@@ -449,18 +449,22 @@ endif()
 ######################################################################
 # partmc library
 
-set(STD_C_FLAGS "-std=c99")
-set(STD_CXX_FLAGS "-fpermissive")
+set(STD_C_FLAGS "-std=c99 -lcudart")
 
 #todo check where is rxns.cu and where is the global function (camp_gpu_solver.cu)... if is in a different unit or what https://stackoverflow.com/questions/31006581/cuda-device-unresolved-extern-function
 #set(STD_CUDA_FLAGS "-dc -arch=compute_70 -code=sm_70 --compiler-options '-fPIC' -lcusolver -lcudart -lcublas -lcusparse_static -lculibos -lpthread -ldl")
-set(STD_CUDA_FLAGS "-arch=compute_70 -code=sm_70 --compiler-options '-fPIC' -lcusolver -lcudart -lcudadevrt -lcublas -lcusparse_static -lculibos -lpthread -ldl")
+set(STD_CUDA_FLAGS "-arch=compute_70 -code=sm_70 -dc --compiler-options '-fPIC' -lcusolver -lcudart -lcudadevrt -lcublas -lcusparse_static -lculibos -lpthread -ldl")
 
+if(ENABLE_CXX)
+  set(STD_CXX_FLAGS "-fpermissive")
+  message( Treating .cpp files as .cu ...)
+  set(STD_CUDA_FLAGS "-x cu")
+endif()
 
 if(${CMAKE_Fortran_COMPILER_ID} MATCHES "Intel")
   set(STD_F_FLAGS "-extend_source -warn truncated_source")
 elseif(${CMAKE_Fortran_COMPILER_ID} MATCHES "GNU")
-  set(STD_F_FLAGS "-ffree-line-length-none")
+  set(STD_F_FLAGS "-ffree-line-length-none -lcudart")
 endif()
 
 set(REACTIONS_F_SRC
@@ -579,8 +583,10 @@ if (CUDA_FOUND AND ENABLE_GPU)
 
   set_source_files_properties(${CAMP_CUDA_SRC} PROPERTIES COMPILE_FLAGS
         ${STD_CUDA_FLAGS})
-
   set_source_files_properties(${CAMP_CUDA_SRC} PROPERTIES LANGUAGE CUDA)
+  set_source_files_properties(${CAMP_CUDA_SRC} PROPERTIES CUDA_SOURCE_PROPERTY_FORMAT OBJ)
+
+
   set_source_files_properties(${CAMP_CUDA_SRC_2} PROPERTIES LANGUAGE CUDA)
 
 else()
@@ -617,10 +623,20 @@ add_library(partmclib ${CAMP_F_SRC}
   ${CAMP_C_SRC} ${AEROSOL_REPS_SRC} ${SUB_MODELS_SRC} ${REACTIONS_SRC}
   ${SUNDIALS_SRC} ${GSL_SRC} ${C_SORT_SRC} ${CAMP_CUDA_SRC} ${CAMP_CUDA_SRC_2} ${CAMP_CXX_SRC} )
 
-target_link_libraries(partmclib ${NETCDF_LIBS} ${SUNDIALS_LIBS}
-  ${MOSAIC_LIB} ${GSL_LIBS} ${JSON_LIB})
+if (CUDA_FOUND)
+  #todo check compilation and execution works fine
 
-set_target_properties(partmclib PROPERTIES OUTPUT_NAME partmc)
+  target_link_libraries(partmclib ${NETCDF_LIBS} ${SUNDIALS_LIBS}
+    ${MOSAIC_LIB} ${GSL_LIBS} ${JSON_LIB} ${CUDA_LIBRARIES})
+
+  set_target_properties(partmclib PROPERTIES OUTPUT_NAME partmc)
+  set_target_properties(partmclib PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
+
+else()
+  target_link_libraries(partmclib ${NETCDF_LIBS} ${SUNDIALS_LIBS}
+    ${MOSAIC_LIB} ${GSL_LIBS} ${JSON_LIB})
+  set_target_properties(partmclib PROPERTIES OUTPUT_NAME partmc)
+endif()
 
 #[[
 if (CUDA_FOUND AND ENABLE_GPU AND ENABLE_TESTS)
