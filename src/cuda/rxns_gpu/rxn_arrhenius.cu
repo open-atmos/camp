@@ -124,12 +124,18 @@ void * rxn_gpu_arrhenius_pre_calc(ModelData *model_data, void *rxn_data)
  */
 #ifdef PMC_USE_SUNDIALS
 
-#ifdef __CUDA_ARCH__//maybe is better if we activate gpu? because if we dont activate but cuda_Arch then PUM (well if not work a replace to pmc_use_gpu is easy)
+#ifdef __CUDA_ARCH__
 __host__ __device__
 #endif
+#ifdef BASIC_CALC_DERIV
 void rxn_gpu_arrhenius_calc_deriv_contrib(ModelData *model_data, realtype *deriv,
                                       int *rxn_int_data, double *rxn_float_data,
                                       double *rxn_env_data, double time_step)
+#else
+void rxn_gpu_arrhenius_calc_deriv_contrib(ModelData *model_data, TimeDerivativeGPU time_deriv,
+                                      int *rxn_int_data, double *rxn_float_data,
+                                      double *rxn_env_data, double time_step)
+#endif
 {
 #ifdef __CUDA_ARCH__
   int n_rxn=model_data->n_rxn;
@@ -150,31 +156,42 @@ void rxn_gpu_arrhenius_calc_deriv_contrib(ModelData *model_data, realtype *deriv
     int i_dep_var = 0;
     for (int i_spec=0; i_spec<NUM_REACT_; i_spec++, i_dep_var++) {
       if (DERIV_ID_(i_dep_var) < 0) continue;
+
+#ifdef BASIC_CALC_DERIV
 #ifdef __CUDA_ARCH__
         atomicAdd(&(deriv[DERIV_ID_(i_dep_var)]),-rate);
         //atomicAdd(&(deriv[DERIV_ID_(i_dep_var)]),0.5); //debug
+        //DERIV_ID_(i_dep_var)=0.5; //debug
 #else
         deriv[DERIV_ID_(i_dep_var)] -= rate;
 #endif
+#else
+      time_derivative_add_value_gpu(time_deriv, DERIV_ID_(i_dep_var), -rate);
+#endif
+
 	}
     for (int i_spec=0; i_spec<NUM_PROD_; i_spec++, i_dep_var++) {
       if (DERIV_ID_(i_dep_var) < 0) continue;
-
       // Negative yields are allowed, but prevented from causing negative
       // concentrations that lead to solver failures
       if (-rate*YIELD_(i_spec)*time_step <= state[PROD_(i_spec)]) {
+#ifdef BASIC_CALC_DERIV
 #ifdef __CUDA_ARCH__
         atomicAdd(&(deriv[DERIV_ID_(i_dep_var)]),rate*YIELD_(i_spec));
         //atomicAdd(&(deriv[DERIV_ID_(i_dep_var)]),0.1); //debug
+        //DERIV_ID_(i_dep_var)=0.5; //debug
 #else
         deriv[DERIV_ID_(i_dep_var)] += rate * YIELD_(i_spec);
+        //DERIV_ID_(i_dep_var)=0.5;
+#endif
+#else
+        time_derivative_add_value_gpu(time_deriv, DERIV_ID_(i_dep_var),rate*YIELD_(i_spec));
 #endif
       }
     }
   }
 
 }
-
 
 
 #endif

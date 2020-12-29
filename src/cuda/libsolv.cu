@@ -656,7 +656,7 @@ __device__ void cudaDevicedotxy(double *g_idata1, double *g_idata2, double *g_od
     __syncthreads();
   }
 
-  //dont need to access global memory now
+  //dont need to access global memory on block-cells
   //if (tid == 0) g_odata[blockIdx.x] = sdata[0];
   *g_odata = sdata[0];
 }

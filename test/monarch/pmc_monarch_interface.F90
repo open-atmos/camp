@@ -524,6 +524,7 @@ contains
 
     end if
 
+
     if(.not.this%solve_multiple_cells) then
       do i=i_start, i_end
         do j=j_start, j_end
@@ -708,7 +709,7 @@ contains
 #else
             if(this%interface_input_file.eq."interface_simple.json") then
               this%camp_state%state_var(this%gas_phase_water_id+(z*state_size_per_cell)) = &
-                      water_conc(i,j,k_flip,water_vapor_index) *air_density(i,j,k) * 1.0d9
+                      water_conc(i,j,k_flip,water_vapor_index) !*air_density(i,j,k) * 1.0d9
             else
               this%camp_state%state_var(this%gas_phase_water_id+(z*state_size_per_cell)) = &
                       water_conc(1,1,1,water_vapor_index) * mwair / mwwat * 1.e6
@@ -766,6 +767,8 @@ contains
           end do
         end do
       end do
+
+      !print*, "state", this%camp_state%state_var(:)
 
       ! Integrate the PMC mechanism
       call cpu_time(comp_start)
@@ -1310,8 +1313,8 @@ end if
 
           if(this%interface_input_file.eq."interface_simple.json") then
             !Not much good water_conc implementation, tries to don't use monarch_1 case
-            MONARCH_water_conc(:,:,:,WATER_VAPOR_ID +(r*state_size_per_cell)) = &
-                    this%camp_state%state_var(this%gas_phase_water_id) !* &
+            MONARCH_water_conc(:,:,:,WATER_VAPOR_ID) = &
+                    this%camp_state%state_var(this%gas_phase_water_id +(r*state_size_per_cell)) !* &
             !                1.0d-9 / 1.225d0
           else
             this%camp_state%state_var(this%gas_phase_water_id +(r*state_size_per_cell)) = &

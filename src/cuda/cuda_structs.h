@@ -50,7 +50,7 @@ typedef struct
   double* dzn;
   double* dcv_y;
 
-#ifdef PMC_DEBUG_GPU
+#ifndef PMC_DEBUG_GPU
   int counterSendInit;
   int counterMatScaleAddI;
   int counterMatScaleAddISendA;
@@ -102,5 +102,17 @@ typedef struct
 
 } itsolver;
 
+//todo use default TimeDerivative class (long must change to double to match GPU case)
+//Time derivative for solver species
+typedef struct {
+    unsigned int num_spec;          // Number of species in the derivative
+    // long double is treated as double in GPU
+    double *production_rates;  // Production rates for all species
+    double *loss_rates;        // Loss rates for all species
+#ifdef PMC_DEBUG
+    double last_max_loss_precision;  // Maximum loss of precision at last output
+#endif
+
+} TimeDerivativeGPU;
 
 #endif //CAMPGPU_CUDA_STRUCTS_H

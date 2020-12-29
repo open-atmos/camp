@@ -16,6 +16,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "../camp_common.h"
+#include "time_derivative_gpu.h"
 //#include "../debug_and_stats/camp_debug_2.h"
 
 //Value to consider data size too big -> Memory optimization will change below and under the limit

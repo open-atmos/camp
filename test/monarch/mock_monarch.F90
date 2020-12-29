@@ -34,11 +34,11 @@ program mock_monarch
   !> Number of total species in mock MONARCH
   integer, parameter :: NUM_MONARCH_SPEC = 300 !800
   !> Number of vertical cells in mock MONARCH
-  integer, parameter :: NUM_VERT_CELLS = 1
+  integer, parameter :: NUM_VERT_CELLS = 100
   !> Starting W-E cell for camp-chem call
   integer, parameter :: I_W = 1
   !> Ending W-E cell for camp-chem call
-  integer, parameter :: I_E = 1
+  integer, parameter :: I_E = 10
   !> Starting S-N cell for camp-chem call
   integer, parameter :: I_S = 1
   !> Ending S-N cell for camp-chem call
@@ -54,7 +54,7 @@ program mock_monarch
   !> Time step (min)
   real, parameter :: TIME_STEP = 3.!2. !3. = monarch dt
   !> Number of time steps to integrate over
-  integer, parameter :: NUM_TIME_STEP = 180!720!30
+  integer, parameter :: NUM_TIME_STEP = 1!720!180
   !> Index for water vapor in water_conc()
   integer, parameter :: WATER_VAPOR_ID = 5
   !> Start time
@@ -236,7 +236,7 @@ program mock_monarch
 
   end if
 
-  write(*,*) "Num time-steps:", NUM_TIME_STEP
+  write(*,*) "Num time-steps:", NUM_TIME_STEP, "Num cells:", n_cells
 
   !Check if repeat program to compare n_cells=1 with n_cells=N
   if(check_multiple_cells) then
@@ -392,18 +392,6 @@ program mock_monarch
 
   ! finalize mpi
   call pmc_mpi_finalize()
-
-  ! Free the interface and the solver
-#ifdef PMC_USE_MPI
-
-  !not work on MPI
-  !if (pmc_mpi_rank().eq.0) then
-  !  deallocate(pmc_interface)
-  !end if
-
-#else
- deallocate(pmc_interface)
-#endif
 
 contains
 

@@ -23,8 +23,6 @@ while [ true ]
 do
   echo Attempt $counter
 
-#Try to don't use monarch_1 case: water_conc, photo_rates and other things are improved in test_2
-
 if [[ $1 == "MPI" ]]; then
   exec_str="mpirun -v -np 2 ../../mock_monarch config_simple.json interface_simple.json simple" #local
   #exec_str="srun ../../mock_monarch config_simple.json interface_simple.json simple" #clusterelse
@@ -35,7 +33,7 @@ fi
 
   if ! $exec_str; then 
 	  echo Failure "$counter"
-	  if [ "$counter" -gt 1 ]
+	  if [ "$counter" -gt 0 ]
 	  then
 		  echo FAIL
 		  exit 1

@@ -185,26 +185,24 @@ endif()
 # GPU support
 
 #Compile GPU tests if CUDA detected
-find_package(CUDA)
-if (CUDA_FOUND)
+if (ENABLE_GPU)
+  find_package(CUDA)
+  #If enable_gpu, all will be executed on GPU
+  if (CUDA_FOUND)
     enable_language(CUDA)
-    #If enable_gpu, all will be executed on GPU
-    if (ENABLE_GPU)
-        #Define global variable of use gpu no matter what test to include user main test
-        add_definitions(-DPMC_USE_GPU)
-        #debug gpu add a considerable overhead in time
-        if (ENABLE_ODE_GPU)
-            add_definitions(-DPMC_USE_ODE_GPU)
-        endif()
-        if (ENABLE_DEBUG_GPU OR ENABLE_DEBUG)
-          add_definitions(-DPMC_DEBUG_GPU)
-          #add_definitions(-DCHECK_GPU_LINSOLVE)
-        endif()
+    #Define global variable of use gpu no matter what test to include user main test
+    add_definitions(-DPMC_USE_GPU)
+    #debug gpu add a considerable overhead in time
+    if (ENABLE_ODE_GPU)
+      add_definitions(-DPMC_USE_ODE_GPU)
     endif()
-endif()
-
-if(NOT CUDA_FOUND AND ENABLE_GPU)
+    if (ENABLE_DEBUG_GPU OR ENABLE_DEBUG)
+      add_definitions(-DPMC_DEBUG_GPU)
+      #add_definitions(-DCHECK_GPU_LINSOLVE)
+    endif()
+  else()
     message( WARNING "Not CUDA module found, can't support GPU computation")
+  endif()
 endif()
 
 ######################################################################
@@ -449,10 +447,8 @@ endif()
 ######################################################################
 # partmc library
 
-set(STD_C_FLAGS "-std=c99 -lcudart")
+set(STD_C_FLAGS "-std=c99")
 
-#todo check where is rxns.cu and where is the global function (camp_gpu_solver.cu)... if is in a different unit or what https://stackoverflow.com/questions/31006581/cuda-device-unresolved-extern-function
-#set(STD_CUDA_FLAGS "-dc -arch=compute_70 -code=sm_70 --compiler-options '-fPIC' -lcusolver -lcudart -lcublas -lcusparse_static -lculibos -lpthread -ldl")
 set(STD_CUDA_FLAGS "-arch=compute_70 -code=sm_70 -dc --compiler-options '-fPIC' -lcusolver -lcudart -lcudadevrt -lcublas -lcusparse_static -lculibos -lpthread -ldl")
 
 if(ENABLE_CXX)
@@ -464,7 +460,7 @@ endif()
 if(${CMAKE_Fortran_COMPILER_ID} MATCHES "Intel")
   set(STD_F_FLAGS "-extend_source -warn truncated_source")
 elseif(${CMAKE_Fortran_COMPILER_ID} MATCHES "GNU")
-  set(STD_F_FLAGS "-ffree-line-length-none -lcudart")
+  set(STD_F_FLAGS "-ffree-line-length-none")
 endif()
 
 set(REACTIONS_F_SRC
@@ -578,6 +574,7 @@ if (CUDA_FOUND AND ENABLE_GPU)
           src/cuda/cvode_gpu.cu
           src/cuda/libsolv.cu
           src/cuda/itsolver_gpu.cu
+          src/cuda/time_derivative_gpu.cu
           #src/cuda/camp_gpu_cusolver.cu
           )
 
@@ -586,8 +583,10 @@ if (CUDA_FOUND AND ENABLE_GPU)
   set_source_files_properties(${CAMP_CUDA_SRC} PROPERTIES LANGUAGE CUDA)
   set_source_files_properties(${CAMP_CUDA_SRC} PROPERTIES CUDA_SOURCE_PROPERTY_FORMAT OBJ)
 
+  #set_source_files_properties(${CAMP_CUDA_SRC} PROPERTIES CUDA_RESOLVE_DEVICE_SYMBOLS ON)
+  #set_source_files_properties(${CAMP_CUDA_SRC} PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
+  #set_source_files_properties(${CAMP_CUDA_SRC} PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
-  set_source_files_properties(${CAMP_CUDA_SRC_2} PROPERTIES LANGUAGE CUDA)
 
 else()
   set(CAMP_CUDA_SRC "")
@@ -626,11 +625,26 @@ add_library(partmclib ${CAMP_F_SRC}
 if (CUDA_FOUND)
   #todo check compilation and execution works fine
 
+
+  #CUDA_ADD_LIBRARY(sundials_nveccuda_static STATIC ${nveccuda_SOURCES})
+  #SET_TARGET_PROPERTIES(sundials_nveccuda_static
+  #        PROPERTIES OUTPUT_NAME sundials_nveccuda CLEAN_DIRECT_OUTPUT 1
+  #        )
+  #INSTALL(TARGETS sundials_nveccuda_static DESTINATION lib)
+
+  #CUDA_ADD_LIBRARY(partmcCUDA ${CAMP_CUDA_SRC})
+  #set_target_properties(partmcCUDA PROPERTIES CUDA_RESOLVE_DEVICE_SYMBOLS ON)
+  #set_target_properties(partmcCUDA PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
+  #set_target_properties(partmcCUDA PROPERTIES POSITION_INDEPENDENT_CODE ON)
+
   target_link_libraries(partmclib ${NETCDF_LIBS} ${SUNDIALS_LIBS}
     ${MOSAIC_LIB} ${GSL_LIBS} ${JSON_LIB} ${CUDA_LIBRARIES})
 
-  set_target_properties(partmclib PROPERTIES OUTPUT_NAME partmc)
+  #set_target_properties(partmclib PROPERTIES CUDA_RESOLVE_DEVICE_SYMBOLS ON)
   set_target_properties(partmclib PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
+  #set_target_properties(partmclib PROPERTIES POSITION_INDEPENDENT_CODE ON)
+
+  set_target_properties(partmclib PROPERTIES OUTPUT_NAME partmc)
 
 else()
   target_link_libraries(partmclib ${NETCDF_LIBS} ${SUNDIALS_LIBS}

@@ -13,6 +13,7 @@
 #define RXNS_H_
 #include "camp_gpu_solver.h"
 
+
 //#define PMC_USE_SUNDIALS
 
 // aqueous_equilibrium
@@ -69,12 +70,15 @@ void rxn_cpu_arrhenius_calc_deriv_contrib(double *rxn_env_data, double *state,
 #ifdef __CUDA_ARCH__
 __host__ __device__
 #endif
-/*void rxn_gpu_arrhenius_calc_deriv_contrib(
-          ModelData *model_data, realtype *deriv, int *rxn_int_data,
-          double *rxn_float_data, double *rxn_env_data, double time_step);*/
+#ifdef BASIC_CALC_DERIV
 void rxn_gpu_arrhenius_calc_deriv_contrib(ModelData *model_data, realtype *deriv,
                                       int *rxn_int_data, double *rxn_float_data,
                                       double *rxn_env_data, double time_step);
+#else
+void rxn_gpu_arrhenius_calc_deriv_contrib(ModelData *model_data, TimeDerivativeGPU time_deriv,
+                                      int *rxn_int_data, double *rxn_float_data,
+                                      double *rxn_env_data, double time_step);
+#endif
 #ifdef __CUDA_ARCH__
 __host__ __device__
 #endif
