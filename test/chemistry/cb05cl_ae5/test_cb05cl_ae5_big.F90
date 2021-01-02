@@ -583,6 +583,8 @@ contains
 
     state_size_cell = size(chem_spec_data%get_spec_names()) !size(camp_state%state_var) / n_cells
 
+    write(*,*) "state_size_cell", state_size_cell, "n_deriv", NUM_EBI_SPEC
+
     !if(pmc_multicells.eq.0) then
 
     allocate(model_conc(state_size_cell*n_cells))
@@ -723,8 +725,6 @@ contains
       end do
     end do
 #endif
-
-    write (*,*) "Setup model_concs not ebi species"
 
     ! Set EBI solver constant species concentrations in CAMP-chem
     spec_name = "M"
@@ -1123,6 +1123,13 @@ contains
     write(EBI_KPP_FILE_UNIT,*) "Repeat", i_repeat, "timestep ", NUM_TIME_STEPS
     write(EBI_KPP_FILE_UNIT,*) "spec_name, concentrations rel. error [(èbi-kpp)/(ebi+kpp)], ebi, kpp"
 #endif
+
+    write(*,*) "state_var last cell:"
+    do i_cell = n_cells-1, n_cells-1
+      do j = 1, 3
+        print*,  camp_state%state_var(j)
+      end do
+    end do
 
     ! Compare the results
     ! EBI <-> CAMP-chem

@@ -104,9 +104,15 @@ void * rxn_gpu_CMAQ_H2O2_print(
 #ifdef __CUDA_ARCH__
 __host__ __device__
 #endif
+#ifdef BASIC_CALC_DERIV
 void rxn_gpu_CMAQ_H2O2_calc_deriv_contrib(
           ModelData *model_data, realtype *deriv, int *rxn_int_data,
           double *rxn_float_data, double *rxn_env_data, double time_step);
+#else
+void rxn_gpu_CMAQ_H2O2_calc_deriv_contrib(
+          ModelData *model_data, TimeDerivativeGPU time_deriv, int *rxn_int_data,
+          double *rxn_float_data, double *rxn_env_data, double time_step);
+#endif
 #ifdef __CUDA_ARCH__
 __host__ __device__
 #endif
@@ -134,9 +140,15 @@ void rxn_cpu_CMAQ_OH_HNO3_calc_deriv_contrib(double *rxn_env_data, double *state
 #ifdef __CUDA_ARCH__
 __host__ __device__
 #endif
+#ifdef BASIC_CALC_DERIV
 void rxn_gpu_CMAQ_OH_HNO3_calc_deriv_contrib(
           ModelData *model_data, realtype *deriv, int *rxn_int_data,
           double *rxn_float_data, double *rxn_env_data, double time_step);
+#else
+void rxn_gpu_CMAQ_OH_HNO3_calc_deriv_contrib(
+          ModelData *model_data, TimeDerivativeGPU time_deriv, int *rxn_int_data,
+          double *rxn_float_data, double *rxn_env_data, double time_step);
+#endif
 #ifdef __CUDA_ARCH__
 __host__ __device__
 #endif
@@ -288,9 +300,15 @@ void rxn_cpu_photolysis_calc_deriv_contrib(double *rxn_env_data, double *state,
 #ifdef __CUDA_ARCH__
 __host__ __device__
 #endif
+#ifdef BASIC_CALC_DERIV
 void rxn_gpu_photolysis_calc_deriv_contrib(
           ModelData *model_data, realtype *deriv, int *rxn_int_data,
           double *rxn_float_data, double *rxn_env_data, double time_step);
+#else
+void rxn_gpu_photolysis_calc_deriv_contrib(
+          ModelData *model_data, TimeDerivativeGPU time_deriv, int *rxn_int_data,
+          double *rxn_float_data, double *rxn_env_data, double time_step);
+#endif
 #ifdef __CUDA_ARCH__
 __host__ __device__
 #endif
@@ -342,9 +360,15 @@ void rxn_cpu_troe_calc_deriv_contrib(double *rxn_env_data, double *state, double
 #ifdef __CUDA_ARCH__
 __host__ __device__
 #endif
+#ifdef BASIC_CALC_DERIV
 void rxn_gpu_troe_calc_deriv_contrib(
           ModelData *model_data, realtype *deriv, int *rxn_int_data,
           double *rxn_float_data, double *rxn_env_data, double time_step);
+#else
+void rxn_gpu_troe_calc_deriv_contrib(
+          ModelData *model_data, TimeDerivativeGPU time_deriv, int *rxn_int_data,
+          double *rxn_float_data, double *rxn_env_data, double time_step);
+#endif
 #ifdef __CUDA_ARCH__
 __host__ __device__
 #endif

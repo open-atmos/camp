@@ -61,126 +61,133 @@ void cudaSolveGPU(
         //double *rho1, double *temp1, double *temp2 //Auxiliary parameters
 )
 {
-  double alpha,rho0,omega0,beta,rho1,temp1,temp2;
+  int tid = blockIdx.x * blockDim.x + threadIdx.x;
+  int active_threads=nrows;
 
-  //gpu_spmv(dr0,dx,nrows,dA,djA,diA,mattype,blocks,threads);  // r0= A*x
-  //cudaDevicesetconst(dr0, 0.0, nrows);
-  //cudaDeviceSpmvCSC(dr0,dx,nrows,dA,djA,diA);
+  if(tid<active_threads){
 
-  //gpu_axpby(dr0,dtempv,1.0,-1.0,nrows,blocks,threads); // r0=1.0*rhs+-1.0r0 //y=ax+by
-  cudaDeviceaxpby(dr0,dtempv,1.0,-1.0,nrows);
+    double alpha,rho0,omega0,beta,rho1,temp1,temp2;
 
-  //gpu_yequalsx(dr0h,dr0,nrows,blocks,threads);  //r0h=r0
-  cudaDeviceyequalsx(dr0h,dr0,nrows);
+    //gpu_spmv(dr0,dx,nrows,dA,djA,diA,mattype,blocks,threads);  // r0= A*x
+    //cudaDevicesetconst(dr0, 0.0, nrows);
+    //cudaDeviceSpmvCSC(dr0,dx,nrows,dA,djA,diA);
 
-  //gpu_yequalsconst(dn0,0.0,nrows,blocks,threads);  //n0=0.0 //memset???
-  //gpu_yequalsconst(dp0,0.0,nrows,blocks,threads);  //p0=0.0
-  cudaDevicesetconst(dn0, 0.0, nrows);
-  cudaDevicesetconst(dp0, 0.0, nrows);
+    //gpu_axpby(dr0,dtempv,1.0,-1.0,nrows,blocks,threads); // r0=1.0*rhs+-1.0r0 //y=ax+by
+    cudaDeviceaxpby(dr0,dtempv,1.0,-1.0,nrows);
 
-  alpha  = 1.0;
-  rho0   = 1.0;
-  omega0 = 1.0;
+    //gpu_yequalsx(dr0h,dr0,nrows,blocks,threads);  //r0h=r0
+    cudaDeviceyequalsx(dr0h,dr0,nrows);
 
-#ifndef PMC_DEBUG_GPU
-  int it=*it_pointer;
-#else
-  int it=0;
-#endif
-
-  do
-  {
-    /*alpha = aux_params[0];
-    rho0 = aux_params[1];
-    omega0 = aux_params[2];
-    beta = aux_params[3];
-    rho1 = aux_params[4];
-    temp1 = aux_params[5];
-    temp2 = aux_params[6];*/
-
-    //rho1=gpu_dotxy(dr0, dr0h, aux, daux, nrows,(blocks + 1) / 2, threads);
-    __syncthreads();
-    cudaDevicedotxy(dr0, dr0h, &rho1, nrows, n_shr_empty);//&rho1
-    __syncthreads();//necessary to reduce accuracy error
-    beta = (rho1 / rho0) * (alpha / omega0);
-
-    //gpu_zaxpbypc(dp0,dr0,dn0,beta,-1.0*omega0*beta,nrows,blocks,threads);   //z = ax + by + c
-    cudaDevicezaxpbypc(dp0, dr0, dn0, beta, -1.0 * omega0 * beta, nrows);   //z = ax + by + c
-
-    //gpu_multxy(dy,ddiag,dp0,nrows,blocks,threads);  // precond y= p0*diag
-    cudaDevicemultxy(dy, ddiag, dp0, nrows);
-
-    //gpu_spmv(dn0,dy,nrows,dA,djA,diA,mattype,blocks,threads);  // n0= A*y
+    //gpu_yequalsconst(dn0,0.0,nrows,blocks,threads);  //n0=0.0 //memset???
+    //gpu_yequalsconst(dp0,0.0,nrows,blocks,threads);  //p0=0.0
     cudaDevicesetconst(dn0, 0.0, nrows);
-    cudaDeviceSpmvCSC(dn0, dy, nrows, dA, djA, diA);
+    cudaDevicesetconst(dp0, 0.0, nrows);
 
-    //temp1=gpu_dotxy(dr0h, dn0, aux, daux, nrows,(blocks + 1) / 2, threads);
-    cudaDevicedotxy(dr0h, dn0, &temp1, nrows, n_shr_empty);
-    __syncthreads();
-    alpha = rho1 / temp1;
-
-    //gpu_zaxpby(1.0,dr0,-1.0*alpha,dn0,ds,nrows,blocks,threads);
-    cudaDevicezaxpby(1.0, dr0, -1.0 * alpha, dn0, ds, nrows);
-
-    //gpu_multxy(dz,ddiag,ds,nrows,blocks,threads); // precond z=diag*s
-    cudaDevicemultxy(dz, ddiag, ds, nrows); // precond z=diag*s
-
-    //gpu_spmv(dt,dz,nrows,dA,djA,diA,mattype,blocks,threads);
-    cudaDevicesetconst(dt, 0.0, nrows);
-    cudaDeviceSpmvCSC(dt, dz, nrows, dA, djA, diA);
-
-    //gpu_multxy(dAx2,ddiag,dt,nrows,blocks,threads);
-    cudaDevicemultxy(dAx2, ddiag, dt, nrows);
-
-    //temp1=gpu_dotxy(dz, dAx2, aux, daux, nrows,(blocks + 1) / 2, threads);
-    cudaDevicedotxy(dz, dAx2, &temp1, nrows, n_shr_empty);
-    __syncthreads();
-
-    //temp2=gpu_dotxy(dAx2, dAx2, aux, daux, nrows,(blocks + 1) / 2, threads);
-    cudaDevicedotxy(dAx2, dAx2, &temp2, nrows, n_shr_empty);
-    __syncthreads();
-    omega0 = temp1 / temp2;
-    __syncthreads();
-    //gpu_axpy(dx,dy,alpha,nrows,blocks,threads); // x=alpha*y +x
-    cudaDeviceaxpy(dx, dy, alpha, nrows); // x=alpha*y +x
-    __syncthreads();
-
-    //gpu_axpy(dx,dz,omega0,nrows,blocks,threads);
-    cudaDeviceaxpy(dx, dz, omega0, nrows);
-
-    //gpu_zaxpby(1.0,ds,-1.0*omega0,dt,dr0,nrows,blocks,threads);
-    cudaDevicezaxpby(1.0, ds, -1.0 * omega0, dt, dr0, nrows);
-
-    //temp1=gpu_dotxy(dr0, dr0, aux, daux, nrows,(blocks + 1) / 2, threads);
-    cudaDevicedotxy(dr0, dr0, &temp1, nrows, n_shr_empty);
-    __syncthreads();
-    temp1 = sqrt(temp1);
-
-    rho0 = rho1;
-/**/
-    __syncthreads();
-/**/
-
-    it++;
-  } while(it<maxIt && temp1>tolmax);//while(it<maxIt && temp1>tolmax);//while(0);
+    alpha  = 1.0;
+    rho0   = 1.0;
+    omega0 = 1.0;
 
 #ifndef PMC_DEBUG_GPU
-  *it_pointer = it;
+    int it=*it_pointer;
+#else
+   int it=0;
 #endif
 
-  /*
-  if (id == 0) //return aux variables if debugging
-  {
-    aux_params[0]=alpha;
-    aux_params[1]=rho0;
-    aux_params[2]=omega0;
-    aux_params[3]=beta;//0.01;
-    aux_params[4]=rho1;//rho1
-    aux_params[5]=temp1;
-    aux_params[6]=temp2;
-  }
-*/
 
+    do
+    {
+      /*alpha = aux_params[0];
+      rho0 = aux_params[1];
+      omega0 = aux_params[2];
+      beta = aux_params[3];
+      rho1 = aux_params[4];
+      temp1 = aux_params[5];
+      temp2 = aux_params[6];*/
+
+      //rho1=gpu_dotxy(dr0, dr0h, aux, daux, nrows,(blocks + 1) / 2, threads);
+      __syncthreads();
+      cudaDevicedotxy(dr0, dr0h, &rho1, nrows, n_shr_empty);//&rho1
+      __syncthreads();//necessary to reduce accuracy error
+      beta = (rho1 / rho0) * (alpha / omega0);
+
+      //gpu_zaxpbypc(dp0,dr0,dn0,beta,-1.0*omega0*beta,nrows,blocks,threads);   //z = ax + by + c
+      cudaDevicezaxpbypc(dp0, dr0, dn0, beta, -1.0 * omega0 * beta, nrows);   //z = ax + by + c
+
+      //gpu_multxy(dy,ddiag,dp0,nrows,blocks,threads);  // precond y= p0*diag
+      cudaDevicemultxy(dy, ddiag, dp0, nrows);
+
+      //gpu_spmv(dn0,dy,nrows,dA,djA,diA,mattype,blocks,threads);  // n0= A*y
+      cudaDevicesetconst(dn0, 0.0, nrows);
+      cudaDeviceSpmvCSC(dn0, dy, nrows, dA, djA, diA);
+
+      //temp1=gpu_dotxy(dr0h, dn0, aux, daux, nrows,(blocks + 1) / 2, threads);
+      cudaDevicedotxy(dr0h, dn0, &temp1, nrows, n_shr_empty);
+      __syncthreads();
+      alpha = rho1 / temp1;
+
+      //gpu_zaxpby(1.0,dr0,-1.0*alpha,dn0,ds,nrows,blocks,threads);
+      cudaDevicezaxpby(1.0, dr0, -1.0 * alpha, dn0, ds, nrows);
+
+      //gpu_multxy(dz,ddiag,ds,nrows,blocks,threads); // precond z=diag*s
+      cudaDevicemultxy(dz, ddiag, ds, nrows); // precond z=diag*s
+
+      //gpu_spmv(dt,dz,nrows,dA,djA,diA,mattype,blocks,threads);
+      cudaDevicesetconst(dt, 0.0, nrows);
+      cudaDeviceSpmvCSC(dt, dz, nrows, dA, djA, diA);
+
+      //gpu_multxy(dAx2,ddiag,dt,nrows,blocks,threads);
+      cudaDevicemultxy(dAx2, ddiag, dt, nrows);
+
+      //temp1=gpu_dotxy(dz, dAx2, aux, daux, nrows,(blocks + 1) / 2, threads);
+      cudaDevicedotxy(dz, dAx2, &temp1, nrows, n_shr_empty);
+      __syncthreads();
+
+      //temp2=gpu_dotxy(dAx2, dAx2, aux, daux, nrows,(blocks + 1) / 2, threads);
+      cudaDevicedotxy(dAx2, dAx2, &temp2, nrows, n_shr_empty);
+      __syncthreads();
+      omega0 = temp1 / temp2;
+      __syncthreads();
+      //gpu_axpy(dx,dy,alpha,nrows,blocks,threads); // x=alpha*y +x
+      cudaDeviceaxpy(dx, dy, alpha, nrows); // x=alpha*y +x
+      __syncthreads();
+
+      //gpu_axpy(dx,dz,omega0,nrows,blocks,threads);
+      cudaDeviceaxpy(dx, dz, omega0, nrows);
+
+      //gpu_zaxpby(1.0,ds,-1.0*omega0,dt,dr0,nrows,blocks,threads);
+      cudaDevicezaxpby(1.0, ds, -1.0 * omega0, dt, dr0, nrows);
+
+      //temp1=gpu_dotxy(dr0, dr0, aux, daux, nrows,(blocks + 1) / 2, threads);
+      cudaDevicedotxy(dr0, dr0, &temp1, nrows, n_shr_empty);
+      __syncthreads();
+      temp1 = sqrt(temp1);
+
+      rho0 = rho1;
+  /**/
+      __syncthreads();
+  /**/
+
+      it++;
+    } while(it<maxIt && temp1>tolmax);//while(it<maxIt && temp1>tolmax);//while(0);
+
+#ifndef PMC_DEBUG_GPU
+   *it_pointer = it;
+#endif
+
+    /*
+    if (id == 0) //return aux variables if debugging
+    {
+      aux_params[0]=alpha;
+      aux_params[1]=rho0;
+      aux_params[2]=omega0;
+      aux_params[3]=beta;//0.01;
+      aux_params[4]=rho1;//rho1
+      aux_params[5]=temp1;
+      aux_params[6]=temp2;
+    }
+  */
+
+  }
 }
 
 //solveGPU_block: Each block will compute only a cell/group of cells

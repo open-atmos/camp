@@ -64,12 +64,10 @@ void time_derivative_output_gpu(TimeDerivativeGPU time_deriv, double *dest_array
 
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   if(i<time_deriv.num_spec){
-  //if(1){
 
     double *r_p = time_deriv.production_rates;
     double *r_l = time_deriv.loss_rates;
 
-#ifndef PMC_DEBUG_KERNEL
     //dest_array[i] = 0.1;
     //dest_array[i] = r_p[i];
     if (r_p[i] + r_l[i] != 0.0) {
@@ -93,22 +91,6 @@ void time_derivative_output_gpu(TimeDerivativeGPU time_deriv, double *dest_array
     }
     //dest_array[i] = r_p[i];
     //dest_array[i] = r_l[i];
-#else
-    if (r_p[i] + r_l[i] != 0.0) {
-      if (deriv_est) {
-        double scale_fact;
-        scale_fact =
-            1.0 / (r_p[i] + r_l[i]) /
-            (1.0 / (r_p[i] + r_l[i]) + MAX_PRECISION_LOSS / fabs(r_p[i]- r_l[i]));
-        dest_array[i] =
-            scale_fact * (r_p[i] - r_l[i]) + (1.0 - scale_fact) * (deriv_est[i]);
-      } else {
-        dest_array[i] = r_p[i] - r_l[i];
-      }
-    } else {
-      dest_array[i] = 0.0;
-    }
-#endif
   }
 
 #else
@@ -161,10 +143,12 @@ void time_derivative_add_value_gpu(TimeDerivativeGPU time_deriv, unsigned int sp
                                double rate_contribution) {
 #ifdef __CUDA_ARCH__
   if (rate_contribution > 0.0) {
-    atomicAdd(&(time_deriv.production_rates[spec_id]),rate_contribution);
+    atomicAdd_block(&(time_deriv.production_rates[spec_id]),rate_contribution);
+    //atomicAdd(&(time_deriv.production_rates[spec_id]),rate_contribution);
     //atomicAdd(&(time_deriv.production_rates[spec_id]),0.2); //debug
   } else {
-    atomicAdd(&(time_deriv.loss_rates[spec_id]),-rate_contribution);
+    atomicAdd_block(&(time_deriv.loss_rates[spec_id]),-rate_contribution);
+    //atomicAdd(&(time_deriv.loss_rates[spec_id]),-rate_contribution);
     //atomicAdd(&(time_deriv.loss_rates[spec_id]),-0.1); //debug
   }
 #else

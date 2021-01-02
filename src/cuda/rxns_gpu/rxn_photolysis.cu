@@ -63,8 +63,13 @@ void * rxn_gpu_photolysis_pre_calc(ModelData *model_data, void *rxn_data)
 #ifdef __CUDA_ARCH__
 __host__ __device__
 #endif
+#ifdef BASIC_CALC_DERIV
 void rxn_gpu_photolysis_calc_deriv_contrib(ModelData *model_data, realtype *deriv, int *rxn_int_data,
           double *rxn_float_data, double *rxn_env_data, double time_step)
+#else
+void rxn_gpu_photolysis_calc_deriv_contrib(ModelData *model_data, TimeDerivativeGPU time_deriv, int *rxn_int_data,
+          double *rxn_float_data, double *rxn_env_data, double time_step)
+#endif
 {
 #ifdef __CUDA_ARCH__
   int n_rxn=model_data->n_rxn;
@@ -86,19 +91,31 @@ void rxn_gpu_photolysis_calc_deriv_contrib(ModelData *model_data, realtype *deri
     int i_dep_var = 0;
     for (int i_spec=0; i_spec<NUM_REACT_; i_spec++, i_dep_var++) {
       if (DERIV_ID_(i_dep_var) < 0) continue;
-      //deriv[DERIV_ID_(i_dep_var)] -= rate;
+
+#ifdef BASIC_CALC_DERIV
 #ifdef __CUDA_ARCH__
       atomicAdd((double*)&(deriv[DERIV_ID_(i_dep_var)]),-rate);
+      //atomicAdd(&(deriv[DERIV_ID_(i_dep_var)]),0.5); //debug
+      //DERIV_ID_(i_dep_var)=0.5; //debug
 #else
       deriv[DERIV_ID_(i_dep_var)] -= rate;
+#endif
+#else
+      time_derivative_add_value_gpu(time_deriv, DERIV_ID_(i_dep_var), -rate);
 #endif
     }
     for (int i_spec=0; i_spec<NUM_PROD_; i_spec++, i_dep_var++) {
       if (DERIV_ID_(i_dep_var) < 0) continue;
+#ifdef BASIC_CALC_DERIV
 #ifdef __CUDA_ARCH__
         atomicAdd((double*)&(deriv[DERIV_ID_(i_dep_var)]),rate*YIELD_(i_spec));
+        //atomicAdd(&(deriv[DERIV_ID_(i_dep_var)]),0.1); //debug
+        //DERIV_ID_(i_dep_var)=0.5; //debug
 #else
         deriv[DERIV_ID_(i_dep_var)] += rate * YIELD_(i_spec);
+#endif
+#else
+        time_derivative_add_value_gpu(time_deriv, DERIV_ID_(i_dep_var),rate*YIELD_(i_spec));
 #endif
     }
   }

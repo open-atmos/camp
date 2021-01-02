@@ -230,10 +230,10 @@ void solver_set_rxn_data_gpu(SolverData *sd) {
         implemented = false;
         break;
       case RXN_EMISSION :
-        implemented = true;
+        implemented = false;
         break;
       case RXN_FIRST_ORDER_LOSS :
-        implemented = true;
+        implemented = false;
         break;
       case RXN_HL_PHASE_TRANSFER :
         implemented = false;
@@ -248,12 +248,12 @@ void solver_set_rxn_data_gpu(SolverData *sd) {
         implemented = true;
         break;
       case RXN_WET_DEPOSITION :
-        implemented = true;
+        implemented = false;
         break;
     }
     if(!implemented){
 #ifdef FAILURE_DETAIL
-      printf("WARNING: Reaction type %d is not fully implemented on GPU. Computing on CPU...\n", rxn_type);
+      printf("WARNING: Reaction type %d is not fully implemented on GPU\n", rxn_type);
 #endif
       model_data->implemented_all=false;
     }
@@ -348,7 +348,6 @@ void rxn_update_env_state_gpu(ModelData *model_data){
   int n_cells = model_data->n_cells;
   int n_rxn = model_data->n_rxn;
   int n_threads = n_rxn*n_cells; //Reaction group per number of repetitions/cells
-  double *state = model_data->total_state;
   double *rxn_env_data = model_data->rxn_env_data;
   double *env = model_data->total_env;
   int n_blocks = ((n_threads + model_data->max_n_gpu_thread - 1) / model_data->max_n_gpu_thread);
@@ -445,6 +444,113 @@ int camp_solver_update_model_state_gpu(N_Vector solver_state, ModelData *model_d
 
 */
 
+__device__ void solveRXN(int i_rxn,
+#ifdef BASIC_CALC_DERIV
+        double *deriv_data,
+#else
+        TimeDerivativeGPU deriv_data,
+#endif
+       double *state_init, double *deriv_init,double time_step,
+       int deriv_length_cell, int state_size_cell,int rxn_env_data_size_cell,
+       int n_rxn, int *int_pointer, double *double_pointer,
+       double *rxn_env_data_init, int *rxn_env_data_idx, double *env_init,
+       int i_kernel, double *prod_rates, double *loss_rates,int threads_block
+)
+{
+  int tid = blockIdx.x * blockDim.x + threadIdx.x;
+  int tid_cell=tid%deriv_length_cell;
+
+#ifdef BASIC_CALC_DERIV
+  int i_cell=tid/n_rxn;
+  i_rxn=tid%n_rxn;
+  deriv_data = &( deriv_init[deriv_length_cell*i_cell]);
+#else
+  int i_cell = tid/deriv_length_cell;
+  deriv_data.production_rates = &( prod_rates[deriv_length_cell*i_cell]);
+  deriv_data.loss_rates = &( loss_rates[deriv_length_cell*i_cell]);
+#endif
+
+  //Get indices of each reaction
+  double *rxn_float_data = (double *) &(((double *) double_pointer)[i_rxn]);
+  int *int_data = (int *) &(((int *) int_pointer)[i_rxn]);
+  int rxn_type = int_data[0];
+  int *rxn_int_data = (int *) &(int_data[1*n_rxn]);
+
+  double *state = &( state_init[state_size_cell*i_cell]);
+
+  //Get indices for rates
+  double *rxn_env_data = &(rxn_env_data_init
+  [rxn_env_data_size_cell*i_cell+rxn_env_data_idx[i_rxn]]);
+
+  //todo reduce model_data to allocate less memory
+  ModelData model_data;
+  model_data.grid_cell_state = &( state_init[state_size_cell*i_cell]);
+  model_data.grid_cell_env = &( env_init[PMC_NUM_ENV_PARAM_*i_cell]);
+  model_data.n_rxn = n_rxn;
+
+  //todo bug production rates when spec_id atomicadd
+
+#ifdef PMC_DEBUG_ALL
+  if(tid==0){
+    printf("[DEBUG] GPU solveDerivative tid %d, \n", tid);
+  }
+#endif
+
+  switch (rxn_type) {
+    //case RXN_AQUEOUS_EQUILIBRIUM :
+    //fix run-time error
+    //rxn_gpu_aqueous_equilibrium_calc_deriv_contrib(&model_data, deriv_data, rxn_int_data,
+    //                                               rxn_float_data, rxn_env_data,time_step);
+    //break;
+    case RXN_ARRHENIUS :
+      rxn_gpu_arrhenius_calc_deriv_contrib(&model_data, deriv_data, rxn_int_data,
+                                           rxn_float_data, rxn_env_data,time_step);
+      break;
+    case RXN_CMAQ_H2O2 :
+      rxn_gpu_CMAQ_H2O2_calc_deriv_contrib(&model_data, deriv_data, rxn_int_data,
+                                          rxn_float_data, rxn_env_data,time_step);
+      break;
+    case RXN_CMAQ_OH_HNO3 :
+      rxn_gpu_CMAQ_OH_HNO3_calc_deriv_contrib(&model_data, deriv_data, rxn_int_data,
+                                           rxn_float_data, rxn_env_data,time_step);
+      break;
+    case RXN_CONDENSED_PHASE_ARRHENIUS :
+      //rxn_gpu_condensed_phase_arrhenius_calc_deriv_contrib(&model_data, deriv_data, rxn_int_data,
+      //                                     rxn_float_data, rxn_env_data,time_step);
+      break;
+    case RXN_EMISSION :
+      //rxn_gpu_emission_calc_deriv_contrib(&model_data, deriv_data, rxn_int_data,
+      //                                     rxn_float_data, rxn_env_data,time_step);
+      break;
+    case RXN_FIRST_ORDER_LOSS :
+      //rxn_gpu_first_order_loss_calc_deriv_contrib(&model_data, deriv_data, rxn_int_data,
+      //                                     rxn_float_data, rxn_env_data,time_step);
+      break;
+    case RXN_HL_PHASE_TRANSFER :
+      //rxn_gpu_HL_phase_transfer_calc_deriv_contrib(&model_data, deriv_data, rxn_int_data,
+      //                                             rxn_float_data, rxn_env_data,time_stepn);
+      break;
+    case RXN_PHOTOLYSIS :
+      rxn_gpu_photolysis_calc_deriv_contrib(&model_data, deriv_data, rxn_int_data,
+                                           rxn_float_data, rxn_env_data,time_step);
+      break;
+    case RXN_SIMPOL_PHASE_TRANSFER :
+      //rxn_gpu_SIMPOL_phase_transfer_calc_deriv_contrib(md, rxn_env_data,
+      //        state, deriv_data, rxn_int_data, rxn_float_data, time_step,n_rxn);
+      break;
+    case RXN_TROE :
+      rxn_gpu_troe_calc_deriv_contrib(&model_data, deriv_data, rxn_int_data,
+                                      rxn_float_data, rxn_env_data,time_step);
+      break;
+    case RXN_WET_DEPOSITION :
+      //rxn_gpu_wet_deposition_calc_deriv_contrib(&model_data, deriv_data, rxn_int_data,
+      //                                     rxn_float_data, rxn_env_data,time_step);
+      break;
+  }
+/*
+*/
+
+}
 /** \brief GPU function: Solve derivative
  *
  * \param state_init Pointer to first value of state array
@@ -463,199 +569,98 @@ __global__ void solveDerivative(double *state_init, double *deriv_init,
                                 int rxn_env_data_size_cell, int n_rxn, int n_cells,
                                 int *int_pointer, double *double_pointer,
                                 double *rxn_env_data_init, int *rxn_env_data_idx,
-                                double *env_init, int n_kernels, int i_kernel,
+                                double *env_init, int i_kernel,
                                 double *prod_rates, double *loss_rates,
-                                double *jac_deriv_data) //Interface CPU/GPU
+                                int threads_block, double *jac_deriv_data) //Interface CPU/GPU
 {
-  //Get thread id
-  int index = blockIdx.x * blockDim.x + threadIdx.x;
+  int tid = blockIdx.x * blockDim.x + threadIdx.x;
+  int tid_cell=tid%deriv_length_cell;
+  int i_rxn;
+  int active_threads = n_cells*deriv_length_cell;
 
-#ifdef PMC_DEBUG
-  if(index==0){
-    printf("[DEBUG] GPU solveDerivative tid %d, \n", index);
-  }
-  __syncthreads();
+#ifdef PMC_DEBUG_ALL
+  if(tid==0){
+    printf("[DEBUG] GPU solveDerivative tid %d, \n", tid);
+  }__syncthreads();
 #endif
 
-#ifdef BASIC_CALC_DERIV
-#else
-  //Change nomenclature to easier compatibility with basic_calc_deriv version
-  //double *deriv_data = &( deriv_init[deriv_length_cell*i_cell]);
-  TimeDerivativeGPU deriv_data;
-  deriv_data.production_rates = prod_rates;
-  deriv_data.loss_rates = loss_rates;
-  deriv_data.num_spec = deriv_length_cell*n_cells;
-
-  //if(index<deriv_data.num_spec){
-/*  if(index==2){
-    //printf("deriv_data.num_spec %d\n", deriv_data.num_spec);
-    printf("index %d time_deriv.production_rates %-le time_deriv.loss_rates %-le\n",
-           index, deriv_data.production_rates[index],
-           deriv_data.loss_rates[index]);
-  }
-  */
-
-  // Reset the TimeDerivativeGPU
-  time_derivative_reset_gpu(deriv_data);
-  __syncthreads();
-#endif
-
-  //RXN based work
-#ifdef BASIC_CALC_DERIV
-  int offset1 = (n_rxn*n_cells/n_kernels)*i_kernel;
-  int offset2 = (n_rxn*n_cells/n_kernels)*(i_kernel+1);
-#else
-  int offset1 = (deriv_length_cell*n_cells/n_kernels)*i_kernel;
-  int offset2 = (deriv_length_cell*n_cells/n_kernels)*(i_kernel+1);
-#endif
-
-  //todo case n_species>n_rxn
-  //Maximum number of threads to compute all reactions
-  if( (offset1 <= index) && (index < (offset2)) ){
-
-    //Another option: compute first the cells and then the reactions (seems working fine but no speedup)
-    //Reorder rxn_env_data (first n_cells) to make this efficient (atm is worst for large n_cells)
-    //int i_cell=index%n_cells;
-    //int i_rxn=index/n_cells;
-
-    //Thread index for deriv and state,
-    // till we don't finish all reactions of a cell, we stay on same index
+  if(tid<active_threads){
 
 #ifdef BASIC_CALC_DERIV
-    int i_cell=index/n_rxn;
-    int i_rxn=index%n_rxn;
-#else
-    int i_cell=index/deriv_length_cell;
-    int i_rxn=index%deriv_length_cell;
-
-    if( i_rxn < n_rxn){
-#endif
-
-      //Get indices for concentrations
-#ifdef BASIC_CALC_DERIV
-      double *deriv_data = &( deriv_init[deriv_length_cell*i_cell]);
-#else
-      deriv_data.production_rates = &( prod_rates[deriv_length_cell*i_cell]);
-      deriv_data.loss_rates = &( loss_rates[deriv_length_cell*i_cell]);
-#endif
-
-      //Get indices of each reaction
-      double *rxn_float_data = (double *) &(((double *) double_pointer)[i_rxn]);
-      int *int_data = (int *) &(((int *) int_pointer)[i_rxn]); //Same indices for each cell
-      int rxn_type = int_data[0];
-      int *rxn_int_data = (int *) &(int_data[1*n_rxn]);
-
-      double *state = &( state_init[state_size_cell*i_cell]);
-
-      //Get indices for rates
-      double *rxn_env_data = &(rxn_env_data_init
-      [rxn_env_data_size_cell*i_cell+rxn_env_data_idx[i_rxn]]);
-
-      //todo reduce model_data to allocate less memory
-      ModelData model_data;
-      model_data.grid_cell_state = &( state_init[state_size_cell*i_cell]);
-      model_data.grid_cell_env = &( env_init[PMC_NUM_ENV_PARAM_*i_cell]);
-      model_data.n_rxn = n_rxn;
-
-      switch (rxn_type) {
-        //case RXN_AQUEOUS_EQUILIBRIUM :
-          //fix run-time error
-          //rxn_gpu_aqueous_equilibrium_calc_deriv_contrib(&model_data, deriv_data, rxn_int_data,
-          //                                               rxn_float_data, rxn_env_data,time_step);
-          //break;*/
-        case RXN_ARRHENIUS :
-          rxn_gpu_arrhenius_calc_deriv_contrib(&model_data, deriv_data, rxn_int_data,
-                                               rxn_float_data, rxn_env_data,time_step);
-          break;
-        /*case RXN_CMAQ_H2O2 :
-          rxn_gpu_CMAQ_H2O2_calc_deriv_contrib(&model_data, deriv_data, rxn_int_data,
-                                               rxn_float_data, rxn_env_data,time_step);
-          break;
-        case RXN_CMAQ_OH_HNO3 :
-          rxn_gpu_CMAQ_OH_HNO3_calc_deriv_contrib(&model_data, deriv_data, rxn_int_data,
-                                               rxn_float_data, rxn_env_data,time_step);
-          break;
-        case RXN_CONDENSED_PHASE_ARRHENIUS :
-          rxn_gpu_condensed_phase_arrhenius_calc_deriv_contrib(&model_data, deriv_data, rxn_int_data,
-                                               rxn_float_data, rxn_env_data,time_step);
-          break;
-        case RXN_EMISSION :
-          rxn_gpu_emission_calc_deriv_contrib(&model_data, deriv_data, rxn_int_data,
-                                               rxn_float_data, rxn_env_data,time_step);
-          break;
-        case RXN_FIRST_ORDER_LOSS :
-          rxn_gpu_first_order_loss_calc_deriv_contrib(&model_data, deriv_data, rxn_int_data,
-                                               rxn_float_data, rxn_env_data,time_step);
-          break;
-        case RXN_HL_PHASE_TRANSFER :
-          //rxn_gpu_HL_phase_transfer_calc_deriv_contrib(&model_data, deriv_data, rxn_int_data,
-          //                                             rxn_float_data, rxn_env_data,time_stepn);
-          break;
-        case RXN_PHOTOLYSIS :
-          rxn_gpu_photolysis_calc_deriv_contrib(&model_data, deriv_data, rxn_int_data,
-                                               rxn_float_data, rxn_env_data,time_step);
-          break;
-        case RXN_SIMPOL_PHASE_TRANSFER :
-          //rxn_gpu_SIMPOL_phase_transfer_calc_deriv_contrib(md, rxn_env_data,
-          //        state, deriv_data, rxn_int_data, rxn_float_data, time_step,n_rxn);
-          break;
-        case RXN_TROE :
-          rxn_gpu_troe_calc_deriv_contrib(&model_data, deriv_data, rxn_int_data,
-                                          rxn_float_data, rxn_env_data,time_step);
-          break;
-        case RXN_WET_DEPOSITION :
-          rxn_gpu_wet_deposition_calc_deriv_contrib(&model_data, deriv_data, rxn_int_data,
-                                               rxn_float_data, rxn_env_data,time_step);
-          break;*/
-      }
-      //if(index==0){
-        //printf("[DEBUG] GPU solveDerivative tid %d, \n", index);
-      //}
-
-/*
-      if(index<deriv_data.num_spec && index>0){
-        __syncthreads();
-        deriv_data.production_rates = prod_rates;
-        deriv_data.loss_rates = loss_rates;
-        printf("index %d time_deriv.production_rates %-le time_deriv.loss_rates %-le\n",
-               index, deriv_data.production_rates[index],
-               deriv_data.loss_rates[index]);
-      }
-      */
-#ifdef BASIC_CALC_DERIV
-#else
+    i_rxn=tid%n_rxn;
+    if(tid < n_rxn*n_cells){
+      solveRXN(i_rxn, deriv_data, state_init, deriv_init, time_step, deriv_length_cell,
+              state_size_cell, rxn_env_data_size_cell, n_rxn, int_pointer,
+              double_pointer, rxn_env_data_init, rxn_env_data_idx, env_init,
+              i_kernel, prod_rates, loss_rates, threads_block
+              );
     }
-#endif
-  }
-  __syncthreads();
-
-/*  if(index<deriv_data.num_spec && index>1022){
-    printf("index %d time_deriv.production_rates %-le time_deriv.loss_rates %-le\n",
-            index, deriv_data.production_rates[index],
-           deriv_data.loss_rates[index]);
-  }
-*/
-
-#ifdef BASIC_CALC_DERIV
 #else
-  deriv_data.production_rates = prod_rates;
-  deriv_data.loss_rates = loss_rates;
-  __syncthreads();
-  time_derivative_output_gpu(deriv_data, deriv_init, jac_deriv_data,0);
+    TimeDerivativeGPU deriv_data;
+    deriv_data.production_rates = prod_rates;
+    deriv_data.loss_rates = loss_rates;
+    deriv_data.num_spec = deriv_length_cell*n_cells;
+
+    time_derivative_reset_gpu(deriv_data);
+
+    __syncthreads();
+
+    if( tid_cell < n_rxn) {
+      int n_iters = n_rxn / deriv_length_cell;
+      for (int i = 0; i < n_iters; i++) {
+        i_rxn = tid_cell + i*deriv_length_cell;
+
+        solveRXN(i_rxn, deriv_data, state_init, deriv_init, time_step, deriv_length_cell,
+                 state_size_cell, rxn_env_data_size_cell, n_rxn, int_pointer,
+                 double_pointer, rxn_env_data_init, rxn_env_data_idx, env_init,
+                 i_kernel, prod_rates, loss_rates, threads_block
+        );
+      }
+
+      int residual=n_rxn-(deriv_length_cell*n_iters);
+      /*if(tid<1){
+         printf("tid %d n_rxn %d, n_deriv %d, residual %d\n",
+                tid, n_rxn, deriv_length_cell, residual
+                );
+      }*/
+      if(tid_cell < residual){
+        i_rxn = tid_cell + deriv_length_cell*n_iters;
+
+        solveRXN(i_rxn, deriv_data, state_init, deriv_init, time_step, deriv_length_cell,
+                 state_size_cell, rxn_env_data_size_cell, n_rxn, int_pointer,
+                 double_pointer, rxn_env_data_init, rxn_env_data_idx, env_init,
+                 i_kernel, prod_rates, loss_rates, threads_block
+        );
+      }
+    }
+    __syncthreads();
+
+    /*if(tid==0){
+      printf("tid %d time_deriv.production_rates %-le time_deriv.loss_rates %-le\n",
+              tid, deriv_data.production_rates[tid],
+             deriv_data.loss_rates[tid]);
+    }*/
+
+    deriv_data.production_rates = prod_rates;
+    deriv_data.loss_rates = loss_rates;
+    __syncthreads();
+    time_derivative_output_gpu(deriv_data, deriv_init, jac_deriv_data,0);
 #endif
 
-  /*
-  if(index<deriv_data.num_spec && index>1022){
-    //if(index<1){
-    //deriv_init[index] = deriv_data.production_rates[index];
-    //deriv_init[index] = deriv_data.loss_rates[index];
-    printf("index %d time_deriv.production_rates %-le time_deriv.loss_rates %-le"
-           "deriv_init %-le\n",
-           index, deriv_data.production_rates[index],
-           deriv_data.loss_rates[index],
-           //deriv_data.loss_rates[index]);
-           deriv_init[index]);
-  }*/
+    /*
+    if(tid<deriv_data.num_spec && tid>1022){
+      //if(tid<1){
+      //deriv_init[tid] = deriv_data.production_rates[tid];
+      //deriv_init[tid] = deriv_data.loss_rates[tid];
+      printf("tid %d time_deriv.production_rates %-le time_deriv.loss_rates %-le"
+             "deriv_init %-le\n",
+             tid, deriv_data.production_rates[tid],
+             deriv_data.loss_rates[tid],
+             //deriv_data.loss_rates[tid]);
+             deriv_init[tid]);
+    }*/
+
+  }
 
 }
 
@@ -671,14 +676,15 @@ void rxn_calc_deriv_gpu(ModelData *model_data, N_Vector deriv, realtype time_ste
   realtype *deriv_data = N_VGetArrayPointer(deriv);
   int n_cells = model_data->n_cells;
   int n_kernels = 1; // Divide load into multiple kernel calls
+  //todo n_kernels case division left residual, an extra kernel computes remain residual
   int n_rxn = model_data->n_rxn;
 #ifdef BASIC_CALC_DERIV
-  int total_threads = n_rxn*n_cells; //Reaction group per number of repetitions/cells
+  int total_threads = n_rxn*n_cells/n_kernels; //Reaction group per number of repetitions/cells
   int threads_block = model_data->max_n_gpu_thread;
 #else
   int max_threads = model_data->max_n_gpu_thread;
   int size_cell = model_data->n_per_cell_dep_var;
-  int total_threads = size_cell * n_cells;
+  int total_threads = size_cell * n_cells/n_kernels;
   int n_shr_empty = max_threads%size_cell;
   int threads_block = max_threads - n_shr_empty; //last multiple of size_cell before max_threads
 #endif
@@ -692,12 +698,12 @@ void rxn_calc_deriv_gpu(ModelData *model_data, N_Vector deriv, realtype time_ste
   t1 = clock();
 #endif
 
- /*//debug
-  if(model_data->counterDeriv2>=0){
+ //debug
+  /*if(model_data->counterDeriv2>=0){
     printf("camp solver_run start [(id),conc], n_state_var %d, n_cells %d\n", model_data->n_per_cell_state_var, n_cells);
-    printf("deriv_size %d\n", model_data->deriv_size);
-    for (int i = 0; i < model_data->n_per_cell_state_var*n_cells; i++) {  // NV_LENGTH_S(deriv)
-      printf("(%d) %-le \n",i+1, model_data->total_state[i]);
+    printf("n_deriv %d\n", model_data->n_per_cell_dep_var);
+    for (int i = 0; i < model_data->n_per_cell_state_var*n_cells; i++) {
+      //printf("(%d) %-le \n",i+1, model_data->total_state[i]);
     }
   }*/
 
@@ -728,8 +734,8 @@ void rxn_calc_deriv_gpu(ModelData *model_data, N_Vector deriv, realtype time_ste
      model_data->n_per_cell_state_var, model_data->n_rxn_env_data,
      n_rxn, n_cells, model_data->int_pointer_gpu, model_data->double_pointer_gpu,
      model_data->rxn_env_data_gpu, model_data->rxn_env_data_idx_gpu, model_data->env_gpu,
-     n_kernels, i_kernel,
-     model_data->prod_rates, model_data->loss_rates, model_data->J_tmp_gpu);
+     i_kernel,
+     model_data->prod_rates, model_data->loss_rates,threads_block,model_data->J_tmp_gpu);
   }
 
 #ifndef PMC_DEBUG_GPU

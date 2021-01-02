@@ -28,17 +28,17 @@ program mock_monarch
   integer, parameter :: IMPORT_FILE_UNIT = 12
 
   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  ! Parameters for mock MONARCH model !
+  ! Parameters for mock MONARCH model !aw
   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Number of total species in mock MONARCH
   integer, parameter :: NUM_MONARCH_SPEC = 300 !800
   !> Number of vertical cells in mock MONARCH
-  integer, parameter :: NUM_VERT_CELLS = 100
+  integer, parameter :: NUM_VERT_CELLS = 1000
   !> Starting W-E cell for camp-chem call
   integer, parameter :: I_W = 1
   !> Ending W-E cell for camp-chem call
-  integer, parameter :: I_E = 10
+  integer, parameter :: I_E = 1
   !> Starting S-N cell for camp-chem call
   integer, parameter :: I_S = 1
   !> Ending S-N cell for camp-chem call

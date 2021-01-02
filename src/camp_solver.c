@@ -1072,6 +1072,7 @@ int camp_solver_update_model_state(N_Vector solver_state, ModelData *model_data,
  * \param solver_data Pointer to the solver data
  * \return Status code
  */
+#ifndef BASIC_CALC_DERIV
 int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
   SolverData *sd = (SolverData *)solver_data;
   ModelData *md = &(sd->model_data);
@@ -1202,6 +1203,7 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
 #else
 
   // Loop through the grid cells and update the derivative array
+  // todo avoid loop for gpu case
   for (int i_cell = 0; i_cell < n_cells; ++i_cell) {
     // Set the grid cell state pointers
     md->grid_cell_id = i_cell;
@@ -1230,12 +1232,10 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
     clock_t start4 = clock();
 #endif
 
-#ifdef PMC_USE_GPU  // CPU always better atm cause delay double loop
+#ifdef PMC_USE_GPU
 
-    // Add contributions from reactions not implemented on GPU
-    // TODO: compute hl & simpol on gpu
-    // FIXME need to fix this to use TimeDerivative
-    //rxn_calc_deriv_specific_types(md, sd->time_deriv, (double)time_step);
+    // todo: Add contributions from reactions not implemented on GPU
+    // rxn_calc_deriv_specific_types(md, sd->time_deriv, (double)time_step);
     // rxn_calc_deriv(md, deriv_data, (double)time_step);
     // rxn_calc_deriv_aux(md, deriv_data, (double)time_step);
     // rxn_calc_deriv(md, deriv_data, (double)time_step);
@@ -1312,6 +1312,10 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
   // Return 0 if success
   return (0);
 }
+
+#else//basic_calc_deriv
+
+#endif //basic_calc_deriv
 
 /** \brief Compute the Jacobian
  *
