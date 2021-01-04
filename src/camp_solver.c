@@ -794,7 +794,6 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
   if (!sd->no_solve) {
 #ifdef PMC_USE_GPU
 #ifndef PMC_USE_ODE_GPU
-    //todo returns deriv=0 sometimes on mock_monarch_1 cells>=1000
     flag = CVode_gpu2(sd->cvode_mem, (realtype)t_final, sd->y, &t_rt, CV_NORMAL,
                       sd);
 // flag = CVode(sd->cvode_mem, (realtype)t_final, sd->y, &t_rt, CV_NORMAL);
