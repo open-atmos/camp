@@ -634,10 +634,18 @@ __device__ void cudaDevicedotxy(double *g_idata1, double *g_idata2, double *g_od
   //Used to ensure last block has 0 values for non-zero cases (Last block can have less cells than previous blocks)
   double mySum = (i < n) ? g_idata1[i]*g_idata2[i] : 0;
 
-  //Init shr_memory to 0
+#ifdef DEV_DEVICEDOTXY
   if(tid<blockDim.x/2)
     for (int j=0; j<2; j++)
       sdata[j*blockDim.x/2 + tid] = 0;
+#else
+  //Last thread assign 0 to empty shr values
+  if (tid == 0)//one thread
+  {
+    for (int j=0; j<n_shr_empty; j++)
+      sdata[blockDim.x+j] = 0; //Assign 0 to non interesting sdata
+  }
+#endif
 
   //Set shr_memory to local values
   sdata[tid] = mySum;
@@ -660,48 +668,6 @@ __device__ void cudaDevicedotxy(double *g_idata1, double *g_idata2, double *g_od
   //if (tid == 0) g_odata[blockIdx.x] = sdata[0];
   *g_odata = sdata[0];
 }
-
-/*
-
-//todo use mix of shared cuda and normal
-__device__ void cudaDevicedotxy(double *g_idata1, double *g_idata2, double *g_odata, unsigned int n, int n_shr_empty)
-{
-  extern __shared__ double sdata[];
-  unsigned int tid = threadIdx.x;
-  //unsigned int i = blockIdx.x*(blockDim.x*2) + threadIdx.x;
-  unsigned int i = blockIdx.x*blockDim.x + threadIdx.x;
-
-  //todo i<max_tid
-
-  double mySum = (i < n) ? g_idata1[i]*g_idata2[i] : 0;
-
-  //if (i + blockDim.x < n)
-  //  mySum += g_idata1[i+blockDim.x]*g_idata2[i+blockDim.x];//dont mix values from other blocks!
-
-  //Last thread assign 0 to empty shr values
-  if (tid == 0)//one thread
-  {
-    for (int j=0; j<n_shr_empty; j++)
-      sdata[blockDim.x+j] = 0; //Assign 0 to non interesting sdata
-  }
-  sdata[tid] = mySum;
-  __syncthreads();
-
-  //todo ensure that n_shr_empty is less than half of the max_threads to have enough threads
-  for (unsigned int s=(blockDim.x+n_shr_empty)/2; s>0; s>>=1)
-  {
-    if (tid < s)
-      sdata[tid] = mySum = mySum + sdata[tid + s];
-
-    __syncthreads();
-  }
-
-  //dont need to access global memory now
-  //if (tid == 0) g_odata[blockIdx.x] = sdata[0];
-  *g_odata = sdata[0];
-}
-
- */
 
 // z= a*z + x + b*y
 __device__ void cudaDevicezaxpbypc(double* dz, double* dx,double* dy, double a, double b, int nrows)

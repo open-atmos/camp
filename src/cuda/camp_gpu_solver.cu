@@ -48,9 +48,7 @@ extern "C" {
 
 //Debug info
 #ifndef PMC_DEBUG_GPU
-//todo move counters to struct avoiding global variables
-  int counterDeriv = 0;       // Total calls to f()
-  int counterJac = 0;         // Total calls to Jac()
+//todo use counters from itsolver after avoid send/receive deriv
   clock_t timeDeriv = 0;      // Compute time for calls to f()
   clock_t timeJac = 0;        // Compute time for calls to Jac()
   clock_t timeDerivKernel = 0; // Compute time for calls to f() kernel
@@ -785,7 +783,7 @@ void rxn_calc_deriv_gpu(ModelData *model_data, N_Vector deriv, realtype time_ste
 }
 
 /** \brief Fusion deriv data calculated from CPU and GPU
- * (either from funtions only implemented on CPU or work balancing between CPU and GPU)
+ * (Calculations from CPU & GPU or GPU async case)
  *
  * \param model_data Pointer to the model data
  * \param deriv NVector to hold the calculated vector
@@ -1065,6 +1063,8 @@ void rxn_calc_jac_gpu(SolverData *sd, SUNMatrix jac, realtype time_step) {
 /** \brief Free GPU data structures
  */
 void free_gpu_cu(ModelData *model_data) {
+
+
 
 #ifndef PMC_DEBUG_GPU
   printf("timeDeriv %lf\n", (((double)timeDeriv) ) / CLOCKS_PER_SEC); //*1000
