@@ -221,8 +221,8 @@ typedef struct {
 #ifdef PMC_USE_GPU
   int max_n_gpu_thread;
   int max_n_gpu_blocks;
-  int *index_deriv_state;
-  int *index_deriv_state_gpu;
+  int *map_state_deriv;
+  int *map_state_deriv_gpu;
   double *deriv_gpu_data;
   double *deriv_aux;
   double *jac_gpu_data;  // todo set this pointer to bicg.dA
@@ -235,7 +235,7 @@ typedef struct {
   size_t env_size;
   size_t rxn_env_data_size;
   size_t rxn_env_data_idx_size;
-  size_t index_deriv_state_size;
+  size_t map_state_deriv_size;
   int small_data;
   bool implemented_all;
   int *int_pointer_gpu;

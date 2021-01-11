@@ -34,7 +34,7 @@ program mock_monarch
   !> Number of total species in mock MONARCH
   integer, parameter :: NUM_MONARCH_SPEC = 300 !800
   !> Number of vertical cells in mock MONARCH
-  integer, parameter :: NUM_VERT_CELLS = 1000
+  integer, parameter :: NUM_VERT_CELLS = 1
   !> Starting W-E cell for camp-chem call
   integer, parameter :: I_W = 1
   !> Ending W-E cell for camp-chem call

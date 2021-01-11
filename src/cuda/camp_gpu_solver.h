@@ -34,7 +34,7 @@ void solver_new_gpu_cu(ModelData *model_data, int n_dep_var, int n_state_var, in
 void solver_set_rxn_data_gpu(SolverData *sd);
 void rxn_update_env_state_gpu(ModelData *model_data);
 int camp_solver_update_model_state_gpu(N_Vector solver_state, ModelData *model_data,
-                                       realtype threshhold, realtype replacement_value);
+                                       double threshold, double replacement_value);
 void rxn_calc_deriv_gpu(ModelData *model_data, N_Vector deriv, realtype time_step);
 void rxn_calc_deriv_aux(ModelData *model_data, double *deriv_data, realtype time_step);
 void rxn_fusion_deriv_gpu(ModelData *model_data, N_Vector deriv);

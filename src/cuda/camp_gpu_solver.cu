@@ -47,7 +47,7 @@ extern "C" {
 //int model_data->max_n_gpu_blocks;
 
 //Debug info
-#ifndef PMC_DEBUG_GPU
+#ifdef PMC_DEBUG_GPU
 //todo use counters from itsolver after avoid send/receive deriv
   clock_t timeDeriv = 0;      // Compute time for calls to f()
   clock_t timeJac = 0;        // Compute time for calls to Jac()
@@ -89,7 +89,7 @@ void solver_new_gpu_cu(ModelData *model_data, int n_dep_var,
   model_data->env_size = PMC_NUM_ENV_PARAM_ * n_cells * sizeof(double); //Temp and pressure
   model_data->rxn_env_data_size = n_rxn_env_param * n_cells * sizeof(double);
   model_data->rxn_env_data_idx_size = (n_rxn+1) * sizeof(int);
-  //model_data->index_deriv_state_size = n_dep_var * n_cells * sizeof(int);
+  model_data->map_state_deriv_size = n_dep_var * n_cells * sizeof(int);
   model_data->small_data = 0;
   model_data->implemented_all = true;
 
@@ -103,20 +103,6 @@ void solver_new_gpu_cu(ModelData *model_data, int n_dep_var,
       //model_data->stream_gpu = (cudaStream_t *)malloc(n_streams * sizeof(cudaStream_t));
   //}
   //n_solver_objects++;
-
-  //Alloc cpu
-  //model_data->index_deriv_state = (int *)malloc(model_data->index_deriv_state_size);
-
-  //Save positions to deriv in state
-  /*int i_dep_var = 0;
-  for (int i_cell = 0; i_cell < n_cells; i_cell++) {
-    for (int i_spec = 0; i_spec < n_state_var; i_spec++) {
-      if (model_data->var_type[i_spec] == CHEM_SPEC_VARIABLE) {
-        model_data->index_deriv_state[i_dep_var] = i_spec + i_cell * n_state_var;//Save position
-        i_dep_var++;
-      }
-    }
-  }*/
 
   //Detect if we are working with few data values
   //todo check if it's worth to maintain this case (we will use small_data?)
@@ -143,12 +129,27 @@ void solver_new_gpu_cu(ModelData *model_data, int n_dep_var,
   cudaMalloc((void **) &model_data->env_gpu, model_data->env_size);
   cudaMalloc((void **) &model_data->rxn_env_data_gpu, model_data->rxn_env_data_size);
   cudaMalloc((void **) &model_data->rxn_env_data_idx_gpu, model_data->rxn_env_data_idx_size);
-  //cudaMalloc((void **) &model_data->index_deriv_state_gpu, model_data->index_deriv_state_size);
+  cudaMalloc((void **) &model_data->map_state_deriv_gpu, model_data->map_state_deriv_size);
 
   time_derivative_initialize_gpu(model_data,n_dep_var*n_cells);
 
-  //Setup GPU
-  //HANDLE_ERROR(cudaMemcpy(model_data->index_deriv_state_gpu, model_data->index_deriv_state, model_data->index_deriv_state_size, cudaMemcpyHostToDevice));
+  //Mapping state-deriv
+  model_data->map_state_deriv = (int *)malloc(model_data->map_state_deriv_size);
+  int i_dep_var = 0;
+  for (int i_cell = 0; i_cell < n_cells; i_cell++) {
+    for (int i_spec = 0; i_spec < n_state_var; i_spec++) {
+      if (model_data->var_type[i_spec] == CHEM_SPEC_VARIABLE) {
+        model_data->map_state_deriv[i_dep_var] = i_spec + i_cell * n_state_var;
+        i_dep_var++;
+      }
+    }
+  }
+
+  HANDLE_ERROR(cudaMemcpy(model_data->map_state_deriv_gpu, model_data->map_state_deriv,
+          model_data->map_state_deriv_size, cudaMemcpyHostToDevice));
+
+  //HANDLE_ERROR(cudaMemcpy(model_data->int_pointer_gpu, int_pointer, rxn_int_length*sizeof(int), cudaMemcpyHostToDevice));
+
 
   //GPU allocation few data on pinned memory
   if(model_data->small_data){
@@ -338,6 +339,13 @@ void solver_set_rxn_data_gpu(SolverData *sd) {
   free(int_pointer);
   free(double_pointer);
 
+  //init state
+  //HANDLE_ERROR(cudaMemcpy(model_data->state_gpu, model_data->total_state,
+  //                        model_data->state_size, cudaMemcpyHostToDevice));
+  //invalid argument....why?
+  //HANDLE_ERROR(cudaMemcpy(model_data->state_gpu, model_data->total_state,
+  //        model_data->state_size, cudaMemcpyHostToDevice));
+
 }
 
 void rxn_update_env_state_gpu(ModelData *model_data){
@@ -374,27 +382,38 @@ void rxn_update_env_state_gpu(ModelData *model_data){
 }
 
 __global__
-void camp_solver_update_model_state_cuda(double *total_state, double *y,
-        int *index_deriv_state, double threshhold,double replacement_value, int *status)
+void camp_solver_update_model_state_cuda(double *state_init, double *y,
+        int *map_state_deriv, double threshhold, double replacement_value, int *status,
+        int deriv_length_cell, int n_cells)
 {
-  int i_dep_var = blockIdx.x * blockDim.x + threadIdx.x;
-  if (y[i_dep_var] > -SMALL) {
-    total_state[index_deriv_state[i_dep_var]] =
-            y[i_dep_var] > threshhold ?
-            y[i_dep_var] : replacement_value;
-  } else {//error
-    //*status = CAMP_SOLVER_FAIL;
+  int tid = blockIdx.x * blockDim.x + threadIdx.x;
+  int active_threads = n_cells*deriv_length_cell;
+
+  if(tid<active_threads) {
+    if (y[tid] > -SMALL) {
+    //if (y[tid] >= 0.0) {
+    //if (1) {
+      state_init[map_state_deriv[tid]] =
+      y[tid] > threshhold ?
+      y[tid] : replacement_value;
+      //state_init[map_state_deriv[tid]] = 0.1;
+      //printf("tid %d map_state_deriv %d\n", tid, map_state_deriv[tid]);
+    } else {//error
+      *status = CAMP_SOLVER_FAIL;
+#ifdef FAILURE_DETAIL
+      printf("\nFailed model state update gpu (Negative value on 'y'):[spec %d] = %le",tid,y[tid]);
+#endif
+    }
   }
+
 }
 
-/*
-
 //todo not working after first execution (I guess missing free memory)
-// and innefficient (increase the number of cudamemcpys)...
+// and inefficient (increase the number of cudamemcpys)...
 int camp_solver_update_model_state_gpu(N_Vector solver_state, ModelData *model_data,
-        realtype threshhold, realtype replacement_value)
+        double threshhold, double replacement_value)
 {
-  int status = CAMP_SOLVER_SUCCESS; //CAMP_SOLVER_FAIL;
+  int status = CAMP_SOLVER_SUCCESS; //0
   int n_cells = model_data->n_cells;
   int n_state_var = model_data->n_per_cell_state_var;
   int n_dep_var = model_data->n_per_cell_dep_var;
@@ -403,44 +422,40 @@ int camp_solver_update_model_state_gpu(N_Vector solver_state, ModelData *model_d
   int *var_type = model_data->var_type;
   double *state = model_data->total_state;
   double *y = NV_DATA_S(solver_state);
-  //int *index_deriv_state = model_data->index_deriv_state;
+  int *map_state_deriv = model_data->map_state_deriv;
 
-  //Need because f is also called in cvode first step initializations (cpu) :(
-  HANDLE_ERROR(cudaMemcpy(model_data->deriv_gpu_data, y, model_data->deriv_size, cudaMemcpyHostToDevice));
+  //Need because f is also called in cvode first step initializations (cpu)
+  //todo check because deriv_gpu_data is mapped to y in cvode_gpu
+  //HANDLE_ERROR(cudaMemcpy(model_data->deriv_gpu_data, y, model_data->deriv_size, cudaMemcpyHostToDevice));
 
-  //Need because Jac (and maybe ohters) can also update total_model_state :(
+  //Need because Jac function can also call update_model_state cpu (pending to rework)
   HANDLE_ERROR(cudaMemcpy(model_data->state_gpu, model_data->total_state, model_data->state_size, cudaMemcpyHostToDevice));
 
   camp_solver_update_model_state_cuda << < n_blocks, model_data->max_n_gpu_thread >> >
-     (model_data->state_gpu, model_data->deriv_gpu_data, model_data->index_deriv_state_gpu,
-     threshhold, replacement_value, &status);
+     (model_data->state_gpu, y, model_data->map_state_deriv_gpu,
+     threshhold, replacement_value, &status, n_dep_var, n_cells);
 
-  //Need because used in other cpu reactions (aero, sub_model, etc)
+  //needed atm
   HANDLE_ERROR(cudaMemcpy(model_data->total_state, model_data->state_gpu, model_data->state_size, cudaMemcpyDeviceToHost));
-
-  //if failure detail and if error print the fail ala ya tu sabeh
-  //Check error
-  for(int i_dep_var = 0; i_dep_var < n_dep_var*n_cells; i_dep_var++)
-  {
-    if (NV_DATA_S(solver_state)[i_dep_var] < -SMALL) {
-#ifdef FAILURE_DETAIL
-      printf("\nFailed model state update: [spec %d] = %le", i_spec,
-                 NV_DATA_S(solver_state)[i_dep_var]);
-#endif
-      status = CAMP_SOLVER_FAIL;
-      break;
-    }
-  }
-  //printf("status %d\n",status);//why
 
   //status = CAMP_SOLVER_SUCCESS;
   //if nothing failed and we reach the end, then everything is correct
   //if (flag == CAMP_SOLVER_SUCCESS) status=flag;
 
+/*
+#ifdef PMC_DEBUG_ALL
+  for (int i_cell = 0; i_cell < n_cells; i_cell++) {
+   for (int i_dep_var = 0; i_dep_var < n_dep_var; i_dep_var++) {
+
+     printf("(%d) %-le \n", i_dep_var+1,
+            model_data->total_state[model_data->map_state_deriv[i_dep_var]]);
+   }
+}
+#endif
+*/
+
   return status;
 }
-
-*/
 
 __device__ void solveRXN(int i_rxn,
 #ifdef BASIC_CALC_DERIV
@@ -689,10 +704,9 @@ void rxn_calc_deriv_gpu(ModelData *model_data, N_Vector deriv, realtype time_ste
   int n_blocks = ((total_threads + threads_block - 1) / threads_block);
   double *state = model_data->total_state;
   double *rxn_env_data = model_data->rxn_env_data;
-  double *env = model_data->total_env;
   double *jac_deriv_data = N_VGetArrayPointer(model_data->J_tmp);
 
-#ifndef PMC_DEBUG_GPU
+#ifdef PMC_DEBUG_GPU
   t1 = clock();
 #endif
 
@@ -719,7 +733,7 @@ void rxn_calc_deriv_gpu(ModelData *model_data, N_Vector deriv, realtype time_ste
   //Reset deriv gpu
   HANDLE_ERROR(cudaMemset(model_data->deriv_gpu_data, 0.0, model_data->deriv_size));
 
-#ifndef PMC_DEBUG_GPU
+#ifdef PMC_DEBUG_GPU
   timeDerivSend += (clock() - t1);
   clock_t t2 = clock();
 #endif
@@ -736,7 +750,7 @@ void rxn_calc_deriv_gpu(ModelData *model_data, N_Vector deriv, realtype time_ste
      model_data->prod_rates, model_data->loss_rates,threads_block,model_data->J_tmp_gpu);
   }
 
-#ifndef PMC_DEBUG_GPU
+#ifdef PMC_DEBUG_GPU
 //todo update times with kernel device timers
   cudaDeviceSynchronize();
   timeDerivKernel += (clock() - t2);
@@ -775,7 +789,7 @@ void rxn_calc_deriv_gpu(ModelData *model_data, N_Vector deriv, realtype time_ste
   }
 */
 
-#ifndef PMC_DEBUG_GPU
+#ifdef PMC_DEBUG_GPU
   timeDerivReceive += (clock() - t3);
   timeDeriv += (clock() - t1);
   t3 = clock();
@@ -791,7 +805,7 @@ void rxn_calc_deriv_gpu(ModelData *model_data, N_Vector deriv, realtype time_ste
  */
 void rxn_fusion_deriv_gpu(ModelData *model_data, N_Vector deriv) {
 
-#ifndef PMC_DEBUG_GPU
+#ifdef PMC_DEBUG_GPU
  timeDerivCPU += (clock() - t3);
 #endif
   // Get a pointer to the derivative data
@@ -1066,7 +1080,7 @@ void free_gpu_cu(ModelData *model_data) {
 
 
 
-#ifndef PMC_DEBUG_GPU
+#ifdef PMC_DEBUG_GPU
   printf("timeDeriv %lf\n", (((double)timeDeriv) ) / CLOCKS_PER_SEC); //*1000
   printf("timeDerivSend %lf\n", (((double)timeDerivSend) ) / CLOCKS_PER_SEC);
   printf("timeDerivKernel %lf\n", (((double)timeDerivKernel) ) / CLOCKS_PER_SEC);
@@ -1181,12 +1195,12 @@ int camp_solver_update_model_state_cpu(N_Vector solver_state, ModelData *model_d
   int *var_type = model_data->var_type;
   double *state = model_data->total_state;
   double *y = NV_DATA_S(solver_state);
-  int *index_deriv_state = model_data->index_deriv_state;
+  int *map_state_deriv = model_data->map_state_deriv;
 
   for(int i_dep_var = 0; i_dep_var < n_dep_var*n_cells; i_dep_var++)
   {
     if (NV_DATA_S(solver_state)[i_dep_var] > -SMALL) {
-      model_data->total_state[index_deriv_state[i_dep_var]] =
+      model_data->total_state[map_state_deriv[i_dep_var]] =
               NV_DATA_S(solver_state)[i_dep_var] > threshhold
               ? NV_DATA_S(solver_state)[i_dep_var] : replacement_value;
       status = CAMP_SOLVER_SUCCESS;

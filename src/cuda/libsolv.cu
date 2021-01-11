@@ -601,13 +601,30 @@ __device__ void cudaDeviceyequalsx(double* dy,double* dx,int nrows)
   }
 }
 
-__device__ void cudaDevicereducey(double *g_odata, unsigned int n)
+/* //unused
+__device__ void cudaDevicereducey(double *g_odata, unsigned int n, int n_shr_empty)
 {
   extern __shared__ double sdata[];
   unsigned int tid = threadIdx.x;
   //int id = blockIdx.x * blockDim.x + threadIdx.x;
 
   double mySum =  (tid < n) ? g_odata[tid] : 0;
+
+#ifdef DEV_DEVICEDOTXY
+  //under development, fix returning deriv=0 and slower
+  if(tid<blockDim.x/2)
+    for (int j=0; j<2; j++)
+      sdata[j*blockDim.x/2 + tid] = 0;
+#else
+  //Last thread assign 0 to empty shr values
+  if (tid == 0)//one thread
+  {
+    //todo fix, returning 0 sometimes on mock_monarch cells=1000
+    //speedup when active, but why? and sometimes returns deriv=0
+    for (int j=0; j<n_shr_empty; j++)
+      sdata[blockDim.x+j] = 0; //Assign 0 to non interesting sdata
+  }
+#endif
 
   sdata[tid] = mySum;
   __syncthreads();
@@ -622,6 +639,7 @@ __device__ void cudaDevicereducey(double *g_odata, unsigned int n)
 
   if (tid == 0) g_odata[blockIdx.x] = sdata[0];
 }
+*/
 
 //todo use mix of shared cuda and normal
 __device__ void cudaDevicedotxy(double *g_idata1, double *g_idata2, double *g_odata, unsigned int n, int n_shr_empty)
@@ -632,7 +650,7 @@ __device__ void cudaDevicedotxy(double *g_idata1, double *g_idata2, double *g_od
   unsigned int i = blockIdx.x*blockDim.x + threadIdx.x;
 
   //Used to ensure last block has 0 values for non-zero cases (Last block can have less cells than previous blocks)
-  double mySum = (i < n) ? g_idata1[i]*g_idata2[i] : 0;
+  double mySum = (i < n) ? g_idata1[i]*g_idata2[i] : 0.;
 
 #ifdef DEV_DEVICEDOTXY
   //under development, fix returning deriv=0 and slower
@@ -643,10 +661,11 @@ __device__ void cudaDevicedotxy(double *g_idata1, double *g_idata2, double *g_od
   //Last thread assign 0 to empty shr values
   if (tid == 0)//one thread
   {
-    //todo fix, returning 0 sometimes mock_monarch cells=1000
-    //speedup when active, but why? and sometimes returns deriv=0
+    //todo fix, returning 0 sometimes on mock_monarch cells=1000 (bug appears after <=7 attemps)
+    //speedup when active, probably cause if no active some threads are not
+    // doing anything so it takes more time to converge, but then sometimes returns deriv=0(fix)
     //for (int j=0; j<n_shr_empty; j++)
-      //sdata[blockDim.x+j] = 0; //Assign 0 to non interesting sdata
+      //sdata[blockDim.x+j] = 0.; //Assign 0 to remaining sdata (cases sdata_id>=threads_block)
   }
 #endif
 
