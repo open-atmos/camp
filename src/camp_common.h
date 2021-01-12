@@ -225,7 +225,11 @@ typedef struct {
   int *map_state_deriv_gpu;
   double *deriv_gpu_data;
   double *deriv_aux;
-  double *jac_gpu_data;  // todo set this pointer to bicg.dA
+  double *J_solver_gpu;
+  double *J_state_gpu;
+  double *J_deriv_gpu;
+  double *J_tmp_gpu;
+  double *J_tmp2_gpu;
   double *jac_aux;
   int *indexvals_gpu;
   int *indexptrs_gpu;
@@ -248,7 +252,6 @@ typedef struct {
   int counterDeriv2;
   // cudaStream_t *stream_gpu;
 
-  double *J_tmp_gpu;
   //TimeDeriv struct arrays (needed for gpu pre-allocation)
   double *prod_rates;
   double *loss_rates;

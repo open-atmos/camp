@@ -1141,7 +1141,7 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
   // Calculate the time derivative f(t,y)
   // (this is for all grid cells at once)
   // if(!md->small_data)
-  rxn_calc_deriv_gpu(md, deriv, (double)time_step);
+  rxn_calc_deriv_gpu(sd, deriv, (double)time_step);
 #endif
 
 #ifdef PMC_DEBUG
@@ -1355,7 +1355,7 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
   // Update the state array with the current dependent variable values.
   // Signal a recoverable error (positive return value) for negative
   // concentrations.
-  if (camp_solver_update_model_state_gpu(y, md, ZERO, ZERO) != CAMP_SOLVER_SUCCESS)
+  if (camp_solver_update_model_state_gpu(y, sd, ZERO, ZERO) != CAMP_SOLVER_SUCCESS)
   //if (camp_solver_update_model_state(y, md, ZERO, ZERO) != CAMP_SOLVER_SUCCESS)
     return 1;
 
@@ -1364,11 +1364,13 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
   // N_VConst(ZERO, deriv);
   // todo: new case after matt changes:
   // Get the Jacobian-estimated derivative
+  /*
   N_VLinearSum(1.0, y, -1.0, md->J_state, md->J_tmp);
   SUNMatMatvec(md->J_solver, md->J_tmp, md->J_tmp2);
   N_VLinearSum(1.0, md->J_deriv, 1.0, md->J_tmp2, md->J_tmp);
+   */
 
-  rxn_calc_deriv_gpu(md, deriv, (double)time_step);
+  rxn_calc_deriv_gpu(sd, deriv, (double)time_step);
 
 #else
 
@@ -1665,6 +1667,10 @@ int Jac(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_data,
     SM_DATA_S(md->J_solver)[i_elem] = SM_DATA_S(J)[i_elem];
   N_VScale(1.0, y, md->J_state);
   N_VScale(1.0, deriv, md->J_deriv);
+
+#ifdef PMC_USE_GPU
+  update_j_state_deriv_solver_gpu(sd);
+#endif
 
 #ifdef PMC_DEBUG
   // Evaluate the Jacobian if flagged to do so
@@ -2371,6 +2377,10 @@ SUNMatrix get_jac_init(SolverData *solver_data) {
   // for use before the first call to Jac()
   N_VConst(0.0, solver_data->model_data.J_state);
   N_VConst(0.0, solver_data->model_data.J_deriv);
+
+#ifdef PMC_USE_GPU
+  init_j_state_deriv_solver_gpu(solver_data);
+#endif
 
   // Free the memory used
   for (int i_spec = 0; i_spec < n_state_var; i_spec++)

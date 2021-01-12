@@ -281,7 +281,7 @@ void allocSolverGPU(CVodeMem cv_mem, SolverData *sd)
   bicg->threads=prop.maxThreadsPerBlock;//1024; //128 set at max gpu
   bicg->blocks=(bicg->nrows+bicg->threads-1)/bicg->threads;
   bicg->n_cells=md->n_cells;
-  bicg->dA=md->jac_gpu_data;//set itsolver gpu pointer to jac pointer initialized at camp
+  bicg->dA=md->J_solver_gpu;//set itsolver gpu pointer to jac pointer initialized at camp
   bicg->dftemp=md->deriv_gpu_data; //deriv is gpu pointer
 
   // Allocating matrix data to the GPU
@@ -1867,7 +1867,7 @@ void set_data_gpu2(CVodeMem cv_mem, SolverData *sd)
   bicg->A=(double*)SM_DATA_S(J);
   bicg->jA=(int*)SM_INDEXVALS_S(J);
   bicg->iA=(int*)SM_INDEXPTRS_S(J);
-  bicg->dA=md->jac_gpu_data;//set itsolver gpu pointer to jac pointer initialized at camp
+  bicg->dA=md->J_solver_gpu;//set itsolver gpu pointer to jac pointer initialized at camp
   bicg->dftemp=md->deriv_gpu_data;
 
   // Setting data
