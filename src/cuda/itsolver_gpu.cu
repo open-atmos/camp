@@ -61,13 +61,14 @@ void cudaSolveGPU(
         //double *rho1, double *temp1, double *temp2 //Auxiliary parameters
 )
 {
-  int tid = blockIdx.x * blockDim.x + threadIdx.x;
+  //int tid = blockIdx.x * blockDim.x + threadIdx.x;
 
   double alpha,rho0,omega0,beta,rho1,temp1,temp2;
 
   //gpu_spmv(dr0,dx,nrows,dA,djA,diA,mattype,blocks,threads);  // r0= A*x
   //cudaDevicesetconst(dr0, 0.0, nrows);
   //cudaDeviceSpmvCSC(dr0,dx,nrows,dA,djA,diA);
+  cudaDeviceSpmvCSC_block(dr0,dx,nrows,dA,djA,diA); //todo check
 
   //gpu_axpby(dr0,dtempv,1.0,-1.0,nrows,blocks,threads); // r0=1.0*rhs+-1.0r0 //y=ax+by
   cudaDeviceaxpby(dr0,dtempv,1.0,-1.0,nrows);
@@ -114,8 +115,9 @@ void cudaSolveGPU(
     cudaDevicemultxy(dy, ddiag, dp0, nrows);
 
     //gpu_spmv(dn0,dy,nrows,dA,djA,diA,mattype,blocks,threads);  // n0= A*y
-    cudaDevicesetconst(dn0, 0.0, nrows);
-    cudaDeviceSpmvCSC(dn0, dy, nrows, dA, djA, diA);
+    //cudaDevicesetconst(dn0, 0.0, nrows);
+    //cudaDeviceSpmvCSC(dn0, dy, nrows, dA, djA, diA);
+    cudaDeviceSpmvCSC_block(dn0, dy, nrows, dA, djA, diA);
 
     //temp1=gpu_dotxy(dr0h, dn0, aux, daux, nrows,(blocks + 1) / 2, threads);
     cudaDevicedotxy(dr0h, dn0, &temp1, nrows, n_shr_empty);
@@ -129,8 +131,9 @@ void cudaSolveGPU(
     cudaDevicemultxy(dz, ddiag, ds, nrows); // precond z=diag*s
 
     //gpu_spmv(dt,dz,nrows,dA,djA,diA,mattype,blocks,threads);
-    cudaDevicesetconst(dt, 0.0, nrows);
-    cudaDeviceSpmvCSC(dt, dz, nrows, dA, djA, diA);
+    //cudaDevicesetconst(dt, 0.0, nrows);
+    //cudaDeviceSpmvCSC(dt, dz, nrows, dA, djA, diA);
+    cudaDeviceSpmvCSC_block(dt, dz, nrows, dA, djA, diA);
 
     //gpu_multxy(dAx2,ddiag,dt,nrows,blocks,threads);
     cudaDevicemultxy(dAx2, ddiag, dt, nrows);

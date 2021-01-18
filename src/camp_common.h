@@ -225,7 +225,12 @@ typedef struct {
   int *map_state_deriv_gpu;
   double *deriv_gpu_data;
   double *deriv_aux;
+  double *J_gpu;
   double *J_solver_gpu;
+  int *jJ_solver_gpu;
+  int *iJ_solver_gpu;
+  int nnz_J_solver;
+  int nrows_J_solver;
   double *J_state_gpu;
   double *J_deriv_gpu;
   double *J_tmp_gpu;

@@ -281,7 +281,7 @@ void allocSolverGPU(CVodeMem cv_mem, SolverData *sd)
   bicg->threads=prop.maxThreadsPerBlock;//1024; //128 set at max gpu
   bicg->blocks=(bicg->nrows+bicg->threads-1)/bicg->threads;
   bicg->n_cells=md->n_cells;
-  bicg->dA=md->J_solver_gpu;//set itsolver gpu pointer to jac pointer initialized at camp
+  bicg->dA=md->J_gpu;//set itsolver gpu pointer to jac pointer initialized at camp
   bicg->dftemp=md->deriv_gpu_data; //deriv is gpu pointer
 
   // Allocating matrix data to the GPU
@@ -3035,6 +3035,7 @@ int cvEwtSetSV_gpu2(CVodeMem cv_mem, N_Vector cv_ewt, N_Vector weight)
 int cvNlsNewton_gpu2(SolverData *sd, CVodeMem cv_mem, int nflag)
 {
   itsolver *bicg = &(sd->bicg);
+  ModelData *md = &(sd->model_data);
   N_Vector vtemp1, vtemp2, vtemp3;
   int convfail, retval, ier;
   booleantype callSetup;
@@ -3123,7 +3124,18 @@ int cvNlsNewton_gpu2(SolverData *sd, CVodeMem cv_mem, int nflag)
     cudaEventRecord(bicg->startDerivNewton);
 #endif
 
-    retval = f(cv_mem->cv_tn, cv_mem->cv_y, cv_mem->cv_ftemp, cv_mem->cv_user_data);
+    /*if(md->counterDeriv2<=5){
+      printf("counterDeriv2 %d \n", md->counterDeriv2);
+      for (int i = 0; i < NV_LENGTH_S(cv_mem->cv_y); i++) {
+        //printf("(%d) %-le ", i + 1, NV_DATA_S(deriv)[i]);
+        if(cv_y[i]!=md->deriv_aux[i]) {
+          printf("(%d) dy %-le y %-le\n", i + 1, md->deriv_aux[i], cv_y[i]);
+        }
+      }
+    }*/
+
+    //retval = f(cv_mem->cv_tn, cv_mem->cv_y, cv_mem->cv_ftemp, cv_mem->cv_user_data);
+    retval = f_gpu(cv_mem->cv_tn, cv_mem->cv_y, cv_mem->cv_ftemp, cv_mem->cv_user_data);
 
 #ifdef PMC_DEBUG_GPU
     cudaEventRecord(bicg->stopDerivNewton);
@@ -3533,7 +3545,19 @@ int linsolsolve_gpu2(SolverData *sd, CVodeMem cv_mem)
     cudaEventRecord(bicg->startDerivSolve);
 #endif
 
-    retval = f(cv_mem->cv_tn, cv_mem->cv_y, cv_mem->cv_ftemp, cv_mem->cv_user_data);
+    /*
+    if(md->counterDeriv2<=5){
+      printf("counterDeriv2 %d \n", md->counterDeriv2);
+      for (int i = 0; i < NV_LENGTH_S(cv_mem->cv_y); i++) {
+        //printf("(%d) %-le ", i + 1, NV_DATA_S(deriv)[i]);
+        if(cv_y[i]!=md->deriv_aux[i]) {
+          printf("(%d) dy %-le y %-le\n", i + 1, md->deriv_aux[i], cv_y[i]);
+        }
+      }
+    }*/
+
+    //retval = f(cv_mem->cv_tn, cv_mem->cv_y, cv_mem->cv_ftemp, cv_mem->cv_user_data);
+    retval = f_gpu(cv_mem->cv_tn, cv_mem->cv_y, cv_mem->cv_ftemp, cv_mem->cv_user_data);
 
 #ifdef PMC_DEBUG_GPU
     cudaEventRecord(bicg->stopDerivSolve);

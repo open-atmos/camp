@@ -33,12 +33,13 @@
 void solver_new_gpu_cu(ModelData *model_data, int n_dep_var, int n_state_var, int n_rxn,
      int n_rxn_int_param, int n_rxn_float_param, int n_rxn_env_param, int n_cells);
 void solver_set_rxn_data_gpu(SolverData *sd);
-void init_j_state_deriv_solver_gpu(SolverData *sd);
-void update_j_state_deriv_solver_gpu(SolverData *sd);
+void init_j_state_deriv_solver_gpu(SolverData *sd, double *J);
+void update_j_state_deriv_solver_gpu(SolverData *sd, double *J);
 void rxn_update_env_state_gpu(ModelData *model_data);
 int camp_solver_update_model_state_gpu(N_Vector solver_state, SolverData *sd,
                                        double threshold, double replacement_value);
-void rxn_calc_deriv_gpu(SolverData *sd, N_Vector deriv, double time_step);
+void rxn_calc_deriv_gpu(SolverData *sd, N_Vector deriv, double time_step,
+                        double threshhold, double replacement_value);
 void rxn_calc_deriv_aux(ModelData *model_data, double *deriv_data, double time_step);
 void rxn_fusion_deriv_gpu(ModelData *model_data, N_Vector deriv);
 void rxn_calc_jac_gpu(SolverData *sd, SUNMatrix jac, double time_step);

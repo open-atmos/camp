@@ -566,6 +566,25 @@ __device__ void cudaDeviceSpmvCSR(double* dx, double* db, int nrows, double* dA,
 
 }
 
+__device__ void cudaDeviceSpmvCSC_block(double* dx, double* db, int nrows, double* dA, int* djA, int* diA)
+{
+  double mult;
+  int row= threadIdx.x + blockDim.x*blockIdx.x;
+  if(row < nrows)
+  {
+    dx[row]=0.0;
+    __syncthreads(); //Multiple threads can save to the same row
+    int jstart = diA[row];
+    int jend   = diA[row+1];
+    for(int j=jstart; j<jend; j++)
+    {
+      mult = db[row]*dA[j];
+      atomicAdd_block(&(dx[djA[j]]),mult);
+//		dx[djA[j]]+= db[row]*dA[j];
+    }
+  }
+}
+
 __device__ void cudaDeviceSpmvCSC(double* dx, double* db, int nrows, double* dA, int* djA, int* diA)
 {
   double mult;
@@ -761,4 +780,31 @@ __device__ void cudaDevicescaley(double* dy, double a, int nrows)
     dy[row]=a*dy[row];
   }
 }
+
+/*
+__device__ void cudaMatvec_SparseCSC(double* dy, double a, int nrows)
+{
+  int row= threadIdx.x + blockDim.x*blockIdx.x;
+  if(row < nrows){
+    dy[row]=a*dy[row];
+  }
+}
+
+__device__ void cudaDeviceSpmvCSC(double* dx, double* db, int nrows, double* dA, int* djA, int* diA)
+{
+  double mult;
+  int row= threadIdx.x + blockDim.x*blockIdx.x;
+  if(row < nrows)
+  {
+    int jstart = diA[row];
+    int jend   = diA[row+1];
+    for(int j=jstart; j<jend; j++)
+    {
+      mult = db[row]*dA[j];
+      atomicAdd(&(dx[djA[j]]),mult);
+//		dx[djA[j]]+= db[row]*dA[j];
+    }
+  }
+}
+ */
 
