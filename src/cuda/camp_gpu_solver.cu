@@ -440,7 +440,7 @@ void rxn_update_env_state_gpu(ModelData *md){
 }
 
 __global__
-void camp_solver_update_model_state_cuda(double *state_init, double *y,
+void camp_solver_check_model_state_cuda(double *state_init, double *y,
         int *map_state_deriv, double threshhold, double replacement_value, int *status,
         int deriv_length_cell, int n_cells)
 {
@@ -450,9 +450,9 @@ void camp_solver_update_model_state_cuda(double *state_init, double *y,
   if(tid<active_threads) {
 
     if (y[tid] > -SMALL) {
-      //state_init[map_state_deriv[tid]] =
-      //y[tid] > threshhold ?
-      //y[tid] : replacement_value;
+      state_init[map_state_deriv[tid]] =
+      y[tid] > threshhold ?
+      y[tid] : replacement_value;
 
       //state_init[map_state_deriv[tid]] = 0.1;
       //printf("tid %d map_state_deriv %d\n", tid, map_state_deriv[tid]);
@@ -462,18 +462,12 @@ void camp_solver_update_model_state_cuda(double *state_init, double *y,
       printf("\nFailed model state update gpu (Negative value on 'y'):[spec %d] = %le",tid,y[tid]);
 #endif
     }
-
-    __syncthreads;
-    //printf("tid %d state %-le\n", tid, state_init[tid]);
-
   }
-
-
 
 }
 
-int camp_solver_update_model_state_gpu(N_Vector solver_state, SolverData *sd,
-        double threshhold, double replacement_value)
+int camp_solver_check_model_state_gpu(N_Vector solver_state, SolverData *sd,
+                                      double threshhold, double replacement_value)
 {
   ModelData *md = &(sd->model_data);
   itsolver *bicg = &(sd->bicg);
@@ -485,7 +479,7 @@ int camp_solver_update_model_state_gpu(N_Vector solver_state, SolverData *sd,
   int n_blocks = ((n_threads + md->max_n_gpu_thread - 1) / md->max_n_gpu_thread);
   int *var_type = md->var_type;
   double *state = md->total_state;
-  double *y = NV_DATA_S(solver_state);//todo use dftemp pointer
+  double *y = NV_DATA_S(solver_state);
   int *map_state_deriv = md->map_state_deriv;
 
 /*
@@ -501,13 +495,11 @@ int camp_solver_update_model_state_gpu(N_Vector solver_state, SolverData *sd,
   }
 */
 
-  camp_solver_update_model_state_cuda << < n_blocks, md->max_n_gpu_thread >> >
-     (md->state_gpu, bicg->dcv_y, md->map_state_deriv_gpu,
-     threshhold, replacement_value, &status, n_dep_var, n_cells);
+  camp_solver_check_model_state_cuda << < n_blocks, md->max_n_gpu_thread >> >
+   (md->state_gpu, bicg->dcv_y, md->map_state_deriv_gpu,
+   threshhold, replacement_value, &status, n_dep_var, n_cells);
 
-  //needed atm
-  //if (status==CAMP_SOLVER_SUCCESS)
-    HANDLE_ERROR(cudaMemcpy(md->total_state, md->state_gpu, md->state_size, cudaMemcpyDeviceToHost));
+  HANDLE_ERROR(cudaMemcpy(md->total_state, md->state_gpu, md->state_size, cudaMemcpyDeviceToHost));
 
 /*
 #ifdef PMC_DEBUG_ALL
@@ -522,6 +514,14 @@ int camp_solver_update_model_state_gpu(N_Vector solver_state, SolverData *sd,
 */
 
   return status;
+}
+
+void camp_solver_update_model_state_gpu(N_Vector solver_state, SolverData *sd,
+                                       double threshhold, double replacement_value)
+{
+  ModelData *md = &(sd->model_data);
+
+  HANDLE_ERROR(cudaMemcpy(md->state_gpu, md->total_state, md->state_size, cudaMemcpyHostToDevice));
 }
 
 __device__ void solveRXN(int i_rxn,
@@ -670,13 +670,11 @@ __global__ void solveDerivative(double *state_init, double *deriv_init,
 
   if(tid<active_threads){
 
-  state_init[map_state_deriv[tid]] =
+  /* Use when all parts that need state are on the GPU (e.g. Jacobian)
+    state_init[map_state_deriv[tid]] =
           y[tid] > threshhold ?
           y[tid] : replacement_value;
-
-  __syncthreads;
-  //printf("tid %d state %-le\n", tid, state_init[tid]);
-
+  */
 
   //N_VLinearSum(1.0, y, -1.0, md->J_state, md->J_tmp);
   cudaDevicezaxpby(1.0, y, -1.0, J_state, J_tmp, active_threads);
@@ -817,7 +815,7 @@ void rxn_calc_deriv_gpu(SolverData *sd, N_Vector deriv, double time_step,
   }
     //Slower, use for large values
   else{
-    HANDLE_ERROR(cudaMemcpy(md->state_gpu, md->total_state, md->state_size, cudaMemcpyHostToDevice));
+    //HANDLE_ERROR(cudaMemcpy(md->state_gpu, md->total_state, md->state_size, cudaMemcpyHostToDevice));
   }
 
   //Reset deriv gpu

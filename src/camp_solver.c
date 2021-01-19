@@ -1031,9 +1031,10 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
  * \return CAMP_SOLVER_SUCCESS for successful update or
  *         CAMP_SOLVER_FAIL for negative concentration
  */
-int camp_solver_update_model_state(N_Vector solver_state, ModelData *model_data,
+int camp_solver_update_model_state(N_Vector solver_state, SolverData *sd,
                                    realtype threshhold,
                                    realtype replacement_value) {
+  ModelData *model_data = &(sd->model_data);
   int n_state_var = model_data->n_per_cell_state_var;
   int n_dep_var = model_data->n_per_cell_dep_var;
   int n_cells = model_data->n_cells;
@@ -1061,6 +1062,14 @@ int camp_solver_update_model_state(N_Vector solver_state, ModelData *model_data,
       }
     }
   }
+
+#ifdef PMC_USE_GPU
+
+  //Update gpu from cpu changes
+  camp_solver_update_model_state_gpu(solver_state, sd, threshhold, replacement_value);
+
+#endif
+
   return CAMP_SOLVER_SUCCESS;
 }
 
@@ -1104,7 +1113,7 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
   // Update the state array with the current dependent variable values.
   // Signal a recoverable error (positive return value) for negative
   // concentrations.
-  if (camp_solver_update_model_state(y, md, ZERO, ZERO) != CAMP_SOLVER_SUCCESS)
+  if (camp_solver_update_model_state(y, sd, ZERO, ZERO) != CAMP_SOLVER_SUCCESS)
     return 1;
 
   // Reset the derivative vector
@@ -1343,8 +1352,7 @@ int f_gpu(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
   // Update the state array with the current dependent variable values.
   // Signal a recoverable error (positive return value) for negative
   // concentrations.
-  if (camp_solver_update_model_state_gpu(y, sd, ZERO, ZERO) != CAMP_SOLVER_SUCCESS)
-  //if (camp_solver_update_model_state(y, md, ZERO, ZERO) != CAMP_SOLVER_SUCCESS)
+  if (camp_solver_check_model_state_gpu(y, sd, ZERO, ZERO) != CAMP_SOLVER_SUCCESS)
     return 1;
 
   rxn_calc_deriv_gpu(sd, deriv, (double)time_step, ZERO, ZERO);
@@ -1403,7 +1411,7 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
   // Update the state array with the current dependent variable values.
   // Signal a recoverable error (positive return value) for negative
   // concentrations.
-  if (camp_solver_update_model_state(y, md, ZERO, ZERO) != CAMP_SOLVER_SUCCESS)
+  if (camp_solver_update_model_state(y, sd, ZERO, ZERO) != CAMP_SOLVER_SUCCESS)
     return 1;
 
   // Get the Jacobian-estimated derivative
@@ -1571,7 +1579,7 @@ int Jac(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_data,
   // Update the state array with the current dependent variable values
   // Signal a recoverable error (positive return value) for negative
   // concentrations.
-  if (camp_solver_update_model_state(y, md, ZERO, ZERO) != CAMP_SOLVER_SUCCESS)
+  if (camp_solver_update_model_state(y, sd, ZERO, ZERO) != CAMP_SOLVER_SUCCESS)
     return 1;
 
   // Get the current integrator time step (s)

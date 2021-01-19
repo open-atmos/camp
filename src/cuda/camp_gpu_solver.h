@@ -36,7 +36,9 @@ void solver_set_rxn_data_gpu(SolverData *sd);
 void init_j_state_deriv_solver_gpu(SolverData *sd, double *J);
 void update_j_state_deriv_solver_gpu(SolverData *sd, double *J);
 void rxn_update_env_state_gpu(ModelData *model_data);
-int camp_solver_update_model_state_gpu(N_Vector solver_state, SolverData *sd,
+int camp_solver_check_model_state_gpu(N_Vector solver_state, SolverData *sd,
+                                       double threshold, double replacement_value);
+void camp_solver_update_model_state_gpu(N_Vector solver_state, SolverData *sd,
                                        double threshold, double replacement_value);
 void rxn_calc_deriv_gpu(SolverData *sd, N_Vector deriv, double time_step,
                         double threshhold, double replacement_value);
