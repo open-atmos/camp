@@ -736,12 +736,10 @@ int CVode_gpu2(void *cvode_mem, realtype tout, N_Vector yout,
 
 #ifdef PMC_DEBUG_GPU
     cudaEventRecord(bicg->stopcvStep);
-
     cudaEventSynchronize(bicg->stopcvStep);
     float mscvStep = 0.0;
     cudaEventElapsedTime(&mscvStep, bicg->startcvStep, bicg->stopcvStep);
     bicg->timecvStep+= mscvStep;
-
 
     //bicg->timecvStep+= clock() - start;
     bicg->countercvStep++;
@@ -3124,8 +3122,8 @@ int cvNlsNewton_gpu2(SolverData *sd, CVodeMem cv_mem, int nflag)
     cudaEventRecord(bicg->startDerivNewton);
 #endif
 
-    /*if(md->counterDeriv2<=5){
-      printf("counterDeriv2 %d \n", md->counterDeriv2);
+    /*if(sd->counterDerivCPU<=5){
+      printf("counterDeriv2 %d \n", sd->counterDerivCPU);
       for (int i = 0; i < NV_LENGTH_S(cv_mem->cv_y); i++) {
         //printf("(%d) %-le ", i + 1, NV_DATA_S(deriv)[i]);
         if(cv_y[i]!=md->deriv_aux[i]) {
@@ -3546,8 +3544,8 @@ int linsolsolve_gpu2(SolverData *sd, CVodeMem cv_mem)
 #endif
 
     /*
-    if(md->counterDeriv2<=5){
-      printf("counterDeriv2 %d \n", md->counterDeriv2);
+    if(sd->counterDerivCPU<=5){
+      printf("counterDeriv2 %d \n", sd->counterDerivCPU);
       for (int i = 0; i < NV_LENGTH_S(cv_mem->cv_y); i++) {
         //printf("(%d) %-le ", i + 1, NV_DATA_S(deriv)[i]);
         if(cv_y[i]!=md->deriv_aux[i]) {
@@ -3763,22 +3761,6 @@ void printSolverCounters(SolverData *sd)
 
   itsolver *bicg = &(sd->bicg);
 
-  //printf("timeNewtonSendInit %lf, counterSendInit %d\n",bicg->timeNewtonSendInit/CLOCKS_PER_SEC,bicg->counterSendInit);
-  //printf("timeMatScaleAddI %lf, counterMatScaleAddI %d\n",bicg->timeMatScaleAddI/CLOCKS_PER_SEC,bicg->counterMatScaleAddI);
-  //printf("timeMatScaleAddISendA %lf, counterMatScaleAddISendA %d\n",bicg->timeMatScaleAddISendA/CLOCKS_PER_SEC,bicg->counterMatScaleAddISendA);
-  //printf("timeMatCopy %lf, counterMatCopy %d\n",bicg->timeMatCopy/CLOCKS_PER_SEC,bicg->counterMatCopy);
-
-  //CPU counters
-  /*printf("timeDerivNewton %lf, counterDerivNewton %d\n",bicg->timeDerivNewton/CLOCKS_PER_SEC,bicg->counterDerivNewton);
-  printf("timeDerivSolve %lf, counterDerivSolve %d\n",bicg->timeDerivSolve/CLOCKS_PER_SEC,bicg->counterDerivSolve);
-  printf("timeLinSolSetup %lf, counterLinSolSetup %d\n",bicg->timeLinSolSetup/CLOCKS_PER_SEC,bicg->counterLinSolSetup);
-  printf("timeLinSolSolve %lf, counterLinSolSolve %d\n",bicg->timeLinSolSolve/CLOCKS_PER_SEC,bicg->counterLinSolSolve);
-  printf("timeNewtonIt %lf, counterNewtonIt %d\n",bicg->timeNewtonIt/CLOCKS_PER_SEC,bicg->counterNewtonIt);
-  printf("timecvStep %lf, countercvStep %d\n",bicg->timecvStep/CLOCKS_PER_SEC,bicg->countercvStep);
-  printf("timeprecvStep %lf, counterBiConjGrad %d\n",bicg->timeBiConjGrad/CLOCKS_PER_SEC,bicg->counterBiConjGrad);
-  printf("timeBiConjGrad %lf, counterBiConjGrad %d\n",bicg->timeBiConjGrad/CLOCKS_PER_SEC,bicg->counterBiConjGrad);
-  */
-
   //Upgraded GPU-CPU counters (Sync with GPU and CPU)
   printf("timecvStep %lf, countercvStep %d\n",bicg->timecvStep/1000,bicg->countercvStep);
   printf("timeNewtonIt %lf, counterNewtonIt %d\n",bicg->timeNewtonIt/1000,bicg->counterNewtonIt);
@@ -3790,7 +3772,5 @@ void printSolverCounters(SolverData *sd)
           bicg->counterBiConjGrad,bicg->counterBiConjGradInternal/(double)bicg->counterBiConjGrad);
   printf("timeJac %lf, counterJac %d\n",bicg->timeJac/1000,bicg->counterJac);
 
-  //printf("timeJacCVODE %lf, bicg->counterJacCVODE %d\n",timeJacCVODE/CLOCKS_PER_SEC,bicg->counterJacCVODE);
-  //printf("timeprecvStep %lf, bicg->counterBiConjGrad %d\n",timeBiConjGrad/CLOCKS_PER_SEC,bicg->counterBiConjGrad);
 #endif
 }

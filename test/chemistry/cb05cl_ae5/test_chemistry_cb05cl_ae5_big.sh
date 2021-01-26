@@ -162,9 +162,10 @@ else
 
             #--print-gpu-summary
             #--analysis-metrics -f -o ../../../../mock_monarch_1000.nvprof
-            #exec_str="nvprof --analysis-metrics -f -o ../../../../../test_cb05_10800.nvprof \
-            #../../../test_chemistry_cb05cl_ae5_big ${n_cells[id_n_cells]} \
+            #exec_str="nvprof --analysis-metrics -f -o ../../../../../test_cb05_100.nvprof \
+            #../../../test_chemistry_cb05cl_ae5_big ${n_cells[id_n_cells]} ${n_blocks[id_n_blocks]} \
             #${offset_conc[$id_offset_conc]} ${offset_temp[$id_offset_temp]} ${pmc_multicells[$id_pmc_multicells]}"
+            #open with: nvvp
 
             if ! $exec_str; then
                 echo Failure "$counter"

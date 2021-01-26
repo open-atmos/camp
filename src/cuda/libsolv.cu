@@ -579,6 +579,8 @@ __device__ void cudaDeviceSpmvCSC_block(double* dx, double* db, int nrows, doubl
     for(int j=jstart; j<jend; j++)
     {
       mult = db[row]*dA[j];
+      //atomicAdd_block(&(dx[djA[j]]),mult);
+      //todo eliminate atomicAdd and use this only
       atomicAdd_block(&(dx[djA[j]]),mult);
 //		dx[djA[j]]+= db[row]*dA[j];
     }
@@ -596,6 +598,7 @@ __device__ void cudaDeviceSpmvCSC(double* dx, double* db, int nrows, double* dA,
     for(int j=jstart; j<jend; j++)
     {
       mult = db[row]*dA[j];
+      //atomicAdd(&(dx[djA[j]]),mult);
       atomicAdd(&(dx[djA[j]]),mult);
 //		dx[djA[j]]+= db[row]*dA[j];
     }
@@ -671,11 +674,14 @@ __device__ void cudaDevicedotxy(double *g_idata1, double *g_idata2, double *g_od
   //Used to ensure last block has 0 values for non-zero cases (Last block can have less cells than previous blocks)
   double mySum = (i < n) ? g_idata1[i]*g_idata2[i] : 0.;
 
-#ifdef DEV_DEVICEDOTXY
+#ifndef DEV_DEVICEDOTXY
   //under development, fix returning deriv=0 and slower
-  if(tid<blockDim.x/2)
+  /*if(tid<blockDim.x/2)
     for (int j=0; j<2; j++)
-      sdata[j*blockDim.x/2 + tid] = 0;
+      sdata[j*blockDim.x/2 + tid] = 0;*/
+  for( int i = threadIdx.x; i < n_shr_empty+blockDim.x; i+=blockDim.x)
+    sdata[i]=0.0;
+
 #else
   //Last thread assign 0 to empty shr values
   if (tid == 0)//one thread
@@ -683,8 +689,9 @@ __device__ void cudaDevicedotxy(double *g_idata1, double *g_idata2, double *g_od
     //todo fix, returning 0 sometimes on mock_monarch cells=1000 (bug appears after <=7 attemps)
     //speedup when active, probably cause if no active some threads are not
     // doing anything so it takes more time to converge, but then sometimes returns deriv=0(fix)
-    //for (int j=0; j<n_shr_empty; j++)
-      //sdata[blockDim.x+j] = 0.; //Assign 0 to remaining sdata (cases sdata_id>=threads_block)
+    //needed or diff results on n_cells=100 3 species
+    for (int j=0; j<n_shr_empty; j++)
+      sdata[blockDim.x+j] = 0.; //Assign 0 to remaining sdata (cases sdata_id>=threads_block)
   }
 #endif
 
@@ -693,10 +700,6 @@ __device__ void cudaDevicedotxy(double *g_idata1, double *g_idata2, double *g_od
   __syncthreads();
 
   //todo ensure that n_shr_empty is less than half of the max_threads to have enough threads
-  //n_shr_empty its a different implementation from cuda reduce extended samples ( https://docs.nvidia.com/cuda/cuda-samples/index.html)
-  // since n_threads_blocks isnotpowerof2
-  // while these samples only takes into account n=notpowerof2, also we need active_threads able to be < max_threads
-  // because other operations must work only with this number of threads to ensure work only with complete cells
   for (unsigned int s=(blockDim.x+n_shr_empty)/2; s>0; s>>=1)
   {
     if (tid < s)
@@ -709,6 +712,11 @@ __device__ void cudaDevicedotxy(double *g_idata1, double *g_idata2, double *g_od
   //if (tid == 0) g_odata[blockIdx.x] = sdata[0];
   *g_odata = sdata[0];
 }
+
+//n_shr_empty its a different implementation from cuda reduce extended samples ( https://docs.nvidia.com/cuda/cuda-samples/index.html)
+// since n_threads_blocks isnotpowerof2
+// while these samples only takes into account n=notpowerof2, also we need active_threads able to be < max_threads
+// because other operations must work only with this number of threads to ensure work only with complete cells
 
 // z= a*z + x + b*y
 __device__ void cudaDevicezaxpbypc(double* dz, double* dx,double* dy, double a, double b, int nrows)

@@ -213,7 +213,11 @@ typedef struct {
                                  // for the current grid cell
   int n_sub_model_env_data;      // Number of sub model environmental parameters
                                  // from all sub models
+
+#ifdef DEBUG_RXN
   int counterMD;
+#endif
+
 
   //#ifdef CUDA_FOUND
   // GPU data
@@ -254,12 +258,21 @@ typedef struct {
   double *rxn_env_data_gpu;
   int *rxn_env_data_idx_gpu;
   int model_data_id;  // Id of the modelData object
-  int counterDeriv2;
   // cudaStream_t *stream_gpu;
 
   //TimeDeriv struct arrays (needed for gpu pre-allocation)
   double *prod_rates;
   double *loss_rates;
+
+#ifdef PMC_DEBUG_GPU
+
+  double timeDerivKernel;
+
+  cudaEvent_t startDerivKernel;
+
+  cudaEvent_t stopDerivKernel;
+
+#endif
 
 #endif
 
@@ -303,14 +316,17 @@ typedef struct {
       max_loss_precision;  // Maximum loss of precision during last call to f()
 #endif
 
+#ifdef PMC_DEBUG_GPU
   int counterDerivTotal;  // Total calls to f()
-  int counterDerivGPU;    // todo set as counterDeriv and fix old counterDeriv
-  int counterJacGPU;
+  int counterDerivCPU;    // todo set as counterDeriv and fix old counterDeriv
+  int counterJacCPU;
   int counterSolve;
   int counterFail;
   double timeCVode;
   double timeCVodeTotal;
-  double timeF;
+  double timeDerivCPU;
+  double timeJacCPU;
+#endif
 
 #endif
 #ifdef PMC_USE_GPU

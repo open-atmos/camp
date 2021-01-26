@@ -1255,8 +1255,8 @@ contains
     deallocate(kpp_init)
     deallocate(camp_init)
     !deallocate(camp_state_comp)
-    !deallocate(camp_state)
-    !deallocate(camp_core)
+    deallocate(camp_state)
+    deallocate(camp_core)
 
     passed = .true.
 

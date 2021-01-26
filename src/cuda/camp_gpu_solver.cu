@@ -48,19 +48,6 @@ extern "C" {
 //int md->max_n_gpu_thread;
 //int md->max_n_gpu_blocks;
 
-//Debug info
-#ifdef PMC_DEBUG_GPU
-//todo use counters from itsolver after avoid send/receive deriv
-  clock_t timeDeriv = 0;      // Compute time for calls to f()
-  clock_t timeJac = 0;        // Compute time for calls to Jac()
-  clock_t timeDerivKernel = 0; // Compute time for calls to f() kernel
-  clock_t timeDerivSend = 0;
-  clock_t timeDerivReceive = 0;
-  clock_t timeDerivCPU = 0;
-  clock_t t1 = 0;             //Auxiliar time counter
-  clock_t t3 = 0;
-#endif
-
 static void HandleError(cudaError_t err,
                         const char *file,
                         int line) {
@@ -175,8 +162,16 @@ void solver_new_gpu_cu(ModelData *md, int n_dep_var,
            n_blocks, md->max_n_gpu_blocks);
   }
 
-#ifdef PMC_DEBUG_PRINT
+#ifdef PMC_DEBUG_PRINT_GPU_SPECS
   print_gpu_specs();
+#endif
+
+#ifdef PMC_DEBUG_GPU
+
+  md->timeDerivKernel=0.0;
+  cudaEventCreate(&md->startDerivKernel);
+  cudaEventCreate(&md->stopDerivKernel);
+
 #endif
 
 }
@@ -383,7 +378,8 @@ void init_j_state_deriv_solver_gpu(SolverData *sd, double *J){
   HANDLE_ERROR(cudaMemcpy(md->J_state_gpu, J_state, md->deriv_size, cudaMemcpyHostToDevice));
   HANDLE_ERROR(cudaMemcpy(md->J_deriv_gpu, J_deriv, md->deriv_size, cudaMemcpyHostToDevice));
   HANDLE_ERROR(cudaMemcpy(md->J_tmp_gpu, J_tmp, md->deriv_size, cudaMemcpyHostToDevice));
-  HANDLE_ERROR(cudaMemcpy(md->J_tmp2_gpu, J_tmp2, md->deriv_size, cudaMemcpyHostToDevice));
+  HANDLE_ERROR(cudaMemset(md->J_tmp2_gpu, 0.0, md->deriv_size));
+
 
   if(md->small_data){
     cudaMallocHost((void**)&md->jac_aux, md->jac_size);
@@ -398,8 +394,6 @@ void update_j_state_deriv_solver_gpu(SolverData *sd, double *J){
   double *J_solver = SM_DATA_S(md->J_solver);
   double *J_state = N_VGetArrayPointer(md->J_state);
   double *J_deriv = N_VGetArrayPointer(md->J_deriv);
-  double *J_tmp = N_VGetArrayPointer(md->J_tmp);
-  double *J_tmp2 = N_VGetArrayPointer(md->J_tmp2);
 
   HANDLE_ERROR(cudaMemcpy(md->J_gpu, J, md->jac_size, cudaMemcpyHostToDevice));
   HANDLE_ERROR(cudaMemcpy(md->J_solver_gpu, J_solver, md->jac_size, cudaMemcpyHostToDevice));
@@ -484,8 +478,8 @@ int camp_solver_check_model_state_gpu(N_Vector solver_state, SolverData *sd,
 
 /*
   //HANDLE_ERROR(cudaMemcpy(md->deriv_aux, bicg->dcv_y, md->deriv_size, cudaMemcpyDeviceToHost));
-  if(md->counterDeriv2<=5){
-    printf("counterDeriv2 %d \n", md->counterDeriv2);
+  if(sd->counterDerivCPU<=5){
+    printf("counterDeriv2 %d \n", sd->counterDerivCPU);
     for (int i = 0; i < NV_LENGTH_S(solver_state); i++) {
         //printf("(%d) %-le ", i + 1, NV_DATA_S(deriv)[i]);
       if(y[i]!=md->deriv_aux[i]) {
@@ -520,7 +514,6 @@ void camp_solver_update_model_state_gpu(N_Vector solver_state, SolverData *sd,
                                        double threshhold, double replacement_value)
 {
   ModelData *md = &(sd->model_data);
-
   HANDLE_ERROR(cudaMemcpy(md->state_gpu, md->total_state, md->state_size, cudaMemcpyHostToDevice));
 }
 
@@ -567,8 +560,6 @@ __device__ void solveRXN(int i_rxn,
   md.grid_cell_state = &( state_init[state_size_cell*i_cell]);
   md.grid_cell_env = &( env_init[PMC_NUM_ENV_PARAM_*i_cell]);
   md.n_rxn = n_rxn;
-
-  //todo bug production rates when spec_id atomicadd
 
 #ifdef PMC_DEBUG_ALL
   if(tid==0){
@@ -644,18 +635,22 @@ __device__ void solveRXN(int i_rxn,
  * \param md->double_pointer Pointer to double reaction data
  * \param rxn_env_data_init Pointer to first value of reaction rates
  */
-__global__ void solveDerivative(double *state_init, double *deriv_init,
-                                double time_step, int deriv_length_cell, int state_size_cell,
-                                int rxn_env_data_size_cell, int n_rxn, int n_cells,
-                                int *int_pointer, double *double_pointer,
-                                double *rxn_env_data_init, int *rxn_env_data_idx,
-                                double *env_init, int i_kernel,
-                                double *prod_rates, double *loss_rates, int threads_block,
-                                double *J_solver, int *jJ_solver, int *iJ_solver,
-                                double *J_state, double *J_deriv,
-                                double *J_tmp, double *J_tmp2, double *y, int counterDeriv2,
-                                int *map_state_deriv, double threshhold, double replacement_value
-                                ) //Interface CPU/GPU
+__global__ void solveDerivative(
+#ifdef PMC_DEBUG_GPU
+                          int counterDeriv2,
+#endif
+                          double *state_init, double *deriv_init,
+                          double time_step, int deriv_length_cell, int state_size_cell,
+                          int rxn_env_data_size_cell, int n_rxn, int n_cells,
+                          int *int_pointer, double *double_pointer,
+                          double *rxn_env_data_init, int *rxn_env_data_idx,
+                          double *env_init, int i_kernel,
+                          double *prod_rates, double *loss_rates, int threads_block,
+                          double *J_solver, int *jJ_solver, int *iJ_solver,
+                          double *J_state, double *J_deriv,
+                          double *J_tmp, double *J_tmp2, double *y, int *map_state_deriv,
+                          double threshhold, double replacement_value
+                          ) //Interface CPU/GPU
 {
   int tid = blockIdx.x * blockDim.x + threadIdx.x;
   int tid_cell=tid%deriv_length_cell;
@@ -682,6 +677,7 @@ __global__ void solveDerivative(double *state_init, double *deriv_init,
   cudaDeviceSpmvCSC_block(J_tmp2, J_tmp, active_threads, J_solver, jJ_solver, iJ_solver);
   //N_VLinearSum(1.0, md->J_deriv, 1.0, md->J_tmp2, md->J_tmp);
   cudaDevicezaxpby(1.0, J_deriv, 1.0, J_tmp2, J_tmp, active_threads);
+  cudaDevicesetconst(J_tmp2, 0.0, active_threads); //Reset for next iter
 
   //Debug
 /*
@@ -795,12 +791,8 @@ void rxn_calc_deriv_gpu(SolverData *sd, N_Vector deriv, double time_step,
   double *rxn_env_data = md->rxn_env_data;
   double *J_tmp = N_VGetArrayPointer(md->J_tmp);
 
-#ifdef PMC_DEBUG_GPU
-  t1 = clock();
-#endif
-
  //debug
-  /*if(md->counterDeriv2>=0){
+  /*if(sd->counterDerivCPU>=0){
     printf("camp solver_run start [(id),conc], n_state_var %d, n_cells %d\n", md->n_per_cell_state_var, n_cells);
     printf("n_deriv %d\n", md->n_per_cell_dep_var);
     for (int i = 0; i < md->n_per_cell_state_var*n_cells; i++) {
@@ -808,43 +800,49 @@ void rxn_calc_deriv_gpu(SolverData *sd, N_Vector deriv, double time_step,
     }
   }*/
 
-  //Faster, use for few values
-  if (md->small_data){
-    //This method of passing them as a function parameter has a theoric maximum of 4kb of data
-    md->state_gpu= md->total_state;
-  }
-    //Slower, use for large values
-  else{
-    //HANDLE_ERROR(cudaMemcpy(md->state_gpu, md->total_state, md->state_size, cudaMemcpyHostToDevice));
-  }
-
   //Reset deriv gpu
   HANDLE_ERROR(cudaMemset(md->deriv_gpu_data, 0.0, md->deriv_size));
 
 #ifdef PMC_DEBUG_GPU
-  timeDerivSend += (clock() - t1);
-  clock_t t2 = clock();
+  //timeDerivSend += (clock() - t1);
+  //clock_t t2 = clock();
+
+  cudaEventRecord(md->startDerivKernel);
+
 #endif
 
   //Loop to test multiple kernel executions
-  for (int i_kernel=0; i_kernel<n_kernels;i_kernel++){
+  for (int i_kernel=0; i_kernel<n_kernels; i_kernel++){
     //cudaDeviceSynchronize();
-    solveDerivative << < (n_blocks), threads_block >> >
-     (md->state_gpu, md->deriv_gpu_data, time_step, md->n_per_cell_dep_var,
+    solveDerivative << < (n_blocks), threads_block >> >(
+#ifdef PMC_DEBUG_GPU
+    sd->counterDerivCPU,
+#endif
+     md->state_gpu, md->deriv_gpu_data, time_step, md->n_per_cell_dep_var,
      md->n_per_cell_state_var, md->n_rxn_env_data,
      n_rxn, n_cells, md->int_pointer_gpu, md->double_pointer_gpu,
      md->rxn_env_data_gpu, md->rxn_env_data_idx_gpu, md->env_gpu,
      i_kernel,md->prod_rates, md->loss_rates,threads_block,md->J_solver_gpu,
      md->jJ_solver_gpu, md->iJ_solver_gpu, md->J_state_gpu,
      md->J_deriv_gpu,md->J_tmp_gpu,md->J_tmp2_gpu,bicg->dcv_y,
-     md->counterDeriv2,md->map_state_deriv_gpu,threshhold,replacement_value);
+     md->map_state_deriv_gpu,threshhold,replacement_value);
   }
 
 #ifdef PMC_DEBUG_GPU
 //todo update times with kernel device timers
-  cudaDeviceSynchronize();
+
+  /*cudaDeviceSynchronize();
   timeDerivKernel += (clock() - t2);
-  t3 = clock();
+  t3 = clock();*/
+
+
+  cudaEventRecord(md->stopDerivKernel);
+  cudaEventSynchronize(md->stopDerivKernel);
+  float msDerivKernel = 0.0;
+  cudaEventElapsedTime(&msDerivKernel, md->startDerivKernel, md->stopDerivKernel);
+  md->timeDerivKernel+= msDerivKernel;
+
+
 #endif
 
   //Use pinned memory for few values
@@ -859,13 +857,13 @@ void rxn_calc_deriv_gpu(SolverData *sd, N_Vector deriv, double time_step,
 
     //Sync
     //HANDLE_ERROR(cudaMemcpy(md->deriv_aux, md->deriv_gpu_data, md->deriv_size, cudaMemcpyDeviceToHost));
-    HANDLE_ERROR(cudaMemcpy(deriv_data, md->deriv_gpu_data, md->deriv_size, cudaMemcpyDeviceToHost));
+    //HANDLE_ERROR(cudaMemcpy(deriv_data, md->deriv_gpu_data, md->deriv_size, cudaMemcpyDeviceToHost));
   }
 
   //cudaDeviceSynchronize();
 
 /* //debug
-  if(md->counterDeriv2>=0){
+  if(sd->counterDerivCPU>=0){
     n_cells=1;
     int size_j = NV_LENGTH_S(deriv) / n_cells;
     printf("length_deriv %d \n", size_j);
@@ -880,9 +878,9 @@ void rxn_calc_deriv_gpu(SolverData *sd, N_Vector deriv, double time_step,
 */
 
 #ifdef PMC_DEBUG_GPU
-  timeDerivReceive += (clock() - t3);
+  /*timeDerivReceive += (clock() - t3);
   timeDeriv += (clock() - t1);
-  t3 = clock();
+  t3 = clock();*/
 #endif
 }
 
@@ -895,9 +893,6 @@ void rxn_calc_deriv_gpu(SolverData *sd, N_Vector deriv, double time_step,
  */
 void rxn_fusion_deriv_gpu(ModelData *md, N_Vector deriv) {
 
-#ifdef PMC_DEBUG_GPU
- timeDerivCPU += (clock() - t3);
-#endif
   // Get a pointer to the derivative data
   realtype *deriv_data = N_VGetArrayPointer(deriv);
 
@@ -1168,14 +1163,10 @@ void rxn_calc_jac_gpu(SolverData *sd, SUNMatrix jac, double time_step) {
  */
 void free_gpu_cu(ModelData *md) {
 
-
-
 #ifdef PMC_DEBUG_GPU
-  printf("timeDeriv %lf\n", (((double)timeDeriv) ) / CLOCKS_PER_SEC); //*1000
-  printf("timeDerivSend %lf\n", (((double)timeDerivSend) ) / CLOCKS_PER_SEC);
-  printf("timeDerivKernel %lf\n", (((double)timeDerivKernel) ) / CLOCKS_PER_SEC);
-  printf("timeDerivReceive %lf\n", (((double)timeDerivReceive) ) / CLOCKS_PER_SEC);
-  printf("timeDerivCPU %lf\n", (((double)timeDerivCPU) ) / CLOCKS_PER_SEC);
+
+  printf("timeDerivKernel %lf\n", md->timeDerivKernel/1000);
+
 #endif
 
   //for (int i = 0; i < n_streams; ++i)
