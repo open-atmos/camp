@@ -239,7 +239,6 @@ module pmc_camp_core
     procedure :: bin_unpack
     !> Print the core data
     procedure :: print => do_print
-    !todo class heritage print_plot from camp_core concepts
     procedure :: print_state_gnuplot
     !> Finalize the core
     final :: finalize
@@ -1329,7 +1328,7 @@ contains
 
   end subroutine initialize_sub_model_update_object
 
-  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Update data associated with an aerosol representation. This function
   !! should be called by an external aerosol microphysics model whenever
@@ -1363,7 +1362,7 @@ contains
 
   end subroutine aero_rep_update_data
 
-  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Update data associated with a reaction. This function should be called
   !! when reaction parameters need updated from the host model. For example,
@@ -1395,7 +1394,7 @@ contains
 
   end subroutine rxn_update_data
 
-  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Update data associated with a sub-model. This function should be called
   !! when sub-model parameters need updated from the host model.

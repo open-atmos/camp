@@ -315,8 +315,8 @@ contains
       ! Set the photolysis rates
       !todo set photo_rates for MPI ranks > 0
       do i_photo_rxn = 1, this%n_photo_rxn
-        !call this%photo_rxns(i_photo_rxn)%set_rate(real(this%base_rates(i_photo_rxn), kind=dp))
-        call this%photo_rxns(i_photo_rxn)%set_rate(real(0.01, kind=dp))
+        call this%photo_rxns(i_photo_rxn)%set_rate(real(this%base_rates(i_photo_rxn), kind=dp))
+        !call this%photo_rxns(i_photo_rxn)%set_rate(real(0.01, kind=dp))
         call this%camp_core%update_data(this%photo_rxns(i_photo_rxn))
       end do
 
@@ -548,7 +548,7 @@ contains
 
             !print*,"camp_state", this%camp_state%state_var(this%map_camp_id(:))
 
-#ifdef IMPORT_CAMP_INPUT
+#ifndef IMPORT_CAMP_INPUT
 #else
           if(this%interface_input_file.eq."interface_simple.json") then
             this%camp_state%state_var(this%gas_phase_water_id) = &
@@ -705,7 +705,7 @@ contains
             !(z*state_size_per_cell)) = MONARCH_conc(1,1,1,this%map_monarch_id(:))
             !print*, "camp_state", this%camp_state%state_var(this%map_camp_id(:)+(z*state_size_per_cell))
 
-#ifdef IMPORT_CAMP_INPUT
+#ifndef IMPORT_CAMP_INPUT
 #else
             if(this%interface_input_file.eq."interface_simple.json") then
               this%camp_state%state_var(this%gas_phase_water_id+(z*state_size_per_cell)) = &

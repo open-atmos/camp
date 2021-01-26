@@ -939,7 +939,6 @@ sd->counterDerivTotal,sd->timeCVode/CLOCKS_PER_SEC,sd->timeCVodeTotal/CLOCKS_PER
  * \param max_loss_precision    Indicators of loss of precision in derivative
  *                              calculation for each species
  */
-
 void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
                            int *RHS_evals, int *LS_setups,
                            int *error_test_fails, int *NLS_iters,
@@ -1039,8 +1038,7 @@ int camp_solver_update_model_state(N_Vector solver_state, SolverData *sd,
   for (int i_cell = 0; i_cell < n_cells; i_cell++) {
     for (int i_spec = 0; i_spec < n_state_var; ++i_spec) {
       if (model_data->var_type[i_spec] == CHEM_SPEC_VARIABLE) {
-        if (NV_DATA_S(solver_state)[i_dep_var] <
-            -SMALL) {  // uncomment this triggers failure
+        if (NV_DATA_S(solver_state)[i_dep_var] < -SMALL) {
 #ifdef FAILURE_DETAIL
           // todo: limit number of prints
            printf("Failed model state update: [spec %d] = %le\n", i_spec,
@@ -1310,6 +1308,7 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
 
 #else//basic_calc_deriv
 
+#ifdef PMC_USE_GPU
 int f_gpu(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
   SolverData *sd = (SolverData *)solver_data;
   ModelData *md = &(sd->model_data);
@@ -1369,6 +1368,7 @@ int f_gpu(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
   // Return 0 if success
   return (0);
 }
+#endif
 
 int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
   SolverData *sd = (SolverData *)solver_data;
@@ -1963,7 +1963,6 @@ int guess_helper(const realtype t_n, const realtype h_n, N_Vector y_n,
     }
 
     // Scale incomplete jumps
-    // todo this part change in last chem_mod commit, check with gpu cvode case
     if (i_fast >= 0 && h_n > ZERO)
       h_j *= 0.95 + 0.1 * rand() / (double)RAND_MAX;
     h_j = t_n < t_0 + t_j + h_j ? t_n - (t_0 + t_j) : h_j;
@@ -2015,18 +2014,12 @@ int guess_helper(const realtype t_n, const realtype h_n, N_Vector y_n,
  *         to 1.0
  */
 SUNMatrix get_jac_init(SolverData *solver_data) {
-  int n_rxn;                     /* number of reactions in the mechanism
-                                  * (stored in first position in *rxn_data) */
-  bool **jac_struct_rxn;         /* structure of Jacobian with flags to indicate
-                                  * elements that could be used by reactions. */
-  bool **jac_struct_param;       /* structure of Jacobian with flags to indicate
-                                  * elements that could be used by sub models. */
-  bool **jac_struct_solver;      /* structure of Jacobian with flags to indicate
-                                  * elements that could be used in the solver. */
-  sunindextype n_jac_elem_rxn;   /* number of potentially non-zero Jacobian
-                                    elements in the reaction matrix*/
-  sunindextype n_jac_elem_param; /* number of potentially non-zero Jacobian
-                                    elements in the reaction matrix*/
+  int n_rxn;                      /* number of reactions in the mechanism
+                                   * (stored in first position in *rxn_data) */
+  sunindextype n_jac_elem_rxn;    /* number of potentially non-zero Jacobian
+                                     elements in the reaction matrix*/
+  sunindextype n_jac_elem_param;  /* number of potentially non-zero Jacobian
+                                     elements in the reaction matrix*/
   sunindextype n_jac_elem_solver; /* number of potentially non-zero Jacobian
                                      elements in the reaction matrix*/
   // Number of grid cells
@@ -2046,35 +2039,30 @@ SUNMatrix get_jac_init(SolverData *solver_data) {
   // Number of total solver variables
   int n_dep_var_total = n_dep_var * n_cells;
 
-  // Set up the 2D array of flags for a single grid cell
-  jac_struct_rxn = (bool **)malloc(sizeof(int *) * n_state_var);
-  if (jac_struct_rxn == NULL) {
-    printf("\n\nERROR allocating space for jacobian structure array\n\n");
+  // Initialize the Jacobian for reactions
+  if (jacobian_initialize_empty(&(solver_data->jac),
+                                (unsigned int)n_state_var) != 1) {
+    printf("\n\nERROR allocating Jacobian structure\n\n");
     exit(EXIT_FAILURE);
   }
-  for (int i_spec = 0; i_spec < n_state_var; i_spec++) {
-    jac_struct_rxn[i_spec] = (bool *)malloc(sizeof(int) * n_state_var);
-    if (jac_struct_rxn[i_spec] == NULL) {
-      printf(
-          "\n\nERROR allocating space for jacobian structure array "
-          "row %d\n\n",
-          i_spec);
-      exit(EXIT_FAILURE);
-    }
-    // Add diagnonal elements by default
-    for (int j_spec = 0; j_spec < n_state_var; j_spec++)
-      jac_struct_rxn[i_spec][j_spec] = i_spec == j_spec ? true : false;
+
+  // Add diagonal elements by default
+  for (unsigned int i_spec = 0; i_spec < n_state_var; ++i_spec) {
+    jacobian_register_element(&(solver_data->jac), i_spec, i_spec);
   }
 
   // Fill in the 2D array of flags with Jacobian elements used by the
   // mechanism reactions for a single grid cell
-  rxn_get_used_jac_elem(&(solver_data->model_data), jac_struct_rxn);
+  rxn_get_used_jac_elem(&(solver_data->model_data), &(solver_data->jac));
+
+  // Build the sparse Jacobian
+  if (jacobian_build_matrix(&(solver_data->jac)) != 1) {
+    printf("\n\nERROR building sparse full-state Jacobian\n\n");
+    exit(EXIT_FAILURE);
+  }
 
   // Determine the number of non-zero Jacobian elements per grid cell
-  n_jac_elem_rxn = 0;
-  for (int i = 0; i < n_state_var; i++)
-    for (int j = 0; j < n_state_var; j++)
-      if (jac_struct_rxn[i][j] == true) ++n_jac_elem_rxn;
+  n_jac_elem_rxn = jacobian_number_of_elements(solver_data->jac);
 
   // Save number of reaction jacobian elements per grid cell
   solver_data->model_data.n_per_cell_rxn_jac_elem = (int)n_jac_elem_rxn;
@@ -2083,29 +2071,16 @@ SUNMatrix get_jac_init(SolverData *solver_data) {
   solver_data->model_data.J_rxn =
       SUNSparseMatrix(n_state_var, n_state_var, n_jac_elem_rxn, CSC_MAT);
 
-  // Initialize the Jacobian for reactions
-  // TODO: Adapt the Jacobian structure for general use to avoid using
-  // SUNSparseMatrix outside of the solver interface
-  if (jacobian_initialize(&(solver_data->jac), (unsigned int)n_state_var,
-                          jac_struct_rxn) != 1) {
-    printf("\n\nERROR allocating Jacobian structure\n\n");
-    exit(EXIT_FAILURE);
-  }
-
   // Set the column and row indices
-  int i_col = 0, i_elem = 0;
-  for (int i = 0; i < n_state_var; i++) {
-    (SM_INDEXPTRS_S(solver_data->model_data.J_rxn))[i_col] = i_elem;
-    for (int j = 0, i_row = 0; j < n_state_var; j++) {
-      if (jac_struct_rxn[j][i] == true) {
-        (SM_DATA_S(solver_data->model_data.J_rxn))[i_elem] = (realtype)0.0;
-        (SM_INDEXVALS_S(solver_data->model_data.J_rxn))[i_elem++] = i_row;
-      }
-      i_row++;
-    }
-    i_col++;
+  for (unsigned int i_col = 0; i_col <= n_state_var; ++i_col) {
+    (SM_INDEXPTRS_S(solver_data->model_data.J_rxn))[i_col] =
+        jacobian_column_pointer_value(solver_data->jac, i_col);
   }
-  (SM_INDEXPTRS_S(solver_data->model_data.J_rxn))[i_col] = i_elem;
+  for (unsigned int i_elem = 0; i_elem < n_jac_elem_rxn; ++i_elem) {
+    (SM_DATA_S(solver_data->model_data.J_rxn))[i_elem] = (realtype)0.0;
+    (SM_INDEXVALS_S(solver_data->model_data.J_rxn))[i_elem] =
+        jacobian_row_index(solver_data->jac, i_elem);
+  }
 
   // Build the set of time derivative ids
   int *deriv_ids = (int *)malloc(sizeof(int) * n_state_var);
@@ -2115,62 +2090,43 @@ SUNMatrix get_jac_init(SolverData *solver_data) {
     exit(EXIT_FAILURE);
   }
   int i_dep_var = 0;
-  for (int i_spec = 0; i_spec < n_state_var; i_spec++)
+  for (int i_spec = 0; i_spec < n_state_var; i_spec++) {
     if (solver_data->model_data.var_type[i_spec] == CHEM_SPEC_VARIABLE) {
       deriv_ids[i_spec] = i_dep_var++;
     } else {
       deriv_ids[i_spec] = -1;
     }
-
-  // Build the set of Jacobian ids
-  int **jac_ids_rxn = (int **)jac_struct_rxn;
-  for (int i_ind = 0, i_jac_elem_rxn = 0; i_ind < n_state_var; i_ind++)
-    for (int i_dep = 0; i_dep < n_state_var; i_dep++)
-      if (jac_struct_rxn[i_dep][i_ind] == true) {
-        jac_ids_rxn[i_dep][i_ind] = i_jac_elem_rxn++;
-      } else {
-        jac_ids_rxn[i_dep][i_ind] = -1;
-      }
+  }
 
   // Update the ids in the reaction data
-  rxn_update_ids(&(solver_data->model_data), deriv_ids, jac_ids_rxn);
+  rxn_update_ids(&(solver_data->model_data), deriv_ids, solver_data->jac);
 
   ////////////////////////////////////////////////////////////////////////
   // Get the Jacobian elements used in sub model parameter calculations //
   ////////////////////////////////////////////////////////////////////////
 
-  // Set up the 2D array of flags
-  jac_struct_param = (bool **)malloc(sizeof(int *) * n_state_var);
-  if (jac_struct_param == NULL) {
-    printf("\n\nERROR allocating space for jacobian structure array\n\n");
+  // Initialize the Jacobian for sub-model parameters
+  Jacobian param_jac;
+  if (jacobian_initialize_empty(&param_jac, (unsigned int)n_state_var) != 1) {
+    printf("\n\nERROR allocating sub-model Jacobian structure\n\n");
     exit(EXIT_FAILURE);
   }
-  for (int i_spec = 0; i_spec < n_state_var; i_spec++) {
-    jac_struct_param[i_spec] = (bool *)malloc(sizeof(int) * n_state_var);
-    if (jac_struct_param[i_spec] == NULL) {
-      printf(
-          "\n\nERROR allocating space for jacobian structure array "
-          "row %d\n\n",
-          i_spec);
-      exit(EXIT_FAILURE);
-    }
-    for (int j_spec = 0; j_spec < n_state_var; j_spec++)
-      jac_struct_param[i_spec][j_spec] = false;
-  }
-  // Set up a dummy param at the first position
-  jac_struct_param[0][0] = true;
+
+  // Set up a dummy element at the first position
+  jacobian_register_element(&param_jac, 0, 0);
 
   // Fill in the 2D array of flags with Jacobian elements used by the
   // mechanism sub models
-  sub_model_get_used_jac_elem(&(solver_data->model_data), jac_struct_param);
+  sub_model_get_used_jac_elem(&(solver_data->model_data), &param_jac);
 
-  // Determine the number of non-zero Jacobian elements
-  n_jac_elem_param = 0;
-  for (int i = 0; i < n_state_var; i++)
-    for (int j = 0; j < n_state_var; j++)
-      if (jac_struct_param[i][j] == true) ++n_jac_elem_param;
+  // Build the sparse Jacobian for sub-model parameters
+  if (jacobian_build_matrix(&param_jac) != 1) {
+    printf("\n\nERROR building sparse Jacobian for sub-model parameters\n\n");
+    exit(EXIT_FAILURE);
+  }
 
   // Save the number of sub model Jacobian elements per grid cell
+  n_jac_elem_param = jacobian_number_of_elements(param_jac);
   solver_data->model_data.n_per_cell_param_jac_elem = (int)n_jac_elem_param;
 
   // Set up the parameter Jacobian (sized for one grid cell)
@@ -2181,54 +2137,28 @@ SUNMatrix get_jac_init(SolverData *solver_data) {
       SUNSparseMatrix(n_state_var, n_state_var, n_jac_elem_param, CSC_MAT);
 
   // Set the column and row indices
-  i_col = 0, i_elem = 0;
-  for (int i = 0; i < n_state_var; i++) {
-    (SM_INDEXPTRS_S(solver_data->model_data.J_params))[i_col] = i_elem;
-    for (int j = 0, i_row = 0; j < n_state_var; j++) {
-      if (jac_struct_param[j][i] == true || (i == 0 && j == 0)) {
-        (SM_DATA_S(solver_data->model_data.J_params))[i_elem] = (realtype)0.0;
-        (SM_INDEXVALS_S(solver_data->model_data.J_params))[i_elem++] = i_row;
-      }
-      i_row++;
-    }
-    i_col++;
+  for (unsigned int i_col = 0; i_col <= n_state_var; ++i_col) {
+    (SM_INDEXPTRS_S(solver_data->model_data.J_params))[i_col] =
+        jacobian_column_pointer_value(param_jac, i_col);
   }
-  (SM_INDEXPTRS_S(solver_data->model_data.J_params))[i_col] = i_elem;
-
-  // Build the set of Jacobian ids
-  int **jac_ids_param = (int **)jac_struct_param;
-  for (int i_ind = 0, i_jac_elem_param = 0; i_ind < n_state_var; i_ind++)
-    for (int i_dep = 0; i_dep < n_state_var; i_dep++)
-      if (jac_struct_param[i_dep][i_ind] == true) {
-        jac_ids_param[i_dep][i_ind] = i_jac_elem_param++;
-      } else {
-        jac_ids_param[i_dep][i_ind] = -1;
-      }
+  for (unsigned int i_elem = 0; i_elem < n_jac_elem_param; ++i_elem) {
+    (SM_DATA_S(solver_data->model_data.J_params))[i_elem] = (realtype)0.0;
+    (SM_INDEXVALS_S(solver_data->model_data.J_params))[i_elem] =
+        jacobian_row_index(param_jac, i_elem);
+  }
 
   // Update the ids in the sub model data
-  sub_model_update_ids(&(solver_data->model_data), deriv_ids, jac_ids_param);
+  sub_model_update_ids(&(solver_data->model_data), deriv_ids, param_jac);
 
   ////////////////////////////////
   // Set up the solver Jacobian //
   ////////////////////////////////
 
-  // Set up the 2D array of flags
-  jac_struct_solver = (bool **)malloc(sizeof(int *) * n_state_var);
-  if (jac_struct_solver == NULL) {
-    printf("\n\nERROR allocating space for jacobian structure array\n\n");
+  // Initialize the Jacobian for sub-model parameters
+  Jacobian solver_jac;
+  if (jacobian_initialize_empty(&solver_jac, (unsigned int)n_state_var) != 1) {
+    printf("\n\nERROR allocating solver Jacobian structure\n\n");
     exit(EXIT_FAILURE);
-  }
-  for (int i_spec = 0; i_spec < n_state_var; i_spec++) {
-    jac_struct_solver[i_spec] = (bool *)malloc(sizeof(int) * n_state_var);
-    if (jac_struct_solver[i_spec] == NULL) {
-      printf(
-          "\n\nERROR allocating space for jacobian structure array "
-          "row %d\n\n",
-          i_spec);
-      exit(EXIT_FAILURE);
-    }
-    for (int j_spec = 0; j_spec < n_state_var; j_spec++)
-      jac_struct_solver[i_spec][j_spec] = false;
   }
 
   // Determine the structure of the solver Jacobian and number of mapped values
@@ -2238,12 +2168,12 @@ SUNMatrix get_jac_init(SolverData *solver_data) {
       // skip dependent species that are not solver variables and
       // depenedent species that aren't used by any reaction
       if (solver_data->model_data.var_type[i_dep] != CHEM_SPEC_VARIABLE ||
-          jac_ids_rxn[i_dep][i_ind] == -1)
+          jacobian_get_element_id(solver_data->jac, i_dep, i_ind) == -1)
         continue;
       // If both elements are variable, use the rxn Jacobian only
       if (solver_data->model_data.var_type[i_ind] == CHEM_SPEC_VARIABLE &&
           solver_data->model_data.var_type[i_dep] == CHEM_SPEC_VARIABLE) {
-        jac_struct_solver[i_dep][i_ind] = true;
+        jacobian_register_element(&solver_jac, i_dep, i_ind);
         ++n_mapped_values;
         continue;
       }
@@ -2251,63 +2181,55 @@ SUNMatrix get_jac_init(SolverData *solver_data) {
       /// \todo Make the Jacobian mapping recursive for sub model parameters
       ///       that depend on other sub model parameters
       for (int j_ind = 0; j_ind < n_state_var; ++j_ind) {
-        if (jac_ids_param[i_ind][j_ind] >= 0 &&
+        if (jacobian_get_element_id(param_jac, i_ind, j_ind) != -1 &&
             solver_data->model_data.var_type[j_ind] == CHEM_SPEC_VARIABLE) {
-          jac_struct_solver[i_dep][j_ind] = true;
+          jacobian_register_element(&solver_jac, i_dep, j_ind);
           ++n_mapped_values;
         }
       }
     }
   }
 
-  // Determine the number of non-zero Jacobian elements
-  n_jac_elem_solver = 0;
-  for (int i = 0; i < n_state_var; i++)
-    for (int j = 0; j < n_state_var; j++)
-      if (jac_struct_solver[i][j] == true) ++n_jac_elem_solver;
+  // Build the sparse solver Jacobian
+  if (jacobian_build_matrix(&solver_jac) != 1) {
+    printf("\n\nERROR building sparse Jacobian for the solver\n\n");
+    exit(EXIT_FAILURE);
+  }
 
-  // Save the number of solver Jacobian elements per grid cell
+  // Save the number of non-zero Jacobian elements
+  n_jac_elem_solver = jacobian_number_of_elements(solver_jac);
   solver_data->model_data.n_per_cell_solver_jac_elem = (int)n_jac_elem_solver;
 
-  // Initialize the sparse matrix (for full state array)
+  // Initialize the sparse matrix (for solver state array including all cells)
   SUNMatrix M = SUNSparseMatrix(n_dep_var_total, n_dep_var_total,
                                 n_jac_elem_solver * n_cells, CSC_MAT);
   solver_data->model_data.J_solver = SUNSparseMatrix(
       n_dep_var_total, n_dep_var_total, n_jac_elem_solver * n_cells, CSC_MAT);
 
   // Set the column and row indices
-  i_col = 0, i_elem = 0;
-  for (int i_cell = 0; i_cell < n_cells; i_cell++) {
-    for (int i = 0; i < n_state_var; i++) {
-      if (solver_data->model_data.var_type[i] != CHEM_SPEC_VARIABLE) continue;
-      (SM_INDEXPTRS_S(M))[i_col] = i_elem;
-      (SM_INDEXPTRS_S(solver_data->model_data.J_solver))[i_col] = i_elem;
-      for (int j = 0, i_row = 0; j < n_state_var; j++) {
-        if (solver_data->model_data.var_type[j] != CHEM_SPEC_VARIABLE) continue;
-        if (jac_struct_solver[j][i] == true) {
-          (SM_DATA_S(M))[i_elem] = (realtype)0.0;
+  for (unsigned int i_cell = 0; i_cell < n_cells; ++i_cell) {
+    for (unsigned int cell_col = 0; cell_col < n_state_var; ++cell_col) {
+      if (deriv_ids[cell_col] == -1) continue;
+      unsigned int i_col = deriv_ids[cell_col] + i_cell * n_dep_var;
+      (SM_INDEXPTRS_S(M))[i_col] =
+          (SM_INDEXPTRS_S(solver_data->model_data.J_solver))[i_col] =
+              jacobian_column_pointer_value(solver_jac, cell_col) +
+              i_cell * n_jac_elem_solver;
+    }
+    for (unsigned int cell_elem = 0; cell_elem < n_jac_elem_solver;
+         ++cell_elem) {
+      unsigned int i_elem = cell_elem + i_cell * n_jac_elem_solver;
+      (SM_DATA_S(M))[i_elem] =
           (SM_DATA_S(solver_data->model_data.J_solver))[i_elem] = (realtype)0.0;
-          (SM_INDEXVALS_S(M))[i_elem] = i_row + n_dep_var * i_cell;
-          (SM_INDEXVALS_S(solver_data->model_data.J_solver))[i_elem++] =
-              i_row + n_dep_var * i_cell;
-        }
-        i_row++;
-      }
-      i_col++;
+      (SM_INDEXVALS_S(M))[i_elem] =
+          (SM_INDEXVALS_S(solver_data->model_data.J_solver))[i_elem] =
+              deriv_ids[jacobian_row_index(solver_jac, cell_elem)] +
+              i_cell * n_dep_var;
     }
   }
-  (SM_INDEXPTRS_S(M))[i_col] = i_elem;
-  (SM_INDEXPTRS_S(solver_data->model_data.J_solver))[i_col] = i_elem;
-
-  // Build the set of Jacobian ids
-  int **jac_ids_solver = (int **)jac_struct_solver;
-  for (int i_ind = 0, i_jac_elem_solver = 0; i_ind < n_state_var; i_ind++)
-    for (int i_dep = 0; i_dep < n_state_var; i_dep++)
-      if (jac_struct_solver[i_dep][i_ind] == true) {
-        jac_ids_solver[i_dep][i_ind] = i_jac_elem_solver++;
-      } else {
-        jac_ids_solver[i_dep][i_ind] = -1;
-      }
+  (SM_INDEXPTRS_S(M))[n_cells * n_dep_var] =
+      (SM_INDEXPTRS_S(solver_data->model_data.J_solver))[n_cells * n_dep_var] =
+          n_cells * n_jac_elem_solver;
 
   // Allocate space for the map
   solver_data->model_data.n_mapped_values = n_mapped_values;
@@ -2322,18 +2244,23 @@ SUNMatrix get_jac_init(SolverData *solver_data) {
   // Set map indices (when no sub-model value is used, the param_id is
   // set to 0 which maps to a fixed value of 1.0
   int i_mapped_value = 0;
-  for (int i_ind = 0; i_ind < n_state_var; ++i_ind) {
-    for (int i_dep = 0; i_dep < n_state_var; ++i_dep) {
+  for (unsigned int i_ind = 0; i_ind < n_state_var; ++i_ind) {
+    for (unsigned int i_elem =
+             jacobian_column_pointer_value(solver_data->jac, i_ind);
+         i_elem < jacobian_column_pointer_value(solver_data->jac, i_ind + 1);
+         ++i_elem) {
+      unsigned int i_dep = jacobian_row_index(solver_data->jac, i_elem);
       // skip dependent species that are not solver variables and
       // depenedent species that aren't used by any reaction
       if (solver_data->model_data.var_type[i_dep] != CHEM_SPEC_VARIABLE ||
-          jac_ids_rxn[i_dep][i_ind] == -1)
+          jacobian_get_element_id(solver_data->jac, i_dep, i_ind) == -1)
         continue;
       // If both elements are variable, use the rxn Jacobian only
       if (solver_data->model_data.var_type[i_ind] == CHEM_SPEC_VARIABLE &&
           solver_data->model_data.var_type[i_dep] == CHEM_SPEC_VARIABLE) {
-        map[i_mapped_value].solver_id = jac_struct_solver[i_dep][i_ind];
-        map[i_mapped_value].rxn_id = jac_struct_rxn[i_dep][i_ind];
+        map[i_mapped_value].solver_id =
+            jacobian_get_element_id(solver_jac, i_dep, i_ind);
+        map[i_mapped_value].rxn_id = i_elem;
         map[i_mapped_value].param_id = 0;
         ++i_mapped_value;
         continue;
@@ -2341,11 +2268,13 @@ SUNMatrix get_jac_init(SolverData *solver_data) {
       // Check the sub model Jacobian for remaining conditions
       // (variable dependent species; independent parameter from sub model)
       for (int j_ind = 0; j_ind < n_state_var; ++j_ind) {
-        if (jac_ids_param[i_ind][j_ind] >= 0 &&
+        if (jacobian_get_element_id(param_jac, i_ind, j_ind) != -1 &&
             solver_data->model_data.var_type[j_ind] == CHEM_SPEC_VARIABLE) {
-          map[i_mapped_value].solver_id = jac_struct_solver[i_dep][j_ind];
-          map[i_mapped_value].rxn_id = jac_struct_rxn[i_dep][i_ind];
-          map[i_mapped_value].param_id = jac_struct_param[i_ind][j_ind];
+          map[i_mapped_value].solver_id =
+              jacobian_get_element_id(solver_jac, i_dep, j_ind);
+          map[i_mapped_value].rxn_id = i_elem;
+          map[i_mapped_value].param_id =
+              jacobian_get_element_id(param_jac, i_ind, j_ind);
           ++i_mapped_value;
         }
       }
@@ -2393,15 +2322,8 @@ SUNMatrix get_jac_init(SolverData *solver_data) {
 #endif
 
   // Free the memory used
-  for (int i_spec = 0; i_spec < n_state_var; i_spec++)
-    free(jac_struct_rxn[i_spec]);
-  free(jac_struct_rxn);
-  for (int i_spec = 0; i_spec < n_state_var; i_spec++)
-    free(jac_struct_param[i_spec]);
-  free(jac_struct_param);
-  for (int i_spec = 0; i_spec < n_state_var; i_spec++)
-    free(jac_struct_solver[i_spec]);
-  free(jac_struct_solver);
+  jacobian_free(&param_jac);
+  jacobian_free(&solver_jac);
   free(deriv_ids);
 
   return M;
@@ -2623,7 +2545,7 @@ void solver_free(void *solver_data) {
   time_derivative_free(sd->time_deriv);
 
   // free the Jacobian
-  jacobian_free(sd->jac);
+  jacobian_free(&(sd->jac));
 
   // free the derivative vectors
   N_VDestroy(sd->y);

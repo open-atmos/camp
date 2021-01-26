@@ -34,7 +34,7 @@ program mock_monarch
   !> Number of total species in mock MONARCH
   integer, parameter :: NUM_MONARCH_SPEC = 300 !800
   !> Number of vertical cells in mock MONARCH
-  integer, parameter :: NUM_VERT_CELLS = 100
+  integer, parameter :: NUM_VERT_CELLS = 1
   !> Starting W-E cell for camp-chem call
   integer, parameter :: I_W = 1
   !> Ending W-E cell for camp-chem call
@@ -54,7 +54,7 @@ program mock_monarch
   !> Time step (min)
   real, parameter :: TIME_STEP = 3.!2. !3. = monarch dt
   !> Number of time steps to integrate over
-  integer, parameter :: NUM_TIME_STEP = 1!720!180
+  integer, parameter :: NUM_TIME_STEP = 180!720!180
   !> Index for water vapor in water_conc()
   integer, parameter :: WATER_VAPOR_ID = 5
   !> Start time
@@ -277,7 +277,7 @@ program mock_monarch
     call pmc_interface%get_init_conc(species_conc, water_conc, WATER_VAPOR_ID, &
             air_density,i_W,I_E,I_S,I_N)
 
-#ifdef IMPORT_CAMP_INPUT
+#ifndef IMPORT_CAMP_INPUT
     call import_camp_input(pmc_interface)
 #endif
 
@@ -540,10 +540,15 @@ contains
 
     !open(IMPORT_FILE_UNIT, file="exports/camp_input.txt", status="old")!default test monarch input
     open(IMPORT_FILE_UNIT, file="exports/camp_input_18.txt", status="old") !monarch
+    !open(IMPORT_FILE_UNIT, file="exports/camp_input_322.txt", status="old") !monarch
 
     !print*,species_conc(:,:,:,:)
 
     write(*,*) "Importing concentrations"
+
+    if(n_cells.gt.1) then
+      print*, "ERROR: Import can only handle data from 1 cell, set n_cells to 1"
+    end if
 
     read(IMPORT_FILE_UNIT,*) (pmc_interface%camp_state%state_var(&
             i),i=1,size(pmc_interface%camp_state%state_var))

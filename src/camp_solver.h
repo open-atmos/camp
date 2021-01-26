@@ -48,7 +48,9 @@ void model_free(ModelData model_data);
 #ifdef PMC_USE_SUNDIALS
 /* Functions called by the solver */
 int f(realtype t, N_Vector y, N_Vector deriv, void *model_data);
+#ifdef PMC_USE_GPU
 int f_gpu(realtype t, N_Vector y, N_Vector deriv, void *model_data);
+#endif
 int Jac(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *model_data,
         N_Vector tmp1, N_Vector tmp2, N_Vector tmp3);
 int guess_helper(const realtype t_n, const realtype h_n, N_Vector y_n,
