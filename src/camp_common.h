@@ -213,8 +213,8 @@ typedef struct {
   int n_sub_model_env_data;      // Number of sub model environmental parameters
                                  // from all sub models
 
-#ifdef DEBUG_RXN
-  int counterMD;
+#ifndef DEBUG_RXN
+  int counterPhoto;
 #endif
 
 

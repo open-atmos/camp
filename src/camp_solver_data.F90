@@ -415,7 +415,7 @@ module pmc_camp_solver_data
     !> Reset the solver function timers
     procedure, private :: reset_timers
     !> Get the solver statistics from the last run
-    procedure, private :: get_solver_stats
+    procedure:: get_solver_stats
     !> Checks whether a solver is available
     procedure :: is_solver_available
     !> Print the solver data
@@ -872,7 +872,7 @@ contains
     integer, intent(in) :: n_cells
     integer :: i
 
-    !TODO: Improve this to consider different update_rates
+    !TODO: Improve this to consider different update_rates (like monarch multicells case)
 
     !call rxn_update_data( &
     !        update_data%get_cell_id()-1,     & ! Grid cell to update
@@ -928,7 +928,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Solve the mechanism(s) for a specified timestep
-  subroutine solve(this, camp_state, t_initial, t_final, n_cells, solver_stats)
+  function solve(this, camp_state, t_initial, t_final, n_cells, solver_stats) result (solver_status)
 
     !> Solver data
     class(camp_solver_data_t), intent(inout) :: this
@@ -986,17 +986,7 @@ contains
             n_cells&
             )
 
-    ! Get the solver statistics
-    if (present(solver_stats)) then
-      call this%get_solver_stats( solver_stats )
-      solver_stats%status_code   = solver_status
-      solver_stats%start_time__s = t_initial
-      solver_stats%end_time__s   = t_final
-    else
-      call warn_assert_msg(997420005, solver_status.eq.0, "Solver failed")
-    end if
-
-  end subroutine solve
+  end function solve
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 

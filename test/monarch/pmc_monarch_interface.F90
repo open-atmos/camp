@@ -314,7 +314,9 @@ contains
     if(this%interface_input_file.eq."interface_monarch_cb05_soa.json") then
       ! Set the photolysis rates
       !todo set photo_rates for MPI ranks > 0
+
       do i_photo_rxn = 1, this%n_photo_rxn
+
         call this%photo_rxns(i_photo_rxn)%set_rate(real(this%base_rates(i_photo_rxn), kind=dp))
         !call this%photo_rxns(i_photo_rxn)%set_rate(real(0.01, kind=dp))
         call this%camp_core%update_data(this%photo_rxns(i_photo_rxn))
@@ -561,6 +563,7 @@ contains
           end if
 #endif
 
+            !print*, "water_conc: id, value", this%gas_phase_water_id, water_conc(i,j,k_flip,water_vapor_index)
             !print*, "state", this%camp_state%state_var(:)
 
             if(this%interface_input_file.eq."interface_monarch_cb05_soa.json") then
@@ -937,7 +940,8 @@ end if
     real(kind=dp) :: rate_val
     type(string_t), allocatable :: spec_names(:)
 
-    if(this%interface_input_file.eq."interface_monarch_cb05_soa.json") then
+    if(this%interface_input_file.eq."interface_monarch_cb05_soa.json" &
+      .or. this%interface_input_file.eq."interface_monarch_cb05.json") then
 
 #ifdef PMC_USE_MPI
     !if (pmc_mpi_rank().eq.0) then

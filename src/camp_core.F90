@@ -1446,6 +1446,18 @@ contains
     type(solver_stats_t), intent(inout), optional, target :: solver_stats
     integer, intent(in), optional :: n_cells
     integer :: n_cells_aux
+    integer(kind=c_int) :: solver_status
+    real(kind=dp) :: t_initial
+    real(kind=dp) :: t_final
+
+#ifdef EXPORT_CAMP_INPUT
+    type(json_core) :: json
+    type(json_value),pointer :: p, state_var, photo_rates
+    character(len=:), allocatable :: export_path, spec_name
+    integer :: mpi_rank, i
+    character(len=128) :: mpi_rank_str, i_str
+    type(string_t), allocatable :: spec_names(:)
+#endif
 
     ! Phase to solve
     integer(kind=i_kind) :: phase
@@ -1490,12 +1502,95 @@ contains
     ! Make sure the requested solver was loaded
     call assert_msg(730097030, associated(solver), "Invalid solver requested")
 
+    t_initial = real(0.0, kind=dp)
+    t_final = time_step
+
+#ifdef EXPORT_CAMP_INPUT
+
+    call json%initialize()
+
+    ! initialize the structure:
+    call json%create_object(p,'')
+    call json%add(p, "dt", t_final-t_initial)
+    call json%add(p, "temperature", camp_state%env_var(1))
+    call json%add(p, "pressure", camp_state%env_var(2))
+    call json%create_object(state_var,'state_var')
+
+
+    !todo set names to other ranks than 0
+    if (pmc_mpi_rank().eq.0) then
+      spec_names = this%unique_names()
+      do i=1, size(spec_names)
+        spec_name = spec_names(i)%string
+        call json%add(state_var, spec_name, camp_state%state_var(i))
+      end do
+    else
+      !do i=1, size(spec_names)
+      !  write(i_str,*) i
+      !  i_str=adjustl(i_str)
+      !  call json%add(state_var, i_str, camp_state%state_var(i))
+      !end do
+    end if
+    nullify(state_var)
+
+#ifdef COMMENTING
+    do i=1, size(photo_rates)
+      spec_name = spec_names(i)%string
+      RATE_CONSTANT_ = SCALING_ * BASE_RATE_;
+      call json%add(photo_rates, spec_name, camp_state%state_var(i))
+    end do
+    nullify(photo_rates)
+
+
+    ! add an "inputs" object to the structure:
+    call json%create_object(inp,'inputs')
+    call json%add(p, inp) !add it to the root
+
+    ! add some data to inputs:
+    call json%add(inp, 't0', 0.1d0)
+    call json%add(inp, 'tf', 1.1d0)
+    call json%add(inp, 'x0', 9999.0000d0)
+    call json%add(inp, 'integer_scalar', 787)
+    call json%add(inp, 'integer_array', [2,4,99])
+    call json%add(inp, 'names', ['aaa','bbb','ccc'])
+    call json%add(inp, 'logical_scalar', .true.)
+    call json%add(inp, 'logical_vector', [.true., .false., .true.])
+    nullify(inp)
+#endif
+
+#ifdef PMC_USE_MPI
+    mpi_rank = pmc_mpi_rank()
+
+    write(mpi_rank_str,*) mpi_rank
+    mpi_rank_str=adjustl(mpi_rank_str)
+
+    export_path = "/gpfs/scratch/bsc32/bsc32815/a2s8/nmmb-monarch/MODEL/"&
+            //"SRC_LIBS/partmc/test/monarch/exports/camp_input"&
+            //mpi_rank_str//".json"
+#else
+    export_path = "/gpfs/scratch/bsc32/bsc32815/a2s8/nmmb-monarch/MODEL/"&
+            //"SRC_LIBS/partmc/test/monarch/exports/camp_input/config.json"
+#endif
+    call json%print(p,export_path)
+
+    !cleanup:
+    call json%destroy(p)
+    if (json%failed()) stop 1
+
+#endif
+
     ! Run the integration
     if (present(solver_stats)) then
-      call solver%solve(camp_state, real(0.0, kind=dp), time_step,          &
-              n_cells_aux, solver_stats)!this%n_cells
+      solver_status = solver%solve(camp_state, t_initial, t_final,    &
+              n_cells_aux, solver_stats)
+
+      call solver%get_solver_stats( solver_stats )
+      solver_stats%status_code   = solver_status
+      solver_stats%start_time__s = t_initial
+      solver_stats%end_time__s   = t_final
     else
-      call solver%solve(camp_state, real(0.0, kind=dp), time_step, n_cells_aux)
+      solver_status = solver%solve(camp_state, t_initial, t_final, n_cells_aux)
+      call warn_assert_msg(997420005, solver_status.eq.0, "Solver failed")
     end if
 
   end subroutine solve

@@ -53,7 +53,7 @@
 #define CAMP_SOLVER_SUCCESS 0
 #define CAMP_SOLVER_FAIL 1
 
-#define MPI_RANK0 0
+#define MPI_RANK_DEBUG 0
 
 /** \brief Get a new solver object
  *
@@ -370,8 +370,8 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
   if (sd->debug_out) print_data_sizes(&(sd->model_data));
 #endif
 
-#ifdef DEBUG_RXN
-  sd->model_data.counterMD = 0;
+#ifndef DEBUG_RXN
+  sd->model_data.counterPhoto = 0;
 #endif
 
 #ifdef PMC_DEBUG_GPU
@@ -384,14 +384,6 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
   sd->timeCVodeTotal = 0.0;
   sd->timeDerivCPU = 0.0;
   sd->timeJacCPU = 0.0;
-#ifdef PMC_USE_MPI
-  int rank = 0;
-  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  if (rank == 411 || rank == 999) {
-    printf("Rank %d, n_dep_var %d, n_state_var %d, n_rxn %d, n_cells %d\n",
-           rank, n_dep_var, n_state_var, n_rxn, n_cells);
-  }
-#endif
 #endif
 
   // todo optimize, use for only rank 0 or debug flag
@@ -409,7 +401,7 @@ void solver_set_spec_name(void *solver_data, char *spec_name,
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);  // ok its not comm_world :/
   // I have to send de comm to camp_core and only call this funct in that case
   // and i guess it will work then?
-  if (rank == MPI_RANK0) {
+  if (rank == MPI_RANK_DEBUG) {
     // printf("%d aaa", size_spec_name);
     SolverData *sd;
     sd = (SolverData *)solver_data;
@@ -642,21 +634,20 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
     n_cells = sd->model_data.n_cells;
 #endif
 
-    // todo consider multicells different sizes (Reallocate y, deriv and Jacs
+    // todo consider multicells different sizes (Reallocate y, deriv and Jacs)
     // with new n_cells, or create new ones and deallocate later)
   }
 
 #endif
 
-/*
-  #ifdef PMC_DEBUG_GPU
+#ifdef PMC_DEBUG_GPU
   #ifdef PMC_USE_MPI
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    if (rank==18 || rank==0)
+    if (rank==18 || rank==0 )
   #endif
-    if (sd->counterSolve==0)
+    if (sd->counterSolve==0 && sd->counterFail==0)
     {
-      int n_cell=2;
+      int n_cell=1;
       printf("Rank %d t_initial %-le t_final %-le\n",rank,t_initial,t_final);
       printf("camp solver_run start [(id),conc], n_state_var %d, n_cells %d\n", md->n_per_cell_state_var, n_cells);
       for (int i = 0; i < md->n_per_cell_state_var*n_cell; i++) {
@@ -668,7 +659,6 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
         printf("%-le, %-le\n", env[0+2*i], env[1+2*i]);
     }
   #endif
-*/
 
   // Update the dependent variables
   int i_dep_var = 0;
@@ -694,18 +684,18 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
 #ifdef PMC_DEBUG_GPU
   // Save initial state
   double init_state[md->n_per_cell_state_var * n_cells];
-  if (sd->counterSolve == 0)
+  if (sd->counterFail==0)
     for (int i = 0; i < md->n_per_cell_state_var * n_cells; i++) {
       init_state[i] = state[i];
     }
 #endif
 #endif
-
+/*
 #ifdef PMC_DEBUG_GPU
 #ifdef PMC_USE_MPI
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  if (rank == 18 || rank == 999) {
-    if (sd->counterSolve == 0) {
+  if (rank == 999 || rank == 999) {
+    if (sd->counterSolve == 0 ) {
       printf("After set y (deriv), iter %d rank %d...\n", sd->counterDerivCPU,
              rank);
       print_derivative(sd->y);
@@ -713,6 +703,7 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
   }
 #endif
 #endif
+ */
 
 #ifdef PMC_DEBUG
   // Update the debug output flag in CVODES and the linear solver
@@ -837,15 +828,16 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
         // printf("CAMP_SOLVER_FAIL %d counterSolve:%d counterDerivCPU:%d
         // rank:%d\n",flag,sd->counterSolve,sd->counterDerivCPU,rank);
       }
+
+      sd->counterFail++;
+
 #ifdef EXPORT_CAMP_INPUT
 #ifdef PMC_DEBUG_GPU
-      // todo export SAVED input camp_state, not last from cvode
-      if (sd->counterFail == 0)  // if(rank==154)
-                                 // export_camp_input(sd, init_state, "");
+      if (sd->counterFail == 1)
+        export_camp_input(sd, init_state, "");
 #endif
 #endif
 
-        sd->counterFail++;
 #endif
       return CAMP_SOLVER_FAIL;
     }
@@ -1706,7 +1698,7 @@ int Jac(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_data,
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   // if (rank>=0)
-  if (rank == 411 || rank == 999) {
+  if (rank == 999 || rank == 999) {
     if (sd->counterJacCPU < 0) {
       printf("Rank %d deriv iter %d jac iter %d counterSolve %d", rank,
              sd->counterDerivCPU, sd->counterJacCPU, sd->counterSolve);
@@ -2295,7 +2287,7 @@ SUNMatrix get_jac_init(SolverData *solver_data) {
 #ifdef PMC_USE_MPI
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  if (rank == MPI_RANK0) {
+  if (rank == MPI_RANK_DEBUG) {
     pmc_debug_print_jac_rel(sd, sd->model_data.J_rxn, "RXN relations");
   }
 #endif

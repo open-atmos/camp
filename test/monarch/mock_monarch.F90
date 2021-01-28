@@ -482,7 +482,7 @@ contains
       pressure(:,:,:) = 94165.7187500000
       air_density(:,:,:) = 1.225
       conv=0.02897/air_density(1,1,1)*(TIME_STEP*60.)*1e6/height !units of time_step to seconds
-      water_conc(:,:,:,WATER_VAPOR_ID) = 0.01
+      water_conc(:,:,:,WATER_VAPOR_ID) = 1.555555555!0.01
 
       !Initialize different axis values
       !Species_conc is modified in monarch_interface%get_init_conc
@@ -579,9 +579,19 @@ contains
     read(IMPORT_FILE_UNIT,*) (pmc_interface%base_rates(&
             i),i=1,pmc_interface%n_photo_rxn)
 
+    write(*,*) pmc_interface%n_photo_rxn
     do i_photo_rxn = 1, pmc_interface%n_photo_rxn
+
+      if (pmc_mpi_rank().eq.1) then
+        pmc_interface%base_rates(i_photo_rxn) = pmc_interface%base_rates(i_photo_rxn)+0.01
+        write(*,*), "rates",i_photo_rxn, pmc_interface%base_rates(i_photo_rxn)
+      end if
+      !write(*,*), "rates",i_photo_rxn, pmc_interface%base_rates(i_photo_rxn)
+
       call pmc_interface%photo_rxns(i_photo_rxn)%set_rate(real(pmc_interface%base_rates(i_photo_rxn), kind=dp))
+      !call pmc_interface%photo_rxns(i_photo_rxn)%set_rate(real(0.0, kind=dp)) !works
       call pmc_interface%camp_core%update_data(pmc_interface%photo_rxns(i_photo_rxn))
+
       !print*,"id photo_rate", pmc_interface%base_rates(i_photo_rxn)
     end do
 
@@ -681,7 +691,7 @@ contains
 
     write(file_unit, *) ""
 
-    !todo include water_conc with species_conc
+    !todo include water_conc with species_conc to easy access
     !write(RESULTS_FILE_UNIT, *) curr_time, &
     !        species_conc(1,1,1,START_CAMP_ID:END_CAMP_ID), &
     !        water_conc(1,1,1,WATER_VAPOR_ID)
