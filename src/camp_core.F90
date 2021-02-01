@@ -1548,7 +1548,6 @@ contains
     t_final = time_step
 
 #ifndef EXPORT_CAMP_INPUT
-    print*,"hola4"
     allocate(this%init_state_var(size(camp_state%state_var)))
     this%init_state_var(:)=camp_state%state_var(:)
 #endif
@@ -1576,8 +1575,8 @@ contains
     !todo set names to other ranks than 0
 
     !if(1) then
-    if (this%counterSolve.eq.1) then
-    !if (pmc_mpi_rank().eq.1 .and. this%counterSolve.eq.1) then
+    !if (this%counterSolve.eq.1) then
+    if (pmc_mpi_rank().eq.18 .and. this%counterSolve.eq.1) then
 
     call json%initialize()
 
@@ -1586,55 +1585,30 @@ contains
     call json%add(p, "dt", t_final-t_initial)
     call json%add(p, "temperature", camp_state%env_var(1))
     call json%add(p, "pressure", camp_state%env_var(2))
+
+
     call json%create_object(state_var,'state_var')
-
     call json%add(p, state_var)
-    !spec_names = this%unique_names()
-    !print*,"camp_core spec_name, state_var, rank", pmc_mpi_rank()
-
     do i=1, size(this%spec_names)
-      !spec_name = spec_names(i)%string
-      !call json%add(state_var, spec_name, camp_state%state_var(i))
       call json%add(state_var, this%spec_names(i)%string, this%init_state_var(i))
-      print*,pmc_mpi_rank(),this%spec_names(i)%string,camp_state%state_var(i)
     end do
     nullify(state_var)
 
-    print*,"hola"
 
-    allocate(base_rate(25))
+    !todo test in monarch
+    if(.not.allocated(base_rate)) then
+      allocate(base_rate(25))
+    end if
     call solver%get_base_rate(base_rate)
-    print*, "rateees",base_rate(:)
+    call json%create_object(photo_rates,'photo_rates')
+    call json%add(p, photo_rates)
     do i=1, size(base_rate)
       write(i_str,*) i
       i_str=adjustl(i_str)
-      call json%add(state_var, trim(i_str), base_rate(i))
-    end do
-
-#ifdef COMMENTING
-    do i=1, size(photo_rates)
-      spec_name = spec_names(i)%string
-      RATE_CONSTANT_ = SCALING_ * BASE_RATE_;
-      call json%add(photo_rates, spec_name, camp_state%state_var(i))
+      call json%add(photo_rates, trim(i_str), base_rate(i))
+      print*, base_rate(i)
     end do
     nullify(photo_rates)
-
-
-    ! add an "inputs" object to the structure:
-    call json%create_object(inp,'inputs')
-    call json%add(p, inp) !add it to the root
-
-    ! add some data to inputs:
-    call json%add(inp, 't0', 0.1d0)
-    call json%add(inp, 'tf', 1.1d0)
-    call json%add(inp, 'x0', 9999.0000d0)
-    call json%add(inp, 'integer_scalar', 787)
-    call json%add(inp, 'integer_array', [2,4,99])
-    call json%add(inp, 'names', ['aaa','bbb','ccc'])
-    call json%add(inp, 'logical_scalar', .true.)
-    call json%add(inp, 'logical_vector', [.true., .false., .true.])
-    nullify(inp)
-#endif
 
 #ifdef PMC_USE_MPI
     mpi_rank = pmc_mpi_rank()
@@ -1656,6 +1630,9 @@ contains
     if (json%failed()) stop 1
 
     end if
+
+    deallocate(this%init_state_var)
+
 #endif
 
     if (.not.present(solver_stats)) then
@@ -1727,17 +1704,7 @@ contains
 
 #ifndef EXPORT_CAMP_INPUT
 
-    !this%spec_names = this%unique_names()
-
-    !do i=1, size(spec_names)
-      !this%spec_names(i)%string=spec_names(i)%string
-    !end do
-
-    !todo BOTH MPI RANKS CALL THE PACK SIZE WHYY
-    !best option is set same sizes of 128 or something like that... if not,
-    !I would need to send & receive only the sizes and then calculate pack size...
-
-    !allocate(this%spec_names(this%size_state_per_cell*this%n_cells))
+!#ifdef COMMENTING
 
     spec_name=""
     do j=1, max_spec_name_size
@@ -1745,17 +1712,10 @@ contains
     end do
 
     do i=1, this%size_state_per_cell*this%n_cells
-
-      !print*,"spec_name hola1", spec_name
-
-      !pack_size = pack_size + pmc_mpi_pack_size_integer(max_spec_name_size, l_comm)
       pack_size = pack_size + pmc_mpi_pack_size_string(spec_name, l_comm)
-
-      !pack_size = pack_size + pmc_mpi_pack_size_integer(len_trim(this%spec_names(i)%string), l_comm)
-      !pack_size = pack_size + pmc_mpi_pack_size_string(trim(this%spec_names(i)%string), l_comm)
     end do
 
-    print*,"hola0"
+!#endif
 
 #endif
 
@@ -1830,33 +1790,22 @@ contains
 
 #ifndef EXPORT_CAMP_INPUT
 
-    !print*,"hola1", this%spec_names(1)%string, size(this%spec_names)
-
+!#ifdef COMMENTING
 
     allocate(spec_names(this%size_state_per_cell*this%n_cells))
-    print*,"hola1"
-
     this%spec_names = this%unique_names()
 
     do i=1, this%size_state_per_cell*this%n_cells
-
       spec_names(i)%string=trim(this%spec_names(i)%string)
       do j=len(spec_names(i)%string), max_spec_name_size
         spec_names(i)%string=spec_names(i)%string//" "
       end do
 
-      !spec_name = trim(this%spec_names(i)%string)
-      print*,"hola1",spec_name
-      !spec_name=this%spec_names(i)%string
-      !spec_name="hola1"
-
-      !call pmc_mpi_pack_integer(buffer, pos, len(spec_name), l_comm)
-      !call pmc_mpi_pack_string(buffer, pos, spec_name, l_comm)
-      !call pmc_mpi_pack_integer(buffer, pos, len_trim(spec_names(i)%string), l_comm)
       call pmc_mpi_pack_string(buffer, pos, trim(spec_names(i)%string), l_comm)
+
     end do
 
-    print*,"hola1",spec_name
+!#endif
 
 #endif
 
@@ -1936,6 +1885,8 @@ contains
 
 #ifndef EXPORT_CAMP_INPUT
 
+!#ifdef COMMENTING
+
     spec_name=""
     do j=1,max_spec_name_size
       spec_name=spec_name//"a"
@@ -1944,32 +1895,13 @@ contains
     allocate(this%spec_names(this%size_state_per_cell*this%n_cells))
     do i=1, this%size_state_per_cell*this%n_cells
 
-      print*,"hola2"
-      !call pmc_mpi_unpack_integer(buffer, pos, spec_name_size, l_comm)
-      print*, "spec_name_size", spec_name_size
-
-      !spec_name=""
-      !do j=1, spec_name_size
-      !  spec_name=spec_name//"a"
-      !end do
-
-      !spec_name="hola2"
-
-      !spec_names(i)%string=""
-      !do j=1, spec_name_size
-      !  spec_names(i)%string=this%spec_names(i)%string//"a"
-      !end do
-
-      !call pmc_mpi_unpack_string(buffer, pos, spec_name, l_comm)
       call pmc_mpi_unpack_string(buffer, pos, spec_name, l_comm)
-      !print*, "bin_unpack spec_names", this%spec_names(i)%string
-
-      print*, "spec_name hola2", spec_name
       this%spec_names(i)%string = trim(spec_name)
-      print*, "this%spec_names(i)%string hola2", this%spec_names(i)%string
 
     end do
-    print*,"hola"
+
+!#endif
+
 #endif
 
     this%core_is_initialized = .true.
@@ -1983,8 +1915,6 @@ contains
                 this%init_state_cell(i_state_elem)
       end do
     end do
-
-    print*,"hola3"
 
 #endif
 

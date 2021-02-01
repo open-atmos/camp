@@ -54,7 +54,7 @@ program mock_monarch
   !> Time step (min)
   real, parameter :: TIME_STEP = 3.!2. !3. = monarch dt
   !> Number of time steps to integrate over
-  integer, parameter :: NUM_TIME_STEP = 1!720!180
+  integer, parameter :: NUM_TIME_STEP = 2!720!180
   !> Index for water vapor in water_conc()
   integer, parameter :: WATER_VAPOR_ID = 5
   !> Start time
@@ -588,8 +588,8 @@ contains
       !end if
       !write(*,*), "rates",i_photo_rxn, pmc_interface%base_rates(i_photo_rxn)
 
-      !call pmc_interface%photo_rxns(i_photo_rxn)%set_rate(real(pmc_interface%base_rates(i_photo_rxn), kind=dp))
-      call pmc_interface%photo_rxns(i_photo_rxn)%set_rate(real(0.0, kind=dp)) !works
+      call pmc_interface%photo_rxns(i_photo_rxn)%set_rate(real(pmc_interface%base_rates(i_photo_rxn), kind=dp))
+      !call pmc_interface%photo_rxns(i_photo_rxn)%set_rate(real(0.0, kind=dp)) !works
       call pmc_interface%camp_core%update_data(pmc_interface%photo_rxns(i_photo_rxn))
 
       !print*,"id photo_rate", pmc_interface%base_rates(i_photo_rxn)
