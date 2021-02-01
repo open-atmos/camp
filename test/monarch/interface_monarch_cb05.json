@@ -161,7 +161,7 @@
         "DUMMY"   : { "init conc" : 0.0 },
         "O2"      : { "init conc" : 2.095E+05 },
         "H2O"     : { "init conc" : 0.0 },
-        "N2"      : { "init conc" : 7.80055 },
+        "N2"      : { "init conc" : 7.80055E+05 },
         "H2"      : { "init conc" : 5.6E-01 },
         "M"       : { "init conc" : 1.0E+06 }
       }

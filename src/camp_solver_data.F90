@@ -162,6 +162,15 @@ module pmc_camp_solver_data
       integer, value :: n_cells
     end function solver_run
 
+    subroutine rxn_get_base_rate(solver_data, rate_constants) bind (c)
+      use iso_c_binding
+      !> Pointer to the initialized solver data
+      type(c_ptr), value :: solver_data
+      real(kind=c_double) :: rate_constants
+      !type(c_ptr), value :: rate_constants
+      !integer(kind=c_int) :: rxn_id
+    end subroutine rxn_get_base_rate
+
     !> Reset the solver function timers
     subroutine solver_reset_timers( solver_data ) bind(c)
       use iso_c_binding
@@ -412,6 +421,7 @@ module pmc_camp_solver_data
     procedure :: update_aero_rep_data
     !> Integrate over a given time step
     procedure :: solve
+    procedure :: get_base_rate
     !> Reset the solver function timers
     procedure, private :: reset_timers
     !> Get the solver statistics from the last run
@@ -989,6 +999,29 @@ contains
   end function solve
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+  subroutine get_base_rate(this, rate_constants)
+
+    !> Solver data
+    class(camp_solver_data_t), intent(inout) :: this
+    real(kind=dp), allocatable, intent(inout) :: rate_constants(:)
+    real(kind=c_double), pointer :: rate_constants_c(:)
+    !integer(kind=c_int), pointer :: var_type_c(:)
+
+    !allocate(rate_constants_c(size(rate_constants)))
+    !rate_constants_c(:) = int(rate_constants(:), kind=c_double)
+    !call rxn_get_base_rate(this%solver_c_ptr,c_loc(rate_constants_c))
+
+    call rxn_get_base_rate(this%solver_c_ptr,rate_constants(1))
+
+    !allocate(var_type_c(size(var_type)))
+    !var_type_c(:) = int(var_type(:), kind=c_int)
+    !call rxn_get_base_rate(this%solver_c_ptr,c_loc(var_type_c))
+
+
+
+  end subroutine get_base_rate
 
   !> Reset the solver function timers
   subroutine reset_timers( this )

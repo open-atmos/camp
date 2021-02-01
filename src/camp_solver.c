@@ -597,7 +597,7 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
   int flag;
   int rank = 0;
 
-#ifdef PMC_MULTICELLS2_ZEROS
+#ifndef PMC_MULTICELLS2_ZEROS
   if (sd->model_data.n_cells != n_cells) {
     // Only considering two cases: Multicell with all cells and one-cell
 
@@ -605,7 +605,7 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
     // printf("Rank %d sd->model_data.n_cells %d n_cells %d", rank,
     // sd->model_data.n_cells, n_cells);
 
-#ifdef PMC_MULTICELLS2_ZEROS
+#ifndef PMC_MULTICELLS2_ZEROS
     // works but very slow
     for (int j = n_cells; j < sd->model_data.n_cells; j++) {
       for (int i = 0; i < md->n_per_cell_state_var; i++) {
@@ -680,7 +680,7 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
   sd->model_data.total_state = state;
   sd->model_data.total_env = env;
 
-#ifdef EXPORT_CAMP_INPUT
+#ifndef EXPORT_CAMP_INPUT
 #ifdef PMC_DEBUG_GPU
   // Save initial state
   double init_state[md->n_per_cell_state_var * n_cells];
@@ -831,7 +831,7 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
 
       sd->counterFail++;
 
-#ifdef EXPORT_CAMP_INPUT
+#ifndef EXPORT_CAMP_INPUT
 #ifdef PMC_DEBUG_GPU
       if (sd->counterFail == 1)
         export_camp_input(sd, init_state, "");

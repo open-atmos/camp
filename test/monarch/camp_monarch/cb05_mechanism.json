@@ -216,7 +216,7 @@
           "O" : {}
         },
         "orig params" : "TUV_J(6, THETA)",
-        "scaling" : 0.89,
+        "scaling" : 1.0,
         "base rate" : 1.31e-1,
         "Fast-J id" : "NO3_X",
         "type" : "PHOTOLYSIS"
@@ -230,7 +230,7 @@
           "NO" : {}
         },
         "orig params" : "TUV_J(5, THETA)",
-        "scaling" : 0.11,
+        "scaling" : 1.0,
         "base rate" : 1.31e-1,
         "Fast-J id" : "NO3_L",
         "type" : "PHOTOLYSIS"

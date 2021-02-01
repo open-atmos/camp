@@ -142,13 +142,23 @@ contains
     type(string_t), allocatable :: unique_names(:)
 
     class(aero_rep_data_t), pointer :: aero_rep
-    integer(kind=i_kind) :: i_sect_om, i_sect_bc, i_sect_sulf, i_sect_opm
+    integer(kind=i_kind) :: i_sect_om, i_sect_bc, i_sect_sulf, i_sect_opm, i
     type(aero_rep_factory_t) :: aero_rep_factory
     type(aero_rep_update_data_modal_binned_mass_GMD_t) :: update_data_GMD
     type(aero_rep_update_data_modal_binned_mass_GSD_t) :: update_data_GSD
 
     ! Computation time variable
     real(kind=dp) :: comp_start, comp_end
+
+#ifdef COMMENTING
+    integer :: i_rxn, i_base_rate, i_mech
+    type(mechanism_data_t), pointer :: mechanism
+    class(rxn_data_t), pointer :: rxn
+    character(len=:), allocatable :: key, str_val, rxn_key, rate_key, rxn_val
+    real(kind=dp) :: rate_val
+    type(string_t), allocatable :: spec_names(:)
+#endif
+
 
 #ifdef PMC_USE_MPI
     integer :: local_comm
@@ -255,6 +265,15 @@ contains
               pmc_mpi_pack_size_integer(i_sect_bc) + &
               pmc_mpi_pack_size_integer(i_sect_sulf) + &
               pmc_mpi_pack_size_integer(i_sect_opm)
+
+      if(this%interface_input_file.eq."interface_monarch_cb05_soa.json" &
+              .or. this%interface_input_file.eq."interface_monarch_cb05.json") then
+        pack_size = pack_size + pmc_mpi_pack_size_integer(this%n_photo_rxn)
+        do i = 1, this%n_photo_rxn
+          pack_size = pack_size + this%photo_rxns(i)%pack_size( local_comm )
+        end do
+      endif
+
       allocate(buffer(pack_size))
       pos = 0
       call this%camp_core%bin_pack(buffer, pos)
@@ -269,6 +288,15 @@ contains
       call pmc_mpi_pack_integer(buffer, pos, i_sect_bc)
       call pmc_mpi_pack_integer(buffer, pos, i_sect_sulf)
       call pmc_mpi_pack_integer(buffer, pos, i_sect_opm)
+
+      if(this%interface_input_file.eq."interface_monarch_cb05_soa.json" &
+              .or. this%interface_input_file.eq."interface_monarch_cb05.json") then
+        call pmc_mpi_pack_integer(buffer, pos, this%n_photo_rxn)
+        do i = 1, this%n_photo_rxn
+          call this%photo_rxns(i)%bin_pack( buffer, pos, local_comm )
+        end do
+      endif
+
     endif
 
     ! broadcast the buffer size
@@ -298,6 +326,18 @@ contains
       call pmc_mpi_unpack_integer(buffer, pos, i_sect_bc)
       call pmc_mpi_unpack_integer(buffer, pos, i_sect_sulf)
       call pmc_mpi_unpack_integer(buffer, pos, i_sect_opm)
+
+      if(this%interface_input_file.eq."interface_monarch_cb05_soa.json" &
+              .or. this%interface_input_file.eq."interface_monarch_cb05.json") then
+        call pmc_mpi_unpack_integer(buffer, pos, this%n_photo_rxn)
+        if( allocated( this%photo_rxns  ) ) deallocate( this%photo_rxns  )
+        allocate(this%photo_rxns(this%n_photo_rxn))
+        allocate(this%base_rates(this%n_photo_rxn))
+        do i = 1, this%n_photo_rxn
+          call this%photo_rxns(i)%bin_unpack( buffer, pos, local_comm )
+        end do
+      end if
+
 #endif
     end if
 
@@ -313,7 +353,6 @@ contains
 
     if(this%interface_input_file.eq."interface_monarch_cb05_soa.json") then
       ! Set the photolysis rates
-      !todo set photo_rates for MPI ranks > 0
 
       do i_photo_rxn = 1, this%n_photo_rxn
 

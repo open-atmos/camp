@@ -150,10 +150,10 @@ void rxn_photolysis_update_env_state(ModelData *model_data, int *rxn_int_data,
   int n_photo_rates_cell=25;
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  if (rank==0 || rank==1) {
-    if(model_data->counterPhoto<n_photo_rates_cell*2) {
+  if (rank==999 || rank==999) {
+    if(model_data->counterPhoto<n_photo_rates_cell*1) {
 
-      /*
+/*
       printf("RATE_CONSTANT: %-le\n", RATE_CONSTANT_);
       printf("SCALING_: %-le\n", SCALING_);
       printf("BASE_RATE_: %-le\n", BASE_RATE_);
@@ -166,6 +166,7 @@ void rxn_photolysis_update_env_state(ModelData *model_data, int *rxn_int_data,
         printf("%d,",PROD_(i));
         printf("YIELD_: %-le\n", YIELD_(i));
       }
+      printf("RXN_ID_: %d\n", RXN_ID_);
 */
 
       printf("Counter: %d BASE_RATE_:%-le\n",model_data->counterPhoto+1,BASE_RATE_);
@@ -367,6 +368,18 @@ void rxn_photolysis_export_input(ModelData *model_data, int *rxn_int_data,
   double *env_data = model_data->grid_cell_env;
 
   fprintf(f, " %-le", BASE_RATE_);
+
+  return;
+}
+
+void rxn_photolysis_get_base_rate(ModelData *model_data, int *rxn_int_data,
+                                 double *rxn_float_data, double *rxn_env_data,
+                                 double *rate_constant) {
+  int *int_data = rxn_int_data;
+  double *float_data = rxn_float_data;
+  double *env_data = model_data->grid_cell_env;
+
+  *rate_constant = BASE_RATE_;
 
   return;
 }

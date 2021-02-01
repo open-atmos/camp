@@ -126,6 +126,8 @@ module pmc_camp_core
   implicit none
   private
 
+#define CAMP_SOLVER_FAIL 1
+
   public :: camp_core_t
 
   !> Part-MC model data
@@ -168,6 +170,15 @@ module pmc_camp_core
     type(camp_solver_data_t), pointer, public :: solver_data_aero => null()
     !> Solver data (mixed gas- and aerosol-phase reactions)
     type(camp_solver_data_t), pointer, public :: solver_data_gas_aero => null()
+#ifndef EXPORT_CAMP_INPUT
+    !class(rxn_data_t), pointer, public :: rxn_photo
+    !real(kind=dp), allocatable :: base_rate(:)
+    integer(kind=i_kind) :: counterSolve
+    integer(kind=i_kind) :: counterFail
+    real(kind=dp), allocatable :: init_state_var(:)
+    !type(string_t), allocatable :: spec_names(:)
+    type(string_t), allocatable :: spec_names(:)
+#endif
     !> Flag indicating the model data has been initialized
     logical :: core_is_initialized = .false.
     !> Flag indicating the solver has been initialized
@@ -679,7 +690,7 @@ contains
 
     ! Variables for setting initial state values
     class(aero_rep_data_t), pointer :: rep
-    integer(kind=i_kind) :: i_state_elem, i_name
+    integer(kind=i_kind) :: i, i_state_elem, i_name
 
     ! Species name for looking up properties
     character(len=:), allocatable :: spec_name
@@ -687,6 +698,13 @@ contains
     type(string_t), allocatable :: gas_spec_names(:)
     ! Aerosol species
     type(string_t), allocatable :: unique_names(:)
+
+#ifndef EXPORT_CAMP_INPUT
+    type(string_t), allocatable :: spec_names(:)
+    !character(len=*), allocatable :: spec_names_chr(:)
+    this%counterSolve=0
+    this%counterFail=0
+#endif
 
     ! make sure the core has not already been initialized
     call assert_msg(157261665, .not.this%core_is_initialized, &
@@ -812,6 +830,25 @@ contains
                 this%init_state_cell(i_state_elem)
       end do
     end do
+
+#ifndef EXPORT_CAMP_INPUT
+
+    !type(string_t), allocatable :: spec_names(:)
+    !character(len=*), allocatable :: spec_names_chr(:)
+
+    !spec_names = this%unique_names()
+    !do i=1, size(spec_names)
+    !  spec_name = spec_names(i)%string
+    !end do
+
+    !print*,"hola0"
+    !spec_names = this%unique_names()
+    !print*,"hola0"
+    !do i=1, size(spec_names)
+    !  this%spec_names(i)%string=spec_names(i)%string
+    !end do
+
+#endif
 
   end subroutine initialize
 
@@ -1292,9 +1329,9 @@ contains
   subroutine initialize_rxn_update_object( this, rxn, update_data )
 
     !> CAMP core
-    class(camp_core_t), intent(in) :: this
+    class(camp_core_t), intent(inout) :: this
     !> Reaction to be updated
-    class(rxn_data_t), intent(inout) :: rxn
+    class(rxn_data_t),target, intent(inout) :: rxn
     !> Update data object
     class(rxn_update_data_t), intent(out) :: update_data
 
@@ -1426,7 +1463,8 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Integrate the chemical mechanism
-  subroutine solve(this, camp_state, time_step, rxn_phase, solver_stats, n_cells)
+  subroutine solve(this, camp_state, time_step, rxn_phase, solver_stats, n_cells)!,&
+          !update_data)
 
     use pmc_rxn_data
     use pmc_solver_stats
@@ -1445,18 +1483,22 @@ contains
     !> Return solver statistics to the host model
     type(solver_stats_t), intent(inout), optional, target :: solver_stats
     integer, intent(in), optional :: n_cells
+    !class(rxn_update_data_t), intent(inout), optional :: update_data
     integer :: n_cells_aux
     integer(kind=c_int) :: solver_status
     real(kind=dp) :: t_initial
     real(kind=dp) :: t_final
 
-#ifdef EXPORT_CAMP_INPUT
+#ifndef EXPORT_CAMP_INPUT
     type(json_core) :: json
     type(json_value),pointer :: p, state_var, photo_rates
     character(len=:), allocatable :: export_path, spec_name
     integer :: mpi_rank, i
     character(len=128) :: mpi_rank_str, i_str
     type(string_t), allocatable :: spec_names(:)
+    !character(len=*), allocatable :: spec_names(:)
+
+    real(kind=dp), allocatable :: base_rate(:)
 #endif
 
     ! Phase to solve
@@ -1505,7 +1547,37 @@ contains
     t_initial = real(0.0, kind=dp)
     t_final = time_step
 
-#ifdef EXPORT_CAMP_INPUT
+#ifndef EXPORT_CAMP_INPUT
+    print*,"hola4"
+    allocate(this%init_state_var(size(camp_state%state_var)))
+    this%init_state_var(:)=camp_state%state_var(:)
+#endif
+
+    ! Run the integration
+    if (present(solver_stats)) then
+      solver_status = solver%solve(camp_state, t_initial, t_final,    &
+              n_cells_aux, solver_stats)
+
+      call solver%get_solver_stats( solver_stats )
+      solver_stats%status_code   = solver_status
+      solver_stats%start_time__s = t_initial
+      solver_stats%end_time__s   = t_final
+    else
+      solver_status = solver%solve(camp_state, t_initial, t_final, n_cells_aux)
+    end if
+
+#ifndef EXPORT_CAMP_INPUT
+
+    if(solver_status.eq.CAMP_SOLVER_FAIL) then!1
+      this%counterFail=this%counterFail+1
+    end if
+    this%counterSolve=this%counterSolve+1
+
+    !todo set names to other ranks than 0
+
+    !if(1) then
+    if (this%counterSolve.eq.1) then
+    !if (pmc_mpi_rank().eq.1 .and. this%counterSolve.eq.1) then
 
     call json%initialize()
 
@@ -1516,22 +1588,28 @@ contains
     call json%add(p, "pressure", camp_state%env_var(2))
     call json%create_object(state_var,'state_var')
 
+    call json%add(p, state_var)
+    !spec_names = this%unique_names()
+    !print*,"camp_core spec_name, state_var, rank", pmc_mpi_rank()
 
-    !todo set names to other ranks than 0
-    if (pmc_mpi_rank().eq.0) then
-      spec_names = this%unique_names()
-      do i=1, size(spec_names)
-        spec_name = spec_names(i)%string
-        call json%add(state_var, spec_name, camp_state%state_var(i))
-      end do
-    else
-      !do i=1, size(spec_names)
-      !  write(i_str,*) i
-      !  i_str=adjustl(i_str)
-      !  call json%add(state_var, i_str, camp_state%state_var(i))
-      !end do
-    end if
+    do i=1, size(this%spec_names)
+      !spec_name = spec_names(i)%string
+      !call json%add(state_var, spec_name, camp_state%state_var(i))
+      call json%add(state_var, this%spec_names(i)%string, this%init_state_var(i))
+      print*,pmc_mpi_rank(),this%spec_names(i)%string,camp_state%state_var(i)
+    end do
     nullify(state_var)
+
+    print*,"hola"
+
+    allocate(base_rate(25))
+    call solver%get_base_rate(base_rate)
+    print*, "rateees",base_rate(:)
+    do i=1, size(base_rate)
+      write(i_str,*) i
+      i_str=adjustl(i_str)
+      call json%add(state_var, trim(i_str), base_rate(i))
+    end do
 
 #ifdef COMMENTING
     do i=1, size(photo_rates)
@@ -1566,7 +1644,7 @@ contains
 
     export_path = "/gpfs/scratch/bsc32/bsc32815/a2s8/nmmb-monarch/MODEL/"&
             //"SRC_LIBS/partmc/test/monarch/exports/camp_input"&
-            //mpi_rank_str//".json"
+            //trim(mpi_rank_str)//".json"
 #else
     export_path = "/gpfs/scratch/bsc32/bsc32815/a2s8/nmmb-monarch/MODEL/"&
             //"SRC_LIBS/partmc/test/monarch/exports/camp_input/config.json"
@@ -1577,19 +1655,10 @@ contains
     call json%destroy(p)
     if (json%failed()) stop 1
 
+    end if
 #endif
 
-    ! Run the integration
-    if (present(solver_stats)) then
-      solver_status = solver%solve(camp_state, t_initial, t_final,    &
-              n_cells_aux, solver_stats)
-
-      call solver%get_solver_stats( solver_stats )
-      solver_stats%status_code   = solver_status
-      solver_stats%start_time__s = t_initial
-      solver_stats%end_time__s   = t_final
-    else
-      solver_status = solver%solve(camp_state, t_initial, t_final, n_cells_aux)
+    if (.not.present(solver_stats)) then
       call warn_assert_msg(997420005, solver_status.eq.0, "Solver failed")
     end if
 
@@ -1601,7 +1670,7 @@ contains
   integer(kind=i_kind) function pack_size(this, comm)
 
     !> Chemical model
-    class(camp_core_t), intent(in) :: this
+    class(camp_core_t), intent(inout) :: this
     !> MPI communicator
     integer, intent(in), optional :: comm
 
@@ -1609,9 +1678,16 @@ contains
     type(sub_model_factory_t) :: sub_model_factory
     class(aero_rep_data_t), pointer :: aero_rep
     class(sub_model_data_t), pointer :: sub_model
-    integer(kind=i_kind) :: i_mech, i_phase, i_rep, i_sub_model, l_comm
+    integer(kind=i_kind) :: i, j, i_mech, i_phase, i_rep, i_sub_model, l_comm
 
 #ifdef PMC_USE_MPI
+
+#ifndef EXPORT_CAMP_INPUT
+    !character(len=*), allocatable :: spec_names_chr(:)
+    character(len=:), allocatable :: spec_name
+    integer(kind=i_kind) :: max_spec_name_size = 64
+#endif
+
     if (present(comm)) then
       l_comm = comm
     else
@@ -1638,7 +1714,7 @@ contains
     end do
     do i_sub_model = 1, size(this%sub_model)
       sub_model => this%sub_model(i_sub_model)%val
-      pack_size = pacK_size + sub_model_factory%pack_size(sub_model, l_comm)
+      pack_size = pack_size + sub_model_factory%pack_size(sub_model, l_comm)
       sub_model => null()
     end do
     pack_size = pack_size + &
@@ -1648,6 +1724,41 @@ contains
                 pmc_mpi_pack_size_real_array(this%abs_tol, l_comm) + &
                 pmc_mpi_pack_size_integer_array(this%var_type, l_comm) + &
                 pmc_mpi_pack_size_real_array(this%init_state_cell, l_comm)
+
+#ifndef EXPORT_CAMP_INPUT
+
+    !this%spec_names = this%unique_names()
+
+    !do i=1, size(spec_names)
+      !this%spec_names(i)%string=spec_names(i)%string
+    !end do
+
+    !todo BOTH MPI RANKS CALL THE PACK SIZE WHYY
+    !best option is set same sizes of 128 or something like that... if not,
+    !I would need to send & receive only the sizes and then calculate pack size...
+
+    !allocate(this%spec_names(this%size_state_per_cell*this%n_cells))
+
+    spec_name=""
+    do j=1, max_spec_name_size
+      spec_name=spec_name//"a"
+    end do
+
+    do i=1, this%size_state_per_cell*this%n_cells
+
+      !print*,"spec_name hola1", spec_name
+
+      !pack_size = pack_size + pmc_mpi_pack_size_integer(max_spec_name_size, l_comm)
+      pack_size = pack_size + pmc_mpi_pack_size_string(spec_name, l_comm)
+
+      !pack_size = pack_size + pmc_mpi_pack_size_integer(len_trim(this%spec_names(i)%string), l_comm)
+      !pack_size = pack_size + pmc_mpi_pack_size_string(trim(this%spec_names(i)%string), l_comm)
+    end do
+
+    print*,"hola0"
+
+#endif
+
 #else
     pack_size = 0
 #endif
@@ -1659,7 +1770,7 @@ contains
   subroutine bin_pack(this, buffer, pos, comm)
 
     !> Chemical model
-    class(camp_core_t), intent(in) :: this
+    class(camp_core_t), intent(inout) :: this
     !> Memory buffer
     character, intent(inout) :: buffer(:)
     !> Current buffer position
@@ -1672,8 +1783,13 @@ contains
     type(sub_model_factory_t) :: sub_model_factory
     class(aero_rep_data_t), pointer :: aero_rep
     class(sub_model_data_t), pointer :: sub_model
-    integer(kind=i_kind) :: i_mech, i_phase, i_rep, i_sub_model, &
+    integer(kind=i_kind) :: i, j, i_mech, i_phase, i_rep, i_sub_model, &
             prev_position, l_comm
+#ifndef EXPORT_CAMP_INPUT
+    type(string_t), allocatable :: spec_names(:)
+    character(len=:), allocatable :: spec_name
+    integer(kind=i_kind) :: max_spec_name_size = 64
+#endif
 
     if (present(comm)) then
       l_comm = comm
@@ -1711,6 +1827,39 @@ contains
     call pmc_mpi_pack_real_array(buffer, pos, this%abs_tol, l_comm)
     call pmc_mpi_pack_integer_array(buffer, pos, this%var_type, l_comm)
     call pmc_mpi_pack_real_array(buffer, pos, this%init_state_cell, l_comm)
+
+#ifndef EXPORT_CAMP_INPUT
+
+    !print*,"hola1", this%spec_names(1)%string, size(this%spec_names)
+
+
+    allocate(spec_names(this%size_state_per_cell*this%n_cells))
+    print*,"hola1"
+
+    this%spec_names = this%unique_names()
+
+    do i=1, this%size_state_per_cell*this%n_cells
+
+      spec_names(i)%string=trim(this%spec_names(i)%string)
+      do j=len(spec_names(i)%string), max_spec_name_size
+        spec_names(i)%string=spec_names(i)%string//" "
+      end do
+
+      !spec_name = trim(this%spec_names(i)%string)
+      print*,"hola1",spec_name
+      !spec_name=this%spec_names(i)%string
+      !spec_name="hola1"
+
+      !call pmc_mpi_pack_integer(buffer, pos, len(spec_name), l_comm)
+      !call pmc_mpi_pack_string(buffer, pos, spec_name, l_comm)
+      !call pmc_mpi_pack_integer(buffer, pos, len_trim(spec_names(i)%string), l_comm)
+      call pmc_mpi_pack_string(buffer, pos, trim(spec_names(i)%string), l_comm)
+    end do
+
+    print*,"hola1",spec_name
+
+#endif
+
     call assert(184050835, &
          pos - prev_position <= this%pack_size(l_comm))
 #endif
@@ -1735,9 +1884,15 @@ contains
 #ifdef PMC_USE_MPI
     type(aero_rep_factory_t) :: aero_rep_factory
     type(sub_model_factory_t) :: sub_model_factory
-    integer(kind=i_kind) :: i_mech, i_phase, i_rep, i_sub_model, &
+    integer(kind=i_kind) :: i, j, i_mech, i_phase, i_rep, i_sub_model, &
             prev_position, num_mech, num_phase, num_rep, num_sub_model, &
             l_comm
+#ifndef EXPORT_CAMP_INPUT
+    type(string_t), allocatable :: spec_names(:)
+    character(len=:), allocatable :: spec_name
+    integer :: spec_name_size
+    integer :: max_spec_name_size=64
+#endif
 
     if (present(comm)) then
       l_comm = comm
@@ -1778,6 +1933,45 @@ contains
     call pmc_mpi_unpack_real_array(buffer, pos, this%abs_tol, l_comm)
     call pmc_mpi_unpack_integer_array(buffer, pos, this%var_type, l_comm)
     call pmc_mpi_unpack_real_array(buffer, pos, this%init_state_cell, l_comm)
+
+#ifndef EXPORT_CAMP_INPUT
+
+    spec_name=""
+    do j=1,max_spec_name_size
+      spec_name=spec_name//"a"
+    end do
+
+    allocate(this%spec_names(this%size_state_per_cell*this%n_cells))
+    do i=1, this%size_state_per_cell*this%n_cells
+
+      print*,"hola2"
+      !call pmc_mpi_unpack_integer(buffer, pos, spec_name_size, l_comm)
+      print*, "spec_name_size", spec_name_size
+
+      !spec_name=""
+      !do j=1, spec_name_size
+      !  spec_name=spec_name//"a"
+      !end do
+
+      !spec_name="hola2"
+
+      !spec_names(i)%string=""
+      !do j=1, spec_name_size
+      !  spec_names(i)%string=this%spec_names(i)%string//"a"
+      !end do
+
+      !call pmc_mpi_unpack_string(buffer, pos, spec_name, l_comm)
+      call pmc_mpi_unpack_string(buffer, pos, spec_name, l_comm)
+      !print*, "bin_unpack spec_names", this%spec_names(i)%string
+
+      print*, "spec_name hola2", spec_name
+      this%spec_names(i)%string = trim(spec_name)
+      print*, "this%spec_names(i)%string hola2", this%spec_names(i)%string
+
+    end do
+    print*,"hola"
+#endif
+
     this%core_is_initialized = .true.
     call assert(291557168, &
          pos - prev_position <= this%pack_size(l_comm))
@@ -1789,6 +1983,8 @@ contains
                 this%init_state_cell(i_state_elem)
       end do
     end do
+
+    print*,"hola3"
 
 #endif
 
