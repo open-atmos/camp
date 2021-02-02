@@ -162,6 +162,15 @@ module pmc_camp_solver_data
       integer, value :: n_cells
     end function solver_run
 
+    subroutine rxn_get_base_rate(solver_data, rate_constants) bind (c)
+      use iso_c_binding
+      !> Pointer to the initialized solver data
+      type(c_ptr), value :: solver_data
+      real(kind=c_double) :: rate_constants
+      !type(c_ptr), value :: rate_constants
+      !integer(kind=c_int) :: rxn_id
+    end subroutine rxn_get_base_rate
+
     !> Reset the solver function timers
     subroutine solver_reset_timers( solver_data ) bind(c)
       use iso_c_binding
@@ -412,10 +421,11 @@ module pmc_camp_solver_data
     procedure :: update_aero_rep_data
     !> Integrate over a given time step
     procedure :: solve
+    procedure :: get_base_rate
     !> Reset the solver function timers
     procedure, private :: reset_timers
     !> Get the solver statistics from the last run
-    procedure, private :: get_solver_stats
+    procedure:: get_solver_stats
     !> Checks whether a solver is available
     procedure :: is_solver_available
     !> Print the solver data
@@ -872,7 +882,7 @@ contains
     integer, intent(in) :: n_cells
     integer :: i
 
-    !TODO: Improve this to consider different update_rates
+    !TODO: Improve this to consider different update_rates (like monarch multicells case)
 
     !call rxn_update_data( &
     !        update_data%get_cell_id()-1,     & ! Grid cell to update
@@ -928,7 +938,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Solve the mechanism(s) for a specified timestep
-  subroutine solve(this, camp_state, t_initial, t_final, n_cells, solver_stats)
+  function solve(this, camp_state, t_initial, t_final, n_cells, solver_stats) result (solver_status)
 
     !> Solver data
     class(camp_solver_data_t), intent(inout) :: this
@@ -986,19 +996,32 @@ contains
             n_cells&
             )
 
-    ! Get the solver statistics
-    if (present(solver_stats)) then
-      call this%get_solver_stats( solver_stats )
-      solver_stats%status_code   = solver_status
-      solver_stats%start_time__s = t_initial
-      solver_stats%end_time__s   = t_final
-    else
-      call warn_assert_msg(997420005, solver_status.eq.0, "Solver failed")
-    end if
-
-  end subroutine solve
+  end function solve
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+  subroutine get_base_rate(this, rate_constants)
+
+    !> Solver data
+    class(camp_solver_data_t), intent(inout) :: this
+    real(kind=dp), allocatable, intent(inout) :: rate_constants(:)
+    real(kind=c_double), pointer :: rate_constants_c(:)
+    !integer(kind=c_int), pointer :: var_type_c(:)
+
+    !allocate(rate_constants_c(size(rate_constants)))
+    !rate_constants_c(:) = int(rate_constants(:), kind=c_double)
+    !call rxn_get_base_rate(this%solver_c_ptr,c_loc(rate_constants_c))
+
+    call rxn_get_base_rate(this%solver_c_ptr,rate_constants(1))
+
+    !allocate(var_type_c(size(var_type)))
+    !var_type_c(:) = int(var_type(:), kind=c_int)
+    !call rxn_get_base_rate(this%solver_c_ptr,c_loc(var_type_c))
+
+
+
+  end subroutine get_base_rate
 
   !> Reset the solver function timers
   subroutine reset_timers( this )

@@ -1259,6 +1259,15 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
+  !integer function resize_string(in_string, n) result(out_string)
+  !  implicit none
+  !  character(len=*), intent(in)    :: in_string
+  !  integer, intent(in)             :: n
+  !  character(len=n) :: out_string
+  !end function resize_string
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
   !> Allocate or reallocate the given array to ensure it is of the
   !> given size, preserving any data and/or initializing to 0.
   subroutine ensure_real_array_size(x, n, only_grow)

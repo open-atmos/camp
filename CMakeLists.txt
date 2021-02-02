@@ -196,6 +196,7 @@ if (ENABLE_GPU)
     if (ENABLE_ODE_GPU)
       add_definitions(-DPMC_USE_ODE_GPU)
     endif()
+
   else()
     message( WARNING "Not CUDA module found, can't support GPU computation")
   endif()
