@@ -171,7 +171,7 @@ contains
     type(string_t), dimension(NUM_EBI_SPEC) :: ebi_spec_names
 #ifdef PMC_MONARCH_INPUT
     ! EBI-solver species names in MONARCH order
-    type(string_t), dimension(NUM_EBI_SPEC) :: ebi_monarch_spec_names
+    type(string_t), dimension(NUM_EBI_SPEC) :: monarch_spec_names
 #endif
 
     ! KPP reaction labels
@@ -643,7 +643,7 @@ contains
     !todo suppose not multi_cells
     do i_cell = 0, n_cells-1
 
-      call set_ebi_monarch_species(ebi_monarch_spec_names)
+      call set_monarch_species(monarch_spec_names)
       read(30,*) name_cell !First line indicating layer
 
       !write(*,*) name_cell
@@ -671,7 +671,7 @@ contains
           !DEBUG Set real_val from ebi_monarch file
           !Loop to search the same name and id from ebi to monarch names (todo there's a better way to do this)
           do j_spec = 1, NUM_EBI_SPEC
-            if (trim(ebi_spec_names(i_spec)%string).eq.trim(ebi_monarch_spec_names(j_spec)%string)) then
+            if (trim(ebi_spec_names(i_spec)%string).eq.trim(monarch_spec_names(j_spec)%string)) then
               real_val = ebi_monarch_init(j_spec)
               !save id mapping ebi-monarch (difference between i_spec and j_spec
               map_ebi_monarch(j_spec)=i_spec
@@ -965,8 +965,8 @@ contains
       write(EBI_KPP_FILE_UNIT,*) "(id), spec_name, camp input"
       associate (camp_var=>camp_state%state_var( &
               chem_spec_data%gas_state_id( &
-                      ebi_monarch_spec_names(i_spec)%string)))
-        write(*,*) i_spec, ebi_monarch_spec_names(i_spec)%string, &
+                      monarch_spec_names(i_spec)%string)))
+        write(*,*) i_spec, monarch_spec_names(i_spec)%string, &
                 camp_var
       end associate
     end do
@@ -1158,8 +1158,8 @@ contains
 #ifdef PMC_MONARCH_INPUT
       associate (camp_var=>camp_state%state_var( &
               chem_spec_data%gas_state_id( &
-                      ebi_monarch_spec_names(i_spec)%string)))
-        write(CAMP_EBI_FILE_UNIT,*) ebi_monarch_spec_names(i_spec)%string, &
+                      monarch_spec_names(i_spec)%string)))
+        write(CAMP_EBI_FILE_UNIT,*) monarch_spec_names(i_spec)%string, &
                 (abs(camp_var) - abs(YC(map_ebi_monarch(i_spec)))) / &
                         (abs(camp_var) + abs(YC(map_ebi_monarch(i_spec)))+ &
                                 1.0d-30), & !avoid division by zero, &
@@ -1489,7 +1489,7 @@ contains
   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Set the EBI-solver species names in MONARCH order
-  subroutine set_ebi_monarch_species(spec_names)
+  subroutine set_monarch_species(spec_names)
 
     !> EBI solver species names
     type(string_t), dimension(NUM_EBI_SPEC) :: spec_names
@@ -1568,7 +1568,7 @@ contains
     spec_names(71)%string = "BNZHRXN"
     spec_names(72)%string = "SESQRXN"
 
-  end subroutine set_ebi_monarch_species
+  end subroutine set_monarch_species
 
   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 

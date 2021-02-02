@@ -1572,11 +1572,9 @@ contains
     end if
     this%counterSolve=this%counterSolve+1
 
-    !todo set names to other ranks than 0
-
     !if(1) then
     !if (this%counterSolve.eq.1) then
-    if (pmc_mpi_rank().eq.18 .and. this%counterSolve.eq.1) then
+    if (pmc_mpi_rank().eq.0 .and. this%counterSolve.eq.1) then
 
     call json%initialize()
 
@@ -1586,7 +1584,6 @@ contains
     call json%add(p, "temperature", camp_state%env_var(1))
     call json%add(p, "pressure", camp_state%env_var(2))
 
-
     call json%create_object(state_var,'state_var')
     call json%add(p, state_var)
     do i=1, size(this%spec_names)
@@ -1594,8 +1591,6 @@ contains
     end do
     nullify(state_var)
 
-
-    !todo test in monarch
     if(.not.allocated(base_rate)) then
       allocate(base_rate(25))
     end if
@@ -1660,7 +1655,6 @@ contains
 #ifdef PMC_USE_MPI
 
 #ifndef EXPORT_CAMP_INPUT
-    !character(len=*), allocatable :: spec_names_chr(:)
     character(len=:), allocatable :: spec_name
     integer(kind=i_kind) :: max_spec_name_size = 64
 #endif
@@ -1747,7 +1741,6 @@ contains
             prev_position, l_comm
 #ifndef EXPORT_CAMP_INPUT
     type(string_t), allocatable :: spec_names(:)
-    character(len=:), allocatable :: spec_name
     integer(kind=i_kind) :: max_spec_name_size = 64
 #endif
 
@@ -1839,7 +1832,6 @@ contains
 #ifndef EXPORT_CAMP_INPUT
     type(string_t), allocatable :: spec_names(:)
     character(len=:), allocatable :: spec_name
-    integer :: spec_name_size
     integer :: max_spec_name_size=64
 #endif
 

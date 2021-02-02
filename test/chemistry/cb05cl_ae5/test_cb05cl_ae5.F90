@@ -54,7 +54,7 @@ program pmc_test_cb05cl_ae5
   ! file unit
   integer(kind=i_kind), parameter :: EBI_KPP_FILE_UNIT = 16
   ! Number of timesteps to integrate over
-  integer(kind=i_kind), parameter :: NUM_TIME_STEPS = 100
+  integer(kind=i_kind), parameter :: NUM_TIME_STEPS = 10
   ! Number of EBI-solver species
   integer(kind=i_kind), parameter :: NUM_EBI_SPEC = 72
   ! Number of EBI-solever photolysis reactions
@@ -142,7 +142,7 @@ contains
     ! EBI-solver species names
     type(string_t), dimension(NUM_EBI_SPEC) :: ebi_spec_names
     ! EBI-solver species names in MONARCH order
-    type(string_t), dimension(NUM_EBI_SPEC) :: ebi_monarch_spec_names
+    type(string_t), dimension(NUM_EBI_SPEC) :: monarch_spec_names
 
     ! KPP reaction labels
     type(string_t), allocatable :: kpp_rxn_labels(:)
@@ -363,7 +363,14 @@ contains
     allocate(photo_rates(NUM_EBI_PHOTO_RXN))
 
     photo_rates(:) = 0.0001 * 60.0 ! EBI solver wants rates in min^-1
+
+#ifndef TEST_PHOTO_RATES
+    photo_rates(:) = 0.1 * 60.0
+#endif
+
     KPP_PHOTO_RATES(:) = photo_rates(1)/60
+
+
 
     ! Set O2 + hv rate constant to 0 in KPP (not present in ebi version)
     KPP_PHOTO_RATES(1) = 0.0
@@ -752,8 +759,8 @@ contains
 #ifdef COMPARE_CAMP_FILE
       associate (camp_var=>camp_state%state_var( &
               chem_spec_data%gas_state_id( &
-                      ebi_monarch_spec_names(i_spec)%string)))
-        write(CAMP_EBI_FILE_UNIT,*) ebi_monarch_spec_names(i_spec)%string, &
+                      monarch_spec_names(i_spec)%string)))
+        write(CAMP_EBI_FILE_UNIT,*) monarch_spec_names(i_spec)%string, &
                 (abs(camp_var) - abs(YC(map_ebi_monarch(i_spec)))) / &
                         (abs(camp_var) + abs(YC(map_ebi_monarch(i_spec)))+ &
                                 1.0d-30), & !avoid division by zero, &
@@ -940,7 +947,7 @@ contains
   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Set the EBI-solver species names in MONARCH order
-  subroutine set_ebi_monarch_species(spec_names)
+  subroutine set_monarch_species(spec_names)
 
     !> EBI solver species names
     type(string_t), dimension(NUM_EBI_SPEC) :: spec_names
@@ -1019,7 +1026,7 @@ contains
     spec_names(71)%string = "BNZHRXN"
     spec_names(72)%string = "SESQRXN"
 
-  end subroutine set_ebi_monarch_species
+  end subroutine set_monarch_species
 
   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 

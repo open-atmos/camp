@@ -27,6 +27,10 @@ program mock_monarch
   integer, parameter :: RESULTS_FILE_UNIT_PY = 11
   integer, parameter :: IMPORT_FILE_UNIT = 12
 
+#ifdef USE_MAPPING_EBI
+  integer(kind=i_kind), parameter :: NUM_CAMP_SPEC = 79
+#endif
+
   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   ! Parameters for mock MONARCH model !aw
   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -277,7 +281,7 @@ program mock_monarch
     call pmc_interface%get_init_conc(species_conc, water_conc, WATER_VAPOR_ID, &
             air_density,i_W,I_E,I_S,I_N)
 
-#ifndef IMPORT_CAMP_INPUT
+#ifdef IMPORT_CAMP_INPUT
     call import_camp_input(pmc_interface)
 #endif
 
@@ -482,7 +486,7 @@ contains
       pressure(:,:,:) = 94165.7187500000
       air_density(:,:,:) = 1.225
       conv=0.02897/air_density(1,1,1)*(TIME_STEP*60.)*1e6/height !units of time_step to seconds
-      water_conc(:,:,:,WATER_VAPOR_ID) = 1.555555555!0.01
+      water_conc(:,:,:,WATER_VAPOR_ID) = 0.03!0.01
 
       !Initialize different axis values
       !Species_conc is modified in monarch_interface%get_init_conc
@@ -512,7 +516,172 @@ contains
 
   end subroutine model_initialize
 
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#ifdef USE_MAPPING_EBI
+
+  subroutine set_ebi_species(spec_names)
+
+    !> EBI solver species names
+    type(string_t), dimension(NUM_CAMP_SPEC) :: spec_names
+
+    spec_names(1)%string = "NO2"
+    spec_names(2)%string = "NO"
+    spec_names(3)%string = "O"
+    spec_names(4)%string = "O3"
+    spec_names(5)%string = "NO3"
+    spec_names(6)%string = "O1D"
+    spec_names(7)%string = "OH"
+    spec_names(8)%string = "HO2"
+    spec_names(9)%string = "N2O5"
+    spec_names(10)%string = "HNO3"
+    spec_names(11)%string = "HONO"
+    spec_names(12)%string = "PNA"
+    spec_names(13)%string = "H2O2"
+    spec_names(14)%string = "XO2"
+    spec_names(15)%string = "XO2N"
+    spec_names(16)%string = "NTR"
+    spec_names(17)%string = "ROOH"
+    spec_names(18)%string = "FORM"
+    spec_names(19)%string = "ALD2"
+    spec_names(20)%string = "ALDX"
+    spec_names(21)%string = "PAR"
+    spec_names(22)%string = "CO"
+    spec_names(23)%string = "MEO2"
+    spec_names(24)%string = "MEPX"
+    spec_names(25)%string = "MEOH"
+    spec_names(26)%string = "HCO3"
+    spec_names(27)%string = "FACD"
+    spec_names(28)%string = "C2O3"
+    spec_names(29)%string = "PAN"
+    spec_names(30)%string = "PACD"
+    spec_names(31)%string = "AACD"
+    spec_names(32)%string = "CXO3"
+    spec_names(33)%string = "PANX"
+    spec_names(34)%string = "ROR"
+    spec_names(35)%string = "OLE"
+    spec_names(36)%string = "ETH"
+    spec_names(37)%string = "IOLE"
+    spec_names(38)%string = "TOL"
+    spec_names(39)%string = "CRES"
+    spec_names(40)%string = "TO2"
+    spec_names(41)%string = "TOLRO2"
+    spec_names(42)%string = "OPEN"
+    spec_names(43)%string = "CRO"
+    spec_names(44)%string = "MGLY"
+    spec_names(45)%string = "XYL"
+    spec_names(46)%string = "XYLRO2"
+    spec_names(47)%string = "ISOP"
+    spec_names(48)%string = "ISPD"
+    spec_names(49)%string = "ISOPRXN"
+    spec_names(50)%string = "TERP"
+    spec_names(51)%string = "TRPRXN"
+    spec_names(52)%string = "SO2"
+    spec_names(53)%string = "SULF"
+    spec_names(54)%string = "SULRXN"
+    spec_names(55)%string = "ETOH"
+    spec_names(56)%string = "ETHA"
+    spec_names(57)%string = "CL2"
+    spec_names(58)%string = "CL"
+    spec_names(59)%string = "HOCL"
+    spec_names(60)%string = "CLO"
+    spec_names(61)%string = "FMCL"
+    spec_names(62)%string = "HCL"
+    spec_names(63)%string = "TOLNRXN"
+    spec_names(64)%string = "TOLHRXN"
+    spec_names(65)%string = "XYLNRXN"
+    spec_names(66)%string = "XYLHRXN"
+    spec_names(67)%string = "BENZENE"
+    spec_names(68)%string = "BENZRO2"
+    spec_names(69)%string = "BNZNRXN"
+    spec_names(70)%string = "BNZHRXN"
+    spec_names(71)%string = "SESQ"
+    spec_names(72)%string = "SESQRXN"
+
+  end subroutine set_ebi_species
+
+  subroutine set_monarch_species(spec_names)
+
+    !> EBI solver species names
+    type(string_t), dimension(NUM_CAMP_SPEC) :: spec_names
+
+    !Monarch order
+    spec_names(1)%string = "NO2"
+    spec_names(2)%string = "NO"
+    spec_names(3)%string = "O3"
+    spec_names(4)%string = "NO3"
+    spec_names(5)%string = "N2O5"
+    spec_names(6)%string = "HNO3"
+    spec_names(7)%string = "HONO"
+    spec_names(8)%string = "PNA"
+    spec_names(9)%string = "H2O2"
+    spec_names(10)%string = "NTR"
+    spec_names(11)%string = "ROOH"
+    spec_names(12)%string = "FORM"
+    spec_names(13)%string = "ALD2"
+    spec_names(14)%string = "ALDX"
+    spec_names(15)%string = "PAR"
+    spec_names(16)%string = "CO"
+    spec_names(17)%string = "MEPX"
+    spec_names(18)%string = "MEOH"
+    spec_names(19)%string = "FACD"
+    spec_names(20)%string = "PAN"
+    spec_names(21)%string = "PACD"
+    spec_names(22)%string = "AACD"
+    spec_names(23)%string = "PANX"
+    spec_names(24)%string = "OLE"
+    spec_names(25)%string = "ETH"
+    spec_names(26)%string = "IOLE"
+    spec_names(27)%string = "TOL"
+    spec_names(28)%string = "CRES"
+    spec_names(29)%string = "OPEN"
+    spec_names(30)%string = "MGLY"
+    spec_names(31)%string = "XYL"
+    spec_names(32)%string = "ISOP"
+    spec_names(33)%string = "ISPD"
+    spec_names(34)%string = "TERP"
+    spec_names(35)%string = "SO2"
+    spec_names(36)%string = "SULF"
+    spec_names(37)%string = "ETOH"
+    spec_names(38)%string = "ETHA"
+    spec_names(39)%string = "CL2"
+    spec_names(40)%string = "HOCL"
+    spec_names(41)%string = "FMCL"
+    spec_names(42)%string = "HCL"
+    spec_names(43)%string = "BENZENE"
+    spec_names(44)%string = "SESQ"
+    spec_names(45)%string = "O"
+    spec_names(46)%string = "O1D"
+    spec_names(47)%string = "OH"
+    spec_names(48)%string = "HO2"
+    spec_names(49)%string = "XO2"
+    spec_names(50)%string = "XO2N"
+    spec_names(51)%string = "MEO2"
+    spec_names(52)%string = "HCO3"
+    spec_names(53)%string = "C2O3"
+    spec_names(54)%string = "CXO3"
+    spec_names(55)%string = "ROR"
+    spec_names(56)%string = "TO2"
+    spec_names(57)%string = "TOLRO2"
+    spec_names(58)%string = "CRO"
+    spec_names(59)%string = "XYLRO2"
+    spec_names(60)%string = "ISOPRXN"
+    spec_names(61)%string = "TRPRXN"
+    spec_names(62)%string = "SULRXN"
+    spec_names(63)%string = "CL"
+    spec_names(64)%string = "CLO"
+    spec_names(65)%string = "TOLNRXN"
+    spec_names(66)%string = "TOLHRXN"
+    spec_names(67)%string = "XYLNRXN"
+    spec_names(68)%string = "XYLHRXN"
+    spec_names(69)%string = "BENZRO2"
+    spec_names(70)%string = "BNZNRXN"
+    spec_names(71)%string = "BNZHRXN"
+    spec_names(72)%string = "SESQRXN"
+
+  end subroutine set_monarch_species
+
+#endif
+
+  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Read the comparison file (must have same dimensions as current config)
   subroutine read_comp_file()
@@ -536,6 +705,17 @@ contains
     integer :: z,i,j,k,r,o,i_cell,i_spec,i_photo_rxn
     integer :: state_size_per_cell
 
+#ifdef USE_MAPPING_EBI
+    type(string_t), dimension(NUM_CAMP_SPEC) :: ebi_spec_names
+    type(string_t), dimension(NUM_CAMP_SPEC) :: monarch_spec_names
+    type(string_t), allocatable :: camp_spec_names(:)
+    integer, dimension(NUM_CAMP_SPEC) :: map_camp_monarch
+    integer, dimension(NUM_CAMP_SPEC) :: map_monarch_ebi
+    !integer, dimension(NUM_CAMP_SPEC) :: map_ebi_monarch
+    real(kind=dp), dimension(NUM_CAMP_SPEC) :: aux_state_var
+    real(kind=dp), dimension(NUM_CAMP_SPEC) :: aux_state_var2
+#endif
+
     state_size_per_cell = pmc_interface%camp_core%state_size_per_cell()
 
     !open(IMPORT_FILE_UNIT, file="exports/camp_input.txt", status="old")!default test monarch input
@@ -552,6 +732,64 @@ contains
 
     read(IMPORT_FILE_UNIT,*) (pmc_interface%camp_state%state_var(&
             i),i=1,size(pmc_interface%camp_state%state_var))
+
+#ifdef USE_MAPPING_EBI
+
+    call set_ebi_species(ebi_spec_names)
+    call set_monarch_species(monarch_spec_names)
+    camp_spec_names=pmc_interface%camp_core%unique_names()
+
+    !do i = 1, size(camp_spec_names)
+    !  print*, i, camp_spec_names(i)%string
+    !end do
+
+    call assert_msg(122432506, size(pmc_interface%camp_state%state_var).eq.NUM_CAMP_SPEC, &
+            "NUM_CAMP_SPEC not equal size(state_var)")
+
+    print*,"USE_MAPPING_EBI1"
+    do i = 1, NUM_CAMP_SPEC
+      do j = 1, NUM_CAMP_SPEC
+        if (trim(camp_spec_names(i)%string).eq.trim(monarch_spec_names(j)%string)) then
+          !map_camp_monarch(j)=i
+          aux_state_var(j)=pmc_interface%camp_state%state_var(i)
+          print*,monarch_spec_names(i)%string, aux_state_var(j)
+        end if
+      end do
+    end do
+
+    print*,"USE_MAPPING_EBI2"
+    do i = 1, NUM_CAMP_SPEC
+      do j = 1, NUM_CAMP_SPEC
+        if (trim(monarch_spec_names(i)%string).eq.trim(ebi_spec_names(j)%string)) then
+          !map_ebi_monarch(j)=i
+          aux_state_var2(j)=aux_state_var(i)
+          !print*,monarch_spec_names(i)%string, aux_state_var2(j)
+        end if
+      end do
+    end do
+
+    print*,"USE_MAPPING_EBI3"
+    do i = 1, NUM_CAMP_SPEC
+      do j = 1, NUM_CAMP_SPEC
+        if (trim(ebi_spec_names(i)%string).eq.trim(camp_spec_names(j)%string)) then
+        !if (trim(monarch_spec_names(i)%string).eq.trim(camp_spec_names(j)%string)) then
+          !map_ebi_monarch(j)=i
+          !pmc_interface%camp_state%state_var(j)=aux_state_var(i)
+          pmc_interface%camp_state%state_var(j)=aux_state_var2(i)
+
+          !pmc_interface%camp_state%state_var(i)=aux_state_var2(j)
+          !pmc_interface%camp_state%state_var(i)=aux_state_var(j) !converge but wtf
+
+          print*,ebi_spec_names(i)%string, pmc_interface%camp_state%state_var(j)
+        end if
+      end do
+    end do
+
+    !do i = 1, NUM_CAMP_SPEC
+    !  pmc_interface%camp_state%state_var(i)=aux_state_var2(i)
+    !end do
+
+#endif
 
     do i=I_W,I_E
       do j=I_S,I_N
