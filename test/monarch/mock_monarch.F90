@@ -56,9 +56,9 @@ program mock_monarch
   !> Ending index for camp-chem species in tracer array
   integer, parameter :: END_CAMP_ID = 210!350
   !> Time step (min)
-  real, parameter :: TIME_STEP = 3.!2. !3. = monarch dt
+  real, parameter :: TIME_STEP = 0.1 !2. !3. = monarch dt
   !> Number of time steps to integrate over
-  integer, parameter :: NUM_TIME_STEP = 2!720!180
+  integer, parameter :: NUM_TIME_STEP = 1!720!180
   !> Index for water vapor in water_conc()
   integer, parameter :: WATER_VAPOR_ID = 5
   !> Start time
@@ -281,7 +281,7 @@ program mock_monarch
     call pmc_interface%get_init_conc(species_conc, water_conc, WATER_VAPOR_ID, &
             air_density,i_W,I_E,I_S,I_N)
 
-#ifdef IMPORT_CAMP_INPUT
+#ifndef IMPORT_CAMP_INPUT
     call import_camp_input(pmc_interface)
 #endif
 

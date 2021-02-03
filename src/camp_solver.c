@@ -370,7 +370,7 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
   if (sd->debug_out) print_data_sizes(&(sd->model_data));
 #endif
 
-#ifndef DEBUG_RXN
+#ifdef DEBUG_RXN
   sd->model_data.counterPhoto = 0;
 #endif
 
@@ -824,9 +824,9 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
 #endif
 #ifdef PMC_USE_MPI
       MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-      if (rank >= 0) {
-        // printf("CAMP_SOLVER_FAIL %d counterSolve:%d counterDerivCPU:%d
-        // rank:%d\n",flag,sd->counterSolve,sd->counterDerivCPU,rank);
+      if (rank == 0) {
+         printf("CAMP_SOLVER_FAIL %d counterSolve:%d counterDerivCPU:%d rank:%d\n",
+                 flag,sd->counterSolve,sd->counterDerivCPU,rank);
       }
 
       sd->counterFail++;

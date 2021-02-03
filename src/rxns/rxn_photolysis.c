@@ -144,7 +144,7 @@ void rxn_photolysis_update_env_state(ModelData *model_data, int *rxn_int_data,
   // Calculate the rate constant in (1/s)
   RATE_CONSTANT_ = SCALING_ * BASE_RATE_;
 
-#ifndef DEBUG_RXN
+#ifdef DEBUG_RXN
 #ifdef PMC_USE_MPI
 
   int n_photo_rates_cell=25;
