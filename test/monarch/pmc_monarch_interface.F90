@@ -74,6 +74,12 @@ module pmc_monarch_interface
     integer :: n_photo_rxn
     !> Solve multiple grid cells at once?
     logical :: solve_multiple_cells = .false.
+    ! KPP reaction labels
+    type(string_t), allocatable :: kpp_rxn_labels(:)
+    ! KPP rstate
+    real(kind=dp) :: KPP_RSTATE(20)
+    ! KPP control variables
+    integer :: KPP_ICNTRL(20)
   contains
     !> Integrate PartMC for the current MONARCH state over a specified time step
     procedure :: integrate

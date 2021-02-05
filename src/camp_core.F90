@@ -831,25 +831,6 @@ contains
       end do
     end do
 
-#ifndef EXPORT_CAMP_INPUT
-
-    !type(string_t), allocatable :: spec_names(:)
-    !character(len=*), allocatable :: spec_names_chr(:)
-
-    !spec_names = this%unique_names()
-    !do i=1, size(spec_names)
-    !  spec_name = spec_names(i)%string
-    !end do
-
-    !print*,"hola0"
-    !spec_names = this%unique_names()
-    !print*,"hola0"
-    !do i=1, size(spec_names)
-    !  this%spec_names(i)%string=spec_names(i)%string
-    !end do
-
-#endif
-
   end subroutine initialize
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -1501,7 +1482,7 @@ contains
     real(kind=dp), allocatable :: base_rate(:)
 #endif
 
-#ifdef DEBUG_INPUT_OUTPUT
+#ifndef DEBUG_INPUT_OUTPUT
     real(kind=dp) :: rel_error_in_out
     real(kind=dp) :: MAX_REL_ERROR_TOL = 0.05
 #endif
@@ -1593,23 +1574,20 @@ contains
     call json%add(p, state_var)
 #ifdef DEBUG_INPUT_OUTPUT
     print*, "Name, init_state_var, out_state_var, &
-            ,rel. error [(tracers-ebi)/(tracers+ebi)]"
+            ,rel. error [(init-out)/(init+out)]"
 #endif
     do i=1, size(this%spec_names)
       call json%add(state_var, this%spec_names(i)%string, this%init_state_var(i))
 
 #ifdef DEBUG_INPUT_OUTPUT
-
       rel_error_in_out=abs((this%init_state_var(i)-camp_state%state_var(i))/&
-              (this%init_state_var(i)+camp_state%state_var(i)))
-
+              (this%init_state_var(i)+camp_state%state_var(i)+1.0d-30))
       if(rel_error_in_out.gt.MAX_REL_ERROR_TOL) then
         print*, this%spec_names(i)%string, this%init_state_var(i)&
                 ,camp_state%state_var(i),rel_error_in_out
       end if
-
 #endif
-
+      !print*, this%spec_names(i)%string, this%abs_tol(i)
     end do
     nullify(state_var)
 

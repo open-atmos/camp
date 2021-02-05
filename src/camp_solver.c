@@ -787,7 +787,7 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
     flag = CVode(sd->cvode_mem, (realtype)t_final, sd->y, &t_rt, CV_NORMAL);
 #endif
     sd->solver_flag = flag;
-#ifndef FAILURE_DETAIL
+#ifdef FAILURE_DETAIL
     if (flag < 0) {
 #else
     if (check_flag(&flag, "CVode", 1) == CAMP_SOLVER_FAIL) {
@@ -802,8 +802,9 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
       MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 #endif
       if (flag != 0)
-      /*printf("\nCall to f() at failed state failed with flag %d, rank %d \n",
-    flag, rank); for (int i_cell = 0; i_cell < md->n_cells; ++i_cell) {
+      printf("\nCall to f() at failed state failed with flag %d, rank %d \n",
+    flag, rank);
+    /*for (int i_cell = 0; i_cell < md->n_cells; ++i_cell) {
       printf("\n Cell: %d ", i_cell);
       printf("temp = %le pressure = %le\n", env[i_cell * PMC_NUM_ENV_PARAM_],
              env[i_cell * PMC_NUM_ENV_PARAM_ + 1]);
@@ -819,8 +820,8 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
           printf("spec %d = %le\n", i_spec,
                  state[i_cell * md->n_per_cell_state_var + i_spec]);
         }
-    }
-    //solver_print_stats(sd->cvode_mem);*/
+    }*/
+    solver_print_stats(sd->cvode_mem);
 #endif
 #ifdef PMC_USE_MPI
       MPI_Comm_rank(MPI_COMM_WORLD, &rank);

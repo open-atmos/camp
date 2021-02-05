@@ -150,7 +150,7 @@ void rxn_photolysis_update_env_state(ModelData *model_data, int *rxn_int_data,
   int n_photo_rates_cell=25;
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  if (rank==999 || rank==999) {
+  if (rank==0 || rank==999) {
     if(model_data->counterPhoto<n_photo_rates_cell*1) {
 
 /*
