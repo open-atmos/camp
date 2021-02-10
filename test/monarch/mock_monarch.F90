@@ -13,6 +13,9 @@ program mock_monarch
                                                 to_string
   use pmc_monarch_interface
   use pmc_mpi
+#ifdef PMC_USE_JSON
+  use json_module
+#endif
 
   ! EBI Solver
   use module_bsc_chem_data
@@ -410,6 +413,10 @@ program mock_monarch
     end do
   end if
 
+#ifndef COMPARE_WITH_EBI
+    call compare_ebi_camp_json(pmc_interface)
+#endif
+
   !write(*,*) "file_prefix", output_file_prefix
 
   ! Output results and scripts
@@ -697,8 +704,8 @@ contains
       !write(*,*), "rates",i_photo_rxn, pmc_interface%base_rates(i_photo_rxn)
 
 
-      call pmc_interface%photo_rxns(i_photo_rxn)%set_rate(real(pmc_interface%base_rates(i_photo_rxn), kind=dp))
-      !call pmc_interface%photo_rxns(i_photo_rxn)%set_rate(real(0.0, kind=dp)) !works
+      !call pmc_interface%photo_rxns(i_photo_rxn)%set_rate(real(pmc_interface%base_rates(i_photo_rxn), kind=dp))
+      call pmc_interface%photo_rxns(i_photo_rxn)%set_rate(real(0.0, kind=dp)) !works
 
       call pmc_interface%camp_core%update_data(pmc_interface%photo_rxns(i_photo_rxn))
 
@@ -713,6 +720,14 @@ contains
 
     type(monarch_interface_t), intent(inout) :: pmc_interface
     integer :: z,i,j,k,r,o,i_cell,i_spec,i_photo_rxn,i_time
+
+    real(kind=dp) :: dt, temp, press, auxr
+    type(json_core) :: json
+    type(json_value),pointer :: p, species_in, species_out, input, output&
+            , photo_rates
+    character(len=:), allocatable :: export_path, spec_name
+    integer :: mpi_rank
+    character(len=128) :: mpi_rank_str, i_str
 
     type(string_t), dimension(NUM_EBI_SPEC) :: ebi_spec_names
     type(string_t), dimension(NUM_EBI_SPEC) :: monarch_spec_names
@@ -799,13 +814,80 @@ contains
 
     end do
 
+    if (pmc_mpi_rank().eq.0) then
 
+      call json%initialize()
+      call json%create_object(p,'')
+      call json%create_object(input,'input')
+      !call json%add(p, "id", 1) !test
+      call json%add(p, input)
+
+      z=1
+      r=1
+      o=1
+      i_cell=(o-1)*(I_E*I_N) + (r-1)*(I_E) + z
+      call json%add(input, "cell", i_cell)
+      dt=TIME_STEP*60
+      call json%add(input, "dt",dt)
+      temp=temperature(z,r,o)
+      call json%add(input, "temperature", temp)
+      press=pressure(z,r,o)
+      call json%add(input, "pressure", press)
+
+      call json%create_object(species_in,'species')
+      call json%add(input, species_in)
+      call json%create_object(output,'output')
+      call json%add(p, output)
+      call json%create_object(species_out,'species')
+      call json%add(output, species_out)
+
+      do j = 1, NUM_EBI_SPEC
+        !i = ebi_spec_id_to_camp(j) !CAMP order
+        i = j !EBI order
+        auxr=ebi_init(i)
+        call json%add(species_in, ebi_spec_names(i)%string, auxr)
+        auxr=YC(i)
+        call json%add(species_out, ebi_spec_names(i)%string, auxr)
+        end do
+
+      call json%create_object(photo_rates,'photo_rates')
+      call json%add(input, photo_rates)
+      do i=1, size(ebi_photo_rates)
+        write(i_str,*) i
+        i_str=adjustl(i_str)
+        auxr=ebi_photo_rates(i)
+        call json%add(photo_rates, trim(i_str), auxr)
+      end do
+
+#ifdef PMC_USE_MPI
+      mpi_rank = pmc_mpi_rank()
+
+      write(mpi_rank_str,*) mpi_rank
+      mpi_rank_str=adjustl(mpi_rank_str)
+
+      export_path = "/gpfs/scratch/bsc32/bsc32815/a2s8/nmmb-monarch/MODEL/"&
+              //"SRC_LIBS/partmc/test/monarch/exports/ebi_in_out_"&
+              //trim(mpi_rank_str)//".json"
+#else
+      export_path = "/gpfs/scratch/bsc32/bsc32815/a2s8/nmmb-monarch/MODEL/"&
+              //"SRC_LIBS/partmc/test/monarch/exports/ebi_in_out.json"
+#endif
+      call json%print(p,export_path)
+
+      !cleanup:
+      call json%destroy(p)
+      if (json%failed()) stop 1
+
+    end if
+
+#ifdef PRINT_EBI_INPUT
     print*,"EBI species"
     print*, "TIME_STEP", TIME_STEP
     print*, "Temp", temperature(1,1,1)
-    print*, "Press", pressure(1,1,1)!todo translate press to ebi
+    print*, "Press", pressure(1,1,1)
     print*,"water_conc",water_conc(1,1,1,WATER_VAPOR_ID)
     print*,"ebi_photo_rates:", ebi_photo_rates(:)
+#endif
 
 #ifdef PRINT_EBI_SPEC_BY_CAMP_ORDER
     print*,"CAMP order:"
@@ -819,7 +901,7 @@ contains
     end do
 #endif
 
-#ifndef PRINT_EBI_SPEC_BY_EBI_ORDER
+#ifdef PRINT_EBI_SPEC_BY_EBI_ORDER
     print*,"EBI order:"
     print*,"Name, id, init, out, rel. error [(init-out)/(init+out)]"
     do j = 1, NUM_EBI_SPEC
@@ -852,6 +934,111 @@ contains
     KPP_PHOTO_RATES(:) = pmc_interface%base_rates(:)
 
   end subroutine solve_kpp
+
+  subroutine compare_ebi_camp_json(pmc_interface)
+
+    type(monarch_interface_t), intent(inout) :: pmc_interface
+    integer :: z,i,j,k,r,o,i_cell,i_spec,i_photo_rxn,i_time
+
+    type(json_file) :: jfile
+    type(json_core) :: json
+    type(json_value), pointer :: j_obj, child, next
+    integer :: n_childs
+    character(kind=json_ck, len=:), allocatable :: key, unicode_str_val
+    integer(kind=json_ik) :: var_type
+
+    character(len=:), allocatable :: export_path, spec_name_json
+    character(len=128) :: mpi_rank_str, i_str
+    integer :: mpi_rank, id
+
+    real(kind=dp) :: dt, temp, press, real_val
+    real(kind=dp), dimension(NUM_EBI_SPEC) :: ebi_spec_out
+    real(kind=dp), dimension(NUM_CAMP_SPEC) :: camp_spec_out
+    type(string_t), dimension(NUM_EBI_SPEC) :: ebi_spec_names
+    type(string_t), dimension(NUM_EBI_SPEC) :: monarch_spec_names
+    type(string_t), allocatable :: camp_spec_names(:)
+    real, dimension(NUM_EBI_PHOTO_RXN) :: ebi_photo_rates
+    integer, dimension(NUM_EBI_PHOTO_RXN) :: photo_id_camp
+
+    call set_ebi_species(ebi_spec_names)
+    call set_monarch_species(monarch_spec_names)
+    camp_spec_names=pmc_interface%camp_core%unique_names()
+
+    !mpi_rank = 18
+    mpi_rank = 0
+    write(mpi_rank_str,*) mpi_rank
+    mpi_rank_str=adjustl(mpi_rank_str)
+
+    export_path = "/gpfs/scratch/bsc32/bsc32815/a2s8/nmmb-monarch/MODEL/"&
+            //"SRC_LIBS/partmc/test/monarch/exports/ebi_in_out_"&
+            //trim(mpi_rank_str)//".json"
+
+    call jfile%initialize()
+
+    call jfile%load_file(export_path); if (json%failed()) print*,&
+            "JSON not found at compare_ebi_camp_json"
+
+#ifdef COMMENTING
+    call jfile%get('input.dt', dt)
+    call jfile%get('input.temperature', temp)
+    call jfile%get('input.pressure', press)
+
+    print*,"dt",dt
+
+    call jfile%info('input.species', n_children=n_childs)
+    print*,"n_childs",n_childs
+
+
+    call jfile%get_core(json)
+    call jfile%get('output.species', j_obj)
+    call json%get_child(j_obj, child)
+    next => null()
+    do i=1, size(ebi_spec_out)
+
+      call json%info(child, name=key)
+      call json%get(child, ebi_spec_out(i))
+      !print*, key, real_val
+
+      !ebi_spec_out(i)=real_val
+
+      print*, key, ebi_spec_out(i)
+
+      call json%get_next(child, next)
+      child => next
+    end do
+#endif
+
+    do i=1, size(ebi_spec_out)
+      call jfile%get('output.species.'//ebi_spec_names(i)%string,&
+              ebi_spec_out(i))
+      !print*, ebi_spec_names(i)%string, ebi_spec_out(i)
+    end do
+
+#ifdef DEBUG_INPUT_OUTPUT
+    print*, "Specs with error greater than MAX_REL_ERROR_TOL",MAX_REL_ERROR_TOL
+    print*, "Name, init_state_var, out_state_var, &
+            ,rel. error [(init-out)/(init+out)]"
+#endif
+
+#ifdef DEBUG_INPUT_OUTPUT
+      rel_error_in_out=abs((this%init_state_var(i)-camp_state%state_var(i))/&
+            (this%init_state_var(i)+camp_state%state_var(i)+1.0d-30))
+    if(rel_error_in_out.gt.MAX_REL_ERROR_TOL) then
+      print*, this%spec_names(i)%string, this%init_state_var(i)&
+              ,camp_state%state_var(i),rel_error_in_out
+    end if
+    print*, "All specs"
+    print*, "Name, init_state_var, out_state_var, &
+            ,rel. error [(init-out)/(init+out)]"
+    do i=1, size(this%spec_names)
+      rel_error_in_out=abs((this%init_state_var(i)-camp_state%state_var(i))/&
+              (this%init_state_var(i)+camp_state%state_var(i)+1.0d-30))
+      print*, this%spec_names(i)%string, this%init_state_var(i)&
+              ,camp_state%state_var(i),rel_error_in_out
+    end do
+#endif
+
+  end subroutine compare_ebi_camp_json
 
   !> Output the model results
   !subroutine print_state_gnuplot(curr_time,pmc_interface,species_conc)

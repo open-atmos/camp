@@ -1472,9 +1472,10 @@ contains
 
 #ifndef EXPORT_CAMP_INPUT
     type(json_core) :: json
-    type(json_value),pointer :: p, state_var, photo_rates
+    type(json_value),pointer :: p, input, output, species_in,&
+            species_out, photo_rates
     character(len=:), allocatable :: export_path, spec_name
-    integer :: mpi_rank, i
+    integer :: mpi_rank, i, i_cell
     character(len=128) :: mpi_rank_str, i_str
     type(string_t), allocatable :: spec_names(:)
     !character(len=*), allocatable :: spec_names(:)
@@ -1558,45 +1559,35 @@ contains
     end if
     this%counterSolve=this%counterSolve+1
 
-    !if(1) then
     !if (this%counterSolve.eq.1) then
     if (pmc_mpi_rank().eq.0 .and. this%counterSolve.eq.1) then
 
     call json%initialize()
-
-    ! initialize the structure:
     call json%create_object(p,'')
-    call json%add(p, "dt", t_final-t_initial)
-    call json%add(p, "temperature", camp_state%env_var(1))
-    call json%add(p, "pressure", camp_state%env_var(2))
+    call json%create_object(input,'input')
+    call json%add(p, input)
+    call json%add(input, "dt", t_final-t_initial)
+    call json%add(input, "temperature", camp_state%env_var(1))
+    call json%add(input, "pressure", camp_state%env_var(2))
+    call json%create_object(species_in,'species')
+    call json%add(input, species_in)
 
-    call json%create_object(state_var,'state_var')
-    call json%add(p, state_var)
-#ifdef DEBUG_INPUT_OUTPUT
-    print*, "Name, init_state_var, out_state_var, &
-            ,rel. error [(init-out)/(init+out)]"
-#endif
+    call json%create_object(output,'output')
+    call json%add(p, output)
+    call json%create_object(species_out,'species')
+    call json%add(output, species_out)
+
     do i=1, size(this%spec_names)
-      call json%add(state_var, this%spec_names(i)%string, this%init_state_var(i))
-
-#ifdef DEBUG_INPUT_OUTPUT
-      rel_error_in_out=abs((this%init_state_var(i)-camp_state%state_var(i))/&
-              (this%init_state_var(i)+camp_state%state_var(i)+1.0d-30))
-      if(rel_error_in_out.gt.MAX_REL_ERROR_TOL) then
-        print*, this%spec_names(i)%string, this%init_state_var(i)&
-                ,camp_state%state_var(i),rel_error_in_out
-      end if
-#endif
-      !print*, this%spec_names(i)%string, this%abs_tol(i)
+      call json%add(species_in, this%spec_names(i)%string, this%init_state_var(i))
+      call json%add(species_out, this%spec_names(i)%string, camp_state%state_var(i))
     end do
-    nullify(state_var)
 
     if(.not.allocated(base_rate)) then
       allocate(base_rate(25))
     end if
     call solver%get_base_rate(base_rate)
     call json%create_object(photo_rates,'photo_rates')
-    call json%add(p, photo_rates)
+    call json%add(input, photo_rates)
     do i=1, size(base_rate)
       write(i_str,*) i
       i_str=adjustl(i_str)
@@ -1611,11 +1602,11 @@ contains
     mpi_rank_str=adjustl(mpi_rank_str)
 
     export_path = "/gpfs/scratch/bsc32/bsc32815/a2s8/nmmb-monarch/MODEL/"&
-            //"SRC_LIBS/partmc/test/monarch/exports/camp_input"&
+            //"SRC_LIBS/partmc/test/monarch/exports/camp_in_out_"&
             //trim(mpi_rank_str)//".json"
 #else
     export_path = "/gpfs/scratch/bsc32/bsc32815/a2s8/nmmb-monarch/MODEL/"&
-            //"SRC_LIBS/partmc/test/monarch/exports/camp_input/config.json"
+            //"SRC_LIBS/partmc/test/monarch/exports/camp_in_out.json"
 #endif
     call json%print(p,export_path)
 
