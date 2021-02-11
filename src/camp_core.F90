@@ -1483,11 +1483,6 @@ contains
     real(kind=dp), allocatable :: base_rate(:)
 #endif
 
-#ifndef DEBUG_INPUT_OUTPUT
-    real(kind=dp) :: rel_error_in_out
-    real(kind=dp) :: MAX_REL_ERROR_TOL = 0.05
-#endif
-
     ! Phase to solve
     integer(kind=i_kind) :: phase
     ! Pointer to solver data

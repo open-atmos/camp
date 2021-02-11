@@ -703,9 +703,8 @@ contains
       !end if
       !write(*,*), "rates",i_photo_rxn, pmc_interface%base_rates(i_photo_rxn)
 
-
-      !call pmc_interface%photo_rxns(i_photo_rxn)%set_rate(real(pmc_interface%base_rates(i_photo_rxn), kind=dp))
-      call pmc_interface%photo_rxns(i_photo_rxn)%set_rate(real(0.0, kind=dp)) !works
+      call pmc_interface%photo_rxns(i_photo_rxn)%set_rate(real(pmc_interface%base_rates(i_photo_rxn), kind=dp))
+      !call pmc_interface%photo_rxns(i_photo_rxn)%set_rate(real(0.0, kind=dp)) !works
 
       call pmc_interface%camp_core%update_data(pmc_interface%photo_rxns(i_photo_rxn))
 
@@ -960,6 +959,9 @@ contains
     real, dimension(NUM_EBI_PHOTO_RXN) :: ebi_photo_rates
     integer, dimension(NUM_EBI_PHOTO_RXN) :: photo_id_camp
 
+    real(kind=dp) :: rel_error_in_out
+    real(kind=dp) :: MAX_REL_ERROR_TOL = 0.8
+
     call set_ebi_species(ebi_spec_names)
     call set_monarch_species(monarch_spec_names)
     camp_spec_names=pmc_interface%camp_core%unique_names()
@@ -975,43 +977,55 @@ contains
 
     call jfile%initialize()
 
-    call jfile%load_file(export_path); if (json%failed()) print*,&
+    call jfile%load_file(export_path); if (jfile%failed()) print*,&
             "JSON not found at compare_ebi_camp_json"
-
-#ifdef COMMENTING
-    call jfile%get('input.dt', dt)
-    call jfile%get('input.temperature', temp)
-    call jfile%get('input.pressure', press)
-
-    print*,"dt",dt
-
-    call jfile%info('input.species', n_children=n_childs)
-    print*,"n_childs",n_childs
-
-
-    call jfile%get_core(json)
-    call jfile%get('output.species', j_obj)
-    call json%get_child(j_obj, child)
-    next => null()
-    do i=1, size(ebi_spec_out)
-
-      call json%info(child, name=key)
-      call json%get(child, ebi_spec_out(i))
-      !print*, key, real_val
-
-      !ebi_spec_out(i)=real_val
-
-      print*, key, ebi_spec_out(i)
-
-      call json%get_next(child, next)
-      child => next
-    end do
-#endif
 
     do i=1, size(ebi_spec_out)
       call jfile%get('output.species.'//ebi_spec_names(i)%string,&
               ebi_spec_out(i))
       !print*, ebi_spec_names(i)%string, ebi_spec_out(i)
+    end do
+
+    do i=1, size(ebi_spec_out)
+      call jfile%get('output.species.'//ebi_spec_names(i)%string,&
+              ebi_spec_out(i))
+      !print*, ebi_spec_names(i)%string, ebi_spec_out(i)
+    end do
+
+    call jfile%destroy()
+
+    export_path = "/gpfs/scratch/bsc32/bsc32815/a2s8/nmmb-monarch/MODEL/"&
+            //"SRC_LIBS/partmc/test/monarch/exports/camp_in_out_"&
+            //trim(mpi_rank_str)//".json"
+
+    call jfile%initialize()
+
+    call jfile%load_file(export_path); if (json%failed()) print*,&
+            "JSON not found at compare_ebi_camp_json"
+
+    do i=1, size(camp_spec_names)
+      call jfile%get('output.species.'//camp_spec_names(i)%string,&
+              camp_spec_out(i))
+      !print*, camp_spec_names(i)%string, camp_spec_out(i)
+    end do
+
+    call jfile%destroy()
+
+    print*, "Specs error greater than MAX_REL_ERROR_TOL",MAX_REL_ERROR_TOL
+    print*, "Name, ebi_out, camp_out, &
+            ,rel. error [(ebi-camp)/(ebi+camp)]"
+
+    do i=1, size(ebi_spec_names)
+      do j=1, size(camp_spec_names)
+        if (ebi_spec_names(i)%string.eq.camp_spec_names(j)%string) then
+          rel_error_in_out=abs((ebi_spec_out(i)-camp_spec_out(j))/&
+                (ebi_spec_out(i)+camp_spec_out(j)+1.0d-30))
+          if(rel_error_in_out.gt.MAX_REL_ERROR_TOL) then
+            print*, ebi_spec_names(i)%string, ebi_spec_out(i)&
+                    ,camp_spec_out(j),rel_error_in_out
+          end if
+        end if
+      end do
     end do
 
 #ifdef DEBUG_INPUT_OUTPUT

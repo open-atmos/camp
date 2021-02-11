@@ -680,8 +680,8 @@ contains
             !time_step*60
 
             !assert_msg when cvode fails ocurrs, stop the execution
-            call assert_msg(376450931, solver_stats%status_code.eq.0, &
-            "Solver failed with code "// to_string(solver_stats%solver_flag))
+            !call assert_msg(376450931, solver_stats%status_code.eq.0, &
+            !"Solver failed with code "// to_string(solver_stats%solver_flag))
 
 #ifdef PMC_DEBUG
             ! Check the Jacobian evaluations
