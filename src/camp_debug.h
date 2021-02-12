@@ -289,6 +289,29 @@ static void print_derivative(N_Vector deriv) {
   printf("\n");
 }
 
+static void print_derivative_in_out(N_Vector deriv_in, N_Vector deriv) {
+  printf("[(id), deriv_in, deriv_out]\n");
+  int n_cells = 2;
+  int print_cells = 0;
+  //if (NV_LENGTH_S(deriv) < 72 * n_cells) {
+  if (print_cells){
+    for (int i = 0; i < n_cells; i++) {
+      printf("cell %d \n", i);
+      int size_j = NV_LENGTH_S(deriv) / n_cells;
+      for (int j = 0; j < size_j; j++) {  // NV_LENGTH_S(deriv)
+        printf("(%d) %-le \n", j + 1, NV_DATA_S(deriv)[j + i * size_j]);
+      }
+      printf("\n");
+    }
+  } else {
+    for (int i = 0; i < NV_LENGTH_S(deriv); i++) {
+      printf("(%d) %-le %-le \n", i + 1, NV_DATA_S(deriv_in)[i],
+              NV_DATA_S(deriv)[i] );
+    }
+  }
+  printf("\n");
+}
+
 /** \brief Evaluate the derivative and Jacobian near a given state
  *         for a specified species
  *

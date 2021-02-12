@@ -535,6 +535,7 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
   // Set a custom error handling function
   flag = CVodeSetErrHandlerFn(sd->cvode_mem, error_handler, (void *)sd);
   check_flag_fail(&flag, "CVodeSetErrHandlerFn", 0);
+  sd->counter_fail_solve_print=0;
 #endif
 
 #endif
@@ -680,7 +681,7 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
   sd->model_data.total_state = state;
   sd->model_data.total_env = env;
 
-#ifndef EXPORT_CAMP_INPUT
+#ifdef IMPORT_CAMP_INPUT
 #ifdef PMC_DEBUG_GPU
   // Save initial state
   double init_state[md->n_per_cell_state_var * n_cells];
@@ -832,7 +833,7 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
 
       sd->counterFail++;
 
-#ifndef EXPORT_CAMP_INPUT
+#ifdef EXPORT_CAMP_INPUT
 #ifdef PMC_DEBUG_GPU
       if (sd->counterFail == 1)
         export_camp_input(sd, init_state, "");
@@ -1032,10 +1033,22 @@ int camp_solver_update_model_state(N_Vector solver_state, SolverData *sd,
     for (int i_spec = 0; i_spec < n_state_var; ++i_spec) {
       if (model_data->var_type[i_spec] == CHEM_SPEC_VARIABLE) {
         if (NV_DATA_S(solver_state)[i_dep_var] < -SMALL) {
-#ifdef FAILURE_DETAIL
+#ifndef FAILURE_DETAIL
           // todo: limit number of prints
-           printf("Failed model state update: [spec %d] = %le\n", i_spec,
-                 NV_DATA_S(solver_state)[i_dep_var]);
+          if(sd->counter_fail_solve_print<1){
+            printf("Failed model state update: [spec %d] = %le\n", i_spec,
+               NV_DATA_S(solver_state)[i_dep_var]);
+#ifdef PMC_DEBUG_GPU
+            printf("CounterDerivCPU %d CounterJac %d\n",
+                    sd->counterDerivCPU,sd->counterJacCPU );
+            printf("y failed model state:\n");
+            //print_derivative(solver_state);
+#endif
+          }
+          sd->counter_fail_solve_print++;
+#endif
+#ifdef DEV_TESTING_NEGATIVE_CONCS
+          //NV_DATA_S(solver_state)[i_dep_var]=SMALL; //Fails anyway
 #endif
           return CAMP_SOLVER_FAIL;
         }
@@ -1367,6 +1380,7 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
   SolverData *sd = (SolverData *)solver_data;
   ModelData *md = &(sd->model_data);
   realtype time_step;
+  int MAX_COUNTER_PRINT=1;
 
 #ifdef PMC_DEBUG
   sd->counterDeriv++;
@@ -1395,7 +1409,16 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
   }*/
 #endif
 
-  //if(sd->counterDerivCPU==2) print_derivative(y);
+#ifndef PMC_DEBUG_DERIV
+  if(sd->counterDerivCPU==0){
+    sd->y_first = N_VClone(y);
+    for (int i = 0; i < NV_LENGTH_S(deriv); i++) {
+      NV_DATA_S(sd->y_first)[i]=NV_DATA_S(y)[i];
+    }
+    sd->max_deriv_print = 1;
+    sd->counter_deriv_print = 0;
+  }
+#endif
 
   // Update the state array with the current dependent variable values.
   // Signal a recoverable error (positive return value) for negative
@@ -1479,13 +1502,21 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
     jac_deriv_data += n_dep_var;
   }
 
-#ifdef PMC_DEBUG_GPU
+#ifndef PMC_DEBUG_DERIV
+  if(sd->counter_deriv_print<sd->max_deriv_print &&
+  //NV_DATA_S(sd->y_first)[0] != NV_DATA_S(y)[0]){
+  1){
+    printf("y_first[0] %-le[0] y %-le\n", NV_DATA_S(sd->y_first)[0], NV_DATA_S(y)[0]);
+    printf("Deriv iter: %d\n",sd->counterDerivCPU);
+    print_derivative_in_out(y, deriv);
+    sd->counter_deriv_print++;
+  }
+#endif
 
-  //if(sd->counterDerivCPU<=0) print_derivative(deriv);
+#ifdef PMC_DEBUG_GPU
 
   // sd->timeDerivCPU += (clock() - start3);
   sd->timeDerivCPU += (clock() - start10);
-  sd->counterDerivCPU++;
   // printf("%d",sd->counterDerivCPU);
 
 #ifdef PMC_USE_MPI
@@ -1499,8 +1530,8 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
       // print_derivative(deriv);
     }
   }
-  sd->counterDerivCPU++;
 #endif
+  sd->counterDerivCPU++;
 #endif
 
   // Return 0 if success

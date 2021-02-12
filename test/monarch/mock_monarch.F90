@@ -320,11 +320,12 @@ program mock_monarch
     call pmc_interface%get_init_conc(species_conc, water_conc, WATER_VAPOR_ID, &
             air_density,i_W,I_E,I_S,I_N)
 
-#ifndef IMPORT_CAMP_INPUT
-    call import_camp_input(pmc_interface)
+#ifdef IMPORT_CAMP_INPUT
+    !call import_camp_input(pmc_interface)
+    call import_camp_input_json(pmc_interface)
 #endif
 
-#ifndef COMPARE_WITH_EBI
+#ifdef IMPORT_CAMP_INPUT
     call solve_ebi(pmc_interface)
 #endif
 
@@ -413,7 +414,7 @@ program mock_monarch
     end do
   end if
 
-#ifndef COMPARE_WITH_EBI
+#ifdef IMPORT_CAMP_INPUT
     call compare_ebi_camp_json(pmc_interface)
 #endif
 
@@ -603,8 +604,6 @@ contains
     open(IMPORT_FILE_UNIT, file="exports/camp_input_18.txt", status="old") !monarch
     !open(IMPORT_FILE_UNIT, file="exports/camp_input_322.txt", status="old") !monarch
 
-    !print*,species_conc(:,:,:,:)
-
     write(*,*) "Importing concentrations"
 
     if(n_cells.gt.1) then
@@ -715,6 +714,95 @@ contains
 
   end subroutine import_camp_input
 
+  subroutine import_camp_input_json(pmc_interface)
+
+    type(monarch_interface_t), intent(inout) :: pmc_interface
+    integer :: z,i,j,k,r,o,i_cell,i_spec,i_photo_rxn
+    integer :: state_size_per_cell
+
+    type(json_file) :: jfile
+    type(json_core) :: json
+    character(len=:), allocatable :: export_path, spec_name_json
+    character(len=128) :: mpi_rank_str, i_str
+    integer :: mpi_rank, id
+    real(kind=dp) :: dt, temp, press, real_val
+    type(string_t), allocatable :: camp_spec_names(:)
+    real, dimension(NUM_EBI_PHOTO_RXN) :: ebi_photo_rates
+    integer, dimension(NUM_EBI_PHOTO_RXN) :: photo_id_camp
+
+    state_size_per_cell = pmc_interface%camp_core%state_size_per_cell()
+
+
+    !mpi_rank = 18
+    mpi_rank = 0
+    write(mpi_rank_str,*) mpi_rank
+    mpi_rank_str=adjustl(mpi_rank_str)
+
+    export_path = "/gpfs/scratch/bsc32/bsc32815/a2s8/nmmb-monarch/MODEL/"&
+            //"SRC_LIBS/partmc/test/monarch/exports/camp_in_out_"&
+            //trim(mpi_rank_str)//".json"
+
+    call jfile%initialize()
+
+    call jfile%load_file(export_path); if (jfile%failed()) print*,&
+            "JSON not found at compare_ebi_camp_json"
+
+    write(*,*) "Importing concentrations"
+
+    if(n_cells.gt.1) then
+      print*, "ERROR: Import can only handle data from 1 cell, set n_cells to 1"
+    end if
+
+    camp_spec_names=pmc_interface%camp_core%unique_names()
+
+    do i=1, size(camp_spec_names)
+      call jfile%get('input.species.'//camp_spec_names(i)%string,&
+              pmc_interface%camp_state%state_var(i))
+      !print*, camp_spec_names(i)%string, pmc_interface%camp_state%state_var(i)
+    end do
+
+    do i=I_W,I_E
+      do j=I_S,I_N
+        do k=1,NUM_VERT_CELLS
+          o = (j-1)*(I_E) + (i-1) !Index to 3D
+          z = (k-1)*(I_E*I_N) + o !Index for 2D
+
+          species_conc(i,j,k,pmc_interface%map_monarch_id(:)) = &
+                  pmc_interface%camp_state%state_var(pmc_interface%map_camp_id(:)+(z*state_size_per_cell))
+
+          call jfile%get('input.temperature',temp)
+          temperature(i,j,k)=temp
+          call jfile%get('input.pressure',press)
+          pressure(i,j,k)=press
+          print*,"PRESSURE READ CAMP",pressure(i,j,k)
+        end do
+      end do
+    end do
+
+    do i=1, pmc_interface%n_photo_rxn
+      write(i_str,*) i
+      i_str=adjustl(i_str)
+      call jfile%get('input.photo_rates.'//trim(i_str),&
+              pmc_interface%base_rates(i))
+      !print*, trim(i_str), pmc_interface%base_rates(i)
+    end do
+
+    call jfile%destroy()
+
+    do i_photo_rxn = 1, pmc_interface%n_photo_rxn
+
+      call pmc_interface%photo_rxns(i_photo_rxn)%set_rate(real(pmc_interface%base_rates(i_photo_rxn), kind=dp))
+      !call pmc_interface%photo_rxns(i_photo_rxn)%set_rate(real(0.0, kind=dp)) !works
+
+      call pmc_interface%camp_core%update_data(pmc_interface%photo_rxns(i_photo_rxn))
+
+      !print*,"id photo_rate", pmc_interface%base_rates(i_photo_rxn)
+    end do
+
+    close(IMPORT_FILE_UNIT)
+
+  end subroutine import_camp_input_json
+
   subroutine solve_ebi(pmc_interface)
 
     type(monarch_interface_t), intent(inout) :: pmc_interface
@@ -798,7 +886,7 @@ contains
       end if
     end do
 
-    pressure(1,1,1)=pressure(1,1,1)/const%air_std_press
+    press=pressure(1,1,1)/const%air_std_press
 
     do i_time=1, NUM_TIME_STEP
 
@@ -806,7 +894,7 @@ contains
               is_sunny,                & ! Flag for sunlight
               ebi_photo_rates,             & ! Photolysis rates
               temperature(1,1,1),             & ! Temperature (K)
-              pressure(1,1,1),                & ! Air pressure (atm)
+              press,                & ! Air pressure (atm)
               water_conc(1,1,1,WATER_VAPOR_ID),              & ! Water vapor concentration (ppmV)
               RKI)                       ! Rate constants
       call EXT_HRSOLVER( 2018012, 070000, 1, 1, 1) ! These dummy variables are just for output
@@ -951,7 +1039,7 @@ contains
     integer :: mpi_rank, id
 
     real(kind=dp) :: dt, temp, press, real_val
-    real(kind=dp), dimension(NUM_EBI_SPEC) :: ebi_spec_out
+    real(kind=dp), dimension(NUM_EBI_SPEC) :: ebi_spec_out, ebi_spec_in
     real(kind=dp), dimension(NUM_CAMP_SPEC) :: camp_spec_out
     type(string_t), dimension(NUM_EBI_SPEC) :: ebi_spec_names
     type(string_t), dimension(NUM_EBI_SPEC) :: monarch_spec_names
@@ -983,6 +1071,8 @@ contains
     do i=1, size(ebi_spec_out)
       call jfile%get('output.species.'//ebi_spec_names(i)%string,&
               ebi_spec_out(i))
+      call jfile%get('input.species.'//ebi_spec_names(i)%string,&
+              ebi_spec_in(i))
       !print*, ebi_spec_names(i)%string, ebi_spec_out(i)
     end do
 
@@ -1011,9 +1101,10 @@ contains
 
     call jfile%destroy()
 
-    print*, "Specs error greater than MAX_REL_ERROR_TOL",MAX_REL_ERROR_TOL
-    print*, "Name, ebi_out, camp_out, &
-            ,rel. error [(ebi-camp)/(ebi+camp)]"
+    print*, "Specs relative error[(ebi-camp)/(ebi+camp)]&
+            greater than MAX_REL_ERROR_TOL",MAX_REL_ERROR_TOL
+    print*, "Name, input, ebi_out, camp_out, camp_id"! &
+            !,rel. error [(ebi-camp)/(ebi+camp)]"
 
     do i=1, size(ebi_spec_names)
       do j=1, size(camp_spec_names)
@@ -1021,8 +1112,8 @@ contains
           rel_error_in_out=abs((ebi_spec_out(i)-camp_spec_out(j))/&
                 (ebi_spec_out(i)+camp_spec_out(j)+1.0d-30))
           if(rel_error_in_out.gt.MAX_REL_ERROR_TOL) then
-            print*, ebi_spec_names(i)%string, ebi_spec_out(i)&
-                    ,camp_spec_out(j),rel_error_in_out
+            print*, ebi_spec_names(i)%string, ebi_spec_in(i), ebi_spec_out(i)&
+                    ,camp_spec_out(j), j!,rel_error_in_out
           end if
         end if
       end do

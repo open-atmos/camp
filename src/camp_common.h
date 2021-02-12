@@ -322,6 +322,16 @@ typedef struct {
   double timeJacCPU;
 #endif
 
+#ifndef PMC_DEBUG_DERIV
+  N_Vector y_first;
+  int max_deriv_print;
+  int counter_deriv_print;
+#endif
+
+#ifndef FAILURE_DETAIL
+  int counter_fail_solve_print;
+#endif
+
 #endif
 #ifdef PMC_USE_GPU
   itsolver bicg;
