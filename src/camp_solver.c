@@ -681,7 +681,7 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
   sd->model_data.total_state = state;
   sd->model_data.total_env = env;
 
-#ifdef IMPORT_CAMP_INPUT
+#ifndef IMPORT_CAMP_INPUT
 #ifdef PMC_DEBUG_GPU
   // Save initial state
   double init_state[md->n_per_cell_state_var * n_cells];

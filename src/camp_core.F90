@@ -170,7 +170,7 @@ module pmc_camp_core
     type(camp_solver_data_t), pointer, public :: solver_data_aero => null()
     !> Solver data (mixed gas- and aerosol-phase reactions)
     type(camp_solver_data_t), pointer, public :: solver_data_gas_aero => null()
-#ifdef IMPORT_CAMP_INPUT
+#ifndef IMPORT_CAMP_INPUT
     !class(rxn_data_t), pointer, public :: rxn_photo
     !real(kind=dp), allocatable :: base_rate(:)
     integer(kind=i_kind) :: counterSolve
@@ -699,7 +699,7 @@ contains
     ! Aerosol species
     type(string_t), allocatable :: unique_names(:)
 
-#ifdef IMPORT_CAMP_INPUT
+#ifndef IMPORT_CAMP_INPUT
     type(string_t), allocatable :: spec_names(:)
     !character(len=*), allocatable :: spec_names_chr(:)
     this%counterSolve=0
@@ -1470,7 +1470,7 @@ contains
     real(kind=dp) :: t_initial
     real(kind=dp) :: t_final
 
-#ifdef IMPORT_CAMP_INPUT
+#ifndef IMPORT_CAMP_INPUT
     type(json_core) :: json
     type(json_value),pointer :: p, input, output, species_in,&
             species_out, photo_rates
@@ -1529,7 +1529,7 @@ contains
     t_initial = real(0.0, kind=dp)
     t_final = time_step
 
-#ifdef IMPORT_CAMP_INPUT
+#ifndef IMPORT_CAMP_INPUT
     allocate(this%init_state_var(size(camp_state%state_var)))
     this%init_state_var(:)=camp_state%state_var(:)
 #endif
@@ -1547,7 +1547,7 @@ contains
       solver_status = solver%solve(camp_state, t_initial, t_final, n_cells_aux)
     end if
 
-#ifdef IMPORT_CAMP_INPUT
+#ifndef IMPORT_CAMP_INPUT
 
     if(solver_status.eq.CAMP_SOLVER_FAIL) then!1
       this%counterFail=this%counterFail+1
@@ -1639,7 +1639,7 @@ contains
 
 #ifdef PMC_USE_MPI
 
-#ifdef IMPORT_CAMP_INPUT
+#ifndef IMPORT_CAMP_INPUT
     character(len=:), allocatable :: spec_name
     integer(kind=i_kind) :: max_spec_name_size = 64
 #endif
@@ -1681,7 +1681,7 @@ contains
                 pmc_mpi_pack_size_integer_array(this%var_type, l_comm) + &
                 pmc_mpi_pack_size_real_array(this%init_state_cell, l_comm)
 
-#ifdef IMPORT_CAMP_INPUT
+#ifndef IMPORT_CAMP_INPUT
 
 !#ifdef COMMENTING
 
@@ -1724,7 +1724,7 @@ contains
     class(sub_model_data_t), pointer :: sub_model
     integer(kind=i_kind) :: i, j, i_mech, i_phase, i_rep, i_sub_model, &
             prev_position, l_comm
-#ifdef IMPORT_CAMP_INPUT
+#ifndef IMPORT_CAMP_INPUT
     type(string_t), allocatable :: spec_names(:)
     integer(kind=i_kind) :: max_spec_name_size = 64
 #endif
@@ -1766,7 +1766,7 @@ contains
     call pmc_mpi_pack_integer_array(buffer, pos, this%var_type, l_comm)
     call pmc_mpi_pack_real_array(buffer, pos, this%init_state_cell, l_comm)
 
-#ifdef IMPORT_CAMP_INPUT
+#ifndef IMPORT_CAMP_INPUT
 
 !#ifdef COMMENTING
 
@@ -1814,7 +1814,7 @@ contains
     integer(kind=i_kind) :: i, j, i_mech, i_phase, i_rep, i_sub_model, &
             prev_position, num_mech, num_phase, num_rep, num_sub_model, &
             l_comm
-#ifdef IMPORT_CAMP_INPUT
+#ifndef IMPORT_CAMP_INPUT
     type(string_t), allocatable :: spec_names(:)
     character(len=:), allocatable :: spec_name
     integer :: max_spec_name_size=64
@@ -1860,7 +1860,7 @@ contains
     call pmc_mpi_unpack_integer_array(buffer, pos, this%var_type, l_comm)
     call pmc_mpi_unpack_real_array(buffer, pos, this%init_state_cell, l_comm)
 
-#ifdef IMPORT_CAMP_INPUT
+#ifndef IMPORT_CAMP_INPUT
 
 !#ifdef COMMENTING
 
