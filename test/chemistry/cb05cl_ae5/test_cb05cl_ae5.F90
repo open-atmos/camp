@@ -364,13 +364,11 @@ contains
 
     photo_rates(:) = 0.0001 * 60.0 ! EBI solver wants rates in min^-1
 
-#ifndef TEST_PHOTO_RATES
+#ifdef TEST_PHOTO_RATES
     photo_rates(:) = 0.1 * 60.0
 #endif
 
     KPP_PHOTO_RATES(:) = photo_rates(1)/60
-
-
 
     ! Set O2 + hv rate constant to 0 in KPP (not present in ebi version)
     KPP_PHOTO_RATES(1) = 0.0

@@ -321,11 +321,11 @@ program mock_monarch
             air_density,i_W,I_E,I_S,I_N)
 
 #ifndef IMPORT_CAMP_INPUT
-    !call import_camp_input(pmc_interface)
-    call import_camp_input_json(pmc_interface)
+    call import_camp_input(pmc_interface)
+    !call import_camp_input_json(pmc_interface)
 #endif
 
-#ifndef IMPORT_CAMP_INPUT
+#ifdef IMPORT_CAMP_INPUT
     call solve_ebi(pmc_interface)
 #endif
 
@@ -339,7 +339,23 @@ program mock_monarch
       call print_state_gnuplot(curr_time,pmc_interface, name_gas_species_to_print,id_gas_species_to_print&
               ,name_aerosol_species_to_print,id_aerosol_species_to_print,RESULTS_FILE_UNIT)
 
-
+      call pmc_interface%integrate(curr_time,         & ! Starting time (min)
+                                   TIME_STEP,         & ! Time step (min)
+                                   I_W,               & ! Starting W->E grid cell
+                                   I_E,               & ! Ending W->E grid cell
+                                   I_S,               & ! Starting S->N grid cell
+                                   I_N,               & ! Ending S->N grid cell
+                                   temperature,       & ! Temperature (K)
+                                   species_conc,      & ! Tracer array
+                                   water_conc,        & ! Water concentrations (kg_H2O/kg_air)
+                                   WATER_VAPOR_ID,    & ! Index in water_conc() corresponding to water vapor
+                                   air_density,       & ! Air density (kg_air/m^3)
+                                   pressure,          & ! Air pressure (Pa)
+                                   conv,              &
+                                   i_hour,&
+               name_gas_species_to_print,id_gas_species_to_print&
+              ,name_aerosol_species_to_print,id_aerosol_species_to_print,RESULTS_FILE_UNIT)
+      curr_time = curr_time + TIME_STEP
 
       !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       ! **** end runtime modification **** !
@@ -398,8 +414,8 @@ program mock_monarch
     end do
   end if
 
-#ifndef IMPORT_CAMP_INPUT
-    !call compare_ebi_camp_json(pmc_interface)
+#ifdef IMPORT_CAMP_INPUT
+    call compare_ebi_camp_json(pmc_interface)
 #endif
 
   !write(*,*) "file_prefix", output_file_prefix
@@ -612,7 +628,7 @@ contains
         if (trim(camp_spec_names(i)%string).eq.trim(monarch_spec_names(j)%string)) then
           !map_camp_monarch(j)=i
           aux_state_var(j)=pmc_interface%camp_state%state_var(i)
-          print*,monarch_spec_names(i)%string, aux_state_var(j)
+          !print*,monarch_spec_names(i)%string, aux_state_var(j)
         end if
       end do
     end do
@@ -758,7 +774,7 @@ contains
           temperature(i,j,k)=temp
           call jfile%get('input.pressure',press)
           pressure(i,j,k)=press
-          print*,"PRESSURE READ CAMP",pressure(i,j,k)
+          !print*,"PRESSURE READ CAMP",pressure(i,j,k)
         end do
       end do
     end do
@@ -792,7 +808,8 @@ contains
     type(monarch_interface_t), intent(inout) :: pmc_interface
     integer :: z,i,j,k,r,o,i_cell,i_spec,i_photo_rxn,i_time
 
-    real(kind=dp) :: dt, temp, press, auxr
+    real(kind=dp) :: dt, temp, press_json, auxr
+    real :: press
     type(json_core) :: json
     type(json_value),pointer :: p, species_in, species_out, input, output&
             , photo_rates
@@ -847,6 +864,7 @@ contains
     do i=1, NUM_EBI_PHOTO_RXN
       ebi_photo_rates(i)=&
               pmc_interface%base_rates(photo_id_camp(i))*60
+      !print*,i,ebi_photo_rates(i)
     end do
 
     ebi_spec_id_to_camp(:) = 1
@@ -867,13 +885,13 @@ contains
     do i = 1, NUM_CAMP_SPEC
       if (trim(camp_spec_names(i)%string).eq."H2O") then
         water_conc(1,1,1,WATER_VAPOR_ID) = pmc_interface%camp_state%state_var(i)
-        print*,"EBI H2O",water_conc(1,1,1,WATER_VAPOR_ID)
+        !print*,"EBI H2O",water_conc(1,1,1,WATER_VAPOR_ID)
       end if
     end do
 
     press=pressure(1,1,1)/const%air_std_press
-    !press=0.9571863
-    print*,"EBI press,const%air_std_press",press,const%air_std_press
+    !print*,"EBI press, pressure(1,1,1), const%air_std_press"&
+    !,press,pressure(1,1,1),const%air_std_press
 
     do i_time=1, NUM_TIME_STEP
 
@@ -905,8 +923,8 @@ contains
       call json%add(input, "dt",dt)
       temp=temperature(z,r,o)
       call json%add(input, "temperature", temp)
-      press=pressure(z,r,o)/const%air_std_press
-      call json%add(input, "pressure", press)
+      press_json=pressure(z,r,o)/const%air_std_press
+      call json%add(input, "pressure", press_json)
 
       call json%create_object(species_in,'species')
       call json%add(input, species_in)
@@ -975,7 +993,7 @@ contains
     end do
 #endif
 
-#ifndef PRINT_EBI_SPEC_BY_EBI_ORDER
+#ifdef PRINT_EBI_SPEC_BY_EBI_ORDER
     print*,"EBI order:"
     print*,"Name, id, init, out, rel. error [(init-out)/(init+out)]"
     do j = 1, NUM_EBI_SPEC

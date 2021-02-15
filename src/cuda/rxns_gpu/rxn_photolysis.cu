@@ -106,6 +106,7 @@ void rxn_gpu_photolysis_calc_deriv_contrib(ModelData *model_data, TimeDerivative
     }
     for (int i_spec=0; i_spec<NUM_PROD_; i_spec++, i_dep_var++) {
       if (DERIV_ID_(i_dep_var) < 0) continue;
+      //todo copy from rxn.c
 #ifdef BASIC_CALC_DERIV
 #ifdef __CUDA_ARCH__
         atomicAdd((double*)&(deriv[DERIV_ID_(i_dep_var)]),rate*YIELD_(i_spec));

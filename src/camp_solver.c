@@ -1033,8 +1033,7 @@ int camp_solver_update_model_state(N_Vector solver_state, SolverData *sd,
     for (int i_spec = 0; i_spec < n_state_var; ++i_spec) {
       if (model_data->var_type[i_spec] == CHEM_SPEC_VARIABLE) {
         if (NV_DATA_S(solver_state)[i_dep_var] < -SMALL) {
-#ifndef FAILURE_DETAIL
-          // todo: limit number of prints
+#ifdef FAILURE_DETAIL
           if(sd->counter_fail_solve_print<1){
             printf("Failed model state update: [spec %d] = %le\n", i_spec,
                NV_DATA_S(solver_state)[i_dep_var]);
@@ -1048,7 +1047,7 @@ int camp_solver_update_model_state(N_Vector solver_state, SolverData *sd,
           sd->counter_fail_solve_print++;
 #endif
 #ifdef DEV_TESTING_NEGATIVE_CONCS
-          //NV_DATA_S(solver_state)[i_dep_var]=SMALL; //Fails anyway
+          NV_DATA_S(solver_state)[i_dep_var]=SMALL; //Fails anyway
 #endif
           return CAMP_SOLVER_FAIL;
         }
@@ -1409,7 +1408,7 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
   }*/
 #endif
 
-#ifndef PMC_DEBUG_DERIV
+#ifdef PMC_DEBUG_DERIV
   if(sd->counterDerivCPU==0){
     sd->y_first = N_VClone(y);
     for (int i = 0; i < NV_LENGTH_S(deriv); i++) {
@@ -1502,7 +1501,7 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
     jac_deriv_data += n_dep_var;
   }
 
-#ifndef PMC_DEBUG_DERIV
+#ifdef PMC_DEBUG_DERIV
   if(sd->counter_deriv_print<sd->max_deriv_print &&
   //NV_DATA_S(sd->y_first)[0] != NV_DATA_S(y)[0]){
   1){
@@ -2425,6 +2424,7 @@ void solver_reset_timers(void *solver_data) {
 }
 #endif
 
+//Old routine
 void export_camp_input(void *solver_data, double *init_state, char *in_path) {
   SolverData *sd = (SolverData *)solver_data;
   ModelData *md = &(sd->model_data);
