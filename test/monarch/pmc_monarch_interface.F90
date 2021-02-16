@@ -156,16 +156,6 @@ contains
     ! Computation time variable
     real(kind=dp) :: comp_start, comp_end
 
-#ifdef COMMENTING
-    integer :: i_rxn, i_base_rate, i_mech
-    type(mechanism_data_t), pointer :: mechanism
-    class(rxn_data_t), pointer :: rxn
-    character(len=:), allocatable :: key, str_val, rxn_key, rate_key, rxn_val
-    real(kind=dp) :: rate_val
-    type(string_t), allocatable :: spec_names(:)
-#endif
-
-
 #ifdef PMC_USE_MPI
     integer :: local_comm
 
@@ -188,13 +178,19 @@ contains
       this%n_cells=n_cells
     end if
 
+    print*,"hola", interface_config_file
+
     this%interface_input_file=interface_config_file
+    print*,"hola"
 
     ! Check for an available solver
     camp_solver_data => camp_solver_data_t()
+    print*,"hola"
     call assert_msg(332298164, camp_solver_data%is_solver_available(), &
             "No solver available")
     deallocate(camp_solver_data)
+
+    print*,"hola"
 
     ! Initialize the time-invariant model data on each node
     if (MONARCH_PROCESS.eq.0) then
@@ -209,8 +205,12 @@ contains
       call assert_msg(593895016, present(ending_id), &
               "Missing ending tracer index for chemical species")
 
+
+
       ! Load the interface data
       call this%load(interface_config_file)
+
+
 
       ! Initializeorganic_matter the camp-chem core
       this%camp_core => camp_core_t(camp_config_file, this%n_cells)
@@ -303,10 +303,14 @@ contains
         end do
       endif
 
+
+
     endif
 
     ! broadcast the buffer size
     call pmc_mpi_bcast_integer(pack_size, local_comm)
+
+
 
     if (MONARCH_PROCESS.ne.0) then
       ! allocate the buffer to receive data
@@ -351,6 +355,8 @@ contains
     deallocate(buffer)
 #endif
 
+
+
     ! Initialize the solver on all nodes
     call this%camp_core%solver_initialize()
 
@@ -369,6 +375,7 @@ contains
       end do
 
     end if
+
 
     ! Set the aerosol mode dimensions
 

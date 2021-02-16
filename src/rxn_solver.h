@@ -25,13 +25,8 @@ void rxn_print_data(void *solver_data);
 void rxn_export_input(void *solver_data, FILE *f);
 void rxn_get_base_rate(void *solver_data, double *rate_constants);
 #ifdef PMC_USE_SUNDIALS
-#ifdef CHANGE_LOOPS
-void rxn_calc_deriv(ModelData *model_data, double *time_deriv,
-                    double time_step);
-#else
 void rxn_calc_deriv(ModelData *model_data, TimeDerivative time_deriv,
                     double time_step);
-#endif
 void rxn_calc_deriv_specific_types(ModelData *model_data,
                                    TimeDerivative time_deriv, double time_step);
 void rxn_calc_jac(ModelData *model_data, Jacobian jac, double time_step);

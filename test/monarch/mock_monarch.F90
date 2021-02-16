@@ -77,7 +77,7 @@ program mock_monarch
   !> Number of total species in mock MONARCH
   integer, parameter :: NUM_MONARCH_SPEC = 300 !800
   !> Number of vertical cells in mock MONARCH
-  integer, parameter :: NUM_VERT_CELLS = 1
+  integer, parameter :: NUM_VERT_CELLS = 2
   !> Starting W-E cell for camp-chem call
   integer, parameter :: I_W = 1
   !> Ending W-E cell for camp-chem call
@@ -199,20 +199,26 @@ program mock_monarch
   call get_command_argument(1, arg, status=status_code)
   call assert_msg(678165802, status_code.eq.0, "Error getting PartMC-camp "//&
           "configuration file name")
+  print*,"Name input file:",arg
   camp_input_file = trim(arg)
   call get_command_argument(2, arg, status=status_code)
   call assert_msg(664104564, status_code.eq.0, "Error getting PartMC-camp "//&
           "<-> MONARCH interface configuration file name")
+  print*,"Name input file:",arg
   interface_input_file = trim(arg)
+  !interface_input_file = adjustl(arg)
+  print*,"Name input file2:",interface_input_file
 
   ! Initialize the mock model
   call get_command_argument(3, arg, status=status_code)
   call assert_msg(234156729, status_code.eq.0, "Error getting output file prefix")
+  print*,"Name input file:",arg
   output_file_title = "Mock_"//trim(arg)
   output_file_prefix = "out/"//trim(arg)
 
   n_cells_plot = 1
   cell_to_print = 1
+  !cell_to_print = n_cells
 
   if(interface_input_file.eq."interface_simple.json") then
 
@@ -291,8 +297,12 @@ program mock_monarch
   !Repeat in case we want a checking
   do i_case=1, pmc_cases
 
+
+    print*,"Name input file:",interface_input_file
+
     pmc_interface => monarch_interface_t(camp_input_file, interface_input_file, &
             START_CAMP_ID, END_CAMP_ID, n_cells)!, n_cells
+
 
     do j=1, size(name_gas_species_to_print)
       do z=1, size(pmc_interface%monarch_species_names)
@@ -320,7 +330,7 @@ program mock_monarch
     call pmc_interface%get_init_conc(species_conc, water_conc, WATER_VAPOR_ID, &
             air_density,i_W,I_E,I_S,I_N)
 
-#ifndef IMPORT_CAMP_INPUT
+#ifdef IMPORT_CAMP_INPUT
     call import_camp_input(pmc_interface)
     !call import_camp_input_json(pmc_interface)
 #endif
@@ -417,8 +427,6 @@ program mock_monarch
 #ifdef IMPORT_CAMP_INPUT
     call compare_ebi_camp_json(pmc_interface)
 #endif
-
-  !write(*,*) "file_prefix", output_file_prefix
 
   ! Output results and scripts
   if (pmc_mpi_rank().eq.0) then
@@ -539,18 +547,18 @@ contains
       !Initialize different axis values
       !Species_conc is modified in monarch_interface%get_init_conc
       do i=I_W, I_E
-        temperature(i,:,:) = temperature(i,:,:)! + 0.1*i
-        pressure(i,:,:) = pressure(i,:,:)! - 1*i
+        temperature(i,:,:) = temperature(i,:,:) + 0.1*i
+        pressure(i,:,:) = pressure(i,:,:) - 1*i
       end do
 
       do j=I_S, I_N
-        temperature(:,j,:) = temperature(:,j,:)! + 0.3*j
-        pressure(:,:,j) = pressure(:,:,j)! - 3*j
+        temperature(:,j,:) = temperature(:,j,:) + 0.3*j
+        pressure(:,:,j) = pressure(:,:,j) - 3*j
       end do
 
       do k=1, NUM_VERT_CELLS
-        temperature(:,:,k) = temperature(:,:,k)! + 0.6*k
-        pressure(:,k,:) = pressure(:,k,:)! - 6*k
+        temperature(:,:,k) = temperature(:,:,k) + 0.6*k
+        pressure(:,k,:) = pressure(:,k,:) - 6*k
       end do
 
     end if

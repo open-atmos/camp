@@ -267,12 +267,14 @@ static void print_jacobian_file(SUNMatrix J, char *filepath) {
  *
  * \param deriv Derivative array
  */
-static void print_derivative(N_Vector deriv) {
+static void print_derivative(SolverData *sd, N_Vector deriv) {
+  ModelData *md = &(sd->model_data);
+
   printf("[(id) deriv], deriv length: %d\n", NV_LENGTH_S(deriv));
   int n_cells = 2;
-  int print_cells = 0;
+  int print_all_cells = 0;
   //if (NV_LENGTH_S(deriv) < 72 * n_cells) {
-  if (print_cells){
+  if (print_all_cells){
     for (int i = 0; i < n_cells; i++) {
       printf("cell %d \n", i);
       int size_j = NV_LENGTH_S(deriv) / n_cells;
@@ -282,19 +284,23 @@ static void print_derivative(N_Vector deriv) {
       printf("\n");
     }
   } else {
-    for (int i = 0; i < NV_LENGTH_S(deriv); i++) {
+    //Print last cell
+    for (int i = NV_LENGTH_S(deriv)-md->n_per_cell_dep_var;
+    i < NV_LENGTH_S(deriv); i++) {
       printf("(%d) %-le \n", i + 1, NV_DATA_S(deriv)[i]);
     }
   }
   printf("\n");
 }
 
-static void print_derivative_in_out(N_Vector deriv_in, N_Vector deriv) {
+static void print_derivative_in_out(SolverData *sd, N_Vector deriv_in, N_Vector deriv) {
+  ModelData *md = &(sd->model_data);
+
   printf("[(id), deriv_in, deriv_out]\n");
   int n_cells = 2;
-  int print_cells = 0;
+  int print_all_cells = 0;
   //if (NV_LENGTH_S(deriv) < 72 * n_cells) {
-  if (print_cells){
+  if (print_all_cells){
     for (int i = 0; i < n_cells; i++) {
       printf("cell %d \n", i);
       int size_j = NV_LENGTH_S(deriv) / n_cells;
@@ -304,7 +310,9 @@ static void print_derivative_in_out(N_Vector deriv_in, N_Vector deriv) {
       printf("\n");
     }
   } else {
-    for (int i = 0; i < NV_LENGTH_S(deriv); i++) {
+    //Print last cell
+    for (int i = NV_LENGTH_S(deriv)-md->n_per_cell_dep_var;
+         i < NV_LENGTH_S(deriv); i++) {
       printf("(%d) %-le %-le \n", i + 1, NV_DATA_S(deriv_in)[i],
               NV_DATA_S(deriv)[i] );
     }

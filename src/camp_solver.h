@@ -72,8 +72,8 @@ void solver_reset_timers(void *solver_data);
 static void solver_print_stats(void *cvode_mem);
 static void print_data_sizes(ModelData *md);
 static void print_jacobian(SUNMatrix M);
-static void print_derivative(N_Vector deriv);
-static void print_derivative_in_out(N_Vector deriv_in, N_Vector deriv);
+static void print_derivative(SolverData *sd, N_Vector deriv);
+static void print_derivative_in_out(SolverData *sd, N_Vector deriv_in, N_Vector deriv);
 bool is_anything_going_on_here(SolverData *sd, realtype t_initial,
                                realtype t_final);
 #ifdef PMC_USE_GSL

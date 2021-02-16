@@ -27,6 +27,10 @@ int time_derivative_initialize(TimeDerivative *time_deriv,
     return 0;
   }
 
+  //time_deriv->num_spec_per_cell = num_spec;
+  //time_deriv->num_spec = num_spec*n_cells;
+  //time_deriv->i_cell = 0;
+
   time_deriv->num_spec = num_spec;
 
 #ifdef PMC_DEBUG
@@ -75,6 +79,11 @@ void time_derivative_output(TimeDerivative time_deriv, double *dest_array,
     } else {
       *dest_array = 0.0;
     }
+#ifndef BASIC_TIME_DERIVATIVE_RESET
+#else
+    *r_p=0;
+    *r_l=0;
+#endif
     ++r_p;
     ++r_l;
     ++dest_array;
