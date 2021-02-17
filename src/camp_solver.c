@@ -137,18 +137,12 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
   for (int i = 0; i < n_state_var; i++)
     if (var_type[i] == CHEM_SPEC_VARIABLE) n_dep_var++;
 
-#ifdef PMC_DEBUG2_GPU
-  printf("(id) var_type\n");
-  for (int i = 0; i < n_state_var; i++) printf("(%d) %d ", i + 1, var_type[i]);
-  printf("\n");
-#endif
-
   // Save the number of solver variables per grid cell
   sd->model_data.n_per_cell_dep_var = n_dep_var;
 
 #ifdef PMC_USE_SUNDIALS
 
-#ifndef DERIV_RXN_CELLS_LOOP
+#ifdef DERIV_RXN_CELLS_LOOP
   int n_time_deriv_specs=n_dep_var;
 #else
   int n_time_deriv_specs=n_dep_var*n_cells;
@@ -741,7 +735,6 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
 #ifdef PMC_USE_ODE_GPU
     flag = CVode_gpu2(sd->cvode_mem, (realtype)t_final, sd->y, &t_rt, CV_NORMAL,
                       sd);
-// flag = CVode(sd->cvode_mem, (realtype)t_final, sd->y, &t_rt, CV_NORMAL);
 #else
     // flag = CVode_gpu2(sd->cvode_mem, (realtype)t_final, sd->y, &t_rt,
     // CV_NORMAL, sd);
@@ -1139,7 +1132,7 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
   }*/
 #endif
 
-#ifndef PMC_DEBUG_DERIV
+#ifdef PMC_DEBUG_DERIV
   if(sd->counterDerivCPU==0){
     sd->y_first = N_VClone(y);
     for (int i = 0; i < NV_LENGTH_S(deriv); i++) {
@@ -1172,7 +1165,7 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
   int n_state_var = md->n_per_cell_state_var;
   int n_dep_var = md->n_per_cell_dep_var;
 
-#ifndef DERIV_RXN_CELLS_LOOP
+#ifdef DERIV_RXN_CELLS_LOOP
 
   // Loop through the grid cells and update the derivative array
   for (int i_cell = 0; i_cell < n_cells; ++i_cell) {
@@ -1211,12 +1204,29 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
 
     // Update the deriv array
     if (sd->use_deriv_est == 1) {
+      //printf("jac_deriv_data %-le\n",jac_deriv_data[0]);
+      //printf("Pointer jac_deriv_data before time_derivative_output %p\n",(void *)jac_deriv_data);
       time_derivative_output(sd->time_deriv, deriv_data, jac_deriv_data,
                              sd->output_precision);
+      //printf("Pointer jac_deriv_data after time_derivative_output %p\n",(void *)jac_deriv_data);
     } else {
       time_derivative_output(sd->time_deriv, deriv_data, NULL,
                              sd->output_precision);
     }
+
+#ifdef PMC_DEBUG_DERIV
+  if(//sd->counter_deriv_print<sd->max_deriv_print &&
+  //NV_DATA_S(sd->y_first)[0] != NV_DATA_S(y)[0]){
+  sd->counterDerivCPU<=0 &&
+  1){
+#ifdef DERIV_RXN_CELLS_LOOP
+      //for (int i = 0; i < sd->time_deriv.num_spec; i++)
+      //printf("(%d) %-le %-le %-le\n",i,sd->time_deriv.production_rates[i],
+      //      sd->time_deriv.loss_rates[i], jac_deriv_data[i]);
+#else
+#endif
+  }
+#endif
 
 #ifdef PMC_DEBUG
     clock_t end2 = clock();
@@ -1266,14 +1276,23 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
 // DERIV_RXN_CELLS_LOOP
 #endif
 
-#ifndef PMC_DEBUG_DERIV
+#ifdef PMC_DEBUG_DERIV
   if(//sd->counter_deriv_print<sd->max_deriv_print &&
   //NV_DATA_S(sd->y_first)[0] != NV_DATA_S(y)[0]){
-  sd->counterDerivCPU<=3 &&
+  sd->counterDerivCPU<=0 &&
   1){
     printf("y_first[0] %-le y[0] %-le\n", NV_DATA_S(sd->y_first)[0], NV_DATA_S(y)[0]);
     printf("Deriv iter: %d\n",sd->counterDerivCPU);
     print_derivative_in_out(sd, y, deriv);
+    //print_time_derivative(sd);
+    printf("Time_deriv prod loss jac_deriv_data\n");
+#ifdef DERIV_RXN_CELLS_LOOP
+#else
+    for (int i = 0; i < sd->time_deriv.num_spec; i++)
+      printf("(%d) %-le %-le %-le\n",i,sd->time_deriv.production_rates[i],
+            sd->time_deriv.loss_rates[i], jac_deriv_data[i]);
+#endif
+
     sd->counter_deriv_print++;
   }
 #endif

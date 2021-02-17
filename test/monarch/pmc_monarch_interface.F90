@@ -178,19 +178,15 @@ contains
       this%n_cells=n_cells
     end if
 
-    print*,"hola", interface_config_file
-
     this%interface_input_file=interface_config_file
-    print*,"hola"
 
     ! Check for an available solver
     camp_solver_data => camp_solver_data_t()
-    print*,"hola"
+
     call assert_msg(332298164, camp_solver_data%is_solver_available(), &
             "No solver available")
     deallocate(camp_solver_data)
 
-    print*,"hola"
 
     ! Initialize the time-invariant model data on each node
     if (MONARCH_PROCESS.eq.0) then
@@ -1325,7 +1321,7 @@ end if
       factor_ppb_to_ppm=1.0
     end if
 
-    print*,'factor_ppb_to_ppm: ',factor_ppb_to_ppm
+    !print*,'factor_ppb_to_ppm: ',factor_ppb_to_ppm
     ! Reset the species concentrations in PMC and MONARCH
     this%camp_state%state_var(:) = 0.0
     MONARCH_conc(:,:,:,:) = 0.0

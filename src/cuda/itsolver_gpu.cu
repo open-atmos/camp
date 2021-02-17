@@ -263,9 +263,16 @@ void solveGPU_block(itsolver *bicg, double *dA, int *djA, int *diA, double *dx, 
   int size_cell = nrows/n_cells; //e.g size_cell = 3 for mock_monarch 1 (3 species)
   int n_shr_empty = max_threads%size_cell;
   int threads_block = max_threads - n_shr_empty; //last multiple of size_cell before max_threads
+  //max_threads_block = bicg->threads_block //todo test with n_cells_block=1, osea max_threads_block = nearPower2(size_cell)??
+  // int n_cells_block = max_threads_block/size_cell;
+  //int threads_block = n_cells_block*size_cell;
 
+  //Todo: I THINK that the block is blocks should be calculated with
+  //todo check if nrows=1024*n_cells works, in this way, we have some threads idle, but should be easier to program
   //threads = bicg->threads;//active_threads;//bicg->threads;
   blocks = (nrows+threads_block-1)/threads_block; //blocks counting active_threads working in each block
+  //blocks = n_cells/n_cells_block //todo try this and a if in block-cells to only compute nrows
+
 
   /*aux_params[0] = alpha;
   aux_params[1] = rho0;

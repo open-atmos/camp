@@ -82,9 +82,6 @@ void solver_new_gpu_cu(ModelData *md, int n_dep_var,
   md->small_data = 0;
   md->implemented_all = true;
 
-  //TODO: cusolver
-  //cusolver_test();
-
   //Allocate streams array and update variables related to streams
   //md->md_id = n_solver_objects;
   //if(n_solver_objects==0){
@@ -113,12 +110,12 @@ void solver_new_gpu_cu(ModelData *md, int n_dep_var,
   int n_blocks = (n_rxn + md->max_n_gpu_thread - 1) / md->max_n_gpu_thread;
 
   //GPU allocation
-  cudaMalloc((void **) &md->deriv_gpu_data, md->deriv_size);
+  HANDLE_ERROR(cudaMalloc((void **) &md->deriv_gpu_data, md->deriv_size));
   cudaMalloc((void **) &md->state_gpu, md->state_size);
   cudaMalloc((void **) &md->env_gpu, md->env_size);
   cudaMalloc((void **) &md->rxn_env_data_gpu, md->rxn_env_data_size);
   cudaMalloc((void **) &md->rxn_env_data_idx_gpu, md->rxn_env_data_idx_size);
-  cudaMalloc((void **) &md->map_state_deriv_gpu, md->map_state_deriv_size);
+  HANDLE_ERROR(cudaMalloc((void **) &md->map_state_deriv_gpu, md->map_state_deriv_size));
 
   time_derivative_initialize_gpu(md,n_dep_var*n_cells);
 
@@ -129,6 +126,8 @@ void solver_new_gpu_cu(ModelData *md, int n_dep_var,
     for (int i_spec = 0; i_spec < n_state_var; i_spec++) {
       if (md->var_type[i_spec] == CHEM_SPEC_VARIABLE) {
         md->map_state_deriv[i_dep_var] = i_spec + i_cell * n_state_var;
+        //printf("%d %d, %d %d %d\n", md->map_state_deriv_size/sizeof(int),
+        //       md->map_state_deriv[i_dep_var],n_state_var, i_spec, i_cell, i_dep_var);
         i_dep_var++;
       }
     }
@@ -402,6 +401,7 @@ void update_j_state_deriv_solver_gpu(SolverData *sd, double *J){
 
 }
 
+
 void rxn_update_env_state_gpu(ModelData *md){
 
   // Get a pointer to the derivative data
@@ -420,18 +420,18 @@ void rxn_update_env_state_gpu(ModelData *md){
   }
   //Slower, use for large values
   else{
-/*
     //Async memcpy
-    HANDLE_ERROR(cudaMemcpyAsync(md->rxn_env_data_gpu, rxn_env_data,
-            md->rxn_env_data_size, cudaMemcpyHostToDevice, md->stream_gpu[STREAM_RXN_ENV_GPU]));
-    HANDLE_ERROR(cudaMemcpyAsync(md->env_gpu, env, md->env_size,
-            cudaMemcpyHostToDevice, md->stream_gpu[STREAM_ENV_GPU]));
-*/
+    //HANDLE_ERROR(cudaMemcpyAsync(md->rxn_env_data_gpu, rxn_env_data,
+    //        md->rxn_env_data_size, cudaMemcpyHostToDevice, md->stream_gpu[STREAM_RXN_ENV_GPU]));
+    //HANDLE_ERROR(cudaMemcpyAsync(md->env_gpu, env, md->env_size,
+    //        cudaMemcpyHostToDevice, md->stream_gpu[STREAM_ENV_GPU]));
+
     HANDLE_ERROR(cudaMemcpy(md->rxn_env_data_gpu, rxn_env_data, md->rxn_env_data_size, cudaMemcpyHostToDevice));
     HANDLE_ERROR(cudaMemcpy(md->env_gpu, env, md->env_size, cudaMemcpyHostToDevice));
     HANDLE_ERROR(cudaMemcpy(md->state_gpu, md->total_state, md->state_size, cudaMemcpyHostToDevice));
   }
 }
+
 
 __global__
 void camp_solver_check_model_state_cuda(double *state_init, double *y,

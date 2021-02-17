@@ -77,7 +77,7 @@ program mock_monarch
   !> Number of total species in mock MONARCH
   integer, parameter :: NUM_MONARCH_SPEC = 300 !800
   !> Number of vertical cells in mock MONARCH
-  integer, parameter :: NUM_VERT_CELLS = 2
+  integer, parameter :: NUM_VERT_CELLS = 1000
   !> Starting W-E cell for camp-chem call
   integer, parameter :: I_W = 1
   !> Ending W-E cell for camp-chem call
@@ -199,20 +199,15 @@ program mock_monarch
   call get_command_argument(1, arg, status=status_code)
   call assert_msg(678165802, status_code.eq.0, "Error getting PartMC-camp "//&
           "configuration file name")
-  print*,"Name input file:",arg
   camp_input_file = trim(arg)
   call get_command_argument(2, arg, status=status_code)
   call assert_msg(664104564, status_code.eq.0, "Error getting PartMC-camp "//&
           "<-> MONARCH interface configuration file name")
-  print*,"Name input file:",arg
   interface_input_file = trim(arg)
-  !interface_input_file = adjustl(arg)
-  print*,"Name input file2:",interface_input_file
 
   ! Initialize the mock model
   call get_command_argument(3, arg, status=status_code)
   call assert_msg(234156729, status_code.eq.0, "Error getting output file prefix")
-  print*,"Name input file:",arg
   output_file_title = "Mock_"//trim(arg)
   output_file_prefix = "out/"//trim(arg)
 
@@ -296,9 +291,6 @@ program mock_monarch
 
   !Repeat in case we want a checking
   do i_case=1, pmc_cases
-
-
-    print*,"Name input file:",interface_input_file
 
     pmc_interface => monarch_interface_t(camp_input_file, interface_input_file, &
             START_CAMP_ID, END_CAMP_ID, n_cells)!, n_cells

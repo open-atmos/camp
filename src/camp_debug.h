@@ -297,24 +297,25 @@ static void print_derivative_in_out(SolverData *sd, N_Vector deriv_in, N_Vector 
   ModelData *md = &(sd->model_data);
 
   printf("[(id), deriv_in, deriv_out]\n");
-  int n_cells = 2;
+  int n_cells = md->n_cells;
   int print_all_cells = 0;
-  //if (NV_LENGTH_S(deriv) < 72 * n_cells) {
+
   if (print_all_cells){
     for (int i = 0; i < n_cells; i++) {
-      printf("cell %d \n", i);
+      //printf("cell %d \n", i);
       int size_j = NV_LENGTH_S(deriv) / n_cells;
-      for (int j = 0; j < size_j; j++) {  // NV_LENGTH_S(deriv)
-        printf("(%d) %-le \n", j + 1, NV_DATA_S(deriv)[j + i * size_j]);
+      for (int j = 0; j < size_j; j++) {
+        printf("(%d) %-le %-le \n", j + 1, NV_DATA_S(deriv_in)[j + i * size_j],
+                NV_DATA_S(deriv)[j + i * size_j]);
       }
-      printf("\n");
     }
   } else {
-    //Print last cell
-    for (int i = NV_LENGTH_S(deriv)-md->n_per_cell_dep_var;
-         i < NV_LENGTH_S(deriv); i++) {
-      printf("(%d) %-le %-le \n", i + 1, NV_DATA_S(deriv_in)[i],
-              NV_DATA_S(deriv)[i] );
+    //Print specific cell
+    int i=1;
+    int size_j = NV_LENGTH_S(deriv) / n_cells;
+    for (int j = 0; j < size_j; j++) {
+      printf("(%d) %-le %-le \n", j + 1, NV_DATA_S(deriv_in)[j + i * size_j],
+              NV_DATA_S(deriv)[j + i * size_j] );
     }
   }
   printf("\n");

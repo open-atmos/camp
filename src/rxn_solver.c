@@ -255,7 +255,7 @@ void rxn_update_env_state(ModelData *model_data) {
  */
 #ifdef PMC_USE_SUNDIALS
 
-#ifndef DERIV_RXN_CELLS_LOOP
+#ifdef DERIV_RXN_CELLS_LOOP
 
 void rxn_calc_deriv(ModelData *model_data, TimeDerivative time_deriv,
                     realtype time_step) {
@@ -274,6 +274,9 @@ void rxn_calc_deriv(ModelData *model_data, TimeDerivative time_deriv,
 
     // Get the reaction type
     int rxn_type = *(rxn_int_data++);
+
+    //printf("%-le %-le %-le\n",model_data->grid_cell_state[0],model_data->grid_cell_env[0],
+    //      model_data->grid_cell_rxn_env_data[0]);
 
     // Call the appropriate function
     switch (rxn_type) {
@@ -337,6 +340,9 @@ void rxn_calc_deriv(ModelData *model_data, TimeDerivative time_deriv,
                                               rxn_env_data, time_step);
         break;
     }
+    //for (int i = 0; i < model_data->n_per_cell_dep_var; i++)
+    //  printf("(%d) %-le %-le \n",i_rxn,time_deriv.production_rates[i],
+    //        time_deriv.loss_rates[i]);
   }
 }
 
@@ -354,11 +360,13 @@ void rxn_calc_deriv(ModelData *model_data, TimeDerivative time_deriv,
         &(model_data->rxn_int_data[model_data->rxn_int_indices[i_rxn]]);
     double *rxn_float_data =
         &(model_data->rxn_float_data[model_data->rxn_float_indices[i_rxn]]);
-    double *rxn_env_data =
-        &(model_data->grid_cell_rxn_env_data[model_data->rxn_env_idx[i_rxn]]);
 
     // Get the reaction type
     int rxn_type = *(rxn_int_data++);
+
+    //Set time_deriv to first cell
+    time_deriv.production_rates=init_production_rates;
+    time_deriv.loss_rates=init_loss_rates;
 
     for (int i_cell = 0; i_cell < model_data->n_cells; i_cell++) {
       model_data->grid_cell_id = i_cell;
@@ -366,8 +374,13 @@ void rxn_calc_deriv(ModelData *model_data, TimeDerivative time_deriv,
           &(model_data->total_state[i_cell * model_data->n_per_cell_state_var]);
       model_data->grid_cell_env =
           &(model_data->total_env[i_cell * PMC_NUM_ENV_PARAM_]);
-      model_data->grid_cell_rxn_env_data =
-          &(model_data->rxn_env_data[i_cell * model_data->n_rxn_env_data]);
+
+    model_data->grid_cell_rxn_env_data =
+            &(model_data->rxn_env_data[i_cell * model_data->n_rxn_env_data]);
+
+    double *rxn_env_data =
+        &(model_data->grid_cell_rxn_env_data[model_data->rxn_env_idx[i_rxn]]);
+
       /*md->grid_cell_aero_rep_env_data =
           &(md->aero_rep_env_data[i_cell * md->n_aero_rep_env_data]);
       md->grid_cell_sub_model_env_data =
@@ -437,13 +450,9 @@ void rxn_calc_deriv(ModelData *model_data, TimeDerivative time_deriv,
       }
 
       // Advance the time_deriv for the next cell
-      //deriv_data += model_data->n_per_cell_dep_var;
       time_deriv.production_rates+=model_data->n_per_cell_dep_var;
       time_deriv.loss_rates+=model_data->n_per_cell_dep_var;
     }
-    //Reset time_deriv to first cell
-    time_deriv.production_rates=init_production_rates;
-    time_deriv.loss_rates=init_loss_rates;
   }
 }
 
@@ -649,8 +658,6 @@ void rxn_calc_jac_specific_types(ModelData *model_data, Jacobian jac,
  * \param float_param Pointer to floating-point parameter array
  * \param solver_data Pointer to solver data
  */
-// TODO: question: move n_added_rxns out of struct to function parameter since
-// is only used in this function
 void rxn_add_condensed_data(int rxn_type, int n_int_param, int n_float_param,
                             int n_env_param, int *int_param,
                             double *float_param, void *solver_data) {

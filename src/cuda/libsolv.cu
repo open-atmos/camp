@@ -684,6 +684,7 @@ __device__ void cudaDevicedotxy(double *g_idata1, double *g_idata2, double *g_od
 
 #else
   //Last thread assign 0 to empty shr values
+  //todo: it's needed?
   if (tid == 0)//one thread
   {
     //todo fix, returning 0 sometimes on mock_monarch cells=1000 (bug appears after <=7 attemps)

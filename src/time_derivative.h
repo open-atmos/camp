@@ -20,8 +20,13 @@
 /* Time derivative for solver species */
 typedef struct {
   unsigned int num_spec;          // Number of species in the derivative
+#ifdef TIME_DERIVATIVE_LONG_DOUBLE
   long double *production_rates;  // Production rates for all species
   long double *loss_rates;        // Loss rates for all species
+#else
+  double *production_rates;  // Production rates for all species
+  double *loss_rates;        // Loss rates for all species
+#endif
 #ifdef PMC_DEBUG
   double last_max_loss_precision;  // Maximum loss of precision at last output
 #endif
@@ -61,8 +66,13 @@ void time_derivative_output(TimeDerivative time_deriv, double *dest_array,
  * \param rate_contribution Value to add to the time derivative for speces
  * spec_id
  */
+#ifdef TIME_DERIVATIVE_LONG_DOUBLE
 void time_derivative_add_value(TimeDerivative time_deriv, unsigned int spec_id,
                                long double rate_contribution);
+#else
+void time_derivative_add_value(TimeDerivative time_deriv, unsigned int spec_id,
+                               double rate_contribution);
+#endif
 
 #ifdef PMC_DEBUG
 /** \brief Maximum loss of precision at the last output of the derivative

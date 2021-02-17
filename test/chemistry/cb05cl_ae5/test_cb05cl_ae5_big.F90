@@ -1102,9 +1102,6 @@ contains
       end do
     end do
 
-    ! Output the computational time
-    write(*,*) "CAMP-chem calculation time: ", comp_camp," s"
-
     ! Output final timestep
     write(EBI_FILE_UNIT,*) i_time*EBI_TMSTEP, YC(:)
     write(KPP_FILE_UNIT,*) i_time*EBI_TMSTEP, KPP_C(:)*conv

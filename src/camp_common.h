@@ -322,7 +322,7 @@ typedef struct {
   double timeJacCPU;
 #endif
 
-#ifndef PMC_DEBUG_DERIV
+#ifdef PMC_DEBUG_DERIV
   N_Vector y_first;
   int max_deriv_print;
   int counter_deriv_print;
