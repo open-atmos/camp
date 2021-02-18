@@ -148,12 +148,6 @@ void aero_rep_update_state(ModelData *model_data) {
   // Get the number of aerosol representations
   int n_aero_rep = model_data->n_aero_rep;
 
-#ifdef DERIV_LOOP_CELLS_RXN
-#else
-  printf("ERROR: ENABLE DERIV_LOOP_CELLS_RXN compiler flag. sub_model or aero_data\
-         reaction detected, which are not implemented");
-#endif
-
   // Loop through the aerosol representations to update the state
   // advancing the aero_rep_data pointer each time
   for (int i_aero_rep = 0; i_aero_rep < n_aero_rep; i_aero_rep++) {

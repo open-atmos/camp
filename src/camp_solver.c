@@ -1251,13 +1251,27 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
   clock_t start2 = clock();
 #endif
 
+    for (int i_cell = 0; i_cell < n_cells; ++i_cell) {
+      // Set the grid cell state pointers
+      md->grid_cell_id = i_cell;
+      md->grid_cell_state = &(md->total_state[i_cell * n_state_var]);
+      md->grid_cell_env = &(md->total_env[i_cell * PMC_NUM_ENV_PARAM_]);
+      md->grid_cell_rxn_env_data =
+          &(md->rxn_env_data[i_cell * md->n_rxn_env_data]);
+      md->grid_cell_aero_rep_env_data =
+          &(md->aero_rep_env_data[i_cell * md->n_aero_rep_env_data]);
+      md->grid_cell_sub_model_env_data =
+          &(md->sub_model_env_data[i_cell * md->n_sub_model_env_data]);
+
+        // Update the aerosol representations
+      aero_rep_update_state(md);
+
+      // Run the sub models
+      sub_model_calculate(md);
+
+  }
+
   time_derivative_reset(sd->time_deriv);
-
-  // Update the aerosol representations
-  aero_rep_update_state(md);
-
-  // Run the sub models
-  sub_model_calculate(md);
 
   // Calculate the time derivative f(t,y)
   rxn_calc_deriv(md, sd->time_deriv, (double)time_step);
