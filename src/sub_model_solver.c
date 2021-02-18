@@ -310,6 +310,7 @@ void sub_model_calculate(ModelData *model_data) {
   int n_sub_model = model_data->n_sub_model;
 
 #ifdef DERIV_LOOP_CELLS_RXN
+#else
   printf("ERROR: ENABLE DERIV_LOOP_CELLS_RXN compiler flag. sub_model or aero_data\
          reaction detected, which are not implemented");
 #endif

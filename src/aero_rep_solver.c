@@ -149,6 +149,7 @@ void aero_rep_update_state(ModelData *model_data) {
   int n_aero_rep = model_data->n_aero_rep;
 
 #ifdef DERIV_LOOP_CELLS_RXN
+#else
   printf("ERROR: ENABLE DERIV_LOOP_CELLS_RXN compiler flag. sub_model or aero_data\
          reaction detected, which are not implemented");
 #endif
