@@ -142,7 +142,7 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
 
 #ifdef PMC_USE_SUNDIALS
 
-#ifdef DERIV_RXN_CELLS_LOOP
+#ifdef DERIV_LOOP_CELLS_RXN
   int n_time_deriv_specs=n_dep_var;
 #else
   int n_time_deriv_specs=n_dep_var*n_cells;
@@ -1165,7 +1165,7 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
   int n_state_var = md->n_per_cell_state_var;
   int n_dep_var = md->n_per_cell_dep_var;
 
-#ifdef DERIV_RXN_CELLS_LOOP
+#ifdef DERIV_LOOP_CELLS_RXN
 
   // Loop through the grid cells and update the derivative array
   for (int i_cell = 0; i_cell < n_cells; ++i_cell) {
@@ -1219,7 +1219,7 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
   //NV_DATA_S(sd->y_first)[0] != NV_DATA_S(y)[0]){
   sd->counterDerivCPU<=0 &&
   1){
-#ifdef DERIV_RXN_CELLS_LOOP
+#ifdef DERIV_LOOP_CELLS_RXN
       //for (int i = 0; i < sd->time_deriv.num_spec; i++)
       //printf("(%d) %-le %-le %-le\n",i,sd->time_deriv.production_rates[i],
       //      sd->time_deriv.loss_rates[i], jac_deriv_data[i]);
@@ -1243,7 +1243,7 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
     jac_deriv_data += n_dep_var;
   }
 
-// Not DERIV_RXN_CELLS_LOOP
+// Not DERIV_LOOP_CELLS_RXN
 #else
 
 #ifdef PMC_DEBUG
@@ -1251,9 +1251,13 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
   clock_t start2 = clock();
 #endif
 
-#ifndef BASIC_TIME_DERIVATIVE_RESET
-    time_derivative_reset(sd->time_deriv);
-#endif
+  time_derivative_reset(sd->time_deriv);
+
+  // Update the aerosol representations
+  aero_rep_update_state(md);
+
+  // Run the sub models
+  sub_model_calculate(md);
 
   // Calculate the time derivative f(t,y)
   rxn_calc_deriv(md, sd->time_deriv, (double)time_step);
@@ -1273,7 +1277,7 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
   sd->max_loss_precision = time_derivative_max_loss_precision(sd->time_deriv);
 #endif
 
-// DERIV_RXN_CELLS_LOOP
+// DERIV_LOOP_CELLS_RXN
 #endif
 
 #ifdef PMC_DEBUG_DERIV
@@ -1286,11 +1290,11 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
     print_derivative_in_out(sd, y, deriv);
     //print_time_derivative(sd);
     printf("Time_deriv prod loss jac_deriv_data\n");
-#ifdef DERIV_RXN_CELLS_LOOP
+#ifdef DERIV_LOOP_CELLS_RXN
 #else
-    for (int i = 0; i < sd->time_deriv.num_spec; i++)
-      printf("(%d) %-le %-le %-le\n",i,sd->time_deriv.production_rates[i],
-            sd->time_deriv.loss_rates[i], jac_deriv_data[i]);
+    //for (int i = 0; i < sd->time_deriv.num_spec; i++)
+    //  printf("(%d) %-le %-le %-le\n",i,sd->time_deriv.production_rates[i],
+    //        sd->time_deriv.loss_rates[i], jac_deriv_data[i]);
 #endif
 
     sd->counter_deriv_print++;
@@ -1302,7 +1306,6 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
   // sd->timeDerivCPU += (clock() - start3);
   sd->timeDerivCPU += (clock() - start10);
   sd->counterDerivCPU++;
-  //printf("hola\n");
   // printf("%d",sd->counterDerivCPU);
 
 #ifdef PMC_USE_MPI

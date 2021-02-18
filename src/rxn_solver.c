@@ -255,7 +255,7 @@ void rxn_update_env_state(ModelData *model_data) {
  */
 #ifdef PMC_USE_SUNDIALS
 
-#ifdef DERIV_RXN_CELLS_LOOP
+#ifdef DERIV_LOOP_CELLS_RXN
 
 void rxn_calc_deriv(ModelData *model_data, TimeDerivative time_deriv,
                     realtype time_step) {
@@ -274,9 +274,6 @@ void rxn_calc_deriv(ModelData *model_data, TimeDerivative time_deriv,
 
     // Get the reaction type
     int rxn_type = *(rxn_int_data++);
-
-    //printf("%-le %-le %-le\n",model_data->grid_cell_state[0],model_data->grid_cell_env[0],
-    //      model_data->grid_cell_rxn_env_data[0]);
 
     // Call the appropriate function
     switch (rxn_type) {
@@ -340,9 +337,6 @@ void rxn_calc_deriv(ModelData *model_data, TimeDerivative time_deriv,
                                               rxn_env_data, time_step);
         break;
     }
-    //for (int i = 0; i < model_data->n_per_cell_dep_var; i++)
-    //  printf("(%d) %-le %-le \n",i_rxn,time_deriv.production_rates[i],
-    //        time_deriv.loss_rates[i]);
   }
 }
 
@@ -351,8 +345,13 @@ void rxn_calc_deriv(ModelData *model_data, TimeDerivative time_deriv,
 void rxn_calc_deriv(ModelData *model_data, TimeDerivative time_deriv,
                     realtype time_step) {
 
+#ifdef TIME_DERIVATIVE_LONG_DOUBLE
   long double *init_production_rates=time_deriv.production_rates;
   long double *init_loss_rates=time_deriv.loss_rates;
+#else
+  double *init_production_rates=time_deriv.production_rates;
+  double *init_loss_rates=time_deriv.loss_rates;
+#endif
 
   for (int i_rxn = 0; i_rxn < model_data->n_rxn; i_rxn++) {
     // Get pointers to the reaction data
@@ -374,7 +373,6 @@ void rxn_calc_deriv(ModelData *model_data, TimeDerivative time_deriv,
           &(model_data->total_state[i_cell * model_data->n_per_cell_state_var]);
       model_data->grid_cell_env =
           &(model_data->total_env[i_cell * PMC_NUM_ENV_PARAM_]);
-
     model_data->grid_cell_rxn_env_data =
             &(model_data->rxn_env_data[i_cell * model_data->n_rxn_env_data]);
 

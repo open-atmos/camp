@@ -187,3 +187,19 @@ fi
 echo PASS
 exit 0
 done
+
+#gnuplot example generated in mock_monarch for cb05
+
+ # Run as: gnuplot -persist out/monarch_cb05.gnuplot
+ set title 'Mock_monarch_cb05 - One_cell'
+ set xlabel 'Time (min)'
+ set ylabel 'Gas concentration [ppmv]'
+ set y2label 'Aerosol concentration [kg/m^3]'
+ set ytics nomirror
+ set y2tics nomirror
+ set logscale y
+ set logscale y2
+ set xrange [  0.0000000E+00 :   3.000000     ]
+ set key top left
+plot for [col=2:5] 'out/monarch_cb05_results.txt' using 1:col axis x1y1 title columnheader
+

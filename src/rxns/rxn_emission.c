@@ -151,8 +151,13 @@ void rxn_emission_calc_deriv_contrib(ModelData *model_data,
   double *env_data = model_data->grid_cell_env;
 
   // Add contributions to the time derivative
+
   if (DERIV_ID_ >= 0)
+#ifdef TIME_DERIVATIVE_LONG_DOUBLE
     time_derivative_add_value(time_deriv, DERIV_ID_, (long double)RATE_);
+#else
+    time_derivative_add_value(time_deriv, DERIV_ID_, (double)RATE_);
+#endif
 
   return;
 }

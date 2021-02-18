@@ -309,6 +309,11 @@ void sub_model_calculate(ModelData *model_data) {
   // Get the number of sub models
   int n_sub_model = model_data->n_sub_model;
 
+#ifdef DERIV_LOOP_CELLS_RXN
+  printf("ERROR: ENABLE DERIV_LOOP_CELLS_RXN compiler flag. sub_model or aero_data\
+         reaction detected, which are not implemented");
+#endif
+
   // Loop through the sub models to trigger their calculation
   // advancing the sub_model_data pointer each time
   for (int i_sub_model = 0; i_sub_model < n_sub_model; i_sub_model++) {
