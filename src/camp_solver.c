@@ -33,6 +33,7 @@
 #include <gsl/gsl_roots.h>
 #endif
 #include "camp_debug.h"
+#include "debug_and_stats/camp_debug_2.h"
 
 // Default solver initial time step relative to total integration time
 #define DEFAULT_TIME_STEP 1.0
@@ -601,13 +602,14 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
 #ifdef PMC_DEBUG_GPU
 #ifdef PMC_USE_MPI
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    if (rank==0 || rank==999 )
+    if (rank==999 || rank==999 )
 #endif
     if (sd->counterSolve==0 && sd->counterFail==0)
     {
       int n_cell=1;
       printf("Rank %d t_initial %-le t_final %-le\n",rank,t_initial,t_final);
-      printf("camp solver_run start [(id),conc], n_state_var %d, n_cells %d\n", md->n_per_cell_state_var, n_cells);
+      printf("camp solver_run start [(id),conc], n_state_var %d, n_cells %d n_dep_var %d\n",
+              md->n_per_cell_state_var, n_cells, md->n_per_cell_dep_var);
       for (int i = 0; i < md->n_per_cell_state_var*n_cell; i++) {
         printf("(%d) %-le ",i+1, state[i]);
       }
@@ -743,6 +745,7 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
 #else
     flag = CVode(sd->cvode_mem, (realtype)t_final, sd->y, &t_rt, CV_NORMAL);
 #endif
+
     sd->solver_flag = flag;
 #ifdef FAILURE_DETAIL
     if (flag < 0) {
@@ -780,7 +783,10 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
     }*/
     solver_print_stats(sd->cvode_mem);
 #endif
+
+#ifdef PMC_DEBUG_GPU
 #ifdef PMC_USE_MPI
+
       MPI_Comm_rank(MPI_COMM_WORLD, &rank);
       if (rank == 0) {
          printf("CAMP_SOLVER_FAIL %d counterSolve:%d counterDerivCPU:%d rank:%d\n",
@@ -790,12 +796,11 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
       sd->counterFail++;
 
 #ifdef EXPORT_CAMP_INPUT
-#ifdef PMC_DEBUG_GPU
       if (sd->counterFail == 1)
         export_camp_input(sd, init_state, "");
 #endif
-#endif
 
+#endif
 #endif
       return CAMP_SOLVER_FAIL;
     }
@@ -819,6 +824,7 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
     }
   }
 
+#ifdef PMC_DEBUG_GPU
 #ifdef PMC_USE_MPI
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   if (rank >= 0) {
@@ -842,12 +848,12 @@ sd->counterDerivTotal,sd->timeCVode/CLOCKS_PER_SEC,sd->timeCVodeTotal/CLOCKS_PER
 
   }
 #endif
-
-#ifdef PMC_DEBUG_GPU
   //sd->counterDerivCPU = 0;
   //sd->counterJacCPU = 0;
   sd->counterSolve++;
 #endif
+
+
 
   // Re-run the pre-derivative calculations to update equilibrium species
   // and apply adjustments to final state
@@ -1363,6 +1369,8 @@ int Jac(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_data,
   sd->counterJac++;
 #endif
 
+
+
   clock_t start4 = clock();
 
   // Get the grid cell dimensions
@@ -1550,6 +1558,7 @@ int Jac(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_data,
 
   return (0);
 }
+
 
 /** \brief Check a Jacobian for accuracy
  *
@@ -2247,8 +2256,13 @@ void export_camp_input(void *solver_data, double *init_state, char *in_path) {
   char mpi_path[1024];
   char rank_str[64];
 
+#ifdef PMC_DEBUG_GPU
   printf("Exporting camp input rank %d counterFail %d counterSolve %d\n", rank,
          sd->counterFail, sd->counterSolve);
+#else
+  printf("Exporting camp input rank %d\n", rank);
+#endif
+
 
   sprintf(rank_str, "%d", rank);
 
@@ -2360,6 +2374,36 @@ void solver_free(void *solver_data) {
   SolverData *sd = (SolverData *)solver_data;
   ModelData *md = &(sd->model_data);
 
+#ifdef PMC_DEBUG_GPU
+
+  export_counters_open(sd);
+
+#ifdef PMC_USE_GPU
+#ifdef PMC_USE_ODE_GPU
+  printSolverCounters(sd);
+#endif
+#endif
+
+  /*printf("timeDerivCPU %lf, counterDerivCPU %d\n", sd->timeDerivCPU / CLOCKS_PER_SEC,
+         sd->counterDerivCPU);
+
+  printf("timeJacCPU %lf, counterJacCPU %d\n", sd->timeJacCPU / CLOCKS_PER_SEC,
+         sd->counterJacCPU);
+
+  printf("timeCVode %lf\n", sd->timeCVode / CLOCKS_PER_SEC);*/
+
+  fprintf(sd->file,"timeDerivCPU %lf\ncounterDerivCPU %d\n", sd->timeDerivCPU / CLOCKS_PER_SEC,
+         sd->counterDerivCPU);
+  fprintf(sd->file,"timeJacCPU %lf\ncounterJacCPU %d\n", sd->timeJacCPU / CLOCKS_PER_SEC,
+         sd->counterJacCPU);
+  fprintf(sd->file,"timeCVode %lf\n", sd->timeCVode / CLOCKS_PER_SEC);
+
+  //fprintf(f, "n_cells %d\n", md->n_cells);
+
+  fclose(sd->file);
+
+#endif
+
 #ifdef PMC_USE_SUNDIALS
   // free the SUNDIALS solver
   CVodeFree(&(sd->cvode_mem));
@@ -2387,23 +2431,6 @@ void solver_free(void *solver_data) {
   SUNLinSolFree(sd->ls);
 #endif
 
-#ifdef PMC_DEBUG_GPU
-#ifdef PMC_USE_GPU
-#ifdef PMC_USE_ODE_GPU
-  printSolverCounters(sd);
-#endif
-#endif
-  printf("timeDerivCPU %lf, counterDerivCPU %d\n", sd->timeDerivCPU / CLOCKS_PER_SEC,
-         sd->counterDerivCPU);
-
-  printf("timeJacCPU %lf, counterJacCPU %d\n", sd->timeJacCPU / CLOCKS_PER_SEC,
-         sd->counterJacCPU);
-  printf("timeCVode %lf\n", sd->timeCVode / CLOCKS_PER_SEC);
-
-  // todo print this in profile_stats file
-  // write_profile_stats();
-#endif
-
 #ifdef CHECK_GPU_LINSOLVE
   printf("ODE iters %d\n", sd->n_linsolver_i);
 #endif
@@ -2412,11 +2439,6 @@ void solver_free(void *solver_data) {
   free_ode(sd);
 #endif
 
-  // Free the allocated ModelData
-  model_free(sd->model_data);
-
-  // free the SolverData object
-  free(sd);
 }
 
 #ifdef PMC_USE_SUNDIALS
@@ -2461,87 +2483,7 @@ void error_handler(int error_code, const char *module, const char *function,
   // Do nothing
 }
 
-void write_profile_stats() {
-  // todo specify common out format with auto-profiling tool from
-  // oriolTinto&stella work
 
-  FILE *fptr;
-  FILE *fptr1;
-  FILE *fptr2;
-  char filename[] = "../../../../../profile_stats.csv";
-  char filename2[] = "../../../../../profile_stats2.csv";
-  char ch;
-
-  fptr = fopen(filename, "r");
-  fptr1 = fptr;
-  fptr2 = fopen(filename2, "w");
-
-  if (fptr == NULL) {
-    printf("Cannot open file profile_stats \n");
-    exit(0);
-  }
-
-  char line[1024];
-  const char *tok;
-  int counter = 0;
-  int counter2 = 0;
-
-  // Set name first line
-  fgets(line, 1024, fptr1);
-  strcat("timeDeriv,", line);
-  fputs(line, fptr2);
-
-  while (fgets(line, 1024, fptr1)) {
-    // count number of lines
-    counter++;
-  }
-
-  while (fgets(line, 1024, fptr)) {
-    // tmp = strdup(line);
-    // printf("Field 3 would be %s\n", getfield(tmp, 3));
-    // NOTE strtok clobbers tmp
-
-    /*for (tok = strtok(line, ",");
-         tok && *tok;
-         tok = strtok(NULL, ";\n"))
-
-    {
-      if (!--num)
-        return tok;
-    }
-     */
-
-    counter2++;
-
-    /*if (counter2==counter){
-      strcat ("2,",line);
-      fputs(line, fptr2);
-    }*/
-
-    // strcat ("timeDeriv,",line);
-    // fputs(line, fptr2);
-
-    // free(tmp);
-  }
-
-  /*ch = fgetc(fptr);
-  while (feof(ch))
-  {
-    printf ("%c", ch);
-    ch = fgetc(fptr);
-
-    if (ch == '\n')
-    {
-      fputs("holaaaaaaaaaaa",fptr2);
-    }
-  }
-*/
-
-  fclose(fptr);
-  fclose(fptr2);
-  remove(filename);
-  rename(filename2, filename);
-}
 
 /** \brief Free a ModelData object
  *

@@ -320,6 +320,8 @@ typedef struct {
   double timeCVodeTotal;
   double timeDerivCPU;
   double timeJacCPU;
+  FILE *file;
+
 #endif
 
 #ifdef PMC_DEBUG_DERIV

@@ -75,21 +75,21 @@ program mock_monarch
   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Number of total species in mock MONARCH
-  integer, parameter :: NUM_MONARCH_SPEC = 300 !800
+  integer, parameter :: NUM_MONARCH_SPEC = 250 !800
   !> Number of vertical cells in mock MONARCH
-  integer, parameter :: NUM_VERT_CELLS = 1000
+  integer :: NUM_VERT_CELLS
   !> Starting W-E cell for camp-chem call
-  integer, parameter :: I_W = 1
+  integer :: I_W
   !> Ending W-E cell for camp-chem call
-  integer, parameter :: I_E = 1
+  integer :: I_E
   !> Starting S-N cell for camp-chem call
-  integer, parameter :: I_S = 1
+  integer :: I_S
   !> Ending S-N cell for camp-chem call
-  integer, parameter :: I_N = 1
+  integer :: I_N
   !> Number of W-E cells in mock MONARCH
-  integer, parameter :: NUM_WE_CELLS = I_E-I_W+1
+  integer :: NUM_WE_CELLS
   !> Number of S-N cells in mock MONARCH
-  integer, parameter :: NUM_SN_CELLS = I_N-I_S+1
+  integer :: NUM_SN_CELLS
   !> Starting index for camp-chem species in tracer array
   integer, parameter :: START_CAMP_ID = 1!100
   !> Ending index for camp-chem species in tracer array
@@ -103,8 +103,7 @@ program mock_monarch
   !> Start time
   real, parameter :: START_TIME = 0.0
   !> Number of cells to compute simultaneously
-  !integer :: n_cells = 1
-  integer :: n_cells = (I_E - I_W+1)*(I_N - I_S+1)*NUM_VERT_CELLS
+  integer :: n_cells
   !> Check multiple cells results are correct?
   logical :: check_multiple_cells = .false.
 
@@ -114,19 +113,15 @@ program mock_monarch
 
   !> NMMB style arrays (W->E, S->N, top->bottom, ...)
   !> Temperature (K)
-  real :: temperature(NUM_WE_CELLS, NUM_SN_CELLS, NUM_VERT_CELLS)
+  real,allocatable :: temperature(:, :, :)
   !> Species conc (various units)
-  real :: species_conc(NUM_WE_CELLS, NUM_SN_CELLS, NUM_VERT_CELLS, NUM_MONARCH_SPEC)
+  real, allocatable  :: species_conc(:, :, :, :)
   !> Water concentrations (kg_H2O/kg_air)
-  real :: water_conc(NUM_WE_CELLS, NUM_SN_CELLS, NUM_VERT_CELLS, WATER_VAPOR_ID)
-  real :: air_density(NUM_WE_CELLS, NUM_SN_CELLS, NUM_VERT_CELLS)
-  real :: pressure(NUM_WE_CELLS, NUM_SN_CELLS, NUM_VERT_CELLS)
-
-  !> WRF-style arrays (W->E, bottom->top, N->S)
+  real, allocatable  :: water_conc(:, :, :, :)
   !> Air density (kg_air/m^3)
-  !real :: air_density(NUM_WE_CELLS, NUM_VERT_CELLS, NUM_SN_CELLS)
+  real, allocatable  :: air_density(:, :, :)
   !> Air pressure (Pa)
-  !real :: pressure(NUM_WE_CELLS, NUM_VERT_CELLS, NUM_SN_CELLS)
+  real, allocatable  :: pressure(:, :, :)
   !> Cell height (m)
   real :: height
 
@@ -138,7 +133,7 @@ program mock_monarch
 
   !> Comparison values
   real :: comp_species_conc(0:NUM_TIME_STEP, NUM_MONARCH_SPEC)
-  real :: species_conc_copy(NUM_WE_CELLS, NUM_SN_CELLS, NUM_VERT_CELLS, NUM_MONARCH_SPEC)
+  real, allocatable :: species_conc_copy(:, :, :, :)
 
   !> Starting time for mock model run (min since midnight)
   !! is tracked in MONARCH
@@ -160,7 +155,7 @@ program mock_monarch
   !> PartMC-camp <-> MONARCH interface configuration file
   character(len=:), allocatable :: interface_input_file
   !> Results file prefix
-  character(len=:), allocatable :: output_file_prefix, output_file_title
+  character(len=:), allocatable :: output_file_prefix, output_file_title, n_v_cells_str
   !> CAMP-chem input file file
   type(string_t), allocatable :: name_gas_species_to_print(:), name_aerosol_species_to_print(:)
   integer(kind=i_kind), allocatable :: id_gas_species_to_print(:), id_aerosol_species_to_print(:)
@@ -176,17 +171,11 @@ program mock_monarch
   integer :: status_code, i_time, i_spec, i_case, i, j, k, z,n_cells_plot,cell_to_print
   !> Partmc nº of cases to test
   integer :: pmc_cases = 1
-  integer :: plot_case
-
-  ! Check the command line arguments
-  call assert_msg(129432506, command_argument_count().eq.3, "Usage: "// &
-          "./mock_monarch camp_input_file_list.json "// &
-          "interface_input_file.json output_file_prefix")
+  integer :: plot_case, new_v_cells
 
   ! initialize mpi (to take the place of a similar MONARCH call)
   call pmc_mpi_init()
 
-  !Check if repeat program to compare n_cells=1 with n_cells=N
   if(check_multiple_cells) then
     pmc_cases=2
   end if
@@ -211,13 +200,57 @@ program mock_monarch
   output_file_title = "Mock_"//trim(arg)
   output_file_prefix = "out/"//trim(arg)
 
+  call get_command_argument(4, arg, status=status_code)
+  if(status_code.eq.0) then
+    n_v_cells_str = trim(arg)
+    read(n_v_cells_str, *) NUM_VERT_CELLS
+  else
+    !One-cell case as default
+    print*, "WARNING: not n_cells parameter received, value set to 1"
+    NUM_VERT_CELLS = 1
+  end if
+
+  call get_command_argument(5, arg, status=status_code)
+  if(status_code.eq.0) then
+    if(arg.eq."multi-cells") then
+      n_cells = (I_E - I_W+1)*(I_N - I_S+1)*NUM_VERT_CELLS
+    else
+      n_cells = 1
+    end if
+  else
+    !One-cell case as default
+    print*, "WARNING: not multi-cells flag parameter received, value set to one-cell"
+    n_cells = 1
+  end if
+
+  I_W=1
+  I_E=1
+  I_S=1
+  I_N=1
+  NUM_WE_CELLS = I_E-I_W+1
+  NUM_SN_CELLS = I_N-I_S+1
+
+  !One-cell:
+  !n_cells = 1
+  !Multi:
+  !n_cells = (I_E - I_W+1)*(I_N - I_S+1)*NUM_VERT_CELLS
+
+  allocate(temperature(NUM_WE_CELLS,NUM_SN_CELLS,NUM_VERT_CELLS))
+  allocate(species_conc(NUM_WE_CELLS,NUM_SN_CELLS,NUM_VERT_CELLS,NUM_MONARCH_SPEC))
+  allocate(water_conc(NUM_WE_CELLS,NUM_SN_CELLS,NUM_VERT_CELLS,WATER_VAPOR_ID))
+  allocate(air_density(NUM_WE_CELLS,NUM_SN_CELLS,NUM_VERT_CELLS))
+  allocate(pressure(NUM_WE_CELLS,NUM_SN_CELLS,NUM_VERT_CELLS))
+  allocate(species_conc_copy(NUM_WE_CELLS,NUM_SN_CELLS,NUM_VERT_CELLS,NUM_MONARCH_SPEC))
+
   n_cells_plot = 1
   cell_to_print = 1
   !cell_to_print = n_cells
 
   if(interface_input_file.eq."interface_simple.json") then
 
-    write(*,*) "Config simple (test 1)"
+    if (pmc_mpi_rank().eq.0) then
+      write(*,*) "Config simple (test 1)"
+    end if
 
     size_gas_species_to_print=3
     size_aerosol_species_to_print=0
@@ -235,7 +268,9 @@ program mock_monarch
 
   else
 
-    write(*,*) "Config complex (test 2)"
+    if (pmc_mpi_rank().eq.0) then
+      write(*,*) "Config complex (test 2)"
+    end if
 
     plot_case=0
     if(plot_case == 0)then
@@ -280,9 +315,12 @@ program mock_monarch
 
   end if
 
-  write(*,*) "Num time-steps:", NUM_TIME_STEP, "Num cells:", n_cells
+  if (pmc_mpi_rank().eq.0) then
+    write(*,*) "Num time-steps:", NUM_TIME_STEP, "Num cells:",&
+            NUM_WE_CELLS*NUM_SN_CELLS*NUM_VERT_CELLS, trim(arg)
+  end if
 
-  !Check if repeat program to compare n_cells=1 with n_cells=N
+  !Check if repeat program to compare one cell and multicell
   if(check_multiple_cells) then
     pmc_cases=2
   end if
@@ -295,24 +333,25 @@ program mock_monarch
     pmc_interface => monarch_interface_t(camp_input_file, interface_input_file, &
             START_CAMP_ID, END_CAMP_ID, n_cells)!, n_cells
 
-
-    do j=1, size(name_gas_species_to_print)
-      do z=1, size(pmc_interface%monarch_species_names)
-        if(pmc_interface%monarch_species_names(z)%string.eq.name_gas_species_to_print(j)%string) then
-          id_gas_species_to_print(j)=pmc_interface%map_monarch_id(z)
-          !id_gas_species_to_print(j)=pmc_interface%map_camp_id(z)
-        end if
+    if (pmc_mpi_rank().eq.0) then
+      do j=1, size(name_gas_species_to_print)
+        do z=1, size(pmc_interface%monarch_species_names)
+          if(pmc_interface%monarch_species_names(z)%string.eq.name_gas_species_to_print(j)%string) then
+            id_gas_species_to_print(j)=pmc_interface%map_monarch_id(z)
+            !id_gas_species_to_print(j)=pmc_interface%map_camp_id(z)
+          end if
+        end do
       end do
-    end do
 
-    do j=1, size(name_aerosol_species_to_print)
-      do z=1, size(pmc_interface%monarch_species_names)
-        if(pmc_interface%monarch_species_names(z)%string.eq.name_aerosol_species_to_print(j)%string) then
-          id_aerosol_species_to_print(j)=pmc_interface%map_monarch_id(z)
-          !id_aerosol_species_to_print(j)=pmc_interface%map_camp_id(z)
-        end if
+      do j=1, size(name_aerosol_species_to_print)
+        do z=1, size(pmc_interface%monarch_species_names)
+          if(pmc_interface%monarch_species_names(z)%string.eq.name_aerosol_species_to_print(j)%string) then
+            id_aerosol_species_to_print(j)=pmc_interface%map_monarch_id(z)
+            !id_aerosol_species_to_print(j)=pmc_interface%map_camp_id(z)
+          end if
+        end do
       end do
-    end do
+    end if
 
     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     ! **** end initialization modification **** !
@@ -327,8 +366,11 @@ program mock_monarch
     !call import_camp_input_json(pmc_interface)
 #endif
 
-#ifdef IMPORT_CAMP_INPUT
-    call solve_ebi(pmc_interface)
+#ifdef SOLVE_EBI_IMPORT_CAMP_INPUT
+    if (pmc_mpi_rank().eq.0) then
+      !Not working in other ranks than 0 (memory allocation error)
+      call solve_ebi(pmc_interface)
+    end if
 #endif
 
     ! Run the model
@@ -338,8 +380,12 @@ program mock_monarch
       ! **** Add to MONARCH during runtime for each time step **** !
       !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-      call print_state_gnuplot(curr_time,pmc_interface, name_gas_species_to_print,id_gas_species_to_print&
-              ,name_aerosol_species_to_print,id_aerosol_species_to_print,RESULTS_FILE_UNIT)
+      if (pmc_mpi_rank().eq.0) then
+        call print_state_gnuplot(curr_time,pmc_interface, name_gas_species_to_print,id_gas_species_to_print&
+               ,name_aerosol_species_to_print,id_aerosol_species_to_print,RESULTS_FILE_UNIT)
+      end if
+
+
 
       call pmc_interface%integrate(curr_time,         & ! Starting time (min)
                                    TIME_STEP,         & ! Time step (min)
@@ -354,10 +400,11 @@ program mock_monarch
                                    air_density,       & ! Air density (kg_air/m^3)
                                    pressure,          & ! Air pressure (Pa)
                                    conv,              &
-                                   i_hour,&
-               name_gas_species_to_print,id_gas_species_to_print&
-              ,name_aerosol_species_to_print,id_aerosol_species_to_print,RESULTS_FILE_UNIT)
+                                   i_hour,            &
+                                   RESULTS_FILE_UNIT)
       curr_time = curr_time + TIME_STEP
+
+
 
       !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       ! **** end runtime modification **** !
@@ -383,17 +430,14 @@ program mock_monarch
 
   end do
 
-  do z=1, size(name_gas_species_to_print)
-    print*,id_gas_species_to_print(z),name_gas_species_to_print(z)%string,species_conc(1,1,1,id_gas_species_to_print(z))
-  end do
-
-  !#ifdef DEBUG
-  !print*, "SPECIES CONC", species_conc(:,1,1,100)
-#ifdef PMC_USE_MPI
-#else
-  !print*, "SPECIES CONC COPY", species_conc_copy(:,1,1,100)
-#endif
-  !#endif
+  if (pmc_mpi_rank().eq.0) then
+    do z=1, size(name_gas_species_to_print)
+      print*,id_gas_species_to_print(z),name_gas_species_to_print(z)%string,species_conc(1,1,1,id_gas_species_to_print(z))
+    end do
+  else
+      !print*,"Rank",pmc_mpi_rank(), "conc",&
+      !        species_conc(1,1,1,pmc_interface%map_monarch_id(:))
+  end if
 
   !If something to compare
   if(pmc_cases.gt.1) then
@@ -416,13 +460,16 @@ program mock_monarch
     end do
   end if
 
-#ifdef IMPORT_CAMP_INPUT
-    call compare_ebi_camp_json(pmc_interface)
+#ifdef SOLVE_EBI_IMPORT_CAMP_INPUT
+    if (pmc_mpi_rank().eq.0) then
+      !Not working in other ranks than 0 (memory allocation error)
+      call compare_ebi_camsp_json(pmc_interface)
+    end if
 #endif
 
   ! Output results and scripts
   if (pmc_mpi_rank().eq.0) then
-    write(*,*) "MONARCH interface tests - PASS"
+    !write(*,*) "MONARCH interface tests - PASS"
     !call print_state_gnuplot(curr_time,pmc_interface,species_conc)
     call print_state_gnuplot(curr_time,pmc_interface, name_gas_species_to_print,id_gas_species_to_print&
             ,name_aerosol_species_to_print,id_aerosol_species_to_print,RESULTS_FILE_UNIT)
@@ -442,13 +489,13 @@ program mock_monarch
   deallocate(output_file_prefix)
   deallocate(output_file_title)
 
-
-  ! finalize mpi
-  call pmc_mpi_finalize()
+  !print*,"MPI_FINALIZE RANK",pmc_mpi_rank()
 
 !#ifdef PMC_USE_MPI
 
   deallocate(pmc_interface)
+
+  call pmc_mpi_finalize()
 
 !#endif
 
@@ -539,18 +586,18 @@ contains
       !Initialize different axis values
       !Species_conc is modified in monarch_interface%get_init_conc
       do i=I_W, I_E
-        temperature(i,:,:) = temperature(i,:,:) + 0.1*i
-        pressure(i,:,:) = pressure(i,:,:) - 1*i
+        temperature(i,:,:) = temperature(i,:,:) !+ 0.1*i
+        pressure(i,:,:) = pressure(i,:,:) !- 1*i
       end do
 
       do j=I_S, I_N
-        temperature(:,j,:) = temperature(:,j,:) + 0.3*j
-        pressure(:,:,j) = pressure(:,:,j) - 3*j
+        temperature(:,j,:) = temperature(:,j,:)! + 0.3*j
+        pressure(:,:,j) = pressure(:,:,j) !- 3*j
       end do
 
       do k=1, NUM_VERT_CELLS
-        temperature(:,:,k) = temperature(:,:,k) + 0.6*k
-        pressure(:,k,:) = pressure(:,k,:) - 6*k
+        temperature(:,:,k) = temperature(:,:,k)! + 0.6*k
+        pressure(:,k,:) = pressure(:,k,:) !- 6*k
       end do
 
     end if
@@ -604,111 +651,63 @@ contains
     open(IMPORT_FILE_UNIT, file="exports/camp_input_18.txt", status="old") !monarch
     !open(IMPORT_FILE_UNIT, file="exports/camp_input_322.txt", status="old") !monarch
 
-    write(*,*) "Importing concentrations"
-
-    if(n_cells.gt.1) then
-      print*, "ERROR: Import can only handle data from 1 cell, set n_cells to 1"
+    if (pmc_mpi_rank().eq.0) then
+      write(*,*) "Importing camp input"
     end if
 
+    !if(n_cells.gt.1) then
+    !  print*, "ERROR: Import can only handle data from 1 cell, set n_cells to 1"
+    !end if
+
     read(IMPORT_FILE_UNIT,*) (pmc_interface%camp_state%state_var(&
-            i),i=1,size(pmc_interface%camp_state%state_var))
+            i),i=1,size(pmc_interface%camp_state%state_var)/n_cells)
 
-#ifdef USE_MAPPING_EBI
+    !write(*,*) "Importing temperatures and pressures"
 
-    call set_ebi_species(ebi_spec_names)
-    call set_monarch_species(monarch_spec_names)
-    camp_spec_names=pmc_interface%camp_core%unique_names()
+    read(IMPORT_FILE_UNIT,*) ( ( (temperature(i,j,k), k=1,1 ), j=1,1),&
+            i=1,1 )
+    read(IMPORT_FILE_UNIT,*) ( ( (pressure(i,j,k), k=1,1 ), j=1,1),&
+            i=1,1 )
 
-    call assert_msg(122432506, size(pmc_interface%camp_state%state_var).eq.NUM_CAMP_SPEC, &
-            "NUM_CAMP_SPEC not equal size(state_var)")
+    !write(*,*) "Importing photolysis rates"
 
-    print*,"USE_MAPPING_EBI1"
-    do i = 1, NUM_CAMP_SPEC
-      do j = 1, NUM_CAMP_SPEC
-        if (trim(camp_spec_names(i)%string).eq.trim(monarch_spec_names(j)%string)) then
-          !map_camp_monarch(j)=i
-          aux_state_var(j)=pmc_interface%camp_state%state_var(i)
-          !print*,monarch_spec_names(i)%string, aux_state_var(j)
-        end if
-      end do
-    end do
-
-    print*,"USE_MAPPING_EBI2"
-    do i = 1, NUM_CAMP_SPEC
-      do j = 1, NUM_CAMP_SPEC
-        if (trim(monarch_spec_names(i)%string).eq.trim(ebi_spec_names(j)%string)) then
-          !map_ebi_monarch(j)=i
-          aux_state_var2(j)=aux_state_var(i)
-          !print*,monarch_spec_names(i)%string, aux_state_var2(j)
-        end if
-      end do
-    end do
-
-    print*,"USE_MAPPING_EBI3"
-    do i = 1, NUM_CAMP_SPEC
-      do j = 1, NUM_CAMP_SPEC
-        if (trim(ebi_spec_names(i)%string).eq.trim(camp_spec_names(j)%string)) then
-        !if (trim(monarch_spec_names(i)%string).eq.trim(camp_spec_names(j)%string)) then
-          !map_ebi_monarch(j)=i
-          !pmc_interface%camp_state%state_var(j)=aux_state_var(i)
-          pmc_interface%camp_state%state_var(j)=aux_state_var2(i)
-
-          !pmc_interface%camp_state%state_var(i)=aux_state_var2(j)
-          !pmc_interface%camp_state%state_var(i)=aux_state_var(j) !converge but wtf
-
-          print*,ebi_spec_names(i)%string, pmc_interface%camp_state%state_var(j)
-        end if
-      end do
-    end do
-
-    !do i = 1, NUM_CAMP_SPEC
-    !  pmc_interface%camp_state%state_var(i)=aux_state_var2(i)
-    !end do
-
-#endif
+    read(IMPORT_FILE_UNIT,*) (pmc_interface%base_rates(&
+            i),i=1,pmc_interface%n_photo_rxn)
 
     do i=I_W,I_E
       do j=I_S,I_N
         do k=1,NUM_VERT_CELLS
+
           o = (j-1)*(I_E) + (i-1) !Index to 3D
           z = (k-1)*(I_E*I_N) + o !Index for 2D
 
           species_conc(i,j,k,pmc_interface%map_monarch_id(:)) = &
                   pmc_interface%camp_state%state_var(pmc_interface%map_camp_id(:)+(z*state_size_per_cell))
+
+          temperature(i,j,k) = temperature(1,1,1)
+          pressure(i,j,k) = pressure(1,1,1)
+
+          do i_photo_rxn = 1, pmc_interface%n_photo_rxn
+
+          !if (pmc_mpi_rank().eq.1) then
+            !pmc_interface%base_rates(i_photo_rxn) = pmc_interface%base_rates(i_photo_rxn)!+0.01
+            !pmc_interface%base_rates(i_photo_rxn) = 0.01
+            !write(*,*), "rates",i_photo_rxn, pmc_interface%base_rates(i_photo_rxn)
+          !end if
+          !write(*,*), "rates",i_photo_rxn, pmc_interface%base_rates(i_photo_rxn)
+
+
+          call pmc_interface%photo_rxns(i_photo_rxn)%set_rate(real(pmc_interface%base_rates(i_photo_rxn), kind=dp))
+          !call pmc_interface%photo_rxns(i_photo_rxn)%set_rate(real(0.0, kind=dp)) !works
+
+          call pmc_interface%camp_core%update_data(pmc_interface%photo_rxns(i_photo_rxn),z)
+
+        !print*,"id photo_rate", pmc_interface%base_rates(i_photo_rxn)
+          end do
         end do
       end do
     end do
 
-    !print*,species_conc(:,:,:,:)
-
-    write(*,*) "Importing temperatures and pressures"
-
-    read(IMPORT_FILE_UNIT,*) ( ( (temperature(i,j,k), k=1,NUM_VERT_CELLS ), j=1,NUM_SN_CELLS),&
-            i=1,NUM_WE_CELLS )
-    read(IMPORT_FILE_UNIT,*) ( ( (pressure(i,j,k), k=1,NUM_VERT_CELLS ), j=1,NUM_SN_CELLS),&
-            i=1,NUM_WE_CELLS )
-
-    write(*,*) "Importing photolysis rates"
-
-    read(IMPORT_FILE_UNIT,*) (pmc_interface%base_rates(&
-            i),i=1,pmc_interface%n_photo_rxn)
-
-    do i_photo_rxn = 1, pmc_interface%n_photo_rxn
-
-      !if (pmc_mpi_rank().eq.1) then
-        !pmc_interface%base_rates(i_photo_rxn) = pmc_interface%base_rates(i_photo_rxn)!+0.01
-        !pmc_interface%base_rates(i_photo_rxn) = 0.01
-        !write(*,*), "rates",i_photo_rxn, pmc_interface%base_rates(i_photo_rxn)
-      !end if
-      !write(*,*), "rates",i_photo_rxn, pmc_interface%base_rates(i_photo_rxn)
-
-      call pmc_interface%photo_rxns(i_photo_rxn)%set_rate(real(pmc_interface%base_rates(i_photo_rxn), kind=dp))
-      !call pmc_interface%photo_rxns(i_photo_rxn)%set_rate(real(0.0, kind=dp)) !works
-
-      call pmc_interface%camp_core%update_data(pmc_interface%photo_rxns(i_photo_rxn))
-
-      !print*,"id photo_rate", pmc_interface%base_rates(i_photo_rxn)
-    end do
 
     close(IMPORT_FILE_UNIT)
 
@@ -747,7 +746,9 @@ contains
     call jfile%load_file(export_path); if (jfile%failed()) print*,&
             "JSON not found at compare_ebi_camp_json"
 
-    write(*,*) "Importing concentrations"
+    if (pmc_mpi_rank().eq.0) then
+      write(*,*) "Importing camp input json"
+    end if
 
     if(n_cells.gt.1) then
       print*, "ERROR: Import can only handle data from 1 cell, set n_cells to 1"
@@ -1168,8 +1169,6 @@ contains
     character(len=128) :: i_cell_str, time_str
     integer :: n_cells
     real :: curr_time
-
-    n_cells=(I_E - I_W+1)*(I_N - I_S+1)*NUM_VERT_CELLS
 
     !curr_time_min=curr_time_in/60.0
     curr_time=curr_time_in

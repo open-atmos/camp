@@ -148,7 +148,7 @@ contains
     type(string_t), allocatable :: unique_names(:)
 
     class(aero_rep_data_t), pointer :: aero_rep
-    integer(kind=i_kind) :: i_sect_om, i_sect_bc, i_sect_sulf, i_sect_opm, i
+    integer(kind=i_kind) :: i_sect_om, i_sect_bc, i_sect_sulf, i_sect_opm, i, z
     type(aero_rep_factory_t) :: aero_rep_factory
     type(aero_rep_update_data_modal_binned_mass_GMD_t) :: update_data_GMD
     type(aero_rep_update_data_modal_binned_mass_GSD_t) :: update_data_GSD
@@ -201,12 +201,8 @@ contains
       call assert_msg(593895016, present(ending_id), &
               "Missing ending tracer index for chemical species")
 
-
-
       ! Load the interface data
       call this%load(interface_config_file)
-
-
 
       ! Initializeorganic_matter the camp-chem core
       this%camp_core => camp_core_t(camp_config_file, this%n_cells)
@@ -299,14 +295,10 @@ contains
         end do
       endif
 
-
-
     endif
 
     ! broadcast the buffer size
     call pmc_mpi_bcast_integer(pack_size, local_comm)
-
-
 
     if (MONARCH_PROCESS.ne.0) then
       ! allocate the buffer to receive data
@@ -318,7 +310,8 @@ contains
 
     if (MONARCH_PROCESS.ne.0) then
       ! unpack the data
-      this%camp_core => camp_core_t()
+      !this%camp_core => camp_core_t()
+      this%camp_core => camp_core_t(n_cells=this%n_cells)
       pos = 0
       call this%camp_core%bin_unpack(buffer, pos)
       call update_data_GMD%bin_unpack(buffer, pos)
@@ -351,8 +344,6 @@ contains
     deallocate(buffer)
 #endif
 
-
-
     ! Initialize the solver on all nodes
     call this%camp_core%solver_initialize()
 
@@ -364,17 +355,15 @@ contains
       ! Set the photolysis rates
 
       do i_photo_rxn = 1, this%n_photo_rxn
-
-        call this%photo_rxns(i_photo_rxn)%set_rate(real(this%base_rates(i_photo_rxn), kind=dp))
-        !call this%photo_rxns(i_photo_rxn)%set_rate(real(0.01, kind=dp))
+        !todo fix update for all mpi ranks
+        !call this%photo_rxns(i_photo_rxn)%set_rate(real(this%base_rates(i_photo_rxn), kind=dp))
+        call this%photo_rxns(i_photo_rxn)%set_rate(real(0.0, kind=dp))
         call this%camp_core%update_data(this%photo_rxns(i_photo_rxn))
       end do
 
     end if
 
-
     ! Set the aerosol mode dimensions
-
     ! organic matter
     if (i_sect_om.gt.0) then
       call update_data_GMD%set_GMD(i_sect_om, 2.12d-8)
@@ -419,8 +408,7 @@ contains
   subroutine integrate(this, curr_time, time_step, i_start, i_end, j_start, &
                   j_end, temperature, MONARCH_conc, water_conc, &
                   water_vapor_index, air_density, pressure, conv, i_hour,&
-           name_gas_species_to_print,id_gas_species_to_print&
-          ,name_aerosol_species_to_print,id_aerosol_species_to_print,RESULTS_FILE_UNIT)
+                  RESULTS_FILE_UNIT)
 
     !> PartMC-camp <-> MONARCH interface
     class(monarch_interface_t) :: this
@@ -455,8 +443,6 @@ contains
     real, intent(in) :: conv
     integer, intent(inout) :: i_hour
 
-    type(string_t), allocatable, intent(inout) :: name_gas_species_to_print(:), name_aerosol_species_to_print(:)
-    integer(kind=i_kind), allocatable, intent(inout) :: id_gas_species_to_print(:), id_aerosol_species_to_print(:)
     integer, intent(in) :: RESULTS_FILE_UNIT
 
     type(chem_spec_data_t), pointer :: chem_spec_data
@@ -575,7 +561,6 @@ contains
 
     end if
 
-
     if(.not.this%solve_multiple_cells) then
       do i=i_start, i_end
         do j=j_start, j_end
@@ -617,7 +602,6 @@ contains
             !print*, "state", this%camp_state%state_var(:)
 
             if(this%interface_input_file.eq."interface_monarch_cb05_soa.json") then
-              !todo take into account emissions for import_camp_input
               !Add emissions
               this%camp_state%state_var(chem_spec_data%gas_state_id("SO2"))=&
                       this%camp_state%state_var(chem_spec_data%gas_state_id("SO2"))&
@@ -668,14 +652,6 @@ contains
 
             !write(*,*) "State_var input",this%camp_state%state_var(this%map_camp_id(:)+(z*state_size_per_cell))
 
-            ! Start the computation timer
-            if (MONARCH_PROCESS.eq.0 .and. i.eq.i_start .and. j.eq.j_start &
-                    .and. k.eq.1) then
-              !solver_stats%debug_out = .false.
-            else
-              !solver_stats%debug_out = .false.
-            end if
-
             ! Integrate the PMC mechanism
             call cpu_time(comp_start)
             call this%camp_core%solve(this%camp_state, real(time_step*60., kind=dp),solver_stats=solver_stats)
@@ -723,8 +699,6 @@ contains
         do j=j_start, j_end
           do k=1, k_end
             !Remember fortran read matrix in inverse order for optimization!
-            ! TODO add descriptions for o and z, or preferably use descriptive
-            !      variable names
             o = (j-1)*(i_end) + (i-1) !Index to 3D
             z = (k-1)*(i_end*j_end) + o !Index for 2D
 
@@ -823,6 +797,9 @@ contains
 
       !print*, "state", this%camp_state%state_var(:)
 
+
+
+
       ! Integrate the PMC mechanism
       call cpu_time(comp_start)
       call this%camp_core%solve(this%camp_state, &
@@ -837,7 +814,7 @@ contains
             o = (j-1)*(i_end) + (i-1) !Index to 3D
             z = (k-1)*(i_end*j_end) + o !Index for 2D
 
-            !todo remove k_flip to reduce possible bugs
+            !todo remove k_flip to simplify code
             k_flip = size(MONARCH_conc,3) - k + 1
             MONARCH_conc(i,j,k_flip,this%map_monarch_id(:)) = &
                     this%camp_state%state_var(this%map_camp_id(:)+(z*state_size_per_cell))
@@ -1335,8 +1312,13 @@ end if
     do i=i_W, I_E
       do j=I_S, I_N
         do k=1, k_end
-          r=(k-1)*(I_E*I_N) + (j-1)*(I_E) + i-1
-          last_cell=((I_E - I_W+1)*(I_N - I_S+1)*k_end)-1
+          if(this%n_cells.eq.1) then
+            r=0
+            last_cell=0
+          else
+            r=(k-1)*(I_E*I_N) + (j-1)*(I_E) + i-1
+            last_cell=((I_E - I_W+1)*(I_N - I_S+1)*k_end)-1
+          end if
 
           forall (i_spec = 1:size(this%map_monarch_id))
             this%camp_state%state_var(this%init_conc_camp_id(i_spec)&
@@ -1447,12 +1429,6 @@ end if
             deallocate(this%init_conc_camp_id)
     if (allocated(this%init_conc)) &
             deallocate(this%init_conc)
-    if (associated(this%species_map_data)) &
-            deallocate(this%species_map_data)
-    if (associated(this%init_conc_data)) &
-            deallocate(this%init_conc_data)
-    if (associated(this%property_set)) &
-            deallocate(this%property_set)
 
   end subroutine finalize
 

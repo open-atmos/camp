@@ -1502,7 +1502,6 @@ contains
       !write(*,*) "n_cells", n_cells, "this%n_cells", this%n_cells
       call assert_msg(593328368, n_cells.le.this%n_cells,                   &
               "Trying to solve more cells than allocated cells" )
-      !this%n_cells=n_cells !todo re-check consequences of this
       n_cells_aux=n_cells
     else
       n_cells_aux=this%n_cells
@@ -1684,8 +1683,6 @@ contains
 
 #ifdef EXPORT_CAMP_INPUT
 
-!#ifdef COMMENTING
-
     spec_name=""
     do j=1, max_spec_name_size
       spec_name=spec_name//"a"
@@ -1694,9 +1691,6 @@ contains
     do i=1, this%size_state_per_cell
       pack_size = pack_size + pmc_mpi_pack_size_string(spec_name, l_comm)
     end do
-
-!#endif
-
 #endif
 
 #else
@@ -1769,8 +1763,6 @@ contains
 
 #ifdef EXPORT_CAMP_INPUT
 
-!#ifdef COMMENTING
-
     allocate(spec_names(this%size_state_per_cell))
     this%spec_names = this%unique_names()
 
@@ -1783,8 +1775,6 @@ contains
       call pmc_mpi_pack_string(buffer, pos, trim(spec_names(i)%string), l_comm)
 
     end do
-
-!#endif
 
 #endif
 
@@ -1863,8 +1853,6 @@ contains
 
 #ifdef EXPORT_CAMP_INPUT
 
-!#ifdef COMMENTING
-
     spec_name=""
     do j=1,max_spec_name_size
       spec_name=spec_name//"a"
@@ -1877,8 +1865,6 @@ contains
       this%spec_names(i)%string = trim(spec_name)
 
     end do
-
-!#endif
 
 #endif
 

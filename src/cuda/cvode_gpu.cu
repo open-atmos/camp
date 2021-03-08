@@ -3372,8 +3372,8 @@ int linsolsolve_gpu2(SolverData *sd, CVodeMem cv_mem)
 #ifdef PMC_DEBUG_GPU
     cudaEventRecord(bicg->startBiConjGrad);
 #endif
-    //todo change CSC for CSR to avoid atomicadds
 
+    //todo fix solveGPU_block
     // Call the lsolve function
     solveGPU(bicg,bicg->dA,bicg->djA,bicg->diA,bicg->dx,bicg->dtempv);
     //solveGPU_block(bicg,bicg->dA,bicg->djA,bicg->diA,bicg->dx,bicg->dtempv);

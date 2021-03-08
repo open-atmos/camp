@@ -7,6 +7,6 @@
 
 #include "../camp_common.h"
 
-static void print_derivative_2(N_Vector deriv);
+void export_counters_open(SolverData *sd);
 
 #endif  // CAMP_DEBUG_2_H
