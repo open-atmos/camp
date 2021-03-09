@@ -1121,8 +1121,8 @@ contains
     write(EBI_KPP_FILE_UNIT,*) "spec_name, concentrations rel. error [(èbi-kpp)/(ebi+kpp)], ebi, kpp"
 #endif
 
-    write(*,*) "state_var last cell:"
-    do i_cell = n_cells-1, n_cells-1
+    write(*,*) "state_var last cells:"
+    do i_cell = n_cells-2, n_cells-1
       do j = 1, 3
         print*,  camp_state%state_var(j)
       end do

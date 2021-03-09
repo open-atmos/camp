@@ -569,11 +569,12 @@ contains
 
             ! Calculate the vertical index for NMMB-style arrays
             k_flip = size(MONARCH_conc,3) - k + 1
-
+            do z=1, 1
             ! Update the environmental state
             call this%camp_state%env_states(1)%set_temperature_K( &
               real( temperature(i,j,k_flip), kind=dp ) )
             !print*,"PRESSURE CAMP",pressure(i,j,k)
+            !print*,"temp camp",temperature(i,j,k_flip)
             call this%camp_state%env_states(1)%set_pressure_Pa(   &
               real( pressure(i,j,k), kind=dp ) )
 
@@ -589,11 +590,11 @@ contains
 #else
           if(this%interface_input_file.eq."interface_simple.json") then
             this%camp_state%state_var(this%gas_phase_water_id) = &
-            water_conc(i,j,k_flip,water_vapor_index)! * &
+            water_conc(1,1,1,water_vapor_index)! * &
             !        air_density(i,j,k) * 1.0d9
           else
             this%camp_state%state_var(this%gas_phase_water_id) = &
-                    water_conc(i,j,k_flip,water_vapor_index) * &
+                    water_conc(1,1,1,water_vapor_index) * &
                             mwair / mwwat * 1.e6
           end if
 #endif
@@ -654,7 +655,10 @@ contains
 
             ! Integrate the PMC mechanism
             call cpu_time(comp_start)
-            call this%camp_core%solve(this%camp_state, real(time_step*60., kind=dp),solver_stats=solver_stats)
+
+
+              call this%camp_core%solve(this%camp_state, real(time_step*60., kind=dp),solver_stats=solver_stats)
+            end do
             call cpu_time(comp_end)
             comp_time = comp_time + (comp_end-comp_start)
             !time_step*60
@@ -796,9 +800,6 @@ contains
       end do
 
       !print*, "state", this%camp_state%state_var(:)
-
-
-
 
       ! Integrate the PMC mechanism
       call cpu_time(comp_start)

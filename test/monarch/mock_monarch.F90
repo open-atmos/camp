@@ -431,13 +431,22 @@ program mock_monarch
   end do
 
   if (pmc_mpi_rank().eq.0) then
-    do z=1, size(name_gas_species_to_print)
-      print*,id_gas_species_to_print(z),name_gas_species_to_print(z)%string,species_conc(1,1,1,id_gas_species_to_print(z))
+    do i = I_W, I_E
+      do j = I_S, I_N
+        do k = 1, NUM_VERT_CELLS
+          do z=1, size(name_gas_species_to_print)
+            print*,id_gas_species_to_print(z),name_gas_species_to_print(z)%string,&
+            species_conc(i,j,k,id_gas_species_to_print(z))
+          end do
+        end do
+      end do
     end do
   else
       !print*,"Rank",pmc_mpi_rank(), "conc",&
       !        species_conc(1,1,1,pmc_interface%map_monarch_id(:))
   end if
+  !print*,"Rank",pmc_mpi_rank(), "conc",&
+  !        species_conc(1,1,1,pmc_interface%map_monarch_id(:))
 
   !If something to compare
   if(pmc_cases.gt.1) then
@@ -463,7 +472,7 @@ program mock_monarch
 #ifdef SOLVE_EBI_IMPORT_CAMP_INPUT
     if (pmc_mpi_rank().eq.0) then
       !Not working in other ranks than 0 (memory allocation error)
-      call compare_ebi_camsp_json(pmc_interface)
+      call compare_ebi_camp_json(pmc_interface)
     end if
 #endif
 
@@ -684,7 +693,7 @@ contains
           species_conc(i,j,k,pmc_interface%map_monarch_id(:)) = &
                   pmc_interface%camp_state%state_var(pmc_interface%map_camp_id(:)+(z*state_size_per_cell))
 
-          temperature(i,j,k) = temperature(1,1,1)
+          temperature(i,j,k) = temperature(1,1,1)!+z*0.1
           pressure(i,j,k) = pressure(1,1,1)
 
           do i_photo_rxn = 1, pmc_interface%n_photo_rxn

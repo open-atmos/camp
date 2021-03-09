@@ -11,33 +11,39 @@ exec_str="../../mock_monarch config_simple.json interface_simple.json simple"
 mpi="yes"
 #mpi="no"
 
+mpi_threads = 1
+
+
 #test_monarch1
-
-
 if mpi=="yes":
-  exec_str = 'mpirun -v -np 40 --bind-to core:overload-allowed ../../mock_monarch config_simple.json interface_simple.json simple'
+  exec_str = "mpirun -v -np "+str(mpi_threads)+" ../../mock_monarch config_simple.json interface_simple.json simple"
 else:
   exec_str = '../../mock_monarch config_simple.json interface_simple.json simple'
-"""
 
+"""
 
 #test_monarch2
 if mpi=="yes":
-  exec_str="mpirun -np 40 --bind-to core:overload-allowed ../../mock_monarch config_monarch_cb05.json interface_monarch_cb05.json monarch_cb05"
+  exec_str="mpirun -np "+str(mpi_threads)+" ../../mock_monarch config_monarch_cb05.json interface_monarch_cb05.json monarch_cb05"
+  #exec_str="srun -n "+str(mpi_threads)+" ../../mock_monarch config_monarch_cb05.json interface_monarch_cb05.json monarch_cb05"
+#Not:
+  #exec_str="mpirun -np 40 --bind-to core:overload-allowed ../../mock_monarch config_monarch_cb05.json interface_monarch_cb05.json monarch_cb05"
 else:
   exec_str="../../mock_monarch config_monarch_cb05.json interface_monarch_cb05.json monarch_cb05"
   #exec_str = '../../mock_monarch config_simple.json interface_simple.json simple'
+
 """
 
 #Read file
 file = 'out/exported_counters_0.csv'
 
 #cells = [100,1000]
-cells = [10]
+cells = [1]
+cells = [cell/mpi_threads for cell in cells]
 cells = [str(cell) for cell in cells]
 #cases_multicells_onecell = ["one-cell","multi-cells"]
-#cases_multicells_onecell = ["one-cell"]
-cases_multicells_onecell = ["multi-cells"]
+cases_multicells_onecell = ["one-cell"]
+#cases_multicells_onecell = ["multi-cells"]
 
 #SELECT MANUALLY (future:if arch=cpu then select cpu if not gpu)
 cases_gpu_cpu = ["cpu"]
@@ -66,6 +72,8 @@ for case in cases_multicells_onecell:
 
         i_row += 1
 
+  """
+  #not working for cases>1
   with open(cases_gpu_cpu[0]+"_"+case+".csv", 'w') as file:
     writer = csv.writer(file, delimiter=' ')
 
@@ -75,6 +83,7 @@ for case in cases_multicells_onecell:
     writer.writerow(keys)
     for value in data.values():
       writer.writerow(value)
+  """
 
 #print(data)
 
