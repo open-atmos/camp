@@ -6,6 +6,7 @@ set -e
 set -v
 # make sure that the current directory is the one where this script is
 cd ${0%/*}
+pwd
 # make the output directory if it doesn't exist
 mkdir -p out
 # copy the compare file to the output directory
@@ -17,13 +18,12 @@ do
   echo Attempt $counter
 
 if [[ $1 == "MPI" ]]; then
-
-  exec_str="mpirun -np 2 ../../mock_monarch config_monarch_cb05.json interface_monarch_cb05.json monarch_cb05"
-
+  #exec_str="mpirun -v -np 2 ../../mock_monarch config_monarch_mod37.json interface_monarch_mod37.json out/monarch_mod37"
+  exec_str="mpirun -v -np 2 ../../mock_monarch config_monarch_cb05_soa.json interface_monarch_cb05_soa.json out/monarch_cb05_soa"
 else
-
   #exec_str="../../mock_monarch config_monarch_mod37.json interface_monarch_mod37.json out/monarch_mod37"
-  exec_str="../../mock_monarch config_monarch_cb05.json interface_monarch_cb05.json monarch_cb05"
+#  exec_str="../../mock_monarch config_monarch_cb05_soa.json interface_monarch_cb05_soa.json out/monarch_cb05_soa"
+  exec_str="../../mock_monarch config_monarch_modal.json interface_monarch_modal.json out/monarch_cb05_soa"
 fi
 
   if ! $exec_str; then

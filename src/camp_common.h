@@ -49,10 +49,6 @@
 
 #endif
 
-#ifdef PMC_USE_MPI
-#include <mpi.h>
-#endif
-
 #ifdef PMC_USE_GPU
 #include <cuda.h>
 #include <cuda_runtime.h>

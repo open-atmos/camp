@@ -20,7 +20,7 @@
 /* Time derivative for solver species */
 typedef struct {
   unsigned int num_spec;          // Number of species in the derivative
-#ifdef TIME_DERIVATIVE_LONG_DOUBLE
+#ifndef TIME_DERIVATIVE_LONG_DOUBLE
   long double *production_rates;  // Production rates for all species
   long double *loss_rates;        // Loss rates for all species
 #else
@@ -66,7 +66,7 @@ void time_derivative_output(TimeDerivative time_deriv, double *dest_array,
  * \param rate_contribution Value to add to the time derivative for speces
  * spec_id
  */
-#ifdef TIME_DERIVATIVE_LONG_DOUBLE
+#ifndef TIME_DERIVATIVE_LONG_DOUBLE
 void time_derivative_add_value(TimeDerivative time_deriv, unsigned int spec_id,
                                long double rate_contribution);
 #else

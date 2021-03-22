@@ -20,6 +20,10 @@
 #include <string.h>
 #include "../camp_solver.h"
 
+#ifdef PMC_USE_MPI
+#include <mpi.h>
+#endif
+
 void export_counters_open(SolverData *sd)
 {
 

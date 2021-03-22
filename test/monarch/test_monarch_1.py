@@ -1,45 +1,44 @@
+import matplotlib as mpl
+mpl.use('TkAgg')
 import matplotlib.pyplot as plt
 import csv
 import sys, getopt
 import os
 import numpy as np
 from pylab import imread,subplot,imshow,show
+import plot_species
 
 #exec_str="../../mock_monarch config_simple.json interface_simple.json out/simple"
-exec_str="../../mock_monarch config_simple.json interface_simple.json simple"
+#exec_str="../../mock_monarch config_simple.json interface_simple.json simple"
 
-mpi="yes"
-#mpi="no"
+#config_file="simple"
+#config_file="monarch_cb05"
+config_file="monarch_binned"
+
+#mpi="yes"
+mpi="no"
 
 mpi_threads = 1
 
-
-#test_monarch1
+exec_str=""
 if mpi=="yes":
-  exec_str = "mpirun -v -np "+str(mpi_threads)+" ../../mock_monarch config_simple.json interface_simple.json simple"
-else:
-  exec_str = '../../mock_monarch config_simple.json interface_simple.json simple'
+  exec_str+="mpirun -v -np "+str(mpi_threads)+" --bind-to none "
 
-"""
+exec_str+="../../mock_monarch config_"+config_file+".json "+"interface_"+config_file \
+  +".json "+config_file
 
-#test_monarch2
-if mpi=="yes":
-  exec_str="mpirun -np "+str(mpi_threads)+" ../../mock_monarch config_monarch_cb05.json interface_monarch_cb05.json monarch_cb05"
-  #exec_str="srun -n "+str(mpi_threads)+" ../../mock_monarch config_monarch_cb05.json interface_monarch_cb05.json monarch_cb05"
-#Not:
-  #exec_str="mpirun -np 40 --bind-to core:overload-allowed ../../mock_monarch config_monarch_cb05.json interface_monarch_cb05.json monarch_cb05"
-else:
-  exec_str="../../mock_monarch config_monarch_cb05.json interface_monarch_cb05.json monarch_cb05"
-  #exec_str = '../../mock_monarch config_simple.json interface_simple.json simple'
+ADD_EMISIONS="OFF"
+if config_file=="monarch_binned":
+  ADD_EMISIONS="ON"
 
-"""
+exec_str+=" "+ADD_EMISIONS
 
 #Read file
 file = 'out/exported_counters_0.csv'
 
 #cells = [100,1000]
 cells = [1]
-cells = [cell/mpi_threads for cell in cells]
+#cells = [int(cell/mpi_threads) for cell in cells] #in case divide load between threads
 cells = [str(cell) for cell in cells]
 #cases_multicells_onecell = ["one-cell","multi-cells"]
 cases_multicells_onecell = ["one-cell"]
@@ -51,15 +50,20 @@ cases_gpu_cpu = ["cpu"]
 
 data = {}
 
+# make the output directory if it doesn't exist
+if not os.path.exists('out'):
+  os.makedirs('out')
+
 for case in cases_multicells_onecell:
 
   #data[case]={}
 
   for cell in cells:
 
-    print exec_str + " "+ cell
+    print (exec_str + " " + cell + " " + case)
     os.system(exec_str + " " + cell + " " + case)
 
+  """
     with open(file) as f:
       csv_reader = csv.reader(f, delimiter=' ')
 
@@ -71,6 +75,7 @@ for case in cases_multicells_onecell:
         #data[case][row[0]] = data.get(row[0],[]) + [row[1]]
 
         i_row += 1
+  """
 
   """
   #not working for cases>1
@@ -85,9 +90,12 @@ for case in cases_multicells_onecell:
       writer.writerow(value)
   """
 
+
 #print(data)
 
-#Read data... right?
+
+#todo fix plot comparing to gnuplot
+plot_species.plot_species("out/"+config_file+"_urban_plume_0001.txt")
 
 """
 fig = plt.figure(figsize=(7, 4.25))
@@ -109,6 +117,7 @@ axes.set_xlabel('Number of cells')
 plt.xticks()
 """
 
+"""
 np.random.seed(19680801)
 data = np.random.randn(2, 100)
 
@@ -123,4 +132,5 @@ axs[1, 1].hist2d(data[0], data[1])
 #plt.imshow(image)
 
 plt.show()
+"""
 

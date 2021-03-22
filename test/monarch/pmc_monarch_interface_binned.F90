@@ -208,6 +208,7 @@ contains
       ! Load the interface data
       call this%load(interface_config_file)
 
+      ! Initialize the camp-chem core
       this%camp_core => camp_core_t(camp_config_file, this%n_cells)
       call this%camp_core%initialize()
 

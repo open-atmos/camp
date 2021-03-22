@@ -35,6 +35,10 @@
 #include "camp_debug.h"
 #include "debug_and_stats/camp_debug_2.h"
 
+#ifdef PMC_USE_MPI
+#include <mpi.h>
+#endif
+
 // Default solver initial time step relative to total integration time
 #define DEFAULT_TIME_STEP 1.0
 // State advancement factor for Jacobian element evaluation
@@ -605,6 +609,7 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
     if (rank==999 || rank==999 )
 #endif
     if (sd->counterSolve==0 && sd->counterFail==0)
+    //if (sd->counterFail==0)
     {
       int n_cell=1;
       printf("Rank %d t_initial %-le t_final %-le\n",rank,t_initial,t_final);

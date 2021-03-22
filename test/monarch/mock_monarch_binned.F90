@@ -202,8 +202,7 @@ program mock_monarch
   ! Initialize the mock model
   call get_command_argument(3, arg, status=status_code)
   call assert_msg(234156729, status_code.eq.0, "Error getting output file prefix")
-  output_file_title = ""//trim(arg)
-  !output_file_title = "Mock_"//trim(arg)
+  output_file_title = "Mock_"//trim(arg)
   output_file_prefix = "out/"//trim(arg)
 
   call get_command_argument(4, arg, status=status_code)
@@ -275,6 +274,8 @@ program mock_monarch
     allocate(id_gas_species_to_print(size_gas_species_to_print))
     allocate(id_aerosol_species_to_print(size_aerosol_species_to_print))
 
+    !name_gas_species_to_print(1)%string=("A")
+    !name_gas_species_to_print(2)%string=("C")
     name_gas_species_to_print(1)%string=("A")
     name_gas_species_to_print(2)%string=("B")
     name_gas_species_to_print(3)%string=("C")
@@ -285,7 +286,7 @@ program mock_monarch
       write(*,*) "Config complex (test 2)"
     end if
 
-    plot_case=2
+    plot_case=4
     if(plot_case == 0)then
       size_gas_species_to_print=4
       !size_aerosol_species_to_print=1
@@ -299,7 +300,7 @@ program mock_monarch
     elseif(plot_case == 4)then
       size_gas_species_to_print=5
       size_aerosol_species_to_print=24
-    end if
+    endif
 
     allocate(name_gas_species_to_print(size_gas_species_to_print))
     allocate(name_aerosol_species_to_print(size_aerosol_species_to_print))
@@ -427,9 +428,13 @@ program mock_monarch
       !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
       if (pmc_mpi_rank().eq.0) then
-        call print_state_gnuplot(curr_time,pmc_interface, name_gas_species_to_print,id_gas_species_to_print&
-               ,name_aerosol_species_to_print,id_aerosol_species_to_print,RESULTS_FILE_UNIT)
+        !todo fix print_state_gnuplot to use advantages from output_results
+        !call print_state_gnuplot(curr_time,pmc_interface, name_gas_species_to_print,id_gas_species_to_print&
+        !       ,name_aerosol_species_to_print,id_aerosol_species_to_print,RESULTS_FILE_UNIT)
+        call output_results(curr_time,pmc_interface,species_conc)
       end if
+
+
 
       call pmc_interface%integrate(curr_time,         & ! Starting time (min)
                                    TIME_STEP,         & ! Time step (min)
@@ -486,6 +491,7 @@ program mock_monarch
       end do
     end do
   end if
+  !print*,"hola"
   !print*,"Rank",pmc_mpi_rank(), "conc",&
   !        species_conc(1,1,1,pmc_interface%map_monarch_id(:))
 
@@ -512,6 +518,7 @@ program mock_monarch
 
 #ifdef SOLVE_EBI_IMPORT_CAMP_INPUT
     if (pmc_mpi_rank().eq.0) then
+      !Not working in other ranks than 0 (memory allocation error)
       call compare_ebi_camp_json(pmc_interface)
     end if
 #endif
@@ -520,13 +527,14 @@ program mock_monarch
   if (pmc_mpi_rank().eq.0) then
     !write(*,*) "MONARCH interface tests - PASS"
     !call print_state_gnuplot(curr_time,pmc_interface,species_conc)
-    call print_state_gnuplot(curr_time,pmc_interface, name_gas_species_to_print,id_gas_species_to_print&
-            ,name_aerosol_species_to_print,id_aerosol_species_to_print,RESULTS_FILE_UNIT)
+    !call print_state_gnuplot(curr_time,pmc_interface, name_gas_species_to_print,id_gas_species_to_print&
+    !        ,name_aerosol_species_to_print,id_aerosol_species_to_print,RESULTS_FILE_UNIT)
+    call output_results(curr_time,pmc_interface,species_conc)
     call create_gnuplot_script(pmc_interface, output_file_prefix, &
             plot_start_time, curr_time)
     !call create_gnuplot_persist(pmc_interface, output_file_prefix, &
     !        output_file_title, plot_start_time, curr_time, n_cells_plot, cell_to_print)
-    call create_gnuplot_persist_paper_camp(pmc_interface, output_file_prefix, &
+    call create_gnuplot_persist(pmc_interface, output_file_prefix, &
             plot_start_time, curr_time)
   end if
 
@@ -542,13 +550,13 @@ program mock_monarch
 
   !print*,"MPI_FINALIZE RANK",pmc_mpi_rank()
 
-#ifdef PMC_USE_MPI
+!#ifdef PMC_USE_MPI
 
   deallocate(pmc_interface)
 
   call pmc_mpi_finalize()
 
-#endif
+!#endif
 
 contains
 
@@ -1464,7 +1472,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Create a gnuplot script for viewing species concentrations
-  subroutine create_gnuplot_persist(pmc_interface, file_path, plot_title, &
+  subroutine create_gnuplot_persist_gpu(pmc_interface, file_path, plot_title, &
           start_time, end_time, n_cells_plot, i_cell)
 
     !> PartMC-camp <-> MONARCH interface
@@ -1556,10 +1564,6 @@ contains
     !write(SCRIPTS_FILE_UNIT,*) "set key outside"
     write(SCRIPTS_FILE_UNIT,*) "set key top left"
 
-    write(SCRIPTS_FILE_UNIT,"(A)",advance="no") "set output &
-            '"//file_path//".jpg'"
-    write(SCRIPTS_FILE_UNIT,*)
-
     if(size(name_aerosol_species_to_print).gt.0) then
 
       write(SCRIPTS_FILE_UNIT,"(A)",advance="no") "plot for [col="&
@@ -1601,7 +1605,7 @@ contains
   end subroutine
 
   !> Create a gnuplot script for viewing species concentrations
-  subroutine create_gnuplot_persist_paper_camp(pmc_interface, file_prefix, start_time, &
+  subroutine create_gnuplot_persist(pmc_interface, file_prefix, start_time, &
           end_time)
 
     !> PartMC-camp <-> MONARCH interface
