@@ -385,10 +385,12 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
   sd->counterJacCPU = 0;
   sd->counterSolve = 0;
   sd->counterFail = 0;
+  sd->counterLS = 0;
   sd->timeCVode = 0.0;
   sd->timeCVodeTotal = 0.0;
   sd->timeDerivCPU = 0.0;
   sd->timeJacCPU = 0.0;
+  sd->timeLS = 0.0;
 #endif
 
   // todo optimize, use for only rank 0 or debug flag
@@ -584,6 +586,30 @@ int solver_set_eval_jac(void *solver_data, bool eval_Jac) {
 }
 #endif
 
+#ifdef PMC_DEBUG_GPU
+
+void printSolverCountersCPU(SolverData *sd){
+
+  /*printf("timeDerivCPU %lf, counterDerivCPU %d\n", sd->timeDerivCPU / CLOCKS_PER_SEC,
+         sd->counterDerivCPU);
+
+  printf("timeJacCPU %lf, counterJacCPU %d\n", sd->timeJacCPU / CLOCKS_PER_SEC,
+         sd->counterJacCPU);*/
+
+  printf("timeCVode %lf\n", sd->timeCVode);
+
+  /*fprintf(sd->file,"timeDerivCPU %lf\ncounterDerivCPU %d\n", sd->timeDerivCPU / CLOCKS_PER_SEC,
+         sd->counterDerivCPU);
+  fprintf(sd->file,"timeJacCPU %lf\ncounterJacCPU %d\n", sd->timeJacCPU / CLOCKS_PER_SEC,
+         sd->counterJacCPU);
+  fprintf(sd->file,"timeCVode %lf\n", sd->timeCVode / CLOCKS_PER_SEC);*/
+
+  //fprintf(f, "n_cells %d\n", md->n_cells);
+
+}
+
+#endif
+
 /** \brief Solve for a given timestep
  *
  * \param solver_data A pointer to the initialized solver data
@@ -607,7 +633,6 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
 #ifdef PMC_USE_MPI
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     if (rank==999 || rank==999 )
-#endif
     if (sd->counterSolve==0 && sd->counterFail==0)
     //if (sd->counterFail==0)
     {
@@ -623,7 +648,8 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
       for (int i=0; i<1;i++)
         printf("%-le, %-le\n", env[0+2*i], env[1+2*i]);
     }
-  #endif
+#endif
+#endif
 
   // Update the dependent variables
   int i_dep_var = 0;
@@ -735,9 +761,12 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
   // Run the solver
   realtype t_rt = (realtype)t_initial;
 
-  clock_t start2 = clock();
-
   if (!sd->no_solve) {
+
+#ifdef PMC_DEBUG_GPU
+  double starttimeCvode = MPI_Wtime();
+#endif
+
 #ifdef PMC_USE_GPU
 #ifdef PMC_USE_ODE_GPU
     flag = CVode_gpu2(sd->cvode_mem, (realtype)t_final, sd->y, &t_rt, CV_NORMAL,
@@ -749,6 +778,10 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
 #endif
 #else
     flag = CVode(sd->cvode_mem, (realtype)t_final, sd->y, &t_rt, CV_NORMAL);
+#endif
+
+#ifdef PMC_DEBUG_GPU
+  sd->timeCVode += (MPI_Wtime() - starttimeCvode);
 #endif
 
     sd->solver_flag = flag;
@@ -811,10 +844,6 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
     }
   }
 
-#ifdef PMC_DEBUG_GPU
-  sd->timeCVode = (clock() - start2);
-#endif
-
   // Update the species concentrations on the state array
   i_dep_var = 0;
   for (int i_cell = 0; i_cell < n_cells; i_cell++) {
@@ -853,12 +882,12 @@ sd->counterDerivTotal,sd->timeCVode/CLOCKS_PER_SEC,sd->timeCVodeTotal/CLOCKS_PER
 
   }
 #endif
+
   //sd->counterDerivCPU = 0;
   //sd->counterJacCPU = 0;
   sd->counterSolve++;
+
 #endif
-
-
 
   // Re-run the pre-derivative calculations to update equilibrium species
   // and apply adjustments to final state
@@ -909,6 +938,7 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
                            int *RHS_evals_total, int *Jac_evals_total,
                            double *RHS_time__s, double *Jac_time__s,
                            double *timeCVode, double *timeCVodeTotal,
+                           int *counterLS, double *timeLS,
                            double *max_loss_precision) {
 #ifdef PMC_USE_SUNDIALS
   SolverData *sd = (SolverData *)solver_data;
@@ -968,8 +998,18 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
   *max_loss_precision = 0.0;
 #endif
 #ifdef PMC_DEBUG_GPU
-  *timeCVode = ((double)sd->timeCVode) / CLOCKS_PER_SEC;
-  *timeCVodeTotal = ((double)sd->timeCVodeTotal) / CLOCKS_PER_SEC;
+  //todo export struct pointer with all data to reduce code
+  *timeCVode = sd->timeCVode;
+  *timeCVodeTotal = sd->timeCVodeTotal;
+  //sd->timeCVode = 0.0;
+
+  CVodeGetcounterLS(sd->cvode_mem, counterLS);
+  CVodeGettimeLS(sd->cvode_mem, timeLS);
+#else
+  *timeCVode = 0.0;
+  *timeCVodeTotal = 0.0;
+  *counterLS = 0;
+  *timeLS = 0.0;
 #endif
 
 #endif
@@ -2381,7 +2421,7 @@ void solver_free(void *solver_data) {
 
 #ifdef PMC_DEBUG_GPU
 
-  export_counters_open(sd);
+  //export_counters_open(sd);
 
 #ifdef PMC_USE_GPU
 #ifdef PMC_USE_ODE_GPU
@@ -2389,23 +2429,9 @@ void solver_free(void *solver_data) {
 #endif
 #endif
 
-  /*printf("timeDerivCPU %lf, counterDerivCPU %d\n", sd->timeDerivCPU / CLOCKS_PER_SEC,
-         sd->counterDerivCPU);
+  printSolverCountersCPU(sd);
 
-  printf("timeJacCPU %lf, counterJacCPU %d\n", sd->timeJacCPU / CLOCKS_PER_SEC,
-         sd->counterJacCPU);
-
-  printf("timeCVode %lf\n", sd->timeCVode / CLOCKS_PER_SEC);*/
-
-  fprintf(sd->file,"timeDerivCPU %lf\ncounterDerivCPU %d\n", sd->timeDerivCPU / CLOCKS_PER_SEC,
-         sd->counterDerivCPU);
-  fprintf(sd->file,"timeJacCPU %lf\ncounterJacCPU %d\n", sd->timeJacCPU / CLOCKS_PER_SEC,
-         sd->counterJacCPU);
-  fprintf(sd->file,"timeCVode %lf\n", sd->timeCVode / CLOCKS_PER_SEC);
-
-  //fprintf(f, "n_cells %d\n", md->n_cells);
-
-  fclose(sd->file);
+  //fclose(sd->file);
 
 #endif
 

@@ -1,7 +1,92 @@
+import matplotlib as mpl
+mpl.use('TkAgg')
 import matplotlib.pyplot as plt
 import matplotlib
 import csv
-import sys, getopt
+
+def calculate_speedup(base_case_data,new_case_data,data,plot_y_key):
+
+  #base_case_data=data["one-cell"][plot_y_key]
+  #new_case_data=data["multi-cells"][plot_y_key]
+
+  new_plot_y_key="Speedup " + plot_y_key
+
+  #print(base_case_data)
+
+  #data[labels[col]]=data.get(labels[col],[]) + [float(row[col])]
+
+  data[new_plot_y_key] = []
+  for i in range(len(base_case_data)):
+    #print(base_case_data[i],new_case_data[i], base_case_data[i]/new_case_data[i])
+    data[new_plot_y_key]=data.get(new_plot_y_key,[]) \
+           + [base_case_data[i]/new_case_data[i]]
+
+  #print(data)
+
+  plot_y_key = new_plot_y_key
+  #print(plot_y_key)
+  return data,plot_y_key
+
+def plot_solver_stats(data, plot_x_key, plot_y_key, plot_title):
+
+  #print(data)
+
+  #fig = plt.figure(figsize=(7, 4.25))
+  fig = plt.figure()
+  spec2 = mpl.gridspec.GridSpec(ncols=1, nrows=1, wspace=.35,hspace=.1,bottom=.25,top=.85,left=.1,right=.9)
+  axes = fig.add_subplot(spec2[0, 0])
+  #axes = fig.add_subplot()
+  list_colors = ["r","g","b","c","m","y","k","w"]
+  list_markers = ["+","x","*","s","s",".","-"]
+
+  i_color=0
+  PLOT_CELLS=False
+  if PLOT_CELLS:
+    axes.plot(cells,data["timeCVode"],color=list_colors[i_color], marker=list_markers[i_color])
+    axes.set_ylabel('Time (s)')
+    axes.set_xlabel('Number of cells')
+
+  PLOT_TIMESTEPS=True
+  if PLOT_TIMESTEPS:
+    axes.plot(data[plot_x_key],data[plot_y_key],color=list_colors[i_color], marker=list_markers[i_color])
+    axes.set_ylabel(plot_y_key)
+    axes.set_xlabel(plot_x_key)
+
+  #axes.set_yscale('log')
+  plt.xticks()
+  plt.title(plot_title)
+
+  #data[plot_x_key]=data[plot_x_key]+1
+
+  #print(data)
+
+  plt.show()
+
+def read_solver_stats(file, data):
+
+  with open(file) as f:
+    csv_reader = csv.reader(f, delimiter=',')
+
+    i_row = 0
+
+    for row in csv_reader:
+
+      if i_row == 0:
+        labels=row
+
+      else:
+        for col in range(len(row)):
+          data[labels[col]]=data.get(labels[col],[]) + [float(row[col])]
+
+      i_row += 1
+
+  #print(data)
+  #Normalize accumulative timers
+  #for key in data:
+  #  for i in range(len(data[key])):
+  #    if(i != 0):
+  #      data[key][i]=data[key][i]-data[key][i-1]
+  #print(data)
 
 def plot_species(file):
   #print ("hola")
@@ -105,8 +190,8 @@ def plot_species(file):
 
   axes.set_ylabel('Gas mixing ratio (ppm)')
   axes.set_xlabel('Time (min)')
-  #axes.set_xlim([0,1440])
   #axes.set_yscale('log')
+  #axes.set_xlim([0,1440])
   #axes.set_ylim([1e-20,1])
   plt.xticks()
 

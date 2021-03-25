@@ -6,7 +6,7 @@ import sys, getopt
 import os
 import numpy as np
 from pylab import imread,subplot,imshow,show
-import plot_species
+import plot_functions
 
 #exec_str="../../mock_monarch config_simple.json interface_simple.json out/simple"
 #exec_str="../../mock_monarch config_simple.json interface_simple.json simple"
@@ -34,21 +34,28 @@ if config_file=="monarch_binned":
 exec_str+=" "+ADD_EMISIONS
 
 #Read file
-file = 'out/exported_counters_0.csv'
 
 #cells = [100,1000]
-cells = [1]
+cells = [2]
 #cells = [int(cell/mpi_threads) for cell in cells] #in case divide load between threads
 cells = [str(cell) for cell in cells]
 #cases_multicells_onecell = ["one-cell","multi-cells"]
-cases_multicells_onecell = ["one-cell"]
-#cases_multicells_onecell = ["multi-cells"]
+#cases_multicells_onecell = ["one-cell"]
+cases_multicells_onecell = ["multi-cells"]
 
 #SELECT MANUALLY (future:if arch=cpu then select cpu if not gpu)
 cases_gpu_cpu = ["cpu"]
 #cases_gpu_cpu = ["gpu"]
 
+plot_x_key="timestep"
+
+#todo fix timeCVode to MPI counters to avoid 0 division
+#plot_y_key="timeCVode"
+#plot_y_key="timeLS"
+plot_y_key="counterLS"
+
 data = {}
+#data_list = []
 
 # make the output directory if it doesn't exist
 if not os.path.exists('out'):
@@ -56,28 +63,37 @@ if not os.path.exists('out'):
 
 for case in cases_multicells_onecell:
 
-  #data[case]={}
+  data_tmp = {}
+
+  file = 'out/'+config_file+'_'+case+'_solver_stats.csv'
 
   for cell in cells:
 
     print (exec_str + " " + cell + " " + case)
     os.system(exec_str + " " + cell + " " + case)
 
-  """
-    with open(file) as f:
-      csv_reader = csv.reader(f, delimiter=' ')
+    plot_functions.read_solver_stats(file, data_tmp)
 
-      i_row = 0
+  #plot_functions.plot_solver_stats(data_tmp)
+  data[case]=data_tmp
+  #data_list.append(data_tmp)
 
-      for row in csv_reader:
+#print(data)
 
-        data[row[0]] = data.get(row[0],[]) + [row[1]]
-        #data[case][row[0]] = data.get(row[0],[]) + [row[1]]
+if (len(cases_multicells_onecell) == 2):
 
-        i_row += 1
-  """
+  base_case_data=data[cases_multicells_onecell[0]][plot_y_key]
+  new_case_data=data[cases_multicells_onecell[1]][plot_y_key]
 
-  """
+  data,plot_y_key=plot_functions.calculate_speedup( \
+    base_case_data,new_case_data,data_tmp,plot_y_key)
+
+
+plot_title = config_file + ", cells: " + str(cells[0])
+
+plot_functions.plot_solver_stats(data, plot_x_key, plot_y_key, plot_title)
+
+"""
   #not working for cases>1
   with open(cases_gpu_cpu[0]+"_"+case+".csv", 'w') as file:
     writer = csv.writer(file, delimiter=' ')
@@ -88,49 +104,8 @@ for case in cases_multicells_onecell:
     writer.writerow(keys)
     for value in data.values():
       writer.writerow(value)
-  """
-
-
-#print(data)
-
-
-#todo fix plot comparing to gnuplot
-plot_species.plot_species("out/"+config_file+"_urban_plume_0001.txt")
-
-"""
-fig = plt.figure(figsize=(7, 4.25))
-spec2 = matplotlib.gridspec.GridSpec(ncols=1, nrows=1, wspace=.35,hspace=.1,bottom=.25,top=.85,left=.1,right=.9)
-axes = fig.add_subplot(spec2[0, 0])
-list_colors = ["r","g","b","c","m","y","k","w"]
-list_markers = ["+","x","*","s","s",".","-"]
-
-print "hola"
-print data["timeCVode"]
-
-i_color=0
-axes.plot(data["timeCVode"],data["n_cells"],color=list_colors[i_color], marker=list_markers[i_color])
-
-axes.set_ylabel('Time (s)')
-axes.set_xlabel('Number of cells')
-#axes.set_yscale('log')
-
-plt.xticks()
 """
 
-"""
-np.random.seed(19680801)
-data = np.random.randn(2, 100)
+#plot_functions.plot_species("out/"+config_file+"_urban_plume_0001.txt")
 
-fig, axs = plt.subplots(2, 2, figsize=(5, 5))
-axs[0, 0].hist(data[0])
-axs[1, 0].scatter(data[0], data[1])
-axs[0, 1].plot(data[0], data[1])
-axs[1, 1].hist2d(data[0], data[1])
-
-#plt.savefig("mygraph.png")
-#image = imread('mygraph.png')
-#plt.imshow(image)
-
-plt.show()
-"""
 

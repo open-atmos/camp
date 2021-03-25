@@ -13,6 +13,7 @@ program mock_monarch
                                                 to_string
   use pmc_monarch_interface
   use pmc_mpi
+  use pmc_solver_stats
 #ifdef PMC_USE_JSON
   use json_module
 #endif
@@ -69,6 +70,7 @@ program mock_monarch
   integer, parameter :: RESULTS_FILE_UNIT_TABLE = 10
   integer, parameter :: RESULTS_FILE_UNIT_PY = 11
   integer, parameter :: IMPORT_FILE_UNIT = 12
+  integer, parameter :: STATS_FILE_UNIT = 13
 
   integer(kind=i_kind), parameter :: NUM_CAMP_SPEC = 79
   integer(kind=i_kind), parameter :: NUM_EBI_SPEC = 72
@@ -99,9 +101,9 @@ program mock_monarch
   !> Ending index for camp-chem species in tracer array
   integer, parameter :: END_CAMP_ID = 210!350
   !> Time step (min)
-  real, parameter :: TIME_STEP = 2.!1.6
+  real, parameter :: TIME_STEP = 2.!1.6 !camp_paper=2
   !> Number of time steps to integrate over
-  integer, parameter :: NUM_TIME_STEP = 720!1!720!180
+  integer, parameter :: NUM_TIME_STEP = 1!1!camp_paper=720!180
   !> Index for water vapor in water_conc()
   integer, parameter :: WATER_VAPOR_ID = 5
   !> Start time
@@ -177,6 +179,10 @@ program mock_monarch
   !> Partmc nº of cases to test
   integer :: pmc_cases = 1
   integer :: plot_case, new_v_cells
+  type(solver_stats_t), target :: solver_stats
+  integer :: counterLS = 0
+  real :: timeLS = 0.0
+  real :: timeCvode = 0.0
 
   ! initialize mpi (to take the place of a similar MONARCH call)
   call pmc_mpi_init()
@@ -211,8 +217,8 @@ program mock_monarch
     ADD_EMISIONS = trim(arg)
   else
     !One-cell case as default
-    print*, "WARNING: not ADD_EMISIONS parameter received, value set to ON"
-    ADD_EMISIONS = "ON"
+    print*, "WARNING: not ADD_EMISIONS parameter received, value set to OFF"
+    ADD_EMISIONS = "OFF"
   end if
 
   call get_command_argument(5, arg, status=status_code)
@@ -232,10 +238,12 @@ program mock_monarch
     else
       n_cells = 1
     end if
+    output_file_prefix = output_file_prefix//"_"//trim(arg)
   else
     !One-cell case as default
     print*, "WARNING: not multi-cells flag parameter received, value set to one-cell"
     n_cells = 1
+    output_file_prefix = output_file_prefix//"_"//"one_cell"
   end if
 
   I_W=1
@@ -285,7 +293,11 @@ program mock_monarch
       write(*,*) "Config complex (test 2)"
     end if
 
-    plot_case=2
+    if(ADD_EMISIONS.eq."ON") then
+      plot_case=2
+    else
+      plot_case=0
+    end if
     if(plot_case == 0)then
       size_gas_species_to_print=4
       !size_aerosol_species_to_print=1
@@ -414,7 +426,6 @@ program mock_monarch
 
 #ifdef SOLVE_EBI_IMPORT_CAMP_INPUT
     if (pmc_mpi_rank().eq.0) then
-      !Not working in other ranks than 0 (memory allocation error)
       call solve_ebi(pmc_interface)
     end if
 #endif
@@ -444,10 +455,13 @@ program mock_monarch
                                    air_density,       & ! Air density (kg_air/m^3)
                                    pressure,          & ! Air pressure (Pa)
                                    conv,              &
-                                   i_hour)
+                                   i_hour,&
+                                   solver_stats)
       curr_time = curr_time + TIME_STEP
 
-
+#ifdef PMC_DEBUG_GPU
+    call export_solver_stats(curr_time,pmc_interface,solver_stats)
+#endif
 
       !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       ! **** end runtime modification **** !
@@ -475,13 +489,19 @@ program mock_monarch
 
   if (pmc_mpi_rank().eq.0) then
   !if (pmc_mpi_rank().ne.999) then
-    do i = I_W, I_E
-      do j = I_S, I_N
-        do k = 1, NUM_VERT_CELLS
+    do i = I_E,I_E!I_W, I_E
+      do j = I_N,I_N!I_S, I_N
+        do k = 1, NUM_VERT_CELLS!NUM_VERT_CELLS,NUM_VERT_CELLS!1, NUM_VERT_CELLS
           do z=1, size(name_gas_species_to_print)
-            !print*,id_gas_species_to_print(z),name_gas_species_to_print(z)%string,&
-            !species_conc(i,j,k,id_gas_species_to_print(z))
+            print*,id_gas_species_to_print(z),name_gas_species_to_print(z)%string,&
+            species_conc(i,j,k,id_gas_species_to_print(z))
           end do
+          if (plot_case.gt.0) then
+            do z=1, size(name_aerosol_species_to_print)
+              print*,id_aerosol_species_to_print(z),name_aerosol_species_to_print(z)%string,&
+                      species_conc(i,j,k,id_aerosol_species_to_print(z))
+            end do
+          end if
         end do
       end do
     end do
@@ -533,6 +553,7 @@ program mock_monarch
   close(RESULTS_FILE_UNIT)
   close(RESULTS_FILE_UNIT_TABLE)
   close(RESULTS_FILE_UNIT_PY)
+  close(STATS_FILE_UNIT)
 
   ! Deallocation
   deallocate(camp_input_file)
@@ -561,7 +582,7 @@ contains
     character(len=:), allocatable, intent(in) :: file_prefix
 
     character(len=:), allocatable :: file_name
-    character(len=:), allocatable :: aux_str, aux_str_py
+    character(len=:), allocatable :: aux_str, aux_str_py, aux_str_stats
     character(len=128) :: i_str !if len !=128 crashes (e.g len=100)
     integer :: z,i,j,k,r,i_cell,i_spec
     integer :: n_cells_print
@@ -573,12 +594,13 @@ contains
     open(RESULTS_FILE_UNIT_TABLE, file=file_name, status="replace", action="write")
     file_name = file_prefix//"_urban_plume_0001.txt"
     open(RESULTS_FILE_UNIT_PY, file=file_name, status="replace", action="write")
+    file_name = file_prefix//"_solver_stats.csv"
+    open(STATS_FILE_UNIT, file=file_name, status="replace", action="write")
 
     n_cells_print=(I_E - I_W+1)*(I_N - I_S+1)*NUM_VERT_CELLS
 
     !print Titles
     aux_str = "Time"
-    aux_str_py = "Time Cell"
 
     do i_cell=1,n_cells_print
       write(i_str,*) i_cell
@@ -598,6 +620,11 @@ contains
       end do
     end do
 
+    write(RESULTS_FILE_UNIT, "(A)", advance="no") aux_str
+    write(RESULTS_FILE_UNIT, *) ""
+
+    aux_str_py = "Time Cell"
+
     do i_spec=1, size(name_gas_species_to_print)
       aux_str_py = aux_str_py//" "//name_gas_species_to_print(i_spec)%string
     end do
@@ -606,11 +633,13 @@ contains
       aux_str_py = aux_str_py//" "//name_aerosol_species_to_print(i_spec)%string//"_"//trim(i_str)
     end do
 
-    write(RESULTS_FILE_UNIT, "(A)", advance="no") aux_str
-    write(RESULTS_FILE_UNIT, *) ""
-
     write(RESULTS_FILE_UNIT_PY, "(A)", advance="no") aux_str_py
     write(RESULTS_FILE_UNIT_PY, '(a)') ''
+
+    aux_str_stats = "timestep,counterLS,timeLS,timeCVode"
+
+    write(STATS_FILE_UNIT, "(A)", advance="no") aux_str_stats
+    write(STATS_FILE_UNIT, '(a)') ''
 
     ! TODO refine initial model conditions
     species_conc(:,:,:,:) = 0.0
@@ -1674,7 +1703,6 @@ contains
     forall (i_char = 1:len(spec_name), spec_name(i_char:i_char).eq.'/') &
           spec_name(i_char:i_char) = '_'
 
-    !todo improve path detecting
     !write(SCRIPTS_FILE_UNIT,*) "set key outside"
     write(SCRIPTS_FILE_UNIT,*) "set key top left"
     !write(SCRIPTS_FILE_UNIT,*) "set output '"//file_prefix//"_plot.png'"
@@ -1706,6 +1734,46 @@ contains
     deallocate(tracer_ids)
     deallocate(file_name)
     deallocate(spec_name)
+
+  end subroutine
+
+  subroutine export_solver_stats(curr_time, pmc_interface, solver_stats)
+
+    real, intent(in) :: curr_time
+    type(monarch_interface_t), intent(in) :: pmc_interface
+    type(solver_stats_t), intent(inout) :: solver_stats
+
+    character(len=128) :: i_cell_str, time_str
+
+    !todo mpi_reduce counters
+
+    if (pmc_mpi_rank().eq.0) then
+
+      write(time_str,*) curr_time
+      time_str=adjustl(time_str)
+      write(STATS_FILE_UNIT, "(A)", advance="no") trim(time_str)
+      write(STATS_FILE_UNIT, "(A)", advance="no") ","
+
+      write(STATS_FILE_UNIT, "(I6)", advance="no") &
+              solver_stats%counterLS-counterLS
+      write(STATS_FILE_UNIT, "(A)", advance="no") ","
+      write(STATS_FILE_UNIT, "(ES13.6)", advance="no") &
+              solver_stats%timeLS-timeLS
+      write(STATS_FILE_UNIT, "(A)", advance="no") ","
+      write(STATS_FILE_UNIT, "(ES13.6)", advance="no") &
+              solver_stats%timeCvode-timeCvode
+
+      write(STATS_FILE_UNIT, '(a)') ''
+
+      counterLS=solver_stats%counterLS
+      timeLS=solver_stats%timeLS
+      timeCvode=solver_stats%timeCvode
+
+      !print*, "timeLS fortran", timeLS
+      !print*, "counterLS fortran", solver_stats%counterLS
+      !print*, "timeCvode fortran", solver_stats%timeCvode
+
+    end if
 
   end subroutine
 

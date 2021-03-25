@@ -40,6 +40,7 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
                            int *RHS_evals_total, int *Jac_evals_total,
                            double *RHS_time__s, double *Jac_time__s,
                            double *timeCVode, double *timeCVodeTotal,
+                           int *counterLS, double *timeLS,
                            double *max_loss_precision);
 void export_camp_input(void *solver_data, double *init_state, char *path);
 void solver_free(void *solver_data);

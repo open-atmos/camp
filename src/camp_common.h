@@ -307,15 +307,18 @@ typedef struct {
 #endif
 
 #ifdef PMC_DEBUG_GPU
-  int counterDerivTotal;  // Total calls to f()
-  int counterDerivCPU;    // todo set as counterDeriv and fix old counterDeriv
+  int counterDerivTotal;
+  int counterDerivCPU;
   int counterJacCPU;
   int counterSolve;
   int counterFail;
+  int counterLS;
   double timeCVode;
   double timeCVodeTotal;
+  double timeLS;
   double timeDerivCPU;
   double timeJacCPU;
+  //todo clean file
   FILE *file;
 
 #endif

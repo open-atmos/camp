@@ -184,8 +184,9 @@ module pmc_camp_solver_data
                     NLS_convergence_fails, DLS_Jac_evals, DLS_RHS_evals, &
                     last_time_step__s, next_time_step__s, Jac_eval_fails, &
                     RHS_evals_total, Jac_evals_total, RHS_time__s, &
-                    Jac_time__s, timeCVode, &
-                    timeCVodeTotal, max_loss_precision ) bind (c)
+                    Jac_time__s, timeCVode, timeCVodeTotal,&
+            counterLS, timeLS, &
+            max_loss_precision ) bind (c)
       use iso_c_binding
       !> Pointer to the solver data
       type(c_ptr), value :: solver_data
@@ -223,6 +224,8 @@ module pmc_camp_solver_data
       type(c_ptr), value :: Jac_time__s
       type(c_ptr), value :: timeCVode
       type(c_ptr), value :: timeCVodeTotal
+      type(c_ptr), value :: counterLS
+      type(c_ptr), value :: timeLS
       !> Maximum loss of precision on last call the f()
       type(c_ptr), value :: max_loss_precision
     end subroutine solver_get_statistics
@@ -1063,6 +1066,8 @@ contains
             c_loc( solver_stats%Jac_time__s           ),   & ! Compute time Jac() [s]
             c_loc( solver_stats%timeCVode           ),   &
             c_loc( solver_stats%timeCVodeTotal           ),   &
+            c_loc( solver_stats%counterLS),&
+            c_loc( solver_stats%timeLS),&
             c_loc( solver_stats%max_loss_precision    ) )    ! Maximum loss of precision
 
   end subroutine get_solver_stats

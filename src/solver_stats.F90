@@ -43,6 +43,8 @@ module pmc_solver_stats
     integer(kind=i_kind) :: DLS_Jac_evals
     !> Direct Linear Solver right-hand size evaluations
     integer(kind=i_kind) :: DLS_RHS_evals
+    !> Calls to Linear Solver
+    integer(kind=i_kind) :: counterLS
     !> Last time step [s]
     real(kind=dp) :: last_time_step__s
     !> Next time step [s]
@@ -61,6 +63,9 @@ module pmc_solver_stats
     real(kind=dp) :: timeCVode = 0.0
     !> Total compute time accumulated for CVODE solving runs [s]
     real(kind=dp) :: timeCVodeTotal = 0.0
+    !> Time Linear Solver [s]
+    real(kind=dp) :: timeLS = 0.0
+
     !> Maximum loss of precision on last deriv call
     real(kind=dp) :: max_loss_precision
 #ifdef PMC_DEBUG

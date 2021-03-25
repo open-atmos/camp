@@ -212,7 +212,12 @@ if (FAILURE_DETAIL)
   add_definitions(-DFAILURE_DETAIL)
 endif()
 if (ENABLE_DEBUG_GPU)
-  add_definitions(-DPMC_DEBUG_GPU)
+  if(ENABLE_MPI)
+    add_definitions(-DPMC_DEBUG_GPU)
+  else()
+    #ENABLE_DEBUG_GPU uses MPI timers
+    message( ERROR "ENABLE_DEBUG_GPU NEEDS ENABLE_MPI")
+  endif()
   #add_definitions(-DCHECK_GPU_LINSOLVE)
 endif()
 

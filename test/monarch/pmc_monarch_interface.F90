@@ -411,7 +411,8 @@ contains
   !> Integrate the PartMC mechanism for a particular set of cells and timestep
   subroutine integrate(this, curr_time, time_step, i_start, i_end, j_start, &
                   j_end, temperature, MONARCH_conc, water_conc, &
-                  water_vapor_index, air_density, pressure, conv, i_hour)
+                  water_vapor_index, air_density, pressure, conv, i_hour,&
+          solver_stats)
 
     !> PartMC-camp <-> MONARCH interface
     class(monarch_interface_t) :: this
@@ -479,8 +480,12 @@ contains
     ! Computation time variables
     real(kind=dp) :: comp_start, comp_end
 
-    type(solver_stats_t), target :: solver_stats
+    !type(solver_stats_t), target :: solver_stats
+    type(solver_stats_t), intent(inout) :: solver_stats
     integer :: state_size_per_cell, n_cell_check
+    integer :: counterLS = 0
+    real :: timeLS = 0.0
+    real :: timeCvode = 0.0
 
     if(this%n_cells.eq.1) then
       state_size_per_cell = 0
@@ -557,7 +562,6 @@ contains
           end if
 #endif
 
-
             !print*, "water_conc: id, value", this%gas_phase_water_id, water_conc(i,j,k_flip,water_vapor_index)
             !print*, "state", this%camp_state%state_var(:)
 
@@ -617,7 +621,6 @@ contains
             call this%camp_core%solve(this%camp_state, real(time_step*60., kind=dp),solver_stats=solver_stats)
             call cpu_time(comp_end)
             comp_time = comp_time + (comp_end-comp_start)
-            !time_step*60
 
             !assert_msg when cvode fails ocurrs, stop the execution
             !call assert_msg(376450931, solver_stats%status_code.eq.0, &
@@ -763,7 +766,6 @@ contains
               real(time_step*60., kind=dp), solver_stats = solver_stats)
       call cpu_time(comp_end)
       comp_time = comp_time + (comp_end-comp_start)
-      !time_step*60
 
       do i=i_start, i_end
         do j=j_start, j_end
@@ -1324,8 +1326,6 @@ end if
 
   end subroutine get_init_conc
 
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
   !> Get the MONARCH species names and indices (for testing only)
   subroutine get_MONARCH_species(this, species_names, MONARCH_ids)
 
@@ -1341,8 +1341,6 @@ end if
 
   end subroutine get_MONARCH_species
 
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
   !> Print the PartMC-camp data
   subroutine do_print(this)
 
@@ -1352,8 +1350,6 @@ end if
     call this%camp_core%print()
 
   end subroutine do_print
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Finalize the interface
   elemental subroutine finalize(this)
