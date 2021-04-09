@@ -3,29 +3,187 @@ mpl.use('TkAgg')
 import matplotlib.pyplot as plt
 import matplotlib
 import csv
+import numpy as np
+import statistics
 
-def calculate_speedup(base_case_data,new_case_data,data,plot_y_key):
 
-  #base_case_data=data["one-cell"][plot_y_key]
-  #new_case_data=data["multi-cells"][plot_y_key]
+def get_values_same_timestep(timestep_to_plot,mpiProcessesList, \
+                        data,plot_x_key,plot_y_key):
+
+  new_data = {}
+  new_data[plot_x_key]=mpiProcessesList
+  new_data[plot_y_key] = []
+  for i in range(len(mpiProcessesList)):
+    #print(base_data[i],new_data[i], base_data[i]/new_data[i])
+    #print(len(data["timestep"]), len(data["mpiProcesses"]))
+    step_len=int(len(data["timestep"])/len(mpiProcessesList))
+    j = i*step_len+timestep_to_plot
+    #print("data[new_plot_y_key][j]",data[plot_y_key][j])
+    new_data[plot_y_key].append(data[plot_y_key][j])
+
+  return new_data
+
+def normalized_timeLS(cases_multicells_onecell,data, cells):
+
+  plot_y_key = "timeLS"
+  new_plot_y_key="timeLS" +" normalized"
+
+  #base_data=data[cases_multicells_onecell[0]][plot_y_key]
+  #new_data=data[cases_multicells_onecell[1]][plot_y_key]
+
+  #print(base_data)
+
+  for case in cases_multicells_onecell:
+
+    if(case=="one-cell"):
+      cells_multiply=cells
+    elif(case=="multi-cells"):
+      cells_multiply=1
+
+    data[case][new_plot_y_key] = []
+    for i in range(len(data[case][plot_y_key])):
+      #print(base_data[i],new_data[i], base_data[i]/new_data[i])
+      data[case][new_plot_y_key].append(data[case][plot_y_key][i] \
+                           / data[case]["counterLS"][i]*cells_multiply)
+
+  #extract timestep: timestep is common in both cases like speedup
+  #data["timestep"]=data.get("timestep",[]) \
+  #                 + data[cases_multicells_onecell[0]]["timestep"]
+
+  #print(data)
+
+  return data, new_plot_y_key
+
+def calculate_mean_cell(cell,data, \
+                       plot_x_key,plot_y_key):
+
+  new_plot_y_key="Mean " + plot_y_key
+
+  data[plot_x_key] = data.get(plot_x_key,[]) + [cell]
+
+  data[new_plot_y_key] = data.get(new_plot_y_key,[]) \
+                         + [np.mean(data[cell][plot_y_key])]
+
+  #print(data)
+  #print(plot_y_key)
+  #print(data[cell][plot_y_key])
+  #print(np.std(data[cell][plot_y_key]))
+
+  plot_y_key = new_plot_y_key
+  #print(plot_y_key)
+  return data,plot_y_key
+
+def calculate_std_cell(cell,data, \
+                      plot_x_key,plot_y_key):
+
+  new_plot_y_key="Variance " + plot_y_key
+
+  #data[new_plot_y_key] = statistics.pstdev(data[new_plot_y_key])
+
+  data[plot_x_key] = data.get(plot_x_key,[]) + [cell]
+
+  data[new_plot_y_key] = data.get(new_plot_y_key,[]) \
+                         + [np.std(data[cell][plot_y_key])]
+   #+ [statistics.pvariance(data[cell][plot_y_key])]
+    #+ [np.var(data[cell][plot_y_key])]
+
+  #print(data)
+  #print(plot_y_key)
+  #print(data[cell][plot_y_key])
+  #print(np.std(data[cell][plot_y_key]))
+
+  plot_y_key = new_plot_y_key
+  #print(plot_y_key)
+  return data,plot_y_key
+
+def calculate_speedup(cases_multicells_onecell,data,\
+                      plot_x_key,plot_y_key):
 
   new_plot_y_key="Speedup " + plot_y_key
 
-  #print(base_case_data)
+  base_data=data[cases_multicells_onecell[0]][plot_y_key]
+  new_data=data[cases_multicells_onecell[1]][plot_y_key]
 
-  #data[labels[col]]=data.get(labels[col],[]) + [float(row[col])]
+  #print(base_data)
 
-  data[new_plot_y_key] = []
-  for i in range(len(base_case_data)):
-    #print(base_case_data[i],new_case_data[i], base_case_data[i]/new_case_data[i])
+  data[new_plot_y_key] = data.get(new_plot_y_key,[])
+  for i in range(len(base_data)):
+    #print(base_data[i],new_data[i], base_data[i]/new_data[i])
     data[new_plot_y_key]=data.get(new_plot_y_key,[]) \
-           + [base_case_data[i]/new_case_data[i]]
+                       + [base_data[i]/new_data[i]]
+
+  #extract timestep: timestep is common in both cases like speedup
+  data["timestep"]=data.get("timestep",[]) \
+                     + data[cases_multicells_onecell[0]]["timestep"]
 
   #print(data)
 
   plot_y_key = new_plot_y_key
   #print(plot_y_key)
   return data,plot_y_key
+
+def plot_speedup_cells(x, y, x_name, y_name, plot_title):
+
+  #print(data)
+
+  #fig = plt.figure(figsize=(7, 4.25))
+  fig = plt.figure()
+  spec2 = mpl.gridspec.GridSpec(ncols=1, nrows=1, wspace=.35,hspace=.1,bottom=.25,top=.85,left=.1,right=.9)
+  axes = fig.add_subplot(spec2[0, 0])
+  #axes = fig.add_subplot()
+  list_colors = ["r","g","b","c","m","y","k","w"]
+  list_markers = ["+","x","*","s","s",".","-"]
+
+  i_color=0
+
+  axes.plot(x,y,color=list_colors[i_color], marker=list_markers[i_color])
+  axes.set_ylabel(y_name)
+  axes.set_xlabel(x_name)
+
+  #axes.set_yscale('log')
+  plt.xticks()
+  plt.title(plot_title)
+
+  #data[plot_x_key]=data[plot_x_key]+1
+
+  #saveImage=True
+  saveImage=False
+  if(saveImage==True):
+    plt.savefig('out/plot_speedup_cells.png')
+  else:
+    plt.show()
+
+def plot_solver_stats_mpi(data, plot_x_key, plot_y_key, plot_title):
+
+  #todo generalize function
+
+  #print(data)
+
+  #fig = plt.figure(figsize=(7, 4.25))
+  fig = plt.figure()
+  spec2 = mpl.gridspec.GridSpec(ncols=1, nrows=1, wspace=.35,hspace=.1,bottom=.25,top=.85,left=.1,right=.9)
+  axes = fig.add_subplot(spec2[0, 0])
+  #axes = fig.add_subplot()
+  list_colors = ["r","g","b","c","m","y","k","w"]
+  list_markers = ["+","x","*","s","s",".","-"]
+
+  i_color=0
+
+  axes.plot(data[plot_x_key],data[plot_y_key],color=list_colors[i_color], marker=list_markers[i_color])
+  axes.set_ylabel(plot_y_key)
+  axes.set_xlabel(plot_x_key + " [min]")
+
+  #axes.set_yscale('log')
+  #axes.set_yscale('logit')
+  #axes.set_yscale('symlog')
+  plt.xticks()
+  plt.title(plot_title)
+
+  #data[plot_x_key]=data[plot_x_key]+1
+
+  #print(data)
+
+  plt.show()
 
 def plot_solver_stats(data, plot_x_key, plot_y_key, plot_title):
 
@@ -40,17 +198,10 @@ def plot_solver_stats(data, plot_x_key, plot_y_key, plot_title):
   list_markers = ["+","x","*","s","s",".","-"]
 
   i_color=0
-  PLOT_CELLS=False
-  if PLOT_CELLS:
-    axes.plot(cells,data["timeCVode"],color=list_colors[i_color], marker=list_markers[i_color])
-    axes.set_ylabel('Time (s)')
-    axes.set_xlabel('Number of cells')
 
-  PLOT_TIMESTEPS=True
-  if PLOT_TIMESTEPS:
-    axes.plot(data[plot_x_key],data[plot_y_key],color=list_colors[i_color], marker=list_markers[i_color])
-    axes.set_ylabel(plot_y_key)
-    axes.set_xlabel(plot_x_key)
+  axes.plot(data[plot_x_key],data[plot_y_key],color=list_colors[i_color], marker=list_markers[i_color])
+  axes.set_ylabel(plot_y_key)
+  axes.set_xlabel(plot_x_key)
 
   #axes.set_yscale('log')
   plt.xticks()

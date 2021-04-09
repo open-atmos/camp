@@ -121,7 +121,7 @@ void rxn_emission_update_env_state(ModelData *model_data, int *rxn_int_data,
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   if (rank == 411 || rank == 0) {
-    printf("RATE_CONSTANT: %-le, rank %d \n", RATE_CONSTANT_, rank);
+    printf("RATE_CONSTANT: %-le, rank %d \n", RATE_, rank);
   }
 #endif
 #endif
@@ -153,7 +153,7 @@ void rxn_emission_calc_deriv_contrib(ModelData *model_data,
   // Add contributions to the time derivative
 
   if (DERIV_ID_ >= 0)
-#ifndef TIME_DERIVATIVE_LONG_DOUBLE
+#ifdef TIME_DERIVATIVE_LONG_DOUBLE
     time_derivative_add_value(time_deriv, DERIV_ID_, (long double)RATE_);
 #else
     time_derivative_add_value(time_deriv, DERIV_ID_, (double)RATE_);

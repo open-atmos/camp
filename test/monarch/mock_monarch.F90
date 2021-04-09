@@ -101,13 +101,13 @@ program mock_monarch
   !> Ending index for camp-chem species in tracer array
   integer, parameter :: END_CAMP_ID = 210!350
   !> Time step (min)
-  real, parameter :: TIME_STEP = 2.!1.6 !camp_paper=2
+  real, parameter :: TIME_STEP = 2!1.6 !camp_paper=2
   !> Number of time steps to integrate over
-  integer, parameter :: NUM_TIME_STEP = 1!1!camp_paper=720!180
+  integer, parameter :: NUM_TIME_STEP = 1!1!camp_paper=720
   !> Index for water vapor in water_conc()
   integer, parameter :: WATER_VAPOR_ID = 5
   !> Start time
-  real, parameter :: START_TIME = 0.0
+  real, parameter :: START_TIME = 0 !720 !0
   !> Number of cells to compute simultaneously
   integer :: n_cells
   !> Check multiple cells results are correct?
@@ -180,9 +180,9 @@ program mock_monarch
   integer :: pmc_cases = 1
   integer :: plot_case, new_v_cells
   type(solver_stats_t), target :: solver_stats
-  integer :: counterLS = 0
-  real :: timeLS = 0.0
-  real :: timeCvode = 0.0
+  integer :: counterLS_prev = 0
+  real(kind=dp) :: timeLS_prev = 0.0
+  real(kind=dp) :: timeCvode_prev = 0.0
 
   ! initialize mpi (to take the place of a similar MONARCH call)
   call pmc_mpi_init()
@@ -190,6 +190,12 @@ program mock_monarch
   if(check_multiple_cells) then
     pmc_cases=2
   end if
+
+#ifdef DEBUG_ISSUE29_SAME_INPUT
+
+  print*,"WARNING: DEBUG_ISSUE29_SAME_INPUT flag is ON"
+
+#endif
 
   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   ! **** Add to MONARCH during initialization **** !
@@ -252,11 +258,6 @@ program mock_monarch
   I_N=1
   NUM_WE_CELLS = I_E-I_W+1
   NUM_SN_CELLS = I_N-I_S+1
-
-  !One-cell:
-  !n_cells = 1
-  !Multi:
-  !n_cells = (I_E - I_W+1)*(I_N - I_S+1)*NUM_VERT_CELLS
 
   allocate(temperature(NUM_WE_CELLS,NUM_SN_CELLS,NUM_VERT_CELLS))
   allocate(species_conc(NUM_WE_CELLS,NUM_SN_CELLS,NUM_VERT_CELLS,NUM_MONARCH_SPEC))
@@ -483,12 +484,13 @@ program mock_monarch
     end if
 
     ! Set 1 cell to get a checksum case
-    n_cells = 1
+    !remove this checksum option
+    !n_cells = 1
 
   end do
 
   if (pmc_mpi_rank().eq.0) then
-  !if (pmc_mpi_rank().ne.999) then
+  !if (pmc_mpi_rank().eq.999) then
     do i = I_E,I_E!I_W, I_E
       do j = I_N,I_N!I_S, I_N
         do k = 1, NUM_VERT_CELLS!NUM_VERT_CELLS,NUM_VERT_CELLS!1, NUM_VERT_CELLS
@@ -565,7 +567,10 @@ program mock_monarch
 
 #ifdef PMC_USE_MPI
 
-  deallocate(pmc_interface)
+  if (n_cells.eq.1) then
+  !bug deallocating with multicells and mpi processes > 1
+    deallocate(pmc_interface)
+  end if
 
   call pmc_mpi_finalize()
 
@@ -1745,7 +1750,35 @@ contains
 
     character(len=128) :: i_cell_str, time_str
 
-    !todo mpi_reduce counters
+    integer :: counterLS_max, counterLS
+    real(kind=dp) :: timeLS_max, timeCvode_max, timeLS, timeCvode
+    integer :: l_comm, ierr
+
+#ifdef PMC_USE_MPI
+
+    l_comm = MPI_COMM_WORLD
+
+    call mpi_reduce(solver_stats%counterLS, counterLS_max, 1, MPI_INTEGER, MPI_MAX, 0, &
+            l_comm, ierr)
+    call pmc_mpi_check_ierr(ierr)
+    call mpi_reduce(solver_stats%timeLS, timeLS_max, 1, MPI_DOUBLE, MPI_MAX, 0, &
+            l_comm, ierr)
+    call pmc_mpi_check_ierr(ierr)
+    call mpi_reduce(solver_stats%timeCvode, timeCvode_max, 1, MPI_DOUBLE, MPI_MAX, 0, &
+            l_comm, ierr)
+    call pmc_mpi_check_ierr(ierr)
+
+    counterLS=counterLS_max
+    timeLS=timeLS_max
+    timeCvode=timeCvode_max
+
+#else
+
+    counterLS=solver_stats%counterLS
+    timeLS=solver_stats%timeLS
+    timeCvode=solver_stats%timeCvode
+
+#endif
 
     if (pmc_mpi_rank().eq.0) then
 
@@ -1755,25 +1788,26 @@ contains
       write(STATS_FILE_UNIT, "(A)", advance="no") ","
 
       write(STATS_FILE_UNIT, "(I6)", advance="no") &
-              solver_stats%counterLS-counterLS
+              counterLS-counterLS_prev
       write(STATS_FILE_UNIT, "(A)", advance="no") ","
       write(STATS_FILE_UNIT, "(ES13.6)", advance="no") &
-              solver_stats%timeLS-timeLS
+              timeLS-timeLS_prev
       write(STATS_FILE_UNIT, "(A)", advance="no") ","
       write(STATS_FILE_UNIT, "(ES13.6)", advance="no") &
-              solver_stats%timeCvode-timeCvode
+              timeCvode-timeCvode_prev
 
       write(STATS_FILE_UNIT, '(a)') ''
 
-      counterLS=solver_stats%counterLS
-      timeLS=solver_stats%timeLS
-      timeCvode=solver_stats%timeCvode
+      counterLS_prev=counterLS
+      timeLS_prev=timeLS
+      timeCvode_prev=timeCvode
 
       !print*, "timeLS fortran", timeLS
       !print*, "counterLS fortran", solver_stats%counterLS
       !print*, "timeCvode fortran", solver_stats%timeCvode
 
     end if
+
 
   end subroutine
 

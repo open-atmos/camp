@@ -213,6 +213,9 @@ typedef struct {
   int counterPhoto;
 #endif
 
+#ifdef DEBUG_ARRHENIUS_CALC_DERIV
+  int counterArrhenius;
+#endif
 
   //#ifdef CUDA_FOUND
   // GPU data
@@ -329,7 +332,7 @@ typedef struct {
   int counter_deriv_print;
 #endif
 
-#ifndef FAILURE_DETAIL
+#ifdef FAILURE_DETAIL
   int counter_fail_solve_print;
 #endif
 

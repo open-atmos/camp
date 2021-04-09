@@ -16,6 +16,12 @@
 #include "Jacobian.h"
 #include "camp_common.h"
 
+#ifdef PMC_DEBUG_RATE_CONSTANTS
+#ifdef PMC_USE_MPI
+#include <mpi.h>
+#endif
+#endif
+
 void rxn_aqueous_equilibrium_calc_deriv_contrib(
     ModelData *model_data, TimeDerivative time_deriv, int *rxn_int_data,
     double *rxn_float_data, double *rxn_env_data, realtype time_step);

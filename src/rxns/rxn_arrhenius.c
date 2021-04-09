@@ -166,11 +166,57 @@ void rxn_arrhenius_calc_deriv_contrib(ModelData *model_data,
   double *env_data = model_data->grid_cell_env;
 
   // Calculate the reaction rate
-#ifndef TIME_DERIVATIVE_LONG_DOUBLE
+#ifdef TIME_DERIVATIVE_LONG_DOUBLE
   long double rate = RATE_CONSTANT_;
 #else
   double rate = RATE_CONSTANT_;
 #endif
+
+#ifdef DEBUG_ARRHENIUS_CALC_DERIV
+
+  int maxCounter = 3;
+
+  for (int i_spec = 0; i_spec < NUM_REACT_; i_spec++){
+    rate *= state[REACT_(i_spec)];
+
+    if(model_data->counterArrhenius<maxCounter){
+      printf("counterArrhenius %d \n", model_data->counterArrhenius);
+      printf("RATE_CONSTANT %-le \n", RATE_CONSTANT_);
+      printf("state[REACT_(i_spec)] %-le \n", state[REACT_(i_spec)]);
+    }
+  }
+  
+  // Add contributions to the time derivative
+  if (rate != ZERO) {
+    int i_dep_var = 0;
+    for (int i_spec = 0; i_spec < NUM_REACT_; i_spec++, i_dep_var++) {
+      if (DERIV_ID_(i_dep_var) < 0) continue;
+      time_derivative_add_value(time_deriv, DERIV_ID_(i_dep_var), -rate);
+
+      //if(model_data->counterArrhenius<maxCounter){
+      //  printf("DERIV_ID_(i_dep_var) %-le\n",DERIV_ID_(i_dep_var));
+      //}
+
+    }
+    for (int i_spec = 0; i_spec < NUM_PROD_; i_spec++, i_dep_var++) {
+      if (DERIV_ID_(i_dep_var) < 0) continue;
+
+      //if(model_data->counterArrhenius<maxCounter){
+      //  printf("DERIV_ID_(i_dep_var) %-le\n",DERIV_ID_(i_dep_var));
+      //}
+
+      // Negative yields are allowed, but prevented from causing negative
+      // concentrations that lead to solver failures
+      if (-rate * YIELD_(i_spec) * time_step <= state[PROD_(i_spec)]) {
+        time_derivative_add_value(time_deriv, DERIV_ID_(i_dep_var),
+                                  rate * 1.0);
+      }
+    }
+  }
+  model_data->counterArrhenius++;
+
+#else
+
   for (int i_spec = 0; i_spec < NUM_REACT_; i_spec++)
     rate *= state[REACT_(i_spec)];
 
@@ -192,6 +238,8 @@ void rxn_arrhenius_calc_deriv_contrib(ModelData *model_data,
       }
     }
   }
+
+#endif
 
   return;
 }

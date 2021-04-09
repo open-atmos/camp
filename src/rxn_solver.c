@@ -255,7 +255,7 @@ void rxn_update_env_state(ModelData *model_data) {
  */
 #ifdef PMC_USE_SUNDIALS
 
-#ifdef DERIV_LOOP_CELLS_RXN
+#ifndef DERIV_LOOP_CELLS_RXN
 
 void rxn_calc_deriv(ModelData *model_data, TimeDerivative time_deriv,
                     realtype time_step) {
@@ -345,7 +345,7 @@ void rxn_calc_deriv(ModelData *model_data, TimeDerivative time_deriv,
 void rxn_calc_deriv(ModelData *model_data, TimeDerivative time_deriv,
                     realtype time_step) {
 
-#ifndef TIME_DERIVATIVE_LONG_DOUBLE
+#ifdef TIME_DERIVATIVE_LONG_DOUBLE
   long double *init_production_rates=time_deriv.production_rates;
   long double *init_loss_rates=time_deriv.loss_rates;
 #else
@@ -386,11 +386,7 @@ void rxn_calc_deriv(ModelData *model_data, TimeDerivative time_deriv,
       */
 
       switch (rxn_type) {
-        case RXN_AQUEOUS_EQUILIBRIUM:
-          rxn_aqueous_equilibrium_calc_deriv_contrib(
-              model_data, time_deriv, rxn_int_data, rxn_float_data,
-              rxn_env_data, time_step);
-          break;
+
         case RXN_ARRHENIUS:
           rxn_arrhenius_calc_deriv_contrib(model_data, time_deriv, rxn_int_data,
                                            rxn_float_data, rxn_env_data,

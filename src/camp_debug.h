@@ -311,7 +311,7 @@ static void print_derivative_in_out(SolverData *sd, N_Vector deriv_in, N_Vector 
     }
   } else {
     //Print specific cell
-    int i=1;
+    int i=0;
     int size_j = NV_LENGTH_S(deriv) / n_cells;
     for (int j = 0; j < size_j; j++) {
       printf("(%d) %-le %-le \n", j + 1, NV_DATA_S(deriv_in)[j + i * size_j],

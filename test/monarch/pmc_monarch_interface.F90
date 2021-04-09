@@ -516,12 +516,23 @@ contains
       PAR_emi = (/ 4.27E-10 /)
       ISOP_emi = (/ 6.03E-12 /)
       MEOH_emi = (/ 5.92E-13 /)
-      rate_emi = (/1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,&
-              0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0 /)
+      !rate_emi = (/1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,&
+      !        0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0 /)
 
+      !todo dynamic rate sizes with timesteps
+      !NUM_TIME_STEP
+      do i=1,12
+        rate_emi(i)=1.0
+      end do
+      do i=13,30
+        rate_emi(i)=0.0
+      end do
+
+      i_hour = int(curr_time/60)+1
       if(mod(int(curr_time),60).eq.0) then
-        write(*,*) "i_hour loop", i_hour
-        i_hour = i_hour + 1
+        if (pmc_mpi_rank().eq.0) then
+          write(*,*) "i_hour loop", i_hour
+        end if
       end if
 
     end if
@@ -638,9 +649,17 @@ contains
             solver_stats%eval_Jac = .false.
 #endif
 
+#ifdef DEBUG_ISSUE29_SAME_INPUT
+
+            print*,this%camp_state%state_var(1)
+
+#else
+
             ! Update the MONARCH tracer array with new species concentrations
             MONARCH_conc(i,j,k_flip,this%map_monarch_id(:)) = &
                     this%camp_state%state_var(this%map_camp_id(:))
+
+#endif
 
           end do
         end do
@@ -767,6 +786,12 @@ contains
       call cpu_time(comp_end)
       comp_time = comp_time + (comp_end-comp_start)
 
+#ifdef DEBUG_ISSUE29_SAME_INPUT
+
+      print*,this%camp_state%state_var(1)
+
+#else
+
       do i=i_start, i_end
         do j=j_start, j_end
           do k=1, k_end
@@ -781,6 +806,8 @@ contains
           end do
         end do
       end do
+
+#endif
 
     end if
 
@@ -1359,8 +1386,11 @@ end if
 
     if (associated(this%camp_core)) &
             deallocate(this%camp_core)
-    if (associated(this%camp_state)) &
-            deallocate(this%camp_state)
+
+    !bug deallocating camp_state with MPI process > 1
+    !if (associated(this%camp_state)) &
+    !      deallocate(this%camp_state)
+
     if (allocated(this%monarch_species_names)) &
             deallocate(this%monarch_species_names)
     if (allocated(this%map_monarch_id)) &

@@ -151,7 +151,7 @@ void rxn_troe_calc_deriv_contrib(ModelData *model_data,
   double *env_data = model_data->grid_cell_env;
 
   // Calculate the reaction rate
-#ifndef TIME_DERIVATIVE_LONG_DOUBLE
+#ifdef TIME_DERIVATIVE_LONG_DOUBLE
   long double rate = RATE_CONSTANT_;
 #else
   double rate = RATE_CONSTANT_;

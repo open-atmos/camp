@@ -16,7 +16,7 @@ int time_derivative_initialize(TimeDerivative *time_deriv,
                                unsigned int num_spec) {
   if (num_spec <= 0) return 0;
 
-#ifndef TIME_DERIVATIVE_LONG_DOUBLE
+#ifdef TIME_DERIVATIVE_LONG_DOUBLE
 
   time_deriv->production_rates =
       (long double *)malloc(num_spec * sizeof(long double));
@@ -62,7 +62,7 @@ void time_derivative_reset(TimeDerivative time_deriv) {
 
 void time_derivative_output(TimeDerivative time_deriv, double *dest_array,
                             double *deriv_est, unsigned int output_precision) {
-#ifndef TIME_DERIVATIVE_LONG_DOUBLE
+#ifdef TIME_DERIVATIVE_LONG_DOUBLE
   long double *r_p = time_deriv.production_rates;
   long double *r_l = time_deriv.loss_rates;
 #else
@@ -81,7 +81,7 @@ void time_derivative_output(TimeDerivative time_deriv, double *dest_array,
     double prec_loss = 1.0;
     if (*r_p + *r_l != 0.0) {
       if (deriv_est) {
-#ifndef TIME_DERIVATIVE_LONG_DOUBLE
+#ifdef TIME_DERIVATIVE_LONG_DOUBLE
         long double scale_fact;
 #else
         double scale_fact;
@@ -119,7 +119,7 @@ void time_derivative_output(TimeDerivative time_deriv, double *dest_array,
   }
 }
 
-#ifndef TIME_DERIVATIVE_LONG_DOUBLE
+#ifdef TIME_DERIVATIVE_LONG_DOUBLE
 void time_derivative_add_value(TimeDerivative time_deriv, unsigned int spec_id,
                                long double rate_contribution) {
 #else

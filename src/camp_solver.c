@@ -147,7 +147,7 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
 
 #ifdef PMC_USE_SUNDIALS
 
-#ifdef DERIV_LOOP_CELLS_RXN
+#ifndef DERIV_LOOP_CELLS_RXN
   int n_time_deriv_specs=n_dep_var;
 #else
   int n_time_deriv_specs=n_dep_var*n_cells;
@@ -538,7 +538,7 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
   allocSolverGPU(sd->cvode_mem, sd);
 #endif
 
-#ifndef FAILURE_DETAIL
+#ifdef FAILURE_DETAIL
   // Set a custom error handling function
   flag = CVodeSetErrHandlerFn(sd->cvode_mem, error_handler, (void *)sd);
   check_flag_fail(&flag, "CVodeSetErrHandlerFn", 0);
@@ -590,21 +590,31 @@ int solver_set_eval_jac(void *solver_data, bool eval_Jac) {
 
 void printSolverCountersCPU(SolverData *sd){
 
-  /*printf("timeDerivCPU %lf, counterDerivCPU %d\n", sd->timeDerivCPU / CLOCKS_PER_SEC,
-         sd->counterDerivCPU);
+#ifdef PMC_USE_MPI
+  int rank;
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-  printf("timeJacCPU %lf, counterJacCPU %d\n", sd->timeJacCPU / CLOCKS_PER_SEC,
-         sd->counterJacCPU);*/
+  if (rank == 0){
 
-  printf("timeCVode %lf\n", sd->timeCVode);
+    /*printf("timeDerivCPU %lf, counterDerivCPU %d\n", sd->timeDerivCPU / CLOCKS_PER_SEC,
+           sd->counterDerivCPU);
 
-  /*fprintf(sd->file,"timeDerivCPU %lf\ncounterDerivCPU %d\n", sd->timeDerivCPU / CLOCKS_PER_SEC,
-         sd->counterDerivCPU);
-  fprintf(sd->file,"timeJacCPU %lf\ncounterJacCPU %d\n", sd->timeJacCPU / CLOCKS_PER_SEC,
-         sd->counterJacCPU);
-  fprintf(sd->file,"timeCVode %lf\n", sd->timeCVode / CLOCKS_PER_SEC);*/
+    printf("timeJacCPU %lf, counterJacCPU %d\n", sd->timeJacCPU / CLOCKS_PER_SEC,
+           sd->counterJacCPU);*/
 
-  //fprintf(f, "n_cells %d\n", md->n_cells);
+    printf("timeCVode %lf\n", sd->timeCVode);
+
+    /*fprintf(sd->file,"timeDerivCPU %lf\ncounterDerivCPU %d\n", sd->timeDerivCPU / CLOCKS_PER_SEC,
+           sd->counterDerivCPU);
+    fprintf(sd->file,"timeJacCPU %lf\ncounterJacCPU %d\n", sd->timeJacCPU / CLOCKS_PER_SEC,
+           sd->counterJacCPU);
+    fprintf(sd->file,"timeCVode %lf\n", sd->timeCVode / CLOCKS_PER_SEC);*/
+
+    //fprintf(f, "n_cells %d\n", md->n_cells);
+
+  }
+
+#endif
 
 }
 
@@ -665,6 +675,8 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
             state[i_spec + i_cell * n_state_var] > TINY
                 ? state[i_spec + i_cell * n_state_var]
                 : TINY;
+        //sd->model_data.total_state[i_spec + i_cell * n_state_var]
+        //= state[i_spec + i_cell * n_state_var];
       }
 
   // Update model data pointers
@@ -735,6 +747,21 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
 
   PMC_DEBUG_JAC_STRUCT(sd->model_data.J_init, "Begin solving");
 
+  //Reset Jacobian tmp
+  N_VConst(0.0, md->J_state);
+  N_VConst(0.0, md->J_deriv);
+  N_VConst(0.0, md->J_tmp);
+  N_VConst(0.0, md->J_tmp2);
+
+  SM_NNZ_S(md->J_solver) = SM_NNZ_S(md->J_init);
+  for (int i = 0; i <= SM_NP_S(md->J_solver); i++) {
+    (SM_INDEXPTRS_S(md->J_solver))[i] = (SM_INDEXPTRS_S(md->J_init))[i];
+  }
+  for (int i = 0; i < SM_NNZ_S(md->J_solver); i++) {
+    (SM_INDEXVALS_S(md->J_solver))[i] = (SM_INDEXVALS_S(md->J_init))[i];
+    (SM_DATA_S(md->J_solver))[i] = 0.0;//(SM_DATA_S(md->J_init))[i]; //0.0
+  }
+
   // Reset the flag indicating a current J_guess
   sd->curr_J_guess = false;
 
@@ -752,6 +779,7 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
 
   // Reinitialize the linear solver
   flag = SUNKLUReInit(sd->ls, sd->J, SM_NNZ_S(sd->J), SUNKLU_REINIT_PARTIAL);
+  //flag = SUNKLUReInit(sd->ls, sd->J, SM_NNZ_S(sd->J), SUNKLU_REINIT_FULL);
   check_flag_fail(&flag, "SUNKLUReInit", 1);
 
   // Set the inital time step
@@ -760,6 +788,13 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
 
   // Run the solver
   realtype t_rt = (realtype)t_initial;
+
+#ifdef DEBUG_ARRHENIUS_CALC_DERIV
+  sd->model_data.counterArrhenius = 0;
+#endif
+
+  //printf("Pre-Cvode %-le %-le\n",t_final, t_rt);
+  //print_derivative(sd, sd->y);
 
   if (!sd->no_solve) {
 
@@ -882,9 +917,11 @@ sd->counterDerivTotal,sd->timeCVode/CLOCKS_PER_SEC,sd->timeCVodeTotal/CLOCKS_PER
 
   }
 #endif
-
-  //sd->counterDerivCPU = 0;
-  //sd->counterJacCPU = 0;
+#ifdef FAILURE_DETAIL
+  sd->counter_fail_solve_print=0;
+#endif
+  sd->counterDerivCPU = 0;
+  sd->counterJacCPU = 0;
   sd->counterSolve++;
 
 #endif
@@ -1039,6 +1076,18 @@ int camp_solver_update_model_state(N_Vector solver_state, SolverData *sd,
   for (int i_cell = 0; i_cell < n_cells; i_cell++) {
     for (int i_spec = 0; i_spec < n_state_var; ++i_spec) {
       if (model_data->var_type[i_spec] == CHEM_SPEC_VARIABLE) {
+
+#ifdef DEBUG_UPDATE_MODEL_STATE
+
+      if(sd->counterDerivCPU==2){
+
+        printf("%d %-le\n", i_spec,
+             NV_DATA_S(solver_state)[i_dep_var]);
+
+      }
+
+#endif
+
         if (NV_DATA_S(solver_state)[i_dep_var] < -SMALL) {
 #ifdef FAILURE_DETAIL
           if(sd->counter_fail_solve_print<1){
@@ -1047,7 +1096,7 @@ int camp_solver_update_model_state(N_Vector solver_state, SolverData *sd,
 #ifdef PMC_DEBUG_GPU
             printf("CounterDerivCPU %d CounterJac %d\n",
                     sd->counterDerivCPU,sd->counterJacCPU );
-            printf("y failed model state:\n");
+            //printf("y failed model state:\n");
             //print_derivative(solver_state);
 #endif
           }
@@ -1102,11 +1151,6 @@ int f_gpu(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
   // Get the current integrator time step (s)
   CVodeGetCurrentStep(sd->cvode_mem, &time_step);
 
-#ifdef PMC_DEBUG_GPU
-  //if(sd->counterDerivCPU<=12)
-    //printf("CVodeGetCurrentStep %-le time_step %-le init_time_step %-le\n", time_step, t,sd->init_time_step);
-#endif
-
   // On the first call to f(), the time step hasn't been set yet, so use the
   // default value
   //todo ask why don't use t instead currentstep
@@ -1122,7 +1166,6 @@ int f_gpu(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
   clock_t start10 = clock();
 #endif
 
-  //if(sd->counterDerivCPU==2) print_derivative(y);
 
   // Update the state array with the current dependent variable values.
   // Signal a recoverable error (positive return value) for negative
@@ -1139,8 +1182,8 @@ int f_gpu(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
   //if(sd->counterDerivCPU<=0) print_derivative(deriv);
 
   // sd->timeDerivCPU += (clock() - start3);
-  sd->timeDerivCPU += (clock() - start10);
-  sd->counterDerivCPU++;
+  //sd->timeDerivCPU += (clock() - start10);
+  //sd->counterDerivCPU++;
   // printf("%d",sd->counterDerivCPU);
 
 #endif
@@ -1184,13 +1227,17 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
 #endif
 
 #ifdef PMC_DEBUG_DERIV
-  if(sd->counterDerivCPU==0){
+  int counterPrintDeriv=2;
+  if(sd->counterDerivCPU<=counterPrintDeriv){
     sd->y_first = N_VClone(y);
     for (int i = 0; i < NV_LENGTH_S(deriv); i++) {
       NV_DATA_S(sd->y_first)[i]=NV_DATA_S(y)[i];
     }
     sd->max_deriv_print = 1;
-    sd->counter_deriv_print = 0;
+
+    //printf("y_first \n");
+    //printf("Deriv iter: %d\n",sd->counterDerivCPU);
+    //print_derivative_in_out(sd, y, deriv);
   }
 #endif
 
@@ -1216,7 +1263,7 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
   int n_state_var = md->n_per_cell_state_var;
   int n_dep_var = md->n_per_cell_dep_var;
 
-#ifdef DERIV_LOOP_CELLS_RXN
+#ifndef DERIV_LOOP_CELLS_RXN
 
   // Loop through the grid cells and update the derivative array
   for (int i_cell = 0; i_cell < n_cells; ++i_cell) {
@@ -1268,9 +1315,9 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
 #ifdef PMC_DEBUG_DERIV
   if(//sd->counter_deriv_print<sd->max_deriv_print &&
   //NV_DATA_S(sd->y_first)[0] != NV_DATA_S(y)[0]){
-  sd->counterDerivCPU<=0 &&
-  1){
-#ifdef DERIV_LOOP_CELLS_RXN
+  sd->counterDerivCPU==counterPrintDeriv //&& 1
+  ){
+#ifndef DERIV_LOOP_CELLS_RXN
       //for (int i = 0; i < sd->time_deriv.num_spec; i++)
       //printf("(%d) %-le %-le %-le\n",i,sd->time_deriv.production_rates[i],
       //      sd->time_deriv.loss_rates[i], jac_deriv_data[i]);
@@ -1314,7 +1361,7 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
       md->grid_cell_sub_model_env_data =
           &(md->sub_model_env_data[i_cell * md->n_sub_model_env_data]);
 
-        // Update the aerosol representations
+      // Update the aerosol representations
       aero_rep_update_state(md);
 
       // Run the sub models
@@ -1348,14 +1395,14 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
 #ifdef PMC_DEBUG_DERIV
   if(//sd->counter_deriv_print<sd->max_deriv_print &&
   //NV_DATA_S(sd->y_first)[0] != NV_DATA_S(y)[0]){
-  sd->counterDerivCPU<=0 &&
-  1){
+  sd->counterDerivCPU<=counterPrintDeriv //&& 1
+  ){
     printf("y_first[0] %-le y[0] %-le\n", NV_DATA_S(sd->y_first)[0], NV_DATA_S(y)[0]);
     printf("Deriv iter: %d\n",sd->counterDerivCPU);
     print_derivative_in_out(sd, y, deriv);
     //print_time_derivative(sd);
     printf("Time_deriv prod loss jac_deriv_data\n");
-#ifdef DERIV_LOOP_CELLS_RXN
+#ifndef DERIV_LOOP_CELLS_RXN
 #else
     //for (int i = 0; i < sd->time_deriv.num_spec; i++)
     //  printf("(%d) %-le %-le %-le\n",i,sd->time_deriv.production_rates[i],
@@ -1377,11 +1424,11 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   // if (rank>=0)
-  if (rank == 411 || rank == 999) {
+  if (rank == 999 || rank == 999) {
     if (sd->counterDerivCPU > 100 && sd->counterDerivCPU < 103) {
       // printf("Rank %d deriv iter %d jac iter %d counterSolve %d", rank,
       // sd->counterDerivCPU, sd->counterJacCPU, sd->counterSolve);
-      // print_derivative(deriv);
+      // print_derivative(sd, deriv);
     }
   }
 #endif
@@ -1414,9 +1461,15 @@ int Jac(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_data,
   sd->counterJac++;
 #endif
 
-
-
   clock_t start4 = clock();
+
+#ifndef PMC_DEBUG_JAC
+  int counterPrintJac=0;
+  printf("Jac\n");
+  if(sd->counterDerivCPU==counterPrintJac){
+    print_derivative(sd, y);
+  }
+#endif
 
   // Get the grid cell dimensions
   int n_state_var = md->n_per_cell_state_var;
@@ -1755,12 +1808,14 @@ double gsl_f(double x, void *param) {
   NV_DATA_S(y)[gsl_param->ind_var] = x;
 
   // Calculate the derivative
+  //printf("Derivgsl_f before\n");
   if (f(gsl_param->t, y, deriv, (void *)gsl_param->solver_data) != 0) {
     printf("\nDerivative calculation failed!");
     for (int i_spec = 0; i_spec < NV_LENGTH_S(y); ++i_spec)
       printf("\n species %d conc: %le", i_spec, NV_DATA_S(y)[i_spec]);
     return 0.0 / 0.0;
   }
+  //printf("Derivgsl_f after\n");
 
   // Return the calculated derivative for the dependent variable
   return NV_DATA_S(deriv)[gsl_param->dep_var];
@@ -1843,13 +1898,22 @@ int guess_helper(const realtype t_n, const realtype h_n, N_Vector y_n,
 
     // Scale incomplete jumps
     if (i_fast >= 0 && h_n > ZERO)
-      h_j *= 0.95 + 0.1 * rand() / (double)RAND_MAX;
+      h_j *= 0.95 + 0.1 ;
+      //h_j *= 0.95 + 0.1 * rand() / (double)RAND_MAX;
     h_j = t_n < t_0 + t_j + h_j ? t_n - (t_0 + t_j) : h_j;
 
     // Only make small changes to adjustment vectors used in Newton iteration
     if (h_n == ZERO &&
         t_n - (h_j + t_j + t_0) > ((CVodeMem)sd->cvode_mem)->cv_reltol)
       return -1;
+
+#ifdef DEBUG_GUESS_HELPER
+    if(sd->counterDerivCPU==2){
+      printf("guess_helper h_j %-le\n", h_j);
+      print_derivative(sd, tmp1);
+      print_derivative(sd, corr);
+    }
+#endif
 
     // Advance the state
     N_VLinearSum(ONE, tmp1, h_j, corr, tmp1);
@@ -1858,12 +1922,15 @@ int guess_helper(const realtype t_n, const realtype h_n, N_Vector y_n,
     // Advance t_j
     t_j += h_j;
 
+    //todo problem is here
+    //printf("Derivguess_helper before\n");
     // Recalculate the time derivative \f$f(t_j)\f$
     if (f(t_0 + t_j, tmp1, corr, solver_data) != 0) {
       PMC_DEBUG_PRINT("Unexpected failure in guess helper!");
       N_VConst(ZERO, corr);
       return -1;
     }
+    //printf("Derivguess_helper after\n");
     ((CVodeMem)sd->cvode_mem)->cv_nfe++;
 
     if (iter == GUESS_MAX_ITER - 1 && t_0 + t_j < t_n) {
