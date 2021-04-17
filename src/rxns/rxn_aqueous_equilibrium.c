@@ -17,9 +17,6 @@
 #define TEMPERATURE_K_ env_data[0]
 #define PRESSURE_PA_ env_data[1]
 
-// Small number
-#define SMALL_NUMBER_ 1.0e-30
-
 // Factor used to calculate minimum water concentration for aqueous
 // phase equilibrium reactions
 #define MIN_WATER_ 1.0e-4

@@ -332,7 +332,7 @@ void * rxn_gpu_SIMPOL_phase_transfer_print(
 __host__ __device__
 #endif
 void rxn_gpu_SIMPOL_phase_transfer_calc_deriv_contrib(
-        ModelData *model_data, realtype *deriv, int *rxn_int_data,
+        ModelData *model_data, TimeDerivativeGPU time_deriv, int *rxn_int_data,
           double *rxn_float_data, double *rxn_env_data, double time_step);
 #ifdef __CUDA_ARCH__
 __host__ __device__

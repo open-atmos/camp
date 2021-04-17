@@ -6,5 +6,5 @@ import plot_cases
 #plot_cases.mpi_scalability()
 #plot_cases.speedup_cells("Mean")
 #plot_cases.speedup_cells("Standard Deviation")
-plot_cases.speedup_timesteps()
-#debug_check_species()
+#plot_cases.speedup_timesteps()
+plot_cases.debug_no_plot()

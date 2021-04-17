@@ -457,6 +457,9 @@ set(STD_C_FLAGS "-std=c99")
 
 set(STD_CUDA_FLAGS "-arch=compute_70 -code=sm_70 -dc --compiler-options '-fPIC' -lcusolver -lcudart -lcudadevrt -lcublas -lcusparse_static -lculibos -lpthread -ldl")
 
+#Simplified (Pending to check)
+#set(STD_CUDA_FLAGS "-arch=compute_70 -code=sm_70 -dc --compiler-options '-fPIC' -lcublas -lcusparse_static -lpthread -ldl")
+
 if(ENABLE_CXX)
   set(STD_CXX_FLAGS "-fpermissive")
   message( Treating .cpp files as .cu ...)
@@ -573,11 +576,11 @@ if (CUDA_FOUND AND ENABLE_GPU)
           src/cuda/rxns_gpu/rxn_SIMPOL_phase_transfer.cu
           src/cuda/rxns_gpu/rxn_troe.cu
           src/cuda/rxns_gpu/rxn_wet_deposition.cu
-          src/cuda/aeros_gpu/aero_phase_solver.cu
-          src/cuda/aeros_gpu/aero_rep_solver.cu
-          src/cuda/aeros_gpu/sub_model_solver.cu
-          src/cuda/aero_reps_gpu/aero_rep_modal_binned_mass.cu
-          src/cuda/aero_reps_gpu/aero_rep_single_particle.cu
+          src/cuda/aeros/aero_phase_solver.cu
+          src/cuda/aeros/aero_rep_solver.cu
+          src/cuda/aeros/sub_model_solver.cu
+          src/cuda/aeros/aero_reps/aero_rep_modal_binned_mass.cu
+          src/cuda/aeros/aero_reps/aero_rep_single_particle.cu
           src/cuda/cvode_gpu.cu
           src/cuda/libsolv.cu
           src/cuda/itsolver_gpu.cu

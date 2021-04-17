@@ -8,7 +8,7 @@
  * \brief Sub model solver functions
  */
 extern "C" {
-#include "sub_model_solver_gpu.h"
+#include "sub_model_gpu_solver.h"
 //#include "sub_models_gpu.h"
 
 // Sub model types (Must match parameters in pmc_sub_model_gpu_factory)

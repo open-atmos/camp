@@ -12,7 +12,7 @@ extern "C" {
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "../aeros_gpu/aero_rep_solver_gpu.h"
+#include "../aeros/aero_rep_gpu_solver.h"
 #include "../rxns_gpu.h"
 
 #define TEMPERATURE_K_ env_data[0]

@@ -188,9 +188,9 @@ def speedup_cells(metric):
           cases_multicells_onecell,data[cell],"timestep", \
           plot_y_key)
 
-      data,plot_y_key3 = plot_functions.calculate_std_cell( \
-        cell,data,plot_x_key, \
-        plot_y_key2)
+      #data,plot_y_key3 = plot_functions.calculate_std_cell( \
+      #  cell,data,plot_x_key, \
+      #  plot_y_key2)
 
       if(metric=="Mean"):
         data,plot_y_key3 = plot_functions.calculate_mean_cell( \
@@ -215,8 +215,8 @@ def speedup_timesteps():
   #config_file="monarch_cb05"
   config_file="monarch_binned"
 
-  #mpi="yes"
-  mpi="no"
+  mpi="yes"
+  #mpi="no"
 
   divide_cells_load=False
 
@@ -225,11 +225,11 @@ def speedup_timesteps():
   #Read file
 
   #cells = [100,1000]
-  cells = [2]
+  cells = [10]
 
-  #cases_multicells_onecell = ["one-cell","multi-cells"]
+  cases_multicells_onecell = ["one-cell","multi-cells"]
   #cases_multicells_onecell = ["one-cell"]
-  cases_multicells_onecell = ["multi-cells"]
+  #cases_multicells_onecell = ["multi-cells"]
 
   #SELECT MANUALLY (future:if arch=cpu then select cpu if not gpu)
   cases_gpu_cpu = ["cpu"]
@@ -238,8 +238,10 @@ def speedup_timesteps():
   plot_x_key = "timestep"
 
   #plot_y_key = "timeCVode"
-  plot_y_key = "timeLS"
-  #plot_y_key = "counterLS"
+  #plot_y_key = "timeLS"
+  plot_y_key = "counterLS"
+
+  remove_iters=0#10 #360
 
   data = {}
 
@@ -258,8 +260,8 @@ def speedup_timesteps():
 
     exec_str=""
     if mpi=="yes":
-      #exec_str+="mpirun -v -np "+str(mpiProcesses)+" --bind-to none "
       exec_str+="mpirun -v -np "+str(mpiProcesses)+" --bind-to none "
+      #exec_str+="srun -n "+str(mpiProcesses)+" "
 
     exec_str+="../../mock_monarch config_"+config_file+".json "+"interface_"+config_file \
               +".json "+config_file
@@ -301,6 +303,16 @@ def speedup_timesteps():
         cases_multicells_onecell,data,plot_x_key, \
         plot_y_key)
 
+      #print(data[plot_x_key])
+
+      for i in range(remove_iters):
+        data[plot_x_key].pop(0)
+        data[plot_y_key2].pop(0)
+        #print (data[plot_x_key].pop(0))
+        #print (data[plot_y_key2].pop(0))
+
+      #print(data[plot_x_key])
+
     else:
       data = data_tmp
       plot_y_key2=plot_y_key
@@ -309,5 +321,74 @@ def speedup_timesteps():
 
     plot_functions.plot_solver_stats(data,plot_x_key, plot_y_key2, plot_title)
 
+def debug_no_plot():
+
+  #config_file="simple"
+  #config_file="monarch_cb05"
+  config_file="monarch_binned"
+
+  mpi="yes"
+  #mpi="no"
+
+  divide_cells_load=False
+
+  mpiProcessesList = [1]
+
+  #Read file
+
+  #cells = [100,1000]
+  cells = [10]
+
+  #cases_multicells_onecell = ["one-cell","multi-cells"]
+  cases_multicells_onecell = ["one-cell"]
+  #cases_multicells_onecell = ["multi-cells"]
+
+  #SELECT MANUALLY (future:if arch=cpu then select cpu if not gpu)
+  cases_gpu_cpu = ["cpu"]
+  #cases_gpu_cpu = ["gpu"]
+
+  plot_x_key = "timestep"
+
+  #plot_y_key = "timeCVode"
+  #plot_y_key = "timeLS"
+  plot_y_key = "counterLS"
+
+  # make the output directory if it doesn't exist
+  if not os.path.exists('out'):
+    os.makedirs('out')
+
+  plot_title = config_file + ", cells: " + str(cells[0])
+  #plot_title = config_file + ", cells: " + str(cells[0]) + ", Timesteps: 0-72"
+  #plot_title = config_file + ", cells: " + str(cells[0]) + ", Timesteps: 720-792"
+
+
+  cells_init = cells
+
+  for mpiProcesses in mpiProcessesList:
+
+    exec_str=""
+    if mpi=="yes":
+      exec_str+="mpirun -v -np "+str(mpiProcesses)+" --bind-to none "
+      #exec_str+="srun -n "+str(mpiProcesses)+" "
+
+    exec_str+="../../mock_monarch config_"+config_file+".json "+"interface_"+config_file \
+              +".json "+config_file
+
+    ADD_EMISIONS="OFF"
+    if config_file=="monarch_binned":
+      ADD_EMISIONS="ON"
+
+    exec_str+=" "+ADD_EMISIONS
+
+    if divide_cells_load==True:
+      cells = [int(cell/mpiProcesses) for cell in cells_init] #in case divide load between threads
+
+    for case in cases_multicells_onecell:
+
+      for cell in cells:
+
+        cell_str=str(cell)
+        print(exec_str + " " + cell_str + " " + case)
+        os.system(exec_str + " " + cell_str + " " + case)
 
 

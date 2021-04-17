@@ -103,16 +103,17 @@ program mock_monarch
   !> Time step (min)
   real, parameter :: TIME_STEP = 2!1.6 !camp_paper=2
   !> Number of time steps to integrate over
-  integer, parameter :: NUM_TIME_STEP = 1!1!camp_paper=720
+  integer, parameter :: NUM_TIME_STEP = 30!1!camp_paper=720!36
   !> Index for water vapor in water_conc()
   integer, parameter :: WATER_VAPOR_ID = 5
   !> Start time
-  real, parameter :: START_TIME = 0 !720 !0
+  real, parameter :: START_TIME = 0 !720-noEmissions !0
   !> Number of cells to compute simultaneously
-  integer :: n_cells
+  integer :: n_cells = 1
   !> Check multiple cells results are correct?
   logical :: check_multiple_cells = .false.
   character(len=:), allocatable :: ADD_EMISIONS
+  character(len=:), allocatable :: DIFF_CELLS
 
   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   ! State variables for mock MONARCH model !
@@ -166,19 +167,19 @@ program mock_monarch
   !> CAMP-chem input file file
   type(string_t), allocatable :: name_gas_species_to_print(:), name_aerosol_species_to_print(:)
   integer(kind=i_kind), allocatable :: id_gas_species_to_print(:), id_aerosol_species_to_print(:)
-  integer(kind=i_kind) :: size_gas_species_to_print, size_aerosol_species_to_print
+  integer(kind=i_kind) ::  size_gas_species_to_print, size_aerosol_species_to_print
 
   ! MPI
 #ifdef PMC_USE_MPI
   character, allocatable :: buffer(:)
-  integer(kind=i_kind) :: pos, pack_size
+  integer(kind=i_kind) :: pos, pack_size, mpi_threads
 #endif
 
   character(len=500) :: arg
   integer :: status_code, i_time, i_spec, i_case, i, j, k, z,n_cells_plot,cell_to_print
   !> Partmc nº of cases to test
   integer :: pmc_cases = 1
-  integer :: plot_case, new_v_cells
+  integer :: plot_case, new_v_cells, aux_int
   type(solver_stats_t), target :: solver_stats
   integer :: counterLS_prev = 0
   real(kind=dp) :: timeLS_prev = 0.0
@@ -190,12 +191,6 @@ program mock_monarch
   if(check_multiple_cells) then
     pmc_cases=2
   end if
-
-#ifdef DEBUG_ISSUE29_SAME_INPUT
-
-  print*,"WARNING: DEBUG_ISSUE29_SAME_INPUT flag is ON"
-
-#endif
 
   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   ! **** Add to MONARCH during initialization **** !
@@ -222,7 +217,6 @@ program mock_monarch
   if(status_code.eq.0) then
     ADD_EMISIONS = trim(arg)
   else
-    !One-cell case as default
     print*, "WARNING: not ADD_EMISIONS parameter received, value set to OFF"
     ADD_EMISIONS = "OFF"
   end if
@@ -232,10 +226,16 @@ program mock_monarch
     n_v_cells_str = trim(arg)
     read(n_v_cells_str, *) NUM_VERT_CELLS
   else
-    !One-cell case as default
     print*, "WARNING: not n_cells parameter received, value set to 1"
     NUM_VERT_CELLS = 1
   end if
+
+  I_W=1
+  I_E=1
+  I_S=1
+  I_N=1
+  NUM_WE_CELLS = I_E-I_W+1
+  NUM_SN_CELLS = I_N-I_S+1
 
   call get_command_argument(6, arg, status=status_code)
   if(status_code.eq.0) then
@@ -252,12 +252,14 @@ program mock_monarch
     output_file_prefix = output_file_prefix//"_"//"one_cell"
   end if
 
-  I_W=1
-  I_E=1
-  I_S=1
-  I_N=1
-  NUM_WE_CELLS = I_E-I_W+1
-  NUM_SN_CELLS = I_N-I_S+1
+  !todo
+  !call get_command_argument(4, arg, status=status_code)
+  !if(status_code.eq.0) then
+    DIFF_CELLS = "ON"!trim(arg)
+  !else
+  !  print*, "WARNING: not DIFF_CELLS parameter received, value set to OFF"
+    !DIFF_CELLS = "OFF"
+  !end if
 
   allocate(temperature(NUM_WE_CELLS,NUM_SN_CELLS,NUM_VERT_CELLS))
   allocate(species_conc(NUM_WE_CELLS,NUM_SN_CELLS,NUM_VERT_CELLS,NUM_MONARCH_SPEC))
@@ -388,7 +390,7 @@ program mock_monarch
 
   call model_initialize(output_file_prefix)
 
-  !Repeat in case we want a checking
+  !todo remove pmc_cases
   do i_case=1, pmc_cases
 
     pmc_interface => monarch_interface_t(camp_input_file, interface_input_file, &
@@ -431,6 +433,12 @@ program mock_monarch
     end if
 #endif
 
+#ifndef ISSUE41
+
+    species_conc_copy(:,:,:,:) = species_conc(:,:,:,:)
+
+#endif
+
     ! Run the model
     do i_time=1, NUM_TIME_STEP
 
@@ -442,6 +450,17 @@ program mock_monarch
         call print_state_gnuplot(curr_time,pmc_interface, name_gas_species_to_print,id_gas_species_to_print&
                ,name_aerosol_species_to_print,id_aerosol_species_to_print,RESULTS_FILE_UNIT)
       end if
+
+#ifndef ISSUE41
+
+      !if(i_time.eq.(NUM_TIME_STEP/2)) then
+
+      aux_int=mod(i_time,8)
+      if(aux_int.eq.0) then
+        species_conc(:,:,:,:) = species_conc_copy(:,:,:,:)
+      end if
+
+#endif
 
       call pmc_interface%integrate(curr_time,         & ! Starting time (min)
                                    TIME_STEP,         & ! Time step (min)
@@ -464,9 +483,55 @@ program mock_monarch
     call export_solver_stats(curr_time,pmc_interface,solver_stats)
 #endif
 
-      !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-      ! **** end runtime modification **** !
-      !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#ifndef ISSUE41
+
+      !if(i_time.eq.(NUM_TIME_STEP/2)) then
+
+      aux_int=mod(i_time,8)
+      if(aux_int.eq.0) then
+        if (pmc_mpi_rank().eq.0) then
+        !if (pmc_mpi_rank().eq.999) then
+          do i = I_E,I_E!I_W, I_E
+            do j = I_N,I_N!I_S, I_N
+              do k = NUM_VERT_CELLS, NUM_VERT_CELLS!1,NUM_VERT_CELLS!1, NUM_VERT_CELLS
+                do z=1, size(name_gas_species_to_print)
+                  print*,id_gas_species_to_print(z),name_gas_species_to_print(z)%string,&
+                          species_conc(i,j,k,id_gas_species_to_print(z))
+                end do
+                if (plot_case.gt.0) then
+                  do z=1, size(name_aerosol_species_to_print)
+                    print*,id_aerosol_species_to_print(z),name_aerosol_species_to_print(z)%string,&
+                            species_conc(i,j,k,id_aerosol_species_to_print(z))
+                  end do
+                end if
+              end do
+            end do
+          end do
+        end if
+      end if
+
+#endif
+
+      !if (pmc_mpi_rank().eq.0) then
+        if (pmc_mpi_rank().eq.999) then
+        do i = I_E,I_E!I_W, I_E
+          do j = I_N,I_N!I_S, I_N
+            do k = NUM_VERT_CELLS, NUM_VERT_CELLS!1,NUM_VERT_CELLS!1, NUM_VERT_CELLS
+              do z=1, size(name_gas_species_to_print)
+                print*,id_gas_species_to_print(z),name_gas_species_to_print(z)%string,&
+                        species_conc(i,j,k,id_gas_species_to_print(z))
+              end do
+              if (plot_case.gt.0) then
+                do z=1, size(name_aerosol_species_to_print)
+                  print*,id_aerosol_species_to_print(z),name_aerosol_species_to_print(z)%string,&
+                          species_conc(i,j,k,id_aerosol_species_to_print(z))
+                end do
+              end if
+            end do
+          end do
+        end do
+      end if
+
 
     end do
 
@@ -478,22 +543,13 @@ program mock_monarch
     write(*,*) "Model run time: ", comp_time, " s"
 #endif
 
-    !Save results
-    if(i_case.eq.1) then
-      species_conc_copy(:,:,:,:) = species_conc(:,:,:,:)
-    end if
-
-    ! Set 1 cell to get a checksum case
-    !remove this checksum option
-    !n_cells = 1
-
   end do
 
-  if (pmc_mpi_rank().eq.0) then
-  !if (pmc_mpi_rank().eq.999) then
+  !if (pmc_mpi_rank().eq.0) then
+  if (pmc_mpi_rank().eq.999) then
     do i = I_E,I_E!I_W, I_E
       do j = I_N,I_N!I_S, I_N
-        do k = 1, NUM_VERT_CELLS!NUM_VERT_CELLS,NUM_VERT_CELLS!1, NUM_VERT_CELLS
+        do k = NUM_VERT_CELLS, NUM_VERT_CELLS!1,NUM_VERT_CELLS!1, NUM_VERT_CELLS
           do z=1, size(name_gas_species_to_print)
             print*,id_gas_species_to_print(z),name_gas_species_to_print(z)%string,&
             species_conc(i,j,k,id_gas_species_to_print(z))
@@ -567,8 +623,11 @@ program mock_monarch
 
 #ifdef PMC_USE_MPI
 
-  if (n_cells.eq.1) then
-  !bug deallocating with multicells and mpi processes > 1
+  !call MPI_COMM_SIZE(MPI_COMM_WORLD, mpi_threads)
+  mpi_threads = 1
+  if ((n_cells.gt.1) .and. (mpi_threads.gt.1)) then !one-cell case
+    !bug deallocating with multicells and mpi processes > 1
+  else
     deallocate(pmc_interface)
   end if
 
@@ -589,8 +648,9 @@ contains
     character(len=:), allocatable :: file_name
     character(len=:), allocatable :: aux_str, aux_str_py, aux_str_stats
     character(len=128) :: i_str !if len !=128 crashes (e.g len=100)
-    integer :: z,i,j,k,r,i_cell,i_spec
+    integer :: z,o,i,j,k,r,i_cell,i_spec
     integer :: n_cells_print
+    real :: temp_init,press,press_init,press_end,press_range,press_slide
 
     ! Open the output file
     file_name = file_prefix//"_results.txt"
@@ -653,13 +713,47 @@ contains
     if(ADD_EMISIONS.eq."ON") then
 
       water_conc(:,:,:,WATER_VAPOR_ID) = 0. !0.01165447 !this is equal to 95% RH !1e-14 !0.01 !kg_h2o/kg-1_air
-      temperature(:,:,:) = 290.016!300.614166259766
-      pressure(:,:,:) = 100000.!94165.7187500000
-  !    air_density(:,:,:) = pressure(:,:,:)/(287.04*temperature(:,:,:))!1.225
+      temp_init=290.016
+      press_init=100000.
+
+      if(DIFF_CELLS.eq."ON") then
+
+        press_end = 10000.
+        press_range = press_end-press_init
+        if(((I_E - I_W+1)*(I_N - I_S+1)*NUM_VERT_CELLS-1).eq.0) then
+          press_slide = 0
+        else
+          press_slide = press_range/((I_E - I_W+1)*(I_N - I_S+1)*NUM_VERT_CELLS-1)
+        end if
+
+        do i=I_W,I_E
+          do j=I_S,I_N
+            do k=1,NUM_VERT_CELLS
+              o = (j-1)*(I_E) + (i-1) !Index to 3D
+              z = (k-1)*(I_E*I_N) + o !Index for 2D
+
+              pressure(i,j,k)=press_init+press_slide*z
+              temperature(i,j,k)=temp_init*((pressure(i,j,k)/press_init)**(287./1004.)) !dry_adiabatic formula
+              !temperature(i,j,k)=296.15*((70500./84500.)**(287./1004.))
+
+            end do
+          end do
+        end do
+      else
+
+        temperature(:,:,:) = temp_init
+        pressure(:,:,:) = press_init
+
+      end if
+
+      !print*, temperature(:,:,:)
+      !print*, pressure(:,:,:)
+
       air_density(:,:,:) = pressure(:,:,:)/(287.04*temperature(:,:,:)* &
-           (1.+0.60813824*water_conc(:,:,:,WATER_VAPOR_ID))) !kg m-3
+              (1.+0.60813824*water_conc(:,:,:,WATER_VAPOR_ID))) !kg m-3
       conv=0.02897/air_density(1,1,1)*(TIME_STEP*60.)*1e6/height !units of time_step to seconds
-  !    conv=0.02897/air_density(1,1,1)*(TIME_STEP)*1e6/height !units of time_step to seconds
+      !    conv=0.02897/air_density(1,1,1)*(TIME_STEP)*1e6/height !units of time_step to seconds
+
     else
 
       temperature(:,:,:) = 300.614166259766

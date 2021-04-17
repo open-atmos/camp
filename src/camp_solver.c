@@ -22,10 +22,7 @@
 #include "rxn_solver.h"
 #include "sub_model_solver.h"
 #ifdef PMC_USE_GPU
-#include "cuda/camp_gpu_solver.h"
 #include "cuda/cvode_gpu.h"
-
-#include "cuda/camp_gpu_cusolver.h"
 #endif
 #ifdef PMC_USE_GSL
 #include <gsl/gsl_deriv.h>
@@ -147,7 +144,7 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
 
 #ifdef PMC_USE_SUNDIALS
 
-#ifndef DERIV_LOOP_CELLS_RXN
+#ifdef DERIV_LOOP_CELLS_RXN
   int n_time_deriv_specs=n_dep_var;
 #else
   int n_time_deriv_specs=n_dep_var*n_cells;
@@ -1088,7 +1085,12 @@ int camp_solver_update_model_state(N_Vector solver_state, SolverData *sd,
 
 #endif
 
+#ifndef ISSUE41
+        if (NV_DATA_S(solver_state)[i_dep_var] < -1.0e-10) {
+#else
         if (NV_DATA_S(solver_state)[i_dep_var] < -SMALL) {
+#endif
+
 #ifdef FAILURE_DETAIL
           if(sd->counter_fail_solve_print<1){
             printf("Failed model state update: [spec %d] = %le\n", i_spec,
@@ -1153,7 +1155,6 @@ int f_gpu(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
 
   // On the first call to f(), the time step hasn't been set yet, so use the
   // default value
-  //todo ask why don't use t instead currentstep
   time_step = time_step > ZERO ? time_step : sd->init_time_step;
   //time_step = t;
 
@@ -1165,7 +1166,6 @@ int f_gpu(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
 #ifdef PMC_DEBUG_GPU
   clock_t start10 = clock();
 #endif
-
 
   // Update the state array with the current dependent variable values.
   // Signal a recoverable error (positive return value) for negative
@@ -1263,7 +1263,7 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
   int n_state_var = md->n_per_cell_state_var;
   int n_dep_var = md->n_per_cell_dep_var;
 
-#ifndef DERIV_LOOP_CELLS_RXN
+#ifdef DERIV_LOOP_CELLS_RXN
 
   // Loop through the grid cells and update the derivative array
   for (int i_cell = 0; i_cell < n_cells; ++i_cell) {
@@ -1311,20 +1311,6 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
       time_derivative_output(sd->time_deriv, deriv_data, NULL,
                              sd->output_precision);
     }
-
-#ifdef PMC_DEBUG_DERIV
-  if(//sd->counter_deriv_print<sd->max_deriv_print &&
-  //NV_DATA_S(sd->y_first)[0] != NV_DATA_S(y)[0]){
-  sd->counterDerivCPU==counterPrintDeriv //&& 1
-  ){
-#ifndef DERIV_LOOP_CELLS_RXN
-      //for (int i = 0; i < sd->time_deriv.num_spec; i++)
-      //printf("(%d) %-le %-le %-le\n",i,sd->time_deriv.production_rates[i],
-      //      sd->time_deriv.loss_rates[i], jac_deriv_data[i]);
-#else
-#endif
-  }
-#endif
 
 #ifdef PMC_DEBUG
     clock_t end2 = clock();
@@ -1393,16 +1379,17 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
 #endif
 
 #ifdef PMC_DEBUG_DERIV
-  if(//sd->counter_deriv_print<sd->max_deriv_print &&
+  if(
+  //sd->counter_deriv_print<sd->max_deriv_print &&
   //NV_DATA_S(sd->y_first)[0] != NV_DATA_S(y)[0]){
-  sd->counterDerivCPU<=counterPrintDeriv //&& 1
+  sd->counterDerivCPU<=counterPrintDeriv
   ){
     printf("y_first[0] %-le y[0] %-le\n", NV_DATA_S(sd->y_first)[0], NV_DATA_S(y)[0]);
     printf("Deriv iter: %d\n",sd->counterDerivCPU);
     print_derivative_in_out(sd, y, deriv);
     //print_time_derivative(sd);
     printf("Time_deriv prod loss jac_deriv_data\n");
-#ifndef DERIV_LOOP_CELLS_RXN
+#ifdef DERIV_LOOP_CELLS_RXN
 #else
     //for (int i = 0; i < sd->time_deriv.num_spec; i++)
     //  printf("(%d) %-le %-le %-le\n",i,sd->time_deriv.production_rates[i],
@@ -1922,7 +1909,6 @@ int guess_helper(const realtype t_n, const realtype h_n, N_Vector y_n,
     // Advance t_j
     t_j += h_j;
 
-    //todo problem is here
     //printf("Derivguess_helper before\n");
     // Recalculate the time derivative \f$f(t_j)\f$
     if (f(t_0 + t_j, tmp1, corr, solver_data) != 0) {

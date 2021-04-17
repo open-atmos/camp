@@ -474,8 +474,10 @@ contains
     integer :: local_comm
     real(kind=dp), allocatable :: mpi_conc(:)
 
-    integer :: i, j, k, k_flip, i_spec, z, o, i2, i_cell, i_photo_rxn
+    integer :: i, j, k, i_spec, z, o, i2, i_cell, i_photo_rxn
     integer :: k_end
+
+    character(len=:), allocatable :: DIFF_CELLS_EMI
 
     ! Computation time variables
     real(kind=dp) :: comp_start, comp_end
@@ -528,6 +530,12 @@ contains
         rate_emi(i)=0.0
       end do
 
+      !DIFF_CELLS = "ON"
+
+      !if(DIFF_CELLS.eq."ON") then
+
+      !end if
+
       i_hour = int(curr_time/60)+1
       if(mod(int(curr_time),60).eq.0) then
         if (pmc_mpi_rank().eq.0) then
@@ -541,24 +549,26 @@ contains
       do i=i_start, i_end
         do j=j_start, j_end
           do k=1, k_end
+            o = (j-1)*(i_end) + (i-1) !Index to 3D
+            z = (k-1)*(i_end*j_end) + o !Index for 2D
 
-            ! Calculate the vertical index for NMMB-style arrays
-            k_flip = size(MONARCH_conc,3) - k + 1
             ! Update the environmental state
             call this%camp_state%env_states(1)%set_temperature_K( &
-              real( temperature(i,j,k_flip), kind=dp ) )
+              real( temperature(i,j,k), kind=dp ) )
             !print*,"PRESSURE CAMP",pressure(i,j,k)
-            !print*,"temp camp",temperature(i,j,k_flip)
+            !print*,"temp camp",temperature(i,j,k)
             call this%camp_state%env_states(1)%set_pressure_Pa(   &
               real( pressure(i,j,k), kind=dp ) )
 
             !this%camp_state%state_var(this%map_camp_id(:)) = &
             !        this%camp_state%state_var(this%map_camp_id(:)) + &
-            !                MONARCH_conc(i,j,k_flip,this%map_monarch_id(:))
+            !                MONARCH_conc(i,j,k,this%map_monarch_id(:))
             this%camp_state%state_var(this%map_camp_id(:)) = &
-                            MONARCH_conc(i,j,k_flip,this%map_monarch_id(:))
+                            MONARCH_conc(i,j,k,this%map_monarch_id(:))
 
             !print*,"camp_state", this%camp_state%state_var(this%map_camp_id(:))
+
+            !print*,"i_cell",z
 
 #ifdef IMPORT_CAMP_INPUT
 #else
@@ -573,7 +583,7 @@ contains
           end if
 #endif
 
-            !print*, "water_conc: id, value", this%gas_phase_water_id, water_conc(i,j,k_flip,water_vapor_index)
+            !print*, "water_conc: id, value", this%gas_phase_water_id, water_conc(i,j,k,water_vapor_index)
             !print*, "state", this%camp_state%state_var(:)
 
             if(this%ADD_EMISIONS.eq."ON") then
@@ -649,16 +659,14 @@ contains
             solver_stats%eval_Jac = .false.
 #endif
 
-#ifdef DEBUG_ISSUE29_SAME_INPUT
-
-            print*,this%camp_state%state_var(1)
-
-#else
-
+#ifndef ISSUE41
             ! Update the MONARCH tracer array with new species concentrations
-            MONARCH_conc(i,j,k_flip,this%map_monarch_id(:)) = &
+            MONARCH_conc(i,j,k,this%map_monarch_id(:)) = &
                     this%camp_state%state_var(this%map_camp_id(:))
-
+#else
+            ! Update the MONARCH tracer array with new species concentrations
+            MONARCH_conc(i,j,k,this%map_monarch_id(:)) = &
+                    this%camp_state%state_var(this%map_camp_id(:))
 #endif
 
           end do
@@ -684,19 +692,16 @@ contains
             o = (j-1)*(i_end) + (i-1) !Index to 3D
             z = (k-1)*(i_end*j_end) + o !Index for 2D
 
-            ! Calculate the vertical index for NMMB-style arrays
-            k_flip = size(MONARCH_conc,3) - k + 1
-
             ! Update the environmental state
-            !call this%camp_state%env_states(1)%set_temperature_K(real(temperature(i,j,k_flip),kind=dp))
+            !call this%camp_state%env_states(1)%set_temperature_K(real(temperature(i,j,k),kind=dp))
             !call this%camp_state%env_states(1)%set_pressure_Pa(real(pressure(i,j,k),kind=dp))
-            call this%camp_state%env_states(z+1)%set_temperature_K(real(temperature(i,j,k_flip),kind=dp))
+            call this%camp_state%env_states(z+1)%set_temperature_K(real(temperature(i,j,k),kind=dp))
             call this%camp_state%env_states(z+1)%set_pressure_Pa(real(pressure(i,j,k),kind=dp))
 
             !write(*,*) "State_var input",this%camp_state%state_var(this%map_camp_id(:)+(z*state_size_per_cell))
-            !write(*,*) "Monarch_conc input", MONARCH_conc(i,j,k_flip,this%map_monarch_id(:))
+            !write(*,*) "Monarch_conc input", MONARCH_conc(i,j,k,this%map_monarch_id(:))
 
-            !write(*,*) "Monarch_conc input", MONARCH_conc(i,j,k_flip,this%map_monarch_id(:))
+            !write(*,*) "Monarch_conc input", MONARCH_conc(i,j,k,this%map_monarch_id(:))
             !write(*,*) "State_var input",this%camp_state%state_var(this%map_camp_id(:)+(z*state_size_per_cell))
 
             !Reset state conc
@@ -706,10 +711,10 @@ contains
             !                           (z*state_size_per_cell)) = &
             !        this%camp_state%state_var(this%map_camp_id(:) + &
             !                                   (z*state_size_per_cell)) + &
-            !        MONARCH_conc(i,j,k_flip,this%map_monarch_id(:))
+            !        MONARCH_conc(i,j,k,this%map_monarch_id(:))
 
             this%camp_state%state_var(this%map_camp_id(:) + &
-            (z*state_size_per_cell)) = MONARCH_conc(i,j,k_flip,this%map_monarch_id(:))
+            (z*state_size_per_cell)) = MONARCH_conc(i,j,k,this%map_monarch_id(:))
             !this%camp_state%state_var(this%map_camp_id(:) + &
             !(z*state_size_per_cell)) = MONARCH_conc(1,1,1,this%map_monarch_id(:))
             !print*, "camp_state", this%camp_state%state_var(this%map_camp_id(:)+(z*state_size_per_cell))
@@ -718,7 +723,7 @@ contains
 #else
             if(this%interface_input_file.eq."interface_simple.json") then
               this%camp_state%state_var(this%gas_phase_water_id+(z*state_size_per_cell)) = &
-                      water_conc(i,j,k_flip,water_vapor_index) !*air_density(i,j,k) * 1.0d9
+                      water_conc(i,j,k,water_vapor_index) !*air_density(i,j,k) * 1.0d9
             else
               this%camp_state%state_var(this%gas_phase_water_id+(z*state_size_per_cell)) = &
                       water_conc(1,1,1,water_vapor_index) * mwair / mwwat * 1.e6
@@ -786,21 +791,28 @@ contains
       call cpu_time(comp_end)
       comp_time = comp_time + (comp_end-comp_start)
 
-#ifdef DEBUG_ISSUE29_SAME_INPUT
-
-      print*,this%camp_state%state_var(1)
-
-#else
-
+      !print*,this%camp_state%state_var(1)
+#ifndef ISSUE41
       do i=i_start, i_end
         do j=j_start, j_end
           do k=1, k_end
             o = (j-1)*(i_end) + (i-1) !Index to 3D
             z = (k-1)*(i_end*j_end) + o !Index for 2D
 
-            !todo remove k_flip to simplify code
-            k_flip = size(MONARCH_conc,3) - k + 1
-            MONARCH_conc(i,j,k_flip,this%map_monarch_id(:)) = &
+            MONARCH_conc(i,j,k,this%map_monarch_id(:)) = &
+                    this%camp_state%state_var(this%map_camp_id(:)+(z*state_size_per_cell))
+            !print*, "camp_state", this%camp_state%state_var(this%map_camp_id(:)+(z*state_size_per_cell))
+          end do
+        end do
+      end do
+#else
+      do i=i_start, i_end
+        do j=j_start, j_end
+          do k=1, k_end
+            o = (j-1)*(i_end) + (i-1) !Index to 3D
+            z = (k-1)*(i_end*j_end) + o !Index for 2D
+
+            MONARCH_conc(i,j,k,this%map_monarch_id(:)) = &
                     this%camp_state%state_var(this%map_camp_id(:)+(z*state_size_per_cell))
             !print*, "camp_state", this%camp_state%state_var(this%map_camp_id(:)+(z*state_size_per_cell))
           end do

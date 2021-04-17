@@ -6,10 +6,6 @@
  *
  */
 
-//#include <cusolverDn.h>
-//#include <cuda_runtime.h>
-//#include "camp_gpu_cusolver.h"
-
 #include "itsolver_gpu.h"
 
 extern "C" {
@@ -182,7 +178,51 @@ void solver_new_gpu_cu(ModelData *md, int n_dep_var,
  * \param md Pointer to the model data
  */
 
+#ifdef TEST_HOST_DEVICE
+
+#ifdef __CUDA_ARCH__
+__host__ __device__
+#endif
+void test_host_device(int *a) {
+
+#ifdef __CUDA_ARCH__
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
+
+  if(i<3)
+    a[i]=i;
+
+#else
+
+  for (unsigned int i = 0; i < 3; i++) {
+    a[i]=i;
+  }
+#endif
+
+}
+
+__global__
+void test_host_device_global(int *a){
+
+  test_host_device(a);
+
+}
+
+#endif
+
 void solver_set_rxn_data_gpu(SolverData *sd) {
+
+
+#ifdef TEST_HOST_DEVICE
+  int a[3];//a should be declared as host and device var
+  //TODO quantify efficiency-readability-work to translate
+  // "a" as host&Device var or use "a" and "a_gpu"
+  cudaMalloc( (void**)&a, sizeof(int)*3 );
+
+  test_host_device_global << < 1, 512 >> >(a);
+  printf("a GPU %d", a[2]);
+  test_host_device(a);
+  printf("a CPU %d", a[2]);
+#endif
 
   ModelData *md = &(sd->model_data);
   int n_rxn = md->n_rxn;
@@ -606,6 +646,115 @@ __device__ void solveRXN(int i_rxn,
                                            rxn_float_data, rxn_env_data,time_step);
       break;
     case RXN_SIMPOL_PHASE_TRANSFER :
+      rxn_gpu_SIMPOL_phase_transfer_calc_deriv_contrib(&md, deriv_data,
+              rxn_int_data, rxn_float_data, rxn_env_data, time_step);
+      break;
+    case RXN_TROE :
+#ifdef BASIC_CALC_DERIV
+#else
+      rxn_gpu_troe_calc_deriv_contrib(&md, deriv_data, rxn_int_data,
+                                      rxn_float_data, rxn_env_data,time_step);
+#endif
+      break;
+    case RXN_WET_DEPOSITION :
+      //rxn_gpu_wet_deposition_calc_deriv_contrib(&md, deriv_data, rxn_int_data,
+      //                                     rxn_float_data, rxn_env_data,time_step);
+      break;
+  }
+/*
+*/
+
+}
+
+__device__ void solveAero(int i_rxn,
+#ifdef BASIC_CALC_DERIV
+        double *deriv_data,
+#else
+                         TimeDerivativeGPU deriv_data,
+#endif
+                         double *state_init, double *deriv_init,double time_step,
+                         int deriv_length_cell, int state_size_cell,int rxn_env_data_size_cell,
+                         int n_rxn, int *int_pointer, double *double_pointer,
+                         double *rxn_env_data_init, int *rxn_env_data_idx, double *env_init,
+                         int i_kernel, double *prod_rates, double *loss_rates,int threads_block
+)
+{
+  int tid = blockIdx.x * blockDim.x + threadIdx.x;
+  int tid_cell=tid%deriv_length_cell;
+
+#ifdef BASIC_CALC_DERIV
+  int i_cell=tid/n_rxn;
+  i_rxn=tid%n_rxn;
+  deriv_data = &( deriv_init[deriv_length_cell*i_cell]);
+#else
+  int i_cell = tid/deriv_length_cell;
+  deriv_data.production_rates = &( prod_rates[deriv_length_cell*i_cell]);
+  deriv_data.loss_rates = &( loss_rates[deriv_length_cell*i_cell]);
+#endif
+
+  //Get indices of each reaction
+  double *rxn_float_data = (double *) &(((double *) double_pointer)[i_rxn]);
+  int *int_data = (int *) &(((int *) int_pointer)[i_rxn]);
+  int rxn_type = int_data[0];
+  int *rxn_int_data = (int *) &(int_data[1*n_rxn]);
+
+  double *state = &( state_init[state_size_cell*i_cell]);
+
+  //Get indices for rates
+  double *rxn_env_data = &(rxn_env_data_init
+  [rxn_env_data_size_cell*i_cell+rxn_env_data_idx[i_rxn]]);
+
+  //todo reduce md to allocate less memory
+  ModelData md;
+  md.grid_cell_state = &( state_init[state_size_cell*i_cell]);
+  md.grid_cell_env = &( env_init[PMC_NUM_ENV_PARAM_*i_cell]);
+  md.n_rxn = n_rxn;
+
+#ifdef PMC_DEBUG_ALL
+  if(tid==0){
+    printf("[DEBUG] GPU solveDerivative tid %d, \n", tid);
+  }
+#endif
+
+  switch (rxn_type) {
+    //case RXN_AQUEOUS_EQUILIBRIUM :
+    //fix run-time error
+    //rxn_gpu_aqueous_equilibrium_calc_deriv_contrib(&md, deriv_data, rxn_int_data,
+    //                                               rxn_float_data, rxn_env_data,time_step);
+    //break;
+    case RXN_ARRHENIUS :
+      rxn_gpu_arrhenius_calc_deriv_contrib(&md, deriv_data, rxn_int_data,
+                                           rxn_float_data, rxn_env_data,time_step);
+      break;
+    case RXN_CMAQ_H2O2 :
+      rxn_gpu_CMAQ_H2O2_calc_deriv_contrib(&md, deriv_data, rxn_int_data,
+                                           rxn_float_data, rxn_env_data,time_step);
+      break;
+    case RXN_CMAQ_OH_HNO3 :
+      rxn_gpu_CMAQ_OH_HNO3_calc_deriv_contrib(&md, deriv_data, rxn_int_data,
+                                              rxn_float_data, rxn_env_data,time_step);
+      break;
+    case RXN_CONDENSED_PHASE_ARRHENIUS :
+      //rxn_gpu_condensed_phase_arrhenius_calc_deriv_contrib(&md, deriv_data, rxn_int_data,
+      //                                     rxn_float_data, rxn_env_data,time_step);
+      break;
+    case RXN_EMISSION :
+      //rxn_gpu_emission_calc_deriv_contrib(&md, deriv_data, rxn_int_data,
+      //                                     rxn_float_data, rxn_env_data,time_step);
+      break;
+    case RXN_FIRST_ORDER_LOSS :
+      //rxn_gpu_first_order_loss_calc_deriv_contrib(&md, deriv_data, rxn_int_data,
+      //                                     rxn_float_data, rxn_env_data,time_step);
+      break;
+    case RXN_HL_PHASE_TRANSFER :
+      //rxn_gpu_HL_phase_transfer_calc_deriv_contrib(&md, deriv_data, rxn_int_data,
+      //                                             rxn_float_data, rxn_env_data,time_stepn);
+      break;
+    case RXN_PHOTOLYSIS :
+      rxn_gpu_photolysis_calc_deriv_contrib(&md, deriv_data, rxn_int_data,
+                                            rxn_float_data, rxn_env_data,time_step);
+      break;
+    case RXN_SIMPOL_PHASE_TRANSFER :
       //rxn_gpu_SIMPOL_phase_transfer_calc_deriv_contrib(md, rxn_env_data,
       //        state, deriv_data, rxn_int_data, rxn_float_data, time_step,n_rxn);
       break;
@@ -622,6 +771,7 @@ __device__ void solveRXN(int i_rxn,
 */
 
 }
+
 /** \brief GPU function: Solve derivative
  *
  * \param state_init Pointer to first value of state array
@@ -732,6 +882,41 @@ __global__ void solveDerivative(
     }
     __syncthreads();
 
+    /*md->grid_cell_aero_rep_env_data =
+    &(md->aero_rep_env_data[i_cell * md->n_aero_rep_env_data]);
+md->grid_cell_sub_model_env_data =
+    &(md->sub_model_env_data[i_cell * md->n_sub_model_env_data]);
+*/
+
+/*
+
+    int n_aero_rep=1;
+
+    if( tid_cell < n_aero_rep) {
+      int n_iters = n_aero_rep / deriv_length_cell;
+      for (int i = 0; i < n_iters; i++) {
+        i_rxn = tid_cell + i*deriv_length_cell;
+
+        solveAero(i_rxn, deriv_data, state_init, deriv_init, time_step, deriv_length_cell,
+                 state_size_cell, rxn_env_data_size_cell, n_aero_rep, int_pointer,
+                 double_pointer, rxn_env_data_init, rxn_env_data_idx, env_init,
+                 i_kernel, prod_rates, loss_rates, threads_block
+        );
+      }
+
+      int residual=n_aero_rep-(deriv_length_cell*n_iters);
+      if(tid_cell < residual){
+        i_rxn = tid_cell + deriv_length_cell*n_iters;
+
+        solveAero(i_rxn, deriv_data, state_init, deriv_init, time_step, deriv_length_cell,
+                 state_size_cell, rxn_env_data_size_cell, n_aero_rep, int_pointer,
+                 double_pointer, rxn_env_data_init, rxn_env_data_idx, env_init,
+                 i_kernel, prod_rates, loss_rates, threads_block
+        );
+      }
+    }
+    */
+
     /*if(tid==0){
       printf("tid %d time_deriv.production_rates %-le time_deriv.loss_rates %-le\n",
               tid, deriv_data.production_rates[tid],
@@ -829,8 +1014,6 @@ void rxn_calc_deriv_gpu(SolverData *sd, N_Vector deriv, double time_step,
   }
 
 #ifdef PMC_DEBUG_GPU
-//todo update times with kernel device timers
-
   /*cudaDeviceSynchronize();
   timeDerivKernel += (clock() - t2);
   t3 = clock();*/
