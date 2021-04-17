@@ -1086,7 +1086,7 @@ int camp_solver_update_model_state(N_Vector solver_state, SolverData *sd,
 #endif
 
 #ifndef ISSUE41
-        if (NV_DATA_S(solver_state)[i_dep_var] < -1.0e-10) {
+        if (NV_DATA_S(solver_state)[i_dep_var] < -SMALL) {
 #else
         if (NV_DATA_S(solver_state)[i_dep_var] < -SMALL) {
 #endif
