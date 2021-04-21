@@ -103,7 +103,7 @@ program mock_monarch
   !> Time step (min)
   real, parameter :: TIME_STEP = 2!1.6 !camp_paper=2
   !> Number of time steps to integrate over
-  integer, parameter :: NUM_TIME_STEP = 30!1!camp_paper=720!36
+  integer, parameter :: NUM_TIME_STEP = 1!1!camp_paper=720!36
   !> Index for water vapor in water_conc()
   integer, parameter :: WATER_VAPOR_ID = 5
   !> Start time
@@ -255,10 +255,10 @@ program mock_monarch
   !todo
   !call get_command_argument(4, arg, status=status_code)
   !if(status_code.eq.0) then
-    DIFF_CELLS = "ON"!trim(arg)
+    !DIFF_CELLS = "ON"!trim(arg)
   !else
   !  print*, "WARNING: not DIFF_CELLS parameter received, value set to OFF"
-    !DIFF_CELLS = "OFF"
+    DIFF_CELLS = "OFF"
   !end if
 
   allocate(temperature(NUM_WE_CELLS,NUM_SN_CELLS,NUM_VERT_CELLS))
@@ -433,7 +433,7 @@ program mock_monarch
     end if
 #endif
 
-#ifndef ISSUE41
+#ifdef ISSUE41
 
     species_conc_copy(:,:,:,:) = species_conc(:,:,:,:)
 
@@ -451,7 +451,7 @@ program mock_monarch
                ,name_aerosol_species_to_print,id_aerosol_species_to_print,RESULTS_FILE_UNIT)
       end if
 
-#ifndef ISSUE41
+#ifdef ISSUE41
 
       !if(i_time.eq.(NUM_TIME_STEP/2)) then
 
@@ -476,6 +476,7 @@ program mock_monarch
                                    pressure,          & ! Air pressure (Pa)
                                    conv,              &
                                    i_hour,&
+                                   NUM_TIME_STEP,&
                                    solver_stats)
       curr_time = curr_time + TIME_STEP
 
@@ -483,7 +484,7 @@ program mock_monarch
     call export_solver_stats(curr_time,pmc_interface,solver_stats)
 #endif
 
-#ifndef ISSUE41
+#ifdef ISSUE41
 
       !if(i_time.eq.(NUM_TIME_STEP/2)) then
 
@@ -545,8 +546,8 @@ program mock_monarch
 
   end do
 
-  !if (pmc_mpi_rank().eq.0) then
-  if (pmc_mpi_rank().eq.999) then
+  if (pmc_mpi_rank().eq.0) then
+  !if (pmc_mpi_rank().eq.999) then
     do i = I_E,I_E!I_W, I_E
       do j = I_N,I_N!I_S, I_N
         do k = NUM_VERT_CELLS, NUM_VERT_CELLS!1,NUM_VERT_CELLS!1, NUM_VERT_CELLS
@@ -713,15 +714,15 @@ contains
     if(ADD_EMISIONS.eq."ON") then
 
       water_conc(:,:,:,WATER_VAPOR_ID) = 0. !0.01165447 !this is equal to 95% RH !1e-14 !0.01 !kg_h2o/kg-1_air
-      temp_init=290.016
-      press_init=100000.
+      temp_init = 290.016
+      press_init = 100000.
 
       if(DIFF_CELLS.eq."ON") then
 
         press_end = 10000.
         press_range = press_end-press_init
         if(((I_E - I_W+1)*(I_N - I_S+1)*NUM_VERT_CELLS-1).eq.0) then
-          press_slide = 0
+          press_slide = 0.
         else
           press_slide = press_range/((I_E - I_W+1)*(I_N - I_S+1)*NUM_VERT_CELLS-1)
         end if
@@ -784,9 +785,6 @@ contains
     deallocate(file_name)
     deallocate(aux_str)
     deallocate(aux_str_py)
-
-    ! Read the compare file
-    ! TODO Implement once results are stable
 
   end subroutine model_initialize
 

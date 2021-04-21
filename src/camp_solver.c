@@ -363,7 +363,7 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
   sd->model_data.sub_model_env_idx[0] = 0;
 
 #ifdef PMC_USE_GPU
-  solver_new_gpu_cu(&(sd->model_data), n_dep_var, n_state_var, n_rxn,
+  solver_new_gpu_cu(sd, n_dep_var, n_state_var, n_rxn,
                     n_rxn_int_param, n_rxn_float_param, n_rxn_env_param,
                     n_cells);
 #endif
@@ -1085,7 +1085,7 @@ int camp_solver_update_model_state(N_Vector solver_state, SolverData *sd,
 
 #endif
 
-#ifndef ISSUE41
+#ifdef ISSUE41
         if (NV_DATA_S(solver_state)[i_dep_var] < -SMALL) {
 #else
         if (NV_DATA_S(solver_state)[i_dep_var] < -SMALL) {
@@ -2486,6 +2486,9 @@ void solver_free(void *solver_data) {
 
   //fclose(sd->file);
 
+  //todo test
+  //free_gpu_cu(sd);
+
 #endif
 
 #ifdef PMC_USE_SUNDIALS
@@ -2574,9 +2577,6 @@ void error_handler(int error_code, const char *module, const char *function,
  * \param model_data Pointer to the ModelData object to free
  */
 void model_free(ModelData model_data) {
-#ifdef PMC_USE_GPU
-  free_gpu_cu(&model_data);
-#endif
 
 #ifdef PMC_USE_SUNDIALS
   // Destroy the initialized Jacbobian matrix

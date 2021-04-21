@@ -21,7 +21,7 @@ void * sub_model_gpu_UNIFAC_get_parameter_id(
 void * sub_model_gpu_UNIFAC_update_env_state(int n_rxn2, double *double_pointer_gpu,
           void *sub_model_data, double *env_data);
 void * sub_model_gpu_UNIFAC_calculate(
-          void *sub_model_data, ModelData *model_data);
+          void *sub_model_data, ModelDataGPU *model_data);
 void * sub_model_gpu_UNIFAC_add_jac_contrib(
           void *sub_model_data, double base_val, double *jac_row);
 void * sub_model_gpu_UNIFAC_skip(

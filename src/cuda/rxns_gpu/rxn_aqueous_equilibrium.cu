@@ -117,7 +117,7 @@ return (realtype)rate;
 #ifdef __CUDA_ARCH__
 __host__ __device__
 #endif
-void rxn_gpu_aqueous_equilibrium_calc_deriv_contrib(ModelData *model_data, realtype *deriv, int *rxn_int_data,
+void rxn_gpu_aqueous_equilibrium_calc_deriv_contrib(ModelDataGPU *model_data, realtype *deriv, int *rxn_int_data,
           double *rxn_float_data, double *rxn_env_data, double time_step)
 {
 #ifdef __CUDA_ARCH__
@@ -206,7 +206,7 @@ void rxn_gpu_aqueous_equilibrium_calc_deriv_contrib(ModelData *model_data, realt
 #ifdef __CUDA_ARCH__
 __host__ __device__
 #endif
-void rxn_gpu_aqueous_equilibrium_calc_jac_contrib(ModelData *model_data, realtype *J, int *rxn_int_data,
+void rxn_gpu_aqueous_equilibrium_calc_jac_contrib(ModelDataGPU *model_data, realtype *J, int *rxn_int_data,
           double *rxn_float_data, double *rxn_env_data, double time_step)
 {
 #ifdef __CUDA_ARCH__

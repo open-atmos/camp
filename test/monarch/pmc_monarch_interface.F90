@@ -409,10 +409,10 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Integrate the PartMC mechanism for a particular set of cells and timestep
-  subroutine integrate(this, curr_time, time_step, i_start, i_end, j_start, &
-                  j_end, temperature, MONARCH_conc, water_conc, &
+  subroutine integrate(this, curr_time, time_step, I_W, I_E, I_S, &
+                  I_N, temperature, MONARCH_conc, water_conc, &
                   water_vapor_index, air_density, pressure, conv, i_hour,&
-          solver_stats)
+          NUM_TIME_STEP,solver_stats)
 
     !> PartMC-camp <-> MONARCH interface
     class(monarch_interface_t) :: this
@@ -421,13 +421,13 @@ contains
     !> Integration time step
     real, intent(in) :: time_step
     !> Grid-cell W->E starting index
-    integer, intent(in) :: i_start
+    integer, intent(in) :: I_W
     !> Grid-cell W->E ending index
-    integer, intent(in) :: i_end
+    integer, intent(in) :: I_E
     !> Grid-cell S->N starting index
-    integer, intent(in) :: j_start
+    integer, intent(in) :: I_S
     !> Grid-cell S->N ending index
-    integer, intent(in) :: j_end
+    integer, intent(in) :: I_N
 
     !> NMMB style arrays (W->E, S->N, top->bottom, ...)
     !> Temperature (K)
@@ -446,6 +446,7 @@ contains
     real, intent(in) :: pressure(:,:,:)
     real, intent(in) :: conv
     integer, intent(inout) :: i_hour
+    integer, intent(in) :: NUM_TIME_STEP
 
     type(chem_spec_data_t), pointer :: chem_spec_data
 
@@ -466,7 +467,8 @@ contains
     real, dimension(emi_len) :: PAR_emi
     real, dimension(emi_len) :: ISOP_emi
     real, dimension(emi_len) :: MEOH_emi
-    real, dimension(30) :: rate_emi
+    !real, dimension(30) :: rate_emi
+    real, allocatable :: rate_emi(:,:)
 
     ! MPI
     character, allocatable :: buffer(:)
@@ -474,10 +476,13 @@ contains
     integer :: local_comm
     real(kind=dp), allocatable :: mpi_conc(:)
 
-    integer :: i, j, k, i_spec, z, o, i2, i_cell, i_photo_rxn
-    integer :: k_end
+    integer :: i, j, k, i_spec, z, o, t, i_cell, i_photo_rxn
+    integer :: NUM_VERT_CELLS, i_hour_max
 
     character(len=:), allocatable :: DIFF_CELLS_EMI
+    real :: press_init, press_end, press_range, cells_init, cells_end,&
+            cells_range, emi_slide, press_norm
+    integer :: n_cells_range, n_cells
 
     ! Computation time variables
     real(kind=dp) :: comp_start, comp_end
@@ -495,13 +500,18 @@ contains
       state_size_per_cell = this%camp_core%state_size_per_cell()
     end if
 
-    k_end = size(MONARCH_conc,3)
+    NUM_VERT_CELLS = size(MONARCH_conc,3)
 
     if(this%ADD_EMISIONS.eq."ON") then
 
       call assert_msg(731700229, &
               this%camp_core%get_chem_spec_data(chem_spec_data), &
               "No chemical species data in camp_core.")
+
+      !i_hour_max = int(NUM_TIME_STEP*TIME_STEP / 60)+1
+      n_cells=(I_E - I_W+1)*(I_N - I_S+1)*NUM_VERT_CELLS
+      i_hour_max=30
+      allocate(rate_emi(i_hour_max,n_cells))
 
       SO2_emi = (/ 1.06E-09 /)
       NO2_emi = (/ 7.56E-12 /)
@@ -521,20 +531,69 @@ contains
       !rate_emi = (/1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,&
       !        0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0 /)
 
-      !todo dynamic rate sizes with timesteps
-      !NUM_TIME_STEP
-      do i=1,12
-        rate_emi(i)=1.0
-      end do
-      do i=13,30
-        rate_emi(i)=0.0
-      end do
+      !DIFF_CELLS_EMI = "ON"
+      DIFF_CELLS_EMI = "OFF"
 
-      !DIFF_CELLS = "ON"
+      rate_emi(:,:)=0.0
 
-      !if(DIFF_CELLS.eq."ON") then
+      if(DIFF_CELLS_EMI.eq."ON") then
 
-      !end if
+        press_init = pressure(I_W,I_S,1)!100000.
+        press_end = 85000.
+        press_range = press_end-press_init
+        cells_init = 1.
+        cells_end = 0.
+        cells_range = cells_end-cells_init
+        n_cells_range=0
+
+        do i=I_W, I_E
+          do j=I_S, I_N
+            do k=1, NUM_VERT_CELLS
+              o = (j-1)*(I_E) + (i-1) !Index to 3D
+              z = (k-1)*(I_E*I_N) + o !Index for 2D
+
+              press_norm=&
+                      (press_end-pressure(i,j,k))/(press_range)
+                      !(pressure(i,j,k)-press_end)/(press_init-press_end)
+              !mod_press=dmod(pressure(i,j,k),press_range)
+
+              !print*,press_norm, pressure(i,j,k)
+
+              if(press_norm.ge.0) then
+                do t=1,12
+                  rate_emi(t,z+1)=press_norm
+                end do
+              else
+                do t=1,12
+                  rate_emi(t,z+1)=0.0
+                end do
+              end if
+
+              do t=13,30
+                rate_emi(t,z+1)=0.0
+              end do
+
+
+            end do
+          end do
+        end do
+
+        !print*,n_cells_range, emi_slide
+        !print*,"rate emi and press"
+        !print*,rate_emi(1,:)
+        !print*,pressure(:,:,:)
+
+      else
+
+        !NUM_TIME_STEP
+        do i=1,12
+          rate_emi(i,:)=1.0
+        end do
+        do i=13,30
+          rate_emi(i,:)=0.0
+        end do
+
+      end if
 
       i_hour = int(curr_time/60)+1
       if(mod(int(curr_time),60).eq.0) then
@@ -546,11 +605,11 @@ contains
     end if
 
     if(.not.this%solve_multiple_cells) then
-      do i=i_start, i_end
-        do j=j_start, j_end
-          do k=1, k_end
-            o = (j-1)*(i_end) + (i-1) !Index to 3D
-            z = (k-1)*(i_end*j_end) + o !Index for 2D
+      do i=I_W, I_E
+        do j=I_S, I_N
+          do k=1, NUM_VERT_CELLS
+            o = (j-1)*(I_E) + (i-1) !Index to 3D
+            z = (k-1)*(I_E*I_N) + o !Index for 2D
 
             ! Update the environmental state
             call this%camp_state%env_states(1)%set_temperature_K( &
@@ -590,49 +649,49 @@ contains
               !Add emissions
               this%camp_state%state_var(chem_spec_data%gas_state_id("SO2"))=&
                       this%camp_state%state_var(chem_spec_data%gas_state_id("SO2"))&
-                              +SO2_emi(1)*rate_emi(i_hour)*conv
+                              +SO2_emi(1)*rate_emi(i_hour,z+1)*conv
               this%camp_state%state_var(chem_spec_data%gas_state_id("NO2"))=&
                       this%camp_state%state_var(chem_spec_data%gas_state_id("NO2"))&
-                              +NO2_emi(1)*rate_emi(i_hour)*conv
+                              +NO2_emi(1)*rate_emi(i_hour,z+1)*conv
               this%camp_state%state_var(chem_spec_data%gas_state_id("NO"))=&
                       this%camp_state%state_var(chem_spec_data%gas_state_id("NO"))&
-                              +NO_emi(1)*rate_emi(i_hour)*conv
+                              +NO_emi(1)*rate_emi(i_hour,z+1)*conv
               this%camp_state%state_var(chem_spec_data%gas_state_id("NH3"))=&
                       this%camp_state%state_var(chem_spec_data%gas_state_id("NH3"))&
-                              +NH3_emi(1)*rate_emi(i_hour)*conv
+                              +NH3_emi(1)*rate_emi(i_hour,z+1)*conv
               this%camp_state%state_var(chem_spec_data%gas_state_id("CO"))=&
                       this%camp_state%state_var(chem_spec_data%gas_state_id("CO"))&
-                              +CO_emi(1)*rate_emi(i_hour)*conv
+                              +CO_emi(1)*rate_emi(i_hour,z+1)*conv
               this%camp_state%state_var(chem_spec_data%gas_state_id("ALD2"))=&
                       this%camp_state%state_var(chem_spec_data%gas_state_id("ALD2"))&
-                              +ALD2_emi(1)*rate_emi(i_hour)*conv
+                              +ALD2_emi(1)*rate_emi(i_hour,z+1)*conv
               this%camp_state%state_var(chem_spec_data%gas_state_id("FORM"))=&
                       this%camp_state%state_var(chem_spec_data%gas_state_id("FORM"))&
-                              +FORM_emi(1)*rate_emi(i_hour)*conv
+                              +FORM_emi(1)*rate_emi(i_hour,z+1)*conv
               this%camp_state%state_var(chem_spec_data%gas_state_id("ETH"))=&
                       this%camp_state%state_var(chem_spec_data%gas_state_id("ETH"))&
-                              +ETH_emi(1)*rate_emi(i_hour)*conv
+                              +ETH_emi(1)*rate_emi(i_hour,z+1)*conv
               this%camp_state%state_var(chem_spec_data%gas_state_id("IOLE"))=&
                       this%camp_state%state_var(chem_spec_data%gas_state_id("IOLE"))&
-                              +IOLE_emi(1)*rate_emi(i_hour)*conv
+                              +IOLE_emi(1)*rate_emi(i_hour,z+1)*conv
               this%camp_state%state_var(chem_spec_data%gas_state_id("OLE"))=&
                       this%camp_state%state_var(chem_spec_data%gas_state_id("OLE"))&
-                              +OLE_emi(1)*rate_emi(i_hour)*conv
+                              +OLE_emi(1)*rate_emi(i_hour,z+1)*conv
               this%camp_state%state_var(chem_spec_data%gas_state_id("TOL"))=&
                       this%camp_state%state_var(chem_spec_data%gas_state_id("TOL"))&
-                              +TOL_emi(1)*rate_emi(i_hour)*conv
+                              +TOL_emi(1)*rate_emi(i_hour,z+1)*conv
               this%camp_state%state_var(chem_spec_data%gas_state_id("XYL"))=&
                       this%camp_state%state_var(chem_spec_data%gas_state_id("XYL"))&
-                              +XYL_emi(1)*rate_emi(i_hour)*conv
+                              +XYL_emi(1)*rate_emi(i_hour,z+1)*conv
               this%camp_state%state_var(chem_spec_data%gas_state_id("PAR"))=&
                       this%camp_state%state_var(chem_spec_data%gas_state_id("PAR"))&
-                              +PAR_emi(1)*rate_emi(i_hour)*conv
+                              +PAR_emi(1)*rate_emi(i_hour,z+1)*conv
               this%camp_state%state_var(chem_spec_data%gas_state_id("ISOP"))=&
                       this%camp_state%state_var(chem_spec_data%gas_state_id("ISOP"))&
-                              +ISOP_emi(1)*rate_emi(i_hour)*conv
+                              +ISOP_emi(1)*rate_emi(i_hour,z+1)*conv
               this%camp_state%state_var(chem_spec_data%gas_state_id("MEOH"))=&
                       this%camp_state%state_var(chem_spec_data%gas_state_id("MEOH"))&
-                              +MEOH_emi(1)*rate_emi(i_hour)*conv
+                              +MEOH_emi(1)*rate_emi(i_hour,z+1)*conv
             end if
 
             !write(*,*) "State_var input",this%camp_state%state_var(this%map_camp_id(:)+(z*state_size_per_cell))
@@ -659,7 +718,7 @@ contains
             solver_stats%eval_Jac = .false.
 #endif
 
-#ifndef ISSUE41
+#ifdef ISSUE41
             ! Update the MONARCH tracer array with new species concentrations
             MONARCH_conc(i,j,k,this%map_monarch_id(:)) = &
                     this%camp_state%state_var(this%map_camp_id(:))
@@ -677,20 +736,20 @@ contains
 
       ! solve multiple grid cells at once
       !  FIXME this only works if this%n_cells ==
-      !       (i_end - i_start + 1) * (j_end - j_start + 1 ) * k_end
-      !n_cell_check = (i_end - i_start + 1) * (j_end - j_start + 1 ) * k_end
+      !       (I_E - I_W + 1) * (I_N - I_S + 1 ) * NUM_VERT_CELLS
+      !n_cell_check = (I_E - I_W + 1) * (I_N - I_S + 1 ) * NUM_VERT_CELLS
       !call assert_msg(559245176, this%n_cells .eq. n_cell_check, &
       !        "Grid cell number mismatch, got "// &
       !                trim(to_string(n_cell_check))//", expected "// &
       !                trim(to_string(this%n_cells)))
 
       ! Set initial conditions and environmental parameters for each grid cell
-      do i=i_start, i_end
-        do j=j_start, j_end
-          do k=1, k_end
+      do i=I_W, I_E
+        do j=I_S, I_N
+          do k=1, NUM_VERT_CELLS
             !Remember fortran read matrix in inverse order for optimization!
-            o = (j-1)*(i_end) + (i-1) !Index to 3D
-            z = (k-1)*(i_end*j_end) + o !Index for 2D
+            o = (j-1)*(I_E) + (i-1) !Index to 3D
+            z = (k-1)*(I_E*I_N) + o !Index for 2D
 
             ! Update the environmental state
             !call this%camp_state%env_states(1)%set_temperature_K(real(temperature(i,j,k),kind=dp))
@@ -734,49 +793,49 @@ contains
               !Add emissions
               this%camp_state%state_var(chem_spec_data%gas_state_id("SO2")+z*state_size_per_cell)=&
                       this%camp_state%state_var(chem_spec_data%gas_state_id("SO2")+z*state_size_per_cell)&
-                              +SO2_emi(1)*rate_emi(i_hour)*conv
+                              +SO2_emi(1)*rate_emi(i_hour,z+1)*conv
               this%camp_state%state_var(chem_spec_data%gas_state_id("NO2")+z*state_size_per_cell)=&
                       this%camp_state%state_var(chem_spec_data%gas_state_id("NO2")+z*state_size_per_cell)&
-                              +NO2_emi(1)*rate_emi(i_hour)*conv
+                              +NO2_emi(1)*rate_emi(i_hour,z+1)*conv
               this%camp_state%state_var(chem_spec_data%gas_state_id("NO")+z*state_size_per_cell)=&
                       this%camp_state%state_var(chem_spec_data%gas_state_id("NO")+z*state_size_per_cell)&
-                              +NO_emi(1)*rate_emi(i_hour)*conv
+                              +NO_emi(1)*rate_emi(i_hour,z+1)*conv
               this%camp_state%state_var(chem_spec_data%gas_state_id("NH3")+z*state_size_per_cell)=&
                       this%camp_state%state_var(chem_spec_data%gas_state_id("NH3")+z*state_size_per_cell)&
-                              +NH3_emi(1)*rate_emi(i_hour)*conv
+                              +NH3_emi(1)*rate_emi(i_hour,z+1)*conv
               this%camp_state%state_var(chem_spec_data%gas_state_id("CO")+z*state_size_per_cell)=&
                       this%camp_state%state_var(chem_spec_data%gas_state_id("CO")+z*state_size_per_cell)&
-                              +CO_emi(1)*rate_emi(i_hour)*conv
+                              +CO_emi(1)*rate_emi(i_hour,z+1)*conv
               this%camp_state%state_var(chem_spec_data%gas_state_id("ALD2")+z*state_size_per_cell)=&
                       this%camp_state%state_var(chem_spec_data%gas_state_id("ALD2")+z*state_size_per_cell)&
-                              +ALD2_emi(1)*rate_emi(i_hour)*conv
+                              +ALD2_emi(1)*rate_emi(i_hour,z+1)*conv
               this%camp_state%state_var(chem_spec_data%gas_state_id("FORM")+z*state_size_per_cell)=&
                       this%camp_state%state_var(chem_spec_data%gas_state_id("FORM")+z*state_size_per_cell)&
-                              +FORM_emi(1)*rate_emi(i_hour)*conv
+                              +FORM_emi(1)*rate_emi(i_hour,z+1)*conv
               this%camp_state%state_var(chem_spec_data%gas_state_id("ETH")+z*state_size_per_cell)=&
                       this%camp_state%state_var(chem_spec_data%gas_state_id("ETH")+z*state_size_per_cell)&
-                              +ETH_emi(1)*rate_emi(i_hour)*conv
+                              +ETH_emi(1)*rate_emi(i_hour,z+1)*conv
               this%camp_state%state_var(chem_spec_data%gas_state_id("IOLE")+z*state_size_per_cell)=&
                       this%camp_state%state_var(chem_spec_data%gas_state_id("IOLE")+z*state_size_per_cell)&
-                              +IOLE_emi(1)*rate_emi(i_hour)*conv
+                              +IOLE_emi(1)*rate_emi(i_hour,z+1)*conv
               this%camp_state%state_var(chem_spec_data%gas_state_id("OLE")+z*state_size_per_cell)=&
                       this%camp_state%state_var(chem_spec_data%gas_state_id("OLE")+z*state_size_per_cell)&
-                              +OLE_emi(1)*rate_emi(i_hour)*conv
+                              +OLE_emi(1)*rate_emi(i_hour,z+1)*conv
               this%camp_state%state_var(chem_spec_data%gas_state_id("TOL")+z*state_size_per_cell)=&
                       this%camp_state%state_var(chem_spec_data%gas_state_id("TOL")+z*state_size_per_cell)&
-                              +TOL_emi(1)*rate_emi(i_hour)*conv
+                              +TOL_emi(1)*rate_emi(i_hour,z+1)*conv
               this%camp_state%state_var(chem_spec_data%gas_state_id("XYL")+z*state_size_per_cell)=&
                       this%camp_state%state_var(chem_spec_data%gas_state_id("XYL")+z*state_size_per_cell)&
-                              +XYL_emi(1)*rate_emi(i_hour)*conv
+                              +XYL_emi(1)*rate_emi(i_hour,z+1)*conv
               this%camp_state%state_var(chem_spec_data%gas_state_id("PAR")+z*state_size_per_cell)=&
                       this%camp_state%state_var(chem_spec_data%gas_state_id("PAR")+z*state_size_per_cell)&
-                              +PAR_emi(1)*rate_emi(i_hour)*conv
+                              +PAR_emi(1)*rate_emi(i_hour,z+1)*conv
               this%camp_state%state_var(chem_spec_data%gas_state_id("ISOP")+z*state_size_per_cell)=&
                       this%camp_state%state_var(chem_spec_data%gas_state_id("ISOP")+z*state_size_per_cell)&
-                              +ISOP_emi(1)*rate_emi(i_hour)*conv
+                              +ISOP_emi(1)*rate_emi(i_hour,z+1)*conv
               this%camp_state%state_var(chem_spec_data%gas_state_id("MEOH")+z*state_size_per_cell)=&
                       this%camp_state%state_var(chem_spec_data%gas_state_id("MEOH")+z*state_size_per_cell)&
-                              +MEOH_emi(1)*rate_emi(i_hour)*conv
+                              +MEOH_emi(1)*rate_emi(i_hour,z+1)*conv
             endif
           end do
         end do
@@ -792,12 +851,12 @@ contains
       comp_time = comp_time + (comp_end-comp_start)
 
       !print*,this%camp_state%state_var(1)
-#ifndef ISSUE41
-      do i=i_start, i_end
-        do j=j_start, j_end
-          do k=1, k_end
-            o = (j-1)*(i_end) + (i-1) !Index to 3D
-            z = (k-1)*(i_end*j_end) + o !Index for 2D
+#ifdef ISSUE41
+      do i=I_W, I_E
+        do j=I_S, I_N
+          do k=1, NUM_VERT_CELLS
+            o = (j-1)*(I_E) + (i-1) !Index to 3D
+            z = (k-1)*(I_E*I_N) + o !Index for 2D
 
             MONARCH_conc(i,j,k,this%map_monarch_id(:)) = &
                     this%camp_state%state_var(this%map_camp_id(:)+(z*state_size_per_cell))
@@ -806,11 +865,11 @@ contains
         end do
       end do
 #else
-      do i=i_start, i_end
-        do j=j_start, j_end
-          do k=1, k_end
-            o = (j-1)*(i_end) + (i-1) !Index to 3D
-            z = (k-1)*(i_end*j_end) + o !Index for 2D
+      do i=I_W, I_E
+        do j=I_S, I_N
+          do k=1, NUM_VERT_CELLS
+            o = (j-1)*(I_E) + (i-1) !Index to 3D
+            z = (k-1)*(I_E*I_N) + o !Index for 2D
 
             MONARCH_conc(i,j,k,this%map_monarch_id(:)) = &
                     this%camp_state%state_var(this%map_camp_id(:)+(z*state_size_per_cell))
@@ -822,6 +881,10 @@ contains
 #endif
 
     end if
+
+if(this%ADD_EMISIONS.eq."ON") then
+  deallocate(rate_emi)
+end if
 
 #ifdef PMC_USE_MPI
 
@@ -1280,11 +1343,11 @@ end if
     real, intent(inout) :: MONARCH_air_density(:,:,:)
     integer, intent(in) :: i_W,I_E,I_S,I_N
 
-    integer(kind=i_kind) :: i_spec, water_id,i,j,k,r,k_end,state_size_per_cell, last_cell
+    integer(kind=i_kind) :: i_spec, water_id,i,j,k,r,NUM_VERT_CELLS,state_size_per_cell, last_cell
     real :: conc_deviation_perc
 
     conc_deviation_perc=0.!0.2
-    k_end=size(MONARCH_conc,3)
+    NUM_VERT_CELLS=size(MONARCH_conc,3)
 
     ! Reset the species concentrations in PMC and MONARCH
     this%camp_state%state_var(:) = 0.0
@@ -1298,13 +1361,13 @@ end if
 
     do i=i_W, I_E
       do j=I_S, I_N
-        do k=1, k_end
+        do k=1, NUM_VERT_CELLS
           if(this%n_cells.eq.1) then
             r=0
             last_cell=0
           else
             r=(k-1)*(I_E*I_N) + (j-1)*(I_E) + i-1
-            last_cell=((I_E - I_W+1)*(I_N - I_S+1)*k_end)-1
+            last_cell=((I_E - I_W+1)*(I_N - I_S+1)*NUM_VERT_CELLS)-1
           end if
 
           forall (i_spec = 1:size(this%map_monarch_id))

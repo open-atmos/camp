@@ -255,7 +255,7 @@ typedef struct {
   double *env_gpu;
   double *rxn_env_data_gpu;
   int *rxn_env_data_idx_gpu;
-  int model_data_id;  // Id of the modelData object
+  //int model_data_id;  // Id of the modelData object
   // cudaStream_t *stream_gpu;
 
   //TimeDeriv struct arrays (needed for gpu pre-allocation)
@@ -339,6 +339,7 @@ typedef struct {
 #endif
 #ifdef PMC_USE_GPU
   itsolver bicg;
+  ModelDataGPU *mGPU;
 #ifdef CHECK_GPU_LINSOLVE  // todo fix name
   double max_error_linsolver;
   int max_error_linsolver_i;

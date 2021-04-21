@@ -49,7 +49,7 @@ extern "C" {
 #ifdef __CUDA_ARCH__
 __host__ __device__
 #endif
-int aero_rep_gpu_single_particle_get_used_jac_elem(ModelData *model_data,
+int aero_rep_gpu_single_particle_get_used_jac_elem(ModelDataGPU *model_data,
                                                int aero_phase_idx,
                                                int *aero_rep_int_data,
                                                double *aero_rep_float_data,
@@ -108,7 +108,7 @@ void aero_rep_gpu_single_particle_get_dependencies(int *aero_rep_int_data,
 #ifdef __CUDA_ARCH__
 __host__ __device__
 #endif
-void aero_rep_gpu_single_particle_update_env_state(ModelData *model_data,
+void aero_rep_gpu_single_particle_update_env_state(ModelDataGPU *model_data,
                                                int *aero_rep_int_data,
                                                double *aero_rep_float_data,
                                                double *aero_rep_env_data) {
@@ -131,7 +131,7 @@ void aero_rep_gpu_single_particle_update_env_state(ModelData *model_data,
 #ifdef __CUDA_ARCH__
 __host__ __device__
 #endif
-void aero_rep_gpu_single_particle_update_state(ModelData *model_data,
+void aero_rep_gpu_single_particle_update_state(ModelDataGPU *model_data,
                                            int *aero_rep_int_data,
                                            double *aero_rep_float_data,
                                            double *aero_rep_env_data) {
@@ -158,7 +158,7 @@ void aero_rep_gpu_single_particle_update_state(ModelData *model_data,
 __host__ __device__
 #endif
 void aero_rep_gpu_single_particle_get_effective_radius__m(
-        ModelData *model_data, int aero_phase_idx, double *radius,
+        ModelDataGPU *model_data, int aero_phase_idx, double *radius,
         double *partial_deriv, int *aero_rep_int_data, double *aero_rep_float_data,
         double *aero_rep_env_data) {
   int *int_data = aero_rep_int_data;
@@ -214,7 +214,7 @@ void aero_rep_gpu_single_particle_get_effective_radius__m(
 __host__ __device__
 #endif
 void aero_rep_gpu_single_particle_get_number_conc__n_m3(
-        ModelData *model_data, int aero_phase_idx, double *number_conc,
+        ModelDataGPU *model_data, int aero_phase_idx, double *number_conc,
         double *partial_deriv, int *aero_rep_int_data, double *aero_rep_float_data,
         double *aero_rep_env_data) {
   int *int_data = aero_rep_int_data;
@@ -284,7 +284,7 @@ void aero_rep_gpu_single_particle_get_aero_conc_type(int aero_phase_idx,
 __host__ __device__
 #endif
 void aero_rep_gpu_single_particle_get_aero_phase_gpu_mass__kg_m3(
-        ModelData *model_data, int aero_phase_idx, double *aero_phase_gpu_mass,
+        ModelDataGPU *model_data, int aero_phase_idx, double *aero_phase_gpu_mass,
         double *partial_deriv, int *aero_rep_int_data, double *aero_rep_float_data,
         double *aero_rep_env_data) {
   int *int_data = aero_rep_int_data;
@@ -331,7 +331,7 @@ void aero_rep_gpu_single_particle_get_aero_phase_gpu_mass__kg_m3(
 __host__ __device__
 #endif
 void aero_rep_gpu_single_particle_get_aero_phase_gpu_avg_MW__kg_mol(
-        ModelData *model_data, int aero_phase_idx, double *aero_phase_gpu_avg_MW,
+        ModelDataGPU *model_data, int aero_phase_idx, double *aero_phase_gpu_avg_MW,
         double *partial_deriv, int *aero_rep_int_data, double *aero_rep_float_data,
         double *aero_rep_env_data) {
   int *int_data = aero_rep_int_data;

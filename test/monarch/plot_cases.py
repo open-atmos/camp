@@ -249,10 +249,11 @@ def speedup_timesteps():
   if not os.path.exists('out'):
     os.makedirs('out')
 
-  plot_title = config_file + ", cells: " + str(cells[0])
+  #plot_title = config_file + ", cells: " + str(cells[0])
+  #plot_title = config_file + ", cells: " + str(cells[0]) + " Diff cells: temp, press and emissions"
+  plot_title = config_file + ", cells: " + str(cells[0]) + " Diff cells: temp and press"
   #plot_title = config_file + ", cells: " + str(cells[0]) + ", Timesteps: 0-72"
   #plot_title = config_file + ", cells: " + str(cells[0]) + ", Timesteps: 720-792"
-
 
   cells_init = cells
 
@@ -323,9 +324,9 @@ def speedup_timesteps():
 
 def debug_no_plot():
 
-  #config_file="simple"
+  config_file="simple"
   #config_file="monarch_cb05"
-  config_file="monarch_binned"
+  #config_file="monarch_binned"
 
   mpi="yes"
   #mpi="no"
@@ -337,7 +338,7 @@ def debug_no_plot():
   #Read file
 
   #cells = [100,1000]
-  cells = [10]
+  cells = [1]
 
   #cases_multicells_onecell = ["one-cell","multi-cells"]
   cases_multicells_onecell = ["one-cell"]

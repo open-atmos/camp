@@ -15,6 +15,6 @@
 #ifdef __CUDA_ARCH__
 __host__ __device__
 #endif
-double sub_model_gpu_get_parameter_value(ModelData *model_data, int parameter_id);
+double sub_model_gpu_get_parameter_value(ModelDataGPU *model_data, int parameter_id);
 
 #endif

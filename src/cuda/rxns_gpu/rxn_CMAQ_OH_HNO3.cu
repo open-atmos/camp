@@ -74,7 +74,7 @@ void * rxn_gpu_CMAQ_OH_HNO3_get_used_jac_elem(void *rxn_data, bool **jac_struct)
  * \param rxn_data Pointer to the reaction data
  * \return The rxn_data pointer advanced by the size of the reaction data
  */
-void * rxn_gpu_CMAQ_OH_HNO3_update_ids(ModelData *model_data, int *deriv_ids,
+void * rxn_gpu_CMAQ_OH_HNO3_update_ids(ModelDataGPU *model_data, int *deriv_ids,
           int **jac_ids, void *rxn_data)
 {
   int n_rxn=1;
@@ -108,7 +108,7 @@ void * rxn_gpu_CMAQ_OH_HNO3_update_ids(ModelData *model_data, int *deriv_ids,
  * \param rxn_data Pointer to the reaction data
  * \return The rxn_data pointer advanced by the size of the reaction data
  */
-void * rxn_gpu_CMAQ_OH_HNO3_pre_calc(ModelData *model_data, void *rxn_data)
+void * rxn_gpu_CMAQ_OH_HNO3_pre_calc(ModelDataGPU *model_data, void *rxn_data)
 {
   int n_rxn=1;
   int *int_data = (int*) rxn_data;
@@ -131,10 +131,10 @@ void * rxn_gpu_CMAQ_OH_HNO3_pre_calc(ModelData *model_data, void *rxn_data)
 __host__ __device__
 #endif
 #ifdef BASIC_CALC_DERIV
-void rxn_gpu_CMAQ_OH_HNO3_calc_deriv_contrib(ModelData *model_data, realtype *deriv, int *rxn_int_data,
+void rxn_gpu_CMAQ_OH_HNO3_calc_deriv_contrib(ModelDataGPU *model_data, realtype *deriv, int *rxn_int_data,
           double *rxn_float_data, double *rxn_env_data, double time_step)
 #else
-void rxn_gpu_CMAQ_OH_HNO3_calc_deriv_contrib(ModelData *model_data, TimeDerivativeGPU time_deriv, int *rxn_int_data,
+void rxn_gpu_CMAQ_OH_HNO3_calc_deriv_contrib(ModelDataGPU *model_data, TimeDerivativeGPU time_deriv, int *rxn_int_data,
           double *rxn_float_data, double *rxn_env_data, double time_step)
 #endif
 {
@@ -206,7 +206,7 @@ void rxn_gpu_CMAQ_OH_HNO3_calc_deriv_contrib(ModelData *model_data, TimeDerivati
 #ifdef __CUDA_ARCH__
 __host__ __device__
 #endif
-void rxn_gpu_CMAQ_OH_HNO3_calc_jac_contrib(ModelData *model_data, realtype *J, int *rxn_int_data,
+void rxn_gpu_CMAQ_OH_HNO3_calc_jac_contrib(ModelDataGPU *model_data, realtype *J, int *rxn_int_data,
           double *rxn_float_data, double *rxn_env_data, double time_step)
 {
 #ifdef __CUDA_ARCH__

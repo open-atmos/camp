@@ -46,14 +46,14 @@ extern "C" {
 #ifdef __CUDA_ARCH__
 __host__ __device__
 #endif
-int aero_phase_gpu_get_used_jac_elem(ModelData *model_data, int aero_phase_idx,
+int aero_phase_gpu_get_used_jac_elem(ModelDataGPU *model_data, int aero_phase_idx,
                                      int state_var_id, bool *jac_struct) {
   // Get the requested aerosol phase data
   int *int_data = &(model_data->aero_phase_int_data
-  [model_data->aero_phase_int_indices[aero_phase_idx]]);
+                        [model_data->aero_phase_int_indices[aero_phase_idx]]);
   double *float_data =
-          &(model_data->aero_phase_float_data
-          [model_data->aero_phase_float_indices[aero_phase_idx]]);
+      &(model_data->aero_phase_float_data
+            [model_data->aero_phase_float_indices[aero_phase_idx]]);
 
   int num_flagged_elem = 0;
 
@@ -96,7 +96,7 @@ int aero_phase_gpu_get_used_jac_elem(ModelData *model_data, int aero_phase_idx,
 #ifdef __CUDA_ARCH__
 __host__ __device__
 #endif
-void aero_phase_gpu_get_mass__kg_m3(ModelData *model_data, int aero_phase_idx,
+void aero_phase_gpu_get_mass__kg_m3(ModelDataGPU *model_data, int aero_phase_idx,
                                     double *state_var, double *mass, double *MW,
                                     double *jac_elem_mass, double *jac_elem_MW) {
   // Get the requested aerosol phase data
@@ -107,15 +107,15 @@ void aero_phase_gpu_get_mass__kg_m3(ModelData *model_data, int aero_phase_idx,
           [model_data->aero_phase_float_indices[aero_phase_idx]]);
 
   // Sum the mass and MW
-  long double l_mass = MINIMUM_MASS_;
-  long double moles = MINIMUM_MASS_ / MINIMUM_MW_;
+  double l_mass = MINIMUM_MASS_;
+  double moles = MINIMUM_MASS_ / MINIMUM_MW_;
   int i_jac = 0;
   for (int i_spec = 0; i_spec < NUM_STATE_VAR_; i_spec++) {
     if (SPEC_TYPE_(i_spec) == CHEM_SPEC_VARIABLE ||
         SPEC_TYPE_(i_spec) == CHEM_SPEC_CONSTANT ||
         SPEC_TYPE_(i_spec) == CHEM_SPEC_PSSA) {
       l_mass += state_var[i_spec];
-      moles += state_var[i_spec] / (long double) MW_(i_spec);
+      moles += state_var[i_spec] / (double) MW_(i_spec);
       if (jac_elem_mass) jac_elem_mass[i_jac] = 1.0L;
       if (jac_elem_MW) jac_elem_MW[i_jac] = 1.0L / MW_(i_spec);
       i_jac++;
@@ -150,7 +150,7 @@ void aero_phase_gpu_get_mass__kg_m3(ModelData *model_data, int aero_phase_idx,
 #ifdef __CUDA_ARCH__
 __host__ __device__
 #endif
-void aero_phase_gpu_get_volume__m3_m3(ModelData *model_data, int aero_phase_idx,
+void aero_phase_gpu_get_volume__m3_m3(ModelDataGPU *model_data, int aero_phase_idx,
                                       double *state_var, double *volume,
                                       double *jac_elem) {
   // Get the requested aerosol phase data
@@ -187,8 +187,8 @@ __host__ __device__
 void aero_phase_gpu_add_condensed_data(int n_int_param, int n_float_param,
                                        int *int_param, double *float_param,
                                        void *solver_data) {
-  ModelData *model_data =
-          (ModelData *) &(((SolverData *) solver_data)->model_data);
+  ModelDataGPU *model_data =
+          (ModelDataGPU *) &(((SolverData *) solver_data)->model_data);
 
   // Get pointers to the aerosol phase data
   int *aero_phase_int_data =
@@ -221,8 +221,8 @@ void aero_phase_gpu_add_condensed_data(int n_int_param, int n_float_param,
  */
 
 void aero_phase_gpu_print_data(void *solver_data) {
-  ModelData *model_data =
-          (ModelData *) &(((SolverData *) solver_data)->model_data);
+  ModelDataGPU *model_data =
+          (ModelDataGPU *) &(((SolverData *) solver_data)->model_data);
 
   // Get the number of aerosol phases
   int n_aero_phase = model_data->n_aero_phase;

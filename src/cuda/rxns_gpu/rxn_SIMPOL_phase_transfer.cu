@@ -67,11 +67,11 @@ extern "C"{
 __host__ __device__
 #endif
 #ifdef BASIC_CALC_DERIV
-void rxn_gpu_SIMPOL_phase_calc_deriv_contrib(ModelData *model_data, realtype *deriv,
+void rxn_gpu_SIMPOL_phase_calc_deriv_contrib(ModelDataGPU *model_data, realtype *deriv,
                                       int *rxn_int_data, double *rxn_float_data,
                                       double *rxn_env_data, double time_step)
 #else
-void rxn_gpu_SIMPOL_phase_transfer_calc_deriv_contrib(ModelData *model_data, TimeDerivativeGPU time_deriv,
+void rxn_gpu_SIMPOL_phase_transfer_calc_deriv_contrib(ModelDataGPU *model_data, TimeDerivativeGPU time_deriv,
                                           int *rxn_int_data, double *rxn_float_data,
                                           double *rxn_env_data, double time_step)
 #endif
@@ -96,7 +96,7 @@ void rxn_gpu_SIMPOL_phase_transfer_calc_deriv_contrib(ModelData *model_data, Tim
             AERO_PHASE_ID_(i_phase),  // aerosol phase index
             &radius,                  // particle effective radius (m)
             NULL);                    // partial derivative
-
+/*
     // Check the aerosol concentration type (per-particle or total per-phase
     // mass)
     int aero_conc_type = aero_rep_gpu_get_aero_conc_type(
@@ -191,6 +191,7 @@ void rxn_gpu_SIMPOL_phase_transfer_calc_deriv_contrib(ModelData *model_data, Tim
                                   number_conc * cond_rate / KGM3_TO_PPM_);
       }
     }
+    */
   }
   return;
 }

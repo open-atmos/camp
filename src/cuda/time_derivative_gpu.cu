@@ -14,16 +14,24 @@ extern "C" {
 #include <math.h>
 #include <stdio.h>
 
-int time_derivative_initialize_gpu(ModelData *md, unsigned int num_spec) {
+int time_derivative_initialize_gpu(SolverData *sd, unsigned int num_spec) {
+
+  ModelDataGPU *mGPU = sd->mGPU;
+  ModelData *md = &(sd->model_data);
 
   //Pre-allocation related arrays (internal struct arrays are mandatory)
   cudaMalloc((void **) &md->J_tmp_gpu, md->deriv_size);
 #ifdef PMC_DEBUG
   cudaMalloc((void **) &md->last_max_loss_precision, sizeof(md->last_max_loss_precision));
   cudaMemset(time_deriv->last_max_loss_precision, 0.0, sizeof(md->last_max_loss_precision));
+  cudaMemcpy(&(mGPU->last_max_loss_precision), &md->last_max_loss_precision, sizeof(double*), cudaMemcpyHostToDevice);
+
 #endif
   cudaMalloc((void **) &(md->prod_rates),num_spec*sizeof(md->prod_rates));
   cudaMalloc((void **) &(md->loss_rates),num_spec*sizeof(md->loss_rates));
+
+  cudaMemcpy(&(mGPU->prod_rates), &md->prod_rates, sizeof(double*), cudaMemcpyHostToDevice);
+  cudaMemcpy(&(mGPU->loss_rates), &md->loss_rates, sizeof(double*), cudaMemcpyHostToDevice);
 
   return 1;
 }
