@@ -281,8 +281,9 @@ void allocSolverGPU(CVodeMem cv_mem, SolverData *sd)
   bicg->threads=prop.maxThreadsPerBlock;//1024; //128 set at max gpu
   bicg->blocks=(bicg->nrows+bicg->threads-1)/bicg->threads;
   bicg->n_cells=md->n_cells;
-  bicg->dA=md->J_gpu;//set itsolver gpu pointer to jac pointer initialized at camp
-  bicg->dftemp=md->deriv_gpu_data; //deriv is gpu pointer
+  ModelDataGPU *mGPU = &sd->mGPU;
+  bicg->dA=mGPU->J;//set itsolver gpu pointer to jac pointer initialized at camp
+  bicg->dftemp=mGPU->deriv_data; //deriv is gpu pointer
 
   // Allocating matrix data to the GPU
   cudaMalloc((void**)&bicg->djA,bicg->nnz*sizeof(int));
@@ -1866,7 +1867,7 @@ void set_data_gpu2(CVodeMem cv_mem, SolverData *sd)
   bicg->jA=(int*)SM_INDEXVALS_S(J);
   bicg->iA=(int*)SM_INDEXPTRS_S(J);
   bicg->dA=md->J_solver_gpu;//set itsolver gpu pointer to jac pointer initialized at camp
-  bicg->dftemp=md->deriv_gpu_data;
+  bicg->dftemp=md->deriv_data_gpu;
 
   // Setting data
   bicg->maxIt=100;
@@ -3146,7 +3147,7 @@ int cvNlsNewton_gpu2(SolverData *sd, CVodeMem cv_mem, int nflag)
     bicg->counterDerivNewton++;
 #endif
 
-    //Not needed because bicg->dftemp=md->deriv_gpu_data;
+    //Not needed because bicg->dftemp=md->deriv_data_gpu;
     //cudaMemcpy(cv_ftemp_data,bicg->dftemp,bicg->nrows*sizeof(double),cudaMemcpyDeviceToHost);
 
     if (retval < 0) return(CV_RHSFUNC_FAIL);
@@ -3569,7 +3570,7 @@ int linsolsolve_gpu2(SolverData *sd, CVodeMem cv_mem)
     bicg->counterDerivSolve++;
 #endif
 
-    //Not needed because bicg->dftemp=md->deriv_gpu_data;
+    //Not needed because bicg->dftemp=md->deriv_data_gpu;
     //cudaMemcpy(cv_ftemp_data,bicg->dftemp,bicg->nrows*sizeof(double),cudaMemcpyDeviceToHost);
 
     //N_VLinearSum(ONE, cv_mem->cv_y, -ONE, cv_mem->cv_zn[0], cv_mem->cv_acor);

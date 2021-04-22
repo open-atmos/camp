@@ -116,27 +116,27 @@ typedef struct {
 } TimeDerivativeGPU;
 
 typedef struct {
-    //double *deriv_gpu_data;
+    //double *deriv_data_gpu;
 
     //Allocated from CPU (used during CPU / need some cudamemcpy)
-    int *map_state_deriv_gpu;
-    double *deriv_gpu_data;
-    double *J_gpu;
-    double *J_solver_gpu;
-    int *jJ_solver_gpu;
-    int *iJ_solver_gpu;
-    double *J_state_gpu;
-    double *J_deriv_gpu;
-    double *J_tmp_gpu;
-    double *J_tmp2_gpu;
-    int *indexvals_gpu;
-    int *indexptrs_gpu;
-    int *int_pointer_gpu;
-    double *double_pointer_gpu;
-    double *state_gpu;
-    double *env_gpu;
-    double *rxn_env_data_gpu;
-    int *rxn_env_data_idx_gpu;
+    int *map_state_deriv;
+    double *deriv_data;
+    double *J;
+    double *J_solver;
+    int *jJ_solver;
+    int *iJ_solver;
+    double *J_state;
+    double *J_deriv;
+    double *J_tmp;
+    double *J_tmp2;
+    int *indexvals;
+    int *indexptrs;
+    int *int_pointer;
+    double *double_pointer;
+    double *state;
+    double *env;
+    double *rxn_env_data;
+    int *rxn_env_data_idx;
     double *prod_rates;
     double *loss_rates;
 

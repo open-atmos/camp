@@ -224,19 +224,9 @@ typedef struct {
   int max_n_gpu_thread;
   int max_n_gpu_blocks;
   int *map_state_deriv;
-  int *map_state_deriv_gpu;
-  double *deriv_gpu_data;
   double *deriv_aux;
-  double *J_gpu;
-  double *J_solver_gpu;
-  int *jJ_solver_gpu;
-  int *iJ_solver_gpu;
   int nnz_J_solver;
   int nrows_J_solver;
-  double *J_state_gpu;
-  double *J_deriv_gpu;
-  double *J_tmp_gpu;
-  double *J_tmp2_gpu;
   double *jac_aux;
   int *indexvals_gpu;
   int *indexptrs_gpu;
@@ -248,19 +238,8 @@ typedef struct {
   size_t rxn_env_data_idx_size;
   size_t map_state_deriv_size;
   int small_data;
-  bool implemented_all;
-  int *int_pointer_gpu;
-  double *double_pointer_gpu;
-  double *state_gpu;
-  double *env_gpu;
-  double *rxn_env_data_gpu;
-  int *rxn_env_data_idx_gpu;
   //int model_data_id;  // Id of the modelData object
   // cudaStream_t *stream_gpu;
-
-  //TimeDeriv struct arrays (needed for gpu pre-allocation)
-  double *prod_rates;
-  double *loss_rates;
 
 #ifdef PMC_DEBUG_GPU
 
@@ -339,7 +318,8 @@ typedef struct {
 #endif
 #ifdef PMC_USE_GPU
   itsolver bicg;
-  ModelDataGPU *mGPU;
+  //todo use ModelData mGPU; (only 1 struct of modelData but 2 instances): Remove vars only used on cpu like deriv_size
+  ModelDataGPU mGPU;
 #ifdef CHECK_GPU_LINSOLVE  // todo fix name
   double max_error_linsolver;
   int max_error_linsolver_i;

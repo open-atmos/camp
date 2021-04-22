@@ -739,7 +739,7 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
 
 // Update data for new environmental state on GPU
 #ifdef PMC_USE_GPU
-  rxn_update_env_state_gpu(md);
+  rxn_update_env_state_gpu(sd);
 #endif
 
   PMC_DEBUG_JAC_STRUCT(sd->model_data.J_init, "Begin solving");
