@@ -26,6 +26,8 @@ extern "C" {
 // HL phase transfer
 #define MIN_WATER_ 1.0e-4
 
+#ifndef REVERSE_INT_FLOAT_MATRIX
+
 #define DELTA_H_ float_data[0*n_rxn]
 #define DELTA_S_ float_data[1*n_rxn]
 #define DIFF_COEFF_ float_data[2*n_rxn]
@@ -60,6 +62,42 @@ extern "C" {
 #define INT_DATA_SIZE_ (PHASE_INT_LOC_(NUM_AERO_PHASE_-1)+5+2*NUM_AERO_PHASE_JAC_ELEM_(NUM_AERO_PHASE_-1))
 #define FLOAT_DATA_SIZE_ (PHASE_REAL_LOC_(NUM_AERO_PHASE_-1)+3+2*NUM_AERO_PHASE_JAC_ELEM_(NUM_AERO_PHASE_-1))
 
+#else
 
+#define DELTA_H_ float_data[0]
+#define DELTA_S_ float_data[1]
+#define DIFF_COEFF_ float_data[2]
+#define PRE_C_AVG_ float_data[3]
+#define A_ float_data[4]
+#define C_ float_data[5]
+#define CONV_ float_data[6]
+#define MW_ float_data[7]
+#define SMALL_NUMBER_ float_data[8]
+#define NUM_AERO_PHASE_ int_data[0]
+#define GAS_SPEC_ (int_data[1]-1)
+#define C_AVG_ALPHA_ rxn_env_data[0]
+#define EQUIL_CONST_ float_data[1]
+#define UGM3_TO_PPM_ float_data[2]
+#define NUM_INT_PROP_ 2
+#define NUM_FLOAT_PROP_ 9
+#define DERIV_ID_(x) int_data[(NUM_INT_PROP_ + x)]
+#define JAC_ID_(x) int_data[(NUM_INT_PROP_ + 1 + NUM_AERO_PHASE_ + x)]
+#define PHASE_INT_LOC_(x) (int_data[(NUM_INT_PROP_ + 2 + 6*NUM_AERO_PHASE_ + x)]-1)
+#define PHASE_REAL_LOC_(x) (int_data[(NUM_INT_PROP_ + 2 + 7*NUM_AERO_PHASE_ + x)]-1)
+#define AERO_SPEC_(x) (int_data[(PHASE_INT_LOC_(x))]-1)
+#define AERO_WATER_(x) (int_data[(PHASE_INT_LOC_(x) + 1)]-1)
+#define AERO_PHASE_ID_(x) (int_data[(PHASE_INT_LOC_(x) + 2)]-1)
+#define AERO_REP_ID_(x) (int_data[(PHASE_INT_LOC_(x) + 3)]-1)
+#define NUM_AERO_PHASE_JAC_ELEM_(x) (int_data[(PHASE_INT_LOC_(x) + 4)])
+#define PHASE_JAC_ID_(x, s, e) int_data[(PHASE_INT_LOC_(x) + 5 + s*NUM_AERO_PHASE_JAC_ELEM_(x) + e)]
+#define SMALL_WATER_CONC_(x) (float_data[(PHASE_REAL_LOC_(x))])
+#define FAST_FLUX_(x) (float_data[(PHASE_REAL_LOC_(x) + 1)])
+#define AERO_ADJ_(x) (float_data[(PHASE_REAL_LOC_(x) + 2)])
+#define EFF_RAD_JAC_ELEM_(x, e) float_data[(PHASE_REAL_LOC_(x) + 3 + e)]
+#define NUM_CONC_JAC_ELEM_(x, e) float_data[(PHASE_REAL_LOC_(x) + 3 + NUM_AERO_PHASE_JAC_ELEM_(x) + e)]
+#define INT_DATA_SIZE_ (PHASE_INT_LOC_(NUM_AERO_PHASE_-1)+5+2*NUM_AERO_PHASE_JAC_ELEM_(NUM_AERO_PHASE_-1))
+#define FLOAT_DATA_SIZE_ (PHASE_REAL_LOC_(NUM_AERO_PHASE_-1)+3+2*NUM_AERO_PHASE_JAC_ELEM_(NUM_AERO_PHASE_-1))
+
+#endif
 
 }

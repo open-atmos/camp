@@ -17,6 +17,8 @@ extern "C"{
 #define TEMPERATURE_K_ env_data[0]
 #define PRESSURE_PA_ env_data[1]
 
+#ifndef REVERSE_INT_FLOAT_MATRIX
+
 #define NUM_REACT_ int_data[0*n_rxn]
 #define NUM_PROD_ int_data[1*n_rxn]
 #define k0_A_ float_data[0*n_rxn]
@@ -40,6 +42,34 @@ extern "C"{
 #define YIELD_(x) float_data[(NUM_FLOAT_PROP_ + x)*n_rxn]
 #define INT_DATA_SIZE_ (NUM_INT_PROP_+(NUM_REACT_+2)*(NUM_REACT_+NUM_PROD_))
 #define FLOAT_DATA_SIZE_ (NUM_FLOAT_PROP_+NUM_PROD_)
+
+#else
+
+#define NUM_REACT_ int_data[0]
+#define NUM_PROD_ int_data[1]
+#define k0_A_ float_data[0]
+#define k0_B_ float_data[1]
+#define k0_C_ float_data[2]
+#define k2_A_ float_data[3]
+#define k2_B_ float_data[4]
+#define k2_C_ float_data[5]
+#define k3_A_ float_data[6]
+#define k3_B_ float_data[7]
+#define k3_C_ float_data[8]
+#define SCALING_ float_data[9]
+#define CONV_ float_data[10]
+#define RATE_CONSTANT_ rxn_env_data[0]
+#define NUM_INT_PROP_ 2
+#define NUM_FLOAT_PROP_ 11
+#define REACT_(x) (int_data[(NUM_INT_PROP_ + x)]-1)
+#define PROD_(x) (int_data[(NUM_INT_PROP_ + NUM_REACT_ + x)]-1)
+#define DERIV_ID_(x) int_data[(NUM_INT_PROP_ + NUM_REACT_ + NUM_PROD_ + x)]
+#define JAC_ID_(x) int_data[(NUM_INT_PROP_ + 2*(NUM_REACT_+NUM_PROD_) + x)]
+#define YIELD_(x) float_data[(NUM_FLOAT_PROP_ + x)]
+#define INT_DATA_SIZE_ (NUM_INT_PROP_+(NUM_REACT_+2)*(NUM_REACT_+NUM_PROD_))
+#define FLOAT_DATA_SIZE_ (NUM_FLOAT_PROP_+NUM_PROD_)
+
+#endif
 
 /** \brief Flag Jacobian elements used by this reaction
  *

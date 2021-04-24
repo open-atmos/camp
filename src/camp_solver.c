@@ -204,6 +204,8 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
   }
 
   sd->model_data.n_rxn = n_rxn;
+  sd->model_data.n_rxn_int_param = n_rxn_int_param;
+  sd->model_data.n_rxn_float_param = n_rxn_float_param;
   sd->model_data.n_added_rxns = 0;
   sd->model_data.n_rxn_env_data = 0;
   sd->model_data.rxn_int_indices[0] = 0;
@@ -246,6 +248,8 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
   }
 
   sd->model_data.n_aero_phase = n_aero_phase;
+  sd->model_data.n_aero_phase_int_param = n_aero_phase_int_param;
+  sd->model_data.n_aero_phase_float_param = n_aero_phase_float_param;
   sd->model_data.n_added_aero_phases = 0;
   sd->model_data.aero_phase_int_indices[0] = 0;
   sd->model_data.aero_phase_float_indices[0] = 0;
@@ -303,6 +307,8 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
   }
 
   sd->model_data.n_aero_rep = n_aero_rep;
+  sd->model_data.n_aero_rep_int_param = n_aero_rep_int_param;
+  sd->model_data.n_aero_rep_float_param = n_aero_rep_float_param;
   sd->model_data.n_added_aero_reps = 0;
   sd->model_data.n_aero_rep_env_data = 0;
   sd->model_data.aero_rep_int_indices[0] = 0;
@@ -379,6 +385,7 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
 #ifdef PMC_DEBUG_GPU
   sd->counterDerivTotal = 0;
   sd->counterDerivCPU = 0;
+  sd->counterDerivGPU = 0;
   sd->counterJacCPU = 0;
   sd->counterSolve = 0;
   sd->counterFail = 0;
@@ -531,7 +538,7 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
 
 // Set gpu rxn values
 #ifdef PMC_USE_GPU
-  solver_set_rxn_data_gpu(sd);
+  solver_init_int_double_gpu(sd);
   allocSolverGPU(sd->cvode_mem, sd);
 #endif
 
@@ -918,6 +925,7 @@ sd->counterDerivTotal,sd->timeCVode/CLOCKS_PER_SEC,sd->timeCVodeTotal/CLOCKS_PER
   sd->counter_fail_solve_print=0;
 #endif
   sd->counterDerivCPU = 0;
+  sd->counterDerivGPU = 0;
   sd->counterJacCPU = 0;
   sd->counterSolve++;
 
@@ -1177,13 +1185,12 @@ int f_gpu(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
 
 #ifdef PMC_DEBUG_GPU
 
-  //todo check debug timers and counters (use cuda counters for gpu)
-
+  //todo check debug timers and counters (use cuda counters for gpu and mpi for cpu)
   //if(sd->counterDerivCPU<=0) print_derivative(deriv);
 
   // sd->timeDerivCPU += (clock() - start3);
   //sd->timeDerivCPU += (clock() - start10);
-  //sd->counterDerivCPU++;
+  sd->counterDerivGPU++;
   // printf("%d",sd->counterDerivCPU);
 
 #endif
@@ -1597,7 +1604,7 @@ int Jac(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_data,
   N_VScale(1.0, deriv, md->J_deriv);
 
 #ifdef PMC_USE_GPU
-  update_j_state_deriv_solver_gpu(sd, SM_DATA_S(J));
+  update_jac_data_gpu(sd, SM_DATA_S(J));
 #endif
 
 #ifdef PMC_DEBUG

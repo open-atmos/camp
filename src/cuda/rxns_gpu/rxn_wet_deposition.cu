@@ -17,11 +17,13 @@ extern "C"{
 #define TEMPERATURE_K_ env_data[0]
 #define PRESSURE_PA_ env_data[1]
 
+#ifndef REVERSE_INT_FLOAT_MATRIX
+
 #define RXN_ID_ (int_data[0*n_rxn])
 #define NUM_SPEC_ (int_data[1*n_rxn])
 #define SCALING_ float_data[0*n_rxn]
 #define RATE_CONSTANT_ rxn_env_data[0*n_rxn]
-#define BASE_RATE_ rxn_env_data[1*n_rxn]//todo fix this shouldnt be there
+#define BASE_RATE_ rxn_env_data[1*n_rxn]
 #define NUM_INT_PROP_ 2
 #define NUM_FLOAT_PROP_ 1
 #define REACT_(s) (int_data[(NUM_INT_PROP_+s)*n_rxn]-1)
@@ -29,6 +31,23 @@ extern "C"{
 #define JAC_ID_(s) int_data[(NUM_INT_PROP_+2*NUM_SPEC_+s)*n_rxn]
 #define INT_DATA_SIZE_ (NUM_INT_PROP_+3*NUM_SPEC_)
 #define FLOAT_DATA_SIZE_ (NUM_FLOAT_PROP_)
+
+#else
+
+#define RXN_ID_ (int_data[0])
+#define NUM_SPEC_ (int_data[1])
+#define SCALING_ float_data[0]
+#define RATE_CONSTANT_ rxn_env_data[0]
+#define BASE_RATE_ rxn_env_data[1]
+#define NUM_INT_PROP_ 2
+#define NUM_FLOAT_PROP_ 1
+#define REACT_(s) (int_data[(NUM_INT_PROP_+s)]-1)
+#define DERIV_ID_(s) int_data[(NUM_INT_PROP_+NUM_SPEC_+s)]
+#define JAC_ID_(s) int_data[(NUM_INT_PROP_+2*NUM_SPEC_+s)]
+#define INT_DATA_SIZE_ (NUM_INT_PROP_+3*NUM_SPEC_)
+#define FLOAT_DATA_SIZE_ (NUM_FLOAT_PROP_)
+
+#endif
 
 /** \brief Do pre-derivative calculations
  *
@@ -66,7 +85,7 @@ void rxn_gpu_wet_deposition_calc_deriv_contrib(ModelDataGPU *model_data, realtyp
 #ifdef __CUDA_ARCH__
   int n_rxn=model_data->n_rxn;
 #else
-  int n_rxn=1;;
+  int n_rxn=1;
 #endif
   int *int_data = rxn_int_data;
   double *float_data = rxn_float_data;

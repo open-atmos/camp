@@ -131,8 +131,8 @@ typedef struct {
     double *J_tmp2;
     int *indexvals;
     int *indexptrs;
-    int *int_pointer;
-    double *double_pointer;
+    int *rxn_int;
+    double *rxn_double;
     double *state;
     double *env;
     double *rxn_env_data;
@@ -140,30 +140,36 @@ typedef struct {
     double *prod_rates;
     double *loss_rates;
 
-    int n_rxn_env_data;
-
-    //Allocated in GPU (only on gpu)
-    double *grid_cell_state;
-    double *grid_cell_env;
     int n_rxn;
+    int n_rxn_env_data;
 
     int n_aero_phase;
     int n_added_aero_phases;
-    int *aero_phase_int_data;
     int *aero_phase_int_indices;
     int *aero_phase_float_indices;
+    int *aero_phase_int_data;
     double *aero_phase_float_data;
 
     int n_aero_rep;
     int n_added_aero_reps;
     int n_aero_rep_env_data;
-    int *aero_rep_int_data;
     int *aero_rep_int_indices;
     int *aero_rep_float_indices;
     int *aero_rep_env_idx;
+    int *aero_rep_int_data;
     double *aero_rep_float_data;
-    double *grid_cell_aero_rep_env_data;
+
     double *aero_rep_env_data;
+
+    //Allocated in GPU only
+    int i_cell;
+    int i_rxn;
+    int i_aero_rep;
+
+    double *grid_cell_state;
+    double *grid_cell_env;
+    double *grid_cell_aero_rep_env_data;
+
 
 } ModelDataGPU;
 

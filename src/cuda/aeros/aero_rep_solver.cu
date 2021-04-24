@@ -158,23 +158,63 @@ void aero_rep_gpu_update_env_state(ModelDataGPU *model_data) {
 #ifdef __CUDA_ARCH__
 __host__ __device__
 #endif
-void aero_rep_gpu_update_state(ModelDataGPU *model_data) {
+void aero_rep_gpu_update_state(ModelDataGPU *md) {
   // Get the number of aerosol representations
-  int n_aero_rep = model_data->n_aero_rep;
+  int n_aero_rep = md->n_aero_rep;
+
+#ifdef __CUDA_ARCH__
+
+  int *int_data = &(md->aero_rep_int_data[md->aero_rep_int_indices[md->i_aero_rep]]);
+  int aero_rep_type = int_data[0];
+  int *aero_rep_int_data = (int *) &(int_data[1*md->n_aero_rep]);
+  double *aero_rep_float_data =
+      &(md->aero_rep_float_data
+            [md->aero_rep_float_indices[md->i_aero_rep]]);
+
+  //Todo update grid_cell_aero_rep for the rest of functions
+
+  //double *grid_cell_aero_rep_env_data =
+  //    &(md->aero_rep_env_data
+  //    [md->i_cell*md->n_aero_rep_env_data]);
+  double *aero_rep_env_data =
+      &(md->grid_cell_aero_rep_env_data
+            [md->aero_rep_env_idx[md->i_aero_rep]]);
+
+
+  //double *aero_rep_env_data =
+  //  &(md->aero_rep_env_data
+  //        [md->i_cell*md->n_aero_rep_env_data+
+  //        md->aero_rep_env_idx[md->i_aero_rep]]);
+
+  // Call the appropriate function
+  switch (aero_rep_type) {
+    case AERO_REP_MODAL_BINNED_MASS:
+      aero_rep_gpu_modal_binned_mass_update_state(md, aero_rep_int_data,
+                                              aero_rep_float_data,
+                                              aero_rep_env_data);
+      break;
+    case AERO_REP_SINGLE_PARTICLE:
+      aero_rep_gpu_single_particle_update_state(md, aero_rep_int_data,
+                                            aero_rep_float_data,
+                                            aero_rep_env_data);
+      break;
+  }
+
+
+#else
 
   // Loop through the aerosol representations to update the state
   // advancing the aero_rep_gpu_data pointer each time
   for (int i_aero_rep = 0; i_aero_rep < n_aero_rep; i_aero_rep++) {
     // Get pointers to the aerosol data
     int *aero_rep_int_data = &(
-        model_data
-            ->aero_rep_int_data[model_data->aero_rep_int_indices[i_aero_rep]]);
+        md->aero_rep_int_data[md->aero_rep_int_indices[i_aero_rep]]);
     double *aero_rep_float_data =
-        &(model_data->aero_rep_float_data
-              [model_data->aero_rep_float_indices[i_aero_rep]]);
+        &(md->aero_rep_float_data
+              [md->aero_rep_float_indices[i_aero_rep]]);
     double *aero_rep_env_data =
-        &(model_data->grid_cell_aero_rep_env_data
-              [model_data->aero_rep_env_idx[i_aero_rep]]);
+        &(md->grid_cell_aero_rep_env_data
+              [md->aero_rep_env_idx[i_aero_rep]]);
 
     // Get the aerosol representation type
     int aero_rep_type = *(aero_rep_int_data++);
@@ -182,17 +222,20 @@ void aero_rep_gpu_update_state(ModelDataGPU *model_data) {
     // Call the appropriate function
     switch (aero_rep_type) {
       case AERO_REP_MODAL_BINNED_MASS:
-        aero_rep_gpu_modal_binned_mass_update_state(model_data, aero_rep_int_data,
+        aero_rep_gpu_modal_binned_mass_update_state(md, aero_rep_int_data,
                                                 aero_rep_float_data,
                                                 aero_rep_env_data);
         break;
       case AERO_REP_SINGLE_PARTICLE:
-        aero_rep_gpu_single_particle_update_state(model_data, aero_rep_int_data,
+        aero_rep_gpu_single_particle_update_state(md, aero_rep_int_data,
                                               aero_rep_float_data,
                                               aero_rep_env_data);
         break;
     }
   }
+
+#endif
+
 }
 
 /** \brief Get the effective particle radius, \f$r_{eff}\f$ (m)
@@ -231,20 +274,20 @@ void aero_rep_gpu_get_effective_radius__m(ModelDataGPU *model_data, int aero_rep
   // Get the aerosol representation type
   int aero_rep_type = *(aero_rep_int_data++);
 
-  int a;
+  //int a;
 
   // Get the particle radius and set of partial derivatives
   switch (aero_rep_type) {
     case AERO_REP_MODAL_BINNED_MASS:
 
-       a=1;
+       //a=1;
       aero_rep_gpu_modal_binned_mass_get_effective_radius__m(
           model_data, aero_phase_idx, radius, partial_deriv, aero_rep_int_data,
           aero_rep_float_data, aero_rep_env_data);
       break;
     case AERO_REP_SINGLE_PARTICLE:
 
-      a=2;
+      //a=2;
       aero_rep_gpu_single_particle_get_effective_radius__m(
               model_data, aero_phase_idx, radius, partial_deriv, aero_rep_int_data,
               aero_rep_float_data, aero_rep_env_data);

@@ -17,17 +17,35 @@ extern "C"{
 #define TEMPERATURE_K_ env_data[0]
 #define PRESSURE_PA_ env_data[1]
 
+#ifndef REVERSE_INT_FLOAT_MATRIX
+
 #define RXN_ID_ (int_data[0*n_rxn])
 #define REACT_ (int_data[1*n_rxn]-1)
 #define DERIV_ID_ int_data[2*n_rxn]
 #define JAC_ID_ int_data[3*n_rxn]
 #define SCALING_ float_data[0*n_rxn]
-#define RATE_CONSTANT_ rxn_env_data[0*n_rxn]//todo fix this shouldnt be there
+#define RATE_CONSTANT_ rxn_env_data[0*n_rxn]
 #define BASE_RATE_ rxn_env_data[1*n_rxn]
 #define NUM_INT_PROP_ 4
 #define NUM_FLOAT_PROP_ 1
 #define INT_DATA_SIZE_ (NUM_INT_PROP_)
 #define FLOAT_DATA_SIZE_ (NUM_FLOAT_PROP_)
+
+#else
+
+#define RXN_ID_ (int_data[0])
+#define REACT_ (int_data[1]-1)
+#define DERIV_ID_ int_data[2]
+#define JAC_ID_ int_data[3]
+#define SCALING_ float_data[0]
+#define RATE_CONSTANT_ rxn_env_data[0]
+#define BASE_RATE_ rxn_env_data[1]
+#define NUM_INT_PROP_ 4
+#define NUM_FLOAT_PROP_ 1
+#define INT_DATA_SIZE_ (NUM_INT_PROP_)
+#define FLOAT_DATA_SIZE_ (NUM_FLOAT_PROP_)
+
+#endif
 
 /** \brief Do pre-derivative calculations
  *

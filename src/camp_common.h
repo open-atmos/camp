@@ -209,6 +209,13 @@ typedef struct {
   int n_sub_model_env_data;      // Number of sub model environmental parameters
                                  // from all sub models
 
+  int n_aero_phase_int_param;
+  int n_aero_phase_float_param;
+  int n_aero_rep_int_param;
+  int n_aero_rep_float_param;
+  int n_rxn_int_param;
+  int n_rxn_float_param;
+
 #ifdef DEBUG_RXN
   int counterPhoto;
 #endif
@@ -291,6 +298,7 @@ typedef struct {
 #ifdef PMC_DEBUG_GPU
   int counterDerivTotal;
   int counterDerivCPU;
+  int counterDerivGPU;
   int counterJacCPU;
   int counterSolve;
   int counterFail;
