@@ -82,7 +82,7 @@ void solveBcgCuda(
 
   //if(tid<active_threads){//this is wrong cause cudaDevicedotxy dont set to 0 mysum
   //but I think some function need this active_threads (maybe csc_block)
-  if(tid<1025){
+  if(1){
 
     cudaDevicesetconst(dr0, 0.0, nrows);
     __syncthreads();
@@ -288,7 +288,7 @@ void solveGPU_block(itsolver *bicg, double *dA, int *djA, int *diA, double *dx, 
 
   int size_cell = nrows/n_cells; //e.g size_cell = 3 for mock_monarch 1 (3 species)
 
-#ifndef INDEPENDENCY_CELLS
+#ifdef INDEPENDENCY_CELLS
 
   int max_threads = nextPowerOfTwo(size_cell);//bicg->threads;
   int n_shr_empty = max_threads-size_cell;//nextPowerOfTwo(size_cell)-size_cell;
@@ -296,21 +296,21 @@ void solveGPU_block(itsolver *bicg, double *dA, int *djA, int *diA, double *dx, 
 #else
 
   int max_threads = bicg->threads;//bicg->threads; 128;
-  int n_shr_empty = max_threads%size_cell;
+
+  //int n_shr_empty = max_threads%size_cell; //Wrong
+  int n_shr_empty = max_threads-nrows;
 
 #endif
   //todo its not the same n_shr_empty for all blocks
 
 
   int threads_block = max_threads - n_shr_empty; //last multiple of size_cell before max_threads
-  //max_threads_block = bicg->threads_block //todo test with n_cells_block=1, osea max_threads_block = nearPower2(size_cell)??
+  //max_threads_block = bicg->threads_block /
   // int n_cells_block = max_threads_block/size_cell;
   //int threads_block = n_cells_block*size_cell;
 
-  //todo check if nrows=1024*n_cells works, in this way, we have some threads idle, but should be easier to program
   //threads = bicg->threads;//active_threads;//bicg->threads;
   blocks = (nrows+threads_block-1)/threads_block; //blocks counting active_threads working in each block
-  //blocks = n_cells/n_cells_block //todo try this and a if in block-cells to only compute nrows
 
 #ifndef DEBUG_SOLVEBCGCUDA
   if(bicg->counterBiConjGrad==0) {
