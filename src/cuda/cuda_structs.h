@@ -137,8 +137,15 @@ typedef struct {
     double *env;
     double *rxn_env_data;
     int *rxn_env_data_idx;
-    double *prod_rates;
+
+    double *production_rates;
     double *loss_rates;
+
+#ifdef REVERSE_INT_FLOAT_MATRIX
+#else
+    int *rxn_int_indices;
+    int *rxn_float_indices;
+#endif
 
     int n_rxn;
     int n_rxn_env_data;

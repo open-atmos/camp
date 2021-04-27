@@ -18,7 +18,7 @@ extern "C"{
 #define TEMPERATURE_K_ env_data[0]
 #define PRESSURE_PA_ env_data[1]
 
-#ifndef REVERSE_INT_FLOAT_MATRIX
+#ifdef REVERSE_INT_FLOAT_MATRIX
 
 #define NUM_REACT_ int_data[0*n_rxn]
 #define NUM_PROD_ int_data[1*n_rxn]

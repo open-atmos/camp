@@ -462,7 +462,7 @@ void rxn_calc_deriv(ModelData *model_data, TimeDerivative time_deriv,
  * \param time_step Current model time step (s)
  */
 #ifdef PMC_USE_SUNDIALS
-void rxn_calc_deriv_specific_types(ModelData *model_data,
+void rxn_calc_deriv_aeros(ModelData *model_data,
                                    TimeDerivative time_deriv,
                                    realtype time_step) {
   // Get the number of reactions
@@ -481,8 +481,6 @@ void rxn_calc_deriv_specific_types(ModelData *model_data,
     // Get the reaction type
     int rxn_type = *(rxn_int_data++);
 
-    /*
-    //todo time_deriv
     // Call the appropriate function
     switch (rxn_type) {
       case RXN_HL_PHASE_TRANSFER:
@@ -492,11 +490,10 @@ void rxn_calc_deriv_specific_types(ModelData *model_data,
         break;
       case RXN_SIMPOL_PHASE_TRANSFER:
         rxn_SIMPOL_phase_transfer_calc_deriv_contrib(
-            model_data, time_deriv, rxn_int_data, rxn_float_data, rxn_env_data,
-            time_step);
+            model_data, time_deriv, rxn_int_data, rxn_float_data,
+            rxn_env_data, time_step);
         break;
     }
-     */
   }
 }
 #endif

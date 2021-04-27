@@ -122,7 +122,8 @@ void solver_new_gpu_cu(SolverData *sd, int n_dep_var,
   cudaMalloc((void **) &mGPU->rxn_env_data_idx, md->rxn_env_data_idx_size);
   HANDLE_ERROR(cudaMalloc((void **) &mGPU->map_state_deriv, md->map_state_deriv_size));
 
-  time_derivative_initialize_gpu(sd,n_dep_var*n_cells);
+
+  time_derivative_initialize_gpu(sd);
 
   //Mapping state-deriv
   md->map_state_deriv = (int *)malloc(md->map_state_deriv_size);
@@ -281,11 +282,21 @@ void set_int_double_rxn(
   //GPU allocation
   cudaMalloc((void **) &mGPU->rxn_int, (md->n_rxn_int_param + md->n_rxn)*sizeof(int));
   cudaMalloc((void **) &mGPU->rxn_double, md->n_rxn_float_param*sizeof(double));
+#ifdef REVERSE_INT_FLOAT_MATRIX
+#else
+  cudaMalloc((void **) &mGPU->rxn_int_indices, (md->n_rxn+1)*sizeof(int));
+  cudaMalloc((void **) &mGPU->rxn_float_indices, (md->n_rxn+1)*sizeof(int));
+#endif
 
   //Save data to GPU
   HANDLE_ERROR(cudaMemcpy(mGPU->rxn_int, rxn_int_data,(md->n_rxn_int_param + md->n_rxn)*sizeof(int), cudaMemcpyHostToDevice));
   HANDLE_ERROR(cudaMemcpy(mGPU->rxn_double, rxn_float_data, md->n_rxn_float_param*sizeof(double), cudaMemcpyHostToDevice));
   HANDLE_ERROR(cudaMemcpy(mGPU->rxn_env_data_idx, rxn_env_idx, rxn_env_data_idx_size, cudaMemcpyHostToDevice));
+#ifdef REVERSE_INT_FLOAT_MATRIX
+#else
+  HANDLE_ERROR(cudaMemcpy(mGPU->rxn_int_indices, md->rxn_int_indices,(md->n_rxn+1)*sizeof(int), cudaMemcpyHostToDevice));
+  HANDLE_ERROR(cudaMemcpy(mGPU->rxn_float_indices, md->rxn_float_indices,(md->n_rxn+1)*sizeof(int), cudaMemcpyHostToDevice));
+#endif
 
 }
 
@@ -331,7 +342,7 @@ void solver_init_int_double_gpu(SolverData *sd) {
   ModelData *md = &(sd->model_data);
   ModelDataGPU *mGPU = &sd->mGPU;
 
-#ifndef REVERSE_INT_FLOAT_MATRIX
+#ifdef REVERSE_INT_FLOAT_MATRIX
 
   set_reverse_int_double_rxn(
           md->n_rxn, md->rxn_env_data_idx_size,
@@ -352,152 +363,18 @@ void solver_init_int_double_gpu(SolverData *sd) {
 #endif
 
 
-
+/*
   set_int_double_aero(
           sd
   );
 
-  /*
-
-  int n_rxn = md->n_rxn;
-  unsigned int int_max_length = 0;
-  unsigned int double_max_length = 0;
-
-   //RXN lengths
-   unsigned int int_lengths[n_rxn];
-   unsigned int double_lengths[n_rxn];
-
-   //Number of extra values added to square matrix(zeros and -1's)
-   //unsigned int n_zeros[n_rxn];
-
-   //Position on the matrix for each row
-   unsigned int rxn_position[n_rxn];
-
-   //Get lengths for int and double arrays
-   for (int i_rxn = 0; i_rxn < n_rxn; i_rxn++) {
-
-     // Set a WARNING if the reaction is not implemented yet on GPU
-     bool implemented = false;
-     int rxn_type = md->rxn_int_data[md->rxn_int_indices[i_rxn]];
-
-     switch (rxn_type) {
-       case RXN_AQUEOUS_EQUILIBRIUM :
-         implemented = false;
-         break;
-       case RXN_ARRHENIUS :
-         implemented = true;
-         break;
-       case RXN_CMAQ_H2O2 :
-         implemented = true;
-         break;
-       case RXN_CMAQ_OH_HNO3 :
-         implemented = true;
-         break;
-       case RXN_CONDENSED_PHASE_ARRHENIUS :
-         implemented = false;
-         break;
-       case RXN_EMISSION :
-         implemented = false;
-         break;
-       case RXN_FIRST_ORDER_LOSS :
-         implemented = false;
-         break;
-       case RXN_HL_PHASE_TRANSFER :
-         implemented = false;
-         break;
-       case RXN_PHOTOLYSIS :
-         implemented = true;
-         break;
-       case RXN_SIMPOL_PHASE_TRANSFER :
-         implemented = false;
-         break;
-       case RXN_TROE :
-         implemented = true;
-         break;
-       case RXN_WET_DEPOSITION :
-         implemented = false;
-         break;
-     }
-     if(!implemented){
- #ifdef FAILURE_DETAIL
-       printf("WARNING: Reaction type %d is not fully implemented on GPU\n", rxn_type);
- #endif
-     }
-
-     //Get RXN lengths
-     int_lengths[i_rxn] = md->rxn_int_indices[i_rxn+1] - md->rxn_int_indices[i_rxn];
-     double_lengths[i_rxn] = md->rxn_float_indices[i_rxn+1] - md->rxn_float_indices[i_rxn];
-
-     //Update max size
-     if(int_lengths[i_rxn]>int_max_length) int_max_length=int_lengths[i_rxn];
-     if(double_lengths[i_rxn]>double_max_length) double_max_length=double_lengths[i_rxn];
-
-     //Set initial position
-     rxn_position[i_rxn] = i_rxn;
-
-   }
-
-   //Total lengths of rxn structure
-   unsigned int rxn_int_length=n_rxn*int_max_length;
-   unsigned int rxn_double_length=n_rxn*double_max_length;
-
-   //Allocate int and double rxn data separately
-   //Add -1 to avoid access and have a square matrix
-   int *rxn_int = (int *) malloc(rxn_int_length * sizeof(int));
-   memset(rxn_int, -1, rxn_int_length * sizeof(int));
-
-   //Add 0 to avoid access and have a square matrix
-   double *rxn_double = (double*)calloc(rxn_double_length, sizeof(double));
-
-   //GPU allocation
-   cudaMalloc((void **) &mGPU->rxn_int, rxn_int_length * sizeof(int));
-   cudaMalloc((void **) &mGPU->rxn_double, rxn_double_length * sizeof(double));
-
-   int rxn_env_data_idx_aux[n_rxn];
-
-   for (int i_rxn = 0; i_rxn < n_rxn; i_rxn++) {
-     int i_pos=rxn_position[i_rxn];//i_rxn;//rxn_position[i_rxn];//for bubblesort
-     for (int j = 0; j < int_lengths[i_pos]; j++){
-       int *rxn_int_data = &(md->rxn_int_data[md->rxn_int_indices[i_pos]]);
-       rxn_int[n_rxn*j + i_rxn] = rxn_int_data[j];
-     }
-     for (int j = 0; j < double_lengths[i_pos]; j++) {
-       double *rxn_float_data = &(md->rxn_float_data[md->rxn_float_indices[i_pos]]);
-       rxn_double[n_rxn*j + i_rxn] = rxn_float_data[j];
-     }
-     //Reorder the rate indices
-     //Todo update on main code the rxn_env_data to read consecutively in cpu
-     rxn_env_data_idx_aux[i_rxn] = md->rxn_env_idx[i_pos];
-   }
-
-   //Save data to GPU
-   HANDLE_ERROR(cudaMemcpy(mGPU->rxn_int, rxn_int, rxn_int_length*sizeof(int), cudaMemcpyHostToDevice));
-   HANDLE_ERROR(cudaMemcpy(mGPU->rxn_double, rxn_double, rxn_double_length*sizeof(double), cudaMemcpyHostToDevice));
-   HANDLE_ERROR(cudaMemcpy(mGPU->rxn_env_data_idx, rxn_env_data_idx_aux, md->rxn_env_data_idx_size, cudaMemcpyHostToDevice));
-
-
-   free(rxn_int);
-   free(rxn_double);
-
-*/
+ */
 
 }
 
 void init_j_state_deriv_solver_gpu(SolverData *sd, double *J){
 
   ModelData *md = &(sd->model_data);
-/* //cpu case (delete when gpu works fine)
-  // Create vectors to store Jacobian state and derivative data
-  solver_data->md.J_state = N_VClone(solver_data->y);
-  solver_data->md.J_deriv = N_VClone(solver_data->y);
-  solver_data->md.J_tmp = N_VClone(solver_data->y);
-  solver_data->md.J_tmp2 = N_VClone(solver_data->y);
-
-  // Initialize the Jacobian state and derivative arrays to zero
-  // for use before the first call to Jac()
-  N_VConst(0.0, solver_data->md.J_state);
-  N_VConst(0.0, solver_data->md.J_deriv);
-*/
 
   //todo reduce allocations (use tmp pointers from cvode for j_tmp)
   md->jac_size = md->n_per_cell_solver_jac_elem * md->n_cells * sizeof(double);
@@ -557,8 +434,21 @@ void update_jac_data_gpu(SolverData *sd, double *J){
   HANDLE_ERROR(cudaMemcpy(mGPU->J_state, J_state, md->deriv_size, cudaMemcpyHostToDevice));
   HANDLE_ERROR(cudaMemcpy(mGPU->J_deriv, J_deriv, md->deriv_size, cudaMemcpyHostToDevice));
 
-  //todo use aerop_re_gpu_update_state maybe
-  HANDLE_ERROR(cudaMemcpy(mGPU->aero_rep_float_data, md->aero_rep_float_data, md->n_aero_rep_float_param*sizeof(double), cudaMemcpyHostToDevice));
+  //HANDLE_ERROR(cudaMemcpy(mGPU->aero_rep_float_data, md->aero_rep_float_data, md->n_aero_rep_float_param*sizeof(double), cudaMemcpyHostToDevice));
+
+}
+
+void update_aero_contrib_gpu(SolverData *sd){
+
+  ModelData *md = &(sd->model_data);
+  ModelDataGPU *mGPU = &sd->mGPU;
+
+  HANDLE_ERROR(cudaMemcpy(mGPU->state, md->total_state, md->state_size, cudaMemcpyHostToDevice));
+  //HANDLE_ERROR(cudaMemcpy(mGPU->aero_rep_float_data, md->aero_rep_float_data, md->n_aero_rep_float_param*sizeof(double), cudaMemcpyHostToDevice));
+
+  int num_spec = md->n_per_cell_dep_var*md->n_cells;
+  HANDLE_ERROR(cudaMemcpy(mGPU->production_rates, sd->time_deriv.production_rates, num_spec*sizeof(mGPU->production_rates), cudaMemcpyHostToDevice));
+  HANDLE_ERROR(cudaMemcpy(mGPU->loss_rates, sd->time_deriv.loss_rates, num_spec*sizeof(mGPU->loss_rates), cudaMemcpyHostToDevice));
 
 }
 
@@ -653,12 +543,20 @@ int camp_solver_check_model_state_gpu(N_Vector solver_state, SolverData *sd,
   }
 */
 
+
+
   camp_solver_check_model_state_cuda << < n_blocks, md->max_n_gpu_thread >> >
    (mGPU->state, bicg->dcv_y, mGPU->map_state_deriv,
    threshhold, replacement_value, &status, n_dep_var, n_cells);
 
   HANDLE_ERROR(cudaMemcpy(md->total_state, mGPU->state, md->state_size, cudaMemcpyDeviceToHost));
 
+
+#ifdef DERIV_CPU_ON_GPU
+
+
+
+#endif
 
 #ifdef DEBUG_CHECK_MODEL_STATE_CUDA
   for (int i_cell = 0; i_cell < n_cells; i_cell++) {
@@ -670,9 +568,9 @@ int camp_solver_check_model_state_gpu(N_Vector solver_state, SolverData *sd,
 }
 #endif
 
-
   return status;
 }
+
 
 void camp_solver_update_model_state_gpu(N_Vector solver_state, SolverData *sd,
                                        double threshhold, double replacement_value)
@@ -695,11 +593,26 @@ __device__ void solveRXN(
 {
   int tid = blockIdx.x * blockDim.x + threadIdx.x;
 
-  //Get indices of each reaction
-  double *rxn_float_data = (double *) &(((double *) md->rxn_double)[md->i_rxn]);
-  int *int_data = (int *) &(((int *) md->rxn_int)[md->i_rxn]);
+#ifdef REVERSE_INT_FLOAT_MATRIX
+
+  double *rxn_float_data = &( md->rxn_double[md->i_rxn]);
+  int *int_data = &(md->rxn_int[md->i_rxn]);
   int rxn_type = int_data[0];
   int *rxn_int_data = (int *) &(int_data[1*md->n_rxn]);
+
+#else
+
+  double *rxn_float_data = &( md->rxn_double[md->rxn_float_indices[md->i_rxn]]);
+  int *int_data = &(md->rxn_int[md->rxn_int_indices[md->i_rxn]]);
+
+  //double *rxn_float_data = &( md->rxn_double[md->i_rxn]);
+  //int *int_data = &(md->rxn_int[md->i_rxn]);
+
+
+  int rxn_type = int_data[0];
+  int *rxn_int_data = (int *) &(int_data[1]);
+
+#endif
 
   //Get indices for rates
   double *rxn_env_data = &(md->rxn_env_data
@@ -779,12 +692,13 @@ __global__ void solveDerivative(
   double time_step, int deriv_length_cell, int state_size_cell,
   int n_cells,
   int i_kernel, int threads_block, double *y,
-  double threshhold, double replacement_value, ModelDataGPU *md
+  double threshhold, double replacement_value, ModelDataGPU md_object
   ) //Interface CPU/GPU
 {
   int tid = blockIdx.x * blockDim.x + threadIdx.x;
   int tid_cell=tid%deriv_length_cell;
   int active_threads = n_cells*deriv_length_cell;
+  ModelDataGPU *md = &md_object;
 
 #ifdef DEBUG_DERIV_GPU
   if(tid==0){
@@ -828,25 +742,27 @@ __global__ void solveDerivative(
     TimeDerivativeGPU deriv_data;
     deriv_data.num_spec = deriv_length_cell*n_cells;
 
-    deriv_data.production_rates = md->prod_rates;
+#ifndef AEROS_CPU
+#else
+    deriv_data.production_rates = md->production_rates;
     deriv_data.loss_rates = md->loss_rates;
-
     time_derivative_reset_gpu(deriv_data);
     __syncthreads();
+#endif
 
     int i_cell = tid/deriv_length_cell;
     md->i_cell = i_cell;
-    deriv_data.production_rates = &( md->prod_rates[deriv_length_cell*i_cell]);
+    deriv_data.production_rates = &( md->production_rates[deriv_length_cell*i_cell]);
     deriv_data.loss_rates = &( md->loss_rates[deriv_length_cell*i_cell]);
 
     md->grid_cell_state = &( md->state[state_size_cell*i_cell]);
     md->grid_cell_env = &( md->env[PMC_NUM_ENV_PARAM_*i_cell]);
+
     /*
     md->grid_cell_aero_rep_env_data =
     &(md->aero_rep_env_data[md->i_cell*md->n_aero_rep_env_data]);
 
     //Filter threads for n_aero_rep
-
     int n_aero_rep = md->n_aero_rep;
     if( tid_cell < n_aero_rep) {
       int n_iters = n_aero_rep / deriv_length_cell;
@@ -866,8 +782,6 @@ __global__ void solveDerivative(
       }
     }
      */
-    __syncthreads();
-
 
     //Filter threads for n_rxn
     int n_rxn = md->n_rxn;
@@ -896,7 +810,7 @@ __global__ void solveDerivative(
              deriv_data.loss_rates[tid]);
     }*/
 
-    deriv_data.production_rates = md->prod_rates;
+    deriv_data.production_rates = md->production_rates;
     deriv_data.loss_rates = md->loss_rates;
     __syncthreads();
     time_derivative_output_gpu(deriv_data, md->deriv_data, md->J_tmp,0);
@@ -970,6 +884,18 @@ void rxn_calc_deriv_gpu(SolverData *sd, N_Vector deriv, double time_step,
 
 #endif
 
+#ifndef AEROS_CPU
+
+  update_aero_contrib_gpu(sd);
+
+#endif
+
+#ifdef DERIV_CPU_ON_GPU
+
+  update_aero_contrib_gpu(sd);
+
+#endif
+
   //Loop to test multiple kernel executions
   for (int i_kernel=0; i_kernel<n_kernels; i_kernel++){
     //cudaDeviceSynchronize();
@@ -980,7 +906,7 @@ void rxn_calc_deriv_gpu(SolverData *sd, N_Vector deriv, double time_step,
      time_step, md->n_per_cell_dep_var,
      md->n_per_cell_state_var,n_cells,
      i_kernel, threads_block, bicg->dcv_y,
-     threshhold, replacement_value, mGPU
+     threshhold, replacement_value, sd->mGPU
      );
   }
 
@@ -1021,7 +947,7 @@ void rxn_calc_deriv_gpu(SolverData *sd, N_Vector deriv, double time_step,
   //cudaDeviceSynchronize();
 
  //debug
- /*
+/*
   if(sd->counterDerivGPU<=0 ){
     int size_j = NV_LENGTH_S(deriv);
     printf("length_deriv %d \n", size_j);
@@ -1040,6 +966,21 @@ void rxn_calc_deriv_gpu(SolverData *sd, N_Vector deriv, double time_step,
   timeDeriv += (clock() - t1);
   t3 = clock();*/
 #endif
+}
+
+void get_f_from_gpu(SolverData *sd){
+
+  //HANDLE_ERROR(cudaMemcpy(mGPU->state, J, md->jac_size, cudaMemcpyHostToDevice));
+
+}
+
+void get_guess_helper_from_gpu(N_Vector y_n, N_Vector y_n1,
+        N_Vector hf, void *solver_data, N_Vector tmp1,
+        N_Vector corr){
+
+  //HANDLE_ERROR(cudaMemcpy(mGPU->state, J, md->jac_size, cudaMemcpyHostToDevice));
+
+
 }
 
 /** \brief Fusion deriv data calculated from CPU and GPU

@@ -27,7 +27,7 @@ extern "C"{
 #define PER_PARTICLE_MASS 0
 #define TOTAL_PARTICLE_MASS 1
 
-#ifndef REVERSE_INT_FLOAT_MATRIX
+#ifdef REVERSE_INT_FLOAT_MATRIX
 
 #define DELTA_H_ float_data[0*n_rxn]
 #define DELTA_S_ float_data[1*n_rxn]
@@ -188,6 +188,7 @@ void rxn_gpu_SIMPOL_phase_transfer_calc_deriv_contrib(ModelDataGPU *model_data, 
     if (AERO_ACT_ID_(i_phase) > -1) {
       act_coeff = state[AERO_ACT_ID_(i_phase)];
     }
+
 
     // Calculate aerosol-phase evaporation rate (ppm/s)
     evap_rate *= act_coeff;

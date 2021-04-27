@@ -26,7 +26,7 @@ extern "C" {
 // HL phase transfer
 #define MIN_WATER_ 1.0e-4
 
-#ifndef REVERSE_INT_FLOAT_MATRIX
+#ifdef REVERSE_INT_FLOAT_MATRIX
 
 #define DELTA_H_ float_data[0*n_rxn]
 #define DELTA_S_ float_data[1*n_rxn]

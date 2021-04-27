@@ -166,7 +166,7 @@ void aero_rep_gpu_update_state(ModelDataGPU *md) {
 
   int *int_data = &(md->aero_rep_int_data[md->aero_rep_int_indices[md->i_aero_rep]]);
   int aero_rep_type = int_data[0];
-  int *aero_rep_int_data = (int *) &(int_data[1*md->n_aero_rep]);
+  int *aero_rep_int_data = (int *) &(int_data[1]);
   double *aero_rep_float_data =
       &(md->aero_rep_float_data
             [md->aero_rep_float_indices[md->i_aero_rep]]);

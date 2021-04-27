@@ -338,11 +338,11 @@ def debug_no_plot():
   #Read file
 
   #cells = [100,1000]
-  cells = [1]
+  cells = [2]
 
   #cases_multicells_onecell = ["one-cell","multi-cells"]
-  cases_multicells_onecell = ["one-cell"]
-  #cases_multicells_onecell = ["multi-cells"]
+  #cases_multicells_onecell = ["one-cell"]
+  cases_multicells_onecell = ["multi-cells"]
 
   #SELECT MANUALLY (future:if arch=cpu then select cpu if not gpu)
   cases_gpu_cpu = ["cpu"]

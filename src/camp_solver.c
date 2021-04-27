@@ -1153,11 +1153,6 @@ int f_gpu(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
   ModelData *md = &(sd->model_data);
   realtype time_step;
 
-#ifdef PMC_DEBUG
-  sd->counterDeriv++;
-  clock_t start3 = clock();
-#endif
-
   // Get the current integrator time step (s)
   CVodeGetCurrentStep(sd->cvode_mem, &time_step);
 
@@ -1181,7 +1176,104 @@ int f_gpu(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
   if (camp_solver_check_model_state_gpu(y, sd, ZERO, ZERO) != CAMP_SOLVER_SUCCESS)
     return 1;
 
+
+#ifdef DERIV_CPU_ON_GPU
+
+  //f(t, y, deriv, solver_data);
+
+  // Get the grid cell dimensions
+  int n_cells = md->n_cells;
+  int n_state_var = md->n_per_cell_state_var;
+  int n_dep_var = md->n_per_cell_dep_var;
+
+  for (int i_cell = 0; i_cell < n_cells; ++i_cell) {
+    // Set the grid cell state pointers
+    md->grid_cell_id = i_cell;
+    md->grid_cell_state = &(md->total_state[i_cell * n_state_var]);
+    md->grid_cell_env = &(md->total_env[i_cell * PMC_NUM_ENV_PARAM_]);
+    md->grid_cell_rxn_env_data =
+        &(md->rxn_env_data[i_cell * md->n_rxn_env_data]);
+    md->grid_cell_aero_rep_env_data =
+        &(md->aero_rep_env_data[i_cell * md->n_aero_rep_env_data]);
+    md->grid_cell_sub_model_env_data =
+        &(md->sub_model_env_data[i_cell * md->n_sub_model_env_data]);
+
+    // Update the aerosol representations
+    aero_rep_update_state(md);
+
+    // Run the sub models
+    sub_model_calculate(md);
+
+  }
+
+  time_derivative_reset(sd->time_deriv);
+
+  // Calculate the time derivative f(t,y)
+  rxn_calc_deriv(md, sd->time_deriv, (double)time_step);
+
+  /*
+  // Update the deriv array
+  if (sd->use_deriv_est == 1) {
+    time_derivative_output(sd->time_deriv, deriv_data, jac_deriv_data,
+                           sd->output_precision);
+  } else {
+    time_derivative_output(sd->time_deriv, deriv_data, NULL,
+                           sd->output_precision);
+  }
+*/
+
+#else
+
+#ifndef AEROS_CPU
+
+  //todo fix wrong results
+
+  // Get the grid cell dimensions
+  int n_cells = md->n_cells;
+  int n_state_var = md->n_per_cell_state_var;
+  int n_dep_var = md->n_per_cell_dep_var;
+
+    // Loop through the grid cells and update the derivative array
+  for (int i_cell = 0; i_cell < n_cells; ++i_cell) {
+    // Set the grid cell state pointers
+    md->grid_cell_id = i_cell;
+    md->grid_cell_state = &(md->total_state[i_cell * n_state_var]);
+    md->grid_cell_env = &(md->total_env[i_cell * PMC_NUM_ENV_PARAM_]);
+    md->grid_cell_rxn_env_data =
+        &(md->rxn_env_data[i_cell * md->n_rxn_env_data]);
+    md->grid_cell_aero_rep_env_data =
+        &(md->aero_rep_env_data[i_cell * md->n_aero_rep_env_data]);
+    md->grid_cell_sub_model_env_data =
+        &(md->sub_model_env_data[i_cell * md->n_sub_model_env_data]);
+
+    // Update the aerosol representations
+    aero_rep_update_state(md);
+
+    // Run the sub models
+    sub_model_calculate(md);
+
+    // Reset the TimeDerivative
+    time_derivative_reset(sd->time_deriv);
+
+    // Calculate the time derivative f(t,y)
+    rxn_calc_deriv_aeros(md, sd->time_deriv, (double)time_step);
+
+  }
+
+#endif
+#endif
+
   rxn_calc_deriv_gpu(sd, deriv, (double)time_step, ZERO, ZERO);
+
+#ifdef CHECK_F_GPU_WITH_CPU
+
+  //todo
+  get_f_from_gpu(sd);
+  f(t, y_cpu, deriv_cpu, sd);
+  compare_double_arrays();
+
+#endif
+
 
 #ifdef PMC_DEBUG_GPU
 
@@ -1291,16 +1383,6 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
     // Run the sub models
     sub_model_calculate(md);
 
-#ifdef PMC_DEBUG
-    // Measure calc_deriv time execution
-    clock_t start2 = clock();
-#endif
-
-#ifdef PMC_DEBUG_GPU
-    // Measure calc_deriv time execution
-    clock_t start4 = clock();
-#endif
-
     // Reset the TimeDerivative
     time_derivative_reset(sd->time_deriv);
 
@@ -1320,13 +1402,7 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
     }
 
 #ifdef PMC_DEBUG
-    clock_t end2 = clock();
-    sd->timeDeriv += (end2 - start2);
     sd->max_loss_precision = time_derivative_max_loss_precision(sd->time_deriv);
-#endif
-
-#ifdef PMC_DEBUG_GPU
-    sd->timeDerivCPU += (clock() - start4);
 #endif
 
     // Advance the derivative for the next cell
@@ -1816,6 +1892,23 @@ double gsl_f(double x, void *param) {
 }
 #endif
 
+int guess_helper_gpu(SolverData *solver_data){
+
+  //guess_gpu(solver_data);
+
+#ifdef CHECK_GUESS_HELPER_GPU_WITH_CPU
+
+  get_guess_helper_from_gpu(y_n, y_n1, hf, sd, tmpl, corr);
+  guess_helper_cpu(t_n, h_n_cpu, y_n_cpu,
+          y_n1_cpu, hf_cpu, sd, tmpl_cpu, corr_cpu);
+  compare_double_arrays(in, out);
+
+#endif
+
+  return 1;
+
+}
+
 /** \brief Try to improve guesses of y sent to the linear solver
  *
  * This function checks if there are any negative guessed concentrations,
@@ -1902,9 +1995,11 @@ int guess_helper(const realtype t_n, const realtype h_n, N_Vector y_n,
       return -1;
 
 #ifdef DEBUG_GUESS_HELPER
-    if(sd->counterDerivCPU==2){
+    if(sd->counterDerivCPU==2 || sd->counterDerivCPU==3){
       printf("guess_helper h_j %-le\n", h_j);
+      printf("tmpl \n");
       print_derivative(sd, tmp1);
+      printf("corr \n");
       print_derivative(sd, corr);
     }
 #endif
@@ -1942,6 +2037,13 @@ int guess_helper(const realtype t_n, const realtype h_n, N_Vector y_n,
 
   // Update the hf vector
   N_VLinearSum(ONE, tmp1, -ONE, y_n1, hf);
+
+#ifdef DEBUG_GUESS_HELPER
+    if(sd->counterDerivCPU==2 || sd->counterDerivCPU==3){
+      printf("tmpl \n");
+      print_derivative(sd, hf);
+    }
+#endif
 
   return 1;
 }
@@ -2525,7 +2627,7 @@ void solver_free(void *solver_data) {
   SUNLinSolFree(sd->ls);
 #endif
 
-#ifdef CHECK_GPU_LINSOLVE
+#ifndef CHECK_GPU_LINSOLVE
   printf("ODE iters %d\n", sd->n_linsolver_i);
 #endif
 

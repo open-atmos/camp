@@ -26,7 +26,7 @@ extern "C"{
 // phase equilibrium reactions
 #define MIN_WATER_ 1.0e-4
 
-#ifndef REVERSE_INT_FLOAT_MATRIX
+#ifdef REVERSE_INT_FLOAT_MATRIX
 
 #define NUM_REACT_ (int_data[0*n_rxn])
 #define NUM_PROD_ (int_data[1*n_rxn])

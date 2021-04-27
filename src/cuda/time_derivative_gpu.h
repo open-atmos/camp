@@ -25,7 +25,7 @@
  * \return Flag indicating whether the derivative was sucessfully initialized
  *         (0 = false; 1 = true)
  */
-int time_derivative_initialize_gpu(SolverData *sd, unsigned int num_spec);
+int time_derivative_initialize_gpu(SolverData *sd);
 
 /** \brief Reset the derivative
  *
