@@ -3395,7 +3395,7 @@ int linsolsolve_gpu2(SolverData *sd, CVodeMem cv_mem)
     */
     //printf("Checking SolveGPU linear solver...\n");
 
-    if(bicg->counterBiConjGrad==0){
+    if(bicg->counterBiConjGrad<=2){
 
       double *aux_dx;
       double *aux_x1;//output case 1
@@ -3411,6 +3411,7 @@ int linsolsolve_gpu2(SolverData *sd, CVodeMem cv_mem)
 
       //Compute case 1
       solveGPU(bicg,bicg->dA,bicg->djA,bicg->diA,bicg->dx,bicg->dtempv);
+      //solveGPU_block(bicg,bicg->dA,bicg->djA,bicg->diA,bicg->dx,bicg->dtempv);
 
       //Save result
       cudaMemcpy(aux_x1,bicg->dx,bicg->nrows*sizeof(double),cudaMemcpyDeviceToHost);
@@ -3454,14 +3455,15 @@ int linsolsolve_gpu2(SolverData *sd, CVodeMem cv_mem)
       free(aux_x2);
     }
 
-    //solveGPU(bicg,bicg->dA,bicg->djA,bicg->diA,bicg->dx,bicg->dtempv);
+    solveGPU(bicg,bicg->dA,bicg->djA,bicg->diA,bicg->dx,bicg->dtempv);
+    //solveGPU_block(bicg,bicg->dA,bicg->djA,bicg->diA,bicg->dx,bicg->dtempv);
 
 #else
 
     //todo fix solveGPU_block
     // Call the lsolve function
-    solveGPU(bicg,bicg->dA,bicg->djA,bicg->diA,bicg->dx,bicg->dtempv);
-    //solveGPU_block(bicg,bicg->dA,bicg->djA,bicg->diA,bicg->dx,bicg->dtempv);
+    //solveGPU(bicg,bicg->dA,bicg->djA,bicg->diA,bicg->dx,bicg->dtempv);
+    solveGPU_block(bicg,bicg->dA,bicg->djA,bicg->diA,bicg->dx,bicg->dtempv);
 
 #ifndef DEBUG_SOLVEBCGCUDA
 

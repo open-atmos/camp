@@ -338,7 +338,7 @@ def debug_no_plot():
   #Read file
 
   #cells = [100,1000]
-  cells = [30]
+  cells = [1000]
 
   #cases_multicells_onecell = ["one-cell","multi-cells"]
   #cases_multicells_onecell = ["one-cell"]

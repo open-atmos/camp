@@ -1317,12 +1317,6 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
 
 #ifdef PMC_DEBUG_GPU
   clock_t start10 = clock();
-/*  if(sd->counterDerivCPU==0{
-    printf("camp solver_run start [(id),conc], n_state_var %d, n_cells%d\n", md->n_per_cell_state_var, n_cells);
-    for (int i = 0; i < md->n_per_cell_state_var*1; i++) {
-      printf("(%d) %-le ",i+1, md->total_state[i]);
-    }
-  }*/
 #endif
 
 #ifdef PMC_DEBUG_DERIV

@@ -75,24 +75,22 @@ void solveBcgCuda(
         //double *rho1, double *temp1, double *temp2 //Auxiliary parameters
 )
 {
-  int tid = blockIdx.x * blockDim.x + threadIdx.x;
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
+  unsigned int tid = threadIdx.x;
   int active_threads = nrows;
 
-  double alpha,rho0,omega0,beta,rho1,temp1,temp2;
-
-  //if(tid<active_threads){//this is wrong cause cudaDevicedotxy dont set to 0 mysum
-  //but I think some function need this active_threads (maybe csc_block)
+#ifdef BCG_ALL_THREADS
   if(1){
+#else
+  if(i<active_threads){
+#endif
 
-    cudaDevicesetconst(dr0, 0.0, nrows);
-    __syncthreads();
-    cudaDeviceSpmvCSC_block(dr0,dx,nrows,dA,djA,diA); //y=A*x
+    double alpha,rho0,omega0,beta,rho1,temp1,temp2;
+    //alpha=rho0=omega0=beta=rho1=temp1=temp2=1.0;
 
-    //gpu_axpby(dr0,dtempv,1.0,-1.0,nrows,blocks,threads); // r0=1.0*rhs+-1.0r0 //y=ax+by
-    cudaDeviceaxpby(dr0,dtempv,1.0,-1.0,nrows);
-
-    //gpu_yequalsx(dr0h,dr0,nrows,blocks,threads);  //r0h=r0
-    cudaDeviceyequalsx(dr0h,dr0,nrows);
+    alpha  = 1.0;
+    rho0   = 1.0;
+    omega0 = 1.0;
 
     //gpu_yequalsconst(dn0,0.0,nrows,blocks,threads);  //n0=0.0 //memset???
     //gpu_yequalsconst(dp0,0.0,nrows,blocks,threads);  //p0=0.0
@@ -100,24 +98,45 @@ void solveBcgCuda(
     cudaDevicesetconst(dp0, 0.0, nrows);
     cudaDevicesetconst(dt, 0.0, nrows);
 
-#ifdef DEBUG_SOLVEBGCCUDA
+    /*cudaDevicesetconst(dr0, 0.0, nrows);
+    cudaDevicesetconst(dr0h, 0.0, nrows);
+    cudaDevicesetconst(dn0, 0.0, nrows);
+    cudaDevicesetconst(dp0, 0.0, nrows);
+    cudaDevicesetconst(dt, 0.0, nrows);
+    cudaDevicesetconst(ds, 0.0, nrows);
+    cudaDevicesetconst(dAx2, 0.0, nrows);
+    cudaDevicesetconst(dy, 0.0, nrows);
+    cudaDevicesetconst(dz, 0.0, nrows);
+*/
 
-    //printf("dr0[%d] %-le",tid,dr0[tid]);
-
-    /*if(tid<active_threads){
-
-    }*/
-
+#ifdef BASIC_SPMV
+    cudaDevicesetconst(dr0, 0.0, nrows);
+    __syncthreads();
+    cudaDeviceSpmvCSC(dr0,dx,nrows,dA,djA,diA); //y=A*x
+#else
+    cudaDeviceSpmvCSC_block(dr0,dx,nrows,dA,djA,diA); //y=A*x
 #endif
 
-    alpha  = 1.0;
-    rho0   = 1.0;
-    omega0 = 1.0;
+    //gpu_axpby(dr0,dtempv,1.0,-1.0,nrows,blocks,threads); // r0=1.0*rhs+-1.0r0 //y=ax+by
+    cudaDeviceaxpby(dr0,dtempv,1.0,-1.0,nrows);
+
+    //gpu_yequalsx(dr0h,dr0,nrows,blocks,threads);  //r0h=r0
+    cudaDeviceyequalsx(dr0h,dr0,nrows);
 
 #ifdef PMC_DEBUG_GPU
-    int it=*it_pointer;
+    //int it=*it_pointer;
+    int it=0;
 #else
     int it=0;
+#endif
+
+#ifdef DEBUG_SOLVEBCGCUDA_DEEP
+
+    if(i==0){
+      //printf("%d dr0[%d] %-le\n",it,i,dr0[i]);
+      printf("%d %d rho1 %-le\n",it,i,rho1);
+    }
+
 #endif
 
     do
@@ -125,19 +144,30 @@ void solveBcgCuda(
 
       //rho1=gpu_dotxy(dr0, dr0h, aux, daux, nrows,(blocks + 1) / 2, threads);
       __syncthreads();
-      cudaDevicedotxy(dr0, dr0h, &rho1, nrows, n_shr_empty);//&rho1
+
+      cudaDevicedotxy(dr0, dr0h, &rho1, nrows, n_shr_empty);
+
+#ifdef DEBUG_SOLVEBCGCUDA_DEEP
+
+    if(i==0){
+      //printf("%d dr0[%d] %-le\n",it,i,dr0[i]);
+      printf("%d %d rho1 %-le\n",it,i,rho1);
+    }
+
+#endif
+
       __syncthreads();//necessary to reduce accuracy error
       beta = (rho1 / rho0) * (alpha / omega0);
 
       //gpu_zaxpbypc(dp0,dr0,dn0,beta,-1.0*omega0*beta,nrows,blocks,threads);   //z = ax + by + c
       cudaDevicezaxpbypc(dp0, dr0, dn0, beta, -1.0 * omega0 * beta, nrows);   //z = ax + by + c
-      cudaDevicesetconst(dn0, 0.0, nrows);
 
       //gpu_multxy(dy,ddiag,dp0,nrows,blocks,threads);  // precond y= p0*diag
       cudaDevicemultxy(dy, ddiag, dp0, nrows);
 
+      cudaDevicesetconst(dn0, 0.0, nrows);
       //gpu_spmv(dn0,dy,nrows,dA,djA,diA,mattype,blocks,threads);  // n0= A*y
-#ifndef BASIC_SPMV
+#ifdef BASIC_SPMV
       cudaDevicesetconst(dn0, 0.0, nrows);
       __syncthreads();
       cudaDeviceSpmvCSC(dn0, dy, nrows, dA, djA, diA);
@@ -147,58 +177,106 @@ void solveBcgCuda(
       cudaDeviceSpmvCSC_block(dn0, dy, nrows, dA, djA, diA);
 #endif
 
+      __syncthreads();
       //temp1=gpu_dotxy(dr0h, dn0, aux, daux, nrows,(blocks + 1) / 2, threads);
+
       cudaDevicedotxy(dr0h, dn0, &temp1, nrows, n_shr_empty);
+
+#ifdef DEBUG_SOLVEBCGCUDA_DEEP
+
+      if(i==0){
+        printf("%d %d temp1 %-le\n",it,i,temp1);
+        //printf("%d %d &temp1 %p\n",it,i,&temp1);
+        //printf("%d %d &test %p\n",it,i,&test);
+        //printf("%d %d &i %p\n",it,i,&i);
+      }
+
+#endif
+
       __syncthreads();
       alpha = rho1 / temp1;
 
       //gpu_zaxpby(1.0,dr0,-1.0*alpha,dn0,ds,nrows,blocks,threads); // a*x + b*y = z
       cudaDevicezaxpby(1.0, dr0, -1.0 * alpha, dn0, ds, nrows);
 
+#ifdef DEBUG_SOLVEBCGCUDA_DEEP
+
+      if(i==0){
+        printf("%d ds[%d] %-le\n",it,i,ds[i]);
+      }
+
+#endif
+
       //gpu_multxy(dz,ddiag,ds,nrows,blocks,threads); // precond z=diag*s
       cudaDevicemultxy(dz, ddiag, ds, nrows); // precond z=diag*s
 
       //gpu_spmv(dt,dz,nrows,dA,djA,diA,mattype,blocks,threads);
-#ifndef BASIC_SPMV
+#ifdef BASIC_SPMV
       cudaDevicesetconst(dt, 0.0, nrows);
-      //todo slower, but its needed to avoid threads writing same data (move setting of aux(dt) to 0 after spmv, preparing to next iter)
-      //todo document the difference of synchonizing only when needed instead by each kernel call
       __syncthreads();
       cudaDeviceSpmvCSC(dt, dz, nrows, dA, djA, diA);
 #else
-      //cudaDeviceSpmvCSC_block(dt, dz, nrows, dA, djA, diA); //todo fix spmv_block to atomicadd_block
-
-      //todo use CSR to avoid atomicadds since this operation is y=x*A and is saving by rows
       __syncthreads();
       cudaDeviceSpmvCSC_block(dt, dz, nrows, dA, djA, diA);
 #endif
 
+      __syncthreads();///todo find why are needed
       //gpu_multxy(dAx2,ddiag,dt,nrows,blocks,threads);
       cudaDevicemultxy(dAx2, ddiag, dt, nrows);
 
+      __syncthreads();
       //temp1=gpu_dotxy(dz, dAx2, aux, daux, nrows,(blocks + 1) / 2, threads);
+
       cudaDevicedotxy(dz, dAx2, &temp1, nrows, n_shr_empty);
       __syncthreads();
 
+#ifdef DEBUG_SOLVEBCGCUDA_DEEP
+
+      if(i>=0){
+        //printf("%d ddiag[%d] %-le\n",it,i,ddiag[i]);
+        //printf("%d dt[%d] %-le\n",it,i,dt[i]);
+        //printf("%d dAx2[%d] %-le\n",it,i,dAx2[i]);
+        //printf("%d dz[%d] %-le\n",it,i,dz[i]);
+      }
+
+      if(i==0){
+        printf("%d %d temp1 %-le\n",it,i,temp1);
+      }
+
+#endif
+
+      __syncthreads();
       //temp2=gpu_dotxy(dAx2, dAx2, aux, daux, nrows,(blocks + 1) / 2, threads);
+
       cudaDevicedotxy(dAx2, dAx2, &temp2, nrows, n_shr_empty);
+
+#ifdef DEBUG_SOLVEBCGCUDA_DEEP
+
+      if(i==0){
+        printf("%d %d temp2 %-le\n",it,i,temp2);
+      }
+
+#endif
+
       __syncthreads();
       omega0 = temp1 / temp2;
-      __syncthreads();
       //gpu_axpy(dx,dy,alpha,nrows,blocks,threads); // x=alpha*y +x
       cudaDeviceaxpy(dx, dy, alpha, nrows); // x=alpha*y +x
-      __syncthreads();
 
+      __syncthreads();
       //gpu_axpy(dx,dz,omega0,nrows,blocks,threads);
       cudaDeviceaxpy(dx, dz, omega0, nrows);
 
+      __syncthreads();
       //gpu_zaxpby(1.0,ds,-1.0*omega0,dt,dr0,nrows,blocks,threads);
       cudaDevicezaxpby(1.0, ds, -1.0 * omega0, dt, dr0, nrows);
-      //cudaDevicesetconst(dt, 0.0, nrows);
+      cudaDevicesetconst(dt, 0.0, nrows);
 
-      //temp1=gpu_dotxy(dr0, dr0, aux, daux, nrows,(blocks + 1) / 2, threads);
-      cudaDevicedotxy(dr0, dr0, &temp1, nrows, n_shr_empty);
       __syncthreads();
+      //temp1=gpu_dotxy(dr0, dr0, aux, daux, nrows,(blocks + 1) / 2, threads);
+
+      cudaDevicedotxy(dr0, dr0, &temp1, nrows, n_shr_empty);
+
       temp1 = sqrt(temp1);
 
       rho0 = rho1;
@@ -206,15 +284,15 @@ void solveBcgCuda(
       __syncthreads();
   /**/
 
+      //if (tid==0) it++;
       it++;
     } while(it<maxIt && temp1>tolmax);//while(it<maxIt && temp1>tolmax);//while(0);
 
+    //todo itpointer should be an array of n_blocks size, and in cpu reduce to max number
+    // (since the max its supposed to be the last to exit)
 #ifdef PMC_DEBUG_GPU
    *it_pointer = it;
 #endif
-
-
-
 
   }
 
@@ -239,7 +317,6 @@ void solveGPU_block(itsolver *bicg, double *dA, int *djA, int *diA, double *dx, 
 {
   //Init variables ("public")
   int nrows = bicg->nrows;
-  int blocks = bicg->blocks;
   int threads = bicg->threads;
   int maxIt = bicg->maxIt;
   int mattype = bicg->mattype;
@@ -266,7 +343,7 @@ void solveGPU_block(itsolver *bicg, double *dA, int *djA, int *diA, double *dx, 
 #endif
 
 //todo eliminate atomicadd in spmv through using CSR or something like that
-  gpu_spmv(dr0,dx,nrows,dA,djA,diA,mattype,blocks,threads);  // r0= A*x
+  //gpu_spmv(dr0,dx,nrows,dA,djA,diA,mattype,bicg->blocks,threads);  // r0= A*x
 /*
   gpu_axpby(dr0,dtempv,1.0,-1.0,nrows,blocks,threads); // r0=1.0*rhs+-1.0r0 //y=ax+by
 
@@ -286,31 +363,37 @@ void solveGPU_block(itsolver *bicg, double *dA, int *djA, int *diA, double *dx, 
   cudaMalloc(&daux_params,n_aux_params*sizeof(double));*/
   //cudaMemcpy(bicg->djA,bicg->jA,7*sizeof(double),cudaMemcpyHostToDevice);
 
-  int size_cell = nrows/n_cells; //e.g size_cell = 3 for mock_monarch 1 (3 species)
+  int size_cell = nrows/n_cells;
 
 #ifdef INDEPENDENCY_CELLS
 
-  int max_threads = nextPowerOfTwo(size_cell);//bicg->threads;
-  int n_shr_empty = max_threads-size_cell;//nextPowerOfTwo(size_cell)-size_cell;
+  int max_threads_block = nextPowerOfTwo(size_cell);//bicg->threads;
+  //int n_shr_empty = max_threads-size_cell;//nextPowerOfTwo(size_cell)-size_cell;
+  //int threads_block = max_threads_block - n_shr_empty; //last multiple of size_cell before max_threads
 
 #else
 
-  int max_threads = bicg->threads;//bicg->threads; 128;
+  int max_threads_block = bicg->threads;//bicg->threads; 128;
 
   //int n_shr_empty = max_threads%size_cell; //Wrong
-  int n_shr_empty = max_threads-nrows;
+  //int n_shr_empty = max_threads-nrows;
 
 #endif
-  //todo its not the same n_shr_empty for all blocks
+
+#ifdef BCG_ALL_THREADS
+
+  int threads_block = max_threads_block;
+  int n_shr_empty = 0;
+  int blocks = (nrows+threads_block-1)/threads_block;
+
+#else
+  int n_cells_block =  max_threads_block/size_cell;
+  int threads_block = n_cells_block*size_cell;
+  int n_shr_empty = max_threads_block-threads_block;
+  int blocks = (nrows+threads_block-1)/threads_block;
+#endif
 
 
-  int threads_block = max_threads - n_shr_empty; //last multiple of size_cell before max_threads
-  //max_threads_block = bicg->threads_block /
-  // int n_cells_block = max_threads_block/size_cell;
-  //int threads_block = n_cells_block*size_cell;
-
-  //threads = bicg->threads;//active_threads;//bicg->threads;
-  blocks = (nrows+threads_block-1)/threads_block; //blocks counting active_threads working in each block
 
 #ifndef DEBUG_SOLVEBCGCUDA
   if(bicg->counterBiConjGrad==0) {
@@ -336,7 +419,8 @@ void solveGPU_block(itsolver *bicg, double *dA, int *djA, int *diA, double *dx, 
   cudaMemcpy(dit_ptr, &it, sizeof(int), cudaMemcpyHostToDevice);
 #endif
 
-  solveBcgCuda << < blocks, threads_block, max_threads * sizeof(double) >> >
+
+  solveBcgCuda << < blocks, threads_block, max_threads_block * sizeof(double) >> >
   //solveBcgCuda << < blocks, threads_block, threads_block * sizeof(double) >> >
           (dA, djA, diA, dx, dtempv, nrows, blocks, n_shr_empty, maxIt, mattype, n_cells
           ,tolmax, ddiag, dr0, dr0h, dn0, dp0, dt, ds, dAx2, dy, dz, daux
@@ -426,6 +510,12 @@ void solveGPU(itsolver *bicg, double *dA, int *djA, int *diA, double *dx, double
   //printf("temp1 %-le", temp1);
   //printf("rho1 %f", rho1);
 
+#ifdef DEBUG_SOLVEBCGCUDA_DEEP
+
+  double *aux_x1;
+  aux_x1=(double*)malloc(bicg->nrows*sizeof(double));
+
+#endif
 
   //for(int it=0;it<maxIt;it++){
   int it=0;
@@ -433,6 +523,12 @@ void solveGPU(itsolver *bicg, double *dA, int *djA, int *diA, double *dx, double
 
     rho1=gpu_dotxy(dr0, dr0h, aux, daux, nrows,(blocks + 1) / 2, threads);//rho1 =<r0,r0h>
     //rho1=gpu_dotxy(dr0, dr0h, aux, daux, nrows,blocks, threads);//rho1 =<r0,r0h>
+
+#ifdef DEBUG_SOLVEBCGCUDA_DEEP
+    //good here first iter
+    printf("%d rho1 %-le\n",it,rho1);
+#endif
+
     beta=(rho1/rho0)*(alpha/omega0);
 
     //    cout<<"rho1 "<<rho1<<" beta "<<beta<<endl;
@@ -446,11 +542,22 @@ void solveGPU(itsolver *bicg, double *dA, int *djA, int *diA, double *dx, double
     temp1=gpu_dotxy(dr0h, dn0, aux, daux, nrows,(blocks + 1) / 2, threads);
     //temp1=gpu_dotxy(dr0h, dn0, aux, daux, nrows, blocks, threads);
 
+#ifdef DEBUG_SOLVEBCGCUDA_DEEP
+    printf("%d temp1 %-le\n",it,temp1);
+#endif
+
     alpha=rho1/temp1;
 
     //       cout<<"temp1 "<<temp1<<" alpha "<<alpha<<endl;
 
     gpu_zaxpby(1.0,dr0,-1.0*alpha,dn0,ds,nrows,blocks,threads);
+
+#ifdef DEBUG_SOLVEBCGCUDA_DEEP
+    cudaMemcpy(aux_x1,ds,bicg->nrows*sizeof(double),cudaMemcpyDeviceToHost);
+
+    printf("%d ds[0] %-le\n",it,aux_x1[0]);
+
+#endif
 
     gpu_multxy(dz,ddiag,ds,nrows,blocks,threads); // precond z=diag*s
 
@@ -461,8 +568,25 @@ void solveGPU(itsolver *bicg, double *dA, int *djA, int *diA, double *dx, double
     temp1=gpu_dotxy(dz, dAx2, aux, daux, nrows,(blocks + 1) / 2, threads);
     //temp1=gpu_dotxy(dz, dAx2, aux, daux, nrows,blocks, threads);
 
+#ifdef DEBUG_SOLVEBCGCUDA_DEEP
+    cudaMemcpy(aux_x1,dAx2,bicg->nrows*sizeof(double),cudaMemcpyDeviceToHost);
+
+    for(int i=0; i<bicg->nrows; i++){
+      //printf("%d ddiag[%i] %-le\n",it,i,aux_x1[i]);
+      //printf("%d dt[%i] %-le\n",it,i,aux_x1[i]);
+      //printf("%d dAx2[%i] %-le\n",it,i,aux_x1[i]);
+      //printf("%d dz[%i] %-le\n",it,i,aux_x1[i]);
+    }
+
+    printf("%d temp1 %-le\n",it,temp1);
+#endif
+
     temp2=gpu_dotxy(dAx2, dAx2, aux, daux, nrows,(blocks + 1) / 2, threads);
     //temp2=gpu_dotxy(dAx2, dAx2, aux, daux, nrows,blocks, threads);
+
+#ifdef DEBUG_SOLVEBCGCUDA_DEEP
+    printf("%d temp2 %-le\n",it,temp2);
+#endif
 
     omega0= temp1/temp2;
 
@@ -488,6 +612,10 @@ void solveGPU(itsolver *bicg, double *dA, int *djA, int *diA, double *dx, double
 
 #ifdef PMC_DEBUG_GPU
   bicg->counterBiConjGradInternal += it;
+#endif
+
+#ifdef DEBUG_SOLVEBCGCUDA_DEEP
+  free(aux_x1);
 #endif
 
 }

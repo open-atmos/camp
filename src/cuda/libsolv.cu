@@ -717,47 +717,21 @@ __device__ void cudaDevicedotxy_old(double *g_idata1, double *g_idata2,
 }
 
 __device__ void cudaDevicedotxy(double *g_idata1, double *g_idata2,
-        double *g_odata, unsigned int n, int n_shr_empty)
+                                 double *g_odata, unsigned int n, int n_shr_empty)
 {
   extern __shared__ double sdata[];
   unsigned int tid = threadIdx.x;
   //unsigned int i = blockIdx.x*(blockDim.x*2) + threadIdx.x;
-  unsigned int id = blockIdx.x*blockDim.x + threadIdx.x;
+  unsigned int i = blockIdx.x*blockDim.x + threadIdx.x;
 
-  //Used to ensure last block has 0 values for non-zero cases (Last block can have less cells than previous blocks)
-  double mySum = (id < n) ? g_idata1[id]*g_idata2[id] : 0.;
+#ifdef BCG_ALL_THREADS
 
-#ifndef DEV_DEVICEDOTXY
-  //under development, fix returning deriv=0 and slower
-  /*if(tid<blockDim.x/2)
-    for (int j=0; j<2; j++)
-      sdata[j*blockDim.x/2 + tid] = 0;*/
+  double mySum = (i < n) ? g_idata1[i]*g_idata2[i] : 0.;
 
-  for( int i = threadIdx.x; i < n_shr_empty+blockDim.x; i+=blockDim.x)
-    sdata[i]=0.0;
-
-
-  //for( int i = 0; i < 2; i++)
-  //  sdata[i]=
-
-#else
-  //Last thread assign 0 to empty shr values
-  if (tid == 0)//one thread
-  {
-    //todo fix, returning 0 sometimes on mock_monarch cells=1000 (bug appears after <=7 attemps)
-    //speedup when active, probably cause if no active some threads are not
-    // doing anything so it takes more time to converge, but then sometimes returns deriv=0(fix)
-    //needed or diff results on n_cells=100 3 species
-    for (int j=0; j<n_shr_empty; j++)
-      sdata[blockDim.x+j] = 0.; //Assign 0 to remaining sdata (cases sdata_id>=threads_block)
-  }
-#endif
-
-  //Set shr_memory to local values
   sdata[tid] = mySum;
+
   __syncthreads();
 
-  //todo ensure that n_shr_empty is less than half of the max_threads to have enough threads
   for (unsigned int s=(blockDim.x+n_shr_empty)/2; s>0; s>>=1)
   {
     if (tid < s)
@@ -766,9 +740,51 @@ __device__ void cudaDevicedotxy(double *g_idata1, double *g_idata2,
     __syncthreads();
   }
 
-  //dont need to access global memory on block-cells
-  //if (tid == 0) g_odata[blockIdx.x] = sdata[0];
+  //if (tid==0) *g_odata = sdata[0];
   *g_odata = sdata[0];
+  //*g_odata = sdata[0]+0.1*tid;
+  __syncthreads();
+
+#else
+
+
+  if (tid == 0){
+    for (int j=0; j<blockDim.x+n_shr_empty; j++)
+      sdata[j] = 0.;
+  }
+
+/*
+  for (unsigned int s=(blockDim.x+n_shr_empty)/2; s>0; s>>=1)
+  {
+    if (tid < s){
+      sdata[tid] = 0.;
+      sdata[tid+s] = 0.;
+    }
+  }
+*/
+
+  __syncthreads();
+
+
+  sdata[tid] = g_idata1[i]*g_idata2[i];
+
+  __syncthreads();
+
+  for (unsigned int s=(blockDim.x+n_shr_empty)/2; s>0; s>>=1)
+  {
+    if (tid < s)
+      sdata[tid] += sdata[tid + s];
+
+    __syncthreads();
+  }
+
+  //if (tid==0) *g_odata = sdata[0];
+  *g_odata = sdata[0];
+  //*g_odata = sdata[0]+0.1*tid;
+  __syncthreads();
+
+#endif
+
 }
 
 //n_shr_empty its a different implementation from cuda reduce extended samples ( https://docs.nvidia.com/cuda/cuda-samples/index.html)
