@@ -86,19 +86,19 @@ void solveBcgCuda(
 #endif
 
     double alpha,rho0,omega0,beta,rho1,temp1,temp2;
-    //alpha=rho0=omega0=beta=rho1=temp1=temp2=1.0;
+    alpha=rho0=omega0=beta=rho1=temp1=temp2=1.0;
 
-    alpha  = 1.0;
+    /*alpha  = 1.0;
     rho0   = 1.0;
-    omega0 = 1.0;
+    omega0 = 1.0;*/
 
     //gpu_yequalsconst(dn0,0.0,nrows,blocks,threads);  //n0=0.0 //memset???
     //gpu_yequalsconst(dp0,0.0,nrows,blocks,threads);  //p0=0.0
-    cudaDevicesetconst(dn0, 0.0, nrows);
+    /*cudaDevicesetconst(dn0, 0.0, nrows);
     cudaDevicesetconst(dp0, 0.0, nrows);
-    cudaDevicesetconst(dt, 0.0, nrows);
+    cudaDevicesetconst(dt, 0.0, nrows);*/
 
-    /*cudaDevicesetconst(dr0, 0.0, nrows);
+    cudaDevicesetconst(dr0, 0.0, nrows);
     cudaDevicesetconst(dr0h, 0.0, nrows);
     cudaDevicesetconst(dn0, 0.0, nrows);
     cudaDevicesetconst(dp0, 0.0, nrows);
@@ -107,7 +107,7 @@ void solveBcgCuda(
     cudaDevicesetconst(dAx2, 0.0, nrows);
     cudaDevicesetconst(dy, 0.0, nrows);
     cudaDevicesetconst(dz, 0.0, nrows);
-*/
+
 
 #ifdef BASIC_SPMV
     cudaDevicesetconst(dr0, 0.0, nrows);
@@ -393,12 +393,10 @@ void solveGPU_block(itsolver *bicg, double *dA, int *djA, int *diA, double *dx, 
   int blocks = (nrows+threads_block-1)/threads_block;
 #endif
 
-
-
 #ifndef DEBUG_SOLVEBCGCUDA
   if(bicg->counterBiConjGrad==0) {
-    printf("size_cell %d nrows %d blocks %d threads_block %d n_shr_empty %d\n",
-           size_cell,nrows,blocks,threads_block,n_shr_empty);
+    printf("size_cell %d nrows %d max_threads_block %d blocks %d threads_block %d n_shr_empty %d\n",
+           size_cell,nrows,max_threads_block,blocks,threads_block,n_shr_empty);
   }
 #endif
 
@@ -414,9 +412,10 @@ void solveGPU_block(itsolver *bicg, double *dA, int *djA, int *diA, double *dx, 
 
 #ifdef PMC_DEBUG_GPU
   int it = 0;
-  int *dit_ptr;
-  cudaMalloc((void**)&dit_ptr,sizeof(int));
-  cudaMemcpy(dit_ptr, &it, sizeof(int), cudaMemcpyHostToDevice);
+  int *dit_ptr=bicg->counterBiConjGradInternalGPU;
+  //int *dit_ptr;
+  //cudaMalloc((void**)&dit_ptr,sizeof(int));
+  //cudaMemcpy(dit_ptr, &it, sizeof(int), cudaMemcpyHostToDevice);
 #endif
 
 

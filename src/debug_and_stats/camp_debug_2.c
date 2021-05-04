@@ -5,14 +5,6 @@
  * Debug and stats functions
  *
  */
-// todo fix this...move all to this folder and compile correctly...
-// todo: i think is not necessary include all time stdio.h.. reorder includes to
-// left only camp_common with the common includes
-
-// todo gprof to csv:
-// https://stackoverflow.com/questions/28872400/convert-simple-ascii-table-to-csv
-// Nvidia remote profiling:
-// http://docs.nvidia.com/cuda/nsight-eclipse-edition-getting-started-guide/index.html#remote-development
 
 #include "camp_debug_2.h"
 #include <stdio.h>
@@ -20,9 +12,44 @@
 #include <string.h>
 #include "../camp_solver.h"
 
+#include <unistd.h>
+
 #ifdef PMC_USE_MPI
 #include <mpi.h>
 #endif
+
+void print_current_directory(){
+
+  char cwd[1024];
+  if (getcwd(cwd, sizeof(cwd)) != NULL) {
+    printf("Current working dir: %s\n", cwd);
+  } else {
+    printf("getcwd() error");
+  }
+
+}
+
+void get_config_variables(SolverData *sd){
+
+  FILE *fp;
+  char buff[255];
+
+  //print_current_directory();
+
+  fp = fopen("config_variables_c_solver.txt", "r");
+  if (fp == NULL){
+    printf("Could not open file get_config_variables");
+  }
+  fscanf(fp, "%s", buff);
+
+  if(strstr(buff,"USE_CPU=ON")==NULL){
+    sd->use_cpu=0;
+  }
+  else{
+    sd->use_cpu=1;
+  }
+
+}
 
 void export_counters_open(SolverData *sd)
 {

@@ -253,7 +253,7 @@ void allocSolverGPU(CVodeMem cv_mem, SolverData *sd)
   double *ewt = NV_DATA_S(cv_mem->cv_ewt);
   double *tempv = NV_DATA_S(cv_mem->cv_tempv);
 
-#ifndef CHECK_GPU_LINSOLVE
+#ifdef CHECK_GPU_LINSOLVE
   sd->max_error_linsolver = 0.0;
   sd->max_error_linsolver_i = 0;
   sd->n_linsolver_i = 0;
@@ -328,6 +328,7 @@ void allocSolverGPU(CVodeMem cv_mem, SolverData *sd)
   bicg->counterDerivNewton=0;
   bicg->counterBiConjGrad=0;
   bicg->counterBiConjGradInternal=0;
+  cudaMalloc((void**)&bicg->counterBiConjGradInternalGPU,sizeof(int));
   bicg->counterDerivSolve=0;
   bicg->counterJac=0;
 
@@ -3388,7 +3389,7 @@ int linsolsolve_gpu2(SolverData *sd, CVodeMem cv_mem)
     cudaEventRecord(bicg->startBiConjGrad);
 #endif
 
-#ifndef CHECK_GPU_LINSOLVE
+#ifdef CHECK_GPU_LINSOLVE
     //cudaMemcpy(x,bicg->dx,bicg->nrows*sizeof(double),cudaMemcpyDeviceToHost);
     /*
       Seems CMake definitions only affects the current directory, so I can't apply this definitions in a separate CMakeLists... well, at the moment I left it as a only option `ENABLE_DEBUG` and then alognside `add_definitions(-DPMC_USE_GPU)` I added the rest of debug definitions if `ENABLE_DEBUG` is defined
@@ -3460,27 +3461,36 @@ int linsolsolve_gpu2(SolverData *sd, CVodeMem cv_mem)
 
 #else
 
-    //todo fix solveGPU_block
-    // Call the lsolve function
+#ifdef DEBUG_LINEAR_SOLVERS
+
+  double *aux_x2;
+  if(bicg->counterBiConjGrad==0){
+    aux_x2=(double*)malloc(bicg->nrows*sizeof(double));
+    cudaMemcpy(aux_x2,bicg->dtempv,bicg->nrows*sizeof(double),cudaMemcpyDeviceToHost);
+  }
+
+#endif
+
     //solveGPU(bicg,bicg->dA,bicg->djA,bicg->diA,bicg->dx,bicg->dtempv);
     solveGPU_block(bicg,bicg->dA,bicg->djA,bicg->diA,bicg->dx,bicg->dtempv);
 
-#ifndef DEBUG_SOLVEBCGCUDA
+#ifdef DEBUG_LINEAR_SOLVERS
 
   if(bicg->counterBiConjGrad==0){
 
-    printf("DEBUG_SOLVEBCGCUDA\n");
+    printf("DEBUG_SOLVEBCGCUDA call %d\n",bicg->counterBiConjGrad);
     double *aux_x1;//output case 1
     aux_x1=(double*)malloc(bicg->nrows*sizeof(double));
     cudaMemcpy(aux_x1,bicg->dx,bicg->nrows*sizeof(double),cudaMemcpyDeviceToHost);
 
     //printf("%d %-le",bicg->nrows,aux_x1[bicg->nrows]);
-    printf("dx\n");
-    for (int i=bicg->nrows-3; i<bicg->nrows; i++){
-      printf("%d %-le\n",i,aux_x1[i]);
+    printf("dx in out\n");//bicg->nrows
+    for (int i=0; i<bicg->nrows; i++){
+      printf("(%d) %-le %-le\n",i+1,aux_x2[i],aux_x1[i]);
     }
 
     free(aux_x1);
+    free(aux_x2);
   }
 #endif
 
@@ -3648,7 +3658,7 @@ int linsolsolve_gpu2(SolverData *sd, CVodeMem cv_mem)
     bicg->counterDerivSolve++;
 #endif
 
-    //Transfer cv_ftemp() not needed because bicg->dftemp=md->deriv_data_gpu;
+    //Transfer cv_ftemp() not needed because bicg->dftemp=mGPU->deriv_data;
     //cudaMemcpy(cv_ftemp_data,bicg->dftemp,bicg->nrows*sizeof(double),cudaMemcpyDeviceToHost);
 
     //N_VLinearSum(ONE, cv_mem->cv_y, -ONE, cv_mem->cv_zn[0], cv_mem->cv_acor);

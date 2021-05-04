@@ -63,6 +63,7 @@ typedef struct
   int counterDerivNewton;
   int counterBiConjGrad;
   int counterBiConjGradInternal;
+  int *counterBiConjGradInternalGPU;
   int counterDerivSolve;
   int counterJac;
 

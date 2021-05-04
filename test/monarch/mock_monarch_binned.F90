@@ -160,7 +160,7 @@ program mock_monarch
   !> PartMC-camp <-> MONARCH interface configuration file
   character(len=:), allocatable :: interface_input_file
   !> Results file prefix
-  character(len=:), allocatable :: output_file_prefix, output_file_title, n_v_cells_str
+  character(len=:), allocatable :: output_file_prefix, output_file_title, str_to_int_aux
   !> CAMP-chem input file file
   type(string_t), allocatable :: name_gas_species_to_print(:), name_aerosol_species_to_print(:)
   integer(kind=i_kind), allocatable :: id_gas_species_to_print(:), id_aerosol_species_to_print(:)
@@ -216,8 +216,8 @@ program mock_monarch
 
   call get_command_argument(5, arg, status=status_code)
   if(status_code.eq.0) then
-    n_v_cells_str = trim(arg)
-    read(n_v_cells_str, *) NUM_VERT_CELLS
+    str_to_int_aux = trim(arg)
+    read(str_to_int_aux, *) NUM_VERT_CELLS
   else
     !One-cell case as default
     print*, "WARNING: not n_cells parameter received, value set to 1"

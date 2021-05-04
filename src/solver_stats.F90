@@ -43,6 +43,8 @@ module pmc_solver_stats
     integer(kind=i_kind) :: DLS_Jac_evals
     !> Direct Linear Solver right-hand size evaluations
     integer(kind=i_kind) :: DLS_RHS_evals
+    !> Internal iterations Biconjugate Gradient
+    integer(kind=i_kind) :: counterBCG
     !> Calls to Linear Solver
     integer(kind=i_kind) :: counterLS
     !> Last time step [s]

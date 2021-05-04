@@ -7,6 +7,7 @@
 
 #include "../camp_common.h"
 
+void get_config_variables(SolverData *sd);
 void export_counters_open(SolverData *sd);
 
 #endif  // CAMP_DEBUG_2_H

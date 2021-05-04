@@ -5,6 +5,10 @@ import matplotlib
 import csv
 import numpy as np
 import statistics
+from sklearn.metrics import mean_squared_error
+from sklearn import preprocessing
+from sklearn.preprocessing import MinMaxScaler
+import math
 
 
 def get_values_same_timestep(timestep_to_plot,mpiProcessesList, \
@@ -95,6 +99,73 @@ def calculate_std_cell(cell,data, \
   plot_y_key = new_plot_y_key
   #print(plot_y_key)
   return data,plot_y_key
+
+def calculate_NMRSE(data,timesteps):
+
+  #Extract data
+
+  cases_one_multi_cells=list(data.keys())
+  data1=data[cases_one_multi_cells[0]]
+  data2=data[cases_one_multi_cells[1]]
+
+  #print(data)
+
+  #Reorganize data
+
+  #species_keys=list(data1.keys())
+  NRMSEs=[0.]*timesteps
+  species_names=list(data1.keys())
+  len_timestep=int(len(data1[species_names[0]])/timesteps)
+  for j in range(timesteps):
+    for i in data1:
+      data1_values = data1[i]
+      data2_values = data2[i]
+      l=j*len_timestep
+      r=len_timestep*(1+j)
+      out1=data1_values[l:r]
+      out2=data2_values[l:r]
+
+      MSE = mean_squared_error(out1, out2)
+      RMSE = math.sqrt(MSE)
+
+      aux_out=out1+out2
+
+      #print("aux_out",aux_out)
+      #print(RMSE)
+
+      NRMSE=0.
+      if(max(aux_out)-min(aux_out)!=0):
+        NRMSE=RMSE/(max(aux_out)-min(aux_out))
+
+      if(NRMSEs[j]<NRMSE):
+        #print("Concs One-cell:",out1)
+        #print("Concs Multi-cells:",out2)
+        #print("max",max(aux_out))
+        #print("min",min(aux_out))
+        #print("RMSE:",RMSE)
+        #print("NMRSE:",NRMSE)
+        NRMSEs[j]=NRMSE
+
+  print(NRMSEs)
+
+  return NRMSEs
+
+"""
+  base_data=data[cases_multicells_onecell[0]][plot_y_key]
+  new_data=data[cases_multicells_onecell[1]][plot_y_key]
+
+  data[namey] = data.get(namey,[])
+  for i in range(len(base_data)):
+    #print(base_data[i],new_data[i], base_data[i]/new_data[i])
+    data[namey]=data.get(namey,[]) \
+                         + [base_data[i]/new_data[i]]
+
+  #extract timestep: timestep is common in both cases like speedup
+  data["timestep"]=data.get("timestep",[]) \
+                   + data[cases_multicells_onecell[0]]["timestep"]
+
+  #print(data)
+"""
 
 def calculate_speedup(cases_multicells_onecell,data,\
                       plot_x_key,plot_y_key):
@@ -187,8 +258,6 @@ def plot_solver_stats_mpi(data, plot_x_key, plot_y_key, plot_title):
 
 def plot_solver_stats(data, plot_x_key, plot_y_key, plot_title):
 
-  #print(data)
-
   #fig = plt.figure(figsize=(7, 4.25))
   fig = plt.figure()
   spec2 = mpl.gridspec.GridSpec(ncols=1, nrows=1, wspace=.35,hspace=.1,bottom=.25,top=.85,left=.1,right=.9)
@@ -209,7 +278,27 @@ def plot_solver_stats(data, plot_x_key, plot_y_key, plot_title):
 
   #data[plot_x_key]=data[plot_x_key]+1
 
-  #print(data)
+  plt.show()
+
+def plot(namex, namey, datax, datay, plot_title):
+
+  #fig = plt.figure(figsize=(7, 4.25))
+  fig = plt.figure()
+  spec2 = mpl.gridspec.GridSpec(ncols=1, nrows=1, wspace=.35,hspace=.1,bottom=.25,top=.85,left=.1,right=.9)
+  axes = fig.add_subplot(spec2[0, 0])
+  #axes = fig.add_subplot()
+  list_colors = ["r","g","b","c","m","y","k","w"]
+  list_markers = ["+","x","*","s","s",".","-"]
+
+  i_color=0
+
+  axes.plot(datax,datay,color=list_colors[i_color], marker=list_markers[i_color])
+  axes.set_ylabel(namey)
+  axes.set_xlabel(namex)
+
+  #axes.set_yscale('log')
+  plt.xticks()
+  plt.title(plot_title)
 
   plt.show()
 
@@ -224,9 +313,11 @@ def read_solver_stats(file, data):
 
       if i_row == 0:
         labels=row
-
+        #print(row)
       else:
         for col in range(len(row)):
+          #print(labels[col])
+          #print(row[col])
           data[labels[col]]=data.get(labels[col],[]) + [float(row[col])]
 
       i_row += 1
@@ -333,6 +424,8 @@ def plot_species(file):
   #print(f'Processed {i_row} lines.')
   #print(f' ROW 1 {row[1]}.')
 
+"""
+
   i_color=0
   for i_gas in range(n_gases):
     #print("times",times[cell_to_plot],"axes",gases[cell_to_plot][i_gas], "labels", labels[i_gas+2])
@@ -369,6 +462,86 @@ def plot_species(file):
 
   plt.show()
 
+
+
+
+
+  for i in data1:
+    data1_values = data1[i]
+    data2_values = data2[i]
+
+    for j in range(timesteps):
+      len_timestep=int(len(data1_values)/timesteps)
+
+      #data1_timestep=data1[0+j*len_timestep:len_timestep+j*len_timestep]
+      #data1_timestep=data1_values[j*len_timestep:len_timestep*(1+j)]
+      #data2_timestep=data2_values[j*len_timestep:len_timestep*(1+j)]
+
+      l=j*len_timestep
+      r=len_timestep*(1+j)
+
+      #d1=np.array(data1_values[l:r])
+      #d2=np.array(data2_values[l:r])
+
+      #d1=np.reshape(d1,(-1,1))
+      #d2=np.reshape(d2,(-1,1))
+
+      #scaler.fit(d1)
+      #scaler.fit(d2)
+
+      #data1_timestep=scaler.transform(d1)
+      #data2_timestep=scaler.transform(d2)
+
+      #d1=(d1/(d1.max()-d1.min()))
+      #d2=(d2/(d1.max()-d2.min()))
+
+      #out1.append(data1_timestep.tolist())
+      #out2.append(data2_timestep.tolist())
+
+      #print("d1",d1)
+
+      #data1_timestep=preprocessing.normalize(d1)
+      #data2_timestep=preprocessing.normalize(d2)
+
+      #out1.append(data1_timestep.tolist())
+      #out2.append(data2_timestep.tolist())
+
+      #out2.append([data2_timestep[:]/ \
+      #            (max(data2_timestep)-min(data2_timestep))])
+
+
+      out1.append(data1_values[l:r])
+      out2.append(data2_values[l:r])
+
+      #Normalize species
+
+
+      #MSE = mean_squared_error(data1_timestep, data2_timestep)
+      #RMSE = math.sqrt(MSE)
+
+      #data_timestep=data1_timestep+data2_timestep
+
+      #NRMSEs_species[i][j]=RMSE/(max(data_timestep)-min(data_timestep))
+
+
+  #NRMSE among all species
+
+  print("out1",out1)
+
+  NRMSEs=[0]*timesteps
+  for i in range(timesteps):
+
+    MSE = mean_squared_error(out1[i], out2[i])
+    RMSE = math.sqrt(MSE)
+
+    aux_out=out1[i]+out2[i]
+
+    print("out1[i]",out1[i])
+
+    NRMSEs[i]=RMSE/(max(aux_out)-min(aux_out))
+
+
+"""
 
 
 """
@@ -414,3 +587,4 @@ fig.legend(handles=h1+h2,labels=l1+l2,bbox_to_anchor=(legend_x, legend_y), \
 out_filename = 'partmc_case1_soa_one_particle.pdf'
 fig.savefig(out_filename)
 """
+

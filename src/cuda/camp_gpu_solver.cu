@@ -552,11 +552,7 @@ int camp_solver_check_model_state_gpu(N_Vector solver_state, SolverData *sd,
   HANDLE_ERROR(cudaMemcpy(md->total_state, mGPU->state, md->state_size, cudaMemcpyDeviceToHost));
 
 
-#ifdef DERIV_CPU_ON_GPU
 
-
-
-#endif
 
 #ifdef DEBUG_CHECK_MODEL_STATE_CUDA
   for (int i_cell = 0; i_cell < n_cells; i_cell++) {
@@ -861,6 +857,17 @@ void rxn_calc_deriv_gpu(SolverData *sd, N_Vector deriv, double time_step,
   double *J_tmp = N_VGetArrayPointer(md->J_tmp);
   ModelDataGPU *mGPU = &sd->mGPU;
 
+#ifndef DERIV_CPU_ON_GPU
+
+  //Transfer cv_ftemp() not needed because bicg->dftemp=md->deriv_data_gpu;
+  //cudaMemcpy(cv_ftemp_data,bicg->dftemp,bicg->nrows*sizeof(double),cudaMemcpyDeviceToHost);
+
+  HANDLE_ERROR(cudaMemcpy(mGPU->deriv_data, deriv_data, md->deriv_size, cudaMemcpyHostToDevice));
+  HANDLE_ERROR(cudaMemcpy(mGPU->state, md->total_state, md->state_size, cudaMemcpyHostToDevice));
+
+
+#else
+
  //debug
   /*if(sd->counterDerivCPU>=0){
     printf("camp solver_run start [(id),conc], n_state_var %d, n_cells %d\n", md->n_per_cell_state_var, n_cells);
@@ -885,12 +892,6 @@ void rxn_calc_deriv_gpu(SolverData *sd, N_Vector deriv, double time_step,
 #endif
 
 #ifndef AEROS_CPU
-
-  update_aero_contrib_gpu(sd);
-
-#endif
-
-#ifdef DERIV_CPU_ON_GPU
 
   update_aero_contrib_gpu(sd);
 
@@ -940,6 +941,7 @@ void rxn_calc_deriv_gpu(SolverData *sd, N_Vector deriv, double time_step,
     //Sync
     //HANDLE_ERROR(cudaMemcpy(md->deriv_aux, md->deriv_data_gpu, md->deriv_size, cudaMemcpyDeviceToHost));
 
+    //todo i think not necessary
     HANDLE_ERROR(cudaMemcpy(deriv_data, mGPU->deriv_data, md->deriv_size, cudaMemcpyDeviceToHost));
 
   }
@@ -966,6 +968,9 @@ void rxn_calc_deriv_gpu(SolverData *sd, N_Vector deriv, double time_step,
   timeDeriv += (clock() - t1);
   t3 = clock();*/
 #endif
+
+#endif
+
 }
 
 void get_f_from_gpu(SolverData *sd){

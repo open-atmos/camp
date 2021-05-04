@@ -8,6 +8,18 @@ import numpy as np
 from pylab import imread,subplot,imshow,show
 import plot_functions
 
+def write_config_file(case_gpu_cpu):
+  file1 = open("config_variables_c_solver.txt","w")
+
+  print(case_gpu_cpu)
+
+  if(case_gpu_cpu=="CPU"):
+    file1.write("USE_CPU=ON\n")
+  else:
+    file1.write("USE_CPU=OFF\n")
+
+  file1.close()
+
 def mpi_scalability():
 
   #config_file="simple"
@@ -112,8 +124,6 @@ def speedup_cells(metric):
 
   mpiProcessesList = [1]
 
-  #Read file
-
   #cells = [100,1000]
   cells = [1,10]
 
@@ -134,7 +144,6 @@ def speedup_cells(metric):
   if not os.path.exists('out'):
     os.makedirs('out')
 
-  #todo dynamic title timesteps
   plot_title = config_file + ", Timesteps: 0-720"
   #plot_title = config_file + ", Timesteps: 720-1400"
 
@@ -206,7 +215,92 @@ def speedup_cells(metric):
     plot_functions.plot_speedup_cells(cells,data[plot_y_key3],plot_x_key, \
                                     plot_y_key3, plot_title)
 
-    #compute mean can be also interesting to see the mean speedup...
+def rmse_timesteps():
+
+  #config_file="simple"
+  #config_file="monarch_cb05"
+  config_file="monarch_binned"
+
+  mpi="yes"
+  #mpi="no"
+
+  mpiProcessesList = [1]
+
+  #cells = [100,1000]
+  cells = [10]
+  cell = cells[0]
+
+  timesteps = 60
+  TIME_STEP = 2
+
+  cases_multicells_onecell = ["one-cell","multi-cells"]
+  #cases_multicells_onecell = ["one-cell"]
+  #cases_multicells_onecell = ["multi-cells"]
+
+  cases_gpu_cpu = ["CPU"]
+  #cases_gpu_cpu = ["gpu"]
+  case_gpu_cpu = cases_gpu_cpu[0]
+
+  data = {}
+
+  # make the output directory if it doesn't exist
+  if not os.path.exists('out'):
+    os.makedirs('out')
+
+  write_config_file(case_gpu_cpu)
+
+  for mpiProcesses in mpiProcessesList:
+
+    exec_str=""
+    if mpi=="yes":
+      exec_str+="mpirun -v -np "+str(mpiProcesses)+" --bind-to none "
+
+    exec_str+="../../mock_monarch config_"+config_file+".json "+"interface_"+config_file \
+              +".json "+config_file
+
+    ADD_EMISIONS="OFF"
+    if config_file=="monarch_binned":
+      ADD_EMISIONS="ON"
+
+    exec_str+=" "+ADD_EMISIONS
+
+    cell_str=str(cell)
+
+    for case in cases_multicells_onecell:
+
+      print(exec_str +" " + cell_str + " " + case + " " + str(timesteps))
+      os.system(exec_str +" " + cell_str + " " + case + " " + str(timesteps))
+
+      data[case] = {}
+
+      #file = 'out/'+config_file+'_'+case+'_solver_stats.csv'
+      file = 'out/'+config_file+'_'+case+'_results_all_cells.csv'
+      plot_functions.read_solver_stats(file, data[case])
+
+    #print(data)
+
+    if (len(cases_multicells_onecell) == 2):
+
+      NRMSEs=plot_functions.calculate_NMRSE(data,timesteps)
+
+      #data[cell],plot_y_key2=plot_functions.calculate_speedup( \
+      #  cases_multicells_onecell,data[cell],"timestep", \
+      #  plot_y_key)
+
+    #print(data)
+
+      namex = "Timesteps"
+      namey="NRMSE"
+      #datax=list(range(TIME_STEP,timesteps*TIME_STEP,TIME_STEP))
+      datax=list(range(TIME_STEP,TIME_STEP*(timesteps+1),TIME_STEP))
+      print(datax)
+      datay=NRMSEs
+      #plot_title="Ideal "+config_file+" "+case_gpu_cpu+", Timesteps: "+str(timesteps)
+      plot_title="Practical "+config_file+" "+case_gpu_cpu+", Timesteps: "+str(timesteps)
+      #plot_title = config_file + ", Timesteps: 720-1400"
+
+      plot_functions.plot(namex,namey,datax,datay,plot_title)
+
 
 
 def speedup_timesteps():
@@ -222,8 +316,6 @@ def speedup_timesteps():
 
   mpiProcessesList = [1]
 
-  #Read file
-
   #cells = [100,1000]
   cells = [10]
 
@@ -232,8 +324,9 @@ def speedup_timesteps():
   #cases_multicells_onecell = ["multi-cells"]
 
   #SELECT MANUALLY (future:if arch=cpu then select cpu if not gpu)
-  cases_gpu_cpu = ["cpu"]
+  cases_gpu_cpu = ["CPU"]
   #cases_gpu_cpu = ["gpu"]
+  #cases_gpu_cpu = ["CPU","gpu"]
 
   plot_x_key = "timestep"
 
@@ -322,11 +415,11 @@ def speedup_timesteps():
 
     plot_functions.plot_solver_stats(data,plot_x_key, plot_y_key2, plot_title)
 
-def debug_no_plot():
+def speedup_timesteps_counterBCG():
 
-  config_file="simple"
+  #config_file="simple"
   #config_file="monarch_cb05"
-  #config_file="monarch_binned"
+  config_file="monarch_binned"
 
   mpi="yes"
   #mpi="no"
@@ -335,37 +428,46 @@ def debug_no_plot():
 
   mpiProcessesList = [1]
 
-  #Read file
-
   #cells = [100,1000]
-  cells = [1000]
+  cells = [5]
 
-  #cases_multicells_onecell = ["one-cell","multi-cells"]
+  cases_multicells_onecell = ["one-cell","multi-cells"]
   #cases_multicells_onecell = ["one-cell"]
-  cases_multicells_onecell = ["multi-cells"]
+  #cases_multicells_onecell = ["multi-cells"]
 
-  #SELECT MANUALLY (future:if arch=cpu then select cpu if not gpu)
-  cases_gpu_cpu = ["cpu"]
-  #cases_gpu_cpu = ["gpu"]
+  #cases_gpu_cpu = ["CPU"]
+  cases_gpu_cpu = ["gpu"]
+  #cases_gpu_cpu = ["CPU","gpu"]
 
   plot_x_key = "timestep"
 
   #plot_y_key = "timeCVode"
   #plot_y_key = "timeLS"
-  plot_y_key = "counterLS"
+  #plot_y_key = "counterLS"
+  plot_y_key = "counterBCG"
+
+  remove_iters=0#10 #360
+
+  data = {}
 
   # make the output directory if it doesn't exist
   if not os.path.exists('out'):
     os.makedirs('out')
 
-  plot_title = config_file + ", cells: " + str(cells[0])
+  #plot_title = config_file + ", cells: " + str(cells[0])
+  #plot_title = config_file + ", cells: " + str(cells[0]) + " Diff cells: temp, press and emissions"
+  #plot_title = config_file + ", cells: " + str(cells[0]) + " Diff cells: temp and press"
+  plot_title = config_file + ", cells: " + str(cells[0]) + " Ideal case"
   #plot_title = config_file + ", cells: " + str(cells[0]) + ", Timesteps: 0-72"
   #plot_title = config_file + ", cells: " + str(cells[0]) + ", Timesteps: 720-792"
 
-
   cells_init = cells
 
-  for mpiProcesses in mpiProcessesList:
+  for case_gpu_cpu in cases_gpu_cpu:
+
+    write_config_file(case_gpu_cpu)
+
+    mpiProcesses = mpiProcessesList[0]
 
     exec_str=""
     if mpi=="yes":
@@ -386,10 +488,115 @@ def debug_no_plot():
 
     for case in cases_multicells_onecell:
 
+      data_tmp = {}
+
+      file = 'out/'+config_file+'_'+case+'_solver_stats.csv'
+
       for cell in cells:
 
         cell_str=str(cell)
         print(exec_str + " " + cell_str + " " + case)
         os.system(exec_str + " " + cell_str + " " + case)
+
+        plot_functions.read_solver_stats(file, data_tmp)
+
+        if(plot_y_key=="counterBCG2"):
+          for i in range(len(data_tmp[plot_y_key])):
+            #print(data_tmp[plot_y_key][i],data_tmp["counterLS"][i])
+            data_tmp[plot_y_key][i]=data_tmp[plot_y_key][i]/\
+                                    data_tmp["counterLS"][i]
+
+      data[case]=data_tmp
+
+    #print(data)
+
+    if (len(cases_multicells_onecell) == 2):
+
+      data,plot_y_key2=plot_functions.calculate_speedup( \
+      cases_multicells_onecell,data,plot_x_key, \
+      plot_y_key)
+
+      #print(data[plot_x_key])
+
+      for i in range(remove_iters):
+        data[plot_x_key].pop(0)
+        data[plot_y_key2].pop(0)
+        #print (data[plot_x_key].pop(0))
+        #print (data[plot_y_key2].pop(0))
+
+      #print(data[plot_x_key])
+
+    else:
+      data = data_tmp
+      plot_y_key2=plot_y_key
+
+    #print(data)
+
+    plot_functions.plot_solver_stats(data,plot_x_key, plot_y_key2, plot_title)
+
+
+def debug_no_plot():
+
+  #config_file="simple"
+  #config_file="monarch_cb05"
+  config_file="monarch_binned"
+
+  mpi="yes"
+  #mpi="no"
+
+  mpiProcessesList = [1]
+
+  #Read file
+
+  #cells = [100,1000]
+  cells = [3]
+
+  timesteps = 2
+
+  #cases_multicells_onecell = ["one-cell","multi-cells"]
+  cases_multicells_onecell = ["one-cell"]
+  #cases_multicells_onecell = ["multi-cells"]
+
+  #SELECT MANUALLY (future:if arch=cpu then select cpu if not gpu)
+  #cases_gpu_cpu = ["CPU"]
+  cases_gpu_cpu = ["gpu"]
+  case_gpu_cpu = cases_gpu_cpu[0]
+
+  # make the output directory if it doesn't exist
+  if not os.path.exists('out'):
+    os.makedirs('out')
+
+  plot_title = config_file + ", cells: " + str(cells[0])
+  #plot_title = config_file + ", cells: " + str(cells[0]) + ", Timesteps: 0-72"
+  #plot_title = config_file + ", cells: " + str(cells[0]) + ", Timesteps: 720-792"
+
+  cells_init = cells
+
+  write_config_file(case_gpu_cpu)
+
+  for mpiProcesses in mpiProcessesList:
+
+    exec_str=""
+    if mpi=="yes":
+      exec_str+="mpirun -v -np "+str(mpiProcesses)+" --bind-to none "
+      #exec_str+="srun -n "+str(mpiProcesses)+" "
+
+    exec_str+="../../mock_monarch config_"+config_file+".json "+"interface_"+config_file \
+              +".json "+config_file
+
+    ADD_EMISIONS="OFF"
+    if config_file=="monarch_binned":
+      ADD_EMISIONS="ON"
+
+    exec_str+=" "+ADD_EMISIONS
+
+    for case in cases_multicells_onecell:
+
+      for cell in cells:
+
+        cell_str=str(cell)
+        print(exec_str +" " + cell_str + " " + case + " " + str(timesteps))
+        os.system(exec_str +" " + cell_str + " " + case + " " + str(timesteps))
+
 
 

@@ -295,6 +295,8 @@ typedef struct {
       max_loss_precision;  // Maximum loss of precision during last call to f()
 #endif
 
+  int use_cpu; //too try bool instead of int
+
 #ifdef PMC_DEBUG_GPU
   int counterDerivTotal;
   int counterDerivCPU;
@@ -302,18 +304,17 @@ typedef struct {
   int counterJacCPU;
   int counterSolve;
   int counterFail;
+  int counterBCG;
   int counterLS;
   double timeCVode;
   double timeCVodeTotal;
   double timeLS;
   double timeDerivCPU;
   double timeJacCPU;
-  //todo clean file
-  FILE *file;
-
+  FILE *file; //todo clean file
 #endif
 
-#ifdef PMC_DEBUG_DERIV
+#ifdef PMC_DEBUG_DERIV_CPU
   N_Vector y_first;
   int max_deriv_print;
   int counter_deriv_print;
@@ -328,7 +329,7 @@ typedef struct {
   itsolver bicg;
   //todo use ModelData mGPU; (only 1 struct of modelData but 2 instances): Remove vars only used on cpu like deriv_size
   ModelDataGPU mGPU;
-#ifndef CHECK_GPU_LINSOLVE  // todo fix name
+#ifdef CHECK_GPU_LINSOLVE  // todo fix name
   double max_error_linsolver;
   int max_error_linsolver_i;
   int n_linsolver_i;
