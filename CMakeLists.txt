@@ -633,8 +633,6 @@ add_library(partmclib ${CAMP_F_SRC}
   ${SUNDIALS_SRC} ${GSL_SRC} ${C_SORT_SRC} ${CAMP_CUDA_SRC} ${CAMP_CUDA_SRC_2} ${CAMP_CXX_SRC} )
 
 if (CUDA_FOUND)
-  #todo check compilation and execution works fine
-
 
   #CUDA_ADD_LIBRARY(sundials_nveccuda_static STATIC ${nveccuda_SOURCES})
   #SET_TARGET_PROPERTIES(sundials_nveccuda_static

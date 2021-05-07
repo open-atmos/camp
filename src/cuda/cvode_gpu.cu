@@ -243,7 +243,7 @@ int CVodeGetCurrentStepGPU(void *cvode_mem, realtype *hcur)
   return(CV_SUCCESS);
 }*/
 
-void allocSolverGPU(CVodeMem cv_mem, SolverData *sd)
+void alloc_solver_gpu(CVodeMem cv_mem, SolverData *sd)
 {
   itsolver *bicg = &(sd->bicg);
   ModelData *md = &(sd->model_data);
@@ -252,6 +252,12 @@ void allocSolverGPU(CVodeMem cv_mem, SolverData *sd)
 
   double *ewt = NV_DATA_S(cv_mem->cv_ewt);
   double *tempv = NV_DATA_S(cv_mem->cv_tempv);
+
+  bicg->n_cells=md->n_cells;
+  ModelDataGPU *mGPU = &sd->mGPU;
+  bicg->dA=mGPU->J;//set itsolver gpu pointer to jac pointer initialized at camp
+  //cudaMemcpy(bicg->A, bicg->dA, bicg->nnz*sizeof(double), cudaMemcpyDeviceToHost);
+  bicg->dftemp=mGPU->deriv_data; //deriv is gpu pointer
 
 #ifdef CHECK_GPU_LINSOLVE
   sd->max_error_linsolver = 0.0;
@@ -279,11 +285,9 @@ void allocSolverGPU(CVodeMem cv_mem, SolverData *sd)
   cudaDeviceProp prop;
   cudaGetDeviceProperties(&prop, device);
   bicg->threads=prop.maxThreadsPerBlock;//1024; //128 set at max gpu
+  //bicg->threads=1024;
+  //printf("bicg->threads %d \n", bicg->threads);
   bicg->blocks=(bicg->nrows+bicg->threads-1)/bicg->threads;
-  bicg->n_cells=md->n_cells;
-  ModelDataGPU *mGPU = &sd->mGPU;
-  bicg->dA=mGPU->J;//set itsolver gpu pointer to jac pointer initialized at camp
-  bicg->dftemp=mGPU->deriv_data; //deriv is gpu pointer
 
   // Allocating matrix data to the GPU
   cudaMalloc((void**)&bicg->djA,bicg->nnz*sizeof(int));
@@ -305,9 +309,6 @@ void allocSolverGPU(CVodeMem cv_mem, SolverData *sd)
   cudaMemcpy(bicg->dacor,ewt,bicg->nrows*sizeof(double),cudaMemcpyHostToDevice);
   cudaMemcpy(bicg->dftemp,ewt,bicg->nrows*sizeof(double),cudaMemcpyHostToDevice);
   cudaMemcpy(bicg->dx,tempv,bicg->nnz*sizeof(double),cudaMemcpyHostToDevice);
-
-  bicg->maxIt=100;
-  bicg->tolmax=1e-10; //cv_mem->cv_reltol CAMP selected accuracy (1e-8) //1e-10;//1e-6
 
   //Init Linear Solver variables
   createSolver(bicg);
@@ -361,6 +362,138 @@ void allocSolverGPU(CVodeMem cv_mem, SolverData *sd)
   cudaEventCreate(&bicg->stopJac);
 #endif
 
+}
+
+int check_jac_status_error(SUNMatrix A)
+{
+  sunindextype j, i, newvals, M, N;
+  booleantype newmat, found;
+  sunindextype *Ap, *Ai;
+  //realtype *Ax;
+  int flag;
+
+  /* store shortcuts to matrix dimensions (M is inner dimension, N is outer) */
+  if (SM_SPARSETYPE_S(A) == CSC_MAT) {
+    M = SM_ROWS_S(A);
+    N = SM_COLUMNS_S(A);
+  } else {
+    M = SM_COLUMNS_S(A);
+    N = SM_ROWS_S(A);
+  }
+
+  /* access data arrays from A (return if failure) */
+  Ap = Ai = NULL;
+  //Ax = NULL;
+  if (SM_INDEXPTRS_S(A)) Ap = SM_INDEXPTRS_S(A);
+  else return (-1);
+  if (SM_INDEXVALS_S(A)) Ai = SM_INDEXVALS_S(A);
+  else return (-1);
+  //if (SM_DATA_S(A)) Ax = SM_DATA_S(A);
+  //else return (-1);
+
+
+  /* determine if A: contains values on the diagonal (so I can just be added in);
+     if not, then increment counter for extra storage that should be required. */
+  newvals = 0;
+  for (j = 0; j < SUNMIN(M, N); j++) {
+    /* scan column (row if CSR) of A, searching for diagonal value */
+    found = SUNFALSE;
+    for (i = Ap[j]; i < Ap[j + 1]; i++) {
+      if (Ai[i] == j) {
+        found = SUNTRUE;
+        break;
+      }
+    }
+    /* if no diagonal found, increment necessary storage counter */
+    if (!found) newvals += 1;
+  }
+
+  /* If extra nonzeros required, check whether matrix has sufficient storage space
+     for new nonzero entries  (so I can be inserted into existing storage) */
+  newmat = SUNFALSE;   /* no reallocation needed */
+  if (newvals > (SM_NNZ_S(A) - Ap[N]))
+    newmat = SUNTRUE;
+
+  //case 1: A already contains a diagonal
+  if (newvals == 0) {
+
+    flag = 0;
+    //printf("jac_indices had or need change to fill the diagonal");
+
+    //   case 2: A has sufficient storage, but does not already contain a diagonal
+  } else if (!newmat) {
+
+    printf("Jacobian does not contain a diagonal, jac_indices had/need to change");
+    flag = 1;
+    //case 3: A must be reallocated with sufficient storage */
+  } else {
+
+    printf("Jacobian must be reallocated with sufficient storage");
+    flag = 1;
+  }
+
+  return flag;
+}
+
+/*
+ * cvHandleFailure
+ *
+ * This routine prints error messages for all cases of failure by
+ * cvHin and cvStep.
+ * It returns to CVode the value that CVode is to return to the user.
+ */
+
+int cvHandleFailure_gpu2(CVodeMem cv_mem, int flag)
+{
+
+  /* Set vector of  absolute weighted local errors */
+  /*
+  N_VProd(acor, ewt, tempv);
+  N_VAbs(tempv, tempv);
+  */
+
+  /* Depending on flag, print error message and return error flag */
+  switch (flag) {
+    case CV_ERR_FAILURE:
+      cvProcessError(cv_mem, CV_ERR_FAILURE, "CVODE", "CVode", MSGCV_ERR_FAILS,
+                     cv_mem->cv_tn, cv_mem->cv_h);
+      break;
+    case CV_CONV_FAILURE:
+      cvProcessError(cv_mem, CV_CONV_FAILURE, "CVODE", "CVode", MSGCV_CONV_FAILS,
+                     cv_mem->cv_tn, cv_mem->cv_h);
+      break;
+    case CV_LSETUP_FAIL:
+      cvProcessError(cv_mem, CV_LSETUP_FAIL, "CVODE", "CVode", MSGCV_SETUP_FAILED,
+                     cv_mem->cv_tn);
+      break;
+    case CV_LSOLVE_FAIL:
+      cvProcessError(cv_mem, CV_LSOLVE_FAIL, "CVODE", "CVode", MSGCV_SOLVE_FAILED,
+                     cv_mem->cv_tn);
+      break;
+    case CV_RHSFUNC_FAIL:
+      cvProcessError(cv_mem, CV_RHSFUNC_FAIL, "CVODE", "CVode", MSGCV_RHSFUNC_FAILED,
+                     cv_mem->cv_tn);
+      break;
+    case CV_UNREC_RHSFUNC_ERR:
+      cvProcessError(cv_mem, CV_UNREC_RHSFUNC_ERR, "CVODE", "CVode", MSGCV_RHSFUNC_UNREC,
+                     cv_mem->cv_tn);
+      break;
+    case CV_REPTD_RHSFUNC_ERR:
+      cvProcessError(cv_mem, CV_REPTD_RHSFUNC_ERR, "CVODE", "CVode", MSGCV_RHSFUNC_REPTD,
+                     cv_mem->cv_tn);
+      break;
+    case CV_RTFUNC_FAIL:
+      cvProcessError(cv_mem, CV_RTFUNC_FAIL, "CVODE", "CVode", MSGCV_RTFUNC_FAILED,
+                     cv_mem->cv_tn);
+      break;
+    case CV_TOO_CLOSE:
+      cvProcessError(cv_mem, CV_TOO_CLOSE, "CVODE", "CVode", MSGCV_TOO_CLOSE);
+      break;
+    default:
+      return(CV_SUCCESS);
+  }
+
+  return(flag);
 }
 
 int CVode_gpu2(void *cvode_mem, realtype tout, N_Vector yout,
@@ -1391,9 +1524,6 @@ int cvYddNorm_gpu2(CVodeMem cv_mem, realtype hg, realtype *yddnrm)
   return(CV_SUCCESS);
 }
 
-
-
-
 /*
  * -----------------------------------------------------------------
  * Functions for rootfinding
@@ -1876,6 +2006,8 @@ void set_data_gpu2(CVodeMem cv_mem, SolverData *sd)
 */
 }
 
+
+
 /*
  * cvStep
  *
@@ -1925,7 +2057,11 @@ int cvStep_gpu2(SolverData *sd, CVodeMem cv_mem)
     cudaEventRecord(bicg->startNewtonIt);
 #endif
 
+#ifdef NEWTON_CPU
+    nflag = cvNlsNewton_cpu2(sd, cv_mem, nflag);
+#else
     nflag = cvNlsNewton_gpu2(sd, cv_mem, nflag);
+#endif
 
 #ifdef PMC_DEBUG_GPU
     cudaEventRecord(bicg->stopNewtonIt);
@@ -3246,8 +3382,8 @@ int linsolsetup_gpu2(SolverData *sd, CVodeMem cv_mem,int convfail,N_Vector vtemp
   jok = !jbad;
 
   // If jok = SUNTRUE, use saved copy of J
-  if (jok) {
-  //  if (0) {
+  if (jok) {//todo works with multi-cells but no one-cells
+    //if (0) {
     cv_mem->cv_jcur = SUNFALSE;
     retval = SUNMatCopy(cvdls_mem->savedJ, cvdls_mem->A);
 
@@ -3471,8 +3607,8 @@ int linsolsolve_gpu2(SolverData *sd, CVodeMem cv_mem)
 
 #endif
 
-    //solveGPU(bicg,bicg->dA,bicg->djA,bicg->diA,bicg->dx,bicg->dtempv);
-    solveGPU_block(bicg,bicg->dA,bicg->djA,bicg->diA,bicg->dx,bicg->dtempv);
+    solveGPU(bicg,bicg->dA,bicg->djA,bicg->diA,bicg->dx,bicg->dtempv);
+    //solveGPU_block(bicg,bicg->dA,bicg->djA,bicg->diA,bicg->dx,bicg->dtempv);
 
 #ifdef DEBUG_LINEAR_SOLVERS
 
@@ -3685,137 +3821,7 @@ int linsolsolve_gpu2(SolverData *sd, CVodeMem cv_mem)
   //return 0;
 }
 
-int check_jac_status_error(SUNMatrix A)
-{
-  sunindextype j, i, newvals, M, N;
-  booleantype newmat, found;
-  sunindextype *Ap, *Ai;
-  //realtype *Ax;
-  int flag;
 
-  /* store shortcuts to matrix dimensions (M is inner dimension, N is outer) */
-  if (SM_SPARSETYPE_S(A) == CSC_MAT) {
-    M = SM_ROWS_S(A);
-    N = SM_COLUMNS_S(A);
-  } else {
-    M = SM_COLUMNS_S(A);
-    N = SM_ROWS_S(A);
-  }
-
-  /* access data arrays from A (return if failure) */
-  Ap = Ai = NULL;
-  //Ax = NULL;
-  if (SM_INDEXPTRS_S(A)) Ap = SM_INDEXPTRS_S(A);
-  else return (-1);
-  if (SM_INDEXVALS_S(A)) Ai = SM_INDEXVALS_S(A);
-  else return (-1);
-  //if (SM_DATA_S(A)) Ax = SM_DATA_S(A);
-  //else return (-1);
-
-
-  /* determine if A: contains values on the diagonal (so I can just be added in);
-     if not, then increment counter for extra storage that should be required. */
-  newvals = 0;
-  for (j = 0; j < SUNMIN(M, N); j++) {
-    /* scan column (row if CSR) of A, searching for diagonal value */
-    found = SUNFALSE;
-    for (i = Ap[j]; i < Ap[j + 1]; i++) {
-      if (Ai[i] == j) {
-        found = SUNTRUE;
-        break;
-      }
-    }
-    /* if no diagonal found, increment necessary storage counter */
-    if (!found) newvals += 1;
-  }
-
-  /* If extra nonzeros required, check whether matrix has sufficient storage space
-     for new nonzero entries  (so I can be inserted into existing storage) */
-  newmat = SUNFALSE;   /* no reallocation needed */
-  if (newvals > (SM_NNZ_S(A) - Ap[N]))
-    newmat = SUNTRUE;
-
-  //case 1: A already contains a diagonal
-  if (newvals == 0) {
-
-    flag = 0;
-    //printf("jac_indices had or need change to fill the diagonal");
-
-  //   case 2: A has sufficient storage, but does not already contain a diagonal
-  } else if (!newmat) {
-
-    printf("Jacobian does not contain a diagonal, jac_indices had/need to change");
-    flag = 1;
-  //case 3: A must be reallocated with sufficient storage */
-  } else {
-
-    printf("Jacobian must be reallocated with sufficient storage");
-    flag = 1;
-  }
-
-  return flag;
-}
-
-/*
- * cvHandleFailure
- *
- * This routine prints error messages for all cases of failure by
- * cvHin and cvStep.
- * It returns to CVode the value that CVode is to return to the user.
- */
-
-int cvHandleFailure_gpu2(CVodeMem cv_mem, int flag)
-{
-
-  /* Set vector of  absolute weighted local errors */
-  /*
-  N_VProd(acor, ewt, tempv);
-  N_VAbs(tempv, tempv);
-  */
-
-  /* Depending on flag, print error message and return error flag */
-  switch (flag) {
-    case CV_ERR_FAILURE:
-      cvProcessError(cv_mem, CV_ERR_FAILURE, "CVODE", "CVode", MSGCV_ERR_FAILS,
-                     cv_mem->cv_tn, cv_mem->cv_h);
-      break;
-    case CV_CONV_FAILURE:
-      cvProcessError(cv_mem, CV_CONV_FAILURE, "CVODE", "CVode", MSGCV_CONV_FAILS,
-                     cv_mem->cv_tn, cv_mem->cv_h);
-      break;
-    case CV_LSETUP_FAIL:
-      cvProcessError(cv_mem, CV_LSETUP_FAIL, "CVODE", "CVode", MSGCV_SETUP_FAILED,
-                     cv_mem->cv_tn);
-      break;
-    case CV_LSOLVE_FAIL:
-      cvProcessError(cv_mem, CV_LSOLVE_FAIL, "CVODE", "CVode", MSGCV_SOLVE_FAILED,
-                     cv_mem->cv_tn);
-      break;
-    case CV_RHSFUNC_FAIL:
-      cvProcessError(cv_mem, CV_RHSFUNC_FAIL, "CVODE", "CVode", MSGCV_RHSFUNC_FAILED,
-                     cv_mem->cv_tn);
-      break;
-    case CV_UNREC_RHSFUNC_ERR:
-      cvProcessError(cv_mem, CV_UNREC_RHSFUNC_ERR, "CVODE", "CVode", MSGCV_RHSFUNC_UNREC,
-                     cv_mem->cv_tn);
-      break;
-    case CV_REPTD_RHSFUNC_ERR:
-      cvProcessError(cv_mem, CV_REPTD_RHSFUNC_ERR, "CVODE", "CVode", MSGCV_RHSFUNC_REPTD,
-                     cv_mem->cv_tn);
-      break;
-    case CV_RTFUNC_FAIL:
-      cvProcessError(cv_mem, CV_RTFUNC_FAIL, "CVODE", "CVode", MSGCV_RTFUNC_FAILED,
-                     cv_mem->cv_tn);
-      break;
-    case CV_TOO_CLOSE:
-      cvProcessError(cv_mem, CV_TOO_CLOSE, "CVODE", "CVode", MSGCV_TOO_CLOSE);
-      break;
-    default:
-      return(CV_SUCCESS);
-  }
-
-  return(flag);
-}
 
 
 void free_ode(SolverData *sd)

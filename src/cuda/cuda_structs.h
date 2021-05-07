@@ -5,6 +5,7 @@
 #ifndef CAMPGPU_CUDA_STRUCTS_H
 #define CAMPGPU_CUDA_STRUCTS_H
 
+//Move to proper classes instead of englobing all in a single file
 typedef struct
 {
   //Init variables ("public")

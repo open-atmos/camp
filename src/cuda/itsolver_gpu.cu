@@ -5,6 +5,8 @@ void createSolver(itsolver *bicg)
   //Init variables ("public")
   int nrows = bicg->nrows;
   int blocks = bicg->blocks;
+  bicg->maxIt=1000;
+  bicg->tolmax=1e-12; //cv_mem->cv_reltol CAMP selected accuracy (1e-8) //1e-10;//1e-6
 
   //Auxiliary vectors ("private")
   double ** dr0 = &bicg->dr0;
@@ -367,6 +369,7 @@ void solveGPU_block(itsolver *bicg, double *dA, int *djA, int *diA, double *dx, 
 
 #ifdef INDEPENDENCY_CELLS
 
+  //todo fix if max_threads_block > bicg->threads then what?
   int max_threads_block = nextPowerOfTwo(size_cell);//bicg->threads;
   //int n_shr_empty = max_threads-size_cell;//nextPowerOfTwo(size_cell)-size_cell;
   //int threads_block = max_threads_block - n_shr_empty; //last multiple of size_cell before max_threads

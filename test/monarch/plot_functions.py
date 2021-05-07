@@ -100,6 +100,40 @@ def calculate_std_cell(cell,data, \
   #print(plot_y_key)
   return data,plot_y_key
 
+def check_tolerances(data,timesteps,rel_tol,abs_tol):
+
+  #Extract data
+
+  cases_one_multi_cells=list(data.keys())
+  data1=data[cases_one_multi_cells[0]]
+  data2=data[cases_one_multi_cells[1]]
+
+  #print(data)
+
+  #Reorganize data
+
+  #species_keys=list(data1.keys())
+  species_names=list(data1.keys())
+  len_timestep=int(len(data1[species_names[0]])/timesteps)
+  for j in range(timesteps):
+    for i in data1:
+      data1_values = data1[i]
+      data2_values = data2[i]
+      l=j*len_timestep
+      r=len_timestep*(1+j)
+      out1=data1_values[l:r]
+      out2=data2_values[l:r]
+
+      for k in range(len(out1)):
+        if(out1[k]-out2[k]!=0):
+          out_abs_tol=abs(out1[k]-out2[k])
+          #out_rel_tol=abs(out1[k]-out2[k])/(abs(out1[k])+abs(out2[k]))
+          if(out_abs_tol>abs_tol):
+            print("Exceeding abs_tol",abs_tol,"at",k)
+          #if(out_rel_tol>rel_tol):
+          #  print("Exceeding rel_tol",rel_tol,"at",k)
+          #  print(out1[k],out2[k])
+
 def calculate_NMRSE(data,timesteps):
 
   #Extract data
@@ -146,7 +180,7 @@ def calculate_NMRSE(data,timesteps):
         #print("NMRSE:",NRMSE)
         NRMSEs[j]=NRMSE
 
-  print(NRMSEs)
+  #print(NRMSEs)
 
   return NRMSEs
 

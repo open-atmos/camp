@@ -421,7 +421,7 @@ void init_j_state_deriv_solver_gpu(SolverData *sd, double *J){
 
 }
 
-void update_jac_data_gpu(SolverData *sd, double *J){
+void set_jac_data_gpu(SolverData *sd, double *J){
 
   ModelData *md = &(sd->model_data);
   ModelDataGPU *mGPU = &sd->mGPU;
@@ -435,6 +435,10 @@ void update_jac_data_gpu(SolverData *sd, double *J){
   HANDLE_ERROR(cudaMemcpy(mGPU->J_deriv, J_deriv, md->deriv_size, cudaMemcpyHostToDevice));
 
   //HANDLE_ERROR(cudaMemcpy(mGPU->aero_rep_float_data, md->aero_rep_float_data, md->n_aero_rep_float_param*sizeof(double), cudaMemcpyHostToDevice));
+
+  itsolver *bicg = &(sd->bicg);
+  cudaMemcpy(bicg->djA,bicg->jA,bicg->nnz*sizeof(int),cudaMemcpyHostToDevice);
+  cudaMemcpy(bicg->diA,bicg->iA,(bicg->nrows+1)*sizeof(int),cudaMemcpyHostToDevice);
 
 }
 

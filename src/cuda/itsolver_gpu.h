@@ -14,7 +14,6 @@
 #include<math.h>
 #include<iostream>
 #include"libsolv.h"
-#include<iostream>
 #include<cuda.h>
 #include<cuda_runtime.h>
 #include<cuda_runtime_api.h>

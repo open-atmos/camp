@@ -546,7 +546,7 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
 // Set gpu rxn values
 #ifdef PMC_USE_GPU
   solver_init_int_double_gpu(sd);
-  allocSolverGPU(sd->cvode_mem, sd);
+  alloc_solver_gpu(sd->cvode_mem, sd);
 #endif
 
 #ifdef FAILURE_DETAIL
@@ -598,6 +598,7 @@ int solver_set_eval_jac(void *solver_data, bool eval_Jac) {
 #endif
 
 #ifdef PMC_DEBUG_GPU
+
 
 void printSolverCountersCPU(SolverData *sd){
 
@@ -1054,6 +1055,10 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
 #endif
 
   *counterBCG=0;
+  *timeCVode = 0.0;
+  *timeCVodeTotal = 0.0;
+  *counterLS = 0;
+  *timeLS = 0.0;
 
 #ifdef PMC_DEBUG_GPU
   //todo export struct pointer with all data to reduce code
@@ -1068,6 +1073,8 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
     //printf("CVodeGettimeLS %-le",*timeLS);
   }
   else{
+
+#ifdef PMC_USE_GPU
     itsolver *bicg = &(sd->bicg);
 
     *counterBCG = bicg->counterBiConjGradInternal;
@@ -1078,15 +1085,9 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
     *counterLS=bicg->counterBiConjGrad;
     *timeLS=bicg->timeBiConjGrad/1000;
     //printf("timeLS %-le",*timeLS);
-
-
+#endif
   }
 
-#else
-  *timeCVode = 0.0;
-  *timeCVodeTotal = 0.0;
-  *counterLS = 0;
-  *timeLS = 0.0;
 #endif
 
 #endif
@@ -1165,8 +1166,9 @@ int camp_solver_update_model_state(N_Vector solver_state, SolverData *sd,
 
 #ifdef PMC_USE_GPU
 
-  //Update gpu from cpu changes
-  camp_solver_update_model_state_gpu(solver_state, sd, threshhold, replacement_value);
+  if(sd->use_cpu==0)
+    //Update gpu from cpu changes
+    camp_solver_update_model_state_gpu(solver_state, sd, threshhold, replacement_value);
 
 #endif
 
@@ -1630,13 +1632,6 @@ int Jac(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_data,
     clock_t start = clock();
 #endif
 
-    /*#ifdef PMC_USE_GPU
-
-        // Add contributions from reactions not implemented on GPU
-        rxn_calc_jac_specific_types(md, sd->jac, time_step);
-
-    #else*/
-
     // Calculate the reaction Jacobian
     rxn_calc_jac(md, sd->jac, time_step);
 
@@ -1670,7 +1665,8 @@ int Jac(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_data,
   N_VScale(1.0, deriv, md->J_deriv);
 
 #ifdef PMC_USE_GPU
-  update_jac_data_gpu(sd, SM_DATA_S(J));
+  if(sd->use_cpu==0)
+    set_jac_data_gpu(sd, SM_DATA_S(J));
 #endif
 
 #ifdef PMC_DEBUG
@@ -2348,7 +2344,8 @@ SUNMatrix get_jac_init(SolverData *solver_data) {
   N_VConst(0.0, solver_data->model_data.J_deriv);
 
 #ifdef PMC_USE_GPU
-  init_j_state_deriv_solver_gpu(solver_data, SM_DATA_S(M));
+  if(sd->use_cpu==0)
+    init_j_state_deriv_solver_gpu(solver_data, SM_DATA_S(M));
 #endif
 
   // Free the memory used

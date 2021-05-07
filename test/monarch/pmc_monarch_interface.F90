@@ -531,8 +531,8 @@ contains
       !rate_emi = (/1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,&
       !        0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0 /)
 
-      !DIFF_CELLS_EMI = "ON"
-      DIFF_CELLS_EMI = "OFF"
+      DIFF_CELLS_EMI = "ON"
+      !DIFF_CELLS_EMI = "OFF"
 
       rate_emi(:,:)=0.0
 

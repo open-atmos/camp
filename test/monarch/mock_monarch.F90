@@ -260,8 +260,8 @@ program mock_monarch
     print*, "WARNING: not NUM_TIME_STEP parameter received, value set to ",NUM_TIME_STEP
   end if
 
-  DIFF_CELLS = "OFF"
-  !DIFF_CELLS = "ON"
+  !DIFF_CELLS = "OFF"
+  DIFF_CELLS = "ON"
 
   !todo
   !call get_command_argument(4, arg, status=status_code)

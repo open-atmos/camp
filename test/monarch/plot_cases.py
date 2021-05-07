@@ -11,7 +11,7 @@ import plot_functions
 def write_config_file(case_gpu_cpu):
   file1 = open("config_variables_c_solver.txt","w")
 
-  print(case_gpu_cpu)
+  #print(case_gpu_cpu)
 
   if(case_gpu_cpu=="CPU"):
     file1.write("USE_CPU=ON\n")
@@ -230,7 +230,7 @@ def rmse_timesteps():
   cells = [10]
   cell = cells[0]
 
-  timesteps = 60
+  timesteps = 60#720=12h
   TIME_STEP = 2
 
   cases_multicells_onecell = ["one-cell","multi-cells"]
@@ -238,7 +238,7 @@ def rmse_timesteps():
   #cases_multicells_onecell = ["multi-cells"]
 
   cases_gpu_cpu = ["CPU"]
-  #cases_gpu_cpu = ["gpu"]
+  #cases_gpu_cpu = ["GPU"]
   case_gpu_cpu = cases_gpu_cpu[0]
 
   data = {}
@@ -281,6 +281,10 @@ def rmse_timesteps():
 
     if (len(cases_multicells_onecell) == 2):
 
+      #rel_tol 1.d-5, abs_tol 1d-4
+      #rel_tol=1.0E-2
+      #abs_tol=1.0E-4
+      #plot_functions.check_tolerances(data,timesteps,rel_tol,abs_tol)
       NRMSEs=plot_functions.calculate_NMRSE(data,timesteps)
 
       #data[cell],plot_y_key2=plot_functions.calculate_speedup( \
@@ -293,14 +297,12 @@ def rmse_timesteps():
       namey="NRMSE"
       #datax=list(range(TIME_STEP,timesteps*TIME_STEP,TIME_STEP))
       datax=list(range(TIME_STEP,TIME_STEP*(timesteps+1),TIME_STEP))
-      print(datax)
       datay=NRMSEs
-      #plot_title="Ideal "+config_file+" "+case_gpu_cpu+", Timesteps: "+str(timesteps)
-      plot_title="Practical "+config_file+" "+case_gpu_cpu+", Timesteps: "+str(timesteps)
+      plot_title="Ideal "+config_file+" "+case_gpu_cpu+", Cells: "+cell_str
+      plot_title="Practical "+config_file+" "+case_gpu_cpu+", Cells: "+cell_str
       #plot_title = config_file + ", Timesteps: 720-1400"
 
       plot_functions.plot(namex,namey,datax,datay,plot_title)
-
 
 
 def speedup_timesteps():
@@ -325,8 +327,8 @@ def speedup_timesteps():
 
   #SELECT MANUALLY (future:if arch=cpu then select cpu if not gpu)
   cases_gpu_cpu = ["CPU"]
-  #cases_gpu_cpu = ["gpu"]
-  #cases_gpu_cpu = ["CPU","gpu"]
+  #cases_gpu_cpu = ["GPU"]
+  #cases_gpu_cpu = ["CPU","GPU"]
 
   plot_x_key = "timestep"
 
@@ -436,8 +438,8 @@ def speedup_timesteps_counterBCG():
   #cases_multicells_onecell = ["multi-cells"]
 
   #cases_gpu_cpu = ["CPU"]
-  cases_gpu_cpu = ["gpu"]
-  #cases_gpu_cpu = ["CPU","gpu"]
+  cases_gpu_cpu = ["GPU"]
+  #cases_gpu_cpu = ["CPU","GPU"]
 
   plot_x_key = "timestep"
 
@@ -549,7 +551,7 @@ def debug_no_plot():
   #Read file
 
   #cells = [100,1000]
-  cells = [3]
+  cells = [10]
 
   timesteps = 2
 
@@ -558,8 +560,8 @@ def debug_no_plot():
   #cases_multicells_onecell = ["multi-cells"]
 
   #SELECT MANUALLY (future:if arch=cpu then select cpu if not gpu)
-  #cases_gpu_cpu = ["CPU"]
-  cases_gpu_cpu = ["gpu"]
+  cases_gpu_cpu = ["CPU"]
+  #cases_gpu_cpu = ["GPU"]
   case_gpu_cpu = cases_gpu_cpu[0]
 
   # make the output directory if it doesn't exist

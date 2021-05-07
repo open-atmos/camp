@@ -34,7 +34,7 @@ void solver_new_gpu_cu(SolverData *sd, int n_dep_var, int n_state_var, int n_rxn
      int n_rxn_int_param, int n_rxn_float_param, int n_rxn_env_param, int n_cells);
 void solver_init_int_double_gpu(SolverData *sd);
 void init_j_state_deriv_solver_gpu(SolverData *sd, double *J);
-void update_jac_data_gpu(SolverData *sd, double *J);
+void set_jac_data_gpu(SolverData *sd, double *J);
 void rxn_update_env_state_gpu(SolverData *sd);
 int camp_solver_check_model_state_gpu(N_Vector solver_state, SolverData *sd,
                                        double threshold, double replacement_value);

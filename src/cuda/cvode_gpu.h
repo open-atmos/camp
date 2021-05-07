@@ -11,7 +11,7 @@
 
 //#define HANDLE_ERROR( err ) (HandleError( err, __FILE__, __LINE__ ))
 
-void allocSolverGPU(CVodeMem cv_mem, SolverData *sd);
+void alloc_solver_gpu(CVodeMem cv_mem, SolverData *sd);
 int CVode_gpu2(void *cvode_mem, realtype tout, N_Vector yout,
               realtype *tret, int itask, SolverData *sd);
 int CVodeGetDky_gpu2(void *cvode_mem, realtype t, int k, N_Vector dky);
