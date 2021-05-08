@@ -21,6 +21,13 @@
 
 /* SUNDIALS Header files with a description of contents used */
 #ifdef PMC_USE_SUNDIALS
+
+#ifdef PMC_USE_GPU
+#include <cuda.h>
+#include <cuda_runtime.h>
+#include "cuda/cuda_structs.h"
+#endif
+
 #include <cvode/cvode.h>        /* Protoypes for CVODE fcts., consts.  */
 #include <cvode/cvode_direct.h> /* CVDls interface                     */
 #include <cvode/cvode_impl.h>   /* CVodeMem structure                  */
@@ -49,11 +56,6 @@
 
 #endif
 
-#ifdef PMC_USE_GPU
-#include <cuda.h>
-#include <cuda_runtime.h>
-#include "cuda/cuda_structs.h"
-#endif
 
 // State variable types (Must match parameters defined in pmc_chem_spec_data
 // module)

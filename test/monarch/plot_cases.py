@@ -551,7 +551,7 @@ def debug_no_plot():
   #Read file
 
   #cells = [100,1000]
-  cells = [10]
+  cells = [1]
 
   timesteps = 2
 

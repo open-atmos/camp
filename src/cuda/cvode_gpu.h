@@ -11,7 +11,7 @@
 
 //#define HANDLE_ERROR( err ) (HandleError( err, __FILE__, __LINE__ ))
 
-void alloc_solver_gpu(CVodeMem cv_mem, SolverData *sd);
+void alloc_solver_gpu2(CVodeMem cv_mem, SolverData *sd);
 int CVode_gpu2(void *cvode_mem, realtype tout, N_Vector yout,
               realtype *tret, int itask, SolverData *sd);
 int CVodeGetDky_gpu2(void *cvode_mem, realtype t, int k, N_Vector dky);
@@ -54,15 +54,15 @@ int cvEwtSetSV_gpu2(CVodeMem cv_mem, N_Vector cv_ewt, N_Vector weight);
 int cvNlsNewton_gpu2(SolverData *sd, CVodeMem cv_mem, int nflag);
 //int linsolsetup_gpu2(CVodeMem cv_mem);
 int linsolsetup_gpu2(SolverData *sd, CVodeMem cv_mem, int convfail, N_Vector vtemp1, N_Vector vtemp2, N_Vector vtemp3);
-void free_ode(SolverData *sd);
+void free_ode_gpu2(SolverData *sd);
 int linsolsolve_gpu2(SolverData *sd, CVodeMem cv_mem);
 //int linsolsolve_gpu2(int *m, double *del, double *delp, double *dcon, SUNMatrix J, CVodeMem cv_mem, double *x, double *b);
 
 //void setUpSolver(itsolver bicg, double reltol, double *ewt, int tnrows,int tnnz,double *tA, int *tjA, int *tiA, int tmattype, int qmax, double *dACamp, double *dftempCamp);
 
-int check_jac_status_error(SUNMatrix A);
+int check_jac_status_error_gpu2(SUNMatrix A);
 int cvHandleFailure_gpu2(CVodeMem cv_mem, int flag);
 
-void printSolverCounters(SolverData *sd);
+void printSolverCounters_gpu2(SolverData *sd);
 
 #endif

@@ -23,6 +23,7 @@
 #include "sub_model_solver.h"
 #ifdef PMC_USE_GPU
 #include "cuda/cvode_gpu.h"
+#include "cuda/cvode_cpu.h"
 #endif
 #ifdef PMC_USE_GSL
 #include <gsl/gsl_deriv.h>
@@ -546,7 +547,11 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
 // Set gpu rxn values
 #ifdef PMC_USE_GPU
   solver_init_int_double_gpu(sd);
-  alloc_solver_gpu(sd->cvode_mem, sd);
+#ifndef USE_CVODE_CPU_CAMP_VERSION
+    alloc_solver_cpu2(sd->cvode_mem, sd);
+#else
+    alloc_solver_gpu2(sd->cvode_mem, sd);
+#endif
 #endif
 
 #ifdef FAILURE_DETAIL
@@ -600,7 +605,7 @@ int solver_set_eval_jac(void *solver_data, bool eval_Jac) {
 #ifdef PMC_DEBUG_GPU
 
 
-void printSolverCountersCPU(SolverData *sd){
+void printSolverCounters_gpu2CPU(SolverData *sd){
 
 #ifdef PMC_USE_MPI
   int rank;
@@ -820,8 +825,13 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
     if(sd->use_cpu==1){
       flag = CVode(sd->cvode_mem, (realtype)t_final, sd->y, &t_rt, CV_NORMAL);
     }else{
+#ifndef USE_CVODE_CPU_CAMP_VERSION
+      flag = CVode_cpu2(sd->cvode_mem, (realtype)t_final, sd->y,
+            &t_rt, CV_NORMAL, sd);
+#else
       flag = CVode_gpu2(sd->cvode_mem, (realtype)t_final, sd->y,
-              &t_rt, CV_NORMAL, sd);
+            &t_rt, CV_NORMAL, sd);
+#endif
     }
 
 #else
@@ -2574,13 +2584,13 @@ void solver_free(void *solver_data) {
 #ifdef PMC_USE_GPU
 
   if(sd->use_cpu==0){
-    printSolverCounters(sd);
+    printSolverCounters_gpu2(sd);
   }
 
 #endif
 
   if(sd->use_cpu==0){
-    printSolverCountersCPU(sd);
+    printSolverCounters_gpu2CPU(sd);
   }
 
   //fclose(sd->file);
@@ -2622,7 +2632,11 @@ void solver_free(void *solver_data) {
 #endif
 
 #ifdef PMC_USE_GPU
-  free_ode(sd);
+#ifndef USE_CVODE_CPU_CAMP_VERSION
+  free_ode_cpu2(sd);
+#else
+  free_ode_gpu2(sd);
+#endif
 #endif
 
 }

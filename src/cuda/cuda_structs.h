@@ -104,6 +104,8 @@ typedef struct
 
 } itsolver;
 
+#endif //CAMPGPU_CUDA_STRUCTS_H
+
 //todo use default TimeDerivative class (long must change to double to match GPU case)
 //Time derivative for solver species
 typedef struct {
@@ -182,4 +184,4 @@ typedef struct {
 
 } ModelDataGPU;
 
-#endif //CAMPGPU_CUDA_STRUCTS_H
+
