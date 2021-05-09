@@ -9,7 +9,6 @@
 //#include<cublas.h>
 //#include<cublas_v2.h>
 
-//#define HANDLE_ERROR( err ) (HandleError( err, __FILE__, __LINE__ ))
 
 void alloc_solver_gpu2(CVodeMem cv_mem, SolverData *sd);
 int CVode_gpu2(void *cvode_mem, realtype tout, N_Vector yout,

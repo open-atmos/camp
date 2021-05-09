@@ -250,9 +250,6 @@ void alloc_solver_gpu2(CVodeMem cv_mem, SolverData *sd)
   CVDlsMem cvdls_mem = (CVDlsMem) cv_mem->cv_lmem;
   SUNMatrix J = cvdls_mem->A;
 
-  double *ewt = NV_DATA_S(cv_mem->cv_ewt);
-  double *tempv = NV_DATA_S(cv_mem->cv_tempv);
-
   bicg->n_cells=md->n_cells;
   ModelDataGPU *mGPU = &sd->mGPU;
   bicg->dA=mGPU->J;//set itsolver gpu pointer to jac pointer initialized at camp
@@ -303,6 +300,8 @@ void alloc_solver_gpu2(CVodeMem cv_mem, SolverData *sd)
   cudaMalloc((void**)&bicg->dcv_y,bicg->nrows*sizeof(double));
   cudaMalloc((void**)&bicg->dx,bicg->nrows*sizeof(double));
 
+  double *ewt = NV_DATA_S(cv_mem->cv_ewt);
+  double *tempv = NV_DATA_S(cv_mem->cv_tempv);
   cudaMemcpy(bicg->djA,bicg->jA,bicg->nnz*sizeof(int),cudaMemcpyHostToDevice);
   cudaMemcpy(bicg->diA,bicg->iA,(bicg->nrows+1)*sizeof(int),cudaMemcpyHostToDevice);
   cudaMemcpy(bicg->dewt,ewt,bicg->nrows*sizeof(double),cudaMemcpyHostToDevice);
@@ -3365,6 +3364,24 @@ int cvNlsNewton_gpu2(SolverData *sd, CVodeMem cv_mem, int nflag)
   }
 }
 
+void check_input(double *dx, int len, int var_id){
+
+  double *x=(double*)malloc(len*sizeof(double));
+
+  cudaMemcpy(x, dx, len*sizeof(double), cudaMemcpyDeviceToHost);
+
+  int n_zeros=0;
+  for (int i=0; i<50; i++){
+    if(x[i]==0.0)
+      n_zeros++;
+    printf("%d[%d]=%-le\n",var_id,i,x[i]);
+  }
+  if(n_zeros==len)
+    printf("%d is all zeros\n",var_id);
+
+  free(x);
+}
+
 int linsolsetup_gpu2(SolverData *sd, CVodeMem cv_mem,int convfail,N_Vector vtemp1,N_Vector vtemp2,N_Vector vtemp3)
 {
   itsolver *bicg = &(sd->bicg);
@@ -3480,6 +3497,9 @@ int linsolsetup_gpu2(SolverData *sd, CVodeMem cv_mem,int convfail,N_Vector vtemp
 #endif
 
   gpu_diagprecond(bicg->nrows,bicg->dA,bicg->djA,bicg->diA,bicg->ddiag,bicg->blocks,bicg->threads); //Setup linear solver
+
+  if(bicg->counterBiConjGrad==0)
+    check_input(bicg->ddiag,bicg->nrows,0);
 
   //return(cvdls_mem->last_flag);
   return retval;

@@ -107,10 +107,19 @@ extern "C++" void gpu_matScaleAddI(int nrows, double* dA, int* djA, int* diA, do
   cudamatScaleAddI<<<dimGrid,dimBlock>>>(nrows, dA, djA, diA, alpha);
 }
 
+__device__ void cudadiagprecondd(){
+  int row= threadIdx.x + blockDim.x*blockIdx.x;
+  if(row==0)
+    printf("AQUI NO d %d\n",row);
+}
+
 // Diagonal precond
 __global__ void cudadiagprecond(int nrows, double* dA, int* djA, int* diA, double* ddiag)
 {
   int row= threadIdx.x + blockDim.x*blockIdx.x;
+  cudadiagprecondd();
+  if(row==0)
+    printf("AQUI NO %d\n",row);
   if(row < nrows){
     int jstart=diA[row];
     int jend  =diA[row+1];
