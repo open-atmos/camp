@@ -391,7 +391,6 @@ void init_j_state_deriv_solver_gpu(SolverData *sd, double *J){
   cudaMalloc((void **) &mGPU->J_tmp, md->deriv_size);
   cudaMalloc((void **) &mGPU->J_tmp2, md->deriv_size);
 
-
   double *J_solver = SM_DATA_S(md->J_solver);
   //Transfer sunindextype to int
   int *jJ_solver=(int*)malloc(sizeof(int)*md->nnz_J_solver);
