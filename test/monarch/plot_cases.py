@@ -551,7 +551,7 @@ def debug_no_plot():
   #Read file
 
   #cells = [100,1000]
-  cells = [1]
+  cells = [2]
 
   timesteps = 2
 
@@ -560,8 +560,8 @@ def debug_no_plot():
   #cases_multicells_onecell = ["multi-cells"]
 
   #SELECT MANUALLY (future:if arch=cpu then select cpu if not gpu)
-  cases_gpu_cpu = ["CPU"]
-  #cases_gpu_cpu = ["GPU"]
+  #cases_gpu_cpu = ["CPU"]
+  cases_gpu_cpu = ["GPU"]
   case_gpu_cpu = cases_gpu_cpu[0]
 
   # make the output directory if it doesn't exist

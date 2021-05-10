@@ -3374,7 +3374,7 @@ void check_input(double *dx, int len, int var_id){
   for (int i=0; i<50; i++){
     if(x[i]==0.0)
       n_zeros++;
-    printf("%d[%d]=%-le\n",var_id,i,x[i]);
+    printf("%d[%d]=%-le check_input\n",var_id,i,x[i]);
   }
   if(n_zeros==len)
     printf("%d is all zeros\n",var_id);
@@ -3498,8 +3498,8 @@ int linsolsetup_gpu2(SolverData *sd, CVodeMem cv_mem,int convfail,N_Vector vtemp
 
   gpu_diagprecond(bicg->nrows,bicg->dA,bicg->djA,bicg->diA,bicg->ddiag,bicg->blocks,bicg->threads); //Setup linear solver
 
-  if(bicg->counterBiConjGrad==0)
-    check_input(bicg->ddiag,bicg->nrows,0);
+  //if(bicg->counterBiConjGrad==0)
+    //check_input(bicg->ddiag,bicg->nrows,0);
 
   //return(cvdls_mem->last_flag);
   return retval;
@@ -3588,7 +3588,7 @@ int linsolsolve_gpu2(SolverData *sd, CVodeMem cv_mem)
       //Print accuracy
       double error;
       double max_error = aux_x1[0]- aux_x2[0];
-      int max_error_i = 0.0;
+      int max_error_i = 0;
       for (int i=0; i<bicg->nrows; i++){
         error = fabs(aux_x1[i]-aux_x2[i]);
         if (error > max_error){
@@ -3627,8 +3627,8 @@ int linsolsolve_gpu2(SolverData *sd, CVodeMem cv_mem)
 
 #endif
 
-    solveGPU(bicg,bicg->dA,bicg->djA,bicg->diA,bicg->dx,bicg->dtempv);
-    //solveGPU_block(bicg,bicg->dA,bicg->djA,bicg->diA,bicg->dx,bicg->dtempv);
+    //solveGPU(bicg,bicg->dA,bicg->djA,bicg->diA,bicg->dx,bicg->dtempv);
+    solveGPU_block(bicg,bicg->dA,bicg->djA,bicg->diA,bicg->dx,bicg->dtempv);
 
 #ifdef DEBUG_LINEAR_SOLVERS
 
