@@ -582,19 +582,36 @@ __device__ void cudaDeviceSpmvCSC_block(double* dx, double* db, int nrows, doubl
   int row= threadIdx.x + blockDim.x*blockIdx.x;
   if(row < nrows)
   {
+    __syncthreads();
     dx[row]=0.0;
     __syncthreads(); //Multiple threads can save to the same row
     int jstart = diA[row];
     int jend   = diA[row+1];
+
+#ifdef DEBUG_CUDADEVICESPMVCSC_BLOCK
+    if(diA[row] != diA[row] ||
+            diA[row+1] != diA[row+1]
+    )
+      printf("NAN dia[row]");
+#endif
+
     for(int j=jstart; j<jend; j++)
     {
+
+#ifdef DEBUG_CUDADEVICESPMVCSC_BLOCK
+      if(dA[j] != dA[j])
+        printf("NAN dA[j]");
+      if(djA[j] != djA[j])
+        printf("NAN djA[j]]");
+#endif
+
       mult = db[row]*dA[j];
-      //atomicAdd_block(&(dx[djA[j]]),mult);
-      //todo eliminate atomicAdd
+      //atomicAdd(&(dx[djA[j]]),mult);
       atomicAdd_block(&(dx[djA[j]]),mult);
 //		dx[djA[j]]+= db[row]*dA[j];
     }
   }
+  __syncthreads();
 }
 
 __device__ void cudaDeviceSpmvCSC(double* dx, double* db, int nrows, double* dA, int* djA, int* diA)
@@ -613,6 +630,7 @@ __device__ void cudaDeviceSpmvCSC(double* dx, double* db, int nrows, double* dA,
 //		dx[djA[j]]+= db[row]*dA[j];
     }
   }
+  __syncthreads();
 }
 
 // y= a*x+ b*y
@@ -671,7 +689,7 @@ __device__ void cudaDevicereducey(double *g_odata, unsigned int n, int n_shr_emp
 
   if (tid == 0) g_odata[blockIdx.x] = sdata[0];
 }
-*/
+
 
 __device__ void cudaDevicedotxy_old(double *g_idata1, double *g_idata2,
                                 double *g_odata, unsigned int n, int n_shr_empty)
@@ -687,9 +705,7 @@ __device__ void cudaDevicedotxy_old(double *g_idata1, double *g_idata2,
 
 #ifndef DEV_DEVICEDOTXY
   //under development, fix returning deriv=0 and slower
-  /*if(tid<blockDim.x/2)
-    for (int j=0; j<2; j++)
-      sdata[j*blockDim.x/2 + tid] = 0;*/
+
 
   for( int j = threadIdx.x; j < n_shr_empty+blockDim.x; j+=blockDim.x)
     sdata[j]=0.0;
@@ -725,7 +741,7 @@ __device__ void cudaDevicedotxy_old(double *g_idata1, double *g_idata2,
   //if (tid == 0) g_odata[blockIdx.x] = sdata[0];
   *g_odata = sdata[0];
 }
-
+*/
 __device__ void cudaDevicedotxy(double *g_idata1, double *g_idata2,
                                  double *g_odata, unsigned int n, int n_shr_empty)
 {
@@ -757,6 +773,12 @@ __device__ void cudaDevicedotxy(double *g_idata1, double *g_idata2,
 
 #else
 
+  //double mySum = (i < n) ? g_idata1[i]*g_idata2[i] : 0;
+
+  //Init shr_memory to 0
+  /*if(tid<blockDim.x/2)
+    for (int j=0; j<2; j++)
+      sdata[j*blockDim.x/2 + tid] = 0;*/
 
   if (tid == 0){
     for (int j=0; j<blockDim.x+n_shr_empty; j++)
@@ -775,7 +797,7 @@ __device__ void cudaDevicedotxy(double *g_idata1, double *g_idata2,
 
   __syncthreads();
 
-
+  //sdata[tid] = (i < n) ? g_idata1[i]*g_idata2[i] : 0;
   sdata[tid] = g_idata1[i]*g_idata2[i];
 
   __syncthreads();

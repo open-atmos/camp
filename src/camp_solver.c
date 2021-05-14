@@ -605,7 +605,7 @@ int solver_set_eval_jac(void *solver_data, bool eval_Jac) {
 #ifdef PMC_DEBUG_GPU
 
 
-void printSolverCounters_gpu2CPU(SolverData *sd){
+void printSolverCounters_cpu(SolverData *sd){
 
 #ifdef PMC_USE_MPI
   int rank;
@@ -1116,12 +1116,25 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
  *         CAMP_SOLVER_FAIL for negative concentration
  */
 int camp_solver_update_model_state(N_Vector solver_state, SolverData *sd,
-                                   realtype threshhold,
-                                   realtype replacement_value) {
+                                   realtype threshhold0,
+                                   realtype replacement_value0) {
   ModelData *model_data = &(sd->model_data);
   int n_state_var = model_data->n_per_cell_state_var;
   int n_dep_var = model_data->n_per_cell_dep_var;
   int n_cells = model_data->n_cells;
+
+  //double replacement_value = ZERO;
+  //double replacement_value = SMALL;
+  double replacement_value = TINY;
+  double threshhold = -SMALL;
+  //double threshhold = -1.0E-12;
+
+#ifdef DEBUG_CAMP_SOLVER_UPDATE_MODEL_STATE
+
+  //if(sd->counterSolve<1)
+    printf("camp_solver_update_model_state replacement_value %-le\n",replacement_value);
+
+#endif
 
   int i_dep_var = 0;
   for (int i_cell = 0; i_cell < n_cells; i_cell++) {
@@ -1139,15 +1152,19 @@ int camp_solver_update_model_state(N_Vector solver_state, SolverData *sd,
 
 #endif
 
-#ifdef ISSUE41
-        if (NV_DATA_S(solver_state)[i_dep_var] < -SMALL) {
+#ifdef ISSUE53
+        if (0) {
 #else
-        if (NV_DATA_S(solver_state)[i_dep_var] < -SMALL) {
+        //if (NV_DATA_S(solver_state)[i_dep_var] <= -SMALL)
+        //if (NV_DATA_S(solver_state)[i_dep_var] <= ZERO)
+        if (NV_DATA_S(solver_state)[i_dep_var] < threshhold) //Avoid innacurate results
+        {
+
 #endif
 
 #ifdef FAILURE_DETAIL
           if(sd->counter_fail_solve_print<1){
-            printf("Failed model state update: [spec %d] = %le\n", i_spec,
+            printf("Failed model state update (Innacurate results): [spec %d] = %le\n", i_spec,
                NV_DATA_S(solver_state)[i_dep_var]);
 #ifdef PMC_DEBUG_GPU
             printf("CounterDerivCPU %d CounterJac %d\n",
@@ -1158,16 +1175,22 @@ int camp_solver_update_model_state(N_Vector solver_state, SolverData *sd,
           }
           sd->counter_fail_solve_print++;
 #endif
-#ifdef DEV_TESTING_NEGATIVE_CONCS
-          NV_DATA_S(solver_state)[i_dep_var]=SMALL; //Fails anyway
-#endif
+
           return CAMP_SOLVER_FAIL;
         }
         // Assign model state to solver_state
+
+        /*model_data->total_state[i_spec + i_cell * n_state_var] =
+            NV_DATA_S(solver_state)[i_dep_var] == ZERO
+                ? replacement_value
+                : NV_DATA_S(solver_state)[i_dep_var];*/
+
+        //Set concs near zero to fixed threshhold value
         model_data->total_state[i_spec + i_cell * n_state_var] =
-            NV_DATA_S(solver_state)[i_dep_var] > threshhold
-                ? NV_DATA_S(solver_state)[i_dep_var]
-                : replacement_value;
+            NV_DATA_S(solver_state)[i_dep_var] <= threshhold
+                ? replacement_value
+                : NV_DATA_S(solver_state)[i_dep_var];
+
         // printf("(%d) %-le \n", i_spec+1, model_data->total_state[i_spec]);
         i_dep_var++;
       }
@@ -1226,7 +1249,7 @@ int f_gpu(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
   // Update the state array with the current dependent variable values.
   // Signal a recoverable error (positive return value) for negative
   // concentrations.
-  if (camp_solver_check_model_state_gpu(y, sd, ZERO, ZERO) != CAMP_SOLVER_SUCCESS)
+  if (camp_solver_check_model_state_gpu(y, sd, -SMALL, TINY) != CAMP_SOLVER_SUCCESS)
     return 1;
 
 #ifndef AEROS_CPU
@@ -1345,7 +1368,7 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
   // Update the state array with the current dependent variable values.
   // Signal a recoverable error (positive return value) for negative
   // concentrations.
-  if (camp_solver_update_model_state(y, sd, ZERO, ZERO) != CAMP_SOLVER_SUCCESS)
+  if (camp_solver_update_model_state(y, sd, ZERO, TINY) != CAMP_SOLVER_SUCCESS)
     return 1;
 
   // Get the Jacobian-estimated derivative
@@ -1535,14 +1558,6 @@ int Jac(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_data,
 
   clock_t start4 = clock();
 
-#ifdef PMC_DEBUG_JAC_CPU
-  int counterPrintJac=20;
-  printf("Jac\n");
-  if(sd->counterJacCPU<=counterPrintJac){
-    print_derivative(sd, y);
-  }
-#endif
-
   // Get the grid cell dimensions
   int n_state_var = md->n_per_cell_state_var;
   int n_dep_var = md->n_per_cell_dep_var;
@@ -1565,6 +1580,15 @@ int Jac(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_data,
   // !!!! Do not use tmp2 - it is the same as y !!!! //
   // FIXME Find out why cvode is sending tmp2 as y
 
+#ifndef PMC_DEBUG_JAC_CPU
+  int counterPrintJac=0;
+  if(sd->counterJacCPU<=counterPrintJac){
+    //printf("Jac\n");
+    //print_derivative(sd, y);
+  }
+  int k=0;
+#endif
+
   // Calculate the the derivative for the current state y without
   // the estimated derivative from the last Jacobian calculation
   sd->use_deriv_est = 0;
@@ -1578,7 +1602,7 @@ int Jac(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_data,
   // Update the state array with the current dependent variable values
   // Signal a recoverable error (positive return value) for negative
   // concentrations.
-  if (camp_solver_update_model_state(y, sd, ZERO, ZERO) != CAMP_SOLVER_SUCCESS)
+  if (camp_solver_update_model_state(y, sd, ZERO, TINY) != CAMP_SOLVER_SUCCESS)
     return 1;
 
   // Get the current integrator time step (s)
@@ -1653,9 +1677,21 @@ int Jac(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_data,
     sd->timeJac += (end - start);
 #endif
 
+#ifndef PMC_DEBUG_JAC_CPU
+  check_isnand(sd->jac.production_partials,sd->jac.num_elem,"pre jacobian_output");
+  check_isnand(sd->jac.loss_partials,sd->jac.num_elem,"pre jacobian_output");
+  check_isnand(SM_DATA_S(md->J_rxn),SM_NNZ_S(md->J_rxn),"pre jacobian_output J_rxn");
+#endif
+
     // Output the Jacobian to the SUNDIALS J_rxn
     jacobian_output(sd->jac, SM_DATA_S(md->J_rxn));
     PMC_DEBUG_JAC(md->J_rxn, "reaction Jacobian");
+
+#ifndef PMC_DEBUG_JAC_CPU
+  check_isnand(sd->jac.production_partials,sd->jac.num_elem,"post jacobian_output");
+  check_isnand(sd->jac.loss_partials,sd->jac.num_elem,"post jacobian_output");
+  check_isnand(SM_DATA_S(md->J_rxn),SM_NNZ_S(md->J_rxn),"post jacobian_output J_rxn");
+#endif
 
     // Set the solver Jacobian using the reaction and sub-model Jacobians
     JacMap *jac_map = md->jac_map;
@@ -1664,9 +1700,19 @@ int Jac(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_data,
       SM_DATA_S(J)
       [i_cell * md->n_per_cell_solver_jac_elem + jac_map[i_map].solver_id] +=
           SM_DATA_S(md->J_rxn)[jac_map[i_map].rxn_id] *
+          //0.0;
           SM_DATA_S(md->J_params)[jac_map[i_map].param_id];
     PMC_DEBUG_JAC(J, "solver Jacobian");
   }
+
+  //check_isnand(J_param_data,SM_NNZ_S(md->J_params),k++);
+  //check_isnand(J_rxn_data,SM_NNZ_S(md->J_rxn),k++);
+  //check_isnand(SM_DATA_S(J),SM_NNZ_S(J),k++);
+
+#ifndef PMC_DEBUG_JAC_CPU
+  check_isnand(SM_DATA_S(md->J_rxn),SM_NNZ_S(md->J_rxn),"post J_rxn");
+  check_isnand(SM_DATA_S(md->J_params),SM_NNZ_S(md->J_params),"post J_params");
+#endif
 
   // Save the Jacobian for use with derivative calculations
   for (int i_elem = 0; i_elem < SM_NNZ_S(J); ++i_elem)
@@ -2585,12 +2631,15 @@ void solver_free(void *solver_data) {
 
   if(sd->use_cpu==0){
     printSolverCounters_gpu2(sd);
+#ifndef CHECK_GPU_LINSOLVE
+  printf("Max error linsolve %-le\n", sd->max_error_linsolver);
+#endif
   }
 
 #endif
 
   if(sd->use_cpu==0){
-    printSolverCounters_gpu2CPU(sd);
+    printSolverCounters_cpu(sd);
   }
 
   //fclose(sd->file);
@@ -2625,10 +2674,6 @@ void solver_free(void *solver_data) {
 
   // free the linear solver
   SUNLinSolFree(sd->ls);
-#endif
-
-#ifdef CHECK_GPU_LINSOLVE
-  printf("ODE iters %d\n", sd->n_linsolver_i);
 #endif
 
 #ifdef PMC_USE_GPU

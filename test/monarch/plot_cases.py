@@ -215,11 +215,15 @@ def speedup_cells(metric):
     plot_functions.plot_speedup_cells(cells,data[plot_y_key3],plot_x_key, \
                                     plot_y_key3, plot_title)
 
-def rmse_timesteps():
+def error_timesteps():
 
   #config_file="simple"
   #config_file="monarch_cb05"
   config_file="monarch_binned"
+
+  #plot_metric="NRMSE"
+  plot_metric="MAPE"
+  #plot_metric="SMAPE"
 
   mpi="yes"
   #mpi="no"
@@ -230,7 +234,7 @@ def rmse_timesteps():
   cells = [10]
   cell = cells[0]
 
-  timesteps = 60#720=12h
+  timesteps = 5#720=12h
   TIME_STEP = 2
 
   cases_multicells_onecell = ["one-cell","multi-cells"]
@@ -239,6 +243,7 @@ def rmse_timesteps():
 
   cases_gpu_cpu = ["CPU"]
   #cases_gpu_cpu = ["GPU"]
+  #cases_gpu_cpu = ["CPU,GPU"]
   case_gpu_cpu = cases_gpu_cpu[0]
 
   data = {}
@@ -281,11 +286,14 @@ def rmse_timesteps():
 
     if (len(cases_multicells_onecell) == 2):
 
-      #rel_tol 1.d-5, abs_tol 1d-4
-      #rel_tol=1.0E-2
-      #abs_tol=1.0E-4
-      #plot_functions.check_tolerances(data,timesteps,rel_tol,abs_tol)
-      NRMSEs=plot_functions.calculate_NMRSE(data,timesteps)
+      errs=[]
+
+      if(plot_metric=="RMSE"):
+        errs=plot_functions.calculate_NMRSE(data,timesteps)
+      if(plot_metric=="MAPE"):
+        errs=plot_functions.calculate_MAPE(data,timesteps)
+      if(plot_metric=="SMAPE"):
+        errs=plot_functions.calculate_SMAPE(data,timesteps)
 
       #data[cell],plot_y_key2=plot_functions.calculate_speedup( \
       #  cases_multicells_onecell,data[cell],"timestep", \
@@ -294,16 +302,15 @@ def rmse_timesteps():
     #print(data)
 
       namex = "Timesteps"
-      namey="NRMSE"
+      namey=plot_metric
       #datax=list(range(TIME_STEP,timesteps*TIME_STEP,TIME_STEP))
       datax=list(range(TIME_STEP,TIME_STEP*(timesteps+1),TIME_STEP))
-      datay=NRMSEs
+      datay=errs
       plot_title="Ideal "+config_file+" "+case_gpu_cpu+", Cells: "+cell_str
       plot_title="Practical "+config_file+" "+case_gpu_cpu+", Cells: "+cell_str
       #plot_title = config_file + ", Timesteps: 720-1400"
 
       plot_functions.plot(namex,namey,datax,datay,plot_title)
-
 
 def speedup_timesteps():
 
@@ -551,7 +558,7 @@ def debug_no_plot():
   #Read file
 
   #cells = [100,1000]
-  cells = [2]
+  cells = [10]
 
   timesteps = 2
 

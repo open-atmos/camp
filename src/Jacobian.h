@@ -136,9 +136,16 @@ void jacobian_output(Jacobian jac, double *dest_array);
  *                         (contributions to loss elements should be positive if
  *                         the contribution increases the loss)
  */
+#ifndef JAC_NOT_LONG_DOUBLE
 void jacobian_add_value(Jacobian jac, unsigned int elem_id,
                         unsigned int prod_or_loss,
                         long double jac_contribution);
+#else
+void jacobian_add_value(Jacobian jac, unsigned int elem_id,
+                        unsigned int prod_or_loss,
+                        double jac_contribution);
+#endif
+
 
 /** \brief Prints the Jacobian structure
  *

@@ -372,6 +372,10 @@ void sub_model_get_jac_contrib(ModelData *model_data, double *J_data,
     // Get the sub model type
     int sub_model_type = *(sub_model_int_data++);
 
+#ifndef DEBUG_SUB_MODEL_GET_JAC_CONTRIB
+  printf("sub_model_type %d\n",sub_model_type);
+#endif
+
     // Call the appropriate function
     switch (sub_model_type) {
       case SUB_MODEL_PDFITE:
@@ -392,11 +396,26 @@ void sub_model_get_jac_contrib(ModelData *model_data, double *J_data,
     }
   }
 
+#ifndef DEBUG_SUB_MODEL_GET_JAC_CONTRIB
+
+  int k=0;
+
+  check_isnand(J_data,SM_NNZ_S(model_data->J_params),k++);
+
+#endif
+
   // Account for sub-model interdependence
   for (int i_map = 0; i_map < model_data->n_mapped_params; ++i_map)
     J_data[model_data->jac_map_params[i_map].solver_id] +=
         J_data[model_data->jac_map_params[i_map].rxn_id] *
         J_data[model_data->jac_map_params[i_map].param_id];
+
+#ifndef DEBUG_SUB_MODEL_GET_JAC_CONTRIB
+
+  check_isnand(J_data,SM_NNZ_S(model_data->J_params),k++);
+
+#endif
+
 }
 #endif
 

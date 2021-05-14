@@ -166,7 +166,7 @@ void rxn_arrhenius_calc_deriv_contrib(ModelData *model_data,
   double *env_data = model_data->grid_cell_env;
 
   // Calculate the reaction rate
-#ifdef TIME_DERIVATIVE_LONG_DOUBLE
+#ifndef TIME_DERIVATIVE_LONG_DOUBLE
   long double rate = RATE_CONSTANT_;
 #else
   double rate = RATE_CONSTANT_;
@@ -268,7 +268,11 @@ void rxn_arrhenius_calc_jac_contrib(ModelData *model_data, Jacobian jac,
   int i_elem = 0;
   for (int i_ind = 0; i_ind < NUM_REACT_; i_ind++) {
     // Calculate d_rate / d_i_ind
-    realtype rate = RATE_CONSTANT_;
+#ifdef JAC_LONG_DOUBLE
+    long double rate = RATE_CONSTANT_;
+#else
+    double rate = RATE_CONSTANT_;
+#endif
     for (int i_spec = 0; i_spec < NUM_REACT_; i_spec++)
       if (i_spec != i_ind) rate *= state[REACT_(i_spec)];
 
@@ -276,6 +280,7 @@ void rxn_arrhenius_calc_jac_contrib(ModelData *model_data, Jacobian jac,
       if (JAC_ID_(i_elem) < 0) continue;
       jacobian_add_value(jac, (unsigned int)JAC_ID_(i_elem), JACOBIAN_LOSS,
                          rate);
+      //check_isnanld(&rate,1,"post rxn_arrhenius_calc_jac_contrib rate");
     }
     for (int i_dep = 0; i_dep < NUM_PROD_; i_dep++, i_elem++) {
       if (JAC_ID_(i_elem) < 0) continue;
@@ -285,9 +290,12 @@ void rxn_arrhenius_calc_jac_contrib(ModelData *model_data, Jacobian jac,
           state[PROD_(i_dep)]) {
         jacobian_add_value(jac, (unsigned int)JAC_ID_(i_elem),
                            JACOBIAN_PRODUCTION, YIELD_(i_dep) * rate);
+        //check_isnanld(&YIELD_(i_dep),1,"post rxn_arrhenius_calc_jac_contrib YIELD_(i_dep)");
+        //check_isnanld(&rate,1,"post rxn_arrhenius_calc_jac_contrib rate");
       }
     }
   }
+
 
   return;
 }

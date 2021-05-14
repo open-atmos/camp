@@ -518,7 +518,7 @@ void camp_solver_check_model_state_cuda(double *state_init, double *y,
 }
 
 int camp_solver_check_model_state_gpu(N_Vector solver_state, SolverData *sd,
-                                      double threshhold, double replacement_value)
+                                      double threshhold0, double replacement_value0)
 {
   ModelData *md = &(sd->model_data);
   itsolver *bicg = &(sd->bicg);
@@ -546,7 +546,8 @@ int camp_solver_check_model_state_gpu(N_Vector solver_state, SolverData *sd,
   }
 */
 
-
+  double replacement_value = TINY;
+  double threshhold = -SMALL;
 
   camp_solver_check_model_state_cuda << < n_blocks, md->max_n_gpu_thread >> >
    (mGPU->state, bicg->dcv_y, mGPU->map_state_deriv,

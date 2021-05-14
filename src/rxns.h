@@ -15,6 +15,7 @@
 #define RXNS_H_
 #include "Jacobian.h"
 #include "camp_common.h"
+#include "debug_and_stats/camp_debug_2.h"
 
 #ifdef PMC_DEBUG_RATE_CONSTANTS
 #ifdef PMC_USE_MPI

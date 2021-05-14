@@ -331,7 +331,7 @@ typedef struct {
   itsolver bicg;
   //todo use ModelData mGPU; (only 1 struct of modelData but 2 instances): Remove vars only used on cpu like deriv_size
   ModelDataGPU mGPU;
-#ifdef CHECK_GPU_LINSOLVE  // todo fix name
+#ifndef CHECK_GPU_LINSOLVE
   double max_error_linsolver;
   int max_error_linsolver_i;
   int n_linsolver_i;

@@ -202,6 +202,9 @@ void aero_rep_single_particle_get_number_conc__n_m3(
   int i_part = aero_phase_idx / NUM_PHASE_;
 
   *number_conc = NUMBER_CONC_(i_part);
+  //check_isnand(number_conc,1,"post aero_rep_single_particle_get_number_conc__n_m3 number_conc");
+  //check_isnanld(number_conc,1,"post aero_rep_single_particle_get_number_conc__n_m3 number_conc");
+
 
   if (partial_deriv) {
     for (int i_phase = 0; i_phase < NUM_PHASE_; ++i_phase)

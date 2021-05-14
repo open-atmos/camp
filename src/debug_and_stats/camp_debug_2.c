@@ -18,6 +18,61 @@
 #include <mpi.h>
 #endif
 
+void check_iszerod(long double *x, int len, char *s){
+
+#ifndef DEBUG_CHECK_ISZEROD
+
+  int n_zeros=0;
+  for (int i=0; i<len; i++){
+    if(x[i]==0.0){
+      printf("ZERO %s %d[%d]",s,i);
+      exit(0);
+    }
+  }
+
+#endif
+
+}
+
+void check_isnanld(long double *x, int len, char *s){
+
+#ifndef DEBUG_CHECK_ISNANLD
+
+  int n_zeros=0;
+  for (int i=0; i<len; i++){
+    if(isnan(x[i])){
+      printf("NAN %s %d[%d]",s,i);
+      exit(0);
+    }
+  }
+
+#endif
+
+}
+
+void check_isnand(double *x, int len, char *s){
+
+  int n_zeros=0;
+  for (int i=0; i<len; i++){
+    if(isnan(x[i])){
+      printf("NAN %s %d[%d]",s,i);
+      exit(0);
+    }
+  }
+
+}
+
+/*
+void check_isnand(double *x, int len, int var_id){
+
+  int n_zeros=0;
+  for (int i=0; i<len; i++){
+    if(isnan(x[i]))
+      printf("NAN %d[%d]",var_id,i);
+  }
+
+}*/
+
 void print_current_directory(){
 
   char cwd[1024];

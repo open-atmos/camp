@@ -345,7 +345,7 @@ void rxn_calc_deriv(ModelData *model_data, TimeDerivative time_deriv,
 void rxn_calc_deriv(ModelData *model_data, TimeDerivative time_deriv,
                     realtype time_step) {
 
-#ifdef TIME_DERIVATIVE_LONG_DOUBLE
+#ifndef TIME_DERIVATIVE_LONG_DOUBLE
   long double *init_production_rates=time_deriv.production_rates;
   long double *init_loss_rates=time_deriv.loss_rates;
 #else

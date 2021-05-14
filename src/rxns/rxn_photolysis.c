@@ -221,7 +221,7 @@ void rxn_photolysis_calc_deriv_contrib(
   double *env_data = model_data->grid_cell_env;
 
   // Calculate the reaction rate
-#ifdef TIME_DERIVATIVE_LONG_DOUBLE
+#ifndef TIME_DERIVATIVE_LONG_DOUBLE
   long double rate = RATE_CONSTANT_;
 #else
   double rate = RATE_CONSTANT_;

@@ -12,6 +12,7 @@
 #define RXN_SOLVER_H
 #include "Jacobian.h"
 #include "camp_common.h"
+#include "debug_and_stats/camp_debug_2.h"
 
 /** Public reaction functions **/
 

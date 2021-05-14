@@ -184,6 +184,115 @@ def calculate_NMRSE(data,timesteps):
 
   return NRMSEs
 
+def calculate_MAPE(data,timesteps):
+
+  #Extract data
+
+  cases_one_multi_cells=list(data.keys())
+  species1=data[cases_one_multi_cells[0]]
+  species2=data[cases_one_multi_cells[1]]
+
+  #print(data)
+
+  #Reorganize data
+
+  #species_keys=list(species1.keys())
+  MAPEs=[0.]*timesteps
+  species_names=list(species1.keys())
+  len_timestep=int(len(species1[species_names[0]])/timesteps)
+  max_err=0.0
+  for j in range(timesteps):
+    MAPE=0.0
+    n=0
+    for i in species1:
+      data1_values = species1[i]
+      data2_values = species2[i]
+      l=j*len_timestep
+      r=len_timestep*(1+j)
+      out1=data1_values[l:r]
+      out2=data2_values[l:r]
+
+      for k in range(len(out1)):
+        if(out1[k]==0.0):
+          out1[k]+=1.0E-60
+          out2[k]+=1.0E-60
+        err=abs((out1[k]-out2[k])/out1[k])
+        MAPE+=err
+        n+=1
+        if(err>max_err):
+          max_err=err
+    MAPEs[j]=MAPE/n
+
+  print("max_error:"+str(max_err)+"%")
+  #print(NRMSEs)
+
+  return MAPEs
+
+def calculate_SMAPE(data,timesteps):
+
+  #Extract data
+
+  cases_one_multi_cells=list(data.keys())
+  species1=data[cases_one_multi_cells[0]]
+  species2=data[cases_one_multi_cells[1]]
+
+  #print(data)
+
+  #Reorganize data
+
+  #species_keys=list(species1.keys())
+  SMAPEs=[0.]*timesteps
+  species_names=list(species1.keys())
+  len_timestep=int(len(species1[species_names[0]])/timesteps)
+
+  for j in range(timesteps):
+    num=0.0
+    den=0.0
+    for key in species1:
+      specie1 = species1[key]
+      specie2 = species2[key]
+      l=j*len_timestep
+      r=len_timestep*(1+j)
+      out1=specie1[l:r]
+      out2=specie2[l:r]
+
+      for k in range(len(out1)):
+        try:
+          num+=abs(out1[k]-out2[k])
+          den+=abs(out1[k])+abs(out2[k])
+        except Exception as e:
+          print(e,k,l,r,len(out1),len(out2))
+
+    if(den!=0.0):
+      SMAPEs[j]=num/den
+
+  #print(NRMSEs)
+
+  return SMAPEs
+
+"""
+  for key in species1:
+    specie1 = species1[key]
+    specie2 = species2[key]
+    num=0.0
+    den=0.0
+    for j in range(timesteps):
+      l=j*len_timestep
+      r=len_timestep*(1+j)
+      out1=specie1[l:r]
+      out2=specie2[l:r]
+
+      for k in range(l,r):
+        try:
+          num+=abs(out1[k]-out2[k])
+          den+=abs(out1[k])+abs(out2[k])
+        except Exception as e:
+          print(e,k,l,r,len(out1),len(out2))
+
+    if(den!=0.0):
+      SMAPEs[j]=num/den
+"""
+
 """
   base_data=data[cases_multicells_onecell[0]][plot_y_key]
   new_data=data[cases_multicells_onecell[1]][plot_y_key]
