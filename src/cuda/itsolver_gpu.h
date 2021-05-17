@@ -23,6 +23,8 @@ extern "C" {
 }
 
 void createSolver(itsolver *bicg);
+void CSRtoCSC(itsolver *bicg);
+void CSCtoCSR(itsolver *bicg);
 void solveGPU(itsolver *bicg, double *dA, int *djA, int *diA, double *dx, double *dtempv);
 void solveGPU_block(itsolver *bicg, double *dA, int *djA, int *diA, double *dx, double *dtempv);
 void free_itsolver(itsolver *bicg);

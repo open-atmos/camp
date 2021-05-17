@@ -1131,8 +1131,14 @@ int camp_solver_update_model_state(N_Vector solver_state, SolverData *sd,
 
 #ifdef DEBUG_CAMP_SOLVER_UPDATE_MODEL_STATE
 
+  if(replacement_value==0.0){
+    printf("ERROR camp_solver_update_model_state replacement_value"
+           " can't be zero to avoid divisions by zero\n")
+     exit(0);
+  }
+
   //if(sd->counterSolve<1)
-    printf("camp_solver_update_model_state replacement_value %-le\n",replacement_value);
+    //printf("camp_solver_update_model_state replacement_value %-le\n",replacement_value);
 
 #endif
 
@@ -1140,17 +1146,6 @@ int camp_solver_update_model_state(N_Vector solver_state, SolverData *sd,
   for (int i_cell = 0; i_cell < n_cells; i_cell++) {
     for (int i_spec = 0; i_spec < n_state_var; ++i_spec) {
       if (model_data->var_type[i_spec] == CHEM_SPEC_VARIABLE) {
-
-#ifdef DEBUG_UPDATE_MODEL_STATE
-
-      if(sd->counterDerivCPU==2){
-
-        printf("%d %-le\n", i_spec,
-             NV_DATA_S(solver_state)[i_dep_var]);
-
-      }
-
-#endif
 
 #ifdef ISSUE53
         if (0) {
@@ -1368,7 +1363,7 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
   // Update the state array with the current dependent variable values.
   // Signal a recoverable error (positive return value) for negative
   // concentrations.
-  if (camp_solver_update_model_state(y, sd, ZERO, TINY) != CAMP_SOLVER_SUCCESS)
+  if (camp_solver_update_model_state(y, sd, -SMALL, TINY) != CAMP_SOLVER_SUCCESS)
     return 1;
 
   // Get the Jacobian-estimated derivative
@@ -1580,7 +1575,7 @@ int Jac(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_data,
   // !!!! Do not use tmp2 - it is the same as y !!!! //
   // FIXME Find out why cvode is sending tmp2 as y
 
-#ifndef PMC_DEBUG_JAC_CPU
+#ifdef PMC_DEBUG_JAC_CPU
   int counterPrintJac=0;
   if(sd->counterJacCPU<=counterPrintJac){
     //printf("Jac\n");
@@ -1602,7 +1597,7 @@ int Jac(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_data,
   // Update the state array with the current dependent variable values
   // Signal a recoverable error (positive return value) for negative
   // concentrations.
-  if (camp_solver_update_model_state(y, sd, ZERO, TINY) != CAMP_SOLVER_SUCCESS)
+  if (camp_solver_update_model_state(y, sd, -SMALL, TINY) != CAMP_SOLVER_SUCCESS)
     return 1;
 
   // Get the current integrator time step (s)
@@ -1677,7 +1672,7 @@ int Jac(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_data,
     sd->timeJac += (end - start);
 #endif
 
-#ifndef PMC_DEBUG_JAC_CPU
+#ifdef PMC_DEBUG_JAC_CPU
   check_isnand(sd->jac.production_partials,sd->jac.num_elem,"pre jacobian_output");
   check_isnand(sd->jac.loss_partials,sd->jac.num_elem,"pre jacobian_output");
   check_isnand(SM_DATA_S(md->J_rxn),SM_NNZ_S(md->J_rxn),"pre jacobian_output J_rxn");
@@ -1687,7 +1682,7 @@ int Jac(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_data,
     jacobian_output(sd->jac, SM_DATA_S(md->J_rxn));
     PMC_DEBUG_JAC(md->J_rxn, "reaction Jacobian");
 
-#ifndef PMC_DEBUG_JAC_CPU
+#ifdef PMC_DEBUG_JAC_CPU
   check_isnand(sd->jac.production_partials,sd->jac.num_elem,"post jacobian_output");
   check_isnand(sd->jac.loss_partials,sd->jac.num_elem,"post jacobian_output");
   check_isnand(SM_DATA_S(md->J_rxn),SM_NNZ_S(md->J_rxn),"post jacobian_output J_rxn");
@@ -1709,7 +1704,7 @@ int Jac(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_data,
   //check_isnand(J_rxn_data,SM_NNZ_S(md->J_rxn),k++);
   //check_isnand(SM_DATA_S(J),SM_NNZ_S(J),k++);
 
-#ifndef PMC_DEBUG_JAC_CPU
+#ifdef PMC_DEBUG_JAC_CPU
   check_isnand(SM_DATA_S(md->J_rxn),SM_NNZ_S(md->J_rxn),"post J_rxn");
   check_isnand(SM_DATA_S(md->J_params),SM_NNZ_S(md->J_params),"post J_params");
 #endif
@@ -2107,6 +2102,13 @@ SUNMatrix get_jac_init(SolverData *solver_data) {
   // Number of grid cells
   int n_cells = solver_data->model_data.n_cells;
 
+#ifdef CSR_MATRIX
+  int mattype = CSR_MAT;
+  //Pending adapt jac in CAMP to CSR
+#else
+  int mattype = CSC_MAT;
+#endif
+
   // Number of variables on the state array per grid cell
   // (these are the ids the reactions are initialized with)
   int n_state_var = solver_data->model_data.n_per_cell_state_var;
@@ -2151,7 +2153,7 @@ SUNMatrix get_jac_init(SolverData *solver_data) {
 
   // Initialize the sparse matrix (sized for one grid cell)
   solver_data->model_data.J_rxn =
-      SUNSparseMatrix(n_state_var, n_state_var, n_jac_elem_rxn, CSC_MAT);
+      SUNSparseMatrix(n_state_var, n_state_var, n_jac_elem_rxn, mattype);
 
   // Set the column and row indices
   for (unsigned int i_col = 0; i_col <= n_state_var; ++i_col) {
@@ -2216,7 +2218,7 @@ SUNMatrix get_jac_init(SolverData *solver_data) {
   // for use in mapping that is set to 1.0. (This is safe because there can be
   // no elements on the diagonal in the sub model Jacobian.)
   solver_data->model_data.J_params =
-      SUNSparseMatrix(n_state_var, n_state_var, n_jac_elem_param, CSC_MAT);
+      SUNSparseMatrix(n_state_var, n_state_var, n_jac_elem_param, mattype);
 
   // Set the column and row indices
   for (unsigned int i_col = 0; i_col <= n_state_var; ++i_col) {
@@ -2284,9 +2286,9 @@ SUNMatrix get_jac_init(SolverData *solver_data) {
 
   // Initialize the sparse matrix (for solver state array including all cells)
   SUNMatrix M = SUNSparseMatrix(n_dep_var_total, n_dep_var_total,
-                                n_jac_elem_solver * n_cells, CSC_MAT);
+                                n_jac_elem_solver * n_cells, mattype);
   solver_data->model_data.J_solver = SUNSparseMatrix(
-      n_dep_var_total, n_dep_var_total, n_jac_elem_solver * n_cells, CSC_MAT);
+      n_dep_var_total, n_dep_var_total, n_jac_elem_solver * n_cells, mattype);
 
   // Set the column and row indices
   for (unsigned int i_cell = 0; i_cell < n_cells; ++i_cell) {
@@ -2631,7 +2633,7 @@ void solver_free(void *solver_data) {
 
   if(sd->use_cpu==0){
     printSolverCounters_gpu2(sd);
-#ifndef CHECK_GPU_LINSOLVE
+#ifdef CHECK_GPU_LINSOLVE
   printf("Max error linsolve %-le\n", sd->max_error_linsolver);
 #endif
   }

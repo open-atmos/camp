@@ -11,7 +11,7 @@
 #include<cuda_runtime.h>
 #include<cuda_runtime_api.h>
 
-//#include "libsolv2.h"
+#include "libsolv.h"
 
 //#include<cublas.h> //todo fix cublas not compiling fine
 //#include<cublas_v2.h>
@@ -120,6 +120,12 @@ void check_input_gpud(double *x, int len, int var_id)
 __global__ void cudadiagprecond(int nrows, double* dA, int* djA, int* diA, double* ddiag)
 {
   int row= threadIdx.x + blockDim.x*blockIdx.x;
+
+#ifdef DEBUG_cudadiagprecond
+
+
+#endif
+
   if(row < nrows){
     int jstart=diA[row];
     int jend  =diA[row+1];
@@ -128,6 +134,7 @@ __global__ void cudadiagprecond(int nrows, double* dA, int* djA, int* diA, doubl
         if(dA[j]!=0.0)
           ddiag[row]= 1.0/dA[j];
         else{
+          printf("cudadiagprecond\n");
           ddiag[row]= 1.0;
         }
       }
@@ -564,10 +571,8 @@ __device__ void cudaDeviceSpmvCSR(double* dx, double* db, int nrows, double* dA,
   int row= threadIdx.x + blockDim.x*blockIdx.x;
   if(row < nrows)
   {
-    int jstart = diA[row];
-    int jend   = diA[row+1];
     double sum = 0.0;
-    for(int j=jstart; j<jend; j++)
+    for(int j=diA[row]; j<diA[row+1]; j++)
     {
       sum+= db[djA[j]]*dA[j];
     }
@@ -576,17 +581,53 @@ __device__ void cudaDeviceSpmvCSR(double* dx, double* db, int nrows, double* dA,
 
 }
 
-__device__ void cudaDeviceSpmvCSC_block(double* dx, double* db, int nrows, double* dA, int* djA, int* diA)
+__device__ void cudaDeviceSpmvCSC_blockReduce( double g_idata,
+        double *g_odata, unsigned int n, int n_shr_empty)
+{
+  extern __shared__ double sdata[];
+  unsigned int tid = threadIdx.x;
+  //unsigned int i = blockIdx.x*(blockDim.x*2) + threadIdx.x;
+  unsigned int i = blockIdx.x*blockDim.x + threadIdx.x;
+
+
+  //if(i>=n)sdata[tid]=0.;
+
+  if (tid == 0){
+    for (int j=0; j<blockDim.x+n_shr_empty; j++)
+      sdata[j] = 0.;
+  }
+
+
+  __syncthreads();
+
+  sdata[tid] = g_idata;
+
+  __syncthreads();
+
+  for (unsigned int s=(blockDim.x+n_shr_empty)/2; s>0; s>>=1)
+  {
+    if (tid < s)
+      sdata[tid] += sdata[tid + s];
+
+    __syncthreads();
+  }
+
+  *g_odata = sdata[0];
+  __syncthreads();
+
+}
+
+__device__ void cudaDeviceSpmvCSC_block(double* dx, double* db, int nrows, double* dA, int* djA, int* diA, int n_shr_empty)
 {
   double mult;
+  extern __shared__ double sdata[];
+  unsigned int tid = threadIdx.x;
   int row= threadIdx.x + blockDim.x*blockIdx.x;
   if(row < nrows)
   {
     __syncthreads();
     dx[row]=0.0;
     __syncthreads(); //Multiple threads can save to the same row
-    int jstart = diA[row];
-    int jend   = diA[row+1];
 
 #ifdef DEBUG_CUDADEVICESPMVCSC_BLOCK
     if(diA[row] != diA[row] ||
@@ -595,7 +636,7 @@ __device__ void cudaDeviceSpmvCSC_block(double* dx, double* db, int nrows, doubl
       printf("NAN dia[row]");
 #endif
 
-    for(int j=jstart; j<jend; j++)
+    for(int j=diA[row]; j<diA[row+1]; j++)
     {
 
 #ifdef DEBUG_CUDADEVICESPMVCSC_BLOCK
@@ -605,14 +646,30 @@ __device__ void cudaDeviceSpmvCSC_block(double* dx, double* db, int nrows, doubl
         printf("NAN djA[j]]");
 #endif
 
+
+#ifndef cudaDeviceSpmvCSC_block_atomicadd
+
       mult = db[row]*dA[j];
       //atomicAdd(&(dx[djA[j]]),mult);
       atomicAdd_block(&(dx[djA[j]]),mult);
+#else
+
+      mult = db[row]*dA[j];
+      //atomicAdd_block(&(dx[djA[j]]),mult);
+
+      //not working
+      cudaDeviceSpmvCSC_blockReduce(mult,&(dx[djA[j]]),nrows,n_shr_empty);
+      //cudaDevicedotxy(db, &dA[j], &dx[djA[j]], nrows, n_shr_empty);
+
+#endif
+
 //		dx[djA[j]]+= db[row]*dA[j];
     }
   }
   __syncthreads();
 }
+
+
 
 __device__ void cudaDeviceSpmvCSC(double* dx, double* db, int nrows, double* dA, int* djA, int* diA)
 {
@@ -633,6 +690,19 @@ __device__ void cudaDeviceSpmvCSC(double* dx, double* db, int nrows, double* dA,
   __syncthreads();
 }
 
+__device__ void cudaDeviceSpmv(double* dx, double* db, int nrows, double* dA, int* djA, int* diA, int n_shr_empty)
+{
+
+  __syncthreads();
+#ifndef CSR_SPMV
+  cudaDeviceSpmvCSR(dx,db,nrows,dA,djA,diA);
+#else
+  cudaDeviceSpmvCSC_block(dx,db,nrows,dA,djA,diA,n_shr_empty);
+#endif
+  __syncthreads();
+
+}
+
 // y= a*x+ b*y
 __device__ void cudaDeviceaxpby(double* dy,double* dx, double a, double b, int nrows)
 {
@@ -651,7 +721,7 @@ __device__ void cudaDeviceyequalsx(double* dy,double* dx,int nrows)
   }
 }
 
-/* //unused
+
 __device__ void cudaDevicereducey(double *g_odata, unsigned int n, int n_shr_empty)
 {
   extern __shared__ double sdata[];
@@ -690,7 +760,7 @@ __device__ void cudaDevicereducey(double *g_odata, unsigned int n, int n_shr_emp
   if (tid == 0) g_odata[blockIdx.x] = sdata[0];
 }
 
-
+/*
 __device__ void cudaDevicedotxy_old(double *g_idata1, double *g_idata2,
                                 double *g_odata, unsigned int n, int n_shr_empty)
 {
@@ -773,12 +843,16 @@ __device__ void cudaDevicedotxy(double *g_idata1, double *g_idata2,
 
 #else
 
+  //if(i>=n)sdata[tid]=0.;
+
   //double mySum = (i < n) ? g_idata1[i]*g_idata2[i] : 0;
 
   //Init shr_memory to 0
   /*if(tid<blockDim.x/2)
     for (int j=0; j<2; j++)
       sdata[j*blockDim.x/2 + tid] = 0;*/
+
+  __syncthreads();
 
   if (tid == 0){
     for (int j=0; j<blockDim.x+n_shr_empty; j++)

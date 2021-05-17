@@ -7,6 +7,13 @@ void createSolver(itsolver *bicg)
   int blocks = bicg->blocks;
   bicg->maxIt=1000;
   bicg->tolmax=1.0e-30; //cv_mem->cv_reltol CAMP selected accuracy (1e-8) //1e-10;//1e-6
+#ifndef CSR_SPMV
+  bicg->mattype=0;
+  printf("BCG Mattype=CSR\n");
+#else
+  bicg->mattype=1; //CSC
+  printf("BCG Mattype=CSC\n");
+#endif
 
   //Auxiliary vectors ("private")
   double ** dr0 = &bicg->dr0;
@@ -52,14 +59,237 @@ int nextPowerOfTwo(int v){
   return v;
 }
 
+
+//Based on
+// https://github.com/scipy/scipy/blob/3b36a574dc657d1ca116f6e230be694f3de31afc/scipy/sparse/sparsetools/csr.h#L363
+void CSRtoCSCandCSCtoCSR(int n_row, int n_col, int* Ap, int* Aj, double* Ax, int* Bp, int* Bi, double* Bx){
+
+  int nnz=Ap[n_row];
+
+  memset(Bp, 0, (n_row+1)*sizeof(int));
+
+  for (int n = 0; n < nnz; n++){
+    Bp[Aj[n]]++;
+  }
+
+  //cumsum the nnz per column to get Bp[]
+  for(int col = 0, cumsum = 0; col < n_col; col++){
+    int temp  = Bp[col];
+    Bp[col] = cumsum;
+    cumsum += temp;
+  }
+  Bp[n_col] = nnz;
+
+  for(int row = 0; row < n_row; row++){
+    for(int jj = Ap[row]; jj < Ap[row+1]; jj++){
+      int col  = Aj[jj];
+      int dest = Bp[col];
+
+      Bi[dest] = row;
+      Bx[dest] = Ax[jj];
+
+      Bp[col]++;
+    }
+  }
+
+  for(int col = 0, last = 0; col <= n_col; col++){
+    int temp  = Bp[col];
+    Bp[col] = last;
+    last    = temp;
+  }
+
+}
+
+void CSRtoCSC(itsolver *bicg){
+
+#ifdef TEST_CSRtoCSC
+
+  //Example configuration taken from KLU Sparse pdf
+  int n_row=3;
+  int n_col=n_row;
+  int nnz=6;
+  int Ap[n_row+1]={0,1,3,6};
+  int Aj[nnz]={0,0,1,0,1,2};
+  double Ax[nnz]={5.,4.,2.,3.,1.,8.};
+  int* Bp=(int*)malloc((n_row+1)*sizeof(int));
+  int* Bi=(int*)malloc(nnz*sizeof(int));
+  double* Bx=(int*)malloc(nnz*sizeof(double));
+#else
+
+  //cudaMemcpy(bicg->dA,bicg->djA,bicg->nnz*sizeof(int),cudaMemcpyDeviceToHost);
+  //cudaMemcpy(bicg->iA,bicg->diA,(bicg->nrows+1)*sizeof(int),cudaMemcpyDeviceToHost);
+
+  int n_row=bicg->nrows;
+  int n_col=n_row;
+  int nnz=bicg->nnz;
+  int* Ap=bicg->iA;
+  int* Aj=bicg->jA;
+  double* Ax=bicg->A;
+  int* Bp=(int*)malloc((bicg->nrows+1)*sizeof(int));
+  int* Bi=(int*)malloc(bicg->nnz*sizeof(int));
+  double* Bx=(double*)malloc(nnz*sizeof(double));
+
+#endif
+
+  CSRtoCSCandCSCtoCSR(n_row,n_col,Ap,Aj,Ax,Bp,Bi,Bx);
+
+#ifdef TEST_CSRtoCSC
+
+  //Correct result:
+  //int Cp[n_row+1]={0,3,5,6};
+  //int Ci[nnz]={0,1,2,1,2,2};
+  //int Cx[nnz]={5,4,3,2,1,8};
+
+  printf("Bp:\n");
+  for(int i=0;i<=n_row;i++)
+    printf("%d ",Bp[i]);
+  printf("\n");
+  printf("Bi:\n");
+  for(int i=0;i<nnz;i++)
+    printf("%d ",Bi[i]);
+  printf("\n");
+  printf("Bx:\n");
+  for(int i=0;i<nnz;i++)
+    printf("%-le ",Bx[i]);
+  printf("\n");
+  exit(0);
+
+#else
+
+  /*
+  for(int i=0;i<bicg->nnz;i++)
+    bicg->jA[i]=Bi[i];
+  for(int i=0;i<=bicg->nrows;i++)
+    bicg->iA[i]=Bp[i];
+
+  cudaMemcpy(bicg->djA,bicg->jA,bicg->nnz*sizeof(int),cudaMemcpyHostToDevice);
+  cudaMemcpy(bicg->diA,bicg->iA,(bicg->nrows+1)*sizeof(int),cudaMemcpyHostToDevice);
+   */
+
+  cudaMemcpy(bicg->diA,Bp,(bicg->nrows+1)*sizeof(int),cudaMemcpyHostToDevice);
+  cudaMemcpy(bicg->djA,Bi,bicg->nnz*sizeof(int),cudaMemcpyHostToDevice);
+  cudaMemcpy(bicg->dA,Bx,bicg->nnz*sizeof(double),cudaMemcpyHostToDevice);
+
+#endif
+
+  free(Bp);
+  free(Bi);
+  free(Bx);
+
+}
+
+void CSCtoCSR(itsolver *bicg){
+
+#ifdef TEST_CSCtoCSR
+
+  //Example configuration taken from KLU Sparse pdf
+  int n_row=3;
+  int n_col=n_row;
+  int nnz=6;
+  int Ap[n_row+1]={0,3,5,6};
+  int Aj[nnz]={0,1,2,1,2,2};
+  double Ax[nnz]={5.,4.,3.,2.,1.,8.};
+  int* Bp=(int*)malloc((n_row+1)*sizeof(int));
+  int* Bi=(int*)malloc(nnz*sizeof(int));
+  double* Bx=(double*)malloc(nnz*sizeof(double));
+
+#else
+
+  //cudaMemcpy(bicg->iA,bicg->diA,(bicg->nrows+1)*sizeof(int),cudaMemcpyDeviceToHost);
+  //cudaMemcpy(bicg->jA,bicg->djA,bicg->nnz*sizeof(int),cudaMemcpyDeviceToHost);
+  //cudaMemcpy(bicg->A,bicg->dA,bicg->nnz*sizeof(double),cudaMemcpyDeviceToHost);
+
+  int n_row=bicg->nrows;
+  int n_col=n_row;
+  int nnz=bicg->nnz;
+  int* Ap=bicg->iA;
+  int* Aj=bicg->jA;
+  double* Ax=bicg->A;
+  int* Bp=(int*)malloc((bicg->nrows+1)*sizeof(int));
+  int* Bi=(int*)malloc(bicg->nnz*sizeof(int));
+  double* Bx=(double*)malloc(nnz*sizeof(double));
+
+#endif
+
+  CSRtoCSCandCSCtoCSR(n_row,n_col,Ap,Aj,Ax,Bp,Bi,Bx);
+
+#ifdef TEST_CSCtoCSR
+
+  //Correct result:
+  //int Cp[n_row+1]={0,1,3,6};
+  //int Ci[nnz]={0,0,1,0,1,2};
+  //int Cx[nnz]={5,4,2,3,1,8};
+
+  printf("Bp:\n");
+  for(int i=0;i<=n_row;i++)
+    printf("%d ",Bp[i]);
+  printf("\n");
+  printf("Bi:\n");
+  for(int i=0;i<nnz;i++)
+    printf("%d ",Bi[i]);
+  printf("\n");
+  printf("Bx:\n");
+  for(int i=0;i<nnz;i++)
+    printf("%-le ",Bx[i]);
+  printf("\n");
+
+  exit(0);
+
+#else
+
+  /*
+  printf("Bp:\n");
+  for(int i=0;i<=n_row;i++)
+    printf("%d ",Bp[i]);
+  printf("\n");
+  printf("Bi:\n");
+  for(int i=0;i<nnz;i++)
+    printf("%d ",Bi[i]);
+  printf("\n");
+  printf("Bx:\n");
+  for(int i=0;i<nnz;i++)
+    printf("%-le ",Bx[i]);
+  printf("\n");
+   */
+
+  /*
+
+  for(int i=0;i<=bicg->nrows;i++)
+    bicg->iA[i]=Bp[i];
+
+  for(int i=0;i<bicg->nnz;i++){
+    bicg->jA[i]=Bi[i];
+    bicg->A[i]=Bx[i];
+  }
+
+  cudaMemcpy(bicg->diA,bicg->iA,(bicg->nrows+1)*sizeof(int),cudaMemcpyHostToDevice);
+  cudaMemcpy(bicg->djA,bicg->jA,bicg->nnz*sizeof(int),cudaMemcpyHostToDevice);
+  cudaMemcpy(bicg->dA,bicg->A,bicg->nnz*sizeof(double),cudaMemcpyHostToDevice);
+
+   */
+
+
+  cudaMemcpy(bicg->diA,Bp,(bicg->nrows+1)*sizeof(int),cudaMemcpyHostToDevice);
+  cudaMemcpy(bicg->djA,Bi,bicg->nnz*sizeof(int),cudaMemcpyHostToDevice);
+  cudaMemcpy(bicg->dA,Bx,bicg->nnz*sizeof(double),cudaMemcpyHostToDevice);
+
+
+#endif
+
+  free(Bp);
+  free(Bi);
+  free(Bx);
+
+}
+
 __device__
-void dvcheck_input_gpud(double *x, int len, int var_id)
+void dvcheck_input_gpud(double *x, int len, const char* s)
 {
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   //if(i<2)
   if(i<len)
   {
-    printf("%d[%d]=%-le\n",var_id,i,x[i]);
+    printf("%s[%d]=%-le\n",s,i,x[i]);
   }
 }
 
@@ -126,8 +356,16 @@ void solveBcgCuda(
     __syncthreads();
     cudaDeviceSpmvCSC(dr0,dx,nrows,dA,djA,diA); //y=A*x
 #else
-    cudaDeviceSpmvCSC_block(dr0,dx,nrows,dA,djA,diA); //y=A*x
+    cudaDeviceSpmv(dr0,dx,nrows,dA,djA,diA,n_shr_empty); //y=A*x
 #endif
+
+#ifdef DEBUG_SOLVEBCGCUDA_DEEP
+
+    //printf("%d ddiag %-le\n",i,ddiag[i]);
+    //printf("%d dr0 %-le\n",i, dr0[i]);
+
+#endif
+
 
     //gpu_axpby(dr0,dtempv,1.0,-1.0,nrows,blocks,threads); // r0=1.0*rhs+-1.0r0 //y=ax+by
     cudaDeviceaxpby(dr0,dtempv,1.0,-1.0,nrows);
@@ -145,14 +383,13 @@ void solveBcgCuda(
 
 #ifdef DEBUG_SOLVEBCGCUDA_DEEP
 
-    int k=0;
     if(i==0){
       //printf("%d dr0[%d] %-le\n",it,i,dr0[i]);
       printf("%d %d rho1 %-le\n",it,i,rho1);
     }
 
-    //dvcheck_input_gpud(dx,nrows,k++);
-    //dvcheck_input_gpud(dr0,nrows,k++);
+    //dvcheck_input_gpud(dx,nrows,"dx");
+    //dvcheck_input_gpud(dr0,nrows,"dr0");
 
 #endif
 
@@ -167,17 +404,17 @@ void solveBcgCuda(
 
     if(i==0){
       //printf("%d dr0[%d] %-le\n",it,i,dr0[i]);
-      printf("%d %d rho1 %-le\n",it,i,rho1);
+      printf("%d %d rho1 rho0 %-le %-le\n",it,i,rho1,rho0);
     }
-    if(isnan(rho1)){
-      dvcheck_input_gpud(dx,nrows,k++);
-      dvcheck_input_gpud(dtempv,nrows,k++);
-      dvcheck_input_gpud(dr0,nrows,k++);
+    if(isnan(rho1) || rho1==0.0){
+      dvcheck_input_gpud(dx,nrows,"dx");
+      dvcheck_input_gpud(dr0h,nrows,"dr0h");
+      dvcheck_input_gpud(dr0,nrows,"dr0");
     }
 
 #endif
 
-      __syncthreads();//necessary to reduce accuracy error
+      __syncthreads();
       beta = (rho1 / rho0) * (alpha / omega0);
 
       __syncthreads();
@@ -196,12 +433,21 @@ void solveBcgCuda(
       __syncthreads();
       cudaDeviceSpmvCSC(dn0, dy, nrows, dA, djA, diA);
 #else
-      //cudaDeviceSpmvCSC_block(dn0, dy, nrows, dA, djA, diA);
-      __syncthreads();
-      cudaDeviceSpmvCSC_block(dn0, dy, nrows, dA, djA, diA);
+      cudaDeviceSpmv(dn0, dy, nrows, dA, djA, diA,n_shr_empty);
 #endif
 
-      __syncthreads();
+#ifdef DEBUG_SOLVEBCGCUDA_DEEP
+
+      if(it==0){
+        printf("%d %d dy dn0 ddiag %-le %-le %le\n",it,i,dy[i],dn0[i],ddiag[i]);
+        //printf("%d %d dn0 %-le\n",it,i,dn0[i]);
+        //printf("%d %d &temp1 %p\n",it,i,&temp1);
+        //printf("%d %d &test %p\n",it,i,&test);
+        //printf("%d %d &i %p\n",it,i,&i);
+      }
+
+#endif
+
       //temp1=gpu_dotxy(dr0h, dn0, aux, daux, nrows,(blocks + 1) / 2, threads);
       cudaDevicedotxy(dr0h, dn0, &temp1, nrows, n_shr_empty);
 
@@ -240,8 +486,7 @@ void solveBcgCuda(
       __syncthreads();
       cudaDeviceSpmvCSC(dt, dz, nrows, dA, djA, diA);
 #else
-      __syncthreads();
-      cudaDeviceSpmvCSC_block(dt, dz, nrows, dA, djA, diA);
+      cudaDeviceSpmv(dt, dz, nrows, dA, djA, diA,n_shr_empty);
 #endif
 
       __syncthreads();///todo find why are needed

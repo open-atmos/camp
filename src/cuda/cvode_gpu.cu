@@ -304,7 +304,7 @@ void alloc_solver_gpu2(CVodeMem cv_mem, SolverData *sd)
   //cudaMemcpy(bicg->A, bicg->dA, bicg->nnz*sizeof(double), cudaMemcpyDeviceToHost);
   bicg->dftemp=mGPU->deriv_data; //deriv is gpu pointer
 
-#ifndef CHECK_GPU_LINSOLVE
+#ifdef CHECK_GPU_LINSOLVE
   sd->max_error_linsolver = 0.0;
   sd->max_error_linsolver_i = 0;
   sd->n_linsolver_i = 0;
@@ -313,7 +313,6 @@ void alloc_solver_gpu2(CVodeMem cv_mem, SolverData *sd)
   //Linking Matrix data, later this data must be allocated in GPU
   bicg->nnz=SM_NNZ_S(J);
   bicg->nrows=SM_NP_S(J);
-  bicg->mattype=1; //CSC
   bicg->A=(double*)SM_DATA_S(J);
 
   //Using int per default as sundindextype give wrong results in CPU, so translate from int64 to int
@@ -2016,45 +2015,6 @@ int cvRootfind_gpu2(CVodeMem cv_mem)
   return(RTFOUND);
 }
 
-//malloc and copy
-void set_data_gpu2(CVodeMem cv_mem, SolverData *sd)
-{
-  /*itsolver *bicg = &(sd->bicg);
-  ModelData *md = &(sd->model_data);
-  CVDlsMem cvdls_mem = (CVDlsMem) cv_mem->cv_lmem;
-  SUNMatrix J = cvdls_mem->A;
-
-  for(int i=0;i<SM_NNZ_S(J);i++)
-    bicg->jA[i]=SM_INDEXVALS_S(J)[i];
-  for(int i=0;i<=SM_NP_S(J);i++)
-    bicg->iA[i]=SM_INDEXPTRS_S(J)[i];
-
-  //cudaMemcpy(bicg->djA,bicg->jA,bicg->nnz*sizeof(int),cudaMemcpyHostToDevice);
-  //cudaMemcpy(bicg->diA,bicg->iA,(bicg->nrows+1)*sizeof(int),cudaMemcpyHostToDevice);
-/*
-/*itsolver *bicg = &(sd->bicg);
-  ModelData *md = &(sd->model_data);
-  CVDlsMem cvdls_mem = (CVDlsMem) cv_mem->cv_lmem;
-  SUNMatrix J = cvdls_mem->A;
-
-  //Init GPU ODE solver variables
-  bicg->nnz=SM_NNZ_S(J);
-  bicg->nrows=SM_NP_S(J);
-  bicg->mattype=1; //CSC
-  bicg->A=(double*)SM_DATA_S(J);
-  bicg->jA=(int*)SM_INDEXVALS_S(J);
-  bicg->iA=(int*)SM_INDEXPTRS_S(J);
-  bicg->dA=md->J_solver_gpu;//set itsolver gpu pointer to jac pointer initialized at camp
-  bicg->dftemp=md->deriv_data_gpu;
-
-  // Setting data
-  bicg->maxIt=100;
-  bicg->tolmax=cv_mem->cv_reltol; //Set to CAMP selected accuracy (1e-8) //1e-10;//1e-6
-*/
-}
-
-
-
 /*
  * cvStep
  *
@@ -3414,6 +3374,16 @@ int cvNlsNewton_gpu2(SolverData *sd, CVodeMem cv_mem, int nflag)
   }
 }
 
+__global__
+void cvcheck_input_globald(double *x, int len, const char* s)
+{
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
+  if(i<len)
+  {
+    printf("%s[%d]=%-le\n",s,i,x[i]);
+  }
+}
+
 void check_input(double *dx, int len, int var_id){
 
   double *x=(double*)malloc(len*sizeof(double));
@@ -3532,6 +3502,8 @@ int linsolsetup_gpu2(SolverData *sd, CVodeMem cv_mem,int convfail,N_Vector vtemp
   //clock_t start = clock();
 #endif
 
+  cudaMemcpy(bicg->diA,bicg->iA,(bicg->nrows+1)*sizeof(int),cudaMemcpyHostToDevice);
+  cudaMemcpy(bicg->djA,bicg->jA,bicg->nnz*sizeof(int),cudaMemcpyHostToDevice);
   cudaMemcpy(bicg->dA,bicg->A,bicg->nnz*sizeof(double),cudaMemcpyHostToDevice);
 
 #ifdef FAILURE_DETAIL
@@ -3549,12 +3521,20 @@ int linsolsetup_gpu2(SolverData *sd, CVodeMem cv_mem,int convfail,N_Vector vtemp
 
   gpu_matScaleAddI(bicg->nrows,bicg->dA,bicg->djA,bicg->diA,-cv_mem->cv_gamma,bicg->blocks,bicg->threads);
 
+  cudaMemcpy(bicg->A,bicg->dA,bicg->nnz*sizeof(double),cudaMemcpyDeviceToHost);
+
 #ifdef PMC_DEBUG_GPU
   //bicg->timeMatScaleAddI+= clock() - start2;
   //bicg->counterMatScaleAddI++;
 #endif
 
   gpu_diagprecond(bicg->nrows,bicg->dA,bicg->djA,bicg->diA,bicg->ddiag,bicg->blocks,bicg->threads); //Setup linear solver
+
+#ifdef DEBUG_linsolsetup_gpu2
+
+  cvcheck_input_globald<<<bicg->blocks,bicg->threads>>>(bicg->ddiag,bicg->nrows,"bicg->ddiag");
+
+#endif
 
   //if(bicg->counterBiConjGrad==0)
     //check_input(bicg->ddiag,bicg->nrows,0);
@@ -3600,11 +3580,18 @@ int linsolsolve_gpu2(SolverData *sd, CVodeMem cv_mem)
     //N_VLinearSum(cv_mem->cv_gamma, cv_mem->cv_ftemp, -ONE,
     //             cv_mem->cv_tempv, cv_mem->cv_tempv);
 
+#ifndef CSR_SPMV
+
+    //CSRtoCSC(bicg);
+    CSCtoCSR(bicg);
+
+#endif
+
 #ifdef PMC_DEBUG_GPU
     cudaEventRecord(bicg->startBiConjGrad);
 #endif
 
-#ifndef CHECK_GPU_LINSOLVE
+#ifdef CHECK_GPU_LINSOLVE
     //cudaMemcpy(x,bicg->dx,bicg->nrows*sizeof(double),cudaMemcpyDeviceToHost);
     /*
       Seems CMake definitions only affects the current directory, so I can't apply this definitions in a separate CMakeLists... well, at the moment I left it as a only option `ENABLE_DEBUG` and then alognside `add_definitions(-DPMC_USE_GPU)` I added the rest of debug definitions if `ENABLE_DEBUG` is defined
@@ -3649,8 +3636,8 @@ int linsolsolve_gpu2(SolverData *sd, CVodeMem cv_mem)
       cudaDeviceSynchronize();
 
       //Compute case 2
-      //solveGPU_block(bicg,bicg->dA,bicg->djA,bicg->diA,bicg->dx,bicg->dtempv);
-      solveGPU(bicg,bicg->dA,bicg->djA,bicg->diA,bicg->dx,bicg->dtempv);
+      solveGPU_block(bicg,bicg->dA,bicg->djA,bicg->diA,bicg->dx,bicg->dtempv);
+      //solveGPU(bicg,bicg->dA,bicg->djA,bicg->diA,bicg->dx,bicg->dtempv);
 
       //Save result
       cudaMemcpy(aux_x2,bicg->dx,bicg->nrows*sizeof(double),cudaMemcpyDeviceToHost);
@@ -3720,8 +3707,8 @@ int linsolsolve_gpu2(SolverData *sd, CVodeMem cv_mem)
 
 #endif
 
-  //solveGPU(bicg,bicg->dA,bicg->djA,bicg->diA,bicg->dx,bicg->dtempv);
-  solveGPU_block(bicg,bicg->dA,bicg->djA,bicg->diA,bicg->dx,bicg->dtempv);
+  solveGPU(bicg,bicg->dA,bicg->djA,bicg->diA,bicg->dx,bicg->dtempv);
+  //solveGPU_block(bicg,bicg->dA,bicg->djA,bicg->diA,bicg->dx,bicg->dtempv);
 
 #ifdef DEBUG_LINEAR_SOLVERS
 
@@ -3743,12 +3730,17 @@ int linsolsolve_gpu2(SolverData *sd, CVodeMem cv_mem)
   }
 #endif
 
-
 #ifdef PMC_DEBUG_GPU
     cudaEventRecord(bicg->stopBiConjGrad);
 
     //bicg->timeBiConjGrad+= clock() - start;
     bicg->counterBiConjGrad++;
+#endif
+
+#ifndef CSR_SPMV
+
+    CSRtoCSC(bicg);
+
 #endif
 
     // scale the correction to account for change in gamma
@@ -3974,8 +3966,8 @@ void printSolverCounters_gpu2(SolverData *sd)
   printf("timeDerivNewton %lf, counterDerivNewton %d\n",bicg->timeDerivNewton/1000,bicg->counterDerivNewton);
   printf("timeLinSolSetup %lf, counterLinSolSetup %d\n",bicg->timeLinSolSetup/1000,bicg->counterLinSolSetup);
   printf("timeDerivSolve %lf, counterDerivSolve %d\n",bicg->timeDerivSolve/1000,bicg->counterDerivSolve);
-  printf("timeBiConjGrad %lf, counterBiConjGrad %d, avgCounterBiConjGrad %lf\n",bicg->timeBiConjGrad/1000,
-          bicg->counterBiConjGrad,bicg->counterBiConjGradInternal/(double)bicg->counterBiConjGrad);
+  printf("timeBiConjGrad %lf, counterBiConjGrad %d, counterBiConjGradInternal %d avgCounterBiConjGrad %lf\n",bicg->timeBiConjGrad/1000,
+          bicg->counterBiConjGrad,bicg->counterBiConjGradInternal,bicg->counterBiConjGradInternal/(double)bicg->counterBiConjGrad);
   printf("timeJac %lf, counterJac %d\n",bicg->timeJac/1000,bicg->counterJac);
 
 #endif

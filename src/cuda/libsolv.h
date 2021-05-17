@@ -49,7 +49,8 @@ __device__ void cudaDevicediagprecond(int nrows, double* dA, int* djA, int* diA,
 __device__ void cudaDevicesetconst(double* dy,double constant,int nrows);
 __device__ void cudaDeviceSpmvCSR(double* dx, double* db, int nrows, double* dA, int* djA, int* diA);
 __device__ void cudaDeviceSpmvCSC(double* dx, double* db, int nrows, double* dA, int* djA, int* diA);
-__device__ void cudaDeviceSpmvCSC_block(double* dx, double* db, int nrows, double* dA, int* djA, int* diA);
+__device__ void cudaDeviceSpmvCSC_block(double* dx, double* db, int nrows, double* dA, int* djA, int* diA, int n_shr_empty);
+__device__ void cudaDeviceSpmv(double* dx, double* db, int nrows, double* dA, int* djA, int* diA, int mattype);
 __device__ void cudaDeviceaxpby(double* dy,double* dx, double a, double b, int nrows);
 __device__ void cudaDeviceyequalsx(double* dy,double* dx,int nrows);
 __device__ void cudaDevicereducey(double *g_odata, unsigned int n, int n_shr_empty);

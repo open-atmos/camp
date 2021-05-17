@@ -412,7 +412,7 @@ contains
   subroutine integrate(this, curr_time, time_step, I_W, I_E, I_S, &
                   I_N, temperature, MONARCH_conc, water_conc, &
                   water_vapor_index, air_density, pressure, conv, i_hour,&
-          NUM_TIME_STEP,solver_stats)
+          NUM_TIME_STEP,solver_stats, DIFF_CELLS)
 
     !> PartMC-camp <-> MONARCH interface
     class(monarch_interface_t) :: this
@@ -447,6 +447,7 @@ contains
     real, intent(in) :: conv
     integer, intent(inout) :: i_hour
     integer, intent(in) :: NUM_TIME_STEP
+    character(len=*),intent(in) :: DIFF_CELLS
 
     type(chem_spec_data_t), pointer :: chem_spec_data
 
@@ -531,8 +532,10 @@ contains
       !rate_emi = (/1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,&
       !        0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0 /)
 
-      DIFF_CELLS_EMI = "ON"
-      !DIFF_CELLS_EMI = "OFF"
+      DIFF_CELLS_EMI = "OFF"
+      if(DIFF_CELLS.eq."ON") then
+        DIFF_CELLS_EMI = "ON"
+      end if
 
       rate_emi(:,:)=0.0
 

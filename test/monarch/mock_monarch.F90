@@ -260,17 +260,18 @@ program mock_monarch
     print*, "WARNING: not NUM_TIME_STEP parameter received, value set to ",NUM_TIME_STEP
   end if
 
-  !DIFF_CELLS = "OFF"
-  DIFF_CELLS = "ON"
-
-  !todo
-  !call get_command_argument(4, arg, status=status_code)
-  !if(status_code.eq.0) then
-    !DIFF_CELLS = "ON"!trim(arg)
-  !else
-  !  print*, "WARNING: not DIFF_CELLS parameter received, value set to OFF"
-    !DIFF_CELLS = "OFF"
-  !end if
+  DIFF_CELLS = "OFF"
+  call get_command_argument(8, arg, status=status_code)
+  if(status_code.eq.0) then
+    if(arg.eq."Practical") then
+      DIFF_CELLS = "ON"
+    else
+      DIFF_CELLS = "OFF"
+    end if
+  else
+    DIFF_CELLS = "OFF"
+    print*, "WARNING: not DIFF_CELLS parameter received, value set to ",DIFF_CELLS
+  end if
 
   if (pmc_mpi_rank().eq.0) then
     write(*,*) "Num time-steps:", NUM_TIME_STEP, "Num cells:",&
@@ -485,7 +486,7 @@ program mock_monarch
                                  conv,              &
                                  i_hour,&
                                  NUM_TIME_STEP,&
-                                 solver_stats)
+                                 solver_stats,DIFF_CELLS)
     curr_time = curr_time + TIME_STEP
 
 #ifdef PMC_DEBUG_GPU

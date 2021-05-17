@@ -258,7 +258,7 @@ void alloc_solver_cpu2(CVodeMem cv_mem, SolverData *sd)
   bicg->dA=mGPU->J;//set itsolver gpu pointer to jac pointer initialized at camp
   bicg->dftemp=mGPU->deriv_data; //deriv is gpu pointer
 
-#ifndef CHECK_GPU_LINSOLVE
+#ifdef CHECK_GPU_LINSOLVE
   sd->max_error_linsolver = 0.0;
   sd->max_error_linsolver_i = 0;
   sd->n_linsolver_i = 0;
@@ -3517,7 +3517,7 @@ int linsolsolve_cpu2(SolverData *sd, CVodeMem cv_mem)
     cudaEventRecord(bicg->startBiConjGrad);
 #endif
 
-#ifndef CHECK_GPU_LINSOLVE
+#ifdef CHECK_GPU_LINSOLVE
     //cudaMemcpy(x,bicg->dx,bicg->nrows*sizeof(double),cudaMemcpyDeviceToHost);
     /*
       Seems CMake definitions only affects the current directory, so I can't apply this definitions in a separate CMakeLists... well, at the moment I left it as a only option `ENABLE_DEBUG` and then alognside `add_definitions(-DPMC_USE_GPU)` I added the rest of debug definitions if `ENABLE_DEBUG` is defined
@@ -3857,8 +3857,8 @@ void printSolverCounters_cpu2(SolverData *sd)
   printf("timeDerivNewton %lf, counterDerivNewton %d\n",bicg->timeDerivNewton/1000,bicg->counterDerivNewton);
   printf("timeLinSolSetup %lf, counterLinSolSetup %d\n",bicg->timeLinSolSetup/1000,bicg->counterLinSolSetup);
   printf("timeDerivSolve %lf, counterDerivSolve %d\n",bicg->timeDerivSolve/1000,bicg->counterDerivSolve);
-  printf("timeBiConjGrad %lf, counterBiConjGrad %d, avgCounterBiConjGrad %lf\n",bicg->timeBiConjGrad/1000,
-          bicg->counterBiConjGrad,bicg->counterBiConjGradInternal/(double)bicg->counterBiConjGrad);
+  printf("timeBiConjGrad %lf, counterBiConjGrad %d, counterBiConjGradInternal %d avgCounterBiConjGrad %lf\n",bicg->timeBiConjGrad/1000,
+          bicg->counterBiConjGrad,bicg->counterBiConjGradInternal,bicg->counterBiConjGradInternal/(double)bicg->counterBiConjGrad);
   printf("timeJac %lf, counterJac %d\n",bicg->timeJac/1000,bicg->counterJac);
 
 #endif

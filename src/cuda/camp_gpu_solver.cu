@@ -691,7 +691,7 @@ __global__ void solveDerivative(
 #endif
   double time_step, int deriv_length_cell, int state_size_cell,
   int n_cells,
-  int i_kernel, int threads_block, double *y,
+  int i_kernel, int threads_block, int n_shr_empty, double *y,
   double threshhold, double replacement_value, ModelDataGPU md_object
   ) //Interface CPU/GPU
 {
@@ -717,7 +717,7 @@ __global__ void solveDerivative(
   //N_VLinearSum(1.0, y, -1.0, md->J_state, md->J_tmp);
   cudaDevicezaxpby(1.0, y, -1.0, md->J_state, md->J_tmp, active_threads);
   //SUNMatMatvec(md->J_solver, md->J_tmp, md->J_tmp2);
-  cudaDeviceSpmvCSC_block(md->J_tmp2, md->J_tmp, active_threads, md->J_solver, md->jJ_solver, md->iJ_solver);
+  cudaDeviceSpmvCSC_block(md->J_tmp2, md->J_tmp, active_threads, md->J_solver, md->jJ_solver, md->iJ_solver, 0);
   //N_VLinearSum(1.0, md->J_deriv, 1.0, md->J_tmp2, md->J_tmp);
   cudaDevicezaxpby(1.0, md->J_deriv, 1.0, md->J_tmp2, md->J_tmp, active_threads);
   cudaDevicesetconst(md->J_tmp2, 0.0, active_threads); //Reset for next iter
@@ -910,8 +910,8 @@ void rxn_calc_deriv_gpu(SolverData *sd, N_Vector deriv, double time_step,
 #endif
      time_step, md->n_per_cell_dep_var,
      md->n_per_cell_state_var,n_cells,
-     i_kernel, threads_block, bicg->dcv_y,
-     threshhold, replacement_value, sd->mGPU
+     i_kernel, threads_block,n_shr_empty, bicg->dcv_y,
+     threshhold, replacement_value, sd->mGPU,
      );
   }
 

@@ -215,15 +215,25 @@ def speedup_cells(metric):
     plot_functions.plot_speedup_cells(cells,data[plot_y_key3],plot_x_key, \
                                     plot_y_key3, plot_title)
 
-def error_timesteps():
+def all_timesteps():
 
   #config_file="simple"
   #config_file="monarch_cb05"
   config_file="monarch_binned"
 
+  diff_cells="Practical"
+  #diff_cells="Ideal"
+
+  plot_metric="NRMSE"
   #plot_metric="NRMSE"
-  plot_metric="MAPE"
+  #plot_metric="MAPE"
   #plot_metric="SMAPE"
+
+  #todo mix NMRSE and timeCVODE metrics
+  #plot_metric = "timeCVode"
+  #plot_metric = "timeLS"
+  #plot_metric = "counterLS"
+  #plot_metric = "counterBCG"
 
   mpi="yes"
   #mpi="no"
@@ -241,18 +251,17 @@ def error_timesteps():
   #cases_multicells_onecell = ["one-cell"]
   #cases_multicells_onecell = ["multi-cells"]
 
-  cases_gpu_cpu = ["CPU"]
+  #cases_gpu_cpu = ["CPU"]
   #cases_gpu_cpu = ["GPU"]
-  #cases_gpu_cpu = ["CPU,GPU"]
+  cases_gpu_cpu = ["CPU","GPU"]
   case_gpu_cpu = cases_gpu_cpu[0]
+  write_config_file(case_gpu_cpu)
 
   data = {}
 
   # make the output directory if it doesn't exist
   if not os.path.exists('out'):
     os.makedirs('out')
-
-  write_config_file(case_gpu_cpu)
 
   for mpiProcesses in mpiProcessesList:
 
@@ -273,8 +282,8 @@ def error_timesteps():
 
     for case in cases_multicells_onecell:
 
-      print(exec_str +" " + cell_str + " " + case + " " + str(timesteps))
-      os.system(exec_str +" " + cell_str + " " + case + " " + str(timesteps))
+      print(exec_str +" " + cell_str + " " + case + " " + str(timesteps)+" "+diff_cells)
+      os.system(exec_str +" " + cell_str + " " + case + " " + str(timesteps)+" "+diff_cells)
 
       data[case] = {}
 
@@ -282,13 +291,131 @@ def error_timesteps():
       file = 'out/'+config_file+'_'+case+'_results_all_cells.csv'
       plot_functions.read_solver_stats(file, data[case])
 
+      if(len(cases_gpu_cpu)==2 and len(cases_multicells_onecell)==2):
+        case_gpu_cpu = cases_gpu_cpu[1]
+        write_config_file(case_gpu_cpu)
+
+
     #print(data)
 
     if (len(cases_multicells_onecell) == 2):
 
       errs=[]
 
-      if(plot_metric=="RMSE"):
+      if(plot_metric=="NRMSE"):
+        errs=plot_functions.calculate_NMRSE(data,timesteps)
+      if(plot_metric=="MAPE"):
+        errs=plot_functions.calculate_MAPE(data,timesteps)
+      if(plot_metric=="SMAPE"):
+        errs=plot_functions.calculate_SMAPE(data,timesteps)
+
+      #data[cell],plot_metric2=plot_functions.calculate_speedup( \
+      #  cases_multicells_onecell,data[cell],"timestep", \
+      #  plot_metric)
+
+      #print(data)
+
+      namex = "Timesteps"
+      namey=plot_metric
+      #datax=list(range(TIME_STEP,timesteps*TIME_STEP,TIME_STEP))
+      datax=list(range(TIME_STEP,TIME_STEP*(timesteps+1),TIME_STEP))
+      datay=errs
+      #plot_title="Ideal "+config_file+" "+case_gpu_cpu+", Cells: "+cell_str
+      plot_title="Practical "+config_file+" "+cases_gpu_cpu[0]+ \
+                 " "+ cases_multicells_onecell[1] +" vs "+ cases_gpu_cpu[0] + \
+                 " "+ cases_multicells_onecell[0] +", Cells: "+cell_str
+      #plot_title = config_file + ", Timesteps: 720-1400"
+
+      if(len(cases_gpu_cpu)==2 and len(cases_multicells_onecell)==2):
+        plot_title="Practical "+config_file+" "+cases_gpu_cpu[1]+ \
+                   " "+ cases_multicells_onecell[1] +" vs "+ cases_gpu_cpu[0] + \
+                   " "+ cases_multicells_onecell[0] +", Cells: "+cell_str
+
+
+      plot_functions.plot(namex,namey,datax,datay,plot_title)
+
+
+def error_timesteps():
+
+  #config_file="simple"
+  #config_file="monarch_cb05"
+  config_file="monarch_binned"
+
+  diff_cells="Practical"
+  #diff_cells="Ideal"
+
+  plot_metric="NRMSE"
+  #plot_metric="MAPE"
+  #plot_metric="SMAPE"
+
+  mpi="yes"
+  #mpi="no"
+
+  mpiProcessesList = [1]
+
+  #cells = [100,1000]
+  cells = [10]
+  cell = cells[0]
+
+  timesteps = 5#720=12h
+  TIME_STEP = 2
+
+  cases_multicells_onecell = ["one-cell","multi-cells"]
+  #cases_multicells_onecell = ["one-cell"]
+  #cases_multicells_onecell = ["multi-cells"]
+
+  #cases_gpu_cpu = ["CPU"]
+  #cases_gpu_cpu = ["GPU"]
+  cases_gpu_cpu = ["CPU","GPU"]
+  case_gpu_cpu = cases_gpu_cpu[0]
+  write_config_file(case_gpu_cpu)
+
+  data = {}
+
+  # make the output directory if it doesn't exist
+  if not os.path.exists('out'):
+    os.makedirs('out')
+
+  for mpiProcesses in mpiProcessesList:
+
+    exec_str=""
+    if mpi=="yes":
+      exec_str+="mpirun -v -np "+str(mpiProcesses)+" --bind-to none "
+
+    exec_str+="../../mock_monarch config_"+config_file+".json "+"interface_"+config_file \
+              +".json "+config_file
+
+    ADD_EMISIONS="OFF"
+    if config_file=="monarch_binned":
+      ADD_EMISIONS="ON"
+
+    exec_str+=" "+ADD_EMISIONS
+
+    cell_str=str(cell)
+
+    for case in cases_multicells_onecell:
+
+      print(exec_str +" " + cell_str + " " + case + " " + str(timesteps)+" "+diff_cells)
+      os.system(exec_str +" " + cell_str + " " + case + " " + str(timesteps)+" "+diff_cells)
+
+      data[case] = {}
+
+      #file = 'out/'+config_file+'_'+case+'_solver_stats.csv'
+      file = 'out/'+config_file+'_'+case+'_results_all_cells.csv'
+      plot_functions.read_solver_stats(file, data[case])
+
+      if(len(cases_gpu_cpu)==2 and len(cases_multicells_onecell)==2):
+        case_gpu_cpu = cases_gpu_cpu[1]
+        write_config_file(case_gpu_cpu)
+
+
+    #print(data)
+
+    if (len(cases_multicells_onecell) == 2):
+
+      errs=[]
+
+      if(plot_metric=="NRMSE"):
         errs=plot_functions.calculate_NMRSE(data,timesteps)
       if(plot_metric=="MAPE"):
         errs=plot_functions.calculate_MAPE(data,timesteps)
@@ -306,9 +433,17 @@ def error_timesteps():
       #datax=list(range(TIME_STEP,timesteps*TIME_STEP,TIME_STEP))
       datax=list(range(TIME_STEP,TIME_STEP*(timesteps+1),TIME_STEP))
       datay=errs
-      plot_title="Ideal "+config_file+" "+case_gpu_cpu+", Cells: "+cell_str
-      plot_title="Practical "+config_file+" "+case_gpu_cpu+", Cells: "+cell_str
+      #plot_title="Ideal "+config_file+" "+case_gpu_cpu+", Cells: "+cell_str
+      plot_title="Practical "+config_file+" "+cases_gpu_cpu[0]+ \
+                 " "+ cases_multicells_onecell[1] +" vs "+ cases_gpu_cpu[0] + \
+                 " "+ cases_multicells_onecell[0] +", Cells: "+cell_str
       #plot_title = config_file + ", Timesteps: 720-1400"
+
+      if(len(cases_gpu_cpu)==2 and len(cases_multicells_onecell)==2):
+        plot_title="Practical "+config_file+" "+cases_gpu_cpu[1]+\
+                   " "+ cases_multicells_onecell[1] +" vs "+ cases_gpu_cpu[0] +\
+                   " "+ cases_multicells_onecell[0] +", Cells: "+cell_str
+
 
       plot_functions.plot(namex,namey,datax,datay,plot_title)
 
@@ -430,6 +565,9 @@ def speedup_timesteps_counterBCG():
   #config_file="monarch_cb05"
   config_file="monarch_binned"
 
+  diff_cells="Practical"
+  #diff_cells="Ideal"
+
   mpi="yes"
   #mpi="no"
 
@@ -438,7 +576,11 @@ def speedup_timesteps_counterBCG():
   mpiProcessesList = [1]
 
   #cells = [100,1000]
-  cells = [5]
+  cells = [10]
+  cell_str=str(cells[0])
+
+  timesteps = 60#720=12h
+  TIME_STEP = 2
 
   cases_multicells_onecell = ["one-cell","multi-cells"]
   #cases_multicells_onecell = ["one-cell"]
@@ -453,7 +595,8 @@ def speedup_timesteps_counterBCG():
   #plot_y_key = "timeCVode"
   #plot_y_key = "timeLS"
   #plot_y_key = "counterLS"
-  plot_y_key = "counterBCG"
+  #plot_y_key = "counterBCG"
+  plot_y_key = "Average BCG internal iterations per call"
 
   remove_iters=0#10 #360
 
@@ -466,9 +609,13 @@ def speedup_timesteps_counterBCG():
   #plot_title = config_file + ", cells: " + str(cells[0])
   #plot_title = config_file + ", cells: " + str(cells[0]) + " Diff cells: temp, press and emissions"
   #plot_title = config_file + ", cells: " + str(cells[0]) + " Diff cells: temp and press"
-  plot_title = config_file + ", cells: " + str(cells[0]) + " Ideal case"
+  #plot_title = config_file + ", cells: " + str(cells[0]) + " Ideal case"
   #plot_title = config_file + ", cells: " + str(cells[0]) + ", Timesteps: 0-72"
   #plot_title = config_file + ", cells: " + str(cells[0]) + ", Timesteps: 720-792"
+
+  plot_title="Practical "+config_file+" "+cases_gpu_cpu[0]+ \
+               " "+ cases_multicells_onecell[1] +" vs "+ cases_gpu_cpu[0] + \
+               " "+ cases_multicells_onecell[0] +", Cells: "+cell_str
 
   cells_init = cells
 
@@ -501,19 +648,17 @@ def speedup_timesteps_counterBCG():
 
       file = 'out/'+config_file+'_'+case+'_solver_stats.csv'
 
-      for cell in cells:
+      print(exec_str +" " + cell_str + " " + case + " " + str(timesteps)+" "+diff_cells)
+      os.system(exec_str +" " + cell_str + " " + case + " " + str(timesteps)+" "+diff_cells)
 
-        cell_str=str(cell)
-        print(exec_str + " " + cell_str + " " + case)
-        os.system(exec_str + " " + cell_str + " " + case)
+      plot_functions.read_solver_stats(file, data_tmp)
 
-        plot_functions.read_solver_stats(file, data_tmp)
-
-        if(plot_y_key=="counterBCG2"):
-          for i in range(len(data_tmp[plot_y_key])):
-            #print(data_tmp[plot_y_key][i],data_tmp["counterLS"][i])
-            data_tmp[plot_y_key][i]=data_tmp[plot_y_key][i]/\
-                                    data_tmp["counterLS"][i]
+      if(plot_y_key=="Average BCG internal iterations per call"):
+        data_tmp[plot_y_key]=[0.]*len(data_tmp["counterBCG"])
+        for i in range(len(data_tmp["counterBCG"])):
+          #print(data_tmp["counterBCG"][i],data_tmp["counterLS"][i])
+          data_tmp[plot_y_key][i]=data_tmp["counterBCG"][i]/\
+                                  data_tmp["counterLS"][i]
 
       data[case]=data_tmp
 
@@ -549,6 +694,9 @@ def debug_no_plot():
   #config_file="simple"
   #config_file="monarch_cb05"
   config_file="monarch_binned"
+
+  diff_cells="Practical"
+  #diff_cells="Ideal"
 
   mpi="yes"
   #mpi="no"
@@ -604,8 +752,8 @@ def debug_no_plot():
       for cell in cells:
 
         cell_str=str(cell)
-        print(exec_str +" " + cell_str + " " + case + " " + str(timesteps))
-        os.system(exec_str +" " + cell_str + " " + case + " " + str(timesteps))
+        print(exec_str +" " + cell_str + " " + case + " " + str(timesteps)+" "+diff_cells)
+        os.system(exec_str +" " + cell_str + " " + case + " " + str(timesteps)+" "+diff_cells)
 
 
 
