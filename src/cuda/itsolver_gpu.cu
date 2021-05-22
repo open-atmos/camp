@@ -15,6 +15,13 @@ void createSolver(itsolver *bicg)
   printf("BCG Mattype=CSC\n");
 #endif
 
+  //todo previous check to exception if size_cell>bicg_threads
+  int size_cell=bicg->nrows/bicg->n_cells;
+  if(size_cell>bicg->threads){
+    printf("ERROR: Size cell greater than available threads per block");
+    exit(0);
+  }
+
   //Auxiliary vectors ("private")
   double ** dr0 = &bicg->dr0;
   double ** dr0h = &bicg->dr0h;
@@ -567,7 +574,21 @@ void solveBcgCuda(
     //todo itpointer should be an array of n_blocks size, and in cpu reduce to max number
     // (since the max its supposed to be the last to exit)
 #ifdef PMC_DEBUG_GPU
+
+#ifndef solveBcgCuda_avg_it
+
+  //printf("it %d %d\n",i,it);
+
+  //atomicAdd(it_pointer,it);
+  //if(i==0) *it_pointer=(*it_pointer)/nrows;
+
+  it_pointer[i]=it;
+
+#else
    *it_pointer = it;
+
+#endif
+
 #endif
 
   }
@@ -644,7 +665,6 @@ void solveGPU_block(itsolver *bicg, double *dA, int *djA, int *diA, double *dx, 
 
 #ifndef INDEPENDENCY_CELLS
 
-  //todo fix if max_threads_block > bicg->threads then what?
   int max_threads_block = nextPowerOfTwo(size_cell);//bicg->threads;
   //int n_shr_empty = max_threads-size_cell;//nextPowerOfTwo(size_cell)-size_cell;
   //int threads_block = max_threads_block - n_shr_empty; //last multiple of size_cell before max_threads
@@ -689,11 +709,22 @@ void solveGPU_block(itsolver *bicg, double *dA, int *djA, int *diA, double *dx, 
   cudaMemcpy(daux_params, aux_params, n_aux_params * sizeof(double), cudaMemcpyHostToDevice);*/
 
 #ifdef PMC_DEBUG_GPU
-  int it = 0;
-  int *dit_ptr=bicg->counterBiConjGradInternalGPU;
-  //int *dit_ptr;
-  //cudaMalloc((void**)&dit_ptr,sizeof(int));
-  //cudaMemcpy(dit_ptr, &it, sizeof(int), cudaMemcpyHostToDevice);
+  int *dit_ptr;
+
+#ifndef solveBcgCuda_avg_it
+
+  cudaMalloc((void**)&dit_ptr,nrows*sizeof(int));
+  cudaMemset(dit_ptr, 0, bicg->nrows*sizeof(int));
+
+#else
+
+  //int *dit_ptr=bicg->counterBiConjGradInternalGPU;
+
+  cudaMalloc((void**)&dit_ptr,sizeof(int));
+  cudaMemset(dit_ptr, 0, bicg->nrows*sizeof(int));
+
+#endif
+
 #endif
 
 
@@ -708,7 +739,28 @@ void solveGPU_block(itsolver *bicg, double *dA, int *djA, int *diA, double *dx, 
           );
 
 #ifdef PMC_DEBUG_GPU
+
+  int it=0;
+
+#ifndef solveBcgCuda_avg_it
+
+  int *it_ptr=(int*)malloc(sizeof(int)*nrows);
+  cudaMemcpy(it_ptr,dit_ptr,nrows*sizeof(int),cudaMemcpyDeviceToHost);
+
+  for(int i=0;i<nrows;i++){
+    it+=it_ptr[i];
+  }
+  it=it/nrows;
+
+  free(it_ptr);
+
+#else
+
   cudaMemcpy(&it,dit_ptr,sizeof(int),cudaMemcpyDeviceToHost);
+
+#endif
+
+  cudaFree(dit_ptr);
   bicg->counterBiConjGradInternal += it;
 
 #ifndef DEBUG_SOLVEBCGCUDA
@@ -889,6 +941,14 @@ void solveGPU(itsolver *bicg, double *dA, int *djA, int *diA, double *dx, double
 
 #ifdef PMC_DEBUG_GPU
   bicg->counterBiConjGradInternal += it;
+
+#ifndef DEBUG_SOLVEBCGCUDA
+  if(bicg->counterBiConjGrad==0) {
+    printf("counterBiConjGradInternal %d\n",
+           bicg->counterBiConjGradInternal);
+  }
+#endif
+
 #endif
 
 #ifdef DEBUG_SOLVEBCGCUDA_DEEP
