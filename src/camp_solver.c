@@ -23,7 +23,6 @@
 #include "sub_model_solver.h"
 #ifdef PMC_USE_GPU
 #include "cuda/cvode_gpu.h"
-#include "cuda/cvode_cpu.h"
 #endif
 #ifdef PMC_USE_GSL
 #include <gsl/gsl_deriv.h>
@@ -547,11 +546,7 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
 // Set gpu rxn values
 #ifdef PMC_USE_GPU
   solver_init_int_double_gpu(sd);
-#ifdef USE_CVODE_CPU_CAMP_VERSION
-    alloc_solver_cpu2(sd->cvode_mem, sd);
-#else
-    alloc_solver_gpu2(sd->cvode_mem, sd);
-#endif
+  alloc_solver_gpu2(sd->cvode_mem, sd);
 #endif
 
 #ifdef FAILURE_DETAIL
@@ -825,13 +820,8 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
     if(sd->use_cpu==1){
       flag = CVode(sd->cvode_mem, (realtype)t_final, sd->y, &t_rt, CV_NORMAL);
     }else{
-#ifdef USE_CVODE_CPU_CAMP_VERSION
-      flag = CVode_cpu2(sd->cvode_mem, (realtype)t_final, sd->y,
-            &t_rt, CV_NORMAL, sd);
-#else
       flag = CVode_gpu2(sd->cvode_mem, (realtype)t_final, sd->y,
             &t_rt, CV_NORMAL, sd);
-#endif
     }
 
 #else
@@ -1005,6 +995,7 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
                            double *RHS_time__s, double *Jac_time__s,
                            double *timeCVode, double *timeCVodeTotal,
                            int *counterBCG, int *counterLS, double *timeLS,
+                           double* timeBiconjGradMemcpy,
                            double *max_loss_precision) {
 #ifdef PMC_USE_SUNDIALS
   SolverData *sd = (SolverData *)solver_data;
@@ -1069,6 +1060,7 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
   *timeCVodeTotal = 0.0;
   *counterLS = 0;
   *timeLS = 0.0;
+  *timeBiconjGradMemcpy=0.0;
 
 #ifdef PMC_DEBUG_GPU
   //todo export struct pointer with all data to reduce code
@@ -1081,6 +1073,7 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
     CVodeGetcounterLS(sd->cvode_mem, counterLS);
     CVodeGettimeLS(sd->cvode_mem, timeLS);
     //printf("CVodeGettimeLS %-le",*timeLS);
+    *timeBiconjGradMemcpy=0.0;
   }
   else{
 
@@ -1094,6 +1087,7 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
 
     *counterLS=bicg->counterBiConjGrad;
     *timeLS=bicg->timeBiConjGrad/1000;
+    *timeBiconjGradMemcpy=bicg->timeBiConjGradMemcpy/1000;
     //printf("timeLS %-le",*timeLS);
 #endif
   }
@@ -2679,11 +2673,7 @@ void solver_free(void *solver_data) {
 #endif
 
 #ifdef PMC_USE_GPU
-#ifdef USE_CVODE_CPU_CAMP_VERSION
-  free_ode_cpu2(sd);
-#else
   free_ode_gpu2(sd);
-#endif
 #endif
 
 }

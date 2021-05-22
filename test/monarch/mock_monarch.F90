@@ -184,6 +184,7 @@ program mock_monarch
   integer :: counterLS_prev = 0
   real(kind=dp) :: timeLS_prev = 0.0
   real(kind=dp) :: timeCvode_prev = 0.0
+  real(kind=dp) :: timeBiconjGradMemcpy_prev = 0.0
   integer :: export_results_all_cells
 
   ! initialize mpi (to take the place of a similar MONARCH call)
@@ -265,6 +266,9 @@ program mock_monarch
   if(status_code.eq.0) then
     if(arg.eq."Practical") then
       DIFF_CELLS = "ON"
+#ifdef DEBUG_DIFF_CELLS
+      print*,"DIFF_CELLS ",DIFF_CELLS
+#endif
     else
       DIFF_CELLS = "OFF"
     end if
@@ -692,7 +696,7 @@ contains
     write(RESULTS_FILE_UNIT_PY, "(A)", advance="no") aux_str_py
     write(RESULTS_FILE_UNIT_PY, '(a)') ''
 
-    aux_str_stats = "timestep,counterBCG,counterLS,timeLS,timeCVode"
+    aux_str_stats = "timestep,counterBCG,counterLS,timeLS,timeBiconjGradMemcpy,timeCVode"
 
     write(STATSOUT_FILE_UNIT, "(A)", advance="no") aux_str_stats
     write(STATSOUT_FILE_UNIT, '(a)') ''
@@ -1894,7 +1898,8 @@ contains
     character(len=128) :: i_cell_str, time_str
 
     integer :: counterLS_max, counterLS, counterBCG, counterBCG_max
-    real(kind=dp) :: timeLS_max, timeCvode_max, timeLS, timeCvode
+    real(kind=dp) :: timeLS_max, timeCvode_max, timeLS, timeBiconjGradMemcpy, &
+            timeBiconjGradMemcpy_max ,timeCvode
     integer :: l_comm, ierr
 
 #ifdef PMC_USE_MPI
@@ -1909,13 +1914,18 @@ contains
     call mpi_reduce(solver_stats%timeLS, timeLS_max, 1, MPI_DOUBLE, MPI_MAX, 0, &
             l_comm, ierr)
     call pmc_mpi_check_ierr(ierr)
+    call mpi_reduce(solver_stats%timeBiconjGradMemcpy, timeBiconjGradMemcpy_max, 1, MPI_DOUBLE, MPI_MAX, 0, &
+            l_comm, ierr)
+    call pmc_mpi_check_ierr(ierr)
     call mpi_reduce(solver_stats%timeCvode, timeCvode_max, 1, MPI_DOUBLE, MPI_MAX, 0, &
             l_comm, ierr)
     call pmc_mpi_check_ierr(ierr)
 
+
     counterBCG=counterBCG_max
     counterLS=counterLS_max
     timeLS=timeLS_max
+    timeBiconjGradMemcpy=timeBiconjGradMemcpy_max
     timeCvode=timeCvode_max
 
 #else
@@ -1923,6 +1933,7 @@ contains
     counterBCG=solver_stats%counterBCG
     counterLS=solver_stats%counterLS
     timeLS=solver_stats%timeLS
+    timeBiconjGradMemcpy=solver_stats%timeBiconjGradMemcpy
     timeCvode=solver_stats%timeCvode
 
 #endif
@@ -1944,6 +1955,9 @@ contains
               timeLS-timeLS_prev
       write(STATSOUT_FILE_UNIT, "(A)", advance="no") ","
       write(STATSOUT_FILE_UNIT, "(ES13.6)", advance="no") &
+              timeBiconjGradMemcpy-timeBiconjGradMemcpy_prev
+      write(STATSOUT_FILE_UNIT, "(A)", advance="no") ","
+      write(STATSOUT_FILE_UNIT, "(ES13.6)", advance="no") &
               timeCvode-timeCvode_prev
 
       write(STATSOUT_FILE_UNIT, '(a)') ''
@@ -1951,11 +1965,13 @@ contains
       counterBCG_prev = counterBCG
       counterLS_prev=counterLS
       timeLS_prev=timeLS
+      timeBiconjGradMemcpy_prev=timeBiconjGradMemcpy
       timeCvode_prev=timeCvode
 
       !print*, "counterBCG fortran", counterBCG
       !print*, "timeLS fortran", timeLS
       !print*, "counterLS fortran", solver_stats%counterLS
+      !print*, "timeBiconjGradMemcpy fortran", solver_stats%timeBiconjGradMemcpy
       !print*, "timeCvode fortran", solver_stats%timeCvode
 
     end if

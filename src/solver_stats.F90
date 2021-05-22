@@ -67,6 +67,8 @@ module pmc_solver_stats
     real(kind=dp) :: timeCVodeTotal = 0.0
     !> Time Linear Solver [s]
     real(kind=dp) :: timeLS = 0.0
+    !> Time Linear Solver memcopys [s]
+    real(kind=dp) :: timeBiconjGradMemcpy = 0.0
 
     !> Maximum loss of precision on last deriv call
     real(kind=dp) :: max_loss_precision

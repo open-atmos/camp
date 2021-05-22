@@ -79,6 +79,7 @@ typedef struct
   double timecvStep;
   double timeDerivNewton;
   double timeBiConjGrad;
+  double timeBiConjGradMemcpy;
   double timeDerivSolve;
   double timeJac;
 
@@ -89,6 +90,7 @@ typedef struct
   cudaEvent_t startNewtonIt;
   cudaEvent_t startcvStep;
   cudaEvent_t startBiConjGrad;
+  cudaEvent_t startBiConjGradMemcpy;
   cudaEvent_t startJac;
 
   cudaEvent_t stopDerivNewton;
@@ -97,6 +99,7 @@ typedef struct
   cudaEvent_t stopLinSolSolve;
   cudaEvent_t stopNewtonIt;
   cudaEvent_t stopcvStep;
+  cudaEvent_t stopBiConjGradMemcpy;
   cudaEvent_t stopBiConjGrad;
   cudaEvent_t stopJac;
 

@@ -386,6 +386,7 @@ void alloc_solver_gpu2(CVodeMem cv_mem, SolverData *sd)
   bicg->timecvStep=PMC_TINY;
   bicg->timeDerivNewton=PMC_TINY;
   bicg->timeBiConjGrad=PMC_TINY;
+  bicg->timeBiConjGradMemcpy=PMC_TINY;
   bicg->timeDerivSolve=PMC_TINY;
   bicg->timeJac=PMC_TINY;
 
@@ -396,6 +397,7 @@ void alloc_solver_gpu2(CVodeMem cv_mem, SolverData *sd)
   cudaEventCreate(&bicg->startNewtonIt);
   cudaEventCreate(&bicg->startcvStep);
   cudaEventCreate(&bicg->startBiConjGrad);
+  cudaEventCreate(&bicg->startBiConjGradMemcpy);
   cudaEventCreate(&bicg->startJac);
 
   cudaEventCreate(&bicg->stopDerivNewton);
@@ -405,6 +407,7 @@ void alloc_solver_gpu2(CVodeMem cv_mem, SolverData *sd)
   cudaEventCreate(&bicg->stopNewtonIt);
   cudaEventCreate(&bicg->stopcvStep);
   cudaEventCreate(&bicg->stopBiConjGrad);
+  cudaEventCreate(&bicg->stopBiConjGradMemcpy);
   cudaEventCreate(&bicg->stopJac);
 #endif
 
@@ -3502,9 +3505,22 @@ int linsolsetup_gpu2(SolverData *sd, CVodeMem cv_mem,int convfail,N_Vector vtemp
   //clock_t start = clock();
 #endif
 
+#ifndef LINSOLSOLVEGPU_INCLUDE_CUDAMEMCPY
+  cudaEventRecord(bicg->startBiConjGradMemcpy);
+#endif
+
   cudaMemcpy(bicg->diA,bicg->iA,(bicg->nrows+1)*sizeof(int),cudaMemcpyHostToDevice);
   cudaMemcpy(bicg->djA,bicg->jA,bicg->nnz*sizeof(int),cudaMemcpyHostToDevice);
   cudaMemcpy(bicg->dA,bicg->A,bicg->nnz*sizeof(double),cudaMemcpyHostToDevice);
+
+#ifndef LINSOLSOLVEGPU_INCLUDE_CUDAMEMCPY
+  cudaEventRecord(bicg->stopBiConjGradMemcpy);
+  cudaEventSynchronize(bicg->stopBiConjGradMemcpy);
+  float msBiConjGradMemcpy = 0.0;
+  cudaEventElapsedTime(&msBiConjGradMemcpy, bicg->startBiConjGradMemcpy, bicg->stopBiConjGradMemcpy);
+  bicg->timeBiConjGradMemcpy+= msBiConjGradMemcpy;
+  bicg->timeBiConjGrad+= msBiConjGradMemcpy;
+#endif
 
 #ifdef FAILURE_DETAIL
   //check if jac is correct
@@ -3584,6 +3600,29 @@ int linsolsolve_gpu2(SolverData *sd, CVodeMem cv_mem)
 
     //CSRtoCSC(bicg);
     CSCtoCSR(bicg);
+
+#endif
+
+#ifndef LINSOLSOLVEGPU_INCLUDE_CUDAMEMCPY
+
+#ifndef LINSOLSOLVEGPU_INCLUDE_CUDAMEMCPY_JAC
+    //Fails for some reason
+    //cudaMemcpy(bicg->dA,bicg->A,bicg->nnz*sizeof(double),cudaMemcpyHostToDevice);
+    //cudaMemcpy(bicg->djA,bicg->jA,bicg->nnz*sizeof(int),cudaMemcpyHostToDevice);
+    //cudaMemcpy(bicg->diA,bicg->iA,(bicg->nrows+1)*sizeof(int),cudaMemcpyHostToDevice);
+#endif
+
+    cudaEventRecord(bicg->startBiConjGradMemcpy);
+
+    //Simulate data movement cost of copy of tempv to dtempv by copying to empty array (daux)
+    cudaMemcpy(bicg->daux,tempv,bicg->nrows*sizeof(double),cudaMemcpyHostToDevice);
+
+    cudaEventRecord(bicg->stopBiConjGradMemcpy);
+    cudaEventSynchronize(bicg->stopBiConjGradMemcpy);
+    float msBiConjGradMemcpy = 0.0;
+    cudaEventElapsedTime(&msBiConjGradMemcpy, bicg->startBiConjGradMemcpy, bicg->stopBiConjGradMemcpy);
+    bicg->timeBiConjGradMemcpy+= msBiConjGradMemcpy;
+    bicg->timeBiConjGrad+= msBiConjGradMemcpy;
 
 #endif
 
@@ -3707,8 +3746,8 @@ int linsolsolve_gpu2(SolverData *sd, CVodeMem cv_mem)
 
 #endif
 
-  solveGPU(bicg,bicg->dA,bicg->djA,bicg->diA,bicg->dx,bicg->dtempv);
-  //solveGPU_block(bicg,bicg->dA,bicg->djA,bicg->diA,bicg->dx,bicg->dtempv);
+  //solveGPU(bicg,bicg->dA,bicg->djA,bicg->diA,bicg->dx,bicg->dtempv);
+  solveGPU_block(bicg,bicg->dA,bicg->djA,bicg->diA,bicg->dx,bicg->dtempv);
 
 #ifdef DEBUG_LINEAR_SOLVERS
 
@@ -3735,6 +3774,21 @@ int linsolsolve_gpu2(SolverData *sd, CVodeMem cv_mem)
 
     //bicg->timeBiConjGrad+= clock() - start;
     bicg->counterBiConjGrad++;
+#endif
+
+#ifndef LINSOLSOLVEGPU_INCLUDE_CUDAMEMCPY
+
+    cudaEventRecord(bicg->startBiConjGradMemcpy);
+
+    //Simulate data movement cost of copy of tempv to dtempv by copying to empty array (aux)
+    cudaMemcpy(tempv,bicg->dtempv,bicg->nrows*sizeof(double),cudaMemcpyDeviceToHost);
+
+    cudaEventRecord(bicg->stopBiConjGradMemcpy);
+    cudaEventSynchronize(bicg->stopBiConjGradMemcpy);
+    cudaEventElapsedTime(&msBiConjGradMemcpy, bicg->startBiConjGradMemcpy, bicg->stopBiConjGradMemcpy);
+    bicg->timeBiConjGradMemcpy+= msBiConjGradMemcpy;
+    bicg->timeBiConjGrad+= msBiConjGradMemcpy;
+
 #endif
 
 #ifndef CSR_SPMV
@@ -3966,8 +4020,11 @@ void printSolverCounters_gpu2(SolverData *sd)
   printf("timeDerivNewton %lf, counterDerivNewton %d\n",bicg->timeDerivNewton/1000,bicg->counterDerivNewton);
   printf("timeLinSolSetup %lf, counterLinSolSetup %d\n",bicg->timeLinSolSetup/1000,bicg->counterLinSolSetup);
   printf("timeDerivSolve %lf, counterDerivSolve %d\n",bicg->timeDerivSolve/1000,bicg->counterDerivSolve);
-  printf("timeBiConjGrad %lf, counterBiConjGrad %d, counterBiConjGradInternal %d avgCounterBiConjGrad %lf\n",bicg->timeBiConjGrad/1000,
-          bicg->counterBiConjGrad,bicg->counterBiConjGradInternal,bicg->counterBiConjGradInternal/(double)bicg->counterBiConjGrad);
+  printf("timeBiConjGrad %lf, timeBiConjGradMemcpy %lf, counterBiConjGrad %d, counterBiConjGradInternal %d "
+         "avgCounterBiConjGrad %lf, %%timeBiConjGradMemcpy %lf%%\n",bicg->timeBiConjGrad/1000,
+          bicg->timeBiConjGradMemcpy/1000, bicg->counterBiConjGrad,bicg->counterBiConjGradInternal,
+          bicg->counterBiConjGradInternal/(double)bicg->counterBiConjGrad,
+          bicg->timeBiConjGradMemcpy/bicg->timeBiConjGrad*100);
   printf("timeJac %lf, counterJac %d\n",bicg->timeJac/1000,bicg->counterJac);
 
 #endif

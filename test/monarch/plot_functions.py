@@ -27,10 +27,48 @@ def get_values_same_timestep(timestep_to_plot,mpiProcessesList, \
 
   return new_data
 
-def normalized_timeLS(cases_multicells_onecell,data, cells):
+def normalize_timeLS(data,new_plot_y_key,cells,case_default):
 
   plot_y_key = "timeLS"
-  new_plot_y_key="timeLS" +" normalized"
+  #new_plot_y_key="Normalized timeLS"
+
+  cases=list(data.keys())
+
+  #base_data=data[cases_multicells_onecell[0]][plot_y_key]
+  #new_data=data[cases_multicells_onecell[1]][plot_y_key]
+
+  #print(base_data)
+
+  if(case_default=="one-cell"):
+    cells_multiply=cells
+  elif(case_default=="multi-cells"):
+    cells_multiply=1
+
+  for case in cases:
+
+    if(case=="one-cell"):
+      cells_multiply=cells
+    elif(case=="multi-cells"):
+      cells_multiply=1
+
+    data[case][new_plot_y_key] = []
+    for i in range(len(data[case][plot_y_key])):
+      #print(base_data[i],new_data[i], base_data[i]/new_data[i])
+      data[case][new_plot_y_key].append(data[case][plot_y_key][i] \
+                                        / data[case]["counterLS"][i]*cells_multiply)
+
+  #extract timestep: timestep is common in both cases like speedup
+  #data["timestep"]=data.get("timestep",[]) \
+  #                 + data[cases_multicells_onecell[0]]["timestep"]
+
+  #print(data)
+
+  return data
+
+def normalized_timeLS(new_plot_y_key,cases_multicells_onecell,data, cells):
+
+  plot_y_key = "timeLS"
+  #new_plot_y_key="Normalized timeLS"
 
   #base_data=data[cases_multicells_onecell[0]][plot_y_key]
   #new_data=data[cases_multicells_onecell[1]][plot_y_key]
@@ -270,45 +308,47 @@ def calculate_SMAPE(data,timesteps):
 
   return SMAPEs
 
-"""
-  for key in species1:
-    specie1 = species1[key]
-    specie2 = species2[key]
-    num=0.0
-    den=0.0
-    for j in range(timesteps):
-      l=j*len_timestep
-      r=len_timestep*(1+j)
-      out1=specie1[l:r]
-      out2=specie2[l:r]
+def calculate_BCGPercTimeDataTransfers(data,plot_y_key):
 
-      for k in range(l,r):
-        try:
-          num+=abs(out1[k]-out2[k])
-          den+=abs(out1[k])+abs(out2[k])
-        except Exception as e:
-          print(e,k,l,r,len(out1),len(out2))
+  cases=list(data.keys())
 
-    if(den!=0.0):
-      SMAPEs[j]=num/den
-"""
+  gpu_exist=False
 
-"""
-  base_data=data[cases_multicells_onecell[0]][plot_y_key]
-  new_data=data[cases_multicells_onecell[1]][plot_y_key]
+  for case in cases:
+    if("GPU" in case):
+      data_timeBiconjGradMemcpy=data[case][plot_y_key]
+      data_timeLS=data[case]["timeLS"]
+      gpu_exist=True
 
-  data[namey] = data.get(namey,[])
+  if(gpu_exist==False):
+    raise Exception("Not GPU case for BCGPercTimeDataTransfers metric")
+
+  datay=[0.]*len(data_timeLS)
+  for i in range(len(data_timeLS)):
+    datay[i]=data_timeBiconjGradMemcpy[i]/data_timeLS[i]*100
+
+  #print(datay)
+
+  return datay
+
+def calculate_speedup2(data,plot_y_key):
+
+  cases=list(data.keys())
+
+  base_data=data[cases[0]][plot_y_key]
+  new_data=data[cases[1]][plot_y_key]
+
+  #print(base_data)
+
+  #data[new_plot_y_key] = data.get(new_plot_y_key,[])
+  datay=[0.]*len(base_data)
   for i in range(len(base_data)):
     #print(base_data[i],new_data[i], base_data[i]/new_data[i])
-    data[namey]=data.get(namey,[]) \
-                         + [base_data[i]/new_data[i]]
-
-  #extract timestep: timestep is common in both cases like speedup
-  data["timestep"]=data.get("timestep",[]) \
-                   + data[cases_multicells_onecell[0]]["timestep"]
+    datay[i]=base_data[i]/new_data[i]
 
   #print(data)
-"""
+
+  return datay
 
 def calculate_speedup(cases_multicells_onecell,data,\
                       plot_x_key,plot_y_key):

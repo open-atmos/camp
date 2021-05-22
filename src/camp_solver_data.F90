@@ -185,7 +185,7 @@ module pmc_camp_solver_data
                     last_time_step__s, next_time_step__s, Jac_eval_fails, &
                     RHS_evals_total, Jac_evals_total, RHS_time__s, &
                     Jac_time__s, timeCVode, timeCVodeTotal,&
-            counterBCG, counterLS, timeLS, &
+            counterBCG, counterLS, timeLS, timeBiconjGradMemcpy, &
             max_loss_precision ) bind (c)
       use iso_c_binding
       !> Pointer to the solver data
@@ -227,6 +227,7 @@ module pmc_camp_solver_data
       type(c_ptr), value :: counterBCG
       type(c_ptr), value :: counterLS
       type(c_ptr), value :: timeLS
+      type(c_ptr), value :: timeBiconjGradMemcpy
       !> Maximum loss of precision on last call the f()
       type(c_ptr), value :: max_loss_precision
     end subroutine solver_get_statistics
@@ -1070,6 +1071,7 @@ contains
             c_loc( solver_stats%counterBCG),&
             c_loc( solver_stats%counterLS),&
             c_loc( solver_stats%timeLS),&
+            c_loc( solver_stats%timeBiconjGradMemcpy),&
             c_loc( solver_stats%max_loss_precision    ) )    ! Maximum loss of precision
 
   end subroutine get_solver_stats
