@@ -101,6 +101,7 @@ typedef struct
   cudaEvent_t stopcvStep;
   cudaEvent_t stopBiConjGradMemcpy;
   cudaEvent_t stopBiConjGrad;
+
   cudaEvent_t stopJac;
 
 #endif
