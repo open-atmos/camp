@@ -386,7 +386,7 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
 
 #ifdef PMC_DEBUG_GPU
 
-  get_config_variables(sd);
+  get_camp_config_variables(sd);
   printf("sd->use_cpu %d\n",sd->use_cpu);
 
   sd->counterDerivTotal = 0;
@@ -1081,9 +1081,6 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
     itsolver *bicg = &(sd->bicg);
 
     *counterBCG = bicg->counterBiConjGradInternal;
-
-    //printf("timeBiConjGrad %lf, counterBiConjGrad %d, avgCounterBiConjGrad %lf\n",bicg->timeBiConjGrad/1000,
-    //    bicg->counterBiConjGrad,bicg->counterBiConjGradInternal/(double)bicg->counterBiConjGrad);
 
     *counterLS=bicg->counterBiConjGrad;
     *timeLS=bicg->timeBiConjGrad/1000;

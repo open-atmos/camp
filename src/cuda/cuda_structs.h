@@ -9,6 +9,7 @@
 typedef struct
 {
   //Init variables ("public")
+  int use_multicells;
   int threads,blocks;
   int maxIt;
   int mattype;

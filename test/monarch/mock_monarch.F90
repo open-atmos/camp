@@ -239,7 +239,7 @@ program mock_monarch
 
   call get_command_argument(6, arg, status=status_code)
   if(status_code.eq.0) then
-    if(arg.eq."multi-cells") then
+    if(arg.eq."Multi-cells") then
       n_cells = (I_E - I_W+1)*(I_N - I_S+1)*NUM_VERT_CELLS
     else
       n_cells = 1
@@ -247,7 +247,7 @@ program mock_monarch
     output_file_prefix = output_file_prefix//"_"//trim(arg)
   else
     !One-cell case as default
-    print*, "WARNING: not multi-cells flag parameter received, value set to one-cell"
+    print*, "WARNING: not Multi-cells flag parameter received, value set to One-cell"
     n_cells = 1
     output_file_prefix = output_file_prefix//"_"//"one_cell"
   end if
@@ -622,7 +622,7 @@ program mock_monarch
 
   !call MPI_COMM_SIZE(MPI_COMM_WORLD, mpi_threads)
   mpi_threads = 1
-  if ((n_cells.gt.1) .and. (mpi_threads.gt.1)) then !one-cell case
+  if ((n_cells.gt.1) .and. (mpi_threads.gt.1)) then !One-cell case
     !bug deallocating with multicells and mpi processes > 1
   else
     deallocate(pmc_interface)
@@ -795,7 +795,6 @@ contains
     integer :: n_cells_print
 
     file_name = file_prefix//"_results_all_cells.csv"
-    !TODO MULTI CELLS Y ONE-CELLLLS
     print*,file_name
     open(RESULTS_ALL_CELLS_FILE_UNIT, file=file_name, status="replace", action="write")
 

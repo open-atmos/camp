@@ -226,14 +226,14 @@ program mock_monarch
 
   call get_command_argument(6, arg, status=status_code)
   if(status_code.eq.0) then
-    if(arg.eq."multi-cells") then
+    if(arg.eq."Multi-cells") then
       n_cells = (I_E - I_W+1)*(I_N - I_S+1)*NUM_VERT_CELLS
     else
       n_cells = 1
     end if
   else
     !One-cell case as default
-    print*, "WARNING: not multi-cells flag parameter received, value set to one-cell"
+    print*, "WARNING: not Multi-cells flag parameter received, value set to One-cell"
     n_cells = 1
   end if
 

@@ -1,10 +1,37 @@
 #include "itsolver_gpu.h"
 
+void read_options(itsolver *bicg){
+
+  FILE *fp;
+  char buff[255];
+
+  //print_current_directory();
+
+  char path[] = "itsolver_options.txt";
+
+  fp = fopen("itsolver_options.txt", "r");
+  if (fp == NULL){
+    printf("Could not open file %s",path);
+  }
+  fscanf(fp, "%s", buff);
+
+  if(strstr(buff,"USE_MULTICELLS=ON")!=NULL){
+    //printf("itsolver read_options USE_MULTICELLS=ON\n");
+    bicg->use_multicells=1; //One-cell per block (Independent cells)
+  }
+  else{
+    //printf("itsolver read_options USE_MULTICELLS=OFF\n");
+    bicg->use_multicells=0;
+  }
+
+}
+
 void createSolver(itsolver *bicg)
 {
   //Init variables ("public")
   int nrows = bicg->nrows;
   int blocks = bicg->blocks;
+  read_options(bicg);
   bicg->maxIt=1000;
   bicg->tolmax=1.0e-30; //cv_mem->cv_reltol CAMP selected accuracy (1e-8) //1e-10;//1e-6
 #ifndef CSR_SPMV
@@ -329,6 +356,8 @@ void solveBcgCuda(
   unsigned int tid = threadIdx.x;
   int active_threads = nrows;
 
+  //if(tid==0)printf("blockDim.x %d\n",blockDim.x);
+
 #ifdef BCG_ALL_THREADS
   if(1){
 #else
@@ -575,7 +604,7 @@ void solveBcgCuda(
     // (since the max its supposed to be the last to exit)
 #ifdef PMC_DEBUG_GPU
 
-#ifndef solveBcgCuda_avg_it
+#ifdef solveBcgCuda_avg_it
 
   //printf("it %d %d\n",i,it);
 
@@ -663,20 +692,20 @@ void solveGPU_block(itsolver *bicg, double *dA, int *djA, int *diA, double *dx, 
 
   int size_cell = nrows/n_cells;
 
-#ifndef INDEPENDENCY_CELLS
+  int max_threads_block;
 
-  int max_threads_block = nextPowerOfTwo(size_cell);//bicg->threads;
-  //int n_shr_empty = max_threads-size_cell;//nextPowerOfTwo(size_cell)-size_cell;
-  //int threads_block = max_threads_block - n_shr_empty; //last multiple of size_cell before max_threads
+  if(bicg->use_multicells) {
 
-#else
+    max_threads_block = bicg->threads;//bicg->threads; 128;
 
-  int max_threads_block = bicg->threads;//bicg->threads; 128;
+  }else{
 
-  //int n_shr_empty = max_threads%size_cell; //Wrong
-  //int n_shr_empty = max_threads-nrows;
+    max_threads_block = nextPowerOfTwo(size_cell);//bicg->threads;
 
-#endif
+    //int n_shr_empty = max_threads%size_cell; //Wrong
+    //int n_shr_empty = max_threads-nrows;
+
+  }
 
 #ifdef BCG_ALL_THREADS
 
@@ -698,20 +727,10 @@ void solveGPU_block(itsolver *bicg, double *dA, int *djA, int *diA, double *dx, 
   }
 #endif
 
-
-  /*aux_params[0] = alpha;
-  aux_params[1] = rho0;
-  aux_params[2] = omega0;
-  aux_params[3] = beta;
-  aux_params[4] = rho1;
-  aux_params[5] = temp1;
-  aux_params[6] = temp2;
-  cudaMemcpy(daux_params, aux_params, n_aux_params * sizeof(double), cudaMemcpyHostToDevice);*/
-
 #ifdef PMC_DEBUG_GPU
   int *dit_ptr;
 
-#ifndef solveBcgCuda_avg_it
+#ifdef solveBcgCuda_avg_it
 
   cudaMalloc((void**)&dit_ptr,nrows*sizeof(int));
   cudaMemset(dit_ptr, 0, bicg->nrows*sizeof(int));
@@ -735,14 +754,13 @@ void solveGPU_block(itsolver *bicg, double *dA, int *djA, int *diA, double *dx, 
 #ifdef PMC_DEBUG_GPU
           ,dit_ptr
 #endif
-          //,daux_params
           );
 
 #ifdef PMC_DEBUG_GPU
 
   int it=0;
 
-#ifndef solveBcgCuda_avg_it
+#ifdef solveBcgCuda_avg_it
 
   int *it_ptr=(int*)malloc(sizeof(int)*nrows);
   cudaMemcpy(it_ptr,dit_ptr,nrows*sizeof(int),cudaMemcpyDeviceToHost);
@@ -771,21 +789,6 @@ void solveGPU_block(itsolver *bicg, double *dA, int *djA, int *diA, double *dx, 
 #endif
 
 #endif
-
-  /*cudaDeviceSynchronize();
-  cudaMemcpy(aux_params, daux_params, n_aux_params * sizeof(double), cudaMemcpyDeviceToHost);
-
-  alpha = aux_params[0];
-  rho0 = aux_params[1];
-  omega0 = aux_params[2];
-  beta = aux_params[3];
-  rho1 = aux_params[4];
-  temp1 = aux_params[5];
-  temp2 = aux_params[6];*/
-  //printf("temp1 %-le", temp1);
-  //printf("rho1 %f", rho1);
-
-  //cudaFreeMem(daux_params);
 
 }
 

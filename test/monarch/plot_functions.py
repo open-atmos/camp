@@ -9,6 +9,8 @@ from sklearn.metrics import mean_squared_error
 from sklearn import preprocessing
 from sklearn.preprocessing import MinMaxScaler
 import math
+import datetime
+import os
 
 
 def get_values_same_timestep(timestep_to_plot,mpiProcessesList, \
@@ -27,40 +29,66 @@ def get_values_same_timestep(timestep_to_plot,mpiProcessesList, \
 
   return new_data
 
-def normalize_timeLS(data,new_plot_y_key,cells,case_default):
+def calculate_computational_timeLS(data,plot_y_key):
 
-  plot_y_key = "timeLS"
+  cases=list(data.keys())
+
+  gpu_exist=False
+
+  for case in cases:
+    if("GPU" in case):
+      data_timeBiconjGradMemcpy=data[case][plot_y_key]
+      data_timeLS=data[case]["timeLS"]
+      gpu_exist=True
+
+  if(gpu_exist==False):
+    raise Exception("Not GPU case for calculate_computational_timeLS metric")
+
+  #print("calculate_computational_timeLS")
+  #print(data_timeLS)
+
+  for i in range(len(data_timeLS)):
+    data_timeLS[i]=data_timeLS[i]-data_timeBiconjGradMemcpy[i]
+
+  #print(datay)
+
+  #print(data_timeLS)
+
+  return data
+
+def normalize_by_counterLS_and_cells(data,plot_y_key,cells):
+
+  #plot_y_key = "timeLS"
   #new_plot_y_key="Normalized timeLS"
 
   cases=list(data.keys())
 
-  #base_data=data[cases_multicells_onecell[0]][plot_y_key]
-  #new_data=data[cases_multicells_onecell[1]][plot_y_key]
+  print("normalize_by_counterLS_and_cells")
 
-  #print(base_data)
-
-  if(case_default=="one-cell"):
-    cells_multiply=cells
-  elif(case_default=="multi-cells"):
-    cells_multiply=1
+  #print(data[cases[0]][plot_y_key])
 
   for case in cases:
 
-    if(case=="one-cell"):
+    if("One-cell" in case and "CPU" in case):
+      #print("One-cell")
       cells_multiply=cells
-    elif(case=="multi-cells"):
+    elif("Multi-cells" in case or "GPU" in case):
+      #print("Multi-cells")
       cells_multiply=1
+    else:
+      raise Exception("normalize_by_counterLS_and_cells case without One-cell or Multi-cells key name")
 
-    data[case][new_plot_y_key] = []
+    #print(cells_multiply)
+
+    #data[case][new_plot_y_key] = []
     for i in range(len(data[case][plot_y_key])):
       #print(base_data[i],new_data[i], base_data[i]/new_data[i])
-      data[case][new_plot_y_key].append(data[case][plot_y_key][i] \
-                                        / data[case]["counterLS"][i]*cells_multiply)
+      data[case][plot_y_key][i]=data[case][plot_y_key][i]\
+      /data[case]["counterLS"][i]*cells_multiply
+      #data[case][new_plot_y_key].append(data[case][plot_y_key][i] \
+      #                                  / data[case]["counterLS"][i]*cells_multiply)
 
-  #extract timestep: timestep is common in both cases like speedup
-  #data["timestep"]=data.get("timestep",[]) \
-  #                 + data[cases_multicells_onecell[0]]["timestep"]
-
+  #print(data[cases[0]][plot_y_key])
   #print(data)
 
   return data
@@ -77,9 +105,9 @@ def normalized_timeLS(new_plot_y_key,cases_multicells_onecell,data, cells):
 
   for case in cases_multicells_onecell:
 
-    if(case=="one-cell"):
+    if(case=="One-cell"):
       cells_multiply=cells
-    elif(case=="multi-cells"):
+    elif(case=="Multi-cells"):
       cells_multiply=1
 
     data[case][new_plot_y_key] = []
@@ -338,6 +366,8 @@ def calculate_speedup2(data,plot_y_key):
   base_data=data[cases[0]][plot_y_key]
   new_data=data[cases[1]][plot_y_key]
 
+  print(plot_y_key)
+
   #print(base_data)
 
   #data[new_plot_y_key] = data.get(new_plot_y_key,[])
@@ -463,7 +493,7 @@ def plot_solver_stats(data, plot_x_key, plot_y_key, plot_title):
 
   plt.show()
 
-def plot(namex, namey, datax, datay, plot_title):
+def plot(namex, namey, datax, datay, plot_title, SAVE_PLOT):
 
   #fig = plt.figure(figsize=(7, 4.25))
   fig = plt.figure()
@@ -482,6 +512,17 @@ def plot(namex, namey, datax, datay, plot_title):
   #axes.set_yscale('log')
   plt.xticks()
   plt.title(plot_title)
+
+  if SAVE_PLOT:
+    now = datetime.datetime.now()
+    dt_string = now.strftime("%d-%m-%Y %H:%M:%S")
+    #print(dt_string)
+    save_folder = "out/plots/"+namey+" "+plot_title
+    if not os.path.exists(save_folder):
+      os.makedirs(save_folder)
+    save_path=save_folder+"/"+dt_string+".png"
+    print("Plot saved to", save_path)
+    plt.savefig(save_path)
 
   plt.show()
 

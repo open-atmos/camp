@@ -3422,7 +3422,7 @@ int linsolsetup_gpu2(SolverData *sd, CVodeMem cv_mem,int convfail,N_Vector vtemp
   jok = !jbad;
 
   // If jok = SUNTRUE, use saved copy of J
-  if (jok) {//todo works with multi-cells but no one-cells
+  if (jok) {
     //if (0) {
     cv_mem->cv_jcur = SUNFALSE;
     retval = SUNMatCopy(cvdls_mem->savedJ, cvdls_mem->A);
@@ -4021,9 +4021,11 @@ void printSolverCounters_gpu2(SolverData *sd)
   printf("timeLinSolSetup %lf, counterLinSolSetup %d\n",bicg->timeLinSolSetup/1000,bicg->counterLinSolSetup);
   printf("timeDerivSolve %lf, counterDerivSolve %d\n",bicg->timeDerivSolve/1000,bicg->counterDerivSolve);
   printf("timeBiConjGrad %lf, timeBiConjGradMemcpy %lf, counterBiConjGrad %d, counterBiConjGradInternal %d "
-         "avgCounterBiConjGrad %lf, %%timeBiConjGradMemcpy %lf%%\n",bicg->timeBiConjGrad/1000,
+         "avgCounterBiConjGrad %lf, avgTimeBCGIter %-le %%timeBiConjGradMemcpy %lf%%\n",
+          bicg->timeBiConjGrad/1000,
           bicg->timeBiConjGradMemcpy/1000, bicg->counterBiConjGrad,bicg->counterBiConjGradInternal,
           bicg->counterBiConjGradInternal/(double)bicg->counterBiConjGrad,
+          (bicg->timeBiConjGrad/1000)/(double)bicg->counterBiConjGrad,
           bicg->timeBiConjGradMemcpy/bicg->timeBiConjGrad*100);
   printf("timeJac %lf, counterJac %d\n",bicg->timeJac/1000,bicg->counterJac);
 

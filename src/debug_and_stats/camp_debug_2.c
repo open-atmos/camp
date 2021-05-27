@@ -84,7 +84,7 @@ void print_current_directory(){
 
 }
 
-void get_config_variables(SolverData *sd){
+void get_camp_config_variables(SolverData *sd){
 
   FILE *fp;
   char buff[255];
@@ -93,17 +93,18 @@ void get_config_variables(SolverData *sd){
 
   fp = fopen("config_variables_c_solver.txt", "r");
   if (fp == NULL){
-    printf("Could not open file get_config_variables");
+    printf("Could not open file get_camp_config_variables");
   }
   fscanf(fp, "%s", buff);
 
-  if(strstr(buff,"USE_CPU=ON")==NULL){
-    sd->use_cpu=0;
-  }
-  else{
+  if(strstr(buff,"USE_CPU=ON")!=NULL){
     sd->use_cpu=1;
   }
+  else{
+    sd->use_cpu=0;
+  }
 
+  fclose(fp);
 }
 
 void export_counters_open(SolverData *sd)

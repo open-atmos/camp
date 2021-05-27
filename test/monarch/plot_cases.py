@@ -8,7 +8,7 @@ import numpy as np
 from pylab import imread,subplot,imshow,show
 import plot_functions
 
-def write_config_file(case_gpu_cpu):
+def write_camp_config_file(case_gpu_cpu):
   file1 = open("config_variables_c_solver.txt","w")
 
   #print(case_gpu_cpu)
@@ -47,7 +47,7 @@ def run(config_file,diff_cells,mpi,mpiProcessesList,n_cells,timesteps,
   #  cells = [int(cell/mpiProcesses) for cell in cells_init] #in case divide load between threads
 
   #GPU-CPU
-  write_config_file(case_gpu_cpu)
+  write_camp_config_file(case_gpu_cpu)
 
   #for case in cases_multicells_onecell:
 
@@ -77,7 +77,7 @@ def run_cell(config_file,diff_cells,mpi,mpiProcessesList,n_cells,timesteps,
 
   if("normalized timeLS" in plot_y_key):
     case_default=cases_multicells_onecell[0]
-    data=plot_functions.normalize_timeLS( \
+    data=plot_functions.normalize_by_counterLS_and_cells( \
       data,"normalized timeLS",n_cells,case_default)
 
   #print(data)
@@ -120,9 +120,9 @@ def mpi_scalability():
   cells = [1000]
   divide_cells_load=True
 
-  #cases_multicells_onecell = ["one-cell","multi-cells"]
-  #cases_multicells_onecell = ["one-cell"]
-  cases_multicells_onecell = ["multi-cells"]
+  #cases_multicells_onecell = ["One-cell","Multi-cells"]
+  #cases_multicells_onecell = ["One-cell"]
+  cases_multicells_onecell = ["Multi-cells"]
 
   plot_x_key = "mpiProcesses"
   timestep_to_plot = 0
@@ -209,9 +209,9 @@ def speedup_cells(metric):
   #cells = [100,1000]
   cells = [1,10]
 
-  cases_multicells_onecell = ["one-cell","multi-cells"]
-  #cases_multicells_onecell = ["one-cell"]
-  #cases_multicells_onecell = ["multi-cells"]
+  cases_multicells_onecell = ["One-cell","Multi-cells"]
+  #cases_multicells_onecell = ["One-cell"]
+  #cases_multicells_onecell = ["Multi-cells"]
 
   #plot_x_key = "timestep"
   plot_x_key = "Cells"
@@ -319,12 +319,12 @@ def all_timesteps():
   timesteps = 5#720=12h
   TIME_STEP = 2 #pending send TIME_STEP to mock_monarch
 
-  #cases = ["CPU one-cell","CPU multi-cells"]
-  cases = ["CPU multi-cells","GPU multi-cells"]
+  #cases = ["CPU One-cell","CPU Multi-cells"]
+  cases = ["CPU Multi-cells","GPU Multi-cells"]
 
   #plot_y_key = "counterBCG"
   #plot_y_key = "Average BCG internal iterations per call"
-  #plot_y_key = "Average BCG time per call" #This metric makes no sense, one-cell would always be faster because is computing way less cells
+  #plot_y_key = "Average BCG time per call" #This metric makes no sense, One-cell would always be faster because is computing way less cells
   #plot_y_key = "Speedup normalized timeLS"
 
   #plot_y_key = "Speedup timeCVode"
@@ -336,7 +336,10 @@ def all_timesteps():
   #plot_y_key="MAPE"
   #plot_y_key="SMAPE"
 
-  remove_iters=0#10 #360
+  #SAVE_PLOT=False
+  SAVE_PLOT=True
+
+  #remove_iters=0#10 #360
 
   if not os.path.exists('out'):
     os.makedirs('out')
@@ -398,7 +401,7 @@ def all_timesteps():
   namey=plot_y_key
   namex=plot_x_key
 
-  plot_functions.plot(namex,namey,datax,datay,plot_title)
+  plot_functions.plot(namex,namey,datax,datay,plot_title,SAVE_PLOT)
 
 
 def error_timesteps():
@@ -426,15 +429,15 @@ def error_timesteps():
   timesteps = 60#720=12h
   TIME_STEP = 2
 
-  cases_multicells_onecell = ["one-cell","multi-cells"]
-  #cases_multicells_onecell = ["one-cell"]
-  #cases_multicells_onecell = ["multi-cells"]
+  cases_multicells_onecell = ["One-cell","Multi-cells"]
+  #cases_multicells_onecell = ["One-cell"]
+  #cases_multicells_onecell = ["Multi-cells"]
 
   #cases_gpu_cpu = ["CPU"]
   #cases_gpu_cpu = ["GPU"]
   cases_gpu_cpu = ["CPU","GPU"]
   case_gpu_cpu = cases_gpu_cpu[0]
-  write_config_file(case_gpu_cpu)
+  write_camp_config_file(case_gpu_cpu)
 
   data = {}
 
@@ -472,7 +475,7 @@ def error_timesteps():
 
       if(len(cases_gpu_cpu)==2 and len(cases_multicells_onecell)==2):
         case_gpu_cpu = cases_gpu_cpu[1]
-        write_config_file(case_gpu_cpu)
+        write_camp_config_file(case_gpu_cpu)
 
     #print(data)
 
@@ -528,9 +531,9 @@ def speedup_timesteps():
   #cells = [100,1000]
   cells = [10]
 
-  cases_multicells_onecell = ["one-cell","multi-cells"]
-  #cases_multicells_onecell = ["one-cell"]
-  #cases_multicells_onecell = ["multi-cells"]
+  cases_multicells_onecell = ["One-cell","Multi-cells"]
+  #cases_multicells_onecell = ["One-cell"]
+  #cases_multicells_onecell = ["Multi-cells"]
 
   #SELECT MANUALLY (future:if arch=cpu then select cpu if not gpu)
   cases_gpu_cpu = ["CPU"]
@@ -647,9 +650,9 @@ def speedup_timesteps_counterBCG():
   timesteps = 5#720=12h
   TIME_STEP = 2
 
-  cases_multicells_onecell = ["one-cell","multi-cells"]
-  #cases_multicells_onecell = ["one-cell"]
-  #cases_multicells_onecell = ["multi-cells"]
+  cases_multicells_onecell = ["One-cell","Multi-cells"]
+  #cases_multicells_onecell = ["One-cell"]
+  #cases_multicells_onecell = ["Multi-cells"]
 
   #cases_gpu_cpu = ["CPU"]
   cases_gpu_cpu = ["GPU"]
@@ -662,7 +665,7 @@ def speedup_timesteps_counterBCG():
   #plot_y_key = "counterLS"
   #plot_y_key = "counterBCG"
   #plot_y_key = "Average BCG internal iterations per call"
-  #plot_y_key = "Average BCG time per call" #This metric makes no sense, one-cell would always be faster because is computing way less cells
+  #plot_y_key = "Average BCG time per call" #This metric makes no sense, One-cell would always be faster because is computing way less cells
   plot_y_key = "Normalized timeLS"
 
   remove_iters=0#10 #360
@@ -698,7 +701,7 @@ def speedup_timesteps_counterBCG():
 
   for case_gpu_cpu in cases_gpu_cpu:
 
-    write_config_file(case_gpu_cpu)
+    write_camp_config_file(case_gpu_cpu)
 
     mpiProcesses = mpiProcessesList[0]
 
@@ -780,8 +783,6 @@ def speedup_timesteps_counterBCG():
   plot_functions.plot_solver_stats(data,plot_x_key, plot_y_key2, plot_title)
 
 
-
-
 def debug_no_plot():
 
   #config_file="simple"
@@ -803,9 +804,9 @@ def debug_no_plot():
 
   timesteps = 2
 
-  #cases_multicells_onecell = ["one-cell","multi-cells"]
-  #cases_multicells_onecell = ["one-cell"]
-  cases_multicells_onecell = ["multi-cells"]
+  #cases_multicells_onecell = ["One-cell","Multi-cells"]
+  #cases_multicells_onecell = ["One-cell"]
+  cases_multicells_onecell = ["Multi-cells"]
 
   #SELECT MANUALLY (future:if arch=cpu then select cpu if not gpu)
   #cases_gpu_cpu = ["CPU"]
@@ -822,7 +823,7 @@ def debug_no_plot():
 
   cells_init = cells
 
-  write_config_file(case_gpu_cpu)
+  write_camp_config_file(case_gpu_cpu)
 
   for mpiProcesses in mpiProcessesList:
 

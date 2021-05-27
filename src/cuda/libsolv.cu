@@ -721,45 +721,6 @@ __device__ void cudaDeviceyequalsx(double* dy,double* dx,int nrows)
   }
 }
 
-
-__device__ void cudaDevicereducey(double *g_odata, unsigned int n, int n_shr_empty)
-{
-  extern __shared__ double sdata[];
-  unsigned int tid = threadIdx.x;
-  //int id = blockIdx.x * blockDim.x + threadIdx.x;
-
-  double mySum =  (tid < n) ? g_odata[tid] : 0;
-
-#ifdef DEV_DEVICEDOTXY
-  //under development, fix returning deriv=0 and slower
-  if(tid<blockDim.x/2)
-    for (int j=0; j<2; j++)
-      sdata[j*blockDim.x/2 + tid] = 0;
-#else
-  //Last thread assign 0 to empty shr values
-  if (tid == 0)//one thread
-  {
-    //todo fix, returning 0 sometimes on mock_monarch cells=1000
-    //speedup when active, but why? and sometimes returns deriv=0
-    for (int j=0; j<n_shr_empty; j++)
-      sdata[blockDim.x+j] = 0; //Assign 0 to non interesting sdata
-  }
-#endif
-
-  sdata[tid] = mySum;
-  __syncthreads();
-
-  for (unsigned int s=blockDim.x/2; s>0; s>>=1)
-  {
-    if (tid < s)
-      sdata[tid] = mySum = mySum + sdata[tid + s];
-
-    __syncthreads();
-  }
-
-  if (tid == 0) g_odata[blockIdx.x] = sdata[0];
-}
-
 /*
 __device__ void cudaDevicedotxy_old(double *g_idata1, double *g_idata2,
                                 double *g_odata, unsigned int n, int n_shr_empty)
@@ -812,6 +773,57 @@ __device__ void cudaDevicedotxy_old(double *g_idata1, double *g_idata2,
   *g_odata = sdata[0];
 }
 */
+
+
+__device__ void cudaDevicereducey(double *g_odata, unsigned int n, int n_shr_empty)
+{
+  extern __shared__ double sdata[];
+  unsigned int tid = threadIdx.x;
+  //int id = blockIdx.x * blockDim.x + threadIdx.x;
+
+  double mySum =  (tid < n) ? g_odata[tid] : 0;
+
+#ifdef DEV_DEVICEDOTXY
+  //under development, fix returning deriv=0 and slower
+  if(tid<blockDim.x/2)
+    for (int j=0; j<2; j++)
+      sdata[j*blockDim.x/2 + tid] = 0;
+#else
+  //Last thread assign 0 to empty shr values
+  if (tid == 0)//one thread
+  {
+    //todo fix, returning 0 sometimes on mock_monarch cells=1000
+    //speedup when active, but why? and sometimes returns deriv=0
+    for (int j=0; j<n_shr_empty; j++)
+      sdata[blockDim.x+j] = 0; //Assign 0 to non interesting sdata
+  }
+#endif
+
+  sdata[tid] = mySum;
+  __syncthreads();
+
+  for (unsigned int s=blockDim.x/2; s>0; s>>=1)
+  {
+    if (tid < s)
+      sdata[tid] = mySum = mySum + sdata[tid + s];
+
+    __syncthreads();
+  }
+
+  if (tid == 0) g_odata[blockIdx.x] = sdata[0];
+}
+
+__device__ void warpReduce(volatile double *sdata, unsigned int tid) {
+  unsigned int blockSize = blockDim.x;
+  if (blockSize >= 64) sdata[tid] += sdata[tid + 32];
+  if (blockSize >= 32) sdata[tid] += sdata[tid + 16];
+  if (blockSize >= 16) sdata[tid] += sdata[tid + 8];
+  if (blockSize >= 8) sdata[tid] += sdata[tid + 4];
+  if (blockSize >= 4) sdata[tid] += sdata[tid + 2];
+  if (blockSize >= 2) sdata[tid] += sdata[tid + 1];
+}
+
+
 __device__ void cudaDevicedotxy(double *g_idata1, double *g_idata2,
                                  double *g_odata, unsigned int n, int n_shr_empty)
 {
@@ -840,6 +852,70 @@ __device__ void cudaDevicedotxy(double *g_idata1, double *g_idata2,
   *g_odata = sdata[0];
   //*g_odata = sdata[0]+0.1*tid;
   __syncthreads();
+
+#else
+
+#ifndef COMMENTING
+
+  __syncthreads();
+
+  //Needed?, when testing be careful with SRAM data remanesce https://stackoverflow.com/questions/22172881/why-does-my-kernels-shared-memory-seems-to-be-initialized-to-zero
+  if (tid == 0){
+    for (int j=0; j<blockDim.x+n_shr_empty; j++)
+      sdata[j] = 0.;
+  }
+
+  __syncthreads();
+
+  //sdata[tid] = (i < n) ? g_idata1[i]*g_idata2[i] : 0;
+  sdata[tid] = g_idata1[i]*g_idata2[i];
+
+
+  __syncthreads();
+
+/*
+  for (unsigned int s=(blockDim.x+n_shr_empty)/2; s>0; s>>=1)
+  {
+    if (tid < s)
+      sdata[tid] += sdata[tid + s];
+
+    __syncthreads();
+  }
+  */
+  //todo is strange this is working without n_shr_empty
+  //unsigned int blockSize = blockDim.x;
+  unsigned int blockSize = blockDim.x+n_shr_empty;
+
+  // do reduction in shared mem
+  if ((blockSize >= 1024) && (tid < 512)) {
+    sdata[tid] += sdata[tid + 512];
+  }
+
+  if ((blockSize >= 512) && (tid < 256)) {
+    sdata[tid] += sdata[tid + 256];
+  }
+
+  __syncthreads();
+
+  if ((blockSize >= 256) && (tid < 128)) {
+    sdata[tid] += sdata[tid + 128];
+  }
+
+  __syncthreads();
+
+  if ((blockSize >= 128) && (tid < 64)) {
+    sdata[tid] += sdata[tid + 64];
+  }
+
+  __syncthreads();
+
+  if (tid < 32) warpReduce(sdata, tid);
+
+  __syncthreads();//not needed?
+
+  *g_odata = sdata[0];
+  __syncthreads();
+
 
 #else
 
@@ -888,6 +964,8 @@ __device__ void cudaDevicedotxy(double *g_idata1, double *g_idata2,
   *g_odata = sdata[0];
   //*g_odata = sdata[0]+0.1*tid;
   __syncthreads();
+
+#endif
 
 #endif
 
