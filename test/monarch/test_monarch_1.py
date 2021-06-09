@@ -34,19 +34,23 @@ def write_camp_config_file(case_gpu_cpu):
 
   file1.close()
 
-def run(config_file,diff_cells,mpi,mpiProcessesList,n_cells,timesteps,
+def run(config_file,diff_cells,mpi,mpiProcesses,n_cells,timesteps,
         case_gpu_cpu,case,results_file):
 
-  data={}
-
-  #for case_gpu_cpu in cases_gpu_cpu:
-
   #MPI
-  mpiProcesses = mpiProcessesList[0]
+
   exec_str=""
   if mpi=="yes":
     exec_str+="mpirun -v -np "+str(mpiProcesses)+" --bind-to none "
     #exec_str+="srun -n "+str(mpiProcesses)+" "
+
+  profileCuda=False
+  if(case_gpu_cpu=="GPU"):
+    profileCuda=False
+    #profileCuda=True
+  if(profileCuda):
+    exec_str+="nvprof --analysis-metrics -f -o "+config_file+case+".nvprof "
+  #--print-gpu-summary
 
   exec_str+="../../mock_monarch config_"+config_file+".json "+"interface_"+config_file \
             +".json "+config_file
@@ -57,9 +61,6 @@ def run(config_file,diff_cells,mpi,mpiProcessesList,n_cells,timesteps,
 
   exec_str+=" "+ADD_EMISIONS
 
-  #if divide_cells_load==True:
-  #  cells = [int(cell/mpiProcesses) for cell in cells_init] #in case divide load between threads
-
   #GPU-CPU
   write_camp_config_file(case_gpu_cpu)
 
@@ -68,62 +69,63 @@ def run(config_file,diff_cells,mpi,mpiProcessesList,n_cells,timesteps,
   if(case_gpu_cpu=="GPU"):
     case="Multi-cells"
 
-  #for case in cases_multicells_onecell:
-
   #Onecell-Multicells
-
-  #plot_title+=case_gpu_cpu+" "+case
-
-  file = 'out/'+config_file+'_'+case+results_file
 
   print(exec_str +" " + str(n_cells) + " " + case + " " + str(timesteps)+" "+diff_cells)
   os.system(exec_str +" " + str(n_cells) + " " + case + " " + str(timesteps)+" "+diff_cells)
 
+  data={}
+  file = 'out/'+config_file+'_'+case+results_file
   plot_functions.read_solver_stats(file, data)
 
   return data
 
-def run_cell(config_file,diff_cells,mpi,mpiProcessesList,n_cells,timesteps,
+def run_cell(config_file,diff_cells,mpi,mpiProcessesList,n_cells_aux,timesteps,
              cases,cases_gpu_cpu,cases_multicells_onecell,results_file,plot_y_key):
 
+  y_key_words = plot_y_key.split()
+  y_key = y_key_words[-1]
   data={}
+  dataMAPE={}
+
   for i in range(len(cases)):
-    data[cases[i]] = run(config_file,diff_cells,mpi,mpiProcessesList,
+
+    if len(mpiProcessesList)==len(cases):
+      #print("len(mpiProcessesList)==len(cases)",len(cases))
+      mpiProcesses=mpiProcessesList[i]
+      n_cells = int(n_cells_aux/mpiProcesses)
+      #mpiProcesses=mpiProcessesList[i]
+      #n_cells=n_cells_aux
+    else:
+      mpiProcesses=mpiProcessesList[0]
+      n_cells=n_cells_aux
+
+    data[cases[i]] = run(config_file,diff_cells,mpi,mpiProcesses,
                          n_cells,timesteps,cases_gpu_cpu[i],cases_multicells_onecell[i],results_file)
+
+    if("timeLS" in plot_y_key and "computational" in plot_y_key):
+      data=plot_functions.calculate_computational_timeLS( \
+        data,"timeBiconjGradMemcpy",cases[i])
+
+    if("normalized" in plot_y_key):
+      if(y_key=="counterBCG" or y_key=="timeLS"):
+        data=plot_functions.normalize_by_counterLS_and_cells( \
+          data,y_key,n_cells,cases[i])
+      else:
+        raise Exception("Unkown normalized case",y_key)
 
   if(len(cases)!=2):
     raise Exception("Only one case to compare, check cases")
 
-  y_key_words = plot_y_key.split()
-  y_key = y_key_words[-1]
-
-  if("timeLS" in plot_y_key and "computational" in plot_y_key):
+  if("(Comp.timeLS/counterBCG)" in plot_y_key):
     data=plot_functions.calculate_computational_timeLS( \
       data,"timeBiconjGradMemcpy")
-
-  if("normalized" in plot_y_key):
-    if(y_key=="counterBCG" or y_key=="timeLS"):
-      data=plot_functions.normalize_by_counterLS_and_cells( \
-        data,y_key,n_cells)
-    else:
-      raise Exception("Unkown normalized case",y_key)
-
-  if("(timeLS/counterBCG)" in plot_y_key):
     y_key="timeLS"
-    print(data)
+    #print(data)
     for case in cases:
       for i in range(len(data[case][y_key])):
         data[case][y_key][i]=data[case][y_key][i] \
                     /data[case]["counterBCG"][i]
-
-  #if("normalized" in plot_y_key and "timeLS" in plot_y_key):
-  #  if("computational" in plot_y_key):
-  #    data=plot_functions.calculate_computational_timeLS( \
-  #      data,"timeBiconjGradMemcpy")
-
-    #case_default=cases_multicells_onecell[0]
-  #  data=plot_functions.normalize_by_counterLS_and_cells( \
-  #    data,"timeLS",n_cells)
 
   #print(data)
 
@@ -163,19 +165,24 @@ def all_timesteps():
   divide_cells_load=False
 
   mpiProcessesList = [1]
+  #mpiProcessesList = [40,1]
 
-  cells = [7]
-  #cells = [1,10,100,1000,5000,10000]
+  cells = [10]
+  #cells = [1,10,100,1000]
+  #cells = [1,10,100,1000,10000,100000]
 
-  timesteps = 1#720=12h
+  timesteps = 5#720=12h
   TIME_STEP = 2 #pending send TIME_STEP to mock_monarch
 
+  #cases = ["CPU One-cell"]
+  #cases = ["CPU Multi-cells"]
   #cases = ["CPU One-cell","CPU Multi-cells"]
   #cases = ["CPU One-cell","GPU Multi-cells"]
   #cases = ["CPU One-cell","GPU One-cell"]
   cases = ["CPU Multi-cells","GPU Multi-cells"]
   #cases = ["CPU Multi-cells","GPU One-cell"]
   #cases = ["GPU One-cell","GPU Multi-cells"]
+  #cases = ["GPU One-cell","GPU 2 One-cell"]
 
   #plot_y_key = "counterBCG"
   #plot_y_key = "Average BCG internal iterations per call"
@@ -187,12 +194,13 @@ def all_timesteps():
   #plot_y_key = "Speedup normalized timeLS"
   plot_y_key = "Speedup normalized computational timeLS"
   #plot_y_key = "Speedup counterBCG"
+  #plot_y_key = "Speedup total iterations - counterBCG"
   #plot_y_key = "Speedup normalized counterBCG"
-  #plot_y_key = "Speedup BCG iteration (timeLS/counterBCG)"
+  #plot_y_key = "Speedup BCG iteration (Comp.timeLS/counterBCG)"
 
   #plot_y_key = "% Time data transfers CPU-GPU BCG"
   #plot_y_key="NRMSE"
-  plot_y_key="MAPE"
+  #plot_y_key="MAPE"
   #plot_y_key="SMAPE"
 
   SAVE_PLOT=False
@@ -216,6 +224,10 @@ def all_timesteps():
     cases_multicells_onecell[i]=cases_words[1]
     #if("GPU" in cases_gpu_cpu[i] and "One-cell" in cases_multicells_onecell[i])
 
+  if "total" in plot_y_key:
+    print("WARNING: Remember to enable solveBcgCuda_sum_it")
+  elif "counterBCG" in plot_y_key:
+    print("WARNING: Remember to disable solveBcgCuda_sum_it")
 
   datay=[]
   for i in range(len(cells)):
@@ -232,6 +244,10 @@ def all_timesteps():
   #print("Base")
   #print("Optimized")
   print(datay)
+
+  if(mpiProcessesList==2):
+    for i in range(len(cases_multicells_onecell)):
+      cases_multicells_onecell[i]=str(mpiProcessesList[i])+" "+cases_multicells_onecell[i]
 
   plot_title=""
   first_word=""
@@ -252,20 +268,34 @@ def all_timesteps():
   #plot_title+=diff_cells+" test"#+"Group cells"
   plot_title+=diff_cells+" test"#+"Ind. cells"
   if(len(cells)>1):
-    plot_title+=", Timesteps:[0-"+str(TIME_STEP*timesteps)+"]"#str(timesteps)
+    #plot_title+=", Timesteps:[0-"+str(TIME_STEP*timesteps)+"]"#str(timesteps)
+    #plot_title+=", Timesteps:"+str(timesteps)
+    plot_title+=", Mean over "+str(timesteps)+ " timesteps"
     datax=cells
     plot_x_key="Cells"
     #Default metric
-    plot_y_key="Mean "+plot_y_key
+    #plot_y_key="Mean "+plot_y_key #Mean over all timesteps
   else:
     plot_title+=", Cells: "+str(cells[0])
-    datax=list(range(TIME_STEP,TIME_STEP*(timesteps+1),TIME_STEP))
+    #datax=list(range(TIME_STEP,TIME_STEP*(timesteps+1),TIME_STEP))
+    datax=list(range(1,timesteps+1,1))
     plot_x_key = "Timesteps"
 
-  namey=plot_y_key
+  #if "MAPE" in plot_y_key:
+  #  namey="MAPE [%] [%]"
+
+  if plot_y_key=="Speedup counterLS":
+    namey="Ratio of calls reduced"
+  if plot_y_key=="MAPE":
+    namey="MAPE [%]"
+  if plot_y_key=="Speedup normalized timeLS":
+    namey="Normalized speedup"
+  else:
+    namey=plot_y_key
+
   namex=plot_x_key
 
-  #plot_functions.plot(namex,namey,datax,datay,plot_title,SAVE_PLOT)
+  plot_functions.plot(namex,namey,datax,datay,plot_title,SAVE_PLOT)
 
 
 #print(datetime.__file__)

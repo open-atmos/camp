@@ -401,6 +401,9 @@ program mock_monarch
 
   call model_initialize(output_file_prefix)
 
+  !call pmc_mpi_barrier(MPI_COMM_WORLD)
+  !print*,"MPI RANK",pmc_mpi_rank()
+
   pmc_interface => monarch_interface_t(camp_input_file, interface_input_file, &
           START_CAMP_ID, END_CAMP_ID, n_cells, ADD_EMISIONS)!, n_cells
 
@@ -451,6 +454,9 @@ program mock_monarch
   species_conc_copy(:,:,:,:) = species_conc(:,:,:,:)
 
 #endif
+
+  !call pmc_mpi_barrier(MPI_COMM_WORLD)
+  !print*,"MPI RANK",pmc_mpi_rank()
 
   ! Run the model
   do i_time=1, NUM_TIME_STEP
@@ -599,16 +605,16 @@ program mock_monarch
     call create_gnuplot_script(pmc_interface, output_file_prefix, &
             plot_start_time, curr_time)
     !call create_gnuplot_persist(pmc_interface, output_file_prefix, &
-    !        output_file_title, plot_start_time, curr_time, n_cells_plot, cell_to_print)
-    call create_gnuplot_persist_paper_camp(pmc_interface, output_file_prefix, &
-            plot_start_time, curr_time)
-  end if
+          !        output_file_title, plot_start_time, curr_time, n_cells_plot, cell_to_print)
+          call create_gnuplot_persist_paper_camp(pmc_interface, output_file_prefix, &
+                  plot_start_time, curr_time)
+                          end if
 
-  close(RESULTS_FILE_UNIT)
-  close(RESULTS_FILE_UNIT_TABLE)
-  close(RESULTS_FILE_UNIT_PY)
-  close(STATSOUT_FILE_UNIT)
-  close(RESULTS_ALL_CELLS_FILE_UNIT)
+                          close(RESULTS_FILE_UNIT)
+                                  close(RESULTS_FILE_UNIT_TABLE)
+                                  close(RESULTS_FILE_UNIT_PY)
+                                  close(STATSOUT_FILE_UNIT)
+                                  close(RESULTS_ALL_CELLS_FILE_UNIT)
 
   ! Deallocation
   deallocate(camp_input_file)
@@ -616,14 +622,13 @@ program mock_monarch
   deallocate(output_file_prefix)
   deallocate(output_file_title)
 
-  !print*,"MPI_FINALIZE RANK",pmc_mpi_rank()
-
 #ifdef PMC_USE_MPI
 
   !call MPI_COMM_SIZE(MPI_COMM_WORLD, mpi_threads)
-  mpi_threads = 1
-  if ((n_cells.gt.1) .and. (mpi_threads.gt.1)) then !One-cell case
-    !bug deallocating with multicells and mpi processes > 1
+  mpi_threads = pmc_mpi_size()!1
+  if ((mpi_threads.gt.1)) then !One-cell case
+    !bug deallocating with mpi processes > 1
+    !deallocate(pmc_interface)
   else
     deallocate(pmc_interface)
   end if
@@ -808,6 +813,8 @@ contains
       !print*,pmc_interface%monarch_species_names(z)%string
       aux_str = aux_str//","//pmc_interface%monarch_species_names(z)%string
     end do
+
+
 
     write(RESULTS_ALL_CELLS_FILE_UNIT, "(A)", advance="no") aux_str
     write(RESULTS_ALL_CELLS_FILE_UNIT, '(a)') ''

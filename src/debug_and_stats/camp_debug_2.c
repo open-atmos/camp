@@ -73,6 +73,24 @@ void check_isnand(double *x, int len, int var_id){
 
 }*/
 
+/*
+void print_int(int *x, int len, char *s){
+
+  for (int i=0; i<len; i++){
+    printf("%s %d[%d]",s,i);
+  }
+
+}
+
+void print_double(double *x, int len, char *s){
+
+  for (int i=0; i<len; i++){
+    printf("%s %d[%d]",s,i);
+  }
+
+}
+ */
+
 void print_current_directory(){
 
   char cwd[1024];
@@ -85,6 +103,8 @@ void print_current_directory(){
 }
 
 void get_camp_config_variables(SolverData *sd){
+
+  //printf("get_camp_config_variables\n");
 
   FILE *fp;
   char buff[255];
@@ -103,6 +123,8 @@ void get_camp_config_variables(SolverData *sd){
   else{
     sd->use_cpu=0;
   }
+
+  //printf("get_camp_config_variables\n");
 
   fclose(fp);
 }

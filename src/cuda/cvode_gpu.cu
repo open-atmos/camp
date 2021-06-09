@@ -3605,13 +3605,6 @@ int linsolsolve_gpu2(SolverData *sd, CVodeMem cv_mem)
 
 #ifndef LINSOLSOLVEGPU_INCLUDE_CUDAMEMCPY
 
-#ifndef LINSOLSOLVEGPU_INCLUDE_CUDAMEMCPY_JAC
-    //Fails for some reason
-    //cudaMemcpy(bicg->dA,bicg->A,bicg->nnz*sizeof(double),cudaMemcpyHostToDevice);
-    //cudaMemcpy(bicg->djA,bicg->jA,bicg->nnz*sizeof(int),cudaMemcpyHostToDevice);
-    //cudaMemcpy(bicg->diA,bicg->iA,(bicg->nrows+1)*sizeof(int),cudaMemcpyHostToDevice);
-#endif
-
     cudaEventRecord(bicg->startBiConjGradMemcpy);
 
     //Simulate data movement cost of copy of tempv to dtempv by copying to empty array (daux)
@@ -4021,7 +4014,7 @@ void printSolverCounters_gpu2(SolverData *sd)
   printf("timeLinSolSetup %lf, counterLinSolSetup %d\n",bicg->timeLinSolSetup/1000,bicg->counterLinSolSetup);
   printf("timeDerivSolve %lf, counterDerivSolve %d\n",bicg->timeDerivSolve/1000,bicg->counterDerivSolve);
   printf("timeBiConjGrad %lf, timeBiConjGradMemcpy %lf, counterBiConjGrad %d, counterBiConjGradInternal %d "
-         "avgCounterBiConjGrad %lf, avgTimeBCGIter %-le %%timeBiConjGradMemcpy %lf%%\n",
+         "avgCounterBiConjGrad %lf, avgTimeBCGIter %lf %%timeBiConjGradMemcpy %lf%%\n",
           bicg->timeBiConjGrad/1000,
           bicg->timeBiConjGradMemcpy/1000, bicg->counterBiConjGrad,bicg->counterBiConjGradInternal,
           bicg->counterBiConjGradInternal/(double)bicg->counterBiConjGrad,

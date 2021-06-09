@@ -308,7 +308,7 @@ __global__ void cudareducey(double *g_odata, unsigned int n)
   if (tid == 0) g_odata[blockIdx.x] = sdata[0];
 }
 
-//threads need to be pow of 2 //todo remove h_temp since not needed now
+//threads need to be pow of 2 //todo h_temp not needed
 extern "C++" double gpu_dotxy(double* vec1, double* vec2, double* h_temp, double* d_temp, int nrows, int blocks,int threads)
 {
   double sum;
@@ -721,60 +721,6 @@ __device__ void cudaDeviceyequalsx(double* dy,double* dx,int nrows)
   }
 }
 
-/*
-__device__ void cudaDevicedotxy_old(double *g_idata1, double *g_idata2,
-                                double *g_odata, unsigned int n, int n_shr_empty)
-{
-  extern __shared__ double sdata[];
-  unsigned int tid = threadIdx.x;
-  //unsigned int i = blockIdx.x*(blockDim.x*2) + threadIdx.x;
-  unsigned int i = blockIdx.x*blockDim.x + threadIdx.x;
-
-  //Used to ensure last block has 0 values for non-zero cases (Last block can have less cells than previous blocks)
-  //todo condition not needed with tid<active_threads
-  double mySum = (i < n) ? g_idata1[i]*g_idata2[i] : 0.;
-
-#ifndef DEV_DEVICEDOTXY
-  //under development, fix returning deriv=0 and slower
-
-
-  for( int j = threadIdx.x; j < n_shr_empty+blockDim.x; j+=blockDim.x)
-    sdata[j]=0.0;
-
-#else
-    //Last thread assign 0 to empty shr values
-  //todo: it's needed?
-  if (tid == 0)//one thread
-  {
-    //todo fix, returning 0 sometimes on mock_monarch cells=1000 (bug appears after <=7 attemps)
-    //speedup when active, probably cause if no active some threads are not
-    // doing anything so it takes more time to converge, but then sometimes returns deriv=0(fix)
-    //needed or diff results on n_cells=100 3 species
-    for (int j=0; j<n_shr_empty; j++)
-      sdata[blockDim.x+j] = 0.; //Assign 0 to remaining sdata (cases sdata_id>=threads_block)
-  }
-#endif
-
-  //Set shr_memory to local values
-  sdata[tid] = mySum;
-  __syncthreads();
-
-  //todo ensure that n_shr_empty is less than half of the max_threads to have enough threads
-  for (unsigned int s=(blockDim.x+n_shr_empty)/2; s>0; s>>=1)
-  {
-    if (tid < s)
-      sdata[tid] = mySum = mySum + sdata[tid + s];
-
-    __syncthreads();
-  }
-
-  //dont need to access global memory on block-cells
-  //if (tid == 0) g_odata[blockIdx.x] = sdata[0];
-  *g_odata = sdata[0];
-}
-*/
-
-
 __device__ void cudaDevicereducey(double *g_odata, unsigned int n, int n_shr_empty)
 {
   extern __shared__ double sdata[];
@@ -859,13 +805,33 @@ __device__ void cudaDevicedotxy(double *g_idata1, double *g_idata2,
 
   __syncthreads();
 
-  //Needed?, when testing be careful with SRAM data remanesce https://stackoverflow.com/questions/22172881/why-does-my-kernels-shared-memory-seems-to-be-initialized-to-zero
+  //Needed, when testing be careful with SRAM data remanesce https://stackoverflow.com/questions/22172881/why-does-my-kernels-shared-memory-seems-to-be-initialized-to-zero
+
+#ifndef ALL_BLOCKS_EQUAL_SIZE
+
+  //j=(blockDim.x+n_shr_empty)/2;
+  //if(tid<j)
+    //sdata[j+tid]=0.;
+
+  //if(tid>=blockDim.x-n_shr_empty)
+    //sdata[tid+n_shr_empty]=0.; //Last threads update empty positions
+
+  //OOOOOOOR just make first threads update empty positions
+  if(tid<n_shr_empty)
+    sdata[tid+blockDim.x]=0.;
+
+  __syncthreads(); //Not needed (should)
+
+#else
+
   if (tid == 0){
     for (int j=0; j<blockDim.x+n_shr_empty; j++)
       sdata[j] = 0.;
   }
 
   __syncthreads();
+
+#endif
 
   //sdata[tid] = (i < n) ? g_idata1[i]*g_idata2[i] : 0;
   sdata[tid] = g_idata1[i]*g_idata2[i];
@@ -882,14 +848,15 @@ __device__ void cudaDevicedotxy(double *g_idata1, double *g_idata2,
     __syncthreads();
   }
   */
-  //todo is strange this is working without n_shr_empty
-  //unsigned int blockSize = blockDim.x;
+
   unsigned int blockSize = blockDim.x+n_shr_empty;
 
   // do reduction in shared mem
   if ((blockSize >= 1024) && (tid < 512)) {
     sdata[tid] += sdata[tid + 512];
   }
+
+  __syncthreads();
 
   if ((blockSize >= 512) && (tid < 256)) {
     sdata[tid] += sdata[tid + 256];

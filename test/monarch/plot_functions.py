@@ -29,34 +29,35 @@ def get_values_same_timestep(timestep_to_plot,mpiProcessesList, \
 
   return new_data
 
-def calculate_computational_timeLS(data,plot_y_key):
+def calculate_computational_timeLS(data,plot_y_key,case):
 
-  cases=list(data.keys())
+  #cases=list(data.keys())
 
-  gpu_exist=False
+  #gpu_exist=False
 
-  for case in cases:
-    if("GPU" in case):
-      data_timeBiconjGradMemcpy=data[case][plot_y_key]
-      data_timeLS=data[case]["timeLS"]
-      gpu_exist=True
+  #for case in cases:
+  if("GPU" in case):
+    data_timeBiconjGradMemcpy=data[case][plot_y_key]
+    data_timeLS=data[case]["timeLS"]
+    #print(data_timeBiconjGradMemcpy)
+    #print(data_timeLS)
+    for i in range(len(data_timeLS)):
+      data_timeLS[i]=data_timeLS[i]-data_timeBiconjGradMemcpy[i]
+    #print(data_timeLS)
+    #gpu_exist=True
 
-  if(gpu_exist==False):
-    raise Exception("Not GPU case for calculate_computational_timeLS metric")
+  #if(gpu_exist==False):
+  #  raise Exception("Not GPU case for calculate_computational_timeLS metric")
 
   #print("calculate_computational_timeLS")
   #print(data_timeLS)
 
-  for i in range(len(data_timeLS)):
-    data_timeLS[i]=data_timeLS[i]-data_timeBiconjGradMemcpy[i]
-
-  #print(datay)
-
-  #print(data_timeLS)
+  #for i in range(len(data_timeLS)):
+  #  data_timeLS[i]=data_timeLS[i]-data_timeBiconjGradMemcpy[i]
 
   return data
 
-def normalize_by_counterLS_and_cells(data,plot_y_key,cells):
+def normalize_by_counterLS_and_cells(data,plot_y_key,cells,case):
 
   #plot_y_key = "timeLS"
   #new_plot_y_key="Normalized timeLS"
@@ -67,26 +68,26 @@ def normalize_by_counterLS_and_cells(data,plot_y_key,cells):
 
   #print(data[cases[0]][plot_y_key])
 
-  for case in cases:
+  #for case in cases:
 
-    if("One-cell" in case and "CPU" in case):
-      #print("One-cell")
-      cells_multiply=cells
-    elif("Multi-cells" in case or "GPU" in case):
-      #print("Multi-cells")
-      cells_multiply=1
-    else:
-      raise Exception("normalize_by_counterLS_and_cells case without One-cell or Multi-cells key name")
+  if("One-cell" in case and "CPU" in case):
+    #print("One-cell")
+    cells_multiply=cells
+  elif("Multi-cells" in case or "GPU" in case):
+    #print("Multi-cells")
+    cells_multiply=1
+  else:
+    raise Exception("normalize_by_counterLS_and_cells case without One-cell or Multi-cells key name")
 
-    #print(cells_multiply)
+  #print(cells_multiply)
 
-    #data[case][new_plot_y_key] = []
-    for i in range(len(data[case][plot_y_key])):
-      #print(base_data[i],new_data[i], base_data[i]/new_data[i])
-      data[case][plot_y_key][i]=data[case][plot_y_key][i]\
-      /data[case]["counterLS"][i]*cells_multiply
-      #data[case][new_plot_y_key].append(data[case][plot_y_key][i] \
-      #                                  / data[case]["counterLS"][i]*cells_multiply)
+  #data[case][new_plot_y_key] = []
+  for i in range(len(data[case][plot_y_key])):
+    #print(base_data[i],new_data[i], base_data[i]/new_data[i])
+    data[case][plot_y_key][i]=data[case][plot_y_key][i]\
+    /data[case]["counterLS"][i]*cells_multiply
+    #data[case][new_plot_y_key].append(data[case][plot_y_key][i] \
+    #                                  / data[case]["counterLS"][i]*cells_multiply)
 
   #print(data[cases[0]][plot_y_key])
   #print(data)
@@ -269,6 +270,7 @@ def calculate_MAPE(data,timesteps):
   max_err=0.0
   for j in range(timesteps):
     MAPE=0.0
+    #MAPE=1.0E-60
     n=0
     for i in species1:
       data1_values = species1[i]
@@ -282,12 +284,13 @@ def calculate_MAPE(data,timesteps):
         if(out1[k]==0.0):
           out1[k]+=1.0E-60
           out2[k]+=1.0E-60
+        #print(out1[k],out2[k])
         err=abs((out1[k]-out2[k])/out1[k])
         MAPE+=err
         n+=1
         if(err>max_err):
           max_err=err
-    MAPEs[j]=MAPE/n
+    MAPEs[j]=MAPE/n*100
 
   print("max_error:"+str(max_err)+"%")
   #print(NRMSEs)
@@ -330,7 +333,7 @@ def calculate_SMAPE(data,timesteps):
           print(e,k,l,r,len(out1),len(out2))
 
     if(den!=0.0):
-      SMAPEs[j]=num/den
+      SMAPEs[j]=num/den*100
 
   #print(NRMSEs)
 

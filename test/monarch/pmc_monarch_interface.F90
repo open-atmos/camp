@@ -149,6 +149,8 @@ contains
     integer(kind=i_kind) :: pos, pack_size
     integer(kind=i_kind) :: i_spec, i_photo_rxn
     type(string_t), allocatable :: unique_names(:)
+    character(len=:), allocatable :: spec_name
+    integer :: max_spec_name_size=512
 
     class(aero_rep_data_t), pointer :: aero_rep
     integer(kind=i_kind) :: i_sect_om, i_sect_bc, i_sect_sulf, i_sect_opm, i, z
@@ -190,7 +192,6 @@ contains
     call assert_msg(332298164, camp_solver_data%is_solver_available(), &
             "No solver available")
     deallocate(camp_solver_data)
-
 
     ! Initialize the time-invariant model data on each node
     if (MONARCH_PROCESS.eq.0) then
@@ -252,9 +253,6 @@ contains
 
 #ifdef PMC_USE_MPI
 
-      ! Change a bit init_conc to denote different initial values
-      !this%init_conc(:) = this%init_conc(:) + 0.1*MONARCH_PROCESS
-
       pack_size = this%camp_core%pack_size() + &
               update_data_GMD%pack_size() + &
               update_data_GSD%pack_size() + &
@@ -267,6 +265,12 @@ contains
               pmc_mpi_pack_size_integer(i_sect_bc) + &
               pmc_mpi_pack_size_integer(i_sect_sulf) + &
               pmc_mpi_pack_size_integer(i_sect_opm)
+
+
+      do z=1, size(this%monarch_species_names)
+        call assert(307722742,len_trim(this%monarch_species_names(z)%string).lt.max_spec_name_size)
+        pack_size = pack_size +  pmc_mpi_pack_size_string(trim(this%monarch_species_names(z)%string))
+      end do
 
       if(this%ADD_EMISIONS.eq."ON" &
               .or. this%interface_input_file.eq."interface_monarch_cb05.json") then
@@ -291,6 +295,15 @@ contains
       call pmc_mpi_pack_integer(buffer, pos, i_sect_sulf)
       call pmc_mpi_pack_integer(buffer, pos, i_sect_opm)
 
+      do z=1, size(this%monarch_species_names)
+        !print*,"this%monarch_species_names(z)%string"
+        !print*,this%monarch_species_names(z)%string
+        call pmc_mpi_pack_string(buffer, pos, trim(this%monarch_species_names(z)%string))
+      end do
+
+      !call pmc_mpi_pack_string_array(buffer, pos, this%monarch_species_names)
+      !print*,size(this%monarch_species_names)
+
       if(this%ADD_EMISIONS.eq."ON" &
         .or. this%interface_input_file.eq."interface_monarch_cb05.json") then
         call pmc_mpi_pack_integer(buffer, pos, this%n_photo_rxn)
@@ -300,6 +313,7 @@ contains
       endif
 
     endif
+
 
     ! broadcast the buffer size
     call pmc_mpi_bcast_integer(pack_size, local_comm)
@@ -330,6 +344,21 @@ contains
       call pmc_mpi_unpack_integer(buffer, pos, i_sect_sulf)
       call pmc_mpi_unpack_integer(buffer, pos, i_sect_opm)
 
+      allocate(this%monarch_species_names(size(this%map_monarch_id)))
+      !call pmc_mpi_unpack_string_array(buffer, pos, this%monarch_species_names)
+
+      spec_name=""
+      do z=1,max_spec_name_size
+        spec_name=spec_name//" "
+      end do
+
+      do z=1, size(this%map_monarch_id)
+        call pmc_mpi_unpack_string(buffer, pos, spec_name)
+        !print*,"this%monarch_species_names(z)%string"
+        this%monarch_species_names(z)%string= trim(spec_name)
+        !print*,this%monarch_species_names(z)%string
+      end do
+
       if(this%ADD_EMISIONS.eq."ON" &
           .or. this%interface_input_file.eq."interface_monarch_cb05.json") then
         call pmc_mpi_unpack_integer(buffer, pos, this%n_photo_rxn)
@@ -353,6 +382,9 @@ contains
 
     ! Create a state variable on each node
     this%camp_state => this%camp_core%new_state()
+
+    !call pmc_mpi_barrier(MPI_COMM_WORLD)
+    !print*,"MPI RANK",pmc_mpi_rank(), this%interface_input_file, this%ADD_EMISIONS
 
     if(this%ADD_EMISIONS.eq."ON" &
       .or. this%interface_input_file.eq."interface_monarch_cb05.json") then
@@ -597,6 +629,9 @@ contains
         end do
 
       end if
+
+      !call pmc_mpi_barrier(MPI_COMM_WORLD)
+      !print*,"MPI RANK",pmc_mpi_rank()
 
       i_hour = int(curr_time/60)+1
       if(mod(int(curr_time),60).eq.0) then

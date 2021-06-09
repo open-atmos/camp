@@ -897,6 +897,8 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
     }
   }
 
+  //printf("Post-Cvode run \n");
+
   // Update the species concentrations on the state array
   i_dep_var = 0;
   for (int i_cell = 0; i_cell < n_cells; i_cell++) {
