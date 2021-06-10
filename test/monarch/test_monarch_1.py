@@ -35,10 +35,9 @@ def write_camp_config_file(case_gpu_cpu):
   file1.close()
 
 def run(config_file,diff_cells,mpi,mpiProcesses,n_cells,timesteps,
-        case_gpu_cpu,case,results_file):
+        case_gpu_cpu,case,results_file,plot_y_key,y_key):
 
   #MPI
-
   exec_str=""
   if mpi=="yes":
     exec_str+="mpirun -v -np "+str(mpiProcesses)+" --bind-to none "
@@ -78,6 +77,28 @@ def run(config_file,diff_cells,mpi,mpiProcesses,n_cells,timesteps,
   file = 'out/'+config_file+'_'+case+results_file
   plot_functions.read_solver_stats(file, data)
 
+  if("timeLS" in plot_y_key and "computational" in plot_y_key):
+    data=plot_functions.calculate_computational_timeLS( \
+      data,"timeBiconjGradMemcpy")
+
+  if("normalized" in plot_y_key):
+    if(y_key=="counterBCG" or y_key=="timeLS"):
+      data=plot_functions.normalize_by_counterLS_and_cells( \
+        data,y_key,n_cells,case)
+      #cases[i]
+    else:
+      raise Exception("Unkown normalized case",y_key)
+
+  if("(Comp.timeLS/counterBCG)" in plot_y_key):
+    data=plot_functions.calculate_computational_timeLS( \
+      data,"timeBiconjGradMemcpy")
+    #print(data)
+    if("CPU" in case_gpu_cpu):
+      raise Exception("Incompatible (Comp.timeLS/counterBCG) and CPU (not counter BCG), set only GPU cases")
+    for i in range(len(data["timeLS"])):
+      data["timeLS"][i]=data["timeLS"][i] \
+                             /data["counterBCG"][i]
+
   return data
 
 def run_cell(config_file,diff_cells,mpi,mpiProcessesList,n_cells_aux,timesteps,
@@ -86,12 +107,11 @@ def run_cell(config_file,diff_cells,mpi,mpiProcessesList,n_cells_aux,timesteps,
   y_key_words = plot_y_key.split()
   y_key = y_key_words[-1]
   data={}
-  dataMAPE={}
 
   for i in range(len(cases)):
 
-    if len(mpiProcessesList)==len(cases):
-      #print("len(mpiProcessesList)==len(cases)",len(cases))
+    if len(mpiProcessesList)==2:
+    #print("len(mpiProcessesList)==len(cases)",len(cases))
       mpiProcesses=mpiProcessesList[i]
       n_cells = int(n_cells_aux/mpiProcesses)
       #mpiProcesses=mpiProcessesList[i]
@@ -101,33 +121,61 @@ def run_cell(config_file,diff_cells,mpi,mpiProcessesList,n_cells_aux,timesteps,
       n_cells=n_cells_aux
 
     data[cases[i]] = run(config_file,diff_cells,mpi,mpiProcesses,
-                         n_cells,timesteps,cases_gpu_cpu[i],cases_multicells_onecell[i],results_file)
+                 n_cells,timesteps,cases_gpu_cpu[i],cases_multicells_onecell[i],
+                 results_file,plot_y_key,y_key)
 
-    if("timeLS" in plot_y_key and "computational" in plot_y_key):
-      data=plot_functions.calculate_computational_timeLS( \
-        data,"timeBiconjGradMemcpy",cases[i])
 
-    if("normalized" in plot_y_key):
-      if(y_key=="counterBCG" or y_key=="timeLS"):
-        data=plot_functions.normalize_by_counterLS_and_cells( \
-          data,y_key,n_cells,cases[i])
-      else:
-        raise Exception("Unkown normalized case",y_key)
 
-  if(len(cases)!=2):
-    raise Exception("Only one case to compare, check cases")
-
-  if("(Comp.timeLS/counterBCG)" in plot_y_key):
-    data=plot_functions.calculate_computational_timeLS( \
-      data,"timeBiconjGradMemcpy")
-    y_key="timeLS"
+  #if("(Comp.timeLS/counterBCG)" in plot_y_key):
+  #  data=plot_functions.calculate_computational_timeLS( \
+  #    data,"timeBiconjGradMemcpy")
+  # y_key="timeLS"
     #print(data)
-    for case in cases:
-      for i in range(len(data[case][y_key])):
-        data[case][y_key][i]=data[case][y_key][i] \
-                    /data[case]["counterBCG"][i]
+  #  for case in cases:
+  #    for i in range(len(data[case][y_key])):
+  #      data[case][y_key][i]=data[case][y_key][i] \
+  #                  /data[case]["counterBCG"][i]
 
   #print(data)
+
+  if("(Comp.timeLS/counterBCG)" in plot_y_key):
+    y_key="timeLS"
+
+  if plot_y_key!="MAPE" and len(cases)==1:
+  #if plot_y_key=="MAPE2":
+    dataMAPE={}
+    #todo change filename to be like "CPUMulti-cells" to distinguish Multi-cells CPU & GPU
+    #for i in range(len(cases)):
+    #  case_gpu_cpu=cases_gpu_cpu[i]
+    #  if(cases_gpu_cpu[i]=="GPU"):
+    #    case_gpu_cpu="Multi-cells"
+    #  data_aux={}
+    #  file = 'out/'+config_file+'_'+case_gpu_cpu+"_results_all_cells.csv"
+    #  plot_functions.read_solver_stats(file, data_aux)
+    #  dataMAPE[cases[i]]=data_aux
+
+    #if len(cases)==1:
+    print("len(cases)==1")
+    case_gpu_cpu="One-cell"
+    data_aux={}
+    file = 'out/'+config_file+'_'+case_gpu_cpu+"_results_all_cells.csv"
+    plot_functions.read_solver_stats(file, data_aux)
+    dataMAPE[case_gpu_cpu]=data_aux
+
+
+    case_gpu_cpu="Multi-cells"
+    data_aux={}
+    file = 'out/'+config_file+'_'+case_gpu_cpu+"_results_all_cells.csv"
+    plot_functions.read_solver_stats(file, data_aux)
+    dataMAPE[case_gpu_cpu]=data_aux
+
+    #print(dataMAPE)
+
+    datayMAPE=plot_functions.calculate_MAPE(dataMAPE,timesteps)
+    print("MAPE "+case_gpu_cpu+":",datayMAPE)
+
+  if(len(cases)!=2):
+    raise Exception("Only one case to compare")
 
   if(plot_y_key=="NRMSE"):
     datay=plot_functions.calculate_NMRSE(data,timesteps)
@@ -171,11 +219,12 @@ def all_timesteps():
   #cells = [1,10,100,1000]
   #cells = [1,10,100,1000,10000,100000]
 
-  timesteps = 5#720=12h
+  timesteps = 1#720=12h
   TIME_STEP = 2 #pending send TIME_STEP to mock_monarch
 
   #cases = ["CPU One-cell"]
   #cases = ["CPU Multi-cells"]
+  #cases = ["GPU One-cell"]
   #cases = ["CPU One-cell","CPU Multi-cells"]
   #cases = ["CPU One-cell","GPU Multi-cells"]
   #cases = ["CPU One-cell","GPU One-cell"]
@@ -192,7 +241,7 @@ def all_timesteps():
   #plot_y_key = "Speedup timeCVode"
   #plot_y_key = "Speedup counterLS"
   #plot_y_key = "Speedup normalized timeLS"
-  plot_y_key = "Speedup normalized computational timeLS"
+  #plot_y_key = "Speedup normalized computational timeLS"
   #plot_y_key = "Speedup counterBCG"
   #plot_y_key = "Speedup total iterations - counterBCG"
   #plot_y_key = "Speedup normalized counterBCG"
@@ -200,7 +249,7 @@ def all_timesteps():
 
   #plot_y_key = "% Time data transfers CPU-GPU BCG"
   #plot_y_key="NRMSE"
-  #plot_y_key="MAPE"
+  plot_y_key="MAPE"
   #plot_y_key="SMAPE"
 
   SAVE_PLOT=False
@@ -295,7 +344,7 @@ def all_timesteps():
 
   namex=plot_x_key
 
-  plot_functions.plot(namex,namey,datax,datay,plot_title,SAVE_PLOT)
+  #plot_functions.plot(namex,namey,datax,datay,plot_title,SAVE_PLOT)
 
 
 #print(datetime.__file__)

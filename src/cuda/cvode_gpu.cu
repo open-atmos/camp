@@ -255,7 +255,7 @@ void check_isnand(double *x, int len, int var_id){
 
 }*/
 
-void check_isnand(double *x, int len, char *s){
+void check_isnand(double *x, int len, const char *s){
 
   int n_zeros=0;
   for (int i=0; i<len; i++){
@@ -375,9 +375,16 @@ void alloc_solver_gpu2(CVodeMem cv_mem, SolverData *sd)
   bicg->counterDerivNewton=0;
   bicg->counterBiConjGrad=0;
   bicg->counterBiConjGradInternal=0;
-  cudaMalloc((void**)&bicg->counterBiConjGradInternalGPU,sizeof(int));
   bicg->counterDerivSolve=0;
   bicg->counterJac=0;
+
+#ifdef solveBcgCuda_sum_it
+  cudaMalloc((void**)&bicg->counterBiConjGradInternalGPU,blocks*sizeof(int));
+  //cudaMemset(bicg->counterBiConjGradInternalGPU, 0, blocks*sizeof(int));
+#else
+  cudaMalloc((void**)&bicg->counterBiConjGradInternalGPU,sizeof(int));
+  //cudaMemset(bicg->counterBiConjGradInternalGPU, 0, sizeof(int));
+#endif
 
   bicg->timeprecvStep=PMC_TINY;
   bicg->timeNewtonIt=PMC_TINY;
@@ -3178,6 +3185,258 @@ int cvEwtSetSV_gpu2(CVodeMem cv_mem, N_Vector cv_ewt, N_Vector weight)
   return(0);
 }
 
+
+__global__
+void solveCudaGlobal(
+        double *dA, int *djA, int *diA, double *dx, double *dtempv //Input data
+        ,int nrows, int blocks, int n_shr_empty, int maxIt, int mattype
+        ,int n_cells, double tolmax, double *ddiag //Init variables
+        ,double *dr0, double *dr0h, double *dn0, double *dp0
+        ,double *dt, double *ds, double *dAx2, double *dy, double *dz// Auxiliary vectors
+#ifdef PMC_DEBUG_GPU
+        ,int *it_pointer//, double dtimeBiConjGrad
+#endif
+)
+{
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
+  unsigned int tid = threadIdx.x;
+  int active_threads = nrows;
+
+
+#ifdef PMC_DEBUG_GPU
+
+  //clock_t start = clock();
+  //device function call
+
+#endif
+
+  //if(i<active_threads) {
+
+  solveBcgCudaDevice(dA, djA, diA, dx, dtempv, nrows, blocks, n_shr_empty, maxIt, mattype, n_cells,
+                 tolmax, ddiag, dr0, dr0h, dn0, dp0, dt, ds, dAx2, dy, dz
+#ifdef PMC_DEBUG_GPU
+            ,it_pointer
+#endif
+    );
+
+#ifdef PMC_DEBUG_GPU
+
+  //int t = (int)(clock() - start);
+  //dtimeBiConjGrad = ((double)t) / CLOCKS_PER_SEC; //Last thread should update, almost accurate:https://stackoverflow.com/questions/19527038/how-to-measure-the-time-of-the-device-functions-when-they-are-called-in-kernel-f
+
+#endif
+
+  //}
+
+}
+
+
+void solveCVODEGPU_thr(int blocks, int threads_block, int n_shr_memory, int n_shr_empty, int offset_cells,
+                        itsolver *bicg)
+{
+
+  //Init variables ("public")
+  int nrows = bicg->nrows;
+  int nnz = bicg->nnz;
+  int n_cells = bicg->n_cells;
+  int maxIt = bicg->maxIt;
+  int mattype = bicg->mattype;
+  double tolmax = bicg->tolmax;
+
+  // Auxiliary vectors ("private")
+  double *dr0 = bicg->dr0;
+  double *dr0h = bicg->dr0h;
+  double *dn0 = bicg->dn0;
+  double *dp0 = bicg->dp0;
+  double *dt = bicg->dt;
+  double *ds = bicg->ds;
+  double *dAx2 = bicg->dAx2;
+  double *dy = bicg->dy;
+  double *dz = bicg->dz;
+  double *daux = bicg->daux;
+
+  //Input variables
+  int offset_nrows=(nrows/n_cells)*offset_cells;
+  int offset_nnz=(nnz/n_cells)*offset_cells;
+  //int offset_nnz=0;
+  //int offset_nrows=0;
+
+
+  //Works always supposing the same jac structure for all cells (same reactions on all cells)
+  int *djA=bicg->djA;
+  int *diA=bicg->diA;
+
+  double *dA=bicg->dA+offset_nnz;
+  double *ddiag=bicg->ddiag+offset_nrows;
+  double *dx=bicg->dx+offset_nrows;
+  double *dtempv=bicg->dtempv+offset_nrows;
+
+  int len_cell=nrows/n_cells;
+
+#ifndef DEBUG_SOLVEBCGCUDA
+  if(bicg->counterBiConjGrad==0) {
+    printf("n_cells %d len_cell %d nrows %d nnz %d max_threads_block %d blocks %d threads_block %d n_shr_empty %d offset_cells %d\n",
+           bicg->n_cells,len_cell,bicg->nrows,bicg->nnz,n_shr_memory,blocks,threads_block,n_shr_empty,offset_cells);
+
+    //print_double(bicg->A,nnz,"A");
+    //print_int(bicg->jA,nnz,"jA");
+    //print_int(bicg->iA,nrows+1,"iA");
+
+  }
+#endif
+
+#ifdef PMC_DEBUG_GPU
+  //int *dit_ptr;
+
+#ifdef solveBcgCuda_sum_it
+
+  //cudaMalloc((void**)&dit_ptr,blocks*sizeof(int));
+  //cudaMemset(dit_ptr, 0, blocks*sizeof(int));
+
+#else
+  //cudaMalloc((void**)&dit_ptr,sizeof(int));
+  //cudaMemset(dit_ptr, 0, sizeof(int));
+
+  double dtimeBiConjGrad;
+
+#endif
+
+#endif
+
+  solveCudaGlobal << < blocks, threads_block, n_shr_memory * sizeof(double) >> >
+                                              //solveBcgCuda << < blocks, threads_block, threads_block * sizeof(double) >> >
+                                              (dA, djA, diA, dx, dtempv, nrows, blocks, n_shr_empty, maxIt, mattype, n_cells,
+                                                      tolmax, ddiag, dr0, dr0h, dn0, dp0, dt, ds, dAx2, dy, dz
+#ifdef PMC_DEBUG_GPU
+                                                      ,bicg->counterBiConjGradInternalGPU//, dtimeBiConjGrad
+#endif
+                                              );
+
+#ifdef PMC_DEBUG_GPU
+
+  int it=0;
+
+#ifdef solveBcgCuda_sum_it
+
+  int *it_ptr=(int*)malloc(blocks*sizeof(int));
+  cudaMemcpy(it_ptr,bicg->counterBiConjGradInternalGPU,blocks*sizeof(int),cudaMemcpyDeviceToHost);
+
+  for(int i=0;i<blocks;i++){
+    it+=it_ptr[i];
+  }
+
+#ifdef solveBcgCuda_avg_it
+  it=it/blocks;
+  //it=it/nrows;
+#endif
+
+  free(it_ptr);
+
+  bicg->counterBiConjGradInternal += it;
+
+#else
+
+  cudaMemcpy(&it,bicg->counterBiConjGradInternalGPU,sizeof(int),cudaMemcpyDeviceToHost);
+
+  if(offset_cells==0)
+    bicg->counterBiConjGradInternal += it;
+    //bicg->counterBiConjGradInternal += it-dtimeBiConjGrad;
+
+
+#endif
+
+#ifndef DEBUG_SOLVEBCGCUDA
+  if(bicg->counterBiConjGrad==0) {
+    printf("solveGPUBlock it %d\n",
+           it);
+  }
+#endif
+
+#endif
+
+
+}
+
+
+int nextPowerOfTwoCVODE(int v){
+
+  v--;
+  v |= v >> 1;
+  v |= v >> 2;
+  v |= v >> 4;
+  v |= v >> 8;
+  v |= v >> 16;
+  v++;
+
+  //printf("nextPowerOfTwoCVODE %d", v);
+
+  return v;
+}
+
+//Each block will compute only a cell/group of cells
+void solveCVODEGPU(itsolver *bicg, double *dA, int *djA, int *diA, double *dx, double *dtempv)
+{
+
+#ifndef DEBUG_SOLVEBCGCUDA
+  if(bicg->counterBiConjGrad==0) {
+    printf("solveGPUBlock\n");
+  }
+#endif
+
+  int len_cell = bicg->nrows/bicg->n_cells;
+  int max_threads_block;
+
+  if(bicg->use_multicells) {
+    max_threads_block = bicg->threads;//bicg->threads; 128;
+  }else{
+    max_threads_block = nextPowerOfTwoCVODE(len_cell);//bicg->threads;
+  }
+
+#ifdef BCG_ALL_THREADS
+
+  int threads_block = max_threads_block;
+  int n_shr_empty = 0;
+  int blocks = (nrows+threads_block-1)/threads_block;
+
+#else
+  int n_cells_block =  max_threads_block/len_cell;
+  int threads_block = n_cells_block*len_cell;
+  int n_shr_empty = max_threads_block-threads_block;
+  int blocks = (bicg->nrows+threads_block-1)/threads_block;
+#endif
+
+  int offset_cells=0;
+
+#ifndef ALL_BLOCKS_EQUAL_SIZE
+
+  //Common kernel (Launch all blocks except the last)
+  if(bicg->use_multicells
+    //&& blocks!=0
+          ) {
+
+    blocks=blocks-1;
+
+    if(blocks!=0)//myb not needed
+      solveCVODEGPU_thr(blocks, threads_block, max_threads_block, n_shr_empty, offset_cells,
+                         bicg);
+
+    //Update vars to launch last kernel
+    offset_cells=n_cells_block*blocks;
+    int n_cells_last_block=bicg->n_cells-offset_cells;
+    threads_block=n_cells_last_block*len_cell;
+    max_threads_block=nextPowerOfTwoCVODE(threads_block);
+    n_shr_empty = max_threads_block-threads_block;
+    blocks=1;
+
+  }
+
+#endif
+
+  solveCVODEGPU_thr(blocks, threads_block, max_threads_block, n_shr_empty, offset_cells,
+                     bicg);
+
+}
+
 int cvNlsNewton_gpu2(SolverData *sd, CVodeMem cv_mem, int nflag)
 {
   itsolver *bicg = &(sd->bicg);
@@ -3740,7 +3999,8 @@ int linsolsolve_gpu2(SolverData *sd, CVodeMem cv_mem)
 #endif
 
   //solveGPU(bicg,bicg->dA,bicg->djA,bicg->diA,bicg->dx,bicg->dtempv);
-  solveGPU_block(bicg,bicg->dA,bicg->djA,bicg->diA,bicg->dx,bicg->dtempv);
+  //solveGPU_block(bicg,bicg->dA,bicg->djA,bicg->diA,bicg->dx,bicg->dtempv);
+  solveCVODEGPU(bicg,bicg->dA,bicg->djA,bicg->diA,bicg->dx,bicg->dtempv);
 
 #ifdef DEBUG_LINEAR_SOLVERS
 
@@ -3849,8 +4109,6 @@ int linsolsolve_gpu2(SolverData *sd, CVodeMem cv_mem)
     cudaMemcpy(bicg->dftemp,cv_ftemp,bicg->nrows*sizeof(double),cudaMemcpyHostToDevice);
 
     //cudaMemcpy(bicg->dftemp,cv_mem->cv_tempv2,bicg->nrows*sizeof(double),cudaMemcpyHostToDevice);
-
-
 
     //add correction to acor and y
     // a*x + b*y = z

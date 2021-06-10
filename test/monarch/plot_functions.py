@@ -29,31 +29,28 @@ def get_values_same_timestep(timestep_to_plot,mpiProcessesList, \
 
   return new_data
 
-def calculate_computational_timeLS(data,plot_y_key,case):
+def calculate_computational_timeLS(data,plot_y_key):
 
-  #cases=list(data.keys())
+  data_timeBiconjGradMemcpy=data[plot_y_key]
+  data_timeLS=data["timeLS"]
+  #print(data_timeBiconjGradMemcpy)
+  #print(data_timeLS)
+  for i in range(len(data_timeLS)):
+    data_timeLS[i]=data_timeLS[i]-data_timeBiconjGradMemcpy[i]
+  #print(data_timeLS)
+  #gpu_exist=True
 
-  #gpu_exist=False
 
-  #for case in cases:
-  if("GPU" in case):
-    data_timeBiconjGradMemcpy=data[case][plot_y_key]
-    data_timeLS=data[case]["timeLS"]
+  #if("GPU" in case):
+    #data_timeBiconjGradMemcpy=data[case][plot_y_key]
+    #data_timeLS=data[case]["timeLS"]
     #print(data_timeBiconjGradMemcpy)
     #print(data_timeLS)
-    for i in range(len(data_timeLS)):
-      data_timeLS[i]=data_timeLS[i]-data_timeBiconjGradMemcpy[i]
+    #for i in range(len(data_timeLS)):
+    #  data_timeLS[i]=data_timeLS[i]-data_timeBiconjGradMemcpy[i]
     #print(data_timeLS)
     #gpu_exist=True
 
-  #if(gpu_exist==False):
-  #  raise Exception("Not GPU case for calculate_computational_timeLS metric")
-
-  #print("calculate_computational_timeLS")
-  #print(data_timeLS)
-
-  #for i in range(len(data_timeLS)):
-  #  data_timeLS[i]=data_timeLS[i]-data_timeBiconjGradMemcpy[i]
 
   return data
 
@@ -62,32 +59,40 @@ def normalize_by_counterLS_and_cells(data,plot_y_key,cells,case):
   #plot_y_key = "timeLS"
   #new_plot_y_key="Normalized timeLS"
 
-  cases=list(data.keys())
-
   print("normalize_by_counterLS_and_cells")
 
   #print(data[cases[0]][plot_y_key])
 
-  #for case in cases:
-
-  if("One-cell" in case and "CPU" in case):
+  if("One-cell" in case):
     #print("One-cell")
     cells_multiply=cells
-  elif("Multi-cells" in case or "GPU" in case):
+  elif("Multi-cells" in case):
     #print("Multi-cells")
     cells_multiply=1
   else:
     raise Exception("normalize_by_counterLS_and_cells case without One-cell or Multi-cells key name")
 
+  #if("One-cell" in case and "CPU" in case):
+    #print("One-cell")
+  #  cells_multiply=cells
+  #elif("Multi-cells" in case or "GPU" in case):
+    #print("Multi-cells")
+    #cells_multiply=1
+  #else:
+  #  raise Exception("normalize_by_counterLS_and_cells case without One-cell or Multi-cells key name")
+
   #print(cells_multiply)
 
   #data[case][new_plot_y_key] = []
-  for i in range(len(data[case][plot_y_key])):
+  for i in range(len(data[plot_y_key])):
     #print(base_data[i],new_data[i], base_data[i]/new_data[i])
-    data[case][plot_y_key][i]=data[case][plot_y_key][i]\
-    /data[case]["counterLS"][i]*cells_multiply
-    #data[case][new_plot_y_key].append(data[case][plot_y_key][i] \
-    #                                  / data[case]["counterLS"][i]*cells_multiply)
+    data[plot_y_key][i]=data[plot_y_key][i]\
+    /data["counterLS"][i]*cells_multiply
+
+  #for i in range(len(data[case][plot_y_key])):
+    #print(base_data[i],new_data[i], base_data[i]/new_data[i])
+    #data[case][plot_y_key][i]=data[case][plot_y_key][i] \
+    #                          /data[case]["counterLS"][i]*cells_multiply
 
   #print(data[cases[0]][plot_y_key])
   #print(data)
