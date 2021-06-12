@@ -210,8 +210,6 @@ def all_timesteps():
   mpi="yes"
   #mpi="no"
 
-  divide_cells_load=False
-
   mpiProcessesList = [1]
   #mpiProcessesList = [40,1]
 
@@ -219,7 +217,7 @@ def all_timesteps():
   #cells = [1,10,100,1000]
   #cells = [1,10,100,1000,10000,100000]
 
-  timesteps = 1#720=12h
+  timesteps = 2#720=12h
   TIME_STEP = 2 #pending send TIME_STEP to mock_monarch
 
   #cases = ["CPU One-cell"]
@@ -227,8 +225,8 @@ def all_timesteps():
   #cases = ["GPU One-cell"]
   #cases = ["CPU One-cell","CPU Multi-cells"]
   #cases = ["CPU One-cell","GPU Multi-cells"]
-  #cases = ["CPU One-cell","GPU One-cell"]
-  cases = ["CPU Multi-cells","GPU Multi-cells"]
+  cases = ["CPU One-cell","GPU One-cell"]
+  #cases = ["CPU Multi-cells","GPU Multi-cells"]
   #cases = ["CPU Multi-cells","GPU One-cell"]
   #cases = ["GPU One-cell","GPU Multi-cells"]
   #cases = ["GPU One-cell","GPU 2 One-cell"]
@@ -330,17 +328,17 @@ def all_timesteps():
     datax=list(range(1,timesteps+1,1))
     plot_x_key = "Timesteps"
 
-  #if "MAPE" in plot_y_key:
-  #  namey="MAPE [%] [%]"
+  #if "Speedup" in plot_y_key and "counterLS" in plot_y_key:
 
+  namey=plot_y_key #default name
   if plot_y_key=="Speedup counterLS":
     namey="Ratio of calls reduced"
+    print(plot_y_key)
   if plot_y_key=="MAPE":
     namey="MAPE [%]"
   if plot_y_key=="Speedup normalized timeLS":
     namey="Normalized speedup"
-  else:
-    namey=plot_y_key
+
 
   namex=plot_x_key
 

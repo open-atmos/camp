@@ -1,6 +1,4 @@
-//
-// Created by Christian on 01/04/2020.
-//
+
 
 #ifndef CAMPGPU_CUDA_STRUCTS_H
 #define CAMPGPU_CUDA_STRUCTS_H
@@ -83,6 +81,7 @@ typedef struct
   double timeBiConjGradMemcpy;
   double timeDerivSolve;
   double timeJac;
+  double dtBCG;
 
   cudaEvent_t startDerivNewton;
   cudaEvent_t startDerivSolve;
@@ -90,8 +89,8 @@ typedef struct
   cudaEvent_t startLinSolSolve;
   cudaEvent_t startNewtonIt;
   cudaEvent_t startcvStep;
-  cudaEvent_t startBiConjGrad;
-  cudaEvent_t startBiConjGradMemcpy;
+  cudaEvent_t startBCG;
+  cudaEvent_t startBCGMemcpy;
   cudaEvent_t startJac;
 
   cudaEvent_t stopDerivNewton;
