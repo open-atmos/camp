@@ -8,9 +8,10 @@
 #include "../camp_common.h"
 
 
-void check_isnand(double *x, int len, char *s);
-void print_int(int *x, int len, char *s);
-void print_double(double *x, int len, char *s);
+void check_isnand(double *x, int len, const char *s);
+void print_int(int *x, int len, const char *s);
+void print_double(double *x, int len, const char *s);
+int compare_doubles(double *x, double *y, int len, const char *s);
 void get_camp_config_variables(SolverData *sd);
 void export_counters_open(SolverData *sd);
 

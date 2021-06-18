@@ -1025,19 +1025,14 @@ void solveGPU_block(itsolver *bicg, double *dA, int *djA, int *diA, double *dx, 
 #endif
 
   int len_cell = bicg->nrows/bicg->n_cells;
-
   int max_threads_block;
-
   if(bicg->use_multicells) {
 
     max_threads_block = bicg->threads;//bicg->threads; 128;
 
   }else{
 
-    max_threads_block = nextPowerOfTwo(len_cell);//bicg->threads;
-
-    //int n_shr_empty = max_threads%len_cell; //Wrong
-    //int n_shr_empty = max_threads-nrows;
+    max_threads_block = nextPowerOfTwo(len_cell);
 
   }
 

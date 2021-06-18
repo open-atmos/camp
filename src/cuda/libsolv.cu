@@ -400,7 +400,7 @@ extern "C++" void gpu_multxy(double* dz, double* dx ,double* dy, int nrows, int 
    cudamultxy<<<dimGrid,dimBlock>>>(dz,dx,dy,nrows);
 }
 
-// z= a*x + b*y
+// a*x + b*y = z
 //__global__ void cudazaxpby(double* dz, double* dx,double* dy, double a, double b, int nrows)
 __global__ void cudazaxpby(double a, double* dx, double b, double* dy, double* dz, int nrows)
 {
@@ -668,7 +668,6 @@ __device__ void cudaDeviceSpmvCSC_block(double* dx, double* db, int nrows, doubl
   }
   __syncthreads();
 }
-
 
 
 __device__ void cudaDeviceSpmvCSC(double* dx, double* db, int nrows, double* dA, int* djA, int* diA)
@@ -1007,6 +1006,15 @@ __device__ void cudaDeviceDVWRMS_Norm(double *g_idata1, double *g_idata2, double
 
 // y=alpha*y
 __device__ void cudaDevicescaley(double* dy, double a, int nrows)
+{
+  int row= threadIdx.x + blockDim.x*blockIdx.x;
+  if(row < nrows){
+    dy[row]=a*dy[row];
+  }
+}
+
+// z=alpha*y
+__device__ void cudaDevicescalezy(double a, double* dy, double *dz, int nrows)
 {
   int row= threadIdx.x + blockDim.x*blockIdx.x;
   if(row < nrows){

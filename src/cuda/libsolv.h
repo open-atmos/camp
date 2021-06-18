@@ -61,6 +61,7 @@ __device__ void cudaDevicezaxpby(double a, double* dx, double b, double* dy, dou
 __device__ void cudaDeviceaxpy(double* dy,double* dx, double a, int nrows);
 __device__ void cudaDeviceDVWRMS_Norm(double *g_idata1, double *g_idata2, double *odata, unsigned int n);
 __device__ void cudaDevicescaley(double* dy, double a, int nrows);
+__device__ void cudaDevicescalezy(double a, double* dy, double *dz, int nrows);
 
 #ifdef __cplusplus
 //}

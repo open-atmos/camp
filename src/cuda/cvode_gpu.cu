@@ -328,6 +328,8 @@ void alloc_solver_gpu2(CVodeMem cv_mem, SolverData *sd)
   cudaMalloc((void**)&bicg->dewt,bicg->nrows*sizeof(double));
   cudaMalloc((void**)&bicg->dacor,bicg->nrows*sizeof(double));
   cudaMalloc((void**)&bicg->dtempv,bicg->nrows*sizeof(double));
+  cudaMalloc((void**)&bicg->dtempv1,bicg->nrows*sizeof(double));
+  cudaMalloc((void**)&bicg->dtempv2,bicg->nrows*sizeof(double));
   cudaMalloc((void**)&bicg->dzn,bicg->nrows*(cv_mem->cv_qmax+1)*sizeof(double));
 
   //ODE concs arrays
@@ -366,10 +368,18 @@ void alloc_solver_gpu2(CVodeMem cv_mem, SolverData *sd)
   bicg->counterJac=0;
 #ifdef solveCudaGlobal_timers_max_blocks
   bicg->dtBCG;
-  cudaMalloc((void**)&bicg->dtBCG,blocks*sizeof(int));
-  cudaMemset(bicg->counterBiConjGradInternalGPU, 0, blocks*sizeof(int));
+  cudaMalloc((void**)&bicg->dtBCG,blocks*sizeof(double));
+  cudaMemset(bicg->counterBiConjGradInternalGPU, 0, blocks*sizeof(double));
+  bicg->dtPreBCG;
+  cudaMalloc((void**)&bicg->dtPreBCG,blocks*sizeof(double));
+  cudaMemset(bicg->counterBiConjGradInternalGPU, 0, blocks*sizeof(double));
+  bicg->dtPostBCG;
+  cudaMalloc((void**)&bicg->dtPostBCG,blocks*sizeof(int));
+  cudaMemset(bicg->counterBiConjGradInternalGPU, 0, blocks*sizeof(double));
 #else
-  bicg->dtBCG=0;
+  bicg->dtBCG=0.;
+  bicg->dtPreBCG=0.;
+  bicg->dtPostBCG=0.;
 #endif
 
 #ifdef solveBcgCuda_sum_it
@@ -3194,6 +3204,277 @@ int nextPowerOfTwoCVODE(int v){
   return v;
 }
 
+
+int guess_helperCudaDevice(const realtype t_n, const realtype h_n, N_Vector y_n,
+                 N_Vector y_n1, N_Vector hf, void *solver_data, N_Vector tmp1,
+                 N_Vector corr) {
+  SolverData *sd = (SolverData *)solver_data;
+  realtype *ay_n = NV_DATA_S(y_n);
+  realtype *ay_n1 = NV_DATA_S(y_n1);
+  realtype *atmp1 = NV_DATA_S(tmp1);
+  realtype *acorr = NV_DATA_S(corr);
+  realtype *ahf = NV_DATA_S(hf);
+  int n_elem = NV_LENGTH_S(y_n);
+
+  // Only try improvements when negative concentrations are predicted
+  if (N_VMin(y_n) > -SMALL) return 0;
+
+
+  // Copy \f$y(t_{n-1})\f$ to working array
+  N_VScale(ONE, y_n1, tmp1);
+
+  // Get  \f$f(t_{n-1})\f$
+  if (h_n > ZERO) {
+    N_VScale(ONE / h_n, hf, corr);
+  } else {
+    N_VScale(ONE, hf, corr);
+  }
+
+  // Advance state interatively
+  realtype t_0 = h_n > ZERO ? t_n - h_n : t_n - ONE;
+  realtype t_j = ZERO;
+  int iter = 0;
+  int GUESS_MAX_ITER = 5;
+  for (; iter < GUESS_MAX_ITER && t_0 + t_j < t_n; iter++) {
+    // Calculate \f$h_j\f$
+    realtype h_j = t_n - (t_0 + t_j);
+    int i_fast = -1;
+    for (int i = 0; i < n_elem; i++) {
+      realtype t_star = -atmp1[i] / acorr[i];
+      if ((t_star > ZERO || (t_star == ZERO && acorr[i] < ZERO)) &&
+          t_star < h_j) {
+        h_j = t_star;
+        i_fast = i;
+      }
+    }
+
+    // Scale incomplete jumps
+    if (i_fast >= 0 && h_n > ZERO)
+      h_j *= 0.95 + 0.1 ;
+    //h_j *= 0.95 + 0.1 * rand() / (double)RAND_MAX;
+    h_j = t_n < t_0 + t_j + h_j ? t_n - (t_0 + t_j) : h_j;
+
+    // Only make small changes to adjustment vectors used in Newton iteration
+    if (h_n == ZERO &&
+        t_n - (h_j + t_j + t_0) > ((CVodeMem)sd->cvode_mem)->cv_reltol)
+      return -1;
+
+#ifdef DEBUG_GUESS_HELPER
+    if(sd->counterDerivCPU==2 || sd->counterDerivCPU==3){
+      printf("guess_helper h_j %-le\n", h_j);
+      printf("tmpl \n");
+      print_derivative(sd, tmp1);
+      printf("corr \n");
+      print_derivative(sd, corr);
+    }
+#endif
+
+    // Advance the state
+    N_VLinearSum(ONE, tmp1, h_j, corr, tmp1);
+
+    // Advance t_j
+    t_j += h_j;
+
+    //printf("Derivguess_helper before\n");
+    // Recalculate the time derivative \f$f(t_j)\f$
+    if (f(t_0 + t_j, tmp1, corr, solver_data) != 0) {
+      N_VConst(ZERO, corr);
+      return -1;
+    }
+    //printf("Derivguess_helper after\n");
+    ((CVodeMem)sd->cvode_mem)->cv_nfe++;
+
+    if (iter == GUESS_MAX_ITER - 1 && t_0 + t_j < t_n) {
+      if (h_n == ZERO) return -1;
+    }
+  }
+
+
+  // Set the correction vector
+  N_VLinearSum(ONE, tmp1, -ONE, y_n, corr);
+
+  // Scale the initial corrections
+  if (h_n > ZERO) N_VScale(0.999, corr, corr);
+
+  // Update the hf vector
+  N_VLinearSum(ONE, tmp1, -ONE, y_n1, hf);
+
+#ifdef DEBUG_GUESS_HELPER
+  if(sd->counterDerivCPU==2 || sd->counterDerivCPU==3){
+      printf("tmpl \n");
+      print_derivative(sd, hf);
+    }
+#endif
+
+  return 1;
+}
+
+__device__
+//int CudaGlobalguess_helper(const realtype t_n, const realtype h_n, N_Vector y_n,
+//                           N_Vector y_n1, N_Vector hf, void *solver_data, N_Vector tmp1,
+//                           N_Vector corr) {
+int CudaDeviceguess_helper(double t_n, double h_n, double* y_n,
+                           double* y_n1, double* hf, double* tmp1,
+                           double* corr, double cv_reltol, int nrows) {
+  //SolverData *sd = (SolverData *)solver_data;
+  //realtype *ay_n = NV_DATA_S(y_n);
+  //realtype *ay_n1 = NV_DATA_S(y_n1);
+  //realtype *atmp1 = NV_DATA_S(tmp1);
+  //realtype *acorr = NV_DATA_S(corr);
+  //realtype *ahf = NV_DATA_S(hf);
+  //int n_elem = NV_LENGTH_S(y_n);
+
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
+  unsigned int tid = threadIdx.x;
+
+  // Only try improvements when negative concentrations are predicted
+  //if (N_VMin(y_n) > -SMALL) return 0;
+   if(y_n[i] > -SMALL) return 0; //todo check if device returns different values per thread or stops
+
+
+  // Copy \f$y(t_{n-1})\f$ to working array
+  //N_VScale(ONE, y_n1, tmp1);
+  cudaDeviceyequalsx(tmp1, y_n1, nrows);
+
+  // Get  \f$f(t_{n-1})\f$
+  /*if (h_n > ZERO) {
+    N_VScale(ONE / h_n, hf, corr);
+  } else {
+    N_VScale(ONE, hf, corr);
+  }*/
+
+  if (h_n == ZERO) {
+    cudaDevicescalezy(1, hf, corr, nrows);
+  } else {
+    cudaDevicescalezy(1/h_n, hf, corr, nrows);
+  }
+
+  // Advance state interatively
+  realtype t_0 = h_n > 0. ? t_n - h_n : t_n - 1.;
+  realtype t_j = 0.;
+  int GUESS_MAX_ITER = 5;
+  for (int iter = 0; iter < GUESS_MAX_ITER && t_0 + t_j < t_n; iter++) {
+    // Calculate \f$h_j\f$
+    double h_j = t_n - (t_0 + t_j);
+    int i_fast = -1;
+
+    /*
+    for (int i = 0; i < n_elem; i++) {
+     realtype t_star = -atmp1[i] / acorr[i];
+      if ((t_star > ZERO || (t_star == ZERO && acorr[i] < ZERO)) &&
+          t_star < h_j) {
+        h_j = t_star;
+        i_fast = i;
+      }
+    }*/
+
+    double t_star = -tmp1[i] / corr[i];
+    if ((t_star > 0. || (t_star == 0. && corr[i] < 0.)) &&
+        t_star < h_j) {
+      h_j = t_star;
+      i_fast = i;
+    }
+
+    // Scale incomplete jumps
+    /*
+    if (i_fast >= 0 && h_n > ZERO)
+      h_j *= 0.95 + 0.1 ;
+    //h_j *= 0.95 + 0.1 * rand() / (double)RAND_MAX;
+    h_j = t_n < t_0 + t_j + h_j ? t_n - (t_0 + t_j) : h_j;
+     */
+
+    if (i_fast >= 0 && h_n > 0.)
+      h_j *= 0.95 + 0.1 ;
+    //h_j *= 0.95 + 0.1 * rand() / (double)RAND_MAX;
+    h_j = t_n < t_0 + t_j + h_j ? t_n - (t_0 + t_j) : h_j;
+
+    // Only make small changes to adjustment vectors used in Newton iteration
+    if (h_n == 0. &&
+        //t_n - (h_j + t_j + t_0) > ((CVodeMem)sd->cvode_mem)->cv_reltol)
+        t_n - (h_j + t_j + t_0) > cv_reltol)
+      return -1;
+
+#ifdef DEBUG_CudaGlobalguess_helper
+    //if(sd->counterDerivCPU==2 || sd->counterDerivCPU==3){
+      printf("guess_helper h_j %-le\n", h_j);
+      printf("tmpl \n");
+      //print_derivative(sd, tmp1);
+      printf("corr \n");
+      //print_derivative(sd, corr);
+    //}
+#endif
+
+    // Advance the state
+    //N_VLinearSum(ONE, tmp1, h_j, corr, tmp1);
+    cudaDevicezaxpby(1., tmp1, h_j, corr, tmp1, nrows);
+
+    // Advance t_j
+    t_j += h_j;
+
+    //printf("Derivguess_helper before\n");
+    // Recalculate the time derivative \f$f(t_j)\f$
+
+    /*if (f(t_0 + t_j, tmp1, corr, solver_data) != 0) {
+      N_VConst(ZERO, corr);
+      return -1;
+    }*/
+
+    //if (cudaDevicef(t_0 + t_j, tmp1, corr, solver_data) != 0) {
+      //N_VConst(ZERO, corr);
+      printf("pending cudaDevicef");
+      corr[i]=0.;
+      return -1;
+    //}
+
+    //printf("Derivguess_helper after\n");
+    //((CVodeMem)sd->cvode_mem)->cv_nfe++;
+
+    if (iter == GUESS_MAX_ITER - 1 && t_0 + t_j < t_n) {
+      if (h_n == 0.) return -1;
+    }
+  }
+
+
+  // Set the correction vector
+  //N_VLinearSum(ONE, tmp1, -ONE, y_n, corr);
+  cudaDevicezaxpby(1., tmp1, -1., y_n, corr, nrows);
+
+
+  // Scale the initial corrections
+  //if (h_n > 0.) N_VScale(0.999, corr, corr);
+  if (h_n > 0.) corr[i]=corr[i]*0.999;
+
+  // Update the hf vector
+  //N_VLinearSum(ONE, tmp1, -ONE, y_n1, hf);
+  cudaDevicezaxpby(1., tmp1, -1., y_n1, hf, nrows);
+
+#ifdef DEBUG_CudaGlobalguess_helper
+  //if(sd->counterDerivCPU==2 || sd->counterDerivCPU==3){
+      printf("tmpl \n");
+     // print_derivative(sd, hf);
+    //}
+#endif
+
+  __syncthreads();
+  return 1;
+  //return flag;
+}
+
+__global__
+//int CudaGlobalguess_helper(const realtype t_n, const realtype h_n, N_Vector y_n,
+//                           N_Vector y_n1, N_Vector hf, void *solver_data, N_Vector tmp1,
+//                           N_Vector corr) {
+void CudaGlobalguess_helper(double t_n, double h_n, double* y_n,
+                           double* y_n1, double* hf, double* tmp1,
+                           double* corr, double cv_reltol, int nrows, int flag) {
+
+  flag = CudaDeviceguess_helper(t_n, h_n, y_n,
+                         y_n1, hf, tmp1,
+                         corr, cv_reltol,nrows);
+
+
+}
+
 //Algorithm: Biconjugate gradient
 __device__
 void solveBcgCudaDeviceCVODE(
@@ -3483,7 +3764,7 @@ void solveCudaGlobal(
         ,double *dr0, double *dr0h, double *dn0, double *dp0
         ,double *dt, double *ds, double *dAx2, double *dy, double *dz// Auxiliary vectors
 #ifdef PMC_DEBUG_GPU
-        ,int *it_pointer, double *dtBCG
+        ,int *it_pointer, double *dtBCG, double *dtPreBCG, double *dtPostBCG
 #endif
 )
 {
@@ -3491,14 +3772,36 @@ void solveCudaGlobal(
   unsigned int tid = threadIdx.x;
   int active_threads = nrows;
 
+
+  //if(i<active_threads) {
+
 #ifdef PMC_DEBUG_GPU
 
-  clock_t start = clock(); //almost accurate :https://stackoverflow.com/questions/19527038/how-to-measure-the-time-of-the-device-functions-when-they-are-called-in-kernel-f
-  //device function call
+  int clock_khz;
+  cudaDeviceGetAttribute(&clock_khz, cudaDevAttrClockRate, 0);
+  clock_t start;
+
+  start = clock(); //almost accurate :https://stackoverflow.com/questions/19527038/how-to-measure-the-time-of-the-device-functions-when-they-are-called-in-kernel-f
 
 #endif
 
-  //if(i<active_threads) {
+//Some functs
+
+#ifdef PMC_DEBUG_GPU
+
+#ifdef solveCudaGlobal_timers_max_blocks
+
+  dtPreBCG[i] += ((double)(int)(clock() - start))/(clock_khz*1000);
+
+#else
+
+   if(i==0) *dtPreBCG += ((double)(int)(clock() - start))/(clock_khz*1000);
+
+#endif
+
+  start = clock(); //almost accurate :https://stackoverflow.com/questions/19527038/how-to-measure-the-time-of-the-device-functions-when-they-are-called-in-kernel-f
+
+#endif
 
   solveBcgCudaDeviceCVODE( //Works with Multi-cells
   //solveBcgCudaDevice(//Fails with Multi-cells for some reason
@@ -3511,32 +3814,42 @@ void solveCudaGlobal(
 
 #ifdef PMC_DEBUG_GPU
 
+#ifdef solveCudaGlobal_timers_max_blocks
+
+  dtBCG[i] += ((double)(int)(clock() - startBCG))/(clock_khz*1000);
+
+#else
+
+  if(i==0) *dtBCG += ((double)(int)(clock() - start))/(clock_khz*1000);
+
+#endif
+
+  start = clock(); //almost accurate :https://stackoverflow.com/questions/19527038/how-to-measure-the-time-of-the-device-functions-when-they-are-called-in-kernel-f
+
+#endif
+
+//Device functs
+
+
+
+
+
+#ifdef PMC_DEBUG_GPU
 
   __syncthreads;
-
-  //printf("dtimeBiConjGrad %lf\n", ((double)bicg->dtBCG)/(clock_khz*1000));
-
-  int clock_khz;
-  cudaDeviceGetAttribute(&clock_khz, cudaDevAttrClockRate, 0);
 
 
 #ifdef solveCudaGlobal_timers_max_blocks
 
-  dtBCG[i] += ((double)(int)(clock() - start))/(clock_khz*1000);
+  dtPostBCG[i] += ((double)(int)(clock() - start))/(clock_khz*1000);
 
 #else
 
-  if(i==0) //Only last thread updates... it should be the max among all threads, but search the max would affect overall performance
-    *dtBCG += ((double)(int)(clock() - start))/(clock_khz*1000); //Last thread updates,
+  if(i==0) *dtPostBCG += ((double)(int)(clock() - start))/(clock_khz*1000);
 
 #endif
 
-  //int clock_khz;
-  //cudaError_t err = cudaDeviceGetAttribute(&clock_khz, cudaDevAttrClockRate, device);
-
   //printf("dtBCG %-le t %d", *dtBCG,t);
-  //if(i==0)
-    //printf("clock_khz %d", CLOCKS_PER_SEC);
 
   __syncthreads;
 
@@ -3600,28 +3913,13 @@ void solveCVODEGPU_thr(int blocks, int threads_block, int n_shr_memory, int n_sh
   }
 #endif
 
-#ifdef PMC_DEBUG_GPU
-  //int *dit_ptr;
-
-#ifdef solveBcgCuda_sum_it
-
-  //cudaMalloc((void**)&dit_ptr,blocks*sizeof(int));
-  //cudaMemset(dit_ptr, 0, blocks*sizeof(int));
-
-#else
-  //cudaMalloc((void**)&dit_ptr,sizeof(int));
-  //cudaMemset(dit_ptr, 0, sizeof(int));
-
-#endif
-
-#endif
-
   solveCudaGlobal << < blocks, threads_block, n_shr_memory * sizeof(double) >> >
                                               //solveBcgCuda << < blocks, threads_block, threads_block * sizeof(double) >> >
                                               (dA, djA, diA, dx, dtempv, nrows, blocks, n_shr_empty, maxIt, mattype, n_cells,
                                                       tolmax, ddiag, dr0, dr0h, dn0, dp0, dt, ds, dAx2, dy, dz
 #ifdef PMC_DEBUG_GPU
-                                                      ,bicg->counterBiConjGradInternalGPU, &bicg->dtBCG//&dtBCG
+                                                      ,bicg->counterBiConjGradInternalGPU, &bicg->dtBCG,
+                                                      &bicg->dtPreBCG, &bicg->dtPostBCG
 #endif
                                               );
 #ifdef PMC_DEBUG_GPU
@@ -3652,13 +3950,6 @@ void solveCVODEGPU_thr(int blocks, int threads_block, int n_shr_memory, int n_sh
 
   if(offset_cells==0)
     bicg->counterBiConjGradInternal += it;
-
-  //int clock_khz;
-  //cudaError_t err = cudaDeviceGetAttribute(&bicg->dtBCG, cudaDevAttrClockRate, 0);
-  //printf("t %lf clock_khz %d dtBCG %d\n", ((double)dtBCG)/(clock_khz*1000),
-  //       clock_khz, dtBCG);
-
-  //bicg->dtimeBiConjGrad=((double)dtBCG)/(clock_khz*1000);
 
 #endif
 
@@ -3831,6 +4122,7 @@ int cvNlsNewton_gpu2(SolverData *sd, CVodeMem cv_mem, int nflag)
     gpu_yequalsx(bicg->dcv_y,bicg->dzn, bicg->nrows, bicg->blocks, bicg->threads);//Consider acor_init=0
     cudaDeviceSynchronize();
 
+    //todo copy cv_y to enable debug on cpu
     cudaMemcpy(cv_y,bicg->dcv_y,bicg->nrows*sizeof(double),cudaMemcpyDeviceToHost);
     //retval = cv_mem->cv_f(cv_mem->cv_tn, cv_mem->cv_y,
     //                      cv_mem->cv_ftemp, cv_mem->cv_user_data);
@@ -4380,18 +4672,42 @@ int linsolsolve_gpu2(SolverData *sd, CVodeMem cv_mem)
 */
 
     // Get WRMS norm of correction
-    del = gpu_VWRMS_Norm(bicg->nrows, bicg->dx, bicg->dewt, bicg->aux, bicg->daux, (bicg->blocks + 1) / 2, bicg->threads);
+    //del = gpu_VWRMS_Norm(bicg->nrows, bicg->dx, bicg->dewt, bicg->aux, bicg->daux, (bicg->blocks + 1) / 2, bicg->threads);
 
     cudaMemcpy(cv_ftemp,bicg->dftemp,bicg->nrows*sizeof(double),cudaMemcpyDeviceToHost);
     cudaMemcpy(cv_y,bicg->dcv_y,bicg->nrows*sizeof(double),cudaMemcpyDeviceToHost);
     cudaMemcpy(b_ptr,bicg->dx,bicg->nrows*sizeof(double),cudaMemcpyDeviceToHost);
-
 
     if (cv_mem->cv_ghfun) {
       N_VLinearSum(ONE, cv_mem->cv_y, ONE, b, cv_mem->cv_ftemp);
       retval = cv_mem->cv_ghfun(cv_mem->cv_tn, ZERO, cv_mem->cv_ftemp,
                                 cv_mem->cv_y, b, cv_mem->cv_user_data,
                                 cv_mem->cv_tempv1, cv_mem->cv_tempv2);
+
+
+      /*int len_cell = bicg->nrows/bicg->n_cells;
+      int max_threads_block = nextPowerOfTwo(len_cell);
+      int n_cells_block =  max_threads_block/len_cell;
+      int threads_block = n_cells_block*len_cell;
+      int n_shr_empty = max_threads_block-threads_block;
+      int blocks = (bicg->nrows+threads_block-1)/threads_block;*/
+
+      /*
+      gpu_zaxpby(1.0, bicg->dcv_y, 1.0, bicg->dtempv, bicg->dftemp, bicg->nrows, bicg->blocks, bicg->threads);
+
+      int len_cell = bicg->nrows/bicg->n_cells;
+      int threads_block = len_cell;
+      int blocks = bicg->n_cells;
+      //int n_shr_empty = nextPowerOfTwo(len_cell);
+
+      retval = CudaGlobalguess_helper << < blocks, threads_block >> >
+      (cv_mem->cv_tn, 0., bicg->dftemp,
+      bicg->dcv_y, bicg->dtempv, bicg->dtempv1,
+      bicg->dtempv2, ((CVodeMem)sd->cvode_mem)->cv_reltol),
+      bicg->nrows);
+       */
+
+
       if (retval==1) {
         //SUNDIALS_DEBUG_PRINT_FULL("Received updated adjustment from guess helper");
       } else if (retval<0) {
@@ -4420,6 +4736,9 @@ int linsolsolve_gpu2(SolverData *sd, CVodeMem cv_mem)
     //Z[i] = a*X[i] + b*Y[i];
     //N_VLinearSum(ONE, cv_mem->cv_acor, ONE, b, cv_mem->cv_acor);
     //N_VLinearSum(ONE, cv_mem->cv_zn[0], ONE, cv_mem->cv_acor, cv_mem->cv_y);
+
+    // Get WRMS norm of correction
+    del = gpu_VWRMS_Norm(bicg->nrows, bicg->dx, bicg->dewt, bicg->aux, bicg->daux, (bicg->blocks + 1) / 2, bicg->threads);
 
     // Test for convergence.  If m > 0, an estimate of the convergence
     // rate constant is stored in crate, and used in the test.
@@ -4582,22 +4901,22 @@ void printSolverCounters_gpu2(SolverData *sd)
           bicg->timeBiConjGradMemcpy/bicg->timeBiConjGrad*100);
 #ifdef solveCudaGlobal_timers_max_blocks
 
-
-  //double *tBCG=(int*)malloc(blocks*sizeof(double));
-  //cudaMemcpy(tBCG,bicg->dtBCG,blocks*sizeof(double),cudaMemcpyDeviceToHost);
-
   for(int i=1;i<blocks;i++){
     if(dtBCG[i]>dtBCG[0])
       dtBCG[0]=dtBCG[i];
+    if(dtPreBCG[i]>dtPreBCG[0])
+      dtPreBCG[0]=dtPreBCG[i];
+    if(dtPostBCG[i]>dtPostBCG[0])
+      dtPostBCG[0]=dtPostBCG[i];
   }
 
-  //free()
-  printf("dtBCG %lf\n",bicg->dtBCG[0]);
+  printf("dtBCG, dtPreBCG. dtPostBCG %lf\n",bicg->dtBCG[0],
+          bicg->dtPreBCG[0],bicg->dtPostBCG[0]);
 
 #else
 
-  printf("dtBCG %lf\n",bicg->dtBCG);
-
+  printf("dtBCG, dtPreBCG. dtPostBCG %lf\n",bicg->dtBCG,
+          bicg->dtPreBCG,bicg->dtPostBCG);
 
 #endif
 

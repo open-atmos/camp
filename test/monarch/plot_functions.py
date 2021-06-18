@@ -273,31 +273,49 @@ def calculate_MAPE(data,timesteps):
   species_names=list(species1.keys())
   len_timestep=int(len(species1[species_names[0]])/timesteps)
   max_err=0.0
+  max_tol=1.0E-60
   for j in range(timesteps):
     MAPE=0.0
     #MAPE=1.0E-60
     n=0
-    for i in species1:
-      data1_values = species1[i]
-      data2_values = species2[i]
+    for name in species1:
+      data1_values = species1[name]
+      data2_values = species2[name]
       l=j*len_timestep
       r=len_timestep*(1+j)
       out1=data1_values[l:r]
       out2=data2_values[l:r]
 
       for k in range(len(out1)):
-        if(out1[k]==0.0):
-          out1[k]+=1.0E-60
-          out2[k]+=1.0E-60
+
+        #if(out1[k]<max_tol):
+        #  out1[k]=1.0E-60
+        #if(out2[k]<max_tol):
+        #  out2[k]=1.0E-60
+
+        #Filter low concs
+        if abs(out1[k]-out2[k]) < max_tol or (out1[k] == 0):
+          err=0.
+        else:
+          err=abs((out1[k]-out2[k])/out1[k])
+
+        #if(out1[k]==0.0):
+        #  out1[k]+=1.0E-60
+        #  out2[k]+=1.0E-60
+        #  err=abs((out1[k]-out2[k])/out1[k])
+          #err=1
         #print(out1[k],out2[k])
-        err=abs((out1[k]-out2[k])/out1[k])
+        #else:
+        #err=abs((out1[k]-out2[k])/out1[k])
         MAPE+=err
         n+=1
         if(err>max_err):
           max_err=err
+        #if(err>1):
+          #print(name,out1[k],out2[k])
     MAPEs[j]=MAPE/n*100
 
-  print("max_error:"+str(max_err)+"%")
+  print("max_error:"+str(max_err*100)+"%")
   #print(NRMSEs)
 
   return MAPEs

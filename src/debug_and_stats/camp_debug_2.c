@@ -18,7 +18,7 @@
 #include <mpi.h>
 #endif
 
-void check_iszerod(long double *x, int len, char *s){
+void check_iszerod(long double *x, int len, const char *s){
 
 #ifndef DEBUG_CHECK_ISZEROD
 
@@ -34,7 +34,7 @@ void check_iszerod(long double *x, int len, char *s){
 
 }
 
-void check_isnanld(long double *x, int len, char *s){
+void check_isnanld(long double *x, int len, const char *s){
 
 #ifndef DEBUG_CHECK_ISNANLD
 
@@ -50,7 +50,7 @@ void check_isnanld(long double *x, int len, char *s){
 
 }
 
-void check_isnand(double *x, int len, char *s){
+void check_isnand(double *x, int len, const char *s){
 
   int n_zeros=0;
   for (int i=0; i<len; i++){
@@ -90,6 +90,26 @@ void print_double(double *x, int len, char *s){
 
 }
  */
+
+int compare_doubles(double *x, double *y, int len, const char *s){
+
+  int flag=1;
+  float tol=0.01;
+  int rel_error;
+  for (int i=0; i<len; i++){
+    if(x[i]==0)
+      rel_error=0;
+    else
+      rel_error=(x[i]-y[i]/x[i]);
+    if(rel_error>tol){
+      printf("Comparison %s not equal at [%d]: %le vs %le\n",s,i,x[i],y[i]);
+      flag=0;
+    }
+  }
+
+  return flag;
+
+}
 
 void print_current_directory(){
 

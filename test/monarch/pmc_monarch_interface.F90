@@ -387,11 +387,12 @@ contains
     !print*,"MPI RANK",pmc_mpi_rank(), this%interface_input_file, this%ADD_EMISIONS
 
     if(this%ADD_EMISIONS.eq."ON" &
-      .or. this%interface_input_file.eq."interface_monarch_cb05.json") then
+      .or. this%interface_input_file.eq."interface_simple.json") then
       ! Set the photolysis rates
 
       do i_photo_rxn = 1, this%n_photo_rxn
         !todo fix update for all mpi ranks
+        !this%base_rates(i_photo_rxn)=0.
         call this%photo_rxns(i_photo_rxn)%set_rate(real(this%base_rates(i_photo_rxn), kind=dp))
         !call this%photo_rxns(i_photo_rxn)%set_rate(real(0.0, kind=dp))
         call this%camp_core%update_data(this%photo_rxns(i_photo_rxn))
@@ -663,13 +664,10 @@ contains
             this%camp_state%state_var(this%map_camp_id(:)) = &
                             MONARCH_conc(i,j,k,this%map_monarch_id(:))
 
-            !print*,"camp_state", this%camp_state%state_var(this%map_camp_id(:))
+            !print*,"i_cell",z,"camp_state", this%camp_state%state_var(this%map_camp_id(:))
 
-            !print*,"i_cell",z
-
-#ifdef IMPORT_CAMP_INPUT
-#else
-          if(this%interface_input_file.eq."interface_simple.json") then
+          if(this%interface_input_file.eq."interface_simple.json" .or.&
+              this%interface_input_file.eq."interface_monarch_cb05.json") then
             this%camp_state%state_var(this%gas_phase_water_id) = &
             water_conc(1,1,1,water_vapor_index)! * &
             !        air_density(i,j,k) * 1.0d9
@@ -678,7 +676,6 @@ contains
                     water_conc(1,1,1,water_vapor_index) * &
                             mwair / mwwat * 1.e6
           end if
-#endif
 
             !print*, "water_conc: id, value", this%gas_phase_water_id, water_conc(i,j,k,water_vapor_index)
             !print*, "state", this%camp_state%state_var(:)
@@ -782,6 +779,18 @@ contains
       !                trim(to_string(this%n_cells)))
 
       ! Set initial conditions and environmental parameters for each grid cell
+
+      !input diff
+      !this%camp_state%state_var(this%map_camp_id(:))=&
+      !        MONARCH_conc(1,1,1,this%map_monarch_id(:))-MONARCH_conc(1,1,2,this%map_monarch_id(:))
+      !do i=1,size(this%map_camp_id(:))
+      !  if(this%camp_state%state_var(i).ne.0.0) then
+      !    print*,"WARNING: CELL 1 NOT EQUAL TO CELL 2 AT SPECIE", i, this%camp_state%state_var(i)
+      !  end if
+      !end do
+      !print*,"1",MONARCH_conc(1,1,1,this%map_monarch_id(:))
+      !print*,"2",MONARCH_conc(1,1,2,this%map_monarch_id(:))
+
       do i=I_W, I_E
         do j=I_S, I_N
           do k=1, NUM_VERT_CELLS
@@ -814,18 +823,17 @@ contains
             (z*state_size_per_cell)) = MONARCH_conc(i,j,k,this%map_monarch_id(:))
             !this%camp_state%state_var(this%map_camp_id(:) + &
             !(z*state_size_per_cell)) = MONARCH_conc(1,1,1,this%map_monarch_id(:))
-            !print*, "camp_state", this%camp_state%state_var(this%map_camp_id(:)+(z*state_size_per_cell))
 
-#ifdef IMPORT_CAMP_INPUT
-#else
-            if(this%interface_input_file.eq."interface_simple.json") then
+            !print*,"i_cell",z,"camp_state", this%camp_state%state_var(this%map_camp_id(:))
+
+            if(this%interface_input_file.eq."interface_simple.json" .or.&
+                    this%interface_input_file.eq."interface_monarch_cb05.json") then
               this%camp_state%state_var(this%gas_phase_water_id+(z*state_size_per_cell)) = &
                       water_conc(i,j,k,water_vapor_index) !*air_density(i,j,k) * 1.0d9
             else
               this%camp_state%state_var(this%gas_phase_water_id+(z*state_size_per_cell)) = &
                       water_conc(1,1,1,water_vapor_index) * mwair / mwwat * 1.e6
             end if
-#endif
 
             if(this%ADD_EMISIONS.eq."ON") then
               !Add emissions

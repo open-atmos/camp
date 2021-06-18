@@ -492,7 +492,7 @@ void rxn_update_env_state_gpu(SolverData *sd){
 
 __global__
 void camp_solver_check_model_state_cuda(double *state_init, double *y,
-        int *map_state_deriv, double threshhold, double replacement_value, int *status,
+        int *map_state_deriv, double threshhold, double replacement_value, int *flag,
         int deriv_length_cell, int n_cells)
 {
   int tid = blockIdx.x * blockDim.x + threadIdx.x;
@@ -500,6 +500,24 @@ void camp_solver_check_model_state_cuda(double *state_init, double *y,
 
   if(tid<active_threads) {
 
+    if (y[tid] < threshhold) {
+
+      *flag = CAMP_SOLVER_FAIL;
+#ifdef FAILURE_DETAIL
+      printf("\nFailed model state update gpu (Negative value on 'y'):[spec %d] = %le",tid,y[tid]);
+#endif
+
+    } else {
+      state_init[map_state_deriv[tid]] =
+              y[tid] <= threshhold ?
+              replacement_value : y[tid];
+
+      //state_init[map_state_deriv[tid]] = 0.1;
+      //printf("tid %d map_state_deriv %d\n", tid, map_state_deriv[tid]);
+
+    }
+
+    /*
     if (y[tid] > -SMALL) {
       state_init[map_state_deriv[tid]] =
       y[tid] > threshhold ?
@@ -513,6 +531,7 @@ void camp_solver_check_model_state_cuda(double *state_init, double *y,
       printf("\nFailed model state update gpu (Negative value on 'y'):[spec %d] = %le",tid,y[tid]);
 #endif
     }
+     */
   }
 
 }
@@ -522,7 +541,7 @@ int camp_solver_check_model_state_gpu(N_Vector solver_state, SolverData *sd,
 {
   ModelData *md = &(sd->model_data);
   itsolver *bicg = &(sd->bicg);
-  int status = CAMP_SOLVER_SUCCESS; //0
+  int flag = CAMP_SOLVER_SUCCESS; //0
   int n_cells = md->n_cells;
   int n_state_var = md->n_per_cell_state_var;
   int n_dep_var = md->n_per_cell_dep_var;
@@ -551,11 +570,9 @@ int camp_solver_check_model_state_gpu(N_Vector solver_state, SolverData *sd,
 
   camp_solver_check_model_state_cuda << < n_blocks, md->max_n_gpu_thread >> >
    (mGPU->state, bicg->dcv_y, mGPU->map_state_deriv,
-   threshhold, replacement_value, &status, n_dep_var, n_cells);
+   threshhold, replacement_value, &flag, n_dep_var, n_cells);
 
   HANDLE_ERROR(cudaMemcpy(md->total_state, mGPU->state, md->state_size, cudaMemcpyDeviceToHost));
-
-
 
 
 #ifdef DEBUG_CHECK_MODEL_STATE_CUDA
@@ -568,7 +585,10 @@ int camp_solver_check_model_state_gpu(N_Vector solver_state, SolverData *sd,
 }
 #endif
 
-  return status;
+
+  //printf("camp_solver_check_model_state_gpu flag %d\n",flag);
+
+  return flag;
 }
 
 
@@ -602,8 +622,8 @@ __device__ void solveRXN(
 
 #else
 
-  double *rxn_float_data = &( md->rxn_double[md->rxn_float_indices[md->i_rxn]]);
-  int *int_data = &(md->rxn_int[md->rxn_int_indices[md->i_rxn]]);
+  double *rxn_float_data = (double *)&( md->rxn_double[md->rxn_float_indices[md->i_rxn]]);
+  int *int_data = (int *)&(md->rxn_int[md->rxn_int_indices[md->i_rxn]]);
 
   //double *rxn_float_data = &( md->rxn_double[md->i_rxn]);
   //int *int_data = &(md->rxn_int[md->i_rxn]);
@@ -647,6 +667,7 @@ __device__ void solveRXN(
       //                                     rxn_float_data, rxn_env_data,time_step);
       break;
     case RXN_EMISSION :
+      printf("RXN_EMISSION");
       //rxn_gpu_emission_calc_deriv_contrib(md, deriv_data, rxn_int_data,
       //                                     rxn_float_data, rxn_env_data,time_step);
       break;
@@ -674,6 +695,7 @@ __device__ void solveRXN(
 #endif
       break;
     case RXN_WET_DEPOSITION :
+      printf("RXN_WET_DEPOSITION");
       //rxn_gpu_wet_deposition_calc_deriv_contrib(md, deriv_data, rxn_int_data,
       //                                     rxn_float_data, rxn_env_data,time_step);
       break;
@@ -714,6 +736,9 @@ __global__ void solveDerivative(
           y[tid] : replacement_value;
   */
 
+#ifndef DEBUG_solveDerivative_J_DERIV_IN_CPU
+#else
+
   //N_VLinearSum(1.0, y, -1.0, md->J_state, md->J_tmp);
   cudaDevicezaxpby(1.0, y, -1.0, md->J_state, md->J_tmp, active_threads);
   //SUNMatMatvec(md->J_solver, md->J_tmp, md->J_tmp2);
@@ -722,12 +747,16 @@ __global__ void solveDerivative(
   cudaDevicezaxpby(1.0, md->J_deriv, 1.0, md->J_tmp2, md->J_tmp, active_threads);
   cudaDevicesetconst(md->J_tmp2, 0.0, active_threads); //Reset for next iter
 
-  //Debug
-/*
-  if(counterDeriv2<=10){
-       printf("(%d) y %-le J_state %-le J_solver %-le J_tmp %-le J_tmp2 %-le J_deriv %-le\n",tid+1,
-              y[tid], J_state[tid], J_solver[tid], J_tmp[tid], J_tmp2[tid], J_deriv[tid]);
-       printf("gpu threads %d\n", active_threads);
+
+#endif
+
+    //Debug
+    //printf("HOLA\n");
+    /*
+    if(counterDeriv2<=1){
+      printf("(%d) y %-le J_state %-le J_solver %-le J_tmp %-le J_tmp2 %-le J_deriv %-le\n",tid+1,
+             y[tid], md->J_state[tid], md->J_solver[tid], md->J_tmp[tid], md->J_tmp2[tid], md->J_deriv[tid]);
+      //printf("gpu threads %d\n", active_threads);
     }
 */
 
@@ -742,7 +771,7 @@ __global__ void solveDerivative(
     TimeDerivativeGPU deriv_data;
     deriv_data.num_spec = deriv_length_cell*n_cells;
 
-#ifndef AEROS_CPU
+#ifdef AEROS_CPU
 #else
     deriv_data.production_rates = md->production_rates;
     deriv_data.loss_rates = md->loss_rates;
@@ -839,7 +868,7 @@ __global__ void solveDerivative(
  * \param deriv NVector to hold the calculated vector
  * \param time_step Current model time step (s)
  */
-void rxn_calc_deriv_gpu(SolverData *sd, N_Vector deriv, double time_step,
+int rxn_calc_deriv_gpu(SolverData *sd, N_Vector y, N_Vector deriv, double time_step,
         double threshhold, double replacement_value) {
 
   ModelData *md = &(sd->model_data);
@@ -861,7 +890,7 @@ void rxn_calc_deriv_gpu(SolverData *sd, N_Vector deriv, double time_step,
   double *J_tmp = N_VGetArrayPointer(md->J_tmp);
   ModelDataGPU *mGPU = &sd->mGPU;
 
-#ifndef DERIV_CPU_ON_GPU
+#ifdef DERIV_CPU_ON_GPU
 
   //Transfer cv_ftemp() not needed because bicg->dftemp=md->deriv_data_gpu;
   //cudaMemcpy(cv_ftemp_data,bicg->dftemp,bicg->nrows*sizeof(double),cudaMemcpyDeviceToHost);
@@ -872,14 +901,19 @@ void rxn_calc_deriv_gpu(SolverData *sd, N_Vector deriv, double time_step,
 
 #else
 
+  if (camp_solver_check_model_state_gpu(y, sd, -SMALL, TINY) != CAMP_SOLVER_SUCCESS)
+    return 1;
+
  //debug
-  /*if(sd->counterDerivCPU>=0){
-    printf("camp solver_run start [(id),conc], n_state_var %d, n_cells %d\n", md->n_per_cell_state_var, n_cells);
+ /*
+  if(sd->counterDerivGPU<=0){
+    printf("f_gpu start total_state [(id),conc], n_state_var %d, n_cells %d\n", md->n_per_cell_state_var, n_cells);
     printf("n_deriv %d\n", md->n_per_cell_dep_var);
     for (int i = 0; i < md->n_per_cell_state_var*n_cells; i++) {
-      //printf("(%d) %-le \n",i+1, md->total_state[i]);
+      printf("(%d) %-le \n",i+1, md->total_state[i]);
     }
-  }*/
+  }
+  */
 
 #ifdef BASIC_CALC_DERIV
   //Reset deriv gpu
@@ -895,9 +929,31 @@ void rxn_calc_deriv_gpu(SolverData *sd, N_Vector deriv, double time_step,
 
 #endif
 
-#ifndef AEROS_CPU
+#ifdef AEROS_CPU
 
   update_aero_contrib_gpu(sd);
+
+  //printf("hola");
+
+#endif
+
+#ifndef DEBUG_solveDerivative_J_DERIV_IN_CPU
+
+/*
+  if(sd->counterDerivGPU<=1 ){
+    printf("f_gpu start J_TMP [(id),conc], n_state_var %d, n_cells %d\n", md->n_per_cell_state_var, n_cells);
+    int size_j = NV_LENGTH_S(deriv);
+    printf("length_deriv %d \n", size_j);
+    for (int i = 0; i < 1; i++) {//n_cells
+      printf("cell %d \n", i);
+      for (int j = 0; j < size_j; j++) {  // NV_LENGTH_S(deriv)
+        printf("(%d) %-le ", j + 1, NV_DATA_S(md->J_tmp)[j+i*size_j]);
+      }
+      printf("\n");
+    }
+  }*/
+
+  HANDLE_ERROR(cudaMemcpy(mGPU->J_tmp, J_tmp, md->deriv_size, cudaMemcpyHostToDevice));
 
 #endif
 
@@ -906,12 +962,12 @@ void rxn_calc_deriv_gpu(SolverData *sd, N_Vector deriv, double time_step,
     //cudaDeviceSynchronize();
     solveDerivative << < (n_blocks), threads_block >> >(
 #ifdef PMC_DEBUG_GPU
-    sd->counterDerivCPU,
+    sd->counterDerivGPU,
 #endif
      time_step, md->n_per_cell_dep_var,
      md->n_per_cell_state_var,n_cells,
      i_kernel, threads_block,n_shr_empty, bicg->dcv_y,
-     threshhold, replacement_value, sd->mGPU,
+     threshhold, replacement_value, sd->mGPU
      );
   }
 
@@ -948,13 +1004,20 @@ void rxn_calc_deriv_gpu(SolverData *sd, N_Vector deriv, double time_step,
     //todo i think not necessary
     HANDLE_ERROR(cudaMemcpy(deriv_data, mGPU->deriv_data, md->deriv_size, cudaMemcpyDeviceToHost));
 
+
+    //HANDLE_ERROR(cudaMemcpy(mGPU->deriv_data, deriv_data, md->deriv_size, cudaMemcpyHostToDevice));
+    //HANDLE_ERROR(cudaMemcpy(bicg->dcv_y, deriv_data, md->deriv_size, cudaMemcpyHostToDevice));
+    //HANDLE_ERROR(cudaMemcpy(mGPU->state, md->total_state, md->state_size, cudaMemcpyHostToDevice));
+
+
   }
 
   //cudaDeviceSynchronize();
 
  //debug
-/*
+ /*
   if(sd->counterDerivGPU<=0 ){
+    printf("f_gpu end deriv [(id),conc], n_state_var %d, n_cells %d\n", md->n_per_cell_state_var, n_cells);
     int size_j = NV_LENGTH_S(deriv);
     printf("length_deriv %d \n", size_j);
     for (int i = 0; i < 1; i++) {//n_cells
@@ -975,6 +1038,7 @@ void rxn_calc_deriv_gpu(SolverData *sd, N_Vector deriv, double time_step,
 
 #endif
 
+  return 0;
 }
 
 void get_f_from_gpu(SolverData *sd){

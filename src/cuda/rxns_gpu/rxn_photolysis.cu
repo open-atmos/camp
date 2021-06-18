@@ -128,7 +128,9 @@ void rxn_gpu_photolysis_calc_deriv_contrib(ModelDataGPU *model_data, TimeDerivat
     }
     for (int i_spec=0; i_spec<NUM_PROD_; i_spec++, i_dep_var++) {
       if (DERIV_ID_(i_dep_var) < 0) continue;
-      //todo copy from rxn.c
+            // Negative yields are allowed, but prevented from causing negative
+      // concentrations that lead to solver failures
+        if (-rate * YIELD_(i_spec) * time_step <= state[PROD_(i_spec)]){
 #ifdef BASIC_CALC_DERIV
 #ifdef __CUDA_ARCH__
         atomicAdd((double*)&(deriv[DERIV_ID_(i_dep_var)]),rate*YIELD_(i_spec));
@@ -140,6 +142,7 @@ void rxn_gpu_photolysis_calc_deriv_contrib(ModelDataGPU *model_data, TimeDerivat
 #else
         time_derivative_add_value_gpu(time_deriv, DERIV_ID_(i_dep_var),rate*YIELD_(i_spec));
 #endif
+      }
     }
   }
 
@@ -191,7 +194,7 @@ void rxn_gpu_photolysis_calc_jac_contrib(ModelDataGPU *model_data, realtype *J, 
      if (JAC_ID_(i_elem) < 0) continue;
 #ifdef __CUDA_ARCH__
      if (-rate * state[REACT_(i_ind)] * YIELD_(i_dep) * time_step
-            <= state[PROD_(i_dep)]) { //TODO: This is necessary for gpu for some reason
+            <= state[PROD_(i_dep)]) {
         atomicAdd(&(J[JAC_ID_(i_elem)]),YIELD_(i_dep) * RATE_CONSTANT_);
       }
 #else

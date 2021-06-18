@@ -1168,11 +1168,6 @@ int camp_solver_update_model_state(N_Vector solver_state, SolverData *sd,
         }
         // Assign model state to solver_state
 
-        /*model_data->total_state[i_spec + i_cell * n_state_var] =
-            NV_DATA_S(solver_state)[i_dep_var] == ZERO
-                ? replacement_value
-                : NV_DATA_S(solver_state)[i_dep_var];*/
-
         //Set concs near zero to fixed threshhold value
         model_data->total_state[i_spec + i_cell * n_state_var] =
             NV_DATA_S(solver_state)[i_dep_var] <= threshhold
@@ -1210,19 +1205,18 @@ int f_gpu(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
   SolverData *sd = (SolverData *)solver_data;
   ModelData *md = &(sd->model_data);
   realtype time_step;
-
-#ifndef DERIV_CPU_ON_GPU
-
   int flag=0;
+
+#ifdef DERIV_CPU_ON_GPU
+
   flag = f(t, y, deriv, solver_data);
 
-  rxn_calc_deriv_gpu(sd, deriv, (double)time_step, ZERO, ZERO);
+  rxn_calc_deriv_gpu(sd, y, deriv, (double)time_step, ZERO, ZERO);
 
-  return flag;
+  //return flag;
 
   //Transfer cv_ftemp() not needed because bicg->dftemp=md->deriv_data_gpu;
   //cudaMemcpy(cv_ftemp_data,bicg->dftemp,bicg->nrows*sizeof(double),cudaMemcpyDeviceToHost);
-
 
 #else
 
@@ -1237,10 +1231,17 @@ int f_gpu(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
   // Update the state array with the current dependent variable values.
   // Signal a recoverable error (positive return value) for negative
   // concentrations.
-  if (camp_solver_check_model_state_gpu(y, sd, -SMALL, TINY) != CAMP_SOLVER_SUCCESS)
-    return 1;
+  //if (camp_solver_check_model_state_gpu(y, sd, -SMALL, TINY) != CAMP_SOLVER_SUCCESS)
+  //  return 1;
 
-#ifndef AEROS_CPU
+  //int flag=0;
+  //flag = f(t, y, deriv, solver_data);
+
+  //rxn_calc_deriv_gpu(sd, y, deriv, (double)time_step, ZERO, ZERO);
+
+  //return flag;
+
+#ifdef AEROS_CPU
 
   //todo fix wrong results
 
@@ -1278,36 +1279,53 @@ int f_gpu(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
 
 #endif
 
-  rxn_calc_deriv_gpu(sd, deriv, (double)time_step, ZERO, ZERO);
+#ifndef DEBUG_solveDerivative_J_DERIV_IN_CPU
+
+  N_VLinearSum(1.0, y, -1.0, md->J_state, md->J_tmp);
+  SUNMatMatvec(md->J_solver, md->J_tmp, md->J_tmp2);
+  N_VLinearSum(1.0, md->J_deriv, 1.0, md->J_tmp2, md->J_tmp);
+
+#endif
+
+  flag = rxn_calc_deriv_gpu(sd, y, deriv, (double)time_step, ZERO, ZERO);
+
+#endif
 
 #ifdef CHECK_F_GPU_WITH_CPU
 
-  //todo
-  get_f_from_gpu(sd);
-  f(t, y_cpu, deriv_cpu, sd);
-  compare_double_arrays();
+  int flag_f;
+  if(sd->counterDerivGPU<=10){
+    printf("CHECK_F_GPU_WITH_CPU %d\n",sd->counterDerivGPU);
+    //flag = f(t, y, md->J_tmp2, solver_data);
+    flag_f = f(t, y, md->J_tmp2, solver_data);
+    flag = camp_solver_check_model_state_gpu(y, sd, -SMALL, TINY);
+    //print_derivative_in_out(sd, y, deriv);
+    //print_derivative_in_out(sd, md->J_tmp2, deriv);
+    int flag_c=compare_doubles(N_VGetArrayPointer(md->J_tmp2),
+            N_VGetArrayPointer(deriv),NV_LENGTH_S(deriv),"CHECK_F_GPU_WITH_CPU");
+    printf("f_gpu flag %d flag_f %d\n",flag,flag_f);
+    if(flag_c==0){
+      printf("false compare_doubles at counterDerivGPU %d",sd->counterDerivGPU);
+      //exit(0);
+    }
+  }
 
 #endif
 
 
 #ifdef PMC_DEBUG_GPU
 
-  //todo check debug timers and counters (use cuda counters for gpu and mpi for cpu)
   //if(sd->counterDerivCPU<=0) print_derivative(deriv);
 
-  // sd->timeDerivCPU += (clock() - start3);
-  //sd->timeDerivCPU += (clock() - start10);
   sd->counterDerivGPU++;
   // printf("%d",sd->counterDerivCPU);
 
+
 #endif
-
-
 
   // Return 0 if success
-  return (0);
+  return flag;
 
-#endif
 }
 #endif
 

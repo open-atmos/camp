@@ -46,6 +46,8 @@ typedef struct
   double* dacor;
   double* dacor_init;
   double* dtempv;
+  double* dtempv1;
+  double* dtempv2;
   double* dftemp;
   double* dzn;
   double* dcv_y;
@@ -82,6 +84,8 @@ typedef struct
   double timeDerivSolve;
   double timeJac;
   double dtBCG;
+  double dtPreBCG;
+  double dtPostBCG;
 
   cudaEvent_t startDerivNewton;
   cudaEvent_t startDerivSolve;

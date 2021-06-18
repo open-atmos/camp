@@ -92,8 +92,6 @@ realtype rxn_gpu_aqueous_equilibrium_calc_overall_rate(int *rxn_int_data,
   realtype prod_fact_l = prod_fact;
   realtype water_l = water;
 
-  /// \todo explore higher precision variables to reduce Jac errors
-
   // Calculate the overall rate
   // These equations are set up to try to avoid loss of accuracy from
   // subtracting two almost-equal numbers when rate_forward ~ rate_backward.
@@ -247,8 +245,6 @@ void rxn_gpu_aqueous_equilibrium_calc_jac_contrib(ModelDataGPU *model_data, real
   double water;
   double forward_rate;
   double reverse_rate;
-
-  //todo: fix gpu by following the methodology of calc_deriv
 
   // Calculate Jacobian contributions for each aerosol phase
   for (int i_phase=0, i_jac = 0; i_phase<NUM_AERO_PHASE_; i_phase++) {

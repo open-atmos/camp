@@ -201,11 +201,11 @@ def run_cell(config_file,diff_cells,mpi,mpiProcessesList,n_cells_aux,timesteps,
 def all_timesteps():
 
   #config_file="simple"
-  #config_file="monarch_cb05"
-  config_file="monarch_binned"
+  config_file="monarch_cb05"
+  #config_file="monarch_binned"
 
-  diff_cells="Practical"
-  #diff_cells="Ideal"
+  #diff_cells="Practical"
+  diff_cells="Ideal"
 
   mpi="yes"
   #mpi="no"
@@ -217,7 +217,7 @@ def all_timesteps():
   #cells = [1,10,100,1000]
   #cells = [1,10,100,1000,10000,100000]
 
-  timesteps = 2#720=12h
+  timesteps = 5#720=12h
   TIME_STEP = 2 #pending send TIME_STEP to mock_monarch
 
   #cases = ["CPU One-cell"]
@@ -226,7 +226,7 @@ def all_timesteps():
   #cases = ["CPU One-cell","CPU Multi-cells"]
   #cases = ["CPU One-cell","GPU Multi-cells"]
   cases = ["CPU One-cell","GPU One-cell"]
-  #cases = ["CPU Multi-cells","GPU Multi-cells"]
+  cases = ["CPU Multi-cells","GPU Multi-cells"]
   #cases = ["CPU Multi-cells","GPU One-cell"]
   #cases = ["GPU One-cell","GPU Multi-cells"]
   #cases = ["GPU One-cell","GPU 2 One-cell"]
@@ -259,6 +259,9 @@ def all_timesteps():
   if not os.path.exists('out'):
     os.makedirs('out')
 
+  if(config_file=="monarch_cb05"):
+    diff_cells="Ideal"
+
   results_file="_solver_stats.csv"
   if(plot_y_key=="NRMSE" or plot_y_key=="MAPE" or plot_y_key=="SMAPE"):
     results_file='_results_all_cells.csv'
@@ -270,6 +273,10 @@ def all_timesteps():
     cases_gpu_cpu[i]=cases_words[0]
     cases_multicells_onecell[i]=cases_words[1]
     #if("GPU" in cases_gpu_cpu[i] and "One-cell" in cases_multicells_onecell[i])
+
+    if(config_file=="simple" and cases_gpu_cpu[i]=="GPU"):
+      print("ERROR: CASE SIMPLE FAILS ON GPU BECAUSE NOT "
+            "ENOUGH SPECIES TO DO REDUCE ON BICONJUGATE GRADIENT FUNCTION")
 
   if "total" in plot_y_key:
     print("WARNING: Remember to enable solveBcgCuda_sum_it")

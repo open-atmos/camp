@@ -40,7 +40,7 @@ int camp_solver_check_model_state_gpu(N_Vector solver_state, SolverData *sd,
                                        double threshold, double replacement_value);
 void camp_solver_update_model_state_gpu(N_Vector solver_state, SolverData *sd,
                                        double threshold, double replacement_value);
-void rxn_calc_deriv_gpu(SolverData *sd, N_Vector deriv, double time_step,
+int rxn_calc_deriv_gpu(SolverData *sd, N_Vector y, N_Vector deriv, double time_step,
                         double threshhold, double replacement_value);
 void rxn_calc_deriv_aux(ModelData *model_data, double *deriv_data, double time_step);
 void rxn_fusion_deriv_gpu(ModelData *model_data, N_Vector deriv);

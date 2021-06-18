@@ -103,7 +103,7 @@ program mock_monarch
   !> Ending index for camp-chem species in tracer array
   integer, parameter :: END_CAMP_ID = 210!350
   !> Time step (min)
-  real, parameter :: TIME_STEP = 2!1.6 !camp_paper=2
+  real :: TIME_STEP
   !> Number of time steps to integrate over
   !integer, parameter :: NUM_TIME_STEP = 20!1!camp_paper=720!36
   integer :: NUM_TIME_STEP !1!camp_paper=720!36
@@ -277,6 +277,12 @@ program mock_monarch
     print*, "WARNING: not DIFF_CELLS parameter received, value set to ",DIFF_CELLS
   end if
 
+  if(interface_input_file.eq."interface_monarch_cb05.json") then
+    TIME_STEP=3. !Monarch case
+  else
+    TIME_STEP=2. !CAMP paper case
+  end if
+
   if (pmc_mpi_rank().eq.0) then
     write(*,*) "Num time-steps:", NUM_TIME_STEP, "Num cells:",&
             NUM_WE_CELLS*NUM_SN_CELLS*NUM_VERT_CELLS
@@ -437,14 +443,15 @@ program mock_monarch
   call pmc_interface%get_init_conc(species_conc, water_conc, WATER_VAPOR_ID, &
           air_density,i_W,I_E,I_S,I_N)
 
-#ifdef IMPORT_CAMP_INPUT
-  call import_camp_input(pmc_interface)
-  !call import_camp_input_json(pmc_interface)
-#endif
+  if(interface_input_file.eq."interface_monarch_cb05.json") then
+    !call import_camp_input(pmc_interface)
+    call import_camp_input_json(pmc_interface)!wrong or correct?
+  end if
 
 #ifdef SOLVE_EBI_IMPORT_CAMP_INPUT
   !todo update compare for monarch_binned case (ebi for gas and another for aerosols)
-  if (pmc_mpi_rank().eq.0) then
+  if (pmc_mpi_rank().eq.0&
+    .and.interface_input_file.eq."interface_monarch_cb05.json") then
     call solve_ebi(pmc_interface)
   end if
 #endif
@@ -588,10 +595,9 @@ program mock_monarch
   !print*,"Rank",pmc_mpi_rank(), "conc",&
   !        species_conc(1,1,1,pmc_interface%map_monarch_id(:))
 
-
-
 #ifdef SOLVE_EBI_IMPORT_CAMP_INPUT
-    if (pmc_mpi_rank().eq.0) then
+      if (pmc_mpi_rank().eq.0&
+          .and.interface_input_file.eq."interface_monarch_cb05.json") then
       call compare_ebi_camp_json(pmc_interface)
     end if
 #endif
@@ -706,7 +712,6 @@ contains
     write(STATSOUT_FILE_UNIT, "(A)", advance="no") aux_str_stats
     write(STATSOUT_FILE_UNIT, '(a)') ''
 
-    ! TODO refine initial model conditions
     species_conc(:,:,:,:) = 0.0
     height=1. !(m)
 
@@ -760,7 +765,7 @@ contains
       pressure(:,:,:) = 94165.7187500000
       air_density(:,:,:) = 1.225
       conv=0.02897/air_density(1,1,1)*(TIME_STEP*60.)*1e6/height !units of time_step to seconds
-      water_conc(:,:,:,WATER_VAPOR_ID) = 0.03!0.01
+      water_conc(:,:,:,WATER_VAPOR_ID) = 0.!0.03!0.01
 
       !Initialize different axis values
       !Species_conc is modified in monarch_interface%get_init_conc
@@ -813,8 +818,6 @@ contains
       !print*,pmc_interface%monarch_species_names(z)%string
       aux_str = aux_str//","//pmc_interface%monarch_species_names(z)%string
     end do
-
-
 
     write(RESULTS_ALL_CELLS_FILE_UNIT, "(A)", advance="no") aux_str
     write(RESULTS_ALL_CELLS_FILE_UNIT, '(a)') ''
@@ -897,8 +900,18 @@ contains
     !  print*, "ERROR: Import can only handle data from 1 cell, set n_cells to 1"
     !end if
 
+    !read(IMPORT_FILE_UNIT,*) (pmc_interface%camp_state%state_var(&
+    !        i),i=1,size(pmc_interface%camp_state%state_var)/n_cells)
+
     read(IMPORT_FILE_UNIT,*) (pmc_interface%camp_state%state_var(&
-            i),i=1,size(pmc_interface%camp_state%state_var)/n_cells)
+            i),i=1,state_size_per_cell)
+
+    do z=0,n_cells-1
+      do i=1,state_size_per_cell
+        pmc_interface%camp_state%state_var(i+(z*state_size_per_cell))=&
+                pmc_interface%camp_state%state_var(i)
+      end do
+    end do
 
     !write(*,*) "Importing temperatures and pressures"
 
@@ -919,13 +932,16 @@ contains
           o = (j-1)*(I_E) + (i-1) !Index to 3D
           z = (k-1)*(I_E*I_N) + o !Index for 2D
 
-          do r=1,size(pmc_interface%camp_state%state_var)/n_cells
-            pmc_interface%camp_state%state_var(r+z*state_size_per_cell) = &
-            pmc_interface%camp_state%state_var(r)
-          end do
+          !do r=1,size(pmc_interface%camp_state%state_var)/n_cells
+          !  pmc_interface%camp_state%state_var(r+z*state_size_per_cell) = &
+          !  pmc_interface%camp_state%state_var(r)
+          !end do
 
-          pmc_interface%camp_state%state_var(pmc_interface%map_camp_id(:)+(z*state_size_per_cell))=&
-                  pmc_interface%camp_state%state_var(pmc_interface%map_camp_id(:))
+          !pmc_interface%camp_state%state_var(pmc_interface%map_camp_id(:)+(z*state_size_per_cell))=&
+          !        pmc_interface%camp_state%state_var(pmc_interface%map_camp_id(:))
+
+          !species_conc(i,j,k,pmc_interface%map_monarch_id(:)) = &
+          !        pmc_interface%camp_state%state_var(pmc_interface%map_camp_id(:))
 
           species_conc(i,j,k,pmc_interface%map_monarch_id(:)) = &
                   pmc_interface%camp_state%state_var(pmc_interface%map_camp_id(:))
@@ -933,27 +949,28 @@ contains
           temperature(i,j,k) = temperature(1,1,1)!+z*0.1
           pressure(i,j,k) = pressure(1,1,1)
 
-          do i_photo_rxn = 1, pmc_interface%n_photo_rxn
-
-          !if (pmc_mpi_rank().eq.1) then
-            !pmc_interface%base_rates(i_photo_rxn) = pmc_interface%base_rates(i_photo_rxn)!+0.01
-            !pmc_interface%base_rates(i_photo_rxn) = 0.01
-            !write(*,*), "rates",i_photo_rxn, pmc_interface%base_rates(i_photo_rxn)
-          !end if
-          !write(*,*), "rates",i_photo_rxn, pmc_interface%base_rates(i_photo_rxn)
-
-
-          call pmc_interface%photo_rxns(i_photo_rxn)%set_rate(real(pmc_interface%base_rates(i_photo_rxn), kind=dp))
-          !call pmc_interface%photo_rxns(i_photo_rxn)%set_rate(real(0.0, kind=dp)) !works
-
-          call pmc_interface%camp_core%update_data(pmc_interface%photo_rxns(i_photo_rxn),z)
-
-        !print*,"id photo_rate", pmc_interface%base_rates(i_photo_rxn)
-          end do
         end do
       end do
     end do
 
+    do i_photo_rxn = 1, pmc_interface%n_photo_rxn
+
+      !if (pmc_mpi_rank().eq.1) then
+      !pmc_interface%base_rates(i_photo_rxn) = pmc_interface%base_rates(i_photo_rxn)!+0.01
+      !pmc_interface%base_rates(i_photo_rxn) = 0.01
+      !write(*,*), "rates",i_photo_rxn, pmc_interface%base_rates(i_photo_rxn)
+      !end if
+      !write(*,*), "rates",i_photo_rxn, pmc_interface%base_rates(i_photo_rxn)
+
+
+      !pmc_interface%base_rates(i_photo_rxn)=0.
+      call pmc_interface%photo_rxns(i_photo_rxn)%set_rate(real(pmc_interface%base_rates(i_photo_rxn), kind=dp))
+      !call pmc_interface%photo_rxns(i_photo_rxn)%set_rate(real(0.0, kind=dp)) !works
+
+      call pmc_interface%camp_core%update_data(pmc_interface%photo_rxns(i_photo_rxn),z)
+
+      !print*,"id photo_rate", pmc_interface%base_rates(i_photo_rxn)
+    end do
 
     close(IMPORT_FILE_UNIT)
 
@@ -996,7 +1013,7 @@ contains
     end if
 
     if(n_cells.gt.1) then
-      print*, "ERROR: Import can only handle data from 1 cell, set n_cells to 1"
+      print*, "Importing data from a cell to the rest"
     end if
 
     camp_spec_names=pmc_interface%camp_core%unique_names()
@@ -1007,14 +1024,30 @@ contains
       !print*, camp_spec_names(i)%string, pmc_interface%camp_state%state_var(i)
     end do
 
+    do z=0,n_cells-1
+      do i=1,state_size_per_cell
+        pmc_interface%camp_state%state_var(i+(z*state_size_per_cell))=&
+                pmc_interface%camp_state%state_var(i)
+      end do
+    end do
+
     do i=I_W,I_E
       do j=I_S,I_N
         do k=1,NUM_VERT_CELLS
           o = (j-1)*(I_E) + (i-1) !Index to 3D
           z = (k-1)*(I_E*I_N) + o !Index for 2D
 
+          !print*,"A"
+
+          !pmc_interface%camp_state%state_var(pmc_interface%map_camp_id(:)+(z*state_size_per_cell))=&
+          !pmc_interface%camp_state%state_var(pmc_interface%map_camp_id(:))
+
+          !species_conc(i,j,k,pmc_interface%map_monarch_id(:)) = &
+          !        pmc_interface%camp_state%state_var(pmc_interface%map_camp_id(:)+(z*state_size_per_cell))
+
           species_conc(i,j,k,pmc_interface%map_monarch_id(:)) = &
-                  pmc_interface%camp_state%state_var(pmc_interface%map_camp_id(:)+(z*state_size_per_cell))
+                  pmc_interface%camp_state%state_var(pmc_interface%map_camp_id(:))
+
 
           call jfile%get('input.temperature',temp)
           temperature(i,j,k)=temp
@@ -1023,6 +1056,13 @@ contains
           !print*,"PRESSURE READ CAMP",pressure(i,j,k)
         end do
       end do
+    end do
+
+    do i = 1, state_size_per_cell
+      if (trim(camp_spec_names(i)%string).eq."H2O") then
+        water_conc(:,:,:,WATER_VAPOR_ID) = pmc_interface%camp_state%state_var(i)
+        !print*,"EBI H2O",water_conc(1,1,1,WATER_VAPOR_ID)
+      end if
     end do
 
     do i=1, pmc_interface%n_photo_rxn
@@ -1037,6 +1077,7 @@ contains
 
     do i_photo_rxn = 1, pmc_interface%n_photo_rxn
 
+      !pmc_interface%base_rates(i_photo_rxn)=0.
       call pmc_interface%photo_rxns(i_photo_rxn)%set_rate(real(pmc_interface%base_rates(i_photo_rxn), kind=dp))
       !call pmc_interface%photo_rxns(i_photo_rxn)%set_rate(real(0.0, kind=dp)) !works
 
@@ -1074,6 +1115,8 @@ contains
     integer, dimension(NUM_EBI_PHOTO_RXN) :: photo_id_camp
     real(kind=dp) :: rel_error_in_out
     real(kind=dp), allocatable :: ebi_init(:)
+    real(kind=dp) :: mwair = 28.9628 !mean molecular weight for dry air [ g/mol ]
+    real(kind=dp) :: mwwat = 18.0153 ! mean molecular weight for water vapor [ g/mol ]
 
     ! Set the BSC chem parameters
     call init_bsc_chem_data()
@@ -1103,7 +1146,7 @@ contains
 
     call set_ebi_species(ebi_spec_names)
     call set_monarch_species(monarch_spec_names)
-    camp_spec_names=pmc_interface%camp_core%unique_names()
+    camp_spec_names=pmc_interface%camp_core%unique_names()!monarch_species_name
 
     call assert_msg(122432506, size(pmc_interface%camp_state%state_var).eq.NUM_CAMP_SPEC, &
             "NUM_CAMP_SPEC not equal size(state_var)")
@@ -1119,7 +1162,6 @@ contains
     do i = 1, NUM_EBI_SPEC
       do j = 1, NUM_CAMP_SPEC
         if (trim(ebi_spec_names(i)%string).eq.trim(camp_spec_names(j)%string)) then
-
 
           ebi_spec_id_to_camp(j) = i
           YC(i) = pmc_interface%camp_state%state_var(j)
@@ -1148,9 +1190,14 @@ contains
               ebi_photo_rates,             & ! Photolysis rates
               temperature(1,1,1),             & ! Temperature (K)
               press,                & ! Air pressure (atm)
-              water_conc(1,1,1,WATER_VAPOR_ID),              & ! Water vapor concentration (ppmV)
+              water_conc(1,1,1,WATER_VAPOR_ID),&! * mwair / mwwat * 1.e6, &
+              !water_conc(1,1,1,WATER_VAPOR_ID) ,              & ! Water vapor concentration (ppmV)
               RKI)                       ! Rate constants
       call EXT_HRSOLVER( 2018012, 070000, 1, 1, 1) ! These dummy variables are just for output
+
+      !H2O  = MAX(WATER(C,R,kflip,P_QV) * MAOMV * 1.0e+06,0.0)
+
+      !print*,YC(:)
 
     end do
 
@@ -1220,7 +1267,7 @@ contains
 
     end if
 
-#ifdef PRINT_EBI_INPUT
+#ifndef PRINT_EBI_INPUT
     print*,"EBI species"
     print*, "TIME_STEP", TIME_STEP
     print*, "Temp", temperature(1,1,1)
@@ -1300,7 +1347,7 @@ contains
     real, dimension(NUM_EBI_PHOTO_RXN) :: ebi_photo_rates
     integer, dimension(NUM_EBI_PHOTO_RXN) :: photo_id_camp
 
-    real(kind=dp) :: rel_error_in_out
+    real(kind=dp) :: rel_error_in_out, mape_err, MAPE
     real(kind=dp) :: MAX_REL_ERROR_TOL = 0.8
 
     call set_ebi_species(ebi_spec_names)
@@ -1354,23 +1401,29 @@ contains
 
     call jfile%destroy()
 
-    print*, "Specs relative error[(ebi-camp)/(ebi+camp)]&
-            greater than MAX_REL_ERROR_TOL",MAX_REL_ERROR_TOL
+    print*, "Specs relative errors[(ebi-camp)/(ebi+camp)]&
+            greater than MAX_REL_ERROR_TOL:",MAX_REL_ERROR_TOL
     print*, "Name, input, ebi_out, camp_out, camp_id"! &
             !,rel. error [(ebi-camp)/(ebi+camp)]"
 
+    mape_err=0.0
     do i=1, size(ebi_spec_names)
       do j=1, size(camp_spec_names)
         if (ebi_spec_names(i)%string.eq.camp_spec_names(j)%string) then
           rel_error_in_out=abs((ebi_spec_out(i)-camp_spec_out(j))/&
                 (ebi_spec_out(i)+camp_spec_out(j)+1.0d-30))
+          mape_err=mape_err+abs((ebi_spec_out(i)-camp_spec_out(j))/&
+                  (ebi_spec_out(i)+1.0d-30))
           if(rel_error_in_out.gt.MAX_REL_ERROR_TOL) then
             print*, ebi_spec_names(i)%string, ebi_spec_in(i), ebi_spec_out(i)&
                     ,camp_spec_out(j), j!,rel_error_in_out
           end if
         end if
+        MAPE=mape_err/size(ebi_spec_names)*100
       end do
     end do
+
+    print*,"MAPE EBI:",MAPE
 
 #ifdef DEBUG_INPUT_OUTPUT
     print*, "Specs with error greater than MAX_REL_ERROR_TOL",MAX_REL_ERROR_TOL
