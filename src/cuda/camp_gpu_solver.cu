@@ -13,6 +13,8 @@ extern "C" {
 #include "rxns_gpu.h"
 #include "aeros/aero_rep_gpu_solver.h"
 #include "time_derivative_gpu.h"
+}
+
 
 // Reaction types (Must match parameters defined in pmc_rxn_factory)
 #define RXN_ARRHENIUS 1
@@ -489,6 +491,51 @@ void rxn_update_env_state_gpu(SolverData *sd){
   }
 }
 
+__device__
+void cudaDevicecamp_solver_check_model_state0(double *state, double *y,
+                                        int *map_state_deriv, double threshhold, double replacement_value, int *flag,
+                                        int deriv_length_cell, int n_cells)
+{
+  int tid = blockIdx.x * blockDim.x + threadIdx.x;
+  int active_threads = n_cells*deriv_length_cell;
+
+  if(tid<active_threads) {
+
+    if (y[tid] < threshhold) {
+
+      *flag = CAMP_SOLVER_FAIL;
+#ifdef FAILURE_DETAIL
+      printf("\nFailed model state update gpu (Negative value on 'y'):[spec %d] = %le",tid,y[tid]);
+#endif
+
+    } else {
+      state[map_state_deriv[tid]] =
+              y[tid] <= threshhold ?
+              replacement_value : y[tid];
+
+      //state_init[map_state_deriv[tid]] = 0.1;
+      //printf("tid %d map_state_deriv %d\n", tid, map_state_deriv[tid]);
+
+    }
+
+    /*
+    if (y[tid] > -SMALL) {
+      state_init[map_state_deriv[tid]] =
+      y[tid] > threshhold ?
+      y[tid] : replacement_value;
+
+      //state_init[map_state_deriv[tid]] = 0.1;
+      //printf("tid %d map_state_deriv %d\n", tid, map_state_deriv[tid]);
+    } else {
+      *status = CAMP_SOLVER_FAIL;
+#ifdef FAILURE_DETAIL
+      printf("\nFailed model state update gpu (Negative value on 'y'):[spec %d] = %le",tid,y[tid]);
+#endif
+    }
+     */
+  }
+
+}
 
 __global__
 void camp_solver_check_model_state_cuda(double *state_init, double *y,
@@ -601,7 +648,7 @@ void camp_solver_update_model_state_gpu(N_Vector solver_state, SolverData *sd,
 
 }
 
-__device__ void solveRXN(
+__device__ void solveRXN0(
 #ifdef BASIC_CALC_DERIV
         double *deriv_data,
 #else
@@ -705,17 +752,18 @@ __device__ void solveRXN(
 
 }
 
-/** \brief GPU function: Solve derivative
- */
-__global__ void solveDerivative(
+__device__ void cudaDevicecalc_deriv0(
 #ifdef PMC_DEBUG_GPU
-                          int counterDeriv2,
+        int counterDeriv2,
 #endif
-  double time_step, int deriv_length_cell, int state_size_cell,
-  int n_cells,
-  int i_kernel, int threads_block, int n_shr_empty, double *y,
-  double threshhold, double replacement_value, ModelDataGPU md_object
-  ) //Interface CPU/GPU
+        //check_model_state
+        //double threshhold, double replacement_value, int *flag,
+        //f_gpu
+        double time_step, int deriv_length_cell, int state_size_cell,
+        int n_cells,
+        int i_kernel, int threads_block, int n_shr_empty, double *y,
+        ModelDataGPU md_object
+) //Interface CPU/GPU
 {
   int tid = blockIdx.x * blockDim.x + threadIdx.x;
   int tid_cell=tid%deriv_length_cell;
@@ -730,16 +778,10 @@ __global__ void solveDerivative(
 
   if(tid<active_threads){
 
-  /* Use when all parts that need state are on the GPU (e.g. Jacobian)
-    state_init[map_state_deriv[tid]] =
-          y[tid] > threshhold ?
-          y[tid] : replacement_value;
-  */
-
-#ifndef DEBUG_solveDerivative_J_DERIV_IN_CPU
+#ifdef DEBUG_solveDerivative_J_DERIV_IN_CPU
 #else
 
-  //N_VLinearSum(1.0, y, -1.0, md->J_state, md->J_tmp);
+    //N_VLinearSum(1.0, y, -1.0, md->J_state, md->J_tmp);
   cudaDevicezaxpby(1.0, y, -1.0, md->J_state, md->J_tmp, active_threads);
   //SUNMatMatvec(md->J_solver, md->J_tmp, md->J_tmp2);
   cudaDeviceSpmvCSC_block(md->J_tmp2, md->J_tmp, active_threads, md->J_solver, md->jJ_solver, md->iJ_solver, 0);
@@ -751,7 +793,6 @@ __global__ void solveDerivative(
 #endif
 
     //Debug
-    //printf("HOLA\n");
     /*
     if(counterDeriv2<=1){
       printf("(%d) y %-le J_state %-le J_solver %-le J_tmp %-le J_tmp2 %-le J_deriv %-le\n",tid+1,
@@ -820,7 +861,7 @@ __global__ void solveDerivative(
       for (int i = 0; i < n_iters; i++) {
         md->i_rxn = tid_cell + i*deriv_length_cell;
 
-        solveRXN(deriv_data, time_step, md);
+        solveRXN0(deriv_data, time_step, md);
       }
 
       //Limit tid to pending rxns to compute
@@ -828,7 +869,7 @@ __global__ void solveDerivative(
       if(tid_cell < residual){
         md->i_rxn = tid_cell + deriv_length_cell*n_iters;
 
-        solveRXN(deriv_data, time_step, md);
+        solveRXN0(deriv_data, time_step, md);
       }
     }
     __syncthreads();
@@ -862,14 +903,208 @@ __global__ void solveDerivative(
 
 }
 
+__device__
+void cudaDevicef0(
+#ifdef PMC_DEBUG_GPU
+        int counterDeriv2,
+#endif
+        //check_model_state
+        double threshhold, double replacement_value, int *flag,
+        //f_gpu
+        double time_step, int deriv_length_cell, int state_size_cell,
+        int n_cells,
+        int i_kernel, int threads_block, int n_shr_empty, double *y,
+        ModelDataGPU md_object
+) //Interface CPU/GPU
+{
+
+  ModelDataGPU *md = &md_object;
+
+  cudaDevicecamp_solver_check_model_state0(md->state, y,
+                                          md->map_state_deriv, threshhold, replacement_value,
+                                          flag, deriv_length_cell, n_cells);
+
+  __syncthreads;
+  //study flag block effect: flag is global for all threads or for only the block?
+  if(*flag==CAMP_SOLVER_FAIL)
+    return;
+
+  cudaDevicecalc_deriv0(
+#ifdef PMC_DEBUG_GPU
+           counterDeriv2,
+#endif
+        //check_model_state          md->map_state_deriv, threshhold, replacement_value, flag,
+          //f_gpu
+        time_step, deriv_length_cell, state_size_cell,
+           n_cells, i_kernel, threads_block, n_shr_empty, y,
+           md_object
+          );
+}
+
+__global__
+void cudaGlobalf(
+#ifdef PMC_DEBUG_GPU
+        int counterDeriv2,
+#endif
+        //check_model_state
+        double threshhold, double replacement_value, int *flag,
+        //f_gpu
+        double time_step, int deriv_length_cell, int state_size_cell,
+        int n_cells,
+        int i_kernel, int threads_block, int n_shr_empty, double *y,
+        ModelDataGPU md_object
+) //Interface CPU/GPU
+{
+
+  cudaDevicef0(
+#ifdef PMC_DEBUG_GPU
+          counterDeriv2,
+#endif
+          //check_model_state
+                threshhold, replacement_value, flag,
+                //f_gpu
+          time_step, deriv_length_cell, state_size_cell,
+          n_cells, i_kernel, threads_block, n_shr_empty, y,
+          md_object
+  );
+}
+
+
+
+/** Old routine
+ */
+__global__ void solveDerivative(
+#ifdef PMC_DEBUG_GPU
+        int counterDeriv2,
+#endif
+        double time_step, int deriv_length_cell, int state_size_cell,
+        int n_cells,
+        int i_kernel, int threads_block, int n_shr_empty, double *y,
+        double threshhold, double replacement_value, ModelDataGPU md_object
+) //Interface CPU/GPU
+{
+  int tid = blockIdx.x * blockDim.x + threadIdx.x;
+  int tid_cell=tid%deriv_length_cell;
+  int active_threads = n_cells*deriv_length_cell;
+  ModelDataGPU *md = &md_object;
+
+#ifdef DEBUG_DERIV_GPU
+  if(tid==0){
+    printf("[DEBUG] GPU solveDerivative tid %d, \n", tid);
+  }__syncthreads();
+#endif
+
+  if(tid<active_threads){
+
+#ifdef DEBUG_solveDerivative_J_DERIV_IN_CPU
+#else
+
+    //N_VLinearSum(1.0, y, -1.0, md->J_state, md->J_tmp);
+    cudaDevicezaxpby(1.0, y, -1.0, md->J_state, md->J_tmp, active_threads);
+    //SUNMatMatvec(md->J_solver, md->J_tmp, md->J_tmp2);
+    cudaDeviceSpmvCSC_block(md->J_tmp2, md->J_tmp, active_threads, md->J_solver, md->jJ_solver, md->iJ_solver, 0);
+    //N_VLinearSum(1.0, md->J_deriv, 1.0, md->J_tmp2, md->J_tmp);
+    cudaDevicezaxpby(1.0, md->J_deriv, 1.0, md->J_tmp2, md->J_tmp, active_threads);
+    cudaDevicesetconst(md->J_tmp2, 0.0, active_threads); //Reset for next iter
+
+
+#endif
+
+    //Debug
+    //printf("HOLA\n");
+    /*
+    if(counterDeriv2<=1){
+      printf("(%d) y %-le J_state %-le J_solver %-le J_tmp %-le J_tmp2 %-le J_deriv %-le\n",tid+1,
+             y[tid], md->J_state[tid], md->J_solver[tid], md->J_tmp[tid], md->J_tmp2[tid], md->J_deriv[tid]);
+      //printf("gpu threads %d\n", active_threads);
+    }
+*/
+
+#ifdef BASIC_CALC_DERIV
+    md->i_rxn=tid%n_rxn;
+    double *deriv_init = md->deriv_data;
+    md->deriv_data = &( md->deriv_init[deriv_length_cell*md->i_cell]);
+    if(tid < n_rxn*n_cells){
+        solveRXN0(deriv_data, time_step, md);
+    }
+#else
+    TimeDerivativeGPU deriv_data;
+    deriv_data.num_spec = deriv_length_cell*n_cells;
+
+#ifdef AEROS_CPU
+#else
+    deriv_data.production_rates = md->production_rates;
+    deriv_data.loss_rates = md->loss_rates;
+    time_derivative_reset_gpu(deriv_data);
+    __syncthreads();
+#endif
+
+    int i_cell = tid/deriv_length_cell;
+    md->i_cell = i_cell;
+    deriv_data.production_rates = &( md->production_rates[deriv_length_cell*i_cell]);
+    deriv_data.loss_rates = &( md->loss_rates[deriv_length_cell*i_cell]);
+
+    md->grid_cell_state = &( md->state[state_size_cell*i_cell]);
+    md->grid_cell_env = &( md->env[PMC_NUM_ENV_PARAM_*i_cell]);
+
+    //Filter threads for n_rxn
+    int n_rxn = md->n_rxn;
+    if( tid_cell < n_rxn) {
+      int n_iters = n_rxn / deriv_length_cell;
+      //Repeat if there are more reactions than species
+      for (int i = 0; i < n_iters; i++) {
+        md->i_rxn = tid_cell + i*deriv_length_cell;
+
+        solveRXN0(deriv_data, time_step, md);
+      }
+
+      //Limit tid to pending rxns to compute
+      int residual=n_rxn-(deriv_length_cell*n_iters);
+      if(tid_cell < residual){
+        md->i_rxn = tid_cell + deriv_length_cell*n_iters;
+
+        solveRXN0(deriv_data, time_step, md);
+      }
+    }
+    __syncthreads();
+
+    /*if(tid==0){
+      printf("tid %d time_deriv.production_rates %-le time_deriv.loss_rates %-le\n",
+              tid, deriv_data.production_rates[tid],
+             deriv_data.loss_rates[tid]);
+    }*/
+
+    deriv_data.production_rates = md->production_rates;
+    deriv_data.loss_rates = md->loss_rates;
+    __syncthreads();
+    time_derivative_output_gpu(deriv_data, md->deriv_data, md->J_tmp,0);
+#endif
+
+    /*
+    if(tid<deriv_data.num_spec && tid>1022){
+      //if(tid<1){
+      //deriv_init[tid] = deriv_data.production_rates[tid];
+      //deriv_init[tid] = deriv_data.loss_rates[tid];
+      printf("tid %d time_deriv.production_rates %-le time_deriv.loss_rates %-le"
+             "deriv_init %-le\n",
+             tid, deriv_data.production_rates[tid],
+             deriv_data.loss_rates[tid],
+             //deriv_data.loss_rates[tid]);
+             deriv_init[tid]);
+    }*/
+
+  }
+
+}
+
+
 /** \brief Calculate the time derivative \f$f(t,y)\f$ on GPU
  *
  * \param md Pointer to the model data
  * \param deriv NVector to hold the calculated vector
  * \param time_step Current model time step (s)
  */
-int rxn_calc_deriv_gpu(SolverData *sd, N_Vector y, N_Vector deriv, double time_step,
-        double threshhold, double replacement_value) {
+int rxn_calc_deriv_gpu(SolverData *sd, N_Vector y, N_Vector deriv, double time_step) {
 
   ModelData *md = &(sd->model_data);
   itsolver *bicg = &(sd->bicg);
@@ -889,6 +1124,10 @@ int rxn_calc_deriv_gpu(SolverData *sd, N_Vector y, N_Vector deriv, double time_s
   int n_blocks = ((total_threads + threads_block - 1) / threads_block);
   double *J_tmp = N_VGetArrayPointer(md->J_tmp);
   ModelDataGPU *mGPU = &sd->mGPU;
+  //Update state
+  double replacement_value = TINY;
+  double threshhold = -SMALL;
+  int flag = CAMP_SOLVER_SUCCESS; //0
 
 #ifdef DERIV_CPU_ON_GPU
 
@@ -937,7 +1176,7 @@ int rxn_calc_deriv_gpu(SolverData *sd, N_Vector y, N_Vector deriv, double time_s
 
 #endif
 
-#ifndef DEBUG_solveDerivative_J_DERIV_IN_CPU
+#ifdef DEBUG_solveDerivative_J_DERIV_IN_CPU
 
 /*
   if(sd->counterDerivGPU<=1 ){
@@ -960,16 +1199,23 @@ int rxn_calc_deriv_gpu(SolverData *sd, N_Vector y, N_Vector deriv, double time_s
   //Loop to test multiple kernel executions
   for (int i_kernel=0; i_kernel<n_kernels; i_kernel++){
     //cudaDeviceSynchronize();
-    solveDerivative << < (n_blocks), threads_block >> >(
+    //solveDerivative << < (n_blocks), threads_block >> >(
+    cudaGlobalf << < (n_blocks), threads_block >> >(
 #ifdef PMC_DEBUG_GPU
     sd->counterDerivGPU,
 #endif
-     time_step, md->n_per_cell_dep_var,
+    //update_state
+    threshhold, replacement_value, &flag,
+     //f_gpu
+    time_step, md->n_per_cell_dep_var,
      md->n_per_cell_state_var,n_cells,
      i_kernel, threads_block,n_shr_empty, bicg->dcv_y,
-     threshhold, replacement_value, sd->mGPU
+     sd->mGPU
      );
   }
+
+  if(flag==CAMP_SOLVER_FAIL)
+    return flag;
 
 #ifdef PMC_DEBUG_GPU
   /*cudaDeviceSynchronize();
@@ -1416,4 +1662,4 @@ int camp_solver_update_model_state_cpu(N_Vector solver_state, ModelData *md,
   return status;
 }
 */
-}
+

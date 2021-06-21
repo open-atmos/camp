@@ -582,11 +582,11 @@ if (CUDA_FOUND AND ENABLE_GPU)
           src/cuda/aeros/aero_reps/aero_rep_modal_binned_mass.cu
           src/cuda/aeros/aero_reps/aero_rep_single_particle.cu
           src/cuda/cvode_gpu.cu
-          #src/cuda/cvode_cpu.cu
           src/cuda/libsolv.cu
           src/cuda/itsolver_gpu.cu
           src/cuda/time_derivative_gpu.cu
           #src/cuda/camp_gpu_cusolver.cu
+          src/cuda/device/f_jac.cu
           )
 
   set_source_files_properties(${CAMP_CUDA_SRC} PROPERTIES COMPILE_FLAGS

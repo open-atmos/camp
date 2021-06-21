@@ -204,8 +204,8 @@ def all_timesteps():
   config_file="monarch_cb05"
   #config_file="monarch_binned"
 
-  #diff_cells="Practical"
-  diff_cells="Ideal"
+  diff_cells="Practical"
+  #diff_cells="Ideal"
 
   mpi="yes"
   #mpi="no"
@@ -217,7 +217,7 @@ def all_timesteps():
   #cells = [1,10,100,1000]
   #cells = [1,10,100,1000,10000,100000]
 
-  timesteps = 5#720=12h
+  timesteps = 1#720=12h
   TIME_STEP = 2 #pending send TIME_STEP to mock_monarch
 
   #cases = ["CPU One-cell"]
@@ -225,7 +225,7 @@ def all_timesteps():
   #cases = ["GPU One-cell"]
   #cases = ["CPU One-cell","CPU Multi-cells"]
   #cases = ["CPU One-cell","GPU Multi-cells"]
-  cases = ["CPU One-cell","GPU One-cell"]
+  #cases = ["CPU One-cell","GPU One-cell"]
   cases = ["CPU Multi-cells","GPU Multi-cells"]
   #cases = ["CPU Multi-cells","GPU One-cell"]
   #cases = ["GPU One-cell","GPU Multi-cells"]
@@ -261,6 +261,10 @@ def all_timesteps():
 
   if(config_file=="monarch_cb05"):
     diff_cells="Ideal"
+    print("WARNING: ENSURE DERIV_CPU_ON_GPU IS OFF")
+
+  if config_file=="monarch_binned":
+    print("WARNING: ENSURE DERIV_CPU_ON_GPU IS ON")
 
   results_file="_solver_stats.csv"
   if(plot_y_key=="NRMSE" or plot_y_key=="MAPE" or plot_y_key=="SMAPE"):

@@ -19,6 +19,7 @@
 #include <string.h>
 #include <time.h>
 #include "aero_rep_solver.h"
+#include "aero_rep_solver.h"
 #include "rxn_solver.h"
 #include "sub_model_solver.h"
 #ifdef PMC_USE_GPU
@@ -1211,7 +1212,7 @@ int f_gpu(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
 
   flag = f(t, y, deriv, solver_data);
 
-  rxn_calc_deriv_gpu(sd, y, deriv, (double)time_step, ZERO, ZERO);
+  rxn_calc_deriv_gpu(sd, y, deriv, (double)time_step);
 
   //return flag;
 
@@ -1237,13 +1238,14 @@ int f_gpu(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
   //int flag=0;
   //flag = f(t, y, deriv, solver_data);
 
-  //rxn_calc_deriv_gpu(sd, y, deriv, (double)time_step, ZERO, ZERO);
+  //rxn_calc_deriv_gpu(sd, y, deriv, (double)time_step);
 
   //return flag;
 
 #ifdef AEROS_CPU
 
-  //todo fix wrong results
+  //todo fix not working (search another way to treat monarhc_binned atm, like computing all deriv in CPU
+  //if it the case
 
   // Get the grid cell dimensions
   int n_cells = md->n_cells;
@@ -1279,7 +1281,7 @@ int f_gpu(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
 
 #endif
 
-#ifndef DEBUG_solveDerivative_J_DERIV_IN_CPU
+#ifdef DEBUG_solveDerivative_J_DERIV_IN_CPU
 
   N_VLinearSum(1.0, y, -1.0, md->J_state, md->J_tmp);
   SUNMatMatvec(md->J_solver, md->J_tmp, md->J_tmp2);
@@ -1287,7 +1289,7 @@ int f_gpu(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
 
 #endif
 
-  flag = rxn_calc_deriv_gpu(sd, y, deriv, (double)time_step, ZERO, ZERO);
+  flag = rxn_calc_deriv_gpu(sd, y, deriv, (double)time_step);
 
 #endif
 
@@ -1296,8 +1298,8 @@ int f_gpu(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
   int flag_f;
   if(sd->counterDerivGPU<=10){
     printf("CHECK_F_GPU_WITH_CPU %d\n",sd->counterDerivGPU);
-    //flag = f(t, y, md->J_tmp2, solver_data);
-    flag_f = f(t, y, md->J_tmp2, solver_data);
+    //flag = f(time_step, y, md->J_tmp2, solver_data);
+    flag_f = f(time_step, y, md->J_tmp2, solver_data);
     flag = camp_solver_check_model_state_gpu(y, sd, -SMALL, TINY);
     //print_derivative_in_out(sd, y, deriv);
     //print_derivative_in_out(sd, md->J_tmp2, deriv);
