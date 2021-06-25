@@ -999,14 +999,16 @@ contains
     write(mpi_rank_str,*) mpi_rank
     mpi_rank_str=adjustl(mpi_rank_str)
 
-    export_path = "/gpfs/scratch/bsc32/bsc32815/a2s8/nmmb-monarch/MODEL/"&
-            //"SRC_LIBS/partmc/test/monarch/exports/camp_in_out_"&
-            //trim(mpi_rank_str)//".json"
+    !export_path = "/gpfs/scratch/bsc32/bsc32815/a2s8/nmmb-monarch/MODEL/"&
+    !        //"SRC_LIBS/partmc/test/monarch/exports/camp_in_out_"&
+    !        //trim(mpi_rank_str)//".json"
+
+    export_path = "exports/camp_in_out_"//trim(mpi_rank_str)//".json"
 
     call jfile%initialize()
 
     call jfile%load_file(export_path); if (jfile%failed()) print*,&
-            "JSON not found at compare_ebi_camp_json"
+            "import_camp_input_json: JSON not found at ",export_path
 
     if (pmc_mpi_rank().eq.0) then
       write(*,*) "Importing camp input json"
@@ -1252,12 +1254,15 @@ contains
       write(mpi_rank_str,*) mpi_rank
       mpi_rank_str=adjustl(mpi_rank_str)
 
-      export_path = "/gpfs/scratch/bsc32/bsc32815/a2s8/nmmb-monarch/MODEL/"&
-              //"SRC_LIBS/partmc/test/monarch/exports/ebi_in_out_"&
-              //trim(mpi_rank_str)//".json"
+      !export_path = "/gpfs/scratch/bsc32/bsc32815/a2s8/nmmb-monarch/MODEL/"&
+      !        //"SRC_LIBS/partmc/test/monarch/exports/ebi_in_out_"&
+      !       //trim(mpi_rank_str)//".json"
+      export_path = "exports/ebi_in_out_"//trim(mpi_rank_str)//".json"
+
 #else
-      export_path = "/gpfs/scratch/bsc32/bsc32815/a2s8/nmmb-monarch/MODEL/"&
-              //"SRC_LIBS/partmc/test/monarch/exports/ebi_in_out.json"
+      !export_path = "/gpfs/scratch/bsc32/bsc32815/a2s8/nmmb-monarch/MODEL/"&
+      !        //"SRC_LIBS/partmc/test/monarch/exports/ebi_in_out.json"
+      export_path = "exports/ebi_in_out.json"
 #endif
       call json%print(p,export_path)
 
@@ -1359,9 +1364,10 @@ contains
     write(mpi_rank_str,*) mpi_rank
     mpi_rank_str=adjustl(mpi_rank_str)
 
-    export_path = "/gpfs/scratch/bsc32/bsc32815/a2s8/nmmb-monarch/MODEL/"&
-            //"SRC_LIBS/partmc/test/monarch/exports/ebi_in_out_"&
-            //trim(mpi_rank_str)//".json"
+    !export_path = "/gpfs/scratch/bsc32/bsc32815/a2s8/nmmb-monarch/MODEL/"&
+    !        //"SRC_LIBS/partmc/test/monarch/exports/ebi_in_out_"&
+    !        //trim(mpi_rank_str)//".json"
+    export_path = "exports/ebi_in_out_"//trim(mpi_rank_str)//".json"
 
     call jfile%initialize()
 
@@ -1384,9 +1390,10 @@ contains
 
     call jfile%destroy()
 
-    export_path = "/gpfs/scratch/bsc32/bsc32815/a2s8/nmmb-monarch/MODEL/"&
-            //"SRC_LIBS/partmc/test/monarch/exports/camp_in_out_"&
-            //trim(mpi_rank_str)//".json"
+    !export_path = "/gpfs/scratch/bsc32/bsc32815/a2s8/nmmb-monarch/MODEL/"&
+    !        //"SRC_LIBS/partmc/test/monarch/exports/camp_in_out_"&
+    !        //trim(mpi_rank_str)//".json"
+    export_path = "exports/camp_in_out_"//trim(mpi_rank_str)//".json"
 
     call jfile%initialize()
 

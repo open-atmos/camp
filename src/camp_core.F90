@@ -1596,12 +1596,14 @@ contains
     write(mpi_rank_str,*) mpi_rank
     mpi_rank_str=adjustl(mpi_rank_str)
 
-    export_path = "/gpfs/scratch/bsc32/bsc32815/a2s8/nmmb-monarch/MODEL/"&
-            //"SRC_LIBS/partmc/test/monarch/exports/camp_in_out_"&
-            //trim(mpi_rank_str)//".json"
+    !export_path = "/gpfs/scratch/bsc32/bsc32815/a2s8/nmmb-monarch/MODEL/"&
+    !        //"SRC_LIBS/partmc/test/monarch/exports/camp_in_out_"&
+    !        //trim(mpi_rank_str)//".json"
+    export_path = "exports/camp_in_out_"//trim(mpi_rank_str)//".json"
 #else
-    export_path = "/gpfs/scratch/bsc32/bsc32815/a2s8/nmmb-monarch/MODEL/"&
-            //"SRC_LIBS/partmc/test/monarch/exports/camp_in_out.json"
+    !export_path = "/gpfs/scratch/bsc32/bsc32815/a2s8/nmmb-monarch/MODEL/"&
+    !        //"SRC_LIBS/partmc/test/monarch/exports/camp_in_out.json"
+    export_path = "exports/camp_in_out.json"
 #endif
     call json%print(p,export_path)
 

@@ -328,8 +328,6 @@ void alloc_solver_gpu2(CVodeMem cv_mem, SolverData *sd)
 
   bicg->n_cells=md->n_cells;
   ModelDataGPU *mGPU = &sd->mGPU;
-  bicg->dA=mGPU->J;//set itsolver gpu pointer to jac pointer initialized at camp
-  //cudaMemcpy(bicg->A, bicg->dA, bicg->nnz*sizeof(double), cudaMemcpyDeviceToHost);
   bicg->dftemp=mGPU->deriv_data; //deriv is gpu pointer
 
 #ifdef CHECK_GPU_LINSOLVE
@@ -356,14 +354,19 @@ void alloc_solver_gpu2(CVodeMem cv_mem, SolverData *sd)
   int device=0;//Selected GPU
   cudaDeviceProp prop;
   cudaGetDeviceProperties(&prop, device);
-  bicg->threads=prop.maxThreadsPerBlock;//1024; //128 set at max gpu
+  bicg->threads=prop.maxThreadsPerBlock;//set at max gpu
   //bicg->threads=1024;
   //printf("bicg->threads %d \n", bicg->threads);
   bicg->blocks=(bicg->nrows+bicg->threads-1)/bicg->threads;
 
   // Allocating matrix data to the GPU
+  bicg->dA=mGPU->J;//set itsolver gpu pointer to jac pointer initialized at camp
+  //cudaMemcpy(bicg->A, bicg->dA, bicg->nnz*sizeof(double), cudaMemcpyDeviceToHost);
   cudaMalloc((void**)&bicg->djA,bicg->nnz*sizeof(int));
   cudaMalloc((void**)&bicg->diA,(bicg->nrows+1)*sizeof(int));
+  cudaMalloc((void**)&bicg->dB,bicg->nnz*sizeof(double));
+  cudaMalloc((void**)&bicg->djB,bicg->nnz*sizeof(int));
+  cudaMalloc((void**)&bicg->diB,(bicg->nrows+1)*sizeof(int));
 
   //ODE aux variables
   cudaMalloc((void**)&bicg->dewt,bicg->nrows*sizeof(double));
@@ -407,7 +410,7 @@ void alloc_solver_gpu2(CVodeMem cv_mem, SolverData *sd)
   bicg->counterBiConjGradInternal=0;
   bicg->counterDerivSolve=0;
   bicg->counterJac=0;
-#ifdef solveCudaGlobal_timers_max_blocks
+#ifdef cudaGlobalSolveODE_timers_max_blocks
   bicg->dtBCG;
   cudaMalloc((void**)&bicg->dtBCG,blocks*sizeof(double));
   cudaMemset(bicg->counterBiConjGradInternalGPU, 0, blocks*sizeof(double));
@@ -3429,6 +3432,7 @@ __device__ void cudaDevicecalc_deriv(
     //N_VLinearSum(1.0, y, -1.0, md->J_state, md->J_tmp);
     cudaDevicezaxpby(1.0, y, -1.0, md->J_state, md->J_tmp, active_threads);
     //SUNMatMatvec(md->J_solver, md->J_tmp, md->J_tmp2);
+    //todo csr
     cudaDeviceSpmvCSC_block(md->J_tmp2, md->J_tmp, active_threads, md->J_solver, md->jJ_solver, md->iJ_solver, 0);
     //N_VLinearSum(1.0, md->J_deriv, 1.0, md->J_tmp2, md->J_tmp);
     cudaDevicezaxpby(1.0, md->J_deriv, 1.0, md->J_tmp2, md->J_tmp, active_threads);
@@ -3995,9 +3999,11 @@ void solveBcgCudaDeviceCVODE(
 
     //dvcheck_input_gpud(dr0,nrows,k++);
 
+    //if(i==0)printf("hola\n");
+
 #ifdef PMC_DEBUG_GPU
 
-    #ifdef solveBcgCuda_sum_it
+#ifdef solveBcgCuda_sum_it
 
   //printf("it %d %d\n",i,it);
   if(tid==0)
@@ -4017,12 +4023,15 @@ void solveBcgCudaDeviceCVODE(
 
 
 __global__
-void solveCudaGlobal(
+void cudaGlobalSolveODE(
+        //LS
         double *dA, int *djA, int *diA, double *dx, double *dtempv //Input data
         ,int nrows, int blocks, int n_shr_empty, int maxIt, int mattype
         ,int n_cells, double tolmax, double *ddiag //Init variables
         ,double *dr0, double *dr0h, double *dn0, double *dp0
         ,double *dt, double *ds, double *dAx2, double *dy, double *dz// Auxiliary vectors
+        //swapCSC_CSR_BCG
+        //,double *dA, int *djA, int *diA
 #ifdef PMC_DEBUG_GPU
         ,int *it_pointer, double *dtBCG, double *dtPreBCG, double *dtPostBCG
 #endif
@@ -4047,9 +4056,19 @@ void solveCudaGlobal(
 
 //Some functs
 
+#ifndef CSR_SPMV
+
+#ifndef DEV_cudaDeviceswapCSC_CSR
+
+  //cudaDeviceswapCSC_CSR(nrows,nrows,diA,djA,dA,diA,djA,dA);
+
+#endif
+
+#endif
+
 #ifdef PMC_DEBUG_GPU
 
-#ifdef solveCudaGlobal_timers_max_blocks
+#ifdef cudaGlobalSolveODE_timers_max_blocks
 
   dtPreBCG[i] += ((double)(int)(clock() - start))/(clock_khz*1000);
 
@@ -4074,7 +4093,7 @@ void solveCudaGlobal(
 
 #ifdef PMC_DEBUG_GPU
 
-#ifdef solveCudaGlobal_timers_max_blocks
+#ifdef cudaGlobalSolveODE_timers_max_blocks
 
   dtBCG[i] += ((double)(int)(clock() - startBCG))/(clock_khz*1000);
 
@@ -4088,9 +4107,17 @@ void solveCudaGlobal(
 
 #endif
 
-//Device functs
+//Some functs
 
+#ifndef CSR_SPMV
 
+#ifndef DEV_cudaDeviceswapCSC_CSR
+
+  //cudaDeviceswapCSC_CSR(nrows,nrows,diA,djA,dA,diA,djA,dA);
+
+#endif
+
+#endif
 
 
 
@@ -4099,7 +4126,7 @@ void solveCudaGlobal(
   __syncthreads;
 
 
-#ifdef solveCudaGlobal_timers_max_blocks
+#ifdef cudaGlobalSolveODE_timers_max_blocks
 
   dtPostBCG[i] += ((double)(int)(clock() - start))/(clock_khz*1000);
 
@@ -4173,7 +4200,7 @@ void solveCVODEGPU_thr(int blocks, int threads_block, int n_shr_memory, int n_sh
   }
 #endif
 
-  solveCudaGlobal << < blocks, threads_block, n_shr_memory * sizeof(double) >> >
+  cudaGlobalSolveODE <<<blocks, threads_block, n_shr_memory*sizeof(double)>>>
                                               //solveBcgCuda << < blocks, threads_block, threads_block * sizeof(double) >> >
                                               (dA, djA, diA, dx, dtempv, nrows, blocks, n_shr_empty, maxIt, mattype, n_cells,
                                                       tolmax, ddiag, dr0, dr0h, dn0, dp0, dt, ds, dAx2, dy, dz
@@ -4345,8 +4372,14 @@ int cudalinsolsolve(SolverData *sd, CVodeMem cv_mem)
 
 #ifndef CSR_SPMV
 
-    //CSRtoCSC(bicg);
-    CSCtoCSR(bicg);
+#ifndef DEV_cudaDeviceswapCSC_CSR
+    cudaGlobalswapCSC_CSR <<<blocks, threads_block, n_shr_empty*sizeof(double)>>>
+            (bicg->nrows,bicg->nrows,bicg->diA,bicg->djA,bicg->dA,
+                    bicg->diB,bicg->djB,bicg->dB);
+    cudaDeviceSynchronize();
+#else
+  swapCSC_CSR_BCG(bicg);
+#endif
 
 #endif
 
@@ -4533,9 +4566,14 @@ int cudalinsolsolve(SolverData *sd, CVodeMem cv_mem)
 #endif
 
 #ifndef CSR_SPMV
-
-    CSRtoCSC(bicg);
-
+#ifndef DEV_cudaDeviceswapCSC_CSR
+    cudaGlobalswapCSC_CSR <<<blocks, threads_block, n_shr_empty*sizeof(double)>>>
+            (bicg->nrows,bicg->nrows,bicg->diA,bicg->djA,bicg->dA,
+              bicg->diB,bicg->djB,bicg->dB);
+    cudaDeviceSynchronize();
+#else
+    swapCSC_CSR_BCG(bicg);
+#endif
 #endif
 
     cudaMemcpy(cv_ftemp,bicg->dftemp,bicg->nrows*sizeof(double),cudaMemcpyDeviceToHost);
@@ -4560,7 +4598,7 @@ int cudalinsolsolve(SolverData *sd, CVodeMem cv_mem)
 
       gpu_zaxpby(1.0, bicg->dcv_y, 1.0, bicg->dtempv, bicg->dftemp, bicg->nrows, bicg->blocks, bicg->threads);
 
-      CudaGlobalguess_helper << < blocks, threads_block >> >
+      CudaGlobalguess_helper <<<blocks, threads_block>>>
                                           (cv_mem->cv_tn, 0., bicg->dftemp,
                                                   bicg->dcv_y, bicg->dtempv, bicg->dtempv1,
                                                   bicg->dtempv2, ((CVodeMem)sd->cvode_mem)->cv_reltol,
@@ -5164,8 +5202,7 @@ int linsolsolve_gpu2(SolverData *sd, CVodeMem cv_mem)
 
 #ifndef CSR_SPMV
 
-    //CSRtoCSC(bicg);
-    CSCtoCSR(bicg);
+    swapCSC_CSR_BCG(bicg);
 
 #endif
 
@@ -5353,7 +5390,7 @@ int linsolsolve_gpu2(SolverData *sd, CVodeMem cv_mem)
 
 #ifndef CSR_SPMV
 
-    CSRtoCSC(bicg);
+    swapCSC_CSR_BCG(bicg);
 
 #endif
 
@@ -5591,7 +5628,7 @@ void printSolverCounters_gpu2(SolverData *sd)
           bicg->counterBiConjGradInternal/(double)bicg->counterBiConjGrad,
           (bicg->timeBiConjGrad/1000)/(double)bicg->counterBiConjGrad,
           bicg->timeBiConjGradMemcpy/bicg->timeBiConjGrad*100);
-#ifdef solveCudaGlobal_timers_max_blocks
+#ifdef cudaGlobalSolveODE_timers_max_blocks
 
   for(int i=1;i<blocks;i++){
     if(dtBCG[i]>dtBCG[0])

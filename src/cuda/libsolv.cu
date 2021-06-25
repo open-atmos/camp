@@ -800,22 +800,13 @@ __device__ void cudaDevicedotxy(double *g_idata1, double *g_idata2,
 
 #else
 
-#ifndef COMMENTING
-
   __syncthreads();
 
   //Needed, when testing be careful with SRAM data remanesce https://stackoverflow.com/questions/22172881/why-does-my-kernels-shared-memory-seems-to-be-initialized-to-zero
 
 #ifndef ALL_BLOCKS_EQUAL_SIZE
 
-  //j=(blockDim.x+n_shr_empty)/2;
-  //if(tid<j)
-    //sdata[j+tid]=0.;
-
-  //if(tid>=blockDim.x-n_shr_empty)
-    //sdata[tid+n_shr_empty]=0.; //Last threads update empty positions
-
-  //OOOOOOOR just make first threads update empty positions
+  //first threads update empty positions
   if(tid<n_shr_empty)
     sdata[tid+blockDim.x]=0.;
 
@@ -823,6 +814,7 @@ __device__ void cudaDevicedotxy(double *g_idata1, double *g_idata2,
 
 #else
 
+//slower
   if (tid == 0){
     for (int j=0; j<blockDim.x+n_shr_empty; j++)
       sdata[j] = 0.;
@@ -832,7 +824,6 @@ __device__ void cudaDevicedotxy(double *g_idata1, double *g_idata2,
 
 #endif
 
-  //sdata[tid] = (i < n) ? g_idata1[i]*g_idata2[i] : 0;
   sdata[tid] = g_idata1[i]*g_idata2[i];
 
 
@@ -847,6 +838,8 @@ __device__ void cudaDevicedotxy(double *g_idata1, double *g_idata2,
     __syncthreads();
   }
   */
+  //todo treat case deriv_length < 32
+  //maybe https://github.com/cudpp/cudpp/blob/master/src/cudpp/kernel/reduce_kernel.cuh
 
   unsigned int blockSize = blockDim.x+n_shr_empty;
 
@@ -882,61 +875,9 @@ __device__ void cudaDevicedotxy(double *g_idata1, double *g_idata2,
   *g_odata = sdata[0];
   __syncthreads();
 
-
-#else
-
-  //if(i>=n)sdata[tid]=0.;
-
-  //double mySum = (i < n) ? g_idata1[i]*g_idata2[i] : 0;
-
-  //Init shr_memory to 0
-  /*if(tid<blockDim.x/2)
-    for (int j=0; j<2; j++)
-      sdata[j*blockDim.x/2 + tid] = 0;*/
-
-  __syncthreads();
-
-  if (tid == 0){
-    for (int j=0; j<blockDim.x+n_shr_empty; j++)
-      sdata[j] = 0.;
-  }
-
-/*
-  for (unsigned int s=(blockDim.x+n_shr_empty)/2; s>0; s>>=1)
-  {
-    if (tid < s){
-      sdata[tid] = 0.;
-      sdata[tid+s] = 0.;
-    }
-  }
-*/
-
-  __syncthreads();
-
-  //sdata[tid] = (i < n) ? g_idata1[i]*g_idata2[i] : 0;
-  sdata[tid] = g_idata1[i]*g_idata2[i];
-
-  __syncthreads();
-
-  for (unsigned int s=(blockDim.x+n_shr_empty)/2; s>0; s>>=1)
-  {
-    if (tid < s)
-      sdata[tid] += sdata[tid + s];
-
-    __syncthreads();
-  }
-
-  //if (tid==0) *g_odata = sdata[0];
-  *g_odata = sdata[0];
-  //*g_odata = sdata[0]+0.1*tid;
-  __syncthreads();
-
-#endif
-
 #endif
 
 }
-
 //n_shr_empty its a different implementation from cuda reduce extended samples ( https://docs.nvidia.com/cuda/cuda-samples/index.html)
 // since n_threads_blocks isnotpowerof2
 // while these samples only takes into account n=notpowerof2, also we need active_threads able to be < max_threads

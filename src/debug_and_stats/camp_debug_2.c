@@ -18,6 +18,47 @@
 #include <mpi.h>
 #endif
 
+#ifdef CSR_MATRIX
+void swapCSC_CSR(int n_row, int n_col, int* Ap, int* Aj, double* Ax, int* Bp, int* Bi, double* Bx){
+
+  int nnz=Ap[n_row];
+
+  memset(Bp, 0, (n_row+1)*sizeof(int));
+
+  for (int n = 0; n < nnz; n++){
+    Bp[Aj[n]]++;
+  }
+
+  //cumsum the nnz per column to get Bp[]
+  for(int col = 0, cumsum = 0; col < n_col; col++){
+    int temp  = Bp[col];
+    Bp[col] = cumsum;
+    cumsum += temp;
+  }
+  Bp[n_col] = nnz;
+
+  for(int row = 0; row < n_row; row++){
+    for(int jj = Ap[row]; jj < Ap[row+1]; jj++){
+      int col  = Aj[jj];
+      int dest = Bp[col];
+
+      Bi[dest] = row;
+      Bx[dest] = Ax[jj];
+
+      Bp[col]++;
+    }
+  }
+
+  for(int col = 0, last = 0; col <= n_col; col++){
+    int temp  = Bp[col];
+    Bp[col] = last;
+    last    = temp;
+  }
+
+}
+
+#endif
+
 void check_iszerod(long double *x, int len, const char *s){
 
 #ifndef DEBUG_CHECK_ISZEROD

@@ -37,6 +37,9 @@ typedef struct
   double* dA;
   int*    djA;
   int*    diA;
+  double* dB;
+  int*    djB;
+  int*    diB;
   double* dx;
   double* aux;
   double* daux;

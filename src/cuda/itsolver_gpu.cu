@@ -95,11 +95,503 @@ int nextPowerOfTwo(int v){
   return v;
 }
 
+__device__
+void cudaDeviceswapCSC_CSR1Thread(int n_row, int n_col, int* Ap, int* Aj, double* Ax, int* Bp, int* Bi, double* Bx) {
+
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
+  unsigned int tid = threadIdx.x;
+
+  //if(i==0) printf("start cudaDeviceswapCSC_CSR1\n");
+
+  int nnz=Ap[n_row];
+
+  if(i==0){ //good
+    //if(tid==0){//wrong
+    //if(i<n_row){//wrong
+
+    memset(Bp, 0, (n_row+1)*sizeof(int));
+
+    //for (int n = 0; n < n_row+1; n++){
+    //  Bp[n]=0;}
+
+    for (int n = 0; n < nnz; n++){
+      Bp[Aj[n]]++;
+    }
+
+    if(i==0) printf("start cudaDeviceswapCSC_CSR1Thread2\n");
+    if(i==0) {
+      printf("Bp:\n");
+      for (int n = 0; n <= n_row; n++)
+        printf("%d ", Bp[n]);
+      printf("\n");
+    }
+
+    for(int col = 0, cumsum = 0; col < n_col; col++){
+      int temp  = Bp[col];
+      Bp[col] = cumsum;
+      cumsum += temp;
+    }
+    Bp[n_col] = nnz;
+
+    if(i==0) printf("start cudaDeviceswapCSC_CSR1Thread3\n");
+    if(i==0) {
+      printf("Bp:\n");
+      for (int n = 0; n <= n_row; n++)
+        printf("%d ", Bp[n]);
+      printf("\n");
+    }
+
+    //int row=i;
+    for(int row = 0; row < n_row; row++){
+      for(int jj = Ap[row]; jj < Ap[row+1]; jj++){
+        int col  = Aj[jj];
+        int dest = Bp[col];
+
+        Bi[dest] = row;
+        Bx[dest] = Ax[jj];
+
+        Bp[col]++;
+      }
+    }
+
+    if(i==0) printf("start cudaDeviceswapCSC_CSR1Thread4\n");
+    if(i==0) {
+      printf("Bp:\n");
+      for (int n = 0; n <= n_row; n++)
+        printf("%d ", Bp[n]);
+      printf("\n");
+    }
+
+    for(int col = 0, last = 0; col <= n_col; col++){
+      int temp  = Bp[col];
+      Bp[col] = last;
+      last    = temp;
+    }
+
+    if(i==0) printf("start cudaDeviceswapCSC_CSR1Thread5\n");
+    if(i==0) {
+      printf("Bp:\n");
+      for (int n = 0; n <= n_row; n++)
+        printf("%d ", Bp[n]);
+      printf("\n");
+    }
+
+    //copy to A
+    for (int n = 0; n < n_row+1; n++){
+      Ap[n]=Bp[n];
+    }
+
+    for (int n = 0; n < nnz; n++){
+      Aj[n]=Bi[n];
+      Ax[n]=Bx[n];
+    }
+  }
+}
+
+__device__
+void cudaDeviceswapCSC_CSR1ThreadBlock(int n_row, int n_col, int* Ap, int* Aj, double* Ax, int* BpGlobal, int* Bi, double* Bx) {
+
+  extern __shared__ int Bp[];
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
+  unsigned int tid = threadIdx.x;
+  int nnz=Ap[n_row];
+  int iprint=0;
+  if(gridDim.x>1)iprint=blockDim.x;//block 2
+
+  //todo shared can be only nrow and algorithm uses nrow+1, so take into into account (first value is always 0 anyway)
+
+#ifdef DEBUG_cudaGlobalswapCSC_CSR
+  if(i==0) printf("start cudaDeviceswapCSC_CSR1ThreadBlock nnz %d n_row %d blockdim %d "
+                  "gridDim.x %d \n",nnz,n_row,blockDim.x,gridDim.x);
+#endif
+
+  //if(tid==0){
+  if(i<n_row){
+
+    if(tid==0) {
+#ifdef DEBUG_cudaGlobalswapCSC_CSR
+      printf("blockDim.x*blockIdx.x %d %d\n",blockDim.x*blockIdx.x,blockDim.x*(blockIdx.x+1));
+#endif
+      //for (int n = 0; n < n_row+1; n++) Bp[n]=0;
+      //for(int n = blockDim.x*blockIdx.x; n < blockDim.x*(blockIdx.x+1); n++) Bp[n]=0;
+      //for(int n = blockDim.x*blockIdx.x; n <= blockDim.x*(blockIdx.x+1); n++) Bp[n]=0;
+    }
+    //if(blockIdx.x==gridDim.x-1) Bp[n_row]=0;
+    Bp[tid]=0;
+    //if(blockIdx.x==gridDim.x-1 && tid==blockDim.x-1) Bp[blockDim.x]=0;
+    //if(i==blockDim.x-1) Bp[blockDim.x]=0; //wrong in 2n iter why?
+    if(blockIdx.x==gridDim.x-1) Bp[blockDim.x]=0;
+
+    //Bp[i]=0;
+      //if(i==n_row-1) Bp[i+1]=0;
+    //__syncthreads;
+
+    //for (int n = 0; n < n_row+1; n++){
+    //  Bp[n]=0;}
+#ifdef DEBUG_cudaGlobalswapCSC_CSR
+    if(i==iprint) printf("start cudaDeviceswapCSC_CSR1ThreadBlock1\n");
+    /*if(i==iprint) {
+    printf("Bp %d:\n",blockIdx);
+      for (int n = blockDim.x*blockIdx.x; n <= blockDim.x*(blockIdx.x+1); n++)
+        printf("%d[%d] ",Bp[n],n);
+      printf("\n");
+    }__syncthreads;*/
+#endif
+
+    if(tid==0){
+    //if(i==iprint){
+    //if(tid==0 && blockIdx.x<gridDim.x){
+      //printf("(nnz/gridDim.x)*blockIdx.x %d %d\n",
+      //       (nnz/gridDim.x)*blockIdx.x, (nnz/gridDim.x)*(blockIdx.x+1));
+      //for (int n = blockDim.x*blockIdx.x; n < nnz/gridDim.x*(blockIdx.x+1); n++){
+      for (int n = (nnz/gridDim.x)*blockIdx.x; n < (nnz/gridDim.x)*(blockIdx.x+1); n++){
+      //for (int n = 0; n < nnz; n++){
+        //Bp[Aj[n]]++;
+        Bp[Aj[n]-blockIdx.x*blockDim.x]++;
+      }
+    }
+    //for(int jj = Ap[i]; jj < Ap[i+1]; jj++){
+    //  Bp[Aj[jj]]++;} // wrong, multiple threads accesing same place
+
+    //for(int n = i; n < nnz; n+=n_row )Bp[Aj[n]]++; // wrong, multiple threads accesing same place
+    //Residual //seems good?
+    //int n;
+    //int n_iters = nnz / n_row;
+    //int residual = nnz-(n_row*n_iters);
+    //if(blockIdx.x==blockDim.x-1){//Last block, which is closer to have read last data
+    //  if(tid<residual){
+    //    n=i+n_row*n_iters;
+    //    Bp[Aj[n]]++;
+    //  }
+    //}    __syncthreads;
+
+    //for (int n  0; n < nnz; n++){
+    //  Bp[Aj[n]]++;
+    //}
+
+#ifdef DEBUG_cudaGlobalswapCSC_CSR
+    if(i==iprint) printf("start cudaDeviceswapCSC_CSR1ThreadBlock2\n");
+    if(i==iprint) {
+      printf("Bp %d:\n",blockIdx);
+      //for (int n = blockDim.x*blockIdx.x; n <= blockDim.x*(blockIdx.x+1); n++)
+      for (int n = 0; n <= blockDim.x; n++)
+        printf("%d ", Bp[n]);
+      printf("\n");
+    }
+#endif
+///*
+
+    //TODO efficient cumsum http://www.eecs.umich.edu/courses/eecs570/hw/parprefix.pdf
+
+    //__syncthreads;
+    if(tid==0){
+    //if(i==iprint){
+    //if(tid==0 && blockIdx.x<gridDim.x){
+      //int cumsum=0;
+      //int cumsum=blockDim.x*blockIdx.x;
+      int cumsum=Ap[blockDim.x*blockIdx.x];
+      //for(int n = blockDim.x*blockIdx.x; n < blockDim.x*(blockIdx.x+1); n++){
+      for(int n = 0; n < blockDim.x; n++){
+        //printf("%d ", Bp[n]);//el compilador me optimiza esto o algo y me trolea cuando printea da diferente wtf xd
+        int temp  = Bp[n];
+        //printf("%d ", temp);
+        Bp[n] = cumsum;
+        cumsum += temp;
+      }
+      //Bp[n_col] = nnz;
+      if(blockIdx.x==gridDim.x-1) Bp[blockDim.x]=nnz;
+    }
+    //if(blockIdx.x==gridDim.x-1 && tid==blockDim.x-1){
+      //printf("HOLAA %d\n\n",nnz);
+      //Bp[blockDim.x]=nnz;}
+    //__syncthreads;
+
+    //for(int col = 0, cumsum = 0; col < n_col; col++){
+    //  int temp  = Bp[col];
+    //  Bp[col] = cumsum;
+    //  cumsum += temp;
+    //}
+    //Bp[n_col] = nnz;
+
+#ifdef DEBUG_cudaGlobalswapCSC_CSR
+    if(i==iprint) printf("start cudaDeviceswapCSC_CSR1ThreadBlock3\n");
+    if(i==iprint) {
+      //printf("Bp %d:\n",blockIdx);
+      //for (int n = blockDim.x*blockIdx.x; n <= blockDim.x*(blockIdx.x+1); n++)
+      for (int n = 0; n <= blockDim.x; n++)
+        printf("%d ", Bp[n]);
+      printf("\n");
+    }
+#endif
+
+    if(tid==0) {
+      //int row=i;
+      //for (int row = 0; row < n_row; row++) {
+      //for(int row=blockDim.x*blockIdx.x; row<blockDim.x*(blockIdx.x+1); row++){
+      for(int row=n_row/gridDim.x*blockIdx.x;row<n_row/gridDim.x*(blockIdx.x+1);row++){
+        for (int jj = Ap[row]; jj < Ap[row + 1]; jj++) {
+          int col = Aj[jj];
+          //int dest = Bp[col];
+          int dest = Bp[col-blockIdx.x*blockDim.x];
+
+          Bi[dest] = row;
+          Bx[dest] = Ax[jj];
+
+          //Bp[col]++;
+          Bp[col-blockIdx.x*blockDim.x]++;
+        }
+      }
+    }
+
+    //for(int row = 0; row < n_row; row++){
+    //  for(int jj = Ap[row]; jj < Ap[row+1]; jj++){
+    //    int col  = Aj[jj];
+    //    int dest = Bp[col];
+    //    Bi[dest] = row;
+    //    Bx[dest] = Ax[jj];
+    //    Bp[col]++;
+    //  }
+    //}
+#ifdef DEBUG_cudaGlobalswapCSC_CSR
+    if(i==iprint) printf("start cudaDeviceswapCSC_CSR1ThreadBlock4\n");
+    if(i==iprint) {
+      //printf("Bp %d:\n",blockIdx);
+      //for (int n = blockDim.x*blockIdx.x; n <= blockDim.x*(blockIdx.x+1); n++)
+      for (int n = 0; n <= blockDim.x; n++)
+        printf("%d ", Bp[n]);
+      printf("\n");
+    }
+#endif
+
+    //__syncthreads;
+    if(tid==0) {
+      //int last=blockDim.x*blockIdx.x;
+      int last=Ap[n_row/gridDim.x*blockIdx.x];
+      //int last=0;
+      //for (int col = blockDim.x*blockIdx.x; col <= blockDim.x*(blockIdx.x+1); col++) {
+      //for (int col = 0; col <= blockDim.x; col++) {
+      int limit=blockDim.x;
+     if(blockIdx.x==gridDim.x-1) limit++;
+      for (int col = 0; col < blockDim.x; col++) {
+        int temp = Bp[col];
+        Bp[col] = last;
+        last = temp;
+      }
+
+    }
+    //__syncthreads;
+
+#ifdef DEBUG_cudaGlobalswapCSC_CSR
+    if(i==iprint) printf("start cudaDeviceswapCSC_CSR1ThreadBlock5\n");
+    if(i==iprint) {
+      //printf("Bp %d:\n",blockIdx);
+      //for (int n = blockDim.x*blockIdx.x; n <= blockDim.x*(blockIdx.x+1); n++)
+      for (int n = 0; n <= blockDim.x; n++)
+        printf("%d ", Bp[n]);
+      printf("\n");
+    }
+#endif
+
+    //for(int col = 0, last = 0; col <= n_col; col++){
+    //  int temp  = Bp[col];
+    //  Bp[col] = last;
+    //  last    = temp;
+    //}
+
+    //if(i==0) printf("start cudaDeviceswapCSC_CSR\n");
+
+    //copy to A
+
+    //Ap[i]=Bp[i];
+    //if(i==n_row-1)
+    //  Ap[i+1]=Bp[i+1];
+
+    if(tid==0){
+      //for(int row = 0; row < n_row; row++) {
+      //for(int row = 0; row < n_row/gridDim.x; row++) {
+      //for(int row = 0; row < blockDim.x; row++) {
+        //for(int row = blockDim.x*blockIdx.x; row < blockDim.x*(blockIdx.x+1); row++) {
+      //for(int row=n_row/gridDim.x*blockIdx.x;row<n_row/gridDim.x*(blockIdx.x+1);row++){//wrong for shared
+        //for (int jj = Bp[row]; jj < Bp[row + 1]; jj++) { //first block has less rows or something
+        //  Aj[jj] = Bi[jj];
+        //  Ax[jj] = Bx[jj];
+        //}
+      for (int n = (nnz/gridDim.x)*blockIdx.x; n < (nnz/gridDim.x)*(blockIdx.x+1); n++) {
+        Aj[n]=Bi[n];
+        Ax[n]=Bx[n];
+      }
+
+    }//__syncthreads;
+
+    if(tid==0){
+      //for (int n = 0; n < n_row+1; n++) Ap[n]=Bp[n];
+      //for(int n=n_row/gridDim.x*blockIdx.x;n<n_row/gridDim.x*(blockIdx.x+1);n++){
+      for(int n=0;n<n_row/gridDim.x;n++){
+        Ap[n+blockIdx.x*blockDim.x]=Bp[n];
+        BpGlobal[n+blockIdx.x*blockDim.x]=Bp[n];
+      }
+      if(blockIdx.x==gridDim.x-1){
+        Ap[n_row]=nnz;
+        BpGlobal[n_row]=nnz;}
+    }//__syncthreads;
+
+    //BpGlobal[i]=Ap[i]=Bp[tid];
+    //Ap[i]=Bp[tid];
+    //if(blockIdx.x==gridDim.x-1 && tid==blockDim.x-1){
+    //  BpGlobal[n_row]=nnz;//Bp[n_row/gridDim.x];
+    //  Ap[n_row]=nnz;//Bp[n_row/gridDim.x];
+    //}
+
+    //if(i==iprint) printf("start cudaDeviceswapCSC_CSR1ThreadBlock6\n");
+
+    //*/
+
+      //for(int jj = Bp[i]; jj < Bp[i+1]; jj++){
+      //  Aj[jj] = Bi[jj];
+      //  Ax[jj] = Bx[jj];}
+
+    //for (int n = 0; n < n_row+1; n++){
+    //Ap[n]=Bp[n];
+    //}
+
+    //for (int n = 0; n < nnz; n++){
+    //  Aj[n]=Bi[n];
+    //  Ax[n]=Bx[n];
+    //}
+
+
+  }
+
+
+}
+
+__global__
+void cudaGlobalswapCSC_CSR(int n_row, int n_col, int* Ap, int* Aj, double* Ax, int* Bp, int* Bi, double* Bx){
+
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
+  unsigned int tid = threadIdx.x;
+  int nnz=Ap[n_row];
+  int iprint=0;
+
+  //if(i==0) printf("start cudaDeviceswapCSC_CSR\n");
+
+#ifdef TEST_DEVICECSCtoCSR
+
+  //Example configuration taken from KLU Sparse pdf
+
+  const int n_row2=3;
+  const int nnz=6;
+  int Cp[n_row2+1]={0,3,5,6};
+  int Cj[nnz]={0,1,2,1,2,2};
+  double Cx[nnz]={5.,4.,3.,2.,1.,8.};
+
+  int* Dp=(int*)malloc((n_row2+1)*sizeof(int));
+  int* Di=(int*)malloc(nnz*sizeof(int));
+  double* Dx=(double*)malloc(nnz*sizeof(double));
+
+  //cudaDeviceswapCSC_CSR1Thread(n_row2,n_row2,Cp,Cj,Cx,Dp,Di,Dx);
+  cudaDeviceswapCSC_CSR1ThreadBlock(n_row2,n_row2,Cp,Cj,Cx,Dp,Di,Dx);
+
+  //Correct result:
+  //int Cp[n_row+1]={0,1,3,6};
+  //int Ci[nnz]={0,0,1,0,1,2};
+  //int Cx[nnz]={5,4,2,3,1,8};
+
+  if(i==0) {
+    printf("Bp:\n");
+    for (int i = 0; i <= n_row2; i++)
+      printf("%d ", Dp[i]);
+    printf("\n");
+    printf("Bi:\n");
+    for (int i = 0; i < nnz; i++)
+      printf("%d ", Di[i]);
+    printf("\n");
+    printf("Bx:\n");
+    for (int i = 0; i < nnz; i++)
+      printf("%-le ", Dx[i]);
+    printf("\n");
+  }
+
+  //exit(0);
+
+#endif
+
+#ifdef DEBUG_cudaGlobalswapCSC_CSR
+  if(gridDim.x>1)iprint=blockDim.x;//block 2
+  if(i==iprint) printf("end cudaGlobalswapCSC_CSR\n");
+  if(i==iprint) {
+    printf("Ap:\n");
+    for (int n = 0; n <= n_row; n++)
+      printf("%d ", Ap[n]);
+    printf("\n");
+    printf("Aj:\n");
+    for (int i = 0; i < nnz; i++)
+      printf("%d ", Aj[i]);
+    printf("\n");
+    //printf("Ax:\n");
+    //for (int i = 0; i < nnz; i++)
+    //  printf("%-le ", Ax[i]);
+    //printf("\n");
+  }
+#endif
+
+  //cudaDeviceswapCSC_CSR1Thread(n_row,n_col,Ap,Aj,Ax,Bp,Bi,Bx);
+  cudaDeviceswapCSC_CSR1ThreadBlock(n_row,n_col,Ap,Aj,Ax,Bp,Bi,Bx); //wa not work with more than one-cell
+
+#ifdef DEBUG_cudaGlobalswapCSC_CSR
+  if(gridDim.x>1)iprint=blockDim.x;//block 2
+  if(i==iprint) printf("end cudaGlobalswapCSC_CSR\n");
+  if(i==iprint) {
+    printf("Ap:\n");
+    for (int n = 0; n <= n_row; n++)
+      printf("%d ", Ap[n]);
+    printf("\n");
+    printf("Aj:\n");
+    for (int i = 0; i < nnz; i++)
+      printf("%d ", Aj[i]);
+    printf("\n");
+    /*printf("Ax:\n");
+    for (int i = 0; i < nnz; i++)
+      printf("%-le ", Ax[i]);
+    printf("\n");
+     */
+  }
+#endif
+
+  /*
+  if(i<n_row){
+  //Copy to A
+
+    Ap[i]=Bp[i];
+    if(i==n_row-1) Ap[n_row]=Bp[n_row];
+
+   // for(int jj = Bp[i]; jj < Bp[i+1]; jj++){
+   //   Aj[jj] = Bi[jj];
+   //   Ax[jj] = Bx[jj];}
+
+  }
+
+
+  if(i==0){
+    //for (int n = 0; n < n_row+1; n++) Ap[n]=Bp[n];
+    //Ap[n_row]=Bp[n_row];
+
+    for (int n = 0; n < nnz; n++){
+      Aj[n]=Bi[n];
+      Ax[n]=Bx[n];}
+  }
+  __syncthreads;
+*/
+
+  //if(i==0) printf("end cudaDeviceswapCSC_CSR\n");
+
+
+}
 
 
 //Based on
 // https://github.com/scipy/scipy/blob/3b36a574dc657d1ca116f6e230be694f3de31afc/scipy/sparse/sparsetools/csr.h#L363
-void CSRtoCSCandCSCtoCSR(int n_row, int n_col, int* Ap, int* Aj, double* Ax, int* Bp, int* Bi, double* Bx){
+void swapCSC_CSR(int n_row, int n_col, int* Ap, int* Aj, double* Ax, int* Bp, int* Bi, double* Bx){
 
   int nnz=Ap[n_row];
 
@@ -137,85 +629,8 @@ void CSRtoCSCandCSCtoCSR(int n_row, int n_col, int* Ap, int* Aj, double* Ax, int
 
 }
 
-void CSRtoCSC(itsolver *bicg){
 
-#ifdef TEST_CSRtoCSC
-
-  //Example configuration taken from KLU Sparse pdf
-  int n_row=3;
-  int n_col=n_row;
-  int nnz=6;
-  int Ap[n_row+1]={0,1,3,6};
-  int Aj[nnz]={0,0,1,0,1,2};
-  double Ax[nnz]={5.,4.,2.,3.,1.,8.};
-  int* Bp=(int*)malloc((n_row+1)*sizeof(int));
-  int* Bi=(int*)malloc(nnz*sizeof(int));
-  double* Bx=(int*)malloc(nnz*sizeof(double));
-#else
-
-  //cudaMemcpy(bicg->dA,bicg->djA,bicg->nnz*sizeof(int),cudaMemcpyDeviceToHost);
-  //cudaMemcpy(bicg->iA,bicg->diA,(bicg->nrows+1)*sizeof(int),cudaMemcpyDeviceToHost);
-
-  int n_row=bicg->nrows;
-  int n_col=n_row;
-  int nnz=bicg->nnz;
-  int* Ap=bicg->iA;
-  int* Aj=bicg->jA;
-  double* Ax=bicg->A;
-  int* Bp=(int*)malloc((bicg->nrows+1)*sizeof(int));
-  int* Bi=(int*)malloc(bicg->nnz*sizeof(int));
-  double* Bx=(double*)malloc(nnz*sizeof(double));
-
-#endif
-
-  CSRtoCSCandCSCtoCSR(n_row,n_col,Ap,Aj,Ax,Bp,Bi,Bx);
-
-#ifdef TEST_CSRtoCSC
-
-  //Correct result:
-  //int Cp[n_row+1]={0,3,5,6};
-  //int Ci[nnz]={0,1,2,1,2,2};
-  //int Cx[nnz]={5,4,3,2,1,8};
-
-  printf("Bp:\n");
-  for(int i=0;i<=n_row;i++)
-    printf("%d ",Bp[i]);
-  printf("\n");
-  printf("Bi:\n");
-  for(int i=0;i<nnz;i++)
-    printf("%d ",Bi[i]);
-  printf("\n");
-  printf("Bx:\n");
-  for(int i=0;i<nnz;i++)
-    printf("%-le ",Bx[i]);
-  printf("\n");
-  exit(0);
-
-#else
-
-  /*
-  for(int i=0;i<bicg->nnz;i++)
-    bicg->jA[i]=Bi[i];
-  for(int i=0;i<=bicg->nrows;i++)
-    bicg->iA[i]=Bp[i];
-
-  cudaMemcpy(bicg->djA,bicg->jA,bicg->nnz*sizeof(int),cudaMemcpyHostToDevice);
-  cudaMemcpy(bicg->diA,bicg->iA,(bicg->nrows+1)*sizeof(int),cudaMemcpyHostToDevice);
-   */
-
-  cudaMemcpy(bicg->diA,Bp,(bicg->nrows+1)*sizeof(int),cudaMemcpyHostToDevice);
-  cudaMemcpy(bicg->djA,Bi,bicg->nnz*sizeof(int),cudaMemcpyHostToDevice);
-  cudaMemcpy(bicg->dA,Bx,bicg->nnz*sizeof(double),cudaMemcpyHostToDevice);
-
-#endif
-
-  free(Bp);
-  free(Bi);
-  free(Bx);
-
-}
-
-void CSCtoCSR(itsolver *bicg){
+void swapCSC_CSR_BCG(itsolver *bicg){
 
 #ifdef TEST_CSCtoCSR
 
@@ -230,14 +645,23 @@ void CSCtoCSR(itsolver *bicg){
   int* Bi=(int*)malloc(nnz*sizeof(int));
   double* Bx=(double*)malloc(nnz*sizeof(double));
 
+#elif TEST_CSRtoCSC
+
+  //Example configuration taken from KLU Sparse pdf
+  int n_row=3;
+  int n_col=n_row;
+  int nnz=6;
+  int Ap[n_row+1]={0,1,3,6};
+  int Aj[nnz]={0,0,1,0,1,2};
+  double Ax[nnz]={5.,4.,2.,3.,1.,8.};
+  int* Bp=(int*)malloc((n_row+1)*sizeof(int));
+  int* Bi=(int*)malloc(nnz*sizeof(int));
+  double* Bx=(int*)malloc(nnz*sizeof(double));
+
 #else
 
-  //cudaMemcpy(bicg->iA,bicg->diA,(bicg->nrows+1)*sizeof(int),cudaMemcpyDeviceToHost);
-  //cudaMemcpy(bicg->jA,bicg->djA,bicg->nnz*sizeof(int),cudaMemcpyDeviceToHost);
-  //cudaMemcpy(bicg->A,bicg->dA,bicg->nnz*sizeof(double),cudaMemcpyDeviceToHost);
-
   int n_row=bicg->nrows;
-  int n_col=n_row;
+  int n_col=bicg->nrows;
   int nnz=bicg->nnz;
   int* Ap=bicg->iA;
   int* Aj=bicg->jA;
@@ -248,7 +672,7 @@ void CSCtoCSR(itsolver *bicg){
 
 #endif
 
-  CSRtoCSCandCSCtoCSR(n_row,n_col,Ap,Aj,Ax,Bp,Bi,Bx);
+  swapCSC_CSR(n_row,n_col,Ap,Aj,Ax,Bp,Bi,Bx);
 
 #ifdef TEST_CSCtoCSR
 
@@ -272,14 +696,35 @@ void CSCtoCSR(itsolver *bicg){
 
   exit(0);
 
+#elif TEST_CSRtoCSC
+
+  //Correct result:
+  //int Cp[n_row+1]={0,3,5,6};
+  //int Ci[nnz]={0,1,2,1,2,2};
+  //int Cx[nnz]={5,4,3,2,1,8};
+
+  printf("Bp:\n");
+  for(int i=0;i<=n_row;i++)
+    printf("%d ",Bp[i]);
+  printf("\n");
+  printf("Bi:\n");
+  for(int i=0;i<nnz;i++)
+    printf("%d ",Bi[i]);
+  printf("\n");
+  printf("Bx:\n");
+  for(int i=0;i<nnz;i++)
+    printf("%-le ",Bx[i]);
+  printf("\n");
+  exit(0);
+
 #else
 
   cudaMemcpy(bicg->diA,Bp,(bicg->nrows+1)*sizeof(int),cudaMemcpyHostToDevice);
   cudaMemcpy(bicg->djA,Bi,bicg->nnz*sizeof(int),cudaMemcpyHostToDevice);
   cudaMemcpy(bicg->dA,Bx,bicg->nnz*sizeof(double),cudaMemcpyHostToDevice);
 
-
 #endif
+
 
   free(Bp);
   free(Bi);
