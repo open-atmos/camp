@@ -169,6 +169,12 @@ void solver_new_gpu_cu(SolverData *sd, int n_dep_var,
            n_blocks, md->max_n_gpu_blocks);
   }
 
+  if(n_dep_var<32 && sd->use_cpu==0) {
+    printf("CAMP ERROR: TOO FEW SPECIES FOR GPU (Species < 32),"
+           " use CPU case instead (More info: https://earth.bsc.es/gitlab/ac/PartMC/-/issues/65 \n");
+    exit(0);
+  }
+
 #ifdef PMC_DEBUG_PRINT_GPU_SPECS
   print_gpu_specs();
 #endif

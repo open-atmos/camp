@@ -777,29 +777,6 @@ __device__ void cudaDevicedotxy(double *g_idata1, double *g_idata2,
   //unsigned int i = blockIdx.x*(blockDim.x*2) + threadIdx.x;
   unsigned int i = blockIdx.x*blockDim.x + threadIdx.x;
 
-#ifdef BCG_ALL_THREADS
-
-  double mySum = (i < n) ? g_idata1[i]*g_idata2[i] : 0.;
-
-  sdata[tid] = mySum;
-
-  __syncthreads();
-
-  for (unsigned int s=(blockDim.x+n_shr_empty)/2; s>0; s>>=1)
-  {
-    if (tid < s)
-      sdata[tid] = mySum = mySum + sdata[tid + s];
-
-    __syncthreads();
-  }
-
-  //if (tid==0) *g_odata = sdata[0];
-  *g_odata = sdata[0];
-  //*g_odata = sdata[0]+0.1*tid;
-  __syncthreads();
-
-#else
-
   __syncthreads();
 
   //Needed, when testing be careful with SRAM data remanesce https://stackoverflow.com/questions/22172881/why-does-my-kernels-shared-memory-seems-to-be-initialized-to-zero
@@ -841,6 +818,7 @@ __device__ void cudaDevicedotxy(double *g_idata1, double *g_idata2,
   //todo treat case deriv_length < 32
   //maybe https://github.com/cudpp/cudpp/blob/master/src/cudpp/kernel/reduce_kernel.cuh
 
+  ///*
   unsigned int blockSize = blockDim.x+n_shr_empty;
 
   // do reduction in shared mem
@@ -872,10 +850,11 @@ __device__ void cudaDevicedotxy(double *g_idata1, double *g_idata2,
 
   __syncthreads();//not needed?
 
+  //*/
+
   *g_odata = sdata[0];
   __syncthreads();
 
-#endif
 
 }
 //n_shr_empty its a different implementation from cuda reduce extended samples ( https://docs.nvidia.com/cuda/cuda-samples/index.html)

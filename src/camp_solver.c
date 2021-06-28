@@ -368,8 +368,10 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
   sd->model_data.sub_model_int_indices[0] = 0;
   sd->model_data.sub_model_float_indices[0] = 0;
   sd->model_data.sub_model_env_idx[0] = 0;
+  sd->use_cpu = 1;
 
 #ifdef PMC_USE_GPU
+  get_camp_config_variables(sd);
   solver_new_gpu_cu(sd, n_dep_var, n_state_var, n_rxn,
                     n_rxn_int_param, n_rxn_float_param, n_rxn_env_param,
                     n_cells);
@@ -383,11 +385,8 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
   sd->model_data.counterPhoto = 0;
 #endif
 
-  sd->use_cpu = 1;
-
 #ifdef PMC_DEBUG_GPU
 
-  get_camp_config_variables(sd);
   printf("sd->use_cpu %d\n",sd->use_cpu);
 
   sd->counterDerivTotal = 0;

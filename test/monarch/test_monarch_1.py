@@ -213,7 +213,7 @@ def all_timesteps():
   mpiProcessesList = [1]
   #mpiProcessesList = [40,1]
 
-  cells = [2]
+  cells = [10]
   #cells = [1,10,100,1000]
   #cells = [1,10,100,1000,10000,100000]
 
@@ -279,10 +279,6 @@ def all_timesteps():
     cases_gpu_cpu[i]=cases_words[0]
     cases_multicells_onecell[i]=cases_words[1]
     #if("GPU" in cases_gpu_cpu[i] and "One-cell" in cases_multicells_onecell[i])
-
-    if(config_file=="simple" and cases_gpu_cpu[i]=="GPU"):
-      print("ERROR: CASE SIMPLE FAILS ON GPU BECAUSE NOT "
-            "ENOUGH SPECIES TO DO REDUCE ON BICONJUGATE GRADIENT FUNCTION")
 
   if "total" in plot_y_key:
     print("WARNING: Remember to enable solveBcgCuda_sum_it")
