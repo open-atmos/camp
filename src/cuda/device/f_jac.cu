@@ -267,7 +267,7 @@ void cudaDevicef(
                                           md->map_state_deriv, threshhold, replacement_value,
                                           flag, deriv_length_cell, n_cells);
 
-  __syncthreads;
+  //__syncthreads();
   //study flag block effect: flag is global for all threads or for only the block?
   if(*flag==CAMP_SOLVER_FAIL)
     return;

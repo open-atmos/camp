@@ -45,6 +45,9 @@ typedef struct
   double* daux;
 
   // ODE solver variables
+  int flag;
+  int *dflag;
+  double *ddel;
   double* dewt;
   double* dacor;
   double* dacor_init;
@@ -106,8 +109,8 @@ typedef struct
   cudaEvent_t stopLinSolSolve;
   cudaEvent_t stopNewtonIt;
   cudaEvent_t stopcvStep;
-  cudaEvent_t stopBiConjGradMemcpy;
-  cudaEvent_t stopBiConjGrad;
+  cudaEvent_t stopBCGMemcpy;
+  cudaEvent_t stopBCG;
 
   cudaEvent_t stopJac;
 

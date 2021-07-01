@@ -188,6 +188,8 @@ void cudaDeviceswapCSC_CSR1Thread(int n_row, int n_col, int* Ap, int* Aj, double
   }
 }
 
+//Based on
+// https://github.com/scipy/scipy/blob/3b36a574dc657d1ca116f6e230be694f3de31afc/scipy/sparse/sparsetools/csr.h#L363
 __device__
 void cudaDeviceswapCSC_CSR1ThreadBlock(int n_row, int n_col, int* Ap, int* Aj, double* Ax, int* BpGlobal, int* Bi, double* Bx) {
 
@@ -226,7 +228,7 @@ void cudaDeviceswapCSC_CSR1ThreadBlock(int n_row, int n_col, int* Ap, int* Aj, d
       for (int n = blockDim.x*blockIdx.x; n <= blockDim.x*(blockIdx.x+1); n++)
         printf("%d[%d] ",Bp[n],n);
       printf("\n");
-    }__syncthreads;*/
+    }__syncthreads();*/
 #endif
 
     if(tid==0){
@@ -460,34 +462,6 @@ void cudaGlobalswapCSC_CSR(int n_row, int n_col, int* Ap, int* Aj, double* Ax, i
   }
 #endif
 
-  /*
-  if(i<n_row){
-  //Copy to A
-
-    Ap[i]=Bp[i];
-    if(i==n_row-1) Ap[n_row]=Bp[n_row];
-
-   // for(int jj = Bp[i]; jj < Bp[i+1]; jj++){
-   //   Aj[jj] = Bi[jj];
-   //   Ax[jj] = Bx[jj];}
-
-  }
-
-
-  if(i==0){
-    //for (int n = 0; n < n_row+1; n++) Ap[n]=Bp[n];
-    //Ap[n_row]=Bp[n_row];
-
-    for (int n = 0; n < nnz; n++){
-      Aj[n]=Bi[n];
-      Ax[n]=Bx[n];}
-  }
-  __syncthreads;
-*/
-
-  //if(i==0) printf("end cudaDeviceswapCSC_CSR\n");
-
-
 }
 
 
@@ -626,7 +600,6 @@ void swapCSC_CSR_BCG(itsolver *bicg){
   cudaMemcpy(bicg->dA,Bx,bicg->nnz*sizeof(double),cudaMemcpyHostToDevice);
 
 #endif
-
 
   free(Bp);
   free(Bi);

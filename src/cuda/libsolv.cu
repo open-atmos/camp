@@ -899,21 +899,30 @@ __device__ void cudaDeviceaxpy(double* dy,double* dx, double a, int nrows)
 }
 
 // sqrt(sum ( (x_i*y_i)^2)/n)
-__device__ void cudaDeviceDVWRMS_Norm(double *g_idata1, double *g_idata2, double *g_odata, unsigned int n)
+__device__ void cudaDeviceVWRMS_Norm(double *g_idata1, double *g_idata2, double *g_odata, int n, int n_shr)
 {
   extern __shared__ double sdata[];
   unsigned int tid = threadIdx.x;
-  unsigned int i = blockIdx.x*(blockDim.x*2) + threadIdx.x;
+  //unsigned int i = blockIdx.x*(blockDim.x*2) + threadIdx.x;
+  unsigned int i = blockIdx.x*blockDim.x + threadIdx.x;
 
+  if (tid == 0){
+    for (int j=0; j<n_shr; j++)
+      sdata[j] = 0.;
+  }
+
+/*
   double mySum = (i < n) ? g_idata1[i]*g_idata1[i]*g_idata2[i]*g_idata2[i] : 0;
-
   if (i + blockDim.x < n)
     mySum += g_idata1[i+blockDim.x]*g_idata1[i+blockDim.x]*g_idata2[i+blockDim.x]*g_idata2[i+blockDim.x];
+*/
 
+  __syncthreads();
+  double mySum=g_idata1[i]*g_idata1[i]*g_idata2[i]*g_idata2[i];
   sdata[tid] = mySum;
   __syncthreads();
 
-  for (unsigned int s=blockDim.x/2; s>0; s>>=1)
+  for (unsigned int s=n_shr/2; s>0; s>>=1)
   {
     if (tid < s)
       sdata[tid] = mySum = mySum + sdata[tid + s];
@@ -921,7 +930,10 @@ __device__ void cudaDeviceDVWRMS_Norm(double *g_idata1, double *g_idata2, double
     __syncthreads();
   }
 
-  if (tid == 0) g_odata[blockIdx.x] = sdata[0];
+  //if (tid == 0) g_odata[blockIdx.x] = sdata[0];
+  g_odata[0] = sqrt(sdata[0]/n);
+  //*g_odata = sqrt(sdata[0]/n);
+  __syncthreads();
 }
 
 // y=alpha*y
