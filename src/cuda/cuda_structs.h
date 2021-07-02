@@ -48,6 +48,7 @@ typedef struct
   int flag;
   int *dflag;
   double *ddel;
+  double *dcv_tq;
   double* dewt;
   double* dacor;
   double* dacor_init;
@@ -57,6 +58,9 @@ typedef struct
   double* dftemp;
   double* dzn;
   double* dcv_y;
+
+  //ODE stats
+  //int cv_mnewt; //Newton iteration counter
 
 #ifdef PMC_DEBUG_GPU
   int counterSendInit;
