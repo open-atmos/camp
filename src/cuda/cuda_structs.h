@@ -47,7 +47,6 @@ typedef struct
   // ODE solver variables
   int flag;
   int *dflag;
-  double *ddel;
   double *dcv_tq;
   double* dewt;
   double* dacor;

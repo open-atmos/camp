@@ -54,8 +54,8 @@ int cvNlsNewton_gpu2(SolverData *sd, CVodeMem cv_mem, int nflag);
 //int linsolsetup_gpu2(CVodeMem cv_mem);
 int linsolsetup_gpu2(SolverData *sd, CVodeMem cv_mem, int convfail, N_Vector vtemp1, N_Vector vtemp2, N_Vector vtemp3);
 void free_ode_gpu2(SolverData *sd);
-int linsolsolve_gpu2(SolverData *sd, CVodeMem cv_mem);
-//int linsolsolve_gpu2(int *m, double *del, double *delp, double *dcon, SUNMatrix J, CVodeMem cv_mem, double *x, double *b);
+int cvNewtonIteration_gpu2(SolverData *sd, CVodeMem cv_mem);
+//int cvNewtonIteration_gpu2(int *m, double *del, double *delp, double *dcon, SUNMatrix J, CVodeMem cv_mem, double *x, double *b);
 
 //void setUpSolver(itsolver bicg, double reltol, double *ewt, int tnrows,int tnnz,double *tA, int *tjA, int *tiA, int tmattype, int qmax, double *dACamp, double *dftempCamp);
 
