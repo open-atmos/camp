@@ -158,7 +158,7 @@ typedef struct {
 #ifdef __CUDA_ARCH__
 #else
 #endif
-#ifdef DEV_REMOVE_threadIdx0
+#ifdef DEV_JACOBIANGPUNUMSPEC
     int num_spec;   // Number of species
 #endif
     //unsigned int num_elem;   // Number of potentially non-zero Jacobian elements

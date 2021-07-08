@@ -75,7 +75,7 @@ int jacobian_initialize_gpu(SolverData *sd) {
   //cudaMalloc((void **) &(mGPU->jac.num_elem), 1*sizeof(mGPU->jac.num_elem));//*md->n_mapped_values should be the same
 
 
-  //printf("num_elem %d\n",num_elem);
+  //printf("jac->num_elem %d\n",jac->num_elem);
 
   cudaMalloc((void **) &(jacgpu->production_partials), num_elem * sizeof(jacgpu->production_partials));
   cudaMalloc((void **) &(jacgpu->loss_partials), num_elem * sizeof(jacgpu->loss_partials));
@@ -112,6 +112,7 @@ void jacobian_reset_gpu(JacobianGPU jac) {
   }*/
 #else
 
+  /*
   __syncthreads();
   if(threadIdx.x==0){
     int nnz = jac.num_elem[0];
@@ -120,7 +121,35 @@ void jacobian_reset_gpu(JacobianGPU jac) {
       jac.production_partials[n] = 0.0;
       jac.loss_partials[n] = 0.0;
     }
+*/
+
+    __syncthreads();
+  if(threadIdx.x==0){
+    //int nnz = jac.num_elem[0];
+    int nnz = jac.num_elem[0];
+    //for (int n = (nnz/gridDim.x)*blockIdx.x; n < (nnz/gridDim.x)*(blockIdx.x+1); n++) {
+    for (int n = 0; n < nnz; n++) {
+      jac.production_partials[n] = 0.0;//1.E-100;//0.0;
+      jac.loss_partials[n] = 0.0;
+    }
+
+    /*
+    //dont needed, always jac.num_elem=jacCell.num_elem*n_cells
+     if(blockIdx.x==gridDim.x-1){
+      int nnz_left = nnz = jac.num_elem[0]*gridDim.x-((nnz/gridDim.x)*gridDim.x);
+      for (int n = (nnz/gridDim.x)*blockIdx.x; n < (nnz/gridDim.x)*(blockIdx.x+1); n++) {
+      //for (int n = 0; n < nnz; n++) {
+        jac.production_partials[n] = 0.0;
+        jac.loss_partials[n] = 0.0;
+      }
+    }*/
+
+
+
   }__syncthreads();
+
+
+
 
 
 #endif
@@ -157,6 +186,8 @@ void jacobian_output_gpu(JacobianGPU jac, double *dest_array) {
     dest_array[i_elem] = drf_dy - drr_dy;
   }
    */
+
+  /*
     __syncthreads();
   //todo if this works, delete col_ptrs since it's not used during calc jac
   if(threadIdx.x==0){
@@ -179,6 +210,7 @@ void jacobian_output_gpu(JacobianGPU jac, double *dest_array) {
       }
     }
   }__syncthreads();
+   */
 
 #else
 
@@ -187,8 +219,8 @@ void jacobian_output_gpu(JacobianGPU jac, double *dest_array) {
   if(threadIdx.x==0){
     int i_col = blockIdx.x * blockDim.x + threadIdx.x;
     int nnz = jac.num_elem[0];
-    for (int n = (nnz/gridDim.x)*blockIdx.x; n < (nnz/gridDim.x)*(blockIdx.x+1); n++) {
-    //for (int n = 0; n < nnz; n++) {
+    //for (int n = (nnz/gridDim.x)*blockIdx.x; n < (nnz/gridDim.x)*(blockIdx.x+1); n++) {
+    for (int n = 0; n < nnz; n++) {
          double drf_dy = jac.production_partials[n];
          double drr_dy = jac.loss_partials[n];
 

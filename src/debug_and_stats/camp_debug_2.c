@@ -138,6 +138,7 @@ int compare_doubles(double *x, double *y, int len, const char *s){
   double tol=0.01;
   //float tol=0.0001;
   int rel_error;
+  int n_fails=0;
   for (int i=0; i<len; i++){
     if(x[i]==0)
       rel_error=0.;
@@ -148,6 +149,9 @@ int compare_doubles(double *x, double *y, int len, const char *s){
       printf("compare_doubles %s rel_error %le for tol %le at [%d]: %le vs %le\n",
               s,rel_error,tol,i,x[i],y[i]);
       flag=0;
+      n_fails++;
+      if(n_fails==4)
+        return flag;
     }
   }
 

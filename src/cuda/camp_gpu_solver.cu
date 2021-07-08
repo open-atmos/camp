@@ -1581,7 +1581,7 @@ __device__ void cudaDevicecalc_Jac0(
     JacobianGPU *jac = &md->jac;
     JacobianGPU jacCell;
 
-#ifdef DEV_REMOVE_threadIdx0
+#ifdef DEV_JACOBIANGPUNUMSPEC
     jac->num_spec = state_size_cell;
     jacCell.num_spec = state_size_cell;
 #endif
@@ -1601,10 +1601,12 @@ __device__ void cudaDevicecalc_Jac0(
 
 #ifdef AEROS_CPU
 #else
-    jacCell.production_partials = jac->production_partials;
-    jacCell.loss_partials = jac->loss_partials;
-    jacobian_reset_gpu(jacCell);
-    __syncthreads();
+    //todo dont need modify pointers
+    //jacCell.production_partials = jac->production_partials;
+    //jacCell.loss_partials = jac->loss_partials;
+
+    //jacobian_reset_gpu(jacCell);
+    //__syncthreads();
 #endif
 
     int i_cell = tid/deriv_length_cell;
@@ -1613,6 +1615,7 @@ __device__ void cudaDevicecalc_Jac0(
     jacCell.loss_partials = &( jac->loss_partials[jac_length_cell*i_cell]);
     //jacCell.col_ptrs = &( md->col_ptrs[algo*i_cell]);
 
+    jacobian_reset_gpu(jacCell);
 
     md->grid_cell_state = &( md->state[state_size_cell*i_cell]);
     md->grid_cell_env = &( md->env[PMC_NUM_ENV_PARAM_*i_cell]);
@@ -1686,12 +1689,12 @@ __device__ void cudaDevicecalc_Jac0(
              deriv_data.loss_rates[tid]);
     }*/
 
-    jacCell.production_partials = jac->production_partials;
-    jacCell.loss_partials = jac->loss_partials;
+    //jacCell.production_partials = jac->production_partials;
+    //jacCell.loss_partials = jac->loss_partials;
     //todo just use jac in jacobian output_gpu instead of updating jacCell
-    __syncthreads();
+    //__syncthreads();
 
-    jacobian_output_gpu(jacCell, md->J_rxn);
+    jacobian_output_gpu(jacCell, &(md->J_rxn[jacCell.num_elem[0]*blockIdx.x]) );
     //jacobian_output_gpu(jacCell, md->J_rxn);
     //jacobian_output_gpu(jacCell, md->J);
 
@@ -1808,12 +1811,13 @@ void cudaDeviceJac0(
   //  (SM_INDEXPTRS_S(J))[i] = (SM_INDEXPTRS_S(md->J_init))[i];
   //}
 
-  /*
+/*
+  //doesnt change anything
   __syncthreads();
   if(threadIdx.x==0) {
     int nnz = (md->n_mapped_values[0])*n_cells;
-    for (int n = (nnz / gridDim.x) * blockIdx.x; n < (nnz / gridDim.x) * (blockIdx.x + 1); n++) {
-      md->J[n] = 0.0;
+    for (int n = (nnz/gridDim.x)*blockIdx.x; n<(nnz/gridDim.x)*(blockIdx.x+1); n++) {
+      md->J[n] = 1.0;
 
       //md->J_rxn[n] = 0.0;
 
@@ -1821,7 +1825,7 @@ void cudaDeviceJac0(
       //(SM_DATA_S(J))[i] = (realtype)0.0;
     }
   }__syncthreads();
-   */
+*/
 
   //if(tid==0)printf("cudaDeviceJac01\n");
 
