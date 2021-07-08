@@ -1866,7 +1866,7 @@ void solveCVODEGPU_thr(int blocks, int threads_block, int n_shr_memory, int n_sh
 
   /*
 
-   int threads_block = len_cell;
+  int threads_block = len_cell;
   int blocks = bicg->n_cells;
   int n_shr = nextPowerOfTwo2(len_cell);
   int n_shr_empty = n_shr-threads_block;
@@ -1886,24 +1886,24 @@ void solveCVODEGPU_thr(int blocks, int threads_block, int n_shr_memory, int n_sh
 #endif
 
   cudaGlobalSolveODE <<<blocks,threads_block,n_shr_memory*sizeof(double)>>>
-                                             (dA, djA, diA, dx, bicg->dtempv, nrows, blocks, n_shr_empty, maxIt, mattype, bicg->n_cells,
-                                                     tolmax, ddiag, dr0, dr0h, dn0, dp0, dt, ds, dAx2, dy, dz,
-                                                     //swapCSC_CSR_BCG
-                                                     bicg->diB,bicg->djB,bicg->dB,
-                                                     //Guess_helper
-                                                     cv_mem->cv_tn, 0., bicg->dftemp,
-                                                     bicg->dcv_y, bicg->dtempv1,
-                                                     bicg->dtempv2, ((CVodeMem)sd->cvode_mem)->cv_reltol,
-                                                     //update_state
-                                                     threshhold, replacement_value, bicg->dflag,//&flag,
-                                                     //f_gpu
-                                                     time_step, len_cell, md->n_per_cell_state_var,
-                                                     i_kernel, threads_block, sd->mGPU,
-                                                     //cudacvNewtonIteration
-                                                     bicg->dacor, bicg->dzn, cv_mem->cv_jcur,
-                                                     bicg->dewt, cv_mem->cv_rl1, cv_mem->cv_gamma,
-                                                     cv_mem->cv_mnewt, cv_mem->cv_crate, bicg->dcv_tq,
-                                                     cv_mem->cv_acnrm, cv_mem->cv_maxcor, cv_mem->cv_nfe
+    (dA, djA, diA, dx, bicg->dtempv, nrows, blocks, n_shr_empty, maxIt, mattype, bicg->n_cells,
+       tolmax, ddiag, dr0, dr0h, dn0, dp0, dt, ds, dAx2, dy, dz,
+       //swapCSC_CSR_BCG
+       bicg->diB,bicg->djB,bicg->dB,
+       //Guess_helper
+       cv_mem->cv_tn, 0., bicg->dftemp,
+       bicg->dcv_y, bicg->dtempv1,
+       bicg->dtempv2, ((CVodeMem)sd->cvode_mem)->cv_reltol,
+       //update_state
+       threshhold, replacement_value, bicg->dflag,//&flag,
+       //f_gpu
+       time_step, len_cell, md->n_per_cell_state_var,
+       i_kernel, threads_block, sd->mGPU,
+       //cudacvNewtonIteration
+       bicg->dacor, bicg->dzn, cv_mem->cv_jcur,
+       bicg->dewt, cv_mem->cv_rl1, cv_mem->cv_gamma,
+       cv_mem->cv_mnewt, cv_mem->cv_crate, bicg->dcv_tq,
+       cv_mem->cv_acnrm, cv_mem->cv_maxcor, cv_mem->cv_nfe
 #ifdef PMC_DEBUG_GPU
   ,bicg->counterBiConjGradInternalGPU, &bicg->dtBCG,
       &bicg->dtPreBCG, &bicg->dtPostBCG, sd->counterDerivGPU

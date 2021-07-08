@@ -214,6 +214,7 @@ void jacobian_output_gpu(JacobianGPU jac, double *dest_array) {
 
 #else
 
+  //todo adapt to multi-cells gpu (not only one-cell per block)
   __syncthreads();
   //todo if this works, delete col_ptrs since it's not used during calc jac
   if(threadIdx.x==0){

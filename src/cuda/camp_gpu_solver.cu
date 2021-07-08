@@ -1896,16 +1896,19 @@ int rxn_calc_jac_gpu(SolverData *sd, SUNMatrix J, double time_step) {
   int n_cells = md->n_cells;
   int n_kernels = 1; // Divide load into multiple kernel calls
   //todo n_kernels case division left residual, an extra kernel computes remain residual
-#ifdef BASIC_CALC_DERIV
-  int total_threads = md->n_rxn*n_cells/n_kernels; //Reaction group per number of repetitions/cells
-  int threads_block = md->max_n_gpu_thread;
+#ifndef DEV_ONE_CELL_GPU
+  int threads_block = md->n_per_cell_dep_var;
+  int n_blocks = bicg->n_cells;
+  //int n_shr = nextPowerOfTwo2(len_cell);
+  //int n_shr_empty = n_shr-threads_block;
+  int n_shr_empty = 0;
 #else
-  int n_per_cell_dep_var = md->n_per_cell_dep_var;
-  int total_threads = n_per_cell_dep_var * n_cells/n_kernels;
-  int n_shr_empty = md->max_n_gpu_thread%n_per_cell_dep_var;
+  int total_threads = md->n_per_cell_dep_var * n_cells/n_kernels;
+  int n_shr_empty = md->max_n_gpu_thread%md->n_per_cell_dep_var;
   int threads_block = md->max_n_gpu_thread - n_shr_empty; //last multiple of size_cell before max_threads
-#endif
   int n_blocks = ((total_threads + threads_block - 1) / threads_block);
+#endif
+
   ModelDataGPU *mGPU = &sd->mGPU;
   //Update state
   double replacement_value = TINY;
@@ -1923,7 +1926,7 @@ int rxn_calc_jac_gpu(SolverData *sd, SUNMatrix J, double time_step) {
    }
    */
 
-#ifdef DEV_RESET_JAC_GPU_TO_INIT
+#ifndef DEV_RESET_JAC_GPU_TO_INIT
   //produce wrong results
   //dont needed (no refactor in GPU at first instance)
   SM_NNZ_S(J) = SM_NNZ_S(md->J_init);
@@ -1936,8 +1939,8 @@ int rxn_calc_jac_gpu(SolverData *sd, SUNMatrix J, double time_step) {
     bicg->jA[i]=SM_INDEXVALS_S(J)[i];
     (SM_DATA_S(J))[i] = (realtype)0.0;
   }
-  cudaMemcpy(bicg->djA,bicg->jA,bicg->nnz*sizeof(int),cudaMemcpyHostToDevice);
-  cudaMemcpy(bicg->diA,bicg->iA,(bicg->nrows+1)*sizeof(int),cudaMemcpyHostToDevice);
+  //cudaMemcpy(bicg->djA,bicg->jA,bicg->nnz*sizeof(int),cudaMemcpyHostToDevice);
+  //cudaMemcpy(bicg->diA,bicg->iA,(bicg->nrows+1)*sizeof(int),cudaMemcpyHostToDevice);
 
 #endif
 

@@ -1378,7 +1378,7 @@ int Jac_gpu(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_da
   double time_step;
   int flag=0;
 
-#ifndef CHECK_JAC_GPU_WITH_CPU
+#ifdef CHECK_JAC_GPU_WITH_CPU
 
   flag = Jac( t, y, deriv, J, solver_data, tmp1, tmp2, tmp3);
   if(flag!=0) return flag;
@@ -1408,18 +1408,17 @@ int Jac_gpu(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_da
   }
 
 
-  /*
 
   sd->use_deriv_est = 0;
-  if (f(t, y, deriv, solver_data) != 0) {
-  //if (f_gpu(t, y, deriv, solver_data) != 0) {
+  //if (f(t, y, deriv, solver_data) != 0) {
+  if (f_gpu(t, y, deriv, solver_data) != 0) {
     printf("\n Derivative calculation failed on Jac.\n");
     sd->use_deriv_est = 1;
     return 1;
   }
   sd->use_deriv_est = 1;
 
-   */
+
   if (camp_solver_check_model_state_gpu(y, sd, -SMALL, TINY) != CAMP_SOLVER_SUCCESS)
     return 1;
 
@@ -1441,7 +1440,6 @@ int Jac_gpu(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_da
 
   flag = rxn_calc_jac_gpu(sd, J, time_step);
 
-
   for (int i_elem = 0; i_elem < SM_NNZ_S(J); ++i_elem)
     SM_DATA_S(md->J_solver)[i_elem] = SM_DATA_S(J)[i_elem];
   N_VScale(1.0, y, md->J_state);
@@ -1449,8 +1447,6 @@ int Jac_gpu(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_da
 
   if(sd->use_cpu==0)
     set_jac_data_gpu(sd, SM_DATA_S(J));
-
-
 
   //Compare
   if(sd->counterJacCPU<=10){
@@ -1474,9 +1470,10 @@ int Jac_gpu(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_da
 
 #else
 
-   sd->use_deriv_est = 0;
-  if (f(t, y, deriv, solver_data) != 0) {
-  //if (f_gpu(t, y, deriv, solver_data) != 0) {
+
+  sd->use_deriv_est = 0;
+  //if (f(t, y, deriv, solver_data) != 0) {
+  if (f_gpu(t, y, deriv, solver_data) != 0) {
     printf("\n Derivative calculation failed on Jac.\n");
     sd->use_deriv_est = 1;
     return 1;
