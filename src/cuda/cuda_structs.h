@@ -123,7 +123,6 @@ typedef struct
 
 #endif //CAMPGPU_CUDA_STRUCTS_H
 
-//todo use default TimeDerivative class (long must change to double to match GPU case)
 //Time derivative for solver species
 typedef struct {
     unsigned int num_spec;          // Number of species in the derivative
@@ -135,6 +134,41 @@ typedef struct {
 #endif
 
 } TimeDerivativeGPU;
+
+#ifndef DEF_JAC_MAP
+#define DEF_JAC_MAP
+typedef struct {
+    int solver_id;  // solver Jacobian id
+    int rxn_id;     // reaction Jacobian id
+    int param_id;   // sub model Jacobian id
+} JacMap;
+#endif
+
+/* Registered elements for a column in the Jacobian */
+/*typedef struct {
+    unsigned int array_size;  // Size of the array of flagged elements
+    unsigned int
+            number_of_elements;  // Number of registered elements in the column
+    unsigned int
+            *row_ids;  // Array of row ids for each registered element in the column
+} JacobianColumnElements;*/
+
+/* Jacobian for solver species */
+typedef struct {
+#ifdef __CUDA_ARCH__
+#else
+#endif
+#ifdef DEV_REMOVE_threadIdx0
+    int num_spec;   // Number of species
+#endif
+    //unsigned int num_elem;   // Number of potentially non-zero Jacobian elements
+    int *num_elem;   // Number of potentially non-zero Jacobian elements
+    unsigned int *col_ptrs;  // Index of start/end of each column in data array
+    //unsigned int *row_ids;   // Row id of each Jacobian element in data array
+    double *production_partials;    // Data array for productions rate partial derivs
+    double *loss_partials;  // Data array for loss rate partial derivs
+    //JacobianColumnElements *elements;  // Jacobian elements flagged for inclusion
+} JacobianGPU;
 
 typedef struct {
     //double *deriv_data_gpu;
@@ -186,8 +220,15 @@ typedef struct {
     int *aero_rep_env_idx;
     int *aero_rep_int_data;
     double *aero_rep_float_data;
-
     double *aero_rep_env_data;
+
+    int *n_mapped_values;
+    double *J_rxn;
+    //JacMap jac_map;
+    JacMap *jac_map;
+    JacobianGPU jac;
+    //int n_per_cell_solver_jac_elem;
+
 
     //Allocated in GPU only
     int i_cell;

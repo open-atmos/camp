@@ -135,7 +135,8 @@ void print_double(double *x, int len, char *s){
 int compare_doubles(double *x, double *y, int len, const char *s){
 
   int flag=1;
-  float tol=0.01;
+  //float tol=0.01;
+  float tol=0.0;
   int rel_error;
   for (int i=0; i<len; i++){
     if(x[i]==0)

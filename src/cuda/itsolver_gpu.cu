@@ -202,8 +202,6 @@ void cudaDeviceswapCSC_CSR1ThreadBlock(int n_row, int n_col, int* Ap, int* Aj, d
   if(gridDim.x>1)iprint=blockDim.x;//block 2
 #endif
 
-  //todo shared can be only nrow and algorithm uses nrow+1, so take into into account (first value is always 0 anyway)
-
 #ifdef DEBUG_cudaGlobalswapCSC_CSR
   if(i==0) printf("start cudaDeviceswapCSC_CSR1ThreadBlock nnz %d n_row %d blockdim %d "
                   "gridDim.x %d \n",nnz,n_row,blockDim.x,gridDim.x);

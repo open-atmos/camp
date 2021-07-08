@@ -13,6 +13,7 @@ extern "C" {
 #include "rxns_gpu.h"
 #include "aeros/aero_rep_gpu_solver.h"
 #include "time_derivative_gpu.h"
+#include "Jacobian_gpu.h"
 }
 
 
@@ -112,6 +113,7 @@ void solver_new_gpu_cu(SolverData *sd, int n_dep_var,
   ModelDataGPU *mGPU = &sd->mGPU;
   HANDLE_ERROR(cudaMalloc((void **) &mGPU->deriv_data, md->deriv_size));
   mGPU->n_rxn=md->n_rxn;
+  //printf("md->n_rxn %d\n",md->n_rxn);
   mGPU->n_rxn_env_data=md->n_rxn_env_data;
   mGPU->n_aero_phase=md->n_aero_phase;
   mGPU->n_added_aero_phases=md->n_added_aero_phases;
@@ -380,16 +382,19 @@ void solver_init_int_double_gpu(SolverData *sd) {
 
 }
 
-void init_j_state_deriv_solver_gpu(SolverData *sd, double *J){
+void init_jac_gpu(SolverData *sd, double *J){
 
   ModelData *md = &(sd->model_data);
 
   //todo reduce allocations (use tmp pointers from cvode for j_tmp)
+
   md->jac_size = md->n_per_cell_solver_jac_elem * md->n_cells * sizeof(double);
   md->nnz_J_solver = SM_NNZ_S(md->J_solver);
   md->nrows_J_solver = SM_NP_S(md->J_solver);
 
   ModelDataGPU *mGPU = &sd->mGPU;
+  //todo dont needed
+  //mGPU->n_per_cell_solver_jac_elem = md->n_per_cell_solver_jac_elem;
   cudaMalloc((void **) &mGPU->J, md->jac_size);
   cudaMalloc((void **) &mGPU->J_solver, md->jac_size);
   cudaMalloc((void **) &mGPU->jJ_solver, md->nnz_J_solver*sizeof(int));
@@ -398,6 +403,15 @@ void init_j_state_deriv_solver_gpu(SolverData *sd, double *J){
   cudaMalloc((void **) &mGPU->J_deriv, md->deriv_size);
   cudaMalloc((void **) &mGPU->J_tmp, md->deriv_size);
   cudaMalloc((void **) &mGPU->J_tmp2, md->deriv_size);
+  //JacMap *jac_map_ptr = &mGPU->jac_map;
+  //cudaMalloc((void **) &jac_map_ptr, sizeof(JacMap)*md->n_mapped_values);
+  cudaMalloc((void **) &mGPU->jac_map, sizeof(JacMap)*md->n_mapped_values);
+  cudaMalloc((void **) &mGPU->J_rxn, sizeof(mGPU->J_rxn)*sd->jac.num_elem*md->n_cells);//*md->n_mapped_values should be the same
+  cudaMalloc((void **) &mGPU->n_mapped_values, 1*sizeof(int));//*md->n_mapped_values should be the same
+
+  printf("md->n_per_cell_dep_var %d sd->jac.num_spec %d md->n_per_cell_solver_jac_elem %d\n",
+         md->n_per_cell_dep_var,sd->jac.num_spec,md->n_per_cell_solver_jac_elem);
+
 
   double *J_solver = SM_DATA_S(md->J_solver);
   //Transfer sunindextype to int
@@ -420,7 +434,11 @@ void init_j_state_deriv_solver_gpu(SolverData *sd, double *J){
   HANDLE_ERROR(cudaMemcpy(mGPU->J_deriv, J_deriv, md->deriv_size, cudaMemcpyHostToDevice));
   HANDLE_ERROR(cudaMemcpy(mGPU->J_tmp, J_tmp, md->deriv_size, cudaMemcpyHostToDevice));
   HANDLE_ERROR(cudaMemset(mGPU->J_tmp2, 0.0, md->deriv_size));
+  HANDLE_ERROR(cudaMemcpy(mGPU->jac_map, md->jac_map, sizeof(JacMap)*md->n_mapped_values, cudaMemcpyHostToDevice));
+  HANDLE_ERROR(cudaMemcpy(mGPU->J_rxn, md->J_rxn, sizeof(mGPU->J_rxn)*sd->jac.num_elem*md->n_cells, cudaMemcpyHostToDevice));
+  HANDLE_ERROR(cudaMemcpy(mGPU->n_mapped_values, &md->n_mapped_values, 1*sizeof(int), cudaMemcpyHostToDevice));
 
+  jacobian_initialize_gpu(sd);
 
   if(md->small_data){
     cudaMallocHost((void**)&md->jac_aux, md->jac_size);
@@ -1253,7 +1271,6 @@ int rxn_calc_deriv_gpu(SolverData *sd, N_Vector y, N_Vector deriv, double time_s
     //Sync
     //HANDLE_ERROR(cudaMemcpy(md->deriv_aux, md->deriv_data_gpu, md->deriv_size, cudaMemcpyDeviceToHost));
 
-    //todo i think not necessary
     HANDLE_ERROR(cudaMemcpy(deriv_data, mGPU->deriv_data, md->deriv_size, cudaMemcpyDeviceToHost));
 
 
@@ -1427,104 +1444,434 @@ void rxn_calc_deriv_cpu(ModelData *md, double *deriv_data,
 }
 #endif
 
-/** \brief GPU function: Solve jacobian
- *
- * \param state_init Pointer to first value of state array
- * \param jac_init Pointer to first value of jacobian array
- * \param time_step Current time step being computed (s)
- * \param jac_length_cell jacobian length for one cell
- * \param md->state_size_cell jacobian length for one cell
- * \param n_rxn Number of reactions to include
- * \param n_cells_gpu Number of cells to compute
- * \param md->rxn_int Pointer to integer reaction data
- * \param md->rxn_double Pointer to double reaction data
- * \param rxn_env_data_init Pointer to first value of reaction rates
- */
-__global__ void solveJacobian(double *state_init, double *jac_init,
-                              double time_step, int jac_length_cell, int state_size_cell,
-                              int n_rxn_env_data_cell, int n_rxn,
-                              int n_cells, int *rxn_int, double *rxn_double,
-                              double *rxn_env_data_init, int *rxn_env_data_idx) //Interface CPU/GPU
+
+
+
+__device__ void solveRXNJac0(
+        JacobianGPU jac,
+        double time_step,
+        ModelDataGPU *md
+)
 {
-  //Get thread id
-  /*int index = blockIdx.x * blockDim.x + threadIdx.x;
+  int tid = blockIdx.x * blockDim.x + threadIdx.x;
 
-  //Maximum number of threads to compute all reactions
-  if(index < n_rxn*n_cells){
+#ifdef REVERSE_INT_FLOAT_MATRIX
 
-    //Thread index for jac and state,
-    // till we don't finish all reactions of a cell, we stay on same index
-    int i_cell=index/n_rxn;
-    int i_rxn=index%n_rxn;
+  double *rxn_float_data = &( md->rxn_double[md->i_rxn]);
+  int *int_data = &(md->rxn_int[md->i_rxn]);
+  int rxn_type = int_data[0];
+  int *rxn_int_data = (int *) &(int_data[1*md->n_rxn]);
 
-    //Get indices of each reaction
-    int *int_data = (int *) &(((int *) rxn_int)[i_rxn]); //Same indices for each cell
-    double *float_data = (double *) &(((double *) rxn_double)[i_rxn]);
-    int rxn_type = int_data[0];
-    int *rxn_int_data = (int *) &(int_data[1*n_rxn]);
+#else
 
-    //Get indices for concentrations
-    double *jac_data = &( jac_init[jac_length_cell*i_cell]);
-    double *state = &( state_init[state_size_cell*i_cell]);
+  double *rxn_float_data = (double *)&( md->rxn_double[md->rxn_float_indices[md->i_rxn]]);
+  int *int_data = (int *)&(md->rxn_int[md->rxn_int_indices[md->i_rxn]]);
 
-    //Get indices for rates
-    double *rxn_env_data = &(rxn_env_data_init
-    [n_rxn_env_data_cell*i_cell+rxn_env_data_idx[i_rxn]]);
+  //double *rxn_float_data = &( md->rxn_double[md->i_rxn]);
+  //int *int_data = &(md->rxn_int[md->i_rxn]);
 
-    switch (rxn_type) {
-      case RXN_AQUEOUS_EQUILIBRIUM :
-        //rxn_gpu_aqueous_equilibrium_calc_jac_contrib(rxn_env_data,
-        //        state, jac_data, rxn_int_data, rxn_float_data, time_step, n_rxn);
-        break;
-      case RXN_ARRHENIUS :
-        rxn_gpu_arrhenius_calc_jac_contrib(rxn_env_data,
-                                           state, jac_data, rxn_int_data, rxn_float_data, time_step,n_rxn);
-        break;
-      case RXN_CMAQ_H2O2 :
-        rxn_gpu_CMAQ_H2O2_calc_jac_contrib(rxn_env_data,
-                                           state, jac_data, rxn_int_data, rxn_float_data, time_step,n_rxn);
-        break;
-      case RXN_CMAQ_OH_HNO3 :
-        rxn_gpu_CMAQ_OH_HNO3_calc_jac_contrib(rxn_env_data,
-                                              state, jac_data, rxn_int_data, rxn_float_data, time_step,n_rxn);
-        break;
-      case RXN_CONDENSED_PHASE_ARRHENIUS :
-        //rxn_gpu_condensed_phase_arrhenius_calc_jac_contrib(rxn_env_data,
-        //        state, jac_data, rxn_int_data, rxn_float_data, time_step,n_rxn);
-        break;
-      case RXN_EMISSION :
-        rxn_gpu_emission_calc_jac_contrib(rxn_env_data,
-                                          state, jac_data, rxn_int_data, rxn_float_data, time_step,n_rxn);
-        break;
-      case RXN_FIRST_ORDER_LOSS :
-        rxn_gpu_first_order_loss_calc_jac_contrib(rxn_env_data,
-                                                  state, jac_data, rxn_int_data, rxn_float_data, time_step,n_rxn);
-        break;
-      case RXN_HL_PHASE_TRANSFER :
-        //rxn_gpu_HL_phase_transfer_calc_jac_contrib(rxn_env_data,
-        //        state, jac_data, rxn_int_data, rxn_float_data, time_step, n_rxn);
-        break;
-      case RXN_PHOTOLYSIS :
-        rxn_gpu_photolysis_calc_jac_contrib(rxn_env_data,
-                                            state, jac_data, rxn_int_data, rxn_float_data, time_step,n_rxn);
-        break;
-      case RXN_SIMPOL_PHASE_TRANSFER :
-        //rxn_gpu_SIMPOL_phase_transfer_calc_jac_contrib(rxn_env_data,
-        //        state, jac_data, rxn_int_data, rxn_float_data, time_step,n_rxn);
-        break;
-      case RXN_TROE :
-        rxn_gpu_troe_calc_jac_contrib(rxn_env_data,
-                                      state, jac_data, rxn_int_data, rxn_float_data, time_step, n_rxn);
-        break;
-      case RXN_WET_DEPOSITION :
-        rxn_gpu_wet_deposition_calc_jac_contrib(rxn_env_data,
-                                                state, jac_data, rxn_int_data, rxn_float_data, time_step,n_rxn);
-        break;
+  int rxn_type = int_data[0];
+  int *rxn_int_data = (int *) &(int_data[1]);
+
+#endif
+
+  //Get indices for rates
+  double *rxn_env_data = &(md->rxn_env_data
+  [md->n_rxn_env_data*md->i_cell+md->rxn_env_data_idx[md->i_rxn]]);
+
+#ifdef DEBUG_solveRXNJac0
+  if(tid==0){
+    printf("[DEBUG] GPU solveRXN tid %d, \n", tid);
+  }
+#endif
+
+  switch (rxn_type) {
+    //case RXN_AQUEOUS_EQUILIBRIUM :
+    //fix run-time error
+    //rxn_gpu_aqueous_equilibrium_calc_jac_contrib(md, jac, rxn_int_data,
+    //                                               rxn_float_data, rxn_env_data,time_step);
+    //break;
+    case RXN_ARRHENIUS :
+      rxn_gpu_arrhenius_calc_jac_contrib(md, jac, rxn_int_data,
+                                           rxn_float_data, rxn_env_data,time_step);
+      break;
+    case RXN_CMAQ_H2O2 :
+      rxn_gpu_CMAQ_H2O2_calc_jac_contrib(md, jac, rxn_int_data,
+                                           rxn_float_data, rxn_env_data,time_step);
+      break;
+    case RXN_CMAQ_OH_HNO3 :
+      rxn_gpu_CMAQ_OH_HNO3_calc_jac_contrib(md, jac, rxn_int_data,
+                                              rxn_float_data, rxn_env_data,time_step);
+      break;
+    case RXN_CONDENSED_PHASE_ARRHENIUS :
+      //rxn_gpu_condensed_phase_arrhenius_calc_jac_contrib(md, jac, rxn_int_data,
+      //                                     rxn_float_data, rxn_env_data,time_step);
+      break;
+    case RXN_EMISSION :
+      //printf("RXN_EMISSION");
+      //rxn_gpu_emission_calc_jac_contrib(md, jac, rxn_int_data,
+      //                                     rxn_float_data, rxn_env_data,time_step);
+      break;
+    case RXN_FIRST_ORDER_LOSS :
+      //rxn_gpu_first_order_loss_calc_jac_contrib(md, jac, rxn_int_data,
+      //                                     rxn_float_data, rxn_env_data,time_step);
+      break;
+    case RXN_HL_PHASE_TRANSFER :
+      //rxn_gpu_HL_phase_transfer_calc_jac_contrib(md, jac, rxn_int_data,
+      //                                             rxn_float_data, rxn_env_data,time_stepn);
+      break;
+    case RXN_PHOTOLYSIS :
+      rxn_gpu_photolysis_calc_jac_contrib(md, jac, rxn_int_data,
+                                            rxn_float_data, rxn_env_data,time_step);
+      break;
+    case RXN_SIMPOL_PHASE_TRANSFER :
+      //rxn_gpu_SIMPOL_phase_transfer_calc_jac_contrib(md, jac,
+      //        rxn_int_data, rxn_float_data, rxn_env_data, time_step);
+      break;
+    case RXN_TROE :
+      rxn_gpu_troe_calc_jac_contrib(md, jac, rxn_int_data,
+                                      rxn_float_data, rxn_env_data,time_step);
+      break;
+    case RXN_WET_DEPOSITION :
+      //printf("RXN_WET_DEPOSITION");
+      //rxn_gpu_wet_deposition_calc_jac_contrib(md, jac, rxn_int_data,
+      //                                     rxn_float_data, rxn_env_data,time_step);
+      break;
+  }
+/*
+*/
+
+}
+
+__device__ void cudaDevicecalc_Jac0(
+#ifdef PMC_DEBUG_GPU
+        int counterDeriv2,
+#endif
+        //check_model_state
+        //double threshhold, double replacement_value, int *flag,
+        //f_gpu
+        double time_step, int deriv_length_cell, int state_size_cell,
+        int n_cells, int i_kernel,
+        int threads_block, int n_shr_empty, double *y,
+        ModelDataGPU md_object
+) //Interface CPU/GPU
+{
+  int tid = blockIdx.x * blockDim.x + threadIdx.x;
+  int tid_cell=tid%deriv_length_cell;
+  int active_threads = n_cells*deriv_length_cell;
+  ModelDataGPU *md = &md_object;
+
+#ifdef DEBUG_cudaDeviceJac0
+  if(tid==0){
+    printf("[DEBUG] GPU solveDerivative tid %d, \n", tid);
+  }__syncthreads();
+#endif
+
+  if(tid<active_threads){
+
+    //Debug
+    /*
+    if(counterDeriv2<=1){
+      printf("(%d) y %-le J_state %-le J_solver %-le J_tmp %-le J_tmp2 %-le J_deriv %-le\n",tid+1,
+             y[tid], md->J_state[tid], md->J_solver[tid], md->J_tmp[tid], md->J_tmp2[tid], md->J_deriv[tid]);
+      //printf("gpu threads %d\n", active_threads);
+    }
+*/
+
+    JacobianGPU *jac = &md->jac;
+    JacobianGPU jacCell;
+
+#ifdef DEV_REMOVE_threadIdx0
+    jac->num_spec = state_size_cell;
+    jacCell.num_spec = state_size_cell;
+#endif
+
+
+    jacCell.num_elem = jac->num_elem;
+    //*jacCell.num_elem = jacCell.num_elem[0]/n_cells;
+
+    if(threadIdx.x==0) printf("*jac->num_elem %d\n",jac->num_elem[0]);
+    if(threadIdx.x==0) printf("deriv_length_cell %d\n",deriv_length_cell);
+    if(threadIdx.x==0) printf("state_size_cell %d\n",state_size_cell);
+    //jacCell.num_elem = jac->num_elem; //Jac_rxn have only space for 1 cell, but multiple cells are computed
+
+    //if(threadIdx.x==0) printf("mGPU->n_rxn %d\n",md->n_rxn);
+
+    int jac_length_cell = jacCell.num_elem[0];
+
+#ifdef AEROS_CPU
+#else
+    jacCell.production_partials = jac->production_partials;
+    jacCell.loss_partials = jac->loss_partials;
+    jacobian_reset_gpu(jacCell);
+    __syncthreads();
+#endif
+
+    int i_cell = tid/deriv_length_cell;
+    md->i_cell = i_cell;
+    jacCell.production_partials = &( jac->production_partials[jac_length_cell*i_cell]);
+    jacCell.loss_partials = &( jac->loss_partials[jac_length_cell*i_cell]);
+    //jacCell.col_ptrs = &( md->col_ptrs[algo*i_cell]);
+
+
+    md->grid_cell_state = &( md->state[state_size_cell*i_cell]);
+    md->grid_cell_env = &( md->env[PMC_NUM_ENV_PARAM_*i_cell]);
+
+    /*
+    md->grid_cell_aero_rep_env_data =
+    &(md->aero_rep_env_data[md->i_cell*md->n_aero_rep_env_data]);
+
+    //Filter threads for n_aero_rep
+    int n_aero_rep = md->n_aero_rep;
+    if( tid_cell < n_aero_rep) {
+      int n_iters = n_aero_rep / deriv_length_cell;
+      //Repeat if there are more reactions than species
+      for (int i = 0; i < n_iters; i++) {
+        md->i_aero_rep = tid_cell + i*deriv_length_cell;
+
+        aero_rep_gpu_update_state(md);
+      }
+
+      //Limit tid to pending rxns to compute
+      int residual=n_aero_rep-(deriv_length_cell*n_iters);
+      if(tid_cell < residual){
+        md->i_aero_rep = tid_cell + deriv_length_cell*n_iters;
+
+        aero_rep_gpu_update_state(md);
+      }
+    }
+     */
+
+#ifdef DEBUG_cudaDevicecalc_Jac0
+
+    if(tid==0)printf("cudaDevicecalc_Jac01\n");
+
+    //if(threadIdx.x==0) {
+    //  printf("jac.num_elem %d\n",jacCell.num_elem);
+    //  printf("*md->n_mapped_values %d\n",*md->n_mapped_values);
+      //for (int i=0; i<*md->n_mapped_values; i++){
+      //  printf("cudaDevicecalc_Jac0 jacCell [%d]=%le\n",i,jacCell.production_partials[i]);
+      //}
+    //}
+
+#endif
+
+    __syncthreads();
+    //Filter threads for n_rxn
+    int n_rxn = md->n_rxn;
+    if( tid_cell < n_rxn) {
+      int n_iters = n_rxn / deriv_length_cell;
+      //Repeat if there are more reactions than species
+      for (int i = 0; i < n_iters; i++) {
+        md->i_rxn = tid_cell + i*deriv_length_cell;
+
+        solveRXNJac0(jacCell, time_step, md);
+      }
+
+      //Limit tid to pending rxns to compute
+      int residual=n_rxn-(deriv_length_cell*n_iters);
+      if(tid_cell < residual){
+        md->i_rxn = tid_cell + deriv_length_cell*n_iters;
+
+        solveRXNJac0(jacCell, time_step, md);
+      }
     }
     __syncthreads();
+
+    //if(tid==0)printf("cudaDevicecalc_Jac02\n");
+
+    /*if(tid==0){
+      printf("tid %d time_deriv.production_rates %-le time_deriv.loss_rates %-le\n",
+              tid, deriv_data.production_rates[tid],
+             deriv_data.loss_rates[tid]);
+    }*/
+
+    jacCell.production_partials = jac->production_partials;
+    jacCell.loss_partials = jac->loss_partials;
+    //todo just use jac in jacobian output_gpu instead of updating jacCell
+    __syncthreads();
+
+    jacobian_output_gpu(*jac, md->J_rxn);
+    //jacobian_output_gpu(jacCell, md->J_rxn);
+    //jacobian_output_gpu(jacCell, md->J);
+
+    /*
+    if(tid<deriv_data.num_spec && tid>1022){
+      //if(tid<1){
+      //deriv_init[tid] = deriv_data.production_rates[tid];
+      //deriv_init[tid] = deriv_data.loss_rates[tid];
+      printf("tid %d time_deriv.production_rates %-le time_deriv.loss_rates %-le"
+             "deriv_init %-le\n",
+             tid, deriv_data.production_rates[tid],
+             deriv_data.loss_rates[tid],
+             //deriv_data.loss_rates[tid]);
+             deriv_init[tid]);
+    }*/
+
+
+    __syncthreads();
+    if(threadIdx.x==0) {
+
+#ifdef DEBUG_cudaDevicecalc_Jac0
+
+      if(threadIdx.x==0) {
+        printf("jac.num_elem %d\n",jacCell.num_elem[0]);
+        printf("*md->n_mapped_values %d\n",*md->n_mapped_values);
+        for (int i=0; i<10; i++){//*md->n_mapped_values
+          printf("cudaDevicecalc_Jac0 J_rxn [%d]=%le\n",i,md->J_rxn[i]);
+        }
+      }
+
+#endif
+
+      JacMap *jac_map = md->jac_map;
+      int nnz = md->n_mapped_values[0];
+      //int nnz = jac->num_elem;
+      //SM_DATA_S(md->J_params)[0] = 1.0;  // dummy value for non-sub model calcs
+      //for (int i_map = 0; i_map < md->n_mapped_values; ++i_map) {
+      //for (int n = (nnz/gridDim.x)*blockIdx.x; n < (nnz/gridDim.x)*(blockIdx.x+1); n++) {
+
+#ifndef DEV_NNZ
+
+      for (int n = 0; n < nnz; ++n) {
+        md->J[n] = 0.0;
+        md->J[jac_map[n].solver_id+nnz*blockIdx.x] += //+=0.;
+                md->J_rxn[jac_map[n].rxn_id+jacCell.num_elem[0]*blockIdx.x];
+        //0.0;
+        //* SM_DATA_S(md->J_params)[jac_map[i_map].param_id];
+
+        //SM_DATA_S(J)
+        //[i_cell * md->n_per_cell_solver_jac_elem + jac_map[i_map].solver_id] +=
+        //        SM_DATA_S(md->J_rxn)[jac_map[i_map].rxn_id] *
+        //0.0;
+        //        SM_DATA_S(md->J_params)[jac_map[i_map].param_id];
+
+      }
+
+#else
+      for (int n = 0; n < nnz; n++) {
+        md->J[n] = 0.0;
+        md->J[jac_map[n].solver_id+nnz*blockIdx.x] += //+=0.;
+                md->J_rxn[jac_map[n].rxn_id+nnz*blockIdx.x];
+        //0.0;
+        //* SM_DATA_S(md->J_params)[jac_map[i_map].param_id];
+
+        //SM_DATA_S(J)
+        //[i_cell * md->n_per_cell_solver_jac_elem + jac_map[i_map].solver_id] +=
+        //        SM_DATA_S(md->J_rxn)[jac_map[i_map].rxn_id] *
+        //0.0;
+        //        SM_DATA_S(md->J_params)[jac_map[i_map].param_id];
+
+      }
+#endif
+    }__syncthreads();
+
   }
+}
+
+__device__
+void cudaDeviceJac0(
+#ifdef PMC_DEBUG_GPU
+        int counterDeriv2,
+#endif
+        //check_model_state
+        double threshhold, double replacement_value, int *flag,
+        //f_gpu
+        double time_step, int deriv_length_cell, int state_size_cell,
+        int n_cells, int i_kernel,
+        int threads_block, int n_shr_empty, double *y,
+        ModelDataGPU md_object
+) //Interface CPU/GPU
+{
+
+  unsigned int tid = threadIdx.x;
+
+  ModelDataGPU *md = &md_object;
+/*
+  cudaDevicecamp_solver_check_model_state0(md->state, y,
+                                           md->map_state_deriv, threshhold, replacement_value,
+                                           flag, deriv_length_cell, n_cells);
+
+
+  //__syncthreads();
+  //study flag block effect: flag is global for all threads or for only the block?
+  if(*flag==CAMP_SOLVER_FAIL)
+    return;
+    */
+
+  // Reset the primary Jacobian
+  ///       during solving
+  //SM_NNZ_S(J) = SM_NNZ_S(md->J_init);
+  //for (int i = 0; i <= SM_NP_S(J); i++) {
+  //  (SM_INDEXPTRS_S(J))[i] = (SM_INDEXPTRS_S(md->J_init))[i];
+  //}
+
+  /*
+  __syncthreads();
+  if(threadIdx.x==0) {
+    int nnz = (md->n_mapped_values[0])*n_cells;
+    for (int n = (nnz / gridDim.x) * blockIdx.x; n < (nnz / gridDim.x) * (blockIdx.x + 1); n++) {
+      md->J[n] = 0.0;
+
+      //md->J_rxn[n] = 0.0;
+
+      //(SM_INDEXVALS_S(J))[i] = (SM_INDEXVALS_S(md->J_init))[i];
+      //(SM_DATA_S(J))[i] = (realtype)0.0;
+    }
+  }__syncthreads();
    */
 
+  //if(tid==0)printf("cudaDeviceJac01\n");
+
+  cudaDevicecalc_Jac0(
+#ifdef PMC_DEBUG_GPU
+          counterDeriv2,
+#endif
+          //check_model_state          md->map_state_deriv, threshhold, replacement_value, flag,
+          //f_gpu
+          time_step, deriv_length_cell, state_size_cell,
+          n_cells, i_kernel, threads_block, n_shr_empty, y,
+          md_object
+  );
+
+  if(tid==0)printf("cudaDeviceJac0End\n");
+
+}
+
+__global__
+void cudaGlobalJac(
+#ifdef PMC_DEBUG_GPU
+        int counterDeriv2,
+#endif
+        //check_model_state
+        double threshhold, double replacement_value, int *flag,
+        //f_gpu
+        double time_step, int deriv_length_cell,
+        int state_size_cell, int n_cells,
+        int i_kernel, int threads_block, int n_shr_empty, double *y,
+        ModelDataGPU md_object
+) //Interface CPU/GPU
+{
+
+  ModelDataGPU *md = &md_object;
+  JacobianGPU *jac = &md->jac;
+
+  if(threadIdx.x==0)printf("cudaGlobalJac \n");
+  __syncthreads();
+  if(threadIdx.x==0)printf("md_object.jac.num_elem %d\n",md->jac.num_elem[0]);
+  __syncthreads();
+
+  cudaDeviceJac0(
+#ifdef PMC_DEBUG_GPU
+          counterDeriv2,
+#endif
+          //check_model_state
+          threshhold, replacement_value, flag,
+          //f_gpu
+          time_step, deriv_length_cell, state_size_cell,
+          n_cells, i_kernel, threads_block, n_shr_empty, y,
+          md_object
+  );
 }
 
 
@@ -1535,9 +1882,153 @@ __global__ void solveJacobian(double *state_init, double *jac_init,
  * \param time_step Current model time step (s)
  */
 
-void rxn_calc_jac_gpu(SolverData *sd, SUNMatrix jac, double time_step) {
+int rxn_calc_jac_gpu(SolverData *sd, SUNMatrix J, double time_step) {
 
-  //TODO
+
+  ModelData *md = &(sd->model_data);
+  itsolver *bicg = &(sd->bicg);
+  int n_cells = md->n_cells;
+  int n_kernels = 1; // Divide load into multiple kernel calls
+  //todo n_kernels case division left residual, an extra kernel computes remain residual
+#ifdef BASIC_CALC_DERIV
+  int total_threads = md->n_rxn*n_cells/n_kernels; //Reaction group per number of repetitions/cells
+  int threads_block = md->max_n_gpu_thread;
+#else
+  int n_per_cell_dep_var = md->n_per_cell_dep_var;
+  int total_threads = n_per_cell_dep_var * n_cells/n_kernels;
+  int n_shr_empty = md->max_n_gpu_thread%n_per_cell_dep_var;
+  int threads_block = md->max_n_gpu_thread - n_shr_empty; //last multiple of size_cell before max_threads
+#endif
+  int n_blocks = ((total_threads + threads_block - 1) / threads_block);
+  ModelDataGPU *mGPU = &sd->mGPU;
+  //Update state
+  double replacement_value = TINY;
+  double threshhold = -SMALL;
+  int flag = CAMP_SOLVER_SUCCESS; //0
+
+  //debug
+  /*
+   if(sd->counterDerivGPU<=0){
+     printf("f_gpu start total_state [(id),conc], n_state_var %d, n_cells %d\n", md->n_per_cell_state_var, n_cells);
+     printf("n_deriv %d\n", md->n_per_cell_dep_var);
+     for (int i = 0; i < md->n_per_cell_state_var*n_cells; i++) {
+       printf("(%d) %-le \n",i+1, md->total_state[i]);
+     }
+   }
+   */
+
+#ifdef DEV_RESET_JAC_GPU_TO_INIT
+  //produce wrong results
+  //dont needed (no refactor in GPU at first instance)
+  SM_NNZ_S(J) = SM_NNZ_S(md->J_init);
+  for (int i = 0; i <= SM_NP_S(J); i++) {
+    (SM_INDEXPTRS_S(J))[i] = (SM_INDEXPTRS_S(md->J_init))[i];
+    bicg->iA[i]=SM_INDEXPTRS_S(J)[i];
+  }
+  for (int i = 0; i < SM_NNZ_S(J); i++) {
+    (SM_INDEXVALS_S(J))[i] = (SM_INDEXVALS_S(md->J_init))[i];
+    bicg->jA[i]=SM_INDEXVALS_S(J)[i];
+    (SM_DATA_S(J))[i] = (realtype)0.0;
+  }
+  cudaMemcpy(bicg->djA,bicg->jA,bicg->nnz*sizeof(int),cudaMemcpyHostToDevice);
+  cudaMemcpy(bicg->diA,bicg->iA,(bicg->nrows+1)*sizeof(int),cudaMemcpyHostToDevice);
+
+#endif
+
+  //printf("sd->jac.num_elem %d\n",sd->jac.num_elem);
+  //printf("mGPU->jac.num_elem%d\n",mGPU->jac.num_elem);
+
+#ifndef DEBUG_rxn_calc_jac_gpu
+
+  //cudaDeviceSynchronize();
+  for (int i=0; i<1; i++){//*md->n_mapped_values
+    //printf("rxn_calc_jac_gpu J_rxn [%d]=%le\n",i,J_rxn_data[i]);
+    printf("rxn_calc_jac_gpu start cudaGlobalJac \n");
+  }
+
+#endif
+
+  //Loop to test multiple kernel executions
+  for (int i_kernel=0; i_kernel<n_kernels; i_kernel++){
+    //cudaDeviceSynchronize();
+    //solveDerivative << < (n_blocks), threads_block >> >(
+    cudaGlobalJac << < (n_blocks), threads_block >> >(
+#ifdef PMC_DEBUG_GPU
+            sd->counterDerivGPU,
+#endif
+            //update_state
+            threshhold, replacement_value, &flag,
+            //f_gpu
+            time_step, md->n_per_cell_dep_var,
+            md->n_per_cell_state_var,n_cells,
+            i_kernel, threads_block,n_shr_empty, bicg->dcv_y,
+            sd->mGPU
+    );
+  }
+
+#ifndef DEBUG_rxn_calc_jac_gpu
+
+  cudaDeviceSynchronize();
+  for (int i=0; i<1; i++){//*md->n_mapped_values
+    //printf("rxn_calc_jac_gpu J_rxn [%d]=%le\n",i,J_rxn_data[i]);
+    printf("rxn_calc_jac_gpu end cudaGlobalJac \n");
+  }
+
+#endif
+
+  if(flag==CAMP_SOLVER_FAIL)
+    return flag;
+
+  double *J_rxn_data = SM_DATA_S(md->J_rxn);
+
+  //todo why this works? Because I was using the check?
+  double *J_data = SM_DATA_S(md->J_rxn);
+  //double *J_data = SM_DATA_S(J);
+
+  //Async
+  //HANDLE_ERROR(cudaMemcpyAsync(md->deriv_aux, md->deriv_data_gpu,
+  //md->deriv_size, cudaMemcpyDeviceToHost, md->stream_gpu[STREAM_DERIV_GPU]));
+
+  //Sync
+
+  //HANDLE_ERROR(cudaMemcpy(deriv_data, mGPU->deriv_data, md->deriv_size, cudaMemcpyDeviceToHost));
+  //HANDLE_ERROR(cudaMemcpy(J_rxn_data, mGPU->J_rxn, sizeof(mGPU->J_rxn)*sd->jac.num_elem, cudaMemcpyDeviceToHost));
+
+
+  HANDLE_ERROR(cudaMemcpy(J_data, mGPU->J, md->jac_size, cudaMemcpyDeviceToHost));
+
+
+
+  //HANDLE_ERROR(cudaMemcpy(J_rxn_data, mGPU->J, md->jac_size, cudaMemcpyDeviceToHost));
+
+
+#ifdef DEBUG_rxn_calc_jac_gpu
+
+  for (int i=0; i<1; i++){//*md->n_mapped_values
+    //printf("rxn_calc_jac_gpu J_rxn [%d]=%le\n",i,J_rxn_data[i]);
+    printf("rxn_calc_jac_gpu J_data [%d]=%le\n",i,J_data[i]);
+  }
+
+#endif
+
+  //debug
+  /*
+   if(sd->counterDerivGPU<=0 ){
+     printf("f_gpu end deriv [(id),conc], n_state_var %d, n_cells %d\n", md->n_per_cell_state_var, n_cells);
+     int size_j = NV_LENGTH_S(deriv);
+     printf("length_deriv %d \n", size_j);
+     for (int i = 0; i < 1; i++) {//n_cells
+       printf("cell %d \n", i);
+       for (int j = 0; j < size_j; j++) {  // NV_LENGTH_S(deriv)
+         printf("(%d) %-le ", j + 1, NV_DATA_S(deriv)[j+i*size_j]);
+       }
+       printf("\n");
+     }
+   }
+ */
+
+
+
 
 }
 

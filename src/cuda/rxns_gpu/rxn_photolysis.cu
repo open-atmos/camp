@@ -161,7 +161,7 @@ void rxn_gpu_photolysis_calc_deriv_contrib(ModelDataGPU *model_data, TimeDerivat
 #ifdef __CUDA_ARCH__
 __host__ __device__
 #endif
-void rxn_gpu_photolysis_calc_jac_contrib(ModelDataGPU *model_data, realtype *J, int *rxn_int_data,
+void rxn_gpu_photolysis_calc_jac_contrib(ModelDataGPU *model_data, JacobianGPU jac, int *rxn_int_data,
           double *rxn_float_data, double *rxn_env_data, double time_step)
 {
 #ifdef __CUDA_ARCH__
@@ -174,33 +174,32 @@ void rxn_gpu_photolysis_calc_jac_contrib(ModelDataGPU *model_data, realtype *J, 
   double *state = model_data->grid_cell_state;
   double *env_data = model_data->grid_cell_env;
 
-  // Calculate the reaction rate
-  realtype rate = RATE_CONSTANT_;
-  for (int i_spec=0; i_spec<NUM_REACT_; i_spec++)
-          rate *= state[REACT_(i_spec)];
-
-  // Add contributions to the Jacobian
+// Add contributions to the Jacobian
   int i_elem = 0;
-  for (int i_ind=0; i_ind<NUM_REACT_; i_ind++) {
-    for (int i_dep=0; i_dep<NUM_REACT_; i_dep++, i_elem++) {
-      if (JAC_ID_(i_elem) < 0) continue;
-#ifdef __CUDA_ARCH__
-      atomicAdd(&(J[JAC_ID_(i_elem)]), -RATE_CONSTANT_);
-#else
-      J[JAC_ID_(i_elem)] -= RATE_CONSTANT_;
-#endif
-    }
-    for (int i_dep=0; i_dep<NUM_PROD_; i_dep++, i_elem++) {
-     if (JAC_ID_(i_elem) < 0) continue;
-#ifdef __CUDA_ARCH__
-     if (-rate * state[REACT_(i_ind)] * YIELD_(i_dep) * time_step
-            <= state[PROD_(i_dep)]) {
-        atomicAdd(&(J[JAC_ID_(i_elem)]),YIELD_(i_dep) * RATE_CONSTANT_);
-      }
-#else
-      J[JAC_ID_(i_elem)] += YIELD_(i_dep) * RATE_CONSTANT_;
-#endif
+  for (int i_ind = 0; i_ind < NUM_REACT_; i_ind++) {
+    // Calculate d_rate / d_i_ind
+    double rate = RATE_CONSTANT_;
+    for (int i_spec = 0; i_spec < NUM_REACT_; i_spec++)
+      if (i_spec != i_ind) rate *= state[REACT_(i_spec)];
 
+    for (int i_dep = 0; i_dep < NUM_REACT_; i_dep++, i_elem++) {
+      if (JAC_ID_(i_elem) < 0) continue;
+      //jacobian_add_value_gpu(jac, (unsigned int)JAC_ID_(i_elem), JACOBIAN_LOSS,
+      //                   RATE_CONSTANT_);
+      jacobian_add_value_gpu(jac, (unsigned int)JAC_ID_(i_elem), JACOBIAN_LOSS,
+                        rate);
+    }
+    for (int i_dep = 0; i_dep < NUM_PROD_; i_dep++, i_elem++) {
+      if (JAC_ID_(i_elem) < 0) continue;
+      // Negative yields are allowed, but prevented from causing negative
+      // concentrations that lead to solver failures
+      if (-rate * state[REACT_(i_ind)] * YIELD_(i_dep) * time_step <=
+          state[PROD_(i_dep)]) {
+      //jacobian_add_value_gpu(jac, (unsigned int)JAC_ID_(i_elem),
+      //                   JACOBIAN_PRODUCTION, YIELD_(i_dep) * RATE_CONSTANT_);
+      jacobian_add_value_gpu(jac, (unsigned int)JAC_ID_(i_elem),
+                   JACOBIAN_PRODUCTION, YIELD_(i_dep) * rate);
+      }
     }
   }
 
