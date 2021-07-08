@@ -1591,8 +1591,8 @@ __device__ void cudaDevicecalc_Jac0(
     //*jacCell.num_elem = jacCell.num_elem[0]/n_cells;
 
     if(threadIdx.x==0) printf("*jac->num_elem %d\n",jac->num_elem[0]);
-    if(threadIdx.x==0) printf("deriv_length_cell %d\n",deriv_length_cell);
-    if(threadIdx.x==0) printf("state_size_cell %d\n",state_size_cell);
+    //if(threadIdx.x==0) printf("deriv_length_cell %d\n",deriv_length_cell);
+    //if(threadIdx.x==0) printf("state_size_cell %d\n",state_size_cell);
     //jacCell.num_elem = jac->num_elem; //Jac_rxn have only space for 1 cell, but multiple cells are computed
 
     //if(threadIdx.x==0) printf("mGPU->n_rxn %d\n",md->n_rxn);
@@ -1691,7 +1691,7 @@ __device__ void cudaDevicecalc_Jac0(
     //todo just use jac in jacobian output_gpu instead of updating jacCell
     __syncthreads();
 
-    jacobian_output_gpu(*jac, md->J_rxn);
+    jacobian_output_gpu(jacCell, md->J_rxn);
     //jacobian_output_gpu(jacCell, md->J_rxn);
     //jacobian_output_gpu(jacCell, md->J);
 
@@ -1714,6 +1714,7 @@ __device__ void cudaDevicecalc_Jac0(
 
 #ifdef DEBUG_cudaDevicecalc_Jac0
 
+
       if(threadIdx.x==0) {
         printf("jac.num_elem %d\n",jacCell.num_elem[0]);
         printf("*md->n_mapped_values %d\n",*md->n_mapped_values);
@@ -1734,8 +1735,9 @@ __device__ void cudaDevicecalc_Jac0(
 #ifndef DEV_NNZ
 
       for (int n = 0; n < nnz; ++n) {
-        md->J[n] = 0.0;
-        md->J[jac_map[n].solver_id+nnz*blockIdx.x] += //+=0.;
+        //md->J[n] = 0.0;
+        //md->J[n] = 0.0;
+        md->J[jac_map[n].solver_id+nnz*blockIdx.x] = //+=0.;
                 md->J_rxn[jac_map[n].rxn_id+jacCell.num_elem[0]*blockIdx.x];
         //0.0;
         //* SM_DATA_S(md->J_params)[jac_map[i_map].param_id];
@@ -1858,8 +1860,8 @@ void cudaGlobalJac(
 
   if(threadIdx.x==0)printf("cudaGlobalJac \n");
   __syncthreads();
-  if(threadIdx.x==0)printf("md_object.jac.num_elem %d\n",md->jac.num_elem[0]);
-  __syncthreads();
+  //if(threadIdx.x==0)printf("md_object.jac.num_elem %d\n",md->jac.num_elem[0]);
+  //__syncthreads();
 
   cudaDeviceJac0(
 #ifdef PMC_DEBUG_GPU
@@ -1982,8 +1984,8 @@ int rxn_calc_jac_gpu(SolverData *sd, SUNMatrix J, double time_step) {
   double *J_rxn_data = SM_DATA_S(md->J_rxn);
 
   //todo why this works? Because I was using the check?
-  double *J_data = SM_DATA_S(md->J_rxn);
-  //double *J_data = SM_DATA_S(J);
+  //double *J_data = SM_DATA_S(md->J_rxn);
+  double *J_data = SM_DATA_S(J);
 
   //Async
   //HANDLE_ERROR(cudaMemcpyAsync(md->deriv_aux, md->deriv_data_gpu,
@@ -1995,7 +1997,9 @@ int rxn_calc_jac_gpu(SolverData *sd, SUNMatrix J, double time_step) {
   //HANDLE_ERROR(cudaMemcpy(J_rxn_data, mGPU->J_rxn, sizeof(mGPU->J_rxn)*sd->jac.num_elem, cudaMemcpyDeviceToHost));
 
 
+
   HANDLE_ERROR(cudaMemcpy(J_data, mGPU->J, md->jac_size, cudaMemcpyDeviceToHost));
+
 
 
 

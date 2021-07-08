@@ -1389,10 +1389,26 @@ int Jac_gpu(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_da
     //printf("Jac_gpu J_data [%d]=%le\n",i,J_data[i]);
   }
 
-  SUNMatrix J_cpu =
-      SUNSparseMatrix(SM_NP_S(J), SM_NP_S(J), SM_NNZ_S(J), CSC_MAT);
-  J_cpu = SUNMatClone(J);
+  //SUNMatrix J_cpu =
+  //    SUNSparseMatrix(SM_NP_S(J), SM_NP_S(J), SM_NNZ_S(J), CSC_MAT);
+  //J_cpu = SUNMatClone(J); //doesnt work, its like it pointers to same place
 
+
+  //Reset Jac
+  for (int i = 0; i < SM_NNZ_S(J); i++) {
+    (SM_DATA_S(md->J_init))[i] = (SM_DATA_S(J))[i];
+    (SM_DATA_S(J))[i] = (realtype)0.0;
+  }
+
+  //double *total_state_cpu=N_VGetArrayPointer(tmp3);
+  double *total_state_cpu=
+    (double *)malloc(md->n_per_cell_state_var*md->n_cells * sizeof(double));
+  for (int i = 0; i < md->n_per_cell_state_var*md->n_cells; i++) {
+    total_state_cpu[i]=md->total_state[i];
+  }
+
+
+  /*
 
   sd->use_deriv_est = 0;
   if (f(t, y, deriv, solver_data) != 0) {
@@ -1403,10 +1419,24 @@ int Jac_gpu(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_da
   }
   sd->use_deriv_est = 1;
 
+   */
   if (camp_solver_check_model_state_gpu(y, sd, -SMALL, TINY) != CAMP_SOLVER_SUCCESS)
     return 1;
 
   CVodeGetCurrentStep(sd->cvode_mem, &time_step);
+
+  //Compare input
+  if(sd->counterJacCPU<=10){
+    //printf("CHECK_JAC_GPU_WITH_CPU %d\n",sd->counterDerivGPU);
+    int flag_c=compare_doubles(total_state_cpu,
+            md->total_state,md->n_per_cell_state_var*md->n_cells,"CHECK_STATE_GPU_WITH_CPU");
+    //printf("f_gpu flag %d flag_f %d\n",flag,flag_f);
+    if(flag_c==0){
+      printf("false compare_doubles at counterJacCPU %d",sd->counterJacCPU);
+      exit(0);
+    }
+  }
+  free(total_state_cpu);
 
 
   flag = rxn_calc_jac_gpu(sd, J, time_step);
@@ -1420,11 +1450,13 @@ int Jac_gpu(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_da
   if(sd->use_cpu==0)
     set_jac_data_gpu(sd, SM_DATA_S(J));
 
+
+
   //Compare
   if(sd->counterJacCPU<=10){
     //printf("CHECK_JAC_GPU_WITH_CPU %d\n",sd->counterDerivGPU);
-    int flag_c=compare_doubles(SM_DATA_S(J_cpu),
-            SM_DATA_S(J),NV_LENGTH_S(deriv),"CHECK_F_GPU_WITH_CPU");
+    int flag_c=compare_doubles(SM_DATA_S(md->J_init),
+            SM_DATA_S(J),NV_LENGTH_S(deriv),"CHECK_JAC_GPU_WITH_CPU");
     //printf("f_gpu flag %d flag_f %d\n",flag,flag_f);
     if(flag_c==0){
       printf("false compare_doubles at counterJacCPU %d",sd->counterJacCPU);
@@ -1432,8 +1464,7 @@ int Jac_gpu(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_da
     }
   }
 
-  //J = SUNMatClone(J_cpu);
-  SUNMatDestroy(J_cpu);
+  //SUNMatDestroy(J_cpu);
 
 #else
 

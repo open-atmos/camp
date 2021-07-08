@@ -135,16 +135,18 @@ void print_double(double *x, int len, char *s){
 int compare_doubles(double *x, double *y, int len, const char *s){
 
   int flag=1;
-  //float tol=0.01;
-  float tol=0.0;
+  double tol=0.01;
+  //float tol=0.0001;
   int rel_error;
   for (int i=0; i<len; i++){
     if(x[i]==0)
-      rel_error=0;
+      rel_error=0.;
     else
-      rel_error=(x[i]-y[i]/x[i]);
+      rel_error=abs((x[i]-y[i])/x[i]);
+      //rel_error=(x[i]-y[i]/(x[i]+1.0E-60));
     if(rel_error>tol){
-      printf("Comparison %s not equal at [%d]: %le vs %le\n",s,i,x[i],y[i]);
+      printf("compare_doubles %s rel_error %le for tol %le at [%d]: %le vs %le\n",
+              s,rel_error,tol,i,x[i],y[i]);
       flag=0;
     }
   }

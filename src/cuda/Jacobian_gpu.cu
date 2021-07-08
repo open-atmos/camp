@@ -99,12 +99,32 @@ __host__ __device__
 #endif
 void jacobian_reset_gpu(JacobianGPU jac) {
 
+
 #ifdef __CUDA_ARCH__
-  int i = blockIdx.x * blockDim.x + threadIdx.x;
+
+#ifdef DEV_REMOVE_threadIdx0
+
+  printf("TODO DEV_REMOVE_threadIdx0");
+  /*int i = blockIdx.x * blockDim.x + threadIdx.x;
   if(i<jac.num_elem[0]){
     jac.production_partials[i] = 0.0;
     jac.loss_partials[i] = 0.0;
-  }
+  }*/
+#else
+
+  __syncthreads();
+  if(threadIdx.x==0){
+    int nnz = jac.num_elem[0];
+    for (int n = (nnz/gridDim.x)*blockIdx.x; n < (nnz/gridDim.x)*(blockIdx.x+1); n++) {
+    //for (int n = 0; n < nnz; n++) {
+      jac.production_partials[n] = 0.0;
+      jac.loss_partials[n] = 0.0;
+    }
+  }__syncthreads();
+
+
+#endif
+
 #else
 
   /*for (unsigned int i_elem = 0; i_elem < jac.num_elem[0]; ++i_elem) {
@@ -137,8 +157,6 @@ void jacobian_output_gpu(JacobianGPU jac, double *dest_array) {
     dest_array[i_elem] = drf_dy - drr_dy;
   }
    */
-
-
     __syncthreads();
   //todo if this works, delete col_ptrs since it's not used during calc jac
   if(threadIdx.x==0){
