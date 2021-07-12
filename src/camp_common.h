@@ -319,6 +319,14 @@ typedef struct {
   FILE *file; //todo clean file
 #endif
 
+
+
+  //todo delete:
+  bool callSetup;
+  int convfail;
+
+
+
 #ifdef PMC_DEBUG_DERIV_CPU
   N_Vector y_first;
   int max_deriv_print;

@@ -74,7 +74,6 @@ int jacobian_initialize_gpu(SolverData *sd) {
   cudaMalloc((void **) &jacgpu->num_elem, 1*sizeof(jacgpu->num_elem));//*md->n_mapped_values should be the same
   //cudaMalloc((void **) &(mGPU->jac.num_elem), 1*sizeof(mGPU->jac.num_elem));//*md->n_mapped_values should be the same
 
-
   //printf("jac->num_elem %d\n",jac->num_elem);
 
   cudaMalloc((void **) &(jacgpu->production_partials), num_elem * sizeof(jacgpu->production_partials));
@@ -123,6 +122,7 @@ void jacobian_reset_gpu(JacobianGPU jac) {
     }
 */
 
+
     __syncthreads();
   if(threadIdx.x==0){
     //int nnz = jac.num_elem[0];
@@ -133,8 +133,10 @@ void jacobian_reset_gpu(JacobianGPU jac) {
       jac.loss_partials[n] = 0.0;
     }
 
+
+
     /*
-    //dont needed, always jac.num_elem=jacCell.num_elem*n_cells
+    //dont needed, always jac.num_elem=jacBlock.num_elem*n_cells
      if(blockIdx.x==gridDim.x-1){
       int nnz_left = nnz = jac.num_elem[0]*gridDim.x-((nnz/gridDim.x)*gridDim.x);
       for (int n = (nnz/gridDim.x)*blockIdx.x; n < (nnz/gridDim.x)*(blockIdx.x+1); n++) {
@@ -172,47 +174,11 @@ void jacobian_output_gpu(JacobianGPU jac, double *dest_array) {
 
 #ifdef DEV_REMOVE_threadIdx0
 
-  /*
-  //crashes
-  int i_col = blockIdx.x * blockDim.x + threadIdx.x;
-  for (unsigned int i_elem = jac.col_ptrs[i_col];
-     i_elem < jac.col_ptrs[i_col + 1]; ++i_elem) {
-     double drf_dy = jac.production_partials[i_elem];
-     double drr_dy = jac.loss_partials[i_elem];
+  //todo use col_ptrs*i_cell and num_spec to better memory access than nnz_left
 
-    //check_isnanld(&drf_dy,1,"post jacobian_output drf_dy");
-    //check_isnanld(&drr_dy,1,"post jacobian_output drr_dy");
-
-    dest_array[i_elem] = drf_dy - drr_dy;
-  }
-   */
-
-  /*
-    __syncthreads();
-  //todo if this works, delete col_ptrs since it's not used during calc jac
-  if(threadIdx.x==0){
-    int i_col = blockIdx.x * blockDim.x + threadIdx.x;
-    int nnz = jac.num_elem[0];
-
-    //for (int n = (nnz/gridDim.x)*blockIdx.x; n < (nnz/gridDim.x)*(blockIdx.x+1); n++) {
-    //for (int n = 0; n < nnz; n++) {
-    //todo dont needed col_ptrs and num_spec
-    for (unsigned int i_col = 0; i_col < jac.num_spec; ++i_col) {//jac.num_spec 79
-      for (unsigned int n = jac.col_ptrs[i_col];
-          n < jac.col_ptrs[i_col + 1]; ++n) {
-         double drf_dy = jac.production_partials[n];
-         double drr_dy = jac.loss_partials[n];
-
-        //check_isnanld(&drf_dy,1,"post jacobian_output drf_dy");
-        //check_isnanld(&drr_dy,1,"post jacobian_output drr_dy");
-
-        dest_array[n] = drf_dy - drr_dy;
-      }
-    }
-  }__syncthreads();
-   */
 
 #else
+
 
   //todo adapt to multi-cells gpu (not only one-cell per block)
   __syncthreads();

@@ -47,6 +47,13 @@ typedef struct
   // ODE solver variables
   int flag;
   int *dflag;
+  int *dlast_flag;
+  int *cv_jcur;
+  int *nje;
+  int *nstlj;
+  int *cv_nst;
+
+  double *dgammap;
   double *dcv_tq;
   double* dewt;
   double* dacor;
@@ -57,6 +64,12 @@ typedef struct
   double* dftemp;
   double* dzn;
   double* dcv_y;
+
+  //Intermediate variables
+  double* dsavedJ;
+  int*    djsavedJ;
+  int*    disavedJ;
+
 
   //ODE stats
   //int cv_mnewt; //Newton iteration counter

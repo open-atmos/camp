@@ -215,7 +215,7 @@ void cudaDeviceswapCSC_CSR1ThreadBlock(int n_row, int n_col, int* Ap, int* Aj, d
       printf("blockDim.x*blockIdx.x %d %d\n",blockDim.x*blockIdx.x,blockDim.x*(blockIdx.x+1));
 #endif
     }
-    Bp[tid]=0;
+    Bp[tid]=0; //todo dont needed? only first value is init to zero, not the whole array
     //Bp[2*tid]=0;
     if(blockIdx.x==gridDim.x-1) Bp[blockDim.x]=0;
 
@@ -438,7 +438,7 @@ void cudaGlobalswapCSC_CSR(int n_row, int n_col, int* Ap, int* Aj, double* Ax, i
 #endif
 
   //cudaDeviceswapCSC_CSR1Thread(n_row,n_col,Ap,Aj,Ax,Bp,Bi,Bx);
-  cudaDeviceswapCSC_CSR1ThreadBlock(n_row,n_col,Ap,Aj,Ax,Bp,Bi,Bx); //wa not work with more than one-cell
+  cudaDeviceswapCSC_CSR1ThreadBlock(n_row,n_col,Ap,Aj,Ax,Bp,Bi,Bx);
 
 #ifdef DEBUG_cudaGlobalswapCSC_CSR
   if(gridDim.x>1)iprint=blockDim.x;//block 2

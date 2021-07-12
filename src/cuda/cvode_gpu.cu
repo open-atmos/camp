@@ -321,6 +321,30 @@ int nextPowerOfTwoCVODE(int v){
   return v;
 }
 
+__device__
+void cudaDeviceJacCopy(int n_row, int* Ap, int* Aj, double* Ax, int* Bp, int* Bi, double* Bx) {
+
+  unsigned int tid = threadIdx.x;
+  int nnz=Ap[n_row];
+
+  if(tid==0){
+
+    for (int n = (nnz/gridDim.x)*blockIdx.x; n < (nnz/gridDim.x)*(blockIdx.x+1); n++) {
+      Bi[n]=Aj[n];
+      Bx[n]=Ax[n];
+    }
+
+    for(int n=0;n<n_row/gridDim.x;n++){
+      Bp[n+blockIdx.x*blockDim.x]=Ap[n];
+    }
+    if(blockIdx.x==gridDim.x-1){
+      Bp[n_row]=nnz;
+    }
+  }
+
+}
+
+
 
 
 __device__
@@ -330,12 +354,16 @@ void cudaDevicecamp_solver_check_model_state(double *state, double *y,
 {
   int tid = blockIdx.x * blockDim.x + threadIdx.x;
   int active_threads = n_cells*deriv_length_cell;
+  //extern __shared__ int flag_shr[];
+  __shared__ int flag_shr[1];
+  flag_shr[0] = 0;
 
   if(tid<active_threads) {
 
     if (y[tid] < threshhold) {
 
-      *flag = CAMP_SOLVER_FAIL;
+      //*flag = CAMP_SOLVER_FAIL;
+      flag_shr[0] = CAMP_SOLVER_FAIL;
 #ifdef FAILURE_DETAIL
       printf("\nFailed model state update gpu (Negative value on 'y'):[spec %d] = %le",tid,y[tid]);
 #endif
@@ -366,6 +394,10 @@ void cudaDevicecamp_solver_check_model_state(double *state, double *y,
     }
      */
   }
+
+  __syncthreads();
+  *flag = flag_shr[0];
+  return;
 
 }
 
@@ -854,7 +886,7 @@ void CudaGlobalguess_helper(double t_n, double h_n, double* y_n,
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   unsigned int tid = threadIdx.x;
 
-  int retval = CudaDeviceguess_helper(t_n, h_n, y_n,
+  CudaDeviceguess_helper(t_n, h_n, y_n,
                                       y_n1, hf, tmp1,
                                       corr, cv_reltol,nrows,
 #ifdef PMC_DEBUG_GPU
@@ -868,13 +900,605 @@ void CudaGlobalguess_helper(double t_n, double h_n, double* y_n,
                                       md_object
   );
 
+  if(i==0)printf("CudaGlobalguess_helperEnd *flag %d\n",*flag);
 
-  //todo this syncthreads softlocks the system
+}
+
+
+
+
+__device__ void solveRXNJac(
+        JacobianGPU jac,
+        double time_step,
+        ModelDataGPU *md
+)
+{
+  int tid = blockIdx.x * blockDim.x + threadIdx.x;
+
+#ifdef REVERSE_INT_FLOAT_MATRIX
+
+  double *rxn_float_data = &( md->rxn_double[md->i_rxn]);
+  int *int_data = &(md->rxn_int[md->i_rxn]);
+  int rxn_type = int_data[0];
+  int *rxn_int_data = (int *) &(int_data[1*md->n_rxn]);
+
+#else
+
+  double *rxn_float_data = (double *)&( md->rxn_double[md->rxn_float_indices[md->i_rxn]]);
+  int *int_data = (int *)&(md->rxn_int[md->rxn_int_indices[md->i_rxn]]);
+
+  //double *rxn_float_data = &( md->rxn_double[md->i_rxn]);
+  //int *int_data = &(md->rxn_int[md->i_rxn]);
+
+  int rxn_type = int_data[0];
+  int *rxn_int_data = (int *) &(int_data[1]);
+
+#endif
+
+  //Get indices for rates
+  double *rxn_env_data = &(md->rxn_env_data
+  [md->n_rxn_env_data*md->i_cell+md->rxn_env_data_idx[md->i_rxn]]);
+
+#ifdef DEBUG_solveRXNJac
+  if(tid==0){
+    printf("[DEBUG] GPU solveRXN tid %d, \n", tid);
+  }
+#endif
+
+  switch (rxn_type) {
+    //case RXN_AQUEOUS_EQUILIBRIUM :
+    //fix run-time error
+    //rxn_gpu_aqueous_equilibrium_calc_jac_contrib(md, jac, rxn_int_data,
+    //                                               rxn_float_data, rxn_env_data,time_step);
+    //break;
+    case RXN_ARRHENIUS :
+      rxn_gpu_arrhenius_calc_jac_contrib(md, jac, rxn_int_data,
+                                         rxn_float_data, rxn_env_data,time_step);
+      break;
+    case RXN_CMAQ_H2O2 :
+      rxn_gpu_CMAQ_H2O2_calc_jac_contrib(md, jac, rxn_int_data,
+                                         rxn_float_data, rxn_env_data,time_step);
+      break;
+    case RXN_CMAQ_OH_HNO3 :
+      rxn_gpu_CMAQ_OH_HNO3_calc_jac_contrib(md, jac, rxn_int_data,
+                                            rxn_float_data, rxn_env_data,time_step);
+      break;
+    case RXN_CONDENSED_PHASE_ARRHENIUS :
+      //rxn_gpu_condensed_phase_arrhenius_calc_jac_contrib(md, jac, rxn_int_data,
+      //                                     rxn_float_data, rxn_env_data,time_step);
+      break;
+    case RXN_EMISSION :
+      //printf("RXN_EMISSION");
+      //rxn_gpu_emission_calc_jac_contrib(md, jac, rxn_int_data,
+      //                                     rxn_float_data, rxn_env_data,time_step);
+      break;
+    case RXN_FIRST_ORDER_LOSS :
+      //rxn_gpu_first_order_loss_calc_jac_contrib(md, jac, rxn_int_data,
+      //                                     rxn_float_data, rxn_env_data,time_step);
+      break;
+    case RXN_HL_PHASE_TRANSFER :
+      //rxn_gpu_HL_phase_transfer_calc_jac_contrib(md, jac, rxn_int_data,
+      //                                             rxn_float_data, rxn_env_data,time_stepn);
+      break;
+    case RXN_PHOTOLYSIS :
+      rxn_gpu_photolysis_calc_jac_contrib(md, jac, rxn_int_data,
+                                          rxn_float_data, rxn_env_data,time_step);
+      break;
+    case RXN_SIMPOL_PHASE_TRANSFER :
+      //rxn_gpu_SIMPOL_phase_transfer_calc_jac_contrib(md, jac,
+      //        rxn_int_data, rxn_float_data, rxn_env_data, time_step);
+      break;
+    case RXN_TROE :
+      rxn_gpu_troe_calc_jac_contrib(md, jac, rxn_int_data,
+                                    rxn_float_data, rxn_env_data,time_step);
+      break;
+    case RXN_WET_DEPOSITION :
+      //printf("RXN_WET_DEPOSITION");
+      //rxn_gpu_wet_deposition_calc_jac_contrib(md, jac, rxn_int_data,
+      //                                     rxn_float_data, rxn_env_data,time_step);
+      break;
+  }
+/*
+*/
+
+}
+
+__device__ void cudaDevicecalc_Jac(
+#ifdef PMC_DEBUG_GPU
+        int counterDeriv2,
+#endif
+        //check_model_state
+        //double threshhold, double replacement_value, int *flag,
+        //f_gpu
+        double time_step, int deriv_length_cell, int state_size_cell,
+        int n_cells, int i_kernel,
+        int threads_block, int n_shr_empty, double *y,
+        ModelDataGPU md_object
+) //Interface CPU/GPU
+{
+  int tid = blockIdx.x * blockDim.x + threadIdx.x;
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
+  int tid_cell=tid%deriv_length_cell;
+  int active_threads = n_cells*deriv_length_cell;
+  ModelDataGPU *md = &md_object;
+
+#ifdef DEBUG_cudaDeviceJac
+  if(tid==0){
+    printf("[DEBUG] GPU solveDerivative tid %d, \n", tid);
+  }__syncthreads();
+#endif
+
+  if(tid<active_threads){
+
+    //Debug
+    /*
+    if(counterDeriv2<=1){
+      printf("(%d) y %-le J_state %-le J_solver %-le J_tmp %-le J_tmp2 %-le J_deriv %-le\n",tid+1,
+             y[tid], md->J_state[tid], md->J_solver[tid], md->J_tmp[tid], md->J_tmp2[tid], md->J_deriv[tid]);
+      //printf("gpu threads %d\n", active_threads);
+    }
+*/
+
+    JacobianGPU *jac = &md->jac;
+    JacobianGPU jacBlock;
+
+#ifdef DEV_JACOBIANGPUNUMSPEC
+    jac->num_spec = state_size_cell;
+    jacBlock.num_spec = state_size_cell;
+#endif
+
+#ifdef DEV_MULTICELLSGPU
+
+    jacBlock.num_elem[0] = jac->num_elem[0]*(blockDim.x/deriv_length_cell);
+
+#else
+
+    jacBlock.num_elem = jac->num_elem;
+
+#endif
+
+    //if(threadIdx.x==0) printf("*jac->num_elem %d\n",jac->num_elem[0]);
+    //if(threadIdx.x==0) printf("deriv_length_cell %d\n",deriv_length_cell);
+    //if(threadIdx.x==0) printf("state_size_cell %d\n",state_size_cell);
+
+#ifdef AEROS_CPU
+#else
+#endif
+
+    int i_cell = tid/deriv_length_cell;
+    md->i_cell = i_cell;
+    //jacBlock.production_partials = &( jac->production_partials[jac.num_elem[0]*i_cell]);
+    //jacBlock.loss_partials = &( jac->loss_partials[jac.num_elem[0]*i_cell]);
+    jacBlock.production_partials = &( jac->production_partials[jacBlock.num_elem[0]*blockIdx.x]);
+    jacBlock.loss_partials = &( jac->loss_partials[jacBlock.num_elem[0]*blockIdx.x]);
+    //jacBlock.col_ptrs = &( md->col_ptrs[algo*i_cell]);
+
+    jacobian_reset_gpu(jacBlock);
+
+    md->grid_cell_state = &( md->state[state_size_cell*i_cell]);
+    md->grid_cell_env = &( md->env[PMC_NUM_ENV_PARAM_*i_cell]);
+
+    /*
+    md->grid_cell_aero_rep_env_data =
+    &(md->aero_rep_env_data[md->i_cell*md->n_aero_rep_env_data]);
+
+    //Filter threads for n_aero_rep
+    int n_aero_rep = md->n_aero_rep;
+    if( tid_cell < n_aero_rep) {
+      int n_iters = n_aero_rep / deriv_length_cell;
+      //Repeat if there are more reactions than species
+      for (int i = 0; i < n_iters; i++) {
+        md->i_aero_rep = tid_cell + i*deriv_length_cell;
+
+        aero_rep_gpu_update_state(md);
+      }
+
+      //Limit tid to pending rxns to compute
+      int residual=n_aero_rep-(deriv_length_cell*n_iters);
+      if(tid_cell < residual){
+        md->i_aero_rep = tid_cell + deriv_length_cell*n_iters;
+
+        aero_rep_gpu_update_state(md);
+      }
+    }
+     */
+
+#ifdef DEBUG_cudaDevicecalc_Jac
+
+    if(tid==0)printf("cudaDevicecalc_Jac01\n");
+
+    //if(threadIdx.x==0) {
+    //  printf("jac.num_elem %d\n",jacBlock.num_elem);
+    //  printf("*md->n_mapped_values %d\n",*md->n_mapped_values);
+      //for (int i=0; i<*md->n_mapped_values; i++){
+      //  printf("cudaDevicecalc_Jac0 jacBlock [%d]=%le\n",i,jacBlock.production_partials[i]);
+      //}
+    //}
+
+#endif
+
+    __syncthreads();
+    //Filter threads for n_rxn
+    int n_rxn = md->n_rxn;
+    if( tid_cell < n_rxn) {
+      int n_iters = n_rxn / deriv_length_cell;
+      //Repeat if there are more reactions than species
+      for (int i = 0; i < n_iters; i++) {
+        md->i_rxn = tid_cell + i*deriv_length_cell;
+
+        solveRXNJac(jacBlock, time_step, md);
+      }
+
+      //Limit tid to pending rxns to compute
+      int residual=n_rxn-(deriv_length_cell*n_iters);
+      if(tid_cell < residual){
+        md->i_rxn = tid_cell + deriv_length_cell*n_iters;
+
+        solveRXNJac(jacBlock, time_step, md);
+      }
+    }
+    __syncthreads();
+
+
+    jacobian_output_gpu(jacBlock, &(md->J_rxn[jacBlock.num_elem[0]*blockIdx.x]) );
+
+
+#ifdef DEBUG_cudaDevicecalc_Jac
+
+    if(threadIdx.x==0) {
+        printf("jac.num_elem %d\n",jacBlock.num_elem[0]);
+        printf("*md->n_mapped_values %d\n",*md->n_mapped_values);
+        for (int i=0; i<10; i++){//*md->n_mapped_values
+          printf("cudaDevicecalc_Jac0 J_rxn [%d]=%le\n",i,md->J_rxn[i]);
+        }
+      }
+
+#endif
+
+
+#ifdef DEV_REMOVE_threadIdx0
+
+    //todo use diA and djA pointers to better memory access
+    JacMap *jac_map = md->jac_map;
+
+    int nnz = md->n_mapped_values[0];
+    int nnz_tid = nnz/active_threads;
+
+    for (int n = i*nnz_tid; n < i*(nnz_tid+1); ++n) {
+
+      md->J[jac_map[n].solver_id+nnz*blockIdx.x] = //+=0.;
+              md->J_rxn[jac_map[n].rxn_id+jacBlock.num_elem[0]*blockIdx.x];
+
+    }
+
+    int nnz_left = nnz-(nnz_tid*active_threads);
+    if(i<nnz_left)
+      for (int n = nnz_tid; n < nnz_tid; ++n) {
+
+        md->J[jac_map[n].solver_id+nnz*blockIdx.x] = //+=0.;
+                md->J_rxn[jac_map[n].rxn_id+jacBlock.num_elem[0]*blockIdx.x];
+
+      }
+
+#else
+
+    __syncthreads();
+    if(threadIdx.x==0) {
+
+      JacMap *jac_map = md->jac_map;
+      int nnz = md->n_mapped_values[0];
+      //int nnz = jac->num_elem;
+      //SM_DATA_S(md->J_params)[0] = 1.0;  // dummy value for non-sub model calcs
+      //for (int i_map = 0; i_map < md->n_mapped_values; ++i_map) {
+      //for (int n = (nnz/gridDim.x)*blockIdx.x; n < (nnz/gridDim.x)*(blockIdx.x+1); n++) {
+
+#ifdef DEV_MULTICELLSGPU
+
+      //*(blockDim.x/deriv_length_cell)
+      for (int j = 0; j < (blockDim.x/deriv_length_cell); j++) {
+        for (int n = 0; n < nnz; n++) {
+          //md->J[n] = 0.0;
+          //md->J[n] = 0.0;
+
+          //o = (j-1)*(I_E) + (i-1)
+          //z = (k-1)*(I_E*I_N) + o
+          int z = blockIdx.x*blockDim.x + j*nnz;
+          int z_rxn = blockIdx.x*blockDim.x + j*jacBlock.num_elem[0];
+
+          md->J[jac_map[n].solver_id + z] = //+=0.;
+                  md->J_rxn[jac_map[n].rxn_id + jacBlock.num_elem[0] * blockIdx.x];
+          //0.0;
+          //* SM_DATA_S(md->J_params)[jac_map[i_map].param_id];
+
+          //SM_DATA_S(J)
+          //[i_cell * md->n_per_cell_solver_jac_elem + jac_map[i_map].solver_id] +=
+          //        SM_DATA_S(md->J_rxn)[jac_map[i_map].rxn_id] *
+          //0.0;
+          //        SM_DATA_S(md->J_params)[jac_map[i_map].param_id];
+
+        }
+      }
+
+#else
+
+      for (int n = 0; n < nnz; n++) {
+        md->J[jac_map[n].solver_id + nnz * blockIdx.x] = 0.0;
+
+        md->J[jac_map[n].solver_id + nnz * blockIdx.x] = //+=0.;
+                md->J_rxn[jac_map[n].rxn_id + jacBlock.num_elem[0] * blockIdx.x];
+        //0.0;
+        //* SM_DATA_S(md->J_params)[jac_map[i_map].param_id];
+
+        //SM_DATA_S(J)
+        //[i_cell * md->n_per_cell_solver_jac_elem + jac_map[i_map].solver_id] +=
+        //        SM_DATA_S(md->J_rxn)[jac_map[i_map].rxn_id] *
+        //0.0;
+        //        SM_DATA_S(md->J_params)[jac_map[i_map].param_id];
+
+      }
+
+#endif
+
+    }__syncthreads();
+
+#endif
+
+  }
+}
+
+__device__
+void cudaDeviceJac(
+#ifdef PMC_DEBUG_GPU
+        int counterDeriv2,
+#endif
+        //check_model_state
+        double threshhold, double replacement_value, int *flag,
+        //f_gpu
+        double time_step, int deriv_length_cell, int state_size_cell,
+        int n_cells, int i_kernel,
+        int threads_block, int n_shr_empty, double *y,
+        ModelDataGPU md_object, double *dftemp
+) //Interface CPU/GPU
+{
+
+  extern __shared__ int flag_shr[];
+  flag_shr[0] = 0;
+  int tid = threadIdx.x;
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
+  int active_threads = n_cells*deriv_length_cell;
+
+
+  ModelDataGPU *md = &md_object;
+
+  cudaDevicef(
+#ifdef PMC_DEBUG_GPU
+          counterDeriv2,
+#endif
+          //check_model_state
+          threshhold, replacement_value, flag,
+          //f_gpu
+          time_step, deriv_length_cell, state_size_cell,
+          n_cells, i_kernel, threads_block, n_shr_empty, y,
+          md_object
+  );
+
+
+
+  //duplicated call to check_model_state (previous f funct already checks model_state)
+  /*
+  cudaDevicecamp_solver_check_model_state0(md->state, y,
+                                           md->map_state_deriv, threshhold, replacement_value,
+                                           flag, deriv_length_cell, n_cells);
+*/
+
+
+  //__syncthreads();
+  //study flag block effect: flag is global for all threads or for only the block?
+  if(*flag==CAMP_SOLVER_FAIL)
+    return;
+
+  //if(tid==0)printf("cudaDeviceJac01\n");
+
+  cudaDevicecalc_Jac(
+#ifdef PMC_DEBUG_GPU
+          counterDeriv2,
+#endif
+          //check_model_state          md->map_state_deriv, threshhold, replacement_value, flag,
+          //f_gpu
+          time_step, deriv_length_cell, state_size_cell,
+          n_cells, i_kernel, threads_block, n_shr_empty, y,
+          md_object
+  );
+
+  //if(tid==0)printf("cudaDeviceJac0End\n");
+
+#ifdef DEV_REMOVE_threadIdx0
+#else
+  if(i<active_threads){
+
+    __syncthreads();
+    if(threadIdx.x==0) {
+      int nnz = md->n_mapped_values[0];
+      for (int n = 0; n < nnz; n++) {
+        md->J_solver[n]=md->J[n];
+      }
+    }__syncthreads();
+
+    md->J_state[i]=y[i];
+    md->J_deriv[i]=md->deriv_data[i];
+
+  }
+
+#endif
+
   __syncthreads();
-  *flag=retval;
-  //flag=retval;
+  *flag = flag_shr[0];
 
-  if(i==0)printf("CudaGlobalguess_helperEnd retval %d\n",retval);
+}
+
+__global__
+void cudaGlobalJac(
+#ifdef PMC_DEBUG_GPU
+        int counterDeriv2,
+#endif
+        //check_model_state
+        double threshhold, double replacement_value, int *flag,
+        //f_gpu
+        double time_step, int deriv_length_cell,
+        int state_size_cell, int n_cells,
+        int i_kernel, int threads_block, int n_shr_empty, double *y,
+        ModelDataGPU md_object, double *dftemp
+) //Interface CPU/GPU
+{
+
+  ModelDataGPU *md = &md_object;
+
+  //if(threadIdx.x==0)printf("cudaGlobalJac \n");
+  //__syncthreads();
+  //if(threadIdx.x==0)printf("md_object.jac.num_elem %d\n",md->jac.num_elem[0]);
+  //__syncthreads();
+
+  cudaDeviceJac(
+#ifdef PMC_DEBUG_GPU
+          counterDeriv2,
+#endif
+          //check_model_state
+          threshhold, replacement_value, flag,
+          //f_gpu
+          time_step, deriv_length_cell, state_size_cell,
+          n_cells, i_kernel, threads_block, n_shr_empty, y,
+          md_object, dftemp
+  );
+}
+
+__global__
+void cudaGlobalinsolsetup(
+        //LS
+        double *dA, int *djA, int *diA, double *dx, double *dtempv, //Input data
+        int nrows, int blocks, int n_shr_empty, int maxIt, int mattype,
+        int n_cells, double tolmax, double *ddiag, //Init variables
+        double *dr0, double *dr0h, double *dn0, double *dp0,
+        double *dt, double *ds, double *dAx2, double *dy, double *dz,// Auxiliary vectors
+        //swapCSC_CSR_BCG
+        int *diB, int *djB, double *dB,
+        //Guess_helper
+        double t_n, double h_n, double* dftemp,
+        double* dcv_y, double* tmp1,
+        double* corr, double cv_reltol,
+        //update_state
+        double threshhold, double replacement_value, int *flag,
+        //f_gpu
+        double time_step, int deriv_length_cell, int state_size_cell,
+        int i_kernel, int threads_block, ModelDataGPU md_object,
+        //cudacvNewtonIteration
+        double *dacor, double *dzn, int *cv_jcur,
+        double *dewt, double cv_rl1, double cv_gamma,
+        int cv_mnewt, double cv_crate, double cv_gammap, double *dcv_tq,
+        double cv_acnrm, double cv_maxcor, int cv_nfe,
+        bool callSetupGlobal, int cv_nsetups, double cv_gamrat,
+        int *cv_nst, int *nstlj, int convfail,
+        int *isavedJ, int *jsavedJ, double *savedJ,
+        int *nje, int jok
+#ifdef PMC_DEBUG_GPU
+,int *it_pointer, double *dtBCG, double *dtPreBCG, double *dtPostBCG,
+        int counterDerivGPU
+#endif
+) {
+
+  extern __shared__ int flag_shr[];
+  flag_shr[0] = 0;
+  //__syncthreads();*flag = flag_shr[0];__syncthreads();
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
+  unsigned int tid = threadIdx.x;
+  int active_threads = nrows;
+  int n_shr = blockDim.x + n_shr_empty;
+
+  ModelDataGPU *md = &md_object;
+
+
+  //if(threadIdx.x==0)printf("cudaGlobalJac \n");
+  //__syncthreads();
+  //if(threadIdx.x==0)printf("md_object.jac.num_elem %d\n",md->jac.num_elem[0]);
+  //__syncthreads();
+
+#ifdef DEV_cudaGlobalinsolsetup
+
+/*
+  double dgamma;
+  int jbad, jok;
+
+  dgamma = fabs((cv_gamma / cv_gammap) - 1.); //In GPU is fabs too
+
+  jbad = (*cv_nst == 0) ||
+         (*cv_nst > *nstlj + CVD_MSBJ) ||
+         ((convfail == CV_FAIL_BAD_J) && (dgamma < CVD_DGMAX)) ||
+         (convfail == CV_FAIL_OTHER);
+  jok = !jbad;
+*/
+
+  //if(i==0)printf("cudaGlobalinsolsetup jok %d",jok);
+
+
+  if (jok) {
+    //if (0) {
+
+    *cv_jcur = 0;
+    cudaDeviceJacCopy(nrows, isavedJ, jsavedJ, savedJ, diA, djA, dA);
+
+    //cv_mem->cv_jcur = SUNFALSE;
+    //retval = SUNMatCopy(cvdls_mem->savedJ, cvdls_mem->A);
+
+    /* If jok = SUNFALSE, reset J, call jac routine for new J value and save a copy */
+  } else {
+
+#else
+
+    *nje++;
+    *nstlj = *cv_nst;
+    *cv_jcur = 1;
+
+    cudaDeviceJac(
+#ifdef PMC_DEBUG_GPU
+            counterDerivGPU,
+#endif
+            //check_model_state
+            threshhold, replacement_value, flag,
+            //f_gpu
+            time_step, deriv_length_cell, state_size_cell,
+            n_cells, i_kernel, threads_block, n_shr_empty, dcv_y,
+            md_object, dftemp
+    );
+
+    __syncthreads();
+
+    //if(i==0)printf("cudaGlobalinsolsetup flag %d",*flag);
+
+    if (*flag < 0) {
+      //cvProcessError(cv_mem, CVDLS_JACFUNC_UNRECVR, "CVDLS",
+      //               "cvDlsSetup",  MSGD_JACFUNC_FAILED);
+      //last_flag = CVDLS_JACFUNC_UNRECVR;
+      //flag_shr[0] = -1;
+      flag_shr[0] = CVDLS_JACFUNC_UNRECVR;
+    }
+    if (*flag > 0) {
+      //last_flag = CVDLS_JACFUNC_RECVR;
+      //flag_shr[0] = 1;
+      flag_shr[0] = CVDLS_JACFUNC_RECVR;
+    }
+    __syncthreads();
+    if (flag_shr[0] != 0) {
+      *flag = flag_shr[0];
+      return;
+    }
+
+    //cudaDeviceJacCopy(nrows, diA, djA, dA, isavedJ, jsavedJ, savedJ);
+
+#endif
+
+#ifdef DEV_cudaGlobalinsolsetup
+  }
+
+#endif
 
 }
 
@@ -1180,6 +1804,23 @@ void alloc_solver_gpu2(CVodeMem cv_mem, SolverData *sd)
   //printf("bicg->threads %d \n", bicg->threads);
   bicg->blocks=(bicg->nrows+bicg->threads-1)/bicg->threads;
 
+  //ODE aux variables
+  cudaMalloc((void**)&bicg->dflag,1*sizeof(int));
+  cudaMalloc((void**)&bicg->dgammap,1*sizeof(double));
+
+  cudaMalloc((void**)&bicg->cv_jcur,1*sizeof(int));
+  cudaMalloc((void**)&bicg->nje,1*sizeof(int));
+  cudaMalloc((void**)&bicg->nstlj,1*sizeof(int));
+  cudaMalloc((void**)&bicg->cv_nst,1*sizeof(int));
+
+
+  cudaMemcpy(bicg->dflag,&bicg->flag,1*sizeof(int),cudaMemcpyHostToDevice);
+
+  //cudaMemcpy(bicg->dflag,&bicg->dgammap,1*sizeof(double),cudaMemcpyHostToDevice);
+
+
+
+
   // Allocating matrix data to the GPU
   bicg->dA=mGPU->J;//set itsolver gpu pointer to jac pointer initialized at camp
   //cudaMemcpy(bicg->A, bicg->dA, bicg->nnz*sizeof(double), cudaMemcpyDeviceToHost);
@@ -1188,11 +1829,11 @@ void alloc_solver_gpu2(CVodeMem cv_mem, SolverData *sd)
   cudaMalloc((void**)&bicg->dB,bicg->nnz*sizeof(double));
   cudaMalloc((void**)&bicg->djB,bicg->nnz*sizeof(int));
   cudaMalloc((void**)&bicg->diB,(bicg->nrows+1)*sizeof(int));
+  cudaMalloc((void**)&bicg->dsavedJ,bicg->nnz*sizeof(double));
+  cudaMalloc((void**)&bicg->djsavedJ,bicg->nnz*sizeof(int));
+  cudaMalloc((void**)&bicg->disavedJ,(bicg->nrows+1)*sizeof(int));
 
-  //ODE aux variables
-  cudaMalloc((void**)&bicg->dflag,1*sizeof(int));
-  cudaMemcpy(bicg->dflag,&bicg->flag,1*sizeof(int),cudaMemcpyHostToDevice);
-  //cudaMemcpy(bicg->dflag,1.0,1*sizeof(double),cudaMemcpyHostToDevice);
+
   cudaMalloc((void**)&bicg->dcv_tq,5*sizeof(double));
   cudaMalloc((void**)&bicg->dewt,bicg->nrows*sizeof(double));
   cudaMalloc((void**)&bicg->dacor,bicg->nrows*sizeof(double));
@@ -1209,6 +1850,9 @@ void alloc_solver_gpu2(CVodeMem cv_mem, SolverData *sd)
   double *tempv = N_VGetArrayPointer(cv_mem->cv_tempv);
   cudaMemcpy(bicg->djA,bicg->jA,bicg->nnz*sizeof(int),cudaMemcpyHostToDevice);
   cudaMemcpy(bicg->diA,bicg->iA,(bicg->nrows+1)*sizeof(int),cudaMemcpyHostToDevice);
+  cudaMemcpy(bicg->dsavedJ,bicg->A,bicg->nnz*sizeof(double),cudaMemcpyHostToDevice);
+  cudaMemcpy(bicg->djsavedJ,bicg->jA,bicg->nnz*sizeof(int),cudaMemcpyHostToDevice);
+  cudaMemcpy(bicg->disavedJ,bicg->iA,(bicg->nrows+1)*sizeof(int),cudaMemcpyHostToDevice);
   cudaMemcpy(bicg->dewt,ewt,bicg->nrows*sizeof(double),cudaMemcpyHostToDevice);
   cudaMemcpy(bicg->dacor,ewt,bicg->nrows*sizeof(double),cudaMemcpyHostToDevice);
   cudaMemcpy(bicg->dftemp,ewt,bicg->nrows*sizeof(double),cudaMemcpyHostToDevice);
@@ -1429,8 +2073,8 @@ int cvHandleFailure_gpu2(CVodeMem cv_mem, int flag)
 
 
 
-__global__
-void cudaGlobalSolveODE(
+__device__
+void cudaDevicecvNewtonIteration(
         //LS
         double *dA, int *djA, int *diA, double *dx, double *dtempv, //Input data
         int nrows, int blocks, int n_shr_empty, int maxIt, int mattype,
@@ -1449,7 +2093,7 @@ void cudaGlobalSolveODE(
         double time_step, int deriv_length_cell, int state_size_cell,
         int i_kernel, int threads_block, ModelDataGPU md_object,
         //cudacvNewtonIteration
-        double *dacor, double *dzn, bool cv_jcur,
+        double *dacor, double *dzn, int cv_jcur,
         double *dewt, double cv_rl1, double cv_gamma,
         int cv_mnewt, double cv_crate, double *dcv_tq,
         double cv_acnrm, double cv_maxcor, int cv_nfe
@@ -1466,7 +2110,6 @@ void cudaGlobalSolveODE(
   int active_threads = nrows;
   int n_shr = blockDim.x+n_shr_empty;
 
-  int retval = 1;
   double del, delp, dcon, m;
   del = delp = 0.0;
   cv_mnewt = m = 0;
@@ -1502,7 +2145,7 @@ void cudaGlobalSolveODE(
 
 #ifdef PMC_DEBUG_GPU
 
-    #ifdef cudaGlobalSolveODE_timers_max_blocks
+#ifdef cudaGlobalSolveODE_timers_max_blocks
 
   dtPreBCG[i] += ((double)(int)(clock() - start))/(clock_khz*1000);
 
@@ -1529,7 +2172,7 @@ void cudaGlobalSolveODE(
 
 #ifdef PMC_DEBUG_GPU
 
-    #ifdef cudaGlobalSolveODE_timers_max_blocks
+#ifdef cudaGlobalSolveODE_timers_max_blocks
 
   dtBCG[i] += ((double)(int)(clock() - startBCG))/(clock_khz*1000);
 
@@ -1557,7 +2200,7 @@ void cudaGlobalSolveODE(
 
     //if (cv_mem->cv_ghfun){//Function is always defined in CAMP
     cudaDevicezaxpby(1.0,dcv_y,1.0,dtempv,dftemp,nrows);
-    retval = CudaDeviceguess_helper(t_n, h_n, dftemp,
+    CudaDeviceguess_helper(t_n, h_n, dftemp,
                                     dcv_y, dtempv, tmp1,
                                     corr, cv_reltol,nrows,
 #ifdef PMC_DEBUG_GPU
@@ -1571,16 +2214,11 @@ void cudaGlobalSolveODE(
                                     md_object
     );
 
-    __syncthreads();
-    *flag=retval;
-    __syncthreads();
+    //if(i==0)printf("cudaGlobalSolveODEEnd *flag %d\n",*flag);
 
-    //if(i==0)printf("cudaGlobalSolveODEEnd retval %d\n",retval);
-
-//todo use retval maybe, or just flag
     __syncthreads();
     //if (*flag<0) {
-    if (retval<0) {
+    if (*flag<0) {
       if (!cv_jcur){ //Bool set up during linsolsetup just before Jacobian
         //&& (cv_lsetup)) { //cv_mem->cv_lsetup// Setup routine, always exists for BCG
         flag_shr[0]=TRY_AGAIN;
@@ -1697,11 +2335,11 @@ void cudaGlobalSolveODE(
     // a*x + b*y = z
     cudaDevicezaxpby(1., dcv_y, 1., dzn, dacor, nrows);
     //gpu_zaxpby(1.0, bicg->dcv_y, -1.0, bicg->dzn, bicg->dacor, bicg->nrows, bicg->blocks, bicg->threads);
-    if (retval < 0){
+    if (*flag < 0){
       flag_shr[0]=CV_RHSFUNC_FAIL;
       //return(CV_RHSFUNC_FAIL);
     }
-    if (retval > 0) {
+    if (*flag > 0) {
       if (!cv_jcur)
         flag_shr[0]=TRY_AGAIN;
         //return(TRY_AGAIN);
@@ -1710,7 +2348,6 @@ void cudaGlobalSolveODE(
       //return(RHSFUNC_RECVR);
     }
     cv_nfe++;
-
     __syncthreads();
     if(flag_shr[0]==TRY_AGAIN || flag_shr[0]==RHSFUNC_RECVR
        || flag_shr[0]==CV_RHSFUNC_FAIL){
@@ -1719,7 +2356,7 @@ void cudaGlobalSolveODE(
     }
 
 #ifdef PMC_DEBUG_GPU
-    #ifdef cudaGlobalSolveODE_timers_max_blocks
+#ifdef cudaGlobalSolveODE_timers_max_blocks
 
 __syncthreads();
   dtPostBCG[i] += ((double)(int)(clock() - start))/(clock_khz*1000);
@@ -1739,8 +2376,10 @@ __syncthreads();
 
 }
 
+
+
 __device__
-void cudaDevicecvNewtonIteration(
+void cudaDevicelinsolsetup(
         //LS
         double *dA, int *djA, int *diA, double *dx, double *dtempv, //Input data
         int nrows, int blocks, int n_shr_empty, int maxIt, int mattype,
@@ -1759,10 +2398,171 @@ void cudaDevicecvNewtonIteration(
         double time_step, int deriv_length_cell, int state_size_cell,
         int i_kernel, int threads_block, ModelDataGPU md_object,
         //cudacvNewtonIteration
-        double *dacor, double *dzn, bool cv_jcur,
+        double *dacor, double *dzn, int cv_jcur,
         double *dewt, double cv_rl1, double cv_gamma,
-        int cv_mnewt, double cv_crate, double *dcv_tq,
-        double cv_acnrm, double cv_maxcor, int cv_nfe
+        int cv_mnewt, double cv_crate, double cv_gammap, double *dcv_tq,
+        double cv_acnrm, double cv_maxcor, int cv_nfe,
+        bool callSetupGlobal, int cv_nsetups, double cv_gamrat,
+        int cv_nst, int nstlj, int convfail,
+        int *isavedJ, int *jsavedJ, double *savedJ,
+        int nje
+#ifdef PMC_DEBUG_GPU
+,int *it_pointer, double *dtBCG, double *dtPreBCG, double *dtPostBCG,
+        int counterDerivGPU
+#endif
+) {
+
+  extern __shared__ int flag_shr[];
+  flag_shr[0] = 99;
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
+  unsigned int tid = threadIdx.x;
+  int active_threads = nrows;
+  int n_shr = blockDim.x + n_shr_empty;
+
+  double dgamma;
+  bool jbad, jok;
+
+  dgamma = fabs((cv_gamma / cv_gammap) - 1.); //In GPU is fabs too
+
+  jbad = (cv_nst == 0) ||
+         (cv_nst > nstlj + CVD_MSBJ) ||
+         ((convfail == CV_FAIL_BAD_J) && (dgamma < CVD_DGMAX)) ||
+         (convfail == CV_FAIL_OTHER);
+  jok = !jbad;
+
+  //jbad = (cv_mem->cv_nst == 0) ||
+  //       (cv_mem->cv_nst > cvdls_mem->nstlj + CVD_MSBJ) ||
+  //       ((convfail == CV_FAIL_BAD_J) && (dgamma < CVD_DGMAX)) ||
+  //       (convfail == CV_FAIL_OTHER);
+  //jok = !jbad;
+
+
+  // If jok = SUNTRUE, use saved copy of J
+  if (jok) {
+    //if (0) {
+
+    cv_jcur = 0;
+    cudaDeviceJacCopy(nrows, isavedJ, jsavedJ, savedJ, diA, djA, dA);
+
+    //cv_mem->cv_jcur = SUNFALSE;
+    //retval = SUNMatCopy(cvdls_mem->savedJ, cvdls_mem->A);
+
+    /* If jok = SUNFALSE, reset J, call jac routine for new J value and save a copy */
+  } else {
+    nje++;
+    nstlj = cv_nst;
+    cv_jcur = 1;
+
+    //retval = Jac(cv_mem->cv_tn, cv_mem->cv_y,cv_mem->cv_ftemp, cvdls_mem->A,cvdls_mem->J_data, vtemp1, vtemp2, vtemp3);
+    //retval = Jac_gpu(cv_mem->cv_tn, cv_mem->cv_y,cv_mem->cv_ftemp, cvdls_mem->A,cvdls_mem->J_data, vtemp1, vtemp2, vtemp3);
+
+    cudaDeviceJac(
+#ifdef PMC_DEBUG_GPU
+            counterDerivGPU,
+#endif
+            //check_model_state
+            threshhold, replacement_value, flag,
+            //f_gpu
+            time_step, deriv_length_cell, state_size_cell,
+            n_cells, i_kernel, threads_block, n_shr_empty, dcv_y,//y
+            md_object, dftemp
+    );
+
+#ifdef PMC_DEBUG_GPU
+    //cudaEventRecord(bicg->stopJac);
+
+  //cudaEventSynchronize(bicg->stopJac);
+  //float msJac = 0.0;
+  //cudaEventElapsedTime(&msJac, bicg->startJac, bicg->stopJac);
+  //bicg->timeJac+= msJac;
+  //bicg->counterJac++;
+#endif
+
+    if (*flag < 0) {
+      //cvProcessError(cv_mem, CVDLS_JACFUNC_UNRECVR, "CVDLS",
+      //               "cvDlsSetup",  MSGD_JACFUNC_FAILED);
+      //last_flag = CVDLS_JACFUNC_UNRECVR;
+      //flag_shr[0] = -1;
+      flag_shr[0] = CVDLS_JACFUNC_UNRECVR;
+    }
+    if (*flag > 0) {
+      //last_flag = CVDLS_JACFUNC_RECVR;
+      //flag_shr[0] = 1;
+      flag_shr[0] = CVDLS_JACFUNC_RECVR;
+    }
+    __syncthreads();
+    if (flag_shr[0] != 0) {
+      *flag = flag_shr[0];
+      return;
+    }
+
+    cudaDeviceJacCopy(nrows, diA, djA, dA, isavedJ, jsavedJ, savedJ);
+
+  }
+
+
+  //cudaMemcpy(bicg->diA,bicg->iA,(bicg->nrows+1)*sizeof(int),cudaMemcpyHostToDevice);
+  //cudaMemcpy(bicg->djA,bicg->jA,bicg->nnz*sizeof(int),cudaMemcpyHostToDevice);
+  //cudaMemcpy(bicg->dA,bicg->A,bicg->nnz*sizeof(double),cudaMemcpyHostToDevice);
+
+
+#ifdef PMC_DEBUG_GPU
+  //bicg->timeMatScaleAddISendA+= clock() - start;
+//bicg->counterMatScaleAddISendA++;
+//clock_t start2 = clock();
+#endif
+
+  cudaDevicematScaleAddI(nrows, dA, djA, diA, -cv_gamma);
+  //gpu_matScaleAddI(bicg->nrows,bicg->dA,bicg->djA,bicg->diA,-cv_mem->cv_gamma,bicg->blocks,bicg->threads);
+
+  //cudaMemcpy(bicg->A,bicg->dA,bicg->nnz*sizeof(double),cudaMemcpyDeviceToHost);
+
+#ifdef PMC_DEBUG_GPU
+  //bicg->timeMatScaleAddI+= clock() - start2;
+//bicg->counterMatScaleAddI++;
+#endif
+
+  cudaDevicediagprecond(nrows, dA, djA, diA, ddiag); //Setup linear solver
+  //gpu_diagprecond(bicg->nrows,bicg->dA,bicg->djA,bicg->diA,bicg->ddiag,bicg->blocks,bicg->threads); //Setup linear solver
+
+  //return retval;
+  __syncthreads();
+  *flag = flag_shr[0];
+  return;
+
+}
+
+
+
+
+__global__
+void cudaGlobalSolveODE(
+        //LS
+        double *dA, int *djA, int *diA, double *dx, double *dtempv, //Input data
+        int nrows, int blocks, int n_shr_empty, int maxIt, int mattype,
+        int n_cells, double tolmax, double *ddiag, //Init variables
+        double *dr0, double *dr0h, double *dn0, double *dp0,
+        double *dt, double *ds, double *dAx2, double *dy, double *dz,// Auxiliary vectors
+        //swapCSC_CSR_BCG
+        int *diB, int *djB, double *dB,
+        //Guess_helper
+        double t_n, double h_n, double* dftemp,
+        double* dcv_y, double* tmp1,
+        double* corr, double cv_reltol,
+        //update_state
+        double threshhold, double replacement_value, int *flag,
+        //f_gpu
+        double time_step, int deriv_length_cell, int state_size_cell,
+        int i_kernel, int threads_block, ModelDataGPU md_object,
+        //cudacvNewtonIteration
+        double *dacor, double *dzn, int cv_jcur,
+        double *dewt, double cv_rl1, double cv_gamma,
+        int cv_mnewt, double cv_crate, double cv_gammap, double *dcv_tq,
+        double cv_acnrm, double cv_maxcor, int cv_nfe,
+        bool callSetupGlobal, int cv_nsetups, double cv_gamrat,
+        int cv_nst, int nstlj, int convfail,
+        int *isavedJ, int *jsavedJ, double *savedJ,
+        int nje
 #ifdef PMC_DEBUG_GPU
 ,int *it_pointer, double *dtBCG, double *dtPreBCG, double *dtPostBCG,
         int counterDerivGPU
@@ -1775,33 +2575,169 @@ void cudaDevicecvNewtonIteration(
   int active_threads = nrows;
   int n_shr = blockDim.x + n_shr_empty;
 
-  cudaDevicecvNewtonIteration(
-          dA, djA, diA, dx, dtempv, //Input data
-          nrows, blocks, n_shr_empty, maxIt, mattype,
-          n_cells, tolmax, ddiag, //Init variables
-          dr0, dr0h, dn0, dp0,
-          dt, ds, dAx2, dy, dz,// Auxiliary vectors
-          //swapCSC_CSR_BCG
-          diB, djB, dB,
-          //Guess_helper
-          t_n, h_n, dftemp,
-          dcv_y, tmp1,
-          corr, cv_reltol,
-          //update_state
-          threshhold, replacement_value, flag,
-          //f_gpu
-          time_step, deriv_length_cell, state_size_cell,
-          i_kernel, threads_block, md_object,
-          //cudacvNewtonIteration
-          dacor, dzn, cv_jcur,
-          dewt, cv_rl1, cv_gamma,
-          cv_mnewt, cv_crate, dcv_tq,
-          cv_acnrm, cv_maxcor, cv_nfe
+
+#ifdef DEV_cudacvNlsNewton
+
+  bool callSetup = callSetupGlobal;
+  int retval = 0;
+
+  for(;;) {
+
+
+    dcv_y[i]=dzn[i];
+
+    cudaDevicef(
 #ifdef PMC_DEBUG_GPU
-  ,it_pointer, dtBCG, dtPreBCG, dtPostBCG,
-    counterDerivGPU
+            counterDerivGPU,
 #endif
-  );
+            //check_model_state
+            threshhold, replacement_value, flag,
+            //f_gpu
+            time_step, deriv_length_cell, state_size_cell,
+            n_cells, i_kernel, threads_block, n_shr_empty, dcv_y,
+            md_object
+    );
+
+    if (*flag < 0){
+      flag_shr[0]=CV_RHSFUNC_FAIL;
+    }
+    if (*flag > 0) {
+      flag_shr[0]=RHSFUNC_RECVR;
+    }
+    __syncthreads();
+    if(flag_shr[0]!=0){
+      *flag=flag_shr[0];
+      return;
+    }
+
+    //gpu_yequalsx(bicg->dcv_y,bicg->dzn, bicg->nrows, bicg->blocks, bicg->threads);//Consider acor_init=0
+    //retval = f_gpu(cv_mem->cv_tn, cv_mem->cv_y, cv_mem->cv_ftemp, cv_mem->cv_user_data);
+    //if (retval < 0) return(CV_RHSFUNC_FAIL);
+    //if (retval > 0) return(RHSFUNC_RECVR);
+
+
+    cv_nfe++;
+    if (callSetup) {
+
+      cudaDevicelinsolsetup(
+              dA, djA, diA, dx, dtempv, //Input data
+              nrows, blocks, n_shr_empty, maxIt, mattype,
+              n_cells, tolmax, ddiag, //Init variables
+              dr0, dr0h, dn0, dp0,
+              dt, ds, dAx2, dy, dz,// Auxiliary vectors
+              //swapCSC_CSR_BCG
+              diB, djB, dB,
+              //Guess_helper
+              t_n, h_n, dftemp,
+              dcv_y, tmp1,
+              corr, cv_reltol,
+              //update_state
+              threshhold, replacement_value, flag,
+              //f_gpu
+              time_step, deriv_length_cell, state_size_cell,
+              i_kernel, threads_block, md_object,
+              //cudacvNewtonIteration
+              dacor, dzn, cv_jcur,
+              dewt, cv_rl1, cv_gamma,
+              cv_mnewt, cv_crate, cv_gammap, dcv_tq,
+              cv_acnrm, cv_maxcor, cv_nfe,
+              callSetupGlobal, cv_nsetups, cv_gamrat,
+              cv_nst, nstlj, convfail,
+              isavedJ, jsavedJ, savedJ,
+              nje
+#ifdef PMC_DEBUG_GPU
+      ,it_pointer, dtBCG, dtPreBCG, dtPostBCG,
+        counterDerivGPU
+#endif
+      );
+
+      //ier = linsolsetup_gpu2(sd, cv_mem, convfail, vtemp1, vtemp2, vtemp3);
+
+
+      cv_nsetups++;
+      callSetup = 0;
+      cv_gamrat = cv_crate = 1.0;
+      cv_gammap = cv_gamma;
+      //cv_mem->cv_nstlp = cv_mem->cv_nst;//long int number of internal steps taken
+      // Return if lsetup failed
+      //if (ier < 0) return(CV_LSETUP_FAIL);
+      //if (ier > 0) return(CONV_FAIL);
+
+      if (retval < 0) {
+        flag_shr[0] = CV_LSETUP_FAIL;
+      }
+      if (retval > 0) {
+        flag_shr[0] = CONV_FAIL;
+      }
+      __syncthreads();
+      if (flag_shr[0] != 0) {
+        *flag = flag_shr[0];
+        return;
+      }
+
+    }
+
+#endif
+
+    dacor[i] = 0.0;
+
+    cudaDevicecvNewtonIteration(
+            dA, djA, diA, dx, dtempv, //Input data
+            nrows, blocks, n_shr_empty, maxIt, mattype,
+            n_cells, tolmax, ddiag, //Init variables
+            dr0, dr0h, dn0, dp0,
+            dt, ds, dAx2, dy, dz,// Auxiliary vectors
+            //swapCSC_CSR_BCG
+            diB, djB, dB,
+            //Guess_helper
+            t_n, h_n, dftemp,
+            dcv_y, tmp1,
+            corr, cv_reltol,
+            //update_state
+            threshhold, replacement_value, flag,
+            //f_gpu
+            time_step, deriv_length_cell, state_size_cell,
+            i_kernel, threads_block, md_object,
+            //cudacvNewtonIteration
+            dacor, dzn, cv_jcur,
+            dewt, cv_rl1, cv_gamma,
+            cv_mnewt, cv_crate, dcv_tq,
+            cv_acnrm, cv_maxcor, cv_nfe
+#ifdef PMC_DEBUG_GPU
+    ,it_pointer, dtBCG, dtPreBCG, dtPostBCG,
+      counterDerivGPU
+#endif
+    );
+
+
+
+
+#ifdef DEV_cudacvNlsNewton
+
+    if (*flag !=TRY_AGAIN ){
+      flag_shr[0]=CV_RHSFUNC_FAIL;
+    }
+    __syncthreads();
+    if(flag_shr[0]!=TRY_AGAIN){
+      *flag=flag_shr[0];
+      return;
+    }
+    //return(flag);
+
+    // If there is a convergence failure and the Jacobian-related
+    //   data appears not to be current, loop again with a call to lsetup
+    //   in which convfail=CV_FAIL_BAD_J.  Otherwise return.
+
+
+    //if (ier != TRY_AGAIN) return(ier);
+
+    callSetup = 1;
+    convfail = CV_FAIL_BAD_J;
+
+
+  }
+
+#endif
 
 }
 
@@ -1812,6 +2748,7 @@ void solveCVODEGPU_thr(int blocks, int threads_block, int n_shr_memory, int n_sh
 
   itsolver *bicg = &(sd->bicg);
   ModelData *md = &(sd->model_data);
+  CVDlsMem cvdls_mem = (CVDlsMem) cv_mem->cv_lmem;;
 
   //Init variables ("public")
   int nrows = bicg->nrows;
@@ -1902,8 +2839,13 @@ void solveCVODEGPU_thr(int blocks, int threads_block, int n_shr_memory, int n_sh
        //cudacvNewtonIteration
        bicg->dacor, bicg->dzn, cv_mem->cv_jcur,
        bicg->dewt, cv_mem->cv_rl1, cv_mem->cv_gamma,
-       cv_mem->cv_mnewt, cv_mem->cv_crate, bicg->dcv_tq,
-       cv_mem->cv_acnrm, cv_mem->cv_maxcor, cv_mem->cv_nfe
+       cv_mem->cv_mnewt, cv_mem->cv_crate, cv_mem->cv_gammap, bicg->dcv_tq,
+       cv_mem->cv_acnrm, cv_mem->cv_maxcor, cv_mem->cv_nfe,
+       sd->callSetup, cv_mem->cv_nsetups, cv_mem->cv_gamrat,
+       cv_mem->cv_nst, cvdls_mem->nstlj, sd->convfail,
+       bicg->disavedJ,bicg->djsavedJ,bicg->dsavedJ,
+       cvdls_mem->nje
+
 #ifdef PMC_DEBUG_GPU
   ,bicg->counterBiConjGradInternalGPU, &bicg->dtBCG,
       &bicg->dtPreBCG, &bicg->dtPostBCG, sd->counterDerivGPU
@@ -2014,7 +2956,336 @@ void solveCVODEGPU(SolverData *sd, CVodeMem cv_mem)
 
 }
 
-//translating to cv new iteration
+//translating to cuda device
+int cudalinsolsetup(SolverData *sd, CVodeMem cv_mem,int convfail,N_Vector vtemp1,N_Vector vtemp2,N_Vector vtemp3)
+{
+  itsolver *bicg = &(sd->bicg);
+  ModelData *md = &(sd->model_data);
+  ModelDataGPU *mGPU = &sd->mGPU;
+  booleantype jbad, jok;
+  realtype dgamma;
+  CVDlsMem cvdls_mem = (CVDlsMem) cv_mem->cv_lmem;;
+  int retval = 0;
+
+  //Init variables ("public")
+  int nrows = bicg->nrows;
+  int nnz = bicg->nnz;
+  int n_cells = bicg->n_cells;
+  int maxIt = bicg->maxIt;
+  int mattype = bicg->mattype;
+  double tolmax = bicg->tolmax;
+
+  // Auxiliary vectors ("private")
+  double *dr0 = bicg->dr0;
+  double *dr0h = bicg->dr0h;
+  double *dn0 = bicg->dn0;
+  double *dp0 = bicg->dp0;
+  double *dt = bicg->dt;
+  double *ds = bicg->ds;
+  double *dAx2 = bicg->dAx2;
+  double *dy = bicg->dy;
+  double *dz = bicg->dz;
+  double *daux = bicg->daux;
+
+  //Input variables
+  //int offset_nrows=(nrows/n_cells)*offset_cells;
+  //int offset_nnz=(nnz/n_cells)*offset_cells;
+  int offset_nnz=0;
+  int offset_nrows=0;
+
+  //Works always supposing the same jac structure for all cells (same reactions on all cells)
+  int *djA=bicg->djA;
+  int *diA=bicg->diA;
+
+  double *dA=bicg->dA+offset_nnz;
+  double *ddiag=bicg->ddiag+offset_nrows;
+  double *dx=bicg->dx+offset_nrows;
+  double *dtempv=bicg->dtempv+offset_nrows;
+
+  int len_cell=nrows/n_cells;
+
+  //Update state
+  double replacement_value = TINY;
+  double threshhold = -SMALL;
+  int flag = 0; //CAMP_SOLVER_SUCCESS
+  //bicg->flag = 0;
+  //int *flag = &bicg->flag = 0;
+  //f_gpu
+  int i_kernel=0;
+  double t=cv_mem->cv_tn;
+  double time_step = cv_mem->cv_next_h;
+
+  int threads_block = md->n_per_cell_dep_var;
+  int blocks = bicg->n_cells;
+  int n_shr_memory = nextPowerOfTwoCVODE(md->n_per_cell_dep_var);
+  int n_shr_empty = n_shr_memory-threads_block;
+  int offset_cells=0;
+
+  //Ensure cv_y is loaded
+  double *cv_y = NV_DATA_S(cv_mem->cv_y);
+  cudaMemcpy(cv_y,bicg->dcv_y,bicg->nrows*sizeof(double),cudaMemcpyDeviceToHost);
+
+  cudaMemcpy(bicg->cv_jcur,&cv_mem->cv_jcur,1*sizeof(int),cudaMemcpyHostToDevice);
+  cudaMemcpy(bicg->nje,&cvdls_mem->nje,1*sizeof(int),cudaMemcpyHostToDevice);
+  cudaMemcpy(bicg->nstlj,&cvdls_mem->nstlj,1*sizeof(int),cudaMemcpyHostToDevice);
+  cudaMemcpy(bicg->cv_nst,&cv_mem->cv_nst,1*sizeof(int),cudaMemcpyHostToDevice);
+
+  /* Use nst, gamma/gammap, and convfail to set J eval. flag jok */
+  dgamma = fabs((cv_mem->cv_gamma/cv_mem->cv_gammap) - ONE); //In GPU is fabs too
+  //dgamma = SUNRabs((cv_mem->cv_gamma/cv_mem->cv_gammap) - ONE);
+  jbad = (cv_mem->cv_nst == 0) ||
+         (cv_mem->cv_nst > cvdls_mem->nstlj + CVD_MSBJ) ||
+         ((convfail == CV_FAIL_BAD_J) && (dgamma < CVD_DGMAX)) ||
+         (convfail == CV_FAIL_OTHER);
+  jok = !jbad;
+
+#ifdef DEV_cudaGlobalinsolsetup
+
+  printf("cudalinsolsetup jok %d",jok);
+
+  cudaGlobalinsolsetup <<<blocks,threads_block,n_shr_memory*sizeof(double)>>>
+  (dA, djA, diA, dx, bicg->dtempv, nrows, blocks, n_shr_empty, maxIt, mattype, bicg->n_cells,
+   tolmax, ddiag, dr0, dr0h, dn0, dp0, dt, ds, dAx2, dy, dz,
+   //swapCSC_CSR_BCG
+   bicg->diB,bicg->djB,bicg->dB,
+   //Guess_helper
+   cv_mem->cv_tn, 0., bicg->dftemp,
+   bicg->dcv_y, bicg->dtempv1,
+   bicg->dtempv2, ((CVodeMem)sd->cvode_mem)->cv_reltol,
+   //update_state
+   threshhold, replacement_value, bicg->dflag,//&flag,
+   //f_gpu
+   time_step, len_cell, md->n_per_cell_state_var,
+   i_kernel, threads_block, sd->mGPU,
+   //cudacvNewtonIteration
+   bicg->dacor, bicg->dzn, bicg->cv_jcur,
+   bicg->dewt, cv_mem->cv_rl1, cv_mem->cv_gamma,
+   cv_mem->cv_mnewt, cv_mem->cv_crate, cv_mem->cv_gammap, bicg->dcv_tq,
+   cv_mem->cv_acnrm, cv_mem->cv_maxcor, cv_mem->cv_nfe,
+   sd->callSetup, cv_mem->cv_nsetups, cv_mem->cv_gamrat,
+   bicg->cv_nst, bicg->nstlj, sd->convfail,
+   bicg->disavedJ,bicg->djsavedJ,bicg->dsavedJ,
+   bicg->nje, jok
+
+#ifdef PMC_DEBUG_GPU
+  ,bicg->counterBiConjGradInternalGPU, &bicg->dtBCG,
+      &bicg->dtPreBCG, &bicg->dtPostBCG, sd->counterDerivGPU
+#endif
+  );
+
+#else
+
+
+  // If jok = SUNTRUE, use saved copy of J
+  if (jok) {
+    //if (0) {
+    cv_mem->cv_jcur = SUNFALSE;
+    retval = SUNMatCopy(cvdls_mem->savedJ, cvdls_mem->A);
+
+    /* If jok = SUNFALSE, reset J, call jac routine for new J value and save a copy */
+  } else {
+
+    //cvdls_mem->nje++;
+    //cvdls_mem->nstlj = cv_mem->cv_nst;
+    //cv_mem->cv_jcur = SUNTRUE;
+
+    //retval = Jac_gpu(cv_mem->cv_tn, cv_mem->cv_y,cv_mem->cv_ftemp, cvdls_mem->A,cvdls_mem->J_data, vtemp1, vtemp2, vtemp3);
+
+
+
+      cudaGlobalinsolsetup <<<blocks,threads_block,n_shr_memory*sizeof(double)>>>
+     (dA, djA, diA, dx, bicg->dtempv, nrows, blocks, n_shr_empty, maxIt, mattype, bicg->n_cells,
+             tolmax, ddiag, dr0, dr0h, dn0, dp0, dt, ds, dAx2, dy, dz,
+             //swapCSC_CSR_BCG
+             bicg->diB,bicg->djB,bicg->dB,
+             //Guess_helper
+             cv_mem->cv_tn, 0., bicg->dftemp,
+             bicg->dcv_y, bicg->dtempv1,
+             bicg->dtempv2, ((CVodeMem)sd->cvode_mem)->cv_reltol,
+             //update_state
+             threshhold, replacement_value, bicg->dflag,//&flag,
+             //f_gpu
+             time_step, len_cell, md->n_per_cell_state_var,
+             i_kernel, threads_block, sd->mGPU,
+             //cudacvNewtonIteration
+             bicg->dacor, bicg->dzn, bicg->cv_jcur,
+             bicg->dewt, cv_mem->cv_rl1, cv_mem->cv_gamma,
+             cv_mem->cv_mnewt, cv_mem->cv_crate, cv_mem->cv_gammap, bicg->dcv_tq,
+             cv_mem->cv_acnrm, cv_mem->cv_maxcor, cv_mem->cv_nfe,
+             sd->callSetup, cv_mem->cv_nsetups, cv_mem->cv_gamrat,
+             bicg->cv_nst, bicg->nstlj, sd->convfail,
+             bicg->disavedJ,bicg->djsavedJ,bicg->dsavedJ,
+             bicg->nje, jok
+#ifdef PMC_DEBUG_GPU
+  ,bicg->counterBiConjGradInternalGPU, &bicg->dtBCG,
+      &bicg->dtPreBCG, &bicg->dtPostBCG, sd->counterDerivGPU
+#endif
+  );
+
+
+
+    /*
+    cudaGlobalJac << < (n_blocks), threads_block >> >(
+#ifdef PMC_DEBUG_GPU
+            sd->counterDerivGPU,
+#endif
+            //update_state
+                    -SMALL, TINY, &flag,
+                    //f_gpu
+                    time_step, md->n_per_cell_dep_var,
+                    md->n_per_cell_state_var,md->n_cells,
+                    i_kernel, threads_block,n_shr_empty, bicg->dcv_y,
+                    sd->mGPU, bicg->dftemp
+    );
+
+    double *J_data = SM_DATA_S(cvdls_mem->A);
+    cudaMemcpy(J_data, mGPU->J, md->jac_size, cudaMemcpyDeviceToHost);
+
+     */
+
+
+/*
+
+    if (retval < 0) {
+      cvProcessError(cv_mem, CVDLS_JACFUNC_UNRECVR, "CVDLS",
+                     "cvDlsSetup",  MSGD_JACFUNC_FAILED);
+      cvdls_mem->last_flag = CVDLS_JACFUNC_UNRECVR;
+      return(-1);
+    }
+    if (retval > 0) {
+      cvdls_mem->last_flag = CVDLS_JACFUNC_RECVR;
+      return(1);
+    }
+
+
+    //copy A to savedJ
+    retval = SUNMatCopy(cvdls_mem->A, cvdls_mem->savedJ);
+
+    if (retval) {
+      cvProcessError(cv_mem, CVDLS_SUNMAT_FAIL, "CVDLS",
+                     "cvDlsSetup",  MSGD_MATCOPY_FAILED);
+      cvdls_mem->last_flag = CVDLS_SUNMAT_FAIL;
+      return(-1);
+    }
+
+    */
+
+    cudaMemcpy(&cv_mem->cv_jcur,bicg->cv_jcur,1*sizeof(int),cudaMemcpyDeviceToHost);
+    cudaMemcpy(&cvdls_mem->nje,bicg->nje,1*sizeof(int),cudaMemcpyDeviceToHost);
+    cudaMemcpy(&cvdls_mem->nstlj,bicg->nstlj,1*sizeof(int),cudaMemcpyDeviceToHost);
+    double *J_data = SM_DATA_S(cvdls_mem->A);
+    cudaMemcpy(J_data, mGPU->J, md->jac_size, cudaMemcpyDeviceToHost);
+
+    //cudaMemcpy(SM_DATA_S(cvdls_mem->savedJ),bicg->dsavedJ,bicg->nnz*sizeof(double),cudaMemcpyDeviceToHost);
+    //cudaMemcpy(SM_INDEXPTRS_S(cvdls_mem->savedJ),bicg->djsavedJ,bicg->nnz*sizeof(int),cudaMemcpyDeviceToHost);
+    //cudaMemcpy(SM_INDEXVALS_S(cvdls_mem->savedJ),bicg->disavedJ,(bicg->nrows+1)*sizeof(int),cudaMemcpyDeviceToHost);
+
+    //cudaMemcpy(&(SM_DATA_S(cvdls_mem->savedJ)[0]),bicg->dsavedJ,bicg->nnz*sizeof(double),cudaMemcpyDeviceToHost);
+    //cudaMemcpy(&(SM_INDEXPTRS_S(cvdls_mem->savedJ)[0]),bicg->djsavedJ,bicg->nnz*sizeof(int),cudaMemcpyDeviceToHost);
+    //cudaMemcpy(&(SM_INDEXVALS_S(cvdls_mem->savedJ)[0]),bicg->disavedJ,(bicg->nrows+1)*sizeof(int),cudaMemcpyDeviceToHost);
+
+    cudaMemcpy(&flag,bicg->dflag,1*sizeof(int),cudaMemcpyDeviceToHost);
+
+    //retval = 0;
+    retval = flag;
+
+    printf("flag %d\n", flag);
+
+    if (retval < 0) {
+      cvProcessError(cv_mem, CVDLS_JACFUNC_UNRECVR, "CVDLS",
+                     "cvDlsSetup",  MSGD_JACFUNC_FAILED);
+      cvdls_mem->last_flag = CVDLS_JACFUNC_UNRECVR;
+      return(-1);
+    }
+    if (retval > 0) {
+      cvdls_mem->last_flag = CVDLS_JACFUNC_RECVR;
+      return(1);
+    }
+
+
+
+/*
+
+    cudaMemcpy(bicg->A,bicg->dsavedJ,bicg->nnz*sizeof(double),cudaMemcpyDeviceToHost);
+    cudaMemcpy(bicg->jA,bicg->djsavedJ,bicg->nnz*sizeof(int),cudaMemcpyDeviceToHost);
+    cudaMemcpy(bicg->iA,bicg->disavedJ,(bicg->nrows+1)*sizeof(int),cudaMemcpyDeviceToHost);
+
+    //SM_NNZ_S(J) = SM_NNZ_S(cvdls_mem->savedJ);
+    for (int i = 0; i <= SM_NP_S(cvdls_mem->savedJ); i++) {
+      (SM_INDEXPTRS_S(cvdls_mem->savedJ))[i] = bicg->iA[i];
+    }
+    for (int i = 0; i < SM_NNZ_S(cvdls_mem->savedJ); i++) {
+      (SM_INDEXVALS_S(cvdls_mem->savedJ))[i] = bicg->jA[i];
+      (SM_DATA_S(cvdls_mem->savedJ))[i] = bicg->A[i];
+    }
+*/
+
+    //copy A to J
+    retval = SUNMatCopy(cvdls_mem->A, cvdls_mem->savedJ);
+
+
+    //cudaMemcpy(bicg->dA,bicg->A,bicg->nnz*sizeof(double),cudaMemcpyHostToDevice);
+    //cudaMemcpy(bicg->djA,bicg->jA,bicg->nnz*sizeof(int),cudaMemcpyHostToDevice);
+    //cudaMemcpy(bicg->diA,bicg->iA,(bicg->nrows+1)*sizeof(int),cudaMemcpyHostToDevice);
+
+
+  }
+
+#endif
+
+
+#ifdef DEV_cudaGlobalinsolsetup
+
+    cudaMemcpy(&cv_mem->cv_jcur,bicg->cv_jcur,1*sizeof(int),cudaMemcpyDeviceToHost);
+    cudaMemcpy(&cvdls_mem->nje,bicg->nje,1*sizeof(int),cudaMemcpyDeviceToHost);
+    cudaMemcpy(&cvdls_mem->nstlj,bicg->nstlj,1*sizeof(int),cudaMemcpyDeviceToHost);
+    double *J_data = SM_DATA_S(cvdls_mem->A);
+    cudaMemcpy(J_data, mGPU->J, md->jac_size, cudaMemcpyDeviceToHost);
+
+    cudaMemcpy(&flag,bicg->dflag,1*sizeof(int),cudaMemcpyDeviceToHost);
+
+    //retval = 0;
+    retval = flag;
+
+    printf("flag %d\n", flag);
+
+    if (retval < 0) {
+      cvProcessError(cv_mem, CVDLS_JACFUNC_UNRECVR, "CVDLS",
+                     "cvDlsSetup",  MSGD_JACFUNC_FAILED);
+      cvdls_mem->last_flag = CVDLS_JACFUNC_UNRECVR;
+      return(-1);
+    }
+    if (retval > 0) {
+      cvdls_mem->last_flag = CVDLS_JACFUNC_RECVR;
+      return(1);
+    }
+
+#endif
+
+
+  TODO THIS SHOULD NOT USE HOST JAC
+  cudaMemcpy(bicg->diA,bicg->iA,(bicg->nrows+1)*sizeof(int),cudaMemcpyHostToDevice);
+  cudaMemcpy(bicg->djA,bicg->jA,bicg->nnz*sizeof(int),cudaMemcpyHostToDevice);
+  cudaMemcpy(bicg->dA,bicg->A,bicg->nnz*sizeof(double),cudaMemcpyHostToDevice);
+
+  gpu_matScaleAddI(bicg->nrows,bicg->dA,bicg->djA,bicg->diA,-cv_mem->cv_gamma,bicg->blocks,bicg->threads);
+
+  cudaMemcpy(bicg->A,bicg->dA,bicg->nnz*sizeof(double),cudaMemcpyDeviceToHost);
+
+
+  gpu_diagprecond(bicg->nrows,bicg->dA,bicg->djA,bicg->diA,bicg->ddiag,bicg->blocks,bicg->threads); //Setup linear solver
+
+
+
+  //if(bicg->counterBiConjGrad==0)
+  //check_input(bicg->ddiag,bicg->nrows,0);
+
+  //return(cvdls_mem->last_flag);
+  return retval;
+}
+
+
+//translating to cuda device
 int cudacvNewtonIteration(SolverData *sd, CVodeMem cv_mem)
 {
   itsolver *bicg = &(sd->bicg);
@@ -2070,6 +3341,11 @@ int cudacvNlsNewton(SolverData *sd, CVodeMem cv_mem, int nflag)
   //int flag = 0; //CAMP_SOLVER_SUCCESS
   int flag = 999;
 
+  CVDlsMem cvdls_mem = (CVDlsMem) cv_mem->cv_lmem;;
+  double *J_data = SM_DATA_S(cvdls_mem->A);
+  ModelDataGPU *mGPU = &sd->mGPU;
+
+
   int znUsedOnNewtonIt=2;//Only used zn[0] and zn[1] //0.01s
   for(int i=0; i<znUsedOnNewtonIt; i++){//cv_qmax+1
     double *zn = NV_DATA_S(cv_mem->cv_zn[i]);
@@ -2096,19 +3372,8 @@ int cudacvNlsNewton(SolverData *sd, CVodeMem cv_mem, int nflag)
     callSetup = SUNFALSE;
   }
 
-  /* Call a user-supplied function to improve guesses for zn(0), if one exists */
-  //if not, set to zero
-  //N_VConst(ZERO, cv_mem->cv_acor_init);
-  //cudaMemcpyDToGpu(acor_init, bicg->dacor_init, bicg->nrows);
-
-  /*if (cv_mem->cv_ghfun) {
-    N_VLinearSum(ONE, cv_mem->cv_zn[0], -ONE, cv_mem->cv_last_yn, cv_mem->cv_ftemp);
-    retval = cv_mem->cv_ghfun(cv_mem->cv_tn, cv_mem->cv_h, cv_mem->cv_zn[0],
-                              cv_mem->cv_last_yn, cv_mem->cv_ftemp, cv_mem->cv_user_data,
-                              cv_mem->cv_tempv, cv_mem->cv_acor_init);
-    cv_mem->cv_tempv1, cv_mem->cv_acor_init);
-    if (retval<0) return(RHSFUNC_RECVR);
-  }*/
+  sd->callSetup = callSetup;
+  sd->convfail = convfail;
 
   if (cv_mem->cv_ghfun) {
     //N_VScale(cv_mem->cv_rl1, cv_mem->cv_zn[1], cv_mem->cv_ftemp);
@@ -2129,6 +3394,32 @@ int cudacvNlsNewton(SolverData *sd, CVodeMem cv_mem, int nflag)
   vtemp2 = cv_mem->cv_acor;  /* rename y as vtemp2 for readability     */
   vtemp3 = cv_mem->cv_acor;  /* rename tempv as vtemp3 for readability */
 
+  cudaMemcpy(bicg->dgammap,&cv_mem->cv_gammap,1*sizeof(double),cudaMemcpyHostToDevice);
+
+
+#ifdef DEV_cudacvNlsNewton
+
+  solveCVODEGPU(sd, cv_mem);
+
+  cudaDeviceSynchronize();
+  cudaMemcpy(J_data, mGPU->J, md->jac_size, cudaMemcpyDeviceToHost);
+
+
+  cudaMemcpy(bicg->iA,bicg->diA,(bicg->nrows+1)*sizeof(int),cudaMemcpyDeviceToHost);
+  cudaMemcpy(bicg->jA,bicg->djA,bicg->nnz*sizeof(int),cudaMemcpyDeviceToHost);
+
+
+  cudaMemcpy(&flag,bicg->dflag,1*sizeof(int),cudaMemcpyDeviceToHost);
+  //printf("flag %d \n",flag);
+
+  cudaMemcpy(acor,bicg->dacor,bicg->nrows*sizeof(double),cudaMemcpyDeviceToHost);
+  cudaMemcpy(tempv,bicg->dx,bicg->nrows*sizeof(double),cudaMemcpyDeviceToHost);
+
+  return(flag);
+
+
+#else
+
   /* Looping point for the solution of the nonlinear system.
      Evaluate f at the predicted y, call lsetup if indicated, and
      call cvNewtonIteration for the Newton iteration itself.      */
@@ -2137,12 +3428,11 @@ int cudacvNlsNewton(SolverData *sd, CVodeMem cv_mem, int nflag)
     /* Load prediction into y vector */
     //N_VLinearSum(ONE, cv_mem->cv_zn[0], ONE, cv_mem->cv_acor_init, cv_mem->cv_y);
     //gpu_zaxpby(1.0, bicg->dzn, 1.0, bicg->dacor_init, bicg->dcv_y, bicg->nrows, bicg->blocks, bicg->threads);
-    //TODO gpu_yequalsx is not thread safe (need cuda_devicesync previously!)
+    //gpu_yequalsx is not thread safe (need cuda_devicesync previously!)
     cudaDeviceSynchronize();
     gpu_yequalsx(bicg->dcv_y,bicg->dzn, bicg->nrows, bicg->blocks, bicg->threads);//Consider acor_init=0
     cudaDeviceSynchronize();
 
-    //todo copy cv_y to enable debug on cpu
     cudaMemcpy(cv_y,bicg->dcv_y,bicg->nrows*sizeof(double),cudaMemcpyDeviceToHost);
     //retval = cv_mem->cv_f(cv_mem->cv_tn, cv_mem->cv_y,
     //                      cv_mem->cv_ftemp, cv_mem->cv_user_data);
@@ -2192,18 +3482,19 @@ int cudacvNlsNewton(SolverData *sd, CVodeMem cv_mem, int nflag)
       cudaEventRecord(bicg->startLinSolSetup);
 #endif
 
-      ier = linsolsetup_gpu2(sd, cv_mem, convfail, vtemp1, vtemp2, vtemp3);
+      //ier = linsolsetup_gpu2(sd, cv_mem, convfail, vtemp1, vtemp2, vtemp3);
+      ier = cudalinsolsetup(sd, cv_mem, convfail, vtemp1, vtemp2, vtemp3);
 
 #ifdef PMC_DEBUG_GPU
       cudaEventRecord(bicg->stopLinSolSetup);
 
-    cudaEventSynchronize(bicg->stopLinSolSetup);
-    float msLinSolSetup = 0.0;
-    cudaEventElapsedTime(&msLinSolSetup, bicg->startLinSolSetup, bicg->stopLinSolSetup);
-    bicg->timeLinSolSetup+= msLinSolSetup;
+      cudaEventSynchronize(bicg->stopLinSolSetup);
+      float msLinSolSetup = 0.0;
+      cudaEventElapsedTime(&msLinSolSetup, bicg->startLinSolSetup, bicg->stopLinSolSetup);
+      bicg->timeLinSolSetup+= msLinSolSetup;
 
-    //bicg->timeLinSolSetup+= clock() - start;
-    bicg->counterLinSolSetup++;
+      //bicg->timeLinSolSetup+= clock() - start;
+      bicg->counterLinSolSetup++;
 #endif
 
       cv_mem->cv_nsetups++;
@@ -2219,7 +3510,7 @@ int cudacvNlsNewton(SolverData *sd, CVodeMem cv_mem, int nflag)
     // Set acor to the initial guess for adjustments to the y vector
     //N_VScale(ONE, cv_mem->cv_acor_init, cv_mem->cv_acor);
     //gpu_yequalsx(bicg->dacor, bicg->dacor_init, bicg->nrows, bicg->blocks, bicg->threads);
-    cudaMemset(bicg->dacor, 0.0, bicg->nrows*sizeof(double));
+    //cudaMemset(bicg->dacor, 0.0, bicg->nrows*sizeof(double));
 
 #ifdef PMC_DEBUG_GPU
     cudaEventRecord(bicg->startLinSolSolve);
@@ -2231,7 +3522,16 @@ int cudacvNlsNewton(SolverData *sd, CVodeMem cv_mem, int nflag)
     //ier = cudacvNewtonIteration(sd, cv_mem);
 
     solveCVODEGPU(sd, cv_mem);
+
+
+
     cudaDeviceSynchronize();
+    cudaMemcpy(J_data, mGPU->J, md->jac_size, cudaMemcpyDeviceToHost);
+
+
+    cudaMemcpy(bicg->iA,bicg->diA,(bicg->nrows+1)*sizeof(int),cudaMemcpyDeviceToHost);
+    cudaMemcpy(bicg->jA,bicg->djA,bicg->nnz*sizeof(int),cudaMemcpyDeviceToHost);
+
 
     cudaMemcpy(&flag,bicg->dflag,1*sizeof(int),cudaMemcpyDeviceToHost);
     //printf("flag %d \n",flag);
@@ -2239,7 +3539,6 @@ int cudacvNlsNewton(SolverData *sd, CVodeMem cv_mem, int nflag)
     cudaMemcpy(acor,bicg->dacor,bicg->nrows*sizeof(double),cudaMemcpyDeviceToHost);
     cudaMemcpy(tempv,bicg->dx,bicg->nrows*sizeof(double),cudaMemcpyDeviceToHost);
     ier = flag;
-    //return(flag);
 
 
 #ifdef PMC_DEBUG_GPU
@@ -2251,6 +3550,10 @@ int cudacvNlsNewton(SolverData *sd, CVodeMem cv_mem, int nflag)
     bicg->timeLinSolSolve+= msLinSolSolve;
     bicg->counterLinSolSolve++;
 #endif
+
+
+    //return(flag);
+
     // If there is a convergence failure and the Jacobian-related
     //   data appears not to be current, loop again with a call to lsetup
     //   in which convfail=CV_FAIL_BAD_J.  Otherwise return.
@@ -2260,6 +3563,9 @@ int cudacvNlsNewton(SolverData *sd, CVodeMem cv_mem, int nflag)
     convfail = CV_FAIL_BAD_J;
 
   }
+
+#endif
+
 }
 
 
@@ -4975,6 +6281,9 @@ int cvNlsNewton_gpu2(SolverData *sd, CVodeMem cv_mem, int nflag)
   double *tempv = NV_DATA_S(cv_mem->cv_tempv);
   double *ftemp = NV_DATA_S(cv_mem->cv_ftemp);
 
+  ModelDataGPU *mGPU = &sd->mGPU;
+  double *J_deriv = N_VGetArrayPointer(md->J_deriv);
+
   //int flag = 0; //CAMP_SOLVER_SUCCESS
   int flag = 999;
 
@@ -5009,16 +6318,6 @@ int cvNlsNewton_gpu2(SolverData *sd, CVodeMem cv_mem, int nflag)
   //N_VConst(ZERO, cv_mem->cv_acor_init);
   //cudaMemcpyDToGpu(acor_init, bicg->dacor_init, bicg->nrows);
 
-  /*if (cv_mem->cv_ghfun) {
-    //todo use this ghfun
-    N_VLinearSum(ONE, cv_mem->cv_zn[0], -ONE, cv_mem->cv_last_yn, cv_mem->cv_ftemp);
-    retval = cv_mem->cv_ghfun(cv_mem->cv_tn, cv_mem->cv_h, cv_mem->cv_zn[0],
-                              cv_mem->cv_last_yn, cv_mem->cv_ftemp, cv_mem->cv_user_data,
-                              cv_mem->cv_tempv, cv_mem->cv_acor_init);
-    cv_mem->cv_tempv1, cv_mem->cv_acor_init);
-    if (retval<0) return(RHSFUNC_RECVR);
-  }*/
-
   if (cv_mem->cv_ghfun) {
   //N_VScale(cv_mem->cv_rl1, cv_mem->cv_zn[1], cv_mem->cv_ftemp);
 
@@ -5047,12 +6346,12 @@ int cvNlsNewton_gpu2(SolverData *sd, CVodeMem cv_mem, int nflag)
     /* Load prediction into y vector */
     //N_VLinearSum(ONE, cv_mem->cv_zn[0], ONE, cv_mem->cv_acor_init, cv_mem->cv_y);
     //gpu_zaxpby(1.0, bicg->dzn, 1.0, bicg->dacor_init, bicg->dcv_y, bicg->nrows, bicg->blocks, bicg->threads);
-    //TODO gpu_yequalsx is not thread safe (need cuda_devicesync previously!)
+    //gpu_yequalsx is not thread safe (need cuda_devicesync previously!)
     cudaDeviceSynchronize();
     gpu_yequalsx(bicg->dcv_y,bicg->dzn, bicg->nrows, bicg->blocks, bicg->threads);//Consider acor_init=0
     cudaDeviceSynchronize();
 
-    //todo copy cv_y to enable debug on cpu
+    //copy cv_y to enable debug on cpu
     cudaMemcpy(cv_y,bicg->dcv_y,bicg->nrows*sizeof(double),cudaMemcpyDeviceToHost);
     //retval = cv_mem->cv_f(cv_mem->cv_tn, cv_mem->cv_y,
     //                      cv_mem->cv_ftemp, cv_mem->cv_user_data);
@@ -5104,6 +6403,7 @@ int cvNlsNewton_gpu2(SolverData *sd, CVodeMem cv_mem, int nflag)
 
       ier = linsolsetup_gpu2(sd, cv_mem, convfail, vtemp1, vtemp2, vtemp3);
 
+
 #ifdef PMC_DEBUG_GPU
     cudaEventRecord(bicg->stopLinSolSetup);
 
@@ -5140,6 +6440,7 @@ int cvNlsNewton_gpu2(SolverData *sd, CVodeMem cv_mem, int nflag)
     ier = cvNewtonIteration_gpu2(sd, cv_mem);
     //ier = cudacvNewtonIteration(sd, cv_mem);
 
+
 #ifdef PMC_DEBUG_GPU
     cudaEventRecord(bicg->stopLinSolSolve);
 
@@ -5158,6 +6459,8 @@ int cvNlsNewton_gpu2(SolverData *sd, CVodeMem cv_mem, int nflag)
     convfail = CV_FAIL_BAD_J;
 
   }
+
+
 }
 
 __global__
@@ -5196,6 +6499,9 @@ int linsolsetup_gpu2(SolverData *sd, CVodeMem cv_mem,int convfail,N_Vector vtemp
   CVDlsMem cvdls_mem = (CVDlsMem) cv_mem->cv_lmem;;
   int retval = 0;
 
+  ModelData *md = &(sd->model_data);
+  ModelDataGPU *mGPU = &sd->mGPU;
+
   /* Use nst, gamma/gammap, and convfail to set J eval. flag jok */
   dgamma = fabs((cv_mem->cv_gamma/cv_mem->cv_gammap) - ONE); //In GPU is fabs too
   //dgamma = SUNRabs((cv_mem->cv_gamma/cv_mem->cv_gammap) - ONE);
@@ -5204,6 +6510,7 @@ int linsolsetup_gpu2(SolverData *sd, CVodeMem cv_mem,int convfail,N_Vector vtemp
          ((convfail == CV_FAIL_BAD_J) && (dgamma < CVD_DGMAX)) ||
          (convfail == CV_FAIL_OTHER);
   jok = !jbad;
+
 
   // If jok = SUNTRUE, use saved copy of J
   if (jok) {
@@ -5230,7 +6537,7 @@ int linsolsetup_gpu2(SolverData *sd, CVodeMem cv_mem,int convfail,N_Vector vtemp
     cudaEventRecord(bicg->startJac);
 #endif
 
-    //Not needed because deriv is called just before, loading cv_y already (todo check when deriv is loaded)
+    //Ensure cv_y is loaded
     double *cv_y = NV_DATA_S(cv_mem->cv_y);
     cudaMemcpy(cv_y,bicg->dcv_y,bicg->nrows*sizeof(double),cudaMemcpyDeviceToHost);
 
@@ -5240,10 +6547,37 @@ int linsolsetup_gpu2(SolverData *sd, CVodeMem cv_mem,int convfail,N_Vector vtemp
 
 
 
-
     //retval = Jac(cv_mem->cv_tn, cv_mem->cv_y,cv_mem->cv_ftemp, cvdls_mem->A,cvdls_mem->J_data, vtemp1, vtemp2, vtemp3);
     retval = Jac_gpu(cv_mem->cv_tn, cv_mem->cv_y,cv_mem->cv_ftemp, cvdls_mem->A,cvdls_mem->J_data, vtemp1, vtemp2, vtemp3);
 
+
+/*
+    int flag = CAMP_SOLVER_SUCCESS; //0
+    int i_kernel=0;
+    int threads_block = md->n_per_cell_dep_var;
+    int n_blocks = bicg->n_cells;
+    int n_shr = nextPowerOfTwoCVODE(md->n_per_cell_dep_var);
+    int n_shr_empty = n_shr-threads_block;
+    double time_step = cv_mem->cv_next_h;
+    //time_step = time_step > 0. ? time_step : sd->init_time_step;
+
+    cudaGlobalJac << < (n_blocks), threads_block >> >(
+#ifdef PMC_DEBUG_GPU
+            sd->counterDerivGPU,
+#endif
+            //update_state
+                    -SMALL, TINY, &flag,
+                    //f_gpu
+                    time_step, md->n_per_cell_dep_var,
+                    md->n_per_cell_state_var,md->n_cells,
+                    i_kernel, threads_block,n_shr_empty, bicg->dcv_y,
+                    sd->mGPU, bicg->dftemp
+    );
+
+    double *J_data = SM_DATA_S(cvdls_mem->A);
+    cudaMemcpy(J_data, mGPU->J, md->jac_size, cudaMemcpyDeviceToHost);
+
+*/
 
 
 #ifndef DEBUG_linsolsetup_gpu2
@@ -5350,7 +6684,6 @@ int linsolsetup_gpu2(SolverData *sd, CVodeMem cv_mem,int convfail,N_Vector vtemp
 }
 
 
-//translating to cv new iteration
 int cvNewtonIteration_gpu2(SolverData *sd, CVodeMem cv_mem)
 {
   itsolver *bicg = &(sd->bicg);
@@ -5439,10 +6772,6 @@ int cvNewtonIteration_gpu2(SolverData *sd, CVodeMem cv_mem)
       cudaDeviceSynchronize();
 
       //equals matrix dA
-
-      //todo add check case cell=1 to autocheck both are equal (separe a single cell and compare both results)
-      //todo add check case cell=2 to autocheck both are equal with multicells
-
       //Compute case 1
       solveGPU(bicg,bicg->dA,bicg->djA,bicg->diA,bicg->dx,bicg->dtempv);
       //solveGPU_block(bicg,bicg->dA,bicg->djA,bicg->diA,bicg->dx,bicg->dtempv);

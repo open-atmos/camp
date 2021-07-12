@@ -59,7 +59,7 @@ void cudaDevicef0(
 int rxn_calc_deriv_gpu(SolverData *sd, N_Vector y, N_Vector deriv, double time_step);
 void rxn_calc_deriv_aux(ModelData *model_data, double *deriv_data, double time_step);
 void rxn_fusion_deriv_gpu(ModelData *model_data, N_Vector deriv);
-int rxn_calc_jac_gpu(SolverData *sd, SUNMatrix jac, double time_step);
+int rxn_calc_jac_gpu(SolverData *sd, SUNMatrix jac, double time_step, N_Vector deriv);
 void free_gpu_cu(SolverData *sd);
 void bubble_sort_gpu(unsigned int *n_zeros, unsigned int *rxn_position, int n_rxn);
 void print_gpu_specs();

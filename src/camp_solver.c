@@ -1383,16 +1383,13 @@ int Jac_gpu(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_da
   flag = Jac( t, y, deriv, J, solver_data, tmp1, tmp2, tmp3);
   if(flag!=0) return flag;
 
+#ifdef DEBUG_CHECK_JAC_GPU_WITH_CPU
   double *J_data = SM_DATA_S(md->J_rxn);
   for (int i=0; i<10; i++){//*md->n_mapped_values
-    //printf("rxn_calc_jac_gpu J_rxn [%d]=%le\n",i,J_rxn_data[i]);
-    //printf("Jac_gpu J_data [%d]=%le\n",i,J_data[i]);
+    printf("rxn_calc_jac_gpu J_rxn [%d]=%le\n",i,J_rxn_data[i]);
+    printf("Jac_gpu J_data [%d]=%le\n",i,J_data[i]);
   }
-
-  //SUNMatrix J_cpu =
-  //    SUNSparseMatrix(SM_NP_S(J), SM_NP_S(J), SM_NNZ_S(J), CSC_MAT);
-  //J_cpu = SUNMatClone(J); //doesnt work, its like it pointers to same place
-
+#endif
 
   //Reset Jac
   for (int i = 0; i < SM_NNZ_S(J); i++) {
@@ -1422,7 +1419,6 @@ int Jac_gpu(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_da
   if (camp_solver_check_model_state_gpu(y, sd, -SMALL, TINY) != CAMP_SOLVER_SUCCESS)
     return 1;
 
-  CVodeGetCurrentStep(sd->cvode_mem, &time_step);
 
   //Compare input
   if(sd->counterJacCPU<=10){
@@ -1438,15 +1434,9 @@ int Jac_gpu(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_da
   free(total_state_cpu);
 
 
+  CVodeGetCurrentStep(sd->cvode_mem, &time_step);
+
   flag = rxn_calc_jac_gpu(sd, J, time_step);
-
-  for (int i_elem = 0; i_elem < SM_NNZ_S(J); ++i_elem)
-    SM_DATA_S(md->J_solver)[i_elem] = SM_DATA_S(J)[i_elem];
-  N_VScale(1.0, y, md->J_state);
-  N_VScale(1.0, deriv, md->J_deriv);
-
-  if(sd->use_cpu==0)
-    set_jac_data_gpu(sd, SM_DATA_S(J));
 
   //Compare
   if(sd->counterJacCPU<=10){
@@ -1470,32 +1460,9 @@ int Jac_gpu(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_da
 
 #else
 
-
-  sd->use_deriv_est = 0;
-  //if (f(t, y, deriv, solver_data) != 0) {
-  if (f_gpu(t, y, deriv, solver_data) != 0) {
-    printf("\n Derivative calculation failed on Jac.\n");
-    sd->use_deriv_est = 1;
-    return 1;
-  }
-  sd->use_deriv_est = 1;
-
-  if (camp_solver_check_model_state_gpu(y, sd, -SMALL, TINY) != CAMP_SOLVER_SUCCESS)
-    return 1;
-
   CVodeGetCurrentStep(sd->cvode_mem, &time_step);
 
-
-  flag = rxn_calc_jac_gpu(sd, J, time_step);
-
-
-  for (int i_elem = 0; i_elem < SM_NNZ_S(J); ++i_elem)
-    SM_DATA_S(md->J_solver)[i_elem] = SM_DATA_S(J)[i_elem];
-  N_VScale(1.0, y, md->J_state);
-  N_VScale(1.0, deriv, md->J_deriv);
-
-  if(sd->use_cpu==0)
-    set_jac_data_gpu(sd, SM_DATA_S(J));
+  flag = rxn_calc_jac_gpu(sd, J, time_step, deriv);
 
 #endif
 
@@ -1751,16 +1718,6 @@ int Jac(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_data,
   // Get pointers to the rxn and parameter Jacobian arrays
   double *J_param_data = SM_DATA_S(md->J_params);
   double *J_rxn_data = SM_DATA_S(md->J_rxn);
-  // Initialize the sparse matrix (sized for one grid cell)
-  // solver_data->model_data.J_rxn =
-  //    SUNSparseMatrix(n_state_var, n_state_var, n_jac_elem_rxn, CSC_MAT);
-
-  // TODO: use this instead of saving all this jacs
-  // double J_rxn_data[md->n_per_cell_dep_var];
-  // memset(J_rxn_data, 0, md->n_per_cell_dep_var * sizeof(double));
-
-  // double *J_rxn_data = (double*)calloc(md->n_per_cell_state_var,
-  // sizeof(double));
 
   // !!!! Do not use tmp2 - it is the same as y !!!! //
   // FIXME Find out why cvode is sending tmp2 as y
@@ -1787,6 +1744,7 @@ int Jac(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_data,
   // Update the state array with the current dependent variable values
   // Signal a recoverable error (positive return value) for negative
   // concentrations.
+  //todo check duplicated call to update_model_state (previous f funct already updates the state)
   if (camp_solver_update_model_state(y, sd, -SMALL, TINY) != CAMP_SOLVER_SUCCESS)
     return 1;
 
