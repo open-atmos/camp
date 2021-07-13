@@ -1171,6 +1171,12 @@ int rxn_calc_deriv_gpu(SolverData *sd, N_Vector y, N_Vector deriv, double time_s
 
 #else
 
+#ifdef DEBUG_rxn_calc_deriv_gpu
+
+  printf("rxn_calc_deriv_gpu start\n");
+
+#endif
+
   if (camp_solver_check_model_state_gpu(y, sd, -SMALL, TINY) != CAMP_SOLVER_SUCCESS)
     return 1;
 
@@ -1944,7 +1950,7 @@ int rxn_calc_jac_gpu(SolverData *sd, SUNMatrix J, double time_step, N_Vector der
 
   cudaMemcpy(&flag,bicg->dflag,1*sizeof(int),cudaMemcpyDeviceToHost);
 
-  printf("flag %d\n", flag);
+  //printf("rxn_calc_jac_gpu flag %d\n", flag);
 
 #ifdef DEBUG_rxn_calc_jac_gpu
 

@@ -52,6 +52,7 @@ typedef struct
   int *nje;
   int *nstlj;
   int *cv_nst;
+  int *jok;
 
   double *dgammap;
   double *dcv_tq;
