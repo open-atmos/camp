@@ -220,7 +220,7 @@ def all_timesteps():
   timesteps = 1#720=12h
   TIME_STEP = 2 #pending send TIME_STEP to mock_monarch
 
-  cases = ["CPU One-cell"]
+  #cases = ["CPU One-cell"]
   #cases = ["CPU Multi-cells"]
   #cases = ["GPU One-cell"]
   #cases = ["CPU One-cell","CPU Multi-cells"]

@@ -520,7 +520,31 @@ extern "C++" void gpu_scaley(double* dy, double a, int nrows, int blocks, int th
 // Device functions (equivalent to global functions but in device to allow calls from gpu)
 __device__ void cudaDevicematScaleAddI(int nrows, double* dA, int* djA, int* diA, double alpha)
 {
+
   int row= threadIdx.x + blockDim.x*blockIdx.x;
+
+#ifdef DEV_cudaDevicematScaleAddI_cudaGlobalinsolsetup
+
+  int nnz=diA[nrows];
+  if(threadIdx.x==0)
+  {
+
+    for (int n = (nnz/gridDim.x)*blockIdx.x; n < (nnz/gridDim.x)*(blockIdx.x+1); n++) {
+
+      if(djA[n]==row){
+        dA[n] = 1.0 + alpha*dA[n];
+      }else{
+        dA[n] = alpha*dA[n];
+      }
+
+      //Bi[n]=Aj[n];
+      //Bx[n]=Ax[n];
+    }
+
+  }
+
+#else
+
   if(row < nrows)
   {
     int jstart = diA[row];
@@ -536,6 +560,9 @@ __device__ void cudaDevicematScaleAddI(int nrows, double* dA, int* djA, int* diA
       }
     }
   }
+
+#endif
+
 }
 
 // Diagonal precond

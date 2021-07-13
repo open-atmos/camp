@@ -46,6 +46,8 @@ typedef struct
 
   // ODE solver variables
   int flag;
+  int callSetup;
+  int convfail;
   int *dflag;
   int *dlast_flag;
   int *cv_jcur;
@@ -53,6 +55,7 @@ typedef struct
   int *nstlj;
   int *cv_nst;
   int *jok;
+  int *cv_nsetups;
 
   double *dgammap;
   double *dcv_tq;

@@ -193,6 +193,10 @@ void cudaDeviceswapCSC_CSR1Thread(int n_row, int n_col, int* Ap, int* Aj, double
 __device__
 void cudaDeviceswapCSC_CSR1ThreadBlock(int n_row, int n_col, int* Ap, int* Aj, double* Ax, int* BpGlobal, int* Bi, double* Bx) {
 
+  //todo remove this syncthreads after access jac with each thread has is row of Ap, instead of using only threadidx==0
+  // (in this way all functs access the jac in the same way)
+  __syncthreads();
+
   extern __shared__ int Bp[];
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   unsigned int tid = threadIdx.x;
@@ -202,10 +206,12 @@ void cudaDeviceswapCSC_CSR1ThreadBlock(int n_row, int n_col, int* Ap, int* Aj, d
   if(gridDim.x>1)iprint=blockDim.x;//block 2
 #endif
 
+
 #ifdef DEBUG_cudaGlobalswapCSC_CSR
   if(i==0) printf("start cudaDeviceswapCSC_CSR1ThreadBlock nnz %d n_row %d blockdim %d "
                   "gridDim.x %d \n",nnz,n_row,blockDim.x,gridDim.x);
 #endif
+
 
   //if(tid==0){
   if(i<n_row){
@@ -364,6 +370,8 @@ void cudaDeviceswapCSC_CSR1ThreadBlock(int n_row, int n_col, int* Ap, int* Aj, d
         BpGlobal[n_row]=nnz;}
       }
     }
+
+  __syncthreads();
 
 }
 
