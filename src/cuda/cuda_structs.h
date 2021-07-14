@@ -56,6 +56,7 @@ typedef struct
   int *cv_nst;
   int *jok;
   int *cv_nsetups;
+  int *cv_nfe;
 
   double *dgammap;
   double *dcv_tq;
