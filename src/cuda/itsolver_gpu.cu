@@ -190,6 +190,238 @@ void cudaDeviceswapCSC_CSR1Thread(int n_row, int n_col, int* Ap, int* Aj, double
 
 //Based on
 // https://github.com/scipy/scipy/blob/3b36a574dc657d1ca116f6e230be694f3de31afc/scipy/sparse/sparsetools/csr.h#L363
+
+__device__
+void cudaDeviceswapCSC_CSR(int n_row, int n_col, int* Ap, int* Aj, double* Ax, int* BpGlobal, int* Bi, double* Bx) {
+
+  __syncthreads();
+
+  extern __shared__ int Bp[];
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
+  unsigned int tid = threadIdx.x;
+  int nnz=Ap[n_row];
+#ifdef DEBUG_cudaGlobalswapCSC_CSR
+  int iprint=0;
+  if(gridDim.x>1)iprint=blockDim.x;//block 2
+#endif
+
+
+#ifdef DEBUG_cudaGlobalswapCSC_CSR
+  if(i==0) printf("start cudaDeviceswapCSC_CSR1ThreadBlock nnz %d n_row %d blockdim %d "
+                  "gridDim.x %d \n",nnz,n_row,blockDim.x,gridDim.x);
+#endif
+
+
+  //if(tid==0){
+  if(i<n_row){
+
+#ifdef DEBUG_cudaGlobalswapCSC_CSR
+    if(tid==0) {
+      printf("blockDim.x*blockIdx.x %d %d\n",blockDim.x*blockIdx.x,blockDim.x*(blockIdx.x+1));
+    }
+#endif
+
+    Bp[tid]=0;
+    //Bp[2*tid]=0;
+
+#ifndef DEV_cudaDeviceswapCSC_CSR
+    if(i==gridDim.x*blockDim.x-1) Bp[blockDim.x]=0; //Maybe dont needed
+#else
+    if(blockIdx.x==gridDim.x-1) Bp[blockDim.x]=0;
+#endif
+
+
+#ifdef DEBUG_cudaGlobalswapCSC_CSR
+    if(i==iprint) printf("start cudaDeviceswapCSC_CSR1ThreadBlock1\n");
+    /*if(i==iprint) {
+    printf("Bp %d:\n",blockIdx);
+      for (int n = blockDim.x*blockIdx.x; n <= blockDim.x*(blockIdx.x+1); n++)
+        printf("%d[%d] ",Bp[n],n);
+      printf("\n");
+    }__syncthreads();*/
+#endif
+
+    if(tid==0){
+      for (int n = (nnz/gridDim.x)*blockIdx.x; n < (nnz/gridDim.x)*(blockIdx.x+1); n++){
+        Bp[Aj[n]-blockIdx.x*blockDim.x]++;
+      }
+    }
+
+#ifdef DEBUG_cudaGlobalswapCSC_CSR
+    if(i==iprint) printf("start cudaDeviceswapCSC_CSR1ThreadBlock2\n");
+    if(i==iprint) {
+      printf("Bp %d:\n",blockIdx);
+      //for (int n = blockDim.x*blockIdx.x; n <= blockDim.x*(blockIdx.x+1); n++)
+      for (int n = 0; n <= blockDim.x; n++)
+        printf("%d ", Bp[n]);
+      printf("\n");
+    }
+#endif
+
+    //TODO efficient cumsum http://www.eecs.umich.edu/courses/eecs570/hw/parprefix.pdf
+    /*int offset = 1;
+    for (int d = n_col>>1; d > 0; d >>= 1) // build sum in place up the tree
+    {
+      __syncthreads();
+      if (tid < d)
+      {
+        int ai = offset*(2*tid+1)-1;
+        int bi = offset*(2*tid+2)-1;
+        Bp[bi] += Bp[ai];
+      }
+      offset *= 2;
+    }
+    if (tid == 0) { Bp[n_col - 1] = 0; } // clear the last element
+    for (int d = 1; d < n_col; d *= 2) // traverse down tree & build scan
+    {
+      offset >>= 1;
+      __syncthreads();
+      if (tid < d)
+      {
+        int ai = offset*(2*tid+1)-1;
+        int bi = offset*(2*tid+2)-1;
+        float t = Bp[ai];
+        Bp[ai] = Bp[bi];
+        Bp[bi] += t;
+      }
+    }
+    __syncthreads();*/
+
+    if(tid==0){
+      int cumsum=Ap[blockDim.x*blockIdx.x];
+      for(int n = 0; n < blockDim.x; n++){
+        //printf("%d ", Bp[n]);//el compilador me optimiza esto o algo y me trolea cuando printea da diferente wtf xd
+        int temp  = Bp[n];
+        //printf("%d ", temp);
+        Bp[n] = cumsum;
+        cumsum += temp;
+      }
+      if(blockIdx.x==gridDim.x-1) Bp[blockDim.x]=nnz;
+    }
+
+    __syncthreads();
+
+#ifdef DEBUG_cudaGlobalswapCSC_CSR
+    if(i==iprint) printf("start cudaDeviceswapCSC_CSR1ThreadBlock3\n");
+    if(i==iprint) {
+      //printf("Bp %d:\n",blockIdx);
+      //for (int n = blockDim.x*blockIdx.x; n <= blockDim.x*(blockIdx.x+1); n++)
+      for (int n = 0; n <= blockDim.x; n++)
+        printf("%d ", Bp[n]);
+      printf("\n");
+    }
+#endif
+
+    if(tid==0) {
+      for(int row=n_row/gridDim.x*blockIdx.x;row<n_row/gridDim.x*(blockIdx.x+1);row++){
+        for (int jj = Ap[row]; jj < Ap[row + 1]; jj++) {
+          int col = Aj[jj];
+          int dest = Bp[col-blockIdx.x*blockDim.x];
+
+          Bi[dest] = row;
+          Bx[dest] = Ax[jj];
+
+          Bp[col-blockIdx.x*blockDim.x]++;
+        }
+      }
+    }
+
+    __syncthreads();
+
+#ifdef DEBUG_cudaGlobalswapCSC_CSR
+    if(i==iprint) printf("start cudaDeviceswapCSC_CSR1ThreadBlock4\n");
+    if(i==iprint) {
+      //printf("Bp %d:\n",blockIdx);
+      //for (int n = blockDim.x*blockIdx.x; n <= blockDim.x*(blockIdx.x+1); n++)
+      for (int n = 0; n <= blockDim.x; n++)
+        printf("%d ", Bp[n]);
+      printf("\n");
+    }
+#endif
+
+#ifndef DEV_cudaDeviceswapCSC_CSR
+
+    __syncthreads();
+    int aux=Bp[tid];
+    __syncthreads();
+    Bp[tid+1]=aux;
+    Bp[0]=Ap[n_row/gridDim.x*blockIdx.x];
+
+
+#else
+
+    if(tid==0) {
+      //int last=Ap[n_row/gridDim.x*blockIdx.x];
+      int last=Ap[i];
+      for (int col = 0; col < blockDim.x; col++) {
+        int temp = Bp[col];
+        Bp[col] = last;
+        last = temp;
+      }
+    }
+
+#endif
+
+
+#ifdef DEBUG_cudaGlobalswapCSC_CSR
+    if(i==iprint) printf("start cudaDeviceswapCSC_CSR1ThreadBlock5\n");
+    if(i==iprint) {
+      //printf("Bp %d:\n",blockIdx);
+      //for (int n = blockDim.x*blockIdx.x; n <= blockDim.x*(blockIdx.x+1); n++)
+      for (int n = 0; n <= blockDim.x; n++)
+        printf("%d ", Bp[n]);
+      printf("\n");
+    }
+#endif
+
+    //Copy to A
+
+#ifndef DEV_cudaDeviceswapCSC_CSR
+
+//GOOD
+    __syncthreads();
+
+    for(int j=Ap[i]; j<Ap[i+1]; j++){
+      Aj[j]=Bi[j];
+      Ax[j]=Bx[j];
+    }
+
+    __syncthreads();
+
+    Ap[i]=Bp[tid];
+    BpGlobal[i]=Bp[tid];
+    if(i==gridDim.x*blockDim.x-1){
+      Ap[i+1]=nnz;//Bp[tid+1];
+      BpGlobal[i+1]=nnz;//Bp[tid+1];
+    }
+
+#else
+
+    if(tid==0){
+      for (int n = (nnz/gridDim.x)*blockIdx.x; n < (nnz/gridDim.x)*(blockIdx.x+1); n++) {
+        Aj[n]=Bi[n];
+        Ax[n]=Bx[n];
+      }
+    }
+
+    if(tid==0){
+      for(int n=0;n<n_row/gridDim.x;n++){
+        Ap[n+blockIdx.x*blockDim.x]=Bp[n];
+        BpGlobal[n+blockIdx.x*blockDim.x]=Bp[n];
+      }
+      if(blockIdx.x==gridDim.x-1){
+        Ap[n_row]=nnz;
+        BpGlobal[n_row]=nnz;}
+    }
+#endif
+
+  }
+
+
+  __syncthreads();
+
+}
+
 __device__
 void cudaDeviceswapCSC_CSR1ThreadBlock(int n_row, int n_col, int* Ap, int* Aj, double* Ax, int* BpGlobal, int* Bi, double* Bx) {
 
@@ -381,7 +613,7 @@ void cudaGlobalswapCSC_CSR(int n_row, int n_col, int* Ap, int* Aj, double* Ax, i
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   unsigned int tid = threadIdx.x;
 
-  //if(i==0) printf("start cudaDeviceswapCSC_CSR\n");
+  //if(i==0) printf("start cudaGlobalswapCSC_CSR\n");
 
 #ifdef TEST_DEVICECSCtoCSR
 

@@ -523,30 +523,7 @@ __device__ void cudaDevicematScaleAddI(int nrows, double* dA, int* djA, int* diA
 
   int row= threadIdx.x + blockDim.x*blockIdx.x;
 
-#ifdef DEV_cudaDevicematScaleAddI_cudaGlobalinsolsetup
-
-  int nnz=diA[nrows];
-  if(threadIdx.x==0)
-  {
-
-    for (int n = (nnz/gridDim.x)*blockIdx.x; n < (nnz/gridDim.x)*(blockIdx.x+1); n++) {
-
-      if(djA[n]==row){
-        dA[n] = 1.0 + alpha*dA[n];
-      }else{
-        dA[n] = alpha*dA[n];
-      }
-
-      //Bi[n]=Aj[n];
-      //Bx[n]=Ax[n];
-    }
-
-  }
-
-#else
-
-  if(row < nrows)
-  {
+  if(row < nrows){
     int jstart = diA[row];
     int jend   = diA[row+1];
     for(int j=jstart; j<jend; j++)
@@ -560,8 +537,6 @@ __device__ void cudaDevicematScaleAddI(int nrows, double* dA, int* djA, int* diA
       }
     }
   }
-
-#endif
 
 }
 
