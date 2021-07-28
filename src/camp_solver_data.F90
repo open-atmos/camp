@@ -51,7 +51,7 @@ module pmc_camp_solver_data
                     n_aero_phase_float_param, n_aero_rep, &
                     n_aero_rep_int_param, n_aero_rep_float_param, &
                     n_aero_rep_env_param, n_sub_model, n_sub_model_int_param,&
-                    n_sub_model_float_param, n_sub_model_env_param) bind (c)
+                    n_sub_model_float_param, n_sub_model_env_param, ncounters) bind (c)
       use iso_c_binding
       !> Number of variables on the state array per grid cell
       !! (including const, PSSA, etc.)
@@ -92,6 +92,8 @@ module pmc_camp_solver_data
       integer(kind=c_int), value :: n_sub_model_float_param
       !> Total number of environment-dependent parameters for all sub models
       integer(kind=c_int), value :: n_sub_model_env_param
+      !> Number of counter variables for profiling (Also equal to times variable)
+      integer(kind=c_int), value :: ncounters
     end function solver_new
 
     !> Set specie name
@@ -162,6 +164,18 @@ module pmc_camp_solver_data
       integer, value :: n_cells
     end function solver_run
 
+    !> Set specie name
+    subroutine export_solver_stats(solver_data&
+            !,path
+    ) bind (c)
+      use iso_c_binding
+      !> Pointer to a SolverData object
+      type(c_ptr), value :: solver_data
+      !character(1) :: path
+      !type(c_ptr), value :: path
+
+    end subroutine export_solver_stats
+
     subroutine rxn_get_base_rate(solver_data, rate_constants) bind (c)
       use iso_c_binding
       !> Pointer to the initialized solver data
@@ -186,7 +200,7 @@ module pmc_camp_solver_data
                     RHS_evals_total, Jac_evals_total, RHS_time__s, &
                     Jac_time__s, timeCVode, timeCVodeTotal,&
             counterBCG, counterLS, timeLS, timeBiconjGradMemcpy, &
-            max_loss_precision ) bind (c)
+            max_loss_precision, counters, times) bind (c)
       use iso_c_binding
       !> Pointer to the solver data
       type(c_ptr), value :: solver_data
@@ -230,6 +244,8 @@ module pmc_camp_solver_data
       type(c_ptr), value :: timeBiconjGradMemcpy
       !> Maximum loss of precision on last call the f()
       type(c_ptr), value :: max_loss_precision
+      type(c_ptr), value :: counters
+      type(c_ptr), value :: times
     end subroutine solver_get_statistics
 
     !> Add condensed reaction data to the solver data block
@@ -426,6 +442,7 @@ module pmc_camp_solver_data
     procedure :: update_aero_rep_data
     !> Integrate over a given time step
     procedure :: solve
+    procedure :: export_solver_statsf
     procedure :: get_base_rate
     !> Reset the solver function timers
     procedure, private :: reset_timers
@@ -463,7 +480,7 @@ contains
 
   !> Initialize the solver
   subroutine initialize(this, var_type, abs_tol, mechanisms, aero_phases, &
-                  aero_reps, sub_models, rxn_phase, n_cells, spec_names)
+                  aero_reps, sub_models, rxn_phase, n_cells, spec_names, ncounters)
 
     !> Solver data
     class(camp_solver_data_t), intent(inout) :: this
@@ -486,6 +503,7 @@ contains
     !! Use parameters in pmc_rxn_data to specify phase:
     !! GAS_RXN, AERO_RXN, GAS_AERO_RXN
     integer(kind=i_kind), intent(in) :: rxn_phase
+    integer(kind=i_kind), intent(in) :: ncounters
 
     ! Variable types
     integer(kind=c_int), pointer :: var_type_c(:)
@@ -664,7 +682,8 @@ contains
             n_sub_model,                       & ! # of sub models
             n_sub_model_int_param,             & ! # of sub model int params
             n_sub_model_float_param,           & ! # of sub model real params
-            n_sub_model_env_param              & ! # of sub model env params
+            n_sub_model_env_param,              & ! # of sub model env params
+            ncounters              & ! # of profiling variables (Times and counters)
             )
 
     ! Add all the condensed reaction data to the solver data block for
@@ -953,7 +972,7 @@ contains
     real(kind=dp), intent(in) :: t_initial
     !> End time (s)
     real(kind=dp), intent(in) :: t_final
-    !> Solver statistics
+    !> Solver statisticsz
     type(solver_stats_t), intent(inout), optional, target :: solver_stats
     integer, intent(in), optional:: n_cells
 
@@ -1004,6 +1023,30 @@ contains
   end function solve
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  subroutine export_solver_statsf(this,path)
+
+
+  !> Solver data
+  class(camp_solver_data_t), intent(inout) :: this
+  character(len=:), allocatable, intent(in) :: path
+  !type(string_t), intent(in) :: spec_names
+  !character(len=:), allocatable :: spec_name
+
+    print*,"export_solver_statsf"
+
+  !do i=1,size(path)
+
+#ifdef COMMENTING
+   call export_solver_stats( &
+            this%solver_c_ptr              & ! Pointer to intialized solver
+            !c_loc(path[1])&
+    !,path(i)&
+            )
+  !end do
+#endif
+
+  end subroutine export_solver_statsf
 
 
   subroutine get_base_rate(this, rate_constants)
@@ -1072,7 +1115,10 @@ contains
             c_loc( solver_stats%counterLS),&
             c_loc( solver_stats%timeLS),&
             c_loc( solver_stats%timeBiconjGradMemcpy),&
-            c_loc( solver_stats%max_loss_precision    ) )    ! Maximum loss of precision
+            c_loc( solver_stats%max_loss_precision),& ! Maximum loss of precision
+            c_loc( solver_stats%counters),&
+            c_loc( solver_stats%times)&
+    )
 
   end subroutine get_solver_stats
 

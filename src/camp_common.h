@@ -316,6 +316,7 @@ typedef struct {
   double timeLS;
   double timeDerivCPU;
   double timeJacCPU;
+  int ncounters;
   FILE *file; //todo clean file
 #endif
 

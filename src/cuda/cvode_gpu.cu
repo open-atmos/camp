@@ -1186,10 +1186,19 @@ __device__ void cudaDevicecalc_Jac(
 
 #ifdef DEV_REMOVE_threadIdx0
 
-    //todo use diA and djA pointers to better memory access
+    //try using diA and djA pointers to better memory access
     JacMap *jac_map = md->jac_map;
 
     int nnz = md->n_mapped_values[0];
+
+    for (int n = 0; n < nnz; n++) {
+      md->J[jac_map[n].solver_id + nnz * blockIdx.x] = 0.0;
+      md->J[jac_map[n].solver_id + nnz * blockIdx.x] =
+              md->J_rxn[jac_map[n].rxn_id + jacBlock.num_elem[0] * blockIdx.x];
+
+    }
+
+    /*
     int nnz_tid = nnz/active_threads;
 
     for (int n = i*nnz_tid; n < i*(nnz_tid+1); ++n) {
@@ -1205,8 +1214,8 @@ __device__ void cudaDevicecalc_Jac(
 
         md->J[jac_map[n].solver_id+nnz*blockIdx.x] = //+=0.;
                 md->J_rxn[jac_map[n].rxn_id+jacBlock.num_elem[0]*blockIdx.x];
-
-      }
+    }
+*/
 
 #else
 
@@ -1235,14 +1244,6 @@ __device__ void cudaDevicecalc_Jac(
 
           md->J[jac_map[n].solver_id + z] = //+=0.;
                   md->J_rxn[jac_map[n].rxn_id + jacBlock.num_elem[0] * blockIdx.x];
-          //0.0;
-          //* SM_DATA_S(md->J_params)[jac_map[i_map].param_id];
-
-          //SM_DATA_S(J)
-          //[i_cell * md->n_per_cell_solver_jac_elem + jac_map[i_map].solver_id] +=
-          //        SM_DATA_S(md->J_rxn)[jac_map[i_map].rxn_id] *
-          //0.0;
-          //        SM_DATA_S(md->J_params)[jac_map[i_map].param_id];
 
         }
       }
@@ -1251,16 +1252,12 @@ __device__ void cudaDevicecalc_Jac(
 
       for (int n = 0; n < nnz; n++) {
         md->J[jac_map[n].solver_id + nnz * blockIdx.x] = 0.0;
-
-        md->J[jac_map[n].solver_id + nnz * blockIdx.x] = //+=0.;
+        md->J[jac_map[n].solver_id + nnz * blockIdx.x] =
                 md->J_rxn[jac_map[n].rxn_id + jacBlock.num_elem[0] * blockIdx.x];
-        //0.0;
-        //* SM_DATA_S(md->J_params)[jac_map[i_map].param_id];
 
         //SM_DATA_S(J)
         //[i_cell * md->n_per_cell_solver_jac_elem + jac_map[i_map].solver_id] +=
         //        SM_DATA_S(md->J_rxn)[jac_map[i_map].rxn_id] *
-        //0.0;
         //        SM_DATA_S(md->J_params)[jac_map[i_map].param_id];
 
       }
@@ -1321,7 +1318,6 @@ void cudaDeviceJac(
 
 
   //__syncthreads();
-  //study flag block effect: flag is global for all threads or for only the block?
   if(*flag==CAMP_SOLVER_FAIL)
     return;
 
@@ -1537,7 +1533,7 @@ void cudaDevicelinsolsetup(
       return;
     }
 
-    //todo Optimization: devicejac and swapcscscr can follow same procedure of accessing jac values
+    //todo Optimization: devicejac and swapcscscr(better try to avoid swap) can follow same procedure of accessing jac values
     // than cudaDevicematScaleAddI (each thread=iA pointer, instead of using only threadidx=0)
 
    cudaDeviceJacCopy(nrows, diA, djA, dA, isavedJ, jsavedJ, savedJ);
@@ -2358,11 +2354,7 @@ void cudaDevicecvNewtonIteration(
 
 #ifndef CSR_SPMV
 
-#ifndef DEV_cudaDeviceswapCSC_CSR
   cudaDeviceswapCSC_CSR(nrows, nrows, diA, djA, dA, diB, djB, dB);
-#else
-  cudaDeviceswapCSC_CSR1ThreadBlock(nrows, nrows, diA, djA, dA, diB, djB, dB);
-#endif
 
 #endif
 
@@ -2392,8 +2384,6 @@ void cudaDevicecvNewtonIteration(
 #endif
     );
 
-    //todo bicg->counterBiConjGrad++;
-
 #ifdef PMC_DEBUG_GPU
 
 #ifdef cudaGlobalSolveODE_timers_max_blocks
@@ -2414,11 +2404,7 @@ void cudaDevicecvNewtonIteration(
 
 #ifndef CSR_SPMV
 
-#ifndef DEV_cudaDeviceswapCSC_CSR
   cudaDeviceswapCSC_CSR(nrows, nrows, diA, djA, dA, diB, djB, dB);
-#else
-    cudaDeviceswapCSC_CSR1ThreadBlock(nrows, nrows, diA, djA, dA, diB, djB, dB);
-#endif
 
 #endif
 
@@ -3095,7 +3081,7 @@ void solveCVODEGPU_thr(int blocks, int threads_block, int n_shr_memory, int n_sh
   }
 #endif
 
-//todo (mas tarde peude ser) figura como las 3 lineas pero con el cb05 (oriol)
+//todo (mas tarde puede ser) figura como las 3 lineas pero con el cb05 (oriol)
 //MARIO: 40 MPI vs 1 GPU y kernels fusionados ya (necesita q vaya mejor que mpi)
 
   cudaGlobalSolveODE <<<blocks,threads_block,n_shr_memory*sizeof(double)>>>
@@ -5404,7 +5390,6 @@ int cvStep_gpu2(SolverData *sd, CVodeMem cv_mem)
 #endif
 
     //nflag = cvNlsNewton_gpu2(sd, cv_mem, nflag);
-    //todo: bug 1000 cells when using cudacvNlsNewton
     nflag = cudacvNlsNewton(sd, cv_mem, nflag);
 
 #ifdef PMC_DEBUG_GPU

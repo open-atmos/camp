@@ -242,6 +242,7 @@ module pmc_camp_core
                sub_model_update_data
     !> Run the chemical mechanisms
     procedure :: solve
+    procedure :: export_solver_statsf
     !> Determine the number of bytes required to pack the variable
     procedure :: pack_size
     !> Pack the given variable into a buffer, advancing position
@@ -1172,12 +1173,13 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Initialize the solver
-  subroutine solver_initialize(this)
+  subroutine solver_initialize(this, ncounters)
 
     !> Chemical model
     class(camp_core_t), intent(inout) :: this
     type(string_t), allocatable :: spec_names(:)
     integer :: i_spec, n_gas_spec
+    integer, optional :: ncounters
 
     call assert_msg(662920365, .not.this%solver_is_initialized, &
             "Attempting to initialize the solver twice.")
@@ -1186,6 +1188,10 @@ contains
     spec_names = this%unique_names()
 #endif
 
+    !todo delete
+    if(.not.present(ncounters)) then
+      ncounters=0
+    end if
 
     !Get spec names
     !n_gas_spec = this%chem_spec_data%size(spec_phase=CHEM_SPEC_GAS_PHASE)
@@ -1222,7 +1228,8 @@ contains
                 this%sub_model,  & ! Pointer to the sub-models
                 GAS_RXN,         & ! Reaction phase
                 this%n_cells,    & ! # of cells computed simultaneosly
-                spec_names       & ! Species names
+                spec_names,       & ! Species names
+                ncounters & ! # of profiling variables (Times and counters)
                 )
       call this%solver_data_aero%initialize( &
                 this%var_type,   & ! State array variable types
@@ -1233,8 +1240,9 @@ contains
                 this%sub_model,  & ! Pointer to the sub-models
                 AERO_RXN,        & ! Reaction phase
                 this%n_cells,    & ! # of cells computed simultaneosly
-                spec_names       & ! Species names
-                )
+                spec_names,       & ! Species names
+                ncounters & ! # of profiling variables (Times and counters)
+      )
     else
 
       ! Create a new solver data object
@@ -1255,7 +1263,8 @@ contains
                 this%sub_model,  & ! Pointer to the sub-models
                 GAS_AERO_RXN,    & ! Reaction phase
                 this%n_cells,    & ! # of cells computed simultaneosly
-                spec_names       & ! Species names
+                spec_names,       & ! Species names
+                ncounters & ! # of profiling variables (Times and counters)
                 )
 
     end if
@@ -1622,6 +1631,22 @@ contains
     end if
 
   end subroutine solve
+
+  subroutine export_solver_statsf(this,path)
+
+    !> Solver data
+    class(camp_core_t), intent(inout) :: this
+    character(len=:), allocatable, intent(in) :: path
+    type(camp_solver_data_t), pointer :: solver
+
+    print*,"export_solver_statsf"
+
+    solver => this%solver_data_gas
+
+    call solver%export_solver_statsf( &
+            path)
+
+  end subroutine export_solver_statsf
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 

@@ -20,7 +20,8 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
                  int n_aero_rep, int n_aero_rep_int_param,
                  int n_aero_rep_float_param, int n_aero_rep_env_param,
                  int n_sub_model, int n_sub_model_int_param,
-                 int n_sub_model_float_param, int n_sub_model_env_param);
+                 int n_sub_model_float_param, int n_sub_model_env_param,
+                 int ncounters);
 void solver_set_spec_name(void *solver_data, char *spec_name,
                           int size_spec_name, int i);
 void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
@@ -41,7 +42,13 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
                            double *RHS_time__s, double *Jac_time__s,
                            double *timeCVode, double *timeCVodeTotal,
                            int *counterBCG, int *counterLS, double *timeLS,
-                           double *timeBiconjGradMemcpy,double *max_loss_precision);
+                           double *timeBiconjGradMemcpy,double *max_loss_precision,
+                           int *counters, double *times);
+void init_solver_stats_file(void *solver_data, const char *path);
+void export_solver_stats(void *solver_data
+        //,char *path
+);
+void free_solver_stats(void *solver_data);
 void export_camp_input(void *solver_data, double *init_state, char *path);
 void solver_free(void *solver_data);
 void model_free(ModelData model_data);

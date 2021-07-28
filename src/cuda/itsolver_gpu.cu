@@ -241,11 +241,54 @@ void cudaDeviceswapCSC_CSR(int n_row, int n_col, int* Ap, int* Aj, double* Ax, i
     }__syncthreads();*/
 #endif
 
+#ifdef DEV_cudaDeviceswapCSC_CSR
+
+
+    __syncthreads();
+
+    if(tid==0){
+
+      for (int n=(nnz/gridDim.x)*blockIdx.x; n<(nnz/gridDim.x)*(blockIdx.x+1); n++){
+        Bp[Aj[n]-blockIdx.x*blockDim.x]++;
+    }
+
+      //for (int n = 0; n < nnz; n++)
+      //  Bp[Aj[n+nnz*blockIdx.x]-blockIdx.x*blockDim.x]++;}
+
+    }
+
+    //Not working, if still failing cause of this function, just use a CSC structure from the start
+    /*
+    for(int j=Ap[tid]; j<Ap[tid+1]; j++) {
+      Bp[Aj[j]+0]++;
+      //BpGlobal[Aj[j]]++;
+    }
+*/
+
+      /*
+    BpGlobal[i]=0.;
+    __syncthreads();
+    for(int j=Ap[i]; j<Ap[i+1]; j++) {
+      //Bp[Aj[j]-blockIdx.x*blockDim.x]++;
+      BpGlobal[Aj[j]]++;
+    }
+    __syncthreads();
+    Bp[tid]=BpGlobal[i];
+*/
+
+    __syncthreads();
+
+#else
+
     if(tid==0){
       for (int n = (nnz/gridDim.x)*blockIdx.x; n < (nnz/gridDim.x)*(blockIdx.x+1); n++){
         Bp[Aj[n]-blockIdx.x*blockDim.x]++;
       }
     }
+
+#endif
+
+
 
 #ifdef DEBUG_cudaGlobalswapCSC_CSR
     if(i==iprint) printf("start cudaDeviceswapCSC_CSR1ThreadBlock2\n");
@@ -290,7 +333,7 @@ void cudaDeviceswapCSC_CSR(int n_row, int n_col, int* Ap, int* Aj, double* Ax, i
     if(tid==0){
       int cumsum=Ap[blockDim.x*blockIdx.x];
       for(int n = 0; n < blockDim.x; n++){
-        //printf("%d ", Bp[n]);//el compilador me optimiza esto o algo y me trolea cuando printea da diferente wtf xd
+        //printf("%d ", Bp[n]); //Different value if accessing BpGlobal with same threadidx and multiple cells
         int temp  = Bp[n];
         //printf("%d ", temp);
         Bp[n] = cumsum;
@@ -516,7 +559,7 @@ void cudaDeviceswapCSC_CSR1ThreadBlock(int n_row, int n_col, int* Ap, int* Aj, d
     if(tid==0){
       int cumsum=Ap[blockDim.x*blockIdx.x];
       for(int n = 0; n < blockDim.x; n++){
-        //printf("%d ", Bp[n]);//el compilador me optimiza esto o algo y me trolea cuando printea da diferente wtf xd
+        //printf("%d ", Bp[n]);
         int temp  = Bp[n];
         //printf("%d ", temp);
         Bp[n] = cumsum;

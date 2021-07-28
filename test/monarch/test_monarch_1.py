@@ -213,11 +213,11 @@ def all_timesteps():
   mpiProcessesList = [1]
   #mpiProcessesList = [40,1]
 
-  cells = [1000]
+  cells = [10]
   #cells = [1,10,100,1000]
   #cells = [1,10,100,1000,10000,100000]
 
-  timesteps = 1#720=12h
+  timesteps = 2#720=12h
   TIME_STEP = 2 #pending send TIME_STEP to mock_monarch
 
   #cases = ["CPU One-cell"]

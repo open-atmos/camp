@@ -69,6 +69,10 @@ module pmc_solver_stats
     real(kind=dp) :: timeLS = 0.0
     !> Time Linear Solver memcopys [s]
     real(kind=dp) :: timeBiconjGradMemcpy = 0.0
+    !> Counters array for profiling [iterations]
+    integer, allocatable :: counters(:)
+    !> Timers array for profiling [s]
+    real(kind=dp), allocatable :: times(:)
 
     !> Maximum loss of precision on last deriv call
     real(kind=dp) :: max_loss_precision
@@ -84,12 +88,27 @@ module pmc_solver_stats
     procedure :: print => do_print
     !> Assignment
     procedure :: assignValue
+
+    procedure :: allocate
+    procedure :: deallocate
+
     generic :: assignment(=) => assignValue
   end type solver_stats_t
 
 contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  subroutine allocate(this,ncounters)
+
+    !> A new set of model parameters
+    class(solver_stats_t), intent(inout) :: this
+    integer, intent(inout) :: ncounters
+
+    allocate(this%counters(ncounters))
+    allocate(this%times(ncounters))
+
+  end subroutine allocate
 
   !> Print the solver statistics
   subroutine do_print( this, file_unit )
@@ -158,6 +177,15 @@ contains
     this%max_loss_precision    = new_value
 
   end subroutine assignValue
+
+  subroutine deallocate(this)
+
+    class(solver_stats_t), intent(inout) :: this
+
+    deallocate(this%counters)
+    deallocate(this%times)
+
+  end subroutine deallocate
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 

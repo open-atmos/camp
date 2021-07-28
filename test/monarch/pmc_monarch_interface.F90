@@ -126,7 +126,7 @@ contains
   !! species in the tracer array.
   function constructor(camp_config_file, interface_config_file, &
                        starting_id, ending_id, n_cells, &
-          ADD_EMISIONS, mpi_comm) result (this)
+          ADD_EMISIONS, ncounters, mpi_comm) result (this)
 
     !> A new MONARCH interface
     type(monarch_interface_t), pointer :: this
@@ -143,6 +143,7 @@ contains
     !> Num cells to compute simulatenously
     integer, optional :: n_cells
     character(len=:), allocatable, optional :: ADD_EMISIONS
+    integer, optional :: ncounters
 
     type(camp_solver_data_t), pointer :: camp_solver_data
     character, allocatable :: buffer(:)
@@ -182,6 +183,13 @@ contains
       this%solve_multiple_cells = .true.
       this%n_cells=n_cells
     end if
+
+    !print*,"monarch_interface_t "
+
+    if(.not.present(ncounters)) then
+      ncounters = 0
+    end if
+
 
     this%interface_input_file=interface_config_file
     this%ADD_EMISIONS=ADD_EMISIONS
@@ -378,7 +386,8 @@ contains
 #endif
 
     ! Initialize the solver on all nodes
-    call this%camp_core%solver_initialize()
+
+    call this%camp_core%solver_initialize(ncounters)
 
     ! Create a state variable on each node
     this%camp_state => this%camp_core%new_state()

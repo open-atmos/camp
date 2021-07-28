@@ -96,7 +96,7 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
                  int n_aero_rep, int n_aero_rep_int_param,
                  int n_aero_rep_float_param, int n_aero_rep_env_param,
                  int n_sub_model, int n_sub_model_int_param,
-                 int n_sub_model_float_param, int n_sub_model_env_param) {
+                 int n_sub_model_float_param, int n_sub_model_env_param, int ncounters) {
   // Create the SolverData object
   SolverData *sd = (SolverData *)malloc(sizeof(SolverData));
   if (sd == NULL) {
@@ -402,7 +402,12 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
   sd->timeDerivCPU = 0.0;
   sd->timeJacCPU = 0.0;
   sd->timeLS = 0.0;
+
+  sd->ncounters = ncounters;
+
+
 #endif
+
 
   // todo optimize, use for only rank 0 or debug flag
   sd->spec_names = (char **)malloc(sizeof(char *) * n_state_var);
@@ -435,6 +440,19 @@ void solver_set_spec_name(void *solver_data, char *spec_name,
     // printf("%d ccc", size_spec_name);
   }
 #endif
+}
+
+void init_solver_stats_file(void *solver_data, const char *path){
+
+  SolverData *sd = (SolverData *)solver_data;
+
+#ifdef PMC_DEBUG_GPU
+
+  //fopen(file_solver_stats);
+  //read solver stats file first line to get names and set n
+
+#endif
+
 }
 
 /** \brief Solver initialization
@@ -1040,7 +1058,9 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
                            double *timeCVode, double *timeCVodeTotal,
                            int *counterBCG, int *counterLS, double *timeLS,
                            double* timeBiconjGradMemcpy,
-                           double *max_loss_precision) {
+                           double *max_loss_precision
+        , int *counters, double *times
+                           ) {
 #ifdef PMC_USE_SUNDIALS
   SolverData *sd = (SolverData *)solver_data;
   long int nst, nfe, nsetups, nje, nfeLS, nni, ncfn, netf, nge;
@@ -1105,9 +1125,13 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
   *counterLS = 0;
   *timeLS = 0.0;
   *timeBiconjGradMemcpy=0.0;
+  for(int i=0; i<sd->ncounters; i++){
+    times[i]=0;
+    counters[i]=0.0;
+  }
+
 
 #ifdef PMC_DEBUG_GPU
-  //todo export struct pointer with all data to reduce code
   *timeCVode = sd->timeCVode;
   *timeCVodeTotal = sd->timeCVodeTotal;
   //sd->timeCVode = 0.0;
@@ -1130,6 +1154,27 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
     *timeLS=bicg->timeBiConjGrad/1000;
     *timeBiconjGradMemcpy=bicg->timeBiConjGradMemcpy/1000;
     //printf("timeLS %-le",*timeLS);
+
+    if(sd->ncounters>0){
+      //counters(1)=bicg->;
+      //counters(2)=bicg->;
+      counters[0]=bicg->counterBiConjGradInternal;
+      counters[1]=bicg->counterBiConjGrad;
+
+      times[0]=bicg->timeBiConjGrad/1000;
+      times[1]=bicg->timeBiConjGradMemcpy/1000;
+      times[2]=sd->timeCVode;
+      times[3]=bicg->dtPreBCG;
+      times[4]=bicg->dtPostBCG;
+
+      //for(int i=0;i<sd->ncounters;i++)
+      //  printf("times[i] [%d]=%lf\n",i,times[i]);
+    }
+    else{
+      printf("WARNING: In function solver_get_statistics trying to assign times "
+             "and counters profilign variables with ncounters < 1");
+    }
+
 #endif
   }
 
@@ -2630,6 +2675,24 @@ void solver_reset_timers(void *solver_data) {
 }
 #endif
 
+void export_solver_stats(void *solver_data
+        //,char *path
+        ) {
+  //SolverData *sd = (SolverData *)solver_data;
+  //ModelData *md = &(sd->model_data);
+  //int n_cells = sd->model_data.n_cells;
+
+#ifdef PMC_DEBUG_GPU
+
+  //printf("export_solver_stats n_cells %d\n",n_cells);
+  printf("export_solver_stats\n");
+
+
+#endif
+
+}
+
+
 //Old routine
 void export_camp_input(void *solver_data, double *init_state, char *in_path) {
   SolverData *sd = (SolverData *)solver_data;
@@ -2710,6 +2773,21 @@ void export_camp_input(void *solver_data, double *init_state, char *in_path) {
 
   // optional: add extra info on a separate txt (counterfail, rank, test...)
 }
+
+
+
+void free_solver_stats(void *solver_data){
+  SolverData *sd = (SolverData *)solver_data;
+
+#ifdef PMC_DEBUG_GPU
+
+//fclose(sd->file_solver_stats);
+
+#endif
+
+}
+
+
 
 /** \brief Print solver statistics
  *

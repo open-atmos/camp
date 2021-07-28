@@ -73,6 +73,7 @@ program mock_monarch
   integer, parameter :: STATSOUT_FILE_UNIT = 13
   integer, parameter :: STATSIN_FILE_UNIT = 14
   integer, parameter :: RESULTS_ALL_CELLS_FILE_UNIT = 15
+  integer, parameter :: STATSOUT_FILE_UNIT2 = 16
 
   integer(kind=i_kind), parameter :: NUM_CAMP_SPEC = 79
   integer(kind=i_kind), parameter :: NUM_EBI_SPEC = 72
@@ -163,7 +164,8 @@ program mock_monarch
   !> PartMC-camp <-> MONARCH interface configuration file
   character(len=:), allocatable :: interface_input_file
   !> Results file prefix
-  character(len=:), allocatable :: output_file_prefix, output_file_title, str_to_int_aux
+  character(len=:), allocatable :: output_file_prefix, output_file_title, str_to_int_aux,&
+          path_solver_stats
   !> CAMP-chem input file file
   type(string_t), allocatable :: name_gas_species_to_print(:), name_aerosol_species_to_print(:)
   integer(kind=i_kind), allocatable :: id_gas_species_to_print(:), id_aerosol_species_to_print(:)
@@ -182,9 +184,13 @@ program mock_monarch
   type(solver_stats_t), target :: solver_stats
   integer :: counterBCG_prev = 0
   integer :: counterLS_prev = 0
+
   real(kind=dp) :: timeLS_prev = 0.0
   real(kind=dp) :: timeCvode_prev = 0.0
   real(kind=dp) :: timeBiconjGradMemcpy_prev = 0.0
+  integer, allocatable :: counters(:)
+  real(kind=dp), allocatable :: times(:)
+  integer :: ncounters != 0 != 2
   integer :: export_results_all_cells
 
   ! initialize mpi (to take the place of a similar MONARCH call)
@@ -276,6 +282,29 @@ program mock_monarch
     DIFF_CELLS = "OFF"
     print*, "WARNING: not DIFF_CELLS parameter received, value set to ",DIFF_CELLS
   end if
+
+
+  !TODO DELETE AFTER EXPORT FROM C
+  call get_command_argument(9, arg, status=status_code)
+  if(status_code.eq.0) then
+    str_to_int_aux = trim(arg)
+    read(str_to_int_aux, *) ncounters
+  else
+    ncounters = 7
+    !print*, "WARNING: not ncounters parameter received, value set to ",ncounters
+  end if
+
+
+  allocate(counters(ncounters))
+  allocate(times(ncounters))
+  counters(:)=0
+  times(:)=0.0
+  !allocate(solver_stats%counters(ncounters))
+  !allocate(solver_stats%times(counters))
+
+  call solver_stats%allocate(ncounters)
+  print*," ncounters",ncounters
+
 
   if(interface_input_file.eq."interface_monarch_cb05.json") then
     TIME_STEP=3. !Monarch case
@@ -406,12 +435,15 @@ program mock_monarch
   end if
 
   call model_initialize(output_file_prefix)
+  path_solver_stats = output_file_prefix//"_solver_stats.csv"
 
-  !call pmc_mpi_barrier(MPI_COMM_WORLD)
-  !print*,"MPI RANK",pmc_mpi_rank()
 
   pmc_interface => monarch_interface_t(camp_input_file, interface_input_file, &
-          START_CAMP_ID, END_CAMP_ID, n_cells, ADD_EMISIONS)!, n_cells
+          START_CAMP_ID, END_CAMP_ID, n_cells, ADD_EMISIONS, ncounters)!, n_cells
+
+  call pmc_mpi_barrier(MPI_COMM_WORLD)
+  print*,"monarch_interface_t end MPI RANK",pmc_mpi_rank()
+
 
   if(export_results_all_cells.eq.1) then
     call init_file_results_all_cells(pmc_interface, output_file_prefix)
@@ -507,7 +539,8 @@ program mock_monarch
     curr_time = curr_time + TIME_STEP
 
 #ifdef PMC_DEBUG_GPU
-    call export_solver_stats(curr_time,pmc_interface,solver_stats)
+    call export_solver_stats_old(curr_time,pmc_interface,solver_stats,ncounters)
+    call pmc_interface%camp_core%export_solver_statsf(path_solver_stats)
 #endif
 
     if(export_results_all_cells.eq.1) then
@@ -616,13 +649,20 @@ program mock_monarch
                   plot_start_time, curr_time)
                           end if
 
-                          close(RESULTS_FILE_UNIT)
-                                  close(RESULTS_FILE_UNIT_TABLE)
-                                  close(RESULTS_FILE_UNIT_PY)
-                                  close(STATSOUT_FILE_UNIT)
-                                  close(RESULTS_ALL_CELLS_FILE_UNIT)
+  close(RESULTS_FILE_UNIT)
+  close(RESULTS_FILE_UNIT_TABLE)
+  close(RESULTS_FILE_UNIT_PY)
+  close(STATSOUT_FILE_UNIT)
+  close(RESULTS_ALL_CELLS_FILE_UNIT)
+  close(STATSOUT_FILE_UNIT2)
 
   ! Deallocation
+  deallocate(counters)
+  deallocate(times)
+  !deallocate(solver_stats%counters)
+  !deallocate(solver_stats%times)
+  call solver_stats%deallocate()
+  !if (associated(solver_stats)) deallocate(solver_stats)
   deallocate(camp_input_file)
   deallocate(interface_input_file)
   deallocate(output_file_prefix)
@@ -667,6 +707,8 @@ contains
     open(RESULTS_FILE_UNIT_PY, file=file_name, status="replace", action="write")
     file_name = file_prefix//"_solver_stats.csv"
     open(STATSOUT_FILE_UNIT, file=file_name, status="replace", action="write")
+    file_name = file_prefix//"_solver_stats2.csv"
+    open(STATSOUT_FILE_UNIT2, file=file_name, status="replace", action="write")
 
     n_cells_print=(I_E - I_W+1)*(I_N - I_S+1)*NUM_VERT_CELLS
 
@@ -711,6 +753,8 @@ contains
 
     write(STATSOUT_FILE_UNIT, "(A)", advance="no") aux_str_stats
     write(STATSOUT_FILE_UNIT, '(a)') ''
+
+    write(STATSOUT_FILE_UNIT2, "(A)", advance="no") aux_str_stats
 
     species_conc(:,:,:,:) = 0.0
     height=1. !(m)
@@ -1955,18 +1999,23 @@ contains
 
   end subroutine
 
-  subroutine export_solver_stats(curr_time, pmc_interface, solver_stats)
+  subroutine export_solver_stats_old(curr_time, pmc_interface, solver_stats, ncounters)
 
     real, intent(in) :: curr_time
     type(monarch_interface_t), intent(in) :: pmc_interface
     type(solver_stats_t), intent(inout) :: solver_stats
+    integer, intent(inout) :: ncounters
 
     character(len=128) :: i_cell_str, time_str
-
     integer :: counterLS_max, counterLS, counterBCG, counterBCG_max
     real(kind=dp) :: timeLS_max, timeCvode_max, timeLS, timeBiconjGradMemcpy, &
             timeBiconjGradMemcpy_max ,timeCvode
-    integer :: l_comm, ierr
+    integer :: l_comm, ierr, i
+    integer, allocatable :: counters_max(:)
+    real(kind=dp), allocatable :: times_max(:)
+
+    allocate(counters_max(ncounters))
+    allocate(times_max(ncounters))
 
 #ifdef PMC_USE_MPI
 
@@ -1988,6 +2037,13 @@ contains
     call pmc_mpi_check_ierr(ierr)
 
 
+    call mpi_reduce(solver_stats%counters, counters_max, ncounters, MPI_INTEGER, MPI_MAX, 0, &
+            l_comm, ierr)
+    call pmc_mpi_check_ierr(ierr)
+    call mpi_reduce(solver_stats%times, times_max, ncounters, MPI_DOUBLE, MPI_MAX, 0, &
+            l_comm, ierr)
+    call pmc_mpi_check_ierr(ierr)
+
     counterBCG=counterBCG_max
     counterLS=counterLS_max
     timeLS=timeLS_max
@@ -2001,6 +2057,9 @@ contains
     timeLS=solver_stats%timeLS
     timeBiconjGradMemcpy=solver_stats%timeBiconjGradMemcpy
     timeCvode=solver_stats%timeCvode
+
+    counters_max(:)=solver_stats%counters(:)
+    times_max(:)=solver_stats%times(:)
 
 #endif
 
@@ -2025,7 +2084,6 @@ contains
       write(STATSOUT_FILE_UNIT, "(A)", advance="no") ","
       write(STATSOUT_FILE_UNIT, "(ES13.6)", advance="no") &
               timeCvode-timeCvode_prev
-
       write(STATSOUT_FILE_UNIT, '(a)') ''
 
       counterBCG_prev = counterBCG
@@ -2034,13 +2092,37 @@ contains
       timeBiconjGradMemcpy_prev=timeBiconjGradMemcpy
       timeCvode_prev=timeCvode
 
+
+      write(STATSOUT_FILE_UNIT2, "(A)", advance="no") trim(time_str)
+      write(STATSOUT_FILE_UNIT2, "(A)", advance="no") ","
+
+      do i=1, ncounters
+        write(STATSOUT_FILE_UNIT2, '(a)') ''
+        write(STATSOUT_FILE_UNIT2, "(I6)", advance="no") &
+                counters_max(i)-counters(i)
+        write(STATSOUT_FILE_UNIT2, "(A)", advance="no") ","
+        write(STATSOUT_FILE_UNIT2, "(ES13.6)", advance="no") &
+                times_max(i)-times(i)
+        !print*,"counters_max(i),counters(i) solver_stats%counters",&
+        !        counters_max(i),counters(i),solver_stats%counters(i)
+        !print*,"times_max(i),times(i) solver_stats%times",&
+        !        times_max(i),times(i),solver_stats%times(i)
+        counters_max(i)=counters(i)
+        times(i)=times_max(i)
+      end do
+
+      !print*,",counters_max(i)-counters(i)",counters_max(i)-counters(i)
+
       !print*, "counterBCG fortran", counterBCG
       !print*, "timeLS fortran", timeLS
       !print*, "counterLS fortran", solver_stats%counterLS
-      !print*, "timeBiconjGradMemcpy fortran", solver_stats%timeBiconjGradMemcpy
       !print*, "timeCvode fortran", solver_stats%timeCvode
 
     end if
+
+
+    deallocate(counters_max)
+    deallocate(times_max)
 
   end subroutine
 
