@@ -242,7 +242,6 @@ module pmc_camp_core
                sub_model_update_data
     !> Run the chemical mechanisms
     procedure :: solve
-    procedure :: export_solver_statsf
     !> Determine the number of bytes required to pack the variable
     procedure :: pack_size
     !> Pack the given variable into a buffer, advancing position
@@ -1631,22 +1630,6 @@ contains
     end if
 
   end subroutine solve
-
-  subroutine export_solver_statsf(this,path)
-
-    !> Solver data
-    class(camp_core_t), intent(inout) :: this
-    character(len=:), allocatable, intent(in) :: path
-    type(camp_solver_data_t), pointer :: solver
-
-    print*,"export_solver_statsf"
-
-    solver => this%solver_data_gas
-
-    call solver%export_solver_statsf( &
-            path)
-
-  end subroutine export_solver_statsf
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 

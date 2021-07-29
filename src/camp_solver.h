@@ -44,11 +44,6 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
                            int *counterBCG, int *counterLS, double *timeLS,
                            double *timeBiconjGradMemcpy,double *max_loss_precision,
                            int *counters, double *times);
-void init_solver_stats_file(void *solver_data, const char *path);
-void export_solver_stats(void *solver_data
-        //,char *path
-);
-void free_solver_stats(void *solver_data);
 void export_camp_input(void *solver_data, double *init_state, char *path);
 void solver_free(void *solver_data);
 void model_free(ModelData model_data);

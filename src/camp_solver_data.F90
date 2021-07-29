@@ -164,18 +164,6 @@ module pmc_camp_solver_data
       integer, value :: n_cells
     end function solver_run
 
-    !> Set specie name
-    subroutine export_solver_stats(solver_data&
-            !,path
-    ) bind (c)
-      use iso_c_binding
-      !> Pointer to a SolverData object
-      type(c_ptr), value :: solver_data
-      !character(1) :: path
-      !type(c_ptr), value :: path
-
-    end subroutine export_solver_stats
-
     subroutine rxn_get_base_rate(solver_data, rate_constants) bind (c)
       use iso_c_binding
       !> Pointer to the initialized solver data
@@ -442,7 +430,6 @@ module pmc_camp_solver_data
     procedure :: update_aero_rep_data
     !> Integrate over a given time step
     procedure :: solve
-    procedure :: export_solver_statsf
     procedure :: get_base_rate
     !> Reset the solver function timers
     procedure, private :: reset_timers
@@ -1023,31 +1010,6 @@ contains
   end function solve
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-  subroutine export_solver_statsf(this,path)
-
-
-  !> Solver data
-  class(camp_solver_data_t), intent(inout) :: this
-  character(len=:), allocatable, intent(in) :: path
-  !type(string_t), intent(in) :: spec_names
-  !character(len=:), allocatable :: spec_name
-
-    print*,"export_solver_statsf"
-
-  !do i=1,size(path)
-
-#ifdef COMMENTING
-   call export_solver_stats( &
-            this%solver_c_ptr              & ! Pointer to intialized solver
-            !c_loc(path[1])&
-    !,path(i)&
-            )
-  !end do
-#endif
-
-  end subroutine export_solver_statsf
-
 
   subroutine get_base_rate(this, rate_constants)
 

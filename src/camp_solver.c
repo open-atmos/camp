@@ -442,19 +442,6 @@ void solver_set_spec_name(void *solver_data, char *spec_name,
 #endif
 }
 
-void init_solver_stats_file(void *solver_data, const char *path){
-
-  SolverData *sd = (SolverData *)solver_data;
-
-#ifdef PMC_DEBUG_GPU
-
-  //fopen(file_solver_stats);
-  //read solver stats file first line to get names and set n
-
-#endif
-
-}
-
 /** \brief Solver initialization
  *
  * Allocate and initialize solver objects
@@ -2675,24 +2662,6 @@ void solver_reset_timers(void *solver_data) {
 }
 #endif
 
-void export_solver_stats(void *solver_data
-        //,char *path
-        ) {
-  //SolverData *sd = (SolverData *)solver_data;
-  //ModelData *md = &(sd->model_data);
-  //int n_cells = sd->model_data.n_cells;
-
-#ifdef PMC_DEBUG_GPU
-
-  //printf("export_solver_stats n_cells %d\n",n_cells);
-  printf("export_solver_stats\n");
-
-
-#endif
-
-}
-
-
 //Old routine
 void export_camp_input(void *solver_data, double *init_state, char *in_path) {
   SolverData *sd = (SolverData *)solver_data;
@@ -2773,20 +2742,6 @@ void export_camp_input(void *solver_data, double *init_state, char *in_path) {
 
   // optional: add extra info on a separate txt (counterfail, rank, test...)
 }
-
-
-
-void free_solver_stats(void *solver_data){
-  SolverData *sd = (SolverData *)solver_data;
-
-#ifdef PMC_DEBUG_GPU
-
-//fclose(sd->file_solver_stats);
-
-#endif
-
-}
-
 
 
 /** \brief Print solver statistics

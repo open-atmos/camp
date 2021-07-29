@@ -539,8 +539,7 @@ program mock_monarch
     curr_time = curr_time + TIME_STEP
 
 #ifdef PMC_DEBUG_GPU
-    call export_solver_stats_old(curr_time,pmc_interface,solver_stats,ncounters)
-    call pmc_interface%camp_core%export_solver_statsf(path_solver_stats)
+    call export_solver_stats(curr_time,pmc_interface,solver_stats,ncounters)
 #endif
 
     if(export_results_all_cells.eq.1) then
@@ -687,12 +686,39 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
+  subroutine get_str_stats_names(file_name,str_stats_names)
+
+    character(len=:), allocatable, intent(in) :: file_name
+    character(len=:), allocatable, intent(inout) :: str_stats_names
+    integer :: nelements, io
+
+
+    open(STATSOUT_FILE_UNIT, file=file_name, status="old", action="read",IOSTAT=io)
+    if(io > 0) then
+      str_stats_names = "timestep,counterBCG,counterLS,timeLS,timeBiconjGradMemcpy,timeCVode,A"
+    else if (io < 0) then
+      read(STATSOUT_FILE_UNIT,*) str_stats_names
+    end if
+
+
+    nelements=0
+    nelements=nelements+1
+
+    !ncounters=nelements
+    !print*,ncounters
+
+    print*,str_stats_names
+
+    close(STATSOUT_FILE_UNIT)
+
+  end subroutine
+
   subroutine model_initialize(file_prefix)
 
     character(len=:), allocatable, intent(in) :: file_prefix
 
     character(len=:), allocatable :: file_name
-    character(len=:), allocatable :: aux_str, aux_str_py, aux_str_stats
+    character(len=:), allocatable :: aux_str, aux_str_py, str_stats_names
     character(len=128) :: i_str !if len !=128 crashes (e.g len=100)
     integer :: z,o,i,j,k,r,i_cell,i_spec
     integer :: n_cells_print
@@ -705,10 +731,6 @@ contains
     open(RESULTS_FILE_UNIT_TABLE, file=file_name, status="replace", action="write")
     file_name = file_prefix//"_urban_plume_0001.txt"
     open(RESULTS_FILE_UNIT_PY, file=file_name, status="replace", action="write")
-    file_name = file_prefix//"_solver_stats.csv"
-    open(STATSOUT_FILE_UNIT, file=file_name, status="replace", action="write")
-    file_name = file_prefix//"_solver_stats2.csv"
-    open(STATSOUT_FILE_UNIT2, file=file_name, status="replace", action="write")
 
     n_cells_print=(I_E - I_W+1)*(I_N - I_S+1)*NUM_VERT_CELLS
 
@@ -749,12 +771,21 @@ contains
     write(RESULTS_FILE_UNIT_PY, "(A)", advance="no") aux_str_py
     write(RESULTS_FILE_UNIT_PY, '(a)') ''
 
-    aux_str_stats = "timestep,counterBCG,counterLS,timeLS,timeBiconjGradMemcpy,timeCVode"
 
-    write(STATSOUT_FILE_UNIT, "(A)", advance="no") aux_str_stats
+    file_name = file_prefix//"_solver_stats.csv"
+
+    !str_stats_names = "timestep,counterBCG,counterLS,timeLS,timeBiconjGradMemcpy,timeCVode"
+    call get_str_stats_names(file_name, str_stats_names)
+
+    open(STATSOUT_FILE_UNIT, file=file_name, status="replace", action="write")
+    file_name = file_prefix//"_solver_stats2.csv"
+    open(STATSOUT_FILE_UNIT2, file=file_name, status="replace", action="write")
+
+    write(STATSOUT_FILE_UNIT, "(A)", advance="no") str_stats_names
     write(STATSOUT_FILE_UNIT, '(a)') ''
 
-    write(STATSOUT_FILE_UNIT2, "(A)", advance="no") aux_str_stats
+    write(STATSOUT_FILE_UNIT2, "(A)", advance="no") str_stats_names
+    write(STATSOUT_FILE_UNIT2, '(a)') ''
 
     species_conc(:,:,:,:) = 0.0
     height=1. !(m)
@@ -1999,7 +2030,7 @@ contains
 
   end subroutine
 
-  subroutine export_solver_stats_old(curr_time, pmc_interface, solver_stats, ncounters)
+  subroutine export_solver_stats(curr_time, pmc_interface, solver_stats, ncounters)
 
     real, intent(in) :: curr_time
     type(monarch_interface_t), intent(in) :: pmc_interface
@@ -2097,7 +2128,6 @@ contains
       write(STATSOUT_FILE_UNIT2, "(A)", advance="no") ","
 
       do i=1, ncounters
-        write(STATSOUT_FILE_UNIT2, '(a)') ''
         write(STATSOUT_FILE_UNIT2, "(I6)", advance="no") &
                 counters_max(i)-counters(i)
         write(STATSOUT_FILE_UNIT2, "(A)", advance="no") ","
@@ -2110,6 +2140,8 @@ contains
         counters_max(i)=counters(i)
         times(i)=times_max(i)
       end do
+
+      write(STATSOUT_FILE_UNIT2, '(a)') ''
 
       !print*,",counters_max(i)-counters(i)",counters_max(i)-counters(i)
 
