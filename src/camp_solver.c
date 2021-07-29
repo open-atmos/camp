@@ -96,7 +96,8 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
                  int n_aero_rep, int n_aero_rep_int_param,
                  int n_aero_rep_float_param, int n_aero_rep_env_param,
                  int n_sub_model, int n_sub_model_int_param,
-                 int n_sub_model_float_param, int n_sub_model_env_param, int ncounters) {
+                 int n_sub_model_float_param, int n_sub_model_env_param,
+                 int ncounters, int ntimers) {
   // Create the SolverData object
   SolverData *sd = (SolverData *)malloc(sizeof(SolverData));
   if (sd == NULL) {
@@ -404,6 +405,7 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
   sd->timeLS = 0.0;
 
   sd->ncounters = ncounters;
+  sd->ntimers = ntimers;
 
 
 #endif
@@ -1113,10 +1115,12 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
   *timeLS = 0.0;
   *timeBiconjGradMemcpy=0.0;
   for(int i=0; i<sd->ncounters; i++){
-    times[i]=0;
-    counters[i]=0.0;
+    counters[i]=0;
   }
-
+  for(int i=0; i<sd->ntimers; i++){
+    times[i]=0.0;
+  }
+  //printf("sd->ntimers ncounters %d %d\n",sd->ntimers,sd->ncounters);
 
 #ifdef PMC_DEBUG_GPU
   *timeCVode = sd->timeCVode;
@@ -1128,7 +1132,21 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
     CVodeGetcounterLS(sd->cvode_mem, counterLS);
     CVodeGettimeLS(sd->cvode_mem, timeLS);
     //printf("CVodeGettimeLS %-le",*timeLS);
-    *timeBiconjGradMemcpy=0.0;
+
+    if(sd->ncounters>0){
+      CVodeGetcounterLS(sd->cvode_mem, &counters[1]);
+    }
+    if(sd->ntimers>0){
+      CVodeGettimeLS(sd->cvode_mem, &times[0]);
+      times[2]=sd->timeCVode;
+      //for(int i=0;i<sd->ntimers;i++)
+      //  printf("times[i] [%d]=%le\n",i,times[i]);
+    }
+    else{
+      printf("WARNING: In function solver_get_statistics trying to assign times "
+             "and counters profilign variables with ncounters || ntimers < 1");
+    }
+
   }
   else{
 
@@ -1143,23 +1161,22 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
     //printf("timeLS %-le",*timeLS);
 
     if(sd->ncounters>0){
-      //counters(1)=bicg->;
-      //counters(2)=bicg->;
       counters[0]=bicg->counterBiConjGradInternal;
       counters[1]=bicg->counterBiConjGrad;
-
+    }
+    if(sd->ntimers>0){
       times[0]=bicg->timeBiConjGrad/1000;
       times[1]=bicg->timeBiConjGradMemcpy/1000;
       times[2]=sd->timeCVode;
       times[3]=bicg->dtPreBCG;
       times[4]=bicg->dtPostBCG;
 
-      //for(int i=0;i<sd->ncounters;i++)
-      //  printf("times[i] [%d]=%lf\n",i,times[i]);
+      //for(int i=0;i<sd->ntimers;i++)
+      //  printf("times[i] [%d]=%le\n",i,times[i]);
     }
     else{
       printf("WARNING: In function solver_get_statistics trying to assign times "
-             "and counters profilign variables with ncounters < 1");
+             "and counters profilign variables with ncounters || ntimers < 1");
     }
 
 #endif

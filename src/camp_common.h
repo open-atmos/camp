@@ -317,6 +317,7 @@ typedef struct {
   double timeDerivCPU;
   double timeJacCPU;
   int ncounters;
+  int ntimers;
   FILE *file; //todo clean file
 #endif
 

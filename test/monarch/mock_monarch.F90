@@ -190,7 +190,7 @@ program mock_monarch
   real(kind=dp) :: timeBiconjGradMemcpy_prev = 0.0
   integer, allocatable :: counters(:)
   real(kind=dp), allocatable :: times(:)
-  integer :: ncounters != 0 != 2
+  integer :: ncounters, ntimers != 0 != 2
   integer :: export_results_all_cells
 
   ! initialize mpi (to take the place of a similar MONARCH call)
@@ -283,27 +283,31 @@ program mock_monarch
     print*, "WARNING: not DIFF_CELLS parameter received, value set to ",DIFF_CELLS
   end if
 
-
-  !TODO DELETE AFTER EXPORT FROM C
   call get_command_argument(9, arg, status=status_code)
   if(status_code.eq.0) then
     str_to_int_aux = trim(arg)
     read(str_to_int_aux, *) ncounters
   else
-    ncounters = 7
+    ncounters = 2
     !print*, "WARNING: not ncounters parameter received, value set to ",ncounters
   end if
 
+  call get_command_argument(10, arg, status=status_code)
+  if(status_code.eq.0) then
+    str_to_int_aux = trim(arg)
+    read(str_to_int_aux, *) ntimers
+  else
+    ntimers = 5
+    !print*, "WARNING: not ntimers parameter received, value set to ",ntimers
+  end if
 
   allocate(counters(ncounters))
-  allocate(times(ncounters))
+  allocate(times(ntimers))
   counters(:)=0
   times(:)=0.0
-  !allocate(solver_stats%counters(ncounters))
-  !allocate(solver_stats%times(counters))
 
-  call solver_stats%allocate(ncounters)
-  print*," ncounters",ncounters
+  call solver_stats%allocate(ncounters,ntimers)
+  print*," ncounters ntimers",ncounters,ntimers
 
 
   if(interface_input_file.eq."interface_monarch_cb05.json") then
@@ -439,7 +443,7 @@ program mock_monarch
 
 
   pmc_interface => monarch_interface_t(camp_input_file, interface_input_file, &
-          START_CAMP_ID, END_CAMP_ID, n_cells, ADD_EMISIONS, ncounters)!, n_cells
+          START_CAMP_ID, END_CAMP_ID, n_cells, ADD_EMISIONS, ncounters, ntimers)!, n_cells
 
   call pmc_mpi_barrier(MPI_COMM_WORLD)
   print*,"monarch_interface_t end MPI RANK",pmc_mpi_rank()
@@ -539,7 +543,7 @@ program mock_monarch
     curr_time = curr_time + TIME_STEP
 
 #ifdef PMC_DEBUG_GPU
-    call export_solver_stats(curr_time,pmc_interface,solver_stats,ncounters)
+    call export_solver_stats(curr_time,pmc_interface,solver_stats,ncounters,ntimers)
 #endif
 
     if(export_results_all_cells.eq.1) then
@@ -658,8 +662,6 @@ program mock_monarch
   ! Deallocation
   deallocate(counters)
   deallocate(times)
-  !deallocate(solver_stats%counters)
-  !deallocate(solver_stats%times)
   call solver_stats%deallocate()
   !if (associated(solver_stats)) deallocate(solver_stats)
   deallocate(camp_input_file)
@@ -685,33 +687,6 @@ program mock_monarch
 contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-  subroutine get_str_stats_names(file_name,str_stats_names)
-
-    character(len=:), allocatable, intent(in) :: file_name
-    character(len=:), allocatable, intent(inout) :: str_stats_names
-    integer :: nelements, io
-
-
-    open(STATSOUT_FILE_UNIT, file=file_name, status="old", action="read",IOSTAT=io)
-    if(io > 0) then
-      str_stats_names = "timestep,counterBCG,counterLS,timeLS,timeBiconjGradMemcpy,timeCVode,A"
-    else if (io < 0) then
-      read(STATSOUT_FILE_UNIT,*) str_stats_names
-    end if
-
-
-    nelements=0
-    nelements=nelements+1
-
-    !ncounters=nelements
-    !print*,ncounters
-
-    print*,str_stats_names
-
-    close(STATSOUT_FILE_UNIT)
-
-  end subroutine
 
   subroutine model_initialize(file_prefix)
 
@@ -773,19 +748,18 @@ contains
 
 
     file_name = file_prefix//"_solver_stats.csv"
-
-    !str_stats_names = "timestep,counterBCG,counterLS,timeLS,timeBiconjGradMemcpy,timeCVode"
-    call get_str_stats_names(file_name, str_stats_names)
-
     open(STATSOUT_FILE_UNIT, file=file_name, status="replace", action="write")
     file_name = file_prefix//"_solver_stats2.csv"
     open(STATSOUT_FILE_UNIT2, file=file_name, status="replace", action="write")
 
+    str_stats_names = "timestep,counterBCG,counterLS,timeLS,timeBiconjGradMemcpy,timeCVode,&
+            dtPreBCG,dtPostBCG"
     write(STATSOUT_FILE_UNIT, "(A)", advance="no") str_stats_names
     write(STATSOUT_FILE_UNIT, '(a)') ''
 
     write(STATSOUT_FILE_UNIT2, "(A)", advance="no") str_stats_names
     write(STATSOUT_FILE_UNIT2, '(a)') ''
+
 
     species_conc(:,:,:,:) = 0.0
     height=1. !(m)
@@ -2030,15 +2004,16 @@ contains
 
   end subroutine
 
-  subroutine export_solver_stats(curr_time, pmc_interface, solver_stats, ncounters)
+  subroutine export_solver_stats(curr_time, pmc_interface, solver_stats, ncounters, ntimers)
 
     real, intent(in) :: curr_time
     type(monarch_interface_t), intent(in) :: pmc_interface
     type(solver_stats_t), intent(inout) :: solver_stats
     integer, intent(inout) :: ncounters
+    integer, intent(inout) :: ntimers
 
     character(len=128) :: i_cell_str, time_str
-    integer :: counterLS_max, counterLS, counterBCG, counterBCG_max
+    integer :: counterLS_max, counterLS, counterBCG, counterBCG_max, aux_int
     real(kind=dp) :: timeLS_max, timeCvode_max, timeLS, timeBiconjGradMemcpy, &
             timeBiconjGradMemcpy_max ,timeCvode
     integer :: l_comm, ierr, i
@@ -2046,7 +2021,7 @@ contains
     real(kind=dp), allocatable :: times_max(:)
 
     allocate(counters_max(ncounters))
-    allocate(times_max(ncounters))
+    allocate(times_max(ntimers))
 
 #ifdef PMC_USE_MPI
 
@@ -2071,7 +2046,7 @@ contains
     call mpi_reduce(solver_stats%counters, counters_max, ncounters, MPI_INTEGER, MPI_MAX, 0, &
             l_comm, ierr)
     call pmc_mpi_check_ierr(ierr)
-    call mpi_reduce(solver_stats%times, times_max, ncounters, MPI_DOUBLE, MPI_MAX, 0, &
+    call mpi_reduce(solver_stats%times, times_max, ntimers, MPI_DOUBLE, MPI_MAX, 0, &
             l_comm, ierr)
     call pmc_mpi_check_ierr(ierr)
 
@@ -2125,19 +2100,24 @@ contains
 
 
       write(STATSOUT_FILE_UNIT2, "(A)", advance="no") trim(time_str)
-      write(STATSOUT_FILE_UNIT2, "(A)", advance="no") ","
 
       do i=1, ncounters
+        write(STATSOUT_FILE_UNIT2, "(A)", advance="no") ","
         write(STATSOUT_FILE_UNIT2, "(I6)", advance="no") &
                 counters_max(i)-counters(i)
+        !print*,"counters_max(i),counters(i)",&
+        !        counters_max(i),counters(i), counters_max(i)-counters(i)
+        counters(i)=counters_max(i)
+      end do
+
+      do i=1, ntimers
         write(STATSOUT_FILE_UNIT2, "(A)", advance="no") ","
         write(STATSOUT_FILE_UNIT2, "(ES13.6)", advance="no") &
                 times_max(i)-times(i)
-        !print*,"counters_max(i),counters(i) solver_stats%counters",&
-        !        counters_max(i),counters(i),solver_stats%counters(i)
-        !print*,"times_max(i),times(i) solver_stats%times",&
-        !        times_max(i),times(i),solver_stats%times(i)
-        counters_max(i)=counters(i)
+
+        !print*,"times_max(i),times(i) ",&
+        !        times_max(i),times(i)!,solver_stats%times(i)
+
         times(i)=times_max(i)
       end do
 

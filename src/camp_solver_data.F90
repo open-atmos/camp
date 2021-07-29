@@ -51,7 +51,7 @@ module pmc_camp_solver_data
                     n_aero_phase_float_param, n_aero_rep, &
                     n_aero_rep_int_param, n_aero_rep_float_param, &
                     n_aero_rep_env_param, n_sub_model, n_sub_model_int_param,&
-                    n_sub_model_float_param, n_sub_model_env_param, ncounters) bind (c)
+                    n_sub_model_float_param, n_sub_model_env_param, ncounters, ntimers) bind (c)
       use iso_c_binding
       !> Number of variables on the state array per grid cell
       !! (including const, PSSA, etc.)
@@ -94,6 +94,7 @@ module pmc_camp_solver_data
       integer(kind=c_int), value :: n_sub_model_env_param
       !> Number of counter variables for profiling (Also equal to times variable)
       integer(kind=c_int), value :: ncounters
+      integer(kind=c_int), value :: ntimers
     end function solver_new
 
     !> Set specie name
@@ -467,7 +468,7 @@ contains
 
   !> Initialize the solver
   subroutine initialize(this, var_type, abs_tol, mechanisms, aero_phases, &
-                  aero_reps, sub_models, rxn_phase, n_cells, spec_names, ncounters)
+                  aero_reps, sub_models, rxn_phase, n_cells, spec_names, ncounters, ntimers)
 
     !> Solver data
     class(camp_solver_data_t), intent(inout) :: this
@@ -491,6 +492,7 @@ contains
     !! GAS_RXN, AERO_RXN, GAS_AERO_RXN
     integer(kind=i_kind), intent(in) :: rxn_phase
     integer(kind=i_kind), intent(in) :: ncounters
+    integer(kind=i_kind), intent(in) :: ntimers
 
     ! Variable types
     integer(kind=c_int), pointer :: var_type_c(:)
@@ -670,7 +672,8 @@ contains
             n_sub_model_int_param,             & ! # of sub model int params
             n_sub_model_float_param,           & ! # of sub model real params
             n_sub_model_env_param,              & ! # of sub model env params
-            ncounters              & ! # of profiling variables (Times and counters)
+            ncounters,              & ! # of profiling variables (Times and counters)
+            ntimers             & ! # of profiling variables (Times and counters)
             )
 
     ! Add all the condensed reaction data to the solver data block for

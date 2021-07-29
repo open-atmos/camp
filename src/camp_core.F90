@@ -1172,13 +1172,14 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Initialize the solver
-  subroutine solver_initialize(this, ncounters)
+  subroutine solver_initialize(this, ncounters, ntimers)
 
     !> Chemical model
     class(camp_core_t), intent(inout) :: this
     type(string_t), allocatable :: spec_names(:)
     integer :: i_spec, n_gas_spec
     integer, optional :: ncounters
+    integer, optional :: ntimers
 
     call assert_msg(662920365, .not.this%solver_is_initialized, &
             "Attempting to initialize the solver twice.")
@@ -1187,10 +1188,13 @@ contains
     spec_names = this%unique_names()
 #endif
 
-    !todo delete
     if(.not.present(ncounters)) then
       ncounters=0
     end if
+    if(.not.present(ntimers)) then
+      ntimers=0
+    end if
+
 
     !Get spec names
     !n_gas_spec = this%chem_spec_data%size(spec_phase=CHEM_SPEC_GAS_PHASE)
@@ -1228,8 +1232,9 @@ contains
                 GAS_RXN,         & ! Reaction phase
                 this%n_cells,    & ! # of cells computed simultaneosly
                 spec_names,       & ! Species names
-                ncounters & ! # of profiling variables (Times and counters)
-                )
+                ncounters, & ! # of profiling variables (Times and counters)
+                ntimers & ! # of profiling variables (Times and counters)
+      )
       call this%solver_data_aero%initialize( &
                 this%var_type,   & ! State array variable types
                 this%abs_tol,    & ! Absolute tolerances for each state var
@@ -1240,7 +1245,8 @@ contains
                 AERO_RXN,        & ! Reaction phase
                 this%n_cells,    & ! # of cells computed simultaneosly
                 spec_names,       & ! Species names
-                ncounters & ! # of profiling variables (Times and counters)
+                ncounters, & ! # of profiling variables (Times and counters)
+                ntimers & ! # of profiling variables (Times and counters)
       )
     else
 
@@ -1263,8 +1269,9 @@ contains
                 GAS_AERO_RXN,    & ! Reaction phase
                 this%n_cells,    & ! # of cells computed simultaneosly
                 spec_names,       & ! Species names
-                ncounters & ! # of profiling variables (Times and counters)
-                )
+                ncounters, & ! # of profiling variables (Times and counters)
+                ntimers & ! # of profiling variables (Times and counters)
+              )
 
     end if
 

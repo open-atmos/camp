@@ -99,14 +99,15 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  subroutine allocate(this,ncounters)
+  subroutine allocate(this,ncounters,ntimers)
 
     !> A new set of model parameters
     class(solver_stats_t), intent(inout) :: this
     integer, intent(inout) :: ncounters
+    integer, intent(inout) :: ntimers
 
     allocate(this%counters(ncounters))
-    allocate(this%times(ncounters))
+    allocate(this%times(ntimers))
 
   end subroutine allocate
 
