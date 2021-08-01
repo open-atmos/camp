@@ -4,7 +4,6 @@ RUN dnf -y update \
     && dnf -y install \
         gcc-gfortran \
         gcc-c++ \
-        netcdf-fortran-devel \
         gsl-devel \
         metis-devel \
         lapack-devel \
@@ -13,7 +12,8 @@ RUN dnf -y update \
     && dnf clean all
 
 # Build the SuiteSparse libraries for sparse matrix support
-RUN curl -LO http://faculty.cse.tamu.edu/davis/SuiteSparse/SuiteSparse-5.1.0.tar.gz \
+# (-k included because of problem with SuiteSparse security certificate - 1 Aug 2021)
+RUN curl -kLO http://faculty.cse.tamu.edu/davis/SuiteSparse/SuiteSparse-5.1.0.tar.gz \
     && tar -zxvf SuiteSparse-5.1.0.tar.gz \
     && export CXX=/usr/bin/cc \
     && cd SuiteSparse \
@@ -29,11 +29,11 @@ RUN curl -LO https://github.com/jacobwilliams/json-fortran/archive/6.1.0.tar.gz 
     && cmake -D SKIP_DOC_GEN:BOOL=TRUE .. \
     && make install
 
-# NOTE: Modify .dockerignore to whitelist files/directories to copy.
-COPY . /partmc/
+# copy CAMP source code and data
+COPY . /camp/
 
 # Install a modified version of CVODE
-RUN tar -zxvf /partmc/cvode-3.4-alpha.tar.gz \
+RUN tar -zxvf /camp/cvode-3.4-alpha.tar.gz \
     && cd cvode-3.4-alpha \
     && mkdir build \
     && cd build \
@@ -48,16 +48,15 @@ RUN tar -zxvf /partmc/cvode-3.4-alpha.tar.gz \
              .. \
     && make install
 
-# Build PartMC
+# Build CAMP
  RUN mkdir build \
     && cd build \
     && export JSON_FORTRAN_HOME="/usr/local/jsonfortran-gnu-6.1.0" \
     && cmake -D CMAKE_BUILD_TYPE=release \
              -D CMAKE_C_FLAGS_DEBUG="-g" \
              -D CMAKE_Fortran_FLAGS_DEBUG="-g" \
-             -D ENABLE_SUNDIALS:BOOL=TRUE \
              -D ENABLE_GSL:BOOL=TRUE \
              -D SUNDIALS_CVODE_LIB=/usr/local/lib/libsundials_cvode.so \
              -D SUNDIALS_INCLUDE_DIR=/usr/local/include \
-             /partmc \
+             /camp \
     && make
