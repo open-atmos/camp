@@ -1,6 +1,6 @@
-/* Copyright (C) 2018 Matthew Dawson
- * Licensed under the GNU General Public License version 1 or (at your
- * option) any later version. See the file COPYING for details.
+/* Copyright (C) 2021 Barcelona Supercomputing Center and University of
+ * Illinois at Urbana-Champaign
+ * SPDX-License-Identifier: MIT
  *
  * Header file for aero_rep_solver.c
  *

@@ -1,6 +1,6 @@
-/* Copyright (C) 2015-2018 Matthew Dawson
- * Licensed under the GNU General Public License version 2 or (at your
- * option) any later version. See the file COPYING for details.
+/* Copyright (C) 2021 Barcelona Supercomputing Center and University of
+ * Illinois at Urbana-Champaign
+ * SPDX-License-Identifier: MIT
  *
  * Condensed Phase Arrhenius reaction solver functions
  *
