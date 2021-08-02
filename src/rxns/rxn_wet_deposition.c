@@ -82,7 +82,7 @@ void rxn_wet_deposition_update_ids(ModelData *model_data, int *deriv_ids,
  *
  *  - \b int rxn_id (Id of one or more wet deposition reactions set by the
  *       host model using the
- *       \c pmc_rxn_wet_deposition::rxn_wet_deposition_t::set_rxn_id
+ *       \c camp_rxn_wet_deposition::rxn_wet_deposition_t::set_rxn_id
  *       function prior to initializing the solver.)
  *  - \b double rate_const (New pre-scaling rate constant.)
  *
@@ -145,7 +145,7 @@ void rxn_wet_deposition_update_env_state(ModelData *model_data,
  * \param rxn_env_data Pointer to the environment-dependent parameters
  * \param time_step Current time step being computed (s)
  */
-#ifdef PMC_USE_SUNDIALS
+#ifdef CAMP_USE_SUNDIALS
 void rxn_wet_deposition_calc_deriv_contrib(
     ModelData *model_data, TimeDerivative time_deriv, int *rxn_int_data,
     double *rxn_float_data, double *rxn_env_data, realtype time_step) {
@@ -175,7 +175,7 @@ void rxn_wet_deposition_calc_deriv_contrib(
  * \param rxn_env_data Pointer to the environment-dependent parameters
  * \param time_step Current time step being calculated (s)
  */
-#ifdef PMC_USE_SUNDIALS
+#ifdef CAMP_USE_SUNDIALS
 void rxn_wet_deposition_calc_jac_contrib(ModelData *model_data, Jacobian jac,
                                          int *rxn_int_data,
                                          double *rxn_float_data,

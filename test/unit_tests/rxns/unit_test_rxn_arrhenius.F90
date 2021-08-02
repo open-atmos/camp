@@ -3,14 +3,14 @@
 ! SPDX-License-Identifier: MIT
 
 !> \file
-!> The pmc_unit_test_rxn_arrhenius module
-module pmc_unit_test_rxn_arrhenius
+!> The camp_unit_test_rxn_arrhenius module
+module camp_unit_test_rxn_arrhenius
 
-  use pmc_camp_core
-  use pmc_camp_state
-  use pmc_mpi
-  use pmc_unit_test_data
-  use pmc_util
+  use camp_camp_core
+  use camp_camp_state
+  use camp_mpi
+  use camp_unit_test_data
+  use camp_util
 
   implicit none
   private
@@ -105,7 +105,7 @@ contains
   !> Initialize the object data
   subroutine initialize( this, camp_core )
 
-    use pmc_chem_spec_data
+    use camp_chem_spec_data
 
     !> Unit test data
     class(unit_test_rxn_arrhenius_t), intent(inout) :: this
@@ -305,7 +305,7 @@ contains
   function analyze_or_output(this, camp_core, camp_state, unique_state_id, &
       model_time_step, output_file_unit) result (passed)
 
-    use pmc_constants
+    use camp_constants
 
     !> Flag indicating whether the tests passed
     logical :: passed
@@ -409,7 +409,7 @@ contains
     !> MPI communicator
     integer, intent(in), optional :: comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: l_comm
 
     if (present(comm)) then
@@ -419,10 +419,10 @@ contains
     endif
 
     pack_size = &
-      pmc_mpi_pack_size_integer(this%idx_A, l_comm) + &
-      pmc_mpi_pack_size_integer(this%idx_B, l_comm) + &
-      pmc_mpi_pack_size_integer(this%idx_C, l_comm) + &
-      pmc_mpi_pack_size_integer(this%idx_D, l_comm)
+      camp_mpi_pack_size_integer(this%idx_A, l_comm) + &
+      camp_mpi_pack_size_integer(this%idx_B, l_comm) + &
+      camp_mpi_pack_size_integer(this%idx_C, l_comm) + &
+      camp_mpi_pack_size_integer(this%idx_D, l_comm)
 #else
     pack_size = 0
 #endif
@@ -443,7 +443,7 @@ contains
     !> MPI communicator
     integer, intent(in), optional ::comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: prev_position, l_comm
 
     if (present(comm)) then
@@ -456,10 +456,10 @@ contains
                     "Trying to pack an uninitialized unit test on a buffer")
 
     prev_position = pos
-    call pmc_mpi_pack_integer(buffer, pos, this%idx_A, l_comm)
-    call pmc_mpi_pack_integer(buffer, pos, this%idx_B, l_comm)
-    call pmc_mpi_pack_integer(buffer, pos, this%idx_C, l_comm)
-    call pmc_mpi_pack_integer(buffer, pos, this%idx_D, l_comm)
+    call camp_mpi_pack_integer(buffer, pos, this%idx_A, l_comm)
+    call camp_mpi_pack_integer(buffer, pos, this%idx_B, l_comm)
+    call camp_mpi_pack_integer(buffer, pos, this%idx_C, l_comm)
+    call camp_mpi_pack_integer(buffer, pos, this%idx_D, l_comm)
     call assert(897212942, &
                 pos - prev_position <= this%pack_size(l_comm))
 #endif
@@ -480,7 +480,7 @@ contains
     !> MPI communicator
     integer, intent(in), optional :: comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: prev_position, l_comm
 
     if (present(comm)) then
@@ -493,10 +493,10 @@ contains
                     "Trying to overwrite an initialized unit test object")
 
     prev_position = pos
-    call pmc_mpi_unpack_integer(buffer, pos, this%idx_A, l_comm)
-    call pmc_mpi_unpack_integer(buffer, pos, this%idx_B, l_comm)
-    call pmc_mpi_unpack_integer(buffer, pos, this%idx_C, l_comm)
-    call pmc_mpi_unpack_integer(buffer, pos, this%idx_D, l_comm)
+    call camp_mpi_unpack_integer(buffer, pos, this%idx_A, l_comm)
+    call camp_mpi_unpack_integer(buffer, pos, this%idx_B, l_comm)
+    call camp_mpi_unpack_integer(buffer, pos, this%idx_C, l_comm)
+    call camp_mpi_unpack_integer(buffer, pos, this%idx_D, l_comm)
     call assert(466926084, &
                 pos - prev_position <= this%pack_size(l_comm))
 
@@ -507,4 +507,4 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end module pmc_unit_test_rxn_arrhenius
+end module camp_unit_test_rxn_arrhenius

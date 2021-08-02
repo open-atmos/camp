@@ -3,20 +3,20 @@
 ! SPDX-License-Identifier: MIT
 
 !> \file
-!> The pmc_camp_state module.
+!> The camp_camp_state module.
 
 !> The camp_state_t structure and associated subroutines.
-module pmc_camp_state
+module camp_camp_state
 
 ! Define array size for contain temperature and pressure
 #define CAMP_STATE_NUM_ENV_PARAM 2
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
   use mpi
 #endif
-  use pmc_env_state
-  use pmc_mpi
-  use pmc_util,                       only : die_msg, string_t
+  use camp_env_state
+  use camp_mpi
+  use camp_util,                       only : die_msg, string_t
 
   implicit none
   private
@@ -190,4 +190,4 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end module pmc_camp_state
+end module camp_camp_state

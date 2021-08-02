@@ -16,7 +16,7 @@
 #include "time_derivative.h"
 
 /* SUNDIALS Header files with a description of contents used */
-#ifdef PMC_USE_SUNDIALS
+#ifdef CAMP_USE_SUNDIALS
 #include <cvode/cvode.h>             /* Protoypes for CVODE fcts., consts.  */
 #include <cvode/cvode_direct.h>      /* CVDls interface                     */
 #include <cvode/cvode_impl.h>        /* CVodeMem structure                  */
@@ -27,7 +27,7 @@
 #include <sunmatrix/sunmatrix_sparse.h> /* sparse SUNMatrix                    */
 #endif
 
-// State variable types (Must match parameters defined in pmc_chem_spec_data
+// State variable types (Must match parameters defined in camp_chem_spec_data
 // module)
 #define CHEM_SPEC_UNKNOWN_TYPE 0
 #define CHEM_SPEC_VARIABLE 1
@@ -46,7 +46,7 @@
 #endif
 
 /* Number of environmental parameters */
-#define PMC_NUM_ENV_PARAM_ 2  // !!! Must match the value in camp_state.f90 !!!
+#define CAMP_NUM_ENV_PARAM_ 2 // !!! Must match the value in camp_state.f90 !!!
 
 /* boolean definition */
 // CUDA/C++ already has bool definition: Avoid issues disabling it for GPU
@@ -76,7 +76,7 @@ typedef struct {
                     // integration tolerances
   int *var_type;    // pointer to array of state variable types (solver,
                     // constant, PSSA)
-#ifdef PMC_USE_SUNDIALS
+#ifdef CAMP_USE_SUNDIALS
   SUNMatrix J_init;    // sparse solver Jacobian matrix with used elements
                        // initialized to 1.0
   SUNMatrix J_rxn;     // Matrix for Jacobian contributions from reactions
@@ -178,7 +178,7 @@ typedef struct {
 
 /* Solver data structure */
 typedef struct {
-#ifdef PMC_USE_SUNDIALS
+#ifdef CAMP_USE_SUNDIALS
   N_Vector abs_tol_nv;        // abosolute tolerance vector
   N_Vector y;                 // vector of solver variables
   SUNLinearSolver ls;         // linear solver
@@ -198,7 +198,7 @@ typedef struct {
   int output_precision;  // Flag indicating whether to output precision loss
   int use_deriv_est;     // Flag indicating whether to use an estimated
                          // derivative in the f() calculations
-#ifdef PMC_DEBUG
+#ifdef CAMP_DEBUG
   booleantype debug_out;  // Output debugging information during solving
   booleantype eval_Jac;   // Evalute Jacobian data during solving
   int counterDeriv;       // Total calls to f()

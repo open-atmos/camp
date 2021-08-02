@@ -23,7 +23,7 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
                  int n_sub_model_float_param, int n_sub_model_env_param);
 void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
                        int max_steps, int max_conv_fails);
-#ifdef PMC_DEBUG
+#ifdef CAMP_DEBUG
 int solver_set_debug_out(void *solver_data, bool do_output);
 int solver_set_eval_jac(void *solver_data, bool eval_Jac);
 #endif
@@ -41,7 +41,7 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
 void solver_free(void *solver_data);
 void model_free(ModelData model_data);
 
-#ifdef PMC_USE_SUNDIALS
+#ifdef CAMP_USE_SUNDIALS
 /* Functions called by the solver */
 int f(realtype t, N_Vector y, N_Vector deriv, void *model_data);
 int Jac(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *model_data,
@@ -68,7 +68,7 @@ static void print_jacobian(SUNMatrix M);
 static void print_derivative(N_Vector deriv);
 bool is_anything_going_on_here(SolverData *sd, realtype t_initial,
                                realtype t_final);
-#ifdef PMC_USE_GSL
+#ifdef CAMP_USE_GSL
 double gsl_f(double x, void *param);
 typedef struct {
   int ind_var;              // independent variable index

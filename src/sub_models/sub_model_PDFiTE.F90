@@ -3,7 +3,7 @@
 ! SPDX-License-Identifier: MIT
 
 !> \file
-!> The pmc_sub_model_PDFiTE module.
+!> The camp_sub_model_PDFiTE module.
 
 !> \page camp_sub_model_PDFiTE CAMP: PD-FiTE Activity
 !!
@@ -16,7 +16,7 @@
 !!
 !! Input data for PDFiTE activity equations have the following format :
 !! \code{.json}
-!!  { "pmc-data" : [
+!!  { "camp-data" : [
 !!   {
 !!     "name" : "my PDFiTE activity",
 !!     "type" : "SUB_MODEL_PDFITE",
@@ -166,16 +166,16 @@
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 !> The sub_model_PDFiTE_t type and associated functions.
-module pmc_sub_model_PDFiTE
+module camp_sub_model_PDFiTE
 
-  use pmc_aero_phase_data
-  use pmc_aero_rep_data
-  use pmc_chem_spec_data
-  use pmc_constants,                        only: const
-  use pmc_camp_state
-  use pmc_property
-  use pmc_sub_model_data
-  use pmc_util,                             only: i_kind, dp, to_string, &
+  use camp_aero_phase_data
+  use camp_aero_rep_data
+  use camp_chem_spec_data
+  use camp_constants,                        only: const
+  use camp_camp_state
+  use camp_property
+  use camp_sub_model_data
+  use camp_util,                             only: i_kind, dp, to_string, &
                                                   assert, assert_msg, &
                                                   die_msg, string_t, &
                                                   warn_assert_msg
@@ -563,7 +563,7 @@ contains
               "Expected 2 got "//trim(to_string(ions%size())))
 
       ! TODO Consider moving some of the ion data validation to
-      ! pmc_chem_spec_data
+      ! camp_chem_spec_data
       call ions%iter_reset()
       total_charge = 0
       do i_ion = 1, 2
@@ -875,4 +875,4 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end module pmc_sub_model_PDFiTE
+end module camp_sub_model_PDFiTE

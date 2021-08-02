@@ -3,17 +3,17 @@
 ! SPDX-License-Identifier: MIT
 
 !> \file
-!> The pmc_property_test program.
+!> The camp_property_test program.
 
-!> Unit tests for the pmc_property module.
-program pmc_property_test
+!> Unit tests for the camp_property module.
+program camp_property_test
 
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
   use json_module
 #endif
-  use pmc_mpi
-  use pmc_property
-  use pmc_util
+  use camp_mpi
+  use camp_property
+  use camp_util
 
   implicit none
 
@@ -21,23 +21,23 @@ program pmc_property_test
   character(len=*), parameter :: new_line = char(10)
 
   !> initialize mpi
-  call pmc_mpi_init()
+  call camp_mpi_init()
 
-  if (run_pmc_property_tests()) then
-    if (pmc_mpi_rank().eq.0) write(*,*) "Property tests - PASS"
+  if (run_camp_property_tests()) then
+    if (camp_mpi_rank().eq.0) write(*,*) "Property tests - PASS"
   else
-    if (pmc_mpi_rank().eq.0) write(*,*) "Property tests - FAIL"
+    if (camp_mpi_rank().eq.0) write(*,*) "Property tests - FAIL"
   end if
 
   !> finalize mpi
-  call pmc_mpi_finalize()
+  call camp_mpi_finalize()
 
 contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  !> Run all pmc_property tests
-  logical function run_pmc_property_tests() result(passed)
+  !> Run all camp_property tests
+  logical function run_camp_property_tests() result(passed)
 
     passed = build_property_set_test()
     if (passed) passed = load_property_set_test()
@@ -203,7 +203,7 @@ contains
 
   !> Test loading properties from a json
   logical function load_property_set_test()
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
     ! Property set
     type(property_t), pointer :: props, sub_props, prop2
     ! JSON string
@@ -555,4 +555,4 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end program pmc_property_test
+end program camp_property_test

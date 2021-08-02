@@ -50,14 +50,14 @@ if(ENABLE_GSL)
   set(GSL_SRC src/rand_gsl.c)
   set(GSL_LIBS ${GSL_LIB} ${GSL_CBLAS_LIB} ${M_LIB})
   include_directories(${GSL_INCLUDE_DIR})
-  add_definitions(-DPMC_USE_GSL)
+  add_definitions(-DCAMP_USE_GSL)
 endif()
 
 ######################################################################
 # MPI
 
 if(ENABLE_MPI)
-  add_definitions(-DPMC_USE_MPI)
+  add_definitions(-DCAMP_USE_MPI)
 endif()
 
 ######################################################################
@@ -109,7 +109,7 @@ set(SUNDIALS_LIBS ${SUNDIALS_NVECSERIAL_LIB} ${SUNDIALS_CVODE_LIB}
   ${SUITE_SPARSE_COLAMD_LIB} ${SUITE_SPARSE_AMD_LIB} ${SUITE_SPARSE_BTF_LIB}
   ${SUITE_SPARSE_CONFIG_LIB})
 include_directories(${SUNDIALS_INCLUDE_DIR} ${SUITE_SPARSE_INCLUDE_DIR})
-add_definitions(-DPMC_USE_SUNDIALS)
+add_definitions(-DCAMP_USE_SUNDIALS)
 
 ######################################################################
 # json-fortran
@@ -121,13 +121,13 @@ find_library(JSON_LIB jsonfortran
   DOC "json-fortran library"
   PATHS $ENV{JSON_FORTRAN_HOME}/lib /opt/local/lib /usr/local/lib)
 include_directories(${JSON_INCLUDE_DIR})
-add_definitions(-DPMC_USE_JSON)
+add_definitions(-DCAMP_USE_JSON)
 
 ######################################################################
 ##CXX
 
 if(ENABLE_CXX)
-  add_definitions(-DPMC_USE_CXX)
+  add_definitions(-DCAMP_USE_CXX)
   enable_language(CXX)
 endif()
 
@@ -135,7 +135,7 @@ endif()
 # GPU support
 
 if (ENABLE_GPU)
-  add_definitions(-DPMC_USE_GPU)
+  add_definitions(-DCAMP_USE_GPU)
   enable_language(CUDA)
 endif()
 
@@ -143,7 +143,7 @@ endif()
 # debugging options
 
 if (ENABLE_DEBUG)
-  add_definitions(-DPMC_DEBUG)
+  add_definitions(-DCAMP_DEBUG)
 endif()
 if (FAILURE_DETAIL)
   add_definitions(-DFAILURE_DETAIL)
@@ -415,7 +415,7 @@ target_link_libraries(test_chemistry_cb05cl_ae5_big camplib)
 # MONARCH interface
 
 add_executable(mock_monarch test/monarch/mock_monarch.F90
-        test/monarch/pmc_monarch_interface.F90)
+        test/monarch/camp_monarch_interface.F90)
 
 target_link_libraries(mock_monarch camplib)
 
@@ -510,11 +510,11 @@ set(UNIT_TEST_RXN_ARRHENIUS_SRC
     test/unit_tests/rxns/unit_test_rxn_arrhenius.F90 ${UNIT_TEST_SRC})
 if(${CMAKE_Fortran_COMPILER_ID} MATCHES "Intel")
   set_source_files_properties(${UNIT_TEST_RXN_ARRHENIUS_SRC} PROPERTIES COMPILE_DEFINITIONS
-    "UNIT_TEST_MODULE_=pmc_unit_test_rxn_arrhenius \
+    "UNIT_TEST_MODULE_=camp_unit_test_rxn_arrhenius \
     ;UNIT_TEST_TYPE_='unit_test_rxn_arrhenius_t()'")
 elseif(${CMAKE_Fortran_COMPILER_ID} MATCHES "GNU")
   set_source_files_properties(${UNIT_TEST_RXN_ARRHENIUS_SRC} PROPERTIES COMPILE_DEFINITIONS
-    "UNIT_TEST_MODULE_=pmc_unit_test_rxn_arrhenius \
+    "UNIT_TEST_MODULE_=camp_unit_test_rxn_arrhenius \
     ;UNIT_TEST_TYPE_=unit_test_rxn_arrhenius_t()")
 endif()
 set_source_files_properties(${UNIT_TEST_RXN_ARRHENIUS_SRC} PROPERTIES COMPILE_FLAGS

@@ -1,7 +1,7 @@
 {
   "note" : "Test case for the PD-FiTE activity coefficient taken from equations 16 and 17",
   "note1" : "and data in tables 3-5 in Topping et al., 2009",
-  "pmc-data" : [
+  "camp-data" : [
   {
     "name" : "H2O",
     "type" : "CHEM_SPEC"

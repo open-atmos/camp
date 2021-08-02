@@ -3,8 +3,8 @@
 ! SPDX-License-Identifier: MIT
 
 !> \file
-!> The pmc_unit_test_data module
-module pmc_unit_test_data
+!> The camp_unit_test_data module
+module camp_unit_test_data
 
   implicit none
   private
@@ -47,7 +47,7 @@ interface
 
   !> Initialize the unit test
   subroutine initialize(this, camp_core)
-    use pmc_camp_core
+    use camp_camp_core
     import :: unit_test_data_t
 
     !> Unit test data
@@ -87,7 +87,7 @@ interface
 
   !> Number of unique initial states available from the unit test
   function num_unique_states(this)
-    use pmc_util,                                only : i_kind
+    use camp_util,                                only : i_kind
     import :: unit_test_data_t
 
     !> Number of unique states
@@ -102,9 +102,9 @@ interface
   !> Initialize a camp_state_t object based on a given index
   subroutine initialize_state(this, grid_cell_id, camp_core, camp_state, &
       unique_state_id)
-    use pmc_camp_core
-    use pmc_camp_state
-    use pmc_util,                                only : i_kind
+    use camp_camp_core
+    use camp_camp_state
+    use camp_util,                                only : i_kind
     import :: unit_test_data_t
 
     !> Unit test data
@@ -124,7 +124,7 @@ interface
 
   !> Get the number of time steps for this test
   function num_time_steps(this)
-    use pmc_util,                                only : i_kind
+    use camp_util,                                only : i_kind
     import :: unit_test_data_t
 
     !> Number of time steps
@@ -138,7 +138,7 @@ interface
 
   !> Get the size of the time step for this test
   function time_step_size(this)
-    use pmc_util,                                only : dp
+    use camp_util,                                only : dp
     import :: unit_test_data_t
 
     !> Time step size
@@ -155,9 +155,9 @@ interface
   !! This function should return true if the analysis passes, false otherwise
   function analyze_state(this, camp_core, camp_state, unique_state_id, &
       model_time_step) result (passed)
-    use pmc_camp_core
-    use pmc_camp_state
-    use pmc_util,                                only : i_kind
+    use camp_camp_core
+    use camp_camp_state
+    use camp_util,                                only : i_kind
     import :: unit_test_data_t
 
     !> Flag indicating whether the tests passed
@@ -180,9 +180,9 @@ interface
   !> Output the results for a given grid cell
   subroutine output_results(this, camp_core, camp_state, unique_state_id, &
       model_time_step, output_file_unit)
-    use pmc_camp_core
-    use pmc_camp_state
-    use pmc_util,                                only : i_kind
+    use camp_camp_core
+    use camp_camp_state
+    use camp_util,                                only : i_kind
     import :: unit_test_data_t
 
     !> Unit test data
@@ -204,7 +204,7 @@ interface
 
   !> Determine the number of bytes required to pack the object on a buffer
   integer(kind=i_kind) function pack_size(this, comm)
-    use pmc_util,                                only : i_kind
+    use camp_util,                                only : i_kind
     import :: unit_test_data_t
 
     !> Unit test data
@@ -252,4 +252,4 @@ interface
 
 end interface
 
-end module pmc_unit_test_data
+end module camp_unit_test_data

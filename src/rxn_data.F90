@@ -3,7 +3,7 @@
 ! SPDX-License-Identifier: MIT
 
 !> \file
-!> The pmc_rxn_data module.
+!> The camp_rxn_data module.
 
 !> \page camp_rxn CAMP: Reactions (general)
 !!
@@ -18,9 +18,9 @@
 !! model is to provide the solver with contributions to the time derivative
 !! and Jacobian matrix for \ref camp_species "chemical species"
 !! concentrations based on the current model state described in a \c
-!! pmc_camp_state::camp_state_t object.
+!! camp_camp_state::camp_state_t object.
 !!
-!! Specific reaction types extend the abstract \c pmc_rxn_data::rxn_data_t
+!! Specific reaction types extend the abstract \c camp_rxn_data::rxn_data_t
 !! type and generally accept a set of reactants and products whose names
 !! correspond to \ref camp_species "chemical species" names, as well as a
 !! set of reaction parameters needed to describe a particular reaction.
@@ -30,7 +30,7 @@
 !! however this information will not be available during a model run. The
 !! information required by the reaction instance to calculate its contribution
 !! to the time derivatve and Jacobian matrix must therefore be packed into
-!! the condensed data arrays of the \c pmc_rxn_data::rxn_data_t object during
+!! the condensed data arrays of the \c camp_rxn_data::rxn_data_t object during
 !! intialization.
 !!
 !! Valid reaction types include:
@@ -55,21 +55,21 @@
 !! \subpage camp_rxn_add "here".
 
 !> The rxn_data_t structure and associated subroutines.
-module pmc_rxn_data
+module camp_rxn_data
 
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
   use json_module
 #endif
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
   use mpi
 #endif
-  use pmc_aero_rep_data
-  use pmc_chem_spec_data
-  use pmc_constants,                  only : i_kind, dp
-  use pmc_mpi
-  use pmc_camp_state
-  use pmc_property
-  use pmc_util,                       only : die_msg, string_t
+  use camp_aero_rep_data
+  use camp_chem_spec_data
+  use camp_constants,                  only : i_kind, dp
+  use camp_mpi
+  use camp_camp_state
+  use camp_property
+  use camp_util,                       only : die_msg, string_t
 
   use iso_c_binding
 
@@ -105,12 +105,12 @@ module pmc_rxn_data
     !> Condensed reaction data. Theses arrays will be available during
     !! integration, and should contain any information required by the
     !! rate and Jacobian constribution functions that cannot be obtained
-    !! from the \c pmc_camp_state::camp_state_t object. (floating-point)
+    !! from the \c camp_camp_state::camp_state_t object. (floating-point)
     real(kind=dp), allocatable, public :: condensed_data_real(:)
     !> Condensed reaction data. Theses arrays will be available during
     !! integration, and should contain any information required by the
     !! rate and Jacobian constribution functions that cannot be obtained
-    !! from the \c pmc_camp_state::camp_state_t object. (integer)
+    !! from the \c camp_camp_state::camp_state_t object. (integer)
     integer(kind=i_kind), allocatable, public :: condensed_data_int(:)
     !> Number of environment-dependent parameters
     !! These are parameters that need updated when environmental conditions
@@ -198,7 +198,7 @@ interface
   !! at the beginning of a model run after all the input files have been
   !! read in.
   subroutine initialize(this, chem_spec_data, aero_rep, n_cells)
-    use pmc_util,                                only : i_kind
+    use camp_util,                                only : i_kind
     import :: rxn_data_t, chem_spec_data_t, aero_rep_data_ptr
 
     !> Reaction data
@@ -216,7 +216,7 @@ interface
 
   !> Extending-type binary pack size (internal use only)
   integer(kind=i_kind) function internal_pack_size(this, comm)
-    use pmc_util,                                only : i_kind
+    use camp_util,                                only : i_kind
     import :: rxn_update_data_t
 
     !> Reaction data
@@ -277,7 +277,7 @@ contains
   !! only found within an input \ref input_format_mechanism "mechanism object"
   !! in an array labelled \b reactions.
   !! \code{.json}
-  !! { "pmc-data" : [
+  !! { "camp-data" : [
   !!   {
   !!     "name" : "my mechanism",
   !!     "type" : "MECHANISM",
@@ -337,7 +337,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Load reactions from an input file
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
   subroutine load(this, json, j_obj)
 
     !> Reaction data
@@ -415,10 +415,10 @@ contains
     integer, intent(in) :: comm
 
     pack_size = &
-            pmc_mpi_pack_size_integer(this%rxn_phase, comm) + &
-            pmc_mpi_pack_size_real_array(this%condensed_data_real, comm) + &
-            pmc_mpi_pack_size_integer_array(this%condensed_data_int, comm) + &
-            pmc_mpi_pack_size_integer(this%num_env_params, comm)
+            camp_mpi_pack_size_integer(this%rxn_phase, comm) + &
+            camp_mpi_pack_size_real_array(this%condensed_data_real, comm) + &
+            camp_mpi_pack_size_integer_array(this%condensed_data_int, comm) + &
+            camp_mpi_pack_size_integer(this%num_env_params, comm)
 
   end function pack_size
 
@@ -436,14 +436,14 @@ contains
     !> MPI communicator
     integer, intent(in) :: comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: prev_position
 
     prev_position = pos
-    call pmc_mpi_pack_integer(buffer, pos, this%rxn_phase, comm)
-    call pmc_mpi_pack_real_array(buffer, pos, this%condensed_data_real, comm)
-    call pmc_mpi_pack_integer_array(buffer, pos, this%condensed_data_int, comm)
-    call pmc_mpi_pack_integer(buffer, pos, this%num_env_params, comm)
+    call camp_mpi_pack_integer(buffer, pos, this%rxn_phase, comm)
+    call camp_mpi_pack_real_array(buffer, pos, this%condensed_data_real, comm)
+    call camp_mpi_pack_integer_array(buffer, pos, this%condensed_data_int, comm)
+    call camp_mpi_pack_integer(buffer, pos, this%num_env_params, comm)
     call assert(149359274, &
          pos - prev_position <= this%pack_size(comm))
 #endif
@@ -464,15 +464,15 @@ contains
     !> MPI communicator
     integer, intent(in) :: comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: prev_position
 
     prev_position = pos
-    call pmc_mpi_unpack_integer(buffer, pos, this%rxn_phase, comm)
-    call pmc_mpi_unpack_real_array(buffer, pos, this%condensed_data_real,comm)
-    call pmc_mpi_unpack_integer_array(buffer, pos, this%condensed_data_int,  &
+    call camp_mpi_unpack_integer(buffer, pos, this%rxn_phase, comm)
+    call camp_mpi_unpack_real_array(buffer, pos, this%condensed_data_real,comm)
+    call camp_mpi_unpack_integer_array(buffer, pos, this%condensed_data_int,  &
                                                                          comm)
-    call pmc_mpi_unpack_integer(buffer, pos, this%num_env_params, comm)
+    call camp_mpi_unpack_integer(buffer, pos, this%num_env_params, comm)
     call assert(168345796, &
          pos - prev_position <= this%pack_size(comm))
 #endif
@@ -581,7 +581,7 @@ contains
     !> MPI communicator
     integer, intent(in), optional :: comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: l_comm
 
     if (present(comm)) then
@@ -591,8 +591,8 @@ contains
     endif
 
     pack_size = &
-      pmc_mpi_pack_size_integer(int(this%rxn_type, kind=i_kind), l_comm) +   &
-      pmc_mpi_pack_size_integer(int(this%rxn_solver_id, kind=i_kind),        &
+      camp_mpi_pack_size_integer(int(this%rxn_type, kind=i_kind), l_comm) +   &
+      camp_mpi_pack_size_integer(int(this%rxn_solver_id, kind=i_kind),        &
                                                                    l_comm) + &
       this%internal_pack_size(l_comm)
 #else
@@ -615,7 +615,7 @@ contains
     !> MPI communicator
     integer, intent(in), optional :: comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: prev_position, l_comm
 
     if (present(comm)) then
@@ -625,9 +625,9 @@ contains
     endif
 
     prev_position = pos
-    call pmc_mpi_pack_integer(buffer, pos, &
+    call camp_mpi_pack_integer(buffer, pos, &
                               int(this%rxn_type, kind=i_kind), l_comm)
-    call pmc_mpi_pack_integer(buffer, pos, &
+    call camp_mpi_pack_integer(buffer, pos, &
                               int(this%rxn_solver_id, kind=i_kind), l_comm)
     call this%internal_bin_pack(buffer, pos, l_comm)
     call assert(713360087, &
@@ -650,7 +650,7 @@ contains
     !> MPI communicator
     integer, intent(in), optional :: comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: prev_position, l_comm
     integer(kind=i_kind) :: temp_int
 
@@ -661,9 +661,9 @@ contains
     endif
 
     prev_position = pos
-    call pmc_mpi_unpack_integer(buffer, pos, temp_int, l_comm)
+    call camp_mpi_unpack_integer(buffer, pos, temp_int, l_comm)
     this%rxn_type = int(temp_int, kind=c_int)
-    call pmc_mpi_unpack_integer(buffer, pos, temp_int, l_comm)
+    call camp_mpi_unpack_integer(buffer, pos, temp_int, l_comm)
     this%rxn_solver_id = int(temp_int, kind=c_int)
     call this%internal_bin_unpack(buffer, pos, l_comm)
     call assert(107364895, &
@@ -696,4 +696,4 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end module pmc_rxn_data
+end module camp_rxn_data

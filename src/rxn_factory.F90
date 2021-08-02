@@ -3,7 +3,7 @@
 ! SPDX-License-Identifier: MIT
 
 !> \file
-!> The pmc_rxn_factory module.
+!> The camp_rxn_factory module.
 
 !> \page camp_rxn_add CAMP: Adding a Reaction Type
 !!
@@ -14,7 +14,7 @@
 !!
 !! ## Step 1. Create a new reaction module ##
 !!   The module should be placed in the \c /src/rxns folder and extent the
-!!   abstract \c pmc_rxn_data::rxn_data_t type, overriding all deferred
+!!   abstract \c camp_rxn_data::rxn_data_t type, overriding all deferred
 !!   functions, and providing a constructor that returns a pointer to a newly
 !!   allocated instance of the new type:
 !!
@@ -47,19 +47,19 @@
 !!
 !!   ...
 !!
-!! end module pmc_rxn_foo
+!! end module camp_rxn_foo
 !! \endcode
 !!
-!! ## Step 2. Add the reaction to the \c pmc_rxn_factory module ##
+!! ## Step 2. Add the reaction to the \c camp_rxn_factory module ##
 !!
 !! \code{.f90}
-!! module pmc_rxn_factory
+!! module camp_rxn_factory
 !!
 !!  ...
 !!
 !!  ! Use all reaction modules
 !!  ...
-!!  use pmc_rxn_foo
+!!  use camp_rxn_foo
 !!
 !!  ...
 !!
@@ -106,7 +106,7 @@
 !!
 !!  ...
 !!
-!! end module pmc_rxn_factory
+!! end module camp_rxn_factory
 !! \endcode
 !!
 !! # Step 4. Add the new module to the CMakeList file in the root directory. ##
@@ -118,7 +118,7 @@
 !!
 !! set(REACTIONS
 !!     ...
-!!     src/rxns/pmc_foo.F90
+!!     src/rxns/camp_foo.F90
 !! )
 !!
 !! ...
@@ -144,7 +144,7 @@
 !! required parameters:
 !!
 !! \code{.json}
-!! { "pmc-data" : [
+!! { "camp-data" : [
 !!   {
 !!     "name" : "my mechanism",
 !!     "type" : "MECHANISM",
@@ -167,33 +167,33 @@
 !This will improve data acces and performance
 
 !> The abstract rxn_factory_t structure and associated subroutines.
-module pmc_rxn_factory
+module camp_rxn_factory
 
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
   use json_module
 #endif
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
   use mpi
 #endif
-  use pmc_constants,                  only : i_kind, dp
-  use pmc_mpi
-  use pmc_rxn_data
-  use pmc_util,                       only : die_msg, string_t, assert_msg, &
+  use camp_constants,                  only : i_kind, dp
+  use camp_mpi
+  use camp_rxn_data
+  use camp_util,                       only : die_msg, string_t, assert_msg, &
                                              warn_msg
 
   ! Use all reaction modules
-  use pmc_rxn_aqueous_equilibrium
-  use pmc_rxn_arrhenius
-  use pmc_rxn_CMAQ_H2O2
-  use pmc_rxn_CMAQ_OH_HNO3
-  use pmc_rxn_condensed_phase_arrhenius
-  use pmc_rxn_emission
-  use pmc_rxn_first_order_loss
-  use pmc_rxn_HL_phase_transfer
-  use pmc_rxn_photolysis
-  use pmc_rxn_SIMPOL_phase_transfer
-  use pmc_rxn_troe
-  use pmc_rxn_wet_deposition
+  use camp_rxn_aqueous_equilibrium
+  use camp_rxn_arrhenius
+  use camp_rxn_CMAQ_H2O2
+  use camp_rxn_CMAQ_OH_HNO3
+  use camp_rxn_condensed_phase_arrhenius
+  use camp_rxn_emission
+  use camp_rxn_first_order_loss
+  use camp_rxn_HL_phase_transfer
+  use camp_rxn_photolysis
+  use camp_rxn_SIMPOL_phase_transfer
+  use camp_rxn_troe
+  use camp_rxn_wet_deposition
 
   use iso_c_binding
 
@@ -291,7 +291,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Load an aerosol represenation from input data
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
   function load(this, json, j_obj) result (new_obj)
 
     !> A chemical reaction
@@ -435,7 +435,7 @@ contains
     !> MPI communicator
     integer, intent(in) :: comm
 
-    pack_size =  pmc_mpi_pack_size_integer(int(1, kind=i_kind), comm) + &
+    pack_size =  camp_mpi_pack_size_integer(int(1, kind=i_kind), comm) + &
                  rxn%pack_size(comm)
 
   end function pack_size
@@ -456,7 +456,7 @@ contains
     !> MPI communicator
     integer, intent(in) :: comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: rxn_type, i_rxn, prev_position
 
     prev_position = pos
@@ -488,7 +488,7 @@ contains
       class default
         call die_msg(343941184, "Trying to pack reaction of unknown type.")
     end select
-    call pmc_mpi_pack_integer(buffer, pos, rxn_type, comm)
+    call camp_mpi_pack_integer(buffer, pos, rxn_type, comm)
     call rxn%bin_pack(buffer, pos, comm)
     call assert(194676336, &
          pos - prev_position <= this%pack_size(rxn, comm))
@@ -512,11 +512,11 @@ contains
     !> MPI communicator
     integer, intent(in) :: comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: rxn_type, i_rxn, prev_position
 
     prev_position = pos
-    call pmc_mpi_unpack_integer(buffer, pos, rxn_type, comm)
+    call camp_mpi_unpack_integer(buffer, pos, rxn_type, comm)
     select case (rxn_type)
       case (RXN_ARRHENIUS)
         rxn => rxn_arrhenius_t()
@@ -556,4 +556,4 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end module pmc_rxn_factory
+end module camp_rxn_factory

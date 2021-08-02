@@ -3,7 +3,7 @@
 ! SPDX-License-Identifier: MIT
 
 !> \file
-!> The pmc_mechanism_data module.
+!> The camp_mechanism_data module.
 
 !> \page camp_mechanism CAMP: Chemical Mechanism
 !!
@@ -19,28 +19,28 @@
 !! consistent across all concurrently loaded mechanisms. The division of \ref
 !! camp_rxn "reactions" into distinct mechanisms permits a host model to
 !! specificy which mechanisms should be solved during a call to
-!! \c pmc_camp_core::camp_core_t::solve().
+!! \c camp_camp_core::camp_core_t::solve().
 !!
 !! The input format for mechanism data can be found \ref
 !! input_format_mechanism "here".
 
 !> The mechanism_data_t structure and associated subroutines.
-module pmc_mechanism_data
+module camp_mechanism_data
 
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
   use json_module
 #endif
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
   use mpi
 #endif
-  use pmc_aero_rep_data
-  use pmc_chem_spec_data
-  use pmc_constants,                  only : i_kind, dp
-  use pmc_mpi
-  use pmc_camp_state
-  use pmc_rxn_data
-  use pmc_rxn_factory
-  use pmc_util,                       only : die_msg, string_t
+  use camp_aero_rep_data
+  use camp_chem_spec_data
+  use camp_constants,                  only : i_kind, dp
+  use camp_mpi
+  use camp_camp_state
+  use camp_rxn_data
+  use camp_rxn_factory
+  use camp_util,                       only : die_msg, string_t
 
   implicit none
   private
@@ -170,7 +170,7 @@ contains
   !! A \c json object containing information about a \ref camp_mechanism
   !! "chemical mechanism" has the following format :
   !! \code{.json}
-  !! { "pmc-data" : [
+  !! { "camp-data" : [
   !!   {
   !!     "name" : "my mechanism",
   !!     "type" : "MECHANISM",
@@ -189,7 +189,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Load a chemical mechanism from an input file
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
   subroutine load(this, json, j_obj)
 
     !> Chemical mechanism
@@ -325,7 +325,7 @@ contains
     type(rxn_factory_t) :: rxn_factory
     integer(kind=i_kind) :: i_rxn
 
-    pack_size =  pmc_mpi_pack_size_integer(this%num_rxn, comm)
+    pack_size =  camp_mpi_pack_size_integer(this%num_rxn, comm)
     do i_rxn = 1, this%num_rxn
       pack_size = pack_size + rxn_factory%pack_size(this%rxn_ptr(i_rxn)%val, &
                                                     comm)
@@ -347,12 +347,12 @@ contains
     !> MPI communicator
     integer, intent(in) :: comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     type(rxn_factory_t) :: rxn_factory
     integer :: i_rxn, prev_position
 
     prev_position = pos
-    call pmc_mpi_pack_integer(buffer, pos, this%num_rxn, comm)
+    call camp_mpi_pack_integer(buffer, pos, this%num_rxn, comm)
     do i_rxn = 1, this%num_rxn
       associate (rxn => this%rxn_ptr(i_rxn)%val)
       call rxn_factory%bin_pack(rxn, buffer, pos, comm)
@@ -378,12 +378,12 @@ contains
     !> MPI communicator
     integer, intent(in) :: comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     type(rxn_factory_t) :: rxn_factory
     integer :: i_rxn, prev_position, num_rxn
 
     prev_position = pos
-    call pmc_mpi_unpack_integer(buffer, pos, num_rxn, comm)
+    call camp_mpi_unpack_integer(buffer, pos, num_rxn, comm)
     call this%ensure_size(num_rxn)
     this%num_rxn = num_rxn
     do i_rxn = 1, this%num_rxn
@@ -460,4 +460,4 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end module pmc_mechanism_data
+end module camp_mechanism_data

@@ -8,7 +8,7 @@
 /** \file
  * \brief UNIFAC activity coefficient calculation
  *
- * For more info see the pmc_sub_model_UNIFAC module
+ * For more info see the camp_sub_model_UNIFAC module
  *
  * Equation references are to Marcolli and Peter, ACP 5(2), 1501-1527, 2005.
  *
@@ -571,7 +571,7 @@ void sub_model_UNIFAC_calculate(int *sub_model_int_data,
  * \param J Jacobian to be calculated
  * \param time_step Current time step [s]
  */
-#ifdef PMC_USE_SUNDIALS
+#ifdef CAMP_USE_SUNDIALS
 void sub_model_UNIFAC_get_jac_contrib(int *sub_model_int_data,
                                       double *sub_model_float_data,
                                       double *sub_model_env_data,

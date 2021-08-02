@@ -3,25 +3,23 @@
 ! SPDX-License-Identifier: MIT
 
 !> \file
-!> The pmc_camp_solver_data module.
+!> The camp_camp_solver_data module.
 
 !> The camp_solver_data_t structure and associated subroutines.
-module pmc_camp_solver_data
-#define CAMP_SOLVER_SUCCESS 0
-#define CAMP_SOLVER_FAIL 1
+module camp_camp_solver_data
 
-  use pmc_aero_phase_data
-  use pmc_aero_rep_data
-  use pmc_aero_rep_factory
-  use pmc_constants,                   only : i_kind, dp
-  use pmc_mechanism_data
-  use pmc_camp_state
-  use pmc_rxn_data
-  use pmc_rxn_factory
-  use pmc_solver_stats
-  use pmc_sub_model_data
-  use pmc_sub_model_factory
-  use pmc_util,                        only : assert_msg, to_string, &
+  use camp_aero_phase_data
+  use camp_aero_rep_data
+  use camp_aero_rep_factory
+  use camp_constants,                   only : i_kind, dp
+  use camp_mechanism_data
+  use camp_camp_state
+  use camp_rxn_data
+  use camp_rxn_factory
+  use camp_solver_stats
+  use camp_sub_model_data
+  use camp_sub_model_factory
+  use camp_util,                        only : assert_msg, to_string, &
                                               warn_assert_msg, die_msg
 
   use iso_c_binding
@@ -32,14 +30,14 @@ module pmc_camp_solver_data
   public :: camp_solver_data_t
 
   !> Default relative tolerance for integration
-  real(kind=dp), parameter :: PMC_SOLVER_DEFAULT_REL_TOL = 1.0D-8
+  real(kind=dp), parameter :: CAMP_SOLVER_DEFAULT_REL_TOL = 1.0D-8
   !> Default max number of integration steps
-  integer(kind=i_kind), parameter :: PMC_SOLVER_DEFAULT_MAX_STEPS = 10000
+  integer(kind=i_kind), parameter :: CAMP_SOLVER_DEFAULT_MAX_STEPS = 10000
   !> Default maximum number of integration convergence failures
-  integer(kind=i_kind), parameter :: PMC_SOLVER_DEFAULT_MAX_CONV_FAILS = 1000
+  integer(kind=i_kind), parameter :: CAMP_SOLVER_DEFAULT_MAX_CONV_FAILS = 1000
 
   !> Result code indicating successful completion
-  integer, parameter :: PMC_SOLVER_SUCCESS = 0
+  integer, parameter :: CAMP_SOLVER_SUCCESS = 0
 
   !> Interface to c ODE solver functions
   interface
@@ -109,7 +107,7 @@ module pmc_camp_solver_data
       integer(kind=c_int), value :: max_conv_fails
     end subroutine solver_initialize
 
-#ifdef PMC_DEBUG
+#ifdef CAMP_DEBUG
     !> Set the debug output flag for the solver
     integer(kind=c_int) function solver_set_debug_out(solver_data, &
                     do_output) bind (c)
@@ -375,12 +373,12 @@ module pmc_camp_solver_data
     !> C Solver object
     type(c_ptr), public :: solver_c_ptr
     !> Relative tolerance for the integration
-    real(kind=dp), public :: rel_tol = PMC_SOLVER_DEFAULT_REL_TOL
+    real(kind=dp), public :: rel_tol = CAMP_SOLVER_DEFAULT_REL_TOL
     !> Maximum number of timesteps
-    integer(kind=i_kind), public :: max_steps = PMC_SOLVER_DEFAULT_MAX_STEPS
+    integer(kind=i_kind), public :: max_steps = CAMP_SOLVER_DEFAULT_MAX_STEPS
     !> Maximum number of convergence failures
     integer(kind=i_kind), public :: max_conv_fails = &
-            PMC_SOLVER_DEFAULT_MAX_CONV_FAILS
+            CAMP_SOLVER_DEFAULT_MAX_CONV_FAILS
     !> Flag indicating whether the solver was intialized
     logical :: initialized = .false.
   contains
@@ -450,7 +448,7 @@ contains
     !> Sub models to include
     type(sub_model_data_ptr), pointer, intent(in) :: sub_models(:)
     !> Reactions phase to solve -- gas, aerosol, or both (default)
-    !! Use parameters in pmc_rxn_data to specify phase:
+    !! Use parameters in camp_rxn_data to specify phase:
     !! GAS_RXN, AERO_RXN, GAS_AERO_RXN
     integer(kind=i_kind), intent(in) :: rxn_phase
     !> Number of cells to compute
@@ -867,7 +865,7 @@ contains
 
     integer(kind=c_int) :: solver_status
 
-#ifdef PMC_DEBUG
+#ifdef CAMP_DEBUG
     if (present(solver_stats)) then
       ! Update the debugging output flag in the solver data
       if (solver_stats%debug_out) then
@@ -972,7 +970,7 @@ contains
     !> Solver data
     class(camp_solver_data_t), intent(in) :: this
 
-#ifdef PMC_USE_SUNDIALS
+#ifdef CAMP_USE_SUNDIALS
     is_solver_available = .true.
 #else
     is_solver_available = .false.
@@ -1009,4 +1007,4 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end module pmc_camp_solver_data
+end module camp_camp_solver_data

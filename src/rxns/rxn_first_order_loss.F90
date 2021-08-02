@@ -3,7 +3,7 @@
 ! SPDX-License-Identifier: MIT
 
 !> \file
-!> The pmc_rxn_first_order_loss module.
+!> The camp_rxn_first_order_loss module.
 
 !> \page camp_rxn_first_order_loss CAMP: First-Order Loss
 !!
@@ -17,12 +17,12 @@
 !!
 !! First-Order loss rate constants can be constant or set from an external
 !! module using the
-!! \c pmc_rxn_first_order_loss::rxn_update_data_first_order_loss_t object.
+!! \c camp_rxn_first_order_loss::rxn_update_data_first_order_loss_t object.
 !! External modules can use the
-!! \c pmc_rxn_first_order_loss::rxn_first_order_loss_t::get_property_set()
+!! \c camp_rxn_first_order_loss::rxn_first_order_loss_t::get_property_set()
 !! function during initilialization to access any needed reaction parameters
 !! to identify certain first-order loss reactions.
-!! An \c pmc_rxn_first_order_loss::update_data_first_order_loss_t object
+!! An \c camp_rxn_first_order_loss::update_data_first_order_loss_t object
 !! should be initialized for each reaction. These objects can then
 !! be used during solving to update the first order loss rate from an
 !! external module.
@@ -48,16 +48,16 @@
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 !> The rxn_first_order_loss_t type and associated functions.
-module pmc_rxn_first_order_loss
+module camp_rxn_first_order_loss
 
-  use pmc_aero_rep_data
-  use pmc_chem_spec_data
-  use pmc_constants,                        only: const
-  use pmc_camp_state
-  use pmc_mpi
-  use pmc_property
-  use pmc_rxn_data
-  use pmc_util,                             only: i_kind, dp, to_string, &
+  use camp_aero_rep_data
+  use camp_chem_spec_data
+  use camp_constants,                        only: const
+  use camp_camp_state
+  use camp_mpi
+  use camp_property
+  use camp_rxn_data
+  use camp_util,                             only: i_kind, dp, to_string, &
                                                   assert, assert_msg, die_msg
 
   use iso_c_binding
@@ -270,7 +270,7 @@ contains
   !> Initialize update data
   subroutine update_data_initialize(this, update_data, rxn_type)
 
-    use pmc_rand,                                only : generate_int_id
+    use camp_rand,                                only : generate_int_id
 
     !> The reaction to update
     class(rxn_first_order_loss_t), intent(inout) :: this
@@ -303,8 +303,8 @@ contains
     integer, intent(in) :: comm
 
     pack_size = &
-      pmc_mpi_pack_size_logical(this%is_malloced, comm) + &
-      pmc_mpi_pack_size_integer(this%rxn_unique_id, comm)
+      camp_mpi_pack_size_logical(this%is_malloced, comm) + &
+      camp_mpi_pack_size_integer(this%rxn_unique_id, comm)
 
   end function internal_pack_size
 
@@ -322,12 +322,12 @@ contains
     !> MPI communicator
     integer, intent(in) :: comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: prev_position
 
     prev_position = pos
-    call pmc_mpi_pack_logical(buffer, pos, this%is_malloced, comm)
-    call pmc_mpi_pack_integer(buffer, pos, this%rxn_unique_id, comm)
+    call camp_mpi_pack_logical(buffer, pos, this%is_malloced, comm)
+    call camp_mpi_pack_integer(buffer, pos, this%rxn_unique_id, comm)
     call assert(373785697, &
          pos - prev_position <= this%pack_size(comm))
 #endif
@@ -348,12 +348,12 @@ contains
     !> MPI communicator
     integer, intent(in) :: comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: prev_position
 
     prev_position = pos
-    call pmc_mpi_unpack_logical(buffer, pos, this%is_malloced, comm)
-    call pmc_mpi_unpack_integer(buffer, pos, this%rxn_unique_id, comm)
+    call camp_mpi_unpack_logical(buffer, pos, this%is_malloced, comm)
+    call camp_mpi_unpack_integer(buffer, pos, this%rxn_unique_id, comm)
     call assert(368521390, &
          pos - prev_position <= this%pack_size(comm))
     this%update_data = rxn_first_order_loss_create_rate_update_data()
@@ -375,4 +375,4 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end module pmc_rxn_first_order_loss
+end module camp_rxn_first_order_loss

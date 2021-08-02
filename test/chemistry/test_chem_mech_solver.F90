@@ -3,22 +3,22 @@
 ! SPDX-License-Identifier: MIT
 
 !> \file
-!> The pmc_test_chem_mech_solver program
+!> The camp_test_chem_mech_solver program
 
 !> Integration test for the chemical mechanism module's solver
-program pmc_test_chem_mech_solver
+program camp_test_chem_mech_solver
 
-  use pmc_util,                         only: i_kind, dp, assert, &
+  use camp_util,                         only: i_kind, dp, assert, &
                                               almost_equal, string_t, &
                                               warn_msg
-  use pmc_camp_core
-  use pmc_camp_state
-  use pmc_chem_spec_data
-  use pmc_solver_stats
-#ifdef PMC_USE_JSON
+  use camp_camp_core
+  use camp_camp_state
+  use camp_chem_spec_data
+  use camp_solver_stats
+#ifdef CAMP_USE_JSON
   use json_module
 #endif
-  use pmc_mpi
+  use camp_mpi
 
   implicit none
 
@@ -28,25 +28,25 @@ program pmc_test_chem_mech_solver
   integer(kind=i_kind) :: NUM_TIME_STEP = 100
 
   ! initialize mpi
-  call pmc_mpi_init()
+  call camp_mpi_init()
 
-  if (run_pmc_chem_mech_solver_tests()) then
-    if (pmc_mpi_rank().eq.0) write(*,*) "Mechanism solver tests - PASS"
+  if (run_camp_chem_mech_solver_tests()) then
+    if (camp_mpi_rank().eq.0) write(*,*) "Mechanism solver tests - PASS"
   else
-    if (pmc_mpi_rank().eq.0) write(*,*) "Mechanism solver tests - FAIL"
+    if (camp_mpi_rank().eq.0) write(*,*) "Mechanism solver tests - FAIL"
   end if
 
   ! finalize mpi
-  call pmc_mpi_finalize()
+  call camp_mpi_finalize()
 
 contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  !> Run all pmc_chem_mech_solver tests
-  logical function run_pmc_chem_mech_solver_tests() result(passed)
+  !> Run all camp_chem_mech_solver tests
+  logical function run_camp_chem_mech_solver_tests() result(passed)
 
-    use pmc_camp_solver_data
+    use camp_camp_solver_data
 
     type(camp_solver_data_t), pointer :: camp_solver_data
 
@@ -61,7 +61,7 @@ contains
 
     deallocate(camp_solver_data)
 
-  end function run_pmc_chem_mech_solver_tests
+  end function run_camp_chem_mech_solver_tests
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -77,7 +77,7 @@ contains
   !!
   logical function run_consecutive_mech_test()
 
-    use pmc_constants
+    use camp_constants
 
     type(camp_core_t), pointer :: camp_core
     type(camp_state_t), pointer :: camp_state
@@ -90,7 +90,7 @@ contains
     character(len=:), allocatable :: key
     integer(kind=i_kind) :: i_time, i_spec
     real(kind=dp) :: time_step
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     character, allocatable :: buffer(:), buffer_copy(:)
     integer(kind=i_kind) :: pack_size, pos, i_elem, results
 #endif
@@ -115,9 +115,9 @@ contains
     ! Set output time step (s)
     time_step = 0.1
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     ! Load the model data on root process and pass it to process 1 for solving
-    if (pmc_mpi_rank().eq.0) then
+    if (camp_mpi_rank().eq.0) then
 #endif
 
       ! Get the consecutive-rxn mechanism json file
@@ -147,7 +147,7 @@ contains
       call assert(226395220, idx_B.gt.0)
       call assert(338713565, idx_C.gt.0)
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
       ! pack the camp core
       pack_size = camp_core%pack_size()
       allocate(buffer(pack_size))
@@ -157,22 +157,22 @@ contains
     end if
 
     ! broadcast the species ids
-    call pmc_mpi_bcast_integer(idx_A)
-    call pmc_mpi_bcast_integer(idx_B)
-    call pmc_mpi_bcast_integer(idx_C)
+    call camp_mpi_bcast_integer(idx_A)
+    call camp_mpi_bcast_integer(idx_B)
+    call camp_mpi_bcast_integer(idx_C)
 
     ! broadcast the buffer size
-    call pmc_mpi_bcast_integer(pack_size)
+    call camp_mpi_bcast_integer(pack_size)
 
-    if (pmc_mpi_rank().eq.1) then
+    if (camp_mpi_rank().eq.1) then
       ! allocate the buffer to receive data
       allocate(buffer(pack_size))
     end if
 
     ! broadcast the data
-    call pmc_mpi_bcast_packed(buffer)
+    call camp_mpi_bcast_packed(buffer)
 
-    if (pmc_mpi_rank().eq.1) then
+    if (camp_mpi_rank().eq.1) then
       ! unpack the data
       camp_core => camp_core_t()
       pos = 0
@@ -209,7 +209,7 @@ contains
       ! Set the initial concentrations in the model
       camp_state%state_var(:) = model_conc(0,:)
 
-#ifdef PMC_DEBUG
+#ifdef CAMP_DEBUG
       ! Evaluate the Jacobian during solving
       solver_stats%eval_Jac = .true.
 #endif
@@ -222,7 +222,7 @@ contains
                               solver_stats = solver_stats)
         model_conc(i_time,:) = camp_state%state_var(:)
 
-#ifdef PMC_DEBUG
+#ifdef CAMP_DEBUG
         ! Check the Jacobian evaluations
         call assert_msg(954300655, solver_stats%Jac_eval_fails.eq.0, &
                         trim( to_string( solver_stats%Jac_eval_fails ) )// &
@@ -268,7 +268,7 @@ contains
 
       deallocate(camp_state)
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
       ! convert the results to an integer
       if (run_consecutive_mech_test) then
         results = 0
@@ -278,10 +278,10 @@ contains
     end if
 
     ! Send the results back to the primary process
-    call pmc_mpi_transfer_integer(results, results, 1, 0)
+    call camp_mpi_transfer_integer(results, results, 1, 0)
 
     ! convert the results back to a logical value
-    if (pmc_mpi_rank().eq.0) then
+    if (camp_mpi_rank().eq.0) then
       if (results.eq.0) then
         run_consecutive_mech_test = .true.
       else
@@ -298,4 +298,4 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end program pmc_test_chem_mech_solver
+end program camp_test_chem_mech_solver

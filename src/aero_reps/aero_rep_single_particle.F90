@@ -3,7 +3,7 @@
 ! SPDX-License-Identifier: MIT
 
 !> \file
-!> The pmc_aero_rep_single_particle module.
+!> The camp_aero_rep_single_particle module.
 
 !> \page camp_aero_rep_single_particle CAMP: Single Particle Aerosol Representation
 !!
@@ -11,7 +11,7 @@
 !! particle-resolved run. The \c json object for this \ref camp_aero_rep
 !! "aerosol representation" has the following format:
 !! \code{.json}
-!!  { "pmc-data" : [
+!!  { "camp-data" : [
 !!    {
 !!      "name" : "my single particle aero rep",
 !!      "type" : "AERO_REP_SINGLE_PARTICLE"
@@ -25,25 +25,25 @@
 !! once in each particle, and that the \ref input_format_mechanism
 !! "chemical mechanisms" will be solved at each time step first for the
 !! gas-phase then for phase-transfer and aerosol-phase chemistry for each
-!! single particle in the \c  pmc_aero_particle_array::aero_particle_array_t
+!! single particle in the \c  camp_aero_particle_array::aero_particle_array_t
 !! variable sequentially. This may be changed in the future to solve for all
 !! particles simultaneously.
 !!
 !! The number concentration for each particle must be
 !! set from an external model using
-!! \c pmc_aero_rep_single_particle::aero_rep_update_data_single_particle_number_t
+!! \c camp_aero_rep_single_particle::aero_rep_update_data_single_particle_number_t
 !! objects.
 
 !> The aero_rep_single_particle_t type and associated subroutines.
-module pmc_aero_rep_single_particle
+module camp_aero_rep_single_particle
 
-  use pmc_aero_phase_data
-  use pmc_aero_rep_data
-  use pmc_chem_spec_data
-  use pmc_camp_state
-  use pmc_mpi
-  use pmc_property
-  use pmc_util,                                  only: dp, i_kind, &
+  use camp_aero_phase_data
+  use camp_aero_rep_data
+  use camp_chem_spec_data
+  use camp_camp_state
+  use camp_mpi
+  use camp_property
+  use camp_util,                                  only: dp, i_kind, &
                                                        string_t, assert_msg, &
                                                        die_msg, to_string, &
                                                        assert
@@ -92,7 +92,7 @@ module pmc_aero_rep_single_particle
     !> Initialize an update data number object
     procedure :: update_data_initialize_number => update_data_init_number
     !> Get the size of the section of the
-    !! \c pmc_camp_state::camp_state_t::state_var array required for this
+    !! \c camp_camp_state::camp_state_t::state_var array required for this
     !! aerosol representation.
     !!
     !! For a single particle representation, the size will correspond to the
@@ -106,14 +106,14 @@ module pmc_aero_rep_single_particle
     !! arranged sequentially
     procedure :: per_particle_size
     !> Get a list of unique names for each element on the
-    !! \c pmc_camp_state::camp_state_t::state_var array for this aerosol
+    !! \c camp_camp_state::camp_state_t::state_var array for this aerosol
     !! representation. The list may be restricted to a particular phase and/or
     !! aerosol species by including the phase_name and spec_name arguments.
     !!
     !! For a single particle representation, the unique names will be the
     !! phase name with the species name separated by a '.'
     procedure :: unique_names
-    !> Get a species id on the \c pmc_camp_state::camp_state_t::state_var
+    !> Get a species id on the \c camp_camp_state::camp_state_t::state_var
     !! array by its unique name. These are unique ids for each element on the
     !! state array for this \ref camp_aero_rep "aerosol representation" and
     !! are numbered:
@@ -122,7 +122,7 @@ module pmc_aero_rep_single_particle
     !!
     !! where \f$x_u\f$ is the id of the element corresponding to the species
     !! with unique name \f$u\f$ on the \c
-    !! pmc_camp_state::camp_state_t::state_var array, \f$x_f\f$ is the index
+    !! camp_camp_state::camp_state_t::state_var array, \f$x_f\f$ is the index
     !! of the first element for this aerosol representation on the state array
     !! and \f$n\f$ is the total number of variables on the state array from
     !! this aerosol representation.
@@ -303,7 +303,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Get the size of the section of the
-  !! \c pmc_camp_state::camp_state_t::state_var array required for this
+  !! \c camp_camp_state::camp_state_t::state_var array required for this
   !! aerosol representation.
   !!
   !! For a single particle representation, the size will correspond to the
@@ -341,7 +341,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Get a list of unique names for each element on the
-  !! \c pmc_camp_state::camp_state_t::state_var array for this aerosol
+  !! \c camp_camp_state::camp_state_t::state_var array for this aerosol
   !! representation. The list may be restricted to a particular phase and/or
   !! aerosol species by including the phase_name and spec_name arguments.
   !!
@@ -350,7 +350,7 @@ contains
   !! another '.', and the species name.
   function unique_names(this, phase_name, tracer_type, spec_name)
 
-    use pmc_util,                      only : integer_to_string
+    use camp_util,                      only : integer_to_string
 
     !> List of unique names
     type(string_t), allocatable :: unique_names(:)
@@ -437,7 +437,7 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  !> Get a species id on the \c pmc_camp_state::camp_state_t::state_var
+  !> Get a species id on the \c camp_camp_state::camp_state_t::state_var
   !! array by its unique name. These are unique ids for each element on the
   !! state array for this \ref camp_aero_rep "aerosol representation" and
   !! are numbered:
@@ -446,7 +446,7 @@ contains
   !!
   !! where \f$x_u\f$ is the id of the element corresponding to the species
   !! with unique name \f$u\f$ on the \c
-  !! pmc_camp_state::camp_state_t::state_var array, \f$x_f\f$ is the index
+  !! camp_camp_state::camp_state_t::state_var array, \f$x_f\f$ is the index
   !! of the first element for this aerosol representation on the state array
   !! and \f$n\f$ is the total number of variables on the state array from
   !! this aerosol representation.
@@ -574,7 +574,7 @@ contains
   !> Initialize an update data object
   subroutine update_data_init_number(this, update_data, aero_rep_type)
 
-    use pmc_rand,                                only : generate_int_id
+    use camp_rand,                                only : generate_int_id
 
     !> Aerosol representation to update
     class(aero_rep_single_particle_t), intent(inout) :: this
@@ -637,9 +637,9 @@ contains
     integer, intent(in) :: comm
 
     pack_size = &
-      pmc_mpi_pack_size_logical(this%is_malloced, comm) + &
-      pmc_mpi_pack_size_integer(this%maximum_computational_particles, comm) + &
-      pmc_mpi_pack_size_integer(this%aero_rep_unique_id, comm)
+      camp_mpi_pack_size_logical(this%is_malloced, comm) + &
+      camp_mpi_pack_size_integer(this%maximum_computational_particles, comm) + &
+      camp_mpi_pack_size_integer(this%aero_rep_unique_id, comm)
 
   end function internal_pack_size_number
 
@@ -657,14 +657,14 @@ contains
     !> MPI communicator
     integer, intent(in) :: comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: prev_position
 
     prev_position = pos
-    call pmc_mpi_pack_logical(buffer, pos, this%is_malloced, comm)
-    call pmc_mpi_pack_integer(buffer, pos, &
+    call camp_mpi_pack_logical(buffer, pos, this%is_malloced, comm)
+    call camp_mpi_pack_integer(buffer, pos, &
                               this%maximum_computational_particles, comm)
-    call pmc_mpi_pack_integer(buffer, pos, this%aero_rep_unique_id, comm)
+    call camp_mpi_pack_integer(buffer, pos, this%aero_rep_unique_id, comm)
     call assert(964639022, &
          pos - prev_position <= this%pack_size(comm))
 #endif
@@ -685,14 +685,14 @@ contains
     !> MPI communicator
     integer, intent(in) :: comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: prev_position
 
     prev_position = pos
-    call pmc_mpi_unpack_logical(buffer, pos, this%is_malloced, comm)
-    call pmc_mpi_unpack_integer(buffer, pos, &
+    call camp_mpi_unpack_logical(buffer, pos, this%is_malloced, comm)
+    call camp_mpi_unpack_integer(buffer, pos, &
                                 this%maximum_computational_particles, comm)
-    call pmc_mpi_unpack_integer(buffer, pos, this%aero_rep_unique_id, comm)
+    call camp_mpi_unpack_integer(buffer, pos, this%aero_rep_unique_id, comm)
     call assert(459432617, &
          pos - prev_position <= this%pack_size(comm))
     this%update_data = aero_rep_single_particle_create_number_update_data()
@@ -714,4 +714,4 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end module pmc_aero_rep_single_particle
+end module camp_aero_rep_single_particle

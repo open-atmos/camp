@@ -1,6 +1,6 @@
 {
   "description" : "These aerosol phases correspond to the MONARCH 'mod37' configuration",
-  "pmc-data" : [
+  "camp-data" : [
     {
       "name" : "dust",
       "type": "AERO_PHASE",

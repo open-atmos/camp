@@ -8,10 +8,10 @@
 !> Mock version of the MONARCH model for testing integration with PartMC
 program mock_monarch
 
-  use pmc_util,                          only : assert_msg, almost_equal, &
+  use camp_util,                          only : assert_msg, almost_equal, &
                                                 to_string
-  use pmc_monarch_interface
-  use pmc_mpi
+  use camp_monarch_interface
+  use camp_mpi
 
   implicit none
 
@@ -93,7 +93,7 @@ program mock_monarch
   real :: plot_start_time = START_TIME
 
   !> !!! Add to MONARCH variables !!!
-  type(monarch_interface_t), pointer :: pmc_interface
+  type(monarch_interface_t), pointer :: camp_interface
 
   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   ! Mock model setup and evaluation variables !
@@ -109,7 +109,7 @@ program mock_monarch
   character(len=500) :: arg
   integer :: status_code, i_time, i_spec, i, j, k
   !> Partmc nº of cases to test
-  integer :: pmc_cases = 1
+  integer :: camp_cases = 1
 
 
   ! Check the command line arguments
@@ -118,11 +118,11 @@ program mock_monarch
           "interface_input_file.json output_file_prefix")
 
   ! initialize mpi (to take the place of a similar MONARCH call)
-  call pmc_mpi_init()
+  call camp_mpi_init()
 
   !Check if repeat program to compare n_cells=1 with n_cells=N
   if(check_multiple_cells) then
-    pmc_cases=2
+    camp_cases=2
   end if
 
   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -147,9 +147,9 @@ program mock_monarch
   call model_initialize(output_file_prefix)
 
   !Repeat in case we want create a checksum
-  do i=1, pmc_cases
+  do i=1, camp_cases
 
-    pmc_interface => monarch_interface_t(camp_input_file, interface_input_file, &
+    camp_interface => monarch_interface_t(camp_input_file, interface_input_file, &
             START_CAMP_ID, END_CAMP_ID, n_cells)!, n_cells
 
     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -157,10 +157,10 @@ program mock_monarch
     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     ! Set conc from mock_model
-    call pmc_interface%get_init_conc(species_conc, water_conc, WATER_VAPOR_ID, &
+    call camp_interface%get_init_conc(species_conc, water_conc, WATER_VAPOR_ID, &
             air_density)
 
-    ! call pmc_interface%print( )
+    ! call camp_interface%print( )
 
     ! Run the model
     do i_time=0, NUM_TIME_STEP
@@ -170,7 +170,7 @@ program mock_monarch
       !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
       call output_results(curr_time)
-      call pmc_interface%integrate(curr_time,         & ! Starting time (min)
+      call camp_interface%integrate(curr_time,         & ! Starting time (min)
                                    TIME_STEP,         & ! Time step (min)
                                    I_W,               & ! Starting W->E grid cell
                                    I_E,               & ! Ending W->E grid cell
@@ -203,7 +203,7 @@ program mock_monarch
   end do
 
   !If something to compare
-  if(pmc_cases.gt.1) then
+  if(camp_cases.gt.1) then
     !Compare results
     do i = I_W, I_E
       do j = I_S, I_N
@@ -226,9 +226,9 @@ program mock_monarch
   write(*,*) "MONARCH interface tests - PASS"
 
   ! Output results and scripts
-  if (pmc_mpi_rank().eq.0) then
+  if (camp_mpi_rank().eq.0) then
     call output_results(curr_time)
-    call create_gnuplot_script(pmc_interface, output_file_prefix, &
+    call create_gnuplot_script(camp_interface, output_file_prefix, &
             plot_start_time, curr_time)
   end if
 
@@ -255,14 +255,14 @@ program mock_monarch
   deallocate(interface_input_file)
 
   ! Free the interface and the solver
-  deallocate(pmc_interface)
+  deallocate(camp_interface)
 
   ! close the output file
   close(RESULTS_FILE_UNIT)
   deallocate(output_file_prefix)
 
   ! finalize mpi
-  call pmc_mpi_finalize()
+  call camp_mpi_finalize()
 
 contains
 
@@ -358,11 +358,11 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Create a gnuplot script for viewing species concentrations
-  subroutine create_gnuplot_script(pmc_interface, file_prefix, start_time, &
+  subroutine create_gnuplot_script(camp_interface, file_prefix, start_time, &
             end_time)
 
     !> PartMC-camp <-> MONARCH interface
-    type(monarch_interface_t), intent(in) :: pmc_interface
+    type(monarch_interface_t), intent(in) :: camp_interface
     !> File prefix for gnuplot script
     character(len=:), allocatable :: file_prefix
     !> Plot start time
@@ -376,7 +376,7 @@ contains
     integer(kind=i_kind) :: i_char, i_spec, tracer_id
 
     ! Get the species names and ids
-    call pmc_interface%get_MONARCH_species(species_names, tracer_ids)
+    call camp_interface%get_MONARCH_species(species_names, tracer_ids)
 
     ! Adjust the tracer ids to match the results file
     tracer_ids(:) = tracer_ids(:) - START_CAMP_ID + 2

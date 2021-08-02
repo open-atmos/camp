@@ -3,21 +3,21 @@
 ! SPDX-License-Identifier: MIT
 
 !> \file
-!> The pmc_test_aero_phase_data program
+!> The camp_test_aero_phase_data program
 
 !> Test class for the aero_phase_data_t type
-program pmc_test_aero_phase_data
+program camp_test_aero_phase_data
 
-  use pmc_util,                         only: i_kind, dp, assert, &
+  use camp_util,                         only: i_kind, dp, assert, &
                                               almost_equal
-  use pmc_property
-  use pmc_aero_phase_data
-  use pmc_chem_spec_data
-#ifdef PMC_USE_JSON
+  use camp_property
+  use camp_aero_phase_data
+  use camp_chem_spec_data
+#ifdef CAMP_USE_JSON
   use json_module
 #endif
-  use pmc_mpi
-#ifdef PMC_USE_MPI
+  use camp_mpi
+#ifdef CAMP_USE_MPI
   use mpi
 #endif
 
@@ -27,28 +27,28 @@ program pmc_test_aero_phase_data
   character(len=*), parameter :: new_line = char(10)
 
   !> initialize mpi
-  call pmc_mpi_init()
+  call camp_mpi_init()
 
-  if (run_pmc_aero_phase_data_tests()) then
-    if (pmc_mpi_rank().eq.0) write(*,*) "Aerosol phase data tests - PASS"
+  if (run_camp_aero_phase_data_tests()) then
+    if (camp_mpi_rank().eq.0) write(*,*) "Aerosol phase data tests - PASS"
   else
-    if (pmc_mpi_rank().eq.0) write(*,*) "Aerosol phase data tests - FAIL"
+    if (camp_mpi_rank().eq.0) write(*,*) "Aerosol phase data tests - FAIL"
     stop 3
   end if
 
   !> finalize mpi
-  call pmc_mpi_finalize()
+  call camp_mpi_finalize()
 
 contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  !> Run all pmc_aero_phase_data tests
-  logical function run_pmc_aero_phase_data_tests() result(passed)
+  !> Run all camp_aero_phase_data tests
+  logical function run_camp_aero_phase_data_tests() result(passed)
 
     passed = build_aero_phase_data_set_test()
 
-  end function run_pmc_aero_phase_data_tests
+  end function run_camp_aero_phase_data_tests
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -58,7 +58,7 @@ contains
     type(aero_phase_data_t), pointer :: aero_phase_data
     type(aero_phase_data_ptr), allocatable :: aero_phase_data_set(:)
     type(chem_spec_data_t), pointer :: chem_spec_data
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
     type(json_file) :: j_file
     type(json_core), pointer :: json
     type(json_value), pointer :: j_obj, j_next
@@ -68,7 +68,7 @@ contains
     character(len=:), allocatable :: key
     real(kind=dp) :: temp_real
     logical :: temp_logical
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     type(aero_phase_data_ptr), allocatable :: aero_phase_passed_data_set(:)
     character, allocatable :: buffer(:)
     integer(kind=i_kind) :: pos, pack_size, i_prop
@@ -78,7 +78,7 @@ contains
     call j_file%get_core(json)
     call j_file%load_file(filename = &
             'test_run/unit_aero_phase_data/test_aero_phase_data.json')
-    call j_file%get('pmc-data(1)',j_obj)
+    call j_file%get('camp-data(1)',j_obj)
 
     build_aero_phase_data_set_test = .false.
 
@@ -133,7 +133,7 @@ contains
     call assert(608559165, aero_phase_data_set(2)%val%size().eq.3)
     call assert(438402261, aero_phase_data_set(3)%val%size().eq.2)
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     pack_size = 0
     do i_phase = 1, 3
       pack_size = pack_size + aero_phase_data_set(i_phase)%val%pack_size(MPI_COMM_WORLD)
@@ -186,4 +186,4 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end program pmc_test_aero_phase_data
+end program camp_test_aero_phase_data

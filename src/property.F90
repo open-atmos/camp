@@ -3,16 +3,16 @@
 ! SPDX-License-Identifier: MIT
 
 !> \file
-!> The pmc_property module.
+!> The camp_property module.
 
 !> The property_t structure and associated subroutines.
-module pmc_property
+module camp_property
 
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
   use json_module
 #endif
-  use pmc_constants,                only : i_kind, dp
-  use pmc_util,                     only : die_msg, warn_msg, to_string, string_t
+  use camp_constants,                only : i_kind, dp
+  use camp_util,                     only : die_msg, warn_msg, to_string, string_t
 
 
   implicit none
@@ -82,7 +82,7 @@ module pmc_property
   !!
   !! An element of a property data set. Property values can be of any
   !! primitive type or be a pointer to a sub-set of property data.
-  !! The property_link_t object is for internal use in the pmc_property
+  !! The property_link_t object is for internal use in the camp_property
   !! module. All interactions with property data should be made using
   !! property_t objects.
   type property_link_t
@@ -136,7 +136,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Load a property set from input data
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
   recursive subroutine load(this, json, j_obj, as_object, owner_name, &
             allow_duplicates)
 
@@ -945,4 +945,4 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end module pmc_property
+end module camp_property

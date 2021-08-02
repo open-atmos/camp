@@ -3,18 +3,18 @@
 ! SPDX-License-Identifier: MIT
 
 !> \file
-!> The pmc_chem_spec_data_test program.
+!> The camp_chem_spec_data_test program.
 
-!> Unit tests for the pmc_chem_spec_data module.
-program pmc_chem_spec_data_test
+!> Unit tests for the camp_chem_spec_data module.
+program camp_chem_spec_data_test
 
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
   use json_module
 #endif
-  use pmc_chem_spec_data
-  use pmc_mpi
-  use pmc_property
-  use pmc_util
+  use camp_chem_spec_data
+  use camp_mpi
+  use camp_property
+  use camp_util
 
   implicit none
 
@@ -22,27 +22,27 @@ program pmc_chem_spec_data_test
   character(len=*), parameter :: new_line = char(10)
 
   !> initialize mpi
-  call pmc_mpi_init()
+  call camp_mpi_init()
 
-  if (run_pmc_chem_spec_data_tests()) then
-    if (pmc_mpi_rank().eq.0) write(*,*) "Chemical species tests - PASS"
+  if (run_camp_chem_spec_data_tests()) then
+    if (camp_mpi_rank().eq.0) write(*,*) "Chemical species tests - PASS"
   else
-    if (pmc_mpi_rank().eq.0) write(*,*) "Chemical species tests - FAIL"
+    if (camp_mpi_rank().eq.0) write(*,*) "Chemical species tests - FAIL"
   end if
 
   !> finalize mpi
-  call pmc_mpi_finalize()
+  call camp_mpi_finalize()
 
 contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  !> Run all pmc_chem_spec_data tests
-  logical function run_pmc_chem_spec_data_tests() result(passed)
+  !> Run all camp_chem_spec_data tests
+  logical function run_camp_chem_spec_data_tests() result(passed)
 
     passed = build_chem_spec_data_test()
 
-  end function run_pmc_chem_spec_data_tests
+  end function run_camp_chem_spec_data_tests
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -51,7 +51,7 @@ contains
 
     type(chem_spec_data_t), pointer :: spec_data
     integer(kind=i_kind) :: i_spec
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
     character(len=:), allocatable :: json_string
 
     type(json_file) :: j_file
@@ -67,7 +67,7 @@ contains
     real(kind=dp) :: temp_real
     logical :: temp_logical
 
-    json_string = '{ "pmc-data" : [{'//new_line//&
+    json_string = '{ "camp-data" : [{'//new_line//&
             '  "name" : "my first species",'//new_line//&
             '  "type" : "CHEM_SPEC",'//new_line//&
             '  "MW" : 123.43,'//new_line//&
@@ -135,8 +135,8 @@ contains
     allocate(json)
     call j_file%load_from_string(json_string)
 
-    ! Get the pmc-data object
-    call j_file%get('pmc-data(1)',j_spec)
+    ! Get the camp-data object
+    call j_file%get('camp-data(1)',j_spec)
 
     ! Load the json dataset
     call assert(256038991, associated(j_spec))
@@ -265,4 +265,4 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end program pmc_chem_spec_data_test
+end program camp_chem_spec_data_test

@@ -3,7 +3,7 @@
 ! SPDX-License-Identifier: MIT
 
 !> \file
-!> The pmc_chem_spec_data module.
+!> The camp_chem_spec_data module.
 
 !> \page camp_species CAMP: Chemical Species
 !!
@@ -22,21 +22,21 @@
 !! and sub-model data for use during solving. Note that chemical species data
 !! are  **only** available during initialization, and when using MPI are not
 !! passed to child nodes. The primary node will, however, have access to data
-!! in the \c pmc_camp_core::camp_core_t::chem_spec_data object for outputing
+!! in the \c camp_camp_core::camp_core_t::chem_spec_data object for outputing
 !! model data (e.g., species names).
 !!
 !! The input format for chemical species can be found \ref
 !! input_format_species "here".
 
 !> The chem_spec_data_t structure and associated subroutines.
-module pmc_chem_spec_data
+module camp_chem_spec_data
 
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
   use json_module
 #endif
-  use pmc_constants,                  only : dp, i_kind
-  use pmc_property
-  use pmc_util,                       only : die_msg, string_t, assert_msg
+  use camp_constants,                  only : dp, i_kind
+  use camp_property
+  use camp_util,                       only : die_msg, string_t, assert_msg
 
   use iso_c_binding
 
@@ -97,17 +97,17 @@ module pmc_chem_spec_data
     !> Get the absolute integration tolerance of a species
     procedure :: get_abs_tol
     !> Get a gas-phase species index in the \c
-    !! pmc_camp_state::camp_state_t::state_var array.  Note that
+    !! camp_camp_state::camp_state_t::state_var array.  Note that
     !! aerosol-phase species indices on the \c
-    !! pmc_camp_state::camp_state_t::state_var array must be accessed from
-    !! \c pmc_aero_rep_data::aero_rep_data_t::spec_state_id() for a
+    !! camp_camp_state::camp_state_t::state_var array must be accessed from
+    !! \c camp_aero_rep_data::aero_rep_data_t::spec_state_id() for a
     !! particular \ref camp_aero_rep "aerosol representation".
     procedure :: gas_state_id
     !> Get the name of a gas-phase species in the \c
-    !! pmc_camp_state::camp_state_t::state_var array.  Note that
+    !! camp_camp_state::camp_state_t::state_var array.  Note that
     !! aerosol-phase species names on the \c
-    !! pmc_camp_state::camp_state_t::state_var array must be accessed from
-    !! \c pmc_aero_rep_data::aero_rep_data_t::spec_state_id() for a
+    !! camp_camp_state::camp_state_t::state_var array must be accessed from
+    !! \c camp_aero_rep_data::aero_rep_data_t::spec_state_id() for a
     !! particular \ref camp_aero_rep "aerosol representation".
     procedure :: gas_state_name
     !> Print out the species data
@@ -162,7 +162,7 @@ contains
   !! A \c json object containing information about a \ref camp_species
   !! "chemical species" has the following format:
   !! \code{.json}
-  !! { "pmc-data" : [
+  !! { "camp-data" : [
   !!   {
   !!     "name" : "my species name",
   !!     "type" : "CHEM_SPEC",
@@ -208,7 +208,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Load species from an input file
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
   subroutine load(this, json, j_obj)
 
     !> Species dataset
@@ -542,10 +542,10 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Get a gas-phase species index in the \c
-  !! pmc_camp_state::camp_state_t::state_var array.  Note that
+  !! camp_camp_state::camp_state_t::state_var array.  Note that
   !! aerosol-phase species indices on the \c
-  !! pmc_camp_state::camp_state_t::state_var array must be accessed from
-  !! \c pmc_aero_rep_data::aero_rep_data_t::spec_state_id() for a
+  !! camp_camp_state::camp_state_t::state_var array must be accessed from
+  !! \c camp_aero_rep_data::aero_rep_data_t::spec_state_id() for a
   !! particular \ref camp_aero_rep "aerosol representation". Returns a valid
   !! state array index if the species is found, or 0 otherwise
   integer(kind=i_kind) function gas_state_id(this, spec_name)
@@ -571,10 +571,10 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Get a gas-phase species name in the \c
-  !! pmc_camp_state::camp_state_t::state_var array.  Note that
+  !! camp_camp_state::camp_state_t::state_var array.  Note that
   !! aerosol-phase species names on the \c
-  !! pmc_camp_state::camp_state_t::state_var array must be accessed from
-  !! \c pmc_aero_rep_data::aero_rep_data_t::spec_state_id() for a
+  !! camp_camp_state::camp_state_t::state_var array must be accessed from
+  !! \c camp_aero_rep_data::aero_rep_data_t::spec_state_id() for a
   !! particular \ref camp_aero_rep "aerosol representation". Returns a valid
   !! state array index if the species is found, or 0 otherwise
   function gas_state_name(this, spec_id) result(spec_name)
@@ -792,4 +792,4 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end module pmc_chem_spec_data
+end module camp_chem_spec_data

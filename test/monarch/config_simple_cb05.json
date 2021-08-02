@@ -1,5 +1,5 @@
 {
-	"pmc-files" : [
+	"camp-files" : [
 		"../../mechanisms_run/cb05cl_ae5/cb05cl_ae5_mechanism_big.json",
 		"../../mechanisms_run/cb05cl_ae5/cb05cl_ae5_species.json",
 		"../chemistry/cb05cl_ae5/cb05cl_ae5_abs_tol.json"

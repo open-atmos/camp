@@ -3,7 +3,7 @@
 ! SPDX-License-Identifier: MIT
 
 !> \file
-!> The pmc_sub_model_ZSR_aerosol_water module.
+!> The camp_sub_model_ZSR_aerosol_water module.
 
 ! TODO Incorporate deliquesence calculations
 
@@ -26,7 +26,7 @@
 !!
 !! Input data for ZSR aerosol water calculations have the following format :
 !! \code{.json}
-!! { "pmc-data" : [
+!! { "camp-data" : [
 !!   {
 !!     "type" : "SUB_MODEL_ZSR_AEROSOL_WATER",
 !!     "aerosol phase" : "my aero phase",
@@ -158,16 +158,16 @@
 ! TODO Find a way to incorporate the "regimes" in EQSAM
 
 !> The sub_model_ZSR_aerosol_water_t type and associated functions.
-module pmc_sub_model_ZSR_aerosol_water
+module camp_sub_model_ZSR_aerosol_water
 
-  use pmc_aero_phase_data
-  use pmc_aero_rep_data
-  use pmc_chem_spec_data
-  use pmc_constants,                        only: const
-  use pmc_camp_state
-  use pmc_property
-  use pmc_sub_model_data
-  use pmc_util,                             only: i_kind, dp, to_string, &
+  use camp_aero_phase_data
+  use camp_aero_rep_data
+  use camp_chem_spec_data
+  use camp_constants,                        only: const
+  use camp_camp_state
+  use camp_property
+  use camp_sub_model_data
+  use camp_util,                             only: i_kind, dp, to_string, &
                                                   assert, assert_msg, &
                                                   die_msg, string_t
 
@@ -732,4 +732,4 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end module pmc_sub_model_ZSR_aerosol_water
+end module camp_sub_model_ZSR_aerosol_water

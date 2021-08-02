@@ -310,7 +310,7 @@ void sub_model_ZSR_aerosol_water_calculate(int *sub_model_int_data,
  * \param J Jacobian to be calculated
  * \param time_step Current time step [s]
  */
-#ifdef PMC_USE_SUNDIALS
+#ifdef CAMP_USE_SUNDIALS
 void sub_model_ZSR_aerosol_water_get_jac_contrib(int *sub_model_int_data,
                                                  double *sub_model_float_data,
                                                  double *sub_model_env_data,

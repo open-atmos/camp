@@ -43,7 +43,7 @@ $(GRAPHVIZ_FILE): $(PARTMC_FSRC) f90_mod_deps.py
 	echo "    node [fontsize = 10, height = 0.3, width = 0.5];" >> $@
 	echo "    graph [nodesep = 0.2, ranksep = 0.3];" >> $@
 	echo "    edge [arrowsize = 0.7];" >> $@
-	./f90_mod_deps.py -d "pmc_(.*)" -D "\1" -m "pmc_(.*)" -M "\1" -g -i $(PARTMC_FSRC) >> $@
+	./f90_mod_deps.py -d "camp_(.*)" -D "\1" -m "camp_(.*)" -M "\1" -g -i $(PARTMC_FSRC) >> $@
 	echo "}" >> $@
 
 %.png: %.gv

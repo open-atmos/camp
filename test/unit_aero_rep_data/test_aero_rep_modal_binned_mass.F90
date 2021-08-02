@@ -3,26 +3,26 @@
 ! SPDX-License-Identifier: MIT
 
 !> \file
-!> The pmc_test_aero_rep_data program
+!> The camp_test_aero_rep_data program
 
 !> Test class for the aero_rep_data_t extending types
-program pmc_test_aero_rep_data
+program camp_test_aero_rep_data
 
-  use pmc_util,                         only: i_kind, dp, assert, &
+  use camp_util,                         only: i_kind, dp, assert, &
                                               almost_equal
-  use pmc_property
-  use pmc_camp_core
-  use pmc_camp_state
-  use pmc_aero_rep_data
-  use pmc_aero_rep_factory
-  use pmc_aero_rep_modal_binned_mass
-#ifdef PMC_USE_JSON
+  use camp_property
+  use camp_camp_core
+  use camp_camp_state
+  use camp_aero_rep_data
+  use camp_aero_rep_factory
+  use camp_aero_rep_modal_binned_mass
+#ifdef CAMP_USE_JSON
   use json_module
 #endif
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
   use mpi
 #endif
-  use pmc_mpi
+  use camp_mpi
 
   use iso_c_binding
   implicit none
@@ -54,26 +54,26 @@ program pmc_test_aero_rep_data
   character(len=*), parameter :: new_line = char(10)
 
   !> initialize mpi
-  call pmc_mpi_init()
+  call camp_mpi_init()
 
-  if (run_pmc_aero_rep_data_tests()) then
-    if (pmc_mpi_rank().eq.0) write(*,*) "Aerosol representation tests - PASS"
+  if (run_camp_aero_rep_data_tests()) then
+    if (camp_mpi_rank().eq.0) write(*,*) "Aerosol representation tests - PASS"
   else
-    if (pmc_mpi_rank().eq.0) write(*,*) "Aerosol representation tests - FAIL"
+    if (camp_mpi_rank().eq.0) write(*,*) "Aerosol representation tests - FAIL"
     stop 3
   end if
 
   !> finalize mpi
-  call pmc_mpi_finalize()
+  call camp_mpi_finalize()
 
 contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  !> Run all pmc_aero_rep_data tests
-  logical function run_pmc_aero_rep_data_tests() result(passed)
+  !> Run all camp_aero_rep_data tests
+  logical function run_camp_aero_rep_data_tests() result(passed)
 
-    use pmc_camp_solver_data
+    use camp_camp_solver_data
 
     type(camp_solver_data_t), pointer :: camp_solver_data
 
@@ -82,7 +82,7 @@ contains
     if (camp_solver_data%is_solver_available()) then
       ! The MPI tests only involve packing and unpacking the aero rep
       ! from a buffer on the primary task
-      if (pmc_mpi_rank().eq.0) then
+      if (camp_mpi_rank().eq.0) then
          passed = build_aero_rep_data_set_test()
       else
          passed = .true.
@@ -94,7 +94,7 @@ contains
 
     deallocate(camp_solver_data)
 
-  end function run_pmc_aero_rep_data_tests
+  end function run_camp_aero_rep_data_tests
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -105,12 +105,12 @@ contains
     type(camp_state_t), pointer :: camp_state
     class(aero_rep_data_t), pointer :: aero_rep
 
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
 
     integer(kind=i_kind) :: i_spec, j_spec, i_phase, spec_id
     character(len=:), allocatable :: rep_name, spec_name, phase_name
     type(string_t), allocatable :: file_list(:), unique_names(:)
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     type(string_t), allocatable :: rep_names(:)
     type(aero_rep_factory_t) :: aero_rep_factory
     type(aero_rep_data_ptr), allocatable :: aero_rep_passed_data_set(:)
@@ -219,7 +219,7 @@ contains
     call assert(366369046, .not.associated(aero_rep))
 
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     allocate(rep_names(1))
     rep_names(1)%string = "my modal/binned mass aerosol rep"
     pack_size = 0
@@ -368,4 +368,4 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end program pmc_test_aero_rep_data
+end program camp_test_aero_rep_data

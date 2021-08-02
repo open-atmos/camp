@@ -3,27 +3,27 @@
 ! SPDX-License-Identifier: MIT
 
 !> \file
-!> The pmc_test_wet_deposition program
+!> The camp_test_wet_deposition program
 
 !> Test of wet_deposition reaction module
-program pmc_test_wet_deposition
+program camp_test_wet_deposition
 
-  use pmc_aero_rep_data
-  use pmc_chem_spec_data
-  use pmc_mechanism_data
-  use pmc_camp_core
-  use pmc_camp_state
-  use pmc_rxn_data
-  use pmc_rxn_wet_deposition
-  use pmc_rxn_factory
-  use pmc_solver_stats
-  use pmc_util,                         only: i_kind, dp, assert, &
+  use camp_aero_rep_data
+  use camp_chem_spec_data
+  use camp_mechanism_data
+  use camp_camp_core
+  use camp_camp_state
+  use camp_rxn_data
+  use camp_rxn_wet_deposition
+  use camp_rxn_factory
+  use camp_solver_stats
+  use camp_util,                         only: i_kind, dp, assert, &
                                               almost_equal, string_t, &
                                               warn_msg
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
   use json_module
 #endif
-  use pmc_mpi
+  use camp_mpi
 
   use iso_c_binding
 
@@ -33,28 +33,28 @@ program pmc_test_wet_deposition
   integer(kind=i_kind) :: NUM_TIME_STEP = 100
 
   ! initialize mpi
-  call pmc_mpi_init()
+  call camp_mpi_init()
 
   if (run_wet_deposition_tests()) then
-    if (pmc_mpi_rank().eq.0) write(*,*) &
+    if (camp_mpi_rank().eq.0) write(*,*) &
           "Wet Deposition reaction tests - PASS"
   else
-    if (pmc_mpi_rank().eq.0) write(*,*) &
+    if (camp_mpi_rank().eq.0) write(*,*) &
           "Wet Deposition reaction tests - FAIL"
     stop 3
   end if
 
   ! finalize mpi
-  call pmc_mpi_finalize()
+  call camp_mpi_finalize()
 
 contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  !> Run all pmc_rxn_wet_deposition tests
+  !> Run all camp_rxn_wet_deposition tests
   logical function run_wet_deposition_tests() result(passed)
 
-    use pmc_camp_solver_data
+    use camp_camp_solver_data
 
     type(camp_solver_data_t), pointer :: camp_solver_data
 
@@ -83,7 +83,7 @@ contains
   !! where k is the wet_deposition reaction rate constant.
   logical function run_wet_deposition_test()
 
-    use pmc_constants
+    use camp_constants
 
     type(camp_core_t), pointer :: camp_core
     type(camp_state_t), pointer :: camp_state
@@ -101,7 +101,7 @@ contains
     class(aero_rep_data_t), pointer :: aero_rep
     type(string_t), allocatable :: unique_names(:)
     character(len=:), allocatable :: spec_name, phase_name, rep_name
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     character, allocatable :: buffer(:), buffer_copy(:)
     integer(kind=i_kind) :: pack_size, pos, i_elem, results
 #endif
@@ -127,9 +127,9 @@ contains
     ! Set output time step (s)
     time_step = 1.0
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     ! Load the model data on the root process and pass it to process 1 for solving
-    if (pmc_mpi_rank().eq.0) then
+    if (camp_mpi_rank().eq.0) then
 #endif
 
       ! Get the wet_deposition reaction mechanism json file
@@ -244,7 +244,7 @@ contains
       call assert(879297015, idx_2CB.gt.0)
       call assert(709140111, idx_2CC.gt.0)
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
       ! pack the camp core
       pack_size = camp_core%pack_size() &
                 + rate_update_rain%pack_size() &
@@ -258,27 +258,27 @@ contains
     end if
 
     ! broadcast the species ids
-    call pmc_mpi_bcast_integer(idx_1RA)
-    call pmc_mpi_bcast_integer(idx_1RB)
-    call pmc_mpi_bcast_integer(idx_1CB)
-    call pmc_mpi_bcast_integer(idx_1CC)
-    call pmc_mpi_bcast_integer(idx_2RA)
-    call pmc_mpi_bcast_integer(idx_2RB)
-    call pmc_mpi_bcast_integer(idx_2CB)
-    call pmc_mpi_bcast_integer(idx_2CC)
+    call camp_mpi_bcast_integer(idx_1RA)
+    call camp_mpi_bcast_integer(idx_1RB)
+    call camp_mpi_bcast_integer(idx_1CB)
+    call camp_mpi_bcast_integer(idx_1CC)
+    call camp_mpi_bcast_integer(idx_2RA)
+    call camp_mpi_bcast_integer(idx_2RB)
+    call camp_mpi_bcast_integer(idx_2CB)
+    call camp_mpi_bcast_integer(idx_2CC)
 
     ! broadcast the buffer size
-    call pmc_mpi_bcast_integer(pack_size)
+    call camp_mpi_bcast_integer(pack_size)
 
-    if (pmc_mpi_rank().eq.1) then
+    if (camp_mpi_rank().eq.1) then
       ! allocate the buffer to receive data
       allocate(buffer(pack_size))
     end if
 
     ! broadcast the data
-    call pmc_mpi_bcast_packed(buffer)
+    call camp_mpi_bcast_packed(buffer)
 
-    if (pmc_mpi_rank().eq.1) then
+    if (camp_mpi_rank().eq.1) then
       ! unpack the data
       camp_core => camp_core_t()
       pos = 0
@@ -334,7 +334,7 @@ contains
       call rate_update_cloud%set_rate(rate_cloud)
       call camp_core%update_data(rate_update_cloud)
 
-#ifdef PMC_DEBUG
+#ifdef CAMP_DEBUG
       ! Evaluate the Jacobian during solving
       solver_stats%eval_Jac = .true.
 #endif
@@ -347,7 +347,7 @@ contains
                               solver_stats = solver_stats)
         model_conc(i_time,:) = camp_state%state_var(:)
 
-#ifdef PMC_DEBUG
+#ifdef CAMP_DEBUG
         ! Check the Jacobian evaluations
         call assert_msg(172394787, solver_stats%Jac_eval_fails.eq.0, &
                         trim( to_string( solver_stats%Jac_eval_fails ) )// &
@@ -401,7 +401,7 @@ contains
 
       deallocate(camp_state)
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
       ! convert the results to an integer
       if (run_wet_deposition_test) then
         results = 0
@@ -411,10 +411,10 @@ contains
     end if
 
     ! Send the results back to the primary process
-    call pmc_mpi_transfer_integer(results, results, 1, 0)
+    call camp_mpi_transfer_integer(results, results, 1, 0)
 
     ! convert the results back to a logical value
-    if (pmc_mpi_rank().eq.0) then
+    if (camp_mpi_rank().eq.0) then
       if (results.eq.0) then
         run_wet_deposition_test = .true.
       else
@@ -431,4 +431,4 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end program pmc_test_wet_deposition
+end program camp_test_wet_deposition

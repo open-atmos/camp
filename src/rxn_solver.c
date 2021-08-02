@@ -8,14 +8,14 @@
 /** \file
  * \brief Reaction solver functions
  */
-#define PMC_DEBUG_SPEC_ 118
+#define CAMP_DEBUG_SPEC_ 118
 
 #include "rxn_solver.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include "rxns.h"
 
-// Reaction types (Must match parameters defined in pmc_rxn_factory)
+// Reaction types (Must match parameters defined in camp_rxn_factory)
 #define RXN_ARRHENIUS 1
 #define RXN_TROE 2
 #define RXN_CMAQ_H2O2 3
@@ -253,7 +253,7 @@ void rxn_update_env_state(ModelData *model_data) {
  * \param time_deriv TimeDerivative to use to build derivative array
  * \param time_step Current model time step (s)
  */
-#ifdef PMC_USE_SUNDIALS
+#ifdef CAMP_USE_SUNDIALS
 void rxn_calc_deriv(ModelData *model_data, TimeDerivative time_deriv,
                     realtype time_step) {
   // Get the number of reactions
@@ -345,7 +345,7 @@ void rxn_calc_deriv(ModelData *model_data, TimeDerivative time_deriv,
  * \param time_deriv TimeDerivative to use to build derivative array
  * \param time_step Current model time step (s)
  */
-#ifdef PMC_USE_SUNDIALS
+#ifdef CAMP_USE_SUNDIALS
 void rxn_calc_deriv_specific_types(ModelData *model_data,
                                    TimeDerivative time_deriv,
                                    realtype time_step) {
@@ -388,7 +388,7 @@ void rxn_calc_deriv_specific_types(ModelData *model_data,
  * \param jac The reaction Jacobian (for one grid cell)
  * \param time_step Current model time step (s)
  */
-#ifdef PMC_USE_SUNDIALS
+#ifdef CAMP_USE_SUNDIALS
 void rxn_calc_jac(ModelData *model_data, Jacobian jac, realtype time_step) {
   // Get the number of reactions
   int n_rxn = model_data->n_rxn;
@@ -475,7 +475,7 @@ void rxn_calc_jac(ModelData *model_data, Jacobian jac, realtype time_step) {
  * \param jac The reaction Jacobian (for one grid cell)
  * \param time_step Current model time step (s)
  */
-#ifdef PMC_USE_SUNDIALS
+#ifdef CAMP_USE_SUNDIALS
 
 void rxn_calc_jac_specific_types(ModelData *model_data, Jacobian jac,
                                  realtype time_step) {

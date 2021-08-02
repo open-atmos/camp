@@ -3,7 +3,7 @@
     "Example is for a n-butanol water mixture, from:",
     "Marcolli and Peter, ACP 5(2), 1501-1527, 2005. (fig 3a)"
   ],
-  "pmc-data" : [
+  "camp-data" : [
   {
     "type" : "RELATIVE_TOLERANCE",
     "value" : 1.0e-30

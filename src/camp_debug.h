@@ -17,19 +17,20 @@ int file_name_prefix = 1;
 // Number of points to advance state for output
 #define N_OUTPUT_STATES 100
 
-#ifdef PMC_DEBUG
-#define PMC_DEBUG_SPEC_ 0
-#define PMC_DEBUG_PRINT(x) \
-  pmc_debug_print(sd->cvode_mem, x, false, 0, __LINE__, __func__)
-#define PMC_DEBUG_PRINT_INT(x, y) \
-  pmc_debug_print(sd->cvode_mem, x, false, y, __LINE__, __func__)
-#define PMC_DEBUG_PRINT_FULL(x) \
-  pmc_debug_print(sd->cvode_mem, x, true, 0, __LINE__, __func__)
-#define PMC_DEBUG_JAC_STRUCT(J, x) pmc_debug_print_jac_struct((void *)sd, J, x)
-#define PMC_DEBUG_JAC(J, x) pmc_debug_print_jac((void *)sd, J, x)
-void pmc_debug_print(void *cvode_mem, const char *message, bool do_full,
-                     const int int_val, const int line, const char *func) {
-#ifdef PMC_USE_SUNDIALS
+#ifdef CAMP_DEBUG
+#define CAMP_DEBUG_SPEC_ 0
+#define CAMP_DEBUG_PRINT(x)                                                    \
+  camp_debug_print(sd->cvode_mem, x, false, 0, __LINE__, __func__)
+#define CAMP_DEBUG_PRINT_INT(x, y)                                             \
+  camp_debug_print(sd->cvode_mem, x, false, y, __LINE__, __func__)
+#define CAMP_DEBUG_PRINT_FULL(x)                                               \
+  camp_debug_print(sd->cvode_mem, x, true, 0, __LINE__, __func__)
+#define CAMP_DEBUG_JAC_STRUCT(J, x)                                            \
+  camp_debug_print_jac_struct((void *)sd, J, x)
+#define CAMP_DEBUG_JAC(J, x) camp_debug_print_jac((void *)sd, J, x)
+void camp_debug_print(void *cvode_mem, const char *message, bool do_full,
+                      const int int_val, const int line, const char *func) {
+#ifdef CAMP_USE_SUNDIALS
   CVodeMem cv_mem = (CVodeMem)cvode_mem;
   if (!(cv_mem->cv_debug_out)) return;
   printf(
@@ -37,14 +38,14 @@ void pmc_debug_print(void *cvode_mem, const char *message, bool do_full,
       "hin = %le species %d(zn[0] = %le zn[1] = %le tempv = %le tempv1 = %le "
       "tempv2 = %le acor_init = %le last_yn = %le",
       line, func, message, int_val, cv_mem->cv_tn, cv_mem->cv_h, cv_mem->cv_q,
-      cv_mem->cv_hin, PMC_DEBUG_SPEC_,
-      NV_DATA_S(cv_mem->cv_zn[0])[PMC_DEBUG_SPEC_],
-      NV_DATA_S(cv_mem->cv_zn[1])[PMC_DEBUG_SPEC_],
-      NV_DATA_S(cv_mem->cv_tempv)[PMC_DEBUG_SPEC_],
-      NV_DATA_S(cv_mem->cv_tempv1)[PMC_DEBUG_SPEC_],
-      NV_DATA_S(cv_mem->cv_tempv2)[PMC_DEBUG_SPEC_],
-      NV_DATA_S(cv_mem->cv_acor_init)[PMC_DEBUG_SPEC_],
-      NV_DATA_S(cv_mem->cv_last_yn)[PMC_DEBUG_SPEC_]);
+      cv_mem->cv_hin, CAMP_DEBUG_SPEC_,
+      NV_DATA_S(cv_mem->cv_zn[0])[CAMP_DEBUG_SPEC_],
+      NV_DATA_S(cv_mem->cv_zn[1])[CAMP_DEBUG_SPEC_],
+      NV_DATA_S(cv_mem->cv_tempv)[CAMP_DEBUG_SPEC_],
+      NV_DATA_S(cv_mem->cv_tempv1)[CAMP_DEBUG_SPEC_],
+      NV_DATA_S(cv_mem->cv_tempv2)[CAMP_DEBUG_SPEC_],
+      NV_DATA_S(cv_mem->cv_acor_init)[CAMP_DEBUG_SPEC_],
+      NV_DATA_S(cv_mem->cv_last_yn)[CAMP_DEBUG_SPEC_]);
   if (do_full) {
     for (int i = 0; i < NV_LENGTH_S(cv_mem->cv_y); i++) {
       printf(
@@ -60,9 +61,9 @@ void pmc_debug_print(void *cvode_mem, const char *message, bool do_full,
   }
 #endif
 }
-void pmc_debug_print_jac_struct(void *solver_data, SUNMatrix J,
-                                const char *message) {
-#ifdef PMC_USE_SUNDIALS
+void camp_debug_print_jac_struct(void *solver_data, SUNMatrix J,
+                                 const char *message) {
+#ifdef CAMP_USE_SUNDIALS
   SolverData *sd = (SolverData *)solver_data;
 
   if (!(sd->debug_out)) return;
@@ -84,8 +85,8 @@ void pmc_debug_print_jac_struct(void *solver_data, SUNMatrix J,
   }
 #endif
 }
-void pmc_debug_print_jac(void *solver_data, SUNMatrix J, const char *message) {
-#ifdef PMC_USE_SUNDIALS
+void camp_debug_print_jac(void *solver_data, SUNMatrix J, const char *message) {
+#ifdef CAMP_USE_SUNDIALS
   SolverData *sd = (SolverData *)solver_data;
 
   if (!(sd->debug_out)) return;
@@ -109,7 +110,7 @@ void pmc_debug_print_jac(void *solver_data, SUNMatrix J, const char *message) {
 #endif
 }
 
-realtype pmc_jac_elem(SUNMatrix J, unsigned int j, unsigned int i) {
+realtype camp_jac_elem(SUNMatrix J, unsigned int j, unsigned int i) {
   for (int i_elem = SM_INDEXPTRS_S(J)[j]; i_elem < SM_INDEXPTRS_S(J)[j + 1];
        ++i_elem) {
     if (i == SM_INDEXVALS_S(J)[i_elem]) return SM_DATA_S(J)[i_elem];
@@ -117,11 +118,11 @@ realtype pmc_jac_elem(SUNMatrix J, unsigned int j, unsigned int i) {
   return 0.0;
 }
 #else
-#define PMC_DEBUG_PRINT(x)
-#define PMC_DEBUG_PRINT_INT(x, y)
-#define PMC_DEBUG_PRINT_FULL(x)
-#define PMC_DEBUG_JAC_STRUCT(J, x)
-#define PMC_DEBUG_JAC(J, x)
+#define CAMP_DEBUG_PRINT(x)
+#define CAMP_DEBUG_PRINT_INT(x, y)
+#define CAMP_DEBUG_PRINT_FULL(x)
+#define CAMP_DEBUG_JAC_STRUCT(J, x)
+#define CAMP_DEBUG_JAC(J, x)
 #endif
 
 /** \brief Print some camp-chem data sizes

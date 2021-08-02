@@ -3,7 +3,7 @@
 ! SPDX-License-Identifier: MIT
 
 !> \file
-!> The pmc_sub_model_factory module.
+!> The camp_sub_model_factory module.
 
 !> \page camp_sub_model_add CAMP: Adding a Sub Model
 !!
@@ -11,24 +11,24 @@
 !!
 
 !> The sub_model_factory_t type and associated subroutines
-module pmc_sub_model_factory
+module camp_sub_model_factory
 
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
   use json_module
 #endif
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
   use mpi
 #endif
-  use pmc_constants,                    only : i_kind, dp
-  use pmc_mpi
-  use pmc_sub_model_data
-  use pmc_util,                         only : die_msg, string_t, assert_msg, &
+  use camp_constants,                    only : i_kind, dp
+  use camp_mpi
+  use camp_sub_model_data
+  use camp_util,                         only : die_msg, string_t, assert_msg, &
                                                warn_msg
 
   ! Use all sub-models
-  use pmc_sub_model_PDFiTE
-  use pmc_sub_model_UNIFAC
-  use pmc_sub_model_ZSR_aerosol_water
+  use camp_sub_model_PDFiTE
+  use camp_sub_model_UNIFAC
+  use camp_sub_model_ZSR_aerosol_water
 
   implicit none
   private
@@ -94,7 +94,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Load a sub-model based on its type
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
   function load(this, json, j_obj) result (new_obj)
 
     !> A new sub-model
@@ -193,7 +193,7 @@ contains
     !> MPI communicator
     integer, intent(in) :: comm
 
-    pack_size =  pmc_mpi_pack_size_integer(int(1, kind=i_kind), comm) + &
+    pack_size =  camp_mpi_pack_size_integer(int(1, kind=i_kind), comm) + &
                  sub_model%pack_size(comm)
 
   end function pack_size
@@ -214,7 +214,7 @@ contains
     !> MPI communicator
     integer, intent(in) :: comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: sub_model_data_type, i_sub_model, prev_position
 
     prev_position = pos
@@ -228,7 +228,7 @@ contains
       class default
         call die_msg(850922257, "Trying to pack sub-model of unknown type.")
     end select
-    call pmc_mpi_pack_integer(buffer, pos, sub_model_data_type, comm)
+    call camp_mpi_pack_integer(buffer, pos, sub_model_data_type, comm)
     call sub_model%bin_pack(buffer, pos, comm)
     call assert(340451545, &
          pos - prev_position <= this%pack_size(sub_model, comm))
@@ -252,11 +252,11 @@ contains
     !> MPI communicator
     integer, intent(in) :: comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: sub_model_data_type, i_sub_model, prev_position
 
     prev_position = pos
-    call pmc_mpi_unpack_integer(buffer, pos, sub_model_data_type, comm)
+    call camp_mpi_unpack_integer(buffer, pos, sub_model_data_type, comm)
     select case (sub_model_data_type)
       case (SUB_MODEL_PDFITE)
         sub_model => sub_model_PDFiTE_t()
@@ -277,4 +277,4 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end module pmc_sub_model_factory
+end module camp_sub_model_factory

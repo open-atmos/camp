@@ -3,27 +3,27 @@
 ! SPDX-License-Identifier: MIT
 
 !> \file
-!> The pmc_test_PDFiTE program
+!> The camp_test_PDFiTE program
 
 !> Test of PDFiTE sub model module
-program pmc_test_PDFiTE
+program camp_test_PDFiTE
 
   use iso_c_binding
 
-  use pmc_util,                         only: i_kind, dp, assert, &
+  use camp_util,                         only: i_kind, dp, assert, &
                                               almost_equal, string_t, &
                                               warn_msg
-  use pmc_camp_core
-  use pmc_camp_state
-  use pmc_aero_rep_data
-  use pmc_aero_rep_factory
-  use pmc_aero_rep_single_particle
-  use pmc_chem_spec_data
-  use pmc_solver_stats
-#ifdef PMC_USE_JSON
+  use camp_camp_core
+  use camp_camp_state
+  use camp_aero_rep_data
+  use camp_aero_rep_factory
+  use camp_aero_rep_single_particle
+  use camp_chem_spec_data
+  use camp_solver_stats
+#ifdef CAMP_USE_JSON
   use json_module
 #endif
-  use pmc_mpi
+  use camp_mpi
 
   implicit none
 
@@ -31,26 +31,26 @@ program pmc_test_PDFiTE
   integer(kind=i_kind) :: NUM_RH_STEP = 101
 
   ! initialize mpi
-  call pmc_mpi_init()
+  call camp_mpi_init()
 
   if (run_PDFiTE_tests()) then
-    if (pmc_mpi_rank().eq.0) write(*,*) " PD-FiTE activity sub model tests - PASS"
+    if (camp_mpi_rank().eq.0) write(*,*) " PD-FiTE activity sub model tests - PASS"
   else
-    if (pmc_mpi_rank().eq.0) write(*,*) " PD-FiTE activity sub model tests - FAIL"
+    if (camp_mpi_rank().eq.0) write(*,*) " PD-FiTE activity sub model tests - FAIL"
     stop 3
   end if
 
   ! finalize mpi
-  call pmc_mpi_finalize()
+  call camp_mpi_finalize()
 
 contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  !> Run all pmc_chem_mech_solver tests
+  !> Run all camp_chem_mech_solver tests
   logical function run_PDFiTE_tests() result(passed)
 
-    use pmc_camp_solver_data
+    use camp_camp_solver_data
 
     type(camp_solver_data_t), pointer :: camp_solver_data
 
@@ -75,7 +75,7 @@ contains
   !! system described by equations 16 and 17 in \cite{Topping2009}.
   logical function run_PDFiTE_test()
 
-    use pmc_constants
+    use camp_constants
 
     type(camp_core_t), pointer :: camp_core
     type(camp_state_t), pointer :: camp_state
@@ -96,7 +96,7 @@ contains
             NH42SO4_B2, NH42SO4_B3, NH4NO3_B0, NH4NO3_B1, NH4NO3_B2, &
             NH4NO3_B3, H_p_mol_m3, NH4_p_mol_m3, SO4_mm_mol_m3, &
             NO3_m_mol_m3, temp, pressure, a_w
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     character, allocatable :: buffer(:), buffer_copy(:)
     integer(kind=i_kind) :: pack_size, pos, i_elem, results
 #endif
@@ -112,9 +112,9 @@ contains
     ! Set output time step (s)
     time_step = 1.0d0
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     ! Load the model data on root process and pass it to process 1 for solving
-    if (pmc_mpi_rank().eq.0) then
+    if (camp_mpi_rank().eq.0) then
 #endif
 
       ! Get the PDFiTE sub model mechanism json file
@@ -169,7 +169,7 @@ contains
       call assert(442660651, idx_H_NO3.gt.0)
       call assert(272503747, idx_H2_SO4.gt.0)
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
       ! pack the camp core
       pack_size = camp_core%pack_size()
       allocate(buffer(pack_size))
@@ -179,29 +179,29 @@ contains
     end if
 
     ! broadcast the species ids
-    call pmc_mpi_bcast_integer(idx_H2O)
-    call pmc_mpi_bcast_integer(idx_H2O_aq)
-    call pmc_mpi_bcast_integer(idx_H_p)
-    call pmc_mpi_bcast_integer(idx_NH4_p)
-    call pmc_mpi_bcast_integer(idx_SO4_mm)
-    call pmc_mpi_bcast_integer(idx_NO3_m)
-    call pmc_mpi_bcast_integer(idx_NH42_SO4)
-    call pmc_mpi_bcast_integer(idx_NH4_NO3)
-    call pmc_mpi_bcast_integer(idx_H_NO3)
-    call pmc_mpi_bcast_integer(idx_H2_SO4)
+    call camp_mpi_bcast_integer(idx_H2O)
+    call camp_mpi_bcast_integer(idx_H2O_aq)
+    call camp_mpi_bcast_integer(idx_H_p)
+    call camp_mpi_bcast_integer(idx_NH4_p)
+    call camp_mpi_bcast_integer(idx_SO4_mm)
+    call camp_mpi_bcast_integer(idx_NO3_m)
+    call camp_mpi_bcast_integer(idx_NH42_SO4)
+    call camp_mpi_bcast_integer(idx_NH4_NO3)
+    call camp_mpi_bcast_integer(idx_H_NO3)
+    call camp_mpi_bcast_integer(idx_H2_SO4)
 
     ! broadcast the buffer size
-    call pmc_mpi_bcast_integer(pack_size)
+    call camp_mpi_bcast_integer(pack_size)
 
-    if (pmc_mpi_rank().eq.1) then
+    if (camp_mpi_rank().eq.1) then
       ! allocate the buffer to receive data
       allocate(buffer(pack_size))
     end if
 
     ! broadcast the data
-    call pmc_mpi_bcast_packed(buffer)
+    call camp_mpi_bcast_packed(buffer)
 
-    if (pmc_mpi_rank().eq.1) then
+    if (camp_mpi_rank().eq.1) then
       ! unpack the data
       camp_core => camp_core_t()
       pos = 0
@@ -293,7 +293,7 @@ contains
       ! Set the initial state in the model
       camp_state%state_var(:) = model_conc(0,:)
 
-#ifdef PMC_DEBUG
+#ifdef CAMP_DEBUG
       ! Evaluate the Jacobian during solving
       solver_stats%eval_Jac = .true.
 #endif
@@ -312,7 +312,7 @@ contains
                               solver_stats = solver_stats)
         model_conc(i_RH,:) = camp_state%state_var(:)
 
-#ifdef PMC_DEBUG
+#ifdef CAMP_DEBUG
         ! Check the Jacobian evaluations
         call assert_msg(404462844, solver_stats%Jac_eval_fails.eq.0, &
                         trim( to_string( solver_stats%Jac_eval_fails ) )// &
@@ -449,7 +449,7 @@ contains
 
       deallocate(camp_state)
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
       ! convert the results to an integer
       if (run_PDFiTE_test) then
         results = 0
@@ -459,10 +459,10 @@ contains
     end if
 
     ! Send the results back to the primary process
-    call pmc_mpi_transfer_integer(results, results, 1, 0)
+    call camp_mpi_transfer_integer(results, results, 1, 0)
 
     ! convert the results back to a logical value
-    if (pmc_mpi_rank().eq.0) then
+    if (camp_mpi_rank().eq.0) then
       if (results.eq.0) then
         run_PDFiTE_test = .true.
       else
@@ -479,4 +479,4 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end program pmc_test_PDFiTE
+end program camp_test_PDFiTE

@@ -319,7 +319,7 @@ long double calc_standard_rate(int *rxn_int_data, double *rxn_float_data,
  * \param rxn_env_data Pointer to the environment-dependent parameters
  * \param time_step Current time step of the itegrator (s)
  */
-#ifdef PMC_USE_SUNDIALS
+#ifdef CAMP_USE_SUNDIALS
 void rxn_aqueous_equilibrium_calc_deriv_contrib(
     ModelData *model_data, TimeDerivative time_deriv, int *rxn_int_data,
     double *rxn_float_data, double *rxn_env_data, double time_step) {
@@ -399,7 +399,7 @@ void rxn_aqueous_equilibrium_calc_deriv_contrib(
  * \param rxn_env_data Pointer to the environment-dependent parameters
  * \param time_step Current time step of the itegrator (s)
  */
-#ifdef PMC_USE_SUNDIALS
+#ifdef CAMP_USE_SUNDIALS
 void rxn_aqueous_equilibrium_calc_jac_contrib(ModelData *model_data,
                                               Jacobian jac, int *rxn_int_data,
                                               double *rxn_float_data,

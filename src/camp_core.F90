@@ -3,7 +3,7 @@
 ! SPDX-License-Identifier: MIT
 
 !> \file
-!> The pmc_camp_core module.
+!> The camp_camp_core module.
 
 !> \page camp_chem Chemistry Across Multiple Phases (CAMP)
 !!
@@ -20,7 +20,7 @@
 !! host model (e.g., binned, modal, single particle) by abstracting the
 !! chemistry from the \ref camp_aero_rep "aerosol representation" through the
 !! use of custom extending types of the abstract
-!! \c pmc_aero_rep_data::aero_rep_data_t type that implement a set of
+!! \c camp_aero_rep_data::aero_rep_data_t type that implement a set of
 !! \ref camp_aero_phase "aerosol phases" based on the configuration of the
 !! host model. A set of \ref camp_sub_model "sub-models" may also be included
 !! to calculate parameters needed by \ref camp_rxn "reactions" during solving.
@@ -66,7 +66,7 @@
 !!
 !! To initialize \ref camp_chem "CAMP" , the path to the
 !! \ref input_format_camp_file_list "file list" must be passed to the
-!! \ref pmc_camp_core::camp_core_t constructor. The method by which this is
+!! \ref camp_camp_core::camp_core_t constructor. The method by which this is
 !! done depends on the host model configuration.
 !!
 !! ## PartMC scenarios ##
@@ -90,31 +90,31 @@
 !!
 
 !> The camp_core_t structure and associated subroutines.
-module pmc_camp_core
+module camp_camp_core
 
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
   use json_module
 #endif
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
   use mpi
 #endif
-  use pmc_aero_phase_data
-  use pmc_aero_rep_data
-  use pmc_aero_rep_factory
-  use pmc_chem_spec_data
-  use pmc_constants,                  only : i_kind, dp
-  use pmc_env_state
-  use pmc_mechanism_data
-  use pmc_mpi
-  use pmc_camp_solver_data
-  use pmc_camp_state
-  use pmc_rxn_data
-  use pmc_rxn_factory
-  use pmc_solver_stats
-  use pmc_sub_model_data
-  use pmc_sub_model_factory
-  use pmc_sub_model_factory
-  use pmc_util,                       only : die_msg, string_t
+  use camp_aero_phase_data
+  use camp_aero_rep_data
+  use camp_aero_rep_factory
+  use camp_chem_spec_data
+  use camp_constants,                  only : i_kind, dp
+  use camp_env_state
+  use camp_mechanism_data
+  use camp_mpi
+  use camp_camp_solver_data
+  use camp_camp_state
+  use camp_rxn_data
+  use camp_rxn_factory
+  use camp_solver_stats
+  use camp_sub_model_data
+  use camp_sub_model_factory
+  use camp_sub_model_factory
+  use camp_util,                       only : die_msg, string_t
 
   implicit none
   private
@@ -289,13 +289,13 @@ contains
   !! "CAMP". The file should be in \c json format
   !! and the general structure should be the following:
   !! \code{.json}
-  !! { "pmc-files" : [
+  !! { "camp-files" : [
   !!   "file_one.json",
   !!   "some_dir/file_two.json",
   !!   ...
   !! ]}
   !! \endcode
-  !! The file should contain a single key-value pair named \b pmc-files whose
+  !! The file should contain a single key-value pair named \b camp-files whose
   !! value is an array of \b strings with paths to the set of \ref
   !! input_format_camp_config "configuration" files to load. Input files
   !! should be in \c json format.
@@ -312,7 +312,7 @@ contains
     !> Part-MC input file paths
     character(len=*), intent(in) :: input_file_path
 
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
     type(json_core), target :: json
     type(json_file) :: j_file
     type(json_value), pointer :: j_obj, j_next
@@ -335,16 +335,16 @@ contains
     call j_file%load_file(filename = trim(input_file_path))
 
     ! get the set of configuration file names
-    call j_file%get('pmc-files(1)', j_obj, found)
+    call j_file%get('camp-files(1)', j_obj, found)
     call assert_msg(405149265, found, &
-            "Could not find pmc-files object in input file: "// &
+            "Could not find camp-files object in input file: "// &
             input_file_path)
     call json%validate(j_obj, valid, json_err_msg)
     if(.not.valid) then
       call die_msg(959537834, "Bad JSON format in file '"// &
                    trim(input_file_path)//"': "//trim(json_err_msg))
     end if
-    call j_file%info('pmc-files', n_children = num_files)
+    call j_file%info('camp-files', n_children = num_files)
     call assert_msg(411804027, num_files.gt.0, &
             "No file names were found in "//input_file_path)
 
@@ -382,7 +382,7 @@ contains
   !! \ref camp_chem "CAMP". The files are in
   !! \c json format and their general structure should be the following:
   !! \code{.json}
-  !! { "pmc-data" : [
+  !! { "camp-data" : [
   !!   {
   !!     "type" : "OBJECT_TYPE",
   !!     ...
@@ -395,9 +395,9 @@ contains
   !! ]}
   !! \endcode
   !! Each input file should contain exactly one \c json object with a single
-  !! key-value pair \b pmc-data whose value is an array of \c json objects.
+  !! key-value pair \b camp-data whose value is an array of \c json objects.
   !! Additional top-level key-value pairs will be ignored. Each of the \c json
-  !! objects in the \b pmc-data array must contain a key-value pair \b type
+  !! objects in the \b camp-data array must contain a key-value pair \b type
   !! whose value is a string referencing a valid PartMC object.
   !!
   !! The valid values for \b type are:
@@ -408,10 +408,10 @@ contains
   !!   - \subpage input_format_aero_rep "AERO_REP_*"
   !!   - \subpage input_format_sub_model "SUB_MODEL_*"
   !!
-  !! The arrangement of objects within the \b pmc-data array and between input
+  !! The arrangement of objects within the \b camp-data array and between input
   !! files is arbitrary. Additionally, some objects, such as \ref
   !! input_format_species "chemical species" and \ref input_format_mechanism
-  !! "mechanisms" may be split into multiple objects within the \b pmc-data
+  !! "mechanisms" may be split into multiple objects within the \b camp-data
   !! array and/or between files, and will be combined based on their unique
   !! name. This flexibility is provided so that the chemical mechanism data
   !! can be organized in a way that makes sense to the designer of the
@@ -434,7 +434,7 @@ contains
     type(string_t), allocatable, intent(in) :: input_file_path(:)
 
     integer(kind=i_kind) :: i_file, cell
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
     type(json_core), pointer :: json
     type(json_file) :: j_file
     type(json_value), pointer :: j_obj, j_next
@@ -488,7 +488,7 @@ contains
       call j_file%load_file(filename = input_file_path(i_file)%string)
 
       ! get the CAMP objects
-      call j_file%get('pmc-data(1)', j_obj)
+      call j_file%get('camp-data(1)', j_obj)
       call json%validate(j_obj, valid, json_err_msg)
       if (.not.valid) then
         call die_msg(560270545, "Bad JSON format in file '"// &
@@ -1358,8 +1358,8 @@ contains
   !> Integrate the chemical mechanism
   subroutine solve(this, camp_state, time_step, rxn_phase, solver_stats)
 
-    use pmc_rxn_data
-    use pmc_solver_stats
+    use camp_rxn_data
+    use camp_solver_stats
     use iso_c_binding
 
     !> Chemical model
@@ -1369,7 +1369,7 @@ contains
     !> Time step over which to integrate (s)
     real(kind=dp), intent(in) :: time_step
     !> Phase to solve - gas, aerosol, or both (default)
-    !! Use parameters in pmc_rxn_data to specify phase:
+    !! Use parameters in camp_rxn_data to specify phase:
     !! GAS_RXN, AERO_RXN, GAS_AERO_RXN
     integer(kind=i_kind), intent(in), optional :: rxn_phase
     !> Return solver statistics to the host model
@@ -1434,7 +1434,7 @@ contains
     class(sub_model_data_t), pointer :: sub_model
     integer(kind=i_kind) :: i_mech, i_phase, i_rep, i_sub_model, l_comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     if (present(comm)) then
       l_comm = comm
     else
@@ -1444,10 +1444,10 @@ contains
     call assert_msg(143374295, this%core_is_initialized, &
             "Trying to get the buffer size of an uninitialized core.")
 
-    pack_size =  pmc_mpi_pack_size_integer(size(this%mechanism),  l_comm) + &
-                 pmc_mpi_pack_size_integer(size(this%aero_phase), l_comm) + &
-                 pmc_mpi_pack_size_integer(size(this%aero_rep),   l_comm) + &
-                 pmc_mpi_pack_size_integer(size(this%sub_model),  l_comm)
+    pack_size =  camp_mpi_pack_size_integer(size(this%mechanism),  l_comm) + &
+                 camp_mpi_pack_size_integer(size(this%aero_phase), l_comm) + &
+                 camp_mpi_pack_size_integer(size(this%aero_rep),   l_comm) + &
+                 camp_mpi_pack_size_integer(size(this%sub_model),  l_comm)
     do i_mech = 1, size(this%mechanism)
       pack_size = pack_size + this%mechanism(i_mech)%val%pack_size(l_comm)
     end do
@@ -1465,13 +1465,13 @@ contains
       sub_model => null()
     end do
     pack_size = pack_size + &
-                pmc_mpi_pack_size_integer(this%size_state_per_cell, l_comm) + &
-                pmc_mpi_pack_size_integer(this%n_cells, l_comm) + &
-                pmc_mpi_pack_size_logical(this%split_gas_aero, l_comm) + &
-                pmc_mpi_pack_size_real(this%rel_tol, l_comm) + &
-                pmc_mpi_pack_size_real_array(this%abs_tol, l_comm) + &
-                pmc_mpi_pack_size_integer_array(this%var_type, l_comm) + &
-                pmc_mpi_pack_size_real_array(this%init_state, l_comm)
+                camp_mpi_pack_size_integer(this%size_state_per_cell, l_comm) + &
+                camp_mpi_pack_size_integer(this%n_cells, l_comm) + &
+                camp_mpi_pack_size_logical(this%split_gas_aero, l_comm) + &
+                camp_mpi_pack_size_real(this%rel_tol, l_comm) + &
+                camp_mpi_pack_size_real_array(this%abs_tol, l_comm) + &
+                camp_mpi_pack_size_integer_array(this%var_type, l_comm) + &
+                camp_mpi_pack_size_real_array(this%init_state, l_comm)
 #else
     pack_size = 0
 #endif
@@ -1491,7 +1491,7 @@ contains
     !> MPI communicator
     integer, intent(in), optional :: comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     type(aero_rep_factory_t) :: aero_rep_factory
     type(sub_model_factory_t) :: sub_model_factory
     class(aero_rep_data_t), pointer :: aero_rep
@@ -1509,10 +1509,10 @@ contains
             "Trying to pack an uninitialized core.")
 
     prev_position = pos
-    call pmc_mpi_pack_integer(buffer, pos, size(this%mechanism),  l_comm)
-    call pmc_mpi_pack_integer(buffer, pos, size(this%aero_phase), l_comm)
-    call pmc_mpi_pack_integer(buffer, pos, size(this%aero_rep),   l_comm)
-    call pmc_mpi_pack_integer(buffer, pos, size(this%sub_model),  l_comm)
+    call camp_mpi_pack_integer(buffer, pos, size(this%mechanism),  l_comm)
+    call camp_mpi_pack_integer(buffer, pos, size(this%aero_phase), l_comm)
+    call camp_mpi_pack_integer(buffer, pos, size(this%aero_rep),   l_comm)
+    call camp_mpi_pack_integer(buffer, pos, size(this%sub_model),  l_comm)
     do i_mech = 1, size(this%mechanism)
       call this%mechanism(i_mech)%val%bin_pack(buffer, pos, l_comm)
     end do
@@ -1529,13 +1529,13 @@ contains
       call sub_model_factory%bin_pack(sub_model, buffer, pos, l_comm)
       sub_model => null()
     end do
-    call pmc_mpi_pack_integer(buffer, pos, this%size_state_per_cell, l_comm)
-    call pmc_mpi_pack_integer(buffer, pos, this%n_cells, l_comm)
-    call pmc_mpi_pack_logical(buffer, pos, this%split_gas_aero, l_comm)
-    call pmc_mpi_pack_real(buffer, pos, this%rel_tol, l_comm)
-    call pmc_mpi_pack_real_array(buffer, pos, this%abs_tol, l_comm)
-    call pmc_mpi_pack_integer_array(buffer, pos, this%var_type, l_comm)
-    call pmc_mpi_pack_real_array(buffer, pos, this%init_state, l_comm)
+    call camp_mpi_pack_integer(buffer, pos, this%size_state_per_cell, l_comm)
+    call camp_mpi_pack_integer(buffer, pos, this%n_cells, l_comm)
+    call camp_mpi_pack_logical(buffer, pos, this%split_gas_aero, l_comm)
+    call camp_mpi_pack_real(buffer, pos, this%rel_tol, l_comm)
+    call camp_mpi_pack_real_array(buffer, pos, this%abs_tol, l_comm)
+    call camp_mpi_pack_integer_array(buffer, pos, this%var_type, l_comm)
+    call camp_mpi_pack_real_array(buffer, pos, this%init_state, l_comm)
     call assert(184050835, &
          pos - prev_position <= this%pack_size(l_comm))
 #endif
@@ -1556,7 +1556,7 @@ contains
     !> MPI communicator
     integer, intent(in), optional :: comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     type(aero_rep_factory_t) :: aero_rep_factory
     type(sub_model_factory_t) :: sub_model_factory
     integer(kind=i_kind) :: i_mech, i_phase, i_rep, i_sub_model, &
@@ -1573,10 +1573,10 @@ contains
     this%chem_spec_data => chem_spec_data_t()
 
     prev_position = pos
-    call pmc_mpi_unpack_integer(buffer, pos, num_mech,      l_comm)
-    call pmc_mpi_unpack_integer(buffer, pos, num_phase,     l_comm)
-    call pmc_mpi_unpack_integer(buffer, pos, num_rep,       l_comm)
-    call pmc_mpi_unpack_integer(buffer, pos, num_sub_model, l_comm)
+    call camp_mpi_unpack_integer(buffer, pos, num_mech,      l_comm)
+    call camp_mpi_unpack_integer(buffer, pos, num_phase,     l_comm)
+    call camp_mpi_unpack_integer(buffer, pos, num_rep,       l_comm)
+    call camp_mpi_unpack_integer(buffer, pos, num_sub_model, l_comm)
     allocate(this%mechanism(num_mech))
     allocate(this%aero_phase(num_phase))
     allocate(this%aero_rep(num_rep))
@@ -1596,13 +1596,13 @@ contains
       this%sub_model(i_sub_model)%val => &
               sub_model_factory%bin_unpack(buffer, pos, l_comm)
     end do
-    call pmc_mpi_unpack_integer(buffer, pos, this%size_state_per_cell, l_comm)
-    call pmc_mpi_unpack_integer(buffer, pos, this%n_cells, l_comm)
-    call pmc_mpi_unpack_logical(buffer, pos, this%split_gas_aero, l_comm)
-    call pmc_mpi_unpack_real(buffer, pos, this%rel_tol, l_comm)
-    call pmc_mpi_unpack_real_array(buffer, pos, this%abs_tol, l_comm)
-    call pmc_mpi_unpack_integer_array(buffer, pos, this%var_type, l_comm)
-    call pmc_mpi_unpack_real_array(buffer, pos, this%init_state, l_comm)
+    call camp_mpi_unpack_integer(buffer, pos, this%size_state_per_cell, l_comm)
+    call camp_mpi_unpack_integer(buffer, pos, this%n_cells, l_comm)
+    call camp_mpi_unpack_logical(buffer, pos, this%split_gas_aero, l_comm)
+    call camp_mpi_unpack_real(buffer, pos, this%rel_tol, l_comm)
+    call camp_mpi_unpack_real_array(buffer, pos, this%abs_tol, l_comm)
+    call camp_mpi_unpack_integer_array(buffer, pos, this%var_type, l_comm)
+    call camp_mpi_unpack_real_array(buffer, pos, this%init_state, l_comm)
     this%core_is_initialized = .true.
     call assert(291557168, &
          pos - prev_position <= this%pack_size(l_comm))
@@ -1850,4 +1850,4 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end module pmc_camp_core
+end module camp_camp_core

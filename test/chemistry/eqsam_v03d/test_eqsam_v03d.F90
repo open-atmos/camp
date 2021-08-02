@@ -3,28 +3,28 @@
 ! SPDX-License-Identifier: MIT
 
 !> \file
-!> The pmc_test_eqsam_v03d program
+!> The camp_test_eqsam_v03d program
 
 !> Test for the eqsam v03d inorganic module from MONARCH. This program runs the
 !! MONARCH eqsam code and the CAMP-chem version and compares the output.
-program pmc_test_eqsam_v03d
+program camp_test_eqsam_v03d
 
 #define DEBUG
 
-  use pmc_constants,                    only: const
-  use pmc_util,                         only: i_kind, dp, assert, assert_msg, &
+  use camp_constants,                    only: const
+  use camp_util,                         only: i_kind, dp, assert, assert_msg, &
                                               almost_equal, string_t, &
                                               to_string, warn_assert_msg, &
                                               die_msg
-  use pmc_camp_core
-  use pmc_camp_state
-  use pmc_camp_solver_data
-  use pmc_aero_rep_data
-  use pmc_chem_spec_data
-  use pmc_rxn_data
-  use pmc_rxn_photolysis
-  use pmc_property
-#ifdef PMC_USE_JSON
+  use camp_camp_core
+  use camp_camp_state
+  use camp_camp_solver_data
+  use camp_aero_rep_data
+  use camp_chem_spec_data
+  use camp_rxn_data
+  use camp_rxn_photolysis
+  use camp_property
+#ifdef CAMP_USE_JSON
   use json_module
 #endif
 
@@ -371,4 +371,4 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end program pmc_test_eqsam_v03d
+end program camp_test_eqsam_v03d

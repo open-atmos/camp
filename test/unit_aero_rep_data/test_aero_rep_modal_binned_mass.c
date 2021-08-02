@@ -60,7 +60,7 @@
  * \param model_data Pointer to the model data
  * \param state Solver state
  */
-#ifdef PMC_USE_SUNDIALS
+#ifdef CAMP_USE_SUNDIALS
 int test_effective_radius(ModelData * model_data, N_Vector state) {
 
   int ret_val = 0;
@@ -292,7 +292,7 @@ int run_aero_rep_modal_c_tests(void *solver_data, double *state, double *env) {
 
   int ret_val = 0;
 
-#ifdef PMC_USE_SUNDIALS
+#ifdef CAMP_USE_SUNDIALS
   SolverData *sd = (SolverData*) solver_data;
   ModelData * model_data = &(sd->model_data);
   int n_solver_var = NV_LENGTH_S(sd->y);

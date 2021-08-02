@@ -3,26 +3,26 @@
 ! SPDX-License-Identifier: MIT
 
 !> \file
-!> The pmc_test_emission program
+!> The camp_test_emission program
 
 !> Test of emission reaction module
-program pmc_test_emission
+program camp_test_emission
 
-  use pmc_util,                         only: i_kind, dp, assert, &
+  use camp_util,                         only: i_kind, dp, assert, &
                                               almost_equal, string_t, &
                                               warn_msg
-  use pmc_rxn_data
-  use pmc_rxn_emission
-  use pmc_rxn_factory
-  use pmc_mechanism_data
-  use pmc_chem_spec_data
-  use pmc_camp_core
-  use pmc_camp_state
-  use pmc_solver_stats
-#ifdef PMC_USE_JSON
+  use camp_rxn_data
+  use camp_rxn_emission
+  use camp_rxn_factory
+  use camp_mechanism_data
+  use camp_chem_spec_data
+  use camp_camp_core
+  use camp_camp_state
+  use camp_solver_stats
+#ifdef CAMP_USE_JSON
   use json_module
 #endif
-  use pmc_mpi
+  use camp_mpi
 
   use iso_c_binding
 
@@ -32,28 +32,28 @@ program pmc_test_emission
   integer(kind=i_kind) :: NUM_TIME_STEP = 100
 
   ! initialize mpi
-  call pmc_mpi_init()
+  call camp_mpi_init()
 
   if (run_emission_tests()) then
-    if (pmc_mpi_rank().eq.0) write(*,*) &
+    if (camp_mpi_rank().eq.0) write(*,*) &
           "Emission reaction tests - PASS"
   else
-    if (pmc_mpi_rank().eq.0) write(*,*) &
+    if (camp_mpi_rank().eq.0) write(*,*) &
           "Emission reaction tests - FAIL"
     stop 3
   end if
 
   ! finalize mpi
-  call pmc_mpi_finalize()
+  call camp_mpi_finalize()
 
 contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  !> Run all pmc_chem_mech_solver tests
+  !> Run all camp_chem_mech_solver tests
   logical function run_emission_tests() result(passed)
 
-    use pmc_camp_solver_data
+    use camp_camp_solver_data
 
     type(camp_solver_data_t), pointer :: camp_solver_data
 
@@ -82,7 +82,7 @@ contains
   !! where k1 and k2 are emission reaction rate constants.
   logical function run_emission_test()
 
-    use pmc_constants
+    use camp_constants
 
     type(camp_core_t), pointer :: camp_core
     type(camp_state_t), pointer :: camp_state
@@ -95,7 +95,7 @@ contains
     real(kind=dp) :: time_step, time, k1, k2, temp, pressure, rate_A, rate_B
     type(chem_spec_data_t), pointer :: chem_spec_data
     class(rxn_data_t), pointer :: rxn
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     character, allocatable :: buffer(:), buffer_copy(:)
     integer(kind=i_kind) :: pack_size, pos, i_elem, results
 #endif
@@ -120,9 +120,9 @@ contains
     ! Set output time step (s)
     time_step = 1.0
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     ! Load the model data on the root process and pass it to process 1 for solving
-    if (pmc_mpi_rank().eq.0) then
+    if (camp_mpi_rank().eq.0) then
 #endif
 
       ! Get the emission reaction mechanism json file
@@ -181,7 +181,7 @@ contains
       call assert(369804751, idx_A.gt.0)
       call assert(199647847, idx_B.gt.0)
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
       ! pack the camp core
       pack_size = camp_core%pack_size() &
                 + rate_update_A%pack_size() &
@@ -195,21 +195,21 @@ contains
     end if
 
     ! broadcast the species ids
-    call pmc_mpi_bcast_integer(idx_A)
-    call pmc_mpi_bcast_integer(idx_B)
+    call camp_mpi_bcast_integer(idx_A)
+    call camp_mpi_bcast_integer(idx_B)
 
     ! broadcast the buffer size
-    call pmc_mpi_bcast_integer(pack_size)
+    call camp_mpi_bcast_integer(pack_size)
 
-    if (pmc_mpi_rank().eq.1) then
+    if (camp_mpi_rank().eq.1) then
       ! allocate the buffer to receive data
       allocate(buffer(pack_size))
     end if
 
     ! broadcast the data
-    call pmc_mpi_bcast_packed(buffer)
+    call camp_mpi_bcast_packed(buffer)
 
-    if (pmc_mpi_rank().eq.1) then
+    if (camp_mpi_rank().eq.1) then
       ! unpack the data
       camp_core => camp_core_t()
       pos = 0
@@ -259,7 +259,7 @@ contains
       call rate_update_B%set_rate(rate_B)
       call camp_core%update_data(rate_update_B)
 
-#ifdef PMC_DEBUG
+#ifdef CAMP_DEBUG
       ! Evaluate the Jacobian during solving
       solver_stats%eval_Jac = .true.
 #endif
@@ -272,7 +272,7 @@ contains
                               solver_stats = solver_stats)
         model_conc(i_time,:) = camp_state%state_var(:)
 
-#ifdef PMC_DEBUG
+#ifdef CAMP_DEBUG
         ! Check the Jacobian evaluations
         call assert_msg(823507267, solver_stats%Jac_eval_fails.eq.0, &
                         trim( to_string( solver_stats%Jac_eval_fails ) )// &
@@ -314,7 +314,7 @@ contains
 
       deallocate(camp_state)
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
       ! convert the results to an integer
       if (run_emission_test) then
         results = 0
@@ -324,10 +324,10 @@ contains
     end if
 
     ! Send the results back to the primary process
-    call pmc_mpi_transfer_integer(results, results, 1, 0)
+    call camp_mpi_transfer_integer(results, results, 1, 0)
 
     ! convert the results back to a logical value
-    if (pmc_mpi_rank().eq.0) then
+    if (camp_mpi_rank().eq.0) then
       if (results.eq.0) then
         run_emission_test = .true.
       else
@@ -344,4 +344,4 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end program pmc_test_emission
+end program camp_test_emission

@@ -3,7 +3,7 @@
 ! SPDX-License-Identifier: MIT
 
 !> \file
-!> The pmc_aero_rep_modal_binned_mass module.
+!> The camp_aero_rep_modal_binned_mass module.
 
 !> \page camp_aero_rep_modal_binned_mass CAMP: Modal/Binned Mass Aerosol Representation
 !!
@@ -12,7 +12,7 @@
 !! \c json object for this \ref camp_aero_rep "aerosol representation" has the
 !! following format:
 !! \code{.json}
-!!  { "pmc-data" : [
+!!  { "camp-data" : [
 !!    {
 !!      "name" : "my modal/binned aero rep",
 !!      "type" : "AERO_REP_MODAL_BINNED_MASS",
@@ -63,21 +63,21 @@
 !! particles in that bin.
 !!
 !! The GMD and GSD for each mode must be set from an external model using
-!! \c pmc_aero_rep_modal_binned_mass::aero_rep_update_data_modal_binned_mass_GMD_t
+!! \c camp_aero_rep_modal_binned_mass::aero_rep_update_data_modal_binned_mass_GMD_t
 !! and
-!! \c pmc_aero_rep_modal_binned_mass::aero_rep_update_data_modal_binned_mass_GSD_t
+!! \c camp_aero_rep_modal_binned_mass::aero_rep_update_data_modal_binned_mass_GSD_t
 !! objects.
 
 !> The abstract aero_rep_modal_binned_mass_t structure and associated subroutines.
-module pmc_aero_rep_modal_binned_mass
+module camp_aero_rep_modal_binned_mass
 
-  use pmc_aero_phase_data
-  use pmc_aero_rep_data
-  use pmc_chem_spec_data
-  use pmc_camp_state
-  use pmc_mpi
-  use pmc_property
-  use pmc_util,                               only: dp, i_kind, &
+  use camp_aero_phase_data
+  use camp_aero_rep_data
+  use camp_chem_spec_data
+  use camp_camp_state
+  use camp_mpi
+  use camp_property
+  use camp_util,                               only: dp, i_kind, &
                                                     string_t, assert_msg, &
                                                     assert, die_msg, to_string
 
@@ -160,7 +160,7 @@ module pmc_aero_rep_modal_binned_mass
     !! use with updates from external modules
     procedure :: get_section_id
     !> Get the size of the section of the
-    !! \c pmc_camp_state::camp_state_t::state_var array required for this
+    !! \c camp_camp_state::camp_state_t::state_var array required for this
     !! aerosol representation.
     !!
     !! For a modal/binned mass representation, the size will correspond to the
@@ -168,7 +168,7 @@ module pmc_aero_rep_modal_binned_mass
     !! provided to \c aero_rep_modal_binned_mass::initialize()
     procedure :: size => get_size
     !> Get a list of unique names for each element on the
-    !! \c pmc_camp_state::camp_state_t::state_var array for this aerosol
+    !! \c camp_camp_state::camp_state_t::state_var array for this aerosol
     !! representation. The list may be restricted to a particular phase and/or
     !! aerosol species by including the phase_name and spec_name arguments.
     !!
@@ -178,7 +178,7 @@ module pmc_aero_rep_modal_binned_mass
     !! ... and for modes are:
     !!   - "mode name.phase name.species name"
     procedure :: unique_names
-    !> Get a species id on the \c pmc_camp_state::camp_state_t::state_var
+    !> Get a species id on the \c camp_camp_state::camp_state_t::state_var
     !! array by its unique name. These are unique ids for each element on the
     !! state array for this \ref camp_aero_rep "aerosol representation" and
     !! are numbered:
@@ -187,7 +187,7 @@ module pmc_aero_rep_modal_binned_mass
     !!
     !! where \f$x_u\f$ is the id of the element corresponding to the species
     !! with unique name \f$u\f$ on the \c
-    !! pmc_camp_state::camp_state_t::state_var array, \f$x_f\f$ is the index
+    !! camp_camp_state::camp_state_t::state_var array, \f$x_f\f$ is the index
     !! of the first element for this aerosol representation on the state array
     !! and \f$n\f$ is the total number of variables on the state array from
     !! this aerosol representation.
@@ -271,7 +271,7 @@ module pmc_aero_rep_modal_binned_mass
       !> Aerosol representation unique id
       integer(kind=c_int), value :: aero_rep_unique_id
       !> Section id from
-      !! pmc_aero_rep_modal_binned_mass::aero_rep_modal_binned_mass_t::get_section_id
+      !! camp_aero_rep_modal_binned_mass::aero_rep_modal_binned_mass_t::get_section_id
       integer(kind=c_int), value :: section_id
       !> New GMD (m)
       real(kind=c_double), value :: gmd
@@ -294,7 +294,7 @@ module pmc_aero_rep_modal_binned_mass
       !> Aerosol representation unique id
       integer(kind=c_int), value :: aero_rep_unique_id
       !> Section id from
-      !! pmc_aero_rep_modal_binned_mass::aero_rep_modal_binned_mass_t::get_section_id
+      !! camp_aero_rep_modal_binned_mass::aero_rep_modal_binned_mass_t::get_section_id
       integer(kind=c_int), value :: section_id
       !> New GSD (m)
       real(kind=c_double), value :: gsd
@@ -695,7 +695,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Get the size of the section of the
-  !! \c pmc_camp_state::camp_state_t::state_var array required for this
+  !! \c camp_camp_state::camp_state_t::state_var array required for this
   !! aerosol representation.
   !!
   !! For a modal/binned mass representation, the size will correspond to the
@@ -721,7 +721,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Get a list of unique names for each element on the
-  !! \c pmc_camp_state::camp_state_t::state_var array for this aerosol
+  !! \c camp_camp_state::camp_state_t::state_var array for this aerosol
   !! representation. The list may be restricted to a particular phase and/or
   !! aerosol species by including the phase_name and spec_name arguments.
   !!
@@ -858,7 +858,7 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  !> Get a species id on the \c pmc_camp_state::camp_state_t::state_var
+  !> Get a species id on the \c camp_camp_state::camp_state_t::state_var
   !! array by its unique name. These are unique ids for each element on the
   !! state array for this \ref camp_aero_rep "aerosol representation" and
   !! are numbered:
@@ -867,7 +867,7 @@ contains
   !!
   !! where \f$x_u\f$ is the id of the element corresponding to the species
   !! with unique name \f$u\f$ on the \c
-  !! pmc_camp_state::camp_state_t::state_var array, \f$x_f\f$ is the index
+  !! camp_camp_state::camp_state_t::state_var array, \f$x_f\f$ is the index
   !! of the first element for this aerosol representation on the state array
   !! and \f$n\f$ is the total number of variables on the state array from
   !! this aerosol representation.
@@ -1025,7 +1025,7 @@ contains
   !> Initialize a GMD update object
   subroutine update_data_init_GMD(this, update_data, aero_rep_type)
 
-    use pmc_rand,                                only : generate_int_id
+    use camp_rand,                                only : generate_int_id
 
     !> Aerosol representation to update
     class(aero_rep_modal_binned_mass_t), intent(inout) :: this
@@ -1055,7 +1055,7 @@ contains
     !> Update data
     class(aero_rep_update_data_modal_binned_mass_GMD_t), intent(inout) :: this
     !> Aerosol section id from
-    !! pmc_aero_rep_modal_binned_mass::aero_rep_modal_binned_mass_t::get_section_id
+    !! camp_aero_rep_modal_binned_mass::aero_rep_modal_binned_mass_t::get_section_id
     integer(kind=i_kind), intent(in) :: section_id
     !> Updated GMD (m)
     real(kind=dp), intent(in) :: GMD
@@ -1077,8 +1077,8 @@ contains
     integer, intent(in) :: comm
 
     pack_size = &
-      pmc_mpi_pack_size_logical(this%is_malloced, comm) + &
-      pmc_mpi_pack_size_integer(this%aero_rep_unique_id, comm)
+      camp_mpi_pack_size_logical(this%is_malloced, comm) + &
+      camp_mpi_pack_size_integer(this%aero_rep_unique_id, comm)
 
   end function internal_pack_size_GMD
 
@@ -1096,12 +1096,12 @@ contains
     !> MPI communicator
     integer, intent(in) :: comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: prev_position
 
     prev_position = pos
-    call pmc_mpi_pack_logical(buffer, pos, this%is_malloced, comm)
-    call pmc_mpi_pack_integer(buffer, pos, this%aero_rep_unique_id, comm)
+    call camp_mpi_pack_logical(buffer, pos, this%is_malloced, comm)
+    call camp_mpi_pack_integer(buffer, pos, this%aero_rep_unique_id, comm)
     call assert(685522546, &
          pos - prev_position <= this%pack_size(comm))
 #endif
@@ -1122,12 +1122,12 @@ contains
     !> MPI communicator
     integer, intent(in) :: comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: prev_position
 
     prev_position = pos
-    call pmc_mpi_unpack_logical(buffer, pos, this%is_malloced, comm)
-    call pmc_mpi_unpack_integer(buffer, pos, this%aero_rep_unique_id, comm)
+    call camp_mpi_unpack_logical(buffer, pos, this%is_malloced, comm)
+    call camp_mpi_unpack_integer(buffer, pos, this%aero_rep_unique_id, comm)
     call assert(855679450, &
          pos - prev_position <= this%pack_size(comm))
     this%update_data = aero_rep_modal_binned_mass_create_GMD_update_data()
@@ -1152,7 +1152,7 @@ contains
   !> Initialize a GSD update data object
   subroutine update_data_init_GSD(this, update_data, aero_rep_type)
 
-    use pmc_rand,                                only : generate_int_id
+    use camp_rand,                                only : generate_int_id
 
     !> Aerosol representation to update
     class(aero_rep_modal_binned_mass_t), intent(inout) :: this
@@ -1182,7 +1182,7 @@ contains
     !> Update data
     class(aero_rep_update_data_modal_binned_mass_GSD_t), intent(inout) :: this
     !> Aerosol section id from
-    !! pmc_aero_rep_modal_binned_mass::aero_rep_modal_binned_mass_t::get_section_id
+    !! camp_aero_rep_modal_binned_mass::aero_rep_modal_binned_mass_t::get_section_id
     integer(kind=i_kind), intent(in) :: section_id
     !> Updated GSD (m)
     real(kind=dp), intent(in) :: GSD
@@ -1204,8 +1204,8 @@ contains
     integer, intent(in) :: comm
 
     pack_size = &
-      pmc_mpi_pack_size_logical(this%is_malloced, comm) + &
-      pmc_mpi_pack_size_integer(this%aero_rep_unique_id, comm)
+      camp_mpi_pack_size_logical(this%is_malloced, comm) + &
+      camp_mpi_pack_size_integer(this%aero_rep_unique_id, comm)
 
   end function internal_pack_size_GSD
 
@@ -1223,12 +1223,12 @@ contains
     !> MPI communicator
     integer, intent(in) :: comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: prev_position
 
     prev_position = pos
-    call pmc_mpi_pack_logical(buffer, pos, this%is_malloced, comm)
-    call pmc_mpi_pack_integer(buffer, pos, this%aero_rep_unique_id, comm)
+    call camp_mpi_pack_logical(buffer, pos, this%is_malloced, comm)
+    call camp_mpi_pack_integer(buffer, pos, this%aero_rep_unique_id, comm)
     call assert(295993259, &
          pos - prev_position <= this%pack_size(comm))
 #endif
@@ -1249,12 +1249,12 @@ contains
     !> MPI communicator
     integer, intent(in) :: comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: prev_position
 
     prev_position = pos
-    call pmc_mpi_unpack_logical(buffer, pos, this%is_malloced, comm)
-    call pmc_mpi_unpack_integer(buffer, pos, this%aero_rep_unique_id, comm)
+    call camp_mpi_unpack_logical(buffer, pos, this%is_malloced, comm)
+    call camp_mpi_unpack_integer(buffer, pos, this%aero_rep_unique_id, comm)
     call assert(518724415, &
          pos - prev_position <= this%pack_size(comm))
     this%update_data = aero_rep_modal_binned_mass_create_GSD_update_data()
@@ -1276,4 +1276,4 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end module pmc_aero_rep_modal_binned_mass
+end module camp_aero_rep_modal_binned_mass

@@ -6,7 +6,7 @@
     "or estimated from bulk densities.",
     "TODO check about molecular weights"
   ],
-  "pmc-data" : [
+  "camp-data" : [
     {
       "name" : "NH3",
       "type" : "CHEM_SPEC",

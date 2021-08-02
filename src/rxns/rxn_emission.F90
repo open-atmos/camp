@@ -3,7 +3,7 @@
 ! SPDX-License-Identifier: MIT
 
 !> \file
-!> The pmc_rxn_emission module.
+!> The camp_rxn_emission module.
 
 !> \page camp_rxn_emission CAMP: Emission
 !!
@@ -16,12 +16,12 @@
 !! where \f$\ce{X}\f$ is the species being emitted.
 !!
 !! Emission rates can be constant or set from an external module using the
-!! \c pmc_rxn_emission::rxn_update_data_emission_t object.
+!! \c camp_rxn_emission::rxn_update_data_emission_t object.
 !! External modules can use the
-!! \c pmc_rxn_emission::rxn_emission_t::get_property_set()
+!! \c camp_rxn_emission::rxn_emission_t::get_property_set()
 !! function during initilialization to access any needed reaction parameters
 !! to identify certain emission reactions.
-!! An \c pmc_rxn_emission::update_data_emission_t object should be
+!! An \c camp_rxn_emission::update_data_emission_t object should be
 !! initialized for each emissions reaction. These objects can then be used
 !! during solving to update the emission rate from an external module.
 !!
@@ -46,16 +46,16 @@
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 !> The rxn_emission_t type and associated functions.
-module pmc_rxn_emission
+module camp_rxn_emission
 
-  use pmc_aero_rep_data
-  use pmc_chem_spec_data
-  use pmc_constants,                        only: const
-  use pmc_camp_state
-  use pmc_mpi
-  use pmc_property
-  use pmc_rxn_data
-  use pmc_util,                             only: i_kind, dp, to_string, &
+  use camp_aero_rep_data
+  use camp_chem_spec_data
+  use camp_constants,                        only: const
+  use camp_camp_state
+  use camp_mpi
+  use camp_property
+  use camp_rxn_data
+  use camp_util,                             only: i_kind, dp, to_string, &
                                                   assert_msg
 
   use iso_c_binding
@@ -267,7 +267,7 @@ contains
   !> Initialize update data
   subroutine update_data_initialize(this, update_data, rxn_type)
 
-    use pmc_rand,                                only : generate_int_id
+    use camp_rand,                                only : generate_int_id
 
     !> The reaction to be udpated
     class(rxn_emission_t), intent(inout) :: this
@@ -300,8 +300,8 @@ contains
     integer, intent(in) :: comm
 
     pack_size = &
-      pmc_mpi_pack_size_logical(this%is_malloced, comm) + &
-      pmc_mpi_pack_size_integer(this%rxn_unique_id, comm)
+      camp_mpi_pack_size_logical(this%is_malloced, comm) + &
+      camp_mpi_pack_size_integer(this%rxn_unique_id, comm)
 
   end function internal_pack_size
 
@@ -319,12 +319,12 @@ contains
     !> MPI communicator
     integer, intent(in) :: comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: prev_position
 
     prev_position = pos
-    call pmc_mpi_pack_logical(buffer, pos, this%is_malloced, comm)
-    call pmc_mpi_pack_integer(buffer, pos, this%rxn_unique_id, comm)
+    call camp_mpi_pack_logical(buffer, pos, this%is_malloced, comm)
+    call camp_mpi_pack_integer(buffer, pos, this%rxn_unique_id, comm)
     call assert(945453741, &
          pos - prev_position <= this%pack_size(comm))
 #endif
@@ -345,12 +345,12 @@ contains
     !> MPI communicator
     integer, intent(in) :: comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: prev_position
 
     prev_position = pos
-    call pmc_mpi_unpack_logical(buffer, pos, this%is_malloced, comm)
-    call pmc_mpi_unpack_integer(buffer, pos, this%rxn_unique_id, comm)
+    call camp_mpi_unpack_logical(buffer, pos, this%is_malloced, comm)
+    call camp_mpi_unpack_integer(buffer, pos, this%rxn_unique_id, comm)
     call assert(775296837, &
          pos - prev_position <= this%pack_size(comm))
     this%update_data = rxn_emission_create_rate_update_data()
@@ -372,4 +372,4 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end module pmc_rxn_emission
+end module camp_rxn_emission

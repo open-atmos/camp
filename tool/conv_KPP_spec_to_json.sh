@@ -26,7 +26,7 @@ sed -i '' -E 's/^[[:space:]]+//g' $SPEC_FILE
 sed -i '' -E "s/^[[:space:]]*([[:alpha:]][[:alnum:]]*)[[:space:]]*\=.*$/  {\\$NL    \"name\" : \"\1\",\\$NL    \"type\" : \"CHEM_SPEC\"\\$NL  },/g" $SPEC_FILE
 
 # header
-sed -i '' -E "1s/^/{ \"pmc-data\" : [\\$NL/g" $SPEC_FILE
+sed -i '' -E "1s/^/{ \"camp-data\" : [\\$NL/g" $SPEC_FILE
 
 # footer
 sed -i '' -E "\$a\\$NL]}" $SPEC_FILE

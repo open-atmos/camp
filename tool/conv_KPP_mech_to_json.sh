@@ -64,7 +64,7 @@ done
 ###################
 
 # header
-sed -i '' -E "1s/^/{ \"pmc-data\" : [\\$NL  {\\$NL    \"name\" : \"\\$MECH_FILE\",\\$NL    \"type\" : \"MECHANISM\",\\$NL    \"reactions\" : [\\$NL/" $MECH_FILE
+sed -i '' -E "1s/^/{ \"camp-data\" : [\\$NL  {\\$NL    \"name\" : \"\\$MECH_FILE\",\\$NL    \"type\" : \"MECHANISM\",\\$NL    \"reactions\" : [\\$NL/" $MECH_FILE
 
 # footer
 sed -i '' -E "\$a\\$NL    ]\\$NL  }\\$NL]}" $MECH_FILE

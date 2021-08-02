@@ -7,7 +7,7 @@
     "N* and diffusion coefficients are from CAMPRAM 2.4",
     "TODO check about molecular weights"
   ],
-  "pmc-data" : [
+  "camp-data" : [
     {
       "name" : "SULF",
       "type" : "CHEM_SPEC",

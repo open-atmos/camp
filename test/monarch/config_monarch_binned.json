@@ -1,5 +1,5 @@
 {
-  "pmc-files" : [
+  "camp-files" : [
     "monarch_box_binned/monarch_mod37_aerosol_representation.json",
     "monarch_box_binned/aerosol_phases.json",
     "monarch_box_binned/cb05_abs_tol.json",

@@ -6,28 +6,28 @@
 !> The monarch_interface_t object and related functions
 
 !> Interface for the MONACH model and PartMC-camp
-module pmc_monarch_interface
+module camp_monarch_interface
 
-  use pmc_constants,                  only : i_kind
-  use pmc_mpi
-  use pmc_util,                       only : assert_msg, string_t, &
+  use camp_constants,                  only : i_kind
+  use camp_mpi
+  use camp_util,                       only : assert_msg, string_t, &
                                              warn_assert_msg
-  use pmc_camp_core
-  use pmc_camp_state
-  use pmc_aero_rep_data
-  use pmc_aero_rep_factory
-  use pmc_aero_rep_modal_binned_mass
-  use pmc_chem_spec_data
-  use pmc_property
-  use pmc_camp_solver_data
-  use pmc_mechanism_data,            only : mechanism_data_t
-  use pmc_rxn_data,                  only : rxn_data_t
-  use pmc_rxn_photolysis
-  use pmc_solver_stats
-#ifdef PMC_USE_MPI
+  use camp_camp_core
+  use camp_camp_state
+  use camp_aero_rep_data
+  use camp_aero_rep_factory
+  use camp_aero_rep_modal_binned_mass
+  use camp_chem_spec_data
+  use camp_property
+  use camp_camp_solver_data
+  use camp_mechanism_data,            only : mechanism_data_t
+  use camp_rxn_data,                  only : rxn_data_t
+  use camp_rxn_photolysis
+  use camp_solver_stats
+#ifdef CAMP_USE_MPI
   use mpi
 #endif
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
   use json_module
 #endif
 
@@ -141,7 +141,7 @@ contains
     type(string_t), allocatable :: unique_names(:)
 
     class(aero_rep_data_t), pointer :: aero_rep
-    integer(kind=i_kind) :: i_sect_om, i_sect_bc, i_sect_sulf, i_sect_opm
+    integer(kind=i_kind) :: i_sect_om_mode1, i_sect_om_mode2, i_sect_om_mode3, i_sect_bc, i_sect_sulf, i_sect_opm
     type(aero_rep_factory_t) :: aero_rep_factory
     type(aero_rep_update_data_modal_binned_mass_GMD_t) :: update_data_GMD
     type(aero_rep_update_data_modal_binned_mass_GSD_t) :: update_data_GSD
@@ -149,7 +149,7 @@ contains
     ! Computation time variable
     real(kind=dp) :: comp_start, comp_end
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: local_comm
 
     if (present(mpi_comm)) then
@@ -159,7 +159,7 @@ contains
     endif
 #endif
     ! Set the MPI rank (TODO replace with MONARCH param)
-    MONARCH_PROCESS = pmc_mpi_rank()
+    MONARCH_PROCESS = camp_mpi_rank()
 
     ! Create a new interface object
     allocate(this)
@@ -208,7 +208,11 @@ contains
             call this%camp_core%initialize_update_object( aero_rep, &
                                                              update_data_GSD)
             call assert(889473105, &
-                        aero_rep%get_section_id("organic_matter", i_sect_om))
+                        aero_rep%get_section_id("organic_matter_mode1", i_sect_om_mode1))
+            call assert(889473106, &
+                        aero_rep%get_section_id("organic_matter_mode2", i_sect_om_mode2))
+            call assert(889473107, &
+                        aero_rep%get_section_id("organic_matter_mode3", i_sect_om_mode3))
             call assert(648042550, &
                         aero_rep%get_section_id("black_carbon", i_sect_bc))
             !call assert(760360895, &
@@ -222,7 +226,9 @@ contains
                          "'MONARCH mass-based'")
         end select
       else
-        i_sect_om = -1
+        i_sect_om_mode1 = -1
+        i_sect_om_mode2 = -1
+        i_sect_om_mode3 = -1
         i_sect_bc = -1
         i_sect_sulf = -1
         i_sect_opm = -1
@@ -238,7 +244,7 @@ contains
       ! Load the initial concentrations
       call this%load_init_conc()
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
 
       ! Change a bit init_conc to denote different initial values
       !this%init_conc(:) = this%init_conc(:) + 0.1*MONARCH_PROCESS
@@ -246,33 +252,37 @@ contains
       pack_size = this%camp_core%pack_size() + &
               update_data_GMD%pack_size() + &
               update_data_GSD%pack_size() + &
-              pmc_mpi_pack_size_integer_array(this%map_monarch_id) + &
-              pmc_mpi_pack_size_integer_array(this%map_camp_id) + &
-              pmc_mpi_pack_size_integer_array(this%init_conc_camp_id) + &
-              pmc_mpi_pack_size_real_array(this%init_conc) + &
-              pmc_mpi_pack_size_integer(this%gas_phase_water_id) + &
-              pmc_mpi_pack_size_integer(i_sect_om) + &
-              pmc_mpi_pack_size_integer(i_sect_bc) + &
-              pmc_mpi_pack_size_integer(i_sect_sulf) + &
-              pmc_mpi_pack_size_integer(i_sect_opm)
+              camp_mpi_pack_size_integer_array(this%map_monarch_id) + &
+              camp_mpi_pack_size_integer_array(this%map_camp_id) + &
+              camp_mpi_pack_size_integer_array(this%init_conc_camp_id) + &
+              camp_mpi_pack_size_real_array(this%init_conc) + &
+              camp_mpi_pack_size_integer(this%gas_phase_water_id) + &
+              camp_mpi_pack_size_integer(i_sect_om_mode1) + &
+              camp_mpi_pack_size_integer(i_sect_om_mode2) + &
+              camp_mpi_pack_size_integer(i_sect_om_mode3) + &
+              camp_mpi_pack_size_integer(i_sect_bc) + &
+              camp_mpi_pack_size_integer(i_sect_sulf) + &
+              camp_mpi_pack_size_integer(i_sect_opm)
       allocate(buffer(pack_size))
       pos = 0
       call this%camp_core%bin_pack(buffer, pos)
       call update_data_GMD%bin_pack(buffer, pos)
       call update_data_GSD%bin_pack(buffer, pos)
-      call pmc_mpi_pack_integer_array(buffer, pos, this%map_monarch_id)
-      call pmc_mpi_pack_integer_array(buffer, pos, this%map_camp_id)
-      call pmc_mpi_pack_integer_array(buffer, pos, this%init_conc_camp_id)
-      call pmc_mpi_pack_real_array(buffer, pos, this%init_conc)
-      call pmc_mpi_pack_integer(buffer, pos, this%gas_phase_water_id)
-      call pmc_mpi_pack_integer(buffer, pos, i_sect_om)
-      call pmc_mpi_pack_integer(buffer, pos, i_sect_bc)
-      call pmc_mpi_pack_integer(buffer, pos, i_sect_sulf)
-      call pmc_mpi_pack_integer(buffer, pos, i_sect_opm)
+      call camp_mpi_pack_integer_array(buffer, pos, this%map_monarch_id)
+      call camp_mpi_pack_integer_array(buffer, pos, this%map_camp_id)
+      call camp_mpi_pack_integer_array(buffer, pos, this%init_conc_camp_id)
+      call camp_mpi_pack_real_array(buffer, pos, this%init_conc)
+      call camp_mpi_pack_integer(buffer, pos, this%gas_phase_water_id)
+      call camp_mpi_pack_integer(buffer, pos, i_sect_om_mode1)
+      call camp_mpi_pack_integer(buffer, pos, i_sect_om_mode2)
+      call camp_mpi_pack_integer(buffer, pos, i_sect_om_mode3)
+      call camp_mpi_pack_integer(buffer, pos, i_sect_bc)
+      call camp_mpi_pack_integer(buffer, pos, i_sect_sulf)
+      call camp_mpi_pack_integer(buffer, pos, i_sect_opm)
     endif
 
     ! broadcast the buffer size
-    call pmc_mpi_bcast_integer(pack_size, local_comm)
+    call camp_mpi_bcast_integer(pack_size, local_comm)
 
     if (MONARCH_PROCESS.ne.0) then
       ! allocate the buffer to receive data
@@ -280,7 +290,7 @@ contains
     end if
 
     ! boradcast the buffer
-    call pmc_mpi_bcast_packed(buffer, local_comm)
+    call camp_mpi_bcast_packed(buffer, local_comm)
 
     if (MONARCH_PROCESS.ne.0) then
       ! unpack the data
@@ -289,19 +299,21 @@ contains
       call this%camp_core%bin_unpack(buffer, pos)
       call update_data_GMD%bin_unpack(buffer, pos)
       call update_data_GSD%bin_unpack(buffer, pos)
-      call pmc_mpi_unpack_integer_array(buffer, pos, this%map_monarch_id)
-      call pmc_mpi_unpack_integer_array(buffer, pos, this%map_camp_id)
-      call pmc_mpi_unpack_integer_array(buffer, pos, this%init_conc_camp_id)
-      call pmc_mpi_unpack_real_array(buffer, pos, this%init_conc)
-      call pmc_mpi_unpack_integer(buffer, pos, this%gas_phase_water_id)
-      call pmc_mpi_unpack_integer(buffer, pos, i_sect_om)
-      call pmc_mpi_unpack_integer(buffer, pos, i_sect_bc)
-      call pmc_mpi_unpack_integer(buffer, pos, i_sect_sulf)
-      call pmc_mpi_unpack_integer(buffer, pos, i_sect_opm)
+      call camp_mpi_unpack_integer_array(buffer, pos, this%map_monarch_id)
+      call camp_mpi_unpack_integer_array(buffer, pos, this%map_camp_id)
+      call camp_mpi_unpack_integer_array(buffer, pos, this%init_conc_camp_id)
+      call camp_mpi_unpack_real_array(buffer, pos, this%init_conc)
+      call camp_mpi_unpack_integer(buffer, pos, this%gas_phase_water_id)
+      call camp_mpi_unpack_integer(buffer, pos, i_sect_om_mode1)
+      call camp_mpi_unpack_integer(buffer, pos, i_sect_om_mode2)
+      call camp_mpi_unpack_integer(buffer, pos, i_sect_om_mode3)
+      call camp_mpi_unpack_integer(buffer, pos, i_sect_bc)
+      call camp_mpi_unpack_integer(buffer, pos, i_sect_sulf)
+      call camp_mpi_unpack_integer(buffer, pos, i_sect_opm)
 #endif
     end if
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     deallocate(buffer)
 #endif
 
@@ -321,14 +333,25 @@ contains
 #endif
 
     ! Set the aerosol mode dimensions
-    print*,'i_sect_: ',i_sect_om,i_sect_bc,i_sect_sulf,i_sect_opm
-   
+    print*,'i_sect_om modes: ',i_sect_om_mode1, i_sect_om_mode2, i_sect_om_mode3
     ! organic matter
-    if (i_sect_om.gt.0) then
-    !  call update_data_GMD%set_GMD(i_sect_om, 2.12d-8)
-    !  call update_data_GSD%set_GSD(i_sect_om, 2.24d0)
-    !  call this%camp_core%update_data(update_data_GMD)
-    !  call this%camp_core%update_data(update_data_GSD)
+    if (i_sect_om_mode1.gt.0) then
+      call update_data_GMD%set_GMD(i_sect_om_mode1, 2.00d-8)
+      call update_data_GSD%set_GSD(i_sect_om_mode1, 1.45d0)
+      call this%camp_core%update_data(update_data_GMD)
+      call this%camp_core%update_data(update_data_GSD)
+    end if
+    if (i_sect_om_mode2.gt.0) then
+      call update_data_GMD%set_GMD(i_sect_om_mode2, 1.16d-7)
+      call update_data_GSD%set_GSD(i_sect_om_mode2, 1.65d0)
+      call this%camp_core%update_data(update_data_GMD)
+      call this%camp_core%update_data(update_data_GSD)
+    end if
+    if (i_sect_om_mode3.gt.0) then
+      call update_data_GMD%set_GMD(i_sect_om_mode3, 1.80d-6)
+      call update_data_GSD%set_GSD(i_sect_om_mode3, 2.40d0)
+      call this%camp_core%update_data(update_data_GMD)
+      call this%camp_core%update_data(update_data_GSD)
     end if
     if (i_sect_bc.gt.0) then
     ! black carbon
@@ -578,7 +601,7 @@ contains
               !solver_stats%debug_out = .false.
             end if
 
-            ! Integrate the PMC mechanism
+            ! Integrate the CAMP mechanism
             !print *,'CAMP CORE PRINT BEFORE:'
             !call this%camp_core%print
 
@@ -593,7 +616,7 @@ contains
             !print *,'CAMP CORE PRINT AFTER:'
             !call this%camp_core%print
             !stop
-#ifdef PMC_DEBUG
+#ifdef CAMP_DEBUG
             ! Check the Jacobian evaluations
             call assert_msg(611569150, solver_stats%Jac_eval_fails.eq.0,&
                           trim( to_string( solver_stats%Jac_eval_fails ) )// &
@@ -672,7 +695,7 @@ contains
         end do
       end do
 
-      ! Integrate the PMC mechanism
+      ! Integrate the CAMP mechanism
       call this%camp_core%solve(this%camp_state, &
               real(time_step*60., kind=dp), solver_stats = solver_stats)
 
@@ -699,8 +722,8 @@ contains
 !#endif
 
     !W8 until all process to send data and measure correctly times
-#ifdef PMC_USE_MPI
-    call pmc_mpi_barrier()
+#ifdef CAMP_USE_MPI
+    call camp_mpi_barrier()
 #endif
 
     !todo move this comp_time to only the solve part, like the other tests
@@ -708,9 +731,9 @@ contains
     comp_time = comp_time + (comp_end-comp_start)
 
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
 
-if (pmc_mpi_rank().eq.0) then
+if (camp_mpi_rank().eq.0) then
   !call solver_stats%print( )
 end if
 
@@ -728,7 +751,7 @@ end if
     !> Interface configuration file path
     character(len=:), allocatable :: config_file
 
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
 
     type(json_core), pointer :: json
     type(json_file) :: j_file
@@ -868,7 +891,7 @@ end if
     allocate(this%rate_update(this%n_photo_rxn))
     allocate(this%photo_rates(this%n_photo_rxn))
 
-    ! Set the PMC and Fast-J ids
+    ! Set the CAMP and Fast-J ids
     i_photo_rxn = 1
     do i_rxn = 1, mechanism%size( )
       rxn => mechanism%get_rxn( i_rxn )
@@ -1156,7 +1179,7 @@ end if
 
     integer(kind=i_kind) :: i_spec, water_id, i,j,k
 
-    ! Reset the species concentrations in PMC and MONARCH
+    ! Reset the species concentrations in CAMP and MONARCH
     this%camp_state%state_var(:) = 0.0
     MONARCH_conc(:,:,:,:) = 0.0
     !MONARCH_water_conc(:,:,:,WATER_VAPOR_ID) = 0.0
@@ -1164,7 +1187,7 @@ end if
     ! Set the air density to a nominal value
     print*,'MONARCH air denisty: ',MONARCH_air_density(:,:,:) ! = 1.225
 
-    ! Set initial concentrations in PMC
+    ! Set initial concentrations in CAMP
     this%camp_state%state_var(this%init_conc_camp_id(:)) = this%init_conc(:)
 
     ! Copy species concentrations to MONARCH array
@@ -1254,4 +1277,4 @@ end if
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end module pmc_monarch_interface
+end module camp_monarch_interface

@@ -50,7 +50,7 @@
  * \param J Jacobian to use for testing
  * \return 0 if tests pass; otherwise the number of test failures
  */
-#ifdef PMC_USE_SUNDIALS
+#ifdef CAMP_USE_SUNDIALS
 int test_sub_model_zsr_jac_calc(void *solver_data, double *state, double *env,
     SUNMatrix J)
 {
@@ -161,7 +161,7 @@ int run_sub_model_zsr_c_tests(void *solver_data, double *state, double *env)
 {
   int ret_val = 0;
 
-#ifdef PMC_USE_SUNDIALS
+#ifdef CAMP_USE_SUNDIALS
   SolverData *sd = (SolverData*) solver_data;
   ModelData *md = &(sd->model_data);
   int n_solver_var = NV_LENGTH_S(sd->y);

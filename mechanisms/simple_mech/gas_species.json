@@ -4,7 +4,7 @@
     "N* and diffusion coefficients are from CAPRAM 2.4",
     "Aerosol species and ion pairs are needed for the MONARCH 'mod37' configuration"
   ],
-  "pmc-data" : [
+  "camp-data" : [
     {
       "type" : "RELATIVE_TOLERANCE",
       "value" : 1.0E-04

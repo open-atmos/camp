@@ -3,12 +3,12 @@
 ! SPDX-License-Identifier: MIT
 
 !> \file
-!> The pmc_solver_stats module
+!> The camp_solver_stats module
 
 !> The solver_stats_t type and associated subroutines
-module pmc_solver_stats
+module camp_solver_stats
 
-  use pmc_constants,                  only : i_kind, dp
+  use camp_constants,                  only : i_kind, dp
 
   implicit none
   private
@@ -59,7 +59,7 @@ module pmc_solver_stats
     real(kind=dp) :: Jac_time__s
     !> Maximum loss of precision on last deriv call
     real(kind=dp) :: max_loss_precision
-#ifdef PMC_DEBUG
+#ifdef CAMP_DEBUG
     !> Flag to output debugging info during solving
     !! THIS PRINTS A LOT OF TEXT TO THE STANDARD OUTPUT
     logical :: debug_out = .false.
@@ -107,7 +107,7 @@ contains
     write(f_unit,*) "Last time step [s]:          ", this%last_time_step__s
     write(f_unit,*) "Next time step [s]:          ", this%next_time_step__s
     write(f_unit,*) "Maximum loss of precision    ", this%max_loss_precision
-#ifdef PMC_DEBUG
+#ifdef CAMP_DEBUG
     write(f_unit,*) "Output debugging info:       ", this%debug_out
     write(f_unit,*) "Evaluate Jacobian:           ", this%eval_Jac
     if (this%eval_Jac) then
@@ -148,4 +148,4 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end module pmc_solver_stats
+end module camp_solver_stats

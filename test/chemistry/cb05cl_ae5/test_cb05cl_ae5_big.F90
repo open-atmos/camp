@@ -3,7 +3,7 @@
 ! SPDX-License-Identifier: MIT
 
 !> \file
-!> The pmc_test_cb05cl_ae5 program
+!> The camp_test_cb05cl_ae5 program
 
 !> Test for the cb05cl_ae5 mechanism from MONARCH. This program runs the
 !! MONARCH CB5 code and the CAMP-chem version and compares the output.
@@ -15,23 +15,23 @@
 !and confirm updating an state array
 !with rows of this matrix is the same than calculating all the matrix
 
-program pmc_test_cb05cl_ae5
+program camp_test_cb05cl_ae5
 
-  use pmc_constants,                    only: const
-  use pmc_util,                         only: i_kind, dp, assert, assert_msg, &
+  use camp_constants,                    only: const
+  use camp_util,                         only: i_kind, dp, assert, assert_msg, &
                                               almost_equal, string_t, &
                                               to_string, warn_assert_msg
-  use pmc_camp_core
-  use pmc_camp_state
-  use pmc_camp_solver_data
-  use pmc_solver_stats
-  use pmc_chem_spec_data
-  use pmc_mechanism_data
-  use pmc_rxn_data
-  use pmc_rxn_photolysis
-  use pmc_rxn_factory
-  use pmc_property
-#ifdef PMC_USE_JSON
+  use camp_camp_core
+  use camp_camp_state
+  use camp_camp_solver_data
+  use camp_solver_stats
+  use camp_chem_spec_data
+  use camp_mechanism_data
+  use camp_rxn_data
+  use camp_rxn_photolysis
+  use camp_rxn_factory
+  use camp_property
+#ifdef CAMP_USE_JSON
   use json_module
 #endif
 
@@ -1251,4 +1251,4 @@ contains
 
   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end program pmc_test_cb05cl_ae5
+end program camp_test_cb05cl_ae5

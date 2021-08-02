@@ -3,13 +3,13 @@
 ! SPDX-License-Identifier: MIT
 
 !> \file
-!> The pmc_camp_box_model program
+!> The camp_camp_box_model program
 
 !> Driver for the \ref camp_chem "CAMP" box model
-program pmc_camp_box_model
+program camp_camp_box_model
 
-  use pmc_camp_box_model_data
-  use pmc_util
+  use camp_camp_box_model_data
+  use camp_util
 
   implicit none
 
@@ -68,4 +68,4 @@ program pmc_camp_box_model
   deallocate( output_file_prefix )
   deallocate( output_file )
 
-end program pmc_camp_box_model
+end program camp_camp_box_model

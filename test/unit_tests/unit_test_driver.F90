@@ -6,13 +6,13 @@
 !> The unit test driver program.
 program unit_test_driver
 
-  use pmc_camp_core
-  use pmc_camp_state
-  use pmc_mpi
-  use pmc_rand
-  use pmc_solver_stats
-  use pmc_unit_test_data
-  use pmc_util
+  use camp_camp_core
+  use camp_camp_state
+  use camp_mpi
+  use camp_rand
+  use camp_solver_stats
+  use camp_unit_test_data
+  use camp_util
   use UNIT_TEST_MODULE_
 
   implicit none
@@ -58,23 +58,23 @@ program unit_test_driver
   real(kind=dp) :: time
   logical :: passed
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
   character, allocatable :: buffer(:), buffer_copy(:)
   integer(kind=i_kind) :: pack_size, pos, i_elem, results
 #endif
 
   ! initialize MPI
-  call pmc_mpi_init()
+  call camp_mpi_init()
 
   passed = .true.
 
   ! Seed the random number generator
-  call pmc_srand(0,0)
+  call camp_srand(0,0)
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
   ! Load the model data and initialize the cores on the primary process, then
   ! pass the cores to process 1 for solving
-  if( pmc_mpi_rank( ) .eq. 0 ) then
+  if( camp_mpi_rank( ) .eq. 0 ) then
 #endif
 
     ! Create a unit test
@@ -91,7 +91,7 @@ program unit_test_driver
     ! Initialize the unit test
     call unit_test%initialize( one_cell_core )
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     ! Pack the cores and the unit test
     pack_size = one_cell_core%pack_size( )  + &
                 multicell_core%pack_size( ) + &
@@ -106,18 +106,18 @@ program unit_test_driver
   end if
 
   ! Broadcast the buffer size
-  call pmc_mpi_bcast_integer( pack_size )
+  call camp_mpi_bcast_integer( pack_size )
 
-  if (pmc_mpi_rank().eq.1) then
+  if (camp_mpi_rank().eq.1) then
     ! allocate the buffer to receive data
     allocate(buffer(pack_size))
   end if
 
   ! broadcast the data
-  call pmc_mpi_bcast_packed(buffer)
+  call camp_mpi_bcast_packed(buffer)
 
   ! Upack the objects on process 1
-  if( pmc_mpi_rank( ) .eq. 1 ) then
+  if( camp_mpi_rank( ) .eq. 1 ) then
 
     ! unpack the data
     one_cell_core  => camp_core_t( )
@@ -162,7 +162,7 @@ program unit_test_driver
     do i_cell=1, N_CELLS
       grid_cell_state( i_cell )%val => one_cell_core%new_state( )
       grid_cell_state_id( i_cell ) = &
-        pmc_rand_int( unit_test%num_unique_states( ) )
+        camp_rand_int( unit_test%num_unique_states( ) )
 
       ! Set the initial state for this grid cell to grid_cell_state_id
       call unit_test%initialize_state( i_cell, one_cell_core, &
@@ -201,7 +201,7 @@ program unit_test_driver
 
     end do
 
-#ifdef PMC_DEBUG
+#ifdef CAMP_DEBUG
     ! Evaluate the Jacobian during solving
     solver_stats%eval_Jac = .true.
 #endif
@@ -223,7 +223,7 @@ program unit_test_driver
                                  unit_test%time_step_size( ), &
                                  solver_stats = solver_stats )
 
-#ifdef PMC_DEBUG
+#ifdef CAMP_DEBUG
       ! Check the Jacobian evaluations
       call assert_msg( 673820325, solver_stats%Jac_eval_fails.eq.0, &
                        trim( to_string( solver_stats%Jac_eval_fails ) )// &
@@ -251,7 +251,7 @@ program unit_test_driver
                                   unit_test%time_step_size( ), &
                                   solver_stats = solver_stats )
 
-#ifdef PMC_DEBUG
+#ifdef CAMP_DEBUG
         ! Check the Jacobian evaluations
         call assert_msg( 781326658, solver_stats%Jac_eval_fails.eq.0, &
                          trim( to_string( solver_stats%Jac_eval_fails ) )// &
@@ -313,7 +313,7 @@ program unit_test_driver
     deallocate( multicell_state )
     deallocate( multicell_cell_state )
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     ! convert the results to an integer
     if( passed ) then
       results = 0
@@ -323,10 +323,10 @@ program unit_test_driver
   end if
 
   ! Send the results back to the primary process
-  call pmc_mpi_transfer_integer(results, results, 1, 0)
+  call camp_mpi_transfer_integer(results, results, 1, 0)
 
   ! Convert the results back to a logical
-  if( pmc_mpi_rank( ) .eq. 0 ) then
+  if( camp_mpi_rank( ) .eq. 0 ) then
     if( results .eq. 0 ) then
       passed = .true.
     else
@@ -344,11 +344,11 @@ program unit_test_driver
 
   ! Finalize the test
   if( passed ) then
-    if( pmc_mpi_rank( ).eq.0 ) write(*,*) "Unit test - PASS"
-    call pmc_mpi_finalize( )
+    if( camp_mpi_rank( ).eq.0 ) write(*,*) "Unit test - PASS"
+    call camp_mpi_finalize( )
   else
-    if( pmc_mpi_rank( ).eq.0 ) write(*,*) "Unit test - FAIL"
-    call pmc_mpi_finalize( )
+    if( camp_mpi_rank( ).eq.0 ) write(*,*) "Unit test - FAIL"
+    call camp_mpi_finalize( )
     stop 3
   end if
 

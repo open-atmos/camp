@@ -3,18 +3,18 @@
 ! SPDX-License-Identifier: MIT
 
 !> \file
-!> The pmc_camp_box_model_data_t type and related functions
+!> The camp_camp_box_model_data_t type and related functions
 
 !> A simple box model for \ref camp_chem "CAMP" mechanisms
 !! \todo{ Modify this to run full PartMC scenarios with CAMP enabled
 !!        so that aerosol physical processes can be included. }
-module pmc_camp_box_model_data
+module camp_camp_box_model_data
 
-  use pmc_aero_rep_data
-  use pmc_camp_core
-  use pmc_camp_state
-  use pmc_rxn_data
-  use pmc_util
+  use camp_aero_rep_data
+  use camp_camp_core
+  use camp_camp_state
+  use camp_rxn_data
+  use camp_util
 
   implicit none
   private
@@ -49,7 +49,7 @@ module pmc_camp_box_model_data
     procedure :: print => profile_do_print
   end type profile_t
 
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
   !> Constructor for profile_t
   interface profile_t
     procedure :: profile_constructor
@@ -67,7 +67,7 @@ module pmc_camp_box_model_data
     final :: rxn_profile_finalize
   end type rxn_profile_t
 
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
   !> Constructor for rxn_profile_t
   interface rxn_profile_t
     procedure :: rxn_profile_constructor
@@ -89,7 +89,7 @@ module pmc_camp_box_model_data
     final :: aero_rep_profile_finalize
   end type aero_rep_profile_t
 
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
   !> Constructor for aero_rep_profile_t
   interface aero_rep_profile_t
     procedure :: aero_rep_profile_constructor
@@ -144,7 +144,7 @@ contains
   !> Constructor for the CAMP box model
   function constructor( config_file ) result( new_obj )
 
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
     use json_module
 #endif
 
@@ -152,7 +152,7 @@ contains
     type(camp_box_model_data_t), pointer :: new_obj
     !> Box model configuration file
     character(len=*), intent(in) :: config_file
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
     type(json_core), target :: json
     type(json_file) :: j_file
     type(json_value), pointer :: j_obj, j_next, j_box_config
@@ -321,7 +321,7 @@ contains
   !> Run the camp-chem box model
   subroutine run( this, output_file_unit )
 
-    use pmc_solver_stats
+    use camp_solver_stats
 
     !> CAMP box model
     class(camp_box_model_data_t), intent(inout) :: this
@@ -537,7 +537,7 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
   !> Constructor for profile_t
   function profile_constructor( json, j_obj ) result( new_obj )
 
@@ -686,15 +686,15 @@ contains
   end subroutine profile_do_print
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
   !> Constructor for rxn_profile_t
   function rxn_profile_constructor( camp_core, json, j_obj ) result( new_obj )
 
-    use pmc_mechanism_data
-    use pmc_rxn_emission
-    use pmc_rxn_first_order_loss
-    use pmc_rxn_photolysis
-    use pmc_rxn_wet_deposition
+    use camp_mechanism_data
+    use camp_rxn_emission
+    use camp_rxn_first_order_loss
+    use camp_rxn_photolysis
+    use camp_rxn_wet_deposition
     use json_module
 
     !> New reaction profile
@@ -759,10 +759,10 @@ contains
   !> Update a reaction with the current rate from the profile
   subroutine update_rxn( this, camp_core )
 
-    use pmc_rxn_emission
-    use pmc_rxn_first_order_loss
-    use pmc_rxn_photolysis
-    use pmc_rxn_wet_deposition
+    use camp_rxn_emission
+    use camp_rxn_first_order_loss
+    use camp_rxn_photolysis
+    use camp_rxn_wet_deposition
 
     !> Reaction rate profile
     class(rxn_profile_t) :: this
@@ -801,14 +801,14 @@ contains
   end subroutine rxn_profile_finalize
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
   !> Constructor for aero_rep_profile_t
   function aero_rep_profile_constructor( camp_core, json, j_obj ) &
       result( new_obj )
 
-    use pmc_mechanism_data
-    use pmc_aero_rep_modal_binned_mass
-    use pmc_aero_rep_single_particle
+    use camp_mechanism_data
+    use camp_aero_rep_modal_binned_mass
+    use camp_aero_rep_single_particle
     use json_module
 
     !> New aerosol representation profile
@@ -898,8 +898,8 @@ contains
   !> Update a reaction with the current rate from the profile
   subroutine update_aero_rep( this, camp_core )
 
-    use pmc_aero_rep_modal_binned_mass
-    use pmc_aero_rep_single_particle
+    use camp_aero_rep_modal_binned_mass
+    use camp_aero_rep_single_particle
 
     !> Aerosol representation profile
     class(aero_rep_profile_t) :: this
@@ -939,4 +939,4 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end module pmc_camp_box_model_data
+end module camp_camp_box_model_data

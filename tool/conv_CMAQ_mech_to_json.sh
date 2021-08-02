@@ -54,7 +54,7 @@ done
 ###################
 
 # header
-sed -i '' -E "1s/^[[:space:]]*([^[:space:]]+)/{ \"pmc-data\" : [\\$NL  {\\$NL    \"name\" : \"\1\",\\$NL    \"type\" : \"MECHANISM\",\\$NL    \"reactions\" : [\\$NL/" $MECH_FILE
+sed -i '' -E "1s/^[[:space:]]*([^[:space:]]+)/{ \"camp-data\" : [\\$NL  {\\$NL    \"name\" : \"\1\",\\$NL    \"type\" : \"MECHANISM\",\\$NL    \"reactions\" : [\\$NL/" $MECH_FILE
 
 # footer
 sed -i '' -E "\$a\\$NL  }\\$NL]}" $MECH_FILE

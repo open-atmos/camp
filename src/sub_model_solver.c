@@ -12,7 +12,7 @@
 #include <stdlib.h>
 #include "sub_models.h"
 
-// Sub model types (Must match parameters in pmc_sub_model_factory)
+// Sub model types (Must match parameters in camp_sub_model_factory)
 #define SUB_MODEL_UNIFAC 1
 #define SUB_MODEL_ZSR_AEROSOL_WATER 2
 #define SUB_MODEL_PDFITE 3
@@ -350,7 +350,7 @@ void sub_model_calculate(ModelData *model_data) {
  * \param J_data Pointer to sub-model Jacobian data
  * \param time_step Current time step [s]
  */
-#ifdef PMC_USE_SUNDIALS
+#ifdef CAMP_USE_SUNDIALS
 void sub_model_get_jac_contrib(ModelData *model_data, double *J_data,
                                realtype time_step) {
   // Get the number of sub models

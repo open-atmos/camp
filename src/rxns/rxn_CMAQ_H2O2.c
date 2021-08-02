@@ -135,7 +135,7 @@ void rxn_CMAQ_H2O2_update_env_state(ModelData *model_data, int *rxn_int_data,
  * \param rxn_env_data Pointer to the environment-dependent parameters
  * \param time_step Current time step being computed (s)
  */
-#ifdef PMC_USE_SUNDIALS
+#ifdef CAMP_USE_SUNDIALS
 void rxn_CMAQ_H2O2_calc_deriv_contrib(ModelData *model_data,
                                       TimeDerivative time_deriv,
                                       int *rxn_int_data, double *rxn_float_data,
@@ -181,7 +181,7 @@ void rxn_CMAQ_H2O2_calc_deriv_contrib(ModelData *model_data,
  * \param rxn_env_data Pointer to the environment-dependent parameters
  * \param time_step Current time step being calculated (s)
  */
-#ifdef PMC_USE_SUNDIALS
+#ifdef CAMP_USE_SUNDIALS
 void rxn_CMAQ_H2O2_calc_jac_contrib(ModelData *model_data, Jacobian jac,
                                     int *rxn_int_data, double *rxn_float_data,
                                     double *rxn_env_data, double time_step) {
