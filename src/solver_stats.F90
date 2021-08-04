@@ -43,10 +43,6 @@ module pmc_solver_stats
     integer(kind=i_kind) :: DLS_Jac_evals
     !> Direct Linear Solver right-hand size evaluations
     integer(kind=i_kind) :: DLS_RHS_evals
-    !> Internal iterations Biconjugate Gradient
-    integer(kind=i_kind) :: counterBCG
-    !> Calls to Linear Solver
-    integer(kind=i_kind) :: counterLS
     !> Last time step [s]
     real(kind=dp) :: last_time_step__s
     !> Next time step [s]
@@ -61,14 +57,6 @@ module pmc_solver_stats
     real(kind=dp) :: RHS_time__s
     !> Compute time for calls to `Jac()` [s]
     real(kind=dp) :: Jac_time__s
-    !> Compute time for CVODE solving run [s]
-    real(kind=dp) :: timeCVode = 0.0
-    !> Total compute time accumulated for CVODE solving runs [s]
-    real(kind=dp) :: timeCVodeTotal = 0.0
-    !> Time Linear Solver [s]
-    real(kind=dp) :: timeLS = 0.0
-    !> Time Linear Solver memcopys [s]
-    real(kind=dp) :: timeBiconjGradMemcpy = 0.0
     !> Counters array for profiling [iterations]
     integer, allocatable :: counters(:)
     !> Timers array for profiling [s]

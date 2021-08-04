@@ -62,6 +62,7 @@ int cvNewtonIteration_gpu2(SolverData *sd, CVodeMem cv_mem);
 int check_jac_status_error_gpu2(SUNMatrix A);
 int cvHandleFailure_gpu2(CVodeMem cv_mem, int flag);
 
+void solver_get_statistics_gpu(SolverData *sd);
 void printSolverCounters_gpu2(SolverData *sd);
 
 #endif

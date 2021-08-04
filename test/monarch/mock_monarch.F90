@@ -70,10 +70,9 @@ program mock_monarch
   integer, parameter :: RESULTS_FILE_UNIT_TABLE = 10
   integer, parameter :: RESULTS_FILE_UNIT_PY = 11
   integer, parameter :: IMPORT_FILE_UNIT = 12
-  integer, parameter :: STATSOUT_FILE_UNIT = 13
+  integer, parameter :: STATSOUT_FILE_UNIT2 = 13
   integer, parameter :: STATSIN_FILE_UNIT = 14
   integer, parameter :: RESULTS_ALL_CELLS_FILE_UNIT = 15
-  integer, parameter :: STATSOUT_FILE_UNIT2 = 16
 
   integer(kind=i_kind), parameter :: NUM_CAMP_SPEC = 79
   integer(kind=i_kind), parameter :: NUM_EBI_SPEC = 72
@@ -182,12 +181,7 @@ program mock_monarch
   !> Partmc nº of cases to test
   integer :: plot_case, new_v_cells, aux_int
   type(solver_stats_t), target :: solver_stats
-  integer :: counterBCG_prev = 0
-  integer :: counterLS_prev = 0
 
-  real(kind=dp) :: timeLS_prev = 0.0
-  real(kind=dp) :: timeCvode_prev = 0.0
-  real(kind=dp) :: timeBiconjGradMemcpy_prev = 0.0
   integer, allocatable :: counters(:)
   real(kind=dp), allocatable :: times(:)
   integer :: ncounters, ntimers != 0 != 2
@@ -288,7 +282,7 @@ program mock_monarch
     str_to_int_aux = trim(arg)
     read(str_to_int_aux, *) ncounters
   else
-    ncounters = 2
+    ncounters = 3
     !print*, "WARNING: not ncounters parameter received, value set to ",ncounters
   end if
 
@@ -297,7 +291,7 @@ program mock_monarch
     str_to_int_aux = trim(arg)
     read(str_to_int_aux, *) ntimers
   else
-    ntimers = 5
+    ntimers = 13!5
     !print*, "WARNING: not ntimers parameter received, value set to ",ntimers
   end if
 
@@ -655,7 +649,6 @@ program mock_monarch
   close(RESULTS_FILE_UNIT)
   close(RESULTS_FILE_UNIT_TABLE)
   close(RESULTS_FILE_UNIT_PY)
-  close(STATSOUT_FILE_UNIT)
   close(RESULTS_ALL_CELLS_FILE_UNIT)
   close(STATSOUT_FILE_UNIT2)
 
@@ -746,16 +739,12 @@ contains
     write(RESULTS_FILE_UNIT_PY, "(A)", advance="no") aux_str_py
     write(RESULTS_FILE_UNIT_PY, '(a)') ''
 
-
     file_name = file_prefix//"_solver_stats.csv"
-    open(STATSOUT_FILE_UNIT, file=file_name, status="replace", action="write")
-    file_name = file_prefix//"_solver_stats2.csv"
     open(STATSOUT_FILE_UNIT2, file=file_name, status="replace", action="write")
 
-    str_stats_names = "timestep,counterBCG,counterLS,timeLS,timeBiconjGradMemcpy,timeCVode,&
-            dtPreBCG,dtPostBCG"
-    write(STATSOUT_FILE_UNIT, "(A)", advance="no") str_stats_names
-    write(STATSOUT_FILE_UNIT, '(a)') ''
+    str_stats_names = "timestep,counterBCG,counterLS,countersolveCVODEGPU,timeLS,timeBiconjGradMemcpy,timeCVode,&
+            dtPreBCG,dtPostBCG,timesolveCVODEGPU,timeNewtonIteration,timeJac,timelinsolsetup,timecalc_Jac,&
+            timeRXNJac,timef,timeguess_helper"
 
     write(STATSOUT_FILE_UNIT2, "(A)", advance="no") str_stats_names
     write(STATSOUT_FILE_UNIT2, '(a)') ''
@@ -2013,9 +2002,6 @@ contains
     integer, intent(inout) :: ntimers
 
     character(len=128) :: i_cell_str, time_str
-    integer :: counterLS_max, counterLS, counterBCG, counterBCG_max, aux_int
-    real(kind=dp) :: timeLS_max, timeCvode_max, timeLS, timeBiconjGradMemcpy, &
-            timeBiconjGradMemcpy_max ,timeCvode
     integer :: l_comm, ierr, i
     integer, allocatable :: counters_max(:)
     real(kind=dp), allocatable :: times_max(:)
@@ -2027,22 +2013,6 @@ contains
 
     l_comm = MPI_COMM_WORLD
 
-    call mpi_reduce(solver_stats%counterBCG, counterBCG_max, 1, MPI_INTEGER, MPI_MAX, 0, &
-            l_comm, ierr)
-    call mpi_reduce(solver_stats%counterLS, counterLS_max, 1, MPI_INTEGER, MPI_MAX, 0, &
-            l_comm, ierr)
-    call pmc_mpi_check_ierr(ierr)
-    call mpi_reduce(solver_stats%timeLS, timeLS_max, 1, MPI_DOUBLE, MPI_MAX, 0, &
-            l_comm, ierr)
-    call pmc_mpi_check_ierr(ierr)
-    call mpi_reduce(solver_stats%timeBiconjGradMemcpy, timeBiconjGradMemcpy_max, 1, MPI_DOUBLE, MPI_MAX, 0, &
-            l_comm, ierr)
-    call pmc_mpi_check_ierr(ierr)
-    call mpi_reduce(solver_stats%timeCvode, timeCvode_max, 1, MPI_DOUBLE, MPI_MAX, 0, &
-            l_comm, ierr)
-    call pmc_mpi_check_ierr(ierr)
-
-
     call mpi_reduce(solver_stats%counters, counters_max, ncounters, MPI_INTEGER, MPI_MAX, 0, &
             l_comm, ierr)
     call pmc_mpi_check_ierr(ierr)
@@ -2050,19 +2020,7 @@ contains
             l_comm, ierr)
     call pmc_mpi_check_ierr(ierr)
 
-    counterBCG=counterBCG_max
-    counterLS=counterLS_max
-    timeLS=timeLS_max
-    timeBiconjGradMemcpy=timeBiconjGradMemcpy_max
-    timeCvode=timeCvode_max
-
 #else
-
-    counterBCG=solver_stats%counterBCG
-    counterLS=solver_stats%counterLS
-    timeLS=solver_stats%timeLS
-    timeBiconjGradMemcpy=solver_stats%timeBiconjGradMemcpy
-    timeCvode=solver_stats%timeCvode
 
     counters_max(:)=solver_stats%counters(:)
     times_max(:)=solver_stats%times(:)
@@ -2073,31 +2031,6 @@ contains
 
       write(time_str,*) curr_time
       time_str=adjustl(time_str)
-      write(STATSOUT_FILE_UNIT, "(A)", advance="no") trim(time_str)
-      write(STATSOUT_FILE_UNIT, "(A)", advance="no") ","
-
-      write(STATSOUT_FILE_UNIT, "(I6)", advance="no") &
-              counterBCG-counterBCG_prev
-      write(STATSOUT_FILE_UNIT, "(A)", advance="no") ","
-      write(STATSOUT_FILE_UNIT, "(I6)", advance="no") &
-              counterLS-counterLS_prev
-      write(STATSOUT_FILE_UNIT, "(A)", advance="no") ","
-      write(STATSOUT_FILE_UNIT, "(ES13.6)", advance="no") &
-              timeLS-timeLS_prev
-      write(STATSOUT_FILE_UNIT, "(A)", advance="no") ","
-      write(STATSOUT_FILE_UNIT, "(ES13.6)", advance="no") &
-              timeBiconjGradMemcpy-timeBiconjGradMemcpy_prev
-      write(STATSOUT_FILE_UNIT, "(A)", advance="no") ","
-      write(STATSOUT_FILE_UNIT, "(ES13.6)", advance="no") &
-              timeCvode-timeCvode_prev
-      write(STATSOUT_FILE_UNIT, '(a)') ''
-
-      counterBCG_prev = counterBCG
-      counterLS_prev=counterLS
-      timeLS_prev=timeLS
-      timeBiconjGradMemcpy_prev=timeBiconjGradMemcpy
-      timeCvode_prev=timeCvode
-
 
       write(STATSOUT_FILE_UNIT2, "(A)", advance="no") trim(time_str)
 
@@ -2115,20 +2048,12 @@ contains
         write(STATSOUT_FILE_UNIT2, "(ES13.6)", advance="no") &
                 times_max(i)-times(i)
 
-        !print*,"times_max(i),times(i) ",&
-        !        times_max(i),times(i)!,solver_stats%times(i)
+        !print*,"times_max,i",times_max(i),i!,solver_stats%times(i)
 
         times(i)=times_max(i)
       end do
 
       write(STATSOUT_FILE_UNIT2, '(a)') ''
-
-      !print*,",counters_max(i)-counters(i)",counters_max(i)-counters(i)
-
-      !print*, "counterBCG fortran", counterBCG
-      !print*, "timeLS fortran", timeLS
-      !print*, "counterLS fortran", solver_stats%counterLS
-      !print*, "timeCvode fortran", solver_stats%timeCvode
 
     end if
 

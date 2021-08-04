@@ -403,6 +403,13 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
   sd->timeDerivCPU = 0.0;
   sd->timeJacCPU = 0.0;
   sd->timeLS = 0.0;
+  sd->timeNewtonIteration = 0.0;
+  sd->timeJac = 0.0;
+  sd->timelinsolsetup = 0.0;
+  sd->timecalc_Jac = 0.0;
+  sd->timeRXNJac = 0.0;
+  sd->timef = 0.0;
+  sd->timeguess_helper = 0.0;
 
   sd->ncounters = ncounters;
   sd->ntimers = ntimers;
@@ -1044,11 +1051,8 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
                            double *next_time_step__s, int *Jac_eval_fails,
                            int *RHS_evals_total, int *Jac_evals_total,
                            double *RHS_time__s, double *Jac_time__s,
-                           double *timeCVode, double *timeCVodeTotal,
-                           int *counterBCG, int *counterLS, double *timeLS,
-                           double* timeBiconjGradMemcpy,
-                           double *max_loss_precision
-        , int *counters, double *times
+                           double *max_loss_precision,
+                           int *counters, double *times
                            ) {
 #ifdef PMC_USE_SUNDIALS
   SolverData *sd = (SolverData *)solver_data;
@@ -1108,12 +1112,6 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
   *max_loss_precision = 0.0;
 #endif
 
-  *counterBCG=0;
-  *timeCVode = 0.0;
-  *timeCVodeTotal = 0.0;
-  *counterLS = 0;
-  *timeLS = 0.0;
-  *timeBiconjGradMemcpy=0.0;
   for(int i=0; i<sd->ncounters; i++){
     counters[i]=0;
   }
@@ -1123,15 +1121,9 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
   //printf("sd->ntimers ncounters %d %d\n",sd->ntimers,sd->ncounters);
 
 #ifdef PMC_DEBUG_GPU
-  *timeCVode = sd->timeCVode;
-  *timeCVodeTotal = sd->timeCVodeTotal;
-  //sd->timeCVode = 0.0;
 
   if(sd->use_cpu==1){
 
-    CVodeGetcounterLS(sd->cvode_mem, counterLS);
-    CVodeGettimeLS(sd->cvode_mem, timeLS);
-    //printf("CVodeGettimeLS %-le",*timeLS);
 
     if(sd->ncounters>0){
       CVodeGetcounterLS(sd->cvode_mem, &counters[1]);
@@ -1153,26 +1145,38 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
 #ifdef PMC_USE_GPU
     itsolver *bicg = &(sd->bicg);
 
-    *counterBCG = bicg->counterBiConjGradInternal;
+    //printf("solver_get_statistics_gpu\n");
 
-    *counterLS=bicg->counterBiConjGrad;
-    *timeLS=bicg->timeBiConjGrad/1000;
-    *timeBiconjGradMemcpy=bicg->timeBiConjGradMemcpy/1000;
-    //printf("timeLS %-le",*timeLS);
+    solver_get_statistics_gpu(sd);
+    int i;
+
+    //printf("solver_get_statistics\n");
 
     if(sd->ncounters>0){
-      counters[0]=bicg->counterBiConjGradInternal;
-      counters[1]=bicg->counterBiConjGrad;
+      i=0;
+      counters[i++]=bicg->counterBiConjGradInternal;
+      counters[i++]=bicg->counterBiConjGrad;
+      counters[i++]=bicg->countersolveCVODEGPU;
     }
     if(sd->ntimers>0){
-      times[0]=bicg->timeBiConjGrad/1000;
-      times[1]=bicg->timeBiConjGradMemcpy/1000;
-      times[2]=sd->timeCVode;
-      times[3]=bicg->dtPreBCG;
-      times[4]=bicg->dtPostBCG;
+      i=0;
+
+      times[i++]=bicg->timeBiConjGrad/1000;
+      times[i++]=bicg->timeBiConjGradMemcpy/1000;
+      times[i++]=sd->timeCVode;
+      times[i++]=bicg->dtPreBCG;
+      times[i++]=bicg->dtPostBCG;
+      times[i++]=bicg->timesolveCVODEGPU/1000;
+      times[i++]=sd->timeNewtonIteration;
+      times[i++]=sd->timeJac;
+      times[i++]=sd->timelinsolsetup;
+      times[i++]=sd->timecalc_Jac;
+      times[i++]=sd->timeRXNJac;
+      times[i++]=sd->timef;
+      times[i++]=sd->timeguess_helper;
 
       //for(int i=0;i<sd->ntimers;i++)
-      //  printf("times[i] [%d]=%le\n",i,times[i]);
+        //printf("times[%d]=%le\n",i,times[i]);
     }
     else{
       printf("WARNING: In function solver_get_statistics trying to assign times "

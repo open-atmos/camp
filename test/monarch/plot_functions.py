@@ -54,6 +54,61 @@ def calculate_computational_timeLS(data,plot_y_key):
 
   return data
 
+def calculate_percentages_solveCVODEGPU(din):
+
+  #data_aux={}
+  print(din)
+  #print(data["timeNewtonIteration"])
+
+  percNum=100#1
+
+  data={}
+
+  data["timeNewtonIteration"]=[]
+  data["timeJac"]=[]
+  data["timelinsolsetup"]=[]
+  data["timecalc_Jac"]=[]
+  data["timeRXNJac"]=[]
+  data["timef"]=[]
+  data["timeguess_helper"]=[]
+
+
+  for i in range(len(din["timesolveCVODEGPU"])):
+    if(din["timesolveCVODEGPU"][i]!=0):
+      data["timeNewtonIteration"].append(din["timeNewtonIteration"][i]/din["timesolveCVODEGPU"][i]*percNum)
+
+      data["timeJac"].append(din["timeJac"][i]/din["timesolveCVODEGPU"][i]*percNum)
+      data["timelinsolsetup"].append(din["timelinsolsetup"][i]/din["timesolveCVODEGPU"][i]*percNum)
+      data["timecalc_Jac"].append(din["timecalc_Jac"][i]/din["timesolveCVODEGPU"][i]*percNum)
+      data["timeRXNJac"].append(din["timeRXNJac"][i]/din["timesolveCVODEGPU"][i]*percNum)
+      data["timef"].append(din["timef"][i]/din["timesolveCVODEGPU"][i]*percNum)
+      data["timeguess_helper"].append(din["timeguess_helper"][i]/din["timesolveCVODEGPU"][i]*percNum)
+
+      #data["timeNewtonIteration"]=din["timeNewtonIteration"][i]/data["timesolveCVODEGPU"][i]*percNum
+      #data["timeJac"][i]=din["timeJac"][i]/data["timesolveCVODEGPU"][i]*percNum
+      #data["timelinsolsetup"][i]=din["timelinsolsetup"][i]/data["timesolveCVODEGPU"][i]*percNum
+      #data["timecalc_Jac"][i]=din["timecalc_Jac"][i]/data["timesolveCVODEGPU"][i]*percNum
+      #data["timeRXNJac"][i]=din["timeRXNJac"][i]/data["timesolveCVODEGPU"][i]*percNum
+      #data["timef"][i]=din["timef"][i]/data["timesolveCVODEGPU"][i]*percNum
+      #data["timeguess_helper"][i]=din["timeguess_helper"][i]/data["timesolveCVODEGPU"][i]*percNum
+
+  #print(data["timeNewtonIteration"])
+
+  #if("GPU" in case):
+  #data_timeBiconjGradMemcpy=data[case][plot_y_key]
+  #data_timeLS=data[case]["timeLS"]
+  #print(data_timeBiconjGradMemcpy)
+  #print(data_timeLS)
+  #for i in range(len(data_timeLS)):
+  #  data_timeLS[i]=data_timeLS[i]-data_timeBiconjGradMemcpy[i]
+  #print(data_timeLS)
+  #gpu_exist=True
+
+  print("calculate_percentages_solveCVODEGPU")
+  print(data)
+
+  return data
+
 def normalize_by_counterLS_and_cells(data,plot_y_key,cells,case):
 
   #plot_y_key = "timeLS"

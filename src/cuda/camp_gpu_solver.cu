@@ -1837,8 +1837,6 @@ void cudaGlobalJac0(
 
   //if(threadIdx.x==0)printf("cudaGlobalJac \n");
   //__syncthreads();
-  //if(threadIdx.x==0)printf("md_object.jac.num_elem %d\n",md->jac.num_elem[0]);
-  //__syncthreads();
 
   cudaDeviceJac0(
 #ifdef PMC_DEBUG_GPU

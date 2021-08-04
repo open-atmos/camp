@@ -316,6 +316,13 @@ typedef struct {
   double timeLS;
   double timeDerivCPU;
   double timeJacCPU;
+  double timeNewtonIteration;
+  double timeJac;
+  double timelinsolsetup;
+  double timecalc_Jac;
+  double timeRXNJac;
+  double timef;
+  double timeguess_helper;
   int ncounters;
   int ntimers;
   FILE *file; //todo clean file

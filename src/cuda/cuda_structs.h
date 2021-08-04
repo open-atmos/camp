@@ -77,7 +77,6 @@ typedef struct
 
 
   //ODE stats
-  //int cv_mnewt; //Newton iteration counter
 
 #ifdef PMC_DEBUG_GPU
   int counterSendInit;
@@ -95,6 +94,7 @@ typedef struct
   int *counterBiConjGradInternalGPU;
   int counterDerivSolve;
   int counterJac;
+  int countersolveCVODEGPU;
 
   double timeNewtonSendInit;
   double timeMatScaleAddI;
@@ -110,9 +110,16 @@ typedef struct
   double timeBiConjGradMemcpy;
   double timeDerivSolve;
   double timeJac;
+  double timesolveCVODEGPU;
+#ifdef cudaGlobalSolveODE_timers_max_blocks
+  double *dtBCG;
+  double *dtPreBCG;
+  double *dtPostBCG;
+#else
   double dtBCG;
   double dtPreBCG;
   double dtPostBCG;
+#endif
 
   cudaEvent_t startDerivNewton;
   cudaEvent_t startDerivSolve;
@@ -123,6 +130,7 @@ typedef struct
   cudaEvent_t startBCG;
   cudaEvent_t startBCGMemcpy;
   cudaEvent_t startJac;
+  cudaEvent_t startsolveCVODEGPU;
 
   cudaEvent_t stopDerivNewton;
   cudaEvent_t stopDerivSolve;
@@ -132,6 +140,7 @@ typedef struct
   cudaEvent_t stopcvStep;
   cudaEvent_t stopBCGMemcpy;
   cudaEvent_t stopBCG;
+  cudaEvent_t stopsolveCVODEGPU;
 
   cudaEvent_t stopJac;
 
@@ -247,7 +256,6 @@ typedef struct {
     JacobianGPU jac;
     //int n_per_cell_solver_jac_elem;
 
-
     //Allocated in GPU only
     int i_cell;
     int i_rxn;
@@ -257,6 +265,29 @@ typedef struct {
     double *grid_cell_env;
     double *grid_cell_aero_rep_env_data;
 
+    //CVODE variables only GPU
+    //double ;
+    double cv_gamrat;
+    double cv_crate;
+    double cv_gamma;
+    double cv_gammap;
+    double cv_nstlp;
+    double cv_rl1;
+    int cv_mnewt;
+    double cv_maxcor;
+    double cv_acnrm;
+
+
+//ODE stats
+#ifdef PMC_DEBUG_GPU
+    double *dtNewtonIteration;
+    double *dtJac;
+    double *dtlinsolsetup;
+    double *dtcalc_Jac;
+    double *dtRXNJac;
+    double *dtf;
+    double *dtguess_helper;
+#endif
 
 } ModelDataGPU;
 

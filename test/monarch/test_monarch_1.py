@@ -99,6 +99,9 @@ def run(config_file,diff_cells,mpi,mpiProcesses,n_cells,timesteps,
       data["timeLS"][i]=data["timeLS"][i] \
                              /data["counterBCG"][i]
 
+  #if plot_y_key=="Percentages solveCVODEGPU":
+  #data=plot_functions.calculate_percentages_solveCVODEGPU(data)
+
   return data
 
 def run_cell(config_file,diff_cells,mpi,mpiProcessesList,n_cells_aux,timesteps,
@@ -142,7 +145,6 @@ def run_cell(config_file,diff_cells,mpi,mpiProcessesList,n_cells_aux,timesteps,
     y_key="timeLS"
 
   if plot_y_key!="MAPE" and len(cases)==1:
-  #if plot_y_key=="MAPE2":
     dataMAPE={}
     #todo change filename to be like "CPUMulti-cells" to distinguish Multi-cells CPU & GPU
     #for i in range(len(cases)):
@@ -177,19 +179,19 @@ def run_cell(config_file,diff_cells,mpi,mpiProcessesList,n_cells_aux,timesteps,
   if(len(cases)!=2):
     raise Exception("Only one case to compare")
 
-  if(plot_y_key=="NRMSE"):
+  if plot_y_key== "NRMSE":
     datay=plot_functions.calculate_NMRSE(data,timesteps)
-  elif(plot_y_key=="MAPE"):
+  elif plot_y_key== "MAPE":
     datay=plot_functions.calculate_MAPE(data,timesteps)
   elif(plot_y_key=="SMAPE"):
     datay=plot_functions.calculate_SMAPE(data,timesteps)
-  elif("Speedup" in plot_y_key):
+  elif "Speedup" in plot_y_key:
     #y_key = plot_y_key.replace('Speedup ', '')
     #y_key_words = plot_y_key.split()
     #y_key = y_key_words[-1]
     #print(y_key)
     datay=plot_functions.calculate_speedup2(data,y_key)
-  elif(plot_y_key=="% Time data transfers CPU-GPU BCG"):
+  elif plot_y_key== "% Time data transfers CPU-GPU BCG":
     y_key="timeBiconjGradMemcpy"
     datay=plot_functions.calculate_BCGPercTimeDataTransfers(data,y_key)
   else:
@@ -217,7 +219,7 @@ def all_timesteps():
   #cells = [1,10,100,1000]
   #cells = [1,10,100,1000,10000,100000]
 
-  timesteps = 2#720=12h
+  timesteps = 1#720=12h
   TIME_STEP = 2 #pending send TIME_STEP to mock_monarch
 
   #cases = ["CPU One-cell"]
@@ -244,6 +246,7 @@ def all_timesteps():
   #plot_y_key = "Speedup total iterations - counterBCG"
   #plot_y_key = "Speedup normalized counterBCG"
   #plot_y_key = "Speedup BCG iteration (Comp.timeLS/counterBCG)"
+  #plot_y_key = "Percentages solveCVODEGPU" #Uncomment function
 
   #plot_y_key = "% Time data transfers CPU-GPU BCG"
   #plot_y_key="NRMSE"
@@ -350,6 +353,10 @@ def all_timesteps():
 
 
   namex=plot_x_key
+
+  if plot_y_key=="Percentages solveCVODEGPU":
+    plot_functions.plot_percentages_solveCVODEGPU( \
+      data,namex,namey,datax,datay,plot_title)
 
   #plot_functions.plot(namex,namey,datax,datay,plot_title,SAVE_PLOT)
 
