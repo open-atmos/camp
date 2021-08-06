@@ -46,7 +46,7 @@ typedef struct
 
   // ODE solver variables
   int flag;
-  int callSetup;
+  int callSetup;//todo remove
   int convfail;
   int *dflag;
   int *dlast_flag;
@@ -277,6 +277,7 @@ typedef struct {
     double cv_maxcor;
     double cv_acnrm;
     int nflag;
+    int cv_jcur;
 
 //ODE stats
 #ifdef PMC_DEBUG_GPU
