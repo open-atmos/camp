@@ -276,7 +276,7 @@ typedef struct {
     int cv_mnewt;
     double cv_maxcor;
     double cv_acnrm;
-
+    int nflag;
 
 //ODE stats
 #ifdef PMC_DEBUG_GPU
