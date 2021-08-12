@@ -158,7 +158,7 @@ void solver_new_gpu_cu(SolverData *sd, int n_dep_var,
     md->deriv_aux = (realtype *)malloc(md->deriv_size);
   }
 
-  printf("small_data:%d\n", md->small_data);
+  //printf("small_data:%d\n", md->small_data);
   //printf("threads_per_block :%d\n", md->max_n_gpu_thread);
 
   //GPU create streams

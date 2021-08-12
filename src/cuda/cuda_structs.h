@@ -276,6 +276,8 @@ typedef struct {
     int cv_mnewt;
     double cv_maxcor;
     double cv_acnrm;
+    double *cv_last_yn;
+    double *cv_acor_init;
     int nflag;
     int cv_jcur;
 

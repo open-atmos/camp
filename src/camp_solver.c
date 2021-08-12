@@ -2178,6 +2178,7 @@ int guess_helper(const realtype t_n, const realtype h_n, N_Vector y_n,
                  N_Vector y_n1, N_Vector hf, void *solver_data, N_Vector tmp1,
                  N_Vector corr) {
   SolverData *sd = (SolverData *)solver_data;
+  itsolver *bicg = &(sd->bicg);
   realtype *ay_n = NV_DATA_S(y_n);
   realtype *ay_n1 = NV_DATA_S(y_n1);
   realtype *atmp1 = NV_DATA_S(tmp1);
@@ -2186,9 +2187,25 @@ int guess_helper(const realtype t_n, const realtype h_n, N_Vector y_n,
   int n_elem = NV_LENGTH_S(y_n);
 
   // Only try improvements when negative concentrations are predicted
-  if (N_VMin(y_n) > -SMALL) return 0;
+  double min = N_VMin(y_n);
+#ifdef DEBUG_GUESS_HELPER
+  printf("N_VMin(y_n) %le -SMALL %le\n",min, -SMALL);
+  int z=0;
+#endif
+  if (min > -SMALL){
+#ifdef DEBUG_GUESS_HELPER
+  printf("Return 0 ");
+#endif
+    return 0;
+  }
+
 
   PMC_DEBUG_PRINT_FULL("Trying to improve guess");
+
+#ifdef DEBUG_GUESS_HELPER
+    for(int j=0;j<bicg->nrows;j++)
+      printf("y_n1[%d] %le \n",j,y_n1[j]);
+#endif
 
   // Copy \f$y(t_{n-1})\f$ to working array
   N_VScale(ONE, y_n1, tmp1);
@@ -2209,6 +2226,13 @@ int guess_helper(const realtype t_n, const realtype h_n, N_Vector y_n,
     // Calculate \f$h_j\f$
     realtype h_j = t_n - (t_0 + t_j);
     int i_fast = -1;
+#ifdef DEBUG_GUESS_HELPER
+    for(int j=0;j<bicg->nrows;j++){
+        printf("h_j %le t_n %le t_0 %le t_j %le\n",
+               h_j,t_n,t_0,t_j);
+        }
+#endif
+
     for (int i = 0; i < n_elem; i++) {
       realtype t_star = -atmp1[i] / acorr[i];
       if ((t_star > ZERO || (t_star == ZERO && acorr[i] < ZERO)) &&
@@ -2229,16 +2253,6 @@ int guess_helper(const realtype t_n, const realtype h_n, N_Vector y_n,
         t_n - (h_j + t_j + t_0) > ((CVodeMem)sd->cvode_mem)->cv_reltol)
       return -1;
 
-#ifdef DEBUG_GUESS_HELPER
-    if(sd->counterDerivCPU==2 || sd->counterDerivCPU==3){
-      printf("guess_helper h_j %-le\n", h_j);
-      printf("tmpl \n");
-      print_derivative(sd, tmp1);
-      printf("corr \n");
-      print_derivative(sd, corr);
-    }
-#endif
-
     // Advance the state
     N_VLinearSum(ONE, tmp1, h_j, corr, tmp1);
     PMC_DEBUG_PRINT_FULL("Advanced state");
@@ -2246,11 +2260,22 @@ int guess_helper(const realtype t_n, const realtype h_n, N_Vector y_n,
     // Advance t_j
     t_j += h_j;
 
+#ifdef DEBUG_GUESS_HELPER
+    for(int j=0;j<bicg->nrows;j++){
+      realtype t_star = -atmp1[j] / acorr[j];
+      printf("corr[%d] %le tmp1[j] %le hf %le t_star %le h_j %le h_n %le\n",
+              j,acorr[j],atmp1[j],ahf[j],t_star,h_j,h_n);
+      }
+#endif
+
     //printf("Derivguess_helper before\n");
     // Recalculate the time derivative \f$f(t_j)\f$
     if (f(t_0 + t_j, tmp1, corr, solver_data) != 0) {
       PMC_DEBUG_PRINT("Unexpected failure in guess helper!");
       N_VConst(ZERO, corr);
+#ifdef DEBUG_GUESS_HELPER
+      printf("CudaDeviceguess_helper f(t)\n");
+#endif
       return -1;
     }
     //printf("Derivguess_helper after\n");
@@ -2258,6 +2283,9 @@ int guess_helper(const realtype t_n, const realtype h_n, N_Vector y_n,
 
     if (iter == GUESS_MAX_ITER - 1 && t_0 + t_j < t_n) {
       PMC_DEBUG_PRINT("Max guess iterations reached!");
+#ifdef DEBUG_GUESS_HELPER
+      printf("CudaDeviceguess_helper GUESS_MAX_ITER\n");
+#endif
       if (h_n == ZERO) return -1;
     }
   }
@@ -2273,11 +2301,8 @@ int guess_helper(const realtype t_n, const realtype h_n, N_Vector y_n,
   // Update the hf vector
   N_VLinearSum(ONE, tmp1, -ONE, y_n1, hf);
 
-#ifdef DEBUG_GUESS_HELPER
-    if(sd->counterDerivCPU==2 || sd->counterDerivCPU==3){
-      printf("tmpl \n");
-      print_derivative(sd, hf);
-    }
+#ifdef DEBUG_CudaDeviceguess_helper
+  printf("CudaDeviceguess_helper return 1\n");
 #endif
 
   return 1;

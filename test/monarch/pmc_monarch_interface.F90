@@ -185,7 +185,7 @@ contains
       this%n_cells=n_cells
     end if
 
-    !print*,"monarch_interface_t "
+    print*,"monarch_interface_t start"
 
     if(.not.present(ncounters)) then
       ncounters = 0
@@ -291,6 +291,8 @@ contains
         end do
       endif
 
+      print*, "monarch_interface_t pack_size() end"
+
       allocate(buffer(pack_size))
       pos = 0
       call this%camp_core%bin_pack(buffer, pos)
@@ -322,6 +324,8 @@ contains
           call this%photo_rxns(i)%bin_pack( buffer, pos, local_comm )
         end do
       endif
+
+      print*, "monarch_interface_t bin_pack() end"
 
     endif
 
@@ -381,6 +385,8 @@ contains
         end do
       end if
 
+      print*, "monarch_interface_t unbin_pack() end"
+
 #endif
     end if
 
@@ -392,11 +398,18 @@ contains
 
     call this%camp_core%solver_initialize(ncounters, ntimers)
 
+    call pmc_mpi_barrier(MPI_COMM_WORLD)
+    print*, "monarch_interface_t solver_initialize end"
+
     ! Create a state variable on each node
     this%camp_state => this%camp_core%new_state()
 
     !call pmc_mpi_barrier(MPI_COMM_WORLD)
     !print*,"MPI RANK",pmc_mpi_rank(), this%interface_input_file, this%ADD_EMISIONS
+
+    call pmc_mpi_barrier(MPI_COMM_WORLD)
+    print*, "monarch_interface_t new_state end"
+    call pmc_mpi_barrier(MPI_COMM_WORLD)
 
     if(this%ADD_EMISIONS.eq."ON" &
       .or. this%interface_input_file.eq."interface_simple.json") then
@@ -411,6 +424,9 @@ contains
       end do
 
     end if
+
+    call pmc_mpi_barrier(MPI_COMM_WORLD)
+
 
     ! Set the aerosol mode dimensions
     ! organic matter

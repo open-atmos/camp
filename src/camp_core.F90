@@ -134,7 +134,10 @@ module pmc_camp_core
   !!
   !! Contains all time-invariant data for a Part-MC model run.
   type :: camp_core_t
+#ifndef BIN_PACK_UNIQUE_NAMES
+#else
   private
+#endif
     !> Chemical mechanisms
     !! FIXME set up an iterator for external modules to use and
     !! make all data members private
@@ -170,13 +173,12 @@ module pmc_camp_core
     type(camp_solver_data_t), pointer, public :: solver_data_aero => null()
     !> Solver data (mixed gas- and aerosol-phase reactions)
     type(camp_solver_data_t), pointer, public :: solver_data_gas_aero => null()
-#ifdef EXPORT_CAMP_INPUT
+#ifndef BIN_PACK_UNIQUE_NAMES
     !class(rxn_data_t), pointer, public :: rxn_photo
     !real(kind=dp), allocatable :: base_rate(:)
     integer(kind=i_kind) :: counterSolve
     integer(kind=i_kind) :: counterFail
     real(kind=dp), allocatable :: init_state_var(:)
-    !type(string_t), allocatable :: spec_names(:)
     type(string_t), allocatable :: spec_names(:)
 #endif
     !> Flag indicating the model data has been initialized
@@ -699,8 +701,8 @@ contains
     ! Aerosol species
     type(string_t), allocatable :: unique_names(:)
 
-#ifdef EXPORT_CAMP_INPUT
-    type(string_t), allocatable :: spec_names(:)
+#ifndef BIN_PACK_UNIQUE_NAMES
+    !type(string_t), allocatable :: spec_names(:)
     !character(len=*), allocatable :: spec_names_chr(:)
     this%counterSolve=0
     this%counterFail=0
@@ -830,6 +832,10 @@ contains
                 this%init_state_cell(i_state_elem)
       end do
     end do
+
+!#ifndef BIN_PACK_UNIQUE_NAMES
+!    allocate(this%spec_names(this%size_state_per_cell))
+!#endif
 
   end subroutine initialize
 
@@ -1652,13 +1658,15 @@ contains
     type(sub_model_factory_t) :: sub_model_factory
     class(aero_rep_data_t), pointer :: aero_rep
     class(sub_model_data_t), pointer :: sub_model
-    integer(kind=i_kind) :: i, j, i_mech, i_phase, i_rep, i_sub_model, l_comm
+    integer(kind=i_kind) :: i, j, i_mech, i_phase, i_rep,&
+            i_sub_model, l_comm
+    type(string_t), allocatable :: spec_names(:)
 
 #ifdef PMC_USE_MPI
 
-#ifdef EXPORT_CAMP_INPUT
+#ifndef BIN_PACK_UNIQUE_NAMES
     character(len=:), allocatable :: spec_name
-    integer(kind=i_kind) :: max_spec_name_size = 64
+    integer(kind=i_kind) :: max_spec_name_size = 128
 #endif
 
     if (present(comm)) then
@@ -1698,6 +1706,8 @@ contains
                 pmc_mpi_pack_size_integer_array(this%var_type, l_comm) + &
                 pmc_mpi_pack_size_real_array(this%init_state_cell, l_comm)
 
+#ifndef BIN_PACK_UNIQUE_NAMES
+
 #ifdef EXPORT_CAMP_INPUT
 
     spec_name=""
@@ -1708,7 +1718,30 @@ contains
     do i=1, this%size_state_per_cell
       pack_size = pack_size + pmc_mpi_pack_size_string(spec_name, l_comm)
     end do
+
+#else
+
+    print*,"camp_core pack_size start"
+
+    !allocate(spec_names(this%size_state_per_cell))
+    this%spec_names = this%unique_names()
+
+    print*,"camp_core pack_size start",size(this%spec_names)
+
+    do i=1, size(this%spec_names)
+      call assert_msg(307712742,len_trim(this%spec_names(i)%string).lt.&
+              max_spec_name_size,&
+              "species name too large")
+      pack_size = pack_size + &
+              pmc_mpi_pack_size_string(trim(this%spec_names(i)%string),l_comm)
+    end do
+
+    print*,"camp_core pack_size end"
+
 #endif
+
+#endif
+
 
 #else
     pack_size = 0
@@ -1736,9 +1769,9 @@ contains
     class(sub_model_data_t), pointer :: sub_model
     integer(kind=i_kind) :: i, j, i_mech, i_phase, i_rep, i_sub_model, &
             prev_position, l_comm
-#ifdef EXPORT_CAMP_INPUT
+#ifndef BIN_PACK_UNIQUE_NAMES
     type(string_t), allocatable :: spec_names(:)
-    integer(kind=i_kind) :: max_spec_name_size = 64
+    integer(kind=i_kind) :: max_spec_name_size = 128
 #endif
 
     if (present(comm)) then
@@ -1778,6 +1811,8 @@ contains
     call pmc_mpi_pack_integer_array(buffer, pos, this%var_type, l_comm)
     call pmc_mpi_pack_real_array(buffer, pos, this%init_state_cell, l_comm)
 
+#ifndef BIN_PACK_UNIQUE_NAMES
+
 #ifdef EXPORT_CAMP_INPUT
 
     allocate(spec_names(this%size_state_per_cell))
@@ -1793,6 +1828,21 @@ contains
 
     end do
 
+#else
+
+    print*,"camp_core bin_pack start"
+
+    !this%spec_names = this%unique_names()
+
+    do i=1, size(this%spec_names)
+      !print*,"camp_core pack_size",i
+      !print*,"camp_core pack_size",this%spec_names(i)%string
+      call pmc_mpi_pack_string(buffer, pos, trim(this%spec_names(i)%string), l_comm)
+    end do
+
+    print*,"camp_core pack_size end"
+
+#endif
 #endif
 
     call assert(184050835, &
@@ -1822,10 +1872,10 @@ contains
     integer(kind=i_kind) :: i, j, i_mech, i_phase, i_rep, i_sub_model, &
             prev_position, num_mech, num_phase, num_rep, num_sub_model, &
             l_comm
-#ifdef EXPORT_CAMP_INPUT
+#ifndef BIN_PACK_UNIQUE_NAMES
     type(string_t), allocatable :: spec_names(:)
     character(len=:), allocatable :: spec_name
-    integer :: max_spec_name_size=64
+    integer :: max_spec_name_size=128
 #endif
 
     if (present(comm)) then
@@ -1868,6 +1918,8 @@ contains
     call pmc_mpi_unpack_integer_array(buffer, pos, this%var_type, l_comm)
     call pmc_mpi_unpack_real_array(buffer, pos, this%init_state_cell, l_comm)
 
+#ifndef BIN_PACK_UNIQUE_NAMES
+
 #ifdef EXPORT_CAMP_INPUT
 
     spec_name=""
@@ -1883,11 +1935,35 @@ contains
 
     end do
 
+#else
+
+    print*,"camp_core bin_unpack start"
+
+    allocate(this%spec_names(this%size_state_per_cell))
+    !this%spec_names(i)=this%unique_names()
+
+    spec_name=""
+    do i=1,max_spec_name_size
+      spec_name=spec_name//" "
+    end do
+
+    !print*,"camp_core this%size_state_per_cell",this%size_state_per_cell
+
+    do i=1, this%size_state_per_cell
+      call pmc_mpi_unpack_string(buffer, pos, spec_name)
+      this%spec_names(i)%string = trim(spec_name)
+      !print*,this%spec_names(i)%string
+    end do
+
+    print*,"camp_core bin_unpack end"
+
+
+#endif
 #endif
 
     this%core_is_initialized = .true.
-    call assert(291557168, &
-         pos - prev_position <= this%pack_size(l_comm))
+    !call assert(291557168, &
+    !        pos - prev_position <= this%pack_size(l_comm))
 
     allocate(this%init_state(this%size_state_per_cell * this%n_cells))
     do i_cell = 0, this%n_cells - 1
