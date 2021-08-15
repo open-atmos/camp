@@ -663,8 +663,7 @@ void cudaDevicef(
 
 #ifdef PMC_DEBUG_GPU
 
-  int clock_khz;
-  cudaDeviceGetAttribute(&clock_khz, cudaDevAttrClockRate, 0);
+  int clock_khz=md->clock_khz;
   clock_t start;
   start = clock();
 
@@ -771,8 +770,7 @@ int CudaDeviceguess_helper(double t_n, double h_n, double* y_n,
 
 #ifdef PMC_DEBUG_GPU
 
-  int clock_khz;
-  cudaDeviceGetAttribute(&clock_khz, cudaDevAttrClockRate, 0);
+  int clock_khz=md->clock_khz;
   clock_t start;
   start = clock();
 
@@ -1071,8 +1069,7 @@ __device__ void solveRXNJac(
 
 #ifdef PMC_DEBUG_GPU
 
-  int clock_khz;
-  cudaDeviceGetAttribute(&clock_khz, cudaDevAttrClockRate, 0);
+  int clock_khz=md->clock_khz;
   clock_t start;
   start = clock();
 
@@ -1199,8 +1196,7 @@ __device__ void cudaDevicecalc_Jac(
 
 #ifdef PMC_DEBUG_GPU
 
-  int clock_khz;
-  cudaDeviceGetAttribute(&clock_khz, cudaDevAttrClockRate, 0);
+  int clock_khz=md->clock_khz;
   clock_t start;
   start = clock();
 
@@ -1462,8 +1458,7 @@ void cudaDeviceJac(
 
 #ifdef PMC_DEBUG_GPU
 
-  int clock_khz;
-  cudaDeviceGetAttribute(&clock_khz, cudaDevAttrClockRate, 0);
+  int clock_khz=md->clock_khz;
   clock_t start;
   start = clock();
 
@@ -2105,6 +2100,9 @@ void alloc_solver_gpu2(CVodeMem cv_mem, SolverData *sd)
 
 #endif
 
+  //int clock_khz;
+  cudaDeviceGetAttribute(&mGPU->clock_khz, cudaDevAttrClockRate, 0);
+  //mGPU->clock_khz=clock_khz;
   cudaMalloc((void**)&mGPU->dtNewtonIteration,lendt*sizeof(double));
   cudaMemset(mGPU->dtNewtonIteration, 0., lendt*sizeof(double));
   cudaMalloc((void**)&mGPU->dtJac,lendt*sizeof(double));
@@ -2343,8 +2341,7 @@ void cudaDevicecvNewtonIteration(
 
 #ifdef PMC_DEBUG_GPU
 
-  int clock_khz;
-  cudaDeviceGetAttribute(&clock_khz, cudaDevAttrClockRate, 0);
+  int clock_khz=md->clock_khz;
   clock_t start;
 
 #endif
@@ -2625,8 +2622,7 @@ void cudaDevicecvNlsNewton(
 
 #ifdef PMC_DEBUG_GPU
 
-  int clock_khz;
-  cudaDeviceGetAttribute(&clock_khz, cudaDevAttrClockRate, 0);
+  int clock_khz=md->clock_khz;
   clock_t start;
 
 #endif

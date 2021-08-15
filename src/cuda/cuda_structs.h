@@ -283,6 +283,7 @@ typedef struct {
 
 //ODE stats
 #ifdef PMC_DEBUG_GPU
+    int clock_khz;
     double *dtNewtonIteration;
     double *dtJac;
     double *dtlinsolsetup;
