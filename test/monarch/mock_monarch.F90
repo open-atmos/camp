@@ -301,8 +301,6 @@ program mock_monarch
   times(:)=0.0
 
   call solver_stats%allocate(ncounters,ntimers)
-  print*," ncounters ntimers",ncounters,ntimers
-
 
   if(interface_input_file.eq."interface_monarch_cb05.json") then
     TIME_STEP=3. !Monarch case
@@ -313,6 +311,7 @@ program mock_monarch
   if (pmc_mpi_rank().eq.0) then
     write(*,*) "Num time-steps:", NUM_TIME_STEP, "Num cells:",&
             NUM_WE_CELLS*NUM_SN_CELLS*NUM_VERT_CELLS
+    !print*," ncounters ntimers",ncounters,ntimers
   end if
 
   allocate(temperature(NUM_WE_CELLS,NUM_SN_CELLS,NUM_VERT_CELLS))
@@ -439,8 +438,8 @@ program mock_monarch
   pmc_interface => monarch_interface_t(camp_input_file, interface_input_file, &
           START_CAMP_ID, END_CAMP_ID, n_cells, ADD_EMISIONS, ncounters, ntimers)!, n_cells
 
-  call pmc_mpi_barrier(MPI_COMM_WORLD)
-  print*,"monarch_interface_t end MPI RANK",pmc_mpi_rank()
+  !call pmc_mpi_barrier(MPI_COMM_WORLD)
+  !print*,"monarch_interface_t end MPI RANK",pmc_mpi_rank()
 
 
   if(export_results_all_cells.eq.1) then
@@ -475,11 +474,10 @@ program mock_monarch
 
   if(interface_input_file.eq."interface_monarch_cb05.json") then
     !call import_camp_input(pmc_interface)
-    call import_camp_input_json(pmc_interface)!wrong or correct?
+    call import_camp_input_json(pmc_interface)
   end if
 
 #ifdef SOLVE_EBI_IMPORT_CAMP_INPUT
-  !todo update compare for monarch_binned case (ebi for gas and another for aerosols)
   if (pmc_mpi_rank().eq.0&
     .and.interface_input_file.eq."interface_monarch_cb05.json") then
     call solve_ebi(pmc_interface)
@@ -1050,25 +1048,19 @@ contains
 
     if (pmc_mpi_rank().eq.0) then
       write(*,*) "Importing camp input json"
+      if(n_cells.gt.1) then
+        print*, "Importing data from a cell to the rest"
+      end if
     end if
 
-    !todo should take into account mpi!
-    if(n_cells.gt.1) then
-      print*, "Importing data from a cell to the rest"
-    end if
-
-#ifndef DEV_FIXMPICB05
     !camp_spec_names=pmc_interface%monarch_species_names
     !unique_names=pmc_interface%camp_core%unique_names()
     unique_names=pmc_interface%camp_core%unique_names()
     !camp_spec_names=unique_names
     !camp_spec_names=pmc_interface%camp_core%unique_names()
     camp_spec_names=pmc_interface%camp_core%spec_names
-#else
-    camp_spec_names=pmc_interface%camp_core%unique_names()
-#endif
 
-    print*,size(pmc_interface%monarch_species_names),size(unique_names) !72,29
+    !print*,size(pmc_interface%monarch_species_names),size(unique_names) !72,29
     !print*, pmc_interface%monarch_species_names(:)%string,&
     !        unique_names(:)%string
     do i=1, size(camp_spec_names)
@@ -1079,7 +1071,7 @@ contains
 
     end do
 
-    print*, "import_camp_input_json b"
+    !print*, "import_camp_input_json b"
 
     do z=0,n_cells-1
       do i=1,state_size_per_cell
@@ -1145,7 +1137,7 @@ contains
 
     close(IMPORT_FILE_UNIT)
 
-    print*, "import_camp_input_json end"
+    !print*, "import_camp_input_json end"
 
   end subroutine import_camp_input_json
 

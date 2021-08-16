@@ -3090,10 +3090,9 @@ void solveCVODEGPU_thr(int blocks, int threads_block, int n_shr_memory, int n_sh
 #endif
 
 #ifndef DEBUG_SOLVEBCGCUDA
-  if(bicg->counterBiConjGrad==0) {
-    printf("solveGPUBlock it %d\n",
-           it);
-  }
+  //if(bicg->counterBiConjGrad==0) {
+  //  printf("solveGPUBlock it %d\n",it);
+  //}
 #endif
 
 #endif

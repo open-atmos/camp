@@ -597,7 +597,7 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
   flag = CVodeSetDlsGuessHelper(sd->cvode_mem, guess_helper);
   check_flag_fail(&flag, "CVodeSetDlsGuessHelper", 1);
 
-  printf("solver_initialize end\n");
+  //printf("solver_initialize end\n");
 
 // Set gpu rxn values
 #ifdef PMC_USE_GPU
