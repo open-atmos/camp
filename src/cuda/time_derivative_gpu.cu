@@ -22,6 +22,7 @@ int time_derivative_initialize_gpu(SolverData *sd) {
   //Pre-allocation related arrays (internal struct arrays are mandatory)
 
   ModelDataGPU *mGPU = &sd->mGPU;
+
   cudaMalloc((void **) &(mGPU->production_rates),num_spec*sizeof(mGPU->production_rates));
   cudaMalloc((void **) &(mGPU->loss_rates),num_spec*sizeof(mGPU->loss_rates));
 

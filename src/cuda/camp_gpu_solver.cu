@@ -111,6 +111,7 @@ void solver_new_gpu_cu(SolverData *sd, int n_dep_var,
 
   //GPU allocation
   ModelDataGPU *mGPU = &sd->mGPU;
+
   HANDLE_ERROR(cudaMalloc((void **) &mGPU->deriv_data, md->deriv_size));
   mGPU->n_rxn=md->n_rxn;
   //printf("md->n_rxn %d\n",md->n_rxn);
@@ -209,6 +210,7 @@ void set_reverse_int_double_rxn(
   ModelData *md = &(sd->model_data);
   ModelDataGPU *mGPU = &sd->mGPU;
 
+
   unsigned int int_max_length = 0;
   unsigned int double_max_length = 0;
 
@@ -289,6 +291,7 @@ void set_int_double_rxn(
   ModelData *md = &(sd->model_data);
   ModelDataGPU *mGPU = &sd->mGPU;
 
+
   //GPU allocation
   cudaMalloc((void **) &mGPU->rxn_int, (md->n_rxn_int_param + md->n_rxn)*sizeof(int));
   cudaMalloc((void **) &mGPU->rxn_double, md->n_rxn_float_param*sizeof(double));
@@ -316,6 +319,7 @@ void set_int_double_aero(
 
   ModelData *md = &(sd->model_data);
   ModelDataGPU *mGPU = &sd->mGPU;
+
 
   //GPU allocation
   cudaMalloc((void **) &mGPU->aero_phase_int_indices, (md->n_aero_phase + 1) * sizeof(int));
@@ -351,6 +355,7 @@ void solver_init_int_double_gpu(SolverData *sd) {
 
   ModelData *md = &(sd->model_data);
   ModelDataGPU *mGPU = &sd->mGPU;
+
 
 #ifdef REVERSE_INT_FLOAT_MATRIX
 
@@ -393,6 +398,7 @@ void init_jac_gpu(SolverData *sd, double *J){
   md->nrows_J_solver = SM_NP_S(md->J_solver);
 
   ModelDataGPU *mGPU = &sd->mGPU;
+
   //mGPU->n_per_cell_solver_jac_elem = md->n_per_cell_solver_jac_elem;
   cudaMalloc((void **) &mGPU->J, md->jac_size);
   cudaMalloc((void **) &mGPU->J_solver, md->jac_size);
@@ -449,6 +455,7 @@ void set_jac_data_gpu(SolverData *sd, double *J){
   ModelData *md = &(sd->model_data);
   ModelDataGPU *mGPU = &sd->mGPU;
 
+
   double *J_solver = SM_DATA_S(md->J_solver);
   double *J_state = N_VGetArrayPointer(md->J_state);
   double *J_deriv = N_VGetArrayPointer(md->J_deriv);
@@ -470,6 +477,7 @@ void update_aero_contrib_gpu(SolverData *sd){
   ModelData *md = &(sd->model_data);
   ModelDataGPU *mGPU = &sd->mGPU;
 
+
   HANDLE_ERROR(cudaMemcpy(mGPU->state, md->total_state, md->state_size, cudaMemcpyHostToDevice));
   //HANDLE_ERROR(cudaMemcpy(mGPU->aero_rep_float_data, md->aero_rep_float_data, md->n_aero_rep_float_param*sizeof(double), cudaMemcpyHostToDevice));
 
@@ -490,6 +498,7 @@ void rxn_update_env_state_gpu(SolverData *sd){
   double *env = md->total_env;
   int n_blocks = ((n_threads + md->max_n_gpu_thread - 1) / md->max_n_gpu_thread);
   ModelDataGPU *mGPU = &sd->mGPU;
+
 
   //Faster, use for few values
   if (md->small_data){
@@ -629,6 +638,7 @@ int camp_solver_check_model_state_gpu(N_Vector solver_state, SolverData *sd,
   double *y = NV_DATA_S(solver_state);
   ModelDataGPU *mGPU = &sd->mGPU;
 
+
 /*
   //HANDLE_ERROR(cudaMemcpy(md->deriv_aux, bicg->dcv_y, md->deriv_size, cudaMemcpyDeviceToHost));
   if(sd->counterDerivCPU<=5){
@@ -674,6 +684,7 @@ void camp_solver_update_model_state_gpu(N_Vector solver_state, SolverData *sd,
 {
   ModelData *md = &(sd->model_data);
   ModelDataGPU *mGPU = &sd->mGPU;
+
   HANDLE_ERROR(cudaMemcpy(mGPU->state, md->total_state, md->state_size, cudaMemcpyHostToDevice));
 
 }
@@ -1154,6 +1165,7 @@ int rxn_calc_deriv_gpu(SolverData *sd, N_Vector y, N_Vector deriv, double time_s
   int n_blocks = ((total_threads + threads_block - 1) / threads_block);
   double *J_tmp = N_VGetArrayPointer(md->J_tmp);
   ModelDataGPU *mGPU = &sd->mGPU;
+
   //Update state
   double replacement_value = TINY;
   double threshhold = -SMALL;
@@ -1882,6 +1894,7 @@ int rxn_calc_jac_gpu(SolverData *sd, SUNMatrix J, double time_step, N_Vector der
   //printf("threads_block %d n_blocks %d",total_threads,n_blocks);
 
   ModelDataGPU *mGPU = &sd->mGPU;
+
   //Update state
   double replacement_value = TINY;
   double threshhold = -SMALL;
@@ -1987,6 +2000,7 @@ void free_gpu_cu(SolverData *sd) {
 
   ModelData *md = &(sd->model_data);
   ModelDataGPU *mGPU = &sd->mGPU;
+
 
 #ifdef PMC_DEBUG_GPU
 

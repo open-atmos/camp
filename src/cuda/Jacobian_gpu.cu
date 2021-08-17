@@ -58,6 +58,7 @@ int jacobian_initialize_gpu(SolverData *sd) {
   ModelData *md = &(sd->model_data);
   ModelDataGPU *mGPU = &sd->mGPU;
 
+
   JacobianGPU *jacgpu = &(sd->mGPU.jac);//&mGPU->jac;
   Jacobian *jac = &sd->jac;
 

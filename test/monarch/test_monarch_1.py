@@ -202,6 +202,8 @@ def run_cell(config_file,diff_cells,mpi,mpiProcessesList,n_cells_aux,timesteps,
 
 def all_timesteps():
 
+#todo figura como las 3 lineas de speedup pero con el cb05 (oriol)
+
   #config_file="simple"
   config_file="monarch_cb05"
   #config_file="monarch_binned"

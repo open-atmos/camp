@@ -342,6 +342,7 @@ typedef struct {
 #ifdef PMC_USE_GPU
   itsolver bicg;
   ModelDataGPU mGPU;
+  ModelDataVariable mdv;
 #ifdef CHECK_GPU_LINSOLVE
   double max_error_linsolver;
   int max_error_linsolver_i;

@@ -46,23 +46,18 @@ typedef struct
 
   // ODE solver variables
   int flag;
-  int callSetup;//todo remove
   int convfail;
   int *dflag;
   int *dlast_flag;
-  int *cv_jcur;
   int *nje;
   int *nstlj;
   int *cv_nst;
-  int *jok;
   int *cv_nsetups;
   int *cv_nfe;
 
-  double *dgammap;
   double *dcv_tq;
   double* dewt;
   double* dacor;
-  double* dacor_init;
   double* dtempv;
   double* dtempv1;
   double* dtempv2;
@@ -83,15 +78,12 @@ typedef struct
   int counterMatScaleAddI;
   int counterMatScaleAddISendA;
   int counterMatCopy;
-  int counterprecvStep;
   int counterNewtonIt;
   int counterLinSolSetup;
   int counterLinSolSolve;
   int countercvStep;
   int counterDerivNewton;
   int counterBiConjGrad;
-  int counterBiConjGradInternal;
-  int *counterBiConjGradInternalGPU;
   int counterDerivSolve;
   int counterJac;
   int countersolveCVODEGPU;
@@ -198,6 +190,20 @@ typedef struct {
 } JacobianGPU;
 
 typedef struct {
+
+    //int *djA; //seems works fine using device ptr
+    int n_cells;
+
+#ifdef PMC_DEBUG_GPU
+    int counterDerivGPU;
+    int counterBCGInternal;
+    double dtBCG;
+    double dtPreBCG;
+    double dtPostBCG;
+#endif
+}ModelDataVariable;
+
+typedef struct {
     //double *deriv_data_gpu;
 
     //Allocated from CPU (used during CPU / need some cudamemcpy)
@@ -256,6 +262,8 @@ typedef struct {
     JacobianGPU jac;
     //int n_per_cell_solver_jac_elem;
 
+    int nnz;
+
     //Allocated in GPU only
     int i_cell;
     int i_rxn;
@@ -273,13 +281,84 @@ typedef struct {
     double cv_gammap;
     double cv_nstlp;
     double cv_rl1;
-    int cv_mnewt;
     double cv_maxcor;
     double cv_acnrm;
+    double saved_t;
     double *cv_last_yn;
     double *cv_acor_init;
+    int cv_mnewt;
     int nflag;
     int cv_jcur;
+    int ncf;
+
+
+    //LS (BCG)
+    double *dA;
+    int *djA;
+    int *diA;
+    double *dx;
+    double* dtempv;
+    int nrows;
+    int blocks;
+    int n_shr_empty;
+    int maxIt;
+    int mattype;
+    int n_cells;
+    double tolmax;
+    double *ddiag;
+    double *dr0;
+    double *dr0h;
+    double *dn0;
+    double *dp0;
+    double *dt;
+    double *ds;
+    double *dAx2;
+    double *dy;
+    double *dz;
+
+    //swapCSC_CSR_BCG
+    double* dB;
+    int*    djB;
+    int*    diB;
+
+    //Guess_helper
+    double t_n;
+    double h_n;
+    double* dftemp;
+    double* dcv_y;
+    double* dtempv1;
+    double* dtempv2;
+    double cv_reltol;
+
+    //update_state
+    double threshhold;
+    double replacement_value;
+    int *dflag;
+
+    //f_gpu
+    double time_step;
+    int deriv_length_cell;
+    int state_size_cell;
+    int i_kernel;
+    int threads_block;
+
+    //cudacvNewtonIteration
+    double* dacor;
+    double* dzn;
+    double* dewt;
+    double *dcv_tq;
+    int *cv_nfe;
+    int *cv_nsetups;
+    int *cv_nst;
+    int *nstlj;
+    int *nje;
+
+    //Auxiliar variables
+    double* dsavedJ;
+    int*    djsavedJ;
+    int*    disavedJ;
+
+    ModelDataVariable *mdv;//works fine
 
 //ODE stats
 #ifdef PMC_DEBUG_GPU
@@ -291,6 +370,9 @@ typedef struct {
     double *dtRXNJac;
     double *dtf;
     double *dtguess_helper;
+    double *dtBCG;
+    double *dtPreBCG;
+    double *dtPostBCG;
 #endif
 
 } ModelDataGPU;
