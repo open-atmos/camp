@@ -11,73 +11,14 @@ typedef struct
   int threads,blocks;
   int maxIt;
   int mattype;
-  int nrows;
-  int nnz;
   int n_cells;
-  double tolmax;
-  double* ddiag;
 
-  // Intermediate variables ("private")
-  double * dr0;
-  double * dr0h;
-  double * dn0;
-  double * dp0;
-  double * dt;
-  double * ds;
-  double * dAx2;
-  double * dy;
-  double * dz;
-
-  // Matrix data ("input")
   double* A;
   int*    jA;
   int*    iA;
-
-  //GPU pointers ("input")
-  double* dA;
-  int*    djA;
-  int*    diA;
-  double* dB;
-  int*    djB;
-  int*    diB;
-  double* dx;
   double* aux;
-  double* daux;
-
-  // ODE solver variables
-  int flag;
-  int convfail;
-  int *dflag;
-  int *dlast_flag;
-  int *nje;
-  int *nstlj;
-  int *cv_nst;
-  int *cv_nsetups;
-  int *cv_nfe;
-
-  double *dcv_tq;
-  double* dewt;
-  double* dacor;
-  double* dtempv;
-  double* dtempv1;
-  double* dtempv2;
-  double* dftemp;
-  double* dzn;
-  double* dcv_y;
-
-  //Intermediate variables
-  double* dsavedJ;
-  int*    djsavedJ;
-  int*    disavedJ;
-
-
-  //ODE stats
 
 #ifdef PMC_DEBUG_GPU
-  int counterSendInit;
-  int counterMatScaleAddI;
-  int counterMatScaleAddISendA;
-  int counterMatCopy;
   int counterNewtonIt;
   int counterLinSolSetup;
   int counterLinSolSolve;
@@ -88,11 +29,6 @@ typedef struct
   int counterJac;
   int countersolveCVODEGPU;
 
-  double timeNewtonSendInit;
-  double timeMatScaleAddI;
-  double timeMatScaleAddISendA;
-  double timeMatCopy;
-  double timeprecvStep;
   double timeNewtonIt;
   double timeLinSolSetup;
   double timeLinSolSolve;
@@ -103,15 +39,6 @@ typedef struct
   double timeDerivSolve;
   double timeJac;
   double timesolveCVODEGPU;
-#ifdef cudaGlobalSolveODE_timers_max_blocks
-  double *dtBCG;
-  double *dtPreBCG;
-  double *dtPostBCG;
-#else
-  double dtBCG;
-  double dtPreBCG;
-  double dtPostBCG;
-#endif
 
   cudaEvent_t startDerivNewton;
   cudaEvent_t startDerivSolve;
@@ -133,7 +60,6 @@ typedef struct
   cudaEvent_t stopBCGMemcpy;
   cudaEvent_t stopBCG;
   cudaEvent_t stopsolveCVODEGPU;
-
   cudaEvent_t stopJac;
 
 #endif
@@ -193,6 +119,12 @@ typedef struct {
 
     //int *djA; //seems works fine using device ptr
     int n_cells;
+    int cv_nsetups;
+    int cv_nfe;
+    int nje;
+    int nstlj;
+
+
 
 #ifdef PMC_DEBUG_GPU
     int counterDerivGPU;
@@ -314,6 +246,7 @@ typedef struct {
     double *dAx2;
     double *dy;
     double *dz;
+    double *daux;
 
     //swapCSC_CSR_BCG
     double* dB;
@@ -346,7 +279,6 @@ typedef struct {
     double* dzn;
     double* dewt;
     double *dcv_tq;
-    int *cv_nfe;
     int *cv_nsetups;
     int *cv_nst;
     int *nstlj;
