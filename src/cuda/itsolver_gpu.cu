@@ -802,7 +802,11 @@ void swapCSC_CSR(int n_row, int n_col, int* Ap, int* Aj, double* Ax, int* Bp, in
 }
 
 
-void swapCSC_CSR_BCG(itsolver *bicg){
+void swapCSC_CSR_BCG(SolverData *sd){
+
+  itsolver *bicg = &(sd->bicg);
+  ModelData *md = &(sd->model_data);
+  ModelDataGPU *mGPU = &sd->mGPU;
 
 #ifdef TEST_CSCtoCSR
 
@@ -893,7 +897,7 @@ void swapCSC_CSR_BCG(itsolver *bicg){
 
   cudaMemcpy(bicg->diA,Bp,(bicg->nrows+1)*sizeof(int),cudaMemcpyHostToDevice);
   cudaMemcpy(bicg->djA,Bi,bicg->nnz*sizeof(int),cudaMemcpyHostToDevice);
-  cudaMemcpy(bicg->dA,Bx,bicg->nnz*sizeof(double),cudaMemcpyHostToDevice);
+  cudaMemcpy(mGPU->dA,Bx,bicg->nnz*sizeof(double),cudaMemcpyHostToDevice);
 
 #endif
 
@@ -1487,8 +1491,11 @@ void solveBcgCuda(
 }
 
 void solveGPU_block_thr(int blocks, int threads_block, int n_shr_memory, int n_shr_empty, int offset_cells,
-        itsolver *bicg)
+        SolverData *sd)
 {
+  itsolver *bicg = &(sd->bicg);
+  ModelData *md = &(sd->model_data);
+  ModelDataGPU *mGPU = &sd->mGPU;
 
   //Init variables ("public")
   int nrows = bicg->nrows;
@@ -1521,7 +1528,7 @@ void solveGPU_block_thr(int blocks, int threads_block, int n_shr_memory, int n_s
   int *djA=bicg->djA;
   int *diA=bicg->diA;
 
-  double *dA=bicg->dA+offset_nnz;
+  double *dA=mGPU->dA+offset_nnz;
   double *ddiag=bicg->ddiag+offset_nrows;
   double *dx=bicg->dx+offset_nrows;
   double *dtempv=bicg->dtempv+offset_nrows;
@@ -1582,8 +1589,12 @@ void solveGPU_block_thr(int blocks, int threads_block, int n_shr_memory, int n_s
 
 //solveGPU_block: Each block will compute only a cell/group of cells
 //Algorithm: Biconjugate gradient
-void solveGPU_block(itsolver *bicg, double *dA, int *djA, int *diA, double *dx, double *dtempv)
+void solveGPU_block(SolverData *sd, double *dA, int *djA, int *diA, double *dx, double *dtempv)
 {
+
+  itsolver *bicg = &(sd->bicg);
+  ModelData *md = &(sd->model_data);
+  ModelDataGPU *mGPU = &sd->mGPU;
 
 #ifndef DEBUG_SOLVEBCGCUDA
   if(bicg->counterBiConjGrad==0) {
@@ -1622,7 +1633,7 @@ void solveGPU_block(itsolver *bicg, double *dA, int *djA, int *diA, double *dx, 
 
     if(blocks!=0)//myb not needed
     solveGPU_block_thr(blocks, threads_block, max_threads_block, n_shr_empty, offset_cells,
-                       bicg);
+                       sd);
 
     //todo fix case one-cell updating vars
 
@@ -1639,7 +1650,7 @@ void solveGPU_block(itsolver *bicg, double *dA, int *djA, int *diA, double *dx, 
 #endif
 
   solveGPU_block_thr(blocks, threads_block, max_threads_block, n_shr_empty, offset_cells,
-           bicg);
+           sd);
 
 }
 

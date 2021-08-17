@@ -291,7 +291,6 @@ typedef struct {
     int cv_jcur;
     int ncf;
 
-
     //LS (BCG)
     double *dA;
     int *djA;
