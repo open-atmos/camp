@@ -2631,6 +2631,7 @@ void cudaDevicecvNlsNewton(
 
 #endif
 
+
   int convfail = ((md->nflag == FIRST_CALL) || (md->nflag == PREV_ERR_FAIL)) ?
                  CV_NO_FAILURES : CV_FAIL_OTHER;
 
@@ -2641,6 +2642,9 @@ void cudaDevicecvNlsNewton(
                   (*cv_nst == 0) ||
                   (*cv_nst >= md->cv_nstlp + MSBP) ||
                   (dgamrat > DGMAX);
+
+
+#ifndef DEV_cudacvNlsNewton
 
   //cudaDevicescalezy(md->cv_rl1, hf, dftemp, nrows);
   //N_VLinearSum(ONE, cv_mem->cv_zn[0], -ONE, cv_mem->cv_last_yn, cv_mem->cv_ftemp);
@@ -2663,7 +2667,7 @@ void cudaDevicecvNlsNewton(
                          md
   );
   __syncthreads();
-
+#endif
 
 /*
     if (cv_mem->cv_ghfun) {
@@ -3257,6 +3261,61 @@ int cudacvNlsNewton(SolverData *sd, CVodeMem cv_mem, int nflag) {
     double *zn = NV_DATA_S(cv_mem->cv_zn[i]);
     cudaMemcpy((i * bicg->nrows + bicg->dzn), zn, bicg->nrows * sizeof(double), cudaMemcpyHostToDevice);
   }
+
+  int convfail, retval, ier;
+  booleantype callSetup;
+
+  convfail = ((nflag == FIRST_CALL) || (nflag == PREV_ERR_FAIL)) ?
+             CV_NO_FAILURES : CV_FAIL_OTHER;
+
+  bicg->convfail = convfail;
+
+  /* Decide whether or not to call setup routine (if one exists) */
+  if (cv_mem->cv_lsetup) {
+    callSetup = (nflag == PREV_CONV_FAIL) || (nflag == PREV_ERR_FAIL) ||
+                (cv_mem->cv_nst == 0) ||
+                (cv_mem->cv_nst >= cv_mem->cv_nstlp + MSBP) ||
+                (SUNRabs(cv_mem->cv_gamrat - ONE) > DGMAX);
+  } else {
+    cv_mem->cv_crate = ONE;
+    callSetup = SUNFALSE;
+    printf("cv_lsetup false\n");
+  }
+  bicg->callSetup = callSetup;
+
+
+
+#ifndef DEV_cudacvNlsNewton
+
+/*
+  if (cv_mem->cv_lsetup) {
+    callSetup = (nflag == PREV_CONV_FAIL) || (nflag == PREV_ERR_FAIL) ||
+                (cv_mem->cv_nst == 0) ||
+                (cv_mem->cv_nst >= cv_mem->cv_nstlp + MSBP) ||
+                (SUNRabs(cv_mem->cv_gamrat - ONE) > DGMAX);
+  } else {
+    cv_mem->cv_crate = ONE;
+    callSetup = SUNFALSE;
+    printf("cv_lsetup false\n");
+  }
+  bicg->callSetup = callSetup;
+  printf("C %d %d %d %lf\n",
+          nflag,cv_mem->cv_nst,cv_mem->cv_nstlp,cv_mem->cv_gamrat);
+*/
+
+#else
+
+  if (cv_mem->cv_ghfun) {
+  //N_VScale(cv_mem->cv_rl1, cv_mem->cv_zn[1], cv_mem->cv_ftemp);
+
+  //all are cpu pointers and gpu pointers are dftemp etc
+  N_VLinearSum(ONE, cv_mem->cv_zn[0], -ONE, cv_mem->cv_last_yn, cv_mem->cv_ftemp);
+  retval = cv_mem->cv_ghfun(cv_mem->cv_tn, cv_mem->cv_h, cv_mem->cv_zn[0],
+                            cv_mem->cv_last_yn, cv_mem->cv_ftemp, cv_mem->cv_user_data,
+                            cv_mem->cv_tempv, cv_mem->cv_acor_init);
+  if (retval<0) return(RHSFUNC_RECVR);
+  }
+#endif
 
   //todo clean unneded cudamemcpy
   cudaMemcpy(bicg->dacor, acor, bicg->nrows * sizeof(double), cudaMemcpyHostToDevice);
@@ -4834,7 +4893,7 @@ int cvStep_gpu2(SolverData *sd, CVodeMem cv_mem)
     //nflag = cvNls(cv_mem, nflag);
 #ifdef PMC_DEBUG_GPU
 
-#ifdef DEV_cudacvNlsNewton
+#ifdef DEV2_cudacvNlsNewton
   double starttimeCvode = MPI_Wtime();
 #else
   cudaEventRecord(bicg->startNewtonIt);
@@ -4845,8 +4904,8 @@ int cvStep_gpu2(SolverData *sd, CVodeMem cv_mem)
     cudaEventRecord(bicg->startBCG);
 #endif
 
-    nflag = cvNlsNewton_gpu2(sd, cv_mem, nflag);//f(y)+BCG
-    //nflag = cudacvNlsNewton(sd, cv_mem, nflag);
+    //nflag = cvNlsNewton_gpu2(sd, cv_mem, nflag);//f(y)+BCG
+    nflag = cudacvNlsNewton(sd, cv_mem, nflag);
 
 #ifdef PMC_DEBUG_GPU
 
@@ -4860,7 +4919,7 @@ int cvStep_gpu2(SolverData *sd, CVodeMem cv_mem)
 
 #ifdef PMC_DEBUG_GPU
 
-#ifdef DEV_cudacvNlsNewton
+#ifdef DEV_2cudacvNlsNewton
     bicg->timeNewtonIt += ((MPI_Wtime() - starttimeCvode))*1000;
 #else
 

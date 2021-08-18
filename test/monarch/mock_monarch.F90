@@ -1026,7 +1026,7 @@ contains
     character(len=128) :: mpi_rank_str, i_str
     integer :: mpi_rank, id
     real(kind=dp) :: dt, temp, press, real_val
-    type(string_t), allocatable :: camp_spec_names(:), unique_names(:)
+    type(string_t), allocatable :: camp_spec_names(:)
     real, dimension(NUM_EBI_PHOTO_RXN) :: ebi_photo_rates
     integer, dimension(NUM_EBI_PHOTO_RXN) :: photo_id_camp
 
@@ -1052,34 +1052,17 @@ contains
       write(*,*) "Importing camp input json"
     end if
 
-    !todo should take into account mpi!
     if(n_cells.gt.1) then
       print*, "Importing data from a cell to the rest"
     end if
 
-#ifndef DEV_FIXMPICB05
-    !camp_spec_names=pmc_interface%monarch_species_names
-    !unique_names=pmc_interface%camp_core%unique_names()
-    unique_names=pmc_interface%camp_core%unique_names()
-    !camp_spec_names=unique_names
-    !camp_spec_names=pmc_interface%camp_core%unique_names()
-    camp_spec_names=pmc_interface%camp_core%spec_names
-#else
     camp_spec_names=pmc_interface%camp_core%unique_names()
-#endif
 
-    print*,size(pmc_interface%monarch_species_names),size(unique_names) !72,29
-    !print*, pmc_interface%monarch_species_names(:)%string,&
-    !        unique_names(:)%string
     do i=1, size(camp_spec_names)
-
       call jfile%get('input.species.'//camp_spec_names(i)%string,&
               pmc_interface%camp_state%state_var(i))
       !print*, camp_spec_names(i)%string, pmc_interface%camp_state%state_var(i)
-
     end do
-
-    print*, "import_camp_input_json b"
 
     do z=0,n_cells-1
       do i=1,state_size_per_cell
@@ -1144,8 +1127,6 @@ contains
     end do
 
     close(IMPORT_FILE_UNIT)
-
-    print*, "import_camp_input_json end"
 
   end subroutine import_camp_input_json
 

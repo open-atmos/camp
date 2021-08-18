@@ -954,7 +954,7 @@ __device__ void cudaDevicescalezy(double a, double* dy, double *dz, int nrows)
 {
   int row= threadIdx.x + blockDim.x*blockIdx.x;
   if(row < nrows){
-    dy[row]=a*dy[row];
+    dz[row]=a*dy[row];
   }
 }
 

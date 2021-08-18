@@ -134,7 +134,7 @@ module pmc_camp_core
   !!
   !! Contains all time-invariant data for a Part-MC model run.
   type :: camp_core_t
-#ifndef BIN_PACK_UNIQUE_NAMES
+#ifdef BIN_PACK_UNIQUE_NAMES
 #else
   private
 #endif
@@ -173,7 +173,7 @@ module pmc_camp_core
     type(camp_solver_data_t), pointer, public :: solver_data_aero => null()
     !> Solver data (mixed gas- and aerosol-phase reactions)
     type(camp_solver_data_t), pointer, public :: solver_data_gas_aero => null()
-#ifndef BIN_PACK_UNIQUE_NAMES
+#ifdef BIN_PACK_UNIQUE_NAMES
     !class(rxn_data_t), pointer, public :: rxn_photo
     !real(kind=dp), allocatable :: base_rate(:)
     integer(kind=i_kind) :: counterSolve
@@ -701,7 +701,7 @@ contains
     ! Aerosol species
     type(string_t), allocatable :: unique_names(:)
 
-#ifndef BIN_PACK_UNIQUE_NAMES
+#ifdef BIN_PACK_UNIQUE_NAMES
     !type(string_t), allocatable :: spec_names(:)
     !character(len=*), allocatable :: spec_names_chr(:)
     this%counterSolve=0
@@ -833,7 +833,7 @@ contains
       end do
     end do
 
-!#ifndef BIN_PACK_UNIQUE_NAMES
+!#ifdef BIN_PACK_UNIQUE_NAMES
 !    allocate(this%spec_names(this%size_state_per_cell))
 !#endif
 
@@ -1664,7 +1664,7 @@ contains
 
 #ifdef PMC_USE_MPI
 
-#ifndef BIN_PACK_UNIQUE_NAMES
+#ifdef BIN_PACK_UNIQUE_NAMES
     character(len=:), allocatable :: spec_name
     integer(kind=i_kind) :: max_spec_name_size = 128
 #endif
@@ -1706,7 +1706,7 @@ contains
                 pmc_mpi_pack_size_integer_array(this%var_type, l_comm) + &
                 pmc_mpi_pack_size_real_array(this%init_state_cell, l_comm)
 
-#ifndef BIN_PACK_UNIQUE_NAMES
+#ifdef BIN_PACK_UNIQUE_NAMES
 
 #ifdef EXPORT_CAMP_INPUT
 
@@ -1769,7 +1769,7 @@ contains
     class(sub_model_data_t), pointer :: sub_model
     integer(kind=i_kind) :: i, j, i_mech, i_phase, i_rep, i_sub_model, &
             prev_position, l_comm
-#ifndef BIN_PACK_UNIQUE_NAMES
+#ifdef BIN_PACK_UNIQUE_NAMES
     type(string_t), allocatable :: spec_names(:)
     integer(kind=i_kind) :: max_spec_name_size = 128
 #endif
@@ -1811,7 +1811,7 @@ contains
     call pmc_mpi_pack_integer_array(buffer, pos, this%var_type, l_comm)
     call pmc_mpi_pack_real_array(buffer, pos, this%init_state_cell, l_comm)
 
-#ifndef BIN_PACK_UNIQUE_NAMES
+#ifdef BIN_PACK_UNIQUE_NAMES
 
 #ifdef EXPORT_CAMP_INPUT
 
@@ -1872,7 +1872,7 @@ contains
     integer(kind=i_kind) :: i, j, i_mech, i_phase, i_rep, i_sub_model, &
             prev_position, num_mech, num_phase, num_rep, num_sub_model, &
             l_comm
-#ifndef BIN_PACK_UNIQUE_NAMES
+#ifdef BIN_PACK_UNIQUE_NAMES
     type(string_t), allocatable :: spec_names(:)
     character(len=:), allocatable :: spec_name
     integer :: max_spec_name_size=128
@@ -1918,7 +1918,7 @@ contains
     call pmc_mpi_unpack_integer_array(buffer, pos, this%var_type, l_comm)
     call pmc_mpi_unpack_real_array(buffer, pos, this%init_state_cell, l_comm)
 
-#ifndef BIN_PACK_UNIQUE_NAMES
+#ifdef BIN_PACK_UNIQUE_NAMES
 
 #ifdef EXPORT_CAMP_INPUT
 
