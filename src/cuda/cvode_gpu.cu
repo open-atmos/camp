@@ -790,20 +790,11 @@ int CudaDeviceguess_helper(double t_n, double h_n, double* y_n,
   }*/
 
   if (h_n > 0.) {
-    //cudaDevicescalezy(1./h_n, hf, corr, nrows);
     corr[i]=(1./h_n)*hf[i];
   } else {
-    //cudaDevicescalezy(1., hf, corr, nrows);
     corr[i]=hf[i];
   }
 
-  /*
-  if (h_n == ZERO) {
-    cudaDevicescalezy(1, hf, corr, nrows);
-  } else {
-    cudaDevicescalezy(1/h_n, hf, corr, nrows);
-  }
-   */
 
 #ifdef DEBUG_CudaDeviceguess_helper
   if(i==0)printf("CudaDeviceguess_helper %d\n",z++);
@@ -2644,7 +2635,7 @@ void cudaDevicecvNlsNewton(
                   (dgamrat > DGMAX);
 
 
-#ifndef DEV_cudacvNlsNewton
+#ifdef DEV_cudacvNlsNewton
 
   //cudaDevicescalezy(md->cv_rl1, hf, dftemp, nrows);
   //N_VLinearSum(ONE, cv_mem->cv_zn[0], -ONE, cv_mem->cv_last_yn, cv_mem->cv_ftemp);
@@ -3285,7 +3276,7 @@ int cudacvNlsNewton(SolverData *sd, CVodeMem cv_mem, int nflag) {
 
 
 
-#ifndef DEV_cudacvNlsNewton
+#ifdef DEV_cudacvNlsNewton
 
 /*
   if (cv_mem->cv_lsetup) {

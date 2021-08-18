@@ -949,12 +949,3 @@ __device__ void cudaDevicescaley(double* dy, double a, int nrows)
   }
 }
 
-// z=alpha*y
-__device__ void cudaDevicescalezy(double a, double* dy, double *dz, int nrows)
-{
-  int row= threadIdx.x + blockDim.x*blockIdx.x;
-  if(row < nrows){
-    dz[row]=a*dy[row];
-  }
-}
-
