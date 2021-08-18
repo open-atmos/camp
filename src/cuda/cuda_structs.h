@@ -8,10 +8,6 @@ typedef struct
 {
   //Init variables ("public")
   int use_multicells;
-  int threads,blocks;
-  int maxIt;
-  int mattype;
-  int n_cells;
 
   double* A;
   int*    jA;
@@ -139,6 +135,7 @@ typedef struct {
     //double *deriv_data_gpu;
 
     //Allocated from CPU (used during CPU / need some cudamemcpy)
+    int threads,blocks;
     int *map_state_deriv;
     double *deriv_data;
     double *J;
@@ -230,7 +227,6 @@ typedef struct {
     double *dx;
     double* dtempv;
     int nrows;
-    int blocks;
     int n_shr_empty;
     int maxIt;
     int mattype;
@@ -265,7 +261,7 @@ typedef struct {
     //update_state
     double threshhold;
     double replacement_value;
-    int *dflag;
+    int *flag;
 
     //f_gpu
     double time_step;
@@ -285,9 +281,9 @@ typedef struct {
     int *nje;
 
     //Auxiliar variables
-    double* dsavedJ;
-    int*    djsavedJ;
-    int*    disavedJ;
+    double* savedJ;
+    int*    jsavedJ;
+    int*    isavedJ;
 
     ModelDataVariable *mdv;//works fine
 

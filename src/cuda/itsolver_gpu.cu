@@ -34,7 +34,7 @@ void createSolver(SolverData *sd)
 
   //Init variables ("public")
   int nrows = mGPU->nrows;
-  int blocks = bicg->blocks;
+  int blocks = mGPU->blocks;
   read_options(bicg);
   mGPU->maxIt=1000;
   mGPU->tolmax=1.0e-30; //cv_mem->cv_reltol CAMP selected accuracy (1e-8) //1e-10;//1e-6
@@ -47,7 +47,7 @@ void createSolver(SolverData *sd)
 #endif
 
   int len_cell=mGPU->nrows/mGPU->n_cells;
-  if(len_cell>bicg->threads){
+  if(len_cell>mGPU->threads){
     printf("ERROR: Size cell greater than available threads per block");
     exit(0);
   }
@@ -1609,7 +1609,7 @@ void solveGPU_block(SolverData *sd, double *dA, int *djA, int *diA, double *dx, 
   int max_threads_block;
   if(bicg->use_multicells) {
 
-    max_threads_block = bicg->threads;//bicg->threads; 128;
+    max_threads_block = mGPU->threads;//mGPU->threads; 128;
 
   }else{
 
@@ -1667,8 +1667,8 @@ void solveGPU(SolverData *sd, double *dA, int *djA, int *diA, double *dx, double
   ModelDataGPU *mGPU = &sd->mGPU;
 
   int nrows = mGPU->nrows;
-  int blocks = bicg->blocks;
-  int threads = bicg->threads;
+  int blocks = mGPU->blocks;
+  int threads = mGPU->threads;
   int maxIt = mGPU->maxIt;
   int mattype = mGPU->mattype;
   double tolmax = mGPU->tolmax;

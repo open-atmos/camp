@@ -1947,7 +1947,7 @@ int rxn_calc_jac_gpu(SolverData *sd, SUNMatrix J, double time_step, N_Vector der
             sd->counterDerivGPU,
 #endif
             //update_state
-            threshhold, replacement_value, mGPU->dflag,
+            threshhold, replacement_value, mGPU->flag,
             //f_gpu
             time_step, md->n_per_cell_dep_var,
             md->n_per_cell_state_var,md->n_cells,
@@ -1956,7 +1956,7 @@ int rxn_calc_jac_gpu(SolverData *sd, SUNMatrix J, double time_step, N_Vector der
     );
   }
 
-  cudaMemcpy(&flag,mGPU->dflag,1*sizeof(int),cudaMemcpyDeviceToHost);
+  cudaMemcpy(&flag,mGPU->flag,1*sizeof(int),cudaMemcpyDeviceToHost);
 
   //printf("rxn_calc_jac_gpu flag %d\n", flag);
 
