@@ -2635,7 +2635,7 @@ void cudaDevicecvNlsNewton(
                   (dgamrat > DGMAX);
 
 
-#ifdef DEV_cudacvNlsNewton
+#ifndef DEV_cudacvNlsNewton
 
   //cudaDevicescalezy(md->cv_rl1, hf, dftemp, nrows);
   //N_VLinearSum(ONE, cv_mem->cv_zn[0], -ONE, cv_mem->cv_last_yn, cv_mem->cv_ftemp);
@@ -2675,7 +2675,7 @@ void cudaDevicecvNlsNewton(
   }
 */
 
-#ifdef DEBUG_CudaDeviceguess_helper
+#ifndef DEBUG_CudaDeviceguess_helper
   if(i==0)printf("CudaDeviceguess_helper end flag %d %d\n",*flag, guessflag);
 #endif
 
@@ -2915,6 +2915,8 @@ void cudaGlobalSolveODE(
   int n_shr = blockDim.x + n_shr_empty;
   ModelDataGPU *md = &md_object;
 
+  if(i<active_threads){
+
   cudaDevicecvNlsNewton(
           dA, djA, diA, dx, dtempv, //Input data
           nrows, blocks, n_shr_empty, maxIt, mattype,
@@ -2944,6 +2946,8 @@ void cudaGlobalSolveODE(
           counterDerivGPU
 #endif
   );
+
+  }
 
   }
 
@@ -3276,7 +3280,7 @@ int cudacvNlsNewton(SolverData *sd, CVodeMem cv_mem, int nflag) {
 
 
 
-#ifdef DEV_cudacvNlsNewton
+#ifndef DEV_cudacvNlsNewton
 
 /*
   if (cv_mem->cv_lsetup) {
@@ -3322,6 +3326,7 @@ int cudacvNlsNewton(SolverData *sd, CVodeMem cv_mem, int nflag) {
   cudaMemcpy(bicg->cv_nst, &cv_mem->cv_nst, 1 * sizeof(int), cudaMemcpyHostToDevice);
 
   mGPU->cv_jcur = cv_mem->cv_jcur;
+  mGPU->cv_crate=cv_mem->cv_crate;
   mGPU->cv_gamrat = cv_mem->cv_gamrat;
   mGPU->cv_gammap = cv_mem->cv_gammap;
   mGPU->cv_gamma = cv_mem->cv_gamma;
@@ -3333,6 +3338,8 @@ int cudacvNlsNewton(SolverData *sd, CVodeMem cv_mem, int nflag) {
   mGPU->cv_nstlp=cv_mem->cv_nstlp;
 
   solveCVODEGPU(sd, cv_mem);
+
+  printf("DEV_cudacvNlsNewton\n");
 
   cudaMemcpy(acor, bicg->dacor, bicg->nrows * sizeof(double), cudaMemcpyDeviceToHost);
   cudaMemcpy(tempv, bicg->dx, bicg->nrows * sizeof(double), cudaMemcpyDeviceToHost);
