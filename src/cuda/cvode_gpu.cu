@@ -814,15 +814,22 @@ int CudaDeviceguess_helper(double t_n, double h_n, double* y_n,
 #ifdef DEBUG_CudaDeviceguess_helper
     if(i==0)printf("Return 0 %le\n",y_n[i]);
 #endif
+
+#ifndef DEV_GUESSFLAG
     return 0;
-    //flag_shr2[0]=0;
+#else
+    flag_shr2[0]=0;
+#endif
   }
-  /*
+
+#ifndef DEV_GUESSFLAG
+#else
   __syncthreads();
   if(flag_shr2[0]==0){
-    //*flag=(int)flag_shr2[0];
+    *flag=(int)flag_shr2[0];
     return 0;
-  }*/
+  }
+#endif
 
 #ifdef PMC_DEBUG_GPU
 
@@ -882,7 +889,6 @@ int CudaDeviceguess_helper(double t_n, double h_n, double* y_n,
 
     __syncthreads();
     double t_star;
-    //La unica diferencia esta aqui...
     if(tid==0){
       for (int j = 0; j < nrows; j++) {
         t_star = -tmp1[j] / corr[j];
@@ -891,7 +897,7 @@ int CudaDeviceguess_helper(double t_n, double h_n, double* y_n,
           h_j = t_star;
         }
       }
-      flag_shr2[iter]=h_j;
+      flag_shr2[iter+1]=h_j;
       //flag_shr2[4]=h_j;
       //md->deriv_data[0]=h_j;
       //md->min=h_j;
@@ -899,7 +905,7 @@ int CudaDeviceguess_helper(double t_n, double h_n, double* y_n,
     __syncthreads();
     //h_j=md->deriv_data[0];
     //h_j=flag_shr2[4];
-    h_j=flag_shr2[iter];
+    h_j=flag_shr2[iter+1];
     __syncthreads();
     t_star=-tmp1[i] / corr[i];
     __syncthreads();
@@ -957,15 +963,21 @@ int CudaDeviceguess_helper(double t_n, double h_n, double* y_n,
 #endif
 #endif
     //flag_shr2[0]=-1;
+#ifndef DEV_GUESSFLAG
     return -1;
+#else
+    flag_shr2[0]=-1;
+#endif
     }
-/*
+
+#ifndef DEV_GUESSFLAG
+#else
     __syncthreads();
     if(flag_shr2[0]==-1){
       *flag=(int)flag_shr2[0];
       return -1;
     }
-*/
+#endif
 
     // Advance the state
     //N_VLinearSum(ONE, tmp1, h_j, corr, tmp1);
@@ -991,7 +1003,6 @@ int CudaDeviceguess_helper(double t_n, double h_n, double* y_n,
       N_VConst(ZERO, corr);
       return -1;
     }*/
-
 
     cudaDevicef(
 #ifdef PMC_DEBUG_GPU
@@ -1023,23 +1034,47 @@ int CudaDeviceguess_helper(double t_n, double h_n, double* y_n,
 #endif
 #endif
       //flag_shr2[0]=-1;
+#ifndef DEV_GUESSFLAG
       return -1;
+#else
+      flag_shr2[0]=-1;
+#endif
     }
 
+#ifndef DEV_GUESSFLAG
+#else
 
-
-    /*
     __syncthreads();
     if(flag_shr2[0]==-1){
       *flag=(int)flag_shr2[0];
       return -1;
-    }*/
+    }
+#endif
 
     //((CVodeMem)sd->cvode_mem)->cv_nfe++;
 
     if (iter == GUESS_MAX_ITER - 1 && t_0 + t_j < t_n) {
-      if (h_n == 0.) return -1;
+      if (h_n == 0.){
+/*
+#ifndef DEV_GUESSFLAG
+        return -1;
+#else
+        flag_shr2[0]=-1;
+#endif
+      */
+        return -1;
+      }
     }
+/*
+#ifndef DEV_GUESSFLAG
+#else
+    __syncthreads();
+    if(flag_shr2[0]==-1){
+      *flag=(int)flag_shr2[0];
+      return -1;
+    }
+#endif
+*/
     __syncthreads();
   }
 
@@ -1069,11 +1104,13 @@ int CudaDeviceguess_helper(double t_n, double h_n, double* y_n,
 #endif
 #endif
 
-    //todo needed *flag? or just return value
   __syncthreads();
-  //flag_shr2[0]=1;
-  //*flag=(int)flag_shr2[0];
+#ifndef DEV_GUESSFLAG
   return 1;
+#else
+  flag_shr2[0]=1;
+  *flag=(int)flag_shr2[0];
+#endif
 }
 
 
@@ -2462,11 +2499,13 @@ void cudaDevicecvNewtonIteration(
                            md
     );
 
-    //todo fix blocks with diff values access same flag memory and break;
-    atomicMin(flag,guessflag);
+    //atomicMin(flag,guessflag);
+
+    //*flag=guessflag;
     //__syncthreads();
+
     //if (*flag<0) {
-    if (*flag < 0) {
+    if (guessflag < 0) {
       if (!(*cv_jcur)) { //Bool set up during linsolsetup just before Jacobian
         //&& (cv_lsetup)) { //cv_mem->cv_lsetup// Setup routine, always exists for BCG
         flag_shr[0] = TRY_AGAIN;
@@ -2678,7 +2717,6 @@ void cudaDevicecvNlsNewton(
   //dftemp[i]=dzn[i]*(-md->cv_last_yn[i]);
 
 #ifndef DEV_cudacvNlsNewton
-/*
 
   __syncthreads();
   int guessflag=CudaDeviceguess_helper(t_n, h_n, dzn,
@@ -2697,10 +2735,32 @@ void cudaDevicecvNlsNewton(
   __syncthreads();
 
 #ifdef DEBUG_CudaDeviceguess_helper
-  if(i==0)printf("CudaDeviceguess_helper end flag %d %d\n",*flag, guessflag);
+  if(i==0)printf("CudaDeviceguess_helper flag %d guessflag %d\n",*flag, guessflag);
 #endif
 
-   if(*flag<0){
+#ifndef DEV_GUESSFLAG
+
+  if(guessflag<0){
+  //if(*flag<0){
+    *flag=RHSFUNC_RECVR;
+    return;
+  }
+
+  /*
+  atomicMin(flag,guessflag);
+  if(*flag<0){
+    flag_shr[0] = RHSFUNC_RECVR;
+  }
+  __syncthreads();
+  if(*flag<0){
+    *flag = flag_shr[0];
+    return;
+  }
+   */
+
+#else
+
+  if(*flag<0){
     flag_shr[0] = RHSFUNC_RECVR;
   }
   __syncthreads();
@@ -2710,7 +2770,7 @@ void cudaDevicecvNlsNewton(
   }
 
 
-*/
+#endif
 
 /*
     if (cv_mem->cv_ghfun) {
@@ -3064,7 +3124,9 @@ extern __shared__ int flag_shr[];
   }
    */
 
-  atomicMin(flag,guessflag);
+  *flag=guessflag;
+  __syncthreads();
+  //atomicMin(flag,guessflag);
 
 #ifdef DEBUG_CudaDeviceguess_helper
   if(i==0)printf("CudaDeviceguess_helper end flag %d %d\n",*flag, guessflag);
@@ -3326,11 +3388,13 @@ void solveCVODEGPU_thr(int blocks, int threads_block, int n_shr_memory, int n_sh
     //print_int(bicg->jA,nnz,"jA");
     //print_int(bicg->iA,nrows+1,"iA");
 
-  }
+  }bicg->counterBiConjGrad++;
 #endif
 
 //todo (mas tarde puede ser) figura como las 3 lineas pero con el cb05 (oriol)
 //MARIO: 40 MPI vs 1 GPU y kernels fusionados ya (necesita q vaya mejor que mpi)
+
+#ifndef DEV_cudacvNlsNewton
 
 
 #ifdef DEBUG_CudaDeviceguess_helper
@@ -3382,7 +3446,6 @@ void solveCVODEGPU_thr(int blocks, int threads_block, int n_shr_memory, int n_sh
   }
   HANDLE_ERROR(cudaMemcpy(mGPU->state, md->total_state, md->state_size, cudaMemcpyHostToDevice));
 
-
   if(compare_doubles(cv_zn,bicg->cv_zn,bicg->nrows,"a")!=1) exit(0);
   z++;
   if(compare_doubles(cv_last_yn,bicg->cv_last_yn,bicg->nrows,"b")!=1) exit(0);
@@ -3394,7 +3457,6 @@ void solveCVODEGPU_thr(int blocks, int threads_block, int n_shr_memory, int n_sh
   if(compare_doubles(cv_tempv,bicg->cv_tempv,bicg->nrows,"d")!=1) exit(0);
   z++;
 
-
   //retval = cv_mem->cv_ghfun(cv_mem->cv_tn, cv_mem->cv_h, cv_zn21,
   //                              cv_last_yn21, cv_ftemp21, cv_mem->cv_user_data,
   //                              cv_tempv21, cv_acor_init21);
@@ -3403,9 +3465,12 @@ void solveCVODEGPU_thr(int blocks, int threads_block, int n_shr_memory, int n_sh
                                 cv_last_yn21, cv_ftemp21, cv_mem->cv_user_data,
                                 cv_tempv21, cv_acor_init21);
 
-
 #endif
 
+
+
+#else
+//DEV_cudacvNlsNewton
 
   CudaGlobalguess_helper <<<blocks,threads_block,n_shr_memory*sizeof(double)>>>
    (dA, djA, diA, dx, bicg->dtempv, nrows, blocks, n_shr_empty, maxIt, mattype, bicg->n_cells,
@@ -3440,6 +3505,8 @@ void solveCVODEGPU_thr(int blocks, int threads_block, int n_shr_memory, int n_sh
   cudaMemcpy(cv_tempv, bicg->dtempv, bicg->nrows * sizeof(double), cudaMemcpyDeviceToHost);
   cudaMemcpy(cv_acor_init, mGPU->cv_acor_init, bicg->nrows * sizeof(double), cudaMemcpyDeviceToHost);
   HANDLE_ERROR(cudaMemcpy(&flag, bicg->dflag, 1 * sizeof(int), cudaMemcpyDeviceToHost));
+
+
 
 #ifdef DEBUG_CudaDeviceguess_helper
   //compare
@@ -3481,11 +3548,9 @@ void solveCVODEGPU_thr(int blocks, int threads_block, int n_shr_memory, int n_sh
   N_VDestroy(cv_tempv21);
   N_VDestroy(cv_acor_init21);
 
-
-
 #endif
 
-  if (retval<0 || flag){
+  if (retval<0 || flag<0){
     retval=RHSFUNC_RECVR;
     HANDLE_ERROR(cudaMemcpy(bicg->dflag, &retval, 1 * sizeof(int), cudaMemcpyHostToDevice));
     return;
@@ -3494,6 +3559,10 @@ void solveCVODEGPU_thr(int blocks, int threads_block, int n_shr_memory, int n_sh
   //if (flag == RHSFUNC_RECVR) return;
 
   printf("CudaGlobalguess_helper end CPU\n");
+
+#endif
+//DEV_cudacvNlsNewton
+
 
 
   cudaGlobalSolveODE <<<blocks,threads_block,n_shr_memory*sizeof(double)>>>
@@ -3524,7 +3593,6 @@ void solveCVODEGPU_thr(int blocks, int threads_block, int n_shr_memory, int n_sh
 
 #ifdef PMC_DEBUG_GPU
 
-  bicg->counterBiConjGrad++;
   int it=0;
 
 #ifdef solveBcgCuda_sum_it
@@ -3555,7 +3623,7 @@ void solveCVODEGPU_thr(int blocks, int threads_block, int n_shr_memory, int n_sh
 #endif
 
 #ifndef DEBUG_SOLVEBCGCUDA
-  if(bicg->counterBiConjGrad==0) {
+  if(bicg->counterBiConjGrad==1) {
     printf("solveGPUBlock it %d\n",
            it);
   }
@@ -3757,6 +3825,7 @@ int cudacvNlsNewton(SolverData *sd, CVodeMem cv_mem, int nflag) {
 #endif
 
 #ifndef DEV_cudacvNlsNewton
+
   /*
   if (cv_mem->cv_lsetup) {
     callSetup = (nflag == PREV_CONV_FAIL) || (nflag == PREV_ERR_FAIL) ||
@@ -3776,7 +3845,7 @@ int cudacvNlsNewton(SolverData *sd, CVodeMem cv_mem, int nflag) {
 
 
 #else
-
+/*
   if (cv_mem->cv_ghfun) {
   //N_VScale(cv_mem->cv_rl1, cv_mem->cv_zn[1], cv_mem->cv_ftemp);
 
@@ -3787,6 +3856,7 @@ int cudacvNlsNewton(SolverData *sd, CVodeMem cv_mem, int nflag) {
                             cv_mem->cv_tempv, cv_mem->cv_acor_init);
   if (retval<0) return(RHSFUNC_RECVR);
   }
+*/
 
 #endif
 
@@ -3832,8 +3902,7 @@ int cudacvNlsNewton(SolverData *sd, CVodeMem cv_mem, int nflag) {
 
   HANDLE_ERROR(cudaMemcpy(&flag, bicg->dflag, 1 * sizeof(int), cudaMemcpyDeviceToHost));
 
-  printf("DEV_cudacvNlsNewton counterBiConjGrad %d\n",bicg->counterBiConjGrad);
-
+  //printf("DEV_cudacvNlsNewton counterBiConjGrad %d\n",bicg->counterBiConjGrad);
 #ifdef DEBUG_CudaDeviceguess_helper
   //exit(0);
 #endif
