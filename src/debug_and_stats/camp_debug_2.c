@@ -137,7 +137,7 @@ int compare_doubles(double *x, double *y, int len, const char *s){
   int flag=1;
   double tol=0.01;
   //float tol=0.0001;
-  int rel_error;
+  double rel_error;
   int n_fails=0;
   for (int i=0; i<len; i++){
     if(x[i]==0)

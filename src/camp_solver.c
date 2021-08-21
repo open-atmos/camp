@@ -2127,23 +2127,6 @@ double gsl_f(double x, void *param) {
 }
 #endif
 
-int guess_helper_gpu(SolverData *solver_data){
-
-  //guess_gpu(solver_data);
-
-#ifdef CHECK_GUESS_HELPER_GPU_WITH_CPU
-
-  get_guess_helper_from_gpu(y_n, y_n1, hf, sd, tmpl, corr);
-  guess_helper_cpu(t_n, h_n_cpu, y_n_cpu,
-          y_n1_cpu, hf_cpu, sd, tmpl_cpu, corr_cpu);
-  compare_double_arrays(in, out);
-
-#endif
-
-  return 1;
-
-}
-
 /** \brief Try to improve guesses of y sent to the linear solver
  *
  * This function checks if there are any negative guessed concentrations,
@@ -2188,13 +2171,12 @@ int guess_helper(const realtype t_n, const realtype h_n, N_Vector y_n,
 
   // Only try improvements when negative concentrations are predicted
   double min = N_VMin(y_n);
-#ifdef DEBUG_GUESS_HELPER
-  printf("N_VMin(y_n) %le -SMALL %le\n",min, -SMALL);
+#ifdef DEBUG_CudaDeviceguess_helperprintf("N_VMin(y_n) %le -SMALL %le\n",min, -SMALL);
   int z=0;
 #endif
   if (min > -SMALL){
 #ifdef DEBUG_GUESS_HELPER
-  printf("Return 0 ");
+  printf("Return 0 \n");
 #endif
     return 0;
   }
@@ -2203,8 +2185,8 @@ int guess_helper(const realtype t_n, const realtype h_n, N_Vector y_n,
   PMC_DEBUG_PRINT_FULL("Trying to improve guess");
 
 #ifdef DEBUG_GUESS_HELPER
-    for(int j=0;j<bicg->nrows;j++)
-      printf("y_n1[%d] %le \n",j,y_n1[j]);
+    //for(int j=0;j<bicg->nrows;j++)
+    //  printf("y_n1[%d] %le \n",j,y_n1[j]);
 #endif
 
   // Copy \f$y(t_{n-1})\f$ to working array
@@ -2227,10 +2209,10 @@ int guess_helper(const realtype t_n, const realtype h_n, N_Vector y_n,
     realtype h_j = t_n - (t_0 + t_j);
     int i_fast = -1;
 #ifdef DEBUG_GUESS_HELPER
-    for(int j=0;j<bicg->nrows;j++){
-        printf("h_j %le t_n %le t_0 %le t_j %le\n",
-               h_j,t_n,t_0,t_j);
-        }
+    //for(int j=0;j<bicg->nrows;j++){
+    //    printf("h_j %le t_n %le t_0 %le t_j %le\n",
+    //           h_j,t_n,t_0,t_j);
+    //    }
 #endif
 
     for (int i = 0; i < n_elem; i++) {
@@ -2250,8 +2232,12 @@ int guess_helper(const realtype t_n, const realtype h_n, N_Vector y_n,
 
     // Only make small changes to adjustment vectors used in Newton iteration
     if (h_n == ZERO &&
-        t_n - (h_j + t_j + t_0) > ((CVodeMem)sd->cvode_mem)->cv_reltol)
-      return -1;
+        t_n - (h_j + t_j + t_0) > ((CVodeMem)sd->cvode_mem)->cv_reltol){
+#ifdef DEBUG_GUESS_HELPER
+     printf("CudaDeviceguess_helper h_n == ZERO -1\n");
+#endif
+        return -1;
+    }
 
     // Advance the state
     N_VLinearSum(ONE, tmp1, h_j, corr, tmp1);
@@ -2261,11 +2247,11 @@ int guess_helper(const realtype t_n, const realtype h_n, N_Vector y_n,
     t_j += h_j;
 
 #ifdef DEBUG_GUESS_HELPER
-    for(int j=0;j<bicg->nrows;j++){
-      realtype t_star = -atmp1[j] / acorr[j];
-      printf("corr[%d] %le tmp1[j] %le hf %le t_star %le h_j %le h_n %le\n",
-              j,acorr[j],atmp1[j],ahf[j],t_star,h_j,h_n);
-      }
+    //for(int j=0;j<bicg->nrows;j++){
+    //  realtype t_star = -atmp1[j] / acorr[j];
+    //  printf("corr[%d] %le tmp1[j] %le hf %le t_star %le h_j %le h_n %le\n",
+    //          j,acorr[j],atmp1[j],ahf[j],t_star,h_j,h_n);
+    //  }
 #endif
 
     //printf("Derivguess_helper before\n");
@@ -2301,7 +2287,7 @@ int guess_helper(const realtype t_n, const realtype h_n, N_Vector y_n,
   // Update the hf vector
   N_VLinearSum(ONE, tmp1, -ONE, y_n1, hf);
 
-#ifdef DEBUG_CudaDeviceguess_helper
+#ifdef DEBUG_GUESS_HELPER
   printf("CudaDeviceguess_helper return 1\n");
 #endif
 

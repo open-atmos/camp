@@ -70,7 +70,17 @@ typedef struct
   double* dzn;
   double* dcv_y;
 
-  //Intermediate variables
+//#ifdef DEBUG_CudaDeviceguess_helper
+  double* cv_zn;
+  double* cv_last_yn;
+  double* cv_ftemp;
+  double* cv_tempv;
+  double* cv_acor_init;
+  double* total_state;
+//#endif
+
+
+    //Intermediate variables
   double* dsavedJ;
   int*    djsavedJ;
   int*    disavedJ;
@@ -280,6 +290,9 @@ typedef struct {
     double *cv_acor_init;
     int nflag;
     int cv_jcur;
+    double min;
+    int convfail;
+    int callSetup;
 
 //ODE stats
 #ifdef PMC_DEBUG_GPU
