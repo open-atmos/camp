@@ -410,6 +410,7 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
   sd->timeRXNJac = 0.0;
   sd->timef = 0.0;
   sd->timeguess_helper = 0.0;
+  sd->tguessNewton = 0.0;
 
   sd->ncounters = ncounters;
   sd->ntimers = ntimers;
@@ -2171,7 +2172,7 @@ int guess_helper(const realtype t_n, const realtype h_n, N_Vector y_n,
 
   // Only try improvements when negative concentrations are predicted
   double min = N_VMin(y_n);
-#ifdef DEBUG_CudaDeviceguess_helperprintf("N_VMin(y_n) %le -SMALL %le\n",min, -SMALL);
+#ifndef DEBUG_CudaDeviceguess_helperprintf("N_VMin(y_n) %le -SMALL %le\n",min, -SMALL);
   int z=0;
 #endif
   if (min > -SMALL){

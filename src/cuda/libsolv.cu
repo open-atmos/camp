@@ -11,6 +11,8 @@
 #include<cuda_runtime.h>
 #include<cuda_runtime_api.h>
 
+//todo try #include <cooperative_groups.h> for reduce
+
 #include "libsolv.h"
 
 //#include<cublas.h> //todo fix cublas not compiling fine
@@ -722,6 +724,106 @@ __device__ void cudaDeviceyequalsx(double* dy,double* dx,int nrows)
   if(row < nrows){
     dy[row]=dx[row];
   }
+}
+
+//volatile double *sdata
+__device__ void cudaDevicemin(double in, volatile double *sdata, int initshr, int n_shr_empty)
+{
+  unsigned int tid = threadIdx.x;
+  //unsigned int i = blockIdx.x*(blockDim.x*2) + threadIdx.x;
+  unsigned int i = blockIdx.x*blockDim.x + threadIdx.x;
+
+#ifndef ALL_BLOCKS_EQUAL_SIZE
+
+  //first threads update empty positions
+  if(tid<n_shr_empty)
+    sdata[tid+blockDim.x]=initshr;
+
+  __syncthreads(); //Not needed (should)
+
+#else
+
+  //slower
+  if (tid == 0){
+    for (int j=0; j<blockDim.x+n_shr_empty; j++)
+      sdata[j] = initshr;
+  }
+
+  __syncthreads();
+
+#endif
+
+
+  __syncthreads();
+
+  sdata[tid] = in;
+
+  __syncthreads();
+
+  //if(blockIdx.x==0)printf("i %d in %le sdata[tid] %le\n",i,in,sdata[tid]);
+
+  for (unsigned int s=(blockDim.x+n_shr_empty)/2; s>0; s>>=1)
+  {
+    if (tid < s){
+      if(sdata[tid + s] < sdata[tid]) sdata[tid]=sdata[tid + s];
+      //sdata[tid] += sdata[tid + s];
+    }
+
+    __syncthreads();
+  }
+
+  //if(i==0)printf("i %d sdata[tid] %le\n",i,sdata[tid]);
+
+  /*
+
+  for (unsigned int s=(blockDim.x+n_shr_empty)/2; s>0; s>>=1)
+  {
+    if (tid < s)
+      sdata[tid] += sdata[tid + s];
+
+    __syncthreads();
+  }
+*/
+
+
+  /*
+  unsigned int blockSize = blockDim.x+n_shr_empty;
+
+  // do reduction in shared mem
+  if ((blockSize >= 1024) && (tid < 512)) {
+    sdata[tid] += sdata[tid + 512];
+  }
+
+  __syncthreads();
+
+  if ((blockSize >= 512) && (tid < 256)) {
+    sdata[tid] += sdata[tid + 256];
+  }
+
+  __syncthreads();
+
+  if ((blockSize >= 256) && (tid < 128)) {
+    sdata[tid] += sdata[tid + 128];
+  }
+
+  __syncthreads();
+
+  if ((blockSize >= 128) && (tid < 64)) {
+    sdata[tid] += sdata[tid + 64];
+  }
+
+  __syncthreads();
+
+  if (tid < 32) warpReduce(sdata, tid);
+
+  __syncthreads();//not needed?
+
+  */
+
+  //*in = sdata[0];
+  __syncthreads();
+
+
 }
 
 __device__ void cudaDevicereducey(double *g_odata, unsigned int n, int n_shr_empty)

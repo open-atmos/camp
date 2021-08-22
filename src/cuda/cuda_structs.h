@@ -70,7 +70,7 @@ typedef struct
   double* dzn;
   double* dcv_y;
 
-//#ifdef DEBUG_CudaDeviceguess_helper
+//#ifndef DEBUG_CudaDeviceguess_helper
   double* cv_zn;
   double* cv_last_yn;
   double* cv_ftemp;
@@ -296,6 +296,8 @@ typedef struct {
 
 //ODE stats
 #ifdef PMC_DEBUG_GPU
+    int clock_khz;
+    double *tguessNewton;
     double *dtNewtonIteration;
     double *dtJac;
     double *dtlinsolsetup;

@@ -317,6 +317,7 @@ typedef struct {
   double timeDerivCPU;
   double timeJacCPU;
   double timeNewtonIteration;
+  double tguessNewton;
   double timeJac;
   double timelinsolsetup;
   double timecalc_Jac;
