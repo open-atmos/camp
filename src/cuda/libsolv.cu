@@ -727,17 +727,22 @@ __device__ void cudaDeviceyequalsx(double* dy,double* dx,int nrows)
 }
 
 //volatile double *sdata
-__device__ void cudaDevicemin(double in, volatile double *sdata, int initshr, int n_shr_empty)
+//__device__ void cudaDevicemin(double *g_odata, double in, volatile double *sdata, int initshr, int n_shr_empty)
+__device__ void cudaDevicemin(double *g_odata, double in, volatile double *sdata, int initshr, int n_shr_empty)
 {
+  //extern __shared__ double sdata[];
   unsigned int tid = threadIdx.x;
   //unsigned int i = blockIdx.x*(blockDim.x*2) + threadIdx.x;
   unsigned int i = blockIdx.x*blockDim.x + threadIdx.x;
+
+  __syncthreads();
 
 #ifndef ALL_BLOCKS_EQUAL_SIZE
 
   //first threads update empty positions
   if(tid<n_shr_empty)
-    sdata[tid+blockDim.x]=initshr;
+    //sdata[tid+blockDim.x]=initshr;
+    sdata[tid+blockDim.x]=sdata[tid];
 
   __syncthreads(); //Not needed (should)
 
@@ -764,13 +769,15 @@ __device__ void cudaDevicemin(double in, volatile double *sdata, int initshr, in
 
   for (unsigned int s=(blockDim.x+n_shr_empty)/2; s>0; s>>=1)
   {
-    if (tid < s){
-      if(sdata[tid + s] < sdata[tid]) sdata[tid]=sdata[tid + s];
+    if (tid < s){//&& sdata[tid + s]!=0.
+      if(sdata[tid + s] < sdata[tid] ) sdata[tid]=sdata[tid + s];
       //sdata[tid] += sdata[tid + s];
     }
-
     __syncthreads();
   }
+
+  __syncthreads();
+  *g_odata = sdata[0];
 
   //if(i==0)printf("i %d sdata[tid] %le\n",i,sdata[tid]);
 

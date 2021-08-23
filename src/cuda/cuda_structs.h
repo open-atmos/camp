@@ -70,7 +70,7 @@ typedef struct
   double* dzn;
   double* dcv_y;
 
-//#ifndef DEBUG_CudaDeviceguess_helper
+//#ifdef DEBUG_CudaDeviceguess_helper
   double* cv_zn;
   double* cv_last_yn;
   double* cv_ftemp;

@@ -2172,7 +2172,7 @@ int guess_helper(const realtype t_n, const realtype h_n, N_Vector y_n,
 
   // Only try improvements when negative concentrations are predicted
   double min = N_VMin(y_n);
-#ifndef DEBUG_CudaDeviceguess_helperprintf("N_VMin(y_n) %le -SMALL %le\n",min, -SMALL);
+#ifdef DEBUG_CudaDeviceguess_helperprintf("N_VMin(y_n) %le -SMALL %le\n",min, -SMALL);
   int z=0;
 #endif
   if (min > -SMALL){
