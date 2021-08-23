@@ -46,7 +46,6 @@ void createSolver(SolverData *sd)
   printf("BCG Mattype=CSC\n");
 #endif
 
-  //todo previous check to exception if len_cell>bicg_threads
   int len_cell=mGPU->nrows/mGPU->n_cells;
   if(len_cell>mGPU->threads){
     printf("ERROR: Size cell greater than available threads per block");
@@ -884,9 +883,9 @@ void swapCSC_CSR_BCG(SolverData *sd){
 
 #else
 
-  cudaMemcpy(bicg->diA,Bp,(mGPU->nrows+1)*sizeof(int),cudaMemcpyHostToDevice);
-  cudaMemcpy(bicg->djA,Bi,mGPU->nnz*sizeof(int),cudaMemcpyHostToDevice);
-  cudaMemcpy(bicg->dA,Bx,mGPU->nnz*sizeof(double),cudaMemcpyHostToDevice);
+  cudaMemcpy(mGPU->diA,Bp,(mGPU->nrows+1)*sizeof(int),cudaMemcpyHostToDevice);
+  cudaMemcpy(mGPU->djA,Bi,mGPU->nnz*sizeof(int),cudaMemcpyHostToDevice);
+  cudaMemcpy(mGPU->dA,Bx,mGPU->nnz*sizeof(double),cudaMemcpyHostToDevice);
 
 #endif
 
@@ -1514,12 +1513,12 @@ void solveGPU_block_thr(int blocks, int threads_block, int n_shr_memory, int n_s
 
 
   //Works always supposing the same jac structure for all cells (same reactions on all cells)
-  int *djA=bicg->djA;
-  int *diA=bicg->diA;
+  int *djA=mGPU->djA;
+  int *diA=mGPU->diA;
 
-  double *dA=bicg->dA+offset_nnz;
+  double *dA=mGPU->dA+offset_nnz;
   double *ddiag=mGPU->ddiag+offset_nrows;
-  double *dx=bicg->dx+offset_nrows;
+  double *dx=mGPU->dx+offset_nrows;
   double *dtempv=mGPU->dtempv+offset_nrows;
 
   int len_cell=nrows/n_cells;
@@ -1570,9 +1569,9 @@ void solveGPU_block_thr(int blocks, int threads_block, int n_shr_memory, int n_s
                                            );
 
 
-
-
-
+#ifdef PMC_DEBUG_GPU
+  cudaFree(dit_ptr);
+#endif
 
 }
 
@@ -1652,7 +1651,6 @@ void solveGPU(SolverData *sd, double *dA, int *djA, int *diA, double *dx, double
   ModelData *md = &(sd->model_data);
   ModelDataGPU *mGPU = &sd->mGPU;
 
-  //Init variables ("public")
   int nrows = mGPU->nrows;
   int blocks = mGPU->blocks;
   int threads = mGPU->threads;
@@ -1798,8 +1796,6 @@ void solveGPU(SolverData *sd, double *dA, int *djA, int *diA, double *dx, double
 
     it++;
   }while(it<maxIt && temp1>tolmax);
-
-
 
 #ifdef DEBUG_SOLVEBCGCUDA_DEEP
   free(aux_x1);

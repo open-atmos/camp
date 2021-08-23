@@ -379,9 +379,9 @@ typedef struct {
     int *nje;
 
     //Auxiliar variables
-    double* savedJ;
-    int*    jsavedJ;
-    int*    isavedJ;
+    double* dsavedJ;
+    int*    djsavedJ;
+    int*    disavedJ;
 
     ModelDataVariable *mdv;//works fine
 

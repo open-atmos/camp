@@ -543,8 +543,8 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
         SUNSparseMatrix(SM_NP_S(J_CSC), SM_NP_S(J_CSC), SM_NNZ_S(J_CSC), CSR_MAT);
 
 
-  //swapCSC_CSR_BCG(mGPU->nrows,mGPU->nrows,bicg->diA,bicg->djA,bicg->dA,
-  //                  bicg->diB,bicg->djB,bicg->dB);
+  //swapCSC_CSR_BCG(mGPU->nrows,mGPU->nrows,mGPU->diA,mGPU->djA,mGPU->dA,
+  //                  mGPU->diB,mGPU->djB,mGPU->dB);
   swapCSC_CSR(SM_NP_S(J_CSC),SM_NP_S(J_CSC),
           SM_INDEXPTRS_S(J_CSC),SM_INDEXVALS_S(J_CSC),SM_DATA_S(J_CSC),
                     SM_INDEXPTRS_S(aux_J_CSR),SM_INDEXVALS_S(aux_J_CSR),SM_DATA_S(aux_J_CSR));
@@ -1310,8 +1310,8 @@ int f_gpu(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
 
   //return flag;
 
-  //Transfer cv_ftemp() not needed because bicg->dftemp=md->deriv_data_gpu;
-  //cudaMemcpy(cv_ftemp_data,bicg->dftemp,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
+  //Transfer cv_ftemp() not needed because mGPU->dftemp=md->deriv_data_gpu;
+  //cudaMemcpy(cv_ftemp_data,mGPU->dftemp,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
 
 #else
 
@@ -2171,7 +2171,8 @@ int guess_helper(const realtype t_n, const realtype h_n, N_Vector y_n,
 
   // Only try improvements when negative concentrations are predicted
   double min = N_VMin(y_n);
-#ifdef DEBUG_CudaDeviceguess_helperprintf("N_VMin(y_n) %le -SMALL %le\n",min, -SMALL);
+#ifdef DEBUG_CudaDeviceguess_helperprintf
+  printf("N_VMin(y_n) %le -SMALL %le\n",min, -SMALL);
   int z=0;
 #endif
   if (min > -SMALL){

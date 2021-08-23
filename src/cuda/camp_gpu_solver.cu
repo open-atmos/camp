@@ -460,8 +460,8 @@ void set_jac_data_gpu(SolverData *sd, double *J){
   //HANDLE_ERROR(cudaMemcpy(mGPU->aero_rep_float_data, md->aero_rep_float_data, md->n_aero_rep_float_param*sizeof(double), cudaMemcpyHostToDevice));
 
   itsolver *bicg = &(sd->bicg);
-  cudaMemcpy(bicg->djA,bicg->jA,mGPU->nnz*sizeof(int),cudaMemcpyHostToDevice);
-  cudaMemcpy(bicg->diA,bicg->iA,(mGPU->nrows+1)*sizeof(int),cudaMemcpyHostToDevice);
+  cudaMemcpy(mGPU->djA,bicg->jA,mGPU->nnz*sizeof(int),cudaMemcpyHostToDevice);
+  cudaMemcpy(mGPU->diA,bicg->iA,(mGPU->nrows+1)*sizeof(int),cudaMemcpyHostToDevice);
 
 }
 
@@ -630,7 +630,7 @@ int camp_solver_check_model_state_gpu(N_Vector solver_state, SolverData *sd,
   ModelDataGPU *mGPU = &sd->mGPU;
 
 /*
-  //HANDLE_ERROR(cudaMemcpy(md->deriv_aux, bicg->dcv_y, md->deriv_size, cudaMemcpyDeviceToHost));
+  //HANDLE_ERROR(cudaMemcpy(md->deriv_aux, mGPU->dcv_y, md->deriv_size, cudaMemcpyDeviceToHost));
   if(sd->counterDerivCPU<=5){
     printf("counterDeriv2 %d \n", sd->counterDerivCPU);
     for (int i = 0; i < NV_LENGTH_S(solver_state); i++) {
@@ -646,7 +646,7 @@ int camp_solver_check_model_state_gpu(N_Vector solver_state, SolverData *sd,
   double threshhold = -SMALL;
 
   camp_solver_check_model_state_cuda << < n_blocks, md->max_n_gpu_thread >> >
-   (mGPU->state, bicg->dcv_y, mGPU->map_state_deriv,
+   (mGPU->state, mGPU->dcv_y, mGPU->map_state_deriv,
    threshhold, replacement_value, &flag, n_dep_var, n_cells);
 
   HANDLE_ERROR(cudaMemcpy(md->total_state, mGPU->state, md->state_size, cudaMemcpyDeviceToHost));
@@ -1161,8 +1161,8 @@ int rxn_calc_deriv_gpu(SolverData *sd, N_Vector y, N_Vector deriv, double time_s
 
 #ifdef DERIV_CPU_ON_GPU
 
-  //Transfer cv_ftemp() not needed because bicg->dftemp=md->deriv_data_gpu;
-  //cudaMemcpy(cv_ftemp_data,bicg->dftemp,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
+  //Transfer cv_ftemp() not needed because mGPU->dftemp=md->deriv_data_gpu;
+  //cudaMemcpy(cv_ftemp_data,mGPU->dftemp,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
 
   HANDLE_ERROR(cudaMemcpy(mGPU->deriv_data, deriv_data, md->deriv_size, cudaMemcpyHostToDevice));
   HANDLE_ERROR(cudaMemcpy(mGPU->state, md->total_state, md->state_size, cudaMemcpyHostToDevice));
@@ -1244,7 +1244,7 @@ int rxn_calc_deriv_gpu(SolverData *sd, N_Vector y, N_Vector deriv, double time_s
      //f_gpu
     time_step, md->n_per_cell_dep_var,
      md->n_per_cell_state_var,n_cells,
-     i_kernel, threads_block,n_shr_empty, bicg->dcv_y,
+     i_kernel, threads_block,n_shr_empty, mGPU->dcv_y,
      sd->mGPU
      );
   }
@@ -1286,7 +1286,7 @@ int rxn_calc_deriv_gpu(SolverData *sd, N_Vector y, N_Vector deriv, double time_s
 
 
     //HANDLE_ERROR(cudaMemcpy(mGPU->deriv_data, deriv_data, md->deriv_size, cudaMemcpyHostToDevice));
-    //HANDLE_ERROR(cudaMemcpy(bicg->dcv_y, deriv_data, md->deriv_size, cudaMemcpyHostToDevice));
+    //HANDLE_ERROR(cudaMemcpy(mGPU->dcv_y, deriv_data, md->deriv_size, cudaMemcpyHostToDevice));
     //HANDLE_ERROR(cudaMemcpy(mGPU->state, md->total_state, md->state_size, cudaMemcpyHostToDevice));
 
 
@@ -1773,8 +1773,8 @@ void cudaDeviceJac0(
     bicg->jA[i]=SM_INDEXVALS_S(J)[i];
     (SM_DATA_S(J))[i] = (realtype)0.0;
   }
-  cudaMemcpy(bicg->djA,bicg->jA,mGPU->nnz*sizeof(int),cudaMemcpyHostToDevice);
-  cudaMemcpy(bicg->diA,bicg->iA,(mGPU->nrows+1)*sizeof(int),cudaMemcpyHostToDevice);
+  cudaMemcpy(mGPU->djA,bicg->jA,mGPU->nnz*sizeof(int),cudaMemcpyHostToDevice);
+  cudaMemcpy(mGPU->diA,bicg->iA,(mGPU->nrows+1)*sizeof(int),cudaMemcpyHostToDevice);
 
 #endif
 
@@ -1911,8 +1911,8 @@ int rxn_calc_jac_gpu(SolverData *sd, SUNMatrix J, double time_step, N_Vector der
     bicg->jA[i]=SM_INDEXVALS_S(J)[i];
     (SM_DATA_S(J))[i] = (realtype)0.0;
   }
-  cudaMemcpy(bicg->djA,bicg->jA,mGPU->nnz*sizeof(int),cudaMemcpyHostToDevice);
-  cudaMemcpy(bicg->diA,bicg->iA,(mGPU->nrows+1)*sizeof(int),cudaMemcpyHostToDevice);
+  cudaMemcpy(mGPU->djA,bicg->jA,mGPU->nnz*sizeof(int),cudaMemcpyHostToDevice);
+  cudaMemcpy(mGPU->diA,bicg->iA,(mGPU->nrows+1)*sizeof(int),cudaMemcpyHostToDevice);
 
 #endif
 
@@ -1935,16 +1935,16 @@ int rxn_calc_jac_gpu(SolverData *sd, SUNMatrix J, double time_step, N_Vector der
             sd->counterDerivGPU,
 #endif
             //update_state
-            threshhold, replacement_value, bicg->dflag,
+            threshhold, replacement_value, mGPU->flag,
             //f_gpu
             time_step, md->n_per_cell_dep_var,
             md->n_per_cell_state_var,md->n_cells,
-            i_kernel, threads_block,n_shr_empty, bicg->dcv_y,
-            sd->mGPU, bicg->dftemp
+            i_kernel, threads_block,n_shr_empty, mGPU->dcv_y,
+            sd->mGPU, mGPU->dftemp
     );
   }
 
-  cudaMemcpy(&flag,bicg->dflag,1*sizeof(int),cudaMemcpyDeviceToHost);
+  cudaMemcpy(&flag,mGPU->flag,1*sizeof(int),cudaMemcpyDeviceToHost);
 
   //printf("rxn_calc_jac_gpu flag %d\n", flag);
 

@@ -1656,7 +1656,7 @@ void cudaDevicelinsolsetup(
         double *dewt, double *dcv_tq,int *cv_nfe,
         int *cv_nsetups,
         int *cv_nst, int *nstlj, int convfail,
-        int *isavedJ, int *jsavedJ, double *savedJ,
+        int *disavedJ, int *djsavedJ, double *dsavedJ,
         int *nje
 #ifdef PMC_DEBUG_GPU
 ,int *it_pointer, double *dtBCG, double *dtPreBCG, double *dtPostBCG,
@@ -1703,7 +1703,7 @@ void cudaDevicelinsolsetup(
 
 
     //todo Optimization: JacCopy of dA only (pointers iA and jA remains unchanged during GPU ODE solver in theory)
-    cudaDeviceJacCopy(nrows, isavedJ, jsavedJ, savedJ, diA, djA, dA);
+    cudaDeviceJacCopy(nrows, disavedJ, djsavedJ, dsavedJ, diA, djA, dA);
 
     __syncthreads();
 
@@ -1758,7 +1758,7 @@ void cudaDevicelinsolsetup(
       return;
     }
 
-   cudaDeviceJacCopy(nrows, diA, djA, dA, isavedJ, jsavedJ, savedJ);
+   cudaDeviceJacCopy(nrows, diA, djA, dA, disavedJ, djsavedJ, dsavedJ);
 
   }
 
@@ -1771,7 +1771,7 @@ void cudaDevicelinsolsetup(
 
   __syncthreads();
 
-  //cudaMemcpy(bicg->A,bicg->dA,mGPU->nnz*sizeof(double),cudaMemcpyDeviceToHost);
+  //cudaMemcpy(bicg->A,mGPU->dA,mGPU->nnz*sizeof(double),cudaMemcpyDeviceToHost);
 
 
   //__syncthreads();
@@ -2060,9 +2060,8 @@ void alloc_solver_gpu2(CVodeMem cv_mem, SolverData *sd)
   int flag = 999; //CAMP_SOLVER_SUCCESS
   cudaDeviceProp prop;
 
-  bicg->flag = 999; //CAMP_SOLVER_SUCCESS
   mGPU->n_cells=md->n_cells;
-  bicg->dftemp=mGPU->deriv_data; //deriv is gpu pointer
+  mGPU->dftemp=mGPU->deriv_data; //deriv is gpu pointer
   //Init GPU ODE solver variables
   //Linking Matrix data, later this data must be allocated in GPU
   mGPU->nnz=SM_NNZ_S(J);
@@ -2079,7 +2078,9 @@ void alloc_solver_gpu2(CVodeMem cv_mem, SolverData *sd)
   //bicg->jA=(int*)SM_INDEXVALS_S(J);
   //bicg->iA=(int*)SM_INDEXPTRS_S(J);
 
-  //bicg->flag = 0; //CAMP_SOLVER_SUCCESS
+#ifdef DEBUG_CudaDeviceguess_helper
+  bicg->total_state=(double *)malloc(md->n_per_cell_state_var*md->n_cells * sizeof(double));
+#endif
 
   cudaGetDeviceProperties(&prop, device);
   mGPU->threads=prop.maxThreadsPerBlock;//set at max gpu
@@ -2088,59 +2089,48 @@ void alloc_solver_gpu2(CVodeMem cv_mem, SolverData *sd)
   mGPU->blocks=(mGPU->nrows+mGPU->threads-1)/mGPU->threads;
 
   //ODE aux variables
-  cudaMalloc((void**)&bicg->dflag,1*sizeof(int));
-  cudaMalloc((void**)&bicg->dgammap,1*sizeof(double));
-  cudaMalloc((void**)&bicg->cv_jcur,1*sizeof(int));
-  cudaMalloc((void**)&bicg->nje,1*sizeof(int));
-  cudaMalloc((void**)&bicg->nstlj,1*sizeof(int));
-  cudaMalloc((void**)&bicg->cv_nst,1*sizeof(int));
-  cudaMalloc((void**)&bicg->cv_nsetups,1*sizeof(int));
-  cudaMalloc((void**)&bicg->cv_nfe,1*sizeof(int));
+  mGPU->dA=mGPU->J;//set itsolver gpu pointer to jac pointer initialized at camp
 
-  cudaMemcpy(bicg->dflag,&bicg->flag,1*sizeof(int),cudaMemcpyHostToDevice);
-  cudaMemset(bicg->cv_nsetups, 0, 1*sizeof(int));
-  cudaMemset(bicg->cv_nfe, 0, 1*sizeof(int));
-
-
-
-#ifdef DEBUG_CudaDeviceguess_helper
-  bicg->total_state=(double *)malloc(md->n_per_cell_state_var*md->n_cells * sizeof(double));
-#endif
-
-  // Allocating matrix data to the GPU
-  bicg->dA=mGPU->J;//set itsolver gpu pointer to jac pointer initialized at camp
-  //cudaMemcpy(bicg->A, bicg->dA, mGPU->nnz*sizeof(double), cudaMemcpyDeviceToHost);
-  cudaMalloc((void**)&bicg->djA,mGPU->nnz*sizeof(int));
-  cudaMalloc((void**)&bicg->diA,(mGPU->nrows+1)*sizeof(int));
-  cudaMalloc((void**)&bicg->dB,mGPU->nnz*sizeof(double));
-  cudaMalloc((void**)&bicg->djB,mGPU->nnz*sizeof(int));
-  cudaMalloc((void**)&bicg->diB,(mGPU->nrows+1)*sizeof(int));
-  cudaMalloc((void**)&bicg->dsavedJ,mGPU->nnz*sizeof(double));
-  cudaMalloc((void**)&bicg->djsavedJ,mGPU->nnz*sizeof(int));
-  cudaMalloc((void**)&bicg->disavedJ,(mGPU->nrows+1)*sizeof(int));
-
-
-  cudaMalloc((void**)&bicg->dcv_tq,5*sizeof(double));
-  cudaMalloc((void**)&bicg->dewt,mGPU->nrows*sizeof(double));
-  cudaMalloc((void**)&bicg->dacor,mGPU->nrows*sizeof(double));
+  cudaMalloc((void**)&mGPU->mdv,sizeof(ModelDataVariable));
+  cudaMalloc((void**)&mGPU->flag,1*sizeof(int));
+  cudaMalloc((void**)&mGPU->cv_jcur,1*sizeof(int));
+  cudaMalloc((void**)&mGPU->nje,1*sizeof(int));
+  cudaMalloc((void**)&mGPU->cv_nst,1*sizeof(int));
+  cudaMalloc((void**)&mGPU->djA,mGPU->nnz*sizeof(int));
+  cudaMalloc((void**)&mGPU->diA,(mGPU->nrows+1)*sizeof(int));
+  cudaMalloc((void**)&mGPU->dB,mGPU->nnz*sizeof(double));
+  cudaMalloc((void**)&mGPU->djB,mGPU->nnz*sizeof(int));
+  cudaMalloc((void**)&mGPU->diB,(mGPU->nrows+1)*sizeof(int));
+  cudaMalloc((void**)&mGPU->dsavedJ,mGPU->nnz*sizeof(double));
+  cudaMalloc((void**)&mGPU->djsavedJ,mGPU->nnz*sizeof(int));
+  cudaMalloc((void**)&mGPU->disavedJ,(mGPU->nrows+1)*sizeof(int));
+  cudaMalloc((void**)&mGPU->dcv_tq,5*sizeof(double));
+  cudaMalloc((void**)&mGPU->dewt,mGPU->nrows*sizeof(double));
+  cudaMalloc((void**)&mGPU->dacor,mGPU->nrows*sizeof(double));
   cudaMalloc((void**)&mGPU->dtempv,mGPU->nrows*sizeof(double));
   cudaMalloc((void**)&mGPU->dtempv1,mGPU->nrows*sizeof(double));
   cudaMalloc((void**)&mGPU->dtempv2,mGPU->nrows*sizeof(double));
   cudaMalloc((void**)&mGPU->dzn,mGPU->nrows*(cv_mem->cv_qmax+1)*sizeof(double));
-  cudaMalloc((void**)&bicg->dcv_y,mGPU->nrows*sizeof(double));
-  cudaMalloc((void**)&bicg->dx,mGPU->nrows*sizeof(double));
+  cudaMalloc((void**)&mGPU->dcv_y,mGPU->nrows*sizeof(double));
+  cudaMalloc((void**)&mGPU->dx,mGPU->nrows*sizeof(double));
+  cudaMalloc((void**)&mGPU->cv_last_yn,mGPU->nrows*sizeof(double));
+  cudaMalloc((void**)&mGPU->cv_acor_init,mGPU->nrows*sizeof(double));
+  cudaMalloc((void**)&mGPU->dacor,mGPU->nrows*sizeof(double));
+  cudaMalloc((void**)&mGPU->cv_nst,1*sizeof(int));
+  cudaMalloc((void**)&mGPU->cv_last_yn,mGPU->nrows*sizeof(double));
+  cudaMalloc((void**)&mGPU->cv_acor_init,mGPU->nrows*sizeof(double));
+  cudaMalloc((void**)&mGPU->dacor,mGPU->nrows*sizeof(double));
+  cudaMalloc((void**)&mGPU->cv_nst,1*sizeof(int));
 
-
-  cudaMemcpy(bicg->djA,bicg->jA,mGPU->nnz*sizeof(int),cudaMemcpyHostToDevice);
-  cudaMemcpy(bicg->diA,bicg->iA,(mGPU->nrows+1)*sizeof(int),cudaMemcpyHostToDevice);
-  cudaMemcpy(bicg->dsavedJ,bicg->A,mGPU->nnz*sizeof(double),cudaMemcpyHostToDevice);
-  cudaMemcpy(bicg->djsavedJ,bicg->jA,mGPU->nnz*sizeof(int),cudaMemcpyHostToDevice);
-  cudaMemcpy(bicg->disavedJ,bicg->iA,(mGPU->nrows+1)*sizeof(int),cudaMemcpyHostToDevice);
-  cudaMemcpy(bicg->dewt,ewt,mGPU->nrows*sizeof(double),cudaMemcpyHostToDevice);
-  cudaMemcpy(bicg->dacor,ewt,mGPU->nrows*sizeof(double),cudaMemcpyHostToDevice);
-  cudaMemcpy(bicg->dftemp,ewt,mGPU->nrows*sizeof(double),cudaMemcpyHostToDevice);
-  cudaMemcpy(bicg->dx,tempv,mGPU->nnz*sizeof(double),cudaMemcpyHostToDevice);
-
+  cudaMemcpy(mGPU->djA,bicg->jA,mGPU->nnz*sizeof(int),cudaMemcpyHostToDevice);
+  cudaMemcpy(mGPU->diA,bicg->iA,(mGPU->nrows+1)*sizeof(int),cudaMemcpyHostToDevice);
+  cudaMemcpy(mGPU->dsavedJ,bicg->A,mGPU->nnz*sizeof(double),cudaMemcpyHostToDevice);
+  cudaMemcpy(mGPU->djsavedJ,bicg->jA,mGPU->nnz*sizeof(int),cudaMemcpyHostToDevice);
+  cudaMemcpy(mGPU->disavedJ,bicg->iA,(mGPU->nrows+1)*sizeof(int),cudaMemcpyHostToDevice);
+  cudaMemcpy(mGPU->dewt,ewt,mGPU->nrows*sizeof(double),cudaMemcpyHostToDevice);
+  cudaMemcpy(mGPU->dacor,ewt,mGPU->nrows*sizeof(double),cudaMemcpyHostToDevice);
+  cudaMemcpy(mGPU->dftemp,ewt,mGPU->nrows*sizeof(double),cudaMemcpyHostToDevice);
+  cudaMemcpy(mGPU->dx,tempv,mGPU->nnz*sizeof(double),cudaMemcpyHostToDevice);
 
 
 
@@ -2157,52 +2147,20 @@ void alloc_solver_gpu2(CVodeMem cv_mem, SolverData *sd)
   mGPU->deriv_length_cell=mGPU->nrows/mGPU->n_cells;
   mGPU->state_size_cell=md->n_per_cell_state_var;
 
-  cudaMalloc((void**)&mGPU->mdv,sizeof(ModelDataVariable));
 
   //ODE aux variables
 
-  cudaMalloc((void**)&mGPU->flag,1*sizeof(int));
-  cudaMalloc((void**)&mGPU->cv_nst,1*sizeof(int));
+  //cudaMalloc((void**)&mGPU->flag,1*sizeof(int));
 
   cudaMemcpy(mGPU->flag,&flag,1*sizeof(int),cudaMemcpyHostToDevice);
 
   // Allocating matrix data to the GPU
   mGPU->dA=mGPU->J;
-  cudaMalloc((void**)&mGPU->djA,mGPU->nnz*sizeof(int));
-  cudaMalloc((void**)&mGPU->diA,(mGPU->nrows+1)*sizeof(int));
-  cudaMalloc((void**)&mGPU->dB,mGPU->nnz*sizeof(double));
-  cudaMalloc((void**)&mGPU->djB,mGPU->nnz*sizeof(int));
-  cudaMalloc((void**)&mGPU->diB,(mGPU->nrows+1)*sizeof(int));
-  cudaMalloc((void**)&mGPU->savedJ,mGPU->nnz*sizeof(double));
-  cudaMalloc((void**)&mGPU->jsavedJ,mGPU->nnz*sizeof(int));
-  cudaMalloc((void**)&mGPU->isavedJ,(mGPU->nrows+1)*sizeof(int));
-  cudaMalloc((void**)&mGPU->dcv_tq,5*sizeof(double));
-  cudaMalloc((void**)&mGPU->dewt,mGPU->nrows*sizeof(double));
-  cudaMalloc((void**)&mGPU->dtempv,mGPU->nrows*sizeof(double));
-  cudaMalloc((void**)&mGPU->dtempv1,mGPU->nrows*sizeof(double));
-  cudaMalloc((void**)&mGPU->dtempv2,mGPU->nrows*sizeof(double));
-  cudaMalloc((void**)&mGPU->dzn,mGPU->nrows*(cv_mem->cv_qmax+1)*sizeof(double));
-  cudaMalloc((void**)&mGPU->dcv_y,mGPU->nrows*sizeof(double));
-  cudaMalloc((void**)&mGPU->dx,mGPU->nrows*sizeof(double));
-  cudaMalloc((void**)&mGPU->cv_last_yn,mGPU->nrows*sizeof(double));
-  cudaMalloc((void**)&mGPU->cv_acor_init,mGPU->nrows*sizeof(double));
-  cudaMalloc((void**)&mGPU->dacor,mGPU->nrows*sizeof(double));
 
-  cudaMemcpy(mGPU->djA,bicg->jA,mGPU->nnz*sizeof(int),cudaMemcpyHostToDevice);
-  cudaMemcpy(mGPU->diA,bicg->iA,(mGPU->nrows+1)*sizeof(int),cudaMemcpyHostToDevice);
-  cudaMemcpy(mGPU->savedJ,bicg->A,mGPU->nnz*sizeof(double),cudaMemcpyHostToDevice);
-  cudaMemcpy(mGPU->jsavedJ,bicg->jA,mGPU->nnz*sizeof(int),cudaMemcpyHostToDevice);
-  cudaMemcpy(mGPU->isavedJ,bicg->iA,(mGPU->nrows+1)*sizeof(int),cudaMemcpyHostToDevice);
-  cudaMemcpy(mGPU->dewt,ewt,mGPU->nrows*sizeof(double),cudaMemcpyHostToDevice);
-  cudaMemcpy(mGPU->dftemp,ewt,mGPU->nrows*sizeof(double),cudaMemcpyHostToDevice);
-  cudaMemcpy(mGPU->dx,tempv,mGPU->nnz*sizeof(double),cudaMemcpyHostToDevice);
+
   cudaMemcpy(mGPU->cv_last_yn,cv_last_yn,mGPU->nrows*sizeof(double),cudaMemcpyHostToDevice);
   cudaMemcpy(mGPU->cv_acor_init,cv_acor_init,mGPU->nrows*sizeof(double),cudaMemcpyHostToDevice);
   cudaMemcpy(mGPU->dacor,ewt,mGPU->nrows*sizeof(double),cudaMemcpyHostToDevice);
-
-
-
-
 
 
   //Init Linear Solver variables
@@ -2212,7 +2170,6 @@ void alloc_solver_gpu2(CVodeMem cv_mem, SolverData *sd)
   mdv->cv_nsetups=0;
   mdv->nje=0;
   mdv->nstlj=0;
-
 
 
   //Check if everything is correct
@@ -2638,7 +2595,7 @@ void cudaDevicecvNewtonIteration(
 
     if (dcon <= 1.0) {
       cudaDeviceVWRMS_Norm(dacor, dewt, &md->cv_acnrm, nrows, n_shr);
-      //cv_mem->cv_acnrm = gpu_VWRMS_Norm(mGPU->nrows, bicg->dacor, bicg->dewt, bicg->aux,
+      //cv_mem->cv_acnrm = gpu_VWRMS_Norm(mGPU->nrows, mGPU->dacor, mGPU->dewt, bicg->aux,
       //  //                                    mGPU->daux, (mGPU->blocks + 1) / 2, mGPU->threads);
 
       __syncthreads();
@@ -2684,7 +2641,7 @@ void cudaDevicecvNewtonIteration(
 
     // a*x + b*y = z
     cudaDevicezaxpby(1., dcv_y, 1., dzn, dacor, nrows);
-    //gpu_zaxpby(1.0, bicg->dcv_y, -1.0, mGPU->dzn, bicg->dacor, mGPU->nrows, mGPU->blocks, mGPU->threads);
+    //gpu_zaxpby(1.0, mGPU->dcv_y, -1.0, mGPU->dzn, mGPU->dacor, mGPU->nrows, mGPU->blocks, mGPU->threads);
     __syncthreads();
 
 #ifdef PMC_DEBUG_GPU
@@ -2762,7 +2719,7 @@ void cudaDevicecvNlsNewton(
         double *dewt, double *dcv_tq,int *cv_nfe,
         int *cv_nsetups,
         int *cv_nst, int *nstlj,
-        int *isavedJ, int *jsavedJ, double *savedJ,
+        int *disavedJ, int *djsavedJ, double *dsavedJ,
         int *nje
 #ifdef PMC_DEBUG_GPU
 ,int *it_pointer, double *dtBCG, double *dtPreBCG, double *dtPostBCG,
@@ -2943,7 +2900,7 @@ void cudaDevicecvNlsNewton(
               dewt, dcv_tq, cv_nfe,
               cv_nsetups,
               cv_nst, nstlj, convfail,
-              isavedJ, jsavedJ, savedJ,
+              disavedJ, djsavedJ, dsavedJ,
               nje
 #ifdef PMC_DEBUG_GPU
       ,it_pointer, dtBCG, dtPreBCG, dtPostBCG,
@@ -3086,7 +3043,7 @@ void cudaGlobalSolveODE(
         double *dewt, double *dcv_tq,int *cv_nfe,
         int *cv_nsetups,
         int *cv_nst, int *nstlj,
-        int *isavedJ, int *jsavedJ, double *savedJ,
+        int *disavedJ, int *djsavedJ, double *dsavedJ,
         int *nje
 #ifdef PMC_DEBUG_GPU
 ,int *it_pointer, double *dtBCG, double *dtPreBCG, double *dtPostBCG,
@@ -3128,7 +3085,7 @@ void cudaGlobalSolveODE(
           dewt, dcv_tq, cv_nfe,
           cv_nsetups,
           cv_nst, nstlj,
-          isavedJ, jsavedJ, savedJ,
+          disavedJ, djsavedJ, dsavedJ,
           nje
 #ifdef PMC_DEBUG_GPU
   ,it_pointer, dtBCG, dtPreBCG, dtPostBCG,
@@ -3164,7 +3121,7 @@ void CudaGlobalguess_helper(
         double *dewt, double *dcv_tq,int *cv_nfe,
         int *cv_nsetups,
         int *cv_nst, int *nstlj,
-        int *isavedJ, int *jsavedJ, double *savedJ,
+        int *disavedJ, int *djsavedJ, double *dsavedJ,
         int *nje
 #ifdef PMC_DEBUG_GPU
 ,int *it_pointer, double *dtBCG, double *dtPreBCG, double *dtPostBCG,
@@ -3436,12 +3393,12 @@ void solveCVODEGPU_thr(int blocks, int threads_block, int n_shr_memory, int n_sh
   //int offset_nrows=0;
 
   //Works always supposing the same jac structure for all cells (same reactions on all cells)
-  int *djA=bicg->djA;
-  int *diA=bicg->diA;
+  int *djA=mGPU->djA;
+  int *diA=mGPU->diA;
 
-  double *dA=bicg->dA+offset_nnz;
+  double *dA=mGPU->dA+offset_nnz;
   double *ddiag=mGPU->ddiag+offset_nrows;
-  double *dx=bicg->dx+offset_nrows;
+  double *dx=mGPU->dx+offset_nrows;
   double *dtempv=mGPU->dtempv+offset_nrows;
 
   double *acor = NV_DATA_S(cv_mem->cv_acor);
@@ -3458,8 +3415,6 @@ void solveCVODEGPU_thr(int blocks, int threads_block, int n_shr_memory, int n_sh
   double replacement_value = TINY;
   double threshhold = -SMALL;
   int flag = 0; //CAMP_SOLVER_SUCCESS
-  //bicg->flag = 0;
-  //int *flag = &bicg->flag = 0;
   //f_gpu
   int i_kernel=0;
   double t=cv_mem->cv_tn;
@@ -3570,22 +3525,22 @@ void solveCVODEGPU_thr(int blocks, int threads_block, int n_shr_memory, int n_sh
    (dA, djA, diA, dx, mGPU->dtempv, nrows, blocks, n_shr_empty, maxIt, mattype, mGPU->n_cells,
      tolmax, ddiag, dr0, dr0h, dn0, dp0, dt, ds, dAx2, dy, dz,
      //swapCSC_CSR_BCG
-     bicg->diB, bicg->djB, bicg->dB,
+     mGPU->diB, mGPU->djB, mGPU->dB,
      //Guess_helper
-     cv_mem->cv_tn, cv_mem->cv_h, bicg->dftemp,
-     bicg->dcv_y, mGPU->dtempv1,
+     cv_mem->cv_tn, cv_mem->cv_h, mGPU->dftemp,
+     mGPU->dcv_y, mGPU->dtempv1,
      mGPU->dtempv2, ((CVodeMem) sd->cvode_mem)->cv_reltol,
      //update_state
-     threshhold, replacement_value, bicg->dflag,//&flag,
+     threshhold, replacement_value, mGPU->flag,//&flag,
      //f_gpu
      time_step, len_cell, md->n_per_cell_state_var,
      i_kernel, threads_block, sd->mGPU,
      //cudacvNewtonIteration
-     bicg->dacor, mGPU->dzn, bicg->dewt,
-     bicg->dcv_tq, bicg->cv_nfe, bicg->cv_nsetups,
-     bicg->cv_nst, bicg->nstlj,
-     bicg->disavedJ, bicg->djsavedJ, bicg->dsavedJ,
-     bicg->nje
+     mGPU->dacor, mGPU->dzn, mGPU->dewt,
+     mGPU->dcv_tq, &mdv->cv_nfe, &mdv->cv_nsetups,
+     mGPU->cv_nst, &mdv->nstlj,
+     mGPU->disavedJ, mGPU->djsavedJ, mGPU->dsavedJ,
+     mGPU->nje
 #ifdef PMC_DEBUG_GPU
   ,mdv->counterBCGInternal, &mdv->dtBCG,
       &mdv->dtPreBCG, &mdv->dtPostBCG, sd->counterDerivGPU
@@ -3603,10 +3558,10 @@ void solveCVODEGPU_thr(int blocks, int threads_block, int n_shr_memory, int n_sh
   double *zn0 = NV_DATA_S(cv_mem->cv_zn[0]);
   cudaMemcpy(cv_zn, mGPU->dzn, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost);
   cudaMemcpy(cv_last_yn, mGPU->cv_last_yn, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost);
-  cudaMemcpy(cv_ftemp, bicg->dftemp, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost);
+  cudaMemcpy(cv_ftemp, mGPU->dftemp, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost);
   cudaMemcpy(cv_tempv, mGPU->dtempv, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost);
   cudaMemcpy(cv_acor_init, mGPU->cv_acor_init, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost);
-  HANDLE_ERROR(cudaMemcpy(&flag, bicg->dflag, 1 * sizeof(int), cudaMemcpyDeviceToHost));
+  HANDLE_ERROR(cudaMemcpy(&flag, mGPU->flag, 1 * sizeof(int), cudaMemcpyDeviceToHost));
 
   //compare
 
@@ -3659,7 +3614,7 @@ void solveCVODEGPU_thr(int blocks, int threads_block, int n_shr_memory, int n_sh
 
   if (retval<0 || flag<0){
     retval=RHSFUNC_RECVR;
-    HANDLE_ERROR(cudaMemcpy(bicg->dflag, &retval, 1 * sizeof(int), cudaMemcpyHostToDevice));
+    HANDLE_ERROR(cudaMemcpy(mGPU->flag, &retval, 1 * sizeof(int), cudaMemcpyHostToDevice));
     return;
   }
 
@@ -3674,22 +3629,22 @@ void solveCVODEGPU_thr(int blocks, int threads_block, int n_shr_memory, int n_sh
   (dA, djA, diA, dx, mGPU->dtempv, nrows, blocks, n_shr_empty, maxIt, mattype, mGPU->n_cells,
         tolmax, ddiag, dr0, dr0h, dn0, dp0, dt, ds, dAx2, dy, dz,
         //swapCSC_CSR_BCG
-        bicg->diB, bicg->djB, bicg->dB,
+        mGPU->diB, mGPU->djB, mGPU->dB,
         //Guess_helper
-        cv_mem->cv_tn, cv_mem->cv_h, bicg->dftemp,
-        bicg->dcv_y, mGPU->dtempv1,
+        cv_mem->cv_tn, cv_mem->cv_h, mGPU->dftemp,
+        mGPU->dcv_y, mGPU->dtempv1,
         mGPU->dtempv2, ((CVodeMem) sd->cvode_mem)->cv_reltol,
         //update_state
-        threshhold, replacement_value, bicg->dflag,//&flag,
+        threshhold, replacement_value, mGPU->flag,//&flag,
         //f_gpu
         time_step, len_cell, md->n_per_cell_state_var,
         i_kernel, threads_block, sd->mGPU,
         //cudacvNewtonIteration
-        bicg->dacor, mGPU->dzn, bicg->dewt,
-        bicg->dcv_tq, bicg->cv_nfe, bicg->cv_nsetups,
-        bicg->cv_nst, bicg->nstlj,
-        bicg->disavedJ, bicg->djsavedJ, bicg->dsavedJ,
-        bicg->nje
+        mGPU->dacor, mGPU->dzn, mGPU->dewt,
+        mGPU->dcv_tq, &mdv->cv_nfe, &mdv->cv_nsetups,
+        mGPU->cv_nst, &mdv->nstlj,
+        mGPU->disavedJ, mGPU->djsavedJ, mGPU->dsavedJ,
+        mGPU->nje
 #ifdef PMC_DEBUG_GPU
   ,&mdv->counterBCGInternal, &mdv->dtBCG,
       &mdv->dtPreBCG, &mdv->dtPostBCG, sd->counterDerivGPU
@@ -3838,11 +3793,11 @@ int cudacvNewtonIteration(SolverData *sd, CVodeMem cv_mem)
   solveCVODEGPU(sd, cv_mem);
   cudaDeviceSynchronize();
 
-  HANDLE_ERROR(cudaMemcpy(&flag,bicg->dflag,1*sizeof(int),cudaMemcpyDeviceToHost));
+  HANDLE_ERROR(cudaMemcpy(&flag,mGPU->flag,1*sizeof(int),cudaMemcpyDeviceToHost));
   //printf("flag %d \n",flag);
 
-  cudaMemcpy(acor,bicg->dacor,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
-  cudaMemcpy(tempv,bicg->dx,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
+  cudaMemcpy(acor,mGPU->dacor,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
+  cudaMemcpy(tempv,mGPU->dx,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
   return(flag);
 
   //return 0;
@@ -3865,7 +3820,7 @@ int cudacvNlsNewton(SolverData *sd, CVodeMem cv_mem, int nflag) {
   int flag = 0;
 
 
-  cudaMemcpy(bicg->dcv_tq, cv_mem->cv_tq, 5 * sizeof(double), cudaMemcpyHostToDevice);
+  cudaMemcpy(mGPU->dcv_tq, cv_mem->cv_tq, 5 * sizeof(double), cudaMemcpyHostToDevice);
 
   int znUsedOnNewtonIt = 2;//Only used zn[0] and zn[1] //0.01s
   for (int i = 0; i < znUsedOnNewtonIt; i++) {//cv_qmax+1
@@ -3920,14 +3875,13 @@ int cudacvNlsNewton(SolverData *sd, CVodeMem cv_mem, int nflag) {
 #endif
 
   //todo clean unneded cudamemcpy
-  cudaMemcpy(bicg->dacor, acor, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice);
+  cudaMemcpy(mGPU->dacor, acor, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice);
   cudaMemcpy(mGPU->dtempv, tempv, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice);
-  cudaMemcpy(bicg->dftemp, ftemp, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice);
-  cudaMemcpy(bicg->dgammap, &cv_mem->cv_gammap, 1 * sizeof(double), cudaMemcpyHostToDevice);
+  cudaMemcpy(mGPU->dftemp, ftemp, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice);
   cudaMemcpy(mGPU->cv_last_yn,cv_last_yn,mGPU->nrows*sizeof(double),cudaMemcpyHostToDevice);
   cudaMemcpy(mGPU->cv_acor_init,cv_acor_init,mGPU->nrows*sizeof(double),cudaMemcpyHostToDevice);
-  cudaMemcpy(bicg->cv_jcur, &cv_mem->cv_jcur, 1 * sizeof(int), cudaMemcpyHostToDevice);//todo needed?
-  cudaMemcpy(bicg->cv_nst, &cv_mem->cv_nst, 1 * sizeof(int), cudaMemcpyHostToDevice);
+  //cudaMemcpy(mGPU->cv_jcur, &cv_mem->cv_jcur, 1 * sizeof(int), cudaMemcpyHostToDevice);//todo needed?
+  cudaMemcpy(mGPU->cv_nst, &cv_mem->cv_nst, 1 * sizeof(int), cudaMemcpyHostToDevice);
 
   double min = N_VMin(cv_mem->cv_zn[0]);
   mGPU->min=min;
@@ -3948,19 +3902,19 @@ int cudacvNlsNewton(SolverData *sd, CVodeMem cv_mem, int nflag) {
 
   cudaMemcpy(zn0, mGPU->dzn, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost);
   cudaMemcpy(cv_last_yn, mGPU->cv_last_yn, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost);
-  cudaMemcpy(ftemp, bicg->dftemp, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost);
+  cudaMemcpy(ftemp, mGPU->dftemp, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost);
   cudaMemcpy(tempv, mGPU->dtempv, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost);
-  //cudaMemcpy(tempv, bicg->dx, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost);
-  cudaMemcpy(acor, bicg->dacor, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost);
+  //cudaMemcpy(tempv, mGPU->dx, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost);
+  cudaMemcpy(acor, mGPU->dacor, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost);
   cudaMemcpy(cv_acor_init, mGPU->cv_acor_init, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost);
 
 
   //printf("DEV_cudacvNlsNewton B\n");
 
-  cudaMemcpy(&cv_mem->cv_nst, bicg->cv_nst, 1 * sizeof(int), cudaMemcpyDeviceToHost);
+  cudaMemcpy(&cv_mem->cv_nst, mGPU->cv_nst, 1 * sizeof(int), cudaMemcpyDeviceToHost);
   //acnrm?
 
-  HANDLE_ERROR(cudaMemcpy(&flag, bicg->dflag, 1 * sizeof(int), cudaMemcpyDeviceToHost));
+  HANDLE_ERROR(cudaMemcpy(&flag, mGPU->flag, 1 * sizeof(int), cudaMemcpyDeviceToHost));
 
   printf("DEV_cudacvNlsNewton counterBiConjGrad %d\n",bicg->counterBiConjGrad);
 #ifdef DEBUG_CudaDeviceguess_helper
@@ -5484,7 +5438,7 @@ int cvStep_gpu2(SolverData *sd, CVodeMem cv_mem)
   int nflag, kflag, eflag;
 
   double *ewt = NV_DATA_S(cv_mem->cv_ewt);
-  cudaMemcpy(bicg->dewt,ewt,mGPU->nrows*sizeof(double),cudaMemcpyHostToDevice);
+  cudaMemcpy(mGPU->dewt,ewt,mGPU->nrows*sizeof(double),cudaMemcpyHostToDevice);
 
   double *acor = NV_DATA_S(cv_mem->cv_acor);
   double *tempv = NV_DATA_S(cv_mem->cv_tempv);
@@ -6672,7 +6626,7 @@ int cvNlsNewton_gpu2(SolverData *sd, CVodeMem cv_mem, int nflag)
   //start=clock();
 #endif
 
-  cudaMemcpy(bicg->dcv_tq,cv_mem->cv_tq,5*sizeof(double),cudaMemcpyHostToDevice);
+  cudaMemcpy(mGPU->dcv_tq,cv_mem->cv_tq,5*sizeof(double),cudaMemcpyHostToDevice);
   //double *acor_init = NV_DATA_S(cv_mem->cv_acor_init); //user-supplied value to improve guesses for zn(0)
   double *acor = NV_DATA_S(cv_mem->cv_acor);
   double *cv_y = NV_DATA_S(cv_mem->cv_y);
@@ -6726,9 +6680,9 @@ int cvNlsNewton_gpu2(SolverData *sd, CVodeMem cv_mem, int nflag)
   if (retval<0) return(RHSFUNC_RECVR);
   }
 
-  cudaMemcpy(bicg->dacor,acor,mGPU->nrows*sizeof(double),cudaMemcpyHostToDevice);
+  cudaMemcpy(mGPU->dacor,acor,mGPU->nrows*sizeof(double),cudaMemcpyHostToDevice);
   cudaMemcpy(mGPU->dtempv,tempv,mGPU->nrows*sizeof(double),cudaMemcpyHostToDevice);
-  cudaMemcpy(bicg->dftemp,ftemp,mGPU->nrows*sizeof(double),cudaMemcpyHostToDevice);
+  cudaMemcpy(mGPU->dftemp,ftemp,mGPU->nrows*sizeof(double),cudaMemcpyHostToDevice);
 
   //remove temps, not used in jac
   vtemp1 = cv_mem->cv_acor;  /* rename acor as vtemp1 for readability  */
@@ -6742,14 +6696,14 @@ int cvNlsNewton_gpu2(SolverData *sd, CVodeMem cv_mem, int nflag)
 
     /* Load prediction into y vector */
     //N_VLinearSum(ONE, cv_mem->cv_zn[0], ONE, cv_mem->cv_acor_init, cv_mem->cv_y);
-    //gpu_zaxpby(1.0, mGPU->dzn, 1.0, bicg->dacor_init, bicg->dcv_y, mGPU->nrows, mGPU->blocks, mGPU->threads);
+    //gpu_zaxpby(1.0, mGPU->dzn, 1.0, bicg->dacor_init, mGPU->dcv_y, mGPU->nrows, mGPU->blocks, mGPU->threads);
     //gpu_yequalsx is not thread safe (need cuda_devicesync previously!)
     cudaDeviceSynchronize();
-    gpu_yequalsx(bicg->dcv_y,mGPU->dzn, mGPU->nrows, mGPU->blocks, mGPU->threads);//Consider acor_init=0
+    gpu_yequalsx(mGPU->dcv_y,mGPU->dzn, mGPU->nrows, mGPU->blocks, mGPU->threads);//Consider acor_init=0
     cudaDeviceSynchronize();
 
     //copy cv_y to enable debug on cpu
-    cudaMemcpy(cv_y,bicg->dcv_y,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
+    cudaMemcpy(cv_y,mGPU->dcv_y,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
     //retval = cv_mem->cv_f(cv_mem->cv_tn, cv_mem->cv_y,
     //                      cv_mem->cv_ftemp, cv_mem->cv_user_data);
     //int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data)
@@ -6783,8 +6737,8 @@ int cvNlsNewton_gpu2(SolverData *sd, CVodeMem cv_mem, int nflag)
     bicg->counterDerivNewton++;
 #endif
 
-    //Not needed because bicg->dftemp=md->deriv_data_gpu;
-    //cudaMemcpy(cv_ftemp_data,bicg->dftemp,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
+    //Not needed because mGPU->dftemp=md->deriv_data_gpu;
+    //cudaMemcpy(cv_ftemp_data,mGPU->dftemp,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
 
     if (retval < 0) return(CV_RHSFUNC_FAIL);
     if (retval > 0) return(RHSFUNC_RECVR);
@@ -6813,7 +6767,7 @@ int cvNlsNewton_gpu2(SolverData *sd, CVodeMem cv_mem, int nflag)
     bicg->counterLinSolSetup++;
 #endif
 
-      bicg->cv_nsetups++;
+      //mGPU->cv_nsetups++;
       callSetup = SUNFALSE;
       cv_mem->cv_gamrat = cv_mem->cv_crate = ONE;
       cv_mem->cv_gammap = cv_mem->cv_gamma;
@@ -6825,8 +6779,8 @@ int cvNlsNewton_gpu2(SolverData *sd, CVodeMem cv_mem, int nflag)
 
     // Set acor to the initial guess for adjustments to the y vector
     //N_VScale(ONE, cv_mem->cv_acor_init, cv_mem->cv_acor);
-    //gpu_yequalsx(bicg->dacor, bicg->dacor_init, mGPU->nrows, mGPU->blocks, mGPU->threads);
-    cudaMemset(bicg->dacor, 0.0, mGPU->nrows*sizeof(double));
+    //gpu_yequalsx(mGPU->dacor, bicg->dacor_init, mGPU->nrows, mGPU->blocks, mGPU->threads);
+    cudaMemset(mGPU->dacor, 0.0, mGPU->nrows*sizeof(double));
 
 #ifdef PMC_DEBUG_GPU
     cudaEventRecord(bicg->startLinSolSolve);
@@ -6936,7 +6890,7 @@ int linsolsetup_gpu2(SolverData *sd, CVodeMem cv_mem,int convfail,N_Vector vtemp
 
     //Ensure cv_y is loaded
     double *cv_y = NV_DATA_S(cv_mem->cv_y);
-    cudaMemcpy(cv_y,bicg->dcv_y,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
+    cudaMemcpy(cv_y,mGPU->dcv_y,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
 
 #ifndef DEBUG_linsolsetup_gpu2
     check_isnand(bicg->A,mGPU->nnz,"prejac");
@@ -6967,8 +6921,8 @@ int linsolsetup_gpu2(SolverData *sd, CVodeMem cv_mem,int convfail,N_Vector vtemp
                     //f_gpu
                     time_step, md->n_per_cell_dep_var,
                     md->n_per_cell_state_var,md->n_cells,
-                    i_kernel, threads_block,n_shr_empty, bicg->dcv_y,
-                    sd->mGPU, bicg->dftemp
+                    i_kernel, threads_block,n_shr_empty, mGPU->dcv_y,
+                    sd->mGPU, mGPU->dftemp
     );
 
     double *J_data = SM_DATA_S(cvdls_mem->A);
@@ -7030,9 +6984,9 @@ int linsolsetup_gpu2(SolverData *sd, CVodeMem cv_mem,int convfail,N_Vector vtemp
   cudaEventRecord(bicg->startBCGMemcpy);
 #endif
 
-  cudaMemcpy(bicg->diA,bicg->iA,(mGPU->nrows+1)*sizeof(int),cudaMemcpyHostToDevice);
-  cudaMemcpy(bicg->djA,bicg->jA,mGPU->nnz*sizeof(int),cudaMemcpyHostToDevice);
-  cudaMemcpy(bicg->dA,bicg->A,mGPU->nnz*sizeof(double),cudaMemcpyHostToDevice);
+  cudaMemcpy(mGPU->diA,bicg->iA,(mGPU->nrows+1)*sizeof(int),cudaMemcpyHostToDevice);
+  cudaMemcpy(mGPU->djA,bicg->jA,mGPU->nnz*sizeof(int),cudaMemcpyHostToDevice);
+  cudaMemcpy(mGPU->dA,bicg->A,mGPU->nnz*sizeof(double),cudaMemcpyHostToDevice);
 
 #ifndef LINSOLSOLVEGPU_INCLUDE_CUDAMEMCPY
   cudaEventRecord(bicg->stopBCGMemcpy);
@@ -7056,16 +7010,16 @@ int linsolsetup_gpu2(SolverData *sd, CVodeMem cv_mem,int convfail,N_Vector vtemp
   //clock_t start2 = clock();
 #endif
 
-  gpu_matScaleAddI(mGPU->nrows,bicg->dA,bicg->djA,bicg->diA,-cv_mem->cv_gamma,mGPU->blocks,mGPU->threads);
+  gpu_matScaleAddI(mGPU->nrows,mGPU->dA,mGPU->djA,mGPU->diA,-cv_mem->cv_gamma,mGPU->blocks,mGPU->threads);
 
-  cudaMemcpy(bicg->A,bicg->dA,mGPU->nnz*sizeof(double),cudaMemcpyDeviceToHost);
+  cudaMemcpy(bicg->A,mGPU->dA,mGPU->nnz*sizeof(double),cudaMemcpyDeviceToHost);
 
 #ifdef PMC_DEBUG_GPU
   //bicg->timeMatScaleAddI+= clock() - start2;
   //bicg->counterMatScaleAddI++;
 #endif
 
-  gpu_diagprecond(mGPU->nrows,bicg->dA,bicg->djA,bicg->diA,mGPU->ddiag,mGPU->blocks,mGPU->threads); //Setup linear solver
+  gpu_diagprecond(mGPU->nrows,mGPU->dA,mGPU->djA,mGPU->diA,mGPU->ddiag,mGPU->blocks,mGPU->threads); //Setup linear solver
 
 #ifdef DEBUG_linsolsetup_gpu2
 
@@ -7110,8 +7064,8 @@ int cvNewtonIteration_gpu2(SolverData *sd, CVodeMem cv_mem)
 
     // Evaluate the residual of the nonlinear system
     // a*x + b*y = z
-    gpu_zaxpby(cv_mem->cv_rl1, (mGPU->dzn+1*mGPU->nrows), 1.0, bicg->dacor, mGPU->dtempv, mGPU->nrows, mGPU->blocks, mGPU->threads);
-    gpu_zaxpby(cv_mem->cv_gamma, bicg->dftemp, -1.0, mGPU->dtempv, mGPU->dtempv, mGPU->nrows, mGPU->blocks, mGPU->threads);
+    gpu_zaxpby(cv_mem->cv_rl1, (mGPU->dzn+1*mGPU->nrows), 1.0, mGPU->dacor, mGPU->dtempv, mGPU->nrows, mGPU->blocks, mGPU->threads);
+    gpu_zaxpby(cv_mem->cv_gamma, mGPU->dftemp, -1.0, mGPU->dtempv, mGPU->dtempv, mGPU->nrows, mGPU->blocks, mGPU->threads);
     //N_VLinearSum(cv_mem->cv_rl1, cv_mem->cv_zn[1], ONE,
     //             cv_mem->cv_acor, cv_mem->cv_tempv);
     //N_VLinearSum(cv_mem->cv_gamma, cv_mem->cv_ftemp, -ONE,
@@ -7145,7 +7099,7 @@ int cvNewtonIteration_gpu2(SolverData *sd, CVodeMem cv_mem)
 #endif
 
 #ifdef CHECK_GPU_LINSOLVE
-    //cudaMemcpy(x,bicg->dx,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
+    //cudaMemcpy(x,mGPU->dx,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
     /*
       Seems CMake definitions only affects the current directory, so I can't apply this definitions in a separate CMakeLists... well, at the moment I left it as a only option `ENABLE_DEBUG` and then alognside `add_definitions(-DPMC_USE_GPU)` I added the rest of debug definitions if `ENABLE_DEBUG` is defined
     */
@@ -7164,37 +7118,37 @@ int cvNewtonIteration_gpu2(SolverData *sd, CVodeMem cv_mem)
       cudaMalloc((void**)&aux_dA,mGPU->nnz*sizeof(double));
       */
 
-      gpu_yequalsx(aux_dx, bicg->dx, mGPU->nrows, mGPU->blocks, mGPU->threads);
+      gpu_yequalsx(aux_dx, mGPU->dx, mGPU->nrows, mGPU->blocks, mGPU->threads);
       //gpu_yequalsx(aux_dtempv, mGPU->dtempv, mGPU->nrows, mGPU->blocks, mGPU->threads);
-      //gpu_yequalsx(aux_dA, bicg->dA, mGPU->nnz, mGPU->blocks, mGPU->threads);
+      //gpu_yequalsx(aux_dA, mGPU->dA, mGPU->nnz, mGPU->blocks, mGPU->threads);
       cudaDeviceSynchronize();
 
       //equals matrix dA
       //Compute case 1
-      solveGPU(sd,bicg->dA,bicg->djA,bicg->diA,bicg->dx,mGPU->dtempv);
-      //solveGPU_block(sd,bicg->dA,bicg->djA,bicg->diA,bicg->dx,mGPU->dtempv);
+      solveGPU(sd,mGPU->dA,mGPU->djA,mGPU->diA,mGPU->dx,mGPU->dtempv);
+      //solveGPU_block(sd,mGPU->dA,mGPU->djA,mGPU->diA,mGPU->dx,mGPU->dtempv);
 
       //Save result
-      cudaMemcpy(aux_x1,bicg->dx,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
+      cudaMemcpy(aux_x1,mGPU->dx,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
       //printf("Case 1: dx3_4 %f %f,", aux_x1[3], aux_x1[4]); //seems working
 
       //Reset input
-      gpu_yequalsx(bicg->dx, aux_dx, mGPU->nrows, mGPU->blocks, mGPU->threads);
+      gpu_yequalsx(mGPU->dx, aux_dx, mGPU->nrows, mGPU->blocks, mGPU->threads);
       //gpu_yequalsx(mGPU->dtempv, aux_dtempv, mGPU->nrows, mGPU->blocks, mGPU->threads);
-      //gpu_yequalsx(bicg->dA, aux_dA, mGPU->nnz, mGPU->blocks, mGPU->threads);
+      //gpu_yequalsx(mGPU->dA, aux_dA, mGPU->nnz, mGPU->blocks, mGPU->threads);
       cudaDeviceSynchronize();
 
       //Compute case 2
-      solveGPU_block(sd,bicg->dA,bicg->djA,bicg->diA,bicg->dx,mGPU->dtempv);
-      //solveGPU(sd,bicg->dA,bicg->djA,bicg->diA,bicg->dx,mGPU->dtempv);
+      solveGPU_block(sd,mGPU->dA,mGPU->djA,mGPU->diA,mGPU->dx,mGPU->dtempv);
+      //solveGPU(sd,mGPU->dA,mGPU->djA,mGPU->diA,mGPU->dx,mGPU->dtempv);
 
       //Save result
-      cudaMemcpy(aux_x2,bicg->dx,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
+      cudaMemcpy(aux_x2,mGPU->dx,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
 
       //Reset input
-      gpu_yequalsx(bicg->dx, aux_dx, mGPU->nrows, mGPU->blocks, mGPU->threads);
+      gpu_yequalsx(mGPU->dx, aux_dx, mGPU->nrows, mGPU->blocks, mGPU->threads);
       //gpu_yequalsx(mGPU->dtempv, aux_dtempv, mGPU->nrows, mGPU->blocks, mGPU->threads);
-      //gpu_yequalsx(bicg->dA, aux_dA, mGPU->nnz, mGPU->blocks, mGPU->threads);
+      //gpu_yequalsx(mGPU->dA, aux_dA, mGPU->nnz, mGPU->blocks, mGPU->threads);
       cudaDeviceSynchronize();
 
       //printf("Case 2: dx3_4 %f %f\n", aux_x2[3], aux_x2[4]);
@@ -7251,13 +7205,13 @@ int cvNewtonIteration_gpu2(SolverData *sd, CVodeMem cv_mem)
 
   //int k=0;
   //check_isnand(bicg->A,mGPU->nnz,k++);
-  //check_isnand_global<<<mGPU->blocks, mGPU->threads>>>(bicg->dA,mGPU->nnz,k++);
-  //check_isnand_global0<<<1, 1>>>(bicg->dA,mGPU->nnz,k++);
+  //check_isnand_global<<<mGPU->blocks, mGPU->threads>>>(mGPU->dA,mGPU->nnz,k++);
+  //check_isnand_global0<<<1, 1>>>(mGPU->dA,mGPU->nnz,k++);
 
 #endif
 
-  //solveGPU(bicg,sd->dA,bicg->djA,bicg->diA,bicg->dx,mGPU->dtempv);
-  solveGPU_block(sd,bicg->dA,bicg->djA,bicg->diA,bicg->dx,mGPU->dtempv);
+  //solveGPU(bicg,sd->dA,mGPU->djA,mGPU->diA,mGPU->dx,mGPU->dtempv);
+  solveGPU_block(sd,mGPU->dA,mGPU->djA,mGPU->diA,mGPU->dx,mGPU->dtempv);
 
 #ifdef DEBUG_LINEAR_SOLVERS
 
@@ -7266,7 +7220,7 @@ int cvNewtonIteration_gpu2(SolverData *sd, CVodeMem cv_mem)
     printf("DEBUG_SOLVEBCGCUDA call %d\n",bicg->counterBiConjGrad);
     double *aux_x1;//output case 1
     aux_x1=(double*)malloc(mGPU->nrows*sizeof(double));
-    cudaMemcpy(aux_x1,bicg->dx,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
+    cudaMemcpy(aux_x1,mGPU->dx,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
 
     //printf("%d %-le",mGPU->nrows,aux_x1[mGPU->nrows]);
     printf("dx in out\n");//mGPU->nrows
@@ -7308,9 +7262,9 @@ int cvNewtonIteration_gpu2(SolverData *sd, CVodeMem cv_mem)
 
 #endif
 
-    cudaMemcpy(cv_ftemp,bicg->dftemp,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
-    cudaMemcpy(cv_y,bicg->dcv_y,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
-    cudaMemcpy(b_ptr,bicg->dx,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
+    cudaMemcpy(cv_ftemp,mGPU->dftemp,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
+    cudaMemcpy(cv_y,mGPU->dcv_y,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
+    cudaMemcpy(b_ptr,mGPU->dx,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
 
     if (cv_mem->cv_ghfun) {
       N_VLinearSum(ONE, cv_mem->cv_y, ONE, b, cv_mem->cv_ftemp);
@@ -7332,14 +7286,14 @@ int cvNewtonIteration_gpu2(SolverData *sd, CVodeMem cv_mem)
       return(CONV_FAIL);
     }
 
-    cudaMemcpy(bicg->dftemp,cv_ftemp,mGPU->nrows*sizeof(double),cudaMemcpyHostToDevice);
+    cudaMemcpy(mGPU->dftemp,cv_ftemp,mGPU->nrows*sizeof(double),cudaMemcpyHostToDevice);
 
-    //cudaMemcpy(bicg->dftemp,cv_mem->cv_tempv2,mGPU->nrows*sizeof(double),cudaMemcpyHostToDevice);
+    //cudaMemcpy(mGPU->dftemp,cv_mem->cv_tempv2,mGPU->nrows*sizeof(double),cudaMemcpyHostToDevice);
 
     //add correction to acor and y
     // a*x + b*y = z
-    gpu_zaxpby(1.0, bicg->dacor, 1.0, bicg->dx, bicg->dacor, mGPU->nrows, mGPU->blocks, mGPU->threads);
-    gpu_zaxpby(1.0, mGPU->dzn, 1.0, bicg->dacor, bicg->dcv_y, mGPU->nrows, mGPU->blocks, mGPU->threads);
+    gpu_zaxpby(1.0, mGPU->dacor, 1.0, mGPU->dx, mGPU->dacor, mGPU->nrows, mGPU->blocks, mGPU->threads);
+    gpu_zaxpby(1.0, mGPU->dzn, 1.0, mGPU->dacor, mGPU->dcv_y, mGPU->nrows, mGPU->blocks, mGPU->threads);
 
     //(T a, const T *X, T b, const T *Y, T *Z, I n)
     //Z[i] = a*X[i] + b*Y[i];
@@ -7347,7 +7301,7 @@ int cvNewtonIteration_gpu2(SolverData *sd, CVodeMem cv_mem)
     //N_VLinearSum(ONE, cv_mem->cv_zn[0], ONE, cv_mem->cv_acor, cv_mem->cv_y);
 
     // Get WRMS norm of correction
-    del = gpu_VWRMS_Norm(mGPU->nrows, bicg->dx, bicg->dewt, bicg->aux, mGPU->daux, (mGPU->blocks + 1) / 2, mGPU->threads);
+    del = gpu_VWRMS_Norm(mGPU->nrows, mGPU->dx, mGPU->dewt, bicg->aux, mGPU->daux, (mGPU->blocks + 1) / 2, mGPU->threads);
 
     // Test for convergence.  If m > 0, an estimate of the convergence
     // rate constant is stored in crate, and used in the test.
@@ -7368,12 +7322,12 @@ int cvNewtonIteration_gpu2(SolverData *sd, CVodeMem cv_mem)
 
     if (dcon <= 1.0) {
       //cv_mem->cv_acnrm = N_VWrmsNorm(cv_mem->cv_acor, cv_mem->cv_ewt);
-      cv_mem->cv_acnrm = gpu_VWRMS_Norm(mGPU->nrows, bicg->dacor, bicg->dewt, bicg->aux,
+      cv_mem->cv_acnrm = gpu_VWRMS_Norm(mGPU->nrows, mGPU->dacor, mGPU->dewt, bicg->aux,
                                         mGPU->daux, (mGPU->blocks + 1) / 2, mGPU->threads);
       cv_mem->cv_jcur = SUNFALSE;
 
-      cudaMemcpy(acor,bicg->dacor,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
-      cudaMemcpy(tempv,bicg->dx,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
+      cudaMemcpy(acor,mGPU->dacor,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
+      cudaMemcpy(tempv,mGPU->dx,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
       return (CV_SUCCESS);
     }
     cv_mem->cv_mnewt = ++m;
@@ -7382,8 +7336,8 @@ int cvNewtonIteration_gpu2(SolverData *sd, CVodeMem cv_mem)
     //     If still not converged and Jacobian data is not current,
     //     signal to try the solution again
     if ((m == cv_mem->cv_maxcor) || ((m >= 2) && (del > RDIV * delp))) {
-      cudaMemcpy(acor,bicg->dacor,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
-      cudaMemcpy(tempv,bicg->dx,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
+      cudaMemcpy(acor,mGPU->dacor,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
+      cudaMemcpy(tempv,mGPU->dx,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
       if ((!cv_mem->cv_jcur) && (cv_mem->cv_lsetup)) {
         return (TRY_AGAIN);
       } else {
@@ -7395,7 +7349,7 @@ int cvNewtonIteration_gpu2(SolverData *sd, CVodeMem cv_mem)
     delp = del;
 
     //todo check if its needed (i think only for f_CPU case, for f_gpu not)
-    cudaMemcpy(cv_y,bicg->dcv_y,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
+    cudaMemcpy(cv_y,mGPU->dcv_y,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
     //retval = cv_mem->cv_f(cv_mem->cv_tn, cv_mem->cv_y,
     //                      cv_mem->cv_ftemp, cv_mem->cv_user_data);
     //int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data)
@@ -7431,22 +7385,22 @@ int cvNewtonIteration_gpu2(SolverData *sd, CVodeMem cv_mem)
     bicg->counterDerivSolve++;
 #endif
 
-    //Transfer cv_ftemp() not needed because bicg->dftemp=mGPU->deriv_data;
-    //cudaMemcpy(cv_ftemp_data,bicg->dftemp,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
+    //Transfer cv_ftemp() not needed because mGPU->dftemp=mGPU->deriv_data;
+    //cudaMemcpy(cv_ftemp_data,mGPU->dftemp,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
 
     //N_VLinearSum(ONE, cv_mem->cv_y, -ONE, cv_mem->cv_zn[0], cv_mem->cv_acor);
     // a*x + b*y = z
-    gpu_zaxpby(1.0, bicg->dcv_y, -1.0, mGPU->dzn, bicg->dacor, mGPU->nrows, mGPU->blocks, mGPU->threads);
+    gpu_zaxpby(1.0, mGPU->dcv_y, -1.0, mGPU->dzn, mGPU->dacor, mGPU->nrows, mGPU->blocks, mGPU->threads);
 
     cv_mem->cv_nfe++;
     if (retval < 0){
-      cudaMemcpy(acor,bicg->dacor,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
-      cudaMemcpy(tempv,bicg->dx,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
+      cudaMemcpy(acor,mGPU->dacor,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
+      cudaMemcpy(tempv,mGPU->dx,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
       return(CV_RHSFUNC_FAIL);
     }
     if (retval > 0) {
-      cudaMemcpy(acor,bicg->dacor,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
-      cudaMemcpy(tempv,bicg->dx,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
+      cudaMemcpy(acor,mGPU->dacor,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
+      cudaMemcpy(tempv,mGPU->dx,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
       if ((!cv_mem->cv_jcur) && (cv_mem->cv_lsetup))
         return(TRY_AGAIN);
       else
@@ -7468,14 +7422,14 @@ void free_ode_gpu2(SolverData *sd)
   ModelDataGPU *mGPU = &sd->mGPU;
 
   //ODE aux variables
-  cudaFree(bicg->dewt);
-  cudaFree(bicg->dacor);
+  cudaFree(mGPU->dewt);
+  cudaFree(mGPU->dacor);
   cudaFree(mGPU->dtempv);
   cudaFree(mGPU->dzn);
 
   //ODE concs arrays
-  cudaFree(bicg->dcv_y);
-  cudaFree(bicg->dx);
+  cudaFree(mGPU->dcv_y);
+  cudaFree(mGPU->dx);
 
   free_itsolver(sd);
 
@@ -7572,8 +7526,6 @@ void printSolverCounters_gpu2(SolverData *sd)
 
 #endif
 
-
-
-
 #endif
+
 }
