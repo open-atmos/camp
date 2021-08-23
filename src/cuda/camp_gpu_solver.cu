@@ -1962,7 +1962,7 @@ int rxn_calc_jac_gpu(SolverData *sd, SUNMatrix J, double time_step, N_Vector der
 
   if(flag==CAMP_SOLVER_FAIL)
     return flag;
-  
+
   //Async
   //HANDLE_ERROR(cudaMemcpyAsync(md->deriv_aux, md->deriv_data_gpu,
   //md->deriv_size, cudaMemcpyDeviceToHost, md->stream_gpu[STREAM_DERIV_GPU]));

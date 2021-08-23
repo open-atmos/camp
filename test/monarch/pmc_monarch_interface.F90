@@ -175,6 +175,7 @@ contains
     ! Set the MPI rank (TODO replace with MONARCH param)
     MONARCH_PROCESS = pmc_mpi_rank()
 
+
     ! Create a new interface object
     allocate(this)
 
@@ -185,7 +186,9 @@ contains
       this%n_cells=n_cells
     end if
 
-    !print*,"monarch_interface_t "
+    if (MONARCH_PROCESS.eq.0) then
+      print*,"monarch_interface_t start"
+    end if
 
     if(.not.present(ncounters)) then
       ncounters = 0
@@ -291,6 +294,8 @@ contains
         end do
       endif
 
+      !print*, "monarch_interface_t pack_size() end"
+
       allocate(buffer(pack_size))
       pos = 0
       call this%camp_core%bin_pack(buffer, pos)
@@ -322,6 +327,8 @@ contains
           call this%photo_rxns(i)%bin_pack( buffer, pos, local_comm )
         end do
       endif
+
+      !print*, "monarch_interface_t bin_pack() end"
 
     endif
 
@@ -381,6 +388,8 @@ contains
         end do
       end if
 
+      !print*, "monarch_interface_t unbin_pack() end"
+
 #endif
     end if
 
@@ -391,6 +400,9 @@ contains
     ! Initialize the solver on all nodes
 
     call this%camp_core%solver_initialize(ncounters, ntimers)
+
+    !call pmc_mpi_barrier(MPI_COMM_WORLD)
+    !print*, "monarch_interface_t solver_initialize end"
 
     ! Create a state variable on each node
     this%camp_state => this%camp_core%new_state()
@@ -411,6 +423,9 @@ contains
       end do
 
     end if
+
+    call pmc_mpi_barrier(MPI_COMM_WORLD)
+
 
     ! Set the aerosol mode dimensions
     ! organic matter
@@ -625,11 +640,6 @@ contains
             end do
           end do
         end do
-
-        !print*,n_cells_range, emi_slide
-        !print*,"rate emi and press"
-        !print*,rate_emi(1,:)
-        !print*,pressure(:,:,:)
 
       else
 
