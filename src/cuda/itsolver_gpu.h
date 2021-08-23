@@ -22,16 +22,16 @@ extern "C" {
 #include "../camp_solver.h"
 }
 
-void createSolver(itsolver *bicg);
+void createSolver(SolverData *sd);
 __device__
 void cudaDeviceswapCSC_CSR1ThreadBlock(int n_row, int n_col, int* Ap, int* Aj, double* Ax, int* BpGlobal, int* Bi, double* Bx);
 __device__
 void cudaDeviceswapCSC_CSR(int n_row, int n_col, int* Ap, int* Aj, double* Ax, int* BpGlobal, int* Bi, double* Bx);
 __global__
 void cudaGlobalswapCSC_CSR(int n_row, int n_col, int* Ap, int* Aj, double* Ax, int* Cp, int* Ci, double* Cx);
-void swapCSC_CSR_BCG(itsolver *bicg);
-void solveGPU(itsolver *bicg, double *dA, int *djA, int *diA, double *dx, double *dtempv);
-void solveGPU_block(itsolver *bicg, double *dA, int *djA, int *diA, double *dx, double *dtempv);
+void swapCSC_CSR_BCG(SolverData *sd);
+void solveGPU(SolverData *sd, double *dA, int *djA, int *diA, double *dx, double *dtempv);
+void solveGPU_block(SolverData *sd, double *dA, int *djA, int *diA, double *dx, double *dtempv);
 __device__ void solveBcgCudaDevice(
         double *dA, int *djA, int *diA, double *dx, double *dtempv //Input data
         ,int nrows, int blocks, int n_shr_empty, int maxIt, int mattype
@@ -43,7 +43,7 @@ __device__ void solveBcgCudaDevice(
 #endif
 );
 
-void free_itsolver(itsolver *bicg);
+void free_itsolver(SolverData *sd);
 
 
 #endif

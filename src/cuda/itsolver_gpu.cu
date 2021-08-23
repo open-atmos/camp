@@ -27,8 +27,11 @@ void read_options(itsolver *bicg){
 
 }
 
-void createSolver(itsolver *bicg)
+void createSolver(SolverData *sd)
 {
+  itsolver *bicg = &(sd->bicg);
+  ModelDataGPU *mGPU = &sd->mGPU;
+
   //Init variables ("public")
   int nrows = bicg->nrows;
   int blocks = bicg->blocks;
@@ -787,7 +790,11 @@ void swapCSC_CSR(int n_row, int n_col, int* Ap, int* Aj, double* Ax, int* Bp, in
 }
 
 
-void swapCSC_CSR_BCG(itsolver *bicg){
+void swapCSC_CSR_BCG(SolverData *sd){
+
+  itsolver *bicg = &(sd->bicg);
+  ModelData *md = &(sd->model_data);
+  ModelDataGPU *mGPU = &sd->mGPU;
 
 #ifdef TEST_CSCtoCSR
 
@@ -1472,8 +1479,11 @@ void solveBcgCuda(
 }
 
 void solveGPU_block_thr(int blocks, int threads_block, int n_shr_memory, int n_shr_empty, int offset_cells,
-        itsolver *bicg)
+        SolverData *sd)
 {
+  itsolver *bicg = &(sd->bicg);
+  ModelData *md = &(sd->model_data);
+  ModelDataGPU *mGPU = &sd->mGPU;
 
   //Init variables ("public")
   int nrows = bicg->nrows;
@@ -1609,8 +1619,12 @@ void solveGPU_block_thr(int blocks, int threads_block, int n_shr_memory, int n_s
 
 //solveGPU_block: Each block will compute only a cell/group of cells
 //Algorithm: Biconjugate gradient
-void solveGPU_block(itsolver *bicg, double *dA, int *djA, int *diA, double *dx, double *dtempv)
+void solveGPU_block(SolverData *sd, double *dA, int *djA, int *diA, double *dx, double *dtempv)
 {
+
+  itsolver *bicg = &(sd->bicg);
+  ModelData *md = &(sd->model_data);
+  ModelDataGPU *mGPU = &sd->mGPU;
 
 #ifndef DEBUG_SOLVEBCGCUDA
   if(bicg->counterBiConjGrad==0) {
@@ -1649,7 +1663,7 @@ void solveGPU_block(itsolver *bicg, double *dA, int *djA, int *diA, double *dx, 
 
     if(blocks!=0)//myb not needed
     solveGPU_block_thr(blocks, threads_block, max_threads_block, n_shr_empty, offset_cells,
-                       bicg);
+                       sd);
 
     //todo fix case one-cell updating vars
 
@@ -1666,13 +1680,19 @@ void solveGPU_block(itsolver *bicg, double *dA, int *djA, int *diA, double *dx, 
 #endif
 
   solveGPU_block_thr(blocks, threads_block, max_threads_block, n_shr_empty, offset_cells,
-           bicg);
+           sd);
 
 }
 
 //Algorithm: Biconjugate gradient
-void solveGPU(itsolver *bicg, double *dA, int *djA, int *diA, double *dx, double *dtempv)
+void solveGPU(SolverData *sd, double *dA, int *djA, int *diA, double *dx, double *dtempv)
 {
+  //Init variables ("public")
+
+  itsolver *bicg = &(sd->bicg);
+  ModelData *md = &(sd->model_data);
+  ModelDataGPU *mGPU = &sd->mGPU;
+
   //Init variables ("public")
   int nrows = bicg->nrows;
   int blocks = bicg->blocks;
@@ -1838,8 +1858,11 @@ void solveGPU(itsolver *bicg, double *dA, int *djA, int *diA, double *dx, double
 
 }
 
-void free_itsolver(itsolver *bicg)
+void free_itsolver(SolverData *sd)
 {
+  itsolver *bicg = &(sd->bicg);
+  ModelDataGPU *mGPU = &sd->mGPU;
+
   //Auxiliary vectors ("private")
   double ** dr0 = &bicg->dr0;
   double ** dr0h = &bicg->dr0h;
@@ -1868,11 +1891,3 @@ void free_itsolver(itsolver *bicg)
 
 }
 
- /*
-void setUpSolver(itsolver *bicg, double reltol, double *ewt, int tnrows,int tnnz,double *tA, int *tjA, int *tiA, int tmattype, int qmax, double *dACamp, double *dftempCamp);
-{
-
-  bicg.tolmax=reltol;
-
-}
-*/

@@ -286,7 +286,6 @@ void check_isnand(double *x, int len, int var_id){
 
 void check_isnand(double *x, int len, const char *s){
 
-  int n_zeros=0;
   for (int i=0; i<len; i++){
     if(isnan(x[i])){
       printf("NAN %s[%d]",s,i);
@@ -2049,11 +2048,12 @@ void alloc_solver_gpu2(CVodeMem cv_mem, SolverData *sd)
 {
   itsolver *bicg = &(sd->bicg);
   ModelData *md = &(sd->model_data);
+  ModelDataGPU *mGPU = &sd->mGPU;
+  ModelDataVariable *mdv = &sd->mdv;
   CVDlsMem cvdls_mem = (CVDlsMem) cv_mem->cv_lmem;
   SUNMatrix J = cvdls_mem->A;
 
   bicg->n_cells=md->n_cells;
-  ModelDataGPU *mGPU = &sd->mGPU;
   bicg->dftemp=mGPU->deriv_data; //deriv is gpu pointer
 
 #ifdef CHECK_GPU_LINSOLVE
@@ -2153,7 +2153,13 @@ void alloc_solver_gpu2(CVodeMem cv_mem, SolverData *sd)
 
 
   //Init Linear Solver variables
-  createSolver(bicg);
+  createSolver(sd);
+
+  mdv->cv_nfe=0;
+  mdv->cv_nsetups=0;
+  mdv->nje=0;
+  mdv->nstlj=0;
+
 
   //Check if everything is correct
 #ifdef FAILURE_DETAIL
@@ -2731,8 +2737,8 @@ void cudaDevicecvNlsNewton(
 
 #endif
 
-  int convfail=md->convfail;
-  int callSetup=md->callSetup;
+  //int convfail=md->convfail;
+  //int callSetup=md->callSetup;
 
 #ifndef DEV_cudacvNlsNewton
 
@@ -3838,7 +3844,7 @@ int cudacvNlsNewton(SolverData *sd, CVodeMem cv_mem, int nflag) {
     cudaMemcpy((i * bicg->nrows + bicg->dzn), zn, bicg->nrows * sizeof(double), cudaMemcpyHostToDevice);
   }
 
-  
+
 
 #ifndef DEV_cudacvNlsNewton
 
@@ -7083,7 +7089,7 @@ int cvNewtonIteration_gpu2(SolverData *sd, CVodeMem cv_mem)
 
 #ifndef CSR_SPMV
 
-    swapCSC_CSR_BCG(bicg);
+    swapCSC_CSR_BCG(sd);
     //cudaGlobalswapCSC_CSR
 
 #endif
@@ -7135,8 +7141,8 @@ int cvNewtonIteration_gpu2(SolverData *sd, CVodeMem cv_mem)
 
       //equals matrix dA
       //Compute case 1
-      solveGPU(bicg,bicg->dA,bicg->djA,bicg->diA,bicg->dx,bicg->dtempv);
-      //solveGPU_block(bicg,bicg->dA,bicg->djA,bicg->diA,bicg->dx,bicg->dtempv);
+      solveGPU(sd,bicg->dA,bicg->djA,bicg->diA,bicg->dx,bicg->dtempv);
+      //solveGPU_block(sd,bicg->dA,bicg->djA,bicg->diA,bicg->dx,bicg->dtempv);
 
       //Save result
       cudaMemcpy(aux_x1,bicg->dx,bicg->nrows*sizeof(double),cudaMemcpyDeviceToHost);
@@ -7149,8 +7155,8 @@ int cvNewtonIteration_gpu2(SolverData *sd, CVodeMem cv_mem)
       cudaDeviceSynchronize();
 
       //Compute case 2
-      solveGPU_block(bicg,bicg->dA,bicg->djA,bicg->diA,bicg->dx,bicg->dtempv);
-      //solveGPU(bicg,bicg->dA,bicg->djA,bicg->diA,bicg->dx,bicg->dtempv);
+      solveGPU_block(sd,bicg->dA,bicg->djA,bicg->diA,bicg->dx,bicg->dtempv);
+      //solveGPU(sd,bicg->dA,bicg->djA,bicg->diA,bicg->dx,bicg->dtempv);
 
       //Save result
       cudaMemcpy(aux_x2,bicg->dx,bicg->nrows*sizeof(double),cudaMemcpyDeviceToHost);
@@ -7220,8 +7226,8 @@ int cvNewtonIteration_gpu2(SolverData *sd, CVodeMem cv_mem)
 
 #endif
 
-  //solveGPU(bicg,bicg->dA,bicg->djA,bicg->diA,bicg->dx,bicg->dtempv);
-  solveGPU_block(bicg,bicg->dA,bicg->djA,bicg->diA,bicg->dx,bicg->dtempv);
+  //solveGPU(bicg,sd->dA,bicg->djA,bicg->diA,bicg->dx,bicg->dtempv);
+  solveGPU_block(sd,bicg->dA,bicg->djA,bicg->diA,bicg->dx,bicg->dtempv);
 
 #ifdef DEBUG_LINEAR_SOLVERS
 
@@ -7267,7 +7273,7 @@ int cvNewtonIteration_gpu2(SolverData *sd, CVodeMem cv_mem)
 
 #ifndef CSR_SPMV
 
-    swapCSC_CSR_BCG(bicg);
+    swapCSC_CSR_BCG(sd);
     //cudaGlobalswapCSC_CSR
 
 #endif
@@ -7429,6 +7435,7 @@ int cvNewtonIteration_gpu2(SolverData *sd, CVodeMem cv_mem)
 void free_ode_gpu2(SolverData *sd)
 {
   itsolver *bicg = &(sd->bicg);
+  ModelDataGPU *mGPU = &sd->mGPU;
 
   //ODE aux variables
   cudaFree(bicg->dewt);
@@ -7440,7 +7447,7 @@ void free_ode_gpu2(SolverData *sd)
   cudaFree(bicg->dcv_y);
   cudaFree(bicg->dx);
 
-  free_itsolver(bicg);
+  free_itsolver(sd);
 
   //HANDLE_ERROR(cudaFree(cv_mem->indexvals_gpu2));
   //HANDLE_ERROR(cudaFree(cv_mem->indexptrs_gpu2));
