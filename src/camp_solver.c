@@ -598,7 +598,7 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
   flag = CVodeSetDlsGuessHelper(sd->cvode_mem, guess_helper);
   check_flag_fail(&flag, "CVodeSetDlsGuessHelper", 1);
 
-  printf("solver_initialize end\n");
+  //printf("solver_initialize end\n");
 
 // Set gpu rxn values
 #ifdef PMC_USE_GPU
@@ -1145,8 +1145,7 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
 
 #ifdef PMC_USE_GPU
     itsolver *bicg = &(sd->bicg);
-
-    //printf("solver_get_statistics_gpu\n");
+    ModelDataVariable *mdv = &sd->mdv;
 
     solver_get_statistics_gpu(sd);
     int i;

@@ -385,6 +385,7 @@ void solver_init_int_double_gpu(SolverData *sd) {
 void init_jac_gpu(SolverData *sd, double *J){
 
   ModelData *md = &(sd->model_data);
+  ModelDataGPU *mGPU = &sd->mGPU;
 
   //todo reduce allocations (use tmp pointers from cvode for j_tmp)
 
@@ -392,8 +393,6 @@ void init_jac_gpu(SolverData *sd, double *J){
   md->nnz_J_solver = SM_NNZ_S(md->J_solver);
   md->nrows_J_solver = SM_NP_S(md->J_solver);
 
-  ModelDataGPU *mGPU = &sd->mGPU;
-  //todo dont needed
   //mGPU->n_per_cell_solver_jac_elem = md->n_per_cell_solver_jac_elem;
   cudaMalloc((void **) &mGPU->J, md->jac_size);
   cudaMalloc((void **) &mGPU->J_solver, md->jac_size);
@@ -409,9 +408,8 @@ void init_jac_gpu(SolverData *sd, double *J){
   cudaMalloc((void **) &mGPU->J_rxn, sizeof(mGPU->J_rxn)*sd->jac.num_elem*md->n_cells);//*md->n_mapped_values should be the same
   cudaMalloc((void **) &mGPU->n_mapped_values, 1*sizeof(int));//*md->n_mapped_values should be the same
 
-  printf("md->n_per_cell_dep_var %d sd->jac.num_spec %d md->n_per_cell_solver_jac_elem %d\n",
-         md->n_per_cell_dep_var,sd->jac.num_spec,md->n_per_cell_solver_jac_elem);
-
+  //printf("md->n_per_cell_dep_var %d sd->jac.num_spec %d md->n_per_cell_solver_jac_elem %d\n",
+  //       md->n_per_cell_dep_var,sd->jac.num_spec,md->n_per_cell_solver_jac_elem);
 
   double *J_solver = SM_DATA_S(md->J_solver);
   //Transfer sunindextype to int
@@ -1864,6 +1862,7 @@ int rxn_calc_jac_gpu(SolverData *sd, SUNMatrix J, double time_step, N_Vector der
 
   ModelData *md = &(sd->model_data);
   itsolver *bicg = &(sd->bicg);
+  ModelDataGPU *mGPU = &sd->mGPU;
   double *deriv_data = N_VGetArrayPointer(deriv);
   int n_cells = md->n_cells;
   int n_kernels = 1; // Divide load into multiple kernel calls
@@ -1883,7 +1882,6 @@ int rxn_calc_jac_gpu(SolverData *sd, SUNMatrix J, double time_step, N_Vector der
 
   //printf("threads_block %d n_blocks %d",total_threads,n_blocks);
 
-  ModelDataGPU *mGPU = &sd->mGPU;
   //Update state
   double replacement_value = TINY;
   double threshhold = -SMALL;
