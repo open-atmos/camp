@@ -8,109 +8,23 @@ typedef struct
 {
   //Init variables ("public")
   int use_multicells;
-  int threads,blocks;
-  int maxIt;
-  int mattype;
-  int nrows;
-  int nnz;
-  int n_cells;
-  double tolmax;
-  double* ddiag;
 
-  // Intermediate variables ("private")
-  double * dr0;
-  double * dr0h;
-  double * dn0;
-  double * dp0;
-  double * dt;
-  double * ds;
-  double * dAx2;
-  double * dy;
-  double * dz;
-
-  // Matrix data ("input")
   double* A;
   int*    jA;
   int*    iA;
-
-  //GPU pointers ("input")
-  double* dA;
-  int*    djA;
-  int*    diA;
-  double* dB;
-  int*    djB;
-  int*    diB;
-  double* dx;
   double* aux;
-  double* daux;
-
-  // ODE solver variables
-  int flag;
-  int callSetup;//todo remove
-  int convfail;
-  int *dflag;
-  int *dlast_flag;
-  int *cv_jcur;
-  int *nje;
-  int *nstlj;
-  int *cv_nst;
-  int *jok;
-  int *cv_nsetups;
-  int *cv_nfe;
-
-  double *dgammap;
-  double *dcv_tq;
-  double* dewt;
-  double* dacor;
-  double* dacor_init;
-  double* dtempv;
-  double* dtempv1;
-  double* dtempv2;
-  double* dftemp;
-  double* dzn;
-  double* dcv_y;
-
-//#ifdef DEBUG_CudaDeviceguess_helper
-  double* cv_zn;
-  double* cv_last_yn;
-  double* cv_ftemp;
-  double* cv_tempv;
-  double* cv_acor_init;
-  double* total_state;
-//#endif
-
-
-    //Intermediate variables
-  double* dsavedJ;
-  int*    djsavedJ;
-  int*    disavedJ;
-
-
-  //ODE stats
 
 #ifdef PMC_DEBUG_GPU
-  int counterSendInit;
-  int counterMatScaleAddI;
-  int counterMatScaleAddISendA;
-  int counterMatCopy;
-  int counterprecvStep;
   int counterNewtonIt;
   int counterLinSolSetup;
   int counterLinSolSolve;
   int countercvStep;
   int counterDerivNewton;
   int counterBiConjGrad;
-  int counterBiConjGradInternal;
-  int *counterBiConjGradInternalGPU;
   int counterDerivSolve;
   int counterJac;
   int countersolveCVODEGPU;
 
-  double timeNewtonSendInit;
-  double timeMatScaleAddI;
-  double timeMatScaleAddISendA;
-  double timeMatCopy;
-  double timeprecvStep;
   double timeNewtonIt;
   double timeLinSolSetup;
   double timeLinSolSolve;
@@ -121,15 +35,6 @@ typedef struct
   double timeDerivSolve;
   double timeJac;
   double timesolveCVODEGPU;
-#ifdef cudaGlobalSolveODE_timers_max_blocks
-  double *dtBCG;
-  double *dtPreBCG;
-  double *dtPostBCG;
-#else
-  double dtBCG;
-  double dtPreBCG;
-  double dtPostBCG;
-#endif
 
   cudaEvent_t startDerivNewton;
   cudaEvent_t startDerivSolve;

@@ -425,15 +425,12 @@ void cudaDeviceJacCopy(int n_row, int* Ap, int* Aj, double* Ax, int* Bp, int* Bi
 }
 
 
-
-
 __device__
-int cudaDevicecamp_solver_check_model_state(double *state, double *y,
-                                             int *map_state_deriv, double threshhold, double replacement_value, int *flag,
-                                             int deriv_length_cell, int n_cells)
+int cudaDevicecamp_solver_check_model_state(ModelDataGPU *md, double *y, int *flag)
 {
+  ModelDataVariable *mdv = md->mdv;
   int i = blockIdx.x * blockDim.x + threadIdx.x;
-  int active_threads = n_cells*deriv_length_cell;
+  int active_threads = md->n_cells*md->deriv_length_cell;
   extern __shared__ int flag_shr[];
   __syncthreads();
   flag_shr[0] = *flag;
@@ -448,23 +445,17 @@ int cudaDevicecamp_solver_check_model_state(double *state, double *y,
     //           j,y[j],threshhold);
 #endif
 
-    if (y[i] < threshhold) {
+    if (y[i] < md->threshhold) {
 
       flag_shr[0] = CAMP_SOLVER_FAIL;
 #ifdef DEBUG_cudaDevicecamp_solver_check_model_state
       printf("Failed model state update gpu:[spec %d] = %le flag_shr %d\n",i,y[i],flag_shr[0]);
 #endif
 
-      //*flag = CAMP_SOLVER_FAIL;
-      //flag_shr[0] = CAMP_SOLVER_FAIL;
-      //*flag=CAMP_SOLVER_FAIL;
-      //__syncthreads();
-      //return CAMP_SOLVER_FAIL;
-
     } else {
-      state[map_state_deriv[i]] =
-              y[i] <= threshhold ?
-              replacement_value : y[i];
+      md->state[md->map_state_deriv[i]] =
+              y[i] <= md->threshhold ?
+              md->replacement_value : y[i];
 
       //state_init[map_state_deriv[tid]] = 0.1;
       //printf("tid %d map_state_deriv %d\n", tid, map_state_deriv[tid]);
@@ -509,6 +500,7 @@ __device__ void solveRXN(
         ModelDataGPU *md
 )
 {
+  ModelDataVariable *mdv = md->mdv;
 
 #ifdef REVERSE_INT_FLOAT_MATRIX
 
@@ -614,9 +606,10 @@ __device__ void cudaDevicecalc_deriv(
         double *yout, ModelDataGPU *md
 ) //Interface CPU/GPU
 {
+  ModelDataVariable *mdv = md->mdv;
   int tid = blockIdx.x * blockDim.x + threadIdx.x;
   int tid_cell=tid%deriv_length_cell;
-  int active_threads = n_cells*deriv_length_cell;
+  int active_threads = md->n_cells*md->deriv_length_cell;
 
 #ifdef DEBUG_DERIV_GPU
   if(tid==0){
@@ -702,23 +695,14 @@ __device__ void cudaDevicecalc_deriv(
 
 __device__
 int cudaDevicef(
-#ifdef PMC_DEBUG_GPU
-        int counterDeriv2,
-#endif
-        //check_model_state
-        double threshhold, double replacement_value, int *flag,
-        //f_gpu
         double time_step, int deriv_length_cell, int state_size_cell,
         int n_cells,
         int i_kernel, int threads_block, int n_shr_empty, double *y,
-        double *yout, ModelDataGPU *md
+        double *yout, ModelDataGPU *md, int *flag
 ) //Interface CPU/GPU
 {
-
+  ModelDataVariable *mdv = md->mdv;
   int i = blockIdx.x * blockDim.x + threadIdx.x;
-
-
-
 
 #ifdef PMC_DEBUG_GPU
 
@@ -728,11 +712,7 @@ int cudaDevicef(
 
 #endif
 
-
-
-  int checkflag=cudaDevicecamp_solver_check_model_state(md->state, y,
-                                          md->map_state_deriv, threshhold, replacement_value,
-                                          flag, deriv_length_cell, n_cells);
+  int checkflag=cudaDevicecamp_solver_check_model_state(md, y, flag);
 
   //__syncthreads();
 #ifdef DEV_FFLAG
@@ -758,15 +738,13 @@ int cudaDevicef(
 
   cudaDevicecalc_deriv(
 #ifdef PMC_DEBUG_GPU
-          counterDeriv2,
+          mdv->counterDerivGPU,
 #endif
-          //check_model_state          md->map_state_deriv, threshhold, replacement_value, flag,
           //f_gpu
           time_step, deriv_length_cell, state_size_cell,
           n_cells, i_kernel, threads_block, n_shr_empty, y,
           yout, md
   );
-
 
 #ifdef PMC_DEBUG_GPU
 #ifdef cudaGlobalSolveODE_timers_max_blocks
@@ -802,6 +780,7 @@ int CudaDeviceguess_helper(double t_n, double h_n, double* y_n,
                            ModelDataGPU *md
 ) {
 
+  ModelDataVariable *mdv = md->mdv;
   extern __shared__ double flag_shr2[];
   //extern __shared__ int flag_shr2[];
   //flag_sh2r[0]=1.;
@@ -991,7 +970,7 @@ int CudaDeviceguess_helper(double t_n, double h_n, double* y_n,
 
     // Advance the state
     //N_VLinearSum(ONE, tmp1, h_j, corr, tmp1);
-    cudaDevicezaxpby(1., tmp1, h_j, corr, tmp1, nrows);
+    cudaDevicezaxpby(1., tmp1, h_j, corr, tmp1, md->nrows);
 
     __syncthreads();
     // Advance t_j
@@ -1020,16 +999,11 @@ int CudaDeviceguess_helper(double t_n, double h_n, double* y_n,
 //#else
 
     int fflag=cudaDevicef(
-#ifdef PMC_DEBUG_GPU
-            counterDerivGPU,
-#endif
-            //check_model_state
-            threshhold, replacement_value, flag,
-            //f_gpu
-            t_0 + t_j, deriv_length_cell, state_size_cell,
-            n_cells, i_kernel, threads_block, n_shr_empty, tmp1,
-            corr,md
+            t_0 + t_j, md->deriv_length_cell, md->state_size_cell,
+            md->n_cells, md->i_kernel, threads_block, md->n_shr_empty, tmp1,
+            corr,md,flag
     );
+
     __syncthreads();
 #ifdef DEV_FFLAG
     if (fflag == CAMP_SOLVER_FAIL) {
@@ -1116,7 +1090,7 @@ int CudaDeviceguess_helper(double t_n, double h_n, double* y_n,
 
   // Set the correction vector
   //N_VLinearSum(ONE, tmp1, -ONE, y_n, corr);
-  cudaDevicezaxpby(1., tmp1, -1., y_n, corr, nrows);
+  cudaDevicezaxpby(1., tmp1, -1., y_n, corr, md->nrows);
 
 
   // Scale the initial corrections
@@ -1125,7 +1099,7 @@ int CudaDeviceguess_helper(double t_n, double h_n, double* y_n,
 
   // Update the hf vector
   //N_VLinearSum(ONE, tmp1, -ONE, y_n1, hf);
-  cudaDevicezaxpby(1., tmp1, -1., y_n1, hf, nrows);
+  cudaDevicezaxpby(1., tmp1, -1., y_n1, hf, md->nrows);
 
 
 #ifdef PMC_DEBUG_GPU
@@ -1282,7 +1256,7 @@ __device__ void cudaDevicecalc_Jac(
   int tid = blockIdx.x * blockDim.x + threadIdx.x;
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   int tid_cell=tid%deriv_length_cell;
-  int active_threads = n_cells*deriv_length_cell;
+  int active_threads = md->n_cells*md->deriv_length_cell;
 
 #ifdef PMC_DEBUG_GPU
 
@@ -1539,12 +1513,12 @@ void cudaDeviceJac(
         ModelDataGPU *md, double *dftemp
 ) //Interface CPU/GPU
 {
-
+  ModelDataVariable *mdv = md->mdv;
   extern __shared__ int flag_shr[];
   flag_shr[0] = 0;
   int tid = threadIdx.x;
   int i = blockIdx.x * blockDim.x + threadIdx.x;
-  int active_threads = n_cells*deriv_length_cell;
+  int active_threads = md->n_cells*md->deriv_length_cell;
 
 #ifdef PMC_DEBUG_GPU
 
@@ -1555,15 +1529,9 @@ void cudaDeviceJac(
 #endif
 
   cudaDevicef(
-#ifdef PMC_DEBUG_GPU
-          counterDeriv2,
-#endif
-          //check_model_state
-          threshhold, replacement_value, flag,
-          //f_gpu
           time_step, deriv_length_cell, state_size_cell,
           n_cells, i_kernel, threads_block, n_shr_empty, y,
-          dftemp,md
+          dftemp,md,flag
   );
 
 
@@ -2228,7 +2196,6 @@ void alloc_solver_gpu2(CVodeMem cv_mem, SolverData *sd)
   cudaMalloc((void**)&mGPU->dtguess_helper,lendt*sizeof(double));
   cudaMemset(mGPU->dtguess_helper, 0., lendt*sizeof(double));
 
-  bicg->timeprecvStep=PMC_TINY;
   bicg->timeNewtonIt=PMC_TINY;
   bicg->timeLinSolSetup=PMC_TINY;
   bicg->timeLinSolSolve=PMC_TINY;
@@ -2625,15 +2592,9 @@ void cudaDevicecvNewtonIteration(
     __syncthreads();
 
     cudaDevicef(
-#ifdef PMC_DEBUG_GPU
-            counterDerivGPU,
-#endif
-            //check_model_state
-            threshhold, replacement_value, flag,
-            //f_gpu
             time_step, deriv_length_cell, state_size_cell,
             n_cells, i_kernel, threads_block, n_shr_empty, dcv_y,
-            dftemp, md
+            dftemp, md,flag
     );
     //retval = f_gpu(cv_mem->cv_tn, cv_mem->cv_y, cv_mem->cv_ftemp, cv_mem->cv_user_data);
 
@@ -2845,15 +2806,10 @@ void cudaDevicecvNlsNewton(
     dcv_y[i] = dzn[i];
 
     cudaDevicef(
-#ifdef PMC_DEBUG_GPU
-            counterDerivGPU,
-#endif
-            //check_model_state
-            threshhold, replacement_value, flag,
             //f_gpu
             time_step, deriv_length_cell, state_size_cell,
             n_cells, i_kernel, threads_block, n_shr_empty, dcv_y,
-            dftemp,md
+            dftemp,md,flag
     );
 
     if (*flag < 0) {
@@ -3409,14 +3365,15 @@ void solveCVODEGPU_thr(int blocks, int threads_block, int n_shr_memory, int n_sh
   double *cv_acor_init = N_VGetArrayPointer(cv_mem->cv_acor_init);
   int retval = 0;
 
-  int len_cell=nrows/n_cells;
+  int len_cell=mGPU->deriv_length_cell;
 
   //Update state
   double replacement_value = TINY;
   double threshhold = -SMALL;
   int flag = 0; //CAMP_SOLVER_SUCCESS
   //f_gpu
-  int i_kernel=0;
+  mGPU->i_kernel=0;
+
   double t=cv_mem->cv_tn;
   double time_step = cv_mem->cv_next_h; //CVodeGetCurrentStep(sd->cvode_mem, &time_step);
   // On the first call to f(), the time step hasn't been set yet, so use the
@@ -3485,6 +3442,7 @@ void solveCVODEGPU_thr(int blocks, int threads_block, int n_shr_memory, int n_sh
   memcpy(bicg->cv_tempv,cv_tempv,mGPU->nrows*sizeof(double));
   memcpy(bicg->cv_acor_init,cv_acor_init,mGPU->nrows*sizeof(double));
    */
+
 
   for(int i=0;i<mGPU->nrows;i++){
 
@@ -3638,7 +3596,7 @@ void solveCVODEGPU_thr(int blocks, int threads_block, int n_shr_memory, int n_sh
         threshhold, replacement_value, mGPU->flag,//&flag,
         //f_gpu
         time_step, len_cell, md->n_per_cell_state_var,
-        i_kernel, threads_block, sd->mGPU,
+        mGPU->i_kernel, threads_block, sd->mGPU,
         //cudacvNewtonIteration
         mGPU->dacor, mGPU->dzn, mGPU->dewt,
         mGPU->dcv_tq, &mdv->cv_nfe, &mdv->cv_nsetups,
@@ -4300,7 +4258,6 @@ int CVode_gpu2(void *cvode_mem, realtype tout, N_Vector yout,
 
 #ifdef PMC_DEBUG_GPU
     //bicg->timeprecvStep+= clock() - start;
-    //bicg->counterprecvStep++;
 
     cudaEventRecord(bicg->startcvStep);
     //start=clock();
@@ -6645,7 +6602,6 @@ int cvNlsNewton_gpu2(SolverData *sd, CVodeMem cv_mem, int nflag)
   }
 
 #ifdef PMC_DEBUG_GPU
-  //bicg->timeNewtonSendInit+= clock() - start;
   //bicg->counterSendInit++;
 #endif
 
