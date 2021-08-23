@@ -543,7 +543,7 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
         SUNSparseMatrix(SM_NP_S(J_CSC), SM_NP_S(J_CSC), SM_NNZ_S(J_CSC), CSR_MAT);
 
 
-  //swapCSC_CSR_BCG(bicg->nrows,bicg->nrows,bicg->diA,bicg->djA,bicg->dA,
+  //swapCSC_CSR_BCG(mGPU->nrows,mGPU->nrows,bicg->diA,bicg->djA,bicg->dA,
   //                  bicg->diB,bicg->djB,bicg->dB);
   swapCSC_CSR(SM_NP_S(J_CSC),SM_NP_S(J_CSC),
           SM_INDEXPTRS_S(J_CSC),SM_INDEXVALS_S(J_CSC),SM_DATA_S(J_CSC),
@@ -1154,7 +1154,7 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
 
     if(sd->ncounters>0){
       i=0;
-      counters[i++]=bicg->counterBiConjGradInternal;
+      counters[i++]=mdv->counterBCGInternal;
       counters[i++]=bicg->counterBiConjGrad;
       counters[i++]=bicg->countersolveCVODEGPU;
     }
@@ -1164,8 +1164,8 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
       times[i++]=bicg->timeBiConjGrad/1000;
       times[i++]=bicg->timeBiConjGradMemcpy/1000;
       times[i++]=sd->timeCVode;
-      times[i++]=bicg->dtPreBCG;
-      times[i++]=bicg->dtPostBCG;
+      times[i++]=mdv->dtPreBCG;
+      times[i++]=mdv->dtPostBCG;
       times[i++]=bicg->timesolveCVODEGPU/1000;
       times[i++]=sd->timeNewtonIteration;
       times[i++]=sd->timeJac;
@@ -1311,7 +1311,7 @@ int f_gpu(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
   //return flag;
 
   //Transfer cv_ftemp() not needed because bicg->dftemp=md->deriv_data_gpu;
-  //cudaMemcpy(cv_ftemp_data,bicg->dftemp,bicg->nrows*sizeof(double),cudaMemcpyDeviceToHost);
+  //cudaMemcpy(cv_ftemp_data,bicg->dftemp,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
 
 #else
 
@@ -2185,7 +2185,7 @@ int guess_helper(const realtype t_n, const realtype h_n, N_Vector y_n,
   PMC_DEBUG_PRINT_FULL("Trying to improve guess");
 
 #ifdef DEBUG_GUESS_HELPER
-    //for(int j=0;j<bicg->nrows;j++)
+    //for(int j=0;j<mGPU->nrows;j++)
     //  printf("y_n1[%d] %le \n",j,y_n1[j]);
 #endif
 
@@ -2209,7 +2209,7 @@ int guess_helper(const realtype t_n, const realtype h_n, N_Vector y_n,
     realtype h_j = t_n - (t_0 + t_j);
     int i_fast = -1;
 #ifdef DEBUG_GUESS_HELPER
-    //for(int j=0;j<bicg->nrows;j++){
+    //for(int j=0;j<mGPU->nrows;j++){
     //    printf("h_j %le t_n %le t_0 %le t_j %le\n",
     //           h_j,t_n,t_0,t_j);
     //    }
@@ -2247,7 +2247,7 @@ int guess_helper(const realtype t_n, const realtype h_n, N_Vector y_n,
     t_j += h_j;
 
 #ifdef DEBUG_GUESS_HELPER
-    //for(int j=0;j<bicg->nrows;j++){
+    //for(int j=0;j<mGPU->nrows;j++){
     //  realtype t_star = -atmp1[j] / acorr[j];
     //  printf("corr[%d] %le tmp1[j] %le hf %le t_star %le h_j %le h_n %le\n",
     //          j,acorr[j],atmp1[j],ahf[j],t_star,h_j,h_n);

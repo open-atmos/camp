@@ -460,8 +460,8 @@ void set_jac_data_gpu(SolverData *sd, double *J){
   //HANDLE_ERROR(cudaMemcpy(mGPU->aero_rep_float_data, md->aero_rep_float_data, md->n_aero_rep_float_param*sizeof(double), cudaMemcpyHostToDevice));
 
   itsolver *bicg = &(sd->bicg);
-  cudaMemcpy(bicg->djA,bicg->jA,bicg->nnz*sizeof(int),cudaMemcpyHostToDevice);
-  cudaMemcpy(bicg->diA,bicg->iA,(bicg->nrows+1)*sizeof(int),cudaMemcpyHostToDevice);
+  cudaMemcpy(bicg->djA,bicg->jA,mGPU->nnz*sizeof(int),cudaMemcpyHostToDevice);
+  cudaMemcpy(bicg->diA,bicg->iA,(mGPU->nrows+1)*sizeof(int),cudaMemcpyHostToDevice);
 
 }
 
@@ -1162,7 +1162,7 @@ int rxn_calc_deriv_gpu(SolverData *sd, N_Vector y, N_Vector deriv, double time_s
 #ifdef DERIV_CPU_ON_GPU
 
   //Transfer cv_ftemp() not needed because bicg->dftemp=md->deriv_data_gpu;
-  //cudaMemcpy(cv_ftemp_data,bicg->dftemp,bicg->nrows*sizeof(double),cudaMemcpyDeviceToHost);
+  //cudaMemcpy(cv_ftemp_data,bicg->dftemp,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
 
   HANDLE_ERROR(cudaMemcpy(mGPU->deriv_data, deriv_data, md->deriv_size, cudaMemcpyHostToDevice));
   HANDLE_ERROR(cudaMemcpy(mGPU->state, md->total_state, md->state_size, cudaMemcpyHostToDevice));
@@ -1773,8 +1773,8 @@ void cudaDeviceJac0(
     bicg->jA[i]=SM_INDEXVALS_S(J)[i];
     (SM_DATA_S(J))[i] = (realtype)0.0;
   }
-  cudaMemcpy(bicg->djA,bicg->jA,bicg->nnz*sizeof(int),cudaMemcpyHostToDevice);
-  cudaMemcpy(bicg->diA,bicg->iA,(bicg->nrows+1)*sizeof(int),cudaMemcpyHostToDevice);
+  cudaMemcpy(bicg->djA,bicg->jA,mGPU->nnz*sizeof(int),cudaMemcpyHostToDevice);
+  cudaMemcpy(bicg->diA,bicg->iA,(mGPU->nrows+1)*sizeof(int),cudaMemcpyHostToDevice);
 
 #endif
 
@@ -1874,7 +1874,7 @@ int rxn_calc_jac_gpu(SolverData *sd, SUNMatrix J, double time_step, N_Vector der
   int n_blocks = ((total_threads + threads_block - 1) / threads_block);
 #else
   int threads_block = md->n_per_cell_dep_var;
-  int n_blocks = bicg->n_cells;
+  int n_blocks = mGPU->n_cells;
   //int n_shr = nextPowerOfTwo2(len_cell);
   //int n_shr_empty = n_shr-threads_block;
   int n_shr_empty = 0;
@@ -1911,8 +1911,8 @@ int rxn_calc_jac_gpu(SolverData *sd, SUNMatrix J, double time_step, N_Vector der
     bicg->jA[i]=SM_INDEXVALS_S(J)[i];
     (SM_DATA_S(J))[i] = (realtype)0.0;
   }
-  cudaMemcpy(bicg->djA,bicg->jA,bicg->nnz*sizeof(int),cudaMemcpyHostToDevice);
-  cudaMemcpy(bicg->diA,bicg->iA,(bicg->nrows+1)*sizeof(int),cudaMemcpyHostToDevice);
+  cudaMemcpy(bicg->djA,bicg->jA,mGPU->nnz*sizeof(int),cudaMemcpyHostToDevice);
+  cudaMemcpy(bicg->diA,bicg->iA,(mGPU->nrows+1)*sizeof(int),cudaMemcpyHostToDevice);
 
 #endif
 

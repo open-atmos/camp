@@ -33,38 +33,38 @@ void createSolver(SolverData *sd)
   ModelDataGPU *mGPU = &sd->mGPU;
 
   //Init variables ("public")
-  int nrows = bicg->nrows;
-  int blocks = bicg->blocks;
+  int nrows = mGPU->nrows;
+  int blocks = mGPU->blocks;
   read_options(bicg);
-  bicg->maxIt=1000;
-  bicg->tolmax=1.0e-30; //cv_mem->cv_reltol CAMP selected accuracy (1e-8) //1e-10;//1e-6
+  mGPU->maxIt=1000;
+  mGPU->tolmax=1.0e-30; //cv_mem->cv_reltol CAMP selected accuracy (1e-8) //1e-10;//1e-6
 #ifndef CSR_SPMV
-  bicg->mattype=0;
+  mGPU->mattype=0;
   printf("BCG Mattype=CSR\n");
 #else
-  bicg->mattype=1; //CSC
+  mGPU->mattype=1; //CSC
   printf("BCG Mattype=CSC\n");
 #endif
 
   //todo previous check to exception if len_cell>bicg_threads
-  int len_cell=bicg->nrows/bicg->n_cells;
-  if(len_cell>bicg->threads){
+  int len_cell=mGPU->nrows/mGPU->n_cells;
+  if(len_cell>mGPU->threads){
     printf("ERROR: Size cell greater than available threads per block");
     exit(0);
   }
 
   //Auxiliary vectors ("private")
-  double ** dr0 = &bicg->dr0;
-  double ** dr0h = &bicg->dr0h;
-  double ** dn0 = &bicg->dn0;
-  double ** dp0 = &bicg->dp0;
-  double ** dt = &bicg->dt;
-  double ** ds = &bicg->ds;
-  double ** dAx2 = &bicg->dAx2;
-  double ** dy = &bicg->dy;
-  double ** dz = &bicg->dz;
-  double ** daux = &bicg->daux;
-  double ** ddiag = &bicg->ddiag;
+  double ** dr0 = &mGPU->dr0;
+  double ** dr0h = &mGPU->dr0h;
+  double ** dn0 = &mGPU->dn0;
+  double ** dp0 = &mGPU->dp0;
+  double ** dt = &mGPU->dt;
+  double ** ds = &mGPU->ds;
+  double ** dAx2 = &mGPU->dAx2;
+  double ** dy = &mGPU->dy;
+  double ** dz = &mGPU->dz;
+  double ** daux = &mGPU->daux;
+  double ** ddiag = &mGPU->ddiag;
 
   //Allocate
   cudaMalloc(dr0,nrows*sizeof(double));
@@ -79,6 +79,7 @@ void createSolver(SolverData *sd)
   cudaMalloc(ddiag,nrows*sizeof(double));
   cudaMalloc(daux,nrows*sizeof(double));
   bicg->aux=(double*)malloc(sizeof(double)*blocks);
+
 
 }
 
@@ -824,14 +825,14 @@ void swapCSC_CSR_BCG(SolverData *sd){
 
 #else
 
-  int n_row=bicg->nrows;
-  int n_col=bicg->nrows;
-  int nnz=bicg->nnz;
+  int n_row=mGPU->nrows;
+  int n_col=mGPU->nrows;
+  int nnz=mGPU->nnz;
   int* Ap=bicg->iA;
   int* Aj=bicg->jA;
   double* Ax=bicg->A;
-  int* Bp=(int*)malloc((bicg->nrows+1)*sizeof(int));
-  int* Bi=(int*)malloc(bicg->nnz*sizeof(int));
+  int* Bp=(int*)malloc((mGPU->nrows+1)*sizeof(int));
+  int* Bi=(int*)malloc(mGPU->nnz*sizeof(int));
   double* Bx=(double*)malloc(nnz*sizeof(double));
 
 #endif
@@ -883,9 +884,9 @@ void swapCSC_CSR_BCG(SolverData *sd){
 
 #else
 
-  cudaMemcpy(bicg->diA,Bp,(bicg->nrows+1)*sizeof(int),cudaMemcpyHostToDevice);
-  cudaMemcpy(bicg->djA,Bi,bicg->nnz*sizeof(int),cudaMemcpyHostToDevice);
-  cudaMemcpy(bicg->dA,Bx,bicg->nnz*sizeof(double),cudaMemcpyHostToDevice);
+  cudaMemcpy(bicg->diA,Bp,(mGPU->nrows+1)*sizeof(int),cudaMemcpyHostToDevice);
+  cudaMemcpy(bicg->djA,Bi,mGPU->nnz*sizeof(int),cudaMemcpyHostToDevice);
+  cudaMemcpy(bicg->dA,Bx,mGPU->nnz*sizeof(double),cudaMemcpyHostToDevice);
 
 #endif
 
@@ -1486,24 +1487,24 @@ void solveGPU_block_thr(int blocks, int threads_block, int n_shr_memory, int n_s
   ModelDataGPU *mGPU = &sd->mGPU;
 
   //Init variables ("public")
-  int nrows = bicg->nrows;
-  int nnz = bicg->nnz;
-  int n_cells = bicg->n_cells;
-  int maxIt = bicg->maxIt;
-  int mattype = bicg->mattype;
-  double tolmax = bicg->tolmax;
+  int nrows = mGPU->nrows;
+  int nnz = mGPU->nnz;
+  int n_cells = mGPU->n_cells;
+  int maxIt = mGPU->maxIt;
+  int mattype = mGPU->mattype;
+  double tolmax = mGPU->tolmax;
 
   // Auxiliary vectors ("private")
-  double *dr0 = bicg->dr0;
-  double *dr0h = bicg->dr0h;
-  double *dn0 = bicg->dn0;
-  double *dp0 = bicg->dp0;
-  double *dt = bicg->dt;
-  double *ds = bicg->ds;
-  double *dAx2 = bicg->dAx2;
-  double *dy = bicg->dy;
-  double *dz = bicg->dz;
-  double *daux = bicg->daux;
+  double *dr0 = mGPU->dr0;
+  double *dr0h = mGPU->dr0h;
+  double *dn0 = mGPU->dn0;
+  double *dp0 = mGPU->dp0;
+  double *dt = mGPU->dt;
+  double *ds = mGPU->ds;
+  double *dAx2 = mGPU->dAx2;
+  double *dy = mGPU->dy;
+  double *dz = mGPU->dz;
+  double *daux = mGPU->daux;
 
   //Input variables
   int offset_nrows=(nrows/n_cells)*offset_cells;
@@ -1517,16 +1518,16 @@ void solveGPU_block_thr(int blocks, int threads_block, int n_shr_memory, int n_s
   int *diA=bicg->diA;
 
   double *dA=bicg->dA+offset_nnz;
-  double *ddiag=bicg->ddiag+offset_nrows;
+  double *ddiag=mGPU->ddiag+offset_nrows;
   double *dx=bicg->dx+offset_nrows;
-  double *dtempv=bicg->dtempv+offset_nrows;
+  double *dtempv=mGPU->dtempv+offset_nrows;
 
   int len_cell=nrows/n_cells;
 
 #ifndef DEBUG_SOLVEBCGCUDA
   if(bicg->counterBiConjGrad==0) {
     printf("n_cells %d len_cell %d nrows %d nnz %d max_threads_block %d blocks %d threads_block %d n_shr_empty %d offset_cells %d\n",
-           bicg->n_cells,len_cell,bicg->nrows,bicg->nnz,n_shr_memory,blocks,threads_block,n_shr_empty,offset_cells);
+           mGPU->n_cells,len_cell,mGPU->nrows,mGPU->nnz,n_shr_memory,blocks,threads_block,n_shr_empty,offset_cells);
 
     //print_double(bicg->A,nnz,"A");
     //print_int(bicg->jA,nnz,"jA");
@@ -1541,14 +1542,13 @@ void solveGPU_block_thr(int blocks, int threads_block, int n_shr_memory, int n_s
 #ifdef solveBcgCuda_sum_it
 
   //cudaMalloc((void**)&dit_ptr,nrows*sizeof(int));
-  //cudaMemset(dit_ptr, 0, bicg->nrows*sizeof(int));
+  //cudaMemset(dit_ptr, 0, mGPU->nrows*sizeof(int));
 
   cudaMalloc((void**)&dit_ptr,blocks*sizeof(int));
   cudaMemset(dit_ptr, 0, blocks*sizeof(int));
 
 #else
 
-  //int *dit_ptr=bicg->counterBiConjGradInternalGPU;
 
   cudaMalloc((void**)&dit_ptr,sizeof(int));
   cudaMemset(dit_ptr, 0, sizeof(int));
@@ -1569,50 +1569,9 @@ void solveGPU_block_thr(int blocks, int threads_block, int n_shr_memory, int n_s
 #endif
                                            );
 
-#ifdef PMC_DEBUG_GPU
-
-
-  int it=0;
-
-#ifdef solveBcgCuda_sum_it
-
-  int *it_ptr=(int*)malloc(blocks*sizeof(int));
-  cudaMemcpy(it_ptr,dit_ptr,blocks*sizeof(int),cudaMemcpyDeviceToHost);
-
-  for(int i=0;i<blocks;i++){
-    it+=it_ptr[i];
-  }
-
-#ifdef solveBcgCuda_avg_it
-  it=it/blocks;
-  //it=it/nrows;
-#endif
-
-  free(it_ptr);
-
-  bicg->counterBiConjGradInternal += it;
-
-#else
-
-  cudaMemcpy(&it,dit_ptr,sizeof(int),cudaMemcpyDeviceToHost);
-
-  if(offset_cells==0)
-    bicg->counterBiConjGradInternal += it;
-
-#endif
-
-#ifndef DEBUG_SOLVEBCGCUDA
-  if(bicg->counterBiConjGrad==0) {
-    printf("solveGPUBlock it %d\n",
-           it);
-  }
-#endif
 
 
 
-  cudaFree(dit_ptr);
-
-#endif
 
 
 }
@@ -1632,11 +1591,11 @@ void solveGPU_block(SolverData *sd, double *dA, int *djA, int *diA, double *dx, 
   }
 #endif
 
-  int len_cell = bicg->nrows/bicg->n_cells;
+  int len_cell = mGPU->nrows/mGPU->n_cells;
   int max_threads_block;
   if(bicg->use_multicells) {
 
-    max_threads_block = bicg->threads;//bicg->threads; 128;
+    max_threads_block = mGPU->threads;//mGPU->threads; 128;
 
   }else{
 
@@ -1647,7 +1606,7 @@ void solveGPU_block(SolverData *sd, double *dA, int *djA, int *diA, double *dx, 
   int n_cells_block =  max_threads_block/len_cell;
   int threads_block = n_cells_block*len_cell;
   int n_shr_empty = max_threads_block-threads_block;
-  int blocks = (bicg->nrows+threads_block-1)/threads_block;
+  int blocks = (mGPU->nrows+threads_block-1)/threads_block;
 
   int offset_cells=0;
 
@@ -1669,7 +1628,7 @@ void solveGPU_block(SolverData *sd, double *dA, int *djA, int *diA, double *dx, 
 
     //Update vars to launch last kernel
     offset_cells=n_cells_block*blocks;
-    int n_cells_last_block=bicg->n_cells-offset_cells;
+    int n_cells_last_block=mGPU->n_cells-offset_cells;
     threads_block=n_cells_last_block*len_cell;
     max_threads_block=nextPowerOfTwo(threads_block);
     n_shr_empty = max_threads_block-threads_block;
@@ -1694,26 +1653,26 @@ void solveGPU(SolverData *sd, double *dA, int *djA, int *diA, double *dx, double
   ModelDataGPU *mGPU = &sd->mGPU;
 
   //Init variables ("public")
-  int nrows = bicg->nrows;
-  int blocks = bicg->blocks;
-  int threads = bicg->threads;
-  int maxIt = bicg->maxIt;
-  int mattype = bicg->mattype;
-  double tolmax = bicg->tolmax;
-  double *ddiag = bicg->ddiag;
+  int nrows = mGPU->nrows;
+  int blocks = mGPU->blocks;
+  int threads = mGPU->threads;
+  int maxIt = mGPU->maxIt;
+  int mattype = mGPU->mattype;
+  double tolmax = mGPU->tolmax;
+  double *ddiag = mGPU->ddiag;
 
   // Auxiliary vectors ("private")
-  double *dr0 = bicg->dr0;
-  double *dr0h = bicg->dr0h;
-  double *dn0 = bicg->dn0;
-  double *dp0 = bicg->dp0;
-  double *dt = bicg->dt;
-  double *ds = bicg->ds;
-  double *dAx2 = bicg->dAx2;
-  double *dy = bicg->dy;
-  double *dz = bicg->dz;
+  double *dr0 = mGPU->dr0;
+  double *dr0h = mGPU->dr0h;
+  double *dn0 = mGPU->dn0;
+  double *dp0 = mGPU->dp0;
+  double *dt = mGPU->dt;
+  double *ds = mGPU->ds;
+  double *dAx2 = mGPU->dAx2;
+  double *dy = mGPU->dy;
+  double *dz = mGPU->dz;
   double *aux = bicg->aux;
-  double *daux = bicg->daux;
+  double *daux = mGPU->daux;
 
 #ifndef DEBUG_SOLVEBCGCUDA
   if(bicg->counterBiConjGrad==0) {
@@ -1743,7 +1702,7 @@ void solveGPU(SolverData *sd, double *dA, int *djA, int *diA, double *dx, double
 #ifdef DEBUG_SOLVEBCGCUDA_DEEP
 
   double *aux_x1;
-  aux_x1=(double*)malloc(bicg->nrows*sizeof(double));
+  aux_x1=(double*)malloc(mGPU->nrows*sizeof(double));
 
 #endif
 
@@ -1783,7 +1742,7 @@ void solveGPU(SolverData *sd, double *dA, int *djA, int *diA, double *dx, double
     gpu_zaxpby(1.0,dr0,-1.0*alpha,dn0,ds,nrows,blocks,threads);
 
 #ifdef DEBUG_SOLVEBCGCUDA_DEEP
-    cudaMemcpy(aux_x1,ds,bicg->nrows*sizeof(double),cudaMemcpyDeviceToHost);
+    cudaMemcpy(aux_x1,ds,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
 
     printf("%d ds[0] %-le\n",it,aux_x1[0]);
 
@@ -1799,9 +1758,9 @@ void solveGPU(SolverData *sd, double *dA, int *djA, int *diA, double *dx, double
     //temp1=gpu_dotxy(dz, dAx2, aux, daux, nrows,blocks, threads);
 
 #ifdef DEBUG_SOLVEBCGCUDA_DEEP
-    cudaMemcpy(aux_x1,dAx2,bicg->nrows*sizeof(double),cudaMemcpyDeviceToHost);
+    cudaMemcpy(aux_x1,dAx2,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
 
-    for(int i=0; i<bicg->nrows; i++){
+    for(int i=0; i<mGPU->nrows; i++){
       //printf("%d ddiag[%i] %-le\n",it,i,aux_x1[i]);
       //printf("%d dt[%i] %-le\n",it,i,aux_x1[i]);
       //printf("%d dAx2[%i] %-le\n",it,i,aux_x1[i]);
@@ -1840,17 +1799,7 @@ void solveGPU(SolverData *sd, double *dA, int *djA, int *diA, double *dx, double
     it++;
   }while(it<maxIt && temp1>tolmax);
 
-#ifdef PMC_DEBUG_GPU
-  bicg->counterBiConjGradInternal += it;
 
-#ifndef DEBUG_SOLVEBCGCUDA
-  if(bicg->counterBiConjGrad==0) {
-    printf("counterBiConjGradInternal %d\n",
-           bicg->counterBiConjGradInternal);
-  }
-#endif
-
-#endif
 
 #ifdef DEBUG_SOLVEBCGCUDA_DEEP
   free(aux_x1);
@@ -1864,17 +1813,17 @@ void free_itsolver(SolverData *sd)
   ModelDataGPU *mGPU = &sd->mGPU;
 
   //Auxiliary vectors ("private")
-  double ** dr0 = &bicg->dr0;
-  double ** dr0h = &bicg->dr0h;
-  double ** dn0 = &bicg->dn0;
-  double ** dp0 = &bicg->dp0;
-  double ** dt = &bicg->dt;
-  double ** ds = &bicg->ds;
-  double ** dAx2 = &bicg->dAx2;
-  double ** dy = &bicg->dy;
-  double ** dz = &bicg->dz;
-  double ** daux = &bicg->daux;
-  double ** ddiag = &bicg->ddiag;
+  double ** dr0 = &mGPU->dr0;
+  double ** dr0h = &mGPU->dr0h;
+  double ** dn0 = &mGPU->dn0;
+  double ** dp0 = &mGPU->dp0;
+  double ** dt = &mGPU->dt;
+  double ** ds = &mGPU->ds;
+  double ** dAx2 = &mGPU->dAx2;
+  double ** dy = &mGPU->dy;
+  double ** dz = &mGPU->dz;
+  double ** daux = &mGPU->daux;
+  double ** ddiag = &mGPU->ddiag;
 
   cudaFree(dr0);
   cudaFree(dr0h);
