@@ -2731,7 +2731,12 @@ void cudaDevicecvNlsNewton(
 
 #endif
 
-/*
+  int convfail=md->convfail;
+  int callSetup=md->callSetup;
+
+#ifndef DEV_cudacvNlsNewton
+
+
   int convfail = ((md->nflag == FIRST_CALL) || (md->nflag == PREV_ERR_FAIL)) ?
                  CV_NO_FAILURES : CV_FAIL_OTHER;
 
@@ -2743,22 +2748,15 @@ void cudaDevicecvNlsNewton(
                   (*cv_nst >= md->cv_nstlp + MSBP) ||
                   (dgamrat > DGMAX);
 
-*/
 
-  int convfail=md->convfail;
-  int callSetup=md->callSetup;
 
-  //cudaDevicescalezy(md->cv_rl1, hf, dftemp, nrows);
-  //N_VLinearSum(ONE, cv_mem->cv_zn[0], -ONE, cv_mem->cv_last_yn, cv_mem->cv_ftemp);
-  //dftemp[i]=md->cv_rl1*dzn[i+1*nrows];
   //cudaDevicezaxpby(1.0, dzn, -1.0, md->cv_last_yn, dftemp, nrows);
+  dftemp[i]=dzn[i]+(-md->cv_last_yn[i]);
 
-  //dftemp[i]=dzn[i]*(-md->cv_last_yn[i]);
 
-#ifndef DEV_cudacvNlsNewton
 
-#ifdef DEBUG_CudaDeviceguess_helper
-#else
+#endif
+
 
   __syncthreads();
   int guessflag=CudaDeviceguess_helper(t_n, h_n, dzn,
@@ -2805,7 +2803,6 @@ void cudaDevicecvNlsNewton(
   }
 
 
-#endif
 
 #endif
 
@@ -2825,7 +2822,7 @@ void cudaDevicecvNlsNewton(
 */
 
 
-#endif
+
 
   for(;;) {
 
@@ -3841,6 +3838,12 @@ int cudacvNlsNewton(SolverData *sd, CVodeMem cv_mem, int nflag) {
     cudaMemcpy((i * bicg->nrows + bicg->dzn), zn, bicg->nrows * sizeof(double), cudaMemcpyHostToDevice);
   }
 
+  
+
+#ifndef DEV_cudacvNlsNewton
+
+#else
+
   int convfail, retval, ier;
   booleantype callSetup;
 
@@ -3864,18 +3867,8 @@ int cudacvNlsNewton(SolverData *sd, CVodeMem cv_mem, int nflag) {
 
   N_VLinearSum(ONE, cv_mem->cv_zn[0], -ONE, cv_mem->cv_last_yn, cv_mem->cv_ftemp);
 
-  double min = N_VMin(cv_mem->cv_zn[0]);
-  mGPU->min=min;
-  int cond=1;
-  if (min>-SMALL) cond=0;
 
-#ifdef DEBUG_CudaDeviceguess_helper
-  printf("min CPU %le min>-SMALL %d \n",min,cond);
-#endif
-
-#ifndef DEV_cudacvNlsNewton
-
-#else
+  /*
 
   if (cv_mem->cv_ghfun) {
   //N_VScale(cv_mem->cv_rl1, cv_mem->cv_zn[1], cv_mem->cv_ftemp);
@@ -3887,7 +3880,7 @@ int cudacvNlsNewton(SolverData *sd, CVodeMem cv_mem, int nflag) {
                             cv_mem->cv_tempv, cv_mem->cv_acor_init);
   if (retval<0) return(RHSFUNC_RECVR);
   }
-
+*/
 
 #endif
 
@@ -3898,10 +3891,11 @@ int cudacvNlsNewton(SolverData *sd, CVodeMem cv_mem, int nflag) {
   cudaMemcpy(bicg->dgammap, &cv_mem->cv_gammap, 1 * sizeof(double), cudaMemcpyHostToDevice);
   cudaMemcpy(mGPU->cv_last_yn,cv_last_yn,bicg->nrows*sizeof(double),cudaMemcpyHostToDevice);
   cudaMemcpy(mGPU->cv_acor_init,cv_acor_init,bicg->nrows*sizeof(double),cudaMemcpyHostToDevice);
-
   cudaMemcpy(bicg->cv_jcur, &cv_mem->cv_jcur, 1 * sizeof(int), cudaMemcpyHostToDevice);//todo needed?
   cudaMemcpy(bicg->cv_nst, &cv_mem->cv_nst, 1 * sizeof(int), cudaMemcpyHostToDevice);
 
+  double min = N_VMin(cv_mem->cv_zn[0]);
+  mGPU->min=min;
   mGPU->cv_jcur = cv_mem->cv_jcur;
   mGPU->cv_crate=cv_mem->cv_crate;
   mGPU->cv_gamrat = cv_mem->cv_gamrat;
