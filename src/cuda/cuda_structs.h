@@ -114,13 +114,22 @@ typedef struct {
 typedef struct {
 
     //int *djA; //seems works fine using device ptr
-    int n_cells;
+
+    double cv_eta;
+    int cv_q;
+    int cv_qprime;
+    double cv_h;
+    double cv_next_h;
+    double cv_hscale;
+    int cv_nscon;
+
+
+    //Counters (e.g. iterations of function cvnlsNewton)
     int cv_nsetups;
     int cv_nfe;
     int nje;
     int nstlj;
-
-
+    int cv_ncfn;
 
 #ifdef PMC_DEBUG_GPU
     int counterDerivGPU;
@@ -254,7 +263,6 @@ typedef struct {
 
     //Guess_helper
     double t_n;
-    double h_n;
     double* dftemp;
     double* dcv_y;
     double* dtempv1;
