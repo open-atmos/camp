@@ -128,8 +128,10 @@ typedef struct {
     double cv_hprime;
     double cv_hmin;
     double cv_tn;
+    double cv_tn_copy;
     double cv_etamax;
     int cv_maxncf;
+
 
 
 
@@ -273,6 +275,7 @@ typedef struct {
 
     //Guess_helper
     //double t_n;
+    double* cv_tn;
     double* dftemp;
     double* dcv_y;
     double* dtempv1;
