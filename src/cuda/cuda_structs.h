@@ -122,6 +122,16 @@ typedef struct {
     double cv_next_h;
     double cv_hscale;
     int cv_nscon;
+    double saved_t;
+    int ncf;
+    int nef;
+    double cv_hprime;
+    double cv_hmin;
+    double cv_tn;
+    double cv_etamax;
+    int cv_maxncf;
+
+
 
 
     //Counters (e.g. iterations of function cvnlsNewton)
@@ -262,7 +272,7 @@ typedef struct {
     int*    diB;
 
     //Guess_helper
-    double t_n;
+    //double t_n;
     double* dftemp;
     double* dcv_y;
     double* dtempv1;
