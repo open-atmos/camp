@@ -2112,6 +2112,7 @@ void alloc_solver_gpu2(CVodeMem cv_mem, SolverData *sd)
   mGPU->replacement_value=TINY;
   mGPU->threshhold=-SMALL;
   mGPU->cv_reltol=((CVodeMem) sd->cvode_mem)->cv_reltol;
+
   mGPU->deriv_length_cell=mGPU->nrows/mGPU->n_cells;
   mGPU->state_size_cell=md->n_per_cell_state_var;
 
@@ -3011,14 +3012,15 @@ void cudaGlobalSolveODE(
   ModelDataVariable *mdv = md->mdv;
   extern __shared__ int flag_shr[];
   flag_shr[0] = 0;//99
-  __syncthreads();*flag = flag_shr[0];__syncthreads();
+  __syncthreads();*md->flag = flag_shr[0];__syncthreads();
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   unsigned int tid = threadIdx.x;
   int active_threads = md->nrows;
-  int n_shr = blockDim.x + n_shr_empty;
+  int n_shr = blockDim.x + md->n_shr_empty;
 
   if(i<active_threads){
 
+    /*
   cudaDevicecvNlsNewton(
           dA, djA, diA, dx, dtempv, //Input data
           nrows, blocks, n_shr_empty, maxIt, mattype,
@@ -3048,6 +3050,74 @@ void cudaGlobalSolveODE(
           counterDerivGPU
 #endif
   );
+*/
+
+    cudaDevicecvNlsNewton(
+            md->dA, md->djA, md->diA, md->dx, md->dtempv, //Input data
+            md->nrows, md->blocks, md->n_shr_empty, md->maxIt, md->mattype,
+            md->n_cells, md->tolmax, md->ddiag, //Init variables
+            md->dr0, md->dr0h, md->dn0, md->dp0,
+            md->dt, md->ds, md->dAx2, md->dy, md->dz,// Auxiliary vectors
+            //swapCSC_CSR_BCG
+            md->diB, md->djB, md->dB,
+            //Guess_helper
+            md->t_n, md->h_n, md->dftemp,
+            md->dcv_y, md->dtempv1,
+            md->dtempv2, md->cv_reltol,
+            //update_state
+            md->threshhold, md->replacement_value, md->flag,
+            //f_gpu
+            md->time_step, md->deriv_length_cell, md->state_size_cell,
+            md->i_kernel, md->threads_block, md,
+            //cudacvNewtonIteration
+            md->dacor, md->dzn, md->dewt, md->dcv_tq,
+            &mdv->cv_nfe, &mdv->cv_nsetups,
+            md->cv_nst, &mdv->nstlj,
+            md->disavedJ, md->djsavedJ, md->dsavedJ,
+            &mdv->nje
+#ifdef PMC_DEBUG_GPU
+    ,&mdv->counterBCGInternal,
+      &mdv->dtBCG, &mdv->dtPreBCG,
+      &mdv->dtPostBCG,
+          mdv->counterDerivGPU
+#endif
+    );
+
+    /*
+
+    cudaDevicecvNlsNewton(
+            md->dA, md->djA, md->diA, md->dx, md->dtempv, //Input data
+            md->nrows, md->blocks, md->n_shr_empty,
+            md->maxIt, md->mattype,
+            md->n_cells, md->tolmax, md->ddiag, //Init variables
+            md->dr0, md->dr0h, md->dn0, md->dp0,
+            md->dt, md->ds, md->dAx2, md->dy, md->dz,// Auxiliary vectors
+            //swapCSC_CSR_BCG
+            md->diB, md->djB, md->dB,
+            //Guess_helper
+            md->t_n, md->h_n, md->dftemp,
+            md->dcv_y, md->dtempv1,
+            md->dtempv2, md->cv_reltol,
+            //update_state
+            md->threshhold, md->replacement_value, md->flag,
+            //f_gpu
+            md->time_step, md->deriv_length_cell, md->state_size_cell,
+            md->i_kernel, md->threads_block, md,
+            //cudacvNewtonIteration
+            md->dacor, md->dzn, md->dewt, md->dcv_tq,
+            &mdv->cv_nfe, &mdv->cv_nsetups,
+            md->cv_nst, &mdv->nstlj,
+            md->disavedJ, md->djsavedJ, md->dsavedJ,
+            &mdv->nje
+#ifdef PMC_DEBUG_GPU
+    ,&mdv->counterBCGInternal,
+      &mdv->dtBCG, &mdv->dtPreBCG,
+      &mdv->dtPostBCG,
+          mdv->counterDerivGPU
+#endif
+    );
+
+     */
 
   }
 
@@ -3379,6 +3449,9 @@ void solveCVODEGPU_thr(int blocks, int threads_block, int n_shr_memory, int n_sh
   // On the first call to f(), the time step hasn't been set yet, so use the
   // default value
   time_step = time_step > 0. ? time_step : sd->init_time_step;
+  mGPU->time_step=time_step;
+  mGPU->t_n=cv_mem->cv_tn;
+  mGPU->h_n=cv_mem->cv_h;
 
   /*
 
@@ -3659,7 +3732,7 @@ void solveCVODEGPU(SolverData *sd, CVodeMem cv_mem)
   int threads_block = len_cell;
   int blocks = mGPU->n_cells;
   int n_shr = max_threads_block = nextPowerOfTwoCVODE(len_cell);
-  int n_shr_empty = n_shr-threads_block;
+  int n_shr_empty = mGPU->n_shr_empty= n_shr-threads_block;
 
   solveCVODEGPU_thr(blocks, threads_block, max_threads_block, n_shr_empty, offset_cells,
                     sd,cv_mem);
@@ -3668,7 +3741,7 @@ void solveCVODEGPU(SolverData *sd, CVodeMem cv_mem)
 
   int n_cells_block =  max_threads_block/len_cell;
   int threads_block = n_cells_block*len_cell;
-  int n_shr_empty = max_threads_block-threads_block;
+  int n_shr_empty = mGPU->n_shr_empty= max_threads_block-threads_block;
   int blocks = (mGPU->nrows+threads_block-1)/threads_block;
 
 
