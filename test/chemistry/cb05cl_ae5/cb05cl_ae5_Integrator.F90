@@ -1361,7 +1361,7 @@ SUBROUTINE INTEGRATE( TIN, TOUT, &
 !  ---------------------------------------------------------------------
 !***ROUTINES CALLED  DEWSET, DINTDY, DUMACH, DSTODE, DVNORM, XERRWD     
 !***COMMON BLOCKS    DLS001                                             
-!***REVISION HISTORY  (YYYYMMDD)                                        
+!***REVISION HISTORY  (YYYYMdmdv)
 ! 19791129  DATE WRITTEN                                                
 ! 19791213  Minor changes to declarations; DELP init. in STODE.         
 ! 19800118  Treat NEQ as array; integer declarations added throughout;  
@@ -2025,7 +2025,7 @@ SUBROUTINE INTEGRATE( TIN, TOUT, &
 !                                                                       
 !***REFERENCES  (NONE)                                                  
 !***ROUTINES CALLED  DUMSUM                                             
-!***REVISION HISTORY  (YYYYMMDD)                                        
+!***REVISION HISTORY  (YYYYMdmdv)
 !   19930216  DATE WRITTEN                                              
 !   19930818  Added SLATEC-format prologue.  (FNF)                      
 !   20030707  Added DUMSUM to force normal storage of COMP.  (ACH)      
@@ -2084,7 +2084,7 @@ SUBROUTINE INTEGRATE( TIN, TOUT, &
 !                                                                       
 !***SEE ALSO  DLSODE                                                    
 !***ROUTINES CALLED  (NONE)                                             
-!***REVISION HISTORY  (YYMMDD)                                          
+!***REVISION HISTORY  (YYMdmdv)
 !   791129  DATE WRITTEN                                                
 !   890501  Modified prologue to SLATEC/LDOC format.  (FNF)             
 !   890503  Minor cosmetic changes.  (FNF)                              
@@ -2204,7 +2204,7 @@ SUBROUTINE INTEGRATE( TIN, TOUT, &
 !***SEE ALSO  DLSODE                                                    
 !***ROUTINES CALLED  XERRWD                                             
 !***COMMON BLOCKS    DLS001                                             
-!***REVISION HISTORY  (YYMMDD)                                          
+!***REVISION HISTORY  (YYMdmdv)
 !   791129  DATE WRITTEN                                                
 !   890501  Modified prologue to SLATEC/LDOC format.  (FNF)             
 !   890503  Minor cosmetic changes.  (FNF)                              
@@ -2325,7 +2325,7 @@ SUBROUTINE INTEGRATE( TIN, TOUT, &
 !***SEE ALSO  DLSODE                                                    
 !***ROUTINES CALLED  DGBFA, DGEFA, DVNORM                               
 !***COMMON BLOCKS    DLS001                                             
-!***REVISION HISTORY  (YYMMDD)                                          
+!***REVISION HISTORY  (YYMdmdv)
 !   791129  DATE WRITTEN                                                
 !   890501  Modified prologue to SLATEC/LDOC format.  (FNF)             
 !   890504  Minor cosmetic changes.  (FNF)                              
@@ -2432,7 +2432,7 @@ SUBROUTINE INTEGRATE( TIN, TOUT, &
 !***SEE ALSO  DLSODE                                                    
 !***ROUTINES CALLED  DGBSL, DGESL                                       
 !***COMMON BLOCKS    DLS001                                             
-!***REVISION HISTORY  (YYMMDD)                                          
+!***REVISION HISTORY  (YYMdmdv)
 !   791129  DATE WRITTEN                                                
 !   890501  Modified prologue to SLATEC/LDOC format.  (FNF)             
 !   890503  Minor cosmetic changes.  (FNF)                              
@@ -2495,7 +2495,7 @@ SUBROUTINE INTEGRATE( TIN, TOUT, &
 !***SEE ALSO  DLSODE                                                    
 !***ROUTINES CALLED  (NONE)                                             
 !***COMMON BLOCKS    DLS001                                             
-!***REVISION HISTORY  (YYMMDD)                                          
+!***REVISION HISTORY  (YYMdmdv)
 !   791129  DATE WRITTEN                                                
 !   890501  Modified prologue to SLATEC/LDOC format.  (FNF)             
 !   890503  Minor cosmetic changes.  (FNF)                              
@@ -2619,7 +2619,7 @@ SUBROUTINE INTEGRATE( TIN, TOUT, &
 !***SEE ALSO  DLSODE                                                    
 !***ROUTINES CALLED  DCFODE, DVNORM                                     
 !***COMMON BLOCKS    DLS001                                             
-!***REVISION HISTORY  (YYMMDD)                                          
+!***REVISION HISTORY  (YYMdmdv)
 !   791129  DATE WRITTEN                                                
 !   890501  Modified prologue to SLATEC/LDOC format.  (FNF)             
 !   890503  Minor cosmetic changes.  (FNF)                              
@@ -3050,7 +3050,7 @@ SUBROUTINE INTEGRATE( TIN, TOUT, &
 !                                                                       
 !***SEE ALSO  DLSODE                                                    
 !***ROUTINES CALLED  (NONE)                                             
-!***REVISION HISTORY  (YYMMDD)                                          
+!***REVISION HISTORY  (YYMdmdv)
 !   791129  DATE WRITTEN                                                
 !   890501  Modified prologue to SLATEC/LDOC format.  (FNF)             
 !   890503  Minor cosmetic changes.  (FNF)                              
@@ -3097,7 +3097,7 @@ SUBROUTINE INTEGRATE( TIN, TOUT, &
 !                                                                       
 !***SEE ALSO  DLSODE                                                    
 !***ROUTINES CALLED  (NONE)                                             
-!***REVISION HISTORY  (YYMMDD)                                          
+!***REVISION HISTORY  (YYMdmdv)
 !   791129  DATE WRITTEN                                                
 !   890501  Modified prologue to SLATEC/LDOC format.  (FNF)             
 !   890503  Minor cosmetic changes.  (FNF)                              
@@ -3154,7 +3154,7 @@ SUBROUTINE INTEGRATE( TIN, TOUT, &
 !     in D21.13 format.                                                 
 !                                                                       
 !***ROUTINES CALLED  IXSAV                                              
-!***REVISION HISTORY  (YYMMDD)                                          
+!***REVISION HISTORY  (YYMdmdv)
 !   920831  DATE WRITTEN                                                
 !   921118  Replaced MFLGSV/LUNSAV by IXSAV. (ACH)                      
 !   930329  Modified prologue to SLATEC format. (FNF)                   
@@ -3227,7 +3227,7 @@ SUBROUTINE INTEGRATE( TIN, TOUT, &
 !***SEE ALSO  XERRWD, XERRWV                                            
 !***REFERENCES  (NONE)                                                  
 !***ROUTINES CALLED  IXSAV                                              
-!***REVISION HISTORY  (YYMMDD)                                          
+!***REVISION HISTORY  (YYMdmdv)
 !   921118  DATE WRITTEN                                                
 !   930329  Added SLATEC format prologue. (FNF)                         
 !   930407  Corrected SEE ALSO section. (FNF)                           
@@ -3260,7 +3260,7 @@ SUBROUTINE INTEGRATE( TIN, TOUT, &
 !***SEE ALSO  XERRWD, XERRWV                                            
 !***REFERENCES  (NONE)                                                  
 !***ROUTINES CALLED  IXSAV                                              
-!***REVISION HISTORY  (YYMMDD)                                          
+!***REVISION HISTORY  (YYMdmdv)
 !   921118  DATE WRITTEN                                                
 !   930329  Added SLATEC format prologue. (FNF)                         
 !   930407  Corrected SEE ALSO section. (FNF)                           
@@ -3313,7 +3313,7 @@ SUBROUTINE INTEGRATE( TIN, TOUT, &
 !                                                                       
 !***SEE ALSO  XERRWD, XERRWV                                            
 !***ROUTINES CALLED  IUMACH                                             
-!***REVISION HISTORY  (YYMMDD)                                          
+!***REVISION HISTORY  (YYMdmdv)
 !   921118  DATE WRITTEN                                                
 !   930329  Modified prologue to SLATEC format. (FNF)                   
 !   930915  Added IUMACH call to get default output unit.  (ACH)        
@@ -3369,7 +3369,7 @@ SUBROUTINE INTEGRATE( TIN, TOUT, &
 !                                                                       
 !***REFERENCES  (NONE)                                                  
 !***ROUTINES CALLED  (NONE)                                             
-!***REVISION HISTORY  (YYMMDD)                                          
+!***REVISION HISTORY  (YYMdmdv)
 !   930915  DATE WRITTEN                                                
 !   930922  Made user-callable, and other cosmetic changes. (FNF)       
 !***END PROLOGUE  IUMACH                                                

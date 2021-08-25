@@ -133,9 +133,6 @@ typedef struct {
     int cv_maxncf;
 
 
-
-
-
     //Counters (e.g. iterations of function cvnlsNewton)
     int cv_nsetups;
     int cv_nfe;
@@ -150,7 +147,26 @@ typedef struct {
     double dtPreBCG;
     double dtPostBCG;
 #endif
-}ModelDataVariable;
+}ModelDataVariable; //things to pass between gpu and cpu
+
+/*
+typedef struct {
+
+    //int *djA; //seems works fine using device ptr
+    double cv_tn;
+
+
+
+    //Counters (e.g. iterations of function cvnlsNewton)
+    //int cv_nsetups;
+    //int cv_nfe;
+
+
+#ifdef PMC_DEBUG_GPU
+
+#endif
+}ModelDataDevice; //Only gpu (all threads has its own struct)
+*/
 
 typedef struct {
     //double *deriv_data_gpu;
@@ -275,7 +291,6 @@ typedef struct {
 
     //Guess_helper
     //double t_n;
-    double* cv_tn;
     double* dftemp;
     double* dcv_y;
     double* dtempv1;
@@ -309,7 +324,8 @@ typedef struct {
     int*    djsavedJ;
     int*    disavedJ;
 
-    ModelDataVariable *mdv;//works fine
+    ModelDataVariable *mdv;
+    ModelDataVariable *mdvo;
 
 //ODE stats
 #ifdef PMC_DEBUG_GPU

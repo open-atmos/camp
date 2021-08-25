@@ -2060,6 +2060,7 @@ void alloc_solver_gpu2(CVodeMem cv_mem, SolverData *sd)
   mGPU->dA=mGPU->J;//set itsolver gpu pointer to jac pointer initialized at camp
 
   cudaMalloc((void**)&mGPU->mdv,sizeof(ModelDataVariable));
+  cudaMalloc((void**)&mGPU->mdvo,sizeof(ModelDataVariable));
   cudaMalloc((void**)&mGPU->flag,1*sizeof(int));
   cudaMalloc((void**)&mGPU->cv_jcur,1*sizeof(int));
   cudaMalloc((void**)&mGPU->nje,1*sizeof(int));
@@ -2089,7 +2090,6 @@ void alloc_solver_gpu2(CVodeMem cv_mem, SolverData *sd)
   cudaMalloc((void**)&mGPU->cv_acor_init,mGPU->nrows*sizeof(double));
   cudaMalloc((void**)&mGPU->dacor,mGPU->nrows*sizeof(double));
   cudaMalloc((void**)&mGPU->cv_nst,1*sizeof(int));
-  cudaMalloc((void**)&mGPU->cv_tn,1*sizeof(double));
 
 
   cudaMemcpy(mGPU->djA,bicg->jA,mGPU->nnz*sizeof(int),cudaMemcpyHostToDevice);
@@ -3057,7 +3057,7 @@ void cudaDevicecvRescale(ModelDataGPU *md) {
 }
 
 __device__
-void cudaDevicecvRestore(ModelDataGPU *md, double saved_t) {
+void cudaDevicecvRestore(ModelDataGPU *md, ModelDataVariable *dmdv, double saved_t) {
 
   ModelDataVariable *mdv = md->mdv;
   extern __shared__ int flag_shr[];
@@ -3072,13 +3072,13 @@ void cudaDevicecvRestore(ModelDataGPU *md, double saved_t) {
 
   __syncthreads();
 
-  mdv->cv_tn = saved_t;
-  //*md->cv_tn = saved_t;
+  //mdv->cv_tn = saved_t;
+  //dmdv->cv_tn = saved_t;
 
   __syncthreads();
 
 #ifndef DEV_cudaDevicecvRestore
-  if(i==0)printf("DEV_cudaDevicecvRestore mdv->cv_tn %le saved_t %le\n",md->cv_tn,saved_t);
+  if(i==0)printf("DEV_cudaDevicecvRestore mdv->cv_tn %le saved_t %le\n",dmdv->cv_tn,saved_t);
 #endif
 
   /*
@@ -3119,7 +3119,7 @@ void cudaDevicecvRestore(ModelDataGPU *md, double saved_t) {
 }
 
 __device__
-int cudaDevicecvHandleNFlag(ModelDataGPU *md, int *nflagPtr, double saved_t,
+int cudaDevicecvHandleNFlag(ModelDataGPU *md, ModelDataVariable *dmdv, int *nflagPtr, double saved_t,
                              int *ncfPtr) {
 
   ModelDataVariable *mdv = md->mdv;
@@ -3154,6 +3154,9 @@ int cudaDevicecvHandleNFlag(ModelDataGPU *md, int *nflagPtr, double saved_t,
   //if (nflag == CV_SUCCESS){
   if (*md->flag == CV_SUCCESS) {
     mdv->cv_tn = mdv->cv_tn_copy;
+
+    //dmdv->cv_tn = mdv->cv_tn;
+
     *md->flag = DO_ERROR_TEST;
     return(DO_ERROR_TEST);
   }//else{
@@ -3161,7 +3164,7 @@ int cudaDevicecvHandleNFlag(ModelDataGPU *md, int *nflagPtr, double saved_t,
   // The nonlinear soln. failed; increment ncfn and restore zn
   if(i==0)mdv->cv_ncfn++;
 
-  cudaDevicecvRestore(md, saved_t);
+  cudaDevicecvRestore(md, dmdv, saved_t);
 
   //*md->flag=*nflagPtr;
   //return (*nflagPtr);
@@ -3208,7 +3211,7 @@ int cudaDevicecvHandleNFlag(ModelDataGPU *md, int *nflagPtr, double saved_t,
 
 
 __device__
-void cudaDevicecvStep(ModelDataGPU *md) {
+void cudaDevicecvStep(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
   ModelDataVariable *mdv = md->mdv;
   extern __shared__ int flag_shr[];
@@ -3250,7 +3253,7 @@ void cudaDevicecvStep(ModelDataGPU *md) {
 
 #ifndef DEV_CUDACVSTEP
     
-  int kflag = cudaDevicecvHandleNFlag(md, md->flag, mdv->saved_t, &mdv->ncf);
+  int kflag = cudaDevicecvHandleNFlag(md, dmdv, md->flag, mdv->saved_t, &mdv->ncf);
 
   __syncthreads();
   //*md->flag = kflag;
@@ -3267,6 +3270,7 @@ void cudaGlobalSolveODE(ModelDataGPU md_object) {
 
   ModelDataGPU *md = &md_object;
   ModelDataVariable *mdv = md->mdv;
+  ModelDataVariable *mdvo = md->mdvo;
   extern __shared__ int flag_shr[];
   flag_shr[0] = 0;//99
   __syncthreads();*md->flag = flag_shr[0];__syncthreads();
@@ -3275,11 +3279,54 @@ void cudaGlobalSolveODE(ModelDataGPU md_object) {
   int active_threads = md->nrows;
   int n_shr = blockDim.x + md->n_shr_empty;
 
+
+  ModelDataVariable dmdv_object;
+  ModelDataVariable *dmdv = &dmdv_object;
+
+  mdv->cv_tn_copy = mdv->cv_tn;
+
+  dmdv->cv_tn = mdv->cv_tn;
+  dmdv->saved_t=mdv->saved_t;
+  dmdv->ncf=mdv->ncf;
+  dmdv->nef=mdv->nef;
+  dmdv->cv_eta=mdv->cv_eta;
+  dmdv->cv_q=mdv->cv_q;
+  dmdv->cv_qprime=mdv->cv_qprime;
+  dmdv->cv_h=mdv->cv_h;
+  dmdv->cv_next_h=mdv->cv_next_h;
+  dmdv->cv_hscale=mdv->cv_hscale;
+  dmdv->cv_nscon=mdv->cv_nscon;
+  dmdv->cv_hprime=mdv->cv_hprime;
+  dmdv->cv_hmin=mdv->cv_hmin;
+  dmdv->cv_etamax=mdv->cv_etamax;
+  dmdv->cv_maxncf=mdv->cv_maxncf;
+
+
   if(i<active_threads){
 
-    cudaDevicecvStep(md);
+    cudaDevicecvStep(md,dmdv);//md,mdGPUOnly //nombres dmdv->mdv y mdv->mdvi
 
   }
+
+  mdv->cv_tn=mdv->cv_tn_copy;
+
+  mdvo->cv_tn = dmdv->cv_tn;
+  mdvo->ncf = dmdv->ncf;
+  mdvo->nef = dmdv->nef;
+  mdvo->cv_eta = dmdv->cv_eta;
+  mdvo->cv_q = dmdv->cv_q;
+  mdvo->cv_qprime = dmdv->cv_qprime;
+  mdvo->cv_h = dmdv->cv_h;
+  mdvo->cv_next_h = dmdv->cv_next_h;
+  mdvo->cv_hscale = dmdv->cv_hscale;
+  mdvo->cv_nscon = dmdv->cv_nscon;
+  mdvo->cv_hprime = dmdv->cv_hprime;
+  mdvo->cv_hprime = dmdv->cv_hprime;
+  mdvo->cv_etamax=dmdv->cv_etamax;
+  mdvo->cv_maxncf=dmdv->cv_maxncf;
+
+
+  //todo make thread save flag and look for other variables
 
 }
 
@@ -4006,11 +4053,11 @@ void cvRestore_gpu3(CVodeMem cv_mem, realtype saved_t)
 {
   int j, k;
 
-/*
+
 
   cv_mem->cv_tn = saved_t;
   printf("cvRestore_gpu3 saved_t %le\n",saved_t);
-*/
+
 
 
   for (k = 1; k <= cv_mem->cv_q; k++)
@@ -4164,7 +4211,6 @@ int cudacvStep(SolverData *sd, CVodeMem cv_mem)
     sd->mdv.cv_hprime=cv_mem->cv_hprime;
     sd->mdv.cv_hmin=cv_mem->cv_hmin;
 
-    cudaMemcpy(mGPU->cv_tn, &cv_mem->cv_tn, 1 * sizeof(double), cudaMemcpyHostToDevice);
     sd->mdv.cv_tn=cv_mem->cv_tn;
     sd->mdv.cv_tn_copy=cv_mem->cv_tn;
 
@@ -4196,6 +4242,7 @@ int cudacvStep(SolverData *sd, CVodeMem cv_mem)
 #ifndef DEV_CUDACVSTEP
 
     cudaMemcpy(&sd->mdv,mGPU->mdv,sizeof(ModelDataVariable),cudaMemcpyDeviceToHost);
+    //cudaMemcpy(&sd->mdv,mGPU->mdvo,sizeof(ModelDataVariable),cudaMemcpyDeviceToHost);
 
 
     //saved_t=sd->mdv.saved_t;
@@ -4211,9 +4258,7 @@ int cudacvStep(SolverData *sd, CVodeMem cv_mem)
     cv_mem->cv_hprime=sd->mdv.cv_hprime;
     cv_mem->cv_hmin=sd->mdv.cv_hmin;
 
-    cv_mem->cv_tn=sd->mdv.cv_tn; //not working, data corrupted
-    //cudaMemcpy(&cv_mem->cv_tn, mGPU->cv_tn, 1 * sizeof(double), cudaMemcpyDeviceToHost);
-
+    //cv_mem->cv_tn=sd->mdv.cv_tn;
 
 
     cv_mem->cv_etamax=sd->mdv.cv_etamax;
