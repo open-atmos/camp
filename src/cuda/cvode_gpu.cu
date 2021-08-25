@@ -1054,11 +1054,6 @@ int CudaDeviceguess_helper(double t_n, double h_n, double* y_n,
     if (iter == GUESS_MAX_ITER - 1 && t_0 + t_j < t_n) {
       if (h_n == 0.){
 
-#ifndef DEV_GUESSFLAG
-        return -1;
-#else
-        flag_shr2[0]=-1;
-#endif
 
 #ifdef PMC_DEBUG_GPU
 #ifdef cudaGlobalSolveODE_timers_max_blocks
@@ -1068,6 +1063,11 @@ int CudaDeviceguess_helper(double t_n, double h_n, double* y_n,
 #endif
 #endif
 
+#ifndef DEV_GUESSFLAG
+        return -1;
+#else
+        flag_shr2[0]=-1;
+#endif
       }
     }
 
@@ -2059,10 +2059,14 @@ void alloc_solver_gpu2(CVodeMem cv_mem, SolverData *sd)
   //ODE aux variables
   mGPU->dA=mGPU->J;//set itsolver gpu pointer to jac pointer initialized at camp
 
+
+
+  sd->flagCells=(int *)malloc((mGPU->n_cells)*sizeof(int));
+
   cudaMalloc((void**)&mGPU->mdv,sizeof(ModelDataVariable));
   cudaMalloc((void**)&mGPU->mdvo,sizeof(ModelDataVariable));
   cudaMalloc((void**)&mGPU->flag,1*sizeof(int));
-  cudaMalloc((void**)&mGPU->flagCells,md->n_per_cell_dep_var*sizeof(int));
+  cudaMalloc((void**)&mGPU->flagCells,mGPU->n_cells*sizeof(int));
   cudaMalloc((void**)&mGPU->cv_jcur,1*sizeof(int));
   cudaMalloc((void**)&mGPU->nje,1*sizeof(int));
   cudaMalloc((void**)&mGPU->cv_nst,1*sizeof(int));
@@ -3328,7 +3332,7 @@ void cudaGlobalSolveODE(ModelDataGPU md_object) {
 
   mdv->cv_tn_copy = mdv->cv_tn;
 
-/*
+
   dmdv->saved_t = mdv->saved_t;
   dmdv->cv_tn = mdv->cv_tn;
   dmdv->saved_t=mdv->saved_t;
@@ -3345,7 +3349,6 @@ void cudaGlobalSolveODE(ModelDataGPU md_object) {
   dmdv->cv_hmin=mdv->cv_hmin;
   dmdv->cv_etamax=mdv->cv_etamax;
   dmdv->cv_maxncf=mdv->cv_maxncf;
-  */
 
 
   if(i<active_threads){
@@ -3355,10 +3358,12 @@ void cudaGlobalSolveODE(ModelDataGPU md_object) {
   }
 
   //no compilo le FUUUUUUUUUU
-  *md->flag=dmdv->flag; //fine
-  //mdvo->flag=dmdv->flag; //fine
+  //*md->flag=dmdv->flag; //fine
+#ifndef DEV_cv_tn
+  mdvo->flag=dmdv->flag; //fine?
+#endif
 
-  //if(tid==0)md->flagCells[blockIdx.x]=dmdv->flag;//wrong? crashes
+  //if(tid==0)md->flagCells[blockIdx.x]=dmdv->flag;//wrong? crashes?
 
 #ifndef DEV_cv_tn
 
@@ -3367,7 +3372,7 @@ void cudaGlobalSolveODE(ModelDataGPU md_object) {
   //mdvo->cv_tn = dmdv->cv_tn;
 #endif
 
-/*
+
   mdvo->saved_t=dmdv->saved_t;
   mdvo->ncf = dmdv->ncf;
   mdvo->nef = dmdv->nef;
@@ -3382,7 +3387,7 @@ void cudaGlobalSolveODE(ModelDataGPU md_object) {
   mdvo->cv_hprime = dmdv->cv_hprime;
   mdvo->cv_etamax=dmdv->cv_etamax;
   mdvo->cv_maxncf=dmdv->cv_maxncf;
-  */
+
 
 
   //todo make thread save flag and look for other variables
@@ -4302,8 +4307,12 @@ int cudacvStep(SolverData *sd, CVodeMem cv_mem)
 
 #ifndef DEV_CUDACVSTEP
 
-    cudaMemcpy(&sd->mdv,mGPU->mdv,sizeof(ModelDataVariable),cudaMemcpyDeviceToHost);
-    //cudaMemcpy(&sd->mdv,mGPU->mdvo,sizeof(ModelDataVariable),cudaMemcpyDeviceToHost);
+    //cudaMemcpy(&sd->mdv,mGPU->mdv,sizeof(ModelDataVariable),cudaMemcpyDeviceToHost);
+    cudaMemcpy(&sd->mdv,mGPU->mdvo,sizeof(ModelDataVariable),cudaMemcpyDeviceToHost);
+
+    //HANDLE_ERROR(cudaMemcpy(&flag, mGPU->flag, 1 * sizeof(int), cudaMemcpyDeviceToHost));//deprecated
+
+    flag=sd->mdv.flag;
 
     //flag=sd->mdv.flag;
     ncf=sd->mdv.ncf;
@@ -4328,7 +4337,7 @@ int cudacvStep(SolverData *sd, CVodeMem cv_mem)
 #endif
 
 /*
-    HANDLE_ERROR(cudaMemcpy(sd->flagCells, mGPU->flagCells, 1 * sizeof(int), cudaMemcpyDeviceToHost));
+    HANDLE_ERROR(cudaMemcpy(sd->flagCells, mGPU->flagCells, mGPU->n_cells * sizeof(int), cudaMemcpyDeviceToHost));
     flag=DO_ERROR_TEST;//CV_SUCCESS
     for(int i=0;i<mGPU->n_cells;i++){
       printf("DEV_cudacvStep sd->flagCells[i] %d sd->mdv.flag %d\n",sd->flagCells[i], sd->mdv.flag);
@@ -4345,10 +4354,7 @@ int cudacvStep(SolverData *sd, CVodeMem cv_mem)
       cudaMemcpy(zn, (i * mGPU->nrows + mGPU->dzn), mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost);
     }
 
-    HANDLE_ERROR(cudaMemcpy(&flag, mGPU->flag, 1 * sizeof(int), cudaMemcpyDeviceToHost));//deprecated
 
-
-    //flag=sd->mdv.flag;
 
 
 
