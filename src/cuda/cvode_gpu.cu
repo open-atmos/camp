@@ -3062,7 +3062,7 @@ void cudaDevicecvRescale(ModelDataGPU *md) {
 }
 
 __device__
-void cudaDevicecvRestore(double *cv_tn, ModelDataGPU *md, ModelDataVariable *dmdv, double saved_t) {
+void cudaDevicecvRestore(ModelDataGPU *md, ModelDataVariable *dmdv, double saved_t) {
 
   ModelDataVariable *mdv = md->mdv;
   ModelDataVariable *mdvo = md->mdvo;
@@ -3088,6 +3088,7 @@ void cudaDevicecvRestore(double *cv_tn, ModelDataGPU *md, ModelDataVariable *dmd
   //dmdv->cv_tn=saved_t; //wrong
 
   //mdvo->cv_tn=saved_t;
+  dmdv->cv_tn=saved_t;
 
 #endif
 
@@ -3108,20 +3109,20 @@ void cudaDevicecvRestore(double *cv_tn, ModelDataGPU *md, ModelDataVariable *dmd
     }
   }
 
-  //md->dzn[i]=md->cv_last_yn[i];
+  md->dzn[i]=md->cv_last_yn[i];
   //N_VScale(ONE, cv_mem->cv_last_yn, cv_mem->cv_zn[0]);
 
 #ifndef DEV_cudaDevicecvRestore
   if(i==0)printf("DEV_cudaDevicecvRestore end\n");
 #endif
 
-    */
+*/
 
 
 }
 
 __device__
-int cudaDevicecvHandleNFlag(double *cv_tn, ModelDataGPU *md, ModelDataVariable *dmdv, int *nflagPtr, double saved_t,
+int cudaDevicecvHandleNFlag(ModelDataGPU *md, ModelDataVariable *dmdv, int *nflagPtr, double saved_t,
                              int *ncfPtr) {
 
   ModelDataVariable *mdv = md->mdv;
@@ -3190,7 +3191,7 @@ int cudaDevicecvHandleNFlag(double *cv_tn, ModelDataGPU *md, ModelDataVariable *
   // The nonlinear soln. failed; increment ncfn and restore zn
   if(i==0)mdv->cv_ncfn++;
 
-  cudaDevicecvRestore(cv_tn, md, dmdv, saved_t);
+  cudaDevicecvRestore(md, dmdv, saved_t);
 
   __syncthreads();
   //__syncthreads();*md->flag = flag_shr[0];__syncthreads();
@@ -3288,11 +3289,10 @@ void cudaDevicecvStep(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
 #ifndef DEV_CUDACVSTEP
 
-  double cv_tn=mdv->cv_tn;
 
   //int kflag = cudaDevicecvHandleNFlag(&cv_tn, md, dmdv, md->flag, dmdv->saved_t, &dmdv->ncf);
 
-  //int kflag = cudaDevicecvHandleNFlag(&cv_tn, md, dmdv, &flagDevice, dmdv->saved_t, &dmdv->ncf);
+  int kflag = cudaDevicecvHandleNFlag(md, dmdv, &dmdv->flag, dmdv->saved_t, &dmdv->ncf);
 
   __syncthreads();
   //mdvo->cv_tn=cv_tn;
@@ -3305,7 +3305,7 @@ void cudaDevicecvStep(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
   __syncthreads();
 
-  if(i==0)printf("DEV_cudaDevicecvStep end mdvo->cv_tn %le\n",mdvo->cv_tn);
+  //if(i==0)printf("DEV_cudaDevicecvStep end mdvo->cv_tn %le\n",mdvo->cv_tn);
 
 
 #else
@@ -3357,20 +3357,10 @@ void cudaGlobalSolveODE(ModelDataGPU md_object) {
 
   }
 
-  //no compilo le FUUUUUUUUUU
   //*md->flag=dmdv->flag; //fine
-#ifndef DEV_cv_tn
-  mdvo->flag=dmdv->flag; //fine?
-#endif
+  mdvo->flag=dmdv->flag; //fine
 
-  //if(tid==0)md->flagCells[blockIdx.x]=dmdv->flag;//wrong? crashes?
-
-#ifndef DEV_cv_tn
-
-#else
-  //mdv->cv_tn=mdv->cv_tn_copy;
-  //mdvo->cv_tn = dmdv->cv_tn;
-#endif
+  if(tid==0)md->flagCells[blockIdx.x]=dmdv->flag;//FINE
 
 
   mdvo->saved_t=dmdv->saved_t;
@@ -4119,7 +4109,7 @@ void cvRestore_gpu3(CVodeMem cv_mem, realtype saved_t)
   int j, k;
 
 #ifndef DEV_cv_tn
-  cv_mem->cv_tn = saved_t;
+  //cv_mem->cv_tn = saved_t;
   printf("cvRestore_gpu3 cv_mem->cv_tn %le\n",cv_mem->cv_tn);
 #else
   cv_mem->cv_tn = saved_t;
@@ -4127,12 +4117,14 @@ void cvRestore_gpu3(CVodeMem cv_mem, realtype saved_t)
 
 #endif
 
+
   for (k = 1; k <= cv_mem->cv_q; k++)
     for (j = cv_mem->cv_q; j >= k; j--)
       N_VLinearSum(ONE, cv_mem->cv_zn[j-1], -ONE,
                    cv_mem->cv_zn[j], cv_mem->cv_zn[j-1]);
 
   N_VScale(ONE, cv_mem->cv_last_yn, cv_mem->cv_zn[0]);
+
 
 }
 
@@ -4312,8 +4304,6 @@ int cudacvStep(SolverData *sd, CVodeMem cv_mem)
 
     //HANDLE_ERROR(cudaMemcpy(&flag, mGPU->flag, 1 * sizeof(int), cudaMemcpyDeviceToHost));//deprecated
 
-    flag=sd->mdv.flag;
-
     //flag=sd->mdv.flag;
     ncf=sd->mdv.ncf;
     nef=sd->mdv.nef;
@@ -4336,24 +4326,23 @@ int cudacvStep(SolverData *sd, CVodeMem cv_mem)
     //cv_mem->cv_tn=sd->mdv.cv_tn;//wrong results
 #endif
 
-/*
+
     HANDLE_ERROR(cudaMemcpy(sd->flagCells, mGPU->flagCells, mGPU->n_cells * sizeof(int), cudaMemcpyDeviceToHost));
     flag=DO_ERROR_TEST;//CV_SUCCESS
     for(int i=0;i<mGPU->n_cells;i++){
-      printf("DEV_cudacvStep sd->flagCells[i] %d sd->mdv.flag %d\n",sd->flagCells[i], sd->mdv.flag);
+      //printf("DEV_cudacvStep sd->flagCells[i] %d sd->mdv.flag %d\n",sd->flagCells[i], sd->mdv.flag);
       if(sd->flagCells[i]!=flag){
         flag=sd->flagCells[i];
         break;
       }
     }
-    printf("DEV_cudacvStep flag %d sd->mdv.flag %d\n",flag, sd->mdv.flag);
-*/
+    //printf("DEV_cudacvStep flag %d sd->mdv.flag %d\n",flag, sd->mdv.flag);
+
 
     for (int i = 0; i <= cv_mem->cv_qmax; i++) {//cv_qmax+1 (6)?
       double *zn = NV_DATA_S(cv_mem->cv_zn[i]);
       cudaMemcpy(zn, (i * mGPU->nrows + mGPU->dzn), mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost);
     }
-
 
 
 
