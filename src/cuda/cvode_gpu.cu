@@ -2122,6 +2122,7 @@ void alloc_solver_gpu2(CVodeMem cv_mem, SolverData *sd)
   mGPU->deriv_length_cell=mGPU->nrows/mGPU->n_cells;
   mGPU->state_size_cell=md->n_per_cell_state_var;
 
+  //printf("mGPU->nrows %d n_dep_var %d\n",mGPU->nrows, md->n_per_cell_dep_var*md->n_cells);
 
   //ODE aux variables
 
@@ -3078,34 +3079,22 @@ void cudaDevicecvRestore(ModelDataGPU *md, ModelDataVariable *dmdv, double saved
 
   __syncthreads();
 
-#ifndef DEV_cv_tn
-  //mdv->cv_tn = saved_t;half-good
-  //dmdv->cv_tn = saved_t;
-  //if(tid==0)*cv_tn=saved_t;
-  //if(tid==0)*cv_tn=mdv->saved_t;
-  //mdvo->cv_tn=saved_t;
-  //if(tid==0)dmdv->cv_tn=saved_t; //wrong
-  //dmdv->cv_tn=saved_t; //wrong
-
-  //mdvo->cv_tn=saved_t;
   dmdv->cv_tn=saved_t;
-
-#endif
 
   __syncthreads();
 
 #ifndef DEV_cudaDevicecvRestore
-  if(i==0)printf("DEV_cudaDevicecvRestore mdv->cv_tn %le saved_t %le\n",dmdv->cv_tn,saved_t);
+  //if(i==0)printf("DEV_cudaDevicecvRestore mdv->cv_tn %le saved_t %le\n",dmdv->cv_tn,saved_t);
 #endif
 
-  /*
+#ifndef DEV_cvRestore
 
   for (k = 1; k <= mdv->cv_q; k++){
     for (j = mdv->cv_q; j >= k; j--){
       //N_VLinearSum(ONE, cv_mem->cv_zn[j-1], -ONE,
       //             cv_mem->cv_zn[j], cv_mem->cv_zn[j-1]);
       cudaDevicezaxpby(1., &md->dzn[md->nrows*(j-1)], -1.,
-              md->J_tmp2, &md->dzn[md->nrows*(j)], md->nrows);
+              &md->dzn[md->nrows*(j)], &md->dzn[md->nrows*(j-1)], md->nrows);
     }
   }
 
@@ -3113,11 +3102,11 @@ void cudaDevicecvRestore(ModelDataGPU *md, ModelDataVariable *dmdv, double saved
   //N_VScale(ONE, cv_mem->cv_last_yn, cv_mem->cv_zn[0]);
 
 #ifndef DEV_cudaDevicecvRestore
-  if(i==0)printf("DEV_cudaDevicecvRestore end\n");
+  //if(i==0)printf("DEV_cudaDevicecvRestore end\n");
 #endif
 
-*/
 
+#endif
 
 }
 
@@ -3161,18 +3150,10 @@ int cudaDevicecvHandleNFlag(ModelDataGPU *md, ModelDataVariable *dmdv, int *nfla
   if (*nflagPtr == CV_SUCCESS){
   //if (*md->flag == CV_SUCCESS) { //AQUI LEE
 
-#ifndef DEV_cv_tn
-    //if(tid==0)*cv_tn=mdv->cv_tn;
-    //if(tid==0)mdvo->cv_tn=mdv->cv_tn;
-    //if(tid==0)dmdv->cv_tn=mdv->cv_tn;
-    //dmdv->cv_tn=mdv->cv_tn; //wrong
+#ifndef DEV_cvRestore
 
-    //mdvo->cv_tn=mdv->cv_tn;
+    //if(i==0)printf("cudaDevicecvHandleNFlag CV_SUCCESS \n");
 
-
-    if(i==0)printf("cudaDevicecvHandleNFlag CV_SUCCESS \n");
-#else
-    mdv->cv_tn = mdv->cv_tn_copy;
 #endif
 
     //*md->flag = DO_ERROR_TEST; //AQUI MODIFICA
@@ -3378,9 +3359,7 @@ void cudaGlobalSolveODE(ModelDataGPU md_object) {
   mdvo->cv_etamax=dmdv->cv_etamax;
   mdvo->cv_maxncf=dmdv->cv_maxncf;
 
-
-
-  //todo make thread save flag and look for other variables
+  //todo look for other variables like flag to load outside (e.g. counters)
 
 }
 
@@ -4108,15 +4087,9 @@ void cvRestore_gpu3(CVodeMem cv_mem, realtype saved_t)
 {
   int j, k;
 
-#ifndef DEV_cv_tn
-  //cv_mem->cv_tn = saved_t;
-  printf("cvRestore_gpu3 cv_mem->cv_tn %le\n",cv_mem->cv_tn);
+#ifndef DEV_cvRestore
+  //printf("cvRestore_gpu3 cv_mem->cv_tn %le\n",cv_mem->cv_tn);
 #else
-  cv_mem->cv_tn = saved_t;
-  printf("cvRestore_gpu3 cv_mem->cv_tn %le\n",cv_mem->cv_tn);
-
-#endif
-
 
   for (k = 1; k <= cv_mem->cv_q; k++)
     for (j = cv_mem->cv_q; j >= k; j--)
@@ -4124,6 +4097,8 @@ void cvRestore_gpu3(CVodeMem cv_mem, realtype saved_t)
                    cv_mem->cv_zn[j], cv_mem->cv_zn[j-1]);
 
   N_VScale(ONE, cv_mem->cv_last_yn, cv_mem->cv_zn[0]);
+
+#endif
 
 
 }
@@ -4302,8 +4277,6 @@ int cudacvStep(SolverData *sd, CVodeMem cv_mem)
     //cudaMemcpy(&sd->mdv,mGPU->mdv,sizeof(ModelDataVariable),cudaMemcpyDeviceToHost);
     cudaMemcpy(&sd->mdv,mGPU->mdvo,sizeof(ModelDataVariable),cudaMemcpyDeviceToHost);
 
-    //HANDLE_ERROR(cudaMemcpy(&flag, mGPU->flag, 1 * sizeof(int), cudaMemcpyDeviceToHost));//deprecated
-
     //flag=sd->mdv.flag;
     ncf=sd->mdv.ncf;
     nef=sd->mdv.nef;
@@ -4318,13 +4291,6 @@ int cudacvStep(SolverData *sd, CVodeMem cv_mem)
     cv_mem->cv_hmin=sd->mdv.cv_hmin;
     cv_mem->cv_etamax=sd->mdv.cv_etamax;
     cv_mem->cv_maxncf=sd->mdv.cv_maxncf;
-
-
-
-#ifndef DEV_cv_tn
-    //cudaMemcpy(&sd->mdv,mGPU->mdvo,sizeof(ModelDataVariable),cudaMemcpyDeviceToHost);
-    //cv_mem->cv_tn=sd->mdv.cv_tn;//wrong results
-#endif
 
 
     HANDLE_ERROR(cudaMemcpy(sd->flagCells, mGPU->flagCells, mGPU->n_cells * sizeof(int), cudaMemcpyDeviceToHost));
