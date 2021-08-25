@@ -1988,6 +1988,8 @@ void free_gpu_cu(SolverData *sd) {
   ModelData *md = &(sd->model_data);
   ModelDataGPU *mGPU = &sd->mGPU;
 
+  free(sd->flagCells);
+
 #ifdef PMC_DEBUG_GPU
 
   printf("timeDerivKernel %lf\n", md->timeDerivKernel/1000);

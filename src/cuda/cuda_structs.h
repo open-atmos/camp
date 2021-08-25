@@ -303,6 +303,7 @@ typedef struct {
     double threshhold;
     double replacement_value;
     int *flag;
+    int *flagCells;
 
     //f_gpu
     double time_step;

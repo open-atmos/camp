@@ -344,6 +344,7 @@ typedef struct {
   itsolver bicg;
   ModelDataGPU mGPU;
   ModelDataVariable mdv;
+  int *flagCells;
 #ifdef CHECK_GPU_LINSOLVE
   double max_error_linsolver;
   int max_error_linsolver_i;
