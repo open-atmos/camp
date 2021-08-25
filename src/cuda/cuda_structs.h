@@ -115,6 +115,8 @@ typedef struct {
 
     //int *djA; //seems works fine using device ptr
 
+    int flag;
+
     double cv_eta;
     int cv_q;
     int cv_qprime;
