@@ -309,7 +309,6 @@ typedef struct {
     double* dacor;
     double* dzn;
     double* dewt;
-    double *dcv_tq;
     int *cv_nsetups;
     int *nstlj;
     int *nje;
