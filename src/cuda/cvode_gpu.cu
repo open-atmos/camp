@@ -1646,10 +1646,10 @@ void cudaDevicelinsolsetup(
   double dgamma;
   int jbad, jok;
 
-  dgamma = fabs((dmdv->cv_gamma / md->cv_gammap) - 1.);//SUNRabs
+  dgamma = fabs((dmdv->cv_gamma / dmdv->cv_gammap) - 1.);//SUNRabs
 
-  jbad = (*cv_nst == 0) ||
-         (*cv_nst > *nstlj + CVD_MSBJ) ||
+  jbad = (dmdv->cv_nst == 0) ||
+         (dmdv->cv_nst > *nstlj + CVD_MSBJ) ||
          ((convfail == CV_FAIL_BAD_J) && (dgamma < CVD_DGMAX)) ||
          (convfail == CV_FAIL_OTHER);
   jok = !jbad;
@@ -1686,7 +1686,7 @@ void cudaDevicelinsolsetup(
   __syncthreads();
 
     *nje++;
-    *nstlj = *cv_nst;
+    *nstlj = dmdv->cv_nst;
     *cv_jcur = 1;
     //flag_shr[1] = 1; //if used, assign to 1 if retval fails
 
@@ -2069,7 +2069,6 @@ void alloc_solver_gpu2(CVodeMem cv_mem, SolverData *sd)
   cudaMalloc((void**)&mGPU->flagCells,mGPU->n_cells*sizeof(int));
   cudaMalloc((void**)&mGPU->cv_jcur,1*sizeof(int));
   cudaMalloc((void**)&mGPU->nje,1*sizeof(int));
-  cudaMalloc((void**)&mGPU->cv_nst,1*sizeof(int));
   cudaMalloc((void**)&mGPU->djA,mGPU->nnz*sizeof(int));
   cudaMalloc((void**)&mGPU->diA,(mGPU->nrows+1)*sizeof(int));
   cudaMalloc((void**)&mGPU->dB,mGPU->nnz*sizeof(double));
@@ -2090,11 +2089,8 @@ void alloc_solver_gpu2(CVodeMem cv_mem, SolverData *sd)
   cudaMalloc((void**)&mGPU->cv_last_yn,mGPU->nrows*sizeof(double));
   cudaMalloc((void**)&mGPU->cv_acor_init,mGPU->nrows*sizeof(double));
   cudaMalloc((void**)&mGPU->dacor,mGPU->nrows*sizeof(double));
-  cudaMalloc((void**)&mGPU->cv_nst,1*sizeof(int));
-  cudaMalloc((void**)&mGPU->cv_last_yn,mGPU->nrows*sizeof(double));
   cudaMalloc((void**)&mGPU->cv_acor_init,mGPU->nrows*sizeof(double));
   cudaMalloc((void**)&mGPU->dacor,mGPU->nrows*sizeof(double));
-  cudaMalloc((void**)&mGPU->cv_nst,1*sizeof(int));
   //cudaMalloc((void**)&mGPU->mdv.cv_l,L_MAX*sizeof(double));
   cudaMalloc((void**)&mGPU->cv_l,L_MAX*sizeof(double));
 
@@ -2729,10 +2725,10 @@ int cudaDevicecvNlsNewton(
 
   //Decide whether or not to call setup routine (if one exists)
   //if (cv_mem->cv_lsetup) { // Setup routine, always exists for BCG
-  int dgamrat=fabs(md->cv_gamrat - 1.);
+  int dgamrat=fabs(dmdv->cv_gamrat - 1.);
   int callSetup = (md->nflag == PREV_CONV_FAIL) || (md->nflag == PREV_ERR_FAIL) ||
-                  (*cv_nst == 0) ||
-                  (*cv_nst >= md->cv_nstlp + MSBP) ||
+                  (dmdv->cv_nst == 0) ||
+                  (dmdv->cv_nst >= md->cv_nstlp + MSBP) ||
                   (dgamrat > DGMAX);
 
 
@@ -2888,8 +2884,8 @@ int cudaDevicecvNlsNewton(
 
       if (i == 0)*cv_nsetups++;
       callSetup = 0;
-      md->cv_gamrat = md->cv_crate = 1.0;
-      md->cv_gammap = dmdv->cv_gamma;
+      dmdv->cv_gamrat = md->cv_crate = 1.0;
+      dmdv->cv_gammap = dmdv->cv_gamma;
       //md->cv_nstlp = *cv_nst;//todo test
       // Return if lsetup failed
       if (*flag < 0) {
@@ -3189,7 +3185,7 @@ void cudaDevicecvSet(ModelDataGPU *md, ModelDataVariable *dmdv) {
   cudaDevicecvSetBDF(md,dmdv);
   dmdv->cv_rl1 = 1.0 / md->cv_l[1];
   cv_mem->cv_gamma = dmdv->cv_h * dmdv->cv_rl1;
-  if (md->cv_nst == 0) cv_mem->cv_gammap = cv_mem->cv_gamma;
+  if (dmdv->cv_nst == 0) cv_mem->cv_gammap = cv_mem->cv_gamma;
   cv_mem->cv_gamrat = (cv_mem->cv_nst > 0) ?
                       cv_mem->cv_gamma / cv_mem->cv_gammap : ONE;  // protect x / x != 1.0
 
@@ -3250,7 +3246,7 @@ void cudaDevicecvStep(ModelDataGPU *md, ModelDataVariable *dmdv) {
             //cudacvNewtonIteration
             md->dacor, md->dzn, md->dewt, md->dcv_tq,
             &mdv->cv_nfe, &mdv->cv_nsetups,
-            md->cv_nst, &mdv->nstlj,
+            &dmdv->cv_nst, &mdv->nstlj,
             md->disavedJ, md->djsavedJ, md->dsavedJ,
             &mdv->nje
 #ifdef PMC_DEBUG_GPU
@@ -4378,9 +4374,11 @@ int cudacvStep(SolverData *sd, CVodeMem cv_mem)
 #endif
 
 
-    sd->mdv.cv_rl1=cv_mem->cv_rl1;
-
+    sd->mdv.cv_gamrat = cv_mem->cv_gamrat;
+    sd->mdv.cv_gammap = cv_mem->cv_gammap;
+    sd->mdv.cv_nst = cv_mem->cv_nst;
     sd->mdv.cv_gamma = cv_mem->cv_gamma;
+    sd->mdv.cv_rl1=cv_mem->cv_rl1;
     sd->mdv.eflag=eflag;
     sd->mdv.kflag=kflag;
     sd->mdv.nflag=nflag;
@@ -4431,14 +4429,11 @@ int cudacvStep(SolverData *sd, CVodeMem cv_mem)
     cudaMemcpy(mGPU->cv_last_yn,cv_last_yn,mGPU->nrows*sizeof(double),cudaMemcpyHostToDevice);
     cudaMemcpy(mGPU->cv_acor_init,cv_acor_init,mGPU->nrows*sizeof(double),cudaMemcpyHostToDevice);
     //cudaMemcpy(mGPU->cv_jcur, &cv_mem->cv_jcur, 1 * sizeof(int), cudaMemcpyHostToDevice);//todo needed?
-    cudaMemcpy(mGPU->cv_nst, &cv_mem->cv_nst, 1 * sizeof(int), cudaMemcpyHostToDevice);
 
     double min = N_VMin(cv_mem->cv_zn[0]);
     mGPU->min=min;
     mGPU->cv_jcur = cv_mem->cv_jcur;
     mGPU->cv_crate=cv_mem->cv_crate;
-    mGPU->cv_gamrat = cv_mem->cv_gamrat;
-    mGPU->cv_gammap = cv_mem->cv_gammap;
     mGPU->cv_mnewt=cv_mem->cv_mnewt;
     mGPU->cv_maxcor=cv_mem->cv_maxcor;
     mGPU->cv_acnrm=cv_mem->cv_acnrm;
@@ -4454,7 +4449,6 @@ int cudacvStep(SolverData *sd, CVodeMem cv_mem)
     cudaMemcpy(tempv, mGPU->dtempv, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost);
     cudaMemcpy(acor, mGPU->dacor, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost);
     cudaMemcpy(cv_acor_init, mGPU->cv_acor_init, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost);
-    cudaMemcpy(&cv_mem->cv_nst, mGPU->cv_nst, 1 * sizeof(int), cudaMemcpyDeviceToHost);
 
     for (int i = 0; i <= cv_mem->cv_qmax; i++) {//cv_qmax+1 (6)?
       double *zn = NV_DATA_S(cv_mem->cv_zn[i]);
@@ -4473,7 +4467,8 @@ int cudacvStep(SolverData *sd, CVodeMem cv_mem)
     //  printf("i %d dmdv->cv_l %le\n",i, dmdv->cv_l)
 
 
-
+    cv_mem->cv_gamrat=sd->mdv.cv_gamrat;
+    cv_mem->cv_gammap=sd->mdv.cv_gammap;
     cv_mem->cv_gamma=sd->mdv.cv_gamma;
     cv_mem->cv_rl1=sd->mdv.cv_rl1;
     ncf=sd->mdv.ncf;
@@ -4574,126 +4569,6 @@ int cudacvStep(SolverData *sd, CVodeMem cv_mem)
   return(CV_SUCCESS);
 
 }
-
-int cudacvNlsNewton(SolverData *sd, CVodeMem cv_mem, int nflag) {
-  itsolver *bicg = &(sd->bicg);
-  ModelData *md = &(sd->model_data);
-  CVDlsMem cvdls_mem = (CVDlsMem) cv_mem->cv_lmem;
-  ModelDataGPU *mGPU = &sd->mGPU;
-
-  double *acor = NV_DATA_S(cv_mem->cv_acor);
-  double *tempv = NV_DATA_S(cv_mem->cv_tempv);
-  double *ftemp = NV_DATA_S(cv_mem->cv_ftemp);
-  double *cv_last_yn = N_VGetArrayPointer(cv_mem->cv_last_yn);
-  double *cv_acor_init = N_VGetArrayPointer(cv_mem->cv_acor_init);
-  double *zn0 = NV_DATA_S(cv_mem->cv_zn[0]);
-
-  int flag = 0;
-
-
-  cudaMemcpy(mGPU->dcv_tq, cv_mem->cv_tq, 5 * sizeof(double), cudaMemcpyHostToDevice);
-
-  int znUsedOnNewtonIt = 2;//Only used zn[0] and zn[1] //0.01s
-  for (int i = 0; i < znUsedOnNewtonIt; i++) {//cv_qmax+1
-    double *zn = NV_DATA_S(cv_mem->cv_zn[i]);
-    cudaMemcpy((i * mGPU->nrows + mGPU->dzn), zn, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice);
-  }
-
-
-
-#ifndef DEV_cudacvNlsNewton
-
-#else
-
-  int convfail, retval, ier;
-  booleantype callSetup;
-
-  convfail = ((nflag == FIRST_CALL) || (nflag == PREV_ERR_FAIL)) ?
-             CV_NO_FAILURES : CV_FAIL_OTHER;
-
-  mGPU->convfail = convfail;
-
-  /* Decide whether or not to call setup routine (if one exists) */
-  if (cv_mem->cv_lsetup) {
-    callSetup = (nflag == PREV_CONV_FAIL) || (nflag == PREV_ERR_FAIL) ||
-                (cv_mem->cv_nst == 0) ||
-                (cv_mem->cv_nst >= cv_mem->cv_nstlp + MSBP) ||
-                (SUNRabs(cv_mem->cv_gamrat - ONE) > DGMAX);
-  } else {
-    cv_mem->cv_crate = ONE;
-    callSetup = SUNFALSE;
-    printf("cv_lsetup false\n");
-  }
-  mGPU->callSetup = callSetup;
-
-  N_VLinearSum(ONE, cv_mem->cv_zn[0], -ONE, cv_mem->cv_last_yn, cv_mem->cv_ftemp);
-
-
-  /*
-
-  if (cv_mem->cv_ghfun) {
-  //N_VScale(cv_mem->cv_rl1, cv_mem->cv_zn[1], cv_mem->cv_ftemp);
-
-  //all are cpu pointers and gpu pointers are dftemp etc
-  //N_VLinearSum(ONE, cv_mem->cv_zn[0], -ONE, cv_mem->cv_last_yn, cv_mem->cv_ftemp);
-  retval = cv_mem->cv_ghfun(cv_mem->cv_tn, cv_mem->cv_h, cv_mem->cv_zn[0],
-                            cv_mem->cv_last_yn, cv_mem->cv_ftemp, cv_mem->cv_user_data,
-                            cv_mem->cv_tempv, cv_mem->cv_acor_init);
-  if (retval<0) return(RHSFUNC_RECVR);
-  }
-*/
-
-#endif
-
-  cudaMemcpy(mGPU->dacor, acor, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice);
-  cudaMemcpy(mGPU->dtempv, tempv, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice);
-  cudaMemcpy(mGPU->dftemp, ftemp, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice);
-  cudaMemcpy(mGPU->cv_last_yn,cv_last_yn,mGPU->nrows*sizeof(double),cudaMemcpyHostToDevice);
-  cudaMemcpy(mGPU->cv_acor_init,cv_acor_init,mGPU->nrows*sizeof(double),cudaMemcpyHostToDevice);
-  //cudaMemcpy(mGPU->cv_jcur, &cv_mem->cv_jcur, 1 * sizeof(int), cudaMemcpyHostToDevice);//todo needed?
-  cudaMemcpy(mGPU->cv_nst, &cv_mem->cv_nst, 1 * sizeof(int), cudaMemcpyHostToDevice);
-
-  double min = N_VMin(cv_mem->cv_zn[0]);
-  mGPU->min=min;
-  mGPU->cv_jcur = cv_mem->cv_jcur;
-  mGPU->cv_crate=cv_mem->cv_crate;
-  mGPU->cv_gamrat = cv_mem->cv_gamrat;
-  mGPU->cv_gammap = cv_mem->cv_gammap;
-  mGPU->cv_gamma = cv_mem->cv_gamma;
-  //mGPU->cv_rl1=cv_mem->cv_rl1;
-  mGPU->cv_mnewt=cv_mem->cv_mnewt;
-  mGPU->cv_maxcor=cv_mem->cv_maxcor;
-  mGPU->cv_acnrm=cv_mem->cv_acnrm;
-  mGPU->nflag=nflag;
-  mGPU->cv_nstlp=cv_mem->cv_nstlp;
-
-  solveCVODEGPU(sd, cv_mem);
-
-
-  cudaMemcpy(zn0, mGPU->dzn, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost);
-  cudaMemcpy(cv_last_yn, mGPU->cv_last_yn, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost);
-  cudaMemcpy(ftemp, mGPU->dftemp, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost);
-  cudaMemcpy(tempv, mGPU->dtempv, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost);
-  cudaMemcpy(acor, mGPU->dacor, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost);
-  cudaMemcpy(cv_acor_init, mGPU->cv_acor_init, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost);
-  cudaMemcpy(&cv_mem->cv_nst, mGPU->cv_nst, 1 * sizeof(int), cudaMemcpyDeviceToHost);
-
-  HANDLE_ERROR(cudaMemcpy(&flag, mGPU->flag, 1 * sizeof(int), cudaMemcpyDeviceToHost));
-
-  printf("DEV_cudacvNlsNewton counterBiConjGrad %d\n",bicg->counterBiConjGrad);
-
-  if (flag < 0) return (CV_RHSFUNC_FAIL);
-  if (flag > 0) return (RHSFUNC_RECVR);
-
-  // If there is a convergence failure and the Jacobian-related
-  //   data appears not to be current, loop again with a call to lsetup
-  //   in which convfail=CV_FAIL_BAD_J.  Otherwise return.
-  if (flag != TRY_AGAIN) return (flag);
-
-}
-
-
-
 
 
 
@@ -6201,12 +6076,6 @@ int cvStep_gpu2(SolverData *sd, CVodeMem cv_mem)
   double *ewt = NV_DATA_S(cv_mem->cv_ewt);
   cudaMemcpy(mGPU->dewt,ewt,mGPU->nrows*sizeof(double),cudaMemcpyHostToDevice);
 
-  double *acor = NV_DATA_S(cv_mem->cv_acor);
-  double *tempv = NV_DATA_S(cv_mem->cv_tempv);
-
-  int flag = 0; //CAMP_SOLVER_SUCCESS
-  //int flag = 999;
-
   saved_t = cv_mem->cv_tn;
   ncf = nef = 0;
   nflag = FIRST_CALL;
@@ -6227,8 +6096,8 @@ int cvStep_gpu2(SolverData *sd, CVodeMem cv_mem)
     cudaEventRecord(bicg->startBCG);
 #endif
 
-    //nflag = cvNlsNewton_gpu2(sd, cv_mem, nflag);//f(y)+BCG
-    nflag = cudacvNlsNewton(sd, cv_mem, nflag);
+    nflag = cvNlsNewton_gpu2(sd, cv_mem, nflag);//f(y)+BCG
+    //nflag = cudacvNlsNewton(sd, cv_mem, nflag);
 
 #ifdef PMC_DEBUG_GPU
 
@@ -8240,8 +8109,6 @@ void printSolverCounters_gpu2(SolverData *sd)
 {
 
 #ifdef PMC_DEBUG_GPU
-
-  ModelDataGPU *mGPU = &sd->mGPU;
 
   ModelDataVariable *mdv = &sd->mdv;
   itsolver *bicg = &(sd->bicg);
