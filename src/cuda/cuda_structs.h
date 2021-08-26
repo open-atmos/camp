@@ -116,6 +116,7 @@ typedef struct {
     //int *djA; //seems works fine using device ptr
 
     int flag;
+    int nflag;//auxiliar flag (maybe delete after completing cudacvstep to device)
 
     double cv_eta;
     int cv_q;
@@ -133,6 +134,7 @@ typedef struct {
     double cv_tn_copy;
     double cv_etamax;
     int cv_maxncf;
+
 
 
     //Counters (e.g. iterations of function cvnlsNewton)
