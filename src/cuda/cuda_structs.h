@@ -120,6 +120,7 @@ typedef struct {
     int kflag;
     int eflag;
 
+    double cv_acnrm;
     double dsm;
     double cv_tstop;
     int cv_tstopset; //Used as bool
@@ -243,7 +244,6 @@ typedef struct {
     //double ;
     double cv_nstlp;
     double cv_maxcor;
-    double cv_acnrm;
     double saved_t;
     double *cv_last_yn;
     double *cv_acor_init;
