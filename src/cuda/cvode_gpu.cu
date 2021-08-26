@@ -1006,7 +1006,8 @@ int CudaDeviceguess_helper(double t_n, double h_n, double* y_n,
 #ifdef DEV_FFLAG
     if (fflag == CAMP_SOLVER_FAIL) {
 #else
-    if (*flag == CAMP_SOLVER_FAIL) {
+    //if (*flag == CAMP_SOLVER_FAIL) {
+    if (fflag == CAMP_SOLVER_FAIL) {
 #endif
     //if (fflag != 0) {//CAMP_SOLVER_FAIL
       //N_VConst(ZERO, corr);
@@ -3388,6 +3389,11 @@ int cudaDevicecvDoErrorTest(ModelDataGPU *md, ModelDataVariable *dmdv,
   //                      cv_mem->cv_tempv, cv_mem->cv_user_data);
   retval = f(cv_mem->cv_tn, cv_mem->cv_zn[0],cv_mem->cv_tempv, cv_mem->cv_user_data);
 
+  int retval=cudaDevicef(
+            t_0 + t_j, md->deriv_length_cell, md->state_size_cell,
+            md->n_cells, md->i_kernel, threads_block, md->n_shr_empty, tmp1,
+            corr,md,flag
+  );
 
 
   cv_mem->cv_nfe++;
