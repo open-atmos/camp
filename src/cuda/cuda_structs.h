@@ -120,6 +120,7 @@ typedef struct {
     int kflag;
     int eflag;
 
+    double cv_crate;
     double cv_gamrat;
     double cv_gammap;
     int cv_nst;
@@ -230,10 +231,10 @@ typedef struct {
     double *grid_cell_aero_rep_env_data;
 
     double *cv_l;
+    double *cv_tau;
 
     //CVODE variables only GPU
     //double ;
-    double cv_crate;
     double cv_nstlp;
     double cv_maxcor;
     double cv_acnrm;
