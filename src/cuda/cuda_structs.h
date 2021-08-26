@@ -120,6 +120,7 @@ typedef struct {
     int kflag;
     int eflag;
 
+    double cv_gamma;
     double cv_rl1;
     double cv_eta;
     int cv_q;
@@ -138,7 +139,6 @@ typedef struct {
     int cv_maxncf;
 
 
-
     //Counters (e.g. iterations of function cvnlsNewton)
     int cv_nsetups;
     int cv_nfe;
@@ -154,25 +154,6 @@ typedef struct {
     double dtPostBCG;
 #endif
 }ModelDataVariable; //things to pass between gpu and cpu
-
-/*
-typedef struct {
-
-    //int *djA; //seems works fine using device ptr
-    double cv_tn;
-
-
-
-    //Counters (e.g. iterations of function cvnlsNewton)
-    //int cv_nsetups;
-    //int cv_nfe;
-
-
-#ifdef PMC_DEBUG_GPU
-
-#endif
-}ModelDataDevice; //Only gpu (all threads has its own struct)
-*/
 
 typedef struct {
     //double *deriv_data_gpu;
@@ -245,14 +226,15 @@ typedef struct {
     double *grid_cell_env;
     double *grid_cell_aero_rep_env_data;
 
+    double *cv_l;
+
     //CVODE variables only GPU
     //double ;
     double cv_gamrat;
     double cv_crate;
-    double cv_gamma;
+    double cv_gamma;//todo delete
     double cv_gammap;
     double cv_nstlp;
-    double cv_rl1;//todo delete
     double cv_maxcor;
     double cv_acnrm;
     double saved_t;

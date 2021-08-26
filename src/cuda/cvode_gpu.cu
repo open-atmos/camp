@@ -1646,7 +1646,7 @@ void cudaDevicelinsolsetup(
   double dgamma;
   int jbad, jok;
 
-  dgamma = fabs((md->cv_gamma / md->cv_gammap) - 1.);//SUNRabs
+  dgamma = fabs((dmdv->cv_gamma / md->cv_gammap) - 1.);//SUNRabs
 
   jbad = (*cv_nst == 0) ||
          (*cv_nst > *nstlj + CVD_MSBJ) ||
@@ -1658,7 +1658,7 @@ void cudaDevicelinsolsetup(
   //if(i==0)printf("cudaGlobalinsolsetupjok %d",jok);
 
   //if(i==0) printf("cudaGlobalinsolsetupcv_nst %d nstlj %d cv_jcur %d jok %d gamma %le\n",
-  //               *cv_nst,*nstlj,*cv_jcur,jok,md->cv_gamma);__syncthreads();
+  //               *cv_nst,*nstlj,*cv_jcur,jok,dmdv->cv_gamma);__syncthreads();
 
 
   if (jok==1) {
@@ -1733,7 +1733,7 @@ void cudaDevicelinsolsetup(
   __syncthreads();
 
 
-  cudaDevicematScaleAddI(nrows, dA, djA, diA, -md->cv_gamma);
+  cudaDevicematScaleAddI(nrows, dA, djA, diA, -dmdv->cv_gamma);
   cudaDevicediagprecond(nrows, dA, djA, diA, ddiag); //Setup linear solver
 
 
@@ -2095,6 +2095,8 @@ void alloc_solver_gpu2(CVodeMem cv_mem, SolverData *sd)
   cudaMalloc((void**)&mGPU->cv_acor_init,mGPU->nrows*sizeof(double));
   cudaMalloc((void**)&mGPU->dacor,mGPU->nrows*sizeof(double));
   cudaMalloc((void**)&mGPU->cv_nst,1*sizeof(int));
+  //cudaMalloc((void**)&mGPU->mdv.cv_l,L_MAX*sizeof(double));
+  cudaMalloc((void**)&mGPU->cv_l,L_MAX*sizeof(double));
 
 
   cudaMemcpy(mGPU->djA,bicg->jA,mGPU->nnz*sizeof(int),cudaMemcpyHostToDevice);
@@ -2444,7 +2446,7 @@ void cudaDevicecvNewtonIteration(
 
     //cudaDevicezaxpby(md->cv_rl1, (dzn + 1 * nrows), 1.0, dacor, dtempv, nrows);
     cudaDevicezaxpby(dmdv->cv_rl1, (dzn + 1 * nrows), 1.0, dacor, dtempv, nrows);
-    cudaDevicezaxpby(md->cv_gamma, dftemp, -1.0, dtempv, dtempv, nrows);
+    cudaDevicezaxpby(dmdv->cv_gamma, dftemp, -1.0, dtempv, dtempv, nrows);
     //}//GOOD
 
 #ifndef CSR_SPMV
@@ -2887,7 +2889,7 @@ int cudaDevicecvNlsNewton(
       if (i == 0)*cv_nsetups++;
       callSetup = 0;
       md->cv_gamrat = md->cv_crate = 1.0;
-      md->cv_gammap = md->cv_gamma;
+      md->cv_gammap = dmdv->cv_gamma;
       //md->cv_nstlp = *cv_nst;//todo test
       // Return if lsetup failed
       if (*flag < 0) {
@@ -2975,86 +2977,6 @@ int cudaDevicecvNlsNewton(
   __syncthreads();
   *flag = flag_shr[0];
   return *flag;
-
-}
-
-__device__
-void cudaDevicecvAdjustParams(ModelDataGPU *md, ModelDataVariable *dmdv) {
-
-  ModelDataVariable *mdv = md->mdv;
-  extern __shared__ int flag_shr[];
-  int i = blockIdx.x * blockDim.x + threadIdx.x;
-  unsigned int tid = threadIdx.x;
-
-
-
-}
-
-__device__
-void cudaDevicecvPredict(ModelDataGPU *md, ModelDataVariable *dmdv) {
-
-  ModelDataVariable *mdv = md->mdv;
-  extern __shared__ int flag_shr[];
-  int i = blockIdx.x * blockDim.x + threadIdx.x;
-  unsigned int tid = threadIdx.x;
-
-
-
-}
-
-__device__
-void cudaDevicecvSetTqBDFt(ModelDataGPU *md, ModelDataVariable *dmdv) {
-
-  ModelDataVariable *mdv = md->mdv;
-  extern __shared__ int flag_shr[];
-  int i = blockIdx.x * blockDim.x + threadIdx.x;
-  unsigned int tid = threadIdx.x;
-
-
-
-}
-
-__device__
-void cudaDevicecvSetBDF(ModelDataGPU *md, ModelDataVariable *dmdv) {
-
-  ModelDataVariable *mdv = md->mdv;
-  extern __shared__ int flag_shr[];
-  int i = blockIdx.x * blockDim.x + threadIdx.x;
-  unsigned int tid = threadIdx.x;
-
-
-
-}
-
-__device__
-void cudaDevicecvSet(ModelDataGPU *md, ModelDataVariable *dmdv) {
-
-  ModelDataVariable *mdv = md->mdv;
-  extern __shared__ int flag_shr[];
-  int i = blockIdx.x * blockDim.x + threadIdx.x;
-  unsigned int tid = threadIdx.x;
-
-  /*
-  cvSetBDF_gpu2(cv_mem);
-  cv_mem->cv_rl1 = ONE / cv_mem->cv_l[1];
-  cv_mem->cv_gamma = cv_mem->cv_h * cv_mem->cv_rl1;
-  if (cv_mem->cv_nst == 0) cv_mem->cv_gammap = cv_mem->cv_gamma;
-  cv_mem->cv_gamrat = (cv_mem->cv_nst > 0) ?
-                      cv_mem->cv_gamma / cv_mem->cv_gammap : ONE;  // protect x / x != 1.0
-
-   */
-
-  /*
-
-     cvSetBDF_gpu2(cv_mem);
-  cv_mem->cv_rl1 = ONE / cv_mem->cv_l[1];
-  cv_mem->cv_gamma = cv_mem->cv_h * cv_mem->cv_rl1;
-  if (cv_mem->cv_nst == 0) cv_mem->cv_gammap = cv_mem->cv_gamma;
-  cv_mem->cv_gamrat = (cv_mem->cv_nst > 0) ?
-                      cv_mem->cv_gamma / cv_mem->cv_gammap : ONE;  // protect x / x != 1.0
-
-
-  */
 
 }
 
@@ -3208,6 +3130,86 @@ int cudaDevicecvHandleNFlag(ModelDataGPU *md, ModelDataVariable *dmdv, int *nfla
 
 
 __device__
+void cudaDevicecvAdjustParams(ModelDataGPU *md, ModelDataVariable *dmdv) {
+
+  ModelDataVariable *mdv = md->mdv;
+  extern __shared__ int flag_shr[];
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
+  unsigned int tid = threadIdx.x;
+
+
+
+}
+
+__device__
+void cudaDevicecvPredict(ModelDataGPU *md, ModelDataVariable *dmdv) {
+
+  ModelDataVariable *mdv = md->mdv;
+  extern __shared__ int flag_shr[];
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
+  unsigned int tid = threadIdx.x;
+
+
+
+}
+
+__device__
+void cudaDevicecvSetTqBDFt(ModelDataGPU *md, ModelDataVariable *dmdv) {
+
+  ModelDataVariable *mdv = md->mdv;
+  extern __shared__ int flag_shr[];
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
+  unsigned int tid = threadIdx.x;
+
+
+
+}
+
+__device__
+void cudaDevicecvSetBDF(ModelDataGPU *md, ModelDataVariable *dmdv) {
+
+  ModelDataVariable *mdv = md->mdv;
+  extern __shared__ int flag_shr[];
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
+  unsigned int tid = threadIdx.x;
+
+
+
+}
+
+__device__
+void cudaDevicecvSet(ModelDataGPU *md, ModelDataVariable *dmdv) {
+
+  ModelDataVariable *mdv = md->mdv;
+  extern __shared__ int flag_shr[];
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
+  unsigned int tid = threadIdx.x;
+
+  /*
+  cudaDevicecvSetBDF(md,dmdv);
+  dmdv->cv_rl1 = 1.0 / md->cv_l[1];
+  cv_mem->cv_gamma = dmdv->cv_h * dmdv->cv_rl1;
+  if (md->cv_nst == 0) cv_mem->cv_gammap = cv_mem->cv_gamma;
+  cv_mem->cv_gamrat = (cv_mem->cv_nst > 0) ?
+                      cv_mem->cv_gamma / cv_mem->cv_gammap : ONE;  // protect x / x != 1.0
+
+   */
+
+  /*
+
+     cvSetBDF_gpu2(cv_mem);
+  cv_mem->cv_rl1 = ONE / cv_mem->cv_l[1];
+  cv_mem->cv_gamma = cv_mem->cv_h * cv_mem->cv_rl1;
+  if (cv_mem->cv_nst == 0) cv_mem->cv_gammap = cv_mem->cv_gamma;
+  cv_mem->cv_gamrat = (cv_mem->cv_nst > 0) ?
+                      cv_mem->cv_gamma / cv_mem->cv_gammap : ONE;  // protect x / x != 1.0
+
+
+  */
+
+}
+
+__device__
 void cudaDevicecvStep(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
   ModelDataVariable *mdv = md->mdv;
@@ -3221,7 +3223,9 @@ void cudaDevicecvStep(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
 #ifndef DEV_CUDACVSTEP
 
-
+  //if(tid==0)
+  //  for(int i=0;i<L_MAX;i++)
+  //    printf("i %d dmdv->cv_l %le\n",i, dmdv->cv_l);
 
 #else
 #endif
@@ -3293,11 +3297,12 @@ void cudaGlobalSolveODE(ModelDataGPU md_object) {
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   unsigned int tid = threadIdx.x;
   int active_threads = md->nrows;
-  
+
   ModelDataVariable dmdv_object = *md_object.mdv;
   ModelDataVariable *dmdv = &dmdv_object; //fine 100 cells
 
   dmdv->flag = 0;
+
 
 /*
   dmdv->cv_rl1 = mdv->cv_rl1;
@@ -4373,9 +4378,9 @@ int cudacvStep(SolverData *sd, CVodeMem cv_mem)
 #endif
 
 
-
     sd->mdv.cv_rl1=cv_mem->cv_rl1;
 
+    sd->mdv.cv_gamma = cv_mem->cv_gamma;
     sd->mdv.eflag=eflag;
     sd->mdv.kflag=kflag;
     sd->mdv.nflag=nflag;
@@ -4396,6 +4401,14 @@ int cudacvStep(SolverData *sd, CVodeMem cv_mem)
     sd->mdv.cv_maxncf=cv_mem->cv_maxncf;
 
     cudaMemcpy(mGPU->mdv,&sd->mdv,sizeof(ModelDataVariable),cudaMemcpyHostToDevice);
+
+    //cudaMemcpy(mGPU->mdv.cv_l, cv_mem->cv_l, L_MAX * sizeof(double), cudaMemcpyHostToDevice);
+    cudaMemcpy(mGPU->cv_l, cv_mem->cv_l, L_MAX * sizeof(double), cudaMemcpyHostToDevice);
+
+
+
+    //for(int i=0;i<L_MAX;i++)
+    //  printf("i %d dmdv->cv_l %le\n",i, dmdv->cv_l)
 
     cudaMemcpy(mGPU->dcv_tq, cv_mem->cv_tq, 5 * sizeof(double), cudaMemcpyHostToDevice);
 
@@ -4426,8 +4439,6 @@ int cudacvStep(SolverData *sd, CVodeMem cv_mem)
     mGPU->cv_crate=cv_mem->cv_crate;
     mGPU->cv_gamrat = cv_mem->cv_gamrat;
     mGPU->cv_gammap = cv_mem->cv_gammap;
-    mGPU->cv_gamma = cv_mem->cv_gamma;
-    //mGPU->cv_rl1=cv_mem->cv_rl1;
     mGPU->cv_mnewt=cv_mem->cv_mnewt;
     mGPU->cv_maxcor=cv_mem->cv_maxcor;
     mGPU->cv_acnrm=cv_mem->cv_acnrm;
@@ -4452,10 +4463,18 @@ int cudacvStep(SolverData *sd, CVodeMem cv_mem)
 
     printf("DEV_cudacvStep counterBiConjGrad %d\n",bicg->counterBiConjGrad);
 
-    //cudaMemcpy(&sd->mdv,mGPU->mdv,sizeof(ModelDataVariable),cudaMemcpyDeviceToHost);
     cudaMemcpy(&sd->mdv,mGPU->mdvo,sizeof(ModelDataVariable),cudaMemcpyDeviceToHost);
 
-    //flag=sd->mdv.flag;
+
+    //cudaMemcpy(cv_mem->cv_l, mGPU->mdvo.cv_l, L_MAX * sizeof(double), cudaMemcpyDeviceToHost);
+    cudaMemcpy(cv_mem->cv_l, mGPU->cv_l, L_MAX * sizeof(double), cudaMemcpyDeviceToHost);
+
+    //for(int i=0;i<L_MAX;i++)
+    //  printf("i %d dmdv->cv_l %le\n",i, dmdv->cv_l)
+
+
+
+    cv_mem->cv_gamma=sd->mdv.cv_gamma;
     cv_mem->cv_rl1=sd->mdv.cv_rl1;
     ncf=sd->mdv.ncf;
     nef=sd->mdv.nef;
@@ -4641,7 +4660,7 @@ int cudacvNlsNewton(SolverData *sd, CVodeMem cv_mem, int nflag) {
   mGPU->cv_gamrat = cv_mem->cv_gamrat;
   mGPU->cv_gammap = cv_mem->cv_gammap;
   mGPU->cv_gamma = cv_mem->cv_gamma;
-  mGPU->cv_rl1=cv_mem->cv_rl1;
+  //mGPU->cv_rl1=cv_mem->cv_rl1;
   mGPU->cv_mnewt=cv_mem->cv_mnewt;
   mGPU->cv_maxcor=cv_mem->cv_maxcor;
   mGPU->cv_acnrm=cv_mem->cv_acnrm;
