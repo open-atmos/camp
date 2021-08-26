@@ -3343,45 +3343,52 @@ int cudaDevicecvDoErrorTest(ModelDataGPU *md, ModelDataVariable *dmdv,
       (*nefPtr == dmdv->cv_maxnef)) return(CV_ERR_FAILURE);
 
   // Set etamax = 1 to prevent step size increase at end of this step
-  cv_mem->cv_etamax = ONE;
+  dmdv->cv_etamax = ONE;
 
   // Set h ratio eta from dsm, rescale, and return for retry of step
   if (*nefPtr <= MXNEF1) {
-    cv_mem->cv_eta = ONE / (SUNRpowerR(BIAS2*dsm,ONE/cv_mem->cv_L) + ADDON);
-    cv_mem->cv_eta = SUNMAX(ETAMIN, SUNMAX(cv_mem->cv_eta,
-                                           cv_mem->cv_hmin / SUNRabs(cv_mem->cv_h)));
-    if (*nefPtr >= SMALL_NEF) cv_mem->cv_eta = SUNMIN(cv_mem->cv_eta, ETAMXF);
+    //cv_mem->cv_eta = 1. / (SUNRpowerR(BIAS2*dsm,ONE/cv_mem->cv_L) + ADDON);
+    dmdv->cv_eta = 1. / (pow(BIAS2*dsm,1./dmdv->cv_L) + ADDON);
+
+    dmdv->cv_eta = SUNMAX(ETAMIN, SUNMAX(dmdv->cv_eta,
+                           dmdv->cv_hmin / fabs(dmdv->cv_h)));
+    if (*nefPtr >= SMALL_NEF) dmdv->cv_eta =
+    SUNMIN(dmdv->cv_eta, ETAMXF);
+
     cudaDevicecvRescale(md, dmdv);
     return(TRY_AGAIN);
   }
 
   // After MXNEF1 failures, force an order reduction and retry step
-  if (cv_mem->cv_q > 1) {
-    cv_mem->cv_eta = SUNMAX(ETAMIN, cv_mem->cv_hmin / SUNRabs(cv_mem->cv_h));
+  if (dmdv->cv_q > 1) {
+    dmdv->cv_eta = SUNMAX(ETAMIN,
+    dmdv->cv_hmin / fabs(dmdv->cv_h));
 
     //cvAdjustOrder_gpu2(cv_mem,-1);
-    cvDecreaseBDF_gpu2(cv_mem);
+    cudaDevicecvDecreaseBDF(md, dmdv);
 
-    cv_mem->cv_L = cv_mem->cv_q;
-    cv_mem->cv_q--;
-    cv_mem->cv_qwait = cv_mem->cv_L;
+    dmdv->cv_L = dmdv->cv_q;
+    dmdv->cv_q--;
+    dmdv->cv_qwait = dmdv->cv_L;
     cudaDevicecvRescale(md, dmdv);
     return(TRY_AGAIN);
   }
 
   // If already at order 1, restart: reload zn from scratch
 
-  cv_mem->cv_eta = SUNMAX(ETAMIN, cv_mem->cv_hmin / SUNRabs(cv_mem->cv_h));
-  cv_mem->cv_h *= cv_mem->cv_eta;
-  cv_mem->cv_next_h = cv_mem->cv_h;
-  cv_mem->cv_hscale = cv_mem->cv_h;
-  cv_mem->cv_qwait = LONG_WAIT;
-  cv_mem->cv_nscon = 0;
+  dmdv->cv_eta = SUNMAX(ETAMIN, dmdv->cv_hmin / fabs(dmdv->cv_h));
+  dmdv->cv_h *= dmdv->cv_eta;
+  dmdv->cv_next_h = dmdv->cv_h;
+  dmdv->cv_hscale = dmdv->cv_h;
+  dmdv->cv_qwait = LONG_WAIT;
+  dmdv->cv_nscon = 0;
 
 
   //retval = cv_mem->cv_f(cv_mem->cv_tn, cv_mem->cv_zn[0],
   //                      cv_mem->cv_tempv, cv_mem->cv_user_data);
   retval = f(cv_mem->cv_tn, cv_mem->cv_zn[0],cv_mem->cv_tempv, cv_mem->cv_user_data);
+
+
 
   cv_mem->cv_nfe++;
   if (retval < 0)  return(CV_RHSFUNC_FAIL);
@@ -4403,8 +4410,9 @@ int cudacvStep(SolverData *sd, CVodeMem cv_mem)
     //cvPredict_gpu2(cv_mem);
     //cvSet_gpu2(cv_mem);
 
+    sd->mdv.cv_L = cv_mem->cv_L;
     sd->mdv.cv_maxnef = cv_mem->cv_maxnef;
-    sd->mdv.cv_netf = cv_mem->cv_netf;
+    sd->mdv.cv_netf = (int)cv_mem->cv_netf;
     sd->mdv.cv_acnrm = cv_mem->cv_acnrm;
     sd->mdv.dsm = dsm;
     sd->mdv.cv_tstop = cv_mem->cv_tstop;
@@ -4482,6 +4490,7 @@ int cudacvStep(SolverData *sd, CVodeMem cv_mem)
     cudaMemcpy(cv_mem->cv_tau, mGPU->cv_tau, (L_MAX+1) * sizeof(double), cudaMemcpyDeviceToHost);
     cudaMemcpy(cv_mem->cv_tq, mGPU->cv_tq, (NUM_TESTS+1) * sizeof(double), cudaMemcpyDeviceToHost);
 
+    cv_mem->cv_L=sd->mdv.cv_L;
     cv_mem->cv_maxnef=sd->mdv.cv_maxnef;
     cv_mem->cv_netf=sd->mdv.cv_netf;
     cv_mem->cv_acnrm=sd->mdv.cv_acnrm;
