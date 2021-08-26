@@ -120,6 +120,8 @@ typedef struct {
     int kflag;
     int eflag;
 
+    double cv_maxnef;
+    double cv_netf;
     double cv_acnrm;
     double dsm;
     double cv_tstop;

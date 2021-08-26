@@ -3037,8 +3037,6 @@ void cudaDevicecvRestore(ModelDataGPU *md, ModelDataVariable *dmdv, double saved
   //if(i==0)printf("DEV_cudaDevicecvRestore mdv->cv_tn %le saved_t %le\n",dmdv->cv_tn,saved_t);
 #endif
 
-#ifndef DEV_cvRestore
-
   __syncthreads();
   dmdv->cv_tn=saved_t;
   __syncthreads();
@@ -3058,8 +3056,6 @@ void cudaDevicecvRestore(ModelDataGPU *md, ModelDataVariable *dmdv, double saved
 
 #ifdef DEV_cudaDevicecvRestore
   //if(i==0)printf("DEV_cudaDevicecvRestore end\n");
-#endif
-
 #endif
 
 }
@@ -3290,7 +3286,9 @@ void cudaDevicecvDecreaseBDF(ModelDataGPU *md, ModelDataVariable *dmdv) {
 }
 
 __device__
-void cudaDevicecvDoErrorTest(ModelDataGPU *md, ModelDataVariable *dmdv) {
+int cudaDevicecvDoErrorTest(ModelDataGPU *md, ModelDataVariable *dmdv,
+                             int *nflagPtr,
+                             double saved_t, int *nefPtr, double *dsmPtr) {
 
   ModelDataVariable *mdv = md->mdv;
   //extern __shared__ int flag_shr[];
@@ -3332,17 +3330,17 @@ void cudaDevicecvDoErrorTest(ModelDataGPU *md, ModelDataVariable *dmdv) {
   // If est. local error norm dsm passes test and there are no negative values,
   // return CV_SUCCESS
   *dsmPtr = dsm;
-  if (dsm <= ONE && min_val >= ZERO) return(CV_SUCCESS);
+  if (dsm <= 1. && min_val >= 0.) return(CV_SUCCESS);
 
   // Test failed; increment counters, set nflag, and restore zn array
   (*nefPtr)++;
-  cv_mem->cv_netf++;
+  dmdv->cv_netf++;
   *nflagPtr = PREV_ERR_FAIL;
-  cudaDevicecvRestore(cv_mem, saved_t);
+  cudaDevicecvRestore(md, dmdv, saved_t);
 
   // At maxnef failures or |h| = hmin, return CV_ERR_FAILURE
-  if ((SUNRabs(cv_mem->cv_h) <= cv_mem->cv_hmin*ONEPSM) ||
-      (*nefPtr == cv_mem->cv_maxnef)) return(CV_ERR_FAILURE);
+  if ((fabs(dmdv->cv_h) <= dmdv->cv_hmin*ONEPSM) ||
+      (*nefPtr == dmdv->cv_maxnef)) return(CV_ERR_FAILURE);
 
   // Set etamax = 1 to prevent step size increase at end of this step
   cv_mem->cv_etamax = ONE;
@@ -3353,7 +3351,7 @@ void cudaDevicecvDoErrorTest(ModelDataGPU *md, ModelDataVariable *dmdv) {
     cv_mem->cv_eta = SUNMAX(ETAMIN, SUNMAX(cv_mem->cv_eta,
                                            cv_mem->cv_hmin / SUNRabs(cv_mem->cv_h)));
     if (*nefPtr >= SMALL_NEF) cv_mem->cv_eta = SUNMIN(cv_mem->cv_eta, ETAMXF);
-    cudaDevicecvRescale(cv_mem);
+    cudaDevicecvRescale(md, dmdv);
     return(TRY_AGAIN);
   }
 
@@ -3367,7 +3365,7 @@ void cudaDevicecvDoErrorTest(ModelDataGPU *md, ModelDataVariable *dmdv) {
     cv_mem->cv_L = cv_mem->cv_q;
     cv_mem->cv_q--;
     cv_mem->cv_qwait = cv_mem->cv_L;
-    cudaDevicecvRescale(cv_mem);
+    cudaDevicecvRescale(md, dmdv);
     return(TRY_AGAIN);
   }
 
@@ -3467,7 +3465,13 @@ int cudaDevicecvStep(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
 #ifndef DEV_CUDACVSTEP
 
-  //cudaDevicecvDoErrorTest(md, dmdv, &dmdv->nflag, dmdv->saved_t, &dmdv->nef, &dmdv->dsm);
+  __syncthreads();
+  //int eflag=cudaDevicecvDoErrorTest(md, dmdv,
+  //        &dmdv->nflag, dmdv->saved_t, &dmdv->nef, &dmdv->dsm);
+
+  __syncthreads();
+  //dmdv->eflag=eflag;
+  __syncthreads();
 
 #endif
 
@@ -4399,6 +4403,8 @@ int cudacvStep(SolverData *sd, CVodeMem cv_mem)
     //cvPredict_gpu2(cv_mem);
     //cvSet_gpu2(cv_mem);
 
+    sd->mdv.cv_maxnef = cv_mem->cv_maxnef;
+    sd->mdv.cv_netf = cv_mem->cv_netf;
     sd->mdv.cv_acnrm = cv_mem->cv_acnrm;
     sd->mdv.dsm = dsm;
     sd->mdv.cv_tstop = cv_mem->cv_tstop;
@@ -4476,6 +4482,9 @@ int cudacvStep(SolverData *sd, CVodeMem cv_mem)
     cudaMemcpy(cv_mem->cv_tau, mGPU->cv_tau, (L_MAX+1) * sizeof(double), cudaMemcpyDeviceToHost);
     cudaMemcpy(cv_mem->cv_tq, mGPU->cv_tq, (NUM_TESTS+1) * sizeof(double), cudaMemcpyDeviceToHost);
 
+    cv_mem->cv_maxnef=sd->mdv.cv_maxnef;
+    cv_mem->cv_netf=sd->mdv.cv_netf;
+    cv_mem->cv_acnrm=sd->mdv.cv_acnrm;
     dsm=sd->mdv.dsm;
     cv_mem->cv_tstop=sd->mdv.cv_tstop;
     cv_mem->cv_tstopset=sd->mdv.cv_tstopset;
@@ -4539,11 +4548,7 @@ int cudacvStep(SolverData *sd, CVodeMem cv_mem)
     //                   &sd->mdv.cv_tn,1,"cv_tn")!=1) exit(0)
 
 
-#ifndef DEV_CUDACVSTEP
-#else
 
-
-#endif
 
     /* Go back in loop if we need to predict again (nflag=PREV_CONV_FAIL)*/
     if (kflag == PREDICT_AGAIN) continue;
@@ -4551,8 +4556,17 @@ int cudacvStep(SolverData *sd, CVodeMem cv_mem)
     /* Return if nonlinear solve failed and recovery not possible. */
     if (kflag != DO_ERROR_TEST) return(kflag);
 
+#ifndef DEV_CUDACVSTEP
+
+    eflag = cvDoErrorTest_gpu2(cv_mem, &nflag, saved_t, &nef, &dsm);
+
+#else
+
     /* Perform error test (nflag=CV_SUCCESS) */
     eflag = cvDoErrorTest_gpu2(cv_mem, &nflag, saved_t, &nef, &dsm);
+
+#endif
+
 
     /* Go back in loop if we need to predict again (nflag=PREV_ERR_FAIL) */
     if (eflag == TRY_AGAIN)  continue;
