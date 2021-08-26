@@ -117,7 +117,10 @@ typedef struct {
 
     int flag;
     int nflag;//auxiliar flag (maybe delete after completing cudacvstep to device)
+    int kflag;
+    int eflag;
 
+    double cv_rl1;
     double cv_eta;
     int cv_q;
     int cv_qprime;
@@ -131,7 +134,6 @@ typedef struct {
     double cv_hprime;
     double cv_hmin;
     double cv_tn;
-    double cv_tn_copy;
     double cv_etamax;
     int cv_maxncf;
 
@@ -250,7 +252,7 @@ typedef struct {
     double cv_gamma;
     double cv_gammap;
     double cv_nstlp;
-    double cv_rl1;
+    double cv_rl1;//todo delete
     double cv_maxcor;
     double cv_acnrm;
     double saved_t;
