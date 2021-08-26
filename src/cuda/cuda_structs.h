@@ -120,6 +120,7 @@ typedef struct {
     int kflag;
     int eflag;
 
+    double dsm;
     double cv_tstop;
     int cv_tstopset; //Used as bool
     double cv_nlscoef;

@@ -3220,18 +3220,6 @@ void cudaDevicecvSet(ModelDataGPU *md, ModelDataVariable *dmdv) {
 }
 
 __device__
-void cudaDevicecvAdjustParams(ModelDataGPU *md, ModelDataVariable *dmdv) {
-
-  ModelDataVariable *mdv = md->mdv;
-  extern __shared__ int flag_shr[];
-  int i = blockIdx.x * blockDim.x + threadIdx.x;
-  unsigned int tid = threadIdx.x;
-
-
-
-}
-
-__device__
 void cudaDevicecvPredict(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
   ModelDataVariable *mdv = md->mdv;
@@ -3258,7 +3246,32 @@ void cudaDevicecvPredict(ModelDataGPU *md, ModelDataVariable *dmdv) {
 }
 
 __device__
-void cudaDevicecvStep(ModelDataGPU *md, ModelDataVariable *dmdv) {
+void cudaDevicecvAdjustParams(ModelDataGPU *md, ModelDataVariable *dmdv) {
+
+  ModelDataVariable *mdv = md->mdv;
+  extern __shared__ int flag_shr[];
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
+  unsigned int tid = threadIdx.x;
+
+
+
+}
+
+__device__
+void cudaDevicecvDoErrorTest(ModelDataGPU *md, ModelDataVariable *dmdv) {
+
+  ModelDataVariable *mdv = md->mdv;
+  extern __shared__ int flag_shr[];
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
+  unsigned int tid = threadIdx.x;
+
+
+
+}
+
+
+__device__
+int cudaDevicecvStep(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
   ModelDataVariable *mdv = md->mdv;
   ModelDataVariable *mdvo = md->mdvo;
@@ -3267,7 +3280,6 @@ void cudaDevicecvStep(ModelDataGPU *md, ModelDataVariable *dmdv) {
   unsigned int tid = threadIdx.x;
 
 #ifndef DEV_CUDACVSTEP
-
 
 #else
 #endif
@@ -3317,13 +3329,16 @@ void cudaDevicecvStep(ModelDataGPU *md, ModelDataVariable *dmdv) {
   dmdv->kflag=kflag;
   __syncthreads();
 
-#ifndef DEV_CUDACVSTEP
-
   // Go back in loop if we need to predict again (nflag=PREV_CONV_FAIL)
-  //if (dmdv->kflag == PREDICT_AGAIN) continue;
+  if (dmdv->kflag == PREDICT_AGAIN) return;
+  //if (kflag == PREDICT_AGAIN) continue;
 
   // Return if nonlinear solve failed and recovery not possible.
-  //if (dmdv->kflag != DO_ERROR_TEST) return(kflag);
+  if (dmdv->kflag != DO_ERROR_TEST) return(dmdv->kflag);
+
+#ifndef DEV_CUDACVSTEP
+
+  //cudaDevicecvDoErrorTest(md, dmdv, &dmdv->nflag, dmdv->saved_t, &dmdv->nef, &dmdv->dsm);
 
 #endif
 
@@ -4136,22 +4151,92 @@ int cudacvNewtonIteration(SolverData *sd, CVodeMem cv_mem)
   //return 0;
 }
 
-void cvPredict_gpu3(CVodeMem cv_mem)
+booleantype cvDoErrorTest_gpu3(CVodeMem cv_mem, int *nflagPtr,
+                               realtype saved_t, int *nefPtr, realtype *dsmPtr)
 {
-  int j, k;
+  realtype dsm;
+  realtype min_val;
+  int retval;
 
-  cv_mem->cv_tn += cv_mem->cv_h;
-  if (cv_mem->cv_tstopset) {
-    if ((cv_mem->cv_tn - cv_mem->cv_tstop)*cv_mem->cv_h > ZERO)
-      cv_mem->cv_tn = cv_mem->cv_tstop;
+  // Find the minimum concentration and if it's small and negative, make it
+  // positive
+  N_VLinearSum(cv_mem->cv_l[0], cv_mem->cv_acor, ONE, cv_mem->cv_zn[0],
+               cv_mem->cv_ftemp);
+  min_val = N_VMin(cv_mem->cv_ftemp);
+  if (min_val < ZERO && min_val > -PMC_TINY) {
+    N_VAbs(cv_mem->cv_ftemp, cv_mem->cv_ftemp);
+    N_VLinearSum(-cv_mem->cv_l[0], cv_mem->cv_acor, ONE, cv_mem->cv_ftemp,
+                 cv_mem->cv_zn[0]);
+    min_val = ZERO;
   }
-  N_VScale(ONE, cv_mem->cv_zn[0], cv_mem->cv_last_yn);
-  for (k = 1; k <= cv_mem->cv_q; k++)
-    for (j = cv_mem->cv_q; j >= k; j--)
-      N_VLinearSum(ONE, cv_mem->cv_zn[j-1], ONE,
-                   cv_mem->cv_zn[j], cv_mem->cv_zn[j-1]);
 
+  dsm = cv_mem->cv_acnrm * cv_mem->cv_tq[2];
+
+  // If est. local error norm dsm passes test and there are no negative values,
+  // return CV_SUCCESS
+  *dsmPtr = dsm;
+  if (dsm <= ONE && min_val >= ZERO) return(CV_SUCCESS);
+
+  // Test failed; increment counters, set nflag, and restore zn array
+  (*nefPtr)++;
+  cv_mem->cv_netf++;
+  *nflagPtr = PREV_ERR_FAIL;
+  cvRestore_gpu2(cv_mem, saved_t);
+
+  // At maxnef failures or |h| = hmin, return CV_ERR_FAILURE
+  if ((SUNRabs(cv_mem->cv_h) <= cv_mem->cv_hmin*ONEPSM) ||
+      (*nefPtr == cv_mem->cv_maxnef)) return(CV_ERR_FAILURE);
+
+  // Set etamax = 1 to prevent step size increase at end of this step
+  cv_mem->cv_etamax = ONE;
+
+  // Set h ratio eta from dsm, rescale, and return for retry of step
+  if (*nefPtr <= MXNEF1) {
+    cv_mem->cv_eta = ONE / (SUNRpowerR(BIAS2*dsm,ONE/cv_mem->cv_L) + ADDON);
+    cv_mem->cv_eta = SUNMAX(ETAMIN, SUNMAX(cv_mem->cv_eta,
+                                           cv_mem->cv_hmin / SUNRabs(cv_mem->cv_h)));
+    if (*nefPtr >= SMALL_NEF) cv_mem->cv_eta = SUNMIN(cv_mem->cv_eta, ETAMXF);
+    cvRescale_gpu2(cv_mem);
+    return(TRY_AGAIN);
+  }
+
+  // After MXNEF1 failures, force an order reduction and retry step
+  if (cv_mem->cv_q > 1) {
+    cv_mem->cv_eta = SUNMAX(ETAMIN, cv_mem->cv_hmin / SUNRabs(cv_mem->cv_h));
+
+    //cvAdjustOrder_gpu2(cv_mem,-1);
+    cvDecreaseBDF_gpu2(cv_mem);
+
+    cv_mem->cv_L = cv_mem->cv_q;
+    cv_mem->cv_q--;
+    cv_mem->cv_qwait = cv_mem->cv_L;
+    cvRescale_gpu2(cv_mem);
+    return(TRY_AGAIN);
+  }
+
+  // If already at order 1, restart: reload zn from scratch
+
+  cv_mem->cv_eta = SUNMAX(ETAMIN, cv_mem->cv_hmin / SUNRabs(cv_mem->cv_h));
+  cv_mem->cv_h *= cv_mem->cv_eta;
+  cv_mem->cv_next_h = cv_mem->cv_h;
+  cv_mem->cv_hscale = cv_mem->cv_h;
+  cv_mem->cv_qwait = LONG_WAIT;
+  cv_mem->cv_nscon = 0;
+
+
+  //retval = cv_mem->cv_f(cv_mem->cv_tn, cv_mem->cv_zn[0],
+  //                      cv_mem->cv_tempv, cv_mem->cv_user_data);
+  retval = f(cv_mem->cv_tn, cv_mem->cv_zn[0],cv_mem->cv_tempv, cv_mem->cv_user_data);
+
+  cv_mem->cv_nfe++;
+  if (retval < 0)  return(CV_RHSFUNC_FAIL);
+  if (retval > 0)  return(CV_UNREC_RHSFUNC_ERR);
+
+  N_VScale(cv_mem->cv_h, cv_mem->cv_tempv, cv_mem->cv_zn[1]);
+
+  return(TRY_AGAIN);
 }
+
 
 int cudacvStep(SolverData *sd, CVodeMem cv_mem)
 {
@@ -4194,18 +4279,10 @@ int cudacvStep(SolverData *sd, CVodeMem cv_mem)
   /* Looping point for attempts to take a step */
   for(;;) {
 
-
-
-#ifndef DEV_CUDACVSTEP
-
-    //cvPredict_gpu3(cv_mem);
-
-#else
     //cvPredict_gpu2(cv_mem);
     //cvSet_gpu2(cv_mem);
-#endif
 
-
+    sd->mdv.dsm = dsm;
     sd->mdv.cv_tstop = cv_mem->cv_tstop;
     sd->mdv.cv_tstopset = cv_mem->cv_tstopset;
     sd->mdv.cv_nlscoef = cv_mem->cv_nlscoef;
@@ -4241,10 +4318,7 @@ int cudacvStep(SolverData *sd, CVodeMem cv_mem)
     cudaMemcpy(mGPU->cv_l, cv_mem->cv_l, L_MAX * sizeof(double), cudaMemcpyHostToDevice);
     cudaMemcpy(mGPU->cv_tau, cv_mem->cv_tau, (L_MAX+1) * sizeof(double), cudaMemcpyHostToDevice);
     cudaMemcpy(mGPU->cv_tq, cv_mem->cv_tq, (NUM_TESTS+1) * sizeof(double), cudaMemcpyHostToDevice);
-
-
-    //for(int i=0;i<L_MAX;i++)
-    //  printf("i %d dmdv->cv_l %le\n",i, dmdv->cv_l)
+//todo check dcv_tq and cv_tq
 
     cudaMemcpy(mGPU->dcv_tq, cv_mem->cv_tq, 5 * sizeof(double), cudaMemcpyHostToDevice);
 
@@ -4288,6 +4362,7 @@ int cudacvStep(SolverData *sd, CVodeMem cv_mem)
     cudaMemcpy(cv_mem->cv_tau, mGPU->cv_tau, (L_MAX+1) * sizeof(double), cudaMemcpyDeviceToHost);
     cudaMemcpy(cv_mem->cv_tq, mGPU->cv_tq, (NUM_TESTS+1) * sizeof(double), cudaMemcpyDeviceToHost);
 
+    dsm=sd->mdv.dsm;
     cv_mem->cv_tstop=sd->mdv.cv_tstop;
     cv_mem->cv_tstopset=sd->mdv.cv_tstopset;
     cv_mem->cv_nlscoef=sd->mdv.cv_nlscoef;
