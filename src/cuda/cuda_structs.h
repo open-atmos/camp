@@ -120,7 +120,7 @@ typedef struct {
     int kflag;
     int eflag;
 
-    
+    double cv_nlscoef;
     int cv_qwait;
     double cv_crate;
     double cv_gamrat;

@@ -3183,7 +3183,7 @@ void cudaDevicecvSetTqBDFt(ModelDataGPU *md, ModelDataVariable *dmdv,
     Cppinv = (ONE - A6 + A5) / A2;
     md->cv_tq[3] = fabs(Cppinv / (xi_inv * (dmdv->cv_q+2) * A5));
   }
-  md->cv_tq[4] = cv_mem->cv_nlscoef / md->cv_tq[2];
+  md->cv_tq[4] = dmdv->cv_nlscoef / md->cv_tq[2];
   */
 
   /*
@@ -3253,7 +3253,7 @@ void cudaDevicecvSetBDF(ModelDataGPU *md, ModelDataVariable *dmdv) {
       md->cv_l[i] += md->cv_l[i-1]*xistar_inv;
   }
 
-  cvSetTqBDF_gpu2(cv_mem, hsum, alpha0, alpha0_hat, xi_inv, xistar_inv);
+  cudaDevicecvSetTqBDFt(md, dmdv, hsum, alpha0, alpha0_hat, xi_inv, xistar_inv);
   */
 
 /*
@@ -4490,7 +4490,7 @@ int cudacvStep(SolverData *sd, CVodeMem cv_mem)
     cvSet_gpu2(cv_mem);
 #endif
 
-
+    sd->mdv.cv_nlscoef = cv_mem->cv_nlscoef;
     sd->mdv.cv_qwait = cv_mem->cv_qwait;
     sd->mdv.cv_crate = cv_mem->cv_crate;
     sd->mdv.cv_gamrat = cv_mem->cv_gamrat;
@@ -4589,6 +4589,7 @@ int cudacvStep(SolverData *sd, CVodeMem cv_mem)
     //for(int i=0;i<L_MAX;i++)
     //  printf("i %d dmdv->cv_l %le\n",i, dmdv->cv_l)
 
+    cv_mem->cv_nlscoef=sd->mdv.cv_nlscoef;
     cv_mem->cv_qwait=sd->mdv.cv_qwait;
     cv_mem->cv_crate=sd->mdv.cv_crate;
     cv_mem->cv_gamrat=sd->mdv.cv_gamrat;
