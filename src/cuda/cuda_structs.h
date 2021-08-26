@@ -120,6 +120,8 @@ typedef struct {
     int kflag;
     int eflag;
 
+    
+    int cv_qwait;
     double cv_crate;
     double cv_gamrat;
     double cv_gammap;
@@ -232,6 +234,7 @@ typedef struct {
 
     double *cv_l;
     double *cv_tau;
+    double *cv_tq;//NUM_TESTS+1
 
     //CVODE variables only GPU
     //double ;
