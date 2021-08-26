@@ -3239,7 +3239,8 @@ void cudaDevicecvPredict(ModelDataGPU *md, ModelDataVariable *dmdv) {
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   unsigned int tid = threadIdx.x;
 
-  /*
+  int j, k;
+
   dmdv->cv_tn += dmdv->cv_h;
   if (dmdv->cv_tstopset) {
     if ((dmdv->cv_tn - dmdv->cv_tstop)*dmdv->cv_h > 0.)
@@ -3254,28 +3255,6 @@ void cudaDevicecvPredict(ModelDataGPU *md, ModelDataVariable *dmdv) {
       cudaDevicezaxpby(1., &md->dzn[md->nrows*(j-1)], 1.,
         &md->dzn[md->nrows*(j)], &md->dzn[md->nrows*(j-1)], md->nrows);
 
-
-       //N_VLinearSum(ONE, cv_mem->cv_zn[j-1], -ONE,
-      //             cv_mem->cv_zn[j], cv_mem->cv_zn[j-1]);
-      //cudaDevicezaxpby(1., &md->dzn[md->nrows*(j-1)], -1.,
-      //        &md->dzn[md->nrows*(j)], &md->dzn[md->nrows*(j-1)], md->nrows);
-*/
-
-  /*
-
-     cv_mem->cv_tn += cv_mem->cv_h;
-  if (cv_mem->cv_tstopset) {
-    if ((cv_mem->cv_tn - cv_mem->cv_tstop)*cv_mem->cv_h > ZERO)
-      cv_mem->cv_tn = cv_mem->cv_tstop;
-  }
-  N_VScale(ONE, cv_mem->cv_zn[0], cv_mem->cv_last_yn);
-  for (k = 1; k <= cv_mem->cv_q; k++)
-    for (j = cv_mem->cv_q; j >= k; j--)
-      N_VLinearSum(ONE, cv_mem->cv_zn[j-1], ONE,
-                   cv_mem->cv_zn[j], cv_mem->cv_zn[j-1]);
-
-   */
-
 }
 
 __device__
@@ -3289,10 +3268,11 @@ void cudaDevicecvStep(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
 #ifndef DEV_CUDACVSTEP
 
-  cudaDevicecvPredict(md,dmdv);
 
 #else
 #endif
+
+  cudaDevicecvPredict(md,dmdv);
 
   cudaDevicecvSet(md,dmdv);
 
@@ -4218,11 +4198,10 @@ int cudacvStep(SolverData *sd, CVodeMem cv_mem)
 
 #ifndef DEV_CUDACVSTEP
 
-    cvPredict_gpu3(cv_mem);
+    //cvPredict_gpu3(cv_mem);
 
 #else
-    cvPredict_gpu2(cv_mem);
-
+    //cvPredict_gpu2(cv_mem);
     //cvSet_gpu2(cv_mem);
 #endif
 
