@@ -3159,7 +3159,6 @@ void cudaDevicecvSetTqBDFt(ModelDataGPU *md, ModelDataVariable *dmdv,
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   unsigned int tid = threadIdx.x;
 
-  /*
   double A1, A2, A3, A4, A5, A6;
   double C, Cpinv, Cppinv;
 
@@ -3170,7 +3169,7 @@ void cudaDevicecvSetTqBDFt(ModelDataGPU *md, ModelDataVariable *dmdv,
   if (dmdv->cv_qwait == 1) {
     if (dmdv->cv_q > 1) {
       C = xistar_inv / md->cv_l[dmdv->cv_q];
-      A3 = alpha0 + ONE / dmdv->cv_q;
+      A3 = alpha0 + 1. / dmdv->cv_q;
       A4 = alpha0_hat + xi_inv;
       Cpinv = (1. - A4 + A3) / A3;
       md->cv_tq[1] = fabs(C * Cpinv);
@@ -3178,17 +3177,16 @@ void cudaDevicecvSetTqBDFt(ModelDataGPU *md, ModelDataVariable *dmdv,
     else md->cv_tq[1] = 1.;
     hsum += md->cv_tau[dmdv->cv_q];
     xi_inv = dmdv->cv_h / hsum;
-    A5 = alpha0 - (ONE / (dmdv->cv_q+1));
+    A5 = alpha0 - (1. / (dmdv->cv_q+1));
     A6 = alpha0_hat - xi_inv;
-    Cppinv = (ONE - A6 + A5) / A2;
+    Cppinv = (1. - A6 + A5) / A2;
     md->cv_tq[3] = fabs(Cppinv / (xi_inv * (dmdv->cv_q+2) * A5));
   }
   md->cv_tq[4] = dmdv->cv_nlscoef / md->cv_tq[2];
-  */
 
   /*
 
-     realtype A1, A2, A3, A4, A5, A6;
+   realtype A1, A2, A3, A4, A5, A6;
   realtype C, Cpinv, Cppinv;
 
   A1 = ONE - alpha0_hat + alpha0;
@@ -3215,7 +3213,6 @@ void cudaDevicecvSetTqBDFt(ModelDataGPU *md, ModelDataVariable *dmdv,
 
    */
 
-
 }
 
 __device__
@@ -3226,12 +3223,12 @@ void cudaDevicecvSetBDF(ModelDataGPU *md, ModelDataVariable *dmdv) {
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   unsigned int tid = threadIdx.x;
 
-  /*
   double alpha0, alpha0_hat, xi_inv, xistar_inv, hsum;
-  int i,j;
+  int z,j;
+
 
   md->cv_l[0] = md->cv_l[1] = xi_inv = xistar_inv = 1.;
-  for (i=2; i <= dmdv->cv_q; i++) md>cv_l[i] = 0.;
+  for (z=2; z <= dmdv->cv_q; z++) md->cv_l[z] = 0.;
   alpha0 = alpha0_hat = -1.;
   hsum = dmdv->cv_h;
   if (dmdv->cv_q > 1) {
@@ -3239,8 +3236,8 @@ void cudaDevicecvSetBDF(ModelDataGPU *md, ModelDataVariable *dmdv) {
       hsum += md->cv_tau[j-1];
       xi_inv = dmdv->cv_h / hsum;
       alpha0 -= 1. / j;
-      for (i=j; i >= 1; i--) md->cv_l[i] += md->cv_l[i-1]*xi_inv;
-      // The l[i] are coefficients of product(1 to j) (1 + x/xi_i)
+      for (z=j; z >= 1; z--) md->cv_l[z] += md->cv_l[z-1]*xi_inv;
+      // The l[z] are coefficients of product(1 to j) (1 + x/xi_i)
     }
 
     // j = q
@@ -3249,12 +3246,11 @@ void cudaDevicecvSetBDF(ModelDataGPU *md, ModelDataVariable *dmdv) {
     hsum += md->cv_tau[dmdv->cv_q-1];
     xi_inv = dmdv->cv_h / hsum;
     alpha0_hat = -md->cv_l[1] - xi_inv;
-    for (i=dmdv->cv_q; i >= 1; i--)
-      md->cv_l[i] += md->cv_l[i-1]*xistar_inv;
+    for (z=dmdv->cv_q; z >= 1; z--)
+      md->cv_l[z] += md->cv_l[z-1]*xistar_inv;
   }
 
   cudaDevicecvSetTqBDFt(md, dmdv, hsum, alpha0, alpha0_hat, xi_inv, xistar_inv);
-  */
 
 /*
 
@@ -3298,15 +3294,15 @@ void cudaDevicecvSet(ModelDataGPU *md, ModelDataVariable *dmdv) {
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   unsigned int tid = threadIdx.x;
 
-  /*
   cudaDevicecvSetBDF(md,dmdv);
+
+//fine
   dmdv->cv_rl1 = 1.0 / md->cv_l[1];
   dmdv->cv_gamma = dmdv->cv_h * dmdv->cv_rl1;
   if (dmdv->cv_nst == 0) dmdv->cv_gammap = dmdv->cv_gamma;
   dmdv->cv_gamrat = (dmdv->cv_nst > 0) ?
-                      dmdv->cv_gamma / dmdv->cv_gammap : 1.;  // protect x / x != 1.0
+                    dmdv->cv_gamma / dmdv->cv_gammap : 1.;  // protect x / x != 1.0
 
-   */
 
   /*
 
@@ -3328,20 +3324,21 @@ void cudaDevicecvStep(ModelDataGPU *md, ModelDataVariable *dmdv) {
   ModelDataVariable *mdv = md->mdv;
   ModelDataVariable *mdvo = md->mdvo;
   extern __shared__ int flag_shr[];
-  int flagDefault = 0;//wrong
-  //int flagDefault = 99;
-  int flagDevice = flagDefault;
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   unsigned int tid = threadIdx.x;
 
 #ifndef DEV_CUDACVSTEP
 
+#else
+#endif
+
   //if(tid==0)
   //  for(int i=0;i<L_MAX;i++)
   //    printf("i %d dmdv->cv_l %le\n",i, dmdv->cv_l);
 
-#else
-#endif
+  cudaDevicecvSet(md,dmdv);
+
+
 
   int nflag=cudaDevicecvNlsNewton(
             md->dA, md->djA, md->diA, md->dx, md->dtempv, //Input data
@@ -4343,12 +4340,17 @@ int cvHandleNFlag_gpu3(CVodeMem cv_mem, int *nflagPtr, realtype saved_t,
 void cvSet_gpu3(CVodeMem cv_mem)
 {
 
-  cvSetBDF_gpu2(cv_mem);
+  //cvSetBDF_gpu2(cv_mem);
+
+#ifndef DEV_cudaDevicecvSet
+#else
+
   cv_mem->cv_rl1 = ONE / cv_mem->cv_l[1];
   cv_mem->cv_gamma = cv_mem->cv_h * cv_mem->cv_rl1;
   if (cv_mem->cv_nst == 0) cv_mem->cv_gammap = cv_mem->cv_gamma;
   cv_mem->cv_gamrat = (cv_mem->cv_nst > 0) ?
                       cv_mem->cv_gamma / cv_mem->cv_gammap : ONE;  // protect x / x != 1.0
+#endif
 
 }
 
@@ -4484,7 +4486,7 @@ int cudacvStep(SolverData *sd, CVodeMem cv_mem)
 
 #ifndef DEV_CUDACVSTEP
 
-    cvSet_gpu3(cv_mem);
+    //cvSet_gpu3(cv_mem);
 
 #else
     cvSet_gpu2(cv_mem);
@@ -4521,7 +4523,7 @@ int cudacvStep(SolverData *sd, CVodeMem cv_mem)
 
     //cudaMemcpy(mGPU->mdv.cv_l, cv_mem->cv_l, L_MAX * sizeof(double), cudaMemcpyHostToDevice);
     cudaMemcpy(mGPU->cv_l, cv_mem->cv_l, L_MAX * sizeof(double), cudaMemcpyHostToDevice);
-    cudaMemcpy(mGPU->cv_tau, cv_mem->cv_l, (L_MAX+1) * sizeof(double), cudaMemcpyHostToDevice);
+    cudaMemcpy(mGPU->cv_tau, cv_mem->cv_tau, (L_MAX+1) * sizeof(double), cudaMemcpyHostToDevice);
     cudaMemcpy(mGPU->cv_tq, cv_mem->cv_tq, (NUM_TESTS+1) * sizeof(double), cudaMemcpyHostToDevice);
 
 
@@ -4581,7 +4583,7 @@ int cudacvStep(SolverData *sd, CVodeMem cv_mem)
 
     //cudaMemcpy(cv_mem->cv_l, mGPU->mdvo.cv_l, L_MAX * sizeof(double), cudaMemcpyDeviceToHost);
     cudaMemcpy(cv_mem->cv_l, mGPU->cv_l, L_MAX * sizeof(double), cudaMemcpyDeviceToHost);
-    cudaMemcpy(cv_mem->cv_l, mGPU->cv_tau, (L_MAX+1) * sizeof(double), cudaMemcpyDeviceToHost);
+    cudaMemcpy(cv_mem->cv_tau, mGPU->cv_tau, (L_MAX+1) * sizeof(double), cudaMemcpyDeviceToHost);
     cudaMemcpy(cv_mem->cv_tq, mGPU->cv_tq, (NUM_TESTS+1) * sizeof(double), cudaMemcpyDeviceToHost);
 
 
