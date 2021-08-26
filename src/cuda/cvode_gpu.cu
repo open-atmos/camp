@@ -805,7 +805,18 @@ int CudaDeviceguess_helper(double t_n, double h_n, double* y_n,
   if(i==0)printf("min %le -SMALL %le\n",md->min, -SMALL);
 #endif
 
-  if(md->min>-SMALL){ //illegal access with 1000 cells
+  double min;
+
+#ifndef DEV_MIN
+
+  cudaDevicemin(&min, y_n[i], flag_shr2, n_shr_empty);
+  //cudaDevicemin(&min, md->dzn[i][i], flag_shr2, n_shr_empty);
+
+#else
+  min=md->min;
+#endif
+
+  if(min>-SMALL){ //illegal access with 1000 cells
   //if(y_n[i]>-SMALL){//Different value in 10,000 cells
 
 #ifdef DEBUG_CudaDeviceguess_helper
@@ -897,12 +908,8 @@ int CudaDeviceguess_helper(double t_n, double h_n, double* y_n,
     __syncthreads();
     //(blockIdx.x==0 && iter<=0)printf("i %d t_star %le atmp1 %le acorr %le\n",i,t_star,tmp1[i],corr[i]);
 
-    //Seg fault here.
-    //cudaDevicemin(t_star, flag_shr2, h_j, n_shr_empty);
-    //double h_j2;
-
     flag_shr2[tid]=h_j_init;
-    cudaDevicemin(&h_j, t_star, flag_shr2, h_j, n_shr_empty);
+    cudaDevicemin(&h_j, t_star, flag_shr2, n_shr_empty);
     flag_shr2[0]=1;
     //h_j=h_j2;
 
@@ -3256,7 +3263,36 @@ void cudaDevicecvAdjustParams(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
 }
 
+__device__
+void cudaDevicecvDecreaseBDF(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
+  ModelDataVariable *mdv = md->mdv;
+  extern __shared__ int flag_shr[];
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
+  unsigned int tid = threadIdx.x;
+
+  /*
+
+  double hsum, xi;
+  int i, j;
+
+  for (i=0; i <= cv_mem->cv_qmax; i++) cv_mem->cv_l[i] = ZERO;
+  cv_mem->cv_l[2] = ONE;
+  hsum = ZERO;
+  for (j=1; j <= cv_mem->cv_q-2; j++) {
+    hsum += cv_mem->cv_tau[j];
+    xi = hsum /cv_mem->cv_hscale;
+    for (i=j+2; i >= 2; i--)
+      cv_mem->cv_l[i] = cv_mem->cv_l[i]*xi + cv_mem->cv_l[i-1];
+  }
+
+  for (j=2; j < cv_mem->cv_q; j++)
+    N_VLinearSum(-cv_mem->cv_l[j], cv_mem->cv_zn[cv_mem->cv_q],
+                 ONE, cv_mem->cv_zn[j], cv_mem->cv_zn[j]);
+
+   */
+
+}
 
 __device__
 void cudaDevicecvDoErrorTest(ModelDataGPU *md, ModelDataVariable *dmdv) {
@@ -3295,7 +3331,7 @@ void cudaDevicecvDoErrorTest(ModelDataGPU *md, ModelDataVariable *dmdv) {
   (*nefPtr)++;
   cv_mem->cv_netf++;
   *nflagPtr = PREV_ERR_FAIL;
-  cvRestore_gpu2(cv_mem, saved_t);
+  cudaDevicecvRestore(cv_mem, saved_t);
 
   // At maxnef failures or |h| = hmin, return CV_ERR_FAILURE
   if ((SUNRabs(cv_mem->cv_h) <= cv_mem->cv_hmin*ONEPSM) ||
@@ -3310,7 +3346,7 @@ void cudaDevicecvDoErrorTest(ModelDataGPU *md, ModelDataVariable *dmdv) {
     cv_mem->cv_eta = SUNMAX(ETAMIN, SUNMAX(cv_mem->cv_eta,
                                            cv_mem->cv_hmin / SUNRabs(cv_mem->cv_h)));
     if (*nefPtr >= SMALL_NEF) cv_mem->cv_eta = SUNMIN(cv_mem->cv_eta, ETAMXF);
-    cvRescale_gpu2(cv_mem);
+    cudaDevicecvRescale(cv_mem);
     return(TRY_AGAIN);
   }
 
@@ -3324,7 +3360,7 @@ void cudaDevicecvDoErrorTest(ModelDataGPU *md, ModelDataVariable *dmdv) {
     cv_mem->cv_L = cv_mem->cv_q;
     cv_mem->cv_q--;
     cv_mem->cv_qwait = cv_mem->cv_L;
-    cvRescale_gpu2(cv_mem);
+    cudaDevicecvRescale(cv_mem);
     return(TRY_AGAIN);
   }
 
@@ -4203,6 +4239,26 @@ int cudacvNewtonIteration(SolverData *sd, CVodeMem cv_mem)
   return(flag);
 
   //return 0;
+}
+
+void cvDecreaseBDF_gpu3(CVodeMem cv_mem)
+{
+  realtype hsum, xi;
+  int i, j;
+
+  for (i=0; i <= cv_mem->cv_qmax; i++) cv_mem->cv_l[i] = ZERO;
+  cv_mem->cv_l[2] = ONE;
+  hsum = ZERO;
+  for (j=1; j <= cv_mem->cv_q-2; j++) {
+    hsum += cv_mem->cv_tau[j];
+    xi = hsum /cv_mem->cv_hscale;
+    for (i=j+2; i >= 2; i--)
+      cv_mem->cv_l[i] = cv_mem->cv_l[i]*xi + cv_mem->cv_l[i-1];
+  }
+
+  for (j=2; j < cv_mem->cv_q; j++)
+    N_VLinearSum(-cv_mem->cv_l[j], cv_mem->cv_zn[cv_mem->cv_q],
+                 ONE, cv_mem->cv_zn[j], cv_mem->cv_zn[j]);
 }
 
 booleantype cvDoErrorTest_gpu3(CVodeMem cv_mem, int *nflagPtr,
