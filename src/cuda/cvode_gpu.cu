@@ -3293,14 +3293,13 @@ void cudaGlobalSolveODE(ModelDataGPU md_object) {
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   unsigned int tid = threadIdx.x;
   int active_threads = md->nrows;
-  ModelDataVariable dmdv_object;
-  ModelDataVariable *dmdv = &dmdv_object;
+  
+  ModelDataVariable dmdv_object = *md_object.mdv;
+  ModelDataVariable *dmdv = &dmdv_object; //fine 100 cells
+
   dmdv->flag = 0;
 
-  //todo check if memcpy works to copy mdv to dmdv or just dmdv=mdv, instead of going 1 by 1
-
-  
-
+/*
   dmdv->cv_rl1 = mdv->cv_rl1;
   dmdv->eflag = mdv->eflag;
   dmdv->kflag = mdv->kflag;
@@ -3322,6 +3321,7 @@ void cudaGlobalSolveODE(ModelDataGPU md_object) {
   dmdv->cv_etamax=mdv->cv_etamax;
   dmdv->cv_maxncf=mdv->cv_maxncf;
 
+*/
 
   if(i<active_threads){
 
@@ -3334,6 +3334,12 @@ void cudaGlobalSolveODE(ModelDataGPU md_object) {
 
   if(tid==0)md->flagCells[blockIdx.x]=dmdv->flag;//FINE
 
+  //ModelDataVariable dmdv_object = *md_object.mdv;
+  //ModelDataVariable *dmdv = &dmdv_object;
+
+  *mdvo = *dmdv;
+
+/*
   mdvo->cv_rl1=dmdv->cv_rl1;
   mdvo->eflag=dmdv->eflag;
   mdvo->kflag=dmdv->kflag;
@@ -3353,6 +3359,7 @@ void cudaGlobalSolveODE(ModelDataGPU md_object) {
   mdvo->cv_tn = dmdv->cv_tn;
   mdvo->cv_etamax=dmdv->cv_etamax;
   mdvo->cv_maxncf=dmdv->cv_maxncf;
+*/
 
   //todo look for other variables in cvnls newton like flag that needs load outside (e.g. counters)
 
@@ -4364,6 +4371,8 @@ int cudacvStep(SolverData *sd, CVodeMem cv_mem)
 #else
     cvSet_gpu2(cv_mem);
 #endif
+
+
 
     sd->mdv.cv_rl1=cv_mem->cv_rl1;
 
