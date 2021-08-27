@@ -120,6 +120,14 @@ typedef struct {
     int kflag;
     int eflag;
 
+    int cv_nhnil;            /* number of messages issued to the user that t + h == t for the next iternal step            */
+    double cv_etaqm1;      /* ratio of new to old h for order q-1             */
+    double cv_etaq;        /* ratio of new to old h for order q               */
+    double cv_etaqp1;      /* ratio of new to old h for order q+1             */
+    int cv_lrw1;        /* no. of realtype words in 1 N_Vector             */
+    int cv_liw1;        /* no. of integer words in 1 N_Vector              */
+    int cv_lrw;             /* no. of realtype words in CVODE work vectors     */
+    int cv_liw;             /* no. of integer words in CVODE work vectors      */
     double cv_saved_tq5;       /* saved value of tq[5]                        */
     double cv_tolsf;           /* tolerance scale factor                      */
     int cv_qmax_alloc;           /* value of qmax used when allocating memory   */
@@ -257,16 +265,8 @@ typedef struct {
 
     //CVODE variables only GPU
     //double ;
-    //double cv_nstlp;//wrong, should be int
-    //double cv_maxcor;//wrong, should be int
-    double saved_t;
     double *cv_last_yn;
     double *cv_acor_init;
-    int nflag;
-    double min;
-    //int convfail;
-    //int callSetup;
-    int ncf;
 
     //LS (BCG)
     double *dA;
