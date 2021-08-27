@@ -319,7 +319,7 @@ typedef struct {
     int threads_block;
 
     //cudacvNewtonIteration
-    double* dacor;
+    double* cv_acor;
     double* dzn;
     double* dewt;
     int *cv_nsetups;
