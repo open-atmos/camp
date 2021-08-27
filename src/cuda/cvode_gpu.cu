@@ -2059,7 +2059,6 @@ void alloc_solver_gpu2(CVodeMem cv_mem, SolverData *sd)
   cudaMalloc((void**)&mGPU->mdvo,sizeof(ModelDataVariable));
   cudaMalloc((void**)&mGPU->flag,1*sizeof(int));
   cudaMalloc((void**)&mGPU->flagCells,mGPU->n_cells*sizeof(int));
-  cudaMalloc((void**)&mGPU->cv_jcur,1*sizeof(int));
   cudaMalloc((void**)&mGPU->nje,1*sizeof(int));
   cudaMalloc((void**)&mGPU->djA,mGPU->nnz*sizeof(int));
   cudaMalloc((void**)&mGPU->diA,(mGPU->nrows+1)*sizeof(int));
@@ -2695,7 +2694,7 @@ int cudaDevicecvNlsNewton(
   int n_shr = blockDim.x + n_shr_empty;
 
   //todo delete jcur
-  int cv_jcur=md->cv_jcur;//cv_jcurGlobal;
+  //int cv_jcur=md->cv_jcur;//cv_jcurGlobal;
   //int cv_jcur=*cv_jcurGlobal;
 
 #ifdef PMC_DEBUG_GPU
@@ -2838,7 +2837,7 @@ int cudaDevicecvNlsNewton(
               time_step, deriv_length_cell, state_size_cell,
               i_kernel, threads_block, md, dmdv,
               //cudacvNewtonIteration
-              dacor, dzn, &cv_jcur,
+              dacor, dzn, &dmdv->cv_jcur,
               dewt, dcv_tq, cv_nfe,
               cv_nsetups,
               cv_nst, nstlj, convfail,
@@ -2909,7 +2908,7 @@ int cudaDevicecvNlsNewton(
             time_step, deriv_length_cell, state_size_cell,
             i_kernel, threads_block, md, dmdv,
             //cudacvNewtonIteration
-            dacor, dzn, &cv_jcur,
+            dacor, dzn, &dmdv->cv_jcur,
             dewt, dcv_tq, cv_nfe
 #ifdef PMC_DEBUG_GPU
     ,it_pointer, dtBCG, dtPreBCG, dtPostBCG,
@@ -4502,6 +4501,7 @@ int cudacvStep(SolverData *sd, CVodeMem cv_mem)
 
   //eflag=sd->mdv.eflag;
 
+  sd->mdv.cv_jcur = cv_mem->cv_jcur;
   sd->mdv.cv_mnewt = cv_mem->cv_mnewt;
   sd->mdv.cv_maxcor = cv_mem->cv_maxcor;
   sd->mdv.cv_nstlp = (int) cv_mem->cv_nstlp;
@@ -4561,7 +4561,6 @@ int cudacvStep(SolverData *sd, CVodeMem cv_mem)
   cudaMemcpy(mGPU->dftemp, ftemp, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice);
   cudaMemcpy(mGPU->cv_last_yn, cv_last_yn, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice);
   cudaMemcpy(mGPU->cv_acor_init, cv_acor_init, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice);
-  //cudaMemcpy(mGPU->cv_jcur, &cv_mem->cv_jcur, 1 * sizeof(int), cudaMemcpyHostToDevice);//todo needed?
 
   for (int i = 0; i <= cv_mem->cv_qmax; i++) {//cv_qmax+1 (6)?
     double *zn = NV_DATA_S(cv_mem->cv_zn[i]);
@@ -4574,7 +4573,7 @@ int cudacvStep(SolverData *sd, CVodeMem cv_mem)
 
 #ifndef DEV2_CUDACVSTEP
 
-  mGPU->cv_jcur = cv_mem->cv_jcur;
+  //mGPU->cv_jcur = cv_mem->cv_jcur;
   //mGPU->cv_mnewt = cv_mem->cv_mnewt;
   //mGPU->cv_maxcor = cv_mem->cv_maxcor;
   //mGPU->cv_nstlp = cv_mem->cv_nstlp;
@@ -4589,6 +4588,7 @@ int cudacvStep(SolverData *sd, CVodeMem cv_mem)
 
   cudaMemcpy(&sd->mdv, mGPU->mdvo, sizeof(ModelDataVariable), cudaMemcpyDeviceToHost);
 
+  cv_mem->cv_jcur = sd->mdv.cv_jcur;
   cv_mem->cv_mnewt = sd->mdv.cv_mnewt;
   cv_mem->cv_maxcor = sd->mdv.cv_maxcor;
   cv_mem->cv_nstlp = sd->mdv.cv_nstlp;

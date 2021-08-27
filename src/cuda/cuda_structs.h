@@ -120,6 +120,7 @@ typedef struct {
     int kflag;
     int eflag;
 
+    int cv_jcur;
     int cv_mnewt;
     int cv_maxcor;
     int cv_nstlp;
@@ -255,7 +256,6 @@ typedef struct {
     double *cv_last_yn;
     double *cv_acor_init;
     int nflag;
-    int cv_jcur;
     double min;
     //int convfail;
     //int callSetup;
