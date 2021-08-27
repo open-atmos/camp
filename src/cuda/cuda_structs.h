@@ -120,6 +120,13 @@ typedef struct {
     int kflag;
     int eflag;
 
+    double cv_saved_tq5;       /* saved value of tq[5]                        */
+    double cv_tolsf;           /* tolerance scale factor                      */
+    int cv_qmax_alloc;           /* value of qmax used when allocating memory   */
+    int cv_indx_acor;            /* index of the zn vector with saved acor      */
+    int cv_qu;
+    double cv_h0u;
+    double cv_hu;
     int cv_jcur;
     int cv_mnewt;
     int cv_maxcor;
