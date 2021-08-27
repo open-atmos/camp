@@ -120,6 +120,11 @@ typedef struct {
     int kflag;
     int eflag;
 
+    double cv_hmax_inv;
+    int cv_lmm;                /* lmm = CV_ADAMS or CV_BDF                      */
+    int cv_iter;               /* iter = CV_FUNCTIONAL or CV_NEWTON             */
+    int cv_itol;               /* itol = CV_SS, CV_SV, CV_WF, CV_NN             */
+    double cv_reltol;        /* relative tolerance                            */
     int cv_nhnil;            /* number of messages issued to the user that t + h == t for the next iternal step            */
     double cv_etaqm1;      /* ratio of new to old h for order q-1             */
     double cv_etaq;        /* ratio of new to old h for order q               */
@@ -303,7 +308,6 @@ typedef struct {
     double* dcv_y;
     double* dtempv1;
     double* dtempv2;
-    double cv_reltol;
 
     //update_state
     double threshhold;

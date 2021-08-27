@@ -2108,7 +2108,8 @@ void alloc_solver_gpu2(CVodeMem cv_mem, SolverData *sd)
   mGPU->blocks=(mGPU->nrows+mGPU->threads-1)/mGPU->threads;
   mGPU->replacement_value=TINY;
   mGPU->threshhold=-SMALL;
-  mGPU->cv_reltol=((CVodeMem) sd->cvode_mem)->cv_reltol;
+  sd->mdv.cv_reltol=((CVodeMem) sd->cvode_mem)->cv_reltol;
+
 
   mGPU->deriv_length_cell=mGPU->nrows/mGPU->n_cells;
   mGPU->state_size_cell=md->n_per_cell_state_var;
@@ -3414,17 +3415,17 @@ void cudaDevicecvChooseEta(ModelDataGPU *md, ModelDataVariable *dmdv) {
     dmdv->cv_eta = dmdv->cv_etaq;
     dmdv->cv_qprime = dmdv->cv_q;
 
-  } else if (etam == cv_mem->cv_etaqm1) {
+  } else if (etam == dmdv->cv_etaqm1) {
 
     dmdv->cv_eta = dmdv->cv_etaqm1;
-    dmdv->cv_qprime = cv_mem->cv_q - 1;
+    dmdv->cv_qprime = dmdv->cv_q - 1;
 
   } else {
 
-    cv_mem->cv_eta = cv_mem->cv_etaqp1;
-    cv_mem->cv_qprime = cv_mem->cv_q + 1;
+    dmdv->cv_eta = dmdv->cv_etaqp1;
+    dmdv->cv_qprime = dmdv->cv_q + 1;
 
-    if (cv_mem->cv_lmm == CV_BDF) {
+    if (dmdv->cv_lmm == CV_BDF) {
       //
        // Store Delta_n in zn[qmax] to be used in order increase
        //
@@ -3432,7 +3433,8 @@ void cudaDevicecvChooseEta(ModelDataGPU *md, ModelDataVariable *dmdv) {
        // to order q+1, so it represents Delta_n in the ELTE at q+1
        //
 
-      N_VScale(ONE, cv_mem->cv_acor, cv_mem->cv_zn[cv_mem->cv_qmax]);
+      //N_VScale(ONE, dmdv->cv_acor, dmdv->cv_zn[dmdv->cv_qmax]);
+      md->dzn[md->nrows*(dmdv->cv_qmax)]=md->cv_acor;
 
     }
   }
@@ -3451,15 +3453,15 @@ void cudaDevicecvSetEta(ModelDataGPU *md, ModelDataVariable *dmdv) {
   /*
 
   // If eta below the threshhold THRESH, reject a change of step size
-  if (cv_mem->cv_eta < THRESH) {
-    cv_mem->cv_eta = ONE;
-    cv_mem->cv_hprime = cv_mem->cv_h;
+  if (dmdv->cv_eta < THRESH) {
+    dmdv->cv_eta = ONE;
+    dmdv->cv_hprime = dmdv->cv_h;
   } else {
     // Limit eta by etamax and hmax, then set hprime
-    cv_mem->cv_eta = SUNMIN(cv_mem->cv_eta, cv_mem->cv_etamax);
-    cv_mem->cv_eta /= SUNMAX(ONE, SUNRabs(cv_mem->cv_h)*cv_mem->cv_hmax_inv*cv_mem->cv_eta);
-    cv_mem->cv_hprime = cv_mem->cv_h * cv_mem->cv_eta;
-    if (cv_mem->cv_qprime < cv_mem->cv_q) cv_mem->cv_nscon = 0;
+    dmdv->cv_eta = SUNMIN(dmdv->cv_eta, dmdv->cv_etamax);
+    dmdv->cv_eta /= SUNMAX(ONE, fabs(dmdv->cv_h)*dmdv->cv_hmax_inv*cv_mem->cv_eta);
+    dmdv->cv_hprime = dmdv->cv_h * dmdv->cv_eta;
+    if (dmdv->cv_qprime < dmdv->cv_q) dmdv->cv_nscon = 0;
   }
 
   */
@@ -3606,7 +3608,7 @@ int cudaDevicecvStep(ModelDataGPU *md, ModelDataVariable *dmdv) {
             //Guess_helper //*md->cv_tn
             mdv->cv_tn, mdv->cv_h, md->dftemp,
             md->dcv_y, md->dtempv1,
-            md->dtempv2, md->cv_reltol,
+            md->dtempv2, dmdv->cv_reltol,
             //update_state
             md->threshhold, md->replacement_value, &dmdv->flag,
             //f_gpu
@@ -4767,7 +4769,7 @@ int cudacvStep(SolverData *sd, CVodeMem cv_mem)
 
   //cudaMemcpy(mGPU->flag,&flag,1*sizeof(int),cudaMemcpyHostToDevice);
 
-  mGPU->cv_reltol=((CVodeMem) sd->cvode_mem)->cv_reltol;
+  sd->mdv.cv_reltol=((CVodeMem) sd->cvode_mem)->cv_reltol;
 
   /* Looping point for attempts to take a step */
   //for(;;) {
@@ -4779,6 +4781,11 @@ int cudacvStep(SolverData *sd, CVodeMem cv_mem)
 
   //eflag=sd->mdv.eflag;
 
+  sd->mdv.cv_hmax_inv = cv_mem->cv_hmax_inv;
+  sd->mdv.cv_lmm = cv_mem->cv_lmm;
+  sd->mdv.cv_iter = cv_mem->cv_iter;
+  sd->mdv.cv_itol = cv_mem->cv_itol;
+  sd->mdv.cv_reltol = cv_mem->cv_reltol;
   sd->mdv.cv_nhnil = cv_mem->cv_nhnil;
   sd->mdv.cv_etaqm1 = cv_mem->cv_etaqm1;
   sd->mdv.cv_etaq = cv_mem->cv_etaq;
@@ -4866,6 +4873,11 @@ int cudacvStep(SolverData *sd, CVodeMem cv_mem)
 
   cudaMemcpy(&sd->mdv, mGPU->mdvo, sizeof(ModelDataVariable), cudaMemcpyDeviceToHost);
 
+  cv_mem->cv_hmax_inv = sd->mdv.cv_hmax_inv;
+  cv_mem->cv_lmm = sd->mdv.cv_lmm;
+  cv_mem->cv_iter = sd->mdv.cv_iter;
+  cv_mem->cv_itol = sd->mdv.cv_itol;
+  cv_mem->cv_reltol = sd->mdv.cv_reltol;
   cv_mem->cv_nhnil = sd->mdv.cv_nhnil;
   cv_mem->cv_etaqm1 = sd->mdv.cv_etaqm1;
   cv_mem->cv_etaq = sd->mdv.cv_etaq;
@@ -5788,7 +5800,7 @@ int cvInitialSetup_gpu2(CVodeMem cv_mem)
   }
 
   /* Set data for efun */
-  if (cv_mem->cv_user_efun) cv_mem->cv_e_data = cv_mem->cv_user_data;
+  if (cv_mem->cv_user_efun) cv_mem->cv_e_data = cv_mem->cv_user_data; //efun not defined in CAMP
   else                      cv_mem->cv_e_data = cv_mem;
 
   /* Load initial error weights */
