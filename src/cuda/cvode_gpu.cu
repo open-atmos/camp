@@ -3222,18 +3222,6 @@ void cudaDevicecvPredict(ModelDataGPU *md, ModelDataVariable *dmdv) {
 }
 
 __device__
-void cudaDevicecvAdjustParams(ModelDataGPU *md, ModelDataVariable *dmdv) {
-
-  ModelDataVariable *mdv = md->mdv;
-  extern __shared__ int flag_shr[];
-  int i = blockIdx.x * blockDim.x + threadIdx.x;
-  unsigned int tid = threadIdx.x;
-
-
-
-}
-
-__device__
 void cudaDevicecvDecreaseBDF(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
   ModelDataVariable *mdv = md->mdv;
@@ -3387,9 +3375,20 @@ int cudaDevicecvDoErrorTest(ModelDataGPU *md, ModelDataVariable *dmdv,
 
   return(TRY_AGAIN);
 
+}
+
+__device__
+void cudaDevicecvAdjustParams(ModelDataGPU *md, ModelDataVariable *dmdv) {
+
+  ModelDataVariable *mdv = md->mdv;
+  extern __shared__ int flag_shr[];
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
+  unsigned int tid = threadIdx.x;
+
 
 
 }
+
 
 
 __device__
@@ -3401,11 +3400,11 @@ int cudaDevicecvStep(ModelDataGPU *md, ModelDataVariable *dmdv) {
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   unsigned int tid = threadIdx.x;
 
-#ifdef DEV_CUDACVSTEP
+#ifndef DEV_CUDACVSTEP
 
   for (;;) {
 
-    dmdv->eflag = dmdv->kflag = 99;
+    dmdv->eflag = dmdv->kflag = 99;//Original algorithm not initializes
 
 #else
 #endif
@@ -3462,23 +3461,15 @@ int cudaDevicecvStep(ModelDataGPU *md, ModelDataVariable *dmdv) {
     //if(i==0)printf("kflag %d \n",kflag);
 
     // Go back in loop if we need to predict again (nflag=PREV_CONV_FAIL)
-#ifdef DEV_CUDACVSTEP
 
     if (dmdv->kflag == PREDICT_AGAIN) {
-      if (i == 0)printf("DEV_CUDACVSTEP kflag PREDICT_AGAIN\n");
+      //if (i == 0)printf("DEV_CUDACVSTEP kflag PREDICT_AGAIN\n");
       continue;
     }
-#else
-    if (dmdv->kflag == PREDICT_AGAIN){
-      //if(i==0)printf("DEV_CUDACVSTEP kflag PREDICT_AGAIN\n");
-      return; //fine
-    }
-
-#endif
 
     // Return if nonlinear solve failed and recovery not possible.
     if (dmdv->kflag != DO_ERROR_TEST) {
-      if(i==0)printf("DEV_CUDACVSTEP kflag!=DO_ERROR_TEST\n");
+      //if(i==0)printf("DEV_CUDACVSTEP kflag!=DO_ERROR_TEST\n");
       return (dmdv->kflag);
     }
 
@@ -3492,17 +3483,15 @@ int cudaDevicecvStep(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
     //if(i==0)printf("eflag %d\n", eflag);
 
-#ifdef DEV_CUDACVSTEP
-
     /* Go back in loop if we need to predict again (nflag=PREV_ERR_FAIL) */
     if (dmdv->eflag == TRY_AGAIN){
-      if (i == 0)printf("DEV_CUDACVSTEP eflag TRY_AGAIN\n");
+      //if (i == 0)printf("DEV_CUDACVSTEP eflag TRY_AGAIN\n");
       continue;
     }
 
     /* Return if error test failed and recovery not possible. */
     if (dmdv->eflag != CV_SUCCESS){
-      if (i == 0)printf("DEV_CUDACVSTEP eflag!=CV_SUCCESS\n");
+      //if (i == 0)printf("DEV_CUDACVSTEP eflag!=CV_SUCCESS\n");
       return (dmdv->eflag);
     }
 
@@ -3511,23 +3500,9 @@ int cudaDevicecvStep(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
   }
 
+#ifndef DEV_CUDACVSTEP
+
 #else
-
-  /* Go back in loop if we need to predict again (nflag=PREV_ERR_FAIL) */
-  if (dmdv->eflag == TRY_AGAIN){
-    //if (i == 0)printf("DEV_CUDACVSTEP kflag PREDICT_AGAIN\n");
-    return;
-  }
-  //fine
-
-  /* Return if error test failed and recovery not possible. */
-  if (dmdv->eflag != CV_SUCCESS){
-
-    return (dmdv->eflag);
-  }
-
-  /* Error test passed (eflag=CV_SUCCESS), break from loop */
-  return; //fine
 
 #endif
 
@@ -4483,16 +4458,8 @@ int cudacvStep(SolverData *sd, CVodeMem cv_mem)
 
   mGPU->cv_reltol=((CVodeMem) sd->cvode_mem)->cv_reltol;
 
-
-#ifdef DEV_CUDACVSTEP
-
-
-
-#else
   /* Looping point for attempts to take a step */
-  for(;;) {
-
-#endif
+  //for(;;) {
 
   eflag = kflag = 99;
 
@@ -4567,21 +4534,6 @@ int cudacvStep(SolverData *sd, CVodeMem cv_mem)
     cudaMemcpy((i * mGPU->nrows + mGPU->dzn), zn, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice);
   }
 
-  //double min = N_VMin(cv_mem->cv_zn[0]);
-  //mGPU->min = min;
-  //Quiza es porque falte esto:
-
-#ifndef DEV2_CUDACVSTEP
-
-  //mGPU->cv_jcur = cv_mem->cv_jcur;
-  //mGPU->cv_mnewt = cv_mem->cv_mnewt;
-  //mGPU->cv_maxcor = cv_mem->cv_maxcor;
-  //mGPU->cv_nstlp = cv_mem->cv_nstlp;
-
-#else
-
-#endif
-
   solveCVODEGPU(sd, cv_mem);
 
   //printf("DEV_cudacvStep counterBiConjGrad %d\n",bicg->counterBiConjGrad);
@@ -4654,7 +4606,6 @@ int cudacvStep(SolverData *sd, CVodeMem cv_mem)
     }
   }
 
-
   //kflag=flag;
 
 
@@ -4669,8 +4620,7 @@ int cudacvStep(SolverData *sd, CVodeMem cv_mem)
 
   printf("kflag %d, eflag %d\n", kflag, eflag);
 
-#ifdef DEV_CUDACVSTEP
-
+  //}//for(;;)
 
   if (kflag != DO_ERROR_TEST) {
     //printf("DEV_CUDACVSTEP kflag!=DO_ERROR_TEST\n");
@@ -4681,47 +4631,12 @@ int cudacvStep(SolverData *sd, CVodeMem cv_mem)
     return (eflag);
   }
 
-#else
-
-
-  /* Go back in loop if we need to predict again (nflag=PREV_CONV_FAIL)*/
-  if (kflag == PREDICT_AGAIN){
-    printf("DEV_CUDACVSTEP kflag PREDICT_AGAIN\n");
-    continue;
-  }
-
-
-  /* Return if nonlinear solve failed and recovery not possible. */
-  if (kflag != DO_ERROR_TEST){
-    printf("DEV_CUDACVSTEP eflag TRY_AGAIN\n");
-    return(kflag);
-  }
-
-  /* Perform error test (nflag=CV_SUCCESS) */
-  //eflag = cvDoErrorTest_gpu2(cv_mem, &nflag, saved_t, &nef, &dsm);
-
-  /* Go back in loop if we need to predict again (nflag=PREV_ERR_FAIL) */
-  if (eflag == TRY_AGAIN){
-    printf("DEV_CUDACVSTEP eflag TRY_AGAIN\n");
-    continue;
-  }
-
-  /* Return if error test failed and recovery not possible. */
-  if (eflag != CV_SUCCESS){
-    printf("DEV_CUDACVSTEP eflag!=CV_SUCCESS\n");
-    return(eflag);
-  }
-
-  /* Error test passed (eflag=CV_SUCCESS), break from loop */
-  break;
-
-  }
-
-#endif
-
-
   /* Nonlinear system solve and error test were both successful.
      Update data, and consider change of step and/or order.       */
+
+#ifndef DEV_CUDACVSTEP
+#else
+#endif
 
   cvCompleteStep_gpu2(cv_mem);
 
