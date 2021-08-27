@@ -2575,7 +2575,7 @@ void cudaDevicecvNewtonIteration(
     // Stop at maxcor iterations or if iter. seems to be diverging.
     //     If still not converged and Jacobian data is not current,
     //     signal to try the solution again
-    if ((m == md->cv_maxcor) || ((m >= 2) && (del > RDIV * delp))) {
+    if ((m == dmdv->cv_maxcor) || ((m >= 2) && (del > RDIV * delp))) {
       if (!(*cv_jcur)) {
         flag_shr[0] = TRY_AGAIN;
       } else {
@@ -4502,7 +4502,8 @@ int cudacvStep(SolverData *sd, CVodeMem cv_mem)
 
   //eflag=sd->mdv.eflag;
 
-  sd->mdv.cv_nstlp = cv_mem->cv_nstlp;
+  sd->mdv.cv_maxcor = cv_mem->cv_maxcor;
+  sd->mdv.cv_nstlp = (int) cv_mem->cv_nstlp;
   sd->mdv.cv_qmax = cv_mem->cv_qmax;
   sd->mdv.cv_L = cv_mem->cv_L;
   sd->mdv.cv_maxnef = cv_mem->cv_maxnef;
@@ -4574,7 +4575,7 @@ int cudacvStep(SolverData *sd, CVodeMem cv_mem)
 
   mGPU->cv_jcur = cv_mem->cv_jcur;
   mGPU->cv_mnewt = cv_mem->cv_mnewt;
-  mGPU->cv_maxcor = cv_mem->cv_maxcor;
+  //mGPU->cv_maxcor = cv_mem->cv_maxcor;
   //mGPU->cv_nstlp = cv_mem->cv_nstlp;
 
 #else
@@ -4587,6 +4588,7 @@ int cudacvStep(SolverData *sd, CVodeMem cv_mem)
 
   cudaMemcpy(&sd->mdv, mGPU->mdvo, sizeof(ModelDataVariable), cudaMemcpyDeviceToHost);
 
+  cv_mem->cv_maxcor = sd->mdv.cv_maxcor;
   cv_mem->cv_nstlp = sd->mdv.cv_nstlp;
   cv_mem->cv_qmax = sd->mdv.cv_qmax;
   cv_mem->cv_L = sd->mdv.cv_L;

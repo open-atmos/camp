@@ -120,6 +120,7 @@ typedef struct {
     int kflag;
     int eflag;
 
+    int cv_maxcor;
     int cv_nstlp;
     int cv_qmax;
     int cv_L;
@@ -248,7 +249,7 @@ typedef struct {
     //CVODE variables only GPU
     //double ;
     //double cv_nstlp;//wrong, should be int
-    double cv_maxcor;
+    //double cv_maxcor;//wrong, should be int
     double saved_t;
     double *cv_last_yn;
     double *cv_acor_init;
