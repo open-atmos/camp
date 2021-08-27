@@ -2713,7 +2713,7 @@ int cudaDevicecvNlsNewton(
   int dgamrat=fabs(dmdv->cv_gamrat - 1.);
   int callSetup = (dmdv->nflag == PREV_CONV_FAIL) || (dmdv->nflag == PREV_ERR_FAIL) ||
                   (dmdv->cv_nst == 0) ||
-                  (dmdv->cv_nst >= md->cv_nstlp + MSBP) ||
+                  (dmdv->cv_nst >= dmdv->cv_nstlp + MSBP) ||
                   (dgamrat > DGMAX);
 
 
@@ -2867,7 +2867,7 @@ int cudaDevicecvNlsNewton(
       callSetup = 0;
       dmdv->cv_gamrat = dmdv->cv_crate = 1.0;
       dmdv->cv_gammap = dmdv->cv_gamma;
-      //md->cv_nstlp = *cv_nst;//todo test
+      dmdv->cv_nstlp = dmdv->cv_nst;//todo test
       // Return if lsetup failed
       if (*flag < 0) {
         flag_shr[0] = CV_LSETUP_FAIL;
@@ -4502,6 +4502,7 @@ int cudacvStep(SolverData *sd, CVodeMem cv_mem)
 
   //eflag=sd->mdv.eflag;
 
+  sd->mdv.cv_nstlp = cv_mem->cv_nstlp;
   sd->mdv.cv_qmax = cv_mem->cv_qmax;
   sd->mdv.cv_L = cv_mem->cv_L;
   sd->mdv.cv_maxnef = cv_mem->cv_maxnef;
@@ -4574,15 +4575,10 @@ int cudacvStep(SolverData *sd, CVodeMem cv_mem)
   mGPU->cv_jcur = cv_mem->cv_jcur;
   mGPU->cv_mnewt = cv_mem->cv_mnewt;
   mGPU->cv_maxcor = cv_mem->cv_maxcor;
-  mGPU->nflag = nflag;
-  mGPU->cv_nstlp = cv_mem->cv_nstlp;
+  //mGPU->cv_nstlp = cv_mem->cv_nstlp;
 
 #else
-  mGPU->cv_jcur = cv_mem->cv_jcur;
-  mGPU->cv_mnewt = cv_mem->cv_mnewt;
-  mGPU->cv_maxcor = cv_mem->cv_maxcor;
-  mGPU->nflag = nflag;
-  mGPU->cv_nstlp = cv_mem->cv_nstlp;
+
 #endif
 
   solveCVODEGPU(sd, cv_mem);
@@ -4591,6 +4587,7 @@ int cudacvStep(SolverData *sd, CVodeMem cv_mem)
 
   cudaMemcpy(&sd->mdv, mGPU->mdvo, sizeof(ModelDataVariable), cudaMemcpyDeviceToHost);
 
+  cv_mem->cv_nstlp = sd->mdv.cv_nstlp;
   cv_mem->cv_qmax = sd->mdv.cv_qmax;
   cv_mem->cv_L = sd->mdv.cv_L;
   cv_mem->cv_maxnef = sd->mdv.cv_maxnef;
