@@ -2411,7 +2411,7 @@ void cudaDevicecvNewtonIteration(
 
   double del, delp, dcon, m;
   del = delp = 0.0;
-  md->cv_mnewt = m = 0;
+  dmdv->cv_mnewt = m = 0;
 
 #ifdef PMC_DEBUG_GPU
 
@@ -2570,7 +2570,7 @@ void cudaDevicecvNewtonIteration(
       flag_shr[0] = CV_SUCCESS;
       break;
     }
-    md->cv_mnewt = ++m;
+    dmdv->cv_mnewt = ++m;
 
     // Stop at maxcor iterations or if iter. seems to be diverging.
     //     If still not converged and Jacobian data is not current,
@@ -4502,6 +4502,7 @@ int cudacvStep(SolverData *sd, CVodeMem cv_mem)
 
   //eflag=sd->mdv.eflag;
 
+  sd->mdv.cv_mnewt = cv_mem->cv_mnewt;
   sd->mdv.cv_maxcor = cv_mem->cv_maxcor;
   sd->mdv.cv_nstlp = (int) cv_mem->cv_nstlp;
   sd->mdv.cv_qmax = cv_mem->cv_qmax;
@@ -4574,7 +4575,7 @@ int cudacvStep(SolverData *sd, CVodeMem cv_mem)
 #ifndef DEV2_CUDACVSTEP
 
   mGPU->cv_jcur = cv_mem->cv_jcur;
-  mGPU->cv_mnewt = cv_mem->cv_mnewt;
+  //mGPU->cv_mnewt = cv_mem->cv_mnewt;
   //mGPU->cv_maxcor = cv_mem->cv_maxcor;
   //mGPU->cv_nstlp = cv_mem->cv_nstlp;
 
@@ -4588,6 +4589,7 @@ int cudacvStep(SolverData *sd, CVodeMem cv_mem)
 
   cudaMemcpy(&sd->mdv, mGPU->mdvo, sizeof(ModelDataVariable), cudaMemcpyDeviceToHost);
 
+  cv_mem->cv_mnewt = sd->mdv.cv_mnewt;
   cv_mem->cv_maxcor = sd->mdv.cv_maxcor;
   cv_mem->cv_nstlp = sd->mdv.cv_nstlp;
   cv_mem->cv_qmax = sd->mdv.cv_qmax;
