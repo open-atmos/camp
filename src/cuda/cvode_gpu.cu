@@ -3410,16 +3410,18 @@ void cudaDevicecvCompleteStep(ModelDataGPU *md, ModelDataVariable *dmdv) {
   unsigned int tid = threadIdx.x;
 
 
-  /*
 
-  int i, j;
+
+  int z, j;
 
   dmdv->cv_nst++;
   dmdv->cv_nscon++;
   dmdv->cv_hu = dmdv->cv_h;
   dmdv->cv_qu = dmdv->cv_q;
 
-  for (i=dmdv->cv_q; i >= 2; i--)  md->cv_tau[i] = md->cv_tau[i-1];
+
+
+  for (z=dmdv->cv_q; z >= 2; z--)  md->cv_tau[z] = md->cv_tau[z-1];
   if ((dmdv->cv_q==1) && (dmdv->cv_nst > 1))
     md->cv_tau[2] = md->cv_tau[1];
   md->cv_tau[1] = dmdv->cv_h;
@@ -3436,12 +3438,12 @@ void cudaDevicecvCompleteStep(ModelDataGPU *md, ModelDataVariable *dmdv) {
   dmdv->cv_qwait--;
   if ((dmdv->cv_qwait == 1) && (dmdv->cv_q != dmdv->cv_qmax)) {
     //N_VScale(ONE, md->cv_acor, md->cv_zn[dmdv->cv_qmax]);
-    
+    md->dzn[md->nrows*(dmdv->cv_qmax)+i]=md->cv_acor[z];
     dmdv->cv_saved_tq5 = md->cv_tq[5];
     dmdv->cv_indx_acor = dmdv->cv_qmax;
   }
-
-   */
+/*
+*/
 
 }
 
@@ -3555,6 +3557,8 @@ int cudaDevicecvStep(ModelDataGPU *md, ModelDataVariable *dmdv) {
   }
 
 #ifndef DEV_CUDACVSTEP
+
+  cudaDevicecvCompleteStep(md, dmdv);
 
 #else
 
@@ -4622,7 +4626,7 @@ int cudacvStep(SolverData *sd, CVodeMem cv_mem)
 
   solveCVODEGPU(sd, cv_mem);
 
-  //printf("DEV_cudacvStep counterBiConjGrad %d\n",bicg->counterBiConjGrad);
+  printf("DEV_cudacvStep counterBiConjGrad %d\n",bicg->counterBiConjGrad);
 
   cudaMemcpy(&sd->mdv, mGPU->mdvo, sizeof(ModelDataVariable), cudaMemcpyDeviceToHost);
 
@@ -4711,7 +4715,7 @@ int cudacvStep(SolverData *sd, CVodeMem cv_mem)
   //if(compare_doubles(&cv_mem->cv_tn,
   //                   &sd->mdv.cv_tn,1,"cv_tn")!=1) exit(0)
 
-  printf("kflag %d, eflag %d\n", kflag, eflag);
+  //printf("kflag %d, eflag %d\n", kflag, eflag);
 
   //}//for(;;)
 
@@ -4728,10 +4732,11 @@ int cudacvStep(SolverData *sd, CVodeMem cv_mem)
      Update data, and consider change of step and/or order.       */
 
 #ifndef DEV_CUDACVSTEP
+  //cvCompleteStep_gpu3(cv_mem);
 #else
+  cvCompleteStep_gpu2(cv_mem);
 #endif
 
-  cvCompleteStep_gpu2(cv_mem);
 
   cvPrepareNextStep_gpu2(cv_mem, dsm);//use tq calculated in cvset and tempv calc in cvnewton
 
