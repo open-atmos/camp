@@ -3268,8 +3268,6 @@ int cudaDevicecvDoErrorTest(ModelDataGPU *md, ModelDataVariable *dmdv,
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   unsigned int tid = threadIdx.x;
 
-
-
   double dsm;
   double min_val;
   int retval;
@@ -3379,6 +3377,45 @@ int cudaDevicecvDoErrorTest(ModelDataGPU *md, ModelDataVariable *dmdv,
 }
 
 __device__
+void cudaDevicecvCompleteStep(ModelDataGPU *md, ModelDataVariable *dmdv) {
+
+  ModelDataVariable *mdv = md->mdv;
+  extern __shared__ int flag_shr[];
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
+  unsigned int tid = threadIdx.x;
+
+  int z, j;
+
+  dmdv->cv_nst++;
+  dmdv->cv_nscon++;
+  dmdv->cv_hu = dmdv->cv_h;
+  dmdv->cv_qu = dmdv->cv_q;
+
+  for (z=dmdv->cv_q; z >= 2; z--)  md->cv_tau[z] = md->cv_tau[z-1];
+  if ((dmdv->cv_q==1) && (dmdv->cv_nst > 1))
+    md->cv_tau[2] = md->cv_tau[1];
+  md->cv_tau[1] = dmdv->cv_h;
+
+  // Apply correction to column j of zn: l_j * Delta_n
+  for (j=0; j <= dmdv->cv_q; j++)
+    //N_VLinearSum(md->cv_l[j], md->cv_acor, ONE,
+    //            md->cv_zn[j], md->cv_zn[j]);
+    cudaDevicezaxpby(md->cv_l[j],
+                     md->cv_acor,
+                     1., &md->dzn[md->nrows*(j)],
+                     &md->dzn[md->nrows*(j)], md->nrows);
+
+  dmdv->cv_qwait--;
+  if ((dmdv->cv_qwait == 1) && (dmdv->cv_q != dmdv->cv_qmax)) {
+    //N_VScale(ONE, md->cv_acor, md->cv_zn[dmdv->cv_qmax]);
+    md->dzn[md->nrows*(dmdv->cv_qmax)+i]=md->cv_acor[z];
+    dmdv->cv_saved_tq5 = md->cv_tq[5];
+    dmdv->cv_indx_acor = dmdv->cv_qmax;
+  }
+
+}
+
+__device__
 void cudaDevicecvAdjustParams(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
   ModelDataVariable *mdv = md->mdv;
@@ -3398,7 +3435,7 @@ void cudaDevicecvChooseEta(ModelDataGPU *md, ModelDataVariable *dmdv) {
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   unsigned int tid = threadIdx.x;
 
-/*
+
 
   double etam;
 
@@ -3434,11 +3471,11 @@ void cudaDevicecvChooseEta(ModelDataGPU *md, ModelDataVariable *dmdv) {
        //
 
       //N_VScale(ONE, dmdv->cv_acor, dmdv->cv_zn[dmdv->cv_qmax]);
-      md->dzn[md->nrows*(dmdv->cv_qmax)]=md->cv_acor;
+      md->dzn[md->nrows*(dmdv->cv_qmax)+i]=md->cv_acor[i];
 
     }
   }
-*/
+
 
 }
 
@@ -3450,7 +3487,7 @@ void cudaDevicecvSetEta(ModelDataGPU *md, ModelDataVariable *dmdv) {
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   unsigned int tid = threadIdx.x;
 
-  /*
+
 
   // If eta below the threshhold THRESH, reject a change of step size
   if (dmdv->cv_eta < THRESH) {
@@ -3459,115 +3496,101 @@ void cudaDevicecvSetEta(ModelDataGPU *md, ModelDataVariable *dmdv) {
   } else {
     // Limit eta by etamax and hmax, then set hprime
     dmdv->cv_eta = SUNMIN(dmdv->cv_eta, dmdv->cv_etamax);
-    dmdv->cv_eta /= SUNMAX(ONE, fabs(dmdv->cv_h)*dmdv->cv_hmax_inv*cv_mem->cv_eta);
+    dmdv->cv_eta /= SUNMAX(ONE, fabs(dmdv->cv_h)*dmdv->cv_hmax_inv*dmdv->cv_eta);
     dmdv->cv_hprime = dmdv->cv_h * dmdv->cv_eta;
     if (dmdv->cv_qprime < dmdv->cv_q) dmdv->cv_nscon = 0;
   }
 
-  */
+
 
 }
 
 __device__
-void cudaDevicecvPrepareNextStep(ModelDataGPU *md, ModelDataVariable *dmdv) {
+int cudaDevicecvPrepareNextStep(ModelDataGPU *md, ModelDataVariable *dmdv, double dsm) {
 
   ModelDataVariable *mdv = md->mdv;
   extern __shared__ int flag_shr[];
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   unsigned int tid = threadIdx.x;
+  int n_shr = blockDim.x+md->n_shr_empty;
 
-/*
+
 
   // If etamax = 1, defer step size or order changes
-  if (cv_mem->cv_etamax == ONE) {
-    cv_mem->cv_qwait = SUNMAX(cv_mem->cv_qwait, 2);
-    cv_mem->cv_qprime = cv_mem->cv_q;
-    cv_mem->cv_hprime = cv_mem->cv_h;
-    cv_mem->cv_eta = ONE;
+  if (dmdv->cv_etamax == ONE) {
+    dmdv->cv_qwait = SUNMAX(dmdv->cv_qwait, 2);
+    dmdv->cv_qprime = dmdv->cv_q;
+    dmdv->cv_hprime = dmdv->cv_h;
+    dmdv->cv_eta = ONE;
     return;
   }
 
   // etaq is the ratio of new to old h at the current order
-  cv_mem->cv_etaq = ONE /(SUNRpowerR(BIAS2*dsm,ONE/cv_mem->cv_L) + ADDON);
+  //dmdv->cv_etaq = 1. /(SUNRpowerR(BIAS2*dsm,1./dmdv->cv_L) + ADDON);
+  dmdv->cv_etaq = 1. /(pow(BIAS2*dsm,1./dmdv->cv_L) + ADDON);
 
   // If no order change, adjust eta and acor in cvSetEta and return
-  if (cv_mem->cv_qwait != 0) {
-    cv_mem->cv_eta = cv_mem->cv_etaq;
-    cv_mem->cv_qprime = cv_mem->cv_q;
-    cvSetEta_gpu2(cv_mem);
+  if (dmdv->cv_qwait != 0) {
+    dmdv->cv_eta = dmdv->cv_etaq;
+    dmdv->cv_qprime = dmdv->cv_q;
+    cudaDevicecvSetEta(md, dmdv);
     return;
   }
 
   // If qwait = 0, consider an order change.   etaqm1 and etaqp1 are
   //  the ratios of new to old h at orders q-1 and q+1, respectively.
   //  cvChooseEta selects the largest; cvSetEta adjusts eta and acor
-  cv_mem->cv_qwait = 2;
+  dmdv->cv_qwait = 2;
 
-  //cv_mem->cv_etaqm1 = cvComputeEtaqm1_gpu2(cv_mem);
   //compute cv_etaqm1
-  realtype ddn;
-  cv_mem->cv_etaqm1 = ZERO;
-  if (cv_mem->cv_q > 1) {
-    ddn = N_VWrmsNorm(cv_mem->cv_zn[cv_mem->cv_q], cv_mem->cv_ewt) * cv_mem->cv_tq[1];
-    cv_mem->cv_etaqm1 = ONE/(SUNRpowerR(BIAS1*ddn, ONE/cv_mem->cv_q) + ADDON);
+  double ddn;
+  dmdv->cv_etaqm1 = ZERO;
+  if (dmdv->cv_q > 1) {
+    //ddn = N_VWrmsNorm(dmdv->cv_zn[cv_mem->cv_q], dmdv->cv_ewt) * dmdv->cv_tq[1];
+      //cv_mem->cv_acnrm = gpu_VWRMS_Norm(mGPU->nrows, mGPU->cv_acor, mGPU->dewt, bicg->aux,
+//  //                                    mGPU->daux, (mGPU->blocks + 1) / 2, mGPU->threads);
+    //cudaDeviceVWRMS_Norm(cv_acor, dewt, &dmdv->cv_acnrm, md->nrows, n_shr);
+
+    //double ddn_aux;
+    cudaDeviceVWRMS_Norm(&md->dzn[md->nrows*(dmdv->cv_q)],
+            md->dewt, &ddn, md->nrows, n_shr);
+    ddn *= md->cv_tq[1];
+
+    dmdv->cv_etaqm1 = 1./(pow(BIAS1*ddn, 1./dmdv->cv_q) + ADDON);
   }
 
-  //cv_mem->cv_etaqp1 = cvComputeEtaqp1_gpu2(cv_mem);
   //compute cv_etaqp1
-  realtype dup, cquot;
-  cv_mem->cv_etaqp1 = ZERO;
-  if (cv_mem->cv_q != cv_mem->cv_qmax && cv_mem->cv_saved_tq5 != ZERO) {
-    //if (cv_mem->cv_saved_tq5 != ZERO) return(cv_mem->cv_etaqp1);
-    cquot = (cv_mem->cv_tq[5] / cv_mem->cv_saved_tq5) *
-            SUNRpowerI(cv_mem->cv_h/cv_mem->cv_tau[2], cv_mem->cv_L);
-    N_VLinearSum(-cquot, cv_mem->cv_zn[cv_mem->cv_qmax], ONE,
-                 cv_mem->cv_acor, cv_mem->cv_tempv);
-    dup = N_VWrmsNorm(cv_mem->cv_tempv, cv_mem->cv_ewt) * cv_mem->cv_tq[3];
-    cv_mem->cv_etaqp1 = ONE / (SUNRpowerR(BIAS3*dup, ONE/(cv_mem->cv_L+1)) + ADDON);
+  double dup, cquot;
+  dmdv->cv_etaqp1 = ZERO;
+  if (dmdv->cv_q != dmdv->cv_qmax && dmdv->cv_saved_tq5 != ZERO) {
+    //if (dmdv->cv_saved_tq5 != ZERO) return(dmdv->cv_etaqp1);
+    //cquot = (dmdv->cv_tq[5] / dmdv->cv_saved_tq5) *
+    //        SUNRpowerI(dmdv->cv_h/md->cv_tau[2], dmdv->cv_L); //maybe need custom function?
+
+    cquot = (md->cv_tq[5] / dmdv->cv_saved_tq5) *
+        pow(double(dmdv->cv_h/md->cv_tau[2]), double(dmdv->cv_L));
+
+
+    //N_VLinearSum(-cquot, dmdv->cv_zn[dmdv->cv_qmax], ONE,
+    //             dmdv->cv_acor, dmdv->cv_tempv);
+    cudaDevicezaxpby(-cquot,
+    &md->dzn[md->nrows*(dmdv->cv_q)],
+    1., md->cv_acor,
+                     md->dtempv, md->nrows);
+
+
+
+    //dup = N_VWrmsNorm(md->dtempv, cv_mem->cv_ewt) * cv_mem->cv_tq[3];
+
+    cudaDeviceVWRMS_Norm(md->dtempv, md->dewt, &dup, md->nrows, n_shr);
+    dup *= md->cv_tq[3];
+
+    dmdv->cv_etaqp1 = 1. / (pow(BIAS3*dup, 1./(dmdv->cv_L+1)) + ADDON);
   }
 
-  cvChooseEta_gpu2(cv_mem);
-  cvSetEta_gpu2(cv_mem);
-  */
+  cudaDevicecvChooseEta(md, dmdv);
+  cudaDevicecvSetEta(md, dmdv);
 
-}
-
-__device__
-void cudaDevicecvCompleteStep(ModelDataGPU *md, ModelDataVariable *dmdv) {
-
-  ModelDataVariable *mdv = md->mdv;
-  extern __shared__ int flag_shr[];
-  int i = blockIdx.x * blockDim.x + threadIdx.x;
-  unsigned int tid = threadIdx.x;
-
-  int z, j;
-
-  dmdv->cv_nst++;
-  dmdv->cv_nscon++;
-  dmdv->cv_hu = dmdv->cv_h;
-  dmdv->cv_qu = dmdv->cv_q;
-
-  for (z=dmdv->cv_q; z >= 2; z--)  md->cv_tau[z] = md->cv_tau[z-1];
-  if ((dmdv->cv_q==1) && (dmdv->cv_nst > 1))
-    md->cv_tau[2] = md->cv_tau[1];
-  md->cv_tau[1] = dmdv->cv_h;
-
-  // Apply correction to column j of zn: l_j * Delta_n
-  for (j=0; j <= dmdv->cv_q; j++)
-    //N_VLinearSum(md->cv_l[j], md->cv_acor, ONE,
-     //            md->cv_zn[j], md->cv_zn[j]);
-    cudaDevicezaxpby(md->cv_l[j],
-    md->cv_acor,
-    1., &md->dzn[md->nrows*(j)],
-    &md->dzn[md->nrows*(j)], md->nrows);
-
-  dmdv->cv_qwait--;
-  if ((dmdv->cv_qwait == 1) && (dmdv->cv_q != dmdv->cv_qmax)) {
-    //N_VScale(ONE, md->cv_acor, md->cv_zn[dmdv->cv_qmax]);
-    md->dzn[md->nrows*(dmdv->cv_qmax)+i]=md->cv_acor[z];
-    dmdv->cv_saved_tq5 = md->cv_tq[5];
-    dmdv->cv_indx_acor = dmdv->cv_qmax;
-  }
 
 }
 
@@ -3581,13 +3604,13 @@ int cudaDevicecvStep(ModelDataGPU *md, ModelDataVariable *dmdv) {
   unsigned int tid = threadIdx.x;
 
 #ifndef DEV_CUDACVSTEP
+#else
+#endif
+
 
   for (;;) {
 
     dmdv->eflag = dmdv->kflag = 99;//Original algorithm not initializes
-
-#else
-#endif
 
     __syncthreads();
     dmdv->flag = dmdv->nflag;//nflag is used in cudaDevicecvNlsNewton
@@ -3680,12 +3703,14 @@ int cudaDevicecvStep(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
   }
 
-#ifndef DEV_CUDACVSTEP
 
   cudaDevicecvCompleteStep(md, dmdv);
 
-#else
+#ifndef DEV_CUDACVSTEP
 
+  cudaDevicecvPrepareNextStep(md, dmdv, dmdv->dsm);
+
+#else
 #endif
 
   //if(i==0)printf("DEV_cudaDevicecvStep end mdvo->cv_tn %le\n",mdvo->cv_tn);
@@ -4465,166 +4490,6 @@ int cudacvNewtonIteration(SolverData *sd, CVodeMem cv_mem)
   //return 0;
 }
 
-void cvDecreaseBDF_gpu3(CVodeMem cv_mem)
-{
-  realtype hsum, xi;
-  int i, j;
-
-  for (i=0; i <= cv_mem->cv_qmax; i++) cv_mem->cv_l[i] = ZERO;
-  cv_mem->cv_l[2] = ONE;
-  hsum = ZERO;
-  for (j=1; j <= cv_mem->cv_q-2; j++) {
-    hsum += cv_mem->cv_tau[j];
-    xi = hsum /cv_mem->cv_hscale;
-    for (i=j+2; i >= 2; i--)
-      cv_mem->cv_l[i] = cv_mem->cv_l[i]*xi + cv_mem->cv_l[i-1];
-  }
-
-  for (j=2; j < cv_mem->cv_q; j++)
-    N_VLinearSum(-cv_mem->cv_l[j], cv_mem->cv_zn[cv_mem->cv_q],
-                 ONE, cv_mem->cv_zn[j], cv_mem->cv_zn[j]);
-}
-
-booleantype cvDoErrorTest_gpu3(CVodeMem cv_mem, int *nflagPtr,
-                               realtype saved_t, int *nefPtr, realtype *dsmPtr)
-{
-  realtype dsm;
-  realtype min_val;
-  int retval;
-
-  // Find the minimum concentration and if it's small and negative, make it
-  // positive
-  N_VLinearSum(cv_mem->cv_l[0], cv_mem->cv_acor, ONE, cv_mem->cv_zn[0],
-               cv_mem->cv_ftemp);
-  min_val = N_VMin(cv_mem->cv_ftemp);
-  if (min_val < ZERO && min_val > -PMC_TINY) {
-    N_VAbs(cv_mem->cv_ftemp, cv_mem->cv_ftemp);
-    N_VLinearSum(-cv_mem->cv_l[0], cv_mem->cv_acor, ONE, cv_mem->cv_ftemp,
-                 cv_mem->cv_zn[0]);
-    min_val = ZERO;
-  }
-
-  dsm = cv_mem->cv_acnrm * cv_mem->cv_tq[2];
-
-  // If est. local error norm dsm passes test and there are no negative values,
-  // return CV_SUCCESS
-  *dsmPtr = dsm;
-  if (dsm <= ONE && min_val >= ZERO) return(CV_SUCCESS);
-
-  // Test failed; increment counters, set nflag, and restore zn array
-  (*nefPtr)++;
-  cv_mem->cv_netf++;
-  *nflagPtr = PREV_ERR_FAIL;
-  cvRestore_gpu2(cv_mem, saved_t);
-
-  // At maxnef failures or |h| = hmin, return CV_ERR_FAILURE
-  if ((SUNRabs(cv_mem->cv_h) <= cv_mem->cv_hmin*ONEPSM) ||
-      (*nefPtr == cv_mem->cv_maxnef)) return(CV_ERR_FAILURE);
-
-  // Set etamax = 1 to prevent step size increase at end of this step
-  cv_mem->cv_etamax = ONE;
-
-  // Set h ratio eta from dsm, rescale, and return for retry of step
-  if (*nefPtr <= MXNEF1) {
-    cv_mem->cv_eta = ONE / (SUNRpowerR(BIAS2*dsm,ONE/cv_mem->cv_L) + ADDON);
-    cv_mem->cv_eta = SUNMAX(ETAMIN, SUNMAX(cv_mem->cv_eta,
-                                           cv_mem->cv_hmin / SUNRabs(cv_mem->cv_h)));
-    if (*nefPtr >= SMALL_NEF) cv_mem->cv_eta = SUNMIN(cv_mem->cv_eta, ETAMXF);
-    cvRescale_gpu2(cv_mem);
-    return(TRY_AGAIN);
-  }
-
-  // After MXNEF1 failures, force an order reduction and retry step
-  if (cv_mem->cv_q > 1) {
-    cv_mem->cv_eta = SUNMAX(ETAMIN, cv_mem->cv_hmin / SUNRabs(cv_mem->cv_h));
-
-    //cvAdjustOrder_gpu2(cv_mem,-1);
-    cvDecreaseBDF_gpu2(cv_mem);
-
-    cv_mem->cv_L = cv_mem->cv_q;
-    cv_mem->cv_q--;
-    cv_mem->cv_qwait = cv_mem->cv_L;
-    cvRescale_gpu2(cv_mem);
-    return(TRY_AGAIN);
-  }
-
-  // If already at order 1, restart: reload zn from scratch
-
-  cv_mem->cv_eta = SUNMAX(ETAMIN, cv_mem->cv_hmin / SUNRabs(cv_mem->cv_h));
-  cv_mem->cv_h *= cv_mem->cv_eta;
-  cv_mem->cv_next_h = cv_mem->cv_h;
-  cv_mem->cv_hscale = cv_mem->cv_h;
-  cv_mem->cv_qwait = LONG_WAIT;
-  cv_mem->cv_nscon = 0;
-
-
-  //retval = cv_mem->cv_f(cv_mem->cv_tn, cv_mem->cv_zn[0],
-  //                      cv_mem->cv_tempv, cv_mem->cv_user_data);
-  retval = f(cv_mem->cv_tn, cv_mem->cv_zn[0],cv_mem->cv_tempv, cv_mem->cv_user_data);
-
-  cv_mem->cv_nfe++;
-  if (retval < 0)  return(CV_RHSFUNC_FAIL);
-  if (retval > 0)  return(CV_UNREC_RHSFUNC_ERR);
-
-  N_VScale(cv_mem->cv_h, cv_mem->cv_tempv, cv_mem->cv_zn[1]);
-
-  return(TRY_AGAIN);
-}
-
-void cvPrepareNextStep_gpu3(CVodeMem cv_mem, realtype dsm)
-{
-  /* If etamax = 1, defer step size or order changes */
-  if (cv_mem->cv_etamax == ONE) {
-    cv_mem->cv_qwait = SUNMAX(cv_mem->cv_qwait, 2);
-    cv_mem->cv_qprime = cv_mem->cv_q;
-    cv_mem->cv_hprime = cv_mem->cv_h;
-    cv_mem->cv_eta = ONE;
-    return;
-  }
-
-  /* etaq is the ratio of new to old h at the current order */
-  cv_mem->cv_etaq = ONE /(SUNRpowerR(BIAS2*dsm,ONE/cv_mem->cv_L) + ADDON);
-
-  /* If no order change, adjust eta and acor in cvSetEta and return */
-  if (cv_mem->cv_qwait != 0) {
-    cv_mem->cv_eta = cv_mem->cv_etaq;
-    cv_mem->cv_qprime = cv_mem->cv_q;
-    cvSetEta_gpu2(cv_mem);
-    return;
-  }
-
-  /* If qwait = 0, consider an order change.   etaqm1 and etaqp1 are
-     the ratios of new to old h at orders q-1 and q+1, respectively.
-     cvChooseEta selects the largest; cvSetEta adjusts eta and acor */
-  cv_mem->cv_qwait = 2;
-
-  //cv_mem->cv_etaqm1 = cvComputeEtaqm1_gpu2(cv_mem);
-  //compute cv_etaqm1
-  realtype ddn;
-  cv_mem->cv_etaqm1 = ZERO;
-  if (cv_mem->cv_q > 1) {
-    ddn = N_VWrmsNorm(cv_mem->cv_zn[cv_mem->cv_q], cv_mem->cv_ewt) * cv_mem->cv_tq[1];
-    cv_mem->cv_etaqm1 = ONE/(SUNRpowerR(BIAS1*ddn, ONE/cv_mem->cv_q) + ADDON);
-  }
-
-  //cv_mem->cv_etaqp1 = cvComputeEtaqp1_gpu2(cv_mem);
-  //compute cv_etaqp1
-  realtype dup, cquot;
-  cv_mem->cv_etaqp1 = ZERO;
-  if (cv_mem->cv_q != cv_mem->cv_qmax && cv_mem->cv_saved_tq5 != ZERO) {
-    //if (cv_mem->cv_saved_tq5 != ZERO) return(cv_mem->cv_etaqp1);
-    cquot = (cv_mem->cv_tq[5] / cv_mem->cv_saved_tq5) *
-            SUNRpowerI(cv_mem->cv_h/cv_mem->cv_tau[2], cv_mem->cv_L);
-    N_VLinearSum(-cquot, cv_mem->cv_zn[cv_mem->cv_qmax], ONE,
-                 cv_mem->cv_acor, cv_mem->cv_tempv);
-    dup = N_VWrmsNorm(cv_mem->cv_tempv, cv_mem->cv_ewt) * cv_mem->cv_tq[3];
-    cv_mem->cv_etaqp1 = ONE / (SUNRpowerR(BIAS3*dup, ONE/(cv_mem->cv_L+1)) + ADDON);
-  }
-
-  cvChooseEta_gpu2(cv_mem);
-  cvSetEta_gpu2(cv_mem);
-}
-
 /*
  * cvSetEta
  *
@@ -4700,7 +4565,59 @@ void cvChooseEta_gpu3(CVodeMem cv_mem)
   }
 }
 
+void cvPrepareNextStep_gpu3(CVodeMem cv_mem, realtype dsm)
+{
+  /* If etamax = 1, defer step size or order changes */
+  if (cv_mem->cv_etamax == ONE) {
+    cv_mem->cv_qwait = SUNMAX(cv_mem->cv_qwait, 2);
+    cv_mem->cv_qprime = cv_mem->cv_q;
+    cv_mem->cv_hprime = cv_mem->cv_h;
+    cv_mem->cv_eta = ONE;
+    return;
+  }
 
+  /* etaq is the ratio of new to old h at the current order */
+  cv_mem->cv_etaq = ONE /(SUNRpowerR(BIAS2*dsm,ONE/cv_mem->cv_L) + ADDON);
+
+  /* If no order change, adjust eta and acor in cvSetEta and return */
+  if (cv_mem->cv_qwait != 0) {
+    cv_mem->cv_eta = cv_mem->cv_etaq;
+    cv_mem->cv_qprime = cv_mem->cv_q;
+    cvSetEta_gpu2(cv_mem);
+    return;
+  }
+
+  /* If qwait = 0, consider an order change.   etaqm1 and etaqp1 are
+     the ratios of new to old h at orders q-1 and q+1, respectively.
+     cvChooseEta selects the largest; cvSetEta adjusts eta and acor */
+  cv_mem->cv_qwait = 2;
+
+  //cv_mem->cv_etaqm1 = cvComputeEtaqm1_gpu2(cv_mem);
+  //compute cv_etaqm1
+  realtype ddn;
+  cv_mem->cv_etaqm1 = ZERO;
+  if (cv_mem->cv_q > 1) {
+    ddn = N_VWrmsNorm(cv_mem->cv_zn[cv_mem->cv_q], cv_mem->cv_ewt) * cv_mem->cv_tq[1];
+    cv_mem->cv_etaqm1 = ONE/(SUNRpowerR(BIAS1*ddn, ONE/cv_mem->cv_q) + ADDON);
+  }
+
+  //cv_mem->cv_etaqp1 = cvComputeEtaqp1_gpu2(cv_mem);
+  //compute cv_etaqp1
+  realtype dup, cquot;
+  cv_mem->cv_etaqp1 = ZERO;
+  if (cv_mem->cv_q != cv_mem->cv_qmax && cv_mem->cv_saved_tq5 != ZERO) {
+    //if (cv_mem->cv_saved_tq5 != ZERO) return(cv_mem->cv_etaqp1);
+    cquot = (cv_mem->cv_tq[5] / cv_mem->cv_saved_tq5) *
+            SUNRpowerI(cv_mem->cv_h/cv_mem->cv_tau[2], cv_mem->cv_L);
+    N_VLinearSum(-cquot, cv_mem->cv_zn[cv_mem->cv_qmax], ONE,
+                 cv_mem->cv_acor, cv_mem->cv_tempv);
+    dup = N_VWrmsNorm(cv_mem->cv_tempv, cv_mem->cv_ewt) * cv_mem->cv_tq[3];
+    cv_mem->cv_etaqp1 = ONE / (SUNRpowerR(BIAS3*dup, ONE/(cv_mem->cv_L+1)) + ADDON);
+  }
+
+  cvChooseEta_gpu2(cv_mem);
+  cvSetEta_gpu2(cv_mem);
+}
 
 
 int cudacvStep(SolverData *sd, CVodeMem cv_mem)
@@ -4989,7 +4906,15 @@ int cudacvStep(SolverData *sd, CVodeMem cv_mem)
 
   //cvCompleteStep_gpu3(cv_mem);
 
+#ifndef DEV_CUDACVSTEP
+
+  //cvPrepareNextStep_gpu3(cv_mem, dsm);//use tq calculated in cvset and tempv calc in cvnewton
+
+#else
+
   cvPrepareNextStep_gpu2(cv_mem, dsm);//use tq calculated in cvset and tempv calc in cvnewton
+
+#endif
 
   /* If Stablilty Limit Detection is turned on, call stability limit
      detection routine for possible order reduction. */
