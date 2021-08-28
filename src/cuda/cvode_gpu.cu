@@ -3416,26 +3416,12 @@ void cudaDevicecvCompleteStep(ModelDataGPU *md, ModelDataVariable *dmdv) {
 }
 
 __device__
-void cudaDevicecvAdjustParams(ModelDataGPU *md, ModelDataVariable *dmdv) {
-
-  ModelDataVariable *mdv = md->mdv;
-  extern __shared__ int flag_shr[];
-  int i = blockIdx.x * blockDim.x + threadIdx.x;
-  unsigned int tid = threadIdx.x;
-
-
-
-}
-
-__device__
 void cudaDevicecvChooseEta(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
   ModelDataVariable *mdv = md->mdv;
   extern __shared__ int flag_shr[];
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   unsigned int tid = threadIdx.x;
-
-
 
   double etam;
 
@@ -3476,7 +3462,6 @@ void cudaDevicecvChooseEta(ModelDataGPU *md, ModelDataVariable *dmdv) {
     }
   }
 
-
 }
 
 __device__
@@ -3486,8 +3471,6 @@ void cudaDevicecvSetEta(ModelDataGPU *md, ModelDataVariable *dmdv) {
   extern __shared__ int flag_shr[];
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   unsigned int tid = threadIdx.x;
-
-
 
   // If eta below the threshhold THRESH, reject a change of step size
   if (dmdv->cv_eta < THRESH) {
@@ -3501,8 +3484,6 @@ void cudaDevicecvSetEta(ModelDataGPU *md, ModelDataVariable *dmdv) {
     if (dmdv->cv_qprime < dmdv->cv_q) dmdv->cv_nscon = 0;
   }
 
-
-
 }
 
 __device__
@@ -3513,8 +3494,6 @@ int cudaDevicecvPrepareNextStep(ModelDataGPU *md, ModelDataVariable *dmdv, doubl
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   unsigned int tid = threadIdx.x;
   int n_shr = blockDim.x+md->n_shr_empty;
-
-
 
   // If etamax = 1, defer step size or order changes
   if (dmdv->cv_etamax == ONE) {
@@ -3590,6 +3569,366 @@ int cudaDevicecvPrepareNextStep(ModelDataGPU *md, ModelDataVariable *dmdv, doubl
 
   cudaDevicecvChooseEta(md, dmdv);
   cudaDevicecvSetEta(md, dmdv);
+
+}
+
+__device__
+void cudaDevicecvSLdet(ModelDataGPU *md, ModelDataVariable *dmdv) {
+
+  ModelDataVariable *mdv = md->mdv;
+  extern __shared__ int flag_shr[];
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
+  unsigned int tid = threadIdx.x;
+
+/*
+
+  int i, k, j, it, kmin = 0, kflag = 0;
+  realtype rat[5][4], rav[4], qkr[4], sigsq[4], smax[4], ssmax[4];
+  realtype drr[4], rrc[4],sqmx[4], qjk[4][4], vrat[5], qc[6][4], qco[6][4];
+  realtype rr, rrcut, vrrtol, vrrt2, sqtol, rrtol;
+  realtype smink, smaxk, sumrat, sumrsq, vmin, vmax, drrmax, adrr;
+  realtype tem, sqmax, saqk, qp, s, sqmaxk, saqj, sqmin;
+  realtype rsa, rsb, rsc, rsd, rd1a, rd1b, rd1c;
+  realtype rd2a, rd2b, rd3a, cest1, corr1;
+  realtype ratp, ratm, qfac1, qfac2, bb, rrb;
+
+  // The following are cutoffs and tolerances used by this routine
+
+  rrcut  = RCONST(0.98);
+  vrrtol = RCONST(1.0e-4);
+  vrrt2  = RCONST(5.0e-4);
+  sqtol  = RCONST(1.0e-3);
+  rrtol  = RCONST(1.0e-2);
+
+  rr = ZERO;
+
+  //  Index k corresponds to the degree of the interpolating polynomial.
+  //      k = 1 -> q-1
+  //      k = 2 -> q
+  //      k = 3 -> q+1
+
+  //  Index i is a backward-in-time index, i = 1 -> current time,
+  //      i = 2 -> previous step, etc
+
+  // get maxima, minima, and variances, and form quartic coefficients
+
+  for (k=1; k<=3; k++) {
+    smink = cv_mem->cv_ssdat[1][k];
+    smaxk = ZERO;
+
+    for (i=1; i<=5; i++) {
+      smink = SUNMIN(smink,cv_mem->cv_ssdat[i][k]);
+      smaxk = SUNMAX(smaxk,cv_mem->cv_ssdat[i][k]);
+    }
+
+    if (smink < TINY*smaxk) {
+      kflag = -1;
+      return(kflag);
+    }
+    smax[k] = smaxk;
+    ssmax[k] = smaxk*smaxk;
+
+    sumrat = ZERO;
+    sumrsq = ZERO;
+    for (i=1; i<=4; i++) {
+      rat[i][k] = cv_mem->cv_ssdat[i][k]/cv_mem->cv_ssdat[i+1][k];
+      sumrat = sumrat + rat[i][k];
+      sumrsq = sumrsq + rat[i][k]*rat[i][k];
+    }
+    rav[k] = FOURTH*sumrat;
+    vrat[k] = SUNRabs(FOURTH*sumrsq - rav[k]*rav[k]);
+
+    qc[5][k] = cv_mem->cv_ssdat[1][k] * cv_mem->cv_ssdat[3][k] -
+               cv_mem->cv_ssdat[2][k] * cv_mem->cv_ssdat[2][k];
+    qc[4][k] = cv_mem->cv_ssdat[2][k] * cv_mem->cv_ssdat[3][k] -
+               cv_mem->cv_ssdat[1][k] * cv_mem->cv_ssdat[4][k];
+    qc[3][k] = ZERO;
+    qc[2][k] = cv_mem->cv_ssdat[2][k] * cv_mem->cv_ssdat[5][k] -
+               cv_mem->cv_ssdat[3][k] * cv_mem->cv_ssdat[4][k];
+    qc[1][k] = cv_mem->cv_ssdat[4][k] * cv_mem->cv_ssdat[4][k] -
+               cv_mem->cv_ssdat[3][k] * cv_mem->cv_ssdat[5][k];
+
+    for (i=1; i<=5; i++)
+      qco[i][k] = qc[i][k];
+
+  }                            // End of k loop
+
+  //Isolate normal or nearly-normal matrix case. The three quartics will
+   //  have a common or nearly-common root in this case.
+   //  Return a kflag = 1 if this procedure works. If the three roots
+    // differ more than vrrt2, return error kflag = -3.
+
+  vmin = SUNMIN(vrat[1],SUNMIN(vrat[2],vrat[3]));
+  vmax = SUNMAX(vrat[1],SUNMAX(vrat[2],vrat[3]));
+
+  if (vmin < vrrtol*vrrtol) {
+
+    if (vmax > vrrt2*vrrt2) {
+      kflag = -2;
+      return(kflag);
+    } else {
+      rr = (rav[1] + rav[2] + rav[3])/THREE;
+      drrmax = ZERO;
+      for (k = 1;k<=3;k++) {
+        adrr = SUNRabs(rav[k] - rr);
+        drrmax = SUNMAX(drrmax, adrr);
+      }
+      if (drrmax > vrrt2) {kflag = -3; return(kflag);}
+
+      kflag = 1;
+
+      //  can compute charactistic root, drop to next section
+    }
+
+  } else {
+
+    // use the quartics to get rr.
+
+    if (SUNRabs(qco[1][1]) < TINY*ssmax[1]) {
+      kflag = -4;
+      return(kflag);
+    }
+
+    tem = qco[1][2]/qco[1][1];
+    for (i=2; i<=5; i++) {
+      qco[i][2] = qco[i][2] - tem*qco[i][1];
+    }
+
+    qco[1][2] = ZERO;
+    tem = qco[1][3]/qco[1][1];
+    for (i=2; i<=5; i++) {
+      qco[i][3] = qco[i][3] - tem*qco[i][1];
+    }
+    qco[1][3] = ZERO;
+
+    if (SUNRabs(qco[2][2]) < TINY*ssmax[2]) {
+      kflag = -4;
+      return(kflag);
+    }
+
+    tem = qco[2][3]/qco[2][2];
+    for (i=3; i<=5; i++) {
+      qco[i][3] = qco[i][3] - tem*qco[i][2];
+    }
+
+    if (SUNRabs(qco[4][3]) < TINY*ssmax[3]) {
+      kflag = -4;
+      return(kflag);
+    }
+
+    rr = -qco[5][3]/qco[4][3];
+
+    if (rr < TINY || rr > HUNDRED) {
+      kflag = -5;
+      return(kflag);
+    }
+
+    for (k=1; k<=3; k++)
+      qkr[k] = qc[5][k] + rr*(qc[4][k] + rr*rr*(qc[2][k] + rr*qc[1][k]));
+
+    sqmax = ZERO;
+    for (k=1; k<=3; k++) {
+      saqk = SUNRabs(qkr[k])/ssmax[k];
+      if (saqk > sqmax) sqmax = saqk;
+    }
+
+    if (sqmax < sqtol) {
+      kflag = 2;
+
+      //  can compute charactistic root, drop to "given rr,etc"
+
+    } else {
+
+      // do Newton corrections to improve rr.
+
+      for (it=1; it<=3; it++) {
+        for (k=1; k<=3; k++) {
+          qp = qc[4][k] + rr*rr*(THREE*qc[2][k] + rr*FOUR*qc[1][k]);
+          drr[k] = ZERO;
+          if (SUNRabs(qp) > TINY*ssmax[k]) drr[k] = -qkr[k]/qp;
+          rrc[k] = rr + drr[k];
+        }
+
+        for (k=1; k<=3; k++) {
+          s = rrc[k];
+          sqmaxk = ZERO;
+          for (j=1; j<=3; j++) {
+            qjk[j][k] = qc[5][j] + s*(qc[4][j] + s*s*(qc[2][j] + s*qc[1][j]));
+            saqj = SUNRabs(qjk[j][k])/ssmax[j];
+            if (saqj > sqmaxk) sqmaxk = saqj;
+          }
+          sqmx[k] = sqmaxk;
+        }
+
+        sqmin = sqmx[1] + ONE;
+        for (k=1; k<=3; k++) {
+          if (sqmx[k] < sqmin) {
+            kmin = k;
+            sqmin = sqmx[k];
+          }
+        }
+        rr = rrc[kmin];
+
+        if (sqmin < sqtol) {
+          kflag = 3;
+          //  can compute charactistic root
+          //  break out of Newton correction loop and drop to "given rr,etc"
+          break;
+        } else {
+          for (j=1; j<=3; j++) {
+            qkr[j] = qjk[j][kmin];
+          }
+        }
+      } /*  end of Newton correction loop
+
+      if (sqmin > sqtol) {
+        kflag = -6;
+        return(kflag);
+      }
+    } //  end of if (sqmax < sqtol) else
+  } //  end of if (vmin < vrrtol*vrrtol) else, quartics to get rr.
+
+  // given rr, find sigsq[k] and verify rr.
+  // All positive kflag drop to this section
+
+  for (k=1; k<=3; k++) {
+    rsa = cv_mem->cv_ssdat[1][k];
+    rsb = cv_mem->cv_ssdat[2][k]*rr;
+    rsc = cv_mem->cv_ssdat[3][k]*rr*rr;
+    rsd = cv_mem->cv_ssdat[4][k]*rr*rr*rr;
+    rd1a = rsa - rsb;
+    rd1b = rsb - rsc;
+    rd1c = rsc - rsd;
+    rd2a = rd1a - rd1b;
+    rd2b = rd1b - rd1c;
+    rd3a = rd2a - rd2b;
+
+    if (SUNRabs(rd1b) < TINY*smax[k]) {
+      kflag = -7;
+      return(kflag);
+    }
+
+    cest1 = -rd3a/rd1b;
+    if (cest1 < TINY || cest1 > FOUR) {
+      kflag = -7;
+      return(kflag);
+    }
+    corr1 = (rd2b/cest1)/(rr*rr);
+    sigsq[k] = cv_mem->cv_ssdat[3][k] + corr1;
+  }
+
+  if (sigsq[2] < TINY) {
+    kflag = -8;
+    return(kflag);
+  }
+
+  ratp = sigsq[3]/sigsq[2];
+  ratm = sigsq[1]/sigsq[2];
+  qfac1 = FOURTH*(cv_mem->cv_q*cv_mem->cv_q - ONE);
+  qfac2 = TWO/(cv_mem->cv_q - ONE);
+  bb = ratp*ratm - ONE - qfac1*ratp;
+  tem = ONE - qfac2*bb;
+
+  if (SUNRabs(tem) < TINY) {
+    kflag = -8;
+    return(kflag);
+  }
+
+  rrb = ONE/tem;
+
+  if (SUNRabs(rrb - rr) > rrtol) {
+    kflag = -9;
+    return(kflag);
+  }
+
+  // Check to see if rr is above cutoff rrcut
+  if (rr > rrcut) {
+    if (kflag == 1) kflag = 4;
+    if (kflag == 2) kflag = 5;
+    if (kflag == 3) kflag = 6;
+  }
+
+  // All positive kflag returned at this point
+
+  return(kflag);
+
+  */
+
+}
+
+__device__
+void cudaDevicecvBDFStab(ModelDataGPU *md, ModelDataVariable *dmdv) {
+
+  ModelDataVariable *mdv = md->mdv;
+  extern __shared__ int flag_shr[];
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
+  unsigned int tid = threadIdx.x;
+
+/*
+
+  int i,k, ldflag, factorial;
+  realtype sq, sqm1, sqm2;
+
+  // If order is 3 or greater, then save scaled derivative data,
+  //   push old data down in i, then add current values to top.
+
+  if (cv_mem->cv_q >= 3) {
+    for (k = 1; k <= 3; k++)
+      for (i = 5; i >= 2; i--)
+        cv_mem->cv_ssdat[i][k] = cv_mem->cv_ssdat[i-1][k];
+    factorial = 1;
+    for (i = 1; i <= cv_mem->cv_q-1; i++) factorial *= i;
+    sq = factorial * cv_mem->cv_q * (cv_mem->cv_q+1) *
+         cv_mem->cv_acnrm / SUNMAX(cv_mem->cv_tq[5],TINY);
+    sqm1 = factorial * cv_mem->cv_q *
+           N_VWrmsNorm(cv_mem->cv_zn[cv_mem->cv_q], cv_mem->cv_ewt);
+    sqm2 = factorial * N_VWrmsNorm(cv_mem->cv_zn[cv_mem->cv_q-1], cv_mem->cv_ewt);
+    cv_mem->cv_ssdat[1][1] = sqm2*sqm2;
+    cv_mem->cv_ssdat[1][2] = sqm1*sqm1;
+    cv_mem->cv_ssdat[1][3] = sq*sq;
+  }
+
+
+  if (cv_mem->cv_qprime >= cv_mem->cv_q) {
+
+    // If order is 3 or greater, and enough ssdat has been saved,
+       nscon >= q+5, then call stability limit detection routine.
+
+    if ( (cv_mem->cv_q >= 3) && (cv_mem->cv_nscon >= cv_mem->cv_q+5) ) {
+      ldflag = cvSLdet_gpu2(cv_mem);
+      if (ldflag > 3) {
+        // A stability limit violation is indicated by
+         //  a return flag of 4, 5, or 6.
+         //  Reduce new order.
+        cv_mem->cv_qprime = cv_mem->cv_q-1;
+        cv_mem->cv_eta = cv_mem->cv_etaqm1;
+        cv_mem->cv_eta = SUNMIN(cv_mem->cv_eta,cv_mem->cv_etamax);
+        cv_mem->cv_eta = cv_mem->cv_eta /
+                         SUNMAX(ONE,SUNRabs(cv_mem->cv_h)*cv_mem->cv_hmax_inv*cv_mem->cv_eta);
+        cv_mem->cv_hprime = cv_mem->cv_h*cv_mem->cv_eta;
+        cv_mem->cv_nor = cv_mem->cv_nor + 1;
+      }
+    }
+  }
+  else {
+    // Otherwise, let order increase happen, and
+       reset stability limit counter, nscon.
+    cv_mem->cv_nscon = 0;
+  }
+
+  */
+
+
+}
+
+__device__
+void cudaDevicecvAdjustParams(ModelDataGPU *md, ModelDataVariable *dmdv) {
+
+  ModelDataVariable *mdv = md->mdv;
+  extern __shared__ int flag_shr[];
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
+  unsigned int tid = threadIdx.x;
+
 
 
 }
@@ -3703,12 +4042,18 @@ int cudaDevicecvStep(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
   }
 
-
   cudaDevicecvCompleteStep(md, dmdv);
+
+  cudaDevicecvPrepareNextStep(md, dmdv, dmdv->dsm);
 
 #ifndef DEV_CUDACVSTEP
 
-  cudaDevicecvPrepareNextStep(md, dmdv, dmdv->dsm);
+  if(dmdv->cv_sldeton){
+
+    if(i==0)printf("ERROR: cudaDevicecvBDFStab is pending to implement "
+                   "(disabled by default on CAMP; tested in mock-monarch gas-CB05 configuration)\n");
+    return;
+  }
 
 #else
 #endif
@@ -4490,135 +4835,58 @@ int cudacvNewtonIteration(SolverData *sd, CVodeMem cv_mem)
   //return 0;
 }
 
-/*
- * cvSetEta
- *
- * This routine adjusts the value of eta according to the various
- * heuristic limits and the optional input hmax.
- */
-
-void cvSetEta_gpu3(CVodeMem cv_mem)
+void cvBDFStab_gpu3(CVodeMem cv_mem)
 {
+  int i,k, ldflag, factorial;
+  realtype sq, sqm1, sqm2;
 
-  /* If eta below the threshhold THRESH, reject a change of step size */
-  if (cv_mem->cv_eta < THRESH) {
-    cv_mem->cv_eta = ONE;
-    cv_mem->cv_hprime = cv_mem->cv_h;
-  } else {
-    /* Limit eta by etamax and hmax, then set hprime */
-    cv_mem->cv_eta = SUNMIN(cv_mem->cv_eta, cv_mem->cv_etamax);
-    cv_mem->cv_eta /= SUNMAX(ONE, SUNRabs(cv_mem->cv_h)*cv_mem->cv_hmax_inv*cv_mem->cv_eta);
-    cv_mem->cv_hprime = cv_mem->cv_h * cv_mem->cv_eta;
-    if (cv_mem->cv_qprime < cv_mem->cv_q) cv_mem->cv_nscon = 0;
-  }
-}
+  /* If order is 3 or greater, then save scaled derivative data,
+     push old data down in i, then add current values to top.    */
 
-/*
- * cvChooseEta
- * Given etaqm1, etaq, etaqp1 (the values of eta for qprime =
- * q - 1, q, or q + 1, respectively), this routine chooses the
- * maximum eta value, sets eta to that value, and sets qprime to the
- * corresponding value of q.  If there is a tie, the preference
- * order is to (1) keep the same order, then (2) decrease the order,
- * and finally (3) increase the order.  If the maximum eta value
- * is below the threshhold THRESH, the order is kept unchanged and
- * eta is set to 1.
- */
-void cvChooseEta_gpu3(CVodeMem cv_mem)
-{
-  realtype etam;
-
-  etam = SUNMAX(cv_mem->cv_etaqm1, SUNMAX(cv_mem->cv_etaq, cv_mem->cv_etaqp1));
-
-  if (etam < THRESH) {
-    cv_mem->cv_eta = ONE;
-    cv_mem->cv_qprime = cv_mem->cv_q;
-    return;
+  if (cv_mem->cv_q >= 3) {
+    for (k = 1; k <= 3; k++)
+      for (i = 5; i >= 2; i--)
+        cv_mem->cv_ssdat[i][k] = cv_mem->cv_ssdat[i-1][k];
+    factorial = 1;
+    for (i = 1; i <= cv_mem->cv_q-1; i++) factorial *= i;
+    sq = factorial * cv_mem->cv_q * (cv_mem->cv_q+1) *
+         cv_mem->cv_acnrm / SUNMAX(cv_mem->cv_tq[5],TINY);
+    sqm1 = factorial * cv_mem->cv_q *
+           N_VWrmsNorm(cv_mem->cv_zn[cv_mem->cv_q], cv_mem->cv_ewt);
+    sqm2 = factorial * N_VWrmsNorm(cv_mem->cv_zn[cv_mem->cv_q-1], cv_mem->cv_ewt);
+    cv_mem->cv_ssdat[1][1] = sqm2*sqm2;
+    cv_mem->cv_ssdat[1][2] = sqm1*sqm1;
+    cv_mem->cv_ssdat[1][3] = sq*sq;
   }
 
-  if (etam == cv_mem->cv_etaq) {
 
-    cv_mem->cv_eta = cv_mem->cv_etaq;
-    cv_mem->cv_qprime = cv_mem->cv_q;
+  if (cv_mem->cv_qprime >= cv_mem->cv_q) {
 
-  } else if (etam == cv_mem->cv_etaqm1) {
+    /* If order is 3 or greater, and enough ssdat has been saved,
+       nscon >= q+5, then call stability limit detection routine.  */
 
-    cv_mem->cv_eta = cv_mem->cv_etaqm1;
-    cv_mem->cv_qprime = cv_mem->cv_q - 1;
-
-  } else {
-
-    cv_mem->cv_eta = cv_mem->cv_etaqp1;
-    cv_mem->cv_qprime = cv_mem->cv_q + 1;
-
-    if (cv_mem->cv_lmm == CV_BDF) {
-      /*
-       * Store Delta_n in zn[qmax] to be used in order increase
-       *
-       * This happens at the last step of order q before an increase
-       * to order q+1, so it represents Delta_n in the ELTE at q+1
-       */
-
-      N_VScale(ONE, cv_mem->cv_acor, cv_mem->cv_zn[cv_mem->cv_qmax]);
-
+    if ( (cv_mem->cv_q >= 3) && (cv_mem->cv_nscon >= cv_mem->cv_q+5) ) {
+      ldflag = cvSLdet_gpu2(cv_mem);
+      if (ldflag > 3) {
+        /* A stability limit violation is indicated by
+           a return flag of 4, 5, or 6.
+           Reduce new order.                     */
+        cv_mem->cv_qprime = cv_mem->cv_q-1;
+        cv_mem->cv_eta = cv_mem->cv_etaqm1;
+        cv_mem->cv_eta = SUNMIN(cv_mem->cv_eta,cv_mem->cv_etamax);
+        cv_mem->cv_eta = cv_mem->cv_eta /
+                         SUNMAX(ONE,SUNRabs(cv_mem->cv_h)*cv_mem->cv_hmax_inv*cv_mem->cv_eta);
+        cv_mem->cv_hprime = cv_mem->cv_h*cv_mem->cv_eta;
+        cv_mem->cv_nor = cv_mem->cv_nor + 1;
+      }
     }
   }
+  else {
+    /* Otherwise, let order increase happen, and
+       reset stability limit counter, nscon.     */
+    cv_mem->cv_nscon = 0;
+  }
 }
-
-void cvPrepareNextStep_gpu3(CVodeMem cv_mem, realtype dsm)
-{
-  /* If etamax = 1, defer step size or order changes */
-  if (cv_mem->cv_etamax == ONE) {
-    cv_mem->cv_qwait = SUNMAX(cv_mem->cv_qwait, 2);
-    cv_mem->cv_qprime = cv_mem->cv_q;
-    cv_mem->cv_hprime = cv_mem->cv_h;
-    cv_mem->cv_eta = ONE;
-    return;
-  }
-
-  /* etaq is the ratio of new to old h at the current order */
-  cv_mem->cv_etaq = ONE /(SUNRpowerR(BIAS2*dsm,ONE/cv_mem->cv_L) + ADDON);
-
-  /* If no order change, adjust eta and acor in cvSetEta and return */
-  if (cv_mem->cv_qwait != 0) {
-    cv_mem->cv_eta = cv_mem->cv_etaq;
-    cv_mem->cv_qprime = cv_mem->cv_q;
-    cvSetEta_gpu2(cv_mem);
-    return;
-  }
-
-  /* If qwait = 0, consider an order change.   etaqm1 and etaqp1 are
-     the ratios of new to old h at orders q-1 and q+1, respectively.
-     cvChooseEta selects the largest; cvSetEta adjusts eta and acor */
-  cv_mem->cv_qwait = 2;
-
-  //cv_mem->cv_etaqm1 = cvComputeEtaqm1_gpu2(cv_mem);
-  //compute cv_etaqm1
-  realtype ddn;
-  cv_mem->cv_etaqm1 = ZERO;
-  if (cv_mem->cv_q > 1) {
-    ddn = N_VWrmsNorm(cv_mem->cv_zn[cv_mem->cv_q], cv_mem->cv_ewt) * cv_mem->cv_tq[1];
-    cv_mem->cv_etaqm1 = ONE/(SUNRpowerR(BIAS1*ddn, ONE/cv_mem->cv_q) + ADDON);
-  }
-
-  //cv_mem->cv_etaqp1 = cvComputeEtaqp1_gpu2(cv_mem);
-  //compute cv_etaqp1
-  realtype dup, cquot;
-  cv_mem->cv_etaqp1 = ZERO;
-  if (cv_mem->cv_q != cv_mem->cv_qmax && cv_mem->cv_saved_tq5 != ZERO) {
-    //if (cv_mem->cv_saved_tq5 != ZERO) return(cv_mem->cv_etaqp1);
-    cquot = (cv_mem->cv_tq[5] / cv_mem->cv_saved_tq5) *
-            SUNRpowerI(cv_mem->cv_h/cv_mem->cv_tau[2], cv_mem->cv_L);
-    N_VLinearSum(-cquot, cv_mem->cv_zn[cv_mem->cv_qmax], ONE,
-                 cv_mem->cv_acor, cv_mem->cv_tempv);
-    dup = N_VWrmsNorm(cv_mem->cv_tempv, cv_mem->cv_ewt) * cv_mem->cv_tq[3];
-    cv_mem->cv_etaqp1 = ONE / (SUNRpowerR(BIAS3*dup, ONE/(cv_mem->cv_L+1)) + ADDON);
-  }
-
-  cvChooseEta_gpu2(cv_mem);
-  cvSetEta_gpu2(cv_mem);
-}
-
 
 int cudacvStep(SolverData *sd, CVodeMem cv_mem)
 {
@@ -4698,6 +4966,7 @@ int cudacvStep(SolverData *sd, CVodeMem cv_mem)
 
   //eflag=sd->mdv.eflag;
 
+  sd->mdv.cv_sldeton = cv_mem->cv_sldeton;
   sd->mdv.cv_hmax_inv = cv_mem->cv_hmax_inv;
   sd->mdv.cv_lmm = cv_mem->cv_lmm;
   sd->mdv.cv_iter = cv_mem->cv_iter;
@@ -4790,6 +5059,7 @@ int cudacvStep(SolverData *sd, CVodeMem cv_mem)
 
   cudaMemcpy(&sd->mdv, mGPU->mdvo, sizeof(ModelDataVariable), cudaMemcpyDeviceToHost);
 
+  cv_mem->cv_sldeton = sd->mdv.cv_sldeton;
   cv_mem->cv_hmax_inv = sd->mdv.cv_hmax_inv;
   cv_mem->cv_lmm = sd->mdv.cv_lmm;
   cv_mem->cv_iter = sd->mdv.cv_iter;
@@ -4906,20 +5176,21 @@ int cudacvStep(SolverData *sd, CVodeMem cv_mem)
 
   //cvCompleteStep_gpu3(cv_mem);
 
+  //cvPrepareNextStep_gpu2(cv_mem, dsm);//use tq calculated in cvset and tempv calc in cvnewton
+
 #ifndef DEV_CUDACVSTEP
-
-  //cvPrepareNextStep_gpu3(cv_mem, dsm);//use tq calculated in cvset and tempv calc in cvnewton
-
 #else
-
-  cvPrepareNextStep_gpu2(cv_mem, dsm);//use tq calculated in cvset and tempv calc in cvnewton
 
 #endif
 
   /* If Stablilty Limit Detection is turned on, call stability limit
      detection routine for possible order reduction. */
 
-  if (cv_mem->cv_sldeton) cvBDFStab_gpu2(cv_mem);
+  if (cv_mem->cv_sldeton){
+    printf("cvBDFStab_gpu2\n");
+    cvBDFStab_gpu2(cv_mem);
+  }
+
 
   cv_mem->cv_etamax = (cv_mem->cv_nst <= SMALL_NST) ? ETAMX2 : ETAMX3;
 

@@ -121,6 +121,7 @@ typedef struct {
     int eflag;
 
 
+    int cv_sldeton;
     double cv_hmax_inv;
     int cv_lmm;                /* lmm = CV_ADAMS or CV_BDF                      */
     int cv_iter;               /* iter = CV_FUNCTIONAL or CV_NEWTON             */
