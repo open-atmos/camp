@@ -2960,7 +2960,6 @@ int cudaDevicecvNlsNewton(
 __device__
 void cudaDevicecvRescale(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
-  ModelDataVariable *mdv = md->mdv;
   extern __shared__ int flag_shr[];
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   unsigned int tid = threadIdx.x;
@@ -3005,7 +3004,6 @@ void cudaDevicecvRescale(ModelDataGPU *md, ModelDataVariable *dmdv) {
 __device__
 void cudaDevicecvRestore(ModelDataGPU *md, ModelDataVariable *dmdv, double saved_t) {
 
-  ModelDataVariable *mdv = md->mdv;
   extern __shared__ int flag_shr[];
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   unsigned int tid = threadIdx.x;
@@ -3048,7 +3046,6 @@ __device__
 int cudaDevicecvHandleNFlag(ModelDataGPU *md, ModelDataVariable *dmdv, int *nflagPtr, double saved_t,
                              int *ncfPtr) {
 
-  ModelDataVariable *mdv = md->mdv;
   ModelDataVariable *mdvo = md->mdvo;
   extern __shared__ int flag_shr[];
   //flag_shr[0] = 0;
@@ -3106,7 +3103,6 @@ void cudaDevicecvSetTqBDFt(ModelDataGPU *md, ModelDataVariable *dmdv,
                            double hsum, double alpha0,
                            double alpha0_hat, double xi_inv, double xistar_inv) {
 
-  ModelDataVariable *mdv = md->mdv;
   extern __shared__ int flag_shr[];
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   unsigned int tid = threadIdx.x;
@@ -3141,7 +3137,6 @@ void cudaDevicecvSetTqBDFt(ModelDataGPU *md, ModelDataVariable *dmdv,
 __device__
 void cudaDevicecvSetBDF(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
-  ModelDataVariable *mdv = md->mdv;
   extern __shared__ int flag_shr[];
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   unsigned int tid = threadIdx.x;
@@ -3180,7 +3175,6 @@ void cudaDevicecvSetBDF(ModelDataGPU *md, ModelDataVariable *dmdv) {
 __device__
 void cudaDevicecvSet(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
-  ModelDataVariable *mdv = md->mdv;
   extern __shared__ int flag_shr[];
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   unsigned int tid = threadIdx.x;
@@ -3199,7 +3193,6 @@ void cudaDevicecvSet(ModelDataGPU *md, ModelDataVariable *dmdv) {
 __device__
 void cudaDevicecvPredict(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
-  ModelDataVariable *mdv = md->mdv;
   extern __shared__ int flag_shr[];
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   unsigned int tid = threadIdx.x;
@@ -3225,12 +3218,9 @@ void cudaDevicecvPredict(ModelDataGPU *md, ModelDataVariable *dmdv) {
 __device__
 void cudaDevicecvDecreaseBDF(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
-  ModelDataVariable *mdv = md->mdv;
   extern __shared__ int flag_shr[];
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   unsigned int tid = threadIdx.x;
-
-
 
   double hsum, xi;
   int z, j;
@@ -3253,8 +3243,6 @@ void cudaDevicecvDecreaseBDF(ModelDataGPU *md, ModelDataVariable *dmdv) {
     1., &md->dzn[md->nrows*(j)],
     &md->dzn[md->nrows*(j)], md->nrows);
 
-
-
 }
 
 __device__
@@ -3262,7 +3250,6 @@ int cudaDevicecvDoErrorTest(ModelDataGPU *md, ModelDataVariable *dmdv,
                              int *nflagPtr,
                              double saved_t, int *nefPtr, double *dsmPtr) {
 
-  ModelDataVariable *mdv = md->mdv;
   //extern __shared__ int flag_shr[];
   extern __shared__ double flag_shr2[];
   int i = blockIdx.x * blockDim.x + threadIdx.x;
@@ -3379,7 +3366,6 @@ int cudaDevicecvDoErrorTest(ModelDataGPU *md, ModelDataVariable *dmdv,
 __device__
 void cudaDevicecvCompleteStep(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
-  ModelDataVariable *mdv = md->mdv;
   extern __shared__ int flag_shr[];
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   unsigned int tid = threadIdx.x;
@@ -3418,7 +3404,6 @@ void cudaDevicecvCompleteStep(ModelDataGPU *md, ModelDataVariable *dmdv) {
 __device__
 void cudaDevicecvChooseEta(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
-  ModelDataVariable *mdv = md->mdv;
   extern __shared__ int flag_shr[];
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   unsigned int tid = threadIdx.x;
@@ -3467,7 +3452,6 @@ void cudaDevicecvChooseEta(ModelDataGPU *md, ModelDataVariable *dmdv) {
 __device__
 void cudaDevicecvSetEta(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
-  ModelDataVariable *mdv = md->mdv;
   extern __shared__ int flag_shr[];
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   unsigned int tid = threadIdx.x;
@@ -3489,7 +3473,6 @@ void cudaDevicecvSetEta(ModelDataGPU *md, ModelDataVariable *dmdv) {
 __device__
 int cudaDevicecvPrepareNextStep(ModelDataGPU *md, ModelDataVariable *dmdv, double dsm) {
 
-  ModelDataVariable *mdv = md->mdv;
   extern __shared__ int flag_shr[];
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   unsigned int tid = threadIdx.x;
@@ -3526,11 +3509,7 @@ int cudaDevicecvPrepareNextStep(ModelDataGPU *md, ModelDataVariable *dmdv, doubl
   dmdv->cv_etaqm1 = ZERO;
   if (dmdv->cv_q > 1) {
     //ddn = N_VWrmsNorm(dmdv->cv_zn[cv_mem->cv_q], dmdv->cv_ewt) * dmdv->cv_tq[1];
-      //cv_mem->cv_acnrm = gpu_VWRMS_Norm(mGPU->nrows, mGPU->cv_acor, mGPU->dewt, bicg->aux,
-//  //                                    mGPU->daux, (mGPU->blocks + 1) / 2, mGPU->threads);
-    //cudaDeviceVWRMS_Norm(cv_acor, dewt, &dmdv->cv_acnrm, md->nrows, n_shr);
 
-    //double ddn_aux;
     cudaDeviceVWRMS_Norm(&md->dzn[md->nrows*(dmdv->cv_q)],
             md->dewt, &ddn, md->nrows, n_shr);
     ddn *= md->cv_tq[1];
@@ -3555,7 +3534,7 @@ int cudaDevicecvPrepareNextStep(ModelDataGPU *md, ModelDataVariable *dmdv, doubl
     cudaDevicezaxpby(-cquot,
     &md->dzn[md->nrows*(dmdv->cv_q)],
     1., md->cv_acor,
-                     md->dtempv, md->nrows);
+    md->dtempv, md->nrows);
 
 
 
@@ -3575,282 +3554,11 @@ int cudaDevicecvPrepareNextStep(ModelDataGPU *md, ModelDataVariable *dmdv, doubl
 __device__
 void cudaDevicecvSLdet(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
-  ModelDataVariable *mdv = md->mdv;
   extern __shared__ int flag_shr[];
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   unsigned int tid = threadIdx.x;
 
 /*
-
-  int i, k, j, it, kmin = 0, kflag = 0;
-  realtype rat[5][4], rav[4], qkr[4], sigsq[4], smax[4], ssmax[4];
-  realtype drr[4], rrc[4],sqmx[4], qjk[4][4], vrat[5], qc[6][4], qco[6][4];
-  realtype rr, rrcut, vrrtol, vrrt2, sqtol, rrtol;
-  realtype smink, smaxk, sumrat, sumrsq, vmin, vmax, drrmax, adrr;
-  realtype tem, sqmax, saqk, qp, s, sqmaxk, saqj, sqmin;
-  realtype rsa, rsb, rsc, rsd, rd1a, rd1b, rd1c;
-  realtype rd2a, rd2b, rd3a, cest1, corr1;
-  realtype ratp, ratm, qfac1, qfac2, bb, rrb;
-
-  // The following are cutoffs and tolerances used by this routine
-
-  rrcut  = RCONST(0.98);
-  vrrtol = RCONST(1.0e-4);
-  vrrt2  = RCONST(5.0e-4);
-  sqtol  = RCONST(1.0e-3);
-  rrtol  = RCONST(1.0e-2);
-
-  rr = ZERO;
-
-  //  Index k corresponds to the degree of the interpolating polynomial.
-  //      k = 1 -> q-1
-  //      k = 2 -> q
-  //      k = 3 -> q+1
-
-  //  Index i is a backward-in-time index, i = 1 -> current time,
-  //      i = 2 -> previous step, etc
-
-  // get maxima, minima, and variances, and form quartic coefficients
-
-  for (k=1; k<=3; k++) {
-    smink = cv_mem->cv_ssdat[1][k];
-    smaxk = ZERO;
-
-    for (i=1; i<=5; i++) {
-      smink = SUNMIN(smink,cv_mem->cv_ssdat[i][k]);
-      smaxk = SUNMAX(smaxk,cv_mem->cv_ssdat[i][k]);
-    }
-
-    if (smink < TINY*smaxk) {
-      kflag = -1;
-      return(kflag);
-    }
-    smax[k] = smaxk;
-    ssmax[k] = smaxk*smaxk;
-
-    sumrat = ZERO;
-    sumrsq = ZERO;
-    for (i=1; i<=4; i++) {
-      rat[i][k] = cv_mem->cv_ssdat[i][k]/cv_mem->cv_ssdat[i+1][k];
-      sumrat = sumrat + rat[i][k];
-      sumrsq = sumrsq + rat[i][k]*rat[i][k];
-    }
-    rav[k] = FOURTH*sumrat;
-    vrat[k] = SUNRabs(FOURTH*sumrsq - rav[k]*rav[k]);
-
-    qc[5][k] = cv_mem->cv_ssdat[1][k] * cv_mem->cv_ssdat[3][k] -
-               cv_mem->cv_ssdat[2][k] * cv_mem->cv_ssdat[2][k];
-    qc[4][k] = cv_mem->cv_ssdat[2][k] * cv_mem->cv_ssdat[3][k] -
-               cv_mem->cv_ssdat[1][k] * cv_mem->cv_ssdat[4][k];
-    qc[3][k] = ZERO;
-    qc[2][k] = cv_mem->cv_ssdat[2][k] * cv_mem->cv_ssdat[5][k] -
-               cv_mem->cv_ssdat[3][k] * cv_mem->cv_ssdat[4][k];
-    qc[1][k] = cv_mem->cv_ssdat[4][k] * cv_mem->cv_ssdat[4][k] -
-               cv_mem->cv_ssdat[3][k] * cv_mem->cv_ssdat[5][k];
-
-    for (i=1; i<=5; i++)
-      qco[i][k] = qc[i][k];
-
-  }                            // End of k loop
-
-  //Isolate normal or nearly-normal matrix case. The three quartics will
-   //  have a common or nearly-common root in this case.
-   //  Return a kflag = 1 if this procedure works. If the three roots
-    // differ more than vrrt2, return error kflag = -3.
-
-  vmin = SUNMIN(vrat[1],SUNMIN(vrat[2],vrat[3]));
-  vmax = SUNMAX(vrat[1],SUNMAX(vrat[2],vrat[3]));
-
-  if (vmin < vrrtol*vrrtol) {
-
-    if (vmax > vrrt2*vrrt2) {
-      kflag = -2;
-      return(kflag);
-    } else {
-      rr = (rav[1] + rav[2] + rav[3])/THREE;
-      drrmax = ZERO;
-      for (k = 1;k<=3;k++) {
-        adrr = SUNRabs(rav[k] - rr);
-        drrmax = SUNMAX(drrmax, adrr);
-      }
-      if (drrmax > vrrt2) {kflag = -3; return(kflag);}
-
-      kflag = 1;
-
-      //  can compute charactistic root, drop to next section
-    }
-
-  } else {
-
-    // use the quartics to get rr.
-
-    if (SUNRabs(qco[1][1]) < TINY*ssmax[1]) {
-      kflag = -4;
-      return(kflag);
-    }
-
-    tem = qco[1][2]/qco[1][1];
-    for (i=2; i<=5; i++) {
-      qco[i][2] = qco[i][2] - tem*qco[i][1];
-    }
-
-    qco[1][2] = ZERO;
-    tem = qco[1][3]/qco[1][1];
-    for (i=2; i<=5; i++) {
-      qco[i][3] = qco[i][3] - tem*qco[i][1];
-    }
-    qco[1][3] = ZERO;
-
-    if (SUNRabs(qco[2][2]) < TINY*ssmax[2]) {
-      kflag = -4;
-      return(kflag);
-    }
-
-    tem = qco[2][3]/qco[2][2];
-    for (i=3; i<=5; i++) {
-      qco[i][3] = qco[i][3] - tem*qco[i][2];
-    }
-
-    if (SUNRabs(qco[4][3]) < TINY*ssmax[3]) {
-      kflag = -4;
-      return(kflag);
-    }
-
-    rr = -qco[5][3]/qco[4][3];
-
-    if (rr < TINY || rr > HUNDRED) {
-      kflag = -5;
-      return(kflag);
-    }
-
-    for (k=1; k<=3; k++)
-      qkr[k] = qc[5][k] + rr*(qc[4][k] + rr*rr*(qc[2][k] + rr*qc[1][k]));
-
-    sqmax = ZERO;
-    for (k=1; k<=3; k++) {
-      saqk = SUNRabs(qkr[k])/ssmax[k];
-      if (saqk > sqmax) sqmax = saqk;
-    }
-
-    if (sqmax < sqtol) {
-      kflag = 2;
-
-      //  can compute charactistic root, drop to "given rr,etc"
-
-    } else {
-
-      // do Newton corrections to improve rr.
-
-      for (it=1; it<=3; it++) {
-        for (k=1; k<=3; k++) {
-          qp = qc[4][k] + rr*rr*(THREE*qc[2][k] + rr*FOUR*qc[1][k]);
-          drr[k] = ZERO;
-          if (SUNRabs(qp) > TINY*ssmax[k]) drr[k] = -qkr[k]/qp;
-          rrc[k] = rr + drr[k];
-        }
-
-        for (k=1; k<=3; k++) {
-          s = rrc[k];
-          sqmaxk = ZERO;
-          for (j=1; j<=3; j++) {
-            qjk[j][k] = qc[5][j] + s*(qc[4][j] + s*s*(qc[2][j] + s*qc[1][j]));
-            saqj = SUNRabs(qjk[j][k])/ssmax[j];
-            if (saqj > sqmaxk) sqmaxk = saqj;
-          }
-          sqmx[k] = sqmaxk;
-        }
-
-        sqmin = sqmx[1] + ONE;
-        for (k=1; k<=3; k++) {
-          if (sqmx[k] < sqmin) {
-            kmin = k;
-            sqmin = sqmx[k];
-          }
-        }
-        rr = rrc[kmin];
-
-        if (sqmin < sqtol) {
-          kflag = 3;
-          //  can compute charactistic root
-          //  break out of Newton correction loop and drop to "given rr,etc"
-          break;
-        } else {
-          for (j=1; j<=3; j++) {
-            qkr[j] = qjk[j][kmin];
-          }
-        }
-      } /*  end of Newton correction loop
-
-      if (sqmin > sqtol) {
-        kflag = -6;
-        return(kflag);
-      }
-    } //  end of if (sqmax < sqtol) else
-  } //  end of if (vmin < vrrtol*vrrtol) else, quartics to get rr.
-
-  // given rr, find sigsq[k] and verify rr.
-  // All positive kflag drop to this section
-
-  for (k=1; k<=3; k++) {
-    rsa = cv_mem->cv_ssdat[1][k];
-    rsb = cv_mem->cv_ssdat[2][k]*rr;
-    rsc = cv_mem->cv_ssdat[3][k]*rr*rr;
-    rsd = cv_mem->cv_ssdat[4][k]*rr*rr*rr;
-    rd1a = rsa - rsb;
-    rd1b = rsb - rsc;
-    rd1c = rsc - rsd;
-    rd2a = rd1a - rd1b;
-    rd2b = rd1b - rd1c;
-    rd3a = rd2a - rd2b;
-
-    if (SUNRabs(rd1b) < TINY*smax[k]) {
-      kflag = -7;
-      return(kflag);
-    }
-
-    cest1 = -rd3a/rd1b;
-    if (cest1 < TINY || cest1 > FOUR) {
-      kflag = -7;
-      return(kflag);
-    }
-    corr1 = (rd2b/cest1)/(rr*rr);
-    sigsq[k] = cv_mem->cv_ssdat[3][k] + corr1;
-  }
-
-  if (sigsq[2] < TINY) {
-    kflag = -8;
-    return(kflag);
-  }
-
-  ratp = sigsq[3]/sigsq[2];
-  ratm = sigsq[1]/sigsq[2];
-  qfac1 = FOURTH*(cv_mem->cv_q*cv_mem->cv_q - ONE);
-  qfac2 = TWO/(cv_mem->cv_q - ONE);
-  bb = ratp*ratm - ONE - qfac1*ratp;
-  tem = ONE - qfac2*bb;
-
-  if (SUNRabs(tem) < TINY) {
-    kflag = -8;
-    return(kflag);
-  }
-
-  rrb = ONE/tem;
-
-  if (SUNRabs(rrb - rr) > rrtol) {
-    kflag = -9;
-    return(kflag);
-  }
-
-  // Check to see if rr is above cutoff rrcut
-  if (rr > rrcut) {
-    if (kflag == 1) kflag = 4;
-    if (kflag == 2) kflag = 5;
-    if (kflag == 3) kflag = 6;
-  }
-
-  // All positive kflag returned at this point
-
-  return(kflag);
 
   */
 
@@ -3859,7 +3567,6 @@ void cudaDevicecvSLdet(ModelDataGPU *md, ModelDataVariable *dmdv) {
 __device__
 void cudaDevicecvBDFStab(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
-  ModelDataVariable *mdv = md->mdv;
   extern __shared__ int flag_shr[];
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   unsigned int tid = threadIdx.x;
@@ -3922,12 +3629,95 @@ void cudaDevicecvBDFStab(ModelDataGPU *md, ModelDataVariable *dmdv) {
 }
 
 __device__
-void cudaDevicecvAdjustParams(ModelDataGPU *md, ModelDataVariable *dmdv) {
+void cudaDeviceTemplate(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
-  ModelDataVariable *mdv = md->mdv;
   extern __shared__ int flag_shr[];
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   unsigned int tid = threadIdx.x;
+
+/*
+
+
+
+ */
+
+}
+
+__device__
+void cudaDevicecvIncreaseBDF(ModelDataGPU *md, ModelDataVariable *dmdv) {
+
+  extern __shared__ int flag_shr[];
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
+  unsigned int tid = threadIdx.x;
+
+
+
+  double alpha0, alpha1, prod, xi, xiold, hsum, A1;
+  int z, j;
+
+  for (z=0; z <= dmdv->cv_qmax; z++) md->cv_l[z] = 0.;
+  md->cv_l[2] = alpha1 = prod = xiold = 1.;
+  alpha0 = -1.;
+  hsum = dmdv->cv_hscale;
+  if (dmdv->cv_q > 1) {
+    for (j=1; j < dmdv->cv_q; j++) {
+      hsum += md->cv_tau[j+1];
+      xi = hsum / dmdv->cv_hscale;
+      prod *= xi;
+      alpha0 -= 1. / (j+1);
+      alpha1 += 1. / xi;
+      for (z=j+2; z >= 2; z--)
+        md->cv_l[z] = md->cv_l[z]*xiold + md->cv_l[z-1];
+      xiold = xi;
+    }
+  }
+  A1 = (-alpha0 - alpha1) / prod;
+  //N_VScale(A1, md->cv_zn[dmdv->cv_indx_acor],
+  //         md->cv_zn[dmdv->cv_L]);
+  md->dzn[md->nrows*(dmdv->cv_L)+i]=A1*md->cv_acor[z];
+
+
+  for (j=2; j <= dmdv->cv_q; j++)
+    //N_VLinearSum(md->cv_l[j], md->cv_zn[dmdv->cv_L], ONE,
+    //             md->cv_zn[j], md->cv_zn[j]);
+    cudaDevicezaxpby(md->cv_l[j],
+    &md->dzn[md->nrows*(dmdv->cv_L)],
+    1., &md->dzn[md->nrows*(j)],
+    &md->dzn[md->nrows*(j)], md->nrows);
+
+
+
+
+}
+
+
+
+__device__
+void cudaDevicecvAdjustParams(ModelDataGPU *md, ModelDataVariable *dmdv) {
+
+  extern __shared__ int flag_shr[];
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
+  unsigned int tid = threadIdx.x;
+
+
+
+  if (dmdv->cv_qprime != dmdv->cv_q) {
+
+  int deltaq = dmdv->cv_qprime-dmdv->cv_q;
+  switch(deltaq) {
+      case 1:
+        cudaDevicecvIncreaseBDF(md, dmdv);
+        break;
+      case -1:
+        cudaDevicecvDecreaseBDF(md, dmdv);
+        break;
+  }
+
+    dmdv->cv_q = dmdv->cv_qprime;
+    dmdv->cv_L = dmdv->cv_q+1;
+    dmdv->cv_qwait = dmdv->cv_L;
+  }
+  cudaDevicecvRescale(md, dmdv);
 
 
 
@@ -3943,6 +3733,10 @@ int cudaDevicecvStep(ModelDataGPU *md, ModelDataVariable *dmdv) {
   unsigned int tid = threadIdx.x;
 
 #ifndef DEV_CUDACVSTEP
+
+  if ((dmdv->cv_nst > 0) && (dmdv->cv_hprime != dmdv->cv_h))
+    cudaDevicecvAdjustParams(md, dmdv);
+
 #else
 #endif
 
@@ -4059,8 +3853,6 @@ int cudaDevicecvStep(ModelDataGPU *md, ModelDataVariable *dmdv) {
     return;
   }
 
-#ifndef DEV_CUDACVSTEP
-
   dmdv->cv_etamax = (dmdv->cv_nst <= SMALL_NST) ? ETAMX2 : ETAMX3;
 
   //  Finally, we rescale the acor array to be the
@@ -4068,8 +3860,6 @@ int cudaDevicecvStep(ModelDataGPU *md, ModelDataVariable *dmdv) {
   //N_VScale(cv_mem->cv_tq[2], cv_mem->cv_acor, cv_mem->cv_acor);
   md->cv_acor[i]*=md->cv_tq[2];
 
-#else
-#endif
 
   //if(i==0)printf("DEV_cudaDevicecvStep end mdvo->cv_tn %le\n",mdvo->cv_tn);
 
@@ -4848,57 +4638,98 @@ int cudacvNewtonIteration(SolverData *sd, CVodeMem cv_mem)
   //return 0;
 }
 
-void cvBDFStab_gpu3(CVodeMem cv_mem)
+/*
+ * cvIncreaseBDF
+ *
+ * This routine adjusts the history array on an increase in the
+ * order q in the case that lmm == CV_BDF.
+ * A new column zn[q+1] is set equal to a multiple of the saved
+ * vector (= acor) in zn[indx_acor].  Then each zn[j] is adjusted by
+ * a multiple of zn[q+1].  The coefficients in the adjustment are the
+ * coefficients of the polynomial x*x*(x+xi_1)*...*(x+xi_j),
+ * where xi_j = [t_n - t_(n-j)]/h.
+ */
+
+void cvIncreaseBDF_gpu3(CVodeMem cv_mem)
 {
-  int i,k, ldflag, factorial;
-  realtype sq, sqm1, sqm2;
+  realtype alpha0, alpha1, prod, xi, xiold, hsum, A1;
+  int i, j;
 
-  /* If order is 3 or greater, then save scaled derivative data,
-     push old data down in i, then add current values to top.    */
-
-  if (cv_mem->cv_q >= 3) {
-    for (k = 1; k <= 3; k++)
-      for (i = 5; i >= 2; i--)
-        cv_mem->cv_ssdat[i][k] = cv_mem->cv_ssdat[i-1][k];
-    factorial = 1;
-    for (i = 1; i <= cv_mem->cv_q-1; i++) factorial *= i;
-    sq = factorial * cv_mem->cv_q * (cv_mem->cv_q+1) *
-         cv_mem->cv_acnrm / SUNMAX(cv_mem->cv_tq[5],TINY);
-    sqm1 = factorial * cv_mem->cv_q *
-           N_VWrmsNorm(cv_mem->cv_zn[cv_mem->cv_q], cv_mem->cv_ewt);
-    sqm2 = factorial * N_VWrmsNorm(cv_mem->cv_zn[cv_mem->cv_q-1], cv_mem->cv_ewt);
-    cv_mem->cv_ssdat[1][1] = sqm2*sqm2;
-    cv_mem->cv_ssdat[1][2] = sqm1*sqm1;
-    cv_mem->cv_ssdat[1][3] = sq*sq;
-  }
-
-
-  if (cv_mem->cv_qprime >= cv_mem->cv_q) {
-
-    /* If order is 3 or greater, and enough ssdat has been saved,
-       nscon >= q+5, then call stability limit detection routine.  */
-
-    if ( (cv_mem->cv_q >= 3) && (cv_mem->cv_nscon >= cv_mem->cv_q+5) ) {
-      ldflag = cvSLdet_gpu2(cv_mem);
-      if (ldflag > 3) {
-        /* A stability limit violation is indicated by
-           a return flag of 4, 5, or 6.
-           Reduce new order.                     */
-        cv_mem->cv_qprime = cv_mem->cv_q-1;
-        cv_mem->cv_eta = cv_mem->cv_etaqm1;
-        cv_mem->cv_eta = SUNMIN(cv_mem->cv_eta,cv_mem->cv_etamax);
-        cv_mem->cv_eta = cv_mem->cv_eta /
-                         SUNMAX(ONE,SUNRabs(cv_mem->cv_h)*cv_mem->cv_hmax_inv*cv_mem->cv_eta);
-        cv_mem->cv_hprime = cv_mem->cv_h*cv_mem->cv_eta;
-        cv_mem->cv_nor = cv_mem->cv_nor + 1;
-      }
+  for (i=0; i <= cv_mem->cv_qmax; i++) cv_mem->cv_l[i] = ZERO;
+  cv_mem->cv_l[2] = alpha1 = prod = xiold = ONE;
+  alpha0 = -ONE;
+  hsum = cv_mem->cv_hscale;
+  if (cv_mem->cv_q > 1) {
+    for (j=1; j < cv_mem->cv_q; j++) {
+      hsum += cv_mem->cv_tau[j+1];
+      xi = hsum / cv_mem->cv_hscale;
+      prod *= xi;
+      alpha0 -= ONE / (j+1);
+      alpha1 += ONE / xi;
+      for (i=j+2; i >= 2; i--)
+        cv_mem->cv_l[i] = cv_mem->cv_l[i]*xiold + cv_mem->cv_l[i-1];
+      xiold = xi;
     }
   }
-  else {
-    /* Otherwise, let order increase happen, and
-       reset stability limit counter, nscon.     */
-    cv_mem->cv_nscon = 0;
+  A1 = (-alpha0 - alpha1) / prod;
+  N_VScale(A1, cv_mem->cv_zn[cv_mem->cv_indx_acor],
+           cv_mem->cv_zn[cv_mem->cv_L]);
+  for (j=2; j <= cv_mem->cv_q; j++)
+    N_VLinearSum(cv_mem->cv_l[j], cv_mem->cv_zn[cv_mem->cv_L], ONE,
+                 cv_mem->cv_zn[j], cv_mem->cv_zn[j]);
+}
+
+/*
+ * cvDecreaseBDF
+ *
+ * This routine adjusts the history array on a decrease in the
+ * order q in the case that lmm == CV_BDF.
+ * Each zn[j] is adjusted by a multiple of zn[q].  The coefficients
+ * in the adjustment are the coefficients of the polynomial
+ *   x*x*(x+xi_1)*...*(x+xi_j), where xi_j = [t_n - t_(n-j)]/h.
+ */
+
+void cvDecreaseBDF_gpu3(CVodeMem cv_mem)
+{
+  realtype hsum, xi;
+  int i, j;
+
+  for (i=0; i <= cv_mem->cv_qmax; i++) cv_mem->cv_l[i] = ZERO;
+  cv_mem->cv_l[2] = ONE;
+  hsum = ZERO;
+  for (j=1; j <= cv_mem->cv_q-2; j++) {
+    hsum += cv_mem->cv_tau[j];
+    xi = hsum /cv_mem->cv_hscale;
+    for (i=j+2; i >= 2; i--)
+      cv_mem->cv_l[i] = cv_mem->cv_l[i]*xi + cv_mem->cv_l[i-1];
   }
+
+  for (j=2; j < cv_mem->cv_q; j++)
+    N_VLinearSum(-cv_mem->cv_l[j], cv_mem->cv_zn[cv_mem->cv_q],
+                 ONE, cv_mem->cv_zn[j], cv_mem->cv_zn[j]);
+}
+
+
+void cvAdjustParams_gpu3(CVodeMem cv_mem)
+{
+  if (cv_mem->cv_qprime != cv_mem->cv_q) {
+    //cvAdjustOrder(cv_mem, cv_mem->cv_qprime-cv_mem->cv_q);
+
+    int deltaq = cv_mem->cv_qprime-cv_mem->cv_q;
+    switch(deltaq) {
+      case 1:
+        cvIncreaseBDF_gpu2(cv_mem);
+        break;
+      case -1:
+        cvDecreaseBDF_gpu2(cv_mem);
+        break;
+    }
+
+    cv_mem->cv_q = cv_mem->cv_qprime;
+    cv_mem->cv_L = cv_mem->cv_q+1;
+    cv_mem->cv_qwait = cv_mem->cv_L;
+  }
+  cvRescale_gpu2(cv_mem);
 }
 
 int cudacvStep(SolverData *sd, CVodeMem cv_mem)
@@ -4934,9 +4765,17 @@ int cudacvStep(SolverData *sd, CVodeMem cv_mem)
   ncf = nef = 0;
   nflag = FIRST_CALL;
 
+#ifndef DEV_CUDACVSTEP
+
+  //if ((cv_mem->cv_nst > 0) && (cv_mem->cv_hprime != cv_mem->cv_h))
+  //  cvAdjustParams_gpu2(cv_mem);
+
+#else
 
   if ((cv_mem->cv_nst > 0) && (cv_mem->cv_hprime != cv_mem->cv_h))
     cvAdjustParams_gpu2(cv_mem);
+
+#endif
 
 
   //seguramente le falte algun valor que actualizar
@@ -5194,19 +5033,14 @@ int cudacvStep(SolverData *sd, CVodeMem cv_mem)
   /* If Stablilty Limit Detection is turned on, call stability limit
      detection routine for possible order reduction. */
 
-  if (cv_mem->cv_sldeton) cvBDFStab_gpu2(cv_mem);
+  //if (cv_mem->cv_sldeton) cvBDFStab_gpu2(cv_mem);
 
-#ifndef DEV_CUDACVSTEP
-#else
-
-  cv_mem->cv_etamax = (cv_mem->cv_nst <= SMALL_NST) ? ETAMX2 : ETAMX3;
+  //cv_mem->cv_etamax = (cv_mem->cv_nst <= SMALL_NST) ? ETAMX2 : ETAMX3;
 
   /*  Finally, we rescale the acor array to be the
       estimated local error vector. */
 
-  N_VScale(cv_mem->cv_tq[2], cv_mem->cv_acor, cv_mem->cv_acor);
-
-#endif
+  //N_VScale(cv_mem->cv_tq[2], cv_mem->cv_acor, cv_mem->cv_acor);
 
 #ifdef PMC_DEBUG_GPU
 
