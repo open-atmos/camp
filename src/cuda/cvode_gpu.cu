@@ -4025,28 +4025,32 @@ int cudaDevicecvStep(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
     //if(i==0)printf("eflag %d\n", eflag);
 
-    /* Go back in loop if we need to predict again (nflag=PREV_ERR_FAIL) */
+    // Go back in loop if we need to predict again (nflag=PREV_ERR_FAIL)
     if (dmdv->eflag == TRY_AGAIN){
       //if (i == 0)printf("DEV_CUDACVSTEP eflag TRY_AGAIN\n");
       continue;
     }
 
-    /* Return if error test failed and recovery not possible. */
+    // Return if error test failed and recovery not possible.
     if (dmdv->eflag != CV_SUCCESS){
       //if (i == 0)printf("DEV_CUDACVSTEP eflag!=CV_SUCCESS\n");
       return (dmdv->eflag);
     }
 
-    /* Error test passed (eflag=CV_SUCCESS), break from loop */
+    // Error test passed (eflag=CV_SUCCESS), break from loop
     break;
 
   }
+
+  // Nonlinear system solve and error test were both successful.
+  // Update data, and consider change of step and/or order.
 
   cudaDevicecvCompleteStep(md, dmdv);
 
   cudaDevicecvPrepareNextStep(md, dmdv, dmdv->dsm);
 
-#ifndef DEV_CUDACVSTEP
+  // If Stablilty Limit Detection is turned on, call stability limit
+  // detection routine for possible order reduction.
 
   if(dmdv->cv_sldeton){
 
@@ -4054,6 +4058,15 @@ int cudaDevicecvStep(ModelDataGPU *md, ModelDataVariable *dmdv) {
                    "(disabled by default on CAMP; tested in mock-monarch gas-CB05 configuration)\n");
     return;
   }
+
+#ifndef DEV_CUDACVSTEP
+
+  dmdv->cv_etamax = (dmdv->cv_nst <= SMALL_NST) ? ETAMX2 : ETAMX3;
+
+  //  Finally, we rescale the acor array to be the
+  //  estimated local error vector.
+  //N_VScale(cv_mem->cv_tq[2], cv_mem->cv_acor, cv_mem->cv_acor);
+  md->cv_acor[i]*=md->cv_tq[2];
 
 #else
 #endif
@@ -5178,24 +5191,22 @@ int cudacvStep(SolverData *sd, CVodeMem cv_mem)
 
   //cvPrepareNextStep_gpu2(cv_mem, dsm);//use tq calculated in cvset and tempv calc in cvnewton
 
-#ifndef DEV_CUDACVSTEP
-#else
-
-#endif
-
   /* If Stablilty Limit Detection is turned on, call stability limit
      detection routine for possible order reduction. */
 
-  if (cv_mem->cv_sldeton){
-    printf("cvBDFStab_gpu2\n");
-    cvBDFStab_gpu2(cv_mem);
-  }
+  if (cv_mem->cv_sldeton) cvBDFStab_gpu2(cv_mem);
 
+#ifndef DEV_CUDACVSTEP
+#else
 
   cv_mem->cv_etamax = (cv_mem->cv_nst <= SMALL_NST) ? ETAMX2 : ETAMX3;
 
   /*  Finally, we rescale the acor array to be the
       estimated local error vector. */
+
+  N_VScale(cv_mem->cv_tq[2], cv_mem->cv_acor, cv_mem->cv_acor);
+
+#endif
 
 #ifdef PMC_DEBUG_GPU
 
@@ -5207,7 +5218,6 @@ int cudacvStep(SolverData *sd, CVodeMem cv_mem)
 
 #endif
 
-  N_VScale(cv_mem->cv_tq[2], cv_mem->cv_acor, cv_mem->cv_acor);
   return(CV_SUCCESS);
 
 }
