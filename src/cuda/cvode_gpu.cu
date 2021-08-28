@@ -722,7 +722,7 @@ int cudaDevicef(
 #endif
 
 #ifdef PMC_DEBUG_GPU
-#ifdef cudaGlobalSolveODE_timers_max_blocks
+#ifdef cudaGlobalCVode_timers_max_blocks
     md->dtf[i] += ((double)(int)(clock() - start))/(clock_khz*1000);
 #else
     if(i==0) *md->dtf += ((double)(int)(clock() - start))/(clock_khz*1000);
@@ -747,7 +747,7 @@ int cudaDevicef(
   );
 
 #ifdef PMC_DEBUG_GPU
-#ifdef cudaGlobalSolveODE_timers_max_blocks
+#ifdef cudaGlobalCVode_timers_max_blocks
 
     md->dtf[i] += ((double)(int)(clock() - start))/(clock_khz*1000);
 
@@ -943,7 +943,7 @@ int CudaDeviceguess_helper(double t_n, double h_n, double* y_n,
 
 
 #ifdef PMC_DEBUG_GPU
-#ifdef cudaGlobalSolveODE_timers_max_blocks
+#ifdef cudaGlobalCVode_timers_max_blocks
     md->dtguess_helper[i] += ((double)(clock() - start))/(clock_khz*1000);
 #else
     if(i==0) *md->dtguess_helper += ((double)(clock() - start))/(clock_khz*1000);
@@ -1013,7 +1013,7 @@ int CudaDeviceguess_helper(double t_n, double h_n, double* y_n,
 #endif
 
 #ifdef PMC_DEBUG_GPU
-#ifdef cudaGlobalSolveODE_timers_max_blocks
+#ifdef cudaGlobalCVode_timers_max_blocks
     md->dtguess_helper[i] += ((double)(clock() - start))/(clock_khz*1000);
 #else
     if(i==0) *md->dtguess_helper += ((double)(clock() - start))/(clock_khz*1000);
@@ -1050,7 +1050,7 @@ int CudaDeviceguess_helper(double t_n, double h_n, double* y_n,
 
 
 #ifdef PMC_DEBUG_GPU
-#ifdef cudaGlobalSolveODE_timers_max_blocks
+#ifdef cudaGlobalCVode_timers_max_blocks
     md->dtguess_helper[i] += ((double)(clock() - start))/(clock_khz*1000);
 #else
     if(i==0) *md->dtguess_helper += ((double)(clock() - start))/(clock_khz*1000);
@@ -1097,7 +1097,7 @@ int CudaDeviceguess_helper(double t_n, double h_n, double* y_n,
 
 
 #ifdef PMC_DEBUG_GPU
-#ifdef cudaGlobalSolveODE_timers_max_blocks
+#ifdef cudaGlobalCVode_timers_max_blocks
     md->dtguess_helper[i] += ((double)(clock() - start))/(clock_khz*1000);
 #else
     if(i==0) *md->dtguess_helper += ((double)(clock() - start))/(clock_khz*1000);
@@ -1221,7 +1221,7 @@ __device__ void solveRXNJac(
 
 #ifdef PMC_DEBUG_GPU
   int i = blockIdx.x * blockDim.x + threadIdx.x;
-#ifdef cudaGlobalSolveODE_timers_max_blocks
+#ifdef cudaGlobalCVode_timers_max_blocks
 
   md->dtRXNJac[i] += ((double)(clock() - start))/(clock_khz*1000);
 
@@ -1479,7 +1479,7 @@ __device__ void cudaDevicecalc_Jac(
 #endif
 
 #ifdef PMC_DEBUG_GPU
-#ifdef cudaGlobalSolveODE_timers_max_blocks
+#ifdef cudaGlobalCVode_timers_max_blocks
 
     md->dtcalc_Jac[i] += ((double)(clock() - start))/(clock_khz*1000);
 
@@ -1580,7 +1580,7 @@ void cudaDeviceJac(
   *flag = flag_shr[0];
 
 #ifdef PMC_DEBUG_GPU
-#ifdef cudaGlobalSolveODE_timers_max_blocks
+#ifdef cudaGlobalCVode_timers_max_blocks
 
     md->dtJac[i] += ((double)(clock() - start))/(clock_khz*1000);
 
@@ -2162,7 +2162,7 @@ void alloc_solver_gpu2(CVodeMem cv_mem, SolverData *sd)
   bicg->counterJac=0;
   bicg->countersolveCVODEGPU=0;
 
-#ifdef cudaGlobalSolveODE_timers_max_blocks
+#ifdef cudaGlobalCVode_timers_max_blocks
   int lendt=blocks;
 
 #else
@@ -2445,7 +2445,7 @@ void cudaDevicecvNewtonIteration(
 
 #ifdef PMC_DEBUG_GPU
 
-#ifdef cudaGlobalSolveODE_timers_max_blocks
+#ifdef cudaGlobalCVode_timers_max_blocks
 
     dtPreBCG[i] += ((double)(int)(clock() - start))/(clock_khz*1000);
 
@@ -2470,7 +2470,7 @@ void cudaDevicecvNewtonIteration(
 
 #ifdef PMC_DEBUG_GPU
 
-#ifdef cudaGlobalSolveODE_timers_max_blocks
+#ifdef cudaGlobalCVode_timers_max_blocks
 
     dtBCG[i] += ((double)(int)(clock() - startBCG))/(clock_khz*1000);
 
@@ -2604,7 +2604,7 @@ void cudaDevicecvNewtonIteration(
     __syncthreads();
 
 #ifdef PMC_DEBUG_GPU
-#ifdef cudaGlobalSolveODE_timers_max_blocks
+#ifdef cudaGlobalCVode_timers_max_blocks
 
     __syncthreads();
     dtPostBCG[i] += ((double)(clock() - start))/(clock_khz*1000);
@@ -2852,7 +2852,7 @@ int cudaDevicecvNlsNewton(
       __syncthreads();
 
 #ifdef PMC_DEBUG_GPU
-#ifdef cudaGlobalSolveODE_timers_max_blocks
+#ifdef cudaGlobalCVode_timers_max_blocks
 
       md->dtlinsolsetup[i] += ((double)(clock() - start))/(clock_khz*1000);
 
@@ -2918,7 +2918,7 @@ int cudaDevicecvNlsNewton(
     );
 
 #ifdef PMC_DEBUG_GPU
-#ifdef cudaGlobalSolveODE_timers_max_blocks
+#ifdef cudaGlobalCVode_timers_max_blocks
 
     md->dtNewtonIteration[i] += ((double)(clock() - start))/(clock_khz*1000);
 
@@ -2933,7 +2933,7 @@ int cudaDevicecvNlsNewton(
     if (*flag != TRY_AGAIN) {
       flag_shr[0] = *flag;
 #ifdef DEBUG_FLAG_GPU_ODE_SOLVER_NOT_TRY_AGAIN
-      if(i==0)printf("cudaGlobalSolveODEcudaDevicecvNewtonIteration !TRY_AGAIN\n");
+      if(i==0)printf("cudaGlobalCVodecudaDevicecvNewtonIteration !TRY_AGAIN\n");
 #endif
       break;
     }
@@ -2946,7 +2946,7 @@ int cudaDevicecvNlsNewton(
     //TODO: Set independent flags for each block and evaluate in host if some block need to run again (all blocks should follow same patter most of the times)
     __syncthreads();
     //*cv_jcurGlobal = cv_jcur;
-    //if(tid==0) printf("cudaGlobalSolveODEcv_jcur\n",cv_jcur);
+    //if(tid==0) printf("cudaGlobalCVodecv_jcur\n",cv_jcur);
 
 
   }//for(;;)
@@ -3793,15 +3793,18 @@ void cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   unsigned int tid = threadIdx.x;
 
-  int kflag;
-
-  kflag = cudaDevicecvStep(md,dmdv);
+  dmdv->kflag = cudaDevicecvStep(md,dmdv);
 
   __syncthreads();
-  dmdv->flag = kflag;
+  dmdv->flag = dmdv->kflag;
   __syncthreads();
 
-#ifndef DEV_CUDACVSTEP
+
+
+#ifndef DEV_CUDACVODE
+
+
+
 #else
 #endif
 
@@ -3811,7 +3814,7 @@ void cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
 }
 
 __global__
-void cudaGlobalSolveODE(ModelDataGPU md_object) {
+void cudaGlobalCVode(ModelDataGPU md_object) {
 
   ModelDataGPU *md = &md_object;
   ModelDataVariable *mdv = md->mdv;
@@ -3948,7 +3951,7 @@ void CudaGlobalguess_helper(
    */
 
 #ifdef PMC_DEBUG_GPU
-  #ifdef cudaGlobalSolveODE_timers_max_blocks
+  #ifdef cudaGlobalCVode_timers_max_blocks
     md->tguessNewton[i] += ((double)(int)(clock() - start))/(clock_khz*1000);
 #else
     if(i==1000) *md->tguessNewton += ((double)(int)(clock() - start))/(clock_khz*1000);
@@ -4357,7 +4360,7 @@ void solveCVODEGPU_thr(int blocks, int threads_block, int n_shr_memory, int n_sh
 
 #endif
 
-  cudaGlobalSolveODE <<<blocks,threads_block,n_shr_memory*sizeof(double)>>>
+  cudaGlobalCVode <<<blocks,threads_block,n_shr_memory*sizeof(double)>>>
                                              (sd->mGPU);
 
 #ifdef PMC_DEBUG_GPU
@@ -4970,14 +4973,12 @@ int CVode_gpu2(void *cvode_mem, realtype tout, N_Vector yout,
         cvProcessError(cv_mem, CV_WARNING, "CVODE", "CVode", MSGCV_HNIL_DONE);
     }
 
+
+
+
 #ifdef PMC_DEBUG_GPU
     cudaEventRecord(bicg->startcvStep);
 #endif
-
-
-
-#ifndef DEV_CUDACVSTEP
-
 
   double *ewt = NV_DATA_S(cv_mem->cv_ewt);
   double *acor = NV_DATA_S(cv_mem->cv_acor);
@@ -5163,15 +5164,10 @@ int CVode_gpu2(void *cvode_mem, realtype tout, N_Vector yout,
 
     kflag=flag;
 
-#else
-
     /* Call cvStep to take a step */
     //kflag = cvStep(cv_mem);
     //kflag = cvStep_gpu2(sd, cv_mem);
     //kflag = cudacvStep(sd, cv_mem);
-
-#endif
-
 
     cudaDeviceSynchronize();
 
@@ -5185,6 +5181,9 @@ int CVode_gpu2(void *cvode_mem, realtype tout, N_Vector yout,
     bicg->countercvStep++;
 #endif
 
+
+#ifndef DEV_CUDACVODE
+
     /* Process failed step cases, and exit loop */
     if (kflag != CV_SUCCESS) {
       istate = cvHandleFailure_gpu2(cv_mem, kflag);
@@ -5192,6 +5191,18 @@ int CVode_gpu2(void *cvode_mem, realtype tout, N_Vector yout,
       N_VScale(ONE, cv_mem->cv_zn[0], yout);
       break;
     }
+
+#else
+
+    /* Process failed step cases, and exit loop */
+    if (kflag != CV_SUCCESS) {
+      istate = cvHandleFailure_gpu2(cv_mem, kflag);
+      cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
+      N_VScale(ONE, cv_mem->cv_zn[0], yout);
+      break;
+    }
+
+#endif
 
     nstloc++;
 
@@ -8302,9 +8313,9 @@ void solver_get_statistics_gpu(SolverData *sd){
 
 #ifdef PMC_DEBUG_GPU
 
-#ifdef cudaGlobalSolveODE_timers_max_blocks
+#ifdef cudaGlobalCVode_timers_max_blocks
 
-  printf("PENDING cudaGlobalSolveODE_timers_max_blocks");
+  printf("PENDING cudaGlobalCVode_timers_max_blocks");
 
 #else
 
@@ -8352,7 +8363,7 @@ void printSolverCounters_gpu2(SolverData *sd)
           mdv->counterBCGInternal/(double)bicg->counterBiConjGrad,
           (bicg->timeBiConjGrad/1000)/(double)bicg->counterBiConjGrad,
           bicg->timeBiConjGradMemcpy/bicg->timeBiConjGrad*100);
-#ifdef cudaGlobalSolveODE_timers_max_blocks
+#ifdef cudaGlobalCVode_timers_max_blocks
 
   for(int i=1;i<blocks;i++){
     if(dtBCG[i]>dtBCG[0])
