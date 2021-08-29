@@ -433,7 +433,8 @@ void init_jac_gpu(SolverData *sd, double *J){
   HANDLE_ERROR(cudaMemcpy(mGPU->J_tmp, J_tmp, md->deriv_size, cudaMemcpyHostToDevice));
   HANDLE_ERROR(cudaMemset(mGPU->J_tmp2, 0.0, md->deriv_size));
   HANDLE_ERROR(cudaMemcpy(mGPU->jac_map, md->jac_map, sizeof(JacMap)*md->n_mapped_values, cudaMemcpyHostToDevice));
-  HANDLE_ERROR(cudaMemcpy(mGPU->J_rxn, md->J_rxn, sizeof(mGPU->J_rxn)*sd->jac.num_elem*md->n_cells, cudaMemcpyHostToDevice));
+  double *J_data = SM_DATA_S(md->J_rxn);
+  HANDLE_ERROR(cudaMemcpy(mGPU->J_rxn, J_data, sizeof(J_data)*sd->jac.num_elem*md->n_cells, cudaMemcpyHostToDevice));
   HANDLE_ERROR(cudaMemcpy(mGPU->n_mapped_values, &md->n_mapped_values, 1*sizeof(int), cudaMemcpyHostToDevice));
 
   jacobian_initialize_gpu(sd);
