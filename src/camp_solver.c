@@ -872,20 +872,21 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
 #endif
 
 #ifdef PMC_USE_GPU
-#ifdef PMC_USE_ODE_GPU//todo clean flag, not necessary now,
 
     if(sd->use_cpu==1){
       flag = CVode(sd->cvode_mem, (realtype)t_final, sd->y, &t_rt, CV_NORMAL);
     }else{
+
+#ifdef DERIV_CPU_ON_GPU
       flag = CVode_gpu2(sd->cvode_mem, (realtype)t_final, sd->y,
             &t_rt, CV_NORMAL, sd);
+#else
+      flag = cudaCVode(sd->cvode_mem, (realtype)t_final, sd->y,
+            &t_rt, CV_NORMAL, sd);
+#endif
+
     }
 
-#else
-    // flag = CVode_gpu2(sd->cvode_mem, (realtype)t_final, sd->y, &t_rt,
-    // CV_NORMAL, sd);
-    flag = CVode(sd->cvode_mem, (realtype)t_final, sd->y, &t_rt, CV_NORMAL);
-#endif
 #else
     flag = CVode(sd->cvode_mem, (realtype)t_final, sd->y, &t_rt, CV_NORMAL);
 #endif

@@ -13,6 +13,8 @@
 void alloc_solver_gpu2(CVodeMem cv_mem, SolverData *sd);
 int CVode_gpu2(void *cvode_mem, realtype tout, N_Vector yout,
               realtype *tret, int itask, SolverData *sd);
+int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
+               realtype *tret, int itask, SolverData *sd);
 int CVodeGetDky_gpu2(void *cvode_mem, realtype t, int k, N_Vector dky);
 void CVodeFree_gpu2(void **cvode_mem);
 booleantype cvCheckNvector_gpu2(N_Vector tmpl);
