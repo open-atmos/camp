@@ -40,10 +40,10 @@ void createSolver(SolverData *sd)
   mGPU->tolmax=1.0e-30; //cv_mem->cv_reltol CAMP selected accuracy (1e-8) //1e-10;//1e-6
 #ifndef CSR_SPMV
   mGPU->mattype=0;
-  printf("BCG Mattype=CSR\n");
+  //printf("BCG Mattype=CSR\n");
 #else
   mGPU->mattype=1; //CSC
-  printf("BCG Mattype=CSC\n");
+  //printf("BCG Mattype=CSC\n");
 #endif
 
   int len_cell=mGPU->nrows/mGPU->n_cells;

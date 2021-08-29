@@ -212,10 +212,10 @@ def all_timesteps():
   mpi="yes"
   #mpi="no"
 
-  mpiProcessesList = [1]
+  mpiProcessesList = [40]
   #mpiProcessesList = [40,1]
 
-  cells = [1000]
+  cells = [10]
   #cells = [1,10,100,1000]
   #cells = [1,10,100,1000,10000,100000]
 
@@ -224,10 +224,10 @@ def all_timesteps():
 
   #cases = ["CPU One-cell"]
   #cases = ["CPU Multi-cells"]
-  #cases = ["GPU One-cell"]
+  cases = ["GPU One-cell"]
   #cases = ["CPU One-cell","CPU Multi-cells"]
   #cases = ["CPU One-cell","GPU Multi-cells"]
-  cases = ["CPU One-cell","GPU One-cell"]
+  #cases = ["CPU One-cell","GPU One-cell"]
   #cases = ["CPU Multi-cells","GPU Multi-cells"]
   #cases = ["CPU Multi-cells","GPU One-cell"]
   #cases = ["GPU One-cell","GPU Multi-cells"]
@@ -238,7 +238,7 @@ def all_timesteps():
   #plot_y_key = "Average BCG time per call" #This metric makes no sense, One-cell would always be faster because is computing way less cells
   #plot_y_key = "Speedup normalized timeLS"
 
-  #plot_y_key = "Speedup timeCVode"
+  plot_y_key = "Speedup timeCVode"
   #plot_y_key = "Speedup counterLS"
   #plot_y_key = "Speedup normalized timeLS"
   #plot_y_key = "Speedup normalized computational timeLS"
@@ -250,7 +250,7 @@ def all_timesteps():
 
   #plot_y_key = "% Time data transfers CPU-GPU BCG"
   #plot_y_key="NRMSE"
-  plot_y_key="MAPE"
+  #plot_y_key="MAPE"
   #plot_y_key="SMAPE"
 
   SAVE_PLOT=False

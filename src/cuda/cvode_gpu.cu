@@ -5477,7 +5477,8 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     sd->mdv.cv_lmm = cv_mem->cv_lmm;
     sd->mdv.cv_iter = cv_mem->cv_iter;
     sd->mdv.cv_itol = cv_mem->cv_itol;
-    sd->mdv.cv_reltol = cv_mem->cv_reltol;
+    //sd->mdv.cv_reltol = cv_mem->cv_reltol;
+    sd->mdv.cv_reltol=((CVodeMem) sd->cvode_mem)->cv_reltol;
     sd->mdv.cv_nhnil = cv_mem->cv_nhnil;
     sd->mdv.cv_etaqm1 = cv_mem->cv_etaqm1;
     sd->mdv.cv_etaq = cv_mem->cv_etaq;
@@ -5562,8 +5563,6 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
 
 #endif
 
-    printf("DEV_cudacvStep counterBiConjGrad %d\n",bicg->counterBiConjGrad);
-
     cudaMemcpy(&sd->mdv, mGPU->mdvo, sizeof(ModelDataVariable), cudaMemcpyDeviceToHost);
 
     istate = sd->mdv.istate;
@@ -5572,6 +5571,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     cv_mem->cv_lmm = sd->mdv.cv_lmm;
     cv_mem->cv_iter = sd->mdv.cv_iter;
     cv_mem->cv_itol = sd->mdv.cv_itol;
+    //cv_mem->cv_reltol = sd->mdv.cv_reltol;
     cv_mem->cv_reltol = sd->mdv.cv_reltol;
     cv_mem->cv_nhnil = sd->mdv.cv_nhnil;
     cv_mem->cv_etaqm1 = sd->mdv.cv_etaqm1;
@@ -5646,6 +5646,8 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     }
 
     kflag=flag;
+
+    //printf("DEV_cudacvStep counterBiConjGrad %d\n",bicg->counterBiConjGrad);
 
     /* Call cvStep to take a step */
     //kflag = cvStep(cv_mem);
