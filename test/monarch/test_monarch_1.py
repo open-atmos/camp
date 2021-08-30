@@ -215,8 +215,8 @@ def all_timesteps():
   mpi="yes"
   #mpi="no"
 
-  #mpiProcessesList = [40]
-  mpiProcessesList = [40,1]
+  mpiProcessesList = [1]
+  #mpiProcessesList = [40,1]
 
 
   #cells = [10]

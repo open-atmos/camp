@@ -280,7 +280,7 @@ program mock_monarch
     str_to_int_aux = trim(arg)
     read(str_to_int_aux, *) ncounters
   else
-    ncounters = 3
+    ncounters = 4
     !print*, "WARNING: not ncounters parameter received, value set to ",ncounters
   end if
 
@@ -738,7 +738,7 @@ contains
     file_name = file_prefix//"_solver_stats.csv"
     open(STATSOUT_FILE_UNIT2, file=file_name, status="replace", action="write")
 
-    str_stats_names = "timestep,counterBCG,counterLS,countersolveCVODEGPU,timeLS,timeBiconjGradMemcpy,timeCVode,&
+    str_stats_names = "timestep,counterBCG,counterLS,countersolveCVODEGPU,countercvStep,timeLS,timeBiconjGradMemcpy,timeCVode,&
             dtPreBCG,dtPostBCG,timesolveCVODEGPU,timeNewtonIteration,timeJac,timelinsolsetup,timecalc_Jac,&
             timeRXNJac,timef,timeguess_helper,timecvStep"
 

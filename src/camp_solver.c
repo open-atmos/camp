@@ -1127,14 +1127,13 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
   if(sd->use_cpu==1){
 
 
-    if(sd->ncounters>0){
-      CVodeGetcounterLS(sd->cvode_mem, &counters[1]);
-    }
-    if(sd->ntimers>0){
-      CVodeGettimes(sd->cvode_mem, &times[0]);
+    if(sd->ntimers>0 && sd->ncounters>0){
+      CVodeGettimesCounters(sd->cvode_mem, &times[0], &counters[0]);
       times[2]=sd->timeCVode;
-      for(int i=0;i<sd->ntimers;i++)
-        printf("times[i] [%d]=%le\n",i,times[i]);
+      //for(int i=0;i<sd->ntimers;i++)
+      //  printf("i %d times %le counters %d\n",i,times[i],counters[i]);
+      for(int i=0;i<sd->ncounters;i++)
+        printf("i %d counters %d\n",i,counters[i]);
     }
     else{
       printf("WARNING: In function solver_get_statistics trying to assign times "
@@ -1158,6 +1157,7 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
       counters[i++]=mdv->counterBCGInternal;
       counters[i++]=bicg->counterBiConjGrad;
       counters[i++]=bicg->countersolveCVODEGPU;
+      counters[i++]=bicg->countercvStep;
     }
     if(sd->ntimers>0){
       i=0;
