@@ -120,6 +120,7 @@ typedef struct {
     int kflag;
     int eflag;
 
+    int cv_nrtfn;
     int nstloc;
     double tret;
     double cv_tretlast;
