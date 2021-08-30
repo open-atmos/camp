@@ -2079,8 +2079,7 @@ void alloc_solver_gpu2(CVodeMem cv_mem, SolverData *sd)
   cudaMalloc((void**)&mGPU->cv_last_yn,mGPU->nrows*sizeof(double));
   cudaMalloc((void**)&mGPU->cv_acor_init,mGPU->nrows*sizeof(double));
   cudaMalloc((void**)&mGPU->cv_acor,mGPU->nrows*sizeof(double));
-  cudaMalloc((void**)&mGPU->cv_acor_init,mGPU->nrows*sizeof(double));
-  cudaMalloc((void**)&mGPU->cv_acor,mGPU->nrows*sizeof(double));
+  cudaMalloc((void**)&mGPU->yout,mGPU->nrows*sizeof(double));
   cudaMalloc((void**)&mGPU->cv_l,L_MAX*sizeof(double));
   cudaMalloc((void**)&mGPU->cv_tau,(L_MAX+1)*sizeof(double));
   cudaMalloc((void**)&mGPU->cv_tq,(NUM_TESTS+1)*sizeof(double));
@@ -3801,20 +3800,25 @@ void cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
 
 
-#ifndef DEV_CUDACVODE
+#ifdef DEV_CUDACVODE
 
-  /*
-  if (kflag != CV_SUCCESS) {
+
+  if (dmdv->kflag != CV_SUCCESS) {
+
     //istate = cvHandleFailure_gpu2(cv_mem, kflag);
-    //cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
-    //N_VScale(ONE, cv_mem->cv_zn[0], yout);
+    //dmdv->istate = dmdv->kflag;
 
+    //cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
+    dmdv->cv_tretlast = dmdv->tret = dmdv->cv_tn;
+
+    //N_VScale(ONE, md->dzn[0], yout);
+    md->yout[i]=md->dzn[i];
 
 
     //break;
     return;
   }
-*/
+
 
 #else
 #endif
@@ -4209,7 +4213,6 @@ void solveCVODEGPU_thr(int blocks, int threads_block, int n_shr_memory, int n_sh
 #endif
 
 //todo (mas tarde puede ser) figura como las 3 lineas pero con el cb05 (oriol)
-//MARIO: 40 MPI vs 1 GPU y kernels fusionados ya (necesita q vaya mejor que mpi)
 
 
 #ifdef DEBUG_CudaDeviceguess_helper
@@ -4376,7 +4379,8 @@ void solveCVODEGPU_thr(int blocks, int threads_block, int n_shr_memory, int n_sh
 
 #ifdef PMC_DEBUG_GPU
 
-  bicg->counterBiConjGrad++;
+  //bicg->counterBiConjGrad++;
+  bicg->counterBiConjGrad=bicg->counterBiConjGrad+1;
 
 #endif
 
@@ -4400,7 +4404,7 @@ void solveCVODEGPU(SolverData *sd, CVodeMem cv_mem)
 
 #ifndef DEBUG_SOLVEBCGCUDA
   if(bicg->counterBiConjGrad==0) {
-    printf("solveGPUBlock\n");
+    printf("solveCVODEGPU\n");
   }
 #endif
 
@@ -4491,40 +4495,6 @@ void solveCVODEGPU(SolverData *sd, CVodeMem cv_mem)
   }
 #endif
 
-}
-
-//translating to cuda device
-int cudacvNewtonIteration(SolverData *sd, CVodeMem cv_mem)
-{
-  itsolver *bicg = &(sd->bicg);
-  ModelData *md = &(sd->model_data);
-  ModelDataGPU *mGPU = &sd->mGPU;
-  int m, retval;
-  double del, delp, dcon;
-
-  cv_mem->cv_mnewt = m = 0;
-
-  //Delp = del from last iter (reduce iterations)
-  del = delp = 0.0;
-
-  double *acor = NV_DATA_S(cv_mem->cv_acor);
-  double *cv_y = NV_DATA_S(cv_mem->cv_y);
-  double *tempv = NV_DATA_S(cv_mem->cv_tempv);
-
-  //int flag = 0; //CAMP_SOLVER_SUCCESS
-  int flag = 999;
-
-  solveCVODEGPU(sd, cv_mem);
-  cudaDeviceSynchronize();
-
-  HANDLE_ERROR(cudaMemcpy(&flag,mGPU->flag,1*sizeof(int),cudaMemcpyDeviceToHost));
-  //printf("flag %d \n",flag);
-
-  cudaMemcpy(acor,mGPU->cv_acor,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
-  cudaMemcpy(tempv,mGPU->dx,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
-  return(flag);
-
-  //return 0;
 }
 
 /*
@@ -5403,7 +5373,6 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     if (cv_mem->cv_nst > 0) {
 
       ewtsetOK = cv_mem->cv_efun(cv_mem->cv_zn[0], cv_mem->cv_ewt, cv_mem->cv_e_data);
-      //set here copy of ewt to gpu
 
       if (ewtsetOK != 0) {
 
@@ -5471,6 +5440,8 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     int flag = 0; //CAMP_SOLVER_SUCCESS
     //int flag = 999;
 
+    sd->mdv.tret = *tret;
+    sd->mdv.cv_tretlast = cv_mem->cv_tretlast;
     sd->mdv.istate = istate;
     sd->mdv.cv_sldeton = cv_mem->cv_sldeton;
     sd->mdv.cv_hmax_inv = cv_mem->cv_hmax_inv;
@@ -5540,6 +5511,8 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     cudaMemcpy(mGPU->dftemp, ftemp, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice);
     cudaMemcpy(mGPU->cv_last_yn, cv_last_yn, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice);
     cudaMemcpy(mGPU->cv_acor_init, cv_acor_init, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice);
+    cudaMemcpy(mGPU->yout, yout, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice);
+
 
     for (int i = 0; i <= cv_mem->cv_qmax; i++) {//cv_qmax+1 (6)?
       double *zn = NV_DATA_S(cv_mem->cv_zn[i]);
@@ -5564,6 +5537,8 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
 
     cudaMemcpy(&sd->mdv, mGPU->mdvo, sizeof(ModelDataVariable), cudaMemcpyDeviceToHost);
 
+    *tret = sd->mdv.tret;
+    cv_mem->cv_tretlast = sd->mdv.cv_tretlast;
     istate = sd->mdv.istate;
     cv_mem->cv_sldeton = sd->mdv.cv_sldeton;
     cv_mem->cv_hmax_inv = sd->mdv.cv_hmax_inv;
@@ -5627,6 +5602,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     cudaMemcpy(ftemp, mGPU->dftemp, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost);
     cudaMemcpy(cv_last_yn, mGPU->cv_last_yn, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost);
     cudaMemcpy(cv_acor_init, mGPU->cv_acor_init, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost);
+    cudaMemcpy(yout, mGPU->yout, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost);
 
     for (int i = 0; i <= cv_mem->cv_qmax; i++) {//cv_qmax+1 (6)?
       double *zn = NV_DATA_S(cv_mem->cv_zn[i]);
@@ -5643,9 +5619,9 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
       }
     }
 
-    kflag=flag;
 
-    //printf("DEV_cudacvStep counterBiConjGrad %d\n",bicg->counterBiConjGrad);
+
+    printf("DEV_cudacvStep counterBiConjGrad %d\n",bicg->counterBiConjGrad);
 
     /* Call cvStep to take a step */
     //kflag = cvStep(cv_mem);
@@ -5665,17 +5641,27 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
 #endif
 
 
-#ifndef DEV_CUDACVODE
+#ifdef DEV_CUDACVODE
 
-    /* Process failed step cases, and exit loop */
+    kflag=flag;
+
+    if (kflag != CV_SUCCESS){
+      istate = cvHandleFailure_gpu2(cv_mem, kflag);
+    }
+
+    /*
     if (kflag != CV_SUCCESS) {
       istate = cvHandleFailure_gpu2(cv_mem, kflag);
       cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
       N_VScale(ONE, cv_mem->cv_zn[0], yout);
       break;
     }
+*/
+
 
 #else
+
+    kflag=flag;
 
     /* Process failed step cases, and exit loop */
     if (kflag != CV_SUCCESS) {
@@ -8374,8 +8360,6 @@ int linsolsetup_gpu2(SolverData *sd, CVodeMem cv_mem,int convfail,N_Vector vtemp
 
 #endif
 
-  //if(bicg->counterBiConjGrad==0)
-    //check_input(mGPU->ddiag,mGPU->nrows,0);
 
   //return(cvdls_mem->last_flag);
   return retval;

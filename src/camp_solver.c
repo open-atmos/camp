@@ -1132,8 +1132,8 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
       times[2]=sd->timeCVode;
       //for(int i=0;i<sd->ntimers;i++)
       //  printf("i %d times %le counters %d\n",i,times[i],counters[i]);
-      for(int i=0;i<sd->ncounters;i++)
-        printf("i %d counters %d\n",i,counters[i]);
+      //for(int i=0;i<sd->ncounters;i++)
+      //  printf("i %d counters %d\n",i,counters[i]);
     }
     else{
       printf("WARNING: In function solver_get_statistics trying to assign times "

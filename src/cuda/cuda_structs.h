@@ -120,7 +120,8 @@ typedef struct {
     int kflag;
     int eflag;
 
-
+    double tret;
+    double cv_tretlast;
     int istate;
     int cv_sldeton;
     double cv_hmax_inv;
@@ -257,6 +258,7 @@ typedef struct {
     //int n_per_cell_solver_jac_elem;
 
     int nnz;
+    double *yout;
 
     //Allocated in GPU only
     int i_cell;

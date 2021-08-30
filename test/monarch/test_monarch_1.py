@@ -86,6 +86,9 @@ def run(config_file,diff_cells,mpi,mpiProcesses,n_cells,timesteps,
       data=plot_functions.normalize_by_counterLS_and_cells( \
         data,y_key,n_cells,case)
       #cases[i]
+    if(y_key=="timecvStep"):
+      data=plot_functions.normalize_by_countercvStep_and_cells( \
+        data,"timecvStep",n_cells,case)
     else:
       raise Exception("Unkown normalized case",y_key)
 
@@ -219,7 +222,6 @@ def all_timesteps():
   #mpiProcessesList = [40,1]
 
 
-  #cells = [10]
   cells = [100]
   #cells = [100,1000,5000,10000]
   #cells = [1,10,100,1000,10000,100000]
@@ -252,11 +254,12 @@ def all_timesteps():
   #plot_y_key = "Speedup normalized counterBCG"
   #plot_y_key = "Speedup BCG iteration (Comp.timeLS/counterBCG)"
   #plot_y_key = "Percentages solveCVODEGPU" #Uncomment function
-  plot_y_key = "Speedup timecvStep"
+  #plot_y_key = "Speedup timecvStep"
+  #plot_y_key = "Speedup normalized timecvStep"
 
   #plot_y_key = "% Time data transfers CPU-GPU BCG"
   #plot_y_key="NRMSE"
-  #plot_y_key="MAPE"
+  plot_y_key="MAPE"
   #plot_y_key="SMAPE"
 
   SAVE_PLOT=False
@@ -308,7 +311,6 @@ def all_timesteps():
 
   #print("Base")
   #print("Optimized")
-  print(datay)
 
   if(mpiProcessesList==2):
     for i in range(len(cases_multicells_onecell)):
@@ -363,6 +365,15 @@ def all_timesteps():
   if plot_y_key=="Percentages solveCVODEGPU":
     plot_functions.plot_percentages_solveCVODEGPU( \
       data,namex,namey,datax,datay,plot_title)
+
+  for i in range(len(cases)):
+    if(len(mpiProcessesList)<len(cases)):
+      mpiProcessesList.append(mpiProcessesList[0])
+    print("Case",i,":",cases[i],"MPI processes:",
+          mpiProcessesList[i])
+
+  print("Cells:",cells,"Timesteps:",timesteps)
+  print(namey,":",datay)
 
   #plot_functions.plot(namex,namey,datax,datay,plot_title,SAVE_PLOT)
 
