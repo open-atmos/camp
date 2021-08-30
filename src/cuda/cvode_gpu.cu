@@ -2077,8 +2077,8 @@ void alloc_solver_gpu2(CVodeMem cv_mem, SolverData *sd)
   cudaMalloc((void**)&mGPU->dcv_y,mGPU->nrows*sizeof(double));
   cudaMalloc((void**)&mGPU->dx,mGPU->nrows*sizeof(double));
   cudaMalloc((void**)&mGPU->cv_last_yn,mGPU->nrows*sizeof(double));
-  cudaMalloc((void**)&mGPU->cv_acor_init,mGPU->nrows*sizeof(double));
-  cudaMalloc((void**)&mGPU->cv_acor,mGPU->nrows*sizeof(double));
+  //cudaMalloc((void**)&mGPU->cv_acor_init,mGPU->nrows*sizeof(double));
+  //cudaMalloc((void**)&mGPU->cv_acor,mGPU->nrows*sizeof(double));
   cudaMalloc((void**)&mGPU->cv_acor_init,mGPU->nrows*sizeof(double));
   cudaMalloc((void**)&mGPU->cv_acor,mGPU->nrows*sizeof(double));
   cudaMalloc((void**)&mGPU->cv_l,L_MAX*sizeof(double));
