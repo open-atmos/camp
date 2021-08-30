@@ -22,12 +22,7 @@
 !! The key-value pair \b type is required and must be \b
 !! AERO_REP_SINGLE_PARTICLE. This representation assumes that every \ref
 !! input_format_aero_phase "aerosol phase" available will be present
-!! once in each particle, and that the \ref input_format_mechanism
-!! "chemical mechanisms" will be solved at each time step first for the
-!! gas-phase then for phase-transfer and aerosol-phase chemistry for each
-!! single particle in the \c  camp_aero_particle_array::aero_particle_array_t
-!! variable sequentially. This may be changed in the future to solve for all
-!! particles simultaneously.
+!! once in each particle.
 !!
 !! The number concentration for each particle must be
 !! set from an external model using

@@ -5,34 +5,38 @@
 !> \file
 !> The camp_camp_core module.
 
-!> \page camp_chem Chemistry Across Multiple Phases (CAMP)
+!> \mainpage CAMP Documentation
 !!
-!! Chemistry Across Multiple Phases (CAMP) is a
-!! module within PartMC designed to provide a flexible framework for
-!! incorporating chemical mechanisms into PartMC or another host model. In
-!! general, \ref camp_chem "CAMP" solves one or more
-!! \ref camp_mechanism "mechanisms" composed of a set of \ref camp_rxn
+!! Chemistry Across Multiple Phases (CAMP) facilitates multi-phase
+!! chemistry solving in atmospheric models. In
+!! general, \ref index "CAMP" solves a
+!! \ref camp_mechanism "mechanism" composed of a set of \ref camp_rxn
 !! "reactions" over a time-step specified by the host model. \ref camp_rxn
 !! "Reactions" can take place in the gas phase, in one of several \ref
 !! camp_aero_phase "aerosol phases", or across an interface between phases
-!! (gas or aerosol). \ref camp_chem "CAMP" is designed to
+!! (gas--aerosol).
+!!
+!! \ref index "CAMP" is designed to
 !! work with any \ref camp_aero_rep "aerosol representation" used by the
-!! host model (e.g., binned, modal, single particle) by abstracting the
-!! chemistry from the \ref camp_aero_rep "aerosol representation" through the
+!! host model (e.g., binned, modal, single particle) through the use
 !! use of custom extending types of the abstract
-!! \c camp_aero_rep_data::aero_rep_data_t type that implement a set of
+!! \c camp_aero_rep_data::aero_rep_data_t type. Each
+!! \ref camp_aero_rep "aerosol representation" implements one or more
+!! instances of each
 !! \ref camp_aero_phase "aerosol phases" based on the configuration of the
-!! host model. A set of \ref camp_sub_model "sub-models" may also be included
+!! host model. The multi-phase chemistry system is solved for the gas-phase
+!! and every instance of each \ref camp_aero_phase "aerosol phase".
+!! A set of \ref camp_sub_model "sub-models" may also be included
 !! to calculate parameters needed by \ref camp_rxn "reactions" during solving.
 !!
-!! \ref camp_chem "CAMP" uses \ref ss_json
-!! "json input files" to load \ref input_format_species "chemical species",
+!! \ref index "CAMP" uses
+!! JSON files to load \ref input_format_species "chemical species",
 !! \ref input_format_mechanism "mechanisms", \ref input_format_aero_phase
 !! "aerosol phases", \ref input_format_aero_rep "aerosol representations",
 !! and \ref input_format_sub_model "sub-models" at runtime. This allows a user
 !! to modify any of these data without recompiling the model, permits host
 !! models to choose which mechanisms to solve based on model conditions, and
-!! allows multiple mechanisms to be solved simultaneously.
+!! allows multiple mechanisms to be solved during a model simulation.
 !!
 !! # CAMP Input Classes #
 !!
@@ -45,49 +49,32 @@
 !!
 !! # Usage #
 !!
-!! ## Compiling ##
-!!
-!! To include \ref camp_chem "CAMP" in a PartMC library installation,
-!! set the ccmake flags \c ENABLE_JSON and \c ENABLE_SUNDIALS to \c ON.
-!! (<a href="http://www.llnl.gov/casc/sundials/">SUNDIALS</a> and
-!! <a href="https://github.com/jacobwilliams/json-fortran">json-fortran</a>
-!! must be installed).
-!!
 !! ## Input files ##
 !!
-!! \ref camp_chem "CAMP" uses two types of input files:
+!! \ref index "CAMP" uses two types of input files:
 !!
 !!  - \subpage input_format_camp_file_list "File List" A \c json file
-!!             containing a list of \ref camp_chem "CAMP" configuration
+!!             containing a list of \ref index "CAMP" configuration
 !!             file names.
 !!  - \subpage input_format_camp_config "Configuration File" One or more
-!!             \c json files containing all the \ref camp_chem "CAMP"
+!!             \c json files containing all the \ref index "CAMP"
 !!             configuration data.
 !!
-!! To initialize \ref camp_chem "CAMP" , the path to the
+!! To initialize \ref index "CAMP" , the path to the
 !! \ref input_format_camp_file_list "file list" must be passed to the
 !! \ref camp_camp_core::camp_core_t constructor. The method by which this is
 !! done depends on the host model configuration.
 !!
-!! ## PartMC scenarios ##
+!! ## Adding CAMP to an atmospheric model ##
 !!
-!! Using \ref camp_chem "CAMP" in a PartMC scenario requires modifying
-!! the \ref input_format "spec file" and providing a \ref
-!! input_format_camp_file_list "CAMP file list" file and one or more
-!! \ref input_format_camp_config "CAMP configuration" files that
-!! describe the \ref camp_species "chemical species", \ref camp_mechanism
-!! "mechanism(s)", \ref camp_aero_phase "aerosol phase(s)", \ref
-!! camp_aero_rep "aerosol representation", and \ref camp_sub_model
-!! "sub-model(s)". A description of the input files required for a PartMC run
-!! can be found \ref input_format "here".
-!!
-!! ## CAMP-chem in another host model ##
-!!
-!! Incorporating \ref camp_chem "CAMP" into another host
-!! model can be done in the following steps:
-!!
-!! TODO: Finish
-!!
+!! The easiest way to incorporate CAMP into an atmospheric model
+!! is to follow the templates laid out in the tests. For each
+!! \ref camp_rxn "reaction", a test exists in <tt>test/unit_rxn_data</tt>
+!! that initializes CAMP for a simple mechanism consisting
+!! of only the reaction type being tested. The test code is documented
+!! so that it can be used as a template for incorporating CAMP in
+!! a new host model.
+
 
 !> The camp_core_t structure and associated subroutines.
 module camp_camp_core
@@ -285,7 +272,7 @@ contains
 
   !> \page input_format_camp_file_list Input File Format: CAMP-Chem Configuration File List
   !!
-  !! A list of files containing configuration data for the \ref camp_chem
+  !! A list of files containing configuration data for the \ref index
   !! "CAMP". The file should be in \c json format
   !! and the general structure should be the following:
   !! \code{.json}
@@ -379,7 +366,7 @@ contains
   !> \page input_format_camp_config Input File Format: CAMP-Chem Configuration Data
   !!
   !! Configuration data for the
-  !! \ref camp_chem "CAMP". The files are in
+  !! \ref index "CAMP". The files are in
   !! \c json format and their general structure should be the following:
   !! \code{.json}
   !! { "camp-data" : [

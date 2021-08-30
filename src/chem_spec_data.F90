@@ -7,9 +7,9 @@
 
 !> \page camp_species CAMP: Chemical Species
 !!
-!! Chemical species in the \ref camp_chem "camp-chem" module are gas- or
+!! Chemical species in the \ref index "camp-chem" module are gas- or
 !! aerosol-phase species that can participate in chemical or phase-transfer
-!! reactions in the \ref camp_mechanism "mechanism(s)". Each species must
+!! reactions in the \ref camp_mechanism "mechanism". Each species must
 !! have a unique name (the same name cannot be used for a gas-phase
 !! species and an aerosol-phase species). Chemical species may be present
 !! either in the gas-phase or any number of \ref camp_aero_phase

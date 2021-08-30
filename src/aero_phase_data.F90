@@ -212,9 +212,8 @@ contains
   !! correspond to \ref input_format_species "chemcical species" names.
   !! \ref input_format_species "Chemical species" included in the \b species
   !! array must have a \b phase of \b AEROSOL and must include key value pairs
-  !! \b molecular \b weight \b [kg \b mol-1]
-  !! (\f$\mbox{\si{\kilogram\per\mole}}\f$) and \b density \b [kg m-3]
-  !! (\f$\mbox{\si{\kilogram\per\cubic\metre}}\f$).
+  !! \b molecular \b weight \b [\b kg \b mol-1]
+  !! and \b density \b [\b kg \b m-3].
   !!
   !! All other data is optional and may include any valid \c json value.
   !! Multiple entries with the same aerosol phase \b name will be merged into

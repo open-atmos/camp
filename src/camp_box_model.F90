@@ -5,7 +5,7 @@
 !> \file
 !> The camp_camp_box_model program
 
-!> Driver for the \ref camp_chem "CAMP" box model
+!> Driver for the \ref index "CAMP" box model
 program camp_camp_box_model
 
   use camp_camp_box_model_data

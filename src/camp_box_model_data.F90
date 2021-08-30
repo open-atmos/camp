@@ -5,7 +5,7 @@
 !> \file
 !> The camp_camp_box_model_data_t type and related functions
 
-!> A simple box model for \ref camp_chem "CAMP" mechanisms
+!> A simple box model for \ref index "CAMP" mechanisms
 !! \todo{ Modify this to run full PartMC scenarios with CAMP enabled
 !!        so that aerosol physical processes can be included. }
 module camp_camp_box_model_data

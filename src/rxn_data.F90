@@ -10,11 +10,11 @@
 !! A reaction represents a transformation of the model state due to a physical
 !! or chemical process that occurs within a phase (gas or \ref
 !! camp_aero_phase "aerosol") or across the interface between two phases. In
-!! the \ref camp_chem "camp-chem" model, reactions are grouped into \ref
+!! the \ref index "camp-chem" model, reactions are grouped into \ref
 !! camp_mechanism "mechanisms", which are solved over time-steps specified by
 !! the host model.
 !!
-!! The primary function of a reaction in the \ref camp_chem "camp-chem"
+!! The primary function of a reaction in the \ref index "camp-chem"
 !! model is to provide the solver with contributions to the time derivative
 !! and Jacobian matrix for \ref camp_species "chemical species"
 !! concentrations based on the current model state described in a \c
@@ -26,7 +26,7 @@
 !! set of reaction parameters needed to describe a particular reaction.
 !! During initialization, a reaction will have access to its set of parameters
 !! as well as the parameters of any \ref camp_species "species" and \ref
-!! camp_aero_rep "aerosol phase" in the \ref camp_chem "camp-chem" model,
+!! camp_aero_rep "aerosol phase" in the \ref index "camp-chem" model,
 !! however this information will not be available during a model run. The
 !! information required by the reaction instance to calculate its contribution
 !! to the time derivatve and Jacobian matrix must therefore be packed into
@@ -50,9 +50,6 @@
 !!
 !! The general input format for a reaction can be found
 !! \subpage input_format_rxn "here".
-!!
-!! General instructions for adding a new reaction type can be found
-!! \subpage camp_rxn_add "here".
 
 !> The rxn_data_t structure and associated subroutines.
 module camp_rxn_data
