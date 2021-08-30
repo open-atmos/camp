@@ -1,0 +1,5 @@
+<map id="camp_aero_rep_data::aero_rep_data_t" name="camp_aero_rep_data::aero_rep_data_t">
+<area shape="rect" id="node1" title="Abstract aerosol representation data type." alt="" coords="5,53,148,94"/>
+<area shape="rect" id="node2" href="$structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t.html" title="Modal mass aerosol representation." alt="" coords="199,5,363,61"/>
+<area shape="rect" id="node3" href="$structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t.html" title="Single particle aerosol representation." alt="" coords="196,85,367,141"/>
+</map>

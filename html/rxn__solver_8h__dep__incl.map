@@ -1,0 +1,5 @@
+<map id="rxn_solver.h" name="rxn_solver.h">
+<area shape="rect" id="node1" title="Header file for abstract reaction functions." alt="" coords="74,5,166,32"/>
+<area shape="rect" id="node2" href="$camp__solver_8c.html" title="Interface to c solvers for chemistry." alt="" coords="5,80,112,107"/>
+<area shape="rect" id="node3" href="$rxn__solver_8c.html" title="Reaction solver functions." alt="" coords="137,80,229,107"/>
+</map>

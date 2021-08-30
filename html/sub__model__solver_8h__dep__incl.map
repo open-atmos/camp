@@ -1,0 +1,6 @@
+<map id="sub_model_solver.h" name="sub_model_solver.h">
+<area shape="rect" id="node1" title="Header file for abstract sub model functions." alt="" coords="167,5,305,32"/>
+<area shape="rect" id="node2" href="$camp__solver_8c.html" title="Interface to c solvers for chemistry." alt="" coords="5,80,112,107"/>
+<area shape="rect" id="node3" href="$rxn___s_i_m_p_o_l__phase__transfer_8c.html" title="Phase Transfer reaction solver functions." alt="" coords="136,80,336,107"/>
+<area shape="rect" id="node4" href="$sub__model__solver_8c.html" title="Sub model solver functions." alt="" coords="361,80,498,107"/>
+</map>
