@@ -388,7 +388,7 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
 
 #ifdef PMC_DEBUG_GPU
 
-  printf("sd->use_cpu %d\n",sd->use_cpu);
+  //printf("sd->use_cpu %d\n",sd->use_cpu);
 
   sd->counterDerivTotal = 0;
   sd->counterDerivCPU = 0;
@@ -1127,14 +1127,13 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
   if(sd->use_cpu==1){
 
 
-    if(sd->ncounters>0){
-      CVodeGetcounterLS(sd->cvode_mem, &counters[1]);
-    }
-    if(sd->ntimers>0){
-      CVodeGettimeLS(sd->cvode_mem, &times[0]);
+    if(sd->ntimers>0 && sd->ncounters>0){
+      CVodeGettimesCounters(sd->cvode_mem, &times[0], &counters[0]);
       times[2]=sd->timeCVode;
       //for(int i=0;i<sd->ntimers;i++)
-      //  printf("times[i] [%d]=%le\n",i,times[i]);
+      //  printf("i %d times %le counters %d\n",i,times[i],counters[i]);
+      //for(int i=0;i<sd->ncounters;i++)
+      //  printf("i %d counters %d\n",i,counters[i]);
     }
     else{
       printf("WARNING: In function solver_get_statistics trying to assign times "
@@ -1158,6 +1157,7 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
       counters[i++]=mdv->counterBCGInternal;
       counters[i++]=bicg->counterBiConjGrad;
       counters[i++]=bicg->countersolveCVODEGPU;
+      counters[i++]=bicg->countercvStep;
     }
     if(sd->ntimers>0){
       i=0;
@@ -1175,6 +1175,7 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
       times[i++]=sd->timeRXNJac;
       times[i++]=sd->timef;
       times[i++]=sd->timeguess_helper;
+      times[i++]=bicg->timecvStep/1000;
 
       //for(int i=0;i<sd->ntimers;i++)
         //printf("times[%d]=%le\n",i,times[i]);

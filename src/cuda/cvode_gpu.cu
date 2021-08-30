@@ -3652,12 +3652,9 @@ int cudaDevicecvStep(ModelDataGPU *md, ModelDataVariable *dmdv) {
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   unsigned int tid = threadIdx.x;
 
-
-
   dmdv->saved_t = dmdv->cv_tn;
   dmdv->ncf = dmdv->nef = 0;
   dmdv->nflag = FIRST_CALL;
-
 
   if ((dmdv->cv_nst > 0) && (dmdv->cv_hprime != dmdv->cv_h))
     cudaDevicecvAdjustParams(md, dmdv);
@@ -3785,6 +3782,314 @@ int cudaDevicecvStep(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
   }
 
+__device__
+void cudaDevicecvTemplate(ModelDataGPU *md, ModelDataVariable *dmdv) {
+
+  extern __shared__ int flag_shr[];
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
+  unsigned int tid = threadIdx.x;
+
+/*
+
+
+
+ */
+
+}
+
+__device__
+void cudaDevicecvRootfind(ModelDataGPU *md, ModelDataVariable *dmdv) {
+
+  extern __shared__ int flag_shr[];
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
+  unsigned int tid = threadIdx.x;
+
+/*
+
+  realtype alph, tmid, gfrac, maxfrac, fracint, fracsub;
+  int i, retval, imax, side, sideprev;
+  booleantype zroot, sgnchg;
+
+  imax = 0;
+
+  // First check for change in sign in ghi or for a zero in ghi.
+  maxfrac = ZERO;
+  zroot = SUNFALSE;
+  sgnchg = SUNFALSE;
+  for (i = 0;  i < cv_mem->cv_nrtfn; i++) {
+    if(!cv_mem->cv_gactive[i]) continue;
+    if (SUNRabs(cv_mem->cv_ghi[i]) == ZERO) {
+      if(cv_mem->cv_rootdir[i]*cv_mem->cv_glo[i] <= ZERO) {
+        zroot = SUNTRUE;
+      }
+    } else {
+      if ( (cv_mem->cv_glo[i]*cv_mem->cv_ghi[i] < ZERO) &&
+           (cv_mem->cv_rootdir[i]*cv_mem->cv_glo[i] <= ZERO) ) {
+        gfrac = SUNRabs(cv_mem->cv_ghi[i]/(cv_mem->cv_ghi[i] - cv_mem->cv_glo[i]));
+        if (gfrac > maxfrac) {
+          sgnchg = SUNTRUE;
+          maxfrac = gfrac;
+          imax = i;
+        }
+      }
+    }
+  }
+
+  // If no sign change was found, reset trout and grout.  Then return
+  //   CV_SUCCESS if no zero was found, or set iroots and return RTFOUND.
+  if (!sgnchg) {
+    cv_mem->cv_trout = cv_mem->cv_thi;
+    for (i = 0; i < cv_mem->cv_nrtfn; i++) cv_mem->cv_grout[i] = cv_mem->cv_ghi[i];
+    if (!zroot) return(CV_SUCCESS);
+    for (i = 0; i < cv_mem->cv_nrtfn; i++) {
+      cv_mem->cv_iroots[i] = 0;
+      if(!cv_mem->cv_gactive[i]) continue;
+      if ( (SUNRabs(cv_mem->cv_ghi[i]) == ZERO) &&
+           (cv_mem->cv_rootdir[i]*cv_mem->cv_glo[i] <= ZERO) )
+        cv_mem->cv_iroots[i] = cv_mem->cv_glo[i] > 0 ? -1 : 1;
+    }
+    return(RTFOUND);
+  }
+
+  // Initialize alph to avoid compiler warning
+  alph = ONE;
+
+  // A sign change was found.  Loop to locate nearest root
+
+  side = 0;  sideprev = -1;
+  for(;;) {                                    // Looping point
+
+    // If interval size is already less than tolerance ttol, break.
+    if (SUNRabs(cv_mem->cv_thi - cv_mem->cv_tlo) <= cv_mem->cv_ttol) break;
+
+    // Set weight alph.
+    //   On the first two passes, set alph = 1.  Thereafter, reset alph
+    //   according to the side (low vs high) of the subinterval in which
+    //   the sign change was found in the previous two passes.
+    //   If the sides were opposite, set alph = 1.
+    //   If the sides were the same, then double alph (if high side),
+    //   or halve alph (if low side).
+    //   The next guess tmid is the secant method value if alph = 1, but
+    //   is closer to tlo if alph < 1, and closer to thi if alph > 1.
+
+    if (sideprev == side) {
+      alph = (side == 2) ? alph*TWO : alph*HALF;
+    } else {
+      alph = ONE;
+    }
+
+    // Set next root approximation tmid and get g(tmid).
+    //   If tmid is too close to tlo or thi, adjust it inward,
+    //   by a fractional distance that is between 0.1 and 0.5.
+    tmid = cv_mem->cv_thi - (cv_mem->cv_thi - cv_mem->cv_tlo) *
+                            cv_mem->cv_ghi[imax] / (cv_mem->cv_ghi[imax] - alph*cv_mem->cv_glo[imax]);
+    if (SUNRabs(tmid - cv_mem->cv_tlo) < HALF*cv_mem->cv_ttol) {
+      fracint = SUNRabs(cv_mem->cv_thi - cv_mem->cv_tlo)/cv_mem->cv_ttol;
+      fracsub = (fracint > FIVE) ? PT1 : HALF/fracint;
+      tmid = cv_mem->cv_tlo + fracsub*(cv_mem->cv_thi - cv_mem->cv_tlo);
+    }
+    if (SUNRabs(cv_mem->cv_thi - tmid) < HALF*cv_mem->cv_ttol) {
+      fracint = SUNRabs(cv_mem->cv_thi - cv_mem->cv_tlo)/cv_mem->cv_ttol;
+      fracsub = (fracint > FIVE) ? PT1 : HALF/fracint;
+      tmid = cv_mem->cv_thi - fracsub*(cv_mem->cv_thi - cv_mem->cv_tlo);
+    }
+
+    (void) CVodeGetDky(cv_mem, tmid, 0, cv_mem->cv_y);
+    retval = cv_mem->cv_gfun(tmid, cv_mem->cv_y, cv_mem->cv_grout,
+                             cv_mem->cv_user_data);
+    cv_mem->cv_nge++;
+    if (retval != 0) return(CV_RTFUNC_FAIL);
+
+    // Check to see in which subinterval g changes sign, and reset imax.
+    //   Set side = 1 if sign change is on low side, or 2 if on high side.
+    maxfrac = ZERO;
+    zroot = SUNFALSE;
+    sgnchg = SUNFALSE;
+    sideprev = side;
+    for (i = 0;  i < cv_mem->cv_nrtfn; i++) {
+      if(!cv_mem->cv_gactive[i]) continue;
+      if (SUNRabs(cv_mem->cv_grout[i]) == ZERO) {
+        if(cv_mem->cv_rootdir[i]*cv_mem->cv_glo[i] <= ZERO) zroot = SUNTRUE;
+      } else {
+        if ( (cv_mem->cv_glo[i]*cv_mem->cv_grout[i] < ZERO) &&
+             (cv_mem->cv_rootdir[i]*cv_mem->cv_glo[i] <= ZERO) ) {
+          gfrac = SUNRabs(cv_mem->cv_grout[i]/(cv_mem->cv_grout[i] - cv_mem->cv_glo[i]));
+          if (gfrac > maxfrac) {
+            sgnchg = SUNTRUE;
+            maxfrac = gfrac;
+            imax = i;
+          }
+        }
+      }
+    }
+    if (sgnchg) {
+      // Sign change found in (tlo,tmid); replace thi with tmid.
+      cv_mem->cv_thi = tmid;
+      for (i = 0; i < cv_mem->cv_nrtfn; i++)
+        cv_mem->cv_ghi[i] = cv_mem->cv_grout[i];
+      side = 1;
+      // Stop at root thi if converged; otherwise loop.
+      if (SUNRabs(cv_mem->cv_thi - cv_mem->cv_tlo) <= cv_mem->cv_ttol) break;
+      continue;  // Return to looping point.
+    }
+
+    if (zroot) {
+      // No sign change in (tlo,tmid), but g = 0 at tmid; return root tmid.
+      cv_mem->cv_thi = tmid;
+      for (i = 0; i < cv_mem->cv_nrtfn; i++)
+        cv_mem->cv_ghi[i] = cv_mem->cv_grout[i];
+      break;
+    }
+
+    // No sign change in (tlo,tmid), and no zero at tmid.
+    //   Sign change must be in (tmid,thi).  Replace tlo with tmid.
+    cv_mem->cv_tlo = tmid;
+    for (i = 0; i < cv_mem->cv_nrtfn; i++)
+      cv_mem->cv_glo[i] = cv_mem->cv_grout[i];
+    side = 2;
+    // Stop at root thi if converged; otherwise loop back.
+    if (SUNRabs(cv_mem->cv_thi - cv_mem->cv_tlo) <= cv_mem->cv_ttol) break;
+
+  } // End of root-search loop
+
+  // Reset trout and grout, set iroots, and return RTFOUND.
+  cv_mem->cv_trout = cv_mem->cv_thi;
+  for (i = 0; i < cv_mem->cv_nrtfn; i++) {
+    cv_mem->cv_grout[i] = cv_mem->cv_ghi[i];
+    cv_mem->cv_iroots[i] = 0;
+    if(!cv_mem->cv_gactive[i]) continue;
+    if ( (SUNRabs(cv_mem->cv_ghi[i]) == ZERO) &&
+         (cv_mem->cv_rootdir[i]*cv_mem->cv_glo[i] <= ZERO) )
+      cv_mem->cv_iroots[i] = cv_mem->cv_glo[i] > 0 ? -1 : 1;
+    if ( (cv_mem->cv_glo[i]*cv_mem->cv_ghi[i] < ZERO) &&
+         (cv_mem->cv_rootdir[i]*cv_mem->cv_glo[i] <= ZERO) )
+      cv_mem->cv_iroots[i] = cv_mem->cv_glo[i] > 0 ? -1 : 1;
+  }
+  return(RTFOUND);
+
+ */
+
+}
+
+__device__
+void cudaDeviceCVodeGetDky(ModelDataGPU *md, ModelDataVariable *dmdv,
+                           double t, int k, double *dky) {
+
+  extern __shared__ int flag_shr[];
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
+  unsigned int tid = threadIdx.x;
+
+/*
+
+  double s, c, r;
+  double tfuzz, tp, tn1;
+  int i, j;
+  CVodeMem cv_mem;
+
+  // Check all inputs for legality
+
+  if (cvode_mem == NULL) {
+    cvProcessError(NULL, CV_MEM_NULL, "CVODE", "CVodeGetDky", MSGCV_NO_MEM);
+    return(CV_MEM_NULL);
+  }
+  cv_mem = (CVodeMem) cvode_mem;
+
+  if (dky == NULL) {
+    cvProcessError(cv_mem, CV_BAD_DKY, "CVODE", "CVodeGetDky", MSGCV_NULL_DKY);
+    return(CV_BAD_DKY);
+  }
+
+  if ((k < 0) || (k > cv_mem->cv_q)) {
+    cvProcessError(cv_mem, CV_BAD_K, "CVODE", "CVodeGetDky", MSGCV_BAD_K);
+    return(CV_BAD_K);
+  }
+
+  // Allow for some slack
+  tfuzz = FUZZ_FACTOR * cv_mem->cv_uround * (SUNRabs(cv_mem->cv_tn) + SUNRabs(cv_mem->cv_hu));
+  if (cv_mem->cv_hu < ZERO) tfuzz = -tfuzz;
+  tp = cv_mem->cv_tn - cv_mem->cv_hu - tfuzz;
+  tn1 = cv_mem->cv_tn + tfuzz;
+  if ((t-tp)*(t-tn1) > ZERO) {
+    cvProcessError(cv_mem, CV_BAD_T, "CVODE", "CVodeGetDky", MSGCV_BAD_T,
+                   t, cv_mem->cv_tn-cv_mem->cv_hu, cv_mem->cv_tn);
+    return(CV_BAD_T);
+  }
+
+  // Sum the differentiated interpolating polynomial
+
+  s = (t - cv_mem->cv_tn) / cv_mem->cv_h;
+  for (j=cv_mem->cv_q; j >= k; j--) {
+    c = ONE;
+    for (i=j; i >= j-k+1; i--) c *= i;
+    if (j == cv_mem->cv_q) {
+      N_VScale(c, cv_mem->cv_zn[cv_mem->cv_q], dky);
+    } else {
+      N_VLinearSum(c, cv_mem->cv_zn[j], s, dky, dky);
+    }
+  }
+  if (k == 0) return(CV_SUCCESS);
+  r = SUNRpowerI(cv_mem->cv_h,-k);
+  N_VScale(r, dky, dky);
+  return(CV_SUCCESS);
+
+*/
+
+}
+
+__device__
+void cudaDevicecvRcheck3(ModelDataGPU *md, ModelDataVariable *dmdv) {
+
+  extern __shared__ int flag_shr[];
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
+  unsigned int tid = threadIdx.x;
+
+/*
+
+  int i, ier, retval;
+
+  // Set thi = tn or tout, whichever comes first; set y = y(thi).
+  if (cv_mem->cv_taskc == CV_ONE_STEP) {
+    cv_mem->cv_thi = cv_mem->cv_tn;
+    N_VScale(ONE, cv_mem->cv_zn[0], cv_mem->cv_y);
+  }
+  if (cv_mem->cv_taskc == CV_NORMAL) {
+    if ( (cv_mem->cv_toutc - cv_mem->cv_tn)*cv_mem->cv_h >= ZERO) {
+      cv_mem->cv_thi = cv_mem->cv_tn;
+      N_VScale(ONE, cv_mem->cv_zn[0], cv_mem->cv_y);
+    } else {
+      cv_mem->cv_thi = cv_mem->cv_toutc;
+      (void) CVodeGetDky_gpu3(cv_mem, cv_mem->cv_thi, 0, cv_mem->cv_y);
+    }
+  }
+
+  // Set ghi = g(thi) and call cvRootfind to search (tlo,thi) for roots.
+  retval = cv_mem->cv_gfun(cv_mem->cv_thi, cv_mem->cv_y,
+                           cv_mem->cv_ghi, cv_mem->cv_user_data);
+  cv_mem->cv_nge++;
+  if (retval != 0) return(CV_RTFUNC_FAIL);
+
+  cv_mem->cv_ttol = (SUNRabs(cv_mem->cv_tn) + SUNRabs(cv_mem->cv_h)) *
+                    cv_mem->cv_uround * HUNDRED;
+  ier = cvRootfind_gpu2(cv_mem);
+  if (ier == CV_RTFUNC_FAIL) return(CV_RTFUNC_FAIL);
+  for(i=0; i<cv_mem->cv_nrtfn; i++) {
+    if(!cv_mem->cv_gactive[i] && cv_mem->cv_grout[i] != ZERO)
+      cv_mem->cv_gactive[i] = SUNTRUE;
+  }
+  cv_mem->cv_tlo = cv_mem->cv_trout;
+  for (i = 0; i < cv_mem->cv_nrtfn; i++)
+    cv_mem->cv_glo[i] = cv_mem->cv_grout[i];
+
+  // If no root found, return CV_SUCCESS.
+  if (ier == CV_SUCCESS) return(CV_SUCCESS);
+
+  // If a root was found, interpolate to get y(trout) and return.
+  (void) CVodeGetDky_gpu3(cv_mem, cv_mem->cv_trout, 0, cv_mem->cv_y);
+  return(RTFOUND);
+
+  */
+
+}
 
 __device__
 void cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
@@ -3799,22 +4104,65 @@ void cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
   dmdv->flag = dmdv->kflag;
   __syncthreads();
 
-
-
-#ifndef DEV_CUDACVODE
+#ifdef DEV_CUDACVODE
 
   /*
-  if (kflag != CV_SUCCESS) {
+
+  if (dmdv->kflag != CV_SUCCESS) {
+
     //istate = cvHandleFailure_gpu2(cv_mem, kflag);
+    //dmdv->istate = dmdv->kflag;
     //cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
-    //N_VScale(ONE, cv_mem->cv_zn[0], yout);
+    dmdv->cv_tretlast = dmdv->tret = dmdv->cv_tn;
 
-
+    //N_VScale(ONE, md->dzn[0], yout);
+    md->yout[i]=md->dzn[i];
 
     //break;
     return;
   }
-*/
+
+  dmdv->nstloc++;
+
+
+  if (cv_mem->cv_nrtfn > 0) {
+
+    retval = cvRcheck3_gpu2(cv_mem);
+
+    if (retval == RTFOUND) {  // A new root was found
+      cv_mem->cv_irfnd = 1;
+      istate = CV_ROOT_RETURN;
+      cv_mem->cv_tretlast = *tret = cv_mem->cv_tlo;
+      break;
+    } else if (retval == CV_RTFUNC_FAIL) { // g failed
+      cvProcessError(cv_mem, CV_RTFUNC_FAIL, "CVODE", "cvRcheck3",
+                     MSGCV_RTFUNC_FAILED, cv_mem->cv_tlo);
+      istate = CV_RTFUNC_FAIL;
+      break;
+    }
+
+    // If we are at the end of the first step and we still have
+     // some event functions that are inactive, issue a warning
+     // as this may indicate a user error in the implementation
+     // of the root function.
+
+    if (cv_mem->cv_nst==1) {
+      inactive_roots = SUNFALSE;
+      for (ir=0; ir<cv_mem->cv_nrtfn; ir++) {
+        if (!cv_mem->cv_gactive[ir]) {
+          inactive_roots = SUNTRUE;
+          break;
+        }
+      }
+      if ((cv_mem->cv_mxgnull > 0) && inactive_roots) {
+        cvProcessError(cv_mem, CV_WARNING, "CVODES", "CVode",
+                       MSGCV_INACTIVE_ROOTS);
+      }
+    }
+
+  }
+
+  */
 
 #else
 #endif
@@ -4209,7 +4557,6 @@ void solveCVODEGPU_thr(int blocks, int threads_block, int n_shr_memory, int n_sh
 #endif
 
 //todo (mas tarde puede ser) figura como las 3 lineas pero con el cb05 (oriol)
-//MARIO: 40 MPI vs 1 GPU y kernels fusionados ya (necesita q vaya mejor que mpi)
 
 
 #ifdef DEBUG_CudaDeviceguess_helper
@@ -4400,7 +4747,7 @@ void solveCVODEGPU(SolverData *sd, CVodeMem cv_mem)
 
 #ifndef DEBUG_SOLVEBCGCUDA
   if(bicg->counterBiConjGrad==0) {
-    printf("solveGPUBlock\n");
+    printf("solveCVODEGPU\n");
   }
 #endif
 
@@ -4491,40 +4838,6 @@ void solveCVODEGPU(SolverData *sd, CVodeMem cv_mem)
   }
 #endif
 
-}
-
-//translating to cuda device
-int cudacvNewtonIteration(SolverData *sd, CVodeMem cv_mem)
-{
-  itsolver *bicg = &(sd->bicg);
-  ModelData *md = &(sd->model_data);
-  ModelDataGPU *mGPU = &sd->mGPU;
-  int m, retval;
-  double del, delp, dcon;
-
-  cv_mem->cv_mnewt = m = 0;
-
-  //Delp = del from last iter (reduce iterations)
-  del = delp = 0.0;
-
-  double *acor = NV_DATA_S(cv_mem->cv_acor);
-  double *cv_y = NV_DATA_S(cv_mem->cv_y);
-  double *tempv = NV_DATA_S(cv_mem->cv_tempv);
-
-  //int flag = 0; //CAMP_SOLVER_SUCCESS
-  int flag = 999;
-
-  solveCVODEGPU(sd, cv_mem);
-  cudaDeviceSynchronize();
-
-  HANDLE_ERROR(cudaMemcpy(&flag,mGPU->flag,1*sizeof(int),cudaMemcpyDeviceToHost));
-  //printf("flag %d \n",flag);
-
-  cudaMemcpy(acor,mGPU->cv_acor,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
-  cudaMemcpy(tempv,mGPU->dx,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
-  return(flag);
-
-  //return 0;
 }
 
 /*
@@ -5093,6 +5406,269 @@ int CVode_gpu2(void *cvode_mem, realtype tout, N_Vector yout,
   return(istate);
 }
 
+int cvRootfind_gpu3(CVodeMem cv_mem)
+{
+  realtype alph, tmid, gfrac, maxfrac, fracint, fracsub;
+  int i, retval, imax, side, sideprev;
+  booleantype zroot, sgnchg;
+
+  imax = 0;
+
+  // First check for change in sign in ghi or for a zero in ghi.
+  maxfrac = ZERO;
+  zroot = SUNFALSE;
+  sgnchg = SUNFALSE;
+  for (i = 0;  i < cv_mem->cv_nrtfn; i++) {
+    if(!cv_mem->cv_gactive[i]) continue;
+    if (SUNRabs(cv_mem->cv_ghi[i]) == ZERO) {
+      if(cv_mem->cv_rootdir[i]*cv_mem->cv_glo[i] <= ZERO) {
+        zroot = SUNTRUE;
+      }
+    } else {
+      if ( (cv_mem->cv_glo[i]*cv_mem->cv_ghi[i] < ZERO) &&
+           (cv_mem->cv_rootdir[i]*cv_mem->cv_glo[i] <= ZERO) ) {
+        gfrac = SUNRabs(cv_mem->cv_ghi[i]/(cv_mem->cv_ghi[i] - cv_mem->cv_glo[i]));
+        if (gfrac > maxfrac) {
+          sgnchg = SUNTRUE;
+          maxfrac = gfrac;
+          imax = i;
+        }
+      }
+    }
+  }
+
+  // If no sign change was found, reset trout and grout.  Then return
+  //   CV_SUCCESS if no zero was found, or set iroots and return RTFOUND.
+  if (!sgnchg) {
+    cv_mem->cv_trout = cv_mem->cv_thi;
+    for (i = 0; i < cv_mem->cv_nrtfn; i++) cv_mem->cv_grout[i] = cv_mem->cv_ghi[i];
+    if (!zroot) return(CV_SUCCESS);
+    for (i = 0; i < cv_mem->cv_nrtfn; i++) {
+      cv_mem->cv_iroots[i] = 0;
+      if(!cv_mem->cv_gactive[i]) continue;
+      if ( (SUNRabs(cv_mem->cv_ghi[i]) == ZERO) &&
+           (cv_mem->cv_rootdir[i]*cv_mem->cv_glo[i] <= ZERO) )
+        cv_mem->cv_iroots[i] = cv_mem->cv_glo[i] > 0 ? -1 : 1;
+    }
+    return(RTFOUND);
+  }
+
+  // Initialize alph to avoid compiler warning
+  alph = ONE;
+
+  // A sign change was found.  Loop to locate nearest root
+
+  side = 0;  sideprev = -1;
+  for(;;) {                                    // Looping point
+
+    // If interval size is already less than tolerance ttol, break.
+    if (SUNRabs(cv_mem->cv_thi - cv_mem->cv_tlo) <= cv_mem->cv_ttol) break;
+
+    // Set weight alph.
+    //   On the first two passes, set alph = 1.  Thereafter, reset alph
+    //   according to the side (low vs high) of the subinterval in which
+    //   the sign change was found in the previous two passes.
+    //   If the sides were opposite, set alph = 1.
+    //   If the sides were the same, then double alph (if high side),
+    //   or halve alph (if low side).
+    //   The next guess tmid is the secant method value if alph = 1, but
+    //   is closer to tlo if alph < 1, and closer to thi if alph > 1.
+
+    if (sideprev == side) {
+      alph = (side == 2) ? alph*TWO : alph*HALF;
+    } else {
+      alph = ONE;
+    }
+
+    // Set next root approximation tmid and get g(tmid).
+    //   If tmid is too close to tlo or thi, adjust it inward,
+    //   by a fractional distance that is between 0.1 and 0.5.
+    tmid = cv_mem->cv_thi - (cv_mem->cv_thi - cv_mem->cv_tlo) *
+                            cv_mem->cv_ghi[imax] / (cv_mem->cv_ghi[imax] - alph*cv_mem->cv_glo[imax]);
+    if (SUNRabs(tmid - cv_mem->cv_tlo) < HALF*cv_mem->cv_ttol) {
+      fracint = SUNRabs(cv_mem->cv_thi - cv_mem->cv_tlo)/cv_mem->cv_ttol;
+      fracsub = (fracint > FIVE) ? PT1 : HALF/fracint;
+      tmid = cv_mem->cv_tlo + fracsub*(cv_mem->cv_thi - cv_mem->cv_tlo);
+    }
+    if (SUNRabs(cv_mem->cv_thi - tmid) < HALF*cv_mem->cv_ttol) {
+      fracint = SUNRabs(cv_mem->cv_thi - cv_mem->cv_tlo)/cv_mem->cv_ttol;
+      fracsub = (fracint > FIVE) ? PT1 : HALF/fracint;
+      tmid = cv_mem->cv_thi - fracsub*(cv_mem->cv_thi - cv_mem->cv_tlo);
+    }
+
+    (void) CVodeGetDky(cv_mem, tmid, 0, cv_mem->cv_y);
+    retval = cv_mem->cv_gfun(tmid, cv_mem->cv_y, cv_mem->cv_grout,
+                             cv_mem->cv_user_data);
+    cv_mem->cv_nge++;
+    if (retval != 0) return(CV_RTFUNC_FAIL);
+
+    // Check to see in which subinterval g changes sign, and reset imax.
+    //   Set side = 1 if sign change is on low side, or 2 if on high side.
+    maxfrac = ZERO;
+    zroot = SUNFALSE;
+    sgnchg = SUNFALSE;
+    sideprev = side;
+    for (i = 0;  i < cv_mem->cv_nrtfn; i++) {
+      if(!cv_mem->cv_gactive[i]) continue;
+      if (SUNRabs(cv_mem->cv_grout[i]) == ZERO) {
+        if(cv_mem->cv_rootdir[i]*cv_mem->cv_glo[i] <= ZERO) zroot = SUNTRUE;
+      } else {
+        if ( (cv_mem->cv_glo[i]*cv_mem->cv_grout[i] < ZERO) &&
+             (cv_mem->cv_rootdir[i]*cv_mem->cv_glo[i] <= ZERO) ) {
+          gfrac = SUNRabs(cv_mem->cv_grout[i]/(cv_mem->cv_grout[i] - cv_mem->cv_glo[i]));
+          if (gfrac > maxfrac) {
+            sgnchg = SUNTRUE;
+            maxfrac = gfrac;
+            imax = i;
+          }
+        }
+      }
+    }
+    if (sgnchg) {
+      // Sign change found in (tlo,tmid); replace thi with tmid.
+      cv_mem->cv_thi = tmid;
+      for (i = 0; i < cv_mem->cv_nrtfn; i++)
+        cv_mem->cv_ghi[i] = cv_mem->cv_grout[i];
+      side = 1;
+      // Stop at root thi if converged; otherwise loop.
+      if (SUNRabs(cv_mem->cv_thi - cv_mem->cv_tlo) <= cv_mem->cv_ttol) break;
+      continue;  // Return to looping point.
+    }
+
+    if (zroot) {
+      // No sign change in (tlo,tmid), but g = 0 at tmid; return root tmid.
+      cv_mem->cv_thi = tmid;
+      for (i = 0; i < cv_mem->cv_nrtfn; i++)
+        cv_mem->cv_ghi[i] = cv_mem->cv_grout[i];
+      break;
+    }
+
+    // No sign change in (tlo,tmid), and no zero at tmid.
+    //   Sign change must be in (tmid,thi).  Replace tlo with tmid.
+    cv_mem->cv_tlo = tmid;
+    for (i = 0; i < cv_mem->cv_nrtfn; i++)
+      cv_mem->cv_glo[i] = cv_mem->cv_grout[i];
+    side = 2;
+    // Stop at root thi if converged; otherwise loop back.
+    if (SUNRabs(cv_mem->cv_thi - cv_mem->cv_tlo) <= cv_mem->cv_ttol) break;
+
+  } // End of root-search loop
+
+  // Reset trout and grout, set iroots, and return RTFOUND.
+  cv_mem->cv_trout = cv_mem->cv_thi;
+  for (i = 0; i < cv_mem->cv_nrtfn; i++) {
+    cv_mem->cv_grout[i] = cv_mem->cv_ghi[i];
+    cv_mem->cv_iroots[i] = 0;
+    if(!cv_mem->cv_gactive[i]) continue;
+    if ( (SUNRabs(cv_mem->cv_ghi[i]) == ZERO) &&
+         (cv_mem->cv_rootdir[i]*cv_mem->cv_glo[i] <= ZERO) )
+      cv_mem->cv_iroots[i] = cv_mem->cv_glo[i] > 0 ? -1 : 1;
+    if ( (cv_mem->cv_glo[i]*cv_mem->cv_ghi[i] < ZERO) &&
+         (cv_mem->cv_rootdir[i]*cv_mem->cv_glo[i] <= ZERO) )
+      cv_mem->cv_iroots[i] = cv_mem->cv_glo[i] > 0 ? -1 : 1;
+  }
+  return(RTFOUND);
+}
+
+int CVodeGetDky_gpu3(void *cvode_mem, realtype t, int k, N_Vector dky)
+{
+  realtype s, c, r;
+  realtype tfuzz, tp, tn1;
+  int i, j;
+  CVodeMem cv_mem;
+
+  // Check all inputs for legality
+
+  if (cvode_mem == NULL) {
+    cvProcessError(NULL, CV_MEM_NULL, "CVODE", "CVodeGetDky", MSGCV_NO_MEM);
+    return(CV_MEM_NULL);
+  }
+  cv_mem = (CVodeMem) cvode_mem;
+
+  if (dky == NULL) {
+    cvProcessError(cv_mem, CV_BAD_DKY, "CVODE", "CVodeGetDky", MSGCV_NULL_DKY);
+    return(CV_BAD_DKY);
+  }
+
+  if ((k < 0) || (k > cv_mem->cv_q)) {
+    cvProcessError(cv_mem, CV_BAD_K, "CVODE", "CVodeGetDky", MSGCV_BAD_K);
+    return(CV_BAD_K);
+  }
+
+  // Allow for some slack
+  tfuzz = FUZZ_FACTOR * cv_mem->cv_uround * (SUNRabs(cv_mem->cv_tn) + SUNRabs(cv_mem->cv_hu));
+  if (cv_mem->cv_hu < ZERO) tfuzz = -tfuzz;
+  tp = cv_mem->cv_tn - cv_mem->cv_hu - tfuzz;
+  tn1 = cv_mem->cv_tn + tfuzz;
+  if ((t-tp)*(t-tn1) > ZERO) {
+    cvProcessError(cv_mem, CV_BAD_T, "CVODE", "CVodeGetDky", MSGCV_BAD_T,
+                   t, cv_mem->cv_tn-cv_mem->cv_hu, cv_mem->cv_tn);
+    return(CV_BAD_T);
+  }
+
+  // Sum the differentiated interpolating polynomial
+
+  s = (t - cv_mem->cv_tn) / cv_mem->cv_h;
+  for (j=cv_mem->cv_q; j >= k; j--) {
+    c = ONE;
+    for (i=j; i >= j-k+1; i--) c *= i;
+    if (j == cv_mem->cv_q) {
+      N_VScale(c, cv_mem->cv_zn[cv_mem->cv_q], dky);
+    } else {
+      N_VLinearSum(c, cv_mem->cv_zn[j], s, dky, dky);
+    }
+  }
+  if (k == 0) return(CV_SUCCESS);
+  r = SUNRpowerI(cv_mem->cv_h,-k);
+  N_VScale(r, dky, dky);
+  return(CV_SUCCESS);
+}
+
+
+int cvRcheck3_gpu3(CVodeMem cv_mem)
+{
+  int i, ier, retval;
+
+  // Set thi = tn or tout, whichever comes first; set y = y(thi).
+  if (cv_mem->cv_taskc == CV_ONE_STEP) {
+    cv_mem->cv_thi = cv_mem->cv_tn;
+    N_VScale(ONE, cv_mem->cv_zn[0], cv_mem->cv_y);
+  }
+  if (cv_mem->cv_taskc == CV_NORMAL) {
+    if ( (cv_mem->cv_toutc - cv_mem->cv_tn)*cv_mem->cv_h >= ZERO) {
+      cv_mem->cv_thi = cv_mem->cv_tn;
+      N_VScale(ONE, cv_mem->cv_zn[0], cv_mem->cv_y);
+    } else {
+      cv_mem->cv_thi = cv_mem->cv_toutc;
+      (void) CVodeGetDky_gpu3(cv_mem, cv_mem->cv_thi, 0, cv_mem->cv_y);
+    }
+  }
+
+  // Set ghi = g(thi) and call cvRootfind to search (tlo,thi) for roots.
+  retval = cv_mem->cv_gfun(cv_mem->cv_thi, cv_mem->cv_y,
+                           cv_mem->cv_ghi, cv_mem->cv_user_data);
+  cv_mem->cv_nge++;
+  if (retval != 0) return(CV_RTFUNC_FAIL);
+
+  cv_mem->cv_ttol = (SUNRabs(cv_mem->cv_tn) + SUNRabs(cv_mem->cv_h)) *
+                    cv_mem->cv_uround * HUNDRED;
+  ier = cvRootfind_gpu2(cv_mem);
+  if (ier == CV_RTFUNC_FAIL) return(CV_RTFUNC_FAIL);
+  for(i=0; i<cv_mem->cv_nrtfn; i++) {
+    if(!cv_mem->cv_gactive[i] && cv_mem->cv_grout[i] != ZERO)
+      cv_mem->cv_gactive[i] = SUNTRUE;
+  }
+  cv_mem->cv_tlo = cv_mem->cv_trout;
+  for (i = 0; i < cv_mem->cv_nrtfn; i++)
+    cv_mem->cv_glo[i] = cv_mem->cv_grout[i];
+
+  // If no root found, return CV_SUCCESS.
+  if (ier == CV_SUCCESS) return(CV_SUCCESS);
+
+  // If a root was found, interpolate to get y(trout) and return.
+  (void) CVodeGetDky_gpu3(cv_mem, cv_mem->cv_trout, 0, cv_mem->cv_y);
+  return(RTFOUND);
+}
 
 int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
                realtype *tret, int itask, SolverData *sd)
@@ -5106,7 +5682,6 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
 
   itsolver *bicg = &(sd->bicg);
   ModelData *md = &(sd->model_data);
-  CVDlsMem cvdls_mem = (CVDlsMem) cv_mem->cv_lmem;
   ModelDataGPU *mGPU = &sd->mGPU;
 
   /*
@@ -5403,7 +5978,6 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     if (cv_mem->cv_nst > 0) {
 
       ewtsetOK = cv_mem->cv_efun(cv_mem->cv_zn[0], cv_mem->cv_ewt, cv_mem->cv_e_data);
-      //set here copy of ewt to gpu
 
       if (ewtsetOK != 0) {
 
@@ -5477,7 +6051,6 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     sd->mdv.cv_lmm = cv_mem->cv_lmm;
     sd->mdv.cv_iter = cv_mem->cv_iter;
     sd->mdv.cv_itol = cv_mem->cv_itol;
-    //sd->mdv.cv_reltol = cv_mem->cv_reltol;
     sd->mdv.cv_reltol=((CVodeMem) sd->cvode_mem)->cv_reltol;
     sd->mdv.cv_nhnil = cv_mem->cv_nhnil;
     sd->mdv.cv_etaqm1 = cv_mem->cv_etaqm1;
@@ -5571,7 +6144,6 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     cv_mem->cv_lmm = sd->mdv.cv_lmm;
     cv_mem->cv_iter = sd->mdv.cv_iter;
     cv_mem->cv_itol = sd->mdv.cv_itol;
-    //cv_mem->cv_reltol = sd->mdv.cv_reltol;
     cv_mem->cv_reltol = sd->mdv.cv_reltol;
     cv_mem->cv_nhnil = sd->mdv.cv_nhnil;
     cv_mem->cv_etaqm1 = sd->mdv.cv_etaqm1;
@@ -5647,7 +6219,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
 
     kflag=flag;
 
-    //printf("DEV_cudacvStep counterBiConjGrad %d\n",bicg->counterBiConjGrad);
+    printf("DEV_cudacvStep counterBiConjGrad %d\n",bicg->counterBiConjGrad);
 
     /* Call cvStep to take a step */
     //kflag = cvStep(cv_mem);
@@ -5666,28 +6238,75 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     bicg->countercvStep++;
 #endif
 
+#ifdef DEV_CUDACVODE
 
-#ifndef DEV_CUDACVODE
-
-    /* Process failed step cases, and exit loop */
     if (kflag != CV_SUCCESS) {
       istate = cvHandleFailure_gpu2(cv_mem, kflag);
       cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
       N_VScale(ONE, cv_mem->cv_zn[0], yout);
       break;
+    }
+
+    nstloc++;
+
+    /*
+
+    //kflag=flag;
+    kflag=sd->mdv.flag;
+
+    if (kflag != CV_SUCCESS){
+      istate = cvHandleFailure_gpu2(cv_mem, kflag);
+    }
+
+    */
+
+    /* Check for root in last step taken. */
+    if (cv_mem->cv_nrtfn > 0) {
+
+      retval = cvRcheck3_gpu2(cv_mem);
+      //retval = cvRcheck3_gpu3(cv_mem);
+
+      if (retval == RTFOUND) {  /* A new root was found */
+        cv_mem->cv_irfnd = 1;
+        istate = CV_ROOT_RETURN;
+        cv_mem->cv_tretlast = *tret = cv_mem->cv_tlo;
+        break;
+      } else if (retval == CV_RTFUNC_FAIL) { /* g failed */
+        cvProcessError(cv_mem, CV_RTFUNC_FAIL, "CVODE", "cvRcheck3",
+                       MSGCV_RTFUNC_FAILED, cv_mem->cv_tlo);
+        istate = CV_RTFUNC_FAIL;
+        break;
+      }
+
+      /* If we are at the end of the first step and we still have
+       * some event functions that are inactive, issue a warning
+       * as this may indicate a user error in the implementation
+       * of the root function. */
+
+      if (cv_mem->cv_nst==1) {
+        inactive_roots = SUNFALSE;
+        for (ir=0; ir<cv_mem->cv_nrtfn; ir++) {
+          if (!cv_mem->cv_gactive[ir]) {
+            inactive_roots = SUNTRUE;
+            break;
+          }
+        }
+        if ((cv_mem->cv_mxgnull > 0) && inactive_roots) {
+          cvProcessError(cv_mem, CV_WARNING, "CVODES", "CVode",
+                         MSGCV_INACTIVE_ROOTS);
+        }
+      }
+
     }
 
 #else
 
-    /* Process failed step cases, and exit loop */
     if (kflag != CV_SUCCESS) {
       istate = cvHandleFailure_gpu2(cv_mem, kflag);
       cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
       N_VScale(ONE, cv_mem->cv_zn[0], yout);
       break;
     }
-
-#endif
 
     nstloc++;
 
@@ -5728,6 +6347,8 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
       }
 
     }
+
+#endif
 
     /* In NORMAL mode, check if tout reached */
     if ( (itask == CV_NORMAL) &&  (cv_mem->cv_tn-tout)*cv_mem->cv_h >= ZERO ) {
@@ -8376,8 +8997,6 @@ int linsolsetup_gpu2(SolverData *sd, CVodeMem cv_mem,int convfail,N_Vector vtemp
 
 #endif
 
-  //if(bicg->counterBiConjGrad==0)
-    //check_input(mGPU->ddiag,mGPU->nrows,0);
 
   //return(cvdls_mem->last_flag);
   return retval;

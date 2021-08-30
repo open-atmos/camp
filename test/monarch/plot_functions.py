@@ -127,15 +127,6 @@ def normalize_by_counterLS_and_cells(data,plot_y_key,cells,case):
   else:
     raise Exception("normalize_by_counterLS_and_cells case without One-cell or Multi-cells key name")
 
-  #if("One-cell" in case and "CPU" in case):
-    #print("One-cell")
-  #  cells_multiply=cells
-  #elif("Multi-cells" in case or "GPU" in case):
-    #print("Multi-cells")
-    #cells_multiply=1
-  #else:
-  #  raise Exception("normalize_by_counterLS_and_cells case without One-cell or Multi-cells key name")
-
   #print(cells_multiply)
 
   #data[case][new_plot_y_key] = []
@@ -144,10 +135,36 @@ def normalize_by_counterLS_and_cells(data,plot_y_key,cells,case):
     data[plot_y_key][i]=data[plot_y_key][i]\
     /data["counterLS"][i]*cells_multiply
 
-  #for i in range(len(data[case][plot_y_key])):
+  #print(data[cases[0]][plot_y_key])
+  #print(data)
+
+  return data
+
+def normalize_by_countercvStep_and_cells(data,plot_y_key,cells,case):
+
+  #plot_y_key = "timeLS"
+  #new_plot_y_key="Normalized timeLS"
+
+  print("normalize_by_countercvStep_and_cells")
+
+  #print(data[cases[0]][plot_y_key])
+
+  if("One-cell" in case):
+    #print("One-cell")
+    cells_multiply=cells
+  elif("Multi-cells" in case):
+    #print("Multi-cells")
+    cells_multiply=1
+  else:
+    raise Exception("normalize_by_counterLS_and_cells case without One-cell or Multi-cells key name")
+
+  #print(cells_multiply)
+
+  #data[case][new_plot_y_key] = []
+  for i in range(len(data[plot_y_key])):
     #print(base_data[i],new_data[i], base_data[i]/new_data[i])
-    #data[case][plot_y_key][i]=data[case][plot_y_key][i] \
-    #                          /data[case]["counterLS"][i]*cells_multiply
+    data[plot_y_key][i]=data[plot_y_key][i] \
+                        /data["countercvStep"][i]*cells_multiply
 
   #print(data[cases[0]][plot_y_key])
   #print(data)
