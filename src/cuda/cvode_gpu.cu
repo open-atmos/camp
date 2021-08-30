@@ -3800,7 +3800,7 @@ void cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
 
 
-#ifdef DEV_CUDACVODE
+#ifndef DEV_CUDACVODE
 
 
   if (dmdv->kflag != CV_SUCCESS) {
@@ -4379,8 +4379,7 @@ void solveCVODEGPU_thr(int blocks, int threads_block, int n_shr_memory, int n_sh
 
 #ifdef PMC_DEBUG_GPU
 
-  //bicg->counterBiConjGrad++;
-  bicg->counterBiConjGrad=bicg->counterBiConjGrad+1;
+  bicg->counterBiConjGrad++;
 
 #endif
 
@@ -5436,6 +5435,8 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     double *ftemp = NV_DATA_S(cv_mem->cv_ftemp);
     double *cv_last_yn = N_VGetArrayPointer(cv_mem->cv_last_yn);
     double *cv_acor_init = N_VGetArrayPointer(cv_mem->cv_acor_init);
+    double *youtArray = N_VGetArrayPointer(yout);
+
 
     int flag = 0; //CAMP_SOLVER_SUCCESS
     //int flag = 999;
@@ -5511,7 +5512,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     cudaMemcpy(mGPU->dftemp, ftemp, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice);
     cudaMemcpy(mGPU->cv_last_yn, cv_last_yn, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice);
     cudaMemcpy(mGPU->cv_acor_init, cv_acor_init, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice);
-    cudaMemcpy(mGPU->yout, yout, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice);
+    cudaMemcpy(mGPU->yout, youtArray, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice);
 
 
     for (int i = 0; i <= cv_mem->cv_qmax; i++) {//cv_qmax+1 (6)?
@@ -5602,7 +5603,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     cudaMemcpy(ftemp, mGPU->dftemp, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost);
     cudaMemcpy(cv_last_yn, mGPU->cv_last_yn, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost);
     cudaMemcpy(cv_acor_init, mGPU->cv_acor_init, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost);
-    cudaMemcpy(yout, mGPU->yout, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost);
+    cudaMemcpy(youtArray, mGPU->yout, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost);
 
     for (int i = 0; i <= cv_mem->cv_qmax; i++) {//cv_qmax+1 (6)?
       double *zn = NV_DATA_S(cv_mem->cv_zn[i]);
@@ -5641,7 +5642,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
 #endif
 
 
-#ifdef DEV_CUDACVODE
+#ifndef DEV_CUDACVODE
 
     kflag=flag;
 

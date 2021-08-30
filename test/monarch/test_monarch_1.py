@@ -366,11 +366,11 @@ def all_timesteps():
     plot_functions.plot_percentages_solveCVODEGPU( \
       data,namex,namey,datax,datay,plot_title)
 
+  mpiProcessesList2=mpiProcessesList[:]
   for i in range(len(cases)):
     if(len(mpiProcessesList)<len(cases)):
-      mpiProcessesList.append(mpiProcessesList[0])
-    print("Case",i,":",cases[i],"MPI processes:",
-          mpiProcessesList[i])
+      mpiProcessesList2=mpiProcessesList2+[mpiProcessesList[0]]
+    print("Case",i,":",cases[i],"MPI processes:",mpiProcessesList2[i])
 
   print("Cells:",cells,"Timesteps:",timesteps)
   print(namey,":",datay)
