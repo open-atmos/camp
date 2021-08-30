@@ -3799,15 +3799,10 @@ void cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
   __syncthreads();
 
 
-
-#ifndef DEV_CUDACVODE
-
-
   if (dmdv->kflag != CV_SUCCESS) {
 
     //istate = cvHandleFailure_gpu2(cv_mem, kflag);
     //dmdv->istate = dmdv->kflag;
-
     //cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
     dmdv->cv_tretlast = dmdv->tret = dmdv->cv_tn;
 
@@ -3818,6 +3813,9 @@ void cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
     return;
   }
 
+#ifndef DEV_CUDACVODE
+
+  dmdv->nstloc++;
 
 #else
 #endif
@@ -5436,10 +5434,10 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     double *cv_acor_init = N_VGetArrayPointer(cv_mem->cv_acor_init);
     double *youtArray = N_VGetArrayPointer(yout);
 
-
     int flag = 0; //CAMP_SOLVER_SUCCESS
     //int flag = 999;
 
+    sd->mdv.nstloc = nstloc;
     sd->mdv.tret = *tret;
     sd->mdv.cv_tretlast = cv_mem->cv_tretlast;
     sd->mdv.istate = istate;
@@ -5537,6 +5535,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
 
     cudaMemcpy(&sd->mdv, mGPU->mdvo, sizeof(ModelDataVariable), cudaMemcpyDeviceToHost);
 
+    nstloc = sd->mdv.nstloc;
     *tret = sd->mdv.tret;
     cv_mem->cv_tretlast = sd->mdv.cv_tretlast;
     istate = sd->mdv.istate;
@@ -5640,9 +5639,6 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     bicg->countercvStep++;
 #endif
 
-
-#ifndef DEV_CUDACVODE
-
     //kflag=flag;
     kflag=sd->mdv.flag;
 
@@ -5650,29 +5646,49 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
       istate = cvHandleFailure_gpu2(cv_mem, kflag);
     }
 
-    /*
-    if (kflag != CV_SUCCESS) {
-      istate = cvHandleFailure_gpu2(cv_mem, kflag);
-      cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
-      N_VScale(ONE, cv_mem->cv_zn[0], yout);
-      break;
-    }
-*/
+#ifndef DEV_CUDACVODE
 
+    //nstloc++;
+
+    /* Check for root in last step taken. */
+    if (cv_mem->cv_nrtfn > 0) {
+
+      retval = cvRcheck3_gpu2(cv_mem);
+
+      if (retval == RTFOUND) {  /* A new root was found */
+        cv_mem->cv_irfnd = 1;
+        istate = CV_ROOT_RETURN;
+        cv_mem->cv_tretlast = *tret = cv_mem->cv_tlo;
+        break;
+      } else if (retval == CV_RTFUNC_FAIL) { /* g failed */
+        cvProcessError(cv_mem, CV_RTFUNC_FAIL, "CVODE", "cvRcheck3",
+                       MSGCV_RTFUNC_FAILED, cv_mem->cv_tlo);
+        istate = CV_RTFUNC_FAIL;
+        break;
+      }
+
+      /* If we are at the end of the first step and we still have
+       * some event functions that are inactive, issue a warning
+       * as this may indicate a user error in the implementation
+       * of the root function. */
+
+      if (cv_mem->cv_nst==1) {
+        inactive_roots = SUNFALSE;
+        for (ir=0; ir<cv_mem->cv_nrtfn; ir++) {
+          if (!cv_mem->cv_gactive[ir]) {
+            inactive_roots = SUNTRUE;
+            break;
+          }
+        }
+        if ((cv_mem->cv_mxgnull > 0) && inactive_roots) {
+          cvProcessError(cv_mem, CV_WARNING, "CVODES", "CVode",
+                         MSGCV_INACTIVE_ROOTS);
+        }
+      }
+
+    }
 
 #else
-
-    kflag=flag;
-
-    /* Process failed step cases, and exit loop */
-    if (kflag != CV_SUCCESS) {
-      istate = cvHandleFailure_gpu2(cv_mem, kflag);
-      cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
-      N_VScale(ONE, cv_mem->cv_zn[0], yout);
-      break;
-    }
-
-#endif
 
     nstloc++;
 
@@ -5713,6 +5729,8 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
       }
 
     }
+
+#endif
 
     /* In NORMAL mode, check if tout reached */
     if ( (itask == CV_NORMAL) &&  (cv_mem->cv_tn-tout)*cv_mem->cv_h >= ZERO ) {
