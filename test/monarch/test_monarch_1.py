@@ -117,6 +117,9 @@ def run_cell(config_file,diff_cells,mpi,mpiProcessesList,n_cells_aux,timesteps,
     #print("len(mpiProcessesList)==len(cases)",len(cases))
       mpiProcesses=mpiProcessesList[i]
       n_cells = int(n_cells_aux/mpiProcesses)
+      if(n_cells==0):
+        print("WARNING: More MPI processes than cells")
+        n_cells=1
       #mpiProcesses=mpiProcessesList[i]
       #n_cells=n_cells_aux
     else:
@@ -212,11 +215,13 @@ def all_timesteps():
   mpi="yes"
   #mpi="no"
 
-  mpiProcessesList = [40]
-  #mpiProcessesList = [40,1]
+  #mpiProcessesList = [40]
+  mpiProcessesList = [40,1]
 
-  cells = [1000]
-  #cells = [1,10,100,1000]
+
+  #cells = [10]
+  cells = [100]
+  #cells = [100,1000,5000,10000]
   #cells = [1,10,100,1000,10000,100000]
 
   timesteps = 1#720=12h
@@ -247,10 +252,11 @@ def all_timesteps():
   #plot_y_key = "Speedup normalized counterBCG"
   #plot_y_key = "Speedup BCG iteration (Comp.timeLS/counterBCG)"
   #plot_y_key = "Percentages solveCVODEGPU" #Uncomment function
+  plot_y_key = "Speedup timecvStep"
 
   #plot_y_key = "% Time data transfers CPU-GPU BCG"
   #plot_y_key="NRMSE"
-  plot_y_key="MAPE"
+  #plot_y_key="MAPE"
   #plot_y_key="SMAPE"
 
   SAVE_PLOT=False

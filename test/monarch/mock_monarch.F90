@@ -289,7 +289,7 @@ program mock_monarch
     str_to_int_aux = trim(arg)
     read(str_to_int_aux, *) ntimers
   else
-    ntimers = 13!5
+    ntimers = 14!5 !todo read automatically in .py
     !print*, "WARNING: not ntimers parameter received, value set to ",ntimers
   end if
 
@@ -740,7 +740,7 @@ contains
 
     str_stats_names = "timestep,counterBCG,counterLS,countersolveCVODEGPU,timeLS,timeBiconjGradMemcpy,timeCVode,&
             dtPreBCG,dtPostBCG,timesolveCVODEGPU,timeNewtonIteration,timeJac,timelinsolsetup,timecalc_Jac,&
-            timeRXNJac,timef,timeguess_helper"
+            timeRXNJac,timef,timeguess_helper,timecvStep"
 
     write(STATSOUT_FILE_UNIT2, "(A)", advance="no") str_stats_names
     write(STATSOUT_FILE_UNIT2, '(a)') ''
@@ -839,7 +839,7 @@ contains
     integer :: n_cells_print
 
     file_name = file_prefix//"_results_all_cells.csv"
-    print*,file_name
+    !print*,file_name
     open(RESULTS_ALL_CELLS_FILE_UNIT, file=file_name, status="replace", action="write")
 
     if(NUM_WE_CELLS*NUM_SN_CELLS*NUM_VERT_CELLS.gt.1000) then
