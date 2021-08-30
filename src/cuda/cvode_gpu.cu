@@ -3814,7 +3814,6 @@ void cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
     //N_VScale(ONE, md->dzn[0], yout);
     md->yout[i]=md->dzn[i];
 
-
     //break;
     return;
   }
@@ -5644,7 +5643,8 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
 
 #ifndef DEV_CUDACVODE
 
-    kflag=flag;
+    //kflag=flag;
+    kflag=sd->mdv.flag;
 
     if (kflag != CV_SUCCESS){
       istate = cvHandleFailure_gpu2(cv_mem, kflag);

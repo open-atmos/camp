@@ -222,7 +222,7 @@ def all_timesteps():
   #mpiProcessesList = [40,1]
 
 
-  cells = [100]
+  cells = [1000]
   #cells = [100,1000,5000,10000]
   #cells = [1,10,100,1000,10000,100000]
 
@@ -367,12 +367,12 @@ def all_timesteps():
       data,namex,namey,datax,datay,plot_title)
 
   mpiProcessesList2=mpiProcessesList[:]
-  for i in range(len(cases)):
-    if(len(mpiProcessesList)<len(cases)):
-      mpiProcessesList2=mpiProcessesList2+[mpiProcessesList[0]]
-    print("Case",i,":",cases[i],"MPI processes:",mpiProcessesList2[i])
+  #for i in range(len(cases)):
+  #  if(len(mpiProcessesList)<len(cases)):
+  #    mpiProcessesList2=mpiProcessesList2+[mpiProcessesList[0]]
+  #  print("Case",i,":",cases[i],"MPI processes:",mpiProcessesList2[i])
 
-  print("Cells:",cells,"Timesteps:",timesteps)
+  #print("Cells:",cells,"Timesteps:",timesteps)
   print(namey,":",datay)
 
   #plot_functions.plot(namex,namey,datax,datay,plot_title,SAVE_PLOT)
