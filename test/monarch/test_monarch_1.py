@@ -218,11 +218,11 @@ def all_timesteps():
   mpi="yes"
   #mpi="no"
 
-  mpiProcessesList = [40]
+  mpiProcessesList = [1]
   #mpiProcessesList = [40,1]
 
 
-  cells = [1000]
+  cells = [100]
   #cells = [100,1000,5000,10000]
   #cells = [1,10,100,1000,10000,100000]
 
@@ -231,10 +231,10 @@ def all_timesteps():
 
   #cases = ["CPU One-cell"]
   #cases = ["CPU Multi-cells"]
-  cases = ["GPU One-cell"]
+  #cases = ["GPU One-cell"]
   #cases = ["CPU One-cell","CPU Multi-cells"]
   #cases = ["CPU One-cell","GPU Multi-cells"]
-  #cases = ["CPU One-cell","GPU One-cell"]
+  cases = ["CPU One-cell","GPU One-cell"]
   #cases = ["CPU Multi-cells","GPU Multi-cells"]
   #cases = ["CPU Multi-cells","GPU One-cell"]
   #cases = ["GPU One-cell","GPU Multi-cells"]
