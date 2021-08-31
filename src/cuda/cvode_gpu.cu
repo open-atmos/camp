@@ -4105,9 +4105,7 @@ void cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
   dmdv->flag = dmdv->kflag;
   __syncthreads();
 
-#ifdef DEV_CUDACVODE
-
-  /*
+#ifndef DEV_CUDACVODE
 
   if (dmdv->kflag != CV_SUCCESS) {
 
@@ -4125,6 +4123,7 @@ void cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
   dmdv->nstloc++;
 
+  /*
 
   if (cv_mem->cv_nrtfn > 0) {
 
@@ -6251,8 +6250,16 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     bicg->countercvStep++;
 #endif
 
-#ifdef DEV_CUDACVODE
+#ifndef DEV_CUDACVODE
 
+    kflag=flag;
+    //kflag=sd->mdv.flag;
+
+    if (kflag != CV_SUCCESS){
+      istate = cvHandleFailure_gpu2(cv_mem, kflag);
+    }
+
+    /*
     if (kflag != CV_SUCCESS) {
       istate = cvHandleFailure_gpu2(cv_mem, kflag);
       cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
@@ -6261,17 +6268,8 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     }
 
     nstloc++;
+*/
 
-    /*
-
-    //kflag=flag;
-    kflag=sd->mdv.flag;
-
-    if (kflag != CV_SUCCESS){
-      istate = cvHandleFailure_gpu2(cv_mem, kflag);
-    }
-
-    */
 
     /* Check for root in last step taken. */
     if (cv_mem->cv_nrtfn > 0) {
