@@ -271,6 +271,9 @@ typedef struct {
     int *cv_gactive; //cv_mem->cv_nrtfn, probably 0
     double *cv_grout; //cv_mem->cv_nrtfn
     double *cv_glo; //cv_mem->cv_nrtfn
+    double *cv_ghi; //cv_mem->cv_nrtfn
+    int *cv_rootdir; //cv_mem->cv_nrtfn
+    int *cv_iroots; //cv_mem->cv_nrtfn
 
     //Allocated in GPU only
     int i_cell;

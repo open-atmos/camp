@@ -2088,6 +2088,9 @@ void alloc_solver_gpu2(CVodeMem cv_mem, SolverData *sd)
   cudaMalloc((void**)&mGPU->cv_gactive,cv_mem->cv_nrtfn*sizeof(int));
   cudaMalloc((void**)&mGPU->cv_grout,cv_mem->cv_nrtfn*sizeof(double));
   cudaMalloc((void**)&mGPU->cv_glo,cv_mem->cv_nrtfn*sizeof(double));
+  cudaMalloc((void**)&mGPU->cv_ghi,cv_mem->cv_nrtfn*sizeof(double));
+  cudaMalloc((void**)&mGPU->cv_rootdir,cv_mem->cv_nrtfn*sizeof(int));
+  cudaMalloc((void**)&mGPU->cv_iroots,cv_mem->cv_nrtfn*sizeof(int));
 
 
   cudaMemcpy(mGPU->djA,bicg->jA,mGPU->nnz*sizeof(int),cudaMemcpyHostToDevice);
@@ -3810,9 +3813,9 @@ int cudaDevicecvRootfind(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
 /*
 
-  realtype alph, tmid, gfrac, maxfrac, fracint, fracsub;
+  double alph, tmid, gfrac, maxfrac, fracint, fracsub;
   int z, retval, imax, side, sideprev;
-  booleantype zroot, sgnchg;
+  int zroot, sgnchg;
 
   imax = 0;
 
@@ -3820,16 +3823,16 @@ int cudaDevicecvRootfind(ModelDataGPU *md, ModelDataVariable *dmdv) {
   maxfrac = ZERO;
   zroot = SUNFALSE;
   sgnchg = SUNFALSE;
-  for (z = 0;  z < cv_mem->cv_nrtfn; z++) {
-    if(!cv_mem->cv_gactive[z]) continue;
-    if (fabs(cv_mem->cv_ghi[z]) == ZERO) {
-      if(cv_mem->cv_rootdir[z]*cv_mem->cv_glo[z] <= ZERO) {
+  for (z = 0;  z < dmdv->cv_nrtfn; z++) {
+    if(!md->cv_gactive[z]) continue; //should be always active
+    if (fabs(md->cv_ghi[z]) == ZERO) {
+      if(md->cv_rootdir[z]*md->cv_glo[z] <= ZERO) {
         zroot = SUNTRUE;
       }
     } else {
-      if ( (cv_mem->cv_glo[z]*cv_mem->cv_ghi[z] < ZERO) &&
-           (cv_mem->cv_rootdir[z]*cv_mem->cv_glo[z] <= ZERO) ) {
-        gfrac = SUNRabs(cv_mem->cv_ghi[z]/(cv_mem->cv_ghi[z] - cv_mem->cv_glo[z]));
+      if ( (md->cv_glo[z]*md->cv_ghi[z] < ZERO) &&
+           (md->cv_rootdir[z]*md->cv_glo[z] <= ZERO) ) {
+        gfrac = fabs(md->cv_ghi[z]/(md->cv_ghi[z] - md->cv_glo[z]));
         if (gfrac > maxfrac) {
           sgnchg = SUNTRUE;
           maxfrac = gfrac;
@@ -3842,15 +3845,15 @@ int cudaDevicecvRootfind(ModelDataGPU *md, ModelDataVariable *dmdv) {
   // If no sign change was found, reset trout and grout.  Then return
   //   CV_SUCCESS if no zero was found, or set iroots and return RTFOUND.
   if (!sgnchg) {
-    cv_mem->cv_trout = cv_mem->cv_thi;
-    for (z = 0; z < cv_mem->cv_nrtfn; z++) cv_mem->cv_grout[z] = cv_mem->cv_ghi[z];
+    dmdv->cv_trout = dmdv->cv_thi;
+    for (z = 0; z < dmdv->cv_nrtfn; z++) md->cv_grout[z] = md->cv_ghi[z];
     if (!zroot) return(CV_SUCCESS);
-    for (z = 0; z < cv_mem->cv_nrtfn; z++) {
-      cv_mem->cv_iroots[z] = 0;
-      if(!cv_mem->cv_gactive[z]) continue;
-      if ( (SUNRabs(cv_mem->cv_ghi[z]) == ZERO) &&
-           (cv_mem->cv_rootdir[z]*cv_mem->cv_glo[z] <= ZERO) )
-        cv_mem->cv_iroots[z] = cv_mem->cv_glo[z] > 0 ? -1 : 1;
+    for (z = 0; z < dmdv->cv_nrtfn; z++) {
+      md->cv_iroots[z] = 0;
+      if(!md->cv_gactive[z]) continue;
+      if ( (SUNRabs(md->cv_ghi[z]) == ZERO) &&
+           (md->cv_rootdir[z]*md->cv_glo[z] <= ZERO) )
+        md->cv_iroots[z] = md->cv_glo[z] > 0 ? -1 : 1;
     }
     return(RTFOUND);
   }
@@ -3864,7 +3867,7 @@ int cudaDevicecvRootfind(ModelDataGPU *md, ModelDataVariable *dmdv) {
   for(;;) {                                    // Looping point
 
     // If interval size is already less than tolerance ttol, break.
-    if (SUNRabs(cv_mem->cv_thi - cv_mem->cv_tlo) <= cv_mem->cv_ttol) break;
+    if (fabs(dmdv->cv_thi - dmdv->cv_tlo) <= dmdv->cv_ttol) break;
 
     // Set weight alph.
     //   On the first two passes, set alph = 1.  Thereafter, reset alph
@@ -3885,24 +3888,27 @@ int cudaDevicecvRootfind(ModelDataGPU *md, ModelDataVariable *dmdv) {
     // Set next root approximation tmid and get g(tmid).
     //   If tmid is too close to tlo or thi, adjust it inward,
     //   by a fractional distance that is between 0.1 and 0.5.
-    tmid = cv_mem->cv_thi - (cv_mem->cv_thi - cv_mem->cv_tlo) *
-                            cv_mem->cv_ghi[imax] / (cv_mem->cv_ghi[imax] - alph*cv_mem->cv_glo[imax]);
-    if (SUNRabs(tmid - cv_mem->cv_tlo) < HALF*cv_mem->cv_ttol) {
-      fracint = SUNRabs(cv_mem->cv_thi - cv_mem->cv_tlo)/cv_mem->cv_ttol;
+    tmid = dmdv->cv_thi - (dmdv->cv_thi - dmdv->cv_tlo) *
+                            md->cv_ghi[imax] / (md->cv_ghi[imax] - alph*md->cv_glo[imax]);
+    if (fabs(tmid - dmdv->cv_tlo) < HALF*dmdv->cv_ttol) {
+      fracint = fabs(dmdv->cv_thi - dmdv->cv_tlo)/dmdv->cv_ttol;
       fracsub = (fracint > FIVE) ? PT1 : HALF/fracint;
-      tmid = cv_mem->cv_tlo + fracsub*(cv_mem->cv_thi - cv_mem->cv_tlo);
+      tmid = dmdv->cv_tlo + fracsub*(dmdv->cv_thi - dmdv->cv_tlo);
     }
-    if (SUNRabs(cv_mem->cv_thi - tmid) < HALF*cv_mem->cv_ttol) {
-      fracint = SUNRabs(cv_mem->cv_thi - cv_mem->cv_tlo)/cv_mem->cv_ttol;
+    if (fabs(dmdv->cv_thi - tmid) < HALF*dmdv->cv_ttol) {
+      fracint = SUNRabs(dmdv->cv_thi - dmdv->cv_tlo)/dmdv->cv_ttol;
       fracsub = (fracint > FIVE) ? PT1 : HALF/fracint;
-      tmid = cv_mem->cv_thi - fracsub*(cv_mem->cv_thi - cv_mem->cv_tlo);
+      tmid = dmdv->cv_thi - fracsub*(dmdv->cv_thi - dmdv->cv_tlo);
     }
 
-    (void) CVodeGetDky(cv_mem, tmid, 0, cv_mem->cv_y);
-    retval = cv_mem->cv_gfun(tmid, cv_mem->cv_y, cv_mem->cv_grout,
-                             cv_mem->cv_user_data);
-    cv_mem->cv_nge++;
-    if (retval != 0) return(CV_RTFUNC_FAIL);
+    //(void) CVodeGetDky(cv_mem, tmid, 0, cv_mem->cv_y);
+    cudaDeviceCVodeGetDky(md, dmdv, tmid, 0, md->cv_y);
+
+    //retval = cv_mem->cv_gfun(tmid, cv_mem->cv_y, cv_mem->cv_grout,
+    //                         cv_mem->cv_user_data);
+    //cv_mem->cv_nge++;
+    //if (retval != 0) return(CV_RTFUNC_FAIL);
+    //Not used in camp
 
     // Check to see in which subinterval g changes sign, and reset imax.
     //   Set side = 1 if sign change is on low side, or 2 if on high side.
@@ -3910,14 +3916,14 @@ int cudaDevicecvRootfind(ModelDataGPU *md, ModelDataVariable *dmdv) {
     zroot = SUNFALSE;
     sgnchg = SUNFALSE;
     sideprev = side;
-    for (z = 0;  z < cv_mem->cv_nrtfn; z++) {
-      if(!cv_mem->cv_gactive[z]) continue;
-      if (SUNRabs(cv_mem->cv_grout[z]) == ZERO) {
-        if(cv_mem->cv_rootdir[z]*cv_mem->cv_glo[z] <= ZERO) zroot = SUNTRUE;
+    for (z = 0;  z < dmdv->cv_nrtfn; z++) {
+      if(!md->cv_gactive[z]) continue;
+      if (fabs(md->cv_grout[z]) == ZERO) {
+        if(md->cv_rootdir[z]*md->cv_glo[z] <= ZERO) zroot = SUNTRUE;
       } else {
-        if ( (cv_mem->cv_glo[z]*cv_mem->cv_grout[z] < ZERO) &&
-             (cv_mem->cv_rootdir[z]*cv_mem->cv_glo[z] <= ZERO) ) {
-          gfrac = SUNRabs(cv_mem->cv_grout[z]/(cv_mem->cv_grout[z] - cv_mem->cv_glo[z]));
+        if ( (md->cv_glo[z]*md->cv_grout[z] < ZERO) &&
+             (md->cv_rootdir[z]*md->cv_glo[z] <= ZERO) ) {
+          gfrac = fabs(md->cv_grout[z]/(md->cv_grout[z] - md->cv_glo[z]));
           if (gfrac > maxfrac) {
             sgnchg = SUNTRUE;
             maxfrac = gfrac;
@@ -3928,46 +3934,46 @@ int cudaDevicecvRootfind(ModelDataGPU *md, ModelDataVariable *dmdv) {
     }
     if (sgnchg) {
       // Sign change found in (tlo,tmid); replace thi with tmid.
-      cv_mem->cv_thi = tmid;
-      for (z = 0; z < cv_mem->cv_nrtfn; z++)
-        cv_mem->cv_ghi[z] = cv_mem->cv_grout[z];
+      dmdv->cv_thi = tmid;
+      for (z = 0; z < dmdv->cv_nrtfn; z++)
+        md->cv_ghi[z] = md->cv_grout[z];
       side = 1;
       // Stop at root thi if converged; otherwise loop.
-      if (SUNRabs(cv_mem->cv_thi - cv_mem->cv_tlo) <= cv_mem->cv_ttol) break;
+      if (fabs(dmdv->cv_thi - dmdv->cv_tlo) <= dmdv->cv_ttol) break;
       continue;  // Return to looping point.
     }
 
     if (zroot) {
       // No sign change in (tlo,tmid), but g = 0 at tmid; return root tmid.
-      cv_mem->cv_thi = tmid;
-      for (z = 0; z < cv_mem->cv_nrtfn; z++)
-        cv_mem->cv_ghi[z] = cv_mem->cv_grout[z];
+      dmdv->cv_thi = tmid;
+      for (z = 0; z < dmdv->cv_nrtfn; z++)
+        md->cv_ghi[z] = md->cv_grout[z];
       break;
     }
 
     // No sign change in (tlo,tmid), and no zero at tmid.
     //   Sign change must be in (tmid,thi).  Replace tlo with tmid.
-    cv_mem->cv_tlo = tmid;
-    for (z = 0; z < cv_mem->cv_nrtfn; z++)
-      cv_mem->cv_glo[z] = cv_mem->cv_grout[z];
+    dmdv->cv_tlo = tmid;
+    for (z = 0; z < dmdv->cv_nrtfn; z++)
+      md->cv_glo[z] = md->cv_grout[z];
     side = 2;
     // Stop at root thi if converged; otherwise loop back.
-    if (SUNRabs(cv_mem->cv_thi - cv_mem->cv_tlo) <= cv_mem->cv_ttol) break;
+    if (fabs(dmdv->cv_thi - dmdv->cv_tlo) <= dmdv->cv_ttol) break;
 
   } // End of root-search loop
 
   // Reset trout and grout, set iroots, and return RTFOUND.
-  cv_mem->cv_trout = cv_mem->cv_thi;
-  for (z = 0; z < cv_mem->cv_nrtfn; z++) {
-    cv_mem->cv_grout[z] = cv_mem->cv_ghi[z];
-    cv_mem->cv_iroots[z] = 0;
-    if(!cv_mem->cv_gactive[z]) continue;
-    if ( (SUNRabs(cv_mem->cv_ghi[z]) == ZERO) &&
-         (cv_mem->cv_rootdir[z]*cv_mem->cv_glo[z] <= ZERO) )
-      cv_mem->cv_iroots[z] = cv_mem->cv_glo[z] > 0 ? -1 : 1;
-    if ( (cv_mem->cv_glo[z]*cv_mem->cv_ghi[z] < ZERO) &&
-         (cv_mem->cv_rootdir[z]*cv_mem->cv_glo[z] <= ZERO) )
-      cv_mem->cv_iroots[z] = cv_mem->cv_glo[z] > 0 ? -1 : 1;
+  dmdv->cv_trout = dmdv->cv_thi;
+  for (z = 0; z < dmdv->cv_nrtfn; z++) {
+    md->cv_grout[z] = md->cv_ghi[z];
+    md->cv_iroots[z] = 0;
+    if(!md->cv_gactive[z]) continue;
+    if ( (fabs(md->cv_ghi[z]) == ZERO) &&
+         (md->cv_rootdir[z]*md->cv_glo[z] <= ZERO) )
+      md->cv_iroots[z] = md->cv_glo[z] > 0 ? -1 : 1;
+    if ( (md->cv_glo[z]*md->cv_ghi[z] < ZERO) &&
+         (md->cv_rootdir[z]*md->cv_glo[z] <= ZERO) )
+      md->cv_iroots[z] = md->cv_glo[z] > 0 ? -1 : 1;
   }
   return(RTFOUND);
 
@@ -6156,6 +6162,9 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     cudaMemcpy(mGPU->cv_gactive, cv_mem->cv_gactive, cv_mem->cv_nrtfn * sizeof(int), cudaMemcpyHostToDevice);
     cudaMemcpy(mGPU->cv_grout, cv_mem->cv_grout, cv_mem->cv_nrtfn * sizeof(double), cudaMemcpyHostToDevice);
     cudaMemcpy(mGPU->cv_glo, cv_mem->cv_glo, cv_mem->cv_nrtfn * sizeof(double), cudaMemcpyHostToDevice);
+    cudaMemcpy(mGPU->cv_ghi, cv_mem->cv_ghi, cv_mem->cv_nrtfn * sizeof(double), cudaMemcpyHostToDevice);
+    cudaMemcpy(mGPU->cv_rootdir, cv_mem->cv_rootdir, cv_mem->cv_nrtfn * sizeof(int), cudaMemcpyHostToDevice);
+    cudaMemcpy(mGPU->cv_iroots, cv_mem->cv_iroots, cv_mem->cv_nrtfn * sizeof(int), cudaMemcpyHostToDevice);
 
 
     cudaMemcpy(mGPU->dewt,ewt,mGPU->nrows*sizeof(double),cudaMemcpyHostToDevice);
@@ -6263,6 +6272,9 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     cudaMemcpy(cv_mem->cv_gactive, mGPU->cv_gactive, cv_mem->cv_nrtfn * sizeof(int), cudaMemcpyDeviceToHost);
     cudaMemcpy(cv_mem->cv_grout, mGPU->cv_grout, cv_mem->cv_nrtfn * sizeof(double), cudaMemcpyDeviceToHost);
     cudaMemcpy(cv_mem->cv_glo, mGPU->cv_glo, cv_mem->cv_nrtfn * sizeof(double), cudaMemcpyDeviceToHost);
+    cudaMemcpy(cv_mem->cv_ghi, mGPU->cv_ghi, cv_mem->cv_nrtfn * sizeof(double), cudaMemcpyDeviceToHost);
+    cudaMemcpy(cv_mem->cv_rootdir, mGPU->cv_rootdir, cv_mem->cv_nrtfn * sizeof(int), cudaMemcpyDeviceToHost);
+    cudaMemcpy(cv_mem->cv_iroots, mGPU->cv_iroots, cv_mem->cv_nrtfn * sizeof(int), cudaMemcpyDeviceToHost);
 
 
     cudaMemcpy(acor, mGPU->cv_acor, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost);
