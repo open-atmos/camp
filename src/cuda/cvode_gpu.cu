@@ -3826,11 +3826,11 @@ int cudaDeviceCVodeGetDky(ModelDataGPU *md, ModelDataVariable *dmdv,
    for (j=dmdv->cv_q; j >= k; j--) {
      c = 1.;
      for (z=j; z >= j-k+1; z--) c *= z;
-     if(i==0){ printf("cudaDeviceCVodeGetDky c %le s %le j %d dmdv->cv_q %d\n",
-             c, s, j), dmdv->cv_q;
+     //if(i==0){ printf("cudaDeviceCVodeGetDky c %le s %le j %d dmdv->cv_q %d\n",
+     //        c, s, j), dmdv->cv_q;
       //for(int n=0;n<md->nrows)
       //printf("")
-     }
+     //}
 
      if (j == dmdv->cv_q) {
        //N_VScale(c, md->dzn[dmdv->cv_q], dky);
@@ -3870,6 +3870,27 @@ void cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
   extern __shared__ int flag_shr[];
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   unsigned int tid = threadIdx.x;
+
+#ifndef DEV_CUDACVODE
+
+  if (dmdv->cv_tn + dmdv->cv_h == dmdv->cv_tn) {
+    dmdv->cv_nhnil++;
+    //if (dmdv->cv_nhnil <= dmdv->cv_mxhnil)
+    //  cvProcessError(dmdv, CV_WARNING, "CVODE", "CVode",
+    //                 MSGCV_HNIL, dmdv->cv_tn, dmdv->cv_h);
+    //if (dmdv->cv_nhnil == dmdv->cv_mxhnil)
+    //  cvProcessError(dmdv, CV_WARNING, "CVODE", "CVode", MSGCV_HNIL_DONE);
+
+#ifdef ODE_WARNING
+    if ((dmdv->cv_nhnil <= dmdv->cv_mxhnil) ||
+            (dmdv->cv_nhnil == dmdv->cv_mxhnil))
+      if(i==0)printf("WARNING: h below roundoff level in tn");
+#endif
+
+  }
+
+#else
+#endif
 
   dmdv->kflag = cudaDevicecvStep(md,dmdv);
   //int kflag2 = cudaDevicecvStep(md,dmdv);
@@ -3919,8 +3940,6 @@ void cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
     return;
   }
 
-#ifndef DEV_CUDACVODE
-
   if ( dmdv->cv_tstopset ) {
 
     double troundoff = FUZZ_FACTOR*dmdv->cv_uround*(fabs(dmdv->cv_tn) + fabs(dmdv->cv_h));
@@ -3940,12 +3959,6 @@ void cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
     }
 
   }
-
-#else
-#endif
-
-/*
- */
 
 }
 
@@ -5543,6 +5556,12 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
       cv_mem->cv_tolsf = ONE;
     }
 
+#ifndef DEV_CUDACVODE
+
+
+
+#else
+
     /* Check for h below roundoff level in tn */
     if (cv_mem->cv_tn + cv_mem->cv_h == cv_mem->cv_tn) {
       cv_mem->cv_nhnil++;
@@ -5552,6 +5571,9 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
       if (cv_mem->cv_nhnil == cv_mem->cv_mxhnil)
         cvProcessError(cv_mem, CV_WARNING, "CVODE", "CVode", MSGCV_HNIL_DONE);
     }
+
+
+#endif
 
 #ifdef PMC_DEBUG_GPU
     cudaEventRecord(bicg->startcvStep);
@@ -5781,7 +5803,6 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
 #endif
 
 
-
     //printf("cudaCVode flag %d kflag %d\n",flag, sd->mdv.flag);
 
     /*
@@ -5791,6 +5812,20 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     }
     */
 
+#ifndef DEV_CUDACVODE
+
+    /* Check for h below roundoff level in tn */
+
+      if (cv_mem->cv_tn + cv_mem->cv_h == cv_mem->cv_tn) {
+        //cv_mem->cv_nhnil++;
+        if (cv_mem->cv_nhnil <= cv_mem->cv_mxhnil)
+          cvProcessError(cv_mem, CV_WARNING, "CVODE", "CVode",
+                         MSGCV_HNIL, cv_mem->cv_tn, cv_mem->cv_h);
+        if (cv_mem->cv_nhnil == cv_mem->cv_mxhnil)
+          cvProcessError(cv_mem, CV_WARNING, "CVODE", "CVode", MSGCV_HNIL_DONE);
+      }
+
+#endif
 
     if (kflag != CV_SUCCESS) {
 
@@ -5825,29 +5860,6 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
       break;
     }
 
-#ifndef DEV_CUDACVODE
-
-    /* Check if tn is at tstop or near tstop */
-    /*
-    if ( cv_mem->cv_tstopset ) {
-
-      troundoff = FUZZ_FACTOR*cv_mem->cv_uround*(SUNRabs(cv_mem->cv_tn) + SUNRabs(cv_mem->cv_h));
-      if ( SUNRabs(cv_mem->cv_tn - cv_mem->cv_tstop) <= troundoff) {
-        (void) CVodeGetDky(cv_mem, cv_mem->cv_tstop, 0, yout);
-        cv_mem->cv_tretlast = *tret = cv_mem->cv_tstop;
-        cv_mem->cv_tstopset = SUNFALSE;
-        istate = CV_TSTOP_RETURN;
-        break;
-      }
-
-      if ( (cv_mem->cv_tn + cv_mem->cv_hprime - cv_mem->cv_tstop)*cv_mem->cv_h > ZERO ) {
-        cv_mem->cv_hprime = (cv_mem->cv_tstop - cv_mem->cv_tn)*(ONE-FOUR*cv_mem->cv_uround);
-        cv_mem->cv_eta = cv_mem->cv_hprime/cv_mem->cv_h;
-      }
-
-    }
-*/
-
     if ( cv_mem->cv_tstopset ) {
 
       troundoff = FUZZ_FACTOR*cv_mem->cv_uround*(SUNRabs(cv_mem->cv_tn) + SUNRabs(cv_mem->cv_h));
@@ -5866,32 +5878,8 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
 
     }
 
-#else
-
-    /* Check if tn is at tstop or near tstop */
-    if ( cv_mem->cv_tstopset ) {
-
-      troundoff = FUZZ_FACTOR*cv_mem->cv_uround*(SUNRabs(cv_mem->cv_tn) + SUNRabs(cv_mem->cv_h));
-      if ( SUNRabs(cv_mem->cv_tn - cv_mem->cv_tstop) <= troundoff) {
-        (void) CVodeGetDky(cv_mem, cv_mem->cv_tstop, 0, yout);
-        cv_mem->cv_tretlast = *tret = cv_mem->cv_tstop;
-        cv_mem->cv_tstopset = SUNFALSE;
-        istate = CV_TSTOP_RETURN;
-        break;
-      }
-
-      if ( (cv_mem->cv_tn + cv_mem->cv_hprime - cv_mem->cv_tstop)*cv_mem->cv_h > ZERO ) {
-        cv_mem->cv_hprime = (cv_mem->cv_tstop - cv_mem->cv_tn)*(ONE-FOUR*cv_mem->cv_uround);
-        cv_mem->cv_eta = cv_mem->cv_hprime/cv_mem->cv_h;
-      }
-
-    }
-
-#endif
-
-    /* In ONE_STEP mode, copy y and exit loop */
-
 #ifdef CV_ONE_STEP
+    /* In ONE_STEP mode, copy y and exit loop */
     if (itask == CV_ONE_STEP) { //never CV_ONE_STEP in CAMP
       istate = CV_SUCCESS;
       cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
