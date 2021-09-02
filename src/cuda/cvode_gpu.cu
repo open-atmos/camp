@@ -3870,8 +3870,33 @@ void cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
   extern __shared__ int flag_shr[];
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   unsigned int tid = threadIdx.x;
+  int n_shr = blockDim.x+md->n_shr_empty;
 
 #ifndef DEV_CUDACVODE
+
+  /* Check for too much accuracy requested */
+  //double nrm = N_VWrmsNorm(dmdv->cv_zn[0], dmdv->cv_ewt);
+  double nrm;
+  cudaDeviceVWRMS_Norm(md->dzn,
+                       md->dewt, &nrm, md->nrows, n_shr);
+  dmdv->cv_tolsf = dmdv->cv_uround * nrm;
+  if (dmdv->cv_tolsf > 1.) {
+    //cvProcessError(cv_mem, CV_TOO_MUCH_ACC, "CVODE", "CVode",
+    //               MSGCV_TOO_MUCH_ACC, cv_mem->cv_tn);
+    dmdv->istate = CV_TOO_MUCH_ACC;
+    dmdv->cv_tretlast = dmdv->tret = dmdv->cv_tn;
+    //N_VScale(1., md->dzn[0], md->yout);
+    md->yout[i]=md->dzn[i];
+
+    dmdv->cv_tolsf *= 2.;
+    //break;
+    return;
+  } else {
+    dmdv->cv_tolsf = 1.;
+  }
+
+#else
+#endif
 
   if (dmdv->cv_tn + dmdv->cv_h == dmdv->cv_tn) {
     dmdv->cv_nhnil++;
@@ -3888,9 +3913,6 @@ void cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
 #endif
 
   }
-
-#else
-#endif
 
   dmdv->kflag = cudaDevicecvStep(md,dmdv);
   //int kflag2 = cudaDevicecvStep(md,dmdv);
@@ -5103,104 +5125,6 @@ int CVode_gpu2(void *cvode_mem, realtype tout, N_Vector yout,
   return(istate);
 }
 
-int CVodeGetDky_gpu3(SolverData *sd, void *cvode_mem, realtype t, int k, N_Vector dky)
-{
-  realtype s, c, r;
-  realtype tfuzz, tp, tn1;
-  int i, j;
-  CVodeMem cv_mem;
-  cv_mem = (CVodeMem) cvode_mem;
-  ModelDataGPU *mGPU = &sd->mGPU;
-
-#ifndef DEV_CUDACVODE
-
-  /*
-
-  printf("CVodeGetDky_gpu3 start \n");
-
-  double *dkyArr = N_VGetArrayPointer(dky);
-  N_Vector yout = N_VNew_Serial(mGPU->nrows);
-  double *youtArray = N_VGetArrayPointer(yout);
-  cudaMemcpy(youtArray, mGPU->yout, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost);
-
-  for (int i = 0; i <= cv_mem->cv_qmax; i++) {//cv_qmax+1 (6)?
-    double *zn = NV_DATA_S(cv_mem->cv_zn[i]);
-    //cudaMemcpy(zn, (i * mGPU->nrows + mGPU->dzn), mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost);
-    //printf("zn i %d\n", i);
-    //if(compare_doubles(zn,youtArray,mGPU->nrows,"zn")!=1) exit(0);
-
-  }
-
-  //if(compare_doubles(dkyArr,youtArray,mGPU->nrows,"dky in")!=1) exit(0);
-
-  if(compare_doubles(dkyArr,youtArray,mGPU->nrows,"dky out")!=1) exit(0);
-
-   */
-
-#endif
-
-
-  // Allow for some slack
-  tfuzz = FUZZ_FACTOR * cv_mem->cv_uround * (SUNRabs(cv_mem->cv_tn) + SUNRabs(cv_mem->cv_hu));
-  if (cv_mem->cv_hu < ZERO) tfuzz = -tfuzz;
-  tp = cv_mem->cv_tn - cv_mem->cv_hu - tfuzz;
-  tn1 = cv_mem->cv_tn + tfuzz;
-  if ((t-tp)*(t-tn1) > ZERO) {
-    cvProcessError(cv_mem, CV_BAD_T, "CVODE", "CVodeGetDky", MSGCV_BAD_T,
-                   t, cv_mem->cv_tn-cv_mem->cv_hu, cv_mem->cv_tn);
-    return(CV_BAD_T);
-  }
-
-  // Sum the differentiated interpolating polynomial
-
-  s = (t - cv_mem->cv_tn) / cv_mem->cv_h;
-  for (j=cv_mem->cv_q; j >= k; j--) {
-    c = ONE;
-    for (i=j; i >= j-k+1; i--) c *= i;
-    //printf("CVodeGetDky_gpu3 c %le s %le j %d cv_mem->cv_q %d\n",
-     //      c, s, j), cv_mem->cv_q;
-    if (j == cv_mem->cv_q) {
-      N_VScale(c, cv_mem->cv_zn[cv_mem->cv_q], dky);
-    } else {
-      N_VLinearSum(c, cv_mem->cv_zn[j], s, dky, dky);
-    }
-  }
-
-#ifndef DEV_CUDACVODE
-  /*
-
-  //if(compare_doubles(dkyArr,youtArray,mGPU->nrows,"dky out")!=1) exit(0);
-
-  N_VDestroy(yout);
-
-   */
-
-#endif
-
-  if (k == 0) return(CV_SUCCESS);
-  r = SUNRpowerI(cv_mem->cv_h,-k);
-  N_VScale(r, dky, dky);
-
-
-
-/*
-  for(int i=0;i<mGPU->nrows;i++){
-
-    bicg->cv_zn[i]=cv_zn[i];
-    bicg->cv_last_yn[i]=cv_last_yn[i];
-    bicg->cv_ftemp[i]=cv_ftemp[i];
-    bicg->cv_tempv[i]=cv_tempv[i];
-    bicg->cv_acor_init[i]=cv_acor_init[i];
-
-  }
-  */
-
-
-  return(CV_SUCCESS);
-
-
-}
-
 int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
                realtype *tret, int itask, SolverData *sd)
 {
@@ -5208,7 +5132,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
   long int nstloc;
   int retval, hflag, kflag, istate, ier, irfndp;
   int ewtsetOK;
-  realtype troundoff, tout_hin, rh, nrm;
+  realtype troundoff, tout_hin, rh;
 
   itsolver *bicg = &(sd->bicg);
   ModelDataGPU *mGPU = &sd->mGPU;
@@ -5541,6 +5465,10 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
       break;
     }
 
+#ifndef DEV_CUDACVODE
+
+#else
+
     /* Check for too much accuracy requested */
     nrm = N_VWrmsNorm(cv_mem->cv_zn[0], cv_mem->cv_ewt);
     cv_mem->cv_tolsf = cv_mem->cv_uround * nrm;
@@ -5555,23 +5483,6 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     } else {
       cv_mem->cv_tolsf = ONE;
     }
-
-#ifndef DEV_CUDACVODE
-
-
-
-#else
-
-    /* Check for h below roundoff level in tn */
-    if (cv_mem->cv_tn + cv_mem->cv_h == cv_mem->cv_tn) {
-      cv_mem->cv_nhnil++;
-      if (cv_mem->cv_nhnil <= cv_mem->cv_mxhnil)
-        cvProcessError(cv_mem, CV_WARNING, "CVODE", "CVode",
-                       MSGCV_HNIL, cv_mem->cv_tn, cv_mem->cv_h);
-      if (cv_mem->cv_nhnil == cv_mem->cv_mxhnil)
-        cvProcessError(cv_mem, CV_WARNING, "CVODE", "CVode", MSGCV_HNIL_DONE);
-    }
-
 
 #endif
 
@@ -5814,6 +5725,21 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
 
 #ifndef DEV_CUDACVODE
 
+    /* Check for too much accuracy requested */
+    //nrm = N_VWrmsNorm(cv_mem->cv_zn[0], cv_mem->cv_ewt);
+    //cv_mem->cv_tolsf = cv_mem->cv_uround * nrm;
+    if (cv_mem->cv_tolsf > ONE) {
+      cvProcessError(cv_mem, CV_TOO_MUCH_ACC, "CVODE", "CVode",
+                     MSGCV_TOO_MUCH_ACC, cv_mem->cv_tn);
+      //istate = CV_TOO_MUCH_ACC;
+      //cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
+      //N_VScale(ONE, cv_mem->cv_zn[0], yout);
+      //cv_mem->cv_tolsf *= TWO;
+      break;
+    }
+
+#endif
+
     /* Check for h below roundoff level in tn */
 
       if (cv_mem->cv_tn + cv_mem->cv_h == cv_mem->cv_tn) {
@@ -5824,8 +5750,6 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
         if (cv_mem->cv_nhnil == cv_mem->cv_mxhnil)
           cvProcessError(cv_mem, CV_WARNING, "CVODE", "CVode", MSGCV_HNIL_DONE);
       }
-
-#endif
 
     if (kflag != CV_SUCCESS) {
 
