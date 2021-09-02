@@ -3799,187 +3799,10 @@ int cudaDevicecvTemplate(ModelDataGPU *md, ModelDataVariable *dmdv) {
 }
 
 __device__
-int cudaDevicecvRootfind(ModelDataGPU *md, ModelDataVariable *dmdv) {
-
-  extern __shared__ int flag_shr[];
-  int i = blockIdx.x * blockDim.x + threadIdx.x;
-  unsigned int tid = threadIdx.x;
-
-/*
-
-  double alph, tmid, gfrac, maxfrac, fracint, fracsub;
-  int z, retval, imax, side, sideprev;
-  int zroot, sgnchg;
-
-  imax = 0;
-
-  // First check for change in sign in ghi or for a zero in ghi.
-  maxfrac = ZERO;
-  zroot = SUNFALSE;
-  sgnchg = SUNFALSE;
-  for (z = 0;  z < dmdv->cv_nrtfn; z++) {
-    if(!md->cv_gactive[z]) continue; //should be always active
-    if (fabs(md->cv_ghi[z]) == ZERO) {
-      if(md->cv_rootdir[z]*md->cv_glo[z] <= ZERO) {
-        zroot = SUNTRUE;
-      }
-    } else {
-      if ( (md->cv_glo[z]*md->cv_ghi[z] < ZERO) &&
-           (md->cv_rootdir[z]*md->cv_glo[z] <= ZERO) ) {
-        gfrac = fabs(md->cv_ghi[z]/(md->cv_ghi[z] - md->cv_glo[z]));
-        if (gfrac > maxfrac) {
-          sgnchg = SUNTRUE;
-          maxfrac = gfrac;
-          imax = z;
-        }
-      }
-    }
-  }
-
-  // If no sign change was found, reset trout and grout.  Then return
-  //   CV_SUCCESS if no zero was found, or set iroots and return RTFOUND.
-  if (!sgnchg) {
-    dmdv->cv_trout = dmdv->cv_thi;
-    for (z = 0; z < dmdv->cv_nrtfn; z++) md->cv_grout[z] = md->cv_ghi[z];
-    if (!zroot) return(CV_SUCCESS);
-    for (z = 0; z < dmdv->cv_nrtfn; z++) {
-      md->cv_iroots[z] = 0;
-      if(!md->cv_gactive[z]) continue;
-      if ( (SUNRabs(md->cv_ghi[z]) == ZERO) &&
-           (md->cv_rootdir[z]*md->cv_glo[z] <= ZERO) )
-        md->cv_iroots[z] = md->cv_glo[z] > 0 ? -1 : 1;
-    }
-    return(RTFOUND);
-  }
-
-  // Initialize alph to avoid compiler warning
-  alph = ONE;
-
-  // A sign change was found.  Loop to locate nearest root
-
-  side = 0;  sideprev = -1;
-  for(;;) {                                    // Looping point
-
-    // If interval size is already less than tolerance ttol, break.
-    if (fabs(dmdv->cv_thi - dmdv->cv_tlo) <= dmdv->cv_ttol) break;
-
-    // Set weight alph.
-    //   On the first two passes, set alph = 1.  Thereafter, reset alph
-    //   according to the side (low vs high) of the subinterval in which
-    //   the sign change was found in the previous two passes.
-    //   If the sides were opposite, set alph = 1.
-    //   If the sides were the same, then double alph (if high side),
-    //   or halve alph (if low side).
-    //   The next guess tmid is the secant method value if alph = 1, but
-    //   is closer to tlo if alph < 1, and closer to thi if alph > 1.
-
-    if (sideprev == side) {
-      alph = (side == 2) ? alph*TWO : alph*HALF;
-    } else {
-      alph = ONE;
-    }
-
-    // Set next root approximation tmid and get g(tmid).
-    //   If tmid is too close to tlo or thi, adjust it inward,
-    //   by a fractional distance that is between 0.1 and 0.5.
-    tmid = dmdv->cv_thi - (dmdv->cv_thi - dmdv->cv_tlo) *
-                            md->cv_ghi[imax] / (md->cv_ghi[imax] - alph*md->cv_glo[imax]);
-    if (fabs(tmid - dmdv->cv_tlo) < HALF*dmdv->cv_ttol) {
-      fracint = fabs(dmdv->cv_thi - dmdv->cv_tlo)/dmdv->cv_ttol;
-      fracsub = (fracint > FIVE) ? PT1 : HALF/fracint;
-      tmid = dmdv->cv_tlo + fracsub*(dmdv->cv_thi - dmdv->cv_tlo);
-    }
-    if (fabs(dmdv->cv_thi - tmid) < HALF*dmdv->cv_ttol) {
-      fracint = SUNRabs(dmdv->cv_thi - dmdv->cv_tlo)/dmdv->cv_ttol;
-      fracsub = (fracint > FIVE) ? PT1 : HALF/fracint;
-      tmid = dmdv->cv_thi - fracsub*(dmdv->cv_thi - dmdv->cv_tlo);
-    }
-
-    //(void) CVodeGetDky(cv_mem, tmid, 0, cv_mem->cv_y);
-    cudaDeviceCVodeGetDky(md, dmdv, tmid, 0, md->cv_y);
-
-    //retval = cv_mem->cv_gfun(tmid, cv_mem->cv_y, cv_mem->cv_grout,
-    //                         cv_mem->cv_user_data);
-    //cv_mem->cv_nge++;
-    //if (retval != 0) return(CV_RTFUNC_FAIL);
-    //Not used in camp
-
-    // Check to see in which subinterval g changes sign, and reset imax.
-    //   Set side = 1 if sign change is on low side, or 2 if on high side.
-    maxfrac = ZERO;
-    zroot = SUNFALSE;
-    sgnchg = SUNFALSE;
-    sideprev = side;
-    for (z = 0;  z < dmdv->cv_nrtfn; z++) {
-      if(!md->cv_gactive[z]) continue;
-      if (fabs(md->cv_grout[z]) == ZERO) {
-        if(md->cv_rootdir[z]*md->cv_glo[z] <= ZERO) zroot = SUNTRUE;
-      } else {
-        if ( (md->cv_glo[z]*md->cv_grout[z] < ZERO) &&
-             (md->cv_rootdir[z]*md->cv_glo[z] <= ZERO) ) {
-          gfrac = fabs(md->cv_grout[z]/(md->cv_grout[z] - md->cv_glo[z]));
-          if (gfrac > maxfrac) {
-            sgnchg = SUNTRUE;
-            maxfrac = gfrac;
-            imax = z;
-          }
-        }
-      }
-    }
-    if (sgnchg) {
-      // Sign change found in (tlo,tmid); replace thi with tmid.
-      dmdv->cv_thi = tmid;
-      for (z = 0; z < dmdv->cv_nrtfn; z++)
-        md->cv_ghi[z] = md->cv_grout[z];
-      side = 1;
-      // Stop at root thi if converged; otherwise loop.
-      if (fabs(dmdv->cv_thi - dmdv->cv_tlo) <= dmdv->cv_ttol) break;
-      continue;  // Return to looping point.
-    }
-
-    if (zroot) {
-      // No sign change in (tlo,tmid), but g = 0 at tmid; return root tmid.
-      dmdv->cv_thi = tmid;
-      for (z = 0; z < dmdv->cv_nrtfn; z++)
-        md->cv_ghi[z] = md->cv_grout[z];
-      break;
-    }
-
-    // No sign change in (tlo,tmid), and no zero at tmid.
-    //   Sign change must be in (tmid,thi).  Replace tlo with tmid.
-    dmdv->cv_tlo = tmid;
-    for (z = 0; z < dmdv->cv_nrtfn; z++)
-      md->cv_glo[z] = md->cv_grout[z];
-    side = 2;
-    // Stop at root thi if converged; otherwise loop back.
-    if (fabs(dmdv->cv_thi - dmdv->cv_tlo) <= dmdv->cv_ttol) break;
-
-  } // End of root-search loop
-
-  // Reset trout and grout, set iroots, and return RTFOUND.
-  dmdv->cv_trout = dmdv->cv_thi;
-  for (z = 0; z < dmdv->cv_nrtfn; z++) {
-    md->cv_grout[z] = md->cv_ghi[z];
-    md->cv_iroots[z] = 0;
-    if(!md->cv_gactive[z]) continue;
-    if ( (fabs(md->cv_ghi[z]) == ZERO) &&
-         (md->cv_rootdir[z]*md->cv_glo[z] <= ZERO) )
-      md->cv_iroots[z] = md->cv_glo[z] > 0 ? -1 : 1;
-    if ( (md->cv_glo[z]*md->cv_ghi[z] < ZERO) &&
-         (md->cv_rootdir[z]*md->cv_glo[z] <= ZERO) )
-      md->cv_iroots[z] = md->cv_glo[z] > 0 ? -1 : 1;
-  }
-  return(RTFOUND);
-
- */
-
-}
-
-__device__
 int cudaDeviceCVodeGetDky(ModelDataGPU *md, ModelDataVariable *dmdv,
                            double t, int k, double *dky) {
 
-  extern __shared__ int flag_shr[];
+  //extern __shared__ int flag_shr[];
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   unsigned int tid = threadIdx.x;
 
@@ -4015,7 +3838,8 @@ int cudaDeviceCVodeGetDky(ModelDataGPU *md, ModelDataVariable *dmdv,
 
    */
 
- /*
+
+/*
 
    // Allow for some slack
    tfuzz = FUZZ_FACTOR * dmdv->cv_uround * (fabs(dmdv->cv_tn) + fabs(dmdv->cv_hu));
@@ -4047,70 +3871,12 @@ int cudaDeviceCVodeGetDky(ModelDataGPU *md, ModelDataVariable *dmdv,
    }
    if (k == 0) return(CV_SUCCESS);
    //r = SUNRpowerI(dmdv->cv_h,-k);
-   r = fabs(double(dmdv->cv_h),double(-k));
+   r = pow(double(dmdv->cv_h),double(-k));
    //N_VScale(r, dky, dky);
    dky[i]=dky[i]*r;
    return(CV_SUCCESS);
 
- */
-
-}
-
-__device__
-int cudaDevicecvRcheck3(ModelDataGPU *md, ModelDataVariable *dmdv) {
-
-  extern __shared__ int flag_shr[];
-  int i = blockIdx.x * blockDim.x + threadIdx.x;
-  unsigned int tid = threadIdx.x;
-
-/*
-
-  int z, ier, retval;
-
-  // Set thi = tn or tout, whichever comes first; set y = y(thi).
-  if (dmdv->cv_taskc == CV_ONE_STEP) {
-    dmdv->cv_thi = dmdv->cv_tn;
-    N_VScale(ONE, md->dzn[0], md->cv_y);
-  }
-  if (dmdv->cv_taskc == CV_NORMAL) {
-    if ( (dmdv->cv_toutc - dmdv->cv_tn)*dmdv->cv_h >= ZERO) {
-      dmdv->cv_thi = dmdv->cv_tn;
-      N_VScale(ONE, md->cv_zn[0], md->cv_y);
-    } else {
-      dmdv->cv_thi = dmdv->cv_toutc;
-      //(void) CVodeGetDky_gpu3(md, dmdv, dmdv->cv_thi, 0, md->cv_y);
-      cudaDeviceCVodeGetDky(md, dmdv, dmdv->cv_thi, 0, md->cv_y);
-    }
-  }
-
-  // Set ghi = g(thi) and call cvRootfind to search (tlo,thi) for roots.
-  //retval = cv_mem->cv_gfun(cv_mem->cv_thi, cv_mem->cv_y,
-  //                         cv_mem->cv_ghi, cv_mem->cv_user_data);
-    //dmdv->cv_nge++;
-  //if (retval != 0) return(CV_RTFUNC_FAIL);
-  //gfun not defined in CAMP
-
-  dmdv->cv_ttol = (fabs(dmdv->cv_tn) + fabs(dmdv->cv_h)) *
-                    dmdv->cv_uround * HUNDRED;
-  ier = cudaDevicecvRootfind(md, dmdv);
-  if (ier == CV_RTFUNC_FAIL) return(CV_RTFUNC_FAIL);
-  for(z=0; z<dmdv->cv_nrtfn; z++) {//probably 0
-    if(!md->cv_gactive[z] && md->cv_grout[z] != ZERO)
-      md->cv_gactive[z] = SUNTRUE;
-  }
-  dmdv->cv_tlo = cv_tlo->cv_trout;
-  for (z = 0; z < dmdv->cv_nrtfn; z++)
-    md->cv_glo[z] = md->cv_grout[z];
-
-  // If no root found, return CV_SUCCESS.
-  if (ier == CV_SUCCESS) return(CV_SUCCESS);
-
-  // If a root was found, interpolate to get y(trout) and return.
-  //(void) CVodeGetDky_gpu3(dmdv, dmdv->cv_trout, 0, md->cv_y);
-  cudaDeviceCVodeGetDky(md, dmdv, dmdv->cv_trout, 0, md->cv_y);
-  return(RTFOUND);
-
-  */
+*/
 
 }
 
@@ -4147,47 +3913,19 @@ void cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
 #ifndef DEV_CUDACVODE
 
-  /*
-
-  //gfun is not defined in CAMP
-  if (cv_mem->cv_nrtfn > 0) {
-
-    retval = cvRcheck3_gpu2(cv_mem);
-
-    if (retval == RTFOUND) {  // A new root was found
-      cv_mem->cv_irfnd = 1;
-      istate = CV_ROOT_RETURN;
-      cv_mem->cv_tretlast = *tret = cv_mem->cv_tlo;
-      break;
-    } else if (retval == CV_RTFUNC_FAIL) { // g failed
-      cvProcessError(cv_mem, CV_RTFUNC_FAIL, "CVODE", "cvRcheck3",
-                     MSGCV_RTFUNC_FAILED, cv_mem->cv_tlo);
-      istate = CV_RTFUNC_FAIL;
-      break;
-    }
-
-    // If we are at the end of the first step and we still have
-     // some event functions that are inactive, issue a warning
-     // as this may indicate a user error in the implementation
-     // of the root function.
-
-    if (cv_mem->cv_nst==1) {
-      inactive_roots = SUNFALSE;
-      for (ir=0; ir<cv_mem->cv_nrtfn; ir++) {
-        if (!cv_mem->cv_gactive[ir]) {
-          inactive_roots = SUNTRUE;
-          break;
-        }
-      }
-      if ((cv_mem->cv_mxgnull > 0) && inactive_roots) {
-        cvProcessError(cv_mem, CV_WARNING, "CVODES", "CVode",
-                       MSGCV_INACTIVE_ROOTS);
-      }
-    }
-
+   //In NORMAL mode, check if tout reached
+/*
+   if ( (dmdv->cv_tn-tout)*dmdv->cv_h >= ZERO ) {
+    istate = CV_SUCCESS;
+    dmdv->cv_tretlast = dmdv->tret = dmdv->tout;
+    //(void) CVodeGetDky(cv_mem, dmdv->tout, 0, md->yout);
+    cudaDeviceCVodeGetDky(md, dmdv, dmdv->tout, 0, md->yout);
+    dmdv->cv_next_q = dmdv->cv_qprime;
+    dmdv->cv_next_h = dmdv->cv_hprime;
+    break;
   }
+*/
 
-  */
 
 #else
 #endif
@@ -5706,7 +5444,6 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
   int retval, hflag, kflag, istate, ir, ier, irfndp;
   int ewtsetOK;
   realtype troundoff, tout_hin, rh, nrm;
-  booleantype inactive_roots;
 
   itsolver *bicg = &(sd->bicg);
   ModelData *md = &(sd->model_data);
@@ -6084,7 +5821,8 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     int flag = 0; //CAMP_SOLVER_SUCCESS
     //int flag = 999;
 
-
+    //sd->mdv.cv_next_q = cv_mem->cv_next_q; //bug here?
+    //sd->mdv.tout = tout; //bug here?
     sd->mdv.cv_taskc = cv_mem->cv_taskc;
     sd->mdv.cv_uround = cv_mem->cv_uround;
     sd->mdv.cv_nrtfn = cv_mem->cv_nrtfn;
@@ -6185,6 +5923,8 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
 
     cudaMemcpy(&sd->mdv, mGPU->mdvo, sizeof(ModelDataVariable), cudaMemcpyDeviceToHost);
 
+    //cv_mem->cv_next_q = sd->mdv.cv_next_q;
+    //tout = sd->mdv.tout; //Not output
     cv_mem->cv_taskc = sd->mdv.cv_taskc;
     cv_mem->cv_uround = sd->mdv.cv_uround;
     cv_mem->cv_nrtfn = sd->mdv.cv_nrtfn;
@@ -6357,9 +6097,20 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
 
 #ifndef DEV_CUDACVODE
 
-#else
+    /* In NORMAL mode, check if tout reached */
 
-#endif
+    if ( (itask == CV_NORMAL) &&  (cv_mem->cv_tn-tout)*cv_mem->cv_h >= ZERO ) {
+      //printf("In NORMAL mode \n"); //always normal mode
+      istate = CV_SUCCESS;
+      cv_mem->cv_tretlast = *tret = tout;
+      (void) CVodeGetDky(cv_mem, tout, 0, yout);
+      cv_mem->cv_next_q = cv_mem->cv_qprime;
+      cv_mem->cv_next_h = cv_mem->cv_hprime;
+      break;
+    }
+
+
+#else
 
     /* In NORMAL mode, check if tout reached */
     if ( (itask == CV_NORMAL) &&  (cv_mem->cv_tn-tout)*cv_mem->cv_h >= ZERO ) {
@@ -6370,6 +6121,8 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
       cv_mem->cv_next_h = cv_mem->cv_hprime;
       break;
     }
+
+#endif
 
     /* Check if tn is at tstop or near tstop */
     if ( cv_mem->cv_tstopset ) {
@@ -6391,7 +6144,9 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     }
 
     /* In ONE_STEP mode, copy y and exit loop */
-    if (itask == CV_ONE_STEP) {
+
+#ifdef CV_ONE_STEP
+    if (itask == CV_ONE_STEP) { //never CV_ONE_STEP in CAMP
       istate = CV_SUCCESS;
       cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
       N_VScale(ONE, cv_mem->cv_zn[0], yout);
@@ -6399,6 +6154,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
       cv_mem->cv_next_h = cv_mem->cv_hprime;
       break;
     }
+#endif
 
   } /* end looping for internal steps */
 
