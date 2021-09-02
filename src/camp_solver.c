@@ -2129,6 +2129,19 @@ double gsl_f(double x, void *param) {
 }
 #endif
 
+
+static int g(realtype t, N_Vector y, realtype *gout, void *solver_data)
+{
+
+#ifdef PMC_USE_GPU
+  printf("ERROR: GPU ODE CODE IS NOT PREPARED FOR G FUNCTION, USE CPU VERSION WITH CVODE");
+  exit(0);
+#endif
+
+  return(0);
+}
+
+
 /** \brief Try to improve guesses of y sent to the linear solver
  *
  * This function checks if there are any negative guessed concentrations,

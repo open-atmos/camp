@@ -120,11 +120,14 @@ typedef struct {
     int kflag;
     int eflag;
 
+    /*
+    //g funct, never defined in CAMP
     double cv_trout;
     double cv_tlo;
     double cv_ttol;
     double cv_toutc;
     double cv_thi;
+     */
     int cv_taskc;
     double cv_uround;
     int cv_nrtfn;
@@ -268,12 +271,15 @@ typedef struct {
 
     int nnz;
     double *yout;
-    int *cv_gactive; //cv_mem->cv_nrtfn, probably 0
+    /*
+    //g funct, never defined in CAMP
+    int *cv_gactive; //cv_mem->cv_nrtfn
     double *cv_grout; //cv_mem->cv_nrtfn
     double *cv_glo; //cv_mem->cv_nrtfn
     double *cv_ghi; //cv_mem->cv_nrtfn
     int *cv_rootdir; //cv_mem->cv_nrtfn
     int *cv_iroots; //cv_mem->cv_nrtfn
+     */
 
     //Allocated in GPU only
     int i_cell;
