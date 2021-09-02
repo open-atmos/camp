@@ -3839,7 +3839,7 @@ int cudaDeviceCVodeGetDky(ModelDataGPU *md, ModelDataVariable *dmdv,
    */
 
 
-/*
+
 
    // Allow for some slack
    tfuzz = FUZZ_FACTOR * dmdv->cv_uround * (fabs(dmdv->cv_tn) + fabs(dmdv->cv_hu));
@@ -3876,7 +3876,7 @@ int cudaDeviceCVodeGetDky(ModelDataGPU *md, ModelDataVariable *dmdv,
    dky[i]=dky[i]*r;
    return(CV_SUCCESS);
 
-*/
+
 
 }
 
@@ -5821,8 +5821,8 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     int flag = 0; //CAMP_SOLVER_SUCCESS
     //int flag = 999;
 
-    //sd->mdv.cv_next_q = cv_mem->cv_next_q; //bug here?
-    //sd->mdv.tout = tout; //bug here?
+    sd->mdv.cv_next_q = cv_mem->cv_next_q;
+    sd->mdv.tout = tout;
     sd->mdv.cv_taskc = cv_mem->cv_taskc;
     sd->mdv.cv_uround = cv_mem->cv_uround;
     sd->mdv.cv_nrtfn = cv_mem->cv_nrtfn;
@@ -5923,7 +5923,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
 
     cudaMemcpy(&sd->mdv, mGPU->mdvo, sizeof(ModelDataVariable), cudaMemcpyDeviceToHost);
 
-    //cv_mem->cv_next_q = sd->mdv.cv_next_q;
+    cv_mem->cv_next_q = sd->mdv.cv_next_q;
     //tout = sd->mdv.tout; //Not output
     cv_mem->cv_taskc = sd->mdv.cv_taskc;
     cv_mem->cv_uround = sd->mdv.cv_uround;
