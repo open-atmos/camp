@@ -737,6 +737,10 @@ __device__ void cudaDevicemin(double *g_odata, double in, volatile double *sdata
 
   __syncthreads();
 
+  sdata[tid] = in;
+
+  __syncthreads();
+
 #ifndef ALL_BLOCKS_EQUAL_SIZE
 
   //first threads update empty positions
@@ -757,12 +761,6 @@ __device__ void cudaDevicemin(double *g_odata, double in, volatile double *sdata
 
 #endif
 
-
-  __syncthreads();
-
-  sdata[tid] = in;
-
-  __syncthreads();
 
   //if(blockIdx.x==0)printf("i %d in %le sdata[tid] %le\n",i,in,sdata[tid]);
 
