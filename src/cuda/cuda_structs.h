@@ -121,6 +121,7 @@ typedef struct {
     int eflag;
 
 
+    int cv_mxstep; //long
     int cv_next_q;
     double tout;
     int cv_taskc;

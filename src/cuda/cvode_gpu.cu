@@ -3874,6 +3874,21 @@ void cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
 #ifndef DEV_CUDACVODE
 
+  /* Check for too many steps */
+  if ( (dmdv->cv_mxstep>0) && (dmdv->nstloc >= dmdv->cv_mxstep) ) {
+    //cvProcessError(cv_mem, CV_TOO_MUCH_WORK, "CVODE", "CVode",
+    //               MSGCV_MAX_STEPS, cv_mem->cv_tn);
+    dmdv->istate = CV_TOO_MUCH_WORK;
+    dmdv->cv_tretlast = dmdv->tret = dmdv->cv_tn;
+    //N_VScale(ONE, md->dzn, yout);
+    md->yout[i]=md->dzn[i];
+    return;
+    //break;
+  }
+
+#else
+#endif
+
   /* Check for too much accuracy requested */
   //double nrm = N_VWrmsNorm(dmdv->cv_zn[0], dmdv->cv_ewt);
   double nrm;
@@ -3894,9 +3909,6 @@ void cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
   } else {
     dmdv->cv_tolsf = 1.;
   }
-
-#else
-#endif
 
   if (dmdv->cv_tn + dmdv->cv_h == dmdv->cv_tn) {
     dmdv->cv_nhnil++;
@@ -5455,7 +5467,11 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
       }
     }
 
+#ifndef DEV_CUDACVODE
+
     /* Check for too many steps */
+
+    /*
     if ( (cv_mem->cv_mxstep>0) && (nstloc >= cv_mem->cv_mxstep) ) {
       cvProcessError(cv_mem, CV_TOO_MUCH_WORK, "CVODE", "CVode",
                      MSGCV_MAX_STEPS, cv_mem->cv_tn);
@@ -5465,23 +5481,18 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
       break;
     }
 
-#ifndef DEV_CUDACVODE
+     */
 
 #else
 
-    /* Check for too much accuracy requested */
-    nrm = N_VWrmsNorm(cv_mem->cv_zn[0], cv_mem->cv_ewt);
-    cv_mem->cv_tolsf = cv_mem->cv_uround * nrm;
-    if (cv_mem->cv_tolsf > ONE) {
-      cvProcessError(cv_mem, CV_TOO_MUCH_ACC, "CVODE", "CVode",
-                     MSGCV_TOO_MUCH_ACC, cv_mem->cv_tn);
-      istate = CV_TOO_MUCH_ACC;
+    /* Check for too many steps */
+    if ( (cv_mem->cv_mxstep>0) && (nstloc >= cv_mem->cv_mxstep) ) {
+      cvProcessError(cv_mem, CV_TOO_MUCH_WORK, "CVODE", "CVode",
+                     MSGCV_MAX_STEPS, cv_mem->cv_tn);
+      istate = CV_TOO_MUCH_WORK;
       cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
       N_VScale(ONE, cv_mem->cv_zn[0], yout);
-      cv_mem->cv_tolsf *= TWO;
       break;
-    } else {
-      cv_mem->cv_tolsf = ONE;
     }
 
 #endif
@@ -5501,6 +5512,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     int flag = 0; //CAMP_SOLVER_SUCCESS
     //int flag = 999;
 
+    sd->mdv.cv_mxstep = cv_mem->cv_mxstep;
     sd->mdv.cv_next_q = cv_mem->cv_next_q;
     sd->mdv.tout = tout;
     sd->mdv.cv_taskc = cv_mem->cv_taskc;
@@ -5604,6 +5616,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
 
     cudaMemcpy(&sd->mdv, mGPU->mdvo, sizeof(ModelDataVariable), cudaMemcpyDeviceToHost);
 
+    cv_mem->cv_mxstep = sd->mdv.cv_mxstep;
     cv_mem->cv_next_q = sd->mdv.cv_next_q;
     //tout = sd->mdv.tout; //Not output
     cv_mem->cv_taskc = sd->mdv.cv_taskc;
@@ -5725,6 +5738,18 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
 
 #ifndef DEV_CUDACVODE
 
+    /* Check for too many steps */
+    if ( (cv_mem->cv_mxstep>0) && (nstloc >= cv_mem->cv_mxstep) ) {
+      cvProcessError(cv_mem, CV_TOO_MUCH_WORK, "CVODE", "CVode",
+                     MSGCV_MAX_STEPS, cv_mem->cv_tn);
+      //istate = CV_TOO_MUCH_WORK;
+      //cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
+      //N_VScale(ONE, cv_mem->cv_zn[0], yout);
+      break;
+    }
+
+#endif
+
     /* Check for too much accuracy requested */
     //nrm = N_VWrmsNorm(cv_mem->cv_zn[0], cv_mem->cv_ewt);
     //cv_mem->cv_tolsf = cv_mem->cv_uround * nrm;
@@ -5737,8 +5762,6 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
       //cv_mem->cv_tolsf *= TWO;
       break;
     }
-
-#endif
 
     /* Check for h below roundoff level in tn */
 
