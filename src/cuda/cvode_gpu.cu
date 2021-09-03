@@ -3884,30 +3884,6 @@ int cudaDevicecvEwtSetSV(ModelDataGPU *md, ModelDataVariable *dmdv,
  cudaDevicezaxpby(dmdv->cv_reltol, md->dtempv, 1.,
         md->cv_Vabstol, md->dtempv, md->nrows);
 
-  /*
-
-  if(i==0){
-    printf("cudaDevicecvEwtSetSV cudaDevicezaxpby end\n");
-
-    for(int j=0;j<md->nrows;j++){
-
-      printf("j %d md->dtempv %le\n",j, md->dtempv[j]);
-
-    }
-  }
-
-  //if(md->dtempv[i]<=0.){
-  //  printf("dtempv is zero i %d md->dtempv %le\n",i, md->dtempv[i]);
-  //}
-
-  __syncthreads();
-
-   */
-
-  //if (N_VMin(md->dtempv) <= 0.) return(-1);
-  //if (N_VMin(y_n) > -SMALL) return 0;
-  //double min;
-  //cudaDevicemin(&min, y_n[i], flag_shr2, n_shr_empty);
   double min;
   cudaDevicemin(&min, md->dtempv[i], flag_shr2, md->n_shr_empty);
   __syncthreads();
@@ -3931,123 +3907,124 @@ void cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
   unsigned int tid = threadIdx.x;
   int n_shr = blockDim.x+md->n_shr_empty;
 
-#ifndef DEV_CUDACVODE
+#ifdef DEV_CUDACVODE
 
-
-
-  int ewtsetOK=0;
-
-  if (dmdv->cv_nst > 0) {
-
-    //ewtsetOK = cvEwtSetSV(cv_mem, cv_mem->cv_zn[0], cv_mem->cv_ewt);
-    ewtsetOK = cudaDevicecvEwtSetSV(md, dmdv, md->dzn, md->dewt);//wrong
-
-    //if(i==0)printf("ewtsetOK %d\n",ewtsetOK);
-
-    if (ewtsetOK != 0) {
-
-      //if (cv_mem->cv_itol == CV_WF)
-      //  cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "CVode",
-      //                 MSGCV_EWT_NOW_FAIL, cv_mem->cv_tn);
-      //else
-      //  cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "CVode",
-      //                 MSGCV_EWT_NOW_BAD, cv_mem->cv_tn);
-
-      dmdv->istate = CV_ILL_INPUT;
-      dmdv->cv_tretlast = dmdv->tret = dmdv->cv_tn;
-      //N_VScale(ONE, cv_mem->cv_zn[0], yout);
-      md->yout[i]=md->dzn[i];
-      //break;
-      return;
-    }
-  }
-
-
+  for(;;) {
 
 #else
 #endif
 
-  /* Check for too many steps */
-  if ( (dmdv->cv_mxstep>0) && (dmdv->nstloc >= dmdv->cv_mxstep) ) {
-    //cvProcessError(cv_mem, CV_TOO_MUCH_WORK, "CVODE", "CVode",
-    //               MSGCV_MAX_STEPS, cv_mem->cv_tn);
-    dmdv->istate = CV_TOO_MUCH_WORK;
-    dmdv->cv_tretlast = dmdv->tret = dmdv->cv_tn;
-    //N_VScale(ONE, md->dzn, yout);
-    md->yout[i]=md->dzn[i];
-    return;
-    //break;
-  }
+    dmdv->cv_next_h = dmdv->cv_h;
+    dmdv->cv_next_q = dmdv->cv_q;
 
-  /* Check for too much accuracy requested */
-  //double nrm = N_VWrmsNorm(dmdv->cv_zn[0], dmdv->cv_ewt);
-  double nrm;
-  cudaDeviceVWRMS_Norm(md->dzn,
-                       md->dewt, &nrm, md->nrows, n_shr);
-  dmdv->cv_tolsf = dmdv->cv_uround * nrm;
-  if (dmdv->cv_tolsf > 1.) {
-    //cvProcessError(cv_mem, CV_TOO_MUCH_ACC, "CVODE", "CVode",
-    //               MSGCV_TOO_MUCH_ACC, cv_mem->cv_tn);
-    dmdv->istate = CV_TOO_MUCH_ACC;
-    dmdv->cv_tretlast = dmdv->tret = dmdv->cv_tn;
-    //N_VScale(1., md->dzn[0], md->yout);
-    md->yout[i]=md->dzn[i];
+    int ewtsetOK = 0;
+    if (dmdv->cv_nst > 0) {
 
-    dmdv->cv_tolsf *= 2.;
-    //break;
-    return;
-  } else {
-    dmdv->cv_tolsf = 1.;
-  }
+      //ewtsetOK = cvEwtSetSV(cv_mem, cv_mem->cv_zn[0], cv_mem->cv_ewt);
+      ewtsetOK = cudaDevicecvEwtSetSV(md, dmdv, md->dzn, md->dewt);//wrong
 
-  if (dmdv->cv_tn + dmdv->cv_h == dmdv->cv_tn) {
-    dmdv->cv_nhnil++;
-    //if (dmdv->cv_nhnil <= dmdv->cv_mxhnil)
-    //  cvProcessError(dmdv, CV_WARNING, "CVODE", "CVode",
-    //                 MSGCV_HNIL, dmdv->cv_tn, dmdv->cv_h);
-    //if (dmdv->cv_nhnil == dmdv->cv_mxhnil)
-    //  cvProcessError(dmdv, CV_WARNING, "CVODE", "CVode", MSGCV_HNIL_DONE);
+      //if(i==0)printf("ewtsetOK %d\n",ewtsetOK);
+
+      if (ewtsetOK != 0) {
+
+        //if (cv_mem->cv_itol == CV_WF)
+        //  cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "CVode",
+        //                 MSGCV_EWT_NOW_FAIL, cv_mem->cv_tn);
+        //else
+        //  cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "CVode",
+        //                 MSGCV_EWT_NOW_BAD, cv_mem->cv_tn);
+
+        dmdv->istate = CV_ILL_INPUT;
+        dmdv->cv_tretlast = dmdv->tret = dmdv->cv_tn;
+        //N_VScale(ONE, cv_mem->cv_zn[0], yout);
+        md->yout[i] = md->dzn[i];
+        //break;
+        return;
+      }
+    }
+
+    /* Check for too many steps */
+    if ((dmdv->cv_mxstep > 0) && (dmdv->nstloc >= dmdv->cv_mxstep)) {
+      //cvProcessError(cv_mem, CV_TOO_MUCH_WORK, "CVODE", "CVode",
+      //               MSGCV_MAX_STEPS, cv_mem->cv_tn);
+      dmdv->istate = CV_TOO_MUCH_WORK;
+      dmdv->cv_tretlast = dmdv->tret = dmdv->cv_tn;
+      //N_VScale(ONE, md->dzn, yout);
+      md->yout[i] = md->dzn[i];
+      return;
+      //break;
+    }
+
+    /* Check for too much accuracy requested */
+    //double nrm = N_VWrmsNorm(dmdv->cv_zn[0], dmdv->cv_ewt);
+    double nrm;
+    cudaDeviceVWRMS_Norm(md->dzn,
+                         md->dewt, &nrm, md->nrows, n_shr);
+    dmdv->cv_tolsf = dmdv->cv_uround * nrm;
+    if (dmdv->cv_tolsf > 1.) {
+      //cvProcessError(cv_mem, CV_TOO_MUCH_ACC, "CVODE", "CVode",
+      //               MSGCV_TOO_MUCH_ACC, cv_mem->cv_tn);
+      dmdv->istate = CV_TOO_MUCH_ACC;
+      dmdv->cv_tretlast = dmdv->tret = dmdv->cv_tn;
+      //N_VScale(1., md->dzn[0], md->yout);
+      md->yout[i] = md->dzn[i];
+
+      dmdv->cv_tolsf *= 2.;
+      //break;
+      return;
+    } else {
+      dmdv->cv_tolsf = 1.;
+    }
+
+    if (dmdv->cv_tn + dmdv->cv_h == dmdv->cv_tn) {
+      dmdv->cv_nhnil++;
+      //if (dmdv->cv_nhnil <= dmdv->cv_mxhnil)
+      //  cvProcessError(dmdv, CV_WARNING, "CVODE", "CVode",
+      //                 MSGCV_HNIL, dmdv->cv_tn, dmdv->cv_h);
+      //if (dmdv->cv_nhnil == dmdv->cv_mxhnil)
+      //  cvProcessError(dmdv, CV_WARNING, "CVODE", "CVode", MSGCV_HNIL_DONE);
 
 #ifdef ODE_WARNING
-    if ((dmdv->cv_nhnil <= dmdv->cv_mxhnil) ||
-            (dmdv->cv_nhnil == dmdv->cv_mxhnil))
-      if(i==0)printf("WARNING: h below roundoff level in tn");
+      if ((dmdv->cv_nhnil <= dmdv->cv_mxhnil) ||
+              (dmdv->cv_nhnil == dmdv->cv_mxhnil))
+        if(i==0)printf("WARNING: h below roundoff level in tn");
 #endif
 
-  }
+    }
 
-  dmdv->kflag = cudaDevicecvStep(md,dmdv);
-  //int kflag2 = cudaDevicecvStep(md,dmdv);
+    dmdv->kflag = cudaDevicecvStep(md, dmdv);
+    //int kflag2 = cudaDevicecvStep(md,dmdv);
 
-  __syncthreads();
-  //dmdv->kflag = kflag2;
-  dmdv->flag = dmdv->kflag;
-  __syncthreads();
-
-
-  //if(i==0)printf("cudaDeviceCVode dmdv->kflag %d\n",dmdv->kflag);
-
-  if (dmdv->kflag != CV_SUCCESS) {
-
-    //istate = cvHandleFailure_gpu2(cv_mem, kflag);
-    dmdv->istate = dmdv->kflag;
-    //cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
-    dmdv->cv_tretlast = dmdv->tret = dmdv->cv_tn;
-
-    //N_VScale(ONE, md->dzn[0], yout);
-    md->yout[i]=md->dzn[i];
-
-    //if(i==0)printf("cudaDeviceCVode2 dmdv->kflag %d\n",dmdv->kflag);
-
-    //break;
-    return;
-  }
-
-  dmdv->nstloc++;
+    __syncthreads();
+    //dmdv->kflag = kflag2;
+    dmdv->flag = dmdv->kflag;
+    __syncthreads();
 
 
-  //check if tout reached
-  if ( (dmdv->cv_tn-dmdv->tout)*dmdv->cv_h >= 0. ) {
+    //if(i==0)printf("cudaDeviceCVode dmdv->kflag %d\n",dmdv->kflag);
+
+    if (dmdv->kflag != CV_SUCCESS) {
+
+      //istate = cvHandleFailure_gpu2(cv_mem, kflag);
+      dmdv->istate = dmdv->kflag;
+
+      //cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
+      dmdv->cv_tretlast = dmdv->tret = dmdv->cv_tn;
+
+      //N_VScale(ONE, md->dzn[0], yout);
+      md->yout[i] = md->dzn[i];
+
+      //if(i==0)printf("cudaDeviceCVode2 dmdv->kflag %d\n",dmdv->kflag);
+
+      //break;
+      return;
+    }
+
+    dmdv->nstloc++;
+
+
+    //check if tout reached
+    if ((dmdv->cv_tn - dmdv->tout) * dmdv->cv_h >= 0.) {
 
       //if(i==0)printf("cudaDeviceCVode \n");
 
@@ -4060,29 +4037,37 @@ void cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
       dmdv->cv_next_q = dmdv->cv_qprime;
       dmdv->cv_next_h = dmdv->cv_hprime;
 
-    //break;
-    return;
-  }
-
-  if ( dmdv->cv_tstopset ) {
-
-    double troundoff = FUZZ_FACTOR*dmdv->cv_uround*(fabs(dmdv->cv_tn) + fabs(dmdv->cv_h));
-    if ( fabs(dmdv->cv_tn - dmdv->cv_tstop) <= troundoff) {
-      //(void) CVodeGetDky(dmdv, dmdv->cv_tstop, 0, md->yout);
-      cudaDeviceCVodeGetDky(md, dmdv, dmdv->cv_tstop, 0, md->yout);
-      dmdv->cv_tretlast = dmdv->tret = dmdv->cv_tstop;
-      dmdv->cv_tstopset = SUNFALSE;
-      dmdv->istate = CV_TSTOP_RETURN;
       //break;
       return;
     }
 
-    if ( (dmdv->cv_tn + dmdv->cv_hprime - dmdv->cv_tstop)*dmdv->cv_h > 0. ) {
-      dmdv->cv_hprime = (dmdv->cv_tstop - dmdv->cv_tn)*(1.0 - 4.0*dmdv->cv_uround);
-      dmdv->cv_eta = dmdv->cv_hprime/dmdv->cv_h;
+    if (dmdv->cv_tstopset) {
+
+      double troundoff = FUZZ_FACTOR * dmdv->cv_uround * (fabs(dmdv->cv_tn) + fabs(dmdv->cv_h));
+      if (fabs(dmdv->cv_tn - dmdv->cv_tstop) <= troundoff) {
+        //(void) CVodeGetDky(dmdv, dmdv->cv_tstop, 0, md->yout);
+        cudaDeviceCVodeGetDky(md, dmdv, dmdv->cv_tstop, 0, md->yout);
+        dmdv->cv_tretlast = dmdv->tret = dmdv->cv_tstop;
+        dmdv->cv_tstopset = SUNFALSE;
+        dmdv->istate = CV_TSTOP_RETURN;
+        //break;
+        return;
+      }
+
+      if ((dmdv->cv_tn + dmdv->cv_hprime - dmdv->cv_tstop) * dmdv->cv_h > 0.) {
+        dmdv->cv_hprime = (dmdv->cv_tstop - dmdv->cv_tn) * (1.0 - 4.0 * dmdv->cv_uround);
+        dmdv->cv_eta = dmdv->cv_hprime / dmdv->cv_h;
+      }
+
     }
 
+#ifdef DEV_CUDACVODE
+
   }
+
+#else
+#endif
+
 
 }
 
@@ -5281,7 +5266,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
 
   itsolver *bicg = &(sd->bicg);
   ModelDataGPU *mGPU = &sd->mGPU;
-  double *youtArray = N_VGetArrayPointer(yout);
+  //double *youtArray = N_VGetArrayPointer(yout);
 
   /*
    * -------------------------------------
@@ -5573,67 +5558,12 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
   }
 
   nstloc = 0;
-  for(;;) {
 
-    cv_mem->cv_next_h = cv_mem->cv_h;
-    cv_mem->cv_next_q = cv_mem->cv_q;
+#ifdef DEV_CUDACVODE
 
-#ifndef DEV_CUDACVODE
-
-    /* Reset and check ewt */
-
-/*
-    if (cv_mem->cv_nst > 0) {
-
-      //ewtsetOK = cv_mem->cv_efun(cv_mem->cv_zn[0], cv_mem->cv_ewt, cv_mem->cv_e_data);
-
-      //ewtsetOK = cvEwtSet(cv_mem->cv_zn[0], cv_mem->cv_ewt, cv_mem->cv_e_data);//fine
-      ewtsetOK = cvEwtSetSV(cv_mem, cv_mem->cv_zn[0], cv_mem->cv_ewt);
-      //printf("ewtsetOK %d\n",ewtsetOK);
-
-
-      if (ewtsetOK != 0) {
-
-        if (cv_mem->cv_itol == CV_WF)
-          cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "CVode",
-                         MSGCV_EWT_NOW_FAIL, cv_mem->cv_tn);
-        else
-          cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "CVode",
-                         MSGCV_EWT_NOW_BAD, cv_mem->cv_tn);
-
-        istate = CV_ILL_INPUT;
-        cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
-        N_VScale(ONE, cv_mem->cv_zn[0], yout);
-        break;
-
-      }
-    }
-*/
-
+  //for(;;) {
 #else
-
-    /* Reset and check ewt */
-    if (cv_mem->cv_nst > 0) {
-
-      ewtsetOK = cv_mem->cv_efun(cv_mem->cv_zn[0], cv_mem->cv_ewt, cv_mem->cv_e_data);
-
-      if (ewtsetOK != 0) {
-
-        if (cv_mem->cv_itol == CV_WF)
-          cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "CVode",
-                         MSGCV_EWT_NOW_FAIL, cv_mem->cv_tn);
-        else
-          cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "CVode",
-                         MSGCV_EWT_NOW_BAD, cv_mem->cv_tn);
-
-        istate = CV_ILL_INPUT;
-        cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
-        N_VScale(ONE, cv_mem->cv_zn[0], yout);
-        break;
-
-      }
-    }
-
+  for(;;) {
 #endif
 
 #ifdef PMC_DEBUG_GPU
@@ -5653,7 +5583,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     //int flag = 999;
 
     sd->mdv.cv_mxstep = cv_mem->cv_mxstep;
-    sd->mdv.cv_next_q = cv_mem->cv_next_q;
+    //sd->mdv.cv_next_q = cv_mem->cv_next_q;
     sd->mdv.tout = tout;
     sd->mdv.cv_taskc = cv_mem->cv_taskc;
     sd->mdv.cv_uround = cv_mem->cv_uround;
@@ -5706,7 +5636,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     sd->mdv.cv_q = cv_mem->cv_q;
     sd->mdv.cv_qprime = cv_mem->cv_qprime;
     sd->mdv.cv_h = cv_mem->cv_h;
-    sd->mdv.cv_next_h = cv_mem->cv_next_h;
+    //sd->mdv.cv_next_h = cv_mem->cv_next_h;
     sd->mdv.cv_hscale = cv_mem->cv_hscale;
     sd->mdv.cv_nscon = cv_mem->cv_nscon;
     sd->mdv.cv_hprime = cv_mem->cv_hprime;
@@ -5880,8 +5810,6 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     }
     */
 
-#ifndef DEV_CUDACVODE
-
     /* Reset and check ewt */
 
     if (istate==CV_ILL_INPUT) {
@@ -5892,10 +5820,11 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
         cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "CVode",
                        MSGCV_EWT_NOW_BAD, cv_mem->cv_tn);
       //Remove break after removing for(;;) in cpu
+#ifdef DEV_CUDACVODE
+#else
       break;
-    }
-
 #endif
+    }
 
     /* Check for too many steps */
     if ( (cv_mem->cv_mxstep>0) && (nstloc >= cv_mem->cv_mxstep) ) {
@@ -5904,7 +5833,10 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
       //istate = CV_TOO_MUCH_WORK;
       //cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
       //N_VScale(ONE, cv_mem->cv_zn[0], yout);
+#ifdef DEV_CUDACVODE
+#else
       break;
+#endif
     }
 
     /* Check for too much accuracy requested */
@@ -5917,7 +5849,10 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
       //cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
       //N_VScale(ONE, cv_mem->cv_zn[0], yout);
       //cv_mem->cv_tolsf *= TWO;
+#ifdef DEV_CUDACVODE
+#else
       break;
+#endif
     }
 
     /* Check for h below roundoff level in tn */
@@ -5932,14 +5867,19 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
       }
 
     if (kflag != CV_SUCCESS) {
-
       //printf("cudaCVode2 kflag %d\n",kflag);
-
+#ifdef DEV_CUDACVODE
+      istate = cvHandleFailure_gpu2(cv_mem, kflag);
+#else
       istate = cvHandleFailure_gpu2(cv_mem, kflag);
       cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
       N_VScale(ONE, cv_mem->cv_zn[0], yout);
       break;
+#endif
     }
+
+#ifdef DEV_CUDACVODE
+#else
 
     nstloc++;
 
@@ -5994,7 +5934,14 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     }
 #endif
 
+#endif
+
+#ifdef DEV_CUDACVODE
+#else
+
   } /* end looping for internal steps */
+
+#endif
 
   return(istate);
 }

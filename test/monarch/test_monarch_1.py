@@ -222,7 +222,7 @@ def all_timesteps():
   #mpiProcessesList = [40,1]
 
 
-  cells = [1000]
+  cells = [100]
   #cells = [100,1000,5000,10000]
   #cells = [1,10,100,1000,10000,100000]
 
