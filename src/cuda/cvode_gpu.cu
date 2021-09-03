@@ -2083,6 +2083,8 @@ void alloc_solver_gpu2(CVodeMem cv_mem, SolverData *sd)
   cudaMalloc((void**)&mGPU->cv_l,L_MAX*sizeof(double));
   cudaMalloc((void**)&mGPU->cv_tau,(L_MAX+1)*sizeof(double));
   cudaMalloc((void**)&mGPU->cv_tq,(NUM_TESTS+1)*sizeof(double));
+  cudaMalloc((void**)&mGPU->cv_Vabstol,mGPU->nrows*sizeof(double));
+
 
 
   cudaMemcpy(mGPU->djA,bicg->jA,mGPU->nnz*sizeof(int),cudaMemcpyHostToDevice);
@@ -3865,6 +3867,36 @@ int cudaDeviceCVodeGetDky(ModelDataGPU *md, ModelDataVariable *dmdv,
 }
 
 __device__
+int cudaDevicecvEwtSetSV(ModelDataGPU *md, ModelDataVariable *dmdv,
+                         double *ycur, double *weight) {
+
+  extern __shared__ int flag_shr[];
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
+  unsigned int tid = threadIdx.x;
+
+/*
+
+  //N_VAbs(ycur, md->dtempv);
+  //N_VAbs(cv_mem->cv_ftemp, cv_mem->cv_ftemp);
+  //md->dftemp[i]=fabs(md->dftemp[i]);
+  md->dtempv[i]=fabs(ycur[i]);
+
+  //N_VLinearSum(dmdv->cv_reltol, md->dtempv, ONE,
+  //             md->cv_Vabstol, md->dtempv);
+ cudaDevicezaxpby(dmdv->cv_reltol, md->dtempv, 1.,
+        &md->dzn[md->nrows*(j)], &md->dzn[md->nrows*(j-1)], md->nrows);
+
+
+
+  if (N_VMin(md->dtempv) <= 0.) return(-1);
+  N_VInv(md->dtempv, weight);
+  return(0);
+
+ */
+
+}
+
+__device__
 void cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
   extern __shared__ int flag_shr[];
@@ -3873,6 +3905,40 @@ void cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
   int n_shr = blockDim.x+md->n_shr_empty;
 
 #ifndef DEV_CUDACVODE
+
+  /*
+
+  int ewtsetOK=0;
+
+  if (cv_mem->cv_nst > 0) {
+
+    //ewtsetOK = cvEwtSetSV(cv_mem, cv_mem->cv_zn[0], cv_mem->cv_ewt);
+    ewtsetOK = cudaDevicecvEwtSetSV(md, dmdv, md->dzn, md->dewt);
+
+    //printf("ewtsetOK %d\n",ewtsetOK);
+
+    if (ewtsetOK != 0) {
+
+      //if (cv_mem->cv_itol == CV_WF)
+      //  cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "CVode",
+      //                 MSGCV_EWT_NOW_FAIL, cv_mem->cv_tn);
+      //else
+      //  cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "CVode",
+      //                 MSGCV_EWT_NOW_BAD, cv_mem->cv_tn);
+
+      dmdv->istate = CV_ILL_INPUT;
+      dmdv->cv_tretlast = dmdv->tret = dmdv->cv_tn;
+      //N_VScale(ONE, cv_mem->cv_zn[0], yout);
+      md->yout[i]=md->dzn[i];
+      //break;
+      return;
+    }
+  }
+
+   */
+
+#else
+#endif
 
   /* Check for too many steps */
   if ( (dmdv->cv_mxstep>0) && (dmdv->nstloc >= dmdv->cv_mxstep) ) {
@@ -3885,9 +3951,6 @@ void cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
     return;
     //break;
   }
-
-#else
-#endif
 
   /* Check for too much accuracy requested */
   //double nrm = N_VWrmsNorm(dmdv->cv_zn[0], dmdv->cv_ewt);
@@ -4663,6 +4726,47 @@ void solveCVODEGPU(SolverData *sd, CVodeMem cv_mem)
   }
 #endif
 
+}
+
+static int cvEwtSetSV(CVodeMem cv_mem, N_Vector ycur, N_Vector weight)
+{
+  N_VAbs(ycur, cv_mem->cv_tempv);
+  N_VLinearSum(cv_mem->cv_reltol, cv_mem->cv_tempv, ONE,
+               cv_mem->cv_Vabstol, cv_mem->cv_tempv);
+  if (N_VMin(cv_mem->cv_tempv) <= ZERO) return(-1);
+  N_VInv(cv_mem->cv_tempv, weight);
+  return(0);
+}
+
+
+int cvEwtSet(N_Vector ycur, N_Vector weight, void *data)
+{
+  CVodeMem cv_mem;
+  int flag = 0;
+
+  /* data points to cv_mem here */
+
+  cv_mem = (CVodeMem) data;
+
+  /*
+
+  switch(cv_mem->cv_itol) {
+
+    //Not used in CAMP
+     case CV_SS:
+      flag = cvEwtSetSS(cv_mem, ycur, weight);
+      break;
+
+    case CV_SV:
+      flag = cvEwtSetSV(cv_mem, ycur, weight);
+      break;
+
+  }
+*/
+
+  flag = cvEwtSetSV(cv_mem, ycur, weight);
+
+  return(flag);
 }
 
 int CVode_gpu2(void *cvode_mem, realtype tout, N_Vector yout,
@@ -5445,6 +5549,40 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     cv_mem->cv_next_h = cv_mem->cv_h;
     cv_mem->cv_next_q = cv_mem->cv_q;
 
+#ifndef DEV_CUDACVODE
+
+    /* Reset and check ewt */
+
+
+    if (cv_mem->cv_nst > 0) {
+
+      //ewtsetOK = cv_mem->cv_efun(cv_mem->cv_zn[0], cv_mem->cv_ewt, cv_mem->cv_e_data);
+
+      //ewtsetOK = cvEwtSet(cv_mem->cv_zn[0], cv_mem->cv_ewt, cv_mem->cv_e_data);//fine
+      ewtsetOK = cvEwtSetSV(cv_mem, cv_mem->cv_zn[0], cv_mem->cv_ewt);
+      //printf("ewtsetOK %d\n",ewtsetOK);
+
+
+      if (ewtsetOK != 0) {
+
+        if (cv_mem->cv_itol == CV_WF)
+          cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "CVode",
+                         MSGCV_EWT_NOW_FAIL, cv_mem->cv_tn);
+        else
+          cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "CVode",
+                         MSGCV_EWT_NOW_BAD, cv_mem->cv_tn);
+
+        istate = CV_ILL_INPUT;
+        cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
+        N_VScale(ONE, cv_mem->cv_zn[0], yout);
+        break;
+
+      }
+    }
+
+
+#else
+
     /* Reset and check ewt */
     if (cv_mem->cv_nst > 0) {
 
@@ -5467,34 +5605,6 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
       }
     }
 
-#ifndef DEV_CUDACVODE
-
-    /* Check for too many steps */
-
-    /*
-    if ( (cv_mem->cv_mxstep>0) && (nstloc >= cv_mem->cv_mxstep) ) {
-      cvProcessError(cv_mem, CV_TOO_MUCH_WORK, "CVODE", "CVode",
-                     MSGCV_MAX_STEPS, cv_mem->cv_tn);
-      istate = CV_TOO_MUCH_WORK;
-      cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
-      N_VScale(ONE, cv_mem->cv_zn[0], yout);
-      break;
-    }
-
-     */
-
-#else
-
-    /* Check for too many steps */
-    if ( (cv_mem->cv_mxstep>0) && (nstloc >= cv_mem->cv_mxstep) ) {
-      cvProcessError(cv_mem, CV_TOO_MUCH_WORK, "CVODE", "CVode",
-                     MSGCV_MAX_STEPS, cv_mem->cv_tn);
-      istate = CV_TOO_MUCH_WORK;
-      cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
-      N_VScale(ONE, cv_mem->cv_zn[0], yout);
-      break;
-    }
-
 #endif
 
 #ifdef PMC_DEBUG_GPU
@@ -5508,6 +5618,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     double *cv_last_yn = N_VGetArrayPointer(cv_mem->cv_last_yn);
     double *cv_acor_init = N_VGetArrayPointer(cv_mem->cv_acor_init);
     double *youtArray = N_VGetArrayPointer(yout);
+    double *cv_Vabstol = N_VGetArrayPointer(cv_mem->cv_Vabstol);
 
     int flag = 0; //CAMP_SOLVER_SUCCESS
     //int flag = 999;
@@ -5590,6 +5701,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     cudaMemcpy(mGPU->cv_last_yn, cv_last_yn, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice);
     cudaMemcpy(mGPU->cv_acor_init, cv_acor_init, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice);
     cudaMemcpy(mGPU->yout, youtArray, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice);
+    cudaMemcpy(mGPU->cv_Vabstol,cv_Vabstol,mGPU->nrows*sizeof(double),cudaMemcpyHostToDevice);
 
 
     for (int i = 0; i <= cv_mem->cv_qmax; i++) {//cv_qmax+1 (6)?
@@ -5689,6 +5801,9 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     cudaMemcpy(cv_last_yn, mGPU->cv_last_yn, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost);
     cudaMemcpy(cv_acor_init, mGPU->cv_acor_init, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost);
     cudaMemcpy(youtArray, mGPU->yout, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost);
+    cudaMemcpy(ewt, mGPU->dewt, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost);
+    cudaMemcpy(cv_Vabstol, mGPU->cv_Vabstol, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost);
+
 
     for (int i = 0; i <= cv_mem->cv_qmax; i++) {//cv_qmax+1 (6)?
       double *zn = NV_DATA_S(cv_mem->cv_zn[i]);
@@ -5738,6 +5853,21 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
 
 #ifndef DEV_CUDACVODE
 
+    /* Reset and check ewt */
+
+    if (istate==CV_ILL_INPUT) {
+      if (cv_mem->cv_itol == CV_WF)
+        cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "CVode",
+                       MSGCV_EWT_NOW_FAIL, cv_mem->cv_tn);
+      else
+        cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "CVode",
+                       MSGCV_EWT_NOW_BAD, cv_mem->cv_tn);
+      //Remove break after removing for(;;) in cpu
+      break;
+    }
+
+#endif
+
     /* Check for too many steps */
     if ( (cv_mem->cv_mxstep>0) && (nstloc >= cv_mem->cv_mxstep) ) {
       cvProcessError(cv_mem, CV_TOO_MUCH_WORK, "CVODE", "CVode",
@@ -5747,8 +5877,6 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
       //N_VScale(ONE, cv_mem->cv_zn[0], yout);
       break;
     }
-
-#endif
 
     /* Check for too much accuracy requested */
     //nrm = N_VWrmsNorm(cv_mem->cv_zn[0], cv_mem->cv_ewt);
@@ -6151,7 +6279,9 @@ int cvInitialSetup_gpu2(CVodeMem cv_mem)
   else                      cv_mem->cv_e_data = cv_mem;
 
   /* Load initial error weights */
-  ier = cv_mem->cv_efun(cv_mem->cv_zn[0], cv_mem->cv_ewt, cv_mem->cv_e_data);
+  //ier = cv_mem->cv_efun(cv_mem->cv_zn[0], cv_mem->cv_ewt, cv_mem->cv_e_data);
+  ier = cvEwtSetSV(cv_mem, cv_mem->cv_zn[0], cv_mem->cv_ewt); //always sv in CAMP
+
   if (ier != 0) {
     if (cv_mem->cv_itol == CV_WF)
       cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "cvInitialSetup", MSGCV_EWT_FAIL);

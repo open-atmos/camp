@@ -267,6 +267,7 @@ typedef struct {
 
     int nnz;
     double *yout;
+    double *cv_Vabstol;
 
     //Allocated in GPU only
     int i_cell;
