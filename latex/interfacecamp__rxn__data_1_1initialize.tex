@@ -1,0 +1,50 @@
+\hypertarget{interfacecamp__rxn__data_1_1initialize}{}\doxysection{camp\+\_\+rxn\+\_\+data\+::initialize Interface Reference}
+\label{interfacecamp__rxn__data_1_1initialize}\index{camp\_rxn\_data::initialize@{camp\_rxn\_data::initialize}}
+
+
+Reaction initialization. Takes species, phase and reaction parameters and packs required information into the condensed data arrays for use during the model run.  
+
+
+\doxysubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+subroutine \mbox{\hyperlink{interfacecamp__rxn__data_1_1initialize_a57534a7b0200191e87b26165d1b1d029}{initialize}} (this, chem\+\_\+spec\+\_\+data, aero\+\_\+rep, n\+\_\+cells)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Reaction initialization. Takes species, phase and reaction parameters and packs required information into the condensed data arrays for use during the model run. 
+
+This routine should be called once for each reaction at the beginning of a model run after all the input files have been read in. 
+
+Definition at line 197 of file rxn\+\_\+data.\+F90.
+
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{interfacecamp__rxn__data_1_1initialize_a57534a7b0200191e87b26165d1b1d029}\label{interfacecamp__rxn__data_1_1initialize_a57534a7b0200191e87b26165d1b1d029}} 
+\index{camp\_rxn\_data::initialize@{camp\_rxn\_data::initialize}!initialize@{initialize}}
+\index{initialize@{initialize}!camp\_rxn\_data::initialize@{camp\_rxn\_data::initialize}}
+\doxysubsubsection{\texorpdfstring{initialize()}{initialize()}}
+{\footnotesize\ttfamily subroutine camp\+\_\+rxn\+\_\+data\+::initialize\+::initialize (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__rxn__data_1_1rxn__data__t}{rxn\+\_\+data\+\_\+t}}), intent(inout)}]{this,  }\item[{type(\mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t}{chem\+\_\+spec\+\_\+data\+\_\+t}}), intent(in)}]{chem\+\_\+spec\+\_\+data,  }\item[{type(\mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__ptr}{aero\+\_\+rep\+\_\+data\+\_\+ptr}}), dimension(\+:), intent(in), pointer}]{aero\+\_\+rep,  }\item[{integer(kind=i\+\_\+kind), intent(in)}]{n\+\_\+cells }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & Reaction data\\
+\hline
+\mbox{\texttt{ in}}  & {\em chem\+\_\+spec\+\_\+data} & Chemical species data\\
+\hline
+\mbox{\texttt{ in}}  & {\em aero\+\_\+rep} & Aerosol representations\\
+\hline
+\mbox{\texttt{ in}}  & {\em n\+\_\+cells} & Number of grid cells to solve simultaneously \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 197 of file rxn\+\_\+data.\+F90.
+
+
+
+The documentation for this interface was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{rxn__data_8_f90}{rxn\+\_\+data.\+F90}}\end{DoxyCompactItemize}

@@ -1,0 +1,225 @@
+\hypertarget{structcamp__property_1_1property__link__t}{}\doxysection{camp\+\_\+property\+::property\+\_\+link\+\_\+t Interface Reference}
+\label{structcamp__property_1_1property__link__t}\index{camp\_property::property\_link\_t@{camp\_property::property\_link\_t}}
+
+
+Property link data.  
+
+
+\doxysubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+procedure \mbox{\hyperlink{structcamp__property_1_1property__link__t_a9f873c5a61de22c52a524896427cd379}{key}}
+\begin{DoxyCompactList}\small\item\em Get the key name. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__property_1_1property__link__t_a9557bee9859b6ed236aacc5a98b29bb1}{set\+\_\+value}}
+\begin{DoxyCompactList}\small\item\em Set the value. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__property_1_1property__link__t_a0fbfbed90887015cd890d1b36887cfd7}{value\+\_\+int}}
+\begin{DoxyCompactList}\small\item\em Get the int value. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__property_1_1property__link__t_a41c3d1aaa9611d6bf37a56a660cec644}{value\+\_\+real}}
+\begin{DoxyCompactList}\small\item\em Get the real value. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__property_1_1property__link__t_aae9bcc8e121e3e30ad244f1d2343b2db}{value\+\_\+logical}}
+\begin{DoxyCompactList}\small\item\em Get the logical value. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__property_1_1property__link__t_a22f0eb90f8e7f5cad2d06c2c389e1ca3}{value\+\_\+string}}
+\begin{DoxyCompactList}\small\item\em Get the string value. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__property_1_1property__link__t_a259dbbb84ec5262e8d8175a1c84d7497}{value\+\_\+property\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em Get the property sub-\/set. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__property_1_1property__link__t_a8cf962c37e00c78c6650cced3e3bfec8}{print}} =$>$ \mbox{\hyperlink{namespacecamp__property_a31bb4ad71e6fac0fdd3dd3e4d6255cb3}{link\+\_\+do\+\_\+print}}
+\begin{DoxyCompactList}\small\item\em Print the contents of a property key-\/value pair. \end{DoxyCompactList}\item 
+final \mbox{\hyperlink{structcamp__property_1_1property__link__t_ae1047932449861f1ad24dcf7f740b229}{link\+\_\+finalize}}
+\begin{DoxyCompactList}\small\item\em Finalize. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+character(\+:), allocatable \mbox{\hyperlink{structcamp__property_1_1property__link__t_a508c33a2f7e4d7ae1d70815993613343}{key\+\_\+name}}
+\begin{DoxyCompactList}\small\item\em Key name. \end{DoxyCompactList}\item 
+class($\ast$), pointer \mbox{\hyperlink{structcamp__property_1_1property__link__t_a16fb32294f0e935a4325f6570775bf8a}{val}} =$>$ null()
+\begin{DoxyCompactList}\small\item\em Value. \end{DoxyCompactList}\item 
+type(\mbox{\hyperlink{structcamp__property_1_1property__link__t}{property\+\_\+link\+\_\+t}}), pointer \mbox{\hyperlink{structcamp__property_1_1property__link__t_a809e8c3d25e823d58bc3ab1a0510cfed}{next\+\_\+link}} =$>$ null()
+\begin{DoxyCompactList}\small\item\em Next link. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Property link data. 
+
+An element of a property data set. Property values can be of any primitive type or be a pointer to a sub-\/set of property data. The \mbox{\hyperlink{structcamp__property_1_1property__link__t}{property\+\_\+link\+\_\+t}} object is for internal use in the \mbox{\hyperlink{namespacecamp__property}{camp\+\_\+property}} module. All interactions with property data should be made using \mbox{\hyperlink{structcamp__property_1_1property__t}{property\+\_\+t}} objects. 
+
+Definition at line 88 of file property.\+F90.
+
+
+
+\doxysubsection{Member Function/\+Subroutine Documentation}
+\mbox{\Hypertarget{structcamp__property_1_1property__link__t_a9f873c5a61de22c52a524896427cd379}\label{structcamp__property_1_1property__link__t_a9f873c5a61de22c52a524896427cd379}} 
+\index{camp\_property::property\_link\_t@{camp\_property::property\_link\_t}!key@{key}}
+\index{key@{key}!camp\_property::property\_link\_t@{camp\_property::property\_link\_t}}
+\doxysubsubsection{\texorpdfstring{key()}{key()}}
+{\footnotesize\ttfamily procedure camp\+\_\+property\+::property\+\_\+link\+\_\+t\+::key\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Get the key name. 
+
+
+
+Definition at line 98 of file property.\+F90.
+
+\mbox{\Hypertarget{structcamp__property_1_1property__link__t_ae1047932449861f1ad24dcf7f740b229}\label{structcamp__property_1_1property__link__t_ae1047932449861f1ad24dcf7f740b229}} 
+\index{camp\_property::property\_link\_t@{camp\_property::property\_link\_t}!link\_finalize@{link\_finalize}}
+\index{link\_finalize@{link\_finalize}!camp\_property::property\_link\_t@{camp\_property::property\_link\_t}}
+\doxysubsubsection{\texorpdfstring{link\_finalize()}{link\_finalize()}}
+{\footnotesize\ttfamily final camp\+\_\+property\+::property\+\_\+link\+\_\+t\+::link\+\_\+finalize\hspace{0.3cm}{\ttfamily [final]}, {\ttfamily [private]}}
+
+
+
+Finalize. 
+
+
+
+Definition at line 114 of file property.\+F90.
+
+\mbox{\Hypertarget{structcamp__property_1_1property__link__t_a8cf962c37e00c78c6650cced3e3bfec8}\label{structcamp__property_1_1property__link__t_a8cf962c37e00c78c6650cced3e3bfec8}} 
+\index{camp\_property::property\_link\_t@{camp\_property::property\_link\_t}!print@{print}}
+\index{print@{print}!camp\_property::property\_link\_t@{camp\_property::property\_link\_t}}
+\doxysubsubsection{\texorpdfstring{print()}{print()}}
+{\footnotesize\ttfamily procedure camp\+\_\+property\+::property\+\_\+link\+\_\+t\+::print\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Print the contents of a property key-\/value pair. 
+
+
+
+Definition at line 112 of file property.\+F90.
+
+\mbox{\Hypertarget{structcamp__property_1_1property__link__t_a9557bee9859b6ed236aacc5a98b29bb1}\label{structcamp__property_1_1property__link__t_a9557bee9859b6ed236aacc5a98b29bb1}} 
+\index{camp\_property::property\_link\_t@{camp\_property::property\_link\_t}!set\_value@{set\_value}}
+\index{set\_value@{set\_value}!camp\_property::property\_link\_t@{camp\_property::property\_link\_t}}
+\doxysubsubsection{\texorpdfstring{set\_value()}{set\_value()}}
+{\footnotesize\ttfamily procedure camp\+\_\+property\+::property\+\_\+link\+\_\+t\+::set\+\_\+value\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Set the value. 
+
+
+
+Definition at line 100 of file property.\+F90.
+
+\mbox{\Hypertarget{structcamp__property_1_1property__link__t_a0fbfbed90887015cd890d1b36887cfd7}\label{structcamp__property_1_1property__link__t_a0fbfbed90887015cd890d1b36887cfd7}} 
+\index{camp\_property::property\_link\_t@{camp\_property::property\_link\_t}!value\_int@{value\_int}}
+\index{value\_int@{value\_int}!camp\_property::property\_link\_t@{camp\_property::property\_link\_t}}
+\doxysubsubsection{\texorpdfstring{value\_int()}{value\_int()}}
+{\footnotesize\ttfamily procedure camp\+\_\+property\+::property\+\_\+link\+\_\+t\+::value\+\_\+int\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Get the int value. 
+
+
+
+Definition at line 102 of file property.\+F90.
+
+\mbox{\Hypertarget{structcamp__property_1_1property__link__t_aae9bcc8e121e3e30ad244f1d2343b2db}\label{structcamp__property_1_1property__link__t_aae9bcc8e121e3e30ad244f1d2343b2db}} 
+\index{camp\_property::property\_link\_t@{camp\_property::property\_link\_t}!value\_logical@{value\_logical}}
+\index{value\_logical@{value\_logical}!camp\_property::property\_link\_t@{camp\_property::property\_link\_t}}
+\doxysubsubsection{\texorpdfstring{value\_logical()}{value\_logical()}}
+{\footnotesize\ttfamily procedure camp\+\_\+property\+::property\+\_\+link\+\_\+t\+::value\+\_\+logical\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Get the logical value. 
+
+
+
+Definition at line 106 of file property.\+F90.
+
+\mbox{\Hypertarget{structcamp__property_1_1property__link__t_a259dbbb84ec5262e8d8175a1c84d7497}\label{structcamp__property_1_1property__link__t_a259dbbb84ec5262e8d8175a1c84d7497}} 
+\index{camp\_property::property\_link\_t@{camp\_property::property\_link\_t}!value\_property\_t@{value\_property\_t}}
+\index{value\_property\_t@{value\_property\_t}!camp\_property::property\_link\_t@{camp\_property::property\_link\_t}}
+\doxysubsubsection{\texorpdfstring{value\_property\_t()}{value\_property\_t()}}
+{\footnotesize\ttfamily procedure camp\+\_\+property\+::property\+\_\+link\+\_\+t\+::value\+\_\+property\+\_\+t\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Get the property sub-\/set. 
+
+
+
+Definition at line 110 of file property.\+F90.
+
+\mbox{\Hypertarget{structcamp__property_1_1property__link__t_a41c3d1aaa9611d6bf37a56a660cec644}\label{structcamp__property_1_1property__link__t_a41c3d1aaa9611d6bf37a56a660cec644}} 
+\index{camp\_property::property\_link\_t@{camp\_property::property\_link\_t}!value\_real@{value\_real}}
+\index{value\_real@{value\_real}!camp\_property::property\_link\_t@{camp\_property::property\_link\_t}}
+\doxysubsubsection{\texorpdfstring{value\_real()}{value\_real()}}
+{\footnotesize\ttfamily procedure camp\+\_\+property\+::property\+\_\+link\+\_\+t\+::value\+\_\+real\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Get the real value. 
+
+
+
+Definition at line 104 of file property.\+F90.
+
+\mbox{\Hypertarget{structcamp__property_1_1property__link__t_a22f0eb90f8e7f5cad2d06c2c389e1ca3}\label{structcamp__property_1_1property__link__t_a22f0eb90f8e7f5cad2d06c2c389e1ca3}} 
+\index{camp\_property::property\_link\_t@{camp\_property::property\_link\_t}!value\_string@{value\_string}}
+\index{value\_string@{value\_string}!camp\_property::property\_link\_t@{camp\_property::property\_link\_t}}
+\doxysubsubsection{\texorpdfstring{value\_string()}{value\_string()}}
+{\footnotesize\ttfamily procedure camp\+\_\+property\+::property\+\_\+link\+\_\+t\+::value\+\_\+string\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Get the string value. 
+
+
+
+Definition at line 108 of file property.\+F90.
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{structcamp__property_1_1property__link__t_a508c33a2f7e4d7ae1d70815993613343}\label{structcamp__property_1_1property__link__t_a508c33a2f7e4d7ae1d70815993613343}} 
+\index{camp\_property::property\_link\_t@{camp\_property::property\_link\_t}!key\_name@{key\_name}}
+\index{key\_name@{key\_name}!camp\_property::property\_link\_t@{camp\_property::property\_link\_t}}
+\doxysubsubsection{\texorpdfstring{key\_name}{key\_name}}
+{\footnotesize\ttfamily character(\+:), allocatable camp\+\_\+property\+::property\+\_\+link\+\_\+t\+::key\+\_\+name\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Key name. 
+
+
+
+Definition at line 91 of file property.\+F90.
+
+\mbox{\Hypertarget{structcamp__property_1_1property__link__t_a809e8c3d25e823d58bc3ab1a0510cfed}\label{structcamp__property_1_1property__link__t_a809e8c3d25e823d58bc3ab1a0510cfed}} 
+\index{camp\_property::property\_link\_t@{camp\_property::property\_link\_t}!next\_link@{next\_link}}
+\index{next\_link@{next\_link}!camp\_property::property\_link\_t@{camp\_property::property\_link\_t}}
+\doxysubsubsection{\texorpdfstring{next\_link}{next\_link}}
+{\footnotesize\ttfamily type(\mbox{\hyperlink{structcamp__property_1_1property__link__t}{property\+\_\+link\+\_\+t}}), pointer camp\+\_\+property\+::property\+\_\+link\+\_\+t\+::next\+\_\+link =$>$ null()\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Next link. 
+
+
+
+Definition at line 95 of file property.\+F90.
+
+\mbox{\Hypertarget{structcamp__property_1_1property__link__t_a16fb32294f0e935a4325f6570775bf8a}\label{structcamp__property_1_1property__link__t_a16fb32294f0e935a4325f6570775bf8a}} 
+\index{camp\_property::property\_link\_t@{camp\_property::property\_link\_t}!val@{val}}
+\index{val@{val}!camp\_property::property\_link\_t@{camp\_property::property\_link\_t}}
+\doxysubsubsection{\texorpdfstring{val}{val}}
+{\footnotesize\ttfamily class($\ast$), pointer camp\+\_\+property\+::property\+\_\+link\+\_\+t\+::val =$>$ null()\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Value. 
+
+
+
+Definition at line 93 of file property.\+F90.
+
+
+
+The documentation for this interface was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{property_8_f90}{property.\+F90}}\end{DoxyCompactItemize}

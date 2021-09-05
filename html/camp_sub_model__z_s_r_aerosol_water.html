@@ -55,7 +55,7 @@ $(function() {
 <div class="title">CAMP: ZSR Aerosol Water </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>ZSR aerosol water calculates equilibrium aerosol water content based on the Zdanovski-Stokes-Robinson mixing rule <a class="el" href="citelist.html#CITEREF_Jacobson1996">[5]</a> in the following generalized format:</p>
+<div class="textblock"><p>ZSR aerosol water calculates equilibrium aerosol water content based on the Zdanovski-Stokes-Robinson mixing rule <b>[Jacobson1996]</b> in the following generalized format:</p>
 <p class="formulaDsp">
 \[ W = \sum\limits_{i=0}^{n}\frac{1000 M_i}{MW_i m_{i}(a_w)} \]
 </p>
@@ -91,11 +91,11 @@ $(function() {
 <div class="line">]}</div>
 </div><!-- fragment --><p> The key-value pair <b>aerosol</b> <b>phase</b> is required to specify the aerosol phase for which to calculate water content. Key-value pairs <b>gas-phase</b> <b>water</b> and <b>aerosol-phase</b> <b>water</b> must also be present and specify the names for the water species in each phase. The final required key-value pair is <b>ion</b> <b>pairs</b> which should contain a set of key-value pairs where the key of each member of the set is the name of a binary electrolyte and the contents contain parameters required to estimate the contribution of the this electrolyte to total aerosol water. The name of the electrolyte may or may not refer to an actual aerosol-phase species.</p>
 <p>Each binary electrolyte must include a <b>type</b> that refers to a method of calculating ion-pair contributions to aerosol water. Valid values for <b>type</b> are <b>JACOBSON</b> and <b>EQSAM</b>. These are described next.</p>
-<p>Aerosol water from ion pairs with type <b>JACOBSON</b> use equations (28) and (29) in Jacobson et al. (1996) <a class="el" href="citelist.html#CITEREF_Jacobson1996">[5]</a> where experimentally determined binary solution molalities are fit to a polynomial as:</p>
+<p>Aerosol water from ion pairs with type <b>JACOBSON</b> use equations (28) and (29) in Jacobson et al. (1996) <b>[Jacobson1996]</b> where experimentally determined binary solution molalities are fit to a polynomial as:</p>
 <p class="formulaDsp">
 \[ \sqrt{m_{i}(a_w)} = Y_0 + Y_1 a_w + Y_2 a_w^2 + Y_3 a_w^3 + ..., \]
 </p>
-<p>where \(Y_j\) are the fitting parameters. Thus, \(m_i(a_w)\) is calculated at each time step, assuming constant \(a_w\). These values must be included in a key-value pair <b>Y_j</b> whose value is an array with the \(Y_j\) parameters. The size of the array corresponds to the order of the polynomial equation, which must be greater than 1. The key-value pair <b>low</b> <b>RH</b> is required to specify the lowest RH (0&ndash;1) for which this fit is valid. This value for RH will be used for all lower RH in calculations of \(m_i(a_w)\) as per Jacobson et al. (1996) <a class="el" href="citelist.html#CITEREF_Jacobson1996">[5]</a>.</p>
+<p>where \(Y_j\) are the fitting parameters. Thus, \(m_i(a_w)\) is calculated at each time step, assuming constant \(a_w\). These values must be included in a key-value pair <b>Y_j</b> whose value is an array with the \(Y_j\) parameters. The size of the array corresponds to the order of the polynomial equation, which must be greater than 1. The key-value pair <b>low</b> <b>RH</b> is required to specify the lowest RH (0&ndash;1) for which this fit is valid. This value for RH will be used for all lower RH in calculations of \(m_i(a_w)\) as per Jacobson et al. (1996) <b>[Jacobson1996]</b>.</p>
 <p>The key-value pair <b>ions</b> must contain the set of ions this binary electrolyte includes. Each species must correspond to a species present in <b>aerosol</b> <b>phase</b> and have a <b>charge</b> parameter that specifies their charge (uncharged species are not permitted in this set) and a <b>molecular</b> <b>weight</b> <b></b>[<b>kg</b> <b>mol-1</b>] ( \(\mbox{kg}\,\mbox{mol}^{-1}\)) property. Ions without a <b>qty</b> specified are assumed to appear once in the binary electrolyte. The total molecular weight for the binary electroly \(MW_i\) is calculated as a sum of its ionic components, and the ion species concentrations are used to determine the \(M_i\) during integration. The aerosol-phase water species to be calculated using the ZSR method must have the key-value pair <b>tracer</b> <b>type</b> with value "CONSTANT".</p>
 <p>For the above example, the following input data should be present: </p><div class="fragment"><div class="line">{</div>
 <div class="line">  &quot;name&quot; : &quot;H2O&quot;,</div>
@@ -131,16 +131,16 @@ $(function() {
 <div class="line">  &quot;type&quot; : &quot;AERO_PHASE&quot;,</div>
 <div class="line">  &quot;species&quot; : [&quot;Nap&quot;, &quot;SO4mm&quot;, H2O_aq&quot;]</div>
 <div class="line">}</div>
-</div><!-- fragment --><p> Aerosol water from ion pairs with type <b>EQSAM</b> use the parameterization of Metzger et al. (2002) <a class="el" href="citelist.html#CITEREF_Metzger2002">[7]</a> for aerosol water content:</p>
+</div><!-- fragment --><p> Aerosol water from ion pairs with type <b>EQSAM</b> use the parameterization of Metzger et al. (2002) <b>[Metzger2002]</b> for aerosol water content:</p>
 <p class="formulaDsp">
 \[ \sqrt{m_{i}(a_w)} = (NW_i MW_{H2O}/MW_i (1/a_w-1))^{ZW_i} \]
 </p>
-<p>where \(NW_i\) and \(ZW_i\) are fitting parameters <a class="el" href="citelist.html#CITEREF_Metzger2002">[7]</a>, and must be provided in key-value pairs <b>NW</b> and <b>ZW</b>, along with the binary electrolyte molecular weight <b>MW</b> ( \(\mbox{kg}\,\mbox{mol}^{-1}\)). The key-value pair <b>ions</b> must contain a set of ions that can be summed to calculate \(M_i\) at runtime. </p>
+<p>where \(NW_i\) and \(ZW_i\) are fitting parameters <b>[Metzger2002]</b>, and must be provided in key-value pairs <b>NW</b> and <b>ZW</b>, along with the binary electrolyte molecular weight <b>MW</b> ( \(\mbox{kg}\,\mbox{mol}^{-1}\)). The key-value pair <b>ions</b> must contain a set of ions that can be summed to calculate \(M_i\) at runtime. </p>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Aug 29 2021 16:59:02 for CAMP by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Sun Sep 5 2021 20:48:02 for CAMP by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

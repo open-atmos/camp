@@ -1,0 +1,160 @@
+NOTE\+: These instructions are out-\/of-\/date. TODO update
+
+Adding an \mbox{\hyperlink{camp_aero_rep}{aerosol representation}} to the \mbox{\hyperlink{index}{camp-\/chem}} module can be done in the following steps\+:\hypertarget{camp_aero_rep_add_autotoc_md0}{}\doxysubsection{Step 1. Create a new aerosol representation module}\label{camp_aero_rep_add_autotoc_md0}
+The module should be placed in the {\ttfamily /src/aero\+\_\+reps} folder and extend the abstract {\ttfamily \mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__t}{camp\+\_\+aero\+\_\+rep\+\_\+data\+::aero\+\_\+rep\+\_\+data\+\_\+t}}} type, overriding all deferred functions, and providing a constructor that returns a pointer to a newly allocated instance of the new type\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keyword}{module} camp\_aero\_rep\_foo}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keywordtype}{use }...}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keywordtype}{implicit none}}
+\DoxyCodeLine{  \textcolor{keywordtype}{private}}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keywordtype}{public} :: aero\_rep\_foo\_t}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keyword}{type}, \textcolor{keyword}{extends}(aero\_rep\_data\_t) :: aero\_rep\_foo\_t}
+\DoxyCodeLine{  \textcolor{keyword}{contains}}
+\DoxyCodeLine{    ... (all \textcolor{keywordtype}{deferred} functions) ...}
+\DoxyCodeLine{  \textcolor{keyword}{end type }:: aero\_rep\_foo\_t}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{! Constructor}}
+\DoxyCodeLine{  \textcolor{keyword}{interface} aero\_rep\_foo\_t}
+\DoxyCodeLine{    \textcolor{keywordtype}{procedure} :: constructor}
+\DoxyCodeLine{  \textcolor{keyword}{end interface }aero\_rep\_foo\_t}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keyword}{function }constructor() \textcolor{keyword}{result} (new\_obj)}
+\DoxyCodeLine{    \textcolor{keywordtype}{type}(aero\_rep\_foo\_t), \textcolor{keywordtype}{pointer} :: new\_obj}
+\DoxyCodeLine{    \textcolor{keyword}{allocate}(new\_obj)}
+\DoxyCodeLine{  \textcolor{keyword}{end function }constructor}
+\DoxyCodeLine{}
+\DoxyCodeLine{  ...}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{keyword}{end module }camp\_aero\_rep\_foo}
+
+\end{DoxyCode}
+\hypertarget{camp_aero_rep_add_autotoc_md1}{}\doxysubsection{Step 2. Create a new aerosol representation state module}\label{camp_aero_rep_add_autotoc_md1}
+The module should also be placed in the {\ttfamily /src/aero\+\_\+reps} folder and should extend the abstract {\ttfamily camp\+\_\+aero\+\_\+rep\+\_\+state\+::aero\+\_\+rep\+\_\+state\+\_\+t} type, overriding all deferred functions, and providing a constructor that returns a pointer to a newly allocated instance of the new type\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keyword}{module} camp\_aero\_rep\_foo\_state}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keywordtype}{use }...}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keywordtype}{implicit none}}
+\DoxyCodeLine{  \textcolor{keywordtype}{private}}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keywordtype}{public} :: aero\_rep\_foo\_state\_t}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keyword}{type}, \textcolor{keyword}{extends}(aero\_rep\_state\_t) :: aero\_rep\_foo\_state\_t}
+\DoxyCodeLine{  \textcolor{keyword}{contains}}
+\DoxyCodeLine{    ... (all \textcolor{keywordtype}{deferred} functions) ...}
+\DoxyCodeLine{  \textcolor{keyword}{end type }:: aero\_rep\_foo\_state\_t}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{! Constructor}}
+\DoxyCodeLine{  \textcolor{keyword}{interface} aero\_rep\_foo\_state\_t}
+\DoxyCodeLine{    \textcolor{keywordtype}{procedure} :: constructor}
+\DoxyCodeLine{  \textcolor{keyword}{end interface }aero\_rep\_foo\_state\_t}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keyword}{function }constructor() \textcolor{keyword}{result} (new\_obj)}
+\DoxyCodeLine{    \textcolor{keywordtype}{type}(aero\_rep\_foo\_state\_t), \textcolor{keywordtype}{pointer} :: new\_obj}
+\DoxyCodeLine{    \textcolor{keyword}{allocate}(new\_obj)}
+\DoxyCodeLine{  \textcolor{keyword}{end function }constructor}
+\DoxyCodeLine{}
+\DoxyCodeLine{  ...}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{keyword}{end module }camp\_aero\_rep\_foo\_state}
+
+\end{DoxyCode}
+\hypertarget{camp_aero_rep_add_autotoc_md2}{}\doxysubsection{Step 3. Add the aerosol representation to the \textbackslash{}c  camp\+\_\+aero\+\_\+rep\+\_\+factory module}\label{camp_aero_rep_add_autotoc_md2}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keyword}{module} \mbox{\hyperlink{namespacecamp__aero__rep__factory}{camp\_aero\_rep\_factory}}}
+\DoxyCodeLine{}
+\DoxyCodeLine{...}
+\DoxyCodeLine{}
+\DoxyCodeLine{ \textcolor{comment}{! Use all aerosol representation modules}}
+\DoxyCodeLine{ ...}
+\DoxyCodeLine{ \textcolor{keywordtype}{use }camp\_aero\_rep\_foo}
+\DoxyCodeLine{}
+\DoxyCodeLine{ ...}
+\DoxyCodeLine{\textcolor{comment}{}}
+\DoxyCodeLine{\textcolor{comment}{ !> Identifiers for aerosol representations -\/ used by binary packing/unpacking}}
+\DoxyCodeLine{\textcolor{comment}{ !! functions}}
+\DoxyCodeLine{ ...}
+\DoxyCodeLine{ \textcolor{keywordtype}{integer(kind=i\_kind)}, \textcolor{keywordtype}{parameter} :: AERO\_REP\_FOO = 32}
+\DoxyCodeLine{}
+\DoxyCodeLine{ ...}
+\DoxyCodeLine{\textcolor{comment}{}}
+\DoxyCodeLine{\textcolor{comment}{ !> Create a new aerosol representation by type name}}
+\DoxyCodeLine{ \textcolor{keyword}{function }\mbox{\hyperlink{namespacecamp__aero__rep__factory_a05ad0c111be18449a3b8f850f9a1e0ac}{create}}(this, type\_name) \textcolor{keyword}{result} (new\_obj)}
+\DoxyCodeLine{   ...}
+\DoxyCodeLine{   \textcolor{keywordflow}{select case} (type\_name)}
+\DoxyCodeLine{     ...}
+\DoxyCodeLine{     \textcolor{keywordflow}{case} (\textcolor{stringliteral}{"{}AERO\_REP\_FOO"{}})}
+\DoxyCodeLine{       new\_obj => aero\_rep\_foo\_t()}
+\DoxyCodeLine{   ...}
+\DoxyCodeLine{ \textcolor{keyword}{end function }\mbox{\hyperlink{namespacecamp__aero__rep__factory_a05ad0c111be18449a3b8f850f9a1e0ac}{create}}}
+\DoxyCodeLine{}
+\DoxyCodeLine{...}
+\DoxyCodeLine{\textcolor{comment}{}}
+\DoxyCodeLine{\textcolor{comment}{ !> Pack the given value to the buffer, advancing position}}
+\DoxyCodeLine{ \textcolor{keyword}{subroutine }\mbox{\hyperlink{namespacecamp__aero__rep__factory_ac86219905f216bd3e27e13f9146346a9}{bin\_pack}}(this, aero\_rep, buffer, pos)}
+\DoxyCodeLine{   ...}
+\DoxyCodeLine{   \textcolor{keywordflow}{select type} (aero\_rep)}
+\DoxyCodeLine{     ...}
+\DoxyCodeLine{\textcolor{keywordflow}{     type is} (aero\_rep\_foo\_t)}
+\DoxyCodeLine{       aero\_rep\_type = aero\_rep\_foo}
+\DoxyCodeLine{   ...}
+\DoxyCodeLine{ \textcolor{keyword}{end subroutine }\mbox{\hyperlink{namespacecamp__aero__rep__factory_ac86219905f216bd3e27e13f9146346a9}{bin\_pack}}}
+\DoxyCodeLine{}
+\DoxyCodeLine{...}
+\DoxyCodeLine{\textcolor{comment}{}}
+\DoxyCodeLine{\textcolor{comment}{ !> Unpack the given value to the buffer, advancing position}}
+\DoxyCodeLine{ \textcolor{keyword}{function }\mbox{\hyperlink{namespacecamp__aero__rep__factory_a13df10c87120a3cd50610e104b4d3939}{bin\_unpack}}(this, buffer, pos) \textcolor{keyword}{result} (aero\_rep)}
+\DoxyCodeLine{   ...}
+\DoxyCodeLine{   \textcolor{keywordflow}{select case} (aero\_rep\_type)}
+\DoxyCodeLine{     ...}
+\DoxyCodeLine{     \textcolor{keywordflow}{case} (aero\_rep\_foo)}
+\DoxyCodeLine{       aero\_rep => aero\_rep\_foo\_t()}
+\DoxyCodeLine{   ...}
+\DoxyCodeLine{ \textcolor{keyword}{end function }\mbox{\hyperlink{namespacecamp__aero__rep__factory_a13df10c87120a3cd50610e104b4d3939}{bin\_unpack}}}
+\DoxyCodeLine{}
+\DoxyCodeLine{...}
+\DoxyCodeLine{\textcolor{keyword}{end module }camp\_aero\_rep\_factory}
+
+\end{DoxyCode}
+\hypertarget{camp_aero_rep_add_autotoc_md3}{}\doxysubsection{Step 4. Add the new module to the CMake\+List file in the root directory.}\label{camp_aero_rep_add_autotoc_md3}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{...}
+\DoxyCodeLine{}
+\DoxyCodeLine{\# partmc library}
+\DoxyCodeLine{...}
+\DoxyCodeLine{set(AEROSOL\_REPS\_SRC}
+\DoxyCodeLine{  ...}
+\DoxyCodeLine{  src/aero\_reps/aero\_rep\_foo.F90}
+\DoxyCodeLine{  src/aero\_reps/aero\_rep\_foo\_state.F90}
+\DoxyCodeLine{)}
+\DoxyCodeLine{}
+\DoxyCodeLine{...}
+
+\end{DoxyCode}
+\hypertarget{camp_aero_rep_add_autotoc_md4}{}\doxysubsection{Step 5. Add unit tests for the new \textbackslash{}c aero\+\_\+rep\+\_\+foo\+\_\+t and \textbackslash{}c aero\+\_\+rep\+\_\+foo\+\_\+state\+\_\+t types}\label{camp_aero_rep_add_autotoc_md4}
+Unit testing should be based on the actual functions of the new module, but in general 80\% code coverage is recommended. Some examples can be found in the {\ttfamily /src/test} folder\hypertarget{camp_aero_rep_add_autotoc_md5}{}\doxysubsection{Usage}\label{camp_aero_rep_add_autotoc_md5}
+The new \mbox{\hyperlink{camp_aero_rep}{aerosol representation}} is now ready to use. To include it in a {\ttfamily \mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\+\_\+camp\+\_\+core\+::camp\+\_\+core\+\_\+t}}} instance, add an \mbox{\hyperlink{input_format_aero_rep}{aerosol representation object}} to a new or existing \mbox{\hyperlink{input_format_camp_config}{camp-\/chem configuration file}} with a {\bfseries{type}} corresponding to the newly created type, along with any required parameters\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{ "{}camp-\/data"{} : [}
+\DoxyCodeLine{  \{}
+\DoxyCodeLine{    "{}type"{} : "{}AERO\_REP\_FOO"{},}
+\DoxyCodeLine{    ...}
+\DoxyCodeLine{  \},}
+\DoxyCodeLine{  ...}
+\DoxyCodeLine{]\}}
+
+\end{DoxyCode}
+ 

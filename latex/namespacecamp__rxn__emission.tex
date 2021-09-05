@@ -1,0 +1,266 @@
+\hypertarget{namespacecamp__rxn__emission}{}\doxysection{camp\+\_\+rxn\+\_\+emission Module Reference}
+\label{namespacecamp__rxn__emission}\index{camp\_rxn\_emission@{camp\_rxn\_emission}}
+
+
+The \mbox{\hyperlink{structcamp__rxn__emission_1_1rxn__emission__t}{rxn\+\_\+emission\+\_\+t}} type and associated functions.  
+
+
+\doxysubsection*{Data Types}
+\begin{DoxyCompactItemize}
+\item 
+interface \mbox{\hyperlink{structcamp__rxn__emission_1_1rxn__emission__t}{rxn\+\_\+emission\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em Generic test reaction data type. \end{DoxyCompactList}\item 
+type \mbox{\hyperlink{structcamp__rxn__emission_1_1rxn__update__data__emission__t}{rxn\+\_\+update\+\_\+data\+\_\+emission\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em Emission rate update object. \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interfacecamp__rxn__emission_1_1rxn__emission__create__rate__update__data}{rxn\+\_\+emission\+\_\+create\+\_\+rate\+\_\+update\+\_\+data}}
+\begin{DoxyCompactList}\small\item\em Interface to c reaction functions. \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interfacecamp__rxn__emission_1_1rxn__emission__set__rate__update__data}{rxn\+\_\+emission\+\_\+set\+\_\+rate\+\_\+update\+\_\+data}}
+\begin{DoxyCompactList}\small\item\em Set a new emission rate. \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interfacecamp__rxn__emission_1_1rxn__free__update__data}{rxn\+\_\+free\+\_\+update\+\_\+data}}
+\begin{DoxyCompactList}\small\item\em Free an update rate data object. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Functions/\+Subroutines}
+\begin{DoxyCompactItemize}
+\item 
+type(\mbox{\hyperlink{structcamp__rxn__emission_1_1rxn__emission__t}{rxn\+\_\+emission\+\_\+t}}) function, pointer \mbox{\hyperlink{namespacecamp__rxn__emission_a17dcbbf56fbd0994de36547b7f45cded}{constructor}} ()
+\begin{DoxyCompactList}\small\item\em Constructor for Emission reaction. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__rxn__emission_acb523afa7b98b8afa1b7a0d0895573cc}{initialize}} (this, chem\+\_\+spec\+\_\+data, aero\+\_\+rep, n\+\_\+cells)
+\begin{DoxyCompactList}\small\item\em Initialize the reaction data, validating component data and loading any required information into the condensed data arrays for use during solving. \end{DoxyCompactList}\item 
+type(\mbox{\hyperlink{structcamp__property_1_1property__t}{property\+\_\+t}}) function, pointer \mbox{\hyperlink{namespacecamp__rxn__emission_ab7c8ff1ba07514c99fdc4a0a6be11988}{get\+\_\+property\+\_\+set}} (this)
+\begin{DoxyCompactList}\small\item\em Get the reaction properties. (For use by external modules.) \end{DoxyCompactList}\item 
+elemental subroutine \mbox{\hyperlink{namespacecamp__rxn__emission_a3af938b929508032fba32597c3269eee}{finalize}} (this)
+\begin{DoxyCompactList}\small\item\em Finalize the reaction. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__rxn__emission_a281be8ca77bf3c15b3674cdf7946378d}{update\+\_\+data\+\_\+rate\+\_\+set}} (this, base\+\_\+rate)
+\begin{DoxyCompactList}\small\item\em Set packed update data for emission rate constants. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__rxn__emission_af9ce1d3bfd29e3ee49aaf22279e9f4c7}{update\+\_\+data\+\_\+initialize}} (this, update\+\_\+data, rxn\+\_\+type)
+\begin{DoxyCompactList}\small\item\em Initialize update data. \end{DoxyCompactList}\item 
+integer(kind=i\+\_\+kind) function \mbox{\hyperlink{namespacecamp__rxn__emission_a39eb8f193083fa40ef8d84643aa04ac2}{internal\+\_\+pack\+\_\+size}} (this, comm)
+\begin{DoxyCompactList}\small\item\em Determine the size of a binary required to pack the reaction data. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__rxn__emission_ad82a22ae9ba6a379ee426944f9c833d8}{internal\+\_\+bin\+\_\+pack}} (this, buffer, pos, comm)
+\begin{DoxyCompactList}\small\item\em Pack the given value to the buffer, advancing position. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__rxn__emission_abd42fbac768937f899625ab96d36251b}{internal\+\_\+bin\+\_\+unpack}} (this, buffer, pos, comm)
+\begin{DoxyCompactList}\small\item\em Unpack the given value from the buffer, advancing position. \end{DoxyCompactList}\item 
+elemental subroutine \mbox{\hyperlink{namespacecamp__rxn__emission_ad2ebaade1033d55208ee52421f7eb9ea}{update\+\_\+data\+\_\+finalize}} (this)
+\begin{DoxyCompactList}\small\item\em Finalize an update data object. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+The \mbox{\hyperlink{structcamp__rxn__emission_1_1rxn__emission__t}{rxn\+\_\+emission\+\_\+t}} type and associated functions. 
+
+\doxysubsection{Function/\+Subroutine Documentation}
+\mbox{\Hypertarget{namespacecamp__rxn__emission_a17dcbbf56fbd0994de36547b7f45cded}\label{namespacecamp__rxn__emission_a17dcbbf56fbd0994de36547b7f45cded}} 
+\index{camp\_rxn\_emission@{camp\_rxn\_emission}!constructor@{constructor}}
+\index{constructor@{constructor}!camp\_rxn\_emission@{camp\_rxn\_emission}}
+\doxysubsubsection{\texorpdfstring{constructor()}{constructor()}}
+{\footnotesize\ttfamily type(\mbox{\hyperlink{structcamp__rxn__emission_1_1rxn__emission__t}{rxn\+\_\+emission\+\_\+t}}) function, pointer camp\+\_\+rxn\+\_\+emission\+::constructor}
+
+
+
+Constructor for Emission reaction. 
+
+\begin{DoxyReturn}{Returns}
+A new reaction instance 
+\end{DoxyReturn}
+
+
+Definition at line 151 of file rxn\+\_\+emission.\+F90.
+
+\mbox{\Hypertarget{namespacecamp__rxn__emission_a3af938b929508032fba32597c3269eee}\label{namespacecamp__rxn__emission_a3af938b929508032fba32597c3269eee}} 
+\index{camp\_rxn\_emission@{camp\_rxn\_emission}!finalize@{finalize}}
+\index{finalize@{finalize}!camp\_rxn\_emission@{camp\_rxn\_emission}}
+\doxysubsubsection{\texorpdfstring{finalize()}{finalize()}}
+{\footnotesize\ttfamily elemental subroutine camp\+\_\+rxn\+\_\+emission\+::finalize (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__rxn__emission_1_1rxn__emission__t}{rxn\+\_\+emission\+\_\+t}}), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Finalize the reaction. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & Reaction data \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 236 of file rxn\+\_\+emission.\+F90.
+
+\mbox{\Hypertarget{namespacecamp__rxn__emission_ab7c8ff1ba07514c99fdc4a0a6be11988}\label{namespacecamp__rxn__emission_ab7c8ff1ba07514c99fdc4a0a6be11988}} 
+\index{camp\_rxn\_emission@{camp\_rxn\_emission}!get\_property\_set@{get\_property\_set}}
+\index{get\_property\_set@{get\_property\_set}!camp\_rxn\_emission@{camp\_rxn\_emission}}
+\doxysubsubsection{\texorpdfstring{get\_property\_set()}{get\_property\_set()}}
+{\footnotesize\ttfamily type(\mbox{\hyperlink{structcamp__property_1_1property__t}{property\+\_\+t}}) function, pointer camp\+\_\+rxn\+\_\+emission\+::get\+\_\+property\+\_\+set (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__rxn__emission_1_1rxn__emission__t}{rxn\+\_\+emission\+\_\+t}}), intent(in)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Get the reaction properties. (For use by external modules.) 
+
+\begin{DoxyReturn}{Returns}
+Reaction properties 
+\end{DoxyReturn}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & Reaction data \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 222 of file rxn\+\_\+emission.\+F90.
+
+\mbox{\Hypertarget{namespacecamp__rxn__emission_acb523afa7b98b8afa1b7a0d0895573cc}\label{namespacecamp__rxn__emission_acb523afa7b98b8afa1b7a0d0895573cc}} 
+\index{camp\_rxn\_emission@{camp\_rxn\_emission}!initialize@{initialize}}
+\index{initialize@{initialize}!camp\_rxn\_emission@{camp\_rxn\_emission}}
+\doxysubsubsection{\texorpdfstring{initialize()}{initialize()}}
+{\footnotesize\ttfamily subroutine \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1initialize}{camp\+\_\+rxn\+\_\+emission\+::initialize}} (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__rxn__emission_1_1rxn__emission__t}{rxn\+\_\+emission\+\_\+t}}), intent(inout)}]{this,  }\item[{type(\mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t}{chem\+\_\+spec\+\_\+data\+\_\+t}}), intent(in)}]{chem\+\_\+spec\+\_\+data,  }\item[{type(\mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__ptr}{aero\+\_\+rep\+\_\+data\+\_\+ptr}}), dimension(\+:), intent(in), pointer}]{aero\+\_\+rep,  }\item[{integer(kind=i\+\_\+kind), intent(in)}]{n\+\_\+cells }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Initialize the reaction data, validating component data and loading any required information into the condensed data arrays for use during solving. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & Reaction data \\
+\hline
+\mbox{\texttt{ in}}  & {\em chem\+\_\+spec\+\_\+data} & Chemical species data \\
+\hline
+\mbox{\texttt{ in}}  & {\em aero\+\_\+rep} & Aerosol representations \\
+\hline
+\mbox{\texttt{ in}}  & {\em n\+\_\+cells} & Number of grid cells to solve simultaneously \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 166 of file rxn\+\_\+emission.\+F90.
+
+\mbox{\Hypertarget{namespacecamp__rxn__emission_ad82a22ae9ba6a379ee426944f9c833d8}\label{namespacecamp__rxn__emission_ad82a22ae9ba6a379ee426944f9c833d8}} 
+\index{camp\_rxn\_emission@{camp\_rxn\_emission}!internal\_bin\_pack@{internal\_bin\_pack}}
+\index{internal\_bin\_pack@{internal\_bin\_pack}!camp\_rxn\_emission@{camp\_rxn\_emission}}
+\doxysubsubsection{\texorpdfstring{internal\_bin\_pack()}{internal\_bin\_pack()}}
+{\footnotesize\ttfamily subroutine \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1internal__bin__pack}{camp\+\_\+rxn\+\_\+emission\+::internal\+\_\+bin\+\_\+pack}} (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__rxn__emission_1_1rxn__update__data__emission__t}{rxn\+\_\+update\+\_\+data\+\_\+emission\+\_\+t}}), intent(in)}]{this,  }\item[{character, dimension(\+:), intent(inout)}]{buffer,  }\item[{integer, intent(inout)}]{pos,  }\item[{integer, intent(in)}]{comm }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Pack the given value to the buffer, advancing position. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & Reaction update data \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em buffer} & Memory buffer \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em pos} & Current buffer position \\
+\hline
+\mbox{\texttt{ in}}  & {\em comm} & MPI communicator \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 311 of file rxn\+\_\+emission.\+F90.
+
+\mbox{\Hypertarget{namespacecamp__rxn__emission_abd42fbac768937f899625ab96d36251b}\label{namespacecamp__rxn__emission_abd42fbac768937f899625ab96d36251b}} 
+\index{camp\_rxn\_emission@{camp\_rxn\_emission}!internal\_bin\_unpack@{internal\_bin\_unpack}}
+\index{internal\_bin\_unpack@{internal\_bin\_unpack}!camp\_rxn\_emission@{camp\_rxn\_emission}}
+\doxysubsubsection{\texorpdfstring{internal\_bin\_unpack()}{internal\_bin\_unpack()}}
+{\footnotesize\ttfamily subroutine \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1internal__bin__unpack}{camp\+\_\+rxn\+\_\+emission\+::internal\+\_\+bin\+\_\+unpack}} (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__rxn__emission_1_1rxn__update__data__emission__t}{rxn\+\_\+update\+\_\+data\+\_\+emission\+\_\+t}}), intent(inout)}]{this,  }\item[{character, dimension(\+:), intent(inout)}]{buffer,  }\item[{integer, intent(inout)}]{pos,  }\item[{integer, intent(in)}]{comm }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Unpack the given value from the buffer, advancing position. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & Reaction update data \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em buffer} & Memory buffer \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em pos} & Current buffer position \\
+\hline
+\mbox{\texttt{ in}}  & {\em comm} & MPI communicator \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 337 of file rxn\+\_\+emission.\+F90.
+
+\mbox{\Hypertarget{namespacecamp__rxn__emission_a39eb8f193083fa40ef8d84643aa04ac2}\label{namespacecamp__rxn__emission_a39eb8f193083fa40ef8d84643aa04ac2}} 
+\index{camp\_rxn\_emission@{camp\_rxn\_emission}!internal\_pack\_size@{internal\_pack\_size}}
+\index{internal\_pack\_size@{internal\_pack\_size}!camp\_rxn\_emission@{camp\_rxn\_emission}}
+\doxysubsubsection{\texorpdfstring{internal\_pack\_size()}{internal\_pack\_size()}}
+{\footnotesize\ttfamily integer(kind=i\+\_\+kind) function \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1internal__pack__size}{camp\+\_\+rxn\+\_\+emission\+::internal\+\_\+pack\+\_\+size}} (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__rxn__emission_1_1rxn__update__data__emission__t}{rxn\+\_\+update\+\_\+data\+\_\+emission\+\_\+t}}), intent(in)}]{this,  }\item[{integer, intent(in)}]{comm }\end{DoxyParamCaption})}
+
+
+
+Determine the size of a binary required to pack the reaction data. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & Reaction update data \\
+\hline
+\mbox{\texttt{ in}}  & {\em comm} & MPI communicator \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 294 of file rxn\+\_\+emission.\+F90.
+
+\mbox{\Hypertarget{namespacecamp__rxn__emission_ad2ebaade1033d55208ee52421f7eb9ea}\label{namespacecamp__rxn__emission_ad2ebaade1033d55208ee52421f7eb9ea}} 
+\index{camp\_rxn\_emission@{camp\_rxn\_emission}!update\_data\_finalize@{update\_data\_finalize}}
+\index{update\_data\_finalize@{update\_data\_finalize}!camp\_rxn\_emission@{camp\_rxn\_emission}}
+\doxysubsubsection{\texorpdfstring{update\_data\_finalize()}{update\_data\_finalize()}}
+{\footnotesize\ttfamily elemental subroutine camp\+\_\+rxn\+\_\+emission\+::update\+\_\+data\+\_\+finalize (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__rxn__emission_1_1rxn__update__data__emission__t}{rxn\+\_\+update\+\_\+data\+\_\+emission\+\_\+t}}), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Finalize an update data object. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & Update data object to free \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 364 of file rxn\+\_\+emission.\+F90.
+
+\mbox{\Hypertarget{namespacecamp__rxn__emission_af9ce1d3bfd29e3ee49aaf22279e9f4c7}\label{namespacecamp__rxn__emission_af9ce1d3bfd29e3ee49aaf22279e9f4c7}} 
+\index{camp\_rxn\_emission@{camp\_rxn\_emission}!update\_data\_initialize@{update\_data\_initialize}}
+\index{update\_data\_initialize@{update\_data\_initialize}!camp\_rxn\_emission@{camp\_rxn\_emission}}
+\doxysubsubsection{\texorpdfstring{update\_data\_initialize()}{update\_data\_initialize()}}
+{\footnotesize\ttfamily subroutine camp\+\_\+rxn\+\_\+emission\+::update\+\_\+data\+\_\+initialize (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__rxn__emission_1_1rxn__emission__t}{rxn\+\_\+emission\+\_\+t}}), intent(inout)}]{this,  }\item[{class(\mbox{\hyperlink{structcamp__rxn__emission_1_1rxn__update__data__emission__t}{rxn\+\_\+update\+\_\+data\+\_\+emission\+\_\+t}}), intent(out)}]{update\+\_\+data,  }\item[{integer(kind=i\+\_\+kind), intent(in)}]{rxn\+\_\+type }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Initialize update data. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & The reaction to be udpated \\
+\hline
+\mbox{\texttt{ out}}  & {\em update\+\_\+data} & Update data object \\
+\hline
+\mbox{\texttt{ in}}  & {\em rxn\+\_\+type} & Reaction type id \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 268 of file rxn\+\_\+emission.\+F90.
+
+\mbox{\Hypertarget{namespacecamp__rxn__emission_a281be8ca77bf3c15b3674cdf7946378d}\label{namespacecamp__rxn__emission_a281be8ca77bf3c15b3674cdf7946378d}} 
+\index{camp\_rxn\_emission@{camp\_rxn\_emission}!update\_data\_rate\_set@{update\_data\_rate\_set}}
+\index{update\_data\_rate\_set@{update\_data\_rate\_set}!camp\_rxn\_emission@{camp\_rxn\_emission}}
+\doxysubsubsection{\texorpdfstring{update\_data\_rate\_set()}{update\_data\_rate\_set()}}
+{\footnotesize\ttfamily subroutine camp\+\_\+rxn\+\_\+emission\+::update\+\_\+data\+\_\+rate\+\_\+set (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__rxn__emission_1_1rxn__update__data__emission__t}{rxn\+\_\+update\+\_\+data\+\_\+emission\+\_\+t}}), intent(inout)}]{this,  }\item[{real(kind=dp), intent(in)}]{base\+\_\+rate }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Set packed update data for emission rate constants. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & Update data \\
+\hline
+\mbox{\texttt{ in}}  & {\em base\+\_\+rate} & Updated pre-\/scaling emission rate \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 253 of file rxn\+\_\+emission.\+F90.
+

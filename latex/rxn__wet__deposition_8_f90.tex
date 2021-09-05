@@ -1,0 +1,131 @@
+\hypertarget{rxn__wet__deposition_8_f90}{}\doxysection{rxn\+\_\+wet\+\_\+deposition.\+F90 File Reference}
+\label{rxn__wet__deposition_8_f90}\index{rxn\_wet\_deposition.F90@{rxn\_wet\_deposition.F90}}
+
+
+The \mbox{\hyperlink{namespacecamp__rxn__wet__deposition}{camp\+\_\+rxn\+\_\+wet\+\_\+deposition}} module.  
+
+
+\doxysubsection*{Data Types}
+\begin{DoxyCompactItemize}
+\item 
+interface \mbox{\hyperlink{structcamp__rxn__wet__deposition_1_1rxn__wet__deposition__t}{camp\+\_\+rxn\+\_\+wet\+\_\+deposition\+::rxn\+\_\+wet\+\_\+deposition\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em Generic test reaction data type. \end{DoxyCompactList}\item 
+type \mbox{\hyperlink{structcamp__rxn__wet__deposition_1_1rxn__update__data__wet__deposition__t}{camp\+\_\+rxn\+\_\+wet\+\_\+deposition\+::rxn\+\_\+update\+\_\+data\+\_\+wet\+\_\+deposition\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em Wet Deposition rate update object. \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interfacecamp__rxn__wet__deposition_1_1rxn__wet__deposition__create__rate__update__data}{camp\+\_\+rxn\+\_\+wet\+\_\+deposition\+::rxn\+\_\+wet\+\_\+deposition\+\_\+create\+\_\+rate\+\_\+update\+\_\+data}}
+\begin{DoxyCompactList}\small\item\em Interface to c reaction functions. \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interfacecamp__rxn__wet__deposition_1_1rxn__wet__deposition__set__rate__update__data}{camp\+\_\+rxn\+\_\+wet\+\_\+deposition\+::rxn\+\_\+wet\+\_\+deposition\+\_\+set\+\_\+rate\+\_\+update\+\_\+data}}
+\begin{DoxyCompactList}\small\item\em Set a new wet\+\_\+deposition rate. \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interfacecamp__rxn__wet__deposition_1_1rxn__free__update__data}{camp\+\_\+rxn\+\_\+wet\+\_\+deposition\+::rxn\+\_\+free\+\_\+update\+\_\+data}}
+\begin{DoxyCompactList}\small\item\em Free an update rate data object. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Modules}
+\begin{DoxyCompactItemize}
+\item 
+module \mbox{\hyperlink{namespacecamp__rxn__wet__deposition}{camp\+\_\+rxn\+\_\+wet\+\_\+deposition}}
+\begin{DoxyCompactList}\small\item\em The \mbox{\hyperlink{structcamp__rxn__wet__deposition_1_1rxn__wet__deposition__t}{rxn\+\_\+wet\+\_\+deposition\+\_\+t}} type and associated functions. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{rxn__wet__deposition_8_f90_a90cc89c1a8af0668561f9fc8cdbb9dde}{RXN\+\_\+\+ID\+\_\+}}~this\%condensed\+\_\+data\+\_\+int(1)
+\item 
+\#define \mbox{\hyperlink{rxn__wet__deposition_8_f90_a633b13446295bae13643bf30401199b4}{NUM\+\_\+\+SPEC\+\_\+}}~this\%condensed\+\_\+data\+\_\+int(2)
+\item 
+\#define \mbox{\hyperlink{rxn__wet__deposition_8_f90_a1757f332a0485799c2ee77edff00c38a}{SCALING\+\_\+}}~this\%condensed\+\_\+data\+\_\+real(1)
+\item 
+\#define \mbox{\hyperlink{rxn__wet__deposition_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}}~2
+\item 
+\#define \mbox{\hyperlink{rxn__wet__deposition_8_f90_aa9808eb54fa06bcf890dd1aa1fc6ca5b}{NUM\+\_\+\+REAL\+\_\+\+PROP\+\_\+}}~1
+\item 
+\#define \mbox{\hyperlink{rxn__wet__deposition_8_f90_a1f68a3544ae39a7815cbb5c09dfdeff0}{NUM\+\_\+\+ENV\+\_\+\+PARAM\+\_\+}}~2
+\item 
+\#define \mbox{\hyperlink{rxn__wet__deposition_8_f90_a2ad682b58111b832427ffbe14ad0456b}{REACT\+\_\+}}(s)~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}}+s)
+\item 
+\#define \mbox{\hyperlink{rxn__wet__deposition_8_f90_a9bddf5e7fb20588f83d13cfdc3a61e40}{DERIV\+\_\+\+ID\+\_\+}}(s)~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}}+\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a9a5c42fc20a0cc885faf74920b1f8281}{NUM\+\_\+\+SPEC\+\_\+}}+s)
+\item 
+\#define \mbox{\hyperlink{rxn__wet__deposition_8_f90_a0b740ccc4f77b017cbd76c8e3a040df6}{JAC\+\_\+\+ID\+\_\+}}(s)~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}}+2$\ast$\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a9a5c42fc20a0cc885faf74920b1f8281}{NUM\+\_\+\+SPEC\+\_\+}}+s))
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions/\+Subroutines}
+\begin{DoxyCompactItemize}
+\item 
+type(rxn\+\_\+wet\+\_\+deposition\+\_\+t) function, pointer \mbox{\hyperlink{namespacecamp__rxn__wet__deposition_aaa5e9d8d7f830dc011c2ed6c59daf468}{camp\+\_\+rxn\+\_\+wet\+\_\+deposition\+::constructor}} ()
+\begin{DoxyCompactList}\small\item\em Constructor for Wet Deposition reaction. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__rxn__wet__deposition_a11203f6a27c10196fb8e68d31783539f}{camp\+\_\+rxn\+\_\+wet\+\_\+deposition\+::initialize}} (this, chem\+\_\+spec\+\_\+data, aero\+\_\+rep, n\+\_\+cells)
+\begin{DoxyCompactList}\small\item\em Initialize the reaction data, validating component data and loading any required information into the condensed data arrays for use during solving. \end{DoxyCompactList}\item 
+type(property\+\_\+t) function, pointer \mbox{\hyperlink{namespacecamp__rxn__wet__deposition_ae00cf899ce59493d07596c63fd8589f3}{camp\+\_\+rxn\+\_\+wet\+\_\+deposition\+::get\+\_\+property\+\_\+set}} (this)
+\begin{DoxyCompactList}\small\item\em Get the reaction properties. (For use by external modules.) \end{DoxyCompactList}\item 
+elemental subroutine \mbox{\hyperlink{namespacecamp__rxn__wet__deposition_a9ba3d05eb2830b98aa8650c1205d3869}{camp\+\_\+rxn\+\_\+wet\+\_\+deposition\+::finalize}} (this)
+\begin{DoxyCompactList}\small\item\em Finalize the reaction. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__rxn__wet__deposition_a82bfa22d753a6a2241aaa85bd0ac5c06}{camp\+\_\+rxn\+\_\+wet\+\_\+deposition\+::update\+\_\+data\+\_\+rate\+\_\+set}} (this, base\+\_\+rate)
+\begin{DoxyCompactList}\small\item\em Set packed update data for wet\+\_\+deposition rate constants. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__rxn__wet__deposition_a2d0c13126ff98d0a269494ed18fb3628}{camp\+\_\+rxn\+\_\+wet\+\_\+deposition\+::update\+\_\+data\+\_\+initialize}} (this, update\+\_\+data, rxn\+\_\+type)
+\begin{DoxyCompactList}\small\item\em Initialize update data. \end{DoxyCompactList}\item 
+integer(kind=i\+\_\+kind) function \mbox{\hyperlink{namespacecamp__rxn__wet__deposition_ad301ae9ff9a860e7b2a24e4593875180}{camp\+\_\+rxn\+\_\+wet\+\_\+deposition\+::internal\+\_\+pack\+\_\+size}} (this, comm)
+\begin{DoxyCompactList}\small\item\em Determine the size of a binary required to pack the reaction data. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__rxn__wet__deposition_ae5253b3006230d6a7af9e739ef53ed07}{camp\+\_\+rxn\+\_\+wet\+\_\+deposition\+::internal\+\_\+bin\+\_\+pack}} (this, buffer, pos, comm)
+\begin{DoxyCompactList}\small\item\em Pack the given value to the buffer, advancing position. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__rxn__wet__deposition_a8546acbbd18eec9d25239e3268ce79d3}{camp\+\_\+rxn\+\_\+wet\+\_\+deposition\+::internal\+\_\+bin\+\_\+unpack}} (this, buffer, pos, comm)
+\begin{DoxyCompactList}\small\item\em Unpack the given value from the buffer, advancing position. \end{DoxyCompactList}\item 
+elemental subroutine \mbox{\hyperlink{namespacecamp__rxn__wet__deposition_a81f8190b4501ae3bbb0c2173bc51991c}{camp\+\_\+rxn\+\_\+wet\+\_\+deposition\+::update\+\_\+data\+\_\+finalize}} (this)
+\begin{DoxyCompactList}\small\item\em Finalize an update data object. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+The \mbox{\hyperlink{namespacecamp__rxn__wet__deposition}{camp\+\_\+rxn\+\_\+wet\+\_\+deposition}} module. 
+
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{rxn__wet__deposition_8_f90_a9bddf5e7fb20588f83d13cfdc3a61e40}\label{rxn__wet__deposition_8_f90_a9bddf5e7fb20588f83d13cfdc3a61e40}} 
+\index{rxn\_wet\_deposition.F90@{rxn\_wet\_deposition.F90}!DERIV\_ID\_@{DERIV\_ID\_}}
+\index{DERIV\_ID\_@{DERIV\_ID\_}!rxn\_wet\_deposition.F90@{rxn\_wet\_deposition.F90}}
+\doxysubsubsection{\texorpdfstring{DERIV\_ID\_}{DERIV\_ID\_}}
+{\footnotesize\ttfamily \#define DERIV\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{s }\end{DoxyParamCaption})~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}}+\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a9a5c42fc20a0cc885faf74920b1f8281}{NUM\+\_\+\+SPEC\+\_\+}}+s)}
+
+\mbox{\Hypertarget{rxn__wet__deposition_8_f90_a0b740ccc4f77b017cbd76c8e3a040df6}\label{rxn__wet__deposition_8_f90_a0b740ccc4f77b017cbd76c8e3a040df6}} 
+\index{rxn\_wet\_deposition.F90@{rxn\_wet\_deposition.F90}!JAC\_ID\_@{JAC\_ID\_}}
+\index{JAC\_ID\_@{JAC\_ID\_}!rxn\_wet\_deposition.F90@{rxn\_wet\_deposition.F90}}
+\doxysubsubsection{\texorpdfstring{JAC\_ID\_}{JAC\_ID\_}}
+{\footnotesize\ttfamily \#define JAC\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{s }\end{DoxyParamCaption})~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}}+2$\ast$\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a9a5c42fc20a0cc885faf74920b1f8281}{NUM\+\_\+\+SPEC\+\_\+}}+s))}
+
+\mbox{\Hypertarget{rxn__wet__deposition_8_f90_a1f68a3544ae39a7815cbb5c09dfdeff0}\label{rxn__wet__deposition_8_f90_a1f68a3544ae39a7815cbb5c09dfdeff0}} 
+\index{rxn\_wet\_deposition.F90@{rxn\_wet\_deposition.F90}!NUM\_ENV\_PARAM\_@{NUM\_ENV\_PARAM\_}}
+\index{NUM\_ENV\_PARAM\_@{NUM\_ENV\_PARAM\_}!rxn\_wet\_deposition.F90@{rxn\_wet\_deposition.F90}}
+\doxysubsubsection{\texorpdfstring{NUM\_ENV\_PARAM\_}{NUM\_ENV\_PARAM\_}}
+{\footnotesize\ttfamily \#define NUM\+\_\+\+ENV\+\_\+\+PARAM\+\_\+~2}
+
+\mbox{\Hypertarget{rxn__wet__deposition_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}\label{rxn__wet__deposition_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}} 
+\index{rxn\_wet\_deposition.F90@{rxn\_wet\_deposition.F90}!NUM\_INT\_PROP\_@{NUM\_INT\_PROP\_}}
+\index{NUM\_INT\_PROP\_@{NUM\_INT\_PROP\_}!rxn\_wet\_deposition.F90@{rxn\_wet\_deposition.F90}}
+\doxysubsubsection{\texorpdfstring{NUM\_INT\_PROP\_}{NUM\_INT\_PROP\_}}
+{\footnotesize\ttfamily \#define NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+~2}
+
+\mbox{\Hypertarget{rxn__wet__deposition_8_f90_aa9808eb54fa06bcf890dd1aa1fc6ca5b}\label{rxn__wet__deposition_8_f90_aa9808eb54fa06bcf890dd1aa1fc6ca5b}} 
+\index{rxn\_wet\_deposition.F90@{rxn\_wet\_deposition.F90}!NUM\_REAL\_PROP\_@{NUM\_REAL\_PROP\_}}
+\index{NUM\_REAL\_PROP\_@{NUM\_REAL\_PROP\_}!rxn\_wet\_deposition.F90@{rxn\_wet\_deposition.F90}}
+\doxysubsubsection{\texorpdfstring{NUM\_REAL\_PROP\_}{NUM\_REAL\_PROP\_}}
+{\footnotesize\ttfamily \#define NUM\+\_\+\+REAL\+\_\+\+PROP\+\_\+~1}
+
+\mbox{\Hypertarget{rxn__wet__deposition_8_f90_a633b13446295bae13643bf30401199b4}\label{rxn__wet__deposition_8_f90_a633b13446295bae13643bf30401199b4}} 
+\index{rxn\_wet\_deposition.F90@{rxn\_wet\_deposition.F90}!NUM\_SPEC\_@{NUM\_SPEC\_}}
+\index{NUM\_SPEC\_@{NUM\_SPEC\_}!rxn\_wet\_deposition.F90@{rxn\_wet\_deposition.F90}}
+\doxysubsubsection{\texorpdfstring{NUM\_SPEC\_}{NUM\_SPEC\_}}
+{\footnotesize\ttfamily \#define NUM\+\_\+\+SPEC\+\_\+~this\%condensed\+\_\+data\+\_\+int(2)}
+
+\mbox{\Hypertarget{rxn__wet__deposition_8_f90_a2ad682b58111b832427ffbe14ad0456b}\label{rxn__wet__deposition_8_f90_a2ad682b58111b832427ffbe14ad0456b}} 
+\index{rxn\_wet\_deposition.F90@{rxn\_wet\_deposition.F90}!REACT\_@{REACT\_}}
+\index{REACT\_@{REACT\_}!rxn\_wet\_deposition.F90@{rxn\_wet\_deposition.F90}}
+\doxysubsubsection{\texorpdfstring{REACT\_}{REACT\_}}
+{\footnotesize\ttfamily \#define REACT\+\_\+(\begin{DoxyParamCaption}\item[{}]{s }\end{DoxyParamCaption})~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}}+s)}
+
+\mbox{\Hypertarget{rxn__wet__deposition_8_f90_a90cc89c1a8af0668561f9fc8cdbb9dde}\label{rxn__wet__deposition_8_f90_a90cc89c1a8af0668561f9fc8cdbb9dde}} 
+\index{rxn\_wet\_deposition.F90@{rxn\_wet\_deposition.F90}!RXN\_ID\_@{RXN\_ID\_}}
+\index{RXN\_ID\_@{RXN\_ID\_}!rxn\_wet\_deposition.F90@{rxn\_wet\_deposition.F90}}
+\doxysubsubsection{\texorpdfstring{RXN\_ID\_}{RXN\_ID\_}}
+{\footnotesize\ttfamily \#define RXN\+\_\+\+ID\+\_\+~this\%condensed\+\_\+data\+\_\+int(1)}
+
+\mbox{\Hypertarget{rxn__wet__deposition_8_f90_a1757f332a0485799c2ee77edff00c38a}\label{rxn__wet__deposition_8_f90_a1757f332a0485799c2ee77edff00c38a}} 
+\index{rxn\_wet\_deposition.F90@{rxn\_wet\_deposition.F90}!SCALING\_@{SCALING\_}}
+\index{SCALING\_@{SCALING\_}!rxn\_wet\_deposition.F90@{rxn\_wet\_deposition.F90}}
+\doxysubsubsection{\texorpdfstring{SCALING\_}{SCALING\_}}
+{\footnotesize\ttfamily \#define SCALING\+\_\+~this\%condensed\+\_\+data\+\_\+real(1)}
+

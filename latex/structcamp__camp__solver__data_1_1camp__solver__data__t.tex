@@ -1,0 +1,276 @@
+\hypertarget{structcamp__camp__solver__data_1_1camp__solver__data__t}{}\doxysection{camp\+\_\+camp\+\_\+solver\+\_\+data\+::camp\+\_\+solver\+\_\+data\+\_\+t Interface Reference}
+\label{structcamp__camp__solver__data_1_1camp__solver__data__t}\index{camp\_camp\_solver\_data::camp\_solver\_data\_t@{camp\_camp\_solver\_data::camp\_solver\_data\_t}}
+
+
+Solver data.  
+
+
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+type(c\+\_\+ptr), public \mbox{\hyperlink{structcamp__camp__solver__data_1_1camp__solver__data__t_a60fe5ae83eba67e63196462a4fd7e802}{solver\+\_\+c\+\_\+ptr}}
+\begin{DoxyCompactList}\small\item\em C Solver object. \end{DoxyCompactList}\item 
+real(kind=dp), public \mbox{\hyperlink{structcamp__camp__solver__data_1_1camp__solver__data__t_a2d34803c8a6080d9967dc493ddcbc5f9}{rel\+\_\+tol}} = CAMP\+\_\+\+SOLVER\+\_\+\+DEFAULT\+\_\+\+REL\+\_\+\+TOL
+\begin{DoxyCompactList}\small\item\em Relative tolerance for the integration. \end{DoxyCompactList}\item 
+integer(kind=i\+\_\+kind), public \mbox{\hyperlink{structcamp__camp__solver__data_1_1camp__solver__data__t_a81f469e0bc15eac2886bb21f22563448}{max\+\_\+steps}} = CAMP\+\_\+\+SOLVER\+\_\+\+DEFAULT\+\_\+\+MAX\+\_\+\+STEPS
+\begin{DoxyCompactList}\small\item\em Maximum number of timesteps. \end{DoxyCompactList}\item 
+integer(kind=i\+\_\+kind), public \mbox{\hyperlink{structcamp__camp__solver__data_1_1camp__solver__data__t_a739f0eb1ee8791bb35da72e831a8b414}{max\+\_\+conv\+\_\+fails}} = CAMP\+\_\+\+SOLVER\+\_\+\+DEFAULT\+\_\+\+MAX\+\_\+\+CONV\+\_\+\+FAILS
+\begin{DoxyCompactList}\small\item\em Maximum number of convergence failures. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+procedure \mbox{\hyperlink{structcamp__camp__solver__data_1_1camp__solver__data__t_a848e45e3cef26cb32807ab7e31e10cd8}{initialize}}
+\begin{DoxyCompactList}\small\item\em Initialize the solver. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__camp__solver__data_1_1camp__solver__data__t_aa3e4f37d1c48e99d4d22366cebef35a0}{update\+\_\+sub\+\_\+model\+\_\+data}}
+\begin{DoxyCompactList}\small\item\em Update sub-\/model data. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__camp__solver__data_1_1camp__solver__data__t_a556ecfe10cf6e8783df910c114a54981}{update\+\_\+rxn\+\_\+data}}
+\begin{DoxyCompactList}\small\item\em Update reactions data. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__camp__solver__data_1_1camp__solver__data__t_aca5caeb82e8264d9b11f028182d28d72}{update\+\_\+aero\+\_\+rep\+\_\+data}}
+\begin{DoxyCompactList}\small\item\em Update aerosol representation data. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__camp__solver__data_1_1camp__solver__data__t_a88094e8db883904f08b9ee05254a6959}{solve}}
+\begin{DoxyCompactList}\small\item\em Integrate over a given time step. \end{DoxyCompactList}\item 
+procedure, private \mbox{\hyperlink{structcamp__camp__solver__data_1_1camp__solver__data__t_aa5bc7829700283f7221acf15baecc009}{reset\+\_\+timers}}
+\begin{DoxyCompactList}\small\item\em Reset the solver function timers. \end{DoxyCompactList}\item 
+procedure, private \mbox{\hyperlink{structcamp__camp__solver__data_1_1camp__solver__data__t_af4fad242839b267024d003040fdd0bf4}{get\+\_\+solver\+\_\+stats}}
+\begin{DoxyCompactList}\small\item\em Get the solver statistics from the last run. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__camp__solver__data_1_1camp__solver__data__t_af196e8c1b35805362c1e3b45c28510df}{is\+\_\+solver\+\_\+available}}
+\begin{DoxyCompactList}\small\item\em Checks whether a solver is available. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__camp__solver__data_1_1camp__solver__data__t_ada76cc798a8103a6e8ae8470d32c9d48}{print}} =$>$ \mbox{\hyperlink{namespacecamp__camp__solver__data_a80cd4aadfc872604af5dfd9b74b846ec}{do\+\_\+print}}
+\begin{DoxyCompactList}\small\item\em Print the solver data. \end{DoxyCompactList}\item 
+final \mbox{\hyperlink{structcamp__camp__solver__data_1_1camp__solver__data__t_a82d204adf356b743a0d75bc286c26cf5}{finalize}}
+\begin{DoxyCompactList}\small\item\em Finalize the solver data. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+logical \mbox{\hyperlink{structcamp__camp__solver__data_1_1camp__solver__data__t_a0a0d6edcc997f9c33c267323ac7e16f3}{initialized}} = .false.
+\begin{DoxyCompactList}\small\item\em Flag indicating whether the solver was intialized. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Solver data. 
+
+Acts as the interface between the camp-\/chem module and the solver. Instances of the type hold a pointer to a solver c object and provide functions to initialize the solver with model data and run the solver over a specified time step. 
+
+Definition at line 371 of file camp\+\_\+solver\+\_\+data.\+F90.
+
+
+
+\doxysubsection{Member Function/\+Subroutine Documentation}
+\mbox{\Hypertarget{structcamp__camp__solver__data_1_1camp__solver__data__t_a82d204adf356b743a0d75bc286c26cf5}\label{structcamp__camp__solver__data_1_1camp__solver__data__t_a82d204adf356b743a0d75bc286c26cf5}} 
+\index{camp\_camp\_solver\_data::camp\_solver\_data\_t@{camp\_camp\_solver\_data::camp\_solver\_data\_t}!finalize@{finalize}}
+\index{finalize@{finalize}!camp\_camp\_solver\_data::camp\_solver\_data\_t@{camp\_camp\_solver\_data::camp\_solver\_data\_t}}
+\doxysubsubsection{\texorpdfstring{finalize()}{finalize()}}
+{\footnotesize\ttfamily final camp\+\_\+camp\+\_\+solver\+\_\+data\+::camp\+\_\+solver\+\_\+data\+\_\+t\+::finalize\hspace{0.3cm}{\ttfamily [final]}, {\ttfamily [private]}}
+
+
+
+Finalize the solver data. 
+
+
+
+Definition at line 404 of file camp\+\_\+solver\+\_\+data.\+F90.
+
+\mbox{\Hypertarget{structcamp__camp__solver__data_1_1camp__solver__data__t_af4fad242839b267024d003040fdd0bf4}\label{structcamp__camp__solver__data_1_1camp__solver__data__t_af4fad242839b267024d003040fdd0bf4}} 
+\index{camp\_camp\_solver\_data::camp\_solver\_data\_t@{camp\_camp\_solver\_data::camp\_solver\_data\_t}!get\_solver\_stats@{get\_solver\_stats}}
+\index{get\_solver\_stats@{get\_solver\_stats}!camp\_camp\_solver\_data::camp\_solver\_data\_t@{camp\_camp\_solver\_data::camp\_solver\_data\_t}}
+\doxysubsubsection{\texorpdfstring{get\_solver\_stats()}{get\_solver\_stats()}}
+{\footnotesize\ttfamily procedure, private camp\+\_\+camp\+\_\+solver\+\_\+data\+::camp\+\_\+solver\+\_\+data\+\_\+t\+::get\+\_\+solver\+\_\+stats\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Get the solver statistics from the last run. 
+
+
+
+Definition at line 398 of file camp\+\_\+solver\+\_\+data.\+F90.
+
+\mbox{\Hypertarget{structcamp__camp__solver__data_1_1camp__solver__data__t_a848e45e3cef26cb32807ab7e31e10cd8}\label{structcamp__camp__solver__data_1_1camp__solver__data__t_a848e45e3cef26cb32807ab7e31e10cd8}} 
+\index{camp\_camp\_solver\_data::camp\_solver\_data\_t@{camp\_camp\_solver\_data::camp\_solver\_data\_t}!initialize@{initialize}}
+\index{initialize@{initialize}!camp\_camp\_solver\_data::camp\_solver\_data\_t@{camp\_camp\_solver\_data::camp\_solver\_data\_t}}
+\doxysubsubsection{\texorpdfstring{initialize()}{initialize()}}
+{\footnotesize\ttfamily procedure camp\+\_\+camp\+\_\+solver\+\_\+data\+::camp\+\_\+solver\+\_\+data\+\_\+t\+::initialize\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Initialize the solver. 
+
+
+
+Definition at line 386 of file camp\+\_\+solver\+\_\+data.\+F90.
+
+\mbox{\Hypertarget{structcamp__camp__solver__data_1_1camp__solver__data__t_af196e8c1b35805362c1e3b45c28510df}\label{structcamp__camp__solver__data_1_1camp__solver__data__t_af196e8c1b35805362c1e3b45c28510df}} 
+\index{camp\_camp\_solver\_data::camp\_solver\_data\_t@{camp\_camp\_solver\_data::camp\_solver\_data\_t}!is\_solver\_available@{is\_solver\_available}}
+\index{is\_solver\_available@{is\_solver\_available}!camp\_camp\_solver\_data::camp\_solver\_data\_t@{camp\_camp\_solver\_data::camp\_solver\_data\_t}}
+\doxysubsubsection{\texorpdfstring{is\_solver\_available()}{is\_solver\_available()}}
+{\footnotesize\ttfamily procedure camp\+\_\+camp\+\_\+solver\+\_\+data\+::camp\+\_\+solver\+\_\+data\+\_\+t\+::is\+\_\+solver\+\_\+available\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Checks whether a solver is available. 
+
+
+
+Definition at line 400 of file camp\+\_\+solver\+\_\+data.\+F90.
+
+\mbox{\Hypertarget{structcamp__camp__solver__data_1_1camp__solver__data__t_ada76cc798a8103a6e8ae8470d32c9d48}\label{structcamp__camp__solver__data_1_1camp__solver__data__t_ada76cc798a8103a6e8ae8470d32c9d48}} 
+\index{camp\_camp\_solver\_data::camp\_solver\_data\_t@{camp\_camp\_solver\_data::camp\_solver\_data\_t}!print@{print}}
+\index{print@{print}!camp\_camp\_solver\_data::camp\_solver\_data\_t@{camp\_camp\_solver\_data::camp\_solver\_data\_t}}
+\doxysubsubsection{\texorpdfstring{print()}{print()}}
+{\footnotesize\ttfamily procedure camp\+\_\+camp\+\_\+solver\+\_\+data\+::camp\+\_\+solver\+\_\+data\+\_\+t\+::print\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Print the solver data. 
+
+
+
+Definition at line 402 of file camp\+\_\+solver\+\_\+data.\+F90.
+
+\mbox{\Hypertarget{structcamp__camp__solver__data_1_1camp__solver__data__t_aa5bc7829700283f7221acf15baecc009}\label{structcamp__camp__solver__data_1_1camp__solver__data__t_aa5bc7829700283f7221acf15baecc009}} 
+\index{camp\_camp\_solver\_data::camp\_solver\_data\_t@{camp\_camp\_solver\_data::camp\_solver\_data\_t}!reset\_timers@{reset\_timers}}
+\index{reset\_timers@{reset\_timers}!camp\_camp\_solver\_data::camp\_solver\_data\_t@{camp\_camp\_solver\_data::camp\_solver\_data\_t}}
+\doxysubsubsection{\texorpdfstring{reset\_timers()}{reset\_timers()}}
+{\footnotesize\ttfamily procedure, private camp\+\_\+camp\+\_\+solver\+\_\+data\+::camp\+\_\+solver\+\_\+data\+\_\+t\+::reset\+\_\+timers\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Reset the solver function timers. 
+
+
+
+Definition at line 396 of file camp\+\_\+solver\+\_\+data.\+F90.
+
+\mbox{\Hypertarget{structcamp__camp__solver__data_1_1camp__solver__data__t_a88094e8db883904f08b9ee05254a6959}\label{structcamp__camp__solver__data_1_1camp__solver__data__t_a88094e8db883904f08b9ee05254a6959}} 
+\index{camp\_camp\_solver\_data::camp\_solver\_data\_t@{camp\_camp\_solver\_data::camp\_solver\_data\_t}!solve@{solve}}
+\index{solve@{solve}!camp\_camp\_solver\_data::camp\_solver\_data\_t@{camp\_camp\_solver\_data::camp\_solver\_data\_t}}
+\doxysubsubsection{\texorpdfstring{solve()}{solve()}}
+{\footnotesize\ttfamily procedure camp\+\_\+camp\+\_\+solver\+\_\+data\+::camp\+\_\+solver\+\_\+data\+\_\+t\+::solve\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Integrate over a given time step. 
+
+
+
+Definition at line 394 of file camp\+\_\+solver\+\_\+data.\+F90.
+
+\mbox{\Hypertarget{structcamp__camp__solver__data_1_1camp__solver__data__t_aca5caeb82e8264d9b11f028182d28d72}\label{structcamp__camp__solver__data_1_1camp__solver__data__t_aca5caeb82e8264d9b11f028182d28d72}} 
+\index{camp\_camp\_solver\_data::camp\_solver\_data\_t@{camp\_camp\_solver\_data::camp\_solver\_data\_t}!update\_aero\_rep\_data@{update\_aero\_rep\_data}}
+\index{update\_aero\_rep\_data@{update\_aero\_rep\_data}!camp\_camp\_solver\_data::camp\_solver\_data\_t@{camp\_camp\_solver\_data::camp\_solver\_data\_t}}
+\doxysubsubsection{\texorpdfstring{update\_aero\_rep\_data()}{update\_aero\_rep\_data()}}
+{\footnotesize\ttfamily procedure camp\+\_\+camp\+\_\+solver\+\_\+data\+::camp\+\_\+solver\+\_\+data\+\_\+t\+::update\+\_\+aero\+\_\+rep\+\_\+data\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Update aerosol representation data. 
+
+
+
+Definition at line 392 of file camp\+\_\+solver\+\_\+data.\+F90.
+
+\mbox{\Hypertarget{structcamp__camp__solver__data_1_1camp__solver__data__t_a556ecfe10cf6e8783df910c114a54981}\label{structcamp__camp__solver__data_1_1camp__solver__data__t_a556ecfe10cf6e8783df910c114a54981}} 
+\index{camp\_camp\_solver\_data::camp\_solver\_data\_t@{camp\_camp\_solver\_data::camp\_solver\_data\_t}!update\_rxn\_data@{update\_rxn\_data}}
+\index{update\_rxn\_data@{update\_rxn\_data}!camp\_camp\_solver\_data::camp\_solver\_data\_t@{camp\_camp\_solver\_data::camp\_solver\_data\_t}}
+\doxysubsubsection{\texorpdfstring{update\_rxn\_data()}{update\_rxn\_data()}}
+{\footnotesize\ttfamily procedure camp\+\_\+camp\+\_\+solver\+\_\+data\+::camp\+\_\+solver\+\_\+data\+\_\+t\+::update\+\_\+rxn\+\_\+data\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Update reactions data. 
+
+
+
+Definition at line 390 of file camp\+\_\+solver\+\_\+data.\+F90.
+
+\mbox{\Hypertarget{structcamp__camp__solver__data_1_1camp__solver__data__t_aa3e4f37d1c48e99d4d22366cebef35a0}\label{structcamp__camp__solver__data_1_1camp__solver__data__t_aa3e4f37d1c48e99d4d22366cebef35a0}} 
+\index{camp\_camp\_solver\_data::camp\_solver\_data\_t@{camp\_camp\_solver\_data::camp\_solver\_data\_t}!update\_sub\_model\_data@{update\_sub\_model\_data}}
+\index{update\_sub\_model\_data@{update\_sub\_model\_data}!camp\_camp\_solver\_data::camp\_solver\_data\_t@{camp\_camp\_solver\_data::camp\_solver\_data\_t}}
+\doxysubsubsection{\texorpdfstring{update\_sub\_model\_data()}{update\_sub\_model\_data()}}
+{\footnotesize\ttfamily procedure camp\+\_\+camp\+\_\+solver\+\_\+data\+::camp\+\_\+solver\+\_\+data\+\_\+t\+::update\+\_\+sub\+\_\+model\+\_\+data\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Update sub-\/model data. 
+
+
+
+Definition at line 388 of file camp\+\_\+solver\+\_\+data.\+F90.
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{structcamp__camp__solver__data_1_1camp__solver__data__t_a0a0d6edcc997f9c33c267323ac7e16f3}\label{structcamp__camp__solver__data_1_1camp__solver__data__t_a0a0d6edcc997f9c33c267323ac7e16f3}} 
+\index{camp\_camp\_solver\_data::camp\_solver\_data\_t@{camp\_camp\_solver\_data::camp\_solver\_data\_t}!initialized@{initialized}}
+\index{initialized@{initialized}!camp\_camp\_solver\_data::camp\_solver\_data\_t@{camp\_camp\_solver\_data::camp\_solver\_data\_t}}
+\doxysubsubsection{\texorpdfstring{initialized}{initialized}}
+{\footnotesize\ttfamily logical camp\+\_\+camp\+\_\+solver\+\_\+data\+::camp\+\_\+solver\+\_\+data\+\_\+t\+::initialized = .false.\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Flag indicating whether the solver was intialized. 
+
+
+
+Definition at line 383 of file camp\+\_\+solver\+\_\+data.\+F90.
+
+\mbox{\Hypertarget{structcamp__camp__solver__data_1_1camp__solver__data__t_a739f0eb1ee8791bb35da72e831a8b414}\label{structcamp__camp__solver__data_1_1camp__solver__data__t_a739f0eb1ee8791bb35da72e831a8b414}} 
+\index{camp\_camp\_solver\_data::camp\_solver\_data\_t@{camp\_camp\_solver\_data::camp\_solver\_data\_t}!max\_conv\_fails@{max\_conv\_fails}}
+\index{max\_conv\_fails@{max\_conv\_fails}!camp\_camp\_solver\_data::camp\_solver\_data\_t@{camp\_camp\_solver\_data::camp\_solver\_data\_t}}
+\doxysubsubsection{\texorpdfstring{max\_conv\_fails}{max\_conv\_fails}}
+{\footnotesize\ttfamily integer(kind=i\+\_\+kind), public camp\+\_\+camp\+\_\+solver\+\_\+data\+::camp\+\_\+solver\+\_\+data\+\_\+t\+::max\+\_\+conv\+\_\+fails = CAMP\+\_\+\+SOLVER\+\_\+\+DEFAULT\+\_\+\+MAX\+\_\+\+CONV\+\_\+\+FAILS}
+
+
+
+Maximum number of convergence failures. 
+
+
+
+Definition at line 380 of file camp\+\_\+solver\+\_\+data.\+F90.
+
+\mbox{\Hypertarget{structcamp__camp__solver__data_1_1camp__solver__data__t_a81f469e0bc15eac2886bb21f22563448}\label{structcamp__camp__solver__data_1_1camp__solver__data__t_a81f469e0bc15eac2886bb21f22563448}} 
+\index{camp\_camp\_solver\_data::camp\_solver\_data\_t@{camp\_camp\_solver\_data::camp\_solver\_data\_t}!max\_steps@{max\_steps}}
+\index{max\_steps@{max\_steps}!camp\_camp\_solver\_data::camp\_solver\_data\_t@{camp\_camp\_solver\_data::camp\_solver\_data\_t}}
+\doxysubsubsection{\texorpdfstring{max\_steps}{max\_steps}}
+{\footnotesize\ttfamily integer(kind=i\+\_\+kind), public camp\+\_\+camp\+\_\+solver\+\_\+data\+::camp\+\_\+solver\+\_\+data\+\_\+t\+::max\+\_\+steps = CAMP\+\_\+\+SOLVER\+\_\+\+DEFAULT\+\_\+\+MAX\+\_\+\+STEPS}
+
+
+
+Maximum number of timesteps. 
+
+
+
+Definition at line 378 of file camp\+\_\+solver\+\_\+data.\+F90.
+
+\mbox{\Hypertarget{structcamp__camp__solver__data_1_1camp__solver__data__t_a2d34803c8a6080d9967dc493ddcbc5f9}\label{structcamp__camp__solver__data_1_1camp__solver__data__t_a2d34803c8a6080d9967dc493ddcbc5f9}} 
+\index{camp\_camp\_solver\_data::camp\_solver\_data\_t@{camp\_camp\_solver\_data::camp\_solver\_data\_t}!rel\_tol@{rel\_tol}}
+\index{rel\_tol@{rel\_tol}!camp\_camp\_solver\_data::camp\_solver\_data\_t@{camp\_camp\_solver\_data::camp\_solver\_data\_t}}
+\doxysubsubsection{\texorpdfstring{rel\_tol}{rel\_tol}}
+{\footnotesize\ttfamily real(kind=dp), public camp\+\_\+camp\+\_\+solver\+\_\+data\+::camp\+\_\+solver\+\_\+data\+\_\+t\+::rel\+\_\+tol = CAMP\+\_\+\+SOLVER\+\_\+\+DEFAULT\+\_\+\+REL\+\_\+\+TOL}
+
+
+
+Relative tolerance for the integration. 
+
+
+
+Definition at line 376 of file camp\+\_\+solver\+\_\+data.\+F90.
+
+\mbox{\Hypertarget{structcamp__camp__solver__data_1_1camp__solver__data__t_a60fe5ae83eba67e63196462a4fd7e802}\label{structcamp__camp__solver__data_1_1camp__solver__data__t_a60fe5ae83eba67e63196462a4fd7e802}} 
+\index{camp\_camp\_solver\_data::camp\_solver\_data\_t@{camp\_camp\_solver\_data::camp\_solver\_data\_t}!solver\_c\_ptr@{solver\_c\_ptr}}
+\index{solver\_c\_ptr@{solver\_c\_ptr}!camp\_camp\_solver\_data::camp\_solver\_data\_t@{camp\_camp\_solver\_data::camp\_solver\_data\_t}}
+\doxysubsubsection{\texorpdfstring{solver\_c\_ptr}{solver\_c\_ptr}}
+{\footnotesize\ttfamily type(c\+\_\+ptr), public camp\+\_\+camp\+\_\+solver\+\_\+data\+::camp\+\_\+solver\+\_\+data\+\_\+t\+::solver\+\_\+c\+\_\+ptr}
+
+
+
+C Solver object. 
+
+
+
+Definition at line 374 of file camp\+\_\+solver\+\_\+data.\+F90.
+
+
+
+The documentation for this interface was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{camp__solver__data_8_f90}{camp\+\_\+solver\+\_\+data.\+F90}}\end{DoxyCompactItemize}

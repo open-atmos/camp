@@ -1,0 +1,70 @@
+\hypertarget{camp__box__model__data_8_f90}{}\doxysection{camp\+\_\+box\+\_\+model\+\_\+data.\+F90 File Reference}
+\label{camp__box__model__data_8_f90}\index{camp\_box\_model\_data.F90@{camp\_box\_model\_data.F90}}
+
+
+The camp\+\_\+camp\+\_\+box\+\_\+model\+\_\+data\+\_\+t type and related functions.  
+
+
+\doxysubsection*{Data Types}
+\begin{DoxyCompactItemize}
+\item 
+interface \mbox{\hyperlink{structcamp__camp__box__model__data_1_1profile__t}{camp\+\_\+camp\+\_\+box\+\_\+model\+\_\+data\+::profile\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em Property time profile. \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{structcamp__camp__box__model__data_1_1rxn__profile__t}{camp\+\_\+camp\+\_\+box\+\_\+model\+\_\+data\+::rxn\+\_\+profile\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em Reaction rate time profile. \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{structcamp__camp__box__model__data_1_1aero__rep__profile__t}{camp\+\_\+camp\+\_\+box\+\_\+model\+\_\+data\+::aero\+\_\+rep\+\_\+profile\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em Aerosol representation time profile. \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{structcamp__camp__box__model__data_1_1camp__box__model__data__t}{camp\+\_\+camp\+\_\+box\+\_\+model\+\_\+data\+::camp\+\_\+box\+\_\+model\+\_\+data\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em CAMP Box model. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Modules}
+\begin{DoxyCompactItemize}
+\item 
+module \mbox{\hyperlink{namespacecamp__camp__box__model__data}{camp\+\_\+camp\+\_\+box\+\_\+model\+\_\+data}}
+\begin{DoxyCompactList}\small\item\em A simple box model for \mbox{\hyperlink{index}{CAMP}} mechanisms. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Functions/\+Subroutines}
+\begin{DoxyCompactItemize}
+\item 
+type(camp\+\_\+box\+\_\+model\+\_\+data\+\_\+t) function, pointer \mbox{\hyperlink{namespacecamp__camp__box__model__data_a28c4e7aaf799a85f02ec46f22c92703e}{camp\+\_\+camp\+\_\+box\+\_\+model\+\_\+data\+::constructor}} (config\+\_\+file)
+\begin{DoxyCompactList}\small\item\em Constructor for the CAMP box model. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__camp__box__model__data_ac872f407eff5828aa69a770df166ded7}{camp\+\_\+camp\+\_\+box\+\_\+model\+\_\+data\+::run}} (this, output\+\_\+file\+\_\+unit)
+\begin{DoxyCompactList}\small\item\em Run the camp-\/chem box model. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__camp__box__model__data_ac7222c876f38e6bf3ebb65153e241fc1}{camp\+\_\+camp\+\_\+box\+\_\+model\+\_\+data\+::create\+\_\+gnuplot\+\_\+config\+\_\+file}} (this, file\+\_\+prefix)
+\begin{DoxyCompactList}\small\item\em Create a gnuplot configuration file for plotting box model results. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__camp__box__model__data_a9a5c677bdedd98c03e03896944eb4f03}{camp\+\_\+camp\+\_\+box\+\_\+model\+\_\+data\+::do\+\_\+print}} (this, file\+\_\+unit)
+\begin{DoxyCompactList}\small\item\em Print out the configuration of the box model. \end{DoxyCompactList}\item 
+elemental subroutine \mbox{\hyperlink{namespacecamp__camp__box__model__data_add471e0491a8aecb67f6427588558e60}{camp\+\_\+camp\+\_\+box\+\_\+model\+\_\+data\+::finalize}} (this)
+\begin{DoxyCompactList}\small\item\em Finalize the box model. \end{DoxyCompactList}\item 
+type(profile\+\_\+t) function \mbox{\hyperlink{namespacecamp__camp__box__model__data_ae47b8629e7036728d9322f3b8b58e75b}{camp\+\_\+camp\+\_\+box\+\_\+model\+\_\+data\+::profile\+\_\+constructor}} (json, j\+\_\+obj)
+\begin{DoxyCompactList}\small\item\em Constructor for \mbox{\hyperlink{structcamp__camp__box__model__data_1_1profile__t}{profile\+\_\+t}}. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__camp__box__model__data_a9b28d1449f2275a8fcfa9f6befc223db}{camp\+\_\+camp\+\_\+box\+\_\+model\+\_\+data\+::reset}} (this)
+\begin{DoxyCompactList}\small\item\em Reset the profile to the initial state. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__camp__box__model__data_a8448207c5ec228e265508f0bb2947ebf}{camp\+\_\+camp\+\_\+box\+\_\+model\+\_\+data\+::advance}} (this)
+\begin{DoxyCompactList}\small\item\em Advance the profile by one time step. \end{DoxyCompactList}\item 
+real(kind=dp) function \mbox{\hyperlink{namespacecamp__camp__box__model__data_ab29c50b53e313caecde7287bbcc0a6ae}{camp\+\_\+camp\+\_\+box\+\_\+model\+\_\+data\+::current\+\_\+value}} (this)
+\begin{DoxyCompactList}\small\item\em Get the current value of the profile. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__camp__box__model__data_a287e225be62f3476fef790b5bba76a16}{camp\+\_\+camp\+\_\+box\+\_\+model\+\_\+data\+::profile\+\_\+do\+\_\+print}} (this, file\+\_\+unit)
+\begin{DoxyCompactList}\small\item\em Print the profile configuration. \end{DoxyCompactList}\item 
+type(rxn\+\_\+profile\+\_\+t) function \mbox{\hyperlink{namespacecamp__camp__box__model__data_a97f1bc98fea4f3453a3d9a088a94cee7}{camp\+\_\+camp\+\_\+box\+\_\+model\+\_\+data\+::rxn\+\_\+profile\+\_\+constructor}} (camp\+\_\+core, json, j\+\_\+obj)
+\begin{DoxyCompactList}\small\item\em Constructor for \mbox{\hyperlink{structcamp__camp__box__model__data_1_1rxn__profile__t}{rxn\+\_\+profile\+\_\+t}}. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__camp__box__model__data_a61bdbd2a4ffa9c2ced4c2af8bc202547}{camp\+\_\+camp\+\_\+box\+\_\+model\+\_\+data\+::update\+\_\+rxn}} (this, camp\+\_\+core)
+\begin{DoxyCompactList}\small\item\em Update a reaction with the current rate from the profile. \end{DoxyCompactList}\item 
+elemental subroutine \mbox{\hyperlink{namespacecamp__camp__box__model__data_ad6ece4ae1c922dd4a4e0d3e3b4386160}{camp\+\_\+camp\+\_\+box\+\_\+model\+\_\+data\+::rxn\+\_\+profile\+\_\+finalize}} (this)
+\begin{DoxyCompactList}\small\item\em Finalize the reaction profile. \end{DoxyCompactList}\item 
+type(aero\+\_\+rep\+\_\+profile\+\_\+t) function \mbox{\hyperlink{namespacecamp__camp__box__model__data_a8af4bb4693b7646b5850d93fe7c638fd}{camp\+\_\+camp\+\_\+box\+\_\+model\+\_\+data\+::aero\+\_\+rep\+\_\+profile\+\_\+constructor}} (camp\+\_\+core, json, j\+\_\+obj)
+\begin{DoxyCompactList}\small\item\em Constructor for \mbox{\hyperlink{structcamp__camp__box__model__data_1_1aero__rep__profile__t}{aero\+\_\+rep\+\_\+profile\+\_\+t}}. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__camp__box__model__data_af768542102cf21c66f636348d8f4dcb7}{camp\+\_\+camp\+\_\+box\+\_\+model\+\_\+data\+::update\+\_\+aero\+\_\+rep}} (this, camp\+\_\+core)
+\begin{DoxyCompactList}\small\item\em Update a reaction with the current rate from the profile. \end{DoxyCompactList}\item 
+elemental subroutine \mbox{\hyperlink{namespacecamp__camp__box__model__data_ae63baa4438fec235b2911b8832d1f3df}{camp\+\_\+camp\+\_\+box\+\_\+model\+\_\+data\+::aero\+\_\+rep\+\_\+profile\+\_\+finalize}} (this)
+\begin{DoxyCompactList}\small\item\em Finalize the aerosol representation profile. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+character(len= $\ast$), parameter \mbox{\hyperlink{namespacecamp__camp__box__model__data_a379740ff02b3bc2ba3b0a87e44e88a26}{camp\+\_\+camp\+\_\+box\+\_\+model\+\_\+data\+::new\+\_\+line}} = char(10)
+\item 
+integer(kind=i\+\_\+kind), parameter \mbox{\hyperlink{namespacecamp__camp__box__model__data_a47676ba67feaf329c20b2b3852859054}{camp\+\_\+camp\+\_\+box\+\_\+model\+\_\+data\+::scripts\+\_\+file\+\_\+unit}} = 8
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+The camp\+\_\+camp\+\_\+box\+\_\+model\+\_\+data\+\_\+t type and related functions. 
+

@@ -1,0 +1,76 @@
+\hypertarget{interfacecamp__camp__solver__data_1_1solver__get__statistics}{}\doxysection{camp\+\_\+camp\+\_\+solver\+\_\+data\+::solver\+\_\+get\+\_\+statistics Interface Reference}
+\label{interfacecamp__camp__solver__data_1_1solver__get__statistics}\index{camp\_camp\_solver\_data::solver\_get\_statistics@{camp\_camp\_solver\_data::solver\_get\_statistics}}
+
+
+Get the solver statistics.  
+
+
+\doxysubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+subroutine \mbox{\hyperlink{interfacecamp__camp__solver__data_1_1solver__get__statistics_a2d7cb7438e764ae72c3595e7121a2879}{solver\+\_\+get\+\_\+statistics}} (solver\+\_\+data, solver\+\_\+flag, num\+\_\+steps, RHS\+\_\+evals, LS\+\_\+setups, error\+\_\+test\+\_\+fails, NLS\+\_\+iters, NLS\+\_\+convergence\+\_\+fails, DLS\+\_\+\+Jac\+\_\+evals, DLS\+\_\+\+RHS\+\_\+evals, last\+\_\+time\+\_\+step\+\_\+\+\_\+s, next\+\_\+time\+\_\+step\+\_\+\+\_\+s, Jac\+\_\+eval\+\_\+fails, RHS\+\_\+evals\+\_\+total, Jac\+\_\+evals\+\_\+total, RHS\+\_\+time\+\_\+\+\_\+s, Jac\+\_\+time\+\_\+\+\_\+s, max\+\_\+loss\+\_\+precision)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Get the solver statistics. 
+
+Definition at line 156 of file camp\+\_\+solver\+\_\+data.\+F90.
+
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{interfacecamp__camp__solver__data_1_1solver__get__statistics_a2d7cb7438e764ae72c3595e7121a2879}\label{interfacecamp__camp__solver__data_1_1solver__get__statistics_a2d7cb7438e764ae72c3595e7121a2879}} 
+\index{camp\_camp\_solver\_data::solver\_get\_statistics@{camp\_camp\_solver\_data::solver\_get\_statistics}!solver\_get\_statistics@{solver\_get\_statistics}}
+\index{solver\_get\_statistics@{solver\_get\_statistics}!camp\_camp\_solver\_data::solver\_get\_statistics@{camp\_camp\_solver\_data::solver\_get\_statistics}}
+\doxysubsubsection{\texorpdfstring{solver\_get\_statistics()}{solver\_get\_statistics()}}
+{\footnotesize\ttfamily subroutine camp\+\_\+camp\+\_\+solver\+\_\+data\+::solver\+\_\+get\+\_\+statistics\+::solver\+\_\+get\+\_\+statistics (\begin{DoxyParamCaption}\item[{type(c\+\_\+ptr), value}]{solver\+\_\+data,  }\item[{type(c\+\_\+ptr), value}]{solver\+\_\+flag,  }\item[{type(c\+\_\+ptr), value}]{num\+\_\+steps,  }\item[{type(c\+\_\+ptr), value}]{RHS\+\_\+evals,  }\item[{type(c\+\_\+ptr), value}]{LS\+\_\+setups,  }\item[{type(c\+\_\+ptr), value}]{error\+\_\+test\+\_\+fails,  }\item[{type(c\+\_\+ptr), value}]{NLS\+\_\+iters,  }\item[{type(c\+\_\+ptr), value}]{NLS\+\_\+convergence\+\_\+fails,  }\item[{type(c\+\_\+ptr), value}]{DLS\+\_\+\+Jac\+\_\+evals,  }\item[{type(c\+\_\+ptr), value}]{DLS\+\_\+\+RHS\+\_\+evals,  }\item[{type(c\+\_\+ptr), value}]{last\+\_\+time\+\_\+step\+\_\+\+\_\+s,  }\item[{type(c\+\_\+ptr), value}]{next\+\_\+time\+\_\+step\+\_\+\+\_\+s,  }\item[{type(c\+\_\+ptr), value}]{Jac\+\_\+eval\+\_\+fails,  }\item[{type(c\+\_\+ptr), value}]{RHS\+\_\+evals\+\_\+total,  }\item[{type(c\+\_\+ptr), value}]{Jac\+\_\+evals\+\_\+total,  }\item[{type(c\+\_\+ptr), value}]{RHS\+\_\+time\+\_\+\+\_\+s,  }\item[{type(c\+\_\+ptr), value}]{Jac\+\_\+time\+\_\+\+\_\+s,  }\item[{type(c\+\_\+ptr), value}]{max\+\_\+loss\+\_\+precision }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em solver\+\_\+data} & Pointer to the solver data\\
+\hline
+{\em solver\+\_\+flag} & Last flag returned by the solver\\
+\hline
+{\em num\+\_\+steps} & Number of steps\\
+\hline
+{\em rhs\+\_\+evals} & Right-\/hand side evaluations\\
+\hline
+{\em ls\+\_\+setups} & Linear solver setups\\
+\hline
+{\em error\+\_\+test\+\_\+fails} & Error test failures\\
+\hline
+{\em nls\+\_\+iters} & Non-\/\+Linear solver iterations\\
+\hline
+{\em nls\+\_\+convergence\+\_\+fails} & Non-\/\+Linear solver failures\\
+\hline
+{\em dls\+\_\+jac\+\_\+evals} & Direct Linear Solver \mbox{\hyperlink{struct_jacobian}{Jacobian}} evaluations\\
+\hline
+{\em dls\+\_\+rhs\+\_\+evals} & Direct Linear Solver right-\/hand side evaluations\\
+\hline
+{\em last\+\_\+time\+\_\+step\+\_\+\+\_\+s} & Last time step \mbox{[}s\mbox{]}\\
+\hline
+{\em next\+\_\+time\+\_\+step\+\_\+\+\_\+s} & Next time step \mbox{[}s\mbox{]}\\
+\hline
+{\em jac\+\_\+eval\+\_\+fails} & Number of \mbox{\hyperlink{struct_jacobian}{Jacobian}} evaluation failures\\
+\hline
+{\em rhs\+\_\+evals\+\_\+total} & Total number of calls to {\ttfamily \mbox{\hyperlink{camp__solver_8c_ac55302bc18db0d68d78f543aad6a16c4}{f()}}}\\
+\hline
+{\em jac\+\_\+evals\+\_\+total} & Total number of calls to {\ttfamily \mbox{\hyperlink{camp__solver_8c_a13451d507558a61a2353adfed58db468}{Jac()}}}\\
+\hline
+{\em rhs\+\_\+time\+\_\+\+\_\+s} & Compute time for calls to {\ttfamily \mbox{\hyperlink{camp__solver_8c_ac55302bc18db0d68d78f543aad6a16c4}{f()}}}\\
+\hline
+{\em jac\+\_\+time\+\_\+\+\_\+s} & Compute time for calls to {\ttfamily \mbox{\hyperlink{camp__solver_8c_a13451d507558a61a2353adfed58db468}{Jac()}}}\\
+\hline
+{\em max\+\_\+loss\+\_\+precision} & Maximum loss of precision on last call the \mbox{\hyperlink{camp__solver_8c_ac55302bc18db0d68d78f543aad6a16c4}{f()}} \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 156 of file camp\+\_\+solver\+\_\+data.\+F90.
+
+
+
+The documentation for this interface was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{camp__solver__data_8_f90}{camp\+\_\+solver\+\_\+data.\+F90}}\end{DoxyCompactItemize}

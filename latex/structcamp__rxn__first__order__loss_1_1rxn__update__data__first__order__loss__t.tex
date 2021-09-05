@@ -1,0 +1,153 @@
+\hypertarget{structcamp__rxn__first__order__loss_1_1rxn__update__data__first__order__loss__t}{}\doxysection{camp\+\_\+rxn\+\_\+first\+\_\+order\+\_\+loss\+::rxn\+\_\+update\+\_\+data\+\_\+first\+\_\+order\+\_\+loss\+\_\+t Type Reference}
+\label{structcamp__rxn__first__order__loss_1_1rxn__update__data__first__order__loss__t}\index{camp\_rxn\_first\_order\_loss::rxn\_update\_data\_first\_order\_loss\_t@{camp\_rxn\_first\_order\_loss::rxn\_update\_data\_first\_order\_loss\_t}}
+
+
+First-\/\+Order Loss rate update object.  
+
+
+
+
+Inheritance diagram for camp\+\_\+rxn\+\_\+first\+\_\+order\+\_\+loss\+::rxn\+\_\+update\+\_\+data\+\_\+first\+\_\+order\+\_\+loss\+\_\+t\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=196pt]{structcamp__rxn__first__order__loss_1_1rxn__update__data__first__order__loss__t__inherit__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+procedure \mbox{\hyperlink{structcamp__rxn__first__order__loss_1_1rxn__update__data__first__order__loss__t_aaeffde503ba20bcee887f4f70e3ab798}{set\+\_\+rate}} =$>$ \mbox{\hyperlink{namespacecamp__rxn__first__order__loss_ac7cedb2ca263b15ac02f576ef2b92552}{update\+\_\+data\+\_\+rate\+\_\+set}}
+\begin{DoxyCompactList}\small\item\em Update the rate data. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__rxn__first__order__loss_1_1rxn__update__data__first__order__loss__t_a5d9ce0809223c4f1a937b4da9738c7f5}{internal\+\_\+pack\+\_\+size}}
+\begin{DoxyCompactList}\small\item\em Determine the pack size of the local update data. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__rxn__first__order__loss_1_1rxn__update__data__first__order__loss__t_ac136f3a8b5ab2b25a5ff7d8922b30bc0}{internal\+\_\+bin\+\_\+pack}}
+\begin{DoxyCompactList}\small\item\em Pack the local update data to a binary. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__rxn__first__order__loss_1_1rxn__update__data__first__order__loss__t_aa954ea78ef9efcfecb7f81a06e2facc0}{internal\+\_\+bin\+\_\+unpack}}
+\begin{DoxyCompactList}\small\item\em Unpack the local update data from a binary. \end{DoxyCompactList}\item 
+final \mbox{\hyperlink{structcamp__rxn__first__order__loss_1_1rxn__update__data__first__order__loss__t_a138ac9994b81d4c8ff220acc65bc403a}{update\+\_\+data\+\_\+finalize}}
+\begin{DoxyCompactList}\small\item\em Finalize the rate update data. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+logical \mbox{\hyperlink{structcamp__rxn__first__order__loss_1_1rxn__update__data__first__order__loss__t_a261a2a482932f0eaccce94e4ccec5996}{is\+\_\+malloced}} = .false.
+\begin{DoxyCompactList}\small\item\em Flag indicating whether the update data as been allocated. \end{DoxyCompactList}\item 
+integer(kind=i\+\_\+kind) \mbox{\hyperlink{structcamp__rxn__first__order__loss_1_1rxn__update__data__first__order__loss__t_a2cb400a7ff09c83c53e7aec245f2e1b0}{rxn\+\_\+unique\+\_\+id}} = 0
+\begin{DoxyCompactList}\small\item\em Unique id for finding reactions during model initialization. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+First-\/\+Order Loss rate update object. 
+
+Definition at line 98 of file rxn\+\_\+first\+\_\+order\+\_\+loss.\+F90.
+
+
+
+\doxysubsection{Member Function/\+Subroutine Documentation}
+\mbox{\Hypertarget{structcamp__rxn__first__order__loss_1_1rxn__update__data__first__order__loss__t_ac136f3a8b5ab2b25a5ff7d8922b30bc0}\label{structcamp__rxn__first__order__loss_1_1rxn__update__data__first__order__loss__t_ac136f3a8b5ab2b25a5ff7d8922b30bc0}} 
+\index{camp\_rxn\_first\_order\_loss::rxn\_update\_data\_first\_order\_loss\_t@{camp\_rxn\_first\_order\_loss::rxn\_update\_data\_first\_order\_loss\_t}!internal\_bin\_pack@{internal\_bin\_pack}}
+\index{internal\_bin\_pack@{internal\_bin\_pack}!camp\_rxn\_first\_order\_loss::rxn\_update\_data\_first\_order\_loss\_t@{camp\_rxn\_first\_order\_loss::rxn\_update\_data\_first\_order\_loss\_t}}
+\doxysubsubsection{\texorpdfstring{internal\_bin\_pack()}{internal\_bin\_pack()}}
+{\footnotesize\ttfamily procedure camp\+\_\+rxn\+\_\+first\+\_\+order\+\_\+loss\+::rxn\+\_\+update\+\_\+data\+\_\+first\+\_\+order\+\_\+loss\+\_\+t\+::internal\+\_\+bin\+\_\+pack\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Pack the local update data to a binary. 
+
+
+
+Definition at line 110 of file rxn\+\_\+first\+\_\+order\+\_\+loss.\+F90.
+
+\mbox{\Hypertarget{structcamp__rxn__first__order__loss_1_1rxn__update__data__first__order__loss__t_aa954ea78ef9efcfecb7f81a06e2facc0}\label{structcamp__rxn__first__order__loss_1_1rxn__update__data__first__order__loss__t_aa954ea78ef9efcfecb7f81a06e2facc0}} 
+\index{camp\_rxn\_first\_order\_loss::rxn\_update\_data\_first\_order\_loss\_t@{camp\_rxn\_first\_order\_loss::rxn\_update\_data\_first\_order\_loss\_t}!internal\_bin\_unpack@{internal\_bin\_unpack}}
+\index{internal\_bin\_unpack@{internal\_bin\_unpack}!camp\_rxn\_first\_order\_loss::rxn\_update\_data\_first\_order\_loss\_t@{camp\_rxn\_first\_order\_loss::rxn\_update\_data\_first\_order\_loss\_t}}
+\doxysubsubsection{\texorpdfstring{internal\_bin\_unpack()}{internal\_bin\_unpack()}}
+{\footnotesize\ttfamily procedure camp\+\_\+rxn\+\_\+first\+\_\+order\+\_\+loss\+::rxn\+\_\+update\+\_\+data\+\_\+first\+\_\+order\+\_\+loss\+\_\+t\+::internal\+\_\+bin\+\_\+unpack\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Unpack the local update data from a binary. 
+
+
+
+Definition at line 112 of file rxn\+\_\+first\+\_\+order\+\_\+loss.\+F90.
+
+\mbox{\Hypertarget{structcamp__rxn__first__order__loss_1_1rxn__update__data__first__order__loss__t_a5d9ce0809223c4f1a937b4da9738c7f5}\label{structcamp__rxn__first__order__loss_1_1rxn__update__data__first__order__loss__t_a5d9ce0809223c4f1a937b4da9738c7f5}} 
+\index{camp\_rxn\_first\_order\_loss::rxn\_update\_data\_first\_order\_loss\_t@{camp\_rxn\_first\_order\_loss::rxn\_update\_data\_first\_order\_loss\_t}!internal\_pack\_size@{internal\_pack\_size}}
+\index{internal\_pack\_size@{internal\_pack\_size}!camp\_rxn\_first\_order\_loss::rxn\_update\_data\_first\_order\_loss\_t@{camp\_rxn\_first\_order\_loss::rxn\_update\_data\_first\_order\_loss\_t}}
+\doxysubsubsection{\texorpdfstring{internal\_pack\_size()}{internal\_pack\_size()}}
+{\footnotesize\ttfamily procedure camp\+\_\+rxn\+\_\+first\+\_\+order\+\_\+loss\+::rxn\+\_\+update\+\_\+data\+\_\+first\+\_\+order\+\_\+loss\+\_\+t\+::internal\+\_\+pack\+\_\+size\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Determine the pack size of the local update data. 
+
+
+
+Definition at line 108 of file rxn\+\_\+first\+\_\+order\+\_\+loss.\+F90.
+
+\mbox{\Hypertarget{structcamp__rxn__first__order__loss_1_1rxn__update__data__first__order__loss__t_aaeffde503ba20bcee887f4f70e3ab798}\label{structcamp__rxn__first__order__loss_1_1rxn__update__data__first__order__loss__t_aaeffde503ba20bcee887f4f70e3ab798}} 
+\index{camp\_rxn\_first\_order\_loss::rxn\_update\_data\_first\_order\_loss\_t@{camp\_rxn\_first\_order\_loss::rxn\_update\_data\_first\_order\_loss\_t}!set\_rate@{set\_rate}}
+\index{set\_rate@{set\_rate}!camp\_rxn\_first\_order\_loss::rxn\_update\_data\_first\_order\_loss\_t@{camp\_rxn\_first\_order\_loss::rxn\_update\_data\_first\_order\_loss\_t}}
+\doxysubsubsection{\texorpdfstring{set\_rate()}{set\_rate()}}
+{\footnotesize\ttfamily procedure camp\+\_\+rxn\+\_\+first\+\_\+order\+\_\+loss\+::rxn\+\_\+update\+\_\+data\+\_\+first\+\_\+order\+\_\+loss\+\_\+t\+::set\+\_\+rate\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Update the rate data. 
+
+
+
+Definition at line 106 of file rxn\+\_\+first\+\_\+order\+\_\+loss.\+F90.
+
+\mbox{\Hypertarget{structcamp__rxn__first__order__loss_1_1rxn__update__data__first__order__loss__t_a138ac9994b81d4c8ff220acc65bc403a}\label{structcamp__rxn__first__order__loss_1_1rxn__update__data__first__order__loss__t_a138ac9994b81d4c8ff220acc65bc403a}} 
+\index{camp\_rxn\_first\_order\_loss::rxn\_update\_data\_first\_order\_loss\_t@{camp\_rxn\_first\_order\_loss::rxn\_update\_data\_first\_order\_loss\_t}!update\_data\_finalize@{update\_data\_finalize}}
+\index{update\_data\_finalize@{update\_data\_finalize}!camp\_rxn\_first\_order\_loss::rxn\_update\_data\_first\_order\_loss\_t@{camp\_rxn\_first\_order\_loss::rxn\_update\_data\_first\_order\_loss\_t}}
+\doxysubsubsection{\texorpdfstring{update\_data\_finalize()}{update\_data\_finalize()}}
+{\footnotesize\ttfamily final camp\+\_\+rxn\+\_\+first\+\_\+order\+\_\+loss\+::rxn\+\_\+update\+\_\+data\+\_\+first\+\_\+order\+\_\+loss\+\_\+t\+::update\+\_\+data\+\_\+finalize\hspace{0.3cm}{\ttfamily [final]}, {\ttfamily [private]}}
+
+
+
+Finalize the rate update data. 
+
+
+
+Definition at line 114 of file rxn\+\_\+first\+\_\+order\+\_\+loss.\+F90.
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{structcamp__rxn__first__order__loss_1_1rxn__update__data__first__order__loss__t_a261a2a482932f0eaccce94e4ccec5996}\label{structcamp__rxn__first__order__loss_1_1rxn__update__data__first__order__loss__t_a261a2a482932f0eaccce94e4ccec5996}} 
+\index{camp\_rxn\_first\_order\_loss::rxn\_update\_data\_first\_order\_loss\_t@{camp\_rxn\_first\_order\_loss::rxn\_update\_data\_first\_order\_loss\_t}!is\_malloced@{is\_malloced}}
+\index{is\_malloced@{is\_malloced}!camp\_rxn\_first\_order\_loss::rxn\_update\_data\_first\_order\_loss\_t@{camp\_rxn\_first\_order\_loss::rxn\_update\_data\_first\_order\_loss\_t}}
+\doxysubsubsection{\texorpdfstring{is\_malloced}{is\_malloced}}
+{\footnotesize\ttfamily logical camp\+\_\+rxn\+\_\+first\+\_\+order\+\_\+loss\+::rxn\+\_\+update\+\_\+data\+\_\+first\+\_\+order\+\_\+loss\+\_\+t\+::is\+\_\+malloced = .false.\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Flag indicating whether the update data as been allocated. 
+
+
+
+Definition at line 101 of file rxn\+\_\+first\+\_\+order\+\_\+loss.\+F90.
+
+\mbox{\Hypertarget{structcamp__rxn__first__order__loss_1_1rxn__update__data__first__order__loss__t_a2cb400a7ff09c83c53e7aec245f2e1b0}\label{structcamp__rxn__first__order__loss_1_1rxn__update__data__first__order__loss__t_a2cb400a7ff09c83c53e7aec245f2e1b0}} 
+\index{camp\_rxn\_first\_order\_loss::rxn\_update\_data\_first\_order\_loss\_t@{camp\_rxn\_first\_order\_loss::rxn\_update\_data\_first\_order\_loss\_t}!rxn\_unique\_id@{rxn\_unique\_id}}
+\index{rxn\_unique\_id@{rxn\_unique\_id}!camp\_rxn\_first\_order\_loss::rxn\_update\_data\_first\_order\_loss\_t@{camp\_rxn\_first\_order\_loss::rxn\_update\_data\_first\_order\_loss\_t}}
+\doxysubsubsection{\texorpdfstring{rxn\_unique\_id}{rxn\_unique\_id}}
+{\footnotesize\ttfamily integer(kind=i\+\_\+kind) camp\+\_\+rxn\+\_\+first\+\_\+order\+\_\+loss\+::rxn\+\_\+update\+\_\+data\+\_\+first\+\_\+order\+\_\+loss\+\_\+t\+::rxn\+\_\+unique\+\_\+id = 0\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Unique id for finding reactions during model initialization. 
+
+
+
+Definition at line 103 of file rxn\+\_\+first\+\_\+order\+\_\+loss.\+F90.
+
+
+
+The documentation for this type was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{rxn__first__order__loss_8_f90}{rxn\+\_\+first\+\_\+order\+\_\+loss.\+F90}}\end{DoxyCompactItemize}

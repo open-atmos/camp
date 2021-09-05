@@ -1,0 +1,82 @@
+\hypertarget{chem__spec__data_8_f90}{}\doxysection{chem\+\_\+spec\+\_\+data.\+F90 File Reference}
+\label{chem__spec__data_8_f90}\index{chem\_spec\_data.F90@{chem\_spec\_data.F90}}
+
+
+The \mbox{\hyperlink{namespacecamp__chem__spec__data}{camp\+\_\+chem\+\_\+spec\+\_\+data}} module.  
+
+
+\doxysubsection*{Data Types}
+\begin{DoxyCompactItemize}
+\item 
+interface \mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t}{camp\+\_\+chem\+\_\+spec\+\_\+data\+::chem\+\_\+spec\+\_\+data\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em Chemical species data. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Modules}
+\begin{DoxyCompactItemize}
+\item 
+module \mbox{\hyperlink{namespacecamp__chem__spec__data}{camp\+\_\+chem\+\_\+spec\+\_\+data}}
+\begin{DoxyCompactList}\small\item\em The \mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t}{chem\+\_\+spec\+\_\+data\+\_\+t}} structure and associated subroutines. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Functions/\+Subroutines}
+\begin{DoxyCompactItemize}
+\item 
+type(chem\+\_\+spec\+\_\+data\+\_\+t) function, pointer \mbox{\hyperlink{namespacecamp__chem__spec__data_aab9472c40fc0e9d8eb0bf4b8ae4eb025}{camp\+\_\+chem\+\_\+spec\+\_\+data\+::constructor}} (init\+\_\+size)
+\begin{DoxyCompactList}\small\item\em Constructor for \mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t}{chem\+\_\+spec\+\_\+data\+\_\+t}}. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__chem__spec__data_a3fa55e98066f903d23da0e926e1a2742}{camp\+\_\+chem\+\_\+spec\+\_\+data\+::load}} (this, json, j\+\_\+obj)
+\begin{DoxyCompactList}\small\item\em Load species from an input file. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__chem__spec__data_a74a9f5954872b66edbdcaa12e22e6612}{camp\+\_\+chem\+\_\+spec\+\_\+data\+::initialize}} (this)
+\begin{DoxyCompactList}\small\item\em Initialize the species set. \end{DoxyCompactList}\item 
+integer(kind=i\+\_\+kind) function \mbox{\hyperlink{namespacecamp__chem__spec__data_a3effac32749cc6213f4b21dda04ca7f6}{camp\+\_\+chem\+\_\+spec\+\_\+data\+::get\+\_\+size}} (this, spec\+\_\+type, spec\+\_\+phase)
+\begin{DoxyCompactList}\small\item\em Get the number of species with the given properties. If no properties are specified, return the total number of species. \end{DoxyCompactList}\item 
+logical function \mbox{\hyperlink{namespacecamp__chem__spec__data_adbbbf9f04cdc2b2a68155f18ebf817a5}{camp\+\_\+chem\+\_\+spec\+\_\+data\+::exists}} (this, spec\+\_\+name)
+\begin{DoxyCompactList}\small\item\em Check if a species name is in the set of chemical species. \end{DoxyCompactList}\item 
+type(string\+\_\+t) function, dimension(\+:), allocatable \mbox{\hyperlink{namespacecamp__chem__spec__data_a753b08e0843468b99baa5bb905142ce5}{camp\+\_\+chem\+\_\+spec\+\_\+data\+::get\+\_\+spec\+\_\+names}} (this, spec\+\_\+type, spec\+\_\+phase)
+\begin{DoxyCompactList}\small\item\em Get a list of species names. \end{DoxyCompactList}\item 
+logical function \mbox{\hyperlink{namespacecamp__chem__spec__data_ad68298cb016141617afbe1b6b6d73dea}{camp\+\_\+chem\+\_\+spec\+\_\+data\+::get\+\_\+property\+\_\+set}} (this, spec\+\_\+name, property\+\_\+set)
+\begin{DoxyCompactList}\small\item\em Get a species property set. Returns true if the species is found, or false otherwise. \end{DoxyCompactList}\item 
+logical function \mbox{\hyperlink{namespacecamp__chem__spec__data_a25fe0786fe3de7d03e861cfae3f6f375}{camp\+\_\+chem\+\_\+spec\+\_\+data\+::get\+\_\+type}} (this, spec\+\_\+name, spec\+\_\+type)
+\begin{DoxyCompactList}\small\item\em Get a species type by species name. Returns true if the species is found or false otherwise. \end{DoxyCompactList}\item 
+logical function \mbox{\hyperlink{namespacecamp__chem__spec__data_a6923d97d812b2570ddbf0dbc3f41ba2d}{camp\+\_\+chem\+\_\+spec\+\_\+data\+::get\+\_\+phase}} (this, spec\+\_\+name, spec\+\_\+phase)
+\begin{DoxyCompactList}\small\item\em Get a species phase by name. Returns true if the species is found, or false otherwise. \end{DoxyCompactList}\item 
+logical function \mbox{\hyperlink{namespacecamp__chem__spec__data_a31914e941205be29f822456fcbe07485}{camp\+\_\+chem\+\_\+spec\+\_\+data\+::get\+\_\+abs\+\_\+tol}} (this, spec\+\_\+name, abs\+\_\+tol)
+\begin{DoxyCompactList}\small\item\em Get the absolute integration tolerance of a species by name. Returns true if the species is found, or false otherwise. \end{DoxyCompactList}\item 
+integer(kind=i\+\_\+kind) function \mbox{\hyperlink{namespacecamp__chem__spec__data_ae877fd6fbaaac9755fb3c2ceb7c86824}{camp\+\_\+chem\+\_\+spec\+\_\+data\+::gas\+\_\+state\+\_\+id}} (this, spec\+\_\+name)
+\begin{DoxyCompactList}\small\item\em Get a gas-\/phase species index in the {\ttfamily \mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t_a5405d5023175234c25e2c2371d924c67}{camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t\+::state\+\_\+var}}} array. Note that aerosol-\/phase species indices on the {\ttfamily \mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t_a5405d5023175234c25e2c2371d924c67}{camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t\+::state\+\_\+var}}} array must be accessed from {\ttfamily \mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__t_aed385a911da724faa43ecfa61aed8aea}{camp\+\_\+aero\+\_\+rep\+\_\+data\+::aero\+\_\+rep\+\_\+data\+\_\+t\+::spec\+\_\+state\+\_\+id()}}} for a particular \mbox{\hyperlink{camp_aero_rep}{aerosol representation}}. Returns a valid state array index if the species is found, or 0 otherwise. \end{DoxyCompactList}\item 
+character(len=\+:) function, allocatable \mbox{\hyperlink{namespacecamp__chem__spec__data_a909fdf4aab2bd2d9ab7353b546d06b2f}{camp\+\_\+chem\+\_\+spec\+\_\+data\+::gas\+\_\+state\+\_\+name}} (this, spec\+\_\+id)
+\begin{DoxyCompactList}\small\item\em Get a gas-\/phase species name in the {\ttfamily \mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t_a5405d5023175234c25e2c2371d924c67}{camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t\+::state\+\_\+var}}} array. Note that aerosol-\/phase species names on the {\ttfamily \mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t_a5405d5023175234c25e2c2371d924c67}{camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t\+::state\+\_\+var}}} array must be accessed from {\ttfamily \mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__t_aed385a911da724faa43ecfa61aed8aea}{camp\+\_\+aero\+\_\+rep\+\_\+data\+::aero\+\_\+rep\+\_\+data\+\_\+t\+::spec\+\_\+state\+\_\+id()}}} for a particular \mbox{\hyperlink{camp_aero_rep}{aerosol representation}}. Returns a valid state array index if the species is found, or 0 otherwise. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__chem__spec__data_a60012faea63614e1ce223e11abf1673d}{camp\+\_\+chem\+\_\+spec\+\_\+data\+::do\+\_\+print}} (this, file\+\_\+unit)
+\begin{DoxyCompactList}\small\item\em Print out the species data. \end{DoxyCompactList}\item 
+elemental subroutine \mbox{\hyperlink{namespacecamp__chem__spec__data_ae9a38010284ffefe513884f38ed11374}{camp\+\_\+chem\+\_\+spec\+\_\+data\+::finalize}} (this)
+\begin{DoxyCompactList}\small\item\em Finalize the chemical species data. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__chem__spec__data_a98c98bcbf67fda9cd6df1121793a3b76}{camp\+\_\+chem\+\_\+spec\+\_\+data\+::ensure\+\_\+size}} (this, num\+\_\+spec)
+\begin{DoxyCompactList}\small\item\em Ensure there is enough room in the species dataset to add a specified number of species. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__chem__spec__data_aefb1cfb55308ec574d90c4c6cca57d47}{camp\+\_\+chem\+\_\+spec\+\_\+data\+::add}} (this, spec\+\_\+name, spec\+\_\+type, spec\+\_\+phase, property\+\_\+set)
+\begin{DoxyCompactList}\small\item\em Add a new chemical species. \end{DoxyCompactList}\item 
+logical function \mbox{\hyperlink{namespacecamp__chem__spec__data_a383879cb7b02498989ad7869e152a630}{camp\+\_\+chem\+\_\+spec\+\_\+data\+::find}} (this, spec\+\_\+name, spec\+\_\+id)
+\begin{DoxyCompactList}\small\item\em Get the index of a chemical species by name. Returns true if the species is found or false otherwise. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+integer(kind=i\+\_\+kind), parameter, public \mbox{\hyperlink{namespacecamp__chem__spec__data_a5350b5ad9f915fd214b763302fecb769}{camp\+\_\+chem\+\_\+spec\+\_\+data\+::chem\+\_\+spec\+\_\+unknown\+\_\+type}} = 0
+\begin{DoxyCompactList}\small\item\em State variable types (Must match values in \mbox{\hyperlink{camp__solver_8c}{camp\+\_\+solver.\+c}}) \end{DoxyCompactList}\item 
+integer(kind=i\+\_\+kind), parameter, public \mbox{\hyperlink{namespacecamp__chem__spec__data_acc830535cf5eb0ddf9f554d2dc726417}{camp\+\_\+chem\+\_\+spec\+\_\+data\+::chem\+\_\+spec\+\_\+variable}} = 1
+\item 
+integer(kind=i\+\_\+kind), parameter, public \mbox{\hyperlink{namespacecamp__chem__spec__data_a62c50a8eb501d73cbf3382f9bb9c95a3}{camp\+\_\+chem\+\_\+spec\+\_\+data\+::chem\+\_\+spec\+\_\+constant}} = 2
+\item 
+integer(kind=i\+\_\+kind), parameter, public \mbox{\hyperlink{namespacecamp__chem__spec__data_aec168b8e7ea8fa737716cb828668e767}{camp\+\_\+chem\+\_\+spec\+\_\+data\+::chem\+\_\+spec\+\_\+pssa}} = 3
+\item 
+integer(kind=i\+\_\+kind), parameter, public \mbox{\hyperlink{namespacecamp__chem__spec__data_a1faea991d5e34d0bc33ed6c947ea85c3}{camp\+\_\+chem\+\_\+spec\+\_\+data\+::chem\+\_\+spec\+\_\+activity\+\_\+coeff}} = 4
+\item 
+integer(kind=i\+\_\+kind), parameter, public \mbox{\hyperlink{namespacecamp__chem__spec__data_aaf58428c2da2c090d22ca7e524ddd99f}{camp\+\_\+chem\+\_\+spec\+\_\+data\+::chem\+\_\+spec\+\_\+unknown\+\_\+phase}} = 0
+\begin{DoxyCompactList}\small\item\em Species phase. \end{DoxyCompactList}\item 
+integer(kind=i\+\_\+kind), parameter, public \mbox{\hyperlink{namespacecamp__chem__spec__data_a73a97097bb44acf3aae195766cc41468}{camp\+\_\+chem\+\_\+spec\+\_\+data\+::chem\+\_\+spec\+\_\+gas\+\_\+phase}} = 1
+\item 
+integer(kind=i\+\_\+kind), parameter, public \mbox{\hyperlink{namespacecamp__chem__spec__data_a38983da5b6a11f5e522747c8b3161b84}{camp\+\_\+chem\+\_\+spec\+\_\+data\+::chem\+\_\+spec\+\_\+aero\+\_\+phase}} = 2
+\item 
+integer(kind=i\+\_\+kind), parameter \mbox{\hyperlink{namespacecamp__chem__spec__data_a0408e43f2fc8d66f236562a4f671c612}{camp\+\_\+chem\+\_\+spec\+\_\+data\+::realloc\+\_\+inc}} = 50
+\begin{DoxyCompactList}\small\item\em Reallocation increment. \end{DoxyCompactList}\item 
+real(kind=dp), parameter \mbox{\hyperlink{namespacecamp__chem__spec__data_af74483d8c7df1c20251fbd415f5af4c1}{camp\+\_\+chem\+\_\+spec\+\_\+data\+::default\+\_\+abs\+\_\+tol}} = 1.\+0e-\/14
+\begin{DoxyCompactList}\small\item\em Default absolute integration tolerance. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+The \mbox{\hyperlink{namespacecamp__chem__spec__data}{camp\+\_\+chem\+\_\+spec\+\_\+data}} module. 
+

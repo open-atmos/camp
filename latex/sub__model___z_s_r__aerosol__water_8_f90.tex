@@ -1,0 +1,33 @@
+\hypertarget{sub__model___z_s_r__aerosol__water_8_f90}{}\doxysection{sub\+\_\+model\+\_\+\+ZSR\+\_\+aerosol\+\_\+water.\+F90 File Reference}
+\label{sub__model___z_s_r__aerosol__water_8_f90}\index{sub\_model\_ZSR\_aerosol\_water.F90@{sub\_model\_ZSR\_aerosol\_water.F90}}
+
+
+The camp\+\_\+sub\+\_\+model\+\_\+\+ZSR\+\_\+aerosol\+\_\+water module.  
+
+
+\doxysubsection*{Data Types}
+\begin{DoxyCompactItemize}
+\item 
+interface \mbox{\hyperlink{structcamp__sub__model__zsr__aerosol__water_1_1sub__model__zsr__aerosol__water__t}{camp\+\_\+sub\+\_\+model\+\_\+zsr\+\_\+aerosol\+\_\+water\+::sub\+\_\+model\+\_\+zsr\+\_\+aerosol\+\_\+water\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em Generic test reaction data type. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Modules}
+\begin{DoxyCompactItemize}
+\item 
+module \mbox{\hyperlink{namespacecamp__sub__model__zsr__aerosol__water}{camp\+\_\+sub\+\_\+model\+\_\+zsr\+\_\+aerosol\+\_\+water}}
+\begin{DoxyCompactList}\small\item\em The sub\+\_\+model\+\_\+\+ZSR\+\_\+aerosol\+\_\+water\+\_\+t type and associated functions. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Functions/\+Subroutines}
+\begin{DoxyCompactItemize}
+\item 
+type(sub\+\_\+model\+\_\+zsr\+\_\+aerosol\+\_\+water\+\_\+t) function, pointer \mbox{\hyperlink{namespacecamp__sub__model__zsr__aerosol__water_a3737990cd60906ea7af9d5827a50810a}{camp\+\_\+sub\+\_\+model\+\_\+zsr\+\_\+aerosol\+\_\+water\+::constructor}} ()
+\begin{DoxyCompactList}\small\item\em Constructor for ZSR aerosol water reaction. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__sub__model__zsr__aerosol__water_a705c04f19d51da661dc137f39252e0a4}{camp\+\_\+sub\+\_\+model\+\_\+zsr\+\_\+aerosol\+\_\+water\+::initialize}} (this, aero\+\_\+rep\+\_\+set, aero\+\_\+phase\+\_\+set, chem\+\_\+spec\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Initialize the reaction data, validating component data and loading any required information into the condensed data arrays for use during solving. \end{DoxyCompactList}\item 
+real(kind=dp) function \mbox{\hyperlink{namespacecamp__sub__model__zsr__aerosol__water_abc56af78a8e70c8d8c734dd4d7c92344}{camp\+\_\+sub\+\_\+model\+\_\+zsr\+\_\+aerosol\+\_\+water\+::priority}} (this)
+\begin{DoxyCompactList}\small\item\em Return a real number representing the priority of the sub model calculations. Low priority sub models may use the results of higher priority sub models. Lower numbers indicate higher priority. \end{DoxyCompactList}\item 
+elemental subroutine \mbox{\hyperlink{namespacecamp__sub__model__zsr__aerosol__water_a6c473852d103ea1eaffb6e923703614a}{camp\+\_\+sub\+\_\+model\+\_\+zsr\+\_\+aerosol\+\_\+water\+::finalize}} (this)
+\begin{DoxyCompactList}\small\item\em Finalize the reaction. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+The camp\+\_\+sub\+\_\+model\+\_\+\+ZSR\+\_\+aerosol\+\_\+water module. 
+

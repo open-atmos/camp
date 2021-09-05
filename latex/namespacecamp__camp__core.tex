@@ -1,0 +1,911 @@
+\hypertarget{namespacecamp__camp__core}{}\doxysection{camp\+\_\+camp\+\_\+core Module Reference}
+\label{namespacecamp__camp__core}\index{camp\_camp\_core@{camp\_camp\_core}}
+
+
+The \mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\+\_\+core\+\_\+t}} structure and associated subroutines.  
+
+
+\doxysubsection*{Data Types}
+\begin{DoxyCompactItemize}
+\item 
+interface \mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\+\_\+core\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em Part-\/\+MC model data. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Functions/\+Subroutines}
+\begin{DoxyCompactItemize}
+\item 
+type(\mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\+\_\+core\+\_\+t}}) function, pointer \mbox{\hyperlink{namespacecamp__camp__core_a3d06057e1f01bc813ec31afa13bf8cd9}{constructor}} (input\+\_\+file\+\_\+path, n\+\_\+cells)
+\begin{DoxyCompactList}\small\item\em Constructor for \mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\+\_\+core\+\_\+t}}. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__camp__core_af682baa176c26d19ebab96fa2a9f891a}{load\+\_\+files}} (this, input\+\_\+file\+\_\+path)
+\begin{DoxyCompactList}\small\item\em Load a set of model data files. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__camp__core_a53b401e62799316a6728ef6dcdfeeb04}{load}} (this, input\+\_\+file\+\_\+path)
+\begin{DoxyCompactList}\small\item\em Load model data from input files. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__camp__core_a1f2f5def889682e460e0a7ae9df40bbe}{initialize}} (this)
+\begin{DoxyCompactList}\small\item\em Initialize the model data. \end{DoxyCompactList}\item 
+logical function \mbox{\hyperlink{namespacecamp__camp__core_a734afb87f99d0ada713523cec105343c}{is\+\_\+initialized}} (this)
+\begin{DoxyCompactList}\small\item\em Inidicate whether the core has been initialized. \end{DoxyCompactList}\item 
+logical function \mbox{\hyperlink{namespacecamp__camp__core_ad3994bb4ec316cf9442916ffd4fc0124}{is\+\_\+solver\+\_\+initialized}} (this)
+\begin{DoxyCompactList}\small\item\em Inidicate whether the solver has been initialized. \end{DoxyCompactList}\item 
+logical function \mbox{\hyperlink{namespacecamp__camp__core_a102bbd0955624986e707df20fabff116}{get\+\_\+aero\+\_\+phase}} (this, aero\+\_\+phase\+\_\+name, aero\+\_\+phase)
+\begin{DoxyCompactList}\small\item\em Get a pointer to an aerosol phase by name. \end{DoxyCompactList}\item 
+logical function \mbox{\hyperlink{namespacecamp__camp__core_aa90816fea4638e60b120bc5c53d567f1}{get\+\_\+aero\+\_\+rep}} (this, aero\+\_\+rep\+\_\+name, aero\+\_\+rep)
+\begin{DoxyCompactList}\small\item\em Get a pointer to an aerosol representation by name. \end{DoxyCompactList}\item 
+logical function \mbox{\hyperlink{namespacecamp__camp__core_ae000de658559072d5e2e0e5407a43934}{get\+\_\+chem\+\_\+spec\+\_\+data}} (this, chem\+\_\+spec\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Get a pointer to the chemical species data. \end{DoxyCompactList}\item 
+logical function \mbox{\hyperlink{namespacecamp__camp__core_a99b7c549b716d90250f23213b96fff51}{get\+\_\+mechanism}} (this, mech\+\_\+name, mechanism)
+\begin{DoxyCompactList}\small\item\em Get a pointer to a mechanism by name. \end{DoxyCompactList}\item 
+logical function \mbox{\hyperlink{namespacecamp__camp__core_ab9ab73bf08cd45045f0d42d66a6cfd0b}{get\+\_\+sub\+\_\+model}} (this, sub\+\_\+model\+\_\+name, sub\+\_\+model)
+\begin{DoxyCompactList}\small\item\em Find an sub-\/model by name. \end{DoxyCompactList}\item 
+real(kind=dp) function \mbox{\hyperlink{namespacecamp__camp__core_a288c0d456396f9ea88099f4a409a7926}{get\+\_\+rel\+\_\+tol}} (this)
+\begin{DoxyCompactList}\small\item\em Get the relative tolerance for the solver. \end{DoxyCompactList}\item 
+real(kind=dp) function \mbox{\hyperlink{namespacecamp__camp__core_ab069d391643df8ce43317c255918e69d}{get\+\_\+abs\+\_\+tol}} (this, spec\+\_\+id)
+\begin{DoxyCompactList}\small\item\em Get the absolute tolerance for a species on the state array. \end{DoxyCompactList}\item 
+type(\mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t}{camp\+\_\+state\+\_\+t}}) function, pointer \mbox{\hyperlink{namespacecamp__camp__core_add99e2f8537cffd5cc8ae66c805c2c4e}{new\+\_\+state\+\_\+multi\+\_\+cell}} (this, env\+\_\+states)
+\begin{DoxyCompactList}\small\item\em Get a model state variable based on the this set of model data. \end{DoxyCompactList}\item 
+type(\mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t}{camp\+\_\+state\+\_\+t}}) function, pointer \mbox{\hyperlink{namespacecamp__camp__core_aca76d6cd5cdfd84ea8f99d35205dc72c}{new\+\_\+state\+\_\+one\+\_\+cell}} (this, env\+\_\+state)
+\begin{DoxyCompactList}\small\item\em Get a model state variable based on the this set of model data This is also called for multi-\/cell systems when no env\+\_\+state\+\_\+t array is passed. \end{DoxyCompactList}\item 
+integer(kind=i\+\_\+kind) function \mbox{\hyperlink{namespacecamp__camp__core_a2c02881a75a5df27cae9f8c92345803c}{state\+\_\+size}} (this)
+\begin{DoxyCompactList}\small\item\em Get the size of the state array. \end{DoxyCompactList}\item 
+integer(kind=i\+\_\+kind) function \mbox{\hyperlink{namespacecamp__camp__core_afb6c4595458a836ddd6d59d96f89aab1}{state\+\_\+size\+\_\+per\+\_\+cell}} (this)
+\begin{DoxyCompactList}\small\item\em Get the size of the state array for each grid cell. \end{DoxyCompactList}\item 
+type(\mbox{\hyperlink{structcamp__util_1_1string__t}{string\+\_\+t}}) function, dimension(\+:), allocatable \mbox{\hyperlink{namespacecamp__camp__core_a1018f13837dc28b5869924a88b5c7507}{unique\+\_\+names}} (this)
+\begin{DoxyCompactList}\small\item\em Get an array of unique names for all species on the state array. \end{DoxyCompactList}\item 
+logical function \mbox{\hyperlink{namespacecamp__camp__core_a7093b75afde12e6e9854d1e9942a69ec}{spec\+\_\+state\+\_\+id}} (this, \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\+\_\+name}}, state\+\_\+id)
+\begin{DoxyCompactList}\small\item\em Get the id of a species on the state array by its unique name. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__camp__core_afc097bb26f6704f9398d96eea873ba79}{solver\+\_\+initialize}} (this)
+\begin{DoxyCompactList}\small\item\em Initialize the solver. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__camp__core_a10bbb0d738844de79c4946f6ddf0f120}{free\+\_\+solver}} (this)
+\begin{DoxyCompactList}\small\item\em Free the solver memory. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__camp__core_a048e8aa3d620f11cc977a7633c5ca7e3}{initialize\+\_\+aero\+\_\+rep\+\_\+update\+\_\+object}} (this, aero\+\_\+rep, update\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Initialize an update data object for an aerosol representation. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__camp__core_a94f34a7d8629869fcebd9dfcf036cdb8}{initialize\+\_\+rxn\+\_\+update\+\_\+object}} (this, rxn, update\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Initialize an update data object for a reaction. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__camp__core_af184d87f847c14093e3378711dd86f63}{initialize\+\_\+sub\+\_\+model\+\_\+update\+\_\+object}} (this, sub\+\_\+model, update\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Initialize an update data object for a sub model. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__camp__core_a0ca4cb9df7fab00fc42c9a56c0e88ac1}{aero\+\_\+rep\+\_\+update\+\_\+data}} (this, update\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Update data associated with an aerosol representation. This function should be called by an external aerosol microphysics model whenever the aerosol condensed data needs updated based on changes in, e.\+g., particle size or number concentration. The update types are aerosol-\/ representation specific. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__camp__core_aaa115822f400d9c929165328f08d95e1}{rxn\+\_\+update\+\_\+data}} (this, update\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Update data associated with a reaction. This function should be called when reaction parameters need updated from the host model. For example, this function can be called to update photolysis rates from a host model\textquotesingle{}s photolysis module. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__camp__core_a4c82020c02c1aa45f066930b0e36035c}{sub\+\_\+model\+\_\+update\+\_\+data}} (this, update\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Update data associated with a sub-\/model. This function should be called when sub-\/model parameters need updated from the host model. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__camp__core_a2c930e794dab3e8c87b47cbc35ea28a0}{solve}} (this, camp\+\_\+state, time\+\_\+step, rxn\+\_\+phase, solver\+\_\+stats)
+\begin{DoxyCompactList}\small\item\em Integrate the chemical mechanism. \end{DoxyCompactList}\item 
+integer(kind=i\+\_\+kind) function \mbox{\hyperlink{namespacecamp__camp__core_acbb7425e5bdb0e8af60c1d7b1d372fd2}{pack\+\_\+size}} (this, comm)
+\begin{DoxyCompactList}\small\item\em Determine the size of a binary required to pack the mechanism. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__camp__core_ae216d8a1432331a0ca2b22fa764e5f8e}{bin\+\_\+pack}} (this, buffer, pos, comm)
+\begin{DoxyCompactList}\small\item\em Pack the given value to the buffer, advancing position. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__camp__core_a672a6ddc1f764207c4b6aa80b72ea203}{bin\+\_\+unpack}} (this, buffer, pos, comm)
+\begin{DoxyCompactList}\small\item\em Unpack the given value from the buffer, advancing position. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__camp__core_ad7e85de25d800ea05331e9041c1637fd}{do\+\_\+print}} (this, file\+\_\+unit, solver\+\_\+data\+\_\+only)
+\begin{DoxyCompactList}\small\item\em Print the core data. \end{DoxyCompactList}\item 
+elemental subroutine \mbox{\hyperlink{namespacecamp__camp__core_a275b838802acbff7222f603453851f7b}{finalize}} (this)
+\begin{DoxyCompactList}\small\item\em Finalize the core. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__camp__core_a807e14d531f9191c243a4e766314ca43}{add\+\_\+aero\+\_\+phase}} (this, phase\+\_\+name)
+\begin{DoxyCompactList}\small\item\em Add a aerosol phase to the model data. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__camp__core_a061e1d70300d903948d3f5ace5b38a44}{add\+\_\+aero\+\_\+rep}} (this, rep\+\_\+name)
+\begin{DoxyCompactList}\small\item\em Add a aerosol representation to the model data. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__camp__core_a714172895a48f79549016aa3132bd418}{add\+\_\+mechanism}} (this, mech\+\_\+name)
+\begin{DoxyCompactList}\small\item\em Add a chemical mechanism to the model data. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__camp__core_a0c0833d4af6d0d1f37b3bf1130a9d0fb}{add\+\_\+sub\+\_\+model}} (this, sub\+\_\+model\+\_\+name)
+\begin{DoxyCompactList}\small\item\em Add a sub-\/model to the model data. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+The \mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\+\_\+core\+\_\+t}} structure and associated subroutines. 
+
+\doxysubsection{Function/\+Subroutine Documentation}
+\mbox{\Hypertarget{namespacecamp__camp__core_a807e14d531f9191c243a4e766314ca43}\label{namespacecamp__camp__core_a807e14d531f9191c243a4e766314ca43}} 
+\index{camp\_camp\_core@{camp\_camp\_core}!add\_aero\_phase@{add\_aero\_phase}}
+\index{add\_aero\_phase@{add\_aero\_phase}!camp\_camp\_core@{camp\_camp\_core}}
+\doxysubsubsection{\texorpdfstring{add\_aero\_phase()}{add\_aero\_phase()}}
+{\footnotesize\ttfamily subroutine camp\+\_\+camp\+\_\+core\+::add\+\_\+aero\+\_\+phase (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\+\_\+core\+\_\+t}}), intent(inout)}]{this,  }\item[{character(len=$\ast$), intent(in)}]{phase\+\_\+name }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Add a aerosol phase to the model data. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & \mbox{\hyperlink{struct_model}{Model}} data \\
+\hline
+\mbox{\texttt{ in}}  & {\em phase\+\_\+name} & Aerosol phase name \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1741 of file camp\+\_\+core.\+F90.
+
+\mbox{\Hypertarget{namespacecamp__camp__core_a061e1d70300d903948d3f5ace5b38a44}\label{namespacecamp__camp__core_a061e1d70300d903948d3f5ace5b38a44}} 
+\index{camp\_camp\_core@{camp\_camp\_core}!add\_aero\_rep@{add\_aero\_rep}}
+\index{add\_aero\_rep@{add\_aero\_rep}!camp\_camp\_core@{camp\_camp\_core}}
+\doxysubsubsection{\texorpdfstring{add\_aero\_rep()}{add\_aero\_rep()}}
+{\footnotesize\ttfamily subroutine camp\+\_\+camp\+\_\+core\+::add\+\_\+aero\+\_\+rep (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\+\_\+core\+\_\+t}}), intent(inout)}]{this,  }\item[{character(len=$\ast$), intent(in)}]{rep\+\_\+name }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Add a aerosol representation to the model data. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & \mbox{\hyperlink{struct_model}{Model}} data \\
+\hline
+\mbox{\texttt{ in}}  & {\em rep\+\_\+name} & Aerosol representation name \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1765 of file camp\+\_\+core.\+F90.
+
+\mbox{\Hypertarget{namespacecamp__camp__core_a714172895a48f79549016aa3132bd418}\label{namespacecamp__camp__core_a714172895a48f79549016aa3132bd418}} 
+\index{camp\_camp\_core@{camp\_camp\_core}!add\_mechanism@{add\_mechanism}}
+\index{add\_mechanism@{add\_mechanism}!camp\_camp\_core@{camp\_camp\_core}}
+\doxysubsubsection{\texorpdfstring{add\_mechanism()}{add\_mechanism()}}
+{\footnotesize\ttfamily subroutine camp\+\_\+camp\+\_\+core\+::add\+\_\+mechanism (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\+\_\+core\+\_\+t}}), intent(inout)}]{this,  }\item[{character(len=$\ast$), intent(in)}]{mech\+\_\+name }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Add a chemical mechanism to the model data. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & \mbox{\hyperlink{struct_model}{Model}} data \\
+\hline
+\mbox{\texttt{ in}}  & {\em mech\+\_\+name} & Mechanism name \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1791 of file camp\+\_\+core.\+F90.
+
+\mbox{\Hypertarget{namespacecamp__camp__core_a0c0833d4af6d0d1f37b3bf1130a9d0fb}\label{namespacecamp__camp__core_a0c0833d4af6d0d1f37b3bf1130a9d0fb}} 
+\index{camp\_camp\_core@{camp\_camp\_core}!add\_sub\_model@{add\_sub\_model}}
+\index{add\_sub\_model@{add\_sub\_model}!camp\_camp\_core@{camp\_camp\_core}}
+\doxysubsubsection{\texorpdfstring{add\_sub\_model()}{add\_sub\_model()}}
+{\footnotesize\ttfamily subroutine camp\+\_\+camp\+\_\+core\+::add\+\_\+sub\+\_\+model (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\+\_\+core\+\_\+t}}), intent(inout)}]{this,  }\item[{character(len=$\ast$), intent(in)}]{sub\+\_\+model\+\_\+name }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Add a sub-\/model to the model data. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & \mbox{\hyperlink{struct_model}{Model}} data \\
+\hline
+\mbox{\texttt{ in}}  & {\em sub\+\_\+model\+\_\+name} & Sub model name \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1816 of file camp\+\_\+core.\+F90.
+
+\mbox{\Hypertarget{namespacecamp__camp__core_a0ca4cb9df7fab00fc42c9a56c0e88ac1}\label{namespacecamp__camp__core_a0ca4cb9df7fab00fc42c9a56c0e88ac1}} 
+\index{camp\_camp\_core@{camp\_camp\_core}!aero\_rep\_update\_data@{aero\_rep\_update\_data}}
+\index{aero\_rep\_update\_data@{aero\_rep\_update\_data}!camp\_camp\_core@{camp\_camp\_core}}
+\doxysubsubsection{\texorpdfstring{aero\_rep\_update\_data()}{aero\_rep\_update\_data()}}
+{\footnotesize\ttfamily subroutine \mbox{\hyperlink{interfacecamp__camp__solver__data_1_1aero__rep__update__data}{camp\+\_\+camp\+\_\+core\+::aero\+\_\+rep\+\_\+update\+\_\+data}} (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\+\_\+core\+\_\+t}}), intent(in)}]{this,  }\item[{class(\mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__update__data__t}{aero\+\_\+rep\+\_\+update\+\_\+data\+\_\+t}}), intent(in)}]{update\+\_\+data }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Update data associated with an aerosol representation. This function should be called by an external aerosol microphysics model whenever the aerosol condensed data needs updated based on changes in, e.\+g., particle size or number concentration. The update types are aerosol-\/ representation specific. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & Chemical model \\
+\hline
+\mbox{\texttt{ in}}  & {\em update\+\_\+data} & Update data \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1285 of file camp\+\_\+core.\+F90.
+
+\mbox{\Hypertarget{namespacecamp__camp__core_ae216d8a1432331a0ca2b22fa764e5f8e}\label{namespacecamp__camp__core_ae216d8a1432331a0ca2b22fa764e5f8e}} 
+\index{camp\_camp\_core@{camp\_camp\_core}!bin\_pack@{bin\_pack}}
+\index{bin\_pack@{bin\_pack}!camp\_camp\_core@{camp\_camp\_core}}
+\doxysubsubsection{\texorpdfstring{bin\_pack()}{bin\_pack()}}
+{\footnotesize\ttfamily subroutine camp\+\_\+camp\+\_\+core\+::bin\+\_\+pack (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\+\_\+core\+\_\+t}}), intent(in)}]{this,  }\item[{character, dimension(\+:), intent(inout)}]{buffer,  }\item[{integer, intent(inout)}]{pos,  }\item[{integer, intent(in), optional}]{comm }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Pack the given value to the buffer, advancing position. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & Chemical model \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em buffer} & Memory buffer \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em pos} & Current buffer position \\
+\hline
+\mbox{\texttt{ in}}  & {\em comm} & MPI communicator \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1470 of file camp\+\_\+core.\+F90.
+
+\mbox{\Hypertarget{namespacecamp__camp__core_a672a6ddc1f764207c4b6aa80b72ea203}\label{namespacecamp__camp__core_a672a6ddc1f764207c4b6aa80b72ea203}} 
+\index{camp\_camp\_core@{camp\_camp\_core}!bin\_unpack@{bin\_unpack}}
+\index{bin\_unpack@{bin\_unpack}!camp\_camp\_core@{camp\_camp\_core}}
+\doxysubsubsection{\texorpdfstring{bin\_unpack()}{bin\_unpack()}}
+{\footnotesize\ttfamily subroutine camp\+\_\+camp\+\_\+core\+::bin\+\_\+unpack (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\+\_\+core\+\_\+t}}), intent(inout)}]{this,  }\item[{character, dimension(\+:), intent(inout)}]{buffer,  }\item[{integer, intent(inout)}]{pos,  }\item[{integer, intent(in), optional}]{comm }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Unpack the given value from the buffer, advancing position. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & Chemical model \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em buffer} & Memory buffer \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em pos} & Current buffer position \\
+\hline
+\mbox{\texttt{ in}}  & {\em comm} & MPI communicator \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1535 of file camp\+\_\+core.\+F90.
+
+\mbox{\Hypertarget{namespacecamp__camp__core_a3d06057e1f01bc813ec31afa13bf8cd9}\label{namespacecamp__camp__core_a3d06057e1f01bc813ec31afa13bf8cd9}} 
+\index{camp\_camp\_core@{camp\_camp\_core}!constructor@{constructor}}
+\index{constructor@{constructor}!camp\_camp\_core@{camp\_camp\_core}}
+\doxysubsubsection{\texorpdfstring{constructor()}{constructor()}}
+{\footnotesize\ttfamily type(\mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\+\_\+core\+\_\+t}}) function, pointer camp\+\_\+camp\+\_\+core\+::constructor (\begin{DoxyParamCaption}\item[{character(len=$\ast$), intent(in), optional}]{input\+\_\+file\+\_\+path,  }\item[{integer(kind=i\+\_\+kind), optional}]{n\+\_\+cells }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Constructor for \mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\+\_\+core\+\_\+t}}. 
+
+\begin{DoxyReturn}{Returns}
+A new set of model parameters 
+\end{DoxyReturn}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em input\+\_\+file\+\_\+path} & Part-\/\+MC input file paths \\
+\hline
+ & {\em n\+\_\+cells} & Num cells to compute simulatenously \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 245 of file camp\+\_\+core.\+F90.
+
+\mbox{\Hypertarget{namespacecamp__camp__core_ad7e85de25d800ea05331e9041c1637fd}\label{namespacecamp__camp__core_ad7e85de25d800ea05331e9041c1637fd}} 
+\index{camp\_camp\_core@{camp\_camp\_core}!do\_print@{do\_print}}
+\index{do\_print@{do\_print}!camp\_camp\_core@{camp\_camp\_core}}
+\doxysubsubsection{\texorpdfstring{do\_print()}{do\_print()}}
+{\footnotesize\ttfamily subroutine camp\+\_\+camp\+\_\+core\+::do\+\_\+print (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\+\_\+core\+\_\+t}}), intent(in)}]{this,  }\item[{integer(kind=i\+\_\+kind), intent(in), optional}]{file\+\_\+unit,  }\item[{logical, intent(in), optional}]{solver\+\_\+data\+\_\+only }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Print the core data. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & Core data \\
+\hline
+\mbox{\texttt{ in}}  & {\em file\+\_\+unit} & File unit for output \\
+\hline
+\mbox{\texttt{ in}}  & {\em solver\+\_\+data\+\_\+only} & Print only the solver data (can be used during runtime for debugging) \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1603 of file camp\+\_\+core.\+F90.
+
+\mbox{\Hypertarget{namespacecamp__camp__core_a275b838802acbff7222f603453851f7b}\label{namespacecamp__camp__core_a275b838802acbff7222f603453851f7b}} 
+\index{camp\_camp\_core@{camp\_camp\_core}!finalize@{finalize}}
+\index{finalize@{finalize}!camp\_camp\_core@{camp\_camp\_core}}
+\doxysubsubsection{\texorpdfstring{finalize()}{finalize()}}
+{\footnotesize\ttfamily elemental subroutine camp\+\_\+camp\+\_\+core\+::finalize (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\+\_\+core\+\_\+t}}), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Finalize the core. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & CAMP-\/core data \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1710 of file camp\+\_\+core.\+F90.
+
+\mbox{\Hypertarget{namespacecamp__camp__core_a10bbb0d738844de79c4946f6ddf0f120}\label{namespacecamp__camp__core_a10bbb0d738844de79c4946f6ddf0f120}} 
+\index{camp\_camp\_core@{camp\_camp\_core}!free\_solver@{free\_solver}}
+\index{free\_solver@{free\_solver}!camp\_camp\_core@{camp\_camp\_core}}
+\doxysubsubsection{\texorpdfstring{free\_solver()}{free\_solver()}}
+{\footnotesize\ttfamily subroutine camp\+\_\+camp\+\_\+core\+::free\+\_\+solver (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\+\_\+core\+\_\+t}}), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Free the solver memory. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & CAMP-\/core \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1201 of file camp\+\_\+core.\+F90.
+
+\mbox{\Hypertarget{namespacecamp__camp__core_ab069d391643df8ce43317c255918e69d}\label{namespacecamp__camp__core_ab069d391643df8ce43317c255918e69d}} 
+\index{camp\_camp\_core@{camp\_camp\_core}!get\_abs\_tol@{get\_abs\_tol}}
+\index{get\_abs\_tol@{get\_abs\_tol}!camp\_camp\_core@{camp\_camp\_core}}
+\doxysubsubsection{\texorpdfstring{get\_abs\_tol()}{get\_abs\_tol()}}
+{\footnotesize\ttfamily real(kind=dp) function camp\+\_\+camp\+\_\+core\+::get\+\_\+abs\+\_\+tol (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\+\_\+core\+\_\+t}}), intent(in)}]{this,  }\item[{integer(kind=i\+\_\+kind), intent(in)}]{spec\+\_\+id }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Get the absolute tolerance for a species on the state array. 
+
+\begin{DoxyReturn}{Returns}
+Absolute tolerance 
+\end{DoxyReturn}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & \mbox{\hyperlink{struct_model}{Model}} data \\
+\hline
+\mbox{\texttt{ in}}  & {\em spec\+\_\+id} & Species id \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 956 of file camp\+\_\+core.\+F90.
+
+\mbox{\Hypertarget{namespacecamp__camp__core_a102bbd0955624986e707df20fabff116}\label{namespacecamp__camp__core_a102bbd0955624986e707df20fabff116}} 
+\index{camp\_camp\_core@{camp\_camp\_core}!get\_aero\_phase@{get\_aero\_phase}}
+\index{get\_aero\_phase@{get\_aero\_phase}!camp\_camp\_core@{camp\_camp\_core}}
+\doxysubsubsection{\texorpdfstring{get\_aero\_phase()}{get\_aero\_phase()}}
+{\footnotesize\ttfamily logical function camp\+\_\+camp\+\_\+core\+::get\+\_\+aero\+\_\+phase (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\+\_\+core\+\_\+t}}), intent(in)}]{this,  }\item[{character(len=$\ast$), intent(in)}]{aero\+\_\+phase\+\_\+name,  }\item[{class(\mbox{\hyperlink{structcamp__aero__phase__data_1_1aero__phase__data__t}{aero\+\_\+phase\+\_\+data\+\_\+t}}), intent(out), pointer}]{aero\+\_\+phase }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Get a pointer to an aerosol phase by name. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & \mbox{\hyperlink{struct_model}{Model}} data \\
+\hline
+\mbox{\texttt{ in}}  & {\em aero\+\_\+phase\+\_\+name} & Aerosol phase name to search for \\
+\hline
+\mbox{\texttt{ out}}  & {\em aero\+\_\+phase} & Pointer to the aerosol phase \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 816 of file camp\+\_\+core.\+F90.
+
+\mbox{\Hypertarget{namespacecamp__camp__core_aa90816fea4638e60b120bc5c53d567f1}\label{namespacecamp__camp__core_aa90816fea4638e60b120bc5c53d567f1}} 
+\index{camp\_camp\_core@{camp\_camp\_core}!get\_aero\_rep@{get\_aero\_rep}}
+\index{get\_aero\_rep@{get\_aero\_rep}!camp\_camp\_core@{camp\_camp\_core}}
+\doxysubsubsection{\texorpdfstring{get\_aero\_rep()}{get\_aero\_rep()}}
+{\footnotesize\ttfamily logical function camp\+\_\+camp\+\_\+core\+::get\+\_\+aero\+\_\+rep (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\+\_\+core\+\_\+t}}), intent(in)}]{this,  }\item[{character(len=$\ast$), intent(in)}]{aero\+\_\+rep\+\_\+name,  }\item[{class(\mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__t}{aero\+\_\+rep\+\_\+data\+\_\+t}}), intent(out), pointer}]{aero\+\_\+rep }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Get a pointer to an aerosol representation by name. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & \mbox{\hyperlink{struct_model}{Model}} data \\
+\hline
+\mbox{\texttt{ in}}  & {\em aero\+\_\+rep\+\_\+name} & Aerosol representation name to search for \\
+\hline
+\mbox{\texttt{ out}}  & {\em aero\+\_\+rep} & Aerosol representation \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 844 of file camp\+\_\+core.\+F90.
+
+\mbox{\Hypertarget{namespacecamp__camp__core_ae000de658559072d5e2e0e5407a43934}\label{namespacecamp__camp__core_ae000de658559072d5e2e0e5407a43934}} 
+\index{camp\_camp\_core@{camp\_camp\_core}!get\_chem\_spec\_data@{get\_chem\_spec\_data}}
+\index{get\_chem\_spec\_data@{get\_chem\_spec\_data}!camp\_camp\_core@{camp\_camp\_core}}
+\doxysubsubsection{\texorpdfstring{get\_chem\_spec\_data()}{get\_chem\_spec\_data()}}
+{\footnotesize\ttfamily logical function camp\+\_\+camp\+\_\+core\+::get\+\_\+chem\+\_\+spec\+\_\+data (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\+\_\+core\+\_\+t}}), intent(in)}]{this,  }\item[{type(\mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t}{chem\+\_\+spec\+\_\+data\+\_\+t}}), pointer}]{chem\+\_\+spec\+\_\+data }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Get a pointer to the chemical species data. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & \mbox{\hyperlink{struct_model}{Model}} data \\
+\hline
+ & {\em chem\+\_\+spec\+\_\+data} & Pointer to the chemical species data \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 871 of file camp\+\_\+core.\+F90.
+
+\mbox{\Hypertarget{namespacecamp__camp__core_a99b7c549b716d90250f23213b96fff51}\label{namespacecamp__camp__core_a99b7c549b716d90250f23213b96fff51}} 
+\index{camp\_camp\_core@{camp\_camp\_core}!get\_mechanism@{get\_mechanism}}
+\index{get\_mechanism@{get\_mechanism}!camp\_camp\_core@{camp\_camp\_core}}
+\doxysubsubsection{\texorpdfstring{get\_mechanism()}{get\_mechanism()}}
+{\footnotesize\ttfamily logical function camp\+\_\+camp\+\_\+core\+::get\+\_\+mechanism (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\+\_\+core\+\_\+t}}), intent(in)}]{this,  }\item[{character(len=$\ast$), intent(in)}]{mech\+\_\+name,  }\item[{type(\mbox{\hyperlink{structcamp__mechanism__data_1_1mechanism__data__t}{mechanism\+\_\+data\+\_\+t}}), intent(out), pointer}]{mechanism }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Get a pointer to a mechanism by name. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & \mbox{\hyperlink{struct_model}{Model}} data \\
+\hline
+\mbox{\texttt{ in}}  & {\em mech\+\_\+name} & Mechanism name to search for \\
+\hline
+\mbox{\texttt{ out}}  & {\em mechanism} & Pointer to the mechanism \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 887 of file camp\+\_\+core.\+F90.
+
+\mbox{\Hypertarget{namespacecamp__camp__core_a288c0d456396f9ea88099f4a409a7926}\label{namespacecamp__camp__core_a288c0d456396f9ea88099f4a409a7926}} 
+\index{camp\_camp\_core@{camp\_camp\_core}!get\_rel\_tol@{get\_rel\_tol}}
+\index{get\_rel\_tol@{get\_rel\_tol}!camp\_camp\_core@{camp\_camp\_core}}
+\doxysubsubsection{\texorpdfstring{get\_rel\_tol()}{get\_rel\_tol()}}
+{\footnotesize\ttfamily real(kind=dp) function camp\+\_\+camp\+\_\+core\+::get\+\_\+rel\+\_\+tol (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\+\_\+core\+\_\+t}}), intent(in)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Get the relative tolerance for the solver. 
+
+\begin{DoxyReturn}{Returns}
+Relative tolerance 
+\end{DoxyReturn}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & \mbox{\hyperlink{struct_model}{Model}} data \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 942 of file camp\+\_\+core.\+F90.
+
+\mbox{\Hypertarget{namespacecamp__camp__core_ab9ab73bf08cd45045f0d42d66a6cfd0b}\label{namespacecamp__camp__core_ab9ab73bf08cd45045f0d42d66a6cfd0b}} 
+\index{camp\_camp\_core@{camp\_camp\_core}!get\_sub\_model@{get\_sub\_model}}
+\index{get\_sub\_model@{get\_sub\_model}!camp\_camp\_core@{camp\_camp\_core}}
+\doxysubsubsection{\texorpdfstring{get\_sub\_model()}{get\_sub\_model()}}
+{\footnotesize\ttfamily logical function camp\+\_\+camp\+\_\+core\+::get\+\_\+sub\+\_\+model (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\+\_\+core\+\_\+t}}), intent(in)}]{this,  }\item[{character(len=$\ast$), intent(in)}]{sub\+\_\+model\+\_\+name,  }\item[{class(\mbox{\hyperlink{structcamp__sub__model__data_1_1sub__model__data__t}{sub\+\_\+model\+\_\+data\+\_\+t}}), intent(out), pointer}]{sub\+\_\+model }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Find an sub-\/model by name. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & \mbox{\hyperlink{struct_model}{Model}} data \\
+\hline
+\mbox{\texttt{ in}}  & {\em sub\+\_\+model\+\_\+name} & Sub model name to search for \\
+\hline
+\mbox{\texttt{ out}}  & {\em sub\+\_\+model} & Sub model \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 914 of file camp\+\_\+core.\+F90.
+
+\mbox{\Hypertarget{namespacecamp__camp__core_a1f2f5def889682e460e0a7ae9df40bbe}\label{namespacecamp__camp__core_a1f2f5def889682e460e0a7ae9df40bbe}} 
+\index{camp\_camp\_core@{camp\_camp\_core}!initialize@{initialize}}
+\index{initialize@{initialize}!camp\_camp\_core@{camp\_camp\_core}}
+\doxysubsubsection{\texorpdfstring{initialize()}{initialize()}}
+{\footnotesize\ttfamily subroutine \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1initialize}{camp\+\_\+camp\+\_\+core\+::initialize}} (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\+\_\+core\+\_\+t}}), intent(inout), target}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Initialize the model data. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & \mbox{\hyperlink{struct_model}{Model}} data \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 647 of file camp\+\_\+core.\+F90.
+
+\mbox{\Hypertarget{namespacecamp__camp__core_a048e8aa3d620f11cc977a7633c5ca7e3}\label{namespacecamp__camp__core_a048e8aa3d620f11cc977a7633c5ca7e3}} 
+\index{camp\_camp\_core@{camp\_camp\_core}!initialize\_aero\_rep\_update\_object@{initialize\_aero\_rep\_update\_object}}
+\index{initialize\_aero\_rep\_update\_object@{initialize\_aero\_rep\_update\_object}!camp\_camp\_core@{camp\_camp\_core}}
+\doxysubsubsection{\texorpdfstring{initialize\_aero\_rep\_update\_object()}{initialize\_aero\_rep\_update\_object()}}
+{\footnotesize\ttfamily subroutine camp\+\_\+camp\+\_\+core\+::initialize\+\_\+aero\+\_\+rep\+\_\+update\+\_\+object (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\+\_\+core\+\_\+t}}), intent(in)}]{this,  }\item[{class(\mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__t}{aero\+\_\+rep\+\_\+data\+\_\+t}}), intent(inout)}]{aero\+\_\+rep,  }\item[{class(\mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__update__data__t}{aero\+\_\+rep\+\_\+update\+\_\+data\+\_\+t}}), intent(out)}]{update\+\_\+data }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Initialize an update data object for an aerosol representation. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & CAMP core \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em aero\+\_\+rep} & Aerosol representation to be updated \\
+\hline
+\mbox{\texttt{ out}}  & {\em update\+\_\+data} & Update data object \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1218 of file camp\+\_\+core.\+F90.
+
+\mbox{\Hypertarget{namespacecamp__camp__core_a94f34a7d8629869fcebd9dfcf036cdb8}\label{namespacecamp__camp__core_a94f34a7d8629869fcebd9dfcf036cdb8}} 
+\index{camp\_camp\_core@{camp\_camp\_core}!initialize\_rxn\_update\_object@{initialize\_rxn\_update\_object}}
+\index{initialize\_rxn\_update\_object@{initialize\_rxn\_update\_object}!camp\_camp\_core@{camp\_camp\_core}}
+\doxysubsubsection{\texorpdfstring{initialize\_rxn\_update\_object()}{initialize\_rxn\_update\_object()}}
+{\footnotesize\ttfamily subroutine camp\+\_\+camp\+\_\+core\+::initialize\+\_\+rxn\+\_\+update\+\_\+object (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\+\_\+core\+\_\+t}}), intent(in)}]{this,  }\item[{class(\mbox{\hyperlink{structcamp__rxn__data_1_1rxn__data__t}{rxn\+\_\+data\+\_\+t}}), intent(inout)}]{rxn,  }\item[{class(\mbox{\hyperlink{structcamp__rxn__data_1_1rxn__update__data__t}{rxn\+\_\+update\+\_\+data\+\_\+t}}), intent(out)}]{update\+\_\+data }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Initialize an update data object for a reaction. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & CAMP core \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em rxn} & Reaction to be updated \\
+\hline
+\mbox{\texttt{ out}}  & {\em update\+\_\+data} & Update data object \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1239 of file camp\+\_\+core.\+F90.
+
+\mbox{\Hypertarget{namespacecamp__camp__core_af184d87f847c14093e3378711dd86f63}\label{namespacecamp__camp__core_af184d87f847c14093e3378711dd86f63}} 
+\index{camp\_camp\_core@{camp\_camp\_core}!initialize\_sub\_model\_update\_object@{initialize\_sub\_model\_update\_object}}
+\index{initialize\_sub\_model\_update\_object@{initialize\_sub\_model\_update\_object}!camp\_camp\_core@{camp\_camp\_core}}
+\doxysubsubsection{\texorpdfstring{initialize\_sub\_model\_update\_object()}{initialize\_sub\_model\_update\_object()}}
+{\footnotesize\ttfamily subroutine camp\+\_\+camp\+\_\+core\+::initialize\+\_\+sub\+\_\+model\+\_\+update\+\_\+object (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\+\_\+core\+\_\+t}}), intent(in)}]{this,  }\item[{class(\mbox{\hyperlink{structcamp__sub__model__data_1_1sub__model__data__t}{sub\+\_\+model\+\_\+data\+\_\+t}}), intent(inout)}]{sub\+\_\+model,  }\item[{class(\mbox{\hyperlink{structcamp__sub__model__data_1_1sub__model__update__data__t}{sub\+\_\+model\+\_\+update\+\_\+data\+\_\+t}}), intent(out)}]{update\+\_\+data }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Initialize an update data object for a sub model. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & CAMP core \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em sub\+\_\+model} & Sub model to be updated \\
+\hline
+\mbox{\texttt{ out}}  & {\em update\+\_\+data} & Update data object \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1260 of file camp\+\_\+core.\+F90.
+
+\mbox{\Hypertarget{namespacecamp__camp__core_a734afb87f99d0ada713523cec105343c}\label{namespacecamp__camp__core_a734afb87f99d0ada713523cec105343c}} 
+\index{camp\_camp\_core@{camp\_camp\_core}!is\_initialized@{is\_initialized}}
+\index{is\_initialized@{is\_initialized}!camp\_camp\_core@{camp\_camp\_core}}
+\doxysubsubsection{\texorpdfstring{is\_initialized()}{is\_initialized()}}
+{\footnotesize\ttfamily logical function camp\+\_\+camp\+\_\+core\+::is\+\_\+initialized (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\+\_\+core\+\_\+t}}), intent(in)}]{this }\end{DoxyParamCaption})}
+
+
+
+Inidicate whether the core has been initialized. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & \mbox{\hyperlink{struct_model}{Model}} data \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 792 of file camp\+\_\+core.\+F90.
+
+\mbox{\Hypertarget{namespacecamp__camp__core_ad3994bb4ec316cf9442916ffd4fc0124}\label{namespacecamp__camp__core_ad3994bb4ec316cf9442916ffd4fc0124}} 
+\index{camp\_camp\_core@{camp\_camp\_core}!is\_solver\_initialized@{is\_solver\_initialized}}
+\index{is\_solver\_initialized@{is\_solver\_initialized}!camp\_camp\_core@{camp\_camp\_core}}
+\doxysubsubsection{\texorpdfstring{is\_solver\_initialized()}{is\_solver\_initialized()}}
+{\footnotesize\ttfamily logical function camp\+\_\+camp\+\_\+core\+::is\+\_\+solver\+\_\+initialized (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\+\_\+core\+\_\+t}}), intent(in)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Inidicate whether the solver has been initialized. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & \mbox{\hyperlink{struct_model}{Model}} data \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 804 of file camp\+\_\+core.\+F90.
+
+\mbox{\Hypertarget{namespacecamp__camp__core_a53b401e62799316a6728ef6dcdfeeb04}\label{namespacecamp__camp__core_a53b401e62799316a6728ef6dcdfeeb04}} 
+\index{camp\_camp\_core@{camp\_camp\_core}!load@{load}}
+\index{load@{load}!camp\_camp\_core@{camp\_camp\_core}}
+\doxysubsubsection{\texorpdfstring{load()}{load()}}
+{\footnotesize\ttfamily subroutine camp\+\_\+camp\+\_\+core\+::load (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\+\_\+core\+\_\+t}}), intent(inout)}]{this,  }\item[{type(\mbox{\hyperlink{structcamp__util_1_1string__t}{string\+\_\+t}}), dimension(\+:), intent(in), allocatable}]{input\+\_\+file\+\_\+path }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Load model data from input files. 
+
+See \mbox{\hyperlink{input_format_camp_config}{Input File Format\+: CAMP-\/\+Chem Configuration Data}} for the input file format. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & \mbox{\hyperlink{struct_model}{Model}} data \\
+\hline
+\mbox{\texttt{ in}}  & {\em input\+\_\+file\+\_\+path} & Part-\/\+MC input file paths \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 416 of file camp\+\_\+core.\+F90.
+
+\mbox{\Hypertarget{namespacecamp__camp__core_af682baa176c26d19ebab96fa2a9f891a}\label{namespacecamp__camp__core_af682baa176c26d19ebab96fa2a9f891a}} 
+\index{camp\_camp\_core@{camp\_camp\_core}!load\_files@{load\_files}}
+\index{load\_files@{load\_files}!camp\_camp\_core@{camp\_camp\_core}}
+\doxysubsubsection{\texorpdfstring{load\_files()}{load\_files()}}
+{\footnotesize\ttfamily subroutine camp\+\_\+camp\+\_\+core\+::load\+\_\+files (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\+\_\+core\+\_\+t}}), intent(inout)}]{this,  }\item[{character(len=$\ast$), intent(in)}]{input\+\_\+file\+\_\+path }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Load a set of model data files. 
+
+See \mbox{\hyperlink{input_format_camp_file_list}{Input File Format\+: CAMP-\/\+Chem Configuration File List}} for the input file format. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & \mbox{\hyperlink{struct_model}{Model}} data \\
+\hline
+\mbox{\texttt{ in}}  & {\em input\+\_\+file\+\_\+path} & Part-\/\+MC input file paths \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 295 of file camp\+\_\+core.\+F90.
+
+\mbox{\Hypertarget{namespacecamp__camp__core_add99e2f8537cffd5cc8ae66c805c2c4e}\label{namespacecamp__camp__core_add99e2f8537cffd5cc8ae66c805c2c4e}} 
+\index{camp\_camp\_core@{camp\_camp\_core}!new\_state\_multi\_cell@{new\_state\_multi\_cell}}
+\index{new\_state\_multi\_cell@{new\_state\_multi\_cell}!camp\_camp\_core@{camp\_camp\_core}}
+\doxysubsubsection{\texorpdfstring{new\_state\_multi\_cell()}{new\_state\_multi\_cell()}}
+{\footnotesize\ttfamily type(\mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t}{camp\+\_\+state\+\_\+t}}) function, pointer camp\+\_\+camp\+\_\+core\+::new\+\_\+state\+\_\+multi\+\_\+cell (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\+\_\+core\+\_\+t}}), intent(in)}]{this,  }\item[{type(\mbox{\hyperlink{structcamp__env__state_1_1env__state__ptr}{env\+\_\+state\+\_\+ptr}}), dimension(\+:), intent(in), target}]{env\+\_\+states }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Get a model state variable based on the this set of model data. 
+
+\begin{DoxyReturn}{Returns}
+New model state 
+\end{DoxyReturn}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & Chemical model \\
+\hline
+\mbox{\texttt{ in}}  & {\em env\+\_\+states} & Environmental state array (one element per grid cell to solve simultaneously) \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 976 of file camp\+\_\+core.\+F90.
+
+\mbox{\Hypertarget{namespacecamp__camp__core_aca76d6cd5cdfd84ea8f99d35205dc72c}\label{namespacecamp__camp__core_aca76d6cd5cdfd84ea8f99d35205dc72c}} 
+\index{camp\_camp\_core@{camp\_camp\_core}!new\_state\_one\_cell@{new\_state\_one\_cell}}
+\index{new\_state\_one\_cell@{new\_state\_one\_cell}!camp\_camp\_core@{camp\_camp\_core}}
+\doxysubsubsection{\texorpdfstring{new\_state\_one\_cell()}{new\_state\_one\_cell()}}
+{\footnotesize\ttfamily type(\mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t}{camp\+\_\+state\+\_\+t}}) function, pointer camp\+\_\+camp\+\_\+core\+::new\+\_\+state\+\_\+one\+\_\+cell (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\+\_\+core\+\_\+t}}), intent(in)}]{this,  }\item[{type(\mbox{\hyperlink{structcamp__env__state_1_1env__state__t}{env\+\_\+state\+\_\+t}}), intent(in), optional, target}]{env\+\_\+state }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Get a model state variable based on the this set of model data This is also called for multi-\/cell systems when no env\+\_\+state\+\_\+t array is passed. 
+
+\begin{DoxyReturn}{Returns}
+New model state 
+\end{DoxyReturn}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & Chemical model \\
+\hline
+\mbox{\texttt{ in}}  & {\em env\+\_\+state} & Environmental state array (one element per grid cell to solve simultaneously) \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 999 of file camp\+\_\+core.\+F90.
+
+\mbox{\Hypertarget{namespacecamp__camp__core_acbb7425e5bdb0e8af60c1d7b1d372fd2}\label{namespacecamp__camp__core_acbb7425e5bdb0e8af60c1d7b1d372fd2}} 
+\index{camp\_camp\_core@{camp\_camp\_core}!pack\_size@{pack\_size}}
+\index{pack\_size@{pack\_size}!camp\_camp\_core@{camp\_camp\_core}}
+\doxysubsubsection{\texorpdfstring{pack\_size()}{pack\_size()}}
+{\footnotesize\ttfamily integer(kind=i\+\_\+kind) function camp\+\_\+camp\+\_\+core\+::pack\+\_\+size (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\+\_\+core\+\_\+t}}), intent(in)}]{this,  }\item[{integer, intent(in), optional}]{comm }\end{DoxyParamCaption})}
+
+
+
+Determine the size of a binary required to pack the mechanism. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & Chemical model \\
+\hline
+\mbox{\texttt{ in}}  & {\em comm} & MPI communicator \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1411 of file camp\+\_\+core.\+F90.
+
+\mbox{\Hypertarget{namespacecamp__camp__core_aaa115822f400d9c929165328f08d95e1}\label{namespacecamp__camp__core_aaa115822f400d9c929165328f08d95e1}} 
+\index{camp\_camp\_core@{camp\_camp\_core}!rxn\_update\_data@{rxn\_update\_data}}
+\index{rxn\_update\_data@{rxn\_update\_data}!camp\_camp\_core@{camp\_camp\_core}}
+\doxysubsubsection{\texorpdfstring{rxn\_update\_data()}{rxn\_update\_data()}}
+{\footnotesize\ttfamily subroutine \mbox{\hyperlink{interfacecamp__camp__solver__data_1_1rxn__update__data}{camp\+\_\+camp\+\_\+core\+::rxn\+\_\+update\+\_\+data}} (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\+\_\+core\+\_\+t}}), intent(in)}]{this,  }\item[{class(\mbox{\hyperlink{structcamp__rxn__data_1_1rxn__update__data__t}{rxn\+\_\+update\+\_\+data\+\_\+t}}), intent(in)}]{update\+\_\+data }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Update data associated with a reaction. This function should be called when reaction parameters need updated from the host model. For example, this function can be called to update photolysis rates from a host model\textquotesingle{}s photolysis module. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & Chemical model \\
+\hline
+\mbox{\texttt{ in}}  & {\em update\+\_\+data} & Update data \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1307 of file camp\+\_\+core.\+F90.
+
+\mbox{\Hypertarget{namespacecamp__camp__core_a2c930e794dab3e8c87b47cbc35ea28a0}\label{namespacecamp__camp__core_a2c930e794dab3e8c87b47cbc35ea28a0}} 
+\index{camp\_camp\_core@{camp\_camp\_core}!solve@{solve}}
+\index{solve@{solve}!camp\_camp\_core@{camp\_camp\_core}}
+\doxysubsubsection{\texorpdfstring{solve()}{solve()}}
+{\footnotesize\ttfamily subroutine camp\+\_\+camp\+\_\+core\+::solve (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\+\_\+core\+\_\+t}}), intent(in)}]{this,  }\item[{type(\mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t}{camp\+\_\+state\+\_\+t}}), intent(inout), target}]{camp\+\_\+state,  }\item[{real(kind=dp), intent(in)}]{time\+\_\+step,  }\item[{integer(kind=i\+\_\+kind), intent(in), optional}]{rxn\+\_\+phase,  }\item[{type(\mbox{\hyperlink{structcamp__solver__stats_1_1solver__stats__t}{solver\+\_\+stats\+\_\+t}}), intent(inout), optional, target}]{solver\+\_\+stats }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Integrate the chemical mechanism. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & Chemical model \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em camp\+\_\+state} & Current model state \\
+\hline
+\mbox{\texttt{ in}}  & {\em time\+\_\+step} & Time step over which to integrate (s) \\
+\hline
+\mbox{\texttt{ in}}  & {\em rxn\+\_\+phase} & Phase to solve -\/ gas, aerosol, or both (default) Use parameters in \mbox{\hyperlink{namespacecamp__rxn__data}{camp\+\_\+rxn\+\_\+data}} to specify phase\+: GAS\+\_\+\+RXN, AERO\+\_\+\+RXN, GAS\+\_\+\+AERO\+\_\+\+RXN \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em solver\+\_\+stats} & Return solver statistics to the host model \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1346 of file camp\+\_\+core.\+F90.
+
+\mbox{\Hypertarget{namespacecamp__camp__core_afc097bb26f6704f9398d96eea873ba79}\label{namespacecamp__camp__core_afc097bb26f6704f9398d96eea873ba79}} 
+\index{camp\_camp\_core@{camp\_camp\_core}!solver\_initialize@{solver\_initialize}}
+\index{solver\_initialize@{solver\_initialize}!camp\_camp\_core@{camp\_camp\_core}}
+\doxysubsubsection{\texorpdfstring{solver\_initialize()}{solver\_initialize()}}
+{\footnotesize\ttfamily subroutine \mbox{\hyperlink{interfacecamp__camp__solver__data_1_1solver__initialize}{camp\+\_\+camp\+\_\+core\+::solver\+\_\+initialize}} (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\+\_\+core\+\_\+t}}), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Initialize the solver. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & Chemical model \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1128 of file camp\+\_\+core.\+F90.
+
+\mbox{\Hypertarget{namespacecamp__camp__core_a7093b75afde12e6e9854d1e9942a69ec}\label{namespacecamp__camp__core_a7093b75afde12e6e9854d1e9942a69ec}} 
+\index{camp\_camp\_core@{camp\_camp\_core}!spec\_state\_id@{spec\_state\_id}}
+\index{spec\_state\_id@{spec\_state\_id}!camp\_camp\_core@{camp\_camp\_core}}
+\doxysubsubsection{\texorpdfstring{spec\_state\_id()}{spec\_state\_id()}}
+{\footnotesize\ttfamily logical function \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__state__id}{camp\+\_\+camp\+\_\+core\+::spec\+\_\+state\+\_\+id}} (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\+\_\+core\+\_\+t}}), intent(in)}]{this,  }\item[{character(len=$\ast$), intent(in)}]{spec\+\_\+name,  }\item[{integer(kind=i\+\_\+kind), intent(inout)}]{state\+\_\+id }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Get the id of a species on the state array by its unique name. 
+
+\begin{DoxyReturn}{Returns}
+Flag indicating whether the species was found 
+\end{DoxyReturn}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & CAMP core \\
+\hline
+\mbox{\texttt{ in}}  & {\em spec\+\_\+name} & Species unique name \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em state\+\_\+id} & Species state id \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1098 of file camp\+\_\+core.\+F90.
+
+\mbox{\Hypertarget{namespacecamp__camp__core_a2c02881a75a5df27cae9f8c92345803c}\label{namespacecamp__camp__core_a2c02881a75a5df27cae9f8c92345803c}} 
+\index{camp\_camp\_core@{camp\_camp\_core}!state\_size@{state\_size}}
+\index{state\_size@{state\_size}!camp\_camp\_core@{camp\_camp\_core}}
+\doxysubsubsection{\texorpdfstring{state\_size()}{state\_size()}}
+{\footnotesize\ttfamily integer(kind=i\+\_\+kind) function camp\+\_\+camp\+\_\+core\+::state\+\_\+size (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\+\_\+core\+\_\+t}}), intent(in)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Get the size of the state array. 
+
+\begin{DoxyReturn}{Returns}
+State size 
+\end{DoxyReturn}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & Chemical model \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1027 of file camp\+\_\+core.\+F90.
+
+\mbox{\Hypertarget{namespacecamp__camp__core_afb6c4595458a836ddd6d59d96f89aab1}\label{namespacecamp__camp__core_afb6c4595458a836ddd6d59d96f89aab1}} 
+\index{camp\_camp\_core@{camp\_camp\_core}!state\_size\_per\_cell@{state\_size\_per\_cell}}
+\index{state\_size\_per\_cell@{state\_size\_per\_cell}!camp\_camp\_core@{camp\_camp\_core}}
+\doxysubsubsection{\texorpdfstring{state\_size\_per\_cell()}{state\_size\_per\_cell()}}
+{\footnotesize\ttfamily integer(kind=i\+\_\+kind) function camp\+\_\+camp\+\_\+core\+::state\+\_\+size\+\_\+per\+\_\+cell (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\+\_\+core\+\_\+t}}), intent(in)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Get the size of the state array for each grid cell. 
+
+\begin{DoxyReturn}{Returns}
+State size 
+\end{DoxyReturn}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & Chemical model \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1045 of file camp\+\_\+core.\+F90.
+
+\mbox{\Hypertarget{namespacecamp__camp__core_a4c82020c02c1aa45f066930b0e36035c}\label{namespacecamp__camp__core_a4c82020c02c1aa45f066930b0e36035c}} 
+\index{camp\_camp\_core@{camp\_camp\_core}!sub\_model\_update\_data@{sub\_model\_update\_data}}
+\index{sub\_model\_update\_data@{sub\_model\_update\_data}!camp\_camp\_core@{camp\_camp\_core}}
+\doxysubsubsection{\texorpdfstring{sub\_model\_update\_data()}{sub\_model\_update\_data()}}
+{\footnotesize\ttfamily subroutine \mbox{\hyperlink{interfacecamp__camp__solver__data_1_1sub__model__update__data}{camp\+\_\+camp\+\_\+core\+::sub\+\_\+model\+\_\+update\+\_\+data}} (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\+\_\+core\+\_\+t}}), intent(in)}]{this,  }\item[{class(\mbox{\hyperlink{structcamp__sub__model__data_1_1sub__model__update__data__t}{sub\+\_\+model\+\_\+update\+\_\+data\+\_\+t}}), intent(in)}]{update\+\_\+data }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Update data associated with a sub-\/model. This function should be called when sub-\/model parameters need updated from the host model. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & Chemical model \\
+\hline
+\mbox{\texttt{ in}}  & {\em update\+\_\+data} & Update data \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1327 of file camp\+\_\+core.\+F90.
+
+\mbox{\Hypertarget{namespacecamp__camp__core_a1018f13837dc28b5869924a88b5c7507}\label{namespacecamp__camp__core_a1018f13837dc28b5869924a88b5c7507}} 
+\index{camp\_camp\_core@{camp\_camp\_core}!unique\_names@{unique\_names}}
+\index{unique\_names@{unique\_names}!camp\_camp\_core@{camp\_camp\_core}}
+\doxysubsubsection{\texorpdfstring{unique\_names()}{unique\_names()}}
+{\footnotesize\ttfamily type(\mbox{\hyperlink{structcamp__util_1_1string__t}{string\+\_\+t}}) function, dimension(\+:), allocatable \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1unique__names}{camp\+\_\+camp\+\_\+core\+::unique\+\_\+names}} (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\+\_\+core\+\_\+t}}), intent(in)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Get an array of unique names for all species on the state array. 
+
+The order of this array is the same as the state array for one grid cell \begin{DoxyReturn}{Returns}
+Array of unique species names 
+\end{DoxyReturn}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & CAMP core \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1065 of file camp\+\_\+core.\+F90.
+

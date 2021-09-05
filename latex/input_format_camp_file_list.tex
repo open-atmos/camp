@@ -1,0 +1,12 @@
+A list of files containing configuration data for the \mbox{\hyperlink{index}{CAMP}}. The file should be in {\ttfamily json} format and the general structure should be the following\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{ "{}camp-\/files"{} : [}
+\DoxyCodeLine{  "{}file\_one.json"{},}
+\DoxyCodeLine{  "{}some\_dir/file\_two.json"{},}
+\DoxyCodeLine{  ...}
+\DoxyCodeLine{]\}}
+
+\end{DoxyCode}
+ The file should contain a single key-\/value pair named {\bfseries{camp-\/files}} whose value is an array of {\bfseries{strings}} with paths to the set of \mbox{\hyperlink{input_format_camp_config}{configuration}} files to load. Input files should be in {\ttfamily json} format. 

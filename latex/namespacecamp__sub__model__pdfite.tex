@@ -1,0 +1,112 @@
+\hypertarget{namespacecamp__sub__model__pdfite}{}\doxysection{camp\+\_\+sub\+\_\+model\+\_\+pdfite Module Reference}
+\label{namespacecamp__sub__model__pdfite}\index{camp\_sub\_model\_pdfite@{camp\_sub\_model\_pdfite}}
+
+
+The sub\+\_\+model\+\_\+\+PDFi\+TE\+\_\+t type and associated functions.  
+
+
+\doxysubsection*{Data Types}
+\begin{DoxyCompactItemize}
+\item 
+interface \mbox{\hyperlink{structcamp__sub__model__pdfite_1_1sub__model__pdfite__t}{sub\+\_\+model\+\_\+pdfite\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em Generic test reaction data type. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Functions/\+Subroutines}
+\begin{DoxyCompactItemize}
+\item 
+type(\mbox{\hyperlink{structcamp__sub__model__pdfite_1_1sub__model__pdfite__t}{sub\+\_\+model\+\_\+pdfite\+\_\+t}}) function, pointer \mbox{\hyperlink{namespacecamp__sub__model__pdfite_a7d51abd9910f2312bf03376020e5d3c8}{constructor}} ()
+\begin{DoxyCompactList}\small\item\em Constructor for activity reaction. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__sub__model__pdfite_a615c6e49b354cccfda87b7551b466f1f}{initialize}} (this, aero\+\_\+rep\+\_\+set, aero\+\_\+phase\+\_\+set, chem\+\_\+spec\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Initialize the reaction data, validating component data and loading any required information into the condensed data arrays for use during solving. \end{DoxyCompactList}\item 
+elemental subroutine \mbox{\hyperlink{namespacecamp__sub__model__pdfite_a6ddba2bd7cc93caac144b5eaad85a682}{finalize}} (this)
+\begin{DoxyCompactList}\small\item\em Finalize the reaction. \end{DoxyCompactList}\item 
+real(kind=dp) function \mbox{\hyperlink{namespacecamp__sub__model__pdfite_a2d718db6c7657ffd0a80f94f2c648841}{priority}} (this)
+\begin{DoxyCompactList}\small\item\em Return a real number representing the priority of the sub model calculations. Low priority sub models may use the results of higher priority sub models. Lower numbers indicate higher priority. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+The sub\+\_\+model\+\_\+\+PDFi\+TE\+\_\+t type and associated functions. 
+
+\doxysubsection{Function/\+Subroutine Documentation}
+\mbox{\Hypertarget{namespacecamp__sub__model__pdfite_a7d51abd9910f2312bf03376020e5d3c8}\label{namespacecamp__sub__model__pdfite_a7d51abd9910f2312bf03376020e5d3c8}} 
+\index{camp\_sub\_model\_pdfite@{camp\_sub\_model\_pdfite}!constructor@{constructor}}
+\index{constructor@{constructor}!camp\_sub\_model\_pdfite@{camp\_sub\_model\_pdfite}}
+\doxysubsubsection{\texorpdfstring{constructor()}{constructor()}}
+{\footnotesize\ttfamily type(\mbox{\hyperlink{structcamp__sub__model__pdfite_1_1sub__model__pdfite__t}{sub\+\_\+model\+\_\+pdfite\+\_\+t}}) function, pointer camp\+\_\+sub\+\_\+model\+\_\+pdfite\+::constructor\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Constructor for activity reaction. 
+
+\begin{DoxyReturn}{Returns}
+A new reaction instance 
+\end{DoxyReturn}
+
+
+Definition at line 245 of file sub\+\_\+model\+\_\+\+PDFi\+TE.\+F90.
+
+\mbox{\Hypertarget{namespacecamp__sub__model__pdfite_a6ddba2bd7cc93caac144b5eaad85a682}\label{namespacecamp__sub__model__pdfite_a6ddba2bd7cc93caac144b5eaad85a682}} 
+\index{camp\_sub\_model\_pdfite@{camp\_sub\_model\_pdfite}!finalize@{finalize}}
+\index{finalize@{finalize}!camp\_sub\_model\_pdfite@{camp\_sub\_model\_pdfite}}
+\doxysubsubsection{\texorpdfstring{finalize()}{finalize()}}
+{\footnotesize\ttfamily elemental subroutine camp\+\_\+sub\+\_\+model\+\_\+pdfite\+::finalize (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__sub__model__pdfite_1_1sub__model__pdfite__t}{sub\+\_\+model\+\_\+pdfite\+\_\+t}}), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Finalize the reaction. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & Reaction data \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 843 of file sub\+\_\+model\+\_\+\+PDFi\+TE.\+F90.
+
+\mbox{\Hypertarget{namespacecamp__sub__model__pdfite_a615c6e49b354cccfda87b7551b466f1f}\label{namespacecamp__sub__model__pdfite_a615c6e49b354cccfda87b7551b466f1f}} 
+\index{camp\_sub\_model\_pdfite@{camp\_sub\_model\_pdfite}!initialize@{initialize}}
+\index{initialize@{initialize}!camp\_sub\_model\_pdfite@{camp\_sub\_model\_pdfite}}
+\doxysubsubsection{\texorpdfstring{initialize()}{initialize()}}
+{\footnotesize\ttfamily subroutine \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1initialize}{camp\+\_\+sub\+\_\+model\+\_\+pdfite\+::initialize}} (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__sub__model__pdfite_1_1sub__model__pdfite__t}{sub\+\_\+model\+\_\+pdfite\+\_\+t}}), intent(inout)}]{this,  }\item[{type(\mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__ptr}{aero\+\_\+rep\+\_\+data\+\_\+ptr}}), dimension(\+:), intent(in), pointer}]{aero\+\_\+rep\+\_\+set,  }\item[{type(\mbox{\hyperlink{structcamp__aero__phase__data_1_1aero__phase__data__ptr}{aero\+\_\+phase\+\_\+data\+\_\+ptr}}), dimension(\+:), intent(in), pointer}]{aero\+\_\+phase\+\_\+set,  }\item[{type(\mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t}{chem\+\_\+spec\+\_\+data\+\_\+t}}), intent(in)}]{chem\+\_\+spec\+\_\+data }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Initialize the reaction data, validating component data and loading any required information into the condensed data arrays for use during solving. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & Reaction data \\
+\hline
+\mbox{\texttt{ in}}  & {\em aero\+\_\+rep\+\_\+set} & The set of aerosol representations \\
+\hline
+\mbox{\texttt{ in}}  & {\em aero\+\_\+phase\+\_\+set} & The set of aerosol phases \\
+\hline
+\mbox{\texttt{ in}}  & {\em chem\+\_\+spec\+\_\+data} & Chemical species data \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 259 of file sub\+\_\+model\+\_\+\+PDFi\+TE.\+F90.
+
+\mbox{\Hypertarget{namespacecamp__sub__model__pdfite_a2d718db6c7657ffd0a80f94f2c648841}\label{namespacecamp__sub__model__pdfite_a2d718db6c7657ffd0a80f94f2c648841}} 
+\index{camp\_sub\_model\_pdfite@{camp\_sub\_model\_pdfite}!priority@{priority}}
+\index{priority@{priority}!camp\_sub\_model\_pdfite@{camp\_sub\_model\_pdfite}}
+\doxysubsubsection{\texorpdfstring{priority()}{priority()}}
+{\footnotesize\ttfamily real(kind=dp) function \mbox{\hyperlink{interfacecamp__sub__model__data_1_1priority}{camp\+\_\+sub\+\_\+model\+\_\+pdfite\+::priority}} (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__sub__model__pdfite_1_1sub__model__pdfite__t}{sub\+\_\+model\+\_\+pdfite\+\_\+t}}), intent(in)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Return a real number representing the priority of the sub model calculations. Low priority sub models may use the results of higher priority sub models. Lower numbers indicate higher priority. 
+
+PD-\/\+Fi\+TE calculations may depend on water concentrations, so must be lower priority than the ZSR sub model. \begin{DoxyReturn}{Returns}
+Sub model priority 
+\end{DoxyReturn}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & Sub model data \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 865 of file sub\+\_\+model\+\_\+\+PDFi\+TE.\+F90.
+

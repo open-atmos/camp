@@ -1,0 +1,414 @@
+\hypertarget{rxn__emission_8c}{}\doxysection{rxn\+\_\+emission.\+c File Reference}
+\label{rxn__emission_8c}\index{rxn\_emission.c@{rxn\_emission.c}}
+
+
+Emission reaction solver functions.  
+
+
+Include dependency graph for rxn\+\_\+emission.\+c\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{rxn__emission_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{rxn__emission_8c_aa90d2b6c48aceb4d7ac3d93d5249bb60}{TEMPERATURE\+\_\+\+K\+\_\+}}~env\+\_\+data\mbox{[}0\mbox{]}
+\item 
+\#define \mbox{\hyperlink{rxn__emission_8c_a32cc078fd8ca9ad0684c48ae0aad7135}{PRESSURE\+\_\+\+PA\+\_\+}}~env\+\_\+data\mbox{[}1\mbox{]}
+\item 
+\#define \mbox{\hyperlink{rxn__emission_8c_a90cc89c1a8af0668561f9fc8cdbb9dde}{RXN\+\_\+\+ID\+\_\+}}~(int\+\_\+data\mbox{[}0\mbox{]})
+\item 
+\#define \mbox{\hyperlink{rxn__emission_8c_ad50772634af6363b99f68f7a7d312a7f}{SPECIES\+\_\+}}~(int\+\_\+data\mbox{[}1\mbox{]} -\/ 1)
+\item 
+\#define \mbox{\hyperlink{rxn__emission_8c_ad4462a980bbea67f2a75e80457ef56e7}{DERIV\+\_\+\+ID\+\_\+}}~int\+\_\+data\mbox{[}2\mbox{]}
+\item 
+\#define \mbox{\hyperlink{rxn__emission_8c_a1757f332a0485799c2ee77edff00c38a}{SCALING\+\_\+}}~float\+\_\+data\mbox{[}0\mbox{]}
+\item 
+\#define \mbox{\hyperlink{rxn__emission_8c_ac97cc9673986ffae39906f23ebf1f9f1}{RATE\+\_\+}}~(rxn\+\_\+env\+\_\+data\mbox{[}0\mbox{]})
+\item 
+\#define \mbox{\hyperlink{rxn__emission_8c_a8a6abdf49f8b3b17aea4f4595bcbc0cc}{BASE\+\_\+\+RATE\+\_\+}}~(rxn\+\_\+env\+\_\+data\mbox{[}1\mbox{]})
+\item 
+\#define \mbox{\hyperlink{rxn__emission_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}}~3
+\item 
+\#define \mbox{\hyperlink{rxn__emission_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}{NUM\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+}}~1
+\item 
+\#define \mbox{\hyperlink{rxn__emission_8c_a1f68a3544ae39a7815cbb5c09dfdeff0}{NUM\+\_\+\+ENV\+\_\+\+PARAM\+\_\+}}~2
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{rxn__emission_8c_a0ef69ae99efa726d72f8502eb7d18406}{rxn\+\_\+emission\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem}} (int $\ast$rxn\+\_\+int\+\_\+data, double $\ast$rxn\+\_\+float\+\_\+data, \mbox{\hyperlink{struct_jacobian}{Jacobian}} $\ast$jac)
+\begin{DoxyCompactList}\small\item\em Flag \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used by this reaction. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{rxn__emission_8c_a1409402244e73476c40d3027defb9b21}{rxn\+\_\+emission\+\_\+update\+\_\+ids}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, int $\ast$deriv\+\_\+ids, \mbox{\hyperlink{struct_jacobian}{Jacobian}} jac, int $\ast$rxn\+\_\+int\+\_\+data, double $\ast$rxn\+\_\+float\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Update the time derivative and Jacbobian array indices. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1}{bool}} \mbox{\hyperlink{rxn__emission_8c_a25eaef1dd9f0994f7ae68f20d1eb4276}{rxn\+\_\+emission\+\_\+update\+\_\+data}} (void $\ast$update\+\_\+data, int $\ast$rxn\+\_\+int\+\_\+data, double $\ast$rxn\+\_\+float\+\_\+data, double $\ast$rxn\+\_\+env\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Update reaction data. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{rxn__emission_8c_adccb35681c5b5a230fbb64376c84e6d8}{rxn\+\_\+emission\+\_\+update\+\_\+env\+\_\+state}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, int $\ast$rxn\+\_\+int\+\_\+data, double $\ast$rxn\+\_\+float\+\_\+data, double $\ast$rxn\+\_\+env\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Update reaction data for new environmental conditions. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{rxn__emission_8c_a0fc4250b628dae19ab3c2081a283e2b8}{rxn\+\_\+emission\+\_\+calc\+\_\+deriv\+\_\+contrib}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, \mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}} time\+\_\+deriv, int $\ast$rxn\+\_\+int\+\_\+data, double $\ast$rxn\+\_\+float\+\_\+data, double $\ast$rxn\+\_\+env\+\_\+data, realtype time\+\_\+step)
+\begin{DoxyCompactList}\small\item\em Calculate contributions to the time derivative $f(t,y)$ from this reaction. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{rxn__emission_8c_ab50d43d95dad6b99d9d3fa5c8c887884}{rxn\+\_\+emission\+\_\+calc\+\_\+jac\+\_\+contrib}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, \mbox{\hyperlink{struct_jacobian}{Jacobian}} jac, int $\ast$rxn\+\_\+int\+\_\+data, double $\ast$rxn\+\_\+float\+\_\+data, double $\ast$rxn\+\_\+env\+\_\+data, realtype time\+\_\+step)
+\begin{DoxyCompactList}\small\item\em Calculate contributions to the \mbox{\hyperlink{struct_jacobian}{Jacobian}} from this reaction. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{rxn__emission_8c_a1b928b4840db0494325aa89390a1b845}{rxn\+\_\+emission\+\_\+print}} (int $\ast$rxn\+\_\+int\+\_\+data, double $\ast$rxn\+\_\+float\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Print the reaction parameters. \end{DoxyCompactList}\item 
+void $\ast$ \mbox{\hyperlink{rxn__emission_8c_accb8a648a48a3cfd5ed5e9410b6d8b10}{rxn\+\_\+emission\+\_\+create\+\_\+rate\+\_\+update\+\_\+data}} ()
+\begin{DoxyCompactList}\small\item\em Create update data for new emission rates. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{rxn__emission_8c_a19a65b8e846f6b3173ec1c1ed48257a7}{rxn\+\_\+emission\+\_\+set\+\_\+rate\+\_\+update\+\_\+data}} (void $\ast$update\+\_\+data, int rxn\+\_\+id, double base\+\_\+rate)
+\begin{DoxyCompactList}\small\item\em Set rate update data. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Emission reaction solver functions. 
+
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{rxn__emission_8c_a8a6abdf49f8b3b17aea4f4595bcbc0cc}\label{rxn__emission_8c_a8a6abdf49f8b3b17aea4f4595bcbc0cc}} 
+\index{rxn\_emission.c@{rxn\_emission.c}!BASE\_RATE\_@{BASE\_RATE\_}}
+\index{BASE\_RATE\_@{BASE\_RATE\_}!rxn\_emission.c@{rxn\_emission.c}}
+\doxysubsubsection{\texorpdfstring{BASE\_RATE\_}{BASE\_RATE\_}}
+{\footnotesize\ttfamily \#define BASE\+\_\+\+RATE\+\_\+~(rxn\+\_\+env\+\_\+data\mbox{[}1\mbox{]})}
+
+
+
+Definition at line 25 of file rxn\+\_\+emission.\+c.
+
+\mbox{\Hypertarget{rxn__emission_8c_ad4462a980bbea67f2a75e80457ef56e7}\label{rxn__emission_8c_ad4462a980bbea67f2a75e80457ef56e7}} 
+\index{rxn\_emission.c@{rxn\_emission.c}!DERIV\_ID\_@{DERIV\_ID\_}}
+\index{DERIV\_ID\_@{DERIV\_ID\_}!rxn\_emission.c@{rxn\_emission.c}}
+\doxysubsubsection{\texorpdfstring{DERIV\_ID\_}{DERIV\_ID\_}}
+{\footnotesize\ttfamily \#define DERIV\+\_\+\+ID\+\_\+~int\+\_\+data\mbox{[}2\mbox{]}}
+
+
+
+Definition at line 22 of file rxn\+\_\+emission.\+c.
+
+\mbox{\Hypertarget{rxn__emission_8c_a1f68a3544ae39a7815cbb5c09dfdeff0}\label{rxn__emission_8c_a1f68a3544ae39a7815cbb5c09dfdeff0}} 
+\index{rxn\_emission.c@{rxn\_emission.c}!NUM\_ENV\_PARAM\_@{NUM\_ENV\_PARAM\_}}
+\index{NUM\_ENV\_PARAM\_@{NUM\_ENV\_PARAM\_}!rxn\_emission.c@{rxn\_emission.c}}
+\doxysubsubsection{\texorpdfstring{NUM\_ENV\_PARAM\_}{NUM\_ENV\_PARAM\_}}
+{\footnotesize\ttfamily \#define NUM\+\_\+\+ENV\+\_\+\+PARAM\+\_\+~2}
+
+
+
+Definition at line 28 of file rxn\+\_\+emission.\+c.
+
+\mbox{\Hypertarget{rxn__emission_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}\label{rxn__emission_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}} 
+\index{rxn\_emission.c@{rxn\_emission.c}!NUM\_FLOAT\_PROP\_@{NUM\_FLOAT\_PROP\_}}
+\index{NUM\_FLOAT\_PROP\_@{NUM\_FLOAT\_PROP\_}!rxn\_emission.c@{rxn\_emission.c}}
+\doxysubsubsection{\texorpdfstring{NUM\_FLOAT\_PROP\_}{NUM\_FLOAT\_PROP\_}}
+{\footnotesize\ttfamily \#define NUM\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+~1}
+
+
+
+Definition at line 27 of file rxn\+\_\+emission.\+c.
+
+\mbox{\Hypertarget{rxn__emission_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}\label{rxn__emission_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}} 
+\index{rxn\_emission.c@{rxn\_emission.c}!NUM\_INT\_PROP\_@{NUM\_INT\_PROP\_}}
+\index{NUM\_INT\_PROP\_@{NUM\_INT\_PROP\_}!rxn\_emission.c@{rxn\_emission.c}}
+\doxysubsubsection{\texorpdfstring{NUM\_INT\_PROP\_}{NUM\_INT\_PROP\_}}
+{\footnotesize\ttfamily \#define NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+~3}
+
+
+
+Definition at line 26 of file rxn\+\_\+emission.\+c.
+
+\mbox{\Hypertarget{rxn__emission_8c_a32cc078fd8ca9ad0684c48ae0aad7135}\label{rxn__emission_8c_a32cc078fd8ca9ad0684c48ae0aad7135}} 
+\index{rxn\_emission.c@{rxn\_emission.c}!PRESSURE\_PA\_@{PRESSURE\_PA\_}}
+\index{PRESSURE\_PA\_@{PRESSURE\_PA\_}!rxn\_emission.c@{rxn\_emission.c}}
+\doxysubsubsection{\texorpdfstring{PRESSURE\_PA\_}{PRESSURE\_PA\_}}
+{\footnotesize\ttfamily \#define PRESSURE\+\_\+\+PA\+\_\+~env\+\_\+data\mbox{[}1\mbox{]}}
+
+
+
+Definition at line 18 of file rxn\+\_\+emission.\+c.
+
+\mbox{\Hypertarget{rxn__emission_8c_ac97cc9673986ffae39906f23ebf1f9f1}\label{rxn__emission_8c_ac97cc9673986ffae39906f23ebf1f9f1}} 
+\index{rxn\_emission.c@{rxn\_emission.c}!RATE\_@{RATE\_}}
+\index{RATE\_@{RATE\_}!rxn\_emission.c@{rxn\_emission.c}}
+\doxysubsubsection{\texorpdfstring{RATE\_}{RATE\_}}
+{\footnotesize\ttfamily \#define RATE\+\_\+~(rxn\+\_\+env\+\_\+data\mbox{[}0\mbox{]})}
+
+
+
+Definition at line 24 of file rxn\+\_\+emission.\+c.
+
+\mbox{\Hypertarget{rxn__emission_8c_a90cc89c1a8af0668561f9fc8cdbb9dde}\label{rxn__emission_8c_a90cc89c1a8af0668561f9fc8cdbb9dde}} 
+\index{rxn\_emission.c@{rxn\_emission.c}!RXN\_ID\_@{RXN\_ID\_}}
+\index{RXN\_ID\_@{RXN\_ID\_}!rxn\_emission.c@{rxn\_emission.c}}
+\doxysubsubsection{\texorpdfstring{RXN\_ID\_}{RXN\_ID\_}}
+{\footnotesize\ttfamily \#define RXN\+\_\+\+ID\+\_\+~(int\+\_\+data\mbox{[}0\mbox{]})}
+
+
+
+Definition at line 20 of file rxn\+\_\+emission.\+c.
+
+\mbox{\Hypertarget{rxn__emission_8c_a1757f332a0485799c2ee77edff00c38a}\label{rxn__emission_8c_a1757f332a0485799c2ee77edff00c38a}} 
+\index{rxn\_emission.c@{rxn\_emission.c}!SCALING\_@{SCALING\_}}
+\index{SCALING\_@{SCALING\_}!rxn\_emission.c@{rxn\_emission.c}}
+\doxysubsubsection{\texorpdfstring{SCALING\_}{SCALING\_}}
+{\footnotesize\ttfamily \#define SCALING\+\_\+~float\+\_\+data\mbox{[}0\mbox{]}}
+
+
+
+Definition at line 23 of file rxn\+\_\+emission.\+c.
+
+\mbox{\Hypertarget{rxn__emission_8c_ad50772634af6363b99f68f7a7d312a7f}\label{rxn__emission_8c_ad50772634af6363b99f68f7a7d312a7f}} 
+\index{rxn\_emission.c@{rxn\_emission.c}!SPECIES\_@{SPECIES\_}}
+\index{SPECIES\_@{SPECIES\_}!rxn\_emission.c@{rxn\_emission.c}}
+\doxysubsubsection{\texorpdfstring{SPECIES\_}{SPECIES\_}}
+{\footnotesize\ttfamily \#define SPECIES\+\_\+~(int\+\_\+data\mbox{[}1\mbox{]} -\/ 1)}
+
+
+
+Definition at line 21 of file rxn\+\_\+emission.\+c.
+
+\mbox{\Hypertarget{rxn__emission_8c_aa90d2b6c48aceb4d7ac3d93d5249bb60}\label{rxn__emission_8c_aa90d2b6c48aceb4d7ac3d93d5249bb60}} 
+\index{rxn\_emission.c@{rxn\_emission.c}!TEMPERATURE\_K\_@{TEMPERATURE\_K\_}}
+\index{TEMPERATURE\_K\_@{TEMPERATURE\_K\_}!rxn\_emission.c@{rxn\_emission.c}}
+\doxysubsubsection{\texorpdfstring{TEMPERATURE\_K\_}{TEMPERATURE\_K\_}}
+{\footnotesize\ttfamily \#define TEMPERATURE\+\_\+\+K\+\_\+~env\+\_\+data\mbox{[}0\mbox{]}}
+
+
+
+Definition at line 17 of file rxn\+\_\+emission.\+c.
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{rxn__emission_8c_a0fc4250b628dae19ab3c2081a283e2b8}\label{rxn__emission_8c_a0fc4250b628dae19ab3c2081a283e2b8}} 
+\index{rxn\_emission.c@{rxn\_emission.c}!rxn\_emission\_calc\_deriv\_contrib@{rxn\_emission\_calc\_deriv\_contrib}}
+\index{rxn\_emission\_calc\_deriv\_contrib@{rxn\_emission\_calc\_deriv\_contrib}!rxn\_emission.c@{rxn\_emission.c}}
+\doxysubsubsection{\texorpdfstring{rxn\_emission\_calc\_deriv\_contrib()}{rxn\_emission\_calc\_deriv\_contrib()}}
+{\footnotesize\ttfamily void rxn\+\_\+emission\+\_\+calc\+\_\+deriv\+\_\+contrib (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{\mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}}}]{time\+\_\+deriv,  }\item[{int $\ast$}]{rxn\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+env\+\_\+data,  }\item[{realtype}]{time\+\_\+step }\end{DoxyParamCaption})}
+
+
+
+Calculate contributions to the time derivative $f(t,y)$ from this reaction. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em model\+\_\+data} & Pointer to the model data, including the state array \\
+\hline
+{\em time\+\_\+deriv} & \mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}} object \\
+\hline
+{\em rxn\+\_\+int\+\_\+data} & Pointer to the reaction integer data \\
+\hline
+{\em rxn\+\_\+float\+\_\+data} & Pointer to the reaction floating-\/point data \\
+\hline
+{\em rxn\+\_\+env\+\_\+data} & Pointer to the environment-\/dependent parameters \\
+\hline
+{\em time\+\_\+step} & Current time step being computed (s) \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 133 of file rxn\+\_\+emission.\+c.
+
+\mbox{\Hypertarget{rxn__emission_8c_ab50d43d95dad6b99d9d3fa5c8c887884}\label{rxn__emission_8c_ab50d43d95dad6b99d9d3fa5c8c887884}} 
+\index{rxn\_emission.c@{rxn\_emission.c}!rxn\_emission\_calc\_jac\_contrib@{rxn\_emission\_calc\_jac\_contrib}}
+\index{rxn\_emission\_calc\_jac\_contrib@{rxn\_emission\_calc\_jac\_contrib}!rxn\_emission.c@{rxn\_emission.c}}
+\doxysubsubsection{\texorpdfstring{rxn\_emission\_calc\_jac\_contrib()}{rxn\_emission\_calc\_jac\_contrib()}}
+{\footnotesize\ttfamily void rxn\+\_\+emission\+\_\+calc\+\_\+jac\+\_\+contrib (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}}}]{jac,  }\item[{int $\ast$}]{rxn\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+env\+\_\+data,  }\item[{realtype}]{time\+\_\+step }\end{DoxyParamCaption})}
+
+
+
+Calculate contributions to the \mbox{\hyperlink{struct_jacobian}{Jacobian}} from this reaction. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em model\+\_\+data} & Pointer to the model data \\
+\hline
+{\em jac} & Reaction \mbox{\hyperlink{struct_jacobian}{Jacobian}} \\
+\hline
+{\em rxn\+\_\+int\+\_\+data} & Pointer to the reaction integer data \\
+\hline
+{\em rxn\+\_\+float\+\_\+data} & Pointer to the reaction floating-\/point data \\
+\hline
+{\em rxn\+\_\+env\+\_\+data} & Pointer to the environment-\/dependent parameters \\
+\hline
+{\em time\+\_\+step} & Current time step being calculated (s) \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 160 of file rxn\+\_\+emission.\+c.
+
+\mbox{\Hypertarget{rxn__emission_8c_accb8a648a48a3cfd5ed5e9410b6d8b10}\label{rxn__emission_8c_accb8a648a48a3cfd5ed5e9410b6d8b10}} 
+\index{rxn\_emission.c@{rxn\_emission.c}!rxn\_emission\_create\_rate\_update\_data@{rxn\_emission\_create\_rate\_update\_data}}
+\index{rxn\_emission\_create\_rate\_update\_data@{rxn\_emission\_create\_rate\_update\_data}!rxn\_emission.c@{rxn\_emission.c}}
+\doxysubsubsection{\texorpdfstring{rxn\_emission\_create\_rate\_update\_data()}{rxn\_emission\_create\_rate\_update\_data()}}
+{\footnotesize\ttfamily void$\ast$ rxn\+\_\+emission\+\_\+create\+\_\+rate\+\_\+update\+\_\+data (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Create update data for new emission rates. 
+
+\begin{DoxyReturn}{Returns}
+Pointer to a new rate update data object 
+\end{DoxyReturn}
+
+
+Definition at line 192 of file rxn\+\_\+emission.\+c.
+
+\mbox{\Hypertarget{rxn__emission_8c_a0ef69ae99efa726d72f8502eb7d18406}\label{rxn__emission_8c_a0ef69ae99efa726d72f8502eb7d18406}} 
+\index{rxn\_emission.c@{rxn\_emission.c}!rxn\_emission\_get\_used\_jac\_elem@{rxn\_emission\_get\_used\_jac\_elem}}
+\index{rxn\_emission\_get\_used\_jac\_elem@{rxn\_emission\_get\_used\_jac\_elem}!rxn\_emission.c@{rxn\_emission.c}}
+\doxysubsubsection{\texorpdfstring{rxn\_emission\_get\_used\_jac\_elem()}{rxn\_emission\_get\_used\_jac\_elem()}}
+{\footnotesize\ttfamily void rxn\+\_\+emission\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem (\begin{DoxyParamCaption}\item[{int $\ast$}]{rxn\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+float\+\_\+data,  }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}} $\ast$}]{jac }\end{DoxyParamCaption})}
+
+
+
+Flag \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used by this reaction. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em rxn\+\_\+int\+\_\+data} & Pointer to the reaction integer data \\
+\hline
+{\em rxn\+\_\+float\+\_\+data} & Pointer to the reaction floating-\/point data \\
+\hline
+{\em jac} & \mbox{\hyperlink{struct_jacobian}{Jacobian}} \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 36 of file rxn\+\_\+emission.\+c.
+
+\mbox{\Hypertarget{rxn__emission_8c_a1b928b4840db0494325aa89390a1b845}\label{rxn__emission_8c_a1b928b4840db0494325aa89390a1b845}} 
+\index{rxn\_emission.c@{rxn\_emission.c}!rxn\_emission\_print@{rxn\_emission\_print}}
+\index{rxn\_emission\_print@{rxn\_emission\_print}!rxn\_emission.c@{rxn\_emission.c}}
+\doxysubsubsection{\texorpdfstring{rxn\_emission\_print()}{rxn\_emission\_print()}}
+{\footnotesize\ttfamily void rxn\+\_\+emission\+\_\+print (\begin{DoxyParamCaption}\item[{int $\ast$}]{rxn\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+float\+\_\+data }\end{DoxyParamCaption})}
+
+
+
+Print the reaction parameters. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em rxn\+\_\+int\+\_\+data} & Pointer to the reaction integer data \\
+\hline
+{\em rxn\+\_\+float\+\_\+data} & Pointer to the reaction floating-\/point data \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 179 of file rxn\+\_\+emission.\+c.
+
+\mbox{\Hypertarget{rxn__emission_8c_a19a65b8e846f6b3173ec1c1ed48257a7}\label{rxn__emission_8c_a19a65b8e846f6b3173ec1c1ed48257a7}} 
+\index{rxn\_emission.c@{rxn\_emission.c}!rxn\_emission\_set\_rate\_update\_data@{rxn\_emission\_set\_rate\_update\_data}}
+\index{rxn\_emission\_set\_rate\_update\_data@{rxn\_emission\_set\_rate\_update\_data}!rxn\_emission.c@{rxn\_emission.c}}
+\doxysubsubsection{\texorpdfstring{rxn\_emission\_set\_rate\_update\_data()}{rxn\_emission\_set\_rate\_update\_data()}}
+{\footnotesize\ttfamily void rxn\+\_\+emission\+\_\+set\+\_\+rate\+\_\+update\+\_\+data (\begin{DoxyParamCaption}\item[{void $\ast$}]{update\+\_\+data,  }\item[{int}]{rxn\+\_\+id,  }\item[{double}]{base\+\_\+rate }\end{DoxyParamCaption})}
+
+
+
+Set rate update data. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em update\+\_\+data} & Pointer to an allocated rate update data object \\
+\hline
+{\em rxn\+\_\+id} & Id of emission reactions to update \\
+\hline
+{\em base\+\_\+rate} & New pre-\/scaling emission rate \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 207 of file rxn\+\_\+emission.\+c.
+
+\mbox{\Hypertarget{rxn__emission_8c_a25eaef1dd9f0994f7ae68f20d1eb4276}\label{rxn__emission_8c_a25eaef1dd9f0994f7ae68f20d1eb4276}} 
+\index{rxn\_emission.c@{rxn\_emission.c}!rxn\_emission\_update\_data@{rxn\_emission\_update\_data}}
+\index{rxn\_emission\_update\_data@{rxn\_emission\_update\_data}!rxn\_emission.c@{rxn\_emission.c}}
+\doxysubsubsection{\texorpdfstring{rxn\_emission\_update\_data()}{rxn\_emission\_update\_data()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1}{bool}} rxn\+\_\+emission\+\_\+update\+\_\+data (\begin{DoxyParamCaption}\item[{void $\ast$}]{update\+\_\+data,  }\item[{int $\ast$}]{rxn\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+env\+\_\+data }\end{DoxyParamCaption})}
+
+
+
+Update reaction data. 
+
+Emission reactions can have their base (pre-\/scaling) rates updated from the host model based on the calculations of an external module. The structure of the update data is\+:
+
+
+\begin{DoxyItemize}
+\item {\bfseries{int}} rxn\+\_\+id (Id of one or more emission reactions set by the host model using the {\ttfamily camp\+\_\+rxn\+\_\+emission\+::rxn\+\_\+emission\+\_\+t\+::set\+\_\+rxn\+\_\+id} function prior to initializing the solver.)
+\item {\bfseries{double}} rate (New pre-\/scaling rate.)
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}{Parameters}
+{\em update\+\_\+data} & Pointer to the updated reaction data \\
+\hline
+{\em rxn\+\_\+int\+\_\+data} & Pointer to the reaction integer data \\
+\hline
+{\em rxn\+\_\+float\+\_\+data} & Pointer to the reaction floating-\/point data \\
+\hline
+{\em rxn\+\_\+env\+\_\+data} & Pointer to the environment-\/dependent data \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Flag indicating whether this is the reaction to update 
+\end{DoxyReturn}
+
+
+Definition at line 82 of file rxn\+\_\+emission.\+c.
+
+\mbox{\Hypertarget{rxn__emission_8c_adccb35681c5b5a230fbb64376c84e6d8}\label{rxn__emission_8c_adccb35681c5b5a230fbb64376c84e6d8}} 
+\index{rxn\_emission.c@{rxn\_emission.c}!rxn\_emission\_update\_env\_state@{rxn\_emission\_update\_env\_state}}
+\index{rxn\_emission\_update\_env\_state@{rxn\_emission\_update\_env\_state}!rxn\_emission.c@{rxn\_emission.c}}
+\doxysubsubsection{\texorpdfstring{rxn\_emission\_update\_env\_state()}{rxn\_emission\_update\_env\_state()}}
+{\footnotesize\ttfamily void rxn\+\_\+emission\+\_\+update\+\_\+env\+\_\+state (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{int $\ast$}]{rxn\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+env\+\_\+data }\end{DoxyParamCaption})}
+
+
+
+Update reaction data for new environmental conditions. 
+
+For emission reactions this only involves recalculating the rate.
+
+
+\begin{DoxyParams}{Parameters}
+{\em model\+\_\+data} & Pointer to the model data \\
+\hline
+{\em rxn\+\_\+int\+\_\+data} & Pointer to the reaction integer data \\
+\hline
+{\em rxn\+\_\+float\+\_\+data} & Pointer to the reaction floating-\/point data \\
+\hline
+{\em rxn\+\_\+env\+\_\+data} & Pointer to the environment-\/dependent parameters \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 109 of file rxn\+\_\+emission.\+c.
+
+\mbox{\Hypertarget{rxn__emission_8c_a1409402244e73476c40d3027defb9b21}\label{rxn__emission_8c_a1409402244e73476c40d3027defb9b21}} 
+\index{rxn\_emission.c@{rxn\_emission.c}!rxn\_emission\_update\_ids@{rxn\_emission\_update\_ids}}
+\index{rxn\_emission\_update\_ids@{rxn\_emission\_update\_ids}!rxn\_emission.c@{rxn\_emission.c}}
+\doxysubsubsection{\texorpdfstring{rxn\_emission\_update\_ids()}{rxn\_emission\_update\_ids()}}
+{\footnotesize\ttfamily void rxn\+\_\+emission\+\_\+update\+\_\+ids (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{int $\ast$}]{deriv\+\_\+ids,  }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}}}]{jac,  }\item[{int $\ast$}]{rxn\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+float\+\_\+data }\end{DoxyParamCaption})}
+
+
+
+Update the time derivative and Jacbobian array indices. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em model\+\_\+data} & Pointer to the model data \\
+\hline
+{\em deriv\+\_\+ids} & Id of each state variable in the derivative array \\
+\hline
+{\em jac} & \mbox{\hyperlink{struct_jacobian}{Jacobian}} \\
+\hline
+{\em rxn\+\_\+int\+\_\+data} & Pointer to the reaction integer data \\
+\hline
+{\em rxn\+\_\+float\+\_\+data} & Pointer to the reaction floating-\/point data \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 52 of file rxn\+\_\+emission.\+c.
+

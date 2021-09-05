@@ -1,0 +1,48 @@
+\hypertarget{sub__model__factory_8_f90}{}\doxysection{sub\+\_\+model\+\_\+factory.\+F90 File Reference}
+\label{sub__model__factory_8_f90}\index{sub\_model\_factory.F90@{sub\_model\_factory.F90}}
+
+
+The \mbox{\hyperlink{namespacecamp__sub__model__factory}{camp\+\_\+sub\+\_\+model\+\_\+factory}} module.  
+
+
+\doxysubsection*{Data Types}
+\begin{DoxyCompactItemize}
+\item 
+type \mbox{\hyperlink{structcamp__sub__model__factory_1_1sub__model__factory__t}{camp\+\_\+sub\+\_\+model\+\_\+factory\+::sub\+\_\+model\+\_\+factory\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em Factory type for sub-\/models. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Modules}
+\begin{DoxyCompactItemize}
+\item 
+module \mbox{\hyperlink{namespacecamp__sub__model__factory}{camp\+\_\+sub\+\_\+model\+\_\+factory}}
+\begin{DoxyCompactList}\small\item\em The \mbox{\hyperlink{structcamp__sub__model__factory_1_1sub__model__factory__t}{sub\+\_\+model\+\_\+factory\+\_\+t}} type and associated subroutines. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Functions/\+Subroutines}
+\begin{DoxyCompactItemize}
+\item 
+class(sub\+\_\+model\+\_\+data\+\_\+t) function, pointer \mbox{\hyperlink{namespacecamp__sub__model__factory_a3a05475e7fc4cba67b74353ed34205e8}{camp\+\_\+sub\+\_\+model\+\_\+factory\+::create}} (this, type\+\_\+name)
+\begin{DoxyCompactList}\small\item\em Create a new sub-\/model by type name. \end{DoxyCompactList}\item 
+class(sub\+\_\+model\+\_\+data\+\_\+t) function, pointer \mbox{\hyperlink{namespacecamp__sub__model__factory_a80dee2f5639b9b365210aab59c767a4e}{camp\+\_\+sub\+\_\+model\+\_\+factory\+::load}} (this, json, j\+\_\+obj)
+\begin{DoxyCompactList}\small\item\em Load a sub-\/model based on its type. \end{DoxyCompactList}\item 
+integer(kind=i\+\_\+kind) function \mbox{\hyperlink{namespacecamp__sub__model__factory_a027f8bdcfcdf1c0e71882ab67c8fb39b}{camp\+\_\+sub\+\_\+model\+\_\+factory\+::get\+\_\+type}} (this, sub\+\_\+model)
+\begin{DoxyCompactList}\small\item\em Get the sub-\/model type as a constant. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__sub__model__factory_ac37e3d11329830a875b417c64faba36e}{camp\+\_\+sub\+\_\+model\+\_\+factory\+::initialize\+\_\+update\+\_\+data}} (this, sub\+\_\+model, update\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Initialize an update data object. \end{DoxyCompactList}\item 
+integer(kind=i\+\_\+kind) function \mbox{\hyperlink{namespacecamp__sub__model__factory_af73bdd51e97a9f4f82a68c658196ec0d}{camp\+\_\+sub\+\_\+model\+\_\+factory\+::pack\+\_\+size}} (this, sub\+\_\+model, comm)
+\begin{DoxyCompactList}\small\item\em Determine the size of a binary required to pack a sub-\/model. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__sub__model__factory_ab25c5f5d7e73e6c52a328a762685366c}{camp\+\_\+sub\+\_\+model\+\_\+factory\+::bin\+\_\+pack}} (this, sub\+\_\+model, buffer, pos, comm)
+\begin{DoxyCompactList}\small\item\em Pack the given value to the buffer, advancing position. \end{DoxyCompactList}\item 
+class(sub\+\_\+model\+\_\+data\+\_\+t) function, pointer \mbox{\hyperlink{namespacecamp__sub__model__factory_af5a07fe8d1151801816196830f46691d}{camp\+\_\+sub\+\_\+model\+\_\+factory\+::bin\+\_\+unpack}} (this, buffer, pos, comm)
+\begin{DoxyCompactList}\small\item\em Unpack the given value to the buffer, advancing position. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+integer(kind=i\+\_\+kind), parameter, public \mbox{\hyperlink{namespacecamp__sub__model__factory_acd9a6a58701b54a28cab0579cacaec20}{camp\+\_\+sub\+\_\+model\+\_\+factory\+::sub\+\_\+model\+\_\+unifac}} = 1
+\begin{DoxyCompactList}\small\item\em Identifiers for sub-\/models -\/ used by binary packing/unpacking functions. \end{DoxyCompactList}\item 
+integer(kind=i\+\_\+kind), parameter, public \mbox{\hyperlink{namespacecamp__sub__model__factory_ac306069c30a21681076df001460db8fd}{camp\+\_\+sub\+\_\+model\+\_\+factory\+::sub\+\_\+model\+\_\+zsr\+\_\+aerosol\+\_\+water}} = 2
+\item 
+integer(kind=i\+\_\+kind), parameter, public \mbox{\hyperlink{namespacecamp__sub__model__factory_af261d5964ec6583b19d2a631486e1cc8}{camp\+\_\+sub\+\_\+model\+\_\+factory\+::sub\+\_\+model\+\_\+pdfite}} = 3
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+The \mbox{\hyperlink{namespacecamp__sub__model__factory}{camp\+\_\+sub\+\_\+model\+\_\+factory}} module. 
+

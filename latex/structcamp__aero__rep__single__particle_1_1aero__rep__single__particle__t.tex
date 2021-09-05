@@ -1,0 +1,254 @@
+\hypertarget{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t}{}\doxysection{camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t Interface Reference}
+\label{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t}\index{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}}
+
+
+Single particle aerosol representation.  
+
+
+
+
+Inheritance diagram for camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=206pt]{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t__inherit__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+procedure \mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_a4d6a581e2d51b62d1b2325c30274e29b}{initialize}}
+\begin{DoxyCompactList}\small\item\em Initialize the aerosol representation data, validating component data and loading any required information from the {\ttfamily \mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__t_acf1f8af8cd9982684614af214f64759e}{aero\+\_\+rep\+\_\+data\+\_\+t\+::property\+\_\+set}}}. This routine should be called once for each aerosol representation at the beginning of a model run after all the input files have been read in. It ensures all data required during the model run are included in the condensed data arrays. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_af34f200cf71343b64fc84c1dd923610c}{maximum\+\_\+computational\+\_\+particles}}
+\begin{DoxyCompactList}\small\item\em Returns the maximum number of computational particles. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_a43991a602b2d73ed14c4eb5bcc95e3bf}{update\+\_\+data\+\_\+initialize\+\_\+number}} =$>$ \mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a0cf95e9e46b97393e5654f5f65e417eb}{update\+\_\+data\+\_\+init\+\_\+number}}
+\begin{DoxyCompactList}\small\item\em Initialize an update data number object. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_ad6a215645407344c285ad0997c192f0c}{size}} =$>$ \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1get__size}{get\+\_\+size}}
+\begin{DoxyCompactList}\small\item\em Get the size of the section of the {\ttfamily \mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t_a5405d5023175234c25e2c2371d924c67}{camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t\+::state\+\_\+var}}} array required for this aerosol representation. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_a120aa073e6e2e84816854dc756932e89}{per\+\_\+particle\+\_\+size}}
+\begin{DoxyCompactList}\small\item\em Get the number of state variables per-\/particle. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_a28ff47760e91e2a328b39c358b1962f1}{unique\+\_\+names}}
+\begin{DoxyCompactList}\small\item\em Get a list of unique names for each element on the {\ttfamily \mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t_a5405d5023175234c25e2c2371d924c67}{camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t\+::state\+\_\+var}}} array for this aerosol representation. The list may be restricted to a particular phase and/or aerosol species by including the phase\+\_\+name and spec\+\_\+name arguments. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_a169c568a406602ff553afaf56a847572}{spec\+\_\+state\+\_\+id}}
+\begin{DoxyCompactList}\small\item\em Get a species id on the {\ttfamily \mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t_a5405d5023175234c25e2c2371d924c67}{camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t\+::state\+\_\+var}}} array by its unique name. These are unique ids for each element on the state array for this \mbox{\hyperlink{camp_aero_rep}{aerosol representation}} and are numbered\+: \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_ab4335c7b057af709d80ecdabc40c65a8}{spec\+\_\+name}}
+\begin{DoxyCompactList}\small\item\em Get the non-\/unique name of a species by its unique name. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_a53c8800812d4feb3437b59329c1fd8e0}{num\+\_\+phase\+\_\+instances}}
+\begin{DoxyCompactList}\small\item\em Get the number of instances of an aerosol phase in this representation. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_ad9c40df28f261abceabc5bcbd4cb62f0}{num\+\_\+jac\+\_\+elem}}
+\begin{DoxyCompactList}\small\item\em Get the number of \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used in calculations of aerosol mass, volume, number, etc. for a particular phase. \end{DoxyCompactList}\item 
+final \mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_abe6107d0395ce71134a68b6acf36fab8}{finalize}}
+\begin{DoxyCompactList}\small\item\em Finalize the aerosol representation. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+type(\mbox{\hyperlink{structcamp__util_1_1string__t}{string\+\_\+t}}), dimension(\+:), allocatable, private \mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_adcd3f700e1d5ca5dff2a0f43cae5042d}{unique\+\_\+names\+\_\+}}
+\begin{DoxyCompactList}\small\item\em Unique names for each instance of every chemical species in the aerosol representaiton. \end{DoxyCompactList}\item 
+integer(kind=i\+\_\+kind) \mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_a64bcfbe34e5947e167cc6e48afb1b075}{state\+\_\+id\+\_\+start}} = -\/99999
+\begin{DoxyCompactList}\small\item\em First state id for the representation (only used during initialization) \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+
+
+\doxysubsection{Detailed Description}
+Single particle aerosol representation. 
+
+Time-\/invariant data related to a single particle aerosol representation. 
+
+Definition at line 71 of file aero\+\_\+rep\+\_\+single\+\_\+particle.\+F90.
+
+
+
+\doxysubsection{Member Function/\+Subroutine Documentation}
+\mbox{\Hypertarget{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_abe6107d0395ce71134a68b6acf36fab8}\label{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_abe6107d0395ce71134a68b6acf36fab8}} 
+\index{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}!finalize@{finalize}}
+\index{finalize@{finalize}!camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}}
+\doxysubsubsection{\texorpdfstring{finalize()}{finalize()}}
+{\footnotesize\ttfamily final camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t\+::finalize\hspace{0.3cm}{\ttfamily [final]}, {\ttfamily [private]}}
+
+
+
+Finalize the aerosol representation. 
+
+
+
+Definition at line 133 of file aero\+\_\+rep\+\_\+single\+\_\+particle.\+F90.
+
+\mbox{\Hypertarget{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_a4d6a581e2d51b62d1b2325c30274e29b}\label{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_a4d6a581e2d51b62d1b2325c30274e29b}} 
+\index{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}!initialize@{initialize}}
+\index{initialize@{initialize}!camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}}
+\doxysubsubsection{\texorpdfstring{initialize()}{initialize()}}
+{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t\+::initialize\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Initialize the aerosol representation data, validating component data and loading any required information from the {\ttfamily \mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__t_acf1f8af8cd9982684614af214f64759e}{aero\+\_\+rep\+\_\+data\+\_\+t\+::property\+\_\+set}}}. This routine should be called once for each aerosol representation at the beginning of a model run after all the input files have been read in. It ensures all data required during the model run are included in the condensed data arrays. 
+
+
+
+Definition at line 84 of file aero\+\_\+rep\+\_\+single\+\_\+particle.\+F90.
+
+\mbox{\Hypertarget{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_af34f200cf71343b64fc84c1dd923610c}\label{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_af34f200cf71343b64fc84c1dd923610c}} 
+\index{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}!maximum\_computational\_particles@{maximum\_computational\_particles}}
+\index{maximum\_computational\_particles@{maximum\_computational\_particles}!camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}}
+\doxysubsubsection{\texorpdfstring{maximum\_computational\_particles()}{maximum\_computational\_particles()}}
+{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t\+::maximum\+\_\+computational\+\_\+particles\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Returns the maximum number of computational particles. 
+
+
+
+Definition at line 86 of file aero\+\_\+rep\+\_\+single\+\_\+particle.\+F90.
+
+\mbox{\Hypertarget{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_ad9c40df28f261abceabc5bcbd4cb62f0}\label{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_ad9c40df28f261abceabc5bcbd4cb62f0}} 
+\index{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}!num\_jac\_elem@{num\_jac\_elem}}
+\index{num\_jac\_elem@{num\_jac\_elem}!camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}}
+\doxysubsubsection{\texorpdfstring{num\_jac\_elem()}{num\_jac\_elem()}}
+{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t\+::num\+\_\+jac\+\_\+elem\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Get the number of \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used in calculations of aerosol mass, volume, number, etc. for a particular phase. 
+
+
+
+Definition at line 131 of file aero\+\_\+rep\+\_\+single\+\_\+particle.\+F90.
+
+\mbox{\Hypertarget{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_a53c8800812d4feb3437b59329c1fd8e0}\label{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_a53c8800812d4feb3437b59329c1fd8e0}} 
+\index{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}!num\_phase\_instances@{num\_phase\_instances}}
+\index{num\_phase\_instances@{num\_phase\_instances}!camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}}
+\doxysubsubsection{\texorpdfstring{num\_phase\_instances()}{num\_phase\_instances()}}
+{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t\+::num\+\_\+phase\+\_\+instances\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Get the number of instances of an aerosol phase in this representation. 
+
+
+
+Definition at line 128 of file aero\+\_\+rep\+\_\+single\+\_\+particle.\+F90.
+
+\mbox{\Hypertarget{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_a120aa073e6e2e84816854dc756932e89}\label{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_a120aa073e6e2e84816854dc756932e89}} 
+\index{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}!per\_particle\_size@{per\_particle\_size}}
+\index{per\_particle\_size@{per\_particle\_size}!camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}}
+\doxysubsubsection{\texorpdfstring{per\_particle\_size()}{per\_particle\_size()}}
+{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t\+::per\+\_\+particle\+\_\+size\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Get the number of state variables per-\/particle. 
+
+Calling functions can assume each particle has the same size on the state array, and that individual particle states are contiguous and arranged sequentially 
+
+Definition at line 102 of file aero\+\_\+rep\+\_\+single\+\_\+particle.\+F90.
+
+\mbox{\Hypertarget{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_ad6a215645407344c285ad0997c192f0c}\label{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_ad6a215645407344c285ad0997c192f0c}} 
+\index{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}!size@{size}}
+\index{size@{size}!camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}}
+\doxysubsubsection{\texorpdfstring{size()}{size()}}
+{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t\+::size\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Get the size of the section of the {\ttfamily \mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t_a5405d5023175234c25e2c2371d924c67}{camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t\+::state\+\_\+var}}} array required for this aerosol representation. 
+
+For a single particle representation, the size will correspond to the the sum of the sizes of a single instance of each aerosol phase provided to {\ttfamily \mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a3c6273b61c7f731d8dc71adf195398c8}{aero\+\_\+rep\+\_\+single\+\_\+particle\+::initialize()}}} 
+
+Definition at line 96 of file aero\+\_\+rep\+\_\+single\+\_\+particle.\+F90.
+
+\mbox{\Hypertarget{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_ab4335c7b057af709d80ecdabc40c65a8}\label{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_ab4335c7b057af709d80ecdabc40c65a8}} 
+\index{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}!spec\_name@{spec\_name}}
+\index{spec\_name@{spec\_name}!camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}}
+\doxysubsubsection{\texorpdfstring{spec\_name()}{spec\_name()}}
+{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t\+::spec\+\_\+name\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Get the non-\/unique name of a species by its unique name. 
+
+
+
+Definition at line 126 of file aero\+\_\+rep\+\_\+single\+\_\+particle.\+F90.
+
+\mbox{\Hypertarget{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_a169c568a406602ff553afaf56a847572}\label{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_a169c568a406602ff553afaf56a847572}} 
+\index{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}!spec\_state\_id@{spec\_state\_id}}
+\index{spec\_state\_id@{spec\_state\_id}!camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}}
+\doxysubsubsection{\texorpdfstring{spec\_state\_id()}{spec\_state\_id()}}
+{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t\+::spec\+\_\+state\+\_\+id\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Get a species id on the {\ttfamily \mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t_a5405d5023175234c25e2c2371d924c67}{camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t\+::state\+\_\+var}}} array by its unique name. These are unique ids for each element on the state array for this \mbox{\hyperlink{camp_aero_rep}{aerosol representation}} and are numbered\+: 
+
+\[x_u \in x_f ... (x_f+n-1)\]
+
+where $x_u$ is the id of the element corresponding to the species with unique name $u$ on the {\ttfamily \mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t_a5405d5023175234c25e2c2371d924c67}{camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t\+::state\+\_\+var}}} array, $x_f$ is the index of the first element for this aerosol representation on the state array and $n$ is the total number of variables on the state array from this aerosol representation. 
+
+Definition at line 124 of file aero\+\_\+rep\+\_\+single\+\_\+particle.\+F90.
+
+\mbox{\Hypertarget{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_a28ff47760e91e2a328b39c358b1962f1}\label{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_a28ff47760e91e2a328b39c358b1962f1}} 
+\index{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}!unique\_names@{unique\_names}}
+\index{unique\_names@{unique\_names}!camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}}
+\doxysubsubsection{\texorpdfstring{unique\_names()}{unique\_names()}}
+{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t\+::unique\+\_\+names\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Get a list of unique names for each element on the {\ttfamily \mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t_a5405d5023175234c25e2c2371d924c67}{camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t\+::state\+\_\+var}}} array for this aerosol representation. The list may be restricted to a particular phase and/or aerosol species by including the phase\+\_\+name and spec\+\_\+name arguments. 
+
+For a single particle representation, the unique names will be the phase name with the species name separated by a \textquotesingle{}.\textquotesingle{} 
+
+Definition at line 110 of file aero\+\_\+rep\+\_\+single\+\_\+particle.\+F90.
+
+\mbox{\Hypertarget{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_a43991a602b2d73ed14c4eb5bcc95e3bf}\label{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_a43991a602b2d73ed14c4eb5bcc95e3bf}} 
+\index{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}!update\_data\_initialize\_number@{update\_data\_initialize\_number}}
+\index{update\_data\_initialize\_number@{update\_data\_initialize\_number}!camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}}
+\doxysubsubsection{\texorpdfstring{update\_data\_initialize\_number()}{update\_data\_initialize\_number()}}
+{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t\+::update\+\_\+data\+\_\+initialize\+\_\+number\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Initialize an update data number object. 
+
+
+
+Definition at line 88 of file aero\+\_\+rep\+\_\+single\+\_\+particle.\+F90.
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_a64bcfbe34e5947e167cc6e48afb1b075}\label{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_a64bcfbe34e5947e167cc6e48afb1b075}} 
+\index{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}!state\_id\_start@{state\_id\_start}}
+\index{state\_id\_start@{state\_id\_start}!camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}}
+\doxysubsubsection{\texorpdfstring{state\_id\_start}{state\_id\_start}}
+{\footnotesize\ttfamily integer(kind=i\+\_\+kind) camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t\+::state\+\_\+id\+\_\+start = -\/99999\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+First state id for the representation (only used during initialization) 
+
+
+
+Definition at line 76 of file aero\+\_\+rep\+\_\+single\+\_\+particle.\+F90.
+
+\mbox{\Hypertarget{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_adcd3f700e1d5ca5dff2a0f43cae5042d}\label{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_adcd3f700e1d5ca5dff2a0f43cae5042d}} 
+\index{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}!unique\_names\_@{unique\_names\_}}
+\index{unique\_names\_@{unique\_names\_}!camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}}
+\doxysubsubsection{\texorpdfstring{unique\_names\_}{unique\_names\_}}
+{\footnotesize\ttfamily type(\mbox{\hyperlink{structcamp__util_1_1string__t}{string\+\_\+t}}), dimension(\+:), allocatable, private camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t\+::unique\+\_\+names\+\_\+\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Unique names for each instance of every chemical species in the aerosol representaiton. 
+
+
+
+Definition at line 74 of file aero\+\_\+rep\+\_\+single\+\_\+particle.\+F90.
+
+
+
+The documentation for this interface was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{aero__rep__single__particle_8_f90}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+F90}}\end{DoxyCompactItemize}

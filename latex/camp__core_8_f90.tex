@@ -1,0 +1,99 @@
+\hypertarget{camp__core_8_f90}{}\doxysection{camp\+\_\+core.\+F90 File Reference}
+\label{camp__core_8_f90}\index{camp\_core.F90@{camp\_core.F90}}
+
+
+The \mbox{\hyperlink{namespacecamp__camp__core}{camp\+\_\+camp\+\_\+core}} module.  
+
+
+\doxysubsection*{Data Types}
+\begin{DoxyCompactItemize}
+\item 
+interface \mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\+\_\+camp\+\_\+core\+::camp\+\_\+core\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em Part-\/\+MC model data. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Modules}
+\begin{DoxyCompactItemize}
+\item 
+module \mbox{\hyperlink{namespacecamp__camp__core}{camp\+\_\+camp\+\_\+core}}
+\begin{DoxyCompactList}\small\item\em The \mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\+\_\+core\+\_\+t}} structure and associated subroutines. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Functions/\+Subroutines}
+\begin{DoxyCompactItemize}
+\item 
+type(camp\+\_\+core\+\_\+t) function, pointer \mbox{\hyperlink{namespacecamp__camp__core_a3d06057e1f01bc813ec31afa13bf8cd9}{camp\+\_\+camp\+\_\+core\+::constructor}} (input\+\_\+file\+\_\+path, n\+\_\+cells)
+\begin{DoxyCompactList}\small\item\em Constructor for \mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\+\_\+core\+\_\+t}}. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__camp__core_af682baa176c26d19ebab96fa2a9f891a}{camp\+\_\+camp\+\_\+core\+::load\+\_\+files}} (this, input\+\_\+file\+\_\+path)
+\begin{DoxyCompactList}\small\item\em Load a set of model data files. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__camp__core_a53b401e62799316a6728ef6dcdfeeb04}{camp\+\_\+camp\+\_\+core\+::load}} (this, input\+\_\+file\+\_\+path)
+\begin{DoxyCompactList}\small\item\em Load model data from input files. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__camp__core_a1f2f5def889682e460e0a7ae9df40bbe}{camp\+\_\+camp\+\_\+core\+::initialize}} (this)
+\begin{DoxyCompactList}\small\item\em Initialize the model data. \end{DoxyCompactList}\item 
+logical function \mbox{\hyperlink{namespacecamp__camp__core_a734afb87f99d0ada713523cec105343c}{camp\+\_\+camp\+\_\+core\+::is\+\_\+initialized}} (this)
+\begin{DoxyCompactList}\small\item\em Inidicate whether the core has been initialized. \end{DoxyCompactList}\item 
+logical function \mbox{\hyperlink{namespacecamp__camp__core_ad3994bb4ec316cf9442916ffd4fc0124}{camp\+\_\+camp\+\_\+core\+::is\+\_\+solver\+\_\+initialized}} (this)
+\begin{DoxyCompactList}\small\item\em Inidicate whether the solver has been initialized. \end{DoxyCompactList}\item 
+logical function \mbox{\hyperlink{namespacecamp__camp__core_a102bbd0955624986e707df20fabff116}{camp\+\_\+camp\+\_\+core\+::get\+\_\+aero\+\_\+phase}} (this, aero\+\_\+phase\+\_\+name, aero\+\_\+phase)
+\begin{DoxyCompactList}\small\item\em Get a pointer to an aerosol phase by name. \end{DoxyCompactList}\item 
+logical function \mbox{\hyperlink{namespacecamp__camp__core_aa90816fea4638e60b120bc5c53d567f1}{camp\+\_\+camp\+\_\+core\+::get\+\_\+aero\+\_\+rep}} (this, aero\+\_\+rep\+\_\+name, aero\+\_\+rep)
+\begin{DoxyCompactList}\small\item\em Get a pointer to an aerosol representation by name. \end{DoxyCompactList}\item 
+logical function \mbox{\hyperlink{namespacecamp__camp__core_ae000de658559072d5e2e0e5407a43934}{camp\+\_\+camp\+\_\+core\+::get\+\_\+chem\+\_\+spec\+\_\+data}} (this, chem\+\_\+spec\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Get a pointer to the chemical species data. \end{DoxyCompactList}\item 
+logical function \mbox{\hyperlink{namespacecamp__camp__core_a99b7c549b716d90250f23213b96fff51}{camp\+\_\+camp\+\_\+core\+::get\+\_\+mechanism}} (this, mech\+\_\+name, mechanism)
+\begin{DoxyCompactList}\small\item\em Get a pointer to a mechanism by name. \end{DoxyCompactList}\item 
+logical function \mbox{\hyperlink{namespacecamp__camp__core_ab9ab73bf08cd45045f0d42d66a6cfd0b}{camp\+\_\+camp\+\_\+core\+::get\+\_\+sub\+\_\+model}} (this, sub\+\_\+model\+\_\+name, sub\+\_\+model)
+\begin{DoxyCompactList}\small\item\em Find an sub-\/model by name. \end{DoxyCompactList}\item 
+real(kind=dp) function \mbox{\hyperlink{namespacecamp__camp__core_a288c0d456396f9ea88099f4a409a7926}{camp\+\_\+camp\+\_\+core\+::get\+\_\+rel\+\_\+tol}} (this)
+\begin{DoxyCompactList}\small\item\em Get the relative tolerance for the solver. \end{DoxyCompactList}\item 
+real(kind=dp) function \mbox{\hyperlink{namespacecamp__camp__core_ab069d391643df8ce43317c255918e69d}{camp\+\_\+camp\+\_\+core\+::get\+\_\+abs\+\_\+tol}} (this, spec\+\_\+id)
+\begin{DoxyCompactList}\small\item\em Get the absolute tolerance for a species on the state array. \end{DoxyCompactList}\item 
+type(\mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t}{camp\+\_\+state\+\_\+t}}) function, pointer \mbox{\hyperlink{namespacecamp__camp__core_add99e2f8537cffd5cc8ae66c805c2c4e}{camp\+\_\+camp\+\_\+core\+::new\+\_\+state\+\_\+multi\+\_\+cell}} (this, env\+\_\+states)
+\begin{DoxyCompactList}\small\item\em Get a model state variable based on the this set of model data. \end{DoxyCompactList}\item 
+type(\mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t}{camp\+\_\+state\+\_\+t}}) function, pointer \mbox{\hyperlink{namespacecamp__camp__core_aca76d6cd5cdfd84ea8f99d35205dc72c}{camp\+\_\+camp\+\_\+core\+::new\+\_\+state\+\_\+one\+\_\+cell}} (this, env\+\_\+state)
+\begin{DoxyCompactList}\small\item\em Get a model state variable based on the this set of model data This is also called for multi-\/cell systems when no env\+\_\+state\+\_\+t array is passed. \end{DoxyCompactList}\item 
+integer(kind=i\+\_\+kind) function \mbox{\hyperlink{namespacecamp__camp__core_a2c02881a75a5df27cae9f8c92345803c}{camp\+\_\+camp\+\_\+core\+::state\+\_\+size}} (this)
+\begin{DoxyCompactList}\small\item\em Get the size of the state array. \end{DoxyCompactList}\item 
+integer(kind=i\+\_\+kind) function \mbox{\hyperlink{namespacecamp__camp__core_afb6c4595458a836ddd6d59d96f89aab1}{camp\+\_\+camp\+\_\+core\+::state\+\_\+size\+\_\+per\+\_\+cell}} (this)
+\begin{DoxyCompactList}\small\item\em Get the size of the state array for each grid cell. \end{DoxyCompactList}\item 
+type(\mbox{\hyperlink{structcamp__util_1_1string__t}{string\+\_\+t}}) function, dimension(\+:), allocatable \mbox{\hyperlink{namespacecamp__camp__core_a1018f13837dc28b5869924a88b5c7507}{camp\+\_\+camp\+\_\+core\+::unique\+\_\+names}} (this)
+\begin{DoxyCompactList}\small\item\em Get an array of unique names for all species on the state array. \end{DoxyCompactList}\item 
+logical function \mbox{\hyperlink{namespacecamp__camp__core_a7093b75afde12e6e9854d1e9942a69ec}{camp\+\_\+camp\+\_\+core\+::spec\+\_\+state\+\_\+id}} (this, \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\+\_\+name}}, state\+\_\+id)
+\begin{DoxyCompactList}\small\item\em Get the id of a species on the state array by its unique name. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__camp__core_afc097bb26f6704f9398d96eea873ba79}{camp\+\_\+camp\+\_\+core\+::solver\+\_\+initialize}} (this)
+\begin{DoxyCompactList}\small\item\em Initialize the solver. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__camp__core_a10bbb0d738844de79c4946f6ddf0f120}{camp\+\_\+camp\+\_\+core\+::free\+\_\+solver}} (this)
+\begin{DoxyCompactList}\small\item\em Free the solver memory. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__camp__core_a048e8aa3d620f11cc977a7633c5ca7e3}{camp\+\_\+camp\+\_\+core\+::initialize\+\_\+aero\+\_\+rep\+\_\+update\+\_\+object}} (this, aero\+\_\+rep, update\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Initialize an update data object for an aerosol representation. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__camp__core_a94f34a7d8629869fcebd9dfcf036cdb8}{camp\+\_\+camp\+\_\+core\+::initialize\+\_\+rxn\+\_\+update\+\_\+object}} (this, rxn, update\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Initialize an update data object for a reaction. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__camp__core_af184d87f847c14093e3378711dd86f63}{camp\+\_\+camp\+\_\+core\+::initialize\+\_\+sub\+\_\+model\+\_\+update\+\_\+object}} (this, sub\+\_\+model, update\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Initialize an update data object for a sub model. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__camp__core_a0ca4cb9df7fab00fc42c9a56c0e88ac1}{camp\+\_\+camp\+\_\+core\+::aero\+\_\+rep\+\_\+update\+\_\+data}} (this, update\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Update data associated with an aerosol representation. This function should be called by an external aerosol microphysics model whenever the aerosol condensed data needs updated based on changes in, e.\+g., particle size or number concentration. The update types are aerosol-\/ representation specific. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__camp__core_aaa115822f400d9c929165328f08d95e1}{camp\+\_\+camp\+\_\+core\+::rxn\+\_\+update\+\_\+data}} (this, update\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Update data associated with a reaction. This function should be called when reaction parameters need updated from the host model. For example, this function can be called to update photolysis rates from a host model\textquotesingle{}s photolysis module. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__camp__core_a4c82020c02c1aa45f066930b0e36035c}{camp\+\_\+camp\+\_\+core\+::sub\+\_\+model\+\_\+update\+\_\+data}} (this, update\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Update data associated with a sub-\/model. This function should be called when sub-\/model parameters need updated from the host model. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__camp__core_a2c930e794dab3e8c87b47cbc35ea28a0}{camp\+\_\+camp\+\_\+core\+::solve}} (this, camp\+\_\+state, time\+\_\+step, rxn\+\_\+phase, solver\+\_\+stats)
+\begin{DoxyCompactList}\small\item\em Integrate the chemical mechanism. \end{DoxyCompactList}\item 
+integer(kind=i\+\_\+kind) function \mbox{\hyperlink{namespacecamp__camp__core_acbb7425e5bdb0e8af60c1d7b1d372fd2}{camp\+\_\+camp\+\_\+core\+::pack\+\_\+size}} (this, comm)
+\begin{DoxyCompactList}\small\item\em Determine the size of a binary required to pack the mechanism. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__camp__core_ae216d8a1432331a0ca2b22fa764e5f8e}{camp\+\_\+camp\+\_\+core\+::bin\+\_\+pack}} (this, buffer, pos, comm)
+\begin{DoxyCompactList}\small\item\em Pack the given value to the buffer, advancing position. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__camp__core_a672a6ddc1f764207c4b6aa80b72ea203}{camp\+\_\+camp\+\_\+core\+::bin\+\_\+unpack}} (this, buffer, pos, comm)
+\begin{DoxyCompactList}\small\item\em Unpack the given value from the buffer, advancing position. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__camp__core_ad7e85de25d800ea05331e9041c1637fd}{camp\+\_\+camp\+\_\+core\+::do\+\_\+print}} (this, file\+\_\+unit, solver\+\_\+data\+\_\+only)
+\begin{DoxyCompactList}\small\item\em Print the core data. \end{DoxyCompactList}\item 
+elemental subroutine \mbox{\hyperlink{namespacecamp__camp__core_a275b838802acbff7222f603453851f7b}{camp\+\_\+camp\+\_\+core\+::finalize}} (this)
+\begin{DoxyCompactList}\small\item\em Finalize the core. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__camp__core_a807e14d531f9191c243a4e766314ca43}{camp\+\_\+camp\+\_\+core\+::add\+\_\+aero\+\_\+phase}} (this, phase\+\_\+name)
+\begin{DoxyCompactList}\small\item\em Add a aerosol phase to the model data. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__camp__core_a061e1d70300d903948d3f5ace5b38a44}{camp\+\_\+camp\+\_\+core\+::add\+\_\+aero\+\_\+rep}} (this, rep\+\_\+name)
+\begin{DoxyCompactList}\small\item\em Add a aerosol representation to the model data. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__camp__core_a714172895a48f79549016aa3132bd418}{camp\+\_\+camp\+\_\+core\+::add\+\_\+mechanism}} (this, mech\+\_\+name)
+\begin{DoxyCompactList}\small\item\em Add a chemical mechanism to the model data. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__camp__core_a0c0833d4af6d0d1f37b3bf1130a9d0fb}{camp\+\_\+camp\+\_\+core\+::add\+\_\+sub\+\_\+model}} (this, sub\+\_\+model\+\_\+name)
+\begin{DoxyCompactList}\small\item\em Add a sub-\/model to the model data. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+The \mbox{\hyperlink{namespacecamp__camp__core}{camp\+\_\+camp\+\_\+core}} module. 
+

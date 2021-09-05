@@ -1,0 +1,426 @@
+\hypertarget{rxn__first__order__loss_8c}{}\doxysection{rxn\+\_\+first\+\_\+order\+\_\+loss.\+c File Reference}
+\label{rxn__first__order__loss_8c}\index{rxn\_first\_order\_loss.c@{rxn\_first\_order\_loss.c}}
+
+
+First-\/\+Order loss reaction solver functions.  
+
+
+Include dependency graph for rxn\+\_\+first\+\_\+order\+\_\+loss.\+c\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{rxn__first__order__loss_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{rxn__first__order__loss_8c_aa90d2b6c48aceb4d7ac3d93d5249bb60}{TEMPERATURE\+\_\+\+K\+\_\+}}~env\+\_\+data\mbox{[}0\mbox{]}
+\item 
+\#define \mbox{\hyperlink{rxn__first__order__loss_8c_a32cc078fd8ca9ad0684c48ae0aad7135}{PRESSURE\+\_\+\+PA\+\_\+}}~env\+\_\+data\mbox{[}1\mbox{]}
+\item 
+\#define \mbox{\hyperlink{rxn__first__order__loss_8c_a90cc89c1a8af0668561f9fc8cdbb9dde}{RXN\+\_\+\+ID\+\_\+}}~(int\+\_\+data\mbox{[}0\mbox{]})
+\item 
+\#define \mbox{\hyperlink{rxn__first__order__loss_8c_a341ae951df29b4d3f0b92b7eae194dc9}{REACT\+\_\+}}~(int\+\_\+data\mbox{[}1\mbox{]} -\/ 1)
+\item 
+\#define \mbox{\hyperlink{rxn__first__order__loss_8c_ad4462a980bbea67f2a75e80457ef56e7}{DERIV\+\_\+\+ID\+\_\+}}~int\+\_\+data\mbox{[}2\mbox{]}
+\item 
+\#define \mbox{\hyperlink{rxn__first__order__loss_8c_a472acd7d6b592c0de65fc1915cf5b2c7}{JAC\+\_\+\+ID\+\_\+}}~int\+\_\+data\mbox{[}3\mbox{]}
+\item 
+\#define \mbox{\hyperlink{rxn__first__order__loss_8c_a1757f332a0485799c2ee77edff00c38a}{SCALING\+\_\+}}~float\+\_\+data\mbox{[}0\mbox{]}
+\item 
+\#define \mbox{\hyperlink{rxn__first__order__loss_8c_a6d62af2f44a112ef5b324cf406a830c2}{RATE\+\_\+\+CONSTANT\+\_\+}}~(rxn\+\_\+env\+\_\+data\mbox{[}0\mbox{]})
+\item 
+\#define \mbox{\hyperlink{rxn__first__order__loss_8c_a8a6abdf49f8b3b17aea4f4595bcbc0cc}{BASE\+\_\+\+RATE\+\_\+}}~(rxn\+\_\+env\+\_\+data\mbox{[}1\mbox{]})
+\item 
+\#define \mbox{\hyperlink{rxn__first__order__loss_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}}~4
+\item 
+\#define \mbox{\hyperlink{rxn__first__order__loss_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}{NUM\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+}}~1
+\item 
+\#define \mbox{\hyperlink{rxn__first__order__loss_8c_a1f68a3544ae39a7815cbb5c09dfdeff0}{NUM\+\_\+\+ENV\+\_\+\+PARAM\+\_\+}}~2
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{rxn__first__order__loss_8c_a73e9594a2ad684000b2cbef37ab6f195}{rxn\+\_\+first\+\_\+order\+\_\+loss\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem}} (int $\ast$rxn\+\_\+int\+\_\+data, double $\ast$rxn\+\_\+float\+\_\+data, \mbox{\hyperlink{struct_jacobian}{Jacobian}} $\ast$jac)
+\begin{DoxyCompactList}\small\item\em Flag \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used by this reaction. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{rxn__first__order__loss_8c_ae3eced0147f7ef45e55762930c86bf56}{rxn\+\_\+first\+\_\+order\+\_\+loss\+\_\+update\+\_\+ids}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, int $\ast$deriv\+\_\+ids, \mbox{\hyperlink{struct_jacobian}{Jacobian}} jac, int $\ast$rxn\+\_\+int\+\_\+data, double $\ast$rxn\+\_\+float\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Update the time derivative and Jacbobian array indices. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1}{bool}} \mbox{\hyperlink{rxn__first__order__loss_8c_aeb0a48270ecb60c44746b4c5fce85017}{rxn\+\_\+first\+\_\+order\+\_\+loss\+\_\+update\+\_\+data}} (void $\ast$update\+\_\+data, int $\ast$rxn\+\_\+int\+\_\+data, double $\ast$rxn\+\_\+float\+\_\+data, double $\ast$rxn\+\_\+env\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Update reaction data. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{rxn__first__order__loss_8c_ac31fd29a881698e3bb9f30b4b91ffddb}{rxn\+\_\+first\+\_\+order\+\_\+loss\+\_\+update\+\_\+env\+\_\+state}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, int $\ast$rxn\+\_\+int\+\_\+data, double $\ast$rxn\+\_\+float\+\_\+data, double $\ast$rxn\+\_\+env\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Update reaction data for new environmental conditions. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{rxn__first__order__loss_8c_ac1d2c5d3bf68d6adcdc4183ba340175d}{rxn\+\_\+first\+\_\+order\+\_\+loss\+\_\+calc\+\_\+deriv\+\_\+contrib}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, \mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}} time\+\_\+deriv, int $\ast$rxn\+\_\+int\+\_\+data, double $\ast$rxn\+\_\+float\+\_\+data, double $\ast$rxn\+\_\+env\+\_\+data, realtype time\+\_\+step)
+\begin{DoxyCompactList}\small\item\em Calculate contributions to the time derivative $f(t,y)$ from this reaction. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{rxn__first__order__loss_8c_a07413cad7e1d96989ea035941a53e915}{rxn\+\_\+first\+\_\+order\+\_\+loss\+\_\+calc\+\_\+jac\+\_\+contrib}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, \mbox{\hyperlink{struct_jacobian}{Jacobian}} jac, int $\ast$rxn\+\_\+int\+\_\+data, double $\ast$rxn\+\_\+float\+\_\+data, double $\ast$rxn\+\_\+env\+\_\+data, realtype time\+\_\+step)
+\begin{DoxyCompactList}\small\item\em Calculate contributions to the \mbox{\hyperlink{struct_jacobian}{Jacobian}} from this reaction. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{rxn__first__order__loss_8c_a5ee9277b28f90b141ec018e086fc5fa3}{rxn\+\_\+first\+\_\+order\+\_\+loss\+\_\+print}} (int $\ast$rxn\+\_\+int\+\_\+data, double $\ast$rxn\+\_\+float\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Print the reaction parameters. \end{DoxyCompactList}\item 
+void $\ast$ \mbox{\hyperlink{rxn__first__order__loss_8c_a0988cc71603893ac611ed3d3ca716c98}{rxn\+\_\+first\+\_\+order\+\_\+loss\+\_\+create\+\_\+rate\+\_\+update\+\_\+data}} ()
+\begin{DoxyCompactList}\small\item\em Create update data for new first-\/order loss rates. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{rxn__first__order__loss_8c_a79a93a61f1f6b1d428bd2e6babc58216}{rxn\+\_\+first\+\_\+order\+\_\+loss\+\_\+set\+\_\+rate\+\_\+update\+\_\+data}} (void $\ast$update\+\_\+data, int rxn\+\_\+id, double base\+\_\+rate)
+\begin{DoxyCompactList}\small\item\em Set rate update data. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+First-\/\+Order loss reaction solver functions. 
+
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{rxn__first__order__loss_8c_a8a6abdf49f8b3b17aea4f4595bcbc0cc}\label{rxn__first__order__loss_8c_a8a6abdf49f8b3b17aea4f4595bcbc0cc}} 
+\index{rxn\_first\_order\_loss.c@{rxn\_first\_order\_loss.c}!BASE\_RATE\_@{BASE\_RATE\_}}
+\index{BASE\_RATE\_@{BASE\_RATE\_}!rxn\_first\_order\_loss.c@{rxn\_first\_order\_loss.c}}
+\doxysubsubsection{\texorpdfstring{BASE\_RATE\_}{BASE\_RATE\_}}
+{\footnotesize\ttfamily \#define BASE\+\_\+\+RATE\+\_\+~(rxn\+\_\+env\+\_\+data\mbox{[}1\mbox{]})}
+
+
+
+Definition at line 26 of file rxn\+\_\+first\+\_\+order\+\_\+loss.\+c.
+
+\mbox{\Hypertarget{rxn__first__order__loss_8c_ad4462a980bbea67f2a75e80457ef56e7}\label{rxn__first__order__loss_8c_ad4462a980bbea67f2a75e80457ef56e7}} 
+\index{rxn\_first\_order\_loss.c@{rxn\_first\_order\_loss.c}!DERIV\_ID\_@{DERIV\_ID\_}}
+\index{DERIV\_ID\_@{DERIV\_ID\_}!rxn\_first\_order\_loss.c@{rxn\_first\_order\_loss.c}}
+\doxysubsubsection{\texorpdfstring{DERIV\_ID\_}{DERIV\_ID\_}}
+{\footnotesize\ttfamily \#define DERIV\+\_\+\+ID\+\_\+~int\+\_\+data\mbox{[}2\mbox{]}}
+
+
+
+Definition at line 22 of file rxn\+\_\+first\+\_\+order\+\_\+loss.\+c.
+
+\mbox{\Hypertarget{rxn__first__order__loss_8c_a472acd7d6b592c0de65fc1915cf5b2c7}\label{rxn__first__order__loss_8c_a472acd7d6b592c0de65fc1915cf5b2c7}} 
+\index{rxn\_first\_order\_loss.c@{rxn\_first\_order\_loss.c}!JAC\_ID\_@{JAC\_ID\_}}
+\index{JAC\_ID\_@{JAC\_ID\_}!rxn\_first\_order\_loss.c@{rxn\_first\_order\_loss.c}}
+\doxysubsubsection{\texorpdfstring{JAC\_ID\_}{JAC\_ID\_}}
+{\footnotesize\ttfamily \#define JAC\+\_\+\+ID\+\_\+~int\+\_\+data\mbox{[}3\mbox{]}}
+
+
+
+Definition at line 23 of file rxn\+\_\+first\+\_\+order\+\_\+loss.\+c.
+
+\mbox{\Hypertarget{rxn__first__order__loss_8c_a1f68a3544ae39a7815cbb5c09dfdeff0}\label{rxn__first__order__loss_8c_a1f68a3544ae39a7815cbb5c09dfdeff0}} 
+\index{rxn\_first\_order\_loss.c@{rxn\_first\_order\_loss.c}!NUM\_ENV\_PARAM\_@{NUM\_ENV\_PARAM\_}}
+\index{NUM\_ENV\_PARAM\_@{NUM\_ENV\_PARAM\_}!rxn\_first\_order\_loss.c@{rxn\_first\_order\_loss.c}}
+\doxysubsubsection{\texorpdfstring{NUM\_ENV\_PARAM\_}{NUM\_ENV\_PARAM\_}}
+{\footnotesize\ttfamily \#define NUM\+\_\+\+ENV\+\_\+\+PARAM\+\_\+~2}
+
+
+
+Definition at line 29 of file rxn\+\_\+first\+\_\+order\+\_\+loss.\+c.
+
+\mbox{\Hypertarget{rxn__first__order__loss_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}\label{rxn__first__order__loss_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}} 
+\index{rxn\_first\_order\_loss.c@{rxn\_first\_order\_loss.c}!NUM\_FLOAT\_PROP\_@{NUM\_FLOAT\_PROP\_}}
+\index{NUM\_FLOAT\_PROP\_@{NUM\_FLOAT\_PROP\_}!rxn\_first\_order\_loss.c@{rxn\_first\_order\_loss.c}}
+\doxysubsubsection{\texorpdfstring{NUM\_FLOAT\_PROP\_}{NUM\_FLOAT\_PROP\_}}
+{\footnotesize\ttfamily \#define NUM\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+~1}
+
+
+
+Definition at line 28 of file rxn\+\_\+first\+\_\+order\+\_\+loss.\+c.
+
+\mbox{\Hypertarget{rxn__first__order__loss_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}\label{rxn__first__order__loss_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}} 
+\index{rxn\_first\_order\_loss.c@{rxn\_first\_order\_loss.c}!NUM\_INT\_PROP\_@{NUM\_INT\_PROP\_}}
+\index{NUM\_INT\_PROP\_@{NUM\_INT\_PROP\_}!rxn\_first\_order\_loss.c@{rxn\_first\_order\_loss.c}}
+\doxysubsubsection{\texorpdfstring{NUM\_INT\_PROP\_}{NUM\_INT\_PROP\_}}
+{\footnotesize\ttfamily \#define NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+~4}
+
+
+
+Definition at line 27 of file rxn\+\_\+first\+\_\+order\+\_\+loss.\+c.
+
+\mbox{\Hypertarget{rxn__first__order__loss_8c_a32cc078fd8ca9ad0684c48ae0aad7135}\label{rxn__first__order__loss_8c_a32cc078fd8ca9ad0684c48ae0aad7135}} 
+\index{rxn\_first\_order\_loss.c@{rxn\_first\_order\_loss.c}!PRESSURE\_PA\_@{PRESSURE\_PA\_}}
+\index{PRESSURE\_PA\_@{PRESSURE\_PA\_}!rxn\_first\_order\_loss.c@{rxn\_first\_order\_loss.c}}
+\doxysubsubsection{\texorpdfstring{PRESSURE\_PA\_}{PRESSURE\_PA\_}}
+{\footnotesize\ttfamily \#define PRESSURE\+\_\+\+PA\+\_\+~env\+\_\+data\mbox{[}1\mbox{]}}
+
+
+
+Definition at line 18 of file rxn\+\_\+first\+\_\+order\+\_\+loss.\+c.
+
+\mbox{\Hypertarget{rxn__first__order__loss_8c_a6d62af2f44a112ef5b324cf406a830c2}\label{rxn__first__order__loss_8c_a6d62af2f44a112ef5b324cf406a830c2}} 
+\index{rxn\_first\_order\_loss.c@{rxn\_first\_order\_loss.c}!RATE\_CONSTANT\_@{RATE\_CONSTANT\_}}
+\index{RATE\_CONSTANT\_@{RATE\_CONSTANT\_}!rxn\_first\_order\_loss.c@{rxn\_first\_order\_loss.c}}
+\doxysubsubsection{\texorpdfstring{RATE\_CONSTANT\_}{RATE\_CONSTANT\_}}
+{\footnotesize\ttfamily \#define RATE\+\_\+\+CONSTANT\+\_\+~(rxn\+\_\+env\+\_\+data\mbox{[}0\mbox{]})}
+
+
+
+Definition at line 25 of file rxn\+\_\+first\+\_\+order\+\_\+loss.\+c.
+
+\mbox{\Hypertarget{rxn__first__order__loss_8c_a341ae951df29b4d3f0b92b7eae194dc9}\label{rxn__first__order__loss_8c_a341ae951df29b4d3f0b92b7eae194dc9}} 
+\index{rxn\_first\_order\_loss.c@{rxn\_first\_order\_loss.c}!REACT\_@{REACT\_}}
+\index{REACT\_@{REACT\_}!rxn\_first\_order\_loss.c@{rxn\_first\_order\_loss.c}}
+\doxysubsubsection{\texorpdfstring{REACT\_}{REACT\_}}
+{\footnotesize\ttfamily \#define REACT\+\_\+~(int\+\_\+data\mbox{[}1\mbox{]} -\/ 1)}
+
+
+
+Definition at line 21 of file rxn\+\_\+first\+\_\+order\+\_\+loss.\+c.
+
+\mbox{\Hypertarget{rxn__first__order__loss_8c_a90cc89c1a8af0668561f9fc8cdbb9dde}\label{rxn__first__order__loss_8c_a90cc89c1a8af0668561f9fc8cdbb9dde}} 
+\index{rxn\_first\_order\_loss.c@{rxn\_first\_order\_loss.c}!RXN\_ID\_@{RXN\_ID\_}}
+\index{RXN\_ID\_@{RXN\_ID\_}!rxn\_first\_order\_loss.c@{rxn\_first\_order\_loss.c}}
+\doxysubsubsection{\texorpdfstring{RXN\_ID\_}{RXN\_ID\_}}
+{\footnotesize\ttfamily \#define RXN\+\_\+\+ID\+\_\+~(int\+\_\+data\mbox{[}0\mbox{]})}
+
+
+
+Definition at line 20 of file rxn\+\_\+first\+\_\+order\+\_\+loss.\+c.
+
+\mbox{\Hypertarget{rxn__first__order__loss_8c_a1757f332a0485799c2ee77edff00c38a}\label{rxn__first__order__loss_8c_a1757f332a0485799c2ee77edff00c38a}} 
+\index{rxn\_first\_order\_loss.c@{rxn\_first\_order\_loss.c}!SCALING\_@{SCALING\_}}
+\index{SCALING\_@{SCALING\_}!rxn\_first\_order\_loss.c@{rxn\_first\_order\_loss.c}}
+\doxysubsubsection{\texorpdfstring{SCALING\_}{SCALING\_}}
+{\footnotesize\ttfamily \#define SCALING\+\_\+~float\+\_\+data\mbox{[}0\mbox{]}}
+
+
+
+Definition at line 24 of file rxn\+\_\+first\+\_\+order\+\_\+loss.\+c.
+
+\mbox{\Hypertarget{rxn__first__order__loss_8c_aa90d2b6c48aceb4d7ac3d93d5249bb60}\label{rxn__first__order__loss_8c_aa90d2b6c48aceb4d7ac3d93d5249bb60}} 
+\index{rxn\_first\_order\_loss.c@{rxn\_first\_order\_loss.c}!TEMPERATURE\_K\_@{TEMPERATURE\_K\_}}
+\index{TEMPERATURE\_K\_@{TEMPERATURE\_K\_}!rxn\_first\_order\_loss.c@{rxn\_first\_order\_loss.c}}
+\doxysubsubsection{\texorpdfstring{TEMPERATURE\_K\_}{TEMPERATURE\_K\_}}
+{\footnotesize\ttfamily \#define TEMPERATURE\+\_\+\+K\+\_\+~env\+\_\+data\mbox{[}0\mbox{]}}
+
+
+
+Definition at line 17 of file rxn\+\_\+first\+\_\+order\+\_\+loss.\+c.
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{rxn__first__order__loss_8c_ac1d2c5d3bf68d6adcdc4183ba340175d}\label{rxn__first__order__loss_8c_ac1d2c5d3bf68d6adcdc4183ba340175d}} 
+\index{rxn\_first\_order\_loss.c@{rxn\_first\_order\_loss.c}!rxn\_first\_order\_loss\_calc\_deriv\_contrib@{rxn\_first\_order\_loss\_calc\_deriv\_contrib}}
+\index{rxn\_first\_order\_loss\_calc\_deriv\_contrib@{rxn\_first\_order\_loss\_calc\_deriv\_contrib}!rxn\_first\_order\_loss.c@{rxn\_first\_order\_loss.c}}
+\doxysubsubsection{\texorpdfstring{rxn\_first\_order\_loss\_calc\_deriv\_contrib()}{rxn\_first\_order\_loss\_calc\_deriv\_contrib()}}
+{\footnotesize\ttfamily void rxn\+\_\+first\+\_\+order\+\_\+loss\+\_\+calc\+\_\+deriv\+\_\+contrib (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{\mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}}}]{time\+\_\+deriv,  }\item[{int $\ast$}]{rxn\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+env\+\_\+data,  }\item[{realtype}]{time\+\_\+step }\end{DoxyParamCaption})}
+
+
+
+Calculate contributions to the time derivative $f(t,y)$ from this reaction. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em model\+\_\+data} & Pointer to the model data, including the state array \\
+\hline
+{\em time\+\_\+deriv} & \mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}} object \\
+\hline
+{\em rxn\+\_\+int\+\_\+data} & Pointer to the reaction integer data \\
+\hline
+{\em rxn\+\_\+float\+\_\+data} & Pointer to the reaction floating-\/point data \\
+\hline
+{\em rxn\+\_\+env\+\_\+data} & Pointer to the environment-\/dependent parameters \\
+\hline
+{\em time\+\_\+step} & Current time step being computed (s) \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 143 of file rxn\+\_\+first\+\_\+order\+\_\+loss.\+c.
+
+\mbox{\Hypertarget{rxn__first__order__loss_8c_a07413cad7e1d96989ea035941a53e915}\label{rxn__first__order__loss_8c_a07413cad7e1d96989ea035941a53e915}} 
+\index{rxn\_first\_order\_loss.c@{rxn\_first\_order\_loss.c}!rxn\_first\_order\_loss\_calc\_jac\_contrib@{rxn\_first\_order\_loss\_calc\_jac\_contrib}}
+\index{rxn\_first\_order\_loss\_calc\_jac\_contrib@{rxn\_first\_order\_loss\_calc\_jac\_contrib}!rxn\_first\_order\_loss.c@{rxn\_first\_order\_loss.c}}
+\doxysubsubsection{\texorpdfstring{rxn\_first\_order\_loss\_calc\_jac\_contrib()}{rxn\_first\_order\_loss\_calc\_jac\_contrib()}}
+{\footnotesize\ttfamily void rxn\+\_\+first\+\_\+order\+\_\+loss\+\_\+calc\+\_\+jac\+\_\+contrib (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}}}]{jac,  }\item[{int $\ast$}]{rxn\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+env\+\_\+data,  }\item[{realtype}]{time\+\_\+step }\end{DoxyParamCaption})}
+
+
+
+Calculate contributions to the \mbox{\hyperlink{struct_jacobian}{Jacobian}} from this reaction. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em model\+\_\+data} & Pointer to the model data \\
+\hline
+{\em jac} & Reaction \mbox{\hyperlink{struct_jacobian}{Jacobian}} \\
+\hline
+{\em rxn\+\_\+int\+\_\+data} & Pointer to the reaction integer data \\
+\hline
+{\em rxn\+\_\+float\+\_\+data} & Pointer to the reaction floating-\/point data \\
+\hline
+{\em rxn\+\_\+env\+\_\+data} & Pointer to the environment-\/dependent parameters \\
+\hline
+{\em time\+\_\+step} & Current time step being calculated (s) \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 171 of file rxn\+\_\+first\+\_\+order\+\_\+loss.\+c.
+
+\mbox{\Hypertarget{rxn__first__order__loss_8c_a0988cc71603893ac611ed3d3ca716c98}\label{rxn__first__order__loss_8c_a0988cc71603893ac611ed3d3ca716c98}} 
+\index{rxn\_first\_order\_loss.c@{rxn\_first\_order\_loss.c}!rxn\_first\_order\_loss\_create\_rate\_update\_data@{rxn\_first\_order\_loss\_create\_rate\_update\_data}}
+\index{rxn\_first\_order\_loss\_create\_rate\_update\_data@{rxn\_first\_order\_loss\_create\_rate\_update\_data}!rxn\_first\_order\_loss.c@{rxn\_first\_order\_loss.c}}
+\doxysubsubsection{\texorpdfstring{rxn\_first\_order\_loss\_create\_rate\_update\_data()}{rxn\_first\_order\_loss\_create\_rate\_update\_data()}}
+{\footnotesize\ttfamily void$\ast$ rxn\+\_\+first\+\_\+order\+\_\+loss\+\_\+create\+\_\+rate\+\_\+update\+\_\+data (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Create update data for new first-\/order loss rates. 
+
+\begin{DoxyReturn}{Returns}
+Pointer to a new rate update data object 
+\end{DoxyReturn}
+
+
+Definition at line 208 of file rxn\+\_\+first\+\_\+order\+\_\+loss.\+c.
+
+\mbox{\Hypertarget{rxn__first__order__loss_8c_a73e9594a2ad684000b2cbef37ab6f195}\label{rxn__first__order__loss_8c_a73e9594a2ad684000b2cbef37ab6f195}} 
+\index{rxn\_first\_order\_loss.c@{rxn\_first\_order\_loss.c}!rxn\_first\_order\_loss\_get\_used\_jac\_elem@{rxn\_first\_order\_loss\_get\_used\_jac\_elem}}
+\index{rxn\_first\_order\_loss\_get\_used\_jac\_elem@{rxn\_first\_order\_loss\_get\_used\_jac\_elem}!rxn\_first\_order\_loss.c@{rxn\_first\_order\_loss.c}}
+\doxysubsubsection{\texorpdfstring{rxn\_first\_order\_loss\_get\_used\_jac\_elem()}{rxn\_first\_order\_loss\_get\_used\_jac\_elem()}}
+{\footnotesize\ttfamily void rxn\+\_\+first\+\_\+order\+\_\+loss\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem (\begin{DoxyParamCaption}\item[{int $\ast$}]{rxn\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+float\+\_\+data,  }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}} $\ast$}]{jac }\end{DoxyParamCaption})}
+
+
+
+Flag \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used by this reaction. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em rxn\+\_\+int\+\_\+data} & Pointer to the reaction integer data \\
+\hline
+{\em rxn\+\_\+float\+\_\+data} & Pointer to the reaction floating-\/point data \\
+\hline
+{\em jac} & \mbox{\hyperlink{struct_jacobian}{Jacobian}} \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 37 of file rxn\+\_\+first\+\_\+order\+\_\+loss.\+c.
+
+\mbox{\Hypertarget{rxn__first__order__loss_8c_a5ee9277b28f90b141ec018e086fc5fa3}\label{rxn__first__order__loss_8c_a5ee9277b28f90b141ec018e086fc5fa3}} 
+\index{rxn\_first\_order\_loss.c@{rxn\_first\_order\_loss.c}!rxn\_first\_order\_loss\_print@{rxn\_first\_order\_loss\_print}}
+\index{rxn\_first\_order\_loss\_print@{rxn\_first\_order\_loss\_print}!rxn\_first\_order\_loss.c@{rxn\_first\_order\_loss.c}}
+\doxysubsubsection{\texorpdfstring{rxn\_first\_order\_loss\_print()}{rxn\_first\_order\_loss\_print()}}
+{\footnotesize\ttfamily void rxn\+\_\+first\+\_\+order\+\_\+loss\+\_\+print (\begin{DoxyParamCaption}\item[{int $\ast$}]{rxn\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+float\+\_\+data }\end{DoxyParamCaption})}
+
+
+
+Print the reaction parameters. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em rxn\+\_\+int\+\_\+data} & Pointer to the reaction integer data \\
+\hline
+{\em rxn\+\_\+float\+\_\+data} & Pointer to the reaction floating-\/point data \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 195 of file rxn\+\_\+first\+\_\+order\+\_\+loss.\+c.
+
+\mbox{\Hypertarget{rxn__first__order__loss_8c_a79a93a61f1f6b1d428bd2e6babc58216}\label{rxn__first__order__loss_8c_a79a93a61f1f6b1d428bd2e6babc58216}} 
+\index{rxn\_first\_order\_loss.c@{rxn\_first\_order\_loss.c}!rxn\_first\_order\_loss\_set\_rate\_update\_data@{rxn\_first\_order\_loss\_set\_rate\_update\_data}}
+\index{rxn\_first\_order\_loss\_set\_rate\_update\_data@{rxn\_first\_order\_loss\_set\_rate\_update\_data}!rxn\_first\_order\_loss.c@{rxn\_first\_order\_loss.c}}
+\doxysubsubsection{\texorpdfstring{rxn\_first\_order\_loss\_set\_rate\_update\_data()}{rxn\_first\_order\_loss\_set\_rate\_update\_data()}}
+{\footnotesize\ttfamily void rxn\+\_\+first\+\_\+order\+\_\+loss\+\_\+set\+\_\+rate\+\_\+update\+\_\+data (\begin{DoxyParamCaption}\item[{void $\ast$}]{update\+\_\+data,  }\item[{int}]{rxn\+\_\+id,  }\item[{double}]{base\+\_\+rate }\end{DoxyParamCaption})}
+
+
+
+Set rate update data. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em update\+\_\+data} & Pointer to an allocated rate update data object \\
+\hline
+{\em rxn\+\_\+id} & Id of first-\/order loss reactions to update \\
+\hline
+{\em base\+\_\+rate} & New pre-\/scaling first-\/order loss rate \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 223 of file rxn\+\_\+first\+\_\+order\+\_\+loss.\+c.
+
+\mbox{\Hypertarget{rxn__first__order__loss_8c_aeb0a48270ecb60c44746b4c5fce85017}\label{rxn__first__order__loss_8c_aeb0a48270ecb60c44746b4c5fce85017}} 
+\index{rxn\_first\_order\_loss.c@{rxn\_first\_order\_loss.c}!rxn\_first\_order\_loss\_update\_data@{rxn\_first\_order\_loss\_update\_data}}
+\index{rxn\_first\_order\_loss\_update\_data@{rxn\_first\_order\_loss\_update\_data}!rxn\_first\_order\_loss.c@{rxn\_first\_order\_loss.c}}
+\doxysubsubsection{\texorpdfstring{rxn\_first\_order\_loss\_update\_data()}{rxn\_first\_order\_loss\_update\_data()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1}{bool}} rxn\+\_\+first\+\_\+order\+\_\+loss\+\_\+update\+\_\+data (\begin{DoxyParamCaption}\item[{void $\ast$}]{update\+\_\+data,  }\item[{int $\ast$}]{rxn\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+env\+\_\+data }\end{DoxyParamCaption})}
+
+
+
+Update reaction data. 
+
+First-\/\+Order loss reactions can have their base (pre-\/scaling) rate constants updated from the host model based on the calculations of an external module. The structure of the update data is\+:
+
+
+\begin{DoxyItemize}
+\item {\bfseries{int}} rxn\+\_\+id (Id of one or more first-\/order loss reactions set by the host model using the {\ttfamily camp\+\_\+rxn\+\_\+first\+\_\+order\+\_\+loss\+::rxn\+\_\+first\+\_\+order\+\_\+loss\+\_\+t\+::set\+\_\+rxn\+\_\+id} function prior to initializing the solver.)
+\item {\bfseries{double}} rate\+\_\+const (New pre-\/scaling rate constant.)
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}{Parameters}
+{\em update\+\_\+data} & Pointer to the updated reaction data \\
+\hline
+{\em rxn\+\_\+int\+\_\+data} & Pointer to the reaction integer data \\
+\hline
+{\em rxn\+\_\+float\+\_\+data} & Pointer to the reaction floating-\/point data \\
+\hline
+{\em rxn\+\_\+env\+\_\+data} & Pointer to the environment-\/dependent data \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Flag indicating whether this is the reaction to update 
+\end{DoxyReturn}
+
+
+Definition at line 89 of file rxn\+\_\+first\+\_\+order\+\_\+loss.\+c.
+
+\mbox{\Hypertarget{rxn__first__order__loss_8c_ac31fd29a881698e3bb9f30b4b91ffddb}\label{rxn__first__order__loss_8c_ac31fd29a881698e3bb9f30b4b91ffddb}} 
+\index{rxn\_first\_order\_loss.c@{rxn\_first\_order\_loss.c}!rxn\_first\_order\_loss\_update\_env\_state@{rxn\_first\_order\_loss\_update\_env\_state}}
+\index{rxn\_first\_order\_loss\_update\_env\_state@{rxn\_first\_order\_loss\_update\_env\_state}!rxn\_first\_order\_loss.c@{rxn\_first\_order\_loss.c}}
+\doxysubsubsection{\texorpdfstring{rxn\_first\_order\_loss\_update\_env\_state()}{rxn\_first\_order\_loss\_update\_env\_state()}}
+{\footnotesize\ttfamily void rxn\+\_\+first\+\_\+order\+\_\+loss\+\_\+update\+\_\+env\+\_\+state (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{int $\ast$}]{rxn\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+env\+\_\+data }\end{DoxyParamCaption})}
+
+
+
+Update reaction data for new environmental conditions. 
+
+For first-\/order loss reactions this only involves recalculating the rate constant.
+
+
+\begin{DoxyParams}{Parameters}
+{\em model\+\_\+data} & Pointer to the model data \\
+\hline
+{\em rxn\+\_\+int\+\_\+data} & Pointer to the reaction integer data \\
+\hline
+{\em rxn\+\_\+float\+\_\+data} & Pointer to the reaction floating-\/point data \\
+\hline
+{\em rxn\+\_\+env\+\_\+data} & Pointer to the environment-\/dependent parameters \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 118 of file rxn\+\_\+first\+\_\+order\+\_\+loss.\+c.
+
+\mbox{\Hypertarget{rxn__first__order__loss_8c_ae3eced0147f7ef45e55762930c86bf56}\label{rxn__first__order__loss_8c_ae3eced0147f7ef45e55762930c86bf56}} 
+\index{rxn\_first\_order\_loss.c@{rxn\_first\_order\_loss.c}!rxn\_first\_order\_loss\_update\_ids@{rxn\_first\_order\_loss\_update\_ids}}
+\index{rxn\_first\_order\_loss\_update\_ids@{rxn\_first\_order\_loss\_update\_ids}!rxn\_first\_order\_loss.c@{rxn\_first\_order\_loss.c}}
+\doxysubsubsection{\texorpdfstring{rxn\_first\_order\_loss\_update\_ids()}{rxn\_first\_order\_loss\_update\_ids()}}
+{\footnotesize\ttfamily void rxn\+\_\+first\+\_\+order\+\_\+loss\+\_\+update\+\_\+ids (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{int $\ast$}]{deriv\+\_\+ids,  }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}}}]{jac,  }\item[{int $\ast$}]{rxn\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+float\+\_\+data }\end{DoxyParamCaption})}
+
+
+
+Update the time derivative and Jacbobian array indices. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em model\+\_\+data} & Pointer to the model data \\
+\hline
+{\em deriv\+\_\+ids} & Id of each state variable in the derivative array \\
+\hline
+{\em jac} & \mbox{\hyperlink{struct_jacobian}{Jacobian}} \\
+\hline
+{\em rxn\+\_\+int\+\_\+data} & Pointer to the reaction integer data \\
+\hline
+{\em rxn\+\_\+float\+\_\+data} & Pointer to the reaction floating-\/point data \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 56 of file rxn\+\_\+first\+\_\+order\+\_\+loss.\+c.
+

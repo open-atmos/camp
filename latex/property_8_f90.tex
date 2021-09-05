@@ -1,0 +1,81 @@
+\hypertarget{property_8_f90}{}\doxysection{property.\+F90 File Reference}
+\label{property_8_f90}\index{property.F90@{property.F90}}
+
+
+The \mbox{\hyperlink{namespacecamp__property}{camp\+\_\+property}} module.  
+
+
+\doxysubsection*{Data Types}
+\begin{DoxyCompactItemize}
+\item 
+interface \mbox{\hyperlink{structcamp__property_1_1property__t}{camp\+\_\+property\+::property\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em Property data. \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{structcamp__property_1_1property__link__t}{camp\+\_\+property\+::property\+\_\+link\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em Property link data. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Modules}
+\begin{DoxyCompactItemize}
+\item 
+module \mbox{\hyperlink{namespacecamp__property}{camp\+\_\+property}}
+\begin{DoxyCompactList}\small\item\em The \mbox{\hyperlink{structcamp__property_1_1property__t}{property\+\_\+t}} structure and associated subroutines. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Functions/\+Subroutines}
+\begin{DoxyCompactItemize}
+\item 
+type(property\+\_\+t) function, pointer \mbox{\hyperlink{namespacecamp__property_a7adf3332954158806b22b36e86bc192c}{camp\+\_\+property\+::constructor}} ()
+\begin{DoxyCompactList}\small\item\em Constructor for \mbox{\hyperlink{structcamp__property_1_1property__t}{property\+\_\+t}}. \end{DoxyCompactList}\item 
+recursive subroutine \mbox{\hyperlink{namespacecamp__property_a3f00f8b698974d5594a97eb0f867a9e5}{camp\+\_\+property\+::load}} (this, json, j\+\_\+obj, as\+\_\+object, owner\+\_\+name, allow\+\_\+duplicates)
+\begin{DoxyCompactList}\small\item\em Load a property set from input data. \end{DoxyCompactList}\item 
+recursive subroutine \mbox{\hyperlink{namespacecamp__property_a6a05a24ce71c2d8ec6d9667bcda6d675}{camp\+\_\+property\+::put}} (this, key, val, allow\+\_\+duplicates, owner\+\_\+name)
+\begin{DoxyCompactList}\small\item\em Put an element in the property data set. \end{DoxyCompactList}\item 
+logical function \mbox{\hyperlink{namespacecamp__property_a58b829ab9f394256ce81e6574a378476}{camp\+\_\+property\+::get\+\_\+key}} (this, key)
+\begin{DoxyCompactList}\small\item\em Get the key name of the element currently pointed to by the iterator. Returns true if the iterator points to a key-\/value pair; false indicates the list is empty, the iterator was never reset, or the end of the list has been reached. Array elements return true, but have an empty key name. \end{DoxyCompactList}\item 
+logical function \mbox{\hyperlink{namespacecamp__property_aea9874a70ce05c8ae096d11c14baa707}{camp\+\_\+property\+::get\+\_\+int}} (this, key, val)
+\begin{DoxyCompactList}\small\item\em Get an integer value. The return value is true if the key-\/value pair was found, and false otherwise. If no key name is specified, the current value of the iterator is returned. In this case true indicates a current key-\/value exists; false indicates the list is empty, the iterator was never reset, or the end of the list has been reached. \end{DoxyCompactList}\item 
+logical function \mbox{\hyperlink{namespacecamp__property_a9120f7b01448c0f2fb101ed54ba2f443}{camp\+\_\+property\+::get\+\_\+real}} (this, key, val)
+\begin{DoxyCompactList}\small\item\em Get a real value. The return value is true if the key-\/value pair was found, and false otherwise. If no key name is specified, the current value of the iterator is returned. In this case true indicates a current key-\/value exists; false indicates the list is empty, the iterator was never reset, or the end of the list has been reached. \end{DoxyCompactList}\item 
+logical function \mbox{\hyperlink{namespacecamp__property_a00491ca01f9acc9a906c07c385dccefa}{camp\+\_\+property\+::get\+\_\+logical}} (this, key, val)
+\begin{DoxyCompactList}\small\item\em Get a logical value. The return value is true if the key-\/value pair was found, and false otherwise. If no key name is specified, the current value of the iterator is returned. In this case true indicates a current key-\/value exists; false indicates the list is empty, the iterator was never reset, or the end of the list has been reached. \end{DoxyCompactList}\item 
+logical function \mbox{\hyperlink{namespacecamp__property_a19d4b93f821c29744eb4e9533f30d524}{camp\+\_\+property\+::get\+\_\+string}} (this, key, val)
+\begin{DoxyCompactList}\small\item\em Get a string value. The return value is true if the key-\/value pair was found, and false otherwise. If no key name is specified, the current value of the iterator is returned. In this case true indicates a current key-\/value exists; false indicates the list is empty, the iterator was never reset, or the end of the list has been reached. \end{DoxyCompactList}\item 
+logical function \mbox{\hyperlink{namespacecamp__property_a9f41d477ab2a3fde0b6f115a0448ad19}{camp\+\_\+property\+::get\+\_\+property\+\_\+t}} (this, key, val)
+\begin{DoxyCompactList}\small\item\em Get a property sub-\/set. The return value is true if the key-\/value pair was found, and false otherwise. If no key name is specified, the current value of the iterator is returned. In this case true indicates a current key-\/value exists; false indicates the list is empty, the iterator was never reset, or the end of the list has been reached. \end{DoxyCompactList}\item 
+integer(kind=i\+\_\+kind) function \mbox{\hyperlink{namespacecamp__property_a6ea9e853788f1959db75288a59c24a87}{camp\+\_\+property\+::get\+\_\+size}} (this)
+\begin{DoxyCompactList}\small\item\em Get the number of elements in the property set. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__property_ac19a4e78333c1b9869c77249664c7a56}{camp\+\_\+property\+::iter\+\_\+reset}} (this)
+\begin{DoxyCompactList}\small\item\em Initialize the iterator. It will now point to the first property in the dataset, or be NULL in the case of an empty property dataset. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__property_acd438c48baa5b829c4f29404b945fbdc}{camp\+\_\+property\+::iter\+\_\+next}} (this)
+\begin{DoxyCompactList}\small\item\em Increment the interator. \end{DoxyCompactList}\item 
+elemental subroutine \mbox{\hyperlink{namespacecamp__property_ac4f59839bc9006c8836ffa33777fa8b6}{camp\+\_\+property\+::move}} (this, dest)
+\begin{DoxyCompactList}\small\item\em Move data from one \mbox{\hyperlink{structcamp__property_1_1property__t}{property\+\_\+t}} instance to another. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__property_a2d5d5418bfdd1394948f0c9853f12ce0}{camp\+\_\+property\+::update}} (this, source, owner\+\_\+name)
+\begin{DoxyCompactList}\small\item\em Update this \mbox{\hyperlink{structcamp__property_1_1property__t}{property\+\_\+t}} instance with data from another instance. \end{DoxyCompactList}\item 
+recursive subroutine \mbox{\hyperlink{namespacecamp__property_a1d1ce2cf998f2e6d318ef5877c4ab283}{camp\+\_\+property\+::do\+\_\+print}} (this, file\+\_\+unit)
+\begin{DoxyCompactList}\small\item\em Print the contents of a property set. \end{DoxyCompactList}\item 
+elemental subroutine \mbox{\hyperlink{namespacecamp__property_ab123d6312af66960021d4da84dcc7b9f}{camp\+\_\+property\+::finalize}} (this)
+\begin{DoxyCompactList}\small\item\em Finalize a \mbox{\hyperlink{structcamp__property_1_1property__t}{property\+\_\+t}} variable. \end{DoxyCompactList}\item 
+type(property\+\_\+link\+\_\+t) function, pointer \mbox{\hyperlink{namespacecamp__property_a6980a9f16e3c1a9c83783070b34d4f55}{camp\+\_\+property\+::get}} (this, key)
+\begin{DoxyCompactList}\small\item\em Find a key-\/value pair by key name. Returns a null pointer if the key name is not found. \end{DoxyCompactList}\item 
+type(property\+\_\+link\+\_\+t) function, pointer \mbox{\hyperlink{namespacecamp__property_a2bac0cf3f0c88a40cdf50132e00dd30c}{camp\+\_\+property\+::link\+\_\+constructor}} (key, val)
+\begin{DoxyCompactList}\small\item\em Constructor for \mbox{\hyperlink{structcamp__property_1_1property__link__t}{property\+\_\+link\+\_\+t}}. \end{DoxyCompactList}\item 
+character(\+:) function, allocatable \mbox{\hyperlink{namespacecamp__property_a52abce158c4eccd039de4f875d697869}{camp\+\_\+property\+::key}} (this)
+\begin{DoxyCompactList}\small\item\em Get the key name of a property. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__property_a92d9df64e91f97e476a79887341a6eee}{camp\+\_\+property\+::set\+\_\+value}} (this, val)
+\begin{DoxyCompactList}\small\item\em Set the value of a property key-\/value pair. \end{DoxyCompactList}\item 
+integer(kind=i\+\_\+kind) function \mbox{\hyperlink{namespacecamp__property_a606edaac8e2cffaf4bed45a5fdc2d918}{camp\+\_\+property\+::value\+\_\+int}} (this)
+\begin{DoxyCompactList}\small\item\em Get the int value of a property. \end{DoxyCompactList}\item 
+real(kind=dp) function \mbox{\hyperlink{namespacecamp__property_a420619bf3ac48faac5fd32fb1ae8577f}{camp\+\_\+property\+::value\+\_\+real}} (this)
+\begin{DoxyCompactList}\small\item\em Get the real value of a property. \end{DoxyCompactList}\item 
+logical function \mbox{\hyperlink{namespacecamp__property_aea742a930f0a969f663212add29f9f84}{camp\+\_\+property\+::value\+\_\+logical}} (this)
+\begin{DoxyCompactList}\small\item\em Get the logical value of a property. \end{DoxyCompactList}\item 
+character(len=\+:) function, allocatable \mbox{\hyperlink{namespacecamp__property_a37bba149bb92ca864ee33ff129ad0585}{camp\+\_\+property\+::value\+\_\+string}} (this)
+\begin{DoxyCompactList}\small\item\em Get the string value of a property. \end{DoxyCompactList}\item 
+type(property\+\_\+t) function, pointer \mbox{\hyperlink{namespacecamp__property_a938bf81f9e3809d6d9655e9140a4189b}{camp\+\_\+property\+::value\+\_\+property\+\_\+t}} (this)
+\begin{DoxyCompactList}\small\item\em Get the \mbox{\hyperlink{structcamp__property_1_1property__t}{property\+\_\+t}} value of a property. \end{DoxyCompactList}\item 
+recursive subroutine \mbox{\hyperlink{namespacecamp__property_a31bb4ad71e6fac0fdd3dd3e4d6255cb3}{camp\+\_\+property\+::link\+\_\+do\+\_\+print}} (this, suffix, file\+\_\+unit)
+\begin{DoxyCompactList}\small\item\em Print the contents of a property key-\/value pair. \end{DoxyCompactList}\item 
+elemental subroutine \mbox{\hyperlink{namespacecamp__property_a8fc09d2181501c08c436eb0995c641cd}{camp\+\_\+property\+::link\+\_\+finalize}} (this)
+\begin{DoxyCompactList}\small\item\em Finalize the \mbox{\hyperlink{structcamp__property_1_1property__link__t}{property\+\_\+link\+\_\+t}} variable. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+The \mbox{\hyperlink{namespacecamp__property}{camp\+\_\+property}} module. 
+

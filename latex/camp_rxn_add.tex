@@ -1,0 +1,136 @@
+{\bfseries{Note\+:}} these instructions are out-\/of-\/date. TODO update
+
+Adding a \mbox{\hyperlink{camp_rxn}{reaction}} to the \mbox{\hyperlink{index}{camp-\/chem}} module can be done in the following steps\+:\hypertarget{camp_rxn_add_autotoc_md10}{}\doxysubsection{Step 1. Create a new reaction module}\label{camp_rxn_add_autotoc_md10}
+The module should be placed in the {\ttfamily /src/rxns} folder and extent the abstract {\ttfamily \mbox{\hyperlink{structcamp__rxn__data_1_1rxn__data__t}{camp\+\_\+rxn\+\_\+data\+::rxn\+\_\+data\+\_\+t}}} type, overriding all deferred functions, and providing a constructor that returns a pointer to a newly allocated instance of the new type\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keyword}{module} rxn\_foo}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keywordtype}{use }...}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keywordtype}{implicit none}}
+\DoxyCodeLine{  \textcolor{keywordtype}{private}}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keywordtype}{public} :: rxn\_foo\_t}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keyword}{type}, \textcolor{keyword}{extends}(rxn\_data\_t) :: rxn\_foo\_t}
+\DoxyCodeLine{  \textcolor{keyword}{contains}}
+\DoxyCodeLine{     ... (all \textcolor{keywordtype}{deferred} functions) ...}
+\DoxyCodeLine{  \textcolor{keyword}{end type }rxn\_foo\_t}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{! Constructor}}
+\DoxyCodeLine{  \textcolor{keyword}{interface} rxn\_foo\_t}
+\DoxyCodeLine{    \textcolor{keywordtype}{procedure} :: constructor}
+\DoxyCodeLine{  \textcolor{keyword}{end interface }rxn\_foo\_t}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{keyword}{contains}}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keyword}{function }constructor() \textcolor{keyword}{result}(new\_obj)}
+\DoxyCodeLine{    \textcolor{keywordtype}{type}(rxn\_foo\_t), \textcolor{keywordtype}{pointer} :: new\_obj}
+\DoxyCodeLine{    \textcolor{keyword}{allocate}(new\_obj)}
+\DoxyCodeLine{  \textcolor{keyword}{end function }constructor}
+\DoxyCodeLine{}
+\DoxyCodeLine{  ...}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{keyword}{end module }camp\_rxn\_foo}
+
+\end{DoxyCode}
+\hypertarget{camp_rxn_add_autotoc_md11}{}\doxysubsection{Step 2. Add the reaction to the \textbackslash{}c camp\+\_\+rxn\+\_\+factory module}\label{camp_rxn_add_autotoc_md11}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keyword}{module} \mbox{\hyperlink{namespacecamp__rxn__factory}{camp\_rxn\_factory}}}
+\DoxyCodeLine{}
+\DoxyCodeLine{ ...}
+\DoxyCodeLine{}
+\DoxyCodeLine{ \textcolor{comment}{! Use all reaction modules}}
+\DoxyCodeLine{ ...}
+\DoxyCodeLine{ \textcolor{keywordtype}{use }camp\_rxn\_foo}
+\DoxyCodeLine{}
+\DoxyCodeLine{ ...}
+\DoxyCodeLine{\textcolor{comment}{}}
+\DoxyCodeLine{\textcolor{comment}{ !> Identifiers for reaction types -\/ used by binary packing/unpacking}}
+\DoxyCodeLine{\textcolor{comment}{ !! functions}}
+\DoxyCodeLine{ ...}
+\DoxyCodeLine{ \textcolor{keywordtype}{integer(kind=i\_kind)}, \textcolor{keywordtype}{parameter} :: RXN\_FOO = 32}
+\DoxyCodeLine{}
+\DoxyCodeLine{ ...}
+\DoxyCodeLine{\textcolor{comment}{}}
+\DoxyCodeLine{\textcolor{comment}{ !> Create a new chemical reaction by type name}}
+\DoxyCodeLine{ \textcolor{keyword}{function }\mbox{\hyperlink{namespacecamp__rxn__factory_a3975ec0b65f653a90ffc1e44d7b7353c}{create}}(this, type\_name) \textcolor{keyword}{result} (new\_obj)}
+\DoxyCodeLine{   ...}
+\DoxyCodeLine{   \textcolor{keywordflow}{select case} (type\_name)}
+\DoxyCodeLine{     ...}
+\DoxyCodeLine{     \textcolor{keywordflow}{case} (\textcolor{stringliteral}{"{}FOO"{}})}
+\DoxyCodeLine{       new\_obj => rxn\_foo\_t()}
+\DoxyCodeLine{   ...}
+\DoxyCodeLine{ \textcolor{keyword}{end function }\mbox{\hyperlink{namespacecamp__rxn__factory_a3975ec0b65f653a90ffc1e44d7b7353c}{create}}}
+\DoxyCodeLine{}
+\DoxyCodeLine{ ...}
+\DoxyCodeLine{\textcolor{comment}{}}
+\DoxyCodeLine{\textcolor{comment}{ !> Pack the given value to the buffer, advancing position}}
+\DoxyCodeLine{ \textcolor{keyword}{subroutine }\mbox{\hyperlink{namespacecamp__rxn__factory_af36f0101aafa792b21df852065e91c78}{bin\_pack}}(this, rxn, buffer, pos)}
+\DoxyCodeLine{   ...}
+\DoxyCodeLine{   \textcolor{keywordflow}{select type} (rxn)}
+\DoxyCodeLine{     ...}
+\DoxyCodeLine{\textcolor{keywordflow}{     type is} (rxn\_foo\_t)}
+\DoxyCodeLine{       rxn\_type = rxn\_foo}
+\DoxyCodeLine{   ...}
+\DoxyCodeLine{ \textcolor{keyword}{end subroutine }\mbox{\hyperlink{namespacecamp__rxn__factory_af36f0101aafa792b21df852065e91c78}{bin\_pack}}}
+\DoxyCodeLine{}
+\DoxyCodeLine{ ...}
+\DoxyCodeLine{\textcolor{comment}{}}
+\DoxyCodeLine{\textcolor{comment}{ !> Unpack the given value to the buffer, advancing position}}
+\DoxyCodeLine{ \textcolor{keyword}{function }\mbox{\hyperlink{namespacecamp__rxn__factory_aca756fabc73131844494b81fe160052d}{bin\_unpack}}(this, buffer, pos) \textcolor{keyword}{result} (rxn)}
+\DoxyCodeLine{   ...}
+\DoxyCodeLine{   \textcolor{keywordflow}{select case} (rxn\_type)}
+\DoxyCodeLine{     ...}
+\DoxyCodeLine{     \textcolor{keywordflow}{case} (rxn\_foo)}
+\DoxyCodeLine{       rxn => rxn\_foo\_t()}
+\DoxyCodeLine{   ...}
+\DoxyCodeLine{ \textcolor{keyword}{end function }\mbox{\hyperlink{namespacecamp__rxn__factory_aca756fabc73131844494b81fe160052d}{bin\_unpack}}}
+\DoxyCodeLine{}
+\DoxyCodeLine{ ...}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{keyword}{end module }camp\_rxn\_factory}
+
+\end{DoxyCode}
+\hypertarget{camp_rxn_add_autotoc_md12}{}\doxysection{Step 4. Add the new module to the CMake\+List file in the root directory.}\label{camp_rxn_add_autotoc_md12}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{...}
+\DoxyCodeLine{}
+\DoxyCodeLine{\# partmc library}
+\DoxyCodeLine{}
+\DoxyCodeLine{set(REACTIONS}
+\DoxyCodeLine{    ...}
+\DoxyCodeLine{    src/rxns/camp\_foo.F90}
+\DoxyCodeLine{)}
+\DoxyCodeLine{}
+\DoxyCodeLine{...}
+
+\end{DoxyCode}
+\hypertarget{camp_rxn_add_autotoc_md13}{}\doxysubsection{Step 5. Add unit tests for the new \textbackslash{}c rxn\+\_\+foo\+\_\+t type}\label{camp_rxn_add_autotoc_md13}
+Unit testing should cover, at minimum, the initialization, time derivative and Jacbian matrix functions, and in general 80\% code coverage is recommended. Some examples can be found in the {\ttfamily /src/test} folder.\hypertarget{camp_rxn_add_autotoc_md14}{}\doxysubsection{Step 6.  Update documentation}\label{camp_rxn_add_autotoc_md14}
+TODO finish...\hypertarget{camp_rxn_add_autotoc_md15}{}\doxysubsection{Usage}\label{camp_rxn_add_autotoc_md15}
+The new \mbox{\hyperlink{camp_rxn}{reaction type}} is now ready to use. To include a reaction of this type in a \mbox{\hyperlink{camp_mechanism}{mechanism}}, add a \mbox{\hyperlink{input_format_rxn}{reaction object}} to a new or existing \mbox{\hyperlink{input_format_camp_config}{camp-\/chem configuration file}} as part of a \mbox{\hyperlink{input_format_mechanism}{mechanism object}}. The reaction should have a {\bfseries{type}} corresponding to the newly created reaction type, along with any required parameters\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{ "{}camp-\/data"{} : [}
+\DoxyCodeLine{  \{}
+\DoxyCodeLine{    "{}name"{} : "{}my mechanism"{},}
+\DoxyCodeLine{    "{}type"{} : "{}MECHANISM"{},}
+\DoxyCodeLine{    "{}reactions"{} : [}
+\DoxyCodeLine{      \{}
+\DoxyCodeLine{        "{}type"{} : "{}FOO"{},}
+\DoxyCodeLine{        ...}
+\DoxyCodeLine{      \},}
+\DoxyCodeLine{      ...}
+\DoxyCodeLine{    ]}
+\DoxyCodeLine{  \},}
+\DoxyCodeLine{  ...}
+\DoxyCodeLine{]\}}
+
+\end{DoxyCode}
+ 

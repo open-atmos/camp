@@ -1,0 +1,139 @@
+\hypertarget{structcamp__sub__model__factory_1_1sub__model__factory__t}{}\doxysection{camp\+\_\+sub\+\_\+model\+\_\+factory\+::sub\+\_\+model\+\_\+factory\+\_\+t Type Reference}
+\label{structcamp__sub__model__factory_1_1sub__model__factory__t}\index{camp\_sub\_model\_factory::sub\_model\_factory\_t@{camp\_sub\_model\_factory::sub\_model\_factory\_t}}
+
+
+Factory type for sub-\/models.  
+
+
+\doxysubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+procedure \mbox{\hyperlink{structcamp__sub__model__factory_1_1sub__model__factory__t_a0b07ebb4ef850b1bf2aec73df3edcf4c}{create}}
+\begin{DoxyCompactList}\small\item\em Create a new sub-\/model by type name. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__sub__model__factory_1_1sub__model__factory__t_a92f591aa0a296fd7de983f05998b1f40}{load}}
+\begin{DoxyCompactList}\small\item\em Create a new aerosol representation from input data. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__sub__model__factory_1_1sub__model__factory__t_ae1f149819c453319a2718367a89fe316}{get\+\_\+type}}
+\begin{DoxyCompactList}\small\item\em Get the aerosol representation type. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__sub__model__factory_1_1sub__model__factory__t_a71292303a96b3c04bbcbc02bebe70c43}{initialize\+\_\+update\+\_\+data}}
+\begin{DoxyCompactList}\small\item\em Get a new update data object. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__sub__model__factory_1_1sub__model__factory__t_a2ece82b9ae1e34598ced790d827ad5ca}{pack\+\_\+size}}
+\begin{DoxyCompactList}\small\item\em Determine the number of bytes required to pack a given sub-\/model. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__sub__model__factory_1_1sub__model__factory__t_ad24208b07750a3ad2807590ffde70bee}{bin\+\_\+pack}}
+\begin{DoxyCompactList}\small\item\em Pack a given sub-\/model onto the buffer, advancing position. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__sub__model__factory_1_1sub__model__factory__t_a3d938bec3fea4a764dce18a9a5b732df}{bin\+\_\+unpack}}
+\begin{DoxyCompactList}\small\item\em Unpack a sub-\/model from the buffer, advancing position. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Factory type for sub-\/models. 
+
+Provides new instances of type extending sub\+\_\+model\+\_\+data\+\_\+t by name or from input file data 
+
+Definition at line 47 of file sub\+\_\+model\+\_\+factory.\+F90.
+
+
+
+\doxysubsection{Member Function/\+Subroutine Documentation}
+\mbox{\Hypertarget{structcamp__sub__model__factory_1_1sub__model__factory__t_ad24208b07750a3ad2807590ffde70bee}\label{structcamp__sub__model__factory_1_1sub__model__factory__t_ad24208b07750a3ad2807590ffde70bee}} 
+\index{camp\_sub\_model\_factory::sub\_model\_factory\_t@{camp\_sub\_model\_factory::sub\_model\_factory\_t}!bin\_pack@{bin\_pack}}
+\index{bin\_pack@{bin\_pack}!camp\_sub\_model\_factory::sub\_model\_factory\_t@{camp\_sub\_model\_factory::sub\_model\_factory\_t}}
+\doxysubsubsection{\texorpdfstring{bin\_pack()}{bin\_pack()}}
+{\footnotesize\ttfamily procedure camp\+\_\+sub\+\_\+model\+\_\+factory\+::sub\+\_\+model\+\_\+factory\+\_\+t\+::bin\+\_\+pack\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Pack a given sub-\/model onto the buffer, advancing position. 
+
+
+
+Definition at line 60 of file sub\+\_\+model\+\_\+factory.\+F90.
+
+\mbox{\Hypertarget{structcamp__sub__model__factory_1_1sub__model__factory__t_a3d938bec3fea4a764dce18a9a5b732df}\label{structcamp__sub__model__factory_1_1sub__model__factory__t_a3d938bec3fea4a764dce18a9a5b732df}} 
+\index{camp\_sub\_model\_factory::sub\_model\_factory\_t@{camp\_sub\_model\_factory::sub\_model\_factory\_t}!bin\_unpack@{bin\_unpack}}
+\index{bin\_unpack@{bin\_unpack}!camp\_sub\_model\_factory::sub\_model\_factory\_t@{camp\_sub\_model\_factory::sub\_model\_factory\_t}}
+\doxysubsubsection{\texorpdfstring{bin\_unpack()}{bin\_unpack()}}
+{\footnotesize\ttfamily procedure camp\+\_\+sub\+\_\+model\+\_\+factory\+::sub\+\_\+model\+\_\+factory\+\_\+t\+::bin\+\_\+unpack\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Unpack a sub-\/model from the buffer, advancing position. 
+
+
+
+Definition at line 62 of file sub\+\_\+model\+\_\+factory.\+F90.
+
+\mbox{\Hypertarget{structcamp__sub__model__factory_1_1sub__model__factory__t_a0b07ebb4ef850b1bf2aec73df3edcf4c}\label{structcamp__sub__model__factory_1_1sub__model__factory__t_a0b07ebb4ef850b1bf2aec73df3edcf4c}} 
+\index{camp\_sub\_model\_factory::sub\_model\_factory\_t@{camp\_sub\_model\_factory::sub\_model\_factory\_t}!create@{create}}
+\index{create@{create}!camp\_sub\_model\_factory::sub\_model\_factory\_t@{camp\_sub\_model\_factory::sub\_model\_factory\_t}}
+\doxysubsubsection{\texorpdfstring{create()}{create()}}
+{\footnotesize\ttfamily procedure camp\+\_\+sub\+\_\+model\+\_\+factory\+::sub\+\_\+model\+\_\+factory\+\_\+t\+::create\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Create a new sub-\/model by type name. 
+
+
+
+Definition at line 50 of file sub\+\_\+model\+\_\+factory.\+F90.
+
+\mbox{\Hypertarget{structcamp__sub__model__factory_1_1sub__model__factory__t_ae1f149819c453319a2718367a89fe316}\label{structcamp__sub__model__factory_1_1sub__model__factory__t_ae1f149819c453319a2718367a89fe316}} 
+\index{camp\_sub\_model\_factory::sub\_model\_factory\_t@{camp\_sub\_model\_factory::sub\_model\_factory\_t}!get\_type@{get\_type}}
+\index{get\_type@{get\_type}!camp\_sub\_model\_factory::sub\_model\_factory\_t@{camp\_sub\_model\_factory::sub\_model\_factory\_t}}
+\doxysubsubsection{\texorpdfstring{get\_type()}{get\_type()}}
+{\footnotesize\ttfamily procedure camp\+\_\+sub\+\_\+model\+\_\+factory\+::sub\+\_\+model\+\_\+factory\+\_\+t\+::get\+\_\+type\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Get the aerosol representation type. 
+
+
+
+Definition at line 54 of file sub\+\_\+model\+\_\+factory.\+F90.
+
+\mbox{\Hypertarget{structcamp__sub__model__factory_1_1sub__model__factory__t_a71292303a96b3c04bbcbc02bebe70c43}\label{structcamp__sub__model__factory_1_1sub__model__factory__t_a71292303a96b3c04bbcbc02bebe70c43}} 
+\index{camp\_sub\_model\_factory::sub\_model\_factory\_t@{camp\_sub\_model\_factory::sub\_model\_factory\_t}!initialize\_update\_data@{initialize\_update\_data}}
+\index{initialize\_update\_data@{initialize\_update\_data}!camp\_sub\_model\_factory::sub\_model\_factory\_t@{camp\_sub\_model\_factory::sub\_model\_factory\_t}}
+\doxysubsubsection{\texorpdfstring{initialize\_update\_data()}{initialize\_update\_data()}}
+{\footnotesize\ttfamily procedure camp\+\_\+sub\+\_\+model\+\_\+factory\+::sub\+\_\+model\+\_\+factory\+\_\+t\+::initialize\+\_\+update\+\_\+data\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Get a new update data object. 
+
+
+
+Definition at line 56 of file sub\+\_\+model\+\_\+factory.\+F90.
+
+\mbox{\Hypertarget{structcamp__sub__model__factory_1_1sub__model__factory__t_a92f591aa0a296fd7de983f05998b1f40}\label{structcamp__sub__model__factory_1_1sub__model__factory__t_a92f591aa0a296fd7de983f05998b1f40}} 
+\index{camp\_sub\_model\_factory::sub\_model\_factory\_t@{camp\_sub\_model\_factory::sub\_model\_factory\_t}!load@{load}}
+\index{load@{load}!camp\_sub\_model\_factory::sub\_model\_factory\_t@{camp\_sub\_model\_factory::sub\_model\_factory\_t}}
+\doxysubsubsection{\texorpdfstring{load()}{load()}}
+{\footnotesize\ttfamily procedure camp\+\_\+sub\+\_\+model\+\_\+factory\+::sub\+\_\+model\+\_\+factory\+\_\+t\+::load\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Create a new aerosol representation from input data. 
+
+
+
+Definition at line 52 of file sub\+\_\+model\+\_\+factory.\+F90.
+
+\mbox{\Hypertarget{structcamp__sub__model__factory_1_1sub__model__factory__t_a2ece82b9ae1e34598ced790d827ad5ca}\label{structcamp__sub__model__factory_1_1sub__model__factory__t_a2ece82b9ae1e34598ced790d827ad5ca}} 
+\index{camp\_sub\_model\_factory::sub\_model\_factory\_t@{camp\_sub\_model\_factory::sub\_model\_factory\_t}!pack\_size@{pack\_size}}
+\index{pack\_size@{pack\_size}!camp\_sub\_model\_factory::sub\_model\_factory\_t@{camp\_sub\_model\_factory::sub\_model\_factory\_t}}
+\doxysubsubsection{\texorpdfstring{pack\_size()}{pack\_size()}}
+{\footnotesize\ttfamily procedure camp\+\_\+sub\+\_\+model\+\_\+factory\+::sub\+\_\+model\+\_\+factory\+\_\+t\+::pack\+\_\+size\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Determine the number of bytes required to pack a given sub-\/model. 
+
+
+
+Definition at line 58 of file sub\+\_\+model\+\_\+factory.\+F90.
+
+
+
+The documentation for this type was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{sub__model__factory_8_f90}{sub\+\_\+model\+\_\+factory.\+F90}}\end{DoxyCompactItemize}

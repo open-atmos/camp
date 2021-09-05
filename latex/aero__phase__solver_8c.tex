@@ -1,0 +1,354 @@
+\hypertarget{aero__phase__solver_8c}{}\doxysection{aero\+\_\+phase\+\_\+solver.\+c File Reference}
+\label{aero__phase__solver_8c}\index{aero\_phase\_solver.c@{aero\_phase\_solver.c}}
+
+
+Aerosol phase functions.  
+
+
+Include dependency graph for aero\+\_\+phase\+\_\+solver.\+c\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{aero__phase__solver_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{aero__phase__solver_8c_a23794bf081112761f68bf7b3e54f62ce}{MINIMUM\+\_\+\+MASS\+\_\+}}~1.\+0e-\/25L
+\begin{DoxyCompactList}\small\item\em Minimum aerosol-\/phase mass concentration \mbox{[}kg m-\/3\mbox{]}. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{aero__phase__solver_8c_a6513df0842a330303b55b64f7f1f8efa}{MINIMUM\+\_\+\+MW\+\_\+}}~0.\+1L
+\begin{DoxyCompactList}\small\item\em Minimum mass assumed molecular weight \mbox{[}kg mol-\/1\mbox{]}. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{aero__phase__solver_8c_a423f8486b9891ca83ee03413553cda28}{MINIMUM\+\_\+\+DENSITY\+\_\+}}~1800.\+0L
+\begin{DoxyCompactList}\small\item\em Minimum mass assumed density \mbox{[}kg m-\/3\mbox{]}. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{aero__phase__solver_8c_abc4bad634bb9dd69299f78f9b8e48261}{CHEM\+\_\+\+SPEC\+\_\+\+UNKNOWN\+\_\+\+TYPE}}~0
+\item 
+\#define \mbox{\hyperlink{aero__phase__solver_8c_a10e72ce63e142fef6dce2428a7de2580}{CHEM\+\_\+\+SPEC\+\_\+\+VARIABLE}}~1
+\item 
+\#define \mbox{\hyperlink{aero__phase__solver_8c_a4f2dfc4527e2984ed67ea6c851ace391}{CHEM\+\_\+\+SPEC\+\_\+\+CONSTANT}}~2
+\item 
+\#define \mbox{\hyperlink{aero__phase__solver_8c_aeace301878b189a10ee1804753cb75b9}{CHEM\+\_\+\+SPEC\+\_\+\+PSSA}}~3
+\item 
+\#define \mbox{\hyperlink{aero__phase__solver_8c_af8e7b2f80c9040a3beef4c680c2ff028}{CHEM\+\_\+\+SPEC\+\_\+\+ACTIVITY\+\_\+\+COEFF}}~4
+\item 
+\#define \mbox{\hyperlink{aero__phase__solver_8c_a5b96d96acf980c9d12118897b1cf8585}{NUM\+\_\+\+STATE\+\_\+\+VAR\+\_\+}}~(int\+\_\+data\mbox{[}0\mbox{]})
+\item 
+\#define \mbox{\hyperlink{aero__phase__solver_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}}~1
+\item 
+\#define \mbox{\hyperlink{aero__phase__solver_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}{NUM\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+}}~0
+\item 
+\#define \mbox{\hyperlink{aero__phase__solver_8c_a5abfc86c868793576be1eb6acec4d966}{SPEC\+\_\+\+TYPE\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + x\mbox{]})
+\item 
+\#define \mbox{\hyperlink{aero__phase__solver_8c_a533cad7ef28f4059577d632870ed98d7}{MW\+\_\+}}(x)~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}{NUM\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+}} + x\mbox{]})
+\item 
+\#define \mbox{\hyperlink{aero__phase__solver_8c_a43a841814e566347ca15f79747286d39}{DENSITY\+\_\+}}(x)~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}{NUM\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{aero__phase__solver_8c_a5b96d96acf980c9d12118897b1cf8585}{NUM\+\_\+\+STATE\+\_\+\+VAR\+\_\+}} + x\mbox{]})
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{aero__phase__solver_8c_a6e5ea770a313a6eebea53e86540dd510}{aero\+\_\+phase\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, int aero\+\_\+phase\+\_\+idx, int state\+\_\+var\+\_\+id, \mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1}{bool}} $\ast$jac\+\_\+struct)
+\begin{DoxyCompactList}\small\item\em Flag \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used in calculations of mass and volume. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{aero__phase__solver_8c_a965e0b9fc79db694be201edd05377dd1}{aero\+\_\+phase\+\_\+get\+\_\+mass\+\_\+\+\_\+kg\+\_\+m3}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, int aero\+\_\+phase\+\_\+idx, double $\ast$state\+\_\+var, double $\ast$mass, double $\ast$MW, double $\ast$jac\+\_\+elem\+\_\+mass, double $\ast$jac\+\_\+elem\+\_\+\+MW)
+\begin{DoxyCompactList}\small\item\em Get the mass and average MW in an aerosol phase. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{aero__phase__solver_8c_a6e493e863924f29d6bd06598fa657f08}{aero\+\_\+phase\+\_\+get\+\_\+volume\+\_\+\+\_\+m3\+\_\+m3}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, int aero\+\_\+phase\+\_\+idx, double $\ast$state\+\_\+var, double $\ast$volume, double $\ast$jac\+\_\+elem)
+\begin{DoxyCompactList}\small\item\em Get the volume of an aerosol phase. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{aero__phase__solver_8c_a945dae2a4f51b15322f47d002969e666}{aero\+\_\+phase\+\_\+add\+\_\+condensed\+\_\+data}} (int n\+\_\+int\+\_\+param, int n\+\_\+float\+\_\+param, int $\ast$int\+\_\+param, double $\ast$float\+\_\+param, void $\ast$solver\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Add condensed data to the condensed data block for aerosol phases. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{aero__phase__solver_8c_a27c8defcce28585eb3ed62e62f877caa}{aero\+\_\+phase\+\_\+print\+\_\+data}} (void $\ast$solver\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Print the aerosol phase data. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Aerosol phase functions. 
+
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{aero__phase__solver_8c_af8e7b2f80c9040a3beef4c680c2ff028}\label{aero__phase__solver_8c_af8e7b2f80c9040a3beef4c680c2ff028}} 
+\index{aero\_phase\_solver.c@{aero\_phase\_solver.c}!CHEM\_SPEC\_ACTIVITY\_COEFF@{CHEM\_SPEC\_ACTIVITY\_COEFF}}
+\index{CHEM\_SPEC\_ACTIVITY\_COEFF@{CHEM\_SPEC\_ACTIVITY\_COEFF}!aero\_phase\_solver.c@{aero\_phase\_solver.c}}
+\doxysubsubsection{\texorpdfstring{CHEM\_SPEC\_ACTIVITY\_COEFF}{CHEM\_SPEC\_ACTIVITY\_COEFF}}
+{\footnotesize\ttfamily \#define CHEM\+\_\+\+SPEC\+\_\+\+ACTIVITY\+\_\+\+COEFF~4}
+
+
+
+Definition at line 27 of file aero\+\_\+phase\+\_\+solver.\+c.
+
+\mbox{\Hypertarget{aero__phase__solver_8c_a4f2dfc4527e2984ed67ea6c851ace391}\label{aero__phase__solver_8c_a4f2dfc4527e2984ed67ea6c851ace391}} 
+\index{aero\_phase\_solver.c@{aero\_phase\_solver.c}!CHEM\_SPEC\_CONSTANT@{CHEM\_SPEC\_CONSTANT}}
+\index{CHEM\_SPEC\_CONSTANT@{CHEM\_SPEC\_CONSTANT}!aero\_phase\_solver.c@{aero\_phase\_solver.c}}
+\doxysubsubsection{\texorpdfstring{CHEM\_SPEC\_CONSTANT}{CHEM\_SPEC\_CONSTANT}}
+{\footnotesize\ttfamily \#define CHEM\+\_\+\+SPEC\+\_\+\+CONSTANT~2}
+
+
+
+Definition at line 25 of file aero\+\_\+phase\+\_\+solver.\+c.
+
+\mbox{\Hypertarget{aero__phase__solver_8c_aeace301878b189a10ee1804753cb75b9}\label{aero__phase__solver_8c_aeace301878b189a10ee1804753cb75b9}} 
+\index{aero\_phase\_solver.c@{aero\_phase\_solver.c}!CHEM\_SPEC\_PSSA@{CHEM\_SPEC\_PSSA}}
+\index{CHEM\_SPEC\_PSSA@{CHEM\_SPEC\_PSSA}!aero\_phase\_solver.c@{aero\_phase\_solver.c}}
+\doxysubsubsection{\texorpdfstring{CHEM\_SPEC\_PSSA}{CHEM\_SPEC\_PSSA}}
+{\footnotesize\ttfamily \#define CHEM\+\_\+\+SPEC\+\_\+\+PSSA~3}
+
+
+
+Definition at line 26 of file aero\+\_\+phase\+\_\+solver.\+c.
+
+\mbox{\Hypertarget{aero__phase__solver_8c_abc4bad634bb9dd69299f78f9b8e48261}\label{aero__phase__solver_8c_abc4bad634bb9dd69299f78f9b8e48261}} 
+\index{aero\_phase\_solver.c@{aero\_phase\_solver.c}!CHEM\_SPEC\_UNKNOWN\_TYPE@{CHEM\_SPEC\_UNKNOWN\_TYPE}}
+\index{CHEM\_SPEC\_UNKNOWN\_TYPE@{CHEM\_SPEC\_UNKNOWN\_TYPE}!aero\_phase\_solver.c@{aero\_phase\_solver.c}}
+\doxysubsubsection{\texorpdfstring{CHEM\_SPEC\_UNKNOWN\_TYPE}{CHEM\_SPEC\_UNKNOWN\_TYPE}}
+{\footnotesize\ttfamily \#define CHEM\+\_\+\+SPEC\+\_\+\+UNKNOWN\+\_\+\+TYPE~0}
+
+
+
+Definition at line 23 of file aero\+\_\+phase\+\_\+solver.\+c.
+
+\mbox{\Hypertarget{aero__phase__solver_8c_a10e72ce63e142fef6dce2428a7de2580}\label{aero__phase__solver_8c_a10e72ce63e142fef6dce2428a7de2580}} 
+\index{aero\_phase\_solver.c@{aero\_phase\_solver.c}!CHEM\_SPEC\_VARIABLE@{CHEM\_SPEC\_VARIABLE}}
+\index{CHEM\_SPEC\_VARIABLE@{CHEM\_SPEC\_VARIABLE}!aero\_phase\_solver.c@{aero\_phase\_solver.c}}
+\doxysubsubsection{\texorpdfstring{CHEM\_SPEC\_VARIABLE}{CHEM\_SPEC\_VARIABLE}}
+{\footnotesize\ttfamily \#define CHEM\+\_\+\+SPEC\+\_\+\+VARIABLE~1}
+
+
+
+Definition at line 24 of file aero\+\_\+phase\+\_\+solver.\+c.
+
+\mbox{\Hypertarget{aero__phase__solver_8c_a43a841814e566347ca15f79747286d39}\label{aero__phase__solver_8c_a43a841814e566347ca15f79747286d39}} 
+\index{aero\_phase\_solver.c@{aero\_phase\_solver.c}!DENSITY\_@{DENSITY\_}}
+\index{DENSITY\_@{DENSITY\_}!aero\_phase\_solver.c@{aero\_phase\_solver.c}}
+\doxysubsubsection{\texorpdfstring{DENSITY\_}{DENSITY\_}}
+{\footnotesize\ttfamily \#define DENSITY\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}{NUM\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{aero__phase__solver_8c_a5b96d96acf980c9d12118897b1cf8585}{NUM\+\_\+\+STATE\+\_\+\+VAR\+\_\+}} + x\mbox{]})}
+
+
+
+Definition at line 34 of file aero\+\_\+phase\+\_\+solver.\+c.
+
+\mbox{\Hypertarget{aero__phase__solver_8c_a423f8486b9891ca83ee03413553cda28}\label{aero__phase__solver_8c_a423f8486b9891ca83ee03413553cda28}} 
+\index{aero\_phase\_solver.c@{aero\_phase\_solver.c}!MINIMUM\_DENSITY\_@{MINIMUM\_DENSITY\_}}
+\index{MINIMUM\_DENSITY\_@{MINIMUM\_DENSITY\_}!aero\_phase\_solver.c@{aero\_phase\_solver.c}}
+\doxysubsubsection{\texorpdfstring{MINIMUM\_DENSITY\_}{MINIMUM\_DENSITY\_}}
+{\footnotesize\ttfamily \#define MINIMUM\+\_\+\+DENSITY\+\_\+~1800.\+0L}
+
+
+
+Minimum mass assumed density \mbox{[}kg m-\/3\mbox{]}. 
+
+
+
+Definition at line 20 of file aero\+\_\+phase\+\_\+solver.\+c.
+
+\mbox{\Hypertarget{aero__phase__solver_8c_a23794bf081112761f68bf7b3e54f62ce}\label{aero__phase__solver_8c_a23794bf081112761f68bf7b3e54f62ce}} 
+\index{aero\_phase\_solver.c@{aero\_phase\_solver.c}!MINIMUM\_MASS\_@{MINIMUM\_MASS\_}}
+\index{MINIMUM\_MASS\_@{MINIMUM\_MASS\_}!aero\_phase\_solver.c@{aero\_phase\_solver.c}}
+\doxysubsubsection{\texorpdfstring{MINIMUM\_MASS\_}{MINIMUM\_MASS\_}}
+{\footnotesize\ttfamily \#define MINIMUM\+\_\+\+MASS\+\_\+~1.\+0e-\/25L}
+
+
+
+Minimum aerosol-\/phase mass concentration \mbox{[}kg m-\/3\mbox{]}. 
+
+
+
+Definition at line 16 of file aero\+\_\+phase\+\_\+solver.\+c.
+
+\mbox{\Hypertarget{aero__phase__solver_8c_a6513df0842a330303b55b64f7f1f8efa}\label{aero__phase__solver_8c_a6513df0842a330303b55b64f7f1f8efa}} 
+\index{aero\_phase\_solver.c@{aero\_phase\_solver.c}!MINIMUM\_MW\_@{MINIMUM\_MW\_}}
+\index{MINIMUM\_MW\_@{MINIMUM\_MW\_}!aero\_phase\_solver.c@{aero\_phase\_solver.c}}
+\doxysubsubsection{\texorpdfstring{MINIMUM\_MW\_}{MINIMUM\_MW\_}}
+{\footnotesize\ttfamily \#define MINIMUM\+\_\+\+MW\+\_\+~0.\+1L}
+
+
+
+Minimum mass assumed molecular weight \mbox{[}kg mol-\/1\mbox{]}. 
+
+
+
+Definition at line 18 of file aero\+\_\+phase\+\_\+solver.\+c.
+
+\mbox{\Hypertarget{aero__phase__solver_8c_a533cad7ef28f4059577d632870ed98d7}\label{aero__phase__solver_8c_a533cad7ef28f4059577d632870ed98d7}} 
+\index{aero\_phase\_solver.c@{aero\_phase\_solver.c}!MW\_@{MW\_}}
+\index{MW\_@{MW\_}!aero\_phase\_solver.c@{aero\_phase\_solver.c}}
+\doxysubsubsection{\texorpdfstring{MW\_}{MW\_}}
+{\footnotesize\ttfamily \#define MW\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}{NUM\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+}} + x\mbox{]})}
+
+
+
+Definition at line 33 of file aero\+\_\+phase\+\_\+solver.\+c.
+
+\mbox{\Hypertarget{aero__phase__solver_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}\label{aero__phase__solver_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}} 
+\index{aero\_phase\_solver.c@{aero\_phase\_solver.c}!NUM\_FLOAT\_PROP\_@{NUM\_FLOAT\_PROP\_}}
+\index{NUM\_FLOAT\_PROP\_@{NUM\_FLOAT\_PROP\_}!aero\_phase\_solver.c@{aero\_phase\_solver.c}}
+\doxysubsubsection{\texorpdfstring{NUM\_FLOAT\_PROP\_}{NUM\_FLOAT\_PROP\_}}
+{\footnotesize\ttfamily \#define NUM\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+~0}
+
+
+
+Definition at line 31 of file aero\+\_\+phase\+\_\+solver.\+c.
+
+\mbox{\Hypertarget{aero__phase__solver_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}\label{aero__phase__solver_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}} 
+\index{aero\_phase\_solver.c@{aero\_phase\_solver.c}!NUM\_INT\_PROP\_@{NUM\_INT\_PROP\_}}
+\index{NUM\_INT\_PROP\_@{NUM\_INT\_PROP\_}!aero\_phase\_solver.c@{aero\_phase\_solver.c}}
+\doxysubsubsection{\texorpdfstring{NUM\_INT\_PROP\_}{NUM\_INT\_PROP\_}}
+{\footnotesize\ttfamily \#define NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+~1}
+
+
+
+Definition at line 30 of file aero\+\_\+phase\+\_\+solver.\+c.
+
+\mbox{\Hypertarget{aero__phase__solver_8c_a5b96d96acf980c9d12118897b1cf8585}\label{aero__phase__solver_8c_a5b96d96acf980c9d12118897b1cf8585}} 
+\index{aero\_phase\_solver.c@{aero\_phase\_solver.c}!NUM\_STATE\_VAR\_@{NUM\_STATE\_VAR\_}}
+\index{NUM\_STATE\_VAR\_@{NUM\_STATE\_VAR\_}!aero\_phase\_solver.c@{aero\_phase\_solver.c}}
+\doxysubsubsection{\texorpdfstring{NUM\_STATE\_VAR\_}{NUM\_STATE\_VAR\_}}
+{\footnotesize\ttfamily \#define NUM\+\_\+\+STATE\+\_\+\+VAR\+\_\+~(int\+\_\+data\mbox{[}0\mbox{]})}
+
+
+
+Definition at line 29 of file aero\+\_\+phase\+\_\+solver.\+c.
+
+\mbox{\Hypertarget{aero__phase__solver_8c_a5abfc86c868793576be1eb6acec4d966}\label{aero__phase__solver_8c_a5abfc86c868793576be1eb6acec4d966}} 
+\index{aero\_phase\_solver.c@{aero\_phase\_solver.c}!SPEC\_TYPE\_@{SPEC\_TYPE\_}}
+\index{SPEC\_TYPE\_@{SPEC\_TYPE\_}!aero\_phase\_solver.c@{aero\_phase\_solver.c}}
+\doxysubsubsection{\texorpdfstring{SPEC\_TYPE\_}{SPEC\_TYPE\_}}
+{\footnotesize\ttfamily \#define SPEC\+\_\+\+TYPE\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + x\mbox{]})}
+
+
+
+Definition at line 32 of file aero\+\_\+phase\+\_\+solver.\+c.
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{aero__phase__solver_8c_a945dae2a4f51b15322f47d002969e666}\label{aero__phase__solver_8c_a945dae2a4f51b15322f47d002969e666}} 
+\index{aero\_phase\_solver.c@{aero\_phase\_solver.c}!aero\_phase\_add\_condensed\_data@{aero\_phase\_add\_condensed\_data}}
+\index{aero\_phase\_add\_condensed\_data@{aero\_phase\_add\_condensed\_data}!aero\_phase\_solver.c@{aero\_phase\_solver.c}}
+\doxysubsubsection{\texorpdfstring{aero\_phase\_add\_condensed\_data()}{aero\_phase\_add\_condensed\_data()}}
+{\footnotesize\ttfamily void aero\+\_\+phase\+\_\+add\+\_\+condensed\+\_\+data (\begin{DoxyParamCaption}\item[{int}]{n\+\_\+int\+\_\+param,  }\item[{int}]{n\+\_\+float\+\_\+param,  }\item[{int $\ast$}]{int\+\_\+param,  }\item[{double $\ast$}]{float\+\_\+param,  }\item[{void $\ast$}]{solver\+\_\+data }\end{DoxyParamCaption})}
+
+
+
+Add condensed data to the condensed data block for aerosol phases. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em n\+\_\+int\+\_\+param} & Number of integer parameters \\
+\hline
+{\em n\+\_\+float\+\_\+param} & Number of floating-\/point parameters \\
+\hline
+{\em int\+\_\+param} & Pointer to the integer parameter array \\
+\hline
+{\em float\+\_\+param} & Pointer to the floating-\/point parameter array \\
+\hline
+{\em solver\+\_\+data} & Pointer to the solver data \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 175 of file aero\+\_\+phase\+\_\+solver.\+c.
+
+\mbox{\Hypertarget{aero__phase__solver_8c_a965e0b9fc79db694be201edd05377dd1}\label{aero__phase__solver_8c_a965e0b9fc79db694be201edd05377dd1}} 
+\index{aero\_phase\_solver.c@{aero\_phase\_solver.c}!aero\_phase\_get\_mass\_\_kg\_m3@{aero\_phase\_get\_mass\_\_kg\_m3}}
+\index{aero\_phase\_get\_mass\_\_kg\_m3@{aero\_phase\_get\_mass\_\_kg\_m3}!aero\_phase\_solver.c@{aero\_phase\_solver.c}}
+\doxysubsubsection{\texorpdfstring{aero\_phase\_get\_mass\_\_kg\_m3()}{aero\_phase\_get\_mass\_\_kg\_m3()}}
+{\footnotesize\ttfamily void aero\+\_\+phase\+\_\+get\+\_\+mass\+\_\+\+\_\+kg\+\_\+m3 (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{int}]{aero\+\_\+phase\+\_\+idx,  }\item[{double $\ast$}]{state\+\_\+var,  }\item[{double $\ast$}]{mass,  }\item[{double $\ast$}]{MW,  }\item[{double $\ast$}]{jac\+\_\+elem\+\_\+mass,  }\item[{double $\ast$}]{jac\+\_\+elem\+\_\+\+MW }\end{DoxyParamCaption})}
+
+
+
+Get the mass and average MW in an aerosol phase. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em model\+\_\+data} & Pointer to the model data (state, env, aero\+\_\+phase) \\
+\hline
+{\em aero\+\_\+phase\+\_\+idx} & Index of the aerosol phase to use in the calculation \\
+\hline
+{\em state\+\_\+var} & Pointer the aerosol phase on the state variable array \\
+\hline
+{\em mass} & Pointer to hold total aerosol phase mass ( $\mbox{\si{\kilogram\per\cubic\metre}}$ or $\mbox{\si{\kilogram\per particle}}$) \\
+\hline
+{\em MW} & Pointer to hold average MW of the aerosol phase ( $\mbox{\si{\kilogram\per\mol}}$) \\
+\hline
+{\em jac\+\_\+elem\+\_\+mass} & When not NULL, a pointer to an array whose length is the number of \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used in calculations of mass and volume of this aerosol phase returned by {\ttfamily aero\+\_\+phase\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem} and whose contents will be set to the partial derivatives of mass by concentration $\frac{dm}{dy_i}$ of each component species $y_i$. \\
+\hline
+{\em jac\+\_\+elem\+\_\+\+MW} & When not NULL, a pointer to an array whose length is the number of \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used in calculations of mass and volume of this aerosol phase returned by {\ttfamily aero\+\_\+phase\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem} and whose contents will be set to the partial derivatives of total molecular weight by concentration $\frac{dMW}{dy_i}$ of each component species $y_i$. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 93 of file aero\+\_\+phase\+\_\+solver.\+c.
+
+\mbox{\Hypertarget{aero__phase__solver_8c_a6e5ea770a313a6eebea53e86540dd510}\label{aero__phase__solver_8c_a6e5ea770a313a6eebea53e86540dd510}} 
+\index{aero\_phase\_solver.c@{aero\_phase\_solver.c}!aero\_phase\_get\_used\_jac\_elem@{aero\_phase\_get\_used\_jac\_elem}}
+\index{aero\_phase\_get\_used\_jac\_elem@{aero\_phase\_get\_used\_jac\_elem}!aero\_phase\_solver.c@{aero\_phase\_solver.c}}
+\doxysubsubsection{\texorpdfstring{aero\_phase\_get\_used\_jac\_elem()}{aero\_phase\_get\_used\_jac\_elem()}}
+{\footnotesize\ttfamily int aero\+\_\+phase\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{int}]{aero\+\_\+phase\+\_\+idx,  }\item[{int}]{state\+\_\+var\+\_\+id,  }\item[{\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1}{bool}} $\ast$}]{jac\+\_\+struct }\end{DoxyParamCaption})}
+
+
+
+Flag \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used in calculations of mass and volume. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em model\+\_\+data} & Pointer to the model data(state, env, aero\+\_\+phase) \\
+\hline
+{\em aero\+\_\+phase\+\_\+idx} & Index of the aerosol phase to find elements for \\
+\hline
+{\em state\+\_\+var\+\_\+id} & Index in the state array for this aerosol phase \\
+\hline
+{\em jac\+\_\+struct} & 1D array of flags indicating potentially non-\/zero \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements. (The dependent variable should have been chosen by the calling function.) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Number of \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements flagged 
+\end{DoxyReturn}
+
+
+Definition at line 46 of file aero\+\_\+phase\+\_\+solver.\+c.
+
+\mbox{\Hypertarget{aero__phase__solver_8c_a6e493e863924f29d6bd06598fa657f08}\label{aero__phase__solver_8c_a6e493e863924f29d6bd06598fa657f08}} 
+\index{aero\_phase\_solver.c@{aero\_phase\_solver.c}!aero\_phase\_get\_volume\_\_m3\_m3@{aero\_phase\_get\_volume\_\_m3\_m3}}
+\index{aero\_phase\_get\_volume\_\_m3\_m3@{aero\_phase\_get\_volume\_\_m3\_m3}!aero\_phase\_solver.c@{aero\_phase\_solver.c}}
+\doxysubsubsection{\texorpdfstring{aero\_phase\_get\_volume\_\_m3\_m3()}{aero\_phase\_get\_volume\_\_m3\_m3()}}
+{\footnotesize\ttfamily void aero\+\_\+phase\+\_\+get\+\_\+volume\+\_\+\+\_\+m3\+\_\+m3 (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{int}]{aero\+\_\+phase\+\_\+idx,  }\item[{double $\ast$}]{state\+\_\+var,  }\item[{double $\ast$}]{volume,  }\item[{double $\ast$}]{jac\+\_\+elem }\end{DoxyParamCaption})}
+
+
+
+Get the volume of an aerosol phase. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em model\+\_\+data} & Pointer to the model data (state, env, aero\+\_\+phase) \\
+\hline
+{\em aero\+\_\+phase\+\_\+idx} & Index of the aerosol phase to use in the calculation \\
+\hline
+{\em state\+\_\+var} & Pointer to the aerosol phase on the state variable array \\
+\hline
+{\em volume} & Pointer to hold the aerosol phase volume ( $\mbox{\si{\cubic\metre\per\cubic\metre}}$ or $\mbox{\si{\cubic\metre\per particle}}$) \\
+\hline
+{\em jac\+\_\+elem} & When not NULL, a pointer to an array whose length is the number of \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used in calculations of mass and volume of this aerosol phase returned by {\ttfamily aero\+\_\+phase\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem} and whose contents will be set to the partial derivatives of total phase volume by concentration $\frac{dv}{dy_i}$ of each component species $y_i$. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 144 of file aero\+\_\+phase\+\_\+solver.\+c.
+
+\mbox{\Hypertarget{aero__phase__solver_8c_a27c8defcce28585eb3ed62e62f877caa}\label{aero__phase__solver_8c_a27c8defcce28585eb3ed62e62f877caa}} 
+\index{aero\_phase\_solver.c@{aero\_phase\_solver.c}!aero\_phase\_print\_data@{aero\_phase\_print\_data}}
+\index{aero\_phase\_print\_data@{aero\_phase\_print\_data}!aero\_phase\_solver.c@{aero\_phase\_solver.c}}
+\doxysubsubsection{\texorpdfstring{aero\_phase\_print\_data()}{aero\_phase\_print\_data()}}
+{\footnotesize\ttfamily void aero\+\_\+phase\+\_\+print\+\_\+data (\begin{DoxyParamCaption}\item[{void $\ast$}]{solver\+\_\+data }\end{DoxyParamCaption})}
+
+
+
+Print the aerosol phase data. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em solver\+\_\+data} & Pointer to the solver data \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 210 of file aero\+\_\+phase\+\_\+solver.\+c.
+

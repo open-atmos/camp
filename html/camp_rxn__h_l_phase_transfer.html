@@ -60,7 +60,7 @@ $(function() {
 \[ HLC(298K) * e^{C({1/T-1/298})} \]
 </p>
 <p>where \(HLC(298K)\) is the Henry's Law constant at 298 K [M \(\mbox{Pa}^{-1}\)], \(C\) is a constant [K] and \(T\) is the temperature [K]. Uptake kinetics are based on the particle effective radius, \(r_{eff}\) [ \(\mbox{m}\)], the condensing species gas-phase diffusion coefficient, \(D_g\) [ \(\mbox{m}^2\,\mbox{s}^{-1}\)], its molecular weight \(MW\) [kg \(\mbox{mol}^{-3}\)], and \(N^{*}\), which is used to calculate the mass accomodation coefficient.</p>
-<p>Mass accomodation coefficients and condensation rate constants are calculated using the method of Ervans et al. (2003) <a class="el" href="citelist.html#CITEREF_Ervens2003">[1]</a> and references therein. Mass accomodation coefficients ( \(\alpha\)) are calculated as:</p>
+<p>Mass accomodation coefficients and condensation rate constants are calculated using the method of Ervans et al. (2003) <b>[Ervens2003]</b> and references therein. Mass accomodation coefficients ( \(\alpha\)) are calculated as:</p>
 <p class="formulaDsp">
 \[ \Delta H_{obs} = -10 \times (N^*-1) + 7.53 \times (N^{*2/3}-1) - 0.1 \times 10 \quad (\mbox{kcal}\,\mbox{M}^{-1}) \]
 </p>
@@ -70,14 +70,14 @@ $(function() {
  <p class="formulaDsp">
 \[ \frac{\alpha}{1-\alpha} = e^{\frac{-\Delta G^{*}}{RT}} \]
 </p>
-<p> If \(\Delta H\) and \(\Delta S\) are not provided, \(\alpha\) is set to 0.1 <a class="el" href="citelist.html#CITEREF_Zaveri2008">[10]</a>.</p>
+<p> If \(\Delta H\) and \(\Delta S\) are not provided, \(\alpha\) is set to 0.1 <b>[Zaveri2008]</b>.</p>
 <p>Condensation rate constants are calculated as: </p><p class="formulaDsp">
 \[ k_{f} = (\frac{r^2}{3D_g} + \frac{4r}{3 \langle c \rangle \alpha})^{-1} \]
 </p>
 <p> where \(r\) is the particle radius ( \(\mbox{m}\)) and \(\langle c \rangle \) is the mean speed of the gas-phase molecules: </p><p class="formulaDsp">
 \[ \langle c \rangle = \sqrt{\frac{8RT}{\pi MW}} \]
 </p>
-<p> where \(R\) is the ideal gas constant [ \(\mbox{J}\,\mbox{K}^{-1}\,\mbox{mol}^{-1}\)]. The particle radius used to calculate \(k_{f}\) is the effective radius [ \(r_{eff}\)], which is taken as the "least-wrong" choice for condensation rates, as it is weighted to surface area <a class="el" href="citelist.html#CITEREF_Zender2002">[11]</a> .</p>
+<p> where \(R\) is the ideal gas constant [ \(\mbox{J}\,\mbox{K}^{-1}\,\mbox{mol}^{-1}\)]. The particle radius used to calculate \(k_{f}\) is the effective radius [ \(r_{eff}\)], which is taken as the "least-wrong" choice for condensation rates, as it is weighted to surface area <b>[Zender2002]</b> .</p>
 <p>Input data for Phase transfer equations have the following format : </p><div class="fragment"><div class="line">{</div>
 <div class="line">  &quot;type&quot; : &quot;HL_PHASE_TRANSFER&quot;,</div>
 <div class="line">  &quot;gas-phase species&quot; : &quot;my gas spec&quot;,</div>
@@ -91,7 +91,7 @@ $(function() {
 </div><!-- PageDoc -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Aug 29 2021 16:59:02 for CAMP by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Sun Sep 5 2021 20:48:02 for CAMP by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

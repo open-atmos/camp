@@ -1,0 +1,257 @@
+\hypertarget{structcamp__env__state_1_1env__state__t}{}\doxysection{camp\+\_\+env\+\_\+state\+::env\+\_\+state\+\_\+t Type Reference}
+\label{structcamp__env__state_1_1env__state__t}\index{camp\_env\_state::env\_state\_t@{camp\_env\_state::env\_state\_t}}
+
+
+Current environment state.  
+
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+procedure, pass(val) \mbox{\hyperlink{structcamp__env__state_1_1env__state__t_a1763131b0a065bc7ff6fc39fd5e96668}{pack\+\_\+size}} =$>$ \mbox{\hyperlink{namespacecamp__env__state_a5da3d709cc454440a04dba470052ef77}{camp\+\_\+mpi\+\_\+pack\+\_\+size\+\_\+env\+\_\+state}}
+\begin{DoxyCompactList}\small\item\em Determine the number of bytes required to pack the given value. \end{DoxyCompactList}\item 
+procedure, pass(val) \mbox{\hyperlink{structcamp__env__state_1_1env__state__t_a4756fb80beeca8607be2ea949b387e82}{bin\+\_\+pack}} =$>$ \mbox{\hyperlink{namespacecamp__env__state_a151aed99a15531066bb5ef8b25d4b94e}{camp\+\_\+mpi\+\_\+pack\+\_\+env\+\_\+state}}
+\begin{DoxyCompactList}\small\item\em Pack the given value to a buffer, advancing position. \end{DoxyCompactList}\item 
+procedure, pass(val) \mbox{\hyperlink{structcamp__env__state_1_1env__state__t_a2f8d608c7e6b124f94aad6c67144d3ca}{bin\+\_\+unpack}} =$>$ \mbox{\hyperlink{namespacecamp__env__state_a80c14bca3257629238c18686269a4084}{camp\+\_\+mpi\+\_\+unpack\+\_\+env\+\_\+state}}
+\begin{DoxyCompactList}\small\item\em Unpack the given value from a buffer, advancing position. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+real(kind=dp) \mbox{\hyperlink{structcamp__env__state_1_1env__state__t_ab766238aac190245bb73074cb269b378}{temp}}
+\begin{DoxyCompactList}\small\item\em Temperature (K). \end{DoxyCompactList}\item 
+real(kind=dp) \mbox{\hyperlink{structcamp__env__state_1_1env__state__t_ae71cc08388573c887cc3f67f3cda406e}{rel\+\_\+humid}}
+\begin{DoxyCompactList}\small\item\em Relative humidity (1). \end{DoxyCompactList}\item 
+real(kind=dp) \mbox{\hyperlink{structcamp__env__state_1_1env__state__t_aa3f3078d2066ad2f7143efbbee20ddfb}{pressure}}
+\begin{DoxyCompactList}\small\item\em Ambient pressure (Pa). \end{DoxyCompactList}\item 
+real(kind=dp) \mbox{\hyperlink{structcamp__env__state_1_1env__state__t_adc00d18a25c0905cc11a5ba4aa8df7fb}{longitude}}
+\begin{DoxyCompactList}\small\item\em Longitude (degrees). \end{DoxyCompactList}\item 
+real(kind=dp) \mbox{\hyperlink{structcamp__env__state_1_1env__state__t_a357d82c4ca631409c335527bca279f5f}{latitude}}
+\begin{DoxyCompactList}\small\item\em Latitude (degrees). \end{DoxyCompactList}\item 
+real(kind=dp) \mbox{\hyperlink{structcamp__env__state_1_1env__state__t_a92f51bf0e013c04ebd7fe55734cb44c2}{altitude}}
+\begin{DoxyCompactList}\small\item\em Altitude (m). \end{DoxyCompactList}\item 
+real(kind=dp) \mbox{\hyperlink{structcamp__env__state_1_1env__state__t_a7b7266b7c48acede3ab20f09537c2788}{start\+\_\+time}}
+\begin{DoxyCompactList}\small\item\em Start time (s since 00\+:00 UTC on {\ttfamily start\+\_\+day}). \end{DoxyCompactList}\item 
+integer \mbox{\hyperlink{structcamp__env__state_1_1env__state__t_a27cd136f032fa4c984d677c6323909ef}{start\+\_\+day}}
+\begin{DoxyCompactList}\small\item\em Start day of year (UTC). \end{DoxyCompactList}\item 
+real(kind=dp) \mbox{\hyperlink{structcamp__env__state_1_1env__state__t_a8efda7294538ce47a514153242b50351}{elapsed\+\_\+time}}
+\begin{DoxyCompactList}\small\item\em Time since {\ttfamily start\+\_\+time} (s). \end{DoxyCompactList}\item 
+real(kind=dp) \mbox{\hyperlink{structcamp__env__state_1_1env__state__t_a8b6deb032c56c1177f570b3430b3903b}{solar\+\_\+zenith\+\_\+angle}}
+\begin{DoxyCompactList}\small\item\em Solar zenith angle (radians from zenith). \end{DoxyCompactList}\item 
+real(kind=dp) \mbox{\hyperlink{structcamp__env__state_1_1env__state__t_a6c3eec631db6dca646d9a9172ac440c8}{height}}
+\begin{DoxyCompactList}\small\item\em Box height (m). \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Current environment state. 
+
+All quantities are instantaneous, describing the state at a particular instant of time. Constant data and other data not associated with the current environment state is stored in scenario\+\_\+t. 
+
+Definition at line 24 of file env\+\_\+state.\+F90.
+
+
+
+\doxysubsection{Member Function/\+Subroutine Documentation}
+\mbox{\Hypertarget{structcamp__env__state_1_1env__state__t_a4756fb80beeca8607be2ea949b387e82}\label{structcamp__env__state_1_1env__state__t_a4756fb80beeca8607be2ea949b387e82}} 
+\index{camp\_env\_state::env\_state\_t@{camp\_env\_state::env\_state\_t}!bin\_pack@{bin\_pack}}
+\index{bin\_pack@{bin\_pack}!camp\_env\_state::env\_state\_t@{camp\_env\_state::env\_state\_t}}
+\doxysubsubsection{\texorpdfstring{bin\_pack()}{bin\_pack()}}
+{\footnotesize\ttfamily procedure, pass(val) camp\+\_\+env\+\_\+state\+::env\+\_\+state\+\_\+t\+::bin\+\_\+pack}
+
+
+
+Pack the given value to a buffer, advancing position. 
+
+
+
+Definition at line 51 of file env\+\_\+state.\+F90.
+
+\mbox{\Hypertarget{structcamp__env__state_1_1env__state__t_a2f8d608c7e6b124f94aad6c67144d3ca}\label{structcamp__env__state_1_1env__state__t_a2f8d608c7e6b124f94aad6c67144d3ca}} 
+\index{camp\_env\_state::env\_state\_t@{camp\_env\_state::env\_state\_t}!bin\_unpack@{bin\_unpack}}
+\index{bin\_unpack@{bin\_unpack}!camp\_env\_state::env\_state\_t@{camp\_env\_state::env\_state\_t}}
+\doxysubsubsection{\texorpdfstring{bin\_unpack()}{bin\_unpack()}}
+{\footnotesize\ttfamily procedure, pass(val) camp\+\_\+env\+\_\+state\+::env\+\_\+state\+\_\+t\+::bin\+\_\+unpack}
+
+
+
+Unpack the given value from a buffer, advancing position. 
+
+
+
+Definition at line 53 of file env\+\_\+state.\+F90.
+
+\mbox{\Hypertarget{structcamp__env__state_1_1env__state__t_a1763131b0a065bc7ff6fc39fd5e96668}\label{structcamp__env__state_1_1env__state__t_a1763131b0a065bc7ff6fc39fd5e96668}} 
+\index{camp\_env\_state::env\_state\_t@{camp\_env\_state::env\_state\_t}!pack\_size@{pack\_size}}
+\index{pack\_size@{pack\_size}!camp\_env\_state::env\_state\_t@{camp\_env\_state::env\_state\_t}}
+\doxysubsubsection{\texorpdfstring{pack\_size()}{pack\_size()}}
+{\footnotesize\ttfamily procedure, pass(val) camp\+\_\+env\+\_\+state\+::env\+\_\+state\+\_\+t\+::pack\+\_\+size}
+
+
+
+Determine the number of bytes required to pack the given value. 
+
+
+
+Definition at line 49 of file env\+\_\+state.\+F90.
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{structcamp__env__state_1_1env__state__t_a92f51bf0e013c04ebd7fe55734cb44c2}\label{structcamp__env__state_1_1env__state__t_a92f51bf0e013c04ebd7fe55734cb44c2}} 
+\index{camp\_env\_state::env\_state\_t@{camp\_env\_state::env\_state\_t}!altitude@{altitude}}
+\index{altitude@{altitude}!camp\_env\_state::env\_state\_t@{camp\_env\_state::env\_state\_t}}
+\doxysubsubsection{\texorpdfstring{altitude}{altitude}}
+{\footnotesize\ttfamily real(kind=dp) camp\+\_\+env\+\_\+state\+::env\+\_\+state\+\_\+t\+::altitude}
+
+
+
+Altitude (m). 
+
+
+
+Definition at line 36 of file env\+\_\+state.\+F90.
+
+\mbox{\Hypertarget{structcamp__env__state_1_1env__state__t_a8efda7294538ce47a514153242b50351}\label{structcamp__env__state_1_1env__state__t_a8efda7294538ce47a514153242b50351}} 
+\index{camp\_env\_state::env\_state\_t@{camp\_env\_state::env\_state\_t}!elapsed\_time@{elapsed\_time}}
+\index{elapsed\_time@{elapsed\_time}!camp\_env\_state::env\_state\_t@{camp\_env\_state::env\_state\_t}}
+\doxysubsubsection{\texorpdfstring{elapsed\_time}{elapsed\_time}}
+{\footnotesize\ttfamily real(kind=dp) camp\+\_\+env\+\_\+state\+::env\+\_\+state\+\_\+t\+::elapsed\+\_\+time}
+
+
+
+Time since {\ttfamily start\+\_\+time} (s). 
+
+
+
+Definition at line 42 of file env\+\_\+state.\+F90.
+
+\mbox{\Hypertarget{structcamp__env__state_1_1env__state__t_a6c3eec631db6dca646d9a9172ac440c8}\label{structcamp__env__state_1_1env__state__t_a6c3eec631db6dca646d9a9172ac440c8}} 
+\index{camp\_env\_state::env\_state\_t@{camp\_env\_state::env\_state\_t}!height@{height}}
+\index{height@{height}!camp\_env\_state::env\_state\_t@{camp\_env\_state::env\_state\_t}}
+\doxysubsubsection{\texorpdfstring{height}{height}}
+{\footnotesize\ttfamily real(kind=dp) camp\+\_\+env\+\_\+state\+::env\+\_\+state\+\_\+t\+::height}
+
+
+
+Box height (m). 
+
+
+
+Definition at line 46 of file env\+\_\+state.\+F90.
+
+\mbox{\Hypertarget{structcamp__env__state_1_1env__state__t_a357d82c4ca631409c335527bca279f5f}\label{structcamp__env__state_1_1env__state__t_a357d82c4ca631409c335527bca279f5f}} 
+\index{camp\_env\_state::env\_state\_t@{camp\_env\_state::env\_state\_t}!latitude@{latitude}}
+\index{latitude@{latitude}!camp\_env\_state::env\_state\_t@{camp\_env\_state::env\_state\_t}}
+\doxysubsubsection{\texorpdfstring{latitude}{latitude}}
+{\footnotesize\ttfamily real(kind=dp) camp\+\_\+env\+\_\+state\+::env\+\_\+state\+\_\+t\+::latitude}
+
+
+
+Latitude (degrees). 
+
+
+
+Definition at line 34 of file env\+\_\+state.\+F90.
+
+\mbox{\Hypertarget{structcamp__env__state_1_1env__state__t_adc00d18a25c0905cc11a5ba4aa8df7fb}\label{structcamp__env__state_1_1env__state__t_adc00d18a25c0905cc11a5ba4aa8df7fb}} 
+\index{camp\_env\_state::env\_state\_t@{camp\_env\_state::env\_state\_t}!longitude@{longitude}}
+\index{longitude@{longitude}!camp\_env\_state::env\_state\_t@{camp\_env\_state::env\_state\_t}}
+\doxysubsubsection{\texorpdfstring{longitude}{longitude}}
+{\footnotesize\ttfamily real(kind=dp) camp\+\_\+env\+\_\+state\+::env\+\_\+state\+\_\+t\+::longitude}
+
+
+
+Longitude (degrees). 
+
+
+
+Definition at line 32 of file env\+\_\+state.\+F90.
+
+\mbox{\Hypertarget{structcamp__env__state_1_1env__state__t_aa3f3078d2066ad2f7143efbbee20ddfb}\label{structcamp__env__state_1_1env__state__t_aa3f3078d2066ad2f7143efbbee20ddfb}} 
+\index{camp\_env\_state::env\_state\_t@{camp\_env\_state::env\_state\_t}!pressure@{pressure}}
+\index{pressure@{pressure}!camp\_env\_state::env\_state\_t@{camp\_env\_state::env\_state\_t}}
+\doxysubsubsection{\texorpdfstring{pressure}{pressure}}
+{\footnotesize\ttfamily real(kind=dp) camp\+\_\+env\+\_\+state\+::env\+\_\+state\+\_\+t\+::pressure}
+
+
+
+Ambient pressure (Pa). 
+
+
+
+Definition at line 30 of file env\+\_\+state.\+F90.
+
+\mbox{\Hypertarget{structcamp__env__state_1_1env__state__t_ae71cc08388573c887cc3f67f3cda406e}\label{structcamp__env__state_1_1env__state__t_ae71cc08388573c887cc3f67f3cda406e}} 
+\index{camp\_env\_state::env\_state\_t@{camp\_env\_state::env\_state\_t}!rel\_humid@{rel\_humid}}
+\index{rel\_humid@{rel\_humid}!camp\_env\_state::env\_state\_t@{camp\_env\_state::env\_state\_t}}
+\doxysubsubsection{\texorpdfstring{rel\_humid}{rel\_humid}}
+{\footnotesize\ttfamily real(kind=dp) camp\+\_\+env\+\_\+state\+::env\+\_\+state\+\_\+t\+::rel\+\_\+humid}
+
+
+
+Relative humidity (1). 
+
+
+
+Definition at line 28 of file env\+\_\+state.\+F90.
+
+\mbox{\Hypertarget{structcamp__env__state_1_1env__state__t_a8b6deb032c56c1177f570b3430b3903b}\label{structcamp__env__state_1_1env__state__t_a8b6deb032c56c1177f570b3430b3903b}} 
+\index{camp\_env\_state::env\_state\_t@{camp\_env\_state::env\_state\_t}!solar\_zenith\_angle@{solar\_zenith\_angle}}
+\index{solar\_zenith\_angle@{solar\_zenith\_angle}!camp\_env\_state::env\_state\_t@{camp\_env\_state::env\_state\_t}}
+\doxysubsubsection{\texorpdfstring{solar\_zenith\_angle}{solar\_zenith\_angle}}
+{\footnotesize\ttfamily real(kind=dp) camp\+\_\+env\+\_\+state\+::env\+\_\+state\+\_\+t\+::solar\+\_\+zenith\+\_\+angle}
+
+
+
+Solar zenith angle (radians from zenith). 
+
+
+
+Definition at line 44 of file env\+\_\+state.\+F90.
+
+\mbox{\Hypertarget{structcamp__env__state_1_1env__state__t_a27cd136f032fa4c984d677c6323909ef}\label{structcamp__env__state_1_1env__state__t_a27cd136f032fa4c984d677c6323909ef}} 
+\index{camp\_env\_state::env\_state\_t@{camp\_env\_state::env\_state\_t}!start\_day@{start\_day}}
+\index{start\_day@{start\_day}!camp\_env\_state::env\_state\_t@{camp\_env\_state::env\_state\_t}}
+\doxysubsubsection{\texorpdfstring{start\_day}{start\_day}}
+{\footnotesize\ttfamily integer camp\+\_\+env\+\_\+state\+::env\+\_\+state\+\_\+t\+::start\+\_\+day}
+
+
+
+Start day of year (UTC). 
+
+
+
+Definition at line 40 of file env\+\_\+state.\+F90.
+
+\mbox{\Hypertarget{structcamp__env__state_1_1env__state__t_a7b7266b7c48acede3ab20f09537c2788}\label{structcamp__env__state_1_1env__state__t_a7b7266b7c48acede3ab20f09537c2788}} 
+\index{camp\_env\_state::env\_state\_t@{camp\_env\_state::env\_state\_t}!start\_time@{start\_time}}
+\index{start\_time@{start\_time}!camp\_env\_state::env\_state\_t@{camp\_env\_state::env\_state\_t}}
+\doxysubsubsection{\texorpdfstring{start\_time}{start\_time}}
+{\footnotesize\ttfamily real(kind=dp) camp\+\_\+env\+\_\+state\+::env\+\_\+state\+\_\+t\+::start\+\_\+time}
+
+
+
+Start time (s since 00\+:00 UTC on {\ttfamily start\+\_\+day}). 
+
+
+
+Definition at line 38 of file env\+\_\+state.\+F90.
+
+\mbox{\Hypertarget{structcamp__env__state_1_1env__state__t_ab766238aac190245bb73074cb269b378}\label{structcamp__env__state_1_1env__state__t_ab766238aac190245bb73074cb269b378}} 
+\index{camp\_env\_state::env\_state\_t@{camp\_env\_state::env\_state\_t}!temp@{temp}}
+\index{temp@{temp}!camp\_env\_state::env\_state\_t@{camp\_env\_state::env\_state\_t}}
+\doxysubsubsection{\texorpdfstring{temp}{temp}}
+{\footnotesize\ttfamily real(kind=dp) camp\+\_\+env\+\_\+state\+::env\+\_\+state\+\_\+t\+::temp}
+
+
+
+Temperature (K). 
+
+
+
+Definition at line 26 of file env\+\_\+state.\+F90.
+
+
+
+The documentation for this type was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{env__state_8_f90}{env\+\_\+state.\+F90}}\end{DoxyCompactItemize}

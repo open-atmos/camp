@@ -1,0 +1,104 @@
+\hypertarget{structcamp__util_1_1string__t}{}\doxysection{camp\+\_\+util\+::string\+\_\+t Interface Reference}
+\label{structcamp__util_1_1string__t}\index{camp\_util::string\_t@{camp\_util::string\_t}}
+
+
+String type for building arrays of string of various size.  
+
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+final \mbox{\hyperlink{structcamp__util_1_1string__t_a64da18bf3ad0df6f852c1d57fa73092e}{string\+\_\+t\+\_\+finalize}}
+\begin{DoxyCompactList}\small\item\em Finalize the string. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+character(len=\+:), allocatable \mbox{\hyperlink{structcamp__util_1_1string__t_ae1b2223308f77a0700519692920f465f}{string}}
+\begin{DoxyCompactList}\small\item\em String value. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Splits a string on a sub-\/string}
+\begin{DoxyCompactItemize}
+\item 
+procedure, private \mbox{\hyperlink{structcamp__util_1_1string__t_a4d6302238270f1b781b21d1f42da91fd}{split\+\_\+char}}
+\item 
+procedure, private \mbox{\hyperlink{structcamp__util_1_1string__t_a2d8a8eaf8cf63448811aaf0eeb43792d}{split\+\_\+string}}
+\item 
+generic \mbox{\hyperlink{structcamp__util_1_1string__t_af2e8e8519761739c035e8257a6fd30fd}{split}} =$>$ \mbox{\hyperlink{structcamp__util_1_1string__t_a4d6302238270f1b781b21d1f42da91fd}{split\+\_\+char}}, \mbox{\hyperlink{structcamp__util_1_1string__t_a2d8a8eaf8cf63448811aaf0eeb43792d}{split\+\_\+string}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+String type for building arrays of string of various size. 
+
+Constructor for \mbox{\hyperlink{structcamp__util_1_1string__t}{string\+\_\+t}}. 
+
+Definition at line 38 of file util.\+F90.
+
+
+
+\doxysubsection{Member Function/\+Subroutine Documentation}
+\mbox{\Hypertarget{structcamp__util_1_1string__t_af2e8e8519761739c035e8257a6fd30fd}\label{structcamp__util_1_1string__t_af2e8e8519761739c035e8257a6fd30fd}} 
+\index{camp\_util::string\_t@{camp\_util::string\_t}!split@{split}}
+\index{split@{split}!camp\_util::string\_t@{camp\_util::string\_t}}
+\doxysubsubsection{\texorpdfstring{split()}{split()}}
+{\footnotesize\ttfamily generic camp\+\_\+util\+::string\+\_\+t\+::split}
+
+
+
+Definition at line 46 of file util.\+F90.
+
+\mbox{\Hypertarget{structcamp__util_1_1string__t_a4d6302238270f1b781b21d1f42da91fd}\label{structcamp__util_1_1string__t_a4d6302238270f1b781b21d1f42da91fd}} 
+\index{camp\_util::string\_t@{camp\_util::string\_t}!split\_char@{split\_char}}
+\index{split\_char@{split\_char}!camp\_util::string\_t@{camp\_util::string\_t}}
+\doxysubsubsection{\texorpdfstring{split\_char()}{split\_char()}}
+{\footnotesize\ttfamily procedure, private camp\+\_\+util\+::string\+\_\+t\+::split\+\_\+char\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 44 of file util.\+F90.
+
+\mbox{\Hypertarget{structcamp__util_1_1string__t_a2d8a8eaf8cf63448811aaf0eeb43792d}\label{structcamp__util_1_1string__t_a2d8a8eaf8cf63448811aaf0eeb43792d}} 
+\index{camp\_util::string\_t@{camp\_util::string\_t}!split\_string@{split\_string}}
+\index{split\_string@{split\_string}!camp\_util::string\_t@{camp\_util::string\_t}}
+\doxysubsubsection{\texorpdfstring{split\_string()}{split\_string()}}
+{\footnotesize\ttfamily procedure, private camp\+\_\+util\+::string\+\_\+t\+::split\+\_\+string\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 45 of file util.\+F90.
+
+\mbox{\Hypertarget{structcamp__util_1_1string__t_a64da18bf3ad0df6f852c1d57fa73092e}\label{structcamp__util_1_1string__t_a64da18bf3ad0df6f852c1d57fa73092e}} 
+\index{camp\_util::string\_t@{camp\_util::string\_t}!string\_t\_finalize@{string\_t\_finalize}}
+\index{string\_t\_finalize@{string\_t\_finalize}!camp\_util::string\_t@{camp\_util::string\_t}}
+\doxysubsubsection{\texorpdfstring{string\_t\_finalize()}{string\_t\_finalize()}}
+{\footnotesize\ttfamily final camp\+\_\+util\+::string\+\_\+t\+::string\+\_\+t\+\_\+finalize\hspace{0.3cm}{\ttfamily [final]}}
+
+
+
+Finalize the string. 
+
+
+
+Definition at line 49 of file util.\+F90.
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{structcamp__util_1_1string__t_ae1b2223308f77a0700519692920f465f}\label{structcamp__util_1_1string__t_ae1b2223308f77a0700519692920f465f}} 
+\index{camp\_util::string\_t@{camp\_util::string\_t}!string@{string}}
+\index{string@{string}!camp\_util::string\_t@{camp\_util::string\_t}}
+\doxysubsubsection{\texorpdfstring{string}{string}}
+{\footnotesize\ttfamily character(len=\+:), allocatable camp\+\_\+util\+::string\+\_\+t\+::string}
+
+
+
+String value. 
+
+
+
+Definition at line 40 of file util.\+F90.
+
+
+
+The documentation for this interface was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{util_8_f90}{util.\+F90}}\end{DoxyCompactItemize}

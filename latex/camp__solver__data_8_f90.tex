@@ -1,0 +1,92 @@
+\hypertarget{camp__solver__data_8_f90}{}\doxysection{camp\+\_\+solver\+\_\+data.\+F90 File Reference}
+\label{camp__solver__data_8_f90}\index{camp\_solver\_data.F90@{camp\_solver\_data.F90}}
+
+
+The \mbox{\hyperlink{namespacecamp__camp__solver__data}{camp\+\_\+camp\+\_\+solver\+\_\+data}} module.  
+
+
+\doxysubsection*{Data Types}
+\begin{DoxyCompactItemize}
+\item 
+interface \mbox{\hyperlink{interfacecamp__camp__solver__data_1_1solver__new}{camp\+\_\+camp\+\_\+solver\+\_\+data\+::solver\+\_\+new}}
+\begin{DoxyCompactList}\small\item\em Interface to c ODE solver functions. \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interfacecamp__camp__solver__data_1_1solver__initialize}{camp\+\_\+camp\+\_\+solver\+\_\+data\+::solver\+\_\+initialize}}
+\begin{DoxyCompactList}\small\item\em Solver initialization. \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interfacecamp__camp__solver__data_1_1solver__run}{camp\+\_\+camp\+\_\+solver\+\_\+data\+::solver\+\_\+run}}
+\begin{DoxyCompactList}\small\item\em Run the solver. \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interfacecamp__camp__solver__data_1_1solver__reset__timers}{camp\+\_\+camp\+\_\+solver\+\_\+data\+::solver\+\_\+reset\+\_\+timers}}
+\begin{DoxyCompactList}\small\item\em Reset the solver function timers. \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interfacecamp__camp__solver__data_1_1solver__get__statistics}{camp\+\_\+camp\+\_\+solver\+\_\+data\+::solver\+\_\+get\+\_\+statistics}}
+\begin{DoxyCompactList}\small\item\em Get the solver statistics. \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interfacecamp__camp__solver__data_1_1rxn__add__condensed__data}{camp\+\_\+camp\+\_\+solver\+\_\+data\+::rxn\+\_\+add\+\_\+condensed\+\_\+data}}
+\begin{DoxyCompactList}\small\item\em Add condensed reaction data to the solver data block. \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interfacecamp__camp__solver__data_1_1rxn__update__data}{camp\+\_\+camp\+\_\+solver\+\_\+data\+::rxn\+\_\+update\+\_\+data}}
+\begin{DoxyCompactList}\small\item\em Update reaction data. \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interfacecamp__camp__solver__data_1_1rxn__print__data}{camp\+\_\+camp\+\_\+solver\+\_\+data\+::rxn\+\_\+print\+\_\+data}}
+\begin{DoxyCompactList}\small\item\em Print the solver data. \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interfacecamp__camp__solver__data_1_1sub__model__add__condensed__data}{camp\+\_\+camp\+\_\+solver\+\_\+data\+::sub\+\_\+model\+\_\+add\+\_\+condensed\+\_\+data}}
+\begin{DoxyCompactList}\small\item\em Add condensed sub model data to the solver data block. \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interfacecamp__camp__solver__data_1_1sub__model__update__data}{camp\+\_\+camp\+\_\+solver\+\_\+data\+::sub\+\_\+model\+\_\+update\+\_\+data}}
+\begin{DoxyCompactList}\small\item\em Update reaction data. \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interfacecamp__camp__solver__data_1_1sub__model__print__data}{camp\+\_\+camp\+\_\+solver\+\_\+data\+::sub\+\_\+model\+\_\+print\+\_\+data}}
+\begin{DoxyCompactList}\small\item\em Print the solver data. \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interfacecamp__camp__solver__data_1_1aero__phase__add__condensed__data}{camp\+\_\+camp\+\_\+solver\+\_\+data\+::aero\+\_\+phase\+\_\+add\+\_\+condensed\+\_\+data}}
+\begin{DoxyCompactList}\small\item\em Add condensed aerosol phase data to the solver data block. \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interfacecamp__camp__solver__data_1_1aero__phase__print__data}{camp\+\_\+camp\+\_\+solver\+\_\+data\+::aero\+\_\+phase\+\_\+print\+\_\+data}}
+\begin{DoxyCompactList}\small\item\em Print the solver data. \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interfacecamp__camp__solver__data_1_1aero__rep__add__condensed__data}{camp\+\_\+camp\+\_\+solver\+\_\+data\+::aero\+\_\+rep\+\_\+add\+\_\+condensed\+\_\+data}}
+\begin{DoxyCompactList}\small\item\em Add condensed aerosol representation data to the solver data block. \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interfacecamp__camp__solver__data_1_1aero__rep__update__data}{camp\+\_\+camp\+\_\+solver\+\_\+data\+::aero\+\_\+rep\+\_\+update\+\_\+data}}
+\begin{DoxyCompactList}\small\item\em Update aerosol representation data. \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interfacecamp__camp__solver__data_1_1aero__rep__print__data}{camp\+\_\+camp\+\_\+solver\+\_\+data\+::aero\+\_\+rep\+\_\+print\+\_\+data}}
+\begin{DoxyCompactList}\small\item\em Print the aerosol representation data. \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interfacecamp__camp__solver__data_1_1solver__free}{camp\+\_\+camp\+\_\+solver\+\_\+data\+::solver\+\_\+free}}
+\begin{DoxyCompactList}\small\item\em Free the memory associated with a solver. \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{structcamp__camp__solver__data_1_1camp__solver__data__t}{camp\+\_\+camp\+\_\+solver\+\_\+data\+::camp\+\_\+solver\+\_\+data\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em Solver data. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Modules}
+\begin{DoxyCompactItemize}
+\item 
+module \mbox{\hyperlink{namespacecamp__camp__solver__data}{camp\+\_\+camp\+\_\+solver\+\_\+data}}
+\begin{DoxyCompactList}\small\item\em The \mbox{\hyperlink{structcamp__camp__solver__data_1_1camp__solver__data__t}{camp\+\_\+solver\+\_\+data\+\_\+t}} structure and associated subroutines. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Functions/\+Subroutines}
+\begin{DoxyCompactItemize}
+\item 
+type(camp\+\_\+solver\+\_\+data\+\_\+t) function, pointer \mbox{\hyperlink{namespacecamp__camp__solver__data_a7b3f1b357c1e183b796a76eab992dcc5}{camp\+\_\+camp\+\_\+solver\+\_\+data\+::constructor}} ()
+\begin{DoxyCompactList}\small\item\em Constructor for \mbox{\hyperlink{structcamp__camp__solver__data_1_1camp__solver__data__t}{camp\+\_\+solver\+\_\+data\+\_\+t}}. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__camp__solver__data_abf81c7a12d2d007b6b2925b53b1c3579}{camp\+\_\+camp\+\_\+solver\+\_\+data\+::initialize}} (this, var\+\_\+type, abs\+\_\+tol, mechanisms, aero\+\_\+phases, aero\+\_\+reps, sub\+\_\+models, rxn\+\_\+phase, n\+\_\+cells)
+\begin{DoxyCompactList}\small\item\em Initialize the solver. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__camp__solver__data_a78dde4ec2c39ecc009fb4170379a80ed}{camp\+\_\+camp\+\_\+solver\+\_\+data\+::update\+\_\+sub\+\_\+model\+\_\+data}} (this, update\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Update sub-\/model data. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__camp__solver__data_a703e1dfb9ca03cbee99cdaa9959be2cb}{camp\+\_\+camp\+\_\+solver\+\_\+data\+::update\+\_\+rxn\+\_\+data}} (this, update\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Update reaction data. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__camp__solver__data_adf4819e7439fd3f634d6e242dd7294f4}{camp\+\_\+camp\+\_\+solver\+\_\+data\+::update\+\_\+aero\+\_\+rep\+\_\+data}} (this, update\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Update aerosol representation data based on data passed from the host model related to aerosol properties. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__camp__solver__data_ad854d73d29a9018f94db4666c3afe7fb}{camp\+\_\+camp\+\_\+solver\+\_\+data\+::solve}} (this, camp\+\_\+state, t\+\_\+initial, t\+\_\+final, solver\+\_\+stats)
+\begin{DoxyCompactList}\small\item\em Solve the mechanism(s) for a specified timestep. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__camp__solver__data_a8d0f89a2f8ee620f2c87e19fb4aff155}{camp\+\_\+camp\+\_\+solver\+\_\+data\+::reset\+\_\+timers}} (this)
+\begin{DoxyCompactList}\small\item\em Reset the solver function timers. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__camp__solver__data_a2f98a02209d71cedf443f279f19e8af4}{camp\+\_\+camp\+\_\+solver\+\_\+data\+::get\+\_\+solver\+\_\+stats}} (this, solver\+\_\+stats)
+\begin{DoxyCompactList}\small\item\em Get solver statistics. \end{DoxyCompactList}\item 
+logical function \mbox{\hyperlink{namespacecamp__camp__solver__data_a99614bacadbc849ac1dad41b05fc0686}{camp\+\_\+camp\+\_\+solver\+\_\+data\+::is\+\_\+solver\+\_\+available}} (this)
+\begin{DoxyCompactList}\small\item\em Check whether a solver is available for the integration. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__camp__solver__data_a80cd4aadfc872604af5dfd9b74b846ec}{camp\+\_\+camp\+\_\+solver\+\_\+data\+::do\+\_\+print}} (this)
+\begin{DoxyCompactList}\small\item\em Print the solver data. \end{DoxyCompactList}\item 
+elemental subroutine \mbox{\hyperlink{namespacecamp__camp__solver__data_a796df1d4fec284ab15d806853e81a7a2}{camp\+\_\+camp\+\_\+solver\+\_\+data\+::finalize}} (this)
+\begin{DoxyCompactList}\small\item\em Finalize the solver data. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+real(kind=dp), parameter \mbox{\hyperlink{namespacecamp__camp__solver__data_ac0c0056598910f8b5cca68b75d7460f4}{camp\+\_\+camp\+\_\+solver\+\_\+data\+::camp\+\_\+solver\+\_\+default\+\_\+rel\+\_\+tol}} = 1.\+0D-\/8
+\begin{DoxyCompactList}\small\item\em Default relative tolerance for integration. \end{DoxyCompactList}\item 
+integer(kind=i\+\_\+kind), parameter \mbox{\hyperlink{namespacecamp__camp__solver__data_ae440ef611384ecf49647866444d9e65b}{camp\+\_\+camp\+\_\+solver\+\_\+data\+::camp\+\_\+solver\+\_\+default\+\_\+max\+\_\+steps}} = 10000
+\begin{DoxyCompactList}\small\item\em Default max number of integration steps. \end{DoxyCompactList}\item 
+integer(kind=i\+\_\+kind), parameter \mbox{\hyperlink{namespacecamp__camp__solver__data_ad7cc6d74aeef337af13d5809432d6580}{camp\+\_\+camp\+\_\+solver\+\_\+data\+::camp\+\_\+solver\+\_\+default\+\_\+max\+\_\+conv\+\_\+fails}} = 1000
+\begin{DoxyCompactList}\small\item\em Default maximum number of integration convergence failures. \end{DoxyCompactList}\item 
+integer, parameter \mbox{\hyperlink{namespacecamp__camp__solver__data_ad0bb6041c4a3c7383bf17a04876fc2ca}{camp\+\_\+camp\+\_\+solver\+\_\+data\+::camp\+\_\+solver\+\_\+success}} = 0
+\begin{DoxyCompactList}\small\item\em Result code indicating successful completion. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+The \mbox{\hyperlink{namespacecamp__camp__solver__data}{camp\+\_\+camp\+\_\+solver\+\_\+data}} module. 
+

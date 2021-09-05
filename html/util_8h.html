@@ -66,9 +66,9 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><img src="util_8h__dep__incl.png" border="0" usemap="#autil_8hdep" alt=""/></div>
 <map name="autil_8hdep" id="autil_8hdep">
-<area shape="rect" title="Utility functions and commonly used science property calculators." alt="" coords="167,5,218,32"/>
+<area shape="rect" title="Utility functions and commonly used science property calculators." alt="" coords="167,5,216,32"/>
 <area shape="rect" href="rxn___h_l__phase__transfer_8c.html" title="Phase Transfer reaction solver functions." alt="" coords="5,80,172,107"/>
-<area shape="rect" href="rxn___s_i_m_p_o_l__phase__transfer_8c.html" title="Phase Transfer reaction solver functions." alt="" coords="197,80,397,107"/>
+<area shape="rect" href="rxn___s_i_m_p_o_l__phase__transfer_8c.html" title="Phase Transfer reaction solver functions." alt="" coords="195,80,395,107"/>
 </map>
 </div>
 </div>
@@ -219,7 +219,7 @@ Functions</h2></td></tr>
 <p>Calculate the derivative of the transition regime correction factor by particle radius. </p><p class="formulaDsp">
 \[ \frac{d f_{fs}}{d r} = \frac{0.75 \alpha \lambda (K_n^2 + 2K_n + 1 + (0.283-0.75)\alpha)}{r^2(K_n^2 + (1+0.283\alpha)K_n + 0.75\alpha)^2} \]
 </p>
- <dl class="todo"><dt><b><a class="el" href="todo.html#_todo000004">Todo:</a></b></dt><dd>double check the correction factor derivative equation where the Knudsen Number \(K_n = \lambda / r\) (where \(\lambda\) is the mean free path (m) of the gas-phase species and \(r\) is the effective radius of the particles (m)), and \( \alpha \) is the mass accomodation coefficient, which is typically assumed to equal 0.1 <a class="el" href="citelist.html#CITEREF_Zaveri2008">[10]</a>.</dd></dl>
+ <dl class="todo"><dt><b><a class="el" href="todo.html#_todo000004">Todo:</a></b></dt><dd>double check the correction factor derivative equation where the Knudsen Number \(K_n = \lambda / r\) (where \(\lambda\) is the mean free path (m) of the gas-phase species and \(r\) is the effective radius of the particles (m)), and \( \alpha \) is the mass accomodation coefficient, which is typically assumed to equal 0.1 <b>[Zaveri2008]</b>.</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">mean_free_path__m</td><td>mean free path of the gas-phase species [m] </td></tr>
@@ -279,7 +279,7 @@ Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 <p>Calculate the gas-aerosol reaction rate constant for the transition regime [m3 #-1 s-1]</p>
-<p>The rate constant \(k_c\) is calculated according to <a class="el" href="citelist.html#CITEREF_Zaveri2008">[10]</a> as: </p><p class="formulaDsp">
+<p>The rate constant \(k_c\) is calculated according to <b>[Zaveri2008]</b> as: </p><p class="formulaDsp">
 \[ k_c = 4 \pi r D_g f_{fs}( K_n, \alpha ) \]
 </p>
 <p> where \(r\) is the radius of the particle(s) [m], \(D_g\) is the diffusion coefficient of the gas-phase species [m2 s-1] and \(f_{fs}( K_n, \alpha )\) is the Fuchs Sutugin transition regime correction factor [unitless] ( \(K_n\) is the Knudsen Number [unitess] and \(\alpha\) is the mass accomodation coefficient.</p>
@@ -399,10 +399,10 @@ Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Calculate the transition regime correction factor [unitless] <a class="el" href="citelist.html#CITEREF_Fuchs1971">[3]</a> : </p><p class="formulaDsp">
+<p>Calculate the transition regime correction factor [unitless] <b>[Fuchs1971]</b> : </p><p class="formulaDsp">
 \[ f(K_n,\alpha) = \frac{0.75 \alpha ( 1 + K_n )}{K_n(1+K_n) + 0.283\alpha K_n + 0.75 \alpha} \]
 </p>
-<p> where the Knudsen Number \(K_n = \lambda / r\) (where \(\lambda\) is the mean free path (m) of the gas-phase species and \(r\) is the effective radius of the particles (m)), and \( \alpha \) is the mass accomodation coefficient, which is typically assumed to equal 0.1 <a class="el" href="citelist.html#CITEREF_Zaveri2008">[10]</a>.</p>
+<p> where the Knudsen Number \(K_n = \lambda / r\) (where \(\lambda\) is the mean free path (m) of the gas-phase species and \(r\) is the effective radius of the particles (m)), and \( \alpha \) is the mass accomodation coefficient, which is typically assumed to equal 0.1 <b>[Zaveri2008]</b>.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">mean_free_path__m</td><td>mean free path of the gas-phase species [m] </td></tr>
@@ -419,7 +419,7 @@ Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Aug 29 2021 16:59:02 for CAMP by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Sun Sep 5 2021 20:48:02 for CAMP by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

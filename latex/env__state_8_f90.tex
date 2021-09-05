@@ -1,0 +1,61 @@
+\hypertarget{env__state_8_f90}{}\doxysection{env\+\_\+state.\+F90 File Reference}
+\label{env__state_8_f90}\index{env\_state.F90@{env\_state.F90}}
+
+
+The \mbox{\hyperlink{namespacecamp__env__state}{camp\+\_\+env\+\_\+state}} module.  
+
+
+\doxysubsection*{Data Types}
+\begin{DoxyCompactItemize}
+\item 
+type \mbox{\hyperlink{structcamp__env__state_1_1env__state__t}{camp\+\_\+env\+\_\+state\+::env\+\_\+state\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em Current environment state. \end{DoxyCompactList}\item 
+type \mbox{\hyperlink{structcamp__env__state_1_1env__state__ptr}{camp\+\_\+env\+\_\+state\+::env\+\_\+state\+\_\+ptr}}
+\begin{DoxyCompactList}\small\item\em Pointer for \mbox{\hyperlink{structcamp__env__state_1_1env__state__t}{env\+\_\+state\+\_\+t}}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Modules}
+\begin{DoxyCompactItemize}
+\item 
+module \mbox{\hyperlink{namespacecamp__env__state}{camp\+\_\+env\+\_\+state}}
+\begin{DoxyCompactList}\small\item\em The \mbox{\hyperlink{structcamp__env__state_1_1env__state__t}{env\+\_\+state\+\_\+t}} structure and associated subroutines. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Functions/\+Subroutines}
+\begin{DoxyCompactItemize}
+\item 
+subroutine \mbox{\hyperlink{namespacecamp__env__state_ac51ba858506da25f49bbd32320bbeb75}{camp\+\_\+env\+\_\+state\+::env\+\_\+state\+\_\+add}} (env\+\_\+state, env\+\_\+state\+\_\+delta)
+\begin{DoxyCompactList}\small\item\em env\+\_\+state += env\+\_\+state\+\_\+delta \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__env__state_a85f6d9d704e9949d321b51d97965d276}{camp\+\_\+env\+\_\+state\+::env\+\_\+state\+\_\+scale}} (env\+\_\+state, alpha)
+\begin{DoxyCompactList}\small\item\em env\+\_\+state $\ast$= alpha \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__env__state_aed371f10382a89dce6a108a550cc94e7}{camp\+\_\+env\+\_\+state\+::env\+\_\+state\+\_\+change\+\_\+water\+\_\+volume}} (env\+\_\+state, dv)
+\begin{DoxyCompactList}\small\item\em Adds the given water volume to the water vapor and updates all environment quantities. \end{DoxyCompactList}\item 
+real(kind=dp) function \mbox{\hyperlink{namespacecamp__env__state_a5c1fd43043590c45470606847d0cd457}{camp\+\_\+env\+\_\+state\+::env\+\_\+state\+\_\+sat\+\_\+vapor\+\_\+pressure}} (env\+\_\+state)
+\begin{DoxyCompactList}\small\item\em Computes the current saturation vapor pressure (Pa). \end{DoxyCompactList}\item 
+real(kind=dp) function \mbox{\hyperlink{namespacecamp__env__state_af8f56c1aae7d482b1a9a62b342edd85d}{camp\+\_\+env\+\_\+state\+::env\+\_\+state\+\_\+air\+\_\+den}} (env\+\_\+state)
+\begin{DoxyCompactList}\small\item\em Air density (kg m$^\wedge$\{-\/3\}). \end{DoxyCompactList}\item 
+real(kind=dp) function \mbox{\hyperlink{namespacecamp__env__state_a1f549c4ca4ea9f5209b75fec899cb0a9}{camp\+\_\+env\+\_\+state\+::env\+\_\+state\+\_\+air\+\_\+molar\+\_\+den}} (env\+\_\+state)
+\begin{DoxyCompactList}\small\item\em Air molar density (mol m$^\wedge$\{-\/3\}). \end{DoxyCompactList}\item 
+real(kind=dp) function \mbox{\hyperlink{namespacecamp__env__state_a510247c52aff804a61315f2d12ae9ae2}{camp\+\_\+env\+\_\+state\+::env\+\_\+state\+\_\+a}} (env\+\_\+state)
+\begin{DoxyCompactList}\small\item\em Condensation $A$ parameter. \end{DoxyCompactList}\item 
+real(kind=dp) function \mbox{\hyperlink{namespacecamp__env__state_a4706a3e61a7f2fe4554b57b126192754}{camp\+\_\+env\+\_\+state\+::env\+\_\+state\+\_\+ppb\+\_\+to\+\_\+conc}} (env\+\_\+state, ppb)
+\begin{DoxyCompactList}\small\item\em Convert (ppb) to (molecules m$^\wedge$\{-\/3\}). \end{DoxyCompactList}\item 
+real(kind=dp) function \mbox{\hyperlink{namespacecamp__env__state_a71497d9ef664a1d08bd507da56b1d077}{camp\+\_\+env\+\_\+state\+::env\+\_\+state\+\_\+conc\+\_\+to\+\_\+ppb}} (env\+\_\+state, conc)
+\begin{DoxyCompactList}\small\item\em Convert (molecules m$^\wedge$\{-\/3\}) to (ppb). \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__env__state_acd71d6143a8e08e77473bf24f1752af6}{camp\+\_\+env\+\_\+state\+::env\+\_\+state\+\_\+mix}} (val)
+\begin{DoxyCompactList}\small\item\em Average val over all processes. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__env__state_aa8f8e6e85adf7327d31a2f64324d49a4}{camp\+\_\+env\+\_\+state\+::env\+\_\+state\+\_\+reduce\+\_\+avg}} (val)
+\begin{DoxyCompactList}\small\item\em Average val over all processes, with the result only on the root process. \end{DoxyCompactList}\item 
+integer function \mbox{\hyperlink{namespacecamp__env__state_a5da3d709cc454440a04dba470052ef77}{camp\+\_\+env\+\_\+state\+::camp\+\_\+mpi\+\_\+pack\+\_\+size\+\_\+env\+\_\+state}} (val)
+\begin{DoxyCompactList}\small\item\em Determines the number of bytes required to pack the given value. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__env__state_a151aed99a15531066bb5ef8b25d4b94e}{camp\+\_\+env\+\_\+state\+::camp\+\_\+mpi\+\_\+pack\+\_\+env\+\_\+state}} (buffer, position, val)
+\begin{DoxyCompactList}\small\item\em Packs the given value into the buffer, advancing position. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__env__state_a80c14bca3257629238c18686269a4084}{camp\+\_\+env\+\_\+state\+::camp\+\_\+mpi\+\_\+unpack\+\_\+env\+\_\+state}} (buffer, position, val)
+\begin{DoxyCompactList}\small\item\em Unpacks the given value from the buffer, advancing position. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__env__state_af55024977aafd912d718d87887a5b114}{camp\+\_\+env\+\_\+state\+::camp\+\_\+mpi\+\_\+reduce\+\_\+avg\+\_\+env\+\_\+state}} (val, val\+\_\+avg)
+\begin{DoxyCompactList}\small\item\em Computes the average of val across all processes, storing the result in val\+\_\+avg on the root process. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__env__state_a980571eae0b75e18ea08f03d0ab9d3d7}{camp\+\_\+env\+\_\+state\+::set\+\_\+temperature\+\_\+k}} (this, temperature)
+\begin{DoxyCompactList}\small\item\em Set the temperature (K) \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__env__state_a8ec95b192896c36ea9c1b39add39e65a}{camp\+\_\+env\+\_\+state\+::set\+\_\+pressure\+\_\+pa}} (this, pressure)
+\begin{DoxyCompactList}\small\item\em Set the pressure (Pa) \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+The \mbox{\hyperlink{namespacecamp__env__state}{camp\+\_\+env\+\_\+state}} module. 
+

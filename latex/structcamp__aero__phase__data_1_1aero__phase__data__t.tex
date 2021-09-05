@@ -1,0 +1,404 @@
+\hypertarget{structcamp__aero__phase__data_1_1aero__phase__data__t}{}\doxysection{camp\+\_\+aero\+\_\+phase\+\_\+data\+::aero\+\_\+phase\+\_\+data\+\_\+t Interface Reference}
+\label{structcamp__aero__phase__data_1_1aero__phase__data__t}\index{camp\_aero\_phase\_data::aero\_phase\_data\_t@{camp\_aero\_phase\_data::aero\_phase\_data\_t}}
+
+
+Aerosol phase data type.  
+
+
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+real(kind=dp), dimension(\+:), allocatable, public \mbox{\hyperlink{structcamp__aero__phase__data_1_1aero__phase__data__t_af62c4556e9fdcea61f3c8feeea256911}{condensed\+\_\+data\+\_\+real}}
+\begin{DoxyCompactList}\small\item\em Condensed phase data. Theses arrays will be available during solving, and should contain any information required by the functions of the aerosol phase that cannot be obtained from the {\ttfamily \mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t}{camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t}}} object. (floating-\/point) \end{DoxyCompactList}\item 
+integer(kind=i\+\_\+kind), dimension(\+:), allocatable, public \mbox{\hyperlink{structcamp__aero__phase__data_1_1aero__phase__data__t_a29609788f8da0223a3e02c3516bb66a5}{condensed\+\_\+data\+\_\+int}}
+\begin{DoxyCompactList}\small\item\em Condensed phase data. Theses arrays will be available during solving, and should contain any information required by the functions of the aerosol phase that cannot be obtained from the {\ttfamily \mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t}{camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t}}} object. (integer) \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+procedure \mbox{\hyperlink{structcamp__aero__phase__data_1_1aero__phase__data__t_af820c8f2aa7ddacca5f57feef583f5a1}{load}}
+\begin{DoxyCompactList}\small\item\em Load data from an input file. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__aero__phase__data_1_1aero__phase__data__t_ae9f310da59cfbe4b2fe7517549532504}{initialize}}
+\begin{DoxyCompactList}\small\item\em Aerosol phase initialization. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__aero__phase__data_1_1aero__phase__data__t_af6562f25b9ce209ed3b90c146e76debe}{name}} =$>$ \mbox{\hyperlink{namespacecamp__aero__phase__data_a50e3a12672f60404141d9f7d90ab049e}{get\+\_\+name}}
+\begin{DoxyCompactList}\small\item\em Get the name of the aerosol phase. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__aero__phase__data_1_1aero__phase__data__t_a638e14de1b9c23679eb1d83bc3551745}{size}} =$>$ \mbox{\hyperlink{namespacecamp__aero__phase__data_a3f1fce7eed369d2c40aa6ec071f85c17}{get\+\_\+size}}
+\begin{DoxyCompactList}\small\item\em Get the number of species in the phase. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__aero__phase__data_1_1aero__phase__data__t_a5b2553db9e7aa7e4ec401b9da6f63c58}{num\+\_\+jac\+\_\+elem}}
+\begin{DoxyCompactList}\small\item\em Get the number of \mbox{\hyperlink{struct_jacobian}{Jacobian}} row elements needed during solving. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__aero__phase__data_1_1aero__phase__data__t_a3aeadf10ed8e600d4bebf9e1146acb3d}{get\+\_\+property\+\_\+set}}
+\begin{DoxyCompactList}\small\item\em Get property data associated with this phase. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__aero__phase__data_1_1aero__phase__data__t_a0184bd713d28e2ab434a027b92149b13}{get\+\_\+species\+\_\+names}}
+\begin{DoxyCompactList}\small\item\em Get a list of species names in this phase. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__aero__phase__data_1_1aero__phase__data__t_a5273f3475347e3e1120eb393d1a2b46a}{get\+\_\+species\+\_\+type}}
+\begin{DoxyCompactList}\small\item\em Get a species type by name. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__aero__phase__data_1_1aero__phase__data__t_a6e64483b012c8a7fe2262d4908c11a75}{pack\+\_\+size}}
+\begin{DoxyCompactList}\small\item\em Determine the number of bytes required to pack the given value. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__aero__phase__data_1_1aero__phase__data__t_a397b434861edf9808625d1fffa678a07}{bin\+\_\+pack}}
+\begin{DoxyCompactList}\small\item\em Packs the given value into the buffer, advancing position. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__aero__phase__data_1_1aero__phase__data__t_a5b42b6dbccdcdd7991726d3d37f79fc5}{bin\+\_\+unpack}}
+\begin{DoxyCompactList}\small\item\em Unpacks the given value from the buffer, advancing position. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__aero__phase__data_1_1aero__phase__data__t_a47f40e3fb6bcff7038030e6b935ba9d9}{print}} =$>$ \mbox{\hyperlink{namespacecamp__aero__phase__data_ac5eaedf2265900988eaddb4872f1c0c2}{do\+\_\+print}}
+\begin{DoxyCompactList}\small\item\em Print the aerosol phase data. \end{DoxyCompactList}\item 
+final \mbox{\hyperlink{structcamp__aero__phase__data_1_1aero__phase__data__t_a8f7c60df17083ac8a79867eead583e97}{finalize}}
+\begin{DoxyCompactList}\small\item\em Finalize the aerosol phase data. \end{DoxyCompactList}\item 
+procedure, private \mbox{\hyperlink{structcamp__aero__phase__data_1_1aero__phase__data__t_a56be1becbafbb46c9f46ebce80dd27e9}{ensure\+\_\+size}}
+\begin{DoxyCompactList}\small\item\em Ensure there is enough room in the species dataset to add a specified number of species. \end{DoxyCompactList}\item 
+procedure, private \mbox{\hyperlink{structcamp__aero__phase__data_1_1aero__phase__data__t_aa7794565edbc937c1940a34e2df353f4}{add}}
+\begin{DoxyCompactList}\small\item\em Add a species. \end{DoxyCompactList}\item 
+procedure, private \mbox{\hyperlink{structcamp__aero__phase__data_1_1aero__phase__data__t_af5341d1c533f8298207d6fe5dfd7a68f}{find}}
+\begin{DoxyCompactList}\small\item\em Find a species index by name. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+character(len=\+:), allocatable \mbox{\hyperlink{structcamp__aero__phase__data_1_1aero__phase__data__t_a44d1f93a13cd6e036c95205e9fe1ee5e}{phase\+\_\+name}}
+\begin{DoxyCompactList}\small\item\em Name of the aerosol phase. \end{DoxyCompactList}\item 
+integer(kind=i\+\_\+kind) \mbox{\hyperlink{structcamp__aero__phase__data_1_1aero__phase__data__t_a61ef6c1803ebac90c343f40be08058c3}{num\+\_\+spec}} = 0
+\begin{DoxyCompactList}\small\item\em Number of species in the phase. \end{DoxyCompactList}\item 
+type(\mbox{\hyperlink{structcamp__util_1_1string__t}{string\+\_\+t}}), dimension(\+:), pointer \mbox{\hyperlink{structcamp__aero__phase__data_1_1aero__phase__data__t_a039ea5c9c295188f220067f98c5830f6}{spec\+\_\+name}} =$>$ null()
+\begin{DoxyCompactList}\small\item\em Species names. These are species that are present in the aerosol phase. These species must exist in the {\ttfamily \mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t_a6d0ccab2236a905514a49ee0a73dc557}{camp\+\_\+camp\+\_\+core\+::camp\+\_\+core\+\_\+t\+::chem\+\_\+spec\+\_\+data}}} variable during initialization. \end{DoxyCompactList}\item 
+type(\mbox{\hyperlink{structcamp__property_1_1property__t}{property\+\_\+t}}), pointer \mbox{\hyperlink{structcamp__aero__phase__data_1_1aero__phase__data__t_a12f08f14a85dd05fa704b9b977504828}{property\+\_\+set}} =$>$ null()
+\begin{DoxyCompactList}\small\item\em Aerosol phase parameters. These will be available during initialization, but not during solving. \end{DoxyCompactList}\item 
+type(\mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t}{chem\+\_\+spec\+\_\+data\+\_\+t}}), pointer \mbox{\hyperlink{structcamp__aero__phase__data_1_1aero__phase__data__t_a687e3e84e02d1ab502beb6004b981016}{chem\+\_\+spec\+\_\+data}}
+\begin{DoxyCompactList}\small\item\em Pointer to the set of chemical species data. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Aerosol phase data type. 
+
+\mbox{\hyperlink{camp_aero_phase}{Aerosol phase}} information. 
+
+Definition at line 78 of file aero\+\_\+phase\+\_\+data.\+F90.
+
+
+
+\doxysubsection{Member Function/\+Subroutine Documentation}
+\mbox{\Hypertarget{structcamp__aero__phase__data_1_1aero__phase__data__t_aa7794565edbc937c1940a34e2df353f4}\label{structcamp__aero__phase__data_1_1aero__phase__data__t_aa7794565edbc937c1940a34e2df353f4}} 
+\index{camp\_aero\_phase\_data::aero\_phase\_data\_t@{camp\_aero\_phase\_data::aero\_phase\_data\_t}!add@{add}}
+\index{add@{add}!camp\_aero\_phase\_data::aero\_phase\_data\_t@{camp\_aero\_phase\_data::aero\_phase\_data\_t}}
+\doxysubsubsection{\texorpdfstring{add()}{add()}}
+{\footnotesize\ttfamily procedure, private camp\+\_\+aero\+\_\+phase\+\_\+data\+::aero\+\_\+phase\+\_\+data\+\_\+t\+::add\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Add a species. 
+
+
+
+Definition at line 137 of file aero\+\_\+phase\+\_\+data.\+F90.
+
+\mbox{\Hypertarget{structcamp__aero__phase__data_1_1aero__phase__data__t_a397b434861edf9808625d1fffa678a07}\label{structcamp__aero__phase__data_1_1aero__phase__data__t_a397b434861edf9808625d1fffa678a07}} 
+\index{camp\_aero\_phase\_data::aero\_phase\_data\_t@{camp\_aero\_phase\_data::aero\_phase\_data\_t}!bin\_pack@{bin\_pack}}
+\index{bin\_pack@{bin\_pack}!camp\_aero\_phase\_data::aero\_phase\_data\_t@{camp\_aero\_phase\_data::aero\_phase\_data\_t}}
+\doxysubsubsection{\texorpdfstring{bin\_pack()}{bin\_pack()}}
+{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+phase\+\_\+data\+::aero\+\_\+phase\+\_\+data\+\_\+t\+::bin\+\_\+pack\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Packs the given value into the buffer, advancing position. 
+
+
+
+Definition at line 124 of file aero\+\_\+phase\+\_\+data.\+F90.
+
+\mbox{\Hypertarget{structcamp__aero__phase__data_1_1aero__phase__data__t_a5b42b6dbccdcdd7991726d3d37f79fc5}\label{structcamp__aero__phase__data_1_1aero__phase__data__t_a5b42b6dbccdcdd7991726d3d37f79fc5}} 
+\index{camp\_aero\_phase\_data::aero\_phase\_data\_t@{camp\_aero\_phase\_data::aero\_phase\_data\_t}!bin\_unpack@{bin\_unpack}}
+\index{bin\_unpack@{bin\_unpack}!camp\_aero\_phase\_data::aero\_phase\_data\_t@{camp\_aero\_phase\_data::aero\_phase\_data\_t}}
+\doxysubsubsection{\texorpdfstring{bin\_unpack()}{bin\_unpack()}}
+{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+phase\+\_\+data\+::aero\+\_\+phase\+\_\+data\+\_\+t\+::bin\+\_\+unpack\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Unpacks the given value from the buffer, advancing position. 
+
+
+
+Definition at line 126 of file aero\+\_\+phase\+\_\+data.\+F90.
+
+\mbox{\Hypertarget{structcamp__aero__phase__data_1_1aero__phase__data__t_a56be1becbafbb46c9f46ebce80dd27e9}\label{structcamp__aero__phase__data_1_1aero__phase__data__t_a56be1becbafbb46c9f46ebce80dd27e9}} 
+\index{camp\_aero\_phase\_data::aero\_phase\_data\_t@{camp\_aero\_phase\_data::aero\_phase\_data\_t}!ensure\_size@{ensure\_size}}
+\index{ensure\_size@{ensure\_size}!camp\_aero\_phase\_data::aero\_phase\_data\_t@{camp\_aero\_phase\_data::aero\_phase\_data\_t}}
+\doxysubsubsection{\texorpdfstring{ensure\_size()}{ensure\_size()}}
+{\footnotesize\ttfamily procedure, private camp\+\_\+aero\+\_\+phase\+\_\+data\+::aero\+\_\+phase\+\_\+data\+\_\+t\+::ensure\+\_\+size\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Ensure there is enough room in the species dataset to add a specified number of species. 
+
+
+
+Definition at line 135 of file aero\+\_\+phase\+\_\+data.\+F90.
+
+\mbox{\Hypertarget{structcamp__aero__phase__data_1_1aero__phase__data__t_a8f7c60df17083ac8a79867eead583e97}\label{structcamp__aero__phase__data_1_1aero__phase__data__t_a8f7c60df17083ac8a79867eead583e97}} 
+\index{camp\_aero\_phase\_data::aero\_phase\_data\_t@{camp\_aero\_phase\_data::aero\_phase\_data\_t}!finalize@{finalize}}
+\index{finalize@{finalize}!camp\_aero\_phase\_data::aero\_phase\_data\_t@{camp\_aero\_phase\_data::aero\_phase\_data\_t}}
+\doxysubsubsection{\texorpdfstring{finalize()}{finalize()}}
+{\footnotesize\ttfamily final camp\+\_\+aero\+\_\+phase\+\_\+data\+::aero\+\_\+phase\+\_\+data\+\_\+t\+::finalize\hspace{0.3cm}{\ttfamily [final]}, {\ttfamily [private]}}
+
+
+
+Finalize the aerosol phase data. 
+
+
+
+Definition at line 130 of file aero\+\_\+phase\+\_\+data.\+F90.
+
+\mbox{\Hypertarget{structcamp__aero__phase__data_1_1aero__phase__data__t_af5341d1c533f8298207d6fe5dfd7a68f}\label{structcamp__aero__phase__data_1_1aero__phase__data__t_af5341d1c533f8298207d6fe5dfd7a68f}} 
+\index{camp\_aero\_phase\_data::aero\_phase\_data\_t@{camp\_aero\_phase\_data::aero\_phase\_data\_t}!find@{find}}
+\index{find@{find}!camp\_aero\_phase\_data::aero\_phase\_data\_t@{camp\_aero\_phase\_data::aero\_phase\_data\_t}}
+\doxysubsubsection{\texorpdfstring{find()}{find()}}
+{\footnotesize\ttfamily procedure, private camp\+\_\+aero\+\_\+phase\+\_\+data\+::aero\+\_\+phase\+\_\+data\+\_\+t\+::find\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Find a species index by name. 
+
+
+
+Definition at line 139 of file aero\+\_\+phase\+\_\+data.\+F90.
+
+\mbox{\Hypertarget{structcamp__aero__phase__data_1_1aero__phase__data__t_a3aeadf10ed8e600d4bebf9e1146acb3d}\label{structcamp__aero__phase__data_1_1aero__phase__data__t_a3aeadf10ed8e600d4bebf9e1146acb3d}} 
+\index{camp\_aero\_phase\_data::aero\_phase\_data\_t@{camp\_aero\_phase\_data::aero\_phase\_data\_t}!get\_property\_set@{get\_property\_set}}
+\index{get\_property\_set@{get\_property\_set}!camp\_aero\_phase\_data::aero\_phase\_data\_t@{camp\_aero\_phase\_data::aero\_phase\_data\_t}}
+\doxysubsubsection{\texorpdfstring{get\_property\_set()}{get\_property\_set()}}
+{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+phase\+\_\+data\+::aero\+\_\+phase\+\_\+data\+\_\+t\+::get\+\_\+property\+\_\+set\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Get property data associated with this phase. 
+
+
+
+Definition at line 116 of file aero\+\_\+phase\+\_\+data.\+F90.
+
+\mbox{\Hypertarget{structcamp__aero__phase__data_1_1aero__phase__data__t_a0184bd713d28e2ab434a027b92149b13}\label{structcamp__aero__phase__data_1_1aero__phase__data__t_a0184bd713d28e2ab434a027b92149b13}} 
+\index{camp\_aero\_phase\_data::aero\_phase\_data\_t@{camp\_aero\_phase\_data::aero\_phase\_data\_t}!get\_species\_names@{get\_species\_names}}
+\index{get\_species\_names@{get\_species\_names}!camp\_aero\_phase\_data::aero\_phase\_data\_t@{camp\_aero\_phase\_data::aero\_phase\_data\_t}}
+\doxysubsubsection{\texorpdfstring{get\_species\_names()}{get\_species\_names()}}
+{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+phase\+\_\+data\+::aero\+\_\+phase\+\_\+data\+\_\+t\+::get\+\_\+species\+\_\+names\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Get a list of species names in this phase. 
+
+
+
+Definition at line 118 of file aero\+\_\+phase\+\_\+data.\+F90.
+
+\mbox{\Hypertarget{structcamp__aero__phase__data_1_1aero__phase__data__t_a5273f3475347e3e1120eb393d1a2b46a}\label{structcamp__aero__phase__data_1_1aero__phase__data__t_a5273f3475347e3e1120eb393d1a2b46a}} 
+\index{camp\_aero\_phase\_data::aero\_phase\_data\_t@{camp\_aero\_phase\_data::aero\_phase\_data\_t}!get\_species\_type@{get\_species\_type}}
+\index{get\_species\_type@{get\_species\_type}!camp\_aero\_phase\_data::aero\_phase\_data\_t@{camp\_aero\_phase\_data::aero\_phase\_data\_t}}
+\doxysubsubsection{\texorpdfstring{get\_species\_type()}{get\_species\_type()}}
+{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+phase\+\_\+data\+::aero\+\_\+phase\+\_\+data\+\_\+t\+::get\+\_\+species\+\_\+type\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Get a species type by name. 
+
+
+
+Definition at line 120 of file aero\+\_\+phase\+\_\+data.\+F90.
+
+\mbox{\Hypertarget{structcamp__aero__phase__data_1_1aero__phase__data__t_ae9f310da59cfbe4b2fe7517549532504}\label{structcamp__aero__phase__data_1_1aero__phase__data__t_ae9f310da59cfbe4b2fe7517549532504}} 
+\index{camp\_aero\_phase\_data::aero\_phase\_data\_t@{camp\_aero\_phase\_data::aero\_phase\_data\_t}!initialize@{initialize}}
+\index{initialize@{initialize}!camp\_aero\_phase\_data::aero\_phase\_data\_t@{camp\_aero\_phase\_data::aero\_phase\_data\_t}}
+\doxysubsubsection{\texorpdfstring{initialize()}{initialize()}}
+{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+phase\+\_\+data\+::aero\+\_\+phase\+\_\+data\+\_\+t\+::initialize\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Aerosol phase initialization. 
+
+
+
+Definition at line 108 of file aero\+\_\+phase\+\_\+data.\+F90.
+
+\mbox{\Hypertarget{structcamp__aero__phase__data_1_1aero__phase__data__t_af820c8f2aa7ddacca5f57feef583f5a1}\label{structcamp__aero__phase__data_1_1aero__phase__data__t_af820c8f2aa7ddacca5f57feef583f5a1}} 
+\index{camp\_aero\_phase\_data::aero\_phase\_data\_t@{camp\_aero\_phase\_data::aero\_phase\_data\_t}!load@{load}}
+\index{load@{load}!camp\_aero\_phase\_data::aero\_phase\_data\_t@{camp\_aero\_phase\_data::aero\_phase\_data\_t}}
+\doxysubsubsection{\texorpdfstring{load()}{load()}}
+{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+phase\+\_\+data\+::aero\+\_\+phase\+\_\+data\+\_\+t\+::load\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Load data from an input file. 
+
+
+
+Definition at line 106 of file aero\+\_\+phase\+\_\+data.\+F90.
+
+\mbox{\Hypertarget{structcamp__aero__phase__data_1_1aero__phase__data__t_af6562f25b9ce209ed3b90c146e76debe}\label{structcamp__aero__phase__data_1_1aero__phase__data__t_af6562f25b9ce209ed3b90c146e76debe}} 
+\index{camp\_aero\_phase\_data::aero\_phase\_data\_t@{camp\_aero\_phase\_data::aero\_phase\_data\_t}!name@{name}}
+\index{name@{name}!camp\_aero\_phase\_data::aero\_phase\_data\_t@{camp\_aero\_phase\_data::aero\_phase\_data\_t}}
+\doxysubsubsection{\texorpdfstring{name()}{name()}}
+{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+phase\+\_\+data\+::aero\+\_\+phase\+\_\+data\+\_\+t\+::name\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Get the name of the aerosol phase. 
+
+
+
+Definition at line 110 of file aero\+\_\+phase\+\_\+data.\+F90.
+
+\mbox{\Hypertarget{structcamp__aero__phase__data_1_1aero__phase__data__t_a5b2553db9e7aa7e4ec401b9da6f63c58}\label{structcamp__aero__phase__data_1_1aero__phase__data__t_a5b2553db9e7aa7e4ec401b9da6f63c58}} 
+\index{camp\_aero\_phase\_data::aero\_phase\_data\_t@{camp\_aero\_phase\_data::aero\_phase\_data\_t}!num\_jac\_elem@{num\_jac\_elem}}
+\index{num\_jac\_elem@{num\_jac\_elem}!camp\_aero\_phase\_data::aero\_phase\_data\_t@{camp\_aero\_phase\_data::aero\_phase\_data\_t}}
+\doxysubsubsection{\texorpdfstring{num\_jac\_elem()}{num\_jac\_elem()}}
+{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+phase\+\_\+data\+::aero\+\_\+phase\+\_\+data\+\_\+t\+::num\+\_\+jac\+\_\+elem\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Get the number of \mbox{\hyperlink{struct_jacobian}{Jacobian}} row elements needed during solving. 
+
+
+
+Definition at line 114 of file aero\+\_\+phase\+\_\+data.\+F90.
+
+\mbox{\Hypertarget{structcamp__aero__phase__data_1_1aero__phase__data__t_a6e64483b012c8a7fe2262d4908c11a75}\label{structcamp__aero__phase__data_1_1aero__phase__data__t_a6e64483b012c8a7fe2262d4908c11a75}} 
+\index{camp\_aero\_phase\_data::aero\_phase\_data\_t@{camp\_aero\_phase\_data::aero\_phase\_data\_t}!pack\_size@{pack\_size}}
+\index{pack\_size@{pack\_size}!camp\_aero\_phase\_data::aero\_phase\_data\_t@{camp\_aero\_phase\_data::aero\_phase\_data\_t}}
+\doxysubsubsection{\texorpdfstring{pack\_size()}{pack\_size()}}
+{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+phase\+\_\+data\+::aero\+\_\+phase\+\_\+data\+\_\+t\+::pack\+\_\+size\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Determine the number of bytes required to pack the given value. 
+
+
+
+Definition at line 122 of file aero\+\_\+phase\+\_\+data.\+F90.
+
+\mbox{\Hypertarget{structcamp__aero__phase__data_1_1aero__phase__data__t_a47f40e3fb6bcff7038030e6b935ba9d9}\label{structcamp__aero__phase__data_1_1aero__phase__data__t_a47f40e3fb6bcff7038030e6b935ba9d9}} 
+\index{camp\_aero\_phase\_data::aero\_phase\_data\_t@{camp\_aero\_phase\_data::aero\_phase\_data\_t}!print@{print}}
+\index{print@{print}!camp\_aero\_phase\_data::aero\_phase\_data\_t@{camp\_aero\_phase\_data::aero\_phase\_data\_t}}
+\doxysubsubsection{\texorpdfstring{print()}{print()}}
+{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+phase\+\_\+data\+::aero\+\_\+phase\+\_\+data\+\_\+t\+::print\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Print the aerosol phase data. 
+
+
+
+Definition at line 128 of file aero\+\_\+phase\+\_\+data.\+F90.
+
+\mbox{\Hypertarget{structcamp__aero__phase__data_1_1aero__phase__data__t_a638e14de1b9c23679eb1d83bc3551745}\label{structcamp__aero__phase__data_1_1aero__phase__data__t_a638e14de1b9c23679eb1d83bc3551745}} 
+\index{camp\_aero\_phase\_data::aero\_phase\_data\_t@{camp\_aero\_phase\_data::aero\_phase\_data\_t}!size@{size}}
+\index{size@{size}!camp\_aero\_phase\_data::aero\_phase\_data\_t@{camp\_aero\_phase\_data::aero\_phase\_data\_t}}
+\doxysubsubsection{\texorpdfstring{size()}{size()}}
+{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+phase\+\_\+data\+::aero\+\_\+phase\+\_\+data\+\_\+t\+::size\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Get the number of species in the phase. 
+
+
+
+Definition at line 112 of file aero\+\_\+phase\+\_\+data.\+F90.
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{structcamp__aero__phase__data_1_1aero__phase__data__t_a687e3e84e02d1ab502beb6004b981016}\label{structcamp__aero__phase__data_1_1aero__phase__data__t_a687e3e84e02d1ab502beb6004b981016}} 
+\index{camp\_aero\_phase\_data::aero\_phase\_data\_t@{camp\_aero\_phase\_data::aero\_phase\_data\_t}!chem\_spec\_data@{chem\_spec\_data}}
+\index{chem\_spec\_data@{chem\_spec\_data}!camp\_aero\_phase\_data::aero\_phase\_data\_t@{camp\_aero\_phase\_data::aero\_phase\_data\_t}}
+\doxysubsubsection{\texorpdfstring{chem\_spec\_data}{chem\_spec\_data}}
+{\footnotesize\ttfamily type(\mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t}{chem\+\_\+spec\+\_\+data\+\_\+t}}), pointer camp\+\_\+aero\+\_\+phase\+\_\+data\+::aero\+\_\+phase\+\_\+data\+\_\+t\+::chem\+\_\+spec\+\_\+data\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Pointer to the set of chemical species data. 
+
+
+
+Definition at line 103 of file aero\+\_\+phase\+\_\+data.\+F90.
+
+\mbox{\Hypertarget{structcamp__aero__phase__data_1_1aero__phase__data__t_a29609788f8da0223a3e02c3516bb66a5}\label{structcamp__aero__phase__data_1_1aero__phase__data__t_a29609788f8da0223a3e02c3516bb66a5}} 
+\index{camp\_aero\_phase\_data::aero\_phase\_data\_t@{camp\_aero\_phase\_data::aero\_phase\_data\_t}!condensed\_data\_int@{condensed\_data\_int}}
+\index{condensed\_data\_int@{condensed\_data\_int}!camp\_aero\_phase\_data::aero\_phase\_data\_t@{camp\_aero\_phase\_data::aero\_phase\_data\_t}}
+\doxysubsubsection{\texorpdfstring{condensed\_data\_int}{condensed\_data\_int}}
+{\footnotesize\ttfamily integer(kind=i\+\_\+kind), dimension(\+:), allocatable, public camp\+\_\+aero\+\_\+phase\+\_\+data\+::aero\+\_\+phase\+\_\+data\+\_\+t\+::condensed\+\_\+data\+\_\+int}
+
+
+
+Condensed phase data. Theses arrays will be available during solving, and should contain any information required by the functions of the aerosol phase that cannot be obtained from the {\ttfamily \mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t}{camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t}}} object. (integer) 
+
+
+
+Definition at line 101 of file aero\+\_\+phase\+\_\+data.\+F90.
+
+\mbox{\Hypertarget{structcamp__aero__phase__data_1_1aero__phase__data__t_af62c4556e9fdcea61f3c8feeea256911}\label{structcamp__aero__phase__data_1_1aero__phase__data__t_af62c4556e9fdcea61f3c8feeea256911}} 
+\index{camp\_aero\_phase\_data::aero\_phase\_data\_t@{camp\_aero\_phase\_data::aero\_phase\_data\_t}!condensed\_data\_real@{condensed\_data\_real}}
+\index{condensed\_data\_real@{condensed\_data\_real}!camp\_aero\_phase\_data::aero\_phase\_data\_t@{camp\_aero\_phase\_data::aero\_phase\_data\_t}}
+\doxysubsubsection{\texorpdfstring{condensed\_data\_real}{condensed\_data\_real}}
+{\footnotesize\ttfamily real(kind=dp), dimension(\+:), allocatable, public camp\+\_\+aero\+\_\+phase\+\_\+data\+::aero\+\_\+phase\+\_\+data\+\_\+t\+::condensed\+\_\+data\+\_\+real}
+
+
+
+Condensed phase data. Theses arrays will be available during solving, and should contain any information required by the functions of the aerosol phase that cannot be obtained from the {\ttfamily \mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t}{camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t}}} object. (floating-\/point) 
+
+
+
+Definition at line 96 of file aero\+\_\+phase\+\_\+data.\+F90.
+
+\mbox{\Hypertarget{structcamp__aero__phase__data_1_1aero__phase__data__t_a61ef6c1803ebac90c343f40be08058c3}\label{structcamp__aero__phase__data_1_1aero__phase__data__t_a61ef6c1803ebac90c343f40be08058c3}} 
+\index{camp\_aero\_phase\_data::aero\_phase\_data\_t@{camp\_aero\_phase\_data::aero\_phase\_data\_t}!num\_spec@{num\_spec}}
+\index{num\_spec@{num\_spec}!camp\_aero\_phase\_data::aero\_phase\_data\_t@{camp\_aero\_phase\_data::aero\_phase\_data\_t}}
+\doxysubsubsection{\texorpdfstring{num\_spec}{num\_spec}}
+{\footnotesize\ttfamily integer(kind=i\+\_\+kind) camp\+\_\+aero\+\_\+phase\+\_\+data\+::aero\+\_\+phase\+\_\+data\+\_\+t\+::num\+\_\+spec = 0\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Number of species in the phase. 
+
+
+
+Definition at line 83 of file aero\+\_\+phase\+\_\+data.\+F90.
+
+\mbox{\Hypertarget{structcamp__aero__phase__data_1_1aero__phase__data__t_a44d1f93a13cd6e036c95205e9fe1ee5e}\label{structcamp__aero__phase__data_1_1aero__phase__data__t_a44d1f93a13cd6e036c95205e9fe1ee5e}} 
+\index{camp\_aero\_phase\_data::aero\_phase\_data\_t@{camp\_aero\_phase\_data::aero\_phase\_data\_t}!phase\_name@{phase\_name}}
+\index{phase\_name@{phase\_name}!camp\_aero\_phase\_data::aero\_phase\_data\_t@{camp\_aero\_phase\_data::aero\_phase\_data\_t}}
+\doxysubsubsection{\texorpdfstring{phase\_name}{phase\_name}}
+{\footnotesize\ttfamily character(len=\+:), allocatable camp\+\_\+aero\+\_\+phase\+\_\+data\+::aero\+\_\+phase\+\_\+data\+\_\+t\+::phase\+\_\+name\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Name of the aerosol phase. 
+
+
+
+Definition at line 81 of file aero\+\_\+phase\+\_\+data.\+F90.
+
+\mbox{\Hypertarget{structcamp__aero__phase__data_1_1aero__phase__data__t_a12f08f14a85dd05fa704b9b977504828}\label{structcamp__aero__phase__data_1_1aero__phase__data__t_a12f08f14a85dd05fa704b9b977504828}} 
+\index{camp\_aero\_phase\_data::aero\_phase\_data\_t@{camp\_aero\_phase\_data::aero\_phase\_data\_t}!property\_set@{property\_set}}
+\index{property\_set@{property\_set}!camp\_aero\_phase\_data::aero\_phase\_data\_t@{camp\_aero\_phase\_data::aero\_phase\_data\_t}}
+\doxysubsubsection{\texorpdfstring{property\_set}{property\_set}}
+{\footnotesize\ttfamily type(\mbox{\hyperlink{structcamp__property_1_1property__t}{property\+\_\+t}}), pointer camp\+\_\+aero\+\_\+phase\+\_\+data\+::aero\+\_\+phase\+\_\+data\+\_\+t\+::property\+\_\+set =$>$ null()\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Aerosol phase parameters. These will be available during initialization, but not during solving. 
+
+
+
+Definition at line 91 of file aero\+\_\+phase\+\_\+data.\+F90.
+
+\mbox{\Hypertarget{structcamp__aero__phase__data_1_1aero__phase__data__t_a039ea5c9c295188f220067f98c5830f6}\label{structcamp__aero__phase__data_1_1aero__phase__data__t_a039ea5c9c295188f220067f98c5830f6}} 
+\index{camp\_aero\_phase\_data::aero\_phase\_data\_t@{camp\_aero\_phase\_data::aero\_phase\_data\_t}!spec\_name@{spec\_name}}
+\index{spec\_name@{spec\_name}!camp\_aero\_phase\_data::aero\_phase\_data\_t@{camp\_aero\_phase\_data::aero\_phase\_data\_t}}
+\doxysubsubsection{\texorpdfstring{spec\_name}{spec\_name}}
+{\footnotesize\ttfamily type(\mbox{\hyperlink{structcamp__util_1_1string__t}{string\+\_\+t}}), dimension(\+:), pointer camp\+\_\+aero\+\_\+phase\+\_\+data\+::aero\+\_\+phase\+\_\+data\+\_\+t\+::spec\+\_\+name =$>$ null()\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Species names. These are species that are present in the aerosol phase. These species must exist in the {\ttfamily \mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t_a6d0ccab2236a905514a49ee0a73dc557}{camp\+\_\+camp\+\_\+core\+::camp\+\_\+core\+\_\+t\+::chem\+\_\+spec\+\_\+data}}} variable during initialization. 
+
+
+
+Definition at line 88 of file aero\+\_\+phase\+\_\+data.\+F90.
+
+
+
+The documentation for this interface was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{aero__phase__data_8_f90}{aero\+\_\+phase\+\_\+data.\+F90}}\end{DoxyCompactItemize}

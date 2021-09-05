@@ -1,0 +1,78 @@
+\hypertarget{interfacecamp__camp__solver__data_1_1solver__new}{}\doxysection{camp\+\_\+camp\+\_\+solver\+\_\+data\+::solver\+\_\+new Interface Reference}
+\label{interfacecamp__camp__solver__data_1_1solver__new}\index{camp\_camp\_solver\_data::solver\_new@{camp\_camp\_solver\_data::solver\_new}}
+
+
+Interface to c ODE solver functions.  
+
+
+\doxysubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+type(c\+\_\+ptr) function \mbox{\hyperlink{interfacecamp__camp__solver__data_1_1solver__new_ab9163618d6720f5c032c37bb5c89cd15}{solver\+\_\+new}} (n\+\_\+state\+\_\+var, n\+\_\+cells, var\+\_\+type, n\+\_\+rxn, n\+\_\+rxn\+\_\+int\+\_\+param, n\+\_\+rxn\+\_\+float\+\_\+param, n\+\_\+rxn\+\_\+env\+\_\+param, n\+\_\+aero\+\_\+phase, n\+\_\+aero\+\_\+phase\+\_\+int\+\_\+param, n\+\_\+aero\+\_\+phase\+\_\+float\+\_\+param, n\+\_\+aero\+\_\+rep, n\+\_\+aero\+\_\+rep\+\_\+int\+\_\+param, n\+\_\+aero\+\_\+rep\+\_\+float\+\_\+param, n\+\_\+aero\+\_\+rep\+\_\+env\+\_\+param, n\+\_\+sub\+\_\+model, n\+\_\+sub\+\_\+model\+\_\+int\+\_\+param, n\+\_\+sub\+\_\+model\+\_\+float\+\_\+param, n\+\_\+sub\+\_\+model\+\_\+env\+\_\+param)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Interface to c ODE solver functions. 
+
+Get a new solver 
+
+Definition at line 45 of file camp\+\_\+solver\+\_\+data.\+F90.
+
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{interfacecamp__camp__solver__data_1_1solver__new_ab9163618d6720f5c032c37bb5c89cd15}\label{interfacecamp__camp__solver__data_1_1solver__new_ab9163618d6720f5c032c37bb5c89cd15}} 
+\index{camp\_camp\_solver\_data::solver\_new@{camp\_camp\_solver\_data::solver\_new}!solver\_new@{solver\_new}}
+\index{solver\_new@{solver\_new}!camp\_camp\_solver\_data::solver\_new@{camp\_camp\_solver\_data::solver\_new}}
+\doxysubsubsection{\texorpdfstring{solver\_new()}{solver\_new()}}
+{\footnotesize\ttfamily type(c\+\_\+ptr) function camp\+\_\+camp\+\_\+solver\+\_\+data\+::solver\+\_\+new\+::solver\+\_\+new (\begin{DoxyParamCaption}\item[{integer(kind=c\+\_\+int), value}]{n\+\_\+state\+\_\+var,  }\item[{integer(kind=c\+\_\+int), value}]{n\+\_\+cells,  }\item[{type(c\+\_\+ptr), value}]{var\+\_\+type,  }\item[{integer(kind=c\+\_\+int), value}]{n\+\_\+rxn,  }\item[{integer(kind=c\+\_\+int), value}]{n\+\_\+rxn\+\_\+int\+\_\+param,  }\item[{integer(kind=c\+\_\+int), value}]{n\+\_\+rxn\+\_\+float\+\_\+param,  }\item[{integer(kind=c\+\_\+int), value}]{n\+\_\+rxn\+\_\+env\+\_\+param,  }\item[{integer(kind=c\+\_\+int), value}]{n\+\_\+aero\+\_\+phase,  }\item[{integer(kind=c\+\_\+int), value}]{n\+\_\+aero\+\_\+phase\+\_\+int\+\_\+param,  }\item[{integer(kind=c\+\_\+int), value}]{n\+\_\+aero\+\_\+phase\+\_\+float\+\_\+param,  }\item[{integer(kind=c\+\_\+int), value}]{n\+\_\+aero\+\_\+rep,  }\item[{integer(kind=c\+\_\+int), value}]{n\+\_\+aero\+\_\+rep\+\_\+int\+\_\+param,  }\item[{integer(kind=c\+\_\+int), value}]{n\+\_\+aero\+\_\+rep\+\_\+float\+\_\+param,  }\item[{integer(kind=c\+\_\+int), value}]{n\+\_\+aero\+\_\+rep\+\_\+env\+\_\+param,  }\item[{integer(kind=c\+\_\+int), value}]{n\+\_\+sub\+\_\+model,  }\item[{integer(kind=c\+\_\+int), value}]{n\+\_\+sub\+\_\+model\+\_\+int\+\_\+param,  }\item[{integer(kind=c\+\_\+int), value}]{n\+\_\+sub\+\_\+model\+\_\+float\+\_\+param,  }\item[{integer(kind=c\+\_\+int), value}]{n\+\_\+sub\+\_\+model\+\_\+env\+\_\+param }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em n\+\_\+state\+\_\+var} & Number of variables on the state array per grid cell (including const, PSSA, etc.)\\
+\hline
+{\em n\+\_\+cells} & Number of cells to compute\\
+\hline
+{\em var\+\_\+type} & Pointer to array of state variable types (solver, constant, PSSA)\\
+\hline
+{\em n\+\_\+rxn} & Number of reactions to solve\\
+\hline
+{\em n\+\_\+rxn\+\_\+int\+\_\+param} & Total number of integer parameters for all reactions\\
+\hline
+{\em n\+\_\+rxn\+\_\+float\+\_\+param} & Total number of floating-\/point parameters for all reactions\\
+\hline
+{\em n\+\_\+rxn\+\_\+env\+\_\+param} & Total number of environment-\/dependent parameters for all reactions\\
+\hline
+{\em n\+\_\+aero\+\_\+phase} & Number of aerosol phases\\
+\hline
+{\em n\+\_\+aero\+\_\+phase\+\_\+int\+\_\+param} & Total number of integer parameters for all aerosol phases\\
+\hline
+{\em n\+\_\+aero\+\_\+phase\+\_\+float\+\_\+param} & Total number of floating-\/point parameters for all aerosol phases\\
+\hline
+{\em n\+\_\+aero\+\_\+rep} & Number of aerosol representations\\
+\hline
+{\em n\+\_\+aero\+\_\+rep\+\_\+int\+\_\+param} & Total number of integer parameters for all aerosol representations\\
+\hline
+{\em n\+\_\+aero\+\_\+rep\+\_\+float\+\_\+param} & Total number of floating-\/point parameters for all aerosol representations\\
+\hline
+{\em n\+\_\+aero\+\_\+rep\+\_\+env\+\_\+param} & Total number of environment-\/dependent parameters for all aerosol representations\\
+\hline
+{\em n\+\_\+sub\+\_\+model} & Number of sub models\\
+\hline
+{\em n\+\_\+sub\+\_\+model\+\_\+int\+\_\+param} & Total number of integer parameters for all sub models\\
+\hline
+{\em n\+\_\+sub\+\_\+model\+\_\+float\+\_\+param} & Total number of floating-\/point parameters for all sub models\\
+\hline
+{\em n\+\_\+sub\+\_\+model\+\_\+env\+\_\+param} & Total number of environment-\/dependent parameters for all sub models \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 45 of file camp\+\_\+solver\+\_\+data.\+F90.
+
+
+
+The documentation for this interface was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{camp__solver__data_8_f90}{camp\+\_\+solver\+\_\+data.\+F90}}\end{DoxyCompactItemize}

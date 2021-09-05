@@ -1,0 +1,139 @@
+\hypertarget{structcamp__aero__rep__factory_1_1aero__rep__factory__t}{}\doxysection{camp\+\_\+aero\+\_\+rep\+\_\+factory\+::aero\+\_\+rep\+\_\+factory\+\_\+t Type Reference}
+\label{structcamp__aero__rep__factory_1_1aero__rep__factory__t}\index{camp\_aero\_rep\_factory::aero\_rep\_factory\_t@{camp\_aero\_rep\_factory::aero\_rep\_factory\_t}}
+
+
+Factory type for aerosol representations.  
+
+
+\doxysubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+procedure \mbox{\hyperlink{structcamp__aero__rep__factory_1_1aero__rep__factory__t_adb761a7103bfbd45ec29294afe665f75}{create}}
+\begin{DoxyCompactList}\small\item\em Create a new aerosol representation by type name. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__aero__rep__factory_1_1aero__rep__factory__t_a2d4fa12447f5fe406aea088495aba23a}{load}}
+\begin{DoxyCompactList}\small\item\em Create a new aerosol representation from input data. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__aero__rep__factory_1_1aero__rep__factory__t_a8b8ac2cf143837b0483b6af555a6c7ae}{get\+\_\+type}}
+\begin{DoxyCompactList}\small\item\em Get the aerosol representation type. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__aero__rep__factory_1_1aero__rep__factory__t_ab68d6c66c06cef4f0b7f3be5f7ef0e59}{initialize\+\_\+update\+\_\+data}}
+\begin{DoxyCompactList}\small\item\em Initialize an update data object. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__aero__rep__factory_1_1aero__rep__factory__t_acca3fa986faec3be7503c66f4064b5ce}{pack\+\_\+size}}
+\begin{DoxyCompactList}\small\item\em Determine the number of bytes required to pack an given aerosol representation. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__aero__rep__factory_1_1aero__rep__factory__t_a840def710afec55fb75fc7c0ba2fe312}{bin\+\_\+pack}}
+\begin{DoxyCompactList}\small\item\em Pack a given aerosol representation to the buffer, advancing the position. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__aero__rep__factory_1_1aero__rep__factory__t_abaab507649a4524af238459387f354f1}{bin\+\_\+unpack}}
+\begin{DoxyCompactList}\small\item\em Unpack a aerosol representation from the buffer, advancing the position. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Factory type for aerosol representations. 
+
+Provides new instances of types extending aero\+\_\+rep\+\_\+data\+\_\+t by name or from input file data 
+
+Definition at line 221 of file aero\+\_\+rep\+\_\+factory.\+F90.
+
+
+
+\doxysubsection{Member Function/\+Subroutine Documentation}
+\mbox{\Hypertarget{structcamp__aero__rep__factory_1_1aero__rep__factory__t_a840def710afec55fb75fc7c0ba2fe312}\label{structcamp__aero__rep__factory_1_1aero__rep__factory__t_a840def710afec55fb75fc7c0ba2fe312}} 
+\index{camp\_aero\_rep\_factory::aero\_rep\_factory\_t@{camp\_aero\_rep\_factory::aero\_rep\_factory\_t}!bin\_pack@{bin\_pack}}
+\index{bin\_pack@{bin\_pack}!camp\_aero\_rep\_factory::aero\_rep\_factory\_t@{camp\_aero\_rep\_factory::aero\_rep\_factory\_t}}
+\doxysubsubsection{\texorpdfstring{bin\_pack()}{bin\_pack()}}
+{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+rep\+\_\+factory\+::aero\+\_\+rep\+\_\+factory\+\_\+t\+::bin\+\_\+pack\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Pack a given aerosol representation to the buffer, advancing the position. 
+
+
+
+Definition at line 236 of file aero\+\_\+rep\+\_\+factory.\+F90.
+
+\mbox{\Hypertarget{structcamp__aero__rep__factory_1_1aero__rep__factory__t_abaab507649a4524af238459387f354f1}\label{structcamp__aero__rep__factory_1_1aero__rep__factory__t_abaab507649a4524af238459387f354f1}} 
+\index{camp\_aero\_rep\_factory::aero\_rep\_factory\_t@{camp\_aero\_rep\_factory::aero\_rep\_factory\_t}!bin\_unpack@{bin\_unpack}}
+\index{bin\_unpack@{bin\_unpack}!camp\_aero\_rep\_factory::aero\_rep\_factory\_t@{camp\_aero\_rep\_factory::aero\_rep\_factory\_t}}
+\doxysubsubsection{\texorpdfstring{bin\_unpack()}{bin\_unpack()}}
+{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+rep\+\_\+factory\+::aero\+\_\+rep\+\_\+factory\+\_\+t\+::bin\+\_\+unpack\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Unpack a aerosol representation from the buffer, advancing the position. 
+
+
+
+Definition at line 238 of file aero\+\_\+rep\+\_\+factory.\+F90.
+
+\mbox{\Hypertarget{structcamp__aero__rep__factory_1_1aero__rep__factory__t_adb761a7103bfbd45ec29294afe665f75}\label{structcamp__aero__rep__factory_1_1aero__rep__factory__t_adb761a7103bfbd45ec29294afe665f75}} 
+\index{camp\_aero\_rep\_factory::aero\_rep\_factory\_t@{camp\_aero\_rep\_factory::aero\_rep\_factory\_t}!create@{create}}
+\index{create@{create}!camp\_aero\_rep\_factory::aero\_rep\_factory\_t@{camp\_aero\_rep\_factory::aero\_rep\_factory\_t}}
+\doxysubsubsection{\texorpdfstring{create()}{create()}}
+{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+rep\+\_\+factory\+::aero\+\_\+rep\+\_\+factory\+\_\+t\+::create\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Create a new aerosol representation by type name. 
+
+
+
+Definition at line 224 of file aero\+\_\+rep\+\_\+factory.\+F90.
+
+\mbox{\Hypertarget{structcamp__aero__rep__factory_1_1aero__rep__factory__t_a8b8ac2cf143837b0483b6af555a6c7ae}\label{structcamp__aero__rep__factory_1_1aero__rep__factory__t_a8b8ac2cf143837b0483b6af555a6c7ae}} 
+\index{camp\_aero\_rep\_factory::aero\_rep\_factory\_t@{camp\_aero\_rep\_factory::aero\_rep\_factory\_t}!get\_type@{get\_type}}
+\index{get\_type@{get\_type}!camp\_aero\_rep\_factory::aero\_rep\_factory\_t@{camp\_aero\_rep\_factory::aero\_rep\_factory\_t}}
+\doxysubsubsection{\texorpdfstring{get\_type()}{get\_type()}}
+{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+rep\+\_\+factory\+::aero\+\_\+rep\+\_\+factory\+\_\+t\+::get\+\_\+type\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Get the aerosol representation type. 
+
+
+
+Definition at line 228 of file aero\+\_\+rep\+\_\+factory.\+F90.
+
+\mbox{\Hypertarget{structcamp__aero__rep__factory_1_1aero__rep__factory__t_ab68d6c66c06cef4f0b7f3be5f7ef0e59}\label{structcamp__aero__rep__factory_1_1aero__rep__factory__t_ab68d6c66c06cef4f0b7f3be5f7ef0e59}} 
+\index{camp\_aero\_rep\_factory::aero\_rep\_factory\_t@{camp\_aero\_rep\_factory::aero\_rep\_factory\_t}!initialize\_update\_data@{initialize\_update\_data}}
+\index{initialize\_update\_data@{initialize\_update\_data}!camp\_aero\_rep\_factory::aero\_rep\_factory\_t@{camp\_aero\_rep\_factory::aero\_rep\_factory\_t}}
+\doxysubsubsection{\texorpdfstring{initialize\_update\_data()}{initialize\_update\_data()}}
+{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+rep\+\_\+factory\+::aero\+\_\+rep\+\_\+factory\+\_\+t\+::initialize\+\_\+update\+\_\+data\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Initialize an update data object. 
+
+
+
+Definition at line 230 of file aero\+\_\+rep\+\_\+factory.\+F90.
+
+\mbox{\Hypertarget{structcamp__aero__rep__factory_1_1aero__rep__factory__t_a2d4fa12447f5fe406aea088495aba23a}\label{structcamp__aero__rep__factory_1_1aero__rep__factory__t_a2d4fa12447f5fe406aea088495aba23a}} 
+\index{camp\_aero\_rep\_factory::aero\_rep\_factory\_t@{camp\_aero\_rep\_factory::aero\_rep\_factory\_t}!load@{load}}
+\index{load@{load}!camp\_aero\_rep\_factory::aero\_rep\_factory\_t@{camp\_aero\_rep\_factory::aero\_rep\_factory\_t}}
+\doxysubsubsection{\texorpdfstring{load()}{load()}}
+{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+rep\+\_\+factory\+::aero\+\_\+rep\+\_\+factory\+\_\+t\+::load\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Create a new aerosol representation from input data. 
+
+
+
+Definition at line 226 of file aero\+\_\+rep\+\_\+factory.\+F90.
+
+\mbox{\Hypertarget{structcamp__aero__rep__factory_1_1aero__rep__factory__t_acca3fa986faec3be7503c66f4064b5ce}\label{structcamp__aero__rep__factory_1_1aero__rep__factory__t_acca3fa986faec3be7503c66f4064b5ce}} 
+\index{camp\_aero\_rep\_factory::aero\_rep\_factory\_t@{camp\_aero\_rep\_factory::aero\_rep\_factory\_t}!pack\_size@{pack\_size}}
+\index{pack\_size@{pack\_size}!camp\_aero\_rep\_factory::aero\_rep\_factory\_t@{camp\_aero\_rep\_factory::aero\_rep\_factory\_t}}
+\doxysubsubsection{\texorpdfstring{pack\_size()}{pack\_size()}}
+{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+rep\+\_\+factory\+::aero\+\_\+rep\+\_\+factory\+\_\+t\+::pack\+\_\+size\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Determine the number of bytes required to pack an given aerosol representation. 
+
+
+
+Definition at line 233 of file aero\+\_\+rep\+\_\+factory.\+F90.
+
+
+
+The documentation for this type was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{aero__rep__factory_8_f90}{aero\+\_\+rep\+\_\+factory.\+F90}}\end{DoxyCompactItemize}

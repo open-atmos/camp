@@ -1,0 +1,169 @@
+\hypertarget{structcamp__aero__rep__single__particle_1_1aero__rep__update__data__single__particle__number__t}{}\doxysection{camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::aero\+\_\+rep\+\_\+update\+\_\+data\+\_\+single\+\_\+particle\+\_\+number\+\_\+t Type Reference}
+\label{structcamp__aero__rep__single__particle_1_1aero__rep__update__data__single__particle__number__t}\index{camp\_aero\_rep\_single\_particle::aero\_rep\_update\_data\_single\_particle\_number\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_update\_data\_single\_particle\_number\_t}}
+
+
+Single particle update number concentration object.  
+
+
+
+
+Inheritance diagram for camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::aero\+\_\+rep\+\_\+update\+\_\+data\+\_\+single\+\_\+particle\+\_\+number\+\_\+t\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=234pt]{structcamp__aero__rep__single__particle_1_1aero__rep__update__data__single__particle__number__t__inherit__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+procedure \mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__update__data__single__particle__number__t_aed807934ed1c508c1fb3d9f8017c4334}{set\+\_\+number\+\_\+\+\_\+n\+\_\+m3}} =$>$ \mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a4a7413970e88f0efdaa1a10e3aeed0d3}{update\+\_\+data\+\_\+set\+\_\+number\+\_\+\+\_\+n\+\_\+m3}}
+\begin{DoxyCompactList}\small\item\em Update the number. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__update__data__single__particle__number__t_a2a6c1a8a2c1567611d9bfb35e4ec8728}{internal\+\_\+pack\+\_\+size}} =$>$ \mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a0544cb13e3473655abef7c470fb1c1fc}{internal\+\_\+pack\+\_\+size\+\_\+number}}
+\begin{DoxyCompactList}\small\item\em Determine the pack size of the local update data. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__update__data__single__particle__number__t_ac2d41bcbef68688d65e6eb62d675455f}{internal\+\_\+bin\+\_\+pack}} =$>$ \mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a60e0785526528d4fcb3646a9855d5393}{internal\+\_\+bin\+\_\+pack\+\_\+number}}
+\begin{DoxyCompactList}\small\item\em Pack the local update data to a binary. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__update__data__single__particle__number__t_a4e5664671580bb2a6ace51bd18abd5b5}{internal\+\_\+bin\+\_\+unpack}} =$>$ \mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a3fb691978e783fdfad253b8e745443be}{internal\+\_\+bin\+\_\+unpack\+\_\+number}}
+\begin{DoxyCompactList}\small\item\em Unpack the local update data from a binary. \end{DoxyCompactList}\item 
+final \mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__update__data__single__particle__number__t_af62d6a04ad938fc35652fd217cfc1978}{update\+\_\+data\+\_\+number\+\_\+finalize}}
+\begin{DoxyCompactList}\small\item\em Finalize the number update data. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+logical \mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__update__data__single__particle__number__t_a3f217d2abc81ceda249031cb487fbb8d}{is\+\_\+malloced}} = .false.
+\begin{DoxyCompactList}\small\item\em Flag indicating whether the update data is allocated. \end{DoxyCompactList}\item 
+integer(kind=i\+\_\+kind) \mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__update__data__single__particle__number__t_a2a8853c8b9103098f53dad73b0233faf}{aero\+\_\+rep\+\_\+unique\+\_\+id}} = 0
+\begin{DoxyCompactList}\small\item\em Unique id for finding aerosol representations during initialization. \end{DoxyCompactList}\item 
+integer(kind=i\+\_\+kind) \mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__update__data__single__particle__number__t_ae17796f219dd7ee214318386fa7e19b1}{maximum\+\_\+computational\+\_\+particles}} = 0
+\begin{DoxyCompactList}\small\item\em Maximum number of computational particles. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Single particle update number concentration object. 
+
+Definition at line 143 of file aero\+\_\+rep\+\_\+single\+\_\+particle.\+F90.
+
+
+
+\doxysubsection{Member Function/\+Subroutine Documentation}
+\mbox{\Hypertarget{structcamp__aero__rep__single__particle_1_1aero__rep__update__data__single__particle__number__t_ac2d41bcbef68688d65e6eb62d675455f}\label{structcamp__aero__rep__single__particle_1_1aero__rep__update__data__single__particle__number__t_ac2d41bcbef68688d65e6eb62d675455f}} 
+\index{camp\_aero\_rep\_single\_particle::aero\_rep\_update\_data\_single\_particle\_number\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_update\_data\_single\_particle\_number\_t}!internal\_bin\_pack@{internal\_bin\_pack}}
+\index{internal\_bin\_pack@{internal\_bin\_pack}!camp\_aero\_rep\_single\_particle::aero\_rep\_update\_data\_single\_particle\_number\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_update\_data\_single\_particle\_number\_t}}
+\doxysubsubsection{\texorpdfstring{internal\_bin\_pack()}{internal\_bin\_pack()}}
+{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::aero\+\_\+rep\+\_\+update\+\_\+data\+\_\+single\+\_\+particle\+\_\+number\+\_\+t\+::internal\+\_\+bin\+\_\+pack\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Pack the local update data to a binary. 
+
+
+
+Definition at line 158 of file aero\+\_\+rep\+\_\+single\+\_\+particle.\+F90.
+
+\mbox{\Hypertarget{structcamp__aero__rep__single__particle_1_1aero__rep__update__data__single__particle__number__t_a4e5664671580bb2a6ace51bd18abd5b5}\label{structcamp__aero__rep__single__particle_1_1aero__rep__update__data__single__particle__number__t_a4e5664671580bb2a6ace51bd18abd5b5}} 
+\index{camp\_aero\_rep\_single\_particle::aero\_rep\_update\_data\_single\_particle\_number\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_update\_data\_single\_particle\_number\_t}!internal\_bin\_unpack@{internal\_bin\_unpack}}
+\index{internal\_bin\_unpack@{internal\_bin\_unpack}!camp\_aero\_rep\_single\_particle::aero\_rep\_update\_data\_single\_particle\_number\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_update\_data\_single\_particle\_number\_t}}
+\doxysubsubsection{\texorpdfstring{internal\_bin\_unpack()}{internal\_bin\_unpack()}}
+{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::aero\+\_\+rep\+\_\+update\+\_\+data\+\_\+single\+\_\+particle\+\_\+number\+\_\+t\+::internal\+\_\+bin\+\_\+unpack\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Unpack the local update data from a binary. 
+
+
+
+Definition at line 160 of file aero\+\_\+rep\+\_\+single\+\_\+particle.\+F90.
+
+\mbox{\Hypertarget{structcamp__aero__rep__single__particle_1_1aero__rep__update__data__single__particle__number__t_a2a6c1a8a2c1567611d9bfb35e4ec8728}\label{structcamp__aero__rep__single__particle_1_1aero__rep__update__data__single__particle__number__t_a2a6c1a8a2c1567611d9bfb35e4ec8728}} 
+\index{camp\_aero\_rep\_single\_particle::aero\_rep\_update\_data\_single\_particle\_number\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_update\_data\_single\_particle\_number\_t}!internal\_pack\_size@{internal\_pack\_size}}
+\index{internal\_pack\_size@{internal\_pack\_size}!camp\_aero\_rep\_single\_particle::aero\_rep\_update\_data\_single\_particle\_number\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_update\_data\_single\_particle\_number\_t}}
+\doxysubsubsection{\texorpdfstring{internal\_pack\_size()}{internal\_pack\_size()}}
+{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::aero\+\_\+rep\+\_\+update\+\_\+data\+\_\+single\+\_\+particle\+\_\+number\+\_\+t\+::internal\+\_\+pack\+\_\+size\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Determine the pack size of the local update data. 
+
+
+
+Definition at line 156 of file aero\+\_\+rep\+\_\+single\+\_\+particle.\+F90.
+
+\mbox{\Hypertarget{structcamp__aero__rep__single__particle_1_1aero__rep__update__data__single__particle__number__t_aed807934ed1c508c1fb3d9f8017c4334}\label{structcamp__aero__rep__single__particle_1_1aero__rep__update__data__single__particle__number__t_aed807934ed1c508c1fb3d9f8017c4334}} 
+\index{camp\_aero\_rep\_single\_particle::aero\_rep\_update\_data\_single\_particle\_number\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_update\_data\_single\_particle\_number\_t}!set\_number\_\_n\_m3@{set\_number\_\_n\_m3}}
+\index{set\_number\_\_n\_m3@{set\_number\_\_n\_m3}!camp\_aero\_rep\_single\_particle::aero\_rep\_update\_data\_single\_particle\_number\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_update\_data\_single\_particle\_number\_t}}
+\doxysubsubsection{\texorpdfstring{set\_number\_\_n\_m3()}{set\_number\_\_n\_m3()}}
+{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::aero\+\_\+rep\+\_\+update\+\_\+data\+\_\+single\+\_\+particle\+\_\+number\+\_\+t\+::set\+\_\+number\+\_\+\+\_\+n\+\_\+m3\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Update the number. 
+
+
+
+Definition at line 154 of file aero\+\_\+rep\+\_\+single\+\_\+particle.\+F90.
+
+\mbox{\Hypertarget{structcamp__aero__rep__single__particle_1_1aero__rep__update__data__single__particle__number__t_af62d6a04ad938fc35652fd217cfc1978}\label{structcamp__aero__rep__single__particle_1_1aero__rep__update__data__single__particle__number__t_af62d6a04ad938fc35652fd217cfc1978}} 
+\index{camp\_aero\_rep\_single\_particle::aero\_rep\_update\_data\_single\_particle\_number\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_update\_data\_single\_particle\_number\_t}!update\_data\_number\_finalize@{update\_data\_number\_finalize}}
+\index{update\_data\_number\_finalize@{update\_data\_number\_finalize}!camp\_aero\_rep\_single\_particle::aero\_rep\_update\_data\_single\_particle\_number\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_update\_data\_single\_particle\_number\_t}}
+\doxysubsubsection{\texorpdfstring{update\_data\_number\_finalize()}{update\_data\_number\_finalize()}}
+{\footnotesize\ttfamily final camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::aero\+\_\+rep\+\_\+update\+\_\+data\+\_\+single\+\_\+particle\+\_\+number\+\_\+t\+::update\+\_\+data\+\_\+number\+\_\+finalize\hspace{0.3cm}{\ttfamily [final]}, {\ttfamily [private]}}
+
+
+
+Finalize the number update data. 
+
+
+
+Definition at line 162 of file aero\+\_\+rep\+\_\+single\+\_\+particle.\+F90.
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{structcamp__aero__rep__single__particle_1_1aero__rep__update__data__single__particle__number__t_a2a8853c8b9103098f53dad73b0233faf}\label{structcamp__aero__rep__single__particle_1_1aero__rep__update__data__single__particle__number__t_a2a8853c8b9103098f53dad73b0233faf}} 
+\index{camp\_aero\_rep\_single\_particle::aero\_rep\_update\_data\_single\_particle\_number\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_update\_data\_single\_particle\_number\_t}!aero\_rep\_unique\_id@{aero\_rep\_unique\_id}}
+\index{aero\_rep\_unique\_id@{aero\_rep\_unique\_id}!camp\_aero\_rep\_single\_particle::aero\_rep\_update\_data\_single\_particle\_number\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_update\_data\_single\_particle\_number\_t}}
+\doxysubsubsection{\texorpdfstring{aero\_rep\_unique\_id}{aero\_rep\_unique\_id}}
+{\footnotesize\ttfamily integer(kind=i\+\_\+kind) camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::aero\+\_\+rep\+\_\+update\+\_\+data\+\_\+single\+\_\+particle\+\_\+number\+\_\+t\+::aero\+\_\+rep\+\_\+unique\+\_\+id = 0\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Unique id for finding aerosol representations during initialization. 
+
+
+
+Definition at line 149 of file aero\+\_\+rep\+\_\+single\+\_\+particle.\+F90.
+
+\mbox{\Hypertarget{structcamp__aero__rep__single__particle_1_1aero__rep__update__data__single__particle__number__t_a3f217d2abc81ceda249031cb487fbb8d}\label{structcamp__aero__rep__single__particle_1_1aero__rep__update__data__single__particle__number__t_a3f217d2abc81ceda249031cb487fbb8d}} 
+\index{camp\_aero\_rep\_single\_particle::aero\_rep\_update\_data\_single\_particle\_number\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_update\_data\_single\_particle\_number\_t}!is\_malloced@{is\_malloced}}
+\index{is\_malloced@{is\_malloced}!camp\_aero\_rep\_single\_particle::aero\_rep\_update\_data\_single\_particle\_number\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_update\_data\_single\_particle\_number\_t}}
+\doxysubsubsection{\texorpdfstring{is\_malloced}{is\_malloced}}
+{\footnotesize\ttfamily logical camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::aero\+\_\+rep\+\_\+update\+\_\+data\+\_\+single\+\_\+particle\+\_\+number\+\_\+t\+::is\+\_\+malloced = .false.\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Flag indicating whether the update data is allocated. 
+
+
+
+Definition at line 147 of file aero\+\_\+rep\+\_\+single\+\_\+particle.\+F90.
+
+\mbox{\Hypertarget{structcamp__aero__rep__single__particle_1_1aero__rep__update__data__single__particle__number__t_ae17796f219dd7ee214318386fa7e19b1}\label{structcamp__aero__rep__single__particle_1_1aero__rep__update__data__single__particle__number__t_ae17796f219dd7ee214318386fa7e19b1}} 
+\index{camp\_aero\_rep\_single\_particle::aero\_rep\_update\_data\_single\_particle\_number\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_update\_data\_single\_particle\_number\_t}!maximum\_computational\_particles@{maximum\_computational\_particles}}
+\index{maximum\_computational\_particles@{maximum\_computational\_particles}!camp\_aero\_rep\_single\_particle::aero\_rep\_update\_data\_single\_particle\_number\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_update\_data\_single\_particle\_number\_t}}
+\doxysubsubsection{\texorpdfstring{maximum\_computational\_particles}{maximum\_computational\_particles}}
+{\footnotesize\ttfamily integer(kind=i\+\_\+kind) camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::aero\+\_\+rep\+\_\+update\+\_\+data\+\_\+single\+\_\+particle\+\_\+number\+\_\+t\+::maximum\+\_\+computational\+\_\+particles = 0\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Maximum number of computational particles. 
+
+
+
+Definition at line 151 of file aero\+\_\+rep\+\_\+single\+\_\+particle.\+F90.
+
+
+
+The documentation for this type was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{aero__rep__single__particle_8_f90}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+F90}}\end{DoxyCompactItemize}

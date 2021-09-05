@@ -1,0 +1,577 @@
+\hypertarget{rxn__aqueous__equilibrium_8c}{}\doxysection{rxn\+\_\+aqueous\+\_\+equilibrium.\+c File Reference}
+\label{rxn__aqueous__equilibrium_8c}\index{rxn\_aqueous\_equilibrium.c@{rxn\_aqueous\_equilibrium.c}}
+
+
+Aqueous Equilibrium reaction solver functions.  
+
+
+Include dependency graph for rxn\+\_\+aqueous\+\_\+equilibrium.\+c\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{rxn__aqueous__equilibrium_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_aa90d2b6c48aceb4d7ac3d93d5249bb60}{TEMPERATURE\+\_\+\+K\+\_\+}}~env\+\_\+data\mbox{[}0\mbox{]}
+\item 
+\#define \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a32cc078fd8ca9ad0684c48ae0aad7135}{PRESSURE\+\_\+\+PA\+\_\+}}~env\+\_\+data\mbox{[}1\mbox{]}
+\item 
+\#define \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_ad75f0b37ea60f72b08dfc39101a21671}{SMALL\+\_\+\+NUMBER\+\_\+}}~1.\+0e-\/30
+\item 
+\#define \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a4bbdf0ebb220103f51252a2b56f22cdf}{MIN\+\_\+\+WATER\+\_\+}}~1.\+0e-\/4
+\item 
+\#define \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}}~(int\+\_\+data\mbox{[}0\mbox{]})
+\item 
+\#define \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}}~(int\+\_\+data\mbox{[}1\mbox{]})
+\item 
+\#define \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_adf4b84135880d5ac73ce37df877d91fb}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+}}~(int\+\_\+data\mbox{[}2\mbox{]})
+\item 
+\#define \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a71700f5633db3f99b43c798b09c60bd2}{A\+\_\+}}~(float\+\_\+data\mbox{[}0\mbox{]})
+\item 
+\#define \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_ad010fec48ee67af5ba75e0ec6c3f5ce4}{C\+\_\+}}~(float\+\_\+data\mbox{[}1\mbox{]})
+\item 
+\#define \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a6691394a09f2e41e036e3dd389032763}{RATE\+\_\+\+CONST\+\_\+\+REVERSE\+\_\+}}~(float\+\_\+data\mbox{[}2\mbox{]})
+\item 
+\#define \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a7a7be1a044251bca9454b2306e958ab0}{WATER\+\_\+\+CONC\+\_\+}}~(float\+\_\+data\mbox{[}3\mbox{]})
+\item 
+\#define \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_ad25dbd402979ada7d7f24fe5429b92ba}{ACTIVITY\+\_\+\+COEFF\+\_\+\+VALUE\+\_\+}}~(float\+\_\+data\mbox{[}4\mbox{]})
+\item 
+\#define \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a66c602144d40f31d965505fae08401a1}{RATE\+\_\+\+CONST\+\_\+\+FORWARD\+\_\+}}~(rxn\+\_\+env\+\_\+data\mbox{[}0\mbox{]})
+\item 
+\#define \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}}~3
+\item 
+\#define \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}{NUM\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+}}~5
+\item 
+\#define \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a1f68a3544ae39a7815cbb5c09dfdeff0}{NUM\+\_\+\+ENV\+\_\+\+PARAM\+\_\+}}~1
+\item 
+\#define \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_ae761e39657aac155d83eae9b338be571}{REACT\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + x\mbox{]} -\/ 1)
+\item 
+\#define \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a9fda90058c6a41b1dda6ded03321c4da}{PROD\+\_\+}}(x)~  (int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{rxn__troe_8_f90_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} $\ast$ \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8_f90_adf4b84135880d5ac73ce37df877d91fb}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+}} + x\mbox{]} -\/ 1)
+\item 
+\#define \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a21d22248f675f2c8aed5aa05e839290f}{WATER\+\_\+}}(x)~  (int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + (\mbox{\hyperlink{rxn__troe_8_f90_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + \mbox{\hyperlink{rxn__troe_8_f90_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}}) $\ast$ \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8_f90_adf4b84135880d5ac73ce37df877d91fb}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+}} + x\mbox{]} -\/ 1)
+\item 
+\#define \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a853f717855396c45b4e2e439932d7b8f}{ACTIVITY\+\_\+\+COEFF\+\_\+}}(x)
+\item 
+\#define \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_af9fc34858d09e71d3cffd88cf942bdf9}{DERIV\+\_\+\+ID\+\_\+}}(x)~  (int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + (\mbox{\hyperlink{rxn__troe_8_f90_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + \mbox{\hyperlink{rxn__troe_8_f90_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}} + 2) $\ast$ \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8_f90_adf4b84135880d5ac73ce37df877d91fb}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+}} + x\mbox{]})
+\item 
+\#define \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\+\_\+\+ID\+\_\+}}(x)
+\item 
+\#define \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a77130e76053b87f8e8ed225d0d6206d8}{MASS\+\_\+\+FRAC\+\_\+\+TO\+\_\+\+M\+\_\+}}(x)~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}{NUM\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+}} + x\mbox{]})
+\item 
+\#define \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a57ec91c5d8fc0e67d395f3748e368d5c}{REACT\+\_\+\+CONC\+\_\+}}(x)~  (float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}{NUM\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{rxn__troe_8_f90_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + \mbox{\hyperlink{rxn__troe_8_f90_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}} + x\mbox{]})
+\item 
+\#define \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_adf6032a096c8fae01588f07f3c34c496}{PROD\+\_\+\+CONC\+\_\+}}(x)~  (float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}{NUM\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+}} + 2 $\ast$ \mbox{\hyperlink{rxn__troe_8_f90_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + \mbox{\hyperlink{rxn__troe_8_f90_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}} + x\mbox{]})
+\item 
+\#define \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a21721f706408d9a4a6e1b02c537c5c8b}{SMALL\+\_\+\+WATER\+\_\+\+CONC\+\_\+}}(x)~  (float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}{NUM\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+}} + 2 $\ast$ \mbox{\hyperlink{rxn__troe_8_f90_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + 2 $\ast$ \mbox{\hyperlink{rxn__troe_8_f90_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}} + x\mbox{]})
+\item 
+\#define \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a7ab0f8638f4cb41541b5d0f5b00d0985}{SMALL\+\_\+\+CONC\+\_\+}}(x)
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_aba2b7971289b789830bb3986d8c26143}{rxn\+\_\+aqueous\+\_\+equilibrium\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem}} (int $\ast$rxn\+\_\+int\+\_\+data, double $\ast$rxn\+\_\+float\+\_\+data, \mbox{\hyperlink{struct_jacobian}{Jacobian}} $\ast$jac)
+\begin{DoxyCompactList}\small\item\em Flag \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used by this reaction. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_af61bf85579cdea2f2c8ee0ea4fd8a96d}{rxn\+\_\+aqueous\+\_\+equilibrium\+\_\+update\+\_\+ids}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, int $\ast$deriv\+\_\+ids, \mbox{\hyperlink{struct_jacobian}{Jacobian}} jac, int $\ast$rxn\+\_\+int\+\_\+data, double $\ast$rxn\+\_\+float\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Update the time derivative and Jacbobian array indices. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a0195133a7e3e489e6580f8feae67b6ee}{rxn\+\_\+aqueous\+\_\+equilibrium\+\_\+update\+\_\+env\+\_\+state}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, int $\ast$rxn\+\_\+int\+\_\+data, double $\ast$rxn\+\_\+float\+\_\+data, double $\ast$rxn\+\_\+env\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Update reaction data for new environmental conditions. \end{DoxyCompactList}\item 
+long double \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_afbf4752793cab50cd6c964aeaf26f531}{calc\+\_\+standard\+\_\+rate}} (int $\ast$rxn\+\_\+int\+\_\+data, double $\ast$rxn\+\_\+float\+\_\+data, double $\ast$rxn\+\_\+env\+\_\+data, \mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1}{bool}} is\+\_\+water\+\_\+partial, long double $\ast$rate\+\_\+forward, long double $\ast$rate\+\_\+reverse)
+\begin{DoxyCompactList}\small\item\em Calculate the reaction rate for a set of conditions using the standard equation per mixing ratio of water \mbox{[}M\+\_\+\+X/s$\ast$kg\+\_\+\+H2\+O/m$^\wedge$3\mbox{]}. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a71247df341cf33530652f240a86e8e22}{rxn\+\_\+aqueous\+\_\+equilibrium\+\_\+calc\+\_\+deriv\+\_\+contrib}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, \mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}} time\+\_\+deriv, int $\ast$rxn\+\_\+int\+\_\+data, double $\ast$rxn\+\_\+float\+\_\+data, double $\ast$rxn\+\_\+env\+\_\+data, double time\+\_\+step)
+\begin{DoxyCompactList}\small\item\em Calculate contributions to the time derivative $f(t,y)$ from this reaction. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a223e07042b82fc3b1391e1354acfdc5d}{rxn\+\_\+aqueous\+\_\+equilibrium\+\_\+calc\+\_\+jac\+\_\+contrib}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, \mbox{\hyperlink{struct_jacobian}{Jacobian}} jac, int $\ast$rxn\+\_\+int\+\_\+data, double $\ast$rxn\+\_\+float\+\_\+data, double $\ast$rxn\+\_\+env\+\_\+data, double time\+\_\+step)
+\begin{DoxyCompactList}\small\item\em Calculate contributions to the \mbox{\hyperlink{struct_jacobian}{Jacobian}} from this reaction. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a797af130ae2247ebb2879055e8d3d8f8}{rxn\+\_\+aqueous\+\_\+equilibrium\+\_\+print}} (int $\ast$rxn\+\_\+int\+\_\+data, double $\ast$rxn\+\_\+float\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Print the Aqueous Equilibrium reaction parameters. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Aqueous Equilibrium reaction solver functions. 
+
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{rxn__aqueous__equilibrium_8c_a71700f5633db3f99b43c798b09c60bd2}\label{rxn__aqueous__equilibrium_8c_a71700f5633db3f99b43c798b09c60bd2}} 
+\index{rxn\_aqueous\_equilibrium.c@{rxn\_aqueous\_equilibrium.c}!A\_@{A\_}}
+\index{A\_@{A\_}!rxn\_aqueous\_equilibrium.c@{rxn\_aqueous\_equilibrium.c}}
+\doxysubsubsection{\texorpdfstring{A\_}{A\_}}
+{\footnotesize\ttfamily \#define A\+\_\+~(float\+\_\+data\mbox{[}0\mbox{]})}
+
+
+
+Definition at line 30 of file rxn\+\_\+aqueous\+\_\+equilibrium.\+c.
+
+\mbox{\Hypertarget{rxn__aqueous__equilibrium_8c_a853f717855396c45b4e2e439932d7b8f}\label{rxn__aqueous__equilibrium_8c_a853f717855396c45b4e2e439932d7b8f}} 
+\index{rxn\_aqueous\_equilibrium.c@{rxn\_aqueous\_equilibrium.c}!ACTIVITY\_COEFF\_@{ACTIVITY\_COEFF\_}}
+\index{ACTIVITY\_COEFF\_@{ACTIVITY\_COEFF\_}!rxn\_aqueous\_equilibrium.c@{rxn\_aqueous\_equilibrium.c}}
+\doxysubsubsection{\texorpdfstring{ACTIVITY\_COEFF\_}{ACTIVITY\_COEFF\_}}
+{\footnotesize\ttfamily \#define ACTIVITY\+\_\+\+COEFF\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{  (int\_data[\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\_INT\_PROP\_}} + (\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}} + \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}} + 1) * \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_adf4b84135880d5ac73ce37df877d91fb}{NUM\_AERO\_PHASE\_}} + \(\backslash\)}
+\DoxyCodeLine{            x] -\/                                                             \(\backslash\)}
+\DoxyCodeLine{   1)}
+
+\end{DoxyCode}
+
+
+Definition at line 44 of file rxn\+\_\+aqueous\+\_\+equilibrium.\+c.
+
+\mbox{\Hypertarget{rxn__aqueous__equilibrium_8c_ad25dbd402979ada7d7f24fe5429b92ba}\label{rxn__aqueous__equilibrium_8c_ad25dbd402979ada7d7f24fe5429b92ba}} 
+\index{rxn\_aqueous\_equilibrium.c@{rxn\_aqueous\_equilibrium.c}!ACTIVITY\_COEFF\_VALUE\_@{ACTIVITY\_COEFF\_VALUE\_}}
+\index{ACTIVITY\_COEFF\_VALUE\_@{ACTIVITY\_COEFF\_VALUE\_}!rxn\_aqueous\_equilibrium.c@{rxn\_aqueous\_equilibrium.c}}
+\doxysubsubsection{\texorpdfstring{ACTIVITY\_COEFF\_VALUE\_}{ACTIVITY\_COEFF\_VALUE\_}}
+{\footnotesize\ttfamily \#define ACTIVITY\+\_\+\+COEFF\+\_\+\+VALUE\+\_\+~(float\+\_\+data\mbox{[}4\mbox{]})}
+
+
+
+Definition at line 34 of file rxn\+\_\+aqueous\+\_\+equilibrium.\+c.
+
+\mbox{\Hypertarget{rxn__aqueous__equilibrium_8c_ad010fec48ee67af5ba75e0ec6c3f5ce4}\label{rxn__aqueous__equilibrium_8c_ad010fec48ee67af5ba75e0ec6c3f5ce4}} 
+\index{rxn\_aqueous\_equilibrium.c@{rxn\_aqueous\_equilibrium.c}!C\_@{C\_}}
+\index{C\_@{C\_}!rxn\_aqueous\_equilibrium.c@{rxn\_aqueous\_equilibrium.c}}
+\doxysubsubsection{\texorpdfstring{C\_}{C\_}}
+{\footnotesize\ttfamily \#define C\+\_\+~(float\+\_\+data\mbox{[}1\mbox{]})}
+
+
+
+Definition at line 31 of file rxn\+\_\+aqueous\+\_\+equilibrium.\+c.
+
+\mbox{\Hypertarget{rxn__aqueous__equilibrium_8c_af9fc34858d09e71d3cffd88cf942bdf9}\label{rxn__aqueous__equilibrium_8c_af9fc34858d09e71d3cffd88cf942bdf9}} 
+\index{rxn\_aqueous\_equilibrium.c@{rxn\_aqueous\_equilibrium.c}!DERIV\_ID\_@{DERIV\_ID\_}}
+\index{DERIV\_ID\_@{DERIV\_ID\_}!rxn\_aqueous\_equilibrium.c@{rxn\_aqueous\_equilibrium.c}}
+\doxysubsubsection{\texorpdfstring{DERIV\_ID\_}{DERIV\_ID\_}}
+{\footnotesize\ttfamily \#define DERIV\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~  (int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + (\mbox{\hyperlink{rxn__troe_8_f90_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + \mbox{\hyperlink{rxn__troe_8_f90_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}} + 2) $\ast$ \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8_f90_adf4b84135880d5ac73ce37df877d91fb}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+}} + x\mbox{]})}
+
+
+
+Definition at line 48 of file rxn\+\_\+aqueous\+\_\+equilibrium.\+c.
+
+\mbox{\Hypertarget{rxn__aqueous__equilibrium_8c_ab831aae98d4453927c63a93f55ee5a86}\label{rxn__aqueous__equilibrium_8c_ab831aae98d4453927c63a93f55ee5a86}} 
+\index{rxn\_aqueous\_equilibrium.c@{rxn\_aqueous\_equilibrium.c}!JAC\_ID\_@{JAC\_ID\_}}
+\index{JAC\_ID\_@{JAC\_ID\_}!rxn\_aqueous\_equilibrium.c@{rxn\_aqueous\_equilibrium.c}}
+\doxysubsubsection{\texorpdfstring{JAC\_ID\_}{JAC\_ID\_}}
+{\footnotesize\ttfamily \#define JAC\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{  (int\_data[\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\_INT\_PROP\_}} + \(\backslash\)}
+\DoxyCodeLine{            (2 * (\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}} + \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}}) + 2) * \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_adf4b84135880d5ac73ce37df877d91fb}{NUM\_AERO\_PHASE\_}} + x])}
+
+\end{DoxyCode}
+
+
+Definition at line 50 of file rxn\+\_\+aqueous\+\_\+equilibrium.\+c.
+
+\mbox{\Hypertarget{rxn__aqueous__equilibrium_8c_a77130e76053b87f8e8ed225d0d6206d8}\label{rxn__aqueous__equilibrium_8c_a77130e76053b87f8e8ed225d0d6206d8}} 
+\index{rxn\_aqueous\_equilibrium.c@{rxn\_aqueous\_equilibrium.c}!MASS\_FRAC\_TO\_M\_@{MASS\_FRAC\_TO\_M\_}}
+\index{MASS\_FRAC\_TO\_M\_@{MASS\_FRAC\_TO\_M\_}!rxn\_aqueous\_equilibrium.c@{rxn\_aqueous\_equilibrium.c}}
+\doxysubsubsection{\texorpdfstring{MASS\_FRAC\_TO\_M\_}{MASS\_FRAC\_TO\_M\_}}
+{\footnotesize\ttfamily \#define MASS\+\_\+\+FRAC\+\_\+\+TO\+\_\+\+M\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}{NUM\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+}} + x\mbox{]})}
+
+
+
+Definition at line 53 of file rxn\+\_\+aqueous\+\_\+equilibrium.\+c.
+
+\mbox{\Hypertarget{rxn__aqueous__equilibrium_8c_a4bbdf0ebb220103f51252a2b56f22cdf}\label{rxn__aqueous__equilibrium_8c_a4bbdf0ebb220103f51252a2b56f22cdf}} 
+\index{rxn\_aqueous\_equilibrium.c@{rxn\_aqueous\_equilibrium.c}!MIN\_WATER\_@{MIN\_WATER\_}}
+\index{MIN\_WATER\_@{MIN\_WATER\_}!rxn\_aqueous\_equilibrium.c@{rxn\_aqueous\_equilibrium.c}}
+\doxysubsubsection{\texorpdfstring{MIN\_WATER\_}{MIN\_WATER\_}}
+{\footnotesize\ttfamily \#define MIN\+\_\+\+WATER\+\_\+~1.\+0e-\/4}
+
+
+
+Definition at line 25 of file rxn\+\_\+aqueous\+\_\+equilibrium.\+c.
+
+\mbox{\Hypertarget{rxn__aqueous__equilibrium_8c_adf4b84135880d5ac73ce37df877d91fb}\label{rxn__aqueous__equilibrium_8c_adf4b84135880d5ac73ce37df877d91fb}} 
+\index{rxn\_aqueous\_equilibrium.c@{rxn\_aqueous\_equilibrium.c}!NUM\_AERO\_PHASE\_@{NUM\_AERO\_PHASE\_}}
+\index{NUM\_AERO\_PHASE\_@{NUM\_AERO\_PHASE\_}!rxn\_aqueous\_equilibrium.c@{rxn\_aqueous\_equilibrium.c}}
+\doxysubsubsection{\texorpdfstring{NUM\_AERO\_PHASE\_}{NUM\_AERO\_PHASE\_}}
+{\footnotesize\ttfamily \#define NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+~(int\+\_\+data\mbox{[}2\mbox{]})}
+
+
+
+Definition at line 29 of file rxn\+\_\+aqueous\+\_\+equilibrium.\+c.
+
+\mbox{\Hypertarget{rxn__aqueous__equilibrium_8c_a1f68a3544ae39a7815cbb5c09dfdeff0}\label{rxn__aqueous__equilibrium_8c_a1f68a3544ae39a7815cbb5c09dfdeff0}} 
+\index{rxn\_aqueous\_equilibrium.c@{rxn\_aqueous\_equilibrium.c}!NUM\_ENV\_PARAM\_@{NUM\_ENV\_PARAM\_}}
+\index{NUM\_ENV\_PARAM\_@{NUM\_ENV\_PARAM\_}!rxn\_aqueous\_equilibrium.c@{rxn\_aqueous\_equilibrium.c}}
+\doxysubsubsection{\texorpdfstring{NUM\_ENV\_PARAM\_}{NUM\_ENV\_PARAM\_}}
+{\footnotesize\ttfamily \#define NUM\+\_\+\+ENV\+\_\+\+PARAM\+\_\+~1}
+
+
+
+Definition at line 38 of file rxn\+\_\+aqueous\+\_\+equilibrium.\+c.
+
+\mbox{\Hypertarget{rxn__aqueous__equilibrium_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}\label{rxn__aqueous__equilibrium_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}} 
+\index{rxn\_aqueous\_equilibrium.c@{rxn\_aqueous\_equilibrium.c}!NUM\_FLOAT\_PROP\_@{NUM\_FLOAT\_PROP\_}}
+\index{NUM\_FLOAT\_PROP\_@{NUM\_FLOAT\_PROP\_}!rxn\_aqueous\_equilibrium.c@{rxn\_aqueous\_equilibrium.c}}
+\doxysubsubsection{\texorpdfstring{NUM\_FLOAT\_PROP\_}{NUM\_FLOAT\_PROP\_}}
+{\footnotesize\ttfamily \#define NUM\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+~5}
+
+
+
+Definition at line 37 of file rxn\+\_\+aqueous\+\_\+equilibrium.\+c.
+
+\mbox{\Hypertarget{rxn__aqueous__equilibrium_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}\label{rxn__aqueous__equilibrium_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}} 
+\index{rxn\_aqueous\_equilibrium.c@{rxn\_aqueous\_equilibrium.c}!NUM\_INT\_PROP\_@{NUM\_INT\_PROP\_}}
+\index{NUM\_INT\_PROP\_@{NUM\_INT\_PROP\_}!rxn\_aqueous\_equilibrium.c@{rxn\_aqueous\_equilibrium.c}}
+\doxysubsubsection{\texorpdfstring{NUM\_INT\_PROP\_}{NUM\_INT\_PROP\_}}
+{\footnotesize\ttfamily \#define NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+~3}
+
+
+
+Definition at line 36 of file rxn\+\_\+aqueous\+\_\+equilibrium.\+c.
+
+\mbox{\Hypertarget{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}\label{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}} 
+\index{rxn\_aqueous\_equilibrium.c@{rxn\_aqueous\_equilibrium.c}!NUM\_PROD\_@{NUM\_PROD\_}}
+\index{NUM\_PROD\_@{NUM\_PROD\_}!rxn\_aqueous\_equilibrium.c@{rxn\_aqueous\_equilibrium.c}}
+\doxysubsubsection{\texorpdfstring{NUM\_PROD\_}{NUM\_PROD\_}}
+{\footnotesize\ttfamily \#define NUM\+\_\+\+PROD\+\_\+~(int\+\_\+data\mbox{[}1\mbox{]})}
+
+
+
+Definition at line 28 of file rxn\+\_\+aqueous\+\_\+equilibrium.\+c.
+
+\mbox{\Hypertarget{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}\label{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}} 
+\index{rxn\_aqueous\_equilibrium.c@{rxn\_aqueous\_equilibrium.c}!NUM\_REACT\_@{NUM\_REACT\_}}
+\index{NUM\_REACT\_@{NUM\_REACT\_}!rxn\_aqueous\_equilibrium.c@{rxn\_aqueous\_equilibrium.c}}
+\doxysubsubsection{\texorpdfstring{NUM\_REACT\_}{NUM\_REACT\_}}
+{\footnotesize\ttfamily \#define NUM\+\_\+\+REACT\+\_\+~(int\+\_\+data\mbox{[}0\mbox{]})}
+
+
+
+Definition at line 27 of file rxn\+\_\+aqueous\+\_\+equilibrium.\+c.
+
+\mbox{\Hypertarget{rxn__aqueous__equilibrium_8c_a32cc078fd8ca9ad0684c48ae0aad7135}\label{rxn__aqueous__equilibrium_8c_a32cc078fd8ca9ad0684c48ae0aad7135}} 
+\index{rxn\_aqueous\_equilibrium.c@{rxn\_aqueous\_equilibrium.c}!PRESSURE\_PA\_@{PRESSURE\_PA\_}}
+\index{PRESSURE\_PA\_@{PRESSURE\_PA\_}!rxn\_aqueous\_equilibrium.c@{rxn\_aqueous\_equilibrium.c}}
+\doxysubsubsection{\texorpdfstring{PRESSURE\_PA\_}{PRESSURE\_PA\_}}
+{\footnotesize\ttfamily \#define PRESSURE\+\_\+\+PA\+\_\+~env\+\_\+data\mbox{[}1\mbox{]}}
+
+
+
+Definition at line 18 of file rxn\+\_\+aqueous\+\_\+equilibrium.\+c.
+
+\mbox{\Hypertarget{rxn__aqueous__equilibrium_8c_a9fda90058c6a41b1dda6ded03321c4da}\label{rxn__aqueous__equilibrium_8c_a9fda90058c6a41b1dda6ded03321c4da}} 
+\index{rxn\_aqueous\_equilibrium.c@{rxn\_aqueous\_equilibrium.c}!PROD\_@{PROD\_}}
+\index{PROD\_@{PROD\_}!rxn\_aqueous\_equilibrium.c@{rxn\_aqueous\_equilibrium.c}}
+\doxysubsubsection{\texorpdfstring{PROD\_}{PROD\_}}
+{\footnotesize\ttfamily \#define PROD\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~  (int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{rxn__troe_8_f90_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} $\ast$ \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8_f90_adf4b84135880d5ac73ce37df877d91fb}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+}} + x\mbox{]} -\/ 1)}
+
+
+
+Definition at line 40 of file rxn\+\_\+aqueous\+\_\+equilibrium.\+c.
+
+\mbox{\Hypertarget{rxn__aqueous__equilibrium_8c_adf6032a096c8fae01588f07f3c34c496}\label{rxn__aqueous__equilibrium_8c_adf6032a096c8fae01588f07f3c34c496}} 
+\index{rxn\_aqueous\_equilibrium.c@{rxn\_aqueous\_equilibrium.c}!PROD\_CONC\_@{PROD\_CONC\_}}
+\index{PROD\_CONC\_@{PROD\_CONC\_}!rxn\_aqueous\_equilibrium.c@{rxn\_aqueous\_equilibrium.c}}
+\doxysubsubsection{\texorpdfstring{PROD\_CONC\_}{PROD\_CONC\_}}
+{\footnotesize\ttfamily \#define PROD\+\_\+\+CONC\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~  (float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}{NUM\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+}} + 2 $\ast$ \mbox{\hyperlink{rxn__troe_8_f90_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + \mbox{\hyperlink{rxn__troe_8_f90_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}} + x\mbox{]})}
+
+
+
+Definition at line 56 of file rxn\+\_\+aqueous\+\_\+equilibrium.\+c.
+
+\mbox{\Hypertarget{rxn__aqueous__equilibrium_8c_a66c602144d40f31d965505fae08401a1}\label{rxn__aqueous__equilibrium_8c_a66c602144d40f31d965505fae08401a1}} 
+\index{rxn\_aqueous\_equilibrium.c@{rxn\_aqueous\_equilibrium.c}!RATE\_CONST\_FORWARD\_@{RATE\_CONST\_FORWARD\_}}
+\index{RATE\_CONST\_FORWARD\_@{RATE\_CONST\_FORWARD\_}!rxn\_aqueous\_equilibrium.c@{rxn\_aqueous\_equilibrium.c}}
+\doxysubsubsection{\texorpdfstring{RATE\_CONST\_FORWARD\_}{RATE\_CONST\_FORWARD\_}}
+{\footnotesize\ttfamily \#define RATE\+\_\+\+CONST\+\_\+\+FORWARD\+\_\+~(rxn\+\_\+env\+\_\+data\mbox{[}0\mbox{]})}
+
+
+
+Definition at line 35 of file rxn\+\_\+aqueous\+\_\+equilibrium.\+c.
+
+\mbox{\Hypertarget{rxn__aqueous__equilibrium_8c_a6691394a09f2e41e036e3dd389032763}\label{rxn__aqueous__equilibrium_8c_a6691394a09f2e41e036e3dd389032763}} 
+\index{rxn\_aqueous\_equilibrium.c@{rxn\_aqueous\_equilibrium.c}!RATE\_CONST\_REVERSE\_@{RATE\_CONST\_REVERSE\_}}
+\index{RATE\_CONST\_REVERSE\_@{RATE\_CONST\_REVERSE\_}!rxn\_aqueous\_equilibrium.c@{rxn\_aqueous\_equilibrium.c}}
+\doxysubsubsection{\texorpdfstring{RATE\_CONST\_REVERSE\_}{RATE\_CONST\_REVERSE\_}}
+{\footnotesize\ttfamily \#define RATE\+\_\+\+CONST\+\_\+\+REVERSE\+\_\+~(float\+\_\+data\mbox{[}2\mbox{]})}
+
+
+
+Definition at line 32 of file rxn\+\_\+aqueous\+\_\+equilibrium.\+c.
+
+\mbox{\Hypertarget{rxn__aqueous__equilibrium_8c_ae761e39657aac155d83eae9b338be571}\label{rxn__aqueous__equilibrium_8c_ae761e39657aac155d83eae9b338be571}} 
+\index{rxn\_aqueous\_equilibrium.c@{rxn\_aqueous\_equilibrium.c}!REACT\_@{REACT\_}}
+\index{REACT\_@{REACT\_}!rxn\_aqueous\_equilibrium.c@{rxn\_aqueous\_equilibrium.c}}
+\doxysubsubsection{\texorpdfstring{REACT\_}{REACT\_}}
+{\footnotesize\ttfamily \#define REACT\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + x\mbox{]} -\/ 1)}
+
+
+
+Definition at line 39 of file rxn\+\_\+aqueous\+\_\+equilibrium.\+c.
+
+\mbox{\Hypertarget{rxn__aqueous__equilibrium_8c_a57ec91c5d8fc0e67d395f3748e368d5c}\label{rxn__aqueous__equilibrium_8c_a57ec91c5d8fc0e67d395f3748e368d5c}} 
+\index{rxn\_aqueous\_equilibrium.c@{rxn\_aqueous\_equilibrium.c}!REACT\_CONC\_@{REACT\_CONC\_}}
+\index{REACT\_CONC\_@{REACT\_CONC\_}!rxn\_aqueous\_equilibrium.c@{rxn\_aqueous\_equilibrium.c}}
+\doxysubsubsection{\texorpdfstring{REACT\_CONC\_}{REACT\_CONC\_}}
+{\footnotesize\ttfamily \#define REACT\+\_\+\+CONC\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~  (float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}{NUM\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{rxn__troe_8_f90_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + \mbox{\hyperlink{rxn__troe_8_f90_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}} + x\mbox{]})}
+
+
+
+Definition at line 54 of file rxn\+\_\+aqueous\+\_\+equilibrium.\+c.
+
+\mbox{\Hypertarget{rxn__aqueous__equilibrium_8c_a7ab0f8638f4cb41541b5d0f5b00d0985}\label{rxn__aqueous__equilibrium_8c_a7ab0f8638f4cb41541b5d0f5b00d0985}} 
+\index{rxn\_aqueous\_equilibrium.c@{rxn\_aqueous\_equilibrium.c}!SMALL\_CONC\_@{SMALL\_CONC\_}}
+\index{SMALL\_CONC\_@{SMALL\_CONC\_}!rxn\_aqueous\_equilibrium.c@{rxn\_aqueous\_equilibrium.c}}
+\doxysubsubsection{\texorpdfstring{SMALL\_CONC\_}{SMALL\_CONC\_}}
+{\footnotesize\ttfamily \#define SMALL\+\_\+\+CONC\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{  (float\_data[\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}{NUM\_FLOAT\_PROP\_}} + 2 * \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}} + 2 * \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}} + \(\backslash\)}
+\DoxyCodeLine{              NUM\_AERO\_PHASE\_ + x])}
+
+\end{DoxyCode}
+
+
+Definition at line 60 of file rxn\+\_\+aqueous\+\_\+equilibrium.\+c.
+
+\mbox{\Hypertarget{rxn__aqueous__equilibrium_8c_ad75f0b37ea60f72b08dfc39101a21671}\label{rxn__aqueous__equilibrium_8c_ad75f0b37ea60f72b08dfc39101a21671}} 
+\index{rxn\_aqueous\_equilibrium.c@{rxn\_aqueous\_equilibrium.c}!SMALL\_NUMBER\_@{SMALL\_NUMBER\_}}
+\index{SMALL\_NUMBER\_@{SMALL\_NUMBER\_}!rxn\_aqueous\_equilibrium.c@{rxn\_aqueous\_equilibrium.c}}
+\doxysubsubsection{\texorpdfstring{SMALL\_NUMBER\_}{SMALL\_NUMBER\_}}
+{\footnotesize\ttfamily \#define SMALL\+\_\+\+NUMBER\+\_\+~1.\+0e-\/30}
+
+
+
+Definition at line 21 of file rxn\+\_\+aqueous\+\_\+equilibrium.\+c.
+
+\mbox{\Hypertarget{rxn__aqueous__equilibrium_8c_a21721f706408d9a4a6e1b02c537c5c8b}\label{rxn__aqueous__equilibrium_8c_a21721f706408d9a4a6e1b02c537c5c8b}} 
+\index{rxn\_aqueous\_equilibrium.c@{rxn\_aqueous\_equilibrium.c}!SMALL\_WATER\_CONC\_@{SMALL\_WATER\_CONC\_}}
+\index{SMALL\_WATER\_CONC\_@{SMALL\_WATER\_CONC\_}!rxn\_aqueous\_equilibrium.c@{rxn\_aqueous\_equilibrium.c}}
+\doxysubsubsection{\texorpdfstring{SMALL\_WATER\_CONC\_}{SMALL\_WATER\_CONC\_}}
+{\footnotesize\ttfamily \#define SMALL\+\_\+\+WATER\+\_\+\+CONC\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~  (float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}{NUM\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+}} + 2 $\ast$ \mbox{\hyperlink{rxn__troe_8_f90_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + 2 $\ast$ \mbox{\hyperlink{rxn__troe_8_f90_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}} + x\mbox{]})}
+
+
+
+Definition at line 58 of file rxn\+\_\+aqueous\+\_\+equilibrium.\+c.
+
+\mbox{\Hypertarget{rxn__aqueous__equilibrium_8c_aa90d2b6c48aceb4d7ac3d93d5249bb60}\label{rxn__aqueous__equilibrium_8c_aa90d2b6c48aceb4d7ac3d93d5249bb60}} 
+\index{rxn\_aqueous\_equilibrium.c@{rxn\_aqueous\_equilibrium.c}!TEMPERATURE\_K\_@{TEMPERATURE\_K\_}}
+\index{TEMPERATURE\_K\_@{TEMPERATURE\_K\_}!rxn\_aqueous\_equilibrium.c@{rxn\_aqueous\_equilibrium.c}}
+\doxysubsubsection{\texorpdfstring{TEMPERATURE\_K\_}{TEMPERATURE\_K\_}}
+{\footnotesize\ttfamily \#define TEMPERATURE\+\_\+\+K\+\_\+~env\+\_\+data\mbox{[}0\mbox{]}}
+
+
+
+Definition at line 17 of file rxn\+\_\+aqueous\+\_\+equilibrium.\+c.
+
+\mbox{\Hypertarget{rxn__aqueous__equilibrium_8c_a21d22248f675f2c8aed5aa05e839290f}\label{rxn__aqueous__equilibrium_8c_a21d22248f675f2c8aed5aa05e839290f}} 
+\index{rxn\_aqueous\_equilibrium.c@{rxn\_aqueous\_equilibrium.c}!WATER\_@{WATER\_}}
+\index{WATER\_@{WATER\_}!rxn\_aqueous\_equilibrium.c@{rxn\_aqueous\_equilibrium.c}}
+\doxysubsubsection{\texorpdfstring{WATER\_}{WATER\_}}
+{\footnotesize\ttfamily \#define WATER\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~  (int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + (\mbox{\hyperlink{rxn__troe_8_f90_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + \mbox{\hyperlink{rxn__troe_8_f90_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}}) $\ast$ \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8_f90_adf4b84135880d5ac73ce37df877d91fb}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+}} + x\mbox{]} -\/ 1)}
+
+
+
+Definition at line 42 of file rxn\+\_\+aqueous\+\_\+equilibrium.\+c.
+
+\mbox{\Hypertarget{rxn__aqueous__equilibrium_8c_a7a7be1a044251bca9454b2306e958ab0}\label{rxn__aqueous__equilibrium_8c_a7a7be1a044251bca9454b2306e958ab0}} 
+\index{rxn\_aqueous\_equilibrium.c@{rxn\_aqueous\_equilibrium.c}!WATER\_CONC\_@{WATER\_CONC\_}}
+\index{WATER\_CONC\_@{WATER\_CONC\_}!rxn\_aqueous\_equilibrium.c@{rxn\_aqueous\_equilibrium.c}}
+\doxysubsubsection{\texorpdfstring{WATER\_CONC\_}{WATER\_CONC\_}}
+{\footnotesize\ttfamily \#define WATER\+\_\+\+CONC\+\_\+~(float\+\_\+data\mbox{[}3\mbox{]})}
+
+
+
+Definition at line 33 of file rxn\+\_\+aqueous\+\_\+equilibrium.\+c.
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{rxn__aqueous__equilibrium_8c_afbf4752793cab50cd6c964aeaf26f531}\label{rxn__aqueous__equilibrium_8c_afbf4752793cab50cd6c964aeaf26f531}} 
+\index{rxn\_aqueous\_equilibrium.c@{rxn\_aqueous\_equilibrium.c}!calc\_standard\_rate@{calc\_standard\_rate}}
+\index{calc\_standard\_rate@{calc\_standard\_rate}!rxn\_aqueous\_equilibrium.c@{rxn\_aqueous\_equilibrium.c}}
+\doxysubsubsection{\texorpdfstring{calc\_standard\_rate()}{calc\_standard\_rate()}}
+{\footnotesize\ttfamily long double calc\+\_\+standard\+\_\+rate (\begin{DoxyParamCaption}\item[{int $\ast$}]{rxn\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+env\+\_\+data,  }\item[{\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1}{bool}}}]{is\+\_\+water\+\_\+partial,  }\item[{long double $\ast$}]{rate\+\_\+forward,  }\item[{long double $\ast$}]{rate\+\_\+reverse }\end{DoxyParamCaption})}
+
+
+
+Calculate the reaction rate for a set of conditions using the standard equation per mixing ratio of water \mbox{[}M\+\_\+\+X/s$\ast$kg\+\_\+\+H2\+O/m$^\wedge$3\mbox{]}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em rxn\+\_\+int\+\_\+data} & Pointer to the reaction integer data \\
+\hline
+{\em rxn\+\_\+float\+\_\+data} & Pointer to the reaction floating point data \\
+\hline
+{\em rxn\+\_\+env\+\_\+data} & Pointer to the environment-\/dependent parameters \\
+\hline
+{\em is\+\_\+water\+\_\+partial} & Flag indicating whether the calculation should return the partial derivative d\+\_\+rate/d\+\_\+\+H2O \\
+\hline
+{\em rate\+\_\+forward} & \mbox{[}output\mbox{]} calculated forward rate \\
+\hline
+{\em rate\+\_\+reverse} & \mbox{[}output\mbox{]} calculated reverse rate \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+reaction rate per mixing ratio of water \mbox{[}M\+\_\+\+X/s$\ast$kg\+\_\+\+H2\+O/m$^\wedge$3\mbox{]} 
+\end{DoxyReturn}
+
+
+Definition at line 278 of file rxn\+\_\+aqueous\+\_\+equilibrium.\+c.
+
+\mbox{\Hypertarget{rxn__aqueous__equilibrium_8c_a71247df341cf33530652f240a86e8e22}\label{rxn__aqueous__equilibrium_8c_a71247df341cf33530652f240a86e8e22}} 
+\index{rxn\_aqueous\_equilibrium.c@{rxn\_aqueous\_equilibrium.c}!rxn\_aqueous\_equilibrium\_calc\_deriv\_contrib@{rxn\_aqueous\_equilibrium\_calc\_deriv\_contrib}}
+\index{rxn\_aqueous\_equilibrium\_calc\_deriv\_contrib@{rxn\_aqueous\_equilibrium\_calc\_deriv\_contrib}!rxn\_aqueous\_equilibrium.c@{rxn\_aqueous\_equilibrium.c}}
+\doxysubsubsection{\texorpdfstring{rxn\_aqueous\_equilibrium\_calc\_deriv\_contrib()}{rxn\_aqueous\_equilibrium\_calc\_deriv\_contrib()}}
+{\footnotesize\ttfamily void rxn\+\_\+aqueous\+\_\+equilibrium\+\_\+calc\+\_\+deriv\+\_\+contrib (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{\mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}}}]{time\+\_\+deriv,  }\item[{int $\ast$}]{rxn\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+env\+\_\+data,  }\item[{double}]{time\+\_\+step }\end{DoxyParamCaption})}
+
+
+
+Calculate contributions to the time derivative $f(t,y)$ from this reaction. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em model\+\_\+data} & Pointer to the model data, including the state array \\
+\hline
+{\em time\+\_\+deriv} & \mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}} object \\
+\hline
+{\em rxn\+\_\+int\+\_\+data} & Pointer to the reaction integer data \\
+\hline
+{\em rxn\+\_\+float\+\_\+data} & Pointer to the reaction floating-\/point data \\
+\hline
+{\em rxn\+\_\+env\+\_\+data} & Pointer to the environment-\/dependent parameters \\
+\hline
+{\em time\+\_\+step} & Current time step of the itegrator (s) \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 323 of file rxn\+\_\+aqueous\+\_\+equilibrium.\+c.
+
+\mbox{\Hypertarget{rxn__aqueous__equilibrium_8c_a223e07042b82fc3b1391e1354acfdc5d}\label{rxn__aqueous__equilibrium_8c_a223e07042b82fc3b1391e1354acfdc5d}} 
+\index{rxn\_aqueous\_equilibrium.c@{rxn\_aqueous\_equilibrium.c}!rxn\_aqueous\_equilibrium\_calc\_jac\_contrib@{rxn\_aqueous\_equilibrium\_calc\_jac\_contrib}}
+\index{rxn\_aqueous\_equilibrium\_calc\_jac\_contrib@{rxn\_aqueous\_equilibrium\_calc\_jac\_contrib}!rxn\_aqueous\_equilibrium.c@{rxn\_aqueous\_equilibrium.c}}
+\doxysubsubsection{\texorpdfstring{rxn\_aqueous\_equilibrium\_calc\_jac\_contrib()}{rxn\_aqueous\_equilibrium\_calc\_jac\_contrib()}}
+{\footnotesize\ttfamily void rxn\+\_\+aqueous\+\_\+equilibrium\+\_\+calc\+\_\+jac\+\_\+contrib (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}}}]{jac,  }\item[{int $\ast$}]{rxn\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+env\+\_\+data,  }\item[{double}]{time\+\_\+step }\end{DoxyParamCaption})}
+
+
+
+Calculate contributions to the \mbox{\hyperlink{struct_jacobian}{Jacobian}} from this reaction. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em model\+\_\+data} & Pointer to the model data \\
+\hline
+{\em jac} & Reaction \mbox{\hyperlink{struct_jacobian}{Jacobian}} \\
+\hline
+{\em rxn\+\_\+int\+\_\+data} & Pointer to the reaction integer data \\
+\hline
+{\em rxn\+\_\+float\+\_\+data} & Pointer to the reaction floating-\/point data \\
+\hline
+{\em rxn\+\_\+env\+\_\+data} & Pointer to the environment-\/dependent parameters \\
+\hline
+{\em time\+\_\+step} & Current time step of the itegrator (s) \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 403 of file rxn\+\_\+aqueous\+\_\+equilibrium.\+c.
+
+\mbox{\Hypertarget{rxn__aqueous__equilibrium_8c_aba2b7971289b789830bb3986d8c26143}\label{rxn__aqueous__equilibrium_8c_aba2b7971289b789830bb3986d8c26143}} 
+\index{rxn\_aqueous\_equilibrium.c@{rxn\_aqueous\_equilibrium.c}!rxn\_aqueous\_equilibrium\_get\_used\_jac\_elem@{rxn\_aqueous\_equilibrium\_get\_used\_jac\_elem}}
+\index{rxn\_aqueous\_equilibrium\_get\_used\_jac\_elem@{rxn\_aqueous\_equilibrium\_get\_used\_jac\_elem}!rxn\_aqueous\_equilibrium.c@{rxn\_aqueous\_equilibrium.c}}
+\doxysubsubsection{\texorpdfstring{rxn\_aqueous\_equilibrium\_get\_used\_jac\_elem()}{rxn\_aqueous\_equilibrium\_get\_used\_jac\_elem()}}
+{\footnotesize\ttfamily void rxn\+\_\+aqueous\+\_\+equilibrium\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem (\begin{DoxyParamCaption}\item[{int $\ast$}]{rxn\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+float\+\_\+data,  }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}} $\ast$}]{jac }\end{DoxyParamCaption})}
+
+
+
+Flag \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used by this reaction. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em rxn\+\_\+int\+\_\+data} & Pointer to the reaction integer data \\
+\hline
+{\em rxn\+\_\+float\+\_\+data} & Pointer to the reaction floating-\/point data \\
+\hline
+{\em jac} & \mbox{\hyperlink{struct_jacobian}{Jacobian}} \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 70 of file rxn\+\_\+aqueous\+\_\+equilibrium.\+c.
+
+\mbox{\Hypertarget{rxn__aqueous__equilibrium_8c_a797af130ae2247ebb2879055e8d3d8f8}\label{rxn__aqueous__equilibrium_8c_a797af130ae2247ebb2879055e8d3d8f8}} 
+\index{rxn\_aqueous\_equilibrium.c@{rxn\_aqueous\_equilibrium.c}!rxn\_aqueous\_equilibrium\_print@{rxn\_aqueous\_equilibrium\_print}}
+\index{rxn\_aqueous\_equilibrium\_print@{rxn\_aqueous\_equilibrium\_print}!rxn\_aqueous\_equilibrium.c@{rxn\_aqueous\_equilibrium.c}}
+\doxysubsubsection{\texorpdfstring{rxn\_aqueous\_equilibrium\_print()}{rxn\_aqueous\_equilibrium\_print()}}
+{\footnotesize\ttfamily void rxn\+\_\+aqueous\+\_\+equilibrium\+\_\+print (\begin{DoxyParamCaption}\item[{int $\ast$}]{rxn\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+float\+\_\+data }\end{DoxyParamCaption})}
+
+
+
+Print the Aqueous Equilibrium reaction parameters. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em rxn\+\_\+int\+\_\+data} & Pointer to the reaction integer data \\
+\hline
+{\em rxn\+\_\+float\+\_\+data} & Pointer to the reaction floating-\/point data \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 549 of file rxn\+\_\+aqueous\+\_\+equilibrium.\+c.
+
+\mbox{\Hypertarget{rxn__aqueous__equilibrium_8c_a0195133a7e3e489e6580f8feae67b6ee}\label{rxn__aqueous__equilibrium_8c_a0195133a7e3e489e6580f8feae67b6ee}} 
+\index{rxn\_aqueous\_equilibrium.c@{rxn\_aqueous\_equilibrium.c}!rxn\_aqueous\_equilibrium\_update\_env\_state@{rxn\_aqueous\_equilibrium\_update\_env\_state}}
+\index{rxn\_aqueous\_equilibrium\_update\_env\_state@{rxn\_aqueous\_equilibrium\_update\_env\_state}!rxn\_aqueous\_equilibrium.c@{rxn\_aqueous\_equilibrium.c}}
+\doxysubsubsection{\texorpdfstring{rxn\_aqueous\_equilibrium\_update\_env\_state()}{rxn\_aqueous\_equilibrium\_update\_env\_state()}}
+{\footnotesize\ttfamily void rxn\+\_\+aqueous\+\_\+equilibrium\+\_\+update\+\_\+env\+\_\+state (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{int $\ast$}]{rxn\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+env\+\_\+data }\end{DoxyParamCaption})}
+
+
+
+Update reaction data for new environmental conditions. 
+
+For Aqueous Equilibrium reaction this only involves recalculating the forward rate constant.
+
+
+\begin{DoxyParams}{Parameters}
+{\em model\+\_\+data} & Pointer to the model data \\
+\hline
+{\em rxn\+\_\+int\+\_\+data} & Pointer to the reaction integer data \\
+\hline
+{\em rxn\+\_\+float\+\_\+data} & Pointer to the reaction floating-\/point data \\
+\hline
+{\em rxn\+\_\+env\+\_\+data} & Pointer to the environment-\/dependent parameters \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 244 of file rxn\+\_\+aqueous\+\_\+equilibrium.\+c.
+
+\mbox{\Hypertarget{rxn__aqueous__equilibrium_8c_af61bf85579cdea2f2c8ee0ea4fd8a96d}\label{rxn__aqueous__equilibrium_8c_af61bf85579cdea2f2c8ee0ea4fd8a96d}} 
+\index{rxn\_aqueous\_equilibrium.c@{rxn\_aqueous\_equilibrium.c}!rxn\_aqueous\_equilibrium\_update\_ids@{rxn\_aqueous\_equilibrium\_update\_ids}}
+\index{rxn\_aqueous\_equilibrium\_update\_ids@{rxn\_aqueous\_equilibrium\_update\_ids}!rxn\_aqueous\_equilibrium.c@{rxn\_aqueous\_equilibrium.c}}
+\doxysubsubsection{\texorpdfstring{rxn\_aqueous\_equilibrium\_update\_ids()}{rxn\_aqueous\_equilibrium\_update\_ids()}}
+{\footnotesize\ttfamily void rxn\+\_\+aqueous\+\_\+equilibrium\+\_\+update\+\_\+ids (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{int $\ast$}]{deriv\+\_\+ids,  }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}}}]{jac,  }\item[{int $\ast$}]{rxn\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+float\+\_\+data }\end{DoxyParamCaption})}
+
+
+
+Update the time derivative and Jacbobian array indices. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em model\+\_\+data} & Pointer to the model data \\
+\hline
+{\em deriv\+\_\+ids} & Id of each state variable in the derivative array \\
+\hline
+{\em jac} & \mbox{\hyperlink{struct_jacobian}{Jacobian}} \\
+\hline
+{\em rxn\+\_\+int\+\_\+data} & Pointer to the reaction integer data \\
+\hline
+{\em rxn\+\_\+float\+\_\+data} & Pointer to the reaction floating-\/point data \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 132 of file rxn\+\_\+aqueous\+\_\+equilibrium.\+c.
+

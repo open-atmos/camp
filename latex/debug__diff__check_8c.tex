@@ -1,0 +1,153 @@
+\hypertarget{debug__diff__check_8c}{}\doxysection{debug\+\_\+diff\+\_\+check.\+c File Reference}
+\label{debug__diff__check_8c}\index{debug\_diff\_check.c@{debug\_diff\_check.c}}
+
+
+model element data difference checker -\/ NOT THREAD SAFE!  
+
+
+Include dependency graph for debug\+\_\+diff\+\_\+check.\+c\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{debug__diff__check_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_model_element_data_indices}{Model\+Element\+Data\+Indices}}
+\item 
+struct \mbox{\hyperlink{struct_model_element_data_pointers}{Model\+Element\+Data\+Pointers}}
+\item 
+struct \mbox{\hyperlink{struct_model_element}{Model\+Element}}
+\item 
+struct \mbox{\hyperlink{struct_model}{Model}}
+\item 
+struct \mbox{\hyperlink{struct_difference_checker_data}{Difference\+Checker\+Data}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{debug__diff__check_8c_af8d6f62e96ac7ffc1ac08d849d2a6e94}{allocate\+\_\+index\+\_\+arrays}} (\mbox{\hyperlink{struct_model_element}{Model\+Element}} $\ast$model\+\_\+element, int num\+\_\+elements)
+\item 
+void \mbox{\hyperlink{debug__diff__check_8c_ada14e583f1d670929be2e9f85c06b5cc}{attach\+\_\+to\+\_\+data}} (\mbox{\hyperlink{struct_model_element}{Model\+Element}} $\ast$model\+\_\+element, int num\+\_\+elements, int num\+\_\+cells, int $\ast$int\+\_\+data, double $\ast$float\+\_\+data, double $\ast$env\+\_\+data, int $\ast$int\+\_\+indices, int $\ast$float\+\_\+indices, int $\ast$env\+\_\+indices)
+\item 
+void \mbox{\hyperlink{debug__diff__check_8c_a9305fcec61894ad9c854522dd760cef7}{copy\+\_\+data}} (\mbox{\hyperlink{struct_model_element}{Model\+Element}} from, \mbox{\hyperlink{struct_model_element}{Model\+Element}} $\ast$to)
+\item 
+void \mbox{\hyperlink{debug__diff__check_8c_af74a08152ac8485ed2dcb710431366f0}{diff\+\_\+check\+\_\+init}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} model\+\_\+data)
+\item 
+int \mbox{\hyperlink{debug__diff__check_8c_afb1128f6f0a020b38c94b979026ac18b}{compare\+\_\+and\+\_\+update}} (\mbox{\hyperlink{struct_model_element}{Model\+Element}} current, \mbox{\hyperlink{struct_model_element}{Model\+Element}} $\ast$last\+\_\+check, char $\ast$element\+\_\+type, \mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1}{bool}} do\+\_\+compare)
+\item 
+void \mbox{\hyperlink{debug__diff__check_8c_a99401326e8d53d4681bbd406a5dcfe06}{diff\+\_\+check}} (char $\ast$message)
+\item 
+void \mbox{\hyperlink{debug__diff__check_8c_ad45026ff55d837c84b7c9171346048ab}{diff\+\_\+check\+\_\+update\+\_\+only}} (char $\ast$message)
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{struct_difference_checker_data}{Difference\+Checker\+Data}} \mbox{\hyperlink{debug__diff__check_8c_a3517e0a5c314f00aad814dfc67bae975}{diff\+\_\+data}} \mbox{[}2\mbox{]}
+\item 
+int \mbox{\hyperlink{debug__diff__check_8c_a2333599bdfcab10267316dad3bb25ad5}{num\+\_\+solvers}} = 0
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+model element data difference checker -\/ NOT THREAD SAFE! 
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{debug__diff__check_8c_af8d6f62e96ac7ffc1ac08d849d2a6e94}\label{debug__diff__check_8c_af8d6f62e96ac7ffc1ac08d849d2a6e94}} 
+\index{debug\_diff\_check.c@{debug\_diff\_check.c}!allocate\_index\_arrays@{allocate\_index\_arrays}}
+\index{allocate\_index\_arrays@{allocate\_index\_arrays}!debug\_diff\_check.c@{debug\_diff\_check.c}}
+\doxysubsubsection{\texorpdfstring{allocate\_index\_arrays()}{allocate\_index\_arrays()}}
+{\footnotesize\ttfamily void allocate\+\_\+index\+\_\+arrays (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_element}{Model\+Element}} $\ast$}]{model\+\_\+element,  }\item[{int}]{num\+\_\+elements }\end{DoxyParamCaption})}
+
+
+
+Definition at line 59 of file debug\+\_\+diff\+\_\+check.\+c.
+
+\mbox{\Hypertarget{debug__diff__check_8c_ada14e583f1d670929be2e9f85c06b5cc}\label{debug__diff__check_8c_ada14e583f1d670929be2e9f85c06b5cc}} 
+\index{debug\_diff\_check.c@{debug\_diff\_check.c}!attach\_to\_data@{attach\_to\_data}}
+\index{attach\_to\_data@{attach\_to\_data}!debug\_diff\_check.c@{debug\_diff\_check.c}}
+\doxysubsubsection{\texorpdfstring{attach\_to\_data()}{attach\_to\_data()}}
+{\footnotesize\ttfamily void attach\+\_\+to\+\_\+data (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_element}{Model\+Element}} $\ast$}]{model\+\_\+element,  }\item[{int}]{num\+\_\+elements,  }\item[{int}]{num\+\_\+cells,  }\item[{int $\ast$}]{int\+\_\+data,  }\item[{double $\ast$}]{float\+\_\+data,  }\item[{double $\ast$}]{env\+\_\+data,  }\item[{int $\ast$}]{int\+\_\+indices,  }\item[{int $\ast$}]{float\+\_\+indices,  }\item[{int $\ast$}]{env\+\_\+indices }\end{DoxyParamCaption})}
+
+
+
+Definition at line 83 of file debug\+\_\+diff\+\_\+check.\+c.
+
+\mbox{\Hypertarget{debug__diff__check_8c_afb1128f6f0a020b38c94b979026ac18b}\label{debug__diff__check_8c_afb1128f6f0a020b38c94b979026ac18b}} 
+\index{debug\_diff\_check.c@{debug\_diff\_check.c}!compare\_and\_update@{compare\_and\_update}}
+\index{compare\_and\_update@{compare\_and\_update}!debug\_diff\_check.c@{debug\_diff\_check.c}}
+\doxysubsubsection{\texorpdfstring{compare\_and\_update()}{compare\_and\_update()}}
+{\footnotesize\ttfamily int compare\+\_\+and\+\_\+update (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_element}{Model\+Element}}}]{current,  }\item[{\mbox{\hyperlink{struct_model_element}{Model\+Element}} $\ast$}]{last\+\_\+check,  }\item[{char $\ast$}]{element\+\_\+type,  }\item[{\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1}{bool}}}]{do\+\_\+compare }\end{DoxyParamCaption})}
+
+
+
+Definition at line 183 of file debug\+\_\+diff\+\_\+check.\+c.
+
+\mbox{\Hypertarget{debug__diff__check_8c_a9305fcec61894ad9c854522dd760cef7}\label{debug__diff__check_8c_a9305fcec61894ad9c854522dd760cef7}} 
+\index{debug\_diff\_check.c@{debug\_diff\_check.c}!copy\_data@{copy\_data}}
+\index{copy\_data@{copy\_data}!debug\_diff\_check.c@{debug\_diff\_check.c}}
+\doxysubsubsection{\texorpdfstring{copy\_data()}{copy\_data()}}
+{\footnotesize\ttfamily void copy\+\_\+data (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_element}{Model\+Element}}}]{from,  }\item[{\mbox{\hyperlink{struct_model_element}{Model\+Element}} $\ast$}]{to }\end{DoxyParamCaption})}
+
+
+
+Definition at line 107 of file debug\+\_\+diff\+\_\+check.\+c.
+
+\mbox{\Hypertarget{debug__diff__check_8c_a99401326e8d53d4681bbd406a5dcfe06}\label{debug__diff__check_8c_a99401326e8d53d4681bbd406a5dcfe06}} 
+\index{debug\_diff\_check.c@{debug\_diff\_check.c}!diff\_check@{diff\_check}}
+\index{diff\_check@{diff\_check}!debug\_diff\_check.c@{debug\_diff\_check.c}}
+\doxysubsubsection{\texorpdfstring{diff\_check()}{diff\_check()}}
+{\footnotesize\ttfamily void diff\+\_\+check (\begin{DoxyParamCaption}\item[{char $\ast$}]{message }\end{DoxyParamCaption})}
+
+
+
+Definition at line 313 of file debug\+\_\+diff\+\_\+check.\+c.
+
+\mbox{\Hypertarget{debug__diff__check_8c_af74a08152ac8485ed2dcb710431366f0}\label{debug__diff__check_8c_af74a08152ac8485ed2dcb710431366f0}} 
+\index{debug\_diff\_check.c@{debug\_diff\_check.c}!diff\_check\_init@{diff\_check\_init}}
+\index{diff\_check\_init@{diff\_check\_init}!debug\_diff\_check.c@{debug\_diff\_check.c}}
+\doxysubsubsection{\texorpdfstring{diff\_check\_init()}{diff\_check\_init()}}
+{\footnotesize\ttfamily void diff\+\_\+check\+\_\+init (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}}}]{model\+\_\+data }\end{DoxyParamCaption})}
+
+
+
+Definition at line 153 of file debug\+\_\+diff\+\_\+check.\+c.
+
+\mbox{\Hypertarget{debug__diff__check_8c_ad45026ff55d837c84b7c9171346048ab}\label{debug__diff__check_8c_ad45026ff55d837c84b7c9171346048ab}} 
+\index{debug\_diff\_check.c@{debug\_diff\_check.c}!diff\_check\_update\_only@{diff\_check\_update\_only}}
+\index{diff\_check\_update\_only@{diff\_check\_update\_only}!debug\_diff\_check.c@{debug\_diff\_check.c}}
+\doxysubsubsection{\texorpdfstring{diff\_check\_update\_only()}{diff\_check\_update\_only()}}
+{\footnotesize\ttfamily void diff\+\_\+check\+\_\+update\+\_\+only (\begin{DoxyParamCaption}\item[{char $\ast$}]{message }\end{DoxyParamCaption})}
+
+
+
+Definition at line 337 of file debug\+\_\+diff\+\_\+check.\+c.
+
+
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{debug__diff__check_8c_a3517e0a5c314f00aad814dfc67bae975}\label{debug__diff__check_8c_a3517e0a5c314f00aad814dfc67bae975}} 
+\index{debug\_diff\_check.c@{debug\_diff\_check.c}!diff\_data@{diff\_data}}
+\index{diff\_data@{diff\_data}!debug\_diff\_check.c@{debug\_diff\_check.c}}
+\doxysubsubsection{\texorpdfstring{diff\_data}{diff\_data}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_difference_checker_data}{Difference\+Checker\+Data}} diff\+\_\+data\mbox{[}2\mbox{]}}
+
+
+
+Definition at line 55 of file debug\+\_\+diff\+\_\+check.\+c.
+
+\mbox{\Hypertarget{debug__diff__check_8c_a2333599bdfcab10267316dad3bb25ad5}\label{debug__diff__check_8c_a2333599bdfcab10267316dad3bb25ad5}} 
+\index{debug\_diff\_check.c@{debug\_diff\_check.c}!num\_solvers@{num\_solvers}}
+\index{num\_solvers@{num\_solvers}!debug\_diff\_check.c@{debug\_diff\_check.c}}
+\doxysubsubsection{\texorpdfstring{num\_solvers}{num\_solvers}}
+{\footnotesize\ttfamily int num\+\_\+solvers = 0}
+
+
+
+Definition at line 56 of file debug\+\_\+diff\+\_\+check.\+c.
+

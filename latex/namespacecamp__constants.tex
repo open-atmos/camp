@@ -1,0 +1,117 @@
+\hypertarget{namespacecamp__constants}{}\doxysection{camp\+\_\+constants Module Reference}
+\label{namespacecamp__constants}\index{camp\_constants@{camp\_constants}}
+
+
+Physical constants.  
+
+
+\doxysubsection*{Data Types}
+\begin{DoxyCompactItemize}
+\item 
+type \mbox{\hyperlink{structcamp__constants_1_1const__t}{const\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em Physical constants. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+integer, parameter \mbox{\hyperlink{namespacecamp__constants_ae5a812d758a5e2742cb945e981dff38a}{sp}} = kind(0.\+0)
+\begin{DoxyCompactList}\small\item\em Kind of a single precision real number. \end{DoxyCompactList}\item 
+integer, parameter \mbox{\hyperlink{namespacecamp__constants_a22c45ae2be3ec958d776e0021f537431}{sc}} = \mbox{\hyperlink{namespacecamp__constants_ae5a812d758a5e2742cb945e981dff38a}{sp}}
+\begin{DoxyCompactList}\small\item\em Kind of a single precision complex number. \end{DoxyCompactList}\item 
+integer, parameter \mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}} = kind(0.d0)
+\begin{DoxyCompactList}\small\item\em Kind of a double precision real number. \end{DoxyCompactList}\item 
+integer, parameter \mbox{\hyperlink{namespacecamp__constants_a39b2446a58e0cac3b0d157f0cf7249bf}{dc}} = \mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}
+\begin{DoxyCompactList}\small\item\em Kind of a double precision complex number. \end{DoxyCompactList}\item 
+integer, parameter \mbox{\hyperlink{namespacecamp__constants_aec214d61ec1cbcbe6ad8bea430b9b957}{i\+\_\+kind}} = kind(1)
+\begin{DoxyCompactList}\small\item\em Kind of an integer. \end{DoxyCompactList}\item 
+type(\mbox{\hyperlink{structcamp__constants_1_1const__t}{const\+\_\+t}}), save \mbox{\hyperlink{namespacecamp__constants_aab17f4f4c76dc9812d8ab58b137081de}{const}}
+\begin{DoxyCompactList}\small\item\em Fixed variable for accessing the constant\textquotesingle{}s values. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Physical constants. 
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{namespacecamp__constants_aab17f4f4c76dc9812d8ab58b137081de}\label{namespacecamp__constants_aab17f4f4c76dc9812d8ab58b137081de}} 
+\index{camp\_constants@{camp\_constants}!const@{const}}
+\index{const@{const}!camp\_constants@{camp\_constants}}
+\doxysubsubsection{\texorpdfstring{const}{const}}
+{\footnotesize\ttfamily type(\mbox{\hyperlink{structcamp__constants_1_1const__t}{const\+\_\+t}}), save camp\+\_\+constants\+::const}
+
+
+
+Fixed variable for accessing the constant\textquotesingle{}s values. 
+
+To access a constant in a subroutine you should {\ttfamily use \mbox{\hyperlink{namespacecamp__constants}{camp\+\_\+constants}}} and then the constant value is accessed with {\ttfamily const\%pi} or similar. Note that the type is called {\ttfamily \mbox{\hyperlink{structcamp__constants_1_1const__t}{const\+\_\+t}}} (with a trailing \+\_\+t) but the single saved variable to access them is just called {\ttfamily const}. 
+
+Definition at line 77 of file constants.\+F90.
+
+\mbox{\Hypertarget{namespacecamp__constants_a39b2446a58e0cac3b0d157f0cf7249bf}\label{namespacecamp__constants_a39b2446a58e0cac3b0d157f0cf7249bf}} 
+\index{camp\_constants@{camp\_constants}!dc@{dc}}
+\index{dc@{dc}!camp\_constants@{camp\_constants}}
+\doxysubsubsection{\texorpdfstring{dc}{dc}}
+{\footnotesize\ttfamily integer, parameter camp\+\_\+constants\+::dc = \mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}}
+
+
+
+Kind of a double precision complex number. 
+
+
+
+Definition at line 18 of file constants.\+F90.
+
+\mbox{\Hypertarget{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}\label{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}} 
+\index{camp\_constants@{camp\_constants}!dp@{dp}}
+\index{dp@{dp}!camp\_constants@{camp\_constants}}
+\doxysubsubsection{\texorpdfstring{dp}{dp}}
+{\footnotesize\ttfamily integer, parameter camp\+\_\+constants\+::dp = kind(0.d0)}
+
+
+
+Kind of a double precision real number. 
+
+
+
+Definition at line 16 of file constants.\+F90.
+
+\mbox{\Hypertarget{namespacecamp__constants_aec214d61ec1cbcbe6ad8bea430b9b957}\label{namespacecamp__constants_aec214d61ec1cbcbe6ad8bea430b9b957}} 
+\index{camp\_constants@{camp\_constants}!i\_kind@{i\_kind}}
+\index{i\_kind@{i\_kind}!camp\_constants@{camp\_constants}}
+\doxysubsubsection{\texorpdfstring{i\_kind}{i\_kind}}
+{\footnotesize\ttfamily integer, parameter camp\+\_\+constants\+::i\+\_\+kind = kind(1)}
+
+
+
+Kind of an integer. 
+
+
+
+Definition at line 21 of file constants.\+F90.
+
+\mbox{\Hypertarget{namespacecamp__constants_a22c45ae2be3ec958d776e0021f537431}\label{namespacecamp__constants_a22c45ae2be3ec958d776e0021f537431}} 
+\index{camp\_constants@{camp\_constants}!sc@{sc}}
+\index{sc@{sc}!camp\_constants@{camp\_constants}}
+\doxysubsubsection{\texorpdfstring{sc}{sc}}
+{\footnotesize\ttfamily integer, parameter camp\+\_\+constants\+::sc = \mbox{\hyperlink{namespacecamp__constants_ae5a812d758a5e2742cb945e981dff38a}{sp}}}
+
+
+
+Kind of a single precision complex number. 
+
+
+
+Definition at line 14 of file constants.\+F90.
+
+\mbox{\Hypertarget{namespacecamp__constants_ae5a812d758a5e2742cb945e981dff38a}\label{namespacecamp__constants_ae5a812d758a5e2742cb945e981dff38a}} 
+\index{camp\_constants@{camp\_constants}!sp@{sp}}
+\index{sp@{sp}!camp\_constants@{camp\_constants}}
+\doxysubsubsection{\texorpdfstring{sp}{sp}}
+{\footnotesize\ttfamily integer, parameter camp\+\_\+constants\+::sp = kind(0.\+0)}
+
+
+
+Kind of a single precision real number. 
+
+
+
+Definition at line 12 of file constants.\+F90.
+

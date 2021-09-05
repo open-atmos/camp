@@ -1,0 +1,66 @@
+\hypertarget{rxn__factory_8_f90}{}\doxysection{rxn\+\_\+factory.\+F90 File Reference}
+\label{rxn__factory_8_f90}\index{rxn\_factory.F90@{rxn\_factory.F90}}
+
+
+The \mbox{\hyperlink{namespacecamp__rxn__factory}{camp\+\_\+rxn\+\_\+factory}} module.  
+
+
+\doxysubsection*{Data Types}
+\begin{DoxyCompactItemize}
+\item 
+type \mbox{\hyperlink{structcamp__rxn__factory_1_1rxn__factory__t}{camp\+\_\+rxn\+\_\+factory\+::rxn\+\_\+factory\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em Factory type for chemical reactions. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Modules}
+\begin{DoxyCompactItemize}
+\item 
+module \mbox{\hyperlink{namespacecamp__rxn__factory}{camp\+\_\+rxn\+\_\+factory}}
+\begin{DoxyCompactList}\small\item\em The abstract \mbox{\hyperlink{structcamp__rxn__factory_1_1rxn__factory__t}{rxn\+\_\+factory\+\_\+t}} structure and associated subroutines. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Functions/\+Subroutines}
+\begin{DoxyCompactItemize}
+\item 
+class(rxn\+\_\+data\+\_\+t) function, pointer \mbox{\hyperlink{namespacecamp__rxn__factory_a3975ec0b65f653a90ffc1e44d7b7353c}{camp\+\_\+rxn\+\_\+factory\+::create}} (this, type\+\_\+name)
+\begin{DoxyCompactList}\small\item\em Create a new chemical reaction by type name. \end{DoxyCompactList}\item 
+class(rxn\+\_\+data\+\_\+t) function, pointer \mbox{\hyperlink{namespacecamp__rxn__factory_a9c918055bf16f3e4db2f2ecd3d310b69}{camp\+\_\+rxn\+\_\+factory\+::load}} (this, json, j\+\_\+obj)
+\begin{DoxyCompactList}\small\item\em Load an aerosol represenation from input data. \end{DoxyCompactList}\item 
+integer(kind=i\+\_\+kind) function \mbox{\hyperlink{namespacecamp__rxn__factory_a458659feabba75328651b709a3b5f8cd}{camp\+\_\+rxn\+\_\+factory\+::get\+\_\+type}} (this, rxn)
+\begin{DoxyCompactList}\small\item\em Get the reaction type as a Rxn\+Type. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__rxn__factory_afaf56d1165c3d63e2e3dadab513a41c5}{camp\+\_\+rxn\+\_\+factory\+::initialize\+\_\+update\+\_\+data}} (this, rxn, update\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Initialize an update data object. \end{DoxyCompactList}\item 
+integer(kind=i\+\_\+kind) function \mbox{\hyperlink{namespacecamp__rxn__factory_a6222bd3f74c00727487b7e9f01602682}{camp\+\_\+rxn\+\_\+factory\+::pack\+\_\+size}} (this, rxn, comm)
+\begin{DoxyCompactList}\small\item\em Determine the size of a binary required to pack a reaction. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__rxn__factory_af36f0101aafa792b21df852065e91c78}{camp\+\_\+rxn\+\_\+factory\+::bin\+\_\+pack}} (this, rxn, buffer, pos, comm)
+\begin{DoxyCompactList}\small\item\em Pack the given value to the buffer, advancing position. \end{DoxyCompactList}\item 
+class(rxn\+\_\+data\+\_\+t) function, pointer \mbox{\hyperlink{namespacecamp__rxn__factory_aca756fabc73131844494b81fe160052d}{camp\+\_\+rxn\+\_\+factory\+::bin\+\_\+unpack}} (this, buffer, pos, comm)
+\begin{DoxyCompactList}\small\item\em Unpack the given value to the buffer, advancing position. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+integer(kind=i\+\_\+kind), parameter, public \mbox{\hyperlink{namespacecamp__rxn__factory_adea8b1c9df8c84b68c20a1604df3ea01}{camp\+\_\+rxn\+\_\+factory\+::rxn\+\_\+arrhenius}} = 1
+\begin{DoxyCompactList}\small\item\em Identifiers for reaction types -\/ used by binary packing/unpacking functions. \end{DoxyCompactList}\item 
+integer(kind=i\+\_\+kind), parameter, public \mbox{\hyperlink{namespacecamp__rxn__factory_a4f84856fabadc46013a830a7b1f0d4c5}{camp\+\_\+rxn\+\_\+factory\+::rxn\+\_\+troe}} = 2
+\item 
+integer(kind=i\+\_\+kind), parameter, public \mbox{\hyperlink{namespacecamp__rxn__factory_a55385943a00d7dd37dddd564df2d7f6e}{camp\+\_\+rxn\+\_\+factory\+::rxn\+\_\+cmaq\+\_\+h2o2}} = 3
+\item 
+integer(kind=i\+\_\+kind), parameter, public \mbox{\hyperlink{namespacecamp__rxn__factory_a38248fd96417e93b2bb812c321dd9566}{camp\+\_\+rxn\+\_\+factory\+::rxn\+\_\+cmaq\+\_\+oh\+\_\+hno3}} = 4
+\item 
+integer(kind=i\+\_\+kind), parameter, public \mbox{\hyperlink{namespacecamp__rxn__factory_a0c99fd79e88f1bd2aa01fe395b26eca7}{camp\+\_\+rxn\+\_\+factory\+::rxn\+\_\+photolysis}} = 5
+\item 
+integer(kind=i\+\_\+kind), parameter, public \mbox{\hyperlink{namespacecamp__rxn__factory_a735a051920caf39c6bdbf244bf4d902b}{camp\+\_\+rxn\+\_\+factory\+::rxn\+\_\+hl\+\_\+phase\+\_\+transfer}} = 6
+\item 
+integer(kind=i\+\_\+kind), parameter, public \mbox{\hyperlink{namespacecamp__rxn__factory_ac388551339b034e56705d814878433da}{camp\+\_\+rxn\+\_\+factory\+::rxn\+\_\+aqueous\+\_\+equilibrium}} = 7
+\item 
+integer(kind=i\+\_\+kind), parameter, public \mbox{\hyperlink{namespacecamp__rxn__factory_a5419d01fc70970f1337777760ea9a70b}{camp\+\_\+rxn\+\_\+factory\+::rxn\+\_\+simpol\+\_\+phase\+\_\+transfer}} = 10
+\item 
+integer(kind=i\+\_\+kind), parameter, public \mbox{\hyperlink{namespacecamp__rxn__factory_a212ba90aa51d54b938b5099651d28e50}{camp\+\_\+rxn\+\_\+factory\+::rxn\+\_\+condensed\+\_\+phase\+\_\+arrhenius}} = 11
+\item 
+integer(kind=i\+\_\+kind), parameter, public \mbox{\hyperlink{namespacecamp__rxn__factory_a3fbd5fe4ba8d23bb0db58bfd1d0e7d09}{camp\+\_\+rxn\+\_\+factory\+::rxn\+\_\+first\+\_\+order\+\_\+loss}} = 12
+\item 
+integer(kind=i\+\_\+kind), parameter, public \mbox{\hyperlink{namespacecamp__rxn__factory_a573a7910ec5ee0a98b119d5b3dba834a}{camp\+\_\+rxn\+\_\+factory\+::rxn\+\_\+emission}} = 13
+\item 
+integer(kind=i\+\_\+kind), parameter, public \mbox{\hyperlink{namespacecamp__rxn__factory_ae1203033b528924293a192f21c7f2d39}{camp\+\_\+rxn\+\_\+factory\+::rxn\+\_\+wet\+\_\+deposition}} = 14
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+The \mbox{\hyperlink{namespacecamp__rxn__factory}{camp\+\_\+rxn\+\_\+factory}} module. 
+

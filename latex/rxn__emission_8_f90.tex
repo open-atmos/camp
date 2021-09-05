@@ -1,0 +1,115 @@
+\hypertarget{rxn__emission_8_f90}{}\doxysection{rxn\+\_\+emission.\+F90 File Reference}
+\label{rxn__emission_8_f90}\index{rxn\_emission.F90@{rxn\_emission.F90}}
+
+
+The \mbox{\hyperlink{namespacecamp__rxn__emission}{camp\+\_\+rxn\+\_\+emission}} module.  
+
+
+\doxysubsection*{Data Types}
+\begin{DoxyCompactItemize}
+\item 
+interface \mbox{\hyperlink{structcamp__rxn__emission_1_1rxn__emission__t}{camp\+\_\+rxn\+\_\+emission\+::rxn\+\_\+emission\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em Generic test reaction data type. \end{DoxyCompactList}\item 
+type \mbox{\hyperlink{structcamp__rxn__emission_1_1rxn__update__data__emission__t}{camp\+\_\+rxn\+\_\+emission\+::rxn\+\_\+update\+\_\+data\+\_\+emission\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em Emission rate update object. \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interfacecamp__rxn__emission_1_1rxn__emission__create__rate__update__data}{camp\+\_\+rxn\+\_\+emission\+::rxn\+\_\+emission\+\_\+create\+\_\+rate\+\_\+update\+\_\+data}}
+\begin{DoxyCompactList}\small\item\em Interface to c reaction functions. \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interfacecamp__rxn__emission_1_1rxn__emission__set__rate__update__data}{camp\+\_\+rxn\+\_\+emission\+::rxn\+\_\+emission\+\_\+set\+\_\+rate\+\_\+update\+\_\+data}}
+\begin{DoxyCompactList}\small\item\em Set a new emission rate. \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interfacecamp__rxn__emission_1_1rxn__free__update__data}{camp\+\_\+rxn\+\_\+emission\+::rxn\+\_\+free\+\_\+update\+\_\+data}}
+\begin{DoxyCompactList}\small\item\em Free an update rate data object. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Modules}
+\begin{DoxyCompactItemize}
+\item 
+module \mbox{\hyperlink{namespacecamp__rxn__emission}{camp\+\_\+rxn\+\_\+emission}}
+\begin{DoxyCompactList}\small\item\em The \mbox{\hyperlink{structcamp__rxn__emission_1_1rxn__emission__t}{rxn\+\_\+emission\+\_\+t}} type and associated functions. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{rxn__emission_8_f90_a90cc89c1a8af0668561f9fc8cdbb9dde}{RXN\+\_\+\+ID\+\_\+}}~this\%condensed\+\_\+data\+\_\+int(1)
+\item 
+\#define \mbox{\hyperlink{rxn__emission_8_f90_ad50772634af6363b99f68f7a7d312a7f}{SPECIES\+\_\+}}~this\%condensed\+\_\+data\+\_\+int(2)
+\item 
+\#define \mbox{\hyperlink{rxn__emission_8_f90_ad4462a980bbea67f2a75e80457ef56e7}{DERIV\+\_\+\+ID\+\_\+}}~this\%condensed\+\_\+data\+\_\+int(3)
+\item 
+\#define \mbox{\hyperlink{rxn__emission_8_f90_a1757f332a0485799c2ee77edff00c38a}{SCALING\+\_\+}}~this\%condensed\+\_\+data\+\_\+real(1)
+\item 
+\#define \mbox{\hyperlink{rxn__emission_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}}~3
+\item 
+\#define \mbox{\hyperlink{rxn__emission_8_f90_aa9808eb54fa06bcf890dd1aa1fc6ca5b}{NUM\+\_\+\+REAL\+\_\+\+PROP\+\_\+}}~1
+\item 
+\#define \mbox{\hyperlink{rxn__emission_8_f90_a1f68a3544ae39a7815cbb5c09dfdeff0}{NUM\+\_\+\+ENV\+\_\+\+PARAM\+\_\+}}~2
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions/\+Subroutines}
+\begin{DoxyCompactItemize}
+\item 
+type(rxn\+\_\+emission\+\_\+t) function, pointer \mbox{\hyperlink{namespacecamp__rxn__emission_a17dcbbf56fbd0994de36547b7f45cded}{camp\+\_\+rxn\+\_\+emission\+::constructor}} ()
+\begin{DoxyCompactList}\small\item\em Constructor for Emission reaction. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__rxn__emission_acb523afa7b98b8afa1b7a0d0895573cc}{camp\+\_\+rxn\+\_\+emission\+::initialize}} (this, chem\+\_\+spec\+\_\+data, aero\+\_\+rep, n\+\_\+cells)
+\begin{DoxyCompactList}\small\item\em Initialize the reaction data, validating component data and loading any required information into the condensed data arrays for use during solving. \end{DoxyCompactList}\item 
+type(property\+\_\+t) function, pointer \mbox{\hyperlink{namespacecamp__rxn__emission_ab7c8ff1ba07514c99fdc4a0a6be11988}{camp\+\_\+rxn\+\_\+emission\+::get\+\_\+property\+\_\+set}} (this)
+\begin{DoxyCompactList}\small\item\em Get the reaction properties. (For use by external modules.) \end{DoxyCompactList}\item 
+elemental subroutine \mbox{\hyperlink{namespacecamp__rxn__emission_a3af938b929508032fba32597c3269eee}{camp\+\_\+rxn\+\_\+emission\+::finalize}} (this)
+\begin{DoxyCompactList}\small\item\em Finalize the reaction. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__rxn__emission_a281be8ca77bf3c15b3674cdf7946378d}{camp\+\_\+rxn\+\_\+emission\+::update\+\_\+data\+\_\+rate\+\_\+set}} (this, base\+\_\+rate)
+\begin{DoxyCompactList}\small\item\em Set packed update data for emission rate constants. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__rxn__emission_af9ce1d3bfd29e3ee49aaf22279e9f4c7}{camp\+\_\+rxn\+\_\+emission\+::update\+\_\+data\+\_\+initialize}} (this, update\+\_\+data, rxn\+\_\+type)
+\begin{DoxyCompactList}\small\item\em Initialize update data. \end{DoxyCompactList}\item 
+integer(kind=i\+\_\+kind) function \mbox{\hyperlink{namespacecamp__rxn__emission_a39eb8f193083fa40ef8d84643aa04ac2}{camp\+\_\+rxn\+\_\+emission\+::internal\+\_\+pack\+\_\+size}} (this, comm)
+\begin{DoxyCompactList}\small\item\em Determine the size of a binary required to pack the reaction data. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__rxn__emission_ad82a22ae9ba6a379ee426944f9c833d8}{camp\+\_\+rxn\+\_\+emission\+::internal\+\_\+bin\+\_\+pack}} (this, buffer, pos, comm)
+\begin{DoxyCompactList}\small\item\em Pack the given value to the buffer, advancing position. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__rxn__emission_abd42fbac768937f899625ab96d36251b}{camp\+\_\+rxn\+\_\+emission\+::internal\+\_\+bin\+\_\+unpack}} (this, buffer, pos, comm)
+\begin{DoxyCompactList}\small\item\em Unpack the given value from the buffer, advancing position. \end{DoxyCompactList}\item 
+elemental subroutine \mbox{\hyperlink{namespacecamp__rxn__emission_ad2ebaade1033d55208ee52421f7eb9ea}{camp\+\_\+rxn\+\_\+emission\+::update\+\_\+data\+\_\+finalize}} (this)
+\begin{DoxyCompactList}\small\item\em Finalize an update data object. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+The \mbox{\hyperlink{namespacecamp__rxn__emission}{camp\+\_\+rxn\+\_\+emission}} module. 
+
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{rxn__emission_8_f90_ad4462a980bbea67f2a75e80457ef56e7}\label{rxn__emission_8_f90_ad4462a980bbea67f2a75e80457ef56e7}} 
+\index{rxn\_emission.F90@{rxn\_emission.F90}!DERIV\_ID\_@{DERIV\_ID\_}}
+\index{DERIV\_ID\_@{DERIV\_ID\_}!rxn\_emission.F90@{rxn\_emission.F90}}
+\doxysubsubsection{\texorpdfstring{DERIV\_ID\_}{DERIV\_ID\_}}
+{\footnotesize\ttfamily \#define DERIV\+\_\+\+ID\+\_\+~this\%condensed\+\_\+data\+\_\+int(3)}
+
+\mbox{\Hypertarget{rxn__emission_8_f90_a1f68a3544ae39a7815cbb5c09dfdeff0}\label{rxn__emission_8_f90_a1f68a3544ae39a7815cbb5c09dfdeff0}} 
+\index{rxn\_emission.F90@{rxn\_emission.F90}!NUM\_ENV\_PARAM\_@{NUM\_ENV\_PARAM\_}}
+\index{NUM\_ENV\_PARAM\_@{NUM\_ENV\_PARAM\_}!rxn\_emission.F90@{rxn\_emission.F90}}
+\doxysubsubsection{\texorpdfstring{NUM\_ENV\_PARAM\_}{NUM\_ENV\_PARAM\_}}
+{\footnotesize\ttfamily \#define NUM\+\_\+\+ENV\+\_\+\+PARAM\+\_\+~2}
+
+\mbox{\Hypertarget{rxn__emission_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}\label{rxn__emission_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}} 
+\index{rxn\_emission.F90@{rxn\_emission.F90}!NUM\_INT\_PROP\_@{NUM\_INT\_PROP\_}}
+\index{NUM\_INT\_PROP\_@{NUM\_INT\_PROP\_}!rxn\_emission.F90@{rxn\_emission.F90}}
+\doxysubsubsection{\texorpdfstring{NUM\_INT\_PROP\_}{NUM\_INT\_PROP\_}}
+{\footnotesize\ttfamily \#define NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+~3}
+
+\mbox{\Hypertarget{rxn__emission_8_f90_aa9808eb54fa06bcf890dd1aa1fc6ca5b}\label{rxn__emission_8_f90_aa9808eb54fa06bcf890dd1aa1fc6ca5b}} 
+\index{rxn\_emission.F90@{rxn\_emission.F90}!NUM\_REAL\_PROP\_@{NUM\_REAL\_PROP\_}}
+\index{NUM\_REAL\_PROP\_@{NUM\_REAL\_PROP\_}!rxn\_emission.F90@{rxn\_emission.F90}}
+\doxysubsubsection{\texorpdfstring{NUM\_REAL\_PROP\_}{NUM\_REAL\_PROP\_}}
+{\footnotesize\ttfamily \#define NUM\+\_\+\+REAL\+\_\+\+PROP\+\_\+~1}
+
+\mbox{\Hypertarget{rxn__emission_8_f90_a90cc89c1a8af0668561f9fc8cdbb9dde}\label{rxn__emission_8_f90_a90cc89c1a8af0668561f9fc8cdbb9dde}} 
+\index{rxn\_emission.F90@{rxn\_emission.F90}!RXN\_ID\_@{RXN\_ID\_}}
+\index{RXN\_ID\_@{RXN\_ID\_}!rxn\_emission.F90@{rxn\_emission.F90}}
+\doxysubsubsection{\texorpdfstring{RXN\_ID\_}{RXN\_ID\_}}
+{\footnotesize\ttfamily \#define RXN\+\_\+\+ID\+\_\+~this\%condensed\+\_\+data\+\_\+int(1)}
+
+\mbox{\Hypertarget{rxn__emission_8_f90_a1757f332a0485799c2ee77edff00c38a}\label{rxn__emission_8_f90_a1757f332a0485799c2ee77edff00c38a}} 
+\index{rxn\_emission.F90@{rxn\_emission.F90}!SCALING\_@{SCALING\_}}
+\index{SCALING\_@{SCALING\_}!rxn\_emission.F90@{rxn\_emission.F90}}
+\doxysubsubsection{\texorpdfstring{SCALING\_}{SCALING\_}}
+{\footnotesize\ttfamily \#define SCALING\+\_\+~this\%condensed\+\_\+data\+\_\+real(1)}
+
+\mbox{\Hypertarget{rxn__emission_8_f90_ad50772634af6363b99f68f7a7d312a7f}\label{rxn__emission_8_f90_ad50772634af6363b99f68f7a7d312a7f}} 
+\index{rxn\_emission.F90@{rxn\_emission.F90}!SPECIES\_@{SPECIES\_}}
+\index{SPECIES\_@{SPECIES\_}!rxn\_emission.F90@{rxn\_emission.F90}}
+\doxysubsubsection{\texorpdfstring{SPECIES\_}{SPECIES\_}}
+{\footnotesize\ttfamily \#define SPECIES\+\_\+~this\%condensed\+\_\+data\+\_\+int(2)}
+

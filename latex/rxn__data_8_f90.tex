@@ -1,0 +1,76 @@
+\hypertarget{rxn__data_8_f90}{}\doxysection{rxn\+\_\+data.\+F90 File Reference}
+\label{rxn__data_8_f90}\index{rxn\_data.F90@{rxn\_data.F90}}
+
+
+The \mbox{\hyperlink{namespacecamp__rxn__data}{camp\+\_\+rxn\+\_\+data}} module.  
+
+
+\doxysubsection*{Data Types}
+\begin{DoxyCompactItemize}
+\item 
+type \mbox{\hyperlink{structcamp__rxn__data_1_1rxn__data__t}{camp\+\_\+rxn\+\_\+data\+::rxn\+\_\+data\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em Abstract reaction data type. \end{DoxyCompactList}\item 
+type \mbox{\hyperlink{structcamp__rxn__data_1_1rxn__data__ptr}{camp\+\_\+rxn\+\_\+data\+::rxn\+\_\+data\+\_\+ptr}}
+\begin{DoxyCompactList}\small\item\em Pointer type for building arrays of mixed reactions. \end{DoxyCompactList}\item 
+type \mbox{\hyperlink{structcamp__rxn__data_1_1rxn__update__data__t}{camp\+\_\+rxn\+\_\+data\+::rxn\+\_\+update\+\_\+data\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em Update cookie. \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interfacecamp__rxn__data_1_1initialize}{camp\+\_\+rxn\+\_\+data\+::initialize}}
+\begin{DoxyCompactList}\small\item\em Reaction initialization. Takes species, phase and reaction parameters and packs required information into the condensed data arrays for use during the model run. \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interfacecamp__rxn__data_1_1internal__pack__size}{camp\+\_\+rxn\+\_\+data\+::internal\+\_\+pack\+\_\+size}}
+\begin{DoxyCompactList}\small\item\em Extending-\/type binary pack size (internal use only) \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interfacecamp__rxn__data_1_1internal__bin__pack}{camp\+\_\+rxn\+\_\+data\+::internal\+\_\+bin\+\_\+pack}}
+\begin{DoxyCompactList}\small\item\em Extending-\/type binary pack function (Internal use only) \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interfacecamp__rxn__data_1_1internal__bin__unpack}{camp\+\_\+rxn\+\_\+data\+::internal\+\_\+bin\+\_\+unpack}}
+\begin{DoxyCompactList}\small\item\em Extending-\/type binary unpack function (Internal use only) \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Modules}
+\begin{DoxyCompactItemize}
+\item 
+module \mbox{\hyperlink{namespacecamp__rxn__data}{camp\+\_\+rxn\+\_\+data}}
+\begin{DoxyCompactList}\small\item\em The \mbox{\hyperlink{structcamp__rxn__data_1_1rxn__data__t}{rxn\+\_\+data\+\_\+t}} structure and associated subroutines. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Functions/\+Subroutines}
+\begin{DoxyCompactItemize}
+\item 
+subroutine \mbox{\hyperlink{namespacecamp__rxn__data_af37ec267973ffc6b553ecbbe37b62c98}{camp\+\_\+rxn\+\_\+data\+::load}} (this, json, j\+\_\+obj)
+\begin{DoxyCompactList}\small\item\em Load reactions from an input file. \end{DoxyCompactList}\item 
+logical function \mbox{\hyperlink{namespacecamp__rxn__data_addbf2edc3675a1065b440cf4290dd560}{camp\+\_\+rxn\+\_\+data\+::check\+\_\+phase}} (this, rxn\+\_\+phase)
+\begin{DoxyCompactList}\small\item\em Check the phase of the reaction against the phase being solved for. During GAS\+\_\+\+RXN integrations, only GAS\+\_\+\+RXN reactions are solved. During AERO\+\_\+\+RXN integrations, only AERO\+\_\+\+RXN and GAS\+\_\+\+AERO\+\_\+\+RXN reactions are solved. During GAS\+\_\+\+AERO\+\_\+\+RXN integrations, all reactions are solved. \end{DoxyCompactList}\item 
+integer(kind=i\+\_\+kind) function \mbox{\hyperlink{namespacecamp__rxn__data_a03c2677e2905ea3b28ba1c1b77d79f90}{camp\+\_\+rxn\+\_\+data\+::pack\+\_\+size}} (this, comm)
+\begin{DoxyCompactList}\small\item\em Determine the size of a binary required to pack the reaction data. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__rxn__data_a4fa66622a18e48d16cad5afaadae03d8}{camp\+\_\+rxn\+\_\+data\+::bin\+\_\+pack}} (this, buffer, pos, comm)
+\begin{DoxyCompactList}\small\item\em Pack the given value to the buffer, advancing position. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__rxn__data_a75df99889ced5d095558bac4cb588042}{camp\+\_\+rxn\+\_\+data\+::bin\+\_\+unpack}} (this, buffer, pos, comm)
+\begin{DoxyCompactList}\small\item\em Unpack the given value from the buffer, advancing position. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__rxn__data_a0a8239fb07b298cde1d02b6397cb79c3}{camp\+\_\+rxn\+\_\+data\+::do\+\_\+print}} (this, file\+\_\+unit)
+\begin{DoxyCompactList}\small\item\em Print the reaction data. \end{DoxyCompactList}\item 
+elemental subroutine \mbox{\hyperlink{namespacecamp__rxn__data_a005184b2ff08ed9baac23a226b86ccdc}{camp\+\_\+rxn\+\_\+data\+::dereference}} (this)
+\begin{DoxyCompactList}\small\item\em Dereference a pointer to a reaction. \end{DoxyCompactList}\item 
+elemental subroutine \mbox{\hyperlink{namespacecamp__rxn__data_a0f5a80be4fae50c8db2972b54bdcc7e8}{camp\+\_\+rxn\+\_\+data\+::ptr\+\_\+finalize}} (this)
+\begin{DoxyCompactList}\small\item\em Finalize a pointer to a reaction. \end{DoxyCompactList}\item 
+integer(kind=c\+\_\+int) function \mbox{\hyperlink{namespacecamp__rxn__data_ab3b029cdec60826e4b69637d6dcb6c9a}{camp\+\_\+rxn\+\_\+data\+::rxn\+\_\+update\+\_\+data\+\_\+get\+\_\+type}} (this)
+\begin{DoxyCompactList}\small\item\em Get the update data reaction type. \end{DoxyCompactList}\item 
+integer(kind=c\+\_\+int) function \mbox{\hyperlink{namespacecamp__rxn__data_a17fa733e5945a0b34b9dc2519fa820f3}{camp\+\_\+rxn\+\_\+data\+::rxn\+\_\+update\+\_\+data\+\_\+get\+\_\+cell\+\_\+id}} (this)
+\begin{DoxyCompactList}\small\item\em Get the grid cell id to update. \end{DoxyCompactList}\item 
+type(c\+\_\+ptr) function \mbox{\hyperlink{namespacecamp__rxn__data_ad6e931331583cff5d45bd95aa33b808e}{camp\+\_\+rxn\+\_\+data\+::rxn\+\_\+update\+\_\+data\+\_\+get\+\_\+data}} (this)
+\begin{DoxyCompactList}\small\item\em Get the update data. \end{DoxyCompactList}\item 
+integer(kind=i\+\_\+kind) function \mbox{\hyperlink{namespacecamp__rxn__data_ae08ddb27fa7f7d4a0910a990719f70f7}{camp\+\_\+rxn\+\_\+data\+::rxn\+\_\+update\+\_\+data\+\_\+pack\+\_\+size}} (this, comm)
+\begin{DoxyCompactList}\small\item\em Determine the size of a binary required to pack the reaction data. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__rxn__data_a648bdedc76d56881987517445567d7dd}{camp\+\_\+rxn\+\_\+data\+::rxn\+\_\+update\+\_\+data\+\_\+bin\+\_\+pack}} (this, buffer, pos, comm)
+\begin{DoxyCompactList}\small\item\em Pack the given value to the buffer, advancing position. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__rxn__data_a9102b38240e782124115e8fff08d406f}{camp\+\_\+rxn\+\_\+data\+::rxn\+\_\+update\+\_\+data\+\_\+bin\+\_\+unpack}} (this, buffer, pos, comm)
+\begin{DoxyCompactList}\small\item\em Unpack the given value from the buffer, advancing position. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__rxn__data_a1788c656b816e2128b41f04c511092b3}{camp\+\_\+rxn\+\_\+data\+::do\+\_\+rxn\+\_\+update\+\_\+data\+\_\+print}} (this, file\+\_\+unit)
+\begin{DoxyCompactList}\small\item\em Print the update data. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+integer(kind=i\+\_\+kind), parameter, public \mbox{\hyperlink{namespacecamp__rxn__data_a1ff1b61ed572674155f271c550e473ab}{camp\+\_\+rxn\+\_\+data\+::gas\+\_\+rxn}} = 1
+\begin{DoxyCompactList}\small\item\em Gas-\/phase reaction. \end{DoxyCompactList}\item 
+integer(kind=i\+\_\+kind), parameter, public \mbox{\hyperlink{namespacecamp__rxn__data_a39217b10bc26fd976daa1f1b8eedb589}{camp\+\_\+rxn\+\_\+data\+::gas\+\_\+aero\+\_\+rxn}} = 2
+\begin{DoxyCompactList}\small\item\em Mixed-\/phase (gas and aerosol) reaction. \end{DoxyCompactList}\item 
+integer(kind=i\+\_\+kind), parameter, public \mbox{\hyperlink{namespacecamp__rxn__data_a5af1c18da3738674ca3911fe3acf3102}{camp\+\_\+rxn\+\_\+data\+::aero\+\_\+rxn}} = 3
+\begin{DoxyCompactList}\small\item\em Aerosol-\/phase reaction. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+The \mbox{\hyperlink{namespacecamp__rxn__data}{camp\+\_\+rxn\+\_\+data}} module. 
+

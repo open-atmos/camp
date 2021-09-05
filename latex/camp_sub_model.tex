@@ -1,0 +1,690 @@
+A sub-\/model is used during solving to calculate parameters based on the current model state for use by reactions.
+
+The available sub-\/models are\+:
+\begin{DoxyItemize}
+\item \mbox{\hyperlink{camp_sub_model_PDFiTE}{PDFi\+TE Activity Coefficients}}
+\item \mbox{\hyperlink{camp_sub_model_UNIFAC}{UNIFAC Activity Coefficients}}
+\item \mbox{\hyperlink{camp_sub_model_ZSR_aerosol_water}{ZSR Aerosol Water}}
+\end{DoxyItemize}
+
+The general input format for a sub-\/model can be found \mbox{\hyperlink{input_format_sub_model}{here}}. \hypertarget{camp_sub_model_PDFiTE}{}\doxysection{CAMP\+: PD-\/\+Fi\+TE Activity}\label{camp_sub_model_PDFiTE}
+PD-\/\+Fi\+TE activity calculates aerosol-\/phase species activities using Taylor series to describe partial derivatives of mean activity coefficients for ternary solutions, as described in Topping et al. (2009) {\bfseries [Topping2009]} . The mean binary activity coefficients for ion pairs are calculated according to eq. 15 in {\bfseries [Topping2009]} . The values are then made available to aqueous-\/phase reactions during solving.
+
+Input data for PDFi\+TE activity equations have the following format \+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{ "{}camp-\/data"{} : [}
+\DoxyCodeLine{ \{}
+\DoxyCodeLine{   "{}name"{} : "{}my PDFiTE activity"{},}
+\DoxyCodeLine{   "{}type"{} : "{}SUB\_MODEL\_PDFITE"{},}
+\DoxyCodeLine{   "{}gas-\/phase water"{} : "{}H2O"{},}
+\DoxyCodeLine{   "{}aerosol-\/phase water"{} : "{}H2O\_aq"{},}
+\DoxyCodeLine{   "{}aerosol phase"{} : "{}my aero phase"{},}
+\DoxyCodeLine{   "{}calculate for"{} : \{}
+\DoxyCodeLine{     "{}H-\/NO3"{} : \{}
+\DoxyCodeLine{       "{}interactions"{} : [}
+\DoxyCodeLine{         \{}
+\DoxyCodeLine{           "{}ion pair"{} : "{}H-\/NO3"{},}
+\DoxyCodeLine{           "{}min RH"{} : 0.0,}
+\DoxyCodeLine{           "{}max RH"{} : 0.1,}
+\DoxyCodeLine{           "{}B"{} : [ 0.925113 ]}
+\DoxyCodeLine{         \},}
+\DoxyCodeLine{         \{}
+\DoxyCodeLine{           "{}ion pair"{} : "{}H-\/NO3"{},}
+\DoxyCodeLine{           "{}min RH"{} : 0.1,}
+\DoxyCodeLine{           "{}max RH"{} : 0.4,}
+\DoxyCodeLine{           "{}B"{} : [ 0.12091, 13.497, -\/67.771, 144.01, -\/117.97 ]}
+\DoxyCodeLine{         \},}
+\DoxyCodeLine{         \{}
+\DoxyCodeLine{           "{}ion pair"{} : "{}H-\/NO3"{},}
+\DoxyCodeLine{           "{}min RH"{} : 0.4,}
+\DoxyCodeLine{           "{}max RH"{} : 0.9,}
+\DoxyCodeLine{           "{}B"{} : [ 1.3424, -\/0.8197, -\/0.52983, -\/0.37335 ]}
+\DoxyCodeLine{         \},}
+\DoxyCodeLine{         \{}
+\DoxyCodeLine{           "{}ion pair"{} : "{}H-\/NO3"{},}
+\DoxyCodeLine{           "{}min RH"{} : 0.9,}
+\DoxyCodeLine{           "{}max RH"{} : 1.0,}
+\DoxyCodeLine{           "{}B"{} : [ -\/0.3506505 ]}
+\DoxyCodeLine{         \},}
+\DoxyCodeLine{         \{}
+\DoxyCodeLine{           "{}ion pair"{} : "{}NH4-\/NO3"{},}
+\DoxyCodeLine{           "{}min RH"{} : 0.0,}
+\DoxyCodeLine{           "{}max RH"{} : 0.1,}
+\DoxyCodeLine{           "{}B"{} : [ -\/11.93308 ]}
+\DoxyCodeLine{         \},}
+\DoxyCodeLine{         \{}
+\DoxyCodeLine{           "{}ion pair"{} : "{}NH4-\/NO3"{},}
+\DoxyCodeLine{           "{}min RH"{} : 0.1,}
+\DoxyCodeLine{           "{}max RH"{} : 0.99,}
+\DoxyCodeLine{           "{}B"{} : [ -\/17.0372, 59.232, -\/86.312, 44.04 ]}
+\DoxyCodeLine{         \},}
+\DoxyCodeLine{         \{}
+\DoxyCodeLine{           "{}ion pair"{} : "{}NH4-\/NO3"{},}
+\DoxyCodeLine{           "{}min RH"{} : 0.99,}
+\DoxyCodeLine{           "{}max RH"{} : 1.0,}
+\DoxyCodeLine{           "{}B"{} : [ -\/0.2599432 ]}
+\DoxyCodeLine{         \}}
+\DoxyCodeLine{       ]}
+\DoxyCodeLine{     \}}
+\DoxyCodeLine{     ...}
+\DoxyCodeLine{   \}}
+\DoxyCodeLine{ \}}
+\DoxyCodeLine{]\}}
+
+\end{DoxyCode}
+ The key-\/value pair {\bfseries{aerosol}} {\bfseries{phase}} is required to specify the aerosol phase for which to calculate activity coefficients. The key-\/value pairs {\bfseries{gas-\/phase}} {\bfseries{water}} and {\bfseries{aerosol-\/phase}} {\bfseries{water}} must also be present and specify the names for the water species in each phase. The final required key-\/value pair is {\bfseries{calculated}} {\bfseries{for}}, which should contain a set of ion pairs that activity coefficients will be calculated for.
+
+The key names in this set must correspond to ion pairs that are present in the specified aerosol phase. The values must contain a key-\/value pair named {\bfseries{interactions}} which includes an array of ion-\/pair interactions used to calculate equation 15 in {\bfseries [Topping2009]} .
+
+Each element in the {\bfseries{interactions}} array must include an {\bfseries{ion}} pair that exists in the specified aerosol phase, a {\bfseries{min}} {\bfseries{RH}} and {\bfseries{max}} {\bfseries{RH}} that specify the bounds for which the fitted curve is valid, and an array of {\bfseries{B}} values that specify the polynomial coefficients B0, B1, B2, ... as in equation 19 in {\bfseries [Topping2009]} . At least one polynomial coefficient must be present.
+
+If at least one interaction with an ion pair is included, enough interactions with that ion pair must be included to cover the entire RH range (0.\+0--1.\+0). Interactions are assume to cover the range (min\+RH, max\+RH\mbox{]}, except for the lowest RH interaction, which covers th range \mbox{[}0.\+0, max\+RH\mbox{]}.
+
+When the interacting ion pair is the same as the ion-\/pair for which the mean binary activity coefficient is being calculated, the interaction parameters are used to calculate $ln(\gamma_A^0(\mathrm{RH}))$. Otherwise, the parameters are used to calculate $\frac{d\ln{\gamma_A(\mathrm{RH})}}{d(N_{B,M}N_{B,x})}$.
+
+For the above example, the following input data should be present\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{  "{}name"{} : "{}H2O"{},}
+\DoxyCodeLine{  "{}type"{} : "{}CHEM\_SPEC"{},}
+\DoxyCodeLine{  "{}phase"{} : "{}GAS"{},}
+\DoxyCodeLine{\},}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{  "{}name"{} : "{}H2O\_aq"{},}
+\DoxyCodeLine{  "{}type"{} : "{}CHEM\_SPEC"{},}
+\DoxyCodeLine{  "{}phase"{} : "{}AEROSOL"{},}
+\DoxyCodeLine{\},}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{  "{}name"{} : "{}H\_p"{},}
+\DoxyCodeLine{  "{}type"{} : "{}CHEM\_SPEC"{},}
+\DoxyCodeLine{  "{}phase"{} : "{}AEROSOL"{},}
+\DoxyCodeLine{  "{}charge"{} : 1,}
+\DoxyCodeLine{  "{}molecular weight [kg mol-\/1]"{} : 1.008}
+\DoxyCodeLine{\},}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{  "{}name"{} : "{}NH4\_p"{},}
+\DoxyCodeLine{  "{}type"{} : "{}CHEM\_SPEC"{},}
+\DoxyCodeLine{  "{}phase"{} : "{}AEROSOL"{},}
+\DoxyCodeLine{  "{}charge"{} : 1,}
+\DoxyCodeLine{  "{}molecular weight"{} : 18.04}
+\DoxyCodeLine{\},}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{  "{}name"{} : "{}NO3\_m"{},}
+\DoxyCodeLine{  "{}type"{} : "{}CHEM\_SPEC"{},}
+\DoxyCodeLine{  "{}phase"{} : "{}AEROSOL"{},}
+\DoxyCodeLine{  "{}charge"{} : -\/1}
+\DoxyCodeLine{  "{}molecular weight [kg mol-\/1]"{} : 62.0049}
+\DoxyCodeLine{\},}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{  "{}name"{} : "{}NH4-\/NO3"{},}
+\DoxyCodeLine{  "{}type"{} : "{}CHEM\_SPEC"{},}
+\DoxyCodeLine{  "{}tracer type"{} : "{}ION\_PAIR"{},}
+\DoxyCodeLine{  "{}ions"{} : \{}
+\DoxyCodeLine{    "{}NH4\_p"{} : \{\},}
+\DoxyCodeLine{    "{}NO3\_m"{} : \{\}}
+\DoxyCodeLine{  \}}
+\DoxyCodeLine{\},}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{  "{}name"{} : "{}H-\/NO3"{},}
+\DoxyCodeLine{  "{}type"{} : "{}CHEM\_SPEC"{},}
+\DoxyCodeLine{  "{}tracer type"{} : "{}ION\_PAIR"{},}
+\DoxyCodeLine{  "{}ions"{} : \{}
+\DoxyCodeLine{    "{}H\_p"{} : \{\},}
+\DoxyCodeLine{    "{}NO3\_m"{} : \{\}}
+\DoxyCodeLine{  \}}
+\DoxyCodeLine{\},}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{  "{}name"{} : "{}my aero phase"{},}
+\DoxyCodeLine{  "{}type"{} : "{}AERO\_PHASE"{},}
+\DoxyCodeLine{  "{}species"{} : ["{}H\_p"{}, "{}NO3\_m"{}, "{}NH4\_p"{}, "{}NH4-\/NO3"{}, "{}H-\/NO3"{}, "{}H2O\_aq"{}]}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+ \hypertarget{camp_sub_model_UNIFAC}{}\doxysection{CAMP\+: UNIFAC Activity Coefficients}\label{camp_sub_model_UNIFAC}
+The UNIFAC activity coefficient sub model calculates activity coefficients for species in an aerosol phase based on the current aerosol phase composition {\bfseries [Marcolli2005]}. The {\ttfamily json} object for this \mbox{\hyperlink{camp_sub_model}{sub model}} has the following format \+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{ "{}camp-\/data"{} : [}
+\DoxyCodeLine{  \{}
+\DoxyCodeLine{    "{}name"{} : "{}my UNIFAC activity"{},}
+\DoxyCodeLine{    "{}type"{} : "{}SUB\_MODEL\_UNIFAC"{},}
+\DoxyCodeLine{    "{}phases"{} : [}
+\DoxyCodeLine{      "{}some phase"{},}
+\DoxyCodeLine{      "{}some other phase"{}}
+\DoxyCodeLine{    ],}
+\DoxyCodeLine{    "{}functional groups"{} : \{}
+\DoxyCodeLine{      "{}CH3"{} : \{}
+\DoxyCodeLine{        "{}main group"{} : "{}CH2"{},}
+\DoxyCodeLine{        "{}volume param"{} : 0.9011,}
+\DoxyCodeLine{        "{}surface param"{} : 0.8480}
+\DoxyCodeLine{      \},}
+\DoxyCodeLine{      "{}CH2"{} : \{}
+\DoxyCodeLine{        "{}main group"{} : "{}CH2"{},}
+\DoxyCodeLine{        "{}volume param"{} : 0.6744,}
+\DoxyCodeLine{        "{}surface param"{} : 0.5400}
+\DoxyCodeLine{      \},}
+\DoxyCodeLine{      "{}CH=CH"{} : \{}
+\DoxyCodeLine{        "{}main group"{} : "{}C=C"{},}
+\DoxyCodeLine{        "{}volume param"{} : 1.1167,}
+\DoxyCodeLine{        "{}suface param"{} : 0.8670}
+\DoxyCodeLine{      \}}
+\DoxyCodeLine{    \},}
+\DoxyCodeLine{    "{}main groups"{} : \{}
+\DoxyCodeLine{      "{}CH2"{} : \{}
+\DoxyCodeLine{        "{}interactions with"{} : \{}
+\DoxyCodeLine{          "{}C=C"{} : -\/35.36}
+\DoxyCodeLine{        \}}
+\DoxyCodeLine{      \},}
+\DoxyCodeLine{      "{}C=C"{} : \{}
+\DoxyCodeLine{        "{}interactions with"{} : \{}
+\DoxyCodeLine{          "{}CH2"{} : 86.02}
+\DoxyCodeLine{        \}}
+\DoxyCodeLine{      \}}
+\DoxyCodeLine{    \}}
+\DoxyCodeLine{  \},}
+\DoxyCodeLine{  ...}
+\DoxyCodeLine{]\}}
+
+\end{DoxyCode}
+ The key-\/value pair {\bfseries{type}} is required and must be {\bfseries{SUB\+\_\+\+MODEL\+\_\+\+UNIFAC}}. The key-\/value pair {\bfseries{phases}} is also required, and its value must be an array of strings that correspond to valid \mbox{\hyperlink{camp_aero_phase}{aerosol phases}}. The key-\/value pair {\bfseries{functional}} {\bfseries{groups}} is also required, and must contain a set of key-\/value pairs whose keys are the names of UNIFAC functions groups, and whose values are a set of key value pairs that contain, at minimum\+:
+\begin{DoxyItemize}
+\item {\bfseries{main}} {\bfseries{group}} \+: a string that corresponds to a key in the {\bfseries{main}} {\bfseries{groups}} set.
+\item {\bfseries{volume}} {\bfseries{param}} \+: the floating-\/point volume parameter for this functional group.
+\item {\bfseries{surface}} {\bfseries{param}} \+: this floating-\/point surface parameter for this functional group. The last required key-\/value pair is {\bfseries{main}} {\bfseries{groups}} whose value must be a set of key-\/value pairs whose keys are the names of the UNIFAC main groups and whose values are a set key-\/pairs that contain, at minimum, {\bfseries{interaction}} {\bfseries{with}} whose value is a set of key-\/value pairs whose keys are the names of the other {\bfseries{main}} {\bfseries{groups}} and whose values are the floating-\/point interation parameters for that interaction. Each main group may contain up to one interaction with each other main group, and may not contain an interaction with itself. Missing interactions are assumed to be 0.\+0.
+\end{DoxyItemize}
+
+Species in the specified phase for whom acitivity coefficients will be calculated must contain a key-\/value pair {\bfseries{UNIFAC}} {\bfseries{groups}} whose value is a set of key value pairs that correspond with members of the {\bfseries{functional}} {\bfseries{groups}} set and whose values are the integer number of instances of a particular functional group in this species. There must also be a {\bfseries{CHEM\+\_\+\+SPEC\+\_\+\+ACTIVITY\+\_\+\+COEFF}} species with a key value pair {\bfseries{chemical}} {\bfseries{species}} whose value is the name of the chemical species. Both the chemical species and the activity coefficient must be included in any aerosol phase for which activities are being calculated. For the above example UNIFAC model, the following species would be valid and included in activity coefficient calculations\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{ "{}camp-\/data"{} : [}
+\DoxyCodeLine{  \{}
+\DoxyCodeLine{    "{}name"{} : "{}my species"{},}
+\DoxyCodeLine{    "{}type"{} : "{}CHEM\_SPEC"{},}
+\DoxyCodeLine{    "{}phase"{} : "{}AEROSOL"{},}
+\DoxyCodeLine{    "{}UNIFAC groups"{} : \{}
+\DoxyCodeLine{      "{}CH3"{} : 4,}
+\DoxyCodeLine{      "{}C=C"{} : 1}
+\DoxyCodeLine{    \}}
+\DoxyCodeLine{  \},}
+\DoxyCodeLine{  \{}
+\DoxyCodeLine{    "{}name"{} : "{}gamma my species"{},}
+\DoxyCodeLine{    "{}type"{} : "{}CHEM\_SPEC"{},}
+\DoxyCodeLine{    "{}phase"{} : "{}AEROSOL"{},}
+\DoxyCodeLine{    "{}tracer type"{} : "{}ACTIVITY\_COEFF"{},}
+\DoxyCodeLine{    "{}chemical species"{} : "{}my species"{}}
+\DoxyCodeLine{  \},}
+\DoxyCodeLine{  \{}
+\DoxyCodeLine{    "{}name"{} : "{}my other species"{},}
+\DoxyCodeLine{    "{}type"{} : "{}CHEM\_SPEC"{},}
+\DoxyCodeLine{    "{}phase"{} : "{}AEROSOL"{},}
+\DoxyCodeLine{    "{}UNIFAC groups"{} : \{}
+\DoxyCodeLine{      "{}CH3"{} : 2,}
+\DoxyCodeLine{      "{}CH2"{} : 4}
+\DoxyCodeLine{    \},}
+\DoxyCodeLine{  \},}
+\DoxyCodeLine{  \{}
+\DoxyCodeLine{    "{}name"{} : "{}gamma my other species"{},}
+\DoxyCodeLine{    "{}type"{} : "{}CHEM\_SPEC"{},}
+\DoxyCodeLine{    "{}phase"{} : "{}AEROSOL"{},}
+\DoxyCodeLine{    "{}tracer type"{} : "{}ACTIVITY\_COEFF"{}}
+\DoxyCodeLine{    "{}chemical species"{} : "{}my other species"{}}
+\DoxyCodeLine{  \},}
+\DoxyCodeLine{  \{}
+\DoxyCodeLine{    "{}name"{} : "{}some phase"{},}
+\DoxyCodeLine{    "{}type"{} : "{}AERO\_PHASE"{},}
+\DoxyCodeLine{    "{}species"{} : \{ "{}my species"{}, "{}gamma my species"{},}
+\DoxyCodeLine{                  "{}my other species"{}, gamma my other species"{}\}}
+\DoxyCodeLine{  \}}
+\DoxyCodeLine{]\}}
+
+\end{DoxyCode}
+ \hypertarget{camp_sub_model_ZSR_aerosol_water}{}\doxysection{CAMP\+: ZSR Aerosol Water}\label{camp_sub_model_ZSR_aerosol_water}
+ZSR aerosol water calculates equilibrium aerosol water content based on the Zdanovski-\/\+Stokes-\/\+Robinson mixing rule {\bfseries [Jacobson1996]} in the following generalized format\+:
+
+\[ W = \sum\limits_{i=0}^{n}\frac{1000 M_i}{MW_i m_{i}(a_w)} \]
+
+where $M$ is the concentration of binary electrolyte $i$ ( $\mbox{$\mu$g}\,\mbox{m}^{-3}$) with molecular weight $MW_i$ ( $\mbox{kg}\,\mbox{mol}^{-1}$) and molality $m_{i}$ at a given water activity $a_w$ (RH; 0--1) contributing to the total aerosol water content $W$ ( $\mbox{$\mu$g}\,\mbox{m}^{-3}$).
+
+Input data for ZSR aerosol water calculations have the following format \+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{ "{}camp-\/data"{} : [}
+\DoxyCodeLine{  \{}
+\DoxyCodeLine{    "{}type"{} : "{}SUB\_MODEL\_ZSR\_AEROSOL\_WATER"{},}
+\DoxyCodeLine{    "{}aerosol phase"{} : "{}my aero phase"{},}
+\DoxyCodeLine{    "{}gas-\/phase water"{} : "{}H2O"{},}
+\DoxyCodeLine{    "{}aerosol-\/phase water"{} : "{}H2O\_aq"{},}
+\DoxyCodeLine{    "{}ion pairs"{} : \{}
+\DoxyCodeLine{      "{}Na2SO4"{} : \{}
+\DoxyCodeLine{        "{}type"{} : "{}JACOBSON"{},}
+\DoxyCodeLine{        "{}ions"{} : \{}
+\DoxyCodeLine{          "{}Nap"{} : \{ "{}qty"{} : 2 \},}
+\DoxyCodeLine{          "{}SO4mm"{} : \{\}}
+\DoxyCodeLine{        \},}
+\DoxyCodeLine{        "{}Y\_j"{} : [-\/3.295311e3, 3.188349e4, -\/1.305168e5, 2.935608e5],}
+\DoxyCodeLine{        "{}low RH"{} : 0.51}
+\DoxyCodeLine{      \},}
+\DoxyCodeLine{      "{}H2SO4"{} : \{}
+\DoxyCodeLine{        "{}type"{} : "{}EQSAM"{},}
+\DoxyCodeLine{        "{}ions"{} : \{}
+\DoxyCodeLine{          "{}SO4mm"{} : \{\}}
+\DoxyCodeLine{        \},}
+\DoxyCodeLine{        "{}NW"{} : 4.5,}
+\DoxyCodeLine{        "{}ZW"{} : 0.5,}
+\DoxyCodeLine{        "{}MW"{} : 0.0980}
+\DoxyCodeLine{      \}}
+\DoxyCodeLine{      ...}
+\DoxyCodeLine{    \}}
+\DoxyCodeLine{  \}}
+\DoxyCodeLine{]\}}
+
+\end{DoxyCode}
+ The key-\/value pair {\bfseries{aerosol}} {\bfseries{phase}} is required to specify the aerosol phase for which to calculate water content. Key-\/value pairs {\bfseries{gas-\/phase}} {\bfseries{water}} and {\bfseries{aerosol-\/phase}} {\bfseries{water}} must also be present and specify the names for the water species in each phase. The final required key-\/value pair is {\bfseries{ion}} {\bfseries{pairs}} which should contain a set of key-\/value pairs where the key of each member of the set is the name of a binary electrolyte and the contents contain parameters required to estimate the contribution of the this electrolyte to total aerosol water. The name of the electrolyte may or may not refer to an actual aerosol-\/phase species.
+
+Each binary electrolyte must include a {\bfseries{type}} that refers to a method of calculating ion-\/pair contributions to aerosol water. Valid values for {\bfseries{type}} are {\bfseries{JACOBSON}} and {\bfseries{EQSAM}}. These are described next.
+
+Aerosol water from ion pairs with type {\bfseries{JACOBSON}} use equations (28) and (29) in Jacobson et al. (1996) {\bfseries [Jacobson1996]} where experimentally determined binary solution molalities are fit to a polynomial as\+:
+
+\[ \sqrt{m_{i}(a_w)} = Y_0 + Y_1 a_w + Y_2 a_w^2 + Y_3 a_w^3 + ..., \]
+
+where $Y_j$ are the fitting parameters. Thus, $m_i(a_w)$ is calculated at each time step, assuming constant $a_w$. These values must be included in a key-\/value pair {\bfseries{Y\+\_\+j}} whose value is an array with the $Y_j$ parameters. The size of the array corresponds to the order of the polynomial equation, which must be greater than 1. The key-\/value pair {\bfseries{low}} {\bfseries{RH}} is required to specify the lowest RH (0--1) for which this fit is valid. This value for RH will be used for all lower RH in calculations of $m_i(a_w)$ as per Jacobson et al. (1996) {\bfseries [Jacobson1996]}.
+
+The key-\/value pair {\bfseries{ions}} must contain the set of ions this binary electrolyte includes. Each species must correspond to a species present in {\bfseries{aerosol}} {\bfseries{phase}} and have a {\bfseries{charge}} parameter that specifies their charge (uncharged species are not permitted in this set) and a {\bfseries{molecular}} {\bfseries{weight}} {\bfseries{}}\mbox{[}{\bfseries{kg}} {\bfseries{mol-\/1}}\mbox{]} ( $\mbox{kg}\,\mbox{mol}^{-1}$) property. Ions without a {\bfseries{qty}} specified are assumed to appear once in the binary electrolyte. The total molecular weight for the binary electroly $MW_i$ is calculated as a sum of its ionic components, and the ion species concentrations are used to determine the $M_i$ during integration. The aerosol-\/phase water species to be calculated using the ZSR method must have the key-\/value pair {\bfseries{tracer}} {\bfseries{type}} with value \char`\"{}\+CONSTANT\char`\"{}.
+
+For the above example, the following input data should be present\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{  "{}name"{} : "{}H2O"{},}
+\DoxyCodeLine{  "{}type"{} : "{}CHEM\_SPEC"{},}
+\DoxyCodeLine{  "{}phase"{} : "{}GAS"{},}
+\DoxyCodeLine{\},}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{  "{}name"{} : "{}H2O\_aq"{},}
+\DoxyCodeLine{  "{}type"{} : "{}CHEM\_SPEC"{},}
+\DoxyCodeLine{  "{}tracer type"{} : "{}CONSTANT"{},}
+\DoxyCodeLine{  "{}phase"{} : "{}AEROSOL"{},}
+\DoxyCodeLine{  "{}density [kg m-\/3]"{} : 1.0,}
+\DoxyCodeLine{  "{}molecular weight [kg mol-\/1]"{} : 0.01801}
+\DoxyCodeLine{\},}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{  "{}name"{} : "{}Nap"{},}
+\DoxyCodeLine{  "{}type"{} : "{}CHEM\_SPEC"{},}
+\DoxyCodeLine{  "{}phase"{} : "{}AEROSOL"{},}
+\DoxyCodeLine{  "{}charge"{} : 1,}
+\DoxyCodeLine{  "{}density [kg m-\/3]"{} : 1.0,}
+\DoxyCodeLine{  "{}molecular weight [kg mol-\/1]"{} : 0.0229898}
+\DoxyCodeLine{\},}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{  "{}name"{} : "{}SO4mm"{},}
+\DoxyCodeLine{  "{}type"{} : "{}CHEM\_SPEC"{},}
+\DoxyCodeLine{  "{}phase"{} : "{}AEROSOL"{},}
+\DoxyCodeLine{  "{}charge"{} : -\/2,}
+\DoxyCodeLine{  "{}density [kg m-\/3]"{} : 1.0,}
+\DoxyCodeLine{  "{}molecular weight [kg mol-\/1]"{} : 0.09606}
+\DoxyCodeLine{\},}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{  "{}name"{} : "{}my aero phase"{},}
+\DoxyCodeLine{  "{}type"{} : "{}AERO\_PHASE"{},}
+\DoxyCodeLine{  "{}species"{} : ["{}Nap"{}, "{}SO4mm"{}, H2O\_aq"{}]}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+ Aerosol water from ion pairs with type {\bfseries{EQSAM}} use the parameterization of Metzger et al. (2002) {\bfseries [Metzger2002]} for aerosol water content\+:
+
+\[ \sqrt{m_{i}(a_w)} = (NW_i MW_{H2O}/MW_i (1/a_w-1))^{ZW_i} \]
+
+where $NW_i$ and $ZW_i$ are fitting parameters {\bfseries [Metzger2002]}, and must be provided in key-\/value pairs {\bfseries{NW}} and {\bfseries{ZW}}, along with the binary electrolyte molecular weight {\bfseries{MW}} ( $\mbox{kg}\,\mbox{mol}^{-1}$). The key-\/value pair {\bfseries{ions}} must contain a set of ions that can be summed to calculate $M_i$ at runtime. \hypertarget{input_format_sub_model}{}\doxysection{Input JSON Object Format\+: Sub-\/\+Model (general)}\label{input_format_sub_model}
+A {\ttfamily json} object containing the information required by a \mbox{\hyperlink{camp_sub_model}{sub-\/model}} of the form\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{ "{}camp-\/data"{} : [}
+\DoxyCodeLine{  \{}
+\DoxyCodeLine{    "{}type"{} : "{}SUB\_MODEL\_TYPE"{},}
+\DoxyCodeLine{    "{}some parameter"{} : 123.34,}
+\DoxyCodeLine{    "{}some other parameter"{} : true,}
+\DoxyCodeLine{    "{}nested parameters"{} : \{}
+\DoxyCodeLine{      "{}sub param 1"{} : 12.43,}
+\DoxyCodeLine{      "{}sub param other "{} : "{}some text"{},}
+\DoxyCodeLine{      ...}
+\DoxyCodeLine{    \},}
+\DoxyCodeLine{    ...}
+\DoxyCodeLine{  \},}
+\DoxyCodeLine{  ...}
+\DoxyCodeLine{]\}}
+
+\end{DoxyCode}
+ Sub-\/models must have a unique {\bfseries{type}} that corresponds to a valid sub-\/model type. These include\+:
+
+
+\begin{DoxyItemize}
+\item \mbox{\hyperlink{camp_sub_model_PDFiTE}{SUB\+\_\+\+MODEL\+\_\+\+PDFITE}}
+\item \mbox{\hyperlink{camp_sub_model_UNIFAC}{SUB\+\_\+\+MODEL\+\_\+\+UNIFAC}}
+\item \mbox{\hyperlink{camp_sub_model_ZSR_aerosol_water}{SUB\+\_\+\+MODEL\+\_\+\+ZSR\+\_\+\+AEROSOL\+\_\+\+WATER}}
+\end{DoxyItemize}
+
+All remaining data are optional and may include and valid {\bfseries{json}} value, including nested objects. However, extending types will have specific requirements for the remaining data. \hypertarget{camp_sub_model_PDFiTE}{}\doxysubsection{CAMP\+: PD-\/\+Fi\+TE Activity}\label{camp_sub_model_PDFiTE}
+PD-\/\+Fi\+TE activity calculates aerosol-\/phase species activities using Taylor series to describe partial derivatives of mean activity coefficients for ternary solutions, as described in Topping et al. (2009) {\bfseries [Topping2009]} . The mean binary activity coefficients for ion pairs are calculated according to eq. 15 in {\bfseries [Topping2009]} . The values are then made available to aqueous-\/phase reactions during solving.
+
+Input data for PDFi\+TE activity equations have the following format \+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{ "{}camp-\/data"{} : [}
+\DoxyCodeLine{ \{}
+\DoxyCodeLine{   "{}name"{} : "{}my PDFiTE activity"{},}
+\DoxyCodeLine{   "{}type"{} : "{}SUB\_MODEL\_PDFITE"{},}
+\DoxyCodeLine{   "{}gas-\/phase water"{} : "{}H2O"{},}
+\DoxyCodeLine{   "{}aerosol-\/phase water"{} : "{}H2O\_aq"{},}
+\DoxyCodeLine{   "{}aerosol phase"{} : "{}my aero phase"{},}
+\DoxyCodeLine{   "{}calculate for"{} : \{}
+\DoxyCodeLine{     "{}H-\/NO3"{} : \{}
+\DoxyCodeLine{       "{}interactions"{} : [}
+\DoxyCodeLine{         \{}
+\DoxyCodeLine{           "{}ion pair"{} : "{}H-\/NO3"{},}
+\DoxyCodeLine{           "{}min RH"{} : 0.0,}
+\DoxyCodeLine{           "{}max RH"{} : 0.1,}
+\DoxyCodeLine{           "{}B"{} : [ 0.925113 ]}
+\DoxyCodeLine{         \},}
+\DoxyCodeLine{         \{}
+\DoxyCodeLine{           "{}ion pair"{} : "{}H-\/NO3"{},}
+\DoxyCodeLine{           "{}min RH"{} : 0.1,}
+\DoxyCodeLine{           "{}max RH"{} : 0.4,}
+\DoxyCodeLine{           "{}B"{} : [ 0.12091, 13.497, -\/67.771, 144.01, -\/117.97 ]}
+\DoxyCodeLine{         \},}
+\DoxyCodeLine{         \{}
+\DoxyCodeLine{           "{}ion pair"{} : "{}H-\/NO3"{},}
+\DoxyCodeLine{           "{}min RH"{} : 0.4,}
+\DoxyCodeLine{           "{}max RH"{} : 0.9,}
+\DoxyCodeLine{           "{}B"{} : [ 1.3424, -\/0.8197, -\/0.52983, -\/0.37335 ]}
+\DoxyCodeLine{         \},}
+\DoxyCodeLine{         \{}
+\DoxyCodeLine{           "{}ion pair"{} : "{}H-\/NO3"{},}
+\DoxyCodeLine{           "{}min RH"{} : 0.9,}
+\DoxyCodeLine{           "{}max RH"{} : 1.0,}
+\DoxyCodeLine{           "{}B"{} : [ -\/0.3506505 ]}
+\DoxyCodeLine{         \},}
+\DoxyCodeLine{         \{}
+\DoxyCodeLine{           "{}ion pair"{} : "{}NH4-\/NO3"{},}
+\DoxyCodeLine{           "{}min RH"{} : 0.0,}
+\DoxyCodeLine{           "{}max RH"{} : 0.1,}
+\DoxyCodeLine{           "{}B"{} : [ -\/11.93308 ]}
+\DoxyCodeLine{         \},}
+\DoxyCodeLine{         \{}
+\DoxyCodeLine{           "{}ion pair"{} : "{}NH4-\/NO3"{},}
+\DoxyCodeLine{           "{}min RH"{} : 0.1,}
+\DoxyCodeLine{           "{}max RH"{} : 0.99,}
+\DoxyCodeLine{           "{}B"{} : [ -\/17.0372, 59.232, -\/86.312, 44.04 ]}
+\DoxyCodeLine{         \},}
+\DoxyCodeLine{         \{}
+\DoxyCodeLine{           "{}ion pair"{} : "{}NH4-\/NO3"{},}
+\DoxyCodeLine{           "{}min RH"{} : 0.99,}
+\DoxyCodeLine{           "{}max RH"{} : 1.0,}
+\DoxyCodeLine{           "{}B"{} : [ -\/0.2599432 ]}
+\DoxyCodeLine{         \}}
+\DoxyCodeLine{       ]}
+\DoxyCodeLine{     \}}
+\DoxyCodeLine{     ...}
+\DoxyCodeLine{   \}}
+\DoxyCodeLine{ \}}
+\DoxyCodeLine{]\}}
+
+\end{DoxyCode}
+ The key-\/value pair {\bfseries{aerosol}} {\bfseries{phase}} is required to specify the aerosol phase for which to calculate activity coefficients. The key-\/value pairs {\bfseries{gas-\/phase}} {\bfseries{water}} and {\bfseries{aerosol-\/phase}} {\bfseries{water}} must also be present and specify the names for the water species in each phase. The final required key-\/value pair is {\bfseries{calculated}} {\bfseries{for}}, which should contain a set of ion pairs that activity coefficients will be calculated for.
+
+The key names in this set must correspond to ion pairs that are present in the specified aerosol phase. The values must contain a key-\/value pair named {\bfseries{interactions}} which includes an array of ion-\/pair interactions used to calculate equation 15 in {\bfseries [Topping2009]} .
+
+Each element in the {\bfseries{interactions}} array must include an {\bfseries{ion}} pair that exists in the specified aerosol phase, a {\bfseries{min}} {\bfseries{RH}} and {\bfseries{max}} {\bfseries{RH}} that specify the bounds for which the fitted curve is valid, and an array of {\bfseries{B}} values that specify the polynomial coefficients B0, B1, B2, ... as in equation 19 in {\bfseries [Topping2009]} . At least one polynomial coefficient must be present.
+
+If at least one interaction with an ion pair is included, enough interactions with that ion pair must be included to cover the entire RH range (0.\+0--1.\+0). Interactions are assume to cover the range (min\+RH, max\+RH\mbox{]}, except for the lowest RH interaction, which covers th range \mbox{[}0.\+0, max\+RH\mbox{]}.
+
+When the interacting ion pair is the same as the ion-\/pair for which the mean binary activity coefficient is being calculated, the interaction parameters are used to calculate $ln(\gamma_A^0(\mathrm{RH}))$. Otherwise, the parameters are used to calculate $\frac{d\ln{\gamma_A(\mathrm{RH})}}{d(N_{B,M}N_{B,x})}$.
+
+For the above example, the following input data should be present\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{  "{}name"{} : "{}H2O"{},}
+\DoxyCodeLine{  "{}type"{} : "{}CHEM\_SPEC"{},}
+\DoxyCodeLine{  "{}phase"{} : "{}GAS"{},}
+\DoxyCodeLine{\},}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{  "{}name"{} : "{}H2O\_aq"{},}
+\DoxyCodeLine{  "{}type"{} : "{}CHEM\_SPEC"{},}
+\DoxyCodeLine{  "{}phase"{} : "{}AEROSOL"{},}
+\DoxyCodeLine{\},}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{  "{}name"{} : "{}H\_p"{},}
+\DoxyCodeLine{  "{}type"{} : "{}CHEM\_SPEC"{},}
+\DoxyCodeLine{  "{}phase"{} : "{}AEROSOL"{},}
+\DoxyCodeLine{  "{}charge"{} : 1,}
+\DoxyCodeLine{  "{}molecular weight [kg mol-\/1]"{} : 1.008}
+\DoxyCodeLine{\},}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{  "{}name"{} : "{}NH4\_p"{},}
+\DoxyCodeLine{  "{}type"{} : "{}CHEM\_SPEC"{},}
+\DoxyCodeLine{  "{}phase"{} : "{}AEROSOL"{},}
+\DoxyCodeLine{  "{}charge"{} : 1,}
+\DoxyCodeLine{  "{}molecular weight"{} : 18.04}
+\DoxyCodeLine{\},}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{  "{}name"{} : "{}NO3\_m"{},}
+\DoxyCodeLine{  "{}type"{} : "{}CHEM\_SPEC"{},}
+\DoxyCodeLine{  "{}phase"{} : "{}AEROSOL"{},}
+\DoxyCodeLine{  "{}charge"{} : -\/1}
+\DoxyCodeLine{  "{}molecular weight [kg mol-\/1]"{} : 62.0049}
+\DoxyCodeLine{\},}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{  "{}name"{} : "{}NH4-\/NO3"{},}
+\DoxyCodeLine{  "{}type"{} : "{}CHEM\_SPEC"{},}
+\DoxyCodeLine{  "{}tracer type"{} : "{}ION\_PAIR"{},}
+\DoxyCodeLine{  "{}ions"{} : \{}
+\DoxyCodeLine{    "{}NH4\_p"{} : \{\},}
+\DoxyCodeLine{    "{}NO3\_m"{} : \{\}}
+\DoxyCodeLine{  \}}
+\DoxyCodeLine{\},}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{  "{}name"{} : "{}H-\/NO3"{},}
+\DoxyCodeLine{  "{}type"{} : "{}CHEM\_SPEC"{},}
+\DoxyCodeLine{  "{}tracer type"{} : "{}ION\_PAIR"{},}
+\DoxyCodeLine{  "{}ions"{} : \{}
+\DoxyCodeLine{    "{}H\_p"{} : \{\},}
+\DoxyCodeLine{    "{}NO3\_m"{} : \{\}}
+\DoxyCodeLine{  \}}
+\DoxyCodeLine{\},}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{  "{}name"{} : "{}my aero phase"{},}
+\DoxyCodeLine{  "{}type"{} : "{}AERO\_PHASE"{},}
+\DoxyCodeLine{  "{}species"{} : ["{}H\_p"{}, "{}NO3\_m"{}, "{}NH4\_p"{}, "{}NH4-\/NO3"{}, "{}H-\/NO3"{}, "{}H2O\_aq"{}]}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+ \hypertarget{camp_sub_model_UNIFAC}{}\doxysubsection{CAMP\+: UNIFAC Activity Coefficients}\label{camp_sub_model_UNIFAC}
+The UNIFAC activity coefficient sub model calculates activity coefficients for species in an aerosol phase based on the current aerosol phase composition {\bfseries [Marcolli2005]}. The {\ttfamily json} object for this \mbox{\hyperlink{camp_sub_model}{sub model}} has the following format \+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{ "{}camp-\/data"{} : [}
+\DoxyCodeLine{  \{}
+\DoxyCodeLine{    "{}name"{} : "{}my UNIFAC activity"{},}
+\DoxyCodeLine{    "{}type"{} : "{}SUB\_MODEL\_UNIFAC"{},}
+\DoxyCodeLine{    "{}phases"{} : [}
+\DoxyCodeLine{      "{}some phase"{},}
+\DoxyCodeLine{      "{}some other phase"{}}
+\DoxyCodeLine{    ],}
+\DoxyCodeLine{    "{}functional groups"{} : \{}
+\DoxyCodeLine{      "{}CH3"{} : \{}
+\DoxyCodeLine{        "{}main group"{} : "{}CH2"{},}
+\DoxyCodeLine{        "{}volume param"{} : 0.9011,}
+\DoxyCodeLine{        "{}surface param"{} : 0.8480}
+\DoxyCodeLine{      \},}
+\DoxyCodeLine{      "{}CH2"{} : \{}
+\DoxyCodeLine{        "{}main group"{} : "{}CH2"{},}
+\DoxyCodeLine{        "{}volume param"{} : 0.6744,}
+\DoxyCodeLine{        "{}surface param"{} : 0.5400}
+\DoxyCodeLine{      \},}
+\DoxyCodeLine{      "{}CH=CH"{} : \{}
+\DoxyCodeLine{        "{}main group"{} : "{}C=C"{},}
+\DoxyCodeLine{        "{}volume param"{} : 1.1167,}
+\DoxyCodeLine{        "{}suface param"{} : 0.8670}
+\DoxyCodeLine{      \}}
+\DoxyCodeLine{    \},}
+\DoxyCodeLine{    "{}main groups"{} : \{}
+\DoxyCodeLine{      "{}CH2"{} : \{}
+\DoxyCodeLine{        "{}interactions with"{} : \{}
+\DoxyCodeLine{          "{}C=C"{} : -\/35.36}
+\DoxyCodeLine{        \}}
+\DoxyCodeLine{      \},}
+\DoxyCodeLine{      "{}C=C"{} : \{}
+\DoxyCodeLine{        "{}interactions with"{} : \{}
+\DoxyCodeLine{          "{}CH2"{} : 86.02}
+\DoxyCodeLine{        \}}
+\DoxyCodeLine{      \}}
+\DoxyCodeLine{    \}}
+\DoxyCodeLine{  \},}
+\DoxyCodeLine{  ...}
+\DoxyCodeLine{]\}}
+
+\end{DoxyCode}
+ The key-\/value pair {\bfseries{type}} is required and must be {\bfseries{SUB\+\_\+\+MODEL\+\_\+\+UNIFAC}}. The key-\/value pair {\bfseries{phases}} is also required, and its value must be an array of strings that correspond to valid \mbox{\hyperlink{camp_aero_phase}{aerosol phases}}. The key-\/value pair {\bfseries{functional}} {\bfseries{groups}} is also required, and must contain a set of key-\/value pairs whose keys are the names of UNIFAC functions groups, and whose values are a set of key value pairs that contain, at minimum\+:
+\begin{DoxyItemize}
+\item {\bfseries{main}} {\bfseries{group}} \+: a string that corresponds to a key in the {\bfseries{main}} {\bfseries{groups}} set.
+\item {\bfseries{volume}} {\bfseries{param}} \+: the floating-\/point volume parameter for this functional group.
+\item {\bfseries{surface}} {\bfseries{param}} \+: this floating-\/point surface parameter for this functional group. The last required key-\/value pair is {\bfseries{main}} {\bfseries{groups}} whose value must be a set of key-\/value pairs whose keys are the names of the UNIFAC main groups and whose values are a set key-\/pairs that contain, at minimum, {\bfseries{interaction}} {\bfseries{with}} whose value is a set of key-\/value pairs whose keys are the names of the other {\bfseries{main}} {\bfseries{groups}} and whose values are the floating-\/point interation parameters for that interaction. Each main group may contain up to one interaction with each other main group, and may not contain an interaction with itself. Missing interactions are assumed to be 0.\+0.
+\end{DoxyItemize}
+
+Species in the specified phase for whom acitivity coefficients will be calculated must contain a key-\/value pair {\bfseries{UNIFAC}} {\bfseries{groups}} whose value is a set of key value pairs that correspond with members of the {\bfseries{functional}} {\bfseries{groups}} set and whose values are the integer number of instances of a particular functional group in this species. There must also be a {\bfseries{CHEM\+\_\+\+SPEC\+\_\+\+ACTIVITY\+\_\+\+COEFF}} species with a key value pair {\bfseries{chemical}} {\bfseries{species}} whose value is the name of the chemical species. Both the chemical species and the activity coefficient must be included in any aerosol phase for which activities are being calculated. For the above example UNIFAC model, the following species would be valid and included in activity coefficient calculations\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{ "{}camp-\/data"{} : [}
+\DoxyCodeLine{  \{}
+\DoxyCodeLine{    "{}name"{} : "{}my species"{},}
+\DoxyCodeLine{    "{}type"{} : "{}CHEM\_SPEC"{},}
+\DoxyCodeLine{    "{}phase"{} : "{}AEROSOL"{},}
+\DoxyCodeLine{    "{}UNIFAC groups"{} : \{}
+\DoxyCodeLine{      "{}CH3"{} : 4,}
+\DoxyCodeLine{      "{}C=C"{} : 1}
+\DoxyCodeLine{    \}}
+\DoxyCodeLine{  \},}
+\DoxyCodeLine{  \{}
+\DoxyCodeLine{    "{}name"{} : "{}gamma my species"{},}
+\DoxyCodeLine{    "{}type"{} : "{}CHEM\_SPEC"{},}
+\DoxyCodeLine{    "{}phase"{} : "{}AEROSOL"{},}
+\DoxyCodeLine{    "{}tracer type"{} : "{}ACTIVITY\_COEFF"{},}
+\DoxyCodeLine{    "{}chemical species"{} : "{}my species"{}}
+\DoxyCodeLine{  \},}
+\DoxyCodeLine{  \{}
+\DoxyCodeLine{    "{}name"{} : "{}my other species"{},}
+\DoxyCodeLine{    "{}type"{} : "{}CHEM\_SPEC"{},}
+\DoxyCodeLine{    "{}phase"{} : "{}AEROSOL"{},}
+\DoxyCodeLine{    "{}UNIFAC groups"{} : \{}
+\DoxyCodeLine{      "{}CH3"{} : 2,}
+\DoxyCodeLine{      "{}CH2"{} : 4}
+\DoxyCodeLine{    \},}
+\DoxyCodeLine{  \},}
+\DoxyCodeLine{  \{}
+\DoxyCodeLine{    "{}name"{} : "{}gamma my other species"{},}
+\DoxyCodeLine{    "{}type"{} : "{}CHEM\_SPEC"{},}
+\DoxyCodeLine{    "{}phase"{} : "{}AEROSOL"{},}
+\DoxyCodeLine{    "{}tracer type"{} : "{}ACTIVITY\_COEFF"{}}
+\DoxyCodeLine{    "{}chemical species"{} : "{}my other species"{}}
+\DoxyCodeLine{  \},}
+\DoxyCodeLine{  \{}
+\DoxyCodeLine{    "{}name"{} : "{}some phase"{},}
+\DoxyCodeLine{    "{}type"{} : "{}AERO\_PHASE"{},}
+\DoxyCodeLine{    "{}species"{} : \{ "{}my species"{}, "{}gamma my species"{},}
+\DoxyCodeLine{                  "{}my other species"{}, gamma my other species"{}\}}
+\DoxyCodeLine{  \}}
+\DoxyCodeLine{]\}}
+
+\end{DoxyCode}
+ \hypertarget{camp_sub_model_ZSR_aerosol_water}{}\doxysubsection{CAMP\+: ZSR Aerosol Water}\label{camp_sub_model_ZSR_aerosol_water}
+ZSR aerosol water calculates equilibrium aerosol water content based on the Zdanovski-\/\+Stokes-\/\+Robinson mixing rule {\bfseries [Jacobson1996]} in the following generalized format\+:
+
+\[ W = \sum\limits_{i=0}^{n}\frac{1000 M_i}{MW_i m_{i}(a_w)} \]
+
+where $M$ is the concentration of binary electrolyte $i$ ( $\mbox{$\mu$g}\,\mbox{m}^{-3}$) with molecular weight $MW_i$ ( $\mbox{kg}\,\mbox{mol}^{-1}$) and molality $m_{i}$ at a given water activity $a_w$ (RH; 0--1) contributing to the total aerosol water content $W$ ( $\mbox{$\mu$g}\,\mbox{m}^{-3}$).
+
+Input data for ZSR aerosol water calculations have the following format \+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{ "{}camp-\/data"{} : [}
+\DoxyCodeLine{  \{}
+\DoxyCodeLine{    "{}type"{} : "{}SUB\_MODEL\_ZSR\_AEROSOL\_WATER"{},}
+\DoxyCodeLine{    "{}aerosol phase"{} : "{}my aero phase"{},}
+\DoxyCodeLine{    "{}gas-\/phase water"{} : "{}H2O"{},}
+\DoxyCodeLine{    "{}aerosol-\/phase water"{} : "{}H2O\_aq"{},}
+\DoxyCodeLine{    "{}ion pairs"{} : \{}
+\DoxyCodeLine{      "{}Na2SO4"{} : \{}
+\DoxyCodeLine{        "{}type"{} : "{}JACOBSON"{},}
+\DoxyCodeLine{        "{}ions"{} : \{}
+\DoxyCodeLine{          "{}Nap"{} : \{ "{}qty"{} : 2 \},}
+\DoxyCodeLine{          "{}SO4mm"{} : \{\}}
+\DoxyCodeLine{        \},}
+\DoxyCodeLine{        "{}Y\_j"{} : [-\/3.295311e3, 3.188349e4, -\/1.305168e5, 2.935608e5],}
+\DoxyCodeLine{        "{}low RH"{} : 0.51}
+\DoxyCodeLine{      \},}
+\DoxyCodeLine{      "{}H2SO4"{} : \{}
+\DoxyCodeLine{        "{}type"{} : "{}EQSAM"{},}
+\DoxyCodeLine{        "{}ions"{} : \{}
+\DoxyCodeLine{          "{}SO4mm"{} : \{\}}
+\DoxyCodeLine{        \},}
+\DoxyCodeLine{        "{}NW"{} : 4.5,}
+\DoxyCodeLine{        "{}ZW"{} : 0.5,}
+\DoxyCodeLine{        "{}MW"{} : 0.0980}
+\DoxyCodeLine{      \}}
+\DoxyCodeLine{      ...}
+\DoxyCodeLine{    \}}
+\DoxyCodeLine{  \}}
+\DoxyCodeLine{]\}}
+
+\end{DoxyCode}
+ The key-\/value pair {\bfseries{aerosol}} {\bfseries{phase}} is required to specify the aerosol phase for which to calculate water content. Key-\/value pairs {\bfseries{gas-\/phase}} {\bfseries{water}} and {\bfseries{aerosol-\/phase}} {\bfseries{water}} must also be present and specify the names for the water species in each phase. The final required key-\/value pair is {\bfseries{ion}} {\bfseries{pairs}} which should contain a set of key-\/value pairs where the key of each member of the set is the name of a binary electrolyte and the contents contain parameters required to estimate the contribution of the this electrolyte to total aerosol water. The name of the electrolyte may or may not refer to an actual aerosol-\/phase species.
+
+Each binary electrolyte must include a {\bfseries{type}} that refers to a method of calculating ion-\/pair contributions to aerosol water. Valid values for {\bfseries{type}} are {\bfseries{JACOBSON}} and {\bfseries{EQSAM}}. These are described next.
+
+Aerosol water from ion pairs with type {\bfseries{JACOBSON}} use equations (28) and (29) in Jacobson et al. (1996) {\bfseries [Jacobson1996]} where experimentally determined binary solution molalities are fit to a polynomial as\+:
+
+\[ \sqrt{m_{i}(a_w)} = Y_0 + Y_1 a_w + Y_2 a_w^2 + Y_3 a_w^3 + ..., \]
+
+where $Y_j$ are the fitting parameters. Thus, $m_i(a_w)$ is calculated at each time step, assuming constant $a_w$. These values must be included in a key-\/value pair {\bfseries{Y\+\_\+j}} whose value is an array with the $Y_j$ parameters. The size of the array corresponds to the order of the polynomial equation, which must be greater than 1. The key-\/value pair {\bfseries{low}} {\bfseries{RH}} is required to specify the lowest RH (0--1) for which this fit is valid. This value for RH will be used for all lower RH in calculations of $m_i(a_w)$ as per Jacobson et al. (1996) {\bfseries [Jacobson1996]}.
+
+The key-\/value pair {\bfseries{ions}} must contain the set of ions this binary electrolyte includes. Each species must correspond to a species present in {\bfseries{aerosol}} {\bfseries{phase}} and have a {\bfseries{charge}} parameter that specifies their charge (uncharged species are not permitted in this set) and a {\bfseries{molecular}} {\bfseries{weight}} {\bfseries{}}\mbox{[}{\bfseries{kg}} {\bfseries{mol-\/1}}\mbox{]} ( $\mbox{kg}\,\mbox{mol}^{-1}$) property. Ions without a {\bfseries{qty}} specified are assumed to appear once in the binary electrolyte. The total molecular weight for the binary electroly $MW_i$ is calculated as a sum of its ionic components, and the ion species concentrations are used to determine the $M_i$ during integration. The aerosol-\/phase water species to be calculated using the ZSR method must have the key-\/value pair {\bfseries{tracer}} {\bfseries{type}} with value \char`\"{}\+CONSTANT\char`\"{}.
+
+For the above example, the following input data should be present\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{  "{}name"{} : "{}H2O"{},}
+\DoxyCodeLine{  "{}type"{} : "{}CHEM\_SPEC"{},}
+\DoxyCodeLine{  "{}phase"{} : "{}GAS"{},}
+\DoxyCodeLine{\},}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{  "{}name"{} : "{}H2O\_aq"{},}
+\DoxyCodeLine{  "{}type"{} : "{}CHEM\_SPEC"{},}
+\DoxyCodeLine{  "{}tracer type"{} : "{}CONSTANT"{},}
+\DoxyCodeLine{  "{}phase"{} : "{}AEROSOL"{},}
+\DoxyCodeLine{  "{}density [kg m-\/3]"{} : 1.0,}
+\DoxyCodeLine{  "{}molecular weight [kg mol-\/1]"{} : 0.01801}
+\DoxyCodeLine{\},}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{  "{}name"{} : "{}Nap"{},}
+\DoxyCodeLine{  "{}type"{} : "{}CHEM\_SPEC"{},}
+\DoxyCodeLine{  "{}phase"{} : "{}AEROSOL"{},}
+\DoxyCodeLine{  "{}charge"{} : 1,}
+\DoxyCodeLine{  "{}density [kg m-\/3]"{} : 1.0,}
+\DoxyCodeLine{  "{}molecular weight [kg mol-\/1]"{} : 0.0229898}
+\DoxyCodeLine{\},}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{  "{}name"{} : "{}SO4mm"{},}
+\DoxyCodeLine{  "{}type"{} : "{}CHEM\_SPEC"{},}
+\DoxyCodeLine{  "{}phase"{} : "{}AEROSOL"{},}
+\DoxyCodeLine{  "{}charge"{} : -\/2,}
+\DoxyCodeLine{  "{}density [kg m-\/3]"{} : 1.0,}
+\DoxyCodeLine{  "{}molecular weight [kg mol-\/1]"{} : 0.09606}
+\DoxyCodeLine{\},}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{  "{}name"{} : "{}my aero phase"{},}
+\DoxyCodeLine{  "{}type"{} : "{}AERO\_PHASE"{},}
+\DoxyCodeLine{  "{}species"{} : ["{}Nap"{}, "{}SO4mm"{}, H2O\_aq"{}]}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+ Aerosol water from ion pairs with type {\bfseries{EQSAM}} use the parameterization of Metzger et al. (2002) {\bfseries [Metzger2002]} for aerosol water content\+:
+
+\[ \sqrt{m_{i}(a_w)} = (NW_i MW_{H2O}/MW_i (1/a_w-1))^{ZW_i} \]
+
+where $NW_i$ and $ZW_i$ are fitting parameters {\bfseries [Metzger2002]}, and must be provided in key-\/value pairs {\bfseries{NW}} and {\bfseries{ZW}}, along with the binary electrolyte molecular weight {\bfseries{MW}} ( $\mbox{kg}\,\mbox{mol}^{-1}$). The key-\/value pair {\bfseries{ions}} must contain a set of ions that can be summed to calculate $M_i$ at runtime. 

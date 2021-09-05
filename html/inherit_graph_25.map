@@ -1,5 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
 <area shape="rect" id="node1" href="$structcamp__camp__box__model__data_1_1profile__t.html" title="Property time profile." alt="" coords="5,39,168,80"/>
-<area shape="rect" id="node2" href="$structcamp__camp__box__model__data_1_1aero__rep__profile__t.html" title="Aerosol representation time profile." alt="" coords="216,5,381,47"/>
-<area shape="rect" id="node3" href="$structcamp__camp__box__model__data_1_1rxn__profile__t.html" title="Reaction rate time profile." alt="" coords="217,71,380,112"/>
+<area shape="rect" id="node2" href="$structcamp__camp__box__model__data_1_1aero__rep__profile__t.html" title="Aerosol representation time profile." alt="" coords="216,5,379,47"/>
+<area shape="rect" id="node3" href="$structcamp__camp__box__model__data_1_1rxn__profile__t.html" title="Reaction rate time profile." alt="" coords="216,71,379,112"/>
 </map>

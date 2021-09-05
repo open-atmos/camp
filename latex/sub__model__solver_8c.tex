@@ -1,0 +1,293 @@
+\hypertarget{sub__model__solver_8c}{}\doxysection{sub\+\_\+model\+\_\+solver.\+c File Reference}
+\label{sub__model__solver_8c}\index{sub\_model\_solver.c@{sub\_model\_solver.c}}
+
+
+Sub model solver functions.  
+
+
+Include dependency graph for sub\+\_\+model\+\_\+solver.\+c\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{sub__model__solver_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{sub__model__solver_8c_abe344a8755ba09d26ffa38022aea4530}{SUB\+\_\+\+MODEL\+\_\+\+UNIFAC}}~1
+\item 
+\#define \mbox{\hyperlink{sub__model__solver_8c_a497cb5cfc3c9293b4627617d18e9836f}{SUB\+\_\+\+MODEL\+\_\+\+ZSR\+\_\+\+AEROSOL\+\_\+\+WATER}}~2
+\item 
+\#define \mbox{\hyperlink{sub__model__solver_8c_a11353981e82548216308c1746eb4e196}{SUB\+\_\+\+MODEL\+\_\+\+PDFITE}}~3
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{sub__model__solver_8c_a4b1d9807c5fc6b0f2129eb420fa191ad}{sub\+\_\+model\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, \mbox{\hyperlink{struct_jacobian}{Jacobian}} $\ast$jac)
+\begin{DoxyCompactList}\small\item\em Get the \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used by a particular sub model. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{sub__model__solver_8c_a61bf1cc1ad435b59182e1db138cc1b53}{sub\+\_\+model\+\_\+set\+\_\+jac\+\_\+map}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, \mbox{\hyperlink{struct_jacobian}{Jacobian}} jac)
+\begin{DoxyCompactList}\small\item\em Set the map for sub-\/model interdependence. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{sub__model__solver_8c_a38ebe393b32d9f9ac185b12801c69e17}{sub\+\_\+model\+\_\+update\+\_\+ids}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, int $\ast$deriv\+\_\+ids, \mbox{\hyperlink{struct_jacobian}{Jacobian}} jac)
+\begin{DoxyCompactList}\small\item\em Update the time derivative and \mbox{\hyperlink{struct_jacobian}{Jacobian}} array ids. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{sub__model__solver_8c_a78345e452d180e21b072ca0bc574042b}{sub\+\_\+model\+\_\+update\+\_\+env\+\_\+state}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Update sub model data for a new environmental state. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{sub__model__solver_8c_a7f9027610b25bafcc5b6c5af1344dd65}{sub\+\_\+model\+\_\+calculate}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Perform the sub model calculations for the current model state. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{sub__model__solver_8c_a9575eb8104f46d396268c361164e88fb}{sub\+\_\+model\+\_\+get\+\_\+jac\+\_\+contrib}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, double $\ast$J\+\_\+data, realtype time\+\_\+step)
+\begin{DoxyCompactList}\small\item\em Calculate the \mbox{\hyperlink{struct_jacobian}{Jacobian}} constributions from sub model calculations. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{sub__model__solver_8c_a3ef9393f60afb047fbf0d457f811ba03}{sub\+\_\+model\+\_\+add\+\_\+condensed\+\_\+data}} (int sub\+\_\+model\+\_\+type, int n\+\_\+int\+\_\+param, int n\+\_\+float\+\_\+param, int n\+\_\+env\+\_\+param, int $\ast$int\+\_\+param, double $\ast$float\+\_\+param, void $\ast$solver\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Add condensed data to the condensed data block for sub models. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{sub__model__solver_8c_a9e9e2ecadad11db30c4954768a69ccda}{sub\+\_\+model\+\_\+update\+\_\+data}} (int cell\+\_\+id, int $\ast$sub\+\_\+model\+\_\+id, int update\+\_\+sub\+\_\+model\+\_\+type, void $\ast$update\+\_\+data, void $\ast$solver\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Update sub-\/model data. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{sub__model__solver_8c_a1e59f0e39671190ef139baa1021d9edf}{sub\+\_\+model\+\_\+print\+\_\+data}} (void $\ast$solver\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Print the sub model data. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Sub model solver functions. 
+
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{sub__model__solver_8c_a11353981e82548216308c1746eb4e196}\label{sub__model__solver_8c_a11353981e82548216308c1746eb4e196}} 
+\index{sub\_model\_solver.c@{sub\_model\_solver.c}!SUB\_MODEL\_PDFITE@{SUB\_MODEL\_PDFITE}}
+\index{SUB\_MODEL\_PDFITE@{SUB\_MODEL\_PDFITE}!sub\_model\_solver.c@{sub\_model\_solver.c}}
+\doxysubsubsection{\texorpdfstring{SUB\_MODEL\_PDFITE}{SUB\_MODEL\_PDFITE}}
+{\footnotesize\ttfamily \#define SUB\+\_\+\+MODEL\+\_\+\+PDFITE~3}
+
+
+
+Definition at line 18 of file sub\+\_\+model\+\_\+solver.\+c.
+
+\mbox{\Hypertarget{sub__model__solver_8c_abe344a8755ba09d26ffa38022aea4530}\label{sub__model__solver_8c_abe344a8755ba09d26ffa38022aea4530}} 
+\index{sub\_model\_solver.c@{sub\_model\_solver.c}!SUB\_MODEL\_UNIFAC@{SUB\_MODEL\_UNIFAC}}
+\index{SUB\_MODEL\_UNIFAC@{SUB\_MODEL\_UNIFAC}!sub\_model\_solver.c@{sub\_model\_solver.c}}
+\doxysubsubsection{\texorpdfstring{SUB\_MODEL\_UNIFAC}{SUB\_MODEL\_UNIFAC}}
+{\footnotesize\ttfamily \#define SUB\+\_\+\+MODEL\+\_\+\+UNIFAC~1}
+
+
+
+Definition at line 16 of file sub\+\_\+model\+\_\+solver.\+c.
+
+\mbox{\Hypertarget{sub__model__solver_8c_a497cb5cfc3c9293b4627617d18e9836f}\label{sub__model__solver_8c_a497cb5cfc3c9293b4627617d18e9836f}} 
+\index{sub\_model\_solver.c@{sub\_model\_solver.c}!SUB\_MODEL\_ZSR\_AEROSOL\_WATER@{SUB\_MODEL\_ZSR\_AEROSOL\_WATER}}
+\index{SUB\_MODEL\_ZSR\_AEROSOL\_WATER@{SUB\_MODEL\_ZSR\_AEROSOL\_WATER}!sub\_model\_solver.c@{sub\_model\_solver.c}}
+\doxysubsubsection{\texorpdfstring{SUB\_MODEL\_ZSR\_AEROSOL\_WATER}{SUB\_MODEL\_ZSR\_AEROSOL\_WATER}}
+{\footnotesize\ttfamily \#define SUB\+\_\+\+MODEL\+\_\+\+ZSR\+\_\+\+AEROSOL\+\_\+\+WATER~2}
+
+
+
+Definition at line 17 of file sub\+\_\+model\+\_\+solver.\+c.
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{sub__model__solver_8c_a3ef9393f60afb047fbf0d457f811ba03}\label{sub__model__solver_8c_a3ef9393f60afb047fbf0d457f811ba03}} 
+\index{sub\_model\_solver.c@{sub\_model\_solver.c}!sub\_model\_add\_condensed\_data@{sub\_model\_add\_condensed\_data}}
+\index{sub\_model\_add\_condensed\_data@{sub\_model\_add\_condensed\_data}!sub\_model\_solver.c@{sub\_model\_solver.c}}
+\doxysubsubsection{\texorpdfstring{sub\_model\_add\_condensed\_data()}{sub\_model\_add\_condensed\_data()}}
+{\footnotesize\ttfamily void sub\+\_\+model\+\_\+add\+\_\+condensed\+\_\+data (\begin{DoxyParamCaption}\item[{int}]{sub\+\_\+model\+\_\+type,  }\item[{int}]{n\+\_\+int\+\_\+param,  }\item[{int}]{n\+\_\+float\+\_\+param,  }\item[{int}]{n\+\_\+env\+\_\+param,  }\item[{int $\ast$}]{int\+\_\+param,  }\item[{double $\ast$}]{float\+\_\+param,  }\item[{void $\ast$}]{solver\+\_\+data }\end{DoxyParamCaption})}
+
+
+
+Add condensed data to the condensed data block for sub models. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em sub\+\_\+model\+\_\+type} & Sub model type \\
+\hline
+{\em n\+\_\+int\+\_\+param} & Number of integer parameters \\
+\hline
+{\em n\+\_\+float\+\_\+param} & Number of floating-\/point parameters \\
+\hline
+{\em n\+\_\+env\+\_\+param} & Number of environment-\/dependent parameters \\
+\hline
+{\em int\+\_\+param} & Pointer to integer parameter array \\
+\hline
+{\em float\+\_\+param} & Pointer to floating-\/point parameter array \\
+\hline
+{\em solver\+\_\+data} & Pointer to solver data \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 413 of file sub\+\_\+model\+\_\+solver.\+c.
+
+\mbox{\Hypertarget{sub__model__solver_8c_a7f9027610b25bafcc5b6c5af1344dd65}\label{sub__model__solver_8c_a7f9027610b25bafcc5b6c5af1344dd65}} 
+\index{sub\_model\_solver.c@{sub\_model\_solver.c}!sub\_model\_calculate@{sub\_model\_calculate}}
+\index{sub\_model\_calculate@{sub\_model\_calculate}!sub\_model\_solver.c@{sub\_model\_solver.c}}
+\doxysubsubsection{\texorpdfstring{sub\_model\_calculate()}{sub\_model\_calculate()}}
+{\footnotesize\ttfamily void sub\+\_\+model\+\_\+calculate (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data }\end{DoxyParamCaption})}
+
+
+
+Perform the sub model calculations for the current model state. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em model\+\_\+data} & Pointer to the model data \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 308 of file sub\+\_\+model\+\_\+solver.\+c.
+
+\mbox{\Hypertarget{sub__model__solver_8c_a9575eb8104f46d396268c361164e88fb}\label{sub__model__solver_8c_a9575eb8104f46d396268c361164e88fb}} 
+\index{sub\_model\_solver.c@{sub\_model\_solver.c}!sub\_model\_get\_jac\_contrib@{sub\_model\_get\_jac\_contrib}}
+\index{sub\_model\_get\_jac\_contrib@{sub\_model\_get\_jac\_contrib}!sub\_model\_solver.c@{sub\_model\_solver.c}}
+\doxysubsubsection{\texorpdfstring{sub\_model\_get\_jac\_contrib()}{sub\_model\_get\_jac\_contrib()}}
+{\footnotesize\ttfamily void sub\+\_\+model\+\_\+get\+\_\+jac\+\_\+contrib (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{double $\ast$}]{J\+\_\+data,  }\item[{realtype}]{time\+\_\+step }\end{DoxyParamCaption})}
+
+
+
+Calculate the \mbox{\hyperlink{struct_jacobian}{Jacobian}} constributions from sub model calculations. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em model\+\_\+data} & Pointer to the model data \\
+\hline
+{\em J\+\_\+data} & Pointer to sub-\/model \mbox{\hyperlink{struct_jacobian}{Jacobian}} data \\
+\hline
+{\em time\+\_\+step} & Current time step \mbox{[}s\mbox{]} \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 354 of file sub\+\_\+model\+\_\+solver.\+c.
+
+\mbox{\Hypertarget{sub__model__solver_8c_a4b1d9807c5fc6b0f2129eb420fa191ad}\label{sub__model__solver_8c_a4b1d9807c5fc6b0f2129eb420fa191ad}} 
+\index{sub\_model\_solver.c@{sub\_model\_solver.c}!sub\_model\_get\_used\_jac\_elem@{sub\_model\_get\_used\_jac\_elem}}
+\index{sub\_model\_get\_used\_jac\_elem@{sub\_model\_get\_used\_jac\_elem}!sub\_model\_solver.c@{sub\_model\_solver.c}}
+\doxysubsubsection{\texorpdfstring{sub\_model\_get\_used\_jac\_elem()}{sub\_model\_get\_used\_jac\_elem()}}
+{\footnotesize\ttfamily void sub\+\_\+model\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}} $\ast$}]{jac }\end{DoxyParamCaption})}
+
+
+
+Get the \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used by a particular sub model. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em model\+\_\+data} & A pointer to the model data \\
+\hline
+{\em jac} & \mbox{\hyperlink{struct_jacobian}{Jacobian}} \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 25 of file sub\+\_\+model\+\_\+solver.\+c.
+
+\mbox{\Hypertarget{sub__model__solver_8c_a1e59f0e39671190ef139baa1021d9edf}\label{sub__model__solver_8c_a1e59f0e39671190ef139baa1021d9edf}} 
+\index{sub\_model\_solver.c@{sub\_model\_solver.c}!sub\_model\_print\_data@{sub\_model\_print\_data}}
+\index{sub\_model\_print\_data@{sub\_model\_print\_data}!sub\_model\_solver.c@{sub\_model\_solver.c}}
+\doxysubsubsection{\texorpdfstring{sub\_model\_print\_data()}{sub\_model\_print\_data()}}
+{\footnotesize\ttfamily void sub\+\_\+model\+\_\+print\+\_\+data (\begin{DoxyParamCaption}\item[{void $\ast$}]{solver\+\_\+data }\end{DoxyParamCaption})}
+
+
+
+Print the sub model data. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em solver\+\_\+data} & Pointer to the solver data \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 509 of file sub\+\_\+model\+\_\+solver.\+c.
+
+\mbox{\Hypertarget{sub__model__solver_8c_a61bf1cc1ad435b59182e1db138cc1b53}\label{sub__model__solver_8c_a61bf1cc1ad435b59182e1db138cc1b53}} 
+\index{sub\_model\_solver.c@{sub\_model\_solver.c}!sub\_model\_set\_jac\_map@{sub\_model\_set\_jac\_map}}
+\index{sub\_model\_set\_jac\_map@{sub\_model\_set\_jac\_map}!sub\_model\_solver.c@{sub\_model\_solver.c}}
+\doxysubsubsection{\texorpdfstring{sub\_model\_set\_jac\_map()}{sub\_model\_set\_jac\_map()}}
+{\footnotesize\ttfamily void sub\+\_\+model\+\_\+set\+\_\+jac\+\_\+map (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}}}]{jac }\end{DoxyParamCaption})}
+
+
+
+Set the map for sub-\/model interdependence. 
+
+Uses the indices provided in {\ttfamily jac\+\_\+struct} along with individual calls to the sub-\/model {\ttfamily get\+\_\+used\+\_\+jac\+\_\+elem()} functions to set up a map to account for the dependence of sub model calculations on the results of other sub model calculations. The sub model priorities used to assemble the array of sub models, must result in independent sub-\/model calculations appearing before dependent sub-\/model calculations in the sub-\/model array.
+
+
+\begin{DoxyParams}{Parameters}
+{\em model\+\_\+data} & Pointer to the model data \\
+\hline
+{\em jac} & \mbox{\hyperlink{struct_jacobian}{Jacobian}} \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 121 of file sub\+\_\+model\+\_\+solver.\+c.
+
+\mbox{\Hypertarget{sub__model__solver_8c_a9e9e2ecadad11db30c4954768a69ccda}\label{sub__model__solver_8c_a9e9e2ecadad11db30c4954768a69ccda}} 
+\index{sub\_model\_solver.c@{sub\_model\_solver.c}!sub\_model\_update\_data@{sub\_model\_update\_data}}
+\index{sub\_model\_update\_data@{sub\_model\_update\_data}!sub\_model\_solver.c@{sub\_model\_solver.c}}
+\doxysubsubsection{\texorpdfstring{sub\_model\_update\_data()}{sub\_model\_update\_data()}}
+{\footnotesize\ttfamily void sub\+\_\+model\+\_\+update\+\_\+data (\begin{DoxyParamCaption}\item[{int}]{cell\+\_\+id,  }\item[{int $\ast$}]{sub\+\_\+model\+\_\+id,  }\item[{int}]{update\+\_\+sub\+\_\+model\+\_\+type,  }\item[{void $\ast$}]{update\+\_\+data,  }\item[{void $\ast$}]{solver\+\_\+data }\end{DoxyParamCaption})}
+
+
+
+Update sub-\/model data. 
+
+Update data for one or more sub-\/models. Sub-\/models of a certain type are passed a void pointer to updated data that must be in the format specified by the sub-\/model type. This data could be used to find specific sub-\/models of the specified type and change some model parameter(s).
+
+
+\begin{DoxyParams}{Parameters}
+{\em cell\+\_\+id} & Id of the grid cell to update \\
+\hline
+{\em sub\+\_\+model\+\_\+id} & Index of the sub model to update (or 0 if unknown) \\
+\hline
+{\em update\+\_\+sub\+\_\+model\+\_\+type} & Type of the sub-\/model \\
+\hline
+{\em update\+\_\+data} & Pointer to updated data to pass to the sub-\/model \\
+\hline
+{\em solver\+\_\+data} & Pointer to solver data \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 468 of file sub\+\_\+model\+\_\+solver.\+c.
+
+\mbox{\Hypertarget{sub__model__solver_8c_a78345e452d180e21b072ca0bc574042b}\label{sub__model__solver_8c_a78345e452d180e21b072ca0bc574042b}} 
+\index{sub\_model\_solver.c@{sub\_model\_solver.c}!sub\_model\_update\_env\_state@{sub\_model\_update\_env\_state}}
+\index{sub\_model\_update\_env\_state@{sub\_model\_update\_env\_state}!sub\_model\_solver.c@{sub\_model\_solver.c}}
+\doxysubsubsection{\texorpdfstring{sub\_model\_update\_env\_state()}{sub\_model\_update\_env\_state()}}
+{\footnotesize\ttfamily void sub\+\_\+model\+\_\+update\+\_\+env\+\_\+state (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data }\end{DoxyParamCaption})}
+
+
+
+Update sub model data for a new environmental state. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em model\+\_\+data} & Pointer to the model data with updated env state \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 264 of file sub\+\_\+model\+\_\+solver.\+c.
+
+\mbox{\Hypertarget{sub__model__solver_8c_a38ebe393b32d9f9ac185b12801c69e17}\label{sub__model__solver_8c_a38ebe393b32d9f9ac185b12801c69e17}} 
+\index{sub\_model\_solver.c@{sub\_model\_solver.c}!sub\_model\_update\_ids@{sub\_model\_update\_ids}}
+\index{sub\_model\_update\_ids@{sub\_model\_update\_ids}!sub\_model\_solver.c@{sub\_model\_solver.c}}
+\doxysubsubsection{\texorpdfstring{sub\_model\_update\_ids()}{sub\_model\_update\_ids()}}
+{\footnotesize\ttfamily void sub\+\_\+model\+\_\+update\+\_\+ids (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{int $\ast$}]{deriv\+\_\+ids,  }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}}}]{jac }\end{DoxyParamCaption})}
+
+
+
+Update the time derivative and \mbox{\hyperlink{struct_jacobian}{Jacobian}} array ids. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em model\+\_\+data} & Pointer to the model data \\
+\hline
+{\em deriv\+\_\+ids} & Ids for state variables on the time derivative array \\
+\hline
+{\em jac} & \mbox{\hyperlink{struct_jacobian}{Jacobian}} \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 225 of file sub\+\_\+model\+\_\+solver.\+c.
+

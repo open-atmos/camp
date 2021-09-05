@@ -1,0 +1,428 @@
+\hypertarget{rxn__arrhenius_8c}{}\doxysection{rxn\+\_\+arrhenius.\+c File Reference}
+\label{rxn__arrhenius_8c}\index{rxn\_arrhenius.c@{rxn\_arrhenius.c}}
+
+
+Arrhenius reaction solver functions.  
+
+
+Include dependency graph for rxn\+\_\+arrhenius.\+c\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{rxn__arrhenius_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{rxn__arrhenius_8c_aa90d2b6c48aceb4d7ac3d93d5249bb60}{TEMPERATURE\+\_\+\+K\+\_\+}}~env\+\_\+data\mbox{[}0\mbox{]}
+\item 
+\#define \mbox{\hyperlink{rxn__arrhenius_8c_a32cc078fd8ca9ad0684c48ae0aad7135}{PRESSURE\+\_\+\+PA\+\_\+}}~env\+\_\+data\mbox{[}1\mbox{]}
+\item 
+\#define \mbox{\hyperlink{rxn__arrhenius_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}}~int\+\_\+data\mbox{[}0\mbox{]}
+\item 
+\#define \mbox{\hyperlink{rxn__arrhenius_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}}~int\+\_\+data\mbox{[}1\mbox{]}
+\item 
+\#define \mbox{\hyperlink{rxn__arrhenius_8c_a71700f5633db3f99b43c798b09c60bd2}{A\+\_\+}}~float\+\_\+data\mbox{[}0\mbox{]}
+\item 
+\#define \mbox{\hyperlink{rxn__arrhenius_8c_a97097eeee58a37a9710a05f559d84a6b}{B\+\_\+}}~float\+\_\+data\mbox{[}1\mbox{]}
+\item 
+\#define \mbox{\hyperlink{rxn__arrhenius_8c_ad010fec48ee67af5ba75e0ec6c3f5ce4}{C\+\_\+}}~float\+\_\+data\mbox{[}2\mbox{]}
+\item 
+\#define \mbox{\hyperlink{rxn__arrhenius_8c_abf33a03f27734aa2fcf6119f36390bd9}{D\+\_\+}}~float\+\_\+data\mbox{[}3\mbox{]}
+\item 
+\#define \mbox{\hyperlink{rxn__arrhenius_8c_a80ef7c0a31f0dd1900c1d9b0bd3b96cc}{E\+\_\+}}~float\+\_\+data\mbox{[}4\mbox{]}
+\item 
+\#define \mbox{\hyperlink{rxn__arrhenius_8c_a91cd74713029c0906e8136c8628d548d}{CONV\+\_\+}}~float\+\_\+data\mbox{[}5\mbox{]}
+\item 
+\#define \mbox{\hyperlink{rxn__arrhenius_8c_a6d62af2f44a112ef5b324cf406a830c2}{RATE\+\_\+\+CONSTANT\+\_\+}}~rxn\+\_\+env\+\_\+data\mbox{[}0\mbox{]}
+\item 
+\#define \mbox{\hyperlink{rxn__arrhenius_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}}~2
+\item 
+\#define \mbox{\hyperlink{rxn__arrhenius_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}{NUM\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+}}~6
+\item 
+\#define \mbox{\hyperlink{rxn__arrhenius_8c_a1f68a3544ae39a7815cbb5c09dfdeff0}{NUM\+\_\+\+ENV\+\_\+\+PARAM\+\_\+}}~1
+\item 
+\#define \mbox{\hyperlink{rxn__arrhenius_8c_ae761e39657aac155d83eae9b338be571}{REACT\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + x\mbox{]} -\/ 1)
+\item 
+\#define \mbox{\hyperlink{rxn__arrhenius_8c_a9fda90058c6a41b1dda6ded03321c4da}{PROD\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{rxn__troe_8_f90_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + x\mbox{]} -\/ 1)
+\item 
+\#define \mbox{\hyperlink{rxn__arrhenius_8c_af9fc34858d09e71d3cffd88cf942bdf9}{DERIV\+\_\+\+ID\+\_\+}}(x)~int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{rxn__troe_8_f90_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + \mbox{\hyperlink{rxn__troe_8_f90_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}} + x\mbox{]}
+\item 
+\#define \mbox{\hyperlink{rxn__arrhenius_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\+\_\+\+ID\+\_\+}}(x)~int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 2 $\ast$ (\mbox{\hyperlink{rxn__troe_8_f90_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + \mbox{\hyperlink{rxn__troe_8_f90_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}}) + x\mbox{]}
+\item 
+\#define \mbox{\hyperlink{rxn__arrhenius_8c_a9ae244708fd9c438bf840ed319733651}{YIELD\+\_\+}}(x)~float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}{NUM\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+}} + x\mbox{]}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{rxn__arrhenius_8c_a7f830056ddb14553c6c27e13895a27a1}{rxn\+\_\+arrhenius\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem}} (int $\ast$rxn\+\_\+int\+\_\+data, double $\ast$rxn\+\_\+float\+\_\+data, \mbox{\hyperlink{struct_jacobian}{Jacobian}} $\ast$jac)
+\begin{DoxyCompactList}\small\item\em Flag \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used by this reaction. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{rxn__arrhenius_8c_a7fe41e1fef6917179eadba8adc9d1bae}{rxn\+\_\+arrhenius\+\_\+update\+\_\+ids}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, int $\ast$deriv\+\_\+ids, \mbox{\hyperlink{struct_jacobian}{Jacobian}} jac, int $\ast$rxn\+\_\+int\+\_\+data, double $\ast$rxn\+\_\+float\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Update the time derivative and Jacbobian array indices. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{rxn__arrhenius_8c_aa80f17dc28b8494f62c9e8df1c9fa68e}{rxn\+\_\+arrhenius\+\_\+update\+\_\+env\+\_\+state}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, int $\ast$rxn\+\_\+int\+\_\+data, double $\ast$rxn\+\_\+float\+\_\+data, double $\ast$rxn\+\_\+env\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Update reaction data for new environmental conditions. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{rxn__arrhenius_8c_a8e9f2b1a4bf2d45c552e9e930e89277f}{rxn\+\_\+arrhenius\+\_\+calc\+\_\+deriv\+\_\+contrib}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, \mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}} time\+\_\+deriv, int $\ast$rxn\+\_\+int\+\_\+data, double $\ast$rxn\+\_\+float\+\_\+data, double $\ast$rxn\+\_\+env\+\_\+data, double time\+\_\+step)
+\begin{DoxyCompactList}\small\item\em Calculate contributions to the time derivative $f(t,y)$ from this reaction. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{rxn__arrhenius_8c_a94a77852fae3b39722aa865747915a95}{rxn\+\_\+arrhenius\+\_\+calc\+\_\+jac\+\_\+contrib}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, \mbox{\hyperlink{struct_jacobian}{Jacobian}} jac, int $\ast$rxn\+\_\+int\+\_\+data, double $\ast$rxn\+\_\+float\+\_\+data, double $\ast$rxn\+\_\+env\+\_\+data, double time\+\_\+step)
+\begin{DoxyCompactList}\small\item\em Calculate contributions to the \mbox{\hyperlink{struct_jacobian}{Jacobian}} from this reaction. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{rxn__arrhenius_8c_afd23db0ecf7476d28a4d0076f486c15c}{rxn\+\_\+arrhenius\+\_\+print}} (int $\ast$rxn\+\_\+int\+\_\+data, double $\ast$rxn\+\_\+float\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Print the Arrhenius reaction parameters. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Arrhenius reaction solver functions. 
+
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{rxn__arrhenius_8c_a71700f5633db3f99b43c798b09c60bd2}\label{rxn__arrhenius_8c_a71700f5633db3f99b43c798b09c60bd2}} 
+\index{rxn\_arrhenius.c@{rxn\_arrhenius.c}!A\_@{A\_}}
+\index{A\_@{A\_}!rxn\_arrhenius.c@{rxn\_arrhenius.c}}
+\doxysubsubsection{\texorpdfstring{A\_}{A\_}}
+{\footnotesize\ttfamily \#define A\+\_\+~float\+\_\+data\mbox{[}0\mbox{]}}
+
+
+
+Definition at line 22 of file rxn\+\_\+arrhenius.\+c.
+
+\mbox{\Hypertarget{rxn__arrhenius_8c_a97097eeee58a37a9710a05f559d84a6b}\label{rxn__arrhenius_8c_a97097eeee58a37a9710a05f559d84a6b}} 
+\index{rxn\_arrhenius.c@{rxn\_arrhenius.c}!B\_@{B\_}}
+\index{B\_@{B\_}!rxn\_arrhenius.c@{rxn\_arrhenius.c}}
+\doxysubsubsection{\texorpdfstring{B\_}{B\_}}
+{\footnotesize\ttfamily \#define B\+\_\+~float\+\_\+data\mbox{[}1\mbox{]}}
+
+
+
+Definition at line 23 of file rxn\+\_\+arrhenius.\+c.
+
+\mbox{\Hypertarget{rxn__arrhenius_8c_ad010fec48ee67af5ba75e0ec6c3f5ce4}\label{rxn__arrhenius_8c_ad010fec48ee67af5ba75e0ec6c3f5ce4}} 
+\index{rxn\_arrhenius.c@{rxn\_arrhenius.c}!C\_@{C\_}}
+\index{C\_@{C\_}!rxn\_arrhenius.c@{rxn\_arrhenius.c}}
+\doxysubsubsection{\texorpdfstring{C\_}{C\_}}
+{\footnotesize\ttfamily \#define C\+\_\+~float\+\_\+data\mbox{[}2\mbox{]}}
+
+
+
+Definition at line 24 of file rxn\+\_\+arrhenius.\+c.
+
+\mbox{\Hypertarget{rxn__arrhenius_8c_a91cd74713029c0906e8136c8628d548d}\label{rxn__arrhenius_8c_a91cd74713029c0906e8136c8628d548d}} 
+\index{rxn\_arrhenius.c@{rxn\_arrhenius.c}!CONV\_@{CONV\_}}
+\index{CONV\_@{CONV\_}!rxn\_arrhenius.c@{rxn\_arrhenius.c}}
+\doxysubsubsection{\texorpdfstring{CONV\_}{CONV\_}}
+{\footnotesize\ttfamily \#define CONV\+\_\+~float\+\_\+data\mbox{[}5\mbox{]}}
+
+
+
+Definition at line 27 of file rxn\+\_\+arrhenius.\+c.
+
+\mbox{\Hypertarget{rxn__arrhenius_8c_abf33a03f27734aa2fcf6119f36390bd9}\label{rxn__arrhenius_8c_abf33a03f27734aa2fcf6119f36390bd9}} 
+\index{rxn\_arrhenius.c@{rxn\_arrhenius.c}!D\_@{D\_}}
+\index{D\_@{D\_}!rxn\_arrhenius.c@{rxn\_arrhenius.c}}
+\doxysubsubsection{\texorpdfstring{D\_}{D\_}}
+{\footnotesize\ttfamily \#define D\+\_\+~float\+\_\+data\mbox{[}3\mbox{]}}
+
+
+
+Definition at line 25 of file rxn\+\_\+arrhenius.\+c.
+
+\mbox{\Hypertarget{rxn__arrhenius_8c_af9fc34858d09e71d3cffd88cf942bdf9}\label{rxn__arrhenius_8c_af9fc34858d09e71d3cffd88cf942bdf9}} 
+\index{rxn\_arrhenius.c@{rxn\_arrhenius.c}!DERIV\_ID\_@{DERIV\_ID\_}}
+\index{DERIV\_ID\_@{DERIV\_ID\_}!rxn\_arrhenius.c@{rxn\_arrhenius.c}}
+\doxysubsubsection{\texorpdfstring{DERIV\_ID\_}{DERIV\_ID\_}}
+{\footnotesize\ttfamily \#define DERIV\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{rxn__troe_8_f90_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + \mbox{\hyperlink{rxn__troe_8_f90_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}} + x\mbox{]}}
+
+
+
+Definition at line 34 of file rxn\+\_\+arrhenius.\+c.
+
+\mbox{\Hypertarget{rxn__arrhenius_8c_a80ef7c0a31f0dd1900c1d9b0bd3b96cc}\label{rxn__arrhenius_8c_a80ef7c0a31f0dd1900c1d9b0bd3b96cc}} 
+\index{rxn\_arrhenius.c@{rxn\_arrhenius.c}!E\_@{E\_}}
+\index{E\_@{E\_}!rxn\_arrhenius.c@{rxn\_arrhenius.c}}
+\doxysubsubsection{\texorpdfstring{E\_}{E\_}}
+{\footnotesize\ttfamily \#define E\+\_\+~float\+\_\+data\mbox{[}4\mbox{]}}
+
+
+
+Definition at line 26 of file rxn\+\_\+arrhenius.\+c.
+
+\mbox{\Hypertarget{rxn__arrhenius_8c_ab831aae98d4453927c63a93f55ee5a86}\label{rxn__arrhenius_8c_ab831aae98d4453927c63a93f55ee5a86}} 
+\index{rxn\_arrhenius.c@{rxn\_arrhenius.c}!JAC\_ID\_@{JAC\_ID\_}}
+\index{JAC\_ID\_@{JAC\_ID\_}!rxn\_arrhenius.c@{rxn\_arrhenius.c}}
+\doxysubsubsection{\texorpdfstring{JAC\_ID\_}{JAC\_ID\_}}
+{\footnotesize\ttfamily \#define JAC\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 2 $\ast$ (\mbox{\hyperlink{rxn__troe_8_f90_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + \mbox{\hyperlink{rxn__troe_8_f90_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}}) + x\mbox{]}}
+
+
+
+Definition at line 35 of file rxn\+\_\+arrhenius.\+c.
+
+\mbox{\Hypertarget{rxn__arrhenius_8c_a1f68a3544ae39a7815cbb5c09dfdeff0}\label{rxn__arrhenius_8c_a1f68a3544ae39a7815cbb5c09dfdeff0}} 
+\index{rxn\_arrhenius.c@{rxn\_arrhenius.c}!NUM\_ENV\_PARAM\_@{NUM\_ENV\_PARAM\_}}
+\index{NUM\_ENV\_PARAM\_@{NUM\_ENV\_PARAM\_}!rxn\_arrhenius.c@{rxn\_arrhenius.c}}
+\doxysubsubsection{\texorpdfstring{NUM\_ENV\_PARAM\_}{NUM\_ENV\_PARAM\_}}
+{\footnotesize\ttfamily \#define NUM\+\_\+\+ENV\+\_\+\+PARAM\+\_\+~1}
+
+
+
+Definition at line 31 of file rxn\+\_\+arrhenius.\+c.
+
+\mbox{\Hypertarget{rxn__arrhenius_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}\label{rxn__arrhenius_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}} 
+\index{rxn\_arrhenius.c@{rxn\_arrhenius.c}!NUM\_FLOAT\_PROP\_@{NUM\_FLOAT\_PROP\_}}
+\index{NUM\_FLOAT\_PROP\_@{NUM\_FLOAT\_PROP\_}!rxn\_arrhenius.c@{rxn\_arrhenius.c}}
+\doxysubsubsection{\texorpdfstring{NUM\_FLOAT\_PROP\_}{NUM\_FLOAT\_PROP\_}}
+{\footnotesize\ttfamily \#define NUM\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+~6}
+
+
+
+Definition at line 30 of file rxn\+\_\+arrhenius.\+c.
+
+\mbox{\Hypertarget{rxn__arrhenius_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}\label{rxn__arrhenius_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}} 
+\index{rxn\_arrhenius.c@{rxn\_arrhenius.c}!NUM\_INT\_PROP\_@{NUM\_INT\_PROP\_}}
+\index{NUM\_INT\_PROP\_@{NUM\_INT\_PROP\_}!rxn\_arrhenius.c@{rxn\_arrhenius.c}}
+\doxysubsubsection{\texorpdfstring{NUM\_INT\_PROP\_}{NUM\_INT\_PROP\_}}
+{\footnotesize\ttfamily \#define NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+~2}
+
+
+
+Definition at line 29 of file rxn\+\_\+arrhenius.\+c.
+
+\mbox{\Hypertarget{rxn__arrhenius_8c_acf951e890da75cd2d503ed6ce8211fc2}\label{rxn__arrhenius_8c_acf951e890da75cd2d503ed6ce8211fc2}} 
+\index{rxn\_arrhenius.c@{rxn\_arrhenius.c}!NUM\_PROD\_@{NUM\_PROD\_}}
+\index{NUM\_PROD\_@{NUM\_PROD\_}!rxn\_arrhenius.c@{rxn\_arrhenius.c}}
+\doxysubsubsection{\texorpdfstring{NUM\_PROD\_}{NUM\_PROD\_}}
+{\footnotesize\ttfamily \#define NUM\+\_\+\+PROD\+\_\+~int\+\_\+data\mbox{[}1\mbox{]}}
+
+
+
+Definition at line 21 of file rxn\+\_\+arrhenius.\+c.
+
+\mbox{\Hypertarget{rxn__arrhenius_8c_a05ef845cf6ed7ab9a774440c42af34fa}\label{rxn__arrhenius_8c_a05ef845cf6ed7ab9a774440c42af34fa}} 
+\index{rxn\_arrhenius.c@{rxn\_arrhenius.c}!NUM\_REACT\_@{NUM\_REACT\_}}
+\index{NUM\_REACT\_@{NUM\_REACT\_}!rxn\_arrhenius.c@{rxn\_arrhenius.c}}
+\doxysubsubsection{\texorpdfstring{NUM\_REACT\_}{NUM\_REACT\_}}
+{\footnotesize\ttfamily \#define NUM\+\_\+\+REACT\+\_\+~int\+\_\+data\mbox{[}0\mbox{]}}
+
+
+
+Definition at line 20 of file rxn\+\_\+arrhenius.\+c.
+
+\mbox{\Hypertarget{rxn__arrhenius_8c_a32cc078fd8ca9ad0684c48ae0aad7135}\label{rxn__arrhenius_8c_a32cc078fd8ca9ad0684c48ae0aad7135}} 
+\index{rxn\_arrhenius.c@{rxn\_arrhenius.c}!PRESSURE\_PA\_@{PRESSURE\_PA\_}}
+\index{PRESSURE\_PA\_@{PRESSURE\_PA\_}!rxn\_arrhenius.c@{rxn\_arrhenius.c}}
+\doxysubsubsection{\texorpdfstring{PRESSURE\_PA\_}{PRESSURE\_PA\_}}
+{\footnotesize\ttfamily \#define PRESSURE\+\_\+\+PA\+\_\+~env\+\_\+data\mbox{[}1\mbox{]}}
+
+
+
+Definition at line 18 of file rxn\+\_\+arrhenius.\+c.
+
+\mbox{\Hypertarget{rxn__arrhenius_8c_a9fda90058c6a41b1dda6ded03321c4da}\label{rxn__arrhenius_8c_a9fda90058c6a41b1dda6ded03321c4da}} 
+\index{rxn\_arrhenius.c@{rxn\_arrhenius.c}!PROD\_@{PROD\_}}
+\index{PROD\_@{PROD\_}!rxn\_arrhenius.c@{rxn\_arrhenius.c}}
+\doxysubsubsection{\texorpdfstring{PROD\_}{PROD\_}}
+{\footnotesize\ttfamily \#define PROD\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{rxn__troe_8_f90_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + x\mbox{]} -\/ 1)}
+
+
+
+Definition at line 33 of file rxn\+\_\+arrhenius.\+c.
+
+\mbox{\Hypertarget{rxn__arrhenius_8c_a6d62af2f44a112ef5b324cf406a830c2}\label{rxn__arrhenius_8c_a6d62af2f44a112ef5b324cf406a830c2}} 
+\index{rxn\_arrhenius.c@{rxn\_arrhenius.c}!RATE\_CONSTANT\_@{RATE\_CONSTANT\_}}
+\index{RATE\_CONSTANT\_@{RATE\_CONSTANT\_}!rxn\_arrhenius.c@{rxn\_arrhenius.c}}
+\doxysubsubsection{\texorpdfstring{RATE\_CONSTANT\_}{RATE\_CONSTANT\_}}
+{\footnotesize\ttfamily \#define RATE\+\_\+\+CONSTANT\+\_\+~rxn\+\_\+env\+\_\+data\mbox{[}0\mbox{]}}
+
+
+
+Definition at line 28 of file rxn\+\_\+arrhenius.\+c.
+
+\mbox{\Hypertarget{rxn__arrhenius_8c_ae761e39657aac155d83eae9b338be571}\label{rxn__arrhenius_8c_ae761e39657aac155d83eae9b338be571}} 
+\index{rxn\_arrhenius.c@{rxn\_arrhenius.c}!REACT\_@{REACT\_}}
+\index{REACT\_@{REACT\_}!rxn\_arrhenius.c@{rxn\_arrhenius.c}}
+\doxysubsubsection{\texorpdfstring{REACT\_}{REACT\_}}
+{\footnotesize\ttfamily \#define REACT\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + x\mbox{]} -\/ 1)}
+
+
+
+Definition at line 32 of file rxn\+\_\+arrhenius.\+c.
+
+\mbox{\Hypertarget{rxn__arrhenius_8c_aa90d2b6c48aceb4d7ac3d93d5249bb60}\label{rxn__arrhenius_8c_aa90d2b6c48aceb4d7ac3d93d5249bb60}} 
+\index{rxn\_arrhenius.c@{rxn\_arrhenius.c}!TEMPERATURE\_K\_@{TEMPERATURE\_K\_}}
+\index{TEMPERATURE\_K\_@{TEMPERATURE\_K\_}!rxn\_arrhenius.c@{rxn\_arrhenius.c}}
+\doxysubsubsection{\texorpdfstring{TEMPERATURE\_K\_}{TEMPERATURE\_K\_}}
+{\footnotesize\ttfamily \#define TEMPERATURE\+\_\+\+K\+\_\+~env\+\_\+data\mbox{[}0\mbox{]}}
+
+
+
+Definition at line 17 of file rxn\+\_\+arrhenius.\+c.
+
+\mbox{\Hypertarget{rxn__arrhenius_8c_a9ae244708fd9c438bf840ed319733651}\label{rxn__arrhenius_8c_a9ae244708fd9c438bf840ed319733651}} 
+\index{rxn\_arrhenius.c@{rxn\_arrhenius.c}!YIELD\_@{YIELD\_}}
+\index{YIELD\_@{YIELD\_}!rxn\_arrhenius.c@{rxn\_arrhenius.c}}
+\doxysubsubsection{\texorpdfstring{YIELD\_}{YIELD\_}}
+{\footnotesize\ttfamily \#define YIELD\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}{NUM\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+}} + x\mbox{]}}
+
+
+
+Definition at line 36 of file rxn\+\_\+arrhenius.\+c.
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{rxn__arrhenius_8c_a8e9f2b1a4bf2d45c552e9e930e89277f}\label{rxn__arrhenius_8c_a8e9f2b1a4bf2d45c552e9e930e89277f}} 
+\index{rxn\_arrhenius.c@{rxn\_arrhenius.c}!rxn\_arrhenius\_calc\_deriv\_contrib@{rxn\_arrhenius\_calc\_deriv\_contrib}}
+\index{rxn\_arrhenius\_calc\_deriv\_contrib@{rxn\_arrhenius\_calc\_deriv\_contrib}!rxn\_arrhenius.c@{rxn\_arrhenius.c}}
+\doxysubsubsection{\texorpdfstring{rxn\_arrhenius\_calc\_deriv\_contrib()}{rxn\_arrhenius\_calc\_deriv\_contrib()}}
+{\footnotesize\ttfamily void rxn\+\_\+arrhenius\+\_\+calc\+\_\+deriv\+\_\+contrib (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{\mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}}}]{time\+\_\+deriv,  }\item[{int $\ast$}]{rxn\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+env\+\_\+data,  }\item[{double}]{time\+\_\+step }\end{DoxyParamCaption})}
+
+
+
+Calculate contributions to the time derivative $f(t,y)$ from this reaction. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em model\+\_\+data} & \mbox{\hyperlink{struct_model}{Model}} data \\
+\hline
+{\em time\+\_\+deriv} & \mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}} object \\
+\hline
+{\em rxn\+\_\+int\+\_\+data} & Pointer to the reaction integer data \\
+\hline
+{\em rxn\+\_\+float\+\_\+data} & Pointer to the reaction floating-\/point data \\
+\hline
+{\em rxn\+\_\+env\+\_\+data} & Pointer to the environment-\/dependent parameters \\
+\hline
+{\em time\+\_\+step} & Current time step being computed (s) \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 131 of file rxn\+\_\+arrhenius.\+c.
+
+\mbox{\Hypertarget{rxn__arrhenius_8c_a94a77852fae3b39722aa865747915a95}\label{rxn__arrhenius_8c_a94a77852fae3b39722aa865747915a95}} 
+\index{rxn\_arrhenius.c@{rxn\_arrhenius.c}!rxn\_arrhenius\_calc\_jac\_contrib@{rxn\_arrhenius\_calc\_jac\_contrib}}
+\index{rxn\_arrhenius\_calc\_jac\_contrib@{rxn\_arrhenius\_calc\_jac\_contrib}!rxn\_arrhenius.c@{rxn\_arrhenius.c}}
+\doxysubsubsection{\texorpdfstring{rxn\_arrhenius\_calc\_jac\_contrib()}{rxn\_arrhenius\_calc\_jac\_contrib()}}
+{\footnotesize\ttfamily void rxn\+\_\+arrhenius\+\_\+calc\+\_\+jac\+\_\+contrib (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}}}]{jac,  }\item[{int $\ast$}]{rxn\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+env\+\_\+data,  }\item[{double}]{time\+\_\+step }\end{DoxyParamCaption})}
+
+
+
+Calculate contributions to the \mbox{\hyperlink{struct_jacobian}{Jacobian}} from this reaction. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em model\+\_\+data} & \mbox{\hyperlink{struct_model}{Model}} data \\
+\hline
+{\em jac} & Reaction \mbox{\hyperlink{struct_jacobian}{Jacobian}} \\
+\hline
+{\em rxn\+\_\+int\+\_\+data} & Pointer to the reaction integer data \\
+\hline
+{\em rxn\+\_\+float\+\_\+data} & Pointer to the reaction floating-\/point data \\
+\hline
+{\em rxn\+\_\+env\+\_\+data} & Pointer to the environment-\/dependent parameters \\
+\hline
+{\em time\+\_\+step} & Current time step being calculated (s) \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 178 of file rxn\+\_\+arrhenius.\+c.
+
+\mbox{\Hypertarget{rxn__arrhenius_8c_a7f830056ddb14553c6c27e13895a27a1}\label{rxn__arrhenius_8c_a7f830056ddb14553c6c27e13895a27a1}} 
+\index{rxn\_arrhenius.c@{rxn\_arrhenius.c}!rxn\_arrhenius\_get\_used\_jac\_elem@{rxn\_arrhenius\_get\_used\_jac\_elem}}
+\index{rxn\_arrhenius\_get\_used\_jac\_elem@{rxn\_arrhenius\_get\_used\_jac\_elem}!rxn\_arrhenius.c@{rxn\_arrhenius.c}}
+\doxysubsubsection{\texorpdfstring{rxn\_arrhenius\_get\_used\_jac\_elem()}{rxn\_arrhenius\_get\_used\_jac\_elem()}}
+{\footnotesize\ttfamily void rxn\+\_\+arrhenius\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem (\begin{DoxyParamCaption}\item[{int $\ast$}]{rxn\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+float\+\_\+data,  }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}} $\ast$}]{jac }\end{DoxyParamCaption})}
+
+
+
+Flag \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used by this reaction. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em rxn\+\_\+int\+\_\+data} & Pointer to the reaction integer data \\
+\hline
+{\em rxn\+\_\+float\+\_\+data} & Pointer to the reaction floating-\/point data \\
+\hline
+{\em jac} & \mbox{\hyperlink{struct_jacobian}{Jacobian}} \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 44 of file rxn\+\_\+arrhenius.\+c.
+
+\mbox{\Hypertarget{rxn__arrhenius_8c_afd23db0ecf7476d28a4d0076f486c15c}\label{rxn__arrhenius_8c_afd23db0ecf7476d28a4d0076f486c15c}} 
+\index{rxn\_arrhenius.c@{rxn\_arrhenius.c}!rxn\_arrhenius\_print@{rxn\_arrhenius\_print}}
+\index{rxn\_arrhenius\_print@{rxn\_arrhenius\_print}!rxn\_arrhenius.c@{rxn\_arrhenius.c}}
+\doxysubsubsection{\texorpdfstring{rxn\_arrhenius\_print()}{rxn\_arrhenius\_print()}}
+{\footnotesize\ttfamily void rxn\+\_\+arrhenius\+\_\+print (\begin{DoxyParamCaption}\item[{int $\ast$}]{rxn\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+float\+\_\+data }\end{DoxyParamCaption})}
+
+
+
+Print the Arrhenius reaction parameters. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em rxn\+\_\+int\+\_\+data} & Pointer to the reaction integer data \\
+\hline
+{\em rxn\+\_\+float\+\_\+data} & Pointer to the reaction floating-\/point data \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 220 of file rxn\+\_\+arrhenius.\+c.
+
+\mbox{\Hypertarget{rxn__arrhenius_8c_aa80f17dc28b8494f62c9e8df1c9fa68e}\label{rxn__arrhenius_8c_aa80f17dc28b8494f62c9e8df1c9fa68e}} 
+\index{rxn\_arrhenius.c@{rxn\_arrhenius.c}!rxn\_arrhenius\_update\_env\_state@{rxn\_arrhenius\_update\_env\_state}}
+\index{rxn\_arrhenius\_update\_env\_state@{rxn\_arrhenius\_update\_env\_state}!rxn\_arrhenius.c@{rxn\_arrhenius.c}}
+\doxysubsubsection{\texorpdfstring{rxn\_arrhenius\_update\_env\_state()}{rxn\_arrhenius\_update\_env\_state()}}
+{\footnotesize\ttfamily void rxn\+\_\+arrhenius\+\_\+update\+\_\+env\+\_\+state (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{int $\ast$}]{rxn\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+env\+\_\+data }\end{DoxyParamCaption})}
+
+
+
+Update reaction data for new environmental conditions. 
+
+For Arrhenius reaction this only involves recalculating the rate constant.
+
+
+\begin{DoxyParams}{Parameters}
+{\em model\+\_\+data} & Pointer to the model data \\
+\hline
+{\em rxn\+\_\+int\+\_\+data} & Pointer to the reaction integer data \\
+\hline
+{\em rxn\+\_\+float\+\_\+data} & Pointer to the reaction floating-\/point data \\
+\hline
+{\em rxn\+\_\+env\+\_\+data} & Pointer to the environment-\/dependent parameters \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 103 of file rxn\+\_\+arrhenius.\+c.
+
+\mbox{\Hypertarget{rxn__arrhenius_8c_a7fe41e1fef6917179eadba8adc9d1bae}\label{rxn__arrhenius_8c_a7fe41e1fef6917179eadba8adc9d1bae}} 
+\index{rxn\_arrhenius.c@{rxn\_arrhenius.c}!rxn\_arrhenius\_update\_ids@{rxn\_arrhenius\_update\_ids}}
+\index{rxn\_arrhenius\_update\_ids@{rxn\_arrhenius\_update\_ids}!rxn\_arrhenius.c@{rxn\_arrhenius.c}}
+\doxysubsubsection{\texorpdfstring{rxn\_arrhenius\_update\_ids()}{rxn\_arrhenius\_update\_ids()}}
+{\footnotesize\ttfamily void rxn\+\_\+arrhenius\+\_\+update\+\_\+ids (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{int $\ast$}]{deriv\+\_\+ids,  }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}}}]{jac,  }\item[{int $\ast$}]{rxn\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+float\+\_\+data }\end{DoxyParamCaption})}
+
+
+
+Update the time derivative and Jacbobian array indices. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em model\+\_\+data} & Pointer to the model data \\
+\hline
+{\em deriv\+\_\+ids} & Id of each state variable in the derivative array \\
+\hline
+{\em jac} & \mbox{\hyperlink{struct_jacobian}{Jacobian}} \\
+\hline
+{\em rxn\+\_\+int\+\_\+data} & Pointer to the reaction integer data \\
+\hline
+{\em rxn\+\_\+float\+\_\+data} & Pointer to the reaction floating-\/point data \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 69 of file rxn\+\_\+arrhenius.\+c.
+

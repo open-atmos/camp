@@ -1,0 +1,23 @@
+Chemistry Across Multiple Phases (CAMP) facilitates multi-\/phase chemistry solving in atmospheric models. In general, \mbox{\hyperlink{index}{CAMP}} solves a \mbox{\hyperlink{camp_mechanism}{mechanism}} composed of a set of \mbox{\hyperlink{camp_rxn}{reactions}} over a time-\/step specified by the host model. \mbox{\hyperlink{camp_rxn}{Reactions}} can take place in the gas phase, in one of several \mbox{\hyperlink{camp_aero_phase}{aerosol phases}}, or across an interface between phases (gas--aerosol). \mbox{\hyperlink{index}{CAMP}} is designed to work with any \mbox{\hyperlink{camp_aero_rep}{aerosol representation}} used by the host model (e.\+g., binned, modal, single particle) through the use use of custom extending types of the abstract {\ttfamily \mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__t}{camp\+\_\+aero\+\_\+rep\+\_\+data\+::aero\+\_\+rep\+\_\+data\+\_\+t}}} type. Each \mbox{\hyperlink{camp_aero_rep}{aerosol representation}} implements one or more instances of each \mbox{\hyperlink{camp_aero_phase}{aerosol phases}} based on the configuration of the host model. The multi-\/phase chemistry system is solved for the gas-\/phase and every instance of each \mbox{\hyperlink{camp_aero_phase}{aerosol phase}}. A set of \mbox{\hyperlink{camp_sub_model}{sub-\/models}} may also be included to calculate parameters needed by \mbox{\hyperlink{camp_rxn}{reactions}} during solving.
+
+\mbox{\hyperlink{index}{CAMP}} uses JSON files to load \mbox{\hyperlink{input_format_species}{chemical species}}, \mbox{\hyperlink{input_format_mechanism}{mechanisms}}, \mbox{\hyperlink{input_format_aero_phase}{aerosol phases}}, \mbox{\hyperlink{input_format_aero_rep}{aerosol representations}}, and \mbox{\hyperlink{input_format_sub_model}{sub-\/models}} at runtime. This allows a user to modify any of these data without recompiling the model, permits host models to choose which mechanisms to solve based on model conditions, and allows multiple mechanisms to be solved during a model simulation.\hypertarget{index_autotoc_md6}{}\doxysection{CAMP Input Classes}\label{index_autotoc_md6}
+
+\begin{DoxyItemize}
+\item \mbox{\hyperlink{camp_aero_phase}{Aerosol Phases}}
+\item \mbox{\hyperlink{camp_aero_rep}{Aerosol Representations}}
+\item \mbox{\hyperlink{camp_species}{Chemical Species}}
+\item \mbox{\hyperlink{camp_mechanism}{Mechanisms}}
+\item \mbox{\hyperlink{camp_rxn}{Reactions}}
+\item \mbox{\hyperlink{camp_sub_model}{Sub-\/\+Models}}
+\end{DoxyItemize}\hypertarget{index_autotoc_md7}{}\doxysection{Usage}\label{index_autotoc_md7}
+\hypertarget{index_autotoc_md8}{}\doxysubsection{Input files}\label{index_autotoc_md8}
+\mbox{\hyperlink{index}{CAMP}} uses two types of input files\+:
+
+
+\begin{DoxyItemize}
+\item \mbox{\hyperlink{input_format_camp_file_list}{File List}} A {\ttfamily json} file containing a list of \mbox{\hyperlink{index}{CAMP}} configuration file names.
+\item \mbox{\hyperlink{input_format_camp_config}{Configuration File}} One or more {\ttfamily json} files containing all the \mbox{\hyperlink{index}{CAMP}} configuration data.
+\end{DoxyItemize}
+
+To initialize \mbox{\hyperlink{index}{CAMP}} , the path to the \mbox{\hyperlink{input_format_camp_file_list}{file list}} must be passed to the \mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\+\_\+camp\+\_\+core\+::camp\+\_\+core\+\_\+t}} constructor. The method by which this is done depends on the host model configuration.\hypertarget{index_autotoc_md9}{}\doxysubsection{Adding CAMP to an atmospheric model}\label{index_autotoc_md9}
+The easiest way to incorporate CAMP into an atmospheric model is to follow the templates laid out in the tests. For each \mbox{\hyperlink{camp_rxn}{reaction}}, a test exists in {\ttfamily test/unit\+\_\+rxn\+\_\+data} that initializes CAMP for a simple mechanism consisting of only the reaction type being tested. The test code is documented so that it can be used as a template for incorporating CAMP in a new host model. 

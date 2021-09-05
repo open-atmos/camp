@@ -1,0 +1,631 @@
+\hypertarget{sub__model___u_n_i_f_a_c_8c}{}\doxysection{sub\+\_\+model\+\_\+\+UNIFAC.\+c File Reference}
+\label{sub__model___u_n_i_f_a_c_8c}\index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
+
+
+UNIFAC activity coefficient calculation.  
+
+
+Include dependency graph for sub\+\_\+model\+\_\+\+UNIFAC.\+c\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{sub__model___u_n_i_f_a_c_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_aa90d2b6c48aceb4d7ac3d93d5249bb60}{TEMPERATURE\+\_\+\+K\+\_\+}}~env\+\_\+data\mbox{[}0\mbox{]}
+\item 
+\#define \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a32cc078fd8ca9ad0684c48ae0aad7135}{PRESSURE\+\_\+\+PA\+\_\+}}~env\+\_\+data\mbox{[}1\mbox{]}
+\item 
+\#define \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_aa97428673e94e122eea2cf55bdc0e8d3}{NUM\+\_\+\+UNIQUE\+\_\+\+PHASE\+\_\+}}~(int\+\_\+data\mbox{[}0\mbox{]})
+\item 
+\#define \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ad6d3e263b5e54004fc858d109e79ef90}{NUM\+\_\+\+GROUP\+\_\+}}~(int\+\_\+data\mbox{[}1\mbox{]})
+\item 
+\#define \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a6dc5674d6d69ee7413767ee9076138ae}{TOTAL\+\_\+\+INT\+\_\+\+PROP\+\_\+}}~(int\+\_\+data\mbox{[}2\mbox{]})
+\item 
+\#define \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a449afc986a9379f304456d0b93c06c52}{TOTAL\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+}}~(int\+\_\+data\mbox{[}3\mbox{]})
+\item 
+\#define \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}}~4
+\item 
+\#define \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}{NUM\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+}}~0
+\item 
+\#define \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ac0b5b9446b202d1ce286ecefe0108869}{PHASE\+\_\+\+INT\+\_\+\+LOC\+\_\+}}(p)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + p\mbox{]} -\/ 1)
+\item 
+\#define \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a1ad2cc048e99792784cf0798275e6ff0}{PHASE\+\_\+\+FLOAT\+\_\+\+LOC\+\_\+}}(p)~  (int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_aa97428673e94e122eea2cf55bdc0e8d3}{NUM\+\_\+\+UNIQUE\+\_\+\+PHASE\+\_\+}} + p\mbox{]} -\/ 1)
+\item 
+\#define \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a56362e1faed2ba94b75e5a223b60b424}{PHASE\+\_\+\+ENV\+\_\+\+LOC\+\_\+}}(p)~  (int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 2 $\ast$ \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_aa97428673e94e122eea2cf55bdc0e8d3}{NUM\+\_\+\+UNIQUE\+\_\+\+PHASE\+\_\+}} + p\mbox{]} -\/ 1)
+\item 
+\#define \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a96afb96b89157441704719c55a19fd76}{NUM\+\_\+\+PHASE\+\_\+\+INSTANCE\+\_\+}}(p)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ac0b5b9446b202d1ce286ecefe0108869}{PHASE\+\_\+\+INT\+\_\+\+LOC\+\_\+}}(p)\mbox{]})
+\item 
+\#define \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a9a5c42fc20a0cc885faf74920b1f8281}{NUM\+\_\+\+SPEC\+\_\+}}(p)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ac0b5b9446b202d1ce286ecefe0108869}{PHASE\+\_\+\+INT\+\_\+\+LOC\+\_\+}}(p) + 1\mbox{]})
+\item 
+\#define \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a5d0bb63217866cb57183969e2d75b54d}{PHASE\+\_\+\+INST\+\_\+\+ID\+\_\+}}(p,  c)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ac0b5b9446b202d1ce286ecefe0108869}{PHASE\+\_\+\+INT\+\_\+\+LOC\+\_\+}}(p) + 2 + c\mbox{]} -\/ 1)
+\item 
+\#define \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a3299a6a03f2fe000f07ddd544fd0ae5a}{SPEC\+\_\+\+ID\+\_\+}}(p,  i)~  (int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ac0b5b9446b202d1ce286ecefe0108869}{PHASE\+\_\+\+INT\+\_\+\+LOC\+\_\+}}(p) + 2 + \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a96afb96b89157441704719c55a19fd76}{NUM\+\_\+\+PHASE\+\_\+\+INSTANCE\+\_\+}}(p) + i\mbox{]})
+\item 
+\#define \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_aa4a9078d99a1dbfa58de04936d652bce}{GAMMA\+\_\+\+ID\+\_\+}}(p,  i)~  (int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ac0b5b9446b202d1ce286ecefe0108869}{PHASE\+\_\+\+INT\+\_\+\+LOC\+\_\+}}(p) + 2 + \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a96afb96b89157441704719c55a19fd76}{NUM\+\_\+\+PHASE\+\_\+\+INSTANCE\+\_\+}}(p) + \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a9a5c42fc20a0cc885faf74920b1f8281}{NUM\+\_\+\+SPEC\+\_\+}}(p) + i\mbox{]})
+\item 
+\#define \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ad30fc663399a0c977685d511359e6f7a}{JAC\+\_\+\+ID\+\_\+}}(p,  c,  j,  i)
+\item 
+\#define \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_adfb11739bde704494a85f005ed76cc70}{V\+\_\+\+IK\+\_\+}}(p,  i,  k)
+\item 
+\#define \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ab84695ff3bb6d0fc0423220bf68fcbc8}{Q\+\_\+\+K\+\_\+}}(k)~(float\+\_\+data\mbox{[}k\mbox{]})
+\item 
+\#define \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_abb8a6874bbc52c11b838e00ab5ebaa5e}{R\+\_\+\+K\+\_\+}}(k)~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ad6d3e263b5e54004fc858d109e79ef90}{NUM\+\_\+\+GROUP\+\_\+}} + k\mbox{]})
+\item 
+\#define \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a11f518c4fa348d90c90a134ef758e178}{X\+\_\+\+K\+\_\+}}(m)~(float\+\_\+data\mbox{[}2 $\ast$ \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ad6d3e263b5e54004fc858d109e79ef90}{NUM\+\_\+\+GROUP\+\_\+}} + m\mbox{]})
+\item 
+\#define \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a55b754107c270c7b258232638bf7d394}{DTHETA\+\_\+\+M\+\_\+\+DC\+\_\+\+I\+\_\+}}(m)~(float\+\_\+data\mbox{[}3 $\ast$ \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ad6d3e263b5e54004fc858d109e79ef90}{NUM\+\_\+\+GROUP\+\_\+}} + m\mbox{]})
+\item 
+\#define \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a58eb0df01fce1899886c4facd3626bd4}{XI\+\_\+\+M\+\_\+}}(m)~(float\+\_\+data\mbox{[}4 $\ast$ \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ad6d3e263b5e54004fc858d109e79ef90}{NUM\+\_\+\+GROUP\+\_\+}} + m\mbox{]})
+\item 
+\#define \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ac8a1e8e8621a611a828d65edc020a3bd}{LN\+\_\+\+GAMMA\+\_\+\+K\+\_\+}}(m)~(float\+\_\+data\mbox{[}5 $\ast$ \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ad6d3e263b5e54004fc858d109e79ef90}{NUM\+\_\+\+GROUP\+\_\+}} + m\mbox{]})
+\item 
+\#define \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ad857d77cfc3f85ade1e96ba998454aa9}{A\+\_\+\+MN\+\_\+}}(m,  n)~(float\+\_\+data\mbox{[}(m + 6) $\ast$ \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ad6d3e263b5e54004fc858d109e79ef90}{NUM\+\_\+\+GROUP\+\_\+}} + n\mbox{]})
+\item 
+\#define \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a38622e7bf04110a9c042849b3fb136f1}{R\+\_\+\+I\+\_\+}}(p,  i)~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a1ad2cc048e99792784cf0798275e6ff0}{PHASE\+\_\+\+FLOAT\+\_\+\+LOC\+\_\+}}(p) + i\mbox{]})
+\item 
+\#define \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a63ace1f59944016dd0bf93573fa74b13}{Q\+\_\+\+I\+\_\+}}(p,  i)~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a1ad2cc048e99792784cf0798275e6ff0}{PHASE\+\_\+\+FLOAT\+\_\+\+LOC\+\_\+}}(p) + \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a9a5c42fc20a0cc885faf74920b1f8281}{NUM\+\_\+\+SPEC\+\_\+}}(p) + i\mbox{]})
+\item 
+\#define \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ae785d2a9fe11700b737572da4bc84b14}{L\+\_\+\+I\+\_\+}}(p,  i)~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a1ad2cc048e99792784cf0798275e6ff0}{PHASE\+\_\+\+FLOAT\+\_\+\+LOC\+\_\+}}(p) + 2 $\ast$ \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a9a5c42fc20a0cc885faf74920b1f8281}{NUM\+\_\+\+SPEC\+\_\+}}(p) + i\mbox{]})
+\item 
+\#define \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a1f5c2d7f5d00731ad2b59dafd08f8b26}{MW\+\_\+\+I\+\_\+}}(p,  i)~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a1ad2cc048e99792784cf0798275e6ff0}{PHASE\+\_\+\+FLOAT\+\_\+\+LOC\+\_\+}}(p) + 3 $\ast$ \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a9a5c42fc20a0cc885faf74920b1f8281}{NUM\+\_\+\+SPEC\+\_\+}}(p) + i\mbox{]})
+\item 
+\#define \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a5bed7503a53ee02a5bc252ee13f96724}{X\+\_\+\+I\+\_\+}}(p,  i)~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a1ad2cc048e99792784cf0798275e6ff0}{PHASE\+\_\+\+FLOAT\+\_\+\+LOC\+\_\+}}(p) + 4 $\ast$ \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a9a5c42fc20a0cc885faf74920b1f8281}{NUM\+\_\+\+SPEC\+\_\+}}(p) + i\mbox{]})
+\item 
+\#define \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a784850b02be0d6211e0118a9d3d16a9c}{THETA\+\_\+\+M\+\_\+}}(m)~(sub\+\_\+model\+\_\+env\+\_\+data\mbox{[}m\mbox{]})
+\item 
+\#define \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ac79faf34253439fe5e701f2ec3b03b8c}{PSI\+\_\+\+MN\+\_\+}}(m,  n)~(sub\+\_\+model\+\_\+env\+\_\+data\mbox{[}(m + 1) $\ast$ \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ad6d3e263b5e54004fc858d109e79ef90}{NUM\+\_\+\+GROUP\+\_\+}} + n\mbox{]})
+\item 
+\#define \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a38e65393d48cdee41eefe73e2279e55a}{LN\+\_\+\+GAMMA\+\_\+\+IK\+\_\+}}(p,  i,  k)~  (sub\+\_\+model\+\_\+env\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a56362e1faed2ba94b75e5a223b60b424}{PHASE\+\_\+\+ENV\+\_\+\+LOC\+\_\+}}(p) + i $\ast$ \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ad6d3e263b5e54004fc858d109e79ef90}{NUM\+\_\+\+GROUP\+\_\+}} + k\mbox{]})
+\item 
+\#define \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_aa0dffbf9b27f4705b9462d86376d1506}{INT\+\_\+\+DATA\+\_\+\+SIZE\+\_\+}}~(\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a6dc5674d6d69ee7413767ee9076138ae}{TOTAL\+\_\+\+INT\+\_\+\+PROP\+\_\+}})
+\item 
+\#define \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a4c9e4c5f3ca6b19f4eb79ae59cc281eb}{FLOAT\+\_\+\+DATA\+\_\+\+SIZE\+\_\+}}~(\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a449afc986a9379f304456d0b93c06c52}{TOTAL\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+}})
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a6895ac51f6122ce830f30d8b1f09d052}{sub\+\_\+model\+\_\+\+UNIFAC\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem}} (int $\ast$sub\+\_\+model\+\_\+int\+\_\+data, double $\ast$sub\+\_\+model\+\_\+float\+\_\+data, \mbox{\hyperlink{struct_jacobian}{Jacobian}} $\ast$jac)
+\begin{DoxyCompactList}\small\item\em Get the \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used for a particular row of the matrix. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a2674d98846a9c4933d56156ec1f0deb5}{sub\+\_\+model\+\_\+\+UNIFAC\+\_\+update\+\_\+ids}} (int $\ast$sub\+\_\+model\+\_\+int\+\_\+data, double $\ast$sub\+\_\+model\+\_\+float\+\_\+data, int $\ast$deriv\+\_\+ids, \mbox{\hyperlink{struct_jacobian}{Jacobian}} jac)
+\begin{DoxyCompactList}\small\item\em Update stored ids for elements used within a row of the \mbox{\hyperlink{struct_jacobian}{Jacobian}} matrix. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a43f3628a20f1bf545034554576e9c85c}{sub\+\_\+model\+\_\+\+UNIFAC\+\_\+update\+\_\+env\+\_\+state}} (int $\ast$sub\+\_\+model\+\_\+int\+\_\+data, double $\ast$sub\+\_\+model\+\_\+float\+\_\+data, double $\ast$sub\+\_\+model\+\_\+env\+\_\+data, \mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Update sub-\/model data for new environmental conditions. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a91d55564c556bf61d6bf0ccac7b43e4b}{sub\+\_\+model\+\_\+\+UNIFAC\+\_\+calculate}} (int $\ast$sub\+\_\+model\+\_\+int\+\_\+data, double $\ast$sub\+\_\+model\+\_\+float\+\_\+data, double $\ast$sub\+\_\+model\+\_\+env\+\_\+data, \mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Perform the sub-\/model calculations for the current model state. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a0301d06b09af90fcfe49f9a1ba7c6742}{sub\+\_\+model\+\_\+\+UNIFAC\+\_\+get\+\_\+jac\+\_\+contrib}} (int $\ast$sub\+\_\+model\+\_\+int\+\_\+data, double $\ast$sub\+\_\+model\+\_\+float\+\_\+data, double $\ast$sub\+\_\+model\+\_\+env\+\_\+data, \mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, realtype $\ast$J, double time\+\_\+step)
+\begin{DoxyCompactList}\small\item\em Add contributions to the \mbox{\hyperlink{struct_jacobian}{Jacobian}} from derivates calculated using the output of this sub model. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ac47310b67585f52b71ff6aac1c603ba5}{sub\+\_\+model\+\_\+\+UNIFAC\+\_\+print}} (int $\ast$sub\+\_\+model\+\_\+int\+\_\+data, double $\ast$sub\+\_\+model\+\_\+float\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Print the sub model data. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+UNIFAC activity coefficient calculation. 
+
+For more info see the camp\+\_\+sub\+\_\+model\+\_\+\+UNIFAC module
+
+Equation references are to Marcolli and Peter, ACP 5(2), 1501-\/1527, 2005. 
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_ad857d77cfc3f85ade1e96ba998454aa9}\label{sub__model___u_n_i_f_a_c_8c_ad857d77cfc3f85ade1e96ba998454aa9}} 
+\index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!A\_MN\_@{A\_MN\_}}
+\index{A\_MN\_@{A\_MN\_}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
+\doxysubsubsection{\texorpdfstring{A\_MN\_}{A\_MN\_}}
+{\footnotesize\ttfamily \#define A\+\_\+\+MN\+\_\+(\begin{DoxyParamCaption}\item[{}]{m,  }\item[{}]{n }\end{DoxyParamCaption})~(float\+\_\+data\mbox{[}(m + 6) $\ast$ \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ad6d3e263b5e54004fc858d109e79ef90}{NUM\+\_\+\+GROUP\+\_\+}} + n\mbox{]})}
+
+
+
+Definition at line 58 of file sub\+\_\+model\+\_\+\+UNIFAC.\+c.
+
+\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_a55b754107c270c7b258232638bf7d394}\label{sub__model___u_n_i_f_a_c_8c_a55b754107c270c7b258232638bf7d394}} 
+\index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!DTHETA\_M\_DC\_I\_@{DTHETA\_M\_DC\_I\_}}
+\index{DTHETA\_M\_DC\_I\_@{DTHETA\_M\_DC\_I\_}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
+\doxysubsubsection{\texorpdfstring{DTHETA\_M\_DC\_I\_}{DTHETA\_M\_DC\_I\_}}
+{\footnotesize\ttfamily \#define DTHETA\+\_\+\+M\+\_\+\+DC\+\_\+\+I\+\_\+(\begin{DoxyParamCaption}\item[{}]{m }\end{DoxyParamCaption})~(float\+\_\+data\mbox{[}3 $\ast$ \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ad6d3e263b5e54004fc858d109e79ef90}{NUM\+\_\+\+GROUP\+\_\+}} + m\mbox{]})}
+
+
+
+Definition at line 55 of file sub\+\_\+model\+\_\+\+UNIFAC.\+c.
+
+\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_a4c9e4c5f3ca6b19f4eb79ae59cc281eb}\label{sub__model___u_n_i_f_a_c_8c_a4c9e4c5f3ca6b19f4eb79ae59cc281eb}} 
+\index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!FLOAT\_DATA\_SIZE\_@{FLOAT\_DATA\_SIZE\_}}
+\index{FLOAT\_DATA\_SIZE\_@{FLOAT\_DATA\_SIZE\_}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
+\doxysubsubsection{\texorpdfstring{FLOAT\_DATA\_SIZE\_}{FLOAT\_DATA\_SIZE\_}}
+{\footnotesize\ttfamily \#define FLOAT\+\_\+\+DATA\+\_\+\+SIZE\+\_\+~(\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a449afc986a9379f304456d0b93c06c52}{TOTAL\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+}})}
+
+
+
+Definition at line 71 of file sub\+\_\+model\+\_\+\+UNIFAC.\+c.
+
+\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_aa4a9078d99a1dbfa58de04936d652bce}\label{sub__model___u_n_i_f_a_c_8c_aa4a9078d99a1dbfa58de04936d652bce}} 
+\index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!GAMMA\_ID\_@{GAMMA\_ID\_}}
+\index{GAMMA\_ID\_@{GAMMA\_ID\_}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
+\doxysubsubsection{\texorpdfstring{GAMMA\_ID\_}{GAMMA\_ID\_}}
+{\footnotesize\ttfamily \#define GAMMA\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{p,  }\item[{}]{i }\end{DoxyParamCaption})~  (int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ac0b5b9446b202d1ce286ecefe0108869}{PHASE\+\_\+\+INT\+\_\+\+LOC\+\_\+}}(p) + 2 + \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a96afb96b89157441704719c55a19fd76}{NUM\+\_\+\+PHASE\+\_\+\+INSTANCE\+\_\+}}(p) + \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a9a5c42fc20a0cc885faf74920b1f8281}{NUM\+\_\+\+SPEC\+\_\+}}(p) + i\mbox{]})}
+
+
+
+Definition at line 42 of file sub\+\_\+model\+\_\+\+UNIFAC.\+c.
+
+\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_aa0dffbf9b27f4705b9462d86376d1506}\label{sub__model___u_n_i_f_a_c_8c_aa0dffbf9b27f4705b9462d86376d1506}} 
+\index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!INT\_DATA\_SIZE\_@{INT\_DATA\_SIZE\_}}
+\index{INT\_DATA\_SIZE\_@{INT\_DATA\_SIZE\_}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
+\doxysubsubsection{\texorpdfstring{INT\_DATA\_SIZE\_}{INT\_DATA\_SIZE\_}}
+{\footnotesize\ttfamily \#define INT\+\_\+\+DATA\+\_\+\+SIZE\+\_\+~(\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a6dc5674d6d69ee7413767ee9076138ae}{TOTAL\+\_\+\+INT\+\_\+\+PROP\+\_\+}})}
+
+
+
+Definition at line 70 of file sub\+\_\+model\+\_\+\+UNIFAC.\+c.
+
+\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_ad30fc663399a0c977685d511359e6f7a}\label{sub__model___u_n_i_f_a_c_8c_ad30fc663399a0c977685d511359e6f7a}} 
+\index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!JAC\_ID\_@{JAC\_ID\_}}
+\index{JAC\_ID\_@{JAC\_ID\_}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
+\doxysubsubsection{\texorpdfstring{JAC\_ID\_}{JAC\_ID\_}}
+{\footnotesize\ttfamily \#define JAC\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{p,  }\item[{}]{c,  }\item[{}]{j,  }\item[{}]{i }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{  int\_data[\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ac0b5b9446b202d1ce286ecefe0108869}{PHASE\_INT\_LOC\_}}(p) + 2 + \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a96afb96b89157441704719c55a19fd76}{NUM\_PHASE\_INSTANCE\_}}(p) + \(\backslash\)}
+\DoxyCodeLine{           (2 + c * \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a9a5c42fc20a0cc885faf74920b1f8281}{NUM\_SPEC\_}}(p) + j) * \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a9a5c42fc20a0cc885faf74920b1f8281}{NUM\_SPEC\_}}(p) + i]}
+
+\end{DoxyCode}
+
+
+Definition at line 44 of file sub\+\_\+model\+\_\+\+UNIFAC.\+c.
+
+\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_ae785d2a9fe11700b737572da4bc84b14}\label{sub__model___u_n_i_f_a_c_8c_ae785d2a9fe11700b737572da4bc84b14}} 
+\index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!L\_I\_@{L\_I\_}}
+\index{L\_I\_@{L\_I\_}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
+\doxysubsubsection{\texorpdfstring{L\_I\_}{L\_I\_}}
+{\footnotesize\ttfamily \#define L\+\_\+\+I\+\_\+(\begin{DoxyParamCaption}\item[{}]{p,  }\item[{}]{i }\end{DoxyParamCaption})~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a1ad2cc048e99792784cf0798275e6ff0}{PHASE\+\_\+\+FLOAT\+\_\+\+LOC\+\_\+}}(p) + 2 $\ast$ \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a9a5c42fc20a0cc885faf74920b1f8281}{NUM\+\_\+\+SPEC\+\_\+}}(p) + i\mbox{]})}
+
+
+
+Definition at line 61 of file sub\+\_\+model\+\_\+\+UNIFAC.\+c.
+
+\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_a38e65393d48cdee41eefe73e2279e55a}\label{sub__model___u_n_i_f_a_c_8c_a38e65393d48cdee41eefe73e2279e55a}} 
+\index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!LN\_GAMMA\_IK\_@{LN\_GAMMA\_IK\_}}
+\index{LN\_GAMMA\_IK\_@{LN\_GAMMA\_IK\_}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
+\doxysubsubsection{\texorpdfstring{LN\_GAMMA\_IK\_}{LN\_GAMMA\_IK\_}}
+{\footnotesize\ttfamily \#define LN\+\_\+\+GAMMA\+\_\+\+IK\+\_\+(\begin{DoxyParamCaption}\item[{}]{p,  }\item[{}]{i,  }\item[{}]{k }\end{DoxyParamCaption})~  (sub\+\_\+model\+\_\+env\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a56362e1faed2ba94b75e5a223b60b424}{PHASE\+\_\+\+ENV\+\_\+\+LOC\+\_\+}}(p) + i $\ast$ \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ad6d3e263b5e54004fc858d109e79ef90}{NUM\+\_\+\+GROUP\+\_\+}} + k\mbox{]})}
+
+
+
+Definition at line 67 of file sub\+\_\+model\+\_\+\+UNIFAC.\+c.
+
+\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_ac8a1e8e8621a611a828d65edc020a3bd}\label{sub__model___u_n_i_f_a_c_8c_ac8a1e8e8621a611a828d65edc020a3bd}} 
+\index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!LN\_GAMMA\_K\_@{LN\_GAMMA\_K\_}}
+\index{LN\_GAMMA\_K\_@{LN\_GAMMA\_K\_}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
+\doxysubsubsection{\texorpdfstring{LN\_GAMMA\_K\_}{LN\_GAMMA\_K\_}}
+{\footnotesize\ttfamily \#define LN\+\_\+\+GAMMA\+\_\+\+K\+\_\+(\begin{DoxyParamCaption}\item[{}]{m }\end{DoxyParamCaption})~(float\+\_\+data\mbox{[}5 $\ast$ \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ad6d3e263b5e54004fc858d109e79ef90}{NUM\+\_\+\+GROUP\+\_\+}} + m\mbox{]})}
+
+
+
+Definition at line 57 of file sub\+\_\+model\+\_\+\+UNIFAC.\+c.
+
+\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_a1f5c2d7f5d00731ad2b59dafd08f8b26}\label{sub__model___u_n_i_f_a_c_8c_a1f5c2d7f5d00731ad2b59dafd08f8b26}} 
+\index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!MW\_I\_@{MW\_I\_}}
+\index{MW\_I\_@{MW\_I\_}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
+\doxysubsubsection{\texorpdfstring{MW\_I\_}{MW\_I\_}}
+{\footnotesize\ttfamily \#define MW\+\_\+\+I\+\_\+(\begin{DoxyParamCaption}\item[{}]{p,  }\item[{}]{i }\end{DoxyParamCaption})~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a1ad2cc048e99792784cf0798275e6ff0}{PHASE\+\_\+\+FLOAT\+\_\+\+LOC\+\_\+}}(p) + 3 $\ast$ \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a9a5c42fc20a0cc885faf74920b1f8281}{NUM\+\_\+\+SPEC\+\_\+}}(p) + i\mbox{]})}
+
+
+
+Definition at line 62 of file sub\+\_\+model\+\_\+\+UNIFAC.\+c.
+
+\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}\label{sub__model___u_n_i_f_a_c_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}} 
+\index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!NUM\_FLOAT\_PROP\_@{NUM\_FLOAT\_PROP\_}}
+\index{NUM\_FLOAT\_PROP\_@{NUM\_FLOAT\_PROP\_}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
+\doxysubsubsection{\texorpdfstring{NUM\_FLOAT\_PROP\_}{NUM\_FLOAT\_PROP\_}}
+{\footnotesize\ttfamily \#define NUM\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+~0}
+
+
+
+Definition at line 31 of file sub\+\_\+model\+\_\+\+UNIFAC.\+c.
+
+\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_ad6d3e263b5e54004fc858d109e79ef90}\label{sub__model___u_n_i_f_a_c_8c_ad6d3e263b5e54004fc858d109e79ef90}} 
+\index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!NUM\_GROUP\_@{NUM\_GROUP\_}}
+\index{NUM\_GROUP\_@{NUM\_GROUP\_}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
+\doxysubsubsection{\texorpdfstring{NUM\_GROUP\_}{NUM\_GROUP\_}}
+{\footnotesize\ttfamily \#define NUM\+\_\+\+GROUP\+\_\+~(int\+\_\+data\mbox{[}1\mbox{]})}
+
+
+
+Definition at line 27 of file sub\+\_\+model\+\_\+\+UNIFAC.\+c.
+
+\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}\label{sub__model___u_n_i_f_a_c_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}} 
+\index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!NUM\_INT\_PROP\_@{NUM\_INT\_PROP\_}}
+\index{NUM\_INT\_PROP\_@{NUM\_INT\_PROP\_}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
+\doxysubsubsection{\texorpdfstring{NUM\_INT\_PROP\_}{NUM\_INT\_PROP\_}}
+{\footnotesize\ttfamily \#define NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+~4}
+
+
+
+Definition at line 30 of file sub\+\_\+model\+\_\+\+UNIFAC.\+c.
+
+\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_a96afb96b89157441704719c55a19fd76}\label{sub__model___u_n_i_f_a_c_8c_a96afb96b89157441704719c55a19fd76}} 
+\index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!NUM\_PHASE\_INSTANCE\_@{NUM\_PHASE\_INSTANCE\_}}
+\index{NUM\_PHASE\_INSTANCE\_@{NUM\_PHASE\_INSTANCE\_}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
+\doxysubsubsection{\texorpdfstring{NUM\_PHASE\_INSTANCE\_}{NUM\_PHASE\_INSTANCE\_}}
+{\footnotesize\ttfamily \#define NUM\+\_\+\+PHASE\+\_\+\+INSTANCE\+\_\+(\begin{DoxyParamCaption}\item[{}]{p }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ac0b5b9446b202d1ce286ecefe0108869}{PHASE\+\_\+\+INT\+\_\+\+LOC\+\_\+}}(p)\mbox{]})}
+
+
+
+Definition at line 37 of file sub\+\_\+model\+\_\+\+UNIFAC.\+c.
+
+\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_a9a5c42fc20a0cc885faf74920b1f8281}\label{sub__model___u_n_i_f_a_c_8c_a9a5c42fc20a0cc885faf74920b1f8281}} 
+\index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!NUM\_SPEC\_@{NUM\_SPEC\_}}
+\index{NUM\_SPEC\_@{NUM\_SPEC\_}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
+\doxysubsubsection{\texorpdfstring{NUM\_SPEC\_}{NUM\_SPEC\_}}
+{\footnotesize\ttfamily \#define NUM\+\_\+\+SPEC\+\_\+(\begin{DoxyParamCaption}\item[{}]{p }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ac0b5b9446b202d1ce286ecefe0108869}{PHASE\+\_\+\+INT\+\_\+\+LOC\+\_\+}}(p) + 1\mbox{]})}
+
+
+
+Definition at line 38 of file sub\+\_\+model\+\_\+\+UNIFAC.\+c.
+
+\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_aa97428673e94e122eea2cf55bdc0e8d3}\label{sub__model___u_n_i_f_a_c_8c_aa97428673e94e122eea2cf55bdc0e8d3}} 
+\index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!NUM\_UNIQUE\_PHASE\_@{NUM\_UNIQUE\_PHASE\_}}
+\index{NUM\_UNIQUE\_PHASE\_@{NUM\_UNIQUE\_PHASE\_}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
+\doxysubsubsection{\texorpdfstring{NUM\_UNIQUE\_PHASE\_}{NUM\_UNIQUE\_PHASE\_}}
+{\footnotesize\ttfamily \#define NUM\+\_\+\+UNIQUE\+\_\+\+PHASE\+\_\+~(int\+\_\+data\mbox{[}0\mbox{]})}
+
+
+
+Definition at line 26 of file sub\+\_\+model\+\_\+\+UNIFAC.\+c.
+
+\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_a56362e1faed2ba94b75e5a223b60b424}\label{sub__model___u_n_i_f_a_c_8c_a56362e1faed2ba94b75e5a223b60b424}} 
+\index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!PHASE\_ENV\_LOC\_@{PHASE\_ENV\_LOC\_}}
+\index{PHASE\_ENV\_LOC\_@{PHASE\_ENV\_LOC\_}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
+\doxysubsubsection{\texorpdfstring{PHASE\_ENV\_LOC\_}{PHASE\_ENV\_LOC\_}}
+{\footnotesize\ttfamily \#define PHASE\+\_\+\+ENV\+\_\+\+LOC\+\_\+(\begin{DoxyParamCaption}\item[{}]{p }\end{DoxyParamCaption})~  (int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 2 $\ast$ \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_aa97428673e94e122eea2cf55bdc0e8d3}{NUM\+\_\+\+UNIQUE\+\_\+\+PHASE\+\_\+}} + p\mbox{]} -\/ 1)}
+
+
+
+Definition at line 35 of file sub\+\_\+model\+\_\+\+UNIFAC.\+c.
+
+\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_a1ad2cc048e99792784cf0798275e6ff0}\label{sub__model___u_n_i_f_a_c_8c_a1ad2cc048e99792784cf0798275e6ff0}} 
+\index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!PHASE\_FLOAT\_LOC\_@{PHASE\_FLOAT\_LOC\_}}
+\index{PHASE\_FLOAT\_LOC\_@{PHASE\_FLOAT\_LOC\_}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
+\doxysubsubsection{\texorpdfstring{PHASE\_FLOAT\_LOC\_}{PHASE\_FLOAT\_LOC\_}}
+{\footnotesize\ttfamily \#define PHASE\+\_\+\+FLOAT\+\_\+\+LOC\+\_\+(\begin{DoxyParamCaption}\item[{}]{p }\end{DoxyParamCaption})~  (int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_aa97428673e94e122eea2cf55bdc0e8d3}{NUM\+\_\+\+UNIQUE\+\_\+\+PHASE\+\_\+}} + p\mbox{]} -\/ 1)}
+
+
+
+Definition at line 33 of file sub\+\_\+model\+\_\+\+UNIFAC.\+c.
+
+\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_a5d0bb63217866cb57183969e2d75b54d}\label{sub__model___u_n_i_f_a_c_8c_a5d0bb63217866cb57183969e2d75b54d}} 
+\index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!PHASE\_INST\_ID\_@{PHASE\_INST\_ID\_}}
+\index{PHASE\_INST\_ID\_@{PHASE\_INST\_ID\_}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
+\doxysubsubsection{\texorpdfstring{PHASE\_INST\_ID\_}{PHASE\_INST\_ID\_}}
+{\footnotesize\ttfamily \#define PHASE\+\_\+\+INST\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{p,  }\item[{}]{c }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ac0b5b9446b202d1ce286ecefe0108869}{PHASE\+\_\+\+INT\+\_\+\+LOC\+\_\+}}(p) + 2 + c\mbox{]} -\/ 1)}
+
+
+
+Definition at line 39 of file sub\+\_\+model\+\_\+\+UNIFAC.\+c.
+
+\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_ac0b5b9446b202d1ce286ecefe0108869}\label{sub__model___u_n_i_f_a_c_8c_ac0b5b9446b202d1ce286ecefe0108869}} 
+\index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!PHASE\_INT\_LOC\_@{PHASE\_INT\_LOC\_}}
+\index{PHASE\_INT\_LOC\_@{PHASE\_INT\_LOC\_}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
+\doxysubsubsection{\texorpdfstring{PHASE\_INT\_LOC\_}{PHASE\_INT\_LOC\_}}
+{\footnotesize\ttfamily \#define PHASE\+\_\+\+INT\+\_\+\+LOC\+\_\+(\begin{DoxyParamCaption}\item[{}]{p }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + p\mbox{]} -\/ 1)}
+
+
+
+Definition at line 32 of file sub\+\_\+model\+\_\+\+UNIFAC.\+c.
+
+\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_a32cc078fd8ca9ad0684c48ae0aad7135}\label{sub__model___u_n_i_f_a_c_8c_a32cc078fd8ca9ad0684c48ae0aad7135}} 
+\index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!PRESSURE\_PA\_@{PRESSURE\_PA\_}}
+\index{PRESSURE\_PA\_@{PRESSURE\_PA\_}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
+\doxysubsubsection{\texorpdfstring{PRESSURE\_PA\_}{PRESSURE\_PA\_}}
+{\footnotesize\ttfamily \#define PRESSURE\+\_\+\+PA\+\_\+~env\+\_\+data\mbox{[}1\mbox{]}}
+
+
+
+Definition at line 24 of file sub\+\_\+model\+\_\+\+UNIFAC.\+c.
+
+\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_ac79faf34253439fe5e701f2ec3b03b8c}\label{sub__model___u_n_i_f_a_c_8c_ac79faf34253439fe5e701f2ec3b03b8c}} 
+\index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!PSI\_MN\_@{PSI\_MN\_}}
+\index{PSI\_MN\_@{PSI\_MN\_}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
+\doxysubsubsection{\texorpdfstring{PSI\_MN\_}{PSI\_MN\_}}
+{\footnotesize\ttfamily \#define PSI\+\_\+\+MN\+\_\+(\begin{DoxyParamCaption}\item[{}]{m,  }\item[{}]{n }\end{DoxyParamCaption})~(sub\+\_\+model\+\_\+env\+\_\+data\mbox{[}(m + 1) $\ast$ \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ad6d3e263b5e54004fc858d109e79ef90}{NUM\+\_\+\+GROUP\+\_\+}} + n\mbox{]})}
+
+
+
+Definition at line 66 of file sub\+\_\+model\+\_\+\+UNIFAC.\+c.
+
+\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_a63ace1f59944016dd0bf93573fa74b13}\label{sub__model___u_n_i_f_a_c_8c_a63ace1f59944016dd0bf93573fa74b13}} 
+\index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!Q\_I\_@{Q\_I\_}}
+\index{Q\_I\_@{Q\_I\_}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
+\doxysubsubsection{\texorpdfstring{Q\_I\_}{Q\_I\_}}
+{\footnotesize\ttfamily \#define Q\+\_\+\+I\+\_\+(\begin{DoxyParamCaption}\item[{}]{p,  }\item[{}]{i }\end{DoxyParamCaption})~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a1ad2cc048e99792784cf0798275e6ff0}{PHASE\+\_\+\+FLOAT\+\_\+\+LOC\+\_\+}}(p) + \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a9a5c42fc20a0cc885faf74920b1f8281}{NUM\+\_\+\+SPEC\+\_\+}}(p) + i\mbox{]})}
+
+
+
+Definition at line 60 of file sub\+\_\+model\+\_\+\+UNIFAC.\+c.
+
+\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_ab84695ff3bb6d0fc0423220bf68fcbc8}\label{sub__model___u_n_i_f_a_c_8c_ab84695ff3bb6d0fc0423220bf68fcbc8}} 
+\index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!Q\_K\_@{Q\_K\_}}
+\index{Q\_K\_@{Q\_K\_}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
+\doxysubsubsection{\texorpdfstring{Q\_K\_}{Q\_K\_}}
+{\footnotesize\ttfamily \#define Q\+\_\+\+K\+\_\+(\begin{DoxyParamCaption}\item[{}]{k }\end{DoxyParamCaption})~(float\+\_\+data\mbox{[}k\mbox{]})}
+
+
+
+Definition at line 52 of file sub\+\_\+model\+\_\+\+UNIFAC.\+c.
+
+\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_a38622e7bf04110a9c042849b3fb136f1}\label{sub__model___u_n_i_f_a_c_8c_a38622e7bf04110a9c042849b3fb136f1}} 
+\index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!R\_I\_@{R\_I\_}}
+\index{R\_I\_@{R\_I\_}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
+\doxysubsubsection{\texorpdfstring{R\_I\_}{R\_I\_}}
+{\footnotesize\ttfamily \#define R\+\_\+\+I\+\_\+(\begin{DoxyParamCaption}\item[{}]{p,  }\item[{}]{i }\end{DoxyParamCaption})~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a1ad2cc048e99792784cf0798275e6ff0}{PHASE\+\_\+\+FLOAT\+\_\+\+LOC\+\_\+}}(p) + i\mbox{]})}
+
+
+
+Definition at line 59 of file sub\+\_\+model\+\_\+\+UNIFAC.\+c.
+
+\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_abb8a6874bbc52c11b838e00ab5ebaa5e}\label{sub__model___u_n_i_f_a_c_8c_abb8a6874bbc52c11b838e00ab5ebaa5e}} 
+\index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!R\_K\_@{R\_K\_}}
+\index{R\_K\_@{R\_K\_}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
+\doxysubsubsection{\texorpdfstring{R\_K\_}{R\_K\_}}
+{\footnotesize\ttfamily \#define R\+\_\+\+K\+\_\+(\begin{DoxyParamCaption}\item[{}]{k }\end{DoxyParamCaption})~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ad6d3e263b5e54004fc858d109e79ef90}{NUM\+\_\+\+GROUP\+\_\+}} + k\mbox{]})}
+
+
+
+Definition at line 53 of file sub\+\_\+model\+\_\+\+UNIFAC.\+c.
+
+\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_a3299a6a03f2fe000f07ddd544fd0ae5a}\label{sub__model___u_n_i_f_a_c_8c_a3299a6a03f2fe000f07ddd544fd0ae5a}} 
+\index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!SPEC\_ID\_@{SPEC\_ID\_}}
+\index{SPEC\_ID\_@{SPEC\_ID\_}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
+\doxysubsubsection{\texorpdfstring{SPEC\_ID\_}{SPEC\_ID\_}}
+{\footnotesize\ttfamily \#define SPEC\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{p,  }\item[{}]{i }\end{DoxyParamCaption})~  (int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ac0b5b9446b202d1ce286ecefe0108869}{PHASE\+\_\+\+INT\+\_\+\+LOC\+\_\+}}(p) + 2 + \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a96afb96b89157441704719c55a19fd76}{NUM\+\_\+\+PHASE\+\_\+\+INSTANCE\+\_\+}}(p) + i\mbox{]})}
+
+
+
+Definition at line 40 of file sub\+\_\+model\+\_\+\+UNIFAC.\+c.
+
+\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_aa90d2b6c48aceb4d7ac3d93d5249bb60}\label{sub__model___u_n_i_f_a_c_8c_aa90d2b6c48aceb4d7ac3d93d5249bb60}} 
+\index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!TEMPERATURE\_K\_@{TEMPERATURE\_K\_}}
+\index{TEMPERATURE\_K\_@{TEMPERATURE\_K\_}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
+\doxysubsubsection{\texorpdfstring{TEMPERATURE\_K\_}{TEMPERATURE\_K\_}}
+{\footnotesize\ttfamily \#define TEMPERATURE\+\_\+\+K\+\_\+~env\+\_\+data\mbox{[}0\mbox{]}}
+
+
+
+Definition at line 23 of file sub\+\_\+model\+\_\+\+UNIFAC.\+c.
+
+\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_a784850b02be0d6211e0118a9d3d16a9c}\label{sub__model___u_n_i_f_a_c_8c_a784850b02be0d6211e0118a9d3d16a9c}} 
+\index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!THETA\_M\_@{THETA\_M\_}}
+\index{THETA\_M\_@{THETA\_M\_}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
+\doxysubsubsection{\texorpdfstring{THETA\_M\_}{THETA\_M\_}}
+{\footnotesize\ttfamily \#define THETA\+\_\+\+M\+\_\+(\begin{DoxyParamCaption}\item[{}]{m }\end{DoxyParamCaption})~(sub\+\_\+model\+\_\+env\+\_\+data\mbox{[}m\mbox{]})}
+
+
+
+Definition at line 65 of file sub\+\_\+model\+\_\+\+UNIFAC.\+c.
+
+\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_a449afc986a9379f304456d0b93c06c52}\label{sub__model___u_n_i_f_a_c_8c_a449afc986a9379f304456d0b93c06c52}} 
+\index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!TOTAL\_FLOAT\_PROP\_@{TOTAL\_FLOAT\_PROP\_}}
+\index{TOTAL\_FLOAT\_PROP\_@{TOTAL\_FLOAT\_PROP\_}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
+\doxysubsubsection{\texorpdfstring{TOTAL\_FLOAT\_PROP\_}{TOTAL\_FLOAT\_PROP\_}}
+{\footnotesize\ttfamily \#define TOTAL\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+~(int\+\_\+data\mbox{[}3\mbox{]})}
+
+
+
+Definition at line 29 of file sub\+\_\+model\+\_\+\+UNIFAC.\+c.
+
+\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_a6dc5674d6d69ee7413767ee9076138ae}\label{sub__model___u_n_i_f_a_c_8c_a6dc5674d6d69ee7413767ee9076138ae}} 
+\index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!TOTAL\_INT\_PROP\_@{TOTAL\_INT\_PROP\_}}
+\index{TOTAL\_INT\_PROP\_@{TOTAL\_INT\_PROP\_}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
+\doxysubsubsection{\texorpdfstring{TOTAL\_INT\_PROP\_}{TOTAL\_INT\_PROP\_}}
+{\footnotesize\ttfamily \#define TOTAL\+\_\+\+INT\+\_\+\+PROP\+\_\+~(int\+\_\+data\mbox{[}2\mbox{]})}
+
+
+
+Definition at line 28 of file sub\+\_\+model\+\_\+\+UNIFAC.\+c.
+
+\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_adfb11739bde704494a85f005ed76cc70}\label{sub__model___u_n_i_f_a_c_8c_adfb11739bde704494a85f005ed76cc70}} 
+\index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!V\_IK\_@{V\_IK\_}}
+\index{V\_IK\_@{V\_IK\_}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
+\doxysubsubsection{\texorpdfstring{V\_IK\_}{V\_IK\_}}
+{\footnotesize\ttfamily \#define V\+\_\+\+IK\+\_\+(\begin{DoxyParamCaption}\item[{}]{p,  }\item[{}]{i,  }\item[{}]{k }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{  (int\_data[\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ac0b5b9446b202d1ce286ecefe0108869}{PHASE\_INT\_LOC\_}}(p) + 2 + \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a96afb96b89157441704719c55a19fd76}{NUM\_PHASE\_INSTANCE\_}}(p) +                 \(\backslash\)}
+\DoxyCodeLine{            (k + 2 + \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a96afb96b89157441704719c55a19fd76}{NUM\_PHASE\_INSTANCE\_}}(p) * \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a9a5c42fc20a0cc885faf74920b1f8281}{NUM\_SPEC\_}}(p)) * \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a9a5c42fc20a0cc885faf74920b1f8281}{NUM\_SPEC\_}}(p) + \(\backslash\)}
+\DoxyCodeLine{            i])}
+
+\end{DoxyCode}
+
+
+Definition at line 47 of file sub\+\_\+model\+\_\+\+UNIFAC.\+c.
+
+\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_a5bed7503a53ee02a5bc252ee13f96724}\label{sub__model___u_n_i_f_a_c_8c_a5bed7503a53ee02a5bc252ee13f96724}} 
+\index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!X\_I\_@{X\_I\_}}
+\index{X\_I\_@{X\_I\_}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
+\doxysubsubsection{\texorpdfstring{X\_I\_}{X\_I\_}}
+{\footnotesize\ttfamily \#define X\+\_\+\+I\+\_\+(\begin{DoxyParamCaption}\item[{}]{p,  }\item[{}]{i }\end{DoxyParamCaption})~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a1ad2cc048e99792784cf0798275e6ff0}{PHASE\+\_\+\+FLOAT\+\_\+\+LOC\+\_\+}}(p) + 4 $\ast$ \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a9a5c42fc20a0cc885faf74920b1f8281}{NUM\+\_\+\+SPEC\+\_\+}}(p) + i\mbox{]})}
+
+
+
+Definition at line 63 of file sub\+\_\+model\+\_\+\+UNIFAC.\+c.
+
+\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_a11f518c4fa348d90c90a134ef758e178}\label{sub__model___u_n_i_f_a_c_8c_a11f518c4fa348d90c90a134ef758e178}} 
+\index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!X\_K\_@{X\_K\_}}
+\index{X\_K\_@{X\_K\_}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
+\doxysubsubsection{\texorpdfstring{X\_K\_}{X\_K\_}}
+{\footnotesize\ttfamily \#define X\+\_\+\+K\+\_\+(\begin{DoxyParamCaption}\item[{}]{m }\end{DoxyParamCaption})~(float\+\_\+data\mbox{[}2 $\ast$ \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ad6d3e263b5e54004fc858d109e79ef90}{NUM\+\_\+\+GROUP\+\_\+}} + m\mbox{]})}
+
+
+
+Definition at line 54 of file sub\+\_\+model\+\_\+\+UNIFAC.\+c.
+
+\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_a58eb0df01fce1899886c4facd3626bd4}\label{sub__model___u_n_i_f_a_c_8c_a58eb0df01fce1899886c4facd3626bd4}} 
+\index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!XI\_M\_@{XI\_M\_}}
+\index{XI\_M\_@{XI\_M\_}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
+\doxysubsubsection{\texorpdfstring{XI\_M\_}{XI\_M\_}}
+{\footnotesize\ttfamily \#define XI\+\_\+\+M\+\_\+(\begin{DoxyParamCaption}\item[{}]{m }\end{DoxyParamCaption})~(float\+\_\+data\mbox{[}4 $\ast$ \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ad6d3e263b5e54004fc858d109e79ef90}{NUM\+\_\+\+GROUP\+\_\+}} + m\mbox{]})}
+
+
+
+Definition at line 56 of file sub\+\_\+model\+\_\+\+UNIFAC.\+c.
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_a91d55564c556bf61d6bf0ccac7b43e4b}\label{sub__model___u_n_i_f_a_c_8c_a91d55564c556bf61d6bf0ccac7b43e4b}} 
+\index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!sub\_model\_UNIFAC\_calculate@{sub\_model\_UNIFAC\_calculate}}
+\index{sub\_model\_UNIFAC\_calculate@{sub\_model\_UNIFAC\_calculate}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
+\doxysubsubsection{\texorpdfstring{sub\_model\_UNIFAC\_calculate()}{sub\_model\_UNIFAC\_calculate()}}
+{\footnotesize\ttfamily void sub\+\_\+model\+\_\+\+UNIFAC\+\_\+calculate (\begin{DoxyParamCaption}\item[{int $\ast$}]{sub\+\_\+model\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{sub\+\_\+model\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{sub\+\_\+model\+\_\+env\+\_\+data,  }\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data }\end{DoxyParamCaption})}
+
+
+
+Perform the sub-\/model calculations for the current model state. 
+
+These calculations are based on equations (1)--(9) in {\bfseries [Marcolli2005]}. Variable names used in the derivation of the \mbox{\hyperlink{struct_jacobian}{Jacobian}} equations are adopted here for consistency. Specifically, these are\+: \[ \begin{align*} \sigma & \equiv \displaystyle\sum_k r_k x_k, \\ \tau & \equiv \displaystyle\sum_k q_k x_k, \\ \mu & \equiv \displaystyle\sum_j x_j l_j, \\ c_{xX} & = \frac{1}{\displaystyle\sum_j \displaystyle\sum_i v_j^{(i)} x_i}, \textrm{ and} \\ \Pi & \equiv \displaystyle\sum_n Q_n X_n. \\ \end{align*} \] Using these variables and subscript $j$ for the species whose activity is being calculated for easy comparison with the \mbox{\hyperlink{struct_jacobian}{Jacobian}} calculations, equations (1)--(9) in {\bfseries [Marcolli2005]} become\+: \[ \begin{align*} \ln{\gamma_j} & = \ln{\gamma_j^C} + \ln{\gamma_j^R} & (1) \\ \alpha_w & = \gamma_w x_w & (2) \\ \ln{\gamma_j^C} & = \ln{\frac{\Phi_j}{x_j}} + \frac{z}{2}q_j\ln{\frac{\Theta_j}{\Phi_j}} + l_j - \frac{\Phi_j}{x_j}\mu & (3) \\ \Phi_j & = \frac{r_j x_j}{\sigma}; \qquad \Theta_j = \frac{q_j x_j}{\tau} & (4) \\ l_j & = \frac{z}{2}\left(r_j - q_j\right) - r_j + 1 & (5) \\ r_j & = \displaystyle\sum_k v_k^{(j)}R_k; \qquad q_j = \displaystyle\sum_k v_k^{(j)}Q_k & (6) \\ \ln{\gamma_j^R} & = \displaystyle\sum_k v_k^{(j)} \left[ \ln{\Gamma_k} - \ln{\Gamma_k^{(j)}}\right] & (7) \\ \ln{\Gamma_k} & = Q_k \left[ 1 - \ln{\Xi_k} - \displaystyle\sum_m\frac{\Theta_m\Phi_{km}}{\Xi_m} \right] & (8) \\ \Theta_m & = \frac{Q_m X_m}{\Pi}; \qquad \Psi_{mn} = \mathrm{exp}\left[\frac{-a_{mn}}{T}\right] & (9) \\ \end{align*} \]
+
+
+\begin{DoxyParams}{Parameters}
+{\em sub\+\_\+model\+\_\+int\+\_\+data} & Pointer to the sub model integer data \\
+\hline
+{\em sub\+\_\+model\+\_\+float\+\_\+data} & Pointer to the sub model floating-\/point data \\
+\hline
+{\em sub\+\_\+model\+\_\+env\+\_\+data} & Pointer to the sub model environment-\/dependent data \\
+\hline
+{\em model\+\_\+data} & Pointer to the model data including the current state and environmental conditions \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 226 of file sub\+\_\+model\+\_\+\+UNIFAC.\+c.
+
+\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_a0301d06b09af90fcfe49f9a1ba7c6742}\label{sub__model___u_n_i_f_a_c_8c_a0301d06b09af90fcfe49f9a1ba7c6742}} 
+\index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!sub\_model\_UNIFAC\_get\_jac\_contrib@{sub\_model\_UNIFAC\_get\_jac\_contrib}}
+\index{sub\_model\_UNIFAC\_get\_jac\_contrib@{sub\_model\_UNIFAC\_get\_jac\_contrib}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
+\doxysubsubsection{\texorpdfstring{sub\_model\_UNIFAC\_get\_jac\_contrib()}{sub\_model\_UNIFAC\_get\_jac\_contrib()}}
+{\footnotesize\ttfamily void sub\+\_\+model\+\_\+\+UNIFAC\+\_\+get\+\_\+jac\+\_\+contrib (\begin{DoxyParamCaption}\item[{int $\ast$}]{sub\+\_\+model\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{sub\+\_\+model\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{sub\+\_\+model\+\_\+env\+\_\+data,  }\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{realtype $\ast$}]{J,  }\item[{double}]{time\+\_\+step }\end{DoxyParamCaption})}
+
+
+
+Add contributions to the \mbox{\hyperlink{struct_jacobian}{Jacobian}} from derivates calculated using the output of this sub model. 
+
+This derivation starts from equations (1)--(9) in {\bfseries [Marcolli2005]}. The mole fraction of species $i$ is calculated as\+: \[ x_i = \frac{m_i}{m_T}, \] where $m_T = \displaystyle\sum_j m_j$, $m_i = \frac{c_i}{\mathrm{MW}_i}$ is the number in moles of species $i$, $c_i$ is its mass concentration ( $\mathrm{ug} \: \mathrm{m}^{-3}$; the state variable), and $\mathrm{MW}_i$ is its molecular weight ( $\mathrm{ug} \: \mathrm{mol}^{-1}$). Thus, \[ \begin{align*} \frac{\partial x_i}{\partial c_i} & = \frac{(m_T-m_i)}{\mathrm{MW}_i m_T^2}, \textrm{ and} \\ \frac{\partial x_j}{\partial c_i} & = -\frac{m_j}{\mathrm{MW}_i m_T^2} \quad \text{for } i\neq j. \\ \end{align*} \] The partial derivative of $\Phi_j$ (Eq. 4) with respect to $c_i$ is derived as follows\+: \[ \begin{align*} \frac{\partial r_i x_i}{\partial c_i} & = r_i \frac{(m_T-m_i)}{\mathrm{MW}_i m_T^2}, \\ \frac{\partial r_j x_j}{\partial c_i} & = - r_j \frac{m_j}{\mathrm{MW}_i m_T^2} \quad \text{for } i\neq j, \\ \frac{\partial \displaystyle\sum_j r_j x_j}{\partial c_i} & = \frac{1}{\mathrm{MW}_i m_T}\left[r_i - \displaystyle\sum_j r_j x_j\right], \\ \sigma & \equiv \displaystyle\sum_k r_k x_k, \\ \frac{\partial \Phi_j}{\partial c_i} & = \frac{r_j}{\mathrm{MW}_i m_T \sigma^2} \left(\sigma^{\prime} - x_j r_i \right) , \qquad \sigma^{\prime} = \begin{cases} \sigma & \quad \text{if } i=j \\ 0 & \quad \text{if } i\neq j \end{cases} \\ \end{align*} \] Similarly, the partial derivative of $\Theta_j$ (Eq. 4) with respect to $c_i$ is\+: \[ \begin{align*} \tau & \equiv \displaystyle\sum_k q_k x_k, \\ \frac{\partial \Theta_j}{\partial c_i} & = \frac{q_j}{\mathrm{MW}_i m_T \tau^2} \left(\tau^{\prime} - x_j q_i \right) , \qquad \tau^{\prime} = \begin{cases} \tau & \quad \text{if } i=j \\ 0 & \quad \text{if } i\neq j \end{cases} \\ \end{align*} \] From Eqs 5 and 6, \[ \frac{\partial r_j}{\partial c_i} = \frac{\partial q_j}{\partial c_i} = \frac{\partial l_j}{\partial c_i} = 0. \] For the last term in Eq. 3, \[ \begin{align*} \mu & \equiv \displaystyle\sum_j x_j l_j, \\ \frac{\partial \mu}{\partial c_i} & = \frac{1}{\mathrm{MW}_i m_T} \left( l_i - \mu \right). \\ \end{align*} \] The partial derivative of the full combinatorial term (Eq. 3) is\+: \[ \begin{align*} \frac{\partial \ln{\gamma^C_j}}{\partial c_i} & = \frac{x_j}{\Phi_j}\frac{\left( \frac{\partial \Phi_j}{\partial c_i} x_j - \Phi_j\frac{\partial x_j}{\partial c_i} \right)}{x_j^2} \\ & \quad + \frac{z}{2}q_j\frac{\Phi_j}{\Theta_j}\frac{\left( \frac{\partial \Theta_j}{\partial c_i} \Phi_j - \Theta_j\frac{\partial \Phi_j}{\partial c_i}\right)}{\Phi_j^2} \\ & \quad - \frac{\left[ \left( \frac{\partial \Phi_j}{\partial c_i} \mu + \Phi_j \frac{\partial \mu}{\partial c_i} \right) x_j - \Phi_j \mu \frac{\partial x_j}{\partial c_i} \right]}{x_j^2}. \end{align*} \] After some rearranging, this becomes\+: \[ \begin{align*} \frac{\partial \ln{\gamma^C_j}}{\partial c_i} & = \frac{1}{\Phi_j}\frac{\partial \Phi_j}{\partial c_i} - \frac{1}{x_j}\frac{\partial x_j}{\partial c_i} \\ & \quad + \frac{z}{2}q_j\left( \frac{1}{\Theta_j}\frac{\partial \Theta_j}{\partial c_i} - \frac{1}{\Phi_j}\frac{\partial \Phi_j}{\partial c_i}\right) \\ & \quad - \frac{\partial \Phi_j}{\partial c_i}\frac{\mu}{x_j} - \frac{\Phi_j}{x_j}\frac{\partial \mu}{\partial c_i} + \frac{\Phi_j \mu}{x_j^2}\frac{\partial x_j}{\partial c_i} \end{align*} \] As $\sigma$, $\tau$, and $\mu$ are independent of species $i$, these can be calculated outside the loop over the independent species. Moving to the residual term (Eq. 7), the mole fraction ( $X_p$) of group $p$ in the mixture is related to the mole fraction ( $x_j$) of species $j$ according to\+: \[ X_p = c_{xX} \omega_p, \textrm{ where } \omega_p \equiv \displaystyle\sum_j v_p^{(j)} x_j, \\ \] and $c_{xX}$ is a conversion factor accounting for the difference in total species and total group number concentrations\+: \[ c_{xX} = \frac{1}{\displaystyle\sum_p \omega_p}. \] Partial derivatives of the group interaction terms in Eq 9, $\Theta_m$ and $\Psi_{mn}$, with respect to $c_i$ are derived as follows\+: \[ \begin{align*} \frac{\partial c_{xX}}{\partial c_i} & = - c_{xX}^2 \displaystyle\sum_p \displaystyle\sum_j v_p^{(j)} \frac{\partial x_j}{\partial c_i} = - \frac{c_{xX}^2}{\mathrm{MW}_im_T} \left( \displaystyle\sum_p v_p^{(i)} - \displaystyle\sum_p \omega_p \right), \\ & = \frac{c_{xX}}{\mathrm{MW}_im_T} \left( 1 - c_{xX} \displaystyle\sum_p v_p^{(i)} \right), \\ \frac{\partial X_n}{\partial c_i} & = c_{xX} \displaystyle\sum_j v_n^{(j)} \frac{\partial x_j}{\partial c_i} + \frac{\partial c_{xX}}{\partial c_i} \omega_n, \\ & = \frac{c_{xX}}{\mathrm{MW}_im_T} \left( v_n^{(i)} - \omega_n \right) + \frac{c_{xX}}{\mathrm{MW}_im_T} \left( \omega_n - c_{xX}\omega_n \displaystyle\sum_p v_p^{(i)} \right), \\ & = \frac{c_{xX}}{\mathrm{MW}_im_T} \left( v_n^{(i)} - X_n \displaystyle\sum_p v_p^{(i)} \right), \\ \Pi & \equiv \displaystyle\sum_n Q_n X_n, \\ \frac{\partial \Pi}{\partial c_i} & = \displaystyle\sum_n Q_n \frac{c_{xX}}{\mathrm{MW}_i m_T}\left( v_n^{(i)} - X_n \displaystyle\sum_p v_p^{(i)} \right), \\ & = \frac{c_{xX}}{\mathrm{MW}_i m_T} \left( \displaystyle\sum_n Q_n v_n^{(i)} - \Pi \displaystyle\sum_p v_p^{(i)} \right), \\ \frac{\partial \Theta_m}{\partial c_i} & = \frac{ \left(Q_m\frac{\partial X_m}{\partial c_i} \Pi - Q_m X_m \frac{\partial \Pi}{\partial c_i} \right)}{\Pi^2} , \\ & = \frac{c_{xX} Q_m}{\mathrm{MW}_im_T\Pi^2} \left[ \left( \Pi v_m^{(i)} - \Pi X_m \displaystyle\sum_p v_p^{(i)} \right) - \left( X_m \displaystyle\sum_n Q_n v_n^{(i)} - X_m \Pi \displaystyle\sum_p v_p^{(i)} \right) \right], \\ & = \frac{c_{xX} Q_m}{\mathrm{MW}_im_T\Pi^2} \left[ \Pi v_m^{(i)} - X_m\displaystyle\sum_n Q_n v_n^{(i)}\right], \textrm{ and} \\ \frac{\partial \Psi_{mn}}{\partial c_i} & = 0 \end{align*} \] The partial derivative of the group residual activity coefficient (Eq. 8) with respect to $c_i$ is\+: \[ \begin{align*} \frac{\partial \ln{\Gamma_k}}{\partial c_i} & = Q_k \left[ - \frac{1}{\displaystyle\sum_m\Theta_m\Psi_{mk}} \displaystyle\sum_m\frac{\partial\Theta_m}{\partial c_i}\Psi_{mk} \\ \quad - \displaystyle\sum_m\left( \frac{\partial\Theta_m}{\partial c_i}\Psi_{km} \displaystyle\sum_n\Theta_n\Psi_{nm} - \Theta_m\Psi_{km}\displaystyle\sum_n \frac{\partial\Theta_n}{\partial c_i} \Psi_{nm}\right)/\left( \displaystyle\sum_n\Theta_n\Psi_{nm}\right)^2 \right] \end{align*} \] After some rearranging, this becomes\+: \[ \begin{align*} \Xi_m & \equiv \displaystyle\sum_n\Theta_n\Psi_{nm}, \\ \frac{\partial \ln{\Gamma_k}}{\partial c_i} & = - Q_k \displaystyle\sum_m \left( \frac{\Psi_{mk}}{\Xi_k}\frac{\partial\Theta_m}{\partial c_i} + \frac{\Psi_{km}}{\Xi_m} \frac{\partial\Theta_m}{\partial c_i} - \frac{\Theta_m\Psi_{km}} {\Xi_m^2} \displaystyle\sum_n\frac{\partial\Theta_n}{\partial c_i}\Psi_{nm} \right) \end{align*} \] The left side of the three bracketed terms in the above equation are independent of species $i$ and can be calculated outside of the loop over the independent species. The partial derivative of the full residual term with respect to $c_i$ is\+: \[ \begin{align*} \frac{\partial \ln{\Gamma_k^{(j)}}}{\partial c_i} & = 0 \\ \frac{\partial \ln{\gamma_j^R}}{\partial c_i} & = \displaystyle\sum_k v_k^{(j)} \frac{\partial \ln{\Gamma_k}}{\partial c_i} \end{align*} \] The overall equation for the partial derivative of $\gamma_j$ with respect to species $i$ is\+: \[ \frac{\partial\gamma_j}{\partial c_i} = \gamma_j \left( \frac{\partial\ln{\gamma_j^C}}{\partial c_i} + \frac{\partial\ln{\gamma_j^R}}{\partial c_i} \right) \]
+
+
+\begin{DoxyParams}{Parameters}
+{\em sub\+\_\+model\+\_\+int\+\_\+data} & Pointer to the sub model integer data \\
+\hline
+{\em sub\+\_\+model\+\_\+float\+\_\+data} & Pointer to the sub model floating-\/point data \\
+\hline
+{\em sub\+\_\+model\+\_\+env\+\_\+data} & Pointer to the sub model environment-\/dependent data \\
+\hline
+{\em model\+\_\+data} & Pointer to the model data \\
+\hline
+{\em J} & \mbox{\hyperlink{struct_jacobian}{Jacobian}} to be calculated \\
+\hline
+{\em time\+\_\+step} & Current time step \mbox{[}s\mbox{]} \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 575 of file sub\+\_\+model\+\_\+\+UNIFAC.\+c.
+
+\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_a6895ac51f6122ce830f30d8b1f09d052}\label{sub__model___u_n_i_f_a_c_8c_a6895ac51f6122ce830f30d8b1f09d052}} 
+\index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!sub\_model\_UNIFAC\_get\_used\_jac\_elem@{sub\_model\_UNIFAC\_get\_used\_jac\_elem}}
+\index{sub\_model\_UNIFAC\_get\_used\_jac\_elem@{sub\_model\_UNIFAC\_get\_used\_jac\_elem}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
+\doxysubsubsection{\texorpdfstring{sub\_model\_UNIFAC\_get\_used\_jac\_elem()}{sub\_model\_UNIFAC\_get\_used\_jac\_elem()}}
+{\footnotesize\ttfamily void sub\+\_\+model\+\_\+\+UNIFAC\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem (\begin{DoxyParamCaption}\item[{int $\ast$}]{sub\+\_\+model\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{sub\+\_\+model\+\_\+float\+\_\+data,  }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}} $\ast$}]{jac }\end{DoxyParamCaption})}
+
+
+
+Get the \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used for a particular row of the matrix. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em sub\+\_\+model\+\_\+int\+\_\+data} & Pointer to the sub model integer data \\
+\hline
+{\em sub\+\_\+model\+\_\+float\+\_\+data} & Pointer to the sub model floating-\/point data \\
+\hline
+{\em jac} & \mbox{\hyperlink{struct_jacobian}{Jacobian}} \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 82 of file sub\+\_\+model\+\_\+\+UNIFAC.\+c.
+
+\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_ac47310b67585f52b71ff6aac1c603ba5}\label{sub__model___u_n_i_f_a_c_8c_ac47310b67585f52b71ff6aac1c603ba5}} 
+\index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!sub\_model\_UNIFAC\_print@{sub\_model\_UNIFAC\_print}}
+\index{sub\_model\_UNIFAC\_print@{sub\_model\_UNIFAC\_print}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
+\doxysubsubsection{\texorpdfstring{sub\_model\_UNIFAC\_print()}{sub\_model\_UNIFAC\_print()}}
+{\footnotesize\ttfamily void sub\+\_\+model\+\_\+\+UNIFAC\+\_\+print (\begin{DoxyParamCaption}\item[{int $\ast$}]{sub\+\_\+model\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{sub\+\_\+model\+\_\+float\+\_\+data }\end{DoxyParamCaption})}
+
+
+
+Print the sub model data. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em sub\+\_\+model\+\_\+int\+\_\+data} & Pointer to the sub model integer data \\
+\hline
+{\em sub\+\_\+model\+\_\+float\+\_\+data} & Pointer to the sub model floating-\/point data \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 771 of file sub\+\_\+model\+\_\+\+UNIFAC.\+c.
+
+\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_a43f3628a20f1bf545034554576e9c85c}\label{sub__model___u_n_i_f_a_c_8c_a43f3628a20f1bf545034554576e9c85c}} 
+\index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!sub\_model\_UNIFAC\_update\_env\_state@{sub\_model\_UNIFAC\_update\_env\_state}}
+\index{sub\_model\_UNIFAC\_update\_env\_state@{sub\_model\_UNIFAC\_update\_env\_state}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
+\doxysubsubsection{\texorpdfstring{sub\_model\_UNIFAC\_update\_env\_state()}{sub\_model\_UNIFAC\_update\_env\_state()}}
+{\footnotesize\ttfamily void sub\+\_\+model\+\_\+\+UNIFAC\+\_\+update\+\_\+env\+\_\+state (\begin{DoxyParamCaption}\item[{int $\ast$}]{sub\+\_\+model\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{sub\+\_\+model\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{sub\+\_\+model\+\_\+env\+\_\+data,  }\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data }\end{DoxyParamCaption})}
+
+
+
+Update sub-\/model data for new environmental conditions. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em sub\+\_\+model\+\_\+int\+\_\+data} & Pointer to the sub model integer data \\
+\hline
+{\em sub\+\_\+model\+\_\+float\+\_\+data} & Pointer to the sub model floating-\/point data \\
+\hline
+{\em sub\+\_\+model\+\_\+env\+\_\+data} & Pointer to the sub model environment-\/dependent data \\
+\hline
+{\em model\+\_\+data} & Pointer to the model data \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 129 of file sub\+\_\+model\+\_\+\+UNIFAC.\+c.
+
+\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_a2674d98846a9c4933d56156ec1f0deb5}\label{sub__model___u_n_i_f_a_c_8c_a2674d98846a9c4933d56156ec1f0deb5}} 
+\index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!sub\_model\_UNIFAC\_update\_ids@{sub\_model\_UNIFAC\_update\_ids}}
+\index{sub\_model\_UNIFAC\_update\_ids@{sub\_model\_UNIFAC\_update\_ids}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
+\doxysubsubsection{\texorpdfstring{sub\_model\_UNIFAC\_update\_ids()}{sub\_model\_UNIFAC\_update\_ids()}}
+{\footnotesize\ttfamily void sub\+\_\+model\+\_\+\+UNIFAC\+\_\+update\+\_\+ids (\begin{DoxyParamCaption}\item[{int $\ast$}]{sub\+\_\+model\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{sub\+\_\+model\+\_\+float\+\_\+data,  }\item[{int $\ast$}]{deriv\+\_\+ids,  }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}}}]{jac }\end{DoxyParamCaption})}
+
+
+
+Update stored ids for elements used within a row of the \mbox{\hyperlink{struct_jacobian}{Jacobian}} matrix. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em sub\+\_\+model\+\_\+int\+\_\+data} & Pointer to the sub model integer data \\
+\hline
+{\em sub\+\_\+model\+\_\+float\+\_\+data} & Pointer to the sub model floating-\/point data \\
+\hline
+{\em deriv\+\_\+ids} & Indices for state array variables on the solver state array \\
+\hline
+{\em jac} & \mbox{\hyperlink{struct_jacobian}{Jacobian}} \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 106 of file sub\+\_\+model\+\_\+\+UNIFAC.\+c.
+

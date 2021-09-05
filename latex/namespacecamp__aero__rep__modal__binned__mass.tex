@@ -1,0 +1,622 @@
+\hypertarget{namespacecamp__aero__rep__modal__binned__mass}{}\doxysection{camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass Module Reference}
+\label{namespacecamp__aero__rep__modal__binned__mass}\index{camp\_aero\_rep\_modal\_binned\_mass@{camp\_aero\_rep\_modal\_binned\_mass}}
+
+
+The abstract \mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t}} structure and associated subroutines.  
+
+
+\doxysubsection*{Data Types}
+\begin{DoxyCompactItemize}
+\item 
+interface \mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em Modal mass aerosol representation. \end{DoxyCompactList}\item 
+type \mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__update__data__modal__binned__mass__gmd__t}{aero\+\_\+rep\+\_\+update\+\_\+data\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+gmd\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em Update GMD object. \end{DoxyCompactList}\item 
+type \mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__update__data__modal__binned__mass__gsd__t}{aero\+\_\+rep\+\_\+update\+\_\+data\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+gsd\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em Update GSD object. \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interfacecamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__create__gmd__update__data}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+create\+\_\+gmd\+\_\+update\+\_\+data}}
+\begin{DoxyCompactList}\small\item\em Interface to c aerosol representation functions. \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interfacecamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__set__gmd__update__data}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+set\+\_\+gmd\+\_\+update\+\_\+data}}
+\begin{DoxyCompactList}\small\item\em Set a new mode GMD. \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interfacecamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__create__gsd__update__data}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+create\+\_\+gsd\+\_\+update\+\_\+data}}
+\begin{DoxyCompactList}\small\item\em Allocate space for a GSD update object. \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interfacecamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__set__gsd__update__data}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+set\+\_\+gsd\+\_\+update\+\_\+data}}
+\begin{DoxyCompactList}\small\item\em Set a new mode GSD. \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interfacecamp__aero__rep__modal__binned__mass_1_1aero__rep__free__update__data}{aero\+\_\+rep\+\_\+free\+\_\+update\+\_\+data}}
+\begin{DoxyCompactList}\small\item\em Free an update data object. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Functions/\+Subroutines}
+\begin{DoxyCompactItemize}
+\item 
+type(\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t}}) function, pointer \mbox{\hyperlink{namespacecamp__aero__rep__modal__binned__mass_acb23a1a765897a0865c6eef0527fb466}{constructor}} ()
+\begin{DoxyCompactList}\small\item\em Constructor for \mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t}}. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__aero__rep__modal__binned__mass_a686a72501682d007283455f5825f07a7}{initialize}} (this, aero\+\_\+phase\+\_\+set, \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__state__id}{spec\+\_\+state\+\_\+id}})
+\begin{DoxyCompactList}\small\item\em Initialize the aerosol representation data, validating component data and loading any required information from the {\ttfamily \mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__t_acf1f8af8cd9982684614af214f64759e}{aero\+\_\+rep\+\_\+data\+\_\+t\+::property\+\_\+set}}}. This routine should be called once for each aerosol representation at the beginning of a model run after all the input files have been read in. It ensures all data required during the model run are included in the condensed data arrays. \end{DoxyCompactList}\item 
+logical function \mbox{\hyperlink{namespacecamp__aero__rep__modal__binned__mass_a0e0dbc7c8b315f97a78db9e321603548}{get\+\_\+section\+\_\+id}} (this, section\+\_\+name, section\+\_\+id)
+\begin{DoxyCompactList}\small\item\em Get an id for a mode or bin by name for use with updates from external modules. \end{DoxyCompactList}\item 
+integer(kind=i\+\_\+kind) function \mbox{\hyperlink{namespacecamp__aero__rep__modal__binned__mass_a273c8dd9f396f5aca9d9542516f6819b}{get\+\_\+size}} (this)
+\begin{DoxyCompactList}\small\item\em Get the size of the section of the {\ttfamily \mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t_a5405d5023175234c25e2c2371d924c67}{camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t\+::state\+\_\+var}}} array required for this aerosol representation. \end{DoxyCompactList}\item 
+type(\mbox{\hyperlink{structcamp__util_1_1string__t}{string\+\_\+t}}) function, dimension(\+:), allocatable \mbox{\hyperlink{namespacecamp__aero__rep__modal__binned__mass_a722655b5fba93555a50ac7b9eb2dcf67}{unique\+\_\+names}} (this, phase\+\_\+name, tracer\+\_\+type, \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\+\_\+name}})
+\begin{DoxyCompactList}\small\item\em Get a list of unique names for each element on the {\ttfamily \mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t_a5405d5023175234c25e2c2371d924c67}{camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t\+::state\+\_\+var}}} array for this aerosol representation. The list may be restricted to a particular phase and/or aerosol species by including the phase\+\_\+name and spec\+\_\+name arguments. \end{DoxyCompactList}\item 
+integer(kind=i\+\_\+kind) function \mbox{\hyperlink{namespacecamp__aero__rep__modal__binned__mass_a3dc87e8d9809ffd313963effe9ff6346}{spec\+\_\+state\+\_\+id}} (this, unique\+\_\+name)
+\begin{DoxyCompactList}\small\item\em Get a species id on the {\ttfamily \mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t_a5405d5023175234c25e2c2371d924c67}{camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t\+::state\+\_\+var}}} array by its unique name. These are unique ids for each element on the state array for this \mbox{\hyperlink{camp_aero_rep}{aerosol representation}} and are numbered\+: \end{DoxyCompactList}\item 
+character(len=\+:) function, allocatable \mbox{\hyperlink{namespacecamp__aero__rep__modal__binned__mass_abc29690af58bbadb8d916b88a3883939}{spec\+\_\+name}} (this, unique\+\_\+name)
+\begin{DoxyCompactList}\small\item\em Get the non-\/unique name of a species by its unique name. \end{DoxyCompactList}\item 
+integer(kind=i\+\_\+kind) function \mbox{\hyperlink{namespacecamp__aero__rep__modal__binned__mass_aee0ff7636a5618287a0e79a36cca5fb1}{num\+\_\+phase\+\_\+instances}} (this, phase\+\_\+name)
+\begin{DoxyCompactList}\small\item\em Get the number of instances of a specified aerosol phase. \end{DoxyCompactList}\item 
+integer(kind=i\+\_\+kind) function \mbox{\hyperlink{namespacecamp__aero__rep__modal__binned__mass_aed4438fdb785bdabc1ac0381af9a157d}{num\+\_\+jac\+\_\+elem}} (this, phase\+\_\+id)
+\begin{DoxyCompactList}\small\item\em Get the number of \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used in calculations of aerosol mass, volume, number, etc. for a particular phase. \end{DoxyCompactList}\item 
+elemental subroutine \mbox{\hyperlink{namespacecamp__aero__rep__modal__binned__mass_a92e5f0912e0043cf3997128af656eb3a}{finalize}} (this)
+\begin{DoxyCompactList}\small\item\em Finalize the aerosol representation. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__aero__rep__modal__binned__mass_afccea8b1865d3f94a32c1bb856d516ba}{update\+\_\+data\+\_\+init\+\_\+gmd}} (this, update\+\_\+data, aero\+\_\+rep\+\_\+type)
+\begin{DoxyCompactList}\small\item\em Initialize a GMD update object. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__aero__rep__modal__binned__mass_ab2088d3157e3bb41beba8b008923eb5c}{update\+\_\+data\+\_\+set\+\_\+gmd}} (this, section\+\_\+id, GMD)
+\begin{DoxyCompactList}\small\item\em Set packed update data for mode GMD. \end{DoxyCompactList}\item 
+integer(kind=i\+\_\+kind) function \mbox{\hyperlink{namespacecamp__aero__rep__modal__binned__mass_a9920f00c282b728d22fdb6a31d513220}{internal\+\_\+pack\+\_\+size\+\_\+gmd}} (this, comm)
+\begin{DoxyCompactList}\small\item\em Determine the size of a binary required to pack the reaction data. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__aero__rep__modal__binned__mass_a1a68e2442ad2692e171203505d437540}{internal\+\_\+bin\+\_\+pack\+\_\+gmd}} (this, buffer, pos, comm)
+\begin{DoxyCompactList}\small\item\em Pack the given value to the buffer, advancing position. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__aero__rep__modal__binned__mass_a724950fc8389ffa38a4a1497b5886420}{internal\+\_\+bin\+\_\+unpack\+\_\+gmd}} (this, buffer, pos, comm)
+\begin{DoxyCompactList}\small\item\em Unpack the given value from the buffer, advancing position. \end{DoxyCompactList}\item 
+elemental subroutine \mbox{\hyperlink{namespacecamp__aero__rep__modal__binned__mass_afd447c39e8f80a6c6849a9562dfc851e}{update\+\_\+data\+\_\+gmd\+\_\+finalize}} (this)
+\begin{DoxyCompactList}\small\item\em Finalize a GMD update data object. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__aero__rep__modal__binned__mass_a009d8b27783a5659ec7d8a5cc8fbaeea}{update\+\_\+data\+\_\+init\+\_\+gsd}} (this, update\+\_\+data, aero\+\_\+rep\+\_\+type)
+\begin{DoxyCompactList}\small\item\em Initialize a GSD update data object. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__aero__rep__modal__binned__mass_a9289bb7c8530d4b7d546591b80993c54}{update\+\_\+data\+\_\+set\+\_\+gsd}} (this, section\+\_\+id, GSD)
+\begin{DoxyCompactList}\small\item\em Set packed update data for mode GSD. \end{DoxyCompactList}\item 
+integer(kind=i\+\_\+kind) function \mbox{\hyperlink{namespacecamp__aero__rep__modal__binned__mass_ab973efc29931da1013cbaf9d91502413}{internal\+\_\+pack\+\_\+size\+\_\+gsd}} (this, comm)
+\begin{DoxyCompactList}\small\item\em Determine the size of a binary required to pack the reaction data. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__aero__rep__modal__binned__mass_a796c774fe9ed06d4f9faa39564709d2c}{internal\+\_\+bin\+\_\+pack\+\_\+gsd}} (this, buffer, pos, comm)
+\begin{DoxyCompactList}\small\item\em Pack the given value to the buffer, advancing position. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__aero__rep__modal__binned__mass_a0d63c15aa46fd5fbbd43b59e5940cf40}{internal\+\_\+bin\+\_\+unpack\+\_\+gsd}} (this, buffer, pos, comm)
+\begin{DoxyCompactList}\small\item\em Unpack the given value from the buffer, advancing position. \end{DoxyCompactList}\item 
+elemental subroutine \mbox{\hyperlink{namespacecamp__aero__rep__modal__binned__mass_ad670c66458900e6a2c2ea7c527a82003}{update\+\_\+data\+\_\+gsd\+\_\+finalize}} (this)
+\begin{DoxyCompactList}\small\item\em Finalize a GSD update data object. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+integer(kind=i\+\_\+kind), parameter, public \mbox{\hyperlink{namespacecamp__aero__rep__modal__binned__mass_aeee912a9dcac1ccbec03014adf31f36f}{update\+\_\+gmd}} = 0
+\item 
+integer(kind=i\+\_\+kind), parameter, public \mbox{\hyperlink{namespacecamp__aero__rep__modal__binned__mass_ad5cb2ed5bbe9e5b0193166b90f2a5b32}{update\+\_\+gsd}} = 1
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+The abstract \mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t}} structure and associated subroutines. 
+
+\doxysubsection{Function/\+Subroutine Documentation}
+\mbox{\Hypertarget{namespacecamp__aero__rep__modal__binned__mass_acb23a1a765897a0865c6eef0527fb466}\label{namespacecamp__aero__rep__modal__binned__mass_acb23a1a765897a0865c6eef0527fb466}} 
+\index{camp\_aero\_rep\_modal\_binned\_mass@{camp\_aero\_rep\_modal\_binned\_mass}!constructor@{constructor}}
+\index{constructor@{constructor}!camp\_aero\_rep\_modal\_binned\_mass@{camp\_aero\_rep\_modal\_binned\_mass}}
+\doxysubsubsection{\texorpdfstring{constructor()}{constructor()}}
+{\footnotesize\ttfamily type(\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t}}) function, pointer camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::constructor}
+
+
+
+Constructor for \mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t}}. 
+
+\begin{DoxyReturn}{Returns}
+New aerosol representation 
+\end{DoxyReturn}
+
+
+Definition at line 317 of file aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+F90.
+
+\mbox{\Hypertarget{namespacecamp__aero__rep__modal__binned__mass_a92e5f0912e0043cf3997128af656eb3a}\label{namespacecamp__aero__rep__modal__binned__mass_a92e5f0912e0043cf3997128af656eb3a}} 
+\index{camp\_aero\_rep\_modal\_binned\_mass@{camp\_aero\_rep\_modal\_binned\_mass}!finalize@{finalize}}
+\index{finalize@{finalize}!camp\_aero\_rep\_modal\_binned\_mass@{camp\_aero\_rep\_modal\_binned\_mass}}
+\doxysubsubsection{\texorpdfstring{finalize()}{finalize()}}
+{\footnotesize\ttfamily elemental subroutine camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::finalize (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t}}), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Finalize the aerosol representation. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & Aerosol representation data \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1003 of file aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+F90.
+
+\mbox{\Hypertarget{namespacecamp__aero__rep__modal__binned__mass_a0e0dbc7c8b315f97a78db9e321603548}\label{namespacecamp__aero__rep__modal__binned__mass_a0e0dbc7c8b315f97a78db9e321603548}} 
+\index{camp\_aero\_rep\_modal\_binned\_mass@{camp\_aero\_rep\_modal\_binned\_mass}!get\_section\_id@{get\_section\_id}}
+\index{get\_section\_id@{get\_section\_id}!camp\_aero\_rep\_modal\_binned\_mass@{camp\_aero\_rep\_modal\_binned\_mass}}
+\doxysubsubsection{\texorpdfstring{get\_section\_id()}{get\_section\_id()}}
+{\footnotesize\ttfamily logical function camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::get\+\_\+section\+\_\+id (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t}}), intent(in)}]{this,  }\item[{character(len=$\ast$), intent(in)}]{section\+\_\+name,  }\item[{integer(kind=i\+\_\+kind), intent(out)}]{section\+\_\+id }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Get an id for a mode or bin by name for use with updates from external modules. 
+
+\begin{DoxyReturn}{Returns}
+Flag indicating whether the mode/bin was found 
+\end{DoxyReturn}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & Aerosol representation \\
+\hline
+\mbox{\texttt{ in}}  & {\em section\+\_\+name} & Section name \\
+\hline
+\mbox{\texttt{ out}}  & {\em section\+\_\+id} & Section id \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 667 of file aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+F90.
+
+\mbox{\Hypertarget{namespacecamp__aero__rep__modal__binned__mass_a273c8dd9f396f5aca9d9542516f6819b}\label{namespacecamp__aero__rep__modal__binned__mass_a273c8dd9f396f5aca9d9542516f6819b}} 
+\index{camp\_aero\_rep\_modal\_binned\_mass@{camp\_aero\_rep\_modal\_binned\_mass}!get\_size@{get\_size}}
+\index{get\_size@{get\_size}!camp\_aero\_rep\_modal\_binned\_mass@{camp\_aero\_rep\_modal\_binned\_mass}}
+\doxysubsubsection{\texorpdfstring{get\_size()}{get\_size()}}
+{\footnotesize\ttfamily integer(kind=i\+\_\+kind) function \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1get__size}{camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::get\+\_\+size}} (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t}}), intent(in)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Get the size of the section of the {\ttfamily \mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t_a5405d5023175234c25e2c2371d924c67}{camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t\+::state\+\_\+var}}} array required for this aerosol representation. 
+
+For a modal/binned mass representation, the size will correspond to the the sum of the sizes of a single instance of each aerosol phase provided to {\ttfamily \mbox{\hyperlink{namespacecamp__aero__rep__modal__binned__mass_a686a72501682d007283455f5825f07a7}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::initialize()}}} \begin{DoxyReturn}{Returns}
+Size on the state array 
+\end{DoxyReturn}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & Aerosol representation data \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 704 of file aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+F90.
+
+\mbox{\Hypertarget{namespacecamp__aero__rep__modal__binned__mass_a686a72501682d007283455f5825f07a7}\label{namespacecamp__aero__rep__modal__binned__mass_a686a72501682d007283455f5825f07a7}} 
+\index{camp\_aero\_rep\_modal\_binned\_mass@{camp\_aero\_rep\_modal\_binned\_mass}!initialize@{initialize}}
+\index{initialize@{initialize}!camp\_aero\_rep\_modal\_binned\_mass@{camp\_aero\_rep\_modal\_binned\_mass}}
+\doxysubsubsection{\texorpdfstring{initialize()}{initialize()}}
+{\footnotesize\ttfamily subroutine \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1initialize}{camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::initialize}} (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t}}), intent(inout)}]{this,  }\item[{type(\mbox{\hyperlink{structcamp__aero__phase__data_1_1aero__phase__data__ptr}{aero\+\_\+phase\+\_\+data\+\_\+ptr}}), dimension(\+:), intent(in), pointer}]{aero\+\_\+phase\+\_\+set,  }\item[{integer(kind=i\+\_\+kind), intent(in)}]{spec\+\_\+state\+\_\+id }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Initialize the aerosol representation data, validating component data and loading any required information from the {\ttfamily \mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__t_acf1f8af8cd9982684614af214f64759e}{aero\+\_\+rep\+\_\+data\+\_\+t\+::property\+\_\+set}}}. This routine should be called once for each aerosol representation at the beginning of a model run after all the input files have been read in. It ensures all data required during the model run are included in the condensed data arrays. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & Aerosol representation data \\
+\hline
+\mbox{\texttt{ in}}  & {\em aero\+\_\+phase\+\_\+set} & The set of aerosol phases \\
+\hline
+\mbox{\texttt{ in}}  & {\em spec\+\_\+state\+\_\+id} & Beginning state id for this aerosol representationin the model species state array \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 334 of file aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+F90.
+
+\mbox{\Hypertarget{namespacecamp__aero__rep__modal__binned__mass_a1a68e2442ad2692e171203505d437540}\label{namespacecamp__aero__rep__modal__binned__mass_a1a68e2442ad2692e171203505d437540}} 
+\index{camp\_aero\_rep\_modal\_binned\_mass@{camp\_aero\_rep\_modal\_binned\_mass}!internal\_bin\_pack\_gmd@{internal\_bin\_pack\_gmd}}
+\index{internal\_bin\_pack\_gmd@{internal\_bin\_pack\_gmd}!camp\_aero\_rep\_modal\_binned\_mass@{camp\_aero\_rep\_modal\_binned\_mass}}
+\doxysubsubsection{\texorpdfstring{internal\_bin\_pack\_gmd()}{internal\_bin\_pack\_gmd()}}
+{\footnotesize\ttfamily subroutine camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::internal\+\_\+bin\+\_\+pack\+\_\+gmd (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__update__data__modal__binned__mass__gmd__t}{aero\+\_\+rep\+\_\+update\+\_\+data\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+gmd\+\_\+t}}), intent(in)}]{this,  }\item[{character, dimension(\+:), intent(inout)}]{buffer,  }\item[{integer, intent(inout)}]{pos,  }\item[{integer, intent(in)}]{comm }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Pack the given value to the buffer, advancing position. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & Aerosol representation update data \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em buffer} & Memory buffer \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em pos} & Current buffer position \\
+\hline
+\mbox{\texttt{ in}}  & {\em comm} & MPI communicator \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1088 of file aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+F90.
+
+\mbox{\Hypertarget{namespacecamp__aero__rep__modal__binned__mass_a796c774fe9ed06d4f9faa39564709d2c}\label{namespacecamp__aero__rep__modal__binned__mass_a796c774fe9ed06d4f9faa39564709d2c}} 
+\index{camp\_aero\_rep\_modal\_binned\_mass@{camp\_aero\_rep\_modal\_binned\_mass}!internal\_bin\_pack\_gsd@{internal\_bin\_pack\_gsd}}
+\index{internal\_bin\_pack\_gsd@{internal\_bin\_pack\_gsd}!camp\_aero\_rep\_modal\_binned\_mass@{camp\_aero\_rep\_modal\_binned\_mass}}
+\doxysubsubsection{\texorpdfstring{internal\_bin\_pack\_gsd()}{internal\_bin\_pack\_gsd()}}
+{\footnotesize\ttfamily subroutine camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::internal\+\_\+bin\+\_\+pack\+\_\+gsd (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__update__data__modal__binned__mass__gsd__t}{aero\+\_\+rep\+\_\+update\+\_\+data\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+gsd\+\_\+t}}), intent(in)}]{this,  }\item[{character, dimension(\+:), intent(inout)}]{buffer,  }\item[{integer, intent(inout)}]{pos,  }\item[{integer, intent(in)}]{comm }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Pack the given value to the buffer, advancing position. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & Aerosol representation update data \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em buffer} & Memory buffer \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em pos} & Current buffer position \\
+\hline
+\mbox{\texttt{ in}}  & {\em comm} & MPI communicator \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1215 of file aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+F90.
+
+\mbox{\Hypertarget{namespacecamp__aero__rep__modal__binned__mass_a724950fc8389ffa38a4a1497b5886420}\label{namespacecamp__aero__rep__modal__binned__mass_a724950fc8389ffa38a4a1497b5886420}} 
+\index{camp\_aero\_rep\_modal\_binned\_mass@{camp\_aero\_rep\_modal\_binned\_mass}!internal\_bin\_unpack\_gmd@{internal\_bin\_unpack\_gmd}}
+\index{internal\_bin\_unpack\_gmd@{internal\_bin\_unpack\_gmd}!camp\_aero\_rep\_modal\_binned\_mass@{camp\_aero\_rep\_modal\_binned\_mass}}
+\doxysubsubsection{\texorpdfstring{internal\_bin\_unpack\_gmd()}{internal\_bin\_unpack\_gmd()}}
+{\footnotesize\ttfamily subroutine camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::internal\+\_\+bin\+\_\+unpack\+\_\+gmd (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__update__data__modal__binned__mass__gmd__t}{aero\+\_\+rep\+\_\+update\+\_\+data\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+gmd\+\_\+t}}), intent(inout)}]{this,  }\item[{character, dimension(\+:), intent(inout)}]{buffer,  }\item[{integer, intent(inout)}]{pos,  }\item[{integer, intent(in)}]{comm }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Unpack the given value from the buffer, advancing position. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & Aerosol representation update data \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em buffer} & Memory buffer \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em pos} & Current buffer position \\
+\hline
+\mbox{\texttt{ in}}  & {\em comm} & MPI communicator \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1114 of file aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+F90.
+
+\mbox{\Hypertarget{namespacecamp__aero__rep__modal__binned__mass_a0d63c15aa46fd5fbbd43b59e5940cf40}\label{namespacecamp__aero__rep__modal__binned__mass_a0d63c15aa46fd5fbbd43b59e5940cf40}} 
+\index{camp\_aero\_rep\_modal\_binned\_mass@{camp\_aero\_rep\_modal\_binned\_mass}!internal\_bin\_unpack\_gsd@{internal\_bin\_unpack\_gsd}}
+\index{internal\_bin\_unpack\_gsd@{internal\_bin\_unpack\_gsd}!camp\_aero\_rep\_modal\_binned\_mass@{camp\_aero\_rep\_modal\_binned\_mass}}
+\doxysubsubsection{\texorpdfstring{internal\_bin\_unpack\_gsd()}{internal\_bin\_unpack\_gsd()}}
+{\footnotesize\ttfamily subroutine camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::internal\+\_\+bin\+\_\+unpack\+\_\+gsd (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__update__data__modal__binned__mass__gsd__t}{aero\+\_\+rep\+\_\+update\+\_\+data\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+gsd\+\_\+t}}), intent(inout)}]{this,  }\item[{character, dimension(\+:), intent(inout)}]{buffer,  }\item[{integer, intent(inout)}]{pos,  }\item[{integer, intent(in)}]{comm }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Unpack the given value from the buffer, advancing position. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & Aerosol representation update data \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em buffer} & Memory buffer \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em pos} & Current buffer position \\
+\hline
+\mbox{\texttt{ in}}  & {\em comm} & MPI communicator \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1241 of file aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+F90.
+
+\mbox{\Hypertarget{namespacecamp__aero__rep__modal__binned__mass_a9920f00c282b728d22fdb6a31d513220}\label{namespacecamp__aero__rep__modal__binned__mass_a9920f00c282b728d22fdb6a31d513220}} 
+\index{camp\_aero\_rep\_modal\_binned\_mass@{camp\_aero\_rep\_modal\_binned\_mass}!internal\_pack\_size\_gmd@{internal\_pack\_size\_gmd}}
+\index{internal\_pack\_size\_gmd@{internal\_pack\_size\_gmd}!camp\_aero\_rep\_modal\_binned\_mass@{camp\_aero\_rep\_modal\_binned\_mass}}
+\doxysubsubsection{\texorpdfstring{internal\_pack\_size\_gmd()}{internal\_pack\_size\_gmd()}}
+{\footnotesize\ttfamily integer(kind=i\+\_\+kind) function camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::internal\+\_\+pack\+\_\+size\+\_\+gmd (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__update__data__modal__binned__mass__gmd__t}{aero\+\_\+rep\+\_\+update\+\_\+data\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+gmd\+\_\+t}}), intent(in)}]{this,  }\item[{integer, intent(in)}]{comm }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Determine the size of a binary required to pack the reaction data. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & Aerosol representation update data \\
+\hline
+\mbox{\texttt{ in}}  & {\em comm} & MPI communicator \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1071 of file aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+F90.
+
+\mbox{\Hypertarget{namespacecamp__aero__rep__modal__binned__mass_ab973efc29931da1013cbaf9d91502413}\label{namespacecamp__aero__rep__modal__binned__mass_ab973efc29931da1013cbaf9d91502413}} 
+\index{camp\_aero\_rep\_modal\_binned\_mass@{camp\_aero\_rep\_modal\_binned\_mass}!internal\_pack\_size\_gsd@{internal\_pack\_size\_gsd}}
+\index{internal\_pack\_size\_gsd@{internal\_pack\_size\_gsd}!camp\_aero\_rep\_modal\_binned\_mass@{camp\_aero\_rep\_modal\_binned\_mass}}
+\doxysubsubsection{\texorpdfstring{internal\_pack\_size\_gsd()}{internal\_pack\_size\_gsd()}}
+{\footnotesize\ttfamily integer(kind=i\+\_\+kind) function camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::internal\+\_\+pack\+\_\+size\+\_\+gsd (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__update__data__modal__binned__mass__gsd__t}{aero\+\_\+rep\+\_\+update\+\_\+data\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+gsd\+\_\+t}}), intent(in)}]{this,  }\item[{integer, intent(in)}]{comm }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Determine the size of a binary required to pack the reaction data. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & Aerosol representation update data \\
+\hline
+\mbox{\texttt{ in}}  & {\em comm} & MPI communicator \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1198 of file aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+F90.
+
+\mbox{\Hypertarget{namespacecamp__aero__rep__modal__binned__mass_aed4438fdb785bdabc1ac0381af9a157d}\label{namespacecamp__aero__rep__modal__binned__mass_aed4438fdb785bdabc1ac0381af9a157d}} 
+\index{camp\_aero\_rep\_modal\_binned\_mass@{camp\_aero\_rep\_modal\_binned\_mass}!num\_jac\_elem@{num\_jac\_elem}}
+\index{num\_jac\_elem@{num\_jac\_elem}!camp\_aero\_rep\_modal\_binned\_mass@{camp\_aero\_rep\_modal\_binned\_mass}}
+\doxysubsubsection{\texorpdfstring{num\_jac\_elem()}{num\_jac\_elem()}}
+{\footnotesize\ttfamily integer(kind=i\+\_\+kind) function \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1num__jac__elem}{camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::num\+\_\+jac\+\_\+elem}} (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t}}), intent(in)}]{this,  }\item[{integer(kind=i\+\_\+kind), intent(in)}]{phase\+\_\+id }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Get the number of \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used in calculations of aerosol mass, volume, number, etc. for a particular phase. 
+
+\begin{DoxyReturn}{Returns}
+Number of \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used 
+\end{DoxyReturn}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & Aerosol respresentation data \\
+\hline
+\mbox{\texttt{ in}}  & {\em phase\+\_\+id} & Aerosol phase id \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 964 of file aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+F90.
+
+\mbox{\Hypertarget{namespacecamp__aero__rep__modal__binned__mass_aee0ff7636a5618287a0e79a36cca5fb1}\label{namespacecamp__aero__rep__modal__binned__mass_aee0ff7636a5618287a0e79a36cca5fb1}} 
+\index{camp\_aero\_rep\_modal\_binned\_mass@{camp\_aero\_rep\_modal\_binned\_mass}!num\_phase\_instances@{num\_phase\_instances}}
+\index{num\_phase\_instances@{num\_phase\_instances}!camp\_aero\_rep\_modal\_binned\_mass@{camp\_aero\_rep\_modal\_binned\_mass}}
+\doxysubsubsection{\texorpdfstring{num\_phase\_instances()}{num\_phase\_instances()}}
+{\footnotesize\ttfamily integer(kind=i\+\_\+kind) function \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1num__phase__instances}{camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::num\+\_\+phase\+\_\+instances}} (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t}}), intent(in)}]{this,  }\item[{character(len=$\ast$), intent(in)}]{phase\+\_\+name }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Get the number of instances of a specified aerosol phase. 
+
+\begin{DoxyReturn}{Returns}
+Number of instances of the aerosol phase 
+\end{DoxyReturn}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & Aerosol representation data \\
+\hline
+\mbox{\texttt{ in}}  & {\em phase\+\_\+name} & Aerosol phase name \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 940 of file aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+F90.
+
+\mbox{\Hypertarget{namespacecamp__aero__rep__modal__binned__mass_abc29690af58bbadb8d916b88a3883939}\label{namespacecamp__aero__rep__modal__binned__mass_abc29690af58bbadb8d916b88a3883939}} 
+\index{camp\_aero\_rep\_modal\_binned\_mass@{camp\_aero\_rep\_modal\_binned\_mass}!spec\_name@{spec\_name}}
+\index{spec\_name@{spec\_name}!camp\_aero\_rep\_modal\_binned\_mass@{camp\_aero\_rep\_modal\_binned\_mass}}
+\doxysubsubsection{\texorpdfstring{spec\_name()}{spec\_name()}}
+{\footnotesize\ttfamily character(len=\+:) function, allocatable \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::spec\+\_\+name}} (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t}}), intent(in)}]{this,  }\item[{character(len=$\ast$), intent(in)}]{unique\+\_\+name }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Get the non-\/unique name of a species by its unique name. 
+
+\begin{DoxyReturn}{Returns}
+Chemical species name 
+\end{DoxyReturn}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & Aerosol representation data \\
+\hline
+\mbox{\texttt{ in}}  & {\em unique\+\_\+name} & Unique name of the species in this aerosol representation \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 901 of file aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+F90.
+
+\mbox{\Hypertarget{namespacecamp__aero__rep__modal__binned__mass_a3dc87e8d9809ffd313963effe9ff6346}\label{namespacecamp__aero__rep__modal__binned__mass_a3dc87e8d9809ffd313963effe9ff6346}} 
+\index{camp\_aero\_rep\_modal\_binned\_mass@{camp\_aero\_rep\_modal\_binned\_mass}!spec\_state\_id@{spec\_state\_id}}
+\index{spec\_state\_id@{spec\_state\_id}!camp\_aero\_rep\_modal\_binned\_mass@{camp\_aero\_rep\_modal\_binned\_mass}}
+\doxysubsubsection{\texorpdfstring{spec\_state\_id()}{spec\_state\_id()}}
+{\footnotesize\ttfamily integer(kind=i\+\_\+kind) function \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__state__id}{camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::spec\+\_\+state\+\_\+id}} (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t}}), intent(in)}]{this,  }\item[{character(len=$\ast$), intent(in)}]{unique\+\_\+name }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Get a species id on the {\ttfamily \mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t_a5405d5023175234c25e2c2371d924c67}{camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t\+::state\+\_\+var}}} array by its unique name. These are unique ids for each element on the state array for this \mbox{\hyperlink{camp_aero_rep}{aerosol representation}} and are numbered\+: 
+
+\[x_u \in x_f ... (x_f+n-1)\]
+
+where $x_u$ is the id of the element corresponding to the species with unique name $u$ on the {\ttfamily \mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t_a5405d5023175234c25e2c2371d924c67}{camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t\+::state\+\_\+var}}} array, $x_f$ is the index of the first element for this aerosol representation on the state array and $n$ is the total number of variables on the state array from this aerosol representation. \begin{DoxyReturn}{Returns}
+Species state id 
+\end{DoxyReturn}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & Aerosol representation data \\
+\hline
+\mbox{\texttt{ in}}  & {\em unique\+\_\+name} & Unique name \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 874 of file aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+F90.
+
+\mbox{\Hypertarget{namespacecamp__aero__rep__modal__binned__mass_a722655b5fba93555a50ac7b9eb2dcf67}\label{namespacecamp__aero__rep__modal__binned__mass_a722655b5fba93555a50ac7b9eb2dcf67}} 
+\index{camp\_aero\_rep\_modal\_binned\_mass@{camp\_aero\_rep\_modal\_binned\_mass}!unique\_names@{unique\_names}}
+\index{unique\_names@{unique\_names}!camp\_aero\_rep\_modal\_binned\_mass@{camp\_aero\_rep\_modal\_binned\_mass}}
+\doxysubsubsection{\texorpdfstring{unique\_names()}{unique\_names()}}
+{\footnotesize\ttfamily type(\mbox{\hyperlink{structcamp__util_1_1string__t}{string\+\_\+t}}) function, dimension(\+:), allocatable \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1unique__names}{camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::unique\+\_\+names}} (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t}}), intent(in)}]{this,  }\item[{character(len=$\ast$), intent(in), optional}]{phase\+\_\+name,  }\item[{integer(kind=i\+\_\+kind), intent(in), optional}]{tracer\+\_\+type,  }\item[{character(len=$\ast$), intent(in), optional}]{spec\+\_\+name }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Get a list of unique names for each element on the {\ttfamily \mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t_a5405d5023175234c25e2c2371d924c67}{camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t\+::state\+\_\+var}}} array for this aerosol representation. The list may be restricted to a particular phase and/or aerosol species by including the phase\+\_\+name and spec\+\_\+name arguments. 
+
+For a modal/binned mass representation, the unique names for bins are\+:
+\begin{DoxyItemize}
+\item \char`\"{}bin name.\+bin \#.\+phase name.\+species name\char`\"{}
+\end{DoxyItemize}
+
+... and for modes are\+:
+\begin{DoxyItemize}
+\item \char`\"{}mode name.\+phase name.\+species name\char`\"{} \begin{DoxyReturn}{Returns}
+List of unique names 
+\end{DoxyReturn}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & Aerosol representation data \\
+\hline
+\mbox{\texttt{ in}}  & {\em phase\+\_\+name} & Aerosol phase name \\
+\hline
+\mbox{\texttt{ in}}  & {\em tracer\+\_\+type} & Aerosol-\/phase species tracer type \\
+\hline
+\mbox{\texttt{ in}}  & {\em spec\+\_\+name} & Aerosol-\/phase species name \\
+\hline
+\end{DoxyParams}
+
+\end{DoxyItemize}
+
+Definition at line 733 of file aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+F90.
+
+\mbox{\Hypertarget{namespacecamp__aero__rep__modal__binned__mass_afd447c39e8f80a6c6849a9562dfc851e}\label{namespacecamp__aero__rep__modal__binned__mass_afd447c39e8f80a6c6849a9562dfc851e}} 
+\index{camp\_aero\_rep\_modal\_binned\_mass@{camp\_aero\_rep\_modal\_binned\_mass}!update\_data\_gmd\_finalize@{update\_data\_gmd\_finalize}}
+\index{update\_data\_gmd\_finalize@{update\_data\_gmd\_finalize}!camp\_aero\_rep\_modal\_binned\_mass@{camp\_aero\_rep\_modal\_binned\_mass}}
+\doxysubsubsection{\texorpdfstring{update\_data\_gmd\_finalize()}{update\_data\_gmd\_finalize()}}
+{\footnotesize\ttfamily elemental subroutine camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::update\+\_\+data\+\_\+gmd\+\_\+finalize (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__update__data__modal__binned__mass__gmd__t}{aero\+\_\+rep\+\_\+update\+\_\+data\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+gmd\+\_\+t}}), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Finalize a GMD update data object. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & Update data object to free \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1141 of file aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+F90.
+
+\mbox{\Hypertarget{namespacecamp__aero__rep__modal__binned__mass_ad670c66458900e6a2c2ea7c527a82003}\label{namespacecamp__aero__rep__modal__binned__mass_ad670c66458900e6a2c2ea7c527a82003}} 
+\index{camp\_aero\_rep\_modal\_binned\_mass@{camp\_aero\_rep\_modal\_binned\_mass}!update\_data\_gsd\_finalize@{update\_data\_gsd\_finalize}}
+\index{update\_data\_gsd\_finalize@{update\_data\_gsd\_finalize}!camp\_aero\_rep\_modal\_binned\_mass@{camp\_aero\_rep\_modal\_binned\_mass}}
+\doxysubsubsection{\texorpdfstring{update\_data\_gsd\_finalize()}{update\_data\_gsd\_finalize()}}
+{\footnotesize\ttfamily elemental subroutine camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::update\+\_\+data\+\_\+gsd\+\_\+finalize (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__update__data__modal__binned__mass__gsd__t}{aero\+\_\+rep\+\_\+update\+\_\+data\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+gsd\+\_\+t}}), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Finalize a GSD update data object. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & Update data object to free \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1268 of file aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+F90.
+
+\mbox{\Hypertarget{namespacecamp__aero__rep__modal__binned__mass_afccea8b1865d3f94a32c1bb856d516ba}\label{namespacecamp__aero__rep__modal__binned__mass_afccea8b1865d3f94a32c1bb856d516ba}} 
+\index{camp\_aero\_rep\_modal\_binned\_mass@{camp\_aero\_rep\_modal\_binned\_mass}!update\_data\_init\_gmd@{update\_data\_init\_gmd}}
+\index{update\_data\_init\_gmd@{update\_data\_init\_gmd}!camp\_aero\_rep\_modal\_binned\_mass@{camp\_aero\_rep\_modal\_binned\_mass}}
+\doxysubsubsection{\texorpdfstring{update\_data\_init\_gmd()}{update\_data\_init\_gmd()}}
+{\footnotesize\ttfamily subroutine camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::update\+\_\+data\+\_\+init\+\_\+gmd (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t}}), intent(inout)}]{this,  }\item[{class(\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__update__data__modal__binned__mass__gmd__t}{aero\+\_\+rep\+\_\+update\+\_\+data\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+gmd\+\_\+t}}), intent(out)}]{update\+\_\+data,  }\item[{integer(kind=i\+\_\+kind), intent(in)}]{aero\+\_\+rep\+\_\+type }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Initialize a GMD update object. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & Aerosol representation to update \\
+\hline
+\mbox{\texttt{ out}}  & {\em update\+\_\+data} & Update data object \\
+\hline
+\mbox{\texttt{ in}}  & {\em aero\+\_\+rep\+\_\+type} & Aerosol representation id \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1026 of file aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+F90.
+
+\mbox{\Hypertarget{namespacecamp__aero__rep__modal__binned__mass_a009d8b27783a5659ec7d8a5cc8fbaeea}\label{namespacecamp__aero__rep__modal__binned__mass_a009d8b27783a5659ec7d8a5cc8fbaeea}} 
+\index{camp\_aero\_rep\_modal\_binned\_mass@{camp\_aero\_rep\_modal\_binned\_mass}!update\_data\_init\_gsd@{update\_data\_init\_gsd}}
+\index{update\_data\_init\_gsd@{update\_data\_init\_gsd}!camp\_aero\_rep\_modal\_binned\_mass@{camp\_aero\_rep\_modal\_binned\_mass}}
+\doxysubsubsection{\texorpdfstring{update\_data\_init\_gsd()}{update\_data\_init\_gsd()}}
+{\footnotesize\ttfamily subroutine camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::update\+\_\+data\+\_\+init\+\_\+gsd (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t}}), intent(inout)}]{this,  }\item[{class(\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__update__data__modal__binned__mass__gsd__t}{aero\+\_\+rep\+\_\+update\+\_\+data\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+gsd\+\_\+t}}), intent(out)}]{update\+\_\+data,  }\item[{integer(kind=i\+\_\+kind), intent(in)}]{aero\+\_\+rep\+\_\+type }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Initialize a GSD update data object. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & Aerosol representation to update \\
+\hline
+\mbox{\texttt{ out}}  & {\em update\+\_\+data} & Update data object \\
+\hline
+\mbox{\texttt{ in}}  & {\em aero\+\_\+rep\+\_\+type} & Aerosol representation id \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1153 of file aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+F90.
+
+\mbox{\Hypertarget{namespacecamp__aero__rep__modal__binned__mass_ab2088d3157e3bb41beba8b008923eb5c}\label{namespacecamp__aero__rep__modal__binned__mass_ab2088d3157e3bb41beba8b008923eb5c}} 
+\index{camp\_aero\_rep\_modal\_binned\_mass@{camp\_aero\_rep\_modal\_binned\_mass}!update\_data\_set\_gmd@{update\_data\_set\_gmd}}
+\index{update\_data\_set\_gmd@{update\_data\_set\_gmd}!camp\_aero\_rep\_modal\_binned\_mass@{camp\_aero\_rep\_modal\_binned\_mass}}
+\doxysubsubsection{\texorpdfstring{update\_data\_set\_gmd()}{update\_data\_set\_gmd()}}
+{\footnotesize\ttfamily subroutine camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::update\+\_\+data\+\_\+set\+\_\+gmd (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__update__data__modal__binned__mass__gmd__t}{aero\+\_\+rep\+\_\+update\+\_\+data\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+gmd\+\_\+t}}), intent(inout)}]{this,  }\item[{integer(kind=i\+\_\+kind), intent(in)}]{section\+\_\+id,  }\item[{real(kind=dp), intent(in)}]{GMD }\end{DoxyParamCaption})}
+
+
+
+Set packed update data for mode GMD. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & Update data \\
+\hline
+\mbox{\texttt{ in}}  & {\em section\+\_\+id} & Aerosol section id from \mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t_a946fdda79c26f10a7d4425c35a9b2fc5}{camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t\+::get\+\_\+section\+\_\+id}} \\
+\hline
+\mbox{\texttt{ in}}  & {\em gmd} & Updated GMD (m) \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1053 of file aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+F90.
+
+\mbox{\Hypertarget{namespacecamp__aero__rep__modal__binned__mass_a9289bb7c8530d4b7d546591b80993c54}\label{namespacecamp__aero__rep__modal__binned__mass_a9289bb7c8530d4b7d546591b80993c54}} 
+\index{camp\_aero\_rep\_modal\_binned\_mass@{camp\_aero\_rep\_modal\_binned\_mass}!update\_data\_set\_gsd@{update\_data\_set\_gsd}}
+\index{update\_data\_set\_gsd@{update\_data\_set\_gsd}!camp\_aero\_rep\_modal\_binned\_mass@{camp\_aero\_rep\_modal\_binned\_mass}}
+\doxysubsubsection{\texorpdfstring{update\_data\_set\_gsd()}{update\_data\_set\_gsd()}}
+{\footnotesize\ttfamily subroutine camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::update\+\_\+data\+\_\+set\+\_\+gsd (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__update__data__modal__binned__mass__gsd__t}{aero\+\_\+rep\+\_\+update\+\_\+data\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+gsd\+\_\+t}}), intent(inout)}]{this,  }\item[{integer(kind=i\+\_\+kind), intent(in)}]{section\+\_\+id,  }\item[{real(kind=dp), intent(in)}]{GSD }\end{DoxyParamCaption})}
+
+
+
+Set packed update data for mode GSD. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & Update data \\
+\hline
+\mbox{\texttt{ in}}  & {\em section\+\_\+id} & Aerosol section id from \mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t_a946fdda79c26f10a7d4425c35a9b2fc5}{camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t\+::get\+\_\+section\+\_\+id}} \\
+\hline
+\mbox{\texttt{ in}}  & {\em gsd} & Updated GSD (m) \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1180 of file aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+F90.
+
+
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{namespacecamp__aero__rep__modal__binned__mass_aeee912a9dcac1ccbec03014adf31f36f}\label{namespacecamp__aero__rep__modal__binned__mass_aeee912a9dcac1ccbec03014adf31f36f}} 
+\index{camp\_aero\_rep\_modal\_binned\_mass@{camp\_aero\_rep\_modal\_binned\_mass}!update\_gmd@{update\_gmd}}
+\index{update\_gmd@{update\_gmd}!camp\_aero\_rep\_modal\_binned\_mass@{camp\_aero\_rep\_modal\_binned\_mass}}
+\doxysubsubsection{\texorpdfstring{update\_gmd}{update\_gmd}}
+{\footnotesize\ttfamily integer(kind=i\+\_\+kind), parameter, public camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::update\+\_\+gmd = 0}
+
+
+
+Definition at line 132 of file aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+F90.
+
+\mbox{\Hypertarget{namespacecamp__aero__rep__modal__binned__mass_ad5cb2ed5bbe9e5b0193166b90f2a5b32}\label{namespacecamp__aero__rep__modal__binned__mass_ad5cb2ed5bbe9e5b0193166b90f2a5b32}} 
+\index{camp\_aero\_rep\_modal\_binned\_mass@{camp\_aero\_rep\_modal\_binned\_mass}!update\_gsd@{update\_gsd}}
+\index{update\_gsd@{update\_gsd}!camp\_aero\_rep\_modal\_binned\_mass@{camp\_aero\_rep\_modal\_binned\_mass}}
+\doxysubsubsection{\texorpdfstring{update\_gsd}{update\_gsd}}
+{\footnotesize\ttfamily integer(kind=i\+\_\+kind), parameter, public camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::update\+\_\+gsd = 1}
+
+
+
+Definition at line 133 of file aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+F90.
+

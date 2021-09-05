@@ -1,0 +1,153 @@
+\hypertarget{structcamp__rxn__emission_1_1rxn__update__data__emission__t}{}\doxysection{camp\+\_\+rxn\+\_\+emission\+::rxn\+\_\+update\+\_\+data\+\_\+emission\+\_\+t Type Reference}
+\label{structcamp__rxn__emission_1_1rxn__update__data__emission__t}\index{camp\_rxn\_emission::rxn\_update\_data\_emission\_t@{camp\_rxn\_emission::rxn\_update\_data\_emission\_t}}
+
+
+Emission rate update object.  
+
+
+
+
+Inheritance diagram for camp\+\_\+rxn\+\_\+emission\+::rxn\+\_\+update\+\_\+data\+\_\+emission\+\_\+t\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=220pt]{structcamp__rxn__emission_1_1rxn__update__data__emission__t__inherit__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+procedure \mbox{\hyperlink{structcamp__rxn__emission_1_1rxn__update__data__emission__t_a05cfb6fccdadae7c1aa0f72bc08c1908}{set\+\_\+rate}} =$>$ \mbox{\hyperlink{namespacecamp__rxn__emission_a281be8ca77bf3c15b3674cdf7946378d}{update\+\_\+data\+\_\+rate\+\_\+set}}
+\begin{DoxyCompactList}\small\item\em Update the rate data. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__rxn__emission_1_1rxn__update__data__emission__t_ae53f121a65e61b6d344f5e84162ea2a4}{internal\+\_\+pack\+\_\+size}}
+\begin{DoxyCompactList}\small\item\em Determine the pack size of the local update data. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__rxn__emission_1_1rxn__update__data__emission__t_a22dfe159f6183bdfc22f6f161bf60f75}{internal\+\_\+bin\+\_\+pack}}
+\begin{DoxyCompactList}\small\item\em Pack the local update data to a binary. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__rxn__emission_1_1rxn__update__data__emission__t_aeb2d038b057ab2dcba1cd09b703dbb7d}{internal\+\_\+bin\+\_\+unpack}}
+\begin{DoxyCompactList}\small\item\em Unpack the local update data from a binary. \end{DoxyCompactList}\item 
+final \mbox{\hyperlink{structcamp__rxn__emission_1_1rxn__update__data__emission__t_a4d05fb39a4bbfc6d8c58a83b9f89bd84}{update\+\_\+data\+\_\+finalize}}
+\begin{DoxyCompactList}\small\item\em Finalize the rate update data. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+logical \mbox{\hyperlink{structcamp__rxn__emission_1_1rxn__update__data__emission__t_a5b34dbceb89cef0d74fd691ecd35a91d}{is\+\_\+malloced}} = .false.
+\begin{DoxyCompactList}\small\item\em Flag indicating whether the update data as been allocated. \end{DoxyCompactList}\item 
+integer(kind=i\+\_\+kind) \mbox{\hyperlink{structcamp__rxn__emission_1_1rxn__update__data__emission__t_a27a8416e638d49936aac593b12db8796}{rxn\+\_\+unique\+\_\+id}} = 0
+\begin{DoxyCompactList}\small\item\em Unique id for finding reactions during model initialization. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Emission rate update object. 
+
+Definition at line 95 of file rxn\+\_\+emission.\+F90.
+
+
+
+\doxysubsection{Member Function/\+Subroutine Documentation}
+\mbox{\Hypertarget{structcamp__rxn__emission_1_1rxn__update__data__emission__t_a22dfe159f6183bdfc22f6f161bf60f75}\label{structcamp__rxn__emission_1_1rxn__update__data__emission__t_a22dfe159f6183bdfc22f6f161bf60f75}} 
+\index{camp\_rxn\_emission::rxn\_update\_data\_emission\_t@{camp\_rxn\_emission::rxn\_update\_data\_emission\_t}!internal\_bin\_pack@{internal\_bin\_pack}}
+\index{internal\_bin\_pack@{internal\_bin\_pack}!camp\_rxn\_emission::rxn\_update\_data\_emission\_t@{camp\_rxn\_emission::rxn\_update\_data\_emission\_t}}
+\doxysubsubsection{\texorpdfstring{internal\_bin\_pack()}{internal\_bin\_pack()}}
+{\footnotesize\ttfamily procedure camp\+\_\+rxn\+\_\+emission\+::rxn\+\_\+update\+\_\+data\+\_\+emission\+\_\+t\+::internal\+\_\+bin\+\_\+pack\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Pack the local update data to a binary. 
+
+
+
+Definition at line 107 of file rxn\+\_\+emission.\+F90.
+
+\mbox{\Hypertarget{structcamp__rxn__emission_1_1rxn__update__data__emission__t_aeb2d038b057ab2dcba1cd09b703dbb7d}\label{structcamp__rxn__emission_1_1rxn__update__data__emission__t_aeb2d038b057ab2dcba1cd09b703dbb7d}} 
+\index{camp\_rxn\_emission::rxn\_update\_data\_emission\_t@{camp\_rxn\_emission::rxn\_update\_data\_emission\_t}!internal\_bin\_unpack@{internal\_bin\_unpack}}
+\index{internal\_bin\_unpack@{internal\_bin\_unpack}!camp\_rxn\_emission::rxn\_update\_data\_emission\_t@{camp\_rxn\_emission::rxn\_update\_data\_emission\_t}}
+\doxysubsubsection{\texorpdfstring{internal\_bin\_unpack()}{internal\_bin\_unpack()}}
+{\footnotesize\ttfamily procedure camp\+\_\+rxn\+\_\+emission\+::rxn\+\_\+update\+\_\+data\+\_\+emission\+\_\+t\+::internal\+\_\+bin\+\_\+unpack\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Unpack the local update data from a binary. 
+
+
+
+Definition at line 109 of file rxn\+\_\+emission.\+F90.
+
+\mbox{\Hypertarget{structcamp__rxn__emission_1_1rxn__update__data__emission__t_ae53f121a65e61b6d344f5e84162ea2a4}\label{structcamp__rxn__emission_1_1rxn__update__data__emission__t_ae53f121a65e61b6d344f5e84162ea2a4}} 
+\index{camp\_rxn\_emission::rxn\_update\_data\_emission\_t@{camp\_rxn\_emission::rxn\_update\_data\_emission\_t}!internal\_pack\_size@{internal\_pack\_size}}
+\index{internal\_pack\_size@{internal\_pack\_size}!camp\_rxn\_emission::rxn\_update\_data\_emission\_t@{camp\_rxn\_emission::rxn\_update\_data\_emission\_t}}
+\doxysubsubsection{\texorpdfstring{internal\_pack\_size()}{internal\_pack\_size()}}
+{\footnotesize\ttfamily procedure camp\+\_\+rxn\+\_\+emission\+::rxn\+\_\+update\+\_\+data\+\_\+emission\+\_\+t\+::internal\+\_\+pack\+\_\+size\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Determine the pack size of the local update data. 
+
+
+
+Definition at line 105 of file rxn\+\_\+emission.\+F90.
+
+\mbox{\Hypertarget{structcamp__rxn__emission_1_1rxn__update__data__emission__t_a05cfb6fccdadae7c1aa0f72bc08c1908}\label{structcamp__rxn__emission_1_1rxn__update__data__emission__t_a05cfb6fccdadae7c1aa0f72bc08c1908}} 
+\index{camp\_rxn\_emission::rxn\_update\_data\_emission\_t@{camp\_rxn\_emission::rxn\_update\_data\_emission\_t}!set\_rate@{set\_rate}}
+\index{set\_rate@{set\_rate}!camp\_rxn\_emission::rxn\_update\_data\_emission\_t@{camp\_rxn\_emission::rxn\_update\_data\_emission\_t}}
+\doxysubsubsection{\texorpdfstring{set\_rate()}{set\_rate()}}
+{\footnotesize\ttfamily procedure camp\+\_\+rxn\+\_\+emission\+::rxn\+\_\+update\+\_\+data\+\_\+emission\+\_\+t\+::set\+\_\+rate\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Update the rate data. 
+
+
+
+Definition at line 103 of file rxn\+\_\+emission.\+F90.
+
+\mbox{\Hypertarget{structcamp__rxn__emission_1_1rxn__update__data__emission__t_a4d05fb39a4bbfc6d8c58a83b9f89bd84}\label{structcamp__rxn__emission_1_1rxn__update__data__emission__t_a4d05fb39a4bbfc6d8c58a83b9f89bd84}} 
+\index{camp\_rxn\_emission::rxn\_update\_data\_emission\_t@{camp\_rxn\_emission::rxn\_update\_data\_emission\_t}!update\_data\_finalize@{update\_data\_finalize}}
+\index{update\_data\_finalize@{update\_data\_finalize}!camp\_rxn\_emission::rxn\_update\_data\_emission\_t@{camp\_rxn\_emission::rxn\_update\_data\_emission\_t}}
+\doxysubsubsection{\texorpdfstring{update\_data\_finalize()}{update\_data\_finalize()}}
+{\footnotesize\ttfamily final camp\+\_\+rxn\+\_\+emission\+::rxn\+\_\+update\+\_\+data\+\_\+emission\+\_\+t\+::update\+\_\+data\+\_\+finalize\hspace{0.3cm}{\ttfamily [final]}, {\ttfamily [private]}}
+
+
+
+Finalize the rate update data. 
+
+
+
+Definition at line 111 of file rxn\+\_\+emission.\+F90.
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{structcamp__rxn__emission_1_1rxn__update__data__emission__t_a5b34dbceb89cef0d74fd691ecd35a91d}\label{structcamp__rxn__emission_1_1rxn__update__data__emission__t_a5b34dbceb89cef0d74fd691ecd35a91d}} 
+\index{camp\_rxn\_emission::rxn\_update\_data\_emission\_t@{camp\_rxn\_emission::rxn\_update\_data\_emission\_t}!is\_malloced@{is\_malloced}}
+\index{is\_malloced@{is\_malloced}!camp\_rxn\_emission::rxn\_update\_data\_emission\_t@{camp\_rxn\_emission::rxn\_update\_data\_emission\_t}}
+\doxysubsubsection{\texorpdfstring{is\_malloced}{is\_malloced}}
+{\footnotesize\ttfamily logical camp\+\_\+rxn\+\_\+emission\+::rxn\+\_\+update\+\_\+data\+\_\+emission\+\_\+t\+::is\+\_\+malloced = .false.\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Flag indicating whether the update data as been allocated. 
+
+
+
+Definition at line 98 of file rxn\+\_\+emission.\+F90.
+
+\mbox{\Hypertarget{structcamp__rxn__emission_1_1rxn__update__data__emission__t_a27a8416e638d49936aac593b12db8796}\label{structcamp__rxn__emission_1_1rxn__update__data__emission__t_a27a8416e638d49936aac593b12db8796}} 
+\index{camp\_rxn\_emission::rxn\_update\_data\_emission\_t@{camp\_rxn\_emission::rxn\_update\_data\_emission\_t}!rxn\_unique\_id@{rxn\_unique\_id}}
+\index{rxn\_unique\_id@{rxn\_unique\_id}!camp\_rxn\_emission::rxn\_update\_data\_emission\_t@{camp\_rxn\_emission::rxn\_update\_data\_emission\_t}}
+\doxysubsubsection{\texorpdfstring{rxn\_unique\_id}{rxn\_unique\_id}}
+{\footnotesize\ttfamily integer(kind=i\+\_\+kind) camp\+\_\+rxn\+\_\+emission\+::rxn\+\_\+update\+\_\+data\+\_\+emission\+\_\+t\+::rxn\+\_\+unique\+\_\+id = 0\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Unique id for finding reactions during model initialization. 
+
+
+
+Definition at line 100 of file rxn\+\_\+emission.\+F90.
+
+
+
+The documentation for this type was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{rxn__emission_8_f90}{rxn\+\_\+emission.\+F90}}\end{DoxyCompactItemize}

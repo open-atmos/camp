@@ -1,0 +1,873 @@
+\hypertarget{aero__reps_8h}{}\doxysection{aero\+\_\+reps.\+h File Reference}
+\label{aero__reps_8h}\index{aero\_reps.h@{aero\_reps.h}}
+
+
+Header file for aerosol representations functions.  
+
+
+Include dependency graph for aero\+\_\+reps.\+h\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{aero__reps_8h__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{aero__reps_8h__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{aero__reps_8h_ac5a65892343b17ff334e280f4d6ae5f9}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, int aero\+\_\+phase\+\_\+idx, int $\ast$aero\+\_\+rep\+\_\+int\+\_\+data, double $\ast$aero\+\_\+rep\+\_\+float\+\_\+data, \mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1}{bool}} $\ast$jac\+\_\+struct)
+\begin{DoxyCompactList}\small\item\em Flag \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used in calcualtions of mass and volume. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{aero__reps_8h_a8e10757d85c3a844a6c76141dbeb2350}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+get\+\_\+dependencies}} (int $\ast$aero\+\_\+rep\+\_\+int\+\_\+data, double $\ast$aero\+\_\+rep\+\_\+float\+\_\+data, \mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1}{bool}} $\ast$state\+\_\+flags)
+\begin{DoxyCompactList}\small\item\em Flag elements on the state array used by this aerosol representation. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{aero__reps_8h_a643ed1219181994b7427b80b71e0ce23}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+update\+\_\+env\+\_\+state}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, int $\ast$aero\+\_\+rep\+\_\+int\+\_\+data, double $\ast$aero\+\_\+rep\+\_\+float\+\_\+data, double $\ast$aero\+\_\+rep\+\_\+env\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Update aerosol representation data for new environmental conditions. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{aero__reps_8h_a567e448c1ea25085add6257c6b8930c6}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+update\+\_\+state}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, int $\ast$aero\+\_\+rep\+\_\+int\+\_\+data, double $\ast$aero\+\_\+rep\+\_\+float\+\_\+data, double $\ast$aero\+\_\+rep\+\_\+env\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Update aerosol representation data for a new state. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{aero__reps_8h_a8d5bf734337581d90c2280ab858ccf96}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+get\+\_\+effective\+\_\+radius\+\_\+\+\_\+m}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, int aero\+\_\+phase\+\_\+idx, double $\ast$radius, double $\ast$partial\+\_\+deriv, int $\ast$aero\+\_\+rep\+\_\+int\+\_\+data, double $\ast$aero\+\_\+rep\+\_\+float\+\_\+data, double $\ast$aero\+\_\+rep\+\_\+env\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Get the effective particle radius $r_{eff}$ (m) \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{aero__reps_8h_a2e585253c19aa48dec8c55b963999e9d}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+get\+\_\+number\+\_\+conc\+\_\+\+\_\+n\+\_\+m3}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, int aero\+\_\+phase\+\_\+idx, double $\ast$number\+\_\+conc, double $\ast$partial\+\_\+deriv, int $\ast$aero\+\_\+rep\+\_\+int\+\_\+data, double $\ast$aero\+\_\+rep\+\_\+float\+\_\+data, double $\ast$aero\+\_\+rep\+\_\+env\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Get the particle number concentration $n$ ( $\mbox{\si{\#\per\cubic\metre}}$) \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{aero__reps_8h_a5806fae1fe7d70369bfb7a0d9c54d12f}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+get\+\_\+aero\+\_\+conc\+\_\+type}} (int aero\+\_\+phase\+\_\+idx, int $\ast$aero\+\_\+conc\+\_\+type, int $\ast$aero\+\_\+rep\+\_\+int\+\_\+data, double $\ast$aero\+\_\+rep\+\_\+float\+\_\+data, double $\ast$aero\+\_\+rep\+\_\+env\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Get the type of aerosol concentration used. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{aero__reps_8h_aa84e95ce69656ab640edfdb32cc71d4c}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+get\+\_\+aero\+\_\+phase\+\_\+mass\+\_\+\+\_\+kg\+\_\+m3}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, int aero\+\_\+phase\+\_\+idx, double $\ast$aero\+\_\+phase\+\_\+mass, double $\ast$partial\+\_\+deriv, int $\ast$aero\+\_\+rep\+\_\+int\+\_\+data, double $\ast$aero\+\_\+rep\+\_\+float\+\_\+data, double $\ast$aero\+\_\+rep\+\_\+env\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Get the total mass in an aerosol phase $m$ ( $\mbox{\si{\kilogram\per\cubic\metre}}$) \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{aero__reps_8h_a2c1fd8badaa6ebffd2b45ab5314c1279}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+get\+\_\+aero\+\_\+phase\+\_\+avg\+\_\+\+MW\+\_\+\+\_\+kg\+\_\+mol}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, int aero\+\_\+phase\+\_\+idx, double $\ast$aero\+\_\+phase\+\_\+avg\+\_\+\+MW, double $\ast$partial\+\_\+deriv, int $\ast$aero\+\_\+rep\+\_\+int\+\_\+data, double $\ast$aero\+\_\+rep\+\_\+float\+\_\+data, double $\ast$aero\+\_\+rep\+\_\+env\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Get the average molecular weight in an aerosol phase $m$ ( $\mbox{\si{\kilogram\per\mole}}$) \end{DoxyCompactList}\item 
+\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1}{bool}} \mbox{\hyperlink{aero__reps_8h_a1af186a816b0a6be0f3ee39f126351f1}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+update\+\_\+data}} (void $\ast$update\+\_\+data, int $\ast$aero\+\_\+rep\+\_\+int\+\_\+data, double $\ast$aero\+\_\+rep\+\_\+float\+\_\+data, double $\ast$aero\+\_\+rep\+\_\+env\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Update the aerosol representation data. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{aero__reps_8h_a720cd5bdec5b2338509109814f0f94c6}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+print}} (int $\ast$aero\+\_\+rep\+\_\+int\+\_\+data, double $\ast$aero\+\_\+rep\+\_\+float\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Print the mass-\/only modal/binned reaction parameters. \end{DoxyCompactList}\item 
+void $\ast$ \mbox{\hyperlink{aero__reps_8h_a04f1ac5b8551ee710a134f25dfb7d5b3}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+create\+\_\+gmd\+\_\+update\+\_\+data}} ()
+\begin{DoxyCompactList}\small\item\em Create update data for new GMD. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{aero__reps_8h_a2ef81a778d8aba9feaef36188a545f45}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+set\+\_\+gmd\+\_\+update\+\_\+data}} (void $\ast$update\+\_\+data, int aero\+\_\+rep\+\_\+id, int section\+\_\+id, double gmd)
+\begin{DoxyCompactList}\small\item\em Set GMD update data. \end{DoxyCompactList}\item 
+void $\ast$ \mbox{\hyperlink{aero__reps_8h_a64f1dfc7a4ec84e4a4c0d7f3ff43e708}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+create\+\_\+gsd\+\_\+update\+\_\+data}} ()
+\begin{DoxyCompactList}\small\item\em Create update data for new GSD. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{aero__reps_8h_a1ac1087396c082ed4ebc7ddf43e7802f}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+set\+\_\+gsd\+\_\+update\+\_\+data}} (void $\ast$update\+\_\+data, int aero\+\_\+rep\+\_\+id, int section\+\_\+id, double gsd)
+\begin{DoxyCompactList}\small\item\em Set GSD update data. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{aero__reps_8h_a076423c54855479ccee0af37f2d9840a}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, int aero\+\_\+phase\+\_\+idx, int $\ast$aero\+\_\+rep\+\_\+int\+\_\+data, double $\ast$aero\+\_\+rep\+\_\+float\+\_\+data, \mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1}{bool}} $\ast$jac\+\_\+struct)
+\begin{DoxyCompactList}\small\item\em Flag \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used in calcualtions of mass and volume. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{aero__reps_8h_ac118d92685e58dda51e1a4a7ac16ddda}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+get\+\_\+dependencies}} (int $\ast$aero\+\_\+rep\+\_\+int\+\_\+data, double $\ast$aero\+\_\+rep\+\_\+float\+\_\+data, \mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1}{bool}} $\ast$state\+\_\+flags)
+\begin{DoxyCompactList}\small\item\em Flag elements on the state array used by this aerosol representation. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{aero__reps_8h_abb3778ac04df76a32ac3359b8cabe51b}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+update\+\_\+env\+\_\+state}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, int $\ast$aero\+\_\+rep\+\_\+int\+\_\+data, double $\ast$aero\+\_\+rep\+\_\+float\+\_\+data, double $\ast$aero\+\_\+rep\+\_\+env\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Update aerosol representation data for new environmental conditions. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{aero__reps_8h_afc5e4c6a81bf52bf0c8ee88037a4954d}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+update\+\_\+state}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, int $\ast$aero\+\_\+rep\+\_\+int\+\_\+data, double $\ast$aero\+\_\+rep\+\_\+float\+\_\+data, double $\ast$aero\+\_\+rep\+\_\+env\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Update aerosol representation data for a new state. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{aero__reps_8h_a48b11d345d89071d34e67b5063b1b891}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+get\+\_\+effective\+\_\+radius\+\_\+\+\_\+m}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, int aero\+\_\+phase\+\_\+idx, double $\ast$radius, double $\ast$partial\+\_\+deriv, int $\ast$aero\+\_\+rep\+\_\+int\+\_\+data, double $\ast$aero\+\_\+rep\+\_\+float\+\_\+data, double $\ast$aero\+\_\+rep\+\_\+env\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Get the effective particle radius $r_{eff}$ (m) \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{aero__reps_8h_afa7d35b774d0ab4d7cad7fb30d75e897}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+get\+\_\+number\+\_\+conc\+\_\+\+\_\+n\+\_\+m3}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, int aero\+\_\+phase\+\_\+idx, double $\ast$number\+\_\+conc, double $\ast$partial\+\_\+deriv, int $\ast$aero\+\_\+rep\+\_\+int\+\_\+data, double $\ast$aero\+\_\+rep\+\_\+float\+\_\+data, double $\ast$aero\+\_\+rep\+\_\+env\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Get the particle number concentration $n$ ( $\mbox{\si{\#\per\cubic\metre}}$) \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{aero__reps_8h_a59114de73dd305d5825a8547155b8946}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+get\+\_\+aero\+\_\+conc\+\_\+type}} (int aero\+\_\+phase\+\_\+idx, int $\ast$aero\+\_\+conc\+\_\+type, int $\ast$aero\+\_\+rep\+\_\+int\+\_\+data, double $\ast$aero\+\_\+rep\+\_\+float\+\_\+data, double $\ast$aero\+\_\+rep\+\_\+env\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Get the type of aerosol concentration used. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{aero__reps_8h_ad49c89b34b57e5b644d6506ead9dea34}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+get\+\_\+aero\+\_\+phase\+\_\+mass\+\_\+\+\_\+kg\+\_\+m3}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, int aero\+\_\+phase\+\_\+idx, double $\ast$aero\+\_\+phase\+\_\+mass, double $\ast$partial\+\_\+deriv, int $\ast$aero\+\_\+rep\+\_\+int\+\_\+data, double $\ast$aero\+\_\+rep\+\_\+float\+\_\+data, double $\ast$aero\+\_\+rep\+\_\+env\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Get the total mass in an aerosol phase $m$ ( $\mbox{\si{\kilogram\per\cubic\metre}}$) \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{aero__reps_8h_a203b6931fd5a504b7cc1750eb582b60c}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+get\+\_\+aero\+\_\+phase\+\_\+avg\+\_\+\+MW\+\_\+\+\_\+kg\+\_\+mol}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, int aero\+\_\+phase\+\_\+idx, double $\ast$aero\+\_\+phase\+\_\+avg\+\_\+\+MW, double $\ast$partial\+\_\+deriv, int $\ast$aero\+\_\+rep\+\_\+int\+\_\+data, double $\ast$aero\+\_\+rep\+\_\+float\+\_\+data, double $\ast$aero\+\_\+rep\+\_\+env\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Get the average molecular weight in an aerosol phase $m$ ( $\mbox{\si{\kilo\gram\per\mol}}$) \end{DoxyCompactList}\item 
+\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1}{bool}} \mbox{\hyperlink{aero__reps_8h_abe4da510bed46cee8a75f90917764311}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+update\+\_\+data}} (void $\ast$update\+\_\+data, int $\ast$aero\+\_\+rep\+\_\+int\+\_\+data, double $\ast$aero\+\_\+rep\+\_\+float\+\_\+data, double $\ast$aero\+\_\+rep\+\_\+env\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Update aerosol representation data. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{aero__reps_8h_a93b022b244ab389f594b3c1ee8956d26}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+print}} (int $\ast$aero\+\_\+rep\+\_\+int\+\_\+data, double $\ast$aero\+\_\+rep\+\_\+float\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Print the Single Particle reaction parameters. \end{DoxyCompactList}\item 
+void $\ast$ \mbox{\hyperlink{aero__reps_8h_adf9c1ec0f9a28fdfad26e9263589e02a}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+create\+\_\+number\+\_\+update\+\_\+data}} ()
+\begin{DoxyCompactList}\small\item\em Create update data for new particle number. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{aero__reps_8h_afc23dec55d2720c18e17a3cdbb6b6a7f}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+set\+\_\+number\+\_\+update\+\_\+data\+\_\+\+\_\+n\+\_\+m3}} (void $\ast$update\+\_\+data, int aero\+\_\+rep\+\_\+id, int particle\+\_\+id, double number\+\_\+conc)
+\begin{DoxyCompactList}\small\item\em Set number update data (\#/m3) \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Header file for aerosol representations functions. 
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{aero__reps_8h_a04f1ac5b8551ee710a134f25dfb7d5b3}\label{aero__reps_8h_a04f1ac5b8551ee710a134f25dfb7d5b3}} 
+\index{aero\_reps.h@{aero\_reps.h}!aero\_rep\_modal\_binned\_mass\_create\_gmd\_update\_data@{aero\_rep\_modal\_binned\_mass\_create\_gmd\_update\_data}}
+\index{aero\_rep\_modal\_binned\_mass\_create\_gmd\_update\_data@{aero\_rep\_modal\_binned\_mass\_create\_gmd\_update\_data}!aero\_reps.h@{aero\_reps.h}}
+\doxysubsubsection{\texorpdfstring{aero\_rep\_modal\_binned\_mass\_create\_gmd\_update\_data()}{aero\_rep\_modal\_binned\_mass\_create\_gmd\_update\_data()}}
+{\footnotesize\ttfamily void$\ast$ aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+create\+\_\+gmd\+\_\+update\+\_\+data (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Create update data for new GMD. 
+
+\begin{DoxyReturn}{Returns}
+Pointer to a new GMD update data object 
+\end{DoxyReturn}
+
+
+Definition at line 676 of file aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c.
+
+\mbox{\Hypertarget{aero__reps_8h_a64f1dfc7a4ec84e4a4c0d7f3ff43e708}\label{aero__reps_8h_a64f1dfc7a4ec84e4a4c0d7f3ff43e708}} 
+\index{aero\_reps.h@{aero\_reps.h}!aero\_rep\_modal\_binned\_mass\_create\_gsd\_update\_data@{aero\_rep\_modal\_binned\_mass\_create\_gsd\_update\_data}}
+\index{aero\_rep\_modal\_binned\_mass\_create\_gsd\_update\_data@{aero\_rep\_modal\_binned\_mass\_create\_gsd\_update\_data}!aero\_reps.h@{aero\_reps.h}}
+\doxysubsubsection{\texorpdfstring{aero\_rep\_modal\_binned\_mass\_create\_gsd\_update\_data()}{aero\_rep\_modal\_binned\_mass\_create\_gsd\_update\_data()}}
+{\footnotesize\ttfamily void$\ast$ aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+create\+\_\+gsd\+\_\+update\+\_\+data (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Create update data for new GSD. 
+
+\begin{DoxyReturn}{Returns}
+Pointer to a new GSD update data object 
+\end{DoxyReturn}
+
+
+Definition at line 710 of file aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c.
+
+\mbox{\Hypertarget{aero__reps_8h_a5806fae1fe7d70369bfb7a0d9c54d12f}\label{aero__reps_8h_a5806fae1fe7d70369bfb7a0d9c54d12f}} 
+\index{aero\_reps.h@{aero\_reps.h}!aero\_rep\_modal\_binned\_mass\_get\_aero\_conc\_type@{aero\_rep\_modal\_binned\_mass\_get\_aero\_conc\_type}}
+\index{aero\_rep\_modal\_binned\_mass\_get\_aero\_conc\_type@{aero\_rep\_modal\_binned\_mass\_get\_aero\_conc\_type}!aero\_reps.h@{aero\_reps.h}}
+\doxysubsubsection{\texorpdfstring{aero\_rep\_modal\_binned\_mass\_get\_aero\_conc\_type()}{aero\_rep\_modal\_binned\_mass\_get\_aero\_conc\_type()}}
+{\footnotesize\ttfamily void aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+get\+\_\+aero\+\_\+conc\+\_\+type (\begin{DoxyParamCaption}\item[{int}]{aero\+\_\+phase\+\_\+idx,  }\item[{int $\ast$}]{aero\+\_\+conc\+\_\+type,  }\item[{int $\ast$}]{aero\+\_\+rep\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{aero\+\_\+rep\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{aero\+\_\+rep\+\_\+env\+\_\+data }\end{DoxyParamCaption})}
+
+
+
+Get the type of aerosol concentration used. 
+
+Modal mass concentrations are per-\/mode or per-\/bin.
+
+
+\begin{DoxyParams}{Parameters}
+{\em aero\+\_\+phase\+\_\+idx} & Index of the aerosol phase within the representation \\
+\hline
+{\em aero\+\_\+conc\+\_\+type} & Pointer to int that will hold the concentration type code \\
+\hline
+{\em aero\+\_\+rep\+\_\+int\+\_\+data} & Pointer to the aerosol representation integer data \\
+\hline
+{\em aero\+\_\+rep\+\_\+float\+\_\+data} & Pointer to the aerosol representation floating-\/point data \\
+\hline
+{\em aero\+\_\+rep\+\_\+env\+\_\+data} & Pointer to the aerosol representation environment-\/dependent parameters \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 431 of file aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c.
+
+\mbox{\Hypertarget{aero__reps_8h_a2c1fd8badaa6ebffd2b45ab5314c1279}\label{aero__reps_8h_a2c1fd8badaa6ebffd2b45ab5314c1279}} 
+\index{aero\_reps.h@{aero\_reps.h}!aero\_rep\_modal\_binned\_mass\_get\_aero\_phase\_avg\_MW\_\_kg\_mol@{aero\_rep\_modal\_binned\_mass\_get\_aero\_phase\_avg\_MW\_\_kg\_mol}}
+\index{aero\_rep\_modal\_binned\_mass\_get\_aero\_phase\_avg\_MW\_\_kg\_mol@{aero\_rep\_modal\_binned\_mass\_get\_aero\_phase\_avg\_MW\_\_kg\_mol}!aero\_reps.h@{aero\_reps.h}}
+\doxysubsubsection{\texorpdfstring{aero\_rep\_modal\_binned\_mass\_get\_aero\_phase\_avg\_MW\_\_kg\_mol()}{aero\_rep\_modal\_binned\_mass\_get\_aero\_phase\_avg\_MW\_\_kg\_mol()}}
+{\footnotesize\ttfamily void aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+get\+\_\+aero\+\_\+phase\+\_\+avg\+\_\+\+MW\+\_\+\+\_\+kg\+\_\+mol (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{int}]{aero\+\_\+phase\+\_\+idx,  }\item[{double $\ast$}]{aero\+\_\+phase\+\_\+avg\+\_\+\+MW,  }\item[{double $\ast$}]{partial\+\_\+deriv,  }\item[{int $\ast$}]{aero\+\_\+rep\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{aero\+\_\+rep\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{aero\+\_\+rep\+\_\+env\+\_\+data }\end{DoxyParamCaption})}
+
+
+
+Get the average molecular weight in an aerosol phase $m$ ( $\mbox{\si{\kilogram\per\mole}}$) 
+
+
+\begin{DoxyParams}{Parameters}
+{\em model\+\_\+data} & Pointer to the model data, including the state array \\
+\hline
+{\em aero\+\_\+phase\+\_\+idx} & Index of the aerosol phase within the representation \\
+\hline
+{\em aero\+\_\+phase\+\_\+avg\+\_\+\+MW} & Average molecular weight in the aerosol phase ( $\mbox{\si{\kilogram\per\mole}}$) \\
+\hline
+{\em partial\+\_\+deriv} & $\frac{\partial m}{\partial y}$ where $y$ are the species on the state array \\
+\hline
+{\em aero\+\_\+rep\+\_\+int\+\_\+data} & Pointer to the aerosol representation integer data \\
+\hline
+{\em aero\+\_\+rep\+\_\+float\+\_\+data} & Pointer to the aerosol representation floating-\/point data \\
+\hline
+{\em aero\+\_\+rep\+\_\+env\+\_\+data} & Pointer to the aerosol representation environment-\/dependent parameters \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 522 of file aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c.
+
+\mbox{\Hypertarget{aero__reps_8h_aa84e95ce69656ab640edfdb32cc71d4c}\label{aero__reps_8h_aa84e95ce69656ab640edfdb32cc71d4c}} 
+\index{aero\_reps.h@{aero\_reps.h}!aero\_rep\_modal\_binned\_mass\_get\_aero\_phase\_mass\_\_kg\_m3@{aero\_rep\_modal\_binned\_mass\_get\_aero\_phase\_mass\_\_kg\_m3}}
+\index{aero\_rep\_modal\_binned\_mass\_get\_aero\_phase\_mass\_\_kg\_m3@{aero\_rep\_modal\_binned\_mass\_get\_aero\_phase\_mass\_\_kg\_m3}!aero\_reps.h@{aero\_reps.h}}
+\doxysubsubsection{\texorpdfstring{aero\_rep\_modal\_binned\_mass\_get\_aero\_phase\_mass\_\_kg\_m3()}{aero\_rep\_modal\_binned\_mass\_get\_aero\_phase\_mass\_\_kg\_m3()}}
+{\footnotesize\ttfamily void aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+get\+\_\+aero\+\_\+phase\+\_\+mass\+\_\+\+\_\+kg\+\_\+m3 (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{int}]{aero\+\_\+phase\+\_\+idx,  }\item[{double $\ast$}]{aero\+\_\+phase\+\_\+mass,  }\item[{double $\ast$}]{partial\+\_\+deriv,  }\item[{int $\ast$}]{aero\+\_\+rep\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{aero\+\_\+rep\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{aero\+\_\+rep\+\_\+env\+\_\+data }\end{DoxyParamCaption})}
+
+
+
+Get the total mass in an aerosol phase $m$ ( $\mbox{\si{\kilogram\per\cubic\metre}}$) 
+
+
+\begin{DoxyParams}{Parameters}
+{\em model\+\_\+data} & Pointer to the model data, including the state array \\
+\hline
+{\em aero\+\_\+phase\+\_\+idx} & Index of the aerosol phase within the representation \\
+\hline
+{\em aero\+\_\+phase\+\_\+mass} & Total mass in the aerosol phase, $m$ ( $\mbox{\si{\kilogram\per\cubic\metre}}$) \\
+\hline
+{\em partial\+\_\+deriv} & $\frac{\partial m}{\partial y}$ where $y$ are the species on the state array \\
+\hline
+{\em aero\+\_\+rep\+\_\+int\+\_\+data} & Pointer to the aerosol representation integer data \\
+\hline
+{\em aero\+\_\+rep\+\_\+float\+\_\+data} & Pointer to the aerosol representation floating-\/point data \\
+\hline
+{\em aero\+\_\+rep\+\_\+env\+\_\+data} & Pointer to the aerosol representation environment-\/dependent parameters \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 459 of file aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c.
+
+\mbox{\Hypertarget{aero__reps_8h_a8e10757d85c3a844a6c76141dbeb2350}\label{aero__reps_8h_a8e10757d85c3a844a6c76141dbeb2350}} 
+\index{aero\_reps.h@{aero\_reps.h}!aero\_rep\_modal\_binned\_mass\_get\_dependencies@{aero\_rep\_modal\_binned\_mass\_get\_dependencies}}
+\index{aero\_rep\_modal\_binned\_mass\_get\_dependencies@{aero\_rep\_modal\_binned\_mass\_get\_dependencies}!aero\_reps.h@{aero\_reps.h}}
+\doxysubsubsection{\texorpdfstring{aero\_rep\_modal\_binned\_mass\_get\_dependencies()}{aero\_rep\_modal\_binned\_mass\_get\_dependencies()}}
+{\footnotesize\ttfamily void aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+get\+\_\+dependencies (\begin{DoxyParamCaption}\item[{int $\ast$}]{aero\+\_\+rep\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{aero\+\_\+rep\+\_\+float\+\_\+data,  }\item[{\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1}{bool}} $\ast$}]{state\+\_\+flags }\end{DoxyParamCaption})}
+
+
+
+Flag elements on the state array used by this aerosol representation. 
+
+The modal mass aerosol representation functions do not use state array values
+
+
+\begin{DoxyParams}{Parameters}
+{\em aero\+\_\+rep\+\_\+int\+\_\+data} & Pointer to the aerosol representation integer data \\
+\hline
+{\em aero\+\_\+rep\+\_\+float\+\_\+data} & Pointer to the aerosol representation floating-\/point data \\
+\hline
+{\em state\+\_\+flags} & Array of flags indicating state array elements used \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 139 of file aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c.
+
+\mbox{\Hypertarget{aero__reps_8h_a8d5bf734337581d90c2280ab858ccf96}\label{aero__reps_8h_a8d5bf734337581d90c2280ab858ccf96}} 
+\index{aero\_reps.h@{aero\_reps.h}!aero\_rep\_modal\_binned\_mass\_get\_effective\_radius\_\_m@{aero\_rep\_modal\_binned\_mass\_get\_effective\_radius\_\_m}}
+\index{aero\_rep\_modal\_binned\_mass\_get\_effective\_radius\_\_m@{aero\_rep\_modal\_binned\_mass\_get\_effective\_radius\_\_m}!aero\_reps.h@{aero\_reps.h}}
+\doxysubsubsection{\texorpdfstring{aero\_rep\_modal\_binned\_mass\_get\_effective\_radius\_\_m()}{aero\_rep\_modal\_binned\_mass\_get\_effective\_radius\_\_m()}}
+{\footnotesize\ttfamily void aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+get\+\_\+effective\+\_\+radius\+\_\+\+\_\+m (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{int}]{aero\+\_\+phase\+\_\+idx,  }\item[{double $\ast$}]{radius,  }\item[{double $\ast$}]{partial\+\_\+deriv,  }\item[{int $\ast$}]{aero\+\_\+rep\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{aero\+\_\+rep\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{aero\+\_\+rep\+\_\+env\+\_\+data }\end{DoxyParamCaption})}
+
+
+
+Get the effective particle radius $r_{eff}$ (m) 
+
+The modal mass effective radius is calculated for a log-\/normal distribution where the geometric mean diameter ( $\tilde{D}_n$) and geometric standard deviation ( $\tilde{\sigma}_g$) are set by the aerosol model prior to solving the chemistry. Thus, all $\frac{\partial r_{eff}}{\partial y}$ are zero. The effective radius is calculated according to the equation given in Table 1 of Zender {\bfseries [Zender2002]} \+:
+
+\[ r_{eff} = \frac{\tilde{D}_n}{2}*exp(9 ln(\tilde{\sigma}_g)^2/2) \] \[ r_{eff} = \frac{D_{eff}}{2} \]
+
+For bins, $r_{eff}$ is assumed to be the bin radius.
+
+
+\begin{DoxyParams}{Parameters}
+{\em model\+\_\+data} & Pointer to the model data, including the state array \\
+\hline
+{\em aero\+\_\+phase\+\_\+idx} & Index of the aerosol phase within the representation \\
+\hline
+{\em radius} & Effective particle radius (m) \\
+\hline
+{\em partial\+\_\+deriv} & $\frac{\partial r_{eff}}{\partial y}$ where $y$ are species on the state array \\
+\hline
+{\em aero\+\_\+rep\+\_\+int\+\_\+data} & Pointer to the aerosol representation integer data \\
+\hline
+{\em aero\+\_\+rep\+\_\+float\+\_\+data} & Pointer to the aerosol representation floating-\/point data \\
+\hline
+{\em aero\+\_\+rep\+\_\+env\+\_\+data} & Pointer to the aerosol representation environment-\/dependent parameters \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 297 of file aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c.
+
+\mbox{\Hypertarget{aero__reps_8h_a2e585253c19aa48dec8c55b963999e9d}\label{aero__reps_8h_a2e585253c19aa48dec8c55b963999e9d}} 
+\index{aero\_reps.h@{aero\_reps.h}!aero\_rep\_modal\_binned\_mass\_get\_number\_conc\_\_n\_m3@{aero\_rep\_modal\_binned\_mass\_get\_number\_conc\_\_n\_m3}}
+\index{aero\_rep\_modal\_binned\_mass\_get\_number\_conc\_\_n\_m3@{aero\_rep\_modal\_binned\_mass\_get\_number\_conc\_\_n\_m3}!aero\_reps.h@{aero\_reps.h}}
+\doxysubsubsection{\texorpdfstring{aero\_rep\_modal\_binned\_mass\_get\_number\_conc\_\_n\_m3()}{aero\_rep\_modal\_binned\_mass\_get\_number\_conc\_\_n\_m3()}}
+{\footnotesize\ttfamily void aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+get\+\_\+number\+\_\+conc\+\_\+\+\_\+n\+\_\+m3 (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{int}]{aero\+\_\+phase\+\_\+idx,  }\item[{double $\ast$}]{number\+\_\+conc,  }\item[{double $\ast$}]{partial\+\_\+deriv,  }\item[{int $\ast$}]{aero\+\_\+rep\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{aero\+\_\+rep\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{aero\+\_\+rep\+\_\+env\+\_\+data }\end{DoxyParamCaption})}
+
+
+
+Get the particle number concentration $n$ ( $\mbox{\si{\#\per\cubic\metre}}$) 
+
+The modal mass number concentration is calculated for a log-\/normal distribution where the geometric mean diameter ( $\tilde{D}_n$) and geometric standard deviation ( $\tilde{\sigma}_g$) are set by the aerosol model prior to solving the chemistry. The number concentration is calculated according to the equation given in Table 1 of Zender {\bfseries [Zender2002]} \+: \[ n = N_0 = \frac{6V_0}{\pi}\tilde{D}_n^{-3}e^{-9 ln(\tilde{\sigma}_g)^2/2} \] \[ V_0 = \sum_i{\frac{m_i}{\rho_i}} \] where $\rho_i$ and $m_i$ are the density and total mass of species $i$ in the specified mode.
+
+The binned number concentration is calculated according to\+: \[ n = V_0 / V_p \] \[ V_p = \frac{4}{3}\pi r^{3} \] where $r$ is the radius of the size bin and $V_0$ is defined as above.
+
+
+\begin{DoxyParams}{Parameters}
+{\em model\+\_\+data} & Pointer to the model data, including the state array \\
+\hline
+{\em aero\+\_\+phase\+\_\+idx} & Index of the aerosol phase within the representation \\
+\hline
+{\em number\+\_\+conc} & Particle number concentration, $n$ ( $\mbox{\si{\#\per\cubic\centi\metre}}$) \\
+\hline
+{\em partial\+\_\+deriv} & $\frac{\partial n}{\partial y}$ where $y$ are the species on the state array \\
+\hline
+{\em aero\+\_\+rep\+\_\+int\+\_\+data} & Pointer to the aerosol representation integer data \\
+\hline
+{\em aero\+\_\+rep\+\_\+float\+\_\+data} & Pointer to the aerosol representation floating-\/point data \\
+\hline
+{\em aero\+\_\+rep\+\_\+env\+\_\+data} & Pointer to the aerosol representation environment-\/dependent parameters \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 365 of file aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c.
+
+\mbox{\Hypertarget{aero__reps_8h_ac5a65892343b17ff334e280f4d6ae5f9}\label{aero__reps_8h_ac5a65892343b17ff334e280f4d6ae5f9}} 
+\index{aero\_reps.h@{aero\_reps.h}!aero\_rep\_modal\_binned\_mass\_get\_used\_jac\_elem@{aero\_rep\_modal\_binned\_mass\_get\_used\_jac\_elem}}
+\index{aero\_rep\_modal\_binned\_mass\_get\_used\_jac\_elem@{aero\_rep\_modal\_binned\_mass\_get\_used\_jac\_elem}!aero\_reps.h@{aero\_reps.h}}
+\doxysubsubsection{\texorpdfstring{aero\_rep\_modal\_binned\_mass\_get\_used\_jac\_elem()}{aero\_rep\_modal\_binned\_mass\_get\_used\_jac\_elem()}}
+{\footnotesize\ttfamily int aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{int}]{aero\+\_\+phase\+\_\+idx,  }\item[{int $\ast$}]{aero\+\_\+rep\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{aero\+\_\+rep\+\_\+float\+\_\+data,  }\item[{\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1}{bool}} $\ast$}]{jac\+\_\+struct }\end{DoxyParamCaption})}
+
+
+
+Flag \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used in calcualtions of mass and volume. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em model\+\_\+data} & Pointer to the model data \\
+\hline
+{\em aero\+\_\+rep\+\_\+int\+\_\+data} & Pointer to the aerosol representation integer data \\
+\hline
+{\em aero\+\_\+rep\+\_\+float\+\_\+data} & Pointer to the aerosol representation floating-\/point data \\
+\hline
+{\em aero\+\_\+phase\+\_\+idx} & Index of the aerosol phase to find elements for \\
+\hline
+{\em jac\+\_\+struct} & 1D array of flags indicating potentially non-\/zero \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements. (The dependent variable should have been chosen by the calling function.) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Number of \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements flagged 
+\end{DoxyReturn}
+
+
+Definition at line 95 of file aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c.
+
+\mbox{\Hypertarget{aero__reps_8h_a720cd5bdec5b2338509109814f0f94c6}\label{aero__reps_8h_a720cd5bdec5b2338509109814f0f94c6}} 
+\index{aero\_reps.h@{aero\_reps.h}!aero\_rep\_modal\_binned\_mass\_print@{aero\_rep\_modal\_binned\_mass\_print}}
+\index{aero\_rep\_modal\_binned\_mass\_print@{aero\_rep\_modal\_binned\_mass\_print}!aero\_reps.h@{aero\_reps.h}}
+\doxysubsubsection{\texorpdfstring{aero\_rep\_modal\_binned\_mass\_print()}{aero\_rep\_modal\_binned\_mass\_print()}}
+{\footnotesize\ttfamily void aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+print (\begin{DoxyParamCaption}\item[{int $\ast$}]{aero\+\_\+rep\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{aero\+\_\+rep\+\_\+float\+\_\+data }\end{DoxyParamCaption})}
+
+
+
+Print the mass-\/only modal/binned reaction parameters. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em aero\+\_\+rep\+\_\+int\+\_\+data} & Pointer to the aerosol representation integer data \\
+\hline
+{\em aero\+\_\+rep\+\_\+float\+\_\+data} & Pointer to the aerosol representation floating-\/point data \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 662 of file aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c.
+
+\mbox{\Hypertarget{aero__reps_8h_a2ef81a778d8aba9feaef36188a545f45}\label{aero__reps_8h_a2ef81a778d8aba9feaef36188a545f45}} 
+\index{aero\_reps.h@{aero\_reps.h}!aero\_rep\_modal\_binned\_mass\_set\_gmd\_update\_data@{aero\_rep\_modal\_binned\_mass\_set\_gmd\_update\_data}}
+\index{aero\_rep\_modal\_binned\_mass\_set\_gmd\_update\_data@{aero\_rep\_modal\_binned\_mass\_set\_gmd\_update\_data}!aero\_reps.h@{aero\_reps.h}}
+\doxysubsubsection{\texorpdfstring{aero\_rep\_modal\_binned\_mass\_set\_gmd\_update\_data()}{aero\_rep\_modal\_binned\_mass\_set\_gmd\_update\_data()}}
+{\footnotesize\ttfamily void aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+set\+\_\+gmd\+\_\+update\+\_\+data (\begin{DoxyParamCaption}\item[{void $\ast$}]{update\+\_\+data,  }\item[{int}]{aero\+\_\+rep\+\_\+id,  }\item[{int}]{section\+\_\+id,  }\item[{double}]{gmd }\end{DoxyParamCaption})}
+
+
+
+Set GMD update data. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em update\+\_\+data} & Pointer to an allocated GMD update data object \\
+\hline
+{\em aero\+\_\+rep\+\_\+id} & Id of the aerosol representation(s) to update \\
+\hline
+{\em section\+\_\+id} & Id of the mode to update \\
+\hline
+{\em gmd} & New mode GMD (m) \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 692 of file aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c.
+
+\mbox{\Hypertarget{aero__reps_8h_a1ac1087396c082ed4ebc7ddf43e7802f}\label{aero__reps_8h_a1ac1087396c082ed4ebc7ddf43e7802f}} 
+\index{aero\_reps.h@{aero\_reps.h}!aero\_rep\_modal\_binned\_mass\_set\_gsd\_update\_data@{aero\_rep\_modal\_binned\_mass\_set\_gsd\_update\_data}}
+\index{aero\_rep\_modal\_binned\_mass\_set\_gsd\_update\_data@{aero\_rep\_modal\_binned\_mass\_set\_gsd\_update\_data}!aero\_reps.h@{aero\_reps.h}}
+\doxysubsubsection{\texorpdfstring{aero\_rep\_modal\_binned\_mass\_set\_gsd\_update\_data()}{aero\_rep\_modal\_binned\_mass\_set\_gsd\_update\_data()}}
+{\footnotesize\ttfamily void aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+set\+\_\+gsd\+\_\+update\+\_\+data (\begin{DoxyParamCaption}\item[{void $\ast$}]{update\+\_\+data,  }\item[{int}]{aero\+\_\+rep\+\_\+id,  }\item[{int}]{section\+\_\+id,  }\item[{double}]{gsd }\end{DoxyParamCaption})}
+
+
+
+Set GSD update data. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em update\+\_\+data} & Pointer to an allocated GSD update data object \\
+\hline
+{\em aero\+\_\+rep\+\_\+id} & Id of the aerosol representation(s) to update \\
+\hline
+{\em section\+\_\+id} & Id of the mode to update \\
+\hline
+{\em gsd} & New mode GSD (unitless) \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 726 of file aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c.
+
+\mbox{\Hypertarget{aero__reps_8h_a1af186a816b0a6be0f3ee39f126351f1}\label{aero__reps_8h_a1af186a816b0a6be0f3ee39f126351f1}} 
+\index{aero\_reps.h@{aero\_reps.h}!aero\_rep\_modal\_binned\_mass\_update\_data@{aero\_rep\_modal\_binned\_mass\_update\_data}}
+\index{aero\_rep\_modal\_binned\_mass\_update\_data@{aero\_rep\_modal\_binned\_mass\_update\_data}!aero\_reps.h@{aero\_reps.h}}
+\doxysubsubsection{\texorpdfstring{aero\_rep\_modal\_binned\_mass\_update\_data()}{aero\_rep\_modal\_binned\_mass\_update\_data()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1}{bool}} aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+update\+\_\+data (\begin{DoxyParamCaption}\item[{void $\ast$}]{update\+\_\+data,  }\item[{int $\ast$}]{aero\+\_\+rep\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{aero\+\_\+rep\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{aero\+\_\+rep\+\_\+env\+\_\+data }\end{DoxyParamCaption})}
+
+
+
+Update the aerosol representation data. 
+
+The model mass aerosol representation update data is structured as follows\+:
+
+
+\begin{DoxyItemize}
+\item {\bfseries{int}} aero\+\_\+rep\+\_\+id (Id of one or more aerosol representations set by the host model using the camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t\+::set\+\_\+id function prior to initializing the solver.)
+\item {\bfseries{int}} update\+\_\+type (Type of update to perform. Can be UPDATE\+\_\+\+GMD or UPDATE\+\_\+\+GSD.)
+\item {\bfseries{int}} section\+\_\+id (Index of the mode to update.)
+\item {\bfseries{double}} new\+\_\+value (Either the new GMD (m) or the new GSD (unitless).)
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}{Parameters}
+{\em update\+\_\+data} & Pointer to the updated aerosol representation data \\
+\hline
+{\em aero\+\_\+rep\+\_\+int\+\_\+data} & Pointer to the aerosol representation integer data \\
+\hline
+{\em aero\+\_\+rep\+\_\+float\+\_\+data} & Pointer to the aerosol representation floating-\/point data \\
+\hline
+{\em aero\+\_\+rep\+\_\+env\+\_\+data} & Pointer to the aerosol representation environment-\/dependent parameters \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Flag indicating whether this is the aerosol representation to update 
+\end{DoxyReturn}
+Recalculate the effective radius \mbox{[}m\mbox{]}
+
+Equation based on {\bfseries [Zender2002]} eq. (23) and Table 1 median diameter ( $\tilde{D_n}$) and Table 1 effective radius $(D_s, D_eff$) equations\+: \[ \tilde{\sigma_g} \equiv ln( \sigma_g ) \] \[ \tilde{D_n} = \bar{D_n} e^{-\tilde{\sigma_g}^2 / 2} \] \[ D_s = D_{eff} = \tilde{D_n} e^{5 \tilde{\sigma_g}^2 / 2} \] \[ D_{eff} = \bar{D_n} e^{ 2 \tilde{\sigma_g}^2 } \] where $\bar{D_n}$ is the mean diameter \mbox{[}m\mbox{]} and $\sigma_g$ is the geometric standard deviation \mbox{[}unitless\mbox{]}.
+
+Definition at line 591 of file aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c.
+
+\mbox{\Hypertarget{aero__reps_8h_a643ed1219181994b7427b80b71e0ce23}\label{aero__reps_8h_a643ed1219181994b7427b80b71e0ce23}} 
+\index{aero\_reps.h@{aero\_reps.h}!aero\_rep\_modal\_binned\_mass\_update\_env\_state@{aero\_rep\_modal\_binned\_mass\_update\_env\_state}}
+\index{aero\_rep\_modal\_binned\_mass\_update\_env\_state@{aero\_rep\_modal\_binned\_mass\_update\_env\_state}!aero\_reps.h@{aero\_reps.h}}
+\doxysubsubsection{\texorpdfstring{aero\_rep\_modal\_binned\_mass\_update\_env\_state()}{aero\_rep\_modal\_binned\_mass\_update\_env\_state()}}
+{\footnotesize\ttfamily void aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+update\+\_\+env\+\_\+state (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{int $\ast$}]{aero\+\_\+rep\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{aero\+\_\+rep\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{aero\+\_\+rep\+\_\+env\+\_\+data }\end{DoxyParamCaption})}
+
+
+
+Update aerosol representation data for new environmental conditions. 
+
+The modal mass aerosol representation is not updated for new environmental conditions
+
+
+\begin{DoxyParams}{Parameters}
+{\em model\+\_\+data} & Pointer to the model data \\
+\hline
+{\em aero\+\_\+rep\+\_\+int\+\_\+data} & Pointer to the aerosol representation integer data \\
+\hline
+{\em aero\+\_\+rep\+\_\+float\+\_\+data} & Pointer to the aerosol representation floating-\/point data \\
+\hline
+{\em aero\+\_\+rep\+\_\+env\+\_\+data} & Pointer to the aerosol representation environment-\/dependent parameters \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 160 of file aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c.
+
+\mbox{\Hypertarget{aero__reps_8h_a567e448c1ea25085add6257c6b8930c6}\label{aero__reps_8h_a567e448c1ea25085add6257c6b8930c6}} 
+\index{aero\_reps.h@{aero\_reps.h}!aero\_rep\_modal\_binned\_mass\_update\_state@{aero\_rep\_modal\_binned\_mass\_update\_state}}
+\index{aero\_rep\_modal\_binned\_mass\_update\_state@{aero\_rep\_modal\_binned\_mass\_update\_state}!aero\_reps.h@{aero\_reps.h}}
+\doxysubsubsection{\texorpdfstring{aero\_rep\_modal\_binned\_mass\_update\_state()}{aero\_rep\_modal\_binned\_mass\_update\_state()}}
+{\footnotesize\ttfamily void aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+update\+\_\+state (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{int $\ast$}]{aero\+\_\+rep\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{aero\+\_\+rep\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{aero\+\_\+rep\+\_\+env\+\_\+data }\end{DoxyParamCaption})}
+
+
+
+Update aerosol representation data for a new state. 
+
+The modal mass aerosol representation recalculates effective radius and number concentration for each new state.
+
+
+\begin{DoxyParams}{Parameters}
+{\em model\+\_\+data} & Pointer to the model data, including the state array \\
+\hline
+{\em aero\+\_\+rep\+\_\+int\+\_\+data} & Pointer to the aerosol representation integer data \\
+\hline
+{\em aero\+\_\+rep\+\_\+float\+\_\+data} & Pointer to the aerosol representation floating-\/point data \\
+\hline
+{\em aero\+\_\+rep\+\_\+env\+\_\+data} & Pointer to the aerosol representation environment-\/dependent parameters \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 183 of file aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c.
+
+\mbox{\Hypertarget{aero__reps_8h_adf9c1ec0f9a28fdfad26e9263589e02a}\label{aero__reps_8h_adf9c1ec0f9a28fdfad26e9263589e02a}} 
+\index{aero\_reps.h@{aero\_reps.h}!aero\_rep\_single\_particle\_create\_number\_update\_data@{aero\_rep\_single\_particle\_create\_number\_update\_data}}
+\index{aero\_rep\_single\_particle\_create\_number\_update\_data@{aero\_rep\_single\_particle\_create\_number\_update\_data}!aero\_reps.h@{aero\_reps.h}}
+\doxysubsubsection{\texorpdfstring{aero\_rep\_single\_particle\_create\_number\_update\_data()}{aero\_rep\_single\_particle\_create\_number\_update\_data()}}
+{\footnotesize\ttfamily void$\ast$ aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+create\+\_\+number\+\_\+update\+\_\+data (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Create update data for new particle number. 
+
+\begin{DoxyReturn}{Returns}
+Pointer to a new number update data object 
+\end{DoxyReturn}
+
+
+Definition at line 405 of file aero\+\_\+rep\+\_\+single\+\_\+particle.\+c.
+
+\mbox{\Hypertarget{aero__reps_8h_a59114de73dd305d5825a8547155b8946}\label{aero__reps_8h_a59114de73dd305d5825a8547155b8946}} 
+\index{aero\_reps.h@{aero\_reps.h}!aero\_rep\_single\_particle\_get\_aero\_conc\_type@{aero\_rep\_single\_particle\_get\_aero\_conc\_type}}
+\index{aero\_rep\_single\_particle\_get\_aero\_conc\_type@{aero\_rep\_single\_particle\_get\_aero\_conc\_type}!aero\_reps.h@{aero\_reps.h}}
+\doxysubsubsection{\texorpdfstring{aero\_rep\_single\_particle\_get\_aero\_conc\_type()}{aero\_rep\_single\_particle\_get\_aero\_conc\_type()}}
+{\footnotesize\ttfamily void aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+get\+\_\+aero\+\_\+conc\+\_\+type (\begin{DoxyParamCaption}\item[{int}]{aero\+\_\+phase\+\_\+idx,  }\item[{int $\ast$}]{aero\+\_\+conc\+\_\+type,  }\item[{int $\ast$}]{aero\+\_\+rep\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{aero\+\_\+rep\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{aero\+\_\+rep\+\_\+env\+\_\+data }\end{DoxyParamCaption})}
+
+
+
+Get the type of aerosol concentration used. 
+
+Single particle concentrations are per-\/particle.
+
+
+\begin{DoxyParams}{Parameters}
+{\em aero\+\_\+phase\+\_\+idx} & Index of the aerosol phase within the representation \\
+\hline
+{\em aero\+\_\+conc\+\_\+type} & Pointer to int that will hold the concentration type code (0 = per particle mass concentrations; 1 = total particle mass concentrations) \\
+\hline
+{\em aero\+\_\+rep\+\_\+int\+\_\+data} & Pointer to the aerosol representation integer data \\
+\hline
+{\em aero\+\_\+rep\+\_\+float\+\_\+data} & Pointer to the aerosol representation floating-\/point data \\
+\hline
+{\em aero\+\_\+rep\+\_\+env\+\_\+data} & Pointer to the aerosol representation environment-\/dependent parameters \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 229 of file aero\+\_\+rep\+\_\+single\+\_\+particle.\+c.
+
+\mbox{\Hypertarget{aero__reps_8h_a203b6931fd5a504b7cc1750eb582b60c}\label{aero__reps_8h_a203b6931fd5a504b7cc1750eb582b60c}} 
+\index{aero\_reps.h@{aero\_reps.h}!aero\_rep\_single\_particle\_get\_aero\_phase\_avg\_MW\_\_kg\_mol@{aero\_rep\_single\_particle\_get\_aero\_phase\_avg\_MW\_\_kg\_mol}}
+\index{aero\_rep\_single\_particle\_get\_aero\_phase\_avg\_MW\_\_kg\_mol@{aero\_rep\_single\_particle\_get\_aero\_phase\_avg\_MW\_\_kg\_mol}!aero\_reps.h@{aero\_reps.h}}
+\doxysubsubsection{\texorpdfstring{aero\_rep\_single\_particle\_get\_aero\_phase\_avg\_MW\_\_kg\_mol()}{aero\_rep\_single\_particle\_get\_aero\_phase\_avg\_MW\_\_kg\_mol()}}
+{\footnotesize\ttfamily void aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+get\+\_\+aero\+\_\+phase\+\_\+avg\+\_\+\+MW\+\_\+\+\_\+kg\+\_\+mol (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{int}]{aero\+\_\+phase\+\_\+idx,  }\item[{double $\ast$}]{aero\+\_\+phase\+\_\+avg\+\_\+\+MW,  }\item[{double $\ast$}]{partial\+\_\+deriv,  }\item[{int $\ast$}]{aero\+\_\+rep\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{aero\+\_\+rep\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{aero\+\_\+rep\+\_\+env\+\_\+data }\end{DoxyParamCaption})}
+
+
+
+Get the average molecular weight in an aerosol phase $m$ ( $\mbox{\si{\kilo\gram\per\mol}}$) 
+
+The single particle mass is set for each new state as the sum of the masses of the aerosol phases that compose the particle
+
+
+\begin{DoxyParams}{Parameters}
+{\em model\+\_\+data} & Pointer to the model data, including the state array \\
+\hline
+{\em aero\+\_\+phase\+\_\+idx} & Index of the aerosol phase within the representation \\
+\hline
+{\em aero\+\_\+phase\+\_\+avg\+\_\+\+MW} & Average molecular weight in the aerosol phase ( $\mbox{\si{\kilogram\per\mole}}$) \\
+\hline
+{\em partial\+\_\+deriv} & $\frac{\partial m}{\partial y}$ where $y$ are the species on the state array \\
+\hline
+{\em aero\+\_\+rep\+\_\+int\+\_\+data} & Pointer to the aerosol representation integer data \\
+\hline
+{\em aero\+\_\+rep\+\_\+float\+\_\+data} & Pointer to the aerosol representation floating-\/point data \\
+\hline
+{\em aero\+\_\+rep\+\_\+env\+\_\+data} & Pointer to the aerosol representation environment-\/dependent parameters \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 304 of file aero\+\_\+rep\+\_\+single\+\_\+particle.\+c.
+
+\mbox{\Hypertarget{aero__reps_8h_ad49c89b34b57e5b644d6506ead9dea34}\label{aero__reps_8h_ad49c89b34b57e5b644d6506ead9dea34}} 
+\index{aero\_reps.h@{aero\_reps.h}!aero\_rep\_single\_particle\_get\_aero\_phase\_mass\_\_kg\_m3@{aero\_rep\_single\_particle\_get\_aero\_phase\_mass\_\_kg\_m3}}
+\index{aero\_rep\_single\_particle\_get\_aero\_phase\_mass\_\_kg\_m3@{aero\_rep\_single\_particle\_get\_aero\_phase\_mass\_\_kg\_m3}!aero\_reps.h@{aero\_reps.h}}
+\doxysubsubsection{\texorpdfstring{aero\_rep\_single\_particle\_get\_aero\_phase\_mass\_\_kg\_m3()}{aero\_rep\_single\_particle\_get\_aero\_phase\_mass\_\_kg\_m3()}}
+{\footnotesize\ttfamily void aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+get\+\_\+aero\+\_\+phase\+\_\+mass\+\_\+\+\_\+kg\+\_\+m3 (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{int}]{aero\+\_\+phase\+\_\+idx,  }\item[{double $\ast$}]{aero\+\_\+phase\+\_\+mass,  }\item[{double $\ast$}]{partial\+\_\+deriv,  }\item[{int $\ast$}]{aero\+\_\+rep\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{aero\+\_\+rep\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{aero\+\_\+rep\+\_\+env\+\_\+data }\end{DoxyParamCaption})}
+
+
+
+Get the total mass in an aerosol phase $m$ ( $\mbox{\si{\kilogram\per\cubic\metre}}$) 
+
+The single particle mass is set for each new state as the sum of the masses of the aerosol phases that compose the particle
+
+
+\begin{DoxyParams}{Parameters}
+{\em model\+\_\+data} & Pointer to the model data, including the state array \\
+\hline
+{\em aero\+\_\+phase\+\_\+idx} & Index of the aerosol phase within the representation \\
+\hline
+{\em aero\+\_\+phase\+\_\+mass} & Total mass in the aerosol phase, $m$ ( $\mbox{\si{\kilogram\per\cubic\metre}}$) \\
+\hline
+{\em partial\+\_\+deriv} & $\frac{\partial m}{\partial y}$ where $y$ are the species on the state array \\
+\hline
+{\em aero\+\_\+rep\+\_\+int\+\_\+data} & Pointer to the aerosol representation integer data \\
+\hline
+{\em aero\+\_\+rep\+\_\+float\+\_\+data} & Pointer to the aerosol representation floating-\/point data \\
+\hline
+{\em aero\+\_\+rep\+\_\+env\+\_\+data} & Pointer to the aerosol representation environment-\/dependent parameters \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 260 of file aero\+\_\+rep\+\_\+single\+\_\+particle.\+c.
+
+\mbox{\Hypertarget{aero__reps_8h_ac118d92685e58dda51e1a4a7ac16ddda}\label{aero__reps_8h_ac118d92685e58dda51e1a4a7ac16ddda}} 
+\index{aero\_reps.h@{aero\_reps.h}!aero\_rep\_single\_particle\_get\_dependencies@{aero\_rep\_single\_particle\_get\_dependencies}}
+\index{aero\_rep\_single\_particle\_get\_dependencies@{aero\_rep\_single\_particle\_get\_dependencies}!aero\_reps.h@{aero\_reps.h}}
+\doxysubsubsection{\texorpdfstring{aero\_rep\_single\_particle\_get\_dependencies()}{aero\_rep\_single\_particle\_get\_dependencies()}}
+{\footnotesize\ttfamily void aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+get\+\_\+dependencies (\begin{DoxyParamCaption}\item[{int $\ast$}]{aero\+\_\+rep\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{aero\+\_\+rep\+\_\+float\+\_\+data,  }\item[{\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1}{bool}} $\ast$}]{state\+\_\+flags }\end{DoxyParamCaption})}
+
+
+
+Flag elements on the state array used by this aerosol representation. 
+
+The single particle aerosol representation functions do not use state array values
+
+
+\begin{DoxyParams}{Parameters}
+{\em aero\+\_\+rep\+\_\+int\+\_\+data} & Pointer to the aerosol representation integer data \\
+\hline
+{\em aero\+\_\+rep\+\_\+float\+\_\+data} & Pointer to the aerosol representation floating-\/point data \\
+\hline
+{\em state\+\_\+flags} & Array of flags indicating state array elements used \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 79 of file aero\+\_\+rep\+\_\+single\+\_\+particle.\+c.
+
+\mbox{\Hypertarget{aero__reps_8h_a48b11d345d89071d34e67b5063b1b891}\label{aero__reps_8h_a48b11d345d89071d34e67b5063b1b891}} 
+\index{aero\_reps.h@{aero\_reps.h}!aero\_rep\_single\_particle\_get\_effective\_radius\_\_m@{aero\_rep\_single\_particle\_get\_effective\_radius\_\_m}}
+\index{aero\_rep\_single\_particle\_get\_effective\_radius\_\_m@{aero\_rep\_single\_particle\_get\_effective\_radius\_\_m}!aero\_reps.h@{aero\_reps.h}}
+\doxysubsubsection{\texorpdfstring{aero\_rep\_single\_particle\_get\_effective\_radius\_\_m()}{aero\_rep\_single\_particle\_get\_effective\_radius\_\_m()}}
+{\footnotesize\ttfamily void aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+get\+\_\+effective\+\_\+radius\+\_\+\+\_\+m (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{int}]{aero\+\_\+phase\+\_\+idx,  }\item[{double $\ast$}]{radius,  }\item[{double $\ast$}]{partial\+\_\+deriv,  }\item[{int $\ast$}]{aero\+\_\+rep\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{aero\+\_\+rep\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{aero\+\_\+rep\+\_\+env\+\_\+data }\end{DoxyParamCaption})}
+
+
+
+Get the effective particle radius $r_{eff}$ (m) 
+
+
+\begin{DoxyParams}{Parameters}
+{\em model\+\_\+data} & Pointer to the model data, including the state array \\
+\hline
+{\em aero\+\_\+phase\+\_\+idx} & Index of the aerosol phase within the representation \\
+\hline
+{\em radius} & Effective particle radius (m) \\
+\hline
+{\em partial\+\_\+deriv} & $\frac{\partial r_{eff}}{\partial y}$ where $y$ are species on the state array \\
+\hline
+{\em aero\+\_\+rep\+\_\+int\+\_\+data} & Pointer to the aerosol representation integer data \\
+\hline
+{\em aero\+\_\+rep\+\_\+float\+\_\+data} & Pointer to the aerosol representation floating-\/point data \\
+\hline
+{\em aero\+\_\+rep\+\_\+env\+\_\+data} & Pointer to the aerosol representation environment-\/dependent parameters \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 143 of file aero\+\_\+rep\+\_\+single\+\_\+particle.\+c.
+
+\mbox{\Hypertarget{aero__reps_8h_afa7d35b774d0ab4d7cad7fb30d75e897}\label{aero__reps_8h_afa7d35b774d0ab4d7cad7fb30d75e897}} 
+\index{aero\_reps.h@{aero\_reps.h}!aero\_rep\_single\_particle\_get\_number\_conc\_\_n\_m3@{aero\_rep\_single\_particle\_get\_number\_conc\_\_n\_m3}}
+\index{aero\_rep\_single\_particle\_get\_number\_conc\_\_n\_m3@{aero\_rep\_single\_particle\_get\_number\_conc\_\_n\_m3}!aero\_reps.h@{aero\_reps.h}}
+\doxysubsubsection{\texorpdfstring{aero\_rep\_single\_particle\_get\_number\_conc\_\_n\_m3()}{aero\_rep\_single\_particle\_get\_number\_conc\_\_n\_m3()}}
+{\footnotesize\ttfamily void aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+get\+\_\+number\+\_\+conc\+\_\+\+\_\+n\+\_\+m3 (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{int}]{aero\+\_\+phase\+\_\+idx,  }\item[{double $\ast$}]{number\+\_\+conc,  }\item[{double $\ast$}]{partial\+\_\+deriv,  }\item[{int $\ast$}]{aero\+\_\+rep\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{aero\+\_\+rep\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{aero\+\_\+rep\+\_\+env\+\_\+data }\end{DoxyParamCaption})}
+
+
+
+Get the particle number concentration $n$ ( $\mbox{\si{\#\per\cubic\metre}}$) 
+
+This single particle number concentration is set by the aerosol model prior to solving the chemistry. Thus, all $\frac{\partial n}{\partial y}$ are zero. Also, there is only one set of particles in the single particle representation, so the phase index is not used.
+
+
+\begin{DoxyParams}{Parameters}
+{\em model\+\_\+data} & Pointer to the model data, including the state array \\
+\hline
+{\em aero\+\_\+phase\+\_\+idx} & Index of the aerosol phase within the representation (not used) \\
+\hline
+{\em number\+\_\+conc} & Particle number concentration, $n$ ( $\mbox{\si{\#\per\cubic\metre}}$) \\
+\hline
+{\em partial\+\_\+deriv} & $\frac{\partial n}{\partial y}$ where $y$ are the species on the state array \\
+\hline
+{\em aero\+\_\+rep\+\_\+int\+\_\+data} & Pointer to the aerosol representation integer data \\
+\hline
+{\em aero\+\_\+rep\+\_\+float\+\_\+data} & Pointer to the aerosol representation floating-\/point data \\
+\hline
+{\em aero\+\_\+rep\+\_\+env\+\_\+data} & Pointer to the aerosol representation environment-\/dependent parameters \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 196 of file aero\+\_\+rep\+\_\+single\+\_\+particle.\+c.
+
+\mbox{\Hypertarget{aero__reps_8h_a076423c54855479ccee0af37f2d9840a}\label{aero__reps_8h_a076423c54855479ccee0af37f2d9840a}} 
+\index{aero\_reps.h@{aero\_reps.h}!aero\_rep\_single\_particle\_get\_used\_jac\_elem@{aero\_rep\_single\_particle\_get\_used\_jac\_elem}}
+\index{aero\_rep\_single\_particle\_get\_used\_jac\_elem@{aero\_rep\_single\_particle\_get\_used\_jac\_elem}!aero\_reps.h@{aero\_reps.h}}
+\doxysubsubsection{\texorpdfstring{aero\_rep\_single\_particle\_get\_used\_jac\_elem()}{aero\_rep\_single\_particle\_get\_used\_jac\_elem()}}
+{\footnotesize\ttfamily int aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{int}]{aero\+\_\+phase\+\_\+idx,  }\item[{int $\ast$}]{aero\+\_\+rep\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{aero\+\_\+rep\+\_\+float\+\_\+data,  }\item[{\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1}{bool}} $\ast$}]{jac\+\_\+struct }\end{DoxyParamCaption})}
+
+
+
+Flag \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used in calcualtions of mass and volume. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em aero\+\_\+rep\+\_\+int\+\_\+data} & Pointer to the aerosol representation integer data \\
+\hline
+{\em aero\+\_\+rep\+\_\+float\+\_\+data} & Pointer to the aerosol representation floating-\/point data \\
+\hline
+{\em model\+\_\+data} & Pointer to the model data \\
+\hline
+{\em aero\+\_\+phase\+\_\+idx} & Index of the aerosol phase to find elements for \\
+\hline
+{\em jac\+\_\+struct} & 1D array of flags indicating potentially non-\/zero \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements. (The dependent variable should have been chosen by the calling function.) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Number of \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements flagged 
+\end{DoxyReturn}
+
+
+Definition at line 47 of file aero\+\_\+rep\+\_\+single\+\_\+particle.\+c.
+
+\mbox{\Hypertarget{aero__reps_8h_a93b022b244ab389f594b3c1ee8956d26}\label{aero__reps_8h_a93b022b244ab389f594b3c1ee8956d26}} 
+\index{aero\_reps.h@{aero\_reps.h}!aero\_rep\_single\_particle\_print@{aero\_rep\_single\_particle\_print}}
+\index{aero\_rep\_single\_particle\_print@{aero\_rep\_single\_particle\_print}!aero\_reps.h@{aero\_reps.h}}
+\doxysubsubsection{\texorpdfstring{aero\_rep\_single\_particle\_print()}{aero\_rep\_single\_particle\_print()}}
+{\footnotesize\ttfamily void aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+print (\begin{DoxyParamCaption}\item[{int $\ast$}]{aero\+\_\+rep\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{aero\+\_\+rep\+\_\+float\+\_\+data }\end{DoxyParamCaption})}
+
+
+
+Print the Single Particle reaction parameters. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em aero\+\_\+rep\+\_\+int\+\_\+data} & Pointer to the aerosol representation integer data \\
+\hline
+{\em aero\+\_\+rep\+\_\+float\+\_\+data} & Pointer to the aerosol representation floating-\/point data \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 381 of file aero\+\_\+rep\+\_\+single\+\_\+particle.\+c.
+
+\mbox{\Hypertarget{aero__reps_8h_afc23dec55d2720c18e17a3cdbb6b6a7f}\label{aero__reps_8h_afc23dec55d2720c18e17a3cdbb6b6a7f}} 
+\index{aero\_reps.h@{aero\_reps.h}!aero\_rep\_single\_particle\_set\_number\_update\_data\_\_n\_m3@{aero\_rep\_single\_particle\_set\_number\_update\_data\_\_n\_m3}}
+\index{aero\_rep\_single\_particle\_set\_number\_update\_data\_\_n\_m3@{aero\_rep\_single\_particle\_set\_number\_update\_data\_\_n\_m3}!aero\_reps.h@{aero\_reps.h}}
+\doxysubsubsection{\texorpdfstring{aero\_rep\_single\_particle\_set\_number\_update\_data\_\_n\_m3()}{aero\_rep\_single\_particle\_set\_number\_update\_data\_\_n\_m3()}}
+{\footnotesize\ttfamily void aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+set\+\_\+number\+\_\+update\+\_\+data\+\_\+\+\_\+n\+\_\+m3 (\begin{DoxyParamCaption}\item[{void $\ast$}]{update\+\_\+data,  }\item[{int}]{aero\+\_\+rep\+\_\+id,  }\item[{int}]{particle\+\_\+id,  }\item[{double}]{number\+\_\+conc }\end{DoxyParamCaption})}
+
+
+
+Set number update data (\#/m3) 
+
+
+\begin{DoxyParams}{Parameters}
+{\em update\+\_\+data} & Pointer to an allocated number update data object \\
+\hline
+{\em aero\+\_\+rep\+\_\+id} & Id of the aerosol representation(s) to update \\
+\hline
+{\em particle\+\_\+id} & Id of the computational particle \\
+\hline
+{\em number\+\_\+conc} & New particle number (\#/m3) \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 421 of file aero\+\_\+rep\+\_\+single\+\_\+particle.\+c.
+
+\mbox{\Hypertarget{aero__reps_8h_abe4da510bed46cee8a75f90917764311}\label{aero__reps_8h_abe4da510bed46cee8a75f90917764311}} 
+\index{aero\_reps.h@{aero\_reps.h}!aero\_rep\_single\_particle\_update\_data@{aero\_rep\_single\_particle\_update\_data}}
+\index{aero\_rep\_single\_particle\_update\_data@{aero\_rep\_single\_particle\_update\_data}!aero\_reps.h@{aero\_reps.h}}
+\doxysubsubsection{\texorpdfstring{aero\_rep\_single\_particle\_update\_data()}{aero\_rep\_single\_particle\_update\_data()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1}{bool}} aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+update\+\_\+data (\begin{DoxyParamCaption}\item[{void $\ast$}]{update\+\_\+data,  }\item[{int $\ast$}]{aero\+\_\+rep\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{aero\+\_\+rep\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{aero\+\_\+rep\+\_\+env\+\_\+data }\end{DoxyParamCaption})}
+
+
+
+Update aerosol representation data. 
+
+Single particle aerosol representation update data is structured as follows\+:
+
+
+\begin{DoxyItemize}
+\item {\bfseries{int}} aero\+\_\+rep\+\_\+id (Id of one or more aerosol representations set by the host model using the camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t\+::set\+\_\+id function prior to initializing the solver.)
+\item {\bfseries{int}} update\+\_\+type (Type of update to perform. Can be UPDATE\+\_\+\+NUMBER only.)
+\item {\bfseries{double}} new\+\_\+value (Either the new radius (m) or the new number concentration ( $\mbox{\si{\#\per\cubic\centi\metre}}$).)
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}{Parameters}
+{\em update\+\_\+data} & Pointer to the updated aerosol representation data \\
+\hline
+{\em aero\+\_\+rep\+\_\+int\+\_\+data} & Pointer to the aerosol representation integer data \\
+\hline
+{\em aero\+\_\+rep\+\_\+float\+\_\+data} & Pointer to the aerosol representation floating-\/point data \\
+\hline
+{\em aero\+\_\+rep\+\_\+env\+\_\+data} & Pointer to the aerosol representation environment-\/dependent parameters \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Flag indicating whether this is the aerosol representation to update 
+\end{DoxyReturn}
+
+
+Definition at line 351 of file aero\+\_\+rep\+\_\+single\+\_\+particle.\+c.
+
+\mbox{\Hypertarget{aero__reps_8h_abb3778ac04df76a32ac3359b8cabe51b}\label{aero__reps_8h_abb3778ac04df76a32ac3359b8cabe51b}} 
+\index{aero\_reps.h@{aero\_reps.h}!aero\_rep\_single\_particle\_update\_env\_state@{aero\_rep\_single\_particle\_update\_env\_state}}
+\index{aero\_rep\_single\_particle\_update\_env\_state@{aero\_rep\_single\_particle\_update\_env\_state}!aero\_reps.h@{aero\_reps.h}}
+\doxysubsubsection{\texorpdfstring{aero\_rep\_single\_particle\_update\_env\_state()}{aero\_rep\_single\_particle\_update\_env\_state()}}
+{\footnotesize\ttfamily void aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+update\+\_\+env\+\_\+state (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{int $\ast$}]{aero\+\_\+rep\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{aero\+\_\+rep\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{aero\+\_\+rep\+\_\+env\+\_\+data }\end{DoxyParamCaption})}
+
+
+
+Update aerosol representation data for new environmental conditions. 
+
+The single particle aerosol representation does not use environmental conditions
+
+
+\begin{DoxyParams}{Parameters}
+{\em model\+\_\+data} & Pointer to the model data \\
+\hline
+{\em aero\+\_\+rep\+\_\+int\+\_\+data} & Pointer to the aerosol representation integer data \\
+\hline
+{\em aero\+\_\+rep\+\_\+float\+\_\+data} & Pointer to the aerosol representation floating-\/point data \\
+\hline
+{\em aero\+\_\+rep\+\_\+env\+\_\+data} & Pointer to the aerosol representation environment-\/dependent parameters \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 100 of file aero\+\_\+rep\+\_\+single\+\_\+particle.\+c.
+
+\mbox{\Hypertarget{aero__reps_8h_afc5e4c6a81bf52bf0c8ee88037a4954d}\label{aero__reps_8h_afc5e4c6a81bf52bf0c8ee88037a4954d}} 
+\index{aero\_reps.h@{aero\_reps.h}!aero\_rep\_single\_particle\_update\_state@{aero\_rep\_single\_particle\_update\_state}}
+\index{aero\_rep\_single\_particle\_update\_state@{aero\_rep\_single\_particle\_update\_state}!aero\_reps.h@{aero\_reps.h}}
+\doxysubsubsection{\texorpdfstring{aero\_rep\_single\_particle\_update\_state()}{aero\_rep\_single\_particle\_update\_state()}}
+{\footnotesize\ttfamily void aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+update\+\_\+state (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{int $\ast$}]{aero\+\_\+rep\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{aero\+\_\+rep\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{aero\+\_\+rep\+\_\+env\+\_\+data }\end{DoxyParamCaption})}
+
+
+
+Update aerosol representation data for a new state. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em model\+\_\+data} & Pointer to the model data, include the state array \\
+\hline
+{\em aero\+\_\+rep\+\_\+int\+\_\+data} & Pointer to the aerosol representation integer data \\
+\hline
+{\em aero\+\_\+rep\+\_\+float\+\_\+data} & Pointer to the aerosol representation floating-\/point data \\
+\hline
+{\em aero\+\_\+rep\+\_\+env\+\_\+data} & Pointer to the aerosol representation environment-\/dependent parameters \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 120 of file aero\+\_\+rep\+\_\+single\+\_\+particle.\+c.
+

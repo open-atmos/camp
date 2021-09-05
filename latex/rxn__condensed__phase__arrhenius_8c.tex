@@ -1,0 +1,458 @@
+\hypertarget{rxn__condensed__phase__arrhenius_8c}{}\doxysection{rxn\+\_\+condensed\+\_\+phase\+\_\+arrhenius.\+c File Reference}
+\label{rxn__condensed__phase__arrhenius_8c}\index{rxn\_condensed\_phase\_arrhenius.c@{rxn\_condensed\_phase\_arrhenius.c}}
+
+
+Condensed Phase Arrhenius reaction solver functions.  
+
+
+Include dependency graph for rxn\+\_\+condensed\+\_\+phase\+\_\+arrhenius.\+c\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{rxn__condensed__phase__arrhenius_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{rxn__condensed__phase__arrhenius_8c_aa90d2b6c48aceb4d7ac3d93d5249bb60}{TEMPERATURE\+\_\+\+K\+\_\+}}~env\+\_\+data\mbox{[}0\mbox{]}
+\item 
+\#define \mbox{\hyperlink{rxn__condensed__phase__arrhenius_8c_a32cc078fd8ca9ad0684c48ae0aad7135}{PRESSURE\+\_\+\+PA\+\_\+}}~env\+\_\+data\mbox{[}1\mbox{]}
+\item 
+\#define \mbox{\hyperlink{rxn__condensed__phase__arrhenius_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}}~(int\+\_\+data\mbox{[}0\mbox{]})
+\item 
+\#define \mbox{\hyperlink{rxn__condensed__phase__arrhenius_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}}~(int\+\_\+data\mbox{[}1\mbox{]})
+\item 
+\#define \mbox{\hyperlink{rxn__condensed__phase__arrhenius_8c_adf4b84135880d5ac73ce37df877d91fb}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+}}~(int\+\_\+data\mbox{[}2\mbox{]})
+\item 
+\#define \mbox{\hyperlink{rxn__condensed__phase__arrhenius_8c_a71700f5633db3f99b43c798b09c60bd2}{A\+\_\+}}~(float\+\_\+data\mbox{[}0\mbox{]})
+\item 
+\#define \mbox{\hyperlink{rxn__condensed__phase__arrhenius_8c_a97097eeee58a37a9710a05f559d84a6b}{B\+\_\+}}~(float\+\_\+data\mbox{[}1\mbox{]})
+\item 
+\#define \mbox{\hyperlink{rxn__condensed__phase__arrhenius_8c_ad010fec48ee67af5ba75e0ec6c3f5ce4}{C\+\_\+}}~(float\+\_\+data\mbox{[}2\mbox{]})
+\item 
+\#define \mbox{\hyperlink{rxn__condensed__phase__arrhenius_8c_abf33a03f27734aa2fcf6119f36390bd9}{D\+\_\+}}~(float\+\_\+data\mbox{[}3\mbox{]})
+\item 
+\#define \mbox{\hyperlink{rxn__condensed__phase__arrhenius_8c_a80ef7c0a31f0dd1900c1d9b0bd3b96cc}{E\+\_\+}}~(float\+\_\+data\mbox{[}4\mbox{]})
+\item 
+\#define \mbox{\hyperlink{rxn__condensed__phase__arrhenius_8c_a6d62af2f44a112ef5b324cf406a830c2}{RATE\+\_\+\+CONSTANT\+\_\+}}~(rxn\+\_\+env\+\_\+data\mbox{[}0\mbox{]})
+\item 
+\#define \mbox{\hyperlink{rxn__condensed__phase__arrhenius_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}}~3
+\item 
+\#define \mbox{\hyperlink{rxn__condensed__phase__arrhenius_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}{NUM\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+}}~5
+\item 
+\#define \mbox{\hyperlink{rxn__condensed__phase__arrhenius_8c_a1f68a3544ae39a7815cbb5c09dfdeff0}{NUM\+\_\+\+ENV\+\_\+\+PARAM\+\_\+}}~1
+\item 
+\#define \mbox{\hyperlink{rxn__condensed__phase__arrhenius_8c_ae761e39657aac155d83eae9b338be571}{REACT\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + x\mbox{]} -\/ 1)
+\item 
+\#define \mbox{\hyperlink{rxn__condensed__phase__arrhenius_8c_a9fda90058c6a41b1dda6ded03321c4da}{PROD\+\_\+}}(x)~  (int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{rxn__troe_8_f90_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} $\ast$ \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8_f90_adf4b84135880d5ac73ce37df877d91fb}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+}} + x\mbox{]} -\/ 1)
+\item 
+\#define \mbox{\hyperlink{rxn__condensed__phase__arrhenius_8c_a21d22248f675f2c8aed5aa05e839290f}{WATER\+\_\+}}(x)~  (int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + (\mbox{\hyperlink{rxn__troe_8_f90_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + \mbox{\hyperlink{rxn__troe_8_f90_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}}) $\ast$ \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8_f90_adf4b84135880d5ac73ce37df877d91fb}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+}} + x\mbox{]} -\/ 1)
+\item 
+\#define \mbox{\hyperlink{rxn__condensed__phase__arrhenius_8c_af9fc34858d09e71d3cffd88cf942bdf9}{DERIV\+\_\+\+ID\+\_\+}}(x)~  (int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + (\mbox{\hyperlink{rxn__troe_8_f90_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + \mbox{\hyperlink{rxn__troe_8_f90_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}} + 1) $\ast$ \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8_f90_adf4b84135880d5ac73ce37df877d91fb}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+}} + x\mbox{]})
+\item 
+\#define \mbox{\hyperlink{rxn__condensed__phase__arrhenius_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\+\_\+\+ID\+\_\+}}(x)
+\item 
+\#define \mbox{\hyperlink{rxn__condensed__phase__arrhenius_8c_a9ae244708fd9c438bf840ed319733651}{YIELD\+\_\+}}(x)~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}{NUM\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+}} + x\mbox{]})
+\item 
+\#define \mbox{\hyperlink{rxn__condensed__phase__arrhenius_8c_a32583318a6f42e1992ca6faf76d8c6bf}{KGM3\+\_\+\+TO\+\_\+\+MOLM3\+\_\+}}(x)~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}{NUM\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{rxn__troe_8_f90_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}} + x\mbox{]})
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{rxn__condensed__phase__arrhenius_8c_a5160c5060999537531f810c0651dd641}{rxn\+\_\+condensed\+\_\+phase\+\_\+arrhenius\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem}} (int $\ast$rxn\+\_\+int\+\_\+data, double $\ast$rxn\+\_\+float\+\_\+data, \mbox{\hyperlink{struct_jacobian}{Jacobian}} $\ast$jac)
+\begin{DoxyCompactList}\small\item\em Flag \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used by this reaction. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{rxn__condensed__phase__arrhenius_8c_ab83f8527d3603f1aab12d721d33eb214}{rxn\+\_\+condensed\+\_\+phase\+\_\+arrhenius\+\_\+update\+\_\+ids}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, int $\ast$deriv\+\_\+ids, \mbox{\hyperlink{struct_jacobian}{Jacobian}} jac, int $\ast$rxn\+\_\+int\+\_\+data, double $\ast$rxn\+\_\+float\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Update the time derivative and Jacbobian array indices. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{rxn__condensed__phase__arrhenius_8c_a7c243d69c88a04756e539c34fef8d8b1}{rxn\+\_\+condensed\+\_\+phase\+\_\+arrhenius\+\_\+update\+\_\+env\+\_\+state}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, int $\ast$rxn\+\_\+int\+\_\+data, double $\ast$rxn\+\_\+float\+\_\+data, double $\ast$rxn\+\_\+env\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Update reaction data for new environmental conditions. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{rxn__condensed__phase__arrhenius_8c_a4186c08bd2d6635c4e80c28482bc5df6}{rxn\+\_\+condensed\+\_\+phase\+\_\+arrhenius\+\_\+calc\+\_\+deriv\+\_\+contrib}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, \mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}} time\+\_\+deriv, int $\ast$rxn\+\_\+int\+\_\+data, double $\ast$rxn\+\_\+float\+\_\+data, double $\ast$rxn\+\_\+env\+\_\+data, double time\+\_\+step)
+\begin{DoxyCompactList}\small\item\em Calculate contributions to the time derivative f(t,y) from this reaction. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{rxn__condensed__phase__arrhenius_8c_a670e87785981a83efecb80fa1c56ff0e}{rxn\+\_\+condensed\+\_\+phase\+\_\+arrhenius\+\_\+calc\+\_\+jac\+\_\+contrib}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, \mbox{\hyperlink{struct_jacobian}{Jacobian}} jac, int $\ast$rxn\+\_\+int\+\_\+data, double $\ast$rxn\+\_\+float\+\_\+data, double $\ast$rxn\+\_\+env\+\_\+data, double time\+\_\+step)
+\begin{DoxyCompactList}\small\item\em Calculate contributions to the \mbox{\hyperlink{struct_jacobian}{Jacobian}} from this reaction. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{rxn__condensed__phase__arrhenius_8c_aadd9ba2b3db5f9cb8f3420663bd7fa48}{rxn\+\_\+condensed\+\_\+phase\+\_\+arrhenius\+\_\+print}} (int $\ast$rxn\+\_\+int\+\_\+data, double $\ast$rxn\+\_\+float\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Print the Condensed Phase Arrhenius reaction parameters. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Condensed Phase Arrhenius reaction solver functions. 
+
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{rxn__condensed__phase__arrhenius_8c_a71700f5633db3f99b43c798b09c60bd2}\label{rxn__condensed__phase__arrhenius_8c_a71700f5633db3f99b43c798b09c60bd2}} 
+\index{rxn\_condensed\_phase\_arrhenius.c@{rxn\_condensed\_phase\_arrhenius.c}!A\_@{A\_}}
+\index{A\_@{A\_}!rxn\_condensed\_phase\_arrhenius.c@{rxn\_condensed\_phase\_arrhenius.c}}
+\doxysubsubsection{\texorpdfstring{A\_}{A\_}}
+{\footnotesize\ttfamily \#define A\+\_\+~(float\+\_\+data\mbox{[}0\mbox{]})}
+
+
+
+Definition at line 23 of file rxn\+\_\+condensed\+\_\+phase\+\_\+arrhenius.\+c.
+
+\mbox{\Hypertarget{rxn__condensed__phase__arrhenius_8c_a97097eeee58a37a9710a05f559d84a6b}\label{rxn__condensed__phase__arrhenius_8c_a97097eeee58a37a9710a05f559d84a6b}} 
+\index{rxn\_condensed\_phase\_arrhenius.c@{rxn\_condensed\_phase\_arrhenius.c}!B\_@{B\_}}
+\index{B\_@{B\_}!rxn\_condensed\_phase\_arrhenius.c@{rxn\_condensed\_phase\_arrhenius.c}}
+\doxysubsubsection{\texorpdfstring{B\_}{B\_}}
+{\footnotesize\ttfamily \#define B\+\_\+~(float\+\_\+data\mbox{[}1\mbox{]})}
+
+
+
+Definition at line 24 of file rxn\+\_\+condensed\+\_\+phase\+\_\+arrhenius.\+c.
+
+\mbox{\Hypertarget{rxn__condensed__phase__arrhenius_8c_ad010fec48ee67af5ba75e0ec6c3f5ce4}\label{rxn__condensed__phase__arrhenius_8c_ad010fec48ee67af5ba75e0ec6c3f5ce4}} 
+\index{rxn\_condensed\_phase\_arrhenius.c@{rxn\_condensed\_phase\_arrhenius.c}!C\_@{C\_}}
+\index{C\_@{C\_}!rxn\_condensed\_phase\_arrhenius.c@{rxn\_condensed\_phase\_arrhenius.c}}
+\doxysubsubsection{\texorpdfstring{C\_}{C\_}}
+{\footnotesize\ttfamily \#define C\+\_\+~(float\+\_\+data\mbox{[}2\mbox{]})}
+
+
+
+Definition at line 25 of file rxn\+\_\+condensed\+\_\+phase\+\_\+arrhenius.\+c.
+
+\mbox{\Hypertarget{rxn__condensed__phase__arrhenius_8c_abf33a03f27734aa2fcf6119f36390bd9}\label{rxn__condensed__phase__arrhenius_8c_abf33a03f27734aa2fcf6119f36390bd9}} 
+\index{rxn\_condensed\_phase\_arrhenius.c@{rxn\_condensed\_phase\_arrhenius.c}!D\_@{D\_}}
+\index{D\_@{D\_}!rxn\_condensed\_phase\_arrhenius.c@{rxn\_condensed\_phase\_arrhenius.c}}
+\doxysubsubsection{\texorpdfstring{D\_}{D\_}}
+{\footnotesize\ttfamily \#define D\+\_\+~(float\+\_\+data\mbox{[}3\mbox{]})}
+
+
+
+Definition at line 26 of file rxn\+\_\+condensed\+\_\+phase\+\_\+arrhenius.\+c.
+
+\mbox{\Hypertarget{rxn__condensed__phase__arrhenius_8c_af9fc34858d09e71d3cffd88cf942bdf9}\label{rxn__condensed__phase__arrhenius_8c_af9fc34858d09e71d3cffd88cf942bdf9}} 
+\index{rxn\_condensed\_phase\_arrhenius.c@{rxn\_condensed\_phase\_arrhenius.c}!DERIV\_ID\_@{DERIV\_ID\_}}
+\index{DERIV\_ID\_@{DERIV\_ID\_}!rxn\_condensed\_phase\_arrhenius.c@{rxn\_condensed\_phase\_arrhenius.c}}
+\doxysubsubsection{\texorpdfstring{DERIV\_ID\_}{DERIV\_ID\_}}
+{\footnotesize\ttfamily \#define DERIV\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~  (int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + (\mbox{\hyperlink{rxn__troe_8_f90_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + \mbox{\hyperlink{rxn__troe_8_f90_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}} + 1) $\ast$ \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8_f90_adf4b84135880d5ac73ce37df877d91fb}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+}} + x\mbox{]})}
+
+
+
+Definition at line 37 of file rxn\+\_\+condensed\+\_\+phase\+\_\+arrhenius.\+c.
+
+\mbox{\Hypertarget{rxn__condensed__phase__arrhenius_8c_a80ef7c0a31f0dd1900c1d9b0bd3b96cc}\label{rxn__condensed__phase__arrhenius_8c_a80ef7c0a31f0dd1900c1d9b0bd3b96cc}} 
+\index{rxn\_condensed\_phase\_arrhenius.c@{rxn\_condensed\_phase\_arrhenius.c}!E\_@{E\_}}
+\index{E\_@{E\_}!rxn\_condensed\_phase\_arrhenius.c@{rxn\_condensed\_phase\_arrhenius.c}}
+\doxysubsubsection{\texorpdfstring{E\_}{E\_}}
+{\footnotesize\ttfamily \#define E\+\_\+~(float\+\_\+data\mbox{[}4\mbox{]})}
+
+
+
+Definition at line 27 of file rxn\+\_\+condensed\+\_\+phase\+\_\+arrhenius.\+c.
+
+\mbox{\Hypertarget{rxn__condensed__phase__arrhenius_8c_ab831aae98d4453927c63a93f55ee5a86}\label{rxn__condensed__phase__arrhenius_8c_ab831aae98d4453927c63a93f55ee5a86}} 
+\index{rxn\_condensed\_phase\_arrhenius.c@{rxn\_condensed\_phase\_arrhenius.c}!JAC\_ID\_@{JAC\_ID\_}}
+\index{JAC\_ID\_@{JAC\_ID\_}!rxn\_condensed\_phase\_arrhenius.c@{rxn\_condensed\_phase\_arrhenius.c}}
+\doxysubsubsection{\texorpdfstring{JAC\_ID\_}{JAC\_ID\_}}
+{\footnotesize\ttfamily \#define JAC\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{  (int\_data[\mbox{\hyperlink{rxn__condensed__phase__arrhenius_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\_INT\_PROP\_}} + \(\backslash\)}
+\DoxyCodeLine{            (2 * (\mbox{\hyperlink{rxn__condensed__phase__arrhenius_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}} + \mbox{\hyperlink{rxn__condensed__phase__arrhenius_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}}) + 1) * \mbox{\hyperlink{rxn__condensed__phase__arrhenius_8c_adf4b84135880d5ac73ce37df877d91fb}{NUM\_AERO\_PHASE\_}} + x])}
+
+\end{DoxyCode}
+
+
+Definition at line 39 of file rxn\+\_\+condensed\+\_\+phase\+\_\+arrhenius.\+c.
+
+\mbox{\Hypertarget{rxn__condensed__phase__arrhenius_8c_a32583318a6f42e1992ca6faf76d8c6bf}\label{rxn__condensed__phase__arrhenius_8c_a32583318a6f42e1992ca6faf76d8c6bf}} 
+\index{rxn\_condensed\_phase\_arrhenius.c@{rxn\_condensed\_phase\_arrhenius.c}!KGM3\_TO\_MOLM3\_@{KGM3\_TO\_MOLM3\_}}
+\index{KGM3\_TO\_MOLM3\_@{KGM3\_TO\_MOLM3\_}!rxn\_condensed\_phase\_arrhenius.c@{rxn\_condensed\_phase\_arrhenius.c}}
+\doxysubsubsection{\texorpdfstring{KGM3\_TO\_MOLM3\_}{KGM3\_TO\_MOLM3\_}}
+{\footnotesize\ttfamily \#define KGM3\+\_\+\+TO\+\_\+\+MOLM3\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}{NUM\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{rxn__troe_8_f90_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}} + x\mbox{]})}
+
+
+
+Definition at line 43 of file rxn\+\_\+condensed\+\_\+phase\+\_\+arrhenius.\+c.
+
+\mbox{\Hypertarget{rxn__condensed__phase__arrhenius_8c_adf4b84135880d5ac73ce37df877d91fb}\label{rxn__condensed__phase__arrhenius_8c_adf4b84135880d5ac73ce37df877d91fb}} 
+\index{rxn\_condensed\_phase\_arrhenius.c@{rxn\_condensed\_phase\_arrhenius.c}!NUM\_AERO\_PHASE\_@{NUM\_AERO\_PHASE\_}}
+\index{NUM\_AERO\_PHASE\_@{NUM\_AERO\_PHASE\_}!rxn\_condensed\_phase\_arrhenius.c@{rxn\_condensed\_phase\_arrhenius.c}}
+\doxysubsubsection{\texorpdfstring{NUM\_AERO\_PHASE\_}{NUM\_AERO\_PHASE\_}}
+{\footnotesize\ttfamily \#define NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+~(int\+\_\+data\mbox{[}2\mbox{]})}
+
+
+
+Definition at line 22 of file rxn\+\_\+condensed\+\_\+phase\+\_\+arrhenius.\+c.
+
+\mbox{\Hypertarget{rxn__condensed__phase__arrhenius_8c_a1f68a3544ae39a7815cbb5c09dfdeff0}\label{rxn__condensed__phase__arrhenius_8c_a1f68a3544ae39a7815cbb5c09dfdeff0}} 
+\index{rxn\_condensed\_phase\_arrhenius.c@{rxn\_condensed\_phase\_arrhenius.c}!NUM\_ENV\_PARAM\_@{NUM\_ENV\_PARAM\_}}
+\index{NUM\_ENV\_PARAM\_@{NUM\_ENV\_PARAM\_}!rxn\_condensed\_phase\_arrhenius.c@{rxn\_condensed\_phase\_arrhenius.c}}
+\doxysubsubsection{\texorpdfstring{NUM\_ENV\_PARAM\_}{NUM\_ENV\_PARAM\_}}
+{\footnotesize\ttfamily \#define NUM\+\_\+\+ENV\+\_\+\+PARAM\+\_\+~1}
+
+
+
+Definition at line 31 of file rxn\+\_\+condensed\+\_\+phase\+\_\+arrhenius.\+c.
+
+\mbox{\Hypertarget{rxn__condensed__phase__arrhenius_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}\label{rxn__condensed__phase__arrhenius_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}} 
+\index{rxn\_condensed\_phase\_arrhenius.c@{rxn\_condensed\_phase\_arrhenius.c}!NUM\_FLOAT\_PROP\_@{NUM\_FLOAT\_PROP\_}}
+\index{NUM\_FLOAT\_PROP\_@{NUM\_FLOAT\_PROP\_}!rxn\_condensed\_phase\_arrhenius.c@{rxn\_condensed\_phase\_arrhenius.c}}
+\doxysubsubsection{\texorpdfstring{NUM\_FLOAT\_PROP\_}{NUM\_FLOAT\_PROP\_}}
+{\footnotesize\ttfamily \#define NUM\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+~5}
+
+
+
+Definition at line 30 of file rxn\+\_\+condensed\+\_\+phase\+\_\+arrhenius.\+c.
+
+\mbox{\Hypertarget{rxn__condensed__phase__arrhenius_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}\label{rxn__condensed__phase__arrhenius_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}} 
+\index{rxn\_condensed\_phase\_arrhenius.c@{rxn\_condensed\_phase\_arrhenius.c}!NUM\_INT\_PROP\_@{NUM\_INT\_PROP\_}}
+\index{NUM\_INT\_PROP\_@{NUM\_INT\_PROP\_}!rxn\_condensed\_phase\_arrhenius.c@{rxn\_condensed\_phase\_arrhenius.c}}
+\doxysubsubsection{\texorpdfstring{NUM\_INT\_PROP\_}{NUM\_INT\_PROP\_}}
+{\footnotesize\ttfamily \#define NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+~3}
+
+
+
+Definition at line 29 of file rxn\+\_\+condensed\+\_\+phase\+\_\+arrhenius.\+c.
+
+\mbox{\Hypertarget{rxn__condensed__phase__arrhenius_8c_acf951e890da75cd2d503ed6ce8211fc2}\label{rxn__condensed__phase__arrhenius_8c_acf951e890da75cd2d503ed6ce8211fc2}} 
+\index{rxn\_condensed\_phase\_arrhenius.c@{rxn\_condensed\_phase\_arrhenius.c}!NUM\_PROD\_@{NUM\_PROD\_}}
+\index{NUM\_PROD\_@{NUM\_PROD\_}!rxn\_condensed\_phase\_arrhenius.c@{rxn\_condensed\_phase\_arrhenius.c}}
+\doxysubsubsection{\texorpdfstring{NUM\_PROD\_}{NUM\_PROD\_}}
+{\footnotesize\ttfamily \#define NUM\+\_\+\+PROD\+\_\+~(int\+\_\+data\mbox{[}1\mbox{]})}
+
+
+
+Definition at line 21 of file rxn\+\_\+condensed\+\_\+phase\+\_\+arrhenius.\+c.
+
+\mbox{\Hypertarget{rxn__condensed__phase__arrhenius_8c_a05ef845cf6ed7ab9a774440c42af34fa}\label{rxn__condensed__phase__arrhenius_8c_a05ef845cf6ed7ab9a774440c42af34fa}} 
+\index{rxn\_condensed\_phase\_arrhenius.c@{rxn\_condensed\_phase\_arrhenius.c}!NUM\_REACT\_@{NUM\_REACT\_}}
+\index{NUM\_REACT\_@{NUM\_REACT\_}!rxn\_condensed\_phase\_arrhenius.c@{rxn\_condensed\_phase\_arrhenius.c}}
+\doxysubsubsection{\texorpdfstring{NUM\_REACT\_}{NUM\_REACT\_}}
+{\footnotesize\ttfamily \#define NUM\+\_\+\+REACT\+\_\+~(int\+\_\+data\mbox{[}0\mbox{]})}
+
+
+
+Definition at line 20 of file rxn\+\_\+condensed\+\_\+phase\+\_\+arrhenius.\+c.
+
+\mbox{\Hypertarget{rxn__condensed__phase__arrhenius_8c_a32cc078fd8ca9ad0684c48ae0aad7135}\label{rxn__condensed__phase__arrhenius_8c_a32cc078fd8ca9ad0684c48ae0aad7135}} 
+\index{rxn\_condensed\_phase\_arrhenius.c@{rxn\_condensed\_phase\_arrhenius.c}!PRESSURE\_PA\_@{PRESSURE\_PA\_}}
+\index{PRESSURE\_PA\_@{PRESSURE\_PA\_}!rxn\_condensed\_phase\_arrhenius.c@{rxn\_condensed\_phase\_arrhenius.c}}
+\doxysubsubsection{\texorpdfstring{PRESSURE\_PA\_}{PRESSURE\_PA\_}}
+{\footnotesize\ttfamily \#define PRESSURE\+\_\+\+PA\+\_\+~env\+\_\+data\mbox{[}1\mbox{]}}
+
+
+
+Definition at line 18 of file rxn\+\_\+condensed\+\_\+phase\+\_\+arrhenius.\+c.
+
+\mbox{\Hypertarget{rxn__condensed__phase__arrhenius_8c_a9fda90058c6a41b1dda6ded03321c4da}\label{rxn__condensed__phase__arrhenius_8c_a9fda90058c6a41b1dda6ded03321c4da}} 
+\index{rxn\_condensed\_phase\_arrhenius.c@{rxn\_condensed\_phase\_arrhenius.c}!PROD\_@{PROD\_}}
+\index{PROD\_@{PROD\_}!rxn\_condensed\_phase\_arrhenius.c@{rxn\_condensed\_phase\_arrhenius.c}}
+\doxysubsubsection{\texorpdfstring{PROD\_}{PROD\_}}
+{\footnotesize\ttfamily \#define PROD\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~  (int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{rxn__troe_8_f90_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} $\ast$ \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8_f90_adf4b84135880d5ac73ce37df877d91fb}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+}} + x\mbox{]} -\/ 1)}
+
+
+
+Definition at line 33 of file rxn\+\_\+condensed\+\_\+phase\+\_\+arrhenius.\+c.
+
+\mbox{\Hypertarget{rxn__condensed__phase__arrhenius_8c_a6d62af2f44a112ef5b324cf406a830c2}\label{rxn__condensed__phase__arrhenius_8c_a6d62af2f44a112ef5b324cf406a830c2}} 
+\index{rxn\_condensed\_phase\_arrhenius.c@{rxn\_condensed\_phase\_arrhenius.c}!RATE\_CONSTANT\_@{RATE\_CONSTANT\_}}
+\index{RATE\_CONSTANT\_@{RATE\_CONSTANT\_}!rxn\_condensed\_phase\_arrhenius.c@{rxn\_condensed\_phase\_arrhenius.c}}
+\doxysubsubsection{\texorpdfstring{RATE\_CONSTANT\_}{RATE\_CONSTANT\_}}
+{\footnotesize\ttfamily \#define RATE\+\_\+\+CONSTANT\+\_\+~(rxn\+\_\+env\+\_\+data\mbox{[}0\mbox{]})}
+
+
+
+Definition at line 28 of file rxn\+\_\+condensed\+\_\+phase\+\_\+arrhenius.\+c.
+
+\mbox{\Hypertarget{rxn__condensed__phase__arrhenius_8c_ae761e39657aac155d83eae9b338be571}\label{rxn__condensed__phase__arrhenius_8c_ae761e39657aac155d83eae9b338be571}} 
+\index{rxn\_condensed\_phase\_arrhenius.c@{rxn\_condensed\_phase\_arrhenius.c}!REACT\_@{REACT\_}}
+\index{REACT\_@{REACT\_}!rxn\_condensed\_phase\_arrhenius.c@{rxn\_condensed\_phase\_arrhenius.c}}
+\doxysubsubsection{\texorpdfstring{REACT\_}{REACT\_}}
+{\footnotesize\ttfamily \#define REACT\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + x\mbox{]} -\/ 1)}
+
+
+
+Definition at line 32 of file rxn\+\_\+condensed\+\_\+phase\+\_\+arrhenius.\+c.
+
+\mbox{\Hypertarget{rxn__condensed__phase__arrhenius_8c_aa90d2b6c48aceb4d7ac3d93d5249bb60}\label{rxn__condensed__phase__arrhenius_8c_aa90d2b6c48aceb4d7ac3d93d5249bb60}} 
+\index{rxn\_condensed\_phase\_arrhenius.c@{rxn\_condensed\_phase\_arrhenius.c}!TEMPERATURE\_K\_@{TEMPERATURE\_K\_}}
+\index{TEMPERATURE\_K\_@{TEMPERATURE\_K\_}!rxn\_condensed\_phase\_arrhenius.c@{rxn\_condensed\_phase\_arrhenius.c}}
+\doxysubsubsection{\texorpdfstring{TEMPERATURE\_K\_}{TEMPERATURE\_K\_}}
+{\footnotesize\ttfamily \#define TEMPERATURE\+\_\+\+K\+\_\+~env\+\_\+data\mbox{[}0\mbox{]}}
+
+
+
+Definition at line 17 of file rxn\+\_\+condensed\+\_\+phase\+\_\+arrhenius.\+c.
+
+\mbox{\Hypertarget{rxn__condensed__phase__arrhenius_8c_a21d22248f675f2c8aed5aa05e839290f}\label{rxn__condensed__phase__arrhenius_8c_a21d22248f675f2c8aed5aa05e839290f}} 
+\index{rxn\_condensed\_phase\_arrhenius.c@{rxn\_condensed\_phase\_arrhenius.c}!WATER\_@{WATER\_}}
+\index{WATER\_@{WATER\_}!rxn\_condensed\_phase\_arrhenius.c@{rxn\_condensed\_phase\_arrhenius.c}}
+\doxysubsubsection{\texorpdfstring{WATER\_}{WATER\_}}
+{\footnotesize\ttfamily \#define WATER\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~  (int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + (\mbox{\hyperlink{rxn__troe_8_f90_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + \mbox{\hyperlink{rxn__troe_8_f90_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}}) $\ast$ \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8_f90_adf4b84135880d5ac73ce37df877d91fb}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+}} + x\mbox{]} -\/ 1)}
+
+
+
+Definition at line 35 of file rxn\+\_\+condensed\+\_\+phase\+\_\+arrhenius.\+c.
+
+\mbox{\Hypertarget{rxn__condensed__phase__arrhenius_8c_a9ae244708fd9c438bf840ed319733651}\label{rxn__condensed__phase__arrhenius_8c_a9ae244708fd9c438bf840ed319733651}} 
+\index{rxn\_condensed\_phase\_arrhenius.c@{rxn\_condensed\_phase\_arrhenius.c}!YIELD\_@{YIELD\_}}
+\index{YIELD\_@{YIELD\_}!rxn\_condensed\_phase\_arrhenius.c@{rxn\_condensed\_phase\_arrhenius.c}}
+\doxysubsubsection{\texorpdfstring{YIELD\_}{YIELD\_}}
+{\footnotesize\ttfamily \#define YIELD\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}{NUM\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+}} + x\mbox{]})}
+
+
+
+Definition at line 42 of file rxn\+\_\+condensed\+\_\+phase\+\_\+arrhenius.\+c.
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{rxn__condensed__phase__arrhenius_8c_a4186c08bd2d6635c4e80c28482bc5df6}\label{rxn__condensed__phase__arrhenius_8c_a4186c08bd2d6635c4e80c28482bc5df6}} 
+\index{rxn\_condensed\_phase\_arrhenius.c@{rxn\_condensed\_phase\_arrhenius.c}!rxn\_condensed\_phase\_arrhenius\_calc\_deriv\_contrib@{rxn\_condensed\_phase\_arrhenius\_calc\_deriv\_contrib}}
+\index{rxn\_condensed\_phase\_arrhenius\_calc\_deriv\_contrib@{rxn\_condensed\_phase\_arrhenius\_calc\_deriv\_contrib}!rxn\_condensed\_phase\_arrhenius.c@{rxn\_condensed\_phase\_arrhenius.c}}
+\doxysubsubsection{\texorpdfstring{rxn\_condensed\_phase\_arrhenius\_calc\_deriv\_contrib()}{rxn\_condensed\_phase\_arrhenius\_calc\_deriv\_contrib()}}
+{\footnotesize\ttfamily void rxn\+\_\+condensed\+\_\+phase\+\_\+arrhenius\+\_\+calc\+\_\+deriv\+\_\+contrib (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{\mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}}}]{time\+\_\+deriv,  }\item[{int $\ast$}]{rxn\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+env\+\_\+data,  }\item[{double}]{time\+\_\+step }\end{DoxyParamCaption})}
+
+
+
+Calculate contributions to the time derivative f(t,y) from this reaction. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em model\+\_\+data} & Pointer to the model data, including the state array \\
+\hline
+{\em time\+\_\+deriv} & \mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}} object \\
+\hline
+{\em rxn\+\_\+int\+\_\+data} & Pointer to the reaction integer data \\
+\hline
+{\em rxn\+\_\+float\+\_\+data} & Pointer to the reaction floating-\/point data \\
+\hline
+{\em rxn\+\_\+env\+\_\+data} & Pointer to the environment-\/dependent parameters \\
+\hline
+{\em time\+\_\+step} & Current time step of the itegrator (s) \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 184 of file rxn\+\_\+condensed\+\_\+phase\+\_\+arrhenius.\+c.
+
+\mbox{\Hypertarget{rxn__condensed__phase__arrhenius_8c_a670e87785981a83efecb80fa1c56ff0e}\label{rxn__condensed__phase__arrhenius_8c_a670e87785981a83efecb80fa1c56ff0e}} 
+\index{rxn\_condensed\_phase\_arrhenius.c@{rxn\_condensed\_phase\_arrhenius.c}!rxn\_condensed\_phase\_arrhenius\_calc\_jac\_contrib@{rxn\_condensed\_phase\_arrhenius\_calc\_jac\_contrib}}
+\index{rxn\_condensed\_phase\_arrhenius\_calc\_jac\_contrib@{rxn\_condensed\_phase\_arrhenius\_calc\_jac\_contrib}!rxn\_condensed\_phase\_arrhenius.c@{rxn\_condensed\_phase\_arrhenius.c}}
+\doxysubsubsection{\texorpdfstring{rxn\_condensed\_phase\_arrhenius\_calc\_jac\_contrib()}{rxn\_condensed\_phase\_arrhenius\_calc\_jac\_contrib()}}
+{\footnotesize\ttfamily void rxn\+\_\+condensed\+\_\+phase\+\_\+arrhenius\+\_\+calc\+\_\+jac\+\_\+contrib (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}}}]{jac,  }\item[{int $\ast$}]{rxn\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+env\+\_\+data,  }\item[{double}]{time\+\_\+step }\end{DoxyParamCaption})}
+
+
+
+Calculate contributions to the \mbox{\hyperlink{struct_jacobian}{Jacobian}} from this reaction. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em model\+\_\+data} & Pointer to the model data \\
+\hline
+{\em jac} & Reaction \mbox{\hyperlink{struct_jacobian}{Jacobian}} \\
+\hline
+{\em rxn\+\_\+int\+\_\+data} & Pointer to the reaction integer data \\
+\hline
+{\em rxn\+\_\+float\+\_\+data} & Pointer to the reaction floating-\/point data \\
+\hline
+{\em rxn\+\_\+env\+\_\+data} & Pointer to the environment-\/dependent parameters \\
+\hline
+{\em time\+\_\+step} & Current time step of the itegrator (s) \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 252 of file rxn\+\_\+condensed\+\_\+phase\+\_\+arrhenius.\+c.
+
+\mbox{\Hypertarget{rxn__condensed__phase__arrhenius_8c_a5160c5060999537531f810c0651dd641}\label{rxn__condensed__phase__arrhenius_8c_a5160c5060999537531f810c0651dd641}} 
+\index{rxn\_condensed\_phase\_arrhenius.c@{rxn\_condensed\_phase\_arrhenius.c}!rxn\_condensed\_phase\_arrhenius\_get\_used\_jac\_elem@{rxn\_condensed\_phase\_arrhenius\_get\_used\_jac\_elem}}
+\index{rxn\_condensed\_phase\_arrhenius\_get\_used\_jac\_elem@{rxn\_condensed\_phase\_arrhenius\_get\_used\_jac\_elem}!rxn\_condensed\_phase\_arrhenius.c@{rxn\_condensed\_phase\_arrhenius.c}}
+\doxysubsubsection{\texorpdfstring{rxn\_condensed\_phase\_arrhenius\_get\_used\_jac\_elem()}{rxn\_condensed\_phase\_arrhenius\_get\_used\_jac\_elem()}}
+{\footnotesize\ttfamily void rxn\+\_\+condensed\+\_\+phase\+\_\+arrhenius\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem (\begin{DoxyParamCaption}\item[{int $\ast$}]{rxn\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+float\+\_\+data,  }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}} $\ast$}]{jac }\end{DoxyParamCaption})}
+
+
+
+Flag \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used by this reaction. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em rxn\+\_\+int\+\_\+data} & Pointer to the reaction integer data \\
+\hline
+{\em rxn\+\_\+float\+\_\+data} & Pointer to the reaction floating-\/point data \\
+\hline
+{\em jac} & \mbox{\hyperlink{struct_jacobian}{Jacobian}} \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 51 of file rxn\+\_\+condensed\+\_\+phase\+\_\+arrhenius.\+c.
+
+\mbox{\Hypertarget{rxn__condensed__phase__arrhenius_8c_aadd9ba2b3db5f9cb8f3420663bd7fa48}\label{rxn__condensed__phase__arrhenius_8c_aadd9ba2b3db5f9cb8f3420663bd7fa48}} 
+\index{rxn\_condensed\_phase\_arrhenius.c@{rxn\_condensed\_phase\_arrhenius.c}!rxn\_condensed\_phase\_arrhenius\_print@{rxn\_condensed\_phase\_arrhenius\_print}}
+\index{rxn\_condensed\_phase\_arrhenius\_print@{rxn\_condensed\_phase\_arrhenius\_print}!rxn\_condensed\_phase\_arrhenius.c@{rxn\_condensed\_phase\_arrhenius.c}}
+\doxysubsubsection{\texorpdfstring{rxn\_condensed\_phase\_arrhenius\_print()}{rxn\_condensed\_phase\_arrhenius\_print()}}
+{\footnotesize\ttfamily void rxn\+\_\+condensed\+\_\+phase\+\_\+arrhenius\+\_\+print (\begin{DoxyParamCaption}\item[{int $\ast$}]{rxn\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+float\+\_\+data }\end{DoxyParamCaption})}
+
+
+
+Print the Condensed Phase Arrhenius reaction parameters. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em rxn\+\_\+int\+\_\+data} & Pointer to the reaction integer data \\
+\hline
+{\em rxn\+\_\+float\+\_\+data} & Pointer to the reaction floating-\/point data \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 359 of file rxn\+\_\+condensed\+\_\+phase\+\_\+arrhenius.\+c.
+
+\mbox{\Hypertarget{rxn__condensed__phase__arrhenius_8c_a7c243d69c88a04756e539c34fef8d8b1}\label{rxn__condensed__phase__arrhenius_8c_a7c243d69c88a04756e539c34fef8d8b1}} 
+\index{rxn\_condensed\_phase\_arrhenius.c@{rxn\_condensed\_phase\_arrhenius.c}!rxn\_condensed\_phase\_arrhenius\_update\_env\_state@{rxn\_condensed\_phase\_arrhenius\_update\_env\_state}}
+\index{rxn\_condensed\_phase\_arrhenius\_update\_env\_state@{rxn\_condensed\_phase\_arrhenius\_update\_env\_state}!rxn\_condensed\_phase\_arrhenius.c@{rxn\_condensed\_phase\_arrhenius.c}}
+\doxysubsubsection{\texorpdfstring{rxn\_condensed\_phase\_arrhenius\_update\_env\_state()}{rxn\_condensed\_phase\_arrhenius\_update\_env\_state()}}
+{\footnotesize\ttfamily void rxn\+\_\+condensed\+\_\+phase\+\_\+arrhenius\+\_\+update\+\_\+env\+\_\+state (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{int $\ast$}]{rxn\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+env\+\_\+data }\end{DoxyParamCaption})}
+
+
+
+Update reaction data for new environmental conditions. 
+
+For Condensed Phase Arrhenius reaction this only involves recalculating the forward rate constant.
+
+
+\begin{DoxyParams}{Parameters}
+{\em model\+\_\+data} & Pointer to the model data \\
+\hline
+{\em rxn\+\_\+int\+\_\+data} & Pointer to the reaction integer data \\
+\hline
+{\em rxn\+\_\+float\+\_\+data} & Pointer to the reaction floating-\/point data \\
+\hline
+{\em rxn\+\_\+env\+\_\+data} & Pointer to the environment-\/dependent parameters \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 156 of file rxn\+\_\+condensed\+\_\+phase\+\_\+arrhenius.\+c.
+
+\mbox{\Hypertarget{rxn__condensed__phase__arrhenius_8c_ab83f8527d3603f1aab12d721d33eb214}\label{rxn__condensed__phase__arrhenius_8c_ab83f8527d3603f1aab12d721d33eb214}} 
+\index{rxn\_condensed\_phase\_arrhenius.c@{rxn\_condensed\_phase\_arrhenius.c}!rxn\_condensed\_phase\_arrhenius\_update\_ids@{rxn\_condensed\_phase\_arrhenius\_update\_ids}}
+\index{rxn\_condensed\_phase\_arrhenius\_update\_ids@{rxn\_condensed\_phase\_arrhenius\_update\_ids}!rxn\_condensed\_phase\_arrhenius.c@{rxn\_condensed\_phase\_arrhenius.c}}
+\doxysubsubsection{\texorpdfstring{rxn\_condensed\_phase\_arrhenius\_update\_ids()}{rxn\_condensed\_phase\_arrhenius\_update\_ids()}}
+{\footnotesize\ttfamily void rxn\+\_\+condensed\+\_\+phase\+\_\+arrhenius\+\_\+update\+\_\+ids (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{int $\ast$}]{deriv\+\_\+ids,  }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}}}]{jac,  }\item[{int $\ast$}]{rxn\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+float\+\_\+data }\end{DoxyParamCaption})}
+
+
+
+Update the time derivative and Jacbobian array indices. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em model\+\_\+data} & Pointer to the model data \\
+\hline
+{\em deriv\+\_\+ids} & Id of each state variable in the derivative array \\
+\hline
+{\em jac} & \mbox{\hyperlink{struct_jacobian}{Jacobian}} \\
+\hline
+{\em rxn\+\_\+int\+\_\+data} & Pointer to the reaction integer data \\
+\hline
+{\em rxn\+\_\+float\+\_\+data} & Pointer to the reaction floating-\/point data \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 94 of file rxn\+\_\+condensed\+\_\+phase\+\_\+arrhenius.\+c.
+

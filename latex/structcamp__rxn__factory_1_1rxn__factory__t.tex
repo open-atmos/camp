@@ -1,0 +1,139 @@
+\hypertarget{structcamp__rxn__factory_1_1rxn__factory__t}{}\doxysection{camp\+\_\+rxn\+\_\+factory\+::rxn\+\_\+factory\+\_\+t Type Reference}
+\label{structcamp__rxn__factory_1_1rxn__factory__t}\index{camp\_rxn\_factory::rxn\_factory\_t@{camp\_rxn\_factory::rxn\_factory\_t}}
+
+
+Factory type for chemical reactions.  
+
+
+\doxysubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+procedure \mbox{\hyperlink{structcamp__rxn__factory_1_1rxn__factory__t_a62e02032fe55dec174fc3221cdbcb71c}{create}}
+\begin{DoxyCompactList}\small\item\em Create a new chemical reaction by type name. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__rxn__factory_1_1rxn__factory__t_a137b9f38e76d1d33d977704489daaf7f}{load}}
+\begin{DoxyCompactList}\small\item\em Create a new chemical reaction from input data. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__rxn__factory_1_1rxn__factory__t_ab69b6ca869908138b7330bf8c77ec8be}{get\+\_\+type}}
+\begin{DoxyCompactList}\small\item\em Get the reaction type. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__rxn__factory_1_1rxn__factory__t_a32d0d92791920273b77121c9f7525f46}{initialize\+\_\+update\+\_\+data}}
+\begin{DoxyCompactList}\small\item\em Get a new update data object. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__rxn__factory_1_1rxn__factory__t_ad5e602ff17f4003dcffb2d692b664dc8}{pack\+\_\+size}}
+\begin{DoxyCompactList}\small\item\em Determine the number of bytes required to pack a given reaction. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__rxn__factory_1_1rxn__factory__t_a146acb5f418ce420e35985c9743d948f}{bin\+\_\+pack}}
+\begin{DoxyCompactList}\small\item\em Pack a given reaction to the buffer, advancing the position. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__rxn__factory_1_1rxn__factory__t_a83b58998d26db4e87f352c81ebe8f0d5}{bin\+\_\+unpack}}
+\begin{DoxyCompactList}\small\item\em Unpack a reaction from the buffer, advancing the position. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Factory type for chemical reactions. 
+
+Provides new instances of types extending rxn\+\_\+data\+\_\+t by name or from input file data 
+
+Definition at line 224 of file rxn\+\_\+factory.\+F90.
+
+
+
+\doxysubsection{Member Function/\+Subroutine Documentation}
+\mbox{\Hypertarget{structcamp__rxn__factory_1_1rxn__factory__t_a146acb5f418ce420e35985c9743d948f}\label{structcamp__rxn__factory_1_1rxn__factory__t_a146acb5f418ce420e35985c9743d948f}} 
+\index{camp\_rxn\_factory::rxn\_factory\_t@{camp\_rxn\_factory::rxn\_factory\_t}!bin\_pack@{bin\_pack}}
+\index{bin\_pack@{bin\_pack}!camp\_rxn\_factory::rxn\_factory\_t@{camp\_rxn\_factory::rxn\_factory\_t}}
+\doxysubsubsection{\texorpdfstring{bin\_pack()}{bin\_pack()}}
+{\footnotesize\ttfamily procedure camp\+\_\+rxn\+\_\+factory\+::rxn\+\_\+factory\+\_\+t\+::bin\+\_\+pack\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Pack a given reaction to the buffer, advancing the position. 
+
+
+
+Definition at line 237 of file rxn\+\_\+factory.\+F90.
+
+\mbox{\Hypertarget{structcamp__rxn__factory_1_1rxn__factory__t_a83b58998d26db4e87f352c81ebe8f0d5}\label{structcamp__rxn__factory_1_1rxn__factory__t_a83b58998d26db4e87f352c81ebe8f0d5}} 
+\index{camp\_rxn\_factory::rxn\_factory\_t@{camp\_rxn\_factory::rxn\_factory\_t}!bin\_unpack@{bin\_unpack}}
+\index{bin\_unpack@{bin\_unpack}!camp\_rxn\_factory::rxn\_factory\_t@{camp\_rxn\_factory::rxn\_factory\_t}}
+\doxysubsubsection{\texorpdfstring{bin\_unpack()}{bin\_unpack()}}
+{\footnotesize\ttfamily procedure camp\+\_\+rxn\+\_\+factory\+::rxn\+\_\+factory\+\_\+t\+::bin\+\_\+unpack\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Unpack a reaction from the buffer, advancing the position. 
+
+
+
+Definition at line 239 of file rxn\+\_\+factory.\+F90.
+
+\mbox{\Hypertarget{structcamp__rxn__factory_1_1rxn__factory__t_a62e02032fe55dec174fc3221cdbcb71c}\label{structcamp__rxn__factory_1_1rxn__factory__t_a62e02032fe55dec174fc3221cdbcb71c}} 
+\index{camp\_rxn\_factory::rxn\_factory\_t@{camp\_rxn\_factory::rxn\_factory\_t}!create@{create}}
+\index{create@{create}!camp\_rxn\_factory::rxn\_factory\_t@{camp\_rxn\_factory::rxn\_factory\_t}}
+\doxysubsubsection{\texorpdfstring{create()}{create()}}
+{\footnotesize\ttfamily procedure camp\+\_\+rxn\+\_\+factory\+::rxn\+\_\+factory\+\_\+t\+::create\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Create a new chemical reaction by type name. 
+
+
+
+Definition at line 227 of file rxn\+\_\+factory.\+F90.
+
+\mbox{\Hypertarget{structcamp__rxn__factory_1_1rxn__factory__t_ab69b6ca869908138b7330bf8c77ec8be}\label{structcamp__rxn__factory_1_1rxn__factory__t_ab69b6ca869908138b7330bf8c77ec8be}} 
+\index{camp\_rxn\_factory::rxn\_factory\_t@{camp\_rxn\_factory::rxn\_factory\_t}!get\_type@{get\_type}}
+\index{get\_type@{get\_type}!camp\_rxn\_factory::rxn\_factory\_t@{camp\_rxn\_factory::rxn\_factory\_t}}
+\doxysubsubsection{\texorpdfstring{get\_type()}{get\_type()}}
+{\footnotesize\ttfamily procedure camp\+\_\+rxn\+\_\+factory\+::rxn\+\_\+factory\+\_\+t\+::get\+\_\+type\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Get the reaction type. 
+
+
+
+Definition at line 231 of file rxn\+\_\+factory.\+F90.
+
+\mbox{\Hypertarget{structcamp__rxn__factory_1_1rxn__factory__t_a32d0d92791920273b77121c9f7525f46}\label{structcamp__rxn__factory_1_1rxn__factory__t_a32d0d92791920273b77121c9f7525f46}} 
+\index{camp\_rxn\_factory::rxn\_factory\_t@{camp\_rxn\_factory::rxn\_factory\_t}!initialize\_update\_data@{initialize\_update\_data}}
+\index{initialize\_update\_data@{initialize\_update\_data}!camp\_rxn\_factory::rxn\_factory\_t@{camp\_rxn\_factory::rxn\_factory\_t}}
+\doxysubsubsection{\texorpdfstring{initialize\_update\_data()}{initialize\_update\_data()}}
+{\footnotesize\ttfamily procedure camp\+\_\+rxn\+\_\+factory\+::rxn\+\_\+factory\+\_\+t\+::initialize\+\_\+update\+\_\+data\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Get a new update data object. 
+
+
+
+Definition at line 233 of file rxn\+\_\+factory.\+F90.
+
+\mbox{\Hypertarget{structcamp__rxn__factory_1_1rxn__factory__t_a137b9f38e76d1d33d977704489daaf7f}\label{structcamp__rxn__factory_1_1rxn__factory__t_a137b9f38e76d1d33d977704489daaf7f}} 
+\index{camp\_rxn\_factory::rxn\_factory\_t@{camp\_rxn\_factory::rxn\_factory\_t}!load@{load}}
+\index{load@{load}!camp\_rxn\_factory::rxn\_factory\_t@{camp\_rxn\_factory::rxn\_factory\_t}}
+\doxysubsubsection{\texorpdfstring{load()}{load()}}
+{\footnotesize\ttfamily procedure camp\+\_\+rxn\+\_\+factory\+::rxn\+\_\+factory\+\_\+t\+::load\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Create a new chemical reaction from input data. 
+
+
+
+Definition at line 229 of file rxn\+\_\+factory.\+F90.
+
+\mbox{\Hypertarget{structcamp__rxn__factory_1_1rxn__factory__t_ad5e602ff17f4003dcffb2d692b664dc8}\label{structcamp__rxn__factory_1_1rxn__factory__t_ad5e602ff17f4003dcffb2d692b664dc8}} 
+\index{camp\_rxn\_factory::rxn\_factory\_t@{camp\_rxn\_factory::rxn\_factory\_t}!pack\_size@{pack\_size}}
+\index{pack\_size@{pack\_size}!camp\_rxn\_factory::rxn\_factory\_t@{camp\_rxn\_factory::rxn\_factory\_t}}
+\doxysubsubsection{\texorpdfstring{pack\_size()}{pack\_size()}}
+{\footnotesize\ttfamily procedure camp\+\_\+rxn\+\_\+factory\+::rxn\+\_\+factory\+\_\+t\+::pack\+\_\+size\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Determine the number of bytes required to pack a given reaction. 
+
+
+
+Definition at line 235 of file rxn\+\_\+factory.\+F90.
+
+
+
+The documentation for this type was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{rxn__factory_8_f90}{rxn\+\_\+factory.\+F90}}\end{DoxyCompactItemize}

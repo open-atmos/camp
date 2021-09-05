@@ -1,0 +1,134 @@
+\hypertarget{mpi_8_f90}{}\doxysection{mpi.\+F90 File Reference}
+\label{mpi_8_f90}\index{mpi.F90@{mpi.F90}}
+
+
+The \mbox{\hyperlink{namespacecamp__mpi}{camp\+\_\+mpi}} module.  
+
+
+\doxysubsection*{Modules}
+\begin{DoxyCompactItemize}
+\item 
+module \mbox{\hyperlink{namespacecamp__mpi}{camp\+\_\+mpi}}
+\begin{DoxyCompactList}\small\item\em Wrapper functions for MPI. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Functions/\+Subroutines}
+\begin{DoxyCompactItemize}
+\item 
+logical function \mbox{\hyperlink{namespacecamp__mpi_a28e2a390929a3cff5d5788b79d5a3a18}{camp\+\_\+mpi\+::camp\+\_\+mpi\+\_\+support}} ()
+\begin{DoxyCompactList}\small\item\em Whether MPI support is compiled in. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__mpi_adb95beaf933131229f017a03af8352ad}{camp\+\_\+mpi\+::camp\+\_\+mpi\+\_\+check\+\_\+ierr}} (ierr)
+\begin{DoxyCompactList}\small\item\em Dies if {\ttfamily ierr} is not ok. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__mpi_a013fae7f812d8d9bd22dc73db714e115}{camp\+\_\+mpi\+::camp\+\_\+mpi\+\_\+init}} ()
+\begin{DoxyCompactList}\small\item\em Initialize MPI. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__mpi_a7c0deeecbf4c64fe7fcade1797e1aab8}{camp\+\_\+mpi\+::camp\+\_\+mpi\+\_\+abort}} (status)
+\begin{DoxyCompactList}\small\item\em Abort the program. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__mpi_a6dab941cdb9b6b5681872411eeee2d1b}{camp\+\_\+mpi\+::camp\+\_\+mpi\+\_\+finalize}} ()
+\begin{DoxyCompactList}\small\item\em Shut down MPI. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__mpi_ab730669b3a011e43ca0710934efee420}{camp\+\_\+mpi\+::camp\+\_\+mpi\+\_\+barrier}} (comm)
+\begin{DoxyCompactList}\small\item\em Synchronize all processes. \end{DoxyCompactList}\item 
+integer function \mbox{\hyperlink{namespacecamp__mpi_a071b987e3ccab55010a23029249b73a4}{camp\+\_\+mpi\+::camp\+\_\+mpi\+\_\+rank}} (comm)
+\begin{DoxyCompactList}\small\item\em Returns the rank of the current process. \end{DoxyCompactList}\item 
+integer function \mbox{\hyperlink{namespacecamp__mpi_ac12772749475620730de7ac0fd2f88d7}{camp\+\_\+mpi\+::camp\+\_\+mpi\+\_\+size}} (comm)
+\begin{DoxyCompactList}\small\item\em Returns the total number of processes. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__mpi_a3a40947a78223499aaa9b9a2c5e32c89}{camp\+\_\+mpi\+::camp\+\_\+mpi\+\_\+test}} ()
+\begin{DoxyCompactList}\small\item\em Perform basic sanity checks on send/receive. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__mpi_a7b8bd92bfd70d41355c71943d41a528c}{camp\+\_\+mpi\+::camp\+\_\+mpi\+\_\+bcast\+\_\+integer}} (val, comm)
+\begin{DoxyCompactList}\small\item\em Broadcast the given value from process 0 to all other processes. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__mpi_a60e1ec60f81b1fe9afbe0705113cde8b}{camp\+\_\+mpi\+::camp\+\_\+mpi\+\_\+bcast\+\_\+string}} (val, comm)
+\begin{DoxyCompactList}\small\item\em Broadcast the given value from process 0 to all other processes. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__mpi_a2b70614f7b7ae69f1ea2dc0256e5cc61}{camp\+\_\+mpi\+::camp\+\_\+mpi\+\_\+bcast\+\_\+packed}} (val, comm)
+\begin{DoxyCompactList}\small\item\em Broadcast the given value from process 0 to all other processes. \end{DoxyCompactList}\item 
+integer function \mbox{\hyperlink{namespacecamp__mpi_abfca35b6c1f158dcb853326861d7e558}{camp\+\_\+mpi\+::camp\+\_\+mpi\+\_\+pack\+\_\+size\+\_\+integer}} (val, comm)
+\begin{DoxyCompactList}\small\item\em Determines the number of bytes required to pack the given value. \end{DoxyCompactList}\item 
+integer function \mbox{\hyperlink{namespacecamp__mpi_ae392f982ac26c341bc44f829e5e12d61}{camp\+\_\+mpi\+::camp\+\_\+mpi\+\_\+pack\+\_\+size\+\_\+real}} (val, comm)
+\begin{DoxyCompactList}\small\item\em Determines the number of bytes required to pack the given value. \end{DoxyCompactList}\item 
+integer function \mbox{\hyperlink{namespacecamp__mpi_afcf498c3b6b28650f14b714e2a69adc3}{camp\+\_\+mpi\+::camp\+\_\+mpi\+\_\+pack\+\_\+size\+\_\+string}} (val, comm)
+\begin{DoxyCompactList}\small\item\em Determines the number of bytes required to pack the given value. \end{DoxyCompactList}\item 
+integer function \mbox{\hyperlink{namespacecamp__mpi_a91e386d6f20f660ab0762c32bb55e3a7}{camp\+\_\+mpi\+::camp\+\_\+mpi\+\_\+pack\+\_\+size\+\_\+logical}} (val, comm)
+\begin{DoxyCompactList}\small\item\em Determines the number of bytes required to pack the given value. \end{DoxyCompactList}\item 
+integer function \mbox{\hyperlink{namespacecamp__mpi_aaed50882c2a168a9f12a9c1eb345cae3}{camp\+\_\+mpi\+::camp\+\_\+mpi\+\_\+pack\+\_\+size\+\_\+complex}} (val, comm)
+\begin{DoxyCompactList}\small\item\em Determines the number of bytes required to pack the given value. \end{DoxyCompactList}\item 
+integer function \mbox{\hyperlink{namespacecamp__mpi_a8ad192802e37c5dcaa41d053909318ab}{camp\+\_\+mpi\+::camp\+\_\+mpi\+\_\+pack\+\_\+size\+\_\+integer\+\_\+array}} (val, comm)
+\begin{DoxyCompactList}\small\item\em Determines the number of bytes required to pack the given value. \end{DoxyCompactList}\item 
+integer function \mbox{\hyperlink{namespacecamp__mpi_a7d5bd45d25af1d118c3f36eb507aca3f}{camp\+\_\+mpi\+::camp\+\_\+mpi\+\_\+pack\+\_\+size\+\_\+real\+\_\+array}} (val, comm)
+\begin{DoxyCompactList}\small\item\em Determines the number of bytes required to pack the given value. \end{DoxyCompactList}\item 
+integer function \mbox{\hyperlink{namespacecamp__mpi_abed687a3059915c41dc4fe41574f016e}{camp\+\_\+mpi\+::camp\+\_\+mpi\+\_\+pack\+\_\+size\+\_\+string\+\_\+array}} (val, comm)
+\begin{DoxyCompactList}\small\item\em Determines the number of bytes required to pack the given value. \end{DoxyCompactList}\item 
+integer function \mbox{\hyperlink{namespacecamp__mpi_afa57a306f017435bd4f4026bd4b36b6f}{camp\+\_\+mpi\+::camp\+\_\+mpi\+\_\+pack\+\_\+size\+\_\+real\+\_\+array\+\_\+2d}} (val, comm)
+\begin{DoxyCompactList}\small\item\em Determines the number of bytes required to pack the given value. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__mpi_ab8a9c9d3285d44ca8d229efc25a436e0}{camp\+\_\+mpi\+::camp\+\_\+mpi\+\_\+pack\+\_\+integer}} (buffer, position, val, comm)
+\begin{DoxyCompactList}\small\item\em Packs the given value into the buffer, advancing position. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__mpi_a0bd441b56242352455d607a27f863a90}{camp\+\_\+mpi\+::camp\+\_\+mpi\+\_\+pack\+\_\+real}} (buffer, position, val, comm)
+\begin{DoxyCompactList}\small\item\em Packs the given value into the buffer, advancing position. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__mpi_aff8d4edb35bc3ce3b4dc0b02bbe65546}{camp\+\_\+mpi\+::camp\+\_\+mpi\+\_\+pack\+\_\+string}} (buffer, position, val, comm)
+\begin{DoxyCompactList}\small\item\em Packs the given value into the buffer, advancing position. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__mpi_a478c2ca36da605f816ccb99988201acc}{camp\+\_\+mpi\+::camp\+\_\+mpi\+\_\+pack\+\_\+logical}} (buffer, position, val, comm)
+\begin{DoxyCompactList}\small\item\em Packs the given value into the buffer, advancing position. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__mpi_a52b92fd5900d99661a7c535860ba1048}{camp\+\_\+mpi\+::camp\+\_\+mpi\+\_\+pack\+\_\+complex}} (buffer, position, val, comm)
+\begin{DoxyCompactList}\small\item\em Packs the given value into the buffer, advancing position. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__mpi_a03468f17d2c13d6389a29b0223a4d7e6}{camp\+\_\+mpi\+::camp\+\_\+mpi\+\_\+pack\+\_\+integer\+\_\+array}} (buffer, position, val, comm)
+\begin{DoxyCompactList}\small\item\em Packs the given value into the buffer, advancing position. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__mpi_a1dae044c008ae5c6b304ee24b4e059fe}{camp\+\_\+mpi\+::camp\+\_\+mpi\+\_\+pack\+\_\+real\+\_\+array}} (buffer, position, val, comm)
+\begin{DoxyCompactList}\small\item\em Packs the given value into the buffer, advancing position. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__mpi_a34ebf62e438a0c46fd37cd9ecd374a40}{camp\+\_\+mpi\+::camp\+\_\+mpi\+\_\+pack\+\_\+string\+\_\+array}} (buffer, position, val, comm)
+\begin{DoxyCompactList}\small\item\em Packs the given value into the buffer, advancing position. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__mpi_a34a7b84e681070b6170d10699e8875ac}{camp\+\_\+mpi\+::camp\+\_\+mpi\+\_\+pack\+\_\+real\+\_\+array\+\_\+2d}} (buffer, position, val, comm)
+\begin{DoxyCompactList}\small\item\em Packs the given value into the buffer, advancing position. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__mpi_a5da126550d7cb5d3127b31f09464670f}{camp\+\_\+mpi\+::camp\+\_\+mpi\+\_\+unpack\+\_\+integer}} (buffer, position, val, comm)
+\begin{DoxyCompactList}\small\item\em Unpacks the given value from the buffer, advancing position. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__mpi_ad1bf276334a50ba9c4e928d848d9fe4a}{camp\+\_\+mpi\+::camp\+\_\+mpi\+\_\+unpack\+\_\+real}} (buffer, position, val, comm)
+\begin{DoxyCompactList}\small\item\em Unpacks the given value from the buffer, advancing position. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__mpi_ac8e3e6898ad6d5826792476730fcc253}{camp\+\_\+mpi\+::camp\+\_\+mpi\+\_\+unpack\+\_\+string}} (buffer, position, val, comm)
+\begin{DoxyCompactList}\small\item\em Unpacks the given value from the buffer, advancing position. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__mpi_a6280c3d9ec2de483b881f0ab7280ddbb}{camp\+\_\+mpi\+::camp\+\_\+mpi\+\_\+unpack\+\_\+logical}} (buffer, position, val, comm)
+\begin{DoxyCompactList}\small\item\em Unpacks the given value from the buffer, advancing position. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__mpi_a1ef2f2ae9f33c8c8a0dc78a282a6279e}{camp\+\_\+mpi\+::camp\+\_\+mpi\+\_\+unpack\+\_\+complex}} (buffer, position, val, comm)
+\begin{DoxyCompactList}\small\item\em Unpacks the given value from the buffer, advancing position. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__mpi_a3b9e1ec6bb02bc828b8a1790a8299349}{camp\+\_\+mpi\+::camp\+\_\+mpi\+\_\+unpack\+\_\+integer\+\_\+array}} (buffer, position, val, comm)
+\begin{DoxyCompactList}\small\item\em Unpacks the given value from the buffer, advancing position. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__mpi_aeca685c68939372a57f9c9dae80b8936}{camp\+\_\+mpi\+::camp\+\_\+mpi\+\_\+unpack\+\_\+real\+\_\+array}} (buffer, position, val, comm)
+\begin{DoxyCompactList}\small\item\em Unpacks the given value from the buffer, advancing position. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__mpi_aabe38fe6e30b6e0c150c6c3ff1491b7d}{camp\+\_\+mpi\+::camp\+\_\+mpi\+\_\+unpack\+\_\+string\+\_\+array}} (buffer, position, val, comm)
+\begin{DoxyCompactList}\small\item\em Unpacks the given value from the buffer, advancing position. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__mpi_a342bca6c68c2c9b8c59002e6e8c78475}{camp\+\_\+mpi\+::camp\+\_\+mpi\+\_\+unpack\+\_\+real\+\_\+array\+\_\+2d}} (buffer, position, val, comm)
+\begin{DoxyCompactList}\small\item\em Unpacks the given value from the buffer, advancing position. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__mpi_a96549d22ee106f1fa29af89dcaa0ab71}{camp\+\_\+mpi\+::camp\+\_\+mpi\+\_\+reduce\+\_\+avg\+\_\+real}} (val, val\+\_\+avg)
+\begin{DoxyCompactList}\small\item\em Computes the average of val across all processes, storing the result in val\+\_\+avg on the root process. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__mpi_add4ad113320dc1a569a974e937a21f85}{camp\+\_\+mpi\+::camp\+\_\+mpi\+\_\+transfer\+\_\+real}} (from\+\_\+val, to\+\_\+val, from\+\_\+proc, to\+\_\+proc)
+\begin{DoxyCompactList}\small\item\em Transfer the value between the given processes. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__mpi_a7f835f1ea14a5b340b691bba8186749c}{camp\+\_\+mpi\+::camp\+\_\+mpi\+\_\+transfer\+\_\+integer}} (from\+\_\+val, to\+\_\+val, from\+\_\+proc, to\+\_\+proc)
+\begin{DoxyCompactList}\small\item\em Transfer the value between the given processes. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__mpi_a6a5857f879dd6dbc6232a2fb5dcf2fbc}{camp\+\_\+mpi\+::camp\+\_\+mpi\+\_\+reduce\+\_\+sum\+\_\+integer}} (val, val\+\_\+sum)
+\begin{DoxyCompactList}\small\item\em Computes the sum of {\ttfamily val} across all processes, storing the result in {\ttfamily val\+\_\+sum} on the root process. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__mpi_aed224819ec8cf04942cb2c3c882bd74f}{camp\+\_\+mpi\+::camp\+\_\+mpi\+\_\+allreduce\+\_\+sum\+\_\+integer}} (val, val\+\_\+sum)
+\begin{DoxyCompactList}\small\item\em Computes the sum of {\ttfamily val} across all processes, storing the result in {\ttfamily val\+\_\+sum} on all processes. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__mpi_a83a928ea74ddb2233d7cca985db067bf}{camp\+\_\+mpi\+::camp\+\_\+mpi\+\_\+reduce\+\_\+avg\+\_\+real\+\_\+array}} (val, val\+\_\+avg)
+\begin{DoxyCompactList}\small\item\em Computes the average of val across all processes, storing the result in val\+\_\+avg on the root process. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__mpi_a32da3f90f515b60042273b5480ede57f}{camp\+\_\+mpi\+::camp\+\_\+mpi\+\_\+reduce\+\_\+avg\+\_\+real\+\_\+array\+\_\+2d}} (val, val\+\_\+avg)
+\begin{DoxyCompactList}\small\item\em Computes the average of val across all processes, storing the result in val\+\_\+avg on the root process. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__mpi_ac17a70c1409131f3634aaed71894ea68}{camp\+\_\+mpi\+::camp\+\_\+mpi\+\_\+allreduce\+\_\+average\+\_\+real}} (val, val\+\_\+avg)
+\begin{DoxyCompactList}\small\item\em Computes the average of val across all processes, storing the result in val\+\_\+avg on all processes. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__mpi_ab2993869e65db724f98a587c4e5c0c12}{camp\+\_\+mpi\+::camp\+\_\+mpi\+\_\+allreduce\+\_\+average\+\_\+real\+\_\+array}} (val, val\+\_\+avg)
+\begin{DoxyCompactList}\small\item\em Computes the average of val across all processes, storing the result in val\+\_\+avg on all processes. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__mpi_a15b9ff05c0c07284139bcdb991416d1e}{camp\+\_\+mpi\+::camp\+\_\+mpi\+\_\+allreduce\+\_\+min\+\_\+integer}} (val, val\+\_\+min)
+\begin{DoxyCompactList}\small\item\em Computes the minimum of val across all processes, storing the result in val\+\_\+min on all processes. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__mpi_ab37aad21478f091075eec8c9dfd0ae8b}{camp\+\_\+mpi\+::camp\+\_\+mpi\+\_\+allreduce\+\_\+max\+\_\+integer}} (val, val\+\_\+max)
+\begin{DoxyCompactList}\small\item\em Computes the maximum of val across all processes, storing the result in val\+\_\+max on all processes. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__mpi_ad8a12dc8d547d496fc0ba69d9f17397c}{camp\+\_\+mpi\+::camp\+\_\+mpi\+\_\+allreduce\+\_\+min\+\_\+real}} (val, val\+\_\+min)
+\begin{DoxyCompactList}\small\item\em Computes the minimum of val across all processes, storing the result in val\+\_\+min on all processes. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__mpi_a93e9a58cb81562d5ef35c94c04432438}{camp\+\_\+mpi\+::camp\+\_\+mpi\+\_\+allreduce\+\_\+max\+\_\+real}} (val, val\+\_\+max)
+\begin{DoxyCompactList}\small\item\em Computes the maximum of val across all processes, storing the result in val\+\_\+max on all processes. \end{DoxyCompactList}\item 
+logical function \mbox{\hyperlink{namespacecamp__mpi_a674d1494035941591fecccc3210bb5e3}{camp\+\_\+mpi\+::camp\+\_\+mpi\+\_\+allequal\+\_\+integer}} (val)
+\begin{DoxyCompactList}\small\item\em Returns whether all processors have the same value. \end{DoxyCompactList}\item 
+logical function \mbox{\hyperlink{namespacecamp__mpi_aeb7df553b3ec4fefd77e840696225869}{camp\+\_\+mpi\+::camp\+\_\+mpi\+\_\+allequal\+\_\+real}} (val)
+\begin{DoxyCompactList}\small\item\em Returns whether all processors have the same value. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__mpi_acb6ff38163ae710802cc75662571fdf9}{camp\+\_\+mpi\+::camp\+\_\+mpi\+\_\+alltoall\+\_\+integer}} (send, recv)
+\begin{DoxyCompactList}\small\item\em Does an all-\/to-\/all transfer of integers. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__mpi_a6095279d2c51301de4488595f4c6e75c}{camp\+\_\+mpi\+::camp\+\_\+mpi\+\_\+allgather\+\_\+integer\+\_\+array}} (send, recv)
+\begin{DoxyCompactList}\small\item\em Does an allgather of integer arrays (must be the same size on all processes). \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__mpi_aeae6a117fdd28992d6a8aa8c73adf618}{camp\+\_\+mpi\+::camp\+\_\+mpi\+\_\+allgather\+\_\+real\+\_\+array}} (send, recv)
+\begin{DoxyCompactList}\small\item\em Does an allgather of real arrays (must be the same size on all processes). \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+The \mbox{\hyperlink{namespacecamp__mpi}{camp\+\_\+mpi}} module. 
+

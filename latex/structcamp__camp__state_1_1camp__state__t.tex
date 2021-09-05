@@ -1,0 +1,129 @@
+\hypertarget{structcamp__camp__state_1_1camp__state__t}{}\doxysection{camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t Interface Reference}
+\label{structcamp__camp__state_1_1camp__state__t}\index{camp\_camp\_state::camp\_state\_t@{camp\_camp\_state::camp\_state\_t}}
+
+
+\mbox{\hyperlink{struct_model}{Model}} state.  
+
+
+\doxysubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+procedure \mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t_a462a3a8567f71663b53a92722b451746}{update\+\_\+env\+\_\+state}}
+\begin{DoxyCompactList}\small\item\em Update the environmental state array. \end{DoxyCompactList}\item 
+final \mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t_a45806e0832a3c886ad505b40920b6886}{finalize}}
+\begin{DoxyCompactList}\small\item\em Finalize the state. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+real(kind=dp), dimension(\+:), allocatable \mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t_ab61ab8a23f61585ad1a6dbd5d8e94d92}{env\+\_\+var}}
+\begin{DoxyCompactList}\small\item\em Environmental state array. This array will include one entry for every environmental variable requried to solve the chemical mechanism(s) \end{DoxyCompactList}\item 
+real(kind=dp), dimension(\+:), allocatable \mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t_a5405d5023175234c25e2c2371d924c67}{state\+\_\+var}}
+\begin{DoxyCompactList}\small\item\em State variable array. This array includes one entry for each variable whose state will be solved for during the mechanism integration. units are ppm (gases) or kg m-\/3 (aerosol species) \end{DoxyCompactList}\item 
+type(\mbox{\hyperlink{structcamp__env__state_1_1env__state__ptr}{env\+\_\+state\+\_\+ptr}}), dimension(\+:), pointer \mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t_aeabc5f63f0a72b13911d2261ffa6b8ee}{env\+\_\+states}}
+\begin{DoxyCompactList}\small\item\em Environmental conditions. \end{DoxyCompactList}\item 
+logical, private \mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t_a42447972ea18f2d14b0ff5c0e96ba359}{owns\+\_\+env\+\_\+states}} = .false.
+\begin{DoxyCompactList}\small\item\em Flag indicating whether the env\+\_\+state object is owned by the state object. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\mbox{\hyperlink{struct_model}{Model}} state. 
+
+Temporal state of the model 
+
+Definition at line 29 of file camp\+\_\+state.\+F90.
+
+
+
+\doxysubsection{Member Function/\+Subroutine Documentation}
+\mbox{\Hypertarget{structcamp__camp__state_1_1camp__state__t_a45806e0832a3c886ad505b40920b6886}\label{structcamp__camp__state_1_1camp__state__t_a45806e0832a3c886ad505b40920b6886}} 
+\index{camp\_camp\_state::camp\_state\_t@{camp\_camp\_state::camp\_state\_t}!finalize@{finalize}}
+\index{finalize@{finalize}!camp\_camp\_state::camp\_state\_t@{camp\_camp\_state::camp\_state\_t}}
+\doxysubsubsection{\texorpdfstring{finalize()}{finalize()}}
+{\footnotesize\ttfamily final camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t\+::finalize\hspace{0.3cm}{\ttfamily [final]}, {\ttfamily [private]}}
+
+
+
+Finalize the state. 
+
+
+
+Definition at line 48 of file camp\+\_\+state.\+F90.
+
+\mbox{\Hypertarget{structcamp__camp__state_1_1camp__state__t_a462a3a8567f71663b53a92722b451746}\label{structcamp__camp__state_1_1camp__state__t_a462a3a8567f71663b53a92722b451746}} 
+\index{camp\_camp\_state::camp\_state\_t@{camp\_camp\_state::camp\_state\_t}!update\_env\_state@{update\_env\_state}}
+\index{update\_env\_state@{update\_env\_state}!camp\_camp\_state::camp\_state\_t@{camp\_camp\_state::camp\_state\_t}}
+\doxysubsubsection{\texorpdfstring{update\_env\_state()}{update\_env\_state()}}
+{\footnotesize\ttfamily procedure camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t\+::update\+\_\+env\+\_\+state\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Update the environmental state array. 
+
+
+
+Definition at line 46 of file camp\+\_\+state.\+F90.
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{structcamp__camp__state_1_1camp__state__t_aeabc5f63f0a72b13911d2261ffa6b8ee}\label{structcamp__camp__state_1_1camp__state__t_aeabc5f63f0a72b13911d2261ffa6b8ee}} 
+\index{camp\_camp\_state::camp\_state\_t@{camp\_camp\_state::camp\_state\_t}!env\_states@{env\_states}}
+\index{env\_states@{env\_states}!camp\_camp\_state::camp\_state\_t@{camp\_camp\_state::camp\_state\_t}}
+\doxysubsubsection{\texorpdfstring{env\_states}{env\_states}}
+{\footnotesize\ttfamily type(\mbox{\hyperlink{structcamp__env__state_1_1env__state__ptr}{env\+\_\+state\+\_\+ptr}}), dimension(\+:), pointer camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t\+::env\+\_\+states\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Environmental conditions. 
+
+
+
+Definition at line 40 of file camp\+\_\+state.\+F90.
+
+\mbox{\Hypertarget{structcamp__camp__state_1_1camp__state__t_ab61ab8a23f61585ad1a6dbd5d8e94d92}\label{structcamp__camp__state_1_1camp__state__t_ab61ab8a23f61585ad1a6dbd5d8e94d92}} 
+\index{camp\_camp\_state::camp\_state\_t@{camp\_camp\_state::camp\_state\_t}!env\_var@{env\_var}}
+\index{env\_var@{env\_var}!camp\_camp\_state::camp\_state\_t@{camp\_camp\_state::camp\_state\_t}}
+\doxysubsubsection{\texorpdfstring{env\_var}{env\_var}}
+{\footnotesize\ttfamily real(kind=dp), dimension(\+:), allocatable camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t\+::env\+\_\+var\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Environmental state array. This array will include one entry for every environmental variable requried to solve the chemical mechanism(s) 
+
+
+
+Definition at line 33 of file camp\+\_\+state.\+F90.
+
+\mbox{\Hypertarget{structcamp__camp__state_1_1camp__state__t_a42447972ea18f2d14b0ff5c0e96ba359}\label{structcamp__camp__state_1_1camp__state__t_a42447972ea18f2d14b0ff5c0e96ba359}} 
+\index{camp\_camp\_state::camp\_state\_t@{camp\_camp\_state::camp\_state\_t}!owns\_env\_states@{owns\_env\_states}}
+\index{owns\_env\_states@{owns\_env\_states}!camp\_camp\_state::camp\_state\_t@{camp\_camp\_state::camp\_state\_t}}
+\doxysubsubsection{\texorpdfstring{owns\_env\_states}{owns\_env\_states}}
+{\footnotesize\ttfamily logical, private camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t\+::owns\+\_\+env\+\_\+states = .false.\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Flag indicating whether the env\+\_\+state object is owned by the state object. 
+
+
+
+Definition at line 43 of file camp\+\_\+state.\+F90.
+
+\mbox{\Hypertarget{structcamp__camp__state_1_1camp__state__t_a5405d5023175234c25e2c2371d924c67}\label{structcamp__camp__state_1_1camp__state__t_a5405d5023175234c25e2c2371d924c67}} 
+\index{camp\_camp\_state::camp\_state\_t@{camp\_camp\_state::camp\_state\_t}!state\_var@{state\_var}}
+\index{state\_var@{state\_var}!camp\_camp\_state::camp\_state\_t@{camp\_camp\_state::camp\_state\_t}}
+\doxysubsubsection{\texorpdfstring{state\_var}{state\_var}}
+{\footnotesize\ttfamily real(kind=dp), dimension(\+:), allocatable camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t\+::state\+\_\+var\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+State variable array. This array includes one entry for each variable whose state will be solved for during the mechanism integration. units are ppm (gases) or kg m-\/3 (aerosol species) 
+
+
+
+Definition at line 38 of file camp\+\_\+state.\+F90.
+
+
+
+The documentation for this interface was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{camp__state_8_f90}{camp\+\_\+state.\+F90}}\end{DoxyCompactItemize}

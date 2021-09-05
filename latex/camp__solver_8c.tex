@@ -1,0 +1,712 @@
+\hypertarget{camp__solver_8c}{}\doxysection{camp\+\_\+solver.\+c File Reference}
+\label{camp__solver_8c}\index{camp\_solver.c@{camp\_solver.c}}
+
+
+Interface to c solvers for chemistry.  
+
+
+Include dependency graph for camp\+\_\+solver.\+c\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{camp__solver_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{camp__solver_8c_a8e536cd45a79a2dfb1312b2b026f00f1}{DEFAULT\+\_\+\+TIME\+\_\+\+STEP}}~1.\+0
+\item 
+\#define \mbox{\hyperlink{camp__solver_8c_aeb60110d91f761135df703922dc7861f}{JAC\+\_\+\+CHECK\+\_\+\+ADV\+\_\+\+MAX}}~1.\+0E-\/00
+\item 
+\#define \mbox{\hyperlink{camp__solver_8c_a4ba56d095e4c0e25285f8108f69be188}{JAC\+\_\+\+CHECK\+\_\+\+ADV\+\_\+\+MIN}}~1.\+0E-\/12
+\item 
+\#define \mbox{\hyperlink{camp__solver_8c_a043631efb6b555588836fc104ac459c4}{JAC\+\_\+\+CHECK\+\_\+\+GSL\+\_\+\+REL\+\_\+\+TOL}}~1.\+0e-\/4
+\item 
+\#define \mbox{\hyperlink{camp__solver_8c_adc365ed9b40058272ed59037a87c3535}{JAC\+\_\+\+CHECK\+\_\+\+GSL\+\_\+\+ABS\+\_\+\+TOL}}~1.\+0e-\/9
+\item 
+\#define \mbox{\hyperlink{camp__solver_8c_a4c64fcaf0e937cb6b8d1d81f01c047a2}{MAX\+\_\+\+TIMESTEP\+\_\+\+WARNINGS}}~-\/1
+\item 
+\#define \mbox{\hyperlink{camp__solver_8c_a4744760cc248d0346b6ace3829f58ddb}{GUESS\+\_\+\+MAX\+\_\+\+ITER}}~5
+\item 
+\#define \mbox{\hyperlink{camp__solver_8c_aad1b39ac87da86f7ac3d9f68f70f432e}{CAMP\+\_\+\+SOLVER\+\_\+\+SUCCESS}}~0
+\item 
+\#define \mbox{\hyperlink{camp__solver_8c_a24ad5702e64ff681fe37e328b12269ee}{CAMP\+\_\+\+SOLVER\+\_\+\+FAIL}}~1
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void $\ast$ \mbox{\hyperlink{camp__solver_8c_a8652eb17aa4aec193810f8351c248c0e}{solver\+\_\+new}} (int n\+\_\+state\+\_\+var, int n\+\_\+cells, int $\ast$var\+\_\+type, int n\+\_\+rxn, int n\+\_\+rxn\+\_\+int\+\_\+param, int n\+\_\+rxn\+\_\+float\+\_\+param, int n\+\_\+rxn\+\_\+env\+\_\+param, int n\+\_\+aero\+\_\+phase, int n\+\_\+aero\+\_\+phase\+\_\+int\+\_\+param, int n\+\_\+aero\+\_\+phase\+\_\+float\+\_\+param, int n\+\_\+aero\+\_\+rep, int n\+\_\+aero\+\_\+rep\+\_\+int\+\_\+param, int n\+\_\+aero\+\_\+rep\+\_\+float\+\_\+param, int n\+\_\+aero\+\_\+rep\+\_\+env\+\_\+param, int n\+\_\+sub\+\_\+model, int n\+\_\+sub\+\_\+model\+\_\+int\+\_\+param, int n\+\_\+sub\+\_\+model\+\_\+float\+\_\+param, int n\+\_\+sub\+\_\+model\+\_\+env\+\_\+param)
+\begin{DoxyCompactList}\small\item\em Get a new solver object. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{camp__solver_8c_a599ffdef916b139a1690bfd41aa386b6}{solver\+\_\+initialize}} (void $\ast$solver\+\_\+data, double $\ast$abs\+\_\+tol, double rel\+\_\+tol, int max\+\_\+steps, int max\+\_\+conv\+\_\+fails)
+\begin{DoxyCompactList}\small\item\em Solver initialization. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{camp__solver_8c_afc5ec8680b419e7ab49530d53a76cee4}{solver\+\_\+run}} (void $\ast$solver\+\_\+data, double $\ast$state, double $\ast$env, double t\+\_\+initial, double t\+\_\+final)
+\begin{DoxyCompactList}\small\item\em Solve for a given timestep. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{camp__solver_8c_a0de7bd46f75dd8496488b32c4983ec77}{solver\+\_\+get\+\_\+statistics}} (void $\ast$solver\+\_\+data, int $\ast$solver\+\_\+flag, int $\ast$num\+\_\+steps, int $\ast$RHS\+\_\+evals, int $\ast$LS\+\_\+setups, int $\ast$error\+\_\+test\+\_\+fails, int $\ast$NLS\+\_\+iters, int $\ast$NLS\+\_\+convergence\+\_\+fails, int $\ast$DLS\+\_\+\+Jac\+\_\+evals, int $\ast$DLS\+\_\+\+RHS\+\_\+evals, double $\ast$last\+\_\+time\+\_\+step\+\_\+\+\_\+s, double $\ast$next\+\_\+time\+\_\+step\+\_\+\+\_\+s, int $\ast$Jac\+\_\+eval\+\_\+fails, int $\ast$RHS\+\_\+evals\+\_\+total, int $\ast$Jac\+\_\+evals\+\_\+total, double $\ast$RHS\+\_\+time\+\_\+\+\_\+s, double $\ast$Jac\+\_\+time\+\_\+\+\_\+s, double $\ast$max\+\_\+loss\+\_\+precision)
+\begin{DoxyCompactList}\small\item\em Get solver statistics after an integration attempt. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{camp__solver_8c_a21373e1f8bad206f6437deeea571f51c}{camp\+\_\+solver\+\_\+update\+\_\+model\+\_\+state}} (N\+\_\+\+Vector solver\+\_\+state, \mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, realtype threshhold, realtype replacement\+\_\+value)
+\begin{DoxyCompactList}\small\item\em Update the model state from the current solver state. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{camp__solver_8c_ac55302bc18db0d68d78f543aad6a16c4}{f}} (realtype t, N\+\_\+\+Vector y, N\+\_\+\+Vector deriv, void $\ast$solver\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Compute the time derivative f(t,y) \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{camp__solver_8c_a13451d507558a61a2353adfed58db468}{Jac}} (realtype t, N\+\_\+\+Vector y, N\+\_\+\+Vector deriv, SUNMatrix J, void $\ast$solver\+\_\+data, N\+\_\+\+Vector tmp1, N\+\_\+\+Vector tmp2, N\+\_\+\+Vector tmp3)
+\begin{DoxyCompactList}\small\item\em Compute the \mbox{\hyperlink{struct_jacobian}{Jacobian}}. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1}{bool}} \mbox{\hyperlink{camp__solver_8c_ad45be595da1a1d6fd40179d9743a9a65}{check\+\_\+\+Jac}} (realtype t, N\+\_\+\+Vector y, SUNMatrix J, N\+\_\+\+Vector deriv, N\+\_\+\+Vector tmp, N\+\_\+\+Vector tmp1, void $\ast$solver\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Check a \mbox{\hyperlink{struct_jacobian}{Jacobian}} for accuracy. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{camp__solver_8c_a2fa3892570de5fd26fb97da6b91568ff}{guess\+\_\+helper}} (const realtype t\+\_\+n, const realtype h\+\_\+n, N\+\_\+\+Vector y\+\_\+n, N\+\_\+\+Vector y\+\_\+n1, N\+\_\+\+Vector hf, void $\ast$solver\+\_\+data, N\+\_\+\+Vector tmp1, N\+\_\+\+Vector corr)
+\begin{DoxyCompactList}\small\item\em Try to improve guesses of y sent to the linear solver. \end{DoxyCompactList}\item 
+SUNMatrix \mbox{\hyperlink{camp__solver_8c_a5b485fa25356197023889f3795888e98}{get\+\_\+jac\+\_\+init}} (\mbox{\hyperlink{struct_solver_data}{Solver\+Data}} $\ast$solver\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Create a sparse \mbox{\hyperlink{struct_jacobian}{Jacobian}} matrix based on model data. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{camp__solver_8c_a08519bb4526ffd3db7f49b33ba7600aa}{check\+\_\+flag}} (void $\ast$flag\+\_\+value, char $\ast$func\+\_\+name, int opt)
+\begin{DoxyCompactList}\small\item\em Check the return value of a SUNDIALS function. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{camp__solver_8c_a736da263e758eddff5578b8685edc459}{check\+\_\+flag\+\_\+fail}} (void $\ast$flag\+\_\+value, char $\ast$func\+\_\+name, int opt)
+\begin{DoxyCompactList}\small\item\em Check the return value of a SUNDIALS function and exit on failure. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{camp__solver_8c_af081ac08d4a99b2ff2d02de98ecd01e0}{solver\+\_\+reset\+\_\+timers}} (void $\ast$solver\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Reset the timers for solver functions. \end{DoxyCompactList}\item 
+static void \mbox{\hyperlink{camp__solver_8c_aa27659e81a1e22c9ab59889e8e7cd341}{solver\+\_\+print\+\_\+stats}} (void $\ast$cvode\+\_\+mem)
+\begin{DoxyCompactList}\small\item\em Print solver statistics. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{camp__solver_8c_a946f57c971834de0c7cb185263cd3c78}{solver\+\_\+free}} (void $\ast$solver\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Free a \mbox{\hyperlink{struct_solver_data}{Solver\+Data}} object. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1}{bool}} \mbox{\hyperlink{camp__solver_8c_a51bc2a16028d4c72dd39669c31f6fc17}{is\+\_\+anything\+\_\+going\+\_\+on\+\_\+here}} (\mbox{\hyperlink{struct_solver_data}{Solver\+Data}} $\ast$sd, realtype t\+\_\+initial, realtype t\+\_\+final)
+\begin{DoxyCompactList}\small\item\em Determine if there is anything to solve. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{camp__solver_8c_ac1241091f152db7fd2aa734994c48b24}{error\+\_\+handler}} (int error\+\_\+code, const char $\ast$module, const char $\ast$function, char $\ast$msg, void $\ast$sd)
+\begin{DoxyCompactList}\small\item\em Custom error handling function. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{camp__solver_8c_a01ab307718c5b5304fc16472d23d999f}{model\+\_\+free}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} model\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Free a \mbox{\hyperlink{struct_model_data}{Model\+Data}} object. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{camp__solver_8c_a97135700d97a42ab3c8c1429513ecb28}{solver\+\_\+free\+\_\+update\+\_\+data}} (void $\ast$update\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Free update data. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Interface to c solvers for chemistry. 
+
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{camp__solver_8c_a24ad5702e64ff681fe37e328b12269ee}\label{camp__solver_8c_a24ad5702e64ff681fe37e328b12269ee}} 
+\index{camp\_solver.c@{camp\_solver.c}!CAMP\_SOLVER\_FAIL@{CAMP\_SOLVER\_FAIL}}
+\index{CAMP\_SOLVER\_FAIL@{CAMP\_SOLVER\_FAIL}!camp\_solver.c@{camp\_solver.c}}
+\doxysubsubsection{\texorpdfstring{CAMP\_SOLVER\_FAIL}{CAMP\_SOLVER\_FAIL}}
+{\footnotesize\ttfamily \#define CAMP\+\_\+\+SOLVER\+\_\+\+FAIL~1}
+
+
+
+Definition at line 50 of file camp\+\_\+solver.\+c.
+
+\mbox{\Hypertarget{camp__solver_8c_aad1b39ac87da86f7ac3d9f68f70f432e}\label{camp__solver_8c_aad1b39ac87da86f7ac3d9f68f70f432e}} 
+\index{camp\_solver.c@{camp\_solver.c}!CAMP\_SOLVER\_SUCCESS@{CAMP\_SOLVER\_SUCCESS}}
+\index{CAMP\_SOLVER\_SUCCESS@{CAMP\_SOLVER\_SUCCESS}!camp\_solver.c@{camp\_solver.c}}
+\doxysubsubsection{\texorpdfstring{CAMP\_SOLVER\_SUCCESS}{CAMP\_SOLVER\_SUCCESS}}
+{\footnotesize\ttfamily \#define CAMP\+\_\+\+SOLVER\+\_\+\+SUCCESS~0}
+
+
+
+Definition at line 49 of file camp\+\_\+solver.\+c.
+
+\mbox{\Hypertarget{camp__solver_8c_a8e536cd45a79a2dfb1312b2b026f00f1}\label{camp__solver_8c_a8e536cd45a79a2dfb1312b2b026f00f1}} 
+\index{camp\_solver.c@{camp\_solver.c}!DEFAULT\_TIME\_STEP@{DEFAULT\_TIME\_STEP}}
+\index{DEFAULT\_TIME\_STEP@{DEFAULT\_TIME\_STEP}!camp\_solver.c@{camp\_solver.c}}
+\doxysubsubsection{\texorpdfstring{DEFAULT\_TIME\_STEP}{DEFAULT\_TIME\_STEP}}
+{\footnotesize\ttfamily \#define DEFAULT\+\_\+\+TIME\+\_\+\+STEP~1.\+0}
+
+
+
+Definition at line 34 of file camp\+\_\+solver.\+c.
+
+\mbox{\Hypertarget{camp__solver_8c_a4744760cc248d0346b6ace3829f58ddb}\label{camp__solver_8c_a4744760cc248d0346b6ace3829f58ddb}} 
+\index{camp\_solver.c@{camp\_solver.c}!GUESS\_MAX\_ITER@{GUESS\_MAX\_ITER}}
+\index{GUESS\_MAX\_ITER@{GUESS\_MAX\_ITER}!camp\_solver.c@{camp\_solver.c}}
+\doxysubsubsection{\texorpdfstring{GUESS\_MAX\_ITER}{GUESS\_MAX\_ITER}}
+{\footnotesize\ttfamily \#define GUESS\+\_\+\+MAX\+\_\+\+ITER~5}
+
+
+
+Definition at line 46 of file camp\+\_\+solver.\+c.
+
+\mbox{\Hypertarget{camp__solver_8c_aeb60110d91f761135df703922dc7861f}\label{camp__solver_8c_aeb60110d91f761135df703922dc7861f}} 
+\index{camp\_solver.c@{camp\_solver.c}!JAC\_CHECK\_ADV\_MAX@{JAC\_CHECK\_ADV\_MAX}}
+\index{JAC\_CHECK\_ADV\_MAX@{JAC\_CHECK\_ADV\_MAX}!camp\_solver.c@{camp\_solver.c}}
+\doxysubsubsection{\texorpdfstring{JAC\_CHECK\_ADV\_MAX}{JAC\_CHECK\_ADV\_MAX}}
+{\footnotesize\ttfamily \#define JAC\+\_\+\+CHECK\+\_\+\+ADV\+\_\+\+MAX~1.\+0E-\/00}
+
+
+
+Definition at line 36 of file camp\+\_\+solver.\+c.
+
+\mbox{\Hypertarget{camp__solver_8c_a4ba56d095e4c0e25285f8108f69be188}\label{camp__solver_8c_a4ba56d095e4c0e25285f8108f69be188}} 
+\index{camp\_solver.c@{camp\_solver.c}!JAC\_CHECK\_ADV\_MIN@{JAC\_CHECK\_ADV\_MIN}}
+\index{JAC\_CHECK\_ADV\_MIN@{JAC\_CHECK\_ADV\_MIN}!camp\_solver.c@{camp\_solver.c}}
+\doxysubsubsection{\texorpdfstring{JAC\_CHECK\_ADV\_MIN}{JAC\_CHECK\_ADV\_MIN}}
+{\footnotesize\ttfamily \#define JAC\+\_\+\+CHECK\+\_\+\+ADV\+\_\+\+MIN~1.\+0E-\/12}
+
+
+
+Definition at line 37 of file camp\+\_\+solver.\+c.
+
+\mbox{\Hypertarget{camp__solver_8c_adc365ed9b40058272ed59037a87c3535}\label{camp__solver_8c_adc365ed9b40058272ed59037a87c3535}} 
+\index{camp\_solver.c@{camp\_solver.c}!JAC\_CHECK\_GSL\_ABS\_TOL@{JAC\_CHECK\_GSL\_ABS\_TOL}}
+\index{JAC\_CHECK\_GSL\_ABS\_TOL@{JAC\_CHECK\_GSL\_ABS\_TOL}!camp\_solver.c@{camp\_solver.c}}
+\doxysubsubsection{\texorpdfstring{JAC\_CHECK\_GSL\_ABS\_TOL}{JAC\_CHECK\_GSL\_ABS\_TOL}}
+{\footnotesize\ttfamily \#define JAC\+\_\+\+CHECK\+\_\+\+GSL\+\_\+\+ABS\+\_\+\+TOL~1.\+0e-\/9}
+
+
+
+Definition at line 42 of file camp\+\_\+solver.\+c.
+
+\mbox{\Hypertarget{camp__solver_8c_a043631efb6b555588836fc104ac459c4}\label{camp__solver_8c_a043631efb6b555588836fc104ac459c4}} 
+\index{camp\_solver.c@{camp\_solver.c}!JAC\_CHECK\_GSL\_REL\_TOL@{JAC\_CHECK\_GSL\_REL\_TOL}}
+\index{JAC\_CHECK\_GSL\_REL\_TOL@{JAC\_CHECK\_GSL\_REL\_TOL}!camp\_solver.c@{camp\_solver.c}}
+\doxysubsubsection{\texorpdfstring{JAC\_CHECK\_GSL\_REL\_TOL}{JAC\_CHECK\_GSL\_REL\_TOL}}
+{\footnotesize\ttfamily \#define JAC\+\_\+\+CHECK\+\_\+\+GSL\+\_\+\+REL\+\_\+\+TOL~1.\+0e-\/4}
+
+
+
+Definition at line 40 of file camp\+\_\+solver.\+c.
+
+\mbox{\Hypertarget{camp__solver_8c_a4c64fcaf0e937cb6b8d1d81f01c047a2}\label{camp__solver_8c_a4c64fcaf0e937cb6b8d1d81f01c047a2}} 
+\index{camp\_solver.c@{camp\_solver.c}!MAX\_TIMESTEP\_WARNINGS@{MAX\_TIMESTEP\_WARNINGS}}
+\index{MAX\_TIMESTEP\_WARNINGS@{MAX\_TIMESTEP\_WARNINGS}!camp\_solver.c@{camp\_solver.c}}
+\doxysubsubsection{\texorpdfstring{MAX\_TIMESTEP\_WARNINGS}{MAX\_TIMESTEP\_WARNINGS}}
+{\footnotesize\ttfamily \#define MAX\+\_\+\+TIMESTEP\+\_\+\+WARNINGS~-\/1}
+
+
+
+Definition at line 44 of file camp\+\_\+solver.\+c.
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{camp__solver_8c_a21373e1f8bad206f6437deeea571f51c}\label{camp__solver_8c_a21373e1f8bad206f6437deeea571f51c}} 
+\index{camp\_solver.c@{camp\_solver.c}!camp\_solver\_update\_model\_state@{camp\_solver\_update\_model\_state}}
+\index{camp\_solver\_update\_model\_state@{camp\_solver\_update\_model\_state}!camp\_solver.c@{camp\_solver.c}}
+\doxysubsubsection{\texorpdfstring{camp\_solver\_update\_model\_state()}{camp\_solver\_update\_model\_state()}}
+{\footnotesize\ttfamily int camp\+\_\+solver\+\_\+update\+\_\+model\+\_\+state (\begin{DoxyParamCaption}\item[{N\+\_\+\+Vector}]{solver\+\_\+state,  }\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{realtype}]{threshhold,  }\item[{realtype}]{replacement\+\_\+value }\end{DoxyParamCaption})}
+
+
+
+Update the model state from the current solver state. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em solver\+\_\+state} & Solver state vector \\
+\hline
+{\em model\+\_\+data} & Pointer to the model data (including the state array) \\
+\hline
+{\em threshhold} & A lower limit for model concentrations below which the solver value is replaced with a replacement value \\
+\hline
+{\em replacement\+\_\+value} & Replacement value for low concentrations \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+CAMP\+\_\+\+SOLVER\+\_\+\+SUCCESS for successful update or CAMP\+\_\+\+SOLVER\+\_\+\+FAIL for negative concentration 
+\end{DoxyReturn}
+
+
+Definition at line 797 of file camp\+\_\+solver.\+c.
+
+\mbox{\Hypertarget{camp__solver_8c_a08519bb4526ffd3db7f49b33ba7600aa}\label{camp__solver_8c_a08519bb4526ffd3db7f49b33ba7600aa}} 
+\index{camp\_solver.c@{camp\_solver.c}!check\_flag@{check\_flag}}
+\index{check\_flag@{check\_flag}!camp\_solver.c@{camp\_solver.c}}
+\doxysubsubsection{\texorpdfstring{check\_flag()}{check\_flag()}}
+{\footnotesize\ttfamily int check\+\_\+flag (\begin{DoxyParamCaption}\item[{void $\ast$}]{flag\+\_\+value,  }\item[{char $\ast$}]{func\+\_\+name,  }\item[{int}]{opt }\end{DoxyParamCaption})}
+
+
+
+Check the return value of a SUNDIALS function. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em flag\+\_\+value} & A pointer to check (either for NULL, or as an int pointer giving the flag value \\
+\hline
+{\em func\+\_\+name} & A string giving the function name returning this result code \\
+\hline
+{\em opt} & A flag indicating the type of check to perform (0 for NULL pointer check; 1 for integer flag check) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Flag indicating CAMP\+\_\+\+SOLVER\+\_\+\+SUCCESS or CAMP\+\_\+\+SOLVER\+\_\+\+FAIL 
+\end{DoxyReturn}
+
+
+Definition at line 1713 of file camp\+\_\+solver.\+c.
+
+\mbox{\Hypertarget{camp__solver_8c_a736da263e758eddff5578b8685edc459}\label{camp__solver_8c_a736da263e758eddff5578b8685edc459}} 
+\index{camp\_solver.c@{camp\_solver.c}!check\_flag\_fail@{check\_flag\_fail}}
+\index{check\_flag\_fail@{check\_flag\_fail}!camp\_solver.c@{camp\_solver.c}}
+\doxysubsubsection{\texorpdfstring{check\_flag\_fail()}{check\_flag\_fail()}}
+{\footnotesize\ttfamily void check\+\_\+flag\+\_\+fail (\begin{DoxyParamCaption}\item[{void $\ast$}]{flag\+\_\+value,  }\item[{char $\ast$}]{func\+\_\+name,  }\item[{int}]{opt }\end{DoxyParamCaption})}
+
+
+
+Check the return value of a SUNDIALS function and exit on failure. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em flag\+\_\+value} & A pointer to check (either for NULL, or as an int pointer giving the flag value \\
+\hline
+{\em func\+\_\+name} & A string giving the function name returning this result code \\
+\hline
+{\em opt} & A flag indicating the type of check to perform (0 for NULL pointer check; 1 for integer flag check) \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1743 of file camp\+\_\+solver.\+c.
+
+\mbox{\Hypertarget{camp__solver_8c_ad45be595da1a1d6fd40179d9743a9a65}\label{camp__solver_8c_ad45be595da1a1d6fd40179d9743a9a65}} 
+\index{camp\_solver.c@{camp\_solver.c}!check\_Jac@{check\_Jac}}
+\index{check\_Jac@{check\_Jac}!camp\_solver.c@{camp\_solver.c}}
+\doxysubsubsection{\texorpdfstring{check\_Jac()}{check\_Jac()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1}{bool}} check\+\_\+\+Jac (\begin{DoxyParamCaption}\item[{realtype}]{t,  }\item[{N\+\_\+\+Vector}]{y,  }\item[{SUNMatrix}]{J,  }\item[{N\+\_\+\+Vector}]{deriv,  }\item[{N\+\_\+\+Vector}]{tmp,  }\item[{N\+\_\+\+Vector}]{tmp1,  }\item[{void $\ast$}]{solver\+\_\+data }\end{DoxyParamCaption})}
+
+
+
+Check a \mbox{\hyperlink{struct_jacobian}{Jacobian}} for accuracy. 
+
+This function compares \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements against differences in derivative calculations for small changes to the state array\+: \[ J_{ij}(x) = \frac{f_i(x+\sum_j e_j) - f_i(x)}{\epsilon} \] where $\epsilon_j = 10^{-8} \left|x_j\right|$
+
+
+\begin{DoxyParams}{Parameters}
+{\em t} & Current time \mbox{[}s\mbox{]} \\
+\hline
+{\em y} & Current state array \\
+\hline
+{\em J} & \mbox{\hyperlink{struct_jacobian}{Jacobian}} matrix to evaluate \\
+\hline
+{\em deriv} & Current derivative $f(y)$ \\
+\hline
+{\em tmp} & Working array the size of $y$ \\
+\hline
+{\em tmp1} & Working array the size of $y$ \\
+\hline
+{\em solver\+\_\+data} & Solver data \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True if \mbox{\hyperlink{struct_jacobian}{Jacobian}} values are accurate, false otherwise 
+\end{DoxyReturn}
+
+
+Definition at line 1138 of file camp\+\_\+solver.\+c.
+
+\mbox{\Hypertarget{camp__solver_8c_ac1241091f152db7fd2aa734994c48b24}\label{camp__solver_8c_ac1241091f152db7fd2aa734994c48b24}} 
+\index{camp\_solver.c@{camp\_solver.c}!error\_handler@{error\_handler}}
+\index{error\_handler@{error\_handler}!camp\_solver.c@{camp\_solver.c}}
+\doxysubsubsection{\texorpdfstring{error\_handler()}{error\_handler()}}
+{\footnotesize\ttfamily void error\+\_\+handler (\begin{DoxyParamCaption}\item[{int}]{error\+\_\+code,  }\item[{const char $\ast$}]{module,  }\item[{const char $\ast$}]{function,  }\item[{char $\ast$}]{msg,  }\item[{void $\ast$}]{sd }\end{DoxyParamCaption})}
+
+
+
+Custom error handling function. 
+
+This is used for quiet operation. Solver failures are returned with a flag from the \mbox{\hyperlink{camp__solver_8c_afc5ec8680b419e7ab49530d53a76cee4}{solver\+\_\+run()}} function. 
+
+Definition at line 1896 of file camp\+\_\+solver.\+c.
+
+\mbox{\Hypertarget{camp__solver_8c_ac55302bc18db0d68d78f543aad6a16c4}\label{camp__solver_8c_ac55302bc18db0d68d78f543aad6a16c4}} 
+\index{camp\_solver.c@{camp\_solver.c}!f@{f}}
+\index{f@{f}!camp\_solver.c@{camp\_solver.c}}
+\doxysubsubsection{\texorpdfstring{f()}{f()}}
+{\footnotesize\ttfamily int f (\begin{DoxyParamCaption}\item[{realtype}]{t,  }\item[{N\+\_\+\+Vector}]{y,  }\item[{N\+\_\+\+Vector}]{deriv,  }\item[{void $\ast$}]{solver\+\_\+data }\end{DoxyParamCaption})}
+
+
+
+Compute the time derivative f(t,y) 
+
+
+\begin{DoxyParams}{Parameters}
+{\em t} & Current model time (s) \\
+\hline
+{\em y} & Dependent variable array \\
+\hline
+{\em deriv} & Time derivative vector f(t,y) to calculate \\
+\hline
+{\em solver\+\_\+data} & Pointer to the solver data \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Status code 
+\end{DoxyReturn}
+
+
+Definition at line 835 of file camp\+\_\+solver.\+c.
+
+\mbox{\Hypertarget{camp__solver_8c_a5b485fa25356197023889f3795888e98}\label{camp__solver_8c_a5b485fa25356197023889f3795888e98}} 
+\index{camp\_solver.c@{camp\_solver.c}!get\_jac\_init@{get\_jac\_init}}
+\index{get\_jac\_init@{get\_jac\_init}!camp\_solver.c@{camp\_solver.c}}
+\doxysubsubsection{\texorpdfstring{get\_jac\_init()}{get\_jac\_init()}}
+{\footnotesize\ttfamily SUNMatrix get\+\_\+jac\+\_\+init (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_solver_data}{Solver\+Data}} $\ast$}]{solver\+\_\+data }\end{DoxyParamCaption})}
+
+
+
+Create a sparse \mbox{\hyperlink{struct_jacobian}{Jacobian}} matrix based on model data. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em solver\+\_\+data} & A pointer to the \mbox{\hyperlink{struct_solver_data}{Solver\+Data}} \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Sparse \mbox{\hyperlink{struct_jacobian}{Jacobian}} matrix with all possible non-\/zero elements intialize to 1.\+0 
+\end{DoxyReturn}
+\begin{DoxyRefDesc}{Todo}
+\item[\mbox{\hyperlink{todo__todo000003}{Todo}}]Make the \mbox{\hyperlink{struct_jacobian}{Jacobian}} mapping recursive for sub model parameters that depend on other sub model parameters \end{DoxyRefDesc}
+
+
+Definition at line 1407 of file camp\+\_\+solver.\+c.
+
+\mbox{\Hypertarget{camp__solver_8c_a2fa3892570de5fd26fb97da6b91568ff}\label{camp__solver_8c_a2fa3892570de5fd26fb97da6b91568ff}} 
+\index{camp\_solver.c@{camp\_solver.c}!guess\_helper@{guess\_helper}}
+\index{guess\_helper@{guess\_helper}!camp\_solver.c@{camp\_solver.c}}
+\doxysubsubsection{\texorpdfstring{guess\_helper()}{guess\_helper()}}
+{\footnotesize\ttfamily int guess\+\_\+helper (\begin{DoxyParamCaption}\item[{const realtype}]{t\+\_\+n,  }\item[{const realtype}]{h\+\_\+n,  }\item[{N\+\_\+\+Vector}]{y\+\_\+n,  }\item[{N\+\_\+\+Vector}]{y\+\_\+n1,  }\item[{N\+\_\+\+Vector}]{hf,  }\item[{void $\ast$}]{solver\+\_\+data,  }\item[{N\+\_\+\+Vector}]{tmp1,  }\item[{N\+\_\+\+Vector}]{corr }\end{DoxyParamCaption})}
+
+
+
+Try to improve guesses of y sent to the linear solver. 
+
+This function checks if there are any negative guessed concentrations, and if there are it calculates a set of initial corrections to the guessed state using the state at time $t_{n-1}$ and the derivative $f_{n-1}$ and advancing the state according to\+: \[ y_n = y_{n-1} + \sum_{j=1}^m h_j * f_j \] where $h_j$ is the largest timestep possible where \[ y_{j-1} + h_j * f_j > 0 \] and \[ t_n = t_{n-1} + \sum_{j=1}^m h_j \]
+
+
+\begin{DoxyParams}{Parameters}
+{\em t\+\_\+n} & Current time \mbox{[}s\mbox{]} \\
+\hline
+{\em h\+\_\+n} & Current time step size \mbox{[}s\mbox{]} If this is set to zero, the change hf is assumed to be an adjustment where y\+\_\+n = y\+\_\+n1 + hf \\
+\hline
+{\em y\+\_\+n} & Current guess for $y(t_n)$ \\
+\hline
+{\em y\+\_\+n1} & $y(t_{n-1})$ \\
+\hline
+{\em hf} & Current guess for change in $y$ from $t_{n-1}$ to $t_n$ \mbox{[}input/output\mbox{]} \\
+\hline
+{\em solver\+\_\+data} & Solver data \\
+\hline
+{\em tmp1} & Temporary vector for calculations \\
+\hline
+{\em corr} & Vector of calculated adjustments to $y(t_n)$ \mbox{[}output\mbox{]} \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+1 if corrections were calculated, 0 if not 
+\end{DoxyReturn}
+
+
+Definition at line 1312 of file camp\+\_\+solver.\+c.
+
+\mbox{\Hypertarget{camp__solver_8c_a51bc2a16028d4c72dd39669c31f6fc17}\label{camp__solver_8c_a51bc2a16028d4c72dd39669c31f6fc17}} 
+\index{camp\_solver.c@{camp\_solver.c}!is\_anything\_going\_on\_here@{is\_anything\_going\_on\_here}}
+\index{is\_anything\_going\_on\_here@{is\_anything\_going\_on\_here}!camp\_solver.c@{camp\_solver.c}}
+\doxysubsubsection{\texorpdfstring{is\_anything\_going\_on\_here()}{is\_anything\_going\_on\_here()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1}{bool}} is\+\_\+anything\+\_\+going\+\_\+on\+\_\+here (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_solver_data}{Solver\+Data}} $\ast$}]{sd,  }\item[{realtype}]{t\+\_\+initial,  }\item[{realtype}]{t\+\_\+final }\end{DoxyParamCaption})}
+
+
+
+Determine if there is anything to solve. 
+
+If the solver state concentrations and the derivative vector are very small, there is no point running the solver 
+
+Definition at line 1865 of file camp\+\_\+solver.\+c.
+
+\mbox{\Hypertarget{camp__solver_8c_a13451d507558a61a2353adfed58db468}\label{camp__solver_8c_a13451d507558a61a2353adfed58db468}} 
+\index{camp\_solver.c@{camp\_solver.c}!Jac@{Jac}}
+\index{Jac@{Jac}!camp\_solver.c@{camp\_solver.c}}
+\doxysubsubsection{\texorpdfstring{Jac()}{Jac()}}
+{\footnotesize\ttfamily int Jac (\begin{DoxyParamCaption}\item[{realtype}]{t,  }\item[{N\+\_\+\+Vector}]{y,  }\item[{N\+\_\+\+Vector}]{deriv,  }\item[{SUNMatrix}]{J,  }\item[{void $\ast$}]{solver\+\_\+data,  }\item[{N\+\_\+\+Vector}]{tmp1,  }\item[{N\+\_\+\+Vector}]{tmp2,  }\item[{N\+\_\+\+Vector}]{tmp3 }\end{DoxyParamCaption})}
+
+
+
+Compute the \mbox{\hyperlink{struct_jacobian}{Jacobian}}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em t} & Current model time (s) \\
+\hline
+{\em y} & Dependent variable array \\
+\hline
+{\em deriv} & Time derivative vector f(t,y) \\
+\hline
+{\em J} & \mbox{\hyperlink{struct_jacobian}{Jacobian}} to calculate \\
+\hline
+{\em solver\+\_\+data} & Pointer to the solver data \\
+\hline
+{\em tmp1} & Unused vector \\
+\hline
+{\em tmp2} & Unused vector \\
+\hline
+{\em tmp3} & Unused vector \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Status code 
+\end{DoxyReturn}
+\begin{DoxyRefDesc}{Todo}
+\item[\mbox{\hyperlink{todo__todo000002}{Todo}}]\#83 Figure out how to stop CVODE from resizing the \mbox{\hyperlink{struct_jacobian}{Jacobian}} during solving \end{DoxyRefDesc}
+
+
+Definition at line 964 of file camp\+\_\+solver.\+c.
+
+\mbox{\Hypertarget{camp__solver_8c_a01ab307718c5b5304fc16472d23d999f}\label{camp__solver_8c_a01ab307718c5b5304fc16472d23d999f}} 
+\index{camp\_solver.c@{camp\_solver.c}!model\_free@{model\_free}}
+\index{model\_free@{model\_free}!camp\_solver.c@{camp\_solver.c}}
+\doxysubsubsection{\texorpdfstring{model\_free()}{model\_free()}}
+{\footnotesize\ttfamily void model\+\_\+free (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}}}]{model\+\_\+data }\end{DoxyParamCaption})}
+
+
+
+Free a \mbox{\hyperlink{struct_model_data}{Model\+Data}} object. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em model\+\_\+data} & Pointer to the \mbox{\hyperlink{struct_model_data}{Model\+Data}} object to free \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1905 of file camp\+\_\+solver.\+c.
+
+\mbox{\Hypertarget{camp__solver_8c_a946f57c971834de0c7cb185263cd3c78}\label{camp__solver_8c_a946f57c971834de0c7cb185263cd3c78}} 
+\index{camp\_solver.c@{camp\_solver.c}!solver\_free@{solver\_free}}
+\index{solver\_free@{solver\_free}!camp\_solver.c@{camp\_solver.c}}
+\doxysubsubsection{\texorpdfstring{solver\_free()}{solver\_free()}}
+{\footnotesize\ttfamily void solver\+\_\+free (\begin{DoxyParamCaption}\item[{void $\ast$}]{solver\+\_\+data }\end{DoxyParamCaption})}
+
+
+
+Free a \mbox{\hyperlink{struct_solver_data}{Solver\+Data}} object. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em solver\+\_\+data} & Pointer to the \mbox{\hyperlink{struct_solver_data}{Solver\+Data}} object to free \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1822 of file camp\+\_\+solver.\+c.
+
+\mbox{\Hypertarget{camp__solver_8c_a97135700d97a42ab3c8c1429513ecb28}\label{camp__solver_8c_a97135700d97a42ab3c8c1429513ecb28}} 
+\index{camp\_solver.c@{camp\_solver.c}!solver\_free\_update\_data@{solver\_free\_update\_data}}
+\index{solver\_free\_update\_data@{solver\_free\_update\_data}!camp\_solver.c@{camp\_solver.c}}
+\doxysubsubsection{\texorpdfstring{solver\_free\_update\_data()}{solver\_free\_update\_data()}}
+{\footnotesize\ttfamily void solver\+\_\+free\+\_\+update\+\_\+data (\begin{DoxyParamCaption}\item[{void $\ast$}]{update\+\_\+data }\end{DoxyParamCaption})}
+
+
+
+Free update data. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em update\+\_\+data} & Object to free \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1952 of file camp\+\_\+solver.\+c.
+
+\mbox{\Hypertarget{camp__solver_8c_a0de7bd46f75dd8496488b32c4983ec77}\label{camp__solver_8c_a0de7bd46f75dd8496488b32c4983ec77}} 
+\index{camp\_solver.c@{camp\_solver.c}!solver\_get\_statistics@{solver\_get\_statistics}}
+\index{solver\_get\_statistics@{solver\_get\_statistics}!camp\_solver.c@{camp\_solver.c}}
+\doxysubsubsection{\texorpdfstring{solver\_get\_statistics()}{solver\_get\_statistics()}}
+{\footnotesize\ttfamily void solver\+\_\+get\+\_\+statistics (\begin{DoxyParamCaption}\item[{void $\ast$}]{solver\+\_\+data,  }\item[{int $\ast$}]{solver\+\_\+flag,  }\item[{int $\ast$}]{num\+\_\+steps,  }\item[{int $\ast$}]{RHS\+\_\+evals,  }\item[{int $\ast$}]{LS\+\_\+setups,  }\item[{int $\ast$}]{error\+\_\+test\+\_\+fails,  }\item[{int $\ast$}]{NLS\+\_\+iters,  }\item[{int $\ast$}]{NLS\+\_\+convergence\+\_\+fails,  }\item[{int $\ast$}]{DLS\+\_\+\+Jac\+\_\+evals,  }\item[{int $\ast$}]{DLS\+\_\+\+RHS\+\_\+evals,  }\item[{double $\ast$}]{last\+\_\+time\+\_\+step\+\_\+\+\_\+s,  }\item[{double $\ast$}]{next\+\_\+time\+\_\+step\+\_\+\+\_\+s,  }\item[{int $\ast$}]{Jac\+\_\+eval\+\_\+fails,  }\item[{int $\ast$}]{RHS\+\_\+evals\+\_\+total,  }\item[{int $\ast$}]{Jac\+\_\+evals\+\_\+total,  }\item[{double $\ast$}]{RHS\+\_\+time\+\_\+\+\_\+s,  }\item[{double $\ast$}]{Jac\+\_\+time\+\_\+\+\_\+s,  }\item[{double $\ast$}]{max\+\_\+loss\+\_\+precision }\end{DoxyParamCaption})}
+
+
+
+Get solver statistics after an integration attempt. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em solver\+\_\+data} & Pointer to the solver data \\
+\hline
+{\em solver\+\_\+flag} & Last flag returned by the solver \\
+\hline
+{\em num\+\_\+steps} & Pointer to set to the number of integration steps \\
+\hline
+{\em RHS\+\_\+evals} & Pointer to set to the number of right-\/hand side evaluations \\
+\hline
+{\em LS\+\_\+setups} & Pointer to set to the number of linear solver setups \\
+\hline
+{\em error\+\_\+test\+\_\+fails} & Pointer to set to the number of error test failures \\
+\hline
+{\em NLS\+\_\+iters} & Pointer to set to the non-\/linear solver iterations \\
+\hline
+{\em NLS\+\_\+convergence\+\_\+fails} & Pointer to set to the non-\/linear solver convergence failures \\
+\hline
+{\em DLS\+\_\+\+Jac\+\_\+evals} & Pointer to set to the direct linear solver \mbox{\hyperlink{struct_jacobian}{Jacobian}} evaluations \\
+\hline
+{\em DLS\+\_\+\+RHS\+\_\+evals} & Pointer to set to the direct linear solver right-\/hand side evaluations \\
+\hline
+{\em last\+\_\+time\+\_\+step\+\_\+\+\_\+s} & Pointer to set to the last time step size \mbox{[}s\mbox{]} \\
+\hline
+{\em next\+\_\+time\+\_\+step\+\_\+\+\_\+s} & Pointer to set to the next time step size \mbox{[}s\mbox{]} \\
+\hline
+{\em Jac\+\_\+eval\+\_\+fails} & Number of \mbox{\hyperlink{struct_jacobian}{Jacobian}} evaluation failures \\
+\hline
+{\em RHS\+\_\+evals\+\_\+total} & Total calls to {\ttfamily \mbox{\hyperlink{camp__solver_8c_ac55302bc18db0d68d78f543aad6a16c4}{f()}}} \\
+\hline
+{\em Jac\+\_\+evals\+\_\+total} & Total calls to {\ttfamily \mbox{\hyperlink{camp__solver_8c_a13451d507558a61a2353adfed58db468}{Jac()}}} \\
+\hline
+{\em RHS\+\_\+time\+\_\+\+\_\+s} & Compute time for calls to \mbox{\hyperlink{camp__solver_8c_ac55302bc18db0d68d78f543aad6a16c4}{f()}} \mbox{[}s\mbox{]} \\
+\hline
+{\em Jac\+\_\+time\+\_\+\+\_\+s} & Compute time for calls to \mbox{\hyperlink{camp__solver_8c_a13451d507558a61a2353adfed58db468}{Jac()}} \mbox{[}s\mbox{]} \\
+\hline
+{\em max\+\_\+loss\+\_\+precision} & Indicators of loss of precision in derivative calculation for each species \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 717 of file camp\+\_\+solver.\+c.
+
+\mbox{\Hypertarget{camp__solver_8c_a599ffdef916b139a1690bfd41aa386b6}\label{camp__solver_8c_a599ffdef916b139a1690bfd41aa386b6}} 
+\index{camp\_solver.c@{camp\_solver.c}!solver\_initialize@{solver\_initialize}}
+\index{solver\_initialize@{solver\_initialize}!camp\_solver.c@{camp\_solver.c}}
+\doxysubsubsection{\texorpdfstring{solver\_initialize()}{solver\_initialize()}}
+{\footnotesize\ttfamily void solver\+\_\+initialize (\begin{DoxyParamCaption}\item[{void $\ast$}]{solver\+\_\+data,  }\item[{double $\ast$}]{abs\+\_\+tol,  }\item[{double}]{rel\+\_\+tol,  }\item[{int}]{max\+\_\+steps,  }\item[{int}]{max\+\_\+conv\+\_\+fails }\end{DoxyParamCaption})}
+
+
+
+Solver initialization. 
+
+Allocate and initialize solver objects
+
+
+\begin{DoxyParams}{Parameters}
+{\em solver\+\_\+data} & Pointer to a \mbox{\hyperlink{struct_solver_data}{Solver\+Data}} object \\
+\hline
+{\em abs\+\_\+tol} & Pointer to array of absolute tolerances \\
+\hline
+{\em rel\+\_\+tol} & Relative integration tolerance \\
+\hline
+{\em max\+\_\+steps} & Maximum number of internal integration steps \\
+\hline
+{\em max\+\_\+conv\+\_\+fails} & Maximum number of convergence failures \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 374 of file camp\+\_\+solver.\+c.
+
+\mbox{\Hypertarget{camp__solver_8c_a8652eb17aa4aec193810f8351c248c0e}\label{camp__solver_8c_a8652eb17aa4aec193810f8351c248c0e}} 
+\index{camp\_solver.c@{camp\_solver.c}!solver\_new@{solver\_new}}
+\index{solver\_new@{solver\_new}!camp\_solver.c@{camp\_solver.c}}
+\doxysubsubsection{\texorpdfstring{solver\_new()}{solver\_new()}}
+{\footnotesize\ttfamily void$\ast$ solver\+\_\+new (\begin{DoxyParamCaption}\item[{int}]{n\+\_\+state\+\_\+var,  }\item[{int}]{n\+\_\+cells,  }\item[{int $\ast$}]{var\+\_\+type,  }\item[{int}]{n\+\_\+rxn,  }\item[{int}]{n\+\_\+rxn\+\_\+int\+\_\+param,  }\item[{int}]{n\+\_\+rxn\+\_\+float\+\_\+param,  }\item[{int}]{n\+\_\+rxn\+\_\+env\+\_\+param,  }\item[{int}]{n\+\_\+aero\+\_\+phase,  }\item[{int}]{n\+\_\+aero\+\_\+phase\+\_\+int\+\_\+param,  }\item[{int}]{n\+\_\+aero\+\_\+phase\+\_\+float\+\_\+param,  }\item[{int}]{n\+\_\+aero\+\_\+rep,  }\item[{int}]{n\+\_\+aero\+\_\+rep\+\_\+int\+\_\+param,  }\item[{int}]{n\+\_\+aero\+\_\+rep\+\_\+float\+\_\+param,  }\item[{int}]{n\+\_\+aero\+\_\+rep\+\_\+env\+\_\+param,  }\item[{int}]{n\+\_\+sub\+\_\+model,  }\item[{int}]{n\+\_\+sub\+\_\+model\+\_\+int\+\_\+param,  }\item[{int}]{n\+\_\+sub\+\_\+model\+\_\+float\+\_\+param,  }\item[{int}]{n\+\_\+sub\+\_\+model\+\_\+env\+\_\+param }\end{DoxyParamCaption})}
+
+
+
+Get a new solver object. 
+
+Return a pointer to a new \mbox{\hyperlink{struct_solver_data}{Solver\+Data}} object
+
+
+\begin{DoxyParams}{Parameters}
+{\em n\+\_\+state\+\_\+var} & Number of variables on the state array per grid cell \\
+\hline
+{\em n\+\_\+cells} & Number of grid cells to solve simultaneously \\
+\hline
+{\em var\+\_\+type} & Pointer to array of state variable types (solver, constant, PSSA) \\
+\hline
+{\em n\+\_\+rxn} & Number of reactions to include \\
+\hline
+{\em n\+\_\+rxn\+\_\+int\+\_\+param} & Total number of integer reaction parameters \\
+\hline
+{\em n\+\_\+rxn\+\_\+float\+\_\+param} & Total number of floating-\/point reaction parameters \\
+\hline
+{\em n\+\_\+rxn\+\_\+env\+\_\+param} & Total number of environment-\/dependent reaction parameters\\
+\hline
+{\em n\+\_\+aero\+\_\+phase} & Number of aerosol phases\\
+\hline
+{\em n\+\_\+aero\+\_\+phase\+\_\+int\+\_\+param} & Total number of integer aerosol phase parameters \\
+\hline
+{\em n\+\_\+aero\+\_\+phase\+\_\+float\+\_\+param} & Total number of floating-\/point aerosol phase parameters \\
+\hline
+{\em n\+\_\+aero\+\_\+rep} & Number of aerosol representations \\
+\hline
+{\em n\+\_\+aero\+\_\+rep\+\_\+int\+\_\+param} & Total number of integer aerosol representation parameters \\
+\hline
+{\em n\+\_\+aero\+\_\+rep\+\_\+float\+\_\+param} & Total number of floating-\/point aerosol representation parameters \\
+\hline
+{\em n\+\_\+aero\+\_\+rep\+\_\+env\+\_\+param} & Total number of environment-\/dependent aerosol representation parameters \\
+\hline
+{\em n\+\_\+sub\+\_\+model} & Number of sub models \\
+\hline
+{\em n\+\_\+sub\+\_\+model\+\_\+int\+\_\+param} & Total number of integer sub model parameters \\
+\hline
+{\em n\+\_\+sub\+\_\+model\+\_\+float\+\_\+param} & Total number of floating-\/point sub model parameters \\
+\hline
+{\em n\+\_\+sub\+\_\+model\+\_\+env\+\_\+param} & Total number of environment-\/dependent sub model parameters \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Pointer to the new \mbox{\hyperlink{struct_solver_data}{Solver\+Data}} object 
+\end{DoxyReturn}
+
+
+Definition at line 83 of file camp\+\_\+solver.\+c.
+
+\mbox{\Hypertarget{camp__solver_8c_aa27659e81a1e22c9ab59889e8e7cd341}\label{camp__solver_8c_aa27659e81a1e22c9ab59889e8e7cd341}} 
+\index{camp\_solver.c@{camp\_solver.c}!solver\_print\_stats@{solver\_print\_stats}}
+\index{solver\_print\_stats@{solver\_print\_stats}!camp\_solver.c@{camp\_solver.c}}
+\doxysubsubsection{\texorpdfstring{solver\_print\_stats()}{solver\_print\_stats()}}
+{\footnotesize\ttfamily static void solver\+\_\+print\+\_\+stats (\begin{DoxyParamCaption}\item[{void $\ast$}]{cvode\+\_\+mem }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Print solver statistics. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em cvode\+\_\+mem} & Solver object \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1770 of file camp\+\_\+solver.\+c.
+
+\mbox{\Hypertarget{camp__solver_8c_af081ac08d4a99b2ff2d02de98ecd01e0}\label{camp__solver_8c_af081ac08d4a99b2ff2d02de98ecd01e0}} 
+\index{camp\_solver.c@{camp\_solver.c}!solver\_reset\_timers@{solver\_reset\_timers}}
+\index{solver\_reset\_timers@{solver\_reset\_timers}!camp\_solver.c@{camp\_solver.c}}
+\doxysubsubsection{\texorpdfstring{solver\_reset\_timers()}{solver\_reset\_timers()}}
+{\footnotesize\ttfamily void solver\+\_\+reset\+\_\+timers (\begin{DoxyParamCaption}\item[{void $\ast$}]{solver\+\_\+data }\end{DoxyParamCaption})}
+
+
+
+Reset the timers for solver functions. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em solver\+\_\+data} & Pointer to the \mbox{\hyperlink{struct_solver_data}{Solver\+Data}} object with timers to reset \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 1754 of file camp\+\_\+solver.\+c.
+
+\mbox{\Hypertarget{camp__solver_8c_afc5ec8680b419e7ab49530d53a76cee4}\label{camp__solver_8c_afc5ec8680b419e7ab49530d53a76cee4}} 
+\index{camp\_solver.c@{camp\_solver.c}!solver\_run@{solver\_run}}
+\index{solver\_run@{solver\_run}!camp\_solver.c@{camp\_solver.c}}
+\doxysubsubsection{\texorpdfstring{solver\_run()}{solver\_run()}}
+{\footnotesize\ttfamily int solver\+\_\+run (\begin{DoxyParamCaption}\item[{void $\ast$}]{solver\+\_\+data,  }\item[{double $\ast$}]{state,  }\item[{double $\ast$}]{env,  }\item[{double}]{t\+\_\+initial,  }\item[{double}]{t\+\_\+final }\end{DoxyParamCaption})}
+
+
+
+Solve for a given timestep. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em solver\+\_\+data} & A pointer to the initialized solver data \\
+\hline
+{\em state} & A pointer to the full state array (all grid cells) \\
+\hline
+{\em env} & A pointer to the full array of environmental conditions (all grid cells) \\
+\hline
+{\em t\+\_\+initial} & Initial time (s) \\
+\hline
+{\em t\+\_\+final} & (s) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Flag indicating CAMP\+\_\+\+SOLVER\+\_\+\+SUCCESS or CAMP\+\_\+\+SOLVER\+\_\+\+FAIL 
+\end{DoxyReturn}
+
+
+Definition at line 536 of file camp\+\_\+solver.\+c.
+
