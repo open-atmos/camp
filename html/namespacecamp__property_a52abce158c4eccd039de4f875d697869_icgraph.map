@@ -1,0 +1,12 @@
+<map id="camp_property::key" name="camp_property::key">
+<area shape="rect" id="node1" title="Get the key name of a property." alt="" coords="419,207,552,233"/>
+<area shape="rect" id="node2" href="$namespacecamp__property.html#a6980a9f16e3c1a9c83783070b34d4f55" title="Find a key&#45;value pair by key name. Returns a null pointer if the key name is not found." alt="" coords="226,156,357,183"/>
+<area shape="rect" id="node3" href="$namespacecamp__property.html#aea9874a70ce05c8ae096d11c14baa707" title="Get an integer value. The return value is true if the key&#45;value pair was found, and false otherwise...." alt="" coords="9,5,161,32"/>
+<area shape="rect" id="node4" href="$namespacecamp__property.html#a00491ca01f9acc9a906c07c385dccefa" title="Get a logical value. The return value is true if the key&#45;value pair was found, and false otherwise...." alt="" coords="19,57,150,98"/>
+<area shape="rect" id="node5" href="$namespacecamp__property.html#a9f41d477ab2a3fde0b6f115a0448ad19" title="Get a property sub&#45;set. The return value is true if the key&#45;value pair was found, and false otherwise..." alt="" coords="19,123,150,165"/>
+<area shape="rect" id="node6" href="$namespacecamp__property.html#a9120f7b01448c0f2fb101ed54ba2f443" title="Get a real value. The return value is true if the key&#45;value pair was found, and false otherwise...." alt="" coords="5,191,164,217"/>
+<area shape="rect" id="node7" href="$namespacecamp__property.html#a19d4b93f821c29744eb4e9533f30d524" title="Get a string value. The return value is true if the key&#45;value pair was found, and false otherwise...." alt="" coords="19,245,150,286"/>
+<area shape="rect" id="node8" href="$namespacecamp__property.html#a58b829ab9f394256ce81e6574a378476" title="Get the key name of the element currently pointed to by the iterator. Returns true if the iterator po..." alt="" coords="212,308,371,335"/>
+<area shape="rect" id="node9" href="$namespacecamp__property.html#a2bac0cf3f0c88a40cdf50132e00dd30c" title="Constructor for property_link_t." alt="" coords="225,359,358,401"/>
+<area shape="rect" id="node10" href="$namespacecamp__property.html#a6a05a24ce71c2d8ec6d9667bcda6d675" title="Put an element in the property data set." alt="" coords="226,425,357,452"/>
+</map>

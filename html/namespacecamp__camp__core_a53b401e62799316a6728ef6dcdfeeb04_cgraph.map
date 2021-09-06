@@ -1,0 +1,6 @@
+<map id="camp_camp_core::load" name="camp_camp_core::load">
+<area shape="rect" id="node1" title="Load model data from input files." alt="" coords="5,13,160,39"/>
+<area shape="rect" id="node2" href="$namespacecamp__util.html#a970b40b46d26e937fb3cdc0b9217b86c" title="Error immediately." alt="" coords="208,13,341,39"/>
+<area shape="rect" id="node3" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="389,13,541,39"/>
+<area shape="rect" id="node4" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="589,5,712,47"/>
+</map>

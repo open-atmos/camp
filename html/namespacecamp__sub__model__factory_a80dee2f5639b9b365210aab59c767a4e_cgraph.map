@@ -1,0 +1,6 @@
+<map id="camp_sub_model_factory::load" name="camp_sub_model_factory::load">
+<area shape="rect" id="node1" title="Load a sub&#45;model based on its type." alt="" coords="5,23,176,65"/>
+<area shape="rect" id="node2" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="224,5,376,32"/>
+<area shape="rect" id="node4" href="$namespacecamp__util.html#ab72bff2627c9468e4c352118b8dc7046" title="Prints a warning message." alt="" coords="228,56,372,83"/>
+<area shape="rect" id="node3" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="424,23,547,65"/>
+</map>

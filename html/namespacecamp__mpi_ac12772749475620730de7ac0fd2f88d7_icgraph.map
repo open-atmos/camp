@@ -1,0 +1,13 @@
+<map id="camp_mpi::camp_mpi_size" name="camp_mpi::camp_mpi_size">
+<area shape="rect" id="node1" title="Returns the total number of processes." alt="" coords="487,209,665,235"/>
+<area shape="rect" id="node2" href="$namespacecamp__mpi.html#a6095279d2c51301de4488595f4c6e75c" title="Does an allgather of integer arrays (must be the same size on all processes)." alt="" coords="261,5,419,47"/>
+<area shape="rect" id="node3" href="$namespacecamp__mpi.html#aeae6a117fdd28992d6a8aa8c73adf618" title="Does an allgather of real arrays (must be the same size on all processes)." alt="" coords="266,71,414,112"/>
+<area shape="rect" id="node4" href="$namespacecamp__mpi.html#ac17a70c1409131f3634aaed71894ea68" title="Computes the average of val across all processes, storing the result in val_avg on all processes." alt="" coords="259,136,421,177"/>
+<area shape="rect" id="node6" href="$namespacecamp__mpi.html#ab2993869e65db724f98a587c4e5c0c12" title="Computes the average of val across all processes, storing the result in val_avg on all processes." alt="" coords="241,201,439,243"/>
+<area shape="rect" id="node7" href="$namespacecamp__mpi.html#a96549d22ee106f1fa29af89dcaa0ab71" title="Computes the average of val across all processes, storing the result in val_avg on the root process." alt="" coords="266,267,414,308"/>
+<area shape="rect" id="node10" href="$namespacecamp__mpi.html#a83a928ea74ddb2233d7cca985db067bf" title="Computes the average of val across all processes, storing the result in val_avg on the root process." alt="" coords="261,332,419,373"/>
+<area shape="rect" id="node11" href="$namespacecamp__mpi.html#a32da3f90f515b60042273b5480ede57f" title="Computes the average of val across all processes, storing the result in val_avg on the root process." alt="" coords="250,397,430,439"/>
+<area shape="rect" id="node5" href="$namespacecamp__env__state.html#acd71d6143a8e08e77473bf24f1752af6" title="Average val over all processes." alt="" coords="27,136,172,177"/>
+<area shape="rect" id="node8" href="$namespacecamp__env__state.html#af55024977aafd912d718d87887a5b114" title="Computes the average of val across all processes, storing the result in val_avg on the root process." alt="" coords="5,233,193,275"/>
+<area shape="rect" id="node9" href="$namespacecamp__env__state.html#aa8f8e6e85adf7327d31a2f64324d49a4" title="Average val over all processes, with the result only on the root process." alt="" coords="27,299,172,340"/>
+</map>

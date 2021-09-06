@@ -1,0 +1,5 @@
+<map id="camp_property::iter_next" name="camp_property::iter_next">
+<area shape="rect" id="node1" title="Increment the interator." alt="" coords="5,13,168,39"/>
+<area shape="rect" id="node2" href="$namespacecamp__util.html#ab72bff2627c9468e4c352118b8dc7046" title="Prints a warning message." alt="" coords="216,13,360,39"/>
+<area shape="rect" id="node3" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="408,5,531,47"/>
+</map>

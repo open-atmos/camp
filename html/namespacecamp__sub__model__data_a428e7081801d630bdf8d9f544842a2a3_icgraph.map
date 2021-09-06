@@ -1,0 +1,5 @@
+<map id="camp_sub_model_data::pack_size" name="camp_sub_model_data::pack_size">
+<area shape="rect" id="node1" title="Determine the size of a binary required to pack the reaction data." alt="" coords="224,41,380,83"/>
+<area shape="rect" id="node2" href="$namespacecamp__sub__model__factory.html#af73bdd51e97a9f4f82a68c658196ec0d" title="Determine the size of a binary required to pack a sub&#45;model." alt="" coords="5,5,176,47"/>
+<area shape="rect" id="node3" href="$namespacecamp__sub__model__data.html#a220d5f85a6afee00ee82db72f03e48a3" title="Determine the size of a binary required to pack the reaction data." alt="" coords="6,70,175,126"/>
+</map>

@@ -1,0 +1,4 @@
+<map id="check_flag_fail" name="check_flag_fail">
+<area shape="rect" id="node1" title="Check the return value of a SUNDIALS function and exit on failure." alt="" coords="5,5,113,32"/>
+<area shape="rect" id="node2" href="$camp__solver_8c.html#a08519bb4526ffd3db7f49b33ba7600aa" title="Check the return value of a SUNDIALS function." alt="" coords="161,5,245,32"/>
+</map>

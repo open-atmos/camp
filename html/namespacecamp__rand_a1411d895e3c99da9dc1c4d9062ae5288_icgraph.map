@@ -1,0 +1,4 @@
+<map id="camp_rand::rand_hex_char" name="camp_rand::rand_hex_char">
+<area shape="rect" id="node1" title="Generate a random hexadecimal character." alt="" coords="199,5,375,32"/>
+<area shape="rect" id="node2" href="$namespacecamp__rand.html#ae36190e0e83c7a16138ed38ec071521c" title="Generate a version 4 UUID as a string." alt="" coords="5,5,151,32"/>
+</map>

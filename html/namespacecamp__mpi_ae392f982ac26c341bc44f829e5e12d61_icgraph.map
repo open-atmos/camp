@@ -1,0 +1,15 @@
+<map id="camp_mpi::camp_mpi_pack_size_real" name="camp_mpi::camp_mpi_pack_size_real">
+<area shape="rect" id="node1" title="Determines the number of bytes required to pack the given value." alt="" coords="825,151,973,193"/>
+<area shape="rect" id="node2" href="$namespacecamp__mpi.html#a0bd441b56242352455d607a27f863a90" title="Packs the given value into the buffer, advancing position." alt="" coords="609,27,757,69"/>
+<area shape="rect" id="node5" href="$namespacecamp__mpi.html#a3a40947a78223499aaa9b9a2c5e32c89" title="Perform basic sanity checks on send/receive." alt="" coords="360,123,537,149"/>
+<area shape="rect" id="node8" href="$namespacecamp__env__state.html#a5da3d709cc454440a04dba470052ef77" title="Determines the number of bytes required to pack the given value." alt="" coords="593,93,772,134"/>
+<area shape="rect" id="node10" href="$namespacecamp__mpi.html#ad1bf276334a50ba9c4e928d848d9fe4a" title="Unpacks the given value from the buffer, advancing position." alt="" coords="609,210,757,251"/>
+<area shape="rect" id="node12" href="$namespacecamp__camp__core.html#acbb7425e5bdb0e8af60c1d7b1d372fd2" title="Determine the size of a binary required to pack the mechanism." alt="" coords="588,276,777,303"/>
+<area shape="rect" id="node3" href="$namespacecamp__camp__core.html#ae216d8a1432331a0ca2b22fa764e5f8e" title="Pack the given value to the buffer, advancing position." alt="" coords="357,5,540,32"/>
+<area shape="rect" id="node4" href="$namespacecamp__env__state.html#a151aed99a15531066bb5ef8b25d4b94e" title="Packs the given value into the buffer, advancing position." alt="" coords="371,57,527,98"/>
+<area shape="rect" id="node6" href="$namespacecamp__mpi.html#a013fae7f812d8d9bd22dc73db714e115" title="Initialize MPI." alt="" coords="137,123,309,149"/>
+<area shape="rect" id="node7" href="$part__3__code_2box__model_8_f90.html#a3f8c0234515cc17b2f3e366868b8646b" title=" " alt="" coords="5,123,89,149"/>
+<area shape="rect" id="node9" href="$namespacecamp__env__state.html#a80c14bca3257629238c18686269a4084" title="Unpacks the given value from the buffer, advancing position." alt="" coords="367,174,530,215"/>
+<area shape="rect" id="node11" href="$namespacecamp__camp__core.html#a672a6ddc1f764207c4b6aa80b72ea203" title="Unpack the given value from the buffer, advancing position." alt="" coords="375,239,523,281"/>
+<area shape="rect" id="node13" href="$part__4__code_2box__model_8_f90.html#a3f8c0234515cc17b2f3e366868b8646b" title=" " alt="" coords="407,305,491,332"/>
+</map>

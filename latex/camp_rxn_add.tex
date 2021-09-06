@@ -1,6 +1,6 @@
 {\bfseries{Note\+:}} these instructions are out-\/of-\/date. TODO update
 
-Adding a \mbox{\hyperlink{camp_rxn}{reaction}} to the \mbox{\hyperlink{index}{camp-\/chem}} module can be done in the following steps\+:\hypertarget{camp_rxn_add_autotoc_md10}{}\doxysubsection{Step 1. Create a new reaction module}\label{camp_rxn_add_autotoc_md10}
+Adding a \mbox{\hyperlink{camp_rxn}{reaction}} to the \mbox{\hyperlink{index}{camp-\/chem}} module can be done in the following steps\+:\hypertarget{camp_rxn_add_autotoc_md11}{}\doxysubsection{Step 1. Create a new reaction module}\label{camp_rxn_add_autotoc_md11}
 The module should be placed in the {\ttfamily /src/rxns} folder and extent the abstract {\ttfamily \mbox{\hyperlink{structcamp__rxn__data_1_1rxn__data__t}{camp\+\_\+rxn\+\_\+data\+::rxn\+\_\+data\+\_\+t}}} type, overriding all deferred functions, and providing a constructor that returns a pointer to a newly allocated instance of the new type\+:
 
 
@@ -36,7 +36,7 @@ The module should be placed in the {\ttfamily /src/rxns} folder and extent the a
 \DoxyCodeLine{\textcolor{keyword}{end module }camp\_rxn\_foo}
 
 \end{DoxyCode}
-\hypertarget{camp_rxn_add_autotoc_md11}{}\doxysubsection{Step 2. Add the reaction to the \textbackslash{}c camp\+\_\+rxn\+\_\+factory module}\label{camp_rxn_add_autotoc_md11}
+\hypertarget{camp_rxn_add_autotoc_md12}{}\doxysubsection{Step 2. Add the reaction to the \textbackslash{}c camp\+\_\+rxn\+\_\+factory module}\label{camp_rxn_add_autotoc_md12}
 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\textcolor{keyword}{module} \mbox{\hyperlink{namespacecamp__rxn__factory}{camp\_rxn\_factory}}}
@@ -95,7 +95,7 @@ The module should be placed in the {\ttfamily /src/rxns} folder and extent the a
 \DoxyCodeLine{\textcolor{keyword}{end module }camp\_rxn\_factory}
 
 \end{DoxyCode}
-\hypertarget{camp_rxn_add_autotoc_md12}{}\doxysection{Step 4. Add the new module to the CMake\+List file in the root directory.}\label{camp_rxn_add_autotoc_md12}
+\hypertarget{camp_rxn_add_autotoc_md13}{}\doxysection{Step 4. Add the new module to the CMake\+List file in the root directory.}\label{camp_rxn_add_autotoc_md13}
 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{...}
@@ -110,9 +110,9 @@ The module should be placed in the {\ttfamily /src/rxns} folder and extent the a
 \DoxyCodeLine{...}
 
 \end{DoxyCode}
-\hypertarget{camp_rxn_add_autotoc_md13}{}\doxysubsection{Step 5. Add unit tests for the new \textbackslash{}c rxn\+\_\+foo\+\_\+t type}\label{camp_rxn_add_autotoc_md13}
-Unit testing should cover, at minimum, the initialization, time derivative and Jacbian matrix functions, and in general 80\% code coverage is recommended. Some examples can be found in the {\ttfamily /src/test} folder.\hypertarget{camp_rxn_add_autotoc_md14}{}\doxysubsection{Step 6.  Update documentation}\label{camp_rxn_add_autotoc_md14}
-TODO finish...\hypertarget{camp_rxn_add_autotoc_md15}{}\doxysubsection{Usage}\label{camp_rxn_add_autotoc_md15}
+\hypertarget{camp_rxn_add_autotoc_md14}{}\doxysubsection{Step 5. Add unit tests for the new \textbackslash{}c rxn\+\_\+foo\+\_\+t type}\label{camp_rxn_add_autotoc_md14}
+Unit testing should cover, at minimum, the initialization, time derivative and Jacbian matrix functions, and in general 80\% code coverage is recommended. Some examples can be found in the {\ttfamily /src/test} folder.\hypertarget{camp_rxn_add_autotoc_md15}{}\doxysubsection{Step 6.  Update documentation}\label{camp_rxn_add_autotoc_md15}
+TODO finish...\hypertarget{camp_rxn_add_autotoc_md16}{}\doxysubsection{Usage}\label{camp_rxn_add_autotoc_md16}
 The new \mbox{\hyperlink{camp_rxn}{reaction type}} is now ready to use. To include a reaction of this type in a \mbox{\hyperlink{camp_mechanism}{mechanism}}, add a \mbox{\hyperlink{input_format_rxn}{reaction object}} to a new or existing \mbox{\hyperlink{input_format_camp_config}{camp-\/chem configuration file}} as part of a \mbox{\hyperlink{input_format_mechanism}{mechanism object}}. The reaction should have a {\bfseries{type}} corresponding to the newly created reaction type, along with any required parameters\+:
 
 

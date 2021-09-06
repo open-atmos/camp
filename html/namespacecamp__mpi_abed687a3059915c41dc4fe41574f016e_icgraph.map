@@ -1,0 +1,5 @@
+<map id="camp_mpi::camp_mpi_pack_size_string_array" name="camp_mpi::camp_mpi_pack_size_string_array">
+<area shape="rect" id="node1" title="Determines the number of bytes required to pack the given value." alt="" coords="201,39,363,80"/>
+<area shape="rect" id="node2" href="$namespacecamp__mpi.html#a34ebf62e438a0c46fd37cd9ecd374a40" title="Packs the given value into the buffer, advancing position." alt="" coords="5,5,153,47"/>
+<area shape="rect" id="node3" href="$namespacecamp__mpi.html#aabe38fe6e30b6e0c150c6c3ff1491b7d" title="Unpacks the given value from the buffer, advancing position." alt="" coords="5,71,153,112"/>
+</map>

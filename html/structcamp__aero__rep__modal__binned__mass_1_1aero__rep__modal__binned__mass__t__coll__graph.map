@@ -1,0 +1,10 @@
+<map id="camp_aero_rep_modal_binned_mass::aero_rep_modal_binned_mass_t" name="camp_aero_rep_modal_binned_mass::aero_rep_modal_binned_mass_t">
+<area shape="rect" id="node1" title="Modal mass aerosol representation." alt="" coords="305,631,468,687"/>
+<area shape="rect" id="node2" href="$structcamp__aero__rep__data_1_1aero__rep__data__t.html" title="Abstract aerosol representation data type." alt="" coords="198,540,341,581"/>
+<area shape="rect" id="node3" href="$structcamp__property_1_1property__t.html" title="Property data." alt="" coords="5,139,176,165"/>
+<area shape="rect" id="node6" href="$structcamp__aero__phase__data_1_1aero__phase__data__t.html" title="Aerosol phase data type." alt="" coords="189,332,349,373"/>
+<area shape="rect" id="node8" href="$structcamp__chem__spec__data_1_1chem__spec__data__t.html" title="Chemical species data." alt="" coords="189,228,349,269"/>
+<area shape="rect" id="node4" href="$structcamp__property_1_1property__link__t.html" title="Property link data." alt="" coords="11,5,170,47"/>
+<area shape="rect" id="node5" href="$structcamp__aero__phase__data_1_1aero__phase__data__ptr.html" title="Pointer type for building arrays." alt="" coords="189,436,349,477"/>
+<area shape="rect" id="node7" href="$structcamp__util_1_1string__t.html" title="String type for building arrays of string of various size." alt="" coords="334,139,461,165"/>
+</map>

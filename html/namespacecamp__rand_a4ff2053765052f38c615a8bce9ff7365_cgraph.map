@@ -1,0 +1,5 @@
+<map id="camp_rand::prob_round" name="camp_rand::prob_round">
+<area shape="rect" id="node1" title="Round val to floor(val) or ceiling(val) with probability proportional to the relative distance from v..." alt="" coords="5,5,161,32"/>
+<area shape="rect" id="node2" href="$namespacecamp__rand.html#aff7aed70c1739a48a1a771e6fd9f97bc" title="Returns a random number between 0 and 1." alt="" coords="209,5,384,32"/>
+<area shape="rect" id="node3" href="$rand__gsl_8c.html#abd204acb91a0adebb638deae62396379" title="Generate a uniform random number in ." alt="" coords="432,5,543,32"/>
+</map>

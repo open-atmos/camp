@@ -1,0 +1,5 @@
+<map id="camp_aero_rep_data::ptr_finalize" name="camp_aero_rep_data::ptr_finalize">
+<area shape="rect" id="node1" title="Finalize a pointer to an aerosol representation." alt="" coords="213,49,356,90"/>
+<area shape="rect" id="node2" href="$structcamp__mechanism__data_1_1mechanism__data__ptr.html#a15908eba533de77c3bfd12f302ec72d2" title="Finalize the pointer." alt="" coords="5,5,165,61"/>
+<area shape="rect" id="node3" href="$structcamp__rxn__data_1_1rxn__data__ptr.html#a65374383b1ee54d64e629f779bc1b615" title="Finalize the pointer." alt="" coords="14,85,157,126"/>
+</map>

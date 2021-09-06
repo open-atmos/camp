@@ -1,0 +1,6 @@
+<map id="camp_rxn_factory::load" name="camp_rxn_factory::load">
+<area shape="rect" id="node1" title="Load an aerosol represenation from input data." alt="" coords="5,31,160,57"/>
+<area shape="rect" id="node2" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="208,5,360,32"/>
+<area shape="rect" id="node4" href="$namespacecamp__util.html#ab72bff2627c9468e4c352118b8dc7046" title="Prints a warning message." alt="" coords="212,56,356,83"/>
+<area shape="rect" id="node3" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="408,23,531,65"/>
+</map>

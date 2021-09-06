@@ -1,0 +1,127 @@
+In the \mbox{\hyperlink{camp_tutorial_part_1}{last installment of Boot CAMP}} we wrote the code for a simple box model. This time we\textquotesingle{}ll build a simple chemical mechanism to run in the box model.
+
+All CAMP input files are in \href{http://json.org}{\texttt{ json}} format, a widely used standard for structured data. Many free tools are available online to compose and validate {\ttfamily json} files, and many editors provide {\ttfamily json} syntax highlighting. If you are new to working with {\ttfamily json} files, we recommend writing the code in an online editor/validator like \href{https://jsonlint.com}{\texttt{ JSONLint}}.
+
+There are two types of input files used by CAMP. We\textquotesingle{}ll start with the simplest one. This is the file whose path we passed to the \mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\+\_\+core\+\_\+t()}} constructor in \mbox{\hyperlink{camp_tutorial_part_1}{part 1}} of the tutorial. We named this file {\ttfamily my\+\_\+config\+\_\+file.\+json} and we\textquotesingle{}ll make its contents as follows\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{  "{}camp-\/files"{} : [}
+\DoxyCodeLine{    "{}my\_simple\_mechanism.json"{}}
+\DoxyCodeLine{  ]}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+ CAMP configuration {\ttfamily json} files begin and end with curly brackets (\char`\"{}\{\}\char`\"{}) that enclose an object named {\bfseries{camp-\/files}}, which is a comma-\/separated array of file names that make up the chemical mechanism to load into CAMP. The mechanism data can be organized however you like, into as many files as you\textquotesingle{}d like. Thus, any number of {\bfseries{camp-\/files}} may be specified and the arrangement of mechanism elements (species, reactions, etc.) within those files is up to you. Also note that {\ttfamily json} ignores most white space, so the code above is equivalent to\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{ "{}camp-\/files"{} :     [ "{}my\_simple\_mechanism.json"{} ]   \}}
+
+\end{DoxyCode}
+
+
+One more note about the CAMP {\ttfamily json} files before we move on. CAMP ignores information in the input files that it is not interested in, as long as the file is in valid {\ttfamily json} format, and this information is not included as an element in an array CAMP uses. Thus, our configuration file could be\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{  "{}note"{} : "{}Remember to rename 'my simple mechanism' to something more meaningful"{},}
+\DoxyCodeLine{  "{}camp-\/files"{} : [}
+\DoxyCodeLine{    "{}my\_simple\_mechanism.json"{}}
+\DoxyCodeLine{  ],}
+\DoxyCodeLine{  "{}change log"{} : [}
+\DoxyCodeLine{    "{}030919 md -\/ created file"{},}
+\DoxyCodeLine{    "{}031019 md -\/ revised file"{}}
+\DoxyCodeLine{  ]}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+ As far as CAMP is concerned, these files are equivalent. This is also a way to include comments in your {\ttfamily json} files, as comment flags are not part of the {\ttfamily json} standard. Note however that adding extra information as an element of the {\bfseries{camp-\/files}} array (an array that CAMP uses) won\textquotesingle{}t work, as CAMP expects these to be valid input file names.
+
+The remaining CAMP input files describe the chemical mechanism and use the following format\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{  "{}camp-\/data"{} : [}
+\DoxyCodeLine{}
+\DoxyCodeLine{     ...}
+\DoxyCodeLine{}
+\DoxyCodeLine{  ]}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+ Here, {\bfseries{camp-\/data}} is a comma-\/separated array of model element objects. There can be any number of these input files, but they must all enclose their model elements with this text.
+
+We\textquotesingle{}ll start off wth a single file that describes our mechanism, {\ttfamily my\+\_\+simple\+\_\+mechanism.\+json}. The order of model elements in the {\bfseries{camp-\/data}} array is arbitrary. We\textquotesingle{}ll start with chemical species. In our first mechanism, we\textquotesingle{}ll just have five\+: $\ce{O3}$, $\ce{NO}$, $\ce{NO2}$, $\ce{O2}$ and $\ce{O}$. The input data for these gas-\/phase species in the {\bfseries{camp-\/data}} array is\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{  "{}name"{} : "{}O3"{},}
+\DoxyCodeLine{  "{}type"{} : "{}CHEM\_SPEC"{}}
+\DoxyCodeLine{\},}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{  "{}name"{} : "{}NO"{},}
+\DoxyCodeLine{  "{}type"{} : "{}CHEM\_SPEC"{}}
+\DoxyCodeLine{\},}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{  "{}name"{} : "{}NO2"{},}
+\DoxyCodeLine{  "{}type"{} : "{}CHEM\_SPEC"{}}
+\DoxyCodeLine{\},}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{  "{}name"{} : "{}O2"{},}
+\DoxyCodeLine{  "{}type"{} : "{}CHEM\_SPEC"{}}
+\DoxyCodeLine{\},}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{  "{}name"{} : "{}O"{},}
+\DoxyCodeLine{  "{}type"{} : "{}CHEM\_SPEC"{}}
+\DoxyCodeLine{\},}
+
+\end{DoxyCode}
+ All CAMP model elements must have a unique name that is chosen by the user and a type that must be one of a set of CAMP data types. For chemical species, this type is {\ttfamily CHEM\+\_\+\+SPEC}. Chemical species default to being gas-\/phase species, but can be specified as being condensed-\/phase, as we\textquotesingle{}ll see later on.
+
+Now, let\textquotesingle{}s build our mechanism. We\textquotesingle{}ll start with just two Arrhenius-\/type reactions\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{  "{}name"{} : "{}my simple mechanism"{},}
+\DoxyCodeLine{  "{}type"{} : "{}MECHANISM"{},}
+\DoxyCodeLine{  "{}reactions"{} : [}
+\DoxyCodeLine{    \{}
+\DoxyCodeLine{      "{}type"{} : "{}ARRHENIUS"{},}
+\DoxyCodeLine{      "{}reactants"{} : \{}
+\DoxyCodeLine{        "{}NO"{} : \{ \},}
+\DoxyCodeLine{        "{}O3"{} : \{ \}}
+\DoxyCodeLine{      \},}
+\DoxyCodeLine{      "{}products"{} : \{}
+\DoxyCodeLine{        "{}NO2"{} : \{ \},}
+\DoxyCodeLine{        "{}O2"{} : \{ \}}
+\DoxyCodeLine{      \},}
+\DoxyCodeLine{      "{}A"{} : 26.59}
+\DoxyCodeLine{    \},}
+\DoxyCodeLine{    \{}
+\DoxyCodeLine{      "{}type"{} : "{}PHOTOLYSIS"{},}
+\DoxyCodeLine{      "{}reactants"{} : \{}
+\DoxyCodeLine{        "{}NO2"{} : \{ \}}
+\DoxyCodeLine{      \},}
+\DoxyCodeLine{     "{}products"{} : \{}
+\DoxyCodeLine{       "{}NO"{} : \{ \},}
+\DoxyCodeLine{       "{}O"{} : \{ \}}
+\DoxyCodeLine{     \},}
+\DoxyCodeLine{     "{}my photo label"{} : "{}NO2 photolysis"{}}
+\DoxyCodeLine{    \},}
+\DoxyCodeLine{    \{}
+\DoxyCodeLine{      "{}type"{} : "{}ARRHENIUS"{},}
+\DoxyCodeLine{      "{}reactants"{} : \{}
+\DoxyCodeLine{        "{}O"{} : \{ \},}
+\DoxyCodeLine{        "{}O2"{} : \{ \}}
+\DoxyCodeLine{      \},}
+\DoxyCodeLine{      "{}products"{} : \{}
+\DoxyCodeLine{        "{}O3"{} : \{ \}}
+\DoxyCodeLine{      \},}
+\DoxyCodeLine{      "{}A"{} : 2.183E-\/5}
+\DoxyCodeLine{    \}}
+\DoxyCodeLine{  ]}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+ CAMP {\bfseries{MECHANISM}} objects are collections of reactions, which are specified in the {\bfseries{reactions}} array. For each reaction several elements must be specified. For Arrhenius-\/like reactions, these include the {\bfseries{reactants}} and {\bfseries{products}}, as well as the pre-\/exponential factor {\bfseries{A}}. They also typically have some optional parameters, which assume default values unless they are specified in the input files. A description of the format used for each reaction\textquotesingle{}s input data is described \mbox{\hyperlink{camp_rxn}{here}}. The empty curly brackets after the products and reactants allow for the inclusion of information specific to these species, such as reactant quantities (for self reactions) and product yields. For Arrhenius-\/like reactions, these are described in more detail \mbox{\hyperlink{camp_rxn_arrhenius}{here}}.
+
+The only key-\/value pair not required by CAMP, but that is present in this input data is {\bfseries{my photo label}} in the $\ce{NO2}$ photolysis reaction. We\textquotesingle{}ll use this label in \mbox{\hyperlink{camp_tutorial_part_3}{part 3 of Boot CAMP}} to set the photolysis rate from our box model, and start generating results!
+
+The full configuration and mechanism {\ttfamily json} files described in the part of the tutorial can be found in {\ttfamily /doc/camp\+\_\+tutorial/boot\+\_\+camp/part\+\_\+2\+\_\+code}.
+
+\DoxyHorRuler{0}
+ {\bfseries{ $<$ Previous\+: }} \mbox{\hyperlink{camp_tutorial_part_1}{Boot CAMP\+: Part 1 -\/ Box Model}}  \mbox{\hyperlink{camp_tutorial}{Index}}  {\bfseries{ Next\+: }} \mbox{\hyperlink{camp_tutorial_part_3}{Boot CAMP\+: Part 3 -\/ Updating CAMP Parameters}} {\bfseries{ $>$ }} 

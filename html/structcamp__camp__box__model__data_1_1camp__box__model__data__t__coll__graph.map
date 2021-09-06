@@ -1,0 +1,22 @@
+<map id="camp_camp_box_model_data::camp_box_model_data_t" name="camp_camp_box_model_data::camp_box_model_data_t">
+<area shape="rect" id="node1" title="CAMP Box model." alt="" coords="1843,174,2005,230"/>
+<area shape="rect" id="node2" href="$structcamp__util_1_1string__t.html" title="String type for building arrays of string of various size." alt="" coords="287,367,414,394"/>
+<area shape="rect" id="node12" href="$structcamp__chem__spec__data_1_1chem__spec__data__t.html" title="Chemical species data." alt="" coords="559,429,719,471"/>
+<area shape="rect" id="node17" href="$structcamp__aero__phase__data_1_1aero__phase__data__t.html" title="Aerosol phase data type." alt="" coords="869,377,1029,419"/>
+<area shape="rect" id="node3" href="$structcamp__camp__state_1_1camp__state__t.html" title="Model state." alt="" coords="1523,5,1689,47"/>
+<area shape="rect" id="node4" href="$structcamp__env__state_1_1env__state__ptr.html" title="Pointer for env_state_t." alt="" coords="1191,5,1336,47"/>
+<area shape="rect" id="node5" href="$structcamp__env__state_1_1env__state__t.html" title="Current environment state." alt="" coords="877,5,1022,47"/>
+<area shape="rect" id="node6" href="$structcamp__camp__box__model__data_1_1aero__rep__profile__t.html" title="Aerosol representation time profile." alt="" coords="1525,215,1687,256"/>
+<area shape="rect" id="node7" href="$structcamp__camp__box__model__data_1_1profile__t.html" title="Property time profile." alt="" coords="1182,149,1345,191"/>
+<area shape="rect" id="node8" href="$structcamp__camp__box__model__data_1_1rxn__profile__t.html" title="Reaction rate time profile." alt="" coords="1525,149,1687,191"/>
+<area shape="rect" id="node9" href="$structcamp__camp__core_1_1camp__core__t.html" title="Part&#45;MC model data." alt="" coords="1525,456,1687,497"/>
+<area shape="rect" id="node10" href="$structcamp__sub__model__data_1_1sub__model__data__ptr.html" title="Pointer to sub_model_data_t extending types." alt="" coords="1185,580,1341,621"/>
+<area shape="rect" id="node11" href="$structcamp__aero__rep__data_1_1aero__rep__data__ptr.html" title="Pointer to aero_rep_data_t extending types." alt="" coords="1192,645,1335,687"/>
+<area shape="rect" id="node13" href="$structcamp__property_1_1property__t.html" title="Property data." alt="" coords="265,474,436,501"/>
+<area shape="rect" id="node14" href="$structcamp__property_1_1property__link__t.html" title="Property link data." alt="" coords="5,467,164,508"/>
+<area shape="rect" id="node15" href="$structcamp__camp__solver__data_1_1camp__solver__data__t.html" title="Solver data." alt="" coords="1180,397,1347,439"/>
+<area shape="rect" id="node16" href="$structcamp__aero__phase__data_1_1aero__phase__data__ptr.html" title="Pointer type for building arrays." alt="" coords="1183,332,1343,373"/>
+<area shape="rect" id="node18" href="$structcamp__mechanism__data_1_1mechanism__data__ptr.html" title="Pointer type for building arrays." alt="" coords="1183,515,1343,556"/>
+<area shape="rect" id="node19" href="$structcamp__mechanism__data_1_1mechanism__data__t.html" title="A chemical mechanism." alt="" coords="869,537,1029,579"/>
+<area shape="rect" id="node20" href="$structcamp__rxn__data_1_1rxn__data__ptr.html" title="Pointer type for building arrays of mixed reactions." alt="" coords="572,559,705,600"/>
+</map>

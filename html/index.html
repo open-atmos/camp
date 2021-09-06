@@ -17,6 +17,7 @@
 </script>
 <script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen_html_style.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
@@ -51,8 +52,7 @@ $(function() {
 <div class="title">CAMP Documentation </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>Chemistry Across Multiple Phases (CAMP) facilitates multi-phase chemistry solving in atmospheric models. In general, <a class="el" href="index.html">CAMP</a> solves a <a class="el" href="camp_mechanism.html">mechanism</a> composed of a set of <a class="el" href="camp_rxn.html">reactions</a> over a time-step specified by the host model. <a class="el" href="camp_rxn.html">Reactions</a> can take place in the gas phase, in one of several <a class="el" href="camp_aero_phase.html">aerosol phases</a>, or across an interface between phases (gas&ndash;aerosol). <a class="el" href="index.html">CAMP</a> is designed to work with any <a class="el" href="camp_aero_rep.html">aerosol representation</a> used by the host model (e.g., binned, modal, single particle) through the use use of custom extending types of the abstract <code><a class="el" href="structcamp__aero__rep__data_1_1aero__rep__data__t.html" title="Abstract aerosol representation data type.">camp_aero_rep_data::aero_rep_data_t</a></code> type. Each <a class="el" href="camp_aero_rep.html">aerosol representation</a> implements one or more instances of each <a class="el" href="camp_aero_phase.html">aerosol phases</a> based on the configuration of the host model. The multi-phase chemistry system is solved for the gas-phase and every instance of each <a class="el" href="camp_aero_phase.html">aerosol phase</a>. A set of <a class="el" href="camp_sub_model.html">sub-models</a> may also be included to calculate parameters needed by <a class="el" href="camp_rxn.html">reactions</a> during solving.</p>
-<p><a class="el" href="index.html">CAMP</a> uses JSON files to load <a class="el" href="input_format_species.html">chemical species</a>, <a class="el" href="input_format_mechanism.html">mechanisms</a>, <a class="el" href="input_format_aero_phase.html">aerosol phases</a>, <a class="el" href="input_format_aero_rep.html">aerosol representations</a>, and <a class="el" href="input_format_sub_model.html">sub-models</a> at runtime. This allows a user to modify any of these data without recompiling the model, permits host models to choose which mechanisms to solve based on model conditions, and allows multiple mechanisms to be solved during a model simulation.</p>
+<div class="textblock"><p><a class="el" href="index.html">CAMP</a> is software for solving multi-phase chemistry in atmospheric models. For a overview of what <a class="el" href="index.html">CAMP</a> can do, check out <a class="el" href="camp_tutorial_part_0.html">part 0 of the CAMP tutorial</a>. A description of the CAMP model elements and how to use them follows.</p>
 <h1><a class="anchor" id="autotoc_md6"></a>
 CAMP Input Classes</h1>
 <ul>
@@ -65,7 +65,30 @@ CAMP Input Classes</h1>
 </ul>
 <h1><a class="anchor" id="autotoc_md7"></a>
 Usage</h1>
+<p><a class="el" href="index.html">CAMP</a> uses json input files to load <a class="el" href="input_format_species.html">chemical species</a>, <a class="el" href="input_format_mechanism.html">mechanisms</a>, <a class="el" href="input_format_aero_phase.html">aerosol phases</a>, <a class="el" href="input_format_aero_rep.html">aerosol representations</a>, and <a class="el" href="input_format_sub_model.html">sub-models</a> at runtime. How to use <a class="el" href="index.html">CAMP</a> in a new or existing model is described in the <a class="el" href="camp_tutorial.html">Boot CAMP</a> tutorial.</p>
 <h2><a class="anchor" id="autotoc_md8"></a>
+Compiling</h2>
+<p>You will need to have c and Fortran compilers along with CMake to build the CAMP library. In addition, CAMP has the following dependencies:</p>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Library   </th><th class="markdownTableHeadNone">Version   </th><th class="markdownTableHeadNone">Source    </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">SUNDIALS   </td><td class="markdownTableBodyNone">custom   </td><td class="markdownTableBodyNone">camp/cvode-3.4-alpha.tar.gz    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">SuiteSparse   </td><td class="markdownTableBodyNone">5.1.0   </td><td class="markdownTableBodyNone"><a href="http://faculty.cse.tamu.edu/davis/SuiteSparse/SuiteSparse-5.1.0.tar.gz">http://faculty.cse.tamu.edu/davis/SuiteSparse/SuiteSparse-5.1.0.tar.gz</a>    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">GSL   </td><td class="markdownTableBodyNone"></td><td class="markdownTableBodyNone"><a href="https://www.gnu.org/software/gsl/">https://www.gnu.org/software/gsl/</a>    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">json-fortran   </td><td class="markdownTableBodyNone">6.1.0   </td><td class="markdownTableBodyNone"><a href="https://github.com/jacobwilliams/json-fortran/archive/6.1.0.tar.gz">https://github.com/jacobwilliams/json-fortran/archive/6.1.0.tar.gz</a>   </td></tr>
+</table>
+<p>The SUNDIALS library must be built with the <code>ENABLE_KLU</code> flag set to <code>ON</code> and the KLU library and include paths set according to the SuiteSparse installation.</p>
+<p>To install CAMP locally, from the <code>camp/</code> folder:</p>
+<div class="fragment"><div class="line">mkdir build</div>
+<div class="line">cd build</div>
+<div class="line">cmake ..</div>
+<div class="line">make install</div>
+</div><!-- fragment --><p>You can also check out ./camp/Dockerfile (or ./camp/Dockerfile.mpi for MPI applications) to see how CAMP is is built for automated testing.</p>
+<h2><a class="anchor" id="autotoc_md9"></a>
 Input files</h2>
 <p><a class="el" href="index.html">CAMP</a> uses two types of input files:</p>
 <ul>
@@ -73,14 +96,12 @@ Input files</h2>
 <li><a class="el" href="input_format_camp_config.html">Configuration File</a> One or more <code>json</code> files containing all the <a class="el" href="index.html">CAMP</a> configuration data.</li>
 </ul>
 <p>To initialize <a class="el" href="index.html">CAMP</a> , the path to the <a class="el" href="input_format_camp_file_list.html">file list</a> must be passed to the <a class="el" href="structcamp__camp__core_1_1camp__core__t.html">camp_camp_core::camp_core_t</a> constructor. The method by which this is done depends on the host model configuration.</p>
-<h2><a class="anchor" id="autotoc_md9"></a>
-Adding CAMP to an atmospheric model</h2>
-<p>The easiest way to incorporate CAMP into an atmospheric model is to follow the templates laid out in the tests. For each <a class="el" href="camp_rxn.html">reaction</a>, a test exists in <code>test/unit_rxn_data</code> that initializes CAMP for a simple mechanism consisting of only the reaction type being tested. The test code is documented so that it can be used as a template for incorporating CAMP in a new host model. </p>
+<h2><a class="anchor" id="autotoc_md10"></a>
+CAMP tutorial</h2>
+<p>Follow the <a class="el" href="camp_tutorial.html">Boot CAMP</a> tutorial to see how to integrate CAMP into your favorite model! </p>
 </div></div><!-- PageDoc -->
 </div><!-- contents -->
-<!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Sep 5 2021 21:17:13 for CAMP by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
-</small></address>
+CAMP 1.0.0 documentation generated by <a href="http://www.doxygen.org/index.html">doxygen</a> 1.9.1</small></address>
 </body>
 </html>

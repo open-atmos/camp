@@ -1,0 +1,8 @@
+<map id="rxn_SIMPOL_phase_transfer_print" name="rxn_SIMPOL_phase_transfer_print">
+<area shape="rect" id="node1" title="Print the Phase Transfer reaction parameters." alt="" coords="745,27,936,69"/>
+<area shape="rect" id="node2" href="$rxn__solver_8c.html#a607b803e7a4b427940312560ae0e5ba3" title="Print the reaction data." alt="" coords="551,5,653,32"/>
+<area shape="rect" id="node3" href="$rxn___s_i_m_p_o_l__phase__transfer_8c.html#a1658944a83529b7d5e854920f235ed3b" title="Flag Jacobian elements used by this reaction." alt="" coords="507,57,697,98"/>
+<area shape="rect" id="node4" href="$rxn__solver_8c.html#a6816597d1e59964f558cfc82b004549e" title="Get the Jacobian elements used by a particular reaction." alt="" coords="300,64,459,91"/>
+<area shape="rect" id="node5" href="$camp__solver_8c.html#a5b485fa25356197023889f3795888e98" title="Create a sparse Jacobian matrix based on model data." alt="" coords="164,64,252,91"/>
+<area shape="rect" id="node6" href="$camp__solver_8c.html#a599ffdef916b139a1690bfd41aa386b6" title="Solver initialization." alt="" coords="5,64,116,91"/>
+</map>

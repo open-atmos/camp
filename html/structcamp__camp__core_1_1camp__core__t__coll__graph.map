@@ -1,0 +1,15 @@
+<map id="camp_camp_core::camp_core_t" name="camp_camp_core::camp_core_t">
+<area shape="rect" id="node1" title="Part&#45;MC model data." alt="" coords="1523,164,1685,205"/>
+<area shape="rect" id="node2" href="$structcamp__sub__model__data_1_1sub__model__data__ptr.html" title="Pointer to sub_model_data_t extending types." alt="" coords="1185,5,1341,47"/>
+<area shape="rect" id="node3" href="$structcamp__aero__rep__data_1_1aero__rep__data__ptr.html" title="Pointer to aero_rep_data_t extending types." alt="" coords="1192,71,1335,112"/>
+<area shape="rect" id="node4" href="$structcamp__chem__spec__data_1_1chem__spec__data__t.html" title="Chemical species data." alt="" coords="559,233,719,275"/>
+<area shape="rect" id="node10" href="$structcamp__aero__phase__data_1_1aero__phase__data__t.html" title="Aerosol phase data type." alt="" coords="869,200,1029,241"/>
+<area shape="rect" id="node5" href="$structcamp__util_1_1string__t.html" title="String type for building arrays of string of various size." alt="" coords="287,266,414,293"/>
+<area shape="rect" id="node6" href="$structcamp__property_1_1property__t.html" title="Property data." alt="" coords="265,197,436,223"/>
+<area shape="rect" id="node7" href="$structcamp__property_1_1property__link__t.html" title="Property link data." alt="" coords="5,189,164,231"/>
+<area shape="rect" id="node8" href="$structcamp__camp__solver__data_1_1camp__solver__data__t.html" title="Solver data." alt="" coords="1180,201,1347,243"/>
+<area shape="rect" id="node9" href="$structcamp__aero__phase__data_1_1aero__phase__data__ptr.html" title="Pointer type for building arrays." alt="" coords="1183,136,1343,177"/>
+<area shape="rect" id="node11" href="$structcamp__mechanism__data_1_1mechanism__data__ptr.html" title="Pointer type for building arrays." alt="" coords="1183,319,1343,360"/>
+<area shape="rect" id="node12" href="$structcamp__mechanism__data_1_1mechanism__data__t.html" title="A chemical mechanism." alt="" coords="869,340,1029,381"/>
+<area shape="rect" id="node13" href="$structcamp__rxn__data_1_1rxn__data__ptr.html" title="Pointer type for building arrays of mixed reactions." alt="" coords="572,363,705,404"/>
+</map>

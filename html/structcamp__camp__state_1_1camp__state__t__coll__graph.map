@@ -1,0 +1,5 @@
+<map id="camp_camp_state::camp_state_t" name="camp_camp_state::camp_state_t">
+<area shape="rect" id="node1" title="Model state." alt="" coords="5,213,172,255"/>
+<area shape="rect" id="node2" href="$structcamp__env__state_1_1env__state__ptr.html" title="Pointer for env_state_t." alt="" coords="16,109,161,151"/>
+<area shape="rect" id="node3" href="$structcamp__env__state_1_1env__state__t.html" title="Current environment state." alt="" coords="16,5,161,47"/>
+</map>

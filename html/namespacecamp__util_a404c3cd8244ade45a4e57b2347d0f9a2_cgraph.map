@@ -1,0 +1,4 @@
+<map id="camp_util::close_file" name="camp_util::close_file">
+<area shape="rect" id="node1" title="Close a file and de&#45;assign the unit." alt="" coords="5,5,144,32"/>
+<area shape="rect" id="node2" href="$namespacecamp__util.html#a3a68d4a7d1b28dd132909a12c83d3c21" title="Frees a unit number returned by get_unit()." alt="" coords="192,5,327,32"/>
+</map>

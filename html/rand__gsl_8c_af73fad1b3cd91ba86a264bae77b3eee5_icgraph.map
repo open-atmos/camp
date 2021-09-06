@@ -1,0 +1,4 @@
+<map id="camp_rand_binomial_gsl" name="camp_rand_binomial_gsl">
+<area shape="rect" id="node1" title="Generate a Binomial&#45;distributed random integer." alt="" coords="225,5,391,32"/>
+<area shape="rect" id="node2" href="$namespacecamp__rand.html#a613b0c64aa5bdface8e6d5aa30cec7c4" title="Generate a Binomial&#45;distributed random number with the given parameters." alt="" coords="5,5,177,32"/>
+</map>

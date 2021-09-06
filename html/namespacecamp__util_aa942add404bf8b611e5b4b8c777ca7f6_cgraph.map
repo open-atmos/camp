@@ -1,0 +1,6 @@
+<map id="camp_util::die" name="camp_util::die">
+<area shape="rect" id="node1" title="Error immediately." alt="" coords="5,13,107,39"/>
+<area shape="rect" id="node2" href="$namespacecamp__util.html#a32cf43c1b618a3ecf93810383e960ef2" title="Errors unless condition_ok is true." alt="" coords="155,13,275,39"/>
+<area shape="rect" id="node3" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="323,13,475,39"/>
+<area shape="rect" id="node4" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="523,5,645,47"/>
+</map>

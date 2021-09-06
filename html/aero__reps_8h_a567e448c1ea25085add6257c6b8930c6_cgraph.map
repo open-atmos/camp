@@ -1,0 +1,5 @@
+<map id="aero_rep_modal_binned_mass_update_state" name="aero_rep_modal_binned_mass_update_state">
+<area shape="rect" id="node1" title="Update aerosol representation data for a new state." alt="" coords="5,39,164,80"/>
+<area shape="rect" id="node2" href="$aero__phase__solver_8c.html#a965e0b9fc79db694be201edd05377dd1" title="Get the mass and average MW in an aerosol phase." alt="" coords="217,5,370,47"/>
+<area shape="rect" id="node3" href="$aero__phase__solver_8c.html#a6e493e863924f29d6bd06598fa657f08" title="Get the volume of an aerosol phase." alt="" coords="212,71,375,112"/>
+</map>

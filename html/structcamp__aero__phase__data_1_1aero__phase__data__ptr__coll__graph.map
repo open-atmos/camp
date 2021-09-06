@@ -1,0 +1,8 @@
+<map id="camp_aero_phase_data::aero_phase_data_ptr" name="camp_aero_phase_data::aero_phase_data_ptr">
+<area shape="rect" id="node1" title="Pointer type for building arrays." alt="" coords="1099,47,1259,89"/>
+<area shape="rect" id="node2" href="$structcamp__aero__phase__data_1_1aero__phase__data__t.html" title="Aerosol phase data type." alt="" coords="869,47,1029,89"/>
+<area shape="rect" id="node3" href="$structcamp__util_1_1string__t.html" title="String type for building arrays of string of various size." alt="" coords="287,9,414,36"/>
+<area shape="rect" id="node6" href="$structcamp__chem__spec__data_1_1chem__spec__data__t.html" title="Chemical species data." alt="" coords="559,47,719,89"/>
+<area shape="rect" id="node4" href="$structcamp__property_1_1property__t.html" title="Property data." alt="" coords="265,81,436,108"/>
+<area shape="rect" id="node5" href="$structcamp__property_1_1property__link__t.html" title="Property link data." alt="" coords="5,74,164,115"/>
+</map>

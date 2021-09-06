@@ -1,0 +1,9 @@
+<map id="camp_rand::camp_rand_int" name="camp_rand::camp_rand_int">
+<area shape="rect" id="node1" title="Returns a random integer between 1 and n." alt="" coords="5,63,183,90"/>
+<area shape="rect" id="node2" href="$namespacecamp__util.html#a32cf43c1b618a3ecf93810383e960ef2" title="Errors unless condition_ok is true." alt="" coords="258,13,378,39"/>
+<area shape="rect" id="node5" href="$rand__gsl_8c.html#a0ebca9079073ff12ca49babd5f49edb9" title="Generate a uniform random integer in ." alt="" coords="253,63,383,90"/>
+<area shape="rect" id="node6" href="$namespacecamp__rand.html#aff7aed70c1739a48a1a771e6fd9f97bc" title="Returns a random number between 0 and 1." alt="" coords="231,114,405,141"/>
+<area shape="rect" id="node3" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="453,13,605,39"/>
+<area shape="rect" id="node4" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="653,5,776,47"/>
+<area shape="rect" id="node7" href="$rand__gsl_8c.html#abd204acb91a0adebb638deae62396379" title="Generate a uniform random number in ." alt="" coords="474,114,585,141"/>
+</map>

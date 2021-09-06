@@ -1,0 +1,6 @@
+<map id="camp_rxn_factory::initialize_update_data" name="camp_rxn_factory::initialize_update_data">
+<area shape="rect" id="node1" title="Initialize an update data object." alt="" coords="5,5,181,47"/>
+<area shape="rect" id="node2" href="$namespacecamp__util.html#a970b40b46d26e937fb3cdc0b9217b86c" title="Error immediately." alt="" coords="229,13,363,39"/>
+<area shape="rect" id="node3" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="411,13,563,39"/>
+<area shape="rect" id="node4" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="611,5,733,47"/>
+</map>

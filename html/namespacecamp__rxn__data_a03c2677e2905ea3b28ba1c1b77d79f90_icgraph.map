@@ -1,0 +1,4 @@
+<map id="camp_rxn_data::pack_size" name="camp_rxn_data::pack_size">
+<area shape="rect" id="node1" title="Determine the size of a binary required to pack the reaction data." alt="" coords="241,5,416,32"/>
+<area shape="rect" id="node2" href="$namespacecamp__rxn__factory.html#a6222bd3f74c00727487b7e9f01602682" title="Determine the size of a binary required to pack a reaction." alt="" coords="5,5,193,32"/>
+</map>

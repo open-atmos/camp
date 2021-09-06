@@ -1,0 +1,12 @@
+<map id="camp_aero_rep_data::pack_size" name="camp_aero_rep_data::pack_size">
+<area shape="rect" id="node1" title="Determine the size of a binary required to pack the aerosol representation data." alt="" coords="464,235,607,276"/>
+<area shape="rect" id="node2" href="$namespacecamp__rxn__emission.html#a39eb8f193083fa40ef8d84643aa04ac2" title="Determine the size of a binary required to pack the reaction data." alt="" coords="257,5,400,47"/>
+<area shape="rect" id="node3" href="$namespacecamp__rxn__first__order__loss.html#a89cafcfa5470cf801f0b142f3c5a3965" title="Determine the size of a binary required to pack the reaction data." alt="" coords="245,71,412,112"/>
+<area shape="rect" id="node4" href="$namespacecamp__rxn__photolysis.html#a2cabb5f83401fb4ee6a7da9d8db3b52a" title="Determine the size of a binary required to pack the reaction data." alt="" coords="257,136,400,177"/>
+<area shape="rect" id="node5" href="$namespacecamp__rxn__wet__deposition.html#ad301ae9ff9a860e7b2a24e4593875180" title="Determine the size of a binary required to pack the reaction data." alt="" coords="243,201,415,243"/>
+<area shape="rect" id="node6" href="$namespacecamp__aero__rep__factory.html#a253696180679d443a17dc5d00973d2b1" title="Determine the size of a binary required to pack an aerosol representation." alt="" coords="250,267,407,308"/>
+<area shape="rect" id="node7" href="$namespacecamp__mechanism__data.html#a07d730e121af5fd3035f6ccddb855b72" title="Determine the size of a binary required to pack the mechanism." alt="" coords="249,332,409,373"/>
+<area shape="rect" id="node8" href="$namespacecamp__rxn__data.html#a03c2677e2905ea3b28ba1c1b77d79f90" title="Determine the size of a binary required to pack the reaction data." alt="" coords="241,398,416,425"/>
+<area shape="rect" id="node10" href="$namespacecamp__rxn__data.html#ae08ddb27fa7f7d4a0910a990719f70f7" title="Determine the size of a binary required to pack the reaction data." alt="" coords="246,449,411,491"/>
+<area shape="rect" id="node9" href="$namespacecamp__rxn__factory.html#a6222bd3f74c00727487b7e9f01602682" title="Determine the size of a binary required to pack a reaction." alt="" coords="5,398,193,425"/>
+</map>

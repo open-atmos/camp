@@ -17,6 +17,7 @@
 </script>
 <script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen_html_style.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
@@ -53,7 +54,7 @@ $(function() {
 <div class="contents">
 <div class="textblock"><p><b>Note:</b> these instructions are out-of-date. TODO update</p>
 <p>Adding a <a class="el" href="camp_rxn.html">reaction</a> to the <a class="el" href="index.html">camp-chem</a> module can be done in the following steps:</p>
-<h2><a class="anchor" id="autotoc_md10"></a>
+<h2><a class="anchor" id="autotoc_md11"></a>
 Step 1. Create a new reaction module</h2>
 <p>The module should be placed in the <code>/src/rxns</code> folder and extent the abstract <code><a class="el" href="structcamp__rxn__data_1_1rxn__data__t.html" title="Abstract reaction data type.">camp_rxn_data::rxn_data_t</a></code> type, overriding all deferred functions, and providing a constructor that returns a pointer to a newly allocated instance of the new type:</p>
 <div class="fragment"><div class="line"><span class="keyword">module</span> rxn_foo</div>
@@ -85,7 +86,7 @@ Step 1. Create a new reaction module</h2>
 <div class="line">  ...</div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">end module </span>camp_rxn_foo</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md11"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md12"></a>
 Step 2. Add the reaction to the \c camp_rxn_factory module</h2>
 <div class="fragment"><div class="line"><span class="keyword">module</span> <a class="code" href="namespacecamp__rxn__factory.html">camp_rxn_factory</a></div>
 <div class="line"> </div>
@@ -145,7 +146,7 @@ Step 2. Add the reaction to the \c camp_rxn_factory module</h2>
 <div class="ttc" id="anamespacecamp__rxn__factory_html_a3975ec0b65f653a90ffc1e44d7b7353c"><div class="ttname"><a href="namespacecamp__rxn__factory.html#a3975ec0b65f653a90ffc1e44d7b7353c">camp_rxn_factory::create</a></div><div class="ttdeci">class(rxn_data_t) function, pointer create(this, type_name)</div><div class="ttdoc">Create a new chemical reaction by type name.</div><div class="ttdef"><b>Definition:</b> <a href="rxn__factory_8_f90_source.html#l00247">rxn_factory.F90:248</a></div></div>
 <div class="ttc" id="anamespacecamp__rxn__factory_html_aca756fabc73131844494b81fe160052d"><div class="ttname"><a href="namespacecamp__rxn__factory.html#aca756fabc73131844494b81fe160052d">camp_rxn_factory::bin_unpack</a></div><div class="ttdeci">class(rxn_data_t) function, pointer bin_unpack(this, buffer, pos, comm)</div><div class="ttdoc">Unpack the given value to the buffer, advancing position.</div><div class="ttdef"><b>Definition:</b> <a href="rxn__factory_8_f90_source.html#l00502">rxn_factory.F90:503</a></div></div>
 <div class="ttc" id="anamespacecamp__rxn__factory_html_af36f0101aafa792b21df852065e91c78"><div class="ttname"><a href="namespacecamp__rxn__factory.html#af36f0101aafa792b21df852065e91c78">camp_rxn_factory::bin_pack</a></div><div class="ttdeci">subroutine bin_pack(this, rxn, buffer, pos, comm)</div><div class="ttdoc">Pack the given value to the buffer, advancing position.</div><div class="ttdef"><b>Definition:</b> <a href="rxn__factory_8_f90_source.html#l00446">rxn_factory.F90:447</a></div></div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md12"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md13"></a>
 Step 4. Add the new module to the CMakeList file in the root directory.</h1>
 <div class="fragment"><div class="line">...</div>
 <div class="line"> </div>
@@ -157,13 +158,13 @@ Step 4. Add the new module to the CMakeList file in the root directory.</h1>
 <div class="line">)</div>
 <div class="line"> </div>
 <div class="line">...</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md13"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md14"></a>
 Step 5. Add unit tests for the new \c rxn_foo_t type</h2>
 <p>Unit testing should cover, at minimum, the initialization, time derivative and Jacbian matrix functions, and in general 80% code coverage is recommended. Some examples can be found in the <code>/src/test</code> folder.</p>
-<h2><a class="anchor" id="autotoc_md14"></a>
+<h2><a class="anchor" id="autotoc_md15"></a>
 Step 6.  Update documentation</h2>
 <p>TODO finish...</p>
-<h2><a class="anchor" id="autotoc_md15"></a>
+<h2><a class="anchor" id="autotoc_md16"></a>
 Usage</h2>
 <p>The new <a class="el" href="camp_rxn.html">reaction type</a> is now ready to use. To include a reaction of this type in a <a class="el" href="camp_mechanism.html">mechanism</a>, add a <a class="el" href="input_format_rxn.html">reaction object</a> to a new or existing <a class="el" href="input_format_camp_config.html">camp-chem configuration file</a> as part of a <a class="el" href="input_format_mechanism.html">mechanism object</a>. The reaction should have a <b>type</b> corresponding to the newly created reaction type, along with any required parameters:</p>
 <div class="fragment"><div class="line">{ &quot;camp-data&quot; : [</div>
@@ -182,9 +183,7 @@ Usage</h2>
 <div class="line">]}</div>
 </div><!-- fragment --> </div></div><!-- contents -->
 </div><!-- PageDoc -->
-<!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Sep 5 2021 21:17:12 for CAMP by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
-</small></address>
+CAMP 1.0.0 documentation generated by <a href="http://www.doxygen.org/index.html">doxygen</a> 1.9.1</small></address>
 </body>
 </html>

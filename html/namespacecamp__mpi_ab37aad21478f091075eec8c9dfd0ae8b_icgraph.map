@@ -1,0 +1,4 @@
+<map id="camp_mpi::camp_mpi_allreduce_max_integer" name="camp_mpi::camp_mpi_allreduce_max_integer">
+<area shape="rect" id="node1" title="Computes the maximum of val across all processes, storing the result in val_max on all processes." alt="" coords="201,5,360,47"/>
+<area shape="rect" id="node2" href="$namespacecamp__mpi.html#a674d1494035941591fecccc3210bb5e3" title="Returns whether all processors have the same value." alt="" coords="5,5,153,47"/>
+</map>

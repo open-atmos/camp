@@ -1,0 +1,8 @@
+<map id="camp_property::get" name="camp_property::get">
+<area shape="rect" id="node1" title="Find a key&#45;value pair by key name. Returns a null pointer if the key name is not found." alt="" coords="212,129,343,156"/>
+<area shape="rect" id="node2" href="$namespacecamp__property.html#aea9874a70ce05c8ae096d11c14baa707" title="Get an integer value. The return value is true if the key&#45;value pair was found, and false otherwise...." alt="" coords="9,5,161,32"/>
+<area shape="rect" id="node3" href="$namespacecamp__property.html#a00491ca01f9acc9a906c07c385dccefa" title="Get a logical value. The return value is true if the key&#45;value pair was found, and false otherwise...." alt="" coords="19,57,150,98"/>
+<area shape="rect" id="node4" href="$namespacecamp__property.html#a9f41d477ab2a3fde0b6f115a0448ad19" title="Get a property sub&#45;set. The return value is true if the key&#45;value pair was found, and false otherwise..." alt="" coords="19,122,150,163"/>
+<area shape="rect" id="node5" href="$namespacecamp__property.html#a9120f7b01448c0f2fb101ed54ba2f443" title="Get a real value. The return value is true if the key&#45;value pair was found, and false otherwise...." alt="" coords="5,188,164,215"/>
+<area shape="rect" id="node6" href="$namespacecamp__property.html#a19d4b93f821c29744eb4e9533f30d524" title="Get a string value. The return value is true if the key&#45;value pair was found, and false otherwise...." alt="" coords="19,239,150,281"/>
+</map>

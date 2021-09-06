@@ -1,0 +1,5 @@
+<map id="camp_util::iso8601_date_and_time" name="camp_util::iso8601_date_and_time">
+<area shape="rect" id="node1" title="Current date and time in ISO 8601 format." alt="" coords="5,5,135,47"/>
+<area shape="rect" id="node2" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="183,13,335,39"/>
+<area shape="rect" id="node3" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="383,5,505,47"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="camp_chem_spec_data::add" name="camp_chem_spec_data::add">
+<area shape="rect" id="node1" title="Add a new chemical species." alt="" coords="5,13,192,39"/>
+<area shape="rect" id="node2" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="240,13,392,39"/>
+<area shape="rect" id="node3" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="440,5,563,47"/>
+</map>

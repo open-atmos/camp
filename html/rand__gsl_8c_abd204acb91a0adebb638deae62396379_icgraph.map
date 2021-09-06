@@ -1,0 +1,15 @@
+<map id="camp_rand_gsl" name="camp_rand_gsl">
+<area shape="rect" id="node1" title="Generate a uniform random number in ." alt="" coords="903,187,1013,213"/>
+<area shape="rect" id="node2" href="$namespacecamp__rand.html#aff7aed70c1739a48a1a771e6fd9f97bc" title="Returns a random number between 0 and 1." alt="" coords="680,187,855,213"/>
+<area shape="rect" id="node3" href="$namespacecamp__rand.html#a6e5ae3dc848f4f5cf5a1e4bf674ed0ce" title="Returns a random integer between 1 and n." alt="" coords="455,35,632,61"/>
+<area shape="rect" id="node6" href="$namespacecamp__rand.html#a1f91bce93606a8f03711ca24653ea3a4" title="Sample the given continuous probability density function." alt="" coords="219,85,403,112"/>
+<area shape="rect" id="node8" href="$namespacecamp__rand.html#a8317841f695b0c19583c216170857572" title="Sample the given discrete probability density function." alt="" coords="216,136,407,163"/>
+<area shape="rect" id="node9" href="$namespacecamp__rand.html#a4ff2053765052f38c615a8bce9ff7365" title="Round val to floor(val) or ceiling(val) with probability proportional to the relative distance from v..." alt="" coords="465,187,621,213"/>
+<area shape="rect" id="node10" href="$namespacecamp__rand.html#a613b0c64aa5bdface8e6d5aa30cec7c4" title="Generate a Binomial&#45;distributed random number with the given parameters." alt="" coords="225,229,397,256"/>
+<area shape="rect" id="node11" href="$namespacecamp__rand.html#ac20e458bc43a3e432568ea44c054778e" title="Generates a normally distributed random number with the given mean and standard deviation." alt="" coords="462,288,625,315"/>
+<area shape="rect" id="node13" href="$namespacecamp__rand.html#afeef7ff3370b9d984897647d64070725" title="Generate a Poisson&#45;distributed random number with the given mean." alt="" coords="227,347,396,373"/>
+<area shape="rect" id="node4" href="$namespacecamp__rand.html#a1411d895e3c99da9dc1c4d9062ae5288" title="Generate a random hexadecimal character." alt="" coords="223,35,399,61"/>
+<area shape="rect" id="node5" href="$namespacecamp__rand.html#ae36190e0e83c7a16138ed38ec071521c" title="Generate a version 4 UUID as a string." alt="" coords="14,5,159,32"/>
+<area shape="rect" id="node7" href="$namespacecamp__rand.html#a24c8c27808b19383b261d200b91b69de" title="Convert a real&#45;valued vector into an integer&#45;valued vector by sampling." alt="" coords="5,78,168,119"/>
+<area shape="rect" id="node12" href="$namespacecamp__rand.html#ad3032643d586f9de792d5f6858223704" title="Generates a vector of normally distributed random numbers with the given means and standard deviation..." alt="" coords="230,281,393,322"/>
+</map>
