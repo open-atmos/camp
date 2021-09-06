@@ -3,6 +3,7 @@
 
 # whitelist things to copy
 !CMakeLists.txt
+!doc/
 !docker/
 !src/
 !test/

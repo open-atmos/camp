@@ -7,36 +7,11 @@
 
 !> \mainpage CAMP Documentation
 !!
-!! Chemistry Across Multiple Phases (CAMP) facilitates multi-phase
-!! chemistry solving in atmospheric models. In
-!! general, \ref index "CAMP" solves a
-!! \ref camp_mechanism "mechanism" composed of a set of \ref camp_rxn
-!! "reactions" over a time-step specified by the host model. \ref camp_rxn
-!! "Reactions" can take place in the gas phase, in one of several \ref
-!! camp_aero_phase "aerosol phases", or across an interface between phases
-!! (gas--aerosol).
-!!
-!! \ref index "CAMP" is designed to
-!! work with any \ref camp_aero_rep "aerosol representation" used by the
-!! host model (e.g., binned, modal, single particle) through the use
-!! use of custom extending types of the abstract
-!! \c camp_aero_rep_data::aero_rep_data_t type. Each
-!! \ref camp_aero_rep "aerosol representation" implements one or more
-!! instances of each
-!! \ref camp_aero_phase "aerosol phases" based on the configuration of the
-!! host model. The multi-phase chemistry system is solved for the gas-phase
-!! and every instance of each \ref camp_aero_phase "aerosol phase".
-!! A set of \ref camp_sub_model "sub-models" may also be included
-!! to calculate parameters needed by \ref camp_rxn "reactions" during solving.
-!!
-!! \ref index "CAMP" uses
-!! JSON files to load \ref input_format_species "chemical species",
-!! \ref input_format_mechanism "mechanisms", \ref input_format_aero_phase
-!! "aerosol phases", \ref input_format_aero_rep "aerosol representations",
-!! and \ref input_format_sub_model "sub-models" at runtime. This allows a user
-!! to modify any of these data without recompiling the model, permits host
-!! models to choose which mechanisms to solve based on model conditions, and
-!! allows multiple mechanisms to be solved during a model simulation.
+!! \ref index "CAMP" is software for
+!! solving multi-phase chemistry in atmospheric models. For a overview of what
+!! \ref index "CAMP" can do, check out
+!! \ref camp_tutorial_part_0 "part 0 of the CAMP tutorial".
+!! A description of the CAMP model elements and how to use them follows.
 !!
 !! # CAMP Input Classes #
 !!
@@ -49,7 +24,45 @@
 !!
 !! # Usage #
 !!
-!! ## Input files ##
+!! \ref index "CAMP" uses
+!! json input files to load \ref input_format_species "chemical species",
+!! \ref input_format_mechanism "mechanisms", \ref input_format_aero_phase
+!! "aerosol phases", \ref input_format_aero_rep "aerosol representations",
+!! and \ref input_format_sub_model "sub-models" at runtime. How to use
+!! \ref index "CAMP" in a new or existing model is described in the
+!! \ref camp_tutorial "Boot CAMP" tutorial.
+!!
+!! ## Compiling ##
+!!
+!! You will need to have c and Fortran compilers along with CMake to build
+!! the CAMP library. In addition, CAMP has the following dependencies:
+!!
+!! | Library      | Version | Source                                        |
+!! |--------------|---------|-----------------------------------------------|
+!! | SUNDIALS     | custom  | camp/cvode-3.4-alpha.tar.gz                   |
+!! | SuiteSparse  | 5.1.0   | http://faculty.cse.tamu.edu/davis/SuiteSparse/SuiteSparse-5.1.0.tar.gz |
+!! | GSL          |         | https://www.gnu.org/software/gsl/             |
+!! | json-fortran | 6.1.0   | https://github.com/jacobwilliams/json-fortran/archive/6.1.0.tar.gz |
+!!
+!! The SUNDIALS library must be built with the `ENABLE_KLU` flag set to `ON`
+!! and the KLU library and include paths set according to the SuiteSparse
+!! installation.
+!!
+!! To install CAMP locally, from the `camp/` folder:
+!!
+!! \code{.sh}
+!!   mkdir build
+!!   cd build
+!!   cmake ..
+!!   make install
+!! \endcode
+!!
+!! You can also check out
+!! \ref ./camp/Dockerfile
+!! (or \ref ./camp/Dockerfile.mpi for MPI applications) to see how CAMP is
+!! is built for automated testing.
+!!
+!!## Input files ##
 !!
 !! \ref index "CAMP" uses two types of input files:
 !!
@@ -65,15 +78,10 @@
 !! \ref camp_camp_core::camp_core_t constructor. The method by which this is
 !! done depends on the host model configuration.
 !!
-!! ## Adding CAMP to an atmospheric model ##
+!! ## CAMP tutorial ##
 !!
-!! The easiest way to incorporate CAMP into an atmospheric model
-!! is to follow the templates laid out in the tests. For each
-!! \ref camp_rxn "reaction", a test exists in <tt>test/unit_rxn_data</tt>
-!! that initializes CAMP for a simple mechanism consisting
-!! of only the reaction type being tested. The test code is documented
-!! so that it can be used as a template for incorporating CAMP in
-!! a new host model.
+!! Follow the \ref camp_tutorial "Boot CAMP" tutorial to see how to
+!! integrate CAMP into your favorite model!
 
 
 !> The camp_core_t structure and associated subroutines.

@@ -11,6 +11,19 @@ set(PACKAGE_STRING "CAMP 1.0.0")
 set(PACKAGE_TARNAME "camp")
 set(PACKAGE_VERSION "1.0.0")
 
+if ( "${CMAKE_SYSTEM_NAME}" MATCHES "Darwin" )
+  set ( ENABLE_DYLIBS_USE_RPATH TRUE CACHE BOOL
+    "Enable @rpath install name for dylibs" )
+  mark_as_advanced ( ENABLE_DYLIBS_USE_RPATH )
+endif ()
+
+if ( ENABLE_DYLIBS_USE_RPATH )
+  set ( CMAKE_MACOSX_RPATH TRUE )
+else ()
+  set ( CMAKE_INSTALL_NAME_DIR
+    "${CMAKE_INSTALL_FULL_LIBDIR}" )
+endif ()
+
 ######################################################################
 # options
 
@@ -154,7 +167,7 @@ endif()
 
 macro(do_unit_test test_name result)
   if(ENABLE_MPI)
-    add_test(unit_test_${test_name} mpiexec_mpt -v -np 2 ${CMAKE_BINARY_DIR}/unit_test_${test_name})
+    add_test(unit_test_${test_name} mpirun -v -np 2 ${CMAKE_BINARY_DIR}/unit_test_${test_name})
   else()
     add_test(unit_test_${test_name} ${CMAKE_BINARY_DIR}/unit_test_${test_name})
   endif()
@@ -168,7 +181,8 @@ endmacro(do_unit_test)
 add_custom_target(copy_test ALL ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/test ${CMAKE_BINARY_DIR}/test_run)
 add_custom_target(copy_mechanism ALL ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/mechanisms ${CMAKE_BINARY_DIR}/mechanisms_run)
 add_custom_target(copy_scenario ALL ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/scenarios ${CMAKE_BINARY_DIR}/scenarios_run)
-set_property(DIRECTORY PROPERTY ADDITIONAL_MAKE_CLEAN_FILES test_run mechanisms_run scenarios_run)
+add_custom_target(copy_boot_camp ALL ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/doc/camp_tutorial/boot_camp ${CMAKE_BINARY_DIR}/boot_camp_run)
+set_property(DIRECTORY PROPERTY ADDITIONAL_MAKE_CLEAN_FILES test_run mechanisms_run scenarios_run boot_camp_run)
 
 ######################################################################
 # tests
@@ -211,6 +225,10 @@ add_test(test_chemistry_cb05cl_ae5 ${CMAKE_BINARY_DIR}/test_run/chemistry/cb05cl
 add_test(test_chemistry_eqsam_v03d ${CMAKE_BINARY_DIR}/test_run/chemistry/eqsam_v03d/test_chemistry_eqsam_v03d.sh ${MPI_TEST_FLAG})
 add_test(test_MONARCH_1 ${CMAKE_BINARY_DIR}/test_run/monarch/test_monarch_1.sh ${MPI_TEST_FLAG})
 add_test(test_MONARCH_2 ${CMAKE_BINARY_DIR}/test_run/monarch/test_monarch_2.sh ${MPI_TEST_FLAG})
+add_test(boot_camp_part_1 ${CMAKE_BINARY_DIR}/boot_camp_run/part_2_code/run_part_1.sh ${MPI_TEST_FLAG})
+add_test(boot_camp_part_2 ${CMAKE_BINARY_DIR}/boot_camp_run/part_2_code/run_part_2.sh ${MPI_TEST_FLAG})
+add_test(boot_camp_part_3 ${CMAKE_BINARY_DIR}/boot_camp_run/part_3_code/run_part_3.sh ${MPI_TEST_FLAG})
+add_test(boot_camp_part_4 ${CMAKE_BINARY_DIR}/boot_camp_run/part_4_code/run_part_4.sh ${MPI_TEST_FLAG})
 
 ######################################################################
 # camp library
@@ -332,7 +350,7 @@ else()
   set(CAMP_CUDA_SRC "")
 endif()
 
-add_library(camplib
+set(CAMP_LIB_SRC
   src/constants.F90
   src/util.F90
   src/mpi.F90
@@ -348,9 +366,44 @@ add_library(camplib
   ${CAMP_C_SRC} ${AEROSOL_REPS_SRC} ${SUB_MODELS_SRC} ${REACTIONS_SRC}
   ${CAMP_CUDA_SRC} ${GSL_SRC} ${CAMP_CXX_SRC} )
 
-target_link_libraries(camplib ${SUNDIALS_LIBS} ${GSL_LIBS} ${JSON_LIB})
+add_library(camplib SHARED ${CAMP_LIB_SRC})
+add_library(camplib-static STATIC ${CAMP_LIB_SRC})
 
-set_target_properties(camplib PROPERTIES OUTPUT_NAME camp)
+target_link_libraries(camplib ${SUNDIALS_LIBS} ${GSL_LIBS} ${JSON_LIB})
+target_link_libraries(camplib-static ${SUNDIALS_LIBS} ${GSL_LIBS} ${JSON_LIB})
+
+set(MODULE_DIR "${CMAKE_BINARY_DIR}/include")
+
+set_target_properties(camplib PROPERTIES
+                         OUTPUT_NAME camp
+                         PREFIX lib
+                         VERSION ${PACKAGE_VERSION}
+                         SOVERSION ${PACKAGE_VERSION}
+                         LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
+                         Fortran_MODULE_DIRECTORY ${CMAKE_BINARY_DIR})
+set_target_properties(camplib-static PROPERTIES
+                         OUTPUT_NAME camp
+                         PREFIX lib
+                         VERSION ${PACKAGE_VERSION}
+                         ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
+                         Fortran_MODULE_DIRECTORY ${MODULE_DIR})
+
+######################################################################
+# Install options
+
+include(GNUInstallDirs)
+install(TARGETS camplib camplib-static
+        EXPORT camplib-targets
+        LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+        ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+       )
+
+set(MOD_DIR_TO_INSTALL "${MODULE_DIR}")
+set(MOD_DESTINATION_DIR "${CMAKE_INSTALL_INCLUDEDIR}/camp")
+install(
+  CODE "file(GLOB_RECURSE MODULE_FILES \"${MOD_DIR_TO_INSTALL}/*.mod\")"
+  CODE "file(INSTALL \${MODULE_FILES} DESTINATION \"\${CMAKE_INSTALL_PREFIX}/${MOD_DESTINATION_DIR}\")"
+  )
 
 ######################################################################
 # camp-chem box model
@@ -560,5 +613,30 @@ target_link_libraries(unit_test_aero_rep_modal_binned_mass camplib)
 add_executable(test_chem_mech_solver test/chemistry/test_chem_mech_solver.F90)
 
 target_link_libraries(test_chem_mech_solver camplib)
+
+######################################################################
+# BootCAMP Tutorial Exercises
+######################################################################
+
+######################################################################
+# Part 1
+
+add_executable(boot_camp_part_1 doc/camp_tutorial/boot_camp/part_1_code/box_model.F90)
+
+target_link_libraries(boot_camp_part_1 camplib)
+
+######################################################################
+# Part 3
+
+add_executable(boot_camp_part_3 doc/camp_tutorial/boot_camp/part_3_code/box_model.F90)
+
+target_link_libraries(boot_camp_part_3 camplib)
+
+######################################################################
+# Part 4
+
+add_executable(boot_camp_part_4 doc/camp_tutorial/boot_camp/part_4_code/box_model.F90)
+
+target_link_libraries(boot_camp_part_4 camplib)
 
 ######################################################################

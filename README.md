@@ -5,14 +5,12 @@ CAMP
 CAMP: Chemistry Across Multiple Phases
 
 [![Latest version](https://img.shields.io/github/tag/open-atmos/camp.svg?label=version)](https://github.com/open-atmos/camp/blob/main/ChangeLog.md)
-[![Docker build status](https://img.shields.io/docker/automated/open-atmos/camp.svg)](https://cloud.docker.com/swarm/compdyn/repository/docker/openatmos/camp/builds)
 [![CI Status](https://github.com/open-atmos/camp/actions/workflows/main.yml/badge.svg)](https://github.com/open-atmos/camp/actions/workflows/main.yml)
 [![License](https://img.shields.io/github/license/open-atmos/camp.svg)](https://github.com/open-atmos/camp/blob/main/COPYING)
 
-Version -.-.-
-Released -
-
 <http://open-atmos.org/camp/>
+
+The full CAMP documentation, including the BootCAMP tutorial is available [here](https://open-atmos.github.io/camp).
 
 References:
 
@@ -37,7 +35,7 @@ This is the fastest way to get running.
 * **_Step 2:_** Run the CAMP test suite with:
 
 ```text
-docker run -it --rm openatmos/camp bash -c 'cd /build; make test'
+docker run -it --rm ghcr.io/open-atmos/camp:main bash -c 'cd /build; make test'
 ```
 
 
@@ -51,7 +49,7 @@ Required dependencies:
    * json-fortran for JSON input file support -
      <https://github.com/jacobwilliams/json-fortran>
    * SuiteSparse - <http://faculty.cse.tamu.edu/davis/SuiteSparse/SuiteSparse-5.1.0.tar.gz>
-   * A modified version of CVODE 3.1.2 - <https://github.com/mattldawson/cvode>
+   * A modified version of CVODE 3.1.2 - provided here in `cvode-3.4-alpha.tar.gz`
 
 Optional dependencies:
 
