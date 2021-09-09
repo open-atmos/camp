@@ -2073,7 +2073,7 @@ void alloc_solver_gpu2(CVodeMem cv_mem, SolverData *sd)
   cudaMalloc((void**)&mGPU->dtempv2,mGPU->nrows*sizeof(double));
   cudaMalloc((void**)&mGPU->dzn,mGPU->nrows*(cv_mem->cv_qmax+1)*sizeof(double));//LMAX
   cudaMalloc((void**)&mGPU->dcv_y,mGPU->nrows*sizeof(double));
-
+  cudaMalloc((void**)&mGPU->dx,mGPU->nrows*sizeof(double));
   cudaMalloc((void**)&mGPU->cv_last_yn,mGPU->nrows*sizeof(double));
   //cudaMalloc((void**)&mGPU->cv_acor_init,mGPU->nrows*sizeof(double));
   //cudaMalloc((void**)&mGPU->cv_acor,mGPU->nrows*sizeof(double));
@@ -2085,12 +2085,7 @@ void alloc_solver_gpu2(CVodeMem cv_mem, SolverData *sd)
   cudaMalloc((void**)&mGPU->cv_tq,(NUM_TESTS+1)*sizeof(double));
   cudaMalloc((void**)&mGPU->cv_Vabstol,mGPU->nrows*sizeof(double));
 
-#ifndef DEV_DX
-  //cudaMalloc((void**)&mGPU->dx,mGPU->nnz*sizeof(double));
-  cudaMalloc((void**)&mGPU->dx,mGPU->nrows*sizeof(double));
-#else
-  cudaMalloc((void**)&mGPU->dx,mGPU->nrows*sizeof(double));
-#endif
+
 
   cudaMemcpy(mGPU->djA,bicg->jA,mGPU->nnz*sizeof(int),cudaMemcpyHostToDevice);
   cudaMemcpy(mGPU->diA,bicg->iA,(mGPU->nrows+1)*sizeof(int),cudaMemcpyHostToDevice);
@@ -5625,6 +5620,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
   kflag = 99;
   nstloc = 0;
 
+
   CVDlsMem cvdls_mem = (CVDlsMem) cv_mem->cv_lmem;
   SUNMatrix J = cvdls_mem->A;
   /*
@@ -5635,6 +5631,8 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     bicg->iA[i]=SM_INDEXPTRS_S(J)[i];
 */
 
+  /*
+
   cudaMemcpy(mGPU->dB,bicg->A,mGPU->nnz*sizeof(double),cudaMemcpyHostToDevice);
   cudaMemcpy(mGPU->djB,bicg->jA,mGPU->nnz*sizeof(int),cudaMemcpyHostToDevice);
   cudaMemcpy(mGPU->diB,bicg->iA,(mGPU->nrows+1)*sizeof(int),cudaMemcpyHostToDevice);
@@ -5644,7 +5642,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
   cudaMemcpy(mGPU->djsavedJ,bicg->jA,mGPU->nnz*sizeof(int),cudaMemcpyHostToDevice);
   cudaMemcpy(mGPU->disavedJ,bicg->iA,(mGPU->nrows+1)*sizeof(int),cudaMemcpyHostToDevice);
 
-
+*/
 
 #ifdef DEV_CUDACVODE
 
@@ -5665,7 +5663,6 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     double *cv_acor_init = N_VGetArrayPointer(cv_mem->cv_acor_init);
     double *youtArray = N_VGetArrayPointer(yout);
     double *cv_Vabstol = N_VGetArrayPointer(cv_mem->cv_Vabstol);
-
 
     int flag = 0; //CAMP_SOLVER_SUCCESS
     //int flag = 999;
@@ -5740,8 +5737,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     cudaMemcpy(mGPU->cv_tau, cv_mem->cv_tau, (L_MAX + 1) * sizeof(double), cudaMemcpyHostToDevice);
     cudaMemcpy(mGPU->cv_tq, cv_mem->cv_tq, (NUM_TESTS + 1) * sizeof(double), cudaMemcpyHostToDevice);
 
-    //NNZ WRONG?
-#ifndef DEV_DX
+#ifdef DEV2_CUDACVODE
 
 
     double *dtempv1 = N_VGetArrayPointer(cv_mem->cv_tempv1);
@@ -5761,20 +5757,16 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     cudaMalloc((void**)&mGPU->dtempv2,mGPU->nrows*sizeof(double));
     cudaMalloc((void**)&mGPU->dcv_y,mGPU->nrows*sizeof(double));
 */
-
-
     cudaMemcpy(mGPU->dtempv1,dtempv1,mGPU->nrows*sizeof(double),cudaMemcpyHostToDevice);
     cudaMemcpy(mGPU->dtempv2,dtempv2,mGPU->nrows*sizeof(double),cudaMemcpyHostToDevice);
     cudaMemcpy(mGPU->dcv_y,dcv_y,mGPU->nrows*sizeof(double),cudaMemcpyHostToDevice);
-
-
 
     cudaMemcpy(mGPU->dx,tempv,mGPU->nrows*sizeof(double),cudaMemcpyHostToDevice);
     //cudaMemcpy(mGPU->dx,tempv,mGPU->nnz*sizeof(double),cudaMemcpyHostToDevice);
 
 
 #else
-    cudaMemcpy(mGPU->dx,tempv,mGPU->nnz*sizeof(double),cudaMemcpyHostToDevice);
+    //cudaMemcpy(mGPU->dx,tempv,mGPU->nnz*sizeof(double),cudaMemcpyHostToDevice);
 #endif
 
     cudaMemcpy(mGPU->dewt,ewt,mGPU->nrows*sizeof(double),cudaMemcpyHostToDevice);

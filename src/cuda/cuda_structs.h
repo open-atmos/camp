@@ -291,6 +291,7 @@ typedef struct {
     double *dA;
     int *djA;
     int *diA;
+    double *dx;
     double* dtempv;
     int nrows;
     int n_shr_empty;
@@ -309,7 +310,6 @@ typedef struct {
     double *dy;
     double *dz;
     double *daux;
-    double *dx;
 
     //swapCSC_CSR_BCG
     double* dB;
