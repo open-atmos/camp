@@ -198,6 +198,7 @@ typedef struct {
     int cv_ncfn;
 
 #ifdef PMC_DEBUG_GPU
+    int countercvstep;
     int counterDerivGPU;
     int counterBCGInternal;
     double dtBCG;
