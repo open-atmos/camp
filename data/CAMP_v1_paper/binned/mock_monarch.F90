@@ -262,34 +262,17 @@ program mock_monarch
       end do
     end do
 
-    !do z=1, size(camp_interface%monarch_species_names)
-    !  write(*,*) camp_interface%monarch_species_names(z)%string
-    !end do
 
     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     ! **** end initialization modification **** !
     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     ! Set conc from mock_model
-    !print *,'debuggg: water_conc ',water_conc
     call camp_interface%get_init_conc(species_conc, water_conc, WATER_VAPOR_ID, &
             air_density)
-    !print *,'debuggg: water_conc ',water_conc
 
-    !print *,'CAMP CORE PRINT AT INIT' 
-    !call camp_interface%print( )
-     
     ! Run the model
     do i_time=1, NUM_TIME_STEP
-
-      !plot after 1 hour: ISOP-P1, ISOP-P2,ISOP-P1_aero, ISOP-P2_aero...
-      !modify ISOP each time_step
-
-      !todo fix photo_rates
-      !todo change cb05 and other files to scenarios 5 files
-      !change units to ppm (monarch) instead ppb (scenario 5) (ppm=ppb*1000)
-      !emissions cada hora cambiar y seguir instrucciones skype y esto :https://github.com/compdyn/partmc/blob/develop-137-urban-plume-camp/scenarios/5_urban_plume_camp/gas_emit.dat
-      !conc set to init_conc if not here set 0 (GMD and GSD don't touch) https://github.com/compdyn/partmc/blob/develop-137-urban-plume-camp/scenarios/5_urban_plume_camp/gas_init.dat
 
       !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       ! **** Add to MONARCH during runtime for each time step **** !
@@ -297,19 +280,19 @@ program mock_monarch
 
       call output_results(curr_time,camp_interface,species_conc)
       call camp_interface%integrate(curr_time,         & ! Starting time (min)
-                                   TIME_STEP,         & ! Time step (min)
-                                   I_W,               & ! Starting W->E grid cell
-                                   I_E,               & ! Ending W->E grid cell
-                                   I_S,               & ! Starting S->N grid cell
-                                   I_N,               & ! Ending S->N grid cell
-                                   temperature,       & ! Temperature (K)
-                                   species_conc,      & ! Tracer array
-                                   water_conc,        & ! Water concentrations (kg_H2O/kg_air)
-                                   WATER_VAPOR_ID,    & ! Index in water_conc() corresponding to water vapor
-                                   air_density,       & ! Air density (kg_air/m^3)
-                                   pressure,          & ! Air pressure (Pa)
-                                   conv,              &
-                                   i_hour)
+                                    TIME_STEP,         & ! Time step (min)
+                                    I_W,               & ! Starting W->E grid cell
+                                    I_E,               & ! Ending W->E grid cell
+                                    I_S,               & ! Starting S->N grid cell
+                                    I_N,               & ! Ending S->N grid cell
+                                    temperature,       & ! Temperature (K)
+                                    species_conc,      & ! Tracer array
+                                    water_conc,        & ! Water concentrations (kg_H2O/kg_air)
+                                    WATER_VAPOR_ID,    & ! Index in water_conc() corresponding to water vapor
+                                    air_density,       & ! Air density (kg_air/m^3)
+                                    pressure,          & ! Air pressure (Pa)
+                                    conv,              &
+                                    i_hour)
       curr_time = curr_time + TIME_STEP
 
       !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -335,16 +318,6 @@ program mock_monarch
     n_cells = 1
 
   end do
-
-  !print*, species_conc(1,1,1,:)
-
-  !#ifdef DEBUG
-  !print*, "SPECIES CONC", species_conc(:,1,1,100)
-#ifdef CAMP_USE_MPI
-#else
-  !print*, "SPECIES CONC COPY", species_conc_copy(:,1,1,100)
-#endif
-  !#endif
 
   !If something to compare
   if(camp_cases.gt.1) then
@@ -390,16 +363,7 @@ program mock_monarch
   call camp_mpi_finalize()
 
   ! Free the interface and the solver
-#ifdef CAMP_USE_MPI
-
-  !not work on MPI
-  !if (camp_mpi_rank().eq.0) then
-  !  deallocate(camp_interface)
-  !end if
-
-#else
- deallocate(camp_interface)
-#endif
+  deallocate(camp_interface)
 
 contains
 
@@ -428,11 +392,9 @@ contains
 #ifndef ENABLE_CB05_SOA
     temperature(:,:,:) = 290.016!300.614166259766
     pressure(:,:,:) = 100000.!94165.7187500000
-!    air_density(:,:,:) = pressure(:,:,:)/(287.04*temperature(:,:,:))!1.225
     air_density(:,:,:) = pressure(:,:,:)/(287.04*temperature(:,:,:)* &
          (1.+0.60813824*water_conc(:,:,:,WATER_VAPOR_ID))) !kg m-3
     conv=0.02897/air_density(1,1,1)*(TIME_STEP*60.)*1e6/height !units of time_step to seconds
-!    conv=0.02897/air_density(1,1,1)*(TIME_STEP)*1e6/height !units of time_step to seconds
 #else
     temperature(:,:,:) = 300.614166259766
     pressure(:,:,:) = 94165.7187500000
@@ -459,9 +421,6 @@ contains
 #endif
 
     deallocate(file_name)
-
-    ! Read the compare file
-    ! TODO Implement once results are stable
 
   end subroutine model_initialize
 
@@ -491,9 +450,6 @@ contains
     type(monarch_interface_t), intent(in) :: camp_interface
     integer :: z,i,j,k
     real, intent(inout) :: species_conc(:,:,:,:)
-    !type(string_t), allocatable :: species_names(:)
-    !integer(kind=i_kind), allocatable :: tracer_ids(:)
-    !call camp_interface%get_MONARCH_species(species_names, tracer_ids)
 
     character(len=:), allocatable :: aux_str
     real, allocatable :: aux_real
@@ -510,40 +466,20 @@ contains
             write(RESULTS_FILE_UNIT_TABLE, *) camp_interface%monarch_species_names(z)%string&
             , species_conc(i,j,k,camp_interface%map_monarch_id(z))&
             , camp_interface%map_monarch_id(z)
-            !write(*,*) "species_conc out",species_conc(i,j,k,camp_interface%map_monarch_id(z))
           end do
         end do
       end do
     end do
-
-    !write(RESULTS_FILE_UNIT, *) curr_time,species_conc(1,1,1,START_CAMP_ID:END_CAMP_ID)
-    !write(RESULTS_FILE_UNIT, *) curr_time,species_conc(1,1,1,START_CAMP_ID:3)
-
-    !Specific names
-    !do z=1, size(camp_interface%monarch_species_names)
-    !  if(camp_interface%monarch_species_names(z)%string.eq.name_specie_to_print) then
-    !    aux_str = camp_interface%monarch_species_names(z)%string//" "//camp_interface%monarch_species_names(z+1)%string
-    !    write(RESULTS_FILE_UNIT, *) "Time ",aux_str
-    !    write(RESULTS_FILE_UNIT, *) curr_time,species_conc(1,1,1,camp_interface%map_monarch_id(z):camp_interface%map_monarch_id(z)+1)
-        !write(RESULTS_FILE_UNIT, *) curr_time,species_conc(1,1,1,camp_interface%map_monarch_id(z))
-    !  end if
-    !end do
 
     !print Titles
     if(first_time)then
     aux_str = "Time(min)"
     do z=1, size(name_gas_species_to_print)
       aux_str = aux_str//" "//name_gas_species_to_print(z)%string
-      !aux_str = aux_str//' "'//name_gas_species_to_print(z)%string//'"'
     end do
-!    aux_str = aux_str//" "//"Time"
 
     do z=1, size(name_aerosol_species_to_print)
-      !if (name_aerosol_species_to_print(z)%string)
-
-      !end if
       aux_str = aux_str//" "//name_aerosol_species_to_print(z)%string
-      !aux_str = aux_str//' "'//name_aerosol_species_to_print(z)%string//'"'
     end do
 
     write(RESULTS_FILE_UNIT, "(A)", advance="no") aux_str
@@ -551,24 +487,17 @@ contains
     first_time=.false.
     endif
 
-    !write(RESULTS_FILE_UNIT, "(F12.4)", advance="no") curr_time
     write(RESULTS_FILE_UNIT, "(i4.4)", advance="no") int(curr_time)
     do z=1, size(name_gas_species_to_print)
       write(RESULTS_FILE_UNIT, "(ES13.6)", advance="no") &
               species_conc(1,1,1,id_gas_species_to_print(z))
     end do
- !   write(RESULTS_FILE_UNIT, "(F12.4)", advance="no") curr_time
     do z=1, size(name_aerosol_species_to_print)
       write(RESULTS_FILE_UNIT, "(ES13.6)", advance="no") &
       species_conc(1,1,1,id_aerosol_species_to_print(z))
     end do
 
     write(RESULTS_FILE_UNIT, "(A)", advance="yes") " "
-
-    !todo include water_conc with species_conc
-    !write(RESULTS_FILE_UNIT, *) curr_time, &
-    !        species_conc(1,1,1,START_CAMP_ID:END_CAMP_ID), &
-    !        water_conc(1,1,1,WATER_VAPOR_ID)
 
   end subroutine output_results
 
@@ -685,13 +614,11 @@ contains
     n_aerosol_species_time_plot_str=adjustl(n_aerosol_species_time_plot_str)
 
     ! Create the gnuplot script
-    !file_name = "partmc/build/test_run/monarch/"//file_prefix//".gnuplot"
     file_name = file_prefix//".gnuplot"
     open(unit=SCRIPTS_FILE_UNIT, file=file_name, status="replace", action="write")
     write(SCRIPTS_FILE_UNIT,*) "# "//file_name
     write(SCRIPTS_FILE_UNIT,*) "# Run as: gnuplot -persist "//file_name
     write(SCRIPTS_FILE_UNIT,*) "set terminal jpeg medium size 640,480 truecolor"
-    !write(SCRIPTS_FILE_UNIT,*) "set key top left"
     write(SCRIPTS_FILE_UNIT,*) "set title 'Mock_monarch_cb05_soa'"
     write(SCRIPTS_FILE_UNIT,*) "set xlabel 'Time (min)'"
     write(SCRIPTS_FILE_UNIT,*) "set ylabel 'Gas concentration (ppmv)'"
@@ -699,7 +626,6 @@ contains
     write(SCRIPTS_FILE_UNIT,*) "set ytics nomirror"
     write(SCRIPTS_FILE_UNIT,*) "set y2tics nomirror"
 
-    !write(SCRIPTS_FILE_UNIT,*) "set autoscale"
     write(SCRIPTS_FILE_UNIT,*) "set logscale y"
     write(SCRIPTS_FILE_UNIT,*) "set logscale y2"
     write(SCRIPTS_FILE_UNIT,*) "set xrange [", start_time, ":", end_time, "]"
@@ -709,31 +635,18 @@ contains
     forall (i_char = 1:len(spec_name), spec_name(i_char:i_char).eq.'/') &
           spec_name(i_char:i_char) = '_'
 
-    !todo improve path detecting
-    !write(SCRIPTS_FILE_UNIT,*) "set key outside"
     write(SCRIPTS_FILE_UNIT,*) "set key top left"
-    !write(SCRIPTS_FILE_UNIT,*) "set output '"//file_prefix//"_plot.png'"
-    write(SCRIPTS_FILE_UNIT,"(A)",advance="no") "set output '/gpfs/scratch/pr1eld00/&
-        pr1eld13/a2nn/nmmb-monarch/MODEL/SRC_LIBS/partmc/build/&
-        test_run/monarch/out/monarch_plot.jpg'"
+    write(SCRIPTS_FILE_UNIT,"(A)",advance="no") "set output 'out/monarch_plot.jpg'"
     write(SCRIPTS_FILE_UNIT,*)
     write(SCRIPTS_FILE_UNIT,"(A)",advance="no") "plot for [col=2:"&
-    //trim(n_gas_species_plot_str)//"] &
-    'partmc/build/test_run/monarch/"//file_prefix//"_results.txt' &
+    //trim(n_gas_species_plot_str)//"] '"//file_prefix//"_results.txt' &
     using 1:col axis x1y1 title columnheader, for [col2=" &
     //trim(n_aerosol_species_start_plot_str)//":" &
     //trim(n_aerosol_species_plot_str)//"] &
-    'partmc/build/test_run/monarch/"//file_prefix//"_results.txt' &
+    '"//file_prefix//"_results.txt' &
     using " &
     //trim(n_aerosol_species_time_plot_str)// &
     ":col2 axis x1y2 title columnheader"
-
-    !tracer_id = END_CAMP_ID - START_CAMP_ID + 3
-    !write(SCRIPTS_FILE_UNIT,*) "set output '"//file_prefix//"_H2O.png'"
-    !write(SCRIPTS_FILE_UNIT,*) "plot\"
-    !write(SCRIPTS_FILE_UNIT,*) " '"//file_prefix//"_results.txt'\"
-    !write(SCRIPTS_FILE_UNIT,*) " using 1:"// &
-    !        trim(to_string(tracer_id))//" title 'H2O (MONARCH)'"
 
     close(SCRIPTS_FILE_UNIT)
 

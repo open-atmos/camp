@@ -178,6 +178,7 @@ endmacro(do_unit_test)
 ######################################################################
 # copy dirs
 
+add_custom_target(copy_data ALL ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/data ${CMAKE_BINARY_DIR}/data_run)
 add_custom_target(copy_test ALL ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/test ${CMAKE_BINARY_DIR}/test_run)
 add_custom_target(copy_mechanism ALL ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/mechanisms ${CMAKE_BINARY_DIR}/mechanisms_run)
 add_custom_target(copy_scenario ALL ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/scenarios ${CMAKE_BINARY_DIR}/scenarios_run)
@@ -229,6 +230,8 @@ add_test(boot_camp_part_1 ${CMAKE_BINARY_DIR}/boot_camp_run/part_2_code/run_part
 add_test(boot_camp_part_2 ${CMAKE_BINARY_DIR}/boot_camp_run/part_2_code/run_part_2.sh ${MPI_TEST_FLAG})
 add_test(boot_camp_part_3 ${CMAKE_BINARY_DIR}/boot_camp_run/part_3_code/run_part_3.sh ${MPI_TEST_FLAG})
 add_test(boot_camp_part_4 ${CMAKE_BINARY_DIR}/boot_camp_run/part_4_code/run_part_4.sh ${MPI_TEST_FLAG})
+add_test(camp_v1_paper_binned ${CMAKE_BINARY_DIR}/data_run/CAMP_v1_paper/binned/test_monarch_binned.sh ${MPI_TEST_FLAG})
+add_test(camp_v1_paper_modal ${CMAKE_BINARY_DIR}/data_run/CAMP_v1_paper/modal/test_monarch_modal.sh ${MPI_TEST_FLAG})
 
 ######################################################################
 # camp library
@@ -639,5 +642,21 @@ target_link_libraries(boot_camp_part_3 camplib)
 add_executable(boot_camp_part_4 doc/camp_tutorial/boot_camp/part_4_code/box_model.F90)
 
 target_link_libraries(boot_camp_part_4 camplib)
+
+######################################################################
+# CAMP v1.0.0 paper configurations
+######################################################################
+
+add_executable(camp_v1_paper_binned data/CAMP_v1_paper/binned/camp_monarch_interface.F90
+                                    data/CAMP_v1_paper/binned/mock_monarch.F90)
+
+target_link_libraries(camp_v1_paper_binned camplib)
+
+######################################################################
+
+add_executable(camp_v1_paper_modal data/CAMP_v1_paper/modal/camp_monarch_interface.F90
+                                   data/CAMP_v1_paper/modal/mock_monarch.F90)
+
+target_link_libraries(camp_v1_paper_modal camplib)
 
 ######################################################################
