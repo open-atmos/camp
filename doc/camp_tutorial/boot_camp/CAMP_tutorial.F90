@@ -23,7 +23,7 @@
 !! If you have Docker installed and want to quickly run the code
 !! described in the tutorial, start a container with CAMP:
 !! \code{.sh}
-!!   docker run -it ghcr.io/open-atmos/camp:main bash
+!!   docker run --name camp -it ghcr.io/open-atmos/camp:main bash
 !! \endcode
 !! Then, follow the instructions at the bottom of the
 !! sections of the tutorial that include executable code.
