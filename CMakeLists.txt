@@ -361,7 +361,7 @@ set(CAMP_LIB_SRC
   src/camp_core.F90 src/camp_solver_data.F90 src/aero_rep_data.F90
   src/aero_phase_data.F90 src/aero_rep_factory.F90
   src/rxn_factory.F90 src/sub_model_data.F90 src/sub_model_factory.F90
-  src/solver_stats.F90 src/camp_box_model_data.F90
+  src/solver_stats.F90
   src/debug_diff_check.F90
   ${CAMP_C_SRC} ${AEROSOL_REPS_SRC} ${SUB_MODELS_SRC} ${REACTIONS_SRC}
   ${CAMP_CUDA_SRC} ${GSL_SRC} ${CAMP_CXX_SRC} )
@@ -408,7 +408,8 @@ install(
 ######################################################################
 # camp-chem box model
 
-add_executable(camp_box_model src/camp_box_model.F90)
+add_executable(camp_box_model test/camp_box_model_data.F90
+                              test/camp_box_model.F90)
 
 target_link_libraries(camp_box_model camplib)
 
