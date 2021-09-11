@@ -1,3 +1,7 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$structcamp__rxn__data_1_1rxn__data__ptr.html" title="Pointer type for building arrays of mixed reactions." alt="" coords="5,5,139,47"/>
+<area shape="rect" id="node1" href="$structcamp__rxn__data_1_1rxn__update__data__t.html" title="Update cookie." alt="" coords="5,113,139,155"/>
+<area shape="rect" id="node2" href="$structcamp__rxn__emission_1_1rxn__update__data__emission__t.html" title="Emission rate update object." alt="" coords="193,5,379,47"/>
+<area shape="rect" id="node3" href="$structcamp__rxn__first__order__loss_1_1rxn__update__data__first__order__loss__t.html" title="First&#45;Order Loss rate update object." alt="" coords="209,70,363,126"/>
+<area shape="rect" id="node4" href="$structcamp__rxn__photolysis_1_1rxn__update__data__photolysis__t.html" title="Photolysis rate update object." alt="" coords="187,149,385,191"/>
+<area shape="rect" id="node5" href="$structcamp__rxn__wet__deposition_1_1rxn__update__data__wet__deposition__t.html" title="Wet Deposition rate update object." alt="" coords="200,214,372,270"/>
 </map>

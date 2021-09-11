@@ -1,6 +1,0 @@
-<map id="camp_camp_box_model_data::aero_rep_profile_constructor" name="camp_camp_box_model_data::aero_rep_profile_constructor">
-<area shape="rect" id="node1" title="Constructor for aero_rep_profile_t." alt="" coords="5,5,168,61"/>
-<area shape="rect" id="node2" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="397,20,549,47"/>
-<area shape="rect" id="node4" href="$namespacecamp__util.html#a970b40b46d26e937fb3cdc0b9217b86c" title="Error immediately." alt="" coords="216,45,349,72"/>
-<area shape="rect" id="node3" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="597,13,720,54"/>
-</map>

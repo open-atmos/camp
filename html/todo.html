@@ -53,14 +53,12 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><dl class="reflist">
-<dt>Module <a class="el" href="namespacecamp__camp__box__model__data.html">camp_camp_box_model_data</a>  </dt>
-<dd><a class="anchor" id="_todo000001"></a>{ Modify this to run full PartMC scenarios with CAMP enabled so that aerosol physical processes can be included. }  </dd>
 <dt>Member <a class="el" href="util_8h.html#af0918da54a73bf30e7079908caea2efd">d_transition_regime_correction_factor_d_radius</a>  (double mean_free_path__m, double radius__m, double alpha)</dt>
-<dd><a class="anchor" id="_todo000004"></a>double check the correction factor derivative equation where the Knudsen Number \(K_n = \lambda / r\) (where \(\lambda\) is the mean free path (m) of the gas-phase species and \(r\) is the effective radius of the particles (m)), and \( \alpha \) is the mass accomodation coefficient, which is typically assumed to equal 0.1 <b>[Zaveri2008]</b>. </dd>
+<dd><a class="anchor" id="_todo000003"></a>double check the correction factor derivative equation where the Knudsen Number \(K_n = \lambda / r\) (where \(\lambda\) is the mean free path (m) of the gas-phase species and \(r\) is the effective radius of the particles (m)), and \( \alpha \) is the mass accomodation coefficient, which is typically assumed to equal 0.1 <b>[Zaveri2008]</b>. </dd>
 <dt>Member <a class="el" href="camp__solver_8h.html#a5b485fa25356197023889f3795888e98">get_jac_init</a>  (<a class="el" href="struct_solver_data.html">SolverData</a> *solver_data)</dt>
-<dd><a class="anchor" id="_todo000003"></a>Make the <a class="el" href="struct_jacobian.html">Jacobian</a> mapping recursive for sub model parameters that depend on other sub model parameters  </dd>
+<dd><a class="anchor" id="_todo000002"></a>Make the <a class="el" href="struct_jacobian.html">Jacobian</a> mapping recursive for sub model parameters that depend on other sub model parameters  </dd>
 <dt>Member <a class="el" href="camp__solver_8h.html#a78e694c3221a39e0b96a5f40fa0fc0dd">Jac</a>  (realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *model_data, N_Vector tmp1, N_Vector tmp2, N_Vector tmp3)</dt>
-<dd><a class="anchor" id="_todo000002"></a>#83 Figure out how to stop CVODE from resizing the <a class="el" href="struct_jacobian.html">Jacobian</a> during solving </dd>
+<dd><a class="anchor" id="_todo000001"></a>#83 Figure out how to stop CVODE from resizing the <a class="el" href="struct_jacobian.html">Jacobian</a> during solving </dd>
 </dl>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
