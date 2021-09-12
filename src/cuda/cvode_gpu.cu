@@ -1594,7 +1594,7 @@ void cudaDevicelinsolsetup(
         double time_step, int deriv_length_cell, int state_size_cell,
         int i_kernel, int threads_block, ModelDataGPU *md, ModelDataVariable *dmdv,
         //cudacvNewtonIteration
-        double *cv_acor, double *dzn, int *cv_jcur,
+        double *cv_acor, double *dzn,// int *cv_jcur,
         double *dewt, double *dcv_tq,
         int convfail,
         int *disavedJ, int *djsavedJ, double *dsavedJ
@@ -1630,7 +1630,7 @@ void cudaDevicelinsolsetup(
 
     __syncthreads();
 
-    *cv_jcur = 0; //all blocks update this variable
+    dmdv->cv_jcur = 0; //all blocks update this variable
     //flag_shr[1] = 0;
 
 
@@ -1649,7 +1649,7 @@ void cudaDevicelinsolsetup(
 
     dmdv->nje++;
     dmdv->nstlj = dmdv->cv_nst;
-    *cv_jcur = 1;
+    dmdv->cv_jcur = 1;
     //flag_shr[1] = 1; //if used, assign to 1 if retval fails
 
   __syncthreads();
@@ -1952,9 +1952,8 @@ void solveBcgCudaDeviceCVODE(
 #ifdef solveBcgCuda_sum_it
 
   //printf("it %d %d\n",i,it);
-  //if(tid==0)
-  //  it_pointer[blockIdx.x]=it;
-  dmdv->counterBCGInternal[blockIdx.x]=it;
+  if(tid==0)
+    dmdv->counterBCGInternal[blockIdx.x]=it;
 
 #else
 
@@ -2360,8 +2359,8 @@ void cudaDevicecvNewtonIteration(
         double time_step, int deriv_length_cell, int state_size_cell,
         int i_kernel, int threads_block, ModelDataGPU *md, ModelDataVariable *dmdv,
         //cudacvNewtonIteration
-        double *cv_acor, double *dzn, int *cv_jcur,
-        double *dewt, double *dcv_tq//, int *cv_nfe
+        double *cv_acor, double *dzn, //int *cv_jcur,
+        double *dewt, double *dcv_tq
 )
 {
   extern __shared__ int flag_shr[];
@@ -2482,7 +2481,7 @@ void cudaDevicecvNewtonIteration(
 
     //if (*flag<0) {
     if (guessflag < 0) {
-      if (!(*cv_jcur)) { //Bool set up during linsolsetup just before Jacobian
+      if (!(dmdv->cv_jcur)) { //Bool set up during linsolsetup just before Jacobian
         //&& (cv_lsetup)) { //cv_mem->cv_lsetup// Setup routine, always exists for BCG
         flag_shr[0] = TRY_AGAIN;
       } else {
@@ -2521,7 +2520,7 @@ void cudaDevicecvNewtonIteration(
       //  //                                    mGPU->daux, (mGPU->blocks + 1) / 2, mGPU->threads);
 
       __syncthreads();
-      *cv_jcur = 0;
+      dmdv->cv_jcur = 0;
       __syncthreads();
 
       flag_shr[0] = CV_SUCCESS;
@@ -2533,7 +2532,7 @@ void cudaDevicecvNewtonIteration(
     //     If still not converged and Jacobian data is not current,
     //     signal to try the solution again
     if ((m == dmdv->cv_maxcor) || ((m >= 2) && (del > RDIV * delp))) {
-      if (!(*cv_jcur)) {
+      if (!(dmdv->cv_jcur)) {
         flag_shr[0] = TRY_AGAIN;
       } else {
         flag_shr[0] = RHSFUNC_RECVR;
@@ -2581,7 +2580,7 @@ void cudaDevicecvNewtonIteration(
 
     }
     if (*flag > 0) {
-      if (!(*cv_jcur)) {
+      if (!(dmdv->cv_jcur)) {
         flag_shr[0] = TRY_AGAIN;
 #ifdef DEBUG_FLAG_GPU_ODE_SOLVER
         if (i == 0)printf("cudaDevicecvNewtonIteration2 TRY_AGAIN\n");
@@ -2634,10 +2633,6 @@ int cudaDevicecvNlsNewton(
         double *cv_acor, double *dzn,
         double *dewt, double *dcv_tq,
         int *disavedJ, int *djsavedJ, double *dsavedJ
-#ifdef PMC_DEBUG_GPU
-//,int *it_pointer, double *dtBCG, double *dtPreBCG,
- //     double *dtPostBCG,  int counterDerivGPU
-#endif
 ) {
   extern __shared__ int flag_shr[];
   flag_shr[0] = 0;//99
@@ -2790,7 +2785,7 @@ int cudaDevicecvNlsNewton(
               time_step, deriv_length_cell, state_size_cell,
               i_kernel, threads_block, md, dmdv,
               //cudacvNewtonIteration
-              cv_acor, dzn, &dmdv->cv_jcur,
+              cv_acor, dzn, //&cv_jcur,
               dewt, dcv_tq,
               convfail,
               disavedJ, djsavedJ, dsavedJ
@@ -2856,7 +2851,7 @@ int cudaDevicecvNlsNewton(
             time_step, deriv_length_cell, state_size_cell,
             i_kernel, threads_block, md, dmdv,
             //cudacvNewtonIteration
-            cv_acor, dzn, &dmdv->cv_jcur,
+            cv_acor, dzn, //cv_jcur,
             dewt, dcv_tq
     );
 
@@ -2886,10 +2881,7 @@ int cudaDevicecvNlsNewton(
     __syncthreads();
     convfail = CV_FAIL_BAD_J;
 
-    //TODO: Set independent flags for each block and evaluate in host if some block need to run again (all blocks should follow same patter most of the times)
     __syncthreads();
-    //*cv_jcurGlobal = cv_jcur;
-    //if(tid==0) printf("cudaGlobalCVodecv_jcur\n",cv_jcur);
 
 
   }//for(;;)
@@ -3536,7 +3528,7 @@ int cudaDevicecvStep(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
   extern __shared__ int flag_shr[];
   int i = blockIdx.x * blockDim.x + threadIdx.x;
-  unsigned int tid = threadIdx.x;
+  //unsigned int tid = threadIdx.x;
 
   dmdv->saved_t = dmdv->cv_tn;
   dmdv->ncf = dmdv->nef = 0;
@@ -3588,12 +3580,6 @@ int cudaDevicecvStep(ModelDataGPU *md, ModelDataVariable *dmdv) {
             //cudacvNewtonIteration
             md->cv_acor, md->dzn, md->dewt, md->cv_tq,
             md->disavedJ, md->djsavedJ, md->dsavedJ
-//#ifdef PMC_DEBUG_GPU
-//    ,&dmdv->counterBCGInternal,
-//      &dmdv->dtBCG, &dmdv->dtPreBCG,
-//      &dmdv->dtPostBCG,
-//          dmdv->counterDerivGPU
-//#endif
     );
 
 
@@ -3863,12 +3849,12 @@ void cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
     dmdv->cv_netf = (int) mdv->cv_netf;
 
     dmdv->cv_nst = mdv->cv_nst;
+    dmdv->cv_gamrat = mdv->cv_gamrat;
+    dmdv->cv_gammap = mdv->cv_gammap;
     //fine (same error than setting nothing)
 
 
 
-    dmdv->cv_gamrat = mdv->cv_gamrat;//wrong NAN
-    //dmdv->cv_gammap = mdv->cv_gammap; //wrong NAN
 
 
     //fine ~ (differs a bit the error than setting nothing but still reliable)
