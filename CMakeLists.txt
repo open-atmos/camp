@@ -456,7 +456,10 @@ endif()
 set(STD_C_FLAGS "-std=c99")
 
 #todo test --default-stream per-thread https://developer.nvidia.com/blog/gpu-pro-tip-cuda-7-streams-simplify-concurrency/
-set(STD_CUDA_FLAGS "-arch=compute_70 -code=sm_70 -dc --compiler-options '-fPIC' -lcusolver -lcudart -lcudadevrt -lcublas -lcusparse_static -lculibos -lpthread -ldl")
+#set(STD_CUDA_FLAGS "-arch=compute_70 -code=sm_70 -dc --compiler-options '-fPIC' -lcusolver -lcudart -lcudadevrt -lcublas -lcusparse_static -lculibos -lpthread -ldl")
+
+set(STD_CUDA_FLAGS "-O0 -arch=compute_70 -code=sm_70 -dc --compiler-options '-fPIC' -lcusolver -lcudart -lcudadevrt -lcublas -lcusparse_static -lculibos -lpthread -ldl")
+
 
 #Simplified (Pending to check)
 #set(STD_CUDA_FLAGS "-arch=compute_70 -code=sm_70 -dc --compiler-options '-fPIC' -lcublas -lcusparse_static -lpthread -ldl")
