@@ -103,7 +103,7 @@ Pointer to a new GMD update data object
 \end{DoxyReturn}
 
 
-Definition at line 676 of file aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c.
+Definition at line 677 of file aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c.
 
 \mbox{\Hypertarget{aero__reps_8h_a64f1dfc7a4ec84e4a4c0d7f3ff43e708}\label{aero__reps_8h_a64f1dfc7a4ec84e4a4c0d7f3ff43e708}} 
 \index{aero\_reps.h@{aero\_reps.h}!aero\_rep\_modal\_binned\_mass\_create\_gsd\_update\_data@{aero\_rep\_modal\_binned\_mass\_create\_gsd\_update\_data}}
@@ -120,7 +120,7 @@ Pointer to a new GSD update data object
 \end{DoxyReturn}
 
 
-Definition at line 710 of file aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c.
+Definition at line 711 of file aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c.
 
 \mbox{\Hypertarget{aero__reps_8h_a5806fae1fe7d70369bfb7a0d9c54d12f}\label{aero__reps_8h_a5806fae1fe7d70369bfb7a0d9c54d12f}} 
 \index{aero\_reps.h@{aero\_reps.h}!aero\_rep\_modal\_binned\_mass\_get\_aero\_conc\_type@{aero\_rep\_modal\_binned\_mass\_get\_aero\_conc\_type}}
@@ -149,7 +149,7 @@ Modal mass concentrations are per-\/mode or per-\/bin.
 \end{DoxyParams}
 
 
-Definition at line 431 of file aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c.
+Definition at line 434 of file aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c.
 
 Here is the caller graph for this function\+:
 \nopagebreak
@@ -188,7 +188,7 @@ Get the average molecular weight in an aerosol phase $m$ ( $\mbox{\si{\kilogram\
 \end{DoxyParams}
 
 
-Definition at line 522 of file aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c.
+Definition at line 525 of file aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -235,7 +235,7 @@ Get the total mass in an aerosol phase $m$ ( $\mbox{\si{\kilogram\per\cubic\metr
 \end{DoxyParams}
 
 
-Definition at line 459 of file aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c.
+Definition at line 462 of file aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -296,9 +296,9 @@ Here is the caller graph for this function\+:
 
 Get the effective particle radius $r_{eff}$ (m) 
 
-The modal mass effective radius is calculated for a log-\/normal distribution where the geometric mean diameter ( $\tilde{D}_n$) and geometric standard deviation ( $\tilde{\sigma}_g$) are set by the aerosol model prior to solving the chemistry. Thus, all $\frac{\partial r_{eff}}{\partial y}$ are zero. The effective radius is calculated according to the equation given in Table 1 of Zender {\bfseries [Zender2002]} \+:
+The modal mass effective radius is calculated for a log-\/normal distribution where the geometric mean diameter ( $\tilde{D}_n$) and geometric standard deviation ( $\sigma_g$) are set by the aerosol model prior to solving the chemistry. Thus, all $\frac{\partial r_{eff}}{\partial y}$ are zero. The effective radius is calculated according to the equation given in Table 1 of Zender {\bfseries [Zender2002]} \+:
 
-\[ r_{eff} = \frac{\tilde{D}_n}{2}*exp(9 ln(\tilde{\sigma}_g)^2/2) \] \[ r_{eff} = \frac{D_{eff}}{2} \]
+\[ \tilde{\sigma_g} \equiv ln( \sigma_g ) \] \[ D_s = D_{eff} = \tilde{D_n} e^{5 \tilde{\sigma}_g^2 / 2} \] \[ r_{eff} = \frac{D_{eff}}{2} \]
 
 For bins, $r_{eff}$ is assumed to be the bin radius.
 
@@ -321,7 +321,7 @@ For bins, $r_{eff}$ is assumed to be the bin radius.
 \end{DoxyParams}
 
 
-Definition at line 297 of file aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c.
+Definition at line 300 of file aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c.
 
 Here is the caller graph for this function\+:
 \nopagebreak
@@ -364,7 +364,7 @@ The binned number concentration is calculated according to\+: \[ n = V_0 / V_p \
 \end{DoxyParams}
 
 
-Definition at line 365 of file aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c.
+Definition at line 368 of file aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -447,7 +447,7 @@ Print the mass-\/only modal/binned reaction parameters.
 \end{DoxyParams}
 
 
-Definition at line 662 of file aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c.
+Definition at line 663 of file aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c.
 
 Here is the caller graph for this function\+:
 \nopagebreak
@@ -480,7 +480,7 @@ Set GMD update data.
 \end{DoxyParams}
 
 
-Definition at line 692 of file aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c.
+Definition at line 693 of file aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c.
 
 \mbox{\Hypertarget{aero__reps_8h_a1ac1087396c082ed4ebc7ddf43e7802f}\label{aero__reps_8h_a1ac1087396c082ed4ebc7ddf43e7802f}} 
 \index{aero\_reps.h@{aero\_reps.h}!aero\_rep\_modal\_binned\_mass\_set\_gsd\_update\_data@{aero\_rep\_modal\_binned\_mass\_set\_gsd\_update\_data}}
@@ -505,7 +505,7 @@ Set GSD update data.
 \end{DoxyParams}
 
 
-Definition at line 726 of file aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c.
+Definition at line 727 of file aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c.
 
 \mbox{\Hypertarget{aero__reps_8h_a1af186a816b0a6be0f3ee39f126351f1}\label{aero__reps_8h_a1af186a816b0a6be0f3ee39f126351f1}} 
 \index{aero\_reps.h@{aero\_reps.h}!aero\_rep\_modal\_binned\_mass\_update\_data@{aero\_rep\_modal\_binned\_mass\_update\_data}}
@@ -543,9 +543,9 @@ Flag indicating whether this is the aerosol representation to update
 \end{DoxyReturn}
 Recalculate the effective radius \mbox{[}m\mbox{]}
 
-Equation based on {\bfseries [Zender2002]} eq. (23) and Table 1 median diameter ( $\tilde{D_n}$) and Table 1 effective radius $(D_s, D_eff$) equations\+: \[ \tilde{\sigma_g} \equiv ln( \sigma_g ) \] \[ \tilde{D_n} = \bar{D_n} e^{-\tilde{\sigma_g}^2 / 2} \] \[ D_s = D_{eff} = \tilde{D_n} e^{5 \tilde{\sigma_g}^2 / 2} \] \[ D_{eff} = \bar{D_n} e^{ 2 \tilde{\sigma_g}^2 } \] where $\bar{D_n}$ is the mean diameter \mbox{[}m\mbox{]} and $\sigma_g$ is the geometric standard deviation \mbox{[}unitless\mbox{]}.
+Equation based on {\bfseries [Zender2002]} Table 1 effective diameter $(D_s, D_{eff}$) equations\+: \[ \tilde{\sigma_g} \equiv ln( \sigma_g ) \] \[ D_s = D_{eff} = \tilde{D_n} e^{5 \tilde{\sigma}_g^2 / 2} \] \[ r_{eff} = \frac{D_{eff}}{2} \] where $\tilde{D_n}$ is the geometric mean diameter \mbox{[}m\mbox{]}, $\sigma_g$ is the geometric standard deviation \mbox{[}unitless\mbox{]}, and $r_{eff}$ is the effective radius \mbox{[}m\mbox{]}.
 
-Definition at line 591 of file aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c.
+Definition at line 594 of file aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c.
 
 Here is the caller graph for this function\+:
 \nopagebreak

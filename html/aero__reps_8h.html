@@ -207,7 +207,7 @@ Functions</h2></td></tr>
 <p>Create update data for new GMD. </p>
 <dl class="section return"><dt>Returns</dt><dd>Pointer to a new GMD update data object </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8c_source.html#l00676">676</a> of file <a class="el" href="aero__rep__modal__binned__mass_8c_source.html">aero_rep_modal_binned_mass.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8c_source.html#l00677">677</a> of file <a class="el" href="aero__rep__modal__binned__mass_8c_source.html">aero_rep_modal_binned_mass.c</a>.</p>
 
 </div>
 </div>
@@ -229,7 +229,7 @@ Functions</h2></td></tr>
 <p>Create update data for new GSD. </p>
 <dl class="section return"><dt>Returns</dt><dd>Pointer to a new GSD update data object </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8c_source.html#l00710">710</a> of file <a class="el" href="aero__rep__modal__binned__mass_8c_source.html">aero_rep_modal_binned_mass.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8c_source.html#l00711">711</a> of file <a class="el" href="aero__rep__modal__binned__mass_8c_source.html">aero_rep_modal_binned_mass.c</a>.</p>
 
 </div>
 </div>
@@ -290,7 +290,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8c_source.html#l00431">431</a> of file <a class="el" href="aero__rep__modal__binned__mass_8c_source.html">aero_rep_modal_binned_mass.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8c_source.html#l00434">434</a> of file <a class="el" href="aero__rep__modal__binned__mass_8c_source.html">aero_rep_modal_binned_mass.c</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -389,7 +389,7 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8c_source.html#l00522">522</a> of file <a class="el" href="aero__rep__modal__binned__mass_8c_source.html">aero_rep_modal_binned_mass.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8c_source.html#l00525">525</a> of file <a class="el" href="aero__rep__modal__binned__mass_8c_source.html">aero_rep_modal_binned_mass.c</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -495,7 +495,7 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8c_source.html#l00459">459</a> of file <a class="el" href="aero__rep__modal__binned__mass_8c_source.html">aero_rep_modal_binned_mass.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8c_source.html#l00462">462</a> of file <a class="el" href="aero__rep__modal__binned__mass_8c_source.html">aero_rep_modal_binned_mass.c</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -644,9 +644,12 @@ Here is the caller graph for this function:</div>
 </div><div class="memdoc">
 
 <p>Get the effective particle radius \(r_{eff}\) (m) </p>
-<p>The modal mass effective radius is calculated for a log-normal distribution where the geometric mean diameter ( \(\tilde{D}_n\)) and geometric standard deviation ( \(\tilde{\sigma}_g\)) are set by the aerosol model prior to solving the chemistry. Thus, all \(\frac{\partial r_{eff}}{\partial y}\) are zero. The effective radius is calculated according to the equation given in Table 1 of Zender <b>[Zender2002]</b> :</p>
+<p>The modal mass effective radius is calculated for a log-normal distribution where the geometric mean diameter ( \(\tilde{D}_n\)) and geometric standard deviation ( \(\sigma_g\)) are set by the aerosol model prior to solving the chemistry. Thus, all \(\frac{\partial r_{eff}}{\partial y}\) are zero. The effective radius is calculated according to the equation given in Table 1 of Zender <b>[Zender2002]</b> :</p>
 <p class="formulaDsp">
-\[ r_{eff} = \frac{\tilde{D}_n}{2}*exp(9 ln(\tilde{\sigma}_g)^2/2) \]
+\[ \tilde{\sigma_g} \equiv ln( \sigma_g ) \]
+</p>
+ <p class="formulaDsp">
+\[ D_s = D_{eff} = \tilde{D_n} e^{5 \tilde{\sigma}_g^2 / 2} \]
 </p>
  <p class="formulaDsp">
 \[ r_{eff} = \frac{D_{eff}}{2} \]
@@ -665,7 +668,7 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8c_source.html#l00297">297</a> of file <a class="el" href="aero__rep__modal__binned__mass_8c_source.html">aero_rep_modal_binned_mass.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8c_source.html#l00300">300</a> of file <a class="el" href="aero__rep__modal__binned__mass_8c_source.html">aero_rep_modal_binned_mass.c</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -778,7 +781,7 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8c_source.html#l00365">365</a> of file <a class="el" href="aero__rep__modal__binned__mass_8c_source.html">aero_rep_modal_binned_mass.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8c_source.html#l00368">368</a> of file <a class="el" href="aero__rep__modal__binned__mass_8c_source.html">aero_rep_modal_binned_mass.c</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -935,7 +938,7 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8c_source.html#l00662">662</a> of file <a class="el" href="aero__rep__modal__binned__mass_8c_source.html">aero_rep_modal_binned_mass.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8c_source.html#l00663">663</a> of file <a class="el" href="aero__rep__modal__binned__mass_8c_source.html">aero_rep_modal_binned_mass.c</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -997,7 +1000,7 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8c_source.html#l00692">692</a> of file <a class="el" href="aero__rep__modal__binned__mass_8c_source.html">aero_rep_modal_binned_mass.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8c_source.html#l00693">693</a> of file <a class="el" href="aero__rep__modal__binned__mass_8c_source.html">aero_rep_modal_binned_mass.c</a>.</p>
 
 </div>
 </div>
@@ -1050,7 +1053,7 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8c_source.html#l00726">726</a> of file <a class="el" href="aero__rep__modal__binned__mass_8c_source.html">aero_rep_modal_binned_mass.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8c_source.html#l00727">727</a> of file <a class="el" href="aero__rep__modal__binned__mass_8c_source.html">aero_rep_modal_binned_mass.c</a>.</p>
 
 </div>
 </div>
@@ -1111,21 +1114,18 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Flag indicating whether this is the aerosol representation to update </dd></dl>
 <p>Recalculate the effective radius [m]</p>
-<p>Equation based on <b>[Zender2002]</b> eq. (23) and Table 1 median diameter ( \(\tilde{D_n}\)) and Table 1 effective radius \((D_s, D_eff\)) equations: </p><p class="formulaDsp">
+<p>Equation based on <b>[Zender2002]</b> Table 1 effective diameter \((D_s, D_{eff}\)) equations: </p><p class="formulaDsp">
 \[ \tilde{\sigma_g} \equiv ln( \sigma_g ) \]
 </p>
  <p class="formulaDsp">
-\[ \tilde{D_n} = \bar{D_n} e^{-\tilde{\sigma_g}^2 / 2} \]
+\[ D_s = D_{eff} = \tilde{D_n} e^{5 \tilde{\sigma}_g^2 / 2} \]
 </p>
  <p class="formulaDsp">
-\[ D_s = D_{eff} = \tilde{D_n} e^{5 \tilde{\sigma_g}^2 / 2} \]
+\[ r_{eff} = \frac{D_{eff}}{2} \]
 </p>
- <p class="formulaDsp">
-\[ D_{eff} = \bar{D_n} e^{ 2 \tilde{\sigma_g}^2 } \]
-</p>
-<p> where \(\bar{D_n}\) is the mean diameter [m] and \(\sigma_g\) is the geometric standard deviation [unitless].</p>
+<p> where \(\tilde{D_n}\) is the geometric mean diameter [m], \(\sigma_g\) is the geometric standard deviation [unitless], and \(r_{eff}\) is the effective radius [m].</p>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8c_source.html#l00591">591</a> of file <a class="el" href="aero__rep__modal__binned__mass_8c_source.html">aero_rep_modal_binned_mass.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8c_source.html#l00594">594</a> of file <a class="el" href="aero__rep__modal__binned__mass_8c_source.html">aero_rep_modal_binned_mass.c</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
