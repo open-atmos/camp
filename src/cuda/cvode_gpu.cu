@@ -2898,10 +2898,8 @@ void cudaDevicecvRescale(ModelDataGPU *md, ModelDataVariable *dmdv) {
   factor = dmdv->cv_eta;
   for (j=1; j <= dmdv->cv_q; j++) {
     //N_VScale(factor, md->dzn[j], md->dzn[j]);
-    //md->dzn[j*md->nrows+i] *= factor;
 
 #ifndef DEV_SHAREDDZN
-    //seg.fault
     __syncthreads();
     dzn[tid]=md->dzn[md->nrows*(j)+i];
     dzn[tid]*=factor;
@@ -3488,8 +3486,9 @@ int cudaDevicecvPrepareNextStep(ModelDataGPU *md, ModelDataVariable *dmdv, doubl
 __device__
 void cudaDevicecvIncreaseBDF(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
-  extern __shared__ int flag_shr[];
+  extern __shared__ double dzn[];
   int i = blockIdx.x * blockDim.x + threadIdx.x;
+  unsigned int tid = threadIdx.x;
 
   double alpha0, alpha1, prod, xi, xiold, hsum, A1;
   int z, j;
@@ -3513,16 +3512,44 @@ void cudaDevicecvIncreaseBDF(ModelDataGPU *md, ModelDataVariable *dmdv) {
   A1 = (-alpha0 - alpha1) / prod;
   //N_VScale(A1, md->cv_zn[dmdv->cv_indx_acor],
   //         md->cv_zn[dmdv->cv_L]);
-  md->dzn[md->nrows*(dmdv->cv_L)+i]=A1*md->cv_acor[z];
+#ifdef DEV_SHAREDDZN
 
+  __syncthreads();
+  dzn[tid]=md->dzn[md->nrows*(dmdv->cv_L)+i];
 
-  for (j=2; j <= dmdv->cv_q; j++)
+  dzn[tid]=A1*md->dzn[md->nrows*(dmdv->cv_indx_acor)+i];
+
+  md->dzn[md->nrows*(dmdv->cv_L)+i]=dzn[tid];
+  __syncthreads();
+#else
+  md->dzn[md->nrows*(dmdv->cv_L)+i]=
+          A1*md->dzn[md->nrows*(dmdv->cv_indx_acor)+i];//fine
+  //md->dzn[md->nrows*(dmdv->cv_L)+i]=A1*md->cv_acor[z];//acor?
+#endif
+
+  for (j=2; j <= dmdv->cv_q; j++){
     //N_VLinearSum(md->cv_l[j], md->cv_zn[dmdv->cv_L], ONE,
     //             md->cv_zn[j], md->cv_zn[j]);
+
+#ifndef DEV_SHAREDDZN
+
+    //fine
+    __syncthreads();
+    dzn[tid]=md->dzn[md->nrows*(j)+i];
+
+    dzn[tid]=md->cv_l[j]*md->dzn[md->nrows*(dmdv->cv_L)+i]+1.*dzn[tid];
+
+    md->dzn[md->nrows*(j)+i]=dzn[tid];
+    __syncthreads();
+
+#else
     cudaDevicezaxpby(md->cv_l[j],
     &md->dzn[md->nrows*(dmdv->cv_L)],
     1., &md->dzn[md->nrows*(j)],
     &md->dzn[md->nrows*(j)], md->nrows);
+#endif
+
+  }
 
 }
 
