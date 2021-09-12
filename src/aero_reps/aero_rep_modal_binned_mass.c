@@ -269,16 +269,19 @@ void aero_rep_modal_binned_mass_update_state(ModelData *model_data,
  *
  * The modal mass effective radius is calculated for a log-normal distribution
  * where the geometric mean diameter (\f$\tilde{D}_n\f$) and geometric standard
- * deviation (\f$\tilde{\sigma}_g\f$) are set by the aerosol model prior to
+ * deviation (\f$\sigma_g\f$) are set by the aerosol model prior to
  * solving the chemistry. Thus, all \f$\frac{\partial r_{eff}}{\partial y}\f$
  * are zero. The effective radius is calculated according to the equation given
  * in Table 1 of Zender \cite Zender2002 :
  *
  * \f[
- *      r_{eff} = \frac{\tilde{D}_n}{2}*exp(9 ln(\tilde{\sigma}_g)^2/2)
+ * \tilde{\sigma_g} \equiv ln( \sigma_g )
  * \f]
  * \f[
- *      r_{eff} = \frac{D_{eff}}{2}
+ * D_s = D_{eff} = \tilde{D_n} e^{5 \tilde{\sigma}_g^2 / 2}
+ * \f]
+ * \f[
+ * r_{eff} = \frac{D_{eff}}{2}
  * \f]
  *
  * For bins, \f$r_{eff}\f$ is assumed to be the bin radius.
@@ -627,27 +630,25 @@ bool aero_rep_modal_binned_mass_update_data(void *update_data,
   if (ret_val == true) {
     /// Recalculate the effective radius [m]
     ///
-    /// Equation based on \cite Zender2002 eq. (23) and Table 1 median diameter
-    /// (\f$\tilde{D_n}\f$)
-    /// and Table 1 effective radius \f$(D_s, D_eff\f$) equations:
+    /// Equation based on \cite Zender2002
+    /// Table 1 effective diameter \f$(D_s, D_{eff}\f$) equations:
     /// \f[
     /// \tilde{\sigma_g} \equiv ln( \sigma_g )
     /// \f]
     /// \f[
-    /// \tilde{D_n} = \bar{D_n} e^{-\tilde{\sigma_g}^2 / 2}
+    /// D_s = D_{eff} = \tilde{D_n} e^{5 \tilde{\sigma}_g^2 / 2}
     /// \f]
     /// \f[
-    /// D_s = D_{eff} = \tilde{D_n} e^{5 \tilde{\sigma_g}^2 / 2}
+    /// r_{eff} = \frac{D_{eff}}{2}
     /// \f]
-    /// \f[
-    /// D_{eff} = \bar{D_n} e^{ 2 \tilde{\sigma_g}^2 }
-    /// \f]
-    /// where \f$\bar{D_n}\f$ is the mean diameter [m] and \f$\sigma_g\f$
-    /// is the geometric standard deviation [unitless].
+    /// where \f$\tilde{D_n}\f$ is the geometric mean diameter [m],
+    /// \f$\sigma_g\f$
+    /// is the geometric standard deviation [unitless], and \f$r_{eff}\f$
+    /// is the effective radius [m].
     ///
     double ln_gsd = log(GSD_(*section_id));
     EFFECTIVE_RADIUS_(*section_id, 0) =
-        GMD_(*section_id) / 2.0 * exp(2.0 * ln_gsd * ln_gsd);
+        GMD_(*section_id) / 2.0 * exp(5.0 * ln_gsd * ln_gsd / 2.0);
   }
 
   return ret_val;

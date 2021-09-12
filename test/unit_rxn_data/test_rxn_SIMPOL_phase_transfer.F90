@@ -333,7 +333,7 @@ contains
         number_conc = 1.3e6         ! particle number concentration (#/cc)
       else if (scenario.eq.2) then
         ! radius (m)
-        radius = 9.37e-7 / 2.0 * exp(9.0/2.0 * 0.9 * 0.9)
+        radius = 9.37e-7 / 2.0 * exp(5.0/2.0 * log(0.9) * log(0.9))
         ! number conc
         number_conc = 1.0 / (const%pi/6.0 * (9.37e-7)**3.0 * &
                              exp(9.0/2.0 * 0.9 * 0.9))
