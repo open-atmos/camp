@@ -496,24 +496,24 @@ __device__ void solveRXN(
         TimeDerivativeGPU deriv_data,
 #endif
         double time_step,
-        ModelDataGPU *md
+        ModelDataGPU *md, ModelDataVariable *dmdv
 )
 {
 
 #ifdef REVERSE_INT_FLOAT_MATRIX
 
-  double *rxn_float_data = &( md->rxn_double[md->i_rxn]);
-  int *int_data = &(md->rxn_int[md->i_rxn]);
+  double *rxn_float_data = &( md->rxn_double[dmdv->i_rxn]);
+  int *int_data = &(md->rxn_int[dmdv->i_rxn]);
   int rxn_type = int_data[0];
   int *rxn_int_data = (int *) &(int_data[1*md->n_rxn]);
 
 #else
 
-  double *rxn_float_data = (double *)&( md->rxn_double[md->rxn_float_indices[md->i_rxn]]);
-  int *int_data = (int *)&(md->rxn_int[md->rxn_int_indices[md->i_rxn]]);
+  double *rxn_float_data = (double *)&( md->rxn_double[md->rxn_float_indices[dmdv->i_rxn]]);
+  int *int_data = (int *)&(md->rxn_int[md->rxn_int_indices[dmdv->i_rxn]]);
 
-  //double *rxn_float_data = &( md->rxn_double[md->i_rxn]);
-  //int *int_data = &(md->rxn_int[md->i_rxn]);
+  //double *rxn_float_data = &( md->rxn_double[dmdv->i_rxn]);
+  //int *int_data = &(md->rxn_int[dmdv->i_rxn]);
 
 
   int rxn_type = int_data[0];
@@ -523,7 +523,7 @@ __device__ void solveRXN(
 
   //Get indices for rates
   double *rxn_env_data = &(md->rxn_env_data
-  [md->n_rxn_env_data*md->i_cell+md->rxn_env_data_idx[md->i_rxn]]);
+  [md->n_rxn_env_data*dmdv->i_cell+md->rxn_env_data_idx[dmdv->i_rxn]]);
 
 #ifdef DEBUG_DERIV_GPU
   if(tid==0){
@@ -595,7 +595,7 @@ __device__ void cudaDevicecalc_deriv(
         double time_step, int deriv_length_cell, int state_size_cell,
         int n_cells,
         int i_kernel, int threads_block, int n_shr_empty, double *y,
-        double *yout, ModelDataGPU *md
+        double *yout, ModelDataGPU *md, ModelDataVariable *dmdv
 ) //Interface CPU/GPU
 {
   int tid = blockIdx.x * blockDim.x + threadIdx.x;
@@ -624,14 +624,6 @@ __device__ void cudaDevicecalc_deriv(
 
 #endif
 
-#ifdef BASIC_CALC_DERIV
-    md->i_rxn=tid%n_rxn;
-    double *deriv_init = md->deriv_data;
-    md->deriv_data = &( md->deriv_init[deriv_length_cell*md->i_cell]);
-    if(tid < n_rxn*n_cells){
-        solveRXN(deriv_data, time_step, md);
-    }
-#else
     TimeDerivativeGPU deriv_data;
     deriv_data.num_spec = deriv_length_cell*n_cells;
 
@@ -644,7 +636,7 @@ __device__ void cudaDevicecalc_deriv(
 #endif
 
     int i_cell = tid/deriv_length_cell;
-    md->i_cell = i_cell;
+    dmdv->i_cell = i_cell;
     deriv_data.production_rates = &( md->production_rates[deriv_length_cell*i_cell]);
     deriv_data.loss_rates = &( md->loss_rates[deriv_length_cell*i_cell]);
 
@@ -657,17 +649,17 @@ __device__ void cudaDevicecalc_deriv(
       int n_iters = n_rxn / deriv_length_cell;
       //Repeat if there are more reactions than species
       for (int i = 0; i < n_iters; i++) {
-        md->i_rxn = tid_cell + i*deriv_length_cell;
+        dmdv->i_rxn = tid_cell + i*deriv_length_cell;
 
-        solveRXN(deriv_data, time_step, md);
+        solveRXN(deriv_data, time_step, md, dmdv);
       }
 
       //Limit tid to pending rxns to compute
       int residual=n_rxn-(deriv_length_cell*n_iters);
       if(tid_cell < residual){
-        md->i_rxn = tid_cell + deriv_length_cell*n_iters;
+        dmdv->i_rxn = tid_cell + deriv_length_cell*n_iters;
 
-        solveRXN(deriv_data, time_step, md);
+        solveRXN(deriv_data, time_step, md, dmdv);
       }
     }
     __syncthreads();
@@ -676,9 +668,6 @@ __device__ void cudaDevicecalc_deriv(
     deriv_data.loss_rates = md->loss_rates;
     __syncthreads();
     time_derivative_output_gpu(deriv_data, yout, md->J_tmp,0);
-#endif
-
-
 
   }
 
@@ -735,7 +724,7 @@ int cudaDevicef(
           //f_gpu
           time_step, deriv_length_cell, state_size_cell,
           n_cells, i_kernel, threads_block, n_shr_empty, y,
-          yout, md
+          yout, md, dmdv
   );
 
 #ifdef PMC_DEBUG_GPU
@@ -755,7 +744,7 @@ int cudaDevicef(
   __syncthreads();
 
 #ifndef DEV2_CUDACVODE
-  return 0; //fine with #ifndef DEV_CUDACVODE 100 cells
+  return 0; //fine with #ifdef DEV_CUDACVODE 100 cells
 #endif
 
 }
@@ -1112,7 +1101,7 @@ int CudaDeviceguess_helper(double t_n, double h_n, double* y_n,
 __device__ void solveRXNJac(
         JacobianGPU jac,
         double time_step,
-        ModelDataGPU *md
+        ModelDataGPU *md, ModelDataVariable *dmdv
 )
 {
 
@@ -1126,18 +1115,18 @@ __device__ void solveRXNJac(
 
 #ifdef REVERSE_INT_FLOAT_MATRIX
 
-  double *rxn_float_data = &( md->rxn_double[md->i_rxn]);
-  int *int_data = &(md->rxn_int[md->i_rxn]);
+  double *rxn_float_data = &( md->rxn_double[dmdv->i_rxn]);
+  int *int_data = &(md->rxn_int[dmdv->i_rxn]);
   int rxn_type = int_data[0];
   int *rxn_int_data = (int *) &(int_data[1*md->n_rxn]);
 
 #else
 
-  double *rxn_float_data = (double *)&( md->rxn_double[md->rxn_float_indices[md->i_rxn]]);
-  int *int_data = (int *)&(md->rxn_int[md->rxn_int_indices[md->i_rxn]]);
+  double *rxn_float_data = (double *)&( md->rxn_double[md->rxn_float_indices[dmdv->i_rxn]]);
+  int *int_data = (int *)&(md->rxn_int[md->rxn_int_indices[dmdv->i_rxn]]);
 
-  //double *rxn_float_data = &( md->rxn_double[md->i_rxn]);
-  //int *int_data = &(md->rxn_int[md->i_rxn]);
+  //double *rxn_float_data = &( md->rxn_double[dmdv->i_rxn]);
+  //int *int_data = &(md->rxn_int[dmdv->i_rxn]);
 
   int rxn_type = int_data[0];
   int *rxn_int_data = (int *) &(int_data[1]);
@@ -1146,7 +1135,7 @@ __device__ void solveRXNJac(
 
   //Get indices for rates
   double *rxn_env_data = &(md->rxn_env_data
-  [md->n_rxn_env_data*md->i_cell+md->rxn_env_data_idx[md->i_rxn]]);
+  [md->n_rxn_env_data*dmdv->i_cell+md->rxn_env_data_idx[dmdv->i_rxn]]);
 
 #ifdef DEBUG_solveRXNJac
   if(tid==0){
@@ -1232,7 +1221,7 @@ __device__ void cudaDevicecalc_Jac(
         double time_step, int deriv_length_cell, int state_size_cell,
         int n_cells, int i_kernel,
         int threads_block, int n_shr_empty, double *y,
-        ModelDataGPU *md
+        ModelDataGPU *md, ModelDataVariable *dmdv
 ) //Interface CPU/GPU
 {
   int tid = blockIdx.x * blockDim.x + threadIdx.x;
@@ -1292,7 +1281,7 @@ __device__ void cudaDevicecalc_Jac(
 #endif
 
     int i_cell = tid/deriv_length_cell;
-    md->i_cell = i_cell;
+    dmdv->i_cell = i_cell;
     //jacBlock.production_partials = &( jac->production_partials[jac.num_elem[0]*i_cell]);
     //jacBlock.loss_partials = &( jac->loss_partials[jac.num_elem[0]*i_cell]);
     jacBlock.production_partials = &( jac->production_partials[jacBlock.num_elem[0]*blockIdx.x]);
@@ -1314,7 +1303,7 @@ __device__ void cudaDevicecalc_Jac(
       int n_iters = n_aero_rep / deriv_length_cell;
       //Repeat if there are more reactions than species
       for (int i = 0; i < n_iters; i++) {
-        md->i_aero_rep = tid_cell + i*deriv_length_cell;
+        dmdv->i_aero_rep = tid_cell + i*deriv_length_cell;
 
         aero_rep_gpu_update_state(md);
       }
@@ -1322,7 +1311,7 @@ __device__ void cudaDevicecalc_Jac(
       //Limit tid to pending rxns to compute
       int residual=n_aero_rep-(deriv_length_cell*n_iters);
       if(tid_cell < residual){
-        md->i_aero_rep = tid_cell + deriv_length_cell*n_iters;
+        dmdv->i_aero_rep = tid_cell + deriv_length_cell*n_iters;
 
         aero_rep_gpu_update_state(md);
       }
@@ -1350,17 +1339,17 @@ __device__ void cudaDevicecalc_Jac(
       int n_iters = n_rxn / deriv_length_cell;
       //Repeat if there are more reactions than species
       for (int i = 0; i < n_iters; i++) {
-        md->i_rxn = tid_cell + i*deriv_length_cell;
+        dmdv->i_rxn = tid_cell + i*deriv_length_cell;
 
-        solveRXNJac(jacBlock, time_step, md);
+        solveRXNJac(jacBlock, time_step, md, dmdv);
       }
 
       //Limit tid to pending rxns to compute
       int residual=n_rxn-(deriv_length_cell*n_iters);
       if(tid_cell < residual){
-        md->i_rxn = tid_cell + deriv_length_cell*n_iters;
+        dmdv->i_rxn = tid_cell + deriv_length_cell*n_iters;
 
-        solveRXNJac(jacBlock, time_step, md);
+        solveRXNJac(jacBlock, time_step, md, dmdv);
       }
     }
     __syncthreads();
@@ -1532,7 +1521,7 @@ void cudaDeviceJac(
           //f_gpu
           time_step, deriv_length_cell, state_size_cell,
           n_cells, i_kernel, threads_block, n_shr_empty, y,
-          md
+          md, dmdv
   );
 
   //if(tid==0)printf("cudaDeviceJac0End\n");
@@ -3804,7 +3793,7 @@ void cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
   int counterBiConjGrad=0;
 
-#ifndef DEV_CUDACVODE
+#ifdef DEV_CUDACVODE
 
   ModelDataVariable *mdv = md->mdv;
 
@@ -3902,7 +3891,7 @@ void cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
 
     */
-    //wrong with #ifndef DEV_CUDACVODE!!
+    //wrong with #ifdef DEV_CUDACVODE!!
 
 
 
@@ -3914,7 +3903,7 @@ void cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
     dmdv->kflag=99;
      */
     //fine
-    //fine all, but sometimes differ a bit with #ifndef DEV_CUDACVODE!!
+    //fine all, but sometimes differ a bit with #ifdef DEV_CUDACVODE!!
 
 #endif
 
@@ -3951,7 +3940,7 @@ void cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
         md->yout[i] = md->dzn[i];
         if(i==0) printf("ewtsetOK istate %d\n",dmdv->istate);
         __syncthreads();
-#ifndef DEV_CUDACVODE
+#ifdef DEV_CUDACVODE
         break;
 #else
         return;
@@ -3969,7 +3958,7 @@ void cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
       md->yout[i] = md->dzn[i];
       if(i==0) printf("cv_mxstep istate %d\n",dmdv->istate);
       __syncthreads();
-#ifndef DEV_CUDACVODE
+#ifdef DEV_CUDACVODE
       break;
 #else
       return;
@@ -3994,7 +3983,7 @@ void cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
       if(i==0) printf("cv_tolsf istate %d\n",dmdv->istate);
       __syncthreads();
-#ifndef DEV_CUDACVODE
+#ifdef DEV_CUDACVODE
       break;
 #else
       return;
@@ -4025,7 +4014,7 @@ void cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
     dmdv->kflag = cudaDevicecvStep(md, dmdv);
 
     __syncthreads();
-#ifndef DEV_CUDACVODE
+#ifdef DEV_CUDACVODE
     dmdv->flag = 0;
     flag_shr[0] = 0;//99
 
@@ -4072,7 +4061,7 @@ void cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
       __syncthreads();
 
-#ifndef DEV_CUDACVODE
+#ifdef DEV_CUDACVODE
       break;
 #else
       return;
@@ -4099,7 +4088,7 @@ void cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
       __syncthreads();
 
-#ifndef DEV_CUDACVODE
+#ifdef DEV_CUDACVODE
       break;
 #else
       return;
@@ -4117,7 +4106,7 @@ void cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
         dmdv->istate = CV_TSTOP_RETURN;
         if(i==0) printf("cv_tstopset istate %d\n",dmdv->istate);
         __syncthreads();
-#ifndef DEV_CUDACVODE
+#ifdef DEV_CUDACVODE
         break;
 #else
         return;
@@ -4132,7 +4121,7 @@ void cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
     }
 
-#ifndef DEV_CUDACVODE
+#ifdef DEV_CUDACVODE
 
   }
 
@@ -4166,7 +4155,7 @@ void cudaGlobalCVode(ModelDataGPU md_object) {
   }
 
 
-#ifndef DEV_CUDACVODE
+#ifdef DEV_CUDACVODE
     __syncthreads();
     //dmdv->kflag = kflag2;
     dmdv->flag = dmdv->istate;
@@ -4180,7 +4169,7 @@ void cudaGlobalCVode(ModelDataGPU md_object) {
 
   *mdvo = *dmdv;
 
-#ifndef DEV_CUDACVODE
+#ifdef DEV_CUDACVODE
 #else
 
   ModelDataVariable *mdv = md->mdv;
@@ -5762,7 +5751,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
 
   int flag;
 
-#ifndef DEV_CUDACVODE
+#ifdef DEV_CUDACVODE
 
   //for(;;) {
 #else
@@ -5883,7 +5872,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
 
     HANDLE_ERROR(cudaMemcpy(sd->flagCells, mGPU->flagCells, mGPU->n_cells * sizeof(int), cudaMemcpyDeviceToHost));
     //flag = DO_ERROR_TEST;//CV_SUCCESS DO_ERROR_TEST
-#ifndef DEV_CUDACVODE
+#ifdef DEV_CUDACVODE
     flag = CV_SUCCESS;
 #else
     flag = CV_SUCCESS;
@@ -5896,7 +5885,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
         break;
       }
     }
-#ifndef DEV_CUDACVODE
+#ifdef DEV_CUDACVODE
     istate=flag;
 #else
     kflag=flag;
@@ -5939,7 +5928,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
 
       cv_mem->cv_next_h = sd->mdv.cv_next_h;
 
-#ifndef DEV_CUDACVODE
+#ifdef DEV_CUDACVODE
 #else
       break;
 #endif
@@ -5973,7 +5962,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
 
       */
 
-#ifndef DEV_CUDACVODE
+#ifdef DEV_CUDACVODE
 #else
       break;
 #endif
@@ -5998,7 +5987,7 @@ if (kflag != CV_SUCCESS){
         cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "CVode",
                        MSGCV_EWT_NOW_BAD, cv_mem->cv_tn);
       //Remove break after removing for(;;) in cpu
-#ifndef DEV_CUDACVODE
+#ifdef DEV_CUDACVODE
 #else
       break;
 #endif
@@ -6011,7 +6000,7 @@ if (kflag != CV_SUCCESS){
       istate = CV_TOO_MUCH_WORK;
       //cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
       //N_VScale(ONE, cv_mem->cv_zn[0], yout);
-#ifndef DEV_CUDACVODE
+#ifdef DEV_CUDACVODE
 #else
       break;
 #endif
@@ -6027,7 +6016,7 @@ if (kflag != CV_SUCCESS){
       //cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
       //N_VScale(ONE, cv_mem->cv_zn[0], yout);
       //cv_mem->cv_tolsf *= TWO;
-#ifndef DEV_CUDACVODE
+#ifdef DEV_CUDACVODE
 #else
       break;
 #endif
@@ -6053,7 +6042,7 @@ if (kflag != CV_SUCCESS){
         //cv_mem->cv_tretlast = *tret = cv_mem->cv_tstop;
         //cv_mem->cv_tstopset = SUNFALSE;
         istate = CV_TSTOP_RETURN;
-#ifndef DEV_CUDACVODE
+#ifdef DEV_CUDACVODE
 #else
         break;
 #endif
@@ -6061,7 +6050,7 @@ if (kflag != CV_SUCCESS){
     }
 */
 
-#ifndef DEV_CUDACVODE
+#ifdef DEV_CUDACVODE
 #else
 
   } /* end looping for internal steps */

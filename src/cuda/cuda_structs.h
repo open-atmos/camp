@@ -121,6 +121,9 @@ typedef struct {
     int eflag;
 
 
+    int i_cell;
+    int i_rxn;
+    int i_aero_rep;
     double init_time_step;
     int cv_mxstep; //long
     int cv_next_q;
@@ -272,7 +275,7 @@ typedef struct {
     double *cv_Vabstol;
 
     //Allocated in GPU only
-    int i_cell;
+    int i_cell; //todo remove
     int i_rxn;
     int i_aero_rep;
 
