@@ -592,12 +592,6 @@ __device__ void solveRXN(
 }
 
 __device__ void cudaDevicecalc_deriv(
-#ifdef PMC_DEBUG_GPU
-        int counterDeriv2,
-#endif
-        //check_model_state
-        //double threshhold, double replacement_value, int *flag,
-        //f_gpu
         double time_step, int deriv_length_cell, int state_size_cell,
         int n_cells,
         int i_kernel, int threads_block, int n_shr_empty, double *y,
@@ -738,9 +732,6 @@ int cudaDevicef(
 
 
   cudaDevicecalc_deriv(
-#ifdef PMC_DEBUG_GPU
-          dmdv->counterDerivGPU,
-#endif
           //f_gpu
           time_step, deriv_length_cell, state_size_cell,
           n_cells, i_kernel, threads_block, n_shr_empty, y,
@@ -773,9 +764,6 @@ __device__
 int CudaDeviceguess_helper(double t_n, double h_n, double* y_n,
                            double* y_n1, double* hf, double* tmp1,
                            double* corr, double cv_reltol, int nrows,
-#ifdef PMC_DEBUG_GPU
-        int counterDerivGPU,
-#endif
         //check_model_state
                            double threshhold, double replacement_value, int *flag,
         //f_gpu
@@ -1238,9 +1226,6 @@ __device__ void solveRXNJac(
 }
 
 __device__ void cudaDevicecalc_Jac(
-#ifdef PMC_DEBUG_GPU
-        int counterDeriv2,
-#endif
         //check_model_state
         //double threshhold, double replacement_value, int *flag,
         //f_gpu
@@ -1273,7 +1258,7 @@ __device__ void cudaDevicecalc_Jac(
 
     //Debug
     /*
-    if(counterDeriv2<=1){
+    if(i==0){
       printf("(%d) y %-le J_state %-le J_solver %-le J_tmp %-le J_tmp2 %-le J_deriv %-le\n",tid+1,
              y[tid], md->J_state[tid], md->J_solver[tid], md->J_tmp[tid], md->J_tmp2[tid], md->J_deriv[tid]);
       //printf("gpu threads %d\n", active_threads);
@@ -1498,9 +1483,6 @@ __device__ void cudaDevicecalc_Jac(
 
 __device__
 void cudaDeviceJac(
-#ifdef PMC_DEBUG_GPU
-        int counterDeriv2,
-#endif
         //check_model_state
         double threshhold, double replacement_value, int *flag,
         //f_gpu
@@ -1546,9 +1528,6 @@ void cudaDeviceJac(
   //if(tid==0)printf("cudaDeviceJac01\n");
 
   cudaDevicecalc_Jac(
-#ifdef PMC_DEBUG_GPU
-          counterDeriv2,
-#endif
           //check_model_state          md->map_state_deriv, threshhold, replacement_value, flag,
           //f_gpu
           time_step, deriv_length_cell, state_size_cell,
@@ -1617,13 +1596,8 @@ void cudaDevicelinsolsetup(
         //cudacvNewtonIteration
         double *cv_acor, double *dzn, int *cv_jcur,
         double *dewt, double *dcv_tq,
-        //int *cv_nfe, int *cv_nsetups,
         int convfail,
         int *disavedJ, int *djsavedJ, double *dsavedJ
-#ifdef PMC_DEBUG_GPU
-,int *it_pointer, double *dtBCG, double *dtPreBCG, double *dtPostBCG,
-        int counterDerivGPU
-#endif
 ) {
 
   extern __shared__ int flag_shr[];
@@ -1681,9 +1655,6 @@ void cudaDevicelinsolsetup(
   __syncthreads();
 
     cudaDeviceJac(
-#ifdef PMC_DEBUG_GPU
-            counterDerivGPU,
-#endif
             //check_model_state
             threshhold, replacement_value, flag,
             //f_gpu
@@ -1748,9 +1719,7 @@ void solveBcgCudaDeviceCVODE(
         ,int n_cells, double tolmax, double *ddiag //Init variables
         ,double *dr0, double *dr0h, double *dn0, double *dp0
         ,double *dt, double *ds, double *dAx2, double *dy, double *dz// Auxiliary vectors
-#ifdef PMC_DEBUG_GPU
-        ,int *it_pointer
-#endif
+        ,ModelDataGPU *md, ModelDataVariable *dmdv
 )
 {
   int i = blockIdx.x * blockDim.x + threadIdx.x;
@@ -1800,7 +1769,6 @@ void solveBcgCudaDeviceCVODE(
     cudaDeviceyequalsx(dr0h,dr0,nrows);
 
 #ifdef PMC_DEBUG_GPU
-    //int it=*it_pointer;
     int it=0;
 #else
     int it=0;
@@ -1981,15 +1949,17 @@ void solveBcgCudaDeviceCVODE(
 
 #ifdef PMC_DEBUG_GPU
 
-    #ifdef solveBcgCuda_sum_it
+#ifdef solveBcgCuda_sum_it
 
   //printf("it %d %d\n",i,it);
-  if(tid==0)
-    it_pointer[blockIdx.x]=it;
+  //if(tid==0)
+  //  it_pointer[blockIdx.x]=it;
+  dmdv->counterBCGInternal[blockIdx.x]=it;
 
 #else
 
-  *it_pointer = it;
+  //*it_pointer = it;
+  dmdv->counterBCGInternal += it;
 
 #endif
 
@@ -2392,10 +2362,6 @@ void cudaDevicecvNewtonIteration(
         //cudacvNewtonIteration
         double *cv_acor, double *dzn, int *cv_jcur,
         double *dewt, double *dcv_tq//, int *cv_nfe
-#ifdef PMC_DEBUG_GPU
-,int *it_pointer, double *dtBCG, double *dtPreBCG, double *dtPostBCG,
-        int counterDerivGPU
-#endif
 )
 {
   extern __shared__ int flag_shr[];
@@ -2441,11 +2407,11 @@ void cudaDevicecvNewtonIteration(
 
 #ifdef cudaGlobalCVode_timers_max_blocks
 
-    dtPreBCG[i] += ((double)(int)(clock() - start))/(clock_khz*1000);
+    dmdv->dtPreBCG[i] += ((double)(int)(clock() - start))/(clock_khz*1000);
 
 #else
 
-     if(i==0) *dtPreBCG += ((double)(int)(clock() - start))/(clock_khz*1000);
+     if(i==0) dmdv->dtPreBCG += ((double)(int)(clock() - start))/(clock_khz*1000);
 
 #endif
 
@@ -2456,21 +2422,18 @@ void cudaDevicecvNewtonIteration(
     solveBcgCudaDeviceCVODE( //Works with Multi-cells
             //solveBcgCudaDevice(//Fails with Multi-cells for some reason
             dA, djA, diA, dx, dtempv, nrows, blocks, n_shr_empty, maxIt, mattype, n_cells,
-            tolmax, ddiag, dr0, dr0h, dn0, dp0, dt, ds, dAx2, dy, dz
-#ifdef PMC_DEBUG_GPU
-            ,it_pointer
-#endif
+            tolmax, ddiag, dr0, dr0h, dn0, dp0, dt, ds, dAx2, dy, dz, md, dmdv
     );
 
 #ifdef PMC_DEBUG_GPU
 
 #ifdef cudaGlobalCVode_timers_max_blocks
 
-    dtBCG[i] += ((double)(int)(clock() - startBCG))/(clock_khz*1000);
+    dmdv->dtBCG[i] += ((double)(int)(clock() - startBCG))/(clock_khz*1000);
 
 #else
 
-    if(i==0) *dtBCG += ((double)(int)(clock() - start))/(clock_khz*1000);
+    if(i==0) dmdv->dtBCG += ((double)(int)(clock() - start))/(clock_khz*1000);
 
 #endif
 
@@ -2500,9 +2463,6 @@ void cudaDevicecvNewtonIteration(
     int guessflag=CudaDeviceguess_helper(t_n, 0., dftemp,
                            dcv_y, dtempv, tmp1,
                            corr, cv_reltol, nrows,
-#ifdef PMC_DEBUG_GPU
-            counterDerivGPU,
-#endif
             //check_model_state
                            threshhold, replacement_value, flag,//todo use local flag
             //f_gpu
@@ -2604,11 +2564,11 @@ void cudaDevicecvNewtonIteration(
 #ifdef cudaGlobalCVode_timers_max_blocks
 
     __syncthreads();
-    dtPostBCG[i] += ((double)(clock() - start))/(clock_khz*1000);
+    dmdv->dtPostBCG[i] += ((double)(clock() - start))/(clock_khz*1000);
 
 #else
 
-    if(i==0) *dtPostBCG += ((double)(clock() - start))/(clock_khz*1000);
+    if(i==0) dmdv->dtPostBCG += ((double)(clock() - start))/(clock_khz*1000);
 
 #endif
 
@@ -2673,11 +2633,10 @@ int cudaDevicecvNlsNewton(
         //cudacvNewtonIteration
         double *cv_acor, double *dzn,
         double *dewt, double *dcv_tq,
-        //int *cv_nfe, int *cv_nsetups,
         int *disavedJ, int *djsavedJ, double *dsavedJ
 #ifdef PMC_DEBUG_GPU
-,int *it_pointer, double *dtBCG, double *dtPreBCG, double *dtPostBCG,
-        int counterDerivGPU
+//,int *it_pointer, double *dtBCG, double *dtPreBCG,
+ //     double *dtPostBCG,  int counterDerivGPU
 #endif
 ) {
   extern __shared__ int flag_shr[];
@@ -2718,9 +2677,6 @@ int cudaDevicecvNlsNewton(
   int guessflag=CudaDeviceguess_helper(t_n, h_n, dzn,
                                        md->cv_last_yn, dftemp, dtempv,
                                        md->cv_acor_init, cv_reltol, nrows,
-#ifdef PMC_DEBUG_GPU
-          counterDerivGPU,
-#endif
           //check_model_state
                          threshhold, replacement_value, &flagDevice,
           //f_gpu
@@ -2836,13 +2792,8 @@ int cudaDevicecvNlsNewton(
               //cudacvNewtonIteration
               cv_acor, dzn, &dmdv->cv_jcur,
               dewt, dcv_tq,
-              //cv_nfe, cv_nsetups,
               convfail,
               disavedJ, djsavedJ, dsavedJ
-#ifdef PMC_DEBUG_GPU
-      ,it_pointer, dtBCG, dtPreBCG, dtPostBCG,
-          counterDerivGPU
-#endif
       );
       __syncthreads();
 
@@ -2907,11 +2858,6 @@ int cudaDevicecvNlsNewton(
             //cudacvNewtonIteration
             cv_acor, dzn, &dmdv->cv_jcur,
             dewt, dcv_tq
-            //, cv_nfe
-#ifdef PMC_DEBUG_GPU
-    ,it_pointer, dtBCG, dtPreBCG, dtPostBCG,
-      counterDerivGPU
-#endif
     );
 
 #ifdef PMC_DEBUG_GPU
@@ -3641,14 +3587,13 @@ int cudaDevicecvStep(ModelDataGPU *md, ModelDataVariable *dmdv) {
             md->i_kernel, md->threads_block, md, dmdv,
             //cudacvNewtonIteration
             md->cv_acor, md->dzn, md->dewt, md->cv_tq,
-            //&dmdv->cv_nfe, &dmdv->cv_nsetups,
             md->disavedJ, md->djsavedJ, md->dsavedJ
-#ifdef PMC_DEBUG_GPU
-    ,&dmdv->counterBCGInternal,
-      &dmdv->dtBCG, &dmdv->dtPreBCG,
-      &dmdv->dtPostBCG,
-          dmdv->counterDerivGPU
-#endif
+//#ifdef PMC_DEBUG_GPU
+//    ,&dmdv->counterBCGInternal,
+//      &dmdv->dtBCG, &dmdv->dtPreBCG,
+//      &dmdv->dtPostBCG,
+//          dmdv->counterDerivGPU
+//#endif
     );
 
 
@@ -3869,9 +3814,9 @@ void cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
   int counterBiConjGrad=0;
 
-  ModelDataVariable *mdv = md->mdv;
-
 #ifdef DEV_CUDACVODE
+
+  ModelDataVariable *mdv = md->mdv;
 
   for(;;) {
 
@@ -4286,12 +4231,7 @@ void CudaGlobalguess_helper(
         //cudacvNewtonIteration
         double *cv_acor, double *dzn,
         double *dewt, double *dcv_tq,
-        //int *cv_nfe, int *cv_nsetups,
         int *disavedJ, int *djsavedJ, double *dsavedJ
-#ifdef PMC_DEBUG_GPU
-,int *it_pointer, double *dtBCG, double *dtPreBCG, double *dtPostBCG,
-        int counterDerivGPU
-#endif
 ) {
 
   ModelDataGPU *md = &md_object;
@@ -4319,9 +4259,6 @@ void CudaGlobalguess_helper(
   int guessflag=CudaDeviceguess_helper(t_n, h_n, dzn,
                            md->cv_last_yn, dftemp, dtempv,
                            md->cv_acor_init, cv_reltol, nrows,
-#ifdef PMC_DEBUG_GPU
-          counterDerivGPU,
-#endif
           //check_model_state
                            threshhold, replacement_value, &flag,
 //f_gpu
@@ -8442,7 +8379,6 @@ int cvNlsNewton_gpu2(SolverData *sd, CVodeMem cv_mem, int nflag)
 #endif
 
     /*if(sd->counterDerivCPU<=5){
-      printf("counterDeriv2 %d \n", sd->counterDerivCPU);
       for (int i = 0; i < NV_LENGTH_S(cv_mem->cv_y); i++) {
         //printf("(%d) %-le ", i + 1, NV_DATA_S(deriv)[i]);
         if(cv_y[i]!=md->deriv_aux[i]) {
@@ -9057,7 +8993,6 @@ int cvNewtonIteration_gpu2(SolverData *sd, CVodeMem cv_mem)
 
     /*
     if(sd->counterDerivCPU<=5){
-      printf("counterDeriv2 %d \n", sd->counterDerivCPU);
       for (int i = 0; i < NV_LENGTH_S(cv_mem->cv_y); i++) {
         //printf("(%d) %-le ", i + 1, NV_DATA_S(deriv)[i]);
         if(cv_y[i]!=md->deriv_aux[i]) {
