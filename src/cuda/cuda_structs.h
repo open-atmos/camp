@@ -120,10 +120,11 @@ typedef struct {
     int kflag;
     int eflag;
 
-
+    //f & jac
     int i_cell;
     int i_rxn;
     int i_aero_rep;
+
     double init_time_step;
     int cv_mxstep; //long
     int cv_next_q;
@@ -335,7 +336,7 @@ typedef struct {
     int *flagCells;
 
     //f_gpu
-    double time_step;
+    double time_step;//remove
     int deriv_length_cell;
     int state_size_cell;
     int i_kernel;
@@ -344,6 +345,12 @@ typedef struct {
     //cudacvNewtonIteration
     double* cv_acor;
     double* dzn;
+    double* dzn0;
+    double* dzn1;
+    double* dzn2;
+    double* dzn3;
+    double* dzn4;
+    double* dzn5;
     double* dewt;
     int *cv_nsetups;
     int *nstlj;
