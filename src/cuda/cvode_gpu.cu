@@ -4008,10 +4008,8 @@ void cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
     dmdv->cv_crate = mdv->cv_crate;
     //fine (same error than setting nothing)
 
-    //dmdv->cv_gammap = mdv->cv_gammap;//illegal access 100 cells always (with 2 cells sometimes)
-
-    //dmdv->cv_qwait = mdv->cv_qwait;// failed error -22
-
+    dmdv->cv_gammap = mdv->cv_gammap;//crash 2 cells but fine 100 cells most of the time (5/6)
+    dmdv->cv_qwait = mdv->cv_qwait;// failed error -22 (or different error)
 
     //sometimes same error sometimes crash 100 cells
     dmdv->cv_rl1 = mdv->cv_rl1;
@@ -4020,36 +4018,28 @@ void cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
     dmdv->cv_qprime = mdv->cv_qprime;
     dmdv->cv_h = mdv->cv_h;
     //sometimes same error sometimes crash 100 cells
+    dmdv->cv_hscale = mdv->cv_hscale;
+    dmdv->cv_nscon = mdv->cv_nscon;
+    dmdv->cv_hprime = mdv->cv_hprime;
+    dmdv->cv_hmin = mdv->cv_hmin;
+    //sometimes same error sometimes crash 100 cells (Crashing more times seems)
+
+    dmdv->cv_tn = mdv->cv_tn;
+    dmdv->cv_etamax = mdv->cv_etamax;
+    dmdv->cv_maxncf = mdv->cv_maxncf;
+    //sometimes same error sometimes crash 100 cells (Fine more times seems)
 
     /*
 
 
 
-    dmdv->cv_tstop = mdv->cv_tstop;
-    dmdv->cv_tstopset = mdv->cv_tstopset;
-    dmdv->cv_nlscoef = mdv->cv_nlscoef;
-    dmdv->cv_qwait = mdv->cv_qwait;
-    dmdv->cv_crate = mdv->cv_crate;
 
-    dmdv->cv_rl1 = mdv->cv_rl1;
-    dmdv->cv_eta = mdv->cv_eta;
-    dmdv->cv_q = mdv->cv_q;
-    dmdv->cv_qprime = mdv->cv_qprime;
-    dmdv->cv_h = mdv->cv_h;
+    //dmdv->cv_next_h = mdv->cv_next_h;//needed?
 
-    dmdv->cv_next_h = mdv->cv_next_h;//needed?
-    dmdv->cv_hscale = mdv->cv_hscale;
-    dmdv->cv_nscon = mdv->cv_nscon;
-    dmdv->cv_hprime = mdv->cv_hprime;
-    dmdv->cv_hmin = mdv->cv_hmin;
     //seems nan sometimes and also crash wtf
 
 
      //differs a bit but working
-
-    dmdv->cv_tn = mdv->cv_tn;
-    dmdv->cv_etamax = mdv->cv_etamax;
-    dmdv->cv_maxncf = mdv->cv_maxncf;
 
 
     */
