@@ -2681,7 +2681,7 @@ int cudaDevicecvNlsNewton(
   if(guessflag<0){
   //if(*flag<0){
     *flag=RHSFUNC_RECVR;
-    //if(i==0)printf("CudaDeviceguess_helper guessflag RHSFUNC_RECVR\n");
+    if(threadIdx.x==0)printf("CudaDeviceguess_helper guessflag RHSFUNC_RECVR block %d\n", blockIdx.x);
     return RHSFUNC_RECVR;
   }
 
@@ -2873,6 +2873,7 @@ int cudaDevicecvNlsNewton(
 
   }//for(;;)
 
+  if(threadIdx.x==0)printf("cudaDevicecvNlsNewton flag_shr[0] %d block %d\n",flag_shr[0], blockIdx.x);
   __syncthreads();
   *flag = flag_shr[0];
   return *flag;
@@ -3120,9 +3121,9 @@ void cudaDevicecvSet(ModelDataGPU *md, ModelDataVariable *dmdv) {
   dmdv->cv_rl1 = 1.0 / md->cv_l[1];
   dmdv->cv_gamma = dmdv->cv_h * dmdv->cv_rl1;
   __syncthreads();
-  //if(threadIdx.x == 0)printf("cudaDevicecvSet3 dmdv->cv_nst %d block %d\n", dmdv->cv_nst, blockIdx.x);
   __syncthreads();
   if (dmdv->cv_nst == 0) dmdv->cv_gammap = dmdv->cv_gamma;
+  if(threadIdx.x == 0)printf("cudaDevicecvSet3 dmdv->cv_nst %d dmdv->cv_gammap %le block %d\n", dmdv->cv_nst, dmdv->cv_gammap, blockIdx.x);
   __syncthreads();
   dmdv->cv_gamrat = (dmdv->cv_nst > 0) ?
                     dmdv->cv_gamma / dmdv->cv_gammap : 1.;  // protect x / x != 1.0
@@ -3318,7 +3319,7 @@ int cudaDevicecvDoErrorTest(ModelDataGPU *md, ModelDataVariable *dmdv,
   dmdv->cv_h *= dmdv->cv_eta;
   dmdv->cv_next_h = dmdv->cv_h;
   dmdv->cv_hscale = dmdv->cv_h;
-  dmdv->cv_qwait = LONG_WAIT;
+  dmdv->cv_qwait = 10;
   dmdv->cv_nscon = 0;
 
 
@@ -3745,13 +3746,13 @@ int cudaDevicecvStep(ModelDataGPU *md, ModelDataVariable *dmdv) {
     // Go back in loop if we need to predict again (nflag=PREV_CONV_FAIL)
 
     if (kflag == PREDICT_AGAIN) {
-      //if (tid == 0)printf("DEV_CUDACVSTEP kflag PREDICT_AGAIN block %d\n", blockIdx.x);
+      if (threadIdx.x == 0)printf("DEV_CUDACVSTEP kflag PREDICT_AGAIN block %d\n", blockIdx.x);
       continue;
     }
 
     // Return if nonlinear solve failed and recovery not possible.
     if (kflag != DO_ERROR_TEST) {
-      //if(tid==0)printf("DEV_CUDACVSTEP kflag!=DO_ERROR_TEST block %d\n", blockIdx.x);
+      if(threadIdx.x==0)printf("DEV_CUDACVSTEP kflag!=DO_ERROR_TEST block %d\n", blockIdx.x);
       return (kflag);
     }
 
@@ -3766,13 +3767,13 @@ int cudaDevicecvStep(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
     // Go back in loop if we need to predict again (nflag=PREV_ERR_FAIL)
     if (eflag == TRY_AGAIN){
-      //if (tid == 0)printf("DEV_CUDACVSTEP eflag TRY_AGAIN block %d\n", blockIdx.x);
+      if (threadIdx.x == 0)printf("DEV_CUDACVSTEP eflag TRY_AGAIN block %d\n", blockIdx.x);
       continue;
     }
 
     // Return if error test failed and recovery not possible.
     if (eflag != CV_SUCCESS){
-      //if (tid == 0)printf("DEV_CUDACVSTEP eflag!=CV_SUCCESS block %d\n", blockIdx.x);
+      if (threadIdx.x == 0)printf("DEV_CUDACVSTEP eflag!=CV_SUCCESS block %d\n", blockIdx.x);
       return (eflag);
     }
 
@@ -3962,8 +3963,6 @@ void cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
      */
 
 
-
-
     dmdv->cv_taskc = mdv->cv_taskc;
     dmdv->cv_uround = mdv->cv_uround;
     dmdv->cv_nrtfn = mdv->cv_nrtfn;
@@ -4000,17 +3999,29 @@ void cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
     dmdv->cv_netf = (int) mdv->cv_netf;
     dmdv->cv_acnrm = mdv->cv_acnrm;
     dmdv->cv_nst = mdv->cv_nst;
-
     dmdv->cv_gamrat = mdv->cv_gamrat;
+    dmdv->cv_gamma = mdv->cv_gamma;
+    dmdv->cv_tstop = mdv->cv_tstop;
+    dmdv->cv_tstopset = mdv->cv_tstopset;
+    dmdv->cv_nlscoef = mdv->cv_nlscoef;
+
+    dmdv->cv_crate = mdv->cv_crate;
     //fine (same error than setting nothing)
 
+    //dmdv->cv_gammap = mdv->cv_gammap;//illegal access 100 cells always (with 2 cells sometimes)
 
-    dmdv->cv_gammap = mdv->cv_gammap;//illegal access sometimes (1/2 times)
-    //dmdv->cv_gamma = mdv->cv_gamma;
+    //dmdv->cv_qwait = mdv->cv_qwait;// failed error -22
 
+
+    //sometimes same error sometimes crash 100 cells
+    dmdv->cv_rl1 = mdv->cv_rl1;
+    dmdv->cv_eta = mdv->cv_eta;
+    dmdv->cv_q = mdv->cv_q;
+    dmdv->cv_qprime = mdv->cv_qprime;
+    dmdv->cv_h = mdv->cv_h;
+    //sometimes same error sometimes crash 100 cells
 
     /*
-
 
 
 
@@ -4020,13 +4031,11 @@ void cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
     dmdv->cv_qwait = mdv->cv_qwait;
     dmdv->cv_crate = mdv->cv_crate;
 
-
     dmdv->cv_rl1 = mdv->cv_rl1;
     dmdv->cv_eta = mdv->cv_eta;
     dmdv->cv_q = mdv->cv_q;
     dmdv->cv_qprime = mdv->cv_qprime;
     dmdv->cv_h = mdv->cv_h;
-
 
     dmdv->cv_next_h = mdv->cv_next_h;//needed?
     dmdv->cv_hscale = mdv->cv_hscale;
