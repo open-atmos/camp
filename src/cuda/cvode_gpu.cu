@@ -2703,7 +2703,7 @@ int cudaDevicecvNlsNewton(
   if(guessflag<0){
   //if(*flag<0){
     *flag=RHSFUNC_RECVR;
-    dmdv->nflag=RHSFUNC_RECVR;
+    //dmdv->nflag=RHSFUNC_RECVR;
     if(threadIdx.x==0)printf("CudaDeviceguess_helper guessflag RHSFUNC_RECVR block %d\n", blockIdx.x);
     return RHSFUNC_RECVR;
   }
@@ -2751,12 +2751,12 @@ int cudaDevicecvNlsNewton(
 
     if (*flag < 0) {
       flag_shr[0] = CV_RHSFUNC_FAIL;
-      dmdv->nflag=CV_RHSFUNC_FAIL;
+      //dmdv->nflag=CV_RHSFUNC_FAIL;
       break;
     }
     if (*flag > 0) {
       flag_shr[0] = RHSFUNC_RECVR;
-      dmdv->nflag=RHSFUNC_RECVR;
+      //dmdv->nflag=RHSFUNC_RECVR;
       break;
     }
 
@@ -2825,12 +2825,12 @@ int cudaDevicecvNlsNewton(
       // Return if lsetup failed
       if (*flag < 0) {
         flag_shr[0] = CV_LSETUP_FAIL;
-        dmdv->nflag=CV_LSETUP_FAIL;
+        //dmdv->nflag=CV_LSETUP_FAIL;
         break;
       }
       if (*flag > 0) {
         flag_shr[0] = CONV_FAIL;
-        dmdv->nflag=CONV_FAIL;
+        //dmdv->nflag=CONV_FAIL;
         break;
       }
 
@@ -2884,7 +2884,7 @@ int cudaDevicecvNlsNewton(
     __syncthreads();
     if (*flag != TRY_AGAIN) {
       flag_shr[0] = *flag;
-      dmdv->nflag=*flag;
+      //dmdv->nflag=*flag;
 #ifdef DEBUG_FLAG_GPU_ODE_SOLVER_NOT_TRY_AGAIN
       if(i==0)printf("cudaGlobalCVodecudaDevicecvNewtonIteration !TRY_AGAIN\n");
 #endif
@@ -2904,8 +2904,8 @@ int cudaDevicecvNlsNewton(
   if(threadIdx.x==0)printf("cudaDevicecvNlsNewton2 flag_shr[0] %d block %d\n",flag_shr[0], blockIdx.x);
   __syncthreads();
   *flag = flag_shr[0];
-  //return *flag;
-  return dmdv->nflag;
+  return *flag;
+  //return dmdv->nflag;
 
 }
 
@@ -4475,22 +4475,15 @@ int cudaDevicecvStep(ModelDataGPU *md, ModelDataVariable *dmdv) {
 #endif
 
     __syncthreads();
-#ifndef DEV_CUDACVODE
-    dmdv->nflag = nflag;//error differs?
-    //dmdv->nflag = dmdv->flag;
-#else
-
-    //dmdv->nflag = dmdv->flag; //use nflag instead of flag cause problem, WHY?
     dmdv->nflag = nflag;//fine
-#endif
     __syncthreads();
 
     if(threadIdx.x==0)printf("DEV_CUDACVSTEP nflag %d dmdv->flag %d block %d\n",nflag, dmdv->nflag, blockIdx.x);
 
-    int kflag = cudaDevicecvHandleNFlag(md, dmdv, &nflag, dmdv->saved_t, &dmdv->ncf);
+    int kflag = cudaDevicecvHandleNFlag(md, dmdv, &dmdv->nflag, dmdv->saved_t, &dmdv->ncf);
 
     __syncthreads();
-    dmdv->nflag = nflag;//fine
+    //dmdv->nflag = nflag;//fine
     __syncthreads();
     if(threadIdx.x==0)printf("DEV_CUDACVSTEP kflag %d block %d\n",kflag, blockIdx.x);
 
@@ -4509,10 +4502,10 @@ int cudaDevicecvStep(ModelDataGPU *md, ModelDataVariable *dmdv) {
     }
 
     __syncthreads();
-    int eflag=cudaDevicecvDoErrorTest(md,dmdv,&nflag,dmdv->saved_t,&dmdv->nef,&dmdv->dsm);
+    int eflag=cudaDevicecvDoErrorTest(md,dmdv,&dmdv->nflag,dmdv->saved_t,&dmdv->nef,&dmdv->dsm);
     __syncthreads();
     dmdv->eflag = eflag;
-    dmdv->nflag = nflag;//fine
+    //dmdv->nflag = nflag;//fine
     __syncthreads();
 
     if(threadIdx.x==0)printf("DEV_CUDACVSTEP nflag %d block %d\n",nflag, blockIdx.x);    //if(i==0)printf("eflag %d\n", eflag);
@@ -4765,7 +4758,7 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
   int kflag2;
   int istate=99;
 
-#ifndef DEV_CUDACVODE
+#ifdef DEV_CUDACVODE
 
   int aux=i+1;
   ModelDataVariable *mdv = md->mdv;
@@ -4860,7 +4853,7 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
     //dmdv->cv_next_h = mdv->cv_next_h;//needed?
 
     */
-    //wrong with #ifndef DEV_CUDACVODE!!
+    //wrong with #ifdef DEV_CUDACVODE!!
 
 #else
     /*
@@ -4906,7 +4899,7 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
 #endif
         if(i==0) printf("ewtsetOK istate %d\n",dmdv->istate);
 
-#ifndef DEV_CUDACVODE
+#ifdef DEV_CUDACVODE
         istate = CV_ILL_INPUT;
         break;
 #else
@@ -4928,7 +4921,7 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
       md->yout[i] = md->dzn[i];
 #endif
       if(i==0) printf("cv_mxstep istate %d\n",dmdv->istate);
-#ifndef DEV_CUDACVODE
+#ifdef DEV_CUDACVODE
       istate = CV_TOO_MUCH_WORK;
       break;
 #else
@@ -4963,7 +4956,7 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
       if(i==0) printf("cv_tolsf istate %d\n",dmdv->istate);
       __syncthreads();
-#ifndef DEV_CUDACVODE
+#ifdef DEV_CUDACVODE
       istate = CV_TOO_MUCH_ACC;
       break;
 #else
@@ -4988,7 +4981,7 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
     }
 #endif
 
-#ifndef DEV_CUDACVODE
+#ifdef DEV_CUDACVODE
     //dmdv->flag = 0;
 #endif
 
@@ -5046,7 +5039,7 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
       //if(i==0)printf("cudaDeviceCVode2 dmdv->kflag %d\n",dmdv->kflag);
 
-#ifndef DEV_CUDACVODE
+#ifdef DEV_CUDACVODE
       istate = kflag2;
       break;
 #else
@@ -5072,7 +5065,7 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
       if(i==0) printf("dmdv->cv_tn - dmdv->tout) istate %d\n",dmdv->istate);
 
-#ifndef DEV_CUDACVODE
+#ifdef DEV_CUDACVODE
       istate = CV_SUCCESS;
       break;
 #else
@@ -5090,7 +5083,7 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
         dmdv->istate = CV_TSTOP_RETURN;
         if(i==0) printf("cv_tstopset istate %d\n",dmdv->istate);
         __syncthreads();
-#ifndef DEV_CUDACVODE
+#ifdef DEV_CUDACVODE
         istate = CV_TSTOP_RETURN;
         break;
 #else
@@ -5104,7 +5097,7 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
       }
     }
 
-#ifndef DEV_CUDACVODE
+#ifdef DEV_CUDACVODE
   }
 #else
 #endif
@@ -5140,7 +5133,7 @@ void cudaGlobalCVode(ModelDataGPU md_object) {
 
   dmdv->istate=istate2;
 
-#ifndef DEV_CUDACVODE
+#ifdef DEV_CUDACVODE
     __syncthreads();
     //dmdv->kflag = kflag2;
     //dmdv->flag = dmdv->istate;
@@ -6752,7 +6745,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
 
   cudaMemcpy(mGPU->mdv, &sd->mdv, sizeof(ModelDataVariable), cudaMemcpyHostToDevice);
 
-#ifndef DEV_CUDACVODE
+#ifdef DEV_CUDACVODE
 
   //for(;;) {
 #else
@@ -7052,7 +7045,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
         break;
       }
     }
-#ifndef DEV_CUDACVODE
+#ifdef DEV_CUDACVODE
     istate=flag;
 #else
     kflag=flag;
@@ -7090,7 +7083,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
 
       cv_mem->cv_next_h = sd->mdv.cv_next_h;
 
-#ifndef DEV_CUDACVODE
+#ifdef DEV_CUDACVODE
 #else
       break;
 #endif
@@ -7124,13 +7117,13 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
 
       */
 
-#ifndef DEV_CUDACVODE
+#ifdef DEV_CUDACVODE
 #else
       break;
 #endif
     }else{
 
-#ifndef DEV_CUDACVODE
+#ifdef DEV_CUDACVODE
 
       printf("istate!=CV_SUCCESS %d\n",istate);
 
@@ -7157,7 +7150,7 @@ if (kflag != CV_SUCCESS){
         cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "CVode",
                        MSGCV_EWT_NOW_BAD, cv_mem->cv_tn);
       //Remove break after removing for(;;) in cpu
-#ifndef DEV_CUDACVODE
+#ifdef DEV_CUDACVODE
 #else
       break;
 #endif
@@ -7170,7 +7163,7 @@ if (kflag != CV_SUCCESS){
       istate = CV_TOO_MUCH_WORK;
       //cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
       //N_VScale(ONE, cv_mem->cv_zn[0], yout);
-#ifndef DEV_CUDACVODE
+#ifdef DEV_CUDACVODE
 #else
       break;
 #endif
@@ -7186,7 +7179,7 @@ if (kflag != CV_SUCCESS){
       //cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
       //N_VScale(ONE, cv_mem->cv_zn[0], yout);
       //cv_mem->cv_tolsf *= TWO;
-#ifndef DEV_CUDACVODE
+#ifdef DEV_CUDACVODE
 #else
       break;
 #endif
@@ -7212,7 +7205,7 @@ if (kflag != CV_SUCCESS){
         //cv_mem->cv_tretlast = *tret = cv_mem->cv_tstop;
         //cv_mem->cv_tstopset = SUNFALSE;
         istate = CV_TSTOP_RETURN;
-#ifndef DEV_CUDACVODE
+#ifdef DEV_CUDACVODE
 #else
         break;
 #endif
@@ -7220,7 +7213,7 @@ if (kflag != CV_SUCCESS){
     }
 */
 
-#ifndef DEV_CUDACVODE
+#ifdef DEV_CUDACVODE
 #else
 
   } /* end looping for internal steps */
