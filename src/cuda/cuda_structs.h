@@ -336,7 +336,7 @@ typedef struct {
     int *flagCells;
 
     //f_gpu
-    double time_step;//remove
+    //double time_step;//remove
     int deriv_length_cell;
     int state_size_cell;
     int i_kernel;
