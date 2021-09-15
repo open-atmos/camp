@@ -2474,7 +2474,7 @@ void cudaDevicecvNewtonIteration(
 
 #ifdef DEV2_GUESSFLAG
 #else
-    *flag=guessflag;//todo needed?
+    //*flag=guessflag;//todo needed?
 #endif
     __syncthreads();
 
@@ -4410,6 +4410,8 @@ int cudaDevicecvStep(ModelDataGPU *md, ModelDataVariable *dmdv) {
   dmdv->countercvstep++;
 #endif
 
+  __syncthreads();
+
   if ((dmdv->cv_nst > 0) && (dmdv->cv_hprime != dmdv->cv_h))
     cudaDevicecvAdjustParams(md, dmdv);
 
@@ -4512,15 +4514,15 @@ int cudaDevicecvStep(ModelDataGPU *md, ModelDataVariable *dmdv) {
     //if(i==0)printf("eflag %d\n", eflag);
 
     // Go back in loop if we need to predict again (nflag=PREV_ERR_FAIL)
-    if (eflag == TRY_AGAIN){
+    if (dmdv->eflag == TRY_AGAIN){
       if (threadIdx.x == 0)printf("DEV_CUDACVSTEP eflag TRY_AGAIN block %d\n", blockIdx.x);
       continue;
     }
 
     // Return if error test failed and recovery not possible.
-    if (eflag != CV_SUCCESS){
+    if (dmdv->eflag != CV_SUCCESS){
       if (threadIdx.x == 0)printf("DEV_CUDACVSTEP eflag!=CV_SUCCESS block %d\n", blockIdx.x);
-      return (eflag);
+      return (dmdv->eflag);
     }
 
     // Error test passed (eflag=CV_SUCCESS), break from loop
@@ -4530,11 +4532,11 @@ int cudaDevicecvStep(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
   // Nonlinear system solve and error test were both successful.
   // Update data, and consider change of step and/or order.
-
+  __syncthreads();
   cudaDevicecvCompleteStep(md, dmdv);
-
+  __syncthreads();
   cudaDevicecvPrepareNextStep(md, dmdv, dmdv->dsm);
-
+  __syncthreads();
   // If Stablilty Limit Detection is turned on, call stability limit
   // detection routine for possible order reduction.
 
@@ -4768,12 +4770,10 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
     atomicMin(&md->flagCells[0],aux);//sync threads
 
-    *dmdv = *mdv; //seg.fault 2 cells fixed at nst 11
+    //*dmdv = *mdv; //seg.fault 2 cells fixed at nst 11
 
     //dmdv->istate=99;
     //dmdv->kflag=99;
-
-
 
     //Random error always (~450%)
 
@@ -4900,8 +4900,9 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
         if(i==0) printf("ewtsetOK istate %d\n",dmdv->istate);
 
 #ifdef DEV_CUDACVODE
-        istate = CV_ILL_INPUT;
-        break;
+        //istate = CV_ILL_INPUT;
+        //break;
+        return CV_ILL_INPUT;
 #else
         return CV_ILL_INPUT;
 #endif
@@ -4922,8 +4923,9 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
 #endif
       if(i==0) printf("cv_mxstep istate %d\n",dmdv->istate);
 #ifdef DEV_CUDACVODE
-      istate = CV_TOO_MUCH_WORK;
-      break;
+      //istate = CV_TOO_MUCH_WORK;
+      //break;
+      return CV_TOO_MUCH_WORK;
 #else
       return CV_TOO_MUCH_WORK;
 #endif
@@ -4957,8 +4959,9 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
       if(i==0) printf("cv_tolsf istate %d\n",dmdv->istate);
       __syncthreads();
 #ifdef DEV_CUDACVODE
-      istate = CV_TOO_MUCH_ACC;
-      break;
+      //istate = CV_TOO_MUCH_ACC;
+      //break;
+      return CV_TOO_MUCH_ACC;
 #else
       return CV_TOO_MUCH_ACC;
 #endif
@@ -4981,10 +4984,6 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
     }
 #endif
 
-#ifdef DEV_CUDACVODE
-    //dmdv->flag = 0;
-#endif
-
     kflag2 = cudaDevicecvStep(md, dmdv);
 
     __syncthreads();
@@ -4993,7 +4992,7 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
     //flag_shr[0] = 0;//99
 
     atomicMin(&md->flagCells[0],aux);//sync threads
-    *mdv = *dmdv;
+    //*mdv = *dmdv;
     atomicMin(&md->flagCells[0],aux);//sync threads
 
 #else
@@ -5040,8 +5039,9 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
       //if(i==0)printf("cudaDeviceCVode2 dmdv->kflag %d\n",dmdv->kflag);
 
 #ifdef DEV_CUDACVODE
-      istate = dmdv->kflag2;
-      break;
+      //istate = dmdv->kflag2;
+      //break;
+      return dmdv->kflag2;
 #else
       return dmdv->kflag2;
 #endif
@@ -5066,8 +5066,9 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
       if(i==0) printf("dmdv->cv_tn - dmdv->tout) istate %d\n",dmdv->istate);
 
 #ifdef DEV_CUDACVODE
-      istate = CV_SUCCESS;
-      break;
+      //istate = CV_SUCCESS;
+      //break;
+      return CV_SUCCESS;
 #else
       return CV_SUCCESS;
 #endif
@@ -5084,8 +5085,9 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
         if(i==0) printf("cv_tstopset istate %d\n",dmdv->istate);
         __syncthreads();
 #ifdef DEV_CUDACVODE
-        istate = CV_TSTOP_RETURN;
-        break;
+        return CV_TSTOP_RETURN;
+        //istate = CV_TSTOP_RETURN;
+        //break;
 #else
         return CV_TSTOP_RETURN;
 #endif
@@ -5102,7 +5104,7 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
 #else
 #endif
 
-  return istate;//todo very small diff sometimes
+  return istate;
 
 }
 
@@ -5157,116 +5159,6 @@ void cudaGlobalCVode(ModelDataGPU md_object) {
   //todo look for other variables in cvnls newton with md-> and non-array, like flag that needs load outside (e.g. counters)
 
 }
-
-#ifdef DEBUG_CudaDeviceguess_helper
-
-__global__
-void CudaGlobalguess_helper(
-        //LS
-        double *dA, int *djA, int *diA, double *dx, double *dtempv, //Input data
-        int nrows, int blocks, int n_shr_empty, int maxIt, int mattype,
-        int n_cells, double tolmax, double *ddiag, //Init variables
-        double *dr0, double *dr0h, double *dn0, double *dp0,
-        double *dt, double *ds, double *dAx2, double *dy, double *dz,// Auxiliary vectors
-        //swapCSC_CSR_BCG
-        int *diB, int *djB, double *dB,
-        //Guess_helper
-        double t_n, double h_n, double* dftemp,
-        double* dcv_y, double* tmp1,
-        double* corr, double cv_reltol,
-        //update_state
-        double threshhold, double replacement_value, int *flagGlobal,
-        //f_gpu
-        double time_step, int deriv_length_cell, int state_size_cell,
-        int i_kernel, int threads_block, ModelDataGPU md_object,
-        //cudacvNewtonIteration
-        double *cv_acor, double *dzn,
-        double *dewt
-        int *disavedJ, int *djsavedJ, double *dsavedJ
-) {
-
-  ModelDataGPU *md = &md_object;
-  extern __shared__ int flag_shr[];
-  //flag_shr[0] = 0;//99
-  flag_shr[0] = 0;
-  int flag = 0;
-  __syncthreads();*flagGlobal = flag_shr[0];__syncthreads();
-  int i = blockIdx.x * blockDim.x + threadIdx.x;
-  unsigned int tid = threadIdx.x;
-  int active_threads = md->nrows;
-  int n_shr = blockDim.x + n_shr_empty;
-
-  if(i<active_threads){
-
-#ifdef PMC_DEBUG_GPU
-
-  int clock_khz=md->clock_khz;
-  clock_t start;
-  start = clock();
-
-#endif
-
-  __syncthreads();
-  int guessflag=CudaDeviceguess_helper(t_n, h_n, dzn,
-                           md->cv_last_yn, dftemp, dtempv,
-                           md->cv_acor_init, cv_reltol, nrows,
-          //check_model_state
-                           threshhold, replacement_value, &flag,
-//f_gpu
-                           time_step, deriv_length_cell, state_size_cell,
-                           n_cells, i_kernel, threads_block, n_shr_empty,
-                           md,dmdv
-);
-  __syncthreads();
-
-  /*
-  if(guessflag<0){
-    guessflag = RHSFUNC_RECVR;
-  }
-   */
-
-  //guess_flag=0;
-
-  //*flagGlobal=guessflag; //fine
-  *flagGlobal=guessflag;
-  //if(guessflag!=1)*flagGlobal=guessflag;
-  //atomicMin(flagGlobal,guessflag);
-
-
-#ifdef DEBUG_CudaDeviceguess_helper
-  if(i==1000)printf("CudaDeviceguess_helper end flag %d %d i %d\n",*flagGlobal, guessflag, i);
-
-#endif
-
-#ifdef DEBUG_CudaDeviceguess_helper
-  if(i==0)printf("CudaDeviceguess_helper end flag2 %d %d i %d\n",*flagGlobal, guessflag, i);
-#endif
-
-  /*
-  if(guessflag<0){
-    flag_shr[0] = RHSFUNC_RECVR;
-  }
-
-  __syncthreads();
-  if(*flag<0){
-    *flag = flag_shr[0];
-    return;
-  }
-   */
-
-#ifdef PMC_DEBUG_GPU
-  #ifdef cudaGlobalCVode_timers_max_blocks
-    md->tguessNewton[i] += ((double)(int)(clock() - start))/(clock_khz*1000);
-#else
-    if(i==1000) *md->tguessNewton += ((double)(int)(clock() - start))/(clock_khz*1000);
-#endif
-#endif
-
-  }
-
-}
-
-#endif
 
 int guess_helper2(const realtype t_n, const realtype h_n, N_Vector y_n,
                  N_Vector y_n1, N_Vector hf, void *solver_data, N_Vector tmp1,
