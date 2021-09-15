@@ -4086,8 +4086,6 @@ void cudaDevicecvSetEta(ModelDataGPU *md, ModelDataVariable *dmdv) {
 __device__
 int cudaDevicecvPrepareNextStep(ModelDataGPU *md, ModelDataVariable *dmdv, double dsm) {
 
-  extern __shared__ int flag_shr[];
-
   __syncthreads();
 
   // If etamax = 1, defer step size or order changes
@@ -4186,35 +4184,35 @@ int cudaDevicecvPrepareNextStep(ModelDataGPU *md, ModelDataVariable *dmdv, doubl
     //N_VLinearSum(-cquot, dmdv->cv_zn[dmdv->cv_qmax], ONE,
     //             dmdv->cv_acor, dmdv->cv_tempv);
 #ifndef DEV_DZN0
-    double *dznq=md->dzn0;
-    switch (dmdv->cv_q){
+    double *dznqm=md->dzn0;
+    switch (dmdv->cv_qmax){
       case 0:
-        dznq=md->dzn0;
+        dznqm=md->dzn0;
         break;
       case 1:
-        dznq=md->dzn1;
+        dznqm=md->dzn1;
         break;
       case 2:
-        dznq=md->dzn2;
+        dznqm=md->dzn2;
         break;
       case 3:
-        dznq=md->dzn3;
+        dznqm=md->dzn3;
         break;
       case 4:
-        dznq=md->dzn4;
+        dznqm=md->dzn4;
         break;
       case 5:
-        dznq=md->dzn5;
+        dznqm=md->dzn5;
         break;
     }
 
     cudaDevicezaxpby(-cquot,
-    dznq,
+                     dznqm,
     1., md->cv_acor,
     md->dtempv, md->nrows);
 #else
     cudaDevicezaxpby(-cquot,
-    &md->dzn[md->nrows*(dmdv->cv_q)],
+    &md->dzn[md->nrows*(dmdv->cv_qmax)],
     1., md->cv_acor,
     md->dtempv, md->nrows);
 #endif
@@ -4791,7 +4789,6 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
   extern __shared__ int flag_shr[];
   int i = blockIdx.x * blockDim.x + threadIdx.x;
-  int n_shr = blockDim.x+md->n_shr_empty;
 
   int counterBiConjGrad=0;
   int kflag2;
