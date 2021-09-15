@@ -2361,7 +2361,6 @@ void cudaDevicecvNewtonIteration(
   extern __shared__ int flag_shr[];
   flag_shr[0]=99;
   int i = blockIdx.x * blockDim.x + threadIdx.x;
-  int n_shr = blockDim.x+n_shr_empty;
 
   double del, delp, dcon, m;
   del = delp = 0.0;
@@ -2503,7 +2502,7 @@ void cudaDevicecvNewtonIteration(
     cudaDevicezaxpby(1., dzn, 1., cv_acor, dcv_y, nrows);
 
 
-    cudaDeviceVWRMS_Norm(dx, dewt, &del, nrows, n_shr);
+    cudaDeviceVWRMS_Norm(dx, dewt, &del, nrows, n_shr_empty);
 
 // Test for convergence.  If m > 0, an estimate of the convergence
     // rate constant is stored in crate, and used in the test.
@@ -2518,7 +2517,7 @@ void cudaDevicecvNewtonIteration(
 #endif
 
     if (dcon <= 1.0) {
-      cudaDeviceVWRMS_Norm(cv_acor, dewt, &dmdv->cv_acnrm, nrows, n_shr);
+      cudaDeviceVWRMS_Norm(cv_acor, dewt, &dmdv->cv_acnrm, nrows, n_shr_empty);
       //cv_mem->cv_acnrm = gpu_VWRMS_Norm(mGPU->nrows, mGPU->cv_acor, mGPU->dewt, bicg->aux,
       //  //                                    mGPU->daux, (mGPU->blocks + 1) / 2, mGPU->threads);
 
@@ -4088,7 +4087,6 @@ __device__
 int cudaDevicecvPrepareNextStep(ModelDataGPU *md, ModelDataVariable *dmdv, double dsm) {
 
   extern __shared__ int flag_shr[];
-  int n_shr = blockDim.x+md->n_shr_empty;
 
   __syncthreads();
 
@@ -4126,7 +4124,8 @@ int cudaDevicecvPrepareNextStep(ModelDataGPU *md, ModelDataVariable *dmdv, doubl
 
   //compute cv_etaqm1
   double ddn;
-  dmdv->cv_etaqm1 = ZERO;
+  dmdv->cv_etaqm1 = 0.;
+  __syncthreads();
   if (dmdv->cv_q > 1) {
     //ddn = N_VWrmsNorm(dmdv->cv_zn[cv_mem->cv_q], dmdv->cv_ewt) * dmdv->cv_tq[1];
 #ifndef DEV_DZN0
@@ -4153,10 +4152,10 @@ int cudaDevicecvPrepareNextStep(ModelDataGPU *md, ModelDataVariable *dmdv, doubl
     }
 
     cudaDeviceVWRMS_Norm(dznq,
-                         md->dewt, &ddn, md->nrows, n_shr);
+                         md->dewt, &ddn, md->nrows, md->n_shr_empty);
 #else
     cudaDeviceVWRMS_Norm(&md->dzn[md->nrows*(dmdv->cv_q)],
-                         md->dewt, &ddn, md->nrows, n_shr);
+                         md->dewt, &ddn, md->nrows, md->n_shr_empty);
 #endif
 
 #ifndef DEV_TQ
@@ -4170,9 +4169,9 @@ int cudaDevicecvPrepareNextStep(ModelDataGPU *md, ModelDataVariable *dmdv, doubl
 
   //compute cv_etaqp1
   double dup, cquot;
-  dmdv->cv_etaqp1 = ZERO;
-  if (dmdv->cv_q != dmdv->cv_qmax && dmdv->cv_saved_tq5 != ZERO) {
-    //if (dmdv->cv_saved_tq5 != ZERO) return(dmdv->cv_etaqp1);
+  dmdv->cv_etaqp1 = 0.;
+  __syncthreads();
+  if (dmdv->cv_q != dmdv->cv_qmax && dmdv->cv_saved_tq5 != 0.) {
     //cquot = (dmdv->cv_tq[5] / dmdv->cv_saved_tq5) *
     //        SUNRpowerI(dmdv->cv_h/md->cv_tau[2], dmdv->cv_L); //maybe need custom function?
 
@@ -4221,7 +4220,7 @@ int cudaDevicecvPrepareNextStep(ModelDataGPU *md, ModelDataVariable *dmdv, doubl
 #endif
 
     //dup = N_VWrmsNorm(md->dtempv, cv_mem->cv_ewt) * cv_mem->cv_tq[3];
-    cudaDeviceVWRMS_Norm(md->dtempv, md->dewt, &dup, md->nrows, n_shr);
+    cudaDeviceVWRMS_Norm(md->dtempv, md->dewt, &dup, md->nrows, md->n_shr_empty);
 #ifndef DEV_TQ
     dup *= md->cv_tq[3+blockIdx.x*(NUM_TESTS + 1)];
 #else
@@ -5046,10 +5045,10 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
     double nrm;
 #ifndef DEV_DZN0
     cudaDeviceVWRMS_Norm(md->dzn0,
-                         md->dewt, &nrm, md->nrows, n_shr);
+                         md->dewt, &nrm, md->nrows, md->n_shr_empty);
 #else
     cudaDeviceVWRMS_Norm(md->dzn,
-                         md->dewt, &nrm, md->nrows, n_shr);
+                         md->dewt, &nrm, md->nrows, md->n_shr_empty);
 #endif
 
     dmdv->cv_tolsf = dmdv->cv_uround * nrm;
@@ -8832,7 +8831,6 @@ void cvPrepareNextStep_gpu2(CVodeMem cv_mem, realtype dsm)
   realtype dup, cquot;
   cv_mem->cv_etaqp1 = ZERO;
   if (cv_mem->cv_q != cv_mem->cv_qmax && cv_mem->cv_saved_tq5 != ZERO) {
-    //if (cv_mem->cv_saved_tq5 != ZERO) return(cv_mem->cv_etaqp1);
     cquot = (cv_mem->cv_tq[5] / cv_mem->cv_saved_tq5) *
             SUNRpowerI(cv_mem->cv_h/cv_mem->cv_tau[2], cv_mem->cv_L);
     N_VLinearSum(-cquot, cv_mem->cv_zn[cv_mem->cv_qmax], ONE,

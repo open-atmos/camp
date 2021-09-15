@@ -1007,7 +1007,7 @@ __device__ void cudaDeviceaxpy(double* dy,double* dx, double a, int nrows)
 }
 
 // sqrt(sum ( (x_i*y_i)^2)/n)
-__device__ void cudaDeviceVWRMS_Norm(double *g_idata1, double *g_idata2, double *g_odata, int n, int n_shr)
+__device__ void cudaDeviceVWRMS_Norm(double *g_idata1, double *g_idata2, double *g_odata, int n, int n_shr_empty)
 {
   extern __shared__ double sdata[];
   unsigned int tid = threadIdx.x;
@@ -1019,7 +1019,7 @@ __device__ void cudaDeviceVWRMS_Norm(double *g_idata1, double *g_idata2, double 
 #ifndef DEV_cudaDeviceVWRMS_Norm
 
   //first threads update empty positions
-  if(tid<n_shr-blockDim.x)
+  if(tid<n_shr_empty)
     sdata[tid+blockDim.x]=0.;
 
   __syncthreads(); //Not needed (should)
@@ -1027,7 +1027,7 @@ __device__ void cudaDeviceVWRMS_Norm(double *g_idata1, double *g_idata2, double 
 #else
 
   if (tid == 0){
-    for (int j=0; j<n_shr; j++)
+    for (int j=0; j<n_shr_empty+blockDim.x; j++)
       sdata[j] = 0.;
   }
 
@@ -1043,7 +1043,7 @@ __device__ void cudaDeviceVWRMS_Norm(double *g_idata1, double *g_idata2, double 
   sdata[tid] = g_idata1[i]*g_idata1[i]*g_idata2[i]*g_idata2[i];
   __syncthreads();
 
-  for (unsigned int s=n_shr/2; s>0; s>>=1)
+  for (unsigned int s=(blockDim.x+n_shr_empty)/2; s>0; s>>=1)
   {
     if (tid < s)
       sdata[tid] += sdata[tid + s];
