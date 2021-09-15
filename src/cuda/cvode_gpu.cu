@@ -4441,7 +4441,7 @@ int cudaDevicecvStep(ModelDataGPU *md, ModelDataVariable *dmdv) {
             md->dcv_y, md->dtempv1,
             md->dtempv2, dmdv->cv_reltol,
             //update_state
-            md->threshhold, md->replacement_value, &nflag,//Using dmdv->nflag fails
+            md->threshhold, md->replacement_value, &nflag,//todo delete input flag since is not used (assigned to default 0 value at the start)
             //f_gpu
             dmdv->cv_next_h, md->deriv_length_cell, md->state_size_cell,
             md->i_kernel, md->threads_block, md, dmdv,
@@ -4480,32 +4480,32 @@ int cudaDevicecvStep(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
     if(threadIdx.x==0)printf("DEV_CUDACVSTEP nflag %d dmdv->flag %d block %d\n",nflag, dmdv->nflag, blockIdx.x);
 
-    int kflag = cudaDevicecvHandleNFlag(md, dmdv, &dmdv->nflag, dmdv->saved_t, &dmdv->ncf);
+    int kflag = cudaDevicecvHandleNFlag(md, dmdv, &nflag, dmdv->saved_t, &dmdv->ncf);
 
     __syncthreads();
-    //dmdv->nflag = nflag;//fine
+    dmdv->nflag = nflag;//needed?
+    dmdv->kflag = kflag;
     __syncthreads();
     if(threadIdx.x==0)printf("DEV_CUDACVSTEP kflag %d block %d\n",kflag, blockIdx.x);
 
-
     // Go back in loop if we need to predict again (nflag=PREV_CONV_FAIL)
 
-    if (kflag == PREDICT_AGAIN) {
+    if (dmdv->kflag == PREDICT_AGAIN) {
       if (threadIdx.x == 0)printf("DEV_CUDACVSTEP kflag PREDICT_AGAIN block %d\n", blockIdx.x);
       continue;
     }
 
     // Return if nonlinear solve failed and recovery not possible.
-    if (kflag != DO_ERROR_TEST) {
+    if (dmdv->kflag != DO_ERROR_TEST) {
       if(threadIdx.x==0)printf("DEV_CUDACVSTEP kflag!=DO_ERROR_TEST block %d\n", blockIdx.x);
-      return (kflag);
+      return (dmdv->kflag);
     }
 
     __syncthreads();
-    int eflag=cudaDevicecvDoErrorTest(md,dmdv,&dmdv->nflag,dmdv->saved_t,&dmdv->nef,&dmdv->dsm);
+    int eflag=cudaDevicecvDoErrorTest(md,dmdv,&nflag,dmdv->saved_t,&dmdv->nef,&dmdv->dsm);
     __syncthreads();
+    dmdv->nflag = nflag;//fine
     dmdv->eflag = eflag;
-    //dmdv->nflag = nflag;//fine
     __syncthreads();
 
     if(threadIdx.x==0)printf("DEV_CUDACVSTEP nflag %d block %d\n",nflag, blockIdx.x);    //if(i==0)printf("eflag %d\n", eflag);
@@ -4756,6 +4756,7 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
   int counterBiConjGrad=0;
   int kflag2;
+  dmdv->kflag2=99;
   int istate=99;
 
 #ifdef DEV_CUDACVODE
@@ -4853,7 +4854,6 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
     //dmdv->cv_next_h = mdv->cv_next_h;//needed?
 
     */
-    //wrong with #ifdef DEV_CUDACVODE!!
 
 #else
     /*
@@ -4999,7 +4999,7 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
 #else
 #endif
     //dmdv->flag = dmdv->kflag;
-    dmdv->kflag=kflag2;
+    dmdv->kflag2=kflag2;
     __syncthreads();
 
     if(i==0){
@@ -5020,7 +5020,7 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
     //if(i==0)printf("cudaDeviceCVode dmdv->kflag %d\n",dmdv->kflag);
 
     //if (dmdv->kflag != CV_SUCCESS) {
-    if (kflag2 != CV_SUCCESS) {
+    if (dmdv->kflag2 != CV_SUCCESS) {
 
       //istate = cvHandleFailure_gpu2(cv_mem, kflag);
 
@@ -5040,10 +5040,10 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
       //if(i==0)printf("cudaDeviceCVode2 dmdv->kflag %d\n",dmdv->kflag);
 
 #ifdef DEV_CUDACVODE
-      istate = kflag2;
+      istate = dmdv->kflag2;
       break;
 #else
-      return kflag2;
+      return dmdv->kflag2;
 #endif
     }
 
@@ -5130,7 +5130,7 @@ void cudaGlobalCVode(ModelDataGPU md_object) {
     istate2=cudaDeviceCVode(md,dmdv); //rename dmdv->mdv , mdv->mdvi
 
   }
-
+  __syncthreads();
   dmdv->istate=istate2;
 
 #ifdef DEV_CUDACVODE
@@ -5138,9 +5138,10 @@ void cudaGlobalCVode(ModelDataGPU md_object) {
     //dmdv->kflag = kflag2;
     //dmdv->flag = dmdv->istate;
     dmdv->flag = istate2;
-    __syncthreads();
 #else
 #endif
+  __syncthreads();
+
 
   if(tid==0)md->flagCells[blockIdx.x]=dmdv->flag;//FINE
 

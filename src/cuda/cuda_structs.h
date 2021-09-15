@@ -118,6 +118,7 @@ typedef struct {
     int flag;
     int nflag;//auxiliar flag (maybe delete after completing cudacvstep to device)
     int kflag;
+    int kflag2;
     int eflag;
 
     //f & jac
