@@ -3151,11 +3151,12 @@ int cudaDevicecvHandleNFlag(ModelDataGPU *md, ModelDataVariable *dmdv, int *nfla
   }
 
   // Reduce step size; return to reattempt the step
-
-  dmdv->cv_eta = SUNMAX(ETACF, dmdv->cv_hmin / fabs(dmdv->cv_h));
-  cudaDevicecvRescale(md, dmdv); //1000 cells same result
-
+  __syncthreads();
+  dmdv->cv_eta = SUNMAX(ETACF,
+          dmdv->cv_hmin / fabs(dmdv->cv_h));
+  __syncthreads();
   *nflagPtr = PREV_CONV_FAIL;//fine 100 cells same result
+  cudaDevicecvRescale(md, dmdv); //1000 cells same result
 
   //__syncthreads();
 
@@ -3717,30 +3718,34 @@ int cudaDevicecvDoErrorTest(ModelDataGPU *md, ModelDataVariable *dmdv,
       (*nefPtr == dmdv->cv_maxnef)) return(CV_ERR_FAILURE);
 
   // Set etamax = 1 to prevent step size increase at end of this step
-  dmdv->cv_etamax = ONE;
+  dmdv->cv_etamax = 1.;
+
+  __syncthreads();
 
   // Set h ratio eta from dsm, rescale, and return for retry of step
   if (*nefPtr <= MXNEF1) {
-    //cv_mem->cv_eta = 1. / (SUNRpowerR(BIAS2*dsm,ONE/cv_mem->cv_L) + ADDON);
+    //dmdv->cv_eta = 1. / (SUNRpowerR(BIAS2*dsm,ONE/cv_mem->cv_L) + ADDON);
     dmdv->cv_eta = 1. / (pow(BIAS2*dsm,1./dmdv->cv_L) + ADDON);
-
+    __syncthreads();
     dmdv->cv_eta = SUNMAX(ETAMIN, SUNMAX(dmdv->cv_eta,
                            dmdv->cv_hmin / fabs(dmdv->cv_h)));
-    if (*nefPtr >= SMALL_NEF) dmdv->cv_eta =
-    SUNMIN(dmdv->cv_eta, ETAMXF);
+    __syncthreads();
+    if (*nefPtr >= SMALL_NEF)
+      dmdv->cv_eta = SUNMIN(dmdv->cv_eta, ETAMXF);
+    __syncthreads();
 
     cudaDevicecvRescale(md, dmdv);
     return(TRY_AGAIN);
   }
 
+  __syncthreads();
+
   // After MXNEF1 failures, force an order reduction and retry step
   if (dmdv->cv_q > 1) {
     dmdv->cv_eta = SUNMAX(ETAMIN,
     dmdv->cv_hmin / fabs(dmdv->cv_h));
-
     //never enters?
     //if(i==0)printf("dmdv->cv_q > 1\n");
-
     //cvAdjustOrder_gpu2(cv_mem,-1);
     cudaDevicecvDecreaseBDF(md, dmdv);
 
@@ -3753,7 +3758,10 @@ int cudaDevicecvDoErrorTest(ModelDataGPU *md, ModelDataVariable *dmdv,
 
   // If already at order 1, restart: reload zn from scratch
 
+  __syncthreads();
+
   dmdv->cv_eta = SUNMAX(ETAMIN, dmdv->cv_hmin / fabs(dmdv->cv_h));
+  __syncthreads();
   dmdv->cv_h *= dmdv->cv_eta;
   dmdv->cv_next_h = dmdv->cv_h;
   dmdv->cv_hscale = dmdv->cv_h;
@@ -3966,11 +3974,15 @@ void cudaDevicecvChooseEta(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
   etam = SUNMAX(dmdv->cv_etaqm1, SUNMAX(dmdv->cv_etaq, dmdv->cv_etaqp1));
 
+  __syncthreads();
+
   if (etam < THRESH) {
-    dmdv->cv_eta = ONE;
+    dmdv->cv_eta = 1.;
     dmdv->cv_qprime = dmdv->cv_q;
     return;
   }
+
+  __syncthreads();
 
   if (etam == dmdv->cv_etaq) {
 
@@ -3986,6 +3998,8 @@ void cudaDevicecvChooseEta(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
     dmdv->cv_eta = dmdv->cv_etaqp1;
     dmdv->cv_qprime = dmdv->cv_q + 1;
+
+    __syncthreads();
 
     if (dmdv->cv_lmm == CV_BDF) {
       //
@@ -4038,6 +4052,8 @@ void cudaDevicecvChooseEta(ModelDataGPU *md, ModelDataVariable *dmdv) {
     }
   }
 
+  __syncthreads();
+
 }
 
 __device__
@@ -4045,17 +4061,26 @@ void cudaDevicecvSetEta(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
   extern __shared__ int flag_shr[];
 
+  __syncthreads();
+
   // If eta below the threshhold THRESH, reject a change of step size
   if (dmdv->cv_eta < THRESH) {
-    dmdv->cv_eta = ONE;
+    dmdv->cv_eta = 1.;
     dmdv->cv_hprime = dmdv->cv_h;
   } else {
     // Limit eta by etamax and hmax, then set hprime
+    __syncthreads();
     dmdv->cv_eta = SUNMIN(dmdv->cv_eta, dmdv->cv_etamax);
-    dmdv->cv_eta /= SUNMAX(ONE, fabs(dmdv->cv_h)*dmdv->cv_hmax_inv*dmdv->cv_eta);
+    __syncthreads();
+    dmdv->cv_eta /= SUNMAX(ONE,
+            fabs(dmdv->cv_h)*dmdv->cv_hmax_inv*dmdv->cv_eta);
+    __syncthreads();
     dmdv->cv_hprime = dmdv->cv_h * dmdv->cv_eta;
+    __syncthreads();
     if (dmdv->cv_qprime < dmdv->cv_q) dmdv->cv_nscon = 0;
   }
+
+  __syncthreads();
 
 }
 
@@ -4065,18 +4090,24 @@ int cudaDevicecvPrepareNextStep(ModelDataGPU *md, ModelDataVariable *dmdv, doubl
   extern __shared__ int flag_shr[];
   int n_shr = blockDim.x+md->n_shr_empty;
 
+  __syncthreads();
+
   // If etamax = 1, defer step size or order changes
   if (dmdv->cv_etamax == 1.) {
     dmdv->cv_qwait = SUNMAX(dmdv->cv_qwait, 2);
     dmdv->cv_qprime = dmdv->cv_q;
     dmdv->cv_hprime = dmdv->cv_h;
-    dmdv->cv_eta = ONE;
+    dmdv->cv_eta = 1.;
     return 0;
   }
+
+  __syncthreads();
 
   // etaq is the ratio of new to old h at the current order
   //dmdv->cv_etaq = 1. /(SUNRpowerR(BIAS2*dsm,1./dmdv->cv_L) + ADDON);
   dmdv->cv_etaq = 1. /(pow(BIAS2*dsm,1./dmdv->cv_L) + ADDON);
+
+  __syncthreads();
 
   // If no order change, adjust eta and acor in cvSetEta and return
   if (dmdv->cv_qwait != 0) {
@@ -4085,6 +4116,8 @@ int cudaDevicecvPrepareNextStep(ModelDataGPU *md, ModelDataVariable *dmdv, doubl
     cudaDevicecvSetEta(md, dmdv);
     return 0;
   }
+
+  __syncthreads();
 
   // If qwait = 0, consider an order change.   etaqm1 and etaqp1 are
   //  the ratios of new to old h at orders q-1 and q+1, respectively.
@@ -4198,8 +4231,11 @@ int cudaDevicecvPrepareNextStep(ModelDataGPU *md, ModelDataVariable *dmdv, doubl
     dmdv->cv_etaqp1 = 1. / (pow(BIAS3*dup, 1./(dmdv->cv_L+1)) + ADDON);
   }
 
+  __syncthreads();
   cudaDevicecvChooseEta(md, dmdv);
+  __syncthreads();
   cudaDevicecvSetEta(md, dmdv);
+  __syncthreads();
 
   return CV_SUCCESS;
 
@@ -4401,10 +4437,12 @@ int cudaDevicecvStep(ModelDataGPU *md, ModelDataVariable *dmdv) {
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   //unsigned int tid = threadIdx.x;
 
-  dmdv->saved_t = dmdv->cv_tn;
-  dmdv->ncf = dmdv->nef = 0;
+  double saved_t = dmdv->cv_tn;
+  int ncf = 0;
+  int nef = 0;
   dmdv->nflag = FIRST_CALL;
   int nflag=FIRST_CALL;
+  double dsm;
 
 #ifdef PMC_DEBUG_GPU
   dmdv->countercvstep++;
@@ -4482,7 +4520,7 @@ int cudaDevicecvStep(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
     if(threadIdx.x==0)printf("DEV_CUDACVSTEP nflag %d dmdv->flag %d block %d\n",nflag, dmdv->nflag, blockIdx.x);
 
-    int kflag = cudaDevicecvHandleNFlag(md, dmdv, &nflag, dmdv->saved_t, &dmdv->ncf);
+    int kflag = cudaDevicecvHandleNFlag(md, dmdv, &nflag, saved_t, &ncf);
 
     __syncthreads();
     dmdv->nflag = nflag;//needed?
@@ -4504,7 +4542,7 @@ int cudaDevicecvStep(ModelDataGPU *md, ModelDataVariable *dmdv) {
     }
 
     __syncthreads();
-    int eflag=cudaDevicecvDoErrorTest(md,dmdv,&nflag,dmdv->saved_t,&dmdv->nef,&dmdv->dsm);
+    int eflag=cudaDevicecvDoErrorTest(md,dmdv,&nflag,saved_t,&nef,&dsm);
     __syncthreads();
     dmdv->nflag = nflag;//fine
     dmdv->eflag = eflag;
@@ -4535,7 +4573,7 @@ int cudaDevicecvStep(ModelDataGPU *md, ModelDataVariable *dmdv) {
   __syncthreads();
   cudaDevicecvCompleteStep(md, dmdv);
   __syncthreads();
-  cudaDevicecvPrepareNextStep(md, dmdv, dmdv->dsm);
+  cudaDevicecvPrepareNextStep(md, dmdv, dsm);
   __syncthreads();
   // If Stablilty Limit Detection is turned on, call stability limit
   // detection routine for possible order reduction.
@@ -4909,17 +4947,19 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
   dmdv->cv_qprime = mdv->cv_qprime;
   dmdv->cv_nscon = mdv->cv_nscon;
   dmdv->cv_hmin = mdv->cv_hmin;
+  mdv->cv_next_h = dmdv->cv_next_h;
+  //mdv->saved_t = dmdv->saved_t;
+  //mdv->nef = dmdv->nef;
+  //mdv->ncf = dmdv->ncf;
+
 
   //fine 1000 cells
 
-  dmdv->cv_h = mdv->cv_h;//never ends 1000 cells
+  //dmdv->cv_eta = mdv->cv_eta;//diff error 1000 cells
 
   /*
 
-  //dmdv->cv_eta = mdv->cv_eta;//diff error 1000 cells
-
-
-
+  //dmdv->cv_h = mdv->cv_h;//never ends 1000 cells
   dmdv->cv_hprime = mdv->cv_hprime; //never ends 1000 cells
   dmdv->cv_hscale = mdv->cv_hscale; //never ends 1000 cells
 
@@ -4927,8 +4967,6 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
   //wrong 1000 cells, fine 2 cells
 
    */
-
-
 
   //*dmdv = *mdv; //wrong 2 cells
 
@@ -5123,21 +5161,18 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
   mdv->cv_qprime = dmdv->cv_qprime;
   mdv->cv_nscon = dmdv->cv_nscon;
   mdv->cv_hmin = dmdv->cv_hmin;
-
+  mdv->cv_next_h = dmdv->cv_next_h;
+  //mdv->saved_t = dmdv->saved_t;
+  //mdv->nef = dmdv->nef;
+  //mdv->ncf = dmdv->ncf;
 
   //fine 1000 cells
 
-  mdv->cv_h = dmdv->cv_h;
+  //mdv->cv_eta = dmdv->cv_eta;//diff error 1000 cells
 
   /*
 
-
-  //mdv->cv_eta = dmdv->cv_eta;//diff error 1000 cells
-
-
-
-
-
+  mdv->cv_h = dmdv->cv_h;//never ends 1000 cells
   mdv->cv_hprime = dmdv->cv_hprime; //never ends 1000 cells
   mdv->cv_hscale = dmdv->cv_hscale;  //never ends 1000 cells
 
@@ -5243,6 +5278,8 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
       if ((dmdv->cv_tn + dmdv->cv_hprime - dmdv->cv_tstop) * dmdv->cv_h > 0.) {
         dmdv->cv_hprime = (dmdv->cv_tstop - dmdv->cv_tn) * (1.0 - 4.0 * dmdv->cv_uround);
+        //never enters
+        if(i==0) printf("dmdv->cv_tn + dmdv->cv_hprime - dmdv->cv_tstop istate %d\n",dmdv->istate);
         dmdv->cv_eta = dmdv->cv_hprime / dmdv->cv_h;
       }
     }
@@ -5306,146 +5343,6 @@ void cudaGlobalCVode(ModelDataGPU md_object) {
 
   //todo look for other variables in cvnls newton with md-> and non-array, like flag that needs load outside (e.g. counters)
 
-}
-
-int guess_helper2(const realtype t_n, const realtype h_n, N_Vector y_n,
-                 N_Vector y_n1, N_Vector hf, void *solver_data, N_Vector tmp1,
-                 N_Vector corr) {
-  SolverData *sd = (SolverData *)solver_data;
-  ModelData *md = &(sd->model_data);
-  //itsolver *bicg = &(sd->bicg);
-  //realtype *ay_n = NV_DATA_S(y_n);
-  //realtype *ay_n1 = NV_DATA_S(y_n1);
-  realtype *atmp1 = NV_DATA_S(tmp1);
-  realtype *acorr = NV_DATA_S(corr);
-  //realtype *ahf = NV_DATA_S(hf);
-
-  // Only try improvements when negative concentrations are predicted
-  double min = N_VMin(y_n);
-  if (min > -SMALL){
-#ifndef DEBUG_GUESS_HELPER
-    printf("Return 0 \n");
-#endif
-    return 0;
-  }
-
-  // Copy \f$y(t_{n-1})\f$ to working array
-  N_VScale(ONE, y_n1, tmp1);
-
-  // Get  \f$f(t_{n-1})\f$
-  if (h_n > ZERO) {
-    N_VScale(ONE / h_n, hf, corr);
-  } else {
-    N_VScale(ONE, hf, corr);
-  }
-
-  // Advance state interatively
-  realtype t_0 = h_n > ZERO ? t_n - h_n : t_n - ONE;
-  realtype t_j = ZERO;
-  int iter = 0;
-  int GUESS_MAX_ITER = 5;
-  for (; iter < GUESS_MAX_ITER && t_0 + t_j < t_n; iter++) {
-    // Calculate \f$h_j\f$
-    realtype h_j = t_n - (t_0 + t_j);
-    int i_fast = -1;
-#ifndef DEBUG_GUESS_HELPER
-    //for(int j=0;j<mGPU->nrows;j++){
-    //    printf("h_j %le t_n %le t_0 %le t_j %le\n",
-    //           h_j,t_n,t_0,t_j);
-    //    }
-#endif
-
-
-    //double h_j_init=h_j;
-    for(int i_cell=0;i_cell<md->n_cells;i_cell++) {
-      for (int j = 0; j < md->n_per_cell_dep_var; j++) {
-        int i=i_cell*md->n_per_cell_dep_var+j;
-        realtype t_star = -atmp1[i] / acorr[i];
-        if ((t_star > ZERO || (t_star == ZERO && acorr[i] < ZERO)) &&
-            t_star < h_j) {
-          h_j = t_star;
-          i_fast = i;
-        }
-#ifdef DEBUG_CudaDeviceguess_helper
-        //if(i_cell==0 && iter<=0)printf("guess_helper2 i %d t_star %le atmp1 %le acorr %le\n",i,t_star,atmp1[i],acorr[i]);
-#endif
-      }
-#ifdef DEBUG_CudaDeviceguess_helper
-      //if(i_cell==0 && iter<=5)printf("guess_helper2 h_j %le h_j_init %le block %d iter %d\n",h_j,h_j_init,i_cell,iter);
-#endif
-    }
-
-#ifdef DEBUG_CudaDeviceguess_helper
-    //if(iter<=5)printf("guess_helper2 h_j %le iter %d\n",h_j,iter);
-#endif
-
-    // Scale incomplete jumps
-    if (i_fast >= 0 && h_n > ZERO)
-      h_j *= 0.95 + 0.1 ;
-    //h_j *= 0.95 + 0.1 * rand() / (double)RAND_MAX;
-    h_j = t_n < t_0 + t_j + h_j ? t_n - (t_0 + t_j) : h_j;
-
-    // Only make small changes to adjustment vectors used in Newton iteration
-    if (h_n == ZERO &&
-        t_n - (h_j + t_j + t_0) > ((CVodeMem)sd->cvode_mem)->cv_reltol){
-#ifndef DEBUG_GUESS_HELPER
-      printf("CudaDeviceguess_helper h_n == ZERO -1\n");
-#endif
-      return -1;
-    }
-
-    // Advance the state
-    N_VLinearSum(ONE, tmp1, h_j, corr, tmp1);
-
-    // Advance t_j
-    t_j += h_j;
-
-#ifndef DEBUG_GUESS_HELPER
-    //for(int j=0;j<mGPU->nrows;j++){
-    //  realtype t_star = -atmp1[j] / acorr[j];
-    //  printf("corr[%d] %le tmp1[j] %le hf %le t_star %le h_j %le h_n %le\n",
-    //          j,acorr[j],atmp1[j],ahf[j],t_star,h_j,h_n);
-    //  }
-#endif
-
-    //printf("Derivguess_helper before\n");
-    // Recalculate the time derivative \f$f(t_j)\f$
-
-
-    if (f(t_0 + t_j, tmp1, corr, solver_data) != 0) {
-      N_VConst(ZERO, corr);
-#ifndef DEBUG_GUESS_HELPER
-      printf("CudaDeviceguess_helper f(t)\n");
-#endif
-      return -1;
-    }
-
-
-    ((CVodeMem)sd->cvode_mem)->cv_nfe++;
-
-    if (iter == GUESS_MAX_ITER - 1 && t_0 + t_j < t_n) {
-#ifndef DEBUG_GUESS_HELPER
-      printf("CudaDeviceguess_helper GUESS_MAX_ITER\n");
-#endif
-      if (h_n == ZERO) return -1;
-    }
-  }
-
-
-  // Set the correction vector
-  N_VLinearSum(ONE, tmp1, -ONE, y_n, corr);
-
-  // Scale the initial corrections
-  if (h_n > ZERO) N_VScale(0.999, corr, corr);
-
-  // Update the hf vector
-  N_VLinearSum(ONE, tmp1, -ONE, y_n1, hf);
-
-#ifndef DEBUG_GUESS_HELPER
-  printf("CudaDeviceguess_helper return 1\n");
-#endif
-
-  return 1;
 }
 
 void solveCVODEGPU_thr(int blocks, int threads_block, int n_shr_memory, int n_shr_empty, int offset_cells,
@@ -8704,7 +8601,8 @@ int cvHandleNFlag_gpu2(CVodeMem cv_mem, int *nflagPtr, realtype saved_t,
 
   /* Reduce step size; return to reattempt the step */
 
-  cv_mem->cv_eta = SUNMAX(ETACF, cv_mem->cv_hmin / SUNRabs(cv_mem->cv_h));
+  cv_mem->cv_eta = SUNMAX(ETACF,
+          cv_mem->cv_hmin / SUNRabs(cv_mem->cv_h));
   *nflagPtr = PREV_CONV_FAIL;
   cvRescale_gpu2(cv_mem);
 
@@ -8794,10 +8692,12 @@ booleantype cvDoErrorTest_gpu2(CVodeMem cv_mem, int *nflagPtr,
 
   /* Set h ratio eta from dsm, rescale, and return for retry of step */
   if (*nefPtr <= MXNEF1) {
-    cv_mem->cv_eta = ONE / (SUNRpowerR(BIAS2*dsm,ONE/cv_mem->cv_L) + ADDON);
+    cv_mem->cv_eta = ONE /
+            (SUNRpowerR(BIAS2*dsm,ONE/cv_mem->cv_L) + ADDON);
     cv_mem->cv_eta = SUNMAX(ETAMIN, SUNMAX(cv_mem->cv_eta,
-                                           cv_mem->cv_hmin / SUNRabs(cv_mem->cv_h)));
-    if (*nefPtr >= SMALL_NEF) cv_mem->cv_eta = SUNMIN(cv_mem->cv_eta, ETAMXF);
+            cv_mem->cv_hmin / SUNRabs(cv_mem->cv_h)));
+    if (*nefPtr >= SMALL_NEF)
+      cv_mem->cv_eta = SUNMIN(cv_mem->cv_eta, ETAMXF);
     cvRescale_gpu2(cv_mem);
     return(TRY_AGAIN);
   }
@@ -8961,8 +8861,10 @@ void cvSetEta_gpu2(CVodeMem cv_mem)
     cv_mem->cv_hprime = cv_mem->cv_h;
   } else {
     /* Limit eta by etamax and hmax, then set hprime */
-    cv_mem->cv_eta = SUNMIN(cv_mem->cv_eta, cv_mem->cv_etamax);
-    cv_mem->cv_eta /= SUNMAX(ONE, SUNRabs(cv_mem->cv_h)*cv_mem->cv_hmax_inv*cv_mem->cv_eta);
+    cv_mem->cv_eta = SUNMIN
+            (cv_mem->cv_eta, cv_mem->cv_etamax);
+    cv_mem->cv_eta /= SUNMAX(ONE,SUNRabs
+    (cv_mem->cv_h)*cv_mem->cv_hmax_inv*cv_mem->cv_eta);
     cv_mem->cv_hprime = cv_mem->cv_h * cv_mem->cv_eta;
     if (cv_mem->cv_qprime < cv_mem->cv_q) cv_mem->cv_nscon = 0;
   }

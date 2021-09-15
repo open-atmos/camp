@@ -167,7 +167,6 @@ typedef struct {
     int cv_maxnef;
     int cv_netf;
     double cv_acnrm;
-    double dsm;
     double cv_tstop;
     int cv_tstopset; //Used as bool
     double cv_nlscoef;

@@ -60,7 +60,7 @@ __device__ void cudaDevicezaxpbypc(double* dz, double* dx,double* dy, double a, 
 __device__ void cudaDevicemultxy(double* dz, double* dx,double* dy, int nrows);
 __device__ void cudaDevicezaxpby(double a, double* dx, double b, double* dy, double* dz, int nrows);
 __device__ void cudaDeviceaxpy(double* dy,double* dx, double a, int nrows);
-__device__ void cudaDeviceVWRMS_Norm(double *g_idata1, double *g_idata2, double *odata, int n, int n_shr);
+__device__ void cudaDeviceVWRMS_Norm(double *g_idata1, double *g_idata2, double *odata, int n, int n_shr_empty);
 __device__ void cudaDevicescaley(double* dy, double a, int nrows);
 
 #ifdef __cplusplus

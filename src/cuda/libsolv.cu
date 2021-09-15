@@ -912,8 +912,6 @@ __device__ void cudaDevicedotxy(double *g_idata1, double *g_idata2,
 #endif
 
   sdata[tid] = g_idata1[i]*g_idata2[i];
-
-
   __syncthreads();
 
 /*
@@ -1016,10 +1014,24 @@ __device__ void cudaDeviceVWRMS_Norm(double *g_idata1, double *g_idata2, double 
   //unsigned int i = blockIdx.x*(blockDim.x*2) + threadIdx.x;
   unsigned int i = blockIdx.x*blockDim.x + threadIdx.x;
 
+  __syncthreads();
+
+#ifndef DEV_cudaDeviceVWRMS_Norm
+
+  //first threads update empty positions
+  if(tid<n_shr-blockDim.x)
+    sdata[tid+blockDim.x]=0.;
+
+  __syncthreads(); //Not needed (should)
+
+#else
+
   if (tid == 0){
     for (int j=0; j<n_shr; j++)
       sdata[j] = 0.;
   }
+
+#endif
 
 /*
   double mySum = (i < n) ? g_idata1[i]*g_idata1[i]*g_idata2[i]*g_idata2[i] : 0;
@@ -1028,14 +1040,13 @@ __device__ void cudaDeviceVWRMS_Norm(double *g_idata1, double *g_idata2, double 
 */
 
   __syncthreads();
-  double mySum=g_idata1[i]*g_idata1[i]*g_idata2[i]*g_idata2[i];
-  sdata[tid] = mySum;
+  sdata[tid] = g_idata1[i]*g_idata1[i]*g_idata2[i]*g_idata2[i];
   __syncthreads();
 
   for (unsigned int s=n_shr/2; s>0; s>>=1)
   {
     if (tid < s)
-      sdata[tid] = mySum = mySum + sdata[tid + s];
+      sdata[tid] += sdata[tid + s];
 
     __syncthreads();
   }
