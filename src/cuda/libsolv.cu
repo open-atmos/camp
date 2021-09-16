@@ -727,12 +727,10 @@ __device__ void cudaDeviceyequalsx(double* dy,double* dx,int nrows)
 }
 
 //volatile double *sdata
-//__device__ void cudaDevicemin(double *g_odata, double in, volatile double *sdata, int initshr, int n_shr_empty)
 __device__ void cudaDevicemin(double *g_odata, double in, volatile double *sdata, int n_shr_empty)
 {
   //extern __shared__ double sdata[];
   unsigned int tid = threadIdx.x;
-  //unsigned int i = blockIdx.x*(blockDim.x*2) + threadIdx.x;
   unsigned int i = blockIdx.x*blockDim.x + threadIdx.x;
 
   __syncthreads();

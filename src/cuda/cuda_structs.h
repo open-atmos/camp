@@ -126,6 +126,9 @@ typedef struct {
     int i_rxn;
     int i_aero_rep;
 
+    double cv_hprime2;
+    double dup;
+    double ddn;
     double init_time_step;
     int cv_mxstep; //long
     int cv_next_q;
