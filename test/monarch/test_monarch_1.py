@@ -94,6 +94,8 @@ def run_cell(config_file,diff_cells,mpi,mpiProcessesList,n_cells_aux,timesteps,
       #print("len(mpiProcessesList)==len(cases)",len(cases))
       mpiProcesses=mpiProcessesList[i]
       n_cells = int(n_cells_aux/mpiProcesses)
+      if n_cells==0:
+        n_cells=1
       #mpiProcesses=mpiProcessesList[i]
       #n_cells=n_cells_aux
     else:
@@ -164,14 +166,14 @@ def all_timesteps():
 
   divide_cells_load=False
 
-  mpiProcessesList = [1]
-  #mpiProcessesList = [40,1]
+  #mpiProcessesList = [1]
+  mpiProcessesList = [40,1]
 
-  cells = [10]
-  #cells = [1,10,100,1000]
+  #cells = [10]
+  cells = [1,10,100,1000]
   #cells = [1,10,100,1000,10000,100000]
 
-  timesteps = 5#720=12h
+  timesteps = 1#720=12h
   TIME_STEP = 2 #pending send TIME_STEP to mock_monarch
 
   #cases = ["CPU One-cell"]
