@@ -15,9 +15,14 @@ def write_itsolver_config_file(cases_multicells_onecell):
 
   #print(case_gpu_cpu)
 
-  if("Multi-cells" in cases_multicells_onecell):
+  #if("1" in cases_multicells_onecell):
+  #if(cases_multicells_onecell.find("N")!=-1):
+  if "Multi-cells" in cases_multicells_onecell or \
+      "Block-cells(N)" in cases_multicells_onecell:
+    print("USE_MULTICELLS=ON")
     file1.write("USE_MULTICELLS=ON\n")
   else:
+    print ("USE_MULTICELLS=OFF")
     file1.write("USE_MULTICELLS=OFF\n")
 
   file1.close()
@@ -177,12 +182,12 @@ def all_timesteps():
   #cases = ["CPU One-cell"]
   #cases = ["CPU Multi-cells"]
   #cases = ["CPU One-cell","CPU Multi-cells"]
-  #cases = ["CPU One-cell","GPU Multi-cells"]
-  #cases = ["CPU One-cell","GPU One-cell"]
-  cases = ["CPU Multi-cells","GPU Multi-cells"]
-  #cases = ["CPU Multi-cells","GPU One-cell"]
-  #cases = ["GPU One-cell","GPU Multi-cells"]
-  #cases = ["GPU One-cell","GPU 2 One-cell"]
+  #cases = ["CPU One-cell","GPU Block-cells(N)"]
+  #cases = ["CPU One-cell","GPU Block-cells(1)"]
+  cases = ["CPU Multi-cells","GPU Block-cells(N)"]
+  #cases = ["CPU Multi-cells","GPU Block-cells(1)"]
+  #cases = ["GPU Block-cells(1)","GPU Block-cells(N)"]
+  #cases = ["GPU Block-cells(1)","GPU 2 One-cell"]
 
   #plot_y_key = "counterBCG"
   #plot_y_key = "Average BCG internal iterations per call"
@@ -260,6 +265,13 @@ def all_timesteps():
   #ECMWF_measures=False
   ECMWF_measures=True
 
+  if(ECMWF_measures):
+    for i in range(len(cases)):
+      if cases_multicells_onecell[i]=="Block-cells(N)":
+        cases_multicells_onecell[i]="Block-cells (N)"
+      if cases_multicells_onecell[i]=="Block-cells(1)":
+        cases_multicells_onecell[i]="Block-cells (1)"
+
   plot_title=""
   first_word=""
   second_word=""
@@ -281,10 +293,6 @@ def all_timesteps():
   else:
     third_word+=cases_multicells_onecell[0] + " "
 
-  if not ECMWF_measures:
-    plot_title+=first_word + "vs " + second_word + third_word
-  else:
-    plot_title+=first_word + "vs " + second_word + third_word
 
   plot_title+=first_word + "vs " + second_word + third_word
   #plot_title+=diff_cells+" test"#+"Group cells"
