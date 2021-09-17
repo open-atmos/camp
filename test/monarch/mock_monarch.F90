@@ -264,7 +264,7 @@ program mock_monarch
   DIFF_CELLS = "OFF"
   call get_command_argument(8, arg, status=status_code)
   if(status_code.eq.0) then
-    if(arg.eq."Practical") then
+    if(arg.eq."Realistic") then
       DIFF_CELLS = "ON"
 #ifdef DEBUG_DIFF_CELLS
       print*,"DIFF_CELLS ",DIFF_CELLS

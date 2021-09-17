@@ -303,7 +303,7 @@ def all_timesteps():
   #config_file="monarch_cb05"
   config_file="monarch_binned"
 
-  diff_cells="Practical"
+  diff_cells="Realistic"
   #diff_cells="Ideal"
 
   mpi="yes"
@@ -410,7 +410,7 @@ def error_timesteps():
   #config_file="monarch_cb05"
   config_file="monarch_binned"
 
-  diff_cells="Practical"
+  diff_cells="Realistic"
   #diff_cells="Ideal"
 
   #plot_y_key="NRMSE"
@@ -502,13 +502,13 @@ def error_timesteps():
       datax=list(range(TIME_STEP,TIME_STEP*(timesteps+1),TIME_STEP))
       datay=errs
       #plot_title="Ideal "+config_file+" "+case_gpu_cpu+", Cells: "+cell_str
-      plot_title="Practical "+"test "+cases_gpu_cpu[0]+ \
+      plot_title="Realistic "+"test "+cases_gpu_cpu[0]+ \
                  " "+ cases_multicells_onecell[1] +" vs "+ cases_gpu_cpu[0] + \
                  " "+ cases_multicells_onecell[0] +", Cells: "+cell_str
       #plot_title = config_file + ", Timesteps: 720-1400"
 
       if(len(cases_gpu_cpu)==2 and len(cases_multicells_onecell)==2):
-        plot_title="Practical "+"test "+cases_gpu_cpu[1]+\
+        plot_title="Realistic "+"test "+cases_gpu_cpu[1]+\
                    " "+ cases_multicells_onecell[1] +" vs "+ cases_gpu_cpu[0] +\
                    " "+ cases_multicells_onecell[0] +", Cells: "+cell_str
 
@@ -633,7 +633,7 @@ def speedup_timesteps_counterBCG():
   #config_file="monarch_cb05"
   config_file="monarch_binned"
 
-  diff_cells="Practical"
+  diff_cells="Realistic"
   #diff_cells="Ideal"
 
   mpi="yes"
@@ -683,8 +683,8 @@ def speedup_timesteps_counterBCG():
   #plot_title = config_file + ", cells: " + str(cells[0]) + " Ideal case"
   #plot_title = config_file + ", cells: " + str(cells[0]) + ", Timesteps: 0-72"
   #plot_title = config_file + ", cells: " + str(cells[0]) + ", Timesteps: 720-792"
-  #plot_title="Practical "+"test "+"Ind. cells "
-  plot_title="Practical "+"test "+"Group cells "
+  #plot_title="Realistic "+"test "+"Ind. cells "
+  plot_title="Realistic "+"test "+"Group cells "
 
   #plot_title+=cases_gpu_cpu[0]+ \
   #             " "+ cases_multicells_onecell[0] +" vs "+ cases_gpu_cpu[0] + \
@@ -789,7 +789,7 @@ def debug_no_plot():
   #config_file="monarch_cb05"
   config_file="monarch_binned"
 
-  diff_cells="Practical"
+  diff_cells="Realistic"
   #diff_cells="Ideal"
 
   mpi="yes"

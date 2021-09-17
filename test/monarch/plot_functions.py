@@ -71,10 +71,8 @@ def normalize_by_counterLS_and_cells(data,plot_y_key,cells,case):
   #for case in cases:
 
   if("One-cell" in case and "CPU" in case):
-    #print("One-cell")
     cells_multiply=cells
   elif("Multi-cells" in case or "GPU" in case):
-    #print("Multi-cells")
     cells_multiply=1
   else:
     raise Exception("normalize_by_counterLS_and_cells case without One-cell or Multi-cells key name")
@@ -108,7 +106,7 @@ def normalized_timeLS(new_plot_y_key,cases_multicells_onecell,data, cells):
 
     if(case=="One-cell"):
       cells_multiply=cells
-    elif(case=="Multi-cells"):
+    else:
       cells_multiply=1
 
     data[case][new_plot_y_key] = []

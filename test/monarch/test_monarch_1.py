@@ -38,7 +38,6 @@ def run(config_file,diff_cells,mpi,mpiProcesses,n_cells,timesteps,
         case_gpu_cpu,case,results_file):
 
   #MPI
-
   exec_str=""
   if mpi=="yes":
     exec_str+="mpirun -v -np "+str(mpiProcesses)+" --bind-to none "
@@ -158,19 +157,18 @@ def all_timesteps():
   #config_file="monarch_cb05"
   config_file="monarch_binned"
 
-  diff_cells="Practical"
+  diff_cells="Realistic"
   #diff_cells="Ideal"
 
   mpi="yes"
   #mpi="no"
 
-  divide_cells_load=False
-
-  #mpiProcessesList = [1]
-  mpiProcessesList = [40,1]
+  mpiProcessesList = [1]
+  #mpiProcessesList = [40,1]
 
   #cells = [10]
-  cells = [1,10,100,1000]
+  cells = [1,10]
+  #cells = [1,10,100,1000]
   #cells = [1,10,100,1000,10000,100000]
 
   timesteps = 1#720=12h
@@ -193,8 +191,8 @@ def all_timesteps():
 
   #plot_y_key = "Speedup timeCVode"
   #plot_y_key = "Speedup counterLS"
-  #plot_y_key = "Speedup normalized timeLS"
-  plot_y_key = "Speedup normalized computational timeLS"
+  plot_y_key = "Speedup normalized timeLS"
+  #plot_y_key = "Speedup normalized computational timeLS"
   #plot_y_key = "Speedup counterBCG"
   #plot_y_key = "Speedup total iterations - counterBCG"
   #plot_y_key = "Speedup normalized counterBCG"
@@ -213,6 +211,15 @@ def all_timesteps():
 
   if not os.path.exists('out'):
     os.makedirs('out')
+
+  print("WARNING: DEVELOPING CSR")
+
+  if(config_file=="monarch_cb05"):
+    diff_cells="Ideal"
+    print("WARNING: ENSURE DERIV_CPU_ON_GPU IS OFF")
+
+  if config_file=="monarch_binned":
+    print("WARNING: ENSURE DERIV_CPU_ON_GPU IS ON")
 
   results_file="_solver_stats.csv"
   if(plot_y_key=="NRMSE" or plot_y_key=="MAPE" or plot_y_key=="SMAPE"):
@@ -245,16 +252,24 @@ def all_timesteps():
 
   #print("Base")
   #print("Optimized")
-  print(datay)
 
   if(mpiProcessesList==2):
     for i in range(len(cases_multicells_onecell)):
       cases_multicells_onecell[i]=str(mpiProcessesList[i])+" "+cases_multicells_onecell[i]
 
+  #ECMWF_measures=False
+  ECMWF_measures=True
+
   plot_title=""
   first_word=""
   second_word=""
   third_word=""
+
+  #if ECMWF_measures:
+  #  if cases_gpu_cpu[1]=="GPU":
+  #    if cases_multicells_onecell[0]=="One-cell"
+  #    first_word += cases_gpu_cpu[1]
+
   if(cases_gpu_cpu[0]!=cases_gpu_cpu[1]):
     first_word+=cases_gpu_cpu[1] + " "
     second_word+=cases_gpu_cpu[0] + " "
@@ -266,34 +281,38 @@ def all_timesteps():
   else:
     third_word+=cases_multicells_onecell[0] + " "
 
+  if not ECMWF_measures:
+    plot_title+=first_word + "vs " + second_word + third_word
+  else:
+    plot_title+=first_word + "vs " + second_word + third_word
+
   plot_title+=first_word + "vs " + second_word + third_word
   #plot_title+=diff_cells+" test"#+"Group cells"
   plot_title+=diff_cells+" test"#+"Ind. cells"
+
   if(len(cells)>1):
-    #plot_title+=", Timesteps:[0-"+str(TIME_STEP*timesteps)+"]"#str(timesteps)
-    #plot_title+=", Timesteps:"+str(timesteps)
-    plot_title+=", Mean over "+str(timesteps)+ " timesteps"
+
+    if not ECMWF_measures:
+      plot_title+=", Mean over "+str(timesteps)+ " timesteps"
     datax=cells
     plot_x_key="Cells"
-    #Default metric
-    #plot_y_key="Mean "+plot_y_key #Mean over all timesteps
+
   else:
     plot_title+=", Cells: "+str(cells[0])
     #datax=list(range(TIME_STEP,TIME_STEP*(timesteps+1),TIME_STEP))
     datax=list(range(1,timesteps+1,1))
     plot_x_key = "Timesteps"
 
-  #if "MAPE" in plot_y_key:
-  #  namey="MAPE [%] [%]"
-
+  #namey=plot_y_key #default name
+  namey="Speedup"
+  if plot_y_key=="Speedup normalized computational timeLS":
+    namey="Speedup without data movements CPU-GPU"
   if plot_y_key=="Speedup counterLS":
-    namey="Ratio of calls reduced"
+    namey="Proportion of calls reduced"
   if plot_y_key=="MAPE":
     namey="MAPE [%]"
-  if plot_y_key=="Speedup normalized timeLS":
-    namey="Normalized speedup"
-  else:
-    namey=plot_y_key
+  #if plot_y_key=="Speedup normalized timeLS":
+  #  namey="Normalized speedup"
 
   namex=plot_x_key
 
