@@ -575,7 +575,6 @@ def read_solver_stats(file, data):
   #print(data)
 
 def plot_species(file):
-  #print ("hola")
 
   fig = plt.figure(figsize=(7, 4.25))
   spec2 = matplotlib.gridspec.GridSpec(ncols=1, nrows=1, wspace=.35,hspace=.1,bottom=.25,top=.85,left=.1,right=.9)

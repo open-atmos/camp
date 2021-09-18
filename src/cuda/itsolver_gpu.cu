@@ -17,19 +17,19 @@ void read_options(itsolver *bicg){
   fscanf(fp, "%s", buff);
 
   if(strstr(buff,"CELLS_METHOD=Block-cells(1)")!=NULL){
-    printf("itsolver read_options CELLS_METHOD=cells\n");
+    //printf("itsolver read_options CELLS_METHOD=cells\n");
     bicg->cells_method=3; //One-cell per block (Independent cells)
   }
   else if(strstr(buff,"CELLS_METHOD=Block-cells(N)")!=NULL){
-    printf("itsolver read_options CELLS_METHOD=cells\n");
+    //printf("itsolver read_options CELLS_METHOD=cells\n");
     bicg->cells_method=2; //One-cell per block (Independent cells)
   }
   else if(strstr(buff,"CELLS_METHOD=Multi-cells")!=NULL){
-    printf("itsolver read_options CELLS_METHOD=cells\n");
+    //printf("itsolver read_options CELLS_METHOD=cells\n");
     bicg->cells_method=1; //One-cell per block (Independent cells)
   }
   else if(strstr(buff,"CELLS_METHOD=One-cell")!=NULL){
-    printf("itsolver read_options CELLS_METHOD=One-cell\n");
+    //printf("itsolver read_options CELLS_METHOD=One-cell\n");
     bicg->cells_method=0;
   }else{
     printf("ERROR: solveGPU_block unkonwn cells_method");

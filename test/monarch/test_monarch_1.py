@@ -10,6 +10,7 @@ import plot_functions
 import datetime
 import pandas as pd
 import seaborn as sns
+import time
 
 def write_itsolver_config_file(cases_multicells_onecell):
   file1 = open("itsolver_options.txt","w")
@@ -168,13 +169,14 @@ def all_timesteps():
   mpiProcessesList = [1]
   #mpiProcessesList = [40,1]
 
-  cells = [10]
+  cells = [100]
   #cells = [1,5]
   #cells = [100,500,1000]
+  #cells = [1,5,10,50,100]
   #cells = [100,500,1000,5000,10000]
   #cells = [100,1000,10000,100000]
 
-  timesteps = 60#5 #720=24h #30=1h
+  timesteps = 5#5 #720=24h #30=1h
   TIME_STEP = 2 #pending send TIME_STEP to mock_monarch
 
   #cases = ["CPU One-cell"]
@@ -185,8 +187,9 @@ def all_timesteps():
   #cases = ["CPU Multi-cells","GPU Block-cells(N)"]
   #cases = ["CPU Multi-cells","GPU Block-cells(1)"]
   #cases = ["GPU Block-cells(1)","GPU Block-cells(N)"]
-  #cases = ["CPU One-cell","GPU One-cell"]
-  cases = ["CPU One-cell","GPU Multi-cells"]
+  cases = ["CPU One-cell","GPU One-cell"]
+  #cases = ["CPU Multi-cells","GPU Multi-cells"]
+  #cases = ["GPU Multi-cells","GPU Block-cells(N)"]
 
   #plot_y_key = "counterBCG"
   #plot_y_key = "Average BCG internal iterations per call"
@@ -208,8 +211,7 @@ def all_timesteps():
   #plot_y_key="SMAPE"
 
   SAVE_PLOT=False
-  if len(cells) > 8 or (timesteps > 200 and cells[-1]>10) or cells[-1]>1000:
-    SAVE_PLOT=True
+  start_time = time.perf_counter()
 
   #remove_iters=0#10 #360
 
@@ -253,6 +255,12 @@ def all_timesteps():
       datay.append(np.mean(datay_cell))
     else:
       datay=datay_cell
+
+  end_time=time.perf_counter()
+  time_s=end_time-start_time
+  #print("time_s:",time_s)
+  if time_s>60:
+    SAVE_PLOT=True
 
   #print("Base")
   #print("Optimized")
@@ -304,13 +312,8 @@ def all_timesteps():
     else:
       third_word+=cases_multicells_onecell[0] + " "
 
-
-
-
-
   plot_title+=first_word + "vs " + second_word + third_word
-  #plot_title+=diff_cells+" test"#+"Group cells"
-  plot_title+=diff_cells+" test"#+"Ind. cells"
+  plot_title+=diff_cells+" test"
 
   if(len(cells)>1):
 
@@ -359,28 +362,6 @@ print(save_path)
 #dates = pd.date_range("1 1 2016", periods=365, freq="D")
 #data = pd.DataFrame(values, dates, columns=["A", "B", "C", "D"])
 #data = data.rolling(7).mean()
-
-def plotsns():
-
-  datax=[1,10]
-  datay=[1,2]
-
-  sns.set_style("whitegrid")
-
-  #sns.set(font_scale=2)
-  #sns.set_context("paper", rc={"font.size":8,"axes.titlesize":8,"axes.labelsize":5})
-  sns.set_context("paper", font_scale=1.25)
-
-  data = pd.DataFrame(datay, datax)
-
-  plt.xlabel("Colors")
-  plt.ylabel("Values")
-  plt.title("Colors vs Values") # You can comment this line out if you don't need title
-
-  sns.lineplot(data=data, palette="tab10", linewidth=2.5)
-  plt.show()
-
-#plotsns()
 
 all_timesteps()
 

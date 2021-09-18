@@ -186,6 +186,7 @@ program mock_monarch
   real(kind=dp) :: timeCvode_prev = 0.0
   real(kind=dp) :: timeBiconjGradMemcpy_prev = 0.0
   integer :: export_results_all_cells
+  integer :: plot_species = 0
 
   ! initialize mpi (to take the place of a similar MONARCH call)
   call pmc_mpi_init()
@@ -597,9 +598,8 @@ program mock_monarch
 #endif
 
   ! Output results and scripts
-  if (pmc_mpi_rank().eq.0) then
+  if (pmc_mpi_rank().eq.0 .and. plot_species.eq.1 ) then
     !write(*,*) "MONARCH interface tests - PASS"
-    !call print_state_gnuplot(curr_time,pmc_interface,species_conc)
     call print_state_gnuplot(curr_time,pmc_interface, name_gas_species_to_print,id_gas_species_to_print&
             ,name_aerosol_species_to_print,id_aerosol_species_to_print,RESULTS_FILE_UNIT)
     call create_gnuplot_script(pmc_interface, output_file_prefix, &
@@ -608,13 +608,13 @@ program mock_monarch
           !        output_file_title, plot_start_time, curr_time, n_cells_plot, cell_to_print)
           call create_gnuplot_persist_paper_camp(pmc_interface, output_file_prefix, &
                   plot_start_time, curr_time)
-                          end if
+  end if
 
-                          close(RESULTS_FILE_UNIT)
-                                  close(RESULTS_FILE_UNIT_TABLE)
-                                  close(RESULTS_FILE_UNIT_PY)
-                                  close(STATSOUT_FILE_UNIT)
-                                  close(RESULTS_ALL_CELLS_FILE_UNIT)
+  close(RESULTS_FILE_UNIT)
+  close(RESULTS_FILE_UNIT_TABLE)
+  close(RESULTS_FILE_UNIT_PY)
+  close(STATSOUT_FILE_UNIT)
+  close(RESULTS_ALL_CELLS_FILE_UNIT)
 
   ! Deallocation
   deallocate(camp_input_file)
@@ -1401,7 +1401,6 @@ contains
 #endif
 
   !> Output the model results
-  !subroutine print_state_gnuplot(curr_time,pmc_interface,species_conc)
   subroutine print_state_gnuplot(curr_time_in, pmc_interface, name_gas_species_to_print,id_gas_species_to_print&
           ,name_aerosol_species_to_print,id_aerosol_species_to_print, file_unit, n_cells_to_print)
 
@@ -1951,10 +1950,10 @@ contains
       write(STATSOUT_FILE_UNIT, "(A)", advance="no") trim(time_str)
       write(STATSOUT_FILE_UNIT, "(A)", advance="no") ","
 
-      write(STATSOUT_FILE_UNIT, "(I6)", advance="no") &
+      write(STATSOUT_FILE_UNIT, "(I9)", advance="no") &
               counterBCG-counterBCG_prev
       write(STATSOUT_FILE_UNIT, "(A)", advance="no") ","
-      write(STATSOUT_FILE_UNIT, "(I6)", advance="no") &
+      write(STATSOUT_FILE_UNIT, "(I9)", advance="no") &
               counterLS-counterLS_prev
       write(STATSOUT_FILE_UNIT, "(A)", advance="no") ","
       write(STATSOUT_FILE_UNIT, "(ES13.6)", advance="no") &
