@@ -11,6 +11,8 @@ from sklearn.preprocessing import MinMaxScaler
 import math
 import datetime
 import os
+import pandas as pd
+import seaborn as sns
 
 
 def get_values_same_timestep(timestep_to_plot,mpiProcessesList, \
@@ -494,7 +496,7 @@ def plot_solver_stats(data, plot_x_key, plot_y_key, plot_title):
 
   plt.show()
 
-def plot(namex, namey, datax, datay, plot_title, SAVE_PLOT):
+def plotplt(namex, namey, datax, datay, plot_title, SAVE_PLOT):
 
   #fig = plt.figure(figsize=(7, 4.25))
   fig = plt.figure()
@@ -513,6 +515,28 @@ def plot(namex, namey, datax, datay, plot_title, SAVE_PLOT):
   #axes.set_yscale('log')
   plt.xticks()
   plt.title(plot_title)
+
+def plotsns(namex, namey, datax, datay, plot_title, SAVE_PLOT):
+
+  #print(sns.__version__)
+  sns.set_style("whitegrid")
+
+  #sns.set(font_scale=2)
+  #sns.set_context("paper", rc={"font.size":8,"axes.titlesize":8,"axes.labelsize":5})
+  sns.set_context("paper", font_scale=1.25)
+
+  data = pd.DataFrame(datay, datax)
+
+  plt.xlabel(namex)
+  plt.ylabel(namey)
+  plt.title(plot_title)
+
+  sns.lineplot(data=data, palette="tab10", linewidth=2.5, legend=False)
+
+def plot(namex, namey, datax, datay, plot_title, SAVE_PLOT):
+
+  #plotplt(namex, namey, datax, datay, plot_title, SAVE_PLOT)
+  plotsns(namex, namey, datax, datay, plot_title, SAVE_PLOT)
 
   if SAVE_PLOT:
     now = datetime.datetime.now()

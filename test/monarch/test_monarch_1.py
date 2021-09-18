@@ -1,6 +1,5 @@
 import matplotlib as mpl
 mpl.use('TkAgg')
-import plot_cases
 import matplotlib.pyplot as plt
 import csv
 import sys, getopt
@@ -9,20 +8,20 @@ import numpy as np
 from pylab import imread,subplot,imshow,show
 import plot_functions
 import datetime
+import pandas as pd
+import seaborn as sns
 
 def write_itsolver_config_file(cases_multicells_onecell):
   file1 = open("itsolver_options.txt","w")
 
   #print(case_gpu_cpu)
 
-  #if("1" in cases_multicells_onecell):
-  #if(cases_multicells_onecell.find("N")!=-1):
   if "Multi-cells" in cases_multicells_onecell or \
       "Block-cells(N)" in cases_multicells_onecell:
-    print("USE_MULTICELLS=ON")
+    #print("USE_MULTICELLS=ON")
     file1.write("USE_MULTICELLS=ON\n")
   else:
-    print ("USE_MULTICELLS=OFF")
+    #print ("USE_MULTICELLS=OFF")
     file1.write("USE_MULTICELLS=OFF\n")
 
   file1.close()
@@ -158,6 +157,7 @@ def run_cell(config_file,diff_cells,mpi,mpiProcessesList,n_cells_aux,timesteps,
 
 def all_timesteps():
 
+
   #config_file="simple"
   #config_file="monarch_cb05"
   config_file="monarch_binned"
@@ -168,15 +168,16 @@ def all_timesteps():
   mpi="yes"
   #mpi="no"
 
-  mpiProcessesList = [1]
-  #mpiProcessesList = [40,1]
+  #mpiProcessesList = [1]
+  mpiProcessesList = [40,1]
 
   #cells = [10]
-  cells = [1,10]
-  #cells = [1,10,100,1000]
-  #cells = [1,10,100,1000,10000,100000]
+  cells = [1,100]
+  #cells = [100,500,1000,5000,10000]
+  #cells = [100,500,1000,5000,10000]
+  #cells = [100,1000,10000,100000]
 
-  timesteps = 1#720=12h
+  timesteps = 1#5 #720=24h #30=1h
   TIME_STEP = 2 #pending send TIME_STEP to mock_monarch
 
   #cases = ["CPU One-cell"]
@@ -184,10 +185,11 @@ def all_timesteps():
   #cases = ["CPU One-cell","CPU Multi-cells"]
   #cases = ["CPU One-cell","GPU Block-cells(N)"]
   #cases = ["CPU One-cell","GPU Block-cells(1)"]
-  cases = ["CPU Multi-cells","GPU Block-cells(N)"]
-  #cases = ["CPU Multi-cells","GPU Block-cells(1)"]
+  #cases = ["CPU Multi-cells","GPU Block-cells(N)"]
+  cases = ["CPU Multi-cells","GPU Block-cells(1)"]
   #cases = ["GPU Block-cells(1)","GPU Block-cells(N)"]
   #cases = ["GPU Block-cells(1)","GPU 2 One-cell"]
+  #cases = ["CPU One-cell","GPU One-cell"]
 
   #plot_y_key = "counterBCG"
   #plot_y_key = "Average BCG internal iterations per call"
@@ -196,8 +198,8 @@ def all_timesteps():
 
   #plot_y_key = "Speedup timeCVode"
   #plot_y_key = "Speedup counterLS"
-  plot_y_key = "Speedup normalized timeLS"
-  #plot_y_key = "Speedup normalized computational timeLS"
+  #plot_y_key = "Speedup normalized timeLS"
+  plot_y_key = "Speedup normalized computational timeLS"
   #plot_y_key = "Speedup counterBCG"
   #plot_y_key = "Speedup total iterations - counterBCG"
   #plot_y_key = "Speedup normalized counterBCG"
@@ -209,7 +211,7 @@ def all_timesteps():
   #plot_y_key="SMAPE"
 
   SAVE_PLOT=False
-  if len(cells) > 3 or timesteps > 10 or cells[0]>1000:
+  if len(cells) > 8 or timesteps > 10 or cells[0]>1000:
     SAVE_PLOT=True
 
   #remove_iters=0#10 #360
@@ -258,10 +260,6 @@ def all_timesteps():
   #print("Base")
   #print("Optimized")
 
-  if(mpiProcessesList==2):
-    for i in range(len(cases_multicells_onecell)):
-      cases_multicells_onecell[i]=str(mpiProcessesList[i])+" "+cases_multicells_onecell[i]
-
   #ECMWF_measures=False
   ECMWF_measures=True
 
@@ -272,26 +270,39 @@ def all_timesteps():
       if cases_multicells_onecell[i]=="Block-cells(1)":
         cases_multicells_onecell[i]="Block-cells (1)"
 
+  if(mpiProcessesList==2):
+    for i in range(len(cases_multicells_onecell)):
+      cases_multicells_onecell[i]=str(mpiProcessesList[i])+" "+cases_multicells_onecell[i]
+
   plot_title=""
   first_word=""
   second_word=""
   third_word=""
 
-  #if ECMWF_measures:
-  #  if cases_gpu_cpu[1]=="GPU":
-  #    if cases_multicells_onecell[0]=="One-cell"
-  #    first_word += cases_gpu_cpu[1]
+  #if(len(mpiProcessesList)==2):
+  #  for()
+  #  if(cases_multicells_onecell[0]=="CPU"):
+  #    cases_multicells_onecell[0]=str(mpiProcessesList[0]) + " MPI"
+  #  if(cases_multicells_onecell[1]=="GPU"):
+  #    cases_multicells_onecell[0]=str(mpiProcessesList[0]) + " MPI"
 
-  if(cases_gpu_cpu[0]!=cases_gpu_cpu[1]):
-    first_word+=cases_gpu_cpu[1] + " "
-    second_word+=cases_gpu_cpu[0] + " "
+  if ECMWF_measures:
+    first_word+= cases_gpu_cpu[1] + " " + cases_multicells_onecell[1] + " "
+    second_word+= cases_gpu_cpu[0] + " " + cases_multicells_onecell[0] + " "
   else:
-    third_word+=cases_gpu_cpu[0] + " "
-  if(cases_multicells_onecell[0]!=cases_multicells_onecell[1]):
-    first_word+=cases_multicells_onecell[1] + " "
-    second_word+=cases_multicells_onecell[0] + " "
-  else:
-    third_word+=cases_multicells_onecell[0] + " "
+    if(cases_gpu_cpu[0]!=cases_gpu_cpu[1]):
+      first_word+=cases_gpu_cpu[1] + " "
+      second_word+=cases_gpu_cpu[0] + " "
+    else:
+      third_word+=cases_gpu_cpu[0] + " "
+    if(cases_multicells_onecell[0]!=cases_multicells_onecell[1]):
+      first_word+=cases_multicells_onecell[1] + " "
+      second_word+=cases_multicells_onecell[0] + " "
+    else:
+      third_word+=cases_multicells_onecell[0] + " "
+
+
+
 
 
   plot_title+=first_word + "vs " + second_word + third_word
@@ -314,7 +325,7 @@ def all_timesteps():
   #namey=plot_y_key #default name
   namey="Speedup"
   if plot_y_key=="Speedup normalized computational timeLS":
-    namey="Speedup without data movements CPU-GPU"
+    namey="Speedup without CPU-GPU data transfers"
   if plot_y_key=="Speedup counterLS":
     namey="Proportion of calls reduced"
   if plot_y_key=="MAPE":
@@ -338,13 +349,36 @@ if not os.path.exists(save_folder):
 save_path=save_folder+"/"+dt_string
 print(save_path)
 """
+
+
+#rs = np.random.RandomState(365)
+#values = rs.randn(365, 4).cumsum(axis=0)
+#dates = pd.date_range("1 1 2016", periods=365, freq="D")
+#data = pd.DataFrame(values, dates, columns=["A", "B", "C", "D"])
+#data = data.rolling(7).mean()
+
+def plotsns():
+
+  datax=[1,10]
+  datay=[1,2]
+
+  sns.set_style("whitegrid")
+
+  #sns.set(font_scale=2)
+  #sns.set_context("paper", rc={"font.size":8,"axes.titlesize":8,"axes.labelsize":5})
+  sns.set_context("paper", font_scale=1.25)
+
+  data = pd.DataFrame(datay, datax)
+
+  plt.xlabel("Colors")
+  plt.ylabel("Values")
+  plt.title("Colors vs Values") # You can comment this line out if you don't need title
+
+  sns.lineplot(data=data, palette="tab10", linewidth=2.5)
+  plt.show()
+
+#plotsns()
+
 all_timesteps()
 
-#deprecated
-#plot_cases.mpi_scalability()
-#plot_cases.speedup_cells("Mean")
-#plot_cases.speedup_cells("Standard Deviation")
-#plot_cases.error_timesteps()
-#plot_cases.speedup_timesteps()
-#plot_cases.speedup_timesteps_counterBCG()
-#plot_cases.debug_no_plot()
+
