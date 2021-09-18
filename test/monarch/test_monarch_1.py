@@ -69,7 +69,8 @@ def run(config_file,diff_cells,mpi,mpiProcesses,n_cells,timesteps,
 
   #Onecell-Multicells itsolver
   write_itsolver_config_file(case)
-  if(case_gpu_cpu=="GPU"):
+  if(case_gpu_cpu=="GPU" and case!="One-cell"):
+    print("case_gpu_cpu==GPU and case!=One-cell")
     case="Multi-cells"
 
   #Onecell-Multicells
@@ -168,11 +169,11 @@ def all_timesteps():
   mpi="yes"
   #mpi="no"
 
-  #mpiProcessesList = [1]
-  mpiProcessesList = [40,1]
+  mpiProcessesList = [1]
+  #mpiProcessesList = [40,1]
 
   #cells = [10]
-  cells = [1,100]
+  cells = [1,5]
   #cells = [100,500,1000,5000,10000]
   #cells = [100,500,1000,5000,10000]
   #cells = [100,1000,10000,100000]
@@ -186,10 +187,9 @@ def all_timesteps():
   #cases = ["CPU One-cell","GPU Block-cells(N)"]
   #cases = ["CPU One-cell","GPU Block-cells(1)"]
   #cases = ["CPU Multi-cells","GPU Block-cells(N)"]
-  cases = ["CPU Multi-cells","GPU Block-cells(1)"]
+  #cases = ["CPU Multi-cells","GPU Block-cells(1)"]
   #cases = ["GPU Block-cells(1)","GPU Block-cells(N)"]
-  #cases = ["GPU Block-cells(1)","GPU 2 One-cell"]
-  #cases = ["CPU One-cell","GPU One-cell"]
+  cases = ["CPU One-cell","GPU One-cell"]
 
   #plot_y_key = "counterBCG"
   #plot_y_key = "Average BCG internal iterations per call"
@@ -198,8 +198,8 @@ def all_timesteps():
 
   #plot_y_key = "Speedup timeCVode"
   #plot_y_key = "Speedup counterLS"
-  #plot_y_key = "Speedup normalized timeLS"
-  plot_y_key = "Speedup normalized computational timeLS"
+  plot_y_key = "Speedup normalized timeLS"
+  #plot_y_key = "Speedup normalized computational timeLS"
   #plot_y_key = "Speedup counterBCG"
   #plot_y_key = "Speedup total iterations - counterBCG"
   #plot_y_key = "Speedup normalized counterBCG"
@@ -270,14 +270,15 @@ def all_timesteps():
       if cases_multicells_onecell[i]=="Block-cells(1)":
         cases_multicells_onecell[i]="Block-cells (1)"
 
-  if(mpiProcessesList==2):
+  gpus=1
+  if(len(mpiProcessesList)==2):
     for i in range(len(cases_multicells_onecell)):
-      cases_multicells_onecell[i]=str(mpiProcessesList[i])+" "+cases_multicells_onecell[i]
-
-  plot_title=""
-  first_word=""
-  second_word=""
-  third_word=""
+      #cases_multicells_onecell[i]=str(mpiProcessesList[i])+" "+cases_multicells_onecell[i]
+      #print(cases_multicells_onecell[i])
+      if cases_gpu_cpu[0]=="CPU":
+        cases_gpu_cpu[0]=str(mpiProcessesList[0]) + " MPI processes"
+      if cases_gpu_cpu[1]=="GPU":
+        cases_gpu_cpu[1]=str(gpus) + " GPU"
 
   #if(len(mpiProcessesList)==2):
   #  for()
@@ -285,6 +286,11 @@ def all_timesteps():
   #    cases_multicells_onecell[0]=str(mpiProcessesList[0]) + " MPI"
   #  if(cases_multicells_onecell[1]=="GPU"):
   #    cases_multicells_onecell[0]=str(mpiProcessesList[0]) + " MPI"
+
+  plot_title=""
+  first_word=""
+  second_word=""
+  third_word=""
 
   if ECMWF_measures:
     first_word+= cases_gpu_cpu[1] + " " + cases_multicells_onecell[1] + " "

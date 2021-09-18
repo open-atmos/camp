@@ -64,15 +64,10 @@ def normalize_by_counterLS_and_cells(data,plot_y_key,cells,case):
   #plot_y_key = "timeLS"
   #new_plot_y_key="Normalized timeLS"
 
-  cases=list(data.keys())
-
-  print("normalize_by_counterLS_and_cells")
-
+  #print("normalize_by_counterLS_and_cells")
   #print(data[cases[0]][plot_y_key])
 
-  #for case in cases:
-
-  if("One-cell" in case and "CPU" in case):
+  if("One-cell" in case):
     cells_multiply=cells
   elif("Multi-cells" in case or "GPU" in case):
     cells_multiply=1
