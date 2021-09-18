@@ -16,13 +16,9 @@ def write_itsolver_config_file(cases_multicells_onecell):
 
   #print(case_gpu_cpu)
 
-  if "Multi-cells" in cases_multicells_onecell or \
-      "Block-cells(N)" in cases_multicells_onecell:
-    #print("USE_MULTICELLS=ON")
-    file1.write("USE_MULTICELLS=ON\n")
-  else:
-    #print ("USE_MULTICELLS=OFF")
-    file1.write("USE_MULTICELLS=OFF\n")
+  cells_method_str="CELLS_METHOD="+cases_multicells_onecell
+  file1.write(cells_method_str)
+  print(cells_method_str)
 
   file1.close()
 
@@ -172,13 +168,13 @@ def all_timesteps():
   mpiProcessesList = [1]
   #mpiProcessesList = [40,1]
 
-  #cells = [10]
-  cells = [1,5]
-  #cells = [100,500,1000,5000,10000]
+  cells = [10]
+  #cells = [1,5]
+  #cells = [100,500,1000]
   #cells = [100,500,1000,5000,10000]
   #cells = [100,1000,10000,100000]
 
-  timesteps = 1#5 #720=24h #30=1h
+  timesteps = 60#5 #720=24h #30=1h
   TIME_STEP = 2 #pending send TIME_STEP to mock_monarch
 
   #cases = ["CPU One-cell"]
@@ -189,7 +185,8 @@ def all_timesteps():
   #cases = ["CPU Multi-cells","GPU Block-cells(N)"]
   #cases = ["CPU Multi-cells","GPU Block-cells(1)"]
   #cases = ["GPU Block-cells(1)","GPU Block-cells(N)"]
-  cases = ["CPU One-cell","GPU One-cell"]
+  #cases = ["CPU One-cell","GPU One-cell"]
+  cases = ["CPU One-cell","GPU Multi-cells"]
 
   #plot_y_key = "counterBCG"
   #plot_y_key = "Average BCG internal iterations per call"
@@ -198,7 +195,7 @@ def all_timesteps():
 
   #plot_y_key = "Speedup timeCVode"
   #plot_y_key = "Speedup counterLS"
-  plot_y_key = "Speedup normalized timeLS"
+  #plot_y_key = "Speedup normalized timeLS"
   #plot_y_key = "Speedup normalized computational timeLS"
   #plot_y_key = "Speedup counterBCG"
   #plot_y_key = "Speedup total iterations - counterBCG"
@@ -207,11 +204,11 @@ def all_timesteps():
 
   #plot_y_key = "% Time data transfers CPU-GPU BCG"
   #plot_y_key="NRMSE"
-  #plot_y_key="MAPE"
+  plot_y_key="MAPE"
   #plot_y_key="SMAPE"
 
   SAVE_PLOT=False
-  if len(cells) > 8 or timesteps > 10 or cells[0]>1000:
+  if len(cells) > 8 or (timesteps > 200 and cells[-1]>10) or cells[-1]>1000:
     SAVE_PLOT=True
 
   #remove_iters=0#10 #360

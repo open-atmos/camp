@@ -16,13 +16,24 @@ void read_options(itsolver *bicg){
   }
   fscanf(fp, "%s", buff);
 
-  if(strstr(buff,"USE_MULTICELLS=ON")!=NULL){
-    //printf("itsolver read_options USE_MULTICELLS=ON\n");
-    bicg->use_multicells=1; //One-cell per block (Independent cells)
+  if(strstr(buff,"CELLS_METHOD=Block-cells(1)")!=NULL){
+    printf("itsolver read_options CELLS_METHOD=cells\n");
+    bicg->cells_method=3; //One-cell per block (Independent cells)
   }
-  else{
-    //printf("itsolver read_options USE_MULTICELLS=OFF\n");
-    bicg->use_multicells=0;
+  else if(strstr(buff,"CELLS_METHOD=Block-cells(N)")!=NULL){
+    printf("itsolver read_options CELLS_METHOD=cells\n");
+    bicg->cells_method=2; //One-cell per block (Independent cells)
+  }
+  else if(strstr(buff,"CELLS_METHOD=Multi-cells")!=NULL){
+    printf("itsolver read_options CELLS_METHOD=cells\n");
+    bicg->cells_method=1; //One-cell per block (Independent cells)
+  }
+  else if(strstr(buff,"CELLS_METHOD=One-cell")!=NULL){
+    printf("itsolver read_options CELLS_METHOD=One-cell\n");
+    bicg->cells_method=0;
+  }else{
+    printf("ERROR: solveGPU_block unkonwn cells_method");
+    exit(0);
   }
 
 }
@@ -784,19 +795,9 @@ void solveGPU_block(itsolver *bicg, double *dA, int *djA, int *diA, double *dx, 
 
   int len_cell = bicg->nrows/bicg->n_cells;
 
-  int max_threads_block;
-
-  if(bicg->use_multicells) {
-
-    max_threads_block = bicg->threads;//bicg->threads; 128;
-
-  }else{
-
-    max_threads_block = nextPowerOfTwo(len_cell);//bicg->threads;
-
-    //int n_shr_empty = max_threads%len_cell; //Wrong
-    //int n_shr_empty = max_threads-nrows;
-
+  int max_threads_block=nextPowerOfTwo(len_cell);
+  if(bicg->cells_method==2) {
+    max_threads_block = bicg->threads;
   }
 
 #ifdef BCG_ALL_THREADS
@@ -818,7 +819,7 @@ void solveGPU_block(itsolver *bicg, double *dA, int *djA, int *diA, double *dx, 
 
   //Common kernel (Launch all blocks except the last)
   //blocks=blocks-1;
-  if(bicg->use_multicells
+  if(bicg->cells_method
   //&& blocks!=0
   ) {
 

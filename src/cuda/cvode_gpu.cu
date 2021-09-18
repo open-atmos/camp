@@ -3739,8 +3739,11 @@ int linsolsolve_gpu2(SolverData *sd, CVodeMem cv_mem)
 
 #endif
 
-  //solveGPU(bicg,bicg->dA,bicg->djA,bicg->diA,bicg->dx,bicg->dtempv);
-  solveGPU_block(bicg,bicg->dA,bicg->djA,bicg->diA,bicg->dx,bicg->dtempv);
+    if(bicg->cells_method==1) {
+      solveGPU(bicg,bicg->dA,bicg->djA,bicg->diA,bicg->dx,bicg->dtempv);
+    }else {
+      solveGPU_block(bicg,bicg->dA,bicg->djA,bicg->diA,bicg->dx,bicg->dtempv);
+    }
 
 #ifdef DEBUG_LINEAR_SOLVERS
 
