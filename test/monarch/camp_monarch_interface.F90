@@ -40,9 +40,9 @@ module camp_monarch_interface
   type :: monarch_interface_t
     private
     !> CAMP-chem core
-    type(camp_core_t), pointer :: camp_core
+    type(camp_core_t), pointer :: camp_core => null( )
     !> CAMP-chem state
-    type(camp_state_t), pointer :: camp_state
+    type(camp_state_t), pointer :: camp_state => null( )
     !> MONARCH species names
     type(string_t), allocatable :: monarch_species_names(:)
     !> MONARCH <-> PartMC species map
@@ -58,13 +58,13 @@ module camp_monarch_interface
     !> Ending index for PartMC species on the MONARCH tracer array
     integer(kind=i_kind) :: tracer_ending_id
     !> PartMC-camp <-> MONARCH species map input data
-    type(property_t), pointer :: species_map_data
+    type(property_t), pointer :: species_map_data => null( )
     !> Gas-phase water id in PartMC-camp
     integer(kind=i_kind) :: gas_phase_water_id
     !> Initial concentration data
-    type(property_t), pointer :: init_conc_data
+    type(property_t), pointer :: init_conc_data => null( )
     !> Interface input data
-    type(property_t), pointer :: property_set
+    type(property_t), pointer :: property_set => null( )
     !> Solve multiple grid cells at once?
     logical :: solve_multiple_cells = .false.
   contains
@@ -333,7 +333,6 @@ contains
     if (MONARCH_PROCESS.eq.0) then
       call cpu_time(comp_end)
       write(*,*) "Initialization time: ", comp_end-comp_start, " s"
-      !call new_obj%camp_core%print()
     end if
 
   end function constructor
@@ -391,12 +390,6 @@ contains
       state_size_per_cell = this%camp_core%state_size_per_cell()
     end if
 
-
-#ifdef CAMP_DEBUG
-    ! Evaluate the Jacobian during solving
-    solver_stats%eval_Jac = .true.
-#endif
-
     k_end = size(MONARCH_conc,3)
 
     call cpu_time(comp_start)
@@ -424,14 +417,6 @@ contains
                     water_conc(i,j,k_flip,water_vapor_index) * &
                     air_density(i,k,j) * 1.0d9
 
-            ! Start the computation timer
-            if (MONARCH_PROCESS.eq.0 .and. i.eq.i_start .and. j.eq.j_start &
-                    .and. k.eq.1) then
-              !solver_stats%debug_out = .false.
-            else
-              !solver_stats%debug_out = .false.
-            end if
-
             ! Integrate the CAMP mechanism
             call this%camp_core%solve(this%camp_state, &
                     real(time_step, kind=dp), solver_stats = solver_stats)
@@ -439,18 +424,6 @@ contains
             call assert_msg(376450931, solver_stats%status_code.eq.0, &
                             "Solver failed with code "// &
                             to_string(solver_stats%solver_flag))
-
-#ifdef CAMP_DEBUG
-            ! Check the Jacobian evaluations
-            call assert_msg(611569150, solver_stats%Jac_eval_fails.eq.0,&
-                          trim( to_string( solver_stats%Jac_eval_fails ) )// &
-                          " Jacobian evaluation failures at time "// &
-                          trim( to_string( start_time ) ) )
-
-            ! Only evaluate the Jacobian for the first cell because it is
-            ! time consuming
-            solver_stats%eval_Jac = .false.
-#endif
 
             ! Update the MONARCH tracer array with new species concentrations
             MONARCH_conc(i,j,k_flip,this%map_monarch_id(:)) = &

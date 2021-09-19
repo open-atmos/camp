@@ -10,6 +10,10 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Build the testing docker image
-      run: docker build -t camp-test .
+      run: docker build -t camp-test . -f Dockerfile.debug
     - name: Run the tests in the docker container
       run: docker run -t camp-test bash -c 'cd /build; make test'
+    - name: Build the MPI testing docker image
+      run: docker build -t camp-test-mpi . -f Dockerfile.mpi
+    - name: Run the MPI tests in the docker container
+      run: docker run -t camp-test-mpi bash -c 'cd /build; make test'
