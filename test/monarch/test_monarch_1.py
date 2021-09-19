@@ -152,6 +152,24 @@ def run_cell(config_file,diff_cells,mpi,mpiProcessesList,n_cells_aux,timesteps,
 
   return datay
 
+def run_case(config_file,diff_cells,mpi,mpiProcessesList,cells,timesteps,
+             cases,cases_gpu_cpu,cases_multicells_onecell,results_file,plot_y_key):
+
+  #cases=casesList[0]
+
+  datay=[]
+  for i in range(len(cells)):
+    datay_cell = run_cell(config_file,diff_cells,mpi,mpiProcessesList,cells[i],timesteps,
+                          cases,cases_gpu_cpu,cases_multicells_onecell,results_file,plot_y_key)
+
+    #print(datay_cell)
+    if(len(cells)>1):
+      #Default metric
+      datay.append(np.mean(datay_cell))
+    else:
+      datay=datay_cell
+
+  return datay
 
 def all_timesteps():
 
@@ -169,16 +187,17 @@ def all_timesteps():
   mpiProcessesList = [1]
   #mpiProcessesList = [40,1]
 
-  cells = [100]
+  cells = [10]
   #cells = [1,5]
   #cells = [100,500,1000]
   #cells = [1,5,10,50,100]
   #cells = [100,500,1000,5000,10000]
   #cells = [100,1000,10000,100000]
 
-  timesteps = 5#5 #720=24h #30=1h
+  timesteps = 10#5 #720=24h #30=1h
   TIME_STEP = 2 #pending send TIME_STEP to mock_monarch
 
+  cases = ["Historic"]
   #cases = ["CPU One-cell"]
   #cases = ["CPU Multi-cells"]
   #cases = ["CPU One-cell","CPU Multi-cells"]
@@ -187,9 +206,10 @@ def all_timesteps():
   #cases = ["CPU Multi-cells","GPU Block-cells(N)"]
   #cases = ["CPU Multi-cells","GPU Block-cells(1)"]
   #cases = ["GPU Block-cells(1)","GPU Block-cells(N)"]
-  cases = ["CPU One-cell","GPU One-cell"]
+  #cases = ["CPU One-cell","GPU One-cell"]
   #cases = ["CPU Multi-cells","GPU Multi-cells"]
   #cases = ["GPU Multi-cells","GPU Block-cells(N)"]
+  #cases = ["GPU Block-cells(N)","GPU Block-cells(1)"]
 
   #plot_y_key = "counterBCG"
   #plot_y_key = "Average BCG internal iterations per call"
@@ -210,15 +230,21 @@ def all_timesteps():
   plot_y_key="MAPE"
   #plot_y_key="SMAPE"
 
-  SAVE_PLOT=False
-  start_time = time.perf_counter()
-
   #remove_iters=0#10 #360
+
+  results_file="_solver_stats.csv"
+  if(plot_y_key=="NRMSE" or plot_y_key=="MAPE" or plot_y_key=="SMAPE"):
+    results_file='_results_all_cells.csv'
 
   if not os.path.exists('out'):
     os.makedirs('out')
 
   print("WARNING: DEVELOPING CSR")
+
+  if "total" in plot_y_key:
+    print("WARNING: Remember to enable solveBcgCuda_sum_it")
+  elif "counterBCG" in plot_y_key:
+    print("WARNING: Remember to disable solveBcgCuda_sum_it")
 
   if(config_file=="monarch_cb05"):
     diff_cells="Ideal"
@@ -227,9 +253,18 @@ def all_timesteps():
   if config_file=="monarch_binned":
     print("WARNING: ENSURE DERIV_CPU_ON_GPU IS ON")
 
-  results_file="_solver_stats.csv"
-  if(plot_y_key=="NRMSE" or plot_y_key=="MAPE" or plot_y_key=="SMAPE"):
-    results_file='_results_all_cells.csv'
+  SAVE_PLOT=False
+  start_time = time.perf_counter()
+
+  if(cases[0]=="Historic"):
+    casesList=[]
+    casesList.append(["CPU One-cell","GPU Block-cells(1)"])
+    #casesList.append(["CPU One-cell","GPU Block-cells(N)"])
+    #casesList.append(["CPU One-cell","GPU Multi-cells"])
+    #casesList.append(["CPU One-cell","CPU Multi-cells"])
+    #casesList.append(["CPU One-cell","GPU One-cell"])
+
+    cases=casesList[0]
 
   cases_gpu_cpu=[""]*len(cases)
   cases_multicells_onecell=[""]*len(cases)
@@ -239,22 +274,22 @@ def all_timesteps():
     cases_multicells_onecell[i]=cases_words[1]
     #if("GPU" in cases_gpu_cpu[i] and "One-cell" in cases_multicells_onecell[i])
 
-  if "total" in plot_y_key:
-    print("WARNING: Remember to enable solveBcgCuda_sum_it")
-  elif "counterBCG" in plot_y_key:
-    print("WARNING: Remember to disable solveBcgCuda_sum_it")
 
-  datay=[]
-  for i in range(len(cells)):
-    datay_cell = run_cell(config_file,diff_cells,mpi,mpiProcessesList,cells[i],timesteps,
-                          cases,cases_gpu_cpu,cases_multicells_onecell,results_file,plot_y_key)
+  datay = run_case(config_file,diff_cells,mpi,mpiProcessesList,cells,timesteps,
+           cases,cases_gpu_cpu,cases_multicells_onecell,results_file,plot_y_key)
+
+
+  #datay=[]
+  #for i in range(len(cells)):
+  #  datay_cell = run_cell(config_file,diff_cells,mpi,mpiProcessesList,cells[i],timesteps,
+  #                       cases,cases_gpu_cpu,cases_multicells_onecell,results_file,plot_y_key)
 
     #print(datay_cell)
-    if(len(cells)>1):
+   # if(len(cells)>1):
       #Default metric
-      datay.append(np.mean(datay_cell))
-    else:
-      datay=datay_cell
+    #  datay.append(np.mean(datay_cell))
+    #else:
+    #  datay=datay_cell
 
   end_time=time.perf_counter()
   time_s=end_time-start_time
