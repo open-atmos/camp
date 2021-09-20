@@ -2920,7 +2920,7 @@ void cudaDevicecvRescale(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
   //if(i==0)printf("cudaDevicecvRescale start\n");
 
-  __syncthreads();
+  //__syncthreads();
 
 
   factor = dmdv->cv_eta;
@@ -2939,11 +2939,11 @@ void cudaDevicecvRescale(ModelDataGPU *md, ModelDataVariable *dmdv) {
     }__syncthreads();
 */
 
-    __syncthreads();
+    //__syncthreads();
     dzn[tid]=md->dzn[md->nrows*(j)+i];
     dzn[tid]*=factor;
     md->dzn[md->nrows*(j)+i]=dzn[tid];
-    __syncthreads();
+    //__syncthreads();
 
 #else
 
@@ -2989,7 +2989,7 @@ void cudaDevicecvRescale(ModelDataGPU *md, ModelDataVariable *dmdv) {
   dmdv->cv_hscale = dmdv->cv_h;
   dmdv->cv_nscon = 0;
 
-  __syncthreads();
+  //__syncthreads();
 
 }
 
@@ -3515,7 +3515,7 @@ void cudaDevicecvDecreaseBDF(ModelDataGPU *md, ModelDataVariable *dmdv) {
   for (j=2; j < dmdv->cv_q; j++){
 #ifdef DEV_SHAREDDZN
 
-    __syncthreads();
+    //__syncthreads();
     dzn[tid]=md->dzn[md->nrows*(j)+i];
 
 
@@ -3526,7 +3526,7 @@ void cudaDevicecvDecreaseBDF(ModelDataGPU *md, ModelDataVariable *dmdv) {
 #endif
 
     md->dzn[md->nrows*(j)+i]=dzn[tid];
-    __syncthreads();
+    //__syncthreads();
 
 #else
 
@@ -4065,8 +4065,8 @@ void cudaDevicecvSetEta(ModelDataGPU *md, ModelDataVariable *dmdv) {
   // If eta below the threshhold THRESH, reject a change of step size
   if (dmdv->cv_eta < THRESH) {
     dmdv->cv_eta = 1.;
-#ifdef DEV_HPRIME2
-    dmdv->cv_hprime2 = dmdv->cv_h;
+#ifndef DEV_HPRIME2
+    //dmdv->cv_hprime2 = dmdv->cv_h;
 #endif
     dmdv->cv_hprime = dmdv->cv_h;
   } else {
@@ -4077,8 +4077,8 @@ void cudaDevicecvSetEta(ModelDataGPU *md, ModelDataVariable *dmdv) {
     dmdv->cv_eta /= SUNMAX(ONE,
             fabs(dmdv->cv_h)*dmdv->cv_hmax_inv*dmdv->cv_eta);
     __syncthreads();
-#ifdef DEV_HPRIME2
-    dmdv->cv_hprime2 = dmdv->cv_h * dmdv->cv_eta;
+#ifndef DEV_HPRIME2
+    //dmdv->cv_hprime2 = dmdv->cv_h * dmdv->cv_eta;
 #endif
     dmdv->cv_hprime = dmdv->cv_h * dmdv->cv_eta;
 
@@ -4100,8 +4100,8 @@ int cudaDevicecvPrepareNextStep(ModelDataGPU *md, ModelDataVariable *dmdv, doubl
   if (dmdv->cv_etamax == 1.) {
     dmdv->cv_qwait = SUNMAX(dmdv->cv_qwait, 2);
     dmdv->cv_qprime = dmdv->cv_q;
-#ifdef DEV_HPRIME2
-    dmdv->cv_hprime2 = dmdv->cv_h;
+#ifndef DEV_HPRIME2
+    //dmdv->cv_hprime2 = dmdv->cv_h;
 #endif
     dmdv->cv_hprime = dmdv->cv_h;
     dmdv->cv_eta = 1.;
@@ -4321,13 +4321,13 @@ void cudaDevicecvIncreaseBDF(ModelDataGPU *md, ModelDataVariable *dmdv) {
   //         md->cv_zn[dmdv->cv_L]);
 #ifdef DEV_SHAREDDZN
 
-  __syncthreads();
+  //__syncthreads();
   dzn[tid]=md->dzn[md->nrows*(dmdv->cv_L)+i];
 
   dzn[tid]=A1*md->dzn[md->nrows*(dmdv->cv_indx_acor)+i];
 
   md->dzn[md->nrows*(dmdv->cv_L)+i]=dzn[tid];
-  __syncthreads();
+  //__syncthreads();
 
 #else
   md->dzn[md->nrows*(dmdv->cv_L)+i]=
@@ -4339,7 +4339,7 @@ void cudaDevicecvIncreaseBDF(ModelDataGPU *md, ModelDataVariable *dmdv) {
     //             md->cv_zn[j], md->cv_zn[j]);
 
 #ifdef DEV_SHAREDDZN
-    __syncthreads();
+    //__syncthreads();
     dzn[tid]=md->dzn[md->nrows*(j)+i];
 #ifndef DEV_CVL
     dzn[tid]=md->cv_l[j+blockIdx.x*L_MAX]*md->dzn[md->nrows*(dmdv->cv_L)+i]+1.*dzn[tid];
@@ -4348,7 +4348,7 @@ void cudaDevicecvIncreaseBDF(ModelDataGPU *md, ModelDataVariable *dmdv) {
 #endif
 
     md->dzn[md->nrows*(j)+i]=dzn[tid];
-    __syncthreads();
+    //__syncthreads();
 
 #else
 
@@ -4458,7 +4458,7 @@ void cudaDevicecvAdjustParams(ModelDataGPU *md, ModelDataVariable *dmdv) {
 __device__
 int cudaDevicecvStep(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
-  extern __shared__ int flag_shr[];
+  extern __shared__ double sdata[];
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   //unsigned int tid = threadIdx.x;
 
@@ -4475,11 +4475,30 @@ int cudaDevicecvStep(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
   __syncthreads();
 
-#ifdef DEV_HPRIME2
+#ifndef DEV_HPRIME2
   //wrong here
+  //if ((dmdv->cv_nst > 0) && (dmdv->cv_hprime2 != dmdv->cv_h)){
+  //  cudaDevicecvAdjustParams(md, dmdv);
+  //}
+
+  atomicAdd(&sdata[5],dmdv->cv_hprime2/gridDim.x);//crashes, interesting
+
+
+  //atomicAdd(&sdata[5],dmdv->cv_hprime2/gridDim.x);
+  //__syncthreads();
+  //dmdv->cv_hprime2=sdata[5];
+  //__syncthreads();
+
   if ((dmdv->cv_nst > 0) && (dmdv->cv_hprime2 != dmdv->cv_h)){
+    if(threadIdx.x==0)printf("cudaDevicecvAdjustParams dmdv->cv_hprime2 %le block %d\n",dmdv->cv_hprime2, blockIdx.x);
+  } else{
+    if(threadIdx.x==0)printf("NOT cudaDevicecvAdjustParams dmdv->cv_hprime2 %le block %d\n",dmdv->cv_hprime2, blockIdx.x);
+  }
+
+  if ((dmdv->cv_nst > 0) && (dmdv->cv_hprime != dmdv->cv_h)){
     cudaDevicecvAdjustParams(md, dmdv);
   }
+
 #else
   if ((dmdv->cv_nst > 0) && (dmdv->cv_hprime != dmdv->cv_h)){
     cudaDevicecvAdjustParams(md, dmdv);
@@ -5002,8 +5021,9 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
  // dmdv->cv_hprime = mdv->cv_hprime; //never ends 1000 cells
 
-#ifdef DEV_HPRIME2
-  dmdv->cv_hprime2 = mdv->cv_hprime2; //never ends 1000 cells
+#ifndef DEV_HPRIME2
+  //dmdv->cv_hprime2 = mdv->cv_hprime2; //never ends 1000 cells
+  dmdv->cv_hprime2 = mdv->cv_hprime; //never ends 1000 cells
 #endif
 
 
@@ -5240,8 +5260,9 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
   //mdv->cv_hprime = dmdv->cv_hprime; //never ends 1000 cells
 
-#ifdef DEV_HPRIME2
-  mdv->cv_hprime2 = dmdv->cv_hprime2;
+#ifndef DEV_HPRIME2
+  //mdv->cv_hprime2 = dmdv->cv_hprime2;
+  //mdv->cv_hprime2 = dmdv->cv_hprime;
 #endif
 
 
@@ -5327,8 +5348,8 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
       cudaDeviceCVodeGetDky(md, dmdv, dmdv->tout, 0, md->yout);//wrong
 
       dmdv->cv_next_q = dmdv->cv_qprime;
-#ifdef DEV_HPRIME2
-      dmdv->cv_next_h = dmdv->cv_hprime2;
+#ifndef DEV_HPRIME2
+      //dmdv->cv_next_h = dmdv->cv_hprime2;
 #else
       dmdv->cv_next_h = dmdv->cv_hprime;
 #endif
@@ -5363,13 +5384,14 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
 #endif
       }
 
-#ifdef DEV_HPRIME2
+#ifndef DEV_HPRIME2
+      /*
       if ((dmdv->cv_tn + dmdv->cv_hprime2 - dmdv->cv_tstop) * dmdv->cv_h > 0.) {
         dmdv->cv_hprime2 = (dmdv->cv_tstop - dmdv->cv_tn) * (1.0 - 4.0 * dmdv->cv_uround);
         //never enters
         if(i==0) printf("dmdv->cv_tn + dmdv->cv_hprime - dmdv->cv_tstop istate %d\n",dmdv->istate);
         dmdv->cv_eta = dmdv->cv_hprime2 / dmdv->cv_h;
-      }
+      }*/
 #else
       if ((dmdv->cv_tn + dmdv->cv_hprime - dmdv->cv_tstop) * dmdv->cv_h > 0.) {
         dmdv->cv_hprime = (dmdv->cv_tstop - dmdv->cv_tn) * (1.0 - 4.0 * dmdv->cv_uround);
