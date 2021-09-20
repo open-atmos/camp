@@ -194,7 +194,7 @@ def all_timesteps():
   #cells = [100,500,1000,5000,10000]
   #cells = [100,1000,10000,100000]
 
-  timesteps = 10#5 #720=24h #30=1h
+  timesteps = 1#5 #720=24h #30=1h
   TIME_STEP = 2 #pending send TIME_STEP to mock_monarch
 
   cases = ["Historic"]
@@ -378,19 +378,91 @@ def all_timesteps():
 
   plot_functions.plot(namex,namey,datax,datay,plot_title,SAVE_PLOT)
 
-
-#print(datetime.__file__)
-#now = datetime.now()
-"""
-now = datetime.datetime.now()
-dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
-save_folder= "a"+" "+"b"
-if not os.path.exists(save_folder):
-  os.makedirs(save_folder)
-save_path=save_folder+"/"+dt_string
-print(save_path)
 """
 
+"""
+
+def plotsns():
+
+  namex="Cells"
+  namey="Speedup"
+  plot_title="Test plotsns"
+
+  datay2=[[1, 2, 3], [4, 5, 6], [7, 8, 9], [10, 11, 12]]
+  datax=[123, 346, 789]
+  columns=["GPU Block-cells(1)",
+           "GPU Block-cells(2)",
+           "GPU Block-cells(3)",
+           "GPU Block-cells(4)"]
+
+  #datay=map(list,)
+
+  #datay=datay2
+  datay=list(map(list, zip(*datay2))) # short circuits at shortest nested list if table is jagged
+  #numpy_array = np.array(datay2)
+  #transpose = numpy_array.T
+  #datay = transpose.tolist()
+
+  print(datay)
+  print(datax)
+
+  #print(sns.__version__)
+  sns.set_style("whitegrid")
+
+  #sns.set(font_scale=2)
+  #sns.set_context("paper", rc={"font.size":8,"axes.titlesize":8,"axes.labelsize":5})
+  sns.set_context("paper", font_scale=1.25)
+
+  #data = pd.DataFrame(datay, datax)
+  data = pd.DataFrame(datay, datax, columns=columns)
+
+  fig = plt.figure()
+  ax = plt.subplot(111)
+
+  ax.set_xlabel(namex)
+  ax.set_ylabel(namey)
+  #ax.set_title(plot_title)
+
+  legend=True
+  if(legend==True):
+
+    print("WARNING: Increase plot window manually to take screenshot better")
+
+    sns.lineplot(data=data, palette="tab10", linewidth=2.5)
+
+
+    #ax.set_position([box.x0, box.y0 + box.height * 0.1,
+    #               box.width, box.height * 0.9])
+
+    #Legend under the plot
+    #box = ax.get_position()
+    #ax.set_position([box.x0, box.y0 + box.height * 0.1,
+    #             box.width, box.height * 0.75])
+    #ax.legend(bbox_to_anchor=(0.5, -0.05), loc='upper center',
+    #          labels=columns,ncol=4, mode="expand", borderaxespad=0.)
+    #fig.subplots_adjust(bottom=0.35)
+    #borderaxespad=1. to move down more the legend
+
+    #Legend up the plot (problem: hide title)
+    ax.set_title(plot_title, y=1.05)
+
+    ax.legend(loc='lower left', bbox_to_anchor=(0, 1),
+          ncol=4, labels=columns,fancybox=True, shadow=False, borderaxespad=0.)#fine
+
+
+    #ax.subplots_adjust(top=0.25) #not work
+    #fig.subplots_adjust(top=0.25)
+
+    #legend out of the plot at the right (problem: plot feels very small)
+    #sns.lineplot(data=data, palette="tab10", linewidth=2.5)
+    #box=ax.get_position()
+    #ax.set_position([box.x0, box.y0, box.width * 0.7, box.height])
+    #ax.legend(bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0,labels=columns)
+
+  else:
+    ax.set_title(plot_title)
+    sns.lineplot(data=data, palette="tab10", linewidth=2.5, legend=False)
+  plt.show()
 
 #rs = np.random.RandomState(365)
 #values = rs.randn(365, 4).cumsum(axis=0)
@@ -398,6 +470,7 @@ print(save_path)
 #data = pd.DataFrame(values, dates, columns=["A", "B", "C", "D"])
 #data = data.rolling(7).mean()
 
-all_timesteps()
+plotsns()
+#all_timesteps()
 
 
