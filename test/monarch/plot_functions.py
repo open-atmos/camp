@@ -528,7 +528,7 @@ def plotsns(namex, namey, datax, datay, plot_title, columns):
 
   if(columns):
 
-    print("WARNING: Increase plot window manually to take screenshot better")
+    print("WARNING: Increase plot window manually to take better screenshot")
 
     datay=list(map(list, zip(*datay)))
     #numpy_array = np.array(datay2)
@@ -554,9 +554,9 @@ def plotsns(namex, namey, datax, datay, plot_title, columns):
     #borderaxespad=1. to move down more the legend
 
     #Legend up the plot (problem: hide title)
-    ax.set_title(plot_title, y=1.05)
-    ax.legend(loc='lower left', bbox_to_anchor=(0, 1),
-              ncol=4, labels=columns,fancybox=True, shadow=False, borderaxespad=0.)#fine
+    ax.set_title(plot_title, y=1.06)
+    ax.legend(loc='lower center', bbox_to_anchor=(0.5, 1),
+              ncol=len(columns), labels=columns,frameon=True,shadow=False, borderaxespad=0.)
 
 
     #ax.subplots_adjust(top=0.25) #not work

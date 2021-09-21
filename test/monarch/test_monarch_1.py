@@ -226,50 +226,15 @@ def plot_historic(cases_gpu_cpu,cases_multicells_onecell,cells,diff_cells,timest
 
   plot_functions.plot(namex,namey,datax,datay,plot_title,columns,SAVE_PLOT)
 
-def plot_case(casesList,cases_gpu_cpu,cases_multicells_onecell,cells,diff_cells,timesteps,plot_y_key,
+def plot_cases(casesList,cases_gpu_cpu2,cases_multicells_onecell2,cells,diff_cells,timesteps,plot_y_key,
                    mpiProcessesList,datacases,SAVE_PLOT):
   print("plot_case")
 
-  for i in range(2):
-    if cases_multicells_onecell[i]=="Block-cells(N)":
-      cases_multicells_onecell[i]="Block-cells (N)"
-    if cases_multicells_onecell[i]=="Block-cells(1)":
-      cases_multicells_onecell[i]="Block-cells (1)"
-
-  gpus=1
-  if(len(mpiProcessesList)==2):
-    for i in range(len(cases_multicells_onecell)):
-      if cases_gpu_cpu[i]=="CPU":
-        cases_gpu_cpu[i]=str(mpiProcessesList[0]) + " MPI processes"
-      if cases_gpu_cpu[i]=="GPU":
-        cases_gpu_cpu[i]=str(gpus) + " GPU"
-
-
   plot_title=""
+  columns=[]
   first_word=""
   second_word=""
-
-
-
-  first_word+= cases_gpu_cpu[1] + " " + cases_multicells_onecell[1] + " "
-  second_word+= cases_gpu_cpu[0] + " " + cases_multicells_onecell[0] + " "
-  plot_title+=first_word + "vs " + second_word
-
-
-  plot_title+=diff_cells+" test"
-
-  if(len(cells)>1):
-
-    print_timesteps_title=False
-    if print_timesteps_title:
-      plot_title+=", Mean over "+str(timesteps)+ " timesteps"
-    datax=cells
-    plot_x_key="Cells"
-
-  else:
-    plot_title+=", Cells: "+str(cells[0])
-    datax=list(range(1,timesteps+1,1))
-    plot_x_key = "Timesteps"
+  gpus=1
 
   namey="Speedup"
   if plot_y_key=="Speedup normalized computational timeLS":
@@ -279,14 +244,63 @@ def plot_case(casesList,cases_gpu_cpu,cases_multicells_onecell,cells,diff_cells,
   if plot_y_key=="MAPE":
     namey="MAPE [%]"
 
-  namex=plot_x_key
+  for j in range(len(casesList)):
+    cases=casesList[j]
+    cases_gpu_cpu=[""]*len(cases)
+    cases_multicells_onecell=[""]*len(cases)
+    for i in range(len(cases)):
+      cases_words=cases[i].split()
+      cases_gpu_cpu[i]=cases_words[0]
+      cases_multicells_onecell[i]=cases_words[1]
 
-  columns=[]
+      if cases_multicells_onecell[i]=="Block-cells(N)":
+        cases_multicells_onecell[i]="Block-cells (N)"
+      if cases_multicells_onecell[i]=="Block-cells(1)":
+        cases_multicells_onecell[i]="Block-cells (1)"
+
+      if(len(mpiProcessesList)==2):
+        if cases_gpu_cpu[i]=="CPU":
+          cases_gpu_cpu[i]=str(mpiProcessesList[0]) + " MPI processes"
+        if cases_gpu_cpu[i]=="GPU":
+          cases_gpu_cpu[i]=str(gpus) + " GPU"
+
+    if(len(casesList)>1):
+
+      column=cases_gpu_cpu[1] + " " + cases_multicells_onecell[1]
+
+      columns.append(column)
 
   if(len(casesList)>1):
-    plot_functions.plot(namex,namey,datax,datacases,plot_title,columns,SAVE_PLOT)
+    plot_title+="Case vs " + cases_gpu_cpu[0] + " " + cases_multicells_onecell[0] + " "
+    plot_title+=diff_cells+" test"
+
+    datay=datacases
   else:
-    plot_functions.plot(namex,namey,datax,datacases[0],plot_title,columns,SAVE_PLOT)
+    first_word+= cases_gpu_cpu[1] + " " + cases_multicells_onecell[1] + " "
+    second_word+= cases_gpu_cpu[0] + " " + cases_multicells_onecell[0] + " "
+    plot_title+=first_word + "vs " + second_word
+    plot_title+=diff_cells+" test"
+
+    datay=datacases[0]
+
+  if(len(cells)>1):
+    print_timesteps_title=True
+    #print_timesteps_title=False
+    if print_timesteps_title:
+      #plot_title+=", Mean over "+str(timesteps)+ " timesteps"
+      plot_title+=", Timesteps: "+str(timesteps)
+    datax=cells
+    plot_x_key="Cells"
+
+  else:
+    plot_title+=", Cells: "+str(cells[0])
+    datax=list(range(1,timesteps+1,1))
+    plot_x_key = "Timesteps"
+
+  namex=plot_x_key
+
+  plot_functions.plot(namex,namey,datax,datay,plot_title,columns,SAVE_PLOT)
+
 
 def all_timesteps():
 
@@ -304,7 +318,7 @@ def all_timesteps():
   #mpiProcessesList = [40,1]
 
   cells = [10]
-  #cells = [1,5]
+  #cells = [1,10,100]
   #cells = [100,500,1000]
   #cells = [1,5,10,50,100]
   #cells = [100,500,1000,5000,10000]
@@ -377,17 +391,18 @@ def all_timesteps():
     if(len(cells)<2):
       print("WARNING: PENDING TEST HISTORIC WITH TIMESTEPS AS AXIS X")
 
-    #casesList.append(["CPU One-cell","GPU Block-cells(1)"])
-    #casesList.append(["CPU One-cell","GPU Block-cells(N)"])
+    casesList.append(["CPU One-cell","GPU Block-cells(1)"])
+    casesList.append(["CPU One-cell","GPU Block-cells(N)"])
     casesList.append(["CPU One-cell","GPU Multi-cells"])
-    #casesList.append(["CPU One-cell","CPU Multi-cells"])
-    #casesList.append(["CPU One-cell","GPU One-cell"])
+    casesList.append(["CPU One-cell","CPU Multi-cells"])
+    casesList.append(["CPU One-cell","GPU One-cell"])
   else:
     casesList.append(cases[0])
 
   datacases=[]
+  columns=[]
   for j in range(len(casesList)):
-    cases=casesList[0]
+    cases=casesList[j]
     cases_gpu_cpu=[""]*len(cases)
     cases_multicells_onecell=[""]*len(cases)
     for i in range(len(cases)):
@@ -399,29 +414,17 @@ def all_timesteps():
              cases,cases_gpu_cpu,cases_multicells_onecell,results_file,plot_y_key)
     datacases.append(datacase)
 
-
   end_time=time.perf_counter()
   time_s=end_time-start_time
   #print("time_s:",time_s)
   if time_s>60:
     SAVE_PLOT=True
 
-  if(len(casesList)>1):
-    #legend=True
-    #plot_historic()
-    #plot_case(casesList,cases_gpu_cpu,cases_multicells_onecell,cells,diff_cells,timesteps,plot_y_key,
-    #               mpiProcessesList,datacases,SAVE_PLOT)
-    #print(columns)
-    print("a")
-  else:
-    plot_case(casesList,cases_gpu_cpu,cases_multicells_onecell,cells,diff_cells,timesteps,plot_y_key,
-              mpiProcessesList,datacases,SAVE_PLOT)
-    print("b")
-
+  plot_cases(casesList,cases_gpu_cpu,cases_multicells_onecell,cells,diff_cells,timesteps,plot_y_key,
+            mpiProcessesList,datacases,SAVE_PLOT)
 
 
 """
-
 """
 
 def plotsns():
@@ -430,12 +433,21 @@ def plotsns():
   namey="Speedup"
   plot_title="Test plotsns"
 
-  datay2=[[1, 2, 3], [4, 5, 6], [7, 8, 9], [10, 11, 12]]
-  datax=[123, 346, 789]
-  columns=["GPU Block-cells(1)",
-           "GPU Block-cells(2)",
-           "GPU Block-cells(3)",
-           "GPU Block-cells(4)"]
+  ncol=4
+  #ncol=2
+  if(ncol==4):
+
+    datay2=[[1, 2, 3], [4, 5, 6], [7, 8, 9], [10, 11, 12]]
+    datax=[123, 346, 789]
+    columns=["GPU Block-cells(1)",
+             "GPU Block-cells(2)",
+             "GPU Block-cells(3)",
+             "GPU Block-cells(4)"]
+  else:
+    datay2=[[1, 2, 3], [4, 5, 6]]
+    datax=[123, 346, 789]
+    columns=["GPU Block-cells(1)",
+           "GPU Block-cells(2)"]
 
   #datay=map(list,)
 
@@ -486,10 +498,13 @@ def plotsns():
     #borderaxespad=1. to move down more the legend
 
     #Legend up the plot (problem: hide title)
-    ax.set_title(plot_title, y=1.05)
+    ax.set_title(plot_title, y=1.06)
 
-    ax.legend(loc='lower left', bbox_to_anchor=(0, 1),
-          ncol=4, labels=columns,fancybox=True, shadow=False, borderaxespad=0.)#fine
+    ax.legend(loc='lower center', bbox_to_anchor=(0.5, 1),
+          ncol=len(columns), labels=columns,frameon=True,shadow=False, borderaxespad=0.)
+
+    #ax.legend(loc='lower center', bbox_to_anchor=(0.5, 1),
+    #          ncol=len(columns), labels=columns,frameon=False, shadow=False, borderaxespad=0.)#fine
 
 
     #ax.subplots_adjust(top=0.25) #not work
