@@ -511,7 +511,7 @@ def plotplt(namex, namey, datax, datay, plot_title, SAVE_PLOT):
   plt.xticks()
   plt.title(plot_title)
 
-def plotsns(namex, namey, datax, datay, plot_title, SAVE_PLOT):
+def plotsns(namex, namey, datax, datay, plot_title, columns):
 
   #print(sns.__version__)
   sns.set_style("whitegrid")
@@ -520,18 +520,63 @@ def plotsns(namex, namey, datax, datay, plot_title, SAVE_PLOT):
   #sns.set_context("paper", rc={"font.size":8,"axes.titlesize":8,"axes.labelsize":5})
   sns.set_context("paper", font_scale=1.25)
 
-  data = pd.DataFrame(datay, datax)
+  fig = plt.figure()
+  ax = plt.subplot(111)
 
-  plt.xlabel(namex)
-  plt.ylabel(namey)
-  plt.title(plot_title)
+  ax.set_xlabel(namex)
+  ax.set_ylabel(namey)
 
-  sns.lineplot(data=data, palette="tab10", linewidth=2.5, legend=False)
+  if(columns):
 
-def plot(namex, namey, datax, datay, plot_title, SAVE_PLOT):
+    print("WARNING: Increase plot window manually to take screenshot better")
+
+    datay=list(map(list, zip(*datay)))
+    #numpy_array = np.array(datay2)
+    #transpose = numpy_array.T
+    #datay = transpose.tolist()
+
+    #print(datay)
+    #print(datax)
+
+    data = pd.DataFrame(datay, datax, columns=columns)
+    sns.lineplot(data=data, palette="tab10", linewidth=2.5)
+
+    #ax.set_position([box.x0, box.y0 + box.height * 0.1,
+    #               box.width, box.height * 0.9])
+
+    #Legend under the plot
+    #box = ax.get_position()
+    #ax.set_position([box.x0, box.y0 + box.height * 0.1,
+    #             box.width, box.height * 0.75])
+    #ax.legend(bbox_to_anchor=(0.5, -0.05), loc='upper center',
+    #          labels=columns,ncol=4, mode="expand", borderaxespad=0.)
+    #fig.subplots_adjust(bottom=0.35)
+    #borderaxespad=1. to move down more the legend
+
+    #Legend up the plot (problem: hide title)
+    ax.set_title(plot_title, y=1.05)
+    ax.legend(loc='lower left', bbox_to_anchor=(0, 1),
+              ncol=4, labels=columns,fancybox=True, shadow=False, borderaxespad=0.)#fine
+
+
+    #ax.subplots_adjust(top=0.25) #not work
+    #fig.subplots_adjust(top=0.25)
+
+    #legend out of the plot at the right (problem: plot feels very small)
+    #sns.lineplot(data=data, palette="tab10", linewidth=2.5)
+    #box=ax.get_position()
+    #ax.set_position([box.x0, box.y0, box.width * 0.7, box.height])
+    #ax.legend(bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0,labels=columns)
+
+  else:
+    ax.set_title(plot_title)
+    data = pd.DataFrame(datay, datax)
+    sns.lineplot(data=data, palette="tab10", linewidth=2.5, legend=False)
+
+def plot(namex, namey, datax, datay, plot_title, columns, SAVE_PLOT):
 
   #plotplt(namex, namey, datax, datay, plot_title, SAVE_PLOT)
-  plotsns(namex, namey, datax, datay, plot_title, SAVE_PLOT)
+  plotsns(namex, namey, datax, datay, plot_title, columns)
 
   if SAVE_PLOT:
     now = datetime.datetime.now()

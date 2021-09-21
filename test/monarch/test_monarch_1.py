@@ -171,6 +171,151 @@ def run_case(config_file,diff_cells,mpi,mpiProcessesList,cells,timesteps,
 
   return datay
 
+def plot_historic(cases_gpu_cpu,cases_multicells_onecell,
+                  namex, namey, datax, datay, plot_title, columns):
+  print("get_plot_names_historic")
+  columns.append("a")
+
+  #ECMWF_measures=False
+  ECMWF_measures=True
+
+  if(ECMWF_measures):
+    for i in range(len(cases)):
+      if cases_multicells_onecell[i]=="Block-cells(N)":
+        cases_multicells_onecell[i]="Block-cells (N)"
+      if cases_multicells_onecell[i]=="Block-cells(1)":
+        cases_multicells_onecell[i]="Block-cells (1)"
+
+  gpus=1
+  if(len(mpiProcessesList)==2):
+    for i in range(len(cases_multicells_onecell)):
+      #cases_multicells_onecell[i]=str(mpiProcessesList[i])+" "+cases_multicells_onecell[i]
+      #print(cases_multicells_onecell[i])
+      if cases_gpu_cpu[0]=="CPU":
+        cases_gpu_cpu[0]=str(mpiProcessesList[0]) + " MPI processes"
+      if cases_gpu_cpu[1]=="GPU":
+        cases_gpu_cpu[1]=str(gpus) + " GPU"
+
+  plot_title=""
+  first_word=""
+  second_word=""
+  third_word=""
+
+  if ECMWF_measures:
+    first_word+= cases_gpu_cpu[1] + " " + cases_multicells_onecell[1] + " "
+    second_word+= cases_gpu_cpu[0] + " " + cases_multicells_onecell[0] + " "
+  else:
+    if(cases_gpu_cpu[0]!=cases_gpu_cpu[1]):
+      first_word+=cases_gpu_cpu[1] + " "
+      second_word+=cases_gpu_cpu[0] + " "
+    else:
+      third_word+=cases_gpu_cpu[0] + " "
+    if(cases_multicells_onecell[0]!=cases_multicells_onecell[1]):
+      first_word+=cases_multicells_onecell[1] + " "
+      second_word+=cases_multicells_onecell[0] + " "
+    else:
+      third_word+=cases_multicells_onecell[0] + " "
+
+  plot_title+=first_word + "vs " + second_word + third_word
+  plot_title+=diff_cells+" test"
+
+  if(len(cells)>1):
+
+    if not ECMWF_measures:
+      plot_title+=", Mean over "+str(timesteps)+ " timesteps"
+    datax=cells
+    plot_x_key="Cells"
+
+  else:
+    plot_title+=", Cells: "+str(cells[0])
+    datax=list(range(1,timesteps+1,1))
+    plot_x_key = "Timesteps"
+
+  namey="Speedup"
+  if plot_y_key=="Speedup normalized computational timeLS":
+    namey="Speedup without CPU-GPU data transfers"
+  if plot_y_key=="Speedup counterLS":
+    namey="Proportion of calls reduced"
+  if plot_y_key=="MAPE":
+    namey="MAPE [%]"
+
+  namex=plot_x_key
+
+  legend=False
+  plot_functions.plot(namex,namey,datax,datay,plot_title,columns,legend,SAVE_PLOT)
+
+def plot_case(cases_gpu_cpu,cases_multicells_onecell,cells,diff_cells,timesteps,plot_y_key,
+                   mpiProcessesList,datay,SAVE_PLOT):
+  print("get_plot_names")
+
+  #ECMWF_measures=False
+  ECMWF_measures=True
+
+  if(ECMWF_measures):
+    for i in range(2):
+      if cases_multicells_onecell[i]=="Block-cells(N)":
+        cases_multicells_onecell[i]="Block-cells (N)"
+      if cases_multicells_onecell[i]=="Block-cells(1)":
+        cases_multicells_onecell[i]="Block-cells (1)"
+
+  gpus=1
+  if(len(mpiProcessesList)==2):
+    for i in range(len(cases_multicells_onecell)):
+      #cases_multicells_onecell[i]=str(mpiProcessesList[i])+" "+cases_multicells_onecell[i]
+      #print(cases_multicells_onecell[i])
+      if cases_gpu_cpu[0]=="CPU":
+        cases_gpu_cpu[0]=str(mpiProcessesList[0]) + " MPI processes"
+      if cases_gpu_cpu[1]=="GPU":
+        cases_gpu_cpu[1]=str(gpus) + " GPU"
+
+  plot_title=""
+  first_word=""
+  second_word=""
+  third_word=""
+
+  if ECMWF_measures:
+    first_word+= cases_gpu_cpu[1] + " " + cases_multicells_onecell[1] + " "
+    second_word+= cases_gpu_cpu[0] + " " + cases_multicells_onecell[0] + " "
+  else:
+    if(cases_gpu_cpu[0]!=cases_gpu_cpu[1]):
+      first_word+=cases_gpu_cpu[1] + " "
+      second_word+=cases_gpu_cpu[0] + " "
+    else:
+      third_word+=cases_gpu_cpu[0] + " "
+    if(cases_multicells_onecell[0]!=cases_multicells_onecell[1]):
+      first_word+=cases_multicells_onecell[1] + " "
+      second_word+=cases_multicells_onecell[0] + " "
+    else:
+      third_word+=cases_multicells_onecell[0] + " "
+
+  plot_title+=first_word + "vs " + second_word + third_word
+  plot_title+=diff_cells+" test"
+
+  if(len(cells)>1):
+
+    if not ECMWF_measures:
+      plot_title+=", Mean over "+str(timesteps)+ " timesteps"
+    datax=cells
+    plot_x_key="Cells"
+
+  else:
+    plot_title+=", Cells: "+str(cells[0])
+    datax=list(range(1,timesteps+1,1))
+    plot_x_key = "Timesteps"
+
+  namey="Speedup"
+  if plot_y_key=="Speedup normalized computational timeLS":
+    namey="Speedup without CPU-GPU data transfers"
+  if plot_y_key=="Speedup counterLS":
+    namey="Proportion of calls reduced"
+  if plot_y_key=="MAPE":
+    namey="MAPE [%]"
+
+  namex=plot_x_key
+
+  columns=[]
+  plot_functions.plot(namex,namey,datax,datay,plot_title,columns,SAVE_PLOT)
+
 def all_timesteps():
 
 
@@ -194,7 +339,7 @@ def all_timesteps():
   #cells = [100,500,1000,5000,10000]
   #cells = [100,1000,10000,100000]
 
-  timesteps = 1#5 #720=24h #30=1h
+  timesteps = 5#5 #720=24h #30=1h
   TIME_STEP = 2 #pending send TIME_STEP to mock_monarch
 
   cases = ["Historic"]
@@ -256,11 +401,11 @@ def all_timesteps():
   SAVE_PLOT=False
   start_time = time.perf_counter()
 
+  casesList=[]
   if(cases[0]=="Historic"):
-    casesList=[]
-    casesList.append(["CPU One-cell","GPU Block-cells(1)"])
+    #casesList.append(["CPU One-cell","GPU Block-cells(1)"])
     #casesList.append(["CPU One-cell","GPU Block-cells(N)"])
-    #casesList.append(["CPU One-cell","GPU Multi-cells"])
+    casesList.append(["CPU One-cell","GPU Multi-cells"])
     #casesList.append(["CPU One-cell","CPU Multi-cells"])
     #casesList.append(["CPU One-cell","GPU One-cell"])
 
@@ -278,105 +423,24 @@ def all_timesteps():
   datay = run_case(config_file,diff_cells,mpi,mpiProcessesList,cells,timesteps,
            cases,cases_gpu_cpu,cases_multicells_onecell,results_file,plot_y_key)
 
-
-  #datay=[]
-  #for i in range(len(cells)):
-  #  datay_cell = run_cell(config_file,diff_cells,mpi,mpiProcessesList,cells[i],timesteps,
-  #                       cases,cases_gpu_cpu,cases_multicells_onecell,results_file,plot_y_key)
-
-    #print(datay_cell)
-   # if(len(cells)>1):
-      #Default metric
-    #  datay.append(np.mean(datay_cell))
-    #else:
-    #  datay=datay_cell
-
   end_time=time.perf_counter()
   time_s=end_time-start_time
   #print("time_s:",time_s)
   if time_s>60:
     SAVE_PLOT=True
 
-  #print("Base")
-  #print("Optimized")
-
-  #ECMWF_measures=False
-  ECMWF_measures=True
-
-  if(ECMWF_measures):
-    for i in range(len(cases)):
-      if cases_multicells_onecell[i]=="Block-cells(N)":
-        cases_multicells_onecell[i]="Block-cells (N)"
-      if cases_multicells_onecell[i]=="Block-cells(1)":
-        cases_multicells_onecell[i]="Block-cells (1)"
-
-  gpus=1
-  if(len(mpiProcessesList)==2):
-    for i in range(len(cases_multicells_onecell)):
-      #cases_multicells_onecell[i]=str(mpiProcessesList[i])+" "+cases_multicells_onecell[i]
-      #print(cases_multicells_onecell[i])
-      if cases_gpu_cpu[0]=="CPU":
-        cases_gpu_cpu[0]=str(mpiProcessesList[0]) + " MPI processes"
-      if cases_gpu_cpu[1]=="GPU":
-        cases_gpu_cpu[1]=str(gpus) + " GPU"
-
-  #if(len(mpiProcessesList)==2):
-  #  for()
-  #  if(cases_multicells_onecell[0]=="CPU"):
-  #    cases_multicells_onecell[0]=str(mpiProcessesList[0]) + " MPI"
-  #  if(cases_multicells_onecell[1]=="GPU"):
-  #    cases_multicells_onecell[0]=str(mpiProcessesList[0]) + " MPI"
-
-  plot_title=""
-  first_word=""
-  second_word=""
-  third_word=""
-
-  if ECMWF_measures:
-    first_word+= cases_gpu_cpu[1] + " " + cases_multicells_onecell[1] + " "
-    second_word+= cases_gpu_cpu[0] + " " + cases_multicells_onecell[0] + " "
+  if(casesList):
+    #legend=True
+    #plot_historic()
+    plot_case(cases_gpu_cpu,cases_multicells_onecell,cells,diff_cells,timesteps,plot_y_key,
+                   mpiProcessesList,datay,SAVE_PLOT)
+    #print(columns)
   else:
-    if(cases_gpu_cpu[0]!=cases_gpu_cpu[1]):
-      first_word+=cases_gpu_cpu[1] + " "
-      second_word+=cases_gpu_cpu[0] + " "
-    else:
-      third_word+=cases_gpu_cpu[0] + " "
-    if(cases_multicells_onecell[0]!=cases_multicells_onecell[1]):
-      first_word+=cases_multicells_onecell[1] + " "
-      second_word+=cases_multicells_onecell[0] + " "
-    else:
-      third_word+=cases_multicells_onecell[0] + " "
+    #plot(cases_gpu_cpu,cases_multicells_onecell,cells,diff_cells,timesteps,plot_y_key,
+    #               mpiProcessesList,namex,namey,datax,datay,plot_title,columns,SAVE_PLOT)
+    print("a")
 
-  plot_title+=first_word + "vs " + second_word + third_word
-  plot_title+=diff_cells+" test"
 
-  if(len(cells)>1):
-
-    if not ECMWF_measures:
-      plot_title+=", Mean over "+str(timesteps)+ " timesteps"
-    datax=cells
-    plot_x_key="Cells"
-
-  else:
-    plot_title+=", Cells: "+str(cells[0])
-    #datax=list(range(TIME_STEP,TIME_STEP*(timesteps+1),TIME_STEP))
-    datax=list(range(1,timesteps+1,1))
-    plot_x_key = "Timesteps"
-
-  #namey=plot_y_key #default name
-  namey="Speedup"
-  if plot_y_key=="Speedup normalized computational timeLS":
-    namey="Speedup without CPU-GPU data transfers"
-  if plot_y_key=="Speedup counterLS":
-    namey="Proportion of calls reduced"
-  if plot_y_key=="MAPE":
-    namey="MAPE [%]"
-  #if plot_y_key=="Speedup normalized timeLS":
-  #  namey="Normalized speedup"
-
-  namex=plot_x_key
-
-  plot_functions.plot(namex,namey,datax,datay,plot_title,SAVE_PLOT)
 
 """
 
@@ -426,7 +490,7 @@ def plotsns():
   legend=True
   if(legend==True):
 
-    print("WARNING: Increase plot window manually to take screenshot better")
+    print("WARNING: Increase plot window manually to take better screenshot")
 
     sns.lineplot(data=data, palette="tab10", linewidth=2.5)
 
@@ -470,7 +534,7 @@ def plotsns():
 #data = pd.DataFrame(values, dates, columns=["A", "B", "C", "D"])
 #data = data.rolling(7).mean()
 
-plotsns()
-#all_timesteps()
+#plotsns()
+all_timesteps()
 
 
