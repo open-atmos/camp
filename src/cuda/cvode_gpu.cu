@@ -2974,7 +2974,7 @@ void cudaDevicecvRescale(ModelDataGPU *md, ModelDataVariable *dmdv) {
     factor *= dmdv->cv_eta;
   }
 
-#ifdef DEV_HPRIME2
+#ifndef DEV_HPRIME2
 #else
   dmdv->cv_h = dmdv->cv_hscale * dmdv->cv_eta;
   dmdv->cv_next_h = dmdv->cv_h;
@@ -3151,7 +3151,7 @@ int cudaDevicecvHandleNFlag(ModelDataGPU *md, ModelDataVariable *dmdv, int *nfla
   *nflagPtr = PREV_CONV_FAIL;//fine 100 cells same result
   cudaDevicecvRescale(md, dmdv); //1000 cells same result
 
-#ifdef DEV_HPRIME2
+#ifndef DEV_HPRIME2
     dmdv->cv_h = dmdv->cv_hscale * dmdv->cv_eta;
     dmdv->cv_next_h = dmdv->cv_h;
     dmdv->cv_hscale = dmdv->cv_h;
@@ -3562,7 +3562,7 @@ int cudaDevicecvDoErrorTest(ModelDataGPU *md, ModelDataVariable *dmdv,
     //__syncthreads();
 
     cudaDevicecvRescale(md, dmdv);
-#ifdef DEV_HPRIME2
+#ifndef DEV_HPRIME2
     dmdv->cv_h = dmdv->cv_hscale * dmdv->cv_eta;
     dmdv->cv_next_h = dmdv->cv_h;
     dmdv->cv_hscale = dmdv->cv_h;
@@ -3585,7 +3585,7 @@ int cudaDevicecvDoErrorTest(ModelDataGPU *md, ModelDataVariable *dmdv,
     dmdv->cv_q--;
     dmdv->cv_qwait = dmdv->cv_L;
     cudaDevicecvRescale(md, dmdv);
-#ifdef DEV_HPRIME2
+#ifndef DEV_HPRIME2
     dmdv->cv_h = dmdv->cv_hscale * dmdv->cv_eta;
     dmdv->cv_next_h = dmdv->cv_h;
     dmdv->cv_hscale = dmdv->cv_h;
@@ -3876,7 +3876,7 @@ void cudaDevicecvSetEta(ModelDataGPU *md, ModelDataVariable *dmdv) {
   // If eta below the threshhold THRESH, reject a change of step size
   if (dmdv->cv_eta < THRESH) {
     dmdv->cv_eta = 1.;
-#ifdef DEV_HPRIME2
+#ifndef DEV_HPRIME2
     dmdv->cv_hprime2 = dmdv->cv_h;//fine (no zero value)
 #endif
     dmdv->cv_hprime = dmdv->cv_h;
@@ -3888,7 +3888,7 @@ void cudaDevicecvSetEta(ModelDataGPU *md, ModelDataVariable *dmdv) {
     dmdv->cv_eta /= SUNMAX(ONE,
             fabs(dmdv->cv_h)*dmdv->cv_hmax_inv*dmdv->cv_eta);
     __syncthreads();
-#ifdef DEV_HPRIME2
+#ifndef DEV_HPRIME2
     dmdv->cv_hprime2 = dmdv->cv_h * dmdv->cv_eta;
 #endif
     dmdv->cv_hprime = dmdv->cv_h * dmdv->cv_eta;
@@ -3911,7 +3911,7 @@ int cudaDevicecvPrepareNextStep(ModelDataGPU *md, ModelDataVariable *dmdv, doubl
   if (dmdv->cv_etamax == 1.) {
     dmdv->cv_qwait = SUNMAX(dmdv->cv_qwait, 2);
     dmdv->cv_qprime = dmdv->cv_q;
-#ifdef DEV_HPRIME2
+#ifndef DEV_HPRIME2
     dmdv->cv_hprime2 = dmdv->cv_h;//fine (no zero value)
 #endif
     dmdv->cv_hprime = dmdv->cv_h;
@@ -4225,7 +4225,7 @@ int cudaDevicecvStep(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
   __syncthreads();
 
-#ifdef DEV_HPRIME2
+#ifndef DEV_HPRIME2
 
   //atomicAdd(&sdata[5],dmdv->cv_hprime2/gridDim.x);
   //__syncthreads();
@@ -4733,12 +4733,9 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
   //fine 1000 cells
 
-  //dmdv->cv_taskc = mdv2->cv_taskc;
-  dmdv->cv_taskc = mdv->cv_taskc;
+  //dmdv->cv_taskc = mdv->cv_taskc;
 
-
-  /*
-
+  dmdv->cv_taskc = mdv2->cv_taskc;
   dmdv->cv_uround = mdv2->cv_uround;
   dmdv->cv_nrtfn = mdv2->cv_nrtfn;
   dmdv->cv_tretlast = mdv2->cv_tretlast;
@@ -4790,23 +4787,16 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
   //mdv2->nef = dmdv->nef;
   //mdv2->ncf = dmdv->ncf;
 
-
-
+  //dmdv->cv_hprime2 = mdv2->cv_hprime
 
   //fine 1000 cells
 
+  /*
+
   dmdv->cv_eta = mdv2->cv_eta;//diff error 1000 cells
-
-  dmdv->ddn = mdv2->ddn;
-  dmdv->dup = mdv2->dup;
-
-  // dmdv->cv_hprime = mdv2->cv_hprime; //never ends 1000 cells
-
-
+  dmdv->cv_hprime = mdv2->cv_hprime; //never ends 1000 cells
   dmdv->cv_h = mdv2->cv_h;//never ends 1000 cells
   dmdv->cv_hscale = mdv2->cv_hscale; //never ends 1000 cells
-
-  //wrong 1000 cells, fine 2 cells
 
    */
 
@@ -4970,19 +4960,9 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
   //fine 1000 cells
 
-  //mdv2->ddn = dmdv->ddn; //explodes when accessing it, why?
-  //mdv->ddn = dmdv->ddn; //explodes when accessing it, why?
 
-  mdv->cv_taskc = dmdv->cv_taskc;
-
-
-
-  //mdv2->cv_hprime = dmdv->cv_hprime; //never ends 1000 cells
-
-  //mdv2->cv_hprime2 = dmdv->cv_hprime2;
-
-  /*
-
+  //mdv->cv_taskc = dmdv->cv_taskc;
+  mdv2->cv_taskc = dmdv->cv_taskc;
   mdv2->cv_uround = dmdv->cv_uround;
   mdv2->cv_nrtfn = dmdv->cv_nrtfn;
   mdv2->cv_tretlast = dmdv->cv_tretlast;
@@ -5043,19 +5023,14 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
   mdv2->ddn = dmdv->ddn;
   mdv2->dup = dmdv->dup;
 
-  //mdv2->cv_hprime = dmdv->cv_hprime; //never ends 1000 cells
+  mdv2->cv_hprime2 = dmdv->cv_hprime2;
 
-  //mdv2->cv_hprime2 = dmdv->cv_hprime2;
 
   /*
 
 
-
-
-
-
-
-
+  mdv2->cv_eta = dmdv->cv_eta;//diff error 1000 cells
+  mdv2->cv_hprime = dmdv->cv_hprime; //never ends 1000 cells
   mdv2->cv_h = dmdv->cv_h;//never ends 1000 cells
   mdv2->cv_hscale = dmdv->cv_hscale;  //never ends 1000 cells
 
@@ -5133,7 +5108,7 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
       dmdv->cv_next_q = dmdv->cv_qprime;
       dmdv->cv_next_h = dmdv->cv_hprime;
-#ifdef DEV_HPRIME2
+#ifndef DEV_HPRIME2
       //dmdv->cv_next_h = dmdv->cv_hprime2; //wrong?
 #endif
 
