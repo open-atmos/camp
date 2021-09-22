@@ -365,6 +365,7 @@ typedef struct {
     int*    disavedJ;
 
     ModelDataVariable *mdv;
+    ModelDataVariable *mdv2;
     ModelDataVariable *mdvo;
 
 //ODE stats

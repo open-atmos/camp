@@ -2008,6 +2008,7 @@ void alloc_solver_gpu2(CVodeMem cv_mem, SolverData *sd)
   sd->flagCells=(int *)malloc((mGPU->n_cells)*sizeof(int));
 
   cudaMalloc((void**)&mGPU->mdv,sizeof(ModelDataVariable));
+  cudaMalloc((void**)&mGPU->mdv2,sizeof(ModelDataVariable));
   cudaMalloc((void**)&mGPU->mdvo,sizeof(ModelDataVariable));
   cudaMalloc((void**)&mGPU->flag,1*sizeof(int));
   cudaMalloc((void**)&mGPU->flagCells,mGPU->n_cells*sizeof(int));
@@ -2642,7 +2643,7 @@ int cudaDevicecvNlsNewton(
   //int cv_jcur=md->cv_jcur;//cv_jcurGlobal;
   //int cv_jcur=*cv_jcurGlobal;
 
-  if(threadIdx.x==0)printf("cudaDevicecvNlsNewton start %d\n",blockIdx.x);
+  //if(threadIdx.x==0)printf("cudaDevicecvNlsNewton start %d\n",blockIdx.x);
 
 
 #ifdef PMC_DEBUG_GPU
@@ -2689,7 +2690,7 @@ int cudaDevicecvNlsNewton(
 
   //if(i==0)printf("CudaDeviceguess_helper flagDevice %d *flag %d guessflag %d\n",flagDevice, *flag, guessflag);
 
-  if(threadIdx.x==0)printf("cudaDevicecvNlsNewton guessflag %d block %d\n",guessflag,blockIdx.x);
+  //if(threadIdx.x==0)printf("cudaDevicecvNlsNewton guessflag %d block %d\n",guessflag,blockIdx.x);
 
 
 #ifndef DEV_GUESSFLAG
@@ -2698,8 +2699,7 @@ int cudaDevicecvNlsNewton(
   if(guessflag<0){
   //if(*flag<0){
     *flag=RHSFUNC_RECVR;
-    //dmdv->nflag=RHSFUNC_RECVR;
-    if(threadIdx.x==0)printf("CudaDeviceguess_helper guessflag RHSFUNC_RECVR block %d\n", blockIdx.x);
+    //if(threadIdx.x==0)printf("CudaDeviceguess_helper guessflag RHSFUNC_RECVR block %d\n", blockIdx.x);
     return RHSFUNC_RECVR;
   }
 
@@ -2746,12 +2746,10 @@ int cudaDevicecvNlsNewton(
 
     if (*flag < 0) {
       flag_shr[0] = CV_RHSFUNC_FAIL;
-      //dmdv->nflag=CV_RHSFUNC_FAIL;
       break;
     }
     if (*flag > 0) {
       flag_shr[0] = RHSFUNC_RECVR;
-      //dmdv->nflag=RHSFUNC_RECVR;
       break;
     }
 
@@ -2820,12 +2818,10 @@ int cudaDevicecvNlsNewton(
       // Return if lsetup failed
       if (*flag < 0) {
         flag_shr[0] = CV_LSETUP_FAIL;
-        //dmdv->nflag=CV_LSETUP_FAIL;
         break;
       }
       if (*flag > 0) {
         flag_shr[0] = CONV_FAIL;
-        //dmdv->nflag=CONV_FAIL;
         break;
       }
 
@@ -2879,7 +2875,6 @@ int cudaDevicecvNlsNewton(
     __syncthreads();
     if (*flag != TRY_AGAIN) {
       flag_shr[0] = *flag;
-      //dmdv->nflag=*flag;
 #ifdef DEBUG_FLAG_GPU_ODE_SOLVER_NOT_TRY_AGAIN
       if(i==0)printf("cudaGlobalCVodecudaDevicecvNewtonIteration !TRY_AGAIN\n");
 #endif
@@ -2896,11 +2891,10 @@ int cudaDevicecvNlsNewton(
 
   }//for(;;)
 
-  if(threadIdx.x==0)printf("cudaDevicecvNlsNewton2 flag_shr[0] %d block %d\n",flag_shr[0], blockIdx.x);
+  //if(threadIdx.x==0)printf("cudaDevicecvNlsNewton2 flag_shr[0] %d block %d\n",flag_shr[0], blockIdx.x);
   __syncthreads();
   *flag = flag_shr[0];
   return *flag;
-  //return dmdv->nflag;
 
 }
 
@@ -2914,7 +2908,7 @@ void cudaDevicecvRescale(ModelDataGPU *md, ModelDataVariable *dmdv) {
   int j;
   double factor;
 
-  //if(i==0)printf("cudaDevicecvRescale start\n");
+  //if(i==0)printf("cudaDevicecvRescale2 start\n");
 
   //__syncthreads();
 
@@ -2976,23 +2970,15 @@ void cudaDevicecvRescale(ModelDataGPU *md, ModelDataVariable *dmdv) {
 #endif
 
 
-    //if(i==0)printf("cudaDevicecvRescale factor %le j %d\n",factor,j);
+    //if(i==0)printf("cudaDevicecvRescale2 factor %le j %d\n",factor,j);
     factor *= dmdv->cv_eta;
   }
 
 #ifdef DEV_HPRIME2
-
-  //commenting this stops from stopping (but infinite loop)
-/*
-  dmdv->cv_h = dmdv->cv_hscale * dmdv->cv_eta;
-  dmdv->cv_next_h = dmdv->cv_hscale * dmdv->cv_eta;
-  dmdv->cv_hscale = dmdv->cv_hscale * dmdv->cv_eta;
-*/
 #else
   dmdv->cv_h = dmdv->cv_hscale * dmdv->cv_eta;
   dmdv->cv_next_h = dmdv->cv_h;
   dmdv->cv_hscale = dmdv->cv_h;
-
 #endif
 
   dmdv->cv_nscon = 0;
@@ -3165,7 +3151,13 @@ int cudaDevicecvHandleNFlag(ModelDataGPU *md, ModelDataVariable *dmdv, int *nfla
   *nflagPtr = PREV_CONV_FAIL;//fine 100 cells same result
   cudaDevicecvRescale(md, dmdv); //1000 cells same result
 
-  //__syncthreads();
+#ifdef DEV_HPRIME2
+    dmdv->cv_h = dmdv->cv_hscale * dmdv->cv_eta;
+    dmdv->cv_next_h = dmdv->cv_h;
+    dmdv->cv_hscale = dmdv->cv_h;
+#endif
+
+  __syncthreads();
 
   return (PREDICT_AGAIN);
 
@@ -3262,7 +3254,7 @@ void cudaDevicecvSet(ModelDataGPU *md, ModelDataVariable *dmdv) {
     dmdv->cv_gammap = dmdv->cv_gamma;
 
   }
-  if(threadIdx.x == 0)printf("cudaDevicecvSet3 dmdv->cv_nst %d dmdv->cv_gammap %le block %d\n", dmdv->cv_nst, dmdv->cv_gammap, blockIdx.x);
+  //if(threadIdx.x == 0)printf("cudaDevicecvSet3 dmdv->cv_nst %d dmdv->cv_gammap %le block %d\n", dmdv->cv_nst, dmdv->cv_gammap, blockIdx.x);
   __syncthreads();
   dmdv->cv_gamrat = (dmdv->cv_nst > 0) ?
                     dmdv->cv_gamma / dmdv->cv_gammap : 1.;  // protect x / x != 1.0
@@ -3561,19 +3553,24 @@ int cudaDevicecvDoErrorTest(ModelDataGPU *md, ModelDataVariable *dmdv,
   if (*nefPtr <= MXNEF1) {
     //dmdv->cv_eta = 1. / (SUNRpowerR(BIAS2*dsm,ONE/cv_mem->cv_L) + ADDON);
     dmdv->cv_eta = 1. / (pow(BIAS2*dsm,1./dmdv->cv_L) + ADDON);
-    __syncthreads();
+    //__syncthreads();
     dmdv->cv_eta = SUNMAX(ETAMIN, SUNMAX(dmdv->cv_eta,
                            dmdv->cv_hmin / fabs(dmdv->cv_h)));
-    __syncthreads();
+    //__syncthreads();
     if (*nefPtr >= SMALL_NEF)
       dmdv->cv_eta = SUNMIN(dmdv->cv_eta, ETAMXF);
-    __syncthreads();
+    //__syncthreads();
 
     cudaDevicecvRescale(md, dmdv);
+#ifdef DEV_HPRIME2
+    dmdv->cv_h = dmdv->cv_hscale * dmdv->cv_eta;
+    dmdv->cv_next_h = dmdv->cv_h;
+    dmdv->cv_hscale = dmdv->cv_h;
+#endif
     return(TRY_AGAIN);
   }
 
-  __syncthreads();
+  //__syncthreads();
 
   // After MXNEF1 failures, force an order reduction and retry step
   if (dmdv->cv_q > 1) {
@@ -3588,15 +3585,20 @@ int cudaDevicecvDoErrorTest(ModelDataGPU *md, ModelDataVariable *dmdv,
     dmdv->cv_q--;
     dmdv->cv_qwait = dmdv->cv_L;
     cudaDevicecvRescale(md, dmdv);
+#ifdef DEV_HPRIME2
+    dmdv->cv_h = dmdv->cv_hscale * dmdv->cv_eta;
+    dmdv->cv_next_h = dmdv->cv_h;
+    dmdv->cv_hscale = dmdv->cv_h;
+#endif
     return(TRY_AGAIN);
   }
 
   // If already at order 1, restart: reload zn from scratch
 
-  __syncthreads();
+  //__syncthreads();
 
   dmdv->cv_eta = SUNMAX(ETAMIN, dmdv->cv_hmin / fabs(dmdv->cv_h));
-  __syncthreads();
+  //__syncthreads();
   dmdv->cv_h *= dmdv->cv_eta;
   dmdv->cv_next_h = dmdv->cv_h;
   dmdv->cv_hscale = dmdv->cv_h;
@@ -3874,8 +3876,8 @@ void cudaDevicecvSetEta(ModelDataGPU *md, ModelDataVariable *dmdv) {
   // If eta below the threshhold THRESH, reject a change of step size
   if (dmdv->cv_eta < THRESH) {
     dmdv->cv_eta = 1.;
-#ifndef DEV_HPRIME2
-    //dmdv->cv_hprime2 = dmdv->cv_h;//fine (no crash if else)
+#ifdef DEV_HPRIME2
+    dmdv->cv_hprime2 = dmdv->cv_h;//fine (no zero value)
 #endif
     dmdv->cv_hprime = dmdv->cv_h;
   } else {
@@ -3886,8 +3888,8 @@ void cudaDevicecvSetEta(ModelDataGPU *md, ModelDataVariable *dmdv) {
     dmdv->cv_eta /= SUNMAX(ONE,
             fabs(dmdv->cv_h)*dmdv->cv_hmax_inv*dmdv->cv_eta);
     __syncthreads();
-#ifndef DEV_HPRIME2
-    dmdv->cv_hprime2 = dmdv->cv_h * dmdv->cv_eta;//fine (no crash if else)
+#ifdef DEV_HPRIME2
+    dmdv->cv_hprime2 = dmdv->cv_h * dmdv->cv_eta;
 #endif
     dmdv->cv_hprime = dmdv->cv_h * dmdv->cv_eta;
 
@@ -3909,8 +3911,8 @@ int cudaDevicecvPrepareNextStep(ModelDataGPU *md, ModelDataVariable *dmdv, doubl
   if (dmdv->cv_etamax == 1.) {
     dmdv->cv_qwait = SUNMAX(dmdv->cv_qwait, 2);
     dmdv->cv_qprime = dmdv->cv_q;
-#ifndef DEV_HPRIME2
-    dmdv->cv_hprime2 = dmdv->cv_h;//fine (no crash if else)
+#ifdef DEV_HPRIME2
+    dmdv->cv_hprime2 = dmdv->cv_h;//fine (no zero value)
 #endif
     dmdv->cv_hprime = dmdv->cv_h;
     dmdv->cv_eta = 1.;
@@ -4223,43 +4225,58 @@ int cudaDevicecvStep(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
   __syncthreads();
 
-#ifndef DEV_HPRIME2
-  //wrong here
-  //if ((dmdv->cv_nst > 0) && (dmdv->cv_hprime2 != dmdv->cv_h)){
-  //  cudaDevicecvAdjustParams(md, dmdv);
-  //}
+#ifdef DEV_HPRIME2
 
   //atomicAdd(&sdata[5],dmdv->cv_hprime2/gridDim.x);
   //__syncthreads();
   //dmdv->cv_hprime2=sdata[5];
   //__syncthreads();
 
+  if ((dmdv->cv_nst > 0) && (dmdv->cv_hprime != dmdv->cv_h)){
+    cudaDevicecvAdjustParams(md, dmdv);
+    dmdv->cv_h = dmdv->cv_hscale * dmdv->cv_eta;
+    dmdv->cv_next_h = dmdv->cv_hscale * dmdv->cv_eta;
+    dmdv->cv_hscale = dmdv->cv_hscale * dmdv->cv_eta;
+  }
+  __syncthreads();
+
+  //if(threadIdx.x==0)
+  //  if(dmdv->cv_hprime2==0.)//Bug here when no updating other vars dmdv...
+  //    printf("cudaDevicecvAdjustParams ERROR HPRIME2=0 block %d\n",dmdv->cv_hprime2);
+
+    /*
 
   if ((dmdv->cv_nst > 0) && (dmdv->cv_hprime2 != dmdv->cv_h)){
     //atomicAdd(&sdata[5],dmdv->cv_hprime2/gridDim.x);//not valid to test...
-    cudaDevicecvAdjustParams(md, dmdv);
 
-#ifdef DEV_HPRIME2
-    //infinite loop
-    dmdv->cv_h = dmdv->cv_hscale * dmdv->cv_eta;
-    dmdv->cv_next_h = dmdv->cv_h;
-    dmdv->cv_hscale = dmdv->cv_h;
-#endif
+    //any change in the workflow fails when updating hprime2
+    //cudaDevicecvAdjustParams(md, dmdv);
 
-    if(threadIdx.x==0)printf("cudaDevicecvAdjustParams dmdv->cv_hprime2 %le block %d\n",dmdv->cv_hprime2, blockIdx.x);
+    //These lines fails when updating hprime2 (makes hprime2=0)
+    //dmdv->cv_h = dmdv->cv_hscale * dmdv->cv_eta;
+    //dmdv->cv_next_h = dmdv->cv_hscale * dmdv->cv_eta;
+    //dmdv->cv_hscale = dmdv->cv_hscale * dmdv->cv_eta;
+
+    //(threadIdx.x==0)printf("cudaDevicecvAdjustParams dmdv->cv_hprime2 %le block %d\n",dmdv->cv_hprime2, blockIdx.x);
+
   } else{
-    if(threadIdx.x==0)printf("NOT cudaDevicecvAdjustParams dmdv->cv_hprime2 %le block %d\n",dmdv->cv_hprime2, blockIdx.x);
+    //if(threadIdx.x==0)printf("NOT cudaDevicecvAdjustParams dmdv->cv_hprime2 %le block %d\n",dmdv->cv_hprime2, blockIdx.x);
   }
-
-  //if ((dmdv->cv_nst > 0) && (dmdv->cv_hprime != dmdv->cv_h)){
-  //  cudaDevicecvAdjustParams(md, dmdv);
-  //}
+*/
 
 #else
+
   if ((dmdv->cv_nst > 0) && (dmdv->cv_hprime != dmdv->cv_h)){
     cudaDevicecvAdjustParams(md, dmdv);
   }
+
 #endif
+
+
+
+  __syncthreads();
+
+
 
   __syncthreads();
 
@@ -4326,7 +4343,7 @@ int cudaDevicecvStep(ModelDataGPU *md, ModelDataVariable *dmdv) {
     dmdv->nflag = nflag;//fine
     __syncthreads();
 
-    if(threadIdx.x==0)printf("DEV_CUDACVSTEP nflag %d dmdv->flag %d block %d\n",nflag, dmdv->nflag, blockIdx.x);
+    //if(threadIdx.x==0)printf("DEV_CUDACVSTEP nflag %d dmdv->flag %d block %d\n",nflag, dmdv->nflag, blockIdx.x);
 
     int kflag = cudaDevicecvHandleNFlag(md, dmdv, &nflag, saved_t, &ncf);
 
@@ -4334,18 +4351,18 @@ int cudaDevicecvStep(ModelDataGPU *md, ModelDataVariable *dmdv) {
     dmdv->nflag = nflag;//needed?
     dmdv->kflag = kflag;
     __syncthreads();
-    if(threadIdx.x==0)printf("DEV_CUDACVSTEP kflag %d block %d\n",kflag, blockIdx.x);
+    //if(threadIdx.x==0)printf("DEV_CUDACVSTEP kflag %d block %d\n",kflag, blockIdx.x);
 
     // Go back in loop if we need to predict again (nflag=PREV_CONV_FAIL)
 
     if (dmdv->kflag == PREDICT_AGAIN) {
-      if (threadIdx.x == 0)printf("DEV_CUDACVSTEP kflag PREDICT_AGAIN block %d\n", blockIdx.x);
+      //if (threadIdx.x == 0)printf("DEV_CUDACVSTEP kflag PREDICT_AGAIN block %d\n", blockIdx.x);
       continue;
     }
 
     // Return if nonlinear solve failed and recovery not possible.
     if (dmdv->kflag != DO_ERROR_TEST) {
-      if(threadIdx.x==0)printf("DEV_CUDACVSTEP kflag!=DO_ERROR_TEST block %d\n", blockIdx.x);
+      //if(threadIdx.x==0)printf("DEV_CUDACVSTEP kflag!=DO_ERROR_TEST block %d\n", blockIdx.x);
       return (dmdv->kflag);
     }
 
@@ -4356,18 +4373,18 @@ int cudaDevicecvStep(ModelDataGPU *md, ModelDataVariable *dmdv) {
     dmdv->eflag = eflag;
     __syncthreads();
 
-    if(threadIdx.x==0)printf("DEV_CUDACVSTEP nflag %d block %d\n",nflag, blockIdx.x);    //if(i==0)printf("eflag %d\n", eflag);
+    //if(threadIdx.x==0)printf("DEV_CUDACVSTEP nflag %d block %d\n",nflag, blockIdx.x);    //if(i==0)printf("eflag %d\n", eflag);
     //if(i==0)printf("eflag %d\n", eflag);
 
     // Go back in loop if we need to predict again (nflag=PREV_ERR_FAIL)
     if (dmdv->eflag == TRY_AGAIN){
-      if (threadIdx.x == 0)printf("DEV_CUDACVSTEP eflag TRY_AGAIN block %d\n", blockIdx.x);
+      //if (threadIdx.x == 0)printf("DEV_CUDACVSTEP eflag TRY_AGAIN block %d\n", blockIdx.x);
       continue;
     }
 
     // Return if error test failed and recovery not possible.
     if (dmdv->eflag != CV_SUCCESS){
-      if (threadIdx.x == 0)printf("DEV_CUDACVSTEP eflag!=CV_SUCCESS block %d\n", blockIdx.x);
+      //if (threadIdx.x == 0)printf("DEV_CUDACVSTEP eflag!=CV_SUCCESS block %d\n", blockIdx.x);
       return (dmdv->eflag);
     }
 
@@ -4603,6 +4620,7 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
   int istate=99;
   int aux=i+1;
   ModelDataVariable *mdv = md->mdv;
+  ModelDataVariable *mdv2 = md->mdv2;
 
 
 #ifdef DEV_CUDACVODE
@@ -4619,9 +4637,11 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
     //Random error always (~450%)
 
+    //dmdv->cv_taskc = mdv->cv_taskc;
+
 /*
 
-    dmdv->cv_taskc = mdv->cv_taskc;
+
     dmdv->cv_uround = mdv->cv_uround;
     dmdv->cv_nrtfn = mdv->cv_nrtfn;
     dmdv->cv_tretlast = mdv->cv_tretlast;
@@ -4711,77 +4731,80 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
   atomicMin(&md->flagCells[1],aux);//sync threads
 #endif
 
-  dmdv->cv_taskc = mdv->cv_taskc;
-  dmdv->cv_uround = mdv->cv_uround;
-  dmdv->cv_nrtfn = mdv->cv_nrtfn;
-  dmdv->cv_tretlast = mdv->cv_tretlast;
-  dmdv->cv_sldeton = mdv->cv_sldeton;
-  dmdv->cv_hmax_inv = mdv->cv_hmax_inv;
-  dmdv->cv_lmm = mdv->cv_lmm;
-  dmdv->cv_iter = mdv->cv_iter;
-  dmdv->cv_itol = mdv->cv_itol;
-  dmdv->cv_reltol = mdv->cv_reltol;
-  dmdv->cv_nhnil = mdv->cv_nhnil;
-  dmdv->cv_etaqm1 = mdv->cv_etaqm1;
-  dmdv->cv_etaq = mdv->cv_etaq;
-  dmdv->cv_etaqp1 = mdv->cv_etaqp1;
-  dmdv->cv_lrw1 = mdv->cv_lrw1;
-  dmdv->cv_liw1 = mdv->cv_liw1;
-  dmdv->cv_lrw = (int) mdv->cv_lrw;
-  dmdv->cv_liw = (int) mdv->cv_liw;
-  dmdv->cv_saved_tq5 = mdv->cv_saved_tq5;
-  dmdv->cv_tolsf = mdv->cv_tolsf;
-  dmdv->cv_qmax_alloc = mdv->cv_qmax_alloc;
-  dmdv->cv_indx_acor = mdv->cv_indx_acor;
-  dmdv->cv_qu = mdv->cv_qu;
-  dmdv->cv_h0u = mdv->cv_h0u;
-  dmdv->cv_hu = mdv->cv_hu;
-  dmdv->cv_jcur = mdv->cv_jcur;
-  dmdv->cv_mnewt = mdv->cv_mnewt;
-  dmdv->cv_maxcor = mdv->cv_maxcor;
-  dmdv->cv_nstlp = (int) mdv->cv_nstlp;
-  dmdv->cv_qmax = mdv->cv_qmax;
-  dmdv->cv_L = mdv->cv_L;
-
-  dmdv->cv_maxnef = mdv->cv_maxnef;
-  dmdv->cv_netf = (int) mdv->cv_netf;
-  dmdv->cv_acnrm = mdv->cv_acnrm;
-  dmdv->cv_nst = mdv->cv_nst;
-  dmdv->cv_gamrat = mdv->cv_gamrat;
-  dmdv->cv_gamma = mdv->cv_gamma;
-  dmdv->cv_tstop = mdv->cv_tstop;
-  dmdv->cv_tstopset = mdv->cv_tstopset;
-  dmdv->cv_nlscoef = mdv->cv_nlscoef;
-  dmdv->cv_crate = mdv->cv_crate;
-  dmdv->cv_rl1 = mdv->cv_rl1;
-  dmdv->cv_q = mdv->cv_q;
-  dmdv->cv_qprime = mdv->cv_qprime;
-  dmdv->cv_nscon = mdv->cv_nscon;
-  dmdv->cv_hmin = mdv->cv_hmin;
-  dmdv->cv_next_h = mdv->cv_next_h;
-  //mdv->saved_t = dmdv->saved_t;
-  //mdv->nef = dmdv->nef;
-  //mdv->ncf = dmdv->ncf;
-
-
   //fine 1000 cells
 
-  dmdv->cv_eta = mdv->cv_eta;//diff error 1000 cells
-
-  dmdv->ddn = mdv->ddn;
-  dmdv->dup = mdv->dup;
-
- // dmdv->cv_hprime = mdv->cv_hprime; //never ends 1000 cells
-
-#ifndef DEV_HPRIME2
-  //dmdv->cv_hprime2 = mdv->cv_hprime2; //never ends 1000 cells
-#endif
+  dmdv->cv_taskc = mdv2->cv_taskc;
+  //dmdv->cv_taskc = mdv->cv_taskc;
 
 
   /*
 
-  dmdv->cv_h = mdv->cv_h;//never ends 1000 cells
-  dmdv->cv_hscale = mdv->cv_hscale; //never ends 1000 cells
+  dmdv->cv_uround = mdv2->cv_uround;
+  dmdv->cv_nrtfn = mdv2->cv_nrtfn;
+  dmdv->cv_tretlast = mdv2->cv_tretlast;
+  dmdv->cv_sldeton = mdv2->cv_sldeton;
+  dmdv->cv_hmax_inv = mdv2->cv_hmax_inv;
+  dmdv->cv_lmm = mdv2->cv_lmm;
+  dmdv->cv_iter = mdv2->cv_iter;
+  dmdv->cv_itol = mdv2->cv_itol;
+  dmdv->cv_reltol = mdv2->cv_reltol;
+  dmdv->cv_nhnil = mdv2->cv_nhnil;
+  dmdv->cv_etaqm1 = mdv2->cv_etaqm1;
+  dmdv->cv_etaq = mdv2->cv_etaq;
+  dmdv->cv_etaqp1 = mdv2->cv_etaqp1;
+  dmdv->cv_lrw1 = mdv2->cv_lrw1;
+  dmdv->cv_liw1 = mdv2->cv_liw1;
+  dmdv->cv_lrw = (int) mdv2->cv_lrw;
+  dmdv->cv_liw = (int) mdv2->cv_liw;
+  dmdv->cv_saved_tq5 = mdv2->cv_saved_tq5;
+  dmdv->cv_tolsf = mdv2->cv_tolsf;
+  dmdv->cv_qmax_alloc = mdv2->cv_qmax_alloc;
+  dmdv->cv_indx_acor = mdv2->cv_indx_acor;
+  dmdv->cv_qu = mdv2->cv_qu;
+  dmdv->cv_h0u = mdv2->cv_h0u;
+  dmdv->cv_hu = mdv2->cv_hu;
+  dmdv->cv_jcur = mdv2->cv_jcur;
+  dmdv->cv_mnewt = mdv2->cv_mnewt;
+  dmdv->cv_maxcor = mdv2->cv_maxcor;
+  dmdv->cv_nstlp = (int) mdv2->cv_nstlp;
+  dmdv->cv_qmax = mdv2->cv_qmax;
+  dmdv->cv_L = mdv2->cv_L;
+
+  dmdv->cv_maxnef = mdv2->cv_maxnef;
+  dmdv->cv_netf = (int) mdv2->cv_netf;
+  dmdv->cv_acnrm = mdv2->cv_acnrm;
+  dmdv->cv_nst = mdv2->cv_nst;
+  dmdv->cv_gamrat = mdv2->cv_gamrat;
+  dmdv->cv_gamma = mdv2->cv_gamma;
+  dmdv->cv_tstop = mdv2->cv_tstop;
+  dmdv->cv_tstopset = mdv2->cv_tstopset;
+  dmdv->cv_nlscoef = mdv2->cv_nlscoef;
+  dmdv->cv_crate = mdv2->cv_crate;
+  dmdv->cv_rl1 = mdv2->cv_rl1;
+  dmdv->cv_q = mdv2->cv_q;
+  dmdv->cv_qprime = mdv2->cv_qprime;
+  dmdv->cv_nscon = mdv2->cv_nscon;
+  dmdv->cv_hmin = mdv2->cv_hmin;
+  dmdv->cv_next_h = mdv2->cv_next_h;
+  //mdv2->saved_t = dmdv->saved_t;
+  //mdv2->nef = dmdv->nef;
+  //mdv2->ncf = dmdv->ncf;
+
+
+
+
+  //fine 1000 cells
+
+  dmdv->cv_eta = mdv2->cv_eta;//diff error 1000 cells
+
+  dmdv->ddn = mdv2->ddn;
+  dmdv->dup = mdv2->dup;
+
+  // dmdv->cv_hprime = mdv2->cv_hprime; //never ends 1000 cells
+
+
+  dmdv->cv_h = mdv2->cv_h;//never ends 1000 cells
+  dmdv->cv_hscale = mdv2->cv_hscale; //never ends 1000 cells
 
   //wrong 1000 cells, fine 2 cells
 
@@ -4945,84 +4968,91 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
   atomicMin(&md->flagCells[1],aux);//sync threads
 #endif
 
-
   //fine 1000 cells
 
-  mdv->cv_taskc = dmdv->cv_taskc;
-  mdv->cv_uround = dmdv->cv_uround;
-  mdv->cv_nrtfn = dmdv->cv_nrtfn;
-  mdv->cv_tretlast = dmdv->cv_tretlast;
-  mdv->cv_sldeton = dmdv->cv_sldeton;
-  mdv->cv_hmax_inv = dmdv->cv_hmax_inv;
-  mdv->cv_lmm = dmdv->cv_lmm;
-  mdv->cv_iter = dmdv->cv_iter;
-  mdv->cv_itol = dmdv->cv_itol;
-  mdv->cv_reltol = dmdv->cv_reltol;
-  mdv->cv_nhnil = dmdv->cv_nhnil;
-  mdv->cv_etaqm1 = dmdv->cv_etaqm1;
-  mdv->cv_etaq = dmdv->cv_etaq;
-  mdv->cv_etaqp1 = dmdv->cv_etaqp1;
-  mdv->cv_lrw1 = dmdv->cv_lrw1;
-  mdv->cv_liw1 = dmdv->cv_liw1;
-  mdv->cv_lrw = (int) dmdv->cv_lrw;
-  mdv->cv_liw = (int) dmdv->cv_liw;
-  mdv->cv_saved_tq5 = dmdv->cv_saved_tq5;
-  mdv->cv_tolsf = dmdv->cv_tolsf;
-  mdv->cv_qmax_alloc = dmdv->cv_qmax_alloc;
-  mdv->cv_indx_acor = dmdv->cv_indx_acor;
-  mdv->cv_qu = dmdv->cv_qu;
-  mdv->cv_h0u = dmdv->cv_h0u;
-  mdv->cv_hu = dmdv->cv_hu;
-  mdv->cv_jcur = dmdv->cv_jcur;
-  mdv->cv_mnewt = dmdv->cv_mnewt;
-  mdv->cv_maxcor = dmdv->cv_maxcor;
-  mdv->cv_nstlp = (int) dmdv->cv_nstlp;
-  mdv->cv_qmax = dmdv->cv_qmax;
-  mdv->cv_L = dmdv->cv_L;
+  //mdv2->ddn = dmdv->ddn; //explodes when accessing it, why?
+  //mdv->ddn = dmdv->ddn; //explodes when accessing it, why?
 
-  mdv->cv_maxnef = dmdv->cv_maxnef;
-  mdv->cv_netf = (int) dmdv->cv_netf;
-  mdv->cv_acnrm = dmdv->cv_acnrm;
-  mdv->cv_nst = dmdv->cv_nst;
-  mdv->cv_gamrat = dmdv->cv_gamrat;
-  mdv->cv_gamma = dmdv->cv_gamma;
-  mdv->cv_tstop = dmdv->cv_tstop;
-  mdv->cv_tstopset = dmdv->cv_tstopset;
-  mdv->cv_nlscoef = dmdv->cv_nlscoef;
-  mdv->cv_crate = dmdv->cv_crate;
-  mdv->cv_rl1 = dmdv->cv_rl1;
-  mdv->cv_q = dmdv->cv_q;
-  mdv->cv_qprime = dmdv->cv_qprime;
-  mdv->cv_nscon = dmdv->cv_nscon;
-  mdv->cv_hmin = dmdv->cv_hmin;
-  mdv->cv_next_h = dmdv->cv_next_h;
-  //mdv->saved_t = dmdv->saved_t;
-  //mdv->nef = dmdv->nef;
-  //mdv->ncf = dmdv->ncf;
+  mdv->cv_taskc = dmdv->cv_taskc;
+
+  mdv2->cv_uround = dmdv->cv_uround;
+  mdv2->cv_nrtfn = dmdv->cv_nrtfn;
+  mdv2->cv_tretlast = dmdv->cv_tretlast;
+  mdv2->cv_sldeton = dmdv->cv_sldeton;
+  mdv2->cv_hmax_inv = dmdv->cv_hmax_inv;
+  mdv2->cv_lmm = dmdv->cv_lmm;
+  mdv2->cv_iter = dmdv->cv_iter;
+  mdv2->cv_itol = dmdv->cv_itol;
+  mdv2->cv_reltol = dmdv->cv_reltol;
+  mdv2->cv_nhnil = dmdv->cv_nhnil;
+  mdv2->cv_etaqm1 = dmdv->cv_etaqm1;
+  mdv2->cv_etaq = dmdv->cv_etaq;
+  mdv2->cv_etaqp1 = dmdv->cv_etaqp1;
+  mdv2->cv_lrw1 = dmdv->cv_lrw1;
+  mdv2->cv_liw1 = dmdv->cv_liw1;
+  mdv2->cv_lrw = (int) dmdv->cv_lrw;
+  mdv2->cv_liw = (int) dmdv->cv_liw;
+  mdv2->cv_saved_tq5 = dmdv->cv_saved_tq5;
+  mdv2->cv_tolsf = dmdv->cv_tolsf;
+  mdv2->cv_qmax_alloc = dmdv->cv_qmax_alloc;
+  mdv2->cv_indx_acor = dmdv->cv_indx_acor;
+  mdv2->cv_qu = dmdv->cv_qu;
+  mdv2->cv_h0u = dmdv->cv_h0u;
+  mdv2->cv_hu = dmdv->cv_hu;
+  mdv2->cv_jcur = dmdv->cv_jcur;
+  mdv2->cv_mnewt = dmdv->cv_mnewt;
+  mdv2->cv_maxcor = dmdv->cv_maxcor;
+  mdv2->cv_nstlp = (int) dmdv->cv_nstlp;
+  mdv2->cv_qmax = dmdv->cv_qmax;
+  mdv2->cv_L = dmdv->cv_L;
+
+
+  mdv2->cv_maxnef = dmdv->cv_maxnef;
+  mdv2->cv_netf = (int) dmdv->cv_netf;
+  mdv2->cv_acnrm = dmdv->cv_acnrm;
+  mdv2->cv_nst = dmdv->cv_nst;
+  mdv2->cv_gamrat = dmdv->cv_gamrat;
+  mdv2->cv_gamma = dmdv->cv_gamma;
+  mdv2->cv_tstop = dmdv->cv_tstop;
+  mdv2->cv_tstopset = dmdv->cv_tstopset;
+  mdv2->cv_nlscoef = dmdv->cv_nlscoef;
+  mdv2->cv_crate = dmdv->cv_crate;
+  mdv2->cv_rl1 = dmdv->cv_rl1;
+  mdv2->cv_q = dmdv->cv_q;
+  mdv2->cv_qprime = dmdv->cv_qprime;
+  mdv2->cv_nscon = dmdv->cv_nscon;
+  mdv2->cv_hmin = dmdv->cv_hmin;
+  mdv2->cv_next_h = dmdv->cv_next_h;
+  //mdv2->saved_t = dmdv->saved_t;
+  //mdv2->nef = dmdv->nef;
+  //mdv2->ncf = dmdv->ncf;
 
   //atomicAdd(&md->J_tmp[1],dmdv->cv_eta/gridDim.x);//wrong (40 iters) 1000 cells
   //__syncthreads();dmdv->cv_eta=md->J_tmp[1];__syncthreads();
 
-  //mdv->cv_eta = dmdv->cv_eta;//diff error 1000 cells
+  //mdv2->cv_eta = dmdv->cv_eta;//diff error 1000 cells
 
-  mdv->ddn = dmdv->ddn;
-  mdv->dup = dmdv->dup;
+  mdv2->ddn = dmdv->ddn;
+  mdv2->dup = dmdv->dup;
 
-  //mdv->cv_hprime = dmdv->cv_hprime; //never ends 1000 cells
+  //mdv2->cv_hprime = dmdv->cv_hprime; //never ends 1000 cells
 
-#ifndef DEV_HPRIME2
-  //mdv->cv_hprime2 = dmdv->cv_hprime2;
-#endif
-
+  //mdv2->cv_hprime2 = dmdv->cv_hprime2;
 
   /*
 
-  mdv->cv_h = dmdv->cv_h;//never ends 1000 cells
-  mdv->cv_hscale = dmdv->cv_hscale;  //never ends 1000 cells
+
+
+
+
+
+
+
+  mdv2->cv_h = dmdv->cv_h;//never ends 1000 cells
+  mdv2->cv_hscale = dmdv->cv_hscale;  //never ends 1000 cells
 
   //1000 cells wrong
    */
-
   //*mdv = *dmdv;//fine?
 
   //atomicAdd(&md->flagCells[0],aux);///wrong but why
@@ -5094,11 +5124,7 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
       cudaDeviceCVodeGetDky(md, dmdv, dmdv->tout, 0, md->yout);//wrong
 
       dmdv->cv_next_q = dmdv->cv_qprime;
-#ifndef DEV_HPRIME2
-      dmdv->cv_next_h = dmdv->cv_hprime2; //wrong?
-#else
       dmdv->cv_next_h = dmdv->cv_hprime;
-#endif
 
       if(i==0) printf("dmdv->cv_tn - dmdv->tout) istate %d\n",dmdv->istate);
 
@@ -5130,23 +5156,12 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
 #endif
       }
 
-#ifndef DEV_HPRIME2
-
-      if ((dmdv->cv_tn + dmdv->cv_hprime2 - dmdv->cv_tstop) * dmdv->cv_h > 0.) {
-        dmdv->cv_hprime2 = (dmdv->cv_tstop - dmdv->cv_tn) * (1.0 - 4.0 * dmdv->cv_uround);
-        //never enters
-        if(i==0) printf("dmdv->cv_tn + dmdv->cv_hprime - dmdv->cv_tstop istate %d\n",dmdv->istate);
-        dmdv->cv_eta = dmdv->cv_hprime2 / dmdv->cv_h;
-      }//wrong?
-
-#else
       if ((dmdv->cv_tn + dmdv->cv_hprime - dmdv->cv_tstop) * dmdv->cv_h > 0.) {
         dmdv->cv_hprime = (dmdv->cv_tstop - dmdv->cv_tn) * (1.0 - 4.0 * dmdv->cv_uround);
         //never enters
         if(i==0) printf("dmdv->cv_tn + dmdv->cv_hprime - dmdv->cv_tstop istate %d\n",dmdv->istate);
         dmdv->cv_eta = dmdv->cv_hprime / dmdv->cv_h;
       }
-#endif
 
     }
 
@@ -6312,6 +6327,8 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
   //fine
 
   cudaMemcpy(mGPU->mdv, &sd->mdv, sizeof(ModelDataVariable), cudaMemcpyHostToDevice);
+  cudaMemcpy(mGPU->mdv2, &sd->mdv, sizeof(ModelDataVariable), cudaMemcpyHostToDevice);
+
 
 #ifdef DEV_CUDACVODE
 
