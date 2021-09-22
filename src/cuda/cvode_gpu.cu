@@ -3157,7 +3157,7 @@ int cudaDevicecvHandleNFlag(ModelDataGPU *md, ModelDataVariable *dmdv, int *nfla
     dmdv->cv_hscale = dmdv->cv_h;
 #endif
 
-  __syncthreads();
+  //__syncthreads();
 
   return (PREDICT_AGAIN);
 
@@ -4733,8 +4733,8 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
   //fine 1000 cells
 
-  dmdv->cv_taskc = mdv2->cv_taskc;
-  //dmdv->cv_taskc = mdv->cv_taskc;
+  //dmdv->cv_taskc = mdv2->cv_taskc;
+  dmdv->cv_taskc = mdv->cv_taskc;
 
 
   /*
@@ -4975,6 +4975,14 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
   mdv->cv_taskc = dmdv->cv_taskc;
 
+
+
+  //mdv2->cv_hprime = dmdv->cv_hprime; //never ends 1000 cells
+
+  //mdv2->cv_hprime2 = dmdv->cv_hprime2;
+
+  /*
+
   mdv2->cv_uround = dmdv->cv_uround;
   mdv2->cv_nrtfn = dmdv->cv_nrtfn;
   mdv2->cv_tretlast = dmdv->cv_tretlast;
@@ -5125,6 +5133,9 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
       dmdv->cv_next_q = dmdv->cv_qprime;
       dmdv->cv_next_h = dmdv->cv_hprime;
+#ifdef DEV_HPRIME2
+      //dmdv->cv_next_h = dmdv->cv_hprime2; //wrong?
+#endif
 
       if(i==0) printf("dmdv->cv_tn - dmdv->tout) istate %d\n",dmdv->istate);
 
