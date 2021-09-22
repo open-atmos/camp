@@ -4788,7 +4788,7 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
   //mdv2->ncf = dmdv->ncf;
 
 #ifndef DEV_HPRIME2
-  //dmdv->cv_hprime2 = mdv2->cv_hprime;Fails when enabled: dmdv->cv_tn - dmdv->tout) * dmdv->cv_h >= 0. with hprim2
+  dmdv->cv_hprime2 = mdv2->cv_hprime; //Fails when enabled: dmdv->cv_tn - dmdv->tout) * dmdv->cv_h >= 0. with hprim2
 #endif
 
   //dmdv->cv_hprime = mdv2->cv_hprime; //never ends 1000 cells
@@ -5029,7 +5029,7 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
   mdv2->cv_hprime2 = dmdv->cv_hprime2;
 
-  mdv2->cv_hprime = dmdv->cv_hprime;
+  //mdv2->cv_hprime = dmdv->cv_hprime; //problem enabling only this
 
   /*
 
@@ -5109,13 +5109,17 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
       dmdv->cv_tretlast = dmdv->tret = dmdv->tout;
       //(void) CVodeGetDky(cv_mem, dmdv->tout, 0, md->yout);
 
-      cudaDeviceCVodeGetDky(md, dmdv, dmdv->tout, 0, md->yout);//wrong
+      cudaDeviceCVodeGetDky(md, dmdv, dmdv->tout, 0, md->yout);//wrong ?
 
-      dmdv->cv_next_q = dmdv->cv_qprime;
-      dmdv->cv_next_h = dmdv->cv_hprime;
+
+      //This seems produce bug: Updating in host after exiting loop
+      //dmdv->cv_next_q = dmdv->cv_qprime;
+      //dmdv->cv_next_h = dmdv->cv_hprime;
+      /*
 #ifndef DEV_HPRIME2
-      dmdv->cv_next_h = dmdv->cv_hprime2; //wrong, problem here when updating dmdv
+      dmdv->cv_next_h = dmdv->cv_hprime2; //wrong?, problem here when updating dmdv
 #endif
+*/
 
       if(i==0) printf("dmdv->cv_tn - dmdv->tout) istate %d\n",dmdv->istate);
 
@@ -6678,9 +6682,11 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
 
       cv_mem->cv_tretlast = sd->mdv.cv_tretlast;
 
-      cv_mem->cv_next_q = sd->mdv.cv_next_q;
-      cv_mem->cv_next_h = sd->mdv.cv_next_h;
+      //cv_mem->cv_next_q = sd->mdv.cv_next_q;
+      //cv_mem->cv_next_h = sd->mdv.cv_next_h;
 
+      cv_mem->cv_next_q = sd->mdv.cv_qprime;
+      cv_mem->cv_next_h = sd->mdv.cv_hprime;
 
       /*
       //printf("In NORMAL mode \n"); //always normal mode
