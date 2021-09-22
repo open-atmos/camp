@@ -4233,36 +4233,36 @@ int cudaDevicecvStep(ModelDataGPU *md, ModelDataVariable *dmdv) {
   //__syncthreads();
 
   if ((dmdv->cv_nst > 0) && (dmdv->cv_hprime != dmdv->cv_h)){
-    cudaDevicecvAdjustParams(md, dmdv);
-    dmdv->cv_h = dmdv->cv_hscale * dmdv->cv_eta;
-    dmdv->cv_next_h = dmdv->cv_hscale * dmdv->cv_eta;
-    dmdv->cv_hscale = dmdv->cv_hscale * dmdv->cv_eta;
+    //cudaDevicecvAdjustParams(md, dmdv);
+    //dmdv->cv_h = dmdv->cv_hscale * dmdv->cv_eta;
+    //dmdv->cv_next_h = dmdv->cv_hscale * dmdv->cv_eta;
+    //dmdv->cv_hscale = dmdv->cv_hscale * dmdv->cv_eta;
   }
   __syncthreads();
 
-  //if(threadIdx.x==0)
-  //  if(dmdv->cv_hprime2==0.)//Bug here when no updating other vars dmdv...
-  //    printf("cudaDevicecvAdjustParams ERROR HPRIME2=0 block %d\n",dmdv->cv_hprime2);
+  if(threadIdx.x==0)
+    if(dmdv->cv_hprime2==0.)//Bug here when no updating other vars dmdv...
+      printf("cudaDevicecvAdjustParams ERROR HPRIME2=0 block %d\n",dmdv->cv_hprime2);
 
-    /*
+
 
   if ((dmdv->cv_nst > 0) && (dmdv->cv_hprime2 != dmdv->cv_h)){
     //atomicAdd(&sdata[5],dmdv->cv_hprime2/gridDim.x);//not valid to test...
 
     //any change in the workflow fails when updating hprime2
-    //cudaDevicecvAdjustParams(md, dmdv);
+    cudaDevicecvAdjustParams(md, dmdv);
 
     //These lines fails when updating hprime2 (makes hprime2=0)
-    //dmdv->cv_h = dmdv->cv_hscale * dmdv->cv_eta;
-    //dmdv->cv_next_h = dmdv->cv_hscale * dmdv->cv_eta;
-    //dmdv->cv_hscale = dmdv->cv_hscale * dmdv->cv_eta;
+    dmdv->cv_h = dmdv->cv_hscale * dmdv->cv_eta;
+    dmdv->cv_next_h = dmdv->cv_hscale * dmdv->cv_eta;
+    dmdv->cv_hscale = dmdv->cv_hscale * dmdv->cv_eta;
 
     //(threadIdx.x==0)printf("cudaDevicecvAdjustParams dmdv->cv_hprime2 %le block %d\n",dmdv->cv_hprime2, blockIdx.x);
 
   } else{
     //if(threadIdx.x==0)printf("NOT cudaDevicecvAdjustParams dmdv->cv_hprime2 %le block %d\n",dmdv->cv_hprime2, blockIdx.x);
   }
-*/
+
 
 #else
 
@@ -4787,14 +4787,18 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
   //mdv2->nef = dmdv->nef;
   //mdv2->ncf = dmdv->ncf;
 
-  //dmdv->cv_hprime2 = mdv2->cv_hprime
+#ifndef DEV_HPRIME2
+  //dmdv->cv_hprime2 = mdv2->cv_hprime;Fails when enabled: dmdv->cv_tn - dmdv->tout) * dmdv->cv_h >= 0. with hprim2
+#endif
+
+  //dmdv->cv_hprime = mdv2->cv_hprime; //never ends 1000 cells
 
   //fine 1000 cells
 
   /*
 
   dmdv->cv_eta = mdv2->cv_eta;//diff error 1000 cells
-  dmdv->cv_hprime = mdv2->cv_hprime; //never ends 1000 cells
+
   dmdv->cv_h = mdv2->cv_h;//never ends 1000 cells
   dmdv->cv_hscale = mdv2->cv_hscale; //never ends 1000 cells
 
@@ -5025,6 +5029,7 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
   mdv2->cv_hprime2 = dmdv->cv_hprime2;
 
+  mdv2->cv_hprime = dmdv->cv_hprime;
 
   /*
 
@@ -5109,7 +5114,7 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
       dmdv->cv_next_q = dmdv->cv_qprime;
       dmdv->cv_next_h = dmdv->cv_hprime;
 #ifndef DEV_HPRIME2
-      //dmdv->cv_next_h = dmdv->cv_hprime2; //wrong?
+      dmdv->cv_next_h = dmdv->cv_hprime2; //wrong, problem here when updating dmdv
 #endif
 
       if(i==0) printf("dmdv->cv_tn - dmdv->tout) istate %d\n",dmdv->istate);
