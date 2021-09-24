@@ -3876,9 +3876,11 @@ void cudaDevicecvSetEta(ModelDataGPU *md, ModelDataVariable *dmdv) {
   // If eta below the threshhold THRESH, reject a change of step size
   if (dmdv->cv_eta < THRESH) {
     dmdv->cv_eta = 1.;
+    //Never enters (ensures it works anyway
 #ifdef DEV_HPRIME2
     dmdv->cv_hprime2 = dmdv->cv_h;
     dmdv->cv_hprime3 = dmdv->cv_h;
+    printf("dmdv->cv_eta < THRESH\n");
 #endif
     dmdv->cv_hprime = dmdv->cv_h;
   } else {
@@ -3916,6 +3918,8 @@ int cudaDevicecvPrepareNextStep(ModelDataGPU *md, ModelDataVariable *dmdv, doubl
 #ifdef DEV_HPRIME2
     dmdv->cv_hprime2 = dmdv->cv_h;
     dmdv->cv_hprime3 = dmdv->cv_h;
+    //dmdv->cv_hprime2 = dmdv->cv_etamax;
+    //dmdv->cv_hprime3 = dmdv->cv_etamax;
 #endif
     dmdv->cv_hprime = dmdv->cv_h;
     dmdv->cv_eta = 1.;
@@ -4230,11 +4234,6 @@ int cudaDevicecvStep(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
 #ifndef DEV_HPRIME2
 
-  //atomicAdd(&sdata[5],dmdv->cv_hprime3/gridDim.x);
-  //__syncthreads();
-  //dmdv->cv_hprime3=sdata[5];
-  //__syncthreads();
-
   //Fails when updating hprime in mdv2, but using hprime here instead of hprime2 works fine, why?
   //if ((dmdv->cv_nst > 0) && (dmdv->cv_hprime2 != dmdv->cv_h)){
     //atomicAdd(&sdata[5],dmdv->cv_hprime2/gridDim.x);//not valid to test...
@@ -4281,10 +4280,10 @@ int cudaDevicecvStep(ModelDataGPU *md, ModelDataVariable *dmdv) {
 #endif
 
 
-
-  __syncthreads();
-
-
+//#ifdef DEV_HPRIME2
+//  dmdv->cv_hprime2 = dmdv->cv_h;
+//  dmdv->cv_hprime3 = dmdv->cv_h;
+//#endif
 
   __syncthreads();
 
@@ -4624,7 +4623,7 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
   int counterBiConjGrad=0;
   int kflag2;
-  dmdv->kflag2=99;
+  //dmdv->kflag2=99;
   int istate=99;
   int aux=i+1;
   ModelDataVariable *mdv = md->mdv;
@@ -4669,11 +4668,6 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
     */
 
 #else
-    /*
-    *dmdv = *mdv;
-    dmdv->istate=99;
-    dmdv->kflag=99;
-     */
 
   //atomicAdd(&md->flagCells[0],aux);///wrong but why
 
@@ -4685,7 +4679,15 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
   atomicMin(&md->flagCells[1],aux);//sync threads
 #endif
 
+
+
+  //dmdv->cv_hprime = mdv2->cv_hprime; //never ends 1000 cells
+
   //fine 1000 cells
+
+  /*
+
+     //fine 1000 cells
 
   //dmdv->cv_taskc = mdv->cv_taskc;
 
@@ -4749,14 +4751,7 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
 #endif
 
 
-  //dmdv->cv_hprime = mdv2->cv_hprime; //never ends 1000 cells
-
-  //fine 1000 cells
-
-  /*
-
   dmdv->cv_eta = mdv2->cv_eta;//diff error 1000 cells
-
   dmdv->cv_h = mdv2->cv_h;//never ends 1000 cells
   dmdv->cv_hscale = mdv2->cv_hscale; //never ends 1000 cells
 
@@ -4833,8 +4828,6 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
 #endif
       if(i==0) printf("cv_mxstep istate %d\n",dmdv->istate);
 #ifdef DEV_CUDACVODE
-      //istate = CV_TOO_MUCH_WORK;
-      //break;
       return CV_TOO_MUCH_WORK;
 #else
       return CV_TOO_MUCH_WORK;
@@ -4869,8 +4862,6 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
       if(i==0) printf("cv_tolsf istate %d\n",dmdv->istate);
       __syncthreads();
 #ifdef DEV_CUDACVODE
-      //istate = CV_TOO_MUCH_ACC;
-      //break;
       return CV_TOO_MUCH_ACC;
 #else
       return CV_TOO_MUCH_ACC;
@@ -4923,7 +4914,15 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
   //fine 1000 cells
 //#ifdef DEV_UPDATEDMDV
 
-  //mdv->cv_taskc = dmdv->cv_taskc;
+
+
+
+  //mdv2->cv_hprime = dmdv->cv_hprime; //problem enabling only this
+
+  /*
+
+
+     //mdv->cv_taskc = dmdv->cv_taskc;
   mdv2->cv_taskc = dmdv->cv_taskc;
   mdv2->cv_uround = dmdv->cv_uround;
   mdv2->cv_nrtfn = dmdv->cv_nrtfn;
@@ -4986,10 +4985,14 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
   mdv2->dup = dmdv->dup;
 
   mdv2->cv_hprime2 = dmdv->cv_hprime2;
+  //if(threadIdx.x==0)printf("cudaDeviceCVode HPRIME2 %le HPRIME3 %le block %d\n",
+  //        dmdv->cv_hprime2,dmdv->cv_hprime3,blockIdx.x);
 
-  //mdv2->cv_hprime = dmdv->cv_hprime; //problem enabling only this
 
-  /*
+
+
+
+
 
 
   mdv2->cv_eta = dmdv->cv_eta;//diff error 1000 cells
@@ -5013,7 +5016,7 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
     if(i==0){
 
-      printf("DEV_cudaDeviceCVode counterBiConjGrad %d\n",counterBiConjGrad);
+      printf("DEV_cudaDeviceCVode counterBiConjGrad %d thread %d\n",counterBiConjGrad, i);
       //printf("dmdv->kflag %d dmdv->istate %d\n",dmdv->kflag, dmdv->istate);
 
       printf("dmdv->cv_tn %le dmdv->tout %le dmdv->cv_h %le\n",
@@ -5048,8 +5051,6 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
       //if(i==0)printf("cudaDeviceCVode2 dmdv->kflag %d\n",dmdv->kflag);
 
 #ifdef DEV_CUDACVODE
-      //istate = dmdv->kflag2;
-      //break;
       return dmdv->kflag2;
 #else
       return dmdv->kflag2;
@@ -5142,8 +5143,18 @@ void cudaGlobalCVode(ModelDataGPU md_object) {
   dmdv->flag = 0;
   int istate2;
 
+  ModelDataVariable *mdv2 = md->mdv2;
+  //if(threadIdx.x==0)printf("cudaGlobalCVode pre-mdv2 HPRIME2 %le HPRIME3 %le block %d\n",
+  //                         dmdv->cv_hprime2,dmdv->cv_hprime3,blockIdx.x);
   __syncthreads();
+
+
   if(i<active_threads){
+
+    //dmdv->cv_hprime2 = mdv2->cv_hprime2;
+    //if(threadIdx.x==0)printf("cudaGlobalCVode post-mdv2 HPRIME2 %le HPRIME3 %le block %d\n",
+    //                         dmdv->cv_hprime2,dmdv->cv_hprime3,blockIdx.x);
+    __syncthreads();
 
     istate2=cudaDeviceCVode(md,dmdv); //rename dmdv->mdv , mdv->mdvi
 
@@ -5161,7 +5172,9 @@ void cudaGlobalCVode(ModelDataGPU md_object) {
   __syncthreads();
 
 
-  if(tid==0)md->flagCells[blockIdx.x]=dmdv->flag;//FINE
+  //if(tid==0)md->flagCells[blockIdx.x]=dmdv->flag;//Wrong, it should be istate
+  if(tid==0)md->flagCells[blockIdx.x]=dmdv->istate;
+
 
   *mdvo = *dmdv;
 
@@ -6202,6 +6215,8 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
   }
   //fine
 
+  double cv_hprime3;
+
   sd->mdv.init_time_step = sd->init_time_step;
   sd->mdv.cv_mxstep = cv_mem->cv_mxstep;
   //sd->mdv.cv_next_q = cv_mem->cv_next_q;
@@ -6258,7 +6273,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
   sd->mdv.cv_nscon = cv_mem->cv_nscon;
   sd->mdv.cv_hprime = cv_mem->cv_hprime;
   sd->mdv.cv_hprime2 = cv_mem->cv_hprime;
-  sd->mdv.cv_hprime3 = cv_mem->cv_hprime;
+  cv_hprime3 = cv_mem->cv_hprime;
   sd->mdv.cv_hmin = cv_mem->cv_hmin;
   sd->mdv.cv_tn = cv_mem->cv_tn;
   sd->mdv.cv_etamax = cv_mem->cv_etamax;
@@ -6343,7 +6358,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     sd->mdv.cv_nscon = cv_mem->cv_nscon;
     sd->mdv.cv_hprime = cv_mem->cv_hprime;
     //sd->mdv.cv_hprime2 = cv_mem->cv_hprime;
-    sd->mdv.cv_hprime3 = cv_mem->cv_hprime;
+    sd->mdv.cv_hprime3 = cv_hprime3;
     sd->mdv.cv_hmin = cv_mem->cv_hmin;
     sd->mdv.cv_tn = cv_mem->cv_tn;
     sd->mdv.cv_etamax = cv_mem->cv_etamax;
@@ -6435,7 +6450,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     cv_mem->cv_nscon = sd->mdv.cv_nscon;
     cv_mem->cv_hprime = sd->mdv.cv_hprime;
     //cv_mem->cv_hprime = sd->mdv.cv_hprime2;//needed?
-    //cv_hprime3 = sd->mdv.cv_hprime3;
+    cv_hprime3 = sd->mdv.cv_hprime3;
     cv_mem->cv_hmin = sd->mdv.cv_hmin;
     cv_mem->cv_etamax = sd->mdv.cv_etamax;
     cv_mem->cv_maxncf = sd->mdv.cv_maxncf;
@@ -6597,7 +6612,9 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
 #endif
       }
 
+
       if ( (cv_mem->cv_tn + cv_mem->cv_hprime - cv_mem->cv_tstop)*cv_mem->cv_h > ZERO ) {
+        printf("cv_mem->cv_tn + cv_mem->cv_hprime - cv_mem->cv_tstop CPU\n");
         cv_mem->cv_hprime = (cv_mem->cv_tstop - cv_mem->cv_tn)*(ONE-FOUR*cv_mem->cv_uround);
         cv_mem->cv_eta = cv_mem->cv_hprime/cv_mem->cv_h;
       }
