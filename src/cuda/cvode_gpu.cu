@@ -2006,6 +2006,7 @@ void alloc_solver_gpu2(CVodeMem cv_mem, SolverData *sd)
 
 
   sd->flagCells=(int *)malloc((mGPU->n_cells)*sizeof(int));
+  //memset(sd->flagCells, CV_SUCCESS, (mGPU->n_cells)*sizeof(int));
 
   cudaMalloc((void**)&mGPU->mdv,sizeof(ModelDataVariable));
   cudaMalloc((void**)&mGPU->mdv2,sizeof(ModelDataVariable));
@@ -2048,7 +2049,7 @@ void alloc_solver_gpu2(CVodeMem cv_mem, SolverData *sd)
   cudaMalloc((void**)&mGPU->dzn5,mGPU->nrows*sizeof(double));
 
 
-
+  HANDLE_ERROR(cudaMemset(mGPU->flagCells, CV_SUCCESS, mGPU->n_cells*sizeof(int)));
   cudaMemcpy(mGPU->djA,bicg->jA,mGPU->nnz*sizeof(int),cudaMemcpyHostToDevice);
   cudaMemcpy(mGPU->diA,bicg->iA,(mGPU->nrows+1)*sizeof(int),cudaMemcpyHostToDevice);
   cudaMemcpy(mGPU->dsavedJ,bicg->A,mGPU->nnz*sizeof(double),cudaMemcpyHostToDevice);
@@ -4350,7 +4351,7 @@ int cudaDevicecvStep(ModelDataGPU *md, ModelDataVariable *dmdv) {
     dmdv->nflag = nflag;//fine
     __syncthreads();
 
-    //if(threadIdx.x==0)printf("DEV_CUDACVSTEP nflag %d dmdv->flag %d block %d\n",nflag, dmdv->nflag, blockIdx.x);
+    if(threadIdx.x==0)printf("DEV_CUDACVSTEP nflag %d dmdv->flag %d block %d\n",nflag, dmdv->nflag, blockIdx.x);
 
     int kflag = cudaDevicecvHandleNFlag(md, dmdv, &nflag, saved_t, &ncf);
 
@@ -4358,7 +4359,7 @@ int cudaDevicecvStep(ModelDataGPU *md, ModelDataVariable *dmdv) {
     dmdv->nflag = nflag;//needed?
     dmdv->kflag = kflag;
     __syncthreads();
-    //if(threadIdx.x==0)printf("DEV_CUDACVSTEP kflag %d block %d\n",kflag, blockIdx.x);
+    if(threadIdx.x==0)printf("DEV_CUDACVSTEP kflag %d block %d\n",kflag, blockIdx.x);
 
     // Go back in loop if we need to predict again (nflag=PREV_CONV_FAIL)
 
@@ -4380,8 +4381,7 @@ int cudaDevicecvStep(ModelDataGPU *md, ModelDataVariable *dmdv) {
     dmdv->eflag = eflag;
     __syncthreads();
 
-    //if(threadIdx.x==0)printf("DEV_CUDACVSTEP nflag %d block %d\n",nflag, blockIdx.x);    //if(i==0)printf("eflag %d\n", eflag);
-    //if(i==0)printf("eflag %d\n", eflag);
+    if(threadIdx.x==0)printf("DEV_CUDACVSTEP nflag %d eflag %d block %d\n",nflag, eflag, blockIdx.x);    //if(i==0)printf("eflag %d\n", eflag);
 
     // Go back in loop if we need to predict again (nflag=PREV_ERR_FAIL)
     if (dmdv->eflag == TRY_AGAIN){
@@ -4434,6 +4434,9 @@ int cudaDevicecvStep(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
   //if(i==0)printf("DEV_cudaDevicecvStep end mdvo->cv_tn %le\n",mdvo->cv_tn);
   __syncthreads();
+
+  if(threadIdx.x==0)printf("DEV_CUDACVSTEP return CV_SUCCESS block %d\n",blockIdx.x);    //if(i==0)printf("eflag %d\n", eflag);
+
 
   return(CV_SUCCESS);
 
@@ -4624,7 +4627,7 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
   int counterBiConjGrad=0;
   int kflag2;
   //dmdv->kflag2=99;
-  int istate=99;
+  int istate=999;
   int aux=i+1;
   ModelDataVariable *mdv = md->mdv;
   ModelDataVariable *mdv2 = md->mdv2;
@@ -4635,12 +4638,8 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
   for(;;) {
 
-    atomicMin(&md->flagCells[0],aux);//sync threads
 
     //*dmdv = *mdv; //seg.fault 2 cells fixed at nst 11
-
-    //dmdv->istate=99;
-    //dmdv->kflag=99;
 
     //Random error always (~450%)
 
@@ -4651,7 +4650,6 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
 
 */
-    atomicMin(&md->flagCells[0],aux);//sync threads
     /*
 
    //dmdv->cv_gammap = mdv->cv_gammap;//crash 2 cells but fine 100 cells most of the time (5/6)
@@ -4676,7 +4674,6 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
   //atomicMax(&md->flagCells[1],aux);//sync threads
   atomicAdd(&sdata[1],-1);
 #else
-  atomicMin(&md->flagCells[1],aux);//sync threads
 #endif
 
 
@@ -4764,7 +4761,6 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
   //atomicMax(&md->flagCells[1],aux);//wrong
   atomicAdd(&sdata[2],-aux);
 #else
-  atomicMin(&md->flagCells[1],aux);//sync threads
 #endif
 
 
@@ -4805,8 +4801,6 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
         if(i==0) printf("ewtsetOK istate %d\n",dmdv->istate);
 
 #ifdef DEV_CUDACVODE
-        //istate = CV_ILL_INPUT;
-        //break;
         return CV_ILL_INPUT;
 #else
         return CV_ILL_INPUT;
@@ -4892,9 +4886,8 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
     //dmdv->flag = 0;
     //flag_shr[0] = 0;//99
 
-    atomicMin(&md->flagCells[0],aux);//sync threads
     //*mdv = *dmdv;
-    atomicMin(&md->flagCells[0],aux);//sync threads
+    //atomicMin(&md->flagCells[0],aux);//sync threads
 
 #else
 
@@ -4903,12 +4896,9 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
     dmdv->kflag2=kflag2;
     __syncthreads();
 
-  //atomicMin(&md->flagCells[0],aux);//sync threads
 #ifndef DEV_ATOMICMAX
-  //atomicMax(&md->flagCells[1],aux);//sync threads
   atomicAdd(&sdata[3],1);
 #else
-  atomicMin(&md->flagCells[1],aux);//sync threads
 #endif
 
   //fine 1000 cells
@@ -5004,13 +4994,9 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
    */
   //*mdv = *dmdv;//fine?
 
-  //atomicAdd(&md->flagCells[0],aux);///wrong but why
-  //atomicMin(&md->flagCells[0],aux);//sync threads
 #ifndef DEV_ATOMICMAX
-  //atomicMax(&md->flagCells[1],aux);//sync threads
   atomicAdd(&sdata[4],aux);
 #else
-  atomicMin(&md->flagCells[1],aux);//sync threads
 #endif
   __syncthreads();
 
@@ -5079,7 +5065,6 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
 #ifdef DEV_CUDACVODE
       //istate = CV_SUCCESS;
-      //break;
       return CV_SUCCESS;
 #else
       return CV_SUCCESS;
@@ -5098,8 +5083,6 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
         __syncthreads();
 #ifdef DEV_CUDACVODE
         return CV_TSTOP_RETURN;
-        //istate = CV_TSTOP_RETURN;
-        //break;
 #else
         return CV_TSTOP_RETURN;
 #endif
@@ -5118,10 +5101,10 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
 #ifdef DEV_CUDACVODE
   }
+  return CV_SUCCESS;//It doesnt matter, it should always return instead of break and never reach here
 #else
+  return dmdv->kflag2;
 #endif
-
-  return istate;
 
 }
 
@@ -6502,7 +6485,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     //flag = DO_ERROR_TEST;//CV_SUCCESS DO_ERROR_TEST
     flag = CV_SUCCESS;
     for (int i = 0; i < mGPU->n_cells; i++) {
-      //printf("DEV_cudacvStep sd->flagCells[i] %d sd->mdv.flag %d\n",sd->flagCells[i], sd->mdv.flag);
+      printf("DEV_cudacvStep sd->flagCells[i] %d sd->mdv.flag %d\n",sd->flagCells[i], sd->mdv.flag);
       if (sd->flagCells[i] != flag) {
         flag = sd->flagCells[i];
         break;
@@ -6552,6 +6535,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
 #endif
     }
 
+#ifdef DEV_CUDACVODE
 
     // In NORMAL mode, check if tout reached
     //if ( (cv_mem->cv_tn-tout)*cv_mem->cv_h >= ZERO ) {
@@ -6565,36 +6549,25 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
 
       //cv_mem->cv_next_q = sd->mdv.cv_next_q;
       //cv_mem->cv_next_h = sd->mdv.cv_next_h;
-
       cv_mem->cv_next_q = sd->mdv.cv_qprime;
       cv_mem->cv_next_h = sd->mdv.cv_hprime;
 
-      /*
-      //printf("In NORMAL mode \n"); //always normal mode
-      istate = CV_SUCCESS;//set in
+    }
+
+#else
+
+    if ( (itask == CV_NORMAL) &&  (cv_mem->cv_tn-tout)*cv_mem->cv_h >= ZERO ) {
+      istate = CV_SUCCESS;
       cv_mem->cv_tretlast = *tret = tout;
-
-      //(void) CVodeGetDky(cv_mem, tout, 0, yout);
-      (void) CVodeGetDky_gpu3(sd, cv_mem, tout, 0, yout);
-
+      (void) CVodeGetDky(cv_mem, tout, 0, yout);
       cv_mem->cv_next_q = cv_mem->cv_qprime;
       cv_mem->cv_next_h = cv_mem->cv_hprime;
-
-      */
-
-#ifdef DEV_CUDACVODE
-#else
       break;
-#endif
-    }else{
-
-#ifdef DEV_CUDACVODE
-
-      printf("istate!=CV_SUCCESS %d\n",istate);
-
-#endif
-
     }
+
+
+#endif
+
 
     //never enters?
     if ( cv_mem->cv_tstopset ) {
