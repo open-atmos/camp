@@ -60,7 +60,7 @@ Optional dependencies:
 Installation
 ============
 
-1. Install cmake, SuiteSparse, and CVODE (see above).
+1. Install cmake, json-fortran, SuiteSparse, and CVODE (see above).
 
 2. Unpack CAMP:
 
