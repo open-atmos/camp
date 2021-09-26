@@ -2003,8 +2003,6 @@ void alloc_solver_gpu2(CVodeMem cv_mem, SolverData *sd)
   //ODE aux variables
   mGPU->dA=mGPU->J;//set itsolver gpu pointer to jac pointer initialized at camp
 
-
-
   sd->flagCells=(int *)malloc((mGPU->n_cells)*sizeof(int));
 
   cudaMalloc((void**)&mGPU->mdv,sizeof(ModelDataVariable));
@@ -2067,7 +2065,6 @@ void alloc_solver_gpu2(CVodeMem cv_mem, SolverData *sd)
   cudaMemcpy(mGPU->cv_acor_init,cv_acor_init,mGPU->nrows*sizeof(double),cudaMemcpyHostToDevice);
 
 
-
   mGPU->n_cells=md->n_cells;
   mGPU->dftemp=mGPU->deriv_data; //deriv is gpu pointer
   mGPU->nnz=SM_NNZ_S(J);
@@ -2076,7 +2073,6 @@ void alloc_solver_gpu2(CVodeMem cv_mem, SolverData *sd)
   mGPU->blocks=(mGPU->nrows+mGPU->threads-1)/mGPU->threads;
   mGPU->replacement_value=TINY;
   mGPU->threshhold=-SMALL;
-  sd->mdv.cv_reltol=((CVodeMem) sd->cvode_mem)->cv_reltol;
 
 
   mGPU->deriv_length_cell=mGPU->nrows/mGPU->n_cells;
@@ -2097,6 +2093,7 @@ void alloc_solver_gpu2(CVodeMem cv_mem, SolverData *sd)
   //Init Linear Solver variables
   createSolver(sd);
 
+  sd->mdv.cv_reltol=((CVodeMem) sd->cvode_mem)->cv_reltol;
   mdv->cv_nfe=0;
   mdv->cv_nsetups=0;
   mdv->nje=0;
@@ -2196,6 +2193,7 @@ void alloc_solver_gpu2(CVodeMem cv_mem, SolverData *sd)
 #endif
 
   cudaMemcpy(mGPU->mdv,mdv,sizeof(ModelDataVariable),cudaMemcpyHostToDevice);
+  //cudaMemcpy(mGPU->mdv2,mdv,sizeof(ModelDataVariable),cudaMemcpyHostToDevice);//WARNING: This should be here before
 
 #ifdef CHECK_GPU_LINSOLVE
   sd->max_error_linsolver = 0.0;
@@ -4667,6 +4665,7 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
   //if(tid==0)printf("md->flagCells[blockIdx.x] %d\n",md->flagCells[blockIdx.x]);
 
+#ifdef DEV_MDVBLOCK
 
   dmdv->cv_taskc = mdv2->cv_taskc;
   dmdv->cv_uround = mdv2->cv_uround;
@@ -4728,7 +4727,16 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
   dmdv->cv_h = mdv2->cv_h;//never ends 1000 cells
   dmdv->cv_hscale = mdv2->cv_hscale; //never ends 1000 cells
 
-  //if(tid==0)printf("if(md->flagCells[blockIdx.x]==99)\n");
+  dmdv->nstloc = mdv2->nstloc;
+  dmdv->tout = mdv2->tout;
+  dmdv->tret = mdv2->tret;
+  dmdv->istate = mdv2->istate;
+  dmdv->kflag = mdv2->kflag;
+  dmdv->kflag2 = mdv2->kflag2;
+
+#endif
+
+  *dmdv = *mdv2; //fine
 
   //fine 1000 cells
 
@@ -4736,12 +4744,7 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
   /*
 
-     //fine 1000 cells
 
-
-  dmdv->cv_eta = mdv2->cv_eta;//diff error 1000 cells
-  dmdv->cv_h = mdv2->cv_h;//never ends 1000 cells
-  dmdv->cv_hscale = mdv2->cv_hscale; //never ends 1000 cells
 
    */
 
@@ -4878,6 +4881,7 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
   //cudaDeviceaddI(&flag2, md->flagCells[blockIdx.x], sdata, md->n_shr_empty);
   //atomicAdd(md->flag2,flag2);//atomic never works
 
+#ifdef DEV_MDVBLOCK
 
   //fine 1000 cells
 
@@ -4931,30 +4935,28 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
   mdv2->cv_hmin = dmdv->cv_hmin;
   mdv2->cv_next_h = dmdv->cv_next_h;
 
-  //mdv2->cv_hprime = dmdv->cv_hprime; //problem enabling only this
-  //mdv->cv_taskc = dmdv->cv_taskc;
-  //mdv2->saved_t = dmdv->saved_t;
-  //mdv2->nef = dmdv->nef;
-  //mdv2->ncf = dmdv->ncf;
-
-  //atomicAdd(&md->J_tmp[1],dmdv->cv_eta/gridDim.x);//wrong (40 iters) 1000 cells
-  //__syncthreads();dmdv->cv_eta=md->J_tmp[1];__syncthreads();
-
-  //mdv2->cv_eta = dmdv->cv_eta;//diff error 1000 cells
-
-  mdv2->ddn = dmdv->ddn;
-  mdv2->dup = dmdv->dup;
+  //mdv2->ddn = dmdv->ddn;//debug
+  //mdv2->dup = dmdv->dup;
+  mdv2->cv_hprime2 = dmdv->cv_hprime2;
 
   //if(md->flag2[0]==gridDim.x*blockDim.x){
-
-  mdv2->cv_hprime2 = dmdv->cv_hprime2;
 
   mdv2->cv_eta = dmdv->cv_eta;//diff error 1000 cells
   mdv2->cv_hprime = dmdv->cv_hprime; //never ends 1000 cells
   mdv2->cv_h = dmdv->cv_h;//never ends 1000 cells
   mdv2->cv_hscale = dmdv->cv_hscale;  //never ends 1000 cells
 
-  //if(tid==0)printf("if(md->flag2[0]==gridDim.x*blockDim.x) dmdv->cv_hprime2 %le gridDim.x*blockDim.x %d md->flag2[0] %d block %d\n",dmdv->cv_hprime2,gridDim.x*blockDim.x,md->flag2[0],blockIdx.x);//fine
+  mdv2->nstloc = dmdv->nstloc;  //never ends 1000 cells
+  mdv2->tout = dmdv->tout;  //never ends 1000 cells
+  mdv2->tret = dmdv->tret;  //never ends 1000 cells
+  mdv2->istate = dmdv->istate;  //never ends 1000 cells
+  mdv2->kflag = dmdv->kflag;  //never ends 1000 cells
+  mdv2->kflag = 99;  //never ends 1000 cells
+
+#endif
+
+  *mdv2 = *dmdv; //fine, but why? what is left to copy? debug?
+
 
   //}
 
@@ -5085,8 +5087,22 @@ void cudaGlobalCVode(ModelDataGPU md_object) {
   unsigned int tid = threadIdx.x;
   int active_threads = md->nrows;
 
+#ifndef DEV_MDVBLOCK
+
+  //ModelDataVariable dmdv_object;
+
+  ModelDataVariable dmdv_object = md_object.mdv2[blockIdx.x]; //fine with copying mdv2 complete
+
+  //ModelDataVariable dmdv_object = *md_object.mdv;
+
+  ModelDataVariable *dmdv = &dmdv_object;
+
+#else
+
   ModelDataVariable dmdv_object = *md_object.mdv;
   ModelDataVariable *dmdv = &dmdv_object;
+
+#endif
 
   dmdv->flag = 0;
   int istate2;
@@ -6222,6 +6238,28 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
   sd->mdv.tret = *tret;
   sd->mdv.istate = istate;
   sd->mdv.kflag = kflag;
+  sd->mdv.kflag2 = 99;
+
+  /*
+
+  sd->mdv.cv_nfe=0;
+  sd->mdv.cv_nsetups=0;
+  sd->mdv.nje=0;
+  sd->mdv.nstlj=0;
+
+#ifdef PMC_DEBUG_GPU
+
+    sd->mdv.countercvstep = 0;
+   sd->mdv.counterDerivGPU = 0;
+   sd->mdv.counterBCGInternal = 0;
+   sd->mdv.dtBCG = 0;
+   sd->mdv.dtPreBCG = 0;
+   sd->mdv.dtPostBCG = 0;
+
+#endif
+
+   */
+
   //fine
 
   cudaMemcpy(mGPU->mdv, &sd->mdv, sizeof(ModelDataVariable), cudaMemcpyHostToDevice);
@@ -6250,7 +6288,9 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     cudaEventRecord(bicg->startcvStep);
 #endif
 
-    sd->mdv.kflag2 = 99;
+#ifndef DEV_MDVBLOCK
+
+#else
     sd->mdv.init_time_step = sd->init_time_step;
     sd->mdv.cv_mxstep = cv_mem->cv_mxstep;
     //sd->mdv.cv_next_q = cv_mem->cv_next_q;
@@ -6313,14 +6353,24 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     sd->mdv.cv_etamax = cv_mem->cv_etamax;
     sd->mdv.cv_maxncf = cv_mem->cv_maxncf;
 
+//fine
+
     sd->mdv.nstloc = (int)nstloc;
     sd->mdv.tout = tout;
     sd->mdv.tret = *tret;
     sd->mdv.istate = istate;
     sd->mdv.kflag = kflag;
-    //fine
+    sd->mdv.kflag2 = 99;
+
+ //fine
+
+//#endif //fine
+
+#endif
 
     cudaMemcpy(mGPU->mdv, &sd->mdv, sizeof(ModelDataVariable), cudaMemcpyHostToDevice);
+
+//#endif //wrong
 
     //HANDLE_ERROR(cudaMemset(mGPU->flagCells, 99, mGPU->n_cells*sizeof(int)));//not works
 
@@ -6348,9 +6398,6 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
 #endif
 
     cudaMemcpy(&sd->mdv, mGPU->mdvo, sizeof(ModelDataVariable), cudaMemcpyDeviceToHost);
-
-    //cv_mem->cv_mxstep = sd->mdv.cv_mxstep;
-
 
     cv_mem->cv_next_q = sd->mdv.cv_next_q;
     tout = sd->mdv.tout; //Not output?
@@ -6468,7 +6515,6 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     istate=flag;
 #else
     kflag=flag;
-    //kflag=sd->mdv.flag; //wrong?
 #endif
 
 
