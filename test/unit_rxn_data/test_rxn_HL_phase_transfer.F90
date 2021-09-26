@@ -103,14 +103,19 @@ contains
             i_time, i_spec
     character(len=:), allocatable :: key, idx_prefix
     real(kind=dp) :: time_step, time, n_star, del_H, del_S, del_G, alpha, &
-            crms, M_to_ppm, kgm3_to_ppm, K_eq_O3, K_eq_H2O2, k_O3_forward, &
-            k_O3_backward, k_H2O2_forward, k_H2O2_backward, equil_O3, &
-            equil_O3_aq, equil_H2O2, equil_H2O2_aq, temp, pressure
+            mfp, Kn, corr, M_to_ppm, kgm3_to_ppm, K_eq_O3, K_eq_H2O2, &
+            k_O3_forward, k_O3_backward, k_H2O2_forward, k_H2O2_backward, &
+            equil_O3, equil_O3_aq, equil_H2O2, equil_H2O2_aq, temp, pressure
     real(kind=dp), target :: radius, number_conc
 #ifdef CAMP_USE_MPI
     character, allocatable :: buffer(:), buffer_copy(:)
     integer(kind=i_kind) :: pack_size, pos, i_elem, results
 #endif
+
+    real(kind=dp), parameter :: MW_O3 =   0.048     ! [kg mol-1]
+    real(kind=dp), parameter :: MW_H2O2 = 0.0340147 ! [kg mol-1]
+    real(kind=dp), parameter :: Dg_O3   = 1.48e-5   ! diffusion coeff [m2 s-1]
+    real(kind=dp), parameter :: Dg_H2O2 = 1.46e-5   ! diffusion coeff [m2 s-1]
 
     type(solver_stats_t), target :: solver_stats
 
@@ -142,12 +147,14 @@ contains
 
     ! Henry's Law equilibrium constants (M/ppm)
     ! O3 HLC Equil Const (M/ppm)
-    K_eq_O3 = 1.14d-2 * exp(2300.0d0 * (1.0d0/temp - 1.0d0/298.0d0)) / 1.0d6
+    K_eq_O3 = 1.12509e-7 * pressure / 1.0e6 &
+              * exp(2300.0d0 * (1.0d0/temp - 1.0d0/298.0d0))
     ! H2O2 HLC Equil Const (M/ppm)
-    K_eq_H2O2 = 1.025d5 * exp(6340.0d0 * (1.0d0/temp - 1.0d0/298.0d0)) / 1.0d6
+    K_eq_H2O2 = 1.011596348 * pressure / 1.0e6 &
+                * exp(6340.0d0 * (1.0d0/temp - 1.0d0/298.0d0))
 
     ! Set output time step (s)
-    time_step = 1.0d-13
+    time_step = 10.0
 
 #ifdef CAMP_USE_MPI
     ! Load the model data on root process and pass it to process 1 for solving
@@ -365,23 +372,29 @@ contains
         true_conc(0,idx_Ca_pp) = 1.3
         true_conc(0,idx_H2O) = 3000.0
       end if
-      model_conc(0,:) = true_conc(0,:)
 
       ! Calculate the radius and number concentration to use
-      ! ( the real values for the modal representation cannot be calculated
-      !   because the number concentrations change sligthly during the run
-      !   but the Jacobian checker can be run as a check. )
+      !
+      ! The modal scenario is only used for Jacobian checking
       if (scenario.eq.1) then
-        radius = 1.5e-5             ! radius (m)
         number_conc = 1.3e6         ! particle number concentration (#/cc)
+        ! single particle aerosol mass concentrations are per particle
+        true_conc(0,idx_O3_aq)  = true_conc(0,idx_O3_aq)  / number_conc
+        true_conc(0,idx_H2O_aq) = true_conc(0,idx_H2O_aq) / number_conc
+        ! radius (m) calculated based on particle mass
+        radius = ( ( true_conc(0,idx_O3_aq)  / 1000.0 +  &
+                     true_conc(0,idx_H2O_aq) / 1000.0 )  &
+                   * 3.0 / 4.0 / 3.14159265359 )**(1.0/3.0)
       else if (scenario.eq.2) then
         ! radius (m)
         radius = 9.37e-7 / 2.0 * exp(5.0 * log(2.1d0) * log(2.1d0) / 2.0)
         ! number conc
-        number_conc = 1.0 / (const%pi/6.0 * (9.37e-7)**3.0 * &
-                             exp(2.0 * log(2.1d0) * log(2.1d0) ))
-        number_conc = number_conc * 1.0e-9 * (1.0e-3 + 1.4e-2)
+        number_conc = 6.0 / (const%pi * (9.37e-7)**3.0 * &
+                             exp(9.0/2.0 * log(2.1d0) * log(2.1d0) ))
+        number_conc = number_conc * ( true_conc(0,idx_O3_aq) / 1000.0 )
       end if
+
+      model_conc(0,:) = true_conc(0,:)
 
       ! Update the aerosol representation (single-particle only)
       if (scenario.eq.1) then
@@ -404,7 +417,7 @@ contains
       end if
 
       ! Determine the M -> ppm conversion using the total aerosol water
-      M_to_ppm = number_conc * 1.0d-3 * true_conc(0,idx_H2O_aq) * &
+      M_to_ppm = number_conc * 1.0d6 * true_conc(0,idx_H2O_aq) * &
               const%univ_gas_const * temp / pressure
 
       ! O3 rate constants
@@ -416,9 +429,14 @@ contains
       del_G = (del_H - temp * del_S/1000.0d0) * 4184.0d0
       alpha = exp(-del_G/(const%univ_gas_const*temp))
       alpha = alpha / (1.0d0 + alpha)
-      crms = sqrt(8.0d0*const%univ_gas_const*temp/(const%pi*48.0d0))
-      k_O3_forward = number_conc * ((radius**2 / (3.0d0 * 1.48d-5) + &
-            4.0d0 * radius / (3.0d0 * crms * alpha))**(-1))           ! (1/s)
+      ! mean free path [m]
+      mfp = 3.0 * Dg_O3 / &
+            ( sqrt( 8.0 * const%univ_gas_const * temp &
+                    / ( const%pi * MW_O3 ) ) )
+      Kn = mfp / radius
+      corr = ( 0.75 * alpha * ( 1 + Kn ) ) / &
+             ( Kn**2 + ( 1.0 + 0.283 * alpha ) * Kn + 0.75 * alpha )
+      k_O3_forward = number_conc * 4.0 * const%pi * radius * Dg_O3 * corr ! [s-1]
       k_O3_backward = k_O3_forward / (K_eq_O3 * M_to_ppm)             ! (1/s)
 
       ! H2O2 rate constants
@@ -430,15 +448,21 @@ contains
       del_G = (del_H - temp * del_S/1000.0d0) * 4184.0d0
       alpha = exp(-del_G/(const%univ_gas_const*temp))
       alpha = alpha / (1.0d0 + alpha)
-      crms = sqrt(8.0d0*const%univ_gas_const*temp/(const%pi*34.0d0))
-      k_H2O2_forward = number_conc * ((radius**2 / (3.0d0 * 1.46d-5) + &
-            4.0d0 * radius / (3.0d0 * crms * alpha))**(-1))           ! (1/s)
+      ! mean free path [m]
+      mfp = 3.0 * Dg_H2O2 / &
+            ( sqrt( 8.0 * const%univ_gas_const * temp &
+                    / ( const%pi * MW_H2O2 ) ) )
+      Kn = mfp / radius
+      corr = ( 0.75 * alpha * ( 1 + Kn ) ) / &
+             ( Kn**2 + ( 1.0 + 0.283 * alpha ) * Kn + 0.75 * alpha )
+      k_H2O2_forward = number_conc * 4.0 * const%pi * radius * Dg_H2O2 * corr ! [s-1]
       k_H2O2_backward = k_H2O2_forward / (K_eq_H2O2 * M_to_ppm)       ! (1/s)
 
       ! Determine the equilibrium concentrations
       ! [A_gas] = [A_total] / (1 + 1/K_HL)
       ! [A_aero] = [A_total] / (K_HL + 1)
-      kgm3_to_ppm = const%univ_gas_const * temp / (48.0d0 * pressure)
+      kgm3_to_ppm = const%univ_gas_const * 1.0e6 * temp &
+                    / (MW_O3 * pressure)
       equil_O3 = (true_conc(0,idx_O3) + &
               true_conc(0,idx_O3_aq)*number_conc*kgm3_to_ppm) / &
               (K_eq_O3*M_to_ppm + 1.0d0)
@@ -446,7 +470,8 @@ contains
               true_conc(0,idx_O3_aq)) / &
               (1.0d0 + 1.0d0/(K_eq_O3*M_to_ppm))
 
-      kgm3_to_ppm = const%univ_gas_const * temp / (34.0d0 * pressure)
+      kgm3_to_ppm = const%univ_gas_const * 1.0e6 * temp &
+                    / (MW_H2O2 * pressure)
       equil_H2O2 = (true_conc(0,idx_H2O2) + &
               true_conc(0,idx_H2O2_aq)*number_conc*kgm3_to_ppm) / &
               (K_eq_H2O2*M_to_ppm + 1.0d0)
@@ -550,17 +575,23 @@ contains
       close(7)
 
       ! Analyze the results (single-particle only)
-      ! TODO figure out if this can be solved analytically with a varying radius
-#if 0
+      !
+      ! The particle radius changes as the species condense/evaporate, so an
+      ! exact solution is not calculated. The tolerances on the comparison
+      ! with "true" values are higher to account for this.
+      !
+      ! scenario 2 is only used for Jacobian checking
       if (scenario.eq.1) then
         do i_time = 1, NUM_TIME_STEP
           do i_spec = 1, size(model_conc, 2)
             if (i_spec.ge.2.and.i_spec.le.8) cycle
             call assert_msg(411096108, &
               almost_equal(model_conc(i_time, i_spec), &
-              true_conc(i_time, i_spec), real(1.0e-2, kind=dp)).or. &
-              (model_conc(i_time, i_spec).lt.1e-5*model_conc(1, i_spec).and. &
-              true_conc(i_time, i_spec).lt.1e-5*true_conc(1, i_spec)), &
+              true_conc(i_time, i_spec), 1.0e-1_dp, 1.0e-14_dp).or. &
+              (model_conc(i_time, i_spec).lt.1.2*model_conc(NUM_TIME_STEP, i_spec).and. &
+              true_conc(i_time, i_spec).lt.1.2*true_conc(NUM_TIME_STEP, i_spec)).or. &
+              (model_conc(i_time, i_spec).lt.1e-2*model_conc(1, i_spec).and. &
+              true_conc(i_time, i_spec).lt.1e-2*true_conc(1, i_spec)), &
               "time: "//trim(to_string(i_time))//"; species: "// &
               trim(to_string(i_spec))//"; mod: "// &
               trim(to_string(model_conc(i_time, i_spec)))//"; true: "// &
@@ -568,7 +599,6 @@ contains
           end do
         end do
       endif
-#endif
       deallocate(camp_state)
 
 #ifdef CAMP_USE_MPI
