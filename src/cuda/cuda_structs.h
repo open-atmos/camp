@@ -337,6 +337,7 @@ typedef struct {
     double threshhold;
     double replacement_value;
     int *flag;
+    int *flag2;
     int *flagCells;
 
     //f_gpu
@@ -356,9 +357,6 @@ typedef struct {
     double* dzn4;
     double* dzn5;
     double* dewt;
-    int *cv_nsetups;
-    int *nstlj;
-    int *nje;
 
     //Auxiliar variables
     double* dsavedJ;

@@ -726,7 +726,6 @@ __device__ void cudaDeviceyequalsx(double* dy,double* dx,int nrows)
   }
 }
 
-//volatile double *sdata
 __device__ void cudaDevicemin(double *g_odata, double in, volatile double *sdata, int n_shr_empty)
 {
   //extern __shared__ double sdata[];
@@ -739,25 +738,11 @@ __device__ void cudaDevicemin(double *g_odata, double in, volatile double *sdata
 
   __syncthreads();
 
-#ifndef ALL_BLOCKS_EQUAL_SIZE
-
   //first threads update empty positions
   if(tid<n_shr_empty)
     sdata[tid+blockDim.x]=sdata[tid];
 
   __syncthreads(); //Not needed (should)
-
-#else
-
-  //slower
-  if (tid == 0){
-    for (int j=0; j<blockDim.x+n_shr_empty; j++)
-      sdata[j] = sdata[0];
-  }
-
-  __syncthreads();
-
-#endif
 
 
   //if(blockIdx.x==0)printf("i %d in %le sdata[tid] %le\n",i,in,sdata[tid]);
@@ -773,58 +758,43 @@ __device__ void cudaDevicemin(double *g_odata, double in, volatile double *sdata
 
   __syncthreads();
   *g_odata = sdata[0];
+  __syncthreads();
 
-  //if(i==0)printf("i %d sdata[tid] %le\n",i,sdata[tid]);
+}
 
-  /*
+__device__ void cudaDeviceaddI(int *g_odata, int in, volatile double *sdata, int n_shr_empty)
+{
+  //extern __shared__ double sdata[];
+  unsigned int tid = threadIdx.x;
+  unsigned int i = blockIdx.x*blockDim.x + threadIdx.x;
+
+  __syncthreads();
+
+  sdata[tid] = in;
+
+  __syncthreads();
+
+  //first threads update empty positions
+  if(tid<n_shr_empty)
+    sdata[tid+blockDim.x]=sdata[tid];
+
+  __syncthreads(); //Not needed (should)
+
+
+  //if(blockIdx.x==0)printf("i %d in %le sdata[tid] %le\n",i,in,sdata[tid]);
 
   for (unsigned int s=(blockDim.x+n_shr_empty)/2; s>0; s>>=1)
   {
-    if (tid < s)
+    if (tid < s){//&& sdata[tid + s]!=0.
+      //if(sdata[tid + s] < sdata[tid] ) sdata[tid]=sdata[tid + s];
       sdata[tid] += sdata[tid + s];
-
+    }
     __syncthreads();
   }
-*/
-
-
-  /*
-  unsigned int blockSize = blockDim.x+n_shr_empty;
-
-  // do reduction in shared mem
-  if ((blockSize >= 1024) && (tid < 512)) {
-    sdata[tid] += sdata[tid + 512];
-  }
 
   __syncthreads();
-
-  if ((blockSize >= 512) && (tid < 256)) {
-    sdata[tid] += sdata[tid + 256];
-  }
-
+  *g_odata = sdata[0];
   __syncthreads();
-
-  if ((blockSize >= 256) && (tid < 128)) {
-    sdata[tid] += sdata[tid + 128];
-  }
-
-  __syncthreads();
-
-  if ((blockSize >= 128) && (tid < 64)) {
-    sdata[tid] += sdata[tid + 64];
-  }
-
-  __syncthreads();
-
-  if (tid < 32) warpReduce(sdata, tid);
-
-  __syncthreads();//not needed?
-
-  */
-
-  //*in = sdata[0];
-  __syncthreads();
-
 
 }
 
