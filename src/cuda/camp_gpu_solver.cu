@@ -1143,15 +1143,10 @@ int rxn_calc_deriv_gpu(SolverData *sd, N_Vector y, N_Vector deriv, double time_s
   int n_cells = md->n_cells;
   int n_kernels = 1; // Divide load into multiple kernel calls
   //todo n_kernels case division left residual, an extra kernel computes remain residual
-#ifdef BASIC_CALC_DERIV
-  int total_threads = md->n_rxn*n_cells/n_kernels; //Reaction group per number of repetitions/cells
-  int threads_block = md->max_n_gpu_thread;
-#else
   int n_per_cell_dep_var = md->n_per_cell_dep_var;
   int total_threads = n_per_cell_dep_var * n_cells/n_kernels;
   int n_shr_empty = md->max_n_gpu_thread%n_per_cell_dep_var;
   int threads_block = md->max_n_gpu_thread - n_shr_empty; //last multiple of size_cell before max_threads
-#endif
   int n_blocks = ((total_threads + threads_block - 1) / threads_block);
   double *J_tmp = N_VGetArrayPointer(md->J_tmp);
   ModelDataGPU *mGPU = &sd->mGPU;
