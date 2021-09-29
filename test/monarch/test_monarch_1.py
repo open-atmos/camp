@@ -284,8 +284,8 @@ def plot_cases(casesList,cases_gpu_cpu2,cases_multicells_onecell2,cells,diff_cel
     datay=datacases[0]
 
   if(len(cells)>1):
-    print_timesteps_title=True
-    #print_timesteps_title=False
+    #print_timesteps_title=True
+    print_timesteps_title=False
     if print_timesteps_title:
       #plot_title+=", Mean over "+str(timesteps)+ " timesteps"
       plot_title+=", Timesteps: "+str(timesteps)
@@ -314,25 +314,25 @@ def all_timesteps():
   mpi="yes"
   #mpi="no"
 
-  mpiProcessesList = [1]
-  #mpiProcessesList = [40,1]
+  #mpiProcessesList = [1]
+  mpiProcessesList = [40,1]
 
-  cells = [10]
+  #cells = [10]
   #cells = [1,10,100]
   #cells = [100,500,1000]
   #cells = [1,5,10,50,100]
-  #cells = [100,500,1000,5000,10000]
+  cells = [100,500,1000,5000,10000]
   #cells = [100,1000,10000,100000]
 
   timesteps = 5#5 #720=24h #30=1h
   TIME_STEP = 2 #pending send TIME_STEP to mock_monarch
 
-  cases = ["Historic"]
+  #cases = ["Historic"]
   #cases = ["CPU One-cell"]
   #cases = ["CPU Multi-cells"]
   #cases = ["CPU One-cell","CPU Multi-cells"]
   #cases = ["CPU One-cell","GPU Block-cells(N)"]
-  #cases = ["CPU One-cell","GPU Block-cells(1)"]
+  cases = ["CPU One-cell","GPU Block-cells(1)"]
   #cases = ["CPU Multi-cells","GPU Block-cells(N)"]
   #cases = ["CPU Multi-cells","GPU Block-cells(1)"]
   #cases = ["GPU Block-cells(1)","GPU Block-cells(N)"]
@@ -348,7 +348,7 @@ def all_timesteps():
 
   #plot_y_key = "Speedup timeCVode"
   #plot_y_key = "Speedup counterLS"
-  #plot_y_key = "Speedup normalized timeLS"
+  plot_y_key = "Speedup normalized timeLS"
   #plot_y_key = "Speedup normalized computational timeLS"
   #plot_y_key = "Speedup counterBCG"
   #plot_y_key = "Speedup total iterations - counterBCG"
@@ -357,7 +357,7 @@ def all_timesteps():
 
   #plot_y_key = "% Time data transfers CPU-GPU BCG"
   #plot_y_key="NRMSE"
-  plot_y_key="MAPE"
+  #plot_y_key="MAPE"
   #plot_y_key="SMAPE"
 
   #remove_iters=0#10 #360
@@ -397,7 +397,7 @@ def all_timesteps():
     casesList.append(["CPU One-cell","CPU Multi-cells"])
     casesList.append(["CPU One-cell","GPU One-cell"])
   else:
-    casesList.append(cases[0])
+    casesList.append(cases)
 
   datacases=[]
   columns=[]
