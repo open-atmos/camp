@@ -423,7 +423,7 @@ __device__
 int cudaDevicecamp_solver_check_model_state(ModelDataGPU *md, double *y, int *flag)
 {
   int i = blockIdx.x * blockDim.x + threadIdx.x;
-  int active_threads = md->n_cells*md->deriv_length_cell;
+  int active_threads = md->nrows;
   extern __shared__ int flag_shr[];
   __syncthreads();
   flag_shr[0] = *flag;
@@ -442,7 +442,7 @@ int cudaDevicecamp_solver_check_model_state(ModelDataGPU *md, double *y, int *fl
 
       flag_shr[0] = CAMP_SOLVER_FAIL;
 #ifdef DEBUG_cudaDevicecamp_solver_check_model_state
-      printf("Failed model state update gpu:[spec %d] = %le flag_shr %d\n",i,y[i],flag_shr[0]);
+      if(i==0=printf("Failed model state update gpu:[spec %d] = %le flag_shr %d\n",i,y[i],flag_shr[0]);
 #endif
 
     } else {
@@ -471,6 +471,8 @@ int cudaDevicecamp_solver_check_model_state(ModelDataGPU *md, double *y, int *fl
     }
      */
   }
+
+  //printmin(md,y,"cudaDevicecamp_solver_check_model_state end y");//wrong
 
   __syncthreads();
   *flag = flag_shr[0];
@@ -1541,8 +1543,11 @@ void cudaDeviceJac(
   //duplicated call to check_model_state (previous f funct already checks model_state)
   //helps with bug printing dftemp
   int checkflag=cudaDevicecamp_solver_check_model_state(md, y, flag);
-  if(*flag==CAMP_SOLVER_FAIL)
+  if(*flag==CAMP_SOLVER_FAIL){
+    //if(i==0)printf("cudaDeviceJac cudaDevicecamp_solver_check_model_state *flag==CAMP_SOLVER_FAIL\n");
+    //printmin(md,y,"cudaDevicef end y");//Never enters?
     return;
+  }
 
   //printmin(md,y,"cudaDevicef end y");//wrong
 
