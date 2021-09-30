@@ -438,11 +438,15 @@ int cudaDevicecamp_solver_check_model_state(ModelDataGPU *md, double *y, int *fl
     //           j,y[j],threshhold);
 #endif
 
+    //printmin(md,md->state,"cudaDevicecamp_solver_check_model_state start state");//wrong, but not from jac
+
+    //if(i==0)printf("cudaDevicecamp_solver_check_model_state md->threshhold %le md->replacement_value %le\n",md->threshhold,md->replacement_value);//fine
+
     if (y[i] < md->threshhold) {
 
       flag_shr[0] = CAMP_SOLVER_FAIL;
 #ifdef DEBUG_cudaDevicecamp_solver_check_model_state
-      if(i==0=printf("Failed model state update gpu:[spec %d] = %le flag_shr %d\n",i,y[i],flag_shr[0]);
+      printf("Failed model state update gpu:[spec %d] = %le flag_shr %d\n",i,y[i],flag_shr[0]);
 #endif
 
     } else {
@@ -714,6 +718,7 @@ int cudaDevicef(
   // default value
   time_step = time_step > 0. ? time_step : dmdv->init_time_step;
 
+  printmin(md,md->state,"cudaDevicef start state");
   int checkflag=cudaDevicecamp_solver_check_model_state(md, y, flag);
 
   //__syncthreads();
@@ -1002,15 +1007,17 @@ int CudaDeviceguess_helper(double t_n, double h_n, double* y_n,
 //#ifndef DEV_CudaDeviceguess_helper
 //#else
 
+#ifndef DEBUG_cudaDevicef
+    printmin(md,md->state,"cudaDevicef start state");
+#endif
+
     int fflag=cudaDevicef(
             t_0 + t_j, md->deriv_length_cell, md->state_size_cell,
             md->n_cells, md->i_kernel, threads_block,
             md->n_shr_empty, tmp1, corr,md,dmdv,flag
     );
 
-#ifdef DEBUG_cudaDevicef
-    printmin(md,tmp1,"cudaDevicef end tmp1");//fine
-#endif
+    //printmin(md,tmp1,"cudaDevicef end tmp1");//fine
 
     __syncthreads();
 
@@ -1523,8 +1530,10 @@ void cudaDeviceJac(
 
 #endif
 
-  //printmin(md,y,"cudaDevicef end y");//fine
-  //printmin(md,dftemp,"cudaDevicef end dftemp");//fine
+  //printmin(md,y,"cudaDeviceJac end y");//fine
+  //printmin(md,dftemp,"cudaDeviceJac end dftemp");//fine
+
+  printmin(md,md->state,"cudaDeviceJac start state");//fine
 
   cudaDevicef(
           time_step, deriv_length_cell, state_size_cell,
@@ -1532,30 +1541,32 @@ void cudaDeviceJac(
           dftemp,md,dmdv,flag
   );
 #ifndef DEBUG_cudaDevicef
-  printmin(md,dftemp,"cudaDevicef end dftemp");//fine with cudaDevicecamp_solver_check_model_state just after
+  printmin(md,dftemp,"cudaDeviceJac dftemp");//fine with cudaDevicecamp_solver_check_model_state just after
 #endif
 
   if(*flag==CAMP_SOLVER_FAIL)
     return;
 
-  printmin(md,y,"cudaDevicef end y");
+  printmin(md,y,"cudaDeviceJac y");
+  printmin(md,md->state,"cudaDeviceJac start state");
 
   //duplicated call to check_model_state (previous f funct already checks model_state)
   //helps with bug printing dftemp
   int checkflag=cudaDevicecamp_solver_check_model_state(md, y, flag);
   if(*flag==CAMP_SOLVER_FAIL){
-    //if(i==0)printf("cudaDeviceJac cudaDevicecamp_solver_check_model_state *flag==CAMP_SOLVER_FAIL\n");
-    //printmin(md,y,"cudaDevicef end y");//Never enters?
+    //Never enters
+    //printf("cudaDeviceJac cudaDevicecamp_solver_check_model_state *flag==CAMP_SOLVER_FAIL\n");
+    //printmin(md,y,"cudaDeviceJac end y");//Never enters?
     return;
   }
 
-  //printmin(md,y,"cudaDevicef end y");//wrong
+  //printmin(md,y,"cudaDeviceJac end y");//wrong
 
 
   //__syncthreads();
-  //printmin(md,dftemp,"cudaDevicef end dftemp");//wrong
+  //printmin(md,dftemp,"cudaDeviceJac end dftemp");//wrong
 
-  //printmin(md,dftemp,"cudaDevicef end dftemp");
+  //printmin(md,dftemp,"cudaDeviceJac end dftemp");
 
   cudaDevicecalc_Jac(
           //check_model_state          md->map_state_deriv, threshhold, replacement_value, flag,
@@ -2581,15 +2592,17 @@ void cudaDevicecvNewtonIteration(
 
     __syncthreads();
 
+#ifndef DEBUG_cudaDevicef
+    printmin(md,md->state,"cudaDevicef start state");
+#endif
+
     cudaDevicef(
             time_step, deriv_length_cell, state_size_cell,
             n_cells, i_kernel, threads_block, n_shr_empty, dcv_y,
             dftemp, md, dmdv, flag
     );
     //retval = f_gpu(cv_mem->cv_tn, cv_mem->cv_y, cv_mem->cv_ftemp, cv_mem->cv_user_data);
-#ifdef DEBUG_cudaDevicef
-    printmin(md,dftemp,"cudaDevicef end dftemp");//fine
-#endif
+    //printmin(md,dftemp,"cudaDevicef end dftemp");//fine
 
     __syncthreads();
 
@@ -2782,15 +2795,16 @@ int cudaDevicecvNlsNewton(
     __syncthreads();
     dcv_y[i] = dzn[i];
 
+#ifndef DEBUG_cudaDevicef
+    printmin(md,md->state,"cudaDevicef start state");
+#endif
+
     cudaDevicef(
             //f_gpu
             time_step, deriv_length_cell, state_size_cell,
             n_cells, i_kernel, threads_block, n_shr_empty, dcv_y,
             dftemp,md,dmdv,flag
     );
-#ifndef DEBUG_cudaDevicef
-    printmin(md,dftemp,"cudaDevicef end dftemp");//fine
-#endif
 
     if (*flag < 0) {
       flag_shr[0] = CV_RHSFUNC_FAIL;
@@ -3697,15 +3711,17 @@ int cudaDevicecvDoErrorTest(ModelDataGPU *md, ModelDataVariable *dmdv,
 
   int aux_flag=0;
 
+#ifndef DEBUG_cudaDevicef
+  printmin(md,md->state,"cudaDevicef start state");//fine
+#endif
+
 #ifndef DEV_DZN0
   retval=cudaDevicef(
             dmdv->cv_tn, md->deriv_length_cell, md->state_size_cell,
             md->n_cells, md->i_kernel, md->threads_block, md->n_shr_empty,
             md->dzn0, md->dtempv,md,dmdv, &aux_flag
   );
-#ifdef DEBUG_cudaDevicef
-  printmin(md,md->dzn0,"cudaDevicef end dzn0");//fine
-#endif
+  //printmin(md,md->dzn0,"cudaDevicef end dzn0");//fine
 
 #else
   retval=cudaDevicef(
@@ -4809,6 +4825,7 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
 #endif
 
+  printmin(md,md->state,"cudaDeviceCVode start state");//fine
 
 #ifdef DEV_CUDACVODE
 

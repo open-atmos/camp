@@ -1239,15 +1239,10 @@ int camp_solver_update_model_state(N_Vector solver_state, SolverData *sd,
     for (int i_spec = 0; i_spec < n_state_var; ++i_spec) {
       if (model_data->var_type[i_spec] == CHEM_SPEC_VARIABLE) {
 
-#ifdef ISSUE53
-        if (0) {
-#else
         //if (NV_DATA_S(solver_state)[i_dep_var] <= -SMALL)
         //if (NV_DATA_S(solver_state)[i_dep_var] <= ZERO)
         if (NV_DATA_S(solver_state)[i_dep_var] < threshhold) //Avoid innacurate results
         {
-
-#endif
 
 #ifdef FAILURE_DETAIL
           if(sd->counter_fail_solve_print<1){
