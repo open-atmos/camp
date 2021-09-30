@@ -457,7 +457,8 @@ void cudaDeviceswapCSC_CSR(int n_row, int n_col, int* Ap, int* Aj, double* Ax, i
       }
       if(blockIdx.x==gridDim.x-1){
         Ap[n_row]=nnz;
-        BpGlobal[n_row]=nnz;}
+        BpGlobal[n_row]=nnz;
+      }
     }
 #endif
 

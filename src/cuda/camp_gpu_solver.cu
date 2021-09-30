@@ -388,7 +388,6 @@ void init_jac_gpu(SolverData *sd, double *J){
   ModelDataGPU *mGPU = &sd->mGPU;
 
   //todo reduce allocations (use tmp pointers from cvode for j_tmp)
-
   md->jac_size = md->n_per_cell_solver_jac_elem * md->n_cells * sizeof(double);
   md->nnz_J_solver = SM_NNZ_S(md->J_solver);
   md->nrows_J_solver = SM_NP_S(md->J_solver);
