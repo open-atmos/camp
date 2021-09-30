@@ -386,6 +386,7 @@ int nextPowerOfTwoCVODE(int v){
 __device__
 void printmin(ModelDataGPU *md,double* y, const char *s) {
 
+  __syncthreads();
   extern __shared__ double flag_shr2[];
   int i= threadIdx.x + blockDim.x*blockIdx.x;
   __syncthreads();
@@ -424,9 +425,14 @@ int cudaDevicecamp_solver_check_model_state(ModelDataGPU *md, double *y, int *fl
 {
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   int active_threads = md->nrows;
+
+  //fine
+  printmin(md,md->state,"cudaDevicecamp_solver_check_model_state start state");//wrong, but not from jac
+
   extern __shared__ int flag_shr[];
   __syncthreads();
-  flag_shr[0] = *flag;
+  //flag_shr[0] = *flag;
+  flag_shr[0] = 0;
   __syncthreads();
 
   if(i<active_threads) {
@@ -438,7 +444,12 @@ int cudaDevicecamp_solver_check_model_state(ModelDataGPU *md, double *y, int *fl
     //           j,y[j],threshhold);
 #endif
 
+    //wrong:
     //printmin(md,md->state,"cudaDevicecamp_solver_check_model_state start state");//wrong, but not from jac
+
+    //todocheck if nan
+    //fine printing:
+    //printf("cudaDevicecamp_solver_check_model_state md->state %le i %d\n",md->state[md->map_state_deriv[i]],i);
 
     //if(i==0)printf("cudaDevicecamp_solver_check_model_state md->threshhold %le md->replacement_value %le\n",md->threshhold,md->replacement_value);//fine
 
@@ -1011,10 +1022,12 @@ int CudaDeviceguess_helper(double t_n, double h_n, double* y_n,
     printmin(md,md->state,"cudaDevicef start state");
 #endif
 
+    int aux_flag=0;
+
     int fflag=cudaDevicef(
             t_0 + t_j, md->deriv_length_cell, md->state_size_cell,
             md->n_cells, md->i_kernel, threads_block,
-            md->n_shr_empty, tmp1, corr,md,dmdv,flag
+            md->n_shr_empty, tmp1, corr,md,dmdv,&aux_flag
     );
 
     //printmin(md,tmp1,"cudaDevicef end tmp1");//fine
@@ -1701,9 +1714,11 @@ void cudaDevicelinsolsetup(
 
   __syncthreads();
 
+    int aux_flag=0;
+
     cudaDeviceJac(
             //check_model_state
-            threshhold, replacement_value, flag,
+            threshhold, replacement_value, &aux_flag,
             //f_gpu
             time_step, deriv_length_cell, state_size_cell,
             n_cells, i_kernel, threads_block, n_shr_empty, dcv_y,
@@ -1714,14 +1729,14 @@ void cudaDevicelinsolsetup(
 
     //if(i==0)printf("cudaGlobalinsolsetupflag_shr[1] %d\n",flag_shr[1]);
 
-    if (*flag < 0) {
+    if (aux_flag < 0) {
       //cvProcessError(cv_mem, CVDLS_JACFUNC_UNRECVR, "CVDLS",
       //               "cvDlsSetup",  MSGD_JACFUNC_FAILED);
       //last_flag = CVDLS_JACFUNC_UNRECVR;
       //flag_shr[0] = -1;
       flag_shr[0] = CVDLS_JACFUNC_UNRECVR;
     }
-    if (*flag > 0) {
+    if (aux_flag > 0) {
       //last_flag = CVDLS_JACFUNC_RECVR;
       //flag_shr[0] = 1;
       flag_shr[0] = CVDLS_JACFUNC_RECVR;
@@ -2590,6 +2605,7 @@ void cudaDevicecvNewtonIteration(
     // Save norm of correction, evaluate f, and loop again
     delp = del;
 
+    int aux_flag=0;
     __syncthreads();
 
 #ifndef DEBUG_cudaDevicef
@@ -2599,7 +2615,7 @@ void cudaDevicecvNewtonIteration(
     cudaDevicef(
             time_step, deriv_length_cell, state_size_cell,
             n_cells, i_kernel, threads_block, n_shr_empty, dcv_y,
-            dftemp, md, dmdv, flag
+            dftemp, md, dmdv, &aux_flag
     );
     //retval = f_gpu(cv_mem->cv_tn, cv_mem->cv_y, cv_mem->cv_ftemp, cv_mem->cv_user_data);
     //printmin(md,dftemp,"cudaDevicef end dftemp");//fine
@@ -2624,14 +2640,14 @@ void cudaDevicecvNewtonIteration(
 #endif
 
 
-    if (*flag < 0) {
+    if (aux_flag < 0) {
       flag_shr[0] = CV_RHSFUNC_FAIL;
 #ifdef DEBUG_FLAG_GPU_ODE_SOLVER
       if (i == 0)printf("cudaDevicecvNewtonIteration2 CV_RHSFUNC_FAIL\n");
 #endif
 
     }
-    if (*flag > 0) {
+    if (aux_flag > 0) {
       if (!(dmdv->cv_jcur)) {
         flag_shr[0] = TRY_AGAIN;
 #ifdef DEBUG_FLAG_GPU_ODE_SOLVER
@@ -2799,18 +2815,20 @@ int cudaDevicecvNlsNewton(
     printmin(md,md->state,"cudaDevicef start state");
 #endif
 
+    int aux_flag=0;
+
     cudaDevicef(
             //f_gpu
             time_step, deriv_length_cell, state_size_cell,
             n_cells, i_kernel, threads_block, n_shr_empty, dcv_y,
-            dftemp,md,dmdv,flag
+            dftemp,md,dmdv,&aux_flag
     );
 
-    if (*flag < 0) {
+    if (aux_flag < 0) {
       flag_shr[0] = CV_RHSFUNC_FAIL;
       break;
     }
-    if (*flag > 0) {
+    if (aux_flag> 0) {
       flag_shr[0] = RHSFUNC_RECVR;
       break;
     }
