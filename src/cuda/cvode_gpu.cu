@@ -425,10 +425,6 @@ int cudaDevicecamp_solver_check_model_state(ModelDataGPU *md, ModelDataVariable 
 {
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   int active_threads = md->nrows;
-
-  //fine
-  //printmin(md,md->state,"cudaDevicecamp_solver_check_model_state start state");//wrong, but not from jac
-
   //extern __shared__ int flag_shr[];
   extern __shared__ double flag_shr2[];
   //fine
@@ -446,13 +442,11 @@ int cudaDevicecamp_solver_check_model_state(ModelDataGPU *md, ModelDataVariable 
 
     int aux_flag=0;
 
-    //fine printing:
+    //fine
     //printf("cudaDevicecamp_solver_check_model_state md->state %le i %d\n",md->state[md->map_state_deriv[i]],i);
 
-    //if(i==0)printf("cudaDevicecamp_solver_check_model_state md->threshhold %le md->replacement_value %le\n",md->threshhold,md->replacement_value);//fine
-
     __syncthreads();
-#ifndef DEV_cudaDevicecamp_solver_check_model_state
+#ifdef DEV_cudaDevicecamp_solver_check_model_state
     //*flag=0;
     flag_shr2[0] = 0;
 #else
@@ -463,7 +457,7 @@ int cudaDevicecamp_solver_check_model_state(ModelDataGPU *md, ModelDataVariable 
     __syncthreads();
     if (y[i] < md->threshhold) {
 
-#ifndef DEV_cudaDevicecamp_solver_check_model_state
+#ifdef DEV_cudaDevicecamp_solver_check_model_state
       aux_flag=CAMP_SOLVER_FAIL;//CAMP_SOLVER_FAIL;
       flag_shr2[0] = CAMP_SOLVER_FAIL;
 #else
@@ -479,7 +473,7 @@ int cudaDevicecamp_solver_check_model_state(ModelDataGPU *md, ModelDataVariable 
               y[i] <= md->threshhold ?
               md->replacement_value : y[i];
 
-      aux_flag=0;//needed?
+      //aux_flag=0;//needed?
 
       //state_init[map_state_deriv[tid]] = 0.1;
       //printf("tid %d map_state_deriv %d\n", tid, map_state_deriv[tid]);
@@ -508,11 +502,13 @@ int cudaDevicecamp_solver_check_model_state(ModelDataGPU *md, ModelDataVariable 
 
   __syncthreads();
 
-#ifndef DEV_cudaDevicecamp_solver_check_model_state
-  //todo test flag_shr[0]= aux_flag; instead of max
-  int max;//same result but fails when printing after
+#ifdef DEV_cudaDevicecamp_solver_check_model_state
+
+  int max;
   cudaDevicemaxI(&max, aux_flag, flag_shr2, md->n_shr_empty);
-  dmdv->flag=max;//wrong printing
+
+  //dmdv->flag=max;
+
   *flag=max;
 
 
@@ -522,15 +518,16 @@ int cudaDevicecamp_solver_check_model_state(ModelDataGPU *md, ModelDataVariable 
   //__syncthreads();
 
 #else
-  //using this plus printing before makes all fails
+  //fails
   *flag = (int)flag_shr2[0];
 #endif
 
   __syncthreads();
 
-  //wrong
-  //printmin(md,md->state,"cudaDevicecamp_solver_check_model_state end state");
+  //fine
   //printmin(md,y,"cudaDevicecamp_solver_check_model_state end y");//wrong
+
+  //printmin(md,md->state,"cudaDevicecamp_solver_check_model_state end state");
   //printmin(md,md->dzn0,"cudaDevicecamp_solver_check_model_state end dzn0");
 
   __syncthreads();
@@ -542,14 +539,15 @@ int cudaDevicecamp_solver_check_model_state(ModelDataGPU *md, ModelDataVariable 
   __syncthreads();if(i==0)printf("flag %d flag_shr %d\n",*flag,flag_shr2[0]);
 #endif
 
-#ifndef DEV_cudaDevicecamp_solver_check_model_state
-  //int aux_max=max;//wrong printing before
-  //dmdv->flag=max;//wrong printing before
-  *flag=max;//wrong printing before
+#ifdef DEV_cudaDevicecamp_solver_check_model_state
+  //int aux_max=max;
+  //dmdv->flag=max;
+
+  //*flag=max;//not needed
   __syncthreads();
 
-  return dmdv->flag;
-  //return max;//fine except printing before
+  //return dmdv->flag;//fine
+  return max;//fine
 #else
   return *flag;
 #endif
@@ -4945,7 +4943,7 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
   printmin(md,md->state,"cudaDeviceCVode start state");//fine
 
-#ifndef DEV_CUDACVODE
+#ifdef DEV_CUDACVODE
 
 
   for(;;) {
@@ -5410,7 +5408,7 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
     }
 
-#ifndef DEV_CUDACVODE
+#ifdef DEV_CUDACVODE
   }
   //return CV_SUCCESS;//It doesnt matter, it should always return instead of break and never reach here
 #else
@@ -6623,7 +6621,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
 
   HANDLE_ERROR(cudaMemcpy(mGPU->state, md->total_state, md->state_size, cudaMemcpyHostToDevice));
 
-#ifndef DEV_CUDACVODE
+#ifdef DEV_CUDACVODE
 
 #else
   for(;;) {
@@ -6852,7 +6850,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
         break;
       }
     }
-#ifndef DEV_CUDACVODE
+#ifdef DEV_CUDACVODE
     istate=flag;
 #else
     kflag=flag;
@@ -6880,7 +6878,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
 
     //printf("cudaCVode flag %d kflag %d\n",flag, sd->mdv.flag);
 
-#ifndef DEV_CUDACVODE
+#ifdef DEV_CUDACVODE
 #else
     if (kflag != CV_SUCCESS) {
       printf("cudaCVode2 kflag %d\n",kflag);
@@ -6895,7 +6893,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
 
 #endif
 
-#ifndef DEV_CUDACVODE
+#ifdef DEV_CUDACVODE
 
     // In NORMAL mode, check if tout reached
     //if ( (cv_mem->cv_tn-tout)*cv_mem->cv_h >= ZERO ) {
@@ -6923,7 +6921,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
 
         cv_mem->cv_next_h = sd->mdv.cv_next_h;
 
-#ifndef DEV_CUDACVODE
+#ifdef DEV_CUDACVODE
 #else
         break;
 #endif
@@ -6957,7 +6955,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
         //cv_mem->cv_tstopset = SUNFALSE;
         istate = CV_TSTOP_RETURN;
 
-#ifndef DEV_CUDACVODE
+#ifdef DEV_CUDACVODE
 #else
         break;
 #endif
@@ -6991,7 +6989,7 @@ if (kflag != CV_SUCCESS){
         cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "CVode",
                        MSGCV_EWT_NOW_BAD, cv_mem->cv_tn);
       //Remove break after removing for(;;) in cpu
-#ifndef DEV_CUDACVODE
+#ifdef DEV_CUDACVODE
 #else
       break;
 #endif
@@ -7004,7 +7002,7 @@ if (kflag != CV_SUCCESS){
       istate = CV_TOO_MUCH_WORK;
       //cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
       //N_VScale(ONE, cv_mem->cv_zn[0], yout);
-#ifndef DEV_CUDACVODE
+#ifdef DEV_CUDACVODE
 #else
       break;
 #endif
@@ -7020,7 +7018,7 @@ if (kflag != CV_SUCCESS){
       //cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
       //N_VScale(ONE, cv_mem->cv_zn[0], yout);
       //cv_mem->cv_tolsf *= TWO;
-#ifndef DEV_CUDACVODE
+#ifdef DEV_CUDACVODE
 #else
       break;
 #endif
@@ -7050,7 +7048,7 @@ if (kflag != CV_SUCCESS){
 
 
 
-#ifndef DEV_CUDACVODE
+#ifdef DEV_CUDACVODE
 #else
         break;
 #endif
@@ -7064,7 +7062,7 @@ if (kflag != CV_SUCCESS){
     }
 */
 
-#ifndef DEV_CUDACVODE
+#ifdef DEV_CUDACVODE
 #else
 
   } /* end looping for internal steps */
