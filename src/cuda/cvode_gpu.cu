@@ -440,8 +440,6 @@ int cudaDevicecamp_solver_check_model_state(ModelDataGPU *md, ModelDataVariable 
     //           j,y[j],threshhold);
 #endif
 
-    //fine
-    printf("cudaDevicecamp_solver_check_model_state md->state %le i %d\n",md->state[md->map_state_deriv[i]],i);
 
     flag_shr2[0] = 0;
 
@@ -1613,7 +1611,7 @@ int cudaDeviceJac(
           time_step, deriv_length_cell, state_size_cell,
           n_cells, i_kernel, threads_block, n_shr_empty, y,
           dftemp,md,dmdv,&aux_flag
-  );
+  );__syncthreads();
 #ifndef DEBUG_cudaDevicef
   printmin(md,dftemp,"cudaDeviceJac dftemp");//fine with cudaDevicecamp_solver_check_model_state just after
 #endif
@@ -1627,6 +1625,7 @@ int cudaDeviceJac(
   //duplicated call to check_model_state (previous f funct already checks model_state)
   //helps with bug printing dftemp
   int checkflag=cudaDevicecamp_solver_check_model_state(md, dmdv, y, flag);
+  __syncthreads();
 #ifndef DEV_FFLAG
   if(checkflag==CAMP_SOLVER_FAIL){
     *flag=CAMP_SOLVER_FAIL;//fine
@@ -1655,7 +1654,7 @@ int cudaDeviceJac(
           n_cells, i_kernel, threads_block, n_shr_empty, y,
           md, dmdv
   );
-
+  __syncthreads();
   //printmin(md,dftemp,"cudaDevicef end dftemp");
 
 #ifdef DEV_REMOVE_threadIdx0
@@ -1798,7 +1797,7 @@ int cudaDevicelinsolsetup(
             n_cells, i_kernel, threads_block, n_shr_empty, dcv_y,
             md,dmdv, dftemp
     );
-
+    __syncthreads();
     //if(i==0)printf("cudaGlobalinsolsetupflag_shr[1] %d\n",flag_shr[1]);
 
 #ifndef DEV2_GUESSFLAG
@@ -3045,7 +3044,7 @@ int cudaDevicecvNlsNewton(
               convfail,
               disavedJ, djsavedJ, dsavedJ
       );
-
+      __syncthreads();
 
 #ifdef PMC_DEBUG_GPU
 #ifdef cudaGlobalCVode_timers_max_blocks
@@ -3126,6 +3125,7 @@ int cudaDevicecvNlsNewton(
             cv_acor, dzn, //cv_jcur,
             dewt
     );
+    __syncthreads();
 
 #ifdef PMC_DEBUG_GPU
 #ifdef cudaGlobalCVode_timers_max_blocks
