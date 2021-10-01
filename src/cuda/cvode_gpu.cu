@@ -1642,7 +1642,7 @@ int cudaDeviceJac(
   }
 
   //printmin(md,md->dzn0,"cudaDevicecamp_solver_check_model_state end dzn0");
-  printmin(md,y,"cudaDeviceJac end y");//wrong
+  //printmin(md,y,"cudaDeviceJac end y");//wrong
 
 
   //__syncthreads();
@@ -1673,8 +1673,8 @@ int cudaDeviceJac(
     }__syncthreads();
 
     md->J_state[i]=y[i];
-#ifdef DEV_cudaDeviceJac
-    md->J_deriv[i]=dftemp[i];//fails
+#ifndef DEV_cudaDeviceJac
+    md->J_deriv[i]=dftemp[i];//fine now
 #else
     md->J_deriv[i]=md->deriv_data[i];//should be ftemp
 #endif
