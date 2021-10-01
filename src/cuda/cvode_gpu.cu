@@ -428,7 +428,7 @@ int cudaDevicecamp_solver_check_model_state(ModelDataGPU *md, ModelDataVariable 
 
   __syncthreads();
 
-#ifndef DEV_cudaDevicecamp_solver_check_model_state
+#ifdef DEV_cudaDevicecamp_solver_check_model_state
   int aux_flag=0;
   extern __shared__ double flag_shr2[];
   flag_shr2[0] = 0;//needed?
@@ -444,7 +444,7 @@ int cudaDevicecamp_solver_check_model_state(ModelDataGPU *md, ModelDataVariable 
     __syncthreads();
     if (y[i] < md->threshhold) {
 
-#ifndef DEV_cudaDevicecamp_solver_check_model_state
+#ifdef DEV_cudaDevicecamp_solver_check_model_state
       aux_flag=CAMP_SOLVER_FAIL;//CAMP_SOLVER_FAIL;
       //flag_shr2[0] = CAMP_SOLVER_FAIL;
 #else
@@ -484,7 +484,7 @@ int cudaDevicecamp_solver_check_model_state(ModelDataGPU *md, ModelDataVariable 
 
   __syncthreads();
 
-#ifndef DEV_cudaDevicecamp_solver_check_model_state
+#ifdef DEV_cudaDevicecamp_solver_check_model_state
 
   int max;
   cudaDevicemaxI(&max, aux_flag, flag_shr2, md->n_shr_empty);
@@ -504,8 +504,14 @@ int cudaDevicecamp_solver_check_model_state(ModelDataGPU *md, ModelDataVariable 
   //__syncthreads();
 #else
 
-  //wrong
-  //printmin(md,md->state,"cudaDevicecamp_solver_check_model_state start state");
+
+
+  //wrong because it sobreescribe el valor de flag_shr y eso ta mal
+  __syncthreads();
+  *flag = (int)flag_shr[0];
+  __syncthreads();
+
+  printmin(md,md->state,"cudaDevicecamp_solver_check_model_state start state");
   //printmin(md,y,"cudaDevicecamp_solver_check_model_state end y");//wrong
 
 #endif
@@ -528,7 +534,7 @@ int cudaDevicecamp_solver_check_model_state(ModelDataGPU *md, ModelDataVariable 
   __syncthreads();if(i==0)printf("flag %d flag_shr %d\n",*flag,flag_shr2[0]);
 #endif
 
-#ifndef DEV_cudaDevicecamp_solver_check_model_state
+#ifdef DEV_cudaDevicecamp_solver_check_model_state
   //int aux_max=max;
   //dmdv->flag=max;
 
@@ -538,9 +544,7 @@ int cudaDevicecamp_solver_check_model_state(ModelDataGPU *md, ModelDataVariable 
   //return dmdv->flag;//fine
   return max;//fine
 #else
-  __syncthreads();
-  *flag = (int)flag_shr[0];
-  __syncthreads();
+
   return *flag;
 #endif
 
@@ -1649,7 +1653,7 @@ int cudaDeviceJac(
           md, dmdv
   );
   __syncthreads();
-  //printmin(md,dftemp,"cudaDevicef end dftemp");
+ printmin(md,dftemp,"cudaDevicef end dftemp");
 
 #ifdef DEV_REMOVE_threadIdx0
 #else
