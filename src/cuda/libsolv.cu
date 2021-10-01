@@ -766,7 +766,6 @@ __device__ void cudaDeviceyequalsx(double* dy,double* dx,int nrows)
 
 __device__ void cudaDevicemin(double *g_odata, double in, volatile double *sdata, int n_shr_empty)
 {
-  //extern __shared__ double sdata[];
   unsigned int tid = threadIdx.x;
   unsigned int i = blockIdx.x*blockDim.x + threadIdx.x;
 
@@ -775,21 +774,44 @@ __device__ void cudaDevicemin(double *g_odata, double in, volatile double *sdata
   sdata[tid] = in;
 
   __syncthreads();
-
   //first threads update empty positions
   if(tid<n_shr_empty)
     sdata[tid+blockDim.x]=sdata[tid];
-
   __syncthreads(); //Not needed (should)
-
-
-  //if(blockIdx.x==0)printf("i %d in %le sdata[tid] %le\n",i,in,sdata[tid]);
 
   for (unsigned int s=(blockDim.x+n_shr_empty)/2; s>0; s>>=1)
   {
-    if (tid < s){//&& sdata[tid + s]!=0.
+    if (tid < s){
       if(sdata[tid + s] < sdata[tid] ) sdata[tid]=sdata[tid + s];
-      //sdata[tid] += sdata[tid + s];
+    }
+    __syncthreads();
+  }
+
+  __syncthreads();
+  *g_odata = sdata[0];
+  __syncthreads();
+
+}
+
+__device__ void cudaDevicemaxI(int *g_odata, int in, volatile double *sdata, int n_shr_empty)
+{
+  unsigned int tid = threadIdx.x;
+  unsigned int i = blockIdx.x*blockDim.x + threadIdx.x;
+
+  __syncthreads();
+
+  sdata[tid] = in;
+
+  __syncthreads();
+  //first threads update empty positions
+  if(tid<n_shr_empty)
+    sdata[tid+blockDim.x]=sdata[tid];
+  __syncthreads(); //Not needed (should)
+
+  for (unsigned int s=(blockDim.x+n_shr_empty)/2; s>0; s>>=1)
+  {
+    if (tid < s){
+      if(sdata[tid + s] > sdata[tid] ) sdata[tid]=sdata[tid + s];
     }
     __syncthreads();
   }
