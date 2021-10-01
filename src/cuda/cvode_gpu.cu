@@ -425,36 +425,30 @@ int cudaDevicecamp_solver_check_model_state(ModelDataGPU *md, ModelDataVariable 
 {
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   int active_threads = md->nrows;
-  //extern __shared__ int flag_shr[];
-  extern __shared__ double flag_shr2[];
+
   __syncthreads();
+
+#ifndef DEV_cudaDevicecamp_solver_check_model_state
+  int aux_flag=0;
+  extern __shared__ double flag_shr2[];
+  flag_shr2[0] = 0;//needed?
+#else
+  extern __shared__ int flag_shr[];
+  flag_shr[0] = 0;
+#endif
 
 
   //fine
   //printmin(md,md->state,"cudaDevicecamp_solver_check_model_state start state");
 
-#ifdef DEBUG_cudaDevicecamp_solver_check_model_state
-    //if(i==0)
-    //  for(int j=0;j<blockDim.x;j++)
-    //    printf("dy[%d] %le dthreshhold %le\n",
-    //           j,y[j],threshhold);
-#endif
-
-
-    flag_shr2[0] = 0;
-
-#ifdef DEV_cudaDevicecamp_solver_check_model_state
-  int aux_flag=0;
-#endif
-
     __syncthreads();
     if (y[i] < md->threshhold) {
 
-#ifdef DEV_cudaDevicecamp_solver_check_model_state
+#ifndef DEV_cudaDevicecamp_solver_check_model_state
       aux_flag=CAMP_SOLVER_FAIL;//CAMP_SOLVER_FAIL;
       //flag_shr2[0] = CAMP_SOLVER_FAIL;
 #else
-      flag_shr2[0] = CAMP_SOLVER_FAIL;
+      flag_shr[0] = CAMP_SOLVER_FAIL;
 #endif
 
 #ifdef DEBUG_cudaDevicecamp_solver_check_model_state
@@ -490,7 +484,7 @@ int cudaDevicecamp_solver_check_model_state(ModelDataGPU *md, ModelDataVariable 
 
   __syncthreads();
 
-#ifdef DEV_cudaDevicecamp_solver_check_model_state
+#ifndef DEV_cudaDevicecamp_solver_check_model_state
 
   int max;
   cudaDevicemaxI(&max, aux_flag, flag_shr2, md->n_shr_empty);
@@ -534,7 +528,7 @@ int cudaDevicecamp_solver_check_model_state(ModelDataGPU *md, ModelDataVariable 
   __syncthreads();if(i==0)printf("flag %d flag_shr %d\n",*flag,flag_shr2[0]);
 #endif
 
-#ifdef DEV_cudaDevicecamp_solver_check_model_state
+#ifndef DEV_cudaDevicecamp_solver_check_model_state
   //int aux_max=max;
   //dmdv->flag=max;
 
@@ -545,7 +539,7 @@ int cudaDevicecamp_solver_check_model_state(ModelDataGPU *md, ModelDataVariable 
   return max;//fine
 #else
   __syncthreads();
-  *flag = (int)flag_shr2[0];
+  *flag = (int)flag_shr[0];
   __syncthreads();
   return *flag;
 #endif
@@ -1639,7 +1633,7 @@ int cudaDeviceJac(
   }
 
   //printmin(md,md->dzn0,"cudaDevicecamp_solver_check_model_state end dzn0");
-  //printmin(md,y,"cudaDeviceJac end y");//wrong
+  printmin(md,y,"cudaDeviceJac end y");//wrong
 
 
   //__syncthreads();
