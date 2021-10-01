@@ -4575,13 +4575,13 @@ int cudaDevicecvStep(ModelDataGPU *md, ModelDataVariable *dmdv) {
   __syncthreads();
 #endif
 
-#ifndef DEBUG_cudaDevicecvStep
+#ifdef DEBUG_cudaDevicecvStep
   //int counter=0;
 #endif
   __syncthreads();
 
   for (;;) {
-#ifndef DEBUG_cudaDevicecvStep
+#ifdef DEBUG_cudaDevicecvStep
     //counter++;//Printing cause slight error differences cause counter
 #endif
     __syncthreads();
@@ -4618,8 +4618,8 @@ int cudaDevicecvStep(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
 #ifndef DEV_DZN0
 
-    //nflag = cudaDevicecvNlsNewton(
-    dmdv->nflag = cudaDevicecvNlsNewton(
+    nflag = cudaDevicecvNlsNewton(
+    //dmdv->nflag = cudaDevicecvNlsNewton(
             md->dA, md->djA, md->diA, md->dx, md->dtempv, //Input data
             md->nrows, md->blocks, md->n_shr_empty, md->maxIt, md->mattype,
             md->n_cells, md->tolmax, md->ddiag, //Init variables
@@ -4666,20 +4666,20 @@ int cudaDevicecvStep(ModelDataGPU *md, ModelDataVariable *dmdv) {
 #endif
 
     __syncthreads();
-    //dmdv->nflag = nflag;//fine
+    dmdv->nflag = nflag;//fine
     __syncthreads();
-#ifndef DEBUG_cudaDevicecvStep
+#ifdef DEBUG_cudaDevicecvStep
     if(threadIdx.x==0)printf("DEV_CUDACVSTEP nflag %d dmdv->nflag %d block %d\n",dmdv->nflag, dmdv->nflag, blockIdx.x);
 #endif
-    //int kflag = cudaDevicecvHandleNFlag(md, dmdv, &nflag, saved_t, &ncf);
+    int kflag = cudaDevicecvHandleNFlag(md, dmdv, &nflag, saved_t, &ncf);
     //dmdv->kflag = cudaDevicecvHandleNFlag(md, dmdv, &nflag, saved_t, &ncf);//fine
-    dmdv->kflag = cudaDevicecvHandleNFlag(md, dmdv, &dmdv->nflag, saved_t, &ncf);
+    //dmdv->kflag = cudaDevicecvHandleNFlag(md, dmdv, &dmdv->nflag, saved_t, &ncf);
 
     __syncthreads();
-    //dmdv->nflag = nflag;//needed?
-    //dmdv->kflag = kflag;
+    dmdv->nflag = nflag;//needed?
+    dmdv->kflag = kflag;
     __syncthreads();
-#ifndef DEBUG_cudaDevicecvStep
+#ifdef DEBUG_cudaDevicecvStep
     if(threadIdx.x==0)printf("DEV_CUDACVSTEP kflag %d block %d\n",dmdv->kflag, blockIdx.x);
 #endif
     // Go back in loop if we need to predict again (nflag=PREV_CONV_FAIL)
@@ -4696,13 +4696,13 @@ int cudaDevicecvStep(ModelDataGPU *md, ModelDataVariable *dmdv) {
     }
 
     __syncthreads();
-    //int eflag=cudaDevicecvDoErrorTest(md,dmdv,&nflag,saved_t,&nef,&dsm);
-    dmdv->eflag=cudaDevicecvDoErrorTest(md,dmdv,&dmdv->nflag,saved_t,&nef,&dsm);
+    int eflag=cudaDevicecvDoErrorTest(md,dmdv,&nflag,saved_t,&nef,&dsm);
+    //dmdv->eflag=cudaDevicecvDoErrorTest(md,dmdv,&dmdv->nflag,saved_t,&nef,&dsm);
     __syncthreads();
-    //dmdv->nflag = nflag;//fine
-    //dmdv->eflag = eflag;
+    dmdv->nflag = nflag;//fine
+    dmdv->eflag = eflag;
     __syncthreads();
-#ifndef DEBUG_cudaDevicecvStep
+#ifdef DEBUG_cudaDevicecvStep
     if(threadIdx.x==0)printf("DEV_CUDACVSTEP nflag %d eflag %d block %d\n",dmdv->nflag, dmdv->eflag, blockIdx.x);    //if(i==0)printf("eflag %d\n", eflag);
 #endif
     // Go back in loop if we need to predict again (nflag=PREV_ERR_FAIL)
@@ -4946,7 +4946,6 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
   printmin(md,md->state,"cudaDeviceCVode start state");//fine
 
 #ifdef DEV_CUDACVODE
-
 
 
   for(;;) {
