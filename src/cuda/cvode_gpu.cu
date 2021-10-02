@@ -791,13 +791,10 @@ int cudaDevicef(
   int checkflag=cudaDevicecamp_solver_check_model_state(md, dmdv, y, flag);
 
   //__syncthreads();
-#ifndef DEV_FFLAG
   if(checkflag==CAMP_SOLVER_FAIL){
     *flag=CAMP_SOLVER_FAIL;//fine
   //*flag=CAMP_SOLVER_FAIL; //fine commented too
-#else
-  if(*flag==CAMP_SOLVER_FAIL){
-#endif
+
 #ifdef DEV_printmin
     printmin(md,y,"cudaDevicef End y");
 #endif
@@ -895,21 +892,8 @@ int CudaDeviceguess_helper(double t_n, double h_n, double* y_n,
     if(i==0)printf("Return 0 %le\n",y_n[i]);
 #endif
 
-#ifndef DEV_GUESSFLAG
-    return 0;
-#else
-    flag_shr2[0]=0;
-#endif
-  }
-
-#ifndef DEV_GUESSFLAG
-#else
-  __syncthreads();
-  if(flag_shr2[0]==0){
-    *flag=(int)flag_shr2[0];
     return 0;
   }
-#endif
 
 #ifdef PMC_DEBUG_GPU
 
@@ -1031,21 +1015,8 @@ int CudaDeviceguess_helper(double t_n, double h_n, double* y_n,
 #endif
 #endif
 
-#ifndef DEV_GUESSFLAG
     return -1;
-#else
-    flag_shr2[0]=-1;
-#endif
     }
-
-#ifndef DEV_GUESSFLAG
-#else
-    __syncthreads();
-    if(flag_shr2[0]==-1){
-      *flag=(int)flag_shr2[0];
-      return -1;
-    }
-#endif
 
     // Advance the state
     //N_VLinearSum(ONE, tmp1, h_j, corr, tmp1);
@@ -1109,28 +1080,11 @@ int CudaDeviceguess_helper(double t_n, double h_n, double* y_n,
 #endif
 #endif
 
-
-#ifndef DEV_GUESSFLAG
-      return -1;
-#else
-      flag_shr2[0]=-1;
-#endif
+     return -1;
     }
-
-#ifndef DEV_GUESSFLAG
-#else
-
-    __syncthreads();
-    if(flag_shr2[0]==-1){
-      *flag=(int)flag_shr2[0];
-      return -1;
-    }
-#endif
-
 
 //#endif
 //DEV_CudaDeviceguess_helper
-
 
     //((CVodeMem)sd->cvode_mem)->cv_nfe++;
 
@@ -1146,23 +1100,9 @@ int CudaDeviceguess_helper(double t_n, double h_n, double* y_n,
 #endif
 #endif
 
-#ifndef DEV_GUESSFLAG
         return -1;
-#else
-        flag_shr2[0]=-1;
-#endif
       }
     }
-
-#ifndef DEV_GUESSFLAG
-#else
-    __syncthreads();
-    if(flag_shr2[0]==-1){
-      *flag=(int)flag_shr2[0];
-      return -1;
-    }
-#endif
-
     __syncthreads();
   }
 
@@ -1195,14 +1135,7 @@ int CudaDeviceguess_helper(double t_n, double h_n, double* y_n,
 
 
   __syncthreads();
-#ifndef DEV_GUESSFLAG
   return 1;
-#else
-  flag_shr2[0]=1;
-  *flag=(int)flag_shr2[0];
-  __syncthreads();
-  return 1;
-#endif
 }
 
 
@@ -2928,9 +2861,7 @@ int cudaDevicecvNlsNewton(
 #endif
   //print guessflag crashes
   //if(i==0)printf("cudaDevicecvNlsNewton guessflag %d block %d\n",guessflag,blockIdx.x);
-
-#ifndef DEV_GUESSFLAG
-
+  
   //fine
   if(guessflag<0){
   //if(*flag<0){
@@ -2938,22 +2869,6 @@ int cudaDevicecvNlsNewton(
     //if(threadIdx.x==0)printf("CudaDeviceguess_helper guessflag RHSFUNC_RECVR block %d\n", blockIdx.x);
     return RHSFUNC_RECVR;
   }
-
-#else
-
-  flag_shr[0] = 0;
-    __syncthreads();
-  //not working
-  if(*flag<0){
-    flag_shr[0] = RHSFUNC_RECVR;
-  }
-  __syncthreads();
-  if(*flag<0){
-    *flag = flag_shr[0];
-    return RHSFUNC_RECVR;
-  }
-
-#endif
 
 /*
     if (cv_mem->cv_ghfun) {

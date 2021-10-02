@@ -532,47 +532,8 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
   flag = CVodeSetMaxHnilWarns(sd->cvode_mem, MAX_TIMESTEP_WARNINGS);
   check_flag_fail(&flag, "CVodeSetMaxHnilWarns", 1);
 
-#ifdef CSR_MATRIX
-
-  //todo: J_rxn, J_param and mapped values to CSR (issue 64)
-
-  // Get the structure of the Jacobian matrix
-  SUNMatrix J_CSC = get_jac_init(sd);
-
-  SUNMatrix aux_J_CSR =
-        SUNSparseMatrix(SM_NP_S(J_CSC), SM_NP_S(J_CSC), SM_NNZ_S(J_CSC), CSR_MAT);
-
-
-  //swapCSC_CSR_BCG(mGPU->nrows,mGPU->nrows,mGPU->diA,mGPU->djA,mGPU->dA,
-  //                  mGPU->diB,mGPU->djB,mGPU->dB);
-  swapCSC_CSR(SM_NP_S(J_CSC),SM_NP_S(J_CSC),
-          SM_INDEXPTRS_S(J_CSC),SM_INDEXVALS_S(J_CSC),SM_DATA_S(J_CSC),
-                    SM_INDEXPTRS_S(aux_J_CSR),SM_INDEXVALS_S(aux_J_CSR),SM_DATA_S(aux_J_CSR));
-
-  sd->J = SUNMatClone(aux_J_CSR);
-
-
-  J_CSC = SUNMatClone(sd->model_data.J_solver);
-
-  swapCSC_CSR(SM_NP_S(J_CSC),SM_NP_S(J_CSC),
-        SM_INDEXPTRS_S(J_CSC),SM_INDEXVALS_S(J_CSC),SM_DATA_S(J_CSC),
-                  SM_INDEXPTRS_S(aux_J_CSR),SM_INDEXVALS_S(aux_J_CSR),SM_DATA_S(aux_J_CSR));
-
-  SUNMatDestroy(sd->model_data.J_solver);
-  sd->model_data.J_solver = SUNMatClone(aux_J_CSR);
-
-
-  SUNMatDestroy(J_CSC);
-  //SUNMatDestroy(aux_J_CSR); //crashes
-
-
-#else
-
   // Get the structure of the Jacobian matrix
   sd->J = get_jac_init(sd);
-
-#endif
-
 
   sd->model_data.J_init = SUNMatClone(sd->J);
   SUNMatCopy(sd->J, sd->model_data.J_init);
