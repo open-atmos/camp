@@ -3002,7 +3002,7 @@ void cudaDevicecvRescale(ModelDataGPU *md, ModelDataVariable *dmdv) {
     __syncthreads();
   }
 
-#ifndef DEV_HPRIME2
+#ifdef DEV_CUDACVODE
 #else
   dmdv->cv_h = dmdv->cv_hscale * dmdv->cv_eta;
   dmdv->cv_next_h = dmdv->cv_h;
@@ -3183,7 +3183,7 @@ int cudaDevicecvHandleNFlag(ModelDataGPU *md, ModelDataVariable *dmdv, int *nfla
 
   __syncthreads();
 
-#ifndef DEV_HPRIME2
+#ifdef DEV_CUDACVODE
     dmdv->cv_h = dmdv->cv_hscale * dmdv->cv_eta;
     dmdv->cv_next_h = dmdv->cv_h;
     dmdv->cv_hscale = dmdv->cv_h;
@@ -3624,7 +3624,7 @@ int cudaDevicecvDoErrorTest(ModelDataGPU *md, ModelDataVariable *dmdv,
     __syncthreads();
 
     cudaDevicecvRescale(md, dmdv);
-#ifndef DEV_HPRIME2
+#ifdef DEV_CUDACVODE
     dmdv->cv_h = dmdv->cv_hscale * dmdv->cv_eta;
     dmdv->cv_next_h = dmdv->cv_h;
     dmdv->cv_hscale = dmdv->cv_h;
@@ -3648,7 +3648,7 @@ int cudaDevicecvDoErrorTest(ModelDataGPU *md, ModelDataVariable *dmdv,
     dmdv->cv_qwait = dmdv->cv_L;
     cudaDevicecvRescale(md, dmdv);
     __syncthreads();
-#ifndef DEV_HPRIME2
+#ifdef DEV_CUDACVODE
     dmdv->cv_h = dmdv->cv_hscale * dmdv->cv_eta;
     dmdv->cv_next_h = dmdv->cv_h;
     dmdv->cv_hscale = dmdv->cv_h;
@@ -4364,7 +4364,7 @@ int cudaDevicecvStep(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
   __syncthreads();
 
-#ifndef DEV_HPRIME2
+#ifdef DEV_CUDACVODE
 
   //Fails when updating hprime in mdv2, but using hprime here instead of hprime2 works fine, why?
   //if ((dmdv->cv_nst > 0) && (dmdv->cv_hprime2 != dmdv->cv_h)){
@@ -4404,7 +4404,7 @@ int cudaDevicecvStep(ModelDataGPU *md, ModelDataVariable *dmdv) {
   if ((dmdv->cv_nst > 0) && (dmdv->cv_hprime != dmdv->cv_h)){
     cudaDevicecvAdjustParams(md, dmdv);
 
-#ifndef DEV_HPRIME2
+#ifdef DEV_CUDACVODE
     dmdv->cv_h = dmdv->cv_hscale * dmdv->cv_eta;
     dmdv->cv_next_h = dmdv->cv_hscale * dmdv->cv_eta;
     dmdv->cv_hscale = dmdv->cv_hscale * dmdv->cv_eta;
@@ -4414,7 +4414,7 @@ int cudaDevicecvStep(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
 #endif
 
-#ifndef DEV_HPRIME2
+#ifdef DEV_CUDACVODE
   __syncthreads();
   dmdv->cv_hprime2 = 1.;//not fine
   dmdv->cv_hprime3 = 1.;
@@ -4798,10 +4798,10 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
 #endif
 
-#ifndef DEV_ATOMICMAX
-  //atomicMax(&md->flagCells[1],aux);//sync threads
+#ifdef DEV_ATOMICMAX
   atomicMin(md->flag,md->jJ_solver[i]);
 #else
+    //Very small diff 100 cells (~0.01 error) sometimes (1/3 exec)
 #endif
 
   //if(tid==0)printf("md->flagCells[blockIdx.x] %d\n",md->flagCells[blockIdx.x]);
@@ -4924,11 +4924,10 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
   if(tid==0)md->flagCells[blockIdx.x]=1;
 #endif
 
-  //atomicAdd(&md->flagCells[0],aux);
-#ifndef DEV_ATOMICMAX
-  //atomicMax(&md->flagCells[1],aux);//wrong
+#ifdef DEV_ATOMICMAX
   atomicMin(md->flag,md->jJ_solver[i]);
 #else
+    //Very small diff 100 cells (~0.01 error) sometimes (1/3 exec)
 #endif
 
     flag_shr[0] = 0;//99
@@ -5038,9 +5037,10 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
     dmdv->kflag2=kflag2;
     __syncthreads();
 
-#ifndef DEV_ATOMICMAX
+#ifdef DEV_ATOMICMAX
   atomicMin(md->flag,md->jJ_solver[i]);
 #else
+    //Very small diff 100 cells (~0.01 error) sometimes (1/3 exec)
 #endif
 
   //int flag2;
@@ -5160,9 +5160,10 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
 #endif
 
-#ifndef DEV_ATOMICMAX
+#ifdef DEV_ATOMICMAX
   atomicMin(md->flag,md->jJ_solver[i]);
 #else
+  //Very small diff 100 cells (~0.01 error) sometimes (1/3 exec)
 #endif
 
 
@@ -5400,8 +5401,6 @@ void solveCVODEGPU(SolverData *sd, CVodeMem cv_mem)
 
   int offset_cells=0;
 
-#ifndef DEV_SIMPLE_ALL_BLOCKS_EQUAL_SIZE
-
   int threads_block = len_cell;
   //int blocks = mGPU->blocks = mGPU->n_cells;
   int blocks = mGPU->n_cells;
@@ -5410,44 +5409,6 @@ void solveCVODEGPU(SolverData *sd, CVodeMem cv_mem)
 
   solveCVODEGPU_thr(blocks, threads_block, max_threads_block, n_shr_empty, offset_cells,
                     sd,cv_mem);
-
-#else
-
-  int n_cells_block =  max_threads_block/len_cell;
-  int threads_block = n_cells_block*len_cell;
-  int n_shr_empty = mGPU->n_shr_empty= max_threads_block-threads_block;
-  int blocks = (mGPU->nrows+threads_block-1)/threads_block;
-
-
-#ifndef ALL_BLOCKS_EQUAL_SIZE
-
-  //Common kernel (Launch all blocks except the last)
-  if(bicg->use_multicells
-    //&& blocks!=0
-          ) {
-
-    blocks=blocks-1;
-
-    if(blocks!=0)//myb not needed
-      solveCVODEGPU_thr(blocks, threads_block, max_threads_block, n_shr_empty, offset_cells,
-                        sd,cv_mem);
-
-    //Update vars to launch last kernel
-    offset_cells=n_cells_block*blocks;
-    int n_cells_last_block=mGPU->n_cells-offset_cells;
-    threads_block=n_cells_last_block*len_cell;
-    max_threads_block=nextPowerOfTwoCVODE(threads_block);
-    n_shr_empty = max_threads_block-threads_block;
-    blocks=1;
-
-  }
-
-#endif
-
-  solveCVODEGPU_thr(blocks, threads_block, max_threads_block, n_shr_empty, offset_cells,
-                    sd,cv_mem);
-
-#endif
 
 #ifdef DEBUG_SOLVEBCGCUDA
   if(bicg->counterBiConjGrad<2) {
@@ -6702,7 +6663,6 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
 #else
     kflag=flag;
 #endif
-
 
     printf("DEV_cudacvStep counterBiConjGrad %d\n",bicg->counterBiConjGrad);
     //printf("DEV_cudacvStep counterBiConjGrad %d istate %d\n",bicg->counterBiConjGrad, istate);
