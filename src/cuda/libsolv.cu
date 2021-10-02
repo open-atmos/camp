@@ -714,7 +714,7 @@ __device__ void cudaDeviceSpmvCSC_block(double* dx, double* db, int nrows, doubl
 }
 
 
-__device__ void cudaDeviceSpmvCSC(double* dx, double* db, int nrows, double* dA, int* djA, int* diA)
+__device__ void cudaDeviceSpmvCSC_block(double* dx, double* db, int nrows, double* dA, int* djA, int* diA)
 {
   double mult;
   int row= threadIdx.x + blockDim.x*blockIdx.x;

@@ -2560,13 +2560,6 @@ int cudaDevicecvNewtonIteration(
     //if(i==0)printf("cudaDevicecvNewtonIteration dftemp %le dtempv %le dcv_y %le it %d block %d\n",
     //               dftemp[(blockDim.x-1)*0],dtempv[(blockDim.x-1)*0],dcv_y[(blockDim.x-1)*0],it,blockIdx.x);
 
-#ifdef CSR_SPMV
-
-  cudaDeviceswapCSC_CSR(nrows, nrows, diA, djA, dA, diB, djB, dB);
-
-#endif
-
-
 #ifdef PMC_DEBUG_GPU
 
 #ifdef cudaGlobalCVode_timers_max_blocks
@@ -2605,15 +2598,6 @@ int cudaDevicecvNewtonIteration(
     start = clock(); //almost accurate :https://stackoverflow.com/questions/19527038/how-to-measure-the-time-of-the-device-functions-when-they-are-called-in-kernel-f
 
 #endif
-
-//Some functs
-
-#ifdef CSR_SPMV
-
-  cudaDeviceswapCSC_CSR(nrows, nrows, diA, djA, dA, diB, djB, dB);
-
-#endif
-
 
     __syncthreads();
     dtempv[i] = dx[i];
@@ -9809,7 +9793,7 @@ int cvNewtonIteration_gpu2(SolverData *sd, CVodeMem cv_mem)
     //N_VLinearSum(cv_mem->cv_gamma, cv_mem->cv_ftemp, -ONE,
     //             cv_mem->cv_tempv, cv_mem->cv_tempv);
 
-#ifdef CSR_SPMV
+#ifndef CSR_SPMV_CPU
 
     swapCSC_CSR_BCG(sd);
     //cudaGlobalswapCSC_CSR
@@ -9993,8 +9977,9 @@ int cvNewtonIteration_gpu2(SolverData *sd, CVodeMem cv_mem)
 
 #endif
 
-#ifdef CSR_SPMV
+#ifndef CSR_SPMV_CPU
 
+    //Swap is fine here, but have problems of sync in GPU
     swapCSC_CSR_BCG(sd);
     //cudaGlobalswapCSC_CSR
 

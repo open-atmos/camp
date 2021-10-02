@@ -194,6 +194,7 @@ void cudaDeviceswapCSC_CSR1Thread(int n_row, int n_col, int* Ap, int* Aj, double
 //Based on
 // https://github.com/scipy/scipy/blob/3b36a574dc657d1ca116f6e230be694f3de31afc/scipy/sparse/sparsetools/csr.h#L363
 
+//Wrong in one-kernel solution(https://earth.bsc.es/gitlab/ac/PartMC/-/issues/62)
 __device__
 void cudaDeviceswapCSC_CSR(int n_row, int n_col, int* Ap, int* Aj, double* Ax, int* BpGlobal, int* Bi, double* Bx) {
 
@@ -968,13 +969,10 @@ void solveBcgCudaDevice(
     cudaDevicesetconst(dy, 0.0, nrows);
     cudaDevicesetconst(dz, 0.0, nrows);
      */
-
-#ifdef BASIC_SPMV
-    cudaDevicesetconst(dr0, 0.0, nrows);
-    __syncthreads();
-    cudaDeviceSpmvCSC(dr0,dx,nrows,dA,djA,diA); //y=A*x
+#ifndef CSR_SPMV_CPU
+    cudaDeviceSpmvCSR(dr0,dx,nrows,dA,djA,diA); //y=A*x
 #else
-    cudaDeviceSpmv(dr0,dx,nrows,dA,djA,diA,n_shr_empty); //y=A*x
+    cudaDeviceSpmvCSC_block(dr0,dx,nrows,dA,djA,diA,n_shr_empty); //y=A*x
 #endif
 
 #ifdef DEBUG_SOLVEBCGCUDA_DEEP
@@ -1045,12 +1043,10 @@ void solveBcgCudaDevice(
       __syncthreads();
       cudaDevicesetconst(dn0, 0.0, nrows);
       //gpu_spmv(dn0,dy,nrows,dA,djA,diA,mattype,blocks,threads);  // n0= A*y
-#ifdef BASIC_SPMV
-      cudaDevicesetconst(dn0, 0.0, nrows);
-      __syncthreads();
-      cudaDeviceSpmvCSC(dn0, dy, nrows, dA, djA, diA);
+#ifndef CSR_SPMV_CPU
+      cudaDeviceSpmvCSR(dn0, dy, nrows, dA, djA, diA);
 #else
-      cudaDeviceSpmv(dn0, dy, nrows, dA, djA, diA,n_shr_empty);
+      cudaDeviceSpmvCSC_block(dn0, dy, nrows, dA, djA, diA,n_shr_empty);
 #endif
 
 #ifdef DEBUG_SOLVEBCGCUDA_DEEP
@@ -1096,14 +1092,11 @@ void solveBcgCudaDevice(
       __syncthreads();
       //gpu_multxy(dz,ddiag,ds,nrows,blocks,threads); // precond z=diag*s
       cudaDevicemultxy(dz, ddiag, ds, nrows); // precond z=diag*s
-
       //gpu_spmv(dt,dz,nrows,dA,djA,diA,mattype,blocks,threads);
-#ifdef BASIC_SPMV
-      cudaDevicesetconst(dt, 0.0, nrows);
-      __syncthreads();
-      cudaDeviceSpmvCSC(dt, dz, nrows, dA, djA, diA);
+#ifndef CSR_SPMV_CPU
+      cudaDeviceSpmvCSR(dt, dz, nrows, dA, djA, diA);
 #else
-      cudaDeviceSpmv(dt, dz, nrows, dA, djA, diA,n_shr_empty);
+      cudaDeviceSpmvCSC_block(dt, dz, nrows, dA, djA, diA,n_shr_empty);
 #endif
 
       __syncthreads();
@@ -1246,12 +1239,10 @@ void solveBcgCuda(
     cudaDevicesetconst(dz, 0.0, nrows);
      */
 
-#ifdef BASIC_SPMV
-    cudaDevicesetconst(dr0, 0.0, nrows);
-    __syncthreads();
-    cudaDeviceSpmvCSC(dr0,dx,nrows,dA,djA,diA); //y=A*x
+#ifndef CSR_SPMV_CPU
+    cudaDeviceSpmvCSR(dr0,dx,nrows,dA,djA,diA); //y=A*x
 #else
-    cudaDeviceSpmv(dr0,dx,nrows,dA,djA,diA,n_shr_empty); //y=A*x
+    cudaDeviceSpmvCSC_block(dr0,dx,nrows,dA,djA,diA,n_shr_empty)); //y=A*x
 #endif
 
 #ifdef DEBUG_SOLVEBCGCUDA_DEEP
@@ -1323,12 +1314,10 @@ void solveBcgCuda(
       __syncthreads();
       cudaDevicesetconst(dn0, 0.0, nrows);
       //gpu_spmv(dn0,dy,nrows,dA,djA,diA,mattype,blocks,threads);  // n0= A*y
-#ifdef BASIC_SPMV
-      cudaDevicesetconst(dn0, 0.0, nrows);
-      __syncthreads();
-      cudaDeviceSpmvCSC(dn0, dy, nrows, dA, djA, diA);
+#ifndef CSR_SPMV_CPU
+      cudaDeviceSpmvCSR(dn0, dy, nrows, dA, djA, diA);
 #else
-      cudaDeviceSpmv(dn0, dy, nrows, dA, djA, diA,n_shr_empty);
+      cudaDeviceSpmvCSC_block(dn0, dy, nrows, dA, djA, diA,n_shr_empty);
 #endif
 
 #ifdef DEBUG_SOLVEBCGCUDA_DEEP
@@ -1376,12 +1365,10 @@ void solveBcgCuda(
       cudaDevicemultxy(dz, ddiag, ds, nrows); // precond z=diag*s
 
       //gpu_spmv(dt,dz,nrows,dA,djA,diA,mattype,blocks,threads);
-#ifdef BASIC_SPMV
-      cudaDevicesetconst(dt, 0.0, nrows);
-      __syncthreads();
-      cudaDeviceSpmvCSC(dt, dz, nrows, dA, djA, diA);
+#ifndef CSR_SPMV_CPU
+      cudaDeviceSpmvCSR(dt, dz, nrows, dA, djA, diA);
 #else
-      cudaDeviceSpmv(dt, dz, nrows, dA, djA, diA,n_shr_empty);
+      cudaDeviceSpmvCSC_block(dt, dz, nrows, dA, djA, diA,n_shr_empty);
 #endif
 
       __syncthreads();
