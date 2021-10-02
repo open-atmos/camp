@@ -5187,8 +5187,8 @@ void cudaGlobalCVode(ModelDataGPU md_object) {
 
   //ModelDataVariable dmdv_object;
 
-  ModelDataVariable dmdv_object = md_object.mdv2[blockIdx.x]; //fine with copying mdv2 complete
-  //ModelDataVariable dmdv_object = *md_object.mdv;
+  //ModelDataVariable dmdv_object = md_object.mdv2[blockIdx.x]; //fine with copying mdv2 complete
+  ModelDataVariable dmdv_object = *md_object.mdv;
 
   ModelDataVariable *dmdv = &dmdv_object;
 
