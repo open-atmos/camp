@@ -126,10 +126,6 @@ typedef struct {
     int i_rxn;
     int i_aero_rep;
 
-    double cv_hprime3;
-    double cv_hprime2;
-    double dup;
-    double ddn;
     double init_time_step;
     int cv_mxstep; //long
     int cv_next_q;
@@ -196,7 +192,6 @@ typedef struct {
     double cv_tn;
     double cv_etamax;
     int cv_maxncf;
-
 
     //Counters (e.g. iterations of function cvnlsNewton)
     int cv_nsetups;
@@ -364,7 +359,6 @@ typedef struct {
     int*    disavedJ;
 
     ModelDataVariable *mdv;
-    ModelDataVariable *mdv2;
     ModelDataVariable *mdvo;
 
 //ODE stats
