@@ -1667,13 +1667,6 @@ int cudaDevicelinsolsetup(
 ) {
 
   extern __shared__ int flag_shr[];
-#ifndef DEV2_GUESSFLAG
-#else
-  flag_shr[0] = 0;
-#endif
-
-  //if(threadIdx.x==0)printf("cudaGlobalJac \n");
-  //__syncthreads();
 
   double dgamma;
   int jbad, jok;
@@ -1742,8 +1735,6 @@ int cudaDevicelinsolsetup(
     __syncthreads();
     //if(i==0)printf("cudaGlobalinsolsetupflag_shr[1] %d\n",flag_shr[1]);
 
-#ifndef DEV2_GUESSFLAG
-
     if (guess_flag < 0) {
       //last_flag = CVDLS_JACFUNC_UNRECVR;
       return -1;
@@ -1752,26 +1743,6 @@ int cudaDevicelinsolsetup(
       //last_flag = CVDLS_JACFUNC_RECVR;
       return 1;
     }
-
-#else
-    flag_shr[0] = 0;
-    __syncthreads();
-    if (guess_flag < 0) {
-      //last_flag = CVDLS_JACFUNC_UNRECVR;
-      flag_shr[0] = -1;
-      //flag_shr[0] = CVDLS_JACFUNC_UNRECVR;
-    }
-    if (guess_flag > 0) {
-      //last_flag = CVDLS_JACFUNC_RECVR;
-      flag_shr[0] = 1;
-      //flag_shr[0] = CVDLS_JACFUNC_RECVR;
-    }
-    __syncthreads();
-    if (flag_shr[0] != 0) {
-      *flag = flag_shr[0];
-      return;
-    }
-#endif
 
    cudaDeviceJacCopy(nrows, diA, djA, dA, disavedJ, djsavedJ, dsavedJ);
 
@@ -2431,12 +2402,8 @@ int cudaDevicecvNewtonIteration(
         double *dewt
 )
 {
-  //extern __shared__ int flag_shr[];
   extern __shared__ double flag_shr2[];
-#ifndef DEV2_GUESSFLAG
-#else
-  flag_shr2[0]=99;
-#endif
+
   int i = blockIdx.x * blockDim.x + threadIdx.x;
 
   double del, delp, dcon, m;
@@ -2561,10 +2528,8 @@ int cudaDevicecvNewtonIteration(
                            md, dmdv
     );
     __syncthreads();
-    if(i==0)printf("cudaDevicecvNewtonIteration guessflag %d block %d\n",guessflag,blockIdx.x);
-    //if (*flag<0) {
+    //if(i==0)printf("cudaDevicecvNewtonIteration guessflag %d block %d\n",guessflag,blockIdx.x);
 
-#ifndef DEV2_GUESSFLAG
     if (guessflag < 0) {
       if (!(dmdv->cv_jcur)) { //Bool set up during linsolsetup just before Jacobian
         //&& (cv_lsetup)) { //cv_mem->cv_lsetup// Setup routine, always exists for BCG
@@ -2573,19 +2538,6 @@ int cudaDevicecvNewtonIteration(
         return RHSFUNC_RECVR;
       }
     }
-#else
-    flag_shr2[0]=0;
-    __syncthreads();
-    if (guessflag < 0) {
-      if (!(dmdv->cv_jcur)) { //Bool set up during linsolsetup just before Jacobian
-        //&& (cv_lsetup)) { //cv_mem->cv_lsetup// Setup routine, always exists for BCG
-        flag_shr2[0] = TRY_AGAIN;
-      } else {
-        flag_shr2[0] = RHSFUNC_RECVR;
-      }
-      break;
-    }
-#endif
 
     // Check for negative concentrations (CAMP addition)
     cudaDevicezaxpby(1., dcv_y, 1., dtempv, dftemp, nrows);
@@ -2596,21 +2548,11 @@ int cudaDevicecvNewtonIteration(
     double min;
     cudaDevicemin(&min, dftemp[i], flag_shr2, md->n_shr_empty);
 
-#ifndef DEV2_GUESSFLAG
     if (min < -PMC_TINY) {
       //if (dftemp[i] < -PMC_TINY) {
       return CONV_FAIL;
     }
     __syncthreads();
-#else
-    if (min < -PMC_TINY) {
-    //if (dftemp[i] < -PMC_TINY) {
-      flag_shr2[0] = CONV_FAIL;
-      break;
-    }__syncthreads();
-    flag_shr2[0]=0;
-    __syncthreads();
-#endif
 
     //cv_acor[i]+=dx[i];
     cudaDevicezaxpby(1., cv_acor, 1., dx, cv_acor, nrows);
@@ -2626,8 +2568,8 @@ int cudaDevicecvNewtonIteration(
     }
 
     dcon = del * SUNMIN(1.0, dmdv->cv_crate) / md->cv_tq[4+blockIdx.x*(NUM_TESTS + 1)];
-#ifndef DEV2_GUESSFLAG
-    flag_shr2[0]=0;
+
+    flag_shr2[0]=0;//needed?
     __syncthreads();
     if (dcon <= 1.0) {
       cudaDeviceVWRMS_Norm(cv_acor, dewt, &dmdv->cv_acnrm, nrows, n_shr_empty);
@@ -2640,29 +2582,12 @@ int cudaDevicecvNewtonIteration(
 
       return CV_SUCCESS;
     }
-#else
-    flag_shr2[0]=0;
-    __syncthreads();
-    if (dcon <= 1.0) {
-      cudaDeviceVWRMS_Norm(cv_acor, dewt, &dmdv->cv_acnrm, nrows, n_shr_empty);
-      //cv_mem->cv_acnrm = gpu_VWRMS_Norm(mGPU->nrows, mGPU->cv_acor, mGPU->dewt, bicg->aux,
-      //  //                                    mGPU->daux, (mGPU->blocks + 1) / 2, mGPU->threads);
-
-      __syncthreads();
-      dmdv->cv_jcur = 0;
-      __syncthreads();
-
-      flag_shr2[0] = CV_SUCCESS;
-      break;
-    }
-#endif
 
     dmdv->cv_mnewt = ++m;
 
     // Stop at maxcor iterations or if iter. seems to be diverging.
     //     If still not converged and Jacobian data is not current,
     //     signal to try the solution again
-#ifndef DEV2_GUESSFLAG
     if ((m == dmdv->cv_maxcor) || ((m >= 2) && (del > RDIV * delp))) {
       if (!(dmdv->cv_jcur)) {
         return TRY_AGAIN;
@@ -2670,18 +2595,6 @@ int cudaDevicecvNewtonIteration(
         return RHSFUNC_RECVR;
       }
     }
-#else
-    flag_shr2[0]=0;
-    __syncthreads();
-    if ((m == dmdv->cv_maxcor) || ((m >= 2) && (del > RDIV * delp))) {
-      if (!(dmdv->cv_jcur)) {
-        flag_shr2[0] = TRY_AGAIN;
-      } else {
-        flag_shr2[0] = RHSFUNC_RECVR;
-      }
-      break;
-    }
-#endif
 
     // Save norm of correction, evaluate f, and loop again
     delp = del;
@@ -2707,8 +2620,6 @@ int cudaDevicecvNewtonIteration(
     cudaDevicezaxpby(1., dcv_y, 1., dzn, cv_acor, nrows);
     //gpu_zaxpby(1.0, mGPU->dcv_y, -1.0, mGPU->dzn, mGPU->cv_acor, mGPU->nrows, mGPU->blocks, mGPU->threads);
 
-#ifndef DEV2_GUESSFLAG
-
     if (retval < 0) {
       return CV_RHSFUNC_FAIL;
     }
@@ -2719,26 +2630,6 @@ int cudaDevicecvNewtonIteration(
         return RHSFUNC_RECVR;
       }
     }
-
-#else
-
-    flag_shr2[0]=0;
-    __syncthreads();
-    if (retval < 0) {
-      flag_shr2[0] = CV_RHSFUNC_FAIL;
-      break;
-    }
-    if (retval > 0) {
-      if (!(dmdv->cv_jcur)) {
-        flag_shr2[0] = TRY_AGAIN;
-      } else {
-        flag_shr2[0] = RHSFUNC_RECVR;
-      }
-      break;
-    }
-
-#endif
-
 
     dmdv->cv_nfe=dmdv->cv_nfe+1;
 
@@ -2762,16 +2653,9 @@ int cudaDevicecvNewtonIteration(
   if(i==0)printf("cudaDevicecvNewtonIteration dzn[(blockDim.x*(blockIdx.x+1)-1)*0] %le it %d block %d\n",dzn[(blockDim.x*(blockIdx.x+1)-1)*0],it,blockIdx.x);
 #endif
 
-#ifndef DEV2_GUESSFLAG
-  printf("cudaDevicecvNewtonIteration WRONG (should not enter here)\n");
-#else
-  __syncthreads();
-  *flag = (int)flag_shr2[0];
-  if(i==0)printf("cudaDevicecvNewtonIteration flag %d block %d\n",*flag,blockIdx.x);
-  __syncthreads();
-#endif
+  //printf("cudaDevicecvNewtonIteration WRONG (should not enter here)\n");
 
-  return;
+  return 0;
 
 }
 
@@ -2800,10 +2684,6 @@ int cudaDevicecvNlsNewton(
         int *disavedJ, int *djsavedJ, double *dsavedJ
 ) {
   extern __shared__ int flag_shr[];
-#ifndef DEV2_GUESSFLAG
-#else
-  flag_shr[0] = 0;//99
-#endif
   int flagDevice = 0;//99
   __syncthreads();*flag = flag_shr[0];__syncthreads();
   int i = blockIdx.x * blockDim.x + threadIdx.x;
@@ -2861,7 +2741,7 @@ int cudaDevicecvNlsNewton(
 #endif
   //print guessflag crashes
   //if(i==0)printf("cudaDevicecvNlsNewton guessflag %d block %d\n",guessflag,blockIdx.x);
-  
+
   //fine
   if(guessflag<0){
   //if(*flag<0){
@@ -2903,27 +2783,12 @@ int cudaDevicecvNlsNewton(
             dftemp,md,dmdv,&aux_flag
     );
 
-#ifndef DEV2_GUESSFLAG
-
     if (retval < 0) {
       return CV_RHSFUNC_FAIL;
     }
     if (retval> 0) {
       return RHSFUNC_RECVR;
     }
-
-#else
-    flag_shr[0] = 0;
-    __syncthreads();
-    if (retval < 0) {
-      flag_shr[0] = CV_RHSFUNC_FAIL;
-      break;
-    }
-    if (retval> 0) {
-      flag_shr[0] = RHSFUNC_RECVR;
-      break;
-    }
-#endif
 
     __syncthreads();
     //if (i == 0)
@@ -2983,7 +2848,6 @@ int cudaDevicecvNlsNewton(
       dmdv->cv_gammap = dmdv->cv_gamma;
       dmdv->cv_nstlp = dmdv->cv_nst;//todo test
       // Return if lsetup failed
-#ifndef DEV2_GUESSFLAG
 
       if (linflag < 0) {
         flag_shr[0] = CV_LSETUP_FAIL;
@@ -2993,21 +2857,6 @@ int cudaDevicecvNlsNewton(
         flag_shr[0] = CONV_FAIL;
         break;
       }
-
-#else
-
-      flag_shr[0] = 0;
-      __syncthreads();
-      if (*flag < 0) {
-        flag_shr[0] = CV_LSETUP_FAIL;
-        break;
-      }
-      if (*flag > 0) {
-        flag_shr[0] = CONV_FAIL;
-        break;
-      }
-
-#endif
 
     }
 
@@ -3057,21 +2906,9 @@ int cudaDevicecvNlsNewton(
 #endif
 #endif
 
-
-#ifndef DEV2_GUESSFLAG
-
     if (nItflag != TRY_AGAIN) {
       return nItflag;
     }
-
-#else
-    flag_shr[0] = 0;
-    __syncthreads();
-    if (*flag != TRY_AGAIN) {
-      flag_shr[0] = *flag;
-      break;
-    }
-#endif
 
     __syncthreads();
     callSetup = 1;
@@ -3084,12 +2921,7 @@ int cudaDevicecvNlsNewton(
   }//for(;;)
 
   //if(threadIdx.x==0)printf("cudaDevicecvNlsNewton2 flag_shr[0] %d block %d\n",flag_shr[0], blockIdx.x);
-  __syncthreads();
 
-#ifndef DEV2_GUESSFLAG
-#else
-  *flag = flag_shr[0];
-#endif
   __syncthreads();
   return *flag;
 
