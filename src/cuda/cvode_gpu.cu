@@ -2042,11 +2042,6 @@ void alloc_solver_gpu2(CVodeMem cv_mem, SolverData *sd)
   sd->flagCells=(int *)malloc((mGPU->n_cells)*sizeof(int));
 
   cudaMalloc((void**)&mGPU->mdv,sizeof(ModelDataVariable));
-#ifndef DEV_MDVBLOCK
-  cudaMalloc((void**)&mGPU->mdv2,mGPU->n_cells*sizeof(ModelDataVariable));
-#else
-  cudaMalloc((void**)&mGPU->mdv2,sizeof(ModelDataVariable));
-#endif
   cudaMalloc((void**)&mGPU->mdvo,sizeof(ModelDataVariable));
   cudaMalloc((void**)&mGPU->flag,1*sizeof(int));
   cudaMalloc((void**)&mGPU->flag2,1*sizeof(int));
@@ -2230,7 +2225,6 @@ void alloc_solver_gpu2(CVodeMem cv_mem, SolverData *sd)
 #endif
 
   cudaMemcpy(mGPU->mdv,mdv,sizeof(ModelDataVariable),cudaMemcpyHostToDevice);
-  //cudaMemcpy(mGPU->mdv2,mdv,sizeof(ModelDataVariable),cudaMemcpyHostToDevice);//WARNING: This should be here before
 
 #ifdef CHECK_GPU_LINSOLVE
   sd->max_error_linsolver = 0.0;
@@ -4687,17 +4681,7 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
   int istate=999;
   int aux=i+1;
   ModelDataVariable *mdv = md->mdv;
-  ModelDataVariable *mdv2;
 
-#ifndef DEV_MDVBLOCK
-
-  mdv2 = &md->mdv2[blockIdx.x];
-
-#else
-
-  mdv2 = md->mdv2;
-
-#endif
 #ifdef DEV_printmin
   printmin(md,md->state,"cudaDeviceCVode start state");//fine
 #endif
@@ -4715,124 +4699,6 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
 #endif
 
   //if(tid==0)printf("md->flagCells[blockIdx.x] %d\n",md->flagCells[blockIdx.x]);
-
-#ifdef DEV_MDVBLOCK
-
-  dmdv->cv_taskc = mdv2->cv_taskc;
-  dmdv->cv_uround = mdv2->cv_uround;
-  dmdv->cv_nrtfn = mdv2->cv_nrtfn;
-  dmdv->cv_tretlast = mdv2->cv_tretlast;
-  dmdv->cv_sldeton = mdv2->cv_sldeton;
-  dmdv->cv_hmax_inv = mdv2->cv_hmax_inv;
-  dmdv->cv_lmm = mdv2->cv_lmm;
-  dmdv->cv_iter = mdv2->cv_iter;
-  dmdv->cv_itol = mdv2->cv_itol;
-  dmdv->cv_reltol = mdv2->cv_reltol;
-  dmdv->cv_nhnil = mdv2->cv_nhnil;
-  dmdv->cv_etaqm1 = mdv2->cv_etaqm1;
-  dmdv->cv_etaq = mdv2->cv_etaq;
-  dmdv->cv_etaqp1 = mdv2->cv_etaqp1;
-  dmdv->cv_lrw1 = mdv2->cv_lrw1;
-  dmdv->cv_liw1 = mdv2->cv_liw1;
-  dmdv->cv_lrw = (int) mdv2->cv_lrw;
-  dmdv->cv_liw = (int) mdv2->cv_liw;
-  dmdv->cv_saved_tq5 = mdv2->cv_saved_tq5;
-  dmdv->cv_tolsf = mdv2->cv_tolsf;
-  dmdv->cv_qmax_alloc = mdv2->cv_qmax_alloc;
-  dmdv->cv_indx_acor = mdv2->cv_indx_acor;
-  dmdv->cv_qu = mdv2->cv_qu;
-  dmdv->cv_h0u = mdv2->cv_h0u;
-  dmdv->cv_hu = mdv2->cv_hu;
-  dmdv->cv_jcur = mdv2->cv_jcur;
-  dmdv->cv_mnewt = mdv2->cv_mnewt;
-  dmdv->cv_maxcor = mdv2->cv_maxcor;
-  dmdv->cv_nstlp = (int) mdv2->cv_nstlp;
-  dmdv->cv_qmax = mdv2->cv_qmax;
-  dmdv->cv_L = mdv2->cv_L;
-
-  dmdv->cv_maxnef = mdv2->cv_maxnef;
-  dmdv->cv_netf = (int) mdv2->cv_netf;
-  dmdv->cv_acnrm = mdv2->cv_acnrm;
-  dmdv->cv_nst = mdv2->cv_nst;
-  dmdv->cv_gamrat = mdv2->cv_gamrat;
-  dmdv->cv_gamma = mdv2->cv_gamma;
-  dmdv->cv_tstop = mdv2->cv_tstop;
-  dmdv->cv_tstopset = mdv2->cv_tstopset;
-  dmdv->cv_nlscoef = mdv2->cv_nlscoef;
-  dmdv->cv_crate = mdv2->cv_crate;
-  dmdv->cv_rl1 = mdv2->cv_rl1;
-  dmdv->cv_q = mdv2->cv_q;
-  dmdv->cv_qprime = mdv2->cv_qprime;
-  dmdv->cv_nscon = mdv2->cv_nscon;
-  dmdv->cv_hmin = mdv2->cv_hmin;
-  dmdv->cv_next_h = mdv2->cv_next_h;
-  //mdv2->saved_t = dmdv->saved_t;
-  //mdv2->nef = dmdv->nef;
-  //mdv2->ncf = dmdv->ncf;
-
-  //if(md->flagCells[blockIdx.x]==99){
-
-  dmdv->cv_hprime2 = mdv2->cv_hprime2;
-
-  dmdv->cv_eta = mdv2->cv_eta;//diff error 1000 cells
-  dmdv->cv_h = mdv2->cv_h;//never ends 1000 cells
-  dmdv->cv_hscale = mdv2->cv_hscale; //never ends 1000 cells
-
-  dmdv->nstloc = mdv2->nstloc;
-  dmdv->tout = mdv2->tout;
-  dmdv->tret = mdv2->tret;
-  dmdv->istate = mdv2->istate;
-  dmdv->kflag = mdv2->kflag;
-  dmdv->kflag2 = mdv2->kflag2;
-
-  dmdv->cv_hprime3 = mdv2->cv_hprime3;
-  dmdv->i_cell = mdv2->i_cell;
-  dmdv->i_rxn = mdv2->i_rxn;
-  dmdv->i_rxn = mdv2->i_rxn;
-
-  dmdv->cv_nfe = mdv2->cv_nfe;
-  dmdv->cv_nsetups = mdv2->cv_nsetups;
-  dmdv->nje = mdv2->nje;
-  dmdv->nstlj = mdv2->nstlj;
-
-/*
-  dmdv->cv_nfe=0;
-  dmdv->cv_nsetups=0;
-  dmdv->nje=0;
-  dmdv->nstlj=0;
-*/
-
-#ifdef PMC_DEBUG_GPU
-
-  dmdv->countercvstep = mdv2->countercvstep;
-  dmdv->counterDerivGPU = mdv2->counterDerivGPU;
-  dmdv->counterBCGInternal = mdv2->counterBCGInternal;
-  dmdv->dtBCG = mdv2->dtBCG;
-  dmdv->dtPreBCG = mdv2->dtPreBCG;
-  dmdv->dtPostBCG = mdv2->dtPostBCG;
-
-  /*
-
-   dmdv->countercvstep = 0;
-   dmdv->counterDerivGPU = 0;
-   dmdv->counterBCGInternal = 0;
-   dmdv->dtBCG = 0.;
-   dmdv->dtPreBCG = 0.;
-   dmdv->dtPostBCG = 0.;
-*/
-
-#endif
-
-#else
-
-  //*dmdv = *mdv2; //fine
-
-#endif
-
-#ifdef DEV_MDVBLOCK
-  __syncthreads();
-  if(tid==0)md->flagCells[blockIdx.x]=1;
-#endif
 
 #ifdef DEV_ATOMICMAX
   atomicMin(md->flag,md->jJ_solver[i]);
@@ -4953,123 +4819,6 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
     //Very small diff 100 cells (~0.01 error) sometimes (1/3 exec)
 #endif
 
-  //int flag2;
-  //atomicAdd(md->flag2,flag2);//atomic never works
-
-#ifdef DEV_MDVBLOCK
-
-  //fine 1000 cells
-
-  mdv2->cv_taskc = dmdv->cv_taskc;
-  mdv2->cv_uround = dmdv->cv_uround;
-  mdv2->cv_nrtfn = dmdv->cv_nrtfn;
-  mdv2->cv_tretlast = dmdv->cv_tretlast;
-  mdv2->cv_sldeton = dmdv->cv_sldeton;
-  mdv2->cv_hmax_inv = dmdv->cv_hmax_inv;
-  mdv2->cv_lmm = dmdv->cv_lmm;
-  mdv2->cv_iter = dmdv->cv_iter;
-  mdv2->cv_itol = dmdv->cv_itol;
-  mdv2->cv_reltol = dmdv->cv_reltol;
-  mdv2->cv_nhnil = dmdv->cv_nhnil;
-  mdv2->cv_etaqm1 = dmdv->cv_etaqm1;
-  mdv2->cv_etaq = dmdv->cv_etaq;
-  mdv2->cv_etaqp1 = dmdv->cv_etaqp1;
-  mdv2->cv_lrw1 = dmdv->cv_lrw1;
-  mdv2->cv_liw1 = dmdv->cv_liw1;
-  mdv2->cv_lrw = (int) dmdv->cv_lrw;
-  mdv2->cv_liw = (int) dmdv->cv_liw;
-  mdv2->cv_saved_tq5 = dmdv->cv_saved_tq5;
-  mdv2->cv_tolsf = dmdv->cv_tolsf;
-  mdv2->cv_qmax_alloc = dmdv->cv_qmax_alloc;
-  mdv2->cv_indx_acor = dmdv->cv_indx_acor;
-  mdv2->cv_qu = dmdv->cv_qu;
-  mdv2->cv_h0u = dmdv->cv_h0u;
-  mdv2->cv_hu = dmdv->cv_hu;
-  mdv2->cv_jcur = dmdv->cv_jcur;
-  mdv2->cv_mnewt = dmdv->cv_mnewt;
-  mdv2->cv_maxcor = dmdv->cv_maxcor;
-  mdv2->cv_nstlp = (int) dmdv->cv_nstlp;
-  mdv2->cv_qmax = dmdv->cv_qmax;
-  mdv2->cv_L = dmdv->cv_L;
-
-
-  mdv2->cv_maxnef = dmdv->cv_maxnef;
-  mdv2->cv_netf = (int) dmdv->cv_netf;
-  mdv2->cv_acnrm = dmdv->cv_acnrm;
-  mdv2->cv_nst = dmdv->cv_nst;
-  mdv2->cv_gamrat = dmdv->cv_gamrat;
-  mdv2->cv_gamma = dmdv->cv_gamma;
-  mdv2->cv_tstop = dmdv->cv_tstop;
-  mdv2->cv_tstopset = dmdv->cv_tstopset;
-  mdv2->cv_nlscoef = dmdv->cv_nlscoef;
-  mdv2->cv_crate = dmdv->cv_crate;
-  mdv2->cv_rl1 = dmdv->cv_rl1;
-  mdv2->cv_q = dmdv->cv_q;
-  mdv2->cv_qprime = dmdv->cv_qprime;
-  mdv2->cv_nscon = dmdv->cv_nscon;
-  mdv2->cv_hmin = dmdv->cv_hmin;
-  mdv2->cv_next_h = dmdv->cv_next_h;
-
-  //mdv2->ddn = dmdv->ddn;//debug
-  //mdv2->dup = dmdv->dup;
-  mdv2->cv_hprime2 = dmdv->cv_hprime2;
-
-  mdv2->cv_eta = dmdv->cv_eta;//diff error 1000 cells
-  mdv2->cv_hprime = dmdv->cv_hprime; //never ends 1000 cells
-  mdv2->cv_h = dmdv->cv_h;//never ends 1000 cells
-  mdv2->cv_hscale = dmdv->cv_hscale;  //never ends 1000 cells
-
-  mdv2->nstloc = dmdv->nstloc;  //never ends 1000 cells
-  mdv2->tout = dmdv->tout;  //never ends 1000 cells
-  mdv2->tret = dmdv->tret;  //never ends 1000 cells
-  mdv2->istate = dmdv->istate;  //never ends 1000 cells
-  mdv2->kflag = dmdv->kflag;  //never ends 1000 cells
-  mdv2->kflag = 99;  //never ends 1000 cells
-
-  mdv2->cv_hprime3 = dmdv->cv_hprime3;
-  mdv2->i_cell = dmdv->i_cell;
-  mdv2->i_rxn = dmdv->i_rxn;
-  mdv2->i_aero_rep = dmdv->i_aero_rep;
-
-  mdv2->cv_nfe = dmdv->cv_nfe;
-  mdv2->cv_nsetups = dmdv->cv_nsetups;
-  mdv2->nje = dmdv->nje;
-  mdv2->nstlj = dmdv->nstlj;
-
-/*
-  dmdv->cv_nfe=0;
-  dmdv->cv_nsetups=0;
-  dmdv->nje=0;
-  dmdv->nstlj=0;
-*/
-
-#ifdef PMC_DEBUG_GPU
-
-  dmdv->countercvstep = mdv2->countercvstep;
-  dmdv->counterDerivGPU = mdv2->counterDerivGPU;
-  dmdv->counterBCGInternal = mdv2->counterBCGInternal;
-  dmdv->dtBCG = mdv2->dtBCG;
-  dmdv->dtPreBCG = mdv2->dtPreBCG;
-  dmdv->dtPostBCG = mdv2->dtPostBCG;
-
-  /*
-
-   dmdv->countercvstep = 0;
-   dmdv->counterDerivGPU = 0;
-   dmdv->counterBCGInternal = 0;
-   dmdv->dtBCG = 0.;
-   dmdv->dtPreBCG = 0.;
-   dmdv->dtPostBCG = 0.;
-*/
-
-#endif
-
-#else
-
-  //*mdv2 = *dmdv; //fine, but why? what is left to copy? debug?
-
-#endif
-
 #ifdef DEV_ATOMICMAX
   atomicMin(md->flag,md->jJ_solver[i]);
 #else
@@ -5183,37 +4932,16 @@ void cudaGlobalCVode(ModelDataGPU md_object) {
   unsigned int tid = threadIdx.x;
   int active_threads = md->nrows;
 
-#ifndef DEV_MDVBLOCK
-
-  //ModelDataVariable dmdv_object;
-
-  //ModelDataVariable dmdv_object = md_object.mdv2[blockIdx.x]; //fine with copying mdv2 complete
-  ModelDataVariable dmdv_object = *md_object.mdv;
-
-  ModelDataVariable *dmdv = &dmdv_object;
-
-#else
-
   ModelDataVariable dmdv_object = *md_object.mdv;
   ModelDataVariable *dmdv = &dmdv_object;
-
-#endif
 
   int istate2;
 
-  //ModelDataVariable *mdv2 = md->mdv2;
-  //if(threadIdx.x==0)printf("cudaGlobalCVode pre-mdv2 HPRIME2 %le HPRIME3 %le block %d\n",
-  //                         dmdv->cv_hprime2,dmdv->cv_hprime3,blockIdx.x);
   __syncthreads();
-
 
   if(i<active_threads){
 
-    //dmdv->cv_hprime2 = mdv2->cv_hprime2;
-    //if(threadIdx.x==0)printf("cudaGlobalCVode post-mdv2 HPRIME2 %le HPRIME3 %le block %d\n",
-    //                         dmdv->cv_hprime2,dmdv->cv_hprime3,blockIdx.x);
     __syncthreads();
-
     istate2=cudaDeviceCVode(md,dmdv); //rename dmdv->mdv , mdv->mdvi
 
   }
@@ -6316,18 +6044,6 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
 
   cudaMemcpy(mGPU->mdv, &sd->mdv, sizeof(ModelDataVariable), cudaMemcpyHostToDevice);
 
-#ifndef DEV_MDVBLOCK
-
-  for (int i = 0; i < mGPU->n_cells; i++) {
-    cudaMemcpy(mGPU->mdv2+i, &sd->mdv, sizeof(ModelDataVariable), cudaMemcpyHostToDevice);
-  }
-
-#else
-
-  cudaMemcpy(mGPU->mdv2, &sd->mdv, sizeof(ModelDataVariable), cudaMemcpyHostToDevice);
-
-#endif
-
   for(int i=0;i<mGPU->n_cells;i++)
     sd->flagCells[i]=99;
 
@@ -6339,15 +6055,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
 
 #else
   for(;;) {
-#endif
 
-#ifdef PMC_DEBUG_GPU
-    cudaEventRecord(bicg->startcvStep);
-#endif
-
-#ifndef DEV_MDVBLOCK
-
-#else
     sd->mdv.init_time_step = sd->init_time_step;
     sd->mdv.cv_mxstep = cv_mem->cv_mxstep;
     //sd->mdv.cv_next_q = cv_mem->cv_next_q;
@@ -6410,8 +6118,6 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     sd->mdv.cv_etamax = cv_mem->cv_etamax;
     sd->mdv.cv_maxncf = cv_mem->cv_maxncf;
 
-//fine
-
     sd->mdv.nstloc = (int)nstloc;
     sd->mdv.tout = tout;
     sd->mdv.tret = *tret;
@@ -6419,19 +6125,13 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     sd->mdv.kflag = kflag;
     sd->mdv.kflag2 = 99;
 
- //fine
-
-//#endif //fine
-
-//#endif
-
     cudaMemcpy(mGPU->mdv, &sd->mdv, sizeof(ModelDataVariable), cudaMemcpyHostToDevice);
 
-#endif //fine updating all mdv2 struct
+#endif
 
-    //HANDLE_ERROR(cudaMemset(mGPU->flagCells, 99, mGPU->n_cells*sizeof(int)));//not works
-
-
+#ifdef PMC_DEBUG_GPU
+    cudaEventRecord(bicg->startcvStep);
+#endif
 
 #ifdef PMC_DEBUG_GPU
     cudaEventRecord(bicg->startBCG);
