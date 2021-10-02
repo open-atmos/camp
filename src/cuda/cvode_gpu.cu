@@ -3002,12 +3002,9 @@ void cudaDevicecvRescale(ModelDataGPU *md, ModelDataVariable *dmdv) {
     __syncthreads();
   }
 
-#ifdef DEV_CUDACVODE
-#else
   dmdv->cv_h = dmdv->cv_hscale * dmdv->cv_eta;
   dmdv->cv_next_h = dmdv->cv_h;
   dmdv->cv_hscale = dmdv->cv_h;
-#endif
 
   dmdv->cv_nscon = 0;
 
@@ -3180,15 +3177,6 @@ int cudaDevicecvHandleNFlag(ModelDataGPU *md, ModelDataVariable *dmdv, int *nfla
   __syncthreads();
   *nflagPtr = PREV_CONV_FAIL;//fine 100 cells same result
   cudaDevicecvRescale(md, dmdv); //1000 cells same result
-
-  __syncthreads();
-
-#ifdef DEV_CUDACVODE
-    dmdv->cv_h = dmdv->cv_hscale * dmdv->cv_eta;
-    dmdv->cv_next_h = dmdv->cv_h;
-    dmdv->cv_hscale = dmdv->cv_h;
-#endif
-
   __syncthreads();
 
   return (PREDICT_AGAIN);
@@ -3624,11 +3612,6 @@ int cudaDevicecvDoErrorTest(ModelDataGPU *md, ModelDataVariable *dmdv,
     __syncthreads();
 
     cudaDevicecvRescale(md, dmdv);
-#ifdef DEV_CUDACVODE
-    dmdv->cv_h = dmdv->cv_hscale * dmdv->cv_eta;
-    dmdv->cv_next_h = dmdv->cv_h;
-    dmdv->cv_hscale = dmdv->cv_h;
-#endif
     return(TRY_AGAIN);
   }
 
@@ -3647,12 +3630,6 @@ int cudaDevicecvDoErrorTest(ModelDataGPU *md, ModelDataVariable *dmdv,
     dmdv->cv_q--;
     dmdv->cv_qwait = dmdv->cv_L;
     cudaDevicecvRescale(md, dmdv);
-    __syncthreads();
-#ifdef DEV_CUDACVODE
-    dmdv->cv_h = dmdv->cv_hscale * dmdv->cv_eta;
-    dmdv->cv_next_h = dmdv->cv_h;
-    dmdv->cv_hscale = dmdv->cv_h;
-#endif
     __syncthreads();
     return(TRY_AGAIN);
   }
@@ -3952,11 +3929,6 @@ void cudaDevicecvSetEta(ModelDataGPU *md, ModelDataVariable *dmdv) {
   if (dmdv->cv_eta < THRESH) {
     dmdv->cv_eta = 1.;
     //Never enters (ensures it works anyway
-#ifdef DEV_HPRIME2
-    dmdv->cv_hprime2 = dmdv->cv_h;
-    dmdv->cv_hprime3 = dmdv->cv_h;
-    printf("dmdv->cv_eta < THRESH\n");
-#endif
     dmdv->cv_hprime = dmdv->cv_h;
   } else {
     // Limit eta by etamax and hmax, then set hprime
@@ -3966,10 +3938,6 @@ void cudaDevicecvSetEta(ModelDataGPU *md, ModelDataVariable *dmdv) {
     dmdv->cv_eta /= SUNMAX(ONE,
             fabs(dmdv->cv_h)*dmdv->cv_hmax_inv*dmdv->cv_eta);
     __syncthreads();
-#ifdef DEV_HPRIME2
-    dmdv->cv_hprime2 = dmdv->cv_h * dmdv->cv_eta;
-    dmdv->cv_hprime3 = dmdv->cv_h * dmdv->cv_eta;
-#endif
     dmdv->cv_hprime = dmdv->cv_h * dmdv->cv_eta;
     //printf("dmdv->cv_eta NOT < THRESH %le dmdv->cv_hprime block %d\n", dmdv->cv_hprime, blockIdx.x);
 
@@ -3993,12 +3961,6 @@ int cudaDevicecvPrepareNextStep(ModelDataGPU *md, ModelDataVariable *dmdv, doubl
   if (dmdv->cv_etamax == 1.) {
     dmdv->cv_qwait = SUNMAX(dmdv->cv_qwait, 2);
     dmdv->cv_qprime = dmdv->cv_q;
-#ifdef DEV_HPRIME2
-    //dmdv->cv_hprime2 = dmdv->cv_h;
-    //dmdv->cv_hprime3 = dmdv->cv_h;
-    dmdv->cv_hprime2 = dmdv->cv_etamax;
-    dmdv->cv_hprime3 = dmdv->cv_etamax;
-#endif
     dmdv->cv_hprime = dmdv->cv_h;
     dmdv->cv_eta = 1.;
     return 0;
@@ -4364,71 +4326,19 @@ int cudaDevicecvStep(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
   __syncthreads();
 
-#ifdef DEV_CUDACVODE
-
-  //Fails when updating hprime in mdv2, but using hprime here instead of hprime2 works fine, why?
-  //if ((dmdv->cv_nst > 0) && (dmdv->cv_hprime2 != dmdv->cv_h)){
-
-    //fine when not updating dmdvhprime2
-    //cudaDevicecvAdjustParams(md, dmdv);
-
-    //These lines fails when updating hprime2 (makes hprime2=0)
-    //dmdv->cv_h = dmdv->cv_hscale * dmdv->cv_eta;
-    //dmdv->cv_next_h = dmdv->cv_hscale * dmdv->cv_eta;
-    //dmdv->cv_hscale = dmdv->cv_hscale * dmdv->cv_eta;
-
-    //if(threadIdx.x==0)printf("cudaDevicecvAdjustParams dmdv->cv_hprime2 %le block %d\n",dmdv->cv_hprime2, blockIdx.x);
-
-  //} //else{
-  //if(threadIdx.x==0)printf("NOT cudaDevicecvAdjustParams dmdv->cv_hprime2 %le block %d\n",dmdv->cv_hprime2, blockIdx.x);
-  //}
-
   if ((dmdv->cv_nst > 0) && (dmdv->cv_hprime != dmdv->cv_h)){
     cudaDevicecvAdjustParams(md, dmdv);
-    dmdv->cv_h = dmdv->cv_hscale * dmdv->cv_eta;
-    dmdv->cv_next_h = dmdv->cv_hscale * dmdv->cv_eta;
-    dmdv->cv_hscale = dmdv->cv_hscale * dmdv->cv_eta;
   }
-  __syncthreads();
-
-  if(threadIdx.x==0)
-    if(dmdv->cv_hprime2!=dmdv->cv_hprime3)
-      printf("cudaDevicecvAdjustParams ERROR HPRIME2=!=HPRIME3 %le %le block %d\n",dmdv->cv_hprime2,dmdv->cv_hprime3,blockIdx.x);
-
-  //if(threadIdx.x==0)
-  //  printf("cudaDevicecvAdjustParams dmdv->cv_hprime2 %le block %d\n",dmdv->cv_hprime,blockIdx.x);
-
-
-#else
-
-  if ((dmdv->cv_nst > 0) && (dmdv->cv_hprime != dmdv->cv_h)){
-    cudaDevicecvAdjustParams(md, dmdv);
-
-#ifdef DEV_CUDACVODE
-    dmdv->cv_h = dmdv->cv_hscale * dmdv->cv_eta;
-    dmdv->cv_next_h = dmdv->cv_hscale * dmdv->cv_eta;
-    dmdv->cv_hscale = dmdv->cv_hscale * dmdv->cv_eta;
-#endif
-
-  }
-
-#endif
-
-#ifdef DEV_CUDACVODE
-  __syncthreads();
-  dmdv->cv_hprime2 = 1.;//not fine
-  dmdv->cv_hprime3 = 1.;
-  __syncthreads();
-#endif
 
 #ifdef DEBUG_cudaDevicecvStep
-  //int counter=0;
+  int counter=0;
 #endif
+
   __syncthreads();
 
   for (;;) {
 #ifdef DEBUG_cudaDevicecvStep
-    //counter++;//Printing cause slight error differences cause counter
+    counter++;//Printing cause slight error differences cause counter
 #endif
     __syncthreads();
 
@@ -4915,7 +4825,7 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
 #else
 
-  *dmdv = *mdv2; //fine
+  //*dmdv = *mdv2; //fine
 
 #endif
 
@@ -5156,7 +5066,7 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
 #else
 
-  *mdv2 = *dmdv; //fine, but why? what is left to copy? debug?
+  //*mdv2 = *dmdv; //fine, but why? what is left to copy? debug?
 
 #endif
 
@@ -5232,7 +5142,7 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
       return CV_SUCCESS;
     }
 
-    if (dmdv->cv_tstopset) {
+    if (dmdv->cv_tstopset) {//needed?
       double troundoff = FUZZ_FACTOR * dmdv->cv_uround * (fabs(dmdv->cv_tn) + fabs(dmdv->cv_h));
       if (fabs(dmdv->cv_tn - dmdv->cv_tstop) <= troundoff) {
         //(void) CVodeGetDky(dmdv, dmdv->cv_tstop, 0, md->yout);
@@ -5244,21 +5154,17 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
         __syncthreads();
         return CV_TSTOP_RETURN;
       }
-/*
-      //wrong?
       if ((dmdv->cv_tn + dmdv->cv_hprime - dmdv->cv_tstop) * dmdv->cv_h > 0.) {
         dmdv->cv_hprime = (dmdv->cv_tstop - dmdv->cv_tn) * (1.0 - 4.0 * dmdv->cv_uround);
-        //never enters
-        if(i==0) printf("dmdv->cv_tn + dmdv->cv_hprime - dmdv->cv_tstop istate %d\n",dmdv->istate);
+        if(i==0) printf("ERROR: dmdv->cv_tn + dmdv->cv_hprime - dmdv->cv_tstop istate %d\n",dmdv->istate);
         dmdv->cv_eta = dmdv->cv_hprime / dmdv->cv_h;
       }
-*/
 
     }
 
 #ifndef DEV_CUDACVODE
   }
-  //return CV_SUCCESS;//It doesnt matter, it should always return instead of break and never reach here
+  //return CV_SUCCESS;//needed?, it should always return instead of break and never reach here
 #else
   return dmdv->kflag2;
 #endif
