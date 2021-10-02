@@ -4686,7 +4686,7 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
   printmin(md,md->state,"cudaDeviceCVode start state");//fine
 #endif
 
-#ifndef DEV_CUDACVODE
+#ifdef DEV_CUDACVODE
 
   for(;;) {
 
@@ -4911,7 +4911,7 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
     }
 
-#ifndef DEV_CUDACVODE
+#ifdef DEV_CUDACVODE
   }
   //return CV_SUCCESS;//needed?, it should always return instead of break and never reach here
 #else
@@ -6051,7 +6051,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
 
   HANDLE_ERROR(cudaMemcpy(mGPU->state, md->total_state, md->state_size, cudaMemcpyHostToDevice));
 
-#ifndef DEV_CUDACVODE
+#ifdef DEV_CUDACVODE
 
 #else
   for(;;) {
@@ -6264,7 +6264,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
         break;
       }
     }
-#ifndef DEV_CUDACVODE
+#ifdef DEV_CUDACVODE
     istate=flag;
 #else
     kflag=flag;
@@ -6291,7 +6291,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
 
     //printf("cudaCVode flag %d kflag %d\n",flag, sd->mdv.flag);
 
-#ifndef DEV_CUDACVODE
+#ifdef DEV_CUDACVODE
 
     // In NORMAL mode, check if tout reached
     //if ( (cv_mem->cv_tn-tout)*cv_mem->cv_h >= ZERO ) {
@@ -6320,7 +6320,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
 
         cv_mem->cv_next_h = sd->mdv.cv_next_h;
 
-#ifndef DEV_CUDACVODE
+#ifdef DEV_CUDACVODE
 #else
         break;
 #endif
@@ -6332,7 +6332,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
         (void) CVodeGetDky(cv_mem, tout, 0, yout);
         cv_mem->cv_next_q = cv_mem->cv_qprime;
         cv_mem->cv_next_h = cv_mem->cv_hprime;
-#ifndef DEV_CUDACVODE
+#ifdef DEV_CUDACVODE
 #else
         break;
 #endif
@@ -6347,7 +6347,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
           cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "CVode",
                          MSGCV_EWT_NOW_BAD, cv_mem->cv_tn);
         //Remove break after removing for(;;) in cpu
-#ifndef DEV_CUDACVODE
+#ifdef DEV_CUDACVODE
 #else
         break;
 #endif
@@ -6360,7 +6360,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
         istate = CV_TOO_MUCH_WORK;
         //cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
         //N_VScale(ONE, cv_mem->cv_zn[0], yout);
-#ifndef DEV_CUDACVODE
+#ifdef DEV_CUDACVODE
 #else
         break;
 #endif
@@ -6376,7 +6376,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
         //cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
         //N_VScale(ONE, cv_mem->cv_zn[0], yout);
         //cv_mem->cv_tolsf *= TWO;
-#ifndef DEV_CUDACVODE
+#ifdef DEV_CUDACVODE
 #else
         break;
 #endif
@@ -6401,7 +6401,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
           //cv_mem->cv_tstopset = SUNFALSE;
           istate = CV_TSTOP_RETURN;
 
-#ifndef DEV_CUDACVODE
+#ifdef DEV_CUDACVODE
 #else
           break;
 #endif
@@ -6415,12 +6415,12 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
       }
 
 
-#ifndef DEV_CUDACVODE
+#ifdef DEV_CUDACVODE
     }
 
 #endif
 
-#ifndef DEV_CUDACVODE
+#ifdef DEV_CUDACVODE
 #else
 
   } /* end looping for internal steps */
