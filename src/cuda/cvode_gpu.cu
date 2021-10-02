@@ -1561,6 +1561,7 @@ int cudaDeviceJac(
 
   //todo duplicated call to check_model_state (previous f funct already checks model_state)
   //helps with debugging printing dftemp
+/*
   int checkflag=cudaDevicecamp_solver_check_model_state(md, dmdv, y, flag);
   __syncthreads();
   if(checkflag==CAMP_SOLVER_FAIL){
@@ -1569,6 +1570,7 @@ int cudaDeviceJac(
     //printmin(md,y,"cudaDeviceJac end y");//Never enters?
     return CAMP_SOLVER_FAIL;
   }
+*/
 
   //printmin(md,md->dzn0,"cudaDevicecamp_solver_check_model_state end dzn0");
 #ifdef DEV_printmin
