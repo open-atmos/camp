@@ -134,7 +134,6 @@ def run_cell(config_file,diff_cells,mpi,mpiProcessesList,n_cells_aux,timesteps,
                  results_file,plot_y_key,y_key)
 
 
-
   #if("(Comp.timeLS/counterBCG)" in plot_y_key):
   #  data=plot_functions.calculate_computational_timeLS( \
   #    data,"timeBiconjGradMemcpy")
@@ -169,7 +168,6 @@ def run_cell(config_file,diff_cells,mpi,mpiProcessesList,n_cells_aux,timesteps,
     file = 'out/'+config_file+'_'+case_gpu_cpu+"_results_all_cells.csv"
     plot_functions.read_solver_stats(file, data_aux)
     dataMAPE[case_gpu_cpu]=data_aux
-
 
     case_gpu_cpu="Multi-cells"
     data_aux={}
@@ -221,9 +219,9 @@ def all_timesteps():
   mpiProcessesList = [1]
   #mpiProcessesList = [40,1]
 
-  #cells = [100]
+  cells = [100]
   #cells = [2,100]
-  cells = [100,1000,5000,10000]
+  #cells = [100,1000,5000,10000]
   #cells = [1,10,100,1000,10000,100000]
 
   timesteps = 1#720=12h
@@ -254,12 +252,12 @@ def all_timesteps():
   #plot_y_key = "Speedup normalized counterBCG"
   #plot_y_key = "Speedup BCG iteration (Comp.timeLS/counterBCG)"
   #plot_y_key = "Percentages solveCVODEGPU" #Uncomment function
-  plot_y_key = "Speedup timecvStep"
+  #plot_y_key = "Speedup timecvStep"
   #plot_y_key = "Speedup normalized timecvStep"#not needed, is always normalized
 
   #plot_y_key = "% Time data transfers CPU-GPU BCG"
   #plot_y_key="NRMSE"
-  #plot_y_key="MAPE"
+  plot_y_key="MAPE"
   #plot_y_key="SMAPE"
 
   SAVE_PLOT=False
