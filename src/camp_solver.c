@@ -1108,7 +1108,6 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
 
 #ifdef PMC_USE_GPU
     itsolver *bicg = &(sd->bicg);
-    ModelDataVariable *mdv = &sd->mdv;
 
     solver_get_statistics_gpu(sd);
     int i;
@@ -1117,7 +1116,7 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
 
     if(sd->ncounters>0){
       i=0;
-      counters[i++]=mdv->counterBCGInternal;
+      counters[i++]=sd->mdv.counterBCGInternal;
       counters[i++]=bicg->counterBiConjGrad;
       counters[i++]=bicg->countersolveCVODEGPU;
       counters[i++]=bicg->countercvStep;
@@ -1128,8 +1127,8 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
       times[i++]=bicg->timeBiConjGrad/1000;
       times[i++]=bicg->timeBiConjGradMemcpy/1000;
       times[i++]=sd->timeCVode;
-      times[i++]=mdv->dtPreBCG;
-      times[i++]=mdv->dtPostBCG;
+      times[i++]=sd->mdv.dtPreBCG;
+      times[i++]=sd->mdv.dtPostBCG;
       times[i++]=bicg->timesolveCVODEGPU/1000;
       times[i++]=sd->timeNewtonIteration;
       times[i++]=sd->timeJac;

@@ -1893,7 +1893,6 @@ void alloc_solver_gpu2(CVodeMem cv_mem, SolverData *sd)
   itsolver *bicg = &(sd->bicg);
   ModelData *md = &(sd->model_data);
   ModelDataGPU *mGPU = &sd->mGPU;
-  ModelDataVariable *mdv = &sd->mdv;
   CVDlsMem cvdls_mem = (CVDlsMem) cv_mem->cv_lmem;
   SUNMatrix J = cvdls_mem->A;
   int device=0;//Selected GPU
@@ -2001,10 +2000,10 @@ void alloc_solver_gpu2(CVodeMem cv_mem, SolverData *sd)
   createSolver(sd);
 
   sd->mdv.cv_reltol=((CVodeMem) sd->cvode_mem)->cv_reltol;
-  mdv->cv_nfe=0;
-  mdv->cv_nsetups=0;
-  mdv->nje=0;
-  mdv->nstlj=0;
+  sd->mdv.cv_nfe=0;
+  sd->mdv.cv_nsetups=0;
+  sd->mdv.nje=0;
+  sd->mdv.nstlj=0;
 
   //Check if everything is correct
 #ifdef FAILURE_DETAIL
@@ -2015,12 +2014,12 @@ void alloc_solver_gpu2(CVodeMem cv_mem, SolverData *sd)
 
 #ifdef PMC_DEBUG_GPU
 
-  mdv->countercvstep=0;
-  mdv->counterBCGInternal=0;
-  mdv->counterDerivGPU=0;
-  mdv->dtBCG=0.;
-  mdv->dtPreBCG=0.;
-  mdv->dtPostBCG=0.;
+  sd->mdv.countercvstep=0;
+  sd->mdv.counterBCGInternal=0;
+  sd->mdv.counterDerivGPU=0;
+  sd->mdv.dtBCG=0.;
+  sd->mdv.dtPreBCG=0.;
+  sd->mdv.dtPostBCG=0.;
 
   bicg->counterNewtonIt=0;
   bicg->counterLinSolSetup=0;
@@ -2036,9 +2035,9 @@ void alloc_solver_gpu2(CVodeMem cv_mem, SolverData *sd)
   int lendt=blocks;
 
 #else
-  mdv->dtBCG=0.;
-  mdv->dtPreBCG=0.;
-  mdv->dtPostBCG=0.;
+  sd->mdv.dtBCG=0.;
+  sd->mdv.dtPreBCG=0.;
+  sd->mdv.dtPostBCG=0.;
   int lendt=1;
 
 #endif
@@ -2098,7 +2097,7 @@ void alloc_solver_gpu2(CVodeMem cv_mem, SolverData *sd)
 
 #endif
 
-  cudaMemcpy(mGPU->mdv,mdv,sizeof(ModelDataVariable),cudaMemcpyHostToDevice);
+  cudaMemcpy(mGPU->mdv,&sd->mdv,sizeof(ModelDataVariable),cudaMemcpyHostToDevice);
 
   if(cv_mem->cv_sldeton){
     printf("ERROR: cudaDevicecvBDFStab is pending to implement "
@@ -3962,18 +3961,18 @@ void cudaGlobalCVode(ModelDataGPU md_object) {
   ModelDataVariable dmdv_object = *md_object.mdv;
   ModelDataVariable *dmdv = &dmdv_object;
 
-  int istate2;
+  int istate;
 
   __syncthreads();
 
   if(i<active_threads){
 
     __syncthreads();
-    istate2=cudaDeviceCVode(md,dmdv); //rename dmdv->mdv , mdv->mdvi
+    istate=cudaDeviceCVode(md,dmdv); //rename dmdv->mdv , mdv->mdvi
 
   }
   __syncthreads();
-  dmdv->istate=istate2;
+  dmdv->istate=istate;
   __syncthreads();
 
   if(tid==0)md->flagCells[blockIdx.x]=dmdv->istate;
@@ -8300,7 +8299,6 @@ void printSolverCounters_gpu2(SolverData *sd)
 
 #ifdef PMC_DEBUG_GPU
 
-  ModelDataVariable *mdv = &sd->mdv;
   itsolver *bicg = &(sd->bicg);
 
   solver_get_statistics_gpu(sd);
@@ -8320,8 +8318,8 @@ void printSolverCounters_gpu2(SolverData *sd)
   printf("timeBiConjGrad %lf, timeBiConjGradMemcpy %lf, counterBiConjGrad %d, counterBCGInternal %d "
          "avgCounterBiConjGrad %lf, avgTimeBCGIter %lf %%timeBiConjGradMemcpy %lf%%\n",
           bicg->timeBiConjGrad/1000,
-          bicg->timeBiConjGradMemcpy/1000, bicg->counterBiConjGrad,mdv->counterBCGInternal,
-          mdv->counterBCGInternal/(double)bicg->counterBiConjGrad,
+          bicg->timeBiConjGradMemcpy/1000, bicg->counterBiConjGrad,sd->mdv.counterBCGInternal,
+          sd->mdv.counterBCGInternal/(double)bicg->counterBiConjGrad,
           (bicg->timeBiConjGrad/1000)/(double)bicg->counterBiConjGrad,
           bicg->timeBiConjGradMemcpy/bicg->timeBiConjGrad*100);
 #ifdef cudaGlobalCVode_timers_max_blocks
@@ -8335,13 +8333,13 @@ void printSolverCounters_gpu2(SolverData *sd)
       dtPostBCG[0]=dtPostBCG[i];
   }
 
-  printf("dtPreBCG %lf dtBCG %lf dtPostBCG %lf\n",mdv->dtPreBCG[0],
-          mdv->dtBCG[0],mdv->dtPostBCG[0]);//todo mdvo
+  printf("dtPreBCG %lf dtBCG %lf dtPostBCG %lf\n",sd->mdv.dtPreBCG[0],
+          sd->mdv.dtBCG[0],sd->mdv.dtPostBCG[0]);
 
 #else
 
-  printf("dtPreBCG %lf dtBCG %lf dtPostBCG %lf\n",mdv->dtPreBCG,
-          mdv->dtBCG,mdv->dtPostBCG);
+  printf("dtPreBCG %lf dtBCG %lf dtPostBCG %lf\n",sd->mdv.dtPreBCG,
+          sd->mdv.dtBCG,sd->mdv.dtPostBCG);
 
 #endif
 
