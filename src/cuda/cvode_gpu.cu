@@ -472,7 +472,6 @@ int cudaDevicecamp_solver_check_model_state(ModelDataGPU *md, ModelDataVariable 
 
   //printmin(md,y,"cudaDevicecamp_solver_check_model_state end y");
   //printmin(md,md->state,"cudaDevicecamp_solver_check_model_state end state");
-  //printmin(md,md->dzn0,"cudaDevicecamp_solver_check_model_state end dzn0");
 
 #ifdef DEBUG_cudaDevicecamp_solver_check_model_state
   __syncthreads();if(i==0)printf("flag %d flag_shr %d\n",*flag,flag_shr2[0]);
@@ -1482,7 +1481,6 @@ int cudaDeviceJac(
   }
 */
 
-  //printmin(md,md->dzn0,"cudaDevicecamp_solver_check_model_state end dzn0");
 #ifdef DEV_printmin
   printmin(md,y,"cudaDeviceJac end y");
 #endif
@@ -1954,7 +1952,6 @@ void alloc_solver_gpu2(CVodeMem cv_mem, SolverData *sd)
   cudaMalloc((void**)&mGPU->dtempv,mGPU->nrows*sizeof(double));
   cudaMalloc((void**)&mGPU->dtempv1,mGPU->nrows*sizeof(double));
   cudaMalloc((void**)&mGPU->dtempv2,mGPU->nrows*sizeof(double));
-  //todo check dzn instead of dzn0
   cudaMalloc((void**)&mGPU->dzn,mGPU->nrows*(cv_mem->cv_qmax+1)*sizeof(double));//L_MAX 6
   cudaMalloc((void**)&mGPU->dcv_y,mGPU->nrows*sizeof(double));
   cudaMalloc((void**)&mGPU->dx,mGPU->nrows*sizeof(double));
@@ -1968,14 +1965,6 @@ void alloc_solver_gpu2(CVodeMem cv_mem, SolverData *sd)
   cudaMalloc((void**)&mGPU->cv_tau,(L_MAX+1)*mGPU->n_cells*sizeof(double));
   cudaMalloc((void**)&mGPU->cv_tq,(NUM_TESTS+1)*mGPU->n_cells*sizeof(double));
   cudaMalloc((void**)&mGPU->cv_Vabstol,mGPU->nrows*sizeof(double));
-
-  cudaMalloc((void**)&mGPU->dzn0,mGPU->nrows*sizeof(double));
-  cudaMalloc((void**)&mGPU->dzn1,mGPU->nrows*sizeof(double));
-  cudaMalloc((void**)&mGPU->dzn2,mGPU->nrows*sizeof(double));
-  cudaMalloc((void**)&mGPU->dzn3,mGPU->nrows*sizeof(double));
-  cudaMalloc((void**)&mGPU->dzn4,mGPU->nrows*sizeof(double));
-  cudaMalloc((void**)&mGPU->dzn5,mGPU->nrows*sizeof(double));
-
 
   HANDLE_ERROR(cudaMemset(mGPU->flagCells, CV_SUCCESS, mGPU->n_cells*sizeof(int)));
   cudaMemcpy(mGPU->djA,bicg->jA,mGPU->nnz*sizeof(int),cudaMemcpyHostToDevice);
@@ -3039,20 +3028,10 @@ void cudaDevicecvPredict(ModelDataGPU *md, ModelDataVariable *dmdv) {
   //N_VScale(ONE, cv_mem->cv_zn[0], cv_mem->cv_last_yn);
   md->cv_last_yn[i]=md->dzn[i];
 
-#ifdef DEBUG_cudaDevicecvPredict
-  int counter=0;
-#endif
-
   for (k = 1; k <= dmdv->cv_q; k++){
     __syncthreads();
     for (j = dmdv->cv_q; j >= k; j--){
       __syncthreads();
-#ifdef DEBUG_cudaDevicecvPredict
-      counter++;
-      __syncthreads();
-      if(i==0)printf("cudaDevicecvPredict dzn[(blockDim.x*(blockIdx.x+1)-1)*0] %le counter %d block %d\n",md->dzn0[(blockDim.x*(blockIdx.x+1)-1)*0],counter,blockIdx.x);
-#endif
-
       //N_VLinearSum(ONE, cv_mem->cv_zn[j-1], ONE,
       //             cv_mem->cv_zn[j], cv_mem->cv_zn[j-1]);
       cudaDevicezaxpby(1., &md->dzn[md->nrows*(j-1)], 1.,
@@ -3555,47 +3534,14 @@ int cudaDevicecvStep(ModelDataGPU *md, ModelDataVariable *dmdv) {
     cudaDevicecvAdjustParams(md, dmdv);
   }
 
-#ifdef DEBUG_cudaDevicecvStep
-  int counter=0;
-#endif
-
   __syncthreads();
 
   for (;;) {
-#ifdef DEBUG_cudaDevicecvStep
-    counter++;//Printing cause slight error differences cause counter
-#endif
     __syncthreads();
-
-#ifdef DEBUG_cudaDevicecvStep
-    //printing the same array two times produce diff error
-    //if(i==0)printf("cudaDevicecvStepPredict dzn[(blockDim.x*(blockIdx.x+1)-1)*0] %le counter %d block %d\n",md->dzn0[(blockDim.x*(blockIdx.x+1)-1)*0],counter,blockIdx.x);
-    //if(i==0)printf("cudaDevicecvStepPredict dzn[(blockDim.x*(blockIdx.x+1)-1)*0] %le block %d\n",md->dzn0[(blockDim.x*(blockIdx.x+1)-1)*0],blockIdx.x);
-    if(i==0)printf("cudaDevicecvStepPredict dzn[(blockDim.x*(blockIdx.x+1)-1)*0] %le block %d\n",md->dftemp[(blockDim.x*(blockIdx.x+1)-1)*0],blockIdx.x);
-#endif
-
-    __syncthreads();
-
     cudaDevicecvPredict(md, dmdv);
-
-#ifdef DEBUG_cudaDevicecvStep
-    //Printing cause slight error differences
-    //if(i==0)printf("cudaDevicecvSet dzn[(blockDim.x*(blockIdx.x+1)-1)*0] %le counter %d block %d\n",md->dzn0[(blockDim.x*(blockIdx.x+1)-1)*0],counter,blockIdx.x);
-    //if(i==0)printf("cudaDevicecvSet dzn[(blockDim.x*(blockIdx.x+1)-1)*0] %le block %d\n",md->dzn0[(blockDim.x*(blockIdx.x+1)-1)*0],blockIdx.x);
-    if(i==0)printf("cudaDevicecvStepPredict dzn[(blockDim.x*(blockIdx.x+1)-1)*0] %le block %d\n",md->dftemp[(blockDim.x*(blockIdx.x+1)-1)*0],blockIdx.x);
-    __syncthreads();
-#endif
-
     __syncthreads();
     cudaDevicecvSet(md, dmdv);
     __syncthreads();
-#ifdef DEBUG_cudaDevicecvStep
-    //Printing cause slight error differences
-    //if(i==0)printf("cudaDevicecvNlsNewton dzn[(blockDim.x*(blockIdx.x+1)-1)*0] %le counter %d block %d\n",md->dzn0[(blockDim.x*(blockIdx.x+1)-1)*0],counter,blockIdx.x);
-    //if(i==0)printf("cudaDevicecvNlsNewton dzn[(blockDim.x*(blockIdx.x+1)-1)*0] %le block %d\n",md->dzn0[(blockDim.x*(blockIdx.x+1)-1)*0],blockIdx.x);
-    if(i==0)printf("cudaDevicecvStepPredict dzn[(blockDim.x*(blockIdx.x+1)-1)*0] %le block %d\n",md->dftemp[(blockDim.x*(blockIdx.x+1)-1)*0],blockIdx.x);
-
-#endif
 
     nflag = cudaDevicecvNlsNewton(
             md->dA, md->djA, md->diA, md->dx, md->dtempv, //Input data

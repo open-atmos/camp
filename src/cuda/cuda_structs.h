@@ -345,12 +345,6 @@ typedef struct {
     //cudacvNewtonIteration
     double* cv_acor;
     double* dzn;
-    double* dzn0;
-    double* dzn1;
-    double* dzn2;
-    double* dzn3;
-    double* dzn4;
-    double* dzn5;
     double* dewt;
 
     //Auxiliar variables
