@@ -113,10 +113,8 @@ typedef struct {
 
 typedef struct {
 
-    //int *djA; //seems works fine using device ptr
-
     int flag;
-    int nflag;//auxiliar flag (maybe delete after completing cudacvstep to device)
+    int nflag;
     int kflag;
     int kflag2;
     int eflag;
@@ -127,7 +125,7 @@ typedef struct {
     int i_aero_rep;
 
     double init_time_step;
-    int cv_mxstep; //long
+    int cv_mxstep;
     int cv_next_q;
     double tout;
     int cv_taskc;
@@ -287,7 +285,6 @@ typedef struct {
     double *cv_tq;//NUM_TESTS+1
 
     //CVODE variables only GPU
-    //double ;
     double *cv_last_yn;
     double *cv_acor_init;
 
@@ -321,7 +318,6 @@ typedef struct {
     int*    diB;
 
     //Guess_helper
-    //double t_n;
     double* dftemp;
     double* dcv_y;
     double* dtempv1;
@@ -334,7 +330,6 @@ typedef struct {
     int *flagCells;
 
     //f_gpu
-    //double time_step;//remove
     int deriv_length_cell;
     int state_size_cell;
     int i_kernel;
