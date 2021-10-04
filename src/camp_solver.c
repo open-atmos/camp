@@ -1119,11 +1119,10 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
       counters[i++]=sd->mdv.counterBCGInternal;
       counters[i++]=bicg->counterBiConjGrad;
       counters[i++]=bicg->countersolveCVODEGPU;
-      counters[i++]=bicg->countercvStep;
+      counters[i++]=sd->mdv.countercvStep;
     }
     if(sd->ntimers>0){
       i=0;
-
       times[i++]=bicg->timeBiConjGrad/1000;
       times[i++]=bicg->timeBiConjGradMemcpy/1000;
       times[i++]=sd->timeCVode;

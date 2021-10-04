@@ -150,10 +150,10 @@ def normalize_by_countercvStep_and_cells(data,plot_y_key,cells,case):
   #print(data[cases[0]][plot_y_key])
 
   if("One-cell" in case):
-    #print("One-cell")
+    print("One-cell")
     cells_multiply=cells
   elif("Multi-cells" in case):
-    #print("Multi-cells")
+    print("Multi-cells")
     cells_multiply=1
   else:
     raise Exception("normalize_by_counterLS_and_cells case without One-cell or Multi-cells key name")

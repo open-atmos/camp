@@ -221,9 +221,9 @@ def all_timesteps():
   mpiProcessesList = [1]
   #mpiProcessesList = [40,1]
 
-  cells = [10000]
+  #cells = [100]
   #cells = [2,100]
-  #cells = [100,1000,5000,10000]
+  cells = [100,1000,5000,10000]
   #cells = [1,10,100,1000,10000,100000]
 
   timesteps = 1#720=12h
@@ -254,12 +254,12 @@ def all_timesteps():
   #plot_y_key = "Speedup normalized counterBCG"
   #plot_y_key = "Speedup BCG iteration (Comp.timeLS/counterBCG)"
   #plot_y_key = "Percentages solveCVODEGPU" #Uncomment function
-  #plot_y_key = "Speedup timecvStep"
-  #plot_y_key = "Speedup normalized timecvStep"
+  plot_y_key = "Speedup timecvStep"
+  #plot_y_key = "Speedup normalized timecvStep"#not needed, is always normalized
 
   #plot_y_key = "% Time data transfers CPU-GPU BCG"
   #plot_y_key="NRMSE"
-  plot_y_key="MAPE"
+  #plot_y_key="MAPE"
   #plot_y_key="SMAPE"
 
   SAVE_PLOT=False
@@ -350,6 +350,10 @@ def all_timesteps():
 
   #if "Speedup" in plot_y_key and "counterLS" in plot_y_key:
 
+  #todo automatic plot title
+  plot_title="GPU Block-cells (1) vs CPU Multi-cells Realistic test"
+  #plot_title="1 GPU Block-cells (1) vs 40 MPI processes Multi-cells Realistic test"
+
   namey=plot_y_key #default name
   if plot_y_key=="Speedup counterLS":
     namey="Ratio of calls reduced"
@@ -375,7 +379,7 @@ def all_timesteps():
   #print("Cells:",cells,"Timesteps:",timesteps)
   print(namey,":",datay)
 
-  #plot_functions.plot(namex,namey,datax,datay,plot_title,SAVE_PLOT)
+  plot_functions.plot(namex,namey,datax,datay,plot_title,SAVE_PLOT)
 
 
 #print(datetime.__file__)

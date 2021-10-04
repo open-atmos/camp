@@ -198,14 +198,14 @@ typedef struct {
     int cv_ncfn;
 
 #ifdef PMC_DEBUG_GPU
-    int countercvstep;
+    int countercvStep;
     int counterDerivGPU;
     int counterBCGInternal;
     double dtBCG;
     double dtPreBCG;
     double dtPostBCG;
 #endif
-}ModelDataVariable; //things to pass between gpu and cpu
+}ModelDataVariable; //variables to pass between gpu and cpu
 
 typedef struct {
     //double *deriv_data_gpu;
