@@ -137,7 +137,6 @@ typedef struct {
     double tret;
     double cv_tretlast;
     int istate;
-    int cv_sldeton;
     double cv_hmax_inv;
     int cv_lmm;                /* lmm = CV_ADAMS or CV_BDF                      */
     int cv_iter;               /* iter = CV_FUNCTIONAL or CV_NEWTON             */
@@ -332,7 +331,6 @@ typedef struct {
     double threshhold;
     double replacement_value;
     int *flag;
-    int *flag2;
     int *flagCells;
 
     //f_gpu

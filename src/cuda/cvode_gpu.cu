@@ -1936,7 +1936,6 @@ void alloc_solver_gpu2(CVodeMem cv_mem, SolverData *sd)
   cudaMalloc((void**)&mGPU->mdv,sizeof(ModelDataVariable));
   cudaMalloc((void**)&mGPU->mdvo,sizeof(ModelDataVariable));
   cudaMalloc((void**)&mGPU->flag,1*sizeof(int));
-  cudaMalloc((void**)&mGPU->flag2,1*sizeof(int));
 
   cudaMalloc((void**)&mGPU->flagCells,mGPU->n_cells*sizeof(int));
   cudaMalloc((void**)&mGPU->djA,mGPU->nnz*sizeof(int));
@@ -1956,8 +1955,6 @@ void alloc_solver_gpu2(CVodeMem cv_mem, SolverData *sd)
   cudaMalloc((void**)&mGPU->dcv_y,mGPU->nrows*sizeof(double));
   cudaMalloc((void**)&mGPU->dx,mGPU->nrows*sizeof(double));
   cudaMalloc((void**)&mGPU->cv_last_yn,mGPU->nrows*sizeof(double));
-  //cudaMalloc((void**)&mGPU->cv_acor_init,mGPU->nrows*sizeof(double));
-  //cudaMalloc((void**)&mGPU->cv_acor,mGPU->nrows*sizeof(double));
   cudaMalloc((void**)&mGPU->cv_acor_init,mGPU->nrows*sizeof(double));
   cudaMalloc((void**)&mGPU->cv_acor,mGPU->nrows*sizeof(double));
   cudaMalloc((void**)&mGPU->yout,mGPU->nrows*sizeof(double));
@@ -1988,8 +1985,6 @@ void alloc_solver_gpu2(CVodeMem cv_mem, SolverData *sd)
   mGPU->blocks=(mGPU->nrows+mGPU->threads-1)/mGPU->threads;
   mGPU->replacement_value=TINY;
   mGPU->threshhold=-SMALL;
-
-
   mGPU->deriv_length_cell=mGPU->nrows/mGPU->n_cells;
   mGPU->state_size_cell=md->n_per_cell_state_var;
 
@@ -1997,10 +1992,7 @@ void alloc_solver_gpu2(CVodeMem cv_mem, SolverData *sd)
 
   //ODE aux variables
 
-
   cudaMemcpy(mGPU->flag,&flag,1*sizeof(int),cudaMemcpyHostToDevice);
-  cudaMemcpy(mGPU->flag2,&flag,1*sizeof(int),cudaMemcpyHostToDevice);
-
 
   // Allocating matrix data to the GPU
   mGPU->dA=mGPU->J;
@@ -2013,7 +2005,6 @@ void alloc_solver_gpu2(CVodeMem cv_mem, SolverData *sd)
   mdv->cv_nsetups=0;
   mdv->nje=0;
   mdv->nstlj=0;
-
 
   //Check if everything is correct
 #ifdef FAILURE_DETAIL
@@ -2108,6 +2099,12 @@ void alloc_solver_gpu2(CVodeMem cv_mem, SolverData *sd)
 #endif
 
   cudaMemcpy(mGPU->mdv,mdv,sizeof(ModelDataVariable),cudaMemcpyHostToDevice);
+
+  if(cv_mem->cv_sldeton){
+    printf("ERROR: cudaDevicecvBDFStab is pending to implement "
+                   "(disabled by default on CAMP)\n");
+    exit(0);
+  }
 
 #ifdef CHECK_GPU_LINSOLVE
   sd->max_error_linsolver = 0.0;
@@ -3632,22 +3629,12 @@ int cudaDevicecvStep(ModelDataGPU *md, ModelDataVariable *dmdv) {
   // If Stablilty Limit Detection is turned on, call stability limit
   // detection routine for possible order reduction.
 
-  //todo move to init
- /*
-  if(dmdv->cv_sldeton){
-
-    if(i==0)printf("ERROR: cudaDevicecvBDFStab is pending to implement "
-                   "(disabled by default on CAMP; tested in mock-monarch gas-CB05 configuration)\n");
-    return(CV_SUCCESS);
-  }
-*/
  //  dmdv->cv_etamax = (dmdv->cv_nst <= SMALL_NST) ? ETAMX2 : ETAMX3;
   //dmdv->cv_etamax = (dmdv->cv_nst <= 10) ? 10. : 10.;
   dmdv->cv_etamax=10.;
 
-  //if(i==0)printf("DEV_cudaDevicecvStep dmdv->cv_etamax %le dmdv->cv_nst %d\n",
+  //if(i==0)printf("DEV_cudaDevicecvStep dmdv->cv._etamax %le dmdv->cv_nst %d\n",
   //               dmdv->cv_etamax,dmdv->cv_nst);
-
 
   //  Finally, we rescale the acor array to be the
   //  estimated local error vector.
@@ -4911,32 +4898,6 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
   nstloc = 0;
   int flag;
 
-
-  //CVDlsMem cvdls_mem = (CVDlsMem) cv_mem->cv_lmem;
-  //SUNMatrix J = cvdls_mem->A;
-  /*
-  bicg->A=(double*)SM_DATA_S(J);
-  for(int i=0;i<SM_NNZ_S(J);i++)
-    bicg->jA[i]=SM_INDEXVALS_S(J)[i];
-  for(int i=0;i<=SM_NP_S(J);i++)
-    bicg->iA[i]=SM_INDEXPTRS_S(J)[i];
-*/
-
-  /*
-
-  cudaMemcpy(mGPU->dB,bicg->A,mGPU->nnz*sizeof(double),cudaMemcpyHostToDevice);
-  cudaMemcpy(mGPU->djB,bicg->jA,mGPU->nnz*sizeof(int),cudaMemcpyHostToDevice);
-  cudaMemcpy(mGPU->diB,bicg->iA,(mGPU->nrows+1)*sizeof(int),cudaMemcpyHostToDevice);
-  cudaMemcpy(mGPU->djA,bicg->jA,mGPU->nnz*sizeof(int),cudaMemcpyHostToDevice);
-  cudaMemcpy(mGPU->diA,bicg->iA,(mGPU->nrows+1)*sizeof(int),cudaMemcpyHostToDevice);
-  cudaMemcpy(mGPU->dsavedJ,bicg->A,mGPU->nnz*sizeof(double),cudaMemcpyHostToDevice);
-  cudaMemcpy(mGPU->djsavedJ,bicg->jA,mGPU->nnz*sizeof(int),cudaMemcpyHostToDevice);
-  cudaMemcpy(mGPU->disavedJ,bicg->iA,(mGPU->nrows+1)*sizeof(int),cudaMemcpyHostToDevice);
-
-*/
-
-
-
   double *ewt = NV_DATA_S(cv_mem->cv_ewt);
   double *acor = NV_DATA_S(cv_mem->cv_acor);
   double *tempv = NV_DATA_S(cv_mem->cv_tempv);
@@ -4967,80 +4928,10 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
 
   }
 
-  sd->mdv.init_time_step = sd->init_time_step;
-  sd->mdv.cv_mxstep = cv_mem->cv_mxstep;
-  //sd->mdv.cv_next_q = cv_mem->cv_next_q;
-  sd->mdv.cv_taskc = cv_mem->cv_taskc;
-  sd->mdv.cv_uround = cv_mem->cv_uround;
-  sd->mdv.cv_nrtfn = cv_mem->cv_nrtfn;
-  sd->mdv.cv_tretlast = cv_mem->cv_tretlast;
-  sd->mdv.cv_sldeton = cv_mem->cv_sldeton;
-  sd->mdv.cv_hmax_inv = cv_mem->cv_hmax_inv;
-  sd->mdv.cv_lmm = cv_mem->cv_lmm;
-  sd->mdv.cv_iter = cv_mem->cv_iter;
-  sd->mdv.cv_itol = cv_mem->cv_itol;
-  sd->mdv.cv_reltol = cv_mem->cv_reltol;
-  sd->mdv.cv_nhnil = cv_mem->cv_nhnil;
-  sd->mdv.cv_etaqm1 = cv_mem->cv_etaqm1;
-  sd->mdv.cv_etaq = cv_mem->cv_etaq;
-  sd->mdv.cv_etaqp1 = cv_mem->cv_etaqp1;
-  sd->mdv.cv_lrw1 = cv_mem->cv_lrw1;
-  sd->mdv.cv_liw1 = cv_mem->cv_liw1;
-  sd->mdv.cv_lrw = (int) cv_mem->cv_lrw;
-  sd->mdv.cv_liw = (int) cv_mem->cv_liw;
-  sd->mdv.cv_saved_tq5 = cv_mem->cv_saved_tq5;
-  sd->mdv.cv_tolsf = cv_mem->cv_tolsf;
-  sd->mdv.cv_qmax_alloc = cv_mem->cv_qmax_alloc;
-  sd->mdv.cv_indx_acor = cv_mem->cv_indx_acor;
-  sd->mdv.cv_qu = cv_mem->cv_qu;
-  sd->mdv.cv_h0u = cv_mem->cv_h0u;
-  sd->mdv.cv_hu = cv_mem->cv_hu;
-  sd->mdv.cv_jcur = cv_mem->cv_jcur;
-  sd->mdv.cv_mnewt = cv_mem->cv_mnewt;
-  sd->mdv.cv_maxcor = cv_mem->cv_maxcor;
-  sd->mdv.cv_nstlp = (int) cv_mem->cv_nstlp;
-  sd->mdv.cv_qmax = cv_mem->cv_qmax;
-  sd->mdv.cv_L = cv_mem->cv_L;
-  sd->mdv.cv_maxnef = cv_mem->cv_maxnef;
-  sd->mdv.cv_netf = (int) cv_mem->cv_netf;
-  sd->mdv.cv_acnrm = cv_mem->cv_acnrm;
-  sd->mdv.cv_tstop = cv_mem->cv_tstop;
-  sd->mdv.cv_tstopset = cv_mem->cv_tstopset;
-  sd->mdv.cv_nlscoef = cv_mem->cv_nlscoef;
-  sd->mdv.cv_qwait = cv_mem->cv_qwait;
-  sd->mdv.cv_crate = cv_mem->cv_crate;
-  sd->mdv.cv_gamrat = cv_mem->cv_gamrat;
-  sd->mdv.cv_gammap = cv_mem->cv_gammap;
-  sd->mdv.cv_nst = cv_mem->cv_nst;
-  sd->mdv.cv_gamma = cv_mem->cv_gamma;
-  sd->mdv.cv_rl1 = cv_mem->cv_rl1;
-  sd->mdv.cv_eta = cv_mem->cv_eta;
-  sd->mdv.cv_q = cv_mem->cv_q;
-  sd->mdv.cv_qprime = cv_mem->cv_qprime;
-  sd->mdv.cv_h = cv_mem->cv_h;
-  sd->mdv.cv_next_h = cv_mem->cv_next_h;//needed?
-  sd->mdv.cv_hscale = cv_mem->cv_hscale;
-  sd->mdv.cv_nscon = cv_mem->cv_nscon;
-  sd->mdv.cv_hprime = cv_mem->cv_hprime;
-  sd->mdv.cv_hmin = cv_mem->cv_hmin;
-  sd->mdv.cv_tn = cv_mem->cv_tn;
-  sd->mdv.cv_etamax = cv_mem->cv_etamax;
-  sd->mdv.cv_maxncf = cv_mem->cv_maxncf;
-
-  sd->mdv.nstloc = (int)nstloc;
-  sd->mdv.tout = tout;
-  sd->mdv.tret = *tret;
-  sd->mdv.istate = istate;
-  sd->mdv.kflag = kflag;
-  sd->mdv.kflag2 = 99;
-
-  cudaMemcpy(mGPU->mdv, &sd->mdv, sizeof(ModelDataVariable), cudaMemcpyHostToDevice);
-
   for(int i=0;i<mGPU->n_cells;i++)
     sd->flagCells[i]=99;
 
   cudaMemcpy(mGPU->flagCells, sd->flagCells, mGPU->n_cells*sizeof(int), cudaMemcpyHostToDevice);
-
   HANDLE_ERROR(cudaMemcpy(mGPU->state, md->total_state, md->state_size, cudaMemcpyHostToDevice));
 
 #ifndef DEV_CUDACVODE
@@ -5048,13 +4939,14 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
 #else
   for(;;) {
 
+#endif
+
     sd->mdv.init_time_step = sd->init_time_step;
     sd->mdv.cv_mxstep = cv_mem->cv_mxstep;
     sd->mdv.cv_taskc = cv_mem->cv_taskc;
     sd->mdv.cv_uround = cv_mem->cv_uround;
     sd->mdv.cv_nrtfn = cv_mem->cv_nrtfn;
     sd->mdv.cv_tretlast = cv_mem->cv_tretlast;
-    sd->mdv.cv_sldeton = cv_mem->cv_sldeton;
     sd->mdv.cv_hmax_inv = cv_mem->cv_hmax_inv;
     sd->mdv.cv_lmm = cv_mem->cv_lmm;
     sd->mdv.cv_iter = cv_mem->cv_iter;
@@ -5102,8 +4994,6 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     sd->mdv.cv_hscale = cv_mem->cv_hscale;
     sd->mdv.cv_nscon = cv_mem->cv_nscon;
     sd->mdv.cv_hprime = cv_mem->cv_hprime;
-    //sd->mdv.cv_hprime2 = cv_mem->cv_hprime;
-    sd->mdv.cv_hprime3 = cv_hprime3;
     sd->mdv.cv_hmin = cv_mem->cv_hmin;
     sd->mdv.cv_tn = cv_mem->cv_tn;
     sd->mdv.cv_etamax = cv_mem->cv_etamax;
@@ -5117,8 +5007,6 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     sd->mdv.kflag2 = 99;
 
     cudaMemcpy(mGPU->mdv, &sd->mdv, sizeof(ModelDataVariable), cudaMemcpyHostToDevice);
-
-#endif
 
 #ifdef PMC_DEBUG_GPU
     cudaEventRecord(bicg->startcvStep);
@@ -5150,7 +5038,6 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     cv_mem->cv_nrtfn = sd->mdv.cv_nrtfn;
     nstloc = sd->mdv.nstloc;
     cv_mem->cv_tretlast = sd->mdv.cv_tretlast;
-    cv_mem->cv_sldeton = sd->mdv.cv_sldeton;
     cv_mem->cv_hmax_inv = sd->mdv.cv_hmax_inv;
     cv_mem->cv_lmm = sd->mdv.cv_lmm;
     cv_mem->cv_iter = sd->mdv.cv_iter;
