@@ -186,6 +186,7 @@ program mock_monarch
   real(kind=dp), allocatable :: times(:)
   integer :: ncounters, ntimers != 0 != 2
   integer :: export_results_all_cells
+  integer :: plot_species = 0
 
   ! initialize mpi (to take the place of a similar MONARCH call)
   call pmc_mpi_init()
@@ -264,7 +265,7 @@ program mock_monarch
   DIFF_CELLS = "OFF"
   call get_command_argument(8, arg, status=status_code)
   if(status_code.eq.0) then
-    if(arg.eq."Practical") then
+    if(arg.eq."Realistic") then
       DIFF_CELLS = "ON"
       !print*,"DIFF_CELLS ",DIFF_CELLS
     else
