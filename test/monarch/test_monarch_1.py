@@ -303,6 +303,8 @@ def plot_cases(casesList,cases_gpu_cpu2,cases_multicells_onecell2,cells,diff_cel
 
   namex=plot_x_key
 
+  print(namey,":",datay)
+
   plot_functions.plot(namex,namey,datax,datay,plot_title,columns,SAVE_PLOT)
 
 
@@ -328,7 +330,7 @@ def all_timesteps():
   cells = [100,500,1000,5000,10000]
   #cells = [100,1000,10000,100000]
 
-  timesteps = 5#5 #720=24h #30=1h
+  timesteps = 1#5 #720=24h #30=1h
   TIME_STEP = 2 #pending send TIME_STEP to mock_monarch
 
   #cases = ["Historic"]
@@ -351,9 +353,9 @@ def all_timesteps():
   #plot_y_key = "Average BCG time per call" #This metric makes no sense, One-cell would always be faster because is computing way less cells
   #plot_y_key = "Speedup normalized timeLS"
 
-  #plot_y_key = "Speedup timeCVode"
+  plot_y_key = "Speedup timeCVode"
   #plot_y_key = "Speedup counterLS"
-  plot_y_key = "Speedup normalized timeLS"
+  #plot_y_key = "Speedup normalized timeLS"#todo fix
   #plot_y_key = "Speedup normalized computational timeLS"
   #plot_y_key = "Speedup counterBCG"
   #plot_y_key = "Speedup total iterations - counterBCG"
