@@ -68,7 +68,7 @@ def run(config_file,diff_cells,mpi,mpiProcesses,n_cells,timesteps,
   #Onecell-Multicells itsolver
   write_itsolver_config_file(case)
   if(case_gpu_cpu=="GPU" and case!="One-cell"):
-    print("case_gpu_cpu==GPU and case!=One-cell")
+    #print("case_gpu_cpu==GPU and case!=One-cell")
     case="Multi-cells"
 
   #Onecell-Multicells
@@ -88,7 +88,6 @@ def run_cell(config_file,diff_cells,mpi,mpiProcessesList,n_cells_aux,timesteps,
   y_key_words = plot_y_key.split()
   y_key = y_key_words[-1]
   data={}
-  dataMAPE={}
 
   for i in range(len(cases)):
 
@@ -115,7 +114,7 @@ def run_cell(config_file,diff_cells,mpi,mpiProcessesList,n_cells_aux,timesteps,
       if(y_key=="counterBCG" or y_key=="timeLS"):
         data=plot_functions.normalize_by_counterLS_and_cells( \
           data,y_key,n_cells,cases[i])
-      if(y_key=="timecvStep"):
+      elif(y_key=="timecvStep"):
         data=plot_functions.normalize_by_countercvStep_and_cells( \
         data,"timecvStep",n_cells,cases[i])
       else:
@@ -232,7 +231,6 @@ def plot_historic(cases_gpu_cpu,cases_multicells_onecell,cells,diff_cells,timest
 
 def plot_cases(casesList,cases_gpu_cpu2,cases_multicells_onecell2,cells,diff_cells,timesteps,plot_y_key,
                    mpiProcessesList,datacases,SAVE_PLOT):
-  print("plot_case")
 
   plot_title=""
   columns=[]
@@ -305,7 +303,7 @@ def plot_cases(casesList,cases_gpu_cpu2,cases_multicells_onecell2,cells,diff_cel
 
   print(namey,":",datay)
 
-  plot_functions.plot(namex,namey,datax,datay,plot_title,columns,SAVE_PLOT)
+  #plot_functions.plot(namex,namey,datax,datay,plot_title,columns,SAVE_PLOT)
 
 
 def all_timesteps():
@@ -320,14 +318,15 @@ def all_timesteps():
   mpi="yes"
   #mpi="no"
 
-  #mpiProcessesList = [1]
-  mpiProcessesList = [40,1]
+  mpiProcessesList = [1]
+  #mpiProcessesList = [40,1]
 
-  #cells = [10]
+  cells = [100]
   #cells = [1,10,100]
   #cells = [100,500,1000]
   #cells = [1,5,10,50,100]
-  cells = [100,500,1000,5000,10000]
+  #cells = [100,1000,10000]
+  #cells = [100,500,1000,5000,10000]
   #cells = [100,1000,10000,100000]
 
   timesteps = 1#5 #720=24h #30=1h
@@ -353,16 +352,16 @@ def all_timesteps():
   #plot_y_key = "Average BCG time per call" #This metric makes no sense, One-cell would always be faster because is computing way less cells
   #plot_y_key = "Speedup normalized timeLS"
 
-  plot_y_key = "Speedup timeCVode"
+  #plot_y_key = "Speedup timeCVode"
   #plot_y_key = "Speedup counterLS"
-  #plot_y_key = "Speedup normalized timeLS"#todo fix
+  #plot_y_key = "Speedup normalized timeLS"#todo measure correct LS GPU
   #plot_y_key = "Speedup normalized computational timeLS"
   #plot_y_key = "Speedup counterBCG"
   #plot_y_key = "Speedup total iterations - counterBCG"
   #plot_y_key = "Speedup normalized counterBCG"
   #plot_y_key = "Speedup BCG iteration (Comp.timeLS/counterBCG)"
   #plot_y_key = "Percentages solveCVODEGPU" #Uncomment function
-  #plot_y_key = "Speedup timecvStep"
+  plot_y_key = "Speedup timecvStep"
   #plot_y_key = "Speedup normalized timecvStep"#not needed, is always normalized
 
   #plot_y_key = "% Time data transfers CPU-GPU BCG"

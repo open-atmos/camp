@@ -201,6 +201,7 @@ typedef struct {
     int countercvStep;
     int counterDerivGPU;
     int counterBCGInternal;
+    int counterBCG;
     double dtBCG;
     double dtPreBCG;
     double dtPostBCG;

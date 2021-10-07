@@ -122,6 +122,7 @@ def normalize_by_counterLS_and_cells(data,plot_y_key,cells,case):
     raise Exception("normalize_by_counterLS_and_cells case without One-cell or Multi-cells key name")
 
   #print(cells_multiply)
+  #print(data)
 
   #data[case][new_plot_y_key] = []
   for i in range(len(data[case][plot_y_key])):
@@ -131,7 +132,6 @@ def normalize_by_counterLS_and_cells(data,plot_y_key,cells,case):
     #data[case][new_plot_y_key].append(data[case][plot_y_key][i] \
     #                                  / data[case]["counterLS"][i]*cells_multiply)
 
-  #print(data[cases[0]][plot_y_key])
   #print(data)
 
   return data

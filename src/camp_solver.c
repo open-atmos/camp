@@ -1089,9 +1089,9 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
 
   if(sd->use_cpu==1){
 
-
     if(sd->ntimers>0 && sd->ncounters>0){
-      CVodeGettimesCounters(sd->cvode_mem, &times[0], &counters[0]);
+      //counters[0]=counterBCG;
+      CVodeGettimesCounters(sd->cvode_mem, &times[0], &counters[1]);
       times[2]=sd->timeCVode;
       //for(int i=0;i<sd->ntimers;i++)
       //  printf("i %d times %le counters %d\n",i,times[i],counters[i]);
@@ -1112,8 +1112,6 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
     solver_get_statistics_gpu(sd);
     int i;
 
-    //printf("solver_get_statistics\n");
-
     if(sd->ncounters>0){
       i=0;
       counters[i++]=sd->mdv.counterBCGInternal;
@@ -1123,12 +1121,12 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
     }
     if(sd->ntimers>0){
       i=0;
-      times[i++]=bicg->timeBiConjGrad/1000;
-      times[i++]=bicg->timeBiConjGradMemcpy/1000;
+      times[i++]=bicg->timeBiConjGrad;
+      times[i++]=bicg->timeBiConjGradMemcpy;
       times[i++]=sd->timeCVode;
       times[i++]=sd->mdv.dtPreBCG;
       times[i++]=sd->mdv.dtPostBCG;
-      times[i++]=bicg->timesolveCVODEGPU/1000;
+      times[i++]=bicg->timesolveCVODEGPU;
       times[i++]=sd->timeNewtonIteration;
       times[i++]=sd->timeJac;
       times[i++]=sd->timelinsolsetup;
@@ -1136,7 +1134,7 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
       times[i++]=sd->timeRXNJac;
       times[i++]=sd->timef;
       times[i++]=sd->timeguess_helper;
-      times[i++]=bicg->timecvStep/1000;
+      times[i++]=bicg->timecvStep;
 
       //for(int i=0;i<sd->ntimers;i++)
         //printf("times[%d]=%le\n",i,times[i]);
@@ -1148,6 +1146,8 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
 
 #endif
   }
+
+  //printf("times[0] %le counters[1] %d\n",times[0],counters[1]);
 
 #endif
 

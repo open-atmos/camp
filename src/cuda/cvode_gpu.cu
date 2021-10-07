@@ -1763,8 +1763,6 @@ void solveBcgCudaDeviceCVODE(
       //temp1=gpu_dotxy(dr0h, dn0, aux, daux, nrows,(blocks + 1) / 2, threads);
       cudaDevicedotxy(dr0h, dn0, &temp1, nrows, n_shr_empty);
 
-
-
       __syncthreads();
       alpha = rho1 / temp1;
 
@@ -1787,13 +1785,9 @@ void solveBcgCudaDeviceCVODE(
       //temp1=gpu_dotxy(dz, dAx2, aux, daux, nrows,(blocks + 1) / 2, threads);
       cudaDevicedotxy(dz, dAx2, &temp1, nrows, n_shr_empty);
 
-
-
       __syncthreads();
       //temp2=gpu_dotxy(dAx2, dAx2, aux, daux, nrows,(blocks + 1) / 2, threads);
       cudaDevicedotxy(dAx2, dAx2, &temp2, nrows, n_shr_empty);
-
-
 
       __syncthreads();
       omega0 = temp1 / temp2;
@@ -1849,13 +1843,15 @@ void solveBcgCudaDeviceCVODE(
 
 #ifdef solveBcgCuda_sum_it
 
-  if(tid==0)
+  if(threadIdx.x==0)
     dmdv->counterBCGInternal[blockIdx.x]=it;
 
 #else
 
   //*it_pointer = it;
   dmdv->counterBCGInternal += it;
+  dmdv->counterBCG++;
+
 
 #endif
 
@@ -1990,8 +1986,9 @@ void alloc_solver_gpu2(CVodeMem cv_mem, SolverData *sd)
 #ifdef PMC_DEBUG_GPU
 
   sd->mdv.countercvStep=0;
-  sd->mdv.counterBCGInternal=0;
   sd->mdv.counterDerivGPU=0;
+  sd->mdv.counterBCGInternal=0;
+  sd->mdv.counterBCG=0;
   sd->mdv.dtBCG=0.;
   sd->mdv.dtPreBCG=0.;
   sd->mdv.dtPostBCG=0.;
@@ -2314,7 +2311,9 @@ int cudaDevicecvNewtonIteration(
 
 #else
 
-    if(i==0) dmdv->dtBCG += ((double)(int)(clock() - start))/(clock_khz*1000);
+    //if(threadIdx.x==0)dmdv->dtBCG += ((double)(int)(clock() - start))/(clock_khz*1000);//wrong
+    dmdv->dtBCG += ((double)(int)(clock() - start))/(clock_khz*1000);
+
 
 #endif
 
@@ -2569,7 +2568,6 @@ int cudaDevicecvNlsNewton(
                               cv_mem->cv_last_yn, cv_mem->cv_ftemp, cv_mem->cv_user_data,
                               cv_mem->cv_tempv, cv_mem->cv_acor_init);
     if (retval < 0){
-      printf("cudacvNlsNewton RHSFUNC_RECVR\n");
       return (RHSFUNC_RECVR);
     }
   }
@@ -3962,18 +3960,6 @@ void solveCVODEGPU_thr(int blocks, int threads_block, int n_shr_memory, int n_sh
   cudaGlobalCVode <<<blocks,threads_block,n_shr_memory*sizeof(double)>>>
                                              (sd->mGPU);
 
-#ifdef PMC_DEBUG_GPU
-
-  bicg->counterBiConjGrad++;
-
-#endif
-
-#ifndef DEBUG_SOLVEBCGCUDA
-  //if(bicg->counterBiConjGrad==0) {
-  //  printf("solveGPUBlock it %d\n",bicg->counterBiConjGrad;
-  //}
-#endif
-
 }
 
 void solveCVODEGPU(SolverData *sd, CVodeMem cv_mem)
@@ -4024,14 +4010,14 @@ void solveCVODEGPU(SolverData *sd, CVodeMem cv_mem)
     float mssolveCVODEGPU = 0.0;
     cudaEventElapsedTime(&mssolveCVODEGPU, bicg->startsolveCVODEGPU, bicg->stopsolveCVODEGPU);
 
-    bicg->timesolveCVODEGPU+= mssolveCVODEGPU;
+    bicg->timesolveCVODEGPU+= mssolveCVODEGPU/1000;
 
     bicg->countersolveCVODEGPU++;
 #endif
 
 #ifdef DEBUG_SOLVEBCGCUDA
   if(bicg->counterBiConjGrad<2) {
-    printf("timesolveCVODEGPU+ end\n");
+    printf("solveCVODEGPU end\n");
   }
 #endif
 
@@ -4529,7 +4515,7 @@ int CVode_gpu2(void *cvode_mem, realtype tout, N_Vector yout,
   cudaEventSynchronize(bicg->stopcvStep);
   float mscvStep = 0.0;
   cudaEventElapsedTime(&mscvStep, bicg->startcvStep, bicg->stopcvStep);
-  bicg->timecvStep+= mscvStep;
+  bicg->timecvStep+= mscvStep/1000;
 #endif
 
   return(istate);
@@ -4957,20 +4943,18 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
   cudaMemcpy(mGPU->mdv, &sd->mdv, sizeof(ModelDataVariable), cudaMemcpyHostToDevice);
 
 #ifdef PMC_DEBUG_GPU
-    cudaEventRecord(bicg->startBCG);
+    //cudaEventRecord(bicg->startBCG);
 #endif
 
   solveCVODEGPU(sd, cv_mem);
   cudaDeviceSynchronize();
 
 #ifdef PMC_DEBUG_GPU
-
-  cudaEventRecord(bicg->stopBCG);
-  cudaEventSynchronize(bicg->stopBCG);
-  float msBiConjGrad = 0.0;
-  cudaEventElapsedTime(&msBiConjGrad, bicg->startBCG, bicg->stopBCG);
-  bicg->timeBiConjGrad+= msBiConjGrad;
-
+  //cudaEventRecord(bicg->stopBCG);
+  //cudaEventSynchronize(bicg->stopBCG);
+  //float msBiConjGrad = 0.0;
+  //cudaEventElapsedTime(&msBiConjGrad, bicg->startBCG, bicg->stopBCG);
+  //bicg->timeBiConjGrad+= msBiConjGrad;
 #endif
 
   cudaMemcpy(&sd->mdv, mGPU->mdvo, sizeof(ModelDataVariable), cudaMemcpyDeviceToHost);
@@ -5036,6 +5020,12 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
   istate = sd->mdv.istate;
   kflag = sd->mdv.kflag;
   *tret = sd->mdv.tret;
+
+
+#ifdef PMC_DEBUG_GPU
+  bicg->timeBiConjGrad+= sd->mdv.dtBCG;
+  bicg->counterBiConjGrad+= sd->mdv.counterBCG;
+#endif
 
   cudaMemcpy(cv_mem->cv_l, mGPU->cv_l, L_MAX * sizeof(double), cudaMemcpyDeviceToHost);
   cudaMemcpy(cv_mem->cv_tau, mGPU->cv_tau, (L_MAX + 1) * sizeof(double), cudaMemcpyDeviceToHost);
@@ -5211,7 +5201,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
   cudaEventSynchronize(bicg->stopcvStep);
   float mscvStep = 0.0;
   cudaEventElapsedTime(&mscvStep, bicg->startcvStep, bicg->stopcvStep);
-  bicg->timecvStep+= mscvStep;
+  bicg->timecvStep+= mscvStep/1000;
 #endif
 
   return(istate);
@@ -6235,7 +6225,6 @@ int cvRootfind_gpu2(CVodeMem cv_mem)
  */
 int cvStep_gpu2(SolverData *sd, CVodeMem cv_mem)
 {
-  itsolver *bicg = &(sd->bicg);
   ModelDataGPU *mGPU = &sd->mGPU;
   realtype saved_t, dsm;
   int ncf, nef;
@@ -6259,23 +6248,7 @@ int cvStep_gpu2(SolverData *sd, CVodeMem cv_mem)
     cvSet_gpu2(cv_mem);
 
     //nflag = cvNls(cv_mem, nflag);
-
-#ifdef PMC_DEBUG_GPU
-    cudaEventRecord(bicg->startBCG);
-#endif
-
     nflag = cvNlsNewton_gpu2(sd, cv_mem, nflag);//f(y)+BCG
-    //nflag = cudacvNlsNewton(sd, cv_mem, nflag);
-
-#ifdef PMC_DEBUG_GPU
-
-    cudaEventRecord(bicg->stopBCG);
-    cudaEventSynchronize(bicg->stopBCG);
-    float msBiConjGrad = 0.0;
-    cudaEventElapsedTime(&msBiConjGrad, bicg->startBCG, bicg->stopBCG);
-    bicg->timeBiConjGrad+= msBiConjGrad;
-
-#endif
 
     kflag = cvHandleNFlag_gpu2(cv_mem, &nflag, saved_t, &ncf);
 
@@ -7758,8 +7731,8 @@ int linsolsetup_gpu2(SolverData *sd, CVodeMem cv_mem,int convfail,N_Vector vtemp
   cudaEventSynchronize(bicg->stopBCGMemcpy);
   float msBiConjGradMemcpy = 0.0;
   cudaEventElapsedTime(&msBiConjGradMemcpy, bicg->startBCGMemcpy, bicg->stopBCGMemcpy);
-  bicg->timeBiConjGradMemcpy+= msBiConjGradMemcpy;
-  bicg->timeBiConjGrad+= msBiConjGradMemcpy;
+  bicg->timeBiConjGradMemcpy+= msBiConjGradMemcpy/1000;
+  bicg->timeBiConjGrad+= msBiConjGradMemcpy/1000;
 #endif
 
 #ifdef FAILURE_DETAIL
@@ -7851,8 +7824,8 @@ int cvNewtonIteration_gpu2(SolverData *sd, CVodeMem cv_mem)
     cudaEventSynchronize(bicg->stopBCGMemcpy);
     float msBiConjGradMemcpy = 0.0;
     cudaEventElapsedTime(&msBiConjGradMemcpy, bicg->startBCGMemcpy, bicg->stopBCGMemcpy);
-    bicg->timeBiConjGradMemcpy+= msBiConjGradMemcpy;
-    bicg->timeBiConjGrad+= msBiConjGradMemcpy;
+    bicg->timeBiConjGradMemcpy+= msBiConjGradMemcpy/1000;
+    bicg->timeBiConjGrad+= msBiConjGradMemcpy/1000;
 
 #endif
 
@@ -7998,7 +7971,11 @@ int cvNewtonIteration_gpu2(SolverData *sd, CVodeMem cv_mem)
 #ifdef PMC_DEBUG_GPU
     cudaEventRecord(bicg->stopBCG);
 
-    //bicg->timeBiConjGrad+= clock() - start;
+    cudaEventSynchronize(bicg->stopBCG); //at the end is the same that cudadevicesynchronyze
+    float msBiConjGrad = 0.0;
+    cudaEventElapsedTime(&msBiConjGrad, bicg->startBCG, bicg->stopBCG);
+    bicg->timeBiConjGrad+= msBiConjGrad/1000;
+
     bicg->counterBiConjGrad++;
 #endif
 
@@ -8012,8 +7989,8 @@ int cvNewtonIteration_gpu2(SolverData *sd, CVodeMem cv_mem)
     cudaEventRecord(bicg->stopBCGMemcpy);
     cudaEventSynchronize(bicg->stopBCGMemcpy);
     cudaEventElapsedTime(&msBiConjGradMemcpy, bicg->startBCGMemcpy, bicg->stopBCGMemcpy);
-    bicg->timeBiConjGradMemcpy+= msBiConjGradMemcpy;
-    bicg->timeBiConjGrad+= msBiConjGradMemcpy;
+    bicg->timeBiConjGradMemcpy+= msBiConjGradMemcpy/1000;
+    bicg->timeBiConjGrad+= msBiConjGradMemcpy/1000;
 
 #endif
 
@@ -8073,15 +8050,6 @@ int cvNewtonIteration_gpu2(SolverData *sd, CVodeMem cv_mem)
     }
 
     dcon = del * SUNMIN(1.0, cv_mem->cv_crate) / cv_mem->cv_tq[4];
-
-#ifdef PMC_DEBUG_GPU
-
-    cudaEventSynchronize(bicg->stopBCG); //at the end is the same that cudadevicesynchronyze
-    float msBiConjGrad = 0.0;
-    cudaEventElapsedTime(&msBiConjGrad, bicg->startBCG, bicg->stopBCG);
-    bicg->timeBiConjGrad+= msBiConjGrad;
-
-#endif
 
     if (dcon <= 1.0) {
       //cv_mem->cv_acnrm = N_VWrmsNorm(cv_mem->cv_acor, cv_mem->cv_ewt);
@@ -8238,9 +8206,9 @@ void printSolverCounters_gpu2(SolverData *sd)
   solver_get_statistics_gpu(sd);
 
   //Upgraded GPU-CPU counters (Sync with GPU and CPU)
-  printf("timecvStep %lf, countercvStep %d\n",bicg->timecvStep/1000,sd->mdv.countercvStep);
-  printf("timesolveCVODEGPU %lf, countersolveCVODEGPU %d\n",bicg->timesolveCVODEGPU/1000,bicg->countersolveCVODEGPU);
-  printf("time CudaGlobalguess_helper %lf\n",bicg->timeNewtonIt/1000);
+  printf("timecvStep %lf, countercvStep %d\n",bicg->timecvStep,sd->mdv.countercvStep);
+  printf("timesolveCVODEGPU %lf, countersolveCVODEGPU %d\n",bicg->timesolveCVODEGPU,bicg->countersolveCVODEGPU);
+  printf("time CudaGlobalguess_helper %lf\n",bicg->timeNewtonIt);
   printf("timef %lf \n",sd->timef);
   printf("timeguess_helper %lf \n",sd->timeguess_helper);
   printf("tguessNewton %lf \n",sd->tguessNewton);
@@ -8251,10 +8219,10 @@ void printSolverCounters_gpu2(SolverData *sd)
   //printf("timeJac %lf, counterJac %d\n",bicg->timeJac/1000,bicg->counterJac);
   printf("timeBiConjGrad %lf, timeBiConjGradMemcpy %lf, counterBiConjGrad %d, counterBCGInternal %d "
          "avgCounterBiConjGrad %lf, avgTimeBCGIter %lf %%timeBiConjGradMemcpy %lf%%\n",
-          bicg->timeBiConjGrad/1000,
-          bicg->timeBiConjGradMemcpy/1000, bicg->counterBiConjGrad,sd->mdv.counterBCGInternal,
+          bicg->timeBiConjGrad,
+          bicg->timeBiConjGradMemcpy, bicg->counterBiConjGrad,sd->mdv.counterBCGInternal,
           sd->mdv.counterBCGInternal/(double)bicg->counterBiConjGrad,
-          (bicg->timeBiConjGrad/1000)/(double)bicg->counterBiConjGrad,
+          bicg->timeBiConjGrad/(double)bicg->counterBiConjGrad,
           bicg->timeBiConjGradMemcpy/bicg->timeBiConjGrad*100);
 #ifdef cudaGlobalCVode_timers_max_blocks
 
