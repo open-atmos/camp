@@ -1124,7 +1124,7 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
       times[i++]=bicg->timeBiConjGrad;
       times[i++]=bicg->timeBiConjGradMemcpy;
       times[i++]=sd->timeCVode;
-      times[i++]=sd->mdv.dtPreBCG;
+      times[i++]=sd->mdv.dtcudaDeviceCVode;
       times[i++]=sd->mdv.dtPostBCG;
       times[i++]=bicg->timesolveCVODEGPU;
       times[i++]=sd->timeNewtonIteration;

@@ -740,7 +740,7 @@ contains
     open(STATSOUT_FILE_UNIT2, file=file_name, status="replace", action="write")
 
     str_stats_names = "timestep,counterBCG,counterLS,countersolveCVODEGPU,countercvStep,timeLS,timeBiconjGradMemcpy,timeCVode,&
-            dtPreBCG,dtPostBCG,timesolveCVODEGPU,timeNewtonIteration,timeJac,timelinsolsetup,timecalc_Jac,&
+            dtcudaDeviceCVode,dtPostBCG,timesolveCVODEGPU,timeNewtonIteration,timeJac,timelinsolsetup,timecalc_Jac,&
             timeRXNJac,timef,timeguess_helper,timecvStep"
 
     write(STATSOUT_FILE_UNIT2, "(A)", advance="no") str_stats_names

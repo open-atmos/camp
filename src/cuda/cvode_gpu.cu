@@ -1990,7 +1990,7 @@ void alloc_solver_gpu2(CVodeMem cv_mem, SolverData *sd)
   sd->mdv.counterBCGInternal=0;
   sd->mdv.counterBCG=0;
   sd->mdv.dtBCG=0.;
-  sd->mdv.dtPreBCG=0.;
+  sd->mdv.dtcudaDeviceCVode=0.;
   sd->mdv.dtPostBCG=0.;
 
   bicg->counterNewtonIt=0;
@@ -2008,7 +2008,7 @@ void alloc_solver_gpu2(CVodeMem cv_mem, SolverData *sd)
 
 #else
   sd->mdv.dtBCG=0.;
-  sd->mdv.dtPreBCG=0.;
+  sd->mdv.dtcudaDeviceCVode=0.;
   sd->mdv.dtPostBCG=0.;
   int lendt=1;
 
@@ -2280,21 +2280,7 @@ int cudaDevicecvNewtonIteration(
     //if(i==0)printf("cudaDevicecvNewtonIteration dftemp %le dtempv %le dcv_y %le it %d block %d\n",
     //               dftemp[(blockDim.x-1)*0],dtempv[(blockDim.x-1)*0],dcv_y[(blockDim.x-1)*0],it,blockIdx.x);
 
-#ifdef PMC_DEBUG_GPU
 
-#ifdef cudaGlobalCVode_timers_max_blocks
-
-    dmdv->dtPreBCG[i] += ((double)(int)(clock() - start))/(clock_khz*1000);
-
-#else
-
-     if(i==0) dmdv->dtPreBCG += ((double)(int)(clock() - start))/(clock_khz*1000);
-
-#endif
-
-    start = clock();
-
-#endif
 
     solveBcgCudaDeviceCVODE(
             dA, djA, diA, dx, dtempv, nrows, blocks,
@@ -3912,14 +3898,26 @@ void cudaGlobalCVode(ModelDataGPU md_object) {
 
   __syncthreads();
   if(i<active_threads){
+
+#ifdef PMC_DEBUG_GPU
+    int clock_khz=md->clock_khz;
+    clock_t start;
+    start = clock();
     __syncthreads();
+#endif
     istate=cudaDeviceCVode(md,dmdv);
+
+#ifdef PMC_DEBUG_GPU
+    __syncthreads();
+     dmdv->dtcudaDeviceCVode += ((double)(int)(clock() - start))/(clock_khz*1000);
+#endif
+
   }
   __syncthreads();
   dmdv->istate=istate;
   __syncthreads();
 
-  if(i==0)printf("countercvStep %d\n",dmdv->countercvStep);
+  //if(i==0)printf("countercvStep %d\n",dmdv->countercvStep);
 
   if(tid==0)md->flagCells[blockIdx.x]=dmdv->istate;
   *mdvo = *dmdv;
@@ -8229,18 +8227,18 @@ void printSolverCounters_gpu2(SolverData *sd)
   for(int i=1;i<blocks;i++){
     if(dtBCG[i]>dtBCG[0])
       dtBCG[0]=dtBCG[i];
-    if(dtPreBCG[i]>dtPreBCG[0])
-      dtPreBCG[0]=dtPreBCG[i];
+    if(dtcudaDeviceCVode[i]>dtcudaDeviceCVode[0])
+      dtcudaDeviceCVode[0]=dtcudaDeviceCVode[i];
     if(dtPostBCG[i]>dtPostBCG[0])
       dtPostBCG[0]=dtPostBCG[i];
   }
 
-  printf("dtPreBCG %lf dtBCG %lf dtPostBCG %lf\n",sd->mdv.dtPreBCG[0],
+  printf("dtcudaDeviceCVode %lf dtBCG %lf dtPostBCG %lf\n",sd->mdv.dtcudaDeviceCVode[0],
           sd->mdv.dtBCG[0],sd->mdv.dtPostBCG[0]);
 
 #else
 
-  printf("dtPreBCG %lf dtBCG %lf dtPostBCG %lf\n",sd->mdv.dtPreBCG,
+  printf("dtcudaDeviceCVode %lf dtBCG %lf dtPostBCG %lf\n",sd->mdv.dtcudaDeviceCVode,
           sd->mdv.dtBCG,sd->mdv.dtPostBCG);
 
 #endif

@@ -203,7 +203,7 @@ typedef struct {
     int counterBCGInternal;
     int counterBCG;
     double dtBCG;
-    double dtPreBCG;
+    double dtcudaDeviceCVode;
     double dtPostBCG;
 #endif
 }ModelDataVariable; //variables to pass between gpu and cpu
@@ -361,7 +361,7 @@ typedef struct {
     double *dtf;
     double *dtguess_helper;
     double *dtBCG;
-    double *dtPreBCG;
+    double *dtcudaDeviceCVode;
     double *dtPostBCG;
 #endif
 
