@@ -318,14 +318,14 @@ def all_timesteps():
   mpi="yes"
   #mpi="no"
 
-  #mpiProcessesList = [1]
-  mpiProcessesList = [40,1]
+  mpiProcessesList = [1]
+  #mpiProcessesList = [40,1]
 
   cells = [1000]
-  #cells = [1,10,100]
+  #cells = [10,100]
   #cells = [100,500,1000]
   #cells = [1,5,10,50,100]
-  #cells = [100,1000,10000]
+  #cells = [100,1000,5000,10000]
   #cells = [100,500,1000,5000,10000]
   #cells = [100,1000,10000,100000]
 
@@ -354,14 +354,14 @@ def all_timesteps():
 
   #plot_y_key = "Speedup timeCVode"
   #plot_y_key = "Speedup counterLS"
-  #plot_y_key = "Speedup normalized timeLS"#todo calculate GPU one-kernel time trhough percentages
+  plot_y_key = "Speedup normalized timeLS"#todo calculate GPU one-kernel time trhough percentages
   #plot_y_key = "Speedup normalized computational timeLS"
   #plot_y_key = "Speedup counterBCG"
   #plot_y_key = "Speedup total iterations - counterBCG"
   #plot_y_key = "Speedup normalized counterBCG"
   #plot_y_key = "Speedup BCG iteration (Comp.timeLS/counterBCG)"
   #plot_y_key = "Percentages solveCVODEGPU" #Uncomment function
-  plot_y_key = "Speedup timecvStep"
+  #plot_y_key = "Speedup timecvStep"
   #plot_y_key = "Speedup normalized timecvStep"#not needed, is always normalized
   #plot_y_key = "Speedup device timecvStep"
 

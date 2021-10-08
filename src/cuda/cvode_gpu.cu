@@ -1960,8 +1960,6 @@ void alloc_solver_gpu2(CVodeMem cv_mem, SolverData *sd)
   mGPU->deriv_length_cell=mGPU->nrows/mGPU->n_cells;
   mGPU->state_size_cell=md->n_per_cell_state_var;
 
-  //ODE aux variables
-
   cudaMemcpy(mGPU->flag,&flag,1*sizeof(int),cudaMemcpyHostToDevice);
 
   // Allocating matrix data to the GPU
@@ -2279,8 +2277,6 @@ int cudaDevicecvNewtonIteration(
 
     //if(i==0)printf("cudaDevicecvNewtonIteration dftemp %le dtempv %le dcv_y %le it %d block %d\n",
     //               dftemp[(blockDim.x-1)*0],dtempv[(blockDim.x-1)*0],dcv_y[(blockDim.x-1)*0],it,blockIdx.x);
-
-
 
     solveBcgCudaDeviceCVODE(
             dA, djA, diA, dx, dtempv, nrows, blocks,
@@ -5019,12 +5015,6 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
   kflag = sd->mdv.kflag;
   *tret = sd->mdv.tret;
 
-
-#ifdef PMC_DEBUG_GPU
-  bicg->timeBiConjGrad+= sd->mdv.dtBCG;
-  bicg->counterBiConjGrad+= sd->mdv.counterBCG;
-#endif
-
   cudaMemcpy(cv_mem->cv_l, mGPU->cv_l, L_MAX * sizeof(double), cudaMemcpyDeviceToHost);
   cudaMemcpy(cv_mem->cv_tau, mGPU->cv_tau, (L_MAX + 1) * sizeof(double), cudaMemcpyDeviceToHost);
   cudaMemcpy(cv_mem->cv_tq, mGPU->cv_tq, (NUM_TESTS + 1) * sizeof(double), cudaMemcpyDeviceToHost);
@@ -5200,6 +5190,11 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
   float mscvStep = 0.0;
   cudaEventElapsedTime(&mscvStep, bicg->startcvStep, bicg->stopcvStep);
   bicg->timecvStep+= mscvStep/1000;
+
+  bicg->timeBiConjGrad=bicg->timesolveCVODEGPU*sd->mdv.dtBCG/sd->mdv.dtcudaDeviceCVode;
+  bicg->counterBiConjGrad+= sd->mdv.counterBCG;
+
+
 #endif
 
   return(istate);
