@@ -11,8 +11,6 @@
 #include<cuda_runtime.h>
 #include<cuda_runtime_api.h>
 
-//todo try #include <cooperative_groups.h> for reduce
-
 #include "libsolv.h"
 
 //#include<cublas.h> //todo fix cublas not compiling fine
@@ -136,7 +134,7 @@ __global__ void cudadiagprecond(int nrows, double* dA, int* djA, int* diA, doubl
         if(dA[j]!=0.0)
           ddiag[row]= 1.0/dA[j];
         else{
-          printf("cudadiagprecond else\n");
+          //printf("cudadiagprecond else\n");
           ddiag[row]= 1.0;
         }
       }
@@ -152,8 +150,6 @@ extern "C++" void gpu_diagprecond(int nrows, double* dA, int* djA, int* diA, dou
 
   dim3 dimGrid(blocks,1,1);
   dim3 dimBlock(threads,1,1);
-
-  //printf("HOLA\n");
 
   cudadiagprecond<<<dimGrid,dimBlock>>>(nrows, dA, djA, diA, ddiag);
   //check_input_gpud<< < 1, 5>> >(ddiag,nrows,0);
@@ -522,9 +518,7 @@ extern "C++" void gpu_scaley(double* dy, double a, int nrows, int blocks, int th
 // Device functions (equivalent to global functions but in device to allow calls from gpu)
 __device__ void cudaDevicematScaleAddI(int nrows, double* dA, int* djA, int* diA, double alpha)
 {
-
   int row= threadIdx.x + blockDim.x*blockIdx.x;
-
   if(row < nrows){
     int jstart = diA[row];
     int jend   = diA[row+1];
@@ -539,7 +533,6 @@ __device__ void cudaDevicematScaleAddI(int nrows, double* dA, int* djA, int* diA
       }
     }
   }
-
 }
 
 // Diagonal precond

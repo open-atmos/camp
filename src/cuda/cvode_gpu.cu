@@ -3941,7 +3941,7 @@ void solveCVODEGPU_thr(int blocks, int threads_block, int n_shr_memory, int n_sh
 
 #ifndef DEBUG_SOLVEBCGCUDA
   if(bicg->counterBiConjGrad==0) {
-    printf("n_cells %d len_cell %d nrows %d nnz %d max_threads_block %d blocks %d threads_block %d n_shr_empty %d offset_cells %d\n",
+    printf("solveCVODEGPU_thr n_cells %d len_cell %d nrows %d nnz %d max_threads_block %d blocks %d threads_block %d n_shr_empty %d offset_cells %d\n",
            mGPU->n_cells,len_cell,mGPU->nrows,mGPU->nnz,n_shr_memory,blocks,threads_block,n_shr_empty,offset_cells);
 
     //print_double(bicg->A,nnz,"A");
@@ -3973,13 +3973,7 @@ void solveCVODEGPU(SolverData *sd, CVodeMem cv_mem)
 #endif
 
   int len_cell = mGPU->nrows/mGPU->n_cells;
-  int max_threads_block;
-
-  if(bicg->use_multicells) {
-    max_threads_block = mGPU->threads;//mGPU->threads; 128;
-  }else{
-    max_threads_block = nextPowerOfTwoCVODE(len_cell);//mGPU->threads;
-  }
+  int max_threads_block=mGPU->threads;
 
   int offset_cells=0;
 
@@ -7940,8 +7934,11 @@ int cvNewtonIteration_gpu2(SolverData *sd, CVodeMem cv_mem)
 
 #endif
 
-  //solveGPU(bicg,sd->dA,mGPU->djA,mGPU->diA,mGPU->dx,mGPU->dtempv);
-  solveGPU_block(sd,mGPU->dA,mGPU->djA,mGPU->diA,mGPU->dx,mGPU->dtempv);
+    if(bicg->cells_method==1) {
+      solveGPU(sd,mGPU->dA,mGPU->djA,mGPU->diA,mGPU->dx,mGPU->dtempv);
+    }else {
+      solveGPU_block(sd,mGPU->dA,mGPU->djA,mGPU->diA,mGPU->dx,mGPU->dtempv);
+    }
 
 #ifdef DEBUG_LINEAR_SOLVERS
 

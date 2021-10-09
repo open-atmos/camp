@@ -7,7 +7,7 @@
 typedef struct
 {
   //Init variables ("public")
-  int use_multicells;
+  int cells_method;
 
   double* A;
   int*    jA;

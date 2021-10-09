@@ -16,13 +16,24 @@ void read_options(itsolver *bicg){
   }
   fscanf(fp, "%s", buff);
 
-  if(strstr(buff,"USE_MULTICELLS=ON")!=NULL){
-    //printf("itsolver read_options USE_MULTICELLS=ON\n");
-    bicg->use_multicells=1; //One-cell per block (Independent cells)
+  if(strstr(buff,"CELLS_METHOD=Block-cells(1)")!=NULL){
+    //printf("itsolver read_options CELLS_METHOD=Block-cells(1)\n");
+    bicg->cells_method=3; //One-cell per block (Independent cells)
   }
-  else{
-    //printf("itsolver read_options USE_MULTICELLS=OFF\n");
-    bicg->use_multicells=0;
+  else if(strstr(buff,"CELLS_METHOD=Block-cells(N)")!=NULL){
+    //printf("itsolver read_options CELLS_METHOD=Block-cells(N)\n");
+    bicg->cells_method=2; //One-cell per block (Independent cells)
+  }
+  else if(strstr(buff,"CELLS_METHOD=Multi-cells")!=NULL){
+    //printf("itsolver read_options CELLS_METHOD=Multi-cells\n");
+    bicg->cells_method=1; //One-cell per block (Independent cells)
+  }
+  else if(strstr(buff,"CELLS_METHOD=One-cell")!=NULL){
+    //printf("itsolver read_options CELLS_METHOD=One-cell\n");
+    bicg->cells_method=0;
+  }else{
+    printf("ERROR: solveGPU_block unkonwn cells_method");
+    exit(0);
   }
 
 }
@@ -1513,7 +1524,7 @@ void solveGPU_block_thr(int blocks, int threads_block, int n_shr_memory, int n_s
 
 #ifndef DEBUG_SOLVEBCGCUDA
   if(bicg->counterBiConjGrad==0) {
-    printf("n_cells %d len_cell %d nrows %d nnz %d max_threads_block %d blocks %d threads_block %d n_shr_empty %d offset_cells %d\n",
+    printf("solveGPU_block_thr n_cells %d len_cell %d nrows %d nnz %d max_threads_block %d blocks %d threads_block %d n_shr_empty %d offset_cells %d\n",
            mGPU->n_cells,len_cell,mGPU->nrows,mGPU->nnz,n_shr_memory,blocks,threads_block,n_shr_empty,offset_cells);
 
     //print_double(bicg->A,nnz,"A");
@@ -1579,15 +1590,9 @@ void solveGPU_block(SolverData *sd, double *dA, int *djA, int *diA, double *dx, 
 #endif
 
   int len_cell = mGPU->nrows/mGPU->n_cells;
-  int max_threads_block;
-  if(bicg->use_multicells) {
-
+  int max_threads_block=nextPowerOfTwo(len_cell);
+  if(bicg->cells_method==2) {
     max_threads_block = mGPU->threads;//mGPU->threads; 128;
-
-  }else{
-
-    max_threads_block = nextPowerOfTwo(len_cell);
-
   }
 
   int n_cells_block =  max_threads_block/len_cell;
@@ -1601,7 +1606,8 @@ void solveGPU_block(SolverData *sd, double *dA, int *djA, int *diA, double *dx, 
 
   //Common kernel (Launch all blocks except the last)
   //blocks=blocks-1;
-  if(bicg->use_multicells
+  //if(bicg->cells_method==2//todo lower speedup with Block-cells(1), which makes no sense
+  if(bicg->cells_method
   //&& blocks!=0
   ) {
 
