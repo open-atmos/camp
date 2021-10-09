@@ -838,7 +838,7 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
       flag = CVode(sd->cvode_mem, (realtype)t_final, sd->y, &t_rt, CV_NORMAL);
     }else{
 
-#ifdef DERIV_CPU_ON_GPU
+#ifndef DERIV_CPU_ON_GPU
       flag = CVode_gpu2(sd->cvode_mem, (realtype)t_final, sd->y,
             &t_rt, CV_NORMAL, sd);
 #else
@@ -1260,7 +1260,7 @@ int f_gpu(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
   realtype time_step;
   int flag=0;
 
-#ifdef DERIV_CPU_ON_GPU
+#ifndef DERIV_CPU_ON_GPU
 
   flag = f(t, y, deriv, solver_data);
 

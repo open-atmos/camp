@@ -1154,7 +1154,7 @@ int rxn_calc_deriv_gpu(SolverData *sd, N_Vector y, N_Vector deriv, double time_s
   double threshhold = -SMALL;
   int flag = CAMP_SOLVER_SUCCESS; //0
 
-#ifdef DERIV_CPU_ON_GPU
+#ifndef DERIV_CPU_ON_GPU
 
   //Transfer cv_ftemp() not needed because mGPU->dftemp=md->deriv_data_gpu;
   //cudaMemcpy(cv_ftemp_data,mGPU->dftemp,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);

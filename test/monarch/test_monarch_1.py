@@ -303,17 +303,17 @@ def plot_cases(casesList,cases_gpu_cpu2,cases_multicells_onecell2,cells,diff_cel
 
   print(namey,":",datay)
 
-  #plot_functions.plot(namex,namey,datax,datay,plot_title,columns,SAVE_PLOT)
+  plot_functions.plot(namex,namey,datax,datay,plot_title,columns,SAVE_PLOT)
 
 
 def all_timesteps():
 
   #config_file="simple"
-  config_file="monarch_cb05"
-  #config_file="monarch_binned"
+  #config_file="monarch_cb05"
+  config_file="monarch_binned"
 
-  #diff_cells="Realistic"
-  diff_cells="Ideal"
+  diff_cells="Realistic"
+  #diff_cells="Ideal"
 
   mpi="yes"
   #mpi="no"
@@ -321,9 +321,9 @@ def all_timesteps():
   mpiProcessesList = [1]
   #mpiProcessesList = [40,1]
 
-  cells = [1000]
-  #cells = [10,100]
-  #cells = [100,500,1000]
+  #cells = [100]
+  #cells = [10,100,1000]
+  cells = [100,500,1000]
   #cells = [1,5,10,50,100]
   #cells = [100,1000,5000,10000]
   #cells = [100,500,1000,5000,10000]
@@ -354,7 +354,7 @@ def all_timesteps():
 
   #plot_y_key = "Speedup timeCVode"
   #plot_y_key = "Speedup counterLS"
-  plot_y_key = "Speedup normalized timeLS"#todo calculate GPU one-kernel time trhough percentages
+  plot_y_key = "Speedup normalized timeLS"
   #plot_y_key = "Speedup normalized computational timeLS"
   #plot_y_key = "Speedup counterBCG"
   #plot_y_key = "Speedup total iterations - counterBCG"
@@ -367,7 +367,7 @@ def all_timesteps():
 
   #plot_y_key = "% Time data transfers CPU-GPU BCG"
   #plot_y_key="NRMSE"
-  #plot_y_key="MAPE"
+  #plot_y_key="MAPE"#todo check old ls option (cvode_gpu)
   #plot_y_key="SMAPE"
 
   #remove_iters=0#10 #360
