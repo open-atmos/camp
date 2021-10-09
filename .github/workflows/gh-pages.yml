@@ -15,7 +15,6 @@ jobs:
         uses: mattnotmitt/doxygen-action@v1
         with:
           working-directory: 'doc/'
-          enable-latex: true
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
