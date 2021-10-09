@@ -72,13 +72,14 @@ $(function() {
 \[ \frac{\alpha}{1-\alpha} = e^{\frac{-\Delta G^{*}}{RT}} \]
 </p>
 <p> If \(\Delta H\) and \(\Delta S\) are not provided, \(\alpha\) is set to 0.1 <b>[Zaveri2008]</b>.</p>
-<p>Condensation rate constants are calculated as: </p><p class="formulaDsp">
-\[ k_{f} = (\frac{r^2}{3D_g} + \frac{4r}{3 \langle c \rangle \alpha})^{-1} \]
+<p>Condensation rate constants are calculated following <b>[Zaveri2008]</b> as: </p><p class="formulaDsp">
+\[ k_c = 4 \pi r D_g f_{fs}( K_n, \alpha ) \]
 </p>
-<p> where \(r\) is the particle radius ( \(\mbox{m}\)) and \(\langle c \rangle \) is the mean speed of the gas-phase molecules: </p><p class="formulaDsp">
-\[ \langle c \rangle = \sqrt{\frac{8RT}{\pi MW}} \]
+<p> where \(r\) is the radius of the particle(s) [m], \(D_g\) is the diffusion coefficient of the gas-phase species [ \(\mbox{m}^2\,\mbox{s}^{-1}\)], \(f_{fs}( K_n, \alpha )\) is the Fuchs Sutugin transition regime correction factor [unitless], \(K_n\) is the Knudsen Number [unitess], and \(\alpha\) is the mass accomodation coefficient.</p>
+<p>Rates can be calculated as: </p><p class="formulaDsp">
+\[ r_c = [G] N_a k_c \]
 </p>
-<p> where \(R\) is the ideal gas constant [ \(\mbox{J}\,\mbox{K}^{-1}\,\mbox{mol}^{-1}\)]. The particle radius used to calculate \(k_{f}\) is the effective radius [ \(r_{eff}\)], which is taken as the "least-wrong" choice for condensation rates, as it is weighted to surface area <b>[Zender2002]</b> .</p>
+<p> where \([G]\) is the gas-phase species concentration [ppm], \(N_a\) is the number concentration of particles [ \(\mbox{particle}\,\mbox{m}^{-3}\)] and the rate \(r_c\) is in [ \(\mbox{ppm}\,\mbox{s}^{-1}\)]. The particle radius used to calculate \(k_{f}\) is the effective radius [ \(r_{eff}\)], which is taken as the "least-wrong" choice for condensation rates, as it is weighted to surface area <b>[Zender2002]</b> .</p>
 <p>Input data for Phase transfer equations have the following format : </p><div class="fragment"><div class="line">{</div>
 <div class="line">  &quot;type&quot; : &quot;HL_PHASE_TRANSFER&quot;,</div>
 <div class="line">  &quot;gas-phase species&quot; : &quot;my gas spec&quot;,</div>
