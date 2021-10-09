@@ -55,7 +55,7 @@
 !!    r_c = [G] N_a k_c
 !!  \f]
 !!  where \f$[G]\f$ is the gas-phase species concentration [ppm], \f$N_a\f$ is
-!! the number concentration of particles [\f$\mbox{#}\,\mbox{m}^{-3}\f$] and
+!! the number concentration of particles [\f$\mbox{particle}\,\mbox{m}^{-3}\f$] and
 !! the rate \f$r_c\f$ is in [\f$\mbox{ppm}\,\mbox{s}^{-1}\f$].
 !!  The particle radius used
 !! to calculate \f$k_{f}\f$ is the effective radius [\f$r_{eff}\f$], which is

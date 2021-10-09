@@ -58,8 +58,8 @@
 !! \endcode
 !!
 !! You can also check out
-!! \ref ./camp/Dockerfile
-!! (or \ref ./camp/Dockerfile.mpi for MPI applications) to see how CAMP is
+!! \ref ./Dockerfile
+!! (or \ref ./Dockerfile.mpi for MPI applications) to see how CAMP is
 !! is built for automated testing.
 !!
 !!## Input files ##

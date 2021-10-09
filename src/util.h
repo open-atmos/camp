@@ -88,7 +88,7 @@ static inline double d_transition_regime_correction_factor_d_radius(
 }
 
 /** Calculate the gas-aerosol reaction rate constant for the transition regime
- * [\f$\mbox{m}^3\, \mbox{#}^{-1}\, \mbox{s}^{-1}\f$]
+ * [\f$\mbox{m}^3\, \mbox{particle}^{-1}\, \mbox{s}^{-1}\f$]
  *
  *  The rate constant \f$k_c\f$ is calculated according to \cite Zaveri2008 as:
  *  \f[
@@ -106,8 +106,8 @@ static inline double d_transition_regime_correction_factor_d_radius(
  *    r_c = [G] N_a k_c
  *  \f]
  *  where \f$[G]\f$ is the gas-phase species concentration [ppm], \f$N_a\f$ is
- * the number concentration of particles [\f$\mbox{#}\,\mbox{m}^{-3}\f$] and
- * the rate \f$r_c\f$ is in [\f$\mbox{ppm}\,\mbox{s}^{-1}\f$].
+ * the number concentration of particles [\f$\mbox{particle}\,\mbox{m}^{-3}\f$]
+ * and the rate \f$r_c\f$ is in [\f$\mbox{ppm}\,\mbox{s}^{-1}\f$].
  *
  *  @param diffusion_coeff__m2_s Diffusion coefficent of the gas species
  *  [\f$\mbox{m}^2\, \mbox{s}^{-1}\f$]
