@@ -334,9 +334,9 @@ def all_timesteps():
   #cases = ["CPU Multi-cells"]
   #cases = ["CPU One-cell","CPU Multi-cells"]
   #cases = ["CPU One-cell","GPU Block-cells(N)"]
-  cases = ["CPU One-cell","GPU Block-cells(1)"]
+  #cases = ["CPU One-cell","GPU Block-cells(1)"]
   #cases = ["CPU Multi-cells","GPU Block-cells(N)"]
-  #cases = ["CPU Multi-cells","GPU Block-cells(1)"]
+  cases = ["CPU Multi-cells","GPU Block-cells(1)"]
   #cases = ["GPU Block-cells(1)","GPU Block-cells(N)"]
   #cases = ["CPU One-cell","GPU One-cell"]
   #cases = ["CPU Multi-cells","GPU Multi-cells"]
@@ -350,7 +350,7 @@ def all_timesteps():
 
   #plot_y_key = "Speedup timeCVode"
   #plot_y_key = "Speedup counterLS"
-  plot_y_key = "Speedup normalized timeLS"
+  #plot_y_key = "Speedup normalized timeLS"
   #plot_y_key = "Speedup normalized computational timeLS"
   #plot_y_key = "Speedup counterBCG"
   #plot_y_key = "Speedup total iterations - counterBCG"
@@ -359,7 +359,7 @@ def all_timesteps():
 
   #plot_y_key = "% Time data transfers CPU-GPU BCG"
   #plot_y_key="NRMSE"
-  #plot_y_key="MAPE"
+  plot_y_key="MAPE"
   #plot_y_key="SMAPE"
 
   #remove_iters=0#10 #360
