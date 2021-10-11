@@ -1,6 +1,5 @@
 import matplotlib as mpl
 mpl.use('TkAgg')
-import plot_cases #todo delete file
 import matplotlib.pyplot as plt
 import csv
 import sys, getopt
