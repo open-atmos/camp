@@ -13,6 +13,9 @@ extern "C" {
 #include "rxns_gpu.h"
 #include "aeros/aero_rep_gpu_solver.h"
 #include "time_derivative_gpu.h"
+#include "Jacobian_gpu.h"
+}
+
 
 // Reaction types (Must match parameters defined in pmc_rxn_factory)
 #define RXN_ARRHENIUS 1
@@ -110,6 +113,7 @@ void solver_new_gpu_cu(SolverData *sd, int n_dep_var,
   ModelDataGPU *mGPU = &sd->mGPU;
   HANDLE_ERROR(cudaMalloc((void **) &mGPU->deriv_data, md->deriv_size));
   mGPU->n_rxn=md->n_rxn;
+  //printf("md->n_rxn %d\n",md->n_rxn);
   mGPU->n_rxn_env_data=md->n_rxn_env_data;
   mGPU->n_aero_phase=md->n_aero_phase;
   mGPU->n_added_aero_phases=md->n_added_aero_phases;
@@ -1352,4 +1356,4 @@ int camp_solver_update_model_state_cpu(N_Vector solver_state, ModelData *md,
   return status;
 }
 */
-}
+

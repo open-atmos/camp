@@ -18,7 +18,48 @@
 #include <mpi.h>
 #endif
 
-void check_iszerod(long double *x, int len, char *s){
+#ifdef CSR_MATRIX
+void swapCSC_CSR2(int n_row, int n_col, int* Ap, int* Aj, double* Ax, int* Bp, int* Bi, double* Bx){
+
+  int nnz=Ap[n_row];
+
+  memset(Bp, 0, (n_row+1)*sizeof(int));
+
+  for (int n = 0; n < nnz; n++){
+    Bp[Aj[n]]++;
+  }
+
+  //cumsum the nnz per column to get Bp[]
+  for(int col = 0, cumsum = 0; col < n_col; col++){
+    int temp  = Bp[col];
+    Bp[col] = cumsum;
+    cumsum += temp;
+  }
+  Bp[n_col] = nnz;
+
+  for(int row = 0; row < n_row; row++){
+    for(int jj = Ap[row]; jj < Ap[row+1]; jj++){
+      int col  = Aj[jj];
+      int dest = Bp[col];
+
+      Bi[dest] = row;
+      Bx[dest] = Ax[jj];
+
+      Bp[col]++;
+    }
+  }
+
+  for(int col = 0, last = 0; col <= n_col; col++){
+    int temp  = Bp[col];
+    Bp[col] = last;
+    last    = temp;
+  }
+
+}
+
+#endif
+
+void check_iszerod(long double *x, int len, const char *s){
 
 #ifndef DEBUG_CHECK_ISZEROD
 
@@ -34,7 +75,7 @@ void check_iszerod(long double *x, int len, char *s){
 
 }
 
-void check_isnanld(long double *x, int len, char *s){
+void check_isnanld(long double *x, int len, const char *s){
 
 #ifndef DEBUG_CHECK_ISNANLD
 
@@ -50,7 +91,7 @@ void check_isnanld(long double *x, int len, char *s){
 
 }
 
-void check_isnand(double *x, int len, char *s){
+void check_isnand(double *x, int len, const char *s){
 
   int n_zeros=0;
   for (int i=0; i<len; i++){
@@ -90,6 +131,33 @@ void print_double(double *x, int len, char *s){
 
 }
  */
+
+int compare_doubles(double *x, double *y, int len, const char *s){
+
+  int flag=1;
+  double tol=0.01;
+  //float tol=0.0001;
+  double rel_error;
+  int n_fails=0;
+  for (int i=0; i<len; i++){
+    if(x[i]==0)
+      rel_error=0.;
+    else
+      rel_error=abs((x[i]-y[i])/x[i]);
+      //rel_error=(x[i]-y[i]/(x[i]+1.0E-60));
+    if(rel_error>tol){
+      printf("compare_doubles %s rel_error %le for tol %le at [%d]: %le vs %le\n",
+              s,rel_error,tol,i,x[i],y[i]);
+      flag=0;
+      n_fails++;
+      if(n_fails==4)
+        return flag;
+    }
+  }
+
+  return flag;
+
+}
 
 void print_current_directory(){
 

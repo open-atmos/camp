@@ -51,11 +51,58 @@ def calculate_computational_timeLS(data,plot_y_key,case):
   #if(gpu_exist==False):
   #  raise Exception("Not GPU case for calculate_computational_timeLS metric")
 
-  #print("calculate_computational_timeLS")
-  #print(data_timeLS)
+def calculate_percentages_solveCVODEGPU(din):
 
+  #data_aux={}
+  print(din)
+  #print(data["timeNewtonIteration"])
+
+  percNum=100#1
+
+  data={}
+
+  data["timeNewtonIteration"]=[]
+  data["timeJac"]=[]
+  data["timelinsolsetup"]=[]
+  data["timecalc_Jac"]=[]
+  data["timeRXNJac"]=[]
+  data["timef"]=[]
+  data["timeguess_helper"]=[]
+
+
+  for i in range(len(din["timesolveCVODEGPU"])):
+    if(din["timesolveCVODEGPU"][i]!=0):
+      data["timeNewtonIteration"].append(din["timeNewtonIteration"][i]/din["timesolveCVODEGPU"][i]*percNum)
+
+      data["timeJac"].append(din["timeJac"][i]/din["timesolveCVODEGPU"][i]*percNum)
+      data["timelinsolsetup"].append(din["timelinsolsetup"][i]/din["timesolveCVODEGPU"][i]*percNum)
+      data["timecalc_Jac"].append(din["timecalc_Jac"][i]/din["timesolveCVODEGPU"][i]*percNum)
+      data["timeRXNJac"].append(din["timeRXNJac"][i]/din["timesolveCVODEGPU"][i]*percNum)
+      data["timef"].append(din["timef"][i]/din["timesolveCVODEGPU"][i]*percNum)
+      data["timeguess_helper"].append(din["timeguess_helper"][i]/din["timesolveCVODEGPU"][i]*percNum)
+
+      #data["timeNewtonIteration"]=din["timeNewtonIteration"][i]/data["timesolveCVODEGPU"][i]*percNum
+      #data["timeJac"][i]=din["timeJac"][i]/data["timesolveCVODEGPU"][i]*percNum
+      #data["timelinsolsetup"][i]=din["timelinsolsetup"][i]/data["timesolveCVODEGPU"][i]*percNum
+      #data["timecalc_Jac"][i]=din["timecalc_Jac"][i]/data["timesolveCVODEGPU"][i]*percNum
+      #data["timeRXNJac"][i]=din["timeRXNJac"][i]/data["timesolveCVODEGPU"][i]*percNum
+      #data["timef"][i]=din["timef"][i]/data["timesolveCVODEGPU"][i]*percNum
+      #data["timeguess_helper"][i]=din["timeguess_helper"][i]/data["timesolveCVODEGPU"][i]*percNum
+
+  #print(data["timeNewtonIteration"])
+
+  #if("GPU" in case):
+  #data_timeBiconjGradMemcpy=data[case][plot_y_key]
+  #data_timeLS=data[case]["timeLS"]
+  #print(data_timeBiconjGradMemcpy)
+  #print(data_timeLS)
   #for i in range(len(data_timeLS)):
   #  data_timeLS[i]=data_timeLS[i]-data_timeBiconjGradMemcpy[i]
+  #print(data_timeLS)
+  #gpu_exist=True
+
+  print("calculate_percentages_solveCVODEGPU")
+  print(data)
 
   return data
 
@@ -75,6 +122,7 @@ def normalize_by_counterLS_and_cells(data,plot_y_key,cells,case):
     raise Exception("normalize_by_counterLS_and_cells case without One-cell or Multi-cells key name")
 
   #print(cells_multiply)
+  #print(data)
 
   #data[case][new_plot_y_key] = []
   for i in range(len(data[case][plot_y_key])):
@@ -83,6 +131,36 @@ def normalize_by_counterLS_and_cells(data,plot_y_key,cells,case):
     /data[case]["counterLS"][i]*cells_multiply
     #data[case][new_plot_y_key].append(data[case][plot_y_key][i] \
     #                                  / data[case]["counterLS"][i]*cells_multiply)
+
+  #print(data)
+
+  return data
+
+def normalize_by_countercvStep_and_cells(data,plot_y_key,cells,case):
+
+  #plot_y_key = "timeLS"
+  #new_plot_y_key="Normalized timeLS"
+
+  print("normalize_by_countercvStep_and_cells")
+
+  #print(data[cases[0]][plot_y_key])
+
+  if("One-cell" in case):
+    print("One-cell")
+    cells_multiply=cells
+  elif("Multi-cells" in case):
+    print("Multi-cells")
+    cells_multiply=1
+  else:
+    raise Exception("normalize_by_counterLS_and_cells case without One-cell or Multi-cells key name")
+
+  #print(cells_multiply)
+
+  #data[case][new_plot_y_key] = []
+  for i in range(len(data[plot_y_key])):
+    #print(base_data[i],new_data[i], base_data[i]/new_data[i])
+    data[plot_y_key][i]=data[plot_y_key][i] \
+                        /data["countercvStep"][i]*cells_multiply
 
   #print(data[cases[0]][plot_y_key])
   #print(data)
@@ -263,31 +341,49 @@ def calculate_MAPE(data,timesteps):
   species_names=list(species1.keys())
   len_timestep=int(len(species1[species_names[0]])/timesteps)
   max_err=0.0
+  max_tol=1.0E-60
   for j in range(timesteps):
     MAPE=0.0
     #MAPE=1.0E-60
     n=0
-    for i in species1:
-      data1_values = species1[i]
-      data2_values = species2[i]
+    for name in species1:
+      data1_values = species1[name]
+      data2_values = species2[name]
       l=j*len_timestep
       r=len_timestep*(1+j)
       out1=data1_values[l:r]
       out2=data2_values[l:r]
 
       for k in range(len(out1)):
-        if(out1[k]==0.0):
-          out1[k]+=1.0E-60
-          out2[k]+=1.0E-60
+
+        #if(out1[k]<max_tol):
+        #  out1[k]=1.0E-60
+        #if(out2[k]<max_tol):
+        #  out2[k]=1.0E-60
+
+        #Filter low concs
+        if abs(out1[k]-out2[k]) < max_tol or (out1[k] == 0):
+          err=0.
+        else:
+          err=abs((out1[k]-out2[k])/out1[k])
+
+        #if(out1[k]==0.0):
+        #  out1[k]+=1.0E-60
+        #  out2[k]+=1.0E-60
+        #  err=abs((out1[k]-out2[k])/out1[k])
+          #err=1
         #print(out1[k],out2[k])
-        err=abs((out1[k]-out2[k])/out1[k])
+        #else:
+        #err=abs((out1[k]-out2[k])/out1[k])
         MAPE+=err
         n+=1
         if(err>max_err):
           max_err=err
+        #if(err>1):
+          #print(name,out1[k],out2[k])
     MAPEs[j]=MAPE/n*100
 
-  print("max_error:"+str(max_err)+"%")
+  print("max_error:"+str(max_err*100)+"%")
   #print(NRMSEs)
 
   return MAPEs

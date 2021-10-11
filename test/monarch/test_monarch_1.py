@@ -67,7 +67,7 @@ def run(config_file,diff_cells,mpi,mpiProcesses,n_cells,timesteps,
   #Onecell-Multicells itsolver
   write_itsolver_config_file(case)
   if(case_gpu_cpu=="GPU" and case!="One-cell"):
-    print("case_gpu_cpu==GPU and case!=One-cell")
+    #print("case_gpu_cpu==GPU and case!=One-cell")
     case="Multi-cells"
 
   #Onecell-Multicells
@@ -87,7 +87,6 @@ def run_cell(config_file,diff_cells,mpi,mpiProcessesList,n_cells_aux,timesteps,
   y_key_words = plot_y_key.split()
   y_key = y_key_words[-1]
   data={}
-  dataMAPE={}
 
   for i in range(len(cases)):
 
@@ -114,6 +113,9 @@ def run_cell(config_file,diff_cells,mpi,mpiProcessesList,n_cells_aux,timesteps,
       if(y_key=="counterBCG" or y_key=="timeLS"):
         data=plot_functions.normalize_by_counterLS_and_cells( \
           data,y_key,n_cells,cases[i])
+      elif(y_key=="timecvStep"):
+        data=plot_functions.normalize_by_countercvStep_and_cells( \
+        data,"timecvStep",n_cells,cases[i])
       else:
         raise Exception("Unkown normalized case",y_key)
 
@@ -144,7 +146,7 @@ def run_cell(config_file,diff_cells,mpi,mpiProcessesList,n_cells_aux,timesteps,
     #y_key = y_key_words[-1]
     #print(y_key)
     datay=plot_functions.calculate_speedup2(data,y_key)
-  elif(plot_y_key=="% Time data transfers CPU-GPU BCG"):
+  elif plot_y_key== "% Time data transfers CPU-GPU BCG":
     y_key="timeBiconjGradMemcpy"
     datay=plot_functions.calculate_BCGPercTimeDataTransfers(data,y_key)
   else:
@@ -228,7 +230,6 @@ def plot_historic(cases_gpu_cpu,cases_multicells_onecell,cells,diff_cells,timest
 
 def plot_cases(casesList,cases_gpu_cpu2,cases_multicells_onecell2,cells,diff_cells,timesteps,plot_y_key,
                    mpiProcessesList,datacases,SAVE_PLOT):
-  print("plot_case")
 
   plot_title=""
   columns=[]
@@ -320,9 +321,10 @@ def all_timesteps():
   #mpiProcessesList = [40,1]
 
   cells = [1000]
-  #cells = [1,10,100]
+  #cells = [10,100,1000]
   #cells = [100,500,1000]
   #cells = [1,5,10,50,100]
+  #cells = [100,1000,5000,10000]
   #cells = [100,500,1000,5000,10000]
   #cells = [100,1000,10000,100000]
 
@@ -332,6 +334,7 @@ def all_timesteps():
   #cases = ["Historic"]
   #cases = ["CPU One-cell"]
   #cases = ["CPU Multi-cells"]
+  #cases = ["GPU One-cell"]
   #cases = ["CPU One-cell","CPU Multi-cells"]
   #cases = ["CPU One-cell","GPU Block-cells(N)"]
   #cases = ["CPU One-cell","GPU Block-cells(1)"]
@@ -356,10 +359,14 @@ def all_timesteps():
   #plot_y_key = "Speedup total iterations - counterBCG"
   #plot_y_key = "Speedup normalized counterBCG"
   #plot_y_key = "Speedup BCG iteration (Comp.timeLS/counterBCG)"
+  #plot_y_key = "Percentages solveCVODEGPU" #Uncomment function
+  #plot_y_key = "Speedup timecvStep"
+  #plot_y_key = "Speedup normalized timecvStep"#not needed, is always normalized
+  #plot_y_key = "Speedup device timecvStep"
 
   #plot_y_key = "% Time data transfers CPU-GPU BCG"
   #plot_y_key="NRMSE"
-  plot_y_key="MAPE"
+  plot_y_key="MAPE"#todo check old ls option (cvode_gpu)
   #plot_y_key="SMAPE"
 
   #remove_iters=0#10 #360

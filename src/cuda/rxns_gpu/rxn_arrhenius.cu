@@ -234,13 +234,13 @@ void rxn_gpu_arrhenius_calc_deriv_contrib(ModelDataGPU *model_data, TimeDerivati
 #ifdef __CUDA_ARCH__
 __host__ __device__
 #endif
-void rxn_gpu_arrhenius_calc_jac_contrib(ModelDataGPU *model_data, realtype *J, int *rxn_int_data,
+void rxn_gpu_arrhenius_calc_jac_contrib(ModelDataGPU *model_data, JacobianGPU jac, int *rxn_int_data,
           double *rxn_float_data, double *rxn_env_data, double time_step)
 {
 #ifdef __CUDA_ARCH__
   int n_rxn=model_data->n_rxn;
 #else
-  int n_rxn=1;;
+  int n_rxn=1;
 #endif
   int *int_data = rxn_int_data;
   double *float_data = rxn_float_data;
@@ -251,28 +251,26 @@ void rxn_gpu_arrhenius_calc_jac_contrib(ModelDataGPU *model_data, realtype *J, i
   int i_elem = 0;
   for (int i_ind = 0; i_ind < NUM_REACT_; i_ind++) {
     // Calculate d_rate / d_i_ind
-    realtype rate = RATE_CONSTANT_;
+    double rate = RATE_CONSTANT_;
     for (int i_spec = 0; i_spec < NUM_REACT_; i_spec++)
       if (i_spec != i_ind) rate *= state[REACT_(i_spec)];
 
-    for (int i_dep=0; i_dep<NUM_REACT_; i_dep++, i_elem++) {
+    for (int i_dep = 0; i_dep < NUM_REACT_; i_dep++, i_elem++) {
       if (JAC_ID_(i_elem) < 0) continue;
-#ifdef __CUDA_ARCH__
-      atomicAdd(&(J[JAC_ID_(i_elem)]),-rate);
-#else
-      J[JAC_ID_(i_elem)] -= rate;
-#endif
+      jacobian_add_value_gpu(jac, (unsigned int)JAC_ID_(i_elem), JACOBIAN_LOSS,
+                         rate);
+      //check_isnanld(&rate,1,"post rxn_arrhenius_calc_jac_contrib rate");
     }
-    for (int i_dep=0; i_dep<NUM_PROD_; i_dep++, i_elem++) {
-  if (JAC_ID_(i_elem) < 0) continue;
+    for (int i_dep = 0; i_dep < NUM_PROD_; i_dep++, i_elem++) {
+      if (JAC_ID_(i_elem) < 0) continue;
       // Negative yields are allowed, but prevented from causing negative
       // concentrations that lead to solver failures
-      if (-rate * state[REACT_(i_ind)] * YIELD_(i_dep) * time_step <= state[PROD_(i_dep)]) {
-#ifdef __CUDA_ARCH__
-    atomicAdd(&(J[JAC_ID_(i_elem)]),YIELD_(i_dep) * rate);
-#else
-    J[JAC_ID_(i_elem)] += YIELD_(i_dep) * rate;
-#endif
+      if (-rate * state[REACT_(i_ind)] * YIELD_(i_dep) * time_step <=
+          state[PROD_(i_dep)]) {
+        jacobian_add_value_gpu(jac, (unsigned int)JAC_ID_(i_elem),
+                           JACOBIAN_PRODUCTION, YIELD_(i_dep) * rate);
+        //check_isnanld(&YIELD_(i_dep),1,"post rxn_arrhenius_calc_jac_contrib YIELD_(i_dep)");
+        //check_isnanld(&rate,1,"post rxn_arrhenius_calc_jac_contrib rate");
       }
     }
   }

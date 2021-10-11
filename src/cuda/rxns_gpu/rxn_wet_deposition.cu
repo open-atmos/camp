@@ -117,7 +117,7 @@ void rxn_gpu_wet_deposition_calc_deriv_contrib(ModelDataGPU *model_data, realtyp
 #ifdef __CUDA_ARCH__
 __host__ __device__
 #endif
-void rxn_gpu_wet_deposition_calc_jac_contrib(ModelDataGPU *model_data, realtype *J, int *rxn_int_data,
+void rxn_gpu_wet_deposition_calc_jac_contrib(ModelDataGPU *model_data, JacobianGPU jac, int *rxn_int_data,
           double *rxn_float_data, double *rxn_env_data, double time_step)
 {
 #ifdef __CUDA_ARCH__
@@ -133,11 +133,8 @@ void rxn_gpu_wet_deposition_calc_jac_contrib(ModelDataGPU *model_data, realtype 
   // Add contributions to the Jacobian
   for (int i_spec = 0; i_spec < NUM_SPEC_; i_spec++) {
     if (JAC_ID_(i_spec) >= 0)
-#ifdef __CUDA_ARCH__
-        atomicAdd(&(J[JAC_ID_(i_spec)]),-RATE_CONSTANT_);
-#else
-        J[JAC_ID_(i_spec)] -= RATE_CONSTANT_;
-#endif
+      jacobian_add_value_gpu(jac, (unsigned int)JAC_ID_(i_spec), JACOBIAN_LOSS,
+                         RATE_CONSTANT_);
   }
 
 }

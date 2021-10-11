@@ -117,7 +117,7 @@ void rxn_gpu_first_order_loss_calc_deriv_contrib(ModelDataGPU *model_data, realt
 #ifdef __CUDA_ARCH__
 __host__ __device__
 #endif
-void rxn_gpu_first_order_loss_calc_jac_contrib(ModelDataGPU *model_data, realtype *J, int *rxn_int_data,
+void rxn_gpu_first_order_loss_calc_jac_contrib(ModelDataGPU *model_data, JacobianGPU jac, int *rxn_int_data,
           double *rxn_float_data, double *rxn_env_data, double time_step)
 {
 #ifdef __CUDA_ARCH__
@@ -132,11 +132,8 @@ void rxn_gpu_first_order_loss_calc_jac_contrib(ModelDataGPU *model_data, realtyp
 
   // Add contributions to the Jacobian
   if (JAC_ID_ >= 0)
-#ifdef __CUDA_ARCH__
-    atomicAdd((double*)&(J[JAC_ID_]),-RATE_CONSTANT_);
-#else
-    J[JAC_ID_] -= RATE_CONSTANT_;
-#endif
+    jacobian_add_value_gpu(jac, (unsigned int)JAC_ID_, JACOBIAN_LOSS,
+                       RATE_CONSTANT_);
 
 }
 #endif

@@ -454,7 +454,11 @@ endif()
 
 set(STD_C_FLAGS "-std=c99")
 
+#todo test --default-stream per-thread https://developer.nvidia.com/blog/gpu-pro-tip-cuda-7-streams-simplify-concurrency/
+#set(STD_CUDA_FLAGS "-arch=compute_70 -code=sm_70 -dc --compiler-options '-fPIC' -lcusolver -lcudart -lcudadevrt -lcublas -lcusparse_static -lculibos -lpthread -ldl")
+
 set(STD_CUDA_FLAGS "-arch=compute_70 -code=sm_70 -dc --compiler-options '-fPIC' -lcusolver -lcudart -lcudadevrt -lcublas -lcusparse_static -lculibos -lpthread -ldl")
+
 
 #Simplified (Pending to check)
 #set(STD_CUDA_FLAGS "-arch=compute_70 -code=sm_70 -dc --compiler-options '-fPIC' -lcublas -lcusparse_static -lpthread -ldl")
@@ -581,10 +585,10 @@ if (CUDA_FOUND AND ENABLE_GPU)
           src/cuda/aeros/aero_reps/aero_rep_modal_binned_mass.cu
           src/cuda/aeros/aero_reps/aero_rep_single_particle.cu
           src/cuda/cvode_gpu.cu
-          #src/cuda/cvode_cpu.cu
           src/cuda/libsolv.cu
           src/cuda/itsolver_gpu.cu
           src/cuda/time_derivative_gpu.cu
+          src/cuda/Jacobian_gpu.cu
           #src/cuda/camp_gpu_cusolver.cu
           )
 
@@ -753,6 +757,23 @@ target_link_libraries(mock_monarch partmclib)
 if (ENABLE_TESTS)
 
 ######################################################################
+  # test_chemistry_cb05cl_ae5_big
+
+  add_executable(test_chemistry_cb05cl_ae5_big
+          test/chemistry/cb05cl_ae5/test_cb05cl_ae5_big.F90
+          ${CB5_EBI_SOLVER} ${CB5_KPP_SOLVER}
+          test/chemistry/cb05cl_ae5/module_BSC_CHEM_DATA.F90)
+  target_link_libraries(test_chemistry_cb05cl_ae5_big partmclib)
+
+  #if (CUDA_FOUND AND NOT ENABLE_GPU AND ENABLE_TESTS)
+  #    add_executable(test_chemistry_cb05cl_ae5_gpu
+  #            test/chemistry/cb05cl_ae5/test_cb05cl_ae5.F90
+  #            ${CB5_EBI_SOLVER} ${CB5_KPP_SOLVER}
+  #            test/chemistry/cb05cl_ae5/module_BSC_CHEM_DATA.F90)
+  #    target_link_libraries(test_chemistry_cb05cl_ae5_gpu partmclib_gpu)
+  #endif()
+
+######################################################################
 # test_chemistry_cb05cl_ae5
 
 add_executable(test_chemistry_cb05cl_ae5
@@ -767,23 +788,6 @@ target_link_libraries(test_chemistry_cb05cl_ae5 partmclib)
 #            ${CB5_EBI_SOLVER} ${CB5_KPP_SOLVER}
 #            test/chemistry/cb05cl_ae5/module_BSC_CHEM_DATA.F90)
 #    target_link_libraries(test_chemistry_cb05cl_ae5_big_gpu partmclib_gpu)
-#endif()
-
-######################################################################
-# test_chemistry_cb05cl_ae5_big
-
-add_executable(test_chemistry_cb05cl_ae5_big
-        test/chemistry/cb05cl_ae5/test_cb05cl_ae5_big.F90
-        ${CB5_EBI_SOLVER} ${CB5_KPP_SOLVER}
-        test/chemistry/cb05cl_ae5/module_BSC_CHEM_DATA.F90)
-target_link_libraries(test_chemistry_cb05cl_ae5_big partmclib)
-
-#if (CUDA_FOUND AND NOT ENABLE_GPU AND ENABLE_TESTS)
-#    add_executable(test_chemistry_cb05cl_ae5_gpu
-#            test/chemistry/cb05cl_ae5/test_cb05cl_ae5.F90
-#            ${CB5_EBI_SOLVER} ${CB5_KPP_SOLVER}
-#            test/chemistry/cb05cl_ae5/module_BSC_CHEM_DATA.F90)
-#    target_link_libraries(test_chemistry_cb05cl_ae5_gpu partmclib_gpu)
 #endif()
 
 ######################################################################

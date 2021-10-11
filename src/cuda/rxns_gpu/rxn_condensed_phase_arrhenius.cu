@@ -283,7 +283,7 @@ void rxn_gpu_condensed_phase_arrhenius_calc_deriv_contrib(ModelDataGPU *model_da
 #ifdef __CUDA_ARCH__
 __host__ __device__
 #endif
-void rxn_gpu_condensed_phase_arrhenius_calc_jac_contrib(ModelDataGPU *model_data, realtype *J, int *rxn_int_data,
+void rxn_gpu_condensed_phase_arrhenius_calc_jac_contrib(ModelDataGPU *model_data, JacobianGPU jac, int *rxn_int_data,
           double *rxn_float_data, double *rxn_env_data, double time_step)
 {
 #ifdef __CUDA_ARCH__
@@ -295,97 +295,7 @@ void rxn_gpu_condensed_phase_arrhenius_calc_jac_contrib(ModelDataGPU *model_data
   double *float_data = rxn_float_data;
   double *state = model_data->grid_cell_state;
   double *env_data = model_data->grid_cell_env;
-  realtype rate = RATE_CONSTANT_;
-
-  // Calculate Jacobian contributions for each aerosol phase
-  for (int i_phase=0, i_jac = 0; i_phase<NUM_AERO_PHASE_; i_phase++) {
-
-    // If this is an aqueous reaction, get the unit conversion from mol/m3 -> M
-    double unit_conv = 1.0;
-    if (WATER_(i_phase)>=0) {
-      unit_conv = state[WATER_(i_phase)] * 1.0e-9; // convert from ug/m3->L/m3
-
-      // For aqueous reactions, if no aerosol water is present, no reaction
-      // occurs
-      if (unit_conv < SMALL_NUMBER_) {
-        i_jac += (NUM_REACT_ + NUM_PROD_) * (NUM_REACT_ + 1);
-        continue;
-      }
-      unit_conv = 1.0/unit_conv;
-    }
-
-     // Add dependence on reactants for reactants and products
-    for (int i_react_ind = 0; i_react_ind < NUM_REACT_; i_react_ind++) {
-
-      // Calculate d_rate / d_react_i
-      rate = RATE_CONSTANT_;
-      for (int i_react = 0; i_react < NUM_REACT_; i_react++) {
-        if (i_react==i_react_ind) {
-          rate *= UGM3_TO_MOLM3_(i_react) * unit_conv;
-        } else {
-          rate *= state[REACT_(i_phase*NUM_REACT_+i_react)] *
-                  UGM3_TO_MOLM3_(i_react) * unit_conv;
-        }
-      }
-
-      // Add the Jacobian elements
-      for (int i_react_dep = 0; i_react_dep < NUM_REACT_; i_react_dep++) {
-	if (JAC_ID_(i_jac)<0) {i_jac++; continue;}
-#ifdef __CUDA_ARCH__
-        atomicAdd((double*)&(J[JAC_ID_(i_jac++)]), -rate /
-          (UGM3_TO_MOLM3_(i_react_dep) * unit_conv));
-#else
-        J[JAC_ID_(i_jac++)] -= rate / (UGM3_TO_MOLM3_(i_react_dep) * unit_conv);
-#endif
-      }
-      for (int i_prod_dep = 0; i_prod_dep < NUM_PROD_; i_prod_dep++) {
-	if (JAC_ID_(i_jac)<0) {i_jac++; continue;}
-#ifdef __CUDA_ARCH__
-        atomicAdd((double*)&(J[JAC_ID_(i_jac++)]), rate /
-        (UGM3_TO_MOLM3_(NUM_REACT_+i_prod_dep) * unit_conv));
-#else
-        J[JAC_ID_(i_jac++)] +=
-        rate * YIELD_(i_prod_dep) /
-        (UGM3_TO_MOLM3_(NUM_REACT_ + i_prod_dep) * unit_conv);
-#endif
-      }
-    }
-
-    // Add dependence on aerosol-phase water for reactants and products in
-    // aqueous reactions
-    if (WATER_(i_phase) < 0) {
-      i_jac += NUM_REACT_ + NUM_PROD_;
-      continue;
-    }
-
-    // Calculate the overall reaction rate (M/s or mol/m3/s)
-    rate = rxn_env_data[0];
-    for (int i_react = 0; i_react < NUM_REACT_; i_react++) {
-      rate *= state[REACT_(i_phase*NUM_REACT_+i_react)] *
-              UGM3_TO_MOLM3_(i_react) * unit_conv;
-    }
-    for (int i_react_dep = 0; i_react_dep < NUM_REACT_; i_react_dep++) {
-      if (JAC_ID_(i_jac)<0) {i_jac++; continue;}
-#ifdef __CUDA_ARCH__
-        atomicAdd((double*)&(J[JAC_ID_(i_jac++)]), (NUM_REACT_-1) * rate * 1e-9 /
-	        UGM3_TO_MOLM3_(i_react_dep));
-#else
-        J[JAC_ID_(i_jac++)] +=
-          (NUM_REACT_ - 1) * rate * 1e-9 / UGM3_TO_MOLM3_(i_react_dep);
-#endif
-    }
-    for (int i_prod_dep = 0; i_prod_dep < NUM_PROD_; i_prod_dep++) {
-      if (JAC_ID_(i_jac)<0) {i_jac++; continue;}
-#ifdef __CUDA_ARCH__
-        atomicAdd((double*)&(J[JAC_ID_(i_jac++)]), -(NUM_REACT_-1) * rate * 1e-9 *
-         YIELD_(i_prod_dep) / UGM3_TO_MOLM3_(NUM_REACT_+i_prod_dep));
-#else
-        J[JAC_ID_(i_jac++)] -= (NUM_REACT_ - 1) * rate * 1e-9 *
-          YIELD_(i_prod_dep) /
-          UGM3_TO_MOLM3_(NUM_REACT_ + i_prod_dep);
-#endif
-    }
-  }
+  double rate = RATE_CONSTANT_;
 
 }
 #endif

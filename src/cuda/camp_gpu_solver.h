@@ -15,8 +15,11 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+//extern "C" {
 #include "../camp_common.h"
+//}
 #include "time_derivative_gpu.h"
+#include "Jacobian_gpu.h"
 //#include "itsolver_gpu.h"
 //#include "../debug_and_stats/camp_debug_2.h"
 

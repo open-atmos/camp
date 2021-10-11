@@ -91,11 +91,14 @@ typedef enum { false, true } bool;
 #endif
 
 /* Jacobian map */
+#ifndef DEF_JAC_MAP
+#define DEF_JAC_MAP
 typedef struct {
   int solver_id;  // solver Jacobian id
   int rxn_id;     // reaction Jacobian id
   int param_id;   // sub model Jacobian id
 } JacMap;
+#endif
 
 /* Model data structure */
 typedef struct {
@@ -313,6 +316,16 @@ typedef struct {
   double timeLS;
   double timeDerivCPU;
   double timeJacCPU;
+  double timeNewtonIteration;
+  double tguessNewton;
+  double timeJac;
+  double timelinsolsetup;
+  double timecalc_Jac;
+  double timeRXNJac;
+  double timef;
+  double timeguess_helper;
+  int ncounters;
+  int ntimers;
   FILE *file; //todo clean file
 #endif
 
@@ -329,8 +342,9 @@ typedef struct {
 #endif
 #ifdef PMC_USE_GPU
   itsolver bicg;
-  //todo use ModelData mGPU; (only 1 struct of modelData but 2 instances): Remove vars only used on cpu like deriv_size
   ModelDataGPU mGPU;
+  ModelDataVariable mdv;
+  int *flagCells;
 #ifdef CHECK_GPU_LINSOLVE
   double max_error_linsolver;
   int max_error_linsolver_i;
