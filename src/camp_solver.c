@@ -534,7 +534,6 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
 
   // Get the structure of the Jacobian matrix
   sd->J = get_jac_init(sd);
-
   sd->model_data.J_init = SUNMatClone(sd->J);
   SUNMatCopy(sd->J, sd->model_data.J_init);
 
@@ -558,8 +557,6 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
   // Set a function to improve guesses for y sent to the linear solver
   flag = CVodeSetDlsGuessHelper(sd->cvode_mem, guess_helper);
   check_flag_fail(&flag, "CVodeSetDlsGuessHelper", 1);
-
-  //printf("solver_initialize end\n");
 
 // Set gpu rxn values
 #ifdef PMC_USE_GPU
@@ -1266,7 +1263,7 @@ int f_gpu(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
 
   rxn_calc_deriv_gpu(sd, y, deriv, (double)time_step);
 
-  //return flag;
+  return flag;
 
   //Transfer cv_ftemp() not needed because mGPU->dftemp=md->deriv_data_gpu;
   //cudaMemcpy(cv_ftemp_data,mGPU->dftemp,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
@@ -2218,14 +2215,6 @@ int guess_helper(const realtype t_n, const realtype h_n, N_Vector y_n,
     // Advance t_j
     t_j += h_j;
 
-#ifdef DEBUG_GUESS_HELPER
-    //for(int j=0;j<mGPU->nrows;j++){
-    //  realtype t_star = -atmp1[j] / acorr[j];
-    //  printf("corr[%d] %le tmp1[j] %le hf %le t_star %le h_j %le h_n %le\n",
-    //          j,acorr[j],atmp1[j],ahf[j],t_star,h_j,h_n);
-    //  }
-#endif
-
     //printf("Derivguess_helper before\n");
     // Recalculate the time derivative \f$f(t_j)\f$
     if (f(t_0 + t_j, tmp1, corr, solver_data) != 0) {
@@ -2390,7 +2379,7 @@ SUNMatrix get_jac_init(SolverData *sd) {
   }
 
   // Save the number of sub model Jacobian elements per grid cell
-  n_jac_elem_param = param_jac.num_elem;
+  n_jac_elem_param = jacobian_number_of_elements(param_jac);
   sd->model_data.n_per_cell_param_jac_elem = (int)n_jac_elem_param;
 
   // Set up the parameter Jacobian (sized for one grid cell)
@@ -2462,7 +2451,7 @@ SUNMatrix get_jac_init(SolverData *sd) {
   }
 
   // Save the number of non-zero Jacobian elements
-  n_jac_elem_solver = solver_jac.num_elem;
+  n_jac_elem_solver = jacobian_number_of_elements(solver_jac);
   sd->model_data.n_per_cell_solver_jac_elem = (int)n_jac_elem_solver;
 
   // Initialize the sparse matrix (for solver state array including all cells)
@@ -2487,8 +2476,8 @@ SUNMatrix get_jac_init(SolverData *sd) {
       (SM_DATA_S(M))[i_elem] =
       (SM_DATA_S(sd->model_data.J_solver))[i_elem] = (realtype)0.0;
       (SM_INDEXVALS_S(M))[i_elem] =
-      (SM_INDEXVALS_S(sd->model_data.J_solver))[i_elem] =
-             deriv_ids[solver_jac.row_ids[cell_elem]] +
+          (SM_INDEXVALS_S(sd->model_data.J_solver))[i_elem] =
+              deriv_ids[jacobian_row_index(solver_jac, cell_elem)] +
               i_cell * n_dep_var;
     }
   }
@@ -2511,8 +2500,8 @@ SUNMatrix get_jac_init(SolverData *sd) {
   int i_mapped_value = 0;
   for (unsigned int i_ind = 0; i_ind < n_state_var; ++i_ind) {
     for (unsigned int i_elem =
-         sd->jac.col_ptrs[i_ind];
-         i_elem < sd->jac.col_ptrs[i_ind+1];
+             jacobian_column_pointer_value(sd->jac, i_ind);
+         i_elem < jacobian_column_pointer_value(sd->jac, i_ind + 1);
          ++i_elem) {
       unsigned int i_dep = sd->jac.row_ids[i_elem];
       // skip dependent species that are not solver variables and

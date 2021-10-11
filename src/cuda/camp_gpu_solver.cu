@@ -699,8 +699,8 @@ __device__ void solveRXN0(
 
 #else
 
-  double *rxn_float_data = (double *)&( md->rxn_double[md->rxn_float_indices[md->i_rxn]]);
-  int *int_data = (int *)&(md->rxn_int[md->rxn_int_indices[md->i_rxn]]);
+  double *rxn_float_data = &( md->rxn_double[md->rxn_float_indices[md->i_rxn]]);
+  int *int_data = &(md->rxn_int[md->rxn_int_indices[md->i_rxn]]);
 
   //double *rxn_float_data = &( md->rxn_double[md->i_rxn]);
   //int *int_data = &(md->rxn_int[md->i_rxn]);
@@ -744,7 +744,6 @@ __device__ void solveRXN0(
       //                                     rxn_float_data, rxn_env_data,time_step);
       break;
     case RXN_EMISSION :
-      printf("RXN_EMISSION");
       //rxn_gpu_emission_calc_deriv_contrib(md, deriv_data, rxn_int_data,
       //                                     rxn_float_data, rxn_env_data,time_step);
       break;
@@ -772,7 +771,6 @@ __device__ void solveRXN0(
 #endif
       break;
     case RXN_WET_DEPOSITION :
-      printf("RXN_WET_DEPOSITION");
       //rxn_gpu_wet_deposition_calc_deriv_contrib(md, deriv_data, rxn_int_data,
       //                                     rxn_float_data, rxn_env_data,time_step);
       break;
@@ -842,7 +840,7 @@ __device__ void cudaDevicecalc_deriv0(
     TimeDerivativeGPU deriv_data;
     deriv_data.num_spec = deriv_length_cell*n_cells;
 
-#ifdef AEROS_CPU
+#ifndef AEROS_CPU
 #else
     deriv_data.production_rates = md->production_rates;
     deriv_data.loss_rates = md->loss_rates;

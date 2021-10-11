@@ -935,18 +935,19 @@ __device__ void cudaDevicedotxy(double *g_idata1, double *g_idata2,
   sdata[tid] = g_idata1[i]*g_idata2[i];
   __syncthreads();
 
-
+/*
   for (unsigned int s=(blockDim.x+n_shr_empty)/2; s>0; s>>=1)
   {
     if (tid < s)
       sdata[tid] += sdata[tid + s];
     __syncthreads();
   }
+  */
 
   //todo treat case deriv_length < 32
   //maybe https://github.com/cudpp/cudpp/blob/master/src/cudpp/kernel/reduce_kernel.cuh
 
-  /*
+
   unsigned int blockSize = blockDim.x+n_shr_empty;
 
   // do reduction in shared mem
@@ -978,7 +979,7 @@ __device__ void cudaDevicedotxy(double *g_idata1, double *g_idata2,
 
   __syncthreads();//not needed?
 
-  */
+
 
   *g_odata = sdata[0];
   __syncthreads();

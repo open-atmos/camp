@@ -800,7 +800,7 @@ contains
       pressure(:,:,:) = 94165.7187500000
       air_density(:,:,:) = 1.225
       conv=0.02897/air_density(1,1,1)*(TIME_STEP*60.)*1e6/height !units of time_step to seconds
-      water_conc(:,:,:,WATER_VAPOR_ID) = 0.!0.03!0.01
+      water_conc(:,:,:,WATER_VAPOR_ID) = 0.03!0.01
 
       !Initialize different axis values
       !Species_conc is modified in monarch_interface%get_init_conc
