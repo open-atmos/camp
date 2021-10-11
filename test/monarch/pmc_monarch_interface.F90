@@ -126,7 +126,7 @@ contains
   !! species in the tracer array.
   function constructor(camp_config_file, interface_config_file, &
                        starting_id, ending_id, n_cells, &
-          ADD_EMISIONS, mpi_comm) result (this)
+          ADD_EMISIONS, ncounters, ntimers, mpi_comm) result (this)
 
     !> A new MONARCH interface
     type(monarch_interface_t), pointer :: this
@@ -143,6 +143,8 @@ contains
     !> Num cells to compute simulatenously
     integer, optional :: n_cells
     character(len=:), allocatable, optional :: ADD_EMISIONS
+    integer, optional :: ncounters
+    integer, optional :: ntimers
 
     type(camp_solver_data_t), pointer :: camp_solver_data
     character, allocatable :: buffer(:)
@@ -181,6 +183,17 @@ contains
     else
       this%solve_multiple_cells = .true.
       this%n_cells=n_cells
+    end if
+
+    if (MONARCH_PROCESS.eq.0) then
+      print*,"monarch_interface_t start"
+    end if
+
+    if(.not.present(ncounters)) then
+      ncounters = 0
+    end if
+    if(.not.present(ntimers)) then
+      ntimers = 0
     end if
 
     this%interface_input_file=interface_config_file
@@ -280,6 +293,8 @@ contains
         end do
       endif
 
+      !print*, "monarch_interface_t pack_size() end"
+
       allocate(buffer(pack_size))
       pos = 0
       call this%camp_core%bin_pack(buffer, pos)
@@ -311,6 +326,8 @@ contains
           call this%photo_rxns(i)%bin_pack( buffer, pos, local_comm )
         end do
       endif
+
+      !print*, "monarch_interface_t bin_pack() end"
 
     endif
 
@@ -378,7 +395,11 @@ contains
 #endif
 
     ! Initialize the solver on all nodes
-    call this%camp_core%solver_initialize()
+
+    call this%camp_core%solver_initialize(ncounters, ntimers)
+
+    !call pmc_mpi_barrier(MPI_COMM_WORLD)
+    !print*, "monarch_interface_t solver_initialize end"
 
     ! Create a state variable on each node
     this%camp_state => this%camp_core%new_state()
@@ -398,6 +419,9 @@ contains
       end do
 
     end if
+
+    call pmc_mpi_barrier(MPI_COMM_WORLD)
+
 
     ! Set the aerosol mode dimensions
     ! organic matter
@@ -613,11 +637,6 @@ contains
           end do
         end do
 
-        !print*,n_cells_range, emi_slide
-        !print*,"rate emi and press"
-        !print*,rate_emi(1,:)
-        !print*,pressure(:,:,:)
-
       else
 
         !NUM_TIME_STEP
@@ -663,7 +682,7 @@ contains
             this%camp_state%state_var(this%map_camp_id(:)) = &
                             MONARCH_conc(i,j,k,this%map_monarch_id(:))
 
-            !print*,"camp_state", this%camp_state%state_var(this%map_camp_id(:))
+            !print*,"i_cell",z,"camp_state", this%camp_state%state_var(this%map_camp_id(:))
 
             !print*,"i_cell",z
 

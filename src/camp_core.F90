@@ -134,7 +134,6 @@ module pmc_camp_core
   !!
   !! Contains all time-invariant data for a Part-MC model run.
   type :: camp_core_t
-  private
     !> Chemical mechanisms
     !! FIXME set up an iterator for external modules to use and
     !! make all data members private
@@ -170,15 +169,10 @@ module pmc_camp_core
     type(camp_solver_data_t), pointer, public :: solver_data_aero => null()
     !> Solver data (mixed gas- and aerosol-phase reactions)
     type(camp_solver_data_t), pointer, public :: solver_data_gas_aero => null()
-#ifdef EXPORT_CAMP_INPUT
-    !class(rxn_data_t), pointer, public :: rxn_photo
-    !real(kind=dp), allocatable :: base_rate(:)
     integer(kind=i_kind) :: counterSolve
     integer(kind=i_kind) :: counterFail
     real(kind=dp), allocatable :: init_state_var(:)
-    !type(string_t), allocatable :: spec_names(:)
     type(string_t), allocatable :: spec_names(:)
-#endif
     !> Flag indicating the model data has been initialized
     logical :: core_is_initialized = .false.
     !> Flag indicating the solver has been initialized
@@ -699,12 +693,8 @@ contains
     ! Aerosol species
     type(string_t), allocatable :: unique_names(:)
 
-#ifdef EXPORT_CAMP_INPUT
-    type(string_t), allocatable :: spec_names(:)
-    !character(len=*), allocatable :: spec_names_chr(:)
     this%counterSolve=0
     this%counterFail=0
-#endif
 
     ! make sure the core has not already been initialized
     call assert_msg(157261665, .not.this%core_is_initialized, &
@@ -1172,12 +1162,14 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Initialize the solver
-  subroutine solver_initialize(this)
+  subroutine solver_initialize(this, ncounters, ntimers)
 
     !> Chemical model
     class(camp_core_t), intent(inout) :: this
     type(string_t), allocatable :: spec_names(:)
     integer :: i_spec, n_gas_spec
+    integer, optional :: ncounters
+    integer, optional :: ntimers
 
     call assert_msg(662920365, .not.this%solver_is_initialized, &
             "Attempting to initialize the solver twice.")
@@ -1185,6 +1177,13 @@ contains
 #ifdef PMC_DEBUG2_GPU
     spec_names = this%unique_names()
 #endif
+
+    if(.not.present(ncounters)) then
+      ncounters=0
+    end if
+    if(.not.present(ntimers)) then
+      ntimers=0
+    end if
 
 
     !Get spec names
@@ -1222,8 +1221,10 @@ contains
                 this%sub_model,  & ! Pointer to the sub-models
                 GAS_RXN,         & ! Reaction phase
                 this%n_cells,    & ! # of cells computed simultaneosly
-                spec_names       & ! Species names
-                )
+                spec_names,       & ! Species names
+                ncounters, & ! # of profiling variables (Times and counters)
+                ntimers & ! # of profiling variables (Times and counters)
+      )
       call this%solver_data_aero%initialize( &
                 this%var_type,   & ! State array variable types
                 this%abs_tol,    & ! Absolute tolerances for each state var
@@ -1233,8 +1234,10 @@ contains
                 this%sub_model,  & ! Pointer to the sub-models
                 AERO_RXN,        & ! Reaction phase
                 this%n_cells,    & ! # of cells computed simultaneosly
-                spec_names       & ! Species names
-                )
+                spec_names,       & ! Species names
+                ncounters, & ! # of profiling variables (Times and counters)
+                ntimers & ! # of profiling variables (Times and counters)
+      )
     else
 
       ! Create a new solver data object
@@ -1255,8 +1258,10 @@ contains
                 this%sub_model,  & ! Pointer to the sub-models
                 GAS_AERO_RXN,    & ! Reaction phase
                 this%n_cells,    & ! # of cells computed simultaneosly
-                spec_names       & ! Species names
-                )
+                spec_names,       & ! Species names
+                ncounters, & ! # of profiling variables (Times and counters)
+                ntimers & ! # of profiling variables (Times and counters)
+              )
 
     end if
 
@@ -1596,12 +1601,14 @@ contains
     write(mpi_rank_str,*) mpi_rank
     mpi_rank_str=adjustl(mpi_rank_str)
 
-    export_path = "/gpfs/scratch/bsc32/bsc32815/a2s8/nmmb-monarch/MODEL/"&
-            //"SRC_LIBS/partmc/test/monarch/exports/camp_in_out_"&
-            //trim(mpi_rank_str)//".json"
+    !export_path = "/gpfs/scratch/bsc32/bsc32815/a2s8/nmmb-monarch/MODEL/"&
+    !        //"SRC_LIBS/partmc/test/monarch/exports/camp_in_out_"&
+    !        //trim(mpi_rank_str)//".json"
+    export_path = "exports/camp_in_out_"//trim(mpi_rank_str)//".json"
 #else
-    export_path = "/gpfs/scratch/bsc32/bsc32815/a2s8/nmmb-monarch/MODEL/"&
-            //"SRC_LIBS/partmc/test/monarch/exports/camp_in_out.json"
+    !export_path = "/gpfs/scratch/bsc32/bsc32815/a2s8/nmmb-monarch/MODEL/"&
+    !        //"SRC_LIBS/partmc/test/monarch/exports/camp_in_out.json"
+    export_path = "exports/camp_in_out.json"
 #endif
     call json%print(p,export_path)
 
@@ -1635,14 +1642,14 @@ contains
     type(sub_model_factory_t) :: sub_model_factory
     class(aero_rep_data_t), pointer :: aero_rep
     class(sub_model_data_t), pointer :: sub_model
-    integer(kind=i_kind) :: i, j, i_mech, i_phase, i_rep, i_sub_model, l_comm
+    integer(kind=i_kind) :: i, j, i_mech, i_phase, i_rep,&
+            i_sub_model, l_comm
+    type(string_t), allocatable :: spec_names(:)
 
 #ifdef PMC_USE_MPI
 
-#ifdef EXPORT_CAMP_INPUT
     character(len=:), allocatable :: spec_name
-    integer(kind=i_kind) :: max_spec_name_size = 64
-#endif
+    integer(kind=i_kind) :: max_spec_name_size = 128
 
     if (present(comm)) then
       l_comm = comm
@@ -1681,6 +1688,7 @@ contains
                 pmc_mpi_pack_size_integer_array(this%var_type, l_comm) + &
                 pmc_mpi_pack_size_real_array(this%init_state_cell, l_comm)
 
+
 #ifdef EXPORT_CAMP_INPUT
 
     spec_name=""
@@ -1691,7 +1699,28 @@ contains
     do i=1, this%size_state_per_cell
       pack_size = pack_size + pmc_mpi_pack_size_string(spec_name, l_comm)
     end do
+
+#else
+
+    !print*,"camp_core pack_size start"
+
+    !allocate(spec_names(this%size_state_per_cell))
+    this%spec_names = this%unique_names()
+
+    !print*,"camp_core pack_size start",size(this%spec_names)
+
+    do i=1, size(this%spec_names)
+      call assert_msg(307712742,len_trim(this%spec_names(i)%string).lt.&
+              max_spec_name_size,&
+              "species name too large")
+      pack_size = pack_size + &
+              pmc_mpi_pack_size_string(trim(this%spec_names(i)%string),l_comm)
+    end do
+
+    !print*,"camp_core pack_size end"
+
 #endif
+
 
 #else
     pack_size = 0
@@ -1719,10 +1748,8 @@ contains
     class(sub_model_data_t), pointer :: sub_model
     integer(kind=i_kind) :: i, j, i_mech, i_phase, i_rep, i_sub_model, &
             prev_position, l_comm
-#ifdef EXPORT_CAMP_INPUT
     type(string_t), allocatable :: spec_names(:)
-    integer(kind=i_kind) :: max_spec_name_size = 64
-#endif
+    integer(kind=i_kind) :: max_spec_name_size = 128
 
     if (present(comm)) then
       l_comm = comm
@@ -1776,6 +1803,20 @@ contains
 
     end do
 
+#else
+
+    !print*,"camp_core bin_pack start"
+
+    !this%spec_names = this%unique_names()
+
+    do i=1, size(this%spec_names)
+      !print*,"camp_core pack_size",i
+      !print*,"camp_core pack_size",this%spec_names(i)%string
+      call pmc_mpi_pack_string(buffer, pos, trim(this%spec_names(i)%string), l_comm)
+    end do
+
+    !print*,"camp_core pack_size end"
+
 #endif
 
     call assert(184050835, &
@@ -1805,11 +1846,9 @@ contains
     integer(kind=i_kind) :: i, j, i_mech, i_phase, i_rep, i_sub_model, &
             prev_position, num_mech, num_phase, num_rep, num_sub_model, &
             l_comm
-#ifdef EXPORT_CAMP_INPUT
     type(string_t), allocatable :: spec_names(:)
     character(len=:), allocatable :: spec_name
-    integer :: max_spec_name_size=64
-#endif
+    integer :: max_spec_name_size=128
 
     if (present(comm)) then
       l_comm = comm
@@ -1866,11 +1905,33 @@ contains
 
     end do
 
+#else
+
+    !print*,"camp_core bin_unpack start"
+
+    allocate(this%spec_names(this%size_state_per_cell))
+    !this%spec_names(i)=this%unique_names()
+
+    spec_name=""
+    do i=1,max_spec_name_size
+      spec_name=spec_name//" "
+    end do
+
+    !print*,"camp_core this%size_state_per_cell",this%size_state_per_cell
+
+    do i=1, this%size_state_per_cell
+      call pmc_mpi_unpack_string(buffer, pos, spec_name)
+      this%spec_names(i)%string = trim(spec_name)
+      !print*,this%spec_names(i)%string
+    end do
+
+    !print*,"camp_core bin_unpack end"
+
 #endif
 
     this%core_is_initialized = .true.
-    call assert(291557168, &
-         pos - prev_position <= this%pack_size(l_comm))
+    !call assert(291557168, &
+    !        pos - prev_position <= this%pack_size(l_comm))
 
     allocate(this%init_state(this%size_state_per_cell * this%n_cells))
     do i_cell = 0, this%n_cells - 1

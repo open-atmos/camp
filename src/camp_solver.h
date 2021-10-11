@@ -20,7 +20,8 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
                  int n_aero_rep, int n_aero_rep_int_param,
                  int n_aero_rep_float_param, int n_aero_rep_env_param,
                  int n_sub_model, int n_sub_model_int_param,
-                 int n_sub_model_float_param, int n_sub_model_env_param);
+                 int n_sub_model_float_param, int n_sub_model_env_param,
+                 int ncounters, int ntimers);
 void solver_set_spec_name(void *solver_data, char *spec_name,
                           int size_spec_name, int i);
 void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
@@ -39,9 +40,8 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
                            double *next_time_step__s, int *Jac_eval_fails,
                            int *RHS_evals_total, int *Jac_evals_total,
                            double *RHS_time__s, double *Jac_time__s,
-                           double *timeCVode, double *timeCVodeTotal,
-                           int *counterBCG, int *counterLS, double *timeLS,
-                           double *timeBiconjGradMemcpy,double *max_loss_precision);
+                           double *max_loss_precision,
+                           int *counters, double *times);
 void export_camp_input(void *solver_data, double *init_state, char *path);
 void solver_free(void *solver_data);
 void model_free(ModelData model_data);
@@ -49,11 +49,13 @@ void model_free(ModelData model_data);
 #ifdef PMC_USE_SUNDIALS
 /* Functions called by the solver */
 int f(realtype t, N_Vector y, N_Vector deriv, void *model_data);
-#ifdef PMC_USE_GPU
-int f_gpu(realtype t, N_Vector y, N_Vector deriv, void *model_data);
-#endif
 int Jac(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *model_data,
         N_Vector tmp1, N_Vector tmp2, N_Vector tmp3);
+#ifdef PMC_USE_GPU
+int f_gpu(realtype t, N_Vector y, N_Vector deriv, void *model_data);
+int Jac_gpu(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *model_data,
+        N_Vector tmp1, N_Vector tmp2, N_Vector tmp3);
+#endif
 int guess_helper(const realtype t_n, const realtype h_n, N_Vector y_n,
                  N_Vector y_n1, N_Vector hf, void *solver_data, N_Vector tmp1,
                  N_Vector corr);
@@ -64,7 +66,7 @@ void error_handler(int error_code, const char *module, const char *function,
 int camp_solver_update_model_state(N_Vector solver_state, SolverData *sd,
                                    realtype threshhold,
                                    realtype replacement_value);
-SUNMatrix get_jac_init(SolverData *solver_data);
+SUNMatrix get_jac_init(SolverData *sd);
 bool check_Jac(realtype t, N_Vector y, SUNMatrix J, N_Vector deriv,
                N_Vector tmp, N_Vector tmp1, void *solver_data);
 int check_flag(void *flag_value, char *func_name, int opt);

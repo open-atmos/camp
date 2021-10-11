@@ -70,7 +70,7 @@ program mock_monarch
   integer, parameter :: RESULTS_FILE_UNIT_TABLE = 10
   integer, parameter :: RESULTS_FILE_UNIT_PY = 11
   integer, parameter :: IMPORT_FILE_UNIT = 12
-  integer, parameter :: STATSOUT_FILE_UNIT = 13
+  integer, parameter :: STATSOUT_FILE_UNIT2 = 13
   integer, parameter :: STATSIN_FILE_UNIT = 14
   integer, parameter :: RESULTS_ALL_CELLS_FILE_UNIT = 15
 
@@ -103,7 +103,7 @@ program mock_monarch
   !> Ending index for camp-chem species in tracer array
   integer, parameter :: END_CAMP_ID = 210!350
   !> Time step (min)
-  real, parameter :: TIME_STEP = 2!1.6 !camp_paper=2
+  real :: TIME_STEP
   !> Number of time steps to integrate over
   !integer, parameter :: NUM_TIME_STEP = 20!1!camp_paper=720!36
   integer :: NUM_TIME_STEP !1!camp_paper=720!36
@@ -163,7 +163,8 @@ program mock_monarch
   !> PartMC-camp <-> MONARCH interface configuration file
   character(len=:), allocatable :: interface_input_file
   !> Results file prefix
-  character(len=:), allocatable :: output_file_prefix, output_file_title, str_to_int_aux
+  character(len=:), allocatable :: output_file_prefix, output_file_title, str_to_int_aux,&
+          path_solver_stats
   !> CAMP-chem input file file
   type(string_t), allocatable :: name_gas_species_to_print(:), name_aerosol_species_to_print(:)
   integer(kind=i_kind), allocatable :: id_gas_species_to_print(:), id_aerosol_species_to_print(:)
@@ -180,11 +181,10 @@ program mock_monarch
   !> Partmc nº of cases to test
   integer :: plot_case, new_v_cells, aux_int
   type(solver_stats_t), target :: solver_stats
-  integer :: counterBCG_prev = 0
-  integer :: counterLS_prev = 0
-  real(kind=dp) :: timeLS_prev = 0.0
-  real(kind=dp) :: timeCvode_prev = 0.0
-  real(kind=dp) :: timeBiconjGradMemcpy_prev = 0.0
+
+  integer, allocatable :: counters(:)
+  real(kind=dp), allocatable :: times(:)
+  integer :: ncounters, ntimers != 0 != 2
   integer :: export_results_all_cells
   integer :: plot_species = 0
 
@@ -267,9 +267,7 @@ program mock_monarch
   if(status_code.eq.0) then
     if(arg.eq."Realistic") then
       DIFF_CELLS = "ON"
-#ifdef DEBUG_DIFF_CELLS
-      print*,"DIFF_CELLS ",DIFF_CELLS
-#endif
+      !print*,"DIFF_CELLS ",DIFF_CELLS
     else
       DIFF_CELLS = "OFF"
     end if
@@ -278,9 +276,41 @@ program mock_monarch
     print*, "WARNING: not DIFF_CELLS parameter received, value set to ",DIFF_CELLS
   end if
 
+  call get_command_argument(9, arg, status=status_code)
+  if(status_code.eq.0) then
+    str_to_int_aux = trim(arg)
+    read(str_to_int_aux, *) ncounters
+  else
+    ncounters = 4
+    !print*, "WARNING: not ncounters parameter received, value set to ",ncounters
+  end if
+
+  call get_command_argument(10, arg, status=status_code)
+  if(status_code.eq.0) then
+    str_to_int_aux = trim(arg)
+    read(str_to_int_aux, *) ntimers
+  else
+    ntimers = 14!5 !todo read automatically in .py
+    !print*, "WARNING: not ntimers parameter received, value set to ",ntimers
+  end if
+
+  allocate(counters(ncounters))
+  allocate(times(ntimers))
+  counters(:)=0
+  times(:)=0.0
+
+  call solver_stats%allocate(ncounters,ntimers)
+
+  if(interface_input_file.eq."interface_monarch_cb05.json") then
+    TIME_STEP=3. !Monarch case
+  else
+    TIME_STEP=2. !CAMP paper case
+  end if
+
   if (pmc_mpi_rank().eq.0) then
     write(*,*) "Num time-steps:", NUM_TIME_STEP, "Num cells:",&
             NUM_WE_CELLS*NUM_SN_CELLS*NUM_VERT_CELLS
+    !print*," ncounters ntimers",ncounters,ntimers
   end if
 
   allocate(temperature(NUM_WE_CELLS,NUM_SN_CELLS,NUM_VERT_CELLS))
@@ -401,12 +431,15 @@ program mock_monarch
   end if
 
   call model_initialize(output_file_prefix)
+  path_solver_stats = output_file_prefix//"_solver_stats.csv"
 
-  !call pmc_mpi_barrier(MPI_COMM_WORLD)
-  !print*,"MPI RANK",pmc_mpi_rank()
 
   pmc_interface => monarch_interface_t(camp_input_file, interface_input_file, &
-          START_CAMP_ID, END_CAMP_ID, n_cells, ADD_EMISIONS)!, n_cells
+          START_CAMP_ID, END_CAMP_ID, n_cells, ADD_EMISIONS, ncounters, ntimers)!, n_cells
+
+  !call pmc_mpi_barrier(MPI_COMM_WORLD)
+  !print*,"monarch_interface_t end MPI RANK",pmc_mpi_rank()
+
 
   if(export_results_all_cells.eq.1) then
     call init_file_results_all_cells(pmc_interface, output_file_prefix)
@@ -438,14 +471,14 @@ program mock_monarch
   call pmc_interface%get_init_conc(species_conc, water_conc, WATER_VAPOR_ID, &
           air_density,i_W,I_E,I_S,I_N)
 
-#ifdef IMPORT_CAMP_INPUT
-  call import_camp_input(pmc_interface)
-  !call import_camp_input_json(pmc_interface)
-#endif
+  if(interface_input_file.eq."interface_monarch_cb05.json") then
+    !call import_camp_input(pmc_interface)
+    call import_camp_input_json(pmc_interface)
+  end if
 
 #ifdef SOLVE_EBI_IMPORT_CAMP_INPUT
-  !todo update compare for monarch_binned case (ebi for gas and another for aerosols)
-  if (pmc_mpi_rank().eq.0) then
+  if (pmc_mpi_rank().eq.0&
+    .and.interface_input_file.eq."interface_monarch_cb05.json") then
     call solve_ebi(pmc_interface)
   end if
 #endif
@@ -501,7 +534,7 @@ program mock_monarch
     curr_time = curr_time + TIME_STEP
 
 #ifdef PMC_DEBUG_GPU
-    call export_solver_stats(curr_time,pmc_interface,solver_stats)
+    call export_solver_stats(curr_time,pmc_interface,solver_stats,ncounters,ntimers)
 #endif
 
     if(export_results_all_cells.eq.1) then
@@ -589,17 +622,17 @@ program mock_monarch
   !print*,"Rank",pmc_mpi_rank(), "conc",&
   !        species_conc(1,1,1,pmc_interface%map_monarch_id(:))
 
-
-
 #ifdef SOLVE_EBI_IMPORT_CAMP_INPUT
-    if (pmc_mpi_rank().eq.0) then
+      if (pmc_mpi_rank().eq.0&
+          .and.interface_input_file.eq."interface_monarch_cb05.json") then
       call compare_ebi_camp_json(pmc_interface)
     end if
 #endif
 
   ! Output results and scripts
-  if (pmc_mpi_rank().eq.0 .and. plot_species.eq.1 ) then
+  if (pmc_mpi_rank().eq.0) then
     !write(*,*) "MONARCH interface tests - PASS"
+    !call print_state_gnuplot(curr_time,pmc_interface,species_conc)
     call print_state_gnuplot(curr_time,pmc_interface, name_gas_species_to_print,id_gas_species_to_print&
             ,name_aerosol_species_to_print,id_aerosol_species_to_print,RESULTS_FILE_UNIT)
     call create_gnuplot_script(pmc_interface, output_file_prefix, &
@@ -608,15 +641,19 @@ program mock_monarch
           !        output_file_title, plot_start_time, curr_time, n_cells_plot, cell_to_print)
           call create_gnuplot_persist_paper_camp(pmc_interface, output_file_prefix, &
                   plot_start_time, curr_time)
-  end if
+                          end if
 
   close(RESULTS_FILE_UNIT)
   close(RESULTS_FILE_UNIT_TABLE)
   close(RESULTS_FILE_UNIT_PY)
-  close(STATSOUT_FILE_UNIT)
   close(RESULTS_ALL_CELLS_FILE_UNIT)
+  close(STATSOUT_FILE_UNIT2)
 
   ! Deallocation
+  deallocate(counters)
+  deallocate(times)
+  call solver_stats%deallocate()
+  !if (associated(solver_stats)) deallocate(solver_stats)
   deallocate(camp_input_file)
   deallocate(interface_input_file)
   deallocate(output_file_prefix)
@@ -646,7 +683,7 @@ contains
     character(len=:), allocatable, intent(in) :: file_prefix
 
     character(len=:), allocatable :: file_name
-    character(len=:), allocatable :: aux_str, aux_str_py, aux_str_stats
+    character(len=:), allocatable :: aux_str, aux_str_py, str_stats_names
     character(len=128) :: i_str !if len !=128 crashes (e.g len=100)
     integer :: z,o,i,j,k,r,i_cell,i_spec
     integer :: n_cells_print
@@ -659,8 +696,6 @@ contains
     open(RESULTS_FILE_UNIT_TABLE, file=file_name, status="replace", action="write")
     file_name = file_prefix//"_urban_plume_0001.txt"
     open(RESULTS_FILE_UNIT_PY, file=file_name, status="replace", action="write")
-    file_name = file_prefix//"_solver_stats.csv"
-    open(STATSOUT_FILE_UNIT, file=file_name, status="replace", action="write")
 
     n_cells_print=(I_E - I_W+1)*(I_N - I_S+1)*NUM_VERT_CELLS
 
@@ -701,12 +736,17 @@ contains
     write(RESULTS_FILE_UNIT_PY, "(A)", advance="no") aux_str_py
     write(RESULTS_FILE_UNIT_PY, '(a)') ''
 
-    aux_str_stats = "timestep,counterBCG,counterLS,timeLS,timeBiconjGradMemcpy,timeCVode"
+    file_name = file_prefix//"_solver_stats.csv"
+    open(STATSOUT_FILE_UNIT2, file=file_name, status="replace", action="write")
 
-    write(STATSOUT_FILE_UNIT, "(A)", advance="no") aux_str_stats
-    write(STATSOUT_FILE_UNIT, '(a)') ''
+    str_stats_names = "timestep,counterBCG,counterLS,countersolveCVODEGPU,countercvStep,timeLS,timeBiconjGradMemcpy,timeCVode,&
+            dtcudaDeviceCVode,dtPostBCG,timesolveCVODEGPU,timeNewtonIteration,timeJac,timelinsolsetup,timecalc_Jac,&
+            timeRXNJac,timef,timeguess_helper,timecvStep"
 
-    ! TODO refine initial model conditions
+    write(STATSOUT_FILE_UNIT2, "(A)", advance="no") str_stats_names
+    write(STATSOUT_FILE_UNIT2, '(a)') ''
+
+
     species_conc(:,:,:,:) = 0.0
     height=1. !(m)
 
@@ -800,7 +840,7 @@ contains
     integer :: n_cells_print
 
     file_name = file_prefix//"_results_all_cells.csv"
-    print*,file_name
+    !print*,file_name
     open(RESULTS_ALL_CELLS_FILE_UNIT, file=file_name, status="replace", action="write")
 
     if(NUM_WE_CELLS*NUM_SN_CELLS*NUM_VERT_CELLS.gt.1000) then
@@ -813,8 +853,6 @@ contains
       !print*,pmc_interface%monarch_species_names(z)%string
       aux_str = aux_str//","//pmc_interface%monarch_species_names(z)%string
     end do
-
-
 
     write(RESULTS_ALL_CELLS_FILE_UNIT, "(A)", advance="no") aux_str
     write(RESULTS_ALL_CELLS_FILE_UNIT, '(a)') ''
@@ -897,8 +935,18 @@ contains
     !  print*, "ERROR: Import can only handle data from 1 cell, set n_cells to 1"
     !end if
 
+    !read(IMPORT_FILE_UNIT,*) (pmc_interface%camp_state%state_var(&
+    !        i),i=1,size(pmc_interface%camp_state%state_var)/n_cells)
+
     read(IMPORT_FILE_UNIT,*) (pmc_interface%camp_state%state_var(&
-            i),i=1,size(pmc_interface%camp_state%state_var)/n_cells)
+            i),i=1,state_size_per_cell)
+
+    do z=0,n_cells-1
+      do i=1,state_size_per_cell
+        pmc_interface%camp_state%state_var(i+(z*state_size_per_cell))=&
+                pmc_interface%camp_state%state_var(i)
+      end do
+    end do
 
     !write(*,*) "Importing temperatures and pressures"
 
@@ -919,13 +967,16 @@ contains
           o = (j-1)*(I_E) + (i-1) !Index to 3D
           z = (k-1)*(I_E*I_N) + o !Index for 2D
 
-          do r=1,size(pmc_interface%camp_state%state_var)/n_cells
-            pmc_interface%camp_state%state_var(r+z*state_size_per_cell) = &
-            pmc_interface%camp_state%state_var(r)
-          end do
+          !do r=1,size(pmc_interface%camp_state%state_var)/n_cells
+          !  pmc_interface%camp_state%state_var(r+z*state_size_per_cell) = &
+          !  pmc_interface%camp_state%state_var(r)
+          !end do
 
-          pmc_interface%camp_state%state_var(pmc_interface%map_camp_id(:)+(z*state_size_per_cell))=&
-                  pmc_interface%camp_state%state_var(pmc_interface%map_camp_id(:))
+          !pmc_interface%camp_state%state_var(pmc_interface%map_camp_id(:)+(z*state_size_per_cell))=&
+          !        pmc_interface%camp_state%state_var(pmc_interface%map_camp_id(:))
+
+          !species_conc(i,j,k,pmc_interface%map_monarch_id(:)) = &
+          !        pmc_interface%camp_state%state_var(pmc_interface%map_camp_id(:))
 
           species_conc(i,j,k,pmc_interface%map_monarch_id(:)) = &
                   pmc_interface%camp_state%state_var(pmc_interface%map_camp_id(:))
@@ -933,27 +984,28 @@ contains
           temperature(i,j,k) = temperature(1,1,1)!+z*0.1
           pressure(i,j,k) = pressure(1,1,1)
 
-          do i_photo_rxn = 1, pmc_interface%n_photo_rxn
-
-          !if (pmc_mpi_rank().eq.1) then
-            !pmc_interface%base_rates(i_photo_rxn) = pmc_interface%base_rates(i_photo_rxn)!+0.01
-            !pmc_interface%base_rates(i_photo_rxn) = 0.01
-            !write(*,*), "rates",i_photo_rxn, pmc_interface%base_rates(i_photo_rxn)
-          !end if
-          !write(*,*), "rates",i_photo_rxn, pmc_interface%base_rates(i_photo_rxn)
-
-
-          call pmc_interface%photo_rxns(i_photo_rxn)%set_rate(real(pmc_interface%base_rates(i_photo_rxn), kind=dp))
-          !call pmc_interface%photo_rxns(i_photo_rxn)%set_rate(real(0.0, kind=dp)) !works
-
-          call pmc_interface%camp_core%update_data(pmc_interface%photo_rxns(i_photo_rxn),z)
-
-        !print*,"id photo_rate", pmc_interface%base_rates(i_photo_rxn)
-          end do
         end do
       end do
     end do
 
+    do i_photo_rxn = 1, pmc_interface%n_photo_rxn
+
+      !if (pmc_mpi_rank().eq.1) then
+      !pmc_interface%base_rates(i_photo_rxn) = pmc_interface%base_rates(i_photo_rxn)!+0.01
+      !pmc_interface%base_rates(i_photo_rxn) = 0.01
+      !write(*,*), "rates",i_photo_rxn, pmc_interface%base_rates(i_photo_rxn)
+      !end if
+      !write(*,*), "rates",i_photo_rxn, pmc_interface%base_rates(i_photo_rxn)
+
+
+      !pmc_interface%base_rates(i_photo_rxn)=0.
+      call pmc_interface%photo_rxns(i_photo_rxn)%set_rate(real(pmc_interface%base_rates(i_photo_rxn), kind=dp))
+      !call pmc_interface%photo_rxns(i_photo_rxn)%set_rate(real(0.0, kind=dp)) !works
+
+      call pmc_interface%camp_core%update_data(pmc_interface%photo_rxns(i_photo_rxn),z)
+
+      !print*,"id photo_rate", pmc_interface%base_rates(i_photo_rxn)
+    end do
 
     close(IMPORT_FILE_UNIT)
 
@@ -971,7 +1023,7 @@ contains
     character(len=128) :: mpi_rank_str, i_str
     integer :: mpi_rank, id
     real(kind=dp) :: dt, temp, press, real_val
-    type(string_t), allocatable :: camp_spec_names(:)
+    type(string_t), allocatable :: camp_spec_names(:), unique_names(:)
     real, dimension(NUM_EBI_PHOTO_RXN) :: ebi_photo_rates
     integer, dimension(NUM_EBI_PHOTO_RXN) :: photo_id_camp
 
@@ -982,29 +1034,49 @@ contains
     write(mpi_rank_str,*) mpi_rank
     mpi_rank_str=adjustl(mpi_rank_str)
 
-    export_path = "/gpfs/scratch/bsc32/bsc32815/a2s8/nmmb-monarch/MODEL/"&
-            //"SRC_LIBS/partmc/test/monarch/exports/camp_in_out_"&
-            //trim(mpi_rank_str)//".json"
+    !export_path = "/gpfs/scratch/bsc32/bsc32815/a2s8/nmmb-monarch/MODEL/"&
+    !        //"SRC_LIBS/partmc/test/monarch/exports/camp_in_out_"&
+    !        //trim(mpi_rank_str)//".json"
+
+    export_path = "exports/camp_in_out_"//trim(mpi_rank_str)//".json"
 
     call jfile%initialize()
 
     call jfile%load_file(export_path); if (jfile%failed()) print*,&
-            "JSON not found at compare_ebi_camp_json"
+            "import_camp_input_json: JSON not found at ",export_path
 
     if (pmc_mpi_rank().eq.0) then
       write(*,*) "Importing camp input json"
+      if(n_cells.gt.1) then
+        print*, "Importing data from a cell to the rest"
+      end if
     end if
 
-    if(n_cells.gt.1) then
-      print*, "ERROR: Import can only handle data from 1 cell, set n_cells to 1"
-    end if
+    !camp_spec_names=pmc_interface%monarch_species_names
+    !unique_names=pmc_interface%camp_core%unique_names()
+    unique_names=pmc_interface%camp_core%unique_names()
+    !camp_spec_names=unique_names
+    !camp_spec_names=pmc_interface%camp_core%unique_names()
+    camp_spec_names=pmc_interface%camp_core%spec_names
 
-    camp_spec_names=pmc_interface%camp_core%unique_names()
-
+    !print*,size(pmc_interface%monarch_species_names),size(unique_names) !72,29
+    !print*, pmc_interface%monarch_species_names(:)%string,&
+    !        unique_names(:)%string
     do i=1, size(camp_spec_names)
+
       call jfile%get('input.species.'//camp_spec_names(i)%string,&
               pmc_interface%camp_state%state_var(i))
       !print*, camp_spec_names(i)%string, pmc_interface%camp_state%state_var(i)
+
+    end do
+
+    !print*, "import_camp_input_json b"
+
+    do z=0,n_cells-1
+      do i=1,state_size_per_cell
+        pmc_interface%camp_state%state_var(i+(z*state_size_per_cell))=&
+                pmc_interface%camp_state%state_var(i)
+      end do
     end do
 
     do i=I_W,I_E
@@ -1013,8 +1085,17 @@ contains
           o = (j-1)*(I_E) + (i-1) !Index to 3D
           z = (k-1)*(I_E*I_N) + o !Index for 2D
 
+          !print*,"A"
+
+          !pmc_interface%camp_state%state_var(pmc_interface%map_camp_id(:)+(z*state_size_per_cell))=&
+          !pmc_interface%camp_state%state_var(pmc_interface%map_camp_id(:))
+
+          !species_conc(i,j,k,pmc_interface%map_monarch_id(:)) = &
+          !        pmc_interface%camp_state%state_var(pmc_interface%map_camp_id(:)+(z*state_size_per_cell))
+
           species_conc(i,j,k,pmc_interface%map_monarch_id(:)) = &
-                  pmc_interface%camp_state%state_var(pmc_interface%map_camp_id(:)+(z*state_size_per_cell))
+                  pmc_interface%camp_state%state_var(pmc_interface%map_camp_id(:))
+
 
           call jfile%get('input.temperature',temp)
           temperature(i,j,k)=temp
@@ -1023,6 +1104,13 @@ contains
           !print*,"PRESSURE READ CAMP",pressure(i,j,k)
         end do
       end do
+    end do
+
+    do i = 1, state_size_per_cell
+      if (trim(camp_spec_names(i)%string).eq."H2O") then
+        water_conc(:,:,:,WATER_VAPOR_ID) = pmc_interface%camp_state%state_var(i)
+        !print*,"EBI H2O",water_conc(1,1,1,WATER_VAPOR_ID)
+      end if
     end do
 
     do i=1, pmc_interface%n_photo_rxn
@@ -1037,6 +1125,7 @@ contains
 
     do i_photo_rxn = 1, pmc_interface%n_photo_rxn
 
+      !pmc_interface%base_rates(i_photo_rxn)=0.
       call pmc_interface%photo_rxns(i_photo_rxn)%set_rate(real(pmc_interface%base_rates(i_photo_rxn), kind=dp))
       !call pmc_interface%photo_rxns(i_photo_rxn)%set_rate(real(0.0, kind=dp)) !works
 
@@ -1046,6 +1135,8 @@ contains
     end do
 
     close(IMPORT_FILE_UNIT)
+
+    !print*, "import_camp_input_json end"
 
   end subroutine import_camp_input_json
 
@@ -1074,6 +1165,8 @@ contains
     integer, dimension(NUM_EBI_PHOTO_RXN) :: photo_id_camp
     real(kind=dp) :: rel_error_in_out
     real(kind=dp), allocatable :: ebi_init(:)
+    real(kind=dp) :: mwair = 28.9628 !mean molecular weight for dry air [ g/mol ]
+    real(kind=dp) :: mwwat = 18.0153 ! mean molecular weight for water vapor [ g/mol ]
 
     ! Set the BSC chem parameters
     call init_bsc_chem_data()
@@ -1103,7 +1196,7 @@ contains
 
     call set_ebi_species(ebi_spec_names)
     call set_monarch_species(monarch_spec_names)
-    camp_spec_names=pmc_interface%camp_core%unique_names()
+    camp_spec_names=pmc_interface%camp_core%unique_names()!monarch_species_name
 
     call assert_msg(122432506, size(pmc_interface%camp_state%state_var).eq.NUM_CAMP_SPEC, &
             "NUM_CAMP_SPEC not equal size(state_var)")
@@ -1119,7 +1212,6 @@ contains
     do i = 1, NUM_EBI_SPEC
       do j = 1, NUM_CAMP_SPEC
         if (trim(ebi_spec_names(i)%string).eq.trim(camp_spec_names(j)%string)) then
-
 
           ebi_spec_id_to_camp(j) = i
           YC(i) = pmc_interface%camp_state%state_var(j)
@@ -1148,9 +1240,14 @@ contains
               ebi_photo_rates,             & ! Photolysis rates
               temperature(1,1,1),             & ! Temperature (K)
               press,                & ! Air pressure (atm)
-              water_conc(1,1,1,WATER_VAPOR_ID),              & ! Water vapor concentration (ppmV)
+              water_conc(1,1,1,WATER_VAPOR_ID),&! * mwair / mwwat * 1.e6, &
+              !water_conc(1,1,1,WATER_VAPOR_ID) ,              & ! Water vapor concentration (ppmV)
               RKI)                       ! Rate constants
       call EXT_HRSOLVER( 2018012, 070000, 1, 1, 1) ! These dummy variables are just for output
+
+      !H2O  = MAX(WATER(C,R,kflip,P_QV) * MAOMV * 1.0e+06,0.0)
+
+      !print*,YC(:)
 
     end do
 
@@ -1205,12 +1302,15 @@ contains
       write(mpi_rank_str,*) mpi_rank
       mpi_rank_str=adjustl(mpi_rank_str)
 
-      export_path = "/gpfs/scratch/bsc32/bsc32815/a2s8/nmmb-monarch/MODEL/"&
-              //"SRC_LIBS/partmc/test/monarch/exports/ebi_in_out_"&
-              //trim(mpi_rank_str)//".json"
+      !export_path = "/gpfs/scratch/bsc32/bsc32815/a2s8/nmmb-monarch/MODEL/"&
+      !        //"SRC_LIBS/partmc/test/monarch/exports/ebi_in_out_"&
+      !       //trim(mpi_rank_str)//".json"
+      export_path = "exports/ebi_in_out_"//trim(mpi_rank_str)//".json"
+
 #else
-      export_path = "/gpfs/scratch/bsc32/bsc32815/a2s8/nmmb-monarch/MODEL/"&
-              //"SRC_LIBS/partmc/test/monarch/exports/ebi_in_out.json"
+      !export_path = "/gpfs/scratch/bsc32/bsc32815/a2s8/nmmb-monarch/MODEL/"&
+      !        //"SRC_LIBS/partmc/test/monarch/exports/ebi_in_out.json"
+      export_path = "exports/ebi_in_out.json"
 #endif
       call json%print(p,export_path)
 
@@ -1220,7 +1320,7 @@ contains
 
     end if
 
-#ifdef PRINT_EBI_INPUT
+#ifndef PRINT_EBI_INPUT
     print*,"EBI species"
     print*, "TIME_STEP", TIME_STEP
     print*, "Temp", temperature(1,1,1)
@@ -1300,7 +1400,7 @@ contains
     real, dimension(NUM_EBI_PHOTO_RXN) :: ebi_photo_rates
     integer, dimension(NUM_EBI_PHOTO_RXN) :: photo_id_camp
 
-    real(kind=dp) :: rel_error_in_out
+    real(kind=dp) :: rel_error_in_out, mape_err, MAPE
     real(kind=dp) :: MAX_REL_ERROR_TOL = 0.8
 
     call set_ebi_species(ebi_spec_names)
@@ -1312,9 +1412,10 @@ contains
     write(mpi_rank_str,*) mpi_rank
     mpi_rank_str=adjustl(mpi_rank_str)
 
-    export_path = "/gpfs/scratch/bsc32/bsc32815/a2s8/nmmb-monarch/MODEL/"&
-            //"SRC_LIBS/partmc/test/monarch/exports/ebi_in_out_"&
-            //trim(mpi_rank_str)//".json"
+    !export_path = "/gpfs/scratch/bsc32/bsc32815/a2s8/nmmb-monarch/MODEL/"&
+    !        //"SRC_LIBS/partmc/test/monarch/exports/ebi_in_out_"&
+    !        //trim(mpi_rank_str)//".json"
+    export_path = "exports/ebi_in_out_"//trim(mpi_rank_str)//".json"
 
     call jfile%initialize()
 
@@ -1337,9 +1438,10 @@ contains
 
     call jfile%destroy()
 
-    export_path = "/gpfs/scratch/bsc32/bsc32815/a2s8/nmmb-monarch/MODEL/"&
-            //"SRC_LIBS/partmc/test/monarch/exports/camp_in_out_"&
-            //trim(mpi_rank_str)//".json"
+    !export_path = "/gpfs/scratch/bsc32/bsc32815/a2s8/nmmb-monarch/MODEL/"&
+    !        //"SRC_LIBS/partmc/test/monarch/exports/camp_in_out_"&
+    !        //trim(mpi_rank_str)//".json"
+    export_path = "exports/camp_in_out_"//trim(mpi_rank_str)//".json"
 
     call jfile%initialize()
 
@@ -1354,23 +1456,29 @@ contains
 
     call jfile%destroy()
 
-    print*, "Specs relative error[(ebi-camp)/(ebi+camp)]&
-            greater than MAX_REL_ERROR_TOL",MAX_REL_ERROR_TOL
+    print*, "Specs relative errors[(ebi-camp)/(ebi+camp)]&
+            greater than MAX_REL_ERROR_TOL:",MAX_REL_ERROR_TOL
     print*, "Name, input, ebi_out, camp_out, camp_id"! &
             !,rel. error [(ebi-camp)/(ebi+camp)]"
 
+    mape_err=0.0
     do i=1, size(ebi_spec_names)
       do j=1, size(camp_spec_names)
         if (ebi_spec_names(i)%string.eq.camp_spec_names(j)%string) then
           rel_error_in_out=abs((ebi_spec_out(i)-camp_spec_out(j))/&
                 (ebi_spec_out(i)+camp_spec_out(j)+1.0d-30))
+          mape_err=mape_err+abs((ebi_spec_out(i)-camp_spec_out(j))/&
+                  (ebi_spec_out(i)+1.0d-30))
           if(rel_error_in_out.gt.MAX_REL_ERROR_TOL) then
             print*, ebi_spec_names(i)%string, ebi_spec_in(i), ebi_spec_out(i)&
                     ,camp_spec_out(j), j!,rel_error_in_out
           end if
         end if
+        MAPE=mape_err/size(ebi_spec_names)*100
       end do
     end do
+
+    print*,"MAPE EBI:",MAPE
 
 #ifdef DEBUG_INPUT_OUTPUT
     print*, "Specs with error greater than MAX_REL_ERROR_TOL",MAX_REL_ERROR_TOL
@@ -1401,6 +1509,7 @@ contains
 #endif
 
   !> Output the model results
+  !subroutine print_state_gnuplot(curr_time,pmc_interface,species_conc)
   subroutine print_state_gnuplot(curr_time_in, pmc_interface, name_gas_species_to_print,id_gas_species_to_print&
           ,name_aerosol_species_to_print,id_aerosol_species_to_print, file_unit, n_cells_to_print)
 
@@ -1894,52 +2003,37 @@ contains
 
   end subroutine
 
-  subroutine export_solver_stats(curr_time, pmc_interface, solver_stats)
+  subroutine export_solver_stats(curr_time, pmc_interface, solver_stats, ncounters, ntimers)
 
     real, intent(in) :: curr_time
     type(monarch_interface_t), intent(in) :: pmc_interface
     type(solver_stats_t), intent(inout) :: solver_stats
+    integer, intent(inout) :: ncounters
+    integer, intent(inout) :: ntimers
 
     character(len=128) :: i_cell_str, time_str
+    integer :: l_comm, ierr, i
+    integer, allocatable :: counters_max(:)
+    real(kind=dp), allocatable :: times_max(:)
 
-    integer :: counterLS_max, counterLS, counterBCG, counterBCG_max
-    real(kind=dp) :: timeLS_max, timeCvode_max, timeLS, timeBiconjGradMemcpy, &
-            timeBiconjGradMemcpy_max ,timeCvode
-    integer :: l_comm, ierr
+    allocate(counters_max(ncounters))
+    allocate(times_max(ntimers))
 
 #ifdef PMC_USE_MPI
 
     l_comm = MPI_COMM_WORLD
 
-    call mpi_reduce(solver_stats%counterBCG, counterBCG_max, 1, MPI_INTEGER, MPI_MAX, 0, &
-            l_comm, ierr)
-    call mpi_reduce(solver_stats%counterLS, counterLS_max, 1, MPI_INTEGER, MPI_MAX, 0, &
+    call mpi_reduce(solver_stats%counters, counters_max, ncounters, MPI_INTEGER, MPI_MAX, 0, &
             l_comm, ierr)
     call pmc_mpi_check_ierr(ierr)
-    call mpi_reduce(solver_stats%timeLS, timeLS_max, 1, MPI_DOUBLE, MPI_MAX, 0, &
+    call mpi_reduce(solver_stats%times, times_max, ntimers, MPI_DOUBLE, MPI_MAX, 0, &
             l_comm, ierr)
     call pmc_mpi_check_ierr(ierr)
-    call mpi_reduce(solver_stats%timeBiconjGradMemcpy, timeBiconjGradMemcpy_max, 1, MPI_DOUBLE, MPI_MAX, 0, &
-            l_comm, ierr)
-    call pmc_mpi_check_ierr(ierr)
-    call mpi_reduce(solver_stats%timeCvode, timeCvode_max, 1, MPI_DOUBLE, MPI_MAX, 0, &
-            l_comm, ierr)
-    call pmc_mpi_check_ierr(ierr)
-
-
-    counterBCG=counterBCG_max
-    counterLS=counterLS_max
-    timeLS=timeLS_max
-    timeBiconjGradMemcpy=timeBiconjGradMemcpy_max
-    timeCvode=timeCvode_max
 
 #else
 
-    counterBCG=solver_stats%counterBCG
-    counterLS=solver_stats%counterLS
-    timeLS=solver_stats%timeLS
-    timeBiconjGradMemcpy=solver_stats%timeBiconjGradMemcpy
-    timeCvode=solver_stats%timeCvode
+    counters_max(:)=solver_stats%counters(:)
+    times_max(:)=solver_stats%times(:)
 
 #endif
 
@@ -1947,39 +2041,35 @@ contains
 
       write(time_str,*) curr_time
       time_str=adjustl(time_str)
-      write(STATSOUT_FILE_UNIT, "(A)", advance="no") trim(time_str)
-      write(STATSOUT_FILE_UNIT, "(A)", advance="no") ","
 
-      write(STATSOUT_FILE_UNIT, "(I9)", advance="no") &
-              counterBCG-counterBCG_prev
-      write(STATSOUT_FILE_UNIT, "(A)", advance="no") ","
-      write(STATSOUT_FILE_UNIT, "(I9)", advance="no") &
-              counterLS-counterLS_prev
-      write(STATSOUT_FILE_UNIT, "(A)", advance="no") ","
-      write(STATSOUT_FILE_UNIT, "(ES13.6)", advance="no") &
-              timeLS-timeLS_prev
-      write(STATSOUT_FILE_UNIT, "(A)", advance="no") ","
-      write(STATSOUT_FILE_UNIT, "(ES13.6)", advance="no") &
-              timeBiconjGradMemcpy-timeBiconjGradMemcpy_prev
-      write(STATSOUT_FILE_UNIT, "(A)", advance="no") ","
-      write(STATSOUT_FILE_UNIT, "(ES13.6)", advance="no") &
-              timeCvode-timeCvode_prev
+      write(STATSOUT_FILE_UNIT2, "(A)", advance="no") trim(time_str)
 
-      write(STATSOUT_FILE_UNIT, '(a)') ''
+      do i=1, ncounters
+        write(STATSOUT_FILE_UNIT2, "(A)", advance="no") ","
+        write(STATSOUT_FILE_UNIT2, "(I6)", advance="no") &
+                counters_max(i)-counters(i)
+        !print*,"counters_max(i),counters(i)",&
+        !        counters_max(i),counters(i), counters_max(i)-counters(i)
+        counters(i)=counters_max(i)
+      end do
 
-      counterBCG_prev = counterBCG
-      counterLS_prev=counterLS
-      timeLS_prev=timeLS
-      timeBiconjGradMemcpy_prev=timeBiconjGradMemcpy
-      timeCvode_prev=timeCvode
+      do i=1, ntimers
+        write(STATSOUT_FILE_UNIT2, "(A)", advance="no") ","
+        write(STATSOUT_FILE_UNIT2, "(ES13.6)", advance="no") &
+                times_max(i)-times(i)
 
-      !print*, "counterBCG fortran", counterBCG
-      !print*, "timeLS fortran", timeLS
-      !print*, "counterLS fortran", solver_stats%counterLS
-      !print*, "timeBiconjGradMemcpy fortran", solver_stats%timeBiconjGradMemcpy
-      !print*, "timeCvode fortran", solver_stats%timeCvode
+        !print*,"times_max,i",times_max(i),i!,solver_stats%times(i)
+
+        times(i)=times_max(i)
+      end do
+
+      write(STATSOUT_FILE_UNIT2, '(a)') ''
 
     end if
+
+
+    deallocate(counters_max)
+    deallocate(times_max)
 
   end subroutine
 

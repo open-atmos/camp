@@ -158,7 +158,7 @@ void solver_new_gpu_cu(SolverData *sd, int n_dep_var,
     md->deriv_aux = (realtype *)malloc(md->deriv_size);
   }
 
-  printf("small_data:%d\n", md->small_data);
+  //printf("small_data:%d\n", md->small_data);
   //printf("threads_per_block :%d\n", md->max_n_gpu_thread);
 
   //GPU create streams
@@ -169,6 +169,12 @@ void solver_new_gpu_cu(SolverData *sd, int n_dep_var,
   if( n_blocks > md->max_n_gpu_blocks){
     printf("\nWarning: More blocks assigned: %d than maximum block numbers: %d",
            n_blocks, md->max_n_gpu_blocks);
+  }
+
+  if(n_dep_var<32 && sd->use_cpu==0) {
+    printf("CAMP ERROR: TOO FEW SPECIES FOR GPU (Species < 32),"
+           " use CPU case instead (More info: https://earth.bsc.es/gitlab/ac/PartMC/-/issues/65 \n");
+    exit(0);
   }
 
 #ifdef PMC_DEBUG_PRINT_GPU_SPECS

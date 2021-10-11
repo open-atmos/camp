@@ -51,7 +51,7 @@ module pmc_camp_solver_data
                     n_aero_phase_float_param, n_aero_rep, &
                     n_aero_rep_int_param, n_aero_rep_float_param, &
                     n_aero_rep_env_param, n_sub_model, n_sub_model_int_param,&
-                    n_sub_model_float_param, n_sub_model_env_param) bind (c)
+                    n_sub_model_float_param, n_sub_model_env_param, ncounters, ntimers) bind (c)
       use iso_c_binding
       !> Number of variables on the state array per grid cell
       !! (including const, PSSA, etc.)
@@ -92,6 +92,9 @@ module pmc_camp_solver_data
       integer(kind=c_int), value :: n_sub_model_float_param
       !> Total number of environment-dependent parameters for all sub models
       integer(kind=c_int), value :: n_sub_model_env_param
+      !> Number of counter variables for profiling (Also equal to times variable)
+      integer(kind=c_int), value :: ncounters
+      integer(kind=c_int), value :: ntimers
     end function solver_new
 
     !> Set specie name
@@ -184,9 +187,7 @@ module pmc_camp_solver_data
                     NLS_convergence_fails, DLS_Jac_evals, DLS_RHS_evals, &
                     last_time_step__s, next_time_step__s, Jac_eval_fails, &
                     RHS_evals_total, Jac_evals_total, RHS_time__s, &
-                    Jac_time__s, timeCVode, timeCVodeTotal,&
-            counterBCG, counterLS, timeLS, timeBiconjGradMemcpy, &
-            max_loss_precision ) bind (c)
+                    Jac_time__s, max_loss_precision, counters, times) bind (c)
       use iso_c_binding
       !> Pointer to the solver data
       type(c_ptr), value :: solver_data
@@ -222,14 +223,10 @@ module pmc_camp_solver_data
       type(c_ptr), value :: RHS_time__s
       !> Compute time for calls to `Jac()`
       type(c_ptr), value :: Jac_time__s
-      type(c_ptr), value :: timeCVode
-      type(c_ptr), value :: timeCVodeTotal
-      type(c_ptr), value :: counterBCG
-      type(c_ptr), value :: counterLS
-      type(c_ptr), value :: timeLS
-      type(c_ptr), value :: timeBiconjGradMemcpy
       !> Maximum loss of precision on last call the f()
       type(c_ptr), value :: max_loss_precision
+      type(c_ptr), value :: counters
+      type(c_ptr), value :: times
     end subroutine solver_get_statistics
 
     !> Add condensed reaction data to the solver data block
@@ -463,7 +460,7 @@ contains
 
   !> Initialize the solver
   subroutine initialize(this, var_type, abs_tol, mechanisms, aero_phases, &
-                  aero_reps, sub_models, rxn_phase, n_cells, spec_names)
+                  aero_reps, sub_models, rxn_phase, n_cells, spec_names, ncounters, ntimers)
 
     !> Solver data
     class(camp_solver_data_t), intent(inout) :: this
@@ -486,6 +483,8 @@ contains
     !! Use parameters in pmc_rxn_data to specify phase:
     !! GAS_RXN, AERO_RXN, GAS_AERO_RXN
     integer(kind=i_kind), intent(in) :: rxn_phase
+    integer(kind=i_kind), intent(in) :: ncounters
+    integer(kind=i_kind), intent(in) :: ntimers
 
     ! Variable types
     integer(kind=c_int), pointer :: var_type_c(:)
@@ -664,7 +663,9 @@ contains
             n_sub_model,                       & ! # of sub models
             n_sub_model_int_param,             & ! # of sub model int params
             n_sub_model_float_param,           & ! # of sub model real params
-            n_sub_model_env_param              & ! # of sub model env params
+            n_sub_model_env_param,              & ! # of sub model env params
+            ncounters,              & ! # of profiling variables (Times and counters)
+            ntimers             & ! # of profiling variables (Times and counters)
             )
 
     ! Add all the condensed reaction data to the solver data block for
@@ -953,7 +954,7 @@ contains
     real(kind=dp), intent(in) :: t_initial
     !> End time (s)
     real(kind=dp), intent(in) :: t_final
-    !> Solver statistics
+    !> Solver statisticsz
     type(solver_stats_t), intent(inout), optional, target :: solver_stats
     integer, intent(in), optional:: n_cells
 
@@ -1004,7 +1005,6 @@ contains
   end function solve
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
 
   subroutine get_base_rate(this, rate_constants)
 
@@ -1066,13 +1066,10 @@ contains
             c_loc( solver_stats%Jac_evals_total       ),   & ! total Jac() calls
             c_loc( solver_stats%RHS_time__s           ),   & ! Compute time f() [s]
             c_loc( solver_stats%Jac_time__s           ),   & ! Compute time Jac() [s]
-            c_loc( solver_stats%timeCVode           ),   &
-            c_loc( solver_stats%timeCVodeTotal           ),   &
-            c_loc( solver_stats%counterBCG),&
-            c_loc( solver_stats%counterLS),&
-            c_loc( solver_stats%timeLS),&
-            c_loc( solver_stats%timeBiconjGradMemcpy),&
-            c_loc( solver_stats%max_loss_precision    ) )    ! Maximum loss of precision
+            c_loc( solver_stats%max_loss_precision),& ! Maximum loss of precision
+            c_loc( solver_stats%counters),& !Profiling
+            c_loc( solver_stats%times)& !Profiling
+    )
 
   end subroutine get_solver_stats
 

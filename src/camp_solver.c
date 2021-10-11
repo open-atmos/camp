@@ -95,7 +95,8 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
                  int n_aero_rep, int n_aero_rep_int_param,
                  int n_aero_rep_float_param, int n_aero_rep_env_param,
                  int n_sub_model, int n_sub_model_int_param,
-                 int n_sub_model_float_param, int n_sub_model_env_param) {
+                 int n_sub_model_float_param, int n_sub_model_env_param,
+                 int ncounters, int ntimers) {
   // Create the SolverData object
   SolverData *sd = (SolverData *)malloc(sizeof(SolverData));
   if (sd == NULL) {
@@ -995,10 +996,9 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
                            double *next_time_step__s, int *Jac_eval_fails,
                            int *RHS_evals_total, int *Jac_evals_total,
                            double *RHS_time__s, double *Jac_time__s,
-                           double *timeCVode, double *timeCVodeTotal,
-                           int *counterBCG, int *counterLS, double *timeLS,
-                           double* timeBiconjGradMemcpy,
-                           double *max_loss_precision) {
+                           double *max_loss_precision,
+                           int *counters, double *times
+                           ) {
 #ifdef PMC_USE_SUNDIALS
   SolverData *sd = (SolverData *)solver_data;
   long int nst, nfe, nsetups, nje, nfeLS, nni, ncfn, netf, nge;
@@ -1057,39 +1057,76 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
   *max_loss_precision = 0.0;
 #endif
 
-  *counterBCG=0;
-  *timeCVode = 0.0;
-  *timeCVodeTotal = 0.0;
-  *counterLS = 0;
-  *timeLS = 0.0;
-  *timeBiconjGradMemcpy=0.0;
+  for(int i=0; i<sd->ncounters; i++){
+    counters[i]=0;
+  }
+  for(int i=0; i<sd->ntimers; i++){
+    times[i]=0.0;
+  }
+  //printf("sd->ntimers ncounters %d %d\n",sd->ntimers,sd->ncounters);
 
 #ifdef PMC_DEBUG_GPU
-  //todo export struct pointer with all data to reduce code
-  *timeCVode = sd->timeCVode;
-  *timeCVodeTotal = sd->timeCVodeTotal;
-  //sd->timeCVode = 0.0;
 
   if(sd->use_cpu==1){
 
-    CVodeGetcounterLS(sd->cvode_mem, counterLS);
-    CVodeGettimeLS(sd->cvode_mem, timeLS);
-    //printf("CVodeGettimeLS %-le",*timeLS);
-    *timeBiconjGradMemcpy=0.0;
+    if(sd->ntimers>0 && sd->ncounters>0){
+      //counters[0]=counterBCG;
+      CVodeGettimesCounters(sd->cvode_mem, &times[0], &counters[1]);
+      times[2]=sd->timeCVode;
+      //for(int i=0;i<sd->ntimers;i++)
+      //  printf("i %d times %le counters %d\n",i,times[i],counters[i]);
+      //for(int i=0;i<sd->ncounters;i++)
+      //  printf("i %d counters %d\n",i,counters[i]);
+    }
+    else{
+      printf("WARNING: In function solver_get_statistics trying to assign times "
+             "and counters profilign variables with ncounters || ntimers < 1");
+    }
+
   }
   else{
 
 #ifdef PMC_USE_GPU
     itsolver *bicg = &(sd->bicg);
+/*
 
-    *counterBCG = bicg->counterBiConjGradInternal;
+    solver_get_statistics_gpu(sd);
+    int i;
+
+    if(sd->ncounters>0){
+      i=0;
+      counters[i++]=sd->mdv.counterBCGInternal;
+      counters[i++]=bicg->counterBiConjGrad;
+      counters[i++]=bicg->countersolveCVODEGPU;
+      counters[i++]=sd->mdv.countercvStep;
+    }
+    if(sd->ntimers>0){
+      i=0;
+      times[i++]=bicg->timeBiConjGrad;
+      times[i++]=bicg->timeBiConjGradMemcpy;
+      times[i++]=sd->timeCVode;
+      times[i++]=sd->mdv.dtcudaDeviceCVode;
+      times[i++]=sd->mdv.dtPostBCG;
+      times[i++]=bicg->timesolveCVODEGPU;
+      times[i++]=sd->timeNewtonIteration;
+      times[i++]=sd->timeJac;
+      times[i++]=sd->timelinsolsetup;
+      times[i++]=sd->timecalc_Jac;
+      times[i++]=sd->timeRXNJac;
+      times[i++]=sd->timef;
+      times[i++]=sd->timeguess_helper;
+      times[i++]=bicg->timecvStep;
 
     *counterLS=bicg->counterBiConjGrad;
     *timeLS=bicg->timeBiConjGrad/1000;
     *timeBiconjGradMemcpy=bicg->timeBiConjGradMemcpy/1000;
     //printf("timeLS %-le",*timeLS);
+    */
+
 #endif
   }
+
+  //printf("times[0] %le counters[1] %d\n",times[0],counters[1]);
 
 #endif
 
@@ -1140,15 +1177,10 @@ int camp_solver_update_model_state(N_Vector solver_state, SolverData *sd,
     for (int i_spec = 0; i_spec < n_state_var; ++i_spec) {
       if (model_data->var_type[i_spec] == CHEM_SPEC_VARIABLE) {
 
-#ifdef ISSUE53
-        if (0) {
-#else
         //if (NV_DATA_S(solver_state)[i_dep_var] <= -SMALL)
         //if (NV_DATA_S(solver_state)[i_dep_var] <= ZERO)
         if (NV_DATA_S(solver_state)[i_dep_var] < threshhold) //Avoid innacurate results
         {
-
-#endif
 
 #ifdef FAILURE_DETAIL
           if(sd->counter_fail_solve_print<1){
@@ -1167,11 +1199,6 @@ int camp_solver_update_model_state(N_Vector solver_state, SolverData *sd,
           return CAMP_SOLVER_FAIL;
         }
         // Assign model state to solver_state
-
-        /*model_data->total_state[i_spec + i_cell * n_state_var] =
-            NV_DATA_S(solver_state)[i_dep_var] == ZERO
-                ? replacement_value
-                : NV_DATA_S(solver_state)[i_dep_var];*/
 
         //Set concs near zero to fixed threshhold value
         model_data->total_state[i_spec + i_cell * n_state_var] =
