@@ -318,6 +318,1548 @@ void check_isnand_global0(double *x, int len, int var_id)
     }
 }
 
+int compare_doubles(double *x, double *y, int len, const char *s) {
+
+  int flag = 1;
+  double tol = 0.01;
+  //float tol=0.0001;
+  double rel_error;
+  int n_fails = 0;
+  for (int i = 0; i < len; i++) {
+    if (x[i] == 0)
+      rel_error = 0.;
+    else
+      rel_error = abs((x[i] - y[i]) / x[i]);
+    //rel_error=(x[i]-y[i]/(x[i]+1.0E-60));
+    if (rel_error > tol) {
+      printf("compare_doubles %s rel_error %le for tol %le at [%d]: %le vs %le\n",
+             s, rel_error, tol, i, x[i], y[i]);
+      flag = 0;
+      n_fails++;
+      if (n_fails == 4)
+        return flag;
+    }
+  }
+  return flag;
+}
+
+int compare_ints(int *x, int *y, int len, const char *s) {
+
+  int flag = 1;
+  double tol = 0.01;
+  //float tol=0.0001;
+  double rel_error;
+  int n_fails = 0;
+  for (int i = 0; i < len; i++) {
+    if (x[i] == 0)
+      rel_error = 0.;
+    else
+      rel_error = abs((x[i] - y[i]) / x[i]);
+    //rel_error=(x[i]-y[i]/(x[i]+1.0E-60));
+    if (rel_error > tol) {
+      printf("compare_ints %s rel_error %le for tol %le at [%d]: %d vs %d\n",
+             s, rel_error, tol, i, x[i], y[i]);
+      flag = 0;
+      n_fails++;
+      if (n_fails == 4)
+        return flag;
+    }
+  }
+  return flag;
+}
+
+
+int nextPowerOfTwoCVODE(int v){
+
+  v--;
+  v |= v >> 1;
+  v |= v >> 2;
+  v |= v >> 4;
+  v |= v >> 8;
+  v |= v >> 16;
+  v++;
+
+  return v;
+}
+
+__device__
+void printmin(ModelDataGPU *md,double* y, const char *s) {
+
+  __syncthreads();
+  extern __shared__ double flag_shr2[];
+  int i= threadIdx.x + blockDim.x*blockIdx.x;
+  __syncthreads();
+
+  double min;
+  cudaDevicemin(&min, y[i], flag_shr2, md->n_shr_empty);
+  __syncthreads();
+  if(i==0)printf("%s min %le\n",s,min);
+  __syncthreads();
+
+}
+
+//Copy A to B
+__device__
+void cudaDeviceJacCopy(int n_row, int* Ap, int* Aj, double* Ax, int* Bp, int* Bi, double* Bx) {
+
+  int i= threadIdx.x + blockDim.x*blockIdx.x;
+  __syncthreads();
+
+  for(int j=Ap[i]; j<Ap[i+1]; j++){
+    Bi[j]=Aj[j];
+    Bx[j]=Ax[j];
+  }
+
+  Bp[i]=Ap[i];
+  if(i==gridDim.x*blockDim.x-1){
+    Bp[i+1]=Ap[i+1];
+  }
+
+  __syncthreads();
+
+}
+
+__device__
+int cudaDevicecamp_solver_check_model_state(ModelDataGPU *md, ModelDataVariable *dmdv, double *y, int *flag)
+{
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
+
+  __syncthreads();
+  extern __shared__ int flag_shr[];
+  flag_shr[0] = 0;
+
+  //printmin(md,md->state,"cudaDevicecamp_solver_check_model_state start state");
+
+  __syncthreads();
+  if (y[i] < md->threshhold) {
+    flag_shr[0] = CAMP_SOLVER_FAIL;
+
+#ifdef DEBUG_cudaDevicecamp_solver_check_model_state
+    printf("Failed model state update gpu:[spec %d] = %le flag_shr %d\n",i,y[i],flag_shr[0]);
+#endif
+
+  } else {
+    md->state[md->map_state_deriv[i]] =
+            y[i] <= md->threshhold ?
+            md->replacement_value : y[i];
+  }
+
+    /*
+    if (y[tid] > -SMALL) {
+      state_init[map_state_deriv[tid]] =
+      y[tid] > threshhold ?
+      y[tid] : replacement_value;
+
+      //state_init[map_state_deriv[tid]] = 0.1;
+      //printf("tid %d map_state_deriv %d\n", tid, map_state_deriv[tid]);
+    } else {
+      *status = CAMP_SOLVER_FAIL;
+#ifdef FAILURE_DETAIL
+      printf("\nFailed model state update gpu (Negative value on 'y'):[spec %d] = %le",tid,y[tid]);
+#endif
+    }
+     */
+
+  __syncthreads();
+  *flag = (int)flag_shr[0];
+  __syncthreads();
+#ifdef DEV_printmin
+  printmin(md,md->state,"cudaDevicecamp_solver_check_model_state end state");
+#endif
+
+  //printmin(md,y,"cudaDevicecamp_solver_check_model_state end y");
+  //printmin(md,md->state,"cudaDevicecamp_solver_check_model_state end state");
+
+#ifdef DEBUG_cudaDevicecamp_solver_check_model_state
+  __syncthreads();if(i==0)printf("flag %d flag_shr %d\n",*flag,flag_shr2[0]);
+#endif
+
+  return *flag;
+}
+
+
+__device__ void solveRXN(
+#ifdef BASIC_CALC_DERIV
+        double *deriv_data,
+#else
+        TimeDerivativeGPU deriv_data,
+#endif
+        double time_step,
+        ModelDataGPU *md, ModelDataVariable *dmdv
+)
+{
+
+#ifdef REVERSE_INT_FLOAT_MATRIX
+
+  double *rxn_float_data = &( md->rxn_double[dmdv->i_rxn]);
+  int *int_data = &(md->rxn_int[dmdv->i_rxn]);
+  int rxn_type = int_data[0];
+  int *rxn_int_data = (int *) &(int_data[1*md->n_rxn]);
+
+#else
+
+  double *rxn_float_data = (double *)&( md->rxn_double[md->rxn_float_indices[dmdv->i_rxn]]);
+  int *int_data = (int *)&(md->rxn_int[md->rxn_int_indices[dmdv->i_rxn]]);
+
+  //double *rxn_float_data = &( md->rxn_double[dmdv->i_rxn]);
+  //int *int_data = &(md->rxn_int[dmdv->i_rxn]);
+
+
+  int rxn_type = int_data[0];
+  int *rxn_int_data = (int *) &(int_data[1]);
+
+#endif
+
+  //Get indices for rates
+  double *rxn_env_data = &(md->rxn_env_data
+  [md->n_rxn_env_data*dmdv->i_cell+md->rxn_env_data_idx[dmdv->i_rxn]]);
+
+#ifdef DEBUG_DERIV_GPU
+  if(tid==0){
+    printf("[DEBUG] GPU solveRXN tid %d, \n", tid);
+  }
+#endif
+
+  switch (rxn_type) {
+    //case RXN_AQUEOUS_EQUILIBRIUM :
+    //fix run-time error
+    //rxn_gpu_aqueous_equilibrium_calc_deriv_contrib(md, deriv_data, rxn_int_data,
+    //                                               rxn_float_data, rxn_env_data,time_step);
+    //break;
+    case RXN_ARRHENIUS :
+      rxn_gpu_arrhenius_calc_deriv_contrib(md, deriv_data, rxn_int_data,
+                                           rxn_float_data, rxn_env_data,time_step);
+      break;
+    case RXN_CMAQ_H2O2 :
+      rxn_gpu_CMAQ_H2O2_calc_deriv_contrib(md, deriv_data, rxn_int_data,
+                                           rxn_float_data, rxn_env_data,time_step);
+      break;
+    case RXN_CMAQ_OH_HNO3 :
+      rxn_gpu_CMAQ_OH_HNO3_calc_deriv_contrib(md, deriv_data, rxn_int_data,
+                                              rxn_float_data, rxn_env_data,time_step);
+      break;
+    case RXN_CONDENSED_PHASE_ARRHENIUS :
+      //rxn_gpu_condensed_phase_arrhenius_calc_deriv_contrib(md, deriv_data, rxn_int_data,
+      //                                     rxn_float_data, rxn_env_data,time_step);
+      break;
+    case RXN_EMISSION :
+      printf("RXN_EMISSION");
+      //rxn_gpu_emission_calc_deriv_contrib(md, deriv_data, rxn_int_data,
+      //                                     rxn_float_data, rxn_env_data,time_step);
+      break;
+    case RXN_FIRST_ORDER_LOSS :
+      //rxn_gpu_first_order_loss_calc_deriv_contrib(md, deriv_data, rxn_int_data,
+      //                                     rxn_float_data, rxn_env_data,time_step);
+      break;
+    case RXN_HL_PHASE_TRANSFER :
+      //rxn_gpu_HL_phase_transfer_calc_deriv_contrib(md, deriv_data, rxn_int_data,
+      //                                             rxn_float_data, rxn_env_data,time_stepn);
+      break;
+    case RXN_PHOTOLYSIS :
+      rxn_gpu_photolysis_calc_deriv_contrib(md, deriv_data, rxn_int_data,
+                                            rxn_float_data, rxn_env_data,time_step);
+      break;
+    case RXN_SIMPOL_PHASE_TRANSFER :
+      //rxn_gpu_SIMPOL_phase_transfer_calc_deriv_contrib(md, deriv_data,
+      //        rxn_int_data, rxn_float_data, rxn_env_data, time_step);
+      break;
+    case RXN_TROE :
+#ifdef BASIC_CALC_DERIV
+#else
+      rxn_gpu_troe_calc_deriv_contrib(md, deriv_data, rxn_int_data,
+                                      rxn_float_data, rxn_env_data,time_step);
+#endif
+      break;
+    case RXN_WET_DEPOSITION :
+      printf("RXN_WET_DEPOSITION");
+      //rxn_gpu_wet_deposition_calc_deriv_contrib(md, deriv_data, rxn_int_data,
+      //                                     rxn_float_data, rxn_env_data,time_step);
+      break;
+  }
+
+
+}
+
+__device__ void cudaDevicecalc_deriv(
+        double time_step, int deriv_length_cell, int state_size_cell,
+        int n_cells,
+        int i_kernel, int threads_block, int n_shr_empty, double *y,
+        double *yout, ModelDataGPU *md, ModelDataVariable *dmdv
+) //Interface CPU/GPU
+{
+  int tid = blockIdx.x * blockDim.x + threadIdx.x;
+  int tid_cell=tid%deriv_length_cell;
+  //int active_threads = md->n_cells*md->deriv_length_cell;
+  int active_threads = md->nrows;
+
+#ifdef DEBUG_DERIV_GPU
+  if(tid==0){
+    printf("[DEBUG] GPU solveDerivative tid %d, \n", tid);
+  }__syncthreads();
+#endif
+
+#ifdef DEV_printmin
+
+  //__syncthreads();//no effect, but printmin yes
+  printmin(md,yout,"cudaDevicecalc_deriv start end yout");
+  printmin(md,md->J_tmp,"cudaDevicecalc_deriv start end J_tmp");
+  printmin(md,md->J_state,"cudaDevicecalc_deriv start end J_state");
+#endif
+    //N_VLinearSum(1.0, y, -1.0, md->J_state, md->J_tmp);
+    cudaDevicezaxpby(1.0, y, -1.0, md->J_state, md->J_tmp, active_threads);
+    //SUNMatMatvec(md->J_solver, md->J_tmp, md->J_tmp2);
+    cudaDeviceSpmvCSC_block(md->J_tmp2, md->J_tmp, active_threads, md->J_solver, md->jJ_solver, md->iJ_solver, 0);
+    //N_VLinearSum(1.0, md->J_deriv, 1.0, md->J_tmp2, md->J_tmp);
+    cudaDevicezaxpby(1.0, md->J_deriv, 1.0, md->J_tmp2, md->J_tmp, active_threads);
+    cudaDevicesetconst(md->J_tmp2, 0.0, active_threads); //Reset for next iter
+#ifdef DEV_printmin
+    printmin(md,md->J_tmp,"cudaDevicecalc_deriv start end J_tmp");
+    printmin(md,md->J_state,"cudaDevicecalc_deriv start end J_state");
+#endif
+    TimeDerivativeGPU deriv_data;
+    deriv_data.num_spec = deriv_length_cell*n_cells;
+
+#ifdef AEROS_CPU
+#else
+    deriv_data.production_rates = md->production_rates;
+    deriv_data.loss_rates = md->loss_rates;
+    time_derivative_reset_gpu(deriv_data);
+    __syncthreads();
+#endif
+
+    int i_cell = tid/deriv_length_cell;
+    dmdv->i_cell = i_cell;
+    deriv_data.production_rates = &( md->production_rates[deriv_length_cell*i_cell]);
+    deriv_data.loss_rates = &( md->loss_rates[deriv_length_cell*i_cell]);
+
+    md->grid_cell_state = &( md->state[state_size_cell*i_cell]);
+    md->grid_cell_env = &( md->env[PMC_NUM_ENV_PARAM_*i_cell]);
+
+    //Filter threads for n_rxn
+    int n_rxn = md->n_rxn;
+    if( tid_cell < n_rxn) {
+      int n_iters = n_rxn / deriv_length_cell;
+      //Repeat if there are more reactions than species
+      for (int i = 0; i < n_iters; i++) {
+        dmdv->i_rxn = tid_cell + i*deriv_length_cell;
+
+        solveRXN(deriv_data, time_step, md, dmdv);
+      }
+
+      //Limit tid to pending rxns to compute
+      int residual=n_rxn-(deriv_length_cell*n_iters);
+      if(tid_cell < residual){
+        dmdv->i_rxn = tid_cell + deriv_length_cell*n_iters;
+
+        solveRXN(deriv_data, time_step, md, dmdv);
+      }
+    }
+    __syncthreads();
+
+    deriv_data.production_rates = md->production_rates;
+    deriv_data.loss_rates = md->loss_rates;
+#ifdef DEV_printmin
+    printmin(md,yout,"cudaDevicecalc_deriv start end yout");
+#endif
+    __syncthreads();
+    time_derivative_output_gpu(deriv_data, yout, md->J_tmp,0);
+#ifdef DEV_printmin
+    printmin(md,yout,"cudaDevicecalc_deriv start end yout");
+#endif
+
+  __syncthreads();
+
+}
+
+__device__
+int cudaDevicef(
+        double time_step, int deriv_length_cell, int state_size_cell,
+        int n_cells,
+        int i_kernel, int threads_block, int n_shr_empty, double *y,
+        double *yout, ModelDataGPU *md, ModelDataVariable *dmdv, int *flag
+) //Interface CPU/GPU
+{
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
+
+#ifdef PMC_DEBUG_GPU
+
+  int clock_khz=md->clock_khz;
+  clock_t start;
+  start = clock();
+
+#endif
+#ifdef DEV_printmin
+  printmin(md,y,"cudaDevicef Start y");
+#endif
+  //double time_step = dmdv->cv_next_h; //CVodeGetCurrentStep(sd->cvode_mem, &time_step);
+  // On the first call to f(), the time step hasn't been set yet, so use the
+  // default value
+  time_step = time_step > 0. ? time_step : dmdv->init_time_step;
+#ifdef DEV_printmin
+  printmin(md,md->state,"cudaDevicef start state");
+#endif
+
+  int checkflag=cudaDevicecamp_solver_check_model_state(md, dmdv, y, flag);
+
+  __syncthreads();
+  if(checkflag==CAMP_SOLVER_FAIL){
+    *flag=CAMP_SOLVER_FAIL;
+
+#ifdef DEV_printmin
+    printmin(md,y,"cudaDevicef End y");
+#endif
+
+#ifdef PMC_DEBUG_GPU
+#ifdef cudaGlobalCVode_timers_max_blocks
+    md->dtf[i] += ((double)(int)(clock() - start))/(clock_khz*1000);
+#else
+    if(i==0) *md->dtf += ((double)(int)(clock() - start))/(clock_khz*1000);
+#endif
+#endif
+
+#ifdef DEBUG_cudaDevicef
+    if(i==0)printf("cudaDevicef CAMP_SOLVER_FAIL %d\n",i);
+#endif
+    return CAMP_SOLVER_FAIL;
+  }
+#ifdef DEV_printmin
+  printmin(md,yout,"cudaDevicef End yout");
+#endif
+  cudaDevicecalc_deriv(
+          //f_gpu
+          time_step, deriv_length_cell, state_size_cell,
+          n_cells, i_kernel, threads_block, n_shr_empty, y,
+          yout, md, dmdv
+  );
+
+  //printmin(md,yout,"cudaDevicef End yout");
+  //printmin(md,y,"cudaDevicef End y");
+
+
+#ifdef PMC_DEBUG_GPU
+#ifdef cudaGlobalCVode_timers_max_blocks
+
+    md->dtf[i] += ((double)(int)(clock() - start))/(clock_khz*1000);
+
+#else
+
+    if(i==0) *md->dtf += ((double)(int)(clock() - start))/(clock_khz*1000);
+
+#endif
+#endif
+
+  __syncthreads();
+  *flag=0;
+  __syncthreads();
+
+  return 0;
+
+}
+
+__device__
+int CudaDeviceguess_helper(double t_n, double h_n, double* y_n,
+                           double* y_n1, double* hf, double* tmp1,
+                           double* corr, double cv_reltol, int nrows,
+        //check_model_state
+                           double threshhold, double replacement_value, int *flag,
+        //f_gpu
+                           double time_step, int deriv_length_cell, int state_size_cell,
+                           int n_cells,
+                           int i_kernel, int threads_block, int n_shr_empty, //double *y,
+                           ModelDataGPU *md, ModelDataVariable *dmdv
+) {
+
+  extern __shared__ double flag_shr2[];
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
+  unsigned int tid = threadIdx.x;
+
+#ifdef DEBUG_CudaDeviceguess_helper
+  if(i==0)printf("CudaDeviceguess_helper start gpu\n");
+#endif
+
+  // Only try improvements when negative concentrations are predicted
+  //if (N_VMin(y_n) > -SMALL) return 0;
+  __syncthreads();
+
+  double min;
+  cudaDevicemin(&min, y_n[i], flag_shr2, n_shr_empty);
+
+#ifdef DEBUG_CudaDeviceguess_helper
+  if(i==0)printf("min %le -SMALL %le\n",min, -SMALL);
+#endif
+
+  if(min>-SMALL){
+
+#ifdef DEBUG_CudaDeviceguess_helper
+    if(i==0)printf("Return 0 %le\n",y_n[i]);
+#endif
+
+    return 0;
+  }
+
+#ifdef PMC_DEBUG_GPU
+
+  int clock_khz=md->clock_khz;
+  clock_t start;
+  start = clock();
+
+#endif
+
+  // Copy \f$y(t_{n-1})\f$ to working array
+  //N_VScale(ONE, y_n1, tmp1);
+  tmp1[i]=y_n1[i];
+  __syncthreads();
+  // Get  \f$f(t_{n-1})\f$
+  /*if (h_n > ZERO) {
+    N_VScale(ONE / h_n, hf, corr);
+  } else {
+    N_VScale(ONE, hf, corr);
+  }*/
+
+  if (h_n > 0.) {
+    corr[i]=(1./h_n)*hf[i];
+  } else {
+    corr[i]=hf[i];
+  }
+
+  // Advance state interatively
+  double t_0 = h_n > 0. ? t_n - h_n : t_n - 1.;
+  double t_j = 0.;
+  int GUESS_MAX_ITER = 5; //5 //reduce this to improve perf
+  __syncthreads();
+  for (int iter = 0; iter < GUESS_MAX_ITER && t_0 + t_j < t_n; iter++) {
+    // Calculate \f$h_j\f$
+    //double h_j = t_n - (t_0 + t_j);
+    //int i_fast = -1;
+    __syncthreads();
+
+    double h_j = t_n - (t_0 + t_j);
+    /*
+    for (int i = 0; i < n_elem; i++) {
+     realtype t_star = -atmp1[i] / acorr[i];
+      if ((t_star > ZERO || (t_star == ZERO && acorr[i] < ZERO)) &&
+          t_star < h_j) {
+        h_j = t_star;
+        i_fast = i;
+      }
+    }
+     */
+    __syncthreads();
+
+    double t_star;
+    double h_j_init=h_j;
+
+    //if(i==0)printf("*md->h_jPtrInit %le\n",*md->h_jPtr);
+
+    if(corr[i]==0){
+      t_star=h_j;
+    }else{
+      t_star = -tmp1[i] / corr[i];
+    }
+
+    if( !(t_star > 0. || (t_star == 0. && corr[i] < 0.)) ){//&&corr[i]==0.)
+      t_star=h_j;
+    }
+
+    __syncthreads();
+    //(blockIdx.x==0 && iter<=0)printf("i %d t_star %le atmp1 %le acorr %le\n",i,t_star,tmp1[i],corr[i]);
+
+    flag_shr2[tid]=h_j_init;
+    cudaDevicemin(&h_j, t_star, flag_shr2, n_shr_empty);
+    flag_shr2[0]=1;
+    __syncthreads();
+
+#ifdef DEBUG_CudaDeviceguess_helper
+    //if(tid==0 && iter<=5) printf("CudaDeviceguess_helper h_j %le h_j_init %le t_star %le block %d iter %d\n",h_j,h_j_init,t_star,blockIdx.x,iter);
+#endif
+
+    // Scale incomplete jumps
+    /*
+    if (i_fast >= 0 && h_n > ZERO)
+      h_j *= 0.95 + 0.1 ;
+    //h_j *= 0.95 + 0.1 * rand() / (double)RAND_MAX;
+    h_j = t_n < t_0 + t_j + h_j ? t_n - (t_0 + t_j) : h_j;
+     */
+
+    //if (i_fast >= 0 && h_n > 0.)
+    if (h_n > 0.)
+      h_j *= 0.95 + 0.1;
+    //h_j *= 0.95 + 0.1 * rand() / (double)RAND_MAX;
+    h_j = t_n < t_0 + t_j + h_j ? t_n - (t_0 + t_j) : h_j;
+
+
+    __syncthreads();
+    // Only make small changes to adjustment vectors used in Newton iteration
+    if (h_n == 0. &&
+        t_n - (h_j + t_j + t_0) > cv_reltol) {
+
+#ifdef DEBUG_CudaDeviceguess_helper
+      if(i==0)printf("CudaDeviceguess_helper small changes \n");
+#endif
+
+
+#ifdef PMC_DEBUG_GPU
+#ifdef cudaGlobalCVode_timers_max_blocks
+    md->dtguess_helper[i] += ((double)(clock() - start))/(clock_khz*1000);
+#else
+    if(i==0) *md->dtguess_helper += ((double)(clock() - start))/(clock_khz*1000);
+#endif
+#endif
+
+    return -1;
+    }
+
+    // Advance the state
+    //N_VLinearSum(ONE, tmp1, h_j, corr, tmp1);
+    cudaDevicezaxpby(1., tmp1, h_j, corr, tmp1, md->nrows);
+
+    __syncthreads();
+    // Advance t_j
+    t_j += h_j;
+
+#ifdef DEBUG_CudaDeviceguess_helper
+    //  printf("dcorr[%d] %le dhf %le dt_star %le dh_j %le dh_n %le\n",
+    //         i,corr[i],hf[i],t_star,h_j,h_n);
+
+    //if(i==0)
+    //  for(int j=0;j<nrows;j++)
+    //    printf("dcorr[%d] %le dtmp1 %le dhf %le dt_star %le dh_j %le dh_n %le\n",
+    //           j,corr[j],tmp1[j],hf[j],t_star,h_j,h_n);
+
+#endif
+
+    // Recalculate the time derivative \f$f(t_j)\f$
+    /*
+    if (f(t_0 + t_j, tmp1, corr, solver_data) != 0) {
+      N_VConst(ZERO, corr);
+      return -1;
+    }*/
+
+
+//#ifndef DEV_CudaDeviceguess_helper
+//#else
+
+#ifdef DEV_printmin
+    printmin(md,md->state,"cudaDevicef start state");
+#endif
+
+    int aux_flag=0;
+
+    int fflag=cudaDevicef(
+            t_0 + t_j, md->deriv_length_cell, md->state_size_cell,
+            md->n_cells, md->i_kernel, threads_block,
+            md->n_shr_empty, tmp1, corr,md,dmdv,&aux_flag
+    );
+#ifdef DEV_printmin
+    printmin(md,tmp1,"cudaDevicef end tmp1");
+#endif
+    __syncthreads();
+
+    if (fflag == CAMP_SOLVER_FAIL) {
+      //N_VConst(ZERO, corr);
+      corr[i] = 0.;
+
+#ifdef DEBUG_CudaDeviceguess_helper
+      if(i==0)printf("CudaDeviceguess_helper df(t)\n");
+#endif
+
+#ifdef PMC_DEBUG_GPU
+#ifdef cudaGlobalCVode_timers_max_blocks
+    md->dtguess_helper[i] += ((double)(clock() - start))/(clock_khz*1000);
+#else
+    if(i==0) *md->dtguess_helper += ((double)(clock() - start))/(clock_khz*1000);
+#endif
+#endif
+
+     return -1;
+    }
+
+//#endif
+//DEV_CudaDeviceguess_helper
+
+    //((CVodeMem)sd->cvode_mem)->cv_nfe++;
+
+    if (iter == GUESS_MAX_ITER - 1 && t_0 + t_j < t_n) {
+      if (h_n == 0.){
+
+
+#ifdef PMC_DEBUG_GPU
+#ifdef cudaGlobalCVode_timers_max_blocks
+    md->dtguess_helper[i] += ((double)(clock() - start))/(clock_khz*1000);
+#else
+    if(i==0) *md->dtguess_helper += ((double)(clock() - start))/(clock_khz*1000);
+#endif
+#endif
+
+        return -1;
+      }
+    }
+    __syncthreads();
+  }
+
+  __syncthreads();
+#ifdef DEBUG_CudaDeviceguess_helper
+   if(i==0)printf("CudaDeviceguess_helper return 1\n");
+#endif
+
+  // Set the correction vector
+  //N_VLinearSum(ONE, tmp1, -ONE, y_n, corr);
+  cudaDevicezaxpby(1., tmp1, -1., y_n, corr, md->nrows);
+
+
+  // Scale the initial corrections
+  //if (h_n > 0.) N_VScale(0.999, corr, corr);
+  if (h_n > 0.) corr[i]=corr[i]*0.999;
+
+  // Update the hf vector
+  //N_VLinearSum(ONE, tmp1, -ONE, y_n1, hf);
+  cudaDevicezaxpby(1., tmp1, -1., y_n1, hf, md->nrows);
+
+
+#ifdef PMC_DEBUG_GPU
+#ifdef cudaGlobalCVode_timers_max_blocks
+    md->dtguess_helper[i] += ((double)(clock() - start))/(clock_khz*1000);
+#else
+    if(i==0) *md->dtguess_helper += ((double)(clock() - start))/(clock_khz*1000);
+#endif
+#endif
+
+
+  __syncthreads();
+  return 1;
+}
+
+
+__device__ void solveRXNJac(
+        JacobianGPU jac,
+        double time_step,
+        ModelDataGPU *md, ModelDataVariable *dmdv
+)
+{
+
+#ifdef PMC_DEBUG_GPU
+
+  int clock_khz=md->clock_khz;
+  clock_t start;
+  start = clock();
+
+#endif
+
+#ifdef REVERSE_INT_FLOAT_MATRIX
+
+  double *rxn_float_data = &( md->rxn_double[dmdv->i_rxn]);
+  int *int_data = &(md->rxn_int[dmdv->i_rxn]);
+  int rxn_type = int_data[0];
+  int *rxn_int_data = (int *) &(int_data[1*md->n_rxn]);
+
+#else
+
+  double *rxn_float_data = (double *)&( md->rxn_double[md->rxn_float_indices[dmdv->i_rxn]]);
+  int *int_data = (int *)&(md->rxn_int[md->rxn_int_indices[dmdv->i_rxn]]);
+
+  //double *rxn_float_data = &( md->rxn_double[dmdv->i_rxn]);
+  //int *int_data = &(md->rxn_int[dmdv->i_rxn]);
+
+  int rxn_type = int_data[0];
+  int *rxn_int_data = (int *) &(int_data[1]);
+
+#endif
+
+  //Get indices for rates
+  double *rxn_env_data = &(md->rxn_env_data
+  [md->n_rxn_env_data*dmdv->i_cell+md->rxn_env_data_idx[dmdv->i_rxn]]);
+
+#ifdef DEBUG_solveRXNJac
+  if(tid==0){
+    printf("[DEBUG] GPU solveRXN tid %d, \n", tid);
+  }
+#endif
+
+  switch (rxn_type) {
+    //case RXN_AQUEOUS_EQUILIBRIUM :
+    //fix run-time error
+    //rxn_gpu_aqueous_equilibrium_calc_jac_contrib(md, jac, rxn_int_data,
+    //                                               rxn_float_data, rxn_env_data,time_step);
+    //break;
+    case RXN_ARRHENIUS :
+      rxn_gpu_arrhenius_calc_jac_contrib(md, jac, rxn_int_data,
+                                         rxn_float_data, rxn_env_data,time_step);
+      break;
+    case RXN_CMAQ_H2O2 :
+      rxn_gpu_CMAQ_H2O2_calc_jac_contrib(md, jac, rxn_int_data,
+                                         rxn_float_data, rxn_env_data,time_step);
+      break;
+    case RXN_CMAQ_OH_HNO3 :
+      rxn_gpu_CMAQ_OH_HNO3_calc_jac_contrib(md, jac, rxn_int_data,
+                                            rxn_float_data, rxn_env_data,time_step);
+      break;
+    case RXN_CONDENSED_PHASE_ARRHENIUS :
+      //rxn_gpu_condensed_phase_arrhenius_calc_jac_contrib(md, jac, rxn_int_data,
+      //                                     rxn_float_data, rxn_env_data,time_step);
+      break;
+    case RXN_EMISSION :
+      //printf("RXN_EMISSION");
+      //rxn_gpu_emission_calc_jac_contrib(md, jac, rxn_int_data,
+      //                                     rxn_float_data, rxn_env_data,time_step);
+      break;
+    case RXN_FIRST_ORDER_LOSS :
+      //rxn_gpu_first_order_loss_calc_jac_contrib(md, jac, rxn_int_data,
+      //                                     rxn_float_data, rxn_env_data,time_step);
+      break;
+    case RXN_HL_PHASE_TRANSFER :
+      //rxn_gpu_HL_phase_transfer_calc_jac_contrib(md, jac, rxn_int_data,
+      //                                             rxn_float_data, rxn_env_data,time_stepn);
+      break;
+    case RXN_PHOTOLYSIS :
+      rxn_gpu_photolysis_calc_jac_contrib(md, jac, rxn_int_data,
+                                          rxn_float_data, rxn_env_data,time_step);
+      break;
+    case RXN_SIMPOL_PHASE_TRANSFER :
+      //rxn_gpu_SIMPOL_phase_transfer_calc_jac_contrib(md, jac,
+      //        rxn_int_data, rxn_float_data, rxn_env_data, time_step);
+      break;
+    case RXN_TROE :
+      rxn_gpu_troe_calc_jac_contrib(md, jac, rxn_int_data,
+                                    rxn_float_data, rxn_env_data,time_step);
+      break;
+    case RXN_WET_DEPOSITION :
+      //printf("RXN_WET_DEPOSITION");
+      //rxn_gpu_wet_deposition_calc_jac_contrib(md, jac, rxn_int_data,
+      //                                     rxn_float_data, rxn_env_data,time_step);
+      break;
+  }
+/*
+*/
+
+#ifdef PMC_DEBUG_GPU
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
+#ifdef cudaGlobalCVode_timers_max_blocks
+
+  md->dtRXNJac[i] += ((double)(clock() - start))/(clock_khz*1000);
+
+#else
+
+  if(i==0) *md->dtRXNJac += ((double)(clock() - start))/(clock_khz*1000);
+
+#endif
+#endif
+
+}
+
+__device__ void cudaDevicecalc_Jac(
+        //check_model_state
+        //double threshhold, double replacement_value, int *flag,
+        //f_gpu
+        double time_step, int deriv_length_cell, int state_size_cell,
+        int n_cells, int i_kernel,
+        int threads_block, int n_shr_empty, double *y,
+        ModelDataGPU *md, ModelDataVariable *dmdv
+) //Interface CPU/GPU
+{
+  int tid = blockIdx.x * blockDim.x + threadIdx.x;
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
+  int tid_cell=tid%deriv_length_cell;
+  int active_threads = md->n_cells*md->deriv_length_cell;
+
+#ifdef PMC_DEBUG_GPU
+
+  int clock_khz=md->clock_khz;
+  clock_t start;
+  start = clock();
+
+#endif
+
+#ifdef DEBUG_cudaDeviceJac
+  if(tid==0){
+    printf("[DEBUG] GPU solveDerivative tid %d, \n", tid);
+  }__syncthreads();
+#endif
+
+  if(tid<active_threads){
+
+    //Debug
+    /*
+    if(i==0){
+      printf("(%d) y %-le J_state %-le J_solver %-le J_tmp %-le J_tmp2 %-le J_deriv %-le\n",tid+1,
+             y[tid], md->J_state[tid], md->J_solver[tid], md->J_tmp[tid], md->J_tmp2[tid], md->J_deriv[tid]);
+      //printf("gpu threads %d\n", active_threads);
+    }
+*/
+
+    JacobianGPU *jac = &md->jac;
+    JacobianGPU jacBlock;
+
+#ifdef DEV_JACOBIANGPUNUMSPEC
+    jac->num_spec = state_size_cell;
+    jacBlock.num_spec = state_size_cell;
+#endif
+
+#ifdef DEV_MULTICELLSGPU
+
+    jacBlock.num_elem[0] = jac->num_elem[0]*(blockDim.x/deriv_length_cell);
+
+#else
+
+    jacBlock.num_elem = jac->num_elem;
+
+#endif
+
+    //if(threadIdx.x==0) printf("*jac->num_elem %d\n",jac->num_elem[0]);
+    //if(threadIdx.x==0) printf("deriv_length_cell %d\n",deriv_length_cell);
+    //if(threadIdx.x==0) printf("state_size_cell %d\n",state_size_cell);
+
+#ifdef AEROS_CPU
+#else
+#endif
+
+    int i_cell = tid/deriv_length_cell;
+    dmdv->i_cell = i_cell;
+    //jacBlock.production_partials = &( jac->production_partials[jac.num_elem[0]*i_cell]);
+    //jacBlock.loss_partials = &( jac->loss_partials[jac.num_elem[0]*i_cell]);
+    jacBlock.production_partials = &( jac->production_partials[jacBlock.num_elem[0]*blockIdx.x]);
+    jacBlock.loss_partials = &( jac->loss_partials[jacBlock.num_elem[0]*blockIdx.x]);
+    //jacBlock.col_ptrs = &( md->col_ptrs[algo*i_cell]);
+
+    jacobian_reset_gpu(jacBlock);
+
+    md->grid_cell_state = &( md->state[state_size_cell*i_cell]);
+    md->grid_cell_env = &( md->env[PMC_NUM_ENV_PARAM_*i_cell]);
+
+    /*
+    md->grid_cell_aero_rep_env_data =
+    &(md->aero_rep_env_data[md->i_cell*md->n_aero_rep_env_data]);
+
+    //Filter threads for n_aero_rep
+    int n_aero_rep = md->n_aero_rep;
+    if( tid_cell < n_aero_rep) {
+      int n_iters = n_aero_rep / deriv_length_cell;
+      //Repeat if there are more reactions than species
+      for (int i = 0; i < n_iters; i++) {
+        dmdv->i_aero_rep = tid_cell + i*deriv_length_cell;
+
+        aero_rep_gpu_update_state(md);
+      }
+
+      //Limit tid to pending rxns to compute
+      int residual=n_aero_rep-(deriv_length_cell*n_iters);
+      if(tid_cell < residual){
+        dmdv->i_aero_rep = tid_cell + deriv_length_cell*n_iters;
+
+        aero_rep_gpu_update_state(md);
+      }
+    }
+     */
+
+#ifdef DEBUG_cudaDevicecalc_Jac
+
+    if(tid==0)printf("cudaDevicecalc_Jac01\n");
+
+    //if(threadIdx.x==0) {
+    //  printf("jac.num_elem %d\n",jacBlock.num_elem);
+    //  printf("*md->n_mapped_values %d\n",*md->n_mapped_values);
+      //for (int i=0; i<*md->n_mapped_values; i++){
+      //  printf("cudaDevicecalc_Jac0 jacBlock [%d]=%le\n",i,jacBlock.production_partials[i]);
+      //}
+    //}
+
+#endif
+
+    __syncthreads();
+    //Filter threads for n_rxn
+    int n_rxn = md->n_rxn;
+    if( tid_cell < n_rxn) {
+      int n_iters = n_rxn / deriv_length_cell;
+      //Repeat if there are more reactions than species
+      for (int i = 0; i < n_iters; i++) {
+        dmdv->i_rxn = tid_cell + i*deriv_length_cell;
+
+        solveRXNJac(jacBlock, time_step, md, dmdv);
+      }
+
+      //Limit tid to pending rxns to compute
+      int residual=n_rxn-(deriv_length_cell*n_iters);
+      if(tid_cell < residual){
+        dmdv->i_rxn = tid_cell + deriv_length_cell*n_iters;
+
+        solveRXNJac(jacBlock, time_step, md, dmdv);
+      }
+    }
+    __syncthreads();
+
+
+    jacobian_output_gpu(jacBlock, &(md->J_rxn[jacBlock.num_elem[0]*blockIdx.x]) );
+
+
+#ifdef DEBUG_cudaDevicecalc_Jac
+
+    if(threadIdx.x==0) {
+        printf("jac.num_elem %d\n",jacBlock.num_elem[0]);
+        printf("*md->n_mapped_values %d\n",*md->n_mapped_values);
+        for (int i=0; i<10; i++){//*md->n_mapped_values
+          printf("cudaDevicecalc_Jac0 J_rxn [%d]=%le\n",i,md->J_rxn[i]);
+        }
+      }
+
+#endif
+
+
+#ifdef DEV_REMOVE_threadIdx0
+
+    //try using diA and djA pointers to better memory access
+    JacMap *jac_map = md->jac_map;
+
+    int nnz = md->n_mapped_values[0];
+
+    for (int n = 0; n < nnz; n++) {
+      md->J[jac_map[n].solver_id + nnz * blockIdx.x] = 0.0;
+      md->J[jac_map[n].solver_id + nnz * blockIdx.x] =
+              md->J_rxn[jac_map[n].rxn_id + jacBlock.num_elem[0] * blockIdx.x];
+
+    }
+
+    /*
+    int nnz_tid = nnz/active_threads;
+
+    for (int n = i*nnz_tid; n < i*(nnz_tid+1); ++n) {
+
+      md->J[jac_map[n].solver_id+nnz*blockIdx.x] = //+=0.;
+              md->J_rxn[jac_map[n].rxn_id+jacBlock.num_elem[0]*blockIdx.x];
+
+    }
+
+    int nnz_left = nnz-(nnz_tid*active_threads);
+    if(i<nnz_left)
+      for (int n = nnz_tid; n < nnz_tid; ++n) {
+
+        md->J[jac_map[n].solver_id+nnz*blockIdx.x] = //+=0.;
+                md->J_rxn[jac_map[n].rxn_id+jacBlock.num_elem[0]*blockIdx.x];
+    }
+*/
+
+#else
+
+    __syncthreads();
+    if(threadIdx.x==0) {
+
+      JacMap *jac_map = md->jac_map;
+      int nnz = md->n_mapped_values[0];
+      //int nnz = jac->num_elem;
+      //SM_DATA_S(md->J_params)[0] = 1.0;  // dummy value for non-sub model calcs
+      //for (int i_map = 0; i_map < md->n_mapped_values; ++i_map) {
+      //for (int n = (nnz/gridDim.x)*blockIdx.x; n < (nnz/gridDim.x)*(blockIdx.x+1); n++) {
+
+#ifdef DEV_MULTICELLSGPU
+
+      //*(blockDim.x/deriv_length_cell)
+      for (int j = 0; j < (blockDim.x/deriv_length_cell); j++) {
+        for (int n = 0; n < nnz; n++) {
+          //md->J[n] = 0.0;
+          //md->J[n] = 0.0;
+
+          //o = (j-1)*(I_E) + (i-1)
+          //z = (k-1)*(I_E*I_N) + o
+          int z = blockIdx.x*blockDim.x + j*nnz;
+          int z_rxn = blockIdx.x*blockDim.x + j*jacBlock.num_elem[0];
+
+          md->J[jac_map[n].solver_id + z] = //+=0.;
+                  md->J_rxn[jac_map[n].rxn_id + jacBlock.num_elem[0] * blockIdx.x];
+
+        }
+      }
+
+#else
+
+      for (int n = 0; n < nnz; n++) {
+        md->J[jac_map[n].solver_id + nnz * blockIdx.x] = 0.0;
+        md->J[jac_map[n].solver_id + nnz * blockIdx.x] =
+                md->J_rxn[jac_map[n].rxn_id + jacBlock.num_elem[0] * blockIdx.x];
+
+        //SM_DATA_S(J)
+        //[i_cell * md->n_per_cell_solver_jac_elem + jac_map[i_map].solver_id] +=
+        //        SM_DATA_S(md->J_rxn)[jac_map[i_map].rxn_id] *
+        //        SM_DATA_S(md->J_params)[jac_map[i_map].param_id];
+
+      }
+
+#endif
+
+    }__syncthreads();
+
+#endif
+
+#ifdef PMC_DEBUG_GPU
+#ifdef cudaGlobalCVode_timers_max_blocks
+
+    md->dtcalc_Jac[i] += ((double)(clock() - start))/(clock_khz*1000);
+
+#else
+
+    if(i==0) *md->dtcalc_Jac += ((double)(clock() - start))/(clock_khz*1000);
+
+#endif
+#endif
+
+  }
+}
+
+__device__
+int cudaDeviceJac(
+        //check_model_state
+        double threshhold, double replacement_value, int *flag,
+        //f_gpu
+        double time_step, int deriv_length_cell, int state_size_cell,
+        int n_cells, int i_kernel,
+        int threads_block, int n_shr_empty, double *y,
+        ModelDataGPU *md, ModelDataVariable *dmdv, double *dftemp
+) //Interface CPU/GPU
+{
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
+  int active_threads = md->n_cells*md->deriv_length_cell;
+
+#ifdef PMC_DEBUG_GPU
+
+  int clock_khz=md->clock_khz;
+  clock_t start;
+  start = clock();
+
+#endif
+
+#ifdef DEV_printmin
+  printmin(md,md->state,"cudaDeviceJac start state");
+#endif
+  int aux_flag=0;
+
+  //int guessflag=
+  int retval=cudaDevicef(
+          time_step, deriv_length_cell, state_size_cell,
+          n_cells, i_kernel, threads_block, n_shr_empty, y,
+          dftemp,md,dmdv,&aux_flag
+  );__syncthreads();
+#ifdef DEBUG_cudaDevicef
+  printmin(md,dftemp,"cudaDeviceJac dftemp");
+#endif
+
+  if(retval==CAMP_SOLVER_FAIL)
+    return CAMP_SOLVER_FAIL;
+
+#ifdef DEV_printmin
+  printmin(md,y,"cudaDeviceJac y");
+  printmin(md,md->state,"cudaDeviceJac start state");
+#endif
+
+  //helps with debugging
+/*
+  int checkflag=cudaDevicecamp_solver_check_model_state(md, dmdv, y, flag);
+  __syncthreads();
+  if(checkflag==CAMP_SOLVER_FAIL){
+    *flag=CAMP_SOLVER_FAIL;
+    //printf("cudaDeviceJac cudaDevicecamp_solver_check_model_state *flag==CAMP_SOLVER_FAIL\n");
+    //printmin(md,y,"cudaDeviceJac end y");//Never enters?
+    return CAMP_SOLVER_FAIL;
+  }
+*/
+
+#ifdef DEV_printmin
+  printmin(md,y,"cudaDeviceJac end y");
+#endif
+
+  //printmin(md,dftemp,"cudaDeviceJac end dftemp");
+
+  cudaDevicecalc_Jac(
+          //check_model_state          md->map_state_deriv, threshhold, replacement_value, flag,
+          //f_gpu
+          time_step, deriv_length_cell, state_size_cell,
+          n_cells, i_kernel, threads_block, n_shr_empty, y,
+          md, dmdv
+  );
+  __syncthreads();
+#ifdef DEV_printmin
+ printmin(md,dftemp,"cudaDevicecalc_Jac end dftemp");
+#endif
+
+#ifdef DEV_REMOVE_threadIdx0
+#else
+  if(i<active_threads){
+
+    __syncthreads();
+    if(threadIdx.x==0) {
+      int nnz = md->n_mapped_values[0];
+      for (int n = 0; n < nnz; n++) {
+        md->J_solver[n]=md->J[n];
+      }
+    }__syncthreads();
+
+    md->J_state[i]=y[i];
+    md->J_deriv[i]=dftemp[i];
+  }
+
+#endif
+
+#ifdef PMC_DEBUG_GPU
+#ifdef cudaGlobalCVode_timers_max_blocks
+
+    md->dtJac[i] += ((double)(clock() - start))/(clock_khz*1000);
+
+#else
+
+    if(i==0) *md->dtJac += ((double)(clock() - start))/(clock_khz*1000);
+
+#endif
+#endif
+
+  __syncthreads();
+  *flag = 0;
+  __syncthreads();
+  return 0;
+
+}
+
+
+__device__
+int cudaDevicelinsolsetup(
+        //LS
+        double *dA, int *djA, int *diA, double *dtempv, //Input data
+        int nrows, int blocks, int n_shr_empty, int maxIt, int mattype,
+        int n_cells, double tolmax, double *ddiag, //Init variables
+        double *dr0, double *dr0h, double *dn0, double *dp0,
+        double *dt, double *ds, double *dAx2, double *dy, double *dz,// Auxiliary vectors
+        //swapCSC_CSR_BCG
+        int *diB, int *djB, double *dB,
+        //Guess_helper
+        double t_n, double h_n, double* dftemp,
+        double* dcv_y, double* tmp1,
+        double* corr, double cv_reltol,
+        //update_state
+        double threshhold, double replacement_value, int *flag,
+        //f_gpu
+        double time_step, int deriv_length_cell, int state_size_cell,
+        int i_kernel, int threads_block, ModelDataGPU *md, ModelDataVariable *dmdv,
+        //cudacvNewtonIteration
+        double *cv_acor,double *dewt,int convfail,
+        int *disavedJ, int *djsavedJ, double *dsavedJ
+) {
+
+  extern __shared__ int flag_shr[];
+
+  double dgamma;
+  int jbad, jok;
+#ifdef DEV_printmin
+  printmin(md,dcv_y,"cudaDevicelinsolsetup Start dcv_y");
+#endif
+  dgamma = fabs((dmdv->cv_gamma / dmdv->cv_gammap) - 1.);//SUNRabs
+
+  jbad = (dmdv->cv_nst == 0) ||
+         (dmdv->cv_nst > dmdv->nstlj + CVD_MSBJ) ||
+         ((convfail == CV_FAIL_BAD_J) && (dgamma < CVD_DGMAX)) ||
+         (convfail == CV_FAIL_OTHER);
+  jok = !jbad;
+
+
+  //if(i==0)printf("cudaGlobalinsolsetupjok %d",jok);
+
+  //if(i==0) printf("cudaGlobalinsolsetupcv_nst %d dmdv->nstlj %d cv_jcur %d jok %d gamma %le\n",
+  //               *dmdv->cv_nst,dmdv->nstlj,*cv_jcur,jok,dmdv->cv_gamma);__syncthreads();
+
+
+  if (jok==1) {
+  //  if (0) {
+
+    __syncthreads();
+
+    dmdv->cv_jcur = 0; //all blocks update this variable
+    //flag_shr[1] = 0;
+
+
+    //todo Optimization: JacCopy of dA only (pointers iA and jA remains unchanged during GPU ODE solver in theory)
+    cudaDeviceJacCopy(nrows, disavedJ, djsavedJ, dsavedJ, diA, djA, dA);
+
+    __syncthreads();
+
+    //cv_mem->cv_jcur = SUNFALSE;
+    //retval = SUNMatCopy(cvdls_mem->savedJ, cvdls_mem->A);
+
+    // If jok = SUNFALSE, reset J, call jac routine for new J value and save a copy
+  } else {
+
+  __syncthreads();
+
+    dmdv->nje++;
+    dmdv->nstlj = dmdv->cv_nst;
+    dmdv->cv_jcur = 1;
+    //flag_shr[1] = 1; //if used, assign to 1 if retval fails
+
+  __syncthreads();
+
+    int aux_flag=0;
+
+    int guess_flag=cudaDeviceJac(
+            //check_model_state
+            threshhold, replacement_value, &aux_flag,
+            //f_gpu
+            time_step, deriv_length_cell, state_size_cell,
+            n_cells, i_kernel, threads_block, n_shr_empty, dcv_y,
+            md,dmdv, dftemp
+    );
+    __syncthreads();
+    //if(i==0)printf("cudaGlobalinsolsetupflag_shr[1] %d\n",flag_shr[1]);
+
+    if (guess_flag < 0) {
+      //last_flag = CVDLS_JACFUNC_UNRECVR;
+      return -1;
+    }
+    if (guess_flag > 0) {
+      //last_flag = CVDLS_JACFUNC_RECVR;
+      return 1;
+    }
+
+   cudaDeviceJacCopy(nrows, diA, djA, dA, disavedJ, djsavedJ, dsavedJ);
+
+  }
+
+  __syncthreads();
+
+
+  cudaDevicematScaleAddI(nrows, dA, djA, diA, -dmdv->cv_gamma);
+  cudaDevicediagprecond(nrows, dA, djA, diA, ddiag); //Setup linear solver
+
+
+  *flag=0;
+  __syncthreads();
+
+  //cudaMemcpy(bicg->A,mGPU->dA,mGPU->nnz*sizeof(double),cudaMemcpyDeviceToHost);
+
+
+  //__syncthreads();
+  //*cv_jcur = flag_shr[1]; //BUG HERE 1000 CELLS
+  //if(i==0)*cv_jcur = flag_shr[1]; //BUG HERE 1000 CELLS
+  //__syncthreads();
+
+  return 0;
+}
+
+
+//Algorithm: Biconjugate gradient
+__device__
+void solveBcgCudaDeviceCVODE(
+        double *dA, int *djA, int *diA, double *dx, double *dtempv //Input data
+        ,int nrows, int blocks, int n_shr_empty, int maxIt, int mattype
+        ,int n_cells, double tolmax, double *ddiag //Init variables
+        ,double *dr0, double *dr0h, double *dn0, double *dp0
+        ,double *dt, double *ds, double *dAx2, double *dy, double *dz// Auxiliary vectors
+        ,ModelDataGPU *md, ModelDataVariable *dmdv
+)
+{
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
+  int active_threads = nrows;
+#ifdef DEV_printmin
+  printmin(md,dtempv,"solveBcgCudaDeviceCVODEStart dtempv");
+#endif
+  //if(i<1){
+  if(i<active_threads){
+
+    double alpha,rho0,omega0,beta,rho1,temp1,temp2;
+    alpha=rho0=omega0=beta=rho1=temp1=temp2=1.0;
+
+    /*alpha  = 1.0;
+    rho0   = 1.0;
+    omega0 = 1.0;*/
+
+    //gpu_yequalsconst(dn0,0.0,nrows,blocks,threads);  //n0=0.0 //memset???
+    //gpu_yequalsconst(dp0,0.0,nrows,blocks,threads);  //p0=0.0
+    cudaDevicesetconst(dn0, 0.0, nrows);
+    cudaDevicesetconst(dp0, 0.0, nrows);
+
+    //Not needed
+    /*
+    cudaDevicesetconst(dr0h, 0.0, nrows);
+    cudaDevicesetconst(dt, 0.0, nrows);
+    cudaDevicesetconst(ds, 0.0, nrows);
+    cudaDevicesetconst(dAx2, 0.0, nrows);
+    cudaDevicesetconst(dy, 0.0, nrows);
+    cudaDevicesetconst(dz, 0.0, nrows);
+     */
+
+    __syncthreads();
+    cudaDeviceSpmv(dr0,dx,nrows,dA,djA,diA,n_shr_empty); //y=A*x
+    __syncthreads();
+
+#ifdef DEBUG_SOLVEBCGCUDA_DEEP
+    __syncthreads();
+    if(i==0)printf("%d dr0 %-le\n",i,dr0[i]);
+    __syncthreads();
+#endif
+
+    //gpu_axpby(dr0,dtempv,1.0,-1.0,nrows,blocks,threads); // r0=1.0*rhs+-1.0r0 //y=ax+by
+    cudaDeviceaxpby(dr0,dtempv,1.0,-1.0,nrows);
+
+    __syncthreads();
+    //gpu_yequalsx(dr0h,dr0,nrows,blocks,threads);  //r0h=r0
+    cudaDeviceyequalsx(dr0h,dr0,nrows);
+
+    int it=0;
+
+#ifdef DEBUG_SOLVEBCGCUDA_DEEP
+    __syncthreads();
+    if(i==0){
+      printf("%d dr0 %-le dr0 %-le\n",it,dr0[i],dr0h[i]);
+    }
+    if(i==0)printf("solveBcgCudaDeviceCVODEStart dx %le ddiag %le diA %d"
+                   "djA %d dA %le it %d block %d\n",
+                   dx[(blockDim.x-1)*0],ddiag[(blockDim.x-1)*0],diA[(blockDim.x-1)*0],
+                   djA[(blockDim.x-1)*0],dA[(blockDim.x-1)*0],it,blockIdx.x);
+
+    __syncthreads();
+#endif
+
+
+    do
+    {
+      //rho1=gpu_dotxy(dr0, dr0h, aux, daux, nrows,(blocks + 1) / 2, threads);
+      __syncthreads();
+
+      cudaDevicedotxy(dr0, dr0h, &rho1, nrows, n_shr_empty);
+
+#ifdef DEBUG_SOLVEBCGCUDA_DEEP
+      __syncthreads();
+    if(i==0 && it<2){
+      //printf("%d dr0[%d] %-le\n",it,i,dr0[i]);
+      printf("%d %d rho1 rho0 %-le %-le\n",it,i,rho1,rho0);
+      printf("%d dr0 %-le dr0 %-le\n",it,dr0[i],dr0h[i]);
+    }
+      __syncthreads();
+#endif
+
+      __syncthreads();
+      beta = (rho1 / rho0) * (alpha / omega0);
+
+      __syncthreads();
+      //gpu_zaxpbypc(dp0,dr0,dn0,beta,-1.0*omega0*beta,nrows,blocks,threads);   //z = ax + by + c
+      cudaDevicezaxpbypc(dp0, dr0, dn0, beta, -1.0 * omega0 * beta, nrows);   //z = ax + by + c
+
+      __syncthreads();
+      //gpu_multxy(dy,ddiag,dp0,nrows,blocks,threads);  // precond y= p0*diag
+      cudaDevicemultxy(dy, ddiag, dp0, nrows);
+
+      __syncthreads();
+      cudaDevicesetconst(dn0, 0.0, nrows);
+      //gpu_spmv(dn0,dy,nrows,dA,djA,diA,mattype,blocks,threads);  // n0= A*y
+      __syncthreads();
+      cudaDeviceSpmv(dn0, dy, nrows, dA, djA, diA,n_shr_empty);
+
+#ifdef DEBUG_SOLVEBCGCUDA_DEEP
+
+      if(i==0 && it<2){
+        printf("%d %d dy dn0 ddiag %-le %-le %le\n",it,i,dy[i],dn0[i],ddiag[i]);
+        //printf("%d %d dn0 %-le\n",it,i,dn0[i]);
+        //printf("%d %d &temp1 %p\n",it,i,&temp1);
+        //printf("%d %d &test %p\n",it,i,&test);
+        //printf("%d %d &i %p\n",it,i,&i);
+      }
+
+#endif
+
+      __syncthreads();
+      //temp1=gpu_dotxy(dr0h, dn0, aux, daux, nrows,(blocks + 1) / 2, threads);
+      cudaDevicedotxy(dr0h, dn0, &temp1, nrows, n_shr_empty);
+
+      __syncthreads();
+      alpha = rho1 / temp1;
+
+      //gpu_zaxpby(1.0,dr0,-1.0*alpha,dn0,ds,nrows,blocks,threads); // a*x + b*y = z
+      cudaDevicezaxpby(1.0, dr0, -1.0 * alpha, dn0, ds, nrows);
+
+      __syncthreads();
+      //gpu_multxy(dz,ddiag,ds,nrows,blocks,threads); // precond z=diag*s
+      cudaDevicemultxy(dz, ddiag, ds, nrows); // precond z=diag*s
+
+      __syncthreads();
+      //gpu_spmv(dt,dz,nrows,dA,djA,diA,mattype,blocks,threads);
+      cudaDeviceSpmv(dt, dz, nrows, dA, djA, diA,n_shr_empty);
+
+      __syncthreads();
+      //gpu_multxy(dAx2,ddiag,dt,nrows,blocks,threads);
+      cudaDevicemultxy(dAx2, ddiag, dt, nrows);
+
+      __syncthreads();
+      //temp1=gpu_dotxy(dz, dAx2, aux, daux, nrows,(blocks + 1) / 2, threads);
+      cudaDevicedotxy(dz, dAx2, &temp1, nrows, n_shr_empty);
+
+      __syncthreads();
+      //temp2=gpu_dotxy(dAx2, dAx2, aux, daux, nrows,(blocks + 1) / 2, threads);
+      cudaDevicedotxy(dAx2, dAx2, &temp2, nrows, n_shr_empty);
+
+      __syncthreads();
+      omega0 = temp1 / temp2;
+      //gpu_axpy(dx,dy,alpha,nrows,blocks,threads); // x=alpha*y +x
+      cudaDeviceaxpy(dx, dy, alpha, nrows); // x=alpha*y +x
+
+      __syncthreads();
+      //gpu_axpy(dx,dz,omega0,nrows,blocks,threads);
+      cudaDeviceaxpy(dx, dz, omega0, nrows);
+
+      __syncthreads();
+      //gpu_zaxpby(1.0,ds,-1.0*omega0,dt,dr0,nrows,blocks,threads);
+      cudaDevicezaxpby(1.0, ds, -1.0 * omega0, dt, dr0, nrows);
+      __syncthreads();
+      cudaDevicesetconst(dt, 0.0, nrows);
+
+      __syncthreads();
+      //temp1=gpu_dotxy(dr0, dr0, aux, daux, nrows,(blocks + 1) / 2, threads);
+      cudaDevicedotxy(dr0, dr0, &temp1, nrows, n_shr_empty);
+      __syncthreads();
+
+      //temp1 = sqrt(temp1);
+      temp1 = sqrtf(temp1);
+
+      rho0 = rho1;
+      /**/
+      __syncthreads();
+      /**/
+
+      //if (tid==0) it++;
+      it++;
+    } while(it<maxIt && temp1>tolmax);//while(it<maxIt && temp1>tolmax);//while(0);
+#ifdef DEV_printmin
+    printmin(md,dx,"solveBcgCudaDeviceCVODEEnd dx");
+#endif
+
+#ifdef DEBUG_SOLVEBCGCUDA_DEEP
+    __syncthreads();
+    if(i==0)printf("solveBcgCudaDeviceCVODEEnd dx %le ddiag %le diA %d"
+                   "djA d dA %le it %d block %d\n",
+                   dx[(blockDim.x-1)*0],ddiag[(blockDim.x-1)*0],diA[(blockDim.x-1)*0],
+                   djA[(blockDim.x-1)*0],dA[(blockDim.x-1)*0],it,blockIdx.x);
+    __syncthreads();
+#endif
+
+    //if(it>=maxIt-1)
+    //  dvcheck_input_gpud(dr0,nrows,999);
+
+    //dvcheck_input_gpud(dr0,nrows,k++);
+
+
+#ifdef PMC_DEBUG_GPU
+
+#ifdef solveBcgCuda_sum_it
+
+  if(threadIdx.x==0)
+    dmdv->counterBCGInternal[blockIdx.x]=it;
+
+#else
+
+  //*it_pointer = it;
+  dmdv->counterBCGInternal += it;
+  dmdv->counterBCG++;
+
+
+#endif
+
+#endif
+
+  }
+
+}
+
 void alloc_solver_gpu2(CVodeMem cv_mem, SolverData *sd)
 {
   itsolver *bicg = &(sd->bicg);
@@ -670,6 +2212,1829 @@ int cvHandleFailure_gpu2(CVodeMem cv_mem, int flag)
   return(flag);
 }
 
+__device__
+int cudaDevicecvNewtonIteration(
+        //LS
+        double *dA, int *djA, int *diA, double *dx, double *dtempv, //Input data
+        int nrows, int blocks, int n_shr_empty, int maxIt, int mattype,
+        int n_cells, double tolmax, double *ddiag, //Init variables
+        double *dr0, double *dr0h, double *dn0, double *dp0,
+        double *dt, double *ds, double *dAx2, double *dy, double *dz,// Auxiliary vectors
+        //swapCSC_CSR_BCG
+        int *diB, int *djB, double *dB,
+        //Guess_helper
+        double t_n, double h_n, double* dftemp,
+        double* dcv_y, double* tmp1,
+        double* corr, double cv_reltol,
+        //update_state
+        double threshhold, double replacement_value, int *flag,
+        //f_gpu
+        double time_step, int deriv_length_cell, int state_size_cell,
+        int i_kernel, int threads_block, ModelDataGPU *md, ModelDataVariable *dmdv,
+        //cudacvNewtonIteration
+        double *cv_acor, double *dzn,
+        double *dewt
+)
+{
+  extern __shared__ double flag_shr2[];
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
+  int aux_flag=0;
+
+  double del, delp, dcon, m;
+  del = delp = 0.0;
+  dmdv->cv_mnewt = m = 0;
+
+#ifdef PMC_DEBUG_GPU
+
+  int clock_khz=md->clock_khz;
+  clock_t start;
+
+#endif
+
+  //if(i==0)printf("cudaDevicecvNewtonIterationStart dzn[(blockDim.x*(blockIdx.x+1)-1)*0] %le counterNewton %d block %d\n",dzn[(blockDim.x*(blockIdx.x+1)-1)*0],counterNewton,blockIdx.x);
+#ifdef DEV_printmin
+  printmin(md,dtempv,"cudaDevicecvNewtonIterationStart dtempv");
+#endif
+
+  for(;;) {
+
+#ifdef DEV_printmin
+    printmin(md,dftemp,"cudaDevicecvNewtonIteration dftemp");
+#endif
+
+#ifdef PMC_DEBUG_GPU
+
+    //Useful for %: https://stackoverflow.com/questions/19527038/how-to-measure-the-time-of-the-device-functions-when-they-are-called-in-kernel-f
+    start = clock();
+
+#endif
+
+
+    cudaDevicezaxpby(dmdv->cv_rl1, (dzn + 1 * nrows), 1.0, cv_acor, dtempv, nrows);
+    cudaDevicezaxpby(dmdv->cv_gamma, dftemp, -1.0, dtempv, dtempv, nrows);
+    //}//GOOD
+
+    //if(i==0)printf("cudaDevicecvNewtonIteration dftemp %le dtempv %le dcv_y %le it %d block %d\n",
+    //               dftemp[(blockDim.x-1)*0],dtempv[(blockDim.x-1)*0],dcv_y[(blockDim.x-1)*0],it,blockIdx.x);
+
+    solveBcgCudaDeviceCVODE(
+            dA, djA, diA, dx, dtempv, nrows, blocks,
+            n_shr_empty,maxIt, mattype, n_cells,
+            tolmax, ddiag, dr0, dr0h, dn0, dp0, dt,
+            ds, dAx2, dy, dz, md, dmdv
+    );
+
+#ifdef PMC_DEBUG_GPU
+
+#ifdef cudaGlobalCVode_timers_max_blocks
+
+    dmdv->dtBCG[i] += ((double)(int)(clock() - startBCG))/(clock_khz*1000);
+
+#else
+
+    //if(threadIdx.x==0)dmdv->dtBCG += ((double)(int)(clock() - start))/(clock_khz*1000);//wrong
+    dmdv->dtBCG += ((double)(int)(clock() - start))/(clock_khz*1000);
+
+
+#endif
+
+    start = clock(); //almost accurate :https://stackoverflow.com/questions/19527038/how-to-measure-the-time-of-the-device-functions-when-they-are-called-in-kernel-f
+
+#endif
+
+    __syncthreads();
+    dtempv[i] = dx[i];
+    __syncthreads();
+#ifdef DEV_printmin
+    printmin(md,dcv_y,"cudaDevicecvNewtonIteration dcv_y");
+    printmin(md,dtempv,"cudaDevicecvNewtonIteration dtempv");
+#endif
+    //if (cv_mem->cv_ghfun){//Function is always defined in CAMP
+    //N_VLinearSum(ONE, cv_mem->cv_y, ONE, b, cv_mem->cv_ftemp);
+    cudaDevicezaxpby(1.0, dcv_y, 1.0, dtempv, dftemp, nrows);
+#ifdef DEBUG_cudaDevicecvNewtonIteration
+    //if(i==0)printf("cudaDevicecvNewtonIteration dftemp %le dtempv %le dcv_y %le it %d block %d\n",
+    //               dftemp[(blockDim.x-1)*0],dtempv[(blockDim.x-1)*0],dcv_y[(blockDim.x-1)*0],it,blockIdx.x);
+#endif
+#ifdef DEV_printmin
+    printmin(md,dftemp,"cudaDevicecvNewtonIteration dftemp");
+#endif
+
+    __syncthreads();
+    int guessflag=CudaDeviceguess_helper(t_n, 0., dftemp,
+                           dcv_y, dtempv, tmp1,
+                           corr, cv_reltol, nrows,
+            //check_model_state
+                           threshhold, replacement_value, &aux_flag,
+            //f_gpu
+                           time_step, deriv_length_cell, state_size_cell,
+                           n_cells, i_kernel, threads_block, n_shr_empty,
+                           md, dmdv
+    );
+    __syncthreads();
+    //if(i==0)printf("cudaDevicecvNewtonIteration guessflag %d block %d\n",guessflag,blockIdx.x);
+
+    if (guessflag < 0) {
+      if (!(dmdv->cv_jcur)) { //Bool set up during linsolsetup just before Jacobian
+        //&& (cv_lsetup)) { //cv_mem->cv_lsetup// Setup routine, always exists for BCG
+        return TRY_AGAIN;
+      } else {
+        return RHSFUNC_RECVR;
+      }
+    }
+
+    // Check for negative concentrations (CAMP addition)
+    cudaDevicezaxpby(1., dcv_y, 1., dtempv, dftemp, nrows);
+
+    //    if (N_VMin(cv_mem->cv_ftemp) < -PMC_TINY) {
+    //      return(CONV_FAIL);
+    //    }
+    double min;
+    cudaDevicemin(&min, dftemp[i], flag_shr2, md->n_shr_empty);
+
+    if (min < -PMC_TINY) {
+      //if (dftemp[i] < -PMC_TINY) {
+      return CONV_FAIL;
+    }
+    __syncthreads();
+
+    //cv_acor[i]+=dx[i];
+    cudaDevicezaxpby(1., cv_acor, 1., dx, cv_acor, nrows);
+    cudaDevicezaxpby(1., dzn, 1., cv_acor, dcv_y, nrows);
+
+    cudaDeviceVWRMS_Norm(dx, dewt, &del, nrows, n_shr_empty);
+
+// Test for convergence.  If m > 0, an estimate of the convergence
+    // rate constant is stored in crate, and used in the test.
+//#define SUNMAX(A, B) ((A) > (B) ? (A) : (B))
+    if (m > 0) {
+      dmdv->cv_crate = SUNMAX(0.3 * dmdv->cv_crate, del / delp);
+    }
+
+    dcon = del * SUNMIN(1.0, dmdv->cv_crate) / md->cv_tq[4+blockIdx.x*(NUM_TESTS + 1)];
+
+    flag_shr2[0]=0;//needed?
+    __syncthreads();
+    if (dcon <= 1.0) {
+      cudaDeviceVWRMS_Norm(cv_acor, dewt, &dmdv->cv_acnrm, nrows, n_shr_empty);
+      //cv_mem->cv_acnrm = gpu_VWRMS_Norm(mGPU->nrows, mGPU->cv_acor, mGPU->dewt, bicg->aux,
+      //  //                                    mGPU->daux, (mGPU->blocks + 1) / 2, mGPU->threads);
+
+      __syncthreads();
+      dmdv->cv_jcur = 0;
+      __syncthreads();
+
+      return CV_SUCCESS;
+    }
+
+    dmdv->cv_mnewt = ++m;
+
+    // Stop at maxcor iterations or if iter. seems to be diverging.
+    //     If still not converged and Jacobian data is not current,
+    //     signal to try the solution again
+    if ((m == dmdv->cv_maxcor) || ((m >= 2) && (del > RDIV * delp))) {
+      if (!(dmdv->cv_jcur)) {
+        return TRY_AGAIN;
+      } else {
+        return RHSFUNC_RECVR;
+      }
+    }
+
+    // Save norm of correction, evaluate f, and loop again
+    delp = del;
+
+    __syncthreads();
+
+#ifdef DEV_printmin
+    printmin(md,md->state,"cudaDevicef start state");
+#endif
+
+    int retval=cudaDevicef(
+            time_step, deriv_length_cell, state_size_cell,
+            n_cells, i_kernel, threads_block, n_shr_empty, dcv_y,
+            dftemp, md, dmdv, &aux_flag
+    );
+    //retval = f_gpu(cv_mem->cv_tn, cv_mem->cv_y, cv_mem->cv_ftemp, cv_mem->cv_user_data);
+
+    __syncthreads();
+
+    // a*x + b*y = z
+    cudaDevicezaxpby(1., dcv_y, 1., dzn, cv_acor, nrows);
+    //gpu_zaxpby(1.0, mGPU->dcv_y, -1.0, mGPU->dzn, mGPU->cv_acor, mGPU->nrows, mGPU->blocks, mGPU->threads);
+
+    if (retval < 0) {
+      return CV_RHSFUNC_FAIL;
+    }
+    if (retval > 0) {
+      if (!(dmdv->cv_jcur)) {
+        return TRY_AGAIN;
+      } else {
+        return RHSFUNC_RECVR;
+      }
+    }
+
+    dmdv->cv_nfe=dmdv->cv_nfe+1;
+
+
+#ifdef PMC_DEBUG_GPU
+#ifdef cudaGlobalCVode_timers_max_blocks
+
+    __syncthreads();
+    dmdv->dtPostBCG[i] += ((double)(clock() - start))/(clock_khz*1000);
+
+#else
+
+    if(i==0) dmdv->dtPostBCG += ((double)(clock() - start))/(clock_khz*1000);
+
+#endif
+
+#endif
+
+#ifdef DEBUG_cudaDevicecvNewtonIteration
+    if(i==0)printf("cudaDevicecvNewtonIteration dzn[(blockDim.x*(blockIdx.x+1)-1)*0] %le it %d block %d\n",dzn[(blockDim.x*(blockIdx.x+1)-1)*0],it,blockIdx.x);
+#endif
+
+  }
+
+}
+
+__device__
+int cudaDevicecvNlsNewton(
+        //LS
+        double *dA, int *djA, int *diA, double *dx, double *dtempv, //Input data
+        int nrows, int blocks, int n_shr_empty, int maxIt, int mattype,
+        int n_cells, double tolmax, double *ddiag, //Init variables
+        double *dr0, double *dr0h, double *dn0, double *dp0,
+        double *dt, double *ds, double *dAx2, double *dy, double *dz,// Auxiliary vectors
+        //swapCSC_CSR_BCG
+        int *diB, int *djB, double *dB,
+        //Guess_helper
+        double t_n, double h_n, double* dftemp,
+        double* dcv_y, double* tmp1,
+        double* corr, double cv_reltol,
+        //update_state
+        double threshhold, double replacement_value, int *flag,
+        //f_gpu
+        double time_step, int deriv_length_cell, int state_size_cell,
+        int i_kernel, int threads_block, ModelDataGPU *md, ModelDataVariable *dmdv,
+        //cudacvNewtonIteration
+        double *cv_acor, double *dzn,
+        double *dewt,
+        int *disavedJ, int *djsavedJ, double *dsavedJ
+) {
+  extern __shared__ int flag_shr[];
+  int flagDevice = 0;//99
+  __syncthreads();*flag = flag_shr[0];__syncthreads();
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
+
+  //if(threadIdx.x==0)printf("cudaDevicecvNlsNewton start %d\n",blockIdx.x);
+#ifdef DEV_printmin
+  printmin(md,dtempv,"cudaDevicecvNlsNewtonStart dtempv");
+#endif
+#ifdef PMC_DEBUG_GPU
+
+  int clock_khz=md->clock_khz;
+  clock_t start;
+
+#endif
+
+  int convfail = ((dmdv->nflag == FIRST_CALL) || (dmdv->nflag == PREV_ERR_FAIL)) ?
+                 CV_NO_FAILURES : CV_FAIL_OTHER;
+
+  //Decide whether or not to call setup routine (if one exists)
+  //if (cv_mem->cv_lsetup) { // Setup routine, always exists for BCG
+  int dgamrat=fabs(dmdv->cv_gamrat - 1.);
+  int callSetup = (dmdv->nflag == PREV_CONV_FAIL) || (dmdv->nflag == PREV_ERR_FAIL) ||
+                  (dmdv->cv_nst == 0) ||
+                  (dmdv->cv_nst >= dmdv->cv_nstlp + MSBP) ||
+                  (dgamrat > DGMAX);
+
+
+
+  //cudaDevicezaxpby(1.0, dzn, -1.0, md->cv_last_yn, dftemp, nrows);
+  dftemp[i]=dzn[i]+(-md->cv_last_yn[i]);
+
+  __syncthreads();
+  int guessflag=CudaDeviceguess_helper(t_n, h_n, dzn,
+                                       md->cv_last_yn, dftemp, dtempv,
+                                       md->cv_acor_init, cv_reltol, nrows,
+          //check_model_state
+                         threshhold, replacement_value, &flagDevice,
+          //f_gpu
+                         time_step, deriv_length_cell, state_size_cell,
+                         n_cells, i_kernel, threads_block, n_shr_empty,
+                         md, dmdv
+  );
+  __syncthreads();
+
+#ifdef DEV_printmin
+  printmin(md,dtempv,"cudaDevicecvSet after guess_helper dtempv");
+#endif
+
+  //if(i==0)printf("cudaDevicecvNlsNewton guessflag %d block %d\n",guessflag,blockIdx.x);
+
+  if(guessflag<0){
+  //if(*flag<0){
+    *flag=RHSFUNC_RECVR;
+    //if(threadIdx.x==0)printf("CudaDeviceguess_helper guessflag RHSFUNC_RECVR block %d\n", blockIdx.x);
+    return RHSFUNC_RECVR;
+  }
+
+/*
+    if (cv_mem->cv_ghfun) {
+    //N_VScale(cv_mem->cv_rl1, cv_mem->cv_zn[1], cv_mem->cv_ftemp);
+
+    N_VLinearSum(ONE, cv_mem->cv_zn[0], -ONE, cv_mem->cv_last_yn, cv_mem->cv_ftemp);
+    retval = cv_mem->cv_ghfun(cv_mem->cv_tn, cv_mem->cv_h, cv_mem->cv_zn[0],
+                              cv_mem->cv_last_yn, cv_mem->cv_ftemp, cv_mem->cv_user_data,
+                              cv_mem->cv_tempv, cv_mem->cv_acor_init);
+    if (retval < 0){
+      return (RHSFUNC_RECVR);
+    }
+  }
+*/
+
+  for(;;) {
+
+    __syncthreads();
+    dcv_y[i] = dzn[i];
+
+#ifdef DEV_printmin
+    //printmin(md,md->state,"cudaDevicef start state");
+#endif
+
+    int aux_flag=0;
+
+    int retval=cudaDevicef(
+            //f_gpu
+            time_step, deriv_length_cell, state_size_cell,
+            n_cells, i_kernel, threads_block, n_shr_empty, dcv_y,
+            dftemp,md,dmdv,&aux_flag
+    );
+
+    if (retval < 0) {
+      return CV_RHSFUNC_FAIL;
+    }
+    if (retval> 0) {
+      return RHSFUNC_RECVR;
+    }
+
+    __syncthreads();
+    //if (i == 0)
+    dmdv->cv_nfe++;
+    __syncthreads();
+
+    if (callSetup==1) {
+
+#ifdef PMC_DEBUG_GPU
+
+      start = clock();
+
+#endif
+
+      __syncthreads();
+      int linflag=cudaDevicelinsolsetup(
+              dA, djA, diA, dtempv, //Input data
+              nrows, blocks, n_shr_empty, maxIt, mattype,
+              n_cells, tolmax, ddiag, //Init variables
+              dr0, dr0h, dn0, dp0,
+              dt, ds, dAx2, dy, dz,// Auxiliary vectors
+              //swapCSC_CSR_BCG
+              diB, djB, dB,
+              //Guess_helper
+              t_n, h_n, dftemp,
+              dcv_y, tmp1,
+              corr, cv_reltol,
+              //update_state
+              threshhold, replacement_value, flag,
+              //f_gpu
+              time_step, deriv_length_cell, state_size_cell,
+              i_kernel, threads_block, md, dmdv,
+              //cudacvNewtonIteration
+              cv_acor,dewt,convfail,
+              disavedJ, djsavedJ, dsavedJ
+      );
+      __syncthreads();
+
+#ifdef PMC_DEBUG_GPU
+#ifdef cudaGlobalCVode_timers_max_blocks
+
+      md->dtlinsolsetup[i] += ((double)(clock() - start))/(clock_khz*1000);
+
+#else
+
+      if(i==0) *md->dtlinsolsetup += ((double)(clock() - start))/(clock_khz*1000);
+
+#endif
+#endif
+
+      //if (i == 0)
+      dmdv->cv_nsetups++; //needed?
+      callSetup = 0;
+      dmdv->cv_gamrat = dmdv->cv_crate = 1.0;
+      dmdv->cv_gammap = dmdv->cv_gamma;
+      dmdv->cv_nstlp = dmdv->cv_nst;
+      // Return if lsetup failed
+
+      if (linflag < 0) {
+        flag_shr[0] = CV_LSETUP_FAIL;
+        break;
+      }
+      if (linflag > 0) {
+        flag_shr[0] = CONV_FAIL;
+        break;
+      }
+
+    }
+
+    __syncthreads();
+    cv_acor[i] = 0.0;
+
+
+#ifdef PMC_DEBUG_GPU
+
+    start = clock();
+
+#endif
+
+    __syncthreads();
+    int nItflag=cudaDevicecvNewtonIteration(
+            dA, djA, diA, dx, dtempv, //Input data
+            nrows, blocks, n_shr_empty, maxIt, mattype,
+            n_cells, tolmax, ddiag, //Init variables
+            dr0, dr0h, dn0, dp0,
+            dt, ds, dAx2, dy, dz,// Auxiliary vectors
+            //swapCSC_CSR_BCG
+            diB, djB, dB,
+            //Guess_helper
+            t_n, h_n, dftemp,
+            dcv_y, tmp1,
+            corr, cv_reltol,
+            //update_state
+            threshhold, replacement_value, flag,
+            //f_gpu
+            time_step, deriv_length_cell, state_size_cell,
+            i_kernel, threads_block, md, dmdv,
+            //cudacvNewtonIteration
+            cv_acor, dzn,
+            dewt
+    );
+    __syncthreads();
+
+#ifdef PMC_DEBUG_GPU
+#ifdef cudaGlobalCVode_timers_max_blocks
+
+    md->dtNewtonIteration[i] += ((double)(clock() - start))/(clock_khz*1000);
+
+#else
+
+    if(i==0) *md->dtNewtonIteration += ((double)(clock() - start))/(clock_khz*1000);
+
+#endif
+#endif
+
+    if (nItflag != TRY_AGAIN) {
+      return nItflag;
+    }
+
+    __syncthreads();
+    callSetup = 1;
+    __syncthreads();
+    convfail = CV_FAIL_BAD_J;
+
+    __syncthreads();
+
+
+  }//for(;;)
+
+  //if(threadIdx.x==0)printf("cudaDevicecvNlsNewton2 flag_shr[0] %d block %d\n",flag_shr[0], blockIdx.x);
+
+  __syncthreads();
+  return *flag;
+
+}
+
+__device__
+void cudaDevicecvRescale(ModelDataGPU *md, ModelDataVariable *dmdv) {
+
+  extern __shared__ double dzn[];
+
+  int j;
+  double factor;
+
+  //if(i==0)printf("cudaDevicecvRescale2 start\n");
+
+  __syncthreads();
+
+  factor = dmdv->cv_eta;
+  for (j=1; j <= dmdv->cv_q; j++) {
+    //N_VScale(factor, md->dzn[j], md->dzn[j]);
+
+    cudaDevicescaley(&md->dzn[md->nrows*(j)],factor,md->nrows);
+
+    __syncthreads();
+    //if(i==0)printf("cudaDevicecvRescale2 factor %le j %d\n",factor,j);
+    factor *= dmdv->cv_eta;
+    __syncthreads();
+  }
+
+  dmdv->cv_h = dmdv->cv_hscale * dmdv->cv_eta;
+  dmdv->cv_next_h = dmdv->cv_h;
+  dmdv->cv_hscale = dmdv->cv_h;
+  dmdv->cv_nscon = 0;
+
+  __syncthreads();
+
+}
+
+__device__
+void cudaDevicecvRestore(ModelDataGPU *md, ModelDataVariable *dmdv, double saved_t) {
+
+  extern __shared__ double dzn[];
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
+
+  int j, k;
+
+#ifdef DEV_cudaDevicecvRestore
+  //if(i==0)printf("DEV_cudaDevicecvRestore start\n");
+  //if(i==0)printf("DEV_cudaDevicecvRestore dmdv->cv_tn %le saved_t %le\n",dmdv->cv_tn,saved_t);
+
+#endif
+
+  __syncthreads();
+  dmdv->cv_tn=saved_t;
+
+  for (k = 1; k <= dmdv->cv_q; k++){
+    for (j = dmdv->cv_q; j >= k; j--) {
+      //N_VLinearSum(ONE, cv_mem->cv_zn[j-1], -ONE,
+      //             cv_mem->cv_zn[j], cv_mem->cv_zn[j-1]);
+
+    cudaDevicezaxpby(1., &md->dzn[md->nrows*(j-1)], -1.,
+            &md->dzn[md->nrows*(j)], &md->dzn[md->nrows*(j-1)], md->nrows);
+
+    }
+  }
+
+  //N_VScale(ONE, cv_mem->cv_last_yn, cv_mem->cv_zn[0]);
+  md->dzn[i]=md->cv_last_yn[i];
+
+  __syncthreads();
+
+#ifdef DEV_cudaDevicecvRestore
+  //if(i==0)printf("DEV_cudaDevicecvRestore end\n");
+#endif
+
+}
+
+__device__
+int cudaDevicecvHandleNFlag(ModelDataGPU *md, ModelDataVariable *dmdv, int *nflagPtr, double saved_t,
+                             int *ncfPtr) {
+
+  extern __shared__ int flag_shr[];
+
+  //if(i==0)printf("cudaDevicecvHandleNFlag *md->flag %d \n",*md->flag);
+
+  if (*nflagPtr == CV_SUCCESS){
+    return(DO_ERROR_TEST);
+  }
+
+  // The nonlinear soln. failed; increment ncfn and restore zn
+  //if(i==0)
+    dmdv->cv_ncfn++;
+
+  cudaDevicecvRestore(md, dmdv, saved_t);
+  //__syncthreads();
+
+  if (*nflagPtr == CV_LSETUP_FAIL)  return(CV_LSETUP_FAIL);
+  if (*nflagPtr == CV_LSOLVE_FAIL)  return(CV_LSOLVE_FAIL);
+  if (*nflagPtr == CV_RHSFUNC_FAIL) return(CV_RHSFUNC_FAIL);
+
+
+  (*ncfPtr)++;
+  dmdv->cv_etamax = 1.;
+
+  // If we had maxncf failures or |h| = hmin,
+  //   return CV_CONV_FAILURE or CV_REPTD_RHSFUNC_ERR.
+
+  __syncthreads();
+
+  if ((fabs(dmdv->cv_h) <= dmdv->cv_hmin*ONEPSM) ||
+      (*ncfPtr == dmdv->cv_maxncf)) {
+    if (*nflagPtr == CONV_FAIL)     return(CV_CONV_FAILURE);
+    if (*nflagPtr == RHSFUNC_RECVR) return(CV_REPTD_RHSFUNC_ERR);
+  }
+
+  // Reduce step size; return to reattempt the step
+  __syncthreads();
+  dmdv->cv_eta = SUNMAX(ETACF,
+          dmdv->cv_hmin / fabs(dmdv->cv_h));
+  __syncthreads();
+  *nflagPtr = PREV_CONV_FAIL;
+  cudaDevicecvRescale(md, dmdv);
+  __syncthreads();
+
+  return (PREDICT_AGAIN);
+
+}
+
+__device__
+void cudaDevicecvSetTqBDFt(ModelDataGPU *md, ModelDataVariable *dmdv,
+                           double hsum, double alpha0,
+                           double alpha0_hat, double xi_inv, double xistar_inv) {
+
+  extern __shared__ int flag_shr[];
+
+  double A1, A2, A3, A4, A5, A6;
+  double C, Cpinv, Cppinv;
+
+  __syncthreads();
+
+  A1 = 1. - alpha0_hat + alpha0;
+  A2 = 1. + dmdv->cv_q * A1;
+
+  md->cv_tq[2+blockIdx.x*(NUM_TESTS + 1)] = fabs(A1 / (alpha0 * A2));
+
+  md->cv_tq[5+blockIdx.x*(NUM_TESTS + 1)] = fabs(A2 * xistar_inv / (md->cv_l[dmdv->cv_q+blockIdx.x*L_MAX] * xi_inv));
+  if (dmdv->cv_qwait == 1) {
+    if (dmdv->cv_q > 1) {
+      C = xistar_inv / md->cv_l[dmdv->cv_q+blockIdx.x*L_MAX];
+      A3 = alpha0 + 1. / dmdv->cv_q;
+      A4 = alpha0_hat + xi_inv;
+      Cpinv = (1. - A4 + A3) / A3;
+      md->cv_tq[1+blockIdx.x*(NUM_TESTS + 1)] = fabs(C * Cpinv);
+    }
+    else md->cv_tq[1+blockIdx.x*(NUM_TESTS + 1)] = 1.;
+
+    __syncthreads();
+
+    hsum += md->cv_tau[dmdv->cv_q+blockIdx.x*(L_MAX + 1)];
+    xi_inv = dmdv->cv_h / hsum;
+    A5 = alpha0 - (1. / (dmdv->cv_q+1));
+    A6 = alpha0_hat - xi_inv;
+    Cppinv = (1. - A6 + A5) / A2;
+    md->cv_tq[3+blockIdx.x*(NUM_TESTS + 1)] = fabs(Cppinv / (xi_inv * (dmdv->cv_q+2) * A5));
+    __syncthreads();
+  }
+
+  md->cv_tq[4+blockIdx.x*(NUM_TESTS + 1)] = dmdv->cv_nlscoef / md->cv_tq[2+blockIdx.x*(NUM_TESTS + 1)];
+
+}
+
+__device__
+void cudaDevicecvSetBDF(ModelDataGPU *md, ModelDataVariable *dmdv) {
+
+  extern __shared__ int flag_shr[];
+
+  double alpha0, alpha0_hat, xi_inv, xistar_inv, hsum;
+  int z,j;
+
+  __syncthreads();
+
+  md->cv_l[0+blockIdx.x*L_MAX] = md->cv_l[1+blockIdx.x*L_MAX] = xi_inv = xistar_inv = 1.;
+  for (z=2; z <= dmdv->cv_q; z++) md->cv_l[z+blockIdx.x*L_MAX] = 0.;
+  alpha0 = alpha0_hat = -1.;
+  hsum = dmdv->cv_h;
+  __syncthreads();
+  if (dmdv->cv_q > 1) {
+    for (j=2; j < dmdv->cv_q; j++) {
+      hsum += md->cv_tau[j-1+blockIdx.x*(L_MAX + 1)];
+      xi_inv = dmdv->cv_h / hsum;
+      alpha0 -= 1. / j;
+      for (z=j; z >= 1; z--) md->cv_l[z+blockIdx.x*L_MAX] += md->cv_l[z-1+blockIdx.x*L_MAX]*xi_inv;
+      // The l[z] are coefficients of product(1 to j) (1 + x/xi_i)
+    }
+    __syncthreads();
+    // j = q
+    alpha0 -= 1. / dmdv->cv_q;
+    xistar_inv = -md->cv_l[1+blockIdx.x*L_MAX] - alpha0;
+    hsum += md->cv_tau[dmdv->cv_q-1+blockIdx.x*(L_MAX + 1)];
+    xi_inv = dmdv->cv_h / hsum;
+    alpha0_hat = -md->cv_l[1+blockIdx.x*L_MAX] - xi_inv;
+    for (z=dmdv->cv_q; z >= 1; z--)
+      md->cv_l[z+blockIdx.x*L_MAX] += md->cv_l[z-1+blockIdx.x*L_MAX]*xistar_inv;
+  }
+  __syncthreads();
+  cudaDevicecvSetTqBDFt(md, dmdv, hsum, alpha0, alpha0_hat, xi_inv, xistar_inv);
+
+}
+
+__device__
+void cudaDevicecvSet(ModelDataGPU *md, ModelDataVariable *dmdv) {
+
+  extern __shared__ int flag_shr[];
+#ifdef DEV_printmin
+  printmin(md,md->dtempv,"cudaDevicecvSet Start dtempv");
+#endif
+  __syncthreads();
+  cudaDevicecvSetBDF(md,dmdv);
+  __syncthreads();
+
+  dmdv->cv_rl1 = 1.0 / md->cv_l[1+blockIdx.x*L_MAX];
+  dmdv->cv_gamma = dmdv->cv_h * dmdv->cv_rl1;
+  __syncthreads();
+  if (dmdv->cv_nst == 0){
+    //if(threadIdx.x == 0)
+      //printf("dmdv->cv_nst == 0\n");
+    dmdv->cv_gammap = dmdv->cv_gamma;
+
+  }
+  //if(threadIdx.x == 0)printf("cudaDevicecvSet3 dmdv->cv_nst %d dmdv->cv_gammap %le block %d\n", dmdv->cv_nst, dmdv->cv_gammap, blockIdx.x);
+  __syncthreads();
+  dmdv->cv_gamrat = (dmdv->cv_nst > 0) ?
+                    dmdv->cv_gamma / dmdv->cv_gammap : 1.;  // protect x / x != 1.0
+  __syncthreads();
+}
+
+__device__
+void cudaDevicecvPredict(ModelDataGPU *md, ModelDataVariable *dmdv) {
+
+  extern __shared__ double dzn[];
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
+
+  int j, k;
+#ifdef DEV_printmin
+  printmin(md,md->dtempv,"cudaDevicecvPredict start dtempv");
+#endif
+  __syncthreads();
+  dmdv->cv_tn += dmdv->cv_h;
+  __syncthreads();
+  if (dmdv->cv_tstopset) {
+    if ((dmdv->cv_tn - dmdv->cv_tstop)*dmdv->cv_h > 0.)
+      dmdv->cv_tn = dmdv->cv_tstop;
+  }
+
+  //N_VScale(ONE, cv_mem->cv_zn[0], cv_mem->cv_last_yn);
+  md->cv_last_yn[i]=md->dzn[i];
+
+  for (k = 1; k <= dmdv->cv_q; k++){
+    __syncthreads();
+    for (j = dmdv->cv_q; j >= k; j--){
+      __syncthreads();
+      //N_VLinearSum(ONE, cv_mem->cv_zn[j-1], ONE,
+      //             cv_mem->cv_zn[j], cv_mem->cv_zn[j-1]);
+      cudaDevicezaxpby(1., &md->dzn[md->nrows*(j-1)], 1.,
+                       &md->dzn[md->nrows*(j)], &md->dzn[md->nrows*(j-1)], md->nrows);
+
+    }
+    __syncthreads();
+  }
+  __syncthreads();
+}
+
+__device__
+void cudaDevicecvDecreaseBDF(ModelDataGPU *md, ModelDataVariable *dmdv) {
+
+  extern __shared__ double dzn[];
+
+  double hsum, xi;
+  int z, j;
+
+  for (z=0; z <= dmdv->cv_qmax; z++) md->cv_l[z+blockIdx.x*L_MAX] = 0.;
+  md->cv_l[2+blockIdx.x*L_MAX] = 1.;
+
+  hsum = 0.;
+  for (j=1; j <= dmdv->cv_q-2; j++) {
+    hsum += md->cv_tau[j+blockIdx.x*(L_MAX + 1)];
+    xi = hsum /dmdv->cv_hscale;
+    for (z=j+2; z >= 2; z--)
+      md->cv_l[z+blockIdx.x*L_MAX] = md->cv_l[z+blockIdx.x*L_MAX]*xi + md->cv_l[z-1+blockIdx.x*L_MAX];
+  }
+
+  for (j=2; j < dmdv->cv_q; j++){
+
+
+    //N_VLinearSum(-cv_mem->cv_l[j], cv_mem->cv_zn[cv_mem->cv_q],
+    //             ONE, cv_mem->cv_zn[j], cv_mem->cv_zn[j]);
+
+    cudaDevicezaxpby(-md->cv_l[j+blockIdx.x*L_MAX],
+                     &md->dzn[md->nrows*(dmdv->cv_q)],
+                     1., &md->dzn[md->nrows*(j)],
+                     &md->dzn[md->nrows*(j)], md->nrows);
+
+    }
+
+}
+
+__device__
+int cudaDevicecvDoErrorTest(ModelDataGPU *md, ModelDataVariable *dmdv,
+                             int *nflagPtr,
+                             double saved_t, int *nefPtr, double *dsmPtr) {
+
+  //extern __shared__ int flag_shr[];
+  //extern __shared__ double flag_shr2[];
+  extern __shared__ double dzn[];
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
+
+  double dsm;
+  double min_val;
+  int retval;
+
+  // Find the minimum concentration and if it's small and negative, make it
+  // positive
+  //N_VLinearSum(cv_mem->cv_l[0], cv_mem->cv_acor, ONE, cv_mem->cv_zn[0],
+  //             cv_mem->cv_ftemp);
+
+  cudaDevicezaxpby(md->cv_l[0+blockIdx.x*L_MAX],
+                   md->cv_acor, 1., md->dzn, md->dftemp, md->nrows);
+
+  //min_val = N_VMin(cv_mem->cv_ftemp);
+  cudaDevicemin(&min_val, md->dftemp[i], dzn, md->n_shr_empty);
+
+  if (min_val < 0. && min_val > -PMC_TINY) {
+    //N_VAbs(cv_mem->cv_ftemp, cv_mem->cv_ftemp);
+    md->dftemp[i]=fabs(md->dftemp[i]);
+
+    //N_VLinearSum(-cv_mem->cv_l[0], cv_mem->cv_acor, ONE, cv_mem->cv_ftemp,
+    //             cv_mem->cv_zn[0]);
+    cudaDevicezaxpby(-md->cv_l[0+blockIdx.x*L_MAX],
+                     md->cv_acor, 1., md->dftemp, md->dzn, md->nrows);
+
+    min_val = 0.;
+  }
+
+  dsm = dmdv->cv_acnrm * md->cv_tq[2+blockIdx.x*(NUM_TESTS + 1)];
+
+  // If est. local error norm dsm passes test and there are no negative values,
+  // return CV_SUCCESS
+  *dsmPtr = dsm;
+  if (dsm <= 1. && min_val >= 0.) return(CV_SUCCESS);
+
+  // Test failed; increment counters, set nflag, and restore zn array
+  (*nefPtr)++;
+  dmdv->cv_netf++;
+  *nflagPtr = PREV_ERR_FAIL;
+  cudaDevicecvRestore(md, dmdv, saved_t);
+
+  __syncthreads();
+
+  // At maxnef failures or |h| = hmin, return CV_ERR_FAILURE
+  if ((fabs(dmdv->cv_h) <= dmdv->cv_hmin*ONEPSM) ||
+      (*nefPtr == dmdv->cv_maxnef)) return(CV_ERR_FAILURE);
+
+  // Set etamax = 1 to prevent step size increase at end of this step
+  dmdv->cv_etamax = 1.;
+
+  __syncthreads();
+
+  // Set h ratio eta from dsm, rescale, and return for retry of step
+  if (*nefPtr <= MXNEF1) {
+    //dmdv->cv_eta = 1. / (SUNRpowerR(BIAS2*dsm,ONE/cv_mem->cv_L) + ADDON);
+    dmdv->cv_eta = 1. / (pow(BIAS2*dsm,1./dmdv->cv_L) + ADDON);
+    __syncthreads();
+    dmdv->cv_eta = SUNMAX(ETAMIN, SUNMAX(dmdv->cv_eta,
+                           dmdv->cv_hmin / fabs(dmdv->cv_h)));
+    __syncthreads();
+    if (*nefPtr >= SMALL_NEF)
+      dmdv->cv_eta = SUNMIN(dmdv->cv_eta, ETAMXF);
+    __syncthreads();
+
+    cudaDevicecvRescale(md, dmdv);
+    return(TRY_AGAIN);
+  }
+
+  __syncthreads();
+
+  // After MXNEF1 failures, force an order reduction and retry step
+  if (dmdv->cv_q > 1) {
+    dmdv->cv_eta = SUNMAX(ETAMIN,
+    dmdv->cv_hmin / fabs(dmdv->cv_h));
+    //never enters?
+    //if(i==0)printf("dmdv->cv_q > 1\n");
+    //cvAdjustOrder_gpu2(cv_mem,-1);
+    cudaDevicecvDecreaseBDF(md, dmdv);
+
+    dmdv->cv_L = dmdv->cv_q;
+    dmdv->cv_q--;
+    dmdv->cv_qwait = dmdv->cv_L;
+    cudaDevicecvRescale(md, dmdv);
+    __syncthreads();
+    return(TRY_AGAIN);
+  }
+
+  // If already at order 1, restart: reload zn from scratch
+
+  __syncthreads();
+
+  dmdv->cv_eta = SUNMAX(ETAMIN, dmdv->cv_hmin / fabs(dmdv->cv_h));
+  __syncthreads();
+  dmdv->cv_h *= dmdv->cv_eta;
+  dmdv->cv_next_h = dmdv->cv_h;
+  dmdv->cv_hscale = dmdv->cv_h;
+  dmdv->cv_qwait = 10;
+  dmdv->cv_nscon = 0;
+
+
+  //retval = cv_mem->cv_f(cv_mem->cv_tn, cv_mem->cv_zn[0],
+  //                      cv_mem->cv_tempv, cv_mem->cv_user_data);
+
+  int aux_flag=0;
+
+#ifdef DEV_printmin
+  printmin(md,md->state,"cudaDevicef start state");
+#endif
+
+  retval=cudaDevicef(
+          dmdv->cv_tn, md->deriv_length_cell, md->state_size_cell,
+          md->n_cells, md->i_kernel, md->threads_block, md->n_shr_empty,
+          md->dzn, md->dtempv,md,dmdv, &aux_flag
+  );
+
+
+  dmdv->cv_nfe++;
+  if (retval < 0)  return(CV_RHSFUNC_FAIL);
+  if (retval > 0)  return(CV_UNREC_RHSFUNC_ERR);
+
+  //N_VScale(cv_mem->cv_h, cv_mem->cv_tempv, cv_mem->cv_zn[1]);
+    md->dzn[1*md->nrows+i]=dmdv->cv_h*md->dtempv[i];
+
+  return(TRY_AGAIN);
+
+}
+
+__device__
+void cudaDevicecvCompleteStep(ModelDataGPU *md, ModelDataVariable *dmdv) {
+
+  extern __shared__ double dzn[];
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
+
+  int z, j;
+#ifdef DEV_printmin
+  printmin(md,md->dtempv,"cudaDevicecvCompleteStep start dtempv");
+#endif
+  dmdv->cv_nst++;
+  dmdv->cv_nscon++;
+  dmdv->cv_hu = dmdv->cv_h;
+  dmdv->cv_qu = dmdv->cv_q;
+
+  for (z=dmdv->cv_q; z >= 2; z--)  md->cv_tau[z+blockIdx.x*(L_MAX + 1)] = md->cv_tau[z-1+blockIdx.x*(L_MAX + 1)];
+  if ((dmdv->cv_q==1) && (dmdv->cv_nst > 1))
+    md->cv_tau[2+blockIdx.x*(L_MAX + 1)] = md->cv_tau[1+blockIdx.x*(L_MAX + 1)];
+  md->cv_tau[1+blockIdx.x*(L_MAX + 1)] = dmdv->cv_h;
+
+  __syncthreads();
+
+
+  // Apply correction to column j of zn: l_j * Delta_n
+  for (j=0; j <= dmdv->cv_q; j++){
+
+    //N_VLinearSum(md->cv_l[j], md->cv_acor, ONE,
+    //            md->cv_zn[j], md->cv_zn[j]);
+
+    cudaDevicezaxpby(md->cv_l[j+blockIdx.x*L_MAX],
+                     md->cv_acor,
+                     1., &md->dzn[md->nrows*(j)],
+                     &md->dzn[md->nrows*(j)], md->nrows);
+
+  }
+  dmdv->cv_qwait--;
+  if ((dmdv->cv_qwait == 1) && (dmdv->cv_q != dmdv->cv_qmax)) {
+
+    //N_VScale(ONE, md->cv_acor, md->cv_zn[dmdv->cv_qmax]);
+    md->dzn[md->nrows*(dmdv->cv_qmax)+i]=md->cv_acor[i];
+
+    dmdv->cv_saved_tq5 = md->cv_tq[5+blockIdx.x*(NUM_TESTS + 1)];
+    dmdv->cv_indx_acor = dmdv->cv_qmax;
+  }
+
+}
+
+__device__
+void cudaDevicecvChooseEta(ModelDataGPU *md, ModelDataVariable *dmdv) {
+
+  extern __shared__ double dzn[];
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
+
+  double etam;
+
+  etam = SUNMAX(dmdv->cv_etaqm1, SUNMAX(dmdv->cv_etaq, dmdv->cv_etaqp1));
+
+  __syncthreads();
+
+  if (etam < THRESH) {
+    dmdv->cv_eta = 1.;
+    dmdv->cv_qprime = dmdv->cv_q;
+    return;
+  }
+
+  __syncthreads();
+
+  if (etam == dmdv->cv_etaq) {
+
+    dmdv->cv_eta = dmdv->cv_etaq;
+    dmdv->cv_qprime = dmdv->cv_q;
+
+  } else if (etam == dmdv->cv_etaqm1) {
+
+    dmdv->cv_eta = dmdv->cv_etaqm1;
+    dmdv->cv_qprime = dmdv->cv_q - 1;
+
+  } else {
+
+    dmdv->cv_eta = dmdv->cv_etaqp1;
+    dmdv->cv_qprime = dmdv->cv_q + 1;
+
+    __syncthreads();
+
+    if (dmdv->cv_lmm == CV_BDF) {
+      //
+       // Store Delta_n in zn[qmax] to be used in order increase
+       //
+       // This happens at the last step of order q before an increase
+       // to order q+1, so it represents Delta_n in the ELTE at q+1
+       //
+
+      //N_VScale(ONE, dmdv->cv_acor, dmdv->cv_zn[dmdv->cv_qmax]);
+      md->dzn[md->nrows*(dmdv->cv_qmax)+i]=md->cv_acor[i];
+
+    }
+  }
+
+  __syncthreads();
+
+}
+
+__device__
+void cudaDevicecvSetEta(ModelDataGPU *md, ModelDataVariable *dmdv) {
+
+  extern __shared__ int flag_shr[];
+
+  __syncthreads();
+
+  // If eta below the threshhold THRESH, reject a change of step size
+  if (dmdv->cv_eta < THRESH) {
+    dmdv->cv_eta = 1.;
+    //Never enters (ensures it works anyway
+    dmdv->cv_hprime = dmdv->cv_h;
+  } else {
+    // Limit eta by etamax and hmax, then set hprime
+    __syncthreads();
+    dmdv->cv_eta = SUNMIN(dmdv->cv_eta, dmdv->cv_etamax);
+    __syncthreads();
+    dmdv->cv_eta /= SUNMAX(ONE,
+            fabs(dmdv->cv_h)*dmdv->cv_hmax_inv*dmdv->cv_eta);
+    __syncthreads();
+    dmdv->cv_hprime = dmdv->cv_h * dmdv->cv_eta;
+    //printf("dmdv->cv_eta NOT < THRESH %le dmdv->cv_hprime block %d\n", dmdv->cv_hprime, blockIdx.x);
+
+    __syncthreads();
+    if (dmdv->cv_qprime < dmdv->cv_q) dmdv->cv_nscon = 0;
+  }
+
+  __syncthreads();
+
+}
+
+__device__
+int cudaDevicecvPrepareNextStep(ModelDataGPU *md, ModelDataVariable *dmdv, double dsm) {
+
+  extern __shared__ double sdata[];
+  __syncthreads();
+#ifdef DEV_printmin
+  printmin(md,md->dtempv,"cudaDevicecvPrepareNextStep start dtempv");
+#endif
+  // If etamax = 1, defer step size or order changes
+  if (dmdv->cv_etamax == 1.) {
+    dmdv->cv_qwait = SUNMAX(dmdv->cv_qwait, 2);
+    dmdv->cv_qprime = dmdv->cv_q;
+    dmdv->cv_hprime = dmdv->cv_h;
+    dmdv->cv_eta = 1.;
+    return 0;
+  }
+
+  __syncthreads();
+
+  // etaq is the ratio of new to old h at the current order
+  //dmdv->cv_etaq = 1. /(SUNRpowerR(BIAS2*dsm,1./dmdv->cv_L) + ADDON);
+  dmdv->cv_etaq = 1. /(pow(BIAS2*dsm,1./dmdv->cv_L) + ADDON);
+
+  __syncthreads();
+
+  // If no order change, adjust eta and acor in cvSetEta and return
+  if (dmdv->cv_qwait != 0) {
+    dmdv->cv_eta = dmdv->cv_etaq;
+    dmdv->cv_qprime = dmdv->cv_q;
+    cudaDevicecvSetEta(md, dmdv);
+    return 0;
+  }
+
+  __syncthreads();
+
+  // If qwait = 0, consider an order change.   etaqm1 and etaqp1 are
+  //  the ratios of new to old h at orders q-1 and q+1, respectively.
+  //  cvChooseEta selects the largest; cvSetEta adjusts eta and acor
+  dmdv->cv_qwait = 2;
+
+  //compute cv_etaqm1
+  double ddn;
+  dmdv->cv_etaqm1 = 0.;
+  __syncthreads();
+  if (dmdv->cv_q > 1) {
+    cudaDeviceVWRMS_Norm(&md->dzn[md->nrows*(dmdv->cv_q)],
+                         md->dewt, &ddn, md->nrows, md->n_shr_empty);
+    __syncthreads();
+    ddn *= md->cv_tq[1+blockIdx.x*(NUM_TESTS + 1)];
+    __syncthreads();
+    dmdv->cv_etaqm1 = 1./(pow(BIAS1*ddn, 1./dmdv->cv_q) + ADDON);
+  }
+
+  //compute cv_etaqp1
+  double dup, cquot;
+  dmdv->cv_etaqp1 = 0.;
+  __syncthreads();
+  if (dmdv->cv_q != dmdv->cv_qmax && dmdv->cv_saved_tq5 != 0.) {
+    //cquot = (dmdv->cv_tq[5] / dmdv->cv_saved_tq5) *
+    //        SUNRpowerI(dmdv->cv_h/md->cv_tau[2], dmdv->cv_L); //maybe need custom function?
+    cquot = (md->cv_tq[5+blockIdx.x*(NUM_TESTS + 1)] / dmdv->cv_saved_tq5) *
+            pow(double(dmdv->cv_h/md->cv_tau[2+blockIdx.x*(L_MAX + 1)]), double(dmdv->cv_L));
+
+    //N_VLinearSum(-cquot, dmdv->cv_zn[dmdv->cv_qmax], ONE,
+    //             dmdv->cv_acor, dmdv->cv_tempv);
+
+    cudaDevicezaxpby(-cquot,
+    &md->dzn[md->nrows*(dmdv->cv_qmax)],
+    1., md->cv_acor,
+    md->dtempv, md->nrows);
+
+    //dup = N_VWrmsNorm(md->dtempv, cv_mem->cv_ewt) * cv_mem->cv_tq[3];
+    cudaDeviceVWRMS_Norm(md->dtempv, md->dewt, &dup, md->nrows, md->n_shr_empty);
+
+    __syncthreads();
+    dup *= md->cv_tq[3+blockIdx.x*(NUM_TESTS + 1)];
+    __syncthreads();
+    dmdv->cv_etaqp1 = 1. / (pow(BIAS3*dup, 1./(dmdv->cv_L+1)) + ADDON);
+  }
+
+  __syncthreads();
+  cudaDevicecvChooseEta(md, dmdv);
+  __syncthreads();
+  cudaDevicecvSetEta(md, dmdv);
+  __syncthreads();
+
+  return CV_SUCCESS;
+
+}
+
+__device__
+void cudaDevicecvIncreaseBDF(ModelDataGPU *md, ModelDataVariable *dmdv) {
+
+  extern __shared__ double dzn[];
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
+  unsigned int tid = threadIdx.x;
+
+  double alpha0, alpha1, prod, xi, xiold, hsum, A1;
+  int z, j;
+
+  for (z=0; z <= dmdv->cv_qmax; z++) md->cv_l[z+blockIdx.x*L_MAX] = 0.;
+  md->cv_l[2+blockIdx.x*L_MAX] = alpha1 = prod = xiold = 1.;
+
+  alpha0 = -1.;
+  hsum = dmdv->cv_hscale;
+  if (dmdv->cv_q > 1) {
+    for (j=1; j < dmdv->cv_q; j++) {
+      hsum += md->cv_tau[j+1+blockIdx.x*(L_MAX + 1)];
+      xi = hsum / dmdv->cv_hscale;
+      prod *= xi;
+      alpha0 -= 1. / (j+1);
+      alpha1 += 1. / xi;
+      for (z=j+2; z >= 2; z--)
+        md->cv_l[z+blockIdx.x*L_MAX] = md->cv_l[z+blockIdx.x*L_MAX]*xiold + md->cv_l[z-1+blockIdx.x*L_MAX];
+      xiold = xi;
+    }
+  }
+
+  A1 = (-alpha0 - alpha1) / prod;
+  //N_VScale(A1, md->cv_zn[dmdv->cv_indx_acor],
+  //         md->cv_zn[dmdv->cv_L]);
+
+  //__syncthreads();
+  dzn[tid]=md->dzn[md->nrows*(dmdv->cv_L)+i];
+
+  dzn[tid]=A1*md->dzn[md->nrows*(dmdv->cv_indx_acor)+i];
+
+  md->dzn[md->nrows*(dmdv->cv_L)+i]=dzn[tid];
+  //__syncthreads();
+
+  for (j=2; j <= dmdv->cv_q; j++){
+    //N_VLinearSum(md->cv_l[j], md->cv_zn[dmdv->cv_L], ONE,
+    //             md->cv_zn[j], md->cv_zn[j]);
+
+    cudaDevicezaxpby(md->cv_l[j+blockIdx.x*L_MAX],
+    &md->dzn[md->nrows*(dmdv->cv_L)],
+    1., &md->dzn[md->nrows*(j)],
+    &md->dzn[md->nrows*(j)], md->nrows);
+
+  }
+
+}
+
+__device__
+void cudaDevicecvAdjustParams(ModelDataGPU *md, ModelDataVariable *dmdv) {
+
+  if (dmdv->cv_qprime != dmdv->cv_q) {
+
+    int deltaq = dmdv->cv_qprime-dmdv->cv_q;
+    switch(deltaq) {
+      case 1:
+        cudaDevicecvIncreaseBDF(md, dmdv);
+        break;
+      case -1:
+        cudaDevicecvDecreaseBDF(md, dmdv);
+        break;
+    }
+
+    dmdv->cv_q = dmdv->cv_qprime;
+    dmdv->cv_L = dmdv->cv_q+1;
+    dmdv->cv_qwait = dmdv->cv_L;
+  }
+  cudaDevicecvRescale(md, dmdv);
+}
+
+__device__
+int cudaDevicecvStep(ModelDataGPU *md, ModelDataVariable *dmdv) {
+
+  extern __shared__ double sdata[];
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
+
+  double saved_t = dmdv->cv_tn;
+  int ncf = 0;
+  int nef = 0;
+  dmdv->nflag = FIRST_CALL;
+  int nflag=FIRST_CALL;
+  double dsm;
+
+  __syncthreads();
+
+  if ((dmdv->cv_nst > 0) && (dmdv->cv_hprime != dmdv->cv_h)){
+    cudaDevicecvAdjustParams(md, dmdv);
+  }
+
+  __syncthreads();
+
+  for (;;) {
+    __syncthreads();
+    cudaDevicecvPredict(md, dmdv);
+    __syncthreads();
+    cudaDevicecvSet(md, dmdv);
+    __syncthreads();
+
+    nflag = cudaDevicecvNlsNewton(
+            md->dA, md->djA, md->diA, md->dx, md->dtempv, //Input data
+            md->nrows, md->blocks, md->n_shr_empty, md->maxIt, md->mattype,
+            md->n_cells, md->tolmax, md->ddiag, //Init variables
+            md->dr0, md->dr0h, md->dn0, md->dp0,
+            md->dt, md->ds, md->dAx2, md->dy, md->dz,// Auxiliary vectors
+            //swapCSC_CSR_BCG
+            md->diB, md->djB, md->dB,
+            //Guess_helper //*md->cv_tn
+            dmdv->cv_tn, dmdv->cv_h, md->dftemp,
+            md->dcv_y, md->dtempv1,
+            md->dtempv2, dmdv->cv_reltol,
+            //update_state
+            md->threshhold, md->replacement_value, &nflag,
+            //f_gpu
+            dmdv->cv_next_h, md->deriv_length_cell, md->state_size_cell,
+            md->i_kernel, md->threads_block, md, dmdv,
+            //cudacvNewtonIteration
+            md->cv_acor, md->dzn, md->dewt,
+            md->disavedJ, md->djsavedJ, md->dsavedJ
+    );
+
+    __syncthreads();
+    dmdv->nflag = nflag;
+    __syncthreads();
+#ifdef DEBUG_cudaDevicecvStep
+    if(threadIdx.x==0)printf("DEV_CUDACVSTEP nflag %d dmdv->nflag %d block %d\n",dmdv->nflag, dmdv->nflag, blockIdx.x);
+#endif
+    int kflag = cudaDevicecvHandleNFlag(md, dmdv, &nflag, saved_t, &ncf);
+    //dmdv->kflag = cudaDevicecvHandleNFlag(md, dmdv, &nflag, saved_t, &ncf);
+    //dmdv->kflag = cudaDevicecvHandleNFlag(md, dmdv, &dmdv->nflag, saved_t, &ncf);
+
+    __syncthreads();
+    dmdv->nflag = nflag;//needed?
+    dmdv->kflag = kflag;
+    __syncthreads();
+#ifdef DEBUG_cudaDevicecvStep
+    if(threadIdx.x==0)printf("DEV_CUDACVSTEP kflag %d block %d\n",dmdv->kflag, blockIdx.x);
+#endif
+    // Go back in loop if we need to predict again (nflag=PREV_CONV_FAIL)
+
+    if (dmdv->kflag == PREDICT_AGAIN) {
+      //if (threadIdx.x == 0)printf("DEV_CUDACVSTEP kflag PREDICT_AGAIN block %d\n", blockIdx.x);
+      continue;
+    }
+
+    // Return if nonlinear solve failed and recovery not possible.
+    if (dmdv->kflag != DO_ERROR_TEST) {
+      //if(threadIdx.x==0)printf("DEV_CUDACVSTEP kflag!=DO_ERROR_TEST block %d\n", blockIdx.x);
+      return (dmdv->kflag);
+    }
+
+    __syncthreads();
+    int eflag=cudaDevicecvDoErrorTest(md,dmdv,&nflag,saved_t,&nef,&dsm);
+    //dmdv->eflag=cudaDevicecvDoErrorTest(md,dmdv,&dmdv->nflag,saved_t,&nef,&dsm);
+    __syncthreads();
+    dmdv->nflag = nflag;
+    dmdv->eflag = eflag;
+    __syncthreads();
+#ifdef DEBUG_cudaDevicecvStep
+    if(threadIdx.x==0)printf("DEV_CUDACVSTEP nflag %d eflag %d block %d\n",dmdv->nflag, dmdv->eflag, blockIdx.x);    //if(i==0)printf("eflag %d\n", eflag);
+#endif
+    // Go back in loop if we need to predict again (nflag=PREV_ERR_FAIL)
+    if (dmdv->eflag == TRY_AGAIN){
+      //if (threadIdx.x == 0)printf("DEV_CUDACVSTEP eflag TRY_AGAIN block %d\n", blockIdx.x);
+      continue;
+    }
+
+    // Return if error test failed and recovery not possible.
+    if (dmdv->eflag != CV_SUCCESS){
+      //if (threadIdx.x == 0)printf("DEV_CUDACVSTEP eflag!=CV_SUCCESS block %d\n", blockIdx.x);
+      return (dmdv->eflag);
+    }
+
+    // Error test passed (eflag=CV_SUCCESS), break from loop
+    break;
+
+  }
+
+  // Nonlinear system solve and error test were both successful.
+  // Update data, and consider change of step and/or order.
+  __syncthreads();
+  cudaDevicecvCompleteStep(md, dmdv);
+  __syncthreads();
+  cudaDevicecvPrepareNextStep(md, dmdv, dsm);
+  __syncthreads();
+  // If Stablilty Limit Detection is turned on, call stability limit
+  // detection routine for possible order reduction.
+
+ //  dmdv->cv_etamax = (dmdv->cv_nst <= SMALL_NST) ? ETAMX2 : ETAMX3;
+  //dmdv->cv_etamax = (dmdv->cv_nst <= 10) ? 10. : 10.;
+  dmdv->cv_etamax=10.;
+
+  //if(i==0)printf("DEV_cudaDevicecvStep dmdv->cv._etamax %le dmdv->cv_nst %d\n",
+  //               dmdv->cv_etamax,dmdv->cv_nst);
+
+  //  Finally, we rescale the acor array to be the
+  //  estimated local error vector.
+  //N_VScale(cv_mem->cv_tq[2], cv_mem->cv_acor, cv_mem->cv_acor);
+  md->cv_acor[i]*=md->cv_tq[2+blockIdx.x*(NUM_TESTS + 1)];
+
+  //if(i==0)printf("DEV_cudaDevicecvStep end mdvo->cv_tn %le\n",mdvo->cv_tn);
+  __syncthreads();
+  //if(threadIdx.x==0)printf("DEV_CUDACVSTEP return CV_SUCCESS block %d\n",blockIdx.x);    //if(i==0)printf("eflag %d\n", eflag);
+
+  return(CV_SUCCESS);
+
+  }
+
+__device__
+int cudaDeviceCVodeGetDky(ModelDataGPU *md, ModelDataVariable *dmdv,
+                           double t, int k, double *dky) {
+
+  //extern __shared__ int flag_shr[];
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
+
+  double s, c, r;
+  double tfuzz, tp, tn1;
+  int z, j;
+
+  __syncthreads();
+   // Allow for some slack
+   tfuzz = FUZZ_FACTOR * dmdv->cv_uround * (fabs(dmdv->cv_tn) + fabs(dmdv->cv_hu));
+   if (dmdv->cv_hu < 0.) tfuzz = -tfuzz;
+   tp = dmdv->cv_tn - dmdv->cv_hu - tfuzz;
+   tn1 = dmdv->cv_tn + tfuzz;
+   if ((t-tp)*(t-tn1) > 0.) {
+     //cvProcessError(dmdv, CV_BAD_T, "CVODE", "CVodeGetDky", MSGCV_BAD_T,
+     //               t, dmdv->cv_tn-dmdv->cv_hu, dmdv->cv_tn);
+     return(CV_BAD_T);
+   }
+
+  __syncthreads();
+   // Sum the differentiated interpolating polynomial
+
+   s = (t - dmdv->cv_tn) / dmdv->cv_h;
+   for (j=dmdv->cv_q; j >= k; j--) {
+     c = 1.;
+     for (z=j; z >= j-k+1; z--) c *= z;
+     //if(i==0){ printf("cudaDeviceCVodeGetDky c %le s %le j %d dmdv->cv_q %d\n",
+     //        c, s, j), dmdv->cv_q;
+      //for(int n=0;n<md->nrows)
+      //printf("")
+     //}
+
+     if (j == dmdv->cv_q) {
+       //N_VScale(c, md->dzn[dmdv->cv_q], dky);
+      //dky[i]=c*md->dzn[md->nrows*(dmdv->cv_q)+i];
+       dky[i]=c*md->dzn[md->nrows*(j)+i];
+
+     } else {
+       //N_VLinearSum(c, md->cv_zn[j], s, dky, dky);
+       cudaDevicezaxpby(c,
+        &md->dzn[md->nrows*(j)],
+        s, dky,
+        dky, md->nrows);
+
+     }
+   }
+  __syncthreads();
+   if (k == 0) return(CV_SUCCESS); //always?
+  __syncthreads();
+   //r = SUNRpowerI(dmdv->cv_h,-k);
+   r = pow(double(dmdv->cv_h),double(-k));
+   //N_VScale(r, dky, dky);
+  __syncthreads();
+
+   dky[i]=dky[i]*r;
+
+   return(CV_SUCCESS);
+
+
+
+}
+
+__device__
+int cudaDevicecvEwtSetSV(ModelDataGPU *md, ModelDataVariable *dmdv,
+                         double *dzn, double *weight) {
+
+  extern __shared__ double flag_shr2[];
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
+
+  //N_VAbs(ycur, md->dtempv);
+  //N_VAbs(cv_mem->cv_ftemp, cv_mem->cv_ftemp);
+  //md->dftemp[i]=fabs(md->dftemp[i]);
+  md->dtempv[i]=fabs(dzn[i]);
+
+  //N_VLinearSum(dmdv->cv_reltol, md->dtempv, ONE,
+  //             md->cv_Vabstol, md->dtempv);
+ cudaDevicezaxpby(dmdv->cv_reltol, md->dtempv, 1.,
+        md->cv_Vabstol, md->dtempv, md->nrows);
+
+  double min;
+  cudaDevicemin(&min, md->dtempv[i], flag_shr2, md->n_shr_empty);
+  __syncthreads();
+  if (min <= 0.) return(-1);
+
+  //N_VInv(md->dtempv, weight);
+  //zd[i] = ONE/xd[i];
+  weight[i]= 1./md->dtempv[i];
+
+  return(0);
+}
+
+__device__
+int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
+
+  extern __shared__ int flag_shr[];
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
+
+#ifdef DEV_printmin
+  printmin(md,md->state,"cudaDeviceCVode start state");
+#endif
+
+#ifndef DEV_CUDACVODE
+
+  for(;;) {
+
+#endif
+
+#ifdef DEV_ATOMICMAX
+  atomicMin(md->flag,md->jJ_solver[i]);
+#else
+    //Very small diff 100 cells (~0.01 error) sometimes (1/3 exec)
+#endif
+
+  //if(tid==0)printf("md->flagCells[blockIdx.x] %d\n",md->flagCells[blockIdx.x]);
+
+#ifdef PMC_DEBUG_GPU
+    dmdv->countercvStep++;
+#endif
+
+    flag_shr[0] = 0;
+    dmdv->flag = 0;
+
+    __syncthreads();
+
+    dmdv->cv_next_h = dmdv->cv_h;
+    dmdv->cv_next_q = dmdv->cv_q;
+
+    int ewtsetOK = 0;
+    if (dmdv->cv_nst > 0) {
+
+      //ewtsetOK = cvEwtSetSV(cv_mem, cv_mem->cv_zn[0], cv_mem->cv_ewt);
+      ewtsetOK = cudaDevicecvEwtSetSV(md, dmdv, md->dzn, md->dewt);
+
+      if (ewtsetOK != 0) {
+
+        //if (cv_mem->cv_itol == CV_WF)
+        //  cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "CVode",
+        //                 MSGCV_EWT_NOW_FAIL, cv_mem->cv_tn);
+        //else
+        //  cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "CVode",
+        //                 MSGCV_EWT_NOW_BAD, cv_mem->cv_tn);
+        dmdv->cv_tretlast = dmdv->tret = dmdv->cv_tn;
+        //N_VScale(ONE, cv_mem->cv_zn[0], yout);
+        md->yout[i] = md->dzn[i];
+
+        if(i==0) printf("ERROR: ewtsetOK istate %d\n",dmdv->istate);
+        return CV_ILL_INPUT;
+      }
+    }
+
+    /* Check for too many steps */
+    if ((dmdv->cv_mxstep > 0) && (dmdv->nstloc >= dmdv->cv_mxstep)) {
+      //cvProcessError(cv_mem, CV_TOO_MUCH_WORK, "CVODE", "CVode",
+      //               MSGCV_MAX_STEPS, cv_mem->cv_tn);
+
+      dmdv->cv_tretlast = dmdv->tret = dmdv->cv_tn;
+      //N_VScale(ONE, md->dzn, yout);
+      md->yout[i] = md->dzn[i];
+
+      if(i==0) printf("ERROR: cv_mxstep istate %d\n",dmdv->istate);
+      return CV_TOO_MUCH_WORK;
+    }
+
+    /* Check for too much accuracy requested */
+    //double nrm = N_VWrmsNorm(dmdv->cv_zn[0], dmdv->cv_ewt);
+    double nrm;
+    cudaDeviceVWRMS_Norm(md->dzn,
+                         md->dewt, &nrm, md->nrows, md->n_shr_empty);
+
+    dmdv->cv_tolsf = dmdv->cv_uround * nrm;
+    if (dmdv->cv_tolsf > 1.) {
+      //cvProcessError(cv_mem, CV_TOO_MUCH_ACC, "CVODE", "CVode",
+      //               MSGCV_TOO_MUCH_ACC, cv_mem->cv_tn);
+      dmdv->cv_tretlast = dmdv->tret = dmdv->cv_tn;
+      //N_VScale(1., md->dzn[0], md->yout);
+      md->yout[i] = md->dzn[i];
+
+      dmdv->cv_tolsf *= 2.;
+
+      if(i==0) printf("ERROR: cv_tolsf istate %d\n",dmdv->istate);
+      __syncthreads();
+      return CV_TOO_MUCH_ACC;
+    } else {
+      dmdv->cv_tolsf = 1.;
+    }
+
+#ifdef ODE_WARNING
+    // Check for h below roundoff level in tn
+    if (dmdv->cv_tn + dmdv->cv_h == dmdv->cv_tn) {
+      dmdv->cv_nhnil++;
+      //if (dmdv->cv_nhnil <= dmdv->cv_mxhnil)
+      //  cvProcessError(dmdv, CV_WARNING, "CVODE", "CVode",
+      //                 MSGCV_HNIL, dmdv->cv_tn, dmdv->cv_h);
+      //if (dmdv->cv_nhnil == dmdv->cv_mxhnil)
+      //  cvProcessError(dmdv, CV_WARNING, "CVODE", "CVode", MSGCV_HNIL_DONE);
+      if ((dmdv->cv_nhnil <= dmdv->cv_mxhnil) ||
+              (dmdv->cv_nhnil == dmdv->cv_mxhnil))
+        if(i==0)printf("WARNING: h below roundoff level in tn");
+    }
+#endif
+
+    int kflag2 = cudaDevicecvStep(md, dmdv);
+
+    __syncthreads();
+    dmdv->kflag2=kflag2;
+    __syncthreads();
+
+#ifdef DEV_ATOMICMAX
+  atomicMin(md->flag,md->jJ_solver[i]);
+#else
+    //Very small diff 100 cells (~0.01 error) sometimes (1/3 exec)
+#endif
+
+  __syncthreads();
+
+#ifdef DEBUG_cudaDeviceCVode
+    if(i==0){
+      printf("DEV_cudaDeviceCVode countercvStep %d thread %d\n",dmdv->countercvStep, i);
+      printf("dmdv->cv_tn %le dmdv->tout %le dmdv->cv_h %le dmdv->cv_hprime %le\n",
+             dmdv->cv_tn,dmdv->tout,dmdv->cv_h,dmdv->cv_hprime);
+    }
+#endif
+
+    //if(i==0)printf("cudaDeviceCVode dmdv->kflag %d\n",dmdv->kflag);
+
+    if (dmdv->kflag2 != CV_SUCCESS) {
+
+      //istate = cvHandleFailure_gpu2(cv_mem, kflag);
+
+      //cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
+      dmdv->cv_tretlast = dmdv->tret = dmdv->cv_tn;
+
+      //N_VScale(ONE, md->dzn[0], yout);
+      md->yout[i] = md->dzn[i];
+
+      if(i==0) printf("ERROR: dmdv->kflag != CV_SUCCESS istate %d\n",dmdv->istate);
+
+      //if(i==0)printf("cudaDeviceCVode2 dmdv->kflag %d\n",dmdv->kflag);
+
+      return dmdv->kflag2;
+    }
+
+    dmdv->nstloc++;
+
+    //check if tout reached
+    if ((dmdv->cv_tn - dmdv->tout) * dmdv->cv_h >= 0.) {
+
+      dmdv->istate = CV_SUCCESS;
+      dmdv->cv_tretlast = dmdv->tret = dmdv->tout;
+      //(void) CVodeGetDky(cv_mem, dmdv->tout, 0, md->yout);
+
+      cudaDeviceCVodeGetDky(md, dmdv, dmdv->tout, 0, md->yout);
+
+      //if(i==0) printf("SUCCESS: dmdv->cv_tn - dmdv->tout) istate %d\n",dmdv->istate);
+
+      //istate = CV_SUCCESS;
+      return CV_SUCCESS;
+    }
+
+    if (dmdv->cv_tstopset) {//needed?
+      double troundoff = FUZZ_FACTOR * dmdv->cv_uround * (fabs(dmdv->cv_tn) + fabs(dmdv->cv_h));
+      if (fabs(dmdv->cv_tn - dmdv->cv_tstop) <= troundoff) {
+        //(void) CVodeGetDky(dmdv, dmdv->cv_tstop, 0, md->yout);
+        cudaDeviceCVodeGetDky(md, dmdv, dmdv->cv_tstop, 0, md->yout);
+        dmdv->cv_tretlast = dmdv->tret = dmdv->cv_tstop;
+        dmdv->cv_tstopset = SUNFALSE;
+        dmdv->istate = CV_TSTOP_RETURN;
+        if(i==0) printf("ERROR: cv_tstopset istate %d\n",dmdv->istate);
+        __syncthreads();
+        return CV_TSTOP_RETURN;
+      }
+      if ((dmdv->cv_tn + dmdv->cv_hprime - dmdv->cv_tstop) * dmdv->cv_h > 0.) {
+        dmdv->cv_hprime = (dmdv->cv_tstop - dmdv->cv_tn) * (1.0 - 4.0 * dmdv->cv_uround);
+        if(i==0) printf("ERROR: dmdv->cv_tn + dmdv->cv_hprime - dmdv->cv_tstop istate %d\n",dmdv->istate);
+        dmdv->cv_eta = dmdv->cv_hprime / dmdv->cv_h;
+      }
+
+    }
+
+#ifndef DEV_CUDACVODE
+  }
+  //return CV_SUCCESS;//needed?, it should always return instead of break and never reach here
+#else
+  return dmdv->kflag2;
+#endif
+
+}
+
+__global__
+void cudaGlobalCVode(ModelDataGPU md_object) {
+
+  ModelDataGPU *md = &md_object;
+  ModelDataVariable *mdvo = md->mdvo;
+  extern __shared__ int flag_shr[];
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
+  unsigned int tid = threadIdx.x;
+  int active_threads = md->nrows;
+  int istate;
+  ModelDataVariable dmdv_object = *md_object.mdv;
+  ModelDataVariable *dmdv = &dmdv_object;
+
+  __syncthreads();
+  if(i<active_threads){
+
+#ifdef PMC_DEBUG_GPU
+    int clock_khz=md->clock_khz;
+    clock_t start;
+    start = clock();
+    __syncthreads();
+#endif
+    istate=cudaDeviceCVode(md,dmdv);
+
+#ifdef PMC_DEBUG_GPU
+    __syncthreads();
+     dmdv->dtcudaDeviceCVode += ((double)(int)(clock() - start))/(clock_khz*1000);
+#endif
+
+  }
+  __syncthreads();
+  dmdv->istate=istate;
+  __syncthreads();
+
+  //if(i==0)printf("countercvStep %d\n",dmdv->countercvStep);
+
+  if(tid==0)md->flagCells[blockIdx.x]=dmdv->istate;
+  *mdvo = *dmdv;
+}
+
+void solveCVODEGPU_thr(int blocks, int threads_block, int n_shr_memory, int n_shr_empty, int offset_cells,
+                       SolverData *sd, CVodeMem cv_mem)
+{
+
+  itsolver *bicg = &(sd->bicg);
+  ModelDataGPU *mGPU = &sd->mGPU;
+
+  int len_cell=mGPU->deriv_length_cell;
+  //f_gpu
+  mGPU->i_kernel=0;
+
+  /*
+
+  int threads_block = len_cell;
+  int blocks = mGPU->n_cells;
+  int n_shr = nextPowerOfTwo2(len_cell);
+  int n_shr_empty = n_shr-threads_block;
+
+   */
+
+#ifndef DEBUG_SOLVEBCGCUDA
+  if(bicg->counterBiConjGrad==0) {
+    printf("solveCVODEGPU_thr n_cells %d len_cell %d nrows %d nnz %d max_threads_block %d blocks %d threads_block %d n_shr_empty %d offset_cells %d\n",
+           mGPU->n_cells,len_cell,mGPU->nrows,mGPU->nnz,n_shr_memory,blocks,threads_block,n_shr_empty,offset_cells);
+
+    //print_double(bicg->A,nnz,"A");
+    //print_int(bicg->jA,nnz,"jA");
+    //print_int(bicg->iA,nrows+1,"iA");
+
+  }
+#endif
+
+  cudaGlobalCVode <<<blocks,threads_block,n_shr_memory*sizeof(double)>>>
+                                             (sd->mGPU);
+
+}
+
+void solveCVODEGPU(SolverData *sd, CVodeMem cv_mem)
+{
+
+  itsolver *bicg = &(sd->bicg);
+  ModelDataGPU *mGPU = &sd->mGPU;
+
+#ifndef DEBUG_SOLVEBCGCUDA
+  if(bicg->counterBiConjGrad==0) {
+    printf("solveCVODEGPU\n");
+  }
+#endif
+
+#ifdef PMC_DEBUG_GPU
+  cudaEventRecord(bicg->startsolveCVODEGPU);
+#endif
+
+  int len_cell = mGPU->nrows/mGPU->n_cells;
+  int max_threads_block=mGPU->threads;
+
+  int offset_cells=0;
+
+  int threads_block = len_cell;
+  //int blocks = mGPU->blocks = mGPU->n_cells;
+  int blocks = mGPU->n_cells;
+  int n_shr = max_threads_block = nextPowerOfTwoCVODE(len_cell);
+  int n_shr_empty = mGPU->n_shr_empty= n_shr-threads_block;
+
+  solveCVODEGPU_thr(blocks, threads_block, max_threads_block, n_shr_empty, offset_cells,
+                    sd,cv_mem);
+
+#ifdef DEBUG_SOLVEBCGCUDA
+  if(bicg->counterBiConjGrad<2) {
+    printf("solveGPUBlock end\n");
+  }
+#endif
+
+#ifdef PMC_DEBUG_GPU
+    cudaEventRecord(bicg->stopsolveCVODEGPU);
+    cudaEventSynchronize(bicg->stopsolveCVODEGPU);
+    float mssolveCVODEGPU = 0.0;
+    cudaEventElapsedTime(&mssolveCVODEGPU, bicg->startsolveCVODEGPU, bicg->stopsolveCVODEGPU);
+
+    bicg->timesolveCVODEGPU+= mssolveCVODEGPU/1000;
+
+    bicg->countersolveCVODEGPU++;
+#endif
+
+#ifdef DEBUG_SOLVEBCGCUDA
+  if(bicg->counterBiConjGrad<2) {
+    printf("solveCVODEGPU end\n");
+  }
+#endif
+
+}
+
+static int cvEwtSetSV(CVodeMem cv_mem, N_Vector ycur, N_Vector weight)
+{
+  N_VAbs(ycur, cv_mem->cv_tempv);
+  N_VLinearSum(cv_mem->cv_reltol, cv_mem->cv_tempv, ONE,
+               cv_mem->cv_Vabstol, cv_mem->cv_tempv);
+  if (N_VMin(cv_mem->cv_tempv) <= ZERO) return(-1);
+  N_VInv(cv_mem->cv_tempv, weight);
+  return(0);
+}
+
+
+int cvEwtSet(N_Vector ycur, N_Vector weight, void *data)
+{
+  CVodeMem cv_mem;
+  int flag = 0;
+
+  /* data points to cv_mem here */
+
+  cv_mem = (CVodeMem) data;
+
+  flag = cvEwtSetSV(cv_mem, ycur, weight);
+
+  return(flag);
+}
+
 int CVode_gpu2(void *cvode_mem, realtype tout, N_Vector yout,
           realtype *tret, int itask, SolverData *sd)
 {
@@ -680,9 +4045,7 @@ int CVode_gpu2(void *cvode_mem, realtype tout, N_Vector yout,
   realtype troundoff, tout_hin, rh, nrm;
   booleantype inactive_roots;
 
-#ifdef PMC_DEBUG_GPU
   itsolver *bicg = &(sd->bicg);
-#endif
 
   /*
    * -------------------------------------
@@ -968,8 +4331,16 @@ int CVode_gpu2(void *cvode_mem, realtype tout, N_Vector yout,
    * --------------------------------------------------
    */
 
+#ifdef PMC_DEBUG_GPU
+  cudaEventRecord(bicg->startcvStep);
+#endif
+
   nstloc = 0;
   for(;;) {
+
+#ifdef PMC_DEBUG_GPU
+    sd->mdv.countercvStep++;
+#endif
 
     cv_mem->cv_next_h = cv_mem->cv_h;
     cv_mem->cv_next_q = cv_mem->cv_q;
@@ -1032,27 +4403,10 @@ int CVode_gpu2(void *cvode_mem, realtype tout, N_Vector yout,
         cvProcessError(cv_mem, CV_WARNING, "CVODE", "CVode", MSGCV_HNIL_DONE);
     }
 
-#ifdef PMC_DEBUG_GPU
-    //bicg->timeprecvStep+= clock() - start;
-    //bicg->counterprecvStep++;
-
-    cudaEventRecord(bicg->startcvStep);
-    //start=clock();
-#endif
     /* Call cvStep to take a step */
     //kflag = cvStep(cv_mem);
     kflag = cvStep_gpu2(sd, cv_mem);
-
-#ifdef PMC_DEBUG_GPU
-    cudaEventRecord(bicg->stopcvStep);
-    cudaEventSynchronize(bicg->stopcvStep);
-    float mscvStep = 0.0;
-    cudaEventElapsedTime(&mscvStep, bicg->startcvStep, bicg->stopcvStep);
-    bicg->timecvStep+= mscvStep;
-
-    //bicg->timecvStep+= clock() - start;
-    bicg->countercvStep++;
-#endif
+    //kflag = cudacvStep(sd, cv_mem);
 
     /* Process failed step cases, and exit loop */
     if (kflag != CV_SUCCESS) {
@@ -1143,10 +4497,702 @@ int CVode_gpu2(void *cvode_mem, realtype tout, N_Vector yout,
 
   } /* end looping for internal steps */
 
-  //free_ode_gpu2(cv_mem, sd);
+#ifdef PMC_DEBUG_GPU
+  cudaEventRecord(bicg->stopcvStep);
+  cudaEventSynchronize(bicg->stopcvStep);
+  float mscvStep = 0.0;
+  cudaEventElapsedTime(&mscvStep, bicg->startcvStep, bicg->stopcvStep);
+  bicg->timecvStep+= mscvStep/1000;
+#endif
 
   return(istate);
 }
+
+int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
+               realtype *tret, int itask, SolverData *sd)
+{
+  CVodeMem cv_mem;
+  long int nstloc;
+  int retval, hflag, kflag, istate, ier, irfndp;
+  realtype troundoff, tout_hin, rh;
+
+  itsolver *bicg = &(sd->bicg);
+  ModelDataGPU *mGPU = &sd->mGPU;
+  ModelData *md = &(sd->model_data);
+  //double *youtArray = N_VGetArrayPointer(yout);
+
+  /*
+   * -------------------------------------
+   * 1. Check and process inputs
+   * -------------------------------------
+   */
+
+  /* Check if cvode_mem exists */
+  if (cvode_mem == NULL) {
+    cvProcessError(NULL, CV_MEM_NULL, "CVODE", "CVode", MSGCV_NO_MEM);
+    return(CV_MEM_NULL);
+  }
+  cv_mem = (CVodeMem) cvode_mem;
+
+  /* Check if cvode_mem was allocated */
+  if (cv_mem->cv_MallocDone == SUNFALSE) {
+    cvProcessError(cv_mem, CV_NO_MALLOC, "CVODE", "CVode", MSGCV_NO_MALLOC);
+    return(CV_NO_MALLOC);
+  }
+
+  /* Check for yout != NULL */
+  if ((cv_mem->cv_y = yout) == NULL) {
+    cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "CVode", MSGCV_YOUT_NULL);
+    return(CV_ILL_INPUT);
+  }
+
+  /* Check for tret != NULL */
+  if (tret == NULL) {
+    cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "CVode", MSGCV_TRET_NULL);
+    return(CV_ILL_INPUT);
+  }
+
+  /* Check for valid itask */
+  if ( (itask != CV_NORMAL) && (itask != CV_ONE_STEP) ) {
+    cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "CVode", MSGCV_BAD_ITASK);
+    return(CV_ILL_INPUT);
+  }
+
+  if (itask == CV_NORMAL) cv_mem->cv_toutc = tout;
+  cv_mem->cv_taskc = itask;
+
+  /*
+   * ----------------------------------------
+   * 2. Initializations performed only at
+   *    the first step (nst=0):
+   *    - initial setup
+   *    - initialize Nordsieck history array
+   *    - compute initial step size
+   *    - check for approach to tstop
+   *    - check for approach to a root
+   * ----------------------------------------
+   */
+
+  // GPU initializations
+  //set_data_gpu2(cv_mem, sd);
+
+  if (cv_mem->cv_nst == 0) {
+
+    cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
+
+    ier = cvInitialSetup_gpu2(cv_mem);
+    if (ier!= CV_SUCCESS) return(ier);
+
+    /* Call f at (t0,y0), set zn[1] = y'(t0),
+       set initial h (from H0 or cvHin), and scale zn[1] by h.
+       Also check for zeros of root function g at and near t0.    */
+    //retval = cv_mem->cv_f(cv_mem->cv_tn, cv_mem->cv_zn[0],
+    //                      cv_mem->cv_zn[1], cv_mem->cv_user_data);
+    retval = f(cv_mem->cv_tn, cv_mem->cv_zn[0], cv_mem->cv_zn[1], cv_mem->cv_user_data);
+
+    N_VScale(ONE, cv_mem->cv_zn[0], yout);
+
+    cv_mem->cv_nfe++;
+    if (retval < 0) {
+      cvProcessError(cv_mem, CV_RHSFUNC_FAIL, "CVODE", "CVode",
+                     MSGCV_RHSFUNC_FAILED, cv_mem->cv_tn);
+      return(CV_RHSFUNC_FAIL);
+    }
+    if (retval > 0) {
+      cvProcessError(cv_mem, CV_FIRST_RHSFUNC_ERR, "CVODE", "CVode",
+                     MSGCV_RHSFUNC_FIRST);
+      return(CV_FIRST_RHSFUNC_ERR);
+    }
+
+
+
+    /* Test input tstop for legality. */
+
+    if (cv_mem->cv_tstopset) {
+      if ( (cv_mem->cv_tstop - cv_mem->cv_tn)*(tout - cv_mem->cv_tn) <= ZERO ) {
+        cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "CVode",
+                       MSGCV_BAD_TSTOP, cv_mem->cv_tstop, cv_mem->cv_tn);
+        return(CV_ILL_INPUT);
+      }
+    }
+
+    /* Set initial h (from H0 or cvHin). */
+
+    cv_mem->cv_h = cv_mem->cv_hin;
+    if ( (cv_mem->cv_h != ZERO) && ((tout-cv_mem->cv_tn)*cv_mem->cv_h < ZERO) ) {
+      cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "CVode", MSGCV_BAD_H0);
+      return(CV_ILL_INPUT);
+    }
+    if (cv_mem->cv_h == ZERO) {
+      tout_hin = tout;
+      if ( cv_mem->cv_tstopset && (tout-cv_mem->cv_tn)*(tout-cv_mem->cv_tstop) > ZERO )
+        tout_hin = cv_mem->cv_tstop;
+      hflag = cvHin_gpu2(cv_mem, tout_hin); //set cv_y
+      if (hflag != CV_SUCCESS) {
+        istate = cvHandleFailure_gpu2(cv_mem, hflag);
+        return(istate);
+      }
+    }
+    rh = SUNRabs(cv_mem->cv_h)*cv_mem->cv_hmax_inv;
+    if (rh > ONE) cv_mem->cv_h /= rh;
+    if (SUNRabs(cv_mem->cv_h) < cv_mem->cv_hmin)
+      cv_mem->cv_h *= cv_mem->cv_hmin/SUNRabs(cv_mem->cv_h);
+
+    /* Check for approach to tstop */
+
+    if (cv_mem->cv_tstopset) {
+      if ( (cv_mem->cv_tn + cv_mem->cv_h - cv_mem->cv_tstop)*cv_mem->cv_h > ZERO )
+        cv_mem->cv_h = (cv_mem->cv_tstop - cv_mem->cv_tn)*(ONE-FOUR*cv_mem->cv_uround);
+    }
+
+    /* Scale zn[1] by h.*/
+
+    cv_mem->cv_hscale = cv_mem->cv_h;
+    cv_mem->cv_h0u    = cv_mem->cv_h;
+    cv_mem->cv_hprime = cv_mem->cv_h;
+
+    N_VScale(cv_mem->cv_h, cv_mem->cv_zn[1], cv_mem->cv_zn[1]);
+    /* Try to improve initial guess of zn[1] */
+    if (cv_mem->cv_ghfun) {
+
+      N_VLinearSum(ONE, cv_mem->cv_zn[0], ONE, cv_mem->cv_zn[1], cv_mem->cv_tempv1);
+      cv_mem->cv_ghfun(cv_mem->cv_tn + cv_mem->cv_h, cv_mem->cv_h, cv_mem->cv_tempv1,
+                       cv_mem->cv_zn[0], cv_mem->cv_zn[1], cv_mem->cv_user_data,
+                       cv_mem->cv_tempv2, cv_mem->cv_acor_init);
+    }
+    /* Check for zeros of root function g at and near t0. */
+
+    if (cv_mem->cv_nrtfn > 0) {
+
+      retval = cvRcheck1_gpu2(cv_mem);
+
+      if (retval == CV_RTFUNC_FAIL) {
+        cvProcessError(cv_mem, CV_RTFUNC_FAIL, "CVODE", "cvRcheck1",
+                       MSGCV_RTFUNC_FAILED, cv_mem->cv_tn);
+        return(CV_RTFUNC_FAIL);
+      }
+
+    }
+
+  } /* end of first call block */
+
+  /*
+   * ------------------------------------------------------
+   * 3. At following steps, perform stop tests:
+   *    - check for root in last step
+   *    - check if we passed tstop
+   *    - check if we passed tout (NORMAL mode)
+   *    - check if current tn was returned (ONE_STEP mode)
+   *    - check if we are close to tstop
+   *      (adjust step size if needed)
+   * -------------------------------------------------------
+   */
+
+  if (cv_mem->cv_nst > 0) {
+
+    /* Estimate an infinitesimal time interval to be used as
+       a roundoff for time quantities (based on current time
+       and step size) */
+    troundoff = FUZZ_FACTOR*cv_mem->cv_uround*(SUNRabs(cv_mem->cv_tn) + SUNRabs(cv_mem->cv_h));
+
+    /* First, check for a root in the last step taken, other than the
+       last root found, if any.  If itask = CV_ONE_STEP and y(tn) was not
+       returned because of an intervening root, return y(tn) now.     */
+    if (cv_mem->cv_nrtfn > 0) {
+
+      irfndp = cv_mem->cv_irfnd;
+
+      retval = cvRcheck2_gpu2(cv_mem);
+
+      if (retval == CLOSERT) {
+        cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "cvRcheck2",
+                       MSGCV_CLOSE_ROOTS, cv_mem->cv_tlo);
+        return(CV_ILL_INPUT);
+      } else if (retval == CV_RTFUNC_FAIL) {
+        cvProcessError(cv_mem, CV_RTFUNC_FAIL, "CVODE", "cvRcheck2",
+                       MSGCV_RTFUNC_FAILED, cv_mem->cv_tlo);
+        return(CV_RTFUNC_FAIL);
+      } else if (retval == RTFOUND) {
+        cv_mem->cv_tretlast = *tret = cv_mem->cv_tlo;
+        return(CV_ROOT_RETURN);
+      }
+
+      /* If tn is distinct from tretlast (within roundoff),
+         check remaining interval for roots */
+      if ( SUNRabs(cv_mem->cv_tn - cv_mem->cv_tretlast) > troundoff ) {
+
+        retval = cvRcheck3_gpu2(cv_mem);
+
+        if (retval == CV_SUCCESS) {     /* no root found */
+          cv_mem->cv_irfnd = 0;
+          if ((irfndp == 1) && (itask == CV_ONE_STEP)) {
+            cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
+            N_VScale(ONE, cv_mem->cv_zn[0], yout);
+            return(CV_SUCCESS);
+          }
+        } else if (retval == RTFOUND) {  /* a new root was found */
+          cv_mem->cv_irfnd = 1;
+          cv_mem->cv_tretlast = *tret = cv_mem->cv_tlo;
+          return(CV_ROOT_RETURN);
+        } else if (retval == CV_RTFUNC_FAIL) {  /* g failed */
+          cvProcessError(cv_mem, CV_RTFUNC_FAIL, "CVODE", "cvRcheck3",
+                         MSGCV_RTFUNC_FAILED, cv_mem->cv_tlo);
+          return(CV_RTFUNC_FAIL);
+        }
+
+      }
+
+    } /* end of root stop check */
+
+    /* In CV_NORMAL mode, test if tout was reached */
+    if ( (itask == CV_NORMAL) && ((cv_mem->cv_tn-tout)*cv_mem->cv_h >= ZERO) ) {
+      cv_mem->cv_tretlast = *tret = tout;
+      ier =  CVodeGetDky(cv_mem, tout, 0, yout);
+      if (ier != CV_SUCCESS) {
+        cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "CVode",
+                       MSGCV_BAD_TOUT, tout);
+        return(CV_ILL_INPUT);
+      }
+      return(CV_SUCCESS);
+    }
+
+    /* In CV_ONE_STEP mode, test if tn was returned */
+    if ( itask == CV_ONE_STEP &&
+         SUNRabs(cv_mem->cv_tn - cv_mem->cv_tretlast) > troundoff ) {
+      cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
+      N_VScale(ONE, cv_mem->cv_zn[0], yout);
+      return(CV_SUCCESS);
+    }
+
+    /* Test for tn at tstop or near tstop */
+    if ( cv_mem->cv_tstopset ) {
+
+      if ( SUNRabs(cv_mem->cv_tn - cv_mem->cv_tstop) <= troundoff) {
+        ier =  CVodeGetDky(cv_mem, cv_mem->cv_tstop, 0, yout);
+        if (ier != CV_SUCCESS) {
+          cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "CVode",
+                         MSGCV_BAD_TSTOP, cv_mem->cv_tstop, cv_mem->cv_tn);
+          return(CV_ILL_INPUT);
+        }
+        cv_mem->cv_tretlast = *tret = cv_mem->cv_tstop;
+        cv_mem->cv_tstopset = SUNFALSE;
+        return(CV_TSTOP_RETURN);
+      }
+
+      /* If next step would overtake tstop, adjust stepsize */
+      if ( (cv_mem->cv_tn + cv_mem->cv_hprime - cv_mem->cv_tstop)*cv_mem->cv_h > ZERO ) {
+        cv_mem->cv_hprime = (cv_mem->cv_tstop - cv_mem->cv_tn)*(ONE-FOUR*cv_mem->cv_uround);
+        cv_mem->cv_eta = cv_mem->cv_hprime/cv_mem->cv_h;
+      }
+
+    }
+
+  } /* end stopping tests block */
+
+  /*
+   * --------------------------------------------------
+   * 4. Looping point for internal steps
+   *
+   *    4.1. check for errors (too many steps, too much
+   *         accuracy requested, step size too small)
+   *    4.2. take a new step (call cvStep)
+   *    4.3. stop on error
+   *    4.4. perform stop tests:
+   *         - check for root in last step
+   *         - check if tout was passed
+   *         - check if close to tstop
+   *         - check if in ONE_STEP mode (must return)
+   * --------------------------------------------------
+   */
+
+  if (cv_mem->cv_y == NULL) {
+    cvProcessError(cv_mem, CV_BAD_DKY, "CVODE", "CVodeGetDky", MSGCV_NULL_DKY);
+    return(CV_BAD_DKY);
+  }
+
+#ifdef PMC_DEBUG_GPU
+  cudaEventRecord(bicg->startcvStep);
+#endif
+
+  istate = 99;
+  kflag = 99;
+  nstloc = 0;
+  int flag;
+
+  double *ewt = NV_DATA_S(cv_mem->cv_ewt);
+  double *acor = NV_DATA_S(cv_mem->cv_acor);
+  double *tempv = NV_DATA_S(cv_mem->cv_tempv);
+  double *ftemp = NV_DATA_S(cv_mem->cv_ftemp);
+  double *cv_last_yn = N_VGetArrayPointer(cv_mem->cv_last_yn);
+  double *cv_acor_init = N_VGetArrayPointer(cv_mem->cv_acor_init);
+  double *youtArray = N_VGetArrayPointer(yout);
+  double *cv_Vabstol = N_VGetArrayPointer(cv_mem->cv_Vabstol);
+
+  cudaMemcpy(mGPU->dewt,ewt,mGPU->nrows*sizeof(double),cudaMemcpyHostToDevice);
+  cudaMemcpy(mGPU->cv_acor, acor, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice);
+  cudaMemcpy(mGPU->dtempv, tempv, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice);
+  cudaMemcpy(mGPU->dftemp, ftemp, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice);
+  cudaMemcpy(mGPU->cv_last_yn, cv_last_yn, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice);
+  cudaMemcpy(mGPU->cv_acor_init, cv_acor_init, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice);
+  cudaMemcpy(mGPU->yout, youtArray, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice);
+  cudaMemcpy(mGPU->cv_Vabstol,cv_Vabstol,mGPU->nrows*sizeof(double),cudaMemcpyHostToDevice);
+
+  for (int i = 0; i < mGPU->n_cells; i++) {
+    cudaMemcpy(mGPU->cv_l+i*L_MAX, cv_mem->cv_l, L_MAX * sizeof(double), cudaMemcpyHostToDevice);
+    cudaMemcpy(mGPU->cv_tau+i*(L_MAX + 1), cv_mem->cv_tau, (L_MAX + 1) * sizeof(double), cudaMemcpyHostToDevice);
+    cudaMemcpy(mGPU->cv_tq+i*(NUM_TESTS + 1), cv_mem->cv_tq, (NUM_TESTS + 1) * sizeof(double), cudaMemcpyHostToDevice);
+  }
+
+  for (int i = 0; i <= cv_mem->cv_qmax; i++) {//cv_qmax+1 (6)?
+    double *zn = NV_DATA_S(cv_mem->cv_zn[i]);
+    cudaMemcpy((i * mGPU->nrows + mGPU->dzn), zn, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice);
+
+  }
+
+  for(int i=0;i<mGPU->n_cells;i++)
+    sd->flagCells[i]=99;
+
+  cudaMemcpy(mGPU->flagCells, sd->flagCells, mGPU->n_cells*sizeof(int), cudaMemcpyHostToDevice);
+  HANDLE_ERROR(cudaMemcpy(mGPU->state, md->total_state, md->state_size, cudaMemcpyHostToDevice));
+
+#ifndef DEV_CUDACVODE
+
+#else
+  for(;;) {
+
+#endif
+
+  sd->mdv.init_time_step = sd->init_time_step;
+  sd->mdv.cv_mxstep = cv_mem->cv_mxstep;
+  sd->mdv.cv_taskc = cv_mem->cv_taskc;
+  sd->mdv.cv_uround = cv_mem->cv_uround;
+  sd->mdv.cv_nrtfn = cv_mem->cv_nrtfn;
+  sd->mdv.cv_tretlast = cv_mem->cv_tretlast;
+  sd->mdv.cv_hmax_inv = cv_mem->cv_hmax_inv;
+  sd->mdv.cv_lmm = cv_mem->cv_lmm;
+  sd->mdv.cv_iter = cv_mem->cv_iter;
+  sd->mdv.cv_itol = cv_mem->cv_itol;
+  sd->mdv.cv_reltol = cv_mem->cv_reltol;
+  sd->mdv.cv_nhnil = cv_mem->cv_nhnil;
+  sd->mdv.cv_etaqm1 = cv_mem->cv_etaqm1;
+  sd->mdv.cv_etaq = cv_mem->cv_etaq;
+  sd->mdv.cv_etaqp1 = cv_mem->cv_etaqp1;
+  sd->mdv.cv_lrw1 = cv_mem->cv_lrw1;
+  sd->mdv.cv_liw1 = cv_mem->cv_liw1;
+  sd->mdv.cv_lrw = (int) cv_mem->cv_lrw;
+  sd->mdv.cv_liw = (int) cv_mem->cv_liw;
+  sd->mdv.cv_saved_tq5 = cv_mem->cv_saved_tq5;
+  sd->mdv.cv_tolsf = cv_mem->cv_tolsf;
+  sd->mdv.cv_qmax_alloc = cv_mem->cv_qmax_alloc;
+  sd->mdv.cv_indx_acor = cv_mem->cv_indx_acor;
+  sd->mdv.cv_qu = cv_mem->cv_qu;
+  sd->mdv.cv_h0u = cv_mem->cv_h0u;
+  sd->mdv.cv_hu = cv_mem->cv_hu;
+  sd->mdv.cv_jcur = cv_mem->cv_jcur;
+  sd->mdv.cv_mnewt = cv_mem->cv_mnewt;
+  sd->mdv.cv_maxcor = cv_mem->cv_maxcor;
+  sd->mdv.cv_nstlp = (int) cv_mem->cv_nstlp;
+  sd->mdv.cv_qmax = cv_mem->cv_qmax;
+  sd->mdv.cv_L = cv_mem->cv_L;
+  sd->mdv.cv_maxnef = cv_mem->cv_maxnef;
+  sd->mdv.cv_netf = (int) cv_mem->cv_netf;
+  sd->mdv.cv_acnrm = cv_mem->cv_acnrm;
+  sd->mdv.cv_tstop = cv_mem->cv_tstop;
+  sd->mdv.cv_tstopset = cv_mem->cv_tstopset;
+  sd->mdv.cv_nlscoef = cv_mem->cv_nlscoef;
+  sd->mdv.cv_qwait = cv_mem->cv_qwait;
+  sd->mdv.cv_crate = cv_mem->cv_crate;
+  sd->mdv.cv_gamrat = cv_mem->cv_gamrat;
+  sd->mdv.cv_gammap = cv_mem->cv_gammap;
+  sd->mdv.cv_nst = cv_mem->cv_nst;
+  sd->mdv.cv_gamma = cv_mem->cv_gamma;
+  sd->mdv.cv_rl1 = cv_mem->cv_rl1;
+  sd->mdv.cv_eta = cv_mem->cv_eta;
+  sd->mdv.cv_q = cv_mem->cv_q;
+  sd->mdv.cv_qprime = cv_mem->cv_qprime;
+  sd->mdv.cv_h = cv_mem->cv_h;
+  sd->mdv.cv_next_h = cv_mem->cv_next_h;//needed?
+  sd->mdv.cv_hscale = cv_mem->cv_hscale;
+  sd->mdv.cv_nscon = cv_mem->cv_nscon;
+  sd->mdv.cv_hprime = cv_mem->cv_hprime;
+  sd->mdv.cv_hmin = cv_mem->cv_hmin;
+  sd->mdv.cv_tn = cv_mem->cv_tn;
+  sd->mdv.cv_etamax = cv_mem->cv_etamax;
+  sd->mdv.cv_maxncf = cv_mem->cv_maxncf;
+
+  sd->mdv.nstloc = (int)nstloc;
+  sd->mdv.tout = tout;
+  sd->mdv.tret = *tret;
+  sd->mdv.istate = istate;
+  sd->mdv.kflag = kflag;
+  sd->mdv.kflag2 = 99;
+
+  cudaMemcpy(mGPU->mdv, &sd->mdv, sizeof(ModelDataVariable), cudaMemcpyHostToDevice);
+
+#ifdef PMC_DEBUG_GPU
+    //cudaEventRecord(bicg->startBCG);
+#endif
+
+  solveCVODEGPU(sd, cv_mem);
+  cudaDeviceSynchronize();
+
+#ifdef PMC_DEBUG_GPU
+  //cudaEventRecord(bicg->stopBCG);
+  //cudaEventSynchronize(bicg->stopBCG);
+  //float msBiConjGrad = 0.0;
+  //cudaEventElapsedTime(&msBiConjGrad, bicg->startBCG, bicg->stopBCG);
+  //bicg->timeBiConjGrad+= msBiConjGrad;
+#endif
+
+  cudaMemcpy(&sd->mdv, mGPU->mdvo, sizeof(ModelDataVariable), cudaMemcpyDeviceToHost);
+
+  cv_mem->cv_next_q = sd->mdv.cv_next_q;
+  tout = sd->mdv.tout; //Not output?
+  cv_mem->cv_taskc = sd->mdv.cv_taskc;
+  cv_mem->cv_uround = sd->mdv.cv_uround;
+  cv_mem->cv_nrtfn = sd->mdv.cv_nrtfn;
+  nstloc = sd->mdv.nstloc;
+  cv_mem->cv_tretlast = sd->mdv.cv_tretlast;
+  cv_mem->cv_hmax_inv = sd->mdv.cv_hmax_inv;
+  cv_mem->cv_lmm = sd->mdv.cv_lmm;
+  cv_mem->cv_iter = sd->mdv.cv_iter;
+  cv_mem->cv_itol = sd->mdv.cv_itol;
+  cv_mem->cv_reltol = sd->mdv.cv_reltol;
+  cv_mem->cv_nhnil = sd->mdv.cv_nhnil;
+  cv_mem->cv_etaqm1 = sd->mdv.cv_etaqm1;
+  cv_mem->cv_etaq = sd->mdv.cv_etaq;
+  cv_mem->cv_etaqp1 = sd->mdv.cv_etaqp1;
+  cv_mem->cv_lrw1 = sd->mdv.cv_lrw1;
+  cv_mem->cv_liw1 = sd->mdv.cv_liw1;
+  cv_mem->cv_lrw = sd->mdv.cv_lrw;
+  cv_mem->cv_liw = sd->mdv.cv_liw;
+  cv_mem->cv_saved_tq5 = sd->mdv.cv_saved_tq5;
+  cv_mem->cv_tolsf = sd->mdv.cv_tolsf;
+  cv_mem->cv_qmax_alloc = sd->mdv.cv_qmax_alloc;
+  cv_mem->cv_indx_acor = sd->mdv.cv_indx_acor;
+  cv_mem->cv_qu = sd->mdv.cv_qu;
+  cv_mem->cv_h0u = sd->mdv.cv_h0u;
+  cv_mem->cv_hu = sd->mdv.cv_hu;
+  cv_mem->cv_jcur = sd->mdv.cv_jcur;//not needed?
+  cv_mem->cv_mnewt = sd->mdv.cv_mnewt;
+  cv_mem->cv_maxcor = sd->mdv.cv_maxcor;
+  cv_mem->cv_nstlp = sd->mdv.cv_nstlp;
+  cv_mem->cv_qmax = sd->mdv.cv_qmax;
+  cv_mem->cv_L = sd->mdv.cv_L;
+  cv_mem->cv_maxnef = sd->mdv.cv_maxnef;
+  cv_mem->cv_netf = sd->mdv.cv_netf;
+  cv_mem->cv_acnrm = sd->mdv.cv_acnrm;
+  cv_mem->cv_tstop = sd->mdv.cv_tstop;
+  cv_mem->cv_tstopset = sd->mdv.cv_tstopset;
+  cv_mem->cv_nlscoef = sd->mdv.cv_nlscoef;
+  cv_mem->cv_qwait = sd->mdv.cv_qwait;
+  cv_mem->cv_crate = sd->mdv.cv_crate;
+  cv_mem->cv_gamrat = sd->mdv.cv_gamrat;
+  cv_mem->cv_gammap = sd->mdv.cv_gammap;
+  cv_mem->cv_nst = sd->mdv.cv_nst;
+  cv_mem->cv_gamma = sd->mdv.cv_gamma;
+  cv_mem->cv_rl1 = sd->mdv.cv_rl1;
+  cv_mem->cv_eta = sd->mdv.cv_eta;
+  cv_mem->cv_q = sd->mdv.cv_q;
+  cv_mem->cv_qprime = sd->mdv.cv_qprime;
+  cv_mem->cv_h = sd->mdv.cv_h;
+  cv_mem->cv_hscale = sd->mdv.cv_hscale;
+  cv_mem->cv_nscon = sd->mdv.cv_nscon;
+  cv_mem->cv_hprime = sd->mdv.cv_hprime;
+  cv_mem->cv_hmin = sd->mdv.cv_hmin;
+  cv_mem->cv_etamax = sd->mdv.cv_etamax;
+  cv_mem->cv_maxncf = sd->mdv.cv_maxncf;
+  cv_mem->cv_tn = sd->mdv.cv_tn;
+
+  istate = sd->mdv.istate;
+  kflag = sd->mdv.kflag;
+  *tret = sd->mdv.tret;
+
+  cudaMemcpy(cv_mem->cv_l, mGPU->cv_l, L_MAX * sizeof(double), cudaMemcpyDeviceToHost);
+  cudaMemcpy(cv_mem->cv_tau, mGPU->cv_tau, (L_MAX + 1) * sizeof(double), cudaMemcpyDeviceToHost);
+  cudaMemcpy(cv_mem->cv_tq, mGPU->cv_tq, (NUM_TESTS + 1) * sizeof(double), cudaMemcpyDeviceToHost);
+
+  cudaMemcpy(ewt, mGPU->dewt, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost);
+  cudaMemcpy(acor, mGPU->cv_acor, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost);
+  cudaMemcpy(tempv, mGPU->dtempv, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost);
+  cudaMemcpy(ftemp, mGPU->dftemp, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost);
+  cudaMemcpy(cv_last_yn, mGPU->cv_last_yn, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost);
+  cudaMemcpy(cv_acor_init, mGPU->cv_acor_init, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost);
+  cudaMemcpy(youtArray, mGPU->yout, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost);
+  cudaMemcpy(cv_Vabstol, mGPU->cv_Vabstol, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost);
+
+  for (int i = 0; i <= cv_mem->cv_qmax; i++) {//cv_qmax+1 (6)?
+    double *zn = NV_DATA_S(cv_mem->cv_zn[i]);
+    cudaMemcpy(zn, (i * mGPU->nrows + mGPU->dzn), mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost);
+
+  }
+
+  HANDLE_ERROR(cudaMemcpy(sd->flagCells, mGPU->flagCells, mGPU->n_cells * sizeof(int), cudaMemcpyDeviceToHost));
+  flag = CV_SUCCESS;
+  for (int i = 0; i < mGPU->n_cells; i++) {
+    if (sd->flagCells[i] != flag) {
+      flag = sd->flagCells[i];
+      break;
+    }
+  }
+#ifndef DEV_CUDACVODE
+    istate=flag;
+#else
+    kflag=flag;
+#endif
+
+    //printf("DEV_cudacvStep counterBiConjGrad %d\n",bicg->counterBiConjGrad);
+    //printf("cudaCVode flag %d kflag %d\n",flag, sd->mdv.flag);
+
+#ifndef DEV_CUDACVODE
+
+    // In NORMAL mode, check if tout reached
+    //if ( (cv_mem->cv_tn-tout)*cv_mem->cv_h >= ZERO ) {
+    if ( istate==CV_SUCCESS ) {
+
+      //istate = CV_SUCCESS;
+
+      //printf("istate==CV_SUCCESS\n";
+
+      cv_mem->cv_tretlast = sd->mdv.cv_tretlast;
+
+      //cv_mem->cv_next_q = sd->mdv.cv_next_q;
+      //cv_mem->cv_next_h = sd->mdv.cv_next_h;
+      cv_mem->cv_next_q = sd->mdv.cv_qprime;//needed?
+      cv_mem->cv_next_h = sd->mdv.cv_hprime;
+
+    }else{
+#endif
+
+      if (kflag != CV_SUCCESS) {
+        printf("cudaCVode2 kflag %d\n",kflag);
+        istate = cvHandleFailure_gpu2(cv_mem, kflag);
+        //cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
+        //N_VScale(ONE, cv_mem->cv_zn[0], yout);
+
+        cv_mem->cv_next_h = sd->mdv.cv_next_h;
+
+#ifndef DEV_CUDACVODE
+#else
+        break;
+#endif
+      }
+
+      if ( (itask == CV_NORMAL) &&  (cv_mem->cv_tn-tout)*cv_mem->cv_h >= ZERO ) {
+        istate = CV_SUCCESS;
+        cv_mem->cv_tretlast = *tret = tout;
+        (void) CVodeGetDky(cv_mem, tout, 0, yout);
+        cv_mem->cv_next_q = cv_mem->cv_qprime;
+        cv_mem->cv_next_h = cv_mem->cv_hprime;
+#ifndef DEV_CUDACVODE
+#else
+        break;
+#endif
+      }
+
+      // Reset and check ewt
+      if (istate==CV_ILL_INPUT) {
+        if (cv_mem->cv_itol == CV_WF)
+          cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "CVode",
+                         MSGCV_EWT_NOW_FAIL, cv_mem->cv_tn);
+        else
+          cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "CVode",
+                         MSGCV_EWT_NOW_BAD, cv_mem->cv_tn);
+        //Remove break after removing for(;;) in cpu
+#ifndef DEV_CUDACVODE
+#else
+        break;
+#endif
+      }
+
+      // Check for too many steps
+      if ( (cv_mem->cv_mxstep>0) && (nstloc >= cv_mem->cv_mxstep) ) {
+        cvProcessError(cv_mem, CV_TOO_MUCH_WORK, "CVODE", "CVode",
+                       MSGCV_MAX_STEPS, cv_mem->cv_tn);
+        istate = CV_TOO_MUCH_WORK;
+        //cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
+        //N_VScale(ONE, cv_mem->cv_zn[0], yout);
+#ifndef DEV_CUDACVODE
+#else
+        break;
+#endif
+      }
+
+      // Check for too much accuracy requested
+      //nrm = N_VWrmsNorm(cv_mem->cv_zn[0], cv_mem->cv_ewt);
+      //cv_mem->cv_tolsf = cv_mem->cv_uround * nrm;
+      if (cv_mem->cv_tolsf > ONE) {
+        cvProcessError(cv_mem, CV_TOO_MUCH_ACC, "CVODE", "CVode",
+                       MSGCV_TOO_MUCH_ACC, cv_mem->cv_tn);
+        istate = CV_TOO_MUCH_ACC;
+        //cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
+        //N_VScale(ONE, cv_mem->cv_zn[0], yout);
+        //cv_mem->cv_tolsf *= TWO;
+#ifndef DEV_CUDACVODE
+#else
+        break;
+#endif
+      }
+
+      //Check for h below roundoff level in tn
+      if (cv_mem->cv_tn + cv_mem->cv_h == cv_mem->cv_tn) {
+          //cv_mem->cv_nhnil++;
+          if (cv_mem->cv_nhnil <= cv_mem->cv_mxhnil)
+            cvProcessError(cv_mem, CV_WARNING, "CVODE", "CVode",
+                           MSGCV_HNIL, cv_mem->cv_tn, cv_mem->cv_h);
+          if (cv_mem->cv_nhnil == cv_mem->cv_mxhnil)
+            cvProcessError(cv_mem, CV_WARNING, "CVODE", "CVode", MSGCV_HNIL_DONE);
+          }
+
+      if ( cv_mem->cv_tstopset ) {
+
+        troundoff = FUZZ_FACTOR*cv_mem->cv_uround*(SUNRabs(cv_mem->cv_tn) + SUNRabs(cv_mem->cv_h));
+        if ( SUNRabs(cv_mem->cv_tn - cv_mem->cv_tstop) <= troundoff) {
+          //(void) CVodeGetDky(cv_mem, cv_mem->cv_tstop, 0, yout);
+          //cv_mem->cv_tretlast = *tret = cv_mem->cv_tstop;
+          //cv_mem->cv_tstopset = SUNFALSE;
+          istate = CV_TSTOP_RETURN;
+
+#ifndef DEV_CUDACVODE
+#else
+          break;
+#endif
+        }
+
+        if ( (cv_mem->cv_tn + cv_mem->cv_hprime - cv_mem->cv_tstop)*cv_mem->cv_h > ZERO ) {
+          cv_mem->cv_hprime = (cv_mem->cv_tstop - cv_mem->cv_tn)*(ONE-FOUR*cv_mem->cv_uround);
+          cv_mem->cv_eta = cv_mem->cv_hprime/cv_mem->cv_h;
+        }
+
+      }
+
+#ifndef DEV_CUDACVODE
+    }
+#endif
+
+#ifndef DEV_CUDACVODE
+#else
+
+  } /* end looping for internal steps */
+
+#endif
+
+#ifdef PMC_DEBUG_GPU
+  cudaEventRecord(bicg->stopcvStep);
+  cudaEventSynchronize(bicg->stopcvStep);
+  float mscvStep = 0.0;
+  cudaEventElapsedTime(&mscvStep, bicg->startcvStep, bicg->stopcvStep);
+  bicg->timecvStep+= mscvStep/1000;
+
+  bicg->timeBiConjGrad=bicg->timesolveCVODEGPU*sd->mdv.dtBCG/sd->mdv.dtcudaDeviceCVode;
+  bicg->counterBiConjGrad+= sd->mdv.counterBCG;
+
+
+#endif
+
+  return(istate);
+}
+
 
 
 /*-----------------------------------------------------------------*/
@@ -2187,28 +6233,8 @@ int cvStep_gpu2(SolverData *sd, CVodeMem cv_mem)
     cvSet_gpu2(cv_mem);
 
     //nflag = cvNls(cv_mem, nflag);
-#ifdef PMC_DEBUG_GPU
-    //clock_t start=clock();
-    cudaEventRecord(bicg->startNewtonIt);
-#endif
+    nflag = cvNlsNewton_gpu2(sd, cv_mem, nflag);//f(y)+BCG
 
-#ifdef NEWTON_CPU
-    nflag = cvNlsNewton_cpu2(sd, cv_mem, nflag);
-#else
-    nflag = cvNlsNewton_gpu2(sd, cv_mem, nflag);
-#endif
-
-#ifdef PMC_DEBUG_GPU
-    cudaEventRecord(bicg->stopNewtonIt);
-
-    cudaEventSynchronize(bicg->stopNewtonIt);
-    float msNewtonIt = 0.0;
-    cudaEventElapsedTime(&msNewtonIt, bicg->startNewtonIt, bicg->stopNewtonIt);
-    bicg->timeNewtonIt+= msNewtonIt;
-
-    //bicg->timeNewtonIt+= clock() - start;
-    bicg->counterNewtonIt++;
-#endif
     kflag = cvHandleNFlag_gpu2(cv_mem, &nflag, saved_t, &ncf);
 
     /* Go back in loop if we need to predict again (nflag=PREV_CONV_FAIL)*/
@@ -3303,6 +7329,45 @@ int cvEwtSetSV_gpu2(CVodeMem cv_mem, N_Vector cv_ewt, N_Vector weight)
   return(0);
 }
 
+
+__global__ void cudaGlobalVWRMS_Norm(double *g_idata1, double *g_idata2, double *g_odata, int n, int n_shr)
+{
+  extern __shared__ double sdata[];
+  unsigned int tid = threadIdx.x;
+  //unsigned int i = blockIdx.x*(blockDim.x*2) + threadIdx.x;
+  unsigned int i = blockIdx.x*blockDim.x + threadIdx.x;
+
+  if (tid == 0){
+    for (int j=0; j<n_shr; j++)
+      sdata[j] = 0.;
+  }
+
+/*
+  double mySum = (i < n) ? g_idata1[i]*g_idata1[i]*g_idata2[i]*g_idata2[i] : 0;
+
+  if (i + blockDim.x < n)
+    mySum += g_idata1[i+blockDim.x]*g_idata1[i+blockDim.x]*g_idata2[i+blockDim.x]*g_idata2[i+blockDim.x];
+*/
+
+  __syncthreads();
+  double mySum=g_idata1[i]*g_idata1[i]*g_idata2[i]*g_idata2[i];
+  sdata[tid] = mySum;
+  __syncthreads();
+
+  for (unsigned int s=n_shr/2; s>0; s>>=1)
+  {
+    if (tid < s)
+      sdata[tid] = mySum = mySum + sdata[tid + s];
+
+    __syncthreads();
+  }
+
+  //if (tid == 0) g_odata[blockIdx.x] = sdata[0];
+  g_odata[0] = sqrt(sdata[0]/n);
+  __syncthreads();
+}
+
+
 int cvNlsNewton_gpu2(SolverData *sd, CVodeMem cv_mem, int nflag)
 {
   itsolver *bicg = &(sd->bicg);
@@ -3330,7 +7395,6 @@ int cvNlsNewton_gpu2(SolverData *sd, CVodeMem cv_mem, int nflag)
   }
 
 #ifdef PMC_DEBUG_GPU
-  //bicg->timeNewtonSendInit+= clock() - start;
   //bicg->counterSendInit++;
 #endif
 
