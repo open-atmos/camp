@@ -17,19 +17,19 @@ void read_options(itsolver *bicg){
   fscanf(fp, "%s", buff);
 
   if(strstr(buff,"CELLS_METHOD=Block-cells(1)")!=NULL){
-    printf("itsolver read_options CELLS_METHOD=Block-cells(1)\n");
+    //printf("itsolver read_options CELLS_METHOD=Block-cells(1)\n");
     bicg->cells_method=3; //One-cell per block (Independent cells)
   }
   else if(strstr(buff,"CELLS_METHOD=Block-cells(N)")!=NULL){
-    printf("itsolver read_options CELLS_METHOD=Block-cells(N)\n");
+    //printf("itsolver read_options CELLS_METHOD=Block-cells(N)\n");
     bicg->cells_method=2; //One-cell per block (Independent cells)
   }
   else if(strstr(buff,"CELLS_METHOD=Multi-cells")!=NULL){
-    printf("itsolver read_options CELLS_METHOD=Multi-cells\n");
+    //printf("itsolver read_options CELLS_METHOD=Multi-cells\n");
     bicg->cells_method=1; //One-cell per block (Independent cells)
   }
   else if(strstr(buff,"CELLS_METHOD=One-cell")!=NULL){
-    printf("itsolver read_options CELLS_METHOD=One-cell\n");
+    //printf("itsolver read_options CELLS_METHOD=One-cell\n");
     bicg->cells_method=0;
   }else{
     printf("ERROR: solveGPU_block unkonwn cells_method");
@@ -49,7 +49,7 @@ void createSolver(SolverData *sd)
   read_options(bicg);
   mGPU->maxIt=1000;
   mGPU->tolmax=1.0e-30; //cv_mem->cv_reltol CAMP selected accuracy (1e-8) //1e-10;//1e-6
-#ifdef CSR_SPMV
+#ifndef CSR_SPMV_CPU
   mGPU->mattype=0;
   //printf("BCG Mattype=CSR\n");
 #else

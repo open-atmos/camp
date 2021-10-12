@@ -24,7 +24,6 @@ extern "C" {
 #include <mpi.h>
 #endif
 
-#include "device/f_jac.h"
 
 #define CV_SUCCESS               0
 

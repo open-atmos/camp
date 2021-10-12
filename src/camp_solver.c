@@ -19,7 +19,6 @@
 #include <string.h>
 #include <time.h>
 #include "aero_rep_solver.h"
-#include "aero_rep_solver.h"
 #include "rxn_solver.h"
 #include "sub_model_solver.h"
 #ifdef PMC_USE_GPU
