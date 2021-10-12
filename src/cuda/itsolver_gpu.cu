@@ -38,11 +38,14 @@ void read_options(itsolver *bicg){
 
 }
 
-void createSolver(itsolver *bicg)
+void createSolver(SolverData *sd)
 {
+  itsolver *bicg = &(sd->bicg);
+  ModelDataGPU *mGPU = &sd->mGPU;
+
   //Init variables ("public")
-  int nrows = bicg->nrows;
-  int blocks = bicg->blocks;
+  int nrows = mGPU->nrows;
+  int blocks = mGPU->blocks;
   read_options(bicg);
   bicg->maxIt=1000;
   bicg->tolmax=1.0e-30; //cv_mem->cv_reltol CAMP selected accuracy (1e-8) //1e-10;//1e-6
@@ -55,8 +58,8 @@ void createSolver(itsolver *bicg)
 #endif
 
   //todo previous check to exception if len_cell>bicg_threads
-  int len_cell=bicg->nrows/bicg->n_cells;
-  if(len_cell>bicg->threads){
+  int len_cell=mGPU->nrows/mGPU->n_cells;
+  if(len_cell>mGPU->threads){
     printf("ERROR: Size cell greater than available threads per block");
     exit(0);
   }
@@ -88,7 +91,9 @@ void createSolver(itsolver *bicg)
   cudaMalloc(daux,nrows*sizeof(double));
   bicg->aux=(double*)malloc(sizeof(double)*blocks);
 
+
 }
+
 
 int nextPowerOfTwo(int v){
 
@@ -105,10 +110,662 @@ int nextPowerOfTwo(int v){
   return v;
 }
 
+__device__
+void cudaDeviceswapCSC_CSR1Thread(int n_row, int n_col, int* Ap, int* Aj, double* Ax, int* Bp, int* Bi, double* Bx) {
+
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
+  unsigned int tid = threadIdx.x;
+
+  //if(i==0) printf("start cudaDeviceswapCSC_CSR1\n");
+
+  int nnz=Ap[n_row];
+
+  if(i==0){ //good
+    //if(tid==0){//wrong
+    //if(i<n_row){//wrong
+
+    memset(Bp, 0, (n_row+1)*sizeof(int));
+
+    //for (int n = 0; n < n_row+1; n++){
+    //  Bp[n]=0;}
+
+    for (int n = 0; n < nnz; n++){
+      Bp[Aj[n]]++;
+    }
+
+    if(i==0) printf("start cudaDeviceswapCSC_CSR1Thread2\n");
+    if(i==0) {
+      printf("Bp:\n");
+      for (int n = 0; n <= n_row; n++)
+        printf("%d ", Bp[n]);
+      printf("\n");
+    }
+
+    for(int col = 0, cumsum = 0; col < n_col; col++){
+      int temp  = Bp[col];
+      Bp[col] = cumsum;
+      cumsum += temp;
+    }
+    Bp[n_col] = nnz;
+
+    if(i==0) printf("start cudaDeviceswapCSC_CSR1Thread3\n");
+    if(i==0) {
+      printf("Bp:\n");
+      for (int n = 0; n <= n_row; n++)
+        printf("%d ", Bp[n]);
+      printf("\n");
+    }
+
+    //int row=i;
+    for(int row = 0; row < n_row; row++){
+      for(int jj = Ap[row]; jj < Ap[row+1]; jj++){
+        int col  = Aj[jj];
+        int dest = Bp[col];
+
+        Bi[dest] = row;
+        Bx[dest] = Ax[jj];
+
+        Bp[col]++;
+      }
+    }
+
+    if(i==0) printf("start cudaDeviceswapCSC_CSR1Thread4\n");
+    if(i==0) {
+      printf("Bp:\n");
+      for (int n = 0; n <= n_row; n++)
+        printf("%d ", Bp[n]);
+      printf("\n");
+    }
+
+    for(int col = 0, last = 0; col <= n_col; col++){
+      int temp  = Bp[col];
+      Bp[col] = last;
+      last    = temp;
+    }
+
+    if(i==0) printf("start cudaDeviceswapCSC_CSR1Thread5\n");
+    if(i==0) {
+      printf("Bp:\n");
+      for (int n = 0; n <= n_row; n++)
+        printf("%d ", Bp[n]);
+      printf("\n");
+    }
+
+    //copy to A
+    for (int n = 0; n < n_row+1; n++){
+      Ap[n]=Bp[n];
+    }
+
+    for (int n = 0; n < nnz; n++){
+      Aj[n]=Bi[n];
+      Ax[n]=Bx[n];
+    }
+  }
+}
 
 //Based on
 // https://github.com/scipy/scipy/blob/3b36a574dc657d1ca116f6e230be694f3de31afc/scipy/sparse/sparsetools/csr.h#L363
-void CSRtoCSCandCSCtoCSR(int n_row, int n_col, int* Ap, int* Aj, double* Ax, int* Bp, int* Bi, double* Bx){
+
+//Wrong in one-kernel solution(https://earth.bsc.es/gitlab/ac/PartMC/-/issues/62)
+__device__
+void cudaDeviceswapCSC_CSR(int n_row, int n_col, int* Ap, int* Aj, double* Ax, int* BpGlobal, int* Bi, double* Bx) {
+
+  __syncthreads();
+
+  extern __shared__ int Bp[];
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
+  unsigned int tid = threadIdx.x;
+  int nnz=Ap[n_row];
+#ifdef DEBUG_cudaGlobalswapCSC_CSR
+  int iprint=0;
+  if(gridDim.x>1)iprint=blockDim.x;//block 2
+#endif
+
+
+#ifdef DEBUG_cudaGlobalswapCSC_CSR
+  if(i==0) printf("start cudaDeviceswapCSC_CSR1ThreadBlock nnz %d n_row %d blockdim %d "
+                  "gridDim.x %d \n",nnz,n_row,blockDim.x,gridDim.x);
+#endif
+
+
+  //if(tid==0){
+  if(i<n_row){
+
+#ifdef DEBUG_cudaGlobalswapCSC_CSR
+    if(tid==0) {
+      printf("blockDim.x*blockIdx.x %d %d\n",blockDim.x*blockIdx.x,blockDim.x*(blockIdx.x+1));
+    }
+#endif
+
+    Bp[tid]=0;
+    //Bp[2*tid]=0;
+
+#ifndef DEV_cudaDeviceswapCSC_CSR
+    if(i==gridDim.x*blockDim.x-1) Bp[blockDim.x]=0; //Maybe dont needed
+#else
+    if(blockIdx.x==gridDim.x-1) Bp[blockDim.x]=0;
+#endif
+
+
+#ifdef DEBUG_cudaGlobalswapCSC_CSR
+    if(i==iprint) printf("start cudaDeviceswapCSC_CSR1ThreadBlock1\n");
+    /*if(i==iprint) {
+    printf("Bp %d:\n",blockIdx);
+      for (int n = blockDim.x*blockIdx.x; n <= blockDim.x*(blockIdx.x+1); n++)
+        printf("%d[%d] ",Bp[n],n);
+      printf("\n");
+    }__syncthreads();*/
+#endif
+
+#ifdef DEV_cudaDeviceswapCSC_CSR
+
+
+    __syncthreads();
+
+    if(tid==0){
+
+      for (int n=(nnz/gridDim.x)*blockIdx.x; n<(nnz/gridDim.x)*(blockIdx.x+1); n++){
+        Bp[Aj[n]-blockIdx.x*blockDim.x]++;
+    }
+
+      //for (int n = 0; n < nnz; n++)
+      //  Bp[Aj[n+nnz*blockIdx.x]-blockIdx.x*blockDim.x]++;}
+
+    }
+
+    //Not working, if still failing cause of this function, just use a CSC structure from the start
+    /*
+    for(int j=Ap[tid]; j<Ap[tid+1]; j++) {
+      Bp[Aj[j]+0]++;
+      //BpGlobal[Aj[j]]++;
+    }
+*/
+
+      /*
+    BpGlobal[i]=0.;
+    __syncthreads();
+    for(int j=Ap[i]; j<Ap[i+1]; j++) {
+      //Bp[Aj[j]-blockIdx.x*blockDim.x]++;
+      BpGlobal[Aj[j]]++;
+    }
+    __syncthreads();
+    Bp[tid]=BpGlobal[i];
+*/
+
+    __syncthreads();
+
+#else
+
+    if(tid==0){
+      for (int n = (nnz/gridDim.x)*blockIdx.x; n < (nnz/gridDim.x)*(blockIdx.x+1); n++){
+        Bp[Aj[n]-blockIdx.x*blockDim.x]++;
+      }
+    }
+
+#endif
+
+
+
+#ifdef DEBUG_cudaGlobalswapCSC_CSR
+    if(i==iprint) printf("start cudaDeviceswapCSC_CSR1ThreadBlock2\n");
+    if(i==iprint) {
+      printf("Bp %d:\n",blockIdx);
+      //for (int n = blockDim.x*blockIdx.x; n <= blockDim.x*(blockIdx.x+1); n++)
+      for (int n = 0; n <= blockDim.x; n++)
+        printf("%d ", Bp[n]);
+      printf("\n");
+    }
+#endif
+
+    //TODO efficient cumsum http://www.eecs.umich.edu/courses/eecs570/hw/parprefix.pdf
+    /*int offset = 1;
+    for (int d = n_col>>1; d > 0; d >>= 1) // build sum in place up the tree
+    {
+      __syncthreads();
+      if (tid < d)
+      {
+        int ai = offset*(2*tid+1)-1;
+        int bi = offset*(2*tid+2)-1;
+        Bp[bi] += Bp[ai];
+      }
+      offset *= 2;
+    }
+    if (tid == 0) { Bp[n_col - 1] = 0; } // clear the last element
+    for (int d = 1; d < n_col; d *= 2) // traverse down tree & build scan
+    {
+      offset >>= 1;
+      __syncthreads();
+      if (tid < d)
+      {
+        int ai = offset*(2*tid+1)-1;
+        int bi = offset*(2*tid+2)-1;
+        float t = Bp[ai];
+        Bp[ai] = Bp[bi];
+        Bp[bi] += t;
+      }
+    }
+    __syncthreads();*/
+
+    if(tid==0){
+      int cumsum=Ap[blockDim.x*blockIdx.x];
+      for(int n = 0; n < blockDim.x; n++){
+        //printf("%d ", Bp[n]); //Different value if accessing BpGlobal with same threadidx and multiple cells
+        int temp  = Bp[n];
+        //printf("%d ", temp);
+        Bp[n] = cumsum;
+        cumsum += temp;
+      }
+      if(blockIdx.x==gridDim.x-1) Bp[blockDim.x]=nnz;
+    }
+
+    __syncthreads();
+
+#ifdef DEBUG_cudaGlobalswapCSC_CSR
+    if(i==iprint) printf("start cudaDeviceswapCSC_CSR1ThreadBlock3\n");
+    if(i==iprint) {
+      //printf("Bp %d:\n",blockIdx);
+      //for (int n = blockDim.x*blockIdx.x; n <= blockDim.x*(blockIdx.x+1); n++)
+      for (int n = 0; n <= blockDim.x; n++)
+        printf("%d ", Bp[n]);
+      printf("\n");
+    }
+#endif
+
+    if(tid==0) {
+      for(int row=n_row/gridDim.x*blockIdx.x;row<n_row/gridDim.x*(blockIdx.x+1);row++){
+        for (int jj = Ap[row]; jj < Ap[row + 1]; jj++) {
+          int col = Aj[jj];
+          int dest = Bp[col-blockIdx.x*blockDim.x];
+
+          Bi[dest] = row;
+          Bx[dest] = Ax[jj];
+
+          Bp[col-blockIdx.x*blockDim.x]++;
+        }
+      }
+    }
+
+    __syncthreads();
+
+#ifdef DEBUG_cudaGlobalswapCSC_CSR
+    if(i==iprint) printf("start cudaDeviceswapCSC_CSR1ThreadBlock4\n");
+    if(i==iprint) {
+      //printf("Bp %d:\n",blockIdx);
+      //for (int n = blockDim.x*blockIdx.x; n <= blockDim.x*(blockIdx.x+1); n++)
+      for (int n = 0; n <= blockDim.x; n++)
+        printf("%d ", Bp[n]);
+      printf("\n");
+    }
+#endif
+
+#ifndef DEV_cudaDeviceswapCSC_CSR
+
+    __syncthreads();
+    int aux=Bp[tid];
+    __syncthreads();
+    Bp[tid+1]=aux;
+    Bp[0]=Ap[n_row/gridDim.x*blockIdx.x];
+
+
+#else
+
+    if(tid==0) {
+      //int last=Ap[n_row/gridDim.x*blockIdx.x];
+      int last=Ap[i];
+      for (int col = 0; col < blockDim.x; col++) {
+        int temp = Bp[col];
+        Bp[col] = last;
+        last = temp;
+      }
+    }
+
+#endif
+
+
+#ifdef DEBUG_cudaGlobalswapCSC_CSR
+    if(i==iprint) printf("start cudaDeviceswapCSC_CSR1ThreadBlock5\n");
+    if(i==iprint) {
+      //printf("Bp %d:\n",blockIdx);
+      //for (int n = blockDim.x*blockIdx.x; n <= blockDim.x*(blockIdx.x+1); n++)
+      for (int n = 0; n <= blockDim.x; n++)
+        printf("%d ", Bp[n]);
+      printf("\n");
+    }
+#endif
+
+    //Copy to A
+
+#ifndef DEV_cudaDeviceswapCSC_CSR
+
+//GOOD
+    __syncthreads();
+
+    for(int j=Ap[i]; j<Ap[i+1]; j++){
+      Aj[j]=Bi[j];
+      Ax[j]=Bx[j];
+    }
+
+    __syncthreads();
+
+    Ap[i]=Bp[tid];
+    BpGlobal[i]=Bp[tid];
+    if(i==gridDim.x*blockDim.x-1){
+      Ap[i+1]=nnz;//Bp[tid+1];
+      BpGlobal[i+1]=nnz;//Bp[tid+1];
+    }
+
+#else
+
+    if(tid==0){
+      for (int n = (nnz/gridDim.x)*blockIdx.x; n < (nnz/gridDim.x)*(blockIdx.x+1); n++) {
+        Aj[n]=Bi[n];
+        Ax[n]=Bx[n];
+      }
+    }
+
+    if(tid==0){
+      for(int n=0;n<n_row/gridDim.x;n++){
+        Ap[n+blockIdx.x*blockDim.x]=Bp[n];
+        BpGlobal[n+blockIdx.x*blockDim.x]=Bp[n];
+      }
+      if(blockIdx.x==gridDim.x-1){
+        Ap[n_row]=nnz;
+        BpGlobal[n_row]=nnz;
+      }
+    }
+#endif
+
+  }
+
+
+  __syncthreads();
+
+}
+
+__device__
+void cudaDeviceswapCSC_CSR1ThreadBlock(int n_row, int n_col, int* Ap, int* Aj, double* Ax, int* BpGlobal, int* Bi, double* Bx) {
+
+  //todo remove this syncthreads after access jac with each thread has is row of Ap, instead of using only threadidx==0
+  // (in this way all functs access the jac in the same way)
+  __syncthreads();
+
+  extern __shared__ int Bp[];
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
+  unsigned int tid = threadIdx.x;
+  int nnz=Ap[n_row];
+#ifdef DEBUG_cudaGlobalswapCSC_CSR
+  int iprint=0;
+  if(gridDim.x>1)iprint=blockDim.x;//block 2
+#endif
+
+
+#ifdef DEBUG_cudaGlobalswapCSC_CSR
+  if(i==0) printf("start cudaDeviceswapCSC_CSR1ThreadBlock nnz %d n_row %d blockdim %d "
+                  "gridDim.x %d \n",nnz,n_row,blockDim.x,gridDim.x);
+#endif
+
+
+  //if(tid==0){
+  if(i<n_row){
+
+    if(tid==0) {
+#ifdef DEBUG_cudaGlobalswapCSC_CSR
+      printf("blockDim.x*blockIdx.x %d %d\n",blockDim.x*blockIdx.x,blockDim.x*(blockIdx.x+1));
+#endif
+    }
+    Bp[tid]=0; //todo dont needed? only first value is init to zero, not the whole array
+    //Bp[2*tid]=0;
+    if(blockIdx.x==gridDim.x-1) Bp[blockDim.x]=0;
+
+#ifdef DEBUG_cudaGlobalswapCSC_CSR
+    if(i==iprint) printf("start cudaDeviceswapCSC_CSR1ThreadBlock1\n");
+    /*if(i==iprint) {
+    printf("Bp %d:\n",blockIdx);
+      for (int n = blockDim.x*blockIdx.x; n <= blockDim.x*(blockIdx.x+1); n++)
+        printf("%d[%d] ",Bp[n],n);
+      printf("\n");
+    }__syncthreads();*/
+#endif
+
+    if(tid==0){
+      for (int n = (nnz/gridDim.x)*blockIdx.x; n < (nnz/gridDim.x)*(blockIdx.x+1); n++){
+        Bp[Aj[n]-blockIdx.x*blockDim.x]++;
+      }
+    }
+
+#ifdef DEBUG_cudaGlobalswapCSC_CSR
+    if(i==iprint) printf("start cudaDeviceswapCSC_CSR1ThreadBlock2\n");
+    if(i==iprint) {
+      printf("Bp %d:\n",blockIdx);
+      //for (int n = blockDim.x*blockIdx.x; n <= blockDim.x*(blockIdx.x+1); n++)
+      for (int n = 0; n <= blockDim.x; n++)
+        printf("%d ", Bp[n]);
+      printf("\n");
+    }
+#endif
+
+    //TODO efficient cumsum http://www.eecs.umich.edu/courses/eecs570/hw/parprefix.pdf
+    /*int offset = 1;
+    for (int d = n_col>>1; d > 0; d >>= 1) // build sum in place up the tree
+    {
+      __syncthreads();
+      if (tid < d)
+      {
+        int ai = offset*(2*tid+1)-1;
+        int bi = offset*(2*tid+2)-1;
+        Bp[bi] += Bp[ai];
+      }
+      offset *= 2;
+    }
+    if (tid == 0) { Bp[n_col - 1] = 0; } // clear the last element
+    for (int d = 1; d < n_col; d *= 2) // traverse down tree & build scan
+    {
+      offset >>= 1;
+      __syncthreads();
+      if (tid < d)
+      {
+        int ai = offset*(2*tid+1)-1;
+        int bi = offset*(2*tid+2)-1;
+        float t = Bp[ai];
+        Bp[ai] = Bp[bi];
+        Bp[bi] += t;
+      }
+    }
+    __syncthreads();*/
+
+    if(tid==0){
+      int cumsum=Ap[blockDim.x*blockIdx.x];
+      for(int n = 0; n < blockDim.x; n++){
+        //printf("%d ", Bp[n]);
+        int temp  = Bp[n];
+        //printf("%d ", temp);
+        Bp[n] = cumsum;
+        cumsum += temp;
+      }
+      if(blockIdx.x==gridDim.x-1) Bp[blockDim.x]=nnz;
+    }
+
+
+#ifdef DEBUG_cudaGlobalswapCSC_CSR
+    if(i==iprint) printf("start cudaDeviceswapCSC_CSR1ThreadBlock3\n");
+    if(i==iprint) {
+      //printf("Bp %d:\n",blockIdx);
+      //for (int n = blockDim.x*blockIdx.x; n <= blockDim.x*(blockIdx.x+1); n++)
+      for (int n = 0; n <= blockDim.x; n++)
+        printf("%d ", Bp[n]);
+      printf("\n");
+    }
+#endif
+
+    if(tid==0) {
+      for(int row=n_row/gridDim.x*blockIdx.x;row<n_row/gridDim.x*(blockIdx.x+1);row++){
+        for (int jj = Ap[row]; jj < Ap[row + 1]; jj++) {
+          int col = Aj[jj];
+          int dest = Bp[col-blockIdx.x*blockDim.x];
+
+          Bi[dest] = row;
+          Bx[dest] = Ax[jj];
+
+          Bp[col-blockIdx.x*blockDim.x]++;
+        }
+      }
+    }
+
+#ifdef DEBUG_cudaGlobalswapCSC_CSR
+    if(i==iprint) printf("start cudaDeviceswapCSC_CSR1ThreadBlock4\n");
+    if(i==iprint) {
+      //printf("Bp %d:\n",blockIdx);
+      //for (int n = blockDim.x*blockIdx.x; n <= blockDim.x*(blockIdx.x+1); n++)
+      for (int n = 0; n <= blockDim.x; n++)
+        printf("%d ", Bp[n]);
+      printf("\n");
+    }
+#endif
+
+    if(tid==0) {
+      int last=Ap[n_row/gridDim.x*blockIdx.x];
+      int limit=blockDim.x;
+      if(blockIdx.x==gridDim.x-1) limit++;
+      for (int col = 0; col < blockDim.x; col++) {
+        int temp = Bp[col];
+        Bp[col] = last;
+        last = temp;
+      }
+    }
+
+#ifdef DEBUG_cudaGlobalswapCSC_CSR
+    if(i==iprint) printf("start cudaDeviceswapCSC_CSR1ThreadBlock5\n");
+    if(i==iprint) {
+      //printf("Bp %d:\n",blockIdx);
+      //for (int n = blockDim.x*blockIdx.x; n <= blockDim.x*(blockIdx.x+1); n++)
+      for (int n = 0; n <= blockDim.x; n++)
+        printf("%d ", Bp[n]);
+      printf("\n");
+    }
+#endif
+
+    //Copy to A
+    if(tid==0){
+      for (int n = (nnz/gridDim.x)*blockIdx.x; n < (nnz/gridDim.x)*(blockIdx.x+1); n++) {
+        Aj[n]=Bi[n];
+        Ax[n]=Bx[n];
+      }
+    }
+
+    if(tid==0){
+      for(int n=0;n<n_row/gridDim.x;n++){
+        Ap[n+blockIdx.x*blockDim.x]=Bp[n];
+        BpGlobal[n+blockIdx.x*blockDim.x]=Bp[n];
+      }
+      if(blockIdx.x==gridDim.x-1){
+        Ap[n_row]=nnz;
+        BpGlobal[n_row]=nnz;}
+      }
+    }
+
+  __syncthreads();
+
+}
+
+__global__
+void cudaGlobalswapCSC_CSR(int n_row, int n_col, int* Ap, int* Aj, double* Ax, int* Bp, int* Bi, double* Bx){
+
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
+  unsigned int tid = threadIdx.x;
+
+  //if(i==0) printf("start cudaGlobalswapCSC_CSR\n");
+
+#ifdef TEST_DEVICECSCtoCSR
+
+  //Example configuration taken from KLU Sparse pdf
+
+  const int n_row2=3;
+  const int nnz=6;
+  int Cp[n_row2+1]={0,3,5,6};
+  int Cj[nnz]={0,1,2,1,2,2};
+  double Cx[nnz]={5.,4.,3.,2.,1.,8.};
+
+  int* Dp=(int*)malloc((n_row2+1)*sizeof(int));
+  int* Di=(int*)malloc(nnz*sizeof(int));
+  double* Dx=(double*)malloc(nnz*sizeof(double));
+
+  //cudaDeviceswapCSC_CSR1Thread(n_row2,n_row2,Cp,Cj,Cx,Dp,Di,Dx);
+  cudaDeviceswapCSC_CSR1ThreadBlock(n_row2,n_row2,Cp,Cj,Cx,Dp,Di,Dx);
+
+  //Correct result:
+  //int Cp[n_row+1]={0,1,3,6};
+  //int Ci[nnz]={0,0,1,0,1,2};
+  //int Cx[nnz]={5,4,2,3,1,8};
+
+  if(i==0) {
+    printf("Bp:\n");
+    for (int i = 0; i <= n_row2; i++)
+      printf("%d ", Dp[i]);
+    printf("\n");
+    printf("Bi:\n");
+    for (int i = 0; i < nnz; i++)
+      printf("%d ", Di[i]);
+    printf("\n");
+    printf("Bx:\n");
+    for (int i = 0; i < nnz; i++)
+      printf("%-le ", Dx[i]);
+    printf("\n");
+  }
+
+  //exit(0);
+
+#endif
+
+#ifdef DEBUG_cudaGlobalswapCSC_CSR
+  int nnz=Ap[n_row];
+  int iprint=0;
+  if(gridDim.x>1)iprint=blockDim.x;//block 2
+  if(i==iprint) printf("end cudaGlobalswapCSC_CSR\n");
+  if(i==iprint) {
+    printf("Ap:\n");
+    for (int n = 0; n <= n_row; n++)
+      printf("%d ", Ap[n]);
+    printf("\n");
+    printf("Aj:\n");
+    for (int i = 0; i < nnz; i++)
+      printf("%d ", Aj[i]);
+    printf("\n");
+    //printf("Ax:\n");
+    //for (int i = 0; i < nnz; i++)
+    //  printf("%-le ", Ax[i]);
+    //printf("\n");
+  }
+#endif
+
+  //cudaDeviceswapCSC_CSR1Thread(n_row,n_col,Ap,Aj,Ax,Bp,Bi,Bx);
+  cudaDeviceswapCSC_CSR1ThreadBlock(n_row,n_col,Ap,Aj,Ax,Bp,Bi,Bx);
+
+#ifdef DEBUG_cudaGlobalswapCSC_CSR
+  if(gridDim.x>1)iprint=blockDim.x;//block 2
+  if(i==iprint) printf("end cudaGlobalswapCSC_CSR\n");
+  if(i==iprint) {
+    printf("Ap:\n");
+    for (int n = 0; n <= n_row; n++)
+      printf("%d ", Ap[n]);
+    printf("\n");
+    printf("Aj:\n");
+    for (int i = 0; i < nnz; i++)
+      printf("%d ", Aj[i]);
+    printf("\n");
+    /*printf("Ax:\n");
+    for (int i = 0; i < nnz; i++)
+      printf("%-le ", Ax[i]);
+    printf("\n");
+     */
+  }
+#endif
+
+}
+
+
+//Based on
+// https://github.com/scipy/scipy/blob/3b36a574dc657d1ca116f6e230be694f3de31afc/scipy/sparse/sparsetools/csr.h#L363
+void swapCSC_CSR(int n_row, int n_col, int* Ap, int* Aj, double* Ax, int* Bp, int* Bi, double* Bx){
 
   int nnz=Ap[n_row];
 
@@ -146,9 +803,27 @@ void CSRtoCSCandCSCtoCSR(int n_row, int n_col, int* Ap, int* Aj, double* Ax, int
 
 }
 
-void CSRtoCSC(itsolver *bicg){
 
-#ifdef TEST_CSRtoCSC
+void swapCSC_CSR_BCG(SolverData *sd){
+
+  itsolver *bicg = &(sd->bicg);
+  ModelData *md = &(sd->model_data);
+  ModelDataGPU *mGPU = &sd->mGPU;
+
+#ifdef TEST_CSCtoCSR
+
+  //Example configuration taken from KLU Sparse pdf
+  int n_row=3;
+  int n_col=n_row;
+  int nnz=6;
+  int Ap[n_row+1]={0,3,5,6};
+  int Aj[nnz]={0,1,2,1,2,2};
+  double Ax[nnz]={5.,4.,3.,2.,1.,8.};
+  int* Bp=(int*)malloc((n_row+1)*sizeof(int));
+  int* Bi=(int*)malloc(nnz*sizeof(int));
+  double* Bx=(double*)malloc(nnz*sizeof(double));
+
+#elif TEST_CSRtoCSC
 
   //Example configuration taken from KLU Sparse pdf
   int n_row=3;
@@ -160,24 +835,22 @@ void CSRtoCSC(itsolver *bicg){
   int* Bp=(int*)malloc((n_row+1)*sizeof(int));
   int* Bi=(int*)malloc(nnz*sizeof(int));
   double* Bx=(int*)malloc(nnz*sizeof(double));
+
 #else
 
-  //cudaMemcpy(bicg->dA,bicg->djA,bicg->nnz*sizeof(int),cudaMemcpyDeviceToHost);
-  //cudaMemcpy(bicg->iA,bicg->diA,(bicg->nrows+1)*sizeof(int),cudaMemcpyDeviceToHost);
-
-  int n_row=bicg->nrows;
-  int n_col=n_row;
-  int nnz=bicg->nnz;
+  int n_row=mGPU->nrows;
+  int n_col=mGPU->nrows;
+  int nnz=mGPU->nnz;
   int* Ap=bicg->iA;
   int* Aj=bicg->jA;
   double* Ax=bicg->A;
-  int* Bp=(int*)malloc((bicg->nrows+1)*sizeof(int));
-  int* Bi=(int*)malloc(bicg->nnz*sizeof(int));
+  int* Bp=(int*)malloc((mGPU->nrows+1)*sizeof(int));
+  int* Bi=(int*)malloc(mGPU->nnz*sizeof(int));
   double* Bx=(double*)malloc(nnz*sizeof(double));
 
 #endif
 
-  CSRtoCSCandCSCtoCSR(n_row,n_col,Ap,Aj,Ax,Bp,Bi,Bx);
+  swapCSC_CSR(n_row,n_col,Ap,Aj,Ax,Bp,Bi,Bx);
 
 #ifdef TEST_CSRtoCSC
 
@@ -203,90 +876,18 @@ void CSRtoCSC(itsolver *bicg){
 #else
 
   /*
-  for(int i=0;i<bicg->nnz;i++)
+  for(int i=0;i<mGPU->nnz;i++)
     bicg->jA[i]=Bi[i];
-  for(int i=0;i<=bicg->nrows;i++)
+  for(int i=0;i<=mGPU->nrows;i++)
     bicg->iA[i]=Bp[i];
 
-  cudaMemcpy(bicg->djA,bicg->jA,bicg->nnz*sizeof(int),cudaMemcpyHostToDevice);
-  cudaMemcpy(bicg->diA,bicg->iA,(bicg->nrows+1)*sizeof(int),cudaMemcpyHostToDevice);
+  cudaMemcpy(bicg->djA,bicg->jA,mGPU->nnz*sizeof(int),cudaMemcpyHostToDevice);
+  cudaMemcpy(bicg->diA,bicg->iA,(mGPU->nrows+1)*sizeof(int),cudaMemcpyHostToDevice);
    */
 
-  cudaMemcpy(bicg->diA,Bp,(bicg->nrows+1)*sizeof(int),cudaMemcpyHostToDevice);
-  cudaMemcpy(bicg->djA,Bi,bicg->nnz*sizeof(int),cudaMemcpyHostToDevice);
-  cudaMemcpy(bicg->dA,Bx,bicg->nnz*sizeof(double),cudaMemcpyHostToDevice);
-
-#endif
-
-  free(Bp);
-  free(Bi);
-  free(Bx);
-
-}
-
-void CSCtoCSR(itsolver *bicg){
-
-#ifdef TEST_CSCtoCSR
-
-  //Example configuration taken from KLU Sparse pdf
-  int n_row=3;
-  int n_col=n_row;
-  int nnz=6;
-  int Ap[n_row+1]={0,3,5,6};
-  int Aj[nnz]={0,1,2,1,2,2};
-  double Ax[nnz]={5.,4.,3.,2.,1.,8.};
-  int* Bp=(int*)malloc((n_row+1)*sizeof(int));
-  int* Bi=(int*)malloc(nnz*sizeof(int));
-  double* Bx=(double*)malloc(nnz*sizeof(double));
-
-#else
-
-  //cudaMemcpy(bicg->iA,bicg->diA,(bicg->nrows+1)*sizeof(int),cudaMemcpyDeviceToHost);
-  //cudaMemcpy(bicg->jA,bicg->djA,bicg->nnz*sizeof(int),cudaMemcpyDeviceToHost);
-  //cudaMemcpy(bicg->A,bicg->dA,bicg->nnz*sizeof(double),cudaMemcpyDeviceToHost);
-
-  int n_row=bicg->nrows;
-  int n_col=n_row;
-  int nnz=bicg->nnz;
-  int* Ap=bicg->iA;
-  int* Aj=bicg->jA;
-  double* Ax=bicg->A;
-  int* Bp=(int*)malloc((bicg->nrows+1)*sizeof(int));
-  int* Bi=(int*)malloc(bicg->nnz*sizeof(int));
-  double* Bx=(double*)malloc(nnz*sizeof(double));
-
-#endif
-
-  CSRtoCSCandCSCtoCSR(n_row,n_col,Ap,Aj,Ax,Bp,Bi,Bx);
-
-#ifdef TEST_CSCtoCSR
-
-  //Correct result:
-  //int Cp[n_row+1]={0,1,3,6};
-  //int Ci[nnz]={0,0,1,0,1,2};
-  //int Cx[nnz]={5,4,2,3,1,8};
-
-  printf("Bp:\n");
-  for(int i=0;i<=n_row;i++)
-    printf("%d ",Bp[i]);
-  printf("\n");
-  printf("Bi:\n");
-  for(int i=0;i<nnz;i++)
-    printf("%d ",Bi[i]);
-  printf("\n");
-  printf("Bx:\n");
-  for(int i=0;i<nnz;i++)
-    printf("%-le ",Bx[i]);
-  printf("\n");
-
-  exit(0);
-
-#else
-
-  cudaMemcpy(bicg->diA,Bp,(bicg->nrows+1)*sizeof(int),cudaMemcpyHostToDevice);
-  cudaMemcpy(bicg->djA,Bi,bicg->nnz*sizeof(int),cudaMemcpyHostToDevice);
-  cudaMemcpy(bicg->dA,Bx,bicg->nnz*sizeof(double),cudaMemcpyHostToDevice);
-
+  cudaMemcpy(bicg->diA,Bp,(mGPU->nrows+1)*sizeof(int),cudaMemcpyHostToDevice);
+  cudaMemcpy(bicg->djA,Bi,mGPU->nnz*sizeof(int),cudaMemcpyHostToDevice);
+  cudaMemcpy(bicg->dA,Bx,mGPU->nnz*sizeof(double),cudaMemcpyHostToDevice);
 
 #endif
 
@@ -616,19 +1217,17 @@ void solveBcgCuda(
 
 }
 
-/*
- * //Problem: CudaReduce in last block uses more shared memory than needed, so there are some extra sums by zero
- * //Solution: This function. Last block is specific block with less n_shr_empty and threads, and the general case is max threads_block
- * //: Calculate Offset index on cpu and send the update pointer (len_array/size_Cell)
-*/
 void solveGPU_block_thr(int blocks, int threads_block, int n_shr_memory, int n_shr_empty, int offset_cells,
-        itsolver *bicg)
+        SolverData *sd)
 {
+  itsolver *bicg = &(sd->bicg);
+  ModelData *md = &(sd->model_data);
+  ModelDataGPU *mGPU = &sd->mGPU;
 
   //Init variables ("public")
-  int nrows = bicg->nrows;
-  int nnz = bicg->nnz;
-  int n_cells = bicg->n_cells;
+  int nrows = mGPU->nrows;
+  int nnz = mGPU->nnz;
+  int n_cells = mGPU->n_cells;
   int maxIt = bicg->maxIt;
   int mattype = bicg->mattype;
   double tolmax = bicg->tolmax;
@@ -666,7 +1265,7 @@ void solveGPU_block_thr(int blocks, int threads_block, int n_shr_memory, int n_s
 #ifndef DEBUG_SOLVEBCGCUDA
   if(bicg->counterBiConjGrad==0) {
     printf("n_cells %d len_cell %d nrows %d nnz %d max_threads_block %d blocks %d threads_block %d n_shr_empty %d offset_cells %d\n",
-           bicg->n_cells,len_cell,bicg->nrows,bicg->nnz,n_shr_memory,blocks,threads_block,n_shr_empty,offset_cells);
+           mGPU->n_cells,len_cell,mGPU->nrows,mGPU->nnz,n_shr_memory,blocks,threads_block,n_shr_empty,offset_cells);
 
     //print_double(bicg->A,nnz,"A");
     //print_int(bicg->jA,nnz,"jA");
@@ -681,7 +1280,7 @@ void solveGPU_block_thr(int blocks, int threads_block, int n_shr_memory, int n_s
 #ifdef solveBcgCuda_sum_it
 
   //cudaMalloc((void**)&dit_ptr,nrows*sizeof(int));
-  //cudaMemset(dit_ptr, 0, bicg->nrows*sizeof(int));
+  //cudaMemset(dit_ptr, 0, mGPU->nrows*sizeof(int));
 
   cudaMalloc((void**)&dit_ptr,blocks*sizeof(int));
   cudaMemset(dit_ptr, 0, blocks*sizeof(int));
@@ -761,31 +1360,12 @@ void solveGPU_block_thr(int blocks, int threads_block, int n_shr_memory, int n_s
 
 //solveGPU_block: Each block will compute only a cell/group of cells
 //Algorithm: Biconjugate gradient
-void solveGPU_block(itsolver *bicg, double *dA, int *djA, int *diA, double *dx, double *dtempv)
+void solveGPU_block(SolverData *sd, double *dA, int *djA, int *diA, double *dx, double *dtempv)
 {
 
-    /*
-  //Init variables ("public")
-  int nrows = bicg->nrows;
-  int threads = bicg->threads;
-  int maxIt = bicg->maxIt;
-  int mattype = bicg->mattype;
-  int n_cells = bicg->n_cells;
-  double tolmax = bicg->tolmax;
-  double *ddiag = bicg->ddiag;
-
-  // Auxiliary vectors ("private")
-  double *dr0 = bicg->dr0;
-  double *dr0h = bicg->dr0h;
-  double *dn0 = bicg->dn0;
-  double *dp0 = bicg->dp0;
-  double *dt = bicg->dt;
-  double *ds = bicg->ds;
-  double *dAx2 = bicg->dAx2;
-  double *dy = bicg->dy;
-  double *dz = bicg->dz;
-  double *daux = bicg->daux;
-     */
+  itsolver *bicg = &(sd->bicg);
+  ModelData *md = &(sd->model_data);
+  ModelDataGPU *mGPU = &sd->mGPU;
 
 #ifndef DEBUG_SOLVEBCGCUDA
   if(bicg->counterBiConjGrad==0) {
@@ -793,11 +1373,11 @@ void solveGPU_block(itsolver *bicg, double *dA, int *djA, int *diA, double *dx, 
   }
 #endif
 
-  int len_cell = bicg->nrows/bicg->n_cells;
+  int len_cell = mGPU->nrows/mGPU->n_cells;
 
   int max_threads_block=nextPowerOfTwo(len_cell);
   if(bicg->cells_method==2) {
-    max_threads_block = bicg->threads;
+    max_threads_block = mGPU->threads;
   }
 
 #ifdef BCG_ALL_THREADS
@@ -810,7 +1390,7 @@ void solveGPU_block(itsolver *bicg, double *dA, int *djA, int *diA, double *dx, 
   int n_cells_block =  max_threads_block/len_cell;
   int threads_block = n_cells_block*len_cell;
   int n_shr_empty = max_threads_block-threads_block;
-  int blocks = (bicg->nrows+threads_block-1)/threads_block;
+  int blocks = (mGPU->nrows+threads_block-1)/threads_block;
 #endif
 
   int offset_cells=0;
@@ -827,13 +1407,13 @@ void solveGPU_block(itsolver *bicg, double *dA, int *djA, int *diA, double *dx, 
 
     if(blocks!=0)//myb not needed
     solveGPU_block_thr(blocks, threads_block, max_threads_block, n_shr_empty, offset_cells,
-                       bicg);
+                       sd);
 
     //todo fix case one-cell updating vars
 
     //Update vars to launch last kernel
     offset_cells=n_cells_block*blocks;
-    int n_cells_last_block=bicg->n_cells-offset_cells;
+    int n_cells_last_block=mGPU->n_cells-offset_cells;
     threads_block=n_cells_last_block*len_cell;
     max_threads_block=nextPowerOfTwo(threads_block);
     n_shr_empty = max_threads_block-threads_block;
@@ -844,17 +1424,22 @@ void solveGPU_block(itsolver *bicg, double *dA, int *djA, int *diA, double *dx, 
 #endif
 
   solveGPU_block_thr(blocks, threads_block, max_threads_block, n_shr_empty, offset_cells,
-           bicg);
+           sd);
 
 }
 
 //Algorithm: Biconjugate gradient
-void solveGPU(itsolver *bicg, double *dA, int *djA, int *diA, double *dx, double *dtempv)
+void solveGPU(SolverData *sd, double *dA, int *djA, int *diA, double *dx, double *dtempv)
 {
   //Init variables ("public")
-  int nrows = bicg->nrows;
-  int blocks = bicg->blocks;
-  int threads = bicg->threads;
+
+  itsolver *bicg = &(sd->bicg);
+  ModelData *md = &(sd->model_data);
+  ModelDataGPU *mGPU = &sd->mGPU;
+
+  int nrows = mGPU->nrows;
+  int blocks = mGPU->blocks;
+  int threads = mGPU->threads;
   int maxIt = bicg->maxIt;
   int mattype = bicg->mattype;
   double tolmax = bicg->tolmax;
@@ -901,7 +1486,7 @@ void solveGPU(itsolver *bicg, double *dA, int *djA, int *diA, double *dx, double
 #ifdef DEBUG_SOLVEBCGCUDA_DEEP
 
   double *aux_x1;
-  aux_x1=(double*)malloc(bicg->nrows*sizeof(double));
+  aux_x1=(double*)malloc(mGPU->nrows*sizeof(double));
 
 #endif
 
@@ -941,7 +1526,7 @@ void solveGPU(itsolver *bicg, double *dA, int *djA, int *diA, double *dx, double
     gpu_zaxpby(1.0,dr0,-1.0*alpha,dn0,ds,nrows,blocks,threads);
 
 #ifdef DEBUG_SOLVEBCGCUDA_DEEP
-    cudaMemcpy(aux_x1,ds,bicg->nrows*sizeof(double),cudaMemcpyDeviceToHost);
+    cudaMemcpy(aux_x1,ds,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
 
     printf("%d ds[0] %-le\n",it,aux_x1[0]);
 
@@ -957,9 +1542,9 @@ void solveGPU(itsolver *bicg, double *dA, int *djA, int *diA, double *dx, double
     //temp1=gpu_dotxy(dz, dAx2, aux, daux, nrows,blocks, threads);
 
 #ifdef DEBUG_SOLVEBCGCUDA_DEEP
-    cudaMemcpy(aux_x1,dAx2,bicg->nrows*sizeof(double),cudaMemcpyDeviceToHost);
+    cudaMemcpy(aux_x1,dAx2,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
 
-    for(int i=0; i<bicg->nrows; i++){
+    for(int i=0; i<mGPU->nrows; i++){
       //printf("%d ddiag[%i] %-le\n",it,i,aux_x1[i]);
       //printf("%d dt[%i] %-le\n",it,i,aux_x1[i]);
       //printf("%d dAx2[%i] %-le\n",it,i,aux_x1[i]);
@@ -1016,8 +1601,11 @@ void solveGPU(itsolver *bicg, double *dA, int *djA, int *diA, double *dx, double
 
 }
 
-void free_itsolver(itsolver *bicg)
+void free_itsolver(SolverData *sd)
 {
+  itsolver *bicg = &(sd->bicg);
+  ModelDataGPU *mGPU = &sd->mGPU;
+
   //Auxiliary vectors ("private")
   double ** dr0 = &bicg->dr0;
   double ** dr0h = &bicg->dr0h;
@@ -1046,11 +1634,3 @@ void free_itsolver(itsolver *bicg)
 
 }
 
- /*
-void setUpSolver(itsolver *bicg, double reltol, double *ewt, int tnrows,int tnnz,double *tA, int *tjA, int *tiA, int tmattype, int qmax, double *dACamp, double *dftempCamp);
-{
-
-  bicg.tolmax=reltol;
-
-}
-*/
