@@ -408,7 +408,7 @@ program mock_monarch
     call pmc_interface%get_init_conc(species_conc, water_conc, WATER_VAPOR_ID, &
             air_density,i_W,I_E,I_S,I_N)
 
-#ifdef IMPORT_CAMP_INPUT
+#ifndef IMPORT_CAMP_INPUT
     call import_camp_input(pmc_interface)
     !call import_camp_input_json(pmc_interface)
 #endif
@@ -1041,7 +1041,7 @@ contains
 
     end if
 
-#ifdef PRINT_EBI_INPUT
+#ifndef PRINT_EBI_INPUT
     print*,"EBI species"
     print*, "TIME_STEP", TIME_STEP
     print*, "Temp", temperature(1,1,1)
