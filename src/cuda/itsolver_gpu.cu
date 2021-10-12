@@ -1339,8 +1339,8 @@ void solveGPU_block(SolverData *sd, double *dA, int *djA, int *diA, double *dx, 
 
   //Common kernel (Launch all blocks except the last)
   //blocks=blocks-1;
-  //if(bicg->cells_method==2//todo lower speedup with Block-cells(1), which makes no sense
-  if(bicg->cells_method
+  if(bicg->cells_method==2//todo lower speedup with Block-cells(1), which makes no sense
+  //if(bicg->cells_method
   //&& blocks!=0
   ) {
 

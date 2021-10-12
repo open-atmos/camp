@@ -51,6 +51,14 @@ def calculate_computational_timeLS(data,plot_y_key,case):
   #if(gpu_exist==False):
   #  raise Exception("Not GPU case for calculate_computational_timeLS metric")
 
+  #print("calculate_computational_timeLS")
+  #print(data_timeLS)
+
+  #for i in range(len(data_timeLS)):
+  #  data_timeLS[i]=data_timeLS[i]-data_timeBiconjGradMemcpy[i]
+
+  return data
+
 def calculate_percentages_solveCVODEGPU(din):
 
   #data_aux={}
@@ -90,16 +98,6 @@ def calculate_percentages_solveCVODEGPU(din):
       #data["timeguess_helper"][i]=din["timeguess_helper"][i]/data["timesolveCVODEGPU"][i]*percNum
 
   #print(data["timeNewtonIteration"])
-
-  #if("GPU" in case):
-  #data_timeBiconjGradMemcpy=data[case][plot_y_key]
-  #data_timeLS=data[case]["timeLS"]
-  #print(data_timeBiconjGradMemcpy)
-  #print(data_timeLS)
-  #for i in range(len(data_timeLS)):
-  #  data_timeLS[i]=data_timeLS[i]-data_timeBiconjGradMemcpy[i]
-  #print(data_timeLS)
-  #gpu_exist=True
 
   print("calculate_percentages_solveCVODEGPU")
   print(data)

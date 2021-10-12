@@ -317,16 +317,14 @@ def all_timesteps():
   mpi="yes"
   #mpi="no"
 
-  #mpiProcessesList = [1]
-  mpiProcessesList = [40,1]
+  mpiProcessesList = [1]
+  #mpiProcessesList = [40,1]
 
-  cells = [100]
-  #cells = [10,100,1000]
+  #cells = [100]
+  cells = [100,1000]
   #cells = [100,500,1000]
   #cells = [1,5,10,50,100]
-  #cells = [100,1000,5000,10000]
   #cells = [100,500,1000,5000,10000]
-  #cells = [100,1000,10000,100000]
 
   timesteps = 1#5 #720=24h #30=1h
   TIME_STEP = 2 #pending send TIME_STEP to mock_monarch
@@ -353,8 +351,8 @@ def all_timesteps():
 
   #plot_y_key = "Speedup timeCVode"
   #plot_y_key = "Speedup counterLS"
-  #plot_y_key = "Speedup normalized timeLS"
-  plot_y_key = "Speedup normalized computational timeLS"
+  plot_y_key = "Speedup normalized timeLS"
+  #plot_y_key = "Speedup normalized computational timeLS"
   #plot_y_key = "Speedup counterBCG"
   #plot_y_key = "Speedup total iterations - counterBCG"
   #plot_y_key = "Speedup normalized counterBCG"
