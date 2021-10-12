@@ -7,19 +7,24 @@
  */
 
 #include "itsolver_gpu.h"
+//#include "camp_gpu_solver.h" //wrong, produce crashes at the start
+
 
 extern "C" {
 #include "cvode_gpu.h"
-#include "../camp_solver.h"
+//#include "cuda_structs.h"
+#include "rxns_gpu.h"
+#include "aeros/aero_rep_gpu_solver.h"
+#include "time_derivative_gpu.h"
+#include "Jacobian_gpu.h"
+
 }
 
-//todo good error code checking:
-//Each function at the end update his own cv_mem->function_status code and return the same status.
-//IF at the end of the function none of the subfunctions returned error code, return success.
-//IF not, return error code and print the stack of status code to see the failed functions.
+#ifdef PMC_USE_MPI
+#include <mpi.h>
+#endif
 
-//this means translate all this flags defined to a proper status memory array (and map the array
-// with the names of each function, maybe define a structure or something).
+
 #define CV_SUCCESS               0
 
 #define DO_ERROR_TEST    +2
@@ -396,8 +401,8 @@ void alloc_solver_gpu2(CVodeMem cv_mem, SolverData *sd)
   cudaEventCreate(&bicg->startLinSolSolve);
   cudaEventCreate(&bicg->startNewtonIt);
   cudaEventCreate(&bicg->startcvStep);
-  cudaEventCreate(&bicg->startBiConjGrad);
-  cudaEventCreate(&bicg->startBiConjGradMemcpy);
+  cudaEventCreate(&bicg->startBCG);
+  cudaEventCreate(&bicg->startBCGMemcpy);
   cudaEventCreate(&bicg->startJac);
 
   cudaEventCreate(&bicg->stopDerivNewton);
@@ -406,8 +411,8 @@ void alloc_solver_gpu2(CVodeMem cv_mem, SolverData *sd)
   cudaEventCreate(&bicg->stopLinSolSolve);
   cudaEventCreate(&bicg->stopNewtonIt);
   cudaEventCreate(&bicg->stopcvStep);
-  cudaEventCreate(&bicg->stopBiConjGrad);
-  cudaEventCreate(&bicg->stopBiConjGradMemcpy);
+  cudaEventCreate(&bicg->stopBCG);
+  cudaEventCreate(&bicg->stopBCGMemcpy);
   cudaEventCreate(&bicg->stopJac);
 #endif
 
@@ -3506,7 +3511,7 @@ int linsolsetup_gpu2(SolverData *sd, CVodeMem cv_mem,int convfail,N_Vector vtemp
 #endif
 
 #ifndef LINSOLSOLVEGPU_INCLUDE_CUDAMEMCPY
-  cudaEventRecord(bicg->startBiConjGradMemcpy);
+  cudaEventRecord(bicg->startBCGMemcpy);
 #endif
 
   cudaMemcpy(bicg->diA,bicg->iA,(bicg->nrows+1)*sizeof(int),cudaMemcpyHostToDevice);
@@ -3514,10 +3519,10 @@ int linsolsetup_gpu2(SolverData *sd, CVodeMem cv_mem,int convfail,N_Vector vtemp
   cudaMemcpy(bicg->dA,bicg->A,bicg->nnz*sizeof(double),cudaMemcpyHostToDevice);
 
 #ifndef LINSOLSOLVEGPU_INCLUDE_CUDAMEMCPY
-  cudaEventRecord(bicg->stopBiConjGradMemcpy);
-  cudaEventSynchronize(bicg->stopBiConjGradMemcpy);
+  cudaEventRecord(bicg->stopBCGMemcpy);
+  cudaEventSynchronize(bicg->stopBCGMemcpy);
   float msBiConjGradMemcpy = 0.0;
-  cudaEventElapsedTime(&msBiConjGradMemcpy, bicg->startBiConjGradMemcpy, bicg->stopBiConjGradMemcpy);
+  cudaEventElapsedTime(&msBiConjGradMemcpy, bicg->startBCGMemcpy, bicg->stopBCGMemcpy);
   bicg->timeBiConjGradMemcpy+= msBiConjGradMemcpy;
   bicg->timeBiConjGrad+= msBiConjGradMemcpy;
 #endif
@@ -3605,22 +3610,22 @@ int linsolsolve_gpu2(SolverData *sd, CVodeMem cv_mem)
 
 #ifndef LINSOLSOLVEGPU_INCLUDE_CUDAMEMCPY
 
-    cudaEventRecord(bicg->startBiConjGradMemcpy);
+    cudaEventRecord(bicg->startBCGMemcpy);
 
     //Simulate data movement cost of copy of tempv to dtempv by copying to empty array (daux)
     cudaMemcpy(bicg->daux,tempv,bicg->nrows*sizeof(double),cudaMemcpyHostToDevice);
 
-    cudaEventRecord(bicg->stopBiConjGradMemcpy);
-    cudaEventSynchronize(bicg->stopBiConjGradMemcpy);
+    cudaEventRecord(bicg->stopBCGMemcpy);
+    cudaEventSynchronize(bicg->stopBCGMemcpy);
     float msBiConjGradMemcpy = 0.0;
-    cudaEventElapsedTime(&msBiConjGradMemcpy, bicg->startBiConjGradMemcpy, bicg->stopBiConjGradMemcpy);
+    cudaEventElapsedTime(&msBiConjGradMemcpy, bicg->startBCGMemcpy, bicg->stopBCGMemcpy);
     bicg->timeBiConjGradMemcpy+= msBiConjGradMemcpy;
     bicg->timeBiConjGrad+= msBiConjGradMemcpy;
 
 #endif
 
 #ifdef PMC_DEBUG_GPU
-    cudaEventRecord(bicg->startBiConjGrad);
+    cudaEventRecord(bicg->startBCG);
 #endif
 
 #ifdef CHECK_GPU_LINSOLVE
@@ -3766,7 +3771,7 @@ int linsolsolve_gpu2(SolverData *sd, CVodeMem cv_mem)
 #endif
 
 #ifdef PMC_DEBUG_GPU
-    cudaEventRecord(bicg->stopBiConjGrad);
+    cudaEventRecord(bicg->stopBCG);
 
     //bicg->timeBiConjGrad+= clock() - start;
     bicg->counterBiConjGrad++;
@@ -3774,14 +3779,14 @@ int linsolsolve_gpu2(SolverData *sd, CVodeMem cv_mem)
 
 #ifndef LINSOLSOLVEGPU_INCLUDE_CUDAMEMCPY
 
-    cudaEventRecord(bicg->startBiConjGradMemcpy);
+    cudaEventRecord(bicg->startBCGMemcpy);
 
     //Simulate data movement cost of copy of tempv to dtempv by copying to empty array (aux)
     cudaMemcpy(tempv,bicg->dtempv,bicg->nrows*sizeof(double),cudaMemcpyDeviceToHost);
 
-    cudaEventRecord(bicg->stopBiConjGradMemcpy);
-    cudaEventSynchronize(bicg->stopBiConjGradMemcpy);
-    cudaEventElapsedTime(&msBiConjGradMemcpy, bicg->startBiConjGradMemcpy, bicg->stopBiConjGradMemcpy);
+    cudaEventRecord(bicg->stopBCGMemcpy);
+    cudaEventSynchronize(bicg->stopBCGMemcpy);
+    cudaEventElapsedTime(&msBiConjGradMemcpy, bicg->startBCGMemcpy, bicg->stopBCGMemcpy);
     bicg->timeBiConjGradMemcpy+= msBiConjGradMemcpy;
     bicg->timeBiConjGrad+= msBiConjGradMemcpy;
 
@@ -3875,9 +3880,9 @@ int linsolsolve_gpu2(SolverData *sd, CVodeMem cv_mem)
 
 #ifdef PMC_DEBUG_GPU
 
-    cudaEventSynchronize(bicg->stopBiConjGrad); //at the end is the same that cudadevicesynchronyze
+    cudaEventSynchronize(bicg->stopBCG); //at the end is the same that cudadevicesynchronyze
     float msBiConjGrad = 0.0;
-    cudaEventElapsedTime(&msBiConjGrad, bicg->startBiConjGrad, bicg->stopBiConjGrad);
+    cudaEventElapsedTime(&msBiConjGrad, bicg->startBCG, bicg->stopBCG);
     bicg->timeBiConjGrad+= msBiConjGrad;
 
 #endif
@@ -3999,6 +4004,37 @@ void free_ode_gpu2(SolverData *sd)
 
   //In principle, C++ guarantee destroy the classes when they go out of scope, so don't need to call destructor
   //bicg->~itsolver(){};
+
+}
+
+void solver_get_statistics_gpu(SolverData *sd){
+
+  ModelDataGPU *mGPU = &sd->mGPU;
+
+  cudaMemcpy(&sd->mdv,mGPU->mdvo,sizeof(ModelDataVariable),cudaMemcpyDeviceToHost);
+
+  //printf("solver_get_statistics_gpu\n");
+
+#ifdef PMC_DEBUG_GPU
+
+#ifdef cudaGlobalCVode_timers_max_blocks
+
+  printf("PENDING cudaGlobalCVode_timers_max_blocks");
+
+#else
+
+  cudaMemcpy(&sd->tguessNewton,mGPU->tguessNewton,sizeof(double),cudaMemcpyDeviceToHost);
+  cudaMemcpy(&sd->timeNewtonIteration,mGPU->dtNewtonIteration,sizeof(double),cudaMemcpyDeviceToHost);
+  cudaMemcpy(&sd->timeJac,mGPU->dtJac,sizeof(double),cudaMemcpyDeviceToHost);
+  cudaMemcpy(&sd->timelinsolsetup,mGPU->dtlinsolsetup,sizeof(double),cudaMemcpyDeviceToHost);
+  cudaMemcpy(&sd->timecalc_Jac,mGPU->dtcalc_Jac,sizeof(double),cudaMemcpyDeviceToHost);
+  cudaMemcpy(&sd->timeRXNJac,mGPU->dtRXNJac,sizeof(double),cudaMemcpyDeviceToHost);
+  cudaMemcpy(&sd->timef,mGPU->dtf,sizeof(double),cudaMemcpyDeviceToHost);
+  cudaMemcpy(&sd->timeguess_helper,mGPU->dtguess_helper,sizeof(double),cudaMemcpyDeviceToHost);
+
+#endif
+
+#endif
 
 }
 

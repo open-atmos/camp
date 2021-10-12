@@ -66,6 +66,7 @@ typedef struct
   int *counterBiConjGradInternalGPU;
   int counterDerivSolve;
   int counterJac;
+  int countersolveCVODEGPU;
 
   double timeNewtonSendInit;
   double timeMatScaleAddI;
@@ -81,6 +82,7 @@ typedef struct
   double timeBiConjGradMemcpy;
   double timeDerivSolve;
   double timeJac;
+  double timesolveCVODEGPU;
 
   cudaEvent_t startDerivNewton;
   cudaEvent_t startDerivSolve;
@@ -88,9 +90,10 @@ typedef struct
   cudaEvent_t startLinSolSolve;
   cudaEvent_t startNewtonIt;
   cudaEvent_t startcvStep;
-  cudaEvent_t startBiConjGrad;
-  cudaEvent_t startBiConjGradMemcpy;
+  cudaEvent_t startBCG;
+  cudaEvent_t startBCGMemcpy;
   cudaEvent_t startJac;
+  cudaEvent_t startsolveCVODEGPU;
 
   cudaEvent_t stopDerivNewton;
   cudaEvent_t stopDerivSolve;
@@ -98,9 +101,9 @@ typedef struct
   cudaEvent_t stopLinSolSolve;
   cudaEvent_t stopNewtonIt;
   cudaEvent_t stopcvStep;
-  cudaEvent_t stopBiConjGradMemcpy;
-  cudaEvent_t stopBiConjGrad;
-
+  cudaEvent_t stopBCGMemcpy;
+  cudaEvent_t stopBCG;
+  cudaEvent_t stopsolveCVODEGPU;
   cudaEvent_t stopJac;
 
 #endif

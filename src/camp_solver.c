@@ -402,7 +402,21 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
   sd->timeDerivCPU = 0.0;
   sd->timeJacCPU = 0.0;
   sd->timeLS = 0.0;
+  sd->timeNewtonIteration = 0.0;
+  sd->timeJac = 0.0;
+  sd->timelinsolsetup = 0.0;
+  sd->timecalc_Jac = 0.0;
+  sd->timeRXNJac = 0.0;
+  sd->timef = 0.0;
+  sd->timeguess_helper = 0.0;
+  sd->tguessNewton = 0.0;
+
+  sd->ncounters = ncounters;
+  sd->ntimers = ntimers;
+
+
 #endif
+
 
   // todo optimize, use for only rank 0 or debug flag
   sd->spec_names = (char **)malloc(sizeof(char *) * n_state_var);
@@ -1090,7 +1104,6 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
 
 #ifdef PMC_USE_GPU
     itsolver *bicg = &(sd->bicg);
-/*
 
     solver_get_statistics_gpu(sd);
     int i;
@@ -1119,11 +1132,13 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
       times[i++]=sd->timeguess_helper;
       times[i++]=bicg->timecvStep;
 
-    *counterLS=bicg->counterBiConjGrad;
-    *timeLS=bicg->timeBiConjGrad/1000;
-    *timeBiconjGradMemcpy=bicg->timeBiConjGradMemcpy/1000;
-    //printf("timeLS %-le",*timeLS);
-    */
+      //for(int i=0;i<sd->ntimers;i++)
+        //printf("times[%d]=%le\n",i,times[i]);
+    }
+    else{
+      printf("WARNING: In function solver_get_statistics trying to assign times "
+             "and counters profilign variables with ncounters || ntimers < 1");
+    }
 
 #endif
   }
