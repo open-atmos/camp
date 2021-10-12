@@ -567,6 +567,7 @@ __device__ void cudaDevicesetconst(double* dy,double constant,int nrows)
 // x=A*b
 __device__ void cudaDeviceSpmvCSR(double* dx, double* db, int nrows, double* dA, int* djA, int* diA)
 {
+  __syncthreads();
   int row= threadIdx.x + blockDim.x*blockIdx.x;
   if(row < nrows)
   {
@@ -577,7 +578,7 @@ __device__ void cudaDeviceSpmvCSR(double* dx, double* db, int nrows, double* dA,
     }
     dx[row]=sum;
   }
-
+  __syncthreads();
 }
 
 __device__ void cudaDeviceSpmvCSC_blockReduce( double g_idata,
@@ -707,8 +708,9 @@ __device__ void cudaDeviceSpmvCSC_block(double* dx, double* db, int nrows, doubl
 }
 
 
-__device__ void cudaDeviceSpmvCSC(double* dx, double* db, int nrows, double* dA, int* djA, int* diA)
+__device__ void cudaDeviceSpmvCSC_block(double* dx, double* db, int nrows, double* dA, int* djA, int* diA)
 {
+  __syncthreads();
   double mult;
   int row= threadIdx.x + blockDim.x*blockIdx.x;
   if(row < nrows)
