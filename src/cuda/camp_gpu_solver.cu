@@ -840,7 +840,7 @@ __device__ void cudaDevicecalc_deriv0(
     TimeDerivativeGPU deriv_data;
     deriv_data.num_spec = deriv_length_cell*n_cells;
 
-#ifndef AEROS_CPU
+#ifdef AEROS_CPU
 #else
     deriv_data.production_rates = md->production_rates;
     deriv_data.loss_rates = md->loss_rates;
