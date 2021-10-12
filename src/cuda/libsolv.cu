@@ -11,8 +11,6 @@
 #include<cuda_runtime.h>
 #include<cuda_runtime_api.h>
 
-//todo try #include <cooperative_groups.h> for reduce
-
 #include "libsolv.h"
 
 //#include<cublas.h> //todo fix cublas not compiling fine
@@ -25,12 +23,12 @@ using namespace std;
 //
 // Para reservar memoria Double e Int
 extern "C++" void cudaMallocDouble(double* &vector,int size)
-{        
+{
 	cudaMalloc((void**)&vector,size*sizeof(double));
 }
 
 extern "C++" void cudaMallocInt(int* &vector,int size)
-{        
+{
 	cudaMalloc((void**)&vector,size*sizeof(int));
 }
 
@@ -102,7 +100,7 @@ extern "C++" void gpu_matScaleAddI(int nrows, double* dA, int* djA, int* diA, do
 {
 
    blocks = (nrows+threads-1)/threads;
-   
+
    dim3 dimGrid(blocks,1,1);
    dim3 dimBlock(threads,1,1);
 
@@ -136,7 +134,7 @@ __global__ void cudadiagprecond(int nrows, double* dA, int* djA, int* diA, doubl
         if(dA[j]!=0.0)
           ddiag[row]= 1.0/dA[j];
         else{
-          printf("cudadiagprecond else\n");
+          //printf("cudadiagprecond else\n");
           ddiag[row]= 1.0;
         }
       }
@@ -152,8 +150,6 @@ extern "C++" void gpu_diagprecond(int nrows, double* dA, int* djA, int* diA, dou
 
   dim3 dimGrid(blocks,1,1);
   dim3 dimBlock(threads,1,1);
-
-  //printf("HOLA\n");
 
   cudadiagprecond<<<dimGrid,dimBlock>>>(nrows, dA, djA, diA, ddiag);
   //check_input_gpud<< < 1, 5>> >(ddiag,nrows,0);
@@ -171,8 +167,8 @@ __global__ void cudasetconst(double* dy,double constant,int nrows)
 extern "C++" void gpu_yequalsconst(double *dy, double constant, int nrows, int blocks, int threads)
 {
    dim3 dimGrid(blocks,1,1);
-   dim3 dimBlock(threads,1,1); 
-   
+   dim3 dimBlock(threads,1,1);
+
    cudasetconst<<<dimGrid,dimBlock>>>(dy,constant,nrows);
 
 }
@@ -193,7 +189,7 @@ __global__ void cudaSpmvCSR(double* dx, double* db, int nrows, double* dA, int* 
     }
     dx[row]=sum;
 	}
- 
+
 }
 
 __global__ void cudaSpmvCSC(double* dx, double* db, int nrows, double* dA, int* djA, int* diA)
@@ -241,8 +237,8 @@ extern "C++" void gpu_axpby(double* dy ,double* dx, double a, double b, int nrow
 {
 
    dim3 dimGrid(blocks,1,1);
-   dim3 dimBlock(threads,1,1); 
-   
+   dim3 dimBlock(threads,1,1);
+
    cudaaxpby<<<dimGrid,dimBlock>>>(dy,dx,a,b,nrows);
 }
 
@@ -258,8 +254,8 @@ __global__ void cudayequalsx(double* dy,double* dx,int nrows)
 extern "C++" void gpu_yequalsx(double *dy, double* dx, int nrows, int blocks, int threads)
 {
    dim3 dimGrid(blocks,1,1);
-   dim3 dimBlock(threads,1,1); 
-   
+   dim3 dimBlock(threads,1,1);
+
    cudayequalsx<<<dimGrid,dimBlock>>>(dy,dx,nrows);
 
 }
@@ -381,8 +377,8 @@ extern "C++" void gpu_zaxpbypc(double* dz, double* dx ,double* dy, double a, dou
 {
 
    dim3 dimGrid(blocks,1,1);
-   dim3 dimBlock(threads,1,1); 
-   
+   dim3 dimBlock(threads,1,1);
+
    cudazaxpbypc<<<dimGrid,dimBlock>>>(dz,dx,dy,a,b,nrows);
 }
 
@@ -399,8 +395,8 @@ extern "C++" void gpu_multxy(double* dz, double* dx ,double* dy, int nrows, int 
 {
 
    dim3 dimGrid(blocks,1,1);
-   dim3 dimBlock(threads,1,1); 
-   
+   dim3 dimBlock(threads,1,1);
+
    cudamultxy<<<dimGrid,dimBlock>>>(dz,dx,dy,nrows);
 }
 
@@ -418,7 +414,7 @@ extern "C++" void gpu_zaxpby(double a, double* dx, double b, double* dy, double*
 {
 
    dim3 dimGrid(blocks,1,1);
-   dim3 dimBlock(threads,1,1); 
+   dim3 dimBlock(threads,1,1);
 
   cudazaxpby<<<dimGrid,dimBlock>>>(a,dx,b,dy,dz,nrows);
 }
@@ -436,8 +432,8 @@ extern "C++" void gpu_axpy(double* dy, double* dx ,double a, int nrows, int bloc
 {
 
    dim3 dimGrid(blocks,1,1);
-   dim3 dimBlock(threads,1,1); 
-   
+   dim3 dimBlock(threads,1,1);
+
    cudaaxpy<<<dimGrid,dimBlock>>>(dy,dx,a,nrows);
 }
 
@@ -522,9 +518,7 @@ extern "C++" void gpu_scaley(double* dy, double a, int nrows, int blocks, int th
 // Device functions (equivalent to global functions but in device to allow calls from gpu)
 __device__ void cudaDevicematScaleAddI(int nrows, double* dA, int* djA, int* diA, double alpha)
 {
-
   int row= threadIdx.x + blockDim.x*blockIdx.x;
-
   if(row < nrows){
     int jstart = diA[row];
     int jend   = diA[row+1];
@@ -539,7 +533,6 @@ __device__ void cudaDevicematScaleAddI(int nrows, double* dA, int* djA, int* diA
       }
     }
   }
-
 }
 
 // Diagonal precond
@@ -574,6 +567,7 @@ __device__ void cudaDevicesetconst(double* dy,double constant,int nrows)
 // x=A*b
 __device__ void cudaDeviceSpmvCSR(double* dx, double* db, int nrows, double* dA, int* djA, int* diA)
 {
+  __syncthreads();
   int row= threadIdx.x + blockDim.x*blockIdx.x;
   if(row < nrows)
   {
@@ -584,7 +578,7 @@ __device__ void cudaDeviceSpmvCSR(double* dx, double* db, int nrows, double* dA,
     }
     dx[row]=sum;
   }
-
+  __syncthreads();
 }
 
 __device__ void cudaDeviceSpmvCSC_blockReduce( double g_idata,
@@ -716,6 +710,7 @@ __device__ void cudaDeviceSpmvCSC_block(double* dx, double* db, int nrows, doubl
 
 __device__ void cudaDeviceSpmvCSC_block(double* dx, double* db, int nrows, double* dA, int* djA, int* diA)
 {
+  __syncthreads();
   double mult;
   int row= threadIdx.x + blockDim.x*blockIdx.x;
   if(row < nrows)
@@ -737,7 +732,7 @@ __device__ void cudaDeviceSpmv(double* dx, double* db, int nrows, double* dA, in
 {
 
   __syncthreads();
-#ifdef CSR_SPMV
+#ifndef CSR_SPMV
   cudaDeviceSpmvCSR(dx,db,nrows,dA,djA,diA);
 #else
   cudaDeviceSpmvCSC_block(dx,db,nrows,dA,djA,diA,n_shr_empty);
@@ -942,18 +937,19 @@ __device__ void cudaDevicedotxy(double *g_idata1, double *g_idata2,
   sdata[tid] = g_idata1[i]*g_idata2[i];
   __syncthreads();
 
-
+/*
   for (unsigned int s=(blockDim.x+n_shr_empty)/2; s>0; s>>=1)
   {
     if (tid < s)
       sdata[tid] += sdata[tid + s];
     __syncthreads();
   }
+  */
 
   //todo treat case deriv_length < 32
   //maybe https://github.com/cudpp/cudpp/blob/master/src/cudpp/kernel/reduce_kernel.cuh
 
-  /*
+
   unsigned int blockSize = blockDim.x+n_shr_empty;
 
   // do reduction in shared mem
@@ -985,7 +981,7 @@ __device__ void cudaDevicedotxy(double *g_idata1, double *g_idata2,
 
   __syncthreads();//not needed?
 
-  */
+
 
   *g_odata = sdata[0];
   __syncthreads();

@@ -11,6 +11,8 @@ from sklearn.preprocessing import MinMaxScaler
 import math
 import datetime
 import os
+import pandas as pd
+import seaborn as sns
 
 
 def get_values_same_timestep(timestep_to_plot,mpiProcessesList, \
@@ -29,28 +31,31 @@ def get_values_same_timestep(timestep_to_plot,mpiProcessesList, \
 
   return new_data
 
-def calculate_computational_timeLS(data,plot_y_key):
+def calculate_computational_timeLS(data,plot_y_key,case):
 
-  data_timeBiconjGradMemcpy=data[plot_y_key]
-  data_timeLS=data["timeLS"]
-  #print(data_timeBiconjGradMemcpy)
-  #print(data_timeLS)
-  for i in range(len(data_timeLS)):
-    data_timeLS[i]=data_timeLS[i]-data_timeBiconjGradMemcpy[i]
-  #print(data_timeLS)
-  #gpu_exist=True
+  #cases=list(data.keys())
 
+  #gpu_exist=False
 
-  #if("GPU" in case):
-    #data_timeBiconjGradMemcpy=data[case][plot_y_key]
-    #data_timeLS=data[case]["timeLS"]
+  #for case in cases:
+  if("GPU" in case):
+    data_timeBiconjGradMemcpy=data[case][plot_y_key]
+    data_timeLS=data[case]["timeLS"]
     #print(data_timeBiconjGradMemcpy)
     #print(data_timeLS)
-    #for i in range(len(data_timeLS)):
-    #  data_timeLS[i]=data_timeLS[i]-data_timeBiconjGradMemcpy[i]
+    for i in range(len(data_timeLS)):
+      data_timeLS[i]=data_timeLS[i]-data_timeBiconjGradMemcpy[i]
     #print(data_timeLS)
     #gpu_exist=True
 
+  #if(gpu_exist==False):
+  #  raise Exception("Not GPU case for calculate_computational_timeLS metric")
+
+  #print("calculate_computational_timeLS")
+  #print(data_timeLS)
+
+  #for i in range(len(data_timeLS)):
+  #  data_timeLS[i]=data_timeLS[i]-data_timeBiconjGradMemcpy[i]
 
   return data
 
@@ -94,16 +99,6 @@ def calculate_percentages_solveCVODEGPU(din):
 
   #print(data["timeNewtonIteration"])
 
-  #if("GPU" in case):
-  #data_timeBiconjGradMemcpy=data[case][plot_y_key]
-  #data_timeLS=data[case]["timeLS"]
-  #print(data_timeBiconjGradMemcpy)
-  #print(data_timeLS)
-  #for i in range(len(data_timeLS)):
-  #  data_timeLS[i]=data_timeLS[i]-data_timeBiconjGradMemcpy[i]
-  #print(data_timeLS)
-  #gpu_exist=True
-
   print("calculate_percentages_solveCVODEGPU")
   print(data)
 
@@ -114,28 +109,27 @@ def normalize_by_counterLS_and_cells(data,plot_y_key,cells,case):
   #plot_y_key = "timeLS"
   #new_plot_y_key="Normalized timeLS"
 
-  print("normalize_by_counterLS_and_cells")
-
+  #print("normalize_by_counterLS_and_cells")
   #print(data[cases[0]][plot_y_key])
 
   if("One-cell" in case):
-    #print("One-cell")
     cells_multiply=cells
-  elif("Multi-cells" in case):
-    #print("Multi-cells")
+  elif("Multi-cells" in case or "GPU" in case):
     cells_multiply=1
   else:
     raise Exception("normalize_by_counterLS_and_cells case without One-cell or Multi-cells key name")
 
   #print(cells_multiply)
+  #print(data)
 
   #data[case][new_plot_y_key] = []
-  for i in range(len(data[plot_y_key])):
+  for i in range(len(data[case][plot_y_key])):
     #print(base_data[i],new_data[i], base_data[i]/new_data[i])
-    data[plot_y_key][i]=data[plot_y_key][i]\
-    /data["counterLS"][i]*cells_multiply
+    data[case][plot_y_key][i]=data[case][plot_y_key][i]\
+    /data[case]["counterLS"][i]*cells_multiply
+    #data[case][new_plot_y_key].append(data[case][plot_y_key][i] \
+    #                                  / data[case]["counterLS"][i]*cells_multiply)
 
-  #print(data[cases[0]][plot_y_key])
   #print(data)
 
   return data
@@ -185,7 +179,7 @@ def normalized_timeLS(new_plot_y_key,cases_multicells_onecell,data, cells):
 
     if(case=="One-cell"):
       cells_multiply=cells
-    elif(case=="Multi-cells"):
+    else:
       cells_multiply=1
 
     data[case][new_plot_y_key] = []
@@ -591,7 +585,7 @@ def plot_solver_stats(data, plot_x_key, plot_y_key, plot_title):
 
   plt.show()
 
-def plot(namex, namey, datax, datay, plot_title, SAVE_PLOT):
+def plotplt(namex, namey, datax, datay, plot_title, SAVE_PLOT):
 
   #fig = plt.figure(figsize=(7, 4.25))
   fig = plt.figure()
@@ -610,6 +604,73 @@ def plot(namex, namey, datax, datay, plot_title, SAVE_PLOT):
   #axes.set_yscale('log')
   plt.xticks()
   plt.title(plot_title)
+
+def plotsns(namex, namey, datax, datay, plot_title, columns):
+
+  #print(sns.__version__)
+  sns.set_style("whitegrid")
+
+  #sns.set(font_scale=2)
+  #sns.set_context("paper", rc={"font.size":8,"axes.titlesize":8,"axes.labelsize":5})
+  sns.set_context("paper", font_scale=1.25)
+
+  fig = plt.figure()
+  ax = plt.subplot(111)
+
+  ax.set_xlabel(namex)
+  ax.set_ylabel(namey)
+
+  if(columns):
+
+    print("WARNING: Increase plot window manually to take better screenshot")
+
+    datay=list(map(list, zip(*datay)))
+    #numpy_array = np.array(datay2)
+    #transpose = numpy_array.T
+    #datay = transpose.tolist()
+
+    #print(datay)
+    #print(datax)
+
+    data = pd.DataFrame(datay, datax, columns=columns)
+    sns.lineplot(data=data, palette="tab10", linewidth=2.5)
+
+    #ax.set_position([box.x0, box.y0 + box.height * 0.1,
+    #               box.width, box.height * 0.9])
+
+    #Legend under the plot
+    #box = ax.get_position()
+    #ax.set_position([box.x0, box.y0 + box.height * 0.1,
+    #             box.width, box.height * 0.75])
+    #ax.legend(bbox_to_anchor=(0.5, -0.05), loc='upper center',
+    #          labels=columns,ncol=4, mode="expand", borderaxespad=0.)
+    #fig.subplots_adjust(bottom=0.35)
+    #borderaxespad=1. to move down more the legend
+
+    #Legend up the plot (problem: hide title)
+    ax.set_title(plot_title, y=1.06)
+    ax.legend(loc='lower center', bbox_to_anchor=(0.5, 1),
+              ncol=len(columns), labels=columns,frameon=True,shadow=False, borderaxespad=0.)
+
+
+    #ax.subplots_adjust(top=0.25) #not work
+    #fig.subplots_adjust(top=0.25)
+
+    #legend out of the plot at the right (problem: plot feels very small)
+    #sns.lineplot(data=data, palette="tab10", linewidth=2.5)
+    #box=ax.get_position()
+    #ax.set_position([box.x0, box.y0, box.width * 0.7, box.height])
+    #ax.legend(bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0,labels=columns)
+
+  else:
+    ax.set_title(plot_title)
+    data = pd.DataFrame(datay, datax)
+    sns.lineplot(data=data, palette="tab10", linewidth=2.5, legend=False)
+
+def plot(namex, namey, datax, datay, plot_title, columns, SAVE_PLOT):
+
+  #plotplt(namex, namey, datax, datay, plot_title, SAVE_PLOT)
+  plotsns(namex, namey, datax, datay, plot_title, columns)
 
   if SAVE_PLOT:
     now = datetime.datetime.now()
@@ -653,7 +714,6 @@ def read_solver_stats(file, data):
   #print(data)
 
 def plot_species(file):
-  #print ("hola")
 
   fig = plt.figure(figsize=(7, 4.25))
   spec2 = matplotlib.gridspec.GridSpec(ncols=1, nrows=1, wspace=.35,hspace=.1,bottom=.25,top=.85,left=.1,right=.9)

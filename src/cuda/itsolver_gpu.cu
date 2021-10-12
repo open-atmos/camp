@@ -16,13 +16,24 @@ void read_options(itsolver *bicg){
   }
   fscanf(fp, "%s", buff);
 
-  if(strstr(buff,"USE_MULTICELLS=ON")!=NULL){
-    //printf("itsolver read_options USE_MULTICELLS=ON\n");
-    bicg->use_multicells=1; //One-cell per block (Independent cells)
+  if(strstr(buff,"CELLS_METHOD=Block-cells(1)")!=NULL){
+    //printf("itsolver read_options CELLS_METHOD=Block-cells(1)\n");
+    bicg->cells_method=3; //One-cell per block (Independent cells)
   }
-  else{
-    //printf("itsolver read_options USE_MULTICELLS=OFF\n");
-    bicg->use_multicells=0;
+  else if(strstr(buff,"CELLS_METHOD=Block-cells(N)")!=NULL){
+    //printf("itsolver read_options CELLS_METHOD=Block-cells(N)\n");
+    bicg->cells_method=2; //One-cell per block (Independent cells)
+  }
+  else if(strstr(buff,"CELLS_METHOD=Multi-cells")!=NULL){
+    //printf("itsolver read_options CELLS_METHOD=Multi-cells\n");
+    bicg->cells_method=1; //One-cell per block (Independent cells)
+  }
+  else if(strstr(buff,"CELLS_METHOD=One-cell")!=NULL){
+    //printf("itsolver read_options CELLS_METHOD=One-cell\n");
+    bicg->cells_method=0;
+  }else{
+    printf("ERROR: solveGPU_block unkonwn cells_method");
+    exit(0);
   }
 
 }
@@ -38,7 +49,7 @@ void createSolver(SolverData *sd)
   read_options(bicg);
   mGPU->maxIt=1000;
   mGPU->tolmax=1.0e-30; //cv_mem->cv_reltol CAMP selected accuracy (1e-8) //1e-10;//1e-6
-#ifdef CSR_SPMV
+#ifndef CSR_SPMV_CPU
   mGPU->mattype=0;
   //printf("BCG Mattype=CSR\n");
 #else
@@ -926,9 +937,11 @@ void dvcheck_input_gpud(double *x, int len, const char* s)
 
 
 
+
+
 //Algorithm: Biconjugate gradient
-__device__
-void solveBcgCudaDevice(
+__global__
+void solveBcgCuda(
         double *dA, int *djA, int *diA, double *dx, double *dtempv //Input data
         ,int nrows, int blocks, int n_shr_empty, int maxIt, int mattype
         ,int n_cells, double tolmax, double *ddiag //Init variables
@@ -944,6 +957,7 @@ void solveBcgCudaDevice(
   int active_threads = nrows;
 
   //if(tid==0)printf("blockDim.x %d\n",blockDim.x);
+
 
   //if(i<1){
   if(i<active_threads){
@@ -969,10 +983,11 @@ void solveBcgCudaDevice(
     cudaDevicesetconst(dy, 0.0, nrows);
     cudaDevicesetconst(dz, 0.0, nrows);
      */
+
 #ifndef CSR_SPMV_CPU
     cudaDeviceSpmvCSR(dr0,dx,nrows,dA,djA,diA); //y=A*x
 #else
-    cudaDeviceSpmvCSC_block(dr0,dx,nrows,dA,djA,diA,n_shr_empty); //y=A*x
+    cudaDeviceSpmvCSC_block(dr0,dx,nrows,dA,djA,diA,n_shr_empty)); //y=A*x
 #endif
 
 #ifdef DEBUG_SOLVEBCGCUDA_DEEP
@@ -1092,6 +1107,7 @@ void solveBcgCudaDevice(
       __syncthreads();
       //gpu_multxy(dz,ddiag,ds,nrows,blocks,threads); // precond z=diag*s
       cudaDevicemultxy(dz, ddiag, ds, nrows); // precond z=diag*s
+
       //gpu_spmv(dt,dz,nrows,dA,djA,diA,mattype,blocks,threads);
 #ifndef CSR_SPMV_CPU
       cudaDeviceSpmvCSR(dt, dz, nrows, dA, djA, diA);
@@ -1194,278 +1210,6 @@ void solveBcgCudaDevice(
 
 }
 
-//Algorithm: Biconjugate gradient
-__global__
-void solveBcgCuda(
-        double *dA, int *djA, int *diA, double *dx, double *dtempv //Input data
-        ,int nrows, int blocks, int n_shr_empty, int maxIt, int mattype
-        ,int n_cells, double tolmax, double *ddiag //Init variables
-        ,double *dr0, double *dr0h, double *dn0, double *dp0
-        ,double *dt, double *ds, double *dAx2, double *dy, double *dz// Auxiliary vectors
-#ifdef PMC_DEBUG_GPU
-        ,int *it_pointer
-#endif
-)
-{
-  int i = blockIdx.x * blockDim.x + threadIdx.x;
-  unsigned int tid = threadIdx.x;
-  int active_threads = nrows;
-
-  //if(tid==0)printf("blockDim.x %d\n",blockDim.x);
-
-
-  //if(i<1){
-  if(i<active_threads){
-
-    double alpha,rho0,omega0,beta,rho1,temp1,temp2;
-    alpha=rho0=omega0=beta=rho1=temp1=temp2=1.0;
-
-    /*alpha  = 1.0;
-    rho0   = 1.0;
-    omega0 = 1.0;*/
-
-    //gpu_yequalsconst(dn0,0.0,nrows,blocks,threads);  //n0=0.0 //memset???
-    //gpu_yequalsconst(dp0,0.0,nrows,blocks,threads);  //p0=0.0
-    cudaDevicesetconst(dn0, 0.0, nrows);
-    cudaDevicesetconst(dp0, 0.0, nrows);
-
-    //Not needed
-    /*
-    cudaDevicesetconst(dr0h, 0.0, nrows);
-    cudaDevicesetconst(dt, 0.0, nrows);
-    cudaDevicesetconst(ds, 0.0, nrows);
-    cudaDevicesetconst(dAx2, 0.0, nrows);
-    cudaDevicesetconst(dy, 0.0, nrows);
-    cudaDevicesetconst(dz, 0.0, nrows);
-     */
-
-#ifndef CSR_SPMV_CPU
-    cudaDeviceSpmvCSR(dr0,dx,nrows,dA,djA,diA); //y=A*x
-#else
-    cudaDeviceSpmvCSC_block(dr0,dx,nrows,dA,djA,diA,n_shr_empty)); //y=A*x
-#endif
-
-#ifdef DEBUG_SOLVEBCGCUDA_DEEP
-
-    //printf("%d ddiag %-le\n",i,ddiag[i]);
-    //printf("%d dr0 %-le\n",i, dr0[i]);
-
-#endif
-
-
-    //gpu_axpby(dr0,dtempv,1.0,-1.0,nrows,blocks,threads); // r0=1.0*rhs+-1.0r0 //y=ax+by
-    cudaDeviceaxpby(dr0,dtempv,1.0,-1.0,nrows);
-
-    __syncthreads();
-    //gpu_yequalsx(dr0h,dr0,nrows,blocks,threads);  //r0h=r0
-    cudaDeviceyequalsx(dr0h,dr0,nrows);
-
-#ifdef PMC_DEBUG_GPU
-    //int it=*it_pointer;
-    int it=0;
-#else
-    int it=0;
-#endif
-
-#ifdef DEBUG_SOLVEBCGCUDA_DEEP
-
-    if(i==0){
-      //printf("%d dr0[%d] %-le\n",it,i,dr0[i]);
-      printf("%d %d rho1 %-le\n",it,i,rho1);
-    }
-
-    //dvcheck_input_gpud(dx,nrows,"dx");
-    //dvcheck_input_gpud(dr0,nrows,"dr0");
-
-#endif
-
-    do
-    {
-      //rho1=gpu_dotxy(dr0, dr0h, aux, daux, nrows,(blocks + 1) / 2, threads);
-      __syncthreads();
-
-      cudaDevicedotxy(dr0, dr0h, &rho1, nrows, n_shr_empty);
-
-#ifdef DEBUG_SOLVEBCGCUDA_DEEP
-
-      if(i==0){
-      //printf("%d dr0[%d] %-le\n",it,i,dr0[i]);
-      printf("%d %d rho1 rho0 %-le %-le\n",it,i,rho1,rho0);
-    }
-    if(isnan(rho1) || rho1==0.0){
-      dvcheck_input_gpud(dx,nrows,"dx");
-      dvcheck_input_gpud(dr0h,nrows,"dr0h");
-      dvcheck_input_gpud(dr0,nrows,"dr0");
-    }
-
-#endif
-
-      __syncthreads();
-      beta = (rho1 / rho0) * (alpha / omega0);
-
-      __syncthreads();
-      //gpu_zaxpbypc(dp0,dr0,dn0,beta,-1.0*omega0*beta,nrows,blocks,threads);   //z = ax + by + c
-      cudaDevicezaxpbypc(dp0, dr0, dn0, beta, -1.0 * omega0 * beta, nrows);   //z = ax + by + c
-
-      __syncthreads();
-      //gpu_multxy(dy,ddiag,dp0,nrows,blocks,threads);  // precond y= p0*diag
-      cudaDevicemultxy(dy, ddiag, dp0, nrows);
-
-      __syncthreads();
-      cudaDevicesetconst(dn0, 0.0, nrows);
-      //gpu_spmv(dn0,dy,nrows,dA,djA,diA,mattype,blocks,threads);  // n0= A*y
-#ifndef CSR_SPMV_CPU
-      cudaDeviceSpmvCSR(dn0, dy, nrows, dA, djA, diA);
-#else
-      cudaDeviceSpmvCSC_block(dn0, dy, nrows, dA, djA, diA,n_shr_empty);
-#endif
-
-#ifdef DEBUG_SOLVEBCGCUDA_DEEP
-
-      if(it==0){
-        printf("%d %d dy dn0 ddiag %-le %-le %le\n",it,i,dy[i],dn0[i],ddiag[i]);
-        //printf("%d %d dn0 %-le\n",it,i,dn0[i]);
-        //printf("%d %d &temp1 %p\n",it,i,&temp1);
-        //printf("%d %d &test %p\n",it,i,&test);
-        //printf("%d %d &i %p\n",it,i,&i);
-      }
-
-#endif
-
-      //temp1=gpu_dotxy(dr0h, dn0, aux, daux, nrows,(blocks + 1) / 2, threads);
-      cudaDevicedotxy(dr0h, dn0, &temp1, nrows, n_shr_empty);
-
-#ifdef DEBUG_SOLVEBCGCUDA_DEEP
-
-      if(i==0){
-        printf("%d %d temp1 %-le\n",it,i,temp1);
-        //printf("%d %d &temp1 %p\n",it,i,&temp1);
-        //printf("%d %d &test %p\n",it,i,&test);
-        //printf("%d %d &i %p\n",it,i,&i);
-      }
-
-#endif
-
-      __syncthreads();
-      alpha = rho1 / temp1;
-
-      //gpu_zaxpby(1.0,dr0,-1.0*alpha,dn0,ds,nrows,blocks,threads); // a*x + b*y = z
-      cudaDevicezaxpby(1.0, dr0, -1.0 * alpha, dn0, ds, nrows);
-
-#ifdef DEBUG_SOLVEBCGCUDA_DEEP
-
-      if(i==0){
-        printf("%d ds[%d] %-le\n",it,i,ds[i]);
-      }
-
-#endif
-
-      __syncthreads();
-      //gpu_multxy(dz,ddiag,ds,nrows,blocks,threads); // precond z=diag*s
-      cudaDevicemultxy(dz, ddiag, ds, nrows); // precond z=diag*s
-
-      //gpu_spmv(dt,dz,nrows,dA,djA,diA,mattype,blocks,threads);
-#ifndef CSR_SPMV_CPU
-      cudaDeviceSpmvCSR(dt, dz, nrows, dA, djA, diA);
-#else
-      cudaDeviceSpmvCSC_block(dt, dz, nrows, dA, djA, diA,n_shr_empty);
-#endif
-
-      __syncthreads();
-      //gpu_multxy(dAx2,ddiag,dt,nrows,blocks,threads);
-      cudaDevicemultxy(dAx2, ddiag, dt, nrows);
-
-      __syncthreads();
-      //temp1=gpu_dotxy(dz, dAx2, aux, daux, nrows,(blocks + 1) / 2, threads);
-      cudaDevicedotxy(dz, dAx2, &temp1, nrows, n_shr_empty);
-
-#ifdef DEBUG_SOLVEBCGCUDA_DEEP
-
-      if(i>=0){
-        //printf("%d ddiag[%d] %-le\n",it,i,ddiag[i]);
-        //printf("%d dt[%d] %-le\n",it,i,dt[i]);
-        //printf("%d dAx2[%d] %-le\n",it,i,dAx2[i]);
-        //printf("%d dz[%d] %-le\n",it,i,dz[i]);
-      }
-
-      if(i==0){
-        printf("%d %d temp1 %-le\n",it,i,temp1);
-      }
-
-#endif
-
-      __syncthreads();
-      //temp2=gpu_dotxy(dAx2, dAx2, aux, daux, nrows,(blocks + 1) / 2, threads);
-      cudaDevicedotxy(dAx2, dAx2, &temp2, nrows, n_shr_empty);
-
-#ifdef DEBUG_SOLVEBCGCUDA_DEEP
-
-      if(i==0){
-        printf("%d %d temp2 %-le\n",it,i,temp2);
-      }
-
-#endif
-
-      __syncthreads();
-      omega0 = temp1 / temp2;
-      //gpu_axpy(dx,dy,alpha,nrows,blocks,threads); // x=alpha*y +x
-      cudaDeviceaxpy(dx, dy, alpha, nrows); // x=alpha*y +x
-
-      __syncthreads();
-      //gpu_axpy(dx,dz,omega0,nrows,blocks,threads);
-      cudaDeviceaxpy(dx, dz, omega0, nrows);
-
-      __syncthreads();
-      //gpu_zaxpby(1.0,ds,-1.0*omega0,dt,dr0,nrows,blocks,threads);
-      cudaDevicezaxpby(1.0, ds, -1.0 * omega0, dt, dr0, nrows);
-      cudaDevicesetconst(dt, 0.0, nrows);
-
-      __syncthreads();
-      //temp1=gpu_dotxy(dr0, dr0, aux, daux, nrows,(blocks + 1) / 2, threads);
-      cudaDevicedotxy(dr0, dr0, &temp1, nrows, n_shr_empty);
-
-      //temp1 = sqrt(temp1);
-      temp1 = sqrtf(temp1);
-
-      rho0 = rho1;
-      /**/
-      __syncthreads();
-      /**/
-
-      //if (tid==0) it++;
-      it++;
-    } while(it<maxIt && temp1>tolmax);//while(it<maxIt && temp1>tolmax);//while(0);
-
-#ifdef DEBUG_SOLVEBCGCUDA_DEEP
-    if(tid==0)
-      printf("%d %d %-le %-le\n",tid,it,temp1,tolmax);
-#endif
-
-    //if(it>=maxIt-1)
-    //  dvcheck_input_gpud(dr0,nrows,999);
-
-    //dvcheck_input_gpud(dr0,nrows,k++);
-
-#ifdef PMC_DEBUG_GPU
-
-    #ifdef solveBcgCuda_sum_it
-
-  //printf("it %d %d\n",i,it);
-  if(tid==0)
-    it_pointer[blockIdx.x]=it;
-
-#else
-
-  *it_pointer = it;
-
-#endif
-
-#endif
-
-  }
-
-}
-
 void solveGPU_block_thr(int blocks, int threads_block, int n_shr_memory, int n_shr_empty, int offset_cells,
         SolverData *sd)
 {
@@ -1513,7 +1257,7 @@ void solveGPU_block_thr(int blocks, int threads_block, int n_shr_memory, int n_s
 
 #ifndef DEBUG_SOLVEBCGCUDA
   if(bicg->counterBiConjGrad==0) {
-    printf("n_cells %d len_cell %d nrows %d nnz %d max_threads_block %d blocks %d threads_block %d n_shr_empty %d offset_cells %d\n",
+    printf("solveGPU_block_thr n_cells %d len_cell %d nrows %d nnz %d max_threads_block %d blocks %d threads_block %d n_shr_empty %d offset_cells %d\n",
            mGPU->n_cells,len_cell,mGPU->nrows,mGPU->nnz,n_shr_memory,blocks,threads_block,n_shr_empty,offset_cells);
 
     //print_double(bicg->A,nnz,"A");
@@ -1579,15 +1323,9 @@ void solveGPU_block(SolverData *sd, double *dA, int *djA, int *diA, double *dx, 
 #endif
 
   int len_cell = mGPU->nrows/mGPU->n_cells;
-  int max_threads_block;
-  if(bicg->use_multicells) {
-
+  int max_threads_block=nextPowerOfTwo(len_cell);
+  if(bicg->cells_method==2) {
     max_threads_block = mGPU->threads;//mGPU->threads; 128;
-
-  }else{
-
-    max_threads_block = nextPowerOfTwo(len_cell);
-
   }
 
   int n_cells_block =  max_threads_block/len_cell;
@@ -1601,7 +1339,8 @@ void solveGPU_block(SolverData *sd, double *dA, int *djA, int *diA, double *dx, 
 
   //Common kernel (Launch all blocks except the last)
   //blocks=blocks-1;
-  if(bicg->use_multicells
+  if(bicg->cells_method==2//todo lower speedup with Block-cells(1), which makes no sense
+  //if(bicg->cells_method
   //&& blocks!=0
   ) {
 

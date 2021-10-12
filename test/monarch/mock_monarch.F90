@@ -186,6 +186,7 @@ program mock_monarch
   real(kind=dp), allocatable :: times(:)
   integer :: ncounters, ntimers != 0 != 2
   integer :: export_results_all_cells
+  integer :: plot_species = 0
 
   ! initialize mpi (to take the place of a similar MONARCH call)
   call pmc_mpi_init()
@@ -264,7 +265,7 @@ program mock_monarch
   DIFF_CELLS = "OFF"
   call get_command_argument(8, arg, status=status_code)
   if(status_code.eq.0) then
-    if(arg.eq."Practical") then
+    if(arg.eq."Realistic") then
       DIFF_CELLS = "ON"
       !print*,"DIFF_CELLS ",DIFF_CELLS
     else
@@ -739,7 +740,7 @@ contains
     open(STATSOUT_FILE_UNIT2, file=file_name, status="replace", action="write")
 
     str_stats_names = "timestep,counterBCG,counterLS,countersolveCVODEGPU,countercvStep,timeLS,timeBiconjGradMemcpy,timeCVode,&
-            dtPreBCG,dtPostBCG,timesolveCVODEGPU,timeNewtonIteration,timeJac,timelinsolsetup,timecalc_Jac,&
+            dtcudaDeviceCVode,dtPostBCG,timesolveCVODEGPU,timeNewtonIteration,timeJac,timelinsolsetup,timecalc_Jac,&
             timeRXNJac,timef,timeguess_helper,timecvStep"
 
     write(STATSOUT_FILE_UNIT2, "(A)", advance="no") str_stats_names
@@ -799,7 +800,7 @@ contains
       pressure(:,:,:) = 94165.7187500000
       air_density(:,:,:) = 1.225
       conv=0.02897/air_density(1,1,1)*(TIME_STEP*60.)*1e6/height !units of time_step to seconds
-      water_conc(:,:,:,WATER_VAPOR_ID) = 0.!0.03!0.01
+      water_conc(:,:,:,WATER_VAPOR_ID) = 0.03!0.01
 
       !Initialize different axis values
       !Species_conc is modified in monarch_interface%get_init_conc

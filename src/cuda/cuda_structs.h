@@ -7,7 +7,7 @@
 typedef struct
 {
   //Init variables ("public")
-  int use_multicells;
+  int cells_method;
 
   double* A;
   int*    jA;
@@ -201,8 +201,9 @@ typedef struct {
     int countercvStep;
     int counterDerivGPU;
     int counterBCGInternal;
+    int counterBCG;
     double dtBCG;
-    double dtPreBCG;
+    double dtcudaDeviceCVode;
     double dtPostBCG;
 #endif
 }ModelDataVariable; //variables to pass between gpu and cpu
@@ -360,7 +361,7 @@ typedef struct {
     double *dtf;
     double *dtguess_helper;
     double *dtBCG;
-    double *dtPreBCG;
+    double *dtcudaDeviceCVode;
     double *dtPostBCG;
 #endif
 

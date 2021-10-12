@@ -175,7 +175,6 @@ contains
     ! Set the MPI rank (TODO replace with MONARCH param)
     MONARCH_PROCESS = pmc_mpi_rank()
 
-
     ! Create a new interface object
     allocate(this)
 
@@ -388,8 +387,6 @@ contains
         end do
       end if
 
-      !print*, "monarch_interface_t unbin_pack() end"
-
 #endif
     end if
 
@@ -411,12 +408,11 @@ contains
     !print*,"MPI RANK",pmc_mpi_rank(), this%interface_input_file, this%ADD_EMISIONS
 
     if(this%ADD_EMISIONS.eq."ON" &
-      .or. this%interface_input_file.eq."interface_simple.json") then
+      .or. this%interface_input_file.eq."interface_monarch_cb05.json") then
       ! Set the photolysis rates
 
       do i_photo_rxn = 1, this%n_photo_rxn
         !todo fix update for all mpi ranks
-        !this%base_rates(i_photo_rxn)=0.
         call this%photo_rxns(i_photo_rxn)%set_rate(real(this%base_rates(i_photo_rxn), kind=dp))
         !call this%photo_rxns(i_photo_rxn)%set_rate(real(0.0, kind=dp))
         call this%camp_core%update_data(this%photo_rxns(i_photo_rxn))

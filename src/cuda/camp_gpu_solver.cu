@@ -699,8 +699,8 @@ __device__ void solveRXN0(
 
 #else
 
-  double *rxn_float_data = (double *)&( md->rxn_double[md->rxn_float_indices[md->i_rxn]]);
-  int *int_data = (int *)&(md->rxn_int[md->rxn_int_indices[md->i_rxn]]);
+  double *rxn_float_data = &( md->rxn_double[md->rxn_float_indices[md->i_rxn]]);
+  int *int_data = &(md->rxn_int[md->rxn_int_indices[md->i_rxn]]);
 
   //double *rxn_float_data = &( md->rxn_double[md->i_rxn]);
   //int *int_data = &(md->rxn_int[md->i_rxn]);
@@ -744,7 +744,6 @@ __device__ void solveRXN0(
       //                                     rxn_float_data, rxn_env_data,time_step);
       break;
     case RXN_EMISSION :
-      printf("RXN_EMISSION");
       //rxn_gpu_emission_calc_deriv_contrib(md, deriv_data, rxn_int_data,
       //                                     rxn_float_data, rxn_env_data,time_step);
       break;
@@ -772,7 +771,6 @@ __device__ void solveRXN0(
 #endif
       break;
     case RXN_WET_DEPOSITION :
-      printf("RXN_WET_DEPOSITION");
       //rxn_gpu_wet_deposition_calc_deriv_contrib(md, deriv_data, rxn_int_data,
       //                                     rxn_float_data, rxn_env_data,time_step);
       break;
@@ -1154,7 +1152,7 @@ int rxn_calc_deriv_gpu(SolverData *sd, N_Vector y, N_Vector deriv, double time_s
   double threshhold = -SMALL;
   int flag = CAMP_SOLVER_SUCCESS; //0
 
-#ifdef DERIV_CPU_ON_GPU
+#ifndef DERIV_CPU_ON_GPU
 
   //Transfer cv_ftemp() not needed because mGPU->dftemp=md->deriv_data_gpu;
   //cudaMemcpy(cv_ftemp_data,mGPU->dftemp,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
