@@ -29,11 +29,11 @@ RUN curl -LO https://github.com/jacobwilliams/json-fortran/archive/6.1.0.tar.gz 
     && cmake -D SKIP_DOC_GEN:BOOL=TRUE .. \
     && make install
 
-# NOTE: Modify .dockerignore to whitelist files/directories to copy.
-COPY . /partmc/
+# copy CAMP source code and data
+COPY . /camp/
 
 # Install a modified version of CVODE
-RUN tar -zxvf /partmc/cvode-3.4-alpha.tar.gz \
+RUN tar -zxvf /camp/cvode-3.4-alpha.tar.gz \
     && cd cvode-3.4-alpha \
     && mkdir build \
     && cd build \
@@ -48,7 +48,7 @@ RUN tar -zxvf /partmc/cvode-3.4-alpha.tar.gz \
              .. \
     && make install
 
-# Build PartMC
+# Build CAMP
  RUN mkdir build \
     && cd build \
     && export JSON_FORTRAN_HOME="/usr/local/jsonfortran-gnu-6.1.0" \
@@ -60,5 +60,5 @@ RUN tar -zxvf /partmc/cvode-3.4-alpha.tar.gz \
              -D ENABLE_GSL:BOOL=TRUE \
              -D SUNDIALS_CVODE_LIB=/usr/local/lib/libsundials_cvode.so \
              -D SUNDIALS_INCLUDE_DIR=/usr/local/include \
-             /partmc \
+             /camp \
     && make

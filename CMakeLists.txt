@@ -3,19 +3,18 @@ cmake_minimum_required(VERSION 2.6.4)
 # http://www.cmake.org/Bug/view.php?id=8598
 # http://gcc.gnu.org/bugzilla/show_bug.cgi?id=35707
 # http://www.cmake.org/Bug/view.php?id=8408
-project(PARTMC Fortran C)
+project(CAMP Fortran C)
 
-set(PACKAGE_BUGREPORT "mwest@illinois.edu")
-set(PACKAGE_NAME "PartMC")
-set(PACKAGE_STRING "PartMC 2.4.0")
-set(PACKAGE_TARNAME "partmc")
-set(PACKAGE_VERSION "2.4.0")
+set(PACKAGE_BUGREPORT "mattldawson@gmail.com")
+set(PACKAGE_NAME "CAMP")
+set(PACKAGE_STRING "CAMP 1.0.0")
+set(PACKAGE_TARNAME "camp")
+set(PACKAGE_VERSION "1.0.0")
 
 ######################################################################
 # options
 
-option(ENABLE_GSL "Enable GSL library for random number generation" OFF)
-option(ENABLE_MOSAIC "Enable MOSAIC chemistry support" OFF)
+option(ENABLE_GSL "Enable GSL library for Jacobian evaluation" OFF)
 option(ENABLE_MPI "Enable MPI parallel support" OFF)
 option(ENABLE_SUNDIALS "Enable SUNDIALS solver for condensation support" OFF)
 option(ENABLE_C_SORT "Enable C sorting routines" OFF)
@@ -35,7 +34,7 @@ mark_as_advanced(FORCE ENABLE_DEBUG FAILURE_DETAIL)
 
 set(CPACK_SOURCE_GENERATOR "TGZ")
 SET(CPACK_SOURCE_PACKAGE_FILE_NAME "${PACKAGE_TARNAME}-${PACKAGE_VERSION}")
-set(CPACK_SOURCE_IGNORE_FILES "${CPACK_SOURCE_IGNORE_FILES};/.*~$;/[.].*/;/build/;/figures/;/scenarios/[^1234].*/;/doc/condensation/;/doc/deposition/;/doc/ship_track/;/old/;/tool/;/TODO")
+set(CPACK_SOURCE_IGNORE_FILES "${CPACK_SOURCE_IGNORE_FILES};/.*~$;/[.].*/;/build/;/figures/;/scenarios/[^1234].*/;/old/;/tool/;/TODO")
 
 include(CPack)
 
@@ -450,7 +449,7 @@ else()
 endif()
 
 ######################################################################
-# partmc library
+# camp library
 
 set(STD_C_FLAGS "-std=c99")
 
@@ -598,11 +597,6 @@ if (CUDA_FOUND AND ENABLE_GPU)
   set_source_files_properties(${CAMP_CUDA_SRC} PROPERTIES LANGUAGE CUDA)
   set_source_files_properties(${CAMP_CUDA_SRC} PROPERTIES CUDA_SOURCE_PROPERTY_FORMAT OBJ)
 
-  #set_source_files_properties(${CAMP_CUDA_SRC} PROPERTIES CUDA_RESOLVE_DEVICE_SYMBOLS ON)
-  #set_source_files_properties(${CAMP_CUDA_SRC} PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
-  #set_source_files_properties(${CAMP_CUDA_SRC} PROPERTIES POSITION_INDEPENDENT_CODE ON)
-
-
 else()
   set(CAMP_CUDA_SRC "")
 endif()
@@ -633,71 +627,30 @@ set(CAMP_F_SRC
         src/debug_diff_check.F90
         )
 
-add_library(partmclib ${CAMP_F_SRC}
+add_library(camplib ${CAMP_F_SRC}
   ${CAMP_C_SRC} ${AEROSOL_REPS_SRC} ${SUB_MODELS_SRC} ${REACTIONS_SRC}
   ${SUNDIALS_SRC} ${GSL_SRC} ${C_SORT_SRC} ${CAMP_CUDA_SRC} ${CAMP_CUDA_SRC_2} ${CAMP_CXX_SRC} )
 
 if (CUDA_FOUND)
 
-  #CUDA_ADD_LIBRARY(sundials_nveccuda_static STATIC ${nveccuda_SOURCES})
-  #SET_TARGET_PROPERTIES(sundials_nveccuda_static
-  #        PROPERTIES OUTPUT_NAME sundials_nveccuda CLEAN_DIRECT_OUTPUT 1
-  #        )
-  #INSTALL(TARGETS sundials_nveccuda_static DESTINATION lib)
-
-  #CUDA_ADD_LIBRARY(partmcCUDA ${CAMP_CUDA_SRC})
-  #set_target_properties(partmcCUDA PROPERTIES CUDA_RESOLVE_DEVICE_SYMBOLS ON)
-  #set_target_properties(partmcCUDA PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
-  #set_target_properties(partmcCUDA PROPERTIES POSITION_INDEPENDENT_CODE ON)
-
-  target_link_libraries(partmclib ${NETCDF_LIBS} ${SUNDIALS_LIBS}
+  target_link_libraries(camplib ${NETCDF_LIBS} ${SUNDIALS_LIBS}
     ${MOSAIC_LIB} ${GSL_LIBS} ${JSON_LIB} ${CUDA_LIBRARIES})
 
-  #set_target_properties(partmclib PROPERTIES CUDA_RESOLVE_DEVICE_SYMBOLS ON)
-  set_target_properties(partmclib PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
-  #set_target_properties(partmclib PROPERTIES POSITION_INDEPENDENT_CODE ON)
-
-  set_target_properties(partmclib PROPERTIES OUTPUT_NAME partmc)
+  set_target_properties(camplib PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
+  set_target_properties(camplib PROPERTIES OUTPUT_NAME camp)
 
 else()
-  target_link_libraries(partmclib ${NETCDF_LIBS} ${SUNDIALS_LIBS}
+  target_link_libraries(camplib ${NETCDF_LIBS} ${SUNDIALS_LIBS}
     ${MOSAIC_LIB} ${GSL_LIBS} ${JSON_LIB})
-  set_target_properties(partmclib PROPERTIES OUTPUT_NAME partmc)
+  set_target_properties(camplib PROPERTIES OUTPUT_NAME camp)
 endif()
-
-#[[
-if (CUDA_FOUND AND ENABLE_GPU AND ENABLE_TESTS)
-    add_library(partmclib_gpu ${CAMP_F_SRC}
-            ${CAMP_C_SRC} ${AEROSOL_REPS_SRC} ${SUB_MODELS_SRC} ${REACTIONS_SRC}
-            ${SUNDIALS_SRC} ${GSL_SRC} ${C_SORT_SRC} ${CAMP_CUDA_SRC} ${CAMP_CUDA_SRC_2} ${CAMP_CXX_SRC} )
-
-    target_compile_definitions(partmclib_gpu PRIVATE
-            "PMC_USE_GPU=ON")
-
-    target_link_libraries(partmclib_gpu ${NETCDF_LIBS} ${SUNDIALS_LIBS}
-            ${MOSAIC_LIB} ${GSL_LIBS} ${JSON_LIB})
-
-    set_target_properties(partmclib_gpu PROPERTIES OUTPUT_NAME partmc_gpu)
-
-    add_executable(partmc_gpu src/partmc.F90)
-
-    target_link_libraries(partmc_gpu partmclib_gpu)
-endif()
-]]
-
-######################################################################
-# partmc executable
-
-add_executable(partmc src/partmc.F90)
-
-target_link_libraries(partmc partmclib)
 
 ######################################################################
 # camp-chem box model
 
 add_executable(camp_box_model src/camp_box_model.F90)
 
-target_link_libraries(camp_box_model partmclib)
+target_link_libraries(camp_box_model camplib)
 
 ######################################################################
 # test_chemistry_cb05cl_ae5
@@ -746,14 +699,14 @@ set_source_files_properties(${CB5_EBI_SOLVER} PROPERTIES COMPILE_FLAGS
 # MONARCH interface
 
 #add_executable(mock_monarch test/monarch/mock_monarch.F90
-#        test/monarch/pmc_monarch_interface.F90)
+#        test/monarch/camp_monarch_interface.F90)
 
 add_executable(mock_monarch test/monarch/mock_monarch.F90
-        test/monarch/pmc_monarch_interface.F90
+        test/monarch/camp_monarch_interface.F90
         ${CB5_EBI_SOLVER} ${CB5_KPP_SOLVER}
         test/chemistry/cb05cl_ae5/module_BSC_CHEM_DATA.F90)
 
-target_link_libraries(mock_monarch partmclib)
+target_link_libraries(mock_monarch camplib)
 
 if (ENABLE_TESTS)
 
@@ -764,14 +717,14 @@ if (ENABLE_TESTS)
           test/chemistry/cb05cl_ae5/test_cb05cl_ae5_big.F90
           ${CB5_EBI_SOLVER} ${CB5_KPP_SOLVER}
           test/chemistry/cb05cl_ae5/module_BSC_CHEM_DATA.F90)
-  target_link_libraries(test_chemistry_cb05cl_ae5_big partmclib)
+  target_link_libraries(test_chemistry_cb05cl_ae5_big camplib)
 
   #if (CUDA_FOUND AND NOT ENABLE_GPU AND ENABLE_TESTS)
   #    add_executable(test_chemistry_cb05cl_ae5_gpu
   #            test/chemistry/cb05cl_ae5/test_cb05cl_ae5.F90
   #            ${CB5_EBI_SOLVER} ${CB5_KPP_SOLVER}
   #            test/chemistry/cb05cl_ae5/module_BSC_CHEM_DATA.F90)
-  #    target_link_libraries(test_chemistry_cb05cl_ae5_gpu partmclib_gpu)
+  #    target_link_libraries(test_chemistry_cb05cl_ae5_gpu camplib_gpu)
   #endif()
 
 ######################################################################
@@ -781,14 +734,14 @@ add_executable(test_chemistry_cb05cl_ae5
         test/chemistry/cb05cl_ae5/test_cb05cl_ae5.F90
         ${CB5_EBI_SOLVER} ${CB5_KPP_SOLVER}
         test/chemistry/cb05cl_ae5/module_BSC_CHEM_DATA.F90)
-target_link_libraries(test_chemistry_cb05cl_ae5 partmclib)
+target_link_libraries(test_chemistry_cb05cl_ae5 camplib)
 
 #if (CUDA_FOUND AND ENABLE_GPU AND ENABLE_TESTS)
 #    add_executable(test_chemistry_cb05cl_ae5_big_gpu
 #            test/chemistry/cb05cl_ae5/test_cb05cl_ae5_big.F90
 #            ${CB5_EBI_SOLVER} ${CB5_KPP_SOLVER}
 #            test/chemistry/cb05cl_ae5/module_BSC_CHEM_DATA.F90)
-#    target_link_libraries(test_chemistry_cb05cl_ae5_big_gpu partmclib_gpu)
+#    target_link_libraries(test_chemistry_cb05cl_ae5_big_gpu camplib_gpu)
 #endif()
 
 ######################################################################
@@ -800,59 +753,59 @@ set(EQSAM_V03D
 add_executable(test_chemistry_eqsam_v03d test/chemistry/eqsam_v03d/test_eqsam_v03d.F90
 	${EQSAM_V03D})
 
-target_link_libraries(test_chemistry_eqsam_v03d partmclib)
+target_link_libraries(test_chemistry_eqsam_v03d camplib)
 
 ######################################################################
 # test_property
 
 add_executable(unit_test_property test/unit_property/test_property.F90)
 
-target_link_libraries(unit_test_property partmclib)
+target_link_libraries(unit_test_property camplib)
 
 ######################################################################
 # test_chem_spec_data
 
 add_executable(unit_test_chem_spec_data test/unit_chem_spec_data/test_chem_spec_data.F90)
 
-target_link_libraries(unit_test_chem_spec_data partmclib)
+target_link_libraries(unit_test_chem_spec_data camplib)
 
 ######################################################################
 # test_rxn_data
 
 add_executable(test_rxn_aqueous_equilibrium test/unit_rxn_data/test_rxn_aqueous_equilibrium.F90)
-target_link_libraries(test_rxn_aqueous_equilibrium partmclib)
+target_link_libraries(test_rxn_aqueous_equilibrium camplib)
 add_executable(test_rxn_CMAQ_H2O2 test/unit_rxn_data/test_rxn_CMAQ_H2O2.F90)
-target_link_libraries(test_rxn_CMAQ_H2O2 partmclib)
+target_link_libraries(test_rxn_CMAQ_H2O2 camplib)
 add_executable(test_rxn_CMAQ_OH_HNO3 test/unit_rxn_data/test_rxn_CMAQ_OH_HNO3.F90)
-target_link_libraries(test_rxn_CMAQ_OH_HNO3 partmclib)
+target_link_libraries(test_rxn_CMAQ_OH_HNO3 camplib)
 add_executable(test_rxn_condensed_phase_arrhenius test/unit_rxn_data/test_rxn_condensed_phase_arrhenius.F90)
-target_link_libraries(test_rxn_condensed_phase_arrhenius partmclib)
+target_link_libraries(test_rxn_condensed_phase_arrhenius camplib)
 add_executable(test_rxn_emission test/unit_rxn_data/test_rxn_emission.F90)
-target_link_libraries(test_rxn_emission partmclib)
+target_link_libraries(test_rxn_emission camplib)
 add_executable(test_rxn_first_order_loss test/unit_rxn_data/test_rxn_first_order_loss.F90)
-target_link_libraries(test_rxn_first_order_loss partmclib)
+target_link_libraries(test_rxn_first_order_loss camplib)
 add_executable(test_rxn_HL_phase_transfer test/unit_rxn_data/test_rxn_HL_phase_transfer.F90)
-target_link_libraries(test_rxn_HL_phase_transfer partmclib)
+target_link_libraries(test_rxn_HL_phase_transfer camplib)
 add_executable(test_rxn_photolysis test/unit_rxn_data/test_rxn_photolysis.F90)
-target_link_libraries(test_rxn_photolysis partmclib)
+target_link_libraries(test_rxn_photolysis camplib)
 add_executable(test_rxn_SIMPOL_phase_transfer test/unit_rxn_data/test_rxn_SIMPOL_phase_transfer.F90)
-target_link_libraries(test_rxn_SIMPOL_phase_transfer partmclib)
+target_link_libraries(test_rxn_SIMPOL_phase_transfer camplib)
 add_executable(test_rxn_troe test/unit_rxn_data/test_rxn_troe.F90)
-target_link_libraries(test_rxn_troe partmclib)
+target_link_libraries(test_rxn_troe camplib)
 add_executable(test_rxn_wet_deposition test/unit_rxn_data/test_rxn_wet_deposition.F90)
-target_link_libraries(test_rxn_wet_deposition partmclib)
+target_link_libraries(test_rxn_wet_deposition camplib)
 
 ######################################################################
 # test_sub_model_data
 
 add_executable(test_sub_model_PDFiTE test/unit_sub_model_data/test_sub_model_PDFiTE.F90)
-target_link_libraries(test_sub_model_PDFiTE partmclib)
+target_link_libraries(test_sub_model_PDFiTE camplib)
 add_executable(test_sub_model_UNIFAC test/unit_sub_model_data/test_sub_model_UNIFAC.F90)
-target_link_libraries(test_sub_model_UNIFAC partmclib)
+target_link_libraries(test_sub_model_UNIFAC camplib)
 add_executable(test_sub_model_ZSR_aerosol_water
                test/unit_sub_model_data/test_sub_model_ZSR_aerosol_water.c
                test/unit_sub_model_data/test_sub_model_ZSR_aerosol_water.F90)
-target_link_libraries(test_sub_model_ZSR_aerosol_water partmclib)
+target_link_libraries(test_sub_model_ZSR_aerosol_water camplib)
 
 ######################################################################
 # New unit tests (UNDER DEVELOPMENT)
@@ -866,16 +819,16 @@ set(UNIT_TEST_RXN_ARRHENIUS_SRC
 set_source_files_properties(${UNIT_TEST_RXN_ARRHENIUS_SRC} PROPERTIES COMPILE_FLAGS ${STD_F_FLAGS})
 add_executable(unit_test_rxn_arrhenius ${UNIT_TEST_RXN_ARRHENIUS_SRC})
 target_compile_definitions(unit_test_rxn_arrhenius PRIVATE
-        "UNIT_TEST_MODULE_=pmc_unit_test_rxn_arrhenius \
+        "UNIT_TEST_MODULE_=camp_unit_test_rxn_arrhenius \
     ;UNIT_TEST_TYPE_=unit_test_rxn_arrhenius_t()")
-target_link_libraries(unit_test_rxn_arrhenius partmclib)
+target_link_libraries(unit_test_rxn_arrhenius camplib)
 
 #if (CUDA_FOUND AND ENABLE_GPU AND ENABLE_TESTS)
 #    add_executable(unit_test_rxn_arrhenius_gpu ${UNIT_TEST_RXN_ARRHENIUS_SRC})
 #    target_compile_definitions(unit_test_rxn_arrhenius_gpu PRIVATE
-#            "UNIT_TEST_MODULE_=pmc_unit_test_rxn_arrhenius \
+#            "UNIT_TEST_MODULE_=camp_unit_test_rxn_arrhenius \
 #    ;UNIT_TEST_TYPE_=unit_test_rxn_arrhenius_t()")
-#    target_link_libraries(unit_test_rxn_arrhenius_gpu partmclib_gpu)
+#    target_link_libraries(unit_test_rxn_arrhenius_gpu camplib_gpu)
 #endif()
 
 ######################################################################
@@ -883,14 +836,14 @@ target_link_libraries(unit_test_rxn_arrhenius partmclib)
 
 add_executable(unit_test_camp_core test/unit_camp_core/test_camp_core.F90)
 
-target_link_libraries(unit_test_camp_core partmclib)
+target_link_libraries(unit_test_camp_core camplib)
 
 ######################################################################
 # test_aero_phase_data
 
 add_executable(unit_test_aero_phase_data test/unit_aero_phase_data/test_aero_phase_data.F90)
 
-target_link_libraries(unit_test_aero_phase_data partmclib)
+target_link_libraries(unit_test_aero_phase_data camplib)
 
 ######################################################################
 # test_aero_rep_single_particle
@@ -899,7 +852,7 @@ add_executable(unit_test_aero_rep_single_particle
 	test/unit_aero_rep_data/test_aero_rep_single_particle.c
 	test/unit_aero_rep_data/test_aero_rep_single_particle.F90)
 
-target_link_libraries(unit_test_aero_rep_single_particle partmclib)
+target_link_libraries(unit_test_aero_rep_single_particle camplib)
 
 ######################################################################
 # test_aero_rep_modal_binned_mass
@@ -908,14 +861,14 @@ add_executable(unit_test_aero_rep_modal_binned_mass
         test/unit_aero_rep_data/test_aero_rep_modal_binned_mass.c
 	test/unit_aero_rep_data/test_aero_rep_modal_binned_mass.F90)
 
-target_link_libraries(unit_test_aero_rep_modal_binned_mass partmclib)
+target_link_libraries(unit_test_aero_rep_modal_binned_mass camplib)
 
 ######################################################################
 # test_chem_mech_solver
 
 add_executable(test_chem_mech_solver test/chemistry/test_chem_mech_solver.F90)
 
-target_link_libraries(test_chem_mech_solver partmclib)
+target_link_libraries(test_chem_mech_solver camplib)
 
 ######################################################################
 # test_bidisperse_ode
@@ -923,7 +876,7 @@ target_link_libraries(test_chem_mech_solver partmclib)
 add_executable(test_bidisperse_ode
   test/bidisperse/test_bidisperse_ode.F90)
 
-target_link_libraries(test_bidisperse_ode partmclib)
+target_link_libraries(test_bidisperse_ode camplib)
 
 ######################################################################
 # test_bidisperse_extract
@@ -964,7 +917,7 @@ add_executable(test_fractal_self_preserve
   test/fractal/test_fractal_self_preserve.F90
   src/getopt.F90)
 
-target_link_libraries(test_fractal_self_preserve partmclib)
+target_link_libraries(test_fractal_self_preserve camplib)
 
 ######################################################################
 # test_fractal_dimless_time
@@ -973,7 +926,7 @@ add_executable(test_fractal_dimless_time
   test/fractal/test_fractal_dimless_time.F90
   src/getopt.F90)
 
-target_link_libraries(test_fractal_dimless_time partmclib)
+target_link_libraries(test_fractal_dimless_time camplib)
 
 ######################################################################
 # test_fractal_radii_conversion
@@ -981,59 +934,59 @@ target_link_libraries(test_fractal_dimless_time partmclib)
 add_executable(test_fractal_radii_conversion
   test/fractal/test_fractal_radii_conversion.F90)
 
-target_link_libraries(test_fractal_radii_conversion partmclib)
+target_link_libraries(test_fractal_radii_conversion camplib)
 
 ######################################################################
 # bin_average_comp
 
 add_executable(bin_average_comp src/bin_average_comp.F90)
 
-target_link_libraries(bin_average_comp partmclib)
+target_link_libraries(bin_average_comp camplib)
 
 ######################################################################
 # bin_average_size
 
 add_executable(bin_average_size src/bin_average_size.F90)
 
-target_link_libraries(bin_average_size partmclib)
+target_link_libraries(bin_average_size camplib)
 
 ######################################################################
 # extract_aero_*
 
 add_executable(extract_aero_particles
   src/extract_aero_particles.F90 src/getopt.F90)
-target_link_libraries(extract_aero_particles partmclib)
+target_link_libraries(extract_aero_particles camplib)
 
 add_executable(extract_aero_size src/extract_aero_size.F90
   src/getopt.F90)
-target_link_libraries(extract_aero_size partmclib)
+target_link_libraries(extract_aero_size camplib)
 
 add_executable(extract_aero_time src/extract_aero_time.F90
   src/getopt.F90)
-target_link_libraries(extract_aero_time partmclib)
+target_link_libraries(extract_aero_time camplib)
 
 add_executable(extract_gas src/extract_gas.F90 src/getopt.F90)
-target_link_libraries(extract_gas partmclib)
+target_link_libraries(extract_gas camplib)
 
 add_executable(extract_env src/extract_env.F90 src/getopt.F90)
-target_link_libraries(extract_env partmclib)
+target_link_libraries(extract_env camplib)
 
 ######################################################################
 # extract_sectional_*
 
 add_executable(extract_sectional_aero_size
   src/extract_sectional_aero_size.F90 src/getopt.F90)
-target_link_libraries(extract_sectional_aero_size partmclib)
+target_link_libraries(extract_sectional_aero_size camplib)
 
 add_executable(extract_sectional_aero_time
   src/extract_sectional_aero_time.F90 src/getopt.F90)
-target_link_libraries(extract_sectional_aero_time partmclib)
+target_link_libraries(extract_sectional_aero_time camplib)
 
 ######################################################################
 # numeric_*
 
 add_executable(numeric_diff src/numeric_diff.F90 src/getopt.F90)
-target_link_libraries(numeric_diff partmclib)
+target_link_libraries(numeric_diff camplib)
 
 add_executable(numeric_average src/numeric_average.F90)
 
@@ -1042,21 +995,21 @@ add_executable(numeric_average src/numeric_average.F90)
 
 add_executable(urban_plume_process
   scenarios/1_urban_plume/urban_plume_process.F90)
-target_link_libraries(urban_plume_process partmclib)
+target_link_libraries(urban_plume_process camplib)
 
 ######################################################################
 # scenarios/4_chamber/chamber_process
 
 add_executable(chamber_process
   scenarios/4_chamber/chamber_process.F90)
-target_link_libraries(chamber_process partmclib)
+target_link_libraries(chamber_process camplib)
 
 ######################################################################
 # scenarios/5_urban_plume_camp/urban_plume_camp_process
 
 add_executable(urban_plume_camp_process
   scenarios/5_urban_plume_camp/urban_plume_camp_process.F90)
-target_link_libraries(urban_plume_camp_process partmclib)
+target_link_libraries(urban_plume_camp_process camplib)
 
 ######################################################################
 endif()

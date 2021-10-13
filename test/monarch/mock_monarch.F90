@@ -11,7 +11,7 @@ program mock_monarch
   use pmc_constants,                    only: const
   use pmc_util,                          only : assert_msg, almost_equal, &
                                                 to_string
-  use pmc_monarch_interface
+  use camp_monarch_interface
   use pmc_mpi
   use pmc_solver_stats
 #ifdef PMC_USE_JSON

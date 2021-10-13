@@ -3,8 +3,8 @@
 ! option) any later version. See the file COPYING for details.
 
 !> \file
-!> The pmc_unit_test_rxn_arrhenius module
-module pmc_unit_test_rxn_arrhenius
+!> The camp_unit_test_rxn_arrhenius module
+module camp_unit_test_rxn_arrhenius
 
   use pmc_camp_core
   use pmc_camp_state
@@ -507,4 +507,4 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end module pmc_unit_test_rxn_arrhenius
+end module camp_unit_test_rxn_arrhenius

@@ -302,7 +302,7 @@ def plot_cases(casesList,cases_gpu_cpu2,cases_multicells_onecell2,cells,diff_cel
 
   print(namey,":",datay)
 
-  plot_functions.plot(namex,namey,datax,datay,plot_title,columns,SAVE_PLOT)
+  #plot_functions.plot(namex,namey,datax,datay,plot_title,columns,SAVE_PLOT)
 
 
 def all_timesteps():
@@ -351,7 +351,7 @@ def all_timesteps():
 
   #plot_y_key = "Speedup timeCVode"
   #plot_y_key = "Speedup counterLS"
-  plot_y_key = "Speedup normalized timeLS"
+  #plot_y_key = "Speedup normalized timeLS"
   #plot_y_key = "Speedup normalized computational timeLS"
   #plot_y_key = "Speedup counterBCG"
   #plot_y_key = "Speedup total iterations - counterBCG"
@@ -364,7 +364,7 @@ def all_timesteps():
 
   #plot_y_key = "% Time data transfers CPU-GPU BCG"
   #plot_y_key="NRMSE"
-  #plot_y_key="MAPE"#todo check old ls option (cvode_gpu)
+  plot_y_key="MAPE"#todo check old ls option (cvode_gpu)
   #plot_y_key="SMAPE"
 
   #remove_iters=0#10 #360

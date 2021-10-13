@@ -6,7 +6,7 @@
 !> The monarch_interface_t object and related functions
 
 !> Interface for the MONACH model and PartMC-camp
-module pmc_monarch_interface
+module camp_monarch_interface
 
   use pmc_constants,                  only : i_kind
   use pmc_mpi
@@ -1545,4 +1545,4 @@ end if
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end module pmc_monarch_interface
+end module camp_monarch_interface
