@@ -4,7 +4,7 @@ def find_between( s, start, end):
 outfile = 'cbmz_species.json'
 f_out = open(outfile, 'w')
 f_out.write('{\n')
-f_out.write('"camp-data" : [\n')
+f_out.write('"pmc-data" : [\n')
 with open('cbmz_mosaic.spc', 'r') as fp:
    line = fp.readline()
    cnt = 1
@@ -27,7 +27,7 @@ f_out.close()
 outfile = 'cbmz_abs_tol.json'
 f_out = open(outfile, 'w')
 f_out.write('{\n')
-f_out.write('  "camp-data" : [\n')
+f_out.write('  "pmc-data" : [\n')
 f_out.write('    {\n')
 f_out.write('      "type" : "RELATIVE_TOLERANCE",\n')
 f_out.write('      "value" : 1.0E-04\n')

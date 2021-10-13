@@ -1,6 +1,6 @@
 {
   "description" : "Aqueous species present in cloud and rain water",
-  "camp-data" : [
+  "pmc-data" : [
     {
       "name" : "NO2",
       "type" : "CHEM_SPEC",

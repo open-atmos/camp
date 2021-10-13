@@ -1,6 +1,6 @@
 {
   "description" : "These aerosol phases correspond to the MOSAIC configuration",
-  "camp-data" : [
+  "pmc-data" : [
     {
       "name" : "black_carbon",
       "type" : "AERO_PHASE",

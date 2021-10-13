@@ -7,6 +7,6 @@ set -v
 
 mkdir -p out
 
-../../build/camp urban_plume.spec
+../../build/partmc urban_plume.spec
 
 # Now run ./2_process.sh to process the data

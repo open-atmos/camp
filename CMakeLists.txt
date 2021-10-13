@@ -39,32 +39,6 @@ set(CPACK_SOURCE_IGNORE_FILES "${CPACK_SOURCE_IGNORE_FILES};/.*~$;/[.].*/;/build
 include(CPack)
 
 ######################################################################
-# NetCDF
-
-find_path(NETCDF_INCLUDE_DIR netcdf.mod NETCDF.mod
-  DOC "NetCDF include directory (must contain netcdf.mod)"
-  PATHS
-  $ENV{NETCDF_FORTRAN_HOME}/include
-  $ENV{NETCDF_HOME}/include
-  /usr/lib/gfortran/modules
-  /usr/lib64/gfortran/modules
-  /opt/local/include)
-find_library(NETCDF_C_LIB netcdf
-  DOC "NetCDF C library"
-  PATHS $ENV{NETCDF_HOME}/lib $ENV{NETCDF_HOME}/lib64 /opt/local/lib)
-find_library(NETCDF_FORTRAN_LIB netcdff
-  DOC "NetCDF Fortran library"
-  PATHS
-  $ENV{NETCDF_HOME}/lib $ENV{NETCDF_HOME}/lib64
-  $ENV{NETCDF_FORTRAN_HOME}/lib $ENV{NETCDF_FORTRAN_HOME}/lib64
-  /opt/local/lib)
-set(NETCDF_LIBS ${NETCDF_C_LIB})
-if(NETCDF_FORTRAN_LIB)
-  set(NETCDF_LIBS ${NETCDF_LIBS} ${NETCDF_FORTRAN_LIB})
-endif()
-include_directories(${NETCDF_INCLUDE_DIR})
-
-######################################################################
 # GSL
 
 if(ENABLE_GSL)
@@ -86,36 +60,12 @@ if(ENABLE_GSL)
 endif()
 
 ######################################################################
-# C sort
-
-if(ENABLE_C_SORT)
-  set(C_SORT_SRC src/sort.c)
-  add_definitions(-DCAMP_USE_C_SORT)
-endif()
-
-######################################################################
-# MOSAIC
-
-if(ENABLE_MOSAIC)
-  find_path(MOSAIC_INCLUDE_DIR module_data_mosaic_main.mod
-    DOC "MOSAIC include directory"
-    PATHS $ENV{MOSAIC_HOME}/datamodules $ENV{MOSAIC_HOME}/include)
-  find_library(MOSAIC_LIB mosaic
-    DOC "MOSAIC library"
-    PATHS $ENV{MOSAIC_HOME} $ENV{MOSAIC_HOME}/lib)
-  include_directories(${MOSAIC_INCLUDE_DIR})
-  add_definitions(-DCAMP_USE_MOSAIC)
-endif()
-
-######################################################################
 # MPI
 
 if(ENABLE_MPI)
-
     if(NOT MPI_FOUND)
         message( WARNING "Not MPI found")
     endif()
-
   add_definitions(-DCAMP_USE_MPI)
 endif()
 
@@ -234,7 +184,7 @@ endif()
 
 macro(do_unit_test test_name result)
   if(ENABLE_MPI)
-    add_test(unit_test_${test_name} mpirun -v -np 2 ${CMAKE_BINARY_DIR}/unit_test_${test_name})
+    add_test(unit_test_${test_name} mpiexec_mpt -v -np 2 ${CMAKE_BINARY_DIR}/unit_test_${test_name})
   else()
     add_test(unit_test_${test_name} ${CMAKE_BINARY_DIR}/unit_test_${test_name})
   endif()
@@ -257,11 +207,10 @@ enable_testing()
 do_unit_test(property "PASS")
 do_unit_test(chem_spec_data "PASS")
 do_unit_test(aero_phase_data "PASS")
-if(ENABLE_JSON)
-  do_unit_test(aero_rep_single_particle "PASS")
-  do_unit_test(aero_rep_modal_binned_mass "PASS")
-  do_unit_test(camp_core "PASS")
-endif()
+do_unit_test(jacobian "PASS")
+do_unit_test(aero_rep_single_particle "PASS")
+do_unit_test(aero_rep_modal_binned_mass "PASS")
+do_unit_test(camp_core "PASS")
 
 if (ENABLE_MPI)
   set(MPI_TEST_FLAG MPI)
@@ -273,26 +222,26 @@ if (ENABLE_TESTS)
       # New unit tests (UNDER DEVELOPMENT)
   add_test(test_rxn_arrhenius_mech ${CMAKE_BINARY_DIR}/test_run/unit_tests/input_files/run_rxn_arrhenius.sh ${MPI_TEST_FLAG})
 
-  # Old-style unit tests
-  add_test(test_rxn_aqueous_equilibrium ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_aqueous_equilibrium.sh ${MPI_TEST_FLAG})
-  add_test(test_rxn_CMAQ_H2O2 ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_CMAQ_H2O2.sh ${MPI_TEST_FLAG})
-  add_test(test_rxn_CMAQ_OH_HNO3 ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_CMAQ_OH_HNO3.sh ${MPI_TEST_FLAG})
-  add_test(test_rxn_condensed_phase_arrhenius ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_condensed_phase_arrhenius.sh ${MPI_TEST_FLAG})
-  add_test(test_rxn_emission ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_emission.sh ${MPI_TEST_FLAG})
-  add_test(test_rxn_first_order_loss ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_first_order_loss.sh ${MPI_TEST_FLAG})
-  add_test(test_rxn_HL_phase_transfer ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_HL_phase_transfer.sh ${MPI_TEST_FLAG})
-  add_test(test_rxn_photolysis ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_photolysis.sh ${MPI_TEST_FLAG})
-  add_test(test_rxn_SIMPOL_phase_transfer ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_SIMPOL_phase_transfer.sh ${MPI_TEST_FLAG})
-  add_test(test_rxn_troe ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_troe.sh ${MPI_TEST_FLAG})
-  add_test(test_rxn_wet_deposition ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_wet_deposition.sh ${MPI_TEST_FLAG})
-  add_test(test_sub_model_PDFiTE ${CMAKE_BINARY_DIR}/test_run/unit_sub_model_data/test_PDFiTE.sh ${MPI_TEST_FLAG})
-  add_test(test_sub_model_UNIFAC ${CMAKE_BINARY_DIR}/test_run/unit_sub_model_data/test_UNIFAC.sh ${MPI_TEST_FLAG})
-  add_test(test_sub_model_ZSR_aerosol_water ${CMAKE_BINARY_DIR}/test_run/unit_sub_model_data/test_ZSR_aerosol_water.sh ${MPI_TEST_FLAG})
-  add_test(test_chem_mech_solver ${CMAKE_BINARY_DIR}/test_run/chemistry/test_chemistry_1.sh ${MPI_TEST_FLAG})
-  add_test(test_chemistry_cb05cl_ae5 ${CMAKE_BINARY_DIR}/test_run/chemistry/cb05cl_ae5/test_chemistry_cb05cl_ae5.sh ${MPI_TEST_FLAG})
-  add_test(test_chemistry_eqsam_v03d ${CMAKE_BINARY_DIR}/test_run/chemistry/eqsam_v03d/test_chemistry_eqsam_v03d.sh ${MPI_TEST_FLAG})
-  add_test(test_MONARCH_1 ${CMAKE_BINARY_DIR}/test_run/monarch/test_monarch_1.sh ${MPI_TEST_FLAG})
-  add_test(test_MONARCH_2 ${CMAKE_BINARY_DIR}/test_run/monarch/test_monarch_2.sh ${MPI_TEST_FLAG})
+# Old-style unit tests
+add_test(test_rxn_aqueous_equilibrium ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_aqueous_equilibrium.sh ${MPI_TEST_FLAG})
+add_test(test_rxn_CMAQ_H2O2 ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_CMAQ_H2O2.sh ${MPI_TEST_FLAG})
+add_test(test_rxn_CMAQ_OH_HNO3 ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_CMAQ_OH_HNO3.sh ${MPI_TEST_FLAG})
+add_test(test_rxn_condensed_phase_arrhenius ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_condensed_phase_arrhenius.sh ${MPI_TEST_FLAG})
+add_test(test_rxn_emission ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_emission.sh ${MPI_TEST_FLAG})
+add_test(test_rxn_first_order_loss ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_first_order_loss.sh ${MPI_TEST_FLAG})
+add_test(test_rxn_HL_phase_transfer ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_HL_phase_transfer.sh ${MPI_TEST_FLAG})
+add_test(test_rxn_photolysis ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_photolysis.sh ${MPI_TEST_FLAG})
+add_test(test_rxn_SIMPOL_phase_transfer ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_SIMPOL_phase_transfer.sh ${MPI_TEST_FLAG})
+add_test(test_rxn_troe ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_troe.sh ${MPI_TEST_FLAG})
+add_test(test_rxn_wet_deposition ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_wet_deposition.sh ${MPI_TEST_FLAG})
+add_test(test_sub_model_PDFiTE ${CMAKE_BINARY_DIR}/test_run/unit_sub_model_data/test_PDFiTE.sh ${MPI_TEST_FLAG})
+add_test(test_sub_model_UNIFAC ${CMAKE_BINARY_DIR}/test_run/unit_sub_model_data/test_UNIFAC.sh ${MPI_TEST_FLAG})
+add_test(test_sub_model_ZSR_aerosol_water ${CMAKE_BINARY_DIR}/test_run/unit_sub_model_data/test_ZSR_aerosol_water.sh ${MPI_TEST_FLAG})
+add_test(test_chem_mech_solver ${CMAKE_BINARY_DIR}/test_run/chemistry/test_chemistry_1.sh ${MPI_TEST_FLAG})
+add_test(test_chemistry_cb05cl_ae5 ${CMAKE_BINARY_DIR}/test_run/chemistry/cb05cl_ae5/test_chemistry_cb05cl_ae5.sh ${MPI_TEST_FLAG})
+add_test(test_chemistry_eqsam_v03d ${CMAKE_BINARY_DIR}/test_run/chemistry/eqsam_v03d/test_chemistry_eqsam_v03d.sh ${MPI_TEST_FLAG})
+add_test(test_MONARCH_1 ${CMAKE_BINARY_DIR}/test_run/monarch/test_monarch_1.sh ${MPI_TEST_FLAG})
+add_test(test_MONARCH_2 ${CMAKE_BINARY_DIR}/test_run/monarch/test_monarch_2.sh ${MPI_TEST_FLAG})
 
 else()
 
@@ -471,7 +420,7 @@ set(CAMP_F_SRC
 
 add_library(camplib ${CAMP_F_SRC}
   ${CAMP_C_SRC} ${AEROSOL_REPS_SRC} ${SUB_MODELS_SRC} ${REACTIONS_SRC}
-  ${GSL_SRC} ${C_SORT_SRC} ${CAMP_CUDA_SRC} ${CAMP_CUDA_SRC_2} ${CAMP_CXX_SRC} )
+        ${CAMP_CUDA_SRC} ${GSL_SRC} ${CAMP_CXX_SRC} ${CAMP_CUDA_SRC_2} )
 
 if (CUDA_FOUND)
 

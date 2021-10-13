@@ -8,26 +8,26 @@
 !> Read NetCDF output files and process them.
 program process
 
-  use camp_output
-  use camp_stats
+  use pmc_output
+  use pmc_stats
 
-  character(len=CAMP_MAX_FILENAME_LEN), parameter :: prefix &
+  character(len=PMC_MAX_FILENAME_LEN), parameter :: prefix &
        = "out/chamber"
 
-  character(len=CAMP_MAX_FILENAME_LEN) :: in_filename, out_filename
+  character(len=PMC_MAX_FILENAME_LEN) :: in_filename, out_filename
   type(bin_grid_t) :: diam_grid
   type(aero_data_t) :: aero_data
   type(aero_state_t) :: aero_state
   type(env_state_t) :: env_state
   integer :: ncid, index, repeat, i_index, i_repeat, n_index, n_repeat
   real(kind=dp) :: time, del_t, tot_num_conc, tot_mass_conc
-  character(len=CAMP_UUID_LEN) :: uuid
+  character(len=PMC_UUID_LEN) :: uuid
   real(kind=dp), allocatable :: times(:), mobility_diameters(:), &
        num_concs(:), dry_masses(:), masses(:), num_dist(:), mass_dist(:)
   type(stats_1d_t) :: stats_num_dist, stats_mass_dist, stats_tot_num_conc, &
        stats_tot_mass_conc
 
-  call camp_mpi_init()
+  call pmc_mpi_init()
 
   call input_n_files(prefix, n_repeat, n_index)
 
@@ -86,6 +86,6 @@ program process
   call stats_1d_output_text(stats_tot_mass_conc, out_filename, times)
   call stats_1d_clear(stats_tot_mass_conc)
 
-  call camp_mpi_finalize()
+  call pmc_mpi_finalize()
 
 end program process

@@ -2,7 +2,7 @@
   "description" : [
     "ZSR aerosol water calculation for inorganic aerosols"
   ],
-  "camp-data" : [
+  "pmc-data" : [
    {
       "type" : "SUB_MODEL_ZSR_AEROSOL_WATER",
       "name" : "MONARCH inorganic aerosol water",

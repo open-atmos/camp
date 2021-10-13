@@ -8,13 +8,13 @@
 !> Read NetCDF output files and process them.
 program process
 
-  use camp_output
-  use camp_stats
+  use pmc_output
+  use pmc_stats
 
-  character(len=CAMP_MAX_FILENAME_LEN), parameter :: prefix &
+  character(len=PMC_MAX_FILENAME_LEN), parameter :: prefix &
        = "out/urban_plume"
 
-  character(len=CAMP_MAX_FILENAME_LEN) :: in_filename, out_filename
+  character(len=PMC_MAX_FILENAME_LEN) :: in_filename, out_filename
   type(bin_grid_t) :: diam_grid, bc_grid, sc_grid
   type(aero_data_t) :: aero_data
   type(aero_state_t) :: aero_state
@@ -22,7 +22,7 @@ program process
   integer :: ncid, index, repeat, i_index, i_repeat, n_index, n_repeat
   real(kind=dp) :: time, del_t, tot_num_conc, tot_mass_conc
   real(kind=dp) :: d_alpha, d_gamma, chi
-  character(len=CAMP_UUID_LEN) :: uuid
+  character(len=PMC_UUID_LEN) :: uuid
   real(kind=dp), allocatable :: times(:), dry_diameters(:), num_concs(:), &
        dry_masses(:), masses(:), bc_masses(:), bc_fracs(:), &
        crit_rhs(:), scs(:), num_dist(:), &
@@ -32,7 +32,7 @@ program process
   type(stats_2d_t) :: stats_diam_bc_dist, stats_diam_sc_dist
   type(camp_core_t), pointer :: camp_core
 
-  call camp_mpi_init()
+  call pmc_mpi_init()
 
   call input_n_files(prefix, n_repeat, n_index)
 
@@ -99,8 +99,8 @@ program process
 
      call make_filename(out_filename, prefix, "_process.nc", index)
      write(*,*) "Writing " // trim(out_filename)
-     call camp_nc_open_write(out_filename, ncid)
-     call camp_nc_write_info(ncid, uuid, "1_urban_plume process")
+     call pmc_nc_open_write(out_filename, ncid)
+     call pmc_nc_write_info(ncid, uuid, "1_urban_plume process")
      call bin_grid_output_netcdf(diam_grid, ncid, "diam", unit="m")
      call bin_grid_output_netcdf(bc_grid, ncid, "bc_frac", unit="1")
      call bin_grid_output_netcdf(sc_grid, ncid, "sc", unit="1")
@@ -117,14 +117,14 @@ program process
           dim_name_1="diam", dim_name_2="sc", unit="m^{-3}")
      call stats_2d_clear(stats_diam_sc_dist)
 
-     call camp_nc_close(ncid)
+     call pmc_nc_close(ncid)
   end do
 
   call make_filename(out_filename, prefix, "_process.nc")
   write(*,*) "Writing " // trim(out_filename)
-  call camp_nc_open_write(out_filename, ncid)
-  call camp_nc_write_info(ncid, uuid, "1_urban_plume process")
-  call camp_nc_write_real_1d(ncid, times, "time", dim_name="time", unit="s")
+  call pmc_nc_open_write(out_filename, ncid)
+  call pmc_nc_write_info(ncid, uuid, "1_urban_plume process")
+  call pmc_nc_write_real_1d(ncid, times, "time", dim_name="time", unit="s")
   call stats_1d_output_netcdf(stats_tot_num_conc, ncid, "tot_num_conc", &
        dim_name="time", unit="m^{-3}")
   call stats_1d_output_netcdf(stats_tot_mass_conc, ncid, "tot_mass_conc", &
@@ -135,8 +135,8 @@ program process
        "d_gamma", dim_name="time", unit="1")
   call stats_1d_output_netcdf(stats_chi, ncid, "chi", &
        dim_name="time", unit="1")
-  call camp_nc_close(ncid)
+  call pmc_nc_close(ncid)
 
-  call camp_mpi_finalize()
+  call pmc_mpi_finalize()
 
 end program process

@@ -4,7 +4,7 @@
     "only the SO4-NO3-NH3 system is included, and inorganic reactions are only applied",
     "to the sulfate aerosol mode. Reaction parameters are from CAPRAM2.4 (Ervens et al. 2003)"
   ],
-  "camp-data" : [
+  "pmc-data" : [
     {
       "name" : "MONARCH mod37",
       "type" : "MECHANISM",

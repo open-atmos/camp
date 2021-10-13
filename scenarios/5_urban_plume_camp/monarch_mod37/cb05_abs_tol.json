@@ -1,5 +1,5 @@
 {
-  "camp-data" : [
+  "pmc-data" : [
     {
       "type" : "RELATIVE_TOLERANCE",
       "value" : 1.0E-04
