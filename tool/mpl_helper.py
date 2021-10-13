@@ -248,7 +248,7 @@ def find_nearest_index(data, value):
 
     Example:
     >>> data = [0, 3, 5, -2]
-    >>> i = partmc.find_nearest_index(data, 3.4)
+    >>> i = camp.find_nearest_index(data, 3.4)
     returns i = 1
 
     """
@@ -441,7 +441,7 @@ def get_filename_list(directory, filename_pattern):
     group match.
 
     Example:
-    >>> netcdf_files = partmc.get_filename_list('out/', r'data_.*\.nc')
+    >>> netcdf_files = camp.get_filename_list('out/', r'data_.*\.nc')
 
     """
     filename_list = []

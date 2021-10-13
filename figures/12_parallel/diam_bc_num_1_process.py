@@ -7,17 +7,17 @@ import os, sys, math
 import numpy as np
 import scipy.io
 sys.path.append("../../tool")
-import partmc
+import camp
 import config
 import config_filelist
 
 data_base_dir = "data"
 data_type = "diam_bc_num"
 
-x_axis = partmc.log_grid(min = config.diameter_axis_min,
+x_axis = camp.log_grid(min = config.diameter_axis_min,
                          max = config.diameter_axis_max,
                          n_bin = config.num_diameter_bins)
-y_axis = partmc.linear_grid(min = config.bc_axis_min,
+y_axis = camp.linear_grid(min = config.bc_axis_min,
                             max = config.bc_axis_max,
                             n_bin = config.num_bc_bins)
 
@@ -25,8 +25,8 @@ def process_data(in_filename_list, out_filename):
     total_value = None
     for in_filename in in_filename_list:
         ncf = scipy.io.netcdf.netcdf_file(in_filename, 'r')
-        particles = partmc.aero_particle_array_t(ncf)
-        env_state = partmc.env_state_t(ncf)
+        particles = camp.aero_particle_array_t(ncf)
+        env_state = camp.env_state_t(ncf)
         ncf.close()
 
         dry_diameters = particles.dry_diameters() * 1e6 # m to um
@@ -36,7 +36,7 @@ def process_data(in_filename_list, out_filename):
         # hack to avoid landing just around the integer boundaries
         comp_frac *= (1.0 + 1e-12)
 
-        value = partmc.histogram_2d(dry_diameters, comp_frac, x_axis, y_axis,
+        value = camp.histogram_2d(dry_diameters, comp_frac, x_axis, y_axis,
                                     weights = 1 / particles.comp_vols,
                                     only_positive=False)
         value *= 100 # account for y_axis scaling in %

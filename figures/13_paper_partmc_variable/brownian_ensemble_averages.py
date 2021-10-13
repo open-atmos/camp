@@ -7,13 +7,13 @@ import matplotlib
 matplotlib.use("PDF")
 import matplotlib.pyplot as plt
 sys.path.append("../../tool")
-import partmc
+import camp
 import config
 
 i_loop_max = config.i_loop_max
 
-sect_array_num_all = np.loadtxt("/Users/nriemer/subversion/partmc/trunk/local_scenarios/brownian_test_paper/out_60s/brownian_sect_size_num.txt")
-sect_array_mass_all = np.loadtxt("/Users/nriemer/subversion/partmc/trunk/local_scenarios/brownian_test_paper/out_60s/brownian_sect_size_mass.txt")
+sect_array_num_all = np.loadtxt("/Users/nriemer/subversion/camp/trunk/local_scenarios/brownian_test_paper/out_60s/brownian_sect_size_num.txt")
+sect_array_mass_all = np.loadtxt("/Users/nriemer/subversion/camp/trunk/local_scenarios/brownian_test_paper/out_60s/brownian_sect_size_mass.txt")
 
 sect_array_num = np.log(10) * sect_array_num_all[:,25]
 sect_array_mass = np.log(10) * sect_array_mass_all[:,25]
@@ -27,12 +27,12 @@ print "sect_num ", sect_num.shape
 norm_num = np.zeros([i_loop_max])
 norm_mass = np.zeros([i_loop_max])
 
-x_axis = partmc.log_grid(min=1e-10,max=1e-4,n_bin=100)
+x_axis = camp.log_grid(min=1e-10,max=1e-4,n_bin=100)
 x_centers = x_axis.centers()
 
 netcdf_pattern = "brownian_part_0001_(.*).nc"
 
-time_filename_list = partmc.get_time_filename_list(config.netcdf_dir, netcdf_pattern)
+time_filename_list = camp.get_time_filename_list(config.netcdf_dir, netcdf_pattern)
 time_array = np.zeros([len(time_filename_list)])
 
 num_avg = np.zeros([len(time_filename_list), i_loop_max, len(x_centers)])
@@ -54,25 +54,25 @@ for i_loop in range (0, i_loop_max):
 
     netcdf_pattern = "brownian_part_0%03d_(.*).nc"  % (i_loop+1)
     print netcdf_pattern
-    time_filename_list = partmc.get_time_filename_list(config.netcdf_dir, netcdf_pattern)
+    time_filename_list = camp.get_time_filename_list(config.netcdf_dir, netcdf_pattern)
 
     i_counter = 0
     for [time, filename, key] in time_filename_list:
         print time, filename, key
         ncf = scipy.io.netcdf.netcdf_file(filename, 'r')
-        particles = partmc.aero_particle_array_t(ncf)
-        env_state = partmc.env_state_t(ncf)
+        particles = camp.aero_particle_array_t(ncf)
+        env_state = camp.env_state_t(ncf)
         ncf.close()
 
         wet_diameters = particles.diameters()
-        hist = partmc.histogram_1d(wet_diameters, x_axis, weights = 1 / particles.comp_vols)
+        hist = camp.histogram_1d(wet_diameters, x_axis, weights = 1 / particles.comp_vols)
 
 #        total_number = sum(1/particles.comp_vols)
 #        total_mass = sum(particles.masses()/particles.comp_vols)
         time_array[i_counter]= time / 3600.
         array_num[i_counter,i_loop,:]= hist
 
-        hist = partmc.histogram_1d(wet_diameters, x_axis, weights = particles.masses() / particles.comp_vols)
+        hist = camp.histogram_1d(wet_diameters, x_axis, weights = particles.masses() / particles.comp_vols)
         array_mass[i_counter,i_loop,:]= hist
         i_counter += 1
 

@@ -8,11 +8,11 @@ import matplotlib
 matplotlib.use("PDF")
 import matplotlib.pyplot as plt
 sys.path.append("../../tool")
-import partmc
+import camp
 
 def make_plot(in_filename,out_filename,title):
     ncf = scipy.io.netcdf.netcdf_file(in_filename, 'r')
-    particles = partmc.aero_particle_array_t(ncf)
+    particles = camp.aero_particle_array_t(ncf)
     ncf.close()
 
     bc_volume = particles.volumes(include = ["BC"])
@@ -29,9 +29,9 @@ def make_plot(in_filename,out_filename,title):
     ratio = coating_thickness/dry_diameters
 
     print ratio.max()
-    x_axis = partmc.linear_grid(min=0,max=ratio.max(),n_bin=50)
+    x_axis = camp.linear_grid(min=0,max=ratio.max(),n_bin=50)
 
-    hist1d = partmc.histogram_1d(coating_thickness[is_bc]/dry_diameters[is_bc], x_axis, weights = 1/particles.comp_vols[is_bc])
+    hist1d = camp.histogram_1d(coating_thickness[is_bc]/dry_diameters[is_bc], x_axis, weights = 1/particles.comp_vols[is_bc])
     print hist1d
     plt.clf()
     a = plt.gca()

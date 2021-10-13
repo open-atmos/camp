@@ -8,11 +8,11 @@ matplotlib.use("PDF")
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 sys.path.append("../../tool")
-import partmc
+import camp
 
 def make_plot(in_filename,out_filename,title):
     ncf = scipy.io.netcdf.netcdf_file(in_filename, 'r')
-    particles = partmc.aero_particle_array_t(ncf)
+    particles = camp.aero_particle_array_t(ncf)
     ncf.close()
 
     so4 = particles.masses(include = ["SO4"])/particles.aero_data.molec_weights[0]
@@ -28,13 +28,13 @@ def make_plot(in_filename,out_filename,title):
     is_neutral = (ion_ratio < 2)
     dry_diameters = particles.dry_diameters()
 
-    x_axis = partmc.log_grid(min=1e-8,max=1e-6,n_bin=70)
-    y_axis = partmc.linear_grid(min=0,max=30.0,n_bin=100)
+    x_axis = camp.log_grid(min=1e-8,max=1e-6,n_bin=70)
+    y_axis = camp.linear_grid(min=0,max=30.0,n_bin=100)
     x_centers = x_axis.centers()
 
-    bin_so4 = partmc.histogram_1d(dry_diameters, x_axis, weights = so4)
-    bin_nh4 = partmc.histogram_1d(dry_diameters, x_axis, weights = nh4)
-    bin_no3 = partmc.histogram_1d(dry_diameters, x_axis, weights = no3)
+    bin_so4 = camp.histogram_1d(dry_diameters, x_axis, weights = so4)
+    bin_nh4 = camp.histogram_1d(dry_diameters, x_axis, weights = nh4)
+    bin_no3 = camp.histogram_1d(dry_diameters, x_axis, weights = no3)
     
     print 'bin_so4 ', bin_so4[40]
     print 'bin_nh4 ', bin_nh4[40]
@@ -68,7 +68,7 @@ def make_plot(in_filename,out_filename,title):
     print 'sums/number ',  sum(so4[is_40])/len(so4_40), sum(nh4[is_40])/len(nh4_40), sum(no3[is_40])/len(no3_40)
     
     
-    hist2d = partmc.histogram_2d(dry_diameters, ion_ratio, x_axis, y_axis, weights = 1/particles.comp_vols)
+    hist2d = camp.histogram_2d(dry_diameters, ion_ratio, x_axis, y_axis, weights = 1/particles.comp_vols)
 
     plt.clf()
     plt.pcolor(x_axis.edges(), y_axis.edges(), hist2d.transpose(),norm = matplotlib.colors.LogNorm(), linewidths = 0.1)

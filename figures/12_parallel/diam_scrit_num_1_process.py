@@ -7,17 +7,17 @@ import os, sys, math
 import numpy as np
 import scipy.io
 sys.path.append("../../tool")
-import partmc
+import camp
 import config
 import config_filelist
 
 data_base_dir = "data"
 data_type = "diam_scrit_num"
 
-x_axis = partmc.log_grid(min = config.diameter_axis_min,
+x_axis = camp.log_grid(min = config.diameter_axis_min,
                          max = config.diameter_axis_max,
                          n_bin = config.num_diameter_bins)
-y_axis = partmc.log_grid(min = config.scrit_axis_min,
+y_axis = camp.log_grid(min = config.scrit_axis_min,
                          max = config.scrit_axis_max,
                          n_bin = config.num_scrit_bins)
 
@@ -25,14 +25,14 @@ def process_data(in_filename_list, out_filename):
     total_value = None
     for in_filename in in_filename_list:
         ncf = scipy.io.netcdf.netcdf_file(in_filename, 'r')
-        particles = partmc.aero_particle_array_t(ncf)
-        env_state = partmc.env_state_t(ncf)
+        particles = camp.aero_particle_array_t(ncf)
+        env_state = camp.env_state_t(ncf)
         ncf.close()
 
         dry_diameters = particles.dry_diameters() * 1e6 # m to um
         scrit = (particles.critical_rel_humids(env_state) - 1) * 100 # in %
 
-        value = partmc.histogram_2d(dry_diameters, scrit, x_axis, y_axis,
+        value = camp.histogram_2d(dry_diameters, scrit, x_axis, y_axis,
                                     weights = 1 / particles.comp_vols,
                                     only_positive=False)
         # do not account for y_axis in % as it is a log-scale

@@ -7,7 +7,7 @@ import os, sys, math
 import numpy as np
 import scipy.io
 sys.path.append("../../tool")
-import partmc
+import camp
 import config
 import config_filelist
 
@@ -18,8 +18,8 @@ def process_data(in_filename_list):
     total_value = None
     for in_filename in in_filename_list:
         ncf = scipy.io.netcdf.netcdf_file(in_filename, 'r')
-        gas_state = partmc.gas_state_t(ncf)
-        env_state = partmc.env_state_t(ncf)
+        gas_state = camp.gas_state_t(ncf)
+        env_state = camp.env_state_t(ncf)
         ncf.close()
 
         time_since_midnight = env_state.start_time_of_day \

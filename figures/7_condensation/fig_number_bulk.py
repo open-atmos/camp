@@ -7,12 +7,12 @@ import matplotlib
 matplotlib.use("PDF")
 import matplotlib.pyplot as plt
 sys.path.append("../../tool")
-import partmc
+import camp
 import config
 
-netcdf_dir = "/home/lfierce2/subversion/partmc/trunk/urban_plume/data/scaleBC3/rate_10k/"
+netcdf_dir = "/home/lfierce2/subversion/camp/trunk/urban_plume/data/scaleBC3/rate_10k/"
 netcdf_pattern = "urban_plume_wc_0001_(.*).nc"
-time_filename_list = partmc.get_time_filename_list(netcdf_dir, netcdf_pattern)
+time_filename_list = camp.get_time_filename_list(netcdf_dir, netcdf_pattern)
 
 array_wc = np.zeros([len(time_filename_list),10])
 array_nc = np.zeros([len(time_filename_list),10])
@@ -21,8 +21,8 @@ i_counter = 0
 for [time, filename, key] in time_filename_list:
     print time, filename, key
     ncf = scipy.io.netcdf.netcdf_file(filename, 'r')
-    particles = partmc.aero_particle_array_t(ncf)
-    env_state = partmc.env_state_t(ncf)
+    particles = camp.aero_particle_array_t(ncf)
+    env_state = camp.env_state_t(ncf)
     ncf.close()
 
     total_number = sum(1/particles.comp_vols)
@@ -52,14 +52,14 @@ np.savetxt("species.txt", array_wc)
 
 #netcdf_dir = "../../scenarios/5_weighted/out/"
 #netcdf_pattern = "urban_plume_nc_0001_(.*).nc"
-#time_filename_list = partmc.get_time_filename_list(netcdf_dir, netcdf_pattern)
+#time_filename_list = camp.get_time_filename_list(netcdf_dir, netcdf_pattern)
 
 #i_counter = 0
 #for [time, filename, key] in time_filename_list:
 #    print time, filename, key
 #    ncf = scipy.io.netcdf.netcdf_file(filename, 'r')
-#    particles = partmc.aero_particle_array_t(ncf)
-#    env_state = partmc.env_state_t(ncf)
+#    particles = camp.aero_particle_array_t(ncf)
+#    env_state = camp.env_state_t(ncf)
 #    ncf.close()#
 
 #    total_number = sum(1/particles.comp_vols)

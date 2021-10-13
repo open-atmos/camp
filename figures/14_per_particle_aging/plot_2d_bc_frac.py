@@ -4,15 +4,15 @@ import os, sys
 import scipy.io
 import numpy as np
 
-sys.path.append("/Users/nriemer/subversion/partmc/trunk/tool")
-import partmc
+sys.path.append("/Users/nriemer/subversion/camp/trunk/tool")
+import camp
 import mpl_helper
 import matplotlib
 import pickle
 
 def make_plot(dir_name,in_filename,out_filename):
     ncf = scipy.io.netcdf.netcdf_file(dir_name+in_filename, 'r')
-    particles = partmc.aero_particle_array_t(ncf)
+    particles = camp.aero_particle_array_t(ncf)
     ncf.close()
 
     bc = particles.masses(include = ["BC"])
@@ -21,10 +21,10 @@ def make_plot(dir_name,in_filename,out_filename):
 
     dry_diameters = particles.dry_diameters() * 1e6
 
-    x_axis = partmc.log_grid(min=1e-3,max=1e1,n_bin=100)
-    y_axis = partmc.linear_grid(min=0,max=0.8,n_bin=40)
+    x_axis = camp.log_grid(min=1e-3,max=1e1,n_bin=100)
+    y_axis = camp.linear_grid(min=0,max=0.8,n_bin=40)
 
-    hist2d = partmc.histogram_2d(dry_diameters, bc_frac, x_axis, y_axis, weights = 1/particles.comp_vols)
+    hist2d = camp.histogram_2d(dry_diameters, bc_frac, x_axis, y_axis, weights = 1/particles.comp_vols)
 
     hist2d = hist2d * 1e-6
     print hist2d[36,:]

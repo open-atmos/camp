@@ -4,14 +4,14 @@ PartMC
 
 PartMC: Particle-resolved Monte Carlo code for atmospheric aerosol simulation
 
-[![Docker build status](https://img.shields.io/docker/automated/compdyn/partmc.svg)](https://cloud.docker.com/swarm/compdyn/repository/docker/compdyn/partmc/builds)
+[![Docker build status](https://img.shields.io/docker/automated/compdyn/camp.svg)](https://cloud.docker.com/swarm/compdyn/repository/docker/compdyn/camp/builds)
 
-[![CI Status](https://img.shields.io/travis/compdyn/partmc/master.svg)](https://travis-ci.org/compdyn/partmc)
+[![CI Status](https://img.shields.io/travis/compdyn/camp/master.svg)](https://travis-ci.org/compdyn/camp)
 
 Version 2.4.0  
 Released 2017-02-14
 
-<http://lagrange.mechse.illinois.edu/partmc/>
+<http://lagrange.mechse.illinois.edu/camp/>
 
 References:
 
@@ -84,14 +84,14 @@ This is the fastest way to get running.
 * **_Step 2:_** (Optional) Run the PartMC test suite with:
 
 ```text
-docker run -it --rm compdyn/partmc bash -c 'cd /build; make test'
+docker run -it --rm compdyn/camp bash -c 'cd /build; make test'
 ```
 
-* **_Step 3:_** Run a scenario like the following. This example uses `partmc/scenarios/4_chamber`. This mounts the current directory (`$PWD`, replace with `%cd%` on Windows) into `/run` inside the container, changes into that directory, and then runs PartMC.
+* **_Step 3:_** Run a scenario like the following. This example uses `camp/scenarios/4_chamber`. This mounts the current directory (`$PWD`, replace with `%cd%` on Windows) into `/run` inside the container, changes into that directory, and then runs PartMC.
 
 ```text
-cd partmc/scenarios/4_chamber
-docker run -it --rm -v $PWD:/run compdyn/partmc bash -c 'cd /run; /build/partmc chamber.spec'
+cd camp/scenarios/4_chamber
+docker run -it --rm -v $PWD:/run compdyn/camp bash -c 'cd /run; /build/camp chamber.spec'
 ```
 
 In the above `docker run` command the arguments are:
@@ -99,15 +99,15 @@ In the above `docker run` command the arguments are:
 - `-it`: activates "interactive" mode so Ctrl-C works to kill the command
 - `--rm`: remove temporary docker container files after running
 - `-v LOCAL:REMOTE`: mount the `LOCAL` directory to the `REMOTE` directory inside the container
-- `compdyn/partmc`: the docker image to run
+- `compdyn/camp`: the docker image to run
 - `bash -c 'COMMAND'`: run `COMMAND` inside the docker container
 
 The directory structure inside the docker container is:
 
 ```text
-/partmc           # a copy of the partmc git source code repository
-/build            # the diretory in which partmc was compiled
-/build/partmc     # the compiled partmc executable
+/camp           # a copy of the camp git source code repository
+/build            # the diretory in which camp was compiled
+/build/camp     # the compiled camp executable
 /run              # the default diretory to run in
 ```
 
@@ -146,12 +146,12 @@ Installation
 
 2. Unpack PartMC:
 
-        tar xzvf partmc-2.4.0.tar.gz
+        tar xzvf camp-2.4.0.tar.gz
 
 3. Change into the main PartMC directory (where this README file is
    located):
 
-        cd partmc-2.4.0
+        cd camp-2.4.0
 
 4. Make a directory called `build` and change into it:
 
@@ -226,7 +226,7 @@ Installation
 Usage
 =====
 
-The main `partmc` command reads `.spec` files and does the run
+The main `camp` command reads `.spec` files and does the run
 specified therein. Either particle-resolved runs, sectional-code runs,
 or exact solutions can be generated. A run produces one NetCDF file
 per output timestep, containing per-particle data (from

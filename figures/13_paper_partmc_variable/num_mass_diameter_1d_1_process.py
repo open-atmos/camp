@@ -4,26 +4,26 @@ import scipy.io
 import sys
 import numpy as np
 sys.path.append("../../tool")
-import partmc
+import camp
 import config
 
 i_loop_max = config.i_loop_max
 
 def make_plot(in_files, f1, f2, f3, f4, f5):
-    x_axis = partmc.log_grid(min=1e-10,max=1e-4,n_bin=100)
+    x_axis = camp.log_grid(min=1e-10,max=1e-4,n_bin=100)
     x_centers = x_axis.centers()
     counter = 0
     hist_array_num = np.zeros([len(x_centers),config.i_loop_max])
     hist_array_mass = np.zeros([len(x_centers),config.i_loop_max])
     for file in in_files:
         ncf = scipy.io.netcdf.netcdf_file(config.netcdf_dir+'/'+file, 'r')
-        particles = partmc.aero_particle_array_t(ncf)
+        particles = camp.aero_particle_array_t(ncf)
         ncf.close()
 
         dry_diameters = particles.dry_diameters()
-        hist = partmc.histogram_1d(dry_diameters, x_axis, weights = 1 / particles.comp_vols)
+        hist = camp.histogram_1d(dry_diameters, x_axis, weights = 1 / particles.comp_vols)
         hist_array_num[:,counter] = hist
-        hist = partmc.histogram_1d(dry_diameters, x_axis, weights = particles.masses(exclude=["H2O"])  / particles.comp_vols)
+        hist = camp.histogram_1d(dry_diameters, x_axis, weights = particles.masses(exclude=["H2O"])  / particles.comp_vols)
         hist_array_mass[:,counter] = hist
 
         counter = counter+1

@@ -7,14 +7,14 @@ import matplotlib
 matplotlib.use("PDF")
 import matplotlib.pyplot as plt
 sys.path.append("../../tool")
-import partmc
+import camp
 import mpl_helper
 
 import config
 
 netcdf_dir = "../../scenarios/1_urban_plume/out/"
 netcdf_pattern = "urban_plume_nc_0001_(.*).nc"
-time_filename_list = partmc.get_time_filename_list(netcdf_dir, netcdf_pattern)
+time_filename_list = camp.get_time_filename_list(netcdf_dir, netcdf_pattern)
 
 mass_array = np.zeros([len(time_filename_list),5])
 i_counter = 0
@@ -22,8 +22,8 @@ i_counter = 0
 for [time, filename, key] in time_filename_list:
     print time, filename, key
     ncf = scipy.io.netcdf.netcdf_file(filename, 'r')
-    particles = partmc.aero_particle_array_t(ncf)
-    env_state = partmc.env_state_t(ncf)
+    particles = camp.aero_particle_array_t(ncf)
+    env_state = camp.env_state_t(ncf)
     ncf.close()
 
     bc = particles.masses(include = ["BC"])

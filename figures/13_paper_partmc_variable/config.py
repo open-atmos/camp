@@ -5,7 +5,7 @@ i_loop_max = 100
 
 #netcdf_dir = "../../scenarios/5_weighted/out"
 #netcdf_dir = "../../local_scenarios/brownian_test_paper/out"
-netcdf_dir = "/home/nriemer/subversion/partmc/branches/nriemer/local_scenarios/brownian_test_paper2/out_60s"
+netcdf_dir = "/home/nriemer/subversion/camp/branches/nriemer/local_scenarios/brownian_test_paper2/out_60s"
 
 figure_width_single = 8.4 / 2.54
 figure_width_double = 16.45 / 2.54
@@ -30,10 +30,10 @@ matplotlib.rc('text.latex', preamble = "\usepackage{upgreek}")
 
 
 
-partmc_tool_dir = "../../tool"
+camp_tool_dir = "../../tool"
 
-plume_data_dir = "/home/ching1/subversion/partmc/trunk/scenarios/3_condense/start"
-parcel_data_dir = "/home/ching1/subversion/partmc/trunk/scenarios/3_condense/out"
+plume_data_dir = "/home/ching1/subversion/camp/trunk/scenarios/3_condense/start"
+parcel_data_dir = "/home/ching1/subversion/camp/trunk/scenarios/3_condense/out"
 parcel_regexp = "cond_08_%s_0001_([0-9]{8}).nc"
 parcel_init_regexp = "cond_([0-9]{2})_%s_0001_00000001.nc"
 parcel_series_regexp = "cond_%s_%s_0001_([0-9]{8}).nc"

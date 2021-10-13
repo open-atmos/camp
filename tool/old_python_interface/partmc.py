@@ -74,7 +74,7 @@ def constants_f2py(constants_f90_filename):
     class.
 
     Example:
-    >>> partmc.constants_t('path_to_src/constants.f90')
+    >>> camp.constants_t('path_to_src/constants.f90')
 
     """
     consts_file = open(constants_f90_filename)
@@ -174,11 +174,11 @@ class aero_data_t(object):
         aero_data_t object will be created. For example:
 
         >>> ncf = scipy.io.netcdf.netcdf_file('filename.nc', 'r')
-        >>> aero_data = partmc.aero_data_t(ncf)
+        >>> aero_data = camp.aero_data_t(ncf)
 
         or
 
-        >>> aero_data = partmc.aero_data_t(n_species=10, n_sources=3)
+        >>> aero_data = camp.aero_data_t(n_species=10, n_sources=3)
 
         """
         if ncf is not None:
@@ -293,11 +293,11 @@ class env_state_t(object):
         an empty env_state_t object will be created. For example:
 
         >>> ncf = scipy.io.netcdf.netcdf_file('filename.nc', 'r')
-        >>> env_state = partmc.env_state_t(ncf)
+        >>> env_state = camp.env_state_t(ncf)
 
         or
 
-        >>> env_state = partmc.env_state_t()
+        >>> env_state = camp.env_state_t()
 
         """
         if ncf is not None:
@@ -455,11 +455,11 @@ class gas_data_t(object):
         object will be created. For example:
 
         >>> ncf = scipy.io.netcdf.netcdf_file('filename.nc', 'r')
-        >>> gas_data = partmc.gas_data_t(ncf)
+        >>> gas_data = camp.gas_data_t(ncf)
 
         or
 
-        >>> gas_data = partmc.gas_data_t(n_species=60)
+        >>> gas_data = camp.gas_data_t(n_species=60)
 
         """
         if ncf is not None:
@@ -511,13 +511,13 @@ class gas_state_t(object):
         example:
 
         >>> ncf = scipy.io.netcdf.netcdf_file('filename.nc', 'r')
-        >>> gas_state = partmc.gas_state_t(ncf)
+        >>> gas_state = camp.gas_state_t(ncf)
 
         or
 
         >>> ncf = scipy.io.netcdf.netcdf_file('filename.nc', 'r')
-        >>> gas_data = partmc.gas_data_t(ncf)
-        >>> gas_state = partmc.gas_state_t(gas_data=gas_data)
+        >>> gas_data = camp.gas_data_t(ncf)
+        >>> gas_state = camp.gas_state_t(gas_data=gas_data)
 
         """
         if ncf is not None:
@@ -610,20 +610,20 @@ class aero_particle_array_t(object):
         For example:
 
         >>> ncf = scipy.io.netcdf.netcdf_file('filename.nc', 'r')
-        >>> aero_particle_array = partmc.aero_particle_array_t(ncf)
+        >>> aero_particle_array = camp.aero_particle_array_t(ncf)
 
         or
 
         >>> ncf = scipy.io.netcdf.netcdf_file('filename.nc', 'r')
-        >>> aero_particle_array = partmc.aero_particle_array_t(ncf,
+        >>> aero_particle_array = camp.aero_particle_array_t(ncf,
                 include_ids=[45, 182, 7281])
 
         or
 
         >>> ncf = scipy.io.netcdf.netcdf_file('filename.nc', 'r')
-        >>> aero_data = partmc.aero_data_t(ncf)
+        >>> aero_data = camp.aero_data_t(ncf)
         >>> aero_particle_array \\
-                = partmc.aero_particle_array_t(n_particles=100,
+                = camp.aero_particle_array_t(n_particles=100,
                                                aero_data=aero_data)
 
         """
@@ -956,11 +956,11 @@ def equilib_rel_humids(env_state, kappa, dry_diameter, wet_diameters):
 
     Example:
     >>> ncf = scipy.io.netcdf.netcdf_file('filename.nc', 'r')
-    >>> env_state = partmc.env_state_t(ncf)
+    >>> env_state = camp.env_state_t(ncf)
     >>> kappa = 0.2
     >>> dry_diameter = 1e-8
-    >>> wet_diameters = partmc.log_grid(min=1.1e-8, max=1e-7, n_bin=20).edges()
-    >>> equilib_rhs = partmc.equilib_rel_humids(env_state,
+    >>> wet_diameters = camp.log_grid(min=1.1e-8, max=1e-7, n_bin=20).edges()
+    >>> equilib_rhs = camp.equilib_rel_humids(env_state,
             kappa, dry_diameter, wet_diameters)
 
     """
@@ -989,10 +989,10 @@ def critical_rel_humids(env_state, kappas, dry_diameters):
 
     Example:
     >>> ncf = scipy.io.netcdf.netcdf_file('filename.nc', 'r')
-    >>> env_state = partmc.env_state_t(ncf)
+    >>> env_state = camp.env_state_t(ncf)
     >>> kappas = numpy.array([0.5, 0.2])
     >>> dry_diameters = numpy.array([1e-8, 5e-8])
-    >>> crit_rhs = partmc.critical_rel_humids(env_state,
+    >>> crit_rhs = camp.critical_rel_humids(env_state,
             kappas, dry_diameters)
 
     """
@@ -1022,10 +1022,10 @@ def critical_diameters(env_state, kappas, dry_diameters):
 
     Example:
     >>> ncf = scipy.io.netcdf.netcdf_file('filename.nc', 'r')
-    >>> env_state = partmc.env_state_t(ncf)
+    >>> env_state = camp.env_state_t(ncf)
     >>> kappas = numpy.array([0.5, 0.2])
     >>> dry_diameters = numpy.array([1e-8, 5e-8])
-    >>> crit_diams = partmc.critical_diameters(env_state,
+    >>> crit_diams = camp.critical_diameters(env_state,
             kappas, dry_diameters)
 
     """
@@ -1082,7 +1082,7 @@ class aero_removed_info_t(object):
 
     Example:
     >>> ncf = scipy.io.netcdf.netcdf_file('filename.nc', 'r')
-    >>> aero_removed_info = partmc.aero_removed_info_t(ncf)
+    >>> aero_removed_info = camp.aero_removed_info_t(ncf)
     >>> n_removed_particles = len(aero_removed_info.ids)
     >>> for i in range(n_removed_particles):
     >>>     print('removed particle %d' % i)
@@ -1115,7 +1115,7 @@ class aero_removed_info_t(object):
         
         For example:
         >>> ncf = scipy.io.netcdf.netcdf_file('filename.nc', 'r')
-        >>> aero_removed_info = partmc.aero_removed_info_t(ncf)
+        >>> aero_removed_info = camp.aero_removed_info_t(ncf)
 
         """
         for (ncf_var, self_var) in [
@@ -1151,7 +1151,7 @@ class aero_binned_t(object):
         For example:
 
         >>> ncf = scipy.io.netcdf.netcdf_file('filename.nc', 'r')
-        >>> aero_binned = partmc.aero_binned_t(ncf)
+        >>> aero_binned = camp.aero_binned_t(ncf)
 
         """
         self.aero_data = aero_data_t(ncf)
@@ -1178,14 +1178,14 @@ class aero_binned_t(object):
 
 class grid(object):
 
-    """Base class for 1D grids. See partmc.linear_grid and
-    partmc.log_grid for specific grid types.
+    """Base class for 1D grids. See camp.linear_grid and
+    camp.log_grid for specific grid types.
 
     """
     
     def __init__(self):
-        """Do not call this. Instead call partmc.linear_grid() or
-        partmc.log_grid() to make a specific type of grid.
+        """Do not call this. Instead call camp.linear_grid() or
+        camp.log_grid() to make a specific type of grid.
 
         """
         raise NotImplementedError()
@@ -1257,7 +1257,7 @@ class linear_grid(grid):
     """Linear 1D grid.
 
     Example:
-    >>> x_grid = partmc.linear_grid(0, 5, 100)
+    >>> x_grid = camp.linear_grid(0, 5, 100)
     >>> x = 1.83
     >>> print('value %f' % x)
     >>> print('is in bin number %d' % x_grid.find(x))
@@ -1271,7 +1271,7 @@ class linear_grid(grid):
         will have n_bin grid bins.
 
         Example:
-        >>> x_grid = partmc.linear_grid(0, 4, 2)
+        >>> x_grid = camp.linear_grid(0, 4, 2)
         >>> x_grid.edges()
         array([0.0, 2.0, 4.0])
         >>> x_grid.centers():
@@ -1289,10 +1289,10 @@ class linear_grid(grid):
 
         For example, the two grids below are the same:
 
-        >>> grid_1 = partmc.linear_grid(5, 10, 100)
+        >>> grid_1 = camp.linear_grid(5, 10, 100)
         >>> grid_1.scale(3)
         
-        >>> grid_2 = partmc.linear_grid(15, 30, 100)
+        >>> grid_2 = camp.linear_grid(15, 30, 100)
 
         """
         self.min = self.min * factor
@@ -1304,7 +1304,7 @@ class linear_grid(grid):
         For a linear grid this will be the same for all bins.
 
         Example:
-        >>> x_grid = partmc.linear_grid(0, 10, 5)
+        >>> x_grid = camp.linear_grid(0, 10, 5)
         >>> x_grid.grid_size(0)
         2.0
 
@@ -1316,7 +1316,7 @@ class linear_grid(grid):
         for the grid.
 
         Example:
-        >>> x_grid = partmc.linear_grid(0, 5, 100)
+        >>> x_grid = camp.linear_grid(0, 5, 100)
         >>> x_grid.valid_bin(30)
         True
         >>> x_grid.valid_bin(120)
@@ -1335,7 +1335,7 @@ class linear_grid(grid):
         values are outside of [min, max] for the grid.
 
         Example:
-        >>> x_grid = partmc.linear_grid(0, 10, 5)
+        >>> x_grid = camp.linear_grid(0, 10, 5)
         >>> x_grid.find(numpy.array([-5, 3, 6.5, 13]))
         array([-3, 1, 3, 6])
 
@@ -1351,7 +1351,7 @@ class linear_grid(grid):
         n_bin grid cells will have (n_bin + 1) edges.
 
         Example:
-        >>> x_grid = partmc.linear_grid(0, 10, 5)
+        >>> x_grid = camp.linear_grid(0, 10, 5)
         >>> x_grid.edge(0)
         0.0
         >>> x_grid.edge(2)
@@ -1377,7 +1377,7 @@ class linear_grid(grid):
         The index must be in the range 0 to (n_bin - 1).
 
         Example:
-        >>> x_grid = partmc.linear_grid(0, 10, 5)
+        >>> x_grid = camp.linear_grid(0, 10, 5)
         >>> x_grid.center(0)
         1.0
         >>> x_grid.center(2)
@@ -1406,7 +1406,7 @@ class log_grid(grid):
     """Logarithmic 1D grid.
 
     Example:
-    >>> x_grid = partmc.log_grid(1, 5, 100)
+    >>> x_grid = camp.log_grid(1, 5, 100)
     >>> x = 1.83
     >>> print('value %f' % x)
     >>> print('is in bin number %d' % x_grid.find(x))
@@ -1420,7 +1420,7 @@ class log_grid(grid):
         will have n_bin grid bins.
 
         Example:
-        >>> x_grid = partmc.log_grid(1, 16, 2)
+        >>> x_grid = camp.log_grid(1, 16, 2)
         >>> x_grid.edges()
         array([1.0, 4.0, 16.0])
         >>> x_grid.centers():
@@ -1441,7 +1441,7 @@ class log_grid(grid):
 
         Example:
         >>> ncf = scipy.io.netcdf.netcdf_file('filename.nc', 'r')
-        >>> diam_grid = partmc.log_grid()
+        >>> diam_grid = camp.log_grid()
         >>> diam_grid.load_ncf_diam(ncf)
 
         """
@@ -1455,10 +1455,10 @@ class log_grid(grid):
 
         For example, the two grids below are the same:
 
-        >>> grid_1 = partmc.log_grid(5, 10, 100)
+        >>> grid_1 = camp.log_grid(5, 10, 100)
         >>> grid_1.scale(3)
         
-        >>> grid_2 = partmc.log_grid(15, 30, 100)
+        >>> grid_2 = camp.log_grid(15, 30, 100)
 
         """
         self.min = self.min * factor
@@ -1473,7 +1473,7 @@ class log_grid(grid):
         edges in the given base (default base-10).
 
         Example:
-        >>> x_grid = partmc.log_grid(1, 100, 10)
+        >>> x_grid = camp.log_grid(1, 100, 10)
         >>> x_grid.grid_size(0)
         0.2
 
@@ -1487,7 +1487,7 @@ class log_grid(grid):
         for the grid.
 
         Example:
-        >>> x_grid = partmc.log_grid(1, 5, 100)
+        >>> x_grid = camp.log_grid(1, 5, 100)
         >>> x_grid.valid_bin(30)
         True
         >>> x_grid.valid_bin(120)
@@ -1507,7 +1507,7 @@ class log_grid(grid):
         outside of [min, max] for the grid.
 
         Example:
-        >>> x_grid = partmc.log_grid(1, 16, 4)
+        >>> x_grid = camp.log_grid(1, 16, 4)
         >>> x_grid.find(numpy.array([0.3, 3, 8.5, 40]))
         array([-2, 1, 3, 5])
 
@@ -1525,7 +1525,7 @@ class log_grid(grid):
         n_bin grid cells will have (n_bin + 1) edges.
 
         Example:
-        >>> x_grid = partmc.log_grid(1, 16, 4)
+        >>> x_grid = camp.log_grid(1, 16, 4)
         >>> x_grid.edge(0)
         1.0
         >>> x_grid.edge(2)
@@ -1552,7 +1552,7 @@ class log_grid(grid):
         The index must be in the range 0 to (n_bin - 1).
 
         Example:
-        >>> x_grid = partmc.log_grid(1, 64, 3)
+        >>> x_grid = camp.log_grid(1, 64, 3)
         >>> x_grid.center(0)
         2.0
         >>> x_grid.center(1)
@@ -1586,8 +1586,8 @@ def histogram_1d(x_values, x_grid, weighted=True, weights=None):
     sizes. If weighted=False then no weighting is performed.
 
     Example:
-    >>> x_grid = partmc.log_grid(min=1e-8, max=1e-5, n_bin=70)
-    >>> hist = partmc.histogram_1d(diam, x_grid, weights=particles.num_concs)
+    >>> x_grid = camp.log_grid(min=1e-8, max=1e-5, n_bin=70)
+    >>> hist = camp.histogram_1d(diam, x_grid, weights=particles.num_concs)
     >>> plt.semilogx(x_grid.centers(), hist)
     
     """
@@ -1620,9 +1620,9 @@ def histogram_2d(x_values, y_values, x_grid, y_grid, weighted=True, weights=None
     sizes. If weighted=False then no weighting is performed.
 
     Example:
-    >>> x_grid = partmc.log_grid(min=1e-8, max=1e-5, n_bin=70)
-    >>> y_grid = partmc.linear_grid(min=0, max=1, n_bin=50)
-    >>> hist = partmc.histogram_2d(diam, bc_frac, x_grid, y_grid, weights=particles.num_concs)
+    >>> x_grid = camp.log_grid(min=1e-8, max=1e-5, n_bin=70)
+    >>> y_grid = camp.linear_grid(min=0, max=1, n_bin=50)
+    >>> hist = camp.histogram_2d(diam, bc_frac, x_grid, y_grid, weights=particles.num_concs)
     >>> plt.pcolor(x_grid.edges(), y_grid.edges(), hist.transpose(),
                    norm=matplotlib.colors.LogNorm(), linewidths=0.1)
 
@@ -1658,9 +1658,9 @@ def multival_2d(x_values, y_values, z_values, x_grid, y_grid, rand_arrange=True)
     (x_values[i], y_values[i]) for each i.
 
     Example:
-    >>> x_grid = partmc.log_grid(min=1e-8, max=1e-5, n_bin=140)
-    >>> y_grid = partmc.linear_grid(min=0, max=1, n_bin=100)
-    >>> vals = partmc.multival_2d(diam, bc_frac, h2o, x_grid, y_grid)
+    >>> x_grid = camp.log_grid(min=1e-8, max=1e-5, n_bin=140)
+    >>> y_grid = camp.linear_grid(min=0, max=1, n_bin=100)
+    >>> vals = camp.multival_2d(diam, bc_frac, h2o, x_grid, y_grid)
     >>> plt.pcolor(x_grid.edges(), y_grid.edges(), vals.transpose(),
                    norm=matplotlib.colors.LogNorm(), linewidths=0.1)
 
@@ -1669,9 +1669,9 @@ def multival_2d(x_values, y_values, z_values, x_grid, y_grid, rand_arrange=True)
     as in the following example.
 
     Example:
-    >>> x_grid = partmc.log_grid(min=1e-8, max=1e-5, n_bin=140)
-    >>> y_grid = partmc.linear_grid(min=0, max=1, n_bin=100)
-    >>> vals = partmc.multival_2d(diam, bc_frac, h2o, x_grid, y_grid)
+    >>> x_grid = camp.log_grid(min=1e-8, max=1e-5, n_bin=140)
+    >>> y_grid = camp.linear_grid(min=0, max=1, n_bin=100)
+    >>> vals = camp.multival_2d(diam, bc_frac, h2o, x_grid, y_grid)
     >>> vals_pos = np.ma.masked_less_equal(vals, 0)
     >>> vals_zero = np.ma.masked_not_equal(vals, 0)
     >>> plt.pcolor(x_grid.edges(), y_grid.edges(), vals_zero.transpose(),
@@ -1734,8 +1734,8 @@ def time_of_day_string(env_state, separator=":", resolution="minutes"):
 
     Example:
     >>> ncf = scipy.io.netcdf.netcdf_file('filename.nc', 'r')
-    >>> env_state = partmc.env_state_t(ncf)
-    >>> partmc.time_of_day_string(env_state)
+    >>> env_state = camp.env_state_t(ncf)
+    >>> camp.time_of_day_string(env_state)
     '14:24'
     
     """
@@ -1753,9 +1753,9 @@ def time_of_day_string_from_seconds(time_seconds, separator=":",
     'seconds', to indicate the granularity of the result.
 
     Example:
-    >>> partmc.time_of_day_string_from_seconds(51858.6)
+    >>> camp.time_of_day_string_from_seconds(51858.6)
     '14:24'
-    >>> partmc.time_of_day_string_from_seconds(51858.6, resolution='seconds')
+    >>> camp.time_of_day_string_from_seconds(51858.6, resolution='seconds')
     '14:24:18'
     
     """
@@ -1785,7 +1785,7 @@ def read_history(constructor, directory, filename_pattern,
     times.
 
     Example:
-    >>> gas_state_history = partmc.read_history(gas_state_t,
+    >>> gas_state_history = camp.read_history(gas_state_t,
                                       'out/', 'data_0001_[0-9]{8}.nc')
     >>> time = [t for [t, gs] in gas_state_history]
     >>> o3 = [gs.mixing_ratio('O3') for [t, gs] in gas_state_history]
@@ -1818,7 +1818,7 @@ def read_any(constructor, directory, filename_pattern):
     the file, which is returned.
 
     Example:
-    >>> aero_data = partmc.read_history(aero_data_t,
+    >>> aero_data = camp.read_history(aero_data_t,
                                         'out/', 'data_0001_[0-9]{8}.nc')
     >>> print('species names: ', aero_data.names)
 
@@ -1845,7 +1845,7 @@ def get_filename_list(directory, filename_pattern):
     group match.
 
     Example:
-    >>> netcdf_files = partmc.get_filename_list('out/', r'data_.*\.nc')
+    >>> netcdf_files = camp.get_filename_list('out/', r'data_.*\.nc')
 
     """
     filename_list = []
@@ -1882,7 +1882,7 @@ def get_time_filename_list(dir, file_pattern):
     match, otherwise it is None.
 
     Example:
-    >>> netcdf_files = partmc.get_filename_list('out/', r'data_(.*)\.nc')
+    >>> netcdf_files = camp.get_filename_list('out/', r'data_(.*)\.nc')
 
     """
     time_filename_list = []
@@ -1916,7 +1916,7 @@ def find_nearest_index(data, value):
 
     Example:
     >>> data = [0, 3, 5, -2]
-    >>> i = partmc.find_nearest_index(data, 3.4)
+    >>> i = camp.find_nearest_index(data, 3.4)
     returns i = 1
 
     """
@@ -1937,7 +1937,7 @@ def argmax(data):
 
     Example:
     >>> data = [0, 3, 5, -2]
-    >>> i = partmc.argmax(data)
+    >>> i = camp.argmax(data)
     returns i = 2
 
     """
@@ -1957,7 +1957,7 @@ def argmin(data):
 
     Example:
     >>> data = [0, 3, 5, -2]
-    >>> i = partmc.argminx(data)
+    >>> i = camp.argminx(data)
     returns i = 3
 
     """
@@ -1981,7 +1981,7 @@ def find_nearest_time(time_indexed_data, search_time):
 
     Example:
     >>> data = [[0, 50], [3, 45], [5, 40]]
-    >>> i = partmc.find_nearest_time(data, 3.4)
+    >>> i = camp.find_nearest_time(data, 3.4)
     returns i = 1
     
     """
@@ -2005,8 +2005,8 @@ def find_filename_at_time(time_filename_list, search_time):
     argument.
 
     Example:
-    >>> netcdf_files = partmc.get_filename_list('out/', r'data_(.*)\.nc')
-    >>> input_file = partmc.find_filename_at_time(netcdf_files, 12 * 3600)
+    >>> netcdf_files = camp.get_filename_list('out/', r'data_(.*)\.nc')
+    >>> input_file = camp.find_filename_at_time(netcdf_files, 12 * 3600)
     returns the filename closest to 12 hours elapsed time.
 
     """
@@ -2026,7 +2026,7 @@ def cumulative_plot_data(x, y_inc, start=0.0, final=None):
     it specifies the final y value.
 
     Example:
-    >>> (x, y) = partmc.cumulative_plot_data(diameter, bc_mass)
+    >>> (x, y) = camp.cumulative_plot_data(diameter, bc_mass)
     >>> plt.plot(x, y)
     plots the cumulative distribution of BC mass versus diameter.
 
@@ -2070,7 +2070,7 @@ def cumulative_hi_res(x, y_inc, start=0.0, final=None,
     successive x or y values in the cumulative distribution.
 
     Example:
-    >>> (x, y) = partmc.cumulative_hi_res(diameter, bc_mass,
+    >>> (x, y) = camp.cumulative_hi_res(diameter, bc_mass,
                                           min_x_factor=10**0.01)
     >>> plt.plot(x, y)
     
@@ -2108,7 +2108,7 @@ def percentile(data, p):
     return.
 
     Example:
-    >>> partmc.percentile([0, 1, 2, 3, 4, 5, 6, 6.1, 6.2, 6.3], 0.9)
+    >>> camp.percentile([0, 1, 2, 3, 4, 5, 6, 6.1, 6.2, 6.3], 0.9)
     returns 6.2 as being the 90% percentile value in the given data.
 
     """

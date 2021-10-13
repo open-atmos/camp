@@ -7,7 +7,7 @@ import matplotlib
 matplotlib.use("PDF")
 import matplotlib.pyplot as plt
 sys.path.append("../../tool")
-import partmc
+import camp
 
 dist_array = np.loadtxt("data/banana_so4_dist.txt")
 times = np.loadtxt("data/banana_times.txt")

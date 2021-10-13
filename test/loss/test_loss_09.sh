@@ -22,12 +22,12 @@ if ! ../../extract_aero_size --mass --dmin 1e-9 --dmax 1e-3 --nbin 160 out/loss_
 		  exit 1
 	  fi
 	  echo retrying...
-	  if ! ../../partmc run_constant_part.spec; then continue; fi
-	  if ! ../../partmc run_constant_exact.spec; then continue; fi
-          if ! ../../partmc run_volume_part.spec; then continue; fi
-          if ! ../../partmc run_volume_exact.spec; then continue; fi
-          if ! ../../partmc run_drydep_part.spec; then continue; fi
-          if ! ../../partmc run_drydep_exact.spec; then continue; fi
+	  if ! ../../camp run_constant_part.spec; then continue; fi
+	  if ! ../../camp run_constant_exact.spec; then continue; fi
+          if ! ../../camp run_volume_part.spec; then continue; fi
+          if ! ../../camp run_volume_exact.spec; then continue; fi
+          if ! ../../camp run_drydep_part.spec; then continue; fi
+          if ! ../../camp run_drydep_exact.spec; then continue; fi
   else
 	  echo PASS
 	  exit 0

@@ -5,7 +5,7 @@ import numpy as np
 import scipy.stats
 
 sys.path.append("../../tool")
-import partmc
+import camp
 import mpl_helper
 import matplotlib
 import config
@@ -26,8 +26,8 @@ num_std1 = np.loadtxt("data/1d_brown_e_bars_num.txt") / 1e6
 mass_avg1 = np.loadtxt("data/1d_brown_hist_array_gav_mass.txt") * 1e9
 mass_std1 = np.loadtxt("data/1d_brown_e_bars_mass.txt") * 1e9
 
-sect_array_num = np.loadtxt("/home/nriemer/subversion/partmc/branches/nriemer/local_scenarios/brownian_test_paper2/brownian_sect_size_num.txt")
-sect_array_mass = np.loadtxt("/home/nriemer/subversion/partmc/branches/nriemer/local_scenarios/brownian_test_paper2/brownian_sect_size_mass.txt")
+sect_array_num = np.loadtxt("/home/nriemer/subversion/camp/branches/nriemer/local_scenarios/brownian_test_paper2/brownian_sect_size_num.txt")
+sect_array_mass = np.loadtxt("/home/nriemer/subversion/camp/branches/nriemer/local_scenarios/brownian_test_paper2/brownian_sect_size_mass.txt")
 
 (figure, axes_array) = mpl_helper.make_fig_array(1,2, figure_width=config.figure_width_double, 
                                                  top_margin=0.41, bottom_margin=0.45,

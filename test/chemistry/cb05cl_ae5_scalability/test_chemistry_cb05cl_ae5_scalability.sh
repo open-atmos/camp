@@ -22,8 +22,8 @@ do
 
     #../../../build/test_run/chemistry/cb05cl_ae5/test_chemistry_cb05cl_ae5_big.sh
     cd ../../../../
-    ./compile.partmc.marenostrum4.sh
-    cd partmc/test/chemistry/cb05cl_ae5_scalability
+    ./compile.camp.marenostrum4.sh
+    cd camp/test/chemistry/cb05cl_ae5_scalability
 
 done
 

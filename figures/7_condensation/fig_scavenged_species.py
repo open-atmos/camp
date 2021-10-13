@@ -7,9 +7,9 @@ import matplotlib
 matplotlib.use("PDF")
 import matplotlib.pyplot as plt
 sys.path.append("../../tool")
-import partmc
+import camp
 
-in_dir = "/home/ching1/subversion/partmc/trunk/scenarios/3_condense/out/"
+in_dir = "/home/ching1/subversion/camp/trunk/scenarios/3_condense/out/"
 #in_dir = "../../scenarios/3_condense/out/"
 out_filename1 = "figs/scavenged_bc_j.pdf" 
 out_filename2 = "figs/scavenged_oc_j.pdf" 
@@ -28,7 +28,7 @@ for k in range(0,4):
     for counter in range(1,49):
         in_filename = "cond_%02d_%s_0001_00000601.nc" % (counter, run)
         ncf = scipy.io.netcdf.netcdf_file(in_dir+in_filename, 'r')
-        particles = partmc.aero_particle_array_t(ncf)
+        particles = camp.aero_particle_array_t(ncf)
         ncf.close()
 
         final_wet_diameters = particles.diameters()

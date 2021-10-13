@@ -12,7 +12,7 @@ while [ true ]
 do
   echo Attempt $counter
 
-if ! ../../partmc run_part_restarted.spec || \
+if ! ../../camp run_part_restarted.spec || \
    ! ../../extract_aero_time out/mosaic_restarted_0001 || \
    ! tail -n +13 out/mosaic_0001_aero_time.txt > out/mosaic_0001_aero_time_tail.txt || \
    ! ../../numeric_diff --by elem --min-col 2 --rel-tol 1e-4 out/mosaic_0001_aero_time_tail.txt out/mosaic_restarted_0001_aero_time.txt; then
@@ -23,7 +23,7 @@ if ! ../../partmc run_part_restarted.spec || \
 		  exit 1
 	  fi
 	  echo retrying...
-	  if ! ../../partmc run_part.spec; then continue; fi
+	  if ! ../../camp run_part.spec; then continue; fi
   else
 	  echo PASS
 	  exit 0

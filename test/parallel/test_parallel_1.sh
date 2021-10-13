@@ -14,12 +14,12 @@ while [ true ]
 do
   echo Attempt $counter
 
-if ! mpirun -v -np 1 ../../partmc run_sect.spec || \
+if ! mpirun -v -np 1 ../../camp run_sect.spec || \
    ! ../../extract_sectional_aero_size --num out/sect || \
    ! ../../extract_sectional_aero_size --mass out/sect || \
    ! ../../extract_sectional_aero_time out/sect || \
 
-   ! mpirun -v -np 1 ../../partmc run_part_serial.spec || \
+   ! mpirun -v -np 1 ../../camp run_part_serial.spec || \
    ! ../../extract_aero_size --num --dmin 1e-10 --dmax 1e-4 --nbin 220 out/serial_0001 || \
    ! ../../extract_aero_size --mass --dmin 1e-10 --dmax 1e-4 --nbin 220 out/serial_0001 || \
    ! ../../extract_aero_time out/serial_0001 || \

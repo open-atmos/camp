@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import scipy.io
 sys.path.append("../../tool")
-import partmc
+import camp
 from config import *
 
 matplotlib.rc('text', usetex = True)
@@ -28,22 +28,22 @@ out_prefix = "figs/mp_2d_bc"
 
 def get_plot_data_bc(filename, value_min = None, value_max = None):
     ncf = scipy.io.netcdf.netcdf_file(filename, 'r')
-    particles = partmc.aero_particle_array_t(ncf)
-    env_state = partmc.env_state_t(ncf)
+    particles = camp.aero_particle_array_t(ncf)
+    env_state = camp.env_state_t(ncf)
     ncf.close()
 
     diameters = particles.dry_diameters() * 1e6
     comp_frac = particles.masses(include = ["BC"]) \
                 / particles.masses(exclude = ["H2O"]) * 100
 
-    x_axis = partmc.log_grid(min = diameter_axis_min, max = diameter_axis_max,
+    x_axis = camp.log_grid(min = diameter_axis_min, max = diameter_axis_max,
                           n_bin = num_diameter_bins)
-    y_axis = partmc.linear_grid(min = bc_axis_min, max = bc_axis_max,
+    y_axis = camp.linear_grid(min = bc_axis_min, max = bc_axis_max,
                              n_bin = num_bc_bins)
     # hack to avoid landing just around the integer boundaries
     comp_frac *= (1.0 + 1e-12)
 
-    value = partmc.histogram_2d(diameters, comp_frac, x_axis, y_axis, weights = 1 / particles.comp_vols)
+    value = camp.histogram_2d(diameters, comp_frac, x_axis, y_axis, weights = 1 / particles.comp_vols)
     value *= 100
     value /= 1e6
     if value_max == None:
@@ -140,7 +140,7 @@ for [i_run, netcdf_pattern] in netcdf_indexed_patterns:
     out_filename = "%s_%d.pdf" % (out_prefix, i_run)
     print out_filename
 
-    filename_list = partmc.get_filename_list(netcdf_dir, netcdf_pattern)
+    filename_list = camp.get_filename_list(netcdf_dir, netcdf_pattern)
     in_filename = filename_list[0]
     make_2d_plot(in_filename, out_filename)
     

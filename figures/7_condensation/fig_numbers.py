@@ -7,7 +7,7 @@ import matplotlib
 matplotlib.use("PDF")
 import matplotlib.pyplot as plt
 sys.path.append("../../tool")
-import partmc
+import camp
 
 in_dir = "../../scenarios/3_condense/out/"
 out_filename = "figs/numbers_wc.pdf" 
@@ -22,10 +22,10 @@ for k in range(0,4):
         in_filename_start = "cond_%02d_%s_0001_00000001.nc" % (counter+1, run)
         in_filename_end = "cond_%02d_%s_0001_00000601.nc" % (counter+1, run)
         ncf = scipy.io.netcdf.netcdf_file(in_dir+in_filename_start, 'r')
-        particles_start = partmc.aero_particle_array_t(ncf)
+        particles_start = camp.aero_particle_array_t(ncf)
         ncf.close()
         ncf = scipy.io.netcdf.netcdf_file(in_dir+in_filename_end, 'r')
-        particles_end = partmc.aero_particle_array_t(ncf)
+        particles_end = camp.aero_particle_array_t(ncf)
         ncf.close()
 
         num_start = sum(1/particles_start.comp_vols)

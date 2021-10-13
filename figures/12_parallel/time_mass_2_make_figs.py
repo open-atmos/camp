@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import scipy.io
 sys.path.append("../../tool")
-import partmc
+import camp
 
 fig_base_dir = "figs"
 data_base_dir = "data"

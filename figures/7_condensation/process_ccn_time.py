@@ -7,20 +7,20 @@ import matplotlib
 matplotlib.use("PDF")
 import matplotlib.pyplot as plt
 sys.path.append("../../tool")
-import partmc
+import camp
 import config
 
-netcdf_dir = "/home/lfierce2/subversion/partmc/trunk/urban_plume/data/scaleBC3/rate_100/"
+netcdf_dir = "/home/lfierce2/subversion/camp/trunk/urban_plume/data/scaleBC3/rate_100/"
 netcdf_pattern = "urban_plume_wc_0001_(.*).nc"
-time_filename_list = partmc.get_time_filename_list(netcdf_dir, netcdf_pattern)
+time_filename_list = camp.get_time_filename_list(netcdf_dir, netcdf_pattern)
 
 ccn_cn_array = np.zeros([len(time_filename_list),6])
 i_counter = 0
 for [time, filename, key] in time_filename_list:
     print filename
     ncf = scipy.io.netcdf.netcdf_file(filename, 'r')
-    particles = partmc.aero_particle_array_t(ncf)
-    env_state = partmc.env_state_t(ncf)
+    particles = camp.aero_particle_array_t(ncf)
+    env_state = camp.env_state_t(ncf)
     ncf.close()
 
     total_number = len(particles.ids)

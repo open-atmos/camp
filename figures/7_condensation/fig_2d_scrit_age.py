@@ -7,22 +7,22 @@ import matplotlib
 matplotlib.use("PDF")
 import matplotlib.pyplot as plt
 sys.path.append("../../tool")
-import partmc
+import camp
 
 def make_plot(in_filename,out_filename,time,title):
     ncf = scipy.io.netcdf.netcdf_file(in_filename, 'r')
-    particles = partmc.aero_particle_array_t(ncf)
-    env_state = partmc.env_state_t(ncf)
+    particles = camp.aero_particle_array_t(ncf)
+    env_state = camp.env_state_t(ncf)
     ncf.close()
 
     age = abs(particles.least_create_times / 3600. - time)
     dry_diameters = particles.dry_diameters()
     s_crit = (particles.critical_rel_humids(env_state) - 1)*100
 
-    x_axis = partmc.log_grid(min=1e-8,max=1e-6,n_bin=140)
-    y_axis = partmc.log_grid(min=1e-3,max=1e2,n_bin=100)
+    x_axis = camp.log_grid(min=1e-8,max=1e-6,n_bin=140)
+    y_axis = camp.log_grid(min=1e-3,max=1e2,n_bin=100)
 
-    vals2d = partmc.multival_2d(dry_diameters, s_crit, age, x_axis, y_axis)
+    vals2d = camp.multival_2d(dry_diameters, s_crit, age, x_axis, y_axis)
 
     plt.clf()
     plt.pcolor(x_axis.edges(), y_axis.edges(), vals2d.transpose(), linewidths = 0.1)

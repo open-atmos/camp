@@ -804,7 +804,7 @@ contains
     mpi_rank_str=adjustl(mpi_rank_str)
 
     export_path = "/gpfs/scratch/bsc32/bsc32815/a2s8/nmmb-monarch/MODEL/"&
-            //"SRC_LIBS/partmc/test/monarch/exports/camp_in_out_"&
+            //"SRC_LIBS/camp/test/monarch/exports/camp_in_out_"&
             //trim(mpi_rank_str)//".json"
 
     call jfile%initialize()
@@ -1027,11 +1027,11 @@ contains
       mpi_rank_str=adjustl(mpi_rank_str)
 
       export_path = "/gpfs/scratch/bsc32/bsc32815/a2s8/nmmb-monarch/MODEL/"&
-              //"SRC_LIBS/partmc/test/monarch/exports/ebi_in_out_"&
+              //"SRC_LIBS/camp/test/monarch/exports/ebi_in_out_"&
               //trim(mpi_rank_str)//".json"
 #else
       export_path = "/gpfs/scratch/bsc32/bsc32815/a2s8/nmmb-monarch/MODEL/"&
-              //"SRC_LIBS/partmc/test/monarch/exports/ebi_in_out.json"
+              //"SRC_LIBS/camp/test/monarch/exports/ebi_in_out.json"
 #endif
       call json%print(p,export_path)
 
@@ -1134,7 +1134,7 @@ contains
     mpi_rank_str=adjustl(mpi_rank_str)
 
     export_path = "/gpfs/scratch/bsc32/bsc32815/a2s8/nmmb-monarch/MODEL/"&
-            //"SRC_LIBS/partmc/test/monarch/exports/ebi_in_out_"&
+            //"SRC_LIBS/camp/test/monarch/exports/ebi_in_out_"&
             //trim(mpi_rank_str)//".json"
 
     call jfile%initialize()
@@ -1159,7 +1159,7 @@ contains
     call jfile%destroy()
 
     export_path = "/gpfs/scratch/bsc32/bsc32815/a2s8/nmmb-monarch/MODEL/"&
-            //"SRC_LIBS/partmc/test/monarch/exports/camp_in_out_"&
+            //"SRC_LIBS/camp/test/monarch/exports/camp_in_out_"&
             //trim(mpi_rank_str)//".json"
 
     call jfile%initialize()
@@ -1654,7 +1654,7 @@ contains
     n_aerosol_species_time_plot_str=adjustl(n_aerosol_species_time_plot_str)
 
     ! Create the gnuplot script
-    !file_name = "partmc/build/test_run/monarch/"//file_prefix//".gnuplot"
+    !file_name = "camp/build/test_run/monarch/"//file_prefix//".gnuplot"
     file_name = file_prefix//".gnuplot"
     open(unit=SCRIPTS_FILE_UNIT, file=file_name, status="replace", action="write")
     write(SCRIPTS_FILE_UNIT,*) "# "//file_name
@@ -1683,16 +1683,16 @@ contains
     write(SCRIPTS_FILE_UNIT,*) "set key top left"
     !write(SCRIPTS_FILE_UNIT,*) "set output '"//file_prefix//"_plot.png'"
     write(SCRIPTS_FILE_UNIT,"(A)",advance="no") "set output '&
-            /gpfs/scratch/bsc32/bsc32815/paperpartmc/partmc/build/&
+            /gpfs/scratch/bsc32/bsc32815/papercamp/camp/build/&
         test_run/monarch/out/monarch_plot.jpg'"
     write(SCRIPTS_FILE_UNIT,*)
     write(SCRIPTS_FILE_UNIT,"(A)",advance="no") "plot for [col=2:"&
     //trim(n_gas_species_plot_str)//"] &
-    'partmc/build/test_run/monarch/"//file_prefix//"_results.txt' &
+    'camp/build/test_run/monarch/"//file_prefix//"_results.txt' &
     using 1:col axis x1y1 title columnheader, for [col2=" &
     //trim(n_aerosol_species_start_plot_str)//":" &
     //trim(n_aerosol_species_plot_str)//"] &
-    'partmc/build/test_run/monarch/"//file_prefix//"_results.txt' &
+    'camp/build/test_run/monarch/"//file_prefix//"_results.txt' &
     using " &
     //trim(n_aerosol_species_time_plot_str)// &
     ":col2 axis x1y2 title columnheader"

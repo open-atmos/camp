@@ -5,7 +5,7 @@ import sys
 import numpy as np
 
 sys.path.append("../../tool")
-import partmc
+import camp
 import matplotlib
 import mpl_helper
 import config

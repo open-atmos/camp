@@ -7,22 +7,22 @@ import matplotlib
 matplotlib.use("PDF")
 import matplotlib.pyplot as plt
 sys.path.append("../../tool")
-import partmc
+import camp
 import config
 
 def make_plot(in_dir, in_files, title, out_filename, error):
-    x_axis = partmc.log_grid(min=1e-8,max=1e-5,n_bin=3)
+    x_axis = camp.log_grid(min=1e-8,max=1e-5,n_bin=3)
     x_centers = x_axis.centers()
     counter = 0
     hist_array = np.zeros([len(x_centers),config.i_loop_max])
     error = np.zeros([3])
     for file in in_files:
         ncf = scipy.io.netcdf.netcdf_file(in_dir+file, 'r')
-        particles = partmc.aero_particle_array_t(ncf)
+        particles = camp.aero_particle_array_t(ncf)
         ncf.close() 
 
         dry_diameters = particles.dry_diameters()
-        hist = partmc.histogram_1d(dry_diameters, x_axis, weights = 1 / particles.comp_vols)
+        hist = camp.histogram_1d(dry_diameters, x_axis, weights = 1 / particles.comp_vols)
         hist_array[:,counter] = hist
         counter = counter+1
     plt.clf()

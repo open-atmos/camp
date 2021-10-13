@@ -7,20 +7,20 @@ import matplotlib
 matplotlib.use("PDF")
 import matplotlib.pyplot as plt
 sys.path.append("../../tool")
-import partmc
+import camp
 
 def make_plot(in_dir, in_filename, out_filename):
     print in_filename
     ncf = scipy.io.netcdf.netcdf_file(in_dir+in_filename, 'r')
-    particles = partmc.aero_particle_array_t(ncf)
+    particles = camp.aero_particle_array_t(ncf)
     ncf.close()
 
-    x_axis = partmc.log_grid(min=1e-10,max=1e-4,n_bin=100)
+    x_axis = camp.log_grid(min=1e-10,max=1e-4,n_bin=100)
     x_centers = x_axis.centers() 
 
     dry_diameters = particles.dry_diameters()
 
-    hist = partmc.histogram_1d(dry_diameters, x_axis, weights = particles.masses() / particles.comp_vols)
+    hist = camp.histogram_1d(dry_diameters, x_axis, weights = particles.masses() / particles.comp_vols)
 
     plt.clf()
     plt.loglog(x_axis.centers(), hist)
@@ -30,7 +30,7 @@ def make_plot(in_dir, in_filename, out_filename):
     fig = plt.gcf()
     fig.savefig(out_filename)
 
-dir_name = "/home/ching1/subversion/partmc/trunk/scenarios/3_condense/start/"
+dir_name = "/home/ching1/subversion/camp/trunk/scenarios/3_condense/start/"
 
 #filename_in = "urban_plume_wc_0001_00000001.nc"
 #filename_out = "figs/1d_wc_mass_001.pdf"

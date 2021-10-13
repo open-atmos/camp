@@ -1,6 +1,6 @@
-! Copyright (C) 2005-2012 Nicole Riemer and Matthew West
-! Licensed under the GNU General Public License version 2 or (at your
-! option) any later version. See the file COPYING for details.
+! Copyright (C) 2005-2021 Barcelona Supercomputing Center and University of
+! Illinois at Urbana-Champaign
+! SPDX-License-Identifier: MIT
 
 !> \file
 !> The camp_env_state module.
@@ -10,9 +10,7 @@ module camp_env_state
 
   use camp_constants
   use camp_util
-  use camp_spec_file
   use camp_mpi
-  use camp_netcdf
 #ifdef CAMP_USE_MPI
   use mpi
 #endif
@@ -232,55 +230,6 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  !> Read environment specification from a spec file.
-  subroutine spec_file_read_env_state(file, env_state)
-
-    !> Spec file.
-    type(spec_file_t), intent(inout) :: file
-    !> Environment data.
-    type(env_state_t), intent(inout) :: env_state
-
-    !> \page input_format_env_state Input File Format: Environment State
-    !!
-    !! The environment parameters are divided into those specified at
-    !! the start of the simulation and then either held constant or
-    !! computed for the rest of the simulation, and those parameters
-    !! given as prescribed profiles for the entire simulation
-    !! duration. The variables below are for the first type --- for
-    !! the prescribed profiles see \ref input_format_scenario.
-    !!
-    !! The environment state is specified by the parameters:
-    !! - \b rel_humidity (real, dimensionless): the relative humidity
-    !!   (0 is completely unsaturated and 1 is fully saturated)
-    !! - \b latitude (real, unit degrees_north): the latitude of the
-    !!   simulation location
-    !! - \b longitude (real, unit degrees_east): the longitude of the
-    !!   simulation location
-    !! - \b altitude (real, unit m): the altitude of the simulation
-    !!   location
-    !! - \b start_time (real, unit s): the time-of-day of the start of
-    !!   the simulation (in seconds past midnight)
-    !! - \b start_day (integer): the day-of-year of the start of the
-    !!   simulation (starting from 1 on the first day of the year)
-    !!
-    !! See also:
-    !!   - \ref spec_file_format --- the input file text format
-    !!   - \ref output_format_env_state --- the corresponding output
-    !!     format
-    !!   - \ref input_format_scenario --- the prescribed profiles of
-    !!     other environment data
-
-    call spec_file_read_real(file, 'rel_humidity', env_state%rel_humid)
-    call spec_file_read_real(file, 'latitude', env_state%latitude)
-    call spec_file_read_real(file, 'longitude', env_state%longitude)
-    call spec_file_read_real(file, 'altitude', env_state%altitude)
-    call spec_file_read_real(file, 'start_time', env_state%start_time)
-    call spec_file_read_integer(file, 'start_day', env_state%start_day)
-
-  end subroutine spec_file_read_env_state
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
   !> Average val over all processes.
   subroutine env_state_mix(val)
 
@@ -430,94 +379,6 @@ contains
     call camp_mpi_reduce_avg_real(val%pressure, val_avg%pressure)
 
   end subroutine camp_mpi_reduce_avg_env_state
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-  !> Write full state.
-  subroutine env_state_output_netcdf(env_state, ncid)
-
-    !> Environment state to write.
-    type(env_state_t), intent(in) :: env_state
-    !> NetCDF file ID, in data mode.
-    integer, intent(in) :: ncid
-
-    !> \page output_format_env_state Output File Format: Environment State
-    !!
-    !! The environment state NetCDF variables are:
-    !!   - \b temperature (unit K): current air temperature
-    !!   - \b relative_humidity (dimensionless): current air
-    !!     relative humidity (value of 1 means completely saturated)
-    !!   - \b pressure (unit Pa): current air pressure
-    !!   - \b longitude (unit degrees_east): longitude of simulation location
-    !!   - \b latitude (unit degrees_north): latitude of simulation location
-    !!   - \b altitude (unit m): altitude of simulation location
-    !!   - \b start_time_of_day (unit s): time-of-day of the
-    !!     simulation start measured in seconds after midnight UTC
-    !!   - \b start_day_of_year: day-in-year number of the simulation start
-    !!     (starting from 1 on the first day of the year)
-    !!   - \b elapsed_time (unit s): elapsed time since the simulation start
-    !!   - \b solar_zenith_angle (unit radians): current angle from
-    !!     the zenith to the sun
-    !!   - \b height (unit m): current boundary layer mixing height
-    !!
-    !! See also:
-    !!   - \ref input_format_env_state and \ref input_format_scenario
-    !!     --- the corresponding input formats
-
-    call camp_nc_write_real(ncid, env_state%temp, "temperature", unit="K", &
-         standard_name="air_temperature")
-    call camp_nc_write_real(ncid, env_state%rel_humid, &
-         "relative_humidity", unit="1", standard_name="relative_humidity")
-    call camp_nc_write_real(ncid, env_state%pressure, "pressure", unit="Pa", &
-         standard_name="air_pressure")
-    call camp_nc_write_real(ncid, env_state%longitude, "longitude", &
-         unit="degree_east", standard_name="longitude")
-    call camp_nc_write_real(ncid, env_state%latitude, "latitude", &
-         unit="degree_north", standard_name="latitude")
-    call camp_nc_write_real(ncid, env_state%altitude, "altitude", unit="m", &
-         standard_name="altitude")
-    call camp_nc_write_real(ncid, env_state%start_time, &
-         "start_time_of_day", unit="s", description="time-of-day of " &
-         // "simulation start in seconds since midnight")
-    call camp_nc_write_integer(ncid, env_state%start_day, &
-         "start_day_of_year", &
-         description="day-of-year number of simulation start")
-    call camp_nc_write_real(ncid, env_state%elapsed_time, "elapsed_time", &
-         unit="s", description="elapsed time since simulation start")
-    call camp_nc_write_real(ncid, env_state%solar_zenith_angle, &
-         "solar_zenith_angle", unit="radian", &
-         description="current angle from the zenith to the sun")
-    call camp_nc_write_real(ncid, env_state%height, "height", unit="m", &
-         long_name="boundary layer mixing height")
-
-  end subroutine env_state_output_netcdf
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-  !> Read full state.
-  subroutine env_state_input_netcdf(env_state, ncid)
-
-    !> Environment state to read.
-    type(env_state_t), intent(inout) :: env_state
-    !> NetCDF file ID, in data mode.
-    integer, intent(in) :: ncid
-
-    call camp_nc_read_real(ncid, env_state%temp, "temperature")
-    call camp_nc_read_real(ncid, env_state%rel_humid, "relative_humidity")
-    call camp_nc_read_real(ncid, env_state%pressure, "pressure")
-    call camp_nc_read_real(ncid, env_state%longitude, "longitude")
-    call camp_nc_read_real(ncid, env_state%latitude, "latitude")
-    call camp_nc_read_real(ncid, env_state%altitude, "altitude")
-    call camp_nc_read_real(ncid, env_state%start_time, &
-         "start_time_of_day")
-    call camp_nc_read_integer(ncid, env_state%start_day, &
-         "start_day_of_year")
-    call camp_nc_read_real(ncid, env_state%elapsed_time, "elapsed_time")
-    call camp_nc_read_real(ncid, env_state%solar_zenith_angle, &
-         "solar_zenith_angle")
-    call camp_nc_read_real(ncid, env_state%height, "height")
-
-  end subroutine env_state_input_netcdf
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 

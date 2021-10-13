@@ -22,7 +22,7 @@ if ! ../../extract_aero_particles out/average_compsizenum_0001_00000001.nc || \
 		  exit 1
 	  fi
 	  echo retrying...
-	  if ! ../../partmc run_part.spec; then continue; fi
+	  if ! ../../camp run_part.spec; then continue; fi
 	  if ! ../../bin_average_comp 1e-10 1e-4 24 wet out/average_0001_00000001.nc out/average_comp; then continue; fi
   else
 	  echo PASS

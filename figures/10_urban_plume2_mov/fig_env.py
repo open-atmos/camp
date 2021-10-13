@@ -8,7 +8,7 @@ import copy as module_copy
 from Scientific.IO.NetCDF import *
 from pyx import *
 sys.path.append("../../tool")
-from partmc import *
+from camp import *
 from camp_pyx import *
 from fig_helper import *
 

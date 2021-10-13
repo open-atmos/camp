@@ -839,7 +839,7 @@ def plot_species(file):
   h2, l2 = ax2.get_legend_handles_labels()
   fig.legend(handles=h1+h2,labels=l1+l2,bbox_to_anchor=(legend_x, legend_y), \
              loc='center',ncol=3)
-  #out_filename = 'partmc_case1_soa_one_particle.pdf'
+  #out_filename = 'camp_case1_soa_one_particle.pdf'
   #fig.savefig(out_filename)
 
   plt.show()
@@ -966,7 +966,7 @@ h1, l1 = axes.get_legend_handles_labels()
 h2, l2 = ax2.get_legend_handles_labels()
 fig.legend(handles=h1+h2,labels=l1+l2,bbox_to_anchor=(legend_x, legend_y), \
      loc='center',ncol=3)
-out_filename = 'partmc_case1_soa_one_particle.pdf'
+out_filename = 'camp_case1_soa_one_particle.pdf'
 fig.savefig(out_filename)
 """
 

@@ -2665,7 +2665,7 @@ void export_camp_input(void *solver_data, double *init_state, char *in_path) {
   // char rel_path[] = "../../../test/monarch/exports/camp_input"; //path for
   // mock_monarch test
   //char rel_path[] =
-  //    "/gpfs/scratch/bsc32/bsc32815/a2s8/nmmb-monarch/MODEL/SRC_LIBS/partmc/"
+  //    "/gpfs/scratch/bsc32/bsc32815/a2s8/nmmb-monarch/MODEL/SRC_LIBS/camp/"
   //    "test/monarch/exports/camp_input";  // monarch
 
   char rel_path[] = "exports/camp_input";

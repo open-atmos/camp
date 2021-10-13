@@ -14,7 +14,7 @@
 ! 
 ! File                 : cb05cl_ae5_LinearAlgebra.f90
 ! Time                 : Thu Feb  8 11:36:55 2018
-! Working directory    : /home/Earth/mdawson/Documents/partmc-chem/partmc/test/chemistry/cb05cl_ae5
+! Working directory    : /home/Earth/mdawson/Documents/camp-chem/camp/test/chemistry/cb05cl_ae5
 ! Equation file        : cb05cl_ae5.kpp
 ! Output root filename : cb05cl_ae5
 ! 

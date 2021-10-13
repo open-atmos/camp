@@ -143,7 +143,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Map all data PartMC -> MOSAIC.
-  subroutine mosaic_from_partmc(env_state, aero_data, &
+  subroutine mosaic_from_camp(env_state, aero_data, &
        aero_state, gas_data, gas_state)
 
 #ifdef CAMP_USE_MOSAIC
@@ -230,7 +230,7 @@ contains
        call AllocateMemory()
     end if
     aer = 0d0    ! initialize to zero
-    ! work backwards for consistency with mosaic_to_partmc(), which
+    ! work backwards for consistency with mosaic_to_camp(), which
     ! has specific ordering requirements
     do i_part = aero_state_n_part(aero_state),1,-1
        num_conc = aero_weight_array_num_conc(aero_state%awa, &
@@ -264,12 +264,12 @@ contains
     end do
 #endif
 
-  end subroutine mosaic_from_partmc
+  end subroutine mosaic_from_camp
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Map all data MOSAIC -> PartMC.
-  subroutine mosaic_to_partmc(env_state, aero_data, aero_state, gas_data, &
+  subroutine mosaic_to_camp(env_state, aero_data, aero_state, gas_data, &
        gas_state)
 
 #ifdef CAMP_USE_MOSAIC
@@ -352,7 +352,7 @@ contains
     end do
 #endif
 
-  end subroutine mosaic_to_partmc
+  end subroutine mosaic_to_camp
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -395,7 +395,7 @@ contains
     end interface
 
     ! map PartMC -> MOSAIC
-    call mosaic_from_partmc(env_state, aero_data, aero_state, gas_data, &
+    call mosaic_from_camp(env_state, aero_data, aero_state, gas_data, &
          gas_state)
 
     if (msolar == 1) then
@@ -406,14 +406,14 @@ contains
 
     ! map MOSAIC -> PartMC
     if (do_optical) then
-       ! must do optical properties first, as mosaic_to_partmc() may
+       ! must do optical properties first, as mosaic_to_camp() may
        ! change the number of particles
        call aerosol_optical
        call mosaic_aero_optical(env_state, aero_data, &
             aero_state, gas_data, gas_state)
     end if
 
-    call mosaic_to_partmc(env_state, aero_data, aero_state, gas_data, &
+    call mosaic_to_camp(env_state, aero_data, aero_state, gas_data, &
          gas_state)
 #endif
 
@@ -456,13 +456,13 @@ contains
     integer :: i_part
 
     ! map PartMC -> MOSAIC
-!    call mosaic_from_partmc(env_state, aero_data, aero_state, &
+!    call mosaic_from_camp(env_state, aero_data, aero_state, &
 !         gas_data, gas_state)
 
 !    call aerosol_optical
 
     ! map MOSAIC -> PartMC
-    ! work backwards for consistency with mosaic_to_partmc(), which
+    ! work backwards for consistency with mosaic_to_camp(), which
     ! has specific ordering requirements
     do i_part = aero_state_n_part(aero_state),1,-1
        aero_state%apa%particle(i_part)%absorb_cross_sect = (ext_cross(i_part) &
@@ -516,7 +516,7 @@ contains
     call load_mosaic_parameters
 
     ! map PartMC -> MOSAIC
-    call mosaic_from_partmc(env_state, aero_data, aero_state, &
+    call mosaic_from_camp(env_state, aero_data, aero_state, &
          gas_data, gas_state)
 
     call aerosol_optical

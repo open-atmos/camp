@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 import matplotlib.path as mpath
 import numpy as np
 sys.path.append("../../tool")
-import partmc
+import camp
 from config import *
 
 matplotlib.rc('text', usetex = True)
@@ -29,16 +29,16 @@ out_prefix = "figs/mp_num_spectra"
 
 def get_plot_data_bc(filename, value_min = None, value_max = None):
     ncf = scipy.io.netcdf.netcdf_file(filename, 'r')
-    particles = partmc.aero_particle_array_t(ncf)
-    env_state = partmc.env_state_t(ncf)
+    particles = camp.aero_particle_array_t(ncf)
+    env_state = camp.env_state_t(ncf)
     ncf.close()
 
     diameters = particles.dry_diameters() * 1e6
 
-    x_axis = partmc.log_grid(min = diameter_axis_min, max = diameter_axis_max,
+    x_axis = camp.log_grid(min = diameter_axis_min, max = diameter_axis_max,
                           n_bin = num_diameter_bins)
 
-    value = partmc.histogram_1d(diameters, x_axis, weights = 1 / particles.comp_vols)
+    value = camp.histogram_1d(diameters, x_axis, weights = 1 / particles.comp_vols)
     value /= 1e6
 
     return (value, x_axis.centers())
@@ -116,7 +116,7 @@ for [i_run, netcdf_pattern] in netcdf_indexed_patterns:
     out_filename = "%s_%d.pdf" % (out_prefix, i_run)
     print out_filename
 
-    filename_list = partmc.get_filename_list(netcdf_dir, netcdf_pattern)
+    filename_list = camp.get_filename_list(netcdf_dir, netcdf_pattern)
     in_filename = filename_list[0]
     make_1d_plot(in_filename, out_filename)
     

@@ -6,8 +6,8 @@ import numpy as np
 import matplotlib
 matplotlib.use("PDF")
 import matplotlib.pyplot as plt
-sys.path.append("/Users/nriemer/subversion/partmc/trunk/tool")
-import partmc
+sys.path.append("/Users/nriemer/subversion/camp/trunk/tool")
+import camp
 import mpl_helper
 
 def make_plot(input_file_data1, input_file_data2, input_file_data3, input_file_data4, input_file_data5, input_file_data6, input_file_data7, input_file_data8, input_file_data9, output_figure):
@@ -59,9 +59,9 @@ def make_plot(input_file_data1, input_file_data2, input_file_data3, input_file_d
 			n_f_a_cond = data_array[:,8]
 			n_f_a_coag = data_array[:,10]
 	
-			n_f_sm = partmc.smooth(data_array[:,2], window_len=smooth_window_width)
-			n_f_a_cond_sm = partmc.smooth(data_array[:,8], window_len=smooth_window_width)
-			n_f_a_coag_sm = partmc.smooth(data_array[:,10], window_len=smooth_window_width)
+			n_f_sm = camp.smooth(data_array[:,2], window_len=smooth_window_width)
+			n_f_a_cond_sm = camp.smooth(data_array[:,8], window_len=smooth_window_width)
+			n_f_a_coag_sm = camp.smooth(data_array[:,10], window_len=smooth_window_width)
 
 			n_aging = n_f_a_cond + n_f_a_coag
 			n_aging_sm = n_f_a_cond_sm + n_f_a_coag_sm

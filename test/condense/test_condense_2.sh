@@ -21,7 +21,7 @@ if ! ../../extract_aero_time out/condense_0001 || \
 		  exit 1
 	  fi
 	  echo retrying...
-          if ! ../../partmc run_part.spec; then continue; fi
+          if ! ../../camp run_part.spec; then continue; fi
   else
 	  echo PASS
 	  exit 0

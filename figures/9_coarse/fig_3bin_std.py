@@ -7,7 +7,7 @@ import matplotlib
 matplotlib.use("PDF")
 import matplotlib.pyplot as plt
 sys.path.append("../../tool")
-import partmc
+import camp
 import config
 
 array_error_num_10K = np.loadtxt("data/num_1d_3bin_10K.txt")

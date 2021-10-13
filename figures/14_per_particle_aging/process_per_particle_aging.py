@@ -4,8 +4,8 @@ import os, sys
 import scipy.io
 import numpy as np
 
-sys.path.append("/Users/nriemer/subversion/partmc/trunk/tool")
-import partmc
+sys.path.append("/Users/nriemer/subversion/camp/trunk/tool")
+import camp
 import pickle
 
 class Struct(object): 
@@ -15,15 +15,15 @@ class Struct(object):
 def make_plot(netcdf_pattern, aging_ss, output_pkl):
 	particle_set = {}
 
-	netcdf_dir = "/Users/nriemer/subversion/partmc/trunk/scenarios/1_urban_plume/out"
-	time_filename_list = partmc.get_time_filename_list(netcdf_dir, netcdf_pattern)
+	netcdf_dir = "/Users/nriemer/subversion/camp/trunk/scenarios/1_urban_plume/out"
+	time_filename_list = camp.get_time_filename_list(netcdf_dir, netcdf_pattern)
 
 	for [time, filename, key] in time_filename_list:
 		print time, filename, key
 		ncf = scipy.io.netcdf.netcdf_file(filename, 'r')
-		particles = partmc.aero_particle_array_t(ncf)
-		removed_info = partmc.aero_removed_info_t(ncf)
-		env_state = partmc.env_state_t(ncf)
+		particles = camp.aero_particle_array_t(ncf)
+		removed_info = camp.aero_removed_info_t(ncf)
+		env_state = camp.env_state_t(ncf)
 		ncf.close()
 
 		dry_diameters = particles.dry_diameters()

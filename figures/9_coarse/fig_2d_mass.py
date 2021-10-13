@@ -7,12 +7,12 @@ import matplotlib
 matplotlib.use("PDF")
 import matplotlib.pyplot as plt
 sys.path.append("../../tool")
-import partmc
+import camp
 import config
 
 def make_plot(dir_name,in_files,out_filename1, out_filename2):
-    x_axis = partmc.log_grid(min=1e-9,max=1e-5,n_bin=70)
-    y_axis = partmc.linear_grid(min=0,max=1.,n_bin=50)
+    x_axis = camp.log_grid(min=1e-9,max=1e-5,n_bin=70)
+    y_axis = camp.linear_grid(min=0,max=1.,n_bin=50)
     x_centers = x_axis.centers()
     y_centers = y_axis.centers()
     counter = 0
@@ -23,7 +23,7 @@ def make_plot(dir_name,in_files,out_filename1, out_filename2):
 
     for file in in_files:
         ncf = scipy.io.netcdf.netcdf_file(dir_name+file, 'r')
-        particles = partmc.aero_particle_array_t(ncf)
+        particles = camp.aero_particle_array_t(ncf)
         ncf.close()
 
         bc = particles.masses(include = ["BC"])
@@ -32,7 +32,7 @@ def make_plot(dir_name,in_files,out_filename1, out_filename2):
 
         dry_diameters = particles.dry_diameters()
 
-        hist2d = partmc.histogram_2d(dry_diameters, bc_frac, x_axis, y_axis, weights = particles.masses(include = ["BC"])/particles.comp_vols)
+        hist2d = camp.histogram_2d(dry_diameters, bc_frac, x_axis, y_axis, weights = particles.masses(include = ["BC"])/particles.comp_vols)
         hist_array[:,:,counter] = hist2d
         counter = counter + 1
 

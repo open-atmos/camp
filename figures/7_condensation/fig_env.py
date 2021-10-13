@@ -7,14 +7,14 @@ import matplotlib
 matplotlib.use("PDF")
 import matplotlib.pyplot as plt
 sys.path.append("../../tool")
-import partmc
+import camp
 
 maximum_ss = np.zeros([4,49])
  
 def make_plot(in_dir, in_file_pattern, out_filename, title, max_ss_i, max_ss_j):
     print in_dir, in_file_pattern
     
-    env_state_history = partmc.read_history(partmc.env_state_t, in_dir, in_file_pattern)
+    env_state_history = camp.read_history(camp.env_state_t, in_dir, in_file_pattern)
     time = [env_state_history[i][0] for i in range(len(env_state_history))]
     rh = [env_state_history[i][1].relative_humidity for i in range(len(env_state_history))]
     temp = [env_state_history[i][1].temperature for i in range(len(env_state_history))]
@@ -36,7 +36,7 @@ def make_plot(in_dir, in_file_pattern, out_filename, title, max_ss_i, max_ss_j):
 for counter in range(1,49):
     print "counter = ", counter
     
-    dir_name = "/home/ching1/subversion/partmc/trunk/scenarios/3_condense/out/"
+    dir_name = "/home/ching1/subversion/camp/trunk/scenarios/3_condense/out/"
 
     filename_in1 = "cond_%02d_ref_0001_.*.nc" % counter
     filename_in2 = "cond_%02d_comp_0001_.*.nc" % counter

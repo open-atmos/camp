@@ -21,7 +21,7 @@ if ! ../../extract_gas out/nucleate_part_0001 || \
 		  exit 1
 	  fi
 	  echo retrying...
-	  if ! ../../partmc run_part.spec; then continue; fi
+	  if ! ../../camp run_part.spec; then continue; fi
   else
 	  echo PASS
 	  exit 0

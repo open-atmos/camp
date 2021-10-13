@@ -14,7 +14,7 @@ while [ true ]
 do
   echo Attempt $counter
 
-if ! ../../partmc run_part.spec || \
+if ! ../../camp run_part.spec || \
    ! ../../extract_aero_time out/mosaic_0001 || \
    ! ../../numeric_diff --by col --rel-tol 0.4 ref_mosaic_0001_aero_time.txt out/mosaic_0001_aero_time.txt; then
 	  echo Failure "$counter"

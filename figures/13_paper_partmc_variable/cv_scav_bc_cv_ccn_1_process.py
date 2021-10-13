@@ -7,12 +7,12 @@ import matplotlib
 matplotlib.use("PDF")
 import matplotlib.pyplot as plt
 sys.path.append("../../tool")
-import partmc
+import camp
 import config
 
 def make_plot(hour_counter, case_counter, in_files):
-    x_axis = partmc.log_grid(min=1e-9,max=1e-5,n_bin=70)
-    y_axis = partmc.log_grid(min=1e-3,max=1e2,n_bin=50)
+    x_axis = camp.log_grid(min=1e-9,max=1e-5,n_bin=70)
+    y_axis = camp.log_grid(min=1e-3,max=1e2,n_bin=50)
     x_centers = x_axis.centers()
     y_centers = y_axis.centers()
     i_counter = 0
@@ -25,8 +25,8 @@ def make_plot(hour_counter, case_counter, in_files):
 
     for file in in_files:
         ncf = scipy.io.netcdf.netcdf_file(config.netcdf_dir+'/'+file, 'r')
-        particles = partmc.aero_particle_array_t(ncf)
-        env_state = partmc.env_state_t(ncf)
+        particles = camp.aero_particle_array_t(ncf)
+        env_state = camp.env_state_t(ncf)
         ncf.close()
 
         dry_diameters = particles.dry_diameters()

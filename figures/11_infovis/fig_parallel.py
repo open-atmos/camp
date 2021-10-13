@@ -7,7 +7,7 @@ import matplotlib
 matplotlib.use("PDF")
 import matplotlib.pyplot as plt
 sys.path.append("../../tool")
-import partmc
+import camp
 
 matplotlib.rc('text', usetex = True)
 matplotlib.rc('xtick.major', pad = 8)
@@ -87,7 +87,7 @@ def make_fig(figure_width = 4,
 #ncf = scipy.io.netcdf.netcdf_file("~/t/urban_plume_wc_100K_flat_0001_00000010.nc", 'r')
 #ncf = scipy.io.netcdf.netcdf_file("~/t/urban_plume_wc_100K_flat_0001_00000010.nc", 'r')
 ncf = scipy.io.netcdf.netcdf_file("../../scenarios/4_nucleate/out/urban_plume_wc_0001_00000100.nc", 'r')
-particles = partmc.aero_particle_array_t(ncf)
+particles = camp.aero_particle_array_t(ncf)
 ncf.close()
 
 (figure, axes, colorbar_axes) = make_fig(figure_width=12, colorbar=True, right_margin=1)

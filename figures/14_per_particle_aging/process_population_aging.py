@@ -4,8 +4,8 @@ import os, sys
 import scipy.io
 import numpy as np
 
-sys.path.append("/Users/nriemer/subversion/partmc/trunk/tool")
-import partmc
+sys.path.append("/Users/nriemer/subversion/camp/trunk/tool")
+import camp
 
 error_detect = False
 def set_error():
@@ -19,8 +19,8 @@ def set_error():
 
 def make_plot(netcdf_pattern, aging_ss, output_file_data, output_file_count):
 	global error_detect
-	netcdf_dir = "/Users/nriemer/subversion/partmc/trunk/local_scenarios/aging_comp/run_100K_60min/out"
-	time_filename_list = partmc.get_time_filename_list(netcdf_dir, netcdf_pattern)
+	netcdf_dir = "/Users/nriemer/subversion/camp/trunk/local_scenarios/aging_comp/run_100K_60min/out"
+	time_filename_list = camp.get_time_filename_list(netcdf_dir, netcdf_pattern)
 
 	data_array = np.zeros([len(time_filename_list),18])
 	count_array = np.zeros([len(time_filename_list),18],dtype=int)
@@ -36,9 +36,9 @@ def make_plot(netcdf_pattern, aging_ss, output_file_data, output_file_count):
 	for (i_counter, [time, filename, key]) in enumerate(time_filename_list):
 		print time, filename, key
 		ncf = scipy.io.netcdf.netcdf_file(filename, 'r')
-		particles = partmc.aero_particle_array_t(ncf)
-		removed_info = partmc.aero_removed_info_t(ncf)
-		env_state = partmc.env_state_t(ncf)
+		particles = camp.aero_particle_array_t(ncf)
+		removed_info = camp.aero_removed_info_t(ncf)
+		env_state = camp.env_state_t(ncf)
 		ncf.close()
 
 		dry_diameters = particles.dry_diameters()

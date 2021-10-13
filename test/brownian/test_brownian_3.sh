@@ -25,8 +25,8 @@ if ! ../../numeric_average out/brownian_part_aero_size_num_average.txt out/brown
 		  exit 1
 	  fi
 	  echo retrying...
-	  if ! ../../partmc run_part.spec; then continue; fi
-	  if ! ../../partmc run_sect.spec; then continue; fi
+	  if ! ../../camp run_part.spec; then continue; fi
+	  if ! ../../camp run_sect.spec; then continue; fi
   else
 	  echo PASS
 	  exit 0

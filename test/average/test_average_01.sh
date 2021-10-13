@@ -14,7 +14,7 @@ while [ true ]
 do
   echo Attempt $counter
 
-if ! ../../partmc run_part.spec || \
+if ! ../../camp run_part.spec || \
    ! ../../bin_average_comp 1e-10 1e-4 24 wet out/average_0001_00000001.nc out/average_comp || \
 
    ! ../../extract_aero_size --num --dmin 1e-10 --dmax 1e-4 --nbin 24 out/average_0001 || \

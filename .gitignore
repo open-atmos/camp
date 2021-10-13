@@ -10,8 +10,8 @@ doc/condensation/condense.pdf
 doc/deposition/deposition.pdf
 doc/html/
 doc/latex/
-doc/partmc_modules.gv
-doc/partmc_modules.pdf
+doc/camp_modules.gv
+doc/camp_modules.pdf
 doc/*.tmp
 doc/*.eps
 scenarios/1_urban_plume/out/

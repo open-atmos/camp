@@ -7,14 +7,14 @@ import matplotlib
 matplotlib.use("PDF")
 import matplotlib.pyplot as plt
 sys.path.append("../../tool")
-import partmc
+import camp
 
 def check_num(in_dir1, in_filename1, in_file_pattern, indir2, in_filename2, out_filename1, out_filename2, out_filename3, counter):
     ncf = scipy.io.netcdf.netcdf_file(in_dir1+in_filename1, 'r')
-    particles1 = partmc.aero_particle_array_t(ncf)
+    particles1 = camp.aero_particle_array_t(ncf)
     ncf.close()
     ncf = scipy.io.netcdf.netcdf_file(in_dir2+in_filename2, 'r')
-    particles2 = partmc.aero_particle_array_t(ncf)
+    particles2 = camp.aero_particle_array_t(ncf)
     particles2.aero_data.kappa[17] = 0.1
     particles2.aero_data = particles1.aero_data
     ncf.close()
@@ -28,16 +28,16 @@ def check_num(in_dir1, in_filename1, in_file_pattern, indir2, in_filename2, out_
     id_list_not_act1 = particles1.ids[is_not_activated1] 
     ccn_cn_ratio1 = num_act1 / sum_tot1
 
-    env_state_history = partmc.read_history(partmc.env_state_t, in_dir1, in_file_pattern)
+    env_state_history = camp.read_history(camp.env_state_t, in_dir1, in_file_pattern)
     time = [env_state_history[i][0] for i in range(len(env_state_history))]
     rh = [env_state_history[i][1].relative_humidity for i in range(len(env_state_history))]
     maximum_ss = (max(rh) - 1)*100.
     max_index = np.argmax(np.array(rh))
     time_index = time[max_index]    
-    time_filename_list = partmc.get_time_filename_list(in_dir1, in_file_pattern)
-    max_filename = partmc.find_filename_at_time(time_filename_list, time_index)
+    time_filename_list = camp.get_time_filename_list(in_dir1, in_file_pattern)
+    max_filename = camp.find_filename_at_time(time_filename_list, time_index)
     ncf = scipy.io.netcdf.netcdf_file(max_filename, 'r')
-    max_env_state = partmc.env_state_t(ncf)
+    max_env_state = camp.env_state_t(ncf)
     ncf.close()
 
 
@@ -47,8 +47,8 @@ def check_num(in_dir1, in_filename1, in_file_pattern, indir2, in_filename2, out_
     for [time, filename, key] in time_filename_list:
         print 'time filename key ', time, filename, key
         ncf = scipy.io.netcdf.netcdf_file(filename, 'r')
-        particles = partmc.aero_particle_array_t(ncf) 
-        env_state = partmc.env_state_t(ncf)
+        particles = camp.aero_particle_array_t(ncf) 
+        env_state = camp.env_state_t(ncf)
         ncf.close()
         
         wet_diameters = particles.diameters()

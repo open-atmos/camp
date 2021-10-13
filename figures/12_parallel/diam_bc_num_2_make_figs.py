@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import scipy.io
 sys.path.append("../../tool")
-import partmc
+import camp
 
 fig_base_dir = "figs"
 data_base_dir = "data"
@@ -21,10 +21,10 @@ data_type = "diam_bc_num"
 value_min = 9.8 # 80
 value_max = 1e6
 
-x_axis = partmc.log_grid(min = config.diameter_axis_min,
+x_axis = camp.log_grid(min = config.diameter_axis_min,
                          max = config.diameter_axis_max,
                          n_bin = config.num_diameter_bins)
-y_axis = partmc.linear_grid(min = config.bc_axis_min,
+y_axis = camp.linear_grid(min = config.bc_axis_min,
                             max = config.bc_axis_max,
                             n_bin = config.num_bc_bins)
 

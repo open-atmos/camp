@@ -41,7 +41,7 @@
 !! | Library      | Version | Source                                        |
 !! |--------------|---------|-----------------------------------------------|
 !! | NetCDF       |         | https://www.unidata.ucar.edu/software/netcdf/ |
-!! | SUNDIALS     | custom  | partmc/cvode-3.4-alpha.tar.gz                 |
+!! | SUNDIALS     | custom  | camp/cvode-3.4-alpha.tar.gz                 |
 !! | SuiteSparse  | 5.1.0   | http://faculty.cse.tamu.edu/davis/SuiteSparse/SuiteSparse-5.1.0.tar.gz |
 !! | GSL          |         | https://www.gnu.org/software/gsl/             |
 !! | json-fortran | 6.1.0   | https://github.com/jacobwilliams/json-fortran/archive/6.1.0.tar.gz |
@@ -49,8 +49,8 @@
 !! The SUNDIALS library must be built with the `ENABLE_KLU` flag set to `ON`
 !! and the KLU library and include paths set according to the SuiteSparse
 !! installation. To get a general idea of the installation steps, check out
-!! \ref ./partmc/Dockerfile
-!! (or \ref ./partmc/Dockerfile.mpi for MPI applications).
+!! \ref ./camp/Dockerfile
+!! (or \ref ./camp/Dockerfile.mpi for MPI applications).
 !!
 !! ## Input files ##
 !!
@@ -1602,12 +1602,12 @@ contains
     mpi_rank_str=adjustl(mpi_rank_str)
 
     !export_path = "/gpfs/scratch/bsc32/bsc32815/a2s8/nmmb-monarch/MODEL/"&
-    !        //"SRC_LIBS/partmc/test/monarch/exports/camp_in_out_"&
+    !        //"SRC_LIBS/camp/test/monarch/exports/camp_in_out_"&
     !        //trim(mpi_rank_str)//".json"
     export_path = "exports/camp_in_out_"//trim(mpi_rank_str)//".json"
 #else
     !export_path = "/gpfs/scratch/bsc32/bsc32815/a2s8/nmmb-monarch/MODEL/"&
-    !        //"SRC_LIBS/partmc/test/monarch/exports/camp_in_out.json"
+    !        //"SRC_LIBS/camp/test/monarch/exports/camp_in_out.json"
     export_path = "exports/camp_in_out.json"
 #endif
     call json%print(p,export_path)

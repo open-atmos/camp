@@ -14,7 +14,7 @@ while [ true ]
 do
   echo Attempt $counter
 
-if ! mpirun -v -np 4 ../../partmc run_part_parallel_${parallel_type}.spec; then
+if ! mpirun -v -np 4 ../../camp run_part_parallel_${parallel_type}.spec; then
 	echo Failure "$counter"
 	if [ "$counter" -gt 10 ]
 	then

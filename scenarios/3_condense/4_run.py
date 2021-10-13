@@ -5,7 +5,7 @@ import os
 if not os.path.exists("out"):
     os.mkdir("out")
 
-str_exec = "../../build/partmc"
+str_exec = "../../build/camp"
 
 for hour in range(1, 50):
     print("hour = ", hour)

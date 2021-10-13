@@ -7,6 +7,6 @@ set -v
 
 mkdir -p out
 
-../../build/partmc chamber.spec
+../../build/camp chamber.spec
 
 # Now run ./2_process.sh to process the data

@@ -22,8 +22,8 @@ if ! ../../extract_aero_size --mass --dmin 1e-7 --dmax 1 --nbin 100 out/sedi_par
 		  exit 1
 	  fi
 	  echo retrying...
-	  if ! ../../partmc run_part.spec; then continue; fi
-	  if ! ../../partmc run_sect.spec; then continue; fi
+	  if ! ../../camp run_part.spec; then continue; fi
+	  if ! ../../camp run_sect.spec; then continue; fi
   else
 	  echo PASS
 	  exit 0

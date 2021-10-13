@@ -14,8 +14,8 @@ while [ true ]
 do
   echo Attempt $counter
 
-if ! ../../partmc run_part_brown_free_df_2_4_upto1000s.spec || \
-   ! ../../partmc run_part_brown_free_df_2_4_restart.spec || \
+if ! ../../camp run_part_brown_free_df_2_4_upto1000s.spec || \
+   ! ../../camp run_part_brown_free_df_2_4_restart.spec || \
    ! ../../test_fractal_dimless_time --free out/part_brown_free_df_2_4_0001 || \
    ! ../../test_fractal_dimless_time --free out/restart_part_brown_free_df_2_4_0001; then
 	echo Failure "$counter"

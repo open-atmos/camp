@@ -23,7 +23,7 @@
 !! If you have Docker installed and want to quickly run the code
 !! described in the tutorial, start a container with PartMC:
 !! \code{.sh}
-!!   docker run -it compdyn/partmc:develop-85-tutorial bash
+!!   docker run -it compdyn/camp:develop-85-tutorial bash
 !! \endcode
 !! Then, follow the instructions at the bottom of the
 !! sections of the tutorial that include executable code.
@@ -605,7 +605,7 @@
 !! Now, our box model code and our input files are complete. To compile
 !! the code, try something like:
 !! \code{.sh}
-!!   gfortran -o run_box_model box_model.F90 -lpartmc -I/usr/local/include/partmc
+!!   gfortran -o run_box_model box_model.F90 -lcamp -I/usr/local/include/camp
 !! \endcode
 !! Where the include path points to where the PartMC library \c .mod
 !! files are installed. If you have trouble compiling or running because
@@ -641,8 +641,8 @@
 !!   dnf install -y gnuplot
 !!   mkdir boot-camp
 !!   cd boot-camp
-!!   cp ../partmc/doc/camp_tutorial/boot_camp/part_3_code/* .
-!!   gfortran -o run_box_model box_model.F90 -lpartmc -I/usr/local/include/partmc
+!!   cp ../camp/doc/camp_tutorial/boot_camp/part_3_code/* .
+!!   gfortran -o run_box_model box_model.F90 -lcamp -I/usr/local/include/camp
 !!   ./run_box_model > output.txt
 !!   gnuplot plot.conf
 !!   exit
@@ -794,7 +794,7 @@
 !! To compile the model code with mpi, be sure to include the `USE_MPI`
 !! flag definition:
 !! \code{.sh}
-!!   mpif90 -o run_box_model box_model.F90 -DUSE_MPI -lpartmc -I/usr/local/include/partmc
+!!   mpif90 -o run_box_model box_model.F90 -DUSE_MPI -lcamp -I/usr/local/include/camp
 !!   mpirun -v -np 2 run_box_model > output.txt
 !! \endcode
 !!
@@ -811,19 +811,19 @@
 !! image locally. So, we'll clone the PartMC repo, build the container
 !! with MPI and then run it:
 !! \code{.sh}
-!!   git clone https://github.com/compdyn/partmc.git
-!!   cd partmc
+!!   git clone https://github.com/compdyn/camp.git
+!!   cd camp
 !!   git checkout develop-85-tutorial
-!!   docker build -f Dockerfile.mpi -t partmc-test-mpi .
-!!   docker run ---name camp -it partmc-test-mpi bash
+!!   docker build -f Dockerfile.mpi -t camp-test-mpi .
+!!   docker run ---name camp -it camp-test-mpi bash
 !! \endcode
 !! Inside the container:
 !! \code{.sh}
 !!   sudo dnf install -y gnuplot
 !!   mkdir boot-camp
 !!   cd boot-camp
-!!   cp ../partmc/doc/camp_tutorial/boot_camp/part_4_code/* .
-!!   mpif90 -o run_box_model box_model.F90 -DUSE_MPI -lpartmc -I/usr/local/include/partmc
+!!   cp ../camp/doc/camp_tutorial/boot_camp/part_4_code/* .
+!!   mpif90 -o run_box_model box_model.F90 -DUSE_MPI -lcamp -I/usr/local/include/camp
 !!   mpirun -v -np 2 run_box_model > output.txt
 !!   gnuplot plot.conf
 !!   exit

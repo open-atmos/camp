@@ -7,15 +7,15 @@ import matplotlib
 matplotlib.use("PDF")
 import matplotlib.pyplot as plt
 sys.path.append("../../tool")
-import partmc
+import camp
 import config
 
 i_ens_max = config.i_ens_max
 i_loop_max = config.i_loop_max
 i_bin = 100
 
-sect_array_num_all = np.loadtxt("/home/nriemer/subversion/partmc/branches/nriemer/local_scenarios/brownian_test_paper2/brownian_sect_size_num.txt")
-sect_array_mass_all = np.loadtxt("/home/nriemer/subversion/partmc/branches/nriemer/local_scenarios/brownian_test_paper2/brownian_sect_size_mass.txt")
+sect_array_num_all = np.loadtxt("/home/nriemer/subversion/camp/branches/nriemer/local_scenarios/brownian_test_paper2/brownian_sect_size_num.txt")
+sect_array_mass_all = np.loadtxt("/home/nriemer/subversion/camp/branches/nriemer/local_scenarios/brownian_test_paper2/brownian_sect_size_mass.txt")
 
 sect_array_num = np.log(10) * sect_array_num_all[:,12]
 sect_array_mass = np.log(10) * sect_array_mass_all[:,12]

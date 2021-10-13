@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 import matplotlib.path as mpath
 import numpy as np
 sys.path.append("../../tool")
-import partmc
+import camp
 from config import *
 
 matplotlib.rc('text', usetex = True)
@@ -29,8 +29,8 @@ out_prefix = "figs/mp_2d_inorg_carbon"
 
 def get_plot_data(filename, value_min = None, value_max = None):
     ncf = scipy.io.netcdf.netcdf_file(filename, 'r')
-    particles = partmc.aero_particle_array_t(ncf)
-    env_state = partmc.env_state_t(ncf)
+    particles = camp.aero_particle_array_t(ncf)
+    env_state = camp.env_state_t(ncf)
     ncf.close()
 
     diameters = particles.dry_diameters() * 1e6
@@ -43,12 +43,12 @@ def get_plot_data(filename, value_min = None, value_max = None):
     comp_frac_ocbc *= (1.0 + 1e-12)
     h2o = particles.masses(include = ["H2O"])
 
-    x_axis = partmc.linear_grid(min = inorg_axis_min, max = inorg_axis_max,
+    x_axis = camp.linear_grid(min = inorg_axis_min, max = inorg_axis_max,
                                 n_bin = num_inorg_bins * 2)
-    y_axis = partmc.linear_grid(min = oc_axis_min, max = oc_axis_max,
+    y_axis = camp.linear_grid(min = oc_axis_min, max = oc_axis_max,
                                 n_bin = num_oc_bins * 2)
 
-    value = partmc.multival_2d(comp_frac_inorg, comp_frac_ocbc, diameters, x_axis, y_axis)
+    value = camp.multival_2d(comp_frac_inorg, comp_frac_ocbc, diameters, x_axis, y_axis)
     if value_max == None:
         value_max = value.max()
     if value_min == None:
@@ -146,7 +146,7 @@ for [i_run, netcdf_pattern] in netcdf_indexed_patterns:
     out_filename = "%s_%02d.pdf" % (out_prefix, i_run)
     print out_filename
 
-    filename_list = partmc.get_filename_list(netcdf_dir, netcdf_pattern)
+    filename_list = camp.get_filename_list(netcdf_dir, netcdf_pattern)
     in_filename = filename_list[0]
     make_2d_plot(in_filename, out_filename)
     

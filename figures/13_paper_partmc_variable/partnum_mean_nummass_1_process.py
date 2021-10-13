@@ -7,7 +7,7 @@ import matplotlib
 matplotlib.use("PDF")
 import matplotlib.pyplot as plt
 sys.path.append("../../tool")
-import partmc
+import camp
 import config
 
 i_loop_max = config.i_loop_max
@@ -16,7 +16,7 @@ i_loop_max = config.i_loop_max
 #for counter in ["10K_mfa", "1K_mfa"]:
 for counter in ["100K_wei\\+1", "100K_flat", "100K_wei-1", "100K_wei-2", "100K_wei-3", "100K_wei-4", "100K_mfa"]:
     netcdf_pattern = "urban_plume_wc_%s_0001_(.*).nc"  % counter
-    time_filename_list = partmc.get_time_filename_list(config.netcdf_dir, netcdf_pattern)
+    time_filename_list = camp.get_time_filename_list(config.netcdf_dir, netcdf_pattern)
     time_array = np.zeros([len(time_filename_list)])
 
     num_avg = np.zeros([len(time_filename_list), i_loop_max])
@@ -38,14 +38,14 @@ for counter in ["100K_wei\\+1", "100K_flat", "100K_wei-1", "100K_wei-2", "100K_w
 
         netcdf_pattern = "urban_plume_wc_%s_0%03d_(.*).nc"  % (counter,i_loop+1)
         print netcdf_pattern
-        time_filename_list = partmc.get_time_filename_list(config.netcdf_dir, netcdf_pattern)
+        time_filename_list = camp.get_time_filename_list(config.netcdf_dir, netcdf_pattern)
 
         i_counter = 0
         for [time, filename, key] in time_filename_list:
             print time, filename, key
             ncf = scipy.io.netcdf.netcdf_file(filename, 'r')
-            particles = partmc.aero_particle_array_t(ncf)
-            env_state = partmc.env_state_t(ncf)
+            particles = camp.aero_particle_array_t(ncf)
+            env_state = camp.env_state_t(ncf)
             ncf.close()
 
             total_number = sum(1/particles.comp_vols)

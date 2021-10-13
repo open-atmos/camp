@@ -53,10 +53,10 @@ pwd
 # Ex.   cp ~/subdir01/subdir02/a.out $SCR 
 #msscmd cd dir1, get a.out, mget *.input
 echo "copying files..."
-cp ~/svn/partmc/trunk/build/partmc .
-cp ~/svn/partmc/trunk/build/extract_* .
-cp ~/svn/partmc/trunk/build/numeric_diff .
-cp -a ~/svn/partmc/trunk/test .
+cp ~/svn/camp/trunk/build/camp .
+cp ~/svn/camp/trunk/build/extract_* .
+cp ~/svn/camp/trunk/build/numeric_diff .
+cp -a ~/svn/camp/trunk/test .
 echo "done copying files"
 ls -l
 

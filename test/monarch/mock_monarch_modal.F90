@@ -271,8 +271,8 @@ program mock_monarch
       !todo fix photo_rates
       !todo change cb05 and other files to scenarios 5 files
       !change units to ppm (monarch) instead ppb (scenario 5) (ppm=ppb*1000)
-      !emissions cada hora cambiar y seguir instrucciones skype y esto :https://github.com/compdyn/partmc/blob/develop-137-urban-plume-camp/scenarios/5_urban_plume_camp/gas_emit.dat
-      !conc set to init_conc if not here set 0 (GMD and GSD don't touch) https://github.com/compdyn/partmc/blob/develop-137-urban-plume-camp/scenarios/5_urban_plume_camp/gas_init.dat
+      !emissions cada hora cambiar y seguir instrucciones skype y esto :https://github.com/compdyn/camp/blob/develop-137-urban-plume-camp/scenarios/5_urban_plume_camp/gas_emit.dat
+      !conc set to init_conc if not here set 0 (GMD and GSD don't touch) https://github.com/compdyn/camp/blob/develop-137-urban-plume-camp/scenarios/5_urban_plume_camp/gas_init.dat
 
       !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       ! **** Add to MONARCH during runtime for each time step **** !
@@ -668,7 +668,7 @@ contains
     n_aerosol_species_time_plot_str=adjustl(n_aerosol_species_time_plot_str)
 
     ! Create the gnuplot script
-    !file_name = "partmc/build/test_run/monarch/"//file_prefix//".gnuplot"
+    !file_name = "camp/build/test_run/monarch/"//file_prefix//".gnuplot"
     file_name = file_prefix//".gnuplot"
     open(unit=SCRIPTS_FILE_UNIT, file=file_name, status="replace", action="write")
     write(SCRIPTS_FILE_UNIT,*) "# "//file_name
@@ -697,16 +697,16 @@ contains
     write(SCRIPTS_FILE_UNIT,*) "set key top left"
     !write(SCRIPTS_FILE_UNIT,*) "set output '"//file_prefix//"_plot.png'"
     write(SCRIPTS_FILE_UNIT,"(A)",advance="no") "set output '/gpfs/scratch/pr1eld00/&
-        pr1eld13/a2nn/nmmb-monarch/MODEL/SRC_LIBS/partmc/build/&
+        pr1eld13/a2nn/nmmb-monarch/MODEL/SRC_LIBS/camp/build/&
         test_run/monarch/out/monarch_plot.jpg'"
     write(SCRIPTS_FILE_UNIT,*)
     write(SCRIPTS_FILE_UNIT,"(A)",advance="no") "plot for [col=2:"&
     //trim(n_gas_species_plot_str)//"] &
-    'partmc/build/test_run/monarch/"//file_prefix//"_results.txt' &
+    'camp/build/test_run/monarch/"//file_prefix//"_results.txt' &
     using 1:col axis x1y1 title columnheader, for [col2=" &
     //trim(n_aerosol_species_start_plot_str)//":" &
     //trim(n_aerosol_species_plot_str)//"] &
-    'partmc/build/test_run/monarch/"//file_prefix//"_results.txt' &
+    'camp/build/test_run/monarch/"//file_prefix//"_results.txt' &
     using " &
     //trim(n_aerosol_species_time_plot_str)// &
     ":col2 axis x1y2 title columnheader"

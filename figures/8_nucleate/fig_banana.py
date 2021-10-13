@@ -8,7 +8,7 @@ import mpl_helper
 import matplotlib
 matplotlib.use("PDF")
 import matplotlib.pyplot as plt
-import partmc
+import camp
 
 size_dist_array = np.loadtxt("data/banana_size_dist_wc_wei-1_lowbg2.txt")
 times = np.loadtxt("data/banana_times_wc_wei-1_lowbg2.txt")

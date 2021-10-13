@@ -7,31 +7,31 @@ import matplotlib
 matplotlib.use("PDF")
 import matplotlib.pyplot as plt
 sys.path.append("../../tool")
-import partmc
+import camp
 import mpl_helper
 
 def make_plot(in_dir, in_filename1, in_filename2, in_filename3, out_filename):
     print in_filename1, in_filename2, in_filename3
     ncf = scipy.io.netcdf.netcdf_file(in_dir+in_filename1, 'r')
-    particles1 = partmc.aero_particle_array_t(ncf)
+    particles1 = camp.aero_particle_array_t(ncf)
     ncf.close()
     ncf = scipy.io.netcdf.netcdf_file(in_dir+in_filename2, 'r')
-    particles2 = partmc.aero_particle_array_t(ncf)
+    particles2 = camp.aero_particle_array_t(ncf)
     ncf.close()
     ncf = scipy.io.netcdf.netcdf_file(in_dir+in_filename3, 'r')
-    particles3 = partmc.aero_particle_array_t(ncf)
+    particles3 = camp.aero_particle_array_t(ncf)
     ncf.close()
 
-    x_axis = partmc.log_grid(min=1e-10,max=1e-4,n_bin=50)
+    x_axis = camp.log_grid(min=1e-10,max=1e-4,n_bin=50)
     x_centers = x_axis.centers() 
 
     dry_diameters1 = particles1.dry_diameters()
     dry_diameters2 = particles2.dry_diameters()
     dry_diameters3 = particles3.dry_diameters()
 
-    hist1 = partmc.histogram_1d(dry_diameters1, x_axis, weights = 1 / particles1.comp_vols)
-    hist2 = partmc.histogram_1d(dry_diameters2, x_axis, weights = 1 / particles2.comp_vols)
-    hist3 = partmc.histogram_1d(dry_diameters3, x_axis, weights = 1 / particles3.comp_vols)
+    hist1 = camp.histogram_1d(dry_diameters1, x_axis, weights = 1 / particles1.comp_vols)
+    hist2 = camp.histogram_1d(dry_diameters2, x_axis, weights = 1 / particles2.comp_vols)
+    hist3 = camp.histogram_1d(dry_diameters3, x_axis, weights = 1 / particles3.comp_vols)
  
     plt.clf()
     plt.loglog(x_axis.centers(), hist1, label = 'initial')

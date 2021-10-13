@@ -602,28 +602,17 @@ else()
 endif()
 
 set(CAMP_F_SRC
-        src/aero_state.F90 src/integer_varray.F90
-        src/integer_rmap.F90 src/integer_rmap2.F90 src/aero_sorted.F90
-        src/aero_binned.F90 src/bin_grid.F90 src/constants.F90
-        src/scenario.F90 src/env_state.F90 src/aero_mode.F90
-        src/aero_dist.F90 src/aero_weight.F90 src/aero_weight_array.F90
-        src/coag_kernel_additive.F90 src/coag_kernel_sedi.F90
-        src/coag_kernel_constant.F90 src/coag_kernel_brown.F90
-        src/coag_kernel_zero.F90 src/coag_kernel_brown_free.F90
-        src/coag_kernel_brown_cont.F90 src/aero_data.F90 src/run_exact.F90
-        src/run_part.F90 src/util.F90 src/stats.F90 src/run_sect.F90 src/output.F90
-        src/mosaic.F90 src/gas_data.F90 src/gas_state.F90
-        src/coagulation.F90 src/exact_soln.F90 src/coagulation_dist.F90
-        src/coag_kernel.F90 src/spec_line.F90 src/spec_file.F90 src/rand.F90
-        src/aero_particle.F90 src/aero_particle_array.F90 src/mpi.F90
-        src/netcdf.F90 src/aero_info.F90 src/aero_info_array.F90
-        src/nucleate.F90 src/condense.F90 src/fractal.F90 src/chamber.F90
+        src/constants.F90
+        src/util.F90
+        src/mpi.F90
+        src/env_state.F90
+        src/rand.F90
         src/property.F90 src/chem_spec_data.F90
         src/rxn_data.F90 src/camp_state.F90 src/mechanism_data.F90
         src/camp_core.F90 src/camp_solver_data.F90 src/aero_rep_data.F90
-        src/aero_phase_data.F90 src/aero_rep_factory.F90 src/camp_interface.F90
+        src/aero_phase_data.F90 src/aero_rep_factory.F90
         src/rxn_factory.F90 src/sub_model_data.F90 src/sub_model_factory.F90
-        src/solver_stats.F90 src/camp_box_model_data.F90 src/photolysis.F90
+        src/solver_stats.F90 src/camp_box_model_data.F90
         src/debug_diff_check.F90
         )
 

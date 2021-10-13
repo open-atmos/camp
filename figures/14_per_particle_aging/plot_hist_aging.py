@@ -4,8 +4,8 @@ import os, sys
 import scipy.io
 import numpy as np
 
-sys.path.append("/Users/nriemer/subversion/partmc/trunk/tool")
-import partmc
+sys.path.append("/Users/nriemer/subversion/camp/trunk/tool")
+import camp
 import mpl_helper
 import matplotlib
 import pickle
@@ -53,16 +53,16 @@ emit_night = ((emit_time > 12) & (bc_frac_emit > 0 ))
 bc_containing = (bc_frac_emit > 0)
 
 # 2D Histogram plot
-x_axis = partmc.log_grid(min=1e-3,max=1e1,n_bin=70)
-y_axis = partmc.linear_grid(min=0,max=48,n_bin=48)
+x_axis = camp.log_grid(min=1e-3,max=1e1,n_bin=70)
+y_axis = camp.linear_grid(min=0,max=48,n_bin=48)
 
-hist2d = partmc.histogram_2d(emit_diam[bc_containing], time_for_aging[bc_containing], 
+hist2d = camp.histogram_2d(emit_diam[bc_containing], time_for_aging[bc_containing], 
 			     x_axis, y_axis, weights = 1 / emit_comp_vols[bc_containing])
 
-hist2d_morning = partmc.histogram_2d(emit_diam[emit_morning], time_for_aging[emit_morning], 
+hist2d_morning = camp.histogram_2d(emit_diam[emit_morning], time_for_aging[emit_morning], 
 			     x_axis, y_axis, weights = 1 / emit_comp_vols[emit_morning])
 
-hist2d_afternoon = partmc.histogram_2d(emit_diam[emit_afternoon], time_for_aging[emit_afternoon], 
+hist2d_afternoon = camp.histogram_2d(emit_diam[emit_afternoon], time_for_aging[emit_afternoon], 
 			     x_axis, y_axis, weights = 1 / emit_comp_vols[emit_afternoon])
 
 hist2d = hist2d * 1e-6

@@ -92,7 +92,7 @@ numerical parameters.
 
 Shift spec file reading into run_part.F95, etc. Have a
 spec_file_read_run_part() or similar, that just takes a filename. The
-main partmc program would then just read the first line of the file,
+main camp program would then just read the first line of the file,
 close it, then call the correct run_*() reader. This would enable
 other driver programs to be easily written. run_part() should also
 take a callback function, with a t_callback timestep parameter, to
@@ -137,10 +137,10 @@ Change kind=dp to kind=wp for "working precision".
 
 Make numeric_diff work even with extra spaces at the end of lines.
 
-Shift aero_data inside aero_state, like in partmc.py, to avoid having
+Shift aero_data inside aero_state, like in camp.py, to avoid having
 to remember when to pass it around.
 
-Unify extract_* programs further (maybe into just partmc executable?).
+Unify extract_* programs further (maybe into just camp executable?).
 
 Use a better Poisson generator method for the non-GSL case (just use
 the GSL method, that seems to be approximate anyway?).
@@ -149,7 +149,7 @@ Parallel input_state(), input_filename_list(), and input_sectional().
 
 Parallel_dist does not do accelerated coagulation yet.
 
-partmc.py can have histogram_1d() and histogram_2d() replaced by
+camp.py can have histogram_1d() and histogram_2d() replaced by
 numpy.histogram() and numpy.histogram2d().
 
 Rename env_state%start_time to start_time_of_day.

@@ -24,8 +24,8 @@ if ! ../../extract_aero_size --num --dmin 1e-9 --dmax 1e-3 --nbin 160 out/loss_p
 		  exit 1
 	  fi
 	  echo retrying...
-	  if ! ../../partmc run_constant_part.spec; then continue; fi
-	  if ! ../../partmc run_constant_exact.spec; then continue; fi
+	  if ! ../../camp run_constant_part.spec; then continue; fi
+	  if ! ../../camp run_constant_exact.spec; then continue; fi
   else
 	  echo PASS
 	  exit 0

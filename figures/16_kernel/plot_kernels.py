@@ -4,7 +4,7 @@ import os, sys
 import numpy
 
 sys.path.append("../../tool")
-import partmc
+import camp
 import mpl_helper
 import matplotlib
 

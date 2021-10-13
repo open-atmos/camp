@@ -23,16 +23,16 @@ git commit -m "update info for 2.1.0 release"
 git tag -a 2.1.0 -m "Version 2.1.0"
 
 cd ~/t
-git clone ~/git/partmc
-cd ~/t/partmc
+git clone ~/git/camp
+cd ~/t/camp
 git checkout 2.1
 
-cd ~/t/partmc/doc
+cd ~/t/camp/doc
 make
 check README.html, ChangeLog.html and html/index.html look ok
 check module diagram page
 
-cd ~/t/partmc
+cd ~/t/camp
 mkdir build
 cd build
 export MOSAIC_HOME=~/git/mosaic
@@ -45,14 +45,14 @@ make package_source
 test package:
 
 cd t
-tar xf ~/t/partmc/build/partmc-2.1.0.tar.gz
+tar xf ~/t/camp/build/camp-2.1.0.tar.gz
 build and test
 
 update website:
 
-cd ~/work/web/site/partmc/
-cp ~/t/partmc/build/partmc-2.1.0.tar.gz .
-tar xf partmc-2.1.0.tar.gz
+cd ~/work/web/site/camp/
+cp ~/t/camp/build/camp-2.1.0.tar.gz .
+tar xf camp-2.1.0.tar.gz
 
 edit index.content
 remember to add ChangeLog now
@@ -60,6 +60,6 @@ make website
 
 push to remote:
 
-cd ~/git/partmc
+cd ~/git/camp
 git push --tags origin master
 git push --tags upstream master

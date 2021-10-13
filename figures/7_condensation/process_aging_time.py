@@ -7,12 +7,12 @@ import matplotlib
 matplotlib.use("PDF")
 import matplotlib.pyplot as plt
 sys.path.append("../../tool")
-import partmc
+import camp
 import config
 
 netcdf_dir = "../../scenarios/2_urban_plume2/out/"
 netcdf_pattern = "urban_plume_nc_0001_(.*).nc"
-time_filename_list = partmc.get_time_filename_list(netcdf_dir, netcdf_pattern)
+time_filename_list = camp.get_time_filename_list(netcdf_dir, netcdf_pattern)
 
 ccn_cn_array = np.zeros([len(time_filename_list),4])
 i_counter = 0
@@ -20,8 +20,8 @@ age_by_id = {}
 for [time, filename, key] in time_filename_list:
     print time, filename, key
     ncf = scipy.io.netcdf.netcdf_file(filename, 'r')
-    particles = partmc.aero_particle_array_t(ncf)
-    env_state = partmc.env_state_t(ncf)
+    particles = camp.aero_particle_array_t(ncf)
+    env_state = camp.env_state_t(ncf)
     ncf.close()
 
     s_crit = (particles.critical_rel_humids(env_state) - 1)*100

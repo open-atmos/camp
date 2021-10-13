@@ -9,12 +9,12 @@ matplotlib.use('Agg')
 
 import matplotlib.pyplot as plt
 sys.path.append("../../tool")
-import partmc
+import camp
 
 def make_plot(in_filename,out_filename):
     ncf = scipy.io.netcdf.netcdf_file(in_filename, 'r')
-    particles = partmc.aero_particle_array_t(ncf)
-    env_state = partmc.env_state_t(ncf)
+    particles = camp.aero_particle_array_t(ncf)
+    env_state = camp.env_state_t(ncf)
     ncf.close()
 
     bc = particles.masses(include = ["BC"])
@@ -30,10 +30,10 @@ def make_plot(in_filename,out_filename):
     wet_diameters = particles.diameters()
     dry_diameters = particles.dry_diameters() * 1e6
 
-    x_axis = partmc.log_grid(min=1e-2,max=1e0,n_bin=90)
-    y_axis = partmc.linear_grid(min=0,max=0.8,n_bin=40)
+    x_axis = camp.log_grid(min=1e-2,max=1e0,n_bin=90)
+    y_axis = camp.linear_grid(min=0,max=0.8,n_bin=40)
 
-    vals = partmc.multival_2d(dry_diameters, bc_frac, kappas, x_axis, y_axis, rand_arrange=False)
+    vals = camp.multival_2d(dry_diameters, bc_frac, kappas, x_axis, y_axis, rand_arrange=False)
 
     vals_pos = np.ma.masked_less_equal(vals, 0)
     vals_zero = np.ma.masked_not_equal(vals, 0)
@@ -45,7 +45,7 @@ def make_plot(in_filename,out_filename):
     if vals_pos.count() > 0:
        plt.pcolor(x_axis.edges(), y_axis.edges(), vals_pos.transpose(), linewidths = 0.1)
 
-    title = partmc.time_of_day_string(env_state)
+    title = camp.time_of_day_string(env_state)
     a = plt.gca()
     a.set_xscale("log")
     a.set_yscale("linear")

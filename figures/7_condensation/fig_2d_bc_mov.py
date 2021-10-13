@@ -9,11 +9,11 @@ matplotlib.use('Agg')
 
 import matplotlib.pyplot as plt
 sys.path.append("../../tool")
-import partmc
+import camp
 
 def make_plot(in_filename,out_filename,title):
     ncf = scipy.io.netcdf.netcdf_file(in_filename, 'r')
-    particles = partmc.aero_particle_array_t(ncf)
+    particles = camp.aero_particle_array_t(ncf)
     ncf.close()
 
     bc = particles.masses(include = ["BC"])
@@ -22,10 +22,10 @@ def make_plot(in_filename,out_filename,title):
 
     wet_diameters = particles.diameters()
 
-    x_axis = partmc.log_grid(min=1e-8,max=1e-4,n_bin=90)
-    y_axis = partmc.linear_grid(min=0,max=0.8,n_bin=40)
+    x_axis = camp.log_grid(min=1e-8,max=1e-4,n_bin=90)
+    y_axis = camp.linear_grid(min=0,max=0.8,n_bin=40)
 
-    hist2d = partmc.histogram_2d(wet_diameters, bc_frac, x_axis, y_axis, weights = 1/particles.comp_vols)
+    hist2d = camp.histogram_2d(wet_diameters, bc_frac, x_axis, y_axis, weights = 1/particles.comp_vols)
     plt.clf()
     plt.pcolor(x_axis.edges(), y_axis.edges(), hist2d.transpose(),norm = matplotlib.colors.LogNorm(), linewidths = 0.1)
     a = plt.gca()
@@ -44,7 +44,7 @@ def make_plot(in_filename,out_filename,title):
 for counter in range(1, 602):
     print "counter = ",  counter
     
-    filename_in1 = "/home/ching1/subversion/partmc/trunk/scenarios/3_condense/out/cond_02_ref_0001_00000%03d.nc" % counter
+    filename_in1 = "/home/ching1/subversion/camp/trunk/scenarios/3_condense/out/cond_02_ref_0001_00000%03d.nc" % counter
     filename_out1 = "figs/2d_bc_ref_%03d.png" % (counter-1)
     titel = "%02d seconds" % (counter-1)
     print filename_in1

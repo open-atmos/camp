@@ -114,7 +114,7 @@
 !! \code{.unparsed}
 !! ...
 !!
-!! # partmc library
+!! # camp library
 !!
 !! set(REACTIONS
 !!     ...

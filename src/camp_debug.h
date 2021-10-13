@@ -245,7 +245,7 @@ static void print_jacobian_file(SUNMatrix J, char *filepath) {
   // void printMatrix(double* A, int* jA, int* iA, int nrows, int nnz)
 
   FILE *fp;
-  fp = fopen("/gpfs/scratch/bsc32/bsc32815/gpupartmc/matrix_basic_1.csr", "w");
+  fp = fopen("/gpfs/scratch/bsc32/bsc32815/gpucamp/matrix_basic_1.csr", "w");
 
   fprintf(fp, " %d", SM_NNZ_S(J));
   fprintf(fp, " %d", SM_NP_S(J));

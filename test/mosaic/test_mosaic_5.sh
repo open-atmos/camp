@@ -22,8 +22,8 @@ if ! ../../extract_env out/mosaic_restarted_0001 || \
 		  exit 1
 	  fi
 	  echo retrying...
-	  if ! ../../partmc run_part.spec; then continue; fi
-          if ! ../../partmc run_part_restarted.spec; then continue; fi
+	  if ! ../../camp run_part.spec; then continue; fi
+          if ! ../../camp run_part_restarted.spec; then continue; fi
   else
 	  echo PASS
 	  exit 0

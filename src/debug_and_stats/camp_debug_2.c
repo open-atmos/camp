@@ -206,10 +206,10 @@ void export_counters_open(SolverData *sd)
 
   //char rel_path[] = "../../../../../exported_counters_";
   //char rel_path[] =
-  //        "/gpfs/scratch/bsc32/bsc32815/a2s8/nmmb-monarch/MODEL/SRC_LIBS/partmc/"
+  //        "/gpfs/scratch/bsc32/bsc32815/a2s8/nmmb-monarch/MODEL/SRC_LIBS/camp/"
   //        "test/monarch/exports/camp_input";  // monarch
   //char rel_path[]=
-  //  "/gpfs/scratch/bsc32/bsc32815/gpupartmc/exported_counters_";
+  //  "/gpfs/scratch/bsc32/bsc32815/gpucamp/exported_counters_";
 
   char rel_path[]=
           "out/exported_counters_";

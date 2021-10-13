@@ -7,13 +7,13 @@ import matplotlib
 matplotlib.use("PDF")
 import matplotlib.pyplot as plt
 sys.path.append("../../tool")
-import partmc
+import camp
 import config
 
 i_loop_max = config.i_loop_max
 i_ens_max = config.i_ens_max
 
-netcdf_dir = "/home/nriemer/subversion/partmc/branches/nriemer/local_scenarios/brownian_test_paper2/out/"
+netcdf_dir = "/home/nriemer/subversion/camp/branches/nriemer/local_scenarios/brownian_test_paper2/out/"
 
 array_num_init = np.zeros([i_loop_max*i_ens_max])
 array_mass_init = np.zeros([i_loop_max*i_ens_max])
@@ -25,8 +25,8 @@ for i_loop in range (0, i_ens_max*i_loop_max):
     filename = "brownian_part_%05d_00000001.nc"  % (i_loop+1)
     print filename
     ncf = scipy.io.netcdf.netcdf_file(netcdf_dir+filename, 'r')
-    particles = partmc.aero_particle_array_t(ncf)
-    env_state = partmc.env_state_t(ncf)
+    particles = camp.aero_particle_array_t(ncf)
+    env_state = camp.env_state_t(ncf)
     ncf.close()
 
     total_number = sum(1/particles.comp_vols)
@@ -38,8 +38,8 @@ for i_loop in range (0, i_ens_max*i_loop_max):
     filename = "brownian_part_%05d_00000002.nc"  % (i_loop+1)
     print filename
     ncf = scipy.io.netcdf.netcdf_file(netcdf_dir+filename, 'r')
-    particles = partmc.aero_particle_array_t(ncf)
-    env_state = partmc.env_state_t(ncf)
+    particles = camp.aero_particle_array_t(ncf)
+    env_state = camp.env_state_t(ncf)
     ncf.close()
 
     total_number = sum(1/particles.comp_vols)

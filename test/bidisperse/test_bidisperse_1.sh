@@ -14,7 +14,7 @@ while [ true ]
 do
   echo Attempt $counter
 
-if ! ../../partmc run_part.spec || \
+if ! ../../camp run_part.spec || \
    ! ../../test_bidisperse_extract || \
    ! ../../test_bidisperse_ode || \
 # extract size distributions for plotting

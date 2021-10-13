@@ -7,11 +7,11 @@ import matplotlib
 matplotlib.use("PDF")
 import matplotlib.pyplot as plt
 sys.path.append("../../tool")
-import partmc
+import camp
 
 netcdf_dir = "../../local_scenarios/matrix_case/out/"
 netcdf_pattern = "brownian_part_0001_(.*).nc"
-time_filename_list = partmc.get_time_filename_list(netcdf_dir, netcdf_pattern)
+time_filename_list = camp.get_time_filename_list(netcdf_dir, netcdf_pattern)
 
 matrix_number_a = np.loadtxt('data/set03nmba.txt') 
 matrix_number_b = np.loadtxt('data/set03nmbb.txt') 
@@ -70,8 +70,8 @@ i_counter = 0
 for [time, filename, key] in time_filename_list:
     print time, filename, key
     ncf = scipy.io.netcdf.netcdf_file(filename, 'r')
-    particles = partmc.aero_particle_array_t(ncf)
-    env_state = partmc.env_state_t(ncf)
+    particles = camp.aero_particle_array_t(ncf)
+    env_state = camp.env_state_t(ncf)
     ncf.close()
 
     pure_bc = ((particles.masses(include = ["BC"]) > 0) & (particles.masses(include = ["SO4"]) == 0))

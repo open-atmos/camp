@@ -7,7 +7,7 @@ import matplotlib
 matplotlib.use("PDF")
 import matplotlib.pyplot as plt
 sys.path.append("../../tool")
-import partmc
+import camp
 import config
 
 bc_std_overall = np.zeros([12,4]) # 12 for weighting schemes, 4 for ss-values

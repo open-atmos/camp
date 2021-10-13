@@ -4,14 +4,14 @@ import scipy.io
 import sys
 import numpy as np
 sys.path.append("../../tool")
-import partmc
+import camp
 import config
 
 i_loop_max = config.i_loop_max
 
 def make_plot(in_files, f1, f2, f3, f4, f5, f6, f7, f8, f9, f10):
-    x_axis = partmc.log_grid(min=1e-9,max=1e-5,n_bin=70)
-    y_axis = partmc.log_grid(min=1e-3,max=1e2,n_bin=50)
+    x_axis = camp.log_grid(min=1e-9,max=1e-5,n_bin=70)
+    y_axis = camp.log_grid(min=1e-3,max=1e2,n_bin=50)
     x_centers = x_axis.centers()
     y_centers = y_axis.centers()
     counter = 0
@@ -29,8 +29,8 @@ def make_plot(in_files, f1, f2, f3, f4, f5, f6, f7, f8, f9, f10):
 
     for file in in_files:
         ncf = scipy.io.netcdf.netcdf_file(config.netcdf_dir+'/'+file, 'r')
-        particles = partmc.aero_particle_array_t(ncf)
-        env_state = partmc.env_state_t(ncf)
+        particles = camp.aero_particle_array_t(ncf)
+        env_state = camp.env_state_t(ncf)
         ncf.close()
 
         dry_diameters = particles.dry_diameters()
@@ -41,19 +41,19 @@ def make_plot(in_files, f1, f2, f3, f4, f5, f6, f7, f8, f9, f10):
         kappa_const1 = 1 * kappa_const
         kappa_const2 = 0 * kappa_const
         print "kappa_const ", kappa_const1, len(kappa_const1), len(particles.dry_diameters())
-    	crit_rhs1 = (partmc.critical_rel_humids(env_state, kappa_const1, x_axis.edges()) - 1)*100
-	crit_rhs2 = (partmc.critical_rel_humids(env_state, kappa_const2, x_axis.edges()) - 1)*100
+    	crit_rhs1 = (camp.critical_rel_humids(env_state, kappa_const1, x_axis.edges()) - 1)*100
+	crit_rhs2 = (camp.critical_rel_humids(env_state, kappa_const2, x_axis.edges()) - 1)*100
         print "crit_rhs ", crit_rhs1, crit_rhs2
  
         s_crit = (particles.critical_rel_humids(env_state) - 1)*100
         dry_mass = particles.masses(exclude = ["H2O"])
 
         dry_diameters = particles.dry_diameters()
-        hist2d = partmc.histogram_2d(dry_diameters, s_crit, x_axis, y_axis, weights = 1 / particles.comp_vols)
+        hist2d = camp.histogram_2d(dry_diameters, s_crit, x_axis, y_axis, weights = 1 / particles.comp_vols)
         hist_array_num[:,:,counter] = hist2d
-        hist2d = partmc.histogram_2d(dry_diameters, s_crit, x_axis, y_axis, weights = particles.masses(include=["BC"])  / particles.comp_vols)
+        hist2d = camp.histogram_2d(dry_diameters, s_crit, x_axis, y_axis, weights = particles.masses(include=["BC"])  / particles.comp_vols)
         hist_array_mass[:,:,counter] = hist2d
-        hist2d = partmc.histogram_2d(dry_diameters, kappas, x_axis, y_axis, weights = 1 / particles.comp_vols)
+        hist2d = camp.histogram_2d(dry_diameters, kappas, x_axis, y_axis, weights = 1 / particles.comp_vols)
         hist_array_kappas[:,:,counter] = hist2d
         counter = counter+1
 

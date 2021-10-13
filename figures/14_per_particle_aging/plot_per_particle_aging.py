@@ -4,8 +4,8 @@ import os, sys
 import scipy.io
 import numpy as np
 
-sys.path.append("/Users/nriemer/subversion/partmc/trunk/tool")
-import partmc
+sys.path.append("/Users/nriemer/subversion/camp/trunk/tool")
+import camp
 import mpl_helper
 import matplotlib
 import pickle
@@ -139,10 +139,10 @@ figure.savefig("aging_kappa_wc_01_1.pdf")
 
 
 # 2D Histogram plot
-x_axis = partmc.log_grid(min=1e-3,max=1e1,n_bin=70)
-y_axis = partmc.linear_grid(min=0,max=48,n_bin=48)
+x_axis = camp.log_grid(min=1e-3,max=1e1,n_bin=70)
+y_axis = camp.linear_grid(min=0,max=48,n_bin=48)
 
-hist2d = partmc.histogram_2d(emit_diam[emit_morning], time_for_aging[emit_morning], x_axis, y_axis, weights = 1 / emit_comp_vols[emit_morning])
+hist2d = camp.histogram_2d(emit_diam[emit_morning], time_for_aging[emit_morning], x_axis, y_axis, weights = 1 / emit_comp_vols[emit_morning])
 
 hist2d = hist2d * 1e-6
 print hist2d[36,:]

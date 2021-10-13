@@ -10,7 +10,7 @@ import matplotlib
 
 import matplotlib.pyplot as plt
 sys.path.append("../../tool")
-import partmc
+import camp
 
 #matplotlib.rc('text', usetex = True)
 #matplotlib.rc('font', size = 20, family = "serif",
@@ -23,8 +23,8 @@ import partmc
 
 def make_plot(in_filename,out_filename):
     ncf = scipy.io.netcdf.netcdf_file(in_filename, 'r')
-    particles = partmc.aero_particle_array_t(ncf)
-    env_state = partmc.env_state_t(ncf)
+    particles = camp.aero_particle_array_t(ncf)
+    env_state = camp.env_state_t(ncf)
     ncf.close()
 
     bc = particles.masses(include = ["BC"])
@@ -34,8 +34,8 @@ def make_plot(in_filename,out_filename):
     wet_diameters = particles.diameters()
     dry_diameters = particles.dry_diameters() * 1e6
 
-    x_axis = partmc.log_grid(min=1e-2,max=1e0,n_bin=90)
-    y_axis = partmc.linear_grid(min=0,max=0.8,n_bin=40)
+    x_axis = camp.log_grid(min=1e-2,max=1e0,n_bin=90)
+    y_axis = camp.linear_grid(min=0,max=0.8,n_bin=40)
 
     (figure, axes, cbar_axes) = config_matplotlib.make_fig(colorbar=True,
                                                            right_margin=1,
@@ -60,14 +60,14 @@ def make_plot(in_filename,out_filename):
     axes.set_xlabel(r"dry diameter $D\ (\rm\mu m)$")
     axes.set_ylabel(r"BC dry mass frac. $w_{{\rm BC},{\rm dry}}$")
 
-    hist2d = partmc.histogram_2d(dry_diameters, bc_frac, x_axis, y_axis, weights = 1/particles.comp_vols)
+    hist2d = camp.histogram_2d(dry_diameters, bc_frac, x_axis, y_axis, weights = 1/particles.comp_vols)
 #    plt.clf()
 
     axes.set_xbound(x_axis.min, x_axis.max)
     axes.set_ybound(y_axis.min, y_axis.max)
 
     p=axes.pcolor(x_axis.edges(), y_axis.edges(), hist2d.transpose(),norm = matplotlib.colors.LogNorm(vmin=1e8, vmax=1e11), linewidths = 0.1)
-    title = partmc.time_of_day_string(env_state)
+    title = camp.time_of_day_string(env_state)
     axes.set_xbound(x_axis.min, x_axis.max)
     axes.set_ybound(y_axis.min, y_axis.max)
     axes.set_title(title)

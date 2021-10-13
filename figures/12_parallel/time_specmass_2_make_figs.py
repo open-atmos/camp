@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import scipy.io
 sys.path.append("../../tool")
-import partmc
+import camp
 
 fig_base_dir = "figs"
 data_base_dir = "data"
@@ -44,7 +44,7 @@ def make_plot(value, out_filename, aero_data):
         h = plt.semilogy((value[:,0] - value[0,0]) / 3600, value[:,i])
         handle_list.append(h)
         name = aero_data.names[i - 1]
-        label_list.append(partmc.aero_data_t.species_tex_names[name])
+        label_list.append(camp.aero_data_t.species_tex_names[name])
         plt.hold(True)
     axes.set_xbound(config.time_axis_min, config.time_axis_max)
     axes.set_ybound(value_min, value_max)
@@ -59,7 +59,7 @@ if __name__ == "__main__":
     index = loop["indices"][0]
     proc = index["procs"][0]
     ncf = scipy.io.netcdf.netcdf_file(proc["filename"], 'r')
-    aero_data = partmc.aero_data_t(ncf)
+    aero_data = camp.aero_data_t(ncf)
     ncf.close()
     for run in config_filelist.runs:
         data_dir = os.path.join(data_base_dir, run["name"])

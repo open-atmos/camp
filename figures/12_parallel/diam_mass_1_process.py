@@ -7,14 +7,14 @@ import os, sys, math
 import numpy as np
 import scipy.io
 sys.path.append("../../tool")
-import partmc
+import camp
 import config
 import config_filelist
 
 data_base_dir = "data"
 data_type = "diam_mass"
 
-x_axis = partmc.log_grid(min = config.diameter_axis_min,
+x_axis = camp.log_grid(min = config.diameter_axis_min,
                          max = config.diameter_axis_max,
                          n_bin = config.num_diameter_bins)
 
@@ -22,14 +22,14 @@ def process_data(in_filename_list, out_filename):
     total_value = None
     for in_filename in in_filename_list:
         ncf = scipy.io.netcdf.netcdf_file(in_filename, 'r')
-        particles = partmc.aero_particle_array_t(ncf)
-        env_state = partmc.env_state_t(ncf)
+        particles = camp.aero_particle_array_t(ncf)
+        env_state = camp.env_state_t(ncf)
         ncf.close()
 
         dry_diameters = particles.dry_diameters() * 1e6 # m to um
         masses = particles.masses() * 1e9 # kg to ug
 
-        value = partmc.histogram_1d(dry_diameters, x_axis,
+        value = camp.histogram_1d(dry_diameters, x_axis,
                                     weights = masses / particles.comp_vols)
         value /= 1e6 # m^{-3} to cm^{-3}
 

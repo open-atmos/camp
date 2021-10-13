@@ -4,14 +4,14 @@ import scipy.io
 import sys
 import numpy as np
 sys.path.append("../../tool")
-import partmc
+import camp
 import config
 
 i_loop_max = config.i_loop_max
 
 def make_plot(in_files, f1, f2, f3, f4, f5, f6):
-    x_axis = partmc.log_grid(min=1e-10,max=1e-4,n_bin=100)
-    y_axis = partmc.linear_grid(min=0,max=1.,n_bin=50)
+    x_axis = camp.log_grid(min=1e-10,max=1e-4,n_bin=100)
+    y_axis = camp.linear_grid(min=0,max=1.,n_bin=50)
     x_centers = x_axis.centers()
     y_centers = y_axis.centers()
     counter = 0
@@ -26,7 +26,7 @@ def make_plot(in_files, f1, f2, f3, f4, f5, f6):
     hist_std_norm_num = np.zeros([len(x_centers), len(y_centers)])
     for file in in_files:
         ncf = scipy.io.netcdf.netcdf_file(config.netcdf_dir+'/'+file, 'r')
-        particles = partmc.aero_particle_array_t(ncf)
+        particles = camp.aero_particle_array_t(ncf)
         ncf.close()
 
         bc = particles.masses(include = ["BC"])
@@ -34,9 +34,9 @@ def make_plot(in_files, f1, f2, f3, f4, f5, f6):
         bc_frac = bc / dry_mass
 
         dry_diameters = particles.dry_diameters()
-        hist2d = partmc.histogram_2d(dry_diameters, bc_frac, x_axis, y_axis, weights = 1 / particles.comp_vols)
+        hist2d = camp.histogram_2d(dry_diameters, bc_frac, x_axis, y_axis, weights = 1 / particles.comp_vols)
         hist_array_num[:,:,counter] = hist2d
-        hist2d = partmc.histogram_2d(dry_diameters, bc_frac, x_axis, y_axis, weights = particles.masses(include=["BC"])  / particles.comp_vols)
+        hist2d = camp.histogram_2d(dry_diameters, bc_frac, x_axis, y_axis, weights = particles.masses(include=["BC"])  / particles.comp_vols)
         hist_array_mass[:,:,counter] = hist2d
 
         counter = counter+1

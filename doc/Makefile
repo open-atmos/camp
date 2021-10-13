@@ -1,7 +1,7 @@
 
 VERSION = 2.4.0
 
-GRAPHVIZ_FILE = partmc_modules.gv
+GRAPHVIZ_FILE = camp_modules.gv
 GRAPHVIZ_PDF = $(patsubst %.gv,%.pdf,$(GRAPHVIZ_FILE))
 DOC_INDEX = html/index.html
 
@@ -38,7 +38,7 @@ $(DOC_INDEX): $(ALL_SRC) $(GRAPHVIZ_PDF) Doxyfile
 	doxygen
 
 $(GRAPHVIZ_FILE): $(CAMP_FSRC) f90_mod_deps.py
-	echo "digraph partmc_modules {" > $@
+	echo "digraph camp_modules {" > $@
 	echo "    rankdir = TB;" >> $@
 	echo "    node [fontsize = 10, height = 0.3, width = 0.5];" >> $@
 	echo "    graph [nodesep = 0.2, ranksep = 0.3];" >> $@

@@ -7,10 +7,10 @@ import matplotlib
 matplotlib.use("PDF")
 import matplotlib.pyplot as plt
 sys.path.append("../../tool")
-import partmc
+import camp
 
 def check_num(in_dir, in_filename, in_file_pattern, out_filename, counter):
-    time_filename_list = partmc.get_time_filename_list(in_dir, in_file_pattern)
+    time_filename_list = camp.get_time_filename_list(in_dir, in_file_pattern)
 
     id_p_array = np.array([16388, 10, 33311, 9212, 451, 11769])
     d = np.zeros((len(id_p_array),len(time_filename_list)))
@@ -20,7 +20,7 @@ def check_num(in_dir, in_filename, in_file_pattern, out_filename, counter):
     for [time, filename, key] in time_filename_list:
 	print time, filename, key
         ncf = scipy.io.netcdf.netcdf_file(filename, 'r')
-        particles = partmc.aero_particle_array_t(ncf) 
+        particles = camp.aero_particle_array_t(ncf) 
         ncf.close()
         wet_diameters = particles.diameters()
         id_list = list(particles.ids)

@@ -7,31 +7,31 @@ import matplotlib
 matplotlib.use("PDF")
 import matplotlib.pyplot as plt
 sys.path.append("../../tool")
-import partmc
+import camp
 
 ccn_cn_ratio = np.zeros([4,49])
 def make_plot(in_dir, in_filename1, in_filename2, in_filename3, out_filename, title, ccn_cn_i, ccn_cn_j):
     print in_filename1, in_filename2, in_filename3
     ncf = scipy.io.netcdf.netcdf_file(in_dir+in_filename1, 'r')
-    particles1 = partmc.aero_particle_array_t(ncf)
+    particles1 = camp.aero_particle_array_t(ncf)
     ncf.close()
     ncf = scipy.io.netcdf.netcdf_file(in_dir+in_filename2, 'r')
-    particles2 = partmc.aero_particle_array_t(ncf)
+    particles2 = camp.aero_particle_array_t(ncf)
     ncf.close()
     ncf = scipy.io.netcdf.netcdf_file(in_dir+in_filename3, 'r')
-    particles3 = partmc.aero_particle_array_t(ncf)
+    particles3 = camp.aero_particle_array_t(ncf)
     ncf.close()
 
-    x_axis = partmc.log_grid(min=1e-10,max=1e-4,n_bin=30)
+    x_axis = camp.log_grid(min=1e-10,max=1e-4,n_bin=30)
     x_centers = x_axis.centers() 
 
     wet_diameters1 = particles1.diameters()
     wet_diameters2 = particles2.diameters()
     wet_diameters3 = particles3.diameters()
 
-    hist1 = partmc.histogram_1d(wet_diameters1, x_axis, weights = 1 / particles1.comp_vols)
-    hist2 = partmc.histogram_1d(wet_diameters2, x_axis, weights = 1 / particles2.comp_vols)
-    hist3 = partmc.histogram_1d(wet_diameters3, x_axis, weights = 1 / particles3.comp_vols)
+    hist1 = camp.histogram_1d(wet_diameters1, x_axis, weights = 1 / particles1.comp_vols)
+    hist2 = camp.histogram_1d(wet_diameters2, x_axis, weights = 1 / particles2.comp_vols)
+    hist3 = camp.histogram_1d(wet_diameters3, x_axis, weights = 1 / particles3.comp_vols)
  
     is_activated = (wet_diameters3 > 2e-6)
     sum_tot = sum(1/particles3.comp_vols) * 1e-6

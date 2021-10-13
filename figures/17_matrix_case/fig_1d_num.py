@@ -7,15 +7,15 @@ import matplotlib
 matplotlib.use("PDF")
 import matplotlib.pyplot as plt
 sys.path.append("../../tool")
-import partmc
+import camp
 
 def make_plot(in_dir, in_filename, out_filename, out_data_name):
     print in_filename
     ncf = scipy.io.netcdf.netcdf_file(in_dir+in_filename, 'r')
-    particles = partmc.aero_particle_array_t(ncf)
+    particles = camp.aero_particle_array_t(ncf)
     ncf.close()
 
-    x_axis = partmc.log_grid(min=1e-9,max=1e-5,n_bin=100)
+    x_axis = camp.log_grid(min=1e-9,max=1e-5,n_bin=100)
     x_centers = x_axis.centers() 
 
     diameters = particles.diameters()
@@ -26,10 +26,10 @@ def make_plot(in_dir, in_filename, out_filename, out_data_name):
     with_so4 = (particles.masses(include = ["SO4"]) > 0)
     mixed_bc_so4 = ((particles.masses(include = ["SO4"]) > 0) &  (particles.masses(include = ["BC"]) > 0))
 
-    hist = partmc.histogram_1d(diameters, x_axis, weights = 1 / particles.comp_vols) / 1e6
-    hist_bc = partmc.histogram_1d(diameters[pure_bc], x_axis, weights = 1 / particles.comp_vols[pure_bc]) /1e6
-    hist_so4 = partmc.histogram_1d(diameters[pure_so4], x_axis, weights = 1 / particles.comp_vols[pure_so4]) /1e6
-    hist_mixed = partmc.histogram_1d(diameters[mixed_bc_so4], x_axis, weights = 1 / particles.comp_vols[mixed_bc_so4]) / 1e6
+    hist = camp.histogram_1d(diameters, x_axis, weights = 1 / particles.comp_vols) / 1e6
+    hist_bc = camp.histogram_1d(diameters[pure_bc], x_axis, weights = 1 / particles.comp_vols[pure_bc]) /1e6
+    hist_so4 = camp.histogram_1d(diameters[pure_so4], x_axis, weights = 1 / particles.comp_vols[pure_so4]) /1e6
+    hist_mixed = camp.histogram_1d(diameters[mixed_bc_so4], x_axis, weights = 1 / particles.comp_vols[mixed_bc_so4]) / 1e6
 
     plt.clf()
     plt.loglog(x_centers*1e6, hist,  'r-', label = 'total')

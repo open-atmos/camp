@@ -7,11 +7,11 @@ import matplotlib
 matplotlib.use("PDF")
 import matplotlib.pyplot as plt
 sys.path.append("../../tool")
-import partmc
+import camp
 
 def make_plot(in_filename,out_filename,title):
     ncf = scipy.io.netcdf.netcdf_file(in_filename, 'r')
-    particles = partmc.aero_particle_array_t(ncf)
+    particles = camp.aero_particle_array_t(ncf)
     ncf.close()
 
     so4 = particles.masses(include = ["SO4"])/particles.aero_data.molec_weights[0]
@@ -27,10 +27,10 @@ def make_plot(in_filename,out_filename,title):
 
     dry_diameters = particles.dry_diameters()
 
-    x_axis = partmc.log_grid(min=1e-8,max=1e-6,n_bin=70)
-    y_axis = partmc.linear_grid(min=0,max=1.0,n_bin=50)
+    x_axis = camp.log_grid(min=1e-8,max=1e-6,n_bin=70)
+    y_axis = camp.linear_grid(min=0,max=1.0,n_bin=50)
 
-    hist2d = partmc.histogram_2d(dry_diameters, so4_frac, x_axis, y_axis, weights = 1/particles.comp_vols)
+    hist2d = camp.histogram_2d(dry_diameters, so4_frac, x_axis, y_axis, weights = 1/particles.comp_vols)
 
     plt.clf()
     plt.semilogx(dry_diameters, ion_ratio, 'rx')

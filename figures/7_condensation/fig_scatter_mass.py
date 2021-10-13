@@ -12,17 +12,17 @@ matplotlib.use('Agg')
 
 import matplotlib.pyplot as plt
 sys.path.append("../../tool")
-import partmc
+import camp
 
 def make_plot(in_dir, in_filename_wc, in_filename_nc, title, out_filename_wc, out_filename_nc):
     print 'file ', in_dir+in_filename_wc
     
     ncf = scipy.io.netcdf.netcdf_file(in_dir+in_filename_wc, 'r')
-    particles_wc = partmc.aero_particle_array_t(ncf)
+    particles_wc = camp.aero_particle_array_t(ncf)
     ncf.close()
     
     ncf = scipy.io.netcdf.netcdf_file(in_dir+in_filename_nc, 'r')
-    particles_nc = partmc.aero_particle_array_t(ncf)
+    particles_nc = camp.aero_particle_array_t(ncf)
     ncf.close()
 
 #    so4_wc =  particles_wc.masses(include = ["SO4"])/particles_wc.aero_data.molec_weights[0]
