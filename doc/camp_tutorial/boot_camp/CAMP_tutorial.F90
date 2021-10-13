@@ -21,7 +21,7 @@
 !! \c doc/camp_tutorial/boot_camp/boot_camp.
 !!
 !! If you have Docker installed and want to quickly run the code
-!! described in the tutorial, start a container with PartMC:
+!! described in the tutorial, start a container with CAMP:
 !! \code{.sh}
 !!   docker run -it compdyn/camp:develop-85-tutorial bash
 !! \endcode
@@ -189,7 +189,7 @@
 !! You evaluate the model results and tweak the reaction parameters
 !! until you're able to fit your experimental results.
 !!
-!! Next, you take your mechanism input files and run them in a PartMC
+!! Next, you take your mechanism input files and run them in a CAMP
 !! particle-resolved urban plume scenario to evaluate the effects of
 !! mixing state on your newly discovered system. Then you try out your
 !! mechanism in the MONARCH chemical weather prediction system to see the
@@ -216,10 +216,10 @@
 
 !> \page camp_tutorial_part_1 Boot CAMP: Part 1 - Box Model
 !!
-!! Prior to beginning this tutorial, the PartMC library should be
-!! installed on your system with PartMC-CAMP enabled. Installation
+!! Prior to beginning this tutorial, the CAMP library should be
+!! installed on your system with CAMP-CAMP enabled. Installation
 !! instructions can be found \ref camp_chem "here". Alternatively,
-!! you can run PartMC in Docker following the instructions
+!! you can run CAMP in Docker following the instructions
 !! \ref camp_tutorial "here".
 !!
 !! The purpose of this tutorial is to demonstrate how to integrate CAMP
@@ -607,10 +607,10 @@
 !! \code{.sh}
 !!   gfortran -o run_box_model box_model.F90 -lcamp -I/usr/local/include/camp
 !! \endcode
-!! Where the include path points to where the PartMC library \c .mod
+!! Where the include path points to where the CAMP library \c .mod
 !! files are installed. If you have trouble compiling or running because
 !! of missing libraries, make sure your `LD_LIBRARY_PATH` and `PATH`
-!! include the directories where the PartMC, json-fortran, SUNDIALS,
+!! include the directories where the CAMP, json-fortran, SUNDIALS,
 !! netCDF, and SuiteSparse libraries are installed.
 !!
 !! Then, to run to mechanism:
@@ -696,13 +696,13 @@
 !! We'll go through this step-by-step, update our box model and discuss
 !! why each process in done when and where it is.
 !!
-!! Note that the PartMC MPI functions use `MPI_WORLD_COMM` by default,
+!! Note that the CAMP MPI functions use `MPI_WORLD_COMM` by default,
 !! but they accept an optional `comm` argument if you would like to use a
 !! different communicator. See the specific function documentation for
 !! details.
 !!
 !! First, let's add the modules we need for MPI. We'll use the standard
-!! mpi module and the PartMC mpi module, with some custom functions.
+!! mpi module and the CAMP mpi module, with some custom functions.
 !!
 !! \snippet camp_tutorial/boot_camp/part_4_code/box_model.F90 MPI modules
 !!
@@ -808,7 +808,7 @@
 !! <hr>
 !! ### Docker Instructions ###
 !! To run a Docker container with MPI support, we'll need to build the
-!! image locally. So, we'll clone the PartMC repo, build the container
+!! image locally. So, we'll clone the CAMP repo, build the container
 !! with MPI and then run it:
 !! \code{.sh}
 !!   git clone https://github.com/compdyn/camp.git

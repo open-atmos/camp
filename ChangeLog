@@ -120,7 +120,7 @@
 
   * Added restart capability from NetCDF state files.
 
-  * Added camp.py library for python-based analysis of PartMC output
+  * Added camp.py library for python-based analysis of CAMP output
     files.
 
   * Reimplemented water condensation to be much faster and also correct.

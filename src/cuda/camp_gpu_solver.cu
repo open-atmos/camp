@@ -173,7 +173,7 @@ void solver_new_gpu_cu(SolverData *sd, int n_dep_var,
 
   if(n_dep_var<32 && sd->use_cpu==0) {
     printf("CAMP ERROR: TOO FEW SPECIES FOR GPU (Species < 32),"
-           " use CPU case instead (More info: https://earth.bsc.es/gitlab/ac/PartMC/-/issues/65 \n");
+           " use CPU case instead (More info: https://earth.bsc.es/gitlab/ac/CAMP/-/issues/65 \n");
     exit(0);
   }
 

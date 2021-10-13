@@ -380,7 +380,7 @@
 !> \page camp_dev_tutorial_part_4 Dev CAMP: Part 4 - MPI
 !!
 !!
-!! All the calls are done throught the MPI class, which derives from the PartMC original
+!! All the calls are done throught the MPI class, which derives from the CAMP original
 !! module. This class adapt more of the MPI functions with a safe call, checking
 !! the flag MPI_SUCCESS and exiting the program if the call do not success.
 !!

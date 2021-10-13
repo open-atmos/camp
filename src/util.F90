@@ -100,7 +100,7 @@ contains
        ! set already_warned so next time we will immediately return
        already_warned = .true.
     end if
-    write(0,'(a)') 'WARNING (PartMC-' // trim(integer_to_string(code)) &
+    write(0,'(a)') 'WARNING (CAMP-' // trim(integer_to_string(code)) &
          // '): ' // trim(warning_msg)
 
   end subroutine warn_msg
@@ -138,7 +138,7 @@ contains
     integer :: ierr
 #endif
     if (.not. condition_ok) then
-       write(0,'(a)') 'ERROR (PartMC-' // trim(integer_to_string(code)) &
+       write(0,'(a)') 'ERROR (CAMP-' // trim(integer_to_string(code)) &
             // '): ' // trim(error_msg)
 #ifdef CAMP_USE_MPI
        call mpi_abort(MPI_COMM_WORLD, code, ierr)

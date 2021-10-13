@@ -1,8 +1,8 @@
 
-PartMC
+CAMP
 ======
 
-PartMC: Particle-resolved Monte Carlo code for atmospheric aerosol simulation
+CAMP: Particle-resolved Monte Carlo code for atmospheric aerosol simulation
 
 [![Docker build status](https://img.shields.io/docker/automated/compdyn/camp.svg)](https://cloud.docker.com/swarm/compdyn/repository/docker/compdyn/camp/builds)
 
@@ -46,7 +46,7 @@ References:
      11423-11439, 2013, <http://dx.doi.org/10.5194/acp-13-11423-2013>
    * J. Tian, N. Riemer, M. West, L. Pfaffenberger, H. Schlager, and
      A. Petzold, Modeling the evolution of aerosol particles in a ship
-     plume using PartMC-MOSAIC, _Atmos. Chem. Phys._ 14, 5327-5347,
+     plume using CAMP-MOSAIC, _Atmos. Chem. Phys._ 14, 5327-5347,
      2014, <http://dx.doi.org/10.5194/acp-14-5327-2014>
    * R. M. Healy, N. Riemer, J. C. Wenger, M. Murphy, M. West,
      L. Poulain, A. Wiedensohler, I. P. O'Connor, E. McGillicuddy,
@@ -72,7 +72,7 @@ For details see the file COPYING or
 <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>.
 
 
-Running PartMC with Docker
+Running CAMP with Docker
 ==========================
 
 This is the fastest way to get running.
@@ -81,13 +81,13 @@ This is the fastest way to get running.
     * On Linux and MacOS this is straightforward. [Download from here](https://store.docker.com/search?type=edition&offering=community).
     * On Windows the best version is [Docker Community Edition for Windows](https://store.docker.com/editions/community/docker-ce-desktop-windows), which requires Windows 10 Pro/Edu.
 
-* **_Step 2:_** (Optional) Run the PartMC test suite with:
+* **_Step 2:_** (Optional) Run the CAMP test suite with:
 
 ```text
 docker run -it --rm compdyn/camp bash -c 'cd /build; make test'
 ```
 
-* **_Step 3:_** Run a scenario like the following. This example uses `camp/scenarios/4_chamber`. This mounts the current directory (`$PWD`, replace with `%cd%` on Windows) into `/run` inside the container, changes into that directory, and then runs PartMC.
+* **_Step 3:_** Run a scenario like the following. This example uses `camp/scenarios/4_chamber`. This mounts the current directory (`$PWD`, replace with `%cd%` on Windows) into `/run` inside the container, changes into that directory, and then runs CAMP.
 
 ```text
 cd camp/scenarios/4_chamber
@@ -140,15 +140,15 @@ Installation
 ============
 
 1. Install cmake and NetCDF (see above). The NetCDF libraries are
-   required to compile PartMC. The `netcdf.mod` Fortran 90 module file
+   required to compile CAMP. The `netcdf.mod` Fortran 90 module file
    is required, and it must be produced by the same compiler being
-   used to compile PartMC.
+   used to compile CAMP.
 
-2. Unpack PartMC:
+2. Unpack CAMP:
 
         tar xzvf camp-2.4.0.tar.gz
 
-3. Change into the main PartMC directory (where this README file is
+3. Change into the main CAMP directory (where this README file is
    located):
 
         cd camp-2.4.0
@@ -176,7 +176,7 @@ Installation
    If `echo $SHELL` instead is `tcsh` or similar, then the environment
    variables can be set like `setenv NETCDF_HOME /` and similarly.
 
-6. Run cmake with the main PartMC directory as an argument (note the
+6. Run cmake with the main CAMP directory as an argument (note the
    double-c):
 
         ccmake ..
@@ -193,7 +193,7 @@ Installation
 
         -O2 -g -fimplicit-none -W -Wall -Wconversion -Wunderflow -Wimplicit-interface -Wno-compare-reals -Wno-unused -Wno-unused-parameter -Wno-unused-dummy-argument -fbounds-check
 
-8. Compile PartMC and test it as follows. Some tests may fail due to
+8. Compile CAMP and test it as follows. Some tests may fail due to
    bad random initial conditions, so re-run the tests a few times to
    see if failures persist.
 

@@ -5,7 +5,7 @@
 !> \file
 !> The mock_monarch program
 
-!> Mock version of the MONARCH model for testing integration with PartMC
+!> Mock version of the MONARCH model for testing integration with CAMP
 program mock_monarch
 
   use camp_util,                          only : assert_msg, almost_equal, &
@@ -110,7 +110,7 @@ program mock_monarch
 
   !> CAMP-chem input file file
   character(len=:), allocatable :: camp_input_file
-  !> PartMC-camp <-> MONARCH interface configuration file
+  !> CAMP-camp <-> MONARCH interface configuration file
   character(len=:), allocatable :: interface_input_file
   !> Results file prefix
   character(len=:), allocatable :: output_file_prefix
@@ -206,13 +206,13 @@ program mock_monarch
   ! **** Add to MONARCH during initialization **** !
   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  ! Initialize PartMC-camp
+  ! Initialize CAMP-camp
   call get_command_argument(1, arg, status=status_code)
-  call assert_msg(678165802, status_code.eq.0, "Error getting PartMC-camp "//&
+  call assert_msg(678165802, status_code.eq.0, "Error getting CAMP-camp "//&
           "configuration file name")
   camp_input_file = trim(arg)
   call get_command_argument(2, arg, status=status_code)
-  call assert_msg(664104564, status_code.eq.0, "Error getting PartMC-camp "//&
+  call assert_msg(664104564, status_code.eq.0, "Error getting CAMP-camp "//&
           "<-> MONARCH interface configuration file name")
   interface_input_file = trim(arg)
 
@@ -561,7 +561,7 @@ contains
   subroutine create_gnuplot_script(camp_interface, file_prefix, start_time, &
             end_time)
 
-    !> PartMC-camp <-> MONARCH interface
+    !> CAMP-camp <-> MONARCH interface
     type(monarch_interface_t), intent(in) :: camp_interface
     !> File prefix for gnuplot script
     character(len=:), allocatable :: file_prefix
@@ -622,7 +622,7 @@ contains
   subroutine create_gnuplot_persist(camp_interface, file_prefix, start_time, &
           end_time)
 
-    !> PartMC-camp <-> MONARCH interface
+    !> CAMP-camp <-> MONARCH interface
     type(monarch_interface_t), intent(in) :: camp_interface
     !> File prefix for gnuplot script
     character(len=:), allocatable :: file_prefix

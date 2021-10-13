@@ -3,7 +3,7 @@
 
 J. Ching, N. Riemer, and M. West (2012) Impacts of black carbon mixing state on black carbon nucleation scavenging: Insights from a particle-resolved model, _J. Geophys. Res. 117(D23209), DOI: <http://dx.doi.org/10.1029/2012JD018269>.
 
-This scenario demonstrates the use of PartMC in a "cloud parcel" mode. It also shows how a Python script (`3_make_specs.py`) can be used to generate spec files from a template to perform many runs.
+This scenario demonstrates the use of CAMP in a "cloud parcel" mode. It also shows how a Python script (`3_make_specs.py`) can be used to generate spec files from a template to perform many runs.
 
 There are 49 * 4 = 196 cloud parcel runs. Each one starts from one of the 49 hourly outputs of the 2_urban_plume2 scenario, with one of four different averaging techniques applied to the hourly output aerosol population ("ref" = no averaging, "comp" = composition averaging, "size" = size averaging, and "both" = composition and size averaging).
 

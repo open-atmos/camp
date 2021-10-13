@@ -7,7 +7,7 @@
 
 !> \page camp_aero_rep_single_particle CAMP: Single Particle Aerosol Representation
 !!
-!! The single particle aerosol representation is for use with a PartMC
+!! The single particle aerosol representation is for use with a CAMP
 !! particle-resolved run. The \c json object for this \ref camp_aero_rep
 !! "aerosol representation" has the following format:
 !! \code{.json}

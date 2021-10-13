@@ -21,16 +21,16 @@ doc: README.html ChangeLog.html $(GRAPHVIZ_PDF) $(DOC_INDEX)
 
 README.html: ../README.md markdown2.py
 	echo "<html>" > $@
-	echo "<head><title>PartMC $(VERSION)</title></head>" >> $@
+	echo "<head><title>CAMP $(VERSION)</title></head>" >> $@
 	echo "<body bgcolor=\"#ffffff\">" >> $@
 	./markdown2.py ../README.md >> $@
 	echo "</body></html>" >> $@
 
 ChangeLog.html: ../ChangeLog markdown2.py
 	echo "<html>" > $@
-	echo "<head><title>ChangeLog: PartMC $(VERSION)</title></head>" >> $@
+	echo "<head><title>ChangeLog: CAMP $(VERSION)</title></head>" >> $@
 	echo "<body bgcolor=\"#ffffff\">" >> $@
-	echo "<h1>ChangeLog: PartMC $(VERSION)</h1>" >> $@
+	echo "<h1>ChangeLog: CAMP $(VERSION)</h1>" >> $@
 	./markdown2.py ../ChangeLog >> $@
 	echo "</body></html>" >> $@
 

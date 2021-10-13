@@ -205,7 +205,7 @@ void cudaDeviceswapCSC_CSR1Thread(int n_row, int n_col, int* Ap, int* Aj, double
 //Based on
 // https://github.com/scipy/scipy/blob/3b36a574dc657d1ca116f6e230be694f3de31afc/scipy/sparse/sparsetools/csr.h#L363
 
-//Wrong in one-kernel solution(https://earth.bsc.es/gitlab/ac/PartMC/-/issues/62)
+//Wrong in one-kernel solution(https://earth.bsc.es/gitlab/ac/CAMP/-/issues/62)
 __device__
 void cudaDeviceswapCSC_CSR(int n_row, int n_col, int* Ap, int* Aj, double* Ax, int* BpGlobal, int* Bi, double* Bx) {
 

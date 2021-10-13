@@ -1,7 +1,7 @@
 {
   "pmc-data" : [
     {
-      "name" : "PartMC single particle",
+      "name" : "CAMP single particle",
       "type" : "AERO_REP_SINGLE_PARTICLE",
       "maximum computational particles" : 2000
     }

@@ -5,7 +5,7 @@
 !> \file
 !> The monarch_original module
 
-!> Functions to run original MONARCH modules for testing integration with PartMC
+!> Functions to run original MONARCH modules for testing integration with CAMP
 module monarch_original
 
   implicit none
@@ -16,7 +16,7 @@ module monarch_original
   !> MONARCH original wrapper type
   !!
   !! Allows mock MONARCH model to initialize and run original MONARCH modules
-  !! for testing integration with PartMC
+  !! for testing integration with CAMP
   type :: monarch_original_t
     private
   contains

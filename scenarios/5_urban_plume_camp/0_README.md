@@ -5,4 +5,4 @@ N. Riemer, M. West, R. A. Zaveri, and R. C. Easter (2009) Simulating the evoluti
 
 This scenario simulates an air parcel moving over a polluted urban area during the daytime, and then moving up into an isolated boundary layer during the night. It has a realistic set of emissions and includes full chemistry and coagulation.
 
-The processing scripts demonstrate two different ways of extracting data from PartMC: (1) using the `extract_*` programs to extract basic text-format data from the output NetCDF files, and (2) using a custom `urban_plume_process.F90` program to extract more complex data such as mixing state entropies.
+The processing scripts demonstrate two different ways of extracting data from CAMP: (1) using the `extract_*` programs to extract basic text-format data from the output NetCDF files, and (2) using a custom `urban_plume_process.F90` program to extract more complex data such as mixing state entropies.

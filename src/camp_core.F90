@@ -34,8 +34,8 @@
 !!
 !! ## Compiling ##
 !!
-!! To include \ref camp_chem "CAMP" in a PartMC library installation,
-!! set the CMake flag \c ENABLE_CAMP to \c ON. PartMC-CAMP has the following
+!! To include \ref camp_chem "CAMP" in a CAMP library installation,
+!! set the CMake flag \c ENABLE_CAMP to \c ON. CAMP-CAMP has the following
 !! dependencies:
 !!
 !! | Library      | Version | Source                                        |
@@ -68,9 +68,9 @@
 !! \ref camp_camp_core::camp_core_t "camp_core_t" constructor.
 !! The method by which this is done depends on the host model configuration.
 !!
-!! ## PartMC scenarios ##
+!! ## CAMP scenarios ##
 !!
-!! Using \ref camp_chem "CAMP" in a PartMC scenario requires setting the
+!! Using \ref camp_chem "CAMP" in a CAMP scenario requires setting the
 !! `do_camp_chem` flag to `yes` in
 !! the \ref input_format "spec file" and providing a \ref
 !! input_format_camp_file_list "CAMP file list" file and one or more
@@ -78,7 +78,7 @@
 !! describe the \ref camp_species "chemical species", \ref camp_mechanism
 !! "mechanism(s)", \ref camp_aero_phase "aerosol phase(s)", \ref
 !! camp_aero_rep "aerosol representation", and \ref camp_sub_model
-!! "sub-model(s)". A description of the input files required for a PartMC run
+!! "sub-model(s)". A description of the input files required for a CAMP run
 !! can be found \ref input_format "here".
 !!
 !! ## CAMP tutorial ##
@@ -412,7 +412,7 @@ contains
   !! key-value pair \b camp-data whose value is an array of \c json objects.
   !! Additional top-level key-value pairs will be ignored. Each of the \c json
   !! objects in the \b camp-data array must contain a key-value pair \b type
-  !! whose value is a string referencing a valid PartMC object.
+  !! whose value is a string referencing a valid CAMP object.
   !!
   !! The valid values for \b type are:
   !!

@@ -5,7 +5,7 @@
 !> \file
 !> The monarch_interface_t object and related functions
 
-!> Interface for the MONACH model and PartMC-camp
+!> Interface for the MONACH model and CAMP-camp
 module camp_monarch_interface
 
   use camp_constants,                  only : i_kind
@@ -36,10 +36,10 @@ module camp_monarch_interface
 
   public :: monarch_interface_t
 
-  !> PartMC <-> MONARCH interface
+  !> CAMP <-> MONARCH interface
   !!
-  !! Contains all data required to intialize and run PartMC from MONARCH data
-  !! and map state variables between PartMC and MONARCH
+  !! Contains all data required to intialize and run CAMP from MONARCH data
+  !! and map state variables between CAMP and MONARCH
   type :: monarch_interface_t
     !private
     !> CAMP-chem core
@@ -49,21 +49,21 @@ module camp_monarch_interface
     !> MONARCH species names
     type(string_t), allocatable :: monarch_species_names(:)
     character(len=:), allocatable :: interface_input_file
-    !> MONARCH <-> PartMC species map
+    !> MONARCH <-> CAMP species map
     integer(kind=i_kind), allocatable :: map_monarch_id(:), map_camp_id(:)
-    !> PartMC-camp ids for initial concentrations
+    !> CAMP-camp ids for initial concentrations
     integer(kind=i_kind), allocatable :: init_conc_camp_id(:)
     !> Initial species concentrations
     real(kind=dp), allocatable :: init_conc(:)
     !> Number of cells to compute simultaneously
     integer(kind=i_kind) :: n_cells = 1
-    !> Starting index for PartMC species on the MONARCH tracer array
+    !> Starting index for CAMP species on the MONARCH tracer array
     integer(kind=i_kind) :: tracer_starting_id
-    !> Ending index for PartMC species on the MONARCH tracer array
+    !> Ending index for CAMP species on the MONARCH tracer array
     integer(kind=i_kind) :: tracer_ending_id
-    !> PartMC-camp <-> MONARCH species map input data
+    !> CAMP-camp <-> MONARCH species map input data
     type(property_t), pointer :: species_map_data
-    !> Gas-phase water id in PartMC-camp
+    !> Gas-phase water id in CAMP-camp
     integer(kind=i_kind) :: gas_phase_water_id
     !> Initial concentration data
     type(property_t), pointer :: init_conc_data
@@ -82,17 +82,17 @@ module camp_monarch_interface
     integer :: KPP_ICNTRL(20)
     character(len=:), allocatable :: ADD_EMISIONS
   contains
-    !> Integrate PartMC for the current MONARCH state over a specified time step
+    !> Integrate CAMP for the current MONARCH state over a specified time step
     procedure :: integrate
     !> Get initial concentrations (for testing only)
     procedure :: get_init_conc
     !> Get monarch species names and ids (for testing only)
     procedure :: get_MONARCH_species
-    !> Print the PartMC-camp data
+    !> Print the CAMP-camp data
     procedure :: print => do_print
     !> Load interface data from a set of input files
     procedure, private :: load
-    !> Create the PartMC <-> MONARCH species map
+    !> Create the CAMP <-> MONARCH species map
     procedure, private :: create_map
     !> Load the initial concentrations
     procedure, private :: load_init_conc
@@ -100,7 +100,7 @@ module camp_monarch_interface
     final :: finalize
   end type monarch_interface_t
 
-  !> PartMC <-> MONARCH interface constructor
+  !> CAMP <-> MONARCH interface constructor
   interface monarch_interface_t
     procedure :: constructor
   end interface monarch_interface_t
@@ -121,7 +121,7 @@ contains
   !!
   !! Create a monarch_interface_t object at the beginning of the  model run
   !! for each node. The master node should pass a string containing the path
-  !! to the PartMC confirguration file list, the path to the interface
+  !! to the CAMP confirguration file list, the path to the interface
   !! configuration file and the starting and ending indices for chemical
   !! species in the tracer array.
   function constructor(camp_config_file, interface_config_file, &
@@ -130,9 +130,9 @@ contains
 
     !> A new MONARCH interface
     type(monarch_interface_t), pointer :: this
-    !> Path to the PartMC-camp configuration file list
+    !> Path to the CAMP-camp configuration file list
     character(len=:), allocatable, optional :: camp_config_file
-    !> Path to the PartMC-camp <-> MONARCH interface input file
+    !> Path to the CAMP-camp <-> MONARCH interface input file
     character(len=:), allocatable, optional :: interface_config_file
     !> Starting index for chemical species in the MONARCH tracer array
     integer, optional :: starting_id
@@ -213,7 +213,7 @@ contains
       call cpu_time(comp_start)
 
       call assert_msg(304676624, present(camp_config_file), &
-              "Missing PartMC-camp configuration file list")
+              "Missing CAMP-camp configuration file list")
       call assert_msg(937567597, present(starting_id), &
               "Missing starting tracer index for chemical species")
       call assert_msg(593895016, present(ending_id), &
@@ -258,7 +258,7 @@ contains
       this%tracer_starting_id = starting_id
       this%tracer_ending_id = ending_id
 
-      ! Generate the PartMC-camp <-> MONARCH species map
+      ! Generate the CAMP-camp <-> MONARCH species map
       call this%create_map()
 
       ! Load the initial concentrations
@@ -464,13 +464,13 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  !> Integrate the PartMC mechanism for a particular set of cells and timestep
+  !> Integrate the CAMP mechanism for a particular set of cells and timestep
   subroutine integrate(this, curr_time, time_step, I_W, I_E, I_S, &
                   I_N, temperature, MONARCH_conc, water_conc, &
                   water_vapor_index, air_density, pressure, conv, i_hour,&
           NUM_TIME_STEP,solver_stats, DIFF_CELLS)
 
-    !> PartMC-camp <-> MONARCH interface
+    !> CAMP-camp <-> MONARCH interface
     class(monarch_interface_t) :: this
     !> Integration start time (min since midnight)
     real, intent(in) :: curr_time
@@ -962,10 +962,10 @@ end if
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  !> Load the MONARCH <-> PartMC-camp interface input data
+  !> Load the MONARCH <-> CAMP-camp interface input data
   subroutine load(this, config_file)
 
-    !> PartMC-camp <-> MONARCH interface
+    !> CAMP-camp <-> MONARCH interface
     class(monarch_interface_t) :: this
     !> Interface configuration file path
     character(len=:), allocatable :: config_file
@@ -1060,7 +1060,7 @@ end if
     deallocate(json)
 
 #else
-    call die_msg(635417227, "PartMC-camp <-> MONARCH interface requires "// &
+    call die_msg(635417227, "CAMP-camp <-> MONARCH interface requires "// &
                   "JSON file support.")
 #endif
 
@@ -1068,10 +1068,10 @@ end if
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  !> Create the PartMC-camp <-> MONARCH species map
+  !> Create the CAMP-camp <-> MONARCH species map
   subroutine create_map(this)
 
-    !> PartMC-camp <-> MONARCH interface
+    !> CAMP-camp <-> MONARCH interface
     class(monarch_interface_t) :: this
 
     type(chem_spec_data_t), pointer :: chem_spec_data
@@ -1186,14 +1186,14 @@ end if
 
       call assert_msg(599522862, &
               gas_species_list%get_property_t(val=species_data), &
-              "Missing species data for '"//spec_name//"' in PartMC-camp "// &
+              "Missing species data for '"//spec_name//"' in CAMP-camp "// &
               "<-> MONARCH species map.")
 
       key_name = "monarch id"
       call assert_msg(643926329, &
               species_data%get_int(key_name, this%map_monarch_id(i_spec)), &
               "Missing monarch id for species '"//spec_name//" in "// &
-              "PartMC-camp <-> MONARCH species map.")
+              "CAMP-camp <-> MONARCH species map.")
       this%map_monarch_id(i_spec) = this%map_monarch_id(i_spec) + &
               this%tracer_starting_id - 1
       call assert_msg(450258014, &
@@ -1203,7 +1203,7 @@ end if
 
       this%map_camp_id(i_spec) = chem_spec_data%gas_state_id(spec_name)
       call assert_msg(916977002, this%map_camp_id(i_spec).gt.0, &
-                "Could not find species '"//spec_name//"' in PartMC-camp.")
+                "Could not find species '"//spec_name//"' in CAMP-camp.")
 
       !print*, "spec_name, state id ", spec_name, this%map_camp_id(i_spec)
 
@@ -1222,13 +1222,13 @@ end if
         call assert_msg(567689501, &
                 aero_species_list%get_property_t(val=species_data), &
                 "Missing species data for '"//spec_name//"' in " //&
-                "PartMC-camp <-> MONARCH species map.")
+                "CAMP-camp <-> MONARCH species map.")
 
         key_name = "monarch id"
         call assert_msg(615451741, &
                 species_data%get_int(key_name, this%map_monarch_id(i_spec)), &
                 "Missing monarch id for species '"//spec_name//"' in "// &
-                "PartMC-camp <-> MONARCH species map.")
+                "CAMP-camp <-> MONARCH species map.")
         this%map_monarch_id(i_spec) = this%map_monarch_id(i_spec) + &
                 this%tracer_starting_id - 1
         call assert_msg(382644266, &
@@ -1240,9 +1240,9 @@ end if
         call assert_msg(963222513, &
                 species_data%get_string(key_name, rep_name), &
                 "Missing aerosol representation name for species '"// &
-                spec_name//"' in PartMC-camp <-> MONARCH species map.")
+                spec_name//"' in CAMP-camp <-> MONARCH species map.")
 
-        ! Find the species PartMC id
+        ! Find the species CAMP id
         this%map_camp_id(i_spec) = 0
         call assert_msg(377850668, &
                 this%camp_core%get_aero_rep(rep_name, aero_rep_ptr), &
@@ -1267,7 +1267,7 @@ end if
   !> Load initial concentrations
   subroutine load_init_conc(this)
 
-    !> PartMC-camp <-> MONARCH interface
+    !> CAMP-camp <-> MONARCH interface
     class(monarch_interface_t) :: this
 
     type(chem_spec_data_t), pointer :: chem_spec_data
@@ -1318,20 +1318,20 @@ end if
         call assert_msg(325582312, &
                 gas_species_list%get_property_t(val=species_data), &
                 "Missing species data for '"//spec_name//"' for "// &
-                "PartMC-camp initial concentrations.")
+                "CAMP-camp initial concentrations.")
 
         key_name = "init conc"
         call assert_msg(445070498, &
                 species_data%get_real(key_name, this%init_conc(i_spec)), &
                 "Missing 'init conc' for species '"//spec_name//" for "// &
-                "PartMC-camp initial concentrations.")
+                "CAMP-camp initial concentrations.")
         ! Unit change json gases in ppb - camp works with ppm
         this%init_conc(i_spec) = this%init_conc(i_spec) * factor_ppb_to_ppm
 
         this%init_conc_camp_id(i_spec) = &
                 chem_spec_data%gas_state_id(spec_name)
         call assert_msg(940200584, this%init_conc_camp_id(i_spec).gt.0, &
-                "Could not find species '"//spec_name//"' in PartMC-camp.")
+                "Could not find species '"//spec_name//"' in CAMP-camp.")
 
         !print*, "spec_name, state id ", spec_name, this%init_conc_camp_id(i_spec)
 
@@ -1350,21 +1350,21 @@ end if
         call assert_msg(331096555, &
                 aero_species_list%get_property_t(val=species_data), &
                 "Missing species data for '"//spec_name//"' for " //&
-                "PartMC-camp initial concentrations.")
+                "CAMP-camp initial concentrations.")
 
         key_name = "init conc"
         call assert_msg(782275469, &
                 species_data%get_real(key_name, this%init_conc(i_spec)), &
                 "Missing 'init conc' for species '"//spec_name//"' for "// &
-                "PartMC-camp initial concentrations.")
+                "CAMP-camp initial concentrations.")
 
         key_name = "aerosol representation name"
         call assert_msg(150863332, &
                 species_data%get_string(key_name, rep_name), &
                 "Missing aerosol representation name for species '"// &
-                spec_name//"' for PartMC-camp initial concentrations.")
+                spec_name//"' for CAMP-camp initial concentrations.")
 
-        ! Find the species PartMC id
+        ! Find the species CAMP id
         this%init_conc_camp_id(i_spec) = 0
         call assert_msg(258814777, &
                 this%camp_core%get_aero_rep(rep_name, aero_rep_ptr), &
@@ -1395,7 +1395,7 @@ end if
   subroutine get_init_conc(this, MONARCH_conc, MONARCH_water_conc, &
       WATER_VAPOR_ID, MONARCH_air_density,i_W,I_E,I_S,I_N)
 
-    !> PartMC-camp <-> MONARCH interface
+    !> CAMP-camp <-> MONARCH interface
     class(monarch_interface_t) :: this
     !> MONARCH species concentrations to update
     real, intent(inout) :: MONARCH_conc(:,:,:,:)
@@ -1495,7 +1495,7 @@ end if
   !> Get the MONARCH species names and indices (for testing only)
   subroutine get_MONARCH_species(this, species_names, MONARCH_ids)
 
-    !> PartMC-camp <-> MONARCH interface
+    !> CAMP-camp <-> MONARCH interface
     class(monarch_interface_t) :: this
     !> Set of MONARCH species names
     type(string_t), allocatable, intent(out) :: species_names(:)
@@ -1507,10 +1507,10 @@ end if
 
   end subroutine get_MONARCH_species
 
-  !> Print the PartMC-camp data
+  !> Print the CAMP-camp data
   subroutine do_print(this)
 
-    !> PartMC-camp <-> MONARCH interface
+    !> CAMP-camp <-> MONARCH interface
     class(monarch_interface_t) :: this
 
     call this%camp_core%print()
@@ -1520,7 +1520,7 @@ end if
   !> Finalize the interface
   elemental subroutine finalize(this)
 
-    !> PartMC-camp <-> MONARCH interface
+    !> CAMP-camp <-> MONARCH interface
     type(monarch_interface_t), intent(inout) :: this
 
     if (associated(this%camp_core)) &
