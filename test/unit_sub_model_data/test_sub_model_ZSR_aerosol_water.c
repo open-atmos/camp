@@ -1,6 +1,6 @@
-/* Copyright (C) 2019 Matthew Dawson
- * Licensed under the GNU General Public License version 1 or (at your
- * option) any later version. See the file COPYING for details.
+/* Copyright (C) 2021 Barcelona Supercomputing Center and University of
+ * Illinois at Urbana-Champaign
+ * SPDX-License-Identifier: MIT
  */
 /** \file
  * \brief c function tests for the ZSR aerosol water sub model

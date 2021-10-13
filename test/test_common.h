@@ -1,6 +1,6 @@
-/* Copyright (C) 2019 Matthew Dawson
- * Licensed under the GNU General Public License version 1 or (at your
- * option) any later version. See the file COPYING for details.
+/* Copyright (C) 2021 Barcelona Supercomputing Center and University of
+ * Illinois at Urbana-Champaign
+ * SPDX-License-Identifier: MIT
  */
 /** \file
  * \brief common functions for c tests
@@ -17,12 +17,14 @@
 // Assert function
 #define ASSERT_MSG(y, z) camp_assert(__func__, __LINE__, y, z);
 #define ASSERT(y) camp_assert(__func__, __LINE__, y, "Unknown error");
-#define ASSERT_CLOSE_MSG(x, y, z) camp_assert_close(__func__, __LINE__, x, y, z);
-#define ASSERT_CLOSE(x, y) camp_assert_close(__func__, __LINE__, x, y, "Unknown error");
+#define ASSERT_CLOSE_MSG(x, y, z)                                              \
+  camp_assert_close(__func__, __LINE__, x, y, z);
+#define ASSERT_CLOSE(x, y)                                                     \
+  camp_assert_close(__func__, __LINE__, x, y, "Unknown error");
 
 // Assert function def
 int camp_assert(const char *func, const int line, bool eval,
-               const char *message) {
+                const char *message) {
   if (eval) {
     return 0;
   }
@@ -31,12 +33,13 @@ int camp_assert(const char *func, const int line, bool eval,
 }
 
 // Assert close function def
-int camp_assert_close(const char *func, const int line, double val1, double val2, const char *message) {
-  bool eval = val1 == val2 ? true :
-              fabs(val1 - val2) <= CAMP_TEST_COMMON_ABS_TOL ||
-              2.0 * fabs(val1 - val2) / fabs(val1 + val2) <= CAMP_TEST_COMMON_REL_TOL;
-  return camp_assert( func, line, eval, message);
+int camp_assert_close(const char *func, const int line, double val1,
+                      double val2, const char *message) {
+  bool eval = val1 == val2 ? true
+                           : fabs(val1 - val2) <= CAMP_TEST_COMMON_ABS_TOL ||
+                                 2.0 * fabs(val1 - val2) / fabs(val1 + val2) <=
+                                     CAMP_TEST_COMMON_REL_TOL;
+  return camp_assert(func, line, eval, message);
 }
-
 
 #endif
