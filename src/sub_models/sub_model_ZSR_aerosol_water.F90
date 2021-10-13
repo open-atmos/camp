@@ -1,6 +1,6 @@
-! Copyright (C) 2017-2018 Matt Dawson
-! Licensed under the GNU General Public License version 2 or (at your
-! option) any later version. See the file COPYING for details.
+! Copyright (C) 2021 Barcelona Supercomputing Center and University of
+! Illinois at Urbana-Champaign
+! SPDX-License-Identifier: MIT
 
 !> \file
 !> The camp_sub_model_ZSR_aerosol_water module.
@@ -18,11 +18,11 @@
 !! \f]
 !!
 !! where \f$M\f$ is the concentration of binary electrolyte \f$i\f$
-!! (\f$\mbox{\si{\micro\gram\per\cubic\metre}}\f$) with molecular weight
-!! \f$MW_i\f$ (\f$\mbox{\si{\kilo\gram\per\mole}}\f$) and molality
+!! (\f$\mbox{$\mu$g}\,\mbox{m}^{-3}\f$) with molecular weight
+!! \f$MW_i\f$ (\f$\mbox{kg}\,\mbox{mol}^{-1}\f$) and molality
 !! \f$m_{i}\f$ at a given water activity \f$a_w\f$ (RH; 0--1)
 !! contributing to the total aerosol water content \f$W\f$
-!! (\f$\mbox{\si{\micro\gram\per\cubic\metre}}\f$).
+!! (\f$\mbox{$\mu$g}\,\mbox{m}^{-3}\f$).
 !!
 !! Input data for ZSR aerosol water calculations have the following format :
 !! \code{.json}
@@ -150,7 +150,7 @@
 !! where \f$NW_i\f$ and \f$ZW_i\f$ are fitting parameters \cite Metzger2002,
 !! and must be provided in key-value pairs \b NW and \b ZW, along with the
 !! binary electrolyte molecular weight \b MW
-!! (\f$\mbox{\si{\kilo\gram\per\mole}}\f$). The key-value pair \b ions must
+!! (\f$\mbox{kg}\,\mbox{mol}^{-1}\f$). The key-value pair \b ions must
 !! contain a set of ions that can be summed to calculate \f$M_i\f$ at runtime.
 !!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

@@ -1,6 +1,6 @@
-! Copyright (C) 2017-2018 Matt Dawson
-! Licensed under the GNU General Public License version 2 or (at your
-! option) any later version. See the file COPYING for details.
+! Copyright (C) 2021 Barcelona Supercomputing Center and University of
+! Illinois at Urbana-Champaign
+! SPDX-License-Identifier: MIT
 
 !> \file
 !> The camp_rxn_photolysis module.
@@ -9,14 +9,14 @@
 !!
 !! Photolysis reactions take the form:
 !!
-!! \f[\mbox{\ch{
+!! \f[\ce{
 !!   X + h $\nu$ -> Y_1 ( + Y_2 \dots )
-!! }}\f]
+!! }\f]
 !!
-!! where \f$\mbox{\ch{X}}\f$ is the species being photolyzed, and
-!! \f$\mbox{\ch{Y_n}}\f$ are the photolysis products.
+!! where \f$\ce{X}\f$ is the species being photolyzed, and
+!! \f$\ce{Y_n}\f$ are the photolysis products.
 !!
-!! Photolysis rate constants (including the \f$\mbox{\ch{h $\nu$}}\f$ term)
+!! Photolysis rate constants (including the \f$\ce{h $\nu$}\f$ term)
 !! can be constant or set from an external photolysis module using the
 !! \c camp_rxn_photolysis::rxn_update_data_photolysis_t object.
 !! External modules can use the

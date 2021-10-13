@@ -1,6 +1,6 @@
-/* Copyright (C) 2017-2018 Matthew Dawson
- * Licensed under the GNU General Public License version 2 or (at your
- * option) any later version. See the file COPYING for details.
+/* Copyright (C) 2021 Barcelona Supercomputing Center and University of
+ * Illinois at Urbana-Champaign
+ * SPDX-License-Identifier: MIT
  *
  * Single particle aerosol representation functions
  *
@@ -202,9 +202,6 @@ void aero_rep_single_particle_get_number_conc__n_m3(
   int i_part = aero_phase_idx / NUM_PHASE_;
 
   *number_conc = NUMBER_CONC_(i_part);
-  //check_isnand(number_conc,1,"post aero_rep_single_particle_get_number_conc__n_m3 number_conc");
-  //check_isnanld(number_conc,1,"post aero_rep_single_particle_get_number_conc__n_m3 number_conc");
-
 
   if (partial_deriv) {
     for (int i_phase = 0; i_phase < NUM_PHASE_; ++i_phase)
@@ -418,6 +415,7 @@ void *aero_rep_single_particle_create_number_update_data() {
  *
  * \param update_data Pointer to an allocated number update data object
  * \param aero_rep_id Id of the aerosol representation(s) to update
+ * \param particle_id Id of the computational particle
  * \param number_conc New particle number (#/m3)
  */
 void aero_rep_single_particle_set_number_update_data__n_m3(void *update_data,

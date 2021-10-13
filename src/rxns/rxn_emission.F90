@@ -1,6 +1,6 @@
-! Copyright (C) 2017-2018 Matt Dawson
-! Licensed under the GNU General Public License version 2 or (at your
-! option) any later version. See the file COPYING for details.
+! Copyright (C) 2021 Barcelona Supercomputing Center and University of
+! Illinois at Urbana-Champaign
+! SPDX-License-Identifier: MIT
 
 !> \file
 !> The camp_rxn_emission module.
@@ -13,7 +13,7 @@
 !!   \rightarrow \mbox{X}
 !! \f]
 !!
-!! where \f$\mbox{\ch{X}}\f$ is the species being emitted.
+!! where \f$\ce{X}\f$ is the species being emitted.
 !!
 !! Emission rates can be constant or set from an external module using the
 !! \c camp_rxn_emission::rxn_update_data_emission_t object.

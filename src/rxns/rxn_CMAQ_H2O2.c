@@ -1,6 +1,6 @@
-/* Copyright (C) 2015-2018 Matthew Dawson
- * Licensed under the GNU General Public License version 2 or (at your
- * option) any later version. See the file COPYING for details.
+/* Copyright (C) 2021 Barcelona Supercomputing Center and University of
+ * Illinois at Urbana-Champaign
+ * SPDX-License-Identifier: MIT
  *
  * CMAQ_H2O2 reaction solver functions
  *
@@ -167,7 +167,6 @@ i=0; i<NUM_REACT_; i++) printf("%d,",REACT_(i));
  * \param time_step Current time step being computed (s)
  */
 #ifdef CAMP_USE_SUNDIALS
-
 void rxn_CMAQ_H2O2_calc_deriv_contrib(ModelData *model_data,
                                       TimeDerivative time_deriv,
                                       int *rxn_int_data, double *rxn_float_data,
@@ -206,7 +205,6 @@ void rxn_CMAQ_H2O2_calc_deriv_contrib(ModelData *model_data,
 
   return;
 }
-
 #endif
 
 /** \brief Calculate contributions to the Jacobian from this reaction

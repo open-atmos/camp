@@ -1,6 +1,6 @@
-/* Copyright (C) 2015-2019 Matthew Dawson
- * Licensed under the GNU General Public License version 2 or (at your
- * option) any later version. See the file COPYING for details.
+/* Copyright (C) 2021 Barcelona Supercomputing Center and University of
+ * Illinois at Urbana-Champaign
+ * SPDX-License-Identifier: MIT
  *
  * Aqueous Equilibrium reaction solver functions
  *
@@ -16,6 +16,9 @@
 // TODO Lookup environmental indices during initialization
 #define TEMPERATURE_K_ env_data[0]
 #define PRESSURE_PA_ env_data[1]
+
+// Small number
+#define SMALL_NUMBER_ 1.0e-30
 
 // Factor used to calculate minimum water concentration for aqueous
 // phase equilibrium reactions
@@ -317,7 +320,6 @@ long double calc_standard_rate(int *rxn_int_data, double *rxn_float_data,
  * \param time_step Current time step of the itegrator (s)
  */
 #ifdef CAMP_USE_SUNDIALS
-
 void rxn_aqueous_equilibrium_calc_deriv_contrib(
     ModelData *model_data, TimeDerivative time_deriv, int *rxn_int_data,
     double *rxn_float_data, double *rxn_env_data, double time_step) {
@@ -386,7 +388,6 @@ void rxn_aqueous_equilibrium_calc_deriv_contrib(
 
   return;
 }
-
 #endif
 
 /** \brief Calculate contributions to the Jacobian from this reaction
@@ -434,8 +435,6 @@ void rxn_aqueous_equilibrium_calc_jac_contrib(ModelData *model_data,
     if (ACTIVITY_COEFF_(i_phase) >= 0)
       reverse_rate *= state[ACTIVITY_COEFF_(i_phase)];
 
-    long double jac_contrib;
-
     // Add dependence on reactants for reactants and products (forward reaction)
     for (int i_react_ind = 0; i_react_ind < NUM_REACT_; i_react_ind++) {
       for (int i_react_dep = 0; i_react_dep < NUM_REACT_; i_react_dep++) {
@@ -443,26 +442,20 @@ void rxn_aqueous_equilibrium_calc_jac_contrib(ModelData *model_data,
           i_jac++;
           continue;
         }
-        jac_contrib=forward_rate / state[REACT_(i_phase * NUM_REACT_ + i_react_ind)] /
-                MASS_FRAC_TO_M_(i_react_dep) * water;
         jacobian_add_value(
             jac, (unsigned int)JAC_ID_(i_jac++), JACOBIAN_LOSS,
             forward_rate / state[REACT_(i_phase * NUM_REACT_ + i_react_ind)] /
                 MASS_FRAC_TO_M_(i_react_dep) * water);
-        check_isnanld(&jac_contrib,1,"post rxn_aqueous_equilibrium_calc_jac_contrib jac_contrib");
-
       }
       for (int i_prod_dep = 0; i_prod_dep < NUM_PROD_; i_prod_dep++) {
         if (JAC_ID_(i_jac) < 0 || forward_rate == 0.0) {
           i_jac++;
           continue;
         }
-        jac_contrib=forward_rate / state[REACT_(i_phase * NUM_REACT_ + i_react_ind)] /
-                MASS_FRAC_TO_M_(NUM_REACT_ + i_prod_dep) * water;
         jacobian_add_value(
             jac, (unsigned int)JAC_ID_(i_jac++), JACOBIAN_PRODUCTION,
-            jac_contrib);
-        check_isnanld(&jac_contrib,1,"post rxn_aqueous_equilibrium_calc_jac_contrib jac_contrib");
+            forward_rate / state[REACT_(i_phase * NUM_REACT_ + i_react_ind)] /
+                MASS_FRAC_TO_M_(NUM_REACT_ + i_prod_dep) * water);
       }
     }
 
@@ -473,24 +466,20 @@ void rxn_aqueous_equilibrium_calc_jac_contrib(ModelData *model_data,
           i_jac++;
           continue;
         }
-        jac_contrib=reverse_rate / state[PROD_(i_phase * NUM_PROD_ + i_prod_ind)] /
-                MASS_FRAC_TO_M_(i_react_dep) * water;
         jacobian_add_value(
             jac, (unsigned int)JAC_ID_(i_jac++), JACOBIAN_PRODUCTION,
-            jac_contrib);
-          check_isnanld(&jac_contrib,1,"post rxn_aqueous_equilibrium_calc_jac_contrib jac_contrib");
+            reverse_rate / state[PROD_(i_phase * NUM_PROD_ + i_prod_ind)] /
+                MASS_FRAC_TO_M_(i_react_dep) * water);
       }
       for (int i_prod_dep = 0; i_prod_dep < NUM_PROD_; i_prod_dep++) {
         if (JAC_ID_(i_jac) < 0 || reverse_rate == 0.0) {
           i_jac++;
           continue;
         }
-        jac_contrib=reverse_rate / state[PROD_(i_phase * NUM_PROD_ + i_prod_ind)] /
-                MASS_FRAC_TO_M_(NUM_REACT_ + i_prod_dep) * water;
         jacobian_add_value(
             jac, (unsigned int)JAC_ID_(i_jac++), JACOBIAN_LOSS,
-            jac_contrib);
-        check_isnanld(&jac_contrib,1,"post rxn_aqueous_equilibrium_calc_jac_contrib jac_contrib");
+            reverse_rate / state[PROD_(i_phase * NUM_PROD_ + i_prod_ind)] /
+                MASS_FRAC_TO_M_(NUM_REACT_ + i_prod_dep) * water);
       }
     }
 
@@ -500,39 +489,26 @@ void rxn_aqueous_equilibrium_calc_jac_contrib(ModelData *model_data,
         i_jac++;
         continue;
       }
-      jac_contrib=-forward_rate / MASS_FRAC_TO_M_(i_react_dep) * (NUM_REACT_ - 1);
       jacobian_add_value(
           jac, (unsigned int)JAC_ID_(i_jac), JACOBIAN_LOSS,
           -forward_rate / MASS_FRAC_TO_M_(i_react_dep) * (NUM_REACT_ - 1));
-      check_isnanld(&jac_contrib,1,"post rxn_aqueous_equilibrium_calc_jac_contrib jac_contrib");
-
-      jac_contrib=-reverse_rate / MASS_FRAC_TO_M_(i_react_dep) * (NUM_PROD_ - 1);
       jacobian_add_value(
           jac, (unsigned int)JAC_ID_(i_jac++), JACOBIAN_PRODUCTION,
           -reverse_rate / MASS_FRAC_TO_M_(i_react_dep) * (NUM_PROD_ - 1));
-      check_isnanld(&jac_contrib,1,"post rxn_aqueous_equilibrium_calc_jac_contrib jac_contrib");
     }
     for (int i_prod_dep = 0; i_prod_dep < NUM_PROD_; i_prod_dep++) {
       if (JAC_ID_(i_jac) < 0) {
         i_jac++;
         continue;
       }
-      jac_contrib=-forward_rate /
-                             MASS_FRAC_TO_M_(NUM_REACT_ + i_prod_dep) *
-                             (NUM_REACT_ - 1);
       jacobian_add_value(jac, (unsigned int)JAC_ID_(i_jac), JACOBIAN_PRODUCTION,
                          -forward_rate /
                              MASS_FRAC_TO_M_(NUM_REACT_ + i_prod_dep) *
                              (NUM_REACT_ - 1));
-      check_isnanld(&jac_contrib,1,"post rxn_aqueous_equilibrium_calc_jac_contrib jac_contrib");
-      jac_contrib=-reverse_rate /
-                             MASS_FRAC_TO_M_(NUM_REACT_ + i_prod_dep) *
-                             (NUM_PROD_ - 1);
       jacobian_add_value(jac, (unsigned int)JAC_ID_(i_jac++), JACOBIAN_LOSS,
                          -reverse_rate /
                              MASS_FRAC_TO_M_(NUM_REACT_ + i_prod_dep) *
                              (NUM_PROD_ - 1));
-      check_isnanld(&jac_contrib,1,"post rxn_aqueous_equilibrium_calc_jac_contrib jac_contrib");
     }
 
     // Add dependence on activity coefficients for reactants and products
@@ -545,25 +521,19 @@ void rxn_aqueous_equilibrium_calc_jac_contrib(ModelData *model_data,
         i_jac++;
         continue;
       }
-      jac_contrib=reverse_rate / state[ACTIVITY_COEFF_(i_phase)] /
-                             MASS_FRAC_TO_M_(i_react_dep) * water;
       jacobian_add_value(jac, (unsigned int)JAC_ID_(i_jac++),
                          JACOBIAN_PRODUCTION,
                          reverse_rate / state[ACTIVITY_COEFF_(i_phase)] /
                              MASS_FRAC_TO_M_(i_react_dep) * water);
-      check_isnanld(&jac_contrib,1,"post rxn_aqueous_equilibrium_calc_jac_contrib jac_contrib");
     }
     for (int i_prod_dep = 0; i_prod_dep < NUM_PROD_; i_prod_dep++) {
       if (JAC_ID_(i_jac) < 0) {
         i_jac++;
         continue;
       }
-      jac_contrib=reverse_rate / state[ACTIVITY_COEFF_(i_phase)] /
-                             MASS_FRAC_TO_M_(NUM_REACT_ + i_prod_dep) * water;
       jacobian_add_value(jac, (unsigned int)JAC_ID_(i_jac++), JACOBIAN_LOSS,
                          reverse_rate / state[ACTIVITY_COEFF_(i_phase)] /
                              MASS_FRAC_TO_M_(NUM_REACT_ + i_prod_dep) * water);
-      check_isnanld(&jac_contrib,1,"post rxn_aqueous_equilibrium_calc_jac_contrib jac_contrib");
     }
   }
 

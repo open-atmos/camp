@@ -1,6 +1,6 @@
-! Copyright (C) 2017-2018 Matt Dawson
-! Licensed under the GNU General Public License version 2 or (at your
-! option) any later version. See the file COPYING for details.
+! Copyright (C) 2021 Barcelona Supercomputing Center and University of
+! Illinois at Urbana-Champaign
+! SPDX-License-Identifier: MIT
 
 !> \file
 !> The camp_rxn_aqueous_equilibrium module.
@@ -46,8 +46,8 @@
 !! The key-value pairs \b reactants and \b products are required. Reactants
 !! and products without a \b qty value are assumed to appear once in the
 !! reaction equation. Reactant and product species must be present in the
-!! specified phase and include a \b molecular \b weight \b [kg \b mol-1]
-!! in \f$\mbox{\si{\kilo\gram\per\mole}}\f$ parameter. The
+!! specified phase and include a \b molecular \b weight \b [\b kg \b mol-1]
+!! parameter in kg \f$\mbox{mole}^{-1}\f$. The
 !! parameter \b aqueous-phase \b water is required and must be the name of the
 !! aerosol-phase species that is used for water. The parameter \b ion \b pair
 !! is optional. When it is included its value must be the name of an ion pair

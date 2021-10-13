@@ -1,6 +1,6 @@
-! Copyright (C) 2017-2018 Matt Dawson
-! Licensed under the GNU General Public License version 2 or (at your
-! option) any later version. See the file COPYING for details.
+! Copyright (C) 2021 Barcelona Supercomputing Center and University of
+! Illinois at Urbana-Champaign
+! SPDX-License-Identifier: MIT
 
 !> \file
 !> The camp_rxn_first_order_loss module.
@@ -13,7 +13,7 @@
 !!   \mbox{X} \rightarrow
 !! \f]
 !!
-!! where \f$\mbox{\ch{X}}\f$ is the species being lost.
+!! where \f$\ce{X}\f$ is the species being lost.
 !!
 !! First-Order loss rate constants can be constant or set from an external
 !! module using the

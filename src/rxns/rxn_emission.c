@@ -1,6 +1,6 @@
-/* Copyright (C) 2015-2018 Matthew Dawson
- * Licensed under the GNU General Public License version 2 or (at your
- * option) any later version. See the file COPYING for details.
+/* Copyright (C) 2021 Barcelona Supercomputing Center and University of
+ * Illinois at Urbana-Champaign
+ * SPDX-License-Identifier: MIT
  *
  * Emission reaction solver functions
  *
@@ -140,7 +140,6 @@ void rxn_emission_update_env_state(ModelData *model_data, int *rxn_int_data,
  * \param time_step Current time step being computed (s)
  */
 #ifdef CAMP_USE_SUNDIALS
-
 void rxn_emission_calc_deriv_contrib(ModelData *model_data,
                                      TimeDerivative time_deriv,
                                      int *rxn_int_data, double *rxn_float_data,
@@ -151,7 +150,6 @@ void rxn_emission_calc_deriv_contrib(ModelData *model_data,
   double *env_data = model_data->grid_cell_env;
 
   // Add contributions to the time derivative
-
   if (DERIV_ID_ >= 0)
 #ifndef TIME_DERIVATIVE_LONG_DOUBLE
     time_derivative_add_value(time_deriv, DERIV_ID_, (long double)RATE_);
@@ -161,7 +159,6 @@ void rxn_emission_calc_deriv_contrib(ModelData *model_data,
 
   return;
 }
-
 #endif
 
 /** \brief Calculate contributions to the Jacobian from this reaction

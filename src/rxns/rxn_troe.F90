@@ -1,6 +1,6 @@
-! Copyright (C) 2017-2018 Matt Dawson
-! Licensed under the GNU General Public License version 2 or (at your
-! option) any later version. See the file COPYING for details.
+! Copyright (C) 2021 Barcelona Supercomputing Center and University of
+! Illinois at Urbana-Champaign
+! SPDX-License-Identifier: MIT
 
 !> \file
 !> The camp_rxn_troe module.
@@ -10,12 +10,12 @@
 !! Troe (fall-off) reaction rate constant equations take the form:
 !!
 !! \f[
-!!   \frac{k_0[\mbox{M}]}{1+k_0[\mbox{M}]/k_{\inf}}F_C^{1+(1/N[log_{10}(k_0[\mbox{M}]/k_{\inf})]^2)^{-1}}
+!!   \frac{k_0[\mbox{M}]}{1+k_0[\mbox{M}]/k_{\inf}}F_C^{(1+1/N[log_{10}(k_0[\mbox{M}]/k_{\inf})]^2)^{-1}}
 !! \f]
 !!
 !! where \f$k_0\f$ is the low-pressure limiting rate constant, \f$k_{\inf}\f$
 !! is the high-pressure limiting rate constant, \f$[\mbox{M}]\f$ is the
-!! density of air (\f$10^6\f$ ppm), and \f$F_C\f$ and \f$N\f$ are parameters
+!! density of air, and \f$F_C\f$ and \f$N\f$ are parameters
 !! that determine the shape of the fall-off curve, and are typically 0.6 and
 !! 1.0, respectively \cite Finlayson-Pitts2000 \cite Gipson. \f$k_0\f$ and
 !! \f$k_{\inf}\f$ are calculated as \ref camp_rxn_arrhenius "Arrhenius" rate

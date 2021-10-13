@@ -1,6 +1,6 @@
-/* Copyright (C) 2015-2018 Matthew Dawson
- * Licensed under the GNU General Public License version 2 or (at your
- * option) any later version. See the file COPYING for details.
+/* Copyright (C) 2021 Barcelona Supercomputing Center and University of
+ * Illinois at Urbana-Champaign
+ * SPDX-License-Identifier: MIT
  *
  * Arrhenius reaction solver functions
  *
@@ -155,7 +155,6 @@ void rxn_arrhenius_update_env_state(ModelData *model_data, int *rxn_int_data,
  * \param time_step Current time step being computed (s)
  */
 #ifdef CAMP_USE_SUNDIALS
-
 void rxn_arrhenius_calc_deriv_contrib(ModelData *model_data,
                                       TimeDerivative time_deriv,
                                       int *rxn_int_data, double *rxn_float_data,
@@ -243,7 +242,6 @@ void rxn_arrhenius_calc_deriv_contrib(ModelData *model_data,
 
   return;
 }
-
 #endif
 
 /** \brief Calculate contributions to the Jacobian from this reaction
@@ -280,7 +278,6 @@ void rxn_arrhenius_calc_jac_contrib(ModelData *model_data, Jacobian jac,
       if (JAC_ID_(i_elem) < 0) continue;
       jacobian_add_value(jac, (unsigned int)JAC_ID_(i_elem), JACOBIAN_LOSS,
                          rate);
-      //check_isnanld(&rate,1,"post rxn_arrhenius_calc_jac_contrib rate");
     }
     for (int i_dep = 0; i_dep < NUM_PROD_; i_dep++, i_elem++) {
       if (JAC_ID_(i_elem) < 0) continue;
@@ -290,12 +287,9 @@ void rxn_arrhenius_calc_jac_contrib(ModelData *model_data, Jacobian jac,
           state[PROD_(i_dep)]) {
         jacobian_add_value(jac, (unsigned int)JAC_ID_(i_elem),
                            JACOBIAN_PRODUCTION, YIELD_(i_dep) * rate);
-        //check_isnanld(&YIELD_(i_dep),1,"post rxn_arrhenius_calc_jac_contrib YIELD_(i_dep)");
-        //check_isnanld(&rate,1,"post rxn_arrhenius_calc_jac_contrib rate");
       }
     }
   }
-
 
   return;
 }

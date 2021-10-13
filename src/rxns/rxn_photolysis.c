@@ -1,6 +1,6 @@
-/* Copyright (C) 2015-2018 Matthew Dawson
- * Licensed under the GNU General Public License version 2 or (at your
- * option) any later version. See the file COPYING for details.
+/* Copyright (C) 2021 Barcelona Supercomputing Center and University of
+ * Illinois at Urbana-Champaign
+ * SPDX-License-Identifier: MIT
  *
  * Photolysis reaction solver functions
  *
@@ -211,7 +211,6 @@ void rxn_photolysis_update_env_state(ModelData *model_data, int *rxn_int_data,
  * \param time_step Current time step being computed (s)
  */
 #ifdef CAMP_USE_SUNDIALS
-
 void rxn_photolysis_calc_deriv_contrib(
     ModelData *model_data, TimeDerivative time_deriv, int *rxn_int_data,
     double *rxn_float_data, double *rxn_env_data, realtype time_step) {
@@ -241,7 +240,7 @@ void rxn_photolysis_calc_deriv_contrib(
 
       // Negative yields are allowed, but prevented from causing negative
       // concentrations that lead to solver failures
-      if (-rate * YIELD_(i_spec) * time_step <= state[PROD_(i_spec)]){
+      if (-rate * YIELD_(i_spec) * time_step <= state[PROD_(i_spec)]) {
         time_derivative_add_value(time_deriv, DERIV_ID_(i_dep_var),
                                   rate * YIELD_(i_spec));
       }
@@ -250,7 +249,6 @@ void rxn_photolysis_calc_deriv_contrib(
 
   return;
 }
-
 #endif
 
 /** \brief Calculate contributions to the Jacobian from this reaction
@@ -281,10 +279,8 @@ void rxn_photolysis_calc_jac_contrib(ModelData *model_data, Jacobian jac,
 
     for (int i_dep = 0; i_dep < NUM_REACT_; i_dep++, i_elem++) {
       if (JAC_ID_(i_elem) < 0) continue;
-      //jacobian_add_value(jac, (unsigned int)JAC_ID_(i_elem), JACOBIAN_LOSS,
-      //                   RATE_CONSTANT_);
       jacobian_add_value(jac, (unsigned int)JAC_ID_(i_elem), JACOBIAN_LOSS,
-                        rate);
+                         rate);
     }
     for (int i_dep = 0; i_dep < NUM_PROD_; i_dep++, i_elem++) {
       if (JAC_ID_(i_elem) < 0) continue;
@@ -292,10 +288,8 @@ void rxn_photolysis_calc_jac_contrib(ModelData *model_data, Jacobian jac,
       // concentrations that lead to solver failures
       if (-rate * state[REACT_(i_ind)] * YIELD_(i_dep) * time_step <=
           state[PROD_(i_dep)]) {
-      //jacobian_add_value(jac, (unsigned int)JAC_ID_(i_elem),
-      //                   JACOBIAN_PRODUCTION, YIELD_(i_dep) * RATE_CONSTANT_);
-      jacobian_add_value(jac, (unsigned int)JAC_ID_(i_elem),
-                   JACOBIAN_PRODUCTION, YIELD_(i_dep) * rate);
+        jacobian_add_value(jac, (unsigned int)JAC_ID_(i_elem),
+                           JACOBIAN_PRODUCTION, YIELD_(i_dep) * rate);
       }
     }
   }

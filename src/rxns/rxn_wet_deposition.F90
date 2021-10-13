@@ -1,6 +1,6 @@
-! Copyright (C) 2017-2018 Matt Dawson
-! Licensed under the GNU General Public License version 2 or (at your
-! option) any later version. See the file COPYING for details.
+! Copyright (C) 2021 Barcelona Supercomputing Center and University of
+! Illinois at Urbana-Champaign
+! SPDX-License-Identifier: MIT
 
 !> \file
 !> The camp_rxn_wet_deposition module.
@@ -13,7 +13,7 @@
 !!   \mbox{X} \rightarrow
 !! \f]
 !!
-!! where \f$\mbox{\ch{X}}\f$ is a set of species in an aerosol phase
+!! where \f$\ce{X}\f$ is a set of species in an aerosol phase
 !! undergoing wet deposition at a given rate.
 !!
 !! Wet deposition rate constants can be constant or set from an external

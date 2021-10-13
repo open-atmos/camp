@@ -1,6 +1,6 @@
-! Copyright (C) 2017-2018 Matt Dawson
-! Licensed under the GNU General Public License version 2 or (at your
-! option) any later version. See the file COPYING for details.
+! Copyright (C) 2021 Barcelona Supercomputing Center and University of
+! Illinois at Urbana-Champaign
+! SPDX-License-Identifier: MIT
 
 !> \file
 !> The camp_rxn_CMAQ_OH_HNO3 module.
@@ -9,9 +9,9 @@
 !!
 !! For the reaction:
 !!
-!! \f[\mbox{\ch{
+!! \f[\ce{
 !!   OH + HNO3 ->[k] NO3 + H2O
-!! }}\f]
+!! }\f]
 !!
 !! CMAQ rate constants are calculated as:
 !!
@@ -21,10 +21,9 @@
 !!
 !! where \f$k_0\f$, \f$k_2\f$ and \f$k_3\f$ are \ref camp_rxn_arrhenius
 !! "Arrhenius" rate constants with \f$D=300\f$ and \f$E=0\f$, and
-!! \f$[\mbox{M}]\f$ is the concentration of air (\f$10^6\f$ ppm)
-!! \cite Gipson.
+!! \f$[\mbox{M}]\f$ is the concentration of air \cite Gipson.
 !!
-!! Input data for CMAQ \f$\mbox{\ch{OH + HNO3}}\f$ reactions have the
+!! Input data for CMAQ \f$\ce{OH + HNO3}\f$ reactions have the
 !! following format:
 !! \code{.json}
 !!   {

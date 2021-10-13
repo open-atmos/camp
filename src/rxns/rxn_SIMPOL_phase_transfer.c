@@ -1,6 +1,6 @@
-/* Copyright (C) 2015-2018 Matthew Dawson
- * Licensed under the GNU General Public License version 2 or (at your
- * option) any later version. See the file COPYING for details.
+/* Copyright (C) 2021 Barcelona Supercomputing Center and University of
+ * Illinois at Urbana-Champaign
+ * SPDX-License-Identifier: MIT
  *
  * Phase Transfer reaction solver functions
  *
@@ -444,15 +444,12 @@ void rxn_SIMPOL_phase_transfer_calc_jac_contrib(ModelData *model_data,
 
     // Get the particle number concentration (#/m3)
     realtype number_conc;
-    //realtype number_concd;
     aero_rep_get_number_conc__n_m3(
         model_data,                          // model data
         AERO_REP_ID_(i_phase),               // aerosol representation index
         AERO_PHASE_ID_(i_phase),             // aerosol phase index
         &number_conc,                        // particle number conc (#/m3)
         &(NUM_CONC_JAC_ELEM_(i_phase, 0)));  // partial derivative
-    //long double number_conc=0.;
-    //number_conc=number_concd;
 
     // Get the total mass of the aerosol phase (kg/m3)
     realtype aero_phase_mass;
@@ -499,100 +496,75 @@ void rxn_SIMPOL_phase_transfer_calc_jac_contrib(ModelData *model_data,
     if (aero_conc_type == PER_PARTICLE_MASS) {
       // Change in the gas-phase is evaporation - condensation (ppm/s)
       if (JAC_ID_(1 + i_phase * 3 + 1) >= 0) {
-        jac_contrib=number_conc * evap_rate * act_coeff;
         jacobian_add_value(jac, (unsigned int)JAC_ID_(1 + i_phase * 3 + 1),
                            JACOBIAN_PRODUCTION,
                            number_conc * evap_rate * act_coeff);
-        check_isnanld(&jac_contrib,1,"post rxn_SIMPOL_phase_transfer_calc_jac_contrib jac_contrib1");
       }
       if (JAC_ID_(0) >= 0) {
-        jac_contrib=number_conc * cond_rate;
         jacobian_add_value(jac, (unsigned int)JAC_ID_(0), JACOBIAN_LOSS,
                            number_conc * cond_rate);
-        check_isnanld(&jac_contrib,1,"post rxn_SIMPOL_phase_transfer_calc_jac_contrib jac_contrib2");
       }
 
       // Change in the aerosol-phase species is condensation - evaporation
       // (kg/m^3/s)
       if (JAC_ID_(1 + i_phase * 3) >= 0) {
-        jac_contrib=cond_rate / KGM3_TO_PPM_;
         jacobian_add_value(jac, (unsigned int)JAC_ID_(1 + i_phase * 3),
                            JACOBIAN_PRODUCTION, cond_rate / KGM3_TO_PPM_);
-        check_isnanld(&jac_contrib,1,"post rxn_SIMPOL_phase_transfer_calc_jac_contrib jac_contrib3");
       }
       if (JAC_ID_(1 + i_phase * 3 + 2) >= 0) {
-        jac_contrib=evap_rate * act_coeff / KGM3_TO_PPM_;
         jacobian_add_value(jac, (unsigned int)JAC_ID_(1 + i_phase * 3 + 2),
                            JACOBIAN_LOSS, evap_rate * act_coeff / KGM3_TO_PPM_);
-        check_isnanld(&jac_contrib,1,"post rxn_SIMPOL_phase_transfer_calc_jac_contrib jac_contrib4");
       }
 
       // Activity coefficient contributions
       if (GAS_ACT_JAC_ID_(i_phase) > 0) {
-        jac_contrib=number_conc * evap_rate * state[AERO_SPEC_(i_phase)];
         jacobian_add_value(
             jac, (unsigned int)GAS_ACT_JAC_ID_(i_phase), JACOBIAN_PRODUCTION,
             number_conc * evap_rate * state[AERO_SPEC_(i_phase)]);
-        check_isnanld(&jac_contrib,1,"post rxn_SIMPOL_phase_transfer_calc_jac_contrib jac_contrib5");
       }
       if (AERO_ACT_JAC_ID_(i_phase) > 0) {
-        jac_contrib=evap_rate / KGM3_TO_PPM_ * state[AERO_SPEC_(i_phase)];
         jacobian_add_value(
             jac, (unsigned int)AERO_ACT_JAC_ID_(i_phase), JACOBIAN_LOSS,
             evap_rate / KGM3_TO_PPM_ * state[AERO_SPEC_(i_phase)]);
-        check_isnanld(&jac_contrib,1,"post rxn_SIMPOL_phase_transfer_calc_jac_contrib jac_contrib6");
       }
 
       // total-particle mass concentrations
     } else {
       // Change in the gas-phase is evaporation - condensation (ppm/s)
       if (JAC_ID_(1 + i_phase * 3 + 1) >= 0) {
-        jac_contrib=number_conc * evap_rate * act_coeff;
         jacobian_add_value(jac, (unsigned int)JAC_ID_(1 + i_phase * 3 + 1),
                            JACOBIAN_PRODUCTION,
                            number_conc * evap_rate * act_coeff);
-        check_isnanld(&jac_contrib,1,"post rxn_SIMPOL_phase_transfer_calc_jac_contrib jac_contrib7");
       }
       if (JAC_ID_(0) >= 0) {
-        jac_contrib=number_conc * cond_rate;
         jacobian_add_value(jac, (unsigned int)JAC_ID_(0), JACOBIAN_LOSS,
                            number_conc * cond_rate);
-        check_isnanld(&jac_contrib,1,"post rxn_SIMPOL_phase_transfer_calc_jac_contrib jac_contrib8");
       }
 
       // Change in the aerosol-phase species is condensation - evaporation
       // (kg/m^3/s)
       if (JAC_ID_(1 + i_phase * 3) >= 0) {
-        jac_contrib=number_conc * cond_rate / KGM3_TO_PPM_;
         jacobian_add_value(jac, (unsigned int)JAC_ID_(1 + i_phase * 3),
                            JACOBIAN_PRODUCTION,
                            number_conc * cond_rate / KGM3_TO_PPM_);
-        check_isnanld(&jac_contrib,1,"post rxn_SIMPOL_phase_transfer_calc_jac_contrib jac_contrib9");
       }
       if (JAC_ID_(1 + i_phase * 3 + 2) >= 0) {
-        jac_contrib=number_conc * evap_rate * act_coeff / KGM3_TO_PPM_;
         jacobian_add_value(jac, (unsigned int)JAC_ID_(1 + i_phase * 3 + 2),
                            JACOBIAN_LOSS,
                            number_conc * evap_rate * act_coeff / KGM3_TO_PPM_);
-        check_isnanld(&jac_contrib,1,"post rxn_SIMPOL_phase_transfer_calc_jac_contrib jac_contribq");
       }
 
       // Activity coefficient contributions
       if (GAS_ACT_JAC_ID_(i_phase) > 0) {
-        jac_contrib=number_conc * evap_rate * state[AERO_SPEC_(i_phase)];
         jacobian_add_value(
             jac, (unsigned int)GAS_ACT_JAC_ID_(i_phase), JACOBIAN_PRODUCTION,
             number_conc * evap_rate * state[AERO_SPEC_(i_phase)]);
-        check_isnanld(&jac_contrib,1,"post rxn_SIMPOL_phase_transfer_calc_jac_contrib jac_contribw");
       }
       if (AERO_ACT_JAC_ID_(i_phase) > 0) {
-        jac_contrib=number_conc * evap_rate / KGM3_TO_PPM_ *
-                               state[AERO_SPEC_(i_phase)];
         jacobian_add_value(jac, (unsigned int)AERO_ACT_JAC_ID_(i_phase),
                            JACOBIAN_LOSS,
                            number_conc * evap_rate / KGM3_TO_PPM_ *
                                state[AERO_SPEC_(i_phase)]);
-        check_isnanld(&jac_contrib,1,"post rxn_SIMPOL_phase_transfer_calc_jac_contrib jac_contribe");
       }
     }
 
@@ -615,20 +587,6 @@ void rxn_SIMPOL_phase_transfer_calc_jac_contrib(ModelData *model_data,
     realtype d_evap_d_radius = d_cond_d_radius / state[GAS_SPEC_] *
                                EQUIL_CONST_ * aero_phase_avg_MW /
                                aero_phase_mass * state[AERO_SPEC_(i_phase)];
-    check_isnand(&d_cond_d_radius,1,"post rxn_SIMPOL_phase_transfer_calc_jac_contrib d_cond_d_radius");
-    check_isnand(&state[GAS_SPEC_],1,"post rxn_SIMPOL_phase_transfer_calc_jac_contrib state[GAS_SPEC_]");
-    check_isnand(&EQUIL_CONST_,1,"post rxn_SIMPOL_phase_transfer_calc_jac_contrib EQUIL_CONST_");
-    check_isnand(&aero_phase_avg_MW,1,"post rxn_SIMPOL_phase_transfer_calc_jac_contrib aero_phase_avg_MW");
-    check_isnand(&aero_phase_mass,1,"post rxn_SIMPOL_phase_transfer_calc_jac_contrib aero_phase_mass");
-    check_isnand(&state[AERO_SPEC_(i_phase)],1,"post rxn_SIMPOL_phase_transfer_calc_jac_contrib state[AERO_SPEC_(i_phase)]");
-
-    //check_iszerod(&aero_phase_mass,1,"post rxn_SIMPOL_phase_transfer_calc_jac_contrib aero_phase_mass");
-    //check_iszerod(&state[AERO_SPEC_(i_phase)],1,"post rxn_SIMPOL_phase_transfer_calc_jac_contrib state[AERO_SPEC_(i_phase)]");
-
-
-    check_isnand(&d_evap_d_radius,1,"post rxn_SIMPOL_phase_transfer_calc_jac_contrib d_evap_d_radius1");
-
-
     realtype d_evap_d_mass = -evap_rate / aero_phase_mass;
     realtype d_evap_d_MW = evap_rate / aero_phase_avg_MW;
 
@@ -640,88 +598,64 @@ void rxn_SIMPOL_phase_transfer_calc_jac_contrib(ModelData *model_data,
         // Gas-phase species dependencies
         if (PHASE_JAC_ID_(i_phase, JAC_GAS, i_elem) > 0) {
           // species involved in effective radius calculations
-          jac_contrib=number_conc * d_evap_d_radius *
-                  EFF_RAD_JAC_ELEM_(i_phase, i_elem);
           jacobian_add_value(
               jac, (unsigned int)PHASE_JAC_ID_(i_phase, JAC_GAS, i_elem),
               JACOBIAN_PRODUCTION,
               number_conc * d_evap_d_radius *
                   EFF_RAD_JAC_ELEM_(i_phase, i_elem));
-          check_isnanld(&jac_contrib,1,"post rxn_SIMPOL_phase_transfer_calc_jac_contrib jac_contribr");
-          jac_contrib=number_conc * d_cond_d_radius *
-                  EFF_RAD_JAC_ELEM_(i_phase, i_elem);
           jacobian_add_value(
               jac, (unsigned int)PHASE_JAC_ID_(i_phase, JAC_GAS, i_elem),
               JACOBIAN_LOSS,
               number_conc * d_cond_d_radius *
                   EFF_RAD_JAC_ELEM_(i_phase, i_elem));
-          check_isnanld(&jac_contrib,1,"post rxn_SIMPOL_phase_transfer_calc_jac_contrib jac_contribt");
 
           // species involved in number concentration
-          jac_contrib=evap_rate * NUM_CONC_JAC_ELEM_(i_phase, i_elem);
           jacobian_add_value(
               jac, (unsigned int)PHASE_JAC_ID_(i_phase, JAC_GAS, i_elem),
               JACOBIAN_PRODUCTION,
               evap_rate * NUM_CONC_JAC_ELEM_(i_phase, i_elem));
-          check_isnanld(&jac_contrib,1,"post rxn_SIMPOL_phase_transfer_calc_jac_contrib jac_contriby");
-          jac_contrib=cond_rate * NUM_CONC_JAC_ELEM_(i_phase, i_elem);
           jacobian_add_value(
               jac, (unsigned int)PHASE_JAC_ID_(i_phase, JAC_GAS, i_elem),
               JACOBIAN_LOSS, cond_rate * NUM_CONC_JAC_ELEM_(i_phase, i_elem));
-          check_isnanld(&jac_contrib,1,"post rxn_SIMPOL_phase_transfer_calc_jac_contrib jac_contribu");
 
           // species involved in mass calculations
-          jac_contrib=number_conc * d_evap_d_mass * MASS_JAC_ELEM_(i_phase, i_elem);
           jacobian_add_value(
               jac, (unsigned int)PHASE_JAC_ID_(i_phase, JAC_GAS, i_elem),
               JACOBIAN_PRODUCTION,
               number_conc * d_evap_d_mass * MASS_JAC_ELEM_(i_phase, i_elem));
-          check_isnanld(&jac_contrib,1,"post rxn_SIMPOL_phase_transfer_calc_jac_contrib jac_contribi");
 
           // species involved in average MW calculations
-          jac_contrib=number_conc * d_evap_d_MW * MW_JAC_ELEM_(i_phase, i_elem);
           jacobian_add_value(
               jac, (unsigned int)PHASE_JAC_ID_(i_phase, JAC_GAS, i_elem),
               JACOBIAN_PRODUCTION,
               number_conc * d_evap_d_MW * MW_JAC_ELEM_(i_phase, i_elem));
-          check_isnanld(&jac_contrib,1,"post rxn_SIMPOL_phase_transfer_calc_jac_contrib jac_contribo");
         }
 
         // Aerosol-phase species dependencies
         if (PHASE_JAC_ID_(i_phase, JAC_AERO, i_elem) > 0) {
           // species involved in effective radius calculations
-          jac_contrib=d_evap_d_radius / KGM3_TO_PPM_ *
-                  EFF_RAD_JAC_ELEM_(i_phase, i_elem);
           jacobian_add_value(
               jac, (unsigned int)PHASE_JAC_ID_(i_phase, JAC_AERO, i_elem),
               JACOBIAN_LOSS,
               d_evap_d_radius / KGM3_TO_PPM_ *
                   EFF_RAD_JAC_ELEM_(i_phase, i_elem));
-          check_isnanld(&jac_contrib,1,"post rxn_SIMPOL_phase_transfer_calc_jac_contrib jac_contribp");
-          jac_contrib=d_cond_d_radius / KGM3_TO_PPM_ *
-                  EFF_RAD_JAC_ELEM_(i_phase, i_elem);
           jacobian_add_value(
               jac, (unsigned int)PHASE_JAC_ID_(i_phase, JAC_AERO, i_elem),
               JACOBIAN_PRODUCTION,
               d_cond_d_radius / KGM3_TO_PPM_ *
                   EFF_RAD_JAC_ELEM_(i_phase, i_elem));
-          check_isnanld(&jac_contrib,1,"post rxn_SIMPOL_phase_transfer_calc_jac_contrib jac_contriba");
 
           // species involved in mass calculations
-          jac_contrib=d_evap_d_mass / KGM3_TO_PPM_ * MASS_JAC_ELEM_(i_phase, i_elem);
           jacobian_add_value(
               jac, (unsigned int)PHASE_JAC_ID_(i_phase, JAC_AERO, i_elem),
               JACOBIAN_LOSS,
               d_evap_d_mass / KGM3_TO_PPM_ * MASS_JAC_ELEM_(i_phase, i_elem));
-          check_isnanld(&jac_contrib,1,"post rxn_SIMPOL_phase_transfer_calc_jac_contrib jac_contribs");
 
           // species involved in average MW calculations
-          jac_contrib=d_evap_d_MW / KGM3_TO_PPM_ * MW_JAC_ELEM_(i_phase, i_elem);
           jacobian_add_value(
               jac, (unsigned int)PHASE_JAC_ID_(i_phase, JAC_AERO, i_elem),
               JACOBIAN_LOSS,
               d_evap_d_MW / KGM3_TO_PPM_ * MW_JAC_ELEM_(i_phase, i_elem));
-          check_isnanld(&jac_contrib,1,"post rxn_SIMPOL_phase_transfer_calc_jac_contrib jac_contribd");
         }
       }
 
@@ -733,109 +667,76 @@ void rxn_SIMPOL_phase_transfer_calc_jac_contrib(ModelData *model_data,
         // Gas-phase species dependencies
         if (PHASE_JAC_ID_(i_phase, JAC_GAS, i_elem) > 0) {
           // species involved in effective radius calculations
-          jac_contrib=number_conc * d_evap_d_radius *
-                  EFF_RAD_JAC_ELEM_(i_phase, i_elem);
           jacobian_add_value(
               jac, (unsigned int)PHASE_JAC_ID_(i_phase, JAC_GAS, i_elem),
               JACOBIAN_PRODUCTION,
               number_conc * d_evap_d_radius *
                   EFF_RAD_JAC_ELEM_(i_phase, i_elem));
-          check_isnanld(&number_conc,1,"post rxn_SIMPOL_phase_transfer_calc_jac_contrib number_conc");
-          check_isnanld(&d_evap_d_radius,1,"post rxn_SIMPOL_phase_transfer_calc_jac_contrib d_evap_d_radius");
-          check_isnanld(&EFF_RAD_JAC_ELEM_(i_phase, i_elem),1,"post rxn_SIMPOL_phase_transfer_calc_jac_contrib EFF_RAD_JAC_ELEM_(i_phase, i_elem)");
-          check_isnanld(&jac_contrib,1,"post rxn_SIMPOL_phase_transfer_calc_jac_contrib jac_contribf");
-          jac_contrib=number_conc * d_cond_d_radius *
-                  EFF_RAD_JAC_ELEM_(i_phase, i_elem);
           jacobian_add_value(
               jac, (unsigned int)PHASE_JAC_ID_(i_phase, JAC_GAS, i_elem),
               JACOBIAN_LOSS,
               number_conc * d_cond_d_radius *
                   EFF_RAD_JAC_ELEM_(i_phase, i_elem));
-          check_isnanld(&jac_contrib,1,"post rxn_SIMPOL_phase_transfer_calc_jac_contrib jac_contribg");
 
           // species involved in number concentration
-          jac_contrib=evap_rate * NUM_CONC_JAC_ELEM_(i_phase, i_elem);
           jacobian_add_value(
               jac, (unsigned int)PHASE_JAC_ID_(i_phase, JAC_GAS, i_elem),
               JACOBIAN_PRODUCTION,
               evap_rate * NUM_CONC_JAC_ELEM_(i_phase, i_elem));
-          check_isnanld(&jac_contrib,1,"post rxn_SIMPOL_phase_transfer_calc_jac_contrib jac_contribh");
-          jac_contrib=cond_rate * NUM_CONC_JAC_ELEM_(i_phase, i_elem);
           jacobian_add_value(
               jac, (unsigned int)PHASE_JAC_ID_(i_phase, JAC_GAS, i_elem),
               JACOBIAN_LOSS, cond_rate * NUM_CONC_JAC_ELEM_(i_phase, i_elem));
-          check_isnanld(&jac_contrib,1,"post rxn_SIMPOL_phase_transfer_calc_jac_contrib jac_contribj");
 
           // species involved in mass calculations
-          jac_contrib=number_conc * d_evap_d_mass * MASS_JAC_ELEM_(i_phase, i_elem);
           jacobian_add_value(
               jac, (unsigned int)PHASE_JAC_ID_(i_phase, JAC_GAS, i_elem),
               JACOBIAN_PRODUCTION,
               number_conc * d_evap_d_mass * MASS_JAC_ELEM_(i_phase, i_elem));
-          check_isnanld(&jac_contrib,1,"post rxn_SIMPOL_phase_transfer_calc_jac_contrib jac_contribk");
 
           // species involved in average MW calculations
-          jac_contrib=number_conc * d_evap_d_MW * MW_JAC_ELEM_(i_phase, i_elem);
           jacobian_add_value(
               jac, (unsigned int)PHASE_JAC_ID_(i_phase, JAC_GAS, i_elem),
               JACOBIAN_PRODUCTION,
               number_conc * d_evap_d_MW * MW_JAC_ELEM_(i_phase, i_elem));
-          check_isnanld(&jac_contrib,1,"post rxn_SIMPOL_phase_transfer_calc_jac_contrib jac_contribl");
         }
 
         // Aerosol-phase species dependencies
         if (PHASE_JAC_ID_(i_phase, JAC_AERO, i_elem) > 0) {
           // species involved in effective radius calculations
-          jac_contrib=number_conc * d_evap_d_radius / KGM3_TO_PPM_ *
-                  EFF_RAD_JAC_ELEM_(i_phase, i_elem);
           jacobian_add_value(
               jac, (unsigned int)PHASE_JAC_ID_(i_phase, JAC_AERO, i_elem),
               JACOBIAN_LOSS,
               number_conc * d_evap_d_radius / KGM3_TO_PPM_ *
                   EFF_RAD_JAC_ELEM_(i_phase, i_elem));
-          check_isnanld(&jac_contrib,1,"post rxn_SIMPOL_phase_transfer_calc_jac_contrib jac_contribz");
-          jac_contrib=number_conc * d_cond_d_radius / KGM3_TO_PPM_ *
-                  EFF_RAD_JAC_ELEM_(i_phase, i_elem);
           jacobian_add_value(
               jac, (unsigned int)PHASE_JAC_ID_(i_phase, JAC_AERO, i_elem),
               JACOBIAN_PRODUCTION,
               number_conc * d_cond_d_radius / KGM3_TO_PPM_ *
                   EFF_RAD_JAC_ELEM_(i_phase, i_elem));
-          check_isnanld(&jac_contrib,1,"post rxn_SIMPOL_phase_transfer_calc_jac_contrib jac_contribx");
 
           // species involved in number concentration
-          jac_contrib=evap_rate / KGM3_TO_PPM_ * NUM_CONC_JAC_ELEM_(i_phase, i_elem);
           jacobian_add_value(
               jac, (unsigned int)PHASE_JAC_ID_(i_phase, JAC_AERO, i_elem),
               JACOBIAN_LOSS,
               evap_rate / KGM3_TO_PPM_ * NUM_CONC_JAC_ELEM_(i_phase, i_elem));
-          check_isnanld(&jac_contrib,1,"post rxn_SIMPOL_phase_transfer_calc_jac_contrib jac_contribc");
-          jac_contrib=cond_rate / KGM3_TO_PPM_ * NUM_CONC_JAC_ELEM_(i_phase, i_elem);
           jacobian_add_value(
               jac, (unsigned int)PHASE_JAC_ID_(i_phase, JAC_AERO, i_elem),
               JACOBIAN_PRODUCTION,
               cond_rate / KGM3_TO_PPM_ * NUM_CONC_JAC_ELEM_(i_phase, i_elem));
-          check_isnanld(&jac_contrib,1,"post rxn_SIMPOL_phase_transfer_calc_jac_contrib jac_contribv");
 
           // species involved in mass calculations
-          jac_contrib=number_conc * d_evap_d_mass / KGM3_TO_PPM_ *
-                  MASS_JAC_ELEM_(i_phase, i_elem);
           jacobian_add_value(
               jac, (unsigned int)PHASE_JAC_ID_(i_phase, JAC_AERO, i_elem),
               JACOBIAN_LOSS,
               number_conc * d_evap_d_mass / KGM3_TO_PPM_ *
                   MASS_JAC_ELEM_(i_phase, i_elem));
-          check_isnanld(&jac_contrib,1,"post rxn_SIMPOL_phase_transfer_calc_jac_contrib jac_contribb");
 
           // species involved in average MW calculations
-          jac_contrib=number_conc * d_evap_d_MW / KGM3_TO_PPM_ *
-                  MW_JAC_ELEM_(i_phase, i_elem);
           jacobian_add_value(
               jac, (unsigned int)PHASE_JAC_ID_(i_phase, JAC_AERO, i_elem),
               JACOBIAN_LOSS,
               number_conc * d_evap_d_MW / KGM3_TO_PPM_ *
                   MW_JAC_ELEM_(i_phase, i_elem));
-          check_isnanld(&jac_contrib,1,"post rxn_SIMPOL_phase_transfer_calc_jac_contrib jac_contribn");
         }
       }
     }

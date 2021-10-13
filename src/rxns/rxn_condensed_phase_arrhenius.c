@@ -1,6 +1,6 @@
-/* Copyright (C) 2015-2018 Matthew Dawson
- * Licensed under the GNU General Public License version 2 or (at your
- * option) any later version. See the file COPYING for details.
+/* Copyright (C) 2021 Barcelona Supercomputing Center and University of
+ * Illinois at Urbana-Champaign
+ * SPDX-License-Identifier: MIT
  *
  * Condensed Phase Arrhenius reaction solver functions
  *
@@ -181,7 +181,6 @@ void rxn_condensed_phase_arrhenius_update_env_state(ModelData *model_data,
  * \param time_step Current time step of the itegrator (s)
  */
 #ifdef CAMP_USE_SUNDIALS
-
 void rxn_condensed_phase_arrhenius_calc_deriv_contrib(
     ModelData *model_data, TimeDerivative time_deriv, int *rxn_int_data,
     double *rxn_float_data, double *rxn_env_data, double time_step) {
@@ -238,7 +237,6 @@ void rxn_condensed_phase_arrhenius_calc_deriv_contrib(
 
   return;
 }
-
 #endif
 
 /** \brief Calculate contributions to the Jacobian from this reaction
