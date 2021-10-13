@@ -356,7 +356,7 @@ n_{\rm ions}=\Big((\nu \Phi) + \frac{m M_{\rm w}}{1000} \frac{(\nu \Phi)^{2}}{2!
 \end{equation}
 where $m_{\rm s}$ and $M_{\rm s}$ are the mass and molecular weight of salt respectively. and $\nu$ is the number of ions produced per dissociation of one molecular of the salt. $m$ is molarity of the solution. $\Phi$ is the Molal osmotic coefficient, which depends on the concentration of the solution. It is assumed to be 1 when the solution is dilute. Eqns (\ref{eqn:3.7}) and (\ref{eqn:3.8}) imply that the value of $\kappa$ depends on the amount of water, hence depends on the wet diameter $D_{\rm p}$ and changes as the droplet grows or shrinks.
 
-In PARTMC-MOSAIC., $n_{\rm ions}$ is not calculated by the above formula and instead by MOSAIC.
+In CAMP-MOSAIC., $n_{\rm ions}$ is not calculated by the above formula and instead by MOSAIC.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Equilibrium equation as function of $\kappa$}
@@ -506,8 +506,8 @@ When deriving the condensational growth equation of a single droplet, we make th
 
 \subsection{Equilibrium equation as function of $\kappa$}
 
-There is an equilibration subroutine in PARTMC to calculate the equilibrium diameter of the aerosol particle which is in equilibrium with the environmental saturation or supersaturation.
-The following equation, $f$, is solved in the equilibration subroutine in PARTMC,
+There is an equilibration subroutine in CAMP to calculate the equilibrium diameter of the aerosol particle which is in equilibrium with the environmental saturation or supersaturation.
+The following equation, $f$, is solved in the equilibration subroutine in CAMP,
 
 
 \begin{equation}\label{eqn:5.1}
@@ -521,7 +521,7 @@ f(D_{\rm p})=S_{\rm v, \infty}-\left(\frac{\frac{\pi}{6}(D_{\rm p})^{3}-V_{\rm s
 \exp{\left(\frac{4 M_{\rm w} \sigma_{\rm w}}{R T_{\rm a} \rho_{\rm w} D_{\rm p}}\right)}
 \end{equation}
 
-In PARTMC, we use Newton iteration method to solve the equation eqn(\ref{eqn:5.2}). For this to be done, we need to compute the derivative of the eqn(\ref{eqn:5.2}) with respect to $D_{\rm p}$.
+In CAMP, we use Newton iteration method to solve the equation eqn(\ref{eqn:5.2}). For this to be done, we need to compute the derivative of the eqn(\ref{eqn:5.2}) with respect to $D_{\rm p}$.
 
 \begin{equation}\label{eqn:5.2a}
 \frac{\partial{f(D_{\rm p})}}     {\partial{D_{\rm p} } } = 
@@ -569,7 +569,7 @@ To further express $V_{\rm w}$ in terms of $V_{\rm s}$ and $ D_{\rm p}$, we have
 \frac{\delta}{A}=B \Bigg(S-\left(\frac{1}{1+\delta}\right) \left(\frac{\frac{\pi}{6}(D_{\rm p})^{3}-V_{\rm s}} {\frac{\pi}{6}(D_{\rm p})^{3}+(\kappa-1)V_{\rm s}}\right)\exp{\left(C \frac{\delta}{1+\delta} +E \frac{1}{1+\delta}\right)} \Bigg)
 \end{equation}
 
-In PARTMC, the following equation, $f$, is the one actually being solved,
+In CAMP, the following equation, $f$, is the one actually being solved,
 
 \begin{equation}\label{eqn:5.10}
 f(\delta)=\frac{\delta}{A}-B \Bigg(S-\left(\frac{1}{1+\delta}\right) \left(\frac{\frac{\pi}{6}(D_{\rm p})^{3}-V_{\rm s}} {\frac{\pi}{6}(D_{\rm p})^{3}+(\kappa-1)V_{\rm s}}\right)\exp{\left(C \frac{\delta}{1+\delta} +E \frac{1}{1+\delta}\right)} \Bigg)
@@ -581,7 +581,7 @@ Using the notation of $a_{\rm w}$,
 f(\delta)=\frac{\delta}{A}-B \Bigg(S-\left(\frac{1}{1+\delta}\right) (a_{\rm w}) \exp{\left(C \frac{\delta}{1+\delta} +E \frac{1}{1+\delta}\right)} \Bigg)
 \end{equation}
 
-In PARTMC, we use Newton iteration method to solve the equation eqn(\ref{eqn:5.2}). For this to be done, we need to compute the derivative of the eqn(\ref{eqn:5.11}) with respect to $\delta$.
+In CAMP, we use Newton iteration method to solve the equation eqn(\ref{eqn:5.2}). For this to be done, we need to compute the derivative of the eqn(\ref{eqn:5.11}) with respect to $\delta$.
 
 \begin{equation}\label{eqn:5.12}
 \frac{\partial{f( \delta)} } {\partial{\delta}} =
@@ -685,9 +685,9 @@ where $\epsilon_{a}$ = $ \frac{V_{s}^{a}}{V_{s}}$ is the volume fraction.
 This states that the $\kappa$ for an aerosol particle is the volume weighted sum of individual $\kappa$ value of each component in the aerosol particle.  
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Appendix I - How to treat insoluble substances in the model PARTMC}
+\section{Appendix I - How to treat insoluble substances in the model CAMP}
 
-There are two approaches to treat insoluble substances in PARTMC, the first one is include the volume of the insoluble material with the assignment of $\nu^{u}$=$0$ in PARTMC. The second approach is to only include the soluble (solute) part of the aerosol particle. This section is to show that both approaches are mathematically equivalent.
+There are two approaches to treat insoluble substances in CAMP, the first one is include the volume of the insoluble material with the assignment of $\nu^{u}$=$0$ in CAMP. The second approach is to only include the soluble (solute) part of the aerosol particle. This section is to show that both approaches are mathematically equivalent.
  
 Approach 1. 
 \begin{equation}\label{eqn:A1}
@@ -719,7 +719,7 @@ a_{\rm w}^{-1}=1+ (  \frac{\nu^{\rm u} M_{\rm w} \rho_{\rm u}}{\rho_{\rm w}M_{\r
 
 where $\rm V_{\rm s}$ = $ V_{\rm u}$ + $V_{\rm s'}$. $V_{\rm u}$ and $V_{\rm s'}$ are the volumes of the insoluble and solute respectively.
 
-If in PARTMC, for insoluble substances, the $\nu^{\rm u}$ is prescribed as zero, and hence $\kappa^{\rm u}$, $n^{\rm u}$  are zero from eqn({\ref{eqn:3.7}) and eqn(\ref{eqn:3.8}), we don't need to volume of an insoluble component in an aerosol particle when we use eqn(\ref{eqn:6.17}).
+If in CAMP, for insoluble substances, the $\nu^{\rm u}$ is prescribed as zero, and hence $\kappa^{\rm u}$, $n^{\rm u}$  are zero from eqn({\ref{eqn:3.7}) and eqn(\ref{eqn:3.8}), we don't need to volume of an insoluble component in an aerosol particle when we use eqn(\ref{eqn:6.17}).
 
 From above, we get the following,
 
@@ -751,7 +751,7 @@ This is the same as approach 1.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Appendix II - The equilibration subroutine in PARTMC}
+\section{Appendix II - The equilibration subroutine in CAMP}
 
 The equilibration subroutine is to associate the aerosol particle with the required amount of water such that it is in equilibrium with the environmental saturation/supersaturation.
 

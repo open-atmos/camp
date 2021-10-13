@@ -83,7 +83,7 @@ module camp_output
 #endif
 
   !> PartMC verson number.
-  character(len=100), parameter :: PARTMC_VERSION = "2.4.0"
+  character(len=100), parameter :: CAMP_VERSION = "2.4.0"
 
   !> Type code for undefined or invalid output.
   integer, parameter :: OUTPUT_TYPE_INVALID = 0
@@ -365,7 +365,7 @@ contains
          write_n_proc)
     call camp_nc_open_write(filename, ncid)
     call camp_nc_write_info(ncid, uuid, &
-         "PartMC version " // trim(PARTMC_VERSION), write_rank, write_n_proc)
+         "PartMC version " // trim(CAMP_VERSION), write_rank, write_n_proc)
     call write_time(ncid, time, del_t, index)
     call camp_nc_write_integer(ncid, i_repeat, "repeat", &
          description="repeat number of this simulation (starting from 1)")
@@ -700,7 +700,7 @@ contains
          '_', index, '.nc'
     call camp_nc_open_write(filename, ncid)
     call camp_nc_write_info(ncid, uuid, &
-         "PartMC version " // trim(PARTMC_VERSION))
+         "PartMC version " // trim(CAMP_VERSION))
     call write_time(ncid, time, del_t, index)
 
     ! write data

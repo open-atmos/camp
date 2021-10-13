@@ -15,7 +15,7 @@ CMakeLists.txt:
   PACKAGE_VERSION
 doc/Makefile: Version
 doc/Doxyfile: Version
-src/output.F90: PARTMC_VERSION
+src/output.F90: CAMP_VERSION
 
 git add -u
 git commit -m "update info for 2.1.0 release"
