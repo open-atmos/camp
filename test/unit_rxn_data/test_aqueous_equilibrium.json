@@ -1,6 +1,6 @@
 {
   "note" : "Test mechanism for aqueous equilibrium reactions",
-  "pmc-data" : [
+  "camp-data" : [
    {
     "type" : "RELATIVE_TOLERANCE",
     "value" : 1.0e-8

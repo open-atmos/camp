@@ -129,14 +129,14 @@ else
   n_blocks=(1) #50
   offset_conc=(0) #0.1
   offset_temp=(0) #0.0006
-  pmc_multicells=(0) #do multicells? 0=false, 1=true, 2=block-cells?
+  camp_multicells=(0) #do multicells? 0=false, 1=true, 2=block-cells?
 
   echo "Test configuration:" > ../../../../../profile_stats.csv
 
   #Test with different parameters
-  for id_pmc_multicells in "${!pmc_multicells[@]}";
+  for id_camp_multicells in "${!camp_multicells[@]}";
   do
-    echo "multi_cells ${pmc_multicells[$id_pmc_multicells]}"
+    echo "multi_cells ${camp_multicells[$id_camp_multicells]}"
     for id_n_blocks in "${!n_blocks[@]}";
     do
       echo "n_blocks ${n_blocks[$id_n_blocks]}"
@@ -158,13 +158,13 @@ else
 
             # Original
             exec_str="../../../test_chemistry_cb05cl_ae5_big ${n_cells[id_n_cells]} ${n_blocks[id_n_blocks]} \
-            ${offset_conc[$id_offset_conc]} ${offset_temp[$id_offset_temp]} ${pmc_multicells[$id_pmc_multicells]}"
+            ${offset_conc[$id_offset_conc]} ${offset_temp[$id_offset_temp]} ${camp_multicells[$id_camp_multicells]}"
 
             #--print-gpu-summary
             #--analysis-metrics -f -o ../../../../mock_monarch_1000.nvprof
             #exec_str="nvprof --analysis-metrics -f -o ../../../../../test_cb05_100.nvprof \
             #../../../test_chemistry_cb05cl_ae5_big ${n_cells[id_n_cells]} ${n_blocks[id_n_blocks]} \
-            #${offset_conc[$id_offset_conc]} ${offset_temp[$id_offset_temp]} ${pmc_multicells[$id_pmc_multicells]}"
+            #${offset_conc[$id_offset_conc]} ${offset_temp[$id_offset_temp]} ${camp_multicells[$id_camp_multicells]}"
             #open with: nvvp
 
             if ! $exec_str; then

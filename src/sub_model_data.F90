@@ -3,7 +3,7 @@
 ! option) any later version. See the file COPYING for details.
 
 !> \file
-!> The pmc_sub_model_data module.
+!> The camp_sub_model_data module.
 
 !> \page camp_sub_model CAMP: Sub-Model (general)
 !!
@@ -22,7 +22,7 @@
 !! \subpage camp_sub_model_add "here".
 
 !> The abstract sub_model_data_t structure and associated subroutines.
-module pmc_sub_model_data
+module camp_sub_model_data
 
 #ifdef PMC_USE_JSON
   use json_module
@@ -30,10 +30,10 @@ module pmc_sub_model_data
 #ifdef PMC_USE_MPI
   use mpi
 #endif
-  use pmc_constants,                    only : i_kind, dp
-  use pmc_mpi
-  use pmc_property
-  use pmc_util,                         only : die_msg, string_t
+  use camp_constants,                    only : i_kind, dp
+  use camp_mpi
+  use camp_property
+  use camp_util,                         only : die_msg, string_t
 
   use iso_c_binding
 
@@ -64,12 +64,12 @@ module pmc_sub_model_data
     !> Condensed sub-model data. These arrays will be available during
     !! integration, and should contain any information required by the
     !! sub-model that cannot be obtained from the
-    !! pmc_camp_state::camp_state_t object. (floating point)
+    !! camp_camp_state::camp_state_t object. (floating point)
     real(kind=dp), allocatable, public :: condensed_data_real(:)
     !> Condensed sub-model data. These arrays will be available during
     !! integration, and should contain any information required by the
     !! sub-model that cannot be obtained from the
-    !! pmc_camp_state::camp_state_t object. (integer)
+    !! camp_camp_state::camp_state_t object. (integer)
     integer(kind=i_kind), allocatable, public :: condensed_data_int(:)
     !> Number of environment-dependent parameters
     !! These are parameters that need updated when environmental conditions
@@ -156,9 +156,9 @@ interface
   !! during the model run are included in the condensed data arrays.
   subroutine initialize(this, aero_rep_set, aero_phase_set, chem_spec_data)
 
-    use pmc_chem_spec_data
-    use pmc_aero_rep_data
-    use pmc_aero_phase_data
+    use camp_chem_spec_data
+    use camp_aero_rep_data
+    use camp_aero_phase_data
     import :: sub_model_data_t
 
     !> Sub model data
@@ -176,7 +176,7 @@ interface
 
   !> Extending-type binary pack size (internal use only)
   integer(kind=i_kind) function internal_pack_size(this, comm)
-    use pmc_util,                                only : i_kind
+    use camp_util,                                only : i_kind
     import :: sub_model_update_data_t
 
     !> Sub model data
@@ -227,7 +227,7 @@ interface
   !! priority sub models. Lower numbers indicate higher priority.
   function priority(this)
 
-    use pmc_constants,                           only : dp
+    use camp_constants,                           only : dp
     import :: sub_model_data_t
 
     !> Sub model priority
@@ -264,7 +264,7 @@ contains
   !! A \c json object containing the information required by a \ref
   !! camp_sub_model "sub-model" of the form:
   !! \code{.json}
-  !! { "pmc-data" : [
+  !! { "camp-data" : [
   !!   {
   !!     "type" : "SUB_MODEL_TYPE",
   !!     "some parameter" : 123.34,
@@ -353,9 +353,9 @@ contains
     integer, intent(in) :: comm
 
     pack_size = &
-            pmc_mpi_pack_size_real_array(this%condensed_data_real, comm) + &
-            pmc_mpi_pack_size_integer_array(this%condensed_data_int, comm) + &
-            pmc_mpi_pack_size_integer(this%num_env_params, comm)
+            camp_mpi_pack_size_real_array(this%condensed_data_real, comm) + &
+            camp_mpi_pack_size_integer_array(this%condensed_data_int, comm) + &
+            camp_mpi_pack_size_integer(this%num_env_params, comm)
 
   end function pack_size
 
@@ -377,9 +377,9 @@ contains
     integer :: prev_position
 
     prev_position = pos
-    call pmc_mpi_pack_real_array(buffer, pos, this%condensed_data_real, comm)
-    call pmc_mpi_pack_integer_array(buffer, pos, this%condensed_data_int,comm)
-    call pmc_mpi_pack_integer(buffer, pos, this%num_env_params,comm)
+    call camp_mpi_pack_real_array(buffer, pos, this%condensed_data_real, comm)
+    call camp_mpi_pack_integer_array(buffer, pos, this%condensed_data_int,comm)
+    call camp_mpi_pack_integer(buffer, pos, this%num_env_params,comm)
     call assert(924075845, &
          pos - prev_position <= this%pack_size(comm))
 #endif
@@ -404,10 +404,10 @@ contains
     integer :: prev_position
 
     prev_position = pos
-    call pmc_mpi_unpack_real_array(buffer, pos, this%condensed_data_real,comm)
-    call pmc_mpi_unpack_integer_array(buffer, pos, this%condensed_data_int,  &
+    call camp_mpi_unpack_real_array(buffer, pos, this%condensed_data_real,comm)
+    call camp_mpi_unpack_integer_array(buffer, pos, this%condensed_data_int,  &
                                                                          comm)
-    call pmc_mpi_unpack_integer(buffer, pos, this%num_env_params, comm)
+    call camp_mpi_unpack_integer(buffer, pos, this%num_env_params, comm)
     call assert(299381254, &
          pos - prev_position <= this%pack_size(comm))
 #endif
@@ -526,9 +526,9 @@ contains
     endif
 
     pack_size = &
-      pmc_mpi_pack_size_integer(int(this%sub_model_type, kind=i_kind),       &
+      camp_mpi_pack_size_integer(int(this%sub_model_type, kind=i_kind),       &
                                                                    l_comm) + &
-      pmc_mpi_pack_size_integer(int(this%sub_model_solver_id, kind=i_kind),  &
+      camp_mpi_pack_size_integer(int(this%sub_model_solver_id, kind=i_kind),  &
                                                                    l_comm) + &
       this%internal_pack_size(l_comm)
 #else
@@ -561,9 +561,9 @@ contains
     endif
 
     prev_position = pos
-    call pmc_mpi_pack_integer(buffer, pos, &
+    call camp_mpi_pack_integer(buffer, pos, &
                               int(this%sub_model_type, kind=i_kind), l_comm)
-    call pmc_mpi_pack_integer(buffer, pos, &
+    call camp_mpi_pack_integer(buffer, pos, &
                               int(this%sub_model_solver_id, kind=i_kind),    &
                               l_comm)
     call this%internal_bin_pack(buffer, pos, l_comm)
@@ -598,9 +598,9 @@ contains
     endif
 
     prev_position = pos
-    call pmc_mpi_unpack_integer(buffer, pos, temp_int, l_comm)
+    call camp_mpi_unpack_integer(buffer, pos, temp_int, l_comm)
     this%sub_model_type = int(temp_int, kind=c_int)
-    call pmc_mpi_unpack_integer(buffer, pos, temp_int, l_comm)
+    call camp_mpi_unpack_integer(buffer, pos, temp_int, l_comm)
     this%sub_model_solver_id = int(temp_int, kind=c_int)
     call this%internal_bin_unpack(buffer, pos, l_comm)
     call assert(191558576, &
@@ -633,4 +633,4 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end module pmc_sub_model_data
+end module camp_sub_model_data

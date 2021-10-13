@@ -3,13 +3,13 @@
 ! option) any later version. See the file COPYING for details.
 
 !> \file
-!> The pmc_stats module.
+!> The camp_stats module.
 
 !> The \c stats_t type and associated subroutines.
-module pmc_stats
+module camp_stats
 
-  use pmc_util
-  use pmc_netcdf
+  use camp_util
+  use camp_netcdf
 
   !> Structure for online computation of mean and variance.
   type stats_t
@@ -582,8 +582,8 @@ contains
     !> Unit of variable.
     character(len=*), optional, intent(in) :: unit
 
-    call pmc_nc_write_real(ncid, stats%mean, name, unit=unit)
-    call pmc_nc_write_real(ncid, stats_conf_95_offset(stats), &
+    call camp_nc_write_real(ncid, stats%mean, name, unit=unit)
+    call camp_nc_write_real(ncid, stats_conf_95_offset(stats), &
          trim(name) // "_ci_offset", unit=unit)
 
   end subroutine stats_output_netcdf
@@ -604,9 +604,9 @@ contains
     !> Unit of variable.
     character(len=*), optional, intent(in) :: unit
 
-    call pmc_nc_write_real_1d(ncid, stats%mean, name, dim_name=dim_name, &
+    call camp_nc_write_real_1d(ncid, stats%mean, name, dim_name=dim_name, &
          unit=unit)
-    call pmc_nc_write_real_1d(ncid, stats_1d_conf_95_offset(stats), &
+    call camp_nc_write_real_1d(ncid, stats_1d_conf_95_offset(stats), &
          trim(name) // "_ci_offset", dim_name=dim_name, unit=unit)
 
   end subroutine stats_1d_output_netcdf
@@ -630,9 +630,9 @@ contains
     !> Unit of variable.
     character(len=*), optional, intent(in) :: unit
 
-    call pmc_nc_write_real_2d(ncid, stats%mean, name, dim_name_1=dim_name_1, &
+    call camp_nc_write_real_2d(ncid, stats%mean, name, dim_name_1=dim_name_1, &
          dim_name_2=dim_name_2, unit=unit)
-    call pmc_nc_write_real_2d(ncid, stats_2d_conf_95_offset(stats), &
+    call camp_nc_write_real_2d(ncid, stats_2d_conf_95_offset(stats), &
          trim(name) // "_ci_offset", dim_name_1=dim_name_1, &
          dim_name_2=dim_name_2, unit=unit)
 
@@ -674,4 +674,4 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end module pmc_stats
+end module camp_stats

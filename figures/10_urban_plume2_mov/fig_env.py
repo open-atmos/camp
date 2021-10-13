@@ -9,7 +9,7 @@ from Scientific.IO.NetCDF import *
 from pyx import *
 sys.path.append("../../tool")
 from partmc import *
-from pmc_pyx import *
+from camp_pyx import *
 from fig_helper import *
 
 out_prefix = "figs/env"

@@ -11,12 +11,12 @@
 
 program test_fractal_dimless_time
 
-  use pmc_aero_state
-  use pmc_aero_particle
-  use pmc_output
-  use pmc_mpi
-  use pmc_util
-  use pmc_constants
+  use camp_aero_state
+  use camp_aero_particle
+  use camp_output
+  use camp_mpi
+  use camp_util
+  use camp_constants
   use getopt_m
 
   integer, parameter :: REGIME_FREE = 1
@@ -39,7 +39,7 @@ program test_fractal_dimless_time
   real(kind=dp), allocatable :: dimless_times(:), dimless_time_num_concs(:)
   type(option_s) :: opts(3)
 
-  call pmc_mpi_init()
+  call camp_mpi_init()
 
   opts(1) = option_s("free", .false., 'f')
   opts(2) = option_s("cont", .false., 'c')
@@ -151,6 +151,6 @@ program test_fractal_dimless_time
   deallocate(particle_volumes)
   deallocate(filename_list)
 
-  call pmc_mpi_finalize()
+  call camp_mpi_finalize()
 
 end program test_fractal_dimless_time

@@ -8,8 +8,8 @@
 !> Read NetCDF output files and process them.
 program process
 
-  use pmc_output
-  use pmc_stats
+  use camp_output
+  use camp_stats
 
   character(len=PMC_MAX_FILENAME_LEN), parameter :: prefix &
        = "out/urban_plume"
@@ -31,7 +31,7 @@ program process
        stats_tot_mass_conc, stats_d_gamma, stats_chi
   type(stats_2d_t) :: stats_diam_bc_dist, stats_diam_sc_dist
 
-  call pmc_mpi_init()
+  call camp_mpi_init()
 
   call input_n_files(prefix, n_repeat, n_index)
 
@@ -95,8 +95,8 @@ program process
 
      call make_filename(out_filename, prefix, "_process.nc", index)
      write(*,*) "Writing " // trim(out_filename)
-     call pmc_nc_open_write(out_filename, ncid)
-     call pmc_nc_write_info(ncid, uuid, "1_urban_plume process")
+     call camp_nc_open_write(out_filename, ncid)
+     call camp_nc_write_info(ncid, uuid, "1_urban_plume process")
      call bin_grid_output_netcdf(diam_grid, ncid, "diam", unit="m")
      call bin_grid_output_netcdf(bc_grid, ncid, "bc_frac", unit="1")
      call bin_grid_output_netcdf(sc_grid, ncid, "sc", unit="1")
@@ -113,14 +113,14 @@ program process
           dim_name_1="diam", dim_name_2="sc", unit="m^{-3}")
      call stats_2d_clear(stats_diam_sc_dist)
 
-     call pmc_nc_close(ncid)
+     call camp_nc_close(ncid)
   end do
 
   call make_filename(out_filename, prefix, "_process.nc")
   write(*,*) "Writing " // trim(out_filename)
-  call pmc_nc_open_write(out_filename, ncid)
-  call pmc_nc_write_info(ncid, uuid, "1_urban_plume process")
-  call pmc_nc_write_real_1d(ncid, times, "time", dim_name="time", unit="s")
+  call camp_nc_open_write(out_filename, ncid)
+  call camp_nc_write_info(ncid, uuid, "1_urban_plume process")
+  call camp_nc_write_real_1d(ncid, times, "time", dim_name="time", unit="s")
   call stats_1d_output_netcdf(stats_tot_num_conc, ncid, "tot_num_conc", &
        dim_name="time", unit="m^{-3}")
   call stats_1d_output_netcdf(stats_tot_mass_conc, ncid, "tot_mass_conc", &
@@ -131,8 +131,8 @@ program process
        "d_gamma", dim_name="time", unit="1")
   call stats_1d_output_netcdf(stats_chi, ncid, "chi", &
        dim_name="time", unit="1")
-  call pmc_nc_close(ncid)
+  call camp_nc_close(ncid)
 
-  call pmc_mpi_finalize()
+  call camp_mpi_finalize()
 
 end program process

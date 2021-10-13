@@ -3,23 +3,23 @@
 ! option) any later version. See the file COPYING for details.
 
 !> \file
-!> The pmc_exact_soln module.
+!> The camp_exact_soln module.
 
 !> Exact solutions for various simulations.
-module pmc_exact_soln
+module camp_exact_soln
 
-  use pmc_bin_grid
-  use pmc_util
-  use pmc_constants
-  use pmc_aero_data
-  use pmc_aero_dist
-  use pmc_coag_kernel
-  use pmc_coag_kernel_zero
-  use pmc_coag_kernel_additive
-  use pmc_coag_kernel_constant
-  use pmc_env_state
-  use pmc_scenario
-  use pmc_aero_binned
+  use camp_bin_grid
+  use camp_util
+  use camp_constants
+  use camp_aero_data
+  use camp_aero_dist
+  use camp_coag_kernel
+  use camp_coag_kernel_zero
+  use camp_coag_kernel_additive
+  use camp_coag_kernel_constant
+  use camp_env_state
+  use camp_scenario
+  use camp_aero_binned
 
 contains
 
@@ -106,4 +106,4 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end module pmc_exact_soln
+end module camp_exact_soln

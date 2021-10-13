@@ -5,7 +5,7 @@
     "to the sulfate aerosol mode. Reaction parameters are from CAPRAM2.4 (Ervens et al. 2003)",
     "!!!NOTE!!! The reverse rate constants have been scaled down by a factor of 1.0e5 to reduce the stiffness of the system. This is still being evaluated"
   ],
-  "pmc-data" : [
+  "camp-data" : [
     {
       "name" : "MONARCH mod37",
       "type" : "MECHANISM",

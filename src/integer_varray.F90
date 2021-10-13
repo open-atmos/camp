@@ -3,13 +3,13 @@
 ! option) any later version. See the file COPYING for details.
 
 !> \file
-!> The pmc_integer_varray module.
+!> The camp_integer_varray module.
 
 !> The integer_varray_t structure and assocated subroutines.
-module pmc_integer_varray
+module camp_integer_varray
 
-  use pmc_util
-  use pmc_mpi
+  use camp_util
+  use camp_mpi
 
   !> A variable-length 1D array of integers.
   !!
@@ -173,7 +173,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Determines the number of bytes required to pack the given value.
-  integer function pmc_mpi_pack_size_integer_varray(val)
+  integer function camp_mpi_pack_size_integer_varray(val)
 
     !> Value to pack.
     type(integer_varray_t), intent(in) :: val
@@ -183,20 +183,20 @@ contains
     integer :: total_size
 
     is_allocated = allocated(val%entry)
-    total_size = pmc_mpi_pack_size_logical(is_allocated)
+    total_size = camp_mpi_pack_size_logical(is_allocated)
     if (is_allocated) then
        tmp_entry = val%entry(1:val%n_entry)
        total_size = total_size &
-            + pmc_mpi_pack_size_integer_array(tmp_entry)
+            + camp_mpi_pack_size_integer_array(tmp_entry)
     end if
-    pmc_mpi_pack_size_integer_varray = total_size
+    camp_mpi_pack_size_integer_varray = total_size
 
-  end function pmc_mpi_pack_size_integer_varray
+  end function camp_mpi_pack_size_integer_varray
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Packs the given value into the buffer, advancing position.
-  subroutine pmc_mpi_pack_integer_varray(buffer, position, val)
+  subroutine camp_mpi_pack_integer_varray(buffer, position, val)
 
     !> Memory buffer.
     character, intent(inout) :: buffer(:)
@@ -212,21 +212,21 @@ contains
 
     prev_position = position
     is_allocated = allocated(val%entry)
-    call pmc_mpi_pack_logical(buffer, position, is_allocated)
+    call camp_mpi_pack_logical(buffer, position, is_allocated)
     if (is_allocated) then
        tmp_entry = val%entry(1:val%n_entry)
-       call pmc_mpi_pack_integer_array(buffer, position, tmp_entry)
+       call camp_mpi_pack_integer_array(buffer, position, tmp_entry)
     end if
     call assert(230655880, &
-         position - prev_position <= pmc_mpi_pack_size_integer_varray(val))
+         position - prev_position <= camp_mpi_pack_size_integer_varray(val))
 #endif
 
-  end subroutine pmc_mpi_pack_integer_varray
+  end subroutine camp_mpi_pack_integer_varray
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Unpacks the given value from the buffer, advancing position.
-  subroutine pmc_mpi_unpack_integer_varray(buffer, position, val)
+  subroutine camp_mpi_unpack_integer_varray(buffer, position, val)
 
     !> Memory buffer.
     character, intent(inout) :: buffer(:)
@@ -241,9 +241,9 @@ contains
     integer, allocatable :: tmp_entry(:)
 
     prev_position = position
-    call pmc_mpi_unpack_logical(buffer, position, is_allocated)
+    call camp_mpi_unpack_logical(buffer, position, is_allocated)
     if (is_allocated) then
-       call pmc_mpi_unpack_integer_array(buffer, position, tmp_entry)
+       call camp_mpi_unpack_integer_array(buffer, position, tmp_entry)
        call integer_varray_realloc(val, size(tmp_entry))
        val%entry(1:size(tmp_entry)) = tmp_entry
     else
@@ -252,11 +252,11 @@ contains
        end if
     end if
     call assert(355866103, &
-         position - prev_position <= pmc_mpi_pack_size_integer_varray(val))
+         position - prev_position <= camp_mpi_pack_size_integer_varray(val))
 #endif
 
-  end subroutine pmc_mpi_unpack_integer_varray
+  end subroutine camp_mpi_unpack_integer_varray
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end module pmc_integer_varray
+end module camp_integer_varray

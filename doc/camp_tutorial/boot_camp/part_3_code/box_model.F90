@@ -1,15 +1,15 @@
 program box_model
 
-  use pmc_camp_core
-  use pmc_camp_state
-  use pmc_chem_spec_data
-  use pmc_constants
+  use camp_camp_core
+  use camp_camp_state
+  use camp_chem_spec_data
+  use camp_constants
 
   !! [NO2 photolysis modules]
-  use pmc_mechanism_data
-  use pmc_rxn_data
-  use pmc_rxn_photolysis
-  use pmc_rxn_factory
+  use camp_mechanism_data
+  use camp_rxn_data
+  use camp_rxn_photolysis
+  use camp_rxn_factory
 
   !! [NO2 photolysis modules]
 

@@ -32,7 +32,7 @@ def getFactor(inputString):
 outfile = 'cbmz_mechanism.json'
 f_out = open(outfile, 'w')
 
-f_out.write('{ "pmc-data" : [\n')
+f_out.write('{ "camp-data" : [\n')
 f_out.write('  {\n')
 f_out.write('    "name" : "CBMZ",\n')
 f_out.write('    "type" : "MECHANISM",\n')

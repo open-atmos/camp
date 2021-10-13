@@ -3,19 +3,19 @@
 ! option) any later version. See the file COPYING for details.
 
 !> \file
-!> The pmc_coagulation_dist module.
+!> The camp_coagulation_dist module.
 
 !> Parallel aerosol particle coagulation with MPI
-module pmc_coagulation_dist
+module camp_coagulation_dist
 
-  use pmc_bin_grid
-  use pmc_aero_data
-  use pmc_util
-  use pmc_env_state
-  use pmc_aero_state
-  use pmc_aero_weight_array
-  use pmc_coagulation
-  use pmc_mpi
+  use camp_bin_grid
+  use camp_aero_data
+  use camp_util
+  use camp_env_state
+  use camp_aero_state
+  use camp_aero_weight_array
+  use camp_coagulation
+  use camp_mpi
 #ifdef PMC_USE_MPI
   use mpi
 #endif
@@ -32,7 +32,7 @@ module pmc_coagulation_dist
   !> Size of send and receive buffer for each message (bytes).
   !!
   !! The biggest message type will be one of the particle-sending
-  !! types, for which we need pmc_mpi_pack_size_aero_particle(), plus
+  !! types, for which we need camp_mpi_pack_size_aero_particle(), plus
   !! a couple of integers or something. At the moment this means
   !! something like (10 + n_spec) reals, (3 + 2) integers, which for
   !! n_spec = 20 gives a size of 260 bytes.
@@ -142,9 +142,9 @@ contains
          aero_sorted_n_class(aero_state%aero_sorted) == 1, &
          "FIXME: mc_coag_dist() can only handle one weight class")
 
-    n_proc = pmc_mpi_size()
+    n_proc = camp_mpi_size()
 
-    call pmc_mpi_barrier()
+    call camp_mpi_barrier()
 
     call aero_state_sort(aero_state, aero_data, all_procs_same=.true.)
     if (.not. aero_state%aero_sorted%coag_kernel_bounds_valid) then
@@ -161,11 +161,11 @@ contains
          bin_grid_size(aero_state%aero_sorted%bin_grid)))
 
     allocate(n_parts(bin_grid_size(aero_state%aero_sorted%bin_grid), n_proc))
-    call pmc_mpi_allgather_integer_array(integer_varray_n_entry( &
+    call camp_mpi_allgather_integer_array(integer_varray_n_entry( &
          aero_state%aero_sorted%size_class%inverse(:, s1)), n_parts)
 
     allocate(magnitudes(size(aero_state%awa%weight), n_proc))
-    call pmc_mpi_allgather_real_array(aero_state%awa%weight(:, s1)%magnitude, &
+    call camp_mpi_allgather_real_array(aero_state%awa%weight(:, s1)%magnitude, &
          magnitudes)
 
     aero_weight_total = aero_state%awa
@@ -200,7 +200,7 @@ contains
     sent_dones = .false.
     call mpi_buffer_attach(outgoing_buffer, &
          COAG_DIST_OUTGOING_BUFFER_SIZE, ierr)
-    call pmc_mpi_check_ierr(ierr)
+    call camp_mpi_check_ierr(ierr)
     do while (.not. all(procs_done))
        ! add requests if we have any slots available call
        call add_coagulation_requests(aero_state, requests, n_parts, &
@@ -233,7 +233,7 @@ contains
     deallocate(magnitudes)
     call mpi_buffer_detach(outgoing_buffer, &
          outgoing_buffer_size_check, ierr)
-    call pmc_mpi_check_ierr(ierr)
+    call camp_mpi_check_ierr(ierr)
     call assert(577822730, &
          COAG_DIST_OUTGOING_BUFFER_SIZE == outgoing_buffer_size_check)
 #else
@@ -275,7 +275,7 @@ contains
 
     call mpi_probe(MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, &
          status, ierr)
-    call pmc_mpi_check_ierr(ierr)
+    call camp_mpi_check_ierr(ierr)
     if (status(MPI_TAG) == COAG_DIST_TAG_REQUEST_PARTICLE) then
        call recv_request_particle(aero_state)
     elseif (status(MPI_TAG) == COAG_DIST_TAG_RETURN_REQ_PARTICLE) then
@@ -383,7 +383,7 @@ contains
     integer, intent(out) :: remote_proc
 
 #ifdef PMC_USE_MPI
-    call assert(770964285, size(n_parts, 2) == pmc_mpi_size())
+    call assert(770964285, size(n_parts, 2) == camp_mpi_size())
     remote_proc = sample_disc_pdf(n_parts(remote_bin, :)) - 1
 #else
     remote_proc = 0
@@ -442,15 +442,15 @@ contains
     integer :: buffer_size, max_buffer_size, position, ierr
 
     max_buffer_size = 0
-    max_buffer_size = max_buffer_size + pmc_mpi_pack_size_integer(remote_bin)
+    max_buffer_size = max_buffer_size + camp_mpi_pack_size_integer(remote_bin)
     call assert(893545122, max_buffer_size <= COAG_DIST_MAX_BUFFER_SIZE)
     position = 0
-    call pmc_mpi_pack_integer(buffer, position, remote_bin)
+    call camp_mpi_pack_integer(buffer, position, remote_bin)
     call assert(610314213, position <= max_buffer_size)
     buffer_size = position
     call mpi_bsend(buffer, buffer_size, MPI_CHARACTER, remote_proc, &
          COAG_DIST_TAG_REQUEST_PARTICLE, MPI_COMM_WORLD, ierr)
-    call pmc_mpi_check_ierr(ierr)
+    call camp_mpi_check_ierr(ierr)
 #endif
 
   end subroutine send_request_particle
@@ -476,17 +476,17 @@ contains
     call mpi_recv(buffer, COAG_DIST_MAX_BUFFER_SIZE, MPI_CHARACTER, &
          MPI_ANY_SOURCE, COAG_DIST_TAG_REQUEST_PARTICLE, MPI_COMM_WORLD, &
          status, ierr)
-    call pmc_mpi_check_ierr(ierr)
+    call camp_mpi_check_ierr(ierr)
     call assert(920139874, status(MPI_TAG) &
          == COAG_DIST_TAG_REQUEST_PARTICLE)
     call mpi_get_count(status, MPI_CHARACTER, buffer_size, ierr)
-    call pmc_mpi_check_ierr(ierr)
+    call camp_mpi_check_ierr(ierr)
     call assert(190658659, buffer_size <= COAG_DIST_MAX_BUFFER_SIZE)
     remote_proc = status(MPI_SOURCE)
 
     ! unpack it
     position = 0
-    call pmc_mpi_unpack_integer(buffer, position, request_bin)
+    call camp_mpi_unpack_integer(buffer, position, request_bin)
     call assert(895128380, position == buffer_size)
 
     ! send the particle back if we have one
@@ -517,15 +517,15 @@ contains
     integer :: buffer_size, max_buffer_size, position, ierr
 
     max_buffer_size = 0
-    max_buffer_size = max_buffer_size + pmc_mpi_pack_size_integer(i_bin)
+    max_buffer_size = max_buffer_size + camp_mpi_pack_size_integer(i_bin)
     call assert(744787119, max_buffer_size <= COAG_DIST_MAX_BUFFER_SIZE)
     position = 0
-    call pmc_mpi_pack_integer(buffer, position, i_bin)
+    call camp_mpi_pack_integer(buffer, position, i_bin)
     call assert(445960340, position <= max_buffer_size)
     buffer_size = position
     call mpi_bsend(buffer, buffer_size, MPI_CHARACTER, dest_proc, &
          COAG_DIST_TAG_RETURN_NO_PARTICLE, MPI_COMM_WORLD, ierr)
-    call pmc_mpi_check_ierr(ierr)
+    call camp_mpi_check_ierr(ierr)
 #endif
 
   end subroutine send_return_no_particle
@@ -551,17 +551,17 @@ contains
     call mpi_recv(buffer, COAG_DIST_MAX_BUFFER_SIZE, MPI_CHARACTER, &
          MPI_ANY_SOURCE, COAG_DIST_TAG_RETURN_NO_PARTICLE, &
          MPI_COMM_WORLD, status, ierr)
-    call pmc_mpi_check_ierr(ierr)
+    call camp_mpi_check_ierr(ierr)
     call assert(918153221, status(MPI_TAG) &
          == COAG_DIST_TAG_RETURN_NO_PARTICLE)
     call mpi_get_count(status, MPI_CHARACTER, buffer_size, ierr)
-    call pmc_mpi_check_ierr(ierr)
+    call camp_mpi_check_ierr(ierr)
     call assert(461111487, buffer_size <= COAG_DIST_MAX_BUFFER_SIZE)
     sent_proc = status(MPI_SOURCE)
 
     ! unpack it
     position = 0
-    call pmc_mpi_unpack_integer(buffer, position, sent_bin)
+    call camp_mpi_unpack_integer(buffer, position, sent_bin)
     call assert(518172999, position == buffer_size)
 
     ! find the matching request
@@ -603,18 +603,18 @@ contains
     integer :: buffer_size, max_buffer_size, position, ierr
 
     max_buffer_size = 0
-    max_buffer_size = max_buffer_size + pmc_mpi_pack_size_integer(i_bin)
+    max_buffer_size = max_buffer_size + camp_mpi_pack_size_integer(i_bin)
     max_buffer_size = max_buffer_size &
-         + pmc_mpi_pack_size_aero_particle(aero_particle)
+         + camp_mpi_pack_size_aero_particle(aero_particle)
     call assert(496283814, max_buffer_size <= COAG_DIST_MAX_BUFFER_SIZE)
     position = 0
-    call pmc_mpi_pack_integer(buffer, position, i_bin)
-    call pmc_mpi_pack_aero_particle(buffer, position, aero_particle)
+    call camp_mpi_pack_integer(buffer, position, i_bin)
+    call camp_mpi_pack_aero_particle(buffer, position, aero_particle)
     call assert(263666386, position <= max_buffer_size)
     buffer_size = position
     call mpi_bsend(buffer, buffer_size, MPI_CHARACTER, dest_proc, &
          COAG_DIST_TAG_RETURN_REQ_PARTICLE, MPI_COMM_WORLD, ierr)
-    call pmc_mpi_check_ierr(ierr)
+    call camp_mpi_check_ierr(ierr)
 #endif
 
   end subroutine send_return_req_particle
@@ -660,18 +660,18 @@ contains
     call mpi_recv(buffer, COAG_DIST_MAX_BUFFER_SIZE, MPI_CHARACTER, &
          MPI_ANY_SOURCE, COAG_DIST_TAG_RETURN_REQ_PARTICLE, &
          MPI_COMM_WORLD, status, ierr)
-    call pmc_mpi_check_ierr(ierr)
+    call camp_mpi_check_ierr(ierr)
     call assert(133285061, status(MPI_TAG) &
          == COAG_DIST_TAG_RETURN_REQ_PARTICLE)
     call mpi_get_count(status, MPI_CHARACTER, buffer_size, ierr)
-    call pmc_mpi_check_ierr(ierr)
+    call camp_mpi_check_ierr(ierr)
     call assert(563012836, buffer_size <= COAG_DIST_MAX_BUFFER_SIZE)
     sent_proc = status(MPI_SOURCE)
 
     ! unpack it
     position = 0
-    call pmc_mpi_unpack_integer(buffer, position, sent_bin)
-    call pmc_mpi_unpack_aero_particle(buffer, position, sent_aero_particle)
+    call camp_mpi_unpack_integer(buffer, position, sent_bin)
+    call camp_mpi_unpack_aero_particle(buffer, position, sent_aero_particle)
     call assert(753356021, position == buffer_size)
 
     ! find the matching request
@@ -691,7 +691,7 @@ contains
          s1, s2, sc, aero_data, aero_weight_total, env_state, k)
     p = k * accept_factors(requests(i_req)%local_bin, sent_bin)
 
-    if (pmc_random() .lt. p) then
+    if (camp_random() .lt. p) then
        ! coagulation happened, do it
        tot_n_coag = tot_n_coag + 1
        call coagulate_dist(aero_data, aero_state, &
@@ -735,15 +735,15 @@ contains
 
     max_buffer_size = 0
     max_buffer_size = max_buffer_size &
-         + pmc_mpi_pack_size_aero_particle(aero_particle)
+         + camp_mpi_pack_size_aero_particle(aero_particle)
     call assert(414990602, max_buffer_size <= COAG_DIST_MAX_BUFFER_SIZE)
     position = 0
-    call pmc_mpi_pack_aero_particle(buffer, position, aero_particle)
+    call camp_mpi_pack_aero_particle(buffer, position, aero_particle)
     call assert(898537822, position <= max_buffer_size)
     buffer_size = position
     call mpi_bsend(buffer, buffer_size, MPI_CHARACTER, dest_proc, &
          COAG_DIST_TAG_RETURN_UNREQ_PARTICLE, MPI_COMM_WORLD, ierr)
-    call pmc_mpi_check_ierr(ierr)
+    call camp_mpi_check_ierr(ierr)
 #endif
 
   end subroutine send_return_unreq_particle
@@ -768,17 +768,17 @@ contains
     call mpi_recv(buffer, COAG_DIST_MAX_BUFFER_SIZE, MPI_CHARACTER, &
          MPI_ANY_SOURCE, COAG_DIST_TAG_RETURN_UNREQ_PARTICLE, &
          MPI_COMM_WORLD, status, ierr)
-    call pmc_mpi_check_ierr(ierr)
+    call camp_mpi_check_ierr(ierr)
     call assert(496247788, status(MPI_TAG) &
          == COAG_DIST_TAG_RETURN_UNREQ_PARTICLE)
     call mpi_get_count(status, MPI_CHARACTER, buffer_size, ierr)
-    call pmc_mpi_check_ierr(ierr)
+    call camp_mpi_check_ierr(ierr)
     call assert(590644042, buffer_size <= COAG_DIST_MAX_BUFFER_SIZE)
     sent_proc = status(MPI_SOURCE)
 
     ! unpack it
     position = 0
-    call pmc_mpi_unpack_aero_particle(buffer, position, aero_particle)
+    call camp_mpi_unpack_aero_particle(buffer, position, aero_particle)
     call assert(833588594, position == buffer_size)
 
     ! put it back
@@ -804,7 +804,7 @@ contains
     buffer_size = 0
     call mpi_bsend(buffer, buffer_size, MPI_CHARACTER, dest_proc, &
          COAG_DIST_TAG_DONE, MPI_COMM_WORLD, ierr)
-    call pmc_mpi_check_ierr(ierr)
+    call camp_mpi_check_ierr(ierr)
 #endif
 
   end subroutine send_done
@@ -826,11 +826,11 @@ contains
     call mpi_recv(buffer, COAG_DIST_MAX_BUFFER_SIZE, MPI_CHARACTER, &
          MPI_ANY_SOURCE, COAG_DIST_TAG_DONE, MPI_COMM_WORLD, &
          status, ierr)
-    call pmc_mpi_check_ierr(ierr)
+    call camp_mpi_check_ierr(ierr)
     call assert(348737947, status(MPI_TAG) &
          == COAG_DIST_TAG_DONE)
     call mpi_get_count(status, MPI_CHARACTER, buffer_size, ierr)
-    call pmc_mpi_check_ierr(ierr)
+    call camp_mpi_check_ierr(ierr)
     call assert(214904056, buffer_size == 0)
     sent_proc = status(MPI_SOURCE)
 
@@ -865,7 +865,7 @@ contains
     real(kind=dp) :: n_samp_mean
 
     n_bin = size(k_max, 1)
-    rank = pmc_mpi_rank()
+    rank = camp_mpi_rank()
     n_samps = 0
     do i_bin = 1,n_bin
        if (n_parts(i_bin, rank + 1) == 0) &
@@ -941,4 +941,4 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end module pmc_coagulation_dist
+end module camp_coagulation_dist

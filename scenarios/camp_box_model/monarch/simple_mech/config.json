@@ -4,7 +4,7 @@
     "the CAMP reactions, and for use in the MONARCH chemical weather prediction",
     "system."
   ],
-  "pmc-files" : [
+  "camp-files" : [
     "aerosol_representation.json",
     "deposition.json",
     "emissions.json",

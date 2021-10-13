@@ -8,8 +8,8 @@ import copy as module_copy
 from Scientific.IO.NetCDF import *
 from pyx import *
 sys.path.append("../tool")
-from pmc_data_nc import *
-from pmc_pyx import *
+from camp_data_nc import *
+from camp_pyx import *
 sys.path.append(".")
 from fig_helper import *
 
@@ -32,12 +32,12 @@ vol_labels = [
     {"diameter": 0.22, "pos": [1, 1]},
     ]
               
-x_axis = pmc_log_axis(min = diameter_axis_min, max = diameter_axis_max,
+x_axis = camp_log_axis(min = diameter_axis_min, max = diameter_axis_max,
                       n_bin = num_diameter_bins)
 
 times_sec = [t * 3600 for t in times_hour]
 
-sect_data = pmc_var(NetCDFFile(os.path.join(brownian_netcdf_dir,
+sect_data = camp_var(NetCDFFile(os.path.join(brownian_netcdf_dir,
                                             "brown_sect_0001.nc")),
 		    "aero",
 		    [sum("aero_species")])

@@ -3,14 +3,14 @@
 ! option) any later version. See the file COPYING for details.
 
 !> \file
-!> The pmc_integer_rmap2 module.
+!> The camp_integer_rmap2 module.
 
 !> The integer_rmap2_t structure and assocated subroutines.
-module pmc_integer_rmap2
+module camp_integer_rmap2
 
-  use pmc_integer_varray
-  use pmc_util
-  use pmc_mpi
+  use camp_integer_varray
+  use camp_util
+  use camp_mpi
 
   !> A map \f$\mathbb{Z} \to \mathbb{Z} \times \mathbb{Z}\f$, together
   !> with its multi-valued inverse.
@@ -372,7 +372,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Determines the number of bytes required to pack the given value.
-  integer function pmc_mpi_pack_size_integer_rmap2(val)
+  integer function camp_mpi_pack_size_integer_rmap2(val)
 
     !> Value to pack.
     type(integer_rmap2_t), intent(in) :: val
@@ -382,30 +382,30 @@ contains
 
     total_size = 0
     is_allocated = allocated(val%inverse)
-    total_size = total_size + pmc_mpi_pack_size_logical(is_allocated)
+    total_size = total_size + camp_mpi_pack_size_logical(is_allocated)
     if (is_allocated) then
        total_size = total_size &
-            + pmc_mpi_pack_size_integer(size(val%inverse, 1))
+            + camp_mpi_pack_size_integer(size(val%inverse, 1))
        total_size = total_size &
-            + pmc_mpi_pack_size_integer(size(val%inverse, 2))
+            + camp_mpi_pack_size_integer(size(val%inverse, 2))
        do i_1 = 1,size(val%inverse, 1)
           do i_2 = 1,size(val%inverse, 2)
              total_size = total_size &
-                  + pmc_mpi_pack_size_integer_varray(val%inverse(i_1, i_2))
+                  + camp_mpi_pack_size_integer_varray(val%inverse(i_1, i_2))
           end do
        end do
     end if
-    total_size = total_size + pmc_mpi_pack_size_integer_varray(val%forward1)
-    total_size = total_size + pmc_mpi_pack_size_integer_varray(val%forward2)
-    total_size = total_size + pmc_mpi_pack_size_integer_varray(val%index)
-    pmc_mpi_pack_size_integer_rmap2 = total_size
+    total_size = total_size + camp_mpi_pack_size_integer_varray(val%forward1)
+    total_size = total_size + camp_mpi_pack_size_integer_varray(val%forward2)
+    total_size = total_size + camp_mpi_pack_size_integer_varray(val%index)
+    camp_mpi_pack_size_integer_rmap2 = total_size
 
-  end function pmc_mpi_pack_size_integer_rmap2
+  end function camp_mpi_pack_size_integer_rmap2
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Packs the given value into the buffer, advancing position.
-  subroutine pmc_mpi_pack_integer_rmap2(buffer, position, val)
+  subroutine camp_mpi_pack_integer_rmap2(buffer, position, val)
 
     !> Memory buffer.
     character, intent(inout) :: buffer(:)
@@ -420,30 +420,30 @@ contains
 
     prev_position = position
     is_allocated = allocated(val%inverse)
-    call pmc_mpi_pack_logical(buffer, position, is_allocated)
+    call camp_mpi_pack_logical(buffer, position, is_allocated)
     if (is_allocated) then
-       call pmc_mpi_pack_integer(buffer, position, size(val%inverse, 1))
-       call pmc_mpi_pack_integer(buffer, position, size(val%inverse, 2))
+       call camp_mpi_pack_integer(buffer, position, size(val%inverse, 1))
+       call camp_mpi_pack_integer(buffer, position, size(val%inverse, 2))
        do i_1 = 1,size(val%inverse, 1)
           do i_2 = 1,size(val%inverse, 2)
-             call pmc_mpi_pack_integer_varray(buffer, position, &
+             call camp_mpi_pack_integer_varray(buffer, position, &
                   val%inverse(i_1, i_2))
           end do
        end do
     end if
-    call pmc_mpi_pack_integer_varray(buffer, position, val%forward1)
-    call pmc_mpi_pack_integer_varray(buffer, position, val%forward2)
-    call pmc_mpi_pack_integer_varray(buffer, position, val%index)
+    call camp_mpi_pack_integer_varray(buffer, position, val%forward1)
+    call camp_mpi_pack_integer_varray(buffer, position, val%forward2)
+    call camp_mpi_pack_integer_varray(buffer, position, val%index)
     call assert(283629348, &
-         position - prev_position <= pmc_mpi_pack_size_integer_rmap2(val))
+         position - prev_position <= camp_mpi_pack_size_integer_rmap2(val))
 #endif
 
-  end subroutine pmc_mpi_pack_integer_rmap2
+  end subroutine camp_mpi_pack_integer_rmap2
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Unpacks the given value from the buffer, advancing position.
-  subroutine pmc_mpi_unpack_integer_rmap2(buffer, position, val)
+  subroutine camp_mpi_unpack_integer_rmap2(buffer, position, val)
 
     !> Memory buffer.
     character, intent(inout) :: buffer(:)
@@ -457,14 +457,14 @@ contains
     logical :: is_allocated
 
     prev_position = position
-    call pmc_mpi_unpack_logical(buffer, position, is_allocated)
+    call camp_mpi_unpack_logical(buffer, position, is_allocated)
     if (is_allocated) then
-       call pmc_mpi_unpack_integer(buffer, position, n_1)
-       call pmc_mpi_unpack_integer(buffer, position, n_2)
+       call camp_mpi_unpack_integer(buffer, position, n_1)
+       call camp_mpi_unpack_integer(buffer, position, n_2)
        call integer_rmap2_set_ranges(val, n_1, n_2)
        do i_1 = 1,size(val%inverse, 1)
           do i_2 = 1,size(val%inverse, 2)
-             call pmc_mpi_unpack_integer_varray(buffer, position, &
+             call camp_mpi_unpack_integer_varray(buffer, position, &
                   val%inverse(i_1, i_2))
           end do
        end do
@@ -473,15 +473,15 @@ contains
           deallocate(val%inverse)
        end if
     end if
-    call pmc_mpi_unpack_integer_varray(buffer, position, val%forward1)
-    call pmc_mpi_unpack_integer_varray(buffer, position, val%forward2)
-    call pmc_mpi_unpack_integer_varray(buffer, position, val%index)
+    call camp_mpi_unpack_integer_varray(buffer, position, val%forward1)
+    call camp_mpi_unpack_integer_varray(buffer, position, val%forward2)
+    call camp_mpi_unpack_integer_varray(buffer, position, val%index)
     call assert(796602256, &
-         position - prev_position <= pmc_mpi_pack_size_integer_rmap2(val))
+         position - prev_position <= camp_mpi_pack_size_integer_rmap2(val))
 #endif
 
-  end subroutine pmc_mpi_unpack_integer_rmap2
+  end subroutine camp_mpi_unpack_integer_rmap2
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end module pmc_integer_rmap2
+end module camp_integer_rmap2

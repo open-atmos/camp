@@ -3,7 +3,7 @@
 ! option) any later version. See the file COPYING for details.
 
 !> \file
-!> The pmc_spec_file module.
+!> The camp_spec_file module.
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -40,10 +40,10 @@
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 !> Reading formatted text input.
-module pmc_spec_file
+module camp_spec_file
 
-  use pmc_spec_line
-  use pmc_util
+  use camp_spec_line
+  use camp_util
 
   !> Maximum number of lines in an array.
   integer, parameter :: SPEC_FILE_MAX_LIST_LINES = 1000
@@ -725,4 +725,4 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end module pmc_spec_file
+end module camp_spec_file

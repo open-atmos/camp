@@ -3,12 +3,12 @@
 ! option) any later version. See the file COPYING for details.
 
 !> \file
-!> The pmc_solver_stats module
+!> The camp_solver_stats module
 
 !> The solver_stats_t type and associated subroutines
-module pmc_solver_stats
+module camp_solver_stats
 
-  use pmc_constants,                  only : i_kind, dp
+  use camp_constants,                  only : i_kind, dp
 
   implicit none
   private
@@ -178,4 +178,4 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end module pmc_solver_stats
+end module camp_solver_stats

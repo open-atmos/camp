@@ -3,16 +3,16 @@
 ! option) any later version. See the file COPYING for details.
 
 !> \file
-!> The pmc_env_state module.
+!> The camp_env_state module.
 
 !> The env_state_t structure and associated subroutines.
-module pmc_env_state
+module camp_env_state
 
-  use pmc_constants
-  use pmc_util
-  use pmc_spec_file
-  use pmc_mpi
-  use pmc_netcdf
+  use camp_constants
+  use camp_util
+  use camp_spec_file
+  use camp_mpi
+  use camp_netcdf
 #ifdef PMC_USE_MPI
   use mpi
 #endif
@@ -48,11 +48,11 @@ module pmc_env_state
      real(kind=dp) :: height
   contains
      !> Determine the number of bytes required to pack the given value
-     procedure, pass(val) :: pack_size => pmc_mpi_pack_size_env_state
+     procedure, pass(val) :: pack_size => camp_mpi_pack_size_env_state
      !> Pack the given value to a buffer, advancing position
-     procedure, pass(val) :: bin_pack => pmc_mpi_pack_env_state
+     procedure, pass(val) :: bin_pack => camp_mpi_pack_env_state
      !> Unpack the given value from a buffer, advancing position
-     procedure, pass(val) :: bin_unpack => pmc_mpi_unpack_env_state
+     procedure, pass(val) :: bin_unpack => camp_mpi_unpack_env_state
   end type env_state_t
 
   !> Pointer for env_state_t
@@ -290,9 +290,9 @@ contains
 #ifdef PMC_USE_MPI
     type(env_state_t) :: val_avg
 
-    call pmc_mpi_allreduce_average_real(val%temp, val_avg%temp)
-    call pmc_mpi_allreduce_average_real(val%rel_humid, val_avg%rel_humid)
-    call pmc_mpi_allreduce_average_real(val%pressure, val_avg%pressure)
+    call camp_mpi_allreduce_average_real(val%temp, val_avg%temp)
+    call camp_mpi_allreduce_average_real(val%rel_humid, val_avg%rel_humid)
+    call camp_mpi_allreduce_average_real(val%pressure, val_avg%pressure)
     val%temp = val_avg%temp
     val%rel_humid = val_avg%rel_humid
     val%pressure = val_avg%pressure
@@ -312,10 +312,10 @@ contains
 #ifdef PMC_USE_MPI
     type(env_state_t) :: val_avg
 
-    call pmc_mpi_reduce_avg_real(val%temp, val_avg%temp)
-    call pmc_mpi_reduce_avg_real(val%rel_humid, val_avg%rel_humid)
-    call pmc_mpi_reduce_avg_real(val%pressure, val_avg%pressure)
-    if (pmc_mpi_rank() == 0) then
+    call camp_mpi_reduce_avg_real(val%temp, val_avg%temp)
+    call camp_mpi_reduce_avg_real(val%rel_humid, val_avg%rel_humid)
+    call camp_mpi_reduce_avg_real(val%pressure, val_avg%pressure)
+    if (camp_mpi_rank() == 0) then
        val%temp = val_avg%temp
        val%rel_humid = val_avg%rel_humid
        val%pressure = val_avg%pressure
@@ -327,30 +327,30 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Determines the number of bytes required to pack the given value.
-  integer function pmc_mpi_pack_size_env_state(val)
+  integer function camp_mpi_pack_size_env_state(val)
 
     !> Value to pack.
     class(env_state_t), intent(in) :: val
 
-    pmc_mpi_pack_size_env_state = &
-         pmc_mpi_pack_size_real(val%temp) &
-         + pmc_mpi_pack_size_real(val%rel_humid) &
-         + pmc_mpi_pack_size_real(val%pressure) &
-         + pmc_mpi_pack_size_real(val%longitude) &
-         + pmc_mpi_pack_size_real(val%latitude) &
-         + pmc_mpi_pack_size_real(val%altitude) &
-         + pmc_mpi_pack_size_real(val%start_time) &
-         + pmc_mpi_pack_size_integer(val%start_day) &
-         + pmc_mpi_pack_size_real(val%elapsed_time) &
-         + pmc_mpi_pack_size_real(val%solar_zenith_angle) &
-         + pmc_mpi_pack_size_real(val%height)
+    camp_mpi_pack_size_env_state = &
+         camp_mpi_pack_size_real(val%temp) &
+         + camp_mpi_pack_size_real(val%rel_humid) &
+         + camp_mpi_pack_size_real(val%pressure) &
+         + camp_mpi_pack_size_real(val%longitude) &
+         + camp_mpi_pack_size_real(val%latitude) &
+         + camp_mpi_pack_size_real(val%altitude) &
+         + camp_mpi_pack_size_real(val%start_time) &
+         + camp_mpi_pack_size_integer(val%start_day) &
+         + camp_mpi_pack_size_real(val%elapsed_time) &
+         + camp_mpi_pack_size_real(val%solar_zenith_angle) &
+         + camp_mpi_pack_size_real(val%height)
 
-  end function pmc_mpi_pack_size_env_state
+  end function camp_mpi_pack_size_env_state
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Packs the given value into the buffer, advancing position.
-  subroutine pmc_mpi_pack_env_state(buffer, position, val)
+  subroutine camp_mpi_pack_env_state(buffer, position, val)
 
     !> Memory buffer.
     character, intent(inout) :: buffer(:)
@@ -363,27 +363,27 @@ contains
     integer :: prev_position
 
     prev_position = position
-    call pmc_mpi_pack_real(buffer, position, val%temp)
-    call pmc_mpi_pack_real(buffer, position, val%rel_humid)
-    call pmc_mpi_pack_real(buffer, position, val%pressure)
-    call pmc_mpi_pack_real(buffer, position, val%longitude)
-    call pmc_mpi_pack_real(buffer, position, val%latitude)
-    call pmc_mpi_pack_real(buffer, position, val%altitude)
-    call pmc_mpi_pack_real(buffer, position, val%start_time)
-    call pmc_mpi_pack_integer(buffer, position, val%start_day)
-    call pmc_mpi_pack_real(buffer, position, val%elapsed_time)
-    call pmc_mpi_pack_real(buffer, position, val%solar_zenith_angle)
-    call pmc_mpi_pack_real(buffer, position, val%height)
+    call camp_mpi_pack_real(buffer, position, val%temp)
+    call camp_mpi_pack_real(buffer, position, val%rel_humid)
+    call camp_mpi_pack_real(buffer, position, val%pressure)
+    call camp_mpi_pack_real(buffer, position, val%longitude)
+    call camp_mpi_pack_real(buffer, position, val%latitude)
+    call camp_mpi_pack_real(buffer, position, val%altitude)
+    call camp_mpi_pack_real(buffer, position, val%start_time)
+    call camp_mpi_pack_integer(buffer, position, val%start_day)
+    call camp_mpi_pack_real(buffer, position, val%elapsed_time)
+    call camp_mpi_pack_real(buffer, position, val%solar_zenith_angle)
+    call camp_mpi_pack_real(buffer, position, val%height)
     call assert(464101191, &
-         position - prev_position <= pmc_mpi_pack_size_env_state(val))
+         position - prev_position <= camp_mpi_pack_size_env_state(val))
 #endif
 
-  end subroutine pmc_mpi_pack_env_state
+  end subroutine camp_mpi_pack_env_state
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Unpacks the given value from the buffer, advancing position.
-  subroutine pmc_mpi_unpack_env_state(buffer, position, val)
+  subroutine camp_mpi_unpack_env_state(buffer, position, val)
 
     !> Memory buffer.
     character, intent(inout) :: buffer(:)
@@ -396,28 +396,28 @@ contains
     integer :: prev_position
 
     prev_position = position
-    call pmc_mpi_unpack_real(buffer, position, val%temp)
-    call pmc_mpi_unpack_real(buffer, position, val%rel_humid)
-    call pmc_mpi_unpack_real(buffer, position, val%pressure)
-    call pmc_mpi_unpack_real(buffer, position, val%longitude)
-    call pmc_mpi_unpack_real(buffer, position, val%latitude)
-    call pmc_mpi_unpack_real(buffer, position, val%altitude)
-    call pmc_mpi_unpack_real(buffer, position, val%start_time)
-    call pmc_mpi_unpack_integer(buffer, position, val%start_day)
-    call pmc_mpi_unpack_real(buffer, position, val%elapsed_time)
-    call pmc_mpi_unpack_real(buffer, position, val%solar_zenith_angle)
-    call pmc_mpi_unpack_real(buffer, position, val%height)
+    call camp_mpi_unpack_real(buffer, position, val%temp)
+    call camp_mpi_unpack_real(buffer, position, val%rel_humid)
+    call camp_mpi_unpack_real(buffer, position, val%pressure)
+    call camp_mpi_unpack_real(buffer, position, val%longitude)
+    call camp_mpi_unpack_real(buffer, position, val%latitude)
+    call camp_mpi_unpack_real(buffer, position, val%altitude)
+    call camp_mpi_unpack_real(buffer, position, val%start_time)
+    call camp_mpi_unpack_integer(buffer, position, val%start_day)
+    call camp_mpi_unpack_real(buffer, position, val%elapsed_time)
+    call camp_mpi_unpack_real(buffer, position, val%solar_zenith_angle)
+    call camp_mpi_unpack_real(buffer, position, val%height)
     call assert(205696745, &
-         position - prev_position <= pmc_mpi_pack_size_env_state(val))
+         position - prev_position <= camp_mpi_pack_size_env_state(val))
 #endif
 
-  end subroutine pmc_mpi_unpack_env_state
+  end subroutine camp_mpi_unpack_env_state
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Computes the average of val across all processes, storing the
   !> result in val_avg on the root process.
-  subroutine pmc_mpi_reduce_avg_env_state(val, val_avg)
+  subroutine camp_mpi_reduce_avg_env_state(val, val_avg)
 
     !> Value to average.
     type(env_state_t), intent(in) :: val
@@ -425,11 +425,11 @@ contains
     type(env_state_t), intent(inout) :: val_avg
 
     val_avg = val
-    call pmc_mpi_reduce_avg_real(val%temp, val_avg%temp)
-    call pmc_mpi_reduce_avg_real(val%rel_humid, val_avg%rel_humid)
-    call pmc_mpi_reduce_avg_real(val%pressure, val_avg%pressure)
+    call camp_mpi_reduce_avg_real(val%temp, val_avg%temp)
+    call camp_mpi_reduce_avg_real(val%rel_humid, val_avg%rel_humid)
+    call camp_mpi_reduce_avg_real(val%pressure, val_avg%pressure)
 
-  end subroutine pmc_mpi_reduce_avg_env_state
+  end subroutine camp_mpi_reduce_avg_env_state
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -464,30 +464,30 @@ contains
     !!   - \ref input_format_env_state and \ref input_format_scenario
     !!     --- the corresponding input formats
 
-    call pmc_nc_write_real(ncid, env_state%temp, "temperature", unit="K", &
+    call camp_nc_write_real(ncid, env_state%temp, "temperature", unit="K", &
          standard_name="air_temperature")
-    call pmc_nc_write_real(ncid, env_state%rel_humid, &
+    call camp_nc_write_real(ncid, env_state%rel_humid, &
          "relative_humidity", unit="1", standard_name="relative_humidity")
-    call pmc_nc_write_real(ncid, env_state%pressure, "pressure", unit="Pa", &
+    call camp_nc_write_real(ncid, env_state%pressure, "pressure", unit="Pa", &
          standard_name="air_pressure")
-    call pmc_nc_write_real(ncid, env_state%longitude, "longitude", &
+    call camp_nc_write_real(ncid, env_state%longitude, "longitude", &
          unit="degree_east", standard_name="longitude")
-    call pmc_nc_write_real(ncid, env_state%latitude, "latitude", &
+    call camp_nc_write_real(ncid, env_state%latitude, "latitude", &
          unit="degree_north", standard_name="latitude")
-    call pmc_nc_write_real(ncid, env_state%altitude, "altitude", unit="m", &
+    call camp_nc_write_real(ncid, env_state%altitude, "altitude", unit="m", &
          standard_name="altitude")
-    call pmc_nc_write_real(ncid, env_state%start_time, &
+    call camp_nc_write_real(ncid, env_state%start_time, &
          "start_time_of_day", unit="s", description="time-of-day of " &
          // "simulation start in seconds since midnight")
-    call pmc_nc_write_integer(ncid, env_state%start_day, &
+    call camp_nc_write_integer(ncid, env_state%start_day, &
          "start_day_of_year", &
          description="day-of-year number of simulation start")
-    call pmc_nc_write_real(ncid, env_state%elapsed_time, "elapsed_time", &
+    call camp_nc_write_real(ncid, env_state%elapsed_time, "elapsed_time", &
          unit="s", description="elapsed time since simulation start")
-    call pmc_nc_write_real(ncid, env_state%solar_zenith_angle, &
+    call camp_nc_write_real(ncid, env_state%solar_zenith_angle, &
          "solar_zenith_angle", unit="radian", &
          description="current angle from the zenith to the sun")
-    call pmc_nc_write_real(ncid, env_state%height, "height", unit="m", &
+    call camp_nc_write_real(ncid, env_state%height, "height", unit="m", &
          long_name="boundary layer mixing height")
 
   end subroutine env_state_output_netcdf
@@ -502,20 +502,20 @@ contains
     !> NetCDF file ID, in data mode.
     integer, intent(in) :: ncid
 
-    call pmc_nc_read_real(ncid, env_state%temp, "temperature")
-    call pmc_nc_read_real(ncid, env_state%rel_humid, "relative_humidity")
-    call pmc_nc_read_real(ncid, env_state%pressure, "pressure")
-    call pmc_nc_read_real(ncid, env_state%longitude, "longitude")
-    call pmc_nc_read_real(ncid, env_state%latitude, "latitude")
-    call pmc_nc_read_real(ncid, env_state%altitude, "altitude")
-    call pmc_nc_read_real(ncid, env_state%start_time, &
+    call camp_nc_read_real(ncid, env_state%temp, "temperature")
+    call camp_nc_read_real(ncid, env_state%rel_humid, "relative_humidity")
+    call camp_nc_read_real(ncid, env_state%pressure, "pressure")
+    call camp_nc_read_real(ncid, env_state%longitude, "longitude")
+    call camp_nc_read_real(ncid, env_state%latitude, "latitude")
+    call camp_nc_read_real(ncid, env_state%altitude, "altitude")
+    call camp_nc_read_real(ncid, env_state%start_time, &
          "start_time_of_day")
-    call pmc_nc_read_integer(ncid, env_state%start_day, &
+    call camp_nc_read_integer(ncid, env_state%start_day, &
          "start_day_of_year")
-    call pmc_nc_read_real(ncid, env_state%elapsed_time, "elapsed_time")
-    call pmc_nc_read_real(ncid, env_state%solar_zenith_angle, &
+    call camp_nc_read_real(ncid, env_state%elapsed_time, "elapsed_time")
+    call camp_nc_read_real(ncid, env_state%solar_zenith_angle, &
          "solar_zenith_angle")
-    call pmc_nc_read_real(ncid, env_state%height, "height")
+    call camp_nc_read_real(ncid, env_state%height, "height")
 
   end subroutine env_state_input_netcdf
 
@@ -549,4 +549,4 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end module pmc_env_state
+end module camp_env_state

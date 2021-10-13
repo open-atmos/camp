@@ -3,7 +3,7 @@
 ! option) any later version. See the file COPYING for details.
 
 !> \file
-!> The pmc_sub_model_UNIFAC module.
+!> The camp_sub_model_UNIFAC module.
 
 !> \page camp_sub_model_UNIFAC CAMP: UNIFAC Activity Coefficients
 !!
@@ -12,7 +12,7 @@
 !! composition \cite Marcolli2005. The \c json object for this
 !! \ref camp_sub_model "sub model" has the following format :
 !! \code{.json}
-!!  { "pmc-data" : [
+!!  { "camp-data" : [
 !!    {
 !!      "name" : "my UNIFAC activity",
 !!      "type" : "SUB_MODEL_UNIFAC",
@@ -88,7 +88,7 @@
 !! For the above example UNIFAC model, the following species would be valid
 !! and included in activity coefficient calculations:
 !! \code{.json}
-!! { "pmc-data" : [
+!! { "camp-data" : [
 !!   {
 !!     "name" : "my species",
 !!     "type" : "CHEM_SPEC",
@@ -141,15 +141,15 @@
 !! Equations referenced are from Marcolli and Peter, ACP 5(2), 1501-1527,
 !! 2005, and variable names roughly follow their naming scheme.
 !!
-module pmc_sub_model_UNIFAC
+module camp_sub_model_UNIFAC
 
-  use pmc_aero_phase_data
-  use pmc_aero_rep_data
-  use pmc_chem_spec_data
-  use pmc_camp_state
-  use pmc_property
-  use pmc_sub_model_data
-  use pmc_util,                                 only : dp, i_kind, &
+  use camp_aero_phase_data
+  use camp_aero_rep_data
+  use camp_chem_spec_data
+  use camp_camp_state
+  use camp_property
+  use camp_sub_model_data
+  use camp_util,                                 only : dp, i_kind, &
                                                        string_t, assert_msg, &
                                                        die_msg, to_string, &
                                                        assert
@@ -756,4 +756,4 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end module pmc_sub_model_UNIFAC
+end module camp_sub_model_UNIFAC

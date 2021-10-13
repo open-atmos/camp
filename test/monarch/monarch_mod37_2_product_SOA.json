@@ -6,7 +6,7 @@
     "TODO the CB05 reactions should be updated/removed to avoid competition with SOA scheme",
     "Clausius clapyron parameters (C* and -dH/R) converted to SIMPOL.1 paramaters"
   ],
-  "pmc-data" : [
+  "camp-data" : [
     {
       "name" : "ISOP-P1",
       "type" : "CHEM_SPEC",

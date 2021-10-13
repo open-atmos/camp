@@ -3,7 +3,7 @@
     "These additional species are needed for the MOSAIC configuration",
     "TODO add other species"
   ],
-  "pmc-data" : [
+  "camp-data" : [
     {
       "name" : "BC",
       "type" : "CHEM_SPEC",

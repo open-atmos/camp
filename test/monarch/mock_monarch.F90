@@ -8,12 +8,12 @@
 !> Mock version of the MONARCH model for testing integration with PartMC
 program mock_monarch
 
-  use pmc_constants,                    only: const
-  use pmc_util,                          only : assert_msg, almost_equal, &
+  use camp_constants,                    only: const
+  use camp_util,                          only : assert_msg, almost_equal, &
                                                 to_string
   use camp_monarch_interface
-  use pmc_mpi
-  use pmc_solver_stats
+  use camp_mpi
+  use camp_solver_stats
 #ifdef PMC_USE_JSON
   use json_module
 #endif
@@ -152,7 +152,7 @@ program mock_monarch
   real :: plot_start_time = START_TIME
 
   !> !!! Add to MONARCH variables !!!
-  type(monarch_interface_t), pointer :: pmc_interface
+  type(monarch_interface_t), pointer :: camp_interface
 
   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   ! Mock model setup and evaluation variables !
@@ -189,7 +189,7 @@ program mock_monarch
   integer :: plot_species = 0
 
   ! initialize mpi (to take the place of a similar MONARCH call)
-  call pmc_mpi_init()
+  call camp_mpi_init()
 
   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   ! **** Add to MONARCH during initialization **** !
@@ -307,7 +307,7 @@ program mock_monarch
     TIME_STEP=2. !CAMP paper case
   end if
 
-  if (pmc_mpi_rank().eq.0) then
+  if (camp_mpi_rank().eq.0) then
     write(*,*) "Num time-steps:", NUM_TIME_STEP, "Num cells:",&
             NUM_WE_CELLS*NUM_SN_CELLS*NUM_VERT_CELLS
     !print*," ncounters ntimers",ncounters,ntimers
@@ -326,7 +326,7 @@ program mock_monarch
 
   if(interface_input_file.eq."interface_simple.json") then
 
-    if (pmc_mpi_rank().eq.0) then
+    if (camp_mpi_rank().eq.0) then
       write(*,*) "Config simple (test 1)"
     end if
 
@@ -344,7 +344,7 @@ program mock_monarch
 
   else
 
-    if (pmc_mpi_rank().eq.0) then
+    if (camp_mpi_rank().eq.0) then
       write(*,*) "Config complex (test 2)"
     end if
 
@@ -434,30 +434,30 @@ program mock_monarch
   path_solver_stats = output_file_prefix//"_solver_stats.csv"
 
 
-  pmc_interface => monarch_interface_t(camp_input_file, interface_input_file, &
+  camp_interface => monarch_interface_t(camp_input_file, interface_input_file, &
           START_CAMP_ID, END_CAMP_ID, n_cells, ADD_EMISIONS, ncounters, ntimers)!, n_cells
 
-  !call pmc_mpi_barrier(MPI_COMM_WORLD)
-  !print*,"monarch_interface_t end MPI RANK",pmc_mpi_rank()
+  !call camp_mpi_barrier(MPI_COMM_WORLD)
+  !print*,"monarch_interface_t end MPI RANK",camp_mpi_rank()
 
 
   if(export_results_all_cells.eq.1) then
-    call init_file_results_all_cells(pmc_interface, output_file_prefix)
+    call init_file_results_all_cells(camp_interface, output_file_prefix)
   end if
 
-  if (pmc_mpi_rank().eq.0) then
+  if (camp_mpi_rank().eq.0) then
     do j=1, size(name_gas_species_to_print)
-      do z=1, size(pmc_interface%monarch_species_names)
-        if(pmc_interface%monarch_species_names(z)%string.eq.name_gas_species_to_print(j)%string) then
-          id_gas_species_to_print(j)=pmc_interface%map_monarch_id(z)
+      do z=1, size(camp_interface%monarch_species_names)
+        if(camp_interface%monarch_species_names(z)%string.eq.name_gas_species_to_print(j)%string) then
+          id_gas_species_to_print(j)=camp_interface%map_monarch_id(z)
         end if
       end do
     end do
 
     do j=1, size(name_aerosol_species_to_print)
-      do z=1, size(pmc_interface%monarch_species_names)
-        if(pmc_interface%monarch_species_names(z)%string.eq.name_aerosol_species_to_print(j)%string) then
-          id_aerosol_species_to_print(j)=pmc_interface%map_monarch_id(z)
+      do z=1, size(camp_interface%monarch_species_names)
+        if(camp_interface%monarch_species_names(z)%string.eq.name_aerosol_species_to_print(j)%string) then
+          id_aerosol_species_to_print(j)=camp_interface%map_monarch_id(z)
         end if
       end do
     end do
@@ -468,18 +468,18 @@ program mock_monarch
   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   ! Set conc from mock_model
-  call pmc_interface%get_init_conc(species_conc, water_conc, WATER_VAPOR_ID, &
+  call camp_interface%get_init_conc(species_conc, water_conc, WATER_VAPOR_ID, &
           air_density,i_W,I_E,I_S,I_N)
 
   if(interface_input_file.eq."interface_monarch_cb05.json") then
-    !call import_camp_input(pmc_interface)
-    call import_camp_input_json(pmc_interface)
+    !call import_camp_input(camp_interface)
+    call import_camp_input_json(camp_interface)
   end if
 
 #ifdef SOLVE_EBI_IMPORT_CAMP_INPUT
-  if (pmc_mpi_rank().eq.0&
+  if (camp_mpi_rank().eq.0&
     .and.interface_input_file.eq."interface_monarch_cb05.json") then
-    call solve_ebi(pmc_interface)
+    call solve_ebi(camp_interface)
   end if
 #endif
 
@@ -489,8 +489,8 @@ program mock_monarch
 
 #endif
 
-  !call pmc_mpi_barrier(MPI_COMM_WORLD)
-  !print*,"MPI RANK",pmc_mpi_rank()
+  !call camp_mpi_barrier(MPI_COMM_WORLD)
+  !print*,"MPI RANK",camp_mpi_rank()
 
   ! Run the model
   do i_time=1, NUM_TIME_STEP
@@ -499,8 +499,8 @@ program mock_monarch
     ! **** Add to MONARCH during runtime for each time step **** !
     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-    if (pmc_mpi_rank().eq.0) then
-      call print_state_gnuplot(curr_time,pmc_interface, name_gas_species_to_print,id_gas_species_to_print&
+    if (camp_mpi_rank().eq.0) then
+      call print_state_gnuplot(curr_time,camp_interface, name_gas_species_to_print,id_gas_species_to_print&
              ,name_aerosol_species_to_print,id_aerosol_species_to_print,RESULTS_FILE_UNIT)
     end if
 
@@ -515,7 +515,7 @@ program mock_monarch
 
 #endif
 
-    call pmc_interface%integrate(curr_time,         & ! Starting time (min)
+    call camp_interface%integrate(curr_time,         & ! Starting time (min)
                                  TIME_STEP,         & ! Time step (min)
                                  I_W,               & ! Starting W->E grid cell
                                  I_E,               & ! Ending W->E grid cell
@@ -534,11 +534,11 @@ program mock_monarch
     curr_time = curr_time + TIME_STEP
 
 #ifdef PMC_DEBUG_GPU
-    call export_solver_stats(curr_time,pmc_interface,solver_stats,ncounters,ntimers)
+    call export_solver_stats(curr_time,camp_interface,solver_stats,ncounters,ntimers)
 #endif
 
     if(export_results_all_cells.eq.1) then
-      call export_file_results_all_cells(pmc_interface)
+      call export_file_results_all_cells(camp_interface)
     end if
 
 #ifdef ISSUE41
@@ -547,8 +547,8 @@ program mock_monarch
 
     aux_int=mod(i_time,8)
     if(aux_int.eq.0) then
-      if (pmc_mpi_rank().eq.0) then
-      !if (pmc_mpi_rank().eq.999) then
+      if (camp_mpi_rank().eq.0) then
+      !if (camp_mpi_rank().eq.999) then
         do i = I_E,I_E!I_W, I_E
           do j = I_N,I_N!I_S, I_N
             do k = NUM_VERT_CELLS, NUM_VERT_CELLS!1,NUM_VERT_CELLS!1, NUM_VERT_CELLS
@@ -570,8 +570,8 @@ program mock_monarch
 
 #endif
 
-    !if (pmc_mpi_rank().eq.0) then
-    if (pmc_mpi_rank().eq.999) then
+    !if (camp_mpi_rank().eq.0) then
+    if (camp_mpi_rank().eq.999) then
       do i = I_E,I_E!I_W, I_E
         do j = I_N,I_N!I_S, I_N
           do k = NUM_VERT_CELLS, NUM_VERT_CELLS!1,NUM_VERT_CELLS!1, NUM_VERT_CELLS
@@ -593,15 +593,15 @@ program mock_monarch
   end do
 
 #ifdef PMC_USE_MPI
-  if (pmc_mpi_rank().eq.0) then
+  if (camp_mpi_rank().eq.0) then
     write(*,*) "Model run time: ", comp_time, " s"
   end if
 #else
   write(*,*) "Model run time: ", comp_time, " s"
 #endif
 
-  if (pmc_mpi_rank().eq.0) then
-  !if (pmc_mpi_rank().eq.999) then
+  if (camp_mpi_rank().eq.0) then
+  !if (camp_mpi_rank().eq.999) then
     do i = I_E,I_E!I_W, I_E
       do j = I_N,I_N!I_S, I_N
         do k = NUM_VERT_CELLS, NUM_VERT_CELLS!1,NUM_VERT_CELLS!1, NUM_VERT_CELLS
@@ -619,27 +619,27 @@ program mock_monarch
       end do
     end do
   end if
-  !print*,"Rank",pmc_mpi_rank(), "conc",&
-  !        species_conc(1,1,1,pmc_interface%map_monarch_id(:))
+  !print*,"Rank",camp_mpi_rank(), "conc",&
+  !        species_conc(1,1,1,camp_interface%map_monarch_id(:))
 
 #ifdef SOLVE_EBI_IMPORT_CAMP_INPUT
-      if (pmc_mpi_rank().eq.0&
+      if (camp_mpi_rank().eq.0&
           .and.interface_input_file.eq."interface_monarch_cb05.json") then
-      call compare_ebi_camp_json(pmc_interface)
+      call compare_ebi_camp_json(camp_interface)
     end if
 #endif
 
   ! Output results and scripts
-  if (pmc_mpi_rank().eq.0) then
+  if (camp_mpi_rank().eq.0) then
     !write(*,*) "MONARCH interface tests - PASS"
-    !call print_state_gnuplot(curr_time,pmc_interface,species_conc)
-    call print_state_gnuplot(curr_time,pmc_interface, name_gas_species_to_print,id_gas_species_to_print&
+    !call print_state_gnuplot(curr_time,camp_interface,species_conc)
+    call print_state_gnuplot(curr_time,camp_interface, name_gas_species_to_print,id_gas_species_to_print&
             ,name_aerosol_species_to_print,id_aerosol_species_to_print,RESULTS_FILE_UNIT)
-    call create_gnuplot_script(pmc_interface, output_file_prefix, &
+    call create_gnuplot_script(camp_interface, output_file_prefix, &
             plot_start_time, curr_time)
-    !call create_gnuplot_persist(pmc_interface, output_file_prefix, &
+    !call create_gnuplot_persist(camp_interface, output_file_prefix, &
           !        output_file_title, plot_start_time, curr_time, n_cells_plot, cell_to_print)
-          call create_gnuplot_persist_paper_camp(pmc_interface, output_file_prefix, &
+          call create_gnuplot_persist_paper_camp(camp_interface, output_file_prefix, &
                   plot_start_time, curr_time)
                           end if
 
@@ -662,15 +662,15 @@ program mock_monarch
 #ifdef PMC_USE_MPI
 
   !call MPI_COMM_SIZE(MPI_COMM_WORLD, mpi_threads)
-  mpi_threads = pmc_mpi_size()!1
+  mpi_threads = camp_mpi_size()!1
   if ((mpi_threads.gt.1)) then !One-cell case
     !bug deallocating with mpi processes > 1
-    !deallocate(pmc_interface)
+    !deallocate(camp_interface)
   else
-    deallocate(pmc_interface)
+    deallocate(camp_interface)
   end if
 
-  call pmc_mpi_finalize()
+  call camp_mpi_finalize()
 
 #endif
 
@@ -829,10 +829,10 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  subroutine init_file_results_all_cells(pmc_interface, file_prefix)
+  subroutine init_file_results_all_cells(camp_interface, file_prefix)
 
     character(len=:), allocatable, intent(in) :: file_prefix
-    type(monarch_interface_t), intent(inout) :: pmc_interface
+    type(monarch_interface_t), intent(inout) :: camp_interface
 
     character(len=:), allocatable :: file_name
     character(len=:), allocatable :: aux_str
@@ -847,11 +847,11 @@ contains
       print*,"WARNING: Maybe too much data to save in a txt file (RESULTS_ALL_CELLS)"
     end if
 
-    aux_str = pmc_interface%monarch_species_names(1)%string
+    aux_str = camp_interface%monarch_species_names(1)%string
 
-    do z=2, size(pmc_interface%monarch_species_names)
-      !print*,pmc_interface%monarch_species_names(z)%string
-      aux_str = aux_str//","//pmc_interface%monarch_species_names(z)%string
+    do z=2, size(camp_interface%monarch_species_names)
+      !print*,camp_interface%monarch_species_names(z)%string
+      aux_str = aux_str//","//camp_interface%monarch_species_names(z)%string
     end do
 
     write(RESULTS_ALL_CELLS_FILE_UNIT, "(A)", advance="no") aux_str
@@ -861,17 +861,17 @@ contains
 
   end subroutine
 
-  subroutine export_file_results_all_cells(pmc_interface)
+  subroutine export_file_results_all_cells(camp_interface)
 
-    type(monarch_interface_t), intent(inout) :: pmc_interface
+    type(monarch_interface_t), intent(inout) :: camp_interface
 
     character(len=:), allocatable :: aux_str
     character(len=128) :: i_str
     integer :: z,o,i,j,k,r,i_cell,i_spec
 
-    if (pmc_mpi_rank().eq.0) then
+    if (camp_mpi_rank().eq.0) then
 
-      !print*, size(pmc_interface%camp_state%state_var), size(pmc_interface%map_monarch_id)
+      !print*, size(camp_interface%camp_state%state_var), size(camp_interface%map_monarch_id)
 
       do i=I_W,I_E
         do j=I_S,I_N
@@ -880,18 +880,18 @@ contains
             z = (k-1)*(I_E*I_N) + o !Index for 2D
 
             write(RESULTS_ALL_CELLS_FILE_UNIT, "(ES13.6)", advance="no") &
-                    species_conc(i,j,k,pmc_interface%map_monarch_id(1))
+                    species_conc(i,j,k,camp_interface%map_monarch_id(1))
 
-            do r=2,size(pmc_interface%map_monarch_id)
+            do r=2,size(camp_interface%map_monarch_id)
 
-              !print*,species_conc(i,j,k,pmc_interface%map_monarch_id(r))
+              !print*,species_conc(i,j,k,camp_interface%map_monarch_id(r))
 
               write(RESULTS_ALL_CELLS_FILE_UNIT, "(A)", advance="no") ","
               write(RESULTS_ALL_CELLS_FILE_UNIT, "(ES13.6)", advance="no") &
-                      species_conc(i,j,k,pmc_interface%map_monarch_id(r))
+                      species_conc(i,j,k,camp_interface%map_monarch_id(r))
 
-              !pmc_interface%camp_state%state_var(r+z*state_size_per_cell) = &
-              !        pmc_interface%camp_state%state_var(r)
+              !camp_interface%camp_state%state_var(r+z*state_size_per_cell) = &
+              !        camp_interface%camp_state%state_var(r)
             end do
 
             write(RESULTS_ALL_CELLS_FILE_UNIT, '(a)') ''
@@ -904,9 +904,9 @@ contains
 
   end subroutine
 
-  subroutine import_camp_input(pmc_interface)
+  subroutine import_camp_input(camp_interface)
 
-    type(monarch_interface_t), intent(inout) :: pmc_interface
+    type(monarch_interface_t), intent(inout) :: camp_interface
     integer :: z,i,j,k,r,o,i_cell,i_spec,i_photo_rxn
     integer :: state_size_per_cell
 
@@ -921,13 +921,13 @@ contains
     real(kind=dp), dimension(NUM_CAMP_SPEC) :: aux_state_var2
 #endif
 
-    state_size_per_cell = pmc_interface%camp_core%state_size_per_cell()
+    state_size_per_cell = camp_interface%camp_core%state_size_per_cell()
 
     !open(IMPORT_FILE_UNIT, file="exports/camp_input.txt", status="old")!default test monarch input
     open(IMPORT_FILE_UNIT, file="exports/camp_input_18.txt", status="old") !monarch
     !open(IMPORT_FILE_UNIT, file="exports/camp_input_322.txt", status="old") !monarch
 
-    if (pmc_mpi_rank().eq.0) then
+    if (camp_mpi_rank().eq.0) then
       write(*,*) "Importing camp input"
     end if
 
@@ -935,16 +935,16 @@ contains
     !  print*, "ERROR: Import can only handle data from 1 cell, set n_cells to 1"
     !end if
 
-    !read(IMPORT_FILE_UNIT,*) (pmc_interface%camp_state%state_var(&
-    !        i),i=1,size(pmc_interface%camp_state%state_var)/n_cells)
+    !read(IMPORT_FILE_UNIT,*) (camp_interface%camp_state%state_var(&
+    !        i),i=1,size(camp_interface%camp_state%state_var)/n_cells)
 
-    read(IMPORT_FILE_UNIT,*) (pmc_interface%camp_state%state_var(&
+    read(IMPORT_FILE_UNIT,*) (camp_interface%camp_state%state_var(&
             i),i=1,state_size_per_cell)
 
     do z=0,n_cells-1
       do i=1,state_size_per_cell
-        pmc_interface%camp_state%state_var(i+(z*state_size_per_cell))=&
-                pmc_interface%camp_state%state_var(i)
+        camp_interface%camp_state%state_var(i+(z*state_size_per_cell))=&
+                camp_interface%camp_state%state_var(i)
       end do
     end do
 
@@ -957,8 +957,8 @@ contains
 
     !write(*,*) "Importing photolysis rates"
 
-    read(IMPORT_FILE_UNIT,*) (pmc_interface%base_rates(&
-            i),i=1,pmc_interface%n_photo_rxn)
+    read(IMPORT_FILE_UNIT,*) (camp_interface%base_rates(&
+            i),i=1,camp_interface%n_photo_rxn)
 
     do i=I_W,I_E
       do j=I_S,I_N
@@ -967,19 +967,19 @@ contains
           o = (j-1)*(I_E) + (i-1) !Index to 3D
           z = (k-1)*(I_E*I_N) + o !Index for 2D
 
-          !do r=1,size(pmc_interface%camp_state%state_var)/n_cells
-          !  pmc_interface%camp_state%state_var(r+z*state_size_per_cell) = &
-          !  pmc_interface%camp_state%state_var(r)
+          !do r=1,size(camp_interface%camp_state%state_var)/n_cells
+          !  camp_interface%camp_state%state_var(r+z*state_size_per_cell) = &
+          !  camp_interface%camp_state%state_var(r)
           !end do
 
-          !pmc_interface%camp_state%state_var(pmc_interface%map_camp_id(:)+(z*state_size_per_cell))=&
-          !        pmc_interface%camp_state%state_var(pmc_interface%map_camp_id(:))
+          !camp_interface%camp_state%state_var(camp_interface%map_camp_id(:)+(z*state_size_per_cell))=&
+          !        camp_interface%camp_state%state_var(camp_interface%map_camp_id(:))
 
-          !species_conc(i,j,k,pmc_interface%map_monarch_id(:)) = &
-          !        pmc_interface%camp_state%state_var(pmc_interface%map_camp_id(:))
+          !species_conc(i,j,k,camp_interface%map_monarch_id(:)) = &
+          !        camp_interface%camp_state%state_var(camp_interface%map_camp_id(:))
 
-          species_conc(i,j,k,pmc_interface%map_monarch_id(:)) = &
-                  pmc_interface%camp_state%state_var(pmc_interface%map_camp_id(:))
+          species_conc(i,j,k,camp_interface%map_monarch_id(:)) = &
+                  camp_interface%camp_state%state_var(camp_interface%map_camp_id(:))
 
           temperature(i,j,k) = temperature(1,1,1)!+z*0.1
           pressure(i,j,k) = pressure(1,1,1)
@@ -988,32 +988,32 @@ contains
       end do
     end do
 
-    do i_photo_rxn = 1, pmc_interface%n_photo_rxn
+    do i_photo_rxn = 1, camp_interface%n_photo_rxn
 
-      !if (pmc_mpi_rank().eq.1) then
-      !pmc_interface%base_rates(i_photo_rxn) = pmc_interface%base_rates(i_photo_rxn)!+0.01
-      !pmc_interface%base_rates(i_photo_rxn) = 0.01
-      !write(*,*), "rates",i_photo_rxn, pmc_interface%base_rates(i_photo_rxn)
+      !if (camp_mpi_rank().eq.1) then
+      !camp_interface%base_rates(i_photo_rxn) = camp_interface%base_rates(i_photo_rxn)!+0.01
+      !camp_interface%base_rates(i_photo_rxn) = 0.01
+      !write(*,*), "rates",i_photo_rxn, camp_interface%base_rates(i_photo_rxn)
       !end if
-      !write(*,*), "rates",i_photo_rxn, pmc_interface%base_rates(i_photo_rxn)
+      !write(*,*), "rates",i_photo_rxn, camp_interface%base_rates(i_photo_rxn)
 
 
-      !pmc_interface%base_rates(i_photo_rxn)=0.
-      call pmc_interface%photo_rxns(i_photo_rxn)%set_rate(real(pmc_interface%base_rates(i_photo_rxn), kind=dp))
-      !call pmc_interface%photo_rxns(i_photo_rxn)%set_rate(real(0.0, kind=dp)) !works
+      !camp_interface%base_rates(i_photo_rxn)=0.
+      call camp_interface%photo_rxns(i_photo_rxn)%set_rate(real(camp_interface%base_rates(i_photo_rxn), kind=dp))
+      !call camp_interface%photo_rxns(i_photo_rxn)%set_rate(real(0.0, kind=dp)) !works
 
-      call pmc_interface%camp_core%update_data(pmc_interface%photo_rxns(i_photo_rxn),z)
+      call camp_interface%camp_core%update_data(camp_interface%photo_rxns(i_photo_rxn),z)
 
-      !print*,"id photo_rate", pmc_interface%base_rates(i_photo_rxn)
+      !print*,"id photo_rate", camp_interface%base_rates(i_photo_rxn)
     end do
 
     close(IMPORT_FILE_UNIT)
 
   end subroutine import_camp_input
 
-  subroutine import_camp_input_json(pmc_interface)
+  subroutine import_camp_input_json(camp_interface)
 
-    type(monarch_interface_t), intent(inout) :: pmc_interface
+    type(monarch_interface_t), intent(inout) :: camp_interface
     integer :: z,i,j,k,r,o,i_cell,i_spec,i_photo_rxn
     integer :: state_size_per_cell
 
@@ -1027,7 +1027,7 @@ contains
     real, dimension(NUM_EBI_PHOTO_RXN) :: ebi_photo_rates
     integer, dimension(NUM_EBI_PHOTO_RXN) :: photo_id_camp
 
-    state_size_per_cell = pmc_interface%camp_core%state_size_per_cell()
+    state_size_per_cell = camp_interface%camp_core%state_size_per_cell()
 
     !mpi_rank = 18
     mpi_rank = 0
@@ -1045,28 +1045,28 @@ contains
     call jfile%load_file(export_path); if (jfile%failed()) print*,&
             "import_camp_input_json: JSON not found at ",export_path
 
-    if (pmc_mpi_rank().eq.0) then
+    if (camp_mpi_rank().eq.0) then
       write(*,*) "Importing camp input json"
       if(n_cells.gt.1) then
         print*, "Importing data from a cell to the rest"
       end if
     end if
 
-    !camp_spec_names=pmc_interface%monarch_species_names
-    !unique_names=pmc_interface%camp_core%unique_names()
-    unique_names=pmc_interface%camp_core%unique_names()
+    !camp_spec_names=camp_interface%monarch_species_names
+    !unique_names=camp_interface%camp_core%unique_names()
+    unique_names=camp_interface%camp_core%unique_names()
     !camp_spec_names=unique_names
-    !camp_spec_names=pmc_interface%camp_core%unique_names()
-    camp_spec_names=pmc_interface%camp_core%spec_names
+    !camp_spec_names=camp_interface%camp_core%unique_names()
+    camp_spec_names=camp_interface%camp_core%spec_names
 
-    !print*,size(pmc_interface%monarch_species_names),size(unique_names) !72,29
-    !print*, pmc_interface%monarch_species_names(:)%string,&
+    !print*,size(camp_interface%monarch_species_names),size(unique_names) !72,29
+    !print*, camp_interface%monarch_species_names(:)%string,&
     !        unique_names(:)%string
     do i=1, size(camp_spec_names)
 
       call jfile%get('input.species.'//camp_spec_names(i)%string,&
-              pmc_interface%camp_state%state_var(i))
-      !print*, camp_spec_names(i)%string, pmc_interface%camp_state%state_var(i)
+              camp_interface%camp_state%state_var(i))
+      !print*, camp_spec_names(i)%string, camp_interface%camp_state%state_var(i)
 
     end do
 
@@ -1074,8 +1074,8 @@ contains
 
     do z=0,n_cells-1
       do i=1,state_size_per_cell
-        pmc_interface%camp_state%state_var(i+(z*state_size_per_cell))=&
-                pmc_interface%camp_state%state_var(i)
+        camp_interface%camp_state%state_var(i+(z*state_size_per_cell))=&
+                camp_interface%camp_state%state_var(i)
       end do
     end do
 
@@ -1087,14 +1087,14 @@ contains
 
           !print*,"A"
 
-          !pmc_interface%camp_state%state_var(pmc_interface%map_camp_id(:)+(z*state_size_per_cell))=&
-          !pmc_interface%camp_state%state_var(pmc_interface%map_camp_id(:))
+          !camp_interface%camp_state%state_var(camp_interface%map_camp_id(:)+(z*state_size_per_cell))=&
+          !camp_interface%camp_state%state_var(camp_interface%map_camp_id(:))
 
-          !species_conc(i,j,k,pmc_interface%map_monarch_id(:)) = &
-          !        pmc_interface%camp_state%state_var(pmc_interface%map_camp_id(:)+(z*state_size_per_cell))
+          !species_conc(i,j,k,camp_interface%map_monarch_id(:)) = &
+          !        camp_interface%camp_state%state_var(camp_interface%map_camp_id(:)+(z*state_size_per_cell))
 
-          species_conc(i,j,k,pmc_interface%map_monarch_id(:)) = &
-                  pmc_interface%camp_state%state_var(pmc_interface%map_camp_id(:))
+          species_conc(i,j,k,camp_interface%map_monarch_id(:)) = &
+                  camp_interface%camp_state%state_var(camp_interface%map_camp_id(:))
 
 
           call jfile%get('input.temperature',temp)
@@ -1108,30 +1108,30 @@ contains
 
     do i = 1, state_size_per_cell
       if (trim(camp_spec_names(i)%string).eq."H2O") then
-        water_conc(:,:,:,WATER_VAPOR_ID) = pmc_interface%camp_state%state_var(i)
+        water_conc(:,:,:,WATER_VAPOR_ID) = camp_interface%camp_state%state_var(i)
         !print*,"EBI H2O",water_conc(1,1,1,WATER_VAPOR_ID)
       end if
     end do
 
-    do i=1, pmc_interface%n_photo_rxn
+    do i=1, camp_interface%n_photo_rxn
       write(i_str,*) i
       i_str=adjustl(i_str)
       call jfile%get('input.photo_rates.'//trim(i_str),&
-              pmc_interface%base_rates(i))
-      !print*, trim(i_str), pmc_interface%base_rates(i)
+              camp_interface%base_rates(i))
+      !print*, trim(i_str), camp_interface%base_rates(i)
     end do
 
     call jfile%destroy()
 
-    do i_photo_rxn = 1, pmc_interface%n_photo_rxn
+    do i_photo_rxn = 1, camp_interface%n_photo_rxn
 
-      !pmc_interface%base_rates(i_photo_rxn)=0.
-      call pmc_interface%photo_rxns(i_photo_rxn)%set_rate(real(pmc_interface%base_rates(i_photo_rxn), kind=dp))
-      !call pmc_interface%photo_rxns(i_photo_rxn)%set_rate(real(0.0, kind=dp)) !works
+      !camp_interface%base_rates(i_photo_rxn)=0.
+      call camp_interface%photo_rxns(i_photo_rxn)%set_rate(real(camp_interface%base_rates(i_photo_rxn), kind=dp))
+      !call camp_interface%photo_rxns(i_photo_rxn)%set_rate(real(0.0, kind=dp)) !works
 
-      call pmc_interface%camp_core%update_data(pmc_interface%photo_rxns(i_photo_rxn))
+      call camp_interface%camp_core%update_data(camp_interface%photo_rxns(i_photo_rxn))
 
-      !print*,"id photo_rate", pmc_interface%base_rates(i_photo_rxn)
+      !print*,"id photo_rate", camp_interface%base_rates(i_photo_rxn)
     end do
 
     close(IMPORT_FILE_UNIT)
@@ -1142,9 +1142,9 @@ contains
 
 #ifdef SOLVE_EBI_IMPORT_CAMP_INPUT
 
-  subroutine solve_ebi(pmc_interface)
+  subroutine solve_ebi(camp_interface)
 
-    type(monarch_interface_t), intent(inout) :: pmc_interface
+    type(monarch_interface_t), intent(inout) :: camp_interface
     integer :: z,i,j,k,r,o,i_cell,i_spec,i_photo_rxn,i_time
 
     real(kind=dp) :: dt, temp, press_json, auxr
@@ -1196,15 +1196,15 @@ contains
 
     call set_ebi_species(ebi_spec_names)
     call set_monarch_species(monarch_spec_names)
-    camp_spec_names=pmc_interface%camp_core%unique_names()!monarch_species_name
+    camp_spec_names=camp_interface%camp_core%unique_names()!monarch_species_name
 
-    call assert_msg(122432506, size(pmc_interface%camp_state%state_var).eq.NUM_CAMP_SPEC, &
+    call assert_msg(122432506, size(camp_interface%camp_state%state_var).eq.NUM_CAMP_SPEC, &
             "NUM_CAMP_SPEC not equal size(state_var)")
 
     call set_ebi_photo_ids_with_camp(photo_id_camp)
     do i=1, NUM_EBI_PHOTO_RXN
       ebi_photo_rates(i)=&
-              pmc_interface%base_rates(photo_id_camp(i))*60
+              camp_interface%base_rates(photo_id_camp(i))*60
       !print*,i,ebi_photo_rates(i)
     end do
 
@@ -1214,17 +1214,17 @@ contains
         if (trim(ebi_spec_names(i)%string).eq.trim(camp_spec_names(j)%string)) then
 
           ebi_spec_id_to_camp(j) = i
-          YC(i) = pmc_interface%camp_state%state_var(j)
+          YC(i) = camp_interface%camp_state%state_var(j)
           ebi_init(i) = YC(i)
 
-          !print*,ebi_spec_names(i)%string, pmc_interface%camp_state%state_var(j)
+          !print*,ebi_spec_names(i)%string, camp_interface%camp_state%state_var(j)
         end if
       end do
     end do
 
     do i = 1, NUM_CAMP_SPEC
       if (trim(camp_spec_names(i)%string).eq."H2O") then
-        water_conc(1,1,1,WATER_VAPOR_ID) = pmc_interface%camp_state%state_var(i)
+        water_conc(1,1,1,WATER_VAPOR_ID) = camp_interface%camp_state%state_var(i)
         !print*,"EBI H2O",water_conc(1,1,1,WATER_VAPOR_ID)
       end if
     end do
@@ -1251,7 +1251,7 @@ contains
 
     end do
 
-    if (pmc_mpi_rank().eq.0) then
+    if (camp_mpi_rank().eq.0) then
 
       call json%initialize()
       call json%create_object(p,'')
@@ -1297,7 +1297,7 @@ contains
       end do
 
 #ifdef PMC_USE_MPI
-      mpi_rank = pmc_mpi_rank()
+      mpi_rank = camp_mpi_rank()
 
       write(mpi_rank_str,*) mpi_rank
       mpi_rank_str=adjustl(mpi_rank_str)
@@ -1355,9 +1355,9 @@ contains
 
   end subroutine solve_ebi
 
-  subroutine solve_kpp(pmc_interface)
+  subroutine solve_kpp(camp_interface)
 
-    type(monarch_interface_t), intent(inout) :: pmc_interface
+    type(monarch_interface_t), intent(inout) :: camp_interface
     integer :: z,i,j,k,r,o,i_cell,i_spec,i_photo_rxn,i_time
 
     ! Set the step limits
@@ -1371,13 +1371,13 @@ contains
     end do
     CALL KPP_Initialize()
 
-    KPP_PHOTO_RATES(:) = pmc_interface%base_rates(:)
+    KPP_PHOTO_RATES(:) = camp_interface%base_rates(:)
 
   end subroutine solve_kpp
 
-  subroutine compare_ebi_camp_json(pmc_interface)
+  subroutine compare_ebi_camp_json(camp_interface)
 
-    type(monarch_interface_t), intent(inout) :: pmc_interface
+    type(monarch_interface_t), intent(inout) :: camp_interface
     integer :: z,i,j,k,r,o,i_cell,i_spec,i_photo_rxn,i_time
 
     type(json_file) :: jfile
@@ -1405,7 +1405,7 @@ contains
 
     call set_ebi_species(ebi_spec_names)
     call set_monarch_species(monarch_spec_names)
-    camp_spec_names=pmc_interface%camp_core%unique_names()
+    camp_spec_names=camp_interface%camp_core%unique_names()
 
     !mpi_rank = 18
     mpi_rank = 0
@@ -1509,13 +1509,13 @@ contains
 #endif
 
   !> Output the model results
-  !subroutine print_state_gnuplot(curr_time,pmc_interface,species_conc)
-  subroutine print_state_gnuplot(curr_time_in, pmc_interface, name_gas_species_to_print,id_gas_species_to_print&
+  !subroutine print_state_gnuplot(curr_time,camp_interface,species_conc)
+  subroutine print_state_gnuplot(curr_time_in, camp_interface, name_gas_species_to_print,id_gas_species_to_print&
           ,name_aerosol_species_to_print,id_aerosol_species_to_print, file_unit, n_cells_to_print)
 
     !> Current model time (min since midnight)
     real, intent(in) :: curr_time_in
-    type(monarch_interface_t), intent(in) :: pmc_interface
+    type(monarch_interface_t), intent(in) :: camp_interface
     type(string_t), allocatable, intent(inout) :: name_gas_species_to_print(:), name_aerosol_species_to_print(:)
     integer(kind=i_kind), allocatable, intent(inout) :: id_gas_species_to_print(:), id_aerosol_species_to_print(:)
     integer, intent(inout), optional :: n_cells_to_print
@@ -1537,11 +1537,11 @@ contains
         do k=1,NUM_VERT_CELLS
           write(RESULTS_FILE_UNIT_TABLE, *) "i:",i,"j:",j,"k:",k
           write(RESULTS_FILE_UNIT_TABLE, *) "Spec_name, Concentrations, Map_monarch_id"
-          do z=1, size(pmc_interface%monarch_species_names)
-            write(RESULTS_FILE_UNIT_TABLE, *) pmc_interface%monarch_species_names(z)%string&
-            , species_conc(i,j,k,pmc_interface%map_monarch_id(z))&
-            , pmc_interface%map_monarch_id(z)
-            !write(*,*) "species_conc out",species_conc(i,j,k,pmc_interface%map_monarch_id(z))
+          do z=1, size(camp_interface%monarch_species_names)
+            write(RESULTS_FILE_UNIT_TABLE, *) camp_interface%monarch_species_names(z)%string&
+            , species_conc(i,j,k,camp_interface%map_monarch_id(z))&
+            , camp_interface%map_monarch_id(z)
+            !write(*,*) "species_conc out",species_conc(i,j,k,camp_interface%map_monarch_id(z))
           end do
         end do
       end do
@@ -1607,16 +1607,16 @@ contains
   end subroutine print_state_gnuplot
 
   !> Output the model results
-  subroutine output_results(curr_time,pmc_interface,species_conc)
+  subroutine output_results(curr_time,camp_interface,species_conc)
 
     !> Current model time (min since midnight)
     real, intent(in) :: curr_time
-    type(monarch_interface_t), intent(in) :: pmc_interface
+    type(monarch_interface_t), intent(in) :: camp_interface
     integer :: z,i,j,k
     real, intent(inout) :: species_conc(:,:,:,:)
     !type(string_t), allocatable :: species_names(:)
     !integer(kind=i_kind), allocatable :: tracer_ids(:)
-    !call pmc_interface%get_MONARCH_species(species_names, tracer_ids)
+    !call camp_interface%get_MONARCH_species(species_names, tracer_ids)
 
     character(len=:), allocatable :: aux_str
     real, allocatable :: aux_real
@@ -1629,11 +1629,11 @@ contains
         do k=I_W,I_E
           write(RESULTS_FILE_UNIT_TABLE, *) "i:",i,"j:",j,"k:",k
           write(RESULTS_FILE_UNIT_TABLE, *) "Spec_name, Concentrations, Map_monarch_id"
-          do z=1, size(pmc_interface%monarch_species_names)
-            write(RESULTS_FILE_UNIT_TABLE, *) pmc_interface%monarch_species_names(z)%string&
-            , species_conc(i,j,k,pmc_interface%map_monarch_id(z))&
-            , pmc_interface%map_monarch_id(z)
-            !write(*,*) "species_conc out",species_conc(i,j,k,pmc_interface%map_monarch_id(z))
+          do z=1, size(camp_interface%monarch_species_names)
+            write(RESULTS_FILE_UNIT_TABLE, *) camp_interface%monarch_species_names(z)%string&
+            , species_conc(i,j,k,camp_interface%map_monarch_id(z))&
+            , camp_interface%map_monarch_id(z)
+            !write(*,*) "species_conc out",species_conc(i,j,k,camp_interface%map_monarch_id(z))
           end do
         end do
       end do
@@ -1643,12 +1643,12 @@ contains
     !write(RESULTS_FILE_UNIT, *) curr_time,species_conc(1,1,1,START_CAMP_ID:3)
 
     !Specific names
-    !do z=1, size(pmc_interface%monarch_species_names)
-    !  if(pmc_interface%monarch_species_names(z)%string.eq.name_specie_to_print) then
-    !    aux_str = pmc_interface%monarch_species_names(z)%string//" "//pmc_interface%monarch_species_names(z+1)%string
+    !do z=1, size(camp_interface%monarch_species_names)
+    !  if(camp_interface%monarch_species_names(z)%string.eq.name_specie_to_print) then
+    !    aux_str = camp_interface%monarch_species_names(z)%string//" "//camp_interface%monarch_species_names(z+1)%string
     !    write(RESULTS_FILE_UNIT, *) "Time ",aux_str
-    !    write(RESULTS_FILE_UNIT, *) curr_time,species_conc(1,1,1,pmc_interface%map_monarch_id(z):pmc_interface%map_monarch_id(z)+1)
-        !write(RESULTS_FILE_UNIT, *) curr_time,species_conc(1,1,1,pmc_interface%map_monarch_id(z))
+    !    write(RESULTS_FILE_UNIT, *) curr_time,species_conc(1,1,1,camp_interface%map_monarch_id(z):camp_interface%map_monarch_id(z)+1)
+        !write(RESULTS_FILE_UNIT, *) curr_time,species_conc(1,1,1,camp_interface%map_monarch_id(z))
     !  end if
     !end do
 
@@ -1698,11 +1698,11 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Create a gnuplot script for viewing species concentrations
-  subroutine create_gnuplot_script(pmc_interface, file_path, start_time, &
+  subroutine create_gnuplot_script(camp_interface, file_path, start_time, &
             end_time)
 
     !> PartMC-camp <-> MONARCH interface
-    type(monarch_interface_t), intent(in) :: pmc_interface
+    type(monarch_interface_t), intent(in) :: camp_interface
     !> File prefix for gnuplot script
     character(len=:), allocatable :: file_path
     !> Plot start time
@@ -1716,7 +1716,7 @@ contains
     integer(kind=i_kind) :: i_char, i_spec, tracer_id
 
     ! Get the species names and ids
-    call pmc_interface%get_MONARCH_species(species_names, tracer_ids)
+    call camp_interface%get_MONARCH_species(species_names, tracer_ids)
 
     ! Adjust the tracer ids to match the results file
     tracer_ids(:) = tracer_ids(:) - START_CAMP_ID + 2
@@ -1759,11 +1759,11 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Create a gnuplot script for viewing species concentrations
-  subroutine create_gnuplot_persist(pmc_interface, file_path, plot_title, &
+  subroutine create_gnuplot_persist(camp_interface, file_path, plot_title, &
           start_time, end_time, n_cells_plot, i_cell)
 
     !> PartMC-camp <-> MONARCH interface
-    type(monarch_interface_t), intent(in) :: pmc_interface
+    type(monarch_interface_t), intent(in) :: camp_interface
     !> File prefix for gnuplot script
     character(len=:), allocatable :: plot_title, file_path
     !> Plot start time
@@ -1793,12 +1793,12 @@ contains
             "Cell to plot more than cells available")
 
     ! Get the species names and ids
-    call pmc_interface%get_MONARCH_species(species_names, tracer_ids)
+    call camp_interface%get_MONARCH_species(species_names, tracer_ids)
 
     ! Adjust the tracer ids to match the results file
     tracer_ids(:) = tracer_ids(:) - START_CAMP_ID + 2
 
-    if(pmc_interface%n_cells.eq.1) then
+    if(camp_interface%n_cells.eq.1) then
       plot_title=plot_title//" - One_cell"
     else
       plot_title=plot_title//" - Multi_cells"
@@ -1896,11 +1896,11 @@ contains
   end subroutine
 
   !> Create a gnuplot script for viewing species concentrations
-  subroutine create_gnuplot_persist_paper_camp(pmc_interface, file_prefix, start_time, &
+  subroutine create_gnuplot_persist_paper_camp(camp_interface, file_prefix, start_time, &
           end_time)
 
     !> PartMC-camp <-> MONARCH interface
-    type(monarch_interface_t), intent(in) :: pmc_interface
+    type(monarch_interface_t), intent(in) :: camp_interface
     !> File prefix for gnuplot script
     character(len=:), allocatable :: file_prefix
     !> Plot start time
@@ -1921,7 +1921,7 @@ contains
 
 
     ! Get the species names and ids
-    call pmc_interface%get_MONARCH_species(species_names, tracer_ids)
+    call camp_interface%get_MONARCH_species(species_names, tracer_ids)
 
     ! Adjust the tracer ids to match the results file
     tracer_ids(:) = tracer_ids(:) - START_CAMP_ID + 2
@@ -2003,10 +2003,10 @@ contains
 
   end subroutine
 
-  subroutine export_solver_stats(curr_time, pmc_interface, solver_stats, ncounters, ntimers)
+  subroutine export_solver_stats(curr_time, camp_interface, solver_stats, ncounters, ntimers)
 
     real, intent(in) :: curr_time
-    type(monarch_interface_t), intent(in) :: pmc_interface
+    type(monarch_interface_t), intent(in) :: camp_interface
     type(solver_stats_t), intent(inout) :: solver_stats
     integer, intent(inout) :: ncounters
     integer, intent(inout) :: ntimers
@@ -2025,10 +2025,10 @@ contains
 
     call mpi_reduce(solver_stats%counters, counters_max, ncounters, MPI_INTEGER, MPI_MAX, 0, &
             l_comm, ierr)
-    call pmc_mpi_check_ierr(ierr)
+    call camp_mpi_check_ierr(ierr)
     call mpi_reduce(solver_stats%times, times_max, ntimers, MPI_DOUBLE, MPI_MAX, 0, &
             l_comm, ierr)
-    call pmc_mpi_check_ierr(ierr)
+    call camp_mpi_check_ierr(ierr)
 
 #else
 
@@ -2037,7 +2037,7 @@ contains
 
 #endif
 
-    if (pmc_mpi_rank().eq.0) then
+    if (camp_mpi_rank().eq.0) then
 
       write(time_str,*) curr_time
       time_str=adjustl(time_str)

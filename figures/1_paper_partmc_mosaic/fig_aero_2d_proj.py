@@ -8,8 +8,8 @@ import copy as module_copy
 from Scientific.IO.NetCDF import *
 from pyx import *
 sys.path.append("../tool")
-from pmc_data_nc import *
-from pmc_pyx import *
+from camp_data_nc import *
+from camp_pyx import *
 sys.path.append(".")
 from fig_helper import *
 
@@ -40,9 +40,9 @@ def get_plot_data(filename):
                 / particles.mass(exclude = ["H2O"]) * 100
     mass = particles.mass() * 1e9
 
-    diam_axis = pmc_log_axis(min = diameter_axis_min, max = diameter_axis_max,
+    diam_axis = camp_log_axis(min = diameter_axis_min, max = diameter_axis_max,
                              n_bin = num_diameter_bins)
-    bc_axis = pmc_linear_axis(min = bc_axis_min, max = bc_axis_max,
+    bc_axis = camp_linear_axis(min = bc_axis_min, max = bc_axis_max,
                               n_bin = num_bc_bins)
     diam_bin = diam_axis.find(diameter)
     # hack to avoid landing just around the integer boundaries
@@ -72,7 +72,7 @@ def get_plot_data(filename):
 
     max_val = num_den_2d.max()
     value = num_den_2d / max_val
-    plot_data_2d = pmc_histogram_2d_multi([value], diam_axis, bc_axis)
+    plot_data_2d = camp_histogram_2d_multi([value], diam_axis, bc_axis)
     diam_num_plot_data = [[diam_axis.center(i), diam_num_den[i]]
                           for i in range(diam_axis.n_bin)]
     diam_mass_plot_data = [[diam_axis.center(i), diam_mass_den[i]]

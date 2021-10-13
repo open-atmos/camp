@@ -3,14 +3,14 @@
 ! option) any later version. See the file COPYING for details.
 
 !> \file
-!> The pmc_integer_rmap module.
+!> The camp_integer_rmap module.
 
 !> The integer_rmap_t structure and assocated subroutines.
-module pmc_integer_rmap
+module camp_integer_rmap
 
-  use pmc_integer_varray
-  use pmc_util
-  use pmc_mpi
+  use camp_integer_varray
+  use camp_util
+  use camp_mpi
 
   !> A map from integers to integers, together with its multi-valued
   !> inverse.
@@ -312,7 +312,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Determines the number of bytes required to pack the given value.
-  integer function pmc_mpi_pack_size_integer_rmap(val)
+  integer function camp_mpi_pack_size_integer_rmap(val)
 
     !> Value to pack.
     type(integer_rmap_t), intent(in) :: val
@@ -322,24 +322,24 @@ contains
 
     total_size = 0
     is_allocated = allocated(val%inverse)
-    total_size = total_size + pmc_mpi_pack_size_logical(is_allocated)
+    total_size = total_size + camp_mpi_pack_size_logical(is_allocated)
     if (is_allocated) then
-       total_size = total_size + pmc_mpi_pack_size_integer(size(val%inverse))
+       total_size = total_size + camp_mpi_pack_size_integer(size(val%inverse))
        do i = 1,size(val%inverse)
           total_size = total_size &
-               + pmc_mpi_pack_size_integer_varray(val%inverse(i))
+               + camp_mpi_pack_size_integer_varray(val%inverse(i))
        end do
     end if
-    total_size = total_size + pmc_mpi_pack_size_integer_varray(val%forward)
-    total_size = total_size + pmc_mpi_pack_size_integer_varray(val%index)
-    pmc_mpi_pack_size_integer_rmap = total_size
+    total_size = total_size + camp_mpi_pack_size_integer_varray(val%forward)
+    total_size = total_size + camp_mpi_pack_size_integer_varray(val%index)
+    camp_mpi_pack_size_integer_rmap = total_size
 
-  end function pmc_mpi_pack_size_integer_rmap
+  end function camp_mpi_pack_size_integer_rmap
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Packs the given value into the buffer, advancing position.
-  subroutine pmc_mpi_pack_integer_rmap(buffer, position, val)
+  subroutine camp_mpi_pack_integer_rmap(buffer, position, val)
 
     !> Memory buffer.
     character, intent(inout) :: buffer(:)
@@ -354,25 +354,25 @@ contains
 
     prev_position = position
     is_allocated = allocated(val%inverse)
-    call pmc_mpi_pack_logical(buffer, position, is_allocated)
+    call camp_mpi_pack_logical(buffer, position, is_allocated)
     if (is_allocated) then
-       call pmc_mpi_pack_integer(buffer, position, size(val%inverse))
+       call camp_mpi_pack_integer(buffer, position, size(val%inverse))
        do i = 1,size(val%inverse)
-          call pmc_mpi_pack_integer_varray(buffer, position, val%inverse(i))
+          call camp_mpi_pack_integer_varray(buffer, position, val%inverse(i))
        end do
     end if
-    call pmc_mpi_pack_integer_varray(buffer, position, val%forward)
-    call pmc_mpi_pack_integer_varray(buffer, position, val%index)
+    call camp_mpi_pack_integer_varray(buffer, position, val%forward)
+    call camp_mpi_pack_integer_varray(buffer, position, val%index)
     call assert(533568488, &
-         position - prev_position <= pmc_mpi_pack_size_integer_rmap(val))
+         position - prev_position <= camp_mpi_pack_size_integer_rmap(val))
 #endif
 
-  end subroutine pmc_mpi_pack_integer_rmap
+  end subroutine camp_mpi_pack_integer_rmap
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Unpacks the given value from the buffer, advancing position.
-  subroutine pmc_mpi_unpack_integer_rmap(buffer, position, val)
+  subroutine camp_mpi_unpack_integer_rmap(buffer, position, val)
 
     !> Memory buffer.
     character, intent(inout) :: buffer(:)
@@ -386,26 +386,26 @@ contains
     logical :: is_allocated
 
     prev_position = position
-    call pmc_mpi_unpack_logical(buffer, position, is_allocated)
+    call camp_mpi_unpack_logical(buffer, position, is_allocated)
     if (is_allocated) then
-       call pmc_mpi_unpack_integer(buffer, position, n)
+       call camp_mpi_unpack_integer(buffer, position, n)
        call integer_rmap_set_range(val, n)
        do i = 1,size(val%inverse)
-          call pmc_mpi_unpack_integer_varray(buffer, position, val%inverse(i))
+          call camp_mpi_unpack_integer_varray(buffer, position, val%inverse(i))
        end do
     else
        if (allocated(val%inverse)) then
           deallocate(val%inverse)
        end if
     end if
-    call pmc_mpi_unpack_integer_varray(buffer, position, val%forward)
-    call pmc_mpi_unpack_integer_varray(buffer, position, val%index)
+    call camp_mpi_unpack_integer_varray(buffer, position, val%forward)
+    call camp_mpi_unpack_integer_varray(buffer, position, val%index)
     call assert(663161025, &
-         position - prev_position <= pmc_mpi_pack_size_integer_rmap(val))
+         position - prev_position <= camp_mpi_pack_size_integer_rmap(val))
 #endif
 
-  end subroutine pmc_mpi_unpack_integer_rmap
+  end subroutine camp_mpi_unpack_integer_rmap
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end module pmc_integer_rmap
+end module camp_integer_rmap

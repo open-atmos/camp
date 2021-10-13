@@ -4,7 +4,7 @@
     "TODO Consider updating diffusion coefficients according to Tang et al. Atmos. Chem. Phys., 14, 9233-9247 (2014)",
     "   available at https://www.atmos-chem-phys.net/14/9233/2014/acp-14-9233-2014.pdf"
   ],
-  "pmc-data" : [
+  "camp-data" : [
     {
       "name" : "NO2",
       "type" : "CHEM_SPEC",

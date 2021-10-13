@@ -8,8 +8,8 @@ import copy as module_copy
 from Scientific.IO.NetCDF import *
 from pyx import *
 sys.path.append("../tool")
-from pmc_data_nc import *
-from pmc_pyx import *
+from camp_data_nc import *
+from camp_pyx import *
 sys.path.append(".")
 from fig_helper import *
 
@@ -39,9 +39,9 @@ for color in [True, False]:
 
     diameter = particles.dry_diameter() * 1e6
 
-    x_axis = pmc_log_axis(min = diameter_axis_min, max = diameter_axis_max,
+    x_axis = camp_log_axis(min = diameter_axis_min, max = diameter_axis_max,
                           n_bin = num_diameter_bins)
-    y_axis = pmc_linear_axis(min = -0.5, max = max_n_coags + 0.5,
+    y_axis = camp_linear_axis(min = -0.5, max = max_n_coags + 0.5,
                              n_bin = max_n_coags + 1)
     x_bin = x_axis.find(diameter)
 
@@ -74,7 +74,7 @@ for color in [True, False]:
         value = value / value_max
     value = value.clip(0.0, 1.0)
 
-    rects = pmc_histogram_2d_multi([value],
+    rects = camp_histogram_2d_multi([value],
                                    x_axis, y_axis)
     if color:
         palette = rainbow_palette

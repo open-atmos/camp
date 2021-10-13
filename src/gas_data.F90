@@ -3,18 +3,18 @@
 ! option) any later version. See the file COPYING for details.
 
 !> \file
-!> The pmc_gas_data module.
+!> The camp_gas_data module.
 
 !> The gas_data_t structure and associated subroutines.
-module pmc_gas_data
+module camp_gas_data
 
-  use pmc_camp_core
-  use pmc_chem_spec_data
-  use pmc_mpi
-  use pmc_netcdf
-  use pmc_spec_file
-  use pmc_util
-  use pmc_property
+  use camp_camp_core
+  use camp_chem_spec_data
+  use camp_mpi
+  use camp_netcdf
+  use camp_spec_file
+  use camp_util
+  use camp_property
 #ifdef PMC_USE_MPI
   use mpi
 #endif
@@ -256,21 +256,21 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Determines the number of bytes required to pack the given value.
-  integer function pmc_mpi_pack_size_gas_data(val)
+  integer function camp_mpi_pack_size_gas_data(val)
 
     !> Value to pack.
     type(gas_data_t), intent(in) :: val
 
-    pmc_mpi_pack_size_gas_data = &
-         pmc_mpi_pack_size_string_array(val%name) &
-         + pmc_mpi_pack_size_integer_array(val%mosaic_index)
+    camp_mpi_pack_size_gas_data = &
+         camp_mpi_pack_size_string_array(val%name) &
+         + camp_mpi_pack_size_integer_array(val%mosaic_index)
 
-  end function pmc_mpi_pack_size_gas_data
+  end function camp_mpi_pack_size_gas_data
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Packs the given value into the buffer, advancing position.
-  subroutine pmc_mpi_pack_gas_data(buffer, position, val)
+  subroutine camp_mpi_pack_gas_data(buffer, position, val)
 
     !> Memory buffer.
     character, intent(inout) :: buffer(:)
@@ -283,18 +283,18 @@ contains
     integer :: prev_position
 
     prev_position = position
-    call pmc_mpi_pack_string_array(buffer, position, val%name)
-    call pmc_mpi_pack_integer_array(buffer, position, val%mosaic_index)
+    call camp_mpi_pack_string_array(buffer, position, val%name)
+    call camp_mpi_pack_integer_array(buffer, position, val%mosaic_index)
     call assert(449872094, &
-         position - prev_position <= pmc_mpi_pack_size_gas_data(val))
+         position - prev_position <= camp_mpi_pack_size_gas_data(val))
 #endif
 
-  end subroutine pmc_mpi_pack_gas_data
+  end subroutine camp_mpi_pack_gas_data
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Unpacks the given value from the buffer, advancing position.
-  subroutine pmc_mpi_unpack_gas_data(buffer, position, val)
+  subroutine camp_mpi_unpack_gas_data(buffer, position, val)
 
     !> Memory buffer.
     character, intent(inout) :: buffer(:)
@@ -307,13 +307,13 @@ contains
     integer :: prev_position
 
     prev_position = position
-    call pmc_mpi_unpack_string_array(buffer, position, val%name)
-    call pmc_mpi_unpack_integer_array(buffer, position, val%mosaic_index)
+    call camp_mpi_unpack_string_array(buffer, position, val%name)
+    call camp_mpi_unpack_integer_array(buffer, position, val%mosaic_index)
     call assert(137879163, &
-         position - prev_position <= pmc_mpi_pack_size_gas_data(val))
+         position - prev_position <= camp_mpi_pack_size_gas_data(val))
 #endif
 
-  end subroutine pmc_mpi_unpack_gas_data
+  end subroutine camp_mpi_unpack_gas_data
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -339,12 +339,12 @@ contains
     ! try to get the dimension ID
     status = nf90_inq_dimid(ncid, "gas_species", dimid_gas_species)
     if (status == NF90_NOERR) return
-    if (status /= NF90_EBADDIM) call pmc_nc_check(status)
+    if (status /= NF90_EBADDIM) call camp_nc_check(status)
 
     ! dimension not defined, so define now define it
-    call pmc_nc_check(nf90_redef(ncid))
+    call camp_nc_check(nf90_redef(ncid))
 
-    call pmc_nc_check(nf90_def_dim(ncid, "gas_species", &
+    call camp_nc_check(nf90_def_dim(ncid, "gas_species", &
          gas_data_n_spec(gas_data), dimid_gas_species))
     gas_species_names = ""
     do i_spec = 1,gas_data_n_spec(gas_data)
@@ -354,20 +354,20 @@ contains
           gas_species_names((len_trim(gas_species_names) + 1):) = ","
        end if
     end do
-    call pmc_nc_check(nf90_def_var(ncid, "gas_species", NF90_INT, &
+    call camp_nc_check(nf90_def_var(ncid, "gas_species", NF90_INT, &
          dimid_gas_species, varid_gas_species))
-    call pmc_nc_check(nf90_put_att(ncid, varid_gas_species, "names", &
+    call camp_nc_check(nf90_put_att(ncid, varid_gas_species, "names", &
          gas_species_names))
-    call pmc_nc_check(nf90_put_att(ncid, varid_gas_species, "description", &
+    call camp_nc_check(nf90_put_att(ncid, varid_gas_species, "description", &
          "dummy dimension variable (no useful value) - read species names " &
          // "as comma-separated values from the 'names' attribute"))
 
-    call pmc_nc_check(nf90_enddef(ncid))
+    call camp_nc_check(nf90_enddef(ncid))
 
     do i_spec = 1,gas_data_n_spec(gas_data)
        gas_species_centers(i_spec) = i_spec
     end do
-    call pmc_nc_check(nf90_put_var(ncid, varid_gas_species, &
+    call camp_nc_check(nf90_put_var(ncid, varid_gas_species, &
          gas_species_centers))
 
   end subroutine gas_data_netcdf_dim_gas_species
@@ -403,7 +403,7 @@ contains
          dimid_gas_species)
 
     if (allocated(gas_data%mosaic_index)) then
-       call pmc_nc_write_integer_1d(ncid, gas_data%mosaic_index, &
+       call camp_nc_write_integer_1d(ncid, gas_data%mosaic_index, &
             "gas_mosaic_index", (/ dimid_gas_species /), &
             long_name="MOSAIC indices of gas species")
      end if
@@ -424,8 +424,8 @@ contains
     integer :: dimid_gas_species, n_spec, varid_gas_species, i_spec, i
     character(len=((GAS_NAME_LEN + 2) * 1000)) :: gas_species_names
 
-    call pmc_nc_check(nf90_inq_dimid(ncid, "gas_species", dimid_gas_species))
-    call pmc_nc_check(nf90_Inquire_Dimension(ncid, dimid_gas_species, name, &
+    call camp_nc_check(nf90_inq_dimid(ncid, "gas_species", dimid_gas_species))
+    call camp_nc_check(nf90_Inquire_Dimension(ncid, dimid_gas_species, name, &
          n_spec))
     call assert(719237193, n_spec < 1000)
 
@@ -434,11 +434,11 @@ contains
     allocate(gas_data%name(n_spec))
     allocate(gas_data%mosaic_index(n_spec))
 
-    call pmc_nc_read_integer_1d(ncid, gas_data%mosaic_index, &
+    call camp_nc_read_integer_1d(ncid, gas_data%mosaic_index, &
          "gas_mosaic_index")
 
-    call pmc_nc_check(nf90_inq_varid(ncid, "gas_species", varid_gas_species))
-    call pmc_nc_check(nf90_get_att(ncid, varid_gas_species, "names", &
+    call camp_nc_check(nf90_inq_varid(ncid, "gas_species", varid_gas_species))
+    call camp_nc_check(nf90_get_att(ncid, varid_gas_species, "names", &
          gas_species_names))
     ! gas_species_names are comma-separated, so unpack them
     do i_spec = 1,gas_data_n_spec(gas_data)
@@ -457,4 +457,4 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end module pmc_gas_data
+end module camp_gas_data

@@ -3,16 +3,16 @@
 ! option) any later version. See the file COPYING for details.
 
 !> \file
-!> The pmc_aero_particle module.
+!> The camp_aero_particle module.
 
 !> The aero_particle_t structure and associated subroutines.
-module pmc_aero_particle
+module camp_aero_particle
 
-  use pmc_util
-  use pmc_aero_data
-  use pmc_spec_file
-  use pmc_env_state
-  use pmc_mpi
+  use camp_util
+  use camp_aero_data
+  use camp_spec_file
+  use camp_env_state
+  use camp_mpi
 #ifdef PMC_USE_MPI
   use mpi
 #endif
@@ -129,7 +129,7 @@ contains
     !> Particle to set ID for.
     type(aero_particle_t), intent(inout) :: aero_particle
 
-    aero_particle%id = (next_id - 1) * pmc_mpi_size() + pmc_mpi_rank() + 1
+    aero_particle%id = (next_id - 1) * camp_mpi_size() + camp_mpi_rank() + 1
     next_id = next_id + 1
 
   end subroutine aero_particle_new_id
@@ -890,33 +890,33 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Determines the number of bytes required to pack the given value.
-  integer function pmc_mpi_pack_size_aero_particle(val)
+  integer function camp_mpi_pack_size_aero_particle(val)
 
     !> Value to pack.
     type(aero_particle_t), intent(in) :: val
 
-    pmc_mpi_pack_size_aero_particle = &
-         pmc_mpi_pack_size_real_array(val%vol) &
-         + pmc_mpi_pack_size_integer_array(val%n_orig_part) &
-         + pmc_mpi_pack_size_integer(val%weight_group) &
-         + pmc_mpi_pack_size_integer(val%weight_class) &
-         + pmc_mpi_pack_size_real(val%absorb_cross_sect) &
-         + pmc_mpi_pack_size_real(val%scatter_cross_sect) &
-         + pmc_mpi_pack_size_real(val%asymmetry) &
-         + pmc_mpi_pack_size_complex(val%refract_shell) &
-         + pmc_mpi_pack_size_complex(val%refract_core) &
-         + pmc_mpi_pack_size_real(val%core_vol) &
-         + pmc_mpi_pack_size_integer(val%water_hyst_leg) &
-         + pmc_mpi_pack_size_integer(val%id) &
-         + pmc_mpi_pack_size_real(val%least_create_time) &
-         + pmc_mpi_pack_size_real(val%greatest_create_time)
+    camp_mpi_pack_size_aero_particle = &
+         camp_mpi_pack_size_real_array(val%vol) &
+         + camp_mpi_pack_size_integer_array(val%n_orig_part) &
+         + camp_mpi_pack_size_integer(val%weight_group) &
+         + camp_mpi_pack_size_integer(val%weight_class) &
+         + camp_mpi_pack_size_real(val%absorb_cross_sect) &
+         + camp_mpi_pack_size_real(val%scatter_cross_sect) &
+         + camp_mpi_pack_size_real(val%asymmetry) &
+         + camp_mpi_pack_size_complex(val%refract_shell) &
+         + camp_mpi_pack_size_complex(val%refract_core) &
+         + camp_mpi_pack_size_real(val%core_vol) &
+         + camp_mpi_pack_size_integer(val%water_hyst_leg) &
+         + camp_mpi_pack_size_integer(val%id) &
+         + camp_mpi_pack_size_real(val%least_create_time) &
+         + camp_mpi_pack_size_real(val%greatest_create_time)
 
-  end function pmc_mpi_pack_size_aero_particle
+  end function camp_mpi_pack_size_aero_particle
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Packs the given value into the buffer, advancing position.
-  subroutine pmc_mpi_pack_aero_particle(buffer, position, val)
+  subroutine camp_mpi_pack_aero_particle(buffer, position, val)
 
     !> Memory buffer.
     character, intent(inout) :: buffer(:)
@@ -929,30 +929,30 @@ contains
     integer :: prev_position
 
     prev_position = position
-    call pmc_mpi_pack_real_array(buffer, position, val%vol)
-    call pmc_mpi_pack_integer_array(buffer, position, val%n_orig_part)
-    call pmc_mpi_pack_integer(buffer, position, val%weight_group)
-    call pmc_mpi_pack_integer(buffer, position, val%weight_class)
-    call pmc_mpi_pack_real(buffer, position, val%absorb_cross_sect)
-    call pmc_mpi_pack_real(buffer, position, val%scatter_cross_sect)
-    call pmc_mpi_pack_real(buffer, position, val%asymmetry)
-    call pmc_mpi_pack_complex(buffer, position, val%refract_shell)
-    call pmc_mpi_pack_complex(buffer, position, val%refract_core)
-    call pmc_mpi_pack_real(buffer, position, val%core_vol)
-    call pmc_mpi_pack_integer(buffer, position, val%water_hyst_leg)
-    call pmc_mpi_pack_integer(buffer, position, val%id)
-    call pmc_mpi_pack_real(buffer, position, val%least_create_time)
-    call pmc_mpi_pack_real(buffer, position, val%greatest_create_time)
+    call camp_mpi_pack_real_array(buffer, position, val%vol)
+    call camp_mpi_pack_integer_array(buffer, position, val%n_orig_part)
+    call camp_mpi_pack_integer(buffer, position, val%weight_group)
+    call camp_mpi_pack_integer(buffer, position, val%weight_class)
+    call camp_mpi_pack_real(buffer, position, val%absorb_cross_sect)
+    call camp_mpi_pack_real(buffer, position, val%scatter_cross_sect)
+    call camp_mpi_pack_real(buffer, position, val%asymmetry)
+    call camp_mpi_pack_complex(buffer, position, val%refract_shell)
+    call camp_mpi_pack_complex(buffer, position, val%refract_core)
+    call camp_mpi_pack_real(buffer, position, val%core_vol)
+    call camp_mpi_pack_integer(buffer, position, val%water_hyst_leg)
+    call camp_mpi_pack_integer(buffer, position, val%id)
+    call camp_mpi_pack_real(buffer, position, val%least_create_time)
+    call camp_mpi_pack_real(buffer, position, val%greatest_create_time)
     call assert(810223998, position - prev_position &
-         <= pmc_mpi_pack_size_aero_particle(val))
+         <= camp_mpi_pack_size_aero_particle(val))
 #endif
 
-  end subroutine pmc_mpi_pack_aero_particle
+  end subroutine camp_mpi_pack_aero_particle
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Unpacks the given value from the buffer, advancing position.
-  subroutine pmc_mpi_unpack_aero_particle(buffer, position, val)
+  subroutine camp_mpi_unpack_aero_particle(buffer, position, val)
 
     !> Memory buffer.
     character, intent(inout) :: buffer(:)
@@ -965,25 +965,25 @@ contains
     integer :: prev_position
 
     prev_position = position
-    call pmc_mpi_unpack_real_array(buffer, position, val%vol)
-    call pmc_mpi_unpack_integer_array(buffer, position, val%n_orig_part)
-    call pmc_mpi_unpack_integer(buffer, position, val%weight_group)
-    call pmc_mpi_unpack_integer(buffer, position, val%weight_class)
-    call pmc_mpi_unpack_real(buffer, position, val%absorb_cross_sect)
-    call pmc_mpi_unpack_real(buffer, position, val%scatter_cross_sect)
-    call pmc_mpi_unpack_real(buffer, position, val%asymmetry)
-    call pmc_mpi_unpack_complex(buffer, position, val%refract_shell)
-    call pmc_mpi_unpack_complex(buffer, position, val%refract_core)
-    call pmc_mpi_unpack_real(buffer, position, val%core_vol)
-    call pmc_mpi_unpack_integer(buffer, position, val%water_hyst_leg)
-    call pmc_mpi_unpack_integer(buffer, position, val%id)
-    call pmc_mpi_unpack_real(buffer, position, val%least_create_time)
-    call pmc_mpi_unpack_real(buffer, position, val%greatest_create_time)
+    call camp_mpi_unpack_real_array(buffer, position, val%vol)
+    call camp_mpi_unpack_integer_array(buffer, position, val%n_orig_part)
+    call camp_mpi_unpack_integer(buffer, position, val%weight_group)
+    call camp_mpi_unpack_integer(buffer, position, val%weight_class)
+    call camp_mpi_unpack_real(buffer, position, val%absorb_cross_sect)
+    call camp_mpi_unpack_real(buffer, position, val%scatter_cross_sect)
+    call camp_mpi_unpack_real(buffer, position, val%asymmetry)
+    call camp_mpi_unpack_complex(buffer, position, val%refract_shell)
+    call camp_mpi_unpack_complex(buffer, position, val%refract_core)
+    call camp_mpi_unpack_real(buffer, position, val%core_vol)
+    call camp_mpi_unpack_integer(buffer, position, val%water_hyst_leg)
+    call camp_mpi_unpack_integer(buffer, position, val%id)
+    call camp_mpi_unpack_real(buffer, position, val%least_create_time)
+    call camp_mpi_unpack_real(buffer, position, val%greatest_create_time)
     call assert(287447241, position - prev_position &
-         <= pmc_mpi_pack_size_aero_particle(val))
+         <= camp_mpi_pack_size_aero_particle(val))
 #endif
 
-  end subroutine pmc_mpi_unpack_aero_particle
+  end subroutine camp_mpi_unpack_aero_particle
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -1023,4 +1023,4 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end module pmc_aero_particle
+end module camp_aero_particle

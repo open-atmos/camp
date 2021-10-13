@@ -2,7 +2,7 @@
   "description" : [
     "Partitioning of species to aqueous. Parameters are from existing wet-deposition module."
   ],
-  "pmc-data" : [
+  "camp-data" : [
     {
       "name" : "MONARCH mod37",
       "type" : "MECHANISM",

@@ -3,16 +3,16 @@
 ! option) any later version. See the file COPYING for details.
 
 !> \file
-!> The pmc_nucleate module.
+!> The camp_nucleate module.
 
 !> Aerosol nucleation functions.
-module pmc_nucleate
+module camp_nucleate
 
-  use pmc_env_state
-  use pmc_aero_state
-  use pmc_aero_data
-  use pmc_gas_data
-  use pmc_gas_state
+  use camp_env_state
+  use camp_aero_state
+  use camp_aero_data
+  use camp_gas_data
+  use camp_gas_state
 
   !> Type code for unknown or invalid nucleation type.
   integer, parameter :: NUCLEATE_TYPE_INVALID   = 0
@@ -216,4 +216,4 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end module pmc_nucleate
+end module camp_nucleate

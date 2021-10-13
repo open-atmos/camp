@@ -3,7 +3,7 @@
     "PD-FiTE activity calculations for aqueous aerosol species. Parameters from tables 3 and 4 in",
     "Topping et al. 2009."
   ],
-  "pmc-data" : [
+  "camp-data" : [
     {
       "type" : "SUB_MODEL_PDFITE",
       "name" : "MONARCH activity scheme",

@@ -3,31 +3,31 @@
 ! option) any later version. See the file COPYING for details.
 
 !> \file
-!> The pmc_run_part module.
+!> The camp_run_part module.
 
 !> Monte Carlo simulation.
-module pmc_run_part
+module camp_run_part
 
-  use pmc_util
-  use pmc_aero_state
-  use pmc_scenario
-  use pmc_env_state
-  use pmc_aero_data
-  use pmc_gas_data
-  use pmc_gas_state
-  use pmc_output
-  use pmc_mosaic
-  use pmc_coagulation
-  use pmc_coagulation_dist
-  use pmc_coag_kernel
-  use pmc_nucleate
-  use pmc_mpi
-  use pmc_camp_core
-  use pmc_camp_state
-  use pmc_camp_interface
-  use pmc_photolysis
+  use camp_util
+  use camp_aero_state
+  use camp_scenario
+  use camp_env_state
+  use camp_aero_data
+  use camp_gas_data
+  use camp_gas_state
+  use camp_output
+  use camp_mosaic
+  use camp_coagulation
+  use camp_coagulation_dist
+  use camp_coag_kernel
+  use camp_nucleate
+  use camp_mpi
+  use camp_camp_core
+  use camp_camp_state
+  use camp_camp_interface
+  use camp_photolysis
 #ifdef PMC_USE_SUNDIALS
-  use pmc_condense
+  use camp_condense
 #endif
 #ifdef PMC_USE_MPI
   use mpi
@@ -151,8 +151,8 @@ contains
     integer :: n_time, i_time, i_time_start, pre_i_time
     integer :: i_state, i_state_netcdf, i_output
 
-    rank = pmc_mpi_rank()
-    n_proc = pmc_mpi_size()
+    rank = camp_mpi_rank()
+    n_proc = camp_mpi_size()
 
     i_time = 0
     i_output = 1
@@ -279,7 +279,7 @@ contains
 
 #ifdef PMC_USE_SUNDIALS
        if (run_part_opt%do_camp_chem) then
-          call pmc_camp_interface_solve(camp_core, camp_state, &
+          call camp_camp_interface_solve(camp_core, camp_state, &
                camp_pre_aero_state, camp_post_aero_state, aero_data, &
                aero_state, gas_data, gas_state, photolysis, &
                run_part_opt%del_t)
@@ -336,14 +336,14 @@ contains
                run_part_opt%t_progress, last_progress_time, do_progress)
           if (do_progress) then
              global_n_part = aero_state_total_particles_all_procs(aero_state)
-             call pmc_mpi_reduce_sum_integer(progress_n_samp, global_n_samp)
-             call pmc_mpi_reduce_sum_integer(progress_n_coag, global_n_coag)
-             call pmc_mpi_reduce_sum_integer(progress_n_emit, global_n_emit)
-             call pmc_mpi_reduce_sum_integer(progress_n_dil_in, &
+             call camp_mpi_reduce_sum_integer(progress_n_samp, global_n_samp)
+             call camp_mpi_reduce_sum_integer(progress_n_coag, global_n_coag)
+             call camp_mpi_reduce_sum_integer(progress_n_emit, global_n_emit)
+             call camp_mpi_reduce_sum_integer(progress_n_dil_in, &
                   global_n_dil_in)
-             call pmc_mpi_reduce_sum_integer(progress_n_dil_out, &
+             call camp_mpi_reduce_sum_integer(progress_n_dil_out, &
                   global_n_dil_out)
-             call pmc_mpi_reduce_sum_integer(progress_n_nuc, global_n_nuc)
+             call camp_mpi_reduce_sum_integer(progress_n_nuc, global_n_nuc)
              if (rank == 0) then
                 ! progress only printed from root process
                 call cpu_time(t_wall_now)
@@ -425,48 +425,48 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Determines the number of bytes required to pack the given value.
-  integer function pmc_mpi_pack_size_run_part_opt(val)
+  integer function camp_mpi_pack_size_run_part_opt(val)
 
     !> Value to pack.
     type(run_part_opt_t), intent(in) :: val
 
-    pmc_mpi_pack_size_run_part_opt = &
-         pmc_mpi_pack_size_real(val%t_max) &
-         + pmc_mpi_pack_size_real(val%t_output) &
-         + pmc_mpi_pack_size_real(val%t_progress) &
-         + pmc_mpi_pack_size_real(val%del_t) &
-         + pmc_mpi_pack_size_string(val%output_prefix) &
-         + pmc_mpi_pack_size_integer(val%coag_kernel_type) &
-         + pmc_mpi_pack_size_integer(val%nucleate_type) &
-         + pmc_mpi_pack_size_integer(val%nucleate_source) &
-         + pmc_mpi_pack_size_logical(val%do_coagulation) &
-         + pmc_mpi_pack_size_logical(val%do_nucleation) &
-         + pmc_mpi_pack_size_logical(val%allow_doubling) &
-         + pmc_mpi_pack_size_logical(val%allow_halving) &
-         + pmc_mpi_pack_size_logical(val%do_condensation) &
-         + pmc_mpi_pack_size_logical(val%do_mosaic) &
-         + pmc_mpi_pack_size_logical(val%do_optical) &
-         + pmc_mpi_pack_size_logical(val%do_select_weighting) &
-         + pmc_mpi_pack_size_integer(val%weighting_type) &
-         + pmc_mpi_pack_size_real(val%weighting_exponent) &
-         + pmc_mpi_pack_size_integer(val%i_repeat) &
-         + pmc_mpi_pack_size_integer(val%n_repeat) &
-         + pmc_mpi_pack_size_real(val%t_wall_start) &
-         + pmc_mpi_pack_size_logical(val%record_removals) &
-         + pmc_mpi_pack_size_logical(val%do_parallel) &
-         + pmc_mpi_pack_size_integer(val%output_type) &
-         + pmc_mpi_pack_size_real(val%mix_timescale) &
-         + pmc_mpi_pack_size_logical(val%gas_average) &
-         + pmc_mpi_pack_size_logical(val%env_average) &
-         + pmc_mpi_pack_size_integer(val%parallel_coag_type) &
-         + pmc_mpi_pack_size_string(val%uuid)
+    camp_mpi_pack_size_run_part_opt = &
+         camp_mpi_pack_size_real(val%t_max) &
+         + camp_mpi_pack_size_real(val%t_output) &
+         + camp_mpi_pack_size_real(val%t_progress) &
+         + camp_mpi_pack_size_real(val%del_t) &
+         + camp_mpi_pack_size_string(val%output_prefix) &
+         + camp_mpi_pack_size_integer(val%coag_kernel_type) &
+         + camp_mpi_pack_size_integer(val%nucleate_type) &
+         + camp_mpi_pack_size_integer(val%nucleate_source) &
+         + camp_mpi_pack_size_logical(val%do_coagulation) &
+         + camp_mpi_pack_size_logical(val%do_nucleation) &
+         + camp_mpi_pack_size_logical(val%allow_doubling) &
+         + camp_mpi_pack_size_logical(val%allow_halving) &
+         + camp_mpi_pack_size_logical(val%do_condensation) &
+         + camp_mpi_pack_size_logical(val%do_mosaic) &
+         + camp_mpi_pack_size_logical(val%do_optical) &
+         + camp_mpi_pack_size_logical(val%do_select_weighting) &
+         + camp_mpi_pack_size_integer(val%weighting_type) &
+         + camp_mpi_pack_size_real(val%weighting_exponent) &
+         + camp_mpi_pack_size_integer(val%i_repeat) &
+         + camp_mpi_pack_size_integer(val%n_repeat) &
+         + camp_mpi_pack_size_real(val%t_wall_start) &
+         + camp_mpi_pack_size_logical(val%record_removals) &
+         + camp_mpi_pack_size_logical(val%do_parallel) &
+         + camp_mpi_pack_size_integer(val%output_type) &
+         + camp_mpi_pack_size_real(val%mix_timescale) &
+         + camp_mpi_pack_size_logical(val%gas_average) &
+         + camp_mpi_pack_size_logical(val%env_average) &
+         + camp_mpi_pack_size_integer(val%parallel_coag_type) &
+         + camp_mpi_pack_size_string(val%uuid)
 
-  end function pmc_mpi_pack_size_run_part_opt
+  end function camp_mpi_pack_size_run_part_opt
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Packs the given value into the buffer, advancing position.
-  subroutine pmc_mpi_pack_run_part_opt(buffer, position, val)
+  subroutine camp_mpi_pack_run_part_opt(buffer, position, val)
 
     !> Memory buffer.
     character, intent(inout) :: buffer(:)
@@ -479,45 +479,45 @@ contains
     integer :: prev_position
 
     prev_position = position
-    call pmc_mpi_pack_real(buffer, position, val%t_max)
-    call pmc_mpi_pack_real(buffer, position, val%t_output)
-    call pmc_mpi_pack_real(buffer, position, val%t_progress)
-    call pmc_mpi_pack_real(buffer, position, val%del_t)
-    call pmc_mpi_pack_string(buffer, position, val%output_prefix)
-    call pmc_mpi_pack_integer(buffer, position, val%coag_kernel_type)
-    call pmc_mpi_pack_integer(buffer, position, val%nucleate_type)
-    call pmc_mpi_pack_integer(buffer, position, val%nucleate_source)
-    call pmc_mpi_pack_logical(buffer, position, val%do_coagulation)
-    call pmc_mpi_pack_logical(buffer, position, val%do_nucleation)
-    call pmc_mpi_pack_logical(buffer, position, val%allow_doubling)
-    call pmc_mpi_pack_logical(buffer, position, val%allow_halving)
-    call pmc_mpi_pack_logical(buffer, position, val%do_condensation)
-    call pmc_mpi_pack_logical(buffer, position, val%do_mosaic)
-    call pmc_mpi_pack_logical(buffer, position, val%do_optical)
-    call pmc_mpi_pack_logical(buffer, position, val%do_select_weighting)
-    call pmc_mpi_pack_integer(buffer, position, val%weighting_type)
-    call pmc_mpi_pack_real(buffer, position, val%weighting_exponent)
-    call pmc_mpi_pack_integer(buffer, position, val%i_repeat)
-    call pmc_mpi_pack_integer(buffer, position, val%n_repeat)
-    call pmc_mpi_pack_real(buffer, position, val%t_wall_start)
-    call pmc_mpi_pack_logical(buffer, position, val%record_removals)
-    call pmc_mpi_pack_logical(buffer, position, val%do_parallel)
-    call pmc_mpi_pack_integer(buffer, position, val%output_type)
-    call pmc_mpi_pack_real(buffer, position, val%mix_timescale)
-    call pmc_mpi_pack_logical(buffer, position, val%gas_average)
-    call pmc_mpi_pack_logical(buffer, position, val%env_average)
-    call pmc_mpi_pack_integer(buffer, position, val%parallel_coag_type)
-    call pmc_mpi_pack_string(buffer, position, val%uuid)
+    call camp_mpi_pack_real(buffer, position, val%t_max)
+    call camp_mpi_pack_real(buffer, position, val%t_output)
+    call camp_mpi_pack_real(buffer, position, val%t_progress)
+    call camp_mpi_pack_real(buffer, position, val%del_t)
+    call camp_mpi_pack_string(buffer, position, val%output_prefix)
+    call camp_mpi_pack_integer(buffer, position, val%coag_kernel_type)
+    call camp_mpi_pack_integer(buffer, position, val%nucleate_type)
+    call camp_mpi_pack_integer(buffer, position, val%nucleate_source)
+    call camp_mpi_pack_logical(buffer, position, val%do_coagulation)
+    call camp_mpi_pack_logical(buffer, position, val%do_nucleation)
+    call camp_mpi_pack_logical(buffer, position, val%allow_doubling)
+    call camp_mpi_pack_logical(buffer, position, val%allow_halving)
+    call camp_mpi_pack_logical(buffer, position, val%do_condensation)
+    call camp_mpi_pack_logical(buffer, position, val%do_mosaic)
+    call camp_mpi_pack_logical(buffer, position, val%do_optical)
+    call camp_mpi_pack_logical(buffer, position, val%do_select_weighting)
+    call camp_mpi_pack_integer(buffer, position, val%weighting_type)
+    call camp_mpi_pack_real(buffer, position, val%weighting_exponent)
+    call camp_mpi_pack_integer(buffer, position, val%i_repeat)
+    call camp_mpi_pack_integer(buffer, position, val%n_repeat)
+    call camp_mpi_pack_real(buffer, position, val%t_wall_start)
+    call camp_mpi_pack_logical(buffer, position, val%record_removals)
+    call camp_mpi_pack_logical(buffer, position, val%do_parallel)
+    call camp_mpi_pack_integer(buffer, position, val%output_type)
+    call camp_mpi_pack_real(buffer, position, val%mix_timescale)
+    call camp_mpi_pack_logical(buffer, position, val%gas_average)
+    call camp_mpi_pack_logical(buffer, position, val%env_average)
+    call camp_mpi_pack_integer(buffer, position, val%parallel_coag_type)
+    call camp_mpi_pack_string(buffer, position, val%uuid)
     call assert(946070052, &
-         position - prev_position <= pmc_mpi_pack_size_run_part_opt(val))
+         position - prev_position <= camp_mpi_pack_size_run_part_opt(val))
 #endif
 
-  end subroutine pmc_mpi_pack_run_part_opt
+  end subroutine camp_mpi_pack_run_part_opt
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Unpacks the given value from the buffer, advancing position.
-  subroutine pmc_mpi_unpack_run_part_opt(buffer, position, val)
+  subroutine camp_mpi_unpack_run_part_opt(buffer, position, val)
 
     !> Memory buffer.
     character, intent(inout) :: buffer(:)
@@ -530,40 +530,40 @@ contains
     integer :: prev_position
 
     prev_position = position
-    call pmc_mpi_unpack_real(buffer, position, val%t_max)
-    call pmc_mpi_unpack_real(buffer, position, val%t_output)
-    call pmc_mpi_unpack_real(buffer, position, val%t_progress)
-    call pmc_mpi_unpack_real(buffer, position, val%del_t)
-    call pmc_mpi_unpack_string(buffer, position, val%output_prefix)
-    call pmc_mpi_unpack_integer(buffer, position, val%coag_kernel_type)
-    call pmc_mpi_unpack_integer(buffer, position, val%nucleate_type)
-    call pmc_mpi_unpack_integer(buffer, position, val%nucleate_source)
-    call pmc_mpi_unpack_logical(buffer, position, val%do_coagulation)
-    call pmc_mpi_unpack_logical(buffer, position, val%do_nucleation)
-    call pmc_mpi_unpack_logical(buffer, position, val%allow_doubling)
-    call pmc_mpi_unpack_logical(buffer, position, val%allow_halving)
-    call pmc_mpi_unpack_logical(buffer, position, val%do_condensation)
-    call pmc_mpi_unpack_logical(buffer, position, val%do_mosaic)
-    call pmc_mpi_unpack_logical(buffer, position, val%do_optical)
-    call pmc_mpi_unpack_logical(buffer, position, val%do_select_weighting)
-    call pmc_mpi_unpack_integer(buffer, position, val%weighting_type)
-    call pmc_mpi_unpack_real(buffer, position, val%weighting_exponent)
-    call pmc_mpi_unpack_integer(buffer, position, val%i_repeat)
-    call pmc_mpi_unpack_integer(buffer, position, val%n_repeat)
-    call pmc_mpi_unpack_real(buffer, position, val%t_wall_start)
-    call pmc_mpi_unpack_logical(buffer, position, val%record_removals)
-    call pmc_mpi_unpack_logical(buffer, position, val%do_parallel)
-    call pmc_mpi_unpack_integer(buffer, position, val%output_type)
-    call pmc_mpi_unpack_real(buffer, position, val%mix_timescale)
-    call pmc_mpi_unpack_logical(buffer, position, val%gas_average)
-    call pmc_mpi_unpack_logical(buffer, position, val%env_average)
-    call pmc_mpi_unpack_integer(buffer, position, val%parallel_coag_type)
-    call pmc_mpi_unpack_string(buffer, position, val%uuid)
+    call camp_mpi_unpack_real(buffer, position, val%t_max)
+    call camp_mpi_unpack_real(buffer, position, val%t_output)
+    call camp_mpi_unpack_real(buffer, position, val%t_progress)
+    call camp_mpi_unpack_real(buffer, position, val%del_t)
+    call camp_mpi_unpack_string(buffer, position, val%output_prefix)
+    call camp_mpi_unpack_integer(buffer, position, val%coag_kernel_type)
+    call camp_mpi_unpack_integer(buffer, position, val%nucleate_type)
+    call camp_mpi_unpack_integer(buffer, position, val%nucleate_source)
+    call camp_mpi_unpack_logical(buffer, position, val%do_coagulation)
+    call camp_mpi_unpack_logical(buffer, position, val%do_nucleation)
+    call camp_mpi_unpack_logical(buffer, position, val%allow_doubling)
+    call camp_mpi_unpack_logical(buffer, position, val%allow_halving)
+    call camp_mpi_unpack_logical(buffer, position, val%do_condensation)
+    call camp_mpi_unpack_logical(buffer, position, val%do_mosaic)
+    call camp_mpi_unpack_logical(buffer, position, val%do_optical)
+    call camp_mpi_unpack_logical(buffer, position, val%do_select_weighting)
+    call camp_mpi_unpack_integer(buffer, position, val%weighting_type)
+    call camp_mpi_unpack_real(buffer, position, val%weighting_exponent)
+    call camp_mpi_unpack_integer(buffer, position, val%i_repeat)
+    call camp_mpi_unpack_integer(buffer, position, val%n_repeat)
+    call camp_mpi_unpack_real(buffer, position, val%t_wall_start)
+    call camp_mpi_unpack_logical(buffer, position, val%record_removals)
+    call camp_mpi_unpack_logical(buffer, position, val%do_parallel)
+    call camp_mpi_unpack_integer(buffer, position, val%output_type)
+    call camp_mpi_unpack_real(buffer, position, val%mix_timescale)
+    call camp_mpi_unpack_logical(buffer, position, val%gas_average)
+    call camp_mpi_unpack_logical(buffer, position, val%env_average)
+    call camp_mpi_unpack_integer(buffer, position, val%parallel_coag_type)
+    call camp_mpi_unpack_string(buffer, position, val%uuid)
     call assert(480118362, &
-         position - prev_position <= pmc_mpi_pack_size_run_part_opt(val))
+         position - prev_position <= camp_mpi_pack_size_run_part_opt(val))
 #endif
 
-  end subroutine pmc_mpi_unpack_run_part_opt
+  end subroutine camp_mpi_unpack_run_part_opt
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -605,4 +605,4 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end module pmc_run_part
+end module camp_run_part

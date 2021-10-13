@@ -76,7 +76,7 @@ void rxn_first_order_loss_update_ids(ModelData *model_data, int *deriv_ids,
  *
  *  - \b int rxn_id (Id of one or more first-order loss reactions set by the
  *       host model using the
- *       \c pmc_rxn_first_order_loss::rxn_first_order_loss_t::set_rxn_id
+ *       \c camp_rxn_first_order_loss::rxn_first_order_loss_t::set_rxn_id
  *       function prior to initializing the solver.)
  *  - \b double rate_const (New pre-scaling rate constant.)
  *

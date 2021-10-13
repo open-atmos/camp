@@ -8,8 +8,8 @@ import copy as module_copy
 from Scientific.IO.NetCDF import *
 from pyx import *
 sys.path.append("../../tool")
-from pmc_data_nc import *
-from pmc_pyx import *
+from camp_data_nc import *
+from camp_pyx import *
 import numpy
 from config import *
 
@@ -24,7 +24,7 @@ for [i_run, netcdf_pattern] in netcdf_indexed_patterns:
 
     diameter = particles.diameter()
 
-    init_grid = pmc_log_axis(min = 1e-8, max = 1e-6, n_bin = 20)
+    init_grid = camp_log_axis(min = 1e-8, max = 1e-6, n_bin = 20)
     ids = []
     for i in range(init_grid.n_bin):
         d = init_grid.center(i)

@@ -3,26 +3,26 @@
 ! option) any later version. See the file COPYING for details.
 
 !> \file
-!> The pmc_test_aero_rep_data program
+!> The camp_test_aero_rep_data program
 
 !> Test class for the aero_rep_data_t extending types
-program pmc_test_aero_rep_data
+program camp_test_aero_rep_data
 
-  use pmc_util,                         only: i_kind, dp, assert, &
+  use camp_util,                         only: i_kind, dp, assert, &
                                               almost_equal
-  use pmc_property
-  use pmc_camp_core
-  use pmc_camp_state
-  use pmc_aero_rep_data
-  use pmc_aero_rep_factory
-  use pmc_aero_rep_modal_binned_mass
+  use camp_property
+  use camp_camp_core
+  use camp_camp_state
+  use camp_aero_rep_data
+  use camp_aero_rep_factory
+  use camp_aero_rep_modal_binned_mass
 #ifdef PMC_USE_JSON
   use json_module
 #endif
 #ifdef PMC_USE_MPI
   use mpi
 #endif
-  use pmc_mpi
+  use camp_mpi
 
   use iso_c_binding
   implicit none
@@ -54,26 +54,26 @@ program pmc_test_aero_rep_data
   character(len=*), parameter :: new_line = char(10)
 
   !> initialize mpi
-  call pmc_mpi_init()
+  call camp_mpi_init()
 
-  if (run_pmc_aero_rep_data_tests()) then
-    if (pmc_mpi_rank().eq.0) write(*,*) "Aerosol representation tests - PASS"
+  if (run_camp_aero_rep_data_tests()) then
+    if (camp_mpi_rank().eq.0) write(*,*) "Aerosol representation tests - PASS"
   else
-    if (pmc_mpi_rank().eq.0) write(*,*) "Aerosol representation tests - FAIL"
+    if (camp_mpi_rank().eq.0) write(*,*) "Aerosol representation tests - FAIL"
     stop 3
   end if
 
   !> finalize mpi
-  call pmc_mpi_finalize()
+  call camp_mpi_finalize()
 
 contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  !> Run all pmc_aero_rep_data tests
-  logical function run_pmc_aero_rep_data_tests() result(passed)
+  !> Run all camp_aero_rep_data tests
+  logical function run_camp_aero_rep_data_tests() result(passed)
 
-    use pmc_camp_solver_data
+    use camp_camp_solver_data
 
     type(camp_solver_data_t), pointer :: camp_solver_data
 
@@ -88,7 +88,7 @@ contains
 
     deallocate(camp_solver_data)
 
-  end function run_pmc_aero_rep_data_tests
+  end function run_camp_aero_rep_data_tests
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -362,4 +362,4 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end program pmc_test_aero_rep_data
+end program camp_test_aero_rep_data

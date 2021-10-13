@@ -5,22 +5,22 @@
 ! option) any later version. See the file COPYING for details.
 
 !> \file
-!> The pmc_coagulation module.
+!> The camp_coagulation module.
 
 !> Aerosol particle coagulation.
-module pmc_coagulation
+module camp_coagulation
 
-  use pmc_bin_grid
-  use pmc_aero_data
-  use pmc_util
-  use pmc_stats
-  use pmc_env_state
-  use pmc_aero_state
-  use pmc_aero_weight
-  use pmc_aero_weight_array
-  use pmc_mpi
-  use pmc_coag_kernel
-  use pmc_aero_sorted
+  use camp_bin_grid
+  use camp_aero_data
+  use camp_util
+  use camp_stats
+  use camp_env_state
+  use camp_aero_state
+  use camp_aero_weight
+  use camp_aero_weight_array
+  use camp_mpi
+  use camp_coag_kernel
+  use camp_aero_sorted
 #ifdef PMC_USE_MPI
   use mpi
 #endif
@@ -421,7 +421,7 @@ contains
        end if
        n_samp = n_samp + 1
        ! FIXME: We are sampling with replacement. Is this a problem?
-       i_unif_entry = pmc_rand_int(integer_varray_n_entry( &
+       i_unif_entry = camp_rand_int(integer_varray_n_entry( &
             aero_state%aero_sorted%size_class%inverse(bs, cs)))
        i_part = aero_state%aero_sorted%size_class%inverse(bs, &
             cs)%entry(i_unif_entry)
@@ -431,7 +431,7 @@ contains
             aero_data, aero_state%awa, env_state, k)
        prob_coag = k * accept_factor
        prob_coag_tot = prob_coag_tot + prob_coag
-       if (pmc_random() < prob_coag) then
+       if (camp_random() < prob_coag) then
           n_avg = n_avg + 1
           call aero_particle_coagulate(source_particle, &
                aero_state%apa%particle(i_part), source_particle)
@@ -440,7 +440,7 @@ contains
              num_conc_i = aero_weight_array_num_conc(aero_state%awa, &
                   aero_state%apa%particle(i_part), aero_data)
              prob_remove_i = num_conc_target / num_conc_i
-             if (pmc_random() < prob_remove_i / prob_remove_source_max) then
+             if (camp_random() < prob_remove_i / prob_remove_source_max) then
                 n_remove = n_remove + 1
                 aero_info%id = aero_state%apa%particle(i_part)%id
                 aero_info%action = AERO_INFO_COAG
@@ -700,7 +700,7 @@ contains
          // "could be caused by changing env_state")
 
     did_coag = .false.
-    if (pmc_random() .lt. p) then
+    if (camp_random() .lt. p) then
        call coagulate(aero_data, aero_state, p1, p2, c1, c2, cc)
        did_coag = .true.
     end if
@@ -731,13 +731,13 @@ contains
 
     call assert(619608562, &
          integer_varray_n_entry(aero_sorted%size_class%inverse(b1, c1)) >= 1)
-    i1 = pmc_rand_int( &
+    i1 = camp_rand_int( &
          integer_varray_n_entry(aero_sorted%size_class%inverse(b1, c1)))
 
     if ((b1 == b2) .and. (c1 == c2)) then
        call assert(956184336, integer_varray_n_entry( &
             aero_sorted%size_class%inverse(b2, c2)) >= 2)
-       i2 = pmc_rand_int( &
+       i2 = camp_rand_int( &
             integer_varray_n_entry(aero_sorted%size_class%inverse(b2, c2)) - 1)
        if (i2 == i1) then
           i2 = integer_varray_n_entry(aero_sorted%size_class%inverse(b2, c2))
@@ -745,7 +745,7 @@ contains
     else
        call assert(271635751, integer_varray_n_entry( &
             aero_sorted%size_class%inverse(b2, c2)) >= 1)
-       i2 = pmc_rand_int( &
+       i2 = camp_rand_int( &
             integer_varray_n_entry(aero_sorted%size_class%inverse(b2, c2)))
     end if
 
@@ -812,14 +812,14 @@ contains
     prob_remove_1 = nc_min / nc1
     prob_remove_2 = nc_min / nc2
     prob_create_new = nc_min / ncc
-    remove_1 = (pmc_random() < prob_remove_1)
+    remove_1 = (camp_random() < prob_remove_1)
     ! FIXME
     !if (aero_weight%type == AERO_WEIGHT_TYPE_MFA) then
     !   remove_2 = .not. remove_1
     !else
-    remove_2 = (pmc_random() < prob_remove_2)
+    remove_2 = (camp_random() < prob_remove_2)
     !end if
-    create_new = (pmc_random() < prob_create_new)
+    create_new = (camp_random() < prob_create_new)
 
     ! figure out what to do about the ID numbers of the various
     ! particles --- we try to preserve particle IDs as much as
@@ -933,4 +933,4 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end module pmc_coagulation
+end module camp_coagulation

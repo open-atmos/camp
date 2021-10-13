@@ -3,18 +3,18 @@
 ! option) any later version. See the file COPYING for details.
 
 !> \file
-!> The pmc_gas_state module.
+!> The camp_gas_state module.
 
 !> The gas_state_t structure and associated subroutines.
-module pmc_gas_state
+module camp_gas_state
 
-  use pmc_util
-  use pmc_spec_file
-  use pmc_gas_data
-  use pmc_env_state
-  use pmc_mpi
-  use pmc_netcdf
-  use pmc_camp_state
+  use camp_util
+  use camp_spec_file
+  use camp_gas_data
+  use camp_env_state
+  use camp_mpi
+  use camp_netcdf
+  use camp_camp_state
 #ifdef PMC_USE_MPI
   use mpi
 #endif
@@ -483,7 +483,7 @@ contains
     type(gas_state_t) :: val_avg
 
     call gas_state_set_size(val_avg, size(val%mix_rat))
-    call pmc_mpi_allreduce_average_real_array(val%mix_rat, val_avg%mix_rat)
+    call camp_mpi_allreduce_average_real_array(val%mix_rat, val_avg%mix_rat)
     val%mix_rat = val_avg%mix_rat
 #endif
 
@@ -502,8 +502,8 @@ contains
     type(gas_state_t) :: val_avg
 
     call gas_state_set_size(val_avg, size(val%mix_rat))
-    call pmc_mpi_reduce_avg_real_array(val%mix_rat, val_avg%mix_rat)
-    if (pmc_mpi_rank() == 0) then
+    call camp_mpi_reduce_avg_real_array(val%mix_rat, val_avg%mix_rat)
+    if (camp_mpi_rank() == 0) then
        val%mix_rat = val_avg%mix_rat
     end if
 #endif
@@ -513,20 +513,20 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Determines the number of bytes required to pack the given value.
-  integer function pmc_mpi_pack_size_gas_state(val)
+  integer function camp_mpi_pack_size_gas_state(val)
 
     !> Value to pack.
     type(gas_state_t), intent(in) :: val
 
-    pmc_mpi_pack_size_gas_state = &
-         + pmc_mpi_pack_size_real_array(val%mix_rat)
+    camp_mpi_pack_size_gas_state = &
+         + camp_mpi_pack_size_real_array(val%mix_rat)
 
-  end function pmc_mpi_pack_size_gas_state
+  end function camp_mpi_pack_size_gas_state
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Packs the given value into the buffer, advancing position.
-  subroutine pmc_mpi_pack_gas_state(buffer, position, val)
+  subroutine camp_mpi_pack_gas_state(buffer, position, val)
 
     !> Memory buffer.
     character, intent(inout) :: buffer(:)
@@ -539,17 +539,17 @@ contains
     integer :: prev_position
 
     prev_position = position
-    call pmc_mpi_pack_real_array(buffer, position, val%mix_rat)
+    call camp_mpi_pack_real_array(buffer, position, val%mix_rat)
     call assert(655827004, &
-         position - prev_position <= pmc_mpi_pack_size_gas_state(val))
+         position - prev_position <= camp_mpi_pack_size_gas_state(val))
 #endif
 
-  end subroutine pmc_mpi_pack_gas_state
+  end subroutine camp_mpi_pack_gas_state
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Unpacks the given value from the buffer, advancing position.
-  subroutine pmc_mpi_unpack_gas_state(buffer, position, val)
+  subroutine camp_mpi_unpack_gas_state(buffer, position, val)
 
     !> Memory buffer.
     character, intent(inout) :: buffer(:)
@@ -562,27 +562,27 @@ contains
     integer :: prev_position
 
     prev_position = position
-    call pmc_mpi_unpack_real_array(buffer, position, val%mix_rat)
+    call camp_mpi_unpack_real_array(buffer, position, val%mix_rat)
     call assert(520815247, &
-         position - prev_position <= pmc_mpi_pack_size_gas_state(val))
+         position - prev_position <= camp_mpi_pack_size_gas_state(val))
 #endif
 
-  end subroutine pmc_mpi_unpack_gas_state
+  end subroutine camp_mpi_unpack_gas_state
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Computes the average of val across all processes, storing the
   !> result in val_avg on the root process.
-  subroutine pmc_mpi_reduce_avg_gas_state(val, val_avg)
+  subroutine camp_mpi_reduce_avg_gas_state(val, val_avg)
 
     !> Value to average.
     type(gas_state_t), intent(in) :: val
     !> Result.
     type(gas_state_t), intent(inout) :: val_avg
 
-    call pmc_mpi_reduce_avg_real_array(val%mix_rat, val_avg%mix_rat)
+    call camp_mpi_reduce_avg_real_array(val%mix_rat, val_avg%mix_rat)
 
-  end subroutine pmc_mpi_reduce_avg_gas_state
+  end subroutine camp_mpi_reduce_avg_gas_state
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -615,7 +615,7 @@ contains
     call gas_data_netcdf_dim_gas_species(gas_data, ncid, &
          dimid_gas_species)
 
-    call pmc_nc_write_real_1d(ncid, gas_state%mix_rat, &
+    call camp_nc_write_real_1d(ncid, gas_state%mix_rat, &
          "gas_mixing_ratio", (/ dimid_gas_species /), unit="ppb", &
          long_name="mixing ratios of gas species")
 
@@ -633,10 +633,10 @@ contains
     !> Gas data.
     type(gas_data_t), intent(in) :: gas_data
 
-    call pmc_nc_read_real_1d(ncid, gas_state%mix_rat, "gas_mixing_ratio")
+    call camp_nc_read_real_1d(ncid, gas_state%mix_rat, "gas_mixing_ratio")
 
   end subroutine gas_state_input_netcdf
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end module pmc_gas_state
+end module camp_gas_state

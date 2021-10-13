@@ -8,8 +8,8 @@ import copy as module_copy
 from Scientific.IO.NetCDF import *
 from pyx import *
 sys.path.append("../tool")
-from pmc_data_nc import *
-from pmc_pyx import *
+from camp_data_nc import *
+from camp_pyx import *
 sys.path.append(".")
 from fig_helper import *
 
@@ -17,17 +17,17 @@ out_prefix = "figs/test_emission"
 
 emission_netcdf_dir = r"../test/emission/out"
 
-mc_data = pmc_var(NetCDFFile(os.path.join(emission_netcdf_dir,
+mc_data = camp_var(NetCDFFile(os.path.join(emission_netcdf_dir,
                                           "emission_mc_0001.nc")),
 		  "aero",
 		  [sum("aero_species")])
 mc_data.scale(1e-6) # m^{-3} to cm^{-3}
-exact_data = pmc_var(NetCDFFile(os.path.join(emission_netcdf_dir,
+exact_data = camp_var(NetCDFFile(os.path.join(emission_netcdf_dir,
                                              "emission_exact_0001.nc")),
 		     "aero",
 		     [sum("aero_species")])
 exact_data.scale(1e-6) # m^{-3} to cm^{-3}
-sect_data = pmc_var(NetCDFFile(os.path.join(emission_netcdf_dir,
+sect_data = camp_var(NetCDFFile(os.path.join(emission_netcdf_dir,
                                             "emission_sect_0001.nc")),
 		    "aero",
 		    [sum("aero_species")])

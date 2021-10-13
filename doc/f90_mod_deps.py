@@ -51,7 +51,7 @@ For a discussion of managing Fortran 90 dependencies see:
 http://tableau.stanford.edu/~mwest/group/Fortran_90_Module_Dependencies
 
 Example:
-f90_mod_deps.py --output src/myfile.deps --dep-re "(pmc_.*)" \\
+f90_mod_deps.py --output src/myfile.deps --dep-re "(camp_.*)" \\
       --dep-template "src/\1.mod" --mod-re "(.*)" \\
       --mod-template "src/\1.mod" src/myfile.f90
 """

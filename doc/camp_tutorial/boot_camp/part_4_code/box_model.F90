@@ -1,18 +1,18 @@
 program box_model
 
-  use pmc_camp_core
-  use pmc_camp_state
-  use pmc_chem_spec_data
-  use pmc_constants
-  use pmc_mechanism_data
-  use pmc_rxn_data
-  use pmc_rxn_photolysis
-  use pmc_rxn_factory
+  use camp_camp_core
+  use camp_camp_state
+  use camp_chem_spec_data
+  use camp_constants
+  use camp_mechanism_data
+  use camp_rxn_data
+  use camp_rxn_photolysis
+  use camp_rxn_factory
 
   !! [MPI modules]
 #ifdef USE_MPI
   use mpi
-  use pmc_mpi
+  use camp_mpi
 #endif
   !! [MPI modules]
 
@@ -45,9 +45,9 @@ program box_model
 
   !! [wrap initialization]
 #ifdef USE_MPI
-  call pmc_mpi_init( )
+  call camp_mpi_init( )
 
-  if( pmc_mpi_rank( ) .eq. 0 ) then
+  if( camp_mpi_rank( ) .eq. 0 ) then
 #endif
 
     camp_core => camp_core_t( "my_config_file.json" )
@@ -107,24 +107,24 @@ program box_model
   !! [pack objects]
 
   !! [pass indices]
-  call pmc_mpi_bcast_integer( idx_O3  )
-  call pmc_mpi_bcast_integer( idx_NO  )
-  call pmc_mpi_bcast_integer( idx_NO2 )
-  call pmc_mpi_bcast_integer( idx_O2  )
+  call camp_mpi_bcast_integer( idx_O3  )
+  call camp_mpi_bcast_integer( idx_NO  )
+  call camp_mpi_bcast_integer( idx_NO2 )
+  call camp_mpi_bcast_integer( idx_O2  )
   !! [pass indices]
 
   !! [pass the buffer]
-  call pmc_mpi_bcast_integer( pack_size )
+  call camp_mpi_bcast_integer( pack_size )
 
-  if( pmc_mpi_rank( ) .gt. 0 ) then
+  if( camp_mpi_rank( ) .gt. 0 ) then
     allocate( buffer( pack_size ) )
   end if
 
-  call pmc_mpi_bcast_packed( buffer )
+  call camp_mpi_bcast_packed( buffer )
   !! [pass the buffer]
 
   !! [unpack the objects]
-  if( pmc_mpi_rank( ) .gt. 0 ) then
+  if( camp_mpi_rank( ) .gt. 0 ) then
 
     camp_core => camp_core_t( )
     pos = 0
@@ -156,7 +156,7 @@ program box_model
 
   !! [output]
 #ifdef USE_MPI
-  if( pmc_mpi_rank( ) .eq. 1 ) then
+  if( camp_mpi_rank( ) .eq. 1 ) then
 #endif
 
     write(*,fmt_hdr) "time", "O3", "NO", "NO2", "O2"
@@ -172,7 +172,7 @@ program box_model
 #ifdef USE_MPI
   end if
 
-  call pmc_mpi_finalize( )
+  call camp_mpi_finalize( )
 #endif
   !! [output]
 

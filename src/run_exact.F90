@@ -3,22 +3,22 @@
 ! option) any later version. See the file COPYING for details.
 
 !> \file
-!> The pmc_run_exact module.
+!> The camp_run_exact module.
 
 !> Exact solution simulation.
-module pmc_run_exact
+module camp_run_exact
 
-  use pmc_aero_dist
-  use pmc_bin_grid
-  use pmc_aero_state
-  use pmc_scenario
-  use pmc_env_state
-  use pmc_aero_data
-  use pmc_output
-  use pmc_aero_binned
-  use pmc_gas_data
-  use pmc_gas_state
-  use pmc_exact_soln
+  use camp_aero_dist
+  use camp_bin_grid
+  use camp_aero_state
+  use camp_scenario
+  use camp_env_state
+  use camp_aero_data
+  use camp_output
+  use camp_aero_binned
+  use camp_gas_data
+  use camp_gas_state
+  use camp_exact_soln
 
   !> Options controlling the execution of run_exact().
   type run_exact_opt_t
@@ -86,4 +86,4 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end module pmc_run_exact
+end module camp_run_exact

@@ -3,7 +3,7 @@
 ! option) any later version. See the file COPYING for details.
 
 !> \file
-!> The pmc_rxn_CMAQ_H2O2 module.
+!> The camp_rxn_CMAQ_H2O2 module.
 
 !> \page camp_rxn_CMAQ_H2O2 CAMP: Special CMAQ Reaction for H2O2
 !!
@@ -67,15 +67,15 @@
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 !> The rxn_CMAQ_H2O2_t type and associated functions.
-module pmc_rxn_CMAQ_H2O2
+module camp_rxn_CMAQ_H2O2
 
-  use pmc_aero_rep_data
-  use pmc_chem_spec_data
-  use pmc_constants,                        only: const
-  use pmc_camp_state
-  use pmc_property
-  use pmc_rxn_data
-  use pmc_util,                             only: i_kind, dp, to_string, &
+  use camp_aero_rep_data
+  use camp_chem_spec_data
+  use camp_constants,                        only: const
+  use camp_camp_state
+  use camp_property
+  use camp_rxn_data
+  use camp_util,                             only: i_kind, dp, to_string, &
                                                   assert, assert_msg, die_msg
 
   implicit none
@@ -308,4 +308,4 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end module pmc_rxn_CMAQ_H2O2
+end module camp_rxn_CMAQ_H2O2

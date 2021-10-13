@@ -11,7 +11,7 @@ extern "C" {
 #include "sub_model_gpu_solver.h"
 //#include "sub_models_gpu.h"
 
-// Sub model types (Must match parameters in pmc_sub_model_gpu_factory)
+// Sub model types (Must match parameters in camp_sub_model_gpu_factory)
 #define SUB_MODEL_UNIFAC 1
 
 }

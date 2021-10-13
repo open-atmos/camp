@@ -3,7 +3,7 @@
 ! option) any later version. See the file COPYING for details.
 
 !> \file
-!> The pmc_output module.
+!> The camp_output module.
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -65,19 +65,19 @@
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 !> Write data in NetCDF format.
-module pmc_output
+module camp_output
 
-  use pmc_bin_grid
-  use pmc_aero_data
-  use pmc_aero_state
-  use pmc_aero_binned
-  use pmc_camp_core
-  use pmc_netcdf
-  use pmc_gas_state
-  use pmc_env_state
-  use pmc_util
-  use pmc_gas_data
-  use pmc_mpi
+  use camp_bin_grid
+  use camp_aero_data
+  use camp_aero_state
+  use camp_aero_binned
+  use camp_camp_core
+  use camp_netcdf
+  use camp_gas_state
+  use camp_env_state
+  use camp_util
+  use camp_gas_data
+  use camp_mpi
 #ifdef PMC_USE_MPI
   use mpi
 #endif
@@ -149,8 +149,8 @@ contains
     character, allocatable :: buffer(:)
 #endif
 
-    rank = pmc_mpi_rank()
-    n_proc = pmc_mpi_size()
+    rank = camp_mpi_rank()
+    n_proc = camp_mpi_size()
     if (output_type == OUTPUT_TYPE_CENTRAL) then
        ! write per-process data to separate files, but do it by
        ! transferring data to process 0 and having it do the writes
@@ -229,12 +229,12 @@ contains
     if (present(write_rank)) then
        use_rank = write_rank
     else
-       use_rank = pmc_mpi_rank()
+       use_rank = camp_mpi_rank()
     end if
     if (present(write_n_proc)) then
        use_n_proc = write_n_proc
     else
-       use_n_proc = pmc_mpi_size()
+       use_n_proc = camp_mpi_size()
     end if
 
     repeat_string = ""
@@ -262,11 +262,11 @@ contains
     !> Filename index.
     integer, intent(in) :: index
 
-    call pmc_nc_write_real(ncid, time, "time", unit="s", &
+    call camp_nc_write_real(ncid, time, "time", unit="s", &
          description="time elapsed since simulation start")
-    call pmc_nc_write_real(ncid, del_t, "timestep", unit="s", &
+    call camp_nc_write_real(ncid, del_t, "timestep", unit="s", &
          description="current timestep size")
-    call pmc_nc_write_integer(ncid, index, "timestep_index", &
+    call camp_nc_write_integer(ncid, index, "timestep_index", &
          description="an integer that is 1 on the first timestep, " &
          // "2 on the second timestep, etc.")
 
@@ -363,11 +363,11 @@ contains
 
     call make_filename(filename, prefix, ".nc", index, i_repeat, write_rank, &
          write_n_proc)
-    call pmc_nc_open_write(filename, ncid)
-    call pmc_nc_write_info(ncid, uuid, &
+    call camp_nc_open_write(filename, ncid)
+    call camp_nc_write_info(ncid, uuid, &
          "PartMC version " // trim(PARTMC_VERSION), write_rank, write_n_proc)
     call write_time(ncid, time, del_t, index)
-    call pmc_nc_write_integer(ncid, i_repeat, "repeat", &
+    call camp_nc_write_integer(ncid, i_repeat, "repeat", &
          description="repeat number of this simulation (starting from 1)")
 
     call env_state_output_netcdf(env_state, ncid)
@@ -377,7 +377,7 @@ contains
     call aero_state_output_netcdf(aero_state, ncid, aero_data, &
          record_removals, record_optical)
 
-    call pmc_nc_check(nf90_close(ncid))
+    call camp_nc_check(nf90_close(ncid))
 
   end subroutine output_state_to_file
 
@@ -397,25 +397,25 @@ contains
     integer :: buffer_size, max_buffer_size, position, ierr
     character, allocatable :: buffer(:)
 
-    call assert(645797304, pmc_mpi_rank() /= 0)
+    call assert(645797304, camp_mpi_rank() /= 0)
 
     max_buffer_size = 0
     max_buffer_size = max_buffer_size &
-         + pmc_mpi_pack_size_env_state(env_state)
+         + camp_mpi_pack_size_env_state(env_state)
     max_buffer_size = max_buffer_size &
-         + pmc_mpi_pack_size_gas_state(gas_state)
+         + camp_mpi_pack_size_gas_state(gas_state)
     max_buffer_size = max_buffer_size &
-         + pmc_mpi_pack_size_aero_state(aero_state)
+         + camp_mpi_pack_size_aero_state(aero_state)
     allocate(buffer(max_buffer_size))
     position = 0
-    call pmc_mpi_pack_env_state(buffer, position, env_state)
-    call pmc_mpi_pack_gas_state(buffer, position, gas_state)
-    call pmc_mpi_pack_aero_state(buffer, position, aero_state)
+    call camp_mpi_pack_env_state(buffer, position, env_state)
+    call camp_mpi_pack_gas_state(buffer, position, gas_state)
+    call camp_mpi_pack_aero_state(buffer, position, aero_state)
     call assert(839343839, position <= max_buffer_size)
     buffer_size = position
     call mpi_send(buffer, buffer_size, MPI_CHARACTER, 0, &
          TAG_OUTPUT_STATE_CENTRAL, MPI_COMM_WORLD, ierr)
-    call pmc_mpi_check_ierr(ierr)
+    call camp_mpi_check_ierr(ierr)
     deallocate(buffer)
 #endif
 
@@ -460,27 +460,27 @@ contains
     integer :: n_proc, ierr
     character, allocatable :: buffer(:)
 
-    call assert(206980035, pmc_mpi_rank() == 0)
+    call assert(206980035, camp_mpi_rank() == 0)
     call assert(291452117, remote_proc /= 0)
-    n_proc = pmc_mpi_size()
+    n_proc = camp_mpi_size()
 
     ! get buffer size
     call mpi_probe(remote_proc, TAG_OUTPUT_STATE_CENTRAL, MPI_COMM_WORLD, &
          status, ierr)
-    call pmc_mpi_check_ierr(ierr)
+    call camp_mpi_check_ierr(ierr)
     call mpi_get_count(status, MPI_CHARACTER, buffer_size, ierr)
 
     ! get message
     allocate(buffer(buffer_size))
     call mpi_recv(buffer, buffer_size, MPI_CHARACTER, remote_proc, &
          TAG_OUTPUT_STATE_CENTRAL, MPI_COMM_WORLD, status, ierr)
-    call pmc_mpi_check_ierr(ierr)
+    call camp_mpi_check_ierr(ierr)
 
     ! unpack message
     position = 0
-    call pmc_mpi_unpack_env_state(buffer, position, env_state)
-    call pmc_mpi_unpack_gas_state(buffer, position, gas_state)
-    call pmc_mpi_unpack_aero_state(buffer, position, aero_state)
+    call camp_mpi_unpack_env_state(buffer, position, env_state)
+    call camp_mpi_unpack_gas_state(buffer, position, gas_state)
+    call camp_mpi_unpack_aero_state(buffer, position, aero_state)
     call assert(279581330, position == buffer_size)
     deallocate(buffer)
 
@@ -524,17 +524,17 @@ contains
 
     integer :: ncid
 
-    call assert_msg(819739354, pmc_mpi_rank() == 0, &
+    call assert_msg(819739354, camp_mpi_rank() == 0, &
          "can only call from process 0")
 
-    call pmc_nc_open_read(filename, ncid)
+    call camp_nc_open_read(filename, ncid)
 
-    call pmc_nc_check(nf90_get_att(ncid, NF90_GLOBAL, "UUID", uuid))
+    call camp_nc_check(nf90_get_att(ncid, NF90_GLOBAL, "UUID", uuid))
 
-    call pmc_nc_read_real(ncid, time, "time")
-    call pmc_nc_read_real(ncid, del_t, "timestep")
-    call pmc_nc_read_integer(ncid, i_repeat, "repeat")
-    call pmc_nc_read_integer(ncid, index, "timestep_index")
+    call camp_nc_read_real(ncid, time, "time")
+    call camp_nc_read_real(ncid, del_t, "timestep")
+    call camp_nc_read_integer(ncid, i_repeat, "repeat")
+    call camp_nc_read_integer(ncid, index, "timestep_index")
 
     if (present(aero_data)) then
        if (present(camp_core)) then
@@ -564,7 +564,7 @@ contains
        call env_state_input_netcdf(env_state, ncid)
     end if
 
-    call pmc_nc_close(ncid)
+    call camp_nc_close(ncid)
 
   end subroutine input_state
 
@@ -582,7 +582,7 @@ contains
     character(len=len(prefix)+100) :: filename
     logical :: done
 
-    call assert_msg(277193351, pmc_mpi_rank() == 0, &
+    call assert_msg(277193351, camp_mpi_rank() == 0, &
          "can only call from process 0")
 
     index = 1
@@ -625,7 +625,7 @@ contains
     character(len=len(prefix)+100) :: filename
     logical :: done
 
-    call assert_msg(711223711, pmc_mpi_rank() == 0, &
+    call assert_msg(711223711, camp_mpi_rank() == 0, &
          "can only call from process 0")
 
     unit = get_unit()
@@ -698,8 +698,8 @@ contains
 
     write(filename, '(a,a,i8.8,a)') trim(prefix), &
          '_', index, '.nc'
-    call pmc_nc_open_write(filename, ncid)
-    call pmc_nc_write_info(ncid, uuid, &
+    call camp_nc_open_write(filename, ncid)
+    call camp_nc_write_info(ncid, uuid, &
          "PartMC version " // trim(PARTMC_VERSION))
     call write_time(ncid, time, del_t, index)
 
@@ -711,7 +711,7 @@ contains
     call aero_binned_output_netcdf(aero_binned, ncid, bin_grid, &
          aero_data)
 
-    call pmc_nc_check(nf90_close(ncid))
+    call camp_nc_check(nf90_close(ncid))
 
   end subroutine output_sectional
 
@@ -746,16 +746,16 @@ contains
 
     integer :: ncid
 
-    call assert_msg(559676785, pmc_mpi_rank() == 0, &
+    call assert_msg(559676785, camp_mpi_rank() == 0, &
          "can only call from process 0")
 
-    call pmc_nc_open_read(filename, ncid)
+    call camp_nc_open_read(filename, ncid)
 
-    call pmc_nc_check(nf90_get_att(ncid, NF90_GLOBAL, "UUID", uuid))
+    call camp_nc_check(nf90_get_att(ncid, NF90_GLOBAL, "UUID", uuid))
 
-    call pmc_nc_read_real(ncid, time, "time")
-    call pmc_nc_read_real(ncid, del_t, "timestep")
-    call pmc_nc_read_integer(ncid, index, "timestep_index")
+    call camp_nc_read_real(ncid, time, "time")
+    call camp_nc_read_real(ncid, del_t, "timestep")
+    call camp_nc_read_integer(ncid, index, "timestep_index")
 
     if (present(bin_grid)) then
        call bin_grid_input_netcdf(bin_grid, ncid, "aero_diam", scale=0.5d0)
@@ -785,7 +785,7 @@ contains
        call env_state_input_netcdf(env_state, ncid)
     end if
 
-    call pmc_nc_close(ncid)
+    call camp_nc_close(ncid)
 
   end subroutine input_sectional
 
@@ -830,4 +830,4 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end module pmc_output
+end module camp_output

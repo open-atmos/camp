@@ -9,8 +9,8 @@ import copy as module_copy
 from Scientific.IO.NetCDF import *
 from pyx import *
 sys.path.append("../tool")
-from pmc_data_nc import *
-from pmc_pyx import *
+from camp_data_nc import *
+from camp_pyx import *
 from fig_helper import *
 
 out_prefix = "movs/aero_2d_water_pdfs/aero_2d_water"
@@ -32,9 +32,9 @@ def get_plot_data(filename, value_max = None, print_info = True):
     water_frac = particles.mass(include = ["H2O"]) \
                  / particles.mass() * 100
 
-    x_axis = pmc_log_axis(min = diameter_axis_min, max = diameter_axis_max,
+    x_axis = camp_log_axis(min = diameter_axis_min, max = diameter_axis_max,
                           n_bin = num_diameter_bins)
-    y_axis = pmc_linear_axis(min = bc_axis_min, max = bc_axis_max,
+    y_axis = camp_linear_axis(min = bc_axis_min, max = bc_axis_max,
                              n_bin = num_bc_bins)
     x_bin = x_axis.find(diameter)
     # hack to avoid landing just around the integer boundaries
@@ -75,11 +75,11 @@ def get_plot_data(filename, value_max = None, print_info = True):
 
     stroke_width_array = dry_array * 0.0001
 
-    wet_rects = pmc_histogram_2d_multi([value], x_axis, y_axis,
+    wet_rects = camp_histogram_2d_multi([value], x_axis, y_axis,
                                        mask = value_mask)
-    dry_rects = pmc_histogram_2d_multi([ones_like(dry_array)],
+    dry_rects = camp_histogram_2d_multi([ones_like(dry_array)],
                                        x_axis, y_axis, mask = dry_array)
-    white_rects = pmc_histogram_2d_multi([zeros_like(dry_array)],
+    white_rects = camp_histogram_2d_multi([zeros_like(dry_array)],
                                          x_axis, y_axis, inv_mask = dry_array)
     return (wet_rects, dry_rects, dry_array, show_coords, env_state,
             white_rects)

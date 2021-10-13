@@ -4,7 +4,7 @@
 ! option) any later version. See the file COPYING for details.
 
 !> \file
-!> The pmc_condense module.
+!> The camp_condense module.
 
 !> Water condensation onto aerosol particles.
 !!
@@ -26,14 +26,14 @@
 !!
 !! All equations used in this file are written in detail in the file
 !! \c doc/condense.tex.
-module pmc_condense
+module camp_condense
 
-  use pmc_aero_state
-  use pmc_env_state
-  use pmc_aero_data
-  use pmc_util
-  use pmc_aero_particle
-  use pmc_constants
+  use camp_aero_state
+  use camp_env_state
+  use camp_aero_data
+  use camp_util
+  use camp_aero_particle
+  use camp_constants
 #ifdef PMC_USE_SUNDIALS
   use iso_c_binding
 #endif
@@ -770,4 +770,4 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end module pmc_condense
+end module camp_condense

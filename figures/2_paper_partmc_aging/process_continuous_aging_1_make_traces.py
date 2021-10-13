@@ -8,7 +8,7 @@ import copy as module_copy
 import random as py_random
 from Scientific.IO.NetCDF import *
 sys.path.append("../tool")
-from pmc_data_nc import *
+from camp_data_nc import *
 from fig_helper import *
 from numpy import *
 

@@ -32,8 +32,8 @@
 !>   \li 3 if an error occurred
 program numeric_diff
 
-  use pmc_util
-  use pmc_mpi
+  use camp_util
+  use camp_mpi
   use getopt_m
 
   integer, parameter :: BY_ARRAY = 1
@@ -53,7 +53,7 @@ program numeric_diff
   real(kind=dp), pointer, dimension(:,:)  :: use_data1, use_data2
   type(option_s) :: opts(9)
 
-  call pmc_mpi_init()
+  call camp_mpi_init()
 
   opts(1) = option_s("help", .false., 'h')
   opts(2) = option_s("abs-tol", .true., 't')
@@ -253,7 +253,7 @@ program numeric_diff
      stop 1
   end if
 
-  call pmc_mpi_finalize()
+  call camp_mpi_finalize()
 
 contains
 

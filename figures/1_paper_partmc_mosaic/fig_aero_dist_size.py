@@ -8,8 +8,8 @@ import copy as module_copy
 from Scientific.IO.NetCDF import *
 from pyx import *
 sys.path.append("../tool")
-from pmc_data_nc import *
-from pmc_pyx import *
+from camp_data_nc import *
+from camp_pyx import *
 sys.path.append(".")
 from fig_helper import *
 
@@ -38,7 +38,7 @@ eval_change_time = 24
 
 out_prefix = "figs/aero_dist_size"
 
-x_axis = pmc_log_axis(min = diameter_axis_min, max = diameter_axis_max,
+x_axis = camp_log_axis(min = diameter_axis_min, max = diameter_axis_max,
                       n_bin = num_diameter_bins)
 
 time_filename_list_wc = get_time_filename_list(netcdf_dir_wc, netcdf_pattern_wc)

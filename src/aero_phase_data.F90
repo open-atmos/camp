@@ -3,11 +3,11 @@
 ! option) any later version. See the file COPYING for details.
 
 !> \file
-!> The pmc_aero_phase_data module.
+!> The camp_aero_phase_data module.
 
 !> \page camp_aero_phase CAMP: Aerosol Phase
 !!
-!! An \c pmc_aero_phase_data::aero_phase_data_t object describes a distinct
+!! An \c camp_aero_phase_data::aero_phase_data_t object describes a distinct
 !! chemical phase within an aerosol. It is designed to allow the
 !! implementation of the chemical and mass transfer processes to be
 !! independent of the particular \ref camp_aero_rep "aerosol representation"
@@ -42,7 +42,7 @@
 !! input_format_aero_phase "here".
 
 !> The abstract aero_phase_data_t structure and associated subroutines.
-module pmc_aero_phase_data
+module camp_aero_phase_data
 
 #ifdef PMC_USE_JSON
   use json_module
@@ -50,12 +50,12 @@ module pmc_aero_phase_data
 #ifdef PMC_USE_MPI
   use mpi
 #endif
-  use pmc_chem_spec_data
-  use pmc_constants,                  only : i_kind, dp
-  use pmc_mpi
-  use pmc_camp_state
-  use pmc_property
-  use pmc_util,                       only : die_msg, string_t
+  use camp_chem_spec_data
+  use camp_constants,                  only : i_kind, dp
+  use camp_mpi
+  use camp_camp_state
+  use camp_property
+  use camp_util,                       only : die_msg, string_t
 
   implicit none
   private
@@ -83,7 +83,7 @@ module pmc_aero_phase_data
     integer(kind=i_kind) :: num_spec = 0
     !> Species names. These are species that are present in the aerosol
     !! phase. These species must exist in the \c
-    !! pmc_camp_core::camp_core_t::chem_spec_data variable during
+    !! camp_camp_core::camp_core_t::chem_spec_data variable during
     !! initialization.
     type(string_t), pointer :: spec_name(:) => null()
     !> Aerosol phase parameters. These will be available during
@@ -92,12 +92,12 @@ module pmc_aero_phase_data
     !> Condensed phase data. Theses arrays will be available during
     !! solving, and should contain any information required by the
     !! functions of the aerosol phase that cannot be obtained
-    !! from the \c pmc_camp_state::camp_state_t object. (floating-point)
+    !! from the \c camp_camp_state::camp_state_t object. (floating-point)
     real(kind=dp), allocatable, public :: condensed_data_real(:)
     !> Condensed phase data. Theses arrays will be available during
     !! solving, and should contain any information required by the
     !! functions of the aerosol phase that cannot be obtained
-    !! from the \c pmc_camp_state::camp_state_t object. (integer)
+    !! from the \c camp_camp_state::camp_state_t object. (integer)
     integer(kind=i_kind), allocatable, public ::  condensed_data_int(:)
     !> Pointer to the set of chemical species data
     type(chem_spec_data_t), pointer :: chem_spec_data
@@ -188,7 +188,7 @@ contains
   !! A \c json object containing information about an \ref camp_aero_phase
   !! "aerosol phase" has the following format:
   !! \code{.json}
-  !! { "pmc-data" : [
+  !! { "camp-data" : [
   !!   {
   !!     "name" : "my aerosol phase"
   !!     "type" : "AERO_PHASE"
@@ -496,8 +496,8 @@ contains
     integer, intent(in) :: comm
 
     pack_size = &
-            pmc_mpi_pack_size_real_array(this%condensed_data_real, comm) + &
-            pmc_mpi_pack_size_integer_array(this%condensed_data_int, comm)
+            camp_mpi_pack_size_real_array(this%condensed_data_real, comm) + &
+            camp_mpi_pack_size_integer_array(this%condensed_data_int, comm)
 
   end function pack_size
 
@@ -519,8 +519,8 @@ contains
     integer :: prev_position
 
     prev_position = pos
-    call pmc_mpi_pack_real_array(buffer, pos, this%condensed_data_real, comm)
-    call pmc_mpi_pack_integer_array(buffer, pos, this%condensed_data_int,comm)
+    call camp_mpi_pack_real_array(buffer, pos, this%condensed_data_real, comm)
+    call camp_mpi_pack_integer_array(buffer, pos, this%condensed_data_int,comm)
     call assert(561436372, &
          pos - prev_position <= this%pack_size(comm))
 #endif
@@ -545,8 +545,8 @@ contains
     integer :: prev_position
 
     prev_position = pos
-    call pmc_mpi_unpack_real_array(buffer, pos, this%condensed_data_real,comm)
-    call pmc_mpi_unpack_integer_array(buffer, pos, this%condensed_data_int,  &
+    call camp_mpi_unpack_real_array(buffer, pos, this%condensed_data_real,comm)
+    call camp_mpi_unpack_integer_array(buffer, pos, this%condensed_data_int,  &
                                                                          comm)
     call assert(219217030, &
          pos - prev_position <= this%pack_size(comm))
@@ -704,4 +704,4 @@ contains
 #undef MW_
 #undef DENSITY_
 
-end module pmc_aero_phase_data
+end module camp_aero_phase_data

@@ -3,7 +3,7 @@
 ! option) any later version. See the file COPYING for details.
 
 !> \file
-!> The pmc_test_cb05cl_ae5 program
+!> The camp_test_cb05cl_ae5 program
 
 !> Test for the cb05cl_ae5 mechanism from MONARCH. This program runs the
 !! MONARCH CB5 code and the CAMP-chem version and compares the output.
@@ -12,27 +12,27 @@
 !todo: regroup cells by stiffness in mpi cell division
 !todo improve test to handle all cases
 
-program pmc_test_cb05cl_ae5
+program camp_test_cb05cl_ae5
 
-  use pmc_constants,                    only: const
-  use pmc_util,                         only: i_kind, dp, assert, assert_msg, &
+  use camp_constants,                    only: const
+  use camp_util,                         only: i_kind, dp, assert, assert_msg, &
                                               almost_equal, string_t, &
                                               to_string, warn_assert_msg
-  use pmc_mpi
-  use pmc_camp_core
-  use pmc_camp_state
-  use pmc_camp_solver_data
-  use pmc_solver_stats
-  use pmc_chem_spec_data
-  use pmc_mechanism_data
-  use pmc_rxn_data
-  use pmc_rxn_photolysis
-  use pmc_rxn_factory
-  use pmc_property
+  use camp_mpi
+  use camp_camp_core
+  use camp_camp_state
+  use camp_camp_solver_data
+  use camp_solver_stats
+  use camp_chem_spec_data
+  use camp_mechanism_data
+  use camp_rxn_data
+  use camp_rxn_photolysis
+  use camp_rxn_factory
+  use camp_property
 #ifdef PMC_USE_JSON
   use json_module
 #endif
-  use pmc_netcdf
+  use camp_netcdf
 
 !todo hide PMC_MONARCH_INPUT until N2 and other init concs can be obtained... (otherwise the results will be always different)
 !#define PMC_MONARCH_INPUT
@@ -98,7 +98,7 @@ program pmc_test_cb05cl_ae5
   open(unit=DEBUG_UNIT, file="out/debug_cb05cl_ae.txt", status="replace", action="write")
 #endif
 
-  call pmc_mpi_init()
+  call camp_mpi_init()
 
   camp_solver_data => camp_solver_data_t()
 
@@ -255,7 +255,7 @@ contains
     character*8 :: t
     character(len=50) :: aux_arg
     integer :: status_code
-    integer :: pmc_multicells
+    integer :: camp_multicells
 
 #ifdef PMC_USE_MPI
     character, allocatable :: buffer(:), buffer_copy(:)
@@ -263,7 +263,7 @@ contains
 #endif
 
     ! initialize MPI
-     !call pmc_mpi_init()
+     !call camp_mpi_init()
 
     ! Read from the .sh script the command arguments
     call get_command_argument(1, aux_arg, status=status_code)
@@ -275,13 +275,13 @@ contains
     call get_command_argument(4, aux_arg, status=status_code)
     read(aux_arg,*)offset_temp
     call get_command_argument(5, aux_arg, status=status_code)
-    read(aux_arg,*)pmc_multicells
+    read(aux_arg,*)camp_multicells
 
     n_cells=n_cells_block*n_blocks
     !n_blocks=n_cells/n_cells_block
     write(*,*) "n_cells", n_cells, "n_cells_block", n_cells_block, "n_blocks", n_blocks
 
-    call assert_msg(921735481, (pmc_multicells.ne.0 .or. pmc_multicells.ne.1), "Wrong pmc_multicells config value (use 0 or 1)")
+    call assert_msg(921735481, (camp_multicells.ne.0 .or. camp_multicells.ne.1), "Wrong camp_multicells config value (use 0 or 1)")
 
     !Default init
     !n_cells = NUM_CELLS !i_n*j_n*k_n
@@ -360,11 +360,11 @@ contains
     !!! Initialize camp-chem !!!
     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 #ifdef PMC_USE_MPI
-    if( pmc_mpi_rank( ) .eq. 0 ) then
+    if( camp_mpi_rank( ) .eq. 0 ) then
 #endif
     call cpu_time(comp_start)
     camp_input_file = "config_cb05cl_ae5_big.json"
-    if(pmc_multicells.eq.1) then
+    if(camp_multicells.eq.1) then
       camp_core => camp_core_t(camp_input_file, n_cells=n_cells_block)
     else
       camp_core => camp_core_t(camp_input_file)
@@ -420,21 +420,21 @@ contains
     end if
 
     ! Broadcast the buffer size
-    call pmc_mpi_bcast_integer( pack_size )
+    call camp_mpi_bcast_integer( pack_size )
 
-    if (pmc_mpi_rank().eq.1) then
+    if (camp_mpi_rank().eq.1) then
       ! allocate the buffer to receive data
       allocate(buffer(pack_size))
     end if
 
     ! broadcast the data
-    call pmc_mpi_bcast_packed(buffer)
+    call camp_mpi_bcast_packed(buffer)
 
-    if( pmc_mpi_rank( ) .eq. 1 ) then
+    if( camp_mpi_rank( ) .eq. 1 ) then
       write(*,*) "Rank 1 exists"
 
       ! unpack the data
-      if(pmc_multicells.eq.1) then
+      if(camp_multicells.eq.1) then
         camp_core => camp_core_t(n_cells=n_cells_block)
       else
         camp_core => camp_core_t()
@@ -537,7 +537,7 @@ contains
     KPP_PHOTO_RATES(1) = 0.0
     write(*,*) "n_photo_rxn", n_photo_rxn
     ! Set the remaining rates
-    if(pmc_multicells.eq.1) then
+    if(camp_multicells.eq.1) then
       do i_cell = 1, n_cells_block
         ! Set the O2 + hv rate constant to 0 (not present in ebi version)
         call jo2_rate_update%set_rate(real(0.0, kind=dp))
@@ -585,7 +585,7 @@ contains
 
     write(*,*) "state_size_cell", state_size_cell, "n_deriv", NUM_EBI_SPEC
 
-    !if(pmc_multicells.eq.0) then
+    !if(camp_multicells.eq.0) then
 
     allocate(model_conc(state_size_cell*n_cells))
     model_conc(:)=0.0
@@ -780,7 +780,7 @@ contains
     ! Set the water concentration for EBI solver (ppmV)
     water_conc = camp_state%state_var(i_H2O)
 
-    !if(pmc_multicells.eq.0) then
+    !if(camp_multicells.eq.0) then
     spec_name = "DUMMY"
     i_DUMMY = chem_spec_data%gas_state_id(spec_name)
     call assert(663478276, chem_spec_data%get_property_set(spec_name, prop_set))
@@ -916,7 +916,7 @@ contains
     !do i_block = 0, n_blocks-1
       do i_cell = 0, n_cells_block-1
         do j = 1, state_size_cell
-          if(pmc_multicells.eq.1) then
+          if(camp_multicells.eq.1) then
             !todo is this necessary when everything is stored in model_conc and updated later?
 #ifdef PMC_MONARCH_INPUT
             camp_state%state_var(i_cell*state_size_cell+j) = camp_state%state_var(i_cell*state_size_cell+j) + offset_conc*i_cell !0.1*j
@@ -935,7 +935,7 @@ contains
       end do
     !end do
 
-    if(pmc_multicells.eq.1) then
+    if(camp_multicells.eq.1) then
       !Set default temperature & pressure to all cells
       do i_cell = 1, n_cells_block
         call camp_state%env_states(i_cell)%set_temperature_K( real( temperatures(i_cell)+offset_temp*(i_cell-1), kind=dp ) )
@@ -1016,7 +1016,7 @@ contains
                 KPP_C(j_spec) = YC(i_spec) / conv
               end if
             end do
-        if(pmc_multicells.eq.1) then
+        if(camp_multicells.eq.1) then
             do i = 0, n_cells_block-1
 #ifdef PMC_MONARCH_INPUT
 #else
@@ -1045,7 +1045,7 @@ contains
         call cpu_time(comp_end)
         comp_kpp = comp_kpp + (comp_end-comp_start)
 
-        if(pmc_multicells.eq.1) then
+        if(camp_multicells.eq.1) then
 #ifndef PMC_MULTICELLS2
           n_blocks=1
 #endif
@@ -1257,7 +1257,7 @@ contains
 
     passed = .true.
 
-    call pmc_mpi_finalize( )
+    call camp_mpi_finalize( )
 
   end function run_standard_cb05cl_ae5_test
 
@@ -1298,7 +1298,7 @@ contains
     integer :: t_n = 1 !1
 
 #ifdef PMC_USE_MPI
-    if( pmc_mpi_rank( ) .eq. 0 ) then
+    if( camp_mpi_rank( ) .eq. 0 ) then
 #endif
 
 #ifdef ARGS_NETCDF
@@ -2061,4 +2061,4 @@ contains
 
   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end program pmc_test_cb05cl_ae5
+end program camp_test_cb05cl_ae5

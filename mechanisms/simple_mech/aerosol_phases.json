@@ -1,6 +1,6 @@
 {
   "description" : "These aerosol phases are for the simple chemistry configuration",
-  "pmc-data" : [
+  "camp-data" : [
     {
       "name" : "cloud and rain water",
       "type" : "AERO_PHASE",

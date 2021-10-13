@@ -3,23 +3,23 @@
 ! option) any later version. See the file COPYING for details.
 
 !> \file
-!> The pmc_camp_interface module.
+!> The camp_camp_interface module.
 
 !> An interface between PartMC and the CAMP
-module pmc_camp_interface
+module camp_camp_interface
 
-  use pmc_aero_data
-  use pmc_aero_particle
-  use pmc_aero_state
-  use pmc_constants,                  only : i_kind, dp
-  use pmc_gas_data
-  use pmc_gas_state
-  use pmc_camp_core
-  use pmc_camp_state
-  use pmc_photolysis
-  use pmc_rxn_data
-  use pmc_solver_stats
-  use pmc_util,                       only : die_msg, string_t, &
+  use camp_aero_data
+  use camp_aero_particle
+  use camp_aero_state
+  use camp_constants,                  only : i_kind, dp
+  use camp_gas_data
+  use camp_gas_state
+  use camp_camp_core
+  use camp_camp_state
+  use camp_photolysis
+  use camp_rxn_data
+  use camp_solver_stats
+  use camp_util,                       only : die_msg, string_t, &
                                              warn_assert_msg, assert_msg
 
   implicit none
@@ -29,7 +29,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Run the CAMP module for the current PartMC state
-  subroutine pmc_camp_interface_solve(camp_core, camp_state, &
+  subroutine camp_camp_interface_solve(camp_core, camp_state, &
           camp_pre_aero_state, camp_post_aero_state, aero_data, &
           aero_state, gas_data, gas_state, photolysis, del_t)
 
@@ -67,7 +67,7 @@ contains
     call photolysis%update_rate_constants()
 
     ! Update the number concentrations and composition for all particles
-    call pmc_camp_interface_set_camp_aerosol(aero_data, aero_state, &
+    call camp_camp_interface_set_camp_aerosol(aero_data, aero_state, &
                                              camp_core, camp_state)
 
     ! We're modifying particle diameters, so the bin sort is now invalid
@@ -81,18 +81,18 @@ contains
                     to_string(solver_stats%solver_flag))
 
     ! Update the PartMC aerosol state
-    call pmc_camp_interface_set_partmc_aerosol(aero_data, aero_state, &
+    call camp_camp_interface_set_partmc_aerosol(aero_data, aero_state, &
                                                camp_state)
 
     ! Update the PartMC gas-phase state
     call gas_state%get_camp_conc(camp_state)
 
-  end subroutine pmc_camp_interface_solve
+  end subroutine camp_camp_interface_solve
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Set the CAMP aerosol-phase species and number concentrations
-  subroutine pmc_camp_interface_set_camp_aerosol(aero_data, aero_state, &
+  subroutine camp_camp_interface_set_camp_aerosol(aero_data, aero_state, &
       camp_core, camp_state)
 
     !> Aerosol data
@@ -144,12 +144,12 @@ contains
     end select
     end associate
 
-  end subroutine pmc_camp_interface_set_camp_aerosol
+  end subroutine camp_camp_interface_set_camp_aerosol
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Set PartMC aerosol-phase species concentrations
-  subroutine pmc_camp_interface_set_partmc_aerosol(aero_data, aero_state, &
+  subroutine camp_camp_interface_set_partmc_aerosol(aero_data, aero_state, &
       camp_state)
 
     !> Aerosol particle
@@ -182,8 +182,8 @@ contains
     end select
     end associate
 
-  end subroutine pmc_camp_interface_set_partmc_aerosol
+  end subroutine camp_camp_interface_set_partmc_aerosol
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end module pmc_camp_interface
+end module camp_camp_interface

@@ -9,10 +9,10 @@
 !> aerosol number and mass concentrations in text format.
 program extract_aero_time
 
-  use pmc_aero_state
-  use pmc_aero_particle
-  use pmc_output
-  use pmc_mpi
+  use camp_aero_state
+  use camp_aero_particle
+  use camp_output
+  use camp_mpi
   use getopt_m
 
   character(len=PMC_MAX_FILENAME_LEN) :: in_prefix, out_filename
@@ -29,7 +29,7 @@ program extract_aero_time
   real(kind=dp), allocatable :: time_species_concs(:,:)
   type(option_s) :: opts(2)
 
-  call pmc_mpi_init()
+  call camp_mpi_init()
 
   opts(1) = option_s("help", .false., 'h')
   opts(2) = option_s("output", .true., 'o')
@@ -131,7 +131,7 @@ program extract_aero_time
   deallocate(time_species_concs)
   deallocate(filename_list)
 
-  call pmc_mpi_finalize()
+  call camp_mpi_finalize()
 
 contains
 

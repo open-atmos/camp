@@ -3,14 +3,14 @@
 ! option) any later version. See the file COPYING for details.
 
 !> \file
-!> The pmc_chamber module.
+!> The camp_chamber module.
 
-module pmc_chamber
+module camp_chamber
 
-  use pmc_aero_data
-  use pmc_constants
-  use pmc_env_state
-  use pmc_spec_file
+  use camp_aero_data
+  use camp_constants
+  use camp_env_state
+  use camp_spec_file
 
   !> Unit translational diffusion coefficient (m^2 s^{-1}).
   real(kind=dp), parameter :: CHAMBER_UNIT_DIFF_COEF = 1d0
@@ -183,24 +183,24 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Determines the number of bytes required to pack the given value.
-  integer function pmc_mpi_pack_size_chamber(val)
+  integer function camp_mpi_pack_size_chamber(val)
 
     !> Value to pack.
     type(chamber_t), intent(in) :: val
 
-    pmc_mpi_pack_size_chamber = &
-         pmc_mpi_pack_size_real(val%volume) &
-         + pmc_mpi_pack_size_real(val%area_diffuse) &
-         + pmc_mpi_pack_size_real(val%area_sedi) &
-         + pmc_mpi_pack_size_real(val%prefactor_BL) &
-         + pmc_mpi_pack_size_real(val%exponent_BL)
+    camp_mpi_pack_size_chamber = &
+         camp_mpi_pack_size_real(val%volume) &
+         + camp_mpi_pack_size_real(val%area_diffuse) &
+         + camp_mpi_pack_size_real(val%area_sedi) &
+         + camp_mpi_pack_size_real(val%prefactor_BL) &
+         + camp_mpi_pack_size_real(val%exponent_BL)
 
-  end function pmc_mpi_pack_size_chamber
+  end function camp_mpi_pack_size_chamber
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Packs the given value into the buffer, advancing position.
-  subroutine pmc_mpi_pack_chamber(buffer, position, val)
+  subroutine camp_mpi_pack_chamber(buffer, position, val)
 
     !> Memory buffer.
     character, intent(inout) :: buffer(:)
@@ -213,21 +213,21 @@ contains
     integer :: prev_position, i
 
     prev_position = position
-    call pmc_mpi_pack_real(buffer, position, val%volume)
-    call pmc_mpi_pack_real(buffer, position, val%area_diffuse)
-    call pmc_mpi_pack_real(buffer, position, val%area_sedi)
-    call pmc_mpi_pack_real(buffer, position, val%prefactor_BL)
-    call pmc_mpi_pack_real(buffer, position, val%exponent_BL)
+    call camp_mpi_pack_real(buffer, position, val%volume)
+    call camp_mpi_pack_real(buffer, position, val%area_diffuse)
+    call camp_mpi_pack_real(buffer, position, val%area_sedi)
+    call camp_mpi_pack_real(buffer, position, val%prefactor_BL)
+    call camp_mpi_pack_real(buffer, position, val%exponent_BL)
     call assert(623603534, &
-         position - prev_position <= pmc_mpi_pack_size_chamber(val))
+         position - prev_position <= camp_mpi_pack_size_chamber(val))
 #endif
 
-  end subroutine pmc_mpi_pack_chamber
+  end subroutine camp_mpi_pack_chamber
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Unpacks the given value from the buffer, advancing position.
-  subroutine pmc_mpi_unpack_chamber(buffer, position, val)
+  subroutine camp_mpi_unpack_chamber(buffer, position, val)
 
     !> Memory buffer.
     character, intent(inout) :: buffer(:)
@@ -240,17 +240,17 @@ contains
     integer :: prev_position, i
 
     prev_position = position
-    call pmc_mpi_unpack_real(buffer, position, val%volume)
-    call pmc_mpi_unpack_real(buffer, position, val%area_diffuse)
-    call pmc_mpi_unpack_real(buffer, position, val%area_sedi)
-    call pmc_mpi_unpack_real(buffer, position, val%prefactor_BL)
-    call pmc_mpi_unpack_real(buffer, position, val%exponent_BL)
+    call camp_mpi_unpack_real(buffer, position, val%volume)
+    call camp_mpi_unpack_real(buffer, position, val%area_diffuse)
+    call camp_mpi_unpack_real(buffer, position, val%area_sedi)
+    call camp_mpi_unpack_real(buffer, position, val%prefactor_BL)
+    call camp_mpi_unpack_real(buffer, position, val%exponent_BL)
     call assert(986998595, &
-         position - prev_position <= pmc_mpi_pack_size_chamber(val))
+         position - prev_position <= camp_mpi_pack_size_chamber(val))
 #endif
 
-  end subroutine pmc_mpi_unpack_chamber
+  end subroutine camp_mpi_unpack_chamber
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end module pmc_chamber
+end module camp_chamber

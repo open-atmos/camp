@@ -9,13 +9,13 @@
 !> bin, and write the data out as another NetCDF file.
 program bin_average_size
 
-  use pmc_aero_state
-  use pmc_gas_data
-  use pmc_gas_state
-  use pmc_env_state
-  use pmc_aero_data
-  use pmc_bin_grid
-  use pmc_output
+  use camp_aero_state
+  use camp_gas_data
+  use camp_gas_state
+  use camp_env_state
+  use camp_aero_data
+  use camp_bin_grid
+  use camp_output
   use netcdf
 
   character(len=1000) :: in_filename, out_prefix
@@ -89,7 +89,7 @@ program bin_average_size
   call get_command_argument(7, in_filename)
   call get_command_argument(8, out_prefix)
 
-  call pmc_mpi_init()
+  call camp_mpi_init()
 
   call bin_grid_make(bin_grid, BIN_GRID_TYPE_LOG, n_bin, diam2rad(d_min), &
        diam2rad(d_max))
@@ -111,6 +111,6 @@ program bin_average_size
        gas_data, gas_state, env_state, index, time, del_t, i_repeat, &
        record_removals, record_optical, uuid)
 
-  call pmc_mpi_finalize()
+  call camp_mpi_finalize()
 
 end program bin_average_size

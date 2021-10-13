@@ -6,7 +6,7 @@
     "or estimated from bulk densities.",
     "TODO check about molecular weight [kg mol-1]s"
   ],
-  "pmc-data" : [
+  "camp-data" : [
     {
       "name" : "lumped high-density dust species",
       "type" : "CHEM_SPEC",

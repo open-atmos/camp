@@ -3,7 +3,7 @@
 ! option) any later version. See the file COPYING for details.
 
 !> \file
-!> The pmc_rxn_HL_phase_transfer module.
+!> The camp_rxn_HL_phase_transfer module.
 
 !> \page camp_rxn_HL_phase_transfer CAMP: Henry's Law Phase-Transfer Reaction
 !!
@@ -83,16 +83,16 @@
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 !> The rxn_HL_phase_transfer_t type and associated functions.
-module pmc_rxn_HL_phase_transfer
+module camp_rxn_HL_phase_transfer
 
-  use pmc_aero_phase_data
-  use pmc_aero_rep_data
-  use pmc_chem_spec_data
-  use pmc_constants,                        only: const
-  use pmc_camp_state
-  use pmc_property
-  use pmc_rxn_data
-  use pmc_util,                             only: i_kind, dp, to_string, &
+  use camp_aero_phase_data
+  use camp_aero_rep_data
+  use camp_chem_spec_data
+  use camp_constants,                        only: const
+  use camp_camp_state
+  use camp_property
+  use camp_rxn_data
+  use camp_util,                             only: i_kind, dp, to_string, &
                                                   assert, assert_msg, &
                                                   die_msg, string_t
 
@@ -426,4 +426,4 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end module pmc_rxn_HL_phase_transfer
+end module camp_rxn_HL_phase_transfer

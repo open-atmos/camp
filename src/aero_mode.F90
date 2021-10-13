@@ -3,19 +3,19 @@
 ! option) any later version. See the file COPYING for details.
 
 !> \file
-!> The pmc_aero_mode module.
+!> The camp_aero_mode module.
 
 !> The aero_mode_t structure and associated subroutines.
-module pmc_aero_mode
+module camp_aero_mode
 
-  use pmc_bin_grid
-  use pmc_util
-  use pmc_constants
-  use pmc_spec_file
-  use pmc_aero_data
-  use pmc_aero_weight
-  use pmc_mpi
-  use pmc_rand
+  use camp_bin_grid
+  use camp_util
+  use camp_constants
+  use camp_spec_file
+  use camp_aero_data
+  use camp_aero_weight
+  use camp_mpi
+  use camp_rand
 #ifdef PMC_USE_MPI
   use mpi
 #endif
@@ -586,7 +586,7 @@ contains
             .and. (aero_weight%exponent == 0d0))) then
           x0 = log(aero_mode%sample_radius(i_sample))
           x1 = log(aero_mode%sample_radius(i_sample + 1))
-          r = pmc_random()
+          r = camp_random()
           x = (1d0 - r) * x0 + r * x1
           radius = exp(x)
        elseif ((aero_weight%type == AERO_WEIGHT_TYPE_POWER) &
@@ -595,7 +595,7 @@ contains
                aero_mode%sample_radius(i_sample))
           inv_nc1 = 1d0 / aero_weight_num_conc_at_radius(aero_weight, &
                aero_mode%sample_radius(i_sample + 1))
-          r = pmc_random()
+          r = camp_random()
           inv_nc = (1d0 - r) * inv_nc0 + r * inv_nc1
           radius = aero_weight_radius_at_num_conc(aero_weight, 1d0 / inv_nc)
        else
@@ -605,7 +605,7 @@ contains
     elseif (aero_mode%type == AERO_MODE_TYPE_EXP) then
        if (aero_weight%type == AERO_WEIGHT_TYPE_NONE) then
           radius = aero_data_vol2rad(aero_data, -aero_data_rad2vol(aero_data, &
-               aero_mode%char_radius) * log(pmc_random()))
+               aero_mode%char_radius) * log(camp_random()))
        elseif ((aero_weight%type == AERO_WEIGHT_TYPE_POWER) &
             .or. (aero_weight%type == AERO_WEIGHT_TYPE_MFA)) then
           call die_msg(678481276, &
@@ -1098,29 +1098,29 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Determines the number of bytes required to pack the given value.
-  integer function pmc_mpi_pack_size_aero_mode(val)
+  integer function camp_mpi_pack_size_aero_mode(val)
 
     !> Value to pack.
     type(aero_mode_t), intent(in) :: val
 
-    pmc_mpi_pack_size_aero_mode = &
-         pmc_mpi_pack_size_string(val%name) &
-         + pmc_mpi_pack_size_integer(val%type) &
-         + pmc_mpi_pack_size_real(val%char_radius) &
-         + pmc_mpi_pack_size_real(val%log10_std_dev_radius) &
-         + pmc_mpi_pack_size_real_array(val%sample_radius) &
-         + pmc_mpi_pack_size_real_array(val%sample_num_conc) &
-         + pmc_mpi_pack_size_real(val%num_conc) &
-         + pmc_mpi_pack_size_real_array(val%vol_frac) &
-         + pmc_mpi_pack_size_real_array(val%vol_frac_std) &
-         + pmc_mpi_pack_size_integer(val%source)
+    camp_mpi_pack_size_aero_mode = &
+         camp_mpi_pack_size_string(val%name) &
+         + camp_mpi_pack_size_integer(val%type) &
+         + camp_mpi_pack_size_real(val%char_radius) &
+         + camp_mpi_pack_size_real(val%log10_std_dev_radius) &
+         + camp_mpi_pack_size_real_array(val%sample_radius) &
+         + camp_mpi_pack_size_real_array(val%sample_num_conc) &
+         + camp_mpi_pack_size_real(val%num_conc) &
+         + camp_mpi_pack_size_real_array(val%vol_frac) &
+         + camp_mpi_pack_size_real_array(val%vol_frac_std) &
+         + camp_mpi_pack_size_integer(val%source)
 
-  end function pmc_mpi_pack_size_aero_mode
+  end function camp_mpi_pack_size_aero_mode
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Packs the given value into the buffer, advancing position.
-  subroutine pmc_mpi_pack_aero_mode(buffer, position, val)
+  subroutine camp_mpi_pack_aero_mode(buffer, position, val)
 
     !> Memory buffer.
     character, intent(inout) :: buffer(:)
@@ -1133,26 +1133,26 @@ contains
     integer :: prev_position
 
     prev_position = position
-    call pmc_mpi_pack_string(buffer, position, val%name)
-    call pmc_mpi_pack_integer(buffer, position, val%type)
-    call pmc_mpi_pack_real(buffer, position, val%char_radius)
-    call pmc_mpi_pack_real(buffer, position, val%log10_std_dev_radius)
-    call pmc_mpi_pack_real_array(buffer, position, val%sample_radius)
-    call pmc_mpi_pack_real_array(buffer, position, val%sample_num_conc)
-    call pmc_mpi_pack_real(buffer, position, val%num_conc)
-    call pmc_mpi_pack_real_array(buffer, position, val%vol_frac)
-    call pmc_mpi_pack_real_array(buffer, position, val%vol_frac_std)
-    call pmc_mpi_pack_integer(buffer, position, val%source)
+    call camp_mpi_pack_string(buffer, position, val%name)
+    call camp_mpi_pack_integer(buffer, position, val%type)
+    call camp_mpi_pack_real(buffer, position, val%char_radius)
+    call camp_mpi_pack_real(buffer, position, val%log10_std_dev_radius)
+    call camp_mpi_pack_real_array(buffer, position, val%sample_radius)
+    call camp_mpi_pack_real_array(buffer, position, val%sample_num_conc)
+    call camp_mpi_pack_real(buffer, position, val%num_conc)
+    call camp_mpi_pack_real_array(buffer, position, val%vol_frac)
+    call camp_mpi_pack_real_array(buffer, position, val%vol_frac_std)
+    call camp_mpi_pack_integer(buffer, position, val%source)
     call assert(497092471, &
-         position - prev_position <= pmc_mpi_pack_size_aero_mode(val))
+         position - prev_position <= camp_mpi_pack_size_aero_mode(val))
 #endif
 
-  end subroutine pmc_mpi_pack_aero_mode
+  end subroutine camp_mpi_pack_aero_mode
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Unpacks the given value from the buffer, advancing position.
-  subroutine pmc_mpi_unpack_aero_mode(buffer, position, val)
+  subroutine camp_mpi_unpack_aero_mode(buffer, position, val)
 
     !> Memory buffer.
     character, intent(inout) :: buffer(:)
@@ -1165,22 +1165,22 @@ contains
     integer :: prev_position
 
     prev_position = position
-    call pmc_mpi_unpack_string(buffer, position, val%name)
-    call pmc_mpi_unpack_integer(buffer, position, val%type)
-    call pmc_mpi_unpack_real(buffer, position, val%char_radius)
-    call pmc_mpi_unpack_real(buffer, position, val%log10_std_dev_radius)
-    call pmc_mpi_unpack_real_array(buffer, position, val%sample_radius)
-    call pmc_mpi_unpack_real_array(buffer, position, val%sample_num_conc)
-    call pmc_mpi_unpack_real(buffer, position, val%num_conc)
-    call pmc_mpi_unpack_real_array(buffer, position, val%vol_frac)
-    call pmc_mpi_unpack_real_array(buffer, position, val%vol_frac_std)
-    call pmc_mpi_unpack_integer(buffer, position, val%source)
+    call camp_mpi_unpack_string(buffer, position, val%name)
+    call camp_mpi_unpack_integer(buffer, position, val%type)
+    call camp_mpi_unpack_real(buffer, position, val%char_radius)
+    call camp_mpi_unpack_real(buffer, position, val%log10_std_dev_radius)
+    call camp_mpi_unpack_real_array(buffer, position, val%sample_radius)
+    call camp_mpi_unpack_real_array(buffer, position, val%sample_num_conc)
+    call camp_mpi_unpack_real(buffer, position, val%num_conc)
+    call camp_mpi_unpack_real_array(buffer, position, val%vol_frac)
+    call camp_mpi_unpack_real_array(buffer, position, val%vol_frac_std)
+    call camp_mpi_unpack_integer(buffer, position, val%source)
     call assert(874467577, &
-         position - prev_position <= pmc_mpi_pack_size_aero_mode(val))
+         position - prev_position <= camp_mpi_pack_size_aero_mode(val))
 #endif
 
-  end subroutine pmc_mpi_unpack_aero_mode
+  end subroutine camp_mpi_unpack_aero_mode
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end module pmc_aero_mode
+end module camp_aero_mode

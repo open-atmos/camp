@@ -3,7 +3,7 @@
     "These species needed for the 2 product SOA scheme",
     "(see mechanism.json for details)"
   ],
-  "pmc-data" : [
+  "camp-data" : [
     {
       "name" : "ISOP-P1",
       "type" : "CHEM_SPEC",

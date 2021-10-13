@@ -1,6 +1,6 @@
 {
   "description" : "Inorganic aerosol phase similar to the MONARCH 'mod37' configuration",
-  "pmc-data" : [
+  "camp-data" : [
     {
       "name" : "aqueous sulfate",
       "type" : "AERO_PHASE",

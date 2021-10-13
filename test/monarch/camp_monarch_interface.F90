@@ -8,22 +8,22 @@
 !> Interface for the MONACH model and PartMC-camp
 module camp_monarch_interface
 
-  use pmc_constants,                  only : i_kind
-  use pmc_mpi
-  use pmc_util,                       only : assert_msg, string_t, &
+  use camp_constants,                  only : i_kind
+  use camp_mpi
+  use camp_util,                       only : assert_msg, string_t, &
                                              warn_assert_msg
-  use pmc_camp_core
-  use pmc_camp_state
-  use pmc_aero_rep_data
-  use pmc_aero_rep_factory
-  use pmc_aero_rep_modal_binned_mass
-  use pmc_chem_spec_data
-  use pmc_property
-  use pmc_camp_solver_data
-  use pmc_mechanism_data,            only : mechanism_data_t
-  use pmc_rxn_data,                  only : rxn_data_t
-  use pmc_rxn_photolysis
-  use pmc_solver_stats
+  use camp_camp_core
+  use camp_camp_state
+  use camp_aero_rep_data
+  use camp_aero_rep_factory
+  use camp_aero_rep_modal_binned_mass
+  use camp_chem_spec_data
+  use camp_property
+  use camp_camp_solver_data
+  use camp_mechanism_data,            only : mechanism_data_t
+  use camp_rxn_data,                  only : rxn_data_t
+  use camp_rxn_photolysis
+  use camp_solver_stats
 #ifdef PMC_USE_MPI
   use mpi
 #endif
@@ -173,7 +173,7 @@ contains
     endif
 #endif
     ! Set the MPI rank (TODO replace with MONARCH param)
-    MONARCH_PROCESS = pmc_mpi_rank()
+    MONARCH_PROCESS = camp_mpi_rank()
 
     ! Create a new interface object
     allocate(this)
@@ -269,25 +269,25 @@ contains
       pack_size = this%camp_core%pack_size() + &
               update_data_GMD%pack_size() + &
               update_data_GSD%pack_size() + &
-              pmc_mpi_pack_size_integer_array(this%map_monarch_id) + &
-              pmc_mpi_pack_size_integer_array(this%map_camp_id) + &
-              pmc_mpi_pack_size_integer_array(this%init_conc_camp_id) + &
-              pmc_mpi_pack_size_real_array(this%init_conc) + &
-              pmc_mpi_pack_size_integer(this%gas_phase_water_id) + &
-              pmc_mpi_pack_size_integer(i_sect_om) + &
-              pmc_mpi_pack_size_integer(i_sect_bc) + &
-              pmc_mpi_pack_size_integer(i_sect_sulf) + &
-              pmc_mpi_pack_size_integer(i_sect_opm)
+              camp_mpi_pack_size_integer_array(this%map_monarch_id) + &
+              camp_mpi_pack_size_integer_array(this%map_camp_id) + &
+              camp_mpi_pack_size_integer_array(this%init_conc_camp_id) + &
+              camp_mpi_pack_size_real_array(this%init_conc) + &
+              camp_mpi_pack_size_integer(this%gas_phase_water_id) + &
+              camp_mpi_pack_size_integer(i_sect_om) + &
+              camp_mpi_pack_size_integer(i_sect_bc) + &
+              camp_mpi_pack_size_integer(i_sect_sulf) + &
+              camp_mpi_pack_size_integer(i_sect_opm)
 
 
       do z=1, size(this%monarch_species_names)
         call assert(307722742,len_trim(this%monarch_species_names(z)%string).lt.max_spec_name_size)
-        pack_size = pack_size +  pmc_mpi_pack_size_string(trim(this%monarch_species_names(z)%string))
+        pack_size = pack_size +  camp_mpi_pack_size_string(trim(this%monarch_species_names(z)%string))
       end do
 
       if(this%ADD_EMISIONS.eq."ON" &
               .or. this%interface_input_file.eq."interface_monarch_cb05.json") then
-        pack_size = pack_size + pmc_mpi_pack_size_integer(this%n_photo_rxn)
+        pack_size = pack_size + camp_mpi_pack_size_integer(this%n_photo_rxn)
         do i = 1, this%n_photo_rxn
           pack_size = pack_size + this%photo_rxns(i)%pack_size( local_comm )
         end do
@@ -300,28 +300,28 @@ contains
       call this%camp_core%bin_pack(buffer, pos)
       call update_data_GMD%bin_pack(buffer, pos)
       call update_data_GSD%bin_pack(buffer, pos)
-      call pmc_mpi_pack_integer_array(buffer, pos, this%map_monarch_id)
-      call pmc_mpi_pack_integer_array(buffer, pos, this%map_camp_id)
-      call pmc_mpi_pack_integer_array(buffer, pos, this%init_conc_camp_id)
-      call pmc_mpi_pack_real_array(buffer, pos, this%init_conc)
-      call pmc_mpi_pack_integer(buffer, pos, this%gas_phase_water_id)
-      call pmc_mpi_pack_integer(buffer, pos, i_sect_om)
-      call pmc_mpi_pack_integer(buffer, pos, i_sect_bc)
-      call pmc_mpi_pack_integer(buffer, pos, i_sect_sulf)
-      call pmc_mpi_pack_integer(buffer, pos, i_sect_opm)
+      call camp_mpi_pack_integer_array(buffer, pos, this%map_monarch_id)
+      call camp_mpi_pack_integer_array(buffer, pos, this%map_camp_id)
+      call camp_mpi_pack_integer_array(buffer, pos, this%init_conc_camp_id)
+      call camp_mpi_pack_real_array(buffer, pos, this%init_conc)
+      call camp_mpi_pack_integer(buffer, pos, this%gas_phase_water_id)
+      call camp_mpi_pack_integer(buffer, pos, i_sect_om)
+      call camp_mpi_pack_integer(buffer, pos, i_sect_bc)
+      call camp_mpi_pack_integer(buffer, pos, i_sect_sulf)
+      call camp_mpi_pack_integer(buffer, pos, i_sect_opm)
 
       do z=1, size(this%monarch_species_names)
         !print*,"this%monarch_species_names(z)%string"
         !print*,this%monarch_species_names(z)%string
-        call pmc_mpi_pack_string(buffer, pos, trim(this%monarch_species_names(z)%string))
+        call camp_mpi_pack_string(buffer, pos, trim(this%monarch_species_names(z)%string))
       end do
 
-      !call pmc_mpi_pack_string_array(buffer, pos, this%monarch_species_names)
+      !call camp_mpi_pack_string_array(buffer, pos, this%monarch_species_names)
       !print*,size(this%monarch_species_names)
 
       if(this%ADD_EMISIONS.eq."ON" &
         .or. this%interface_input_file.eq."interface_monarch_cb05.json") then
-        call pmc_mpi_pack_integer(buffer, pos, this%n_photo_rxn)
+        call camp_mpi_pack_integer(buffer, pos, this%n_photo_rxn)
         do i = 1, this%n_photo_rxn
           call this%photo_rxns(i)%bin_pack( buffer, pos, local_comm )
         end do
@@ -333,7 +333,7 @@ contains
 
 
     ! broadcast the buffer size
-    call pmc_mpi_bcast_integer(pack_size, local_comm)
+    call camp_mpi_bcast_integer(pack_size, local_comm)
 
     if (MONARCH_PROCESS.ne.0) then
       ! allocate the buffer to receive data
@@ -341,7 +341,7 @@ contains
     end if
 
     ! boradcast the buffer
-    call pmc_mpi_bcast_packed(buffer, local_comm)
+    call camp_mpi_bcast_packed(buffer, local_comm)
 
     if (MONARCH_PROCESS.ne.0) then
       ! unpack the data
@@ -351,18 +351,18 @@ contains
       call this%camp_core%bin_unpack(buffer, pos)
       call update_data_GMD%bin_unpack(buffer, pos)
       call update_data_GSD%bin_unpack(buffer, pos)
-      call pmc_mpi_unpack_integer_array(buffer, pos, this%map_monarch_id)
-      call pmc_mpi_unpack_integer_array(buffer, pos, this%map_camp_id)
-      call pmc_mpi_unpack_integer_array(buffer, pos, this%init_conc_camp_id)
-      call pmc_mpi_unpack_real_array(buffer, pos, this%init_conc)
-      call pmc_mpi_unpack_integer(buffer, pos, this%gas_phase_water_id)
-      call pmc_mpi_unpack_integer(buffer, pos, i_sect_om)
-      call pmc_mpi_unpack_integer(buffer, pos, i_sect_bc)
-      call pmc_mpi_unpack_integer(buffer, pos, i_sect_sulf)
-      call pmc_mpi_unpack_integer(buffer, pos, i_sect_opm)
+      call camp_mpi_unpack_integer_array(buffer, pos, this%map_monarch_id)
+      call camp_mpi_unpack_integer_array(buffer, pos, this%map_camp_id)
+      call camp_mpi_unpack_integer_array(buffer, pos, this%init_conc_camp_id)
+      call camp_mpi_unpack_real_array(buffer, pos, this%init_conc)
+      call camp_mpi_unpack_integer(buffer, pos, this%gas_phase_water_id)
+      call camp_mpi_unpack_integer(buffer, pos, i_sect_om)
+      call camp_mpi_unpack_integer(buffer, pos, i_sect_bc)
+      call camp_mpi_unpack_integer(buffer, pos, i_sect_sulf)
+      call camp_mpi_unpack_integer(buffer, pos, i_sect_opm)
 
       allocate(this%monarch_species_names(size(this%map_monarch_id)))
-      !call pmc_mpi_unpack_string_array(buffer, pos, this%monarch_species_names)
+      !call camp_mpi_unpack_string_array(buffer, pos, this%monarch_species_names)
 
       spec_name=""
       do z=1,max_spec_name_size
@@ -370,7 +370,7 @@ contains
       end do
 
       do z=1, size(this%map_monarch_id)
-        call pmc_mpi_unpack_string(buffer, pos, spec_name)
+        call camp_mpi_unpack_string(buffer, pos, spec_name)
         !print*,"this%monarch_species_names(z)%string"
         this%monarch_species_names(z)%string= trim(spec_name)
         !print*,this%monarch_species_names(z)%string
@@ -378,7 +378,7 @@ contains
 
       if(this%ADD_EMISIONS.eq."ON" &
           .or. this%interface_input_file.eq."interface_monarch_cb05.json") then
-        call pmc_mpi_unpack_integer(buffer, pos, this%n_photo_rxn)
+        call camp_mpi_unpack_integer(buffer, pos, this%n_photo_rxn)
         if( allocated( this%photo_rxns  ) ) deallocate( this%photo_rxns  )
         allocate(this%photo_rxns(this%n_photo_rxn))
         allocate(this%base_rates(this%n_photo_rxn))
@@ -398,14 +398,14 @@ contains
 
     call this%camp_core%solver_initialize(ncounters, ntimers)
 
-    !call pmc_mpi_barrier(MPI_COMM_WORLD)
+    !call camp_mpi_barrier(MPI_COMM_WORLD)
     !print*, "monarch_interface_t solver_initialize end"
 
     ! Create a state variable on each node
     this%camp_state => this%camp_core%new_state()
 
-    !call pmc_mpi_barrier(MPI_COMM_WORLD)
-    !print*,"MPI RANK",pmc_mpi_rank(), this%interface_input_file, this%ADD_EMISIONS
+    !call camp_mpi_barrier(MPI_COMM_WORLD)
+    !print*,"MPI RANK",camp_mpi_rank(), this%interface_input_file, this%ADD_EMISIONS
 
     if(this%ADD_EMISIONS.eq."ON" &
       .or. this%interface_input_file.eq."interface_monarch_cb05.json") then
@@ -420,7 +420,7 @@ contains
 
     end if
 
-    call pmc_mpi_barrier(MPI_COMM_WORLD)
+    call camp_mpi_barrier(MPI_COMM_WORLD)
 
 
     ! Set the aerosol mode dimensions
@@ -649,12 +649,12 @@ contains
 
       end if
 
-      !call pmc_mpi_barrier(MPI_COMM_WORLD)
-      !print*,"MPI RANK",pmc_mpi_rank()
+      !call camp_mpi_barrier(MPI_COMM_WORLD)
+      !print*,"MPI RANK",camp_mpi_rank()
 
       i_hour = int(curr_time/60)+1
       if(mod(int(curr_time),60).eq.0) then
-        if (pmc_mpi_rank().eq.0) then
+        if (camp_mpi_rank().eq.0) then
           write(*,*) "i_hour loop", i_hour
         end if
       end if
@@ -952,7 +952,7 @@ end if
 
 #ifdef PMC_USE_MPI
 
-if (pmc_mpi_rank().eq.0) then
+if (camp_mpi_rank().eq.0) then
   !call solver_stats%print( )
 end if
 

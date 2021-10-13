@@ -1,5 +1,5 @@
 {
-  "pmc-data" : [
+  "camp-data" : [
     {
       "name" : "PartMC single particle",
       "type" : "AERO_REP_SINGLE_PARTICLE",

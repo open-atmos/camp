@@ -3,24 +3,24 @@
 ! option) any later version. See the file COPYING for details.
 
 !> \file
-!> The pmc_coag_kernel module.
+!> The camp_coag_kernel module.
 
 !> Generic coagulation kernel.
-module pmc_coag_kernel
+module camp_coag_kernel
 
-  use pmc_env_state
-  use pmc_bin_grid
-  use pmc_aero_particle
-  use pmc_aero_data
-  use pmc_aero_weight
-  use pmc_aero_weight_array
-  use pmc_coag_kernel_sedi
-  use pmc_coag_kernel_additive
-  use pmc_coag_kernel_constant
-  use pmc_coag_kernel_brown
-  use pmc_coag_kernel_zero
-  use pmc_coag_kernel_brown_free
-  use pmc_coag_kernel_brown_cont
+  use camp_env_state
+  use camp_bin_grid
+  use camp_aero_particle
+  use camp_aero_data
+  use camp_aero_weight
+  use camp_aero_weight_array
+  use camp_coag_kernel_sedi
+  use camp_coag_kernel_additive
+  use camp_coag_kernel_constant
+  use camp_coag_kernel_brown
+  use camp_coag_kernel_zero
+  use camp_coag_kernel_brown_free
+  use camp_coag_kernel_brown_cont
 
   !> Maximum length of a mode type.
   integer, parameter :: COAG_KERNEL_TYPE_LEN = 20
@@ -513,4 +513,4 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end module pmc_coag_kernel
+end module camp_coag_kernel

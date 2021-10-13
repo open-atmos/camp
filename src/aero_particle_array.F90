@@ -3,15 +3,15 @@
 ! option) any later version. See the file COPYING for details.
 
 !> \file
-!> The pmc_aero_particle_array module.
+!> The camp_aero_particle_array module.
 
 !> The aero_particle_array_t structure and assoicated subroutines.
-module pmc_aero_particle_array
+module camp_aero_particle_array
 
-  use pmc_aero_particle
-  use pmc_util
-  use pmc_spec_file
-  use pmc_mpi
+  use camp_aero_particle
+  use camp_util
+  use camp_spec_file
+  use camp_mpi
 #ifdef PMC_USE_MPI
   use mpi
 #endif
@@ -200,7 +200,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Determines the number of bytes required to pack the given value.
-  integer function pmc_mpi_pack_size_apa(val)
+  integer function camp_mpi_pack_size_apa(val)
 
     !> Value to pack.
     type(aero_particle_array_t), intent(in) :: val
@@ -209,19 +209,19 @@ contains
 
     total_size = 0
     total_size = total_size &
-         + pmc_mpi_pack_size_integer(aero_particle_array_n_part(val))
+         + camp_mpi_pack_size_integer(aero_particle_array_n_part(val))
     do i = 1,aero_particle_array_n_part(val)
        total_size = total_size &
-            + pmc_mpi_pack_size_aero_particle(val%particle(i))
+            + camp_mpi_pack_size_aero_particle(val%particle(i))
     end do
-    pmc_mpi_pack_size_apa = total_size
+    camp_mpi_pack_size_apa = total_size
 
-  end function pmc_mpi_pack_size_apa
+  end function camp_mpi_pack_size_apa
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Packs the given value into the buffer, advancing position.
-  subroutine pmc_mpi_pack_aero_particle_array(buffer, position, val)
+  subroutine camp_mpi_pack_aero_particle_array(buffer, position, val)
 
     !> Memory buffer.
     character, intent(inout) :: buffer(:)
@@ -234,21 +234,21 @@ contains
     integer :: prev_position, i
 
     prev_position = position
-    call pmc_mpi_pack_integer(buffer, position, &
+    call camp_mpi_pack_integer(buffer, position, &
          aero_particle_array_n_part(val))
     do i = 1,aero_particle_array_n_part(val)
-       call pmc_mpi_pack_aero_particle(buffer, position, val%particle(i))
+       call camp_mpi_pack_aero_particle(buffer, position, val%particle(i))
     end do
     call assert(803856329, &
-         position - prev_position <= pmc_mpi_pack_size_apa(val))
+         position - prev_position <= camp_mpi_pack_size_apa(val))
 #endif
 
-  end subroutine pmc_mpi_pack_aero_particle_array
+  end subroutine camp_mpi_pack_aero_particle_array
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Unpacks the given value from the buffer, advancing position.
-  subroutine pmc_mpi_unpack_aero_particle_array(buffer, position, val)
+  subroutine camp_mpi_unpack_aero_particle_array(buffer, position, val)
 
     !> Memory buffer.
     character, intent(inout) :: buffer(:)
@@ -261,17 +261,17 @@ contains
     integer :: prev_position, i, n
 
     prev_position = position
-    call pmc_mpi_unpack_integer(buffer, position, n)
+    call camp_mpi_unpack_integer(buffer, position, n)
     call aero_particle_array_realloc(val, n)
     val%n_part = n
     do i = 1,n
-       call pmc_mpi_unpack_aero_particle(buffer, position, val%particle(i))
+       call camp_mpi_unpack_aero_particle(buffer, position, val%particle(i))
     end do
     call assert(138783294, &
-         position - prev_position <= pmc_mpi_pack_size_apa(val))
+         position - prev_position <= camp_mpi_pack_size_apa(val))
 #endif
 
-  end subroutine pmc_mpi_unpack_aero_particle_array
+  end subroutine camp_mpi_unpack_aero_particle_array
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -305,4 +305,4 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end module pmc_aero_particle_array
+end module camp_aero_particle_array

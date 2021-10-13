@@ -1882,9 +1882,9 @@ int Jac(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_data,
   }
 #endif
 
-  // if(sd->counterJacCPU==0)pmc_debug_print_jac_rel(sd,J,"J relations");//wrong
+  // if(sd->counterJacCPU==0)camp_debug_print_jac_rel(sd,J,"J relations");//wrong
   // species name seems, maybe I need jac_map or something
-  // if(sd->counterJacCPU==0)pmc_debug_print_jac_rel(sd,md->J_rxn,"RXN relations");
+  // if(sd->counterJacCPU==0)camp_debug_print_jac_rel(sd,md->J_rxn,"RXN relations");
 
   // sd->counterJacCPU++;
   // if(sd->counterJacCPU==0) print_jacobian_file(J, "");
@@ -1904,7 +1904,7 @@ int Jac(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_data,
       print_jacobian(J);
       // printf("Rank %d deriv iter %d jac iter %d counterSolve %d", rank,
       // sd->counterDerivCPU, sd->counterJacCPU, sd->counterSolve);
-      // pmc_debug_print_jac_struct2(sd, J, "RXN struct");
+      // camp_debug_print_jac_struct2(sd, J, "RXN struct");
     }
     if (sd->counterDerivCPU > 100 && sd->counterDerivCPU < 103) {
       // print_derivative(deriv);
@@ -2538,9 +2538,9 @@ SUNMatrix get_jac_init(SolverData *sd) {
   PMC_DEBUG_JAC_STRUCT(sd->model_data.J_rxn, "Reaction struct");
   PMC_DEBUG_JAC_STRUCT(M, "Solver struct");
 
-  // pmc_debug_print_jac_struct2(sd, sd->model_data.J_rxn, "RXN struct"); //Fine
-  // pmc_debug_print_jac_rel(sd, sd->model_data.J_rxn, "RXN relations"); //Fine
-  // but strange reactants affecting reactants pmc_debug_print_jac_rel(sd, M, "M
+  // camp_debug_print_jac_struct2(sd, sd->model_data.J_rxn, "RXN struct"); //Fine
+  // camp_debug_print_jac_rel(sd, sd->model_data.J_rxn, "RXN relations"); //Fine
+  // but strange reactants affecting reactants camp_debug_print_jac_rel(sd, M, "M
   // relations"); //todo miss jacmap indices to print correct names
 
 #ifdef PMC_DEBUG2_GPU
@@ -2548,7 +2548,7 @@ SUNMatrix get_jac_init(SolverData *sd) {
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   if (rank == MPI_RANK_DEBUG) {
-    pmc_debug_print_jac_rel(sd, sd->model_data.J_rxn, "RXN relations");
+    camp_debug_print_jac_rel(sd, sd->model_data.J_rxn, "RXN relations");
   }
 #endif
 #endif

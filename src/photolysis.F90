@@ -6,13 +6,13 @@
 !> PartMC interface to a photolysis module
 
 !> The photolysis_t type and related functions
-module pmc_photolysis
+module camp_photolysis
 
-  use pmc_camp_core
-  use pmc_constants
-  use pmc_rxn_data
-  use pmc_rxn_photolysis
-  use pmc_util
+  use camp_camp_core
+  use camp_constants
+  use camp_rxn_data
+  use camp_rxn_photolysis
+  use camp_util
 
   implicit none
   private
@@ -148,7 +148,7 @@ contains
   !> Determine the size of a binary required to pack the photolysis data
   integer(kind=i_kind) function pack_size(this, comm)
 
-    use pmc_mpi
+    use camp_mpi
 
     !> Photolysis calculator
     class(photolysis_t), intent(in) :: this
@@ -168,8 +168,8 @@ contains
     call assert(634138948, allocated(this%photo_rxns))
 
     pack_size = &
-      pmc_mpi_pack_size_real_array(this%base_rates, l_comm) + &
-      pmc_mpi_pack_size_integer(size(this%photo_rxns), l_comm)
+      camp_mpi_pack_size_real_array(this%base_rates, l_comm) + &
+      camp_mpi_pack_size_integer(size(this%photo_rxns), l_comm)
 
     do i_rxn = 1, size(this%photo_rxns)
       pack_size = pack_size + this%photo_rxns(i_rxn)%pack_size(l_comm)
@@ -185,7 +185,7 @@ contains
   !> Pack the given value to the buffer, advancing position
   subroutine bin_pack(this, buffer, pos, comm)
 
-    use pmc_mpi
+    use camp_mpi
 
     !> Photolysis calculator
     class(photolysis_t), intent(in) :: this
@@ -209,8 +209,8 @@ contains
     call assert(913255424, allocated(this%photo_rxns))
 
     prev_position = pos
-    call pmc_mpi_pack_real_array(buffer, pos, this%base_rates, l_comm)
-    call pmc_mpi_pack_integer(buffer, pos, size(this%photo_rxns), l_comm)
+    call camp_mpi_pack_real_array(buffer, pos, this%base_rates, l_comm)
+    call camp_mpi_pack_integer(buffer, pos, size(this%photo_rxns), l_comm)
     do i_rxn = 1, size(this%photo_rxns)
       call this%photo_rxns(i_rxn)%bin_pack(buffer, pos, l_comm)
     end do
@@ -224,7 +224,7 @@ contains
   !> Pack the given value to the buffer, advancing position
   subroutine bin_unpack(this, buffer, pos, comm)
 
-    use pmc_mpi
+    use camp_mpi
 
     !> Photolysis calculator
     class(photolysis_t), intent(out) :: this
@@ -245,8 +245,8 @@ contains
     endif
 
     prev_position = pos
-    call pmc_mpi_unpack_real_array(buffer, pos, this%base_rates, l_comm)
-    call pmc_mpi_unpack_integer(buffer, pos, n_rxns, l_comm)
+    call camp_mpi_unpack_real_array(buffer, pos, this%base_rates, l_comm)
+    call camp_mpi_unpack_integer(buffer, pos, n_rxns, l_comm)
     allocate(this%photo_rxns(n_rxns))
     do i_rxn = 1, size(this%photo_rxns)
       call this%photo_rxns(i_rxn)%bin_unpack(buffer, pos, l_comm)
@@ -291,4 +291,4 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end module pmc_photolysis
+end module camp_photolysis

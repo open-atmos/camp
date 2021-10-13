@@ -18,7 +18,7 @@
 /** \brief Private internal-use variable to store the random number
  * generator.
  */
-static gsl_rng *pmc_rand_gsl_rng = NULL;
+static gsl_rng *camp_rand_gsl_rng = NULL;
 
 /** \brief Result code indicating successful completion.
  */
@@ -42,35 +42,35 @@ static gsl_rng *pmc_rand_gsl_rng = NULL;
  *
  * \param seed The random seed to use.
  * \return PMC_RAND_GSL_SUCCESS on success, otherwise an error code.
- * \sa pmc_rand_finalize_gsl() to cleanup the generator.
+ * \sa camp_rand_finalize_gsl() to cleanup the generator.
  */
-int pmc_srand_gsl(int seed)
+int camp_srand_gsl(int seed)
 {
-        if (pmc_rand_gsl_rng) {
+        if (camp_rand_gsl_rng) {
                 return PMC_RAND_GSL_ALREADY_INIT;
         }
         gsl_set_error_handler_off(); // turn off automatic error handling
-        pmc_rand_gsl_rng = gsl_rng_alloc(gsl_rng_mt19937);
-        if (pmc_rand_gsl_rng == NULL) {
+        camp_rand_gsl_rng = gsl_rng_alloc(gsl_rng_mt19937);
+        if (camp_rand_gsl_rng == NULL) {
                 return PMC_RAND_GSL_INIT_FAIL;
         }
-        gsl_rng_set(pmc_rand_gsl_rng, seed);
+        gsl_rng_set(camp_rand_gsl_rng, seed);
         return PMC_RAND_GSL_SUCCESS;
 }
 
 /** \brief Cleanup and deallocate the random number generator.
  *
- * This must be called after pmc_srand_gsl().
+ * This must be called after camp_srand_gsl().
  *
  * \return PMC_RAND_GSL_SUCCESS on success, otherwise an error code.
  */
-int pmc_rand_finalize_gsl()
+int camp_rand_finalize_gsl()
 {
-        if (!pmc_rand_gsl_rng) {
+        if (!camp_rand_gsl_rng) {
                 return PMC_RAND_GSL_NOT_INIT;
         }
-        gsl_rng_free(pmc_rand_gsl_rng);
-        pmc_rand_gsl_rng = NULL;
+        gsl_rng_free(camp_rand_gsl_rng);
+        camp_rand_gsl_rng = NULL;
         return PMC_RAND_GSL_SUCCESS;
 }
 
@@ -79,12 +79,12 @@ int pmc_rand_finalize_gsl()
  * \param harvest A pointer to the generated random number.
  * \return PMC_RAND_GSL_SUCCESS on success, otherwise an error code.
  */
-int pmc_rand_gsl(double *harvest)
+int camp_rand_gsl(double *harvest)
 {
-        if (!pmc_rand_gsl_rng) {
+        if (!camp_rand_gsl_rng) {
                 return PMC_RAND_GSL_NOT_INIT;
         }
-        *harvest = gsl_rng_uniform(pmc_rand_gsl_rng);
+        *harvest = gsl_rng_uniform(camp_rand_gsl_rng);
         return PMC_RAND_GSL_SUCCESS;
 }
 
@@ -94,12 +94,12 @@ int pmc_rand_gsl(double *harvest)
  * \param harvest A pointer to the generated random number.
  * \return PMC_RAND_GSL_SUCCESS on success, otherwise an error code.
  */
-int pmc_rand_int_gsl(int n, int *harvest)
+int camp_rand_int_gsl(int n, int *harvest)
 {
-        if (!pmc_rand_gsl_rng) {
+        if (!camp_rand_gsl_rng) {
                 return PMC_RAND_GSL_NOT_INIT;
         }
-        *harvest = gsl_rng_uniform_int(pmc_rand_gsl_rng, n) + 1;
+        *harvest = gsl_rng_uniform_int(camp_rand_gsl_rng, n) + 1;
         return PMC_RAND_GSL_SUCCESS;
 }
 
@@ -110,12 +110,12 @@ int pmc_rand_int_gsl(int n, int *harvest)
  * \param harvest A pointer to the generated random number.
  * \return PMC_RAND_GSL_SUCCESS on success, otherwise an error code.
  */
-int pmc_rand_normal_gsl(double mean, double stddev, double *harvest)
+int camp_rand_normal_gsl(double mean, double stddev, double *harvest)
 {
-        if (!pmc_rand_gsl_rng) {
+        if (!camp_rand_gsl_rng) {
                 return PMC_RAND_GSL_NOT_INIT;
         }
-        *harvest = gsl_ran_gaussian(pmc_rand_gsl_rng, stddev) + mean;
+        *harvest = gsl_ran_gaussian(camp_rand_gsl_rng, stddev) + mean;
         return PMC_RAND_GSL_SUCCESS;
 }
 
@@ -125,12 +125,12 @@ int pmc_rand_normal_gsl(double mean, double stddev, double *harvest)
  * \param harvest A pointer to the generated random number.
  * \return PMC_RAND_GSL_SUCCESS on success, otherwise an error code.
  */
-int pmc_rand_poisson_gsl(double mean, int *harvest)
+int camp_rand_poisson_gsl(double mean, int *harvest)
 {
-        if (!pmc_rand_gsl_rng) {
+        if (!camp_rand_gsl_rng) {
                 return PMC_RAND_GSL_NOT_INIT;
         }
-        *harvest = gsl_ran_poisson(pmc_rand_gsl_rng, mean);
+        *harvest = gsl_ran_poisson(camp_rand_gsl_rng, mean);
         return PMC_RAND_GSL_SUCCESS;
 }
 
@@ -141,15 +141,15 @@ int pmc_rand_poisson_gsl(double mean, int *harvest)
  * \param harvest A pointer to the generated random number.
  * \return PMC_RAND_GSL_SUCCESS on success, otherwise an error code.
  */
-int pmc_rand_binomial_gsl(int n, double p, int *harvest)
+int camp_rand_binomial_gsl(int n, double p, int *harvest)
 {
         unsigned int u;
 
-        if (!pmc_rand_gsl_rng) {
+        if (!camp_rand_gsl_rng) {
                 return PMC_RAND_GSL_NOT_INIT;
         }
         u = n;
-        *harvest = gsl_ran_binomial(pmc_rand_gsl_rng, p, u);
+        *harvest = gsl_ran_binomial(camp_rand_gsl_rng, p, u);
         return PMC_RAND_GSL_SUCCESS;
 }
 

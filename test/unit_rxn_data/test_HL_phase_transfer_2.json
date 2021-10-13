@@ -1,6 +1,6 @@
 {
   "note" : "Parameters for Henry's Law partitioning for ozone and hydrogen peroxide taken from CAPRAM 2.4 reduced",
-  "pmc-data" : [
+  "camp-data" : [
    {
     "type" : "RELATIVE_TOLERANCE",
     "value" : 1.0e-10

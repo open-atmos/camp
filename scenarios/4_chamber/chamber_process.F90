@@ -8,8 +8,8 @@
 !> Read NetCDF output files and process them.
 program process
 
-  use pmc_output
-  use pmc_stats
+  use camp_output
+  use camp_stats
 
   character(len=PMC_MAX_FILENAME_LEN), parameter :: prefix &
        = "out/chamber"
@@ -27,7 +27,7 @@ program process
   type(stats_1d_t) :: stats_num_dist, stats_mass_dist, stats_tot_num_conc, &
        stats_tot_mass_conc
 
-  call pmc_mpi_init()
+  call camp_mpi_init()
 
   call input_n_files(prefix, n_repeat, n_index)
 
@@ -86,6 +86,6 @@ program process
   call stats_1d_output_text(stats_tot_mass_conc, out_filename, times)
   call stats_1d_clear(stats_tot_mass_conc)
 
-  call pmc_mpi_finalize()
+  call camp_mpi_finalize()
 
 end program process

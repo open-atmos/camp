@@ -9,9 +9,9 @@
 !> distribution in text format.
 program extract_sectional_aero_size
 
-  use pmc_aero_binned
-  use pmc_output
-  use pmc_mpi
+  use camp_aero_binned
+  use camp_output
+  use camp_mpi
   use getopt_m
 
   integer, parameter :: DIST_TYPE_NONE = 0
@@ -30,7 +30,7 @@ program extract_sectional_aero_size
   real(kind=dp), allocatable :: aero_dist(:,:)
   type(option_s) :: opts(4)
 
-  call pmc_mpi_init()
+  call camp_mpi_init()
 
   opts(1) = option_s("help", .false., 'h')
   opts(2) = option_s("num", .false., 'n')
@@ -151,7 +151,7 @@ program extract_sectional_aero_size
   deallocate(filename_list)
   deallocate(aero_dist)
 
-  call pmc_mpi_finalize()
+  call camp_mpi_finalize()
 
 contains
 

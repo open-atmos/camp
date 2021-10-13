@@ -4,16 +4,16 @@
 ! option) any later version. See the file COPYING for details.
 
 !> \file
-!> The pmc_coag_kernel_brown module.
+!> The camp_coag_kernel_brown module.
 
 !> Brownian coagulation kernel.
-module pmc_coag_kernel_brown
+module camp_coag_kernel_brown
 
-  use pmc_env_state
-  use pmc_constants
-  use pmc_util
-  use pmc_aero_particle
-  use pmc_aero_data
+  use camp_env_state
+  use camp_constants
+  use camp_util
+  use camp_aero_particle
+  use camp_aero_data
 
 contains
 
@@ -198,4 +198,4 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end module pmc_coag_kernel_brown
+end module camp_coag_kernel_brown

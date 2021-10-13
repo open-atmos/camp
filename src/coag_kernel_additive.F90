@@ -3,21 +3,21 @@
 ! option) any later version. See the file COPYING for details.
 
 !> \file
-!> The pmc_coag_kernel_additive module.
+!> The camp_coag_kernel_additive module.
 
 !> Additive coagulation kernel.
-module pmc_coag_kernel_additive
+module camp_coag_kernel_additive
 
-  use pmc_bin_grid
-  use pmc_env_state
-  use pmc_util
-  use pmc_constants
-  use pmc_constants
-  use pmc_aero_binned
-  use pmc_aero_data
-  use pmc_aero_dist
-  use pmc_aero_data
-  use pmc_aero_particle
+  use camp_bin_grid
+  use camp_env_state
+  use camp_util
+  use camp_constants
+  use camp_constants
+  use camp_aero_binned
+  use camp_aero_data
+  use camp_aero_dist
+  use camp_aero_data
+  use camp_aero_particle
 
   !> Scaling coefficient for constant kernel.
   real(kind=dp), parameter :: beta_1 = 1000d0
@@ -382,4 +382,4 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end module pmc_coag_kernel_additive
+end module camp_coag_kernel_additive

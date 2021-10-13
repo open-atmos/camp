@@ -3,26 +3,26 @@
 ! option) any later version. See the file COPYING for details.
 
 !> \file
-!> The pmc_test_first_order_loss program
+!> The camp_test_first_order_loss program
 
 !> Test of first_order_loss reaction module
-program pmc_test_first_order_loss
+program camp_test_first_order_loss
 
-  use pmc_util,                         only: i_kind, dp, assert, &
+  use camp_util,                         only: i_kind, dp, assert, &
                                               almost_equal, string_t, &
                                               warn_msg
-  use pmc_rxn_data
-  use pmc_rxn_first_order_loss
-  use pmc_rxn_factory
-  use pmc_mechanism_data
-  use pmc_chem_spec_data
-  use pmc_camp_core
-  use pmc_camp_state
-  use pmc_solver_stats
+  use camp_rxn_data
+  use camp_rxn_first_order_loss
+  use camp_rxn_factory
+  use camp_mechanism_data
+  use camp_chem_spec_data
+  use camp_camp_core
+  use camp_camp_state
+  use camp_solver_stats
 #ifdef PMC_USE_JSON
   use json_module
 #endif
-  use pmc_mpi
+  use camp_mpi
 
   use iso_c_binding
 
@@ -32,28 +32,28 @@ program pmc_test_first_order_loss
   integer(kind=i_kind) :: NUM_TIME_STEP = 100
 
   ! initialize mpi
-  call pmc_mpi_init()
+  call camp_mpi_init()
 
   if (run_first_order_loss_tests()) then
-    if (pmc_mpi_rank().eq.0) write(*,*) &
+    if (camp_mpi_rank().eq.0) write(*,*) &
           "First-Order loss reaction tests - PASS"
   else
-    if (pmc_mpi_rank().eq.0) write(*,*) &
+    if (camp_mpi_rank().eq.0) write(*,*) &
           "First-Order loss reaction tests - FAIL"
     stop 3
   end if
 
   ! finalize mpi
-  call pmc_mpi_finalize()
+  call camp_mpi_finalize()
 
 contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  !> Run all pmc_chem_mech_solver tests
+  !> Run all camp_chem_mech_solver tests
   logical function run_first_order_loss_tests() result(passed)
 
-    use pmc_camp_solver_data
+    use camp_camp_solver_data
 
     type(camp_solver_data_t), pointer :: camp_solver_data
 
@@ -82,7 +82,7 @@ contains
   !! where k1 and k2 are first-order loss reaction rate constants.
   logical function run_first_order_loss_test()
 
-    use pmc_constants
+    use camp_constants
 
     type(camp_core_t), pointer :: camp_core
     type(camp_state_t), pointer :: camp_state
@@ -122,7 +122,7 @@ contains
 
 #ifdef PMC_USE_MPI
     ! Load the model data on the root process and pass it to process 1 for solving
-    if (pmc_mpi_rank().eq.0) then
+    if (camp_mpi_rank().eq.0) then
 #endif
 
       ! Get the first_order_loss reaction mechanism json file
@@ -195,21 +195,21 @@ contains
     end if
 
     ! broadcast the species ids
-    call pmc_mpi_bcast_integer(idx_A)
-    call pmc_mpi_bcast_integer(idx_B)
+    call camp_mpi_bcast_integer(idx_A)
+    call camp_mpi_bcast_integer(idx_B)
 
     ! broadcast the buffer size
-    call pmc_mpi_bcast_integer(pack_size)
+    call camp_mpi_bcast_integer(pack_size)
 
-    if (pmc_mpi_rank().eq.1) then
+    if (camp_mpi_rank().eq.1) then
       ! allocate the buffer to receive data
       allocate(buffer(pack_size))
     end if
 
     ! broadcast the data
-    call pmc_mpi_bcast_packed(buffer)
+    call camp_mpi_bcast_packed(buffer)
 
-    if (pmc_mpi_rank().eq.1) then
+    if (camp_mpi_rank().eq.1) then
       ! unpack the data
       camp_core => camp_core_t()
       pos = 0
@@ -324,10 +324,10 @@ contains
     end if
 
     ! Send the results back to the primary process
-    call pmc_mpi_transfer_integer(results, results, 1, 0)
+    call camp_mpi_transfer_integer(results, results, 1, 0)
 
     ! convert the results back to a logical value
-    if (pmc_mpi_rank().eq.0) then
+    if (camp_mpi_rank().eq.0) then
       if (results.eq.0) then
         run_first_order_loss_test = .true.
       else
@@ -344,4 +344,4 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end program pmc_test_first_order_loss
+end program camp_test_first_order_loss

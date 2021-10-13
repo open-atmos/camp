@@ -3,15 +3,15 @@
 ! option) any later version. See the file COPYING for details.
 
 !> \file
-!> The pmc_aero_info_array module.
+!> The camp_aero_info_array module.
 
 !> The aero_info_array_t structure and assoicated subroutines.
-module pmc_aero_info_array
+module camp_aero_info_array
 
-  use pmc_aero_info
-  use pmc_util
-  use pmc_spec_file
-  use pmc_mpi
+  use camp_aero_info
+  use camp_util
+  use camp_spec_file
+  use camp_mpi
 #ifdef PMC_USE_MPI
   use mpi
 #endif
@@ -217,7 +217,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Determines the number of bytes required to pack the given value.
-  integer function pmc_mpi_pack_size_aia(val)
+  integer function camp_mpi_pack_size_aia(val)
 
     !> Value to pack.
     type(aero_info_array_t), intent(in) :: val
@@ -226,19 +226,19 @@ contains
 
     total_size = 0
     total_size = total_size &
-         + pmc_mpi_pack_size_integer(aero_info_array_n_item(val))
+         + camp_mpi_pack_size_integer(aero_info_array_n_item(val))
     do i = 1,aero_info_array_n_item(val)
        total_size = total_size &
-            + pmc_mpi_pack_size_aero_info(val%aero_info(i))
+            + camp_mpi_pack_size_aero_info(val%aero_info(i))
     end do
-    pmc_mpi_pack_size_aia = total_size
+    camp_mpi_pack_size_aia = total_size
 
-  end function pmc_mpi_pack_size_aia
+  end function camp_mpi_pack_size_aia
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Packs the given value into the buffer, advancing position.
-  subroutine pmc_mpi_pack_aero_info_array(buffer, position, val)
+  subroutine camp_mpi_pack_aero_info_array(buffer, position, val)
 
     !> Memory buffer.
     character, intent(inout) :: buffer(:)
@@ -251,20 +251,20 @@ contains
     integer :: prev_position, i
 
     prev_position = position
-    call pmc_mpi_pack_integer(buffer, position, aero_info_array_n_item(val))
+    call camp_mpi_pack_integer(buffer, position, aero_info_array_n_item(val))
     do i = 1,aero_info_array_n_item(val)
-       call pmc_mpi_pack_aero_info(buffer, position, val%aero_info(i))
+       call camp_mpi_pack_aero_info(buffer, position, val%aero_info(i))
     end do
     call assert(732927292, &
-         position - prev_position <= pmc_mpi_pack_size_aia(val))
+         position - prev_position <= camp_mpi_pack_size_aia(val))
 #endif
 
-  end subroutine pmc_mpi_pack_aero_info_array
+  end subroutine camp_mpi_pack_aero_info_array
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Unpacks the given value from the buffer, advancing position.
-  subroutine pmc_mpi_unpack_aero_info_array(buffer, position, val)
+  subroutine camp_mpi_unpack_aero_info_array(buffer, position, val)
 
     !> Memory buffer.
     character, intent(inout) :: buffer(:)
@@ -277,18 +277,18 @@ contains
     integer :: prev_position, i, n
 
     prev_position = position
-    call pmc_mpi_unpack_integer(buffer, position, n)
+    call camp_mpi_unpack_integer(buffer, position, n)
     call aero_info_array_realloc(val, n)
     val%n_item = n
     do i = 1,n
-       call pmc_mpi_unpack_aero_info(buffer, position, val%aero_info(i))
+       call camp_mpi_unpack_aero_info(buffer, position, val%aero_info(i))
     end do
     call assert(262838429, &
-         position - prev_position <= pmc_mpi_pack_size_aia(val))
+         position - prev_position <= camp_mpi_pack_size_aia(val))
 #endif
 
-  end subroutine pmc_mpi_unpack_aero_info_array
+  end subroutine camp_mpi_unpack_aero_info_array
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end module pmc_aero_info_array
+end module camp_aero_info_array

@@ -8,8 +8,8 @@ import copy as module_copy
 from Scientific.IO.NetCDF import *
 from pyx import *
 sys.path.append("../../tool")
-from pmc_data_nc import *
-from pmc_pyx import *
+from camp_data_nc import *
+from camp_pyx import *
 from config import *
 
 ss_axis_min = 1e-2
@@ -29,9 +29,9 @@ def get_plot_data_ss(filename, value_min = None, value_max = None):
     diameter = particles.dry_diameter() * 1e6
     critical_ss = (particles.kappa_rh(env_state, const) - 1.0) * 100.0
 
-    x_axis = pmc_log_axis(min = diameter_axis_min, max = diameter_axis_max,
+    x_axis = camp_log_axis(min = diameter_axis_min, max = diameter_axis_max,
                           n_bin = num_diameter_bins)
-    y_axis = pmc_log_axis(min = ss_axis_min, max = ss_axis_max,
+    y_axis = camp_log_axis(min = ss_axis_min, max = ss_axis_max,
                           n_bin = num_ss_bins)
     x_bin = x_axis.find(diameter)
     # hack to avoid landing just around the integer boundaries
@@ -58,7 +58,7 @@ def get_plot_data_ss(filename, value_min = None, value_max = None):
                 / (log(value_max) - log(value_min))
     value = value.clip(0.0, 1.0)
 
-    rects = pmc_histogram_2d_multi([value],
+    rects = camp_histogram_2d_multi([value],
                                     x_axis, y_axis)
     return (rects, env_state, value_min, value_max)
 

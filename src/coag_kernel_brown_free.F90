@@ -4,7 +4,7 @@
 ! option) any later version. See the file COPYING for details.
 
 !> \file
-!> The pmc_coag_kernel_brown_free module.
+!> The camp_coag_kernel_brown_free module.
 !!
 !! The coagulation kernel is based on Eq. 4 in
 !! S. Vemury and S. E. Pratsinis, Self-preserving size distributions
@@ -13,13 +13,13 @@
 
 !> Brownian coagulation kernel in free molecular regime based on
 !> Vemury and Pratsinis [1995].
-module pmc_coag_kernel_brown_free
+module camp_coag_kernel_brown_free
 
-  use pmc_env_state
-  use pmc_constants
-  use pmc_util
-  use pmc_aero_particle
-  use pmc_aero_data
+  use camp_env_state
+  use camp_constants
+  use camp_util
+  use camp_aero_particle
+  use camp_aero_data
 
 contains
 
@@ -148,4 +148,4 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end module pmc_coag_kernel_brown_free
+end module camp_coag_kernel_brown_free

@@ -575,7 +575,7 @@ void aero_rep_modal_binned_mass_get_aero_phase_avg_MW__kg_mol(
  *
  *  - \b int aero_rep_id (Id of one or more aerosol representations set by the
  *       host model using the
- *       pmc_aero_rep_modal_binned_mass::aero_rep_modal_binned_mass_t::set_id
+ *       camp_aero_rep_modal_binned_mass::aero_rep_modal_binned_mass_t::set_id
  *       function prior to initializing the solver.)
  *  - \b int update_type (Type of update to perform. Can be UPDATE_GMD or
  *       UPDATE_GSD.)

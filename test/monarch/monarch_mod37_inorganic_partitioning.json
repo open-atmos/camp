@@ -5,7 +5,7 @@
     "aerosol mode and H2SO4 is assumed to partition completely and immediately to the aerosol phase.",
     "Partitioning reaction parameters are from CAPRAM2.4 (Ervens et al. 2003)"
   ],
-  "pmc-data" : [
+  "camp-data" : [
     {
       "name" : "SULF",
       "type" : "CHEM_SPEC",

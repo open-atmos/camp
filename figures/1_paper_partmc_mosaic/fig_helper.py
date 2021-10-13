@@ -8,11 +8,11 @@ import copy as module_copy
 from Scientific.IO.NetCDF import *
 from pyx import *
 sys.path.append("../tool")
-from pmc_data_nc import *
+from camp_data_nc import *
 
 text.set(mode="latex")
 #text.set(mode="latex",usefiles=["spam.aux"],texdebug="spam.debug")
-from pmc_pyx import *
+from camp_pyx import *
 
 text.preamble(r"""\usepackage{times}
 \renewcommand{\normalsize}{\fontsize{9}{11}\selectfont}""")
@@ -29,7 +29,7 @@ netcdf_pattern_nc = r"^urban_plume_nc_state_0001_([0-9]{8})\.nc$"
 
 aging_data_dir = "out"
 n_level_bin = 450
-ss_active_axis = pmc_linear_axis(0.001, 0.01, n_level_bin)
+ss_active_axis = camp_linear_axis(0.001, 0.01, n_level_bin)
 level_low = int(ss_active_axis.closest_edge(array(0.001)))
 level_mid = int(ss_active_axis.closest_edge(array(0.006)))
 level_high = int(ss_active_axis.closest_edge(array(0.01)))

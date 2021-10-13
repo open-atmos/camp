@@ -1,6 +1,6 @@
 {
   "notes" :"A Generalized Reaction Mechanism for Photochemical Smog from kpp-2.2.3/models/smog.eqn",
-  "pmc-data" : [
+  "camp-data" : [
     {
       "name" : "H2O_aq",
       "type" : "CHEM_SPEC",

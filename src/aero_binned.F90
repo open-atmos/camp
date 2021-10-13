@@ -3,19 +3,19 @@
 ! option) any later version. See the file COPYING for the.
 
 !> \file
-!> The pmc_aero_binned module.
+!> The camp_aero_binned module.
 
 !> The aero_binned_t structure and associated subroutines.
-module pmc_aero_binned
+module camp_aero_binned
 
-  use pmc_bin_grid
-  use pmc_aero_particle
-  use pmc_spec_file
-  use pmc_util
-  use pmc_bin_grid
-  use pmc_aero_dist
-  use pmc_mpi
-  use pmc_aero_data
+  use camp_bin_grid
+  use camp_aero_particle
+  use camp_spec_file
+  use camp_util
+  use camp_bin_grid
+  use camp_aero_dist
+  use camp_mpi
+  use camp_aero_data
 #ifdef PMC_USE_MPI
   use mpi
 #endif
@@ -258,24 +258,24 @@ contains
 
   !> Determine the number of bytes required to pack the structure.
   !!
-  !! See pmc_mpi for usage details.
-  integer function pmc_mpi_pack_size_aero_binned(val)
+  !! See camp_mpi for usage details.
+  integer function camp_mpi_pack_size_aero_binned(val)
 
     !> Structure to pack.
     type(aero_binned_t), intent(in) :: val
 
-    pmc_mpi_pack_size_aero_binned = &
-         pmc_mpi_pack_size_real_array(val%num_conc) &
-         + pmc_mpi_pack_size_real_array_2d(val%vol_conc)
+    camp_mpi_pack_size_aero_binned = &
+         camp_mpi_pack_size_real_array(val%num_conc) &
+         + camp_mpi_pack_size_real_array_2d(val%vol_conc)
 
-  end function pmc_mpi_pack_size_aero_binned
+  end function camp_mpi_pack_size_aero_binned
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Pack the structure into the buffer and advance position.
   !!
-  !! See pmc_mpi for usage details.
-  subroutine pmc_mpi_pack_aero_binned(buffer, position, val)
+  !! See camp_mpi for usage details.
+  subroutine camp_mpi_pack_aero_binned(buffer, position, val)
 
     !> Memory buffer.
     character, intent(inout) :: buffer(:)
@@ -288,20 +288,20 @@ contains
     integer :: prev_position
 
     prev_position = position
-    call pmc_mpi_pack_real_array(buffer, position, val%num_conc)
-    call pmc_mpi_pack_real_array_2d(buffer, position, val%vol_conc)
+    call camp_mpi_pack_real_array(buffer, position, val%num_conc)
+    call camp_mpi_pack_real_array_2d(buffer, position, val%vol_conc)
     call assert(348207873, &
-         position - prev_position <= pmc_mpi_pack_size_aero_binned(val))
+         position - prev_position <= camp_mpi_pack_size_aero_binned(val))
 #endif
 
-  end subroutine pmc_mpi_pack_aero_binned
+  end subroutine camp_mpi_pack_aero_binned
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Unpack the structure from the buffer and advance position.
   !!
-  !! See pmc_mpi for usage details.
-  subroutine pmc_mpi_unpack_aero_binned(buffer, position, val)
+  !! See camp_mpi for usage details.
+  subroutine camp_mpi_unpack_aero_binned(buffer, position, val)
 
     !> Memory buffer.
     character, intent(inout) :: buffer(:)
@@ -314,29 +314,29 @@ contains
     integer :: prev_position
 
     prev_position = position
-    call pmc_mpi_unpack_real_array(buffer, position, val%num_conc)
-    call pmc_mpi_unpack_real_array_2d(buffer, position, val%vol_conc)
+    call camp_mpi_unpack_real_array(buffer, position, val%num_conc)
+    call camp_mpi_unpack_real_array_2d(buffer, position, val%vol_conc)
     call assert(878267066, &
-         position - prev_position <= pmc_mpi_pack_size_aero_binned(val))
+         position - prev_position <= camp_mpi_pack_size_aero_binned(val))
 #endif
 
-  end subroutine pmc_mpi_unpack_aero_binned
+  end subroutine camp_mpi_unpack_aero_binned
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Computes the average of the structure across all processes,
   !> storing the result on the root process.
-  subroutine pmc_mpi_reduce_avg_aero_binned(val, val_avg)
+  subroutine camp_mpi_reduce_avg_aero_binned(val, val_avg)
 
     !> Per-process value to average.
     type(aero_binned_t), intent(in) :: val
     !> Averaged result (only valid on root process).
     type(aero_binned_t), intent(inout) :: val_avg
 
-    call pmc_mpi_reduce_avg_real_array(val%num_conc, val_avg%num_conc)
-    call pmc_mpi_reduce_avg_real_array_2d(val%vol_conc, val_avg%vol_conc)
+    call camp_mpi_reduce_avg_real_array(val%num_conc, val_avg%num_conc)
+    call camp_mpi_reduce_avg_real_array_2d(val%vol_conc, val_avg%vol_conc)
 
-  end subroutine pmc_mpi_reduce_avg_aero_binned
+  end subroutine camp_mpi_reduce_avg_aero_binned
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -413,14 +413,14 @@ contains
          dimid_aero_diam, "aerosol diameter", scale=2d0)
     call aero_data_netcdf_dim_aero_species(aero_data, ncid, dimid_aero_species)
 
-    call pmc_nc_write_real_1d(ncid, aero_binned%num_conc, &
+    call camp_nc_write_real_1d(ncid, aero_binned%num_conc, &
          "aero_number_concentration", (/ dimid_aero_diam /), &
          unit="1/m^3", &
          long_name="aerosol number size concentration distribution", &
          description="logarithmic number size concentration, " &
          // "d N(r)/d ln D --- multiply by aero_diam_widths(i) " &
          // "and sum over i to compute the total number concentration")
-    call pmc_nc_write_real_2d(ncid, mass_conc, &
+    call camp_nc_write_real_2d(ncid, mass_conc, &
          "aero_mass_concentration", &
          (/ dimid_aero_diam, dimid_aero_species /), unit="kg/m^3", &
          long_name="aerosol mass size concentration distribution", &
@@ -476,9 +476,9 @@ contains
 
     integer :: i_bin
 
-    call pmc_nc_read_real_1d(ncid, aero_binned%num_conc, &
+    call camp_nc_read_real_1d(ncid, aero_binned%num_conc, &
          "aero_number_concentration")
-    call pmc_nc_read_real_2d(ncid, aero_binned%vol_conc, &
+    call camp_nc_read_real_2d(ncid, aero_binned%vol_conc, &
          "aero_mass_concentration")
     ! convert mass concentation to volume concentration
     do i_bin = 1,bin_grid_size(bin_grid)
@@ -490,4 +490,4 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end module pmc_aero_binned
+end module camp_aero_binned

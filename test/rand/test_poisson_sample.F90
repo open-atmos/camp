@@ -1,8 +1,8 @@
 
 program poisson_sample
 
-  use pmc_rand
-  use pmc_util
+  use camp_rand
+  use camp_util
 
   integer :: k_max, n_samp, i_samp, k
   real(kind=dp) :: lambda
@@ -25,8 +25,8 @@ program poisson_sample
   allocate(count(0:k_max), count_pdf(0:k_max), pdf(0:k_max))
 
   ! initialize the RNG with a random seed
-  call pmc_mpi_init()
-  call pmc_srand(0, 0)
+  call camp_mpi_init()
+  call camp_srand(0, 0)
   
   ! compute exact PDF
   if (n_samp == 0) then
@@ -55,7 +55,7 @@ program poisson_sample
   end do
 
   ! cleanup the RNG
-  call pmc_rand_finalize()
-  call pmc_mpi_finalize()
+  call camp_rand_finalize()
+  call camp_mpi_finalize()
 
 end program poisson_sample

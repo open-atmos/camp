@@ -4,7 +4,7 @@
 ! option) any later version. See the file COPYING for details.
 
 !> \file
-!> The pmc_coag_kernel_sedi module.
+!> The camp_coag_kernel_sedi module.
 !!
 !! Contains code based on \c coad1d.f by Andreas Bott
 !!     - http://www.meteo.uni-bonn.de/mitarbeiter/ABott/
@@ -14,12 +14,12 @@
 !!       1998.
 
 !> Gravitational sedimentation coagulation kernel.
-module pmc_coag_kernel_sedi
+module camp_coag_kernel_sedi
 
-  use pmc_env_state
-  use pmc_constants
-  use pmc_aero_data
-  use pmc_aero_particle
+  use camp_env_state
+  use camp_constants
+  use camp_aero_data
+  use camp_aero_particle
 
 contains
 
@@ -285,4 +285,4 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end module pmc_coag_kernel_sedi
+end module camp_coag_kernel_sedi

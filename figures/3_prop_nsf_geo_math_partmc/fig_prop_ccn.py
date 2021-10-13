@@ -8,8 +8,8 @@ import copy as module_copy
 from Scientific.IO.NetCDF import *
 from pyx import *
 sys.path.append("../tool")
-from pmc_data_nc import *
-from pmc_pyx import *
+from camp_data_nc import *
+from camp_pyx import *
 sys.path.append(".")
 from fig_helper import *
 
@@ -34,7 +34,7 @@ for [time, filename, key] in time_filename_list:
     env_state = env_state_t(ncf)
     ncf.close()
 
-    diameter_axis = pmc_log_axis(min = diameter_axis_min, max = diameter_axis_max,
+    diameter_axis = camp_log_axis(min = diameter_axis_min, max = diameter_axis_max,
                                  n_bin = num_diameter_bins)
     averaged_particles = particles.bin_average(diameter_axis)
 

@@ -20,14 +20,14 @@ int file_name_prefix = 1;
 #ifdef PMC_DEBUG
 #define PMC_DEBUG_SPEC_ 0
 #define PMC_DEBUG_PRINT(x) \
-  pmc_debug_print(sd->cvode_mem, x, false, 0, __LINE__, __func__)
+  camp_debug_print(sd->cvode_mem, x, false, 0, __LINE__, __func__)
 #define PMC_DEBUG_PRINT_INT(x, y) \
-  pmc_debug_print(sd->cvode_mem, x, false, y, __LINE__, __func__)
+  camp_debug_print(sd->cvode_mem, x, false, y, __LINE__, __func__)
 #define PMC_DEBUG_PRINT_FULL(x) \
-  pmc_debug_print(sd->cvode_mem, x, true, 0, __LINE__, __func__)
-#define PMC_DEBUG_JAC_STRUCT(J, x) pmc_debug_print_jac_struct((void *)sd, J, x)
-#define PMC_DEBUG_JAC(J, x) pmc_debug_print_jac((void *)sd, J, x)
-void pmc_debug_print(void *cvode_mem, const char *message, bool do_full,
+  camp_debug_print(sd->cvode_mem, x, true, 0, __LINE__, __func__)
+#define PMC_DEBUG_JAC_STRUCT(J, x) camp_debug_print_jac_struct((void *)sd, J, x)
+#define PMC_DEBUG_JAC(J, x) camp_debug_print_jac((void *)sd, J, x)
+void camp_debug_print(void *cvode_mem, const char *message, bool do_full,
                      const int int_val, const int line, const char *func) {
 #ifdef PMC_USE_SUNDIALS
   CVodeMem cv_mem = (CVodeMem)cvode_mem;
@@ -60,7 +60,7 @@ void pmc_debug_print(void *cvode_mem, const char *message, bool do_full,
   }
 #endif
 }
-void pmc_debug_print_jac_struct(void *solver_data, SUNMatrix J,
+void camp_debug_print_jac_struct(void *solver_data, SUNMatrix J,
                                 const char *message) {
 #ifdef PMC_USE_SUNDIALS
   SolverData *sd = (SolverData *)solver_data;
@@ -84,7 +84,7 @@ void pmc_debug_print_jac_struct(void *solver_data, SUNMatrix J,
   }
 #endif
 }
-void pmc_debug_print_jac(void *solver_data, SUNMatrix J, const char *message) {
+void camp_debug_print_jac(void *solver_data, SUNMatrix J, const char *message) {
 #ifdef PMC_USE_SUNDIALS
   SolverData *sd = (SolverData *)solver_data;
 
@@ -109,7 +109,7 @@ void pmc_debug_print_jac(void *solver_data, SUNMatrix J, const char *message) {
 #endif
 }
 
-realtype pmc_jac_elem(SUNMatrix J, unsigned int j, unsigned int i) {
+realtype camp_jac_elem(SUNMatrix J, unsigned int j, unsigned int i) {
   for (int i_elem = SM_INDEXPTRS_S(J)[j]; i_elem < SM_INDEXPTRS_S(J)[j + 1];
        ++i_elem) {
     if (i == SM_INDEXVALS_S(J)[i_elem]) return SM_DATA_S(J)[i_elem];
@@ -138,7 +138,7 @@ static void print_data_sizes(ModelData *md) {
 }
 
 // Print jacobian structure
-void pmc_debug_print_jac_struct2(void *solver_data, SUNMatrix J,
+void camp_debug_print_jac_struct2(void *solver_data, SUNMatrix J,
                                  const char *message) {
   SolverData *sd = (SolverData *)solver_data;
 
@@ -169,7 +169,7 @@ void pmc_debug_print_jac_struct2(void *solver_data, SUNMatrix J,
 }
 
 /*
-void pmc_debug_print_jac_struct2(void *solver_data, SUNMatrix J, const char
+void camp_debug_print_jac_struct2(void *solver_data, SUNMatrix J, const char
 *message) {
 
   SolverData *sd = (SolverData *)solver_data;
@@ -197,7 +197,7 @@ void pmc_debug_print_jac_struct2(void *solver_data, SUNMatrix J, const char
 
 // Print jac species relations (which species relations with which others)
 // based on nonzero values
-void pmc_debug_print_jac_rel(void *solver_data, SUNMatrix J,
+void camp_debug_print_jac_rel(void *solver_data, SUNMatrix J,
                              const char *message) {
   SolverData *sd = (SolverData *)solver_data;
 

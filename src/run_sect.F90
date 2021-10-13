@@ -4,7 +4,7 @@
 ! option) any later version. See the file COPYING for details.
 
 !> \file
-!> The pmc_run_sect module.
+!> The camp_run_sect module.
 
 !> 1D sectional simulation.
 !!
@@ -14,19 +14,19 @@
 !!     - A. Bott, A flux method for the numerical solution of the
 !!       stochastic collection equation, J. Atmos. Sci. 55, 2284-2293,
 !!       1998.
-module pmc_run_sect
+module camp_run_sect
 
-  use pmc_bin_grid
-  use pmc_aero_binned
-  use pmc_util
-  use pmc_aero_dist
-  use pmc_scenario
-  use pmc_env_state
-  use pmc_aero_data
-  use pmc_coag_kernel
-  use pmc_output
-  use pmc_gas_data
-  use pmc_gas_state
+  use camp_bin_grid
+  use camp_aero_binned
+  use camp_util
+  use camp_aero_dist
+  use camp_scenario
+  use camp_env_state
+  use camp_aero_data
+  use camp_coag_kernel
+  use camp_output
+  use camp_gas_data
+  use camp_gas_state
 
   !> Options controlling the operation of run_sect().
   type run_sect_opt_t
@@ -361,4 +361,4 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end module pmc_run_sect
+end module camp_run_sect

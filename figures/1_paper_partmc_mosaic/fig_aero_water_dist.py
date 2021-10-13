@@ -8,8 +8,8 @@ import copy as module_copy
 from Scientific.IO.NetCDF import *
 from pyx import *
 sys.path.append("../tool")
-from pmc_data_nc import *
-from pmc_pyx import *
+from camp_data_nc import *
+from camp_pyx import *
 sys.path.append(".")
 from fig_helper import *
 
@@ -46,8 +46,8 @@ for use_color in [True, False]:
                                                                  = [20, 10]),
                                title = "relative humidity ($\%$)"))
 
-    x_axis = pmc_linear_axis(min = 0, max = max_time_min, n_bin = 500)
-    y_axis = pmc_linear_axis(min = 0, max = 100, n_bin = 100)
+    x_axis = camp_linear_axis(min = 0, max = max_time_min, n_bin = 500)
+    y_axis = camp_linear_axis(min = 0, max = 100, n_bin = 100)
     num_den_array = numpy.zeros([x_axis.n_bin, y_axis.n_bin])
     num_times_array = numpy.zeros([x_axis.n_bin], dtype=int)
 
@@ -77,7 +77,7 @@ for use_color in [True, False]:
         value = value / value_max
     value = value.clip(0.0, 1.0)
 
-    rects = pmc_histogram_2d_multi([value], x_axis, y_axis)
+    rects = camp_histogram_2d_multi([value], x_axis, y_axis)
 
     if use_color:
         palette = rainbow_palette

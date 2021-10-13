@@ -3,14 +3,14 @@
 ! option) any later version. See the file COPYING for details.
 
 !> \file
-!> The pmc_rand module.
+!> The camp_rand module.
 
 !> Random number generators.
-module pmc_rand
+module camp_rand
 
-  use pmc_util
-  use pmc_constants
-  use pmc_mpi
+  use camp_util
+  use camp_constants
+  use camp_mpi
 #ifdef PMC_USE_GSL
   use iso_c_binding
 #endif
@@ -66,7 +66,7 @@ contains
   !> Initializes the random number generator to the state defined by
   !> the given seed plus offset. If the seed is 0 then a seed is
   !> auto-generated from the current time plus offset.
-  subroutine pmc_srand(seed, offset)
+  subroutine camp_srand(seed, offset)
 
     !> Random number generator seed.
     integer, intent(in) :: seed
@@ -82,28 +82,28 @@ contains
 #ifdef PMC_USE_GSL
 #ifndef DOXYGEN_SKIP_DOC
     interface
-       integer(kind=c_int) function pmc_srand_gsl(seed) bind(c)
+       integer(kind=c_int) function camp_srand_gsl(seed) bind(c)
          use iso_c_binding
          integer(kind=c_int), value :: seed
-       end function pmc_srand_gsl
+       end function camp_srand_gsl
     end interface
 #endif
 #endif
 
     if (seed == 0) then
-       if (pmc_mpi_rank() == 0) then
+       if (camp_mpi_rank() == 0) then
           call system_clock(count = clock)
        end if
        ! ensure all nodes use exactly the same seed base, to avoid
        ! accidental correlations
-       call pmc_mpi_bcast_integer(clock)
+       call camp_mpi_bcast_integer(clock)
     else
        clock = seed
     end if
     clock = clock + 67 * offset
 #ifdef PMC_USE_GSL
     c_clock = int(clock, kind=c_int)
-    call rand_check_gsl(100489590, pmc_srand_gsl(c_clock))
+    call rand_check_gsl(100489590, camp_srand_gsl(c_clock))
 #else
     call random_seed(size = n)
     allocate(seed_vec(n))
@@ -113,32 +113,32 @@ contains
     deallocate(seed_vec)
 #endif
 
-  end subroutine pmc_srand
+  end subroutine camp_srand
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Cleanup the random number generator.
-  subroutine pmc_rand_finalize()
+  subroutine camp_rand_finalize()
 
 #ifdef PMC_USE_GSL
 
 #ifndef DOXYGEN_SKIP_DOC
     interface
-       integer(kind=c_int) function pmc_rand_finalize_gsl() bind(c)
+       integer(kind=c_int) function camp_rand_finalize_gsl() bind(c)
          use iso_c_binding
-       end function pmc_rand_finalize_gsl
+       end function camp_rand_finalize_gsl
     end interface
 #endif
 
-    call rand_check_gsl(489538382, pmc_rand_finalize_gsl())
+    call rand_check_gsl(489538382, camp_rand_finalize_gsl())
 #endif
 
-  end subroutine pmc_rand_finalize
+  end subroutine camp_rand_finalize
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Returns a random number between 0 and 1.
-  real(kind=dp) function pmc_random()
+  real(kind=dp) function camp_random()
 
 #ifdef PMC_USE_GSL
     real(kind=c_double), target :: rnd
@@ -150,29 +150,29 @@ contains
 #ifdef PMC_USE_GSL
 #ifndef DOXYGEN_SKIP_DOC
     interface
-       integer(kind=c_int) function pmc_rand_gsl(harvest) bind(c)
+       integer(kind=c_int) function camp_rand_gsl(harvest) bind(c)
          use iso_c_binding
          type(c_ptr), value :: harvest
-       end function pmc_rand_gsl
+       end function camp_rand_gsl
     end interface
 #endif
 #endif
 
 #ifdef PMC_USE_GSL
     rnd_ptr = c_loc(rnd)
-    call rand_check_gsl(843777138, pmc_rand_gsl(rnd_ptr))
-    pmc_random = real(rnd, kind=dp)
+    call rand_check_gsl(843777138, camp_rand_gsl(rnd_ptr))
+    camp_random = real(rnd, kind=dp)
 #else
     call random_number(rnd)
-    pmc_random = rnd
+    camp_random = rnd
 #endif
 
-  end function pmc_random
+  end function camp_random
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Returns a random integer between 1 and n.
-  integer function pmc_rand_int(n)
+  integer function camp_rand_int(n)
 
     !> Maximum random number to generate.
     integer, intent(in) :: n
@@ -186,11 +186,11 @@ contains
 #ifdef PMC_USE_GSL
 #ifndef DOXYGEN_SKIP_DOC
     interface
-       integer(kind=c_int) function pmc_rand_int_gsl(n, harvest) bind(c)
+       integer(kind=c_int) function camp_rand_int_gsl(n, harvest) bind(c)
          use iso_c_binding
          integer(kind=c_int), value :: n
          type(c_ptr), value :: harvest
-       end function pmc_rand_int_gsl
+       end function camp_rand_int_gsl
     end interface
 #endif
 #endif
@@ -199,15 +199,15 @@ contains
 #ifdef PMC_USE_GSL
     n_c = int(n, kind=c_int)
     harvest_ptr = c_loc(harvest)
-    call rand_check_gsl(388234845, pmc_rand_int_gsl(n_c, harvest_ptr))
-    pmc_rand_int = int(harvest)
+    call rand_check_gsl(388234845, camp_rand_int_gsl(n_c, harvest_ptr))
+    camp_rand_int = int(harvest)
 #else
-    pmc_rand_int = mod(int(pmc_random() * real(n, kind=dp)), n) + 1
+    camp_rand_int = mod(int(camp_random() * real(n, kind=dp)), n) + 1
 #endif
-    call assert(515838689, pmc_rand_int >= 1)
-    call assert(802560153, pmc_rand_int <= n)
+    call assert(515838689, camp_rand_int >= 1)
+    call assert(802560153, camp_rand_int <= n)
 
-  end function pmc_rand_int
+  end function camp_rand_int
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -220,8 +220,8 @@ contains
     real(kind=dp), intent(in) :: val
 
     ! FIXME: can replace this with:
-    ! prob_round = floor(val + pmc_random())
-    if (pmc_random() < real(ceiling(val), kind=dp) - val) then
+    ! prob_round = floor(val + camp_random())
+    if (camp_random() < real(ceiling(val), kind=dp) - val) then
        prob_round = floor(val)
     else
        prob_round = ceiling(val)
@@ -269,12 +269,12 @@ contains
 #ifdef PMC_USE_GSL
 #ifndef DOXYGEN_SKIP_DOC
     interface
-       integer(kind=c_int) function pmc_rand_poisson_gsl(mean, harvest) &
+       integer(kind=c_int) function camp_rand_poisson_gsl(mean, harvest) &
             bind(c)
          use iso_c_binding
          real(kind=c_double), value :: mean
          type(c_ptr), value :: harvest
-       end function pmc_rand_poisson_gsl
+       end function camp_rand_poisson_gsl
     end interface
 #endif
 #endif
@@ -284,7 +284,7 @@ contains
     mean_c = real(mean, kind=c_double)
     harvest_ptr = c_loc(harvest)
     call rand_check_gsl(353483140, &
-         pmc_rand_poisson_gsl(mean_c, harvest_ptr))
+         camp_rand_poisson_gsl(mean_c, harvest_ptr))
     rand_poisson = int(harvest)
 #else
     if (mean <= 10d0) then
@@ -294,7 +294,7 @@ contains
        p = 1d0
        do
           k = k + 1
-          p = p * pmc_random()
+          p = p * camp_random()
           if (p < L) exit
        end do
        rand_poisson = k - 1
@@ -339,13 +339,13 @@ contains
 #ifdef PMC_USE_GSL
 #ifndef DOXYGEN_SKIP_DOC
     interface
-       integer(kind=c_int) function pmc_rand_binomial_gsl(n, p, harvest) &
+       integer(kind=c_int) function camp_rand_binomial_gsl(n, p, harvest) &
             bind(c)
          use iso_c_binding
          integer(kind=c_int), value :: n
          real(kind=c_double), value :: p
          type(c_ptr), value :: harvest
-       end function pmc_rand_binomial_gsl
+       end function camp_rand_binomial_gsl
     end interface
 #endif
 #endif
@@ -358,7 +358,7 @@ contains
     p_c = real(p, kind=c_double)
     harvest_ptr = c_loc(harvest)
     call rand_check_gsl(208869397, &
-         pmc_rand_binomial_gsl(n_c, p_c, harvest_ptr))
+         camp_rand_binomial_gsl(n_c, p_c, harvest_ptr))
     rand_binomial = int(harvest)
 #else
     np = real(n, kind=dp) * p
@@ -384,7 +384,7 @@ contains
        sum = 0
        do
           ! G is geometric(q)
-          G_real = log(pmc_random()) / log(1d0 - q)
+          G_real = log(camp_random()) / log(1d0 - q)
           ! early bailout for cases to avoid integer overflow
           if (G_real > real(n - sum, kind=dp)) exit
           G = ceiling(G_real)
@@ -425,13 +425,13 @@ contains
 #ifdef PMC_USE_GSL
 #ifndef DOXYGEN_SKIP_DOC
     interface
-       integer(kind=c_int) function pmc_rand_normal_gsl(mean, stddev, &
+       integer(kind=c_int) function camp_rand_normal_gsl(mean, stddev, &
             harvest) bind(c)
          use iso_c_binding
          real(kind=c_double), value :: mean
          real(kind=c_double), value :: stddev
          type(c_ptr), value :: harvest
-       end function pmc_rand_normal_gsl
+       end function camp_rand_normal_gsl
     end interface
 #endif
 #endif
@@ -442,13 +442,13 @@ contains
     stddev_c = real(stddev, kind=c_double)
     harvest_ptr = c_loc(harvest)
     call rand_check_gsl(102078576, &
-         pmc_rand_normal_gsl(mean_c, stddev_c, harvest_ptr))
+         camp_rand_normal_gsl(mean_c, stddev_c, harvest_ptr))
     rand_normal = real(harvest, kind=dp)
 #else
     ! Uses the Box-Muller transform
     ! http://en.wikipedia.org/wiki/Box-Muller_transform
-    u1 = pmc_random()
-    u2 = pmc_random()
+    u1 = camp_random()
+    u2 = camp_random()
     r = sqrt(-2d0 * log(u1))
     theta = 2d0 * const%pi * u2
     z0 = r * cos(theta)
@@ -508,8 +508,8 @@ contains
     end if
     found = .false.
     do while (.not. found)
-       k = pmc_rand_int(size(pdf))
-       if (pmc_random() < pdf(k) / pdf_max) then
+       k = camp_rand_int(size(pdf))
+       if (camp_random() < pdf(k) / pdf_max) then
           found = .true.
        end if
     end do
@@ -541,8 +541,8 @@ contains
     end if
     found = .false.
     do while (.not. found)
-       k = pmc_rand_int(size(pdf))
-       if (pmc_random() < real(pdf(k), kind=dp) / real(pdf_max, kind=dp)) then
+       k = camp_rand_int(size(pdf))
+       if (camp_random() < real(pdf(k), kind=dp) / real(pdf_max, kind=dp)) then
           found = .true.
        end if
     end do
@@ -584,7 +584,7 @@ contains
 
     integer :: i
 
-    i = pmc_rand_int(16)
+    i = camp_rand_int(16)
     if (i <= 10) then
        rand_hex_char = achar(iachar('0') + i - 1)
     else
@@ -628,7 +628,7 @@ contains
 
     uuid(15:15) = '4'
 
-    i = pmc_rand_int(4)
+    i = camp_rand_int(4)
     if (i <= 2) then
        uuid(20:20) = achar(iachar('8') + i - 1)
     else
@@ -646,7 +646,7 @@ contains
     !> The generated id
     integer(kind=i_kind) :: id
 
-    call assert_msg(226665912, pmc_mpi_rank().eq.0, &
+    call assert_msg(226665912, camp_mpi_rank().eq.0, &
                     "Sequential ids can only be generated on the primary "//&
                     "process.")
 
@@ -657,4 +657,4 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end module pmc_rand
+end module camp_rand

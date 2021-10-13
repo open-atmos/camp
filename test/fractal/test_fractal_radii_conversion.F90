@@ -11,9 +11,9 @@
 !> to check if the results are within tolerance.
 program test_fractal_radii_conversion
 
-  use pmc_util
-  use pmc_constants
-  use pmc_fractal
+  use camp_util
+  use camp_constants
+  use camp_fractal
 
   real(kind=dp), parameter :: temp = 300d0
   real(kind=dp), parameter :: pressure = 1d5

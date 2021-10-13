@@ -10,12 +10,12 @@
 !> size distributions in text format.
 program test_fractal_self_preserve
 
-  use pmc_aero_state
-  use pmc_aero_particle
-  use pmc_output
-  use pmc_mpi
-  use pmc_util
-  use pmc_constants
+  use camp_aero_state
+  use camp_aero_particle
+  use camp_output
+  use camp_mpi
+  use camp_util
+  use camp_constants
   use getopt_m
 
   character(len=PMC_MAX_FILENAME_LEN) :: in_prefix, out_filename
@@ -37,7 +37,7 @@ program test_fractal_self_preserve
   real(kind=dp) :: total_num_conc, total_vol_conc
   type(option_s) :: opts(1)
 
-  call pmc_mpi_init()
+  call camp_mpi_init()
 
   opts(1) = option_s("output", .true., 'o')
 
@@ -132,7 +132,7 @@ program test_fractal_self_preserve
   deallocate(dimless_vol)
   deallocate(dimless_num_conc)
 
-  call pmc_mpi_finalize()
+  call camp_mpi_finalize()
 
 contains
 

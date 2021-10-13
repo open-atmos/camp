@@ -96,7 +96,7 @@ void rxn_photolysis_update_ids(ModelData *model_data, int *deriv_ids,
  * module. The structure of the update data is:
  *
  *  - \b int photo_id (Id of one or more photolysis reactions set by the host
- *       model using the pmc_rxn_photolysis::rxn_photolysis_t::set_photo_id
+ *       model using the camp_rxn_photolysis::rxn_photolysis_t::set_photo_id
  *       function prior to initializing the solver.)
  *  - \b double rate_const (New pre-scaling rate constant.)
  *

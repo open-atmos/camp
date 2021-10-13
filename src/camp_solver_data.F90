@@ -3,25 +3,25 @@
 ! option) any later version. See the file COPYING for details.
 
 !> \file
-!> The pmc_camp_solver_data module.
+!> The camp_camp_solver_data module.
 
 !> The camp_solver_data_t structure and associated subroutines.
-module pmc_camp_solver_data
+module camp_camp_solver_data
 #define CAMP_SOLVER_SUCCESS 0
 #define CAMP_SOLVER_FAIL 1
 
-  use pmc_aero_phase_data
-  use pmc_aero_rep_data
-  use pmc_aero_rep_factory
-  use pmc_constants,                   only : i_kind, dp
-  use pmc_mechanism_data
-  use pmc_camp_state
-  use pmc_rxn_data
-  use pmc_rxn_factory
-  use pmc_solver_stats
-  use pmc_sub_model_data
-  use pmc_sub_model_factory
-  use pmc_util,                        only : assert_msg, to_string, &
+  use camp_aero_phase_data
+  use camp_aero_rep_data
+  use camp_aero_rep_factory
+  use camp_constants,                   only : i_kind, dp
+  use camp_mechanism_data
+  use camp_camp_state
+  use camp_rxn_data
+  use camp_rxn_factory
+  use camp_solver_stats
+  use camp_sub_model_data
+  use camp_sub_model_factory
+  use camp_util,                        only : assert_msg, to_string, &
                                               warn_assert_msg, die_msg,&
                                               string_t
 
@@ -480,7 +480,7 @@ contains
     !> Sub models to include
     type(sub_model_data_ptr), pointer, intent(in) :: sub_models(:)
     !> Reactions phase to solve -- gas, aerosol, or both (default)
-    !! Use parameters in pmc_rxn_data to specify phase:
+    !! Use parameters in camp_rxn_data to specify phase:
     !! GAS_RXN, AERO_RXN, GAS_AERO_RXN
     integer(kind=i_kind), intent(in) :: rxn_phase
     integer(kind=i_kind), intent(in) :: ncounters
@@ -1118,4 +1118,4 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end module pmc_camp_solver_data
+end module camp_camp_solver_data

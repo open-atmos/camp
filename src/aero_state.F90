@@ -3,27 +3,27 @@
 ! option) any later version. See the file COPYING for details.
 
 !> \file
-!> The pmc_aero_state module.
+!> The camp_aero_state module.
 
 !> The aero_state_t structure and assocated subroutines.
-module pmc_aero_state
+module camp_aero_state
 
-  use pmc_aero_particle_array
-  use pmc_aero_sorted
-  use pmc_integer_varray
-  use pmc_bin_grid
-  use pmc_aero_data
-  use pmc_aero_particle
-  use pmc_aero_dist
-  use pmc_util
-  use pmc_rand
-  use pmc_aero_binned
-  use pmc_mpi
-  use pmc_spec_file
-  use pmc_aero_info
-  use pmc_aero_info_array
-  use pmc_aero_weight
-  use pmc_aero_weight_array
+  use camp_aero_particle_array
+  use camp_aero_sorted
+  use camp_integer_varray
+  use camp_bin_grid
+  use camp_aero_data
+  use camp_aero_particle
+  use camp_aero_dist
+  use camp_util
+  use camp_rand
+  use camp_aero_binned
+  use camp_mpi
+  use camp_spec_file
+  use camp_aero_info
+  use camp_aero_info_array
+  use camp_aero_weight
+  use camp_aero_weight_array
 #ifdef PMC_USE_MPI
   use mpi
 #endif
@@ -307,7 +307,7 @@ contains
     !> Weight class.
     integer, optional, intent(in) :: i_class
 
-    call pmc_mpi_allreduce_sum_integer(&
+    call camp_mpi_allreduce_sum_integer(&
          aero_state_total_particles(aero_state, i_group, i_class), &
          aero_state_total_particles_all_procs)
 
@@ -434,7 +434,7 @@ contains
     call assert(742996300, aero_state%valid_sort)
     call assert(392182617, integer_varray_n_entry( &
          aero_state%aero_sorted%size_class%inverse(i_bin, i_class)) > 0)
-    i_entry = pmc_rand_int(integer_varray_n_entry( &
+    i_entry = camp_rand_int(integer_varray_n_entry( &
          aero_state%aero_sorted%size_class%inverse(i_bin, i_class)))
     i_part = aero_state%aero_sorted%size_class%inverse(i_bin, &
          i_class)%entry(i_entry)
@@ -689,11 +689,11 @@ contains
     n_class = aero_weight_array_n_class(aero_state%awa)
     global_n_part = aero_state_total_particles_all_procs(aero_state, &
          i_group, i_class)
-    mean_n_part = real(global_n_part, kind=dp) / real(pmc_mpi_size(), kind=dp)
+    mean_n_part = real(global_n_part, kind=dp) / real(camp_mpi_size(), kind=dp)
     n_part_new = mean_n_part + n_add
     if (n_part_new == 0d0) return
     n_part_ideal_local_group = aero_state%n_part_ideal(i_group, i_class) &
-         / real(pmc_mpi_size(), kind=dp)
+         / real(camp_mpi_size(), kind=dp)
     if ((n_part_new < n_part_ideal_local_group / 2d0) &
          .or. (n_part_new > n_part_ideal_local_group * 2d0)) &
          then
@@ -789,7 +789,7 @@ contains
     integer, intent(out) :: i_part
 
     call assert(950725003, aero_state_n_part(aero_state) > 0)
-    i_part = pmc_rand_int(aero_state_n_part(aero_state))
+    i_part = camp_rand_int(aero_state_n_part(aero_state))
 
   end subroutine aero_state_rand_particle
 
@@ -812,7 +812,7 @@ contains
     type(aero_data_t), intent(in) :: aero_data
     !> Probability of sampling each particle.
     real(kind=dp), intent(in) :: sample_prob
-    !> Action for removal (see pmc_aero_info module for action
+    !> Action for removal (see camp_aero_info module for action
     !> parameters). Set to AERO_INFO_NONE to not log removal.
     integer, intent(in) :: removal_action
 
@@ -841,12 +841,12 @@ contains
        elseif (num_conc_to < num_conc_from) then ! always add, maybe remove
           do_add = .true.
           do_remove = .false.
-          if (pmc_random() < num_conc_to / num_conc_from) then
+          if (camp_random() < num_conc_to / num_conc_from) then
              do_remove = .true.
           end if
        else ! always remove, maybe add
           do_add = .false.
-          if (pmc_random() < num_conc_from / num_conc_to) then
+          if (camp_random() < num_conc_from / num_conc_to) then
              do_add = .true.
           end if
           do_remove = .true.
@@ -887,7 +887,7 @@ contains
     type(aero_data_t), intent(in) :: aero_data
     !> Probability of sampling each particle.
     real(kind=dp), intent(in) :: sample_prob
-    !> Action for removal (see pmc_aero_info module for action
+    !> Action for removal (see camp_aero_info module for action
     !> parameters). Set to AERO_INFO_NONE to not log removal.
     integer, intent(in) :: removal_action
 
@@ -1512,7 +1512,7 @@ contains
        if ((aero_state%apa%particle(i_part)%weight_group == i_group) &
             .and. (aero_state%apa%particle(i_part)%weight_class == i_class)) &
             then
-          if (pmc_random() < 0.5d0) then
+          if (camp_random() < 0.5d0) then
              aero_info%id = aero_state%apa%particle(i_part)%id
              aero_info%action = AERO_INFO_HALVED
              call aero_state_remove_particle_with_info(aero_state, i_part, &
@@ -1631,7 +1631,7 @@ contains
        n_remove = prob_round(real(n_part, kind=dp) &
             * (1d0 - 1d0 / weight_ratio))
        do i_remove = 1,n_remove
-          i_entry = pmc_rand_int(integer_varray_n_entry( &
+          i_entry = camp_rand_int(integer_varray_n_entry( &
                aero_state%aero_sorted%group_class%inverse(i_group, i_class)))
           i_part = aero_state%aero_sorted%group_class%inverse(i_group, &
                i_class)%entry(i_entry)
@@ -1683,8 +1683,8 @@ contains
     real(kind=dp) :: prob_transfer_given_not_transferred
 
     ! process information
-    rank = pmc_mpi_rank()
-    n_proc = pmc_mpi_size()
+    rank = camp_mpi_rank()
+    n_proc = camp_mpi_size()
     if (n_proc == 1) then
        ! buffer allocation below fails if n_proc == 1
        ! so bail out early (nothing to mix anyway)
@@ -1756,47 +1756,47 @@ contains
     integer :: recvcounts(size(send)), rdispls(size(send))
     integer :: i_proc, position, old_position, max_sendbuf_size, ierr
 
-    call assert(978709842, size(send) == pmc_mpi_size())
+    call assert(978709842, size(send) == camp_mpi_size())
 
     max_sendbuf_size = 0
-    do i_proc = 1,pmc_mpi_size()
+    do i_proc = 1,camp_mpi_size()
        if (aero_state_total_particles(send(i_proc)) > 0) then
           max_sendbuf_size = max_sendbuf_size &
-               + pmc_mpi_pack_size_aero_state(send(i_proc))
+               + camp_mpi_pack_size_aero_state(send(i_proc))
        end if
     end do
 
     allocate(sendbuf(max_sendbuf_size))
 
     position = 0
-    do i_proc = 1,pmc_mpi_size()
+    do i_proc = 1,camp_mpi_size()
        old_position = position
        if (aero_state_total_particles(send(i_proc)) > 0) then
-          call pmc_mpi_pack_aero_state(sendbuf, position, send(i_proc))
+          call camp_mpi_pack_aero_state(sendbuf, position, send(i_proc))
        end if
        sendcounts(i_proc) = position - old_position
     end do
     call assert(393267406, position <= max_sendbuf_size)
 
-    call pmc_mpi_alltoall_integer(sendcounts, recvcounts)
+    call camp_mpi_alltoall_integer(sendcounts, recvcounts)
     allocate(recvbuf(sum(recvcounts)))
 
     sdispls(1) = 0
     rdispls(1) = 0
-    do i_proc = 2,pmc_mpi_size()
+    do i_proc = 2,camp_mpi_size()
        sdispls(i_proc) = sdispls(i_proc - 1) + sendcounts(i_proc - 1)
        rdispls(i_proc) = rdispls(i_proc - 1) + recvcounts(i_proc - 1)
     end do
 
     call mpi_alltoallv(sendbuf, sendcounts, sdispls, MPI_CHARACTER, recvbuf, &
          recvcounts, rdispls, MPI_CHARACTER, MPI_COMM_WORLD, ierr)
-    call pmc_mpi_check_ierr(ierr)
+    call camp_mpi_check_ierr(ierr)
 
     position = 0
-    do i_proc = 1,pmc_mpi_size()
+    do i_proc = 1,camp_mpi_size()
        call assert(189739257, position == rdispls(i_proc))
        if (recvcounts(i_proc) > 0) then
-          call pmc_mpi_unpack_aero_state(recvbuf, position, recv(i_proc))
+          call camp_mpi_unpack_aero_state(recvbuf, position, recv(i_proc))
        end if
     end do
 
@@ -2102,7 +2102,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Determines the number of bytes required to pack the given value.
-  integer function pmc_mpi_pack_size_aero_state(val)
+  integer function camp_mpi_pack_size_aero_state(val)
 
     !> Value to pack.
     type(aero_state_t), intent(in) :: val
@@ -2110,18 +2110,18 @@ contains
     integer :: total_size
 
     total_size = 0
-    total_size = total_size + pmc_mpi_pack_size_apa(val%apa)
-    total_size = total_size + pmc_mpi_pack_size_aero_weight_array(val%awa)
-    total_size = total_size + pmc_mpi_pack_size_real_array_2d(val%n_part_ideal)
-    total_size = total_size + pmc_mpi_pack_size_aia(val%aero_info_array)
-    pmc_mpi_pack_size_aero_state = total_size
+    total_size = total_size + camp_mpi_pack_size_apa(val%apa)
+    total_size = total_size + camp_mpi_pack_size_aero_weight_array(val%awa)
+    total_size = total_size + camp_mpi_pack_size_real_array_2d(val%n_part_ideal)
+    total_size = total_size + camp_mpi_pack_size_aia(val%aero_info_array)
+    camp_mpi_pack_size_aero_state = total_size
 
-  end function pmc_mpi_pack_size_aero_state
+  end function camp_mpi_pack_size_aero_state
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Packs the given value into the buffer, advancing position.
-  subroutine pmc_mpi_pack_aero_state(buffer, position, val)
+  subroutine camp_mpi_pack_aero_state(buffer, position, val)
 
     !> Memory buffer.
     character, intent(inout) :: buffer(:)
@@ -2134,20 +2134,20 @@ contains
     integer :: prev_position, i_group
 
     prev_position = position
-    call pmc_mpi_pack_aero_particle_array(buffer, position, val%apa)
-    call pmc_mpi_pack_aero_weight_array(buffer,position,val%awa)
-    call pmc_mpi_pack_real_array_2d(buffer, position, val%n_part_ideal)
-    call pmc_mpi_pack_aero_info_array(buffer, position, val%aero_info_array)
+    call camp_mpi_pack_aero_particle_array(buffer, position, val%apa)
+    call camp_mpi_pack_aero_weight_array(buffer,position,val%awa)
+    call camp_mpi_pack_real_array_2d(buffer, position, val%n_part_ideal)
+    call camp_mpi_pack_aero_info_array(buffer, position, val%aero_info_array)
     call assert(850997402, &
-         position - prev_position <= pmc_mpi_pack_size_aero_state(val))
+         position - prev_position <= camp_mpi_pack_size_aero_state(val))
 #endif
 
-  end subroutine pmc_mpi_pack_aero_state
+  end subroutine camp_mpi_pack_aero_state
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Unpacks the given value from the buffer, advancing position.
-  subroutine pmc_mpi_unpack_aero_state(buffer, position, val)
+  subroutine camp_mpi_unpack_aero_state(buffer, position, val)
 
     !> Memory buffer.
     character, intent(inout) :: buffer(:)
@@ -2161,15 +2161,15 @@ contains
 
     val%valid_sort = .false.
     prev_position = position
-    call pmc_mpi_unpack_aero_particle_array(buffer, position, val%apa)
-    call pmc_mpi_unpack_aero_weight_array(buffer,position,val%awa)
-    call pmc_mpi_unpack_real_array_2d(buffer, position, val%n_part_ideal)
-    call pmc_mpi_unpack_aero_info_array(buffer, position, val%aero_info_array)
+    call camp_mpi_unpack_aero_particle_array(buffer, position, val%apa)
+    call camp_mpi_unpack_aero_weight_array(buffer,position,val%awa)
+    call camp_mpi_unpack_real_array_2d(buffer, position, val%n_part_ideal)
+    call camp_mpi_unpack_aero_info_array(buffer, position, val%aero_info_array)
     call assert(132104747, &
-         position - prev_position <= pmc_mpi_pack_size_aero_state(val))
+         position - prev_position <= camp_mpi_pack_size_aero_state(val))
 #endif
 
-  end subroutine pmc_mpi_unpack_aero_state
+  end subroutine camp_mpi_unpack_aero_state
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -2190,36 +2190,36 @@ contains
     character, allocatable :: buffer(:)
 #endif
 
-    if (pmc_mpi_rank() == 0) then
+    if (camp_mpi_rank() == 0) then
        aero_state_total = aero_state
     end if
 
 #ifdef PMC_USE_MPI
 
-    if (pmc_mpi_rank() /= 0) then
+    if (camp_mpi_rank() /= 0) then
        ! send data from remote processes
        max_buffer_size = 0
        max_buffer_size = max_buffer_size &
-            + pmc_mpi_pack_size_aero_state(aero_state)
+            + camp_mpi_pack_size_aero_state(aero_state)
        allocate(buffer(max_buffer_size))
        position = 0
-       call pmc_mpi_pack_aero_state(buffer, position, aero_state)
+       call camp_mpi_pack_aero_state(buffer, position, aero_state)
        call assert(542772170, position <= max_buffer_size)
        buffer_size = position
        call mpi_send(buffer, buffer_size, MPI_CHARACTER, 0, &
             AERO_STATE_TAG_GATHER, MPI_COMM_WORLD, ierr)
-       call pmc_mpi_check_ierr(ierr)
+       call camp_mpi_check_ierr(ierr)
        deallocate(buffer)
     else
        ! root process receives data from each remote proc
-       n_proc = pmc_mpi_size()
+       n_proc = camp_mpi_size()
        do i_proc = 1,(n_proc - 1)
           ! determine buffer size at root process
           call mpi_probe(i_proc, AERO_STATE_TAG_GATHER, MPI_COMM_WORLD, &
                status, ierr)
-          call pmc_mpi_check_ierr(ierr)
+          call camp_mpi_check_ierr(ierr)
           call mpi_get_count(status, MPI_CHARACTER, buffer_size, ierr)
-          call pmc_mpi_check_ierr(ierr)
+          call camp_mpi_check_ierr(ierr)
 
           ! get buffer at root process
           allocate(buffer(buffer_size))
@@ -2228,7 +2228,7 @@ contains
 
           ! unpack it
           position = 0
-          call pmc_mpi_unpack_aero_state(buffer, position, &
+          call camp_mpi_unpack_aero_state(buffer, position, &
                aero_state_transfer)
           call assert(518174881, position == buffer_size)
           deallocate(buffer)
@@ -2263,20 +2263,20 @@ contains
     ! try to get the dimension ID
     status = nf90_inq_dimid(ncid, "aero_particle", dimid_aero_particle)
     if (status == NF90_NOERR) return
-    if (status /= NF90_EBADDIM) call pmc_nc_check(status)
+    if (status /= NF90_EBADDIM) call camp_nc_check(status)
 
     ! dimension not defined, so define now define it
-    call pmc_nc_check(nf90_redef(ncid))
+    call camp_nc_check(nf90_redef(ncid))
 
-    call pmc_nc_check(nf90_def_dim(ncid, "aero_particle", &
+    call camp_nc_check(nf90_def_dim(ncid, "aero_particle", &
          aero_state_n_part(aero_state), dimid_aero_particle))
 
-    call pmc_nc_check(nf90_enddef(ncid))
+    call camp_nc_check(nf90_enddef(ncid))
 
     do i_part = 1,aero_state_n_part(aero_state)
        aero_particle_centers(i_part) = i_part
     end do
-    call pmc_nc_write_integer_1d(ncid, aero_particle_centers, &
+    call camp_nc_write_integer_1d(ncid, aero_particle_centers, &
          "aero_particle", (/ dimid_aero_particle /), &
          description="dummy dimension variable (no useful value)")
 
@@ -2304,21 +2304,21 @@ contains
     ! try to get the dimension ID
     status = nf90_inq_dimid(ncid, "aero_removed", dimid_aero_removed)
     if (status == NF90_NOERR) return
-    if (status /= NF90_EBADDIM) call pmc_nc_check(status)
+    if (status /= NF90_EBADDIM) call camp_nc_check(status)
 
     ! dimension not defined, so define now define it
-    call pmc_nc_check(nf90_redef(ncid))
+    call camp_nc_check(nf90_redef(ncid))
 
     dim_size = max(1, aero_info_array_n_item(aero_state%aero_info_array))
-    call pmc_nc_check(nf90_def_dim(ncid, "aero_removed", &
+    call camp_nc_check(nf90_def_dim(ncid, "aero_removed", &
          dim_size, dimid_aero_removed))
 
-    call pmc_nc_check(nf90_enddef(ncid))
+    call camp_nc_check(nf90_enddef(ncid))
 
     do i_remove = 1,dim_size
        aero_removed_centers(i_remove) = i_remove
     end do
-    call pmc_nc_write_integer_1d(ncid, aero_removed_centers, &
+    call camp_nc_write_integer_1d(ncid, aero_removed_centers, &
          "aero_removed", (/ dimid_aero_removed /), &
          description="dummy dimension variable (no useful value)")
 
@@ -2510,38 +2510,38 @@ contains
              aero_core_vol(i_part) = aero_state%apa%particle(i_part)%core_vol
           end if
        end do
-       call pmc_nc_write_real_2d(ncid, aero_particle_mass, &
+       call camp_nc_write_real_2d(ncid, aero_particle_mass, &
             "aero_particle_mass", (/ dimid_aero_particle, &
             dimid_aero_species /), unit="kg", &
             long_name="constituent masses of each aerosol particle")
-       call pmc_nc_write_integer_2d(ncid, aero_n_orig_part, &
+       call camp_nc_write_integer_2d(ncid, aero_n_orig_part, &
             "aero_n_orig_part", (/ dimid_aero_particle, &
             dimid_aero_source /), &
             long_name="number of original constituent particles from " &
             // "each source that coagulated to form each aerosol particle")
-       call pmc_nc_write_integer_1d(ncid, aero_particle_weight_group, &
+       call camp_nc_write_integer_1d(ncid, aero_particle_weight_group, &
             "aero_particle_weight_group", (/ dimid_aero_particle /), &
             long_name="weight group number of each aerosol particle")
-       call pmc_nc_write_integer_1d(ncid, aero_particle_weight_class, &
+       call camp_nc_write_integer_1d(ncid, aero_particle_weight_class, &
             "aero_particle_weight_class", (/ dimid_aero_particle /), &
             long_name="weight class number of each aerosol particle")
-       call pmc_nc_write_integer_1d(ncid, aero_water_hyst_leg, &
+       call camp_nc_write_integer_1d(ncid, aero_water_hyst_leg, &
             "aero_water_hyst_leg", (/ dimid_aero_particle /), &
             long_name="leg of the water hysteresis curve leg of each "&
             // "aerosol particle")
-       call pmc_nc_write_real_1d(ncid, aero_num_conc, &
+       call camp_nc_write_real_1d(ncid, aero_num_conc, &
             "aero_num_conc", (/ dimid_aero_particle /), unit="m^{-3}", &
             long_name="number concentration for each particle")
-       call pmc_nc_write_integer_1d(ncid, aero_id, &
+       call camp_nc_write_integer_1d(ncid, aero_id, &
             "aero_id", (/ dimid_aero_particle /), &
             long_name="unique ID number of each aerosol particle")
-       call pmc_nc_write_real_1d(ncid, aero_least_create_time, &
+       call camp_nc_write_real_1d(ncid, aero_least_create_time, &
             "aero_least_create_time", (/ dimid_aero_particle /), unit="s", &
             long_name="least creation time of each aerosol particle", &
             description="least (earliest) creation time of any original " &
             // "constituent particles that coagulated to form each " &
             // "particle, measured from the start of the simulation")
-       call pmc_nc_write_real_1d(ncid, aero_greatest_create_time, &
+       call camp_nc_write_real_1d(ncid, aero_greatest_create_time, &
             "aero_greatest_create_time", (/ dimid_aero_particle /), &
             unit="s", &
             long_name="greatest creation time of each aerosol particle", &
@@ -2549,41 +2549,41 @@ contains
             // "constituent particles that coagulated to form each " &
             // "particle, measured from the start of the simulation")
        if (record_optical) then
-          call pmc_nc_write_real_1d(ncid, aero_absorb_cross_sect, &
+          call camp_nc_write_real_1d(ncid, aero_absorb_cross_sect, &
                "aero_absorb_cross_sect", (/ dimid_aero_particle /), &
                unit="m^2", &
                long_name="optical absorption cross sections of each " &
                // "aerosol particle")
-          call pmc_nc_write_real_1d(ncid, aero_scatter_cross_sect, &
+          call camp_nc_write_real_1d(ncid, aero_scatter_cross_sect, &
                "aero_scatter_cross_sect", (/ dimid_aero_particle /), &
                unit="m^2", &
                long_name="optical scattering cross sections of each " &
                // "aerosol particle")
-          call pmc_nc_write_real_1d(ncid, aero_asymmetry, &
+          call camp_nc_write_real_1d(ncid, aero_asymmetry, &
                "aero_asymmetry", (/ dimid_aero_particle /), unit="1", &
                long_name="optical asymmetry parameters of each " &
                // "aerosol particle")
-          call pmc_nc_write_real_1d(ncid, aero_refract_shell_real, &
+          call camp_nc_write_real_1d(ncid, aero_refract_shell_real, &
                "aero_refract_shell_real", (/ dimid_aero_particle /), &
                unit="1", &
                long_name="real part of the refractive indices of the " &
                // "shell of each aerosol particle")
-          call pmc_nc_write_real_1d(ncid, aero_refract_shell_imag, &
+          call camp_nc_write_real_1d(ncid, aero_refract_shell_imag, &
                "aero_refract_shell_imag", (/ dimid_aero_particle /), &
                unit="1", &
                long_name="imaginary part of the refractive indices of " &
                // "the shell of each aerosol particle")
-          call pmc_nc_write_real_1d(ncid, aero_refract_core_real, &
+          call camp_nc_write_real_1d(ncid, aero_refract_core_real, &
                "aero_refract_core_real", (/ dimid_aero_particle /), &
                unit="1", &
                long_name="real part of the refractive indices of the core " &
                // "of each aerosol particle")
-          call pmc_nc_write_real_1d(ncid, aero_refract_core_imag, &
+          call camp_nc_write_real_1d(ncid, aero_refract_core_imag, &
                "aero_refract_core_imag", (/ dimid_aero_particle /), &
                unit="1", &
                long_name="imaginary part of the refractive indices of " &
                // "the core of each aerosol particle")
-          call pmc_nc_write_real_1d(ncid, aero_core_vol, &
+          call camp_nc_write_real_1d(ncid, aero_core_vol, &
                "aero_core_vol", (/ dimid_aero_particle /), unit="m^3", &
                long_name="volume of the optical cores of each " &
                // "aerosol particle")
@@ -2609,10 +2609,10 @@ contains
           aero_removed_action(1) = AERO_INFO_NONE
           aero_removed_other_id(1) = 0
        end if
-       call pmc_nc_write_integer_1d(ncid, aero_removed_id, &
+       call camp_nc_write_integer_1d(ncid, aero_removed_id, &
             "aero_removed_id", (/ dimid_aero_removed /), &
             long_name="ID of removed particles")
-       call pmc_nc_write_integer_1d(ncid, aero_removed_action, &
+       call camp_nc_write_integer_1d(ncid, aero_removed_action, &
             "aero_removed_action", (/ dimid_aero_removed /), &
             long_name="reason for particle removal", &
             description="valid is 0 (invalid entry), 1 (removed due to " &
@@ -2620,7 +2620,7 @@ contains
             // "particle ID is in \c aero_removed_other_id), 3 (removed " &
             // "due to populating halving), or 4 (removed due to " &
             // "weighting changes")
-       call pmc_nc_write_integer_1d(ncid, aero_removed_other_id, &
+       call camp_nc_write_integer_1d(ncid, aero_removed_other_id, &
             "aero_removed_other_id", (/ dimid_aero_removed /), &
             long_name="ID of other particle involved in removal", &
             description="if <tt>aero_removed_action(i)</tt> is 2 " &
@@ -2740,43 +2740,43 @@ contains
        call aero_weight_array_input_netcdf(aero_state%awa, ncid)
        return
     end if
-    call pmc_nc_check(status)
-    call pmc_nc_check(nf90_Inquire_Dimension(ncid, dimid_aero_particle, &
+    call camp_nc_check(status)
+    call camp_nc_check(nf90_Inquire_Dimension(ncid, dimid_aero_particle, &
          name, n_part))
 
-    call pmc_nc_read_real_2d(ncid, aero_particle_mass, &
+    call camp_nc_read_real_2d(ncid, aero_particle_mass, &
          "aero_particle_mass")
-    call pmc_nc_read_integer_2d(ncid, aero_n_orig_part, &
+    call camp_nc_read_integer_2d(ncid, aero_n_orig_part, &
          "aero_n_orig_part")
-    call pmc_nc_read_integer_1d(ncid, aero_particle_weight_group, &
+    call camp_nc_read_integer_1d(ncid, aero_particle_weight_group, &
          "aero_particle_weight_group")
-    call pmc_nc_read_integer_1d(ncid, aero_particle_weight_class, &
+    call camp_nc_read_integer_1d(ncid, aero_particle_weight_class, &
          "aero_particle_weight_class")
-    call pmc_nc_read_real_1d(ncid, aero_absorb_cross_sect, &
+    call camp_nc_read_real_1d(ncid, aero_absorb_cross_sect, &
          "aero_absorb_cross_sect", must_be_present=.false.)
-    call pmc_nc_read_real_1d(ncid, aero_scatter_cross_sect, &
+    call camp_nc_read_real_1d(ncid, aero_scatter_cross_sect, &
          "aero_scatter_cross_sect", must_be_present=.false.)
-    call pmc_nc_read_real_1d(ncid, aero_asymmetry, &
+    call camp_nc_read_real_1d(ncid, aero_asymmetry, &
          "aero_asymmetry", must_be_present=.false.)
-    call pmc_nc_read_real_1d(ncid, aero_refract_shell_real, &
+    call camp_nc_read_real_1d(ncid, aero_refract_shell_real, &
          "aero_refract_shell_real", must_be_present=.false.)
-    call pmc_nc_read_real_1d(ncid, aero_refract_shell_imag, &
+    call camp_nc_read_real_1d(ncid, aero_refract_shell_imag, &
          "aero_refract_shell_imag", must_be_present=.false.)
-    call pmc_nc_read_real_1d(ncid, aero_refract_core_real, &
+    call camp_nc_read_real_1d(ncid, aero_refract_core_real, &
          "aero_refract_core_real", must_be_present=.false.)
-    call pmc_nc_read_real_1d(ncid, aero_refract_core_imag, &
+    call camp_nc_read_real_1d(ncid, aero_refract_core_imag, &
          "aero_refract_core_imag", must_be_present=.false.)
-    call pmc_nc_read_real_1d(ncid, aero_core_vol, &
+    call camp_nc_read_real_1d(ncid, aero_core_vol, &
          "aero_core_vol", must_be_present=.false.)
-    call pmc_nc_read_integer_1d(ncid, aero_water_hyst_leg, &
+    call camp_nc_read_integer_1d(ncid, aero_water_hyst_leg, &
          "aero_water_hyst_leg")
-    call pmc_nc_read_real_1d(ncid, aero_num_conc, &
+    call camp_nc_read_real_1d(ncid, aero_num_conc, &
          "aero_num_conc")
-    call pmc_nc_read_integer_1d(ncid, aero_id, &
+    call camp_nc_read_integer_1d(ncid, aero_id, &
          "aero_id")
-    call pmc_nc_read_real_1d(ncid, aero_least_create_time, &
+    call camp_nc_read_real_1d(ncid, aero_least_create_time, &
          "aero_least_create_time")
-    call pmc_nc_read_real_1d(ncid, aero_greatest_create_time, &
+    call camp_nc_read_real_1d(ncid, aero_greatest_create_time, &
          "aero_greatest_create_time")
 
     call aero_weight_array_input_netcdf(aero_state%awa, ncid)
@@ -2822,11 +2822,11 @@ contains
        call aero_state_add_particle(aero_state, aero_particle, aero_data)
     end do
 
-    call pmc_nc_read_integer_1d(ncid, aero_removed_id, &
+    call camp_nc_read_integer_1d(ncid, aero_removed_id, &
          "aero_removed_id", must_be_present=.false.)
-    call pmc_nc_read_integer_1d(ncid, aero_removed_action, &
+    call camp_nc_read_integer_1d(ncid, aero_removed_action, &
          "aero_removed_action", must_be_present=.false.)
-    call pmc_nc_read_integer_1d(ncid, aero_removed_other_id, &
+    call camp_nc_read_integer_1d(ncid, aero_removed_other_id, &
          "aero_removed_other_id", must_be_present=.false.)
 
     n_info_item = size(aero_removed_id)
@@ -2893,4 +2893,4 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end module pmc_aero_state
+end module camp_aero_state

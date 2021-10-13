@@ -3,21 +3,21 @@
 ! option) any later version. See the file COPYING for details.
 
 !> \file
-!> The pmc_scenario module.
+!> The camp_scenario module.
 
 !> The scenario_t structure and associated subroutines.
-module pmc_scenario
+module camp_scenario
 
-  use pmc_gas_state
-  use pmc_aero_dist
-  use pmc_util
-  use pmc_env_state
-  use pmc_aero_state
-  use pmc_spec_file
-  use pmc_aero_data
-  use pmc_gas_data
-  use pmc_chamber
-  use pmc_mpi
+  use camp_gas_state
+  use camp_aero_dist
+  use camp_util
+  use camp_env_state
+  use camp_aero_state
+  use camp_spec_file
+  use camp_aero_data
+  use camp_gas_data
+  use camp_chamber
+  use camp_mpi
 #ifdef PMC_USE_MPI
   use mpi
 #endif
@@ -659,7 +659,7 @@ contains
              ! use accept-reject algorithm over bin
              s = aero_state%aero_sorted%size_class%inverse(b, c)%n_entry + 1
              do while (.true.)
-                rand_real = pmc_random()
+                rand_real = camp_random()
                 if (rand_real <= 0d0) exit
                 rand_geom = -log(rand_real) / (delta_t * over_rate) + 1d0
                 if (rand_geom >= real(s, kind=dp)) exit
@@ -717,7 +717,7 @@ contains
          "particle loss upper bound estimation is too tight: " &
          // trim(to_string(prob)) // " > " &
          // trim(to_string(over_prob)) )
-    if (pmc_random() * over_prob > prob) return
+    if (camp_random() * over_prob > prob) return
 
     aero_info%id = aero_state%apa%particle(i_part)%id
     aero_info%action = AERO_INFO_DILUTION
@@ -980,7 +980,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Determines the number of bytes required to pack the given value.
-  integer function pmc_mpi_pack_size_scenario(val)
+  integer function camp_mpi_pack_size_scenario(val)
 
     !> Value to pack.
     type(scenario_t), intent(in) :: val
@@ -988,55 +988,55 @@ contains
     integer :: total_size, i
 
     total_size = &
-         pmc_mpi_pack_size_real_array(val%temp_time) &
-         + pmc_mpi_pack_size_real_array(val%temp) &
-         + pmc_mpi_pack_size_real_array(val%pressure_time) &
-         + pmc_mpi_pack_size_real_array(val%pressure) &
-         + pmc_mpi_pack_size_real_array(val%height_time) &
-         + pmc_mpi_pack_size_real_array(val%height) &
-         + pmc_mpi_pack_size_real_array(val%gas_emission_time) &
-         + pmc_mpi_pack_size_real_array(val%gas_emission_rate_scale) &
-         + pmc_mpi_pack_size_real_array(val%gas_dilution_time) &
-         + pmc_mpi_pack_size_real_array(val%gas_dilution_rate) &
-         + pmc_mpi_pack_size_real_array(val%aero_emission_time) &
-         + pmc_mpi_pack_size_real_array(val%aero_emission_rate_scale) &
-         + pmc_mpi_pack_size_real_array(val%aero_dilution_time) &
-         + pmc_mpi_pack_size_real_array(val%aero_dilution_rate) &
-         + pmc_mpi_pack_size_integer(val%loss_function_type) &
-         + pmc_mpi_pack_size_chamber(val%chamber)
+         camp_mpi_pack_size_real_array(val%temp_time) &
+         + camp_mpi_pack_size_real_array(val%temp) &
+         + camp_mpi_pack_size_real_array(val%pressure_time) &
+         + camp_mpi_pack_size_real_array(val%pressure) &
+         + camp_mpi_pack_size_real_array(val%height_time) &
+         + camp_mpi_pack_size_real_array(val%height) &
+         + camp_mpi_pack_size_real_array(val%gas_emission_time) &
+         + camp_mpi_pack_size_real_array(val%gas_emission_rate_scale) &
+         + camp_mpi_pack_size_real_array(val%gas_dilution_time) &
+         + camp_mpi_pack_size_real_array(val%gas_dilution_rate) &
+         + camp_mpi_pack_size_real_array(val%aero_emission_time) &
+         + camp_mpi_pack_size_real_array(val%aero_emission_rate_scale) &
+         + camp_mpi_pack_size_real_array(val%aero_dilution_time) &
+         + camp_mpi_pack_size_real_array(val%aero_dilution_rate) &
+         + camp_mpi_pack_size_integer(val%loss_function_type) &
+         + camp_mpi_pack_size_chamber(val%chamber)
     if (allocated(val%gas_emission_time)) then
        do i = 1,size(val%gas_emission)
           total_size = total_size &
-               + pmc_mpi_pack_size_gas_state(val%gas_emission(i))
+               + camp_mpi_pack_size_gas_state(val%gas_emission(i))
        end do
     end if
     if (allocated(val%gas_dilution_time)) then
        do i = 1,size(val%gas_background)
           total_size = total_size &
-               + pmc_mpi_pack_size_gas_state(val%gas_background(i))
+               + camp_mpi_pack_size_gas_state(val%gas_background(i))
        end do
     end if
     if (allocated(val%aero_emission_time)) then
        do i = 1,size(val%aero_emission)
           total_size = total_size &
-               + pmc_mpi_pack_size_aero_dist(val%aero_emission(i))
+               + camp_mpi_pack_size_aero_dist(val%aero_emission(i))
        end do
     end if
     if (allocated(val%aero_dilution_time)) then
        do i = 1,size(val%aero_background)
           total_size = total_size &
-               + pmc_mpi_pack_size_aero_dist(val%aero_background(i))
+               + camp_mpi_pack_size_aero_dist(val%aero_background(i))
        end do
     end if
 
-    pmc_mpi_pack_size_scenario = total_size
+    camp_mpi_pack_size_scenario = total_size
 
-  end function pmc_mpi_pack_size_scenario
+  end function camp_mpi_pack_size_scenario
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Packs the given value into the buffer, advancing position.
-  subroutine pmc_mpi_pack_scenario(buffer, position, val)
+  subroutine camp_mpi_pack_scenario(buffer, position, val)
 
     !> Memory buffer.
     character, intent(inout) :: buffer(:)
@@ -1049,53 +1049,53 @@ contains
     integer :: prev_position, i
 
     prev_position = position
-    call pmc_mpi_pack_real_array(buffer, position, val%temp_time)
-    call pmc_mpi_pack_real_array(buffer, position, val%temp)
-    call pmc_mpi_pack_real_array(buffer, position, val%pressure_time)
-    call pmc_mpi_pack_real_array(buffer, position, val%pressure)
-    call pmc_mpi_pack_real_array(buffer, position, val%height_time)
-    call pmc_mpi_pack_real_array(buffer, position, val%height)
-    call pmc_mpi_pack_real_array(buffer, position, val%gas_emission_time)
-    call pmc_mpi_pack_real_array(buffer, position, val%gas_emission_rate_scale)
-    call pmc_mpi_pack_real_array(buffer, position, val%gas_dilution_time)
-    call pmc_mpi_pack_real_array(buffer, position, val%gas_dilution_rate)
-    call pmc_mpi_pack_real_array(buffer, position, val%aero_emission_time)
-    call pmc_mpi_pack_real_array(buffer, position, &
+    call camp_mpi_pack_real_array(buffer, position, val%temp_time)
+    call camp_mpi_pack_real_array(buffer, position, val%temp)
+    call camp_mpi_pack_real_array(buffer, position, val%pressure_time)
+    call camp_mpi_pack_real_array(buffer, position, val%pressure)
+    call camp_mpi_pack_real_array(buffer, position, val%height_time)
+    call camp_mpi_pack_real_array(buffer, position, val%height)
+    call camp_mpi_pack_real_array(buffer, position, val%gas_emission_time)
+    call camp_mpi_pack_real_array(buffer, position, val%gas_emission_rate_scale)
+    call camp_mpi_pack_real_array(buffer, position, val%gas_dilution_time)
+    call camp_mpi_pack_real_array(buffer, position, val%gas_dilution_rate)
+    call camp_mpi_pack_real_array(buffer, position, val%aero_emission_time)
+    call camp_mpi_pack_real_array(buffer, position, &
          val%aero_emission_rate_scale)
-    call pmc_mpi_pack_real_array(buffer, position, val%aero_dilution_time)
-    call pmc_mpi_pack_real_array(buffer, position, val%aero_dilution_rate)
-    call pmc_mpi_pack_integer(buffer, position, val%loss_function_type)
-    call pmc_mpi_pack_chamber(buffer, position, val%chamber)
+    call camp_mpi_pack_real_array(buffer, position, val%aero_dilution_time)
+    call camp_mpi_pack_real_array(buffer, position, val%aero_dilution_rate)
+    call camp_mpi_pack_integer(buffer, position, val%loss_function_type)
+    call camp_mpi_pack_chamber(buffer, position, val%chamber)
     if (allocated(val%gas_emission_time)) then
        do i = 1,size(val%gas_emission)
-          call pmc_mpi_pack_gas_state(buffer, position, val%gas_emission(i))
+          call camp_mpi_pack_gas_state(buffer, position, val%gas_emission(i))
        end do
     end if
     if (allocated(val%gas_dilution_time)) then
        do i = 1,size(val%gas_background)
-          call pmc_mpi_pack_gas_state(buffer, position, val%gas_background(i))
+          call camp_mpi_pack_gas_state(buffer, position, val%gas_background(i))
        end do
     end if
     if (allocated(val%aero_emission_time)) then
        do i = 1,size(val%aero_emission)
-          call pmc_mpi_pack_aero_dist(buffer, position, val%aero_emission(i))
+          call camp_mpi_pack_aero_dist(buffer, position, val%aero_emission(i))
        end do
     end if
     if (allocated(val%aero_dilution_time)) then
        do i = 1,size(val%aero_background)
-          call pmc_mpi_pack_aero_dist(buffer, position, val%aero_background(i))
+          call camp_mpi_pack_aero_dist(buffer, position, val%aero_background(i))
        end do
     end if
     call assert(639466930, &
-         position - prev_position <= pmc_mpi_pack_size_scenario(val))
+         position - prev_position <= camp_mpi_pack_size_scenario(val))
 #endif
 
-  end subroutine pmc_mpi_pack_scenario
+  end subroutine camp_mpi_pack_scenario
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Unpacks the given value from the buffer, advancing position.
-  subroutine pmc_mpi_unpack_scenario(buffer, position, val)
+  subroutine camp_mpi_unpack_scenario(buffer, position, val)
 
     !> Memory buffer.
     character, intent(inout) :: buffer(:)
@@ -1108,24 +1108,24 @@ contains
     integer :: prev_position, i
 
     prev_position = position
-    call pmc_mpi_unpack_real_array(buffer, position, val%temp_time)
-    call pmc_mpi_unpack_real_array(buffer, position, val%temp)
-    call pmc_mpi_unpack_real_array(buffer, position, val%pressure_time)
-    call pmc_mpi_unpack_real_array(buffer, position, val%pressure)
-    call pmc_mpi_unpack_real_array(buffer, position, val%height_time)
-    call pmc_mpi_unpack_real_array(buffer, position, val%height)
-    call pmc_mpi_unpack_real_array(buffer, position, val%gas_emission_time)
-    call pmc_mpi_unpack_real_array(buffer, position, &
+    call camp_mpi_unpack_real_array(buffer, position, val%temp_time)
+    call camp_mpi_unpack_real_array(buffer, position, val%temp)
+    call camp_mpi_unpack_real_array(buffer, position, val%pressure_time)
+    call camp_mpi_unpack_real_array(buffer, position, val%pressure)
+    call camp_mpi_unpack_real_array(buffer, position, val%height_time)
+    call camp_mpi_unpack_real_array(buffer, position, val%height)
+    call camp_mpi_unpack_real_array(buffer, position, val%gas_emission_time)
+    call camp_mpi_unpack_real_array(buffer, position, &
          val%gas_emission_rate_scale)
-    call pmc_mpi_unpack_real_array(buffer, position, val%gas_dilution_time)
-    call pmc_mpi_unpack_real_array(buffer, position, val%gas_dilution_rate)
-    call pmc_mpi_unpack_real_array(buffer, position, val%aero_emission_time)
-    call pmc_mpi_unpack_real_array(buffer, position, &
+    call camp_mpi_unpack_real_array(buffer, position, val%gas_dilution_time)
+    call camp_mpi_unpack_real_array(buffer, position, val%gas_dilution_rate)
+    call camp_mpi_unpack_real_array(buffer, position, val%aero_emission_time)
+    call camp_mpi_unpack_real_array(buffer, position, &
          val%aero_emission_rate_scale)
-    call pmc_mpi_unpack_real_array(buffer, position, val%aero_dilution_time)
-    call pmc_mpi_unpack_real_array(buffer, position, val%aero_dilution_rate)
-    call pmc_mpi_unpack_integer(buffer, position, val%loss_function_type)
-    call pmc_mpi_unpack_chamber(buffer, position, val%chamber)
+    call camp_mpi_unpack_real_array(buffer, position, val%aero_dilution_time)
+    call camp_mpi_unpack_real_array(buffer, position, val%aero_dilution_rate)
+    call camp_mpi_unpack_integer(buffer, position, val%loss_function_type)
+    call camp_mpi_unpack_chamber(buffer, position, val%chamber)
     if (allocated(val%gas_emission)) deallocate(val%gas_emission)
     if (allocated(val%gas_background)) deallocate(val%gas_background)
     if (allocated(val%aero_emission)) deallocate(val%aero_emission)
@@ -1133,35 +1133,35 @@ contains
     if (allocated(val%gas_emission_time)) then
        allocate(val%gas_emission(size(val%gas_emission_time)))
        do i = 1,size(val%gas_emission)
-          call pmc_mpi_unpack_gas_state(buffer, position, val%gas_emission(i))
+          call camp_mpi_unpack_gas_state(buffer, position, val%gas_emission(i))
        end do
     end if
     if (allocated(val%gas_dilution_time)) then
        allocate(val%gas_background(size(val%gas_dilution_time)))
        do i = 1,size(val%gas_background)
-          call pmc_mpi_unpack_gas_state(buffer, position, &
+          call camp_mpi_unpack_gas_state(buffer, position, &
                val%gas_background(i))
        end do
     end if
     if (allocated(val%aero_emission_time)) then
        allocate(val%aero_emission(size(val%aero_emission_time)))
        do i = 1,size(val%aero_emission)
-          call pmc_mpi_unpack_aero_dist(buffer, position, val%aero_emission(i))
+          call camp_mpi_unpack_aero_dist(buffer, position, val%aero_emission(i))
        end do
     end if
     if (allocated(val%aero_dilution_time)) then
        allocate(val%aero_background(size(val%aero_dilution_time)))
        do i = 1,size(val%aero_background)
-          call pmc_mpi_unpack_aero_dist(buffer, position, &
+          call camp_mpi_unpack_aero_dist(buffer, position, &
                val%aero_background(i))
        end do
     end if
     call assert(611542570, &
-         position - prev_position <= pmc_mpi_pack_size_scenario(val))
+         position - prev_position <= camp_mpi_pack_size_scenario(val))
 #endif
 
-  end subroutine pmc_mpi_unpack_scenario
+  end subroutine camp_mpi_unpack_scenario
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end module pmc_scenario
+end module camp_scenario

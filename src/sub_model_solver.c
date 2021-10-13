@@ -12,7 +12,7 @@
 #include <stdlib.h>
 #include "sub_models.h"
 
-// Sub model types (Must match parameters in pmc_sub_model_factory)
+// Sub model types (Must match parameters in camp_sub_model_factory)
 #define SUB_MODEL_UNIFAC 1
 #define SUB_MODEL_ZSR_AEROSOL_WATER 2
 #define SUB_MODEL_PDFITE 3

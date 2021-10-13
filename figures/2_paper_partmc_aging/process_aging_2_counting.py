@@ -5,10 +5,10 @@
 
 import os, sys, pyx, re
 sys.path.append("../tool")
-from pmc_pyx import *
+from camp_pyx import *
 from numpy import *
 sys.path.append("../tool")
-from pmc_data_nc import *
+from camp_data_nc import *
 from fig_helper import *
 
 def delta(arr):

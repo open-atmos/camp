@@ -19,11 +19,11 @@
 
 program test_bidisperse_ode
   
-  use pmc_coag_kernel_sedi
-  use pmc_env_state
-  use pmc_util
-  use pmc_bin_grid
-  use pmc_aero_data
+  use camp_coag_kernel_sedi
+  use camp_env_state
+  use camp_util
+  use camp_bin_grid
+  use camp_aero_data
 
   !> Radius of one small particle (m).
   real(kind=dp), parameter :: r_small = 1d-5

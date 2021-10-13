@@ -3,20 +3,20 @@
 ! option) any later version. See the file COPYING for details.
 
 !> \file
-!> The pmc_coag_kernel_constant module.
+!> The camp_coag_kernel_constant module.
 
 !> Constant coagulation kernel.
-module pmc_coag_kernel_constant
+module camp_coag_kernel_constant
 
-  use pmc_env_state
-  use pmc_bin_grid
-  use pmc_util
-  use pmc_constants
-  use pmc_aero_binned
-  use pmc_aero_data
-  use pmc_aero_dist
-  use pmc_aero_data
-  use pmc_aero_particle
+  use camp_env_state
+  use camp_bin_grid
+  use camp_util
+  use camp_constants
+  use camp_aero_binned
+  use camp_aero_data
+  use camp_aero_dist
+  use camp_aero_data
+  use camp_aero_particle
 
   !> Coefficient for constant kernel.
   real(kind=dp), parameter :: beta_0 = 0.25d0 / (60d0 * 2d8)
@@ -144,4 +144,4 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end module pmc_coag_kernel_constant
+end module camp_coag_kernel_constant

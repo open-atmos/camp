@@ -3,7 +3,7 @@
 ! option) any later version. See the file COPYING for details.
 
 !> \file
-!> The pmc_aero_dist module.
+!> The camp_aero_dist module.
 
 !> The aero_dist_t structure and associated subroutines.
 !!
@@ -15,16 +15,16 @@
 !!
 !! Initial distributions should be normalized so that <tt>sum(n_den) =
 !! 1/log_width</tt>.
-module pmc_aero_dist
+module camp_aero_dist
 
-  use pmc_bin_grid
-  use pmc_util
-  use pmc_constants
-  use pmc_spec_file
-  use pmc_aero_data
-  use pmc_aero_mode
-  use pmc_mpi
-  use pmc_rand
+  use camp_bin_grid
+  use camp_util
+  use camp_constants
+  use camp_spec_file
+  use camp_aero_data
+  use camp_aero_mode
+  use camp_mpi
+  use camp_rand
 #ifdef PMC_USE_MPI
   use mpi
 #endif
@@ -392,7 +392,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Determines the number of bytes required to pack the given value.
-  integer function pmc_mpi_pack_size_aero_dist(val)
+  integer function camp_mpi_pack_size_aero_dist(val)
 
     !> Value to pack.
     type(aero_dist_t), intent(in) :: val
@@ -400,21 +400,21 @@ contains
     integer :: i, total_size
 
     if (allocated(val%mode)) then
-       total_size = pmc_mpi_pack_size_integer(aero_dist_n_mode(val))
+       total_size = camp_mpi_pack_size_integer(aero_dist_n_mode(val))
        do i = 1,size(val%mode)
-          total_size = total_size + pmc_mpi_pack_size_aero_mode(val%mode(i))
+          total_size = total_size + camp_mpi_pack_size_aero_mode(val%mode(i))
        end do
     else
-       total_size = pmc_mpi_pack_size_integer(-1)
+       total_size = camp_mpi_pack_size_integer(-1)
     end if
-    pmc_mpi_pack_size_aero_dist = total_size
+    camp_mpi_pack_size_aero_dist = total_size
 
-  end function pmc_mpi_pack_size_aero_dist
+  end function camp_mpi_pack_size_aero_dist
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Packs the given value into the buffer, advancing position.
-  subroutine pmc_mpi_pack_aero_dist(buffer, position, val)
+  subroutine camp_mpi_pack_aero_dist(buffer, position, val)
 
     !> Memory buffer.
     character, intent(inout) :: buffer(:)
@@ -428,23 +428,23 @@ contains
 
     prev_position = position
     if (allocated(val%mode)) then
-       call pmc_mpi_pack_integer(buffer, position, aero_dist_n_mode(val))
+       call camp_mpi_pack_integer(buffer, position, aero_dist_n_mode(val))
        do i = 1,size(val%mode)
-          call pmc_mpi_pack_aero_mode(buffer, position, val%mode(i))
+          call camp_mpi_pack_aero_mode(buffer, position, val%mode(i))
        end do
     else
-       call pmc_mpi_pack_integer(buffer, position, -1)
+       call camp_mpi_pack_integer(buffer, position, -1)
     end if
     call assert(440557910, &
-         position - prev_position <= pmc_mpi_pack_size_aero_dist(val))
+         position - prev_position <= camp_mpi_pack_size_aero_dist(val))
 #endif
 
-  end subroutine pmc_mpi_pack_aero_dist
+  end subroutine camp_mpi_pack_aero_dist
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Unpacks the given value from the buffer, advancing position.
-  subroutine pmc_mpi_unpack_aero_dist(buffer, position, val)
+  subroutine camp_mpi_unpack_aero_dist(buffer, position, val)
 
     !> Memory buffer.
     character, intent(inout) :: buffer(:)
@@ -457,20 +457,20 @@ contains
     integer :: prev_position, i, n
 
     prev_position = position
-    call pmc_mpi_unpack_integer(buffer, position, n)
+    call camp_mpi_unpack_integer(buffer, position, n)
     if (allocated(val%mode)) deallocate(val%mode)
     if (n >= 0) then
        allocate(val%mode(n))
        do i = 1,n
-          call pmc_mpi_unpack_aero_mode(buffer, position, val%mode(i))
+          call camp_mpi_unpack_aero_mode(buffer, position, val%mode(i))
        end do
     end if
     call assert(742535268, &
-         position - prev_position <= pmc_mpi_pack_size_aero_dist(val))
+         position - prev_position <= camp_mpi_pack_size_aero_dist(val))
 #endif
 
-  end subroutine pmc_mpi_unpack_aero_dist
+  end subroutine camp_mpi_unpack_aero_dist
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end module pmc_aero_dist
+end module camp_aero_dist

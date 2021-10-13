@@ -3,19 +3,19 @@
 ! option) any later version. See the file COPYING for details.
 
 !> \file
-!> The pmc_aero_weight module.
+!> The camp_aero_weight module.
 
 !> The aero_weight_t structure and associated subroutines.
-module pmc_aero_weight
+module camp_aero_weight
 
-  use pmc_util
-  use pmc_constants
-  use pmc_rand
-  use pmc_spec_file
-  use pmc_aero_particle
-  use pmc_aero_data
-  use pmc_netcdf
-  use pmc_mpi
+  use camp_util
+  use camp_constants
+  use camp_rand
+  use camp_spec_file
+  use camp_aero_particle
+  use camp_aero_data
+  use camp_netcdf
+  use camp_mpi
 #ifdef PMC_USE_MPI
   use mpi
 #endif
@@ -309,22 +309,22 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Determines the number of bytes required to pack the given value.
-  integer function pmc_mpi_pack_size_aero_weight(val)
+  integer function camp_mpi_pack_size_aero_weight(val)
 
     !> Value to pack.
     type(aero_weight_t), intent(in) :: val
 
-    pmc_mpi_pack_size_aero_weight = &
-         pmc_mpi_pack_size_integer(val%type) &
-         + pmc_mpi_pack_size_real(val%magnitude) &
-         + pmc_mpi_pack_size_real(val%exponent)
+    camp_mpi_pack_size_aero_weight = &
+         camp_mpi_pack_size_integer(val%type) &
+         + camp_mpi_pack_size_real(val%magnitude) &
+         + camp_mpi_pack_size_real(val%exponent)
 
-  end function pmc_mpi_pack_size_aero_weight
+  end function camp_mpi_pack_size_aero_weight
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Packs the given value into the buffer, advancing position.
-  subroutine pmc_mpi_pack_aero_weight(buffer, position, val)
+  subroutine camp_mpi_pack_aero_weight(buffer, position, val)
 
     !> Memory buffer.
     character, intent(inout) :: buffer(:)
@@ -337,19 +337,19 @@ contains
     integer :: prev_position
 
     prev_position = position
-    call pmc_mpi_pack_integer(buffer, position, val%type)
-    call pmc_mpi_pack_real(buffer, position, val%magnitude)
-    call pmc_mpi_pack_real(buffer, position, val%exponent)
+    call camp_mpi_pack_integer(buffer, position, val%type)
+    call camp_mpi_pack_real(buffer, position, val%magnitude)
+    call camp_mpi_pack_real(buffer, position, val%exponent)
     call assert(579699255, &
-         position - prev_position <= pmc_mpi_pack_size_aero_weight(val))
+         position - prev_position <= camp_mpi_pack_size_aero_weight(val))
 #endif
 
-  end subroutine pmc_mpi_pack_aero_weight
+  end subroutine camp_mpi_pack_aero_weight
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Unpacks the given value from the buffer, advancing position.
-  subroutine pmc_mpi_unpack_aero_weight(buffer, position, val)
+  subroutine camp_mpi_unpack_aero_weight(buffer, position, val)
 
     !> Memory buffer.
     character, intent(inout) :: buffer(:)
@@ -362,15 +362,15 @@ contains
     integer :: prev_position
 
     prev_position = position
-    call pmc_mpi_unpack_integer(buffer, position, val%type)
-    call pmc_mpi_unpack_real(buffer, position, val%magnitude)
-    call pmc_mpi_unpack_real(buffer, position, val%exponent)
+    call camp_mpi_unpack_integer(buffer, position, val%type)
+    call camp_mpi_unpack_real(buffer, position, val%magnitude)
+    call camp_mpi_unpack_real(buffer, position, val%exponent)
     call assert(639056899, &
-         position - prev_position <= pmc_mpi_pack_size_aero_weight(val))
+         position - prev_position <= camp_mpi_pack_size_aero_weight(val))
 #endif
 
-  end subroutine pmc_mpi_unpack_aero_weight
+  end subroutine camp_mpi_unpack_aero_weight
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end module pmc_aero_weight
+end module camp_aero_weight

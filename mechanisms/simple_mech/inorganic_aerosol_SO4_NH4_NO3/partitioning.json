@@ -5,7 +5,7 @@
     "aerosol mode.",
     "Partitioning reaction parameters are from CAPRAM2.4 (Ervens et al. 2003)"
   ],
-  "pmc-data" : [
+  "camp-data" : [
     {
       "name" : "simple",
       "type" : "MECHANISM",

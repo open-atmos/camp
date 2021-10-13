@@ -3,19 +3,19 @@
 ! option) any later version. See the file COPYING for details.
 
 !> \file
-!> The pmc_test_camp_core program
+!> The camp_test_camp_core program
 
 !> Test class for the camp_core_t type
-program pmc_test_camp_core
+program camp_test_camp_core
 
 #ifdef PMC_USE_JSON
   use json_module
 #endif
-  use pmc_chem_spec_data
-  use pmc_mechanism_data
-  use pmc_mpi
-  use pmc_camp_core
-  use pmc_util,                         only: i_kind, dp, assert, &
+  use camp_chem_spec_data
+  use camp_mechanism_data
+  use camp_mpi
+  use camp_camp_core
+  use camp_util,                         only: i_kind, dp, assert, &
                                               almost_equal, string_t
 
   implicit none
@@ -24,27 +24,27 @@ program pmc_test_camp_core
   character(len=*), parameter :: new_line = char(10)
 
   !> initialize mpi
-  call pmc_mpi_init()
+  call camp_mpi_init()
 
-  if (run_pmc_camp_core_tests()) then
-    if (pmc_mpi_rank().eq.0) write(*,*) "CAMP-core tests - PASS"
+  if (run_camp_camp_core_tests()) then
+    if (camp_mpi_rank().eq.0) write(*,*) "CAMP-core tests - PASS"
   else
-    if (pmc_mpi_rank().eq.0) write(*,*) "CAMP-core tests - FAIL"
+    if (camp_mpi_rank().eq.0) write(*,*) "CAMP-core tests - FAIL"
   end if
 
   !> finalize mpi
-  call pmc_mpi_finalize()
+  call camp_mpi_finalize()
 
 contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  !> Run all pmc_camp_core tests
-  logical function run_pmc_camp_core_tests() result(passed)
+  !> Run all camp_camp_core tests
+  logical function run_camp_camp_core_tests() result(passed)
 
     passed = load_camp_core_test()
 
-  end function run_pmc_camp_core_tests
+  end function run_camp_camp_core_tests
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -116,4 +116,4 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end program pmc_test_camp_core
+end program camp_test_camp_core

@@ -362,7 +362,7 @@ void aero_rep_gpu_single_particle_get_aero_phase_gpu_avg_MW__kg_mol(
  *
  *  - \b int aero_rep_id (Id of one or more aerosol representations set by the
  *       host model using the
- *       pmc_aero_rep_gpu_single_particle::aero_rep_gpu_single_particle_t::set_id
+ *       camp_aero_rep_gpu_single_particle::aero_rep_gpu_single_particle_t::set_id
  *       function prior to initializing the solver.)
  *  - \b int update_type (Type of update to perform. Can be UPDATE_NUMBER
  *       only.)

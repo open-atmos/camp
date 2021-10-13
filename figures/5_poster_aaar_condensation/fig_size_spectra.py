@@ -8,8 +8,8 @@ import copy as module_copy
 from Scientific.IO.NetCDF import *
 from pyx import *
 sys.path.append("../../tool")
-from pmc_data_nc import *
-from pmc_pyx import *
+from camp_data_nc import *
+from camp_pyx import *
 import numpy
 from config import *
 
@@ -57,7 +57,7 @@ for [i_run, netcdf_pattern] in netcdf_indexed_patterns:
         comp_frac = particles.mass(include = ["BC"]) \
                     / particles.mass(exclude = ["H2O"]) * 100
 
-        x_axis = pmc_log_axis(min = diameter_axis_min, max = diameter_axis_max,
+        x_axis = camp_log_axis(min = diameter_axis_min, max = diameter_axis_max,
                               n_bin = num_diameter_bins)
         x_bin = x_axis.find(diameter)
 

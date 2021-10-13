@@ -9,9 +9,9 @@
 !> text format.
 program extract_env
 
-  use pmc_env_state
-  use pmc_output
-  use pmc_mpi
+  use camp_env_state
+  use camp_output
+  use camp_mpi
   use getopt_m
 
   character(len=PMC_MAX_FILENAME_LEN) :: in_prefix, out_filename
@@ -26,7 +26,7 @@ program extract_env
   real(kind=dp), allocatable :: pressures(:), mix_heights(:)
   type(option_s) :: opts(2)
 
-  call pmc_mpi_init()
+  call camp_mpi_init()
 
   opts(1) = option_s("help", .false., 'h')
   opts(2) = option_s("output", .true., 'o')
@@ -119,7 +119,7 @@ program extract_env
   deallocate(pressures)
   deallocate(mix_heights)
 
-  call pmc_mpi_finalize()
+  call camp_mpi_finalize()
 
 contains
 

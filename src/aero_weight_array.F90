@@ -4,20 +4,20 @@
 ! option) any later version. See the file COPYING for details.
 
 !> \file
-!> The pmc_aero_weight_array module.
+!> The camp_aero_weight_array module.
 
 !> The aero_weight_array_t structure and associated subroutines.
-module pmc_aero_weight_array
+module camp_aero_weight_array
 
-  use pmc_util
-  use pmc_constants
-  use pmc_rand
-  use pmc_spec_file
-  use pmc_aero_particle
-  use pmc_netcdf
-  use pmc_mpi
-  use pmc_aero_weight
-  use pmc_aero_data
+  use camp_util
+  use camp_constants
+  use camp_rand
+  use camp_spec_file
+  use camp_aero_particle
+  use camp_netcdf
+  use camp_mpi
+  use camp_aero_weight
+  use camp_aero_data
 #ifdef PMC_USE_MPI
   use mpi
 #endif
@@ -416,7 +416,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Determines the number of bytes required to pack the given value.
-  integer function pmc_mpi_pack_size_aero_weight_array(val)
+  integer function camp_mpi_pack_size_aero_weight_array(val)
 
     !> Value to pack.
     type(aero_weight_array_t), intent(in) :: val
@@ -426,26 +426,26 @@ contains
 
     total_size = 0
     is_allocated = allocated(val%weight)
-    total_size = total_size + pmc_mpi_pack_size_logical(is_allocated)
+    total_size = total_size + camp_mpi_pack_size_logical(is_allocated)
     if (is_allocated) then
        total_size = total_size &
-            + pmc_mpi_pack_size_integer(size(val%weight, 1)) &
-            + pmc_mpi_pack_size_integer(size(val%weight, 2))
+            + camp_mpi_pack_size_integer(size(val%weight, 1)) &
+            + camp_mpi_pack_size_integer(size(val%weight, 2))
        do i_group = 1,size(val%weight, 1)
           do i_class = 1,size(val%weight, 2)
              total_size = total_size &
-                  + pmc_mpi_pack_size_aero_weight(val%weight(i_group, i_class))
+                  + camp_mpi_pack_size_aero_weight(val%weight(i_group, i_class))
           end do
        end do
     end if
-    pmc_mpi_pack_size_aero_weight_array = total_size
+    camp_mpi_pack_size_aero_weight_array = total_size
 
-  end function pmc_mpi_pack_size_aero_weight_array
+  end function camp_mpi_pack_size_aero_weight_array
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Packs the given value into the buffer, advancing position.
-  subroutine pmc_mpi_pack_aero_weight_array(buffer, position, val)
+  subroutine camp_mpi_pack_aero_weight_array(buffer, position, val)
 
     !> Memory buffer.
     character, intent(inout) :: buffer(:)
@@ -460,27 +460,27 @@ contains
 
     prev_position = position
     is_allocated = allocated(val%weight)
-    call pmc_mpi_pack_logical(buffer, position, is_allocated)
+    call camp_mpi_pack_logical(buffer, position, is_allocated)
     if (is_allocated) then
-       call pmc_mpi_pack_integer(buffer, position, size(val%weight, 1))
-       call pmc_mpi_pack_integer(buffer, position, size(val%weight, 2))
+       call camp_mpi_pack_integer(buffer, position, size(val%weight, 1))
+       call camp_mpi_pack_integer(buffer, position, size(val%weight, 2))
        do i_group = 1,size(val%weight, 1)
           do i_class = 1,size(val%weight, 2)
-             call pmc_mpi_pack_aero_weight(buffer, position, &
+             call camp_mpi_pack_aero_weight(buffer, position, &
                   val%weight(i_group, i_class))
           end do
        end do
     end if
     call assert(84068036, &
-         position - prev_position <= pmc_mpi_pack_size_aero_weight_array(val))
+         position - prev_position <= camp_mpi_pack_size_aero_weight_array(val))
 #endif
 
-  end subroutine pmc_mpi_pack_aero_weight_array
+  end subroutine camp_mpi_pack_aero_weight_array
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Unpacks the given value from the buffer, advancing position.
-  subroutine pmc_mpi_unpack_aero_weight_array(buffer, position, val)
+  subroutine camp_mpi_unpack_aero_weight_array(buffer, position, val)
 
     !> Memory buffer.
     character, intent(inout) :: buffer(:)
@@ -494,14 +494,14 @@ contains
     logical :: is_allocated
 
     prev_position = position
-    call pmc_mpi_unpack_logical(buffer, position, is_allocated)
+    call camp_mpi_unpack_logical(buffer, position, is_allocated)
     if (is_allocated) then
-       call pmc_mpi_unpack_integer(buffer, position, n_group)
-       call pmc_mpi_unpack_integer(buffer, position, n_class)
+       call camp_mpi_unpack_integer(buffer, position, n_group)
+       call camp_mpi_unpack_integer(buffer, position, n_class)
        call aero_weight_array_set_sizes(val, n_group, n_class)
        do i_group = 1,size(val%weight, 1)
           do i_class = 1,size(val%weight, 2)
-             call pmc_mpi_unpack_aero_weight(buffer, position, &
+             call camp_mpi_unpack_aero_weight(buffer, position, &
                   val%weight(i_group, i_class))
           end do
        end do
@@ -511,10 +511,10 @@ contains
        end if
     end if
     call assert(321022868, &
-         position - prev_position <= pmc_mpi_pack_size_aero_weight_array(val))
+         position - prev_position <= camp_mpi_pack_size_aero_weight_array(val))
 #endif
 
-  end subroutine pmc_mpi_unpack_aero_weight_array
+  end subroutine camp_mpi_unpack_aero_weight_array
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -538,26 +538,26 @@ contains
     ! try to get the dimension ID
     status = nf90_inq_dimid(ncid, "aero_weight_group", dimid_aero_weight_group)
     if (status == NF90_NOERR) return
-    if (status /= NF90_EBADDIM) call pmc_nc_check(status)
+    if (status /= NF90_EBADDIM) call camp_nc_check(status)
 
     ! dimension not defined, so define it
-    call pmc_nc_check(nf90_redef(ncid))
+    call camp_nc_check(nf90_redef(ncid))
 
     n_group = size(aero_weight_array%weight, 1)
 
-    call pmc_nc_check(nf90_def_dim(ncid, "aero_weight_group", n_group, &
+    call camp_nc_check(nf90_def_dim(ncid, "aero_weight_group", n_group, &
          dimid_aero_weight_group))
-    call pmc_nc_check(nf90_def_var(ncid, "aero_weight_group", NF90_INT, &
+    call camp_nc_check(nf90_def_var(ncid, "aero_weight_group", NF90_INT, &
          dimid_aero_weight_group, varid_aero_weight_group))
-    call pmc_nc_check(nf90_put_att(ncid, varid_aero_weight_group, &
+    call camp_nc_check(nf90_put_att(ncid, varid_aero_weight_group, &
          "description", "dummy dimension variable (no useful value)"))
 
-    call pmc_nc_check(nf90_enddef(ncid))
+    call camp_nc_check(nf90_enddef(ncid))
 
     do i_group = 1,n_group
        aero_weight_group_centers(i_group) = i_group
     end do
-    call pmc_nc_check(nf90_put_var(ncid, varid_aero_weight_group, &
+    call camp_nc_check(nf90_put_var(ncid, varid_aero_weight_group, &
          aero_weight_group_centers))
 
   end subroutine aero_weight_netcdf_dim_aero_weight_group
@@ -584,26 +584,26 @@ contains
     ! try to get the dimension ID
     status = nf90_inq_dimid(ncid, "aero_weight_class", dimid_aero_weight_class)
     if (status == NF90_NOERR) return
-    if (status /= NF90_EBADDIM) call pmc_nc_check(status)
+    if (status /= NF90_EBADDIM) call camp_nc_check(status)
 
     ! dimension not defined, so define it
-    call pmc_nc_check(nf90_redef(ncid))
+    call camp_nc_check(nf90_redef(ncid))
 
     n_class = size(aero_weight_array%weight, 2)
 
-    call pmc_nc_check(nf90_def_dim(ncid, "aero_weight_class", n_class, &
+    call camp_nc_check(nf90_def_dim(ncid, "aero_weight_class", n_class, &
          dimid_aero_weight_class))
-    call pmc_nc_check(nf90_def_var(ncid, "aero_weight_class", NF90_INT, &
+    call camp_nc_check(nf90_def_var(ncid, "aero_weight_class", NF90_INT, &
          dimid_aero_weight_class, varid_aero_weight_class))
-    call pmc_nc_check(nf90_put_att(ncid, varid_aero_weight_class, &
+    call camp_nc_check(nf90_put_att(ncid, varid_aero_weight_class, &
          "description", "dummy dimension variable (no useful value)"))
 
-    call pmc_nc_check(nf90_enddef(ncid))
+    call camp_nc_check(nf90_enddef(ncid))
 
     do i_class = 1,n_class
        aero_weight_class_centers(i_class) = i_class
     end do
-    call pmc_nc_check(nf90_put_var(ncid, varid_aero_weight_class, &
+    call camp_nc_check(nf90_put_var(ncid, varid_aero_weight_class, &
          aero_weight_class_centers))
 
   end subroutine aero_weight_netcdf_dim_aero_weight_class
@@ -645,18 +645,18 @@ contains
     call aero_weight_netcdf_dim_aero_weight_class(aero_weight_array, ncid, &
          dimid_aero_weight_class)
 
-    call pmc_nc_write_integer_2d(ncid, aero_weight_array%weight%type, &
+    call camp_nc_write_integer_2d(ncid, aero_weight_array%weight%type, &
          "weight_type", &
          (/ dimid_aero_weight_group, dimid_aero_weight_class /), &
          description="type of each aerosol weighting function: 0 = invalid, " &
          // "1 = none (w(D) = 1), 2 = power (w(D) = (D/D_0)^alpha), " &
          // "3 = MFA (mass flow) (w(D) = (D/D_0)^(-3))")
-    call pmc_nc_write_real_2d(ncid, aero_weight_array%weight%magnitude, &
+    call camp_nc_write_real_2d(ncid, aero_weight_array%weight%magnitude, &
          "weight_magnitude", &
          (/ dimid_aero_weight_group, dimid_aero_weight_class /), &
          unit="m^{-3}", &
          description="magnitude for each weighting function")
-    call pmc_nc_write_real_2d(ncid, aero_weight_array%weight%exponent, &
+    call camp_nc_write_real_2d(ncid, aero_weight_array%weight%exponent, &
          "weight_exponent", &
          (/ dimid_aero_weight_group, dimid_aero_weight_class /), unit="1", &
          description="exponent alpha for the power weight_type, " &
@@ -680,20 +680,20 @@ contains
     integer, allocatable :: type(:, :)
     real(kind=dp), allocatable :: magnitude(:, :), exponent(:, :)
 
-    call pmc_nc_check(nf90_inq_dimid(ncid, "aero_weight_group", &
+    call camp_nc_check(nf90_inq_dimid(ncid, "aero_weight_group", &
          dimid_aero_weight_group))
-    call pmc_nc_check(nf90_inq_dimid(ncid, "aero_weight_class", &
+    call camp_nc_check(nf90_inq_dimid(ncid, "aero_weight_class", &
          dimid_aero_weight_class))
-    call pmc_nc_check(nf90_Inquire_Dimension(ncid, &
+    call camp_nc_check(nf90_Inquire_Dimension(ncid, &
          dimid_aero_weight_group, name, n_group))
-    call pmc_nc_check(nf90_Inquire_Dimension(ncid, &
+    call camp_nc_check(nf90_Inquire_Dimension(ncid, &
          dimid_aero_weight_class, name, n_class))
     call assert(719221386, n_group < 1000)
     call assert(520105999, n_class < 1000)
 
-    call pmc_nc_read_integer_2d(ncid, type, "weight_type")
-    call pmc_nc_read_real_2d(ncid, magnitude, "weight_magnitude")
-    call pmc_nc_read_real_2d(ncid, exponent, "weight_exponent")
+    call camp_nc_read_integer_2d(ncid, type, "weight_type")
+    call camp_nc_read_real_2d(ncid, magnitude, "weight_magnitude")
+    call camp_nc_read_real_2d(ncid, exponent, "weight_exponent")
 
     call assert(309191498, size(magnitude) == size(type))
     call assert(588649520, size(magnitude) == size(exponent))
@@ -708,4 +708,4 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end module pmc_aero_weight_array
+end module camp_aero_weight_array

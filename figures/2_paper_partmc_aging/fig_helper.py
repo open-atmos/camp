@@ -8,12 +8,12 @@ import copy as module_copy
 from Scientific.IO.NetCDF import *
 from pyx import *
 sys.path.append("../tool")
-from pmc_data_nc import *
+from camp_data_nc import *
 
 text.set(mode="latex")
 #text.set(fontmaps="download35.map") # embed times in the pdfs
 #text.set(mode="latex",usefiles=["spam.aux"],texdebug="spam.debug")
-from pmc_pyx import *
+from camp_pyx import *
 
 text.preamble(r"""\usepackage{times}
 %\usepackage{mathptmx} % symbol math
@@ -31,7 +31,7 @@ netcdf_pattern_nc = r"^urban_plume_nc_state_0001_([0-9]{8})\.nc$"
 
 aging_data_dir = "out"
 n_level_bin = 100
-ss_active_axis = pmc_log_axis(0.0001, 0.1, n_level_bin)
+ss_active_axis = camp_log_axis(0.0001, 0.1, n_level_bin)
 level_low = int(ss_active_axis.closest_edge(array(0.001)))
 level_mid = int(ss_active_axis.closest_edge(array(0.003)))
 level_high = int(ss_active_axis.closest_edge(array(0.006)))
@@ -52,9 +52,9 @@ diameter_axis_min = 0.01
 diameter_axis_max = 1.0
 num_diameter_bins = 70
 diameter_axis_label = r'dry diameter $D\ (\rm\mu m)$'
-diameter_axis = pmc_log_axis(min = diameter_axis_min, max = diameter_axis_max,
+diameter_axis = camp_log_axis(min = diameter_axis_min, max = diameter_axis_max,
                              n_bin = num_diameter_bins)
-diameter_axis_hi = pmc_log_axis(min = diameter_axis.min,
+diameter_axis_hi = camp_log_axis(min = diameter_axis.min,
                                 max = diameter_axis.max,
                                 n_bin = diameter_axis.n_bin * 2)
 
@@ -62,10 +62,10 @@ bc_axis_min = 0
 bc_axis_max = 80
 num_bc_bins = 40
 
-aging_time_axis = pmc_linear_axis(min = 0,
+aging_time_axis = camp_linear_axis(min = 0,
                                   max = 18,
                                   n_bin = 36)
-aging_time_axis_hi = pmc_linear_axis(min = aging_time_axis.min,
+aging_time_axis_hi = camp_linear_axis(min = aging_time_axis.min,
                                      max = aging_time_axis.max,
                                      n_bin = aging_time_axis.n_bin * 2)
 aging_time_axis_label = r'aging time $t_{\rm age}\rm\ (h)$'

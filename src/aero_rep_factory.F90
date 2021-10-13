@@ -3,7 +3,7 @@
 ! option) any later version. See the file COPYING for details.
 
 !> \file
-!> The pmc_aero_rep_factory module.
+!> The camp_aero_rep_factory module.
 
 !> \page camp_aero_rep_add CAMP: Adding an Aerosol Representation
 !!
@@ -14,12 +14,12 @@
 !!
 !! ## Step 1. Create a new aerosol representation module ##
 !!   The module should be placed in the \c /src/aero_reps folder and
-!!   extend the abstract \c pmc_aero_rep_data::aero_rep_data_t type,
+!!   extend the abstract \c camp_aero_rep_data::aero_rep_data_t type,
 !!   overriding all deferred functions, and providing a constructor that
 !!   returns a pointer to a newly allocated instance of the new type:
 !!
 !! \code{.f90}
-!! module pmc_aero_rep_foo
+!! module camp_aero_rep_foo
 !!
 !!   use ...
 !!
@@ -45,17 +45,17 @@
 !!
 !!   ...
 !!
-!! end module pmc_aero_rep_foo
+!! end module camp_aero_rep_foo
 !! \endcode
 !!
 !! ## Step 2. Create a new aerosol representation state module ##
 !!   The module should also be placed in the \c /src/aero_reps folder and
-!!   should extend the abstract \c pmc_aero_rep_state::aero_rep_state_t
+!!   should extend the abstract \c camp_aero_rep_state::aero_rep_state_t
 !!   type, overriding all deferred functions, and providing a constructor
 !!   that returns a pointer to a newly allocated instance of the new type:
 !!
 !! \code{.f90}
-!! module pmc_aero_rep_foo_state
+!! module camp_aero_rep_foo_state
 !!
 !!   use ...
 !!
@@ -81,19 +81,19 @@
 !!
 !!   ...
 !!
-!! end module pmc_aero_rep_foo_state
+!! end module camp_aero_rep_foo_state
 !! \endcode
 !!
-!! ## Step 3. Add the aerosol representation to the \c  pmc_aero_rep_factory module ##
+!! ## Step 3. Add the aerosol representation to the \c  camp_aero_rep_factory module ##
 !!
 !! \code{.f90}
-!! module pmc_aero_rep_factory
+!! module camp_aero_rep_factory
 !!
 !! ...
 !!
 !!  ! Use all aerosol representation modules
 !!  ...
-!!  use pmc_aero_rep_foo
+!!  use camp_aero_rep_foo
 !!
 !!  ...
 !!
@@ -139,7 +139,7 @@
 !!  end function bin_unpack
 !!
 !! ...
-!! end module pmc_aero_rep_factory
+!! end module camp_aero_rep_factory
 !! \endcode
 !!
 !! ## Step 4. Add the new module to the CMakeList file in the root directory. ##
@@ -166,14 +166,14 @@
 !!
 !! ## Usage ##
 !! The new \ref camp_aero_rep "aerosol representation" is now ready to use.
-!! To include it in a \c pmc_camp_core::camp_core_t instance, add an \ref
+!! To include it in a \c camp_camp_core::camp_core_t instance, add an \ref
 !! input_format_aero_rep "aerosol representation object" to a new or existing
 !! \ref input_format_camp_config "camp-chem configuration file" with a
 !! \b type corresponding to the newly created type, along with any required
 !! parameters:
 !!
 !! \code{.json}
-!! { "pmc-data" : [
+!! { "camp-data" : [
 !!   {
 !!     "type" : "AERO_REP_FOO",
 !!     ...
@@ -184,7 +184,7 @@
 !!
 
 !> The aero_rep_factory_t type and associated subroutines.
-module pmc_aero_rep_factory
+module camp_aero_rep_factory
 
 #ifdef PMC_USE_JSON
   use json_module
@@ -192,15 +192,15 @@ module pmc_aero_rep_factory
 #ifdef PMC_USE_MPI
   use mpi
 #endif
-  use pmc_aero_rep_data
-  use pmc_constants,                  only : i_kind, dp
-  use pmc_mpi
-  use pmc_util,                       only : die_msg, string_t, assert_msg, &
+  use camp_aero_rep_data
+  use camp_constants,                  only : i_kind, dp
+  use camp_mpi
+  use camp_util,                       only : die_msg, string_t, assert_msg, &
                                              warn_msg
 
   ! Use all aerosol representation modules
-  use pmc_aero_rep_modal_binned_mass
-  use pmc_aero_rep_single_particle
+  use camp_aero_rep_modal_binned_mass
+  use camp_aero_rep_single_particle
 
   use iso_c_binding
 
@@ -388,7 +388,7 @@ contains
     !> MPI communicator
     integer, intent(in) :: comm
 
-    pack_size =  pmc_mpi_pack_size_integer(int(1, kind=i_kind), comm) + &
+    pack_size =  camp_mpi_pack_size_integer(int(1, kind=i_kind), comm) + &
                  aero_rep%pack_size(comm)
 
   end function pack_size
@@ -422,7 +422,7 @@ contains
         call die_msg(278244560, &
                 "Trying to pack aerosol representation of unknown type.")
     end select
-    call pmc_mpi_pack_integer(buffer, pos, aero_rep_type, comm)
+    call camp_mpi_pack_integer(buffer, pos, aero_rep_type, comm)
     call aero_rep%bin_pack(buffer, pos, comm)
     call assert(897674844, &
          pos - prev_position <= this%pack_size(aero_rep, comm))
@@ -450,7 +450,7 @@ contains
     integer :: aero_rep_type, i_aero_rep, prev_position
 
     prev_position = pos
-    call pmc_mpi_unpack_integer(buffer, pos, aero_rep_type, comm)
+    call camp_mpi_unpack_integer(buffer, pos, aero_rep_type, comm)
     select case (aero_rep_type)
       case (AERO_REP_MODAL_BINNED_MASS)
         aero_rep => aero_rep_modal_binned_mass_t()
@@ -470,4 +470,4 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end module pmc_aero_rep_factory
+end module camp_aero_rep_factory

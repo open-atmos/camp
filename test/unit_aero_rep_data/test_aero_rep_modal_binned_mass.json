@@ -1,5 +1,5 @@
 {
-	"pmc-data" : [
+	"camp-data" : [
 {
 	"type" : "AERO_REP_MODAL_BINNED_MASS",
 	"name" : "my modal/binned mass aerosol rep",

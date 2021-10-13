@@ -3,19 +3,19 @@
 ! option) any later version. See the file COPYING for details.
 
 !> \file
-!> The pmc_aero_sorted module.
+!> The camp_aero_sorted module.
 
 !> The aero_sorted_t structure and assocated subroutines.
-module pmc_aero_sorted
+module camp_aero_sorted
 
-  use pmc_integer_varray
-  use pmc_integer_rmap
-  use pmc_integer_rmap2
-  use pmc_aero_particle
-  use pmc_aero_data
-  use pmc_aero_particle_array
-  use pmc_bin_grid
-  use pmc_mpi
+  use camp_integer_varray
+  use camp_integer_rmap
+  use camp_integer_rmap2
+  use camp_aero_particle
+  use camp_aero_data
+  use camp_aero_particle_array
+  use camp_bin_grid
+  use camp_mpi
 
   !> Sorting of particles into bins.
   !!
@@ -309,17 +309,17 @@ contains
        if (all_procs_same) then
           ! take global min/max
           local_r_max = r_max
-          call pmc_mpi_allreduce_max_real(local_r_max, r_max)
+          call camp_mpi_allreduce_max_real(local_r_max, r_max)
           ! don't contaminate global min with zeros
           if (r_min == 0d0) then
              local_r_min = r_max
           else
              local_r_min = r_min
           end if
-          call pmc_mpi_allreduce_min_real(local_r_min, r_min)
+          call camp_mpi_allreduce_min_real(local_r_min, r_min)
 
           ! check that all the bin grids are really the same
-          if (.not. pmc_mpi_allequal_bin_grid(aero_sorted%bin_grid)) then
+          if (.not. camp_mpi_allequal_bin_grid(aero_sorted%bin_grid)) then
              need_new_bin_grid = .true.
           end if
        end if
@@ -562,7 +562,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Determines the number of bytes required to pack the given value.
-  integer function pmc_mpi_pack_size_aero_sorted(val)
+  integer function camp_mpi_pack_size_aero_sorted(val)
 
     !> Value to pack.
     type(aero_sorted_t), intent(in) :: val
@@ -570,17 +570,17 @@ contains
     integer :: total_size
 
     total_size = 0
-    total_size = total_size + pmc_mpi_pack_size_bin_grid(val%bin_grid)
-    total_size = total_size + pmc_mpi_pack_size_integer_rmap2(val%size_class)
-    total_size = total_size + pmc_mpi_pack_size_integer_rmap2(val%group_class)
-    pmc_mpi_pack_size_aero_sorted = total_size
+    total_size = total_size + camp_mpi_pack_size_bin_grid(val%bin_grid)
+    total_size = total_size + camp_mpi_pack_size_integer_rmap2(val%size_class)
+    total_size = total_size + camp_mpi_pack_size_integer_rmap2(val%group_class)
+    camp_mpi_pack_size_aero_sorted = total_size
 
-  end function pmc_mpi_pack_size_aero_sorted
+  end function camp_mpi_pack_size_aero_sorted
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Packs the given value into the buffer, advancing position.
-  subroutine pmc_mpi_pack_aero_sorted(buffer, position, val)
+  subroutine camp_mpi_pack_aero_sorted(buffer, position, val)
 
     !> Memory buffer.
     character, intent(inout) :: buffer(:)
@@ -593,19 +593,19 @@ contains
     integer :: prev_position
 
     prev_position = position
-    call pmc_mpi_pack_bin_grid(buffer, position, val%bin_grid)
-    call pmc_mpi_pack_integer_rmap2(buffer, position, val%size_class)
-    call pmc_mpi_pack_integer_rmap2(buffer, position, val%group_class)
+    call camp_mpi_pack_bin_grid(buffer, position, val%bin_grid)
+    call camp_mpi_pack_integer_rmap2(buffer, position, val%size_class)
+    call camp_mpi_pack_integer_rmap2(buffer, position, val%group_class)
     call assert(786981367, &
-         position - prev_position <= pmc_mpi_pack_size_aero_sorted(val))
+         position - prev_position <= camp_mpi_pack_size_aero_sorted(val))
 #endif
 
-  end subroutine pmc_mpi_pack_aero_sorted
+  end subroutine camp_mpi_pack_aero_sorted
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Unpacks the given value from the buffer, advancing position.
-  subroutine pmc_mpi_unpack_aero_sorted(buffer, position, val)
+  subroutine camp_mpi_unpack_aero_sorted(buffer, position, val)
 
     !> Memory buffer.
     character, intent(inout) :: buffer(:)
@@ -618,15 +618,15 @@ contains
     integer :: prev_position, n_bin, n_group, n_class
 
     prev_position = position
-    call pmc_mpi_unpack_bin_grid(buffer, position, val%bin_grid)
-    call pmc_mpi_unpack_integer_rmap2(buffer, position, val%size_class)
-    call pmc_mpi_unpack_integer_rmap2(buffer, position, val%group_class)
+    call camp_mpi_unpack_bin_grid(buffer, position, val%bin_grid)
+    call camp_mpi_unpack_integer_rmap2(buffer, position, val%size_class)
+    call camp_mpi_unpack_integer_rmap2(buffer, position, val%group_class)
     call assert(703866072, &
-         position - prev_position <= pmc_mpi_pack_size_aero_sorted(val))
+         position - prev_position <= camp_mpi_pack_size_aero_sorted(val))
 #endif
 
-  end subroutine pmc_mpi_unpack_aero_sorted
+  end subroutine camp_mpi_unpack_aero_sorted
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end module pmc_aero_sorted
+end module camp_aero_sorted

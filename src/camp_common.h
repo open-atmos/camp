@@ -57,7 +57,7 @@
 #endif
 
 
-// State variable types (Must match parameters defined in pmc_chem_spec_data
+// State variable types (Must match parameters defined in camp_chem_spec_data
 // module)
 #define CHEM_SPEC_UNKNOWN_TYPE 0
 #define CHEM_SPEC_VARIABLE 1

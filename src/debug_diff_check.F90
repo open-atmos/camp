@@ -3,10 +3,10 @@
 ! option) any later version. See the file COPYING for details.
 
 !> \file
-!> The pmc_debug_diff_check module
+!> The camp_debug_diff_check module
 
 !> Interfaces to the debug_diff_check c functions - NOT THREAD SAFE!
-module pmc_debug_diff_check
+module camp_debug_diff_check
 
   use iso_c_binding
 
@@ -37,4 +37,4 @@ module pmc_debug_diff_check
 
 contains
 
-end module pmc_debug_diff_check
+end module camp_debug_diff_check

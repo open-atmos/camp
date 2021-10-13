@@ -3,23 +3,23 @@
 ! option) any later version. See the file COPYING for details.
 
 !> \file
-!> The pmc_coag_kernel_zero module.
+!> The camp_coag_kernel_zero module.
 
 !> Constant kernel equal to zero.
 !!
 !! This is only of interest for the exact solution to the
 !! no-coagulation, no-condensation case that can be used to test
 !! emissions and background dilution.
-module pmc_coag_kernel_zero
+module camp_coag_kernel_zero
 
-  use pmc_bin_grid
-  use pmc_scenario
-  use pmc_env_state
-  use pmc_util
-  use pmc_aero_binned
-  use pmc_aero_dist
-  use pmc_aero_data
-  use pmc_aero_particle
+  use camp_bin_grid
+  use camp_scenario
+  use camp_env_state
+  use camp_util
+  use camp_aero_binned
+  use camp_aero_dist
+  use camp_aero_data
+  use camp_aero_particle
 
 contains
 
@@ -197,4 +197,4 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end module pmc_coag_kernel_zero
+end module camp_coag_kernel_zero

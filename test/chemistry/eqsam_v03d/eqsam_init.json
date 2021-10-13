@@ -1,6 +1,6 @@
 {
 "notes" : "EQSAM chemistry is based on eqsam_v03d.f90",
-"pmc-data" :[
+"camp-data" :[
 	{
 		"name" : "Na_p",
 		"type" : "CHEM_SPEC",

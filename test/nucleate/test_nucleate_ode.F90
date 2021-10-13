@@ -21,8 +21,8 @@
 
 program test_nucleate_ode
   
-  use pmc_util
-  use pmc_constants
+  use camp_util
+  use camp_constants
 
   !> Conversion from (molecules m^{-3}) to (ppb).
   real(kind=dp), parameter :: conc_to_ppb = 3.977d-17

@@ -3,28 +3,28 @@
 ! option) any later version. See the file COPYING for details.
 
 !> \file
-!> The pmc_test_SIMPOL_phase_transfer program
+!> The camp_test_SIMPOL_phase_transfer program
 
 !> Test of SIMPOL_phase_transfer reaction module
-program pmc_test_SIMPOL_phase_transfer
+program camp_test_SIMPOL_phase_transfer
 
   use iso_c_binding
 
-  use pmc_util,                         only: i_kind, dp, assert, &
+  use camp_util,                         only: i_kind, dp, assert, &
                                               almost_equal, string_t, &
                                               warn_msg
-  use pmc_camp_core
-  use pmc_camp_state
-  use pmc_chem_spec_data
-  use pmc_aero_rep_data
-  use pmc_aero_rep_factory
-  use pmc_aero_rep_modal_binned_mass
-  use pmc_aero_rep_single_particle
-  use pmc_solver_stats
+  use camp_camp_core
+  use camp_camp_state
+  use camp_chem_spec_data
+  use camp_aero_rep_data
+  use camp_aero_rep_factory
+  use camp_aero_rep_modal_binned_mass
+  use camp_aero_rep_single_particle
+  use camp_solver_stats
 #ifdef PMC_USE_JSON
   use json_module
 #endif
-  use pmc_mpi
+  use camp_mpi
 
   implicit none
 
@@ -32,28 +32,28 @@ program pmc_test_SIMPOL_phase_transfer
   integer(kind=i_kind) :: NUM_TIME_STEP = 100
 
   ! initialize mpi
-  call pmc_mpi_init()
+  call camp_mpi_init()
 
   if (run_SIMPOL_phase_transfer_tests()) then
-    if (pmc_mpi_rank().eq.0) write(*,*) &
+    if (camp_mpi_rank().eq.0) write(*,*) &
             "SIMPOL phase transfer reaction tests - PASS"
   else
-    if (pmc_mpi_rank().eq.0) write(*,*) &
+    if (camp_mpi_rank().eq.0) write(*,*) &
             "SIMPOL phase transfer reaction tests - FAIL"
     stop 3
   end if
 
   ! finalize mpi
-  call pmc_mpi_finalize()
+  call camp_mpi_finalize()
 
 contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  !> Run all pmc_chem_mech_solver tests
+  !> Run all camp_chem_mech_solver tests
   logical function run_SIMPOL_phase_transfer_tests() result(passed)
 
-    use pmc_camp_solver_data
+    use camp_camp_solver_data
 
     type(camp_solver_data_t), pointer :: camp_solver_data
 
@@ -95,7 +95,7 @@ contains
   !! checker.
   logical function run_SIMPOL_phase_transfer_test(scenario)
 
-    use pmc_constants
+    use camp_constants
 
     !> Scenario flag
     integer, intent(in) :: scenario
@@ -168,7 +168,7 @@ contains
 
 #ifdef PMC_USE_MPI
     ! Load the model data on root process and pass it to process 1 for solving
-    if (pmc_mpi_rank().eq.0) then
+    if (camp_mpi_rank().eq.0) then
 #endif
 
       ! Get the SIMPOL_phase_transfer reaction mechanism json file
@@ -260,24 +260,24 @@ contains
     end if
 
     ! broadcast the species ids
-    call pmc_mpi_bcast_integer(idx_ethanol)
-    call pmc_mpi_bcast_integer(idx_ethanol_aq)
-    call pmc_mpi_bcast_integer(idx_H2O_aq)
-    call pmc_mpi_bcast_integer(i_sect_unused)
-    call pmc_mpi_bcast_integer(i_sect_the_mode)
+    call camp_mpi_bcast_integer(idx_ethanol)
+    call camp_mpi_bcast_integer(idx_ethanol_aq)
+    call camp_mpi_bcast_integer(idx_H2O_aq)
+    call camp_mpi_bcast_integer(i_sect_unused)
+    call camp_mpi_bcast_integer(i_sect_the_mode)
 
     ! broadcast the buffer size
-    call pmc_mpi_bcast_integer(pack_size)
+    call camp_mpi_bcast_integer(pack_size)
 
-    if (pmc_mpi_rank().eq.1) then
+    if (camp_mpi_rank().eq.1) then
       ! allocate the buffer to receive data
       allocate(buffer(pack_size))
     end if
 
     ! broadcast the data
-    call pmc_mpi_bcast_packed(buffer)
+    call camp_mpi_bcast_packed(buffer)
 
-    if (pmc_mpi_rank().eq.1) then
+    if (camp_mpi_rank().eq.1) then
       ! unpack the data
       camp_core => camp_core_t()
       pos = 0
@@ -484,10 +484,10 @@ contains
     end if
 
     ! Send the results back to the primary process
-    call pmc_mpi_transfer_integer(results, results, 1, 0)
+    call camp_mpi_transfer_integer(results, results, 1, 0)
 
     ! convert the results back to a logical value
-    if (pmc_mpi_rank().eq.0) then
+    if (camp_mpi_rank().eq.0) then
       if (results.eq.0) then
         run_SIMPOL_phase_transfer_test = .true.
       else
@@ -506,4 +506,4 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end program pmc_test_SIMPOL_phase_transfer
+end program camp_test_SIMPOL_phase_transfer

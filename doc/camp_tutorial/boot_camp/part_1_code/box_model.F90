@@ -1,13 +1,13 @@
 !! [Modules to use]
 program box_model
 
-  use pmc_camp_core
-  use pmc_camp_state
-  use pmc_constants
+  use camp_camp_core
+  use camp_camp_state
+  use camp_constants
   !! [Modules to use]
 
   !! [Chem-spec data module]
-  use pmc_chem_spec_data
+  use camp_chem_spec_data
 
   !! [Chem-spec data module]
 

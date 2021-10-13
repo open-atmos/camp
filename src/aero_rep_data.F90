@@ -3,7 +3,7 @@
 ! option) any later version. See the file COPYING for details.
 
 !> \file
-!> The pmc_aero_rep_data module.
+!> The camp_aero_rep_data module.
 
 !> \page camp_aero_rep CAMP: Aerosol Representation (general)
 !!
@@ -24,7 +24,7 @@
 !! \subpage camp_aero_rep_add "here".
 
 !> The abstract aero_rep_data_t structure and associated subroutines.
-module pmc_aero_rep_data
+module camp_aero_rep_data
 
 #ifdef PMC_USE_JSON
   use json_module
@@ -32,13 +32,13 @@ module pmc_aero_rep_data
 #ifdef PMC_USE_MPI
   use mpi
 #endif
-  use pmc_aero_phase_data
-  use pmc_chem_spec_data
-  use pmc_constants,                  only : i_kind, dp
-  use pmc_mpi
-  use pmc_camp_state
-  use pmc_property
-  use pmc_util,                       only : die_msg, string_t
+  use camp_aero_phase_data
+  use camp_chem_spec_data
+  use camp_constants,                  only : i_kind, dp
+  use camp_mpi
+  use camp_camp_state
+  use camp_property
+  use camp_util,                       only : die_msg, string_t
 
   use iso_c_binding
 
@@ -70,12 +70,12 @@ module pmc_aero_rep_data
     !> Condensed representation data. Theses arrays will be available during
     !! solving, and should contain any information required by the
     !! functions of the aerosol representation that cannot be obtained
-    !! from the pmc_camp_state::camp_state_t object. (floating-point)
+    !! from the camp_camp_state::camp_state_t object. (floating-point)
     real(kind=dp), allocatable, public :: condensed_data_real(:)
     !> Condensed representation data. Theses arrays will be available during
     !! solving, and should contain any information required by the
     !! functions of the aerosol representation that cannot be obtained
-    !! from the pmc_camp_state::camp_state_t object. (integer)
+    !! from the camp_camp_state::camp_state_t object. (integer)
     integer(kind=i_kind), allocatable, public ::  condensed_data_int(:)
     !> Number of environment-dependent parameters
     !! These are parameters that need updated when environmental conditions
@@ -90,15 +90,15 @@ module pmc_aero_rep_data
     !! the model run are included in the condensed data arrays.
     procedure(initialize), deferred :: initialize
     !> Get the size of the section of the
-    !! \c pmc_camp_state::camp_state_t::state_var array required for this
+    !! \c camp_camp_state::camp_state_t::state_var array required for this
     !! aerosol representation
     procedure(get_size), deferred :: size
     !> Get a list of unique names for each element on the
-    !! \c pmc_camp_state::camp_state_t::state_var array for this aerosol
+    !! \c camp_camp_state::camp_state_t::state_var array for this aerosol
     !! representation. The list may be restricted to a particular phase and/or
     !! aerosol species by including the phase_name and spec_name arguments.
     procedure(unique_names), deferred :: unique_names
-    !> Get a species id on the \c pmc_camp_state::camp_state_t::state_var
+    !> Get a species id on the \c camp_camp_state::camp_state_t::state_var
     !! array by its unique name. These are unique ids for each element on the
     !! state array for this \ref camp_aero_rep "aerosol representation" and
     !! are numbered:
@@ -107,7 +107,7 @@ module pmc_aero_rep_data
     !!
     !! where \f$x_u\f$ is the id of the element corresponding to the species
     !! with unique name \f$u\f$ on the \c
-    !! pmc_camp_state::camp_state_t::state_var array, \f$x_f\f$ is the index
+    !! camp_camp_state::camp_state_t::state_var array, \f$x_f\f$ is the index
     !! of the first element for this aerosol representation on the state array
     !! and \f$n\f$ is the total number of variables on the state array from
     !! this aerosol representation.
@@ -190,9 +190,9 @@ interface
   !! the input files have been read in. It ensures all data required during
   !! the model run are included in the condensed data arrays.
   subroutine initialize(this, aero_phase_set, spec_state_id)
-    use pmc_util,                                     only : i_kind
-    use pmc_chem_spec_data
-    use pmc_aero_phase_data
+    use camp_util,                                     only : i_kind
+    use camp_chem_spec_data
+    use camp_aero_phase_data
     import :: aero_rep_data_t
 
     !> Aerosol representation data
@@ -201,7 +201,7 @@ interface
     !! implement any number of instances of each phase.
     type(aero_phase_data_ptr), pointer, intent(in) :: aero_phase_set(:)
     !> Beginning state id for this aerosol representation in the
-    !! \c pmc_camp_state::camp_state_t::state_var array
+    !! \c camp_camp_state::camp_state_t::state_var array
     integer(kind=i_kind), intent(in) :: spec_state_id
 
   end subroutine initialize
@@ -210,7 +210,7 @@ interface
 
   !> Extending-type binary pack size (internal use only)
   integer(kind=i_kind) function internal_pack_size(this, comm)
-    use pmc_util,                                only : i_kind
+    use camp_util,                                only : i_kind
     import :: aero_rep_update_data_t
 
     !> Aerosol representation data
@@ -257,10 +257,10 @@ interface
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Get the size of the section of the
-  !! \c pmc_camp_state::camp_state_t::state_var array required for this
+  !! \c camp_camp_state::camp_state_t::state_var array required for this
   !! aerosol representation
   function get_size(this) result (state_size)
-    use pmc_util,                                     only : i_kind
+    use camp_util,                                     only : i_kind
     import :: aero_rep_data_t
 
     !> Size of the state array section
@@ -273,10 +273,10 @@ interface
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Get a list of unique names for each element on the
-  !! \c pmc_camp_state::camp_state_t::state_var array for this aerosol
+  !! \c camp_camp_state::camp_state_t::state_var array for this aerosol
   !! representation.
   function unique_names(this, phase_name, tracer_type, spec_name)
-    use pmc_util,                                     only : string_t, i_kind
+    use camp_util,                                     only : string_t, i_kind
     import :: aero_rep_data_t
 
     !> List of unique names
@@ -294,7 +294,7 @@ interface
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  !> Get a species id on the \c pmc_camp_state::camp_state_t::state_var
+  !> Get a species id on the \c camp_camp_state::camp_state_t::state_var
   !! array by unique name. These are unique ids for each element on the
   !! state array for this \ref camp_aero_rep "aerosol representation" and
   !! are numbered:
@@ -303,14 +303,14 @@ interface
   !!
   !! where \f$x_u\f$ is the id of the element corresponding to the species
   !! with unique name \f$u\f$ on the \c
-  !! pmc_camp_state::camp_state_t::state_var array, \f$x_f\f$ is the index
+  !! camp_camp_state::camp_state_t::state_var array, \f$x_f\f$ is the index
   !! of the first element for this aerosol representation on the state array
   !! and \f$n\f$ is the total number of variables on the state array from
   !! this aerosol representation.
   !!
   !! If the name is not found, the return value is 0.
   function spec_state_id(this, unique_name) result (spec_id)
-    use pmc_util,                                     only : i_kind
+    use camp_util,                                     only : i_kind
     import :: aero_rep_data_t
 
     !> Species state id
@@ -326,7 +326,7 @@ interface
 
   !> Get the non-unique name of a chemical species by its unique name
   function spec_name(this, unique_name)
-    use pmc_util,                                       only : i_kind
+    use camp_util,                                       only : i_kind
     import :: aero_rep_data_t
 
     !> Chemical species name
@@ -342,7 +342,7 @@ interface
 
   !> Get the number of instances of a specified aerosol phase
   function num_phase_instances(this, phase_name)
-    use pmc_util,                                       only : i_kind
+    use camp_util,                                       only : i_kind
     import :: aero_rep_data_t
 
     !> Number of instances of the aerosol phase
@@ -359,7 +359,7 @@ interface
   !> Get the number of Jacobian elements used in calculations of aerosol mass,
   !! volume, number, etc. for a particular phase
   function num_jac_elem(this, phase_id)
-    use pmc_util,                                       only : i_kind
+    use camp_util,                                       only : i_kind
     import :: aero_rep_data_t
 
     !> Number of Jacobian elements used
@@ -384,7 +384,7 @@ contains
   !! A \c json object containing information about an \ref camp_aero_rep
   !! "aerosol representation" has the following format:
   !! \code{.json}
-  !! { "pmc-data" : [
+  !! { "camp-data" : [
   !!   {
   !!     "name" : "my aero rep",
   !!     "type" : "AERO_REP_TYPE",
@@ -527,9 +527,9 @@ contains
     integer, intent(in) :: comm
 
     pack_size = &
-            pmc_mpi_pack_size_real_array(this%condensed_data_real, comm) + &
-            pmc_mpi_pack_size_integer_array(this%condensed_data_int, comm) + &
-            pmc_mpi_pack_size_integer(this%num_env_params, comm)
+            camp_mpi_pack_size_real_array(this%condensed_data_real, comm) + &
+            camp_mpi_pack_size_integer_array(this%condensed_data_int, comm) + &
+            camp_mpi_pack_size_integer(this%num_env_params, comm)
 
   end function pack_size
 
@@ -551,9 +551,9 @@ contains
     integer :: prev_position
 
     prev_position = pos
-    call pmc_mpi_pack_real_array(buffer, pos, this%condensed_data_real, comm)
-    call pmc_mpi_pack_integer_array(buffer, pos, this%condensed_data_int,comm)
-    call pmc_mpi_pack_integer(buffer, pos, this%num_env_params,comm)
+    call camp_mpi_pack_real_array(buffer, pos, this%condensed_data_real, comm)
+    call camp_mpi_pack_integer_array(buffer, pos, this%condensed_data_int,comm)
+    call camp_mpi_pack_integer(buffer, pos, this%num_env_params,comm)
     call assert(257024095, &
          pos - prev_position <= this%pack_size(comm))
 #endif
@@ -578,10 +578,10 @@ contains
     integer :: prev_position
 
     prev_position = pos
-    call pmc_mpi_unpack_real_array(buffer, pos, this%condensed_data_real,comm)
-    call pmc_mpi_unpack_integer_array(buffer, pos, this%condensed_data_int,  &
+    call camp_mpi_unpack_real_array(buffer, pos, this%condensed_data_real,comm)
+    call camp_mpi_unpack_integer_array(buffer, pos, this%condensed_data_int,  &
                                                                          comm)
-    call pmc_mpi_unpack_integer(buffer, pos, this%num_env_params,comm)
+    call camp_mpi_unpack_integer(buffer, pos, this%num_env_params,comm)
     call assert(954732699, &
          pos - prev_position <= this%pack_size(comm))
 #endif
@@ -699,9 +699,9 @@ contains
     endif
 
     pack_size = &
-      pmc_mpi_pack_size_integer(int(this%aero_rep_type, kind=i_kind),        &
+      camp_mpi_pack_size_integer(int(this%aero_rep_type, kind=i_kind),        &
                                                                    l_comm) + &
-      pmc_mpi_pack_size_integer(int(this%aero_rep_solver_id, kind=i_kind),   &
+      camp_mpi_pack_size_integer(int(this%aero_rep_solver_id, kind=i_kind),   &
                                                                    l_comm) + &
       this%internal_pack_size(l_comm)
 #else
@@ -734,9 +734,9 @@ contains
     endif
 
     prev_position = pos
-    call pmc_mpi_pack_integer(buffer, pos, &
+    call camp_mpi_pack_integer(buffer, pos, &
                               int(this%aero_rep_type, kind=i_kind), l_comm)
-    call pmc_mpi_pack_integer(buffer, pos, &
+    call camp_mpi_pack_integer(buffer, pos, &
                               int(this%aero_rep_solver_id, kind=i_kind),     &
                               l_comm)
     call this%internal_bin_pack(buffer, pos, l_comm)
@@ -771,9 +771,9 @@ contains
     endif
 
     prev_position = pos
-    call pmc_mpi_unpack_integer(buffer, pos, temp_int, l_comm)
+    call camp_mpi_unpack_integer(buffer, pos, temp_int, l_comm)
     this%aero_rep_type = int(temp_int, kind=c_int)
-    call pmc_mpi_unpack_integer(buffer, pos, temp_int, l_comm)
+    call camp_mpi_unpack_integer(buffer, pos, temp_int, l_comm)
     this%aero_rep_solver_id = int(temp_int, kind=c_int)
     call this%internal_bin_unpack(buffer, pos, l_comm)
     call assert(257567920, &
@@ -806,4 +806,4 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end module pmc_aero_rep_data
+end module camp_aero_rep_data

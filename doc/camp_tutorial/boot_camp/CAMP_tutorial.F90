@@ -247,8 +247,8 @@
 !! \snippet camp_tutorial/boot_camp/part_1_code/box_model.F90 Modules to use
 !!
 !! These modules provide two derived types that are needed in any CAMP
-!! implementation, \ref pmc_camp_core::camp_core_t "camp_core_t" and
-!! \ref pmc_camp_state::camp_state_t "camp_state_t". CAMP employs an
+!! implementation, \ref camp_camp_core::camp_core_t "camp_core_t" and
+!! \ref camp_camp_state::camp_state_t "camp_state_t". CAMP employs an
 !! object-oriented design in which all of its functionality is exposed
 !! through instances of derived types. Most CAMP modules include one
 !! public derived type, with some exceptions we'll see later on.
@@ -259,39 +259,39 @@
 !! \snippet camp_tutorial/boot_camp/part_1_code/box_model.F90 Core and state
 !! \snippet camp_tutorial/boot_camp/part_1_code/box_model.F90 Initialize core
 !!
-!! The \ref pmc_camp_core::camp_core_t "camp_core_t()"  constructor
+!! The \ref camp_camp_core::camp_core_t "camp_core_t()"  constructor
 !! takes one argument: the path to a
 !! configuration file for the chemical mechanism you would like to run.
 !! (We'll create this a little later in the tutorial.) The
 !! constructor reads the input data and creates internal objects to
 !! describe the system (reactions, species, etc.). The
-!! \ref pmc_camp_core::initialize "initialize()"
+!! \ref camp_camp_core::initialize "initialize()"
 !! function instructs these model elements to validate their input data
 !! and assemble the information they will need during solving.
 !!
 !! In the first implementation of our box model, we will assume a fixed
 !! mechanism, so we will hard-code some species names.
 !! Later on we will use some
-!! \ref pmc_camp_core::camp_core_t "camp_core_t" functions to
+!! \ref camp_camp_core::camp_core_t "camp_core_t" functions to
 !! retrieve the species present in the model at run time to avoid this.
 !!
 !! \snippet camp_tutorial/boot_camp/part_1_code/box_model.F90 Chem-spec data module
 !! \snippet camp_tutorial/boot_camp/part_1_code/box_model.F90 Species ids
 !! \snippet camp_tutorial/boot_camp/part_1_code/box_model.F90 Get species ids
 !!
-!! The \ref pmc_chem_spec_data::chem_spec_data_t "chem_spec_data_t"
+!! The \ref camp_chem_spec_data::chem_spec_data_t "chem_spec_data_t"
 !! object provides access to information about
 !! the chemical species present in the system. If there is a problem
-!! setting the \ref pmc_chem_spec_data::chem_spec_data_t "chem_spec_data_t"
+!! setting the \ref camp_chem_spec_data::chem_spec_data_t "chem_spec_data_t"
 !! pointer, for example if this function
 !! was called before initializing the
-!! \ref pmc_camp_core::camp_core_t "camp_core_t" object, this function
+!! \ref camp_camp_core::camp_core_t "camp_core_t" object, this function
 !! returns \c false, otherwise it returns \c true. The
-!! \ref pmc_chem_spec_data::gas_state_id "gas_state_id()"
+!! \ref camp_chem_spec_data::gas_state_id "gas_state_id()"
 !! function returns the index on the state array for a gas-phase
 !! species. We will use these indices later on to set the initial
 !! conditions and to retrieve the modeled species concentrations.
-!! The \ref pmc_chem_spec_data::gas_state_id "gas_state_id()"
+!! The \ref camp_chem_spec_data::gas_state_id "gas_state_id()"
 !! function returns 0 if a species is not found,
 !! so it is important to check the values after calling this function.
 !!
@@ -299,7 +299,7 @@
 !!
 !! \snippet camp_tutorial/boot_camp/part_1_code/box_model.F90 Set initial conditions
 !!
-!! The \ref pmc_camp_core::solver_initialize "solver_initialize()" function
+!! The \ref camp_camp_core::solver_initialize "solver_initialize()" function
 !! gets the external solver
 !! (<a href="https://computing.llnl.gov/projects/sundials/cvode">CVODE</a>)
 !! ready to solve the chemical system.
@@ -308,8 +308,8 @@
 !! provide initial conditions in the next part of the tutorial) and
 !! environmental parameters. The temperature and pressure can be
 !! updated at any time before or between calls to the CAMP
-!! \ref pmc_camp_core::solve "solve()"
-!! function, but \ref pmc_camp_state::update_env_state "update_env_state()"
+!! \ref camp_camp_core::solve "solve()"
+!! function, but \ref camp_camp_state::update_env_state "update_env_state()"
 !! must be called after changing
 !! either of these properties. Gas-phase species on the state array are
 !! in ppm.
@@ -322,7 +322,7 @@
 !!
 !! \snippet camp_tutorial/boot_camp/part_1_code/box_model.F90 Solve and output
 !!
-!! The \ref pmc_camp_core::solve "solve()" function advances the model
+!! The \ref camp_camp_core::solve "solve()" function advances the model
 !! state stored in \c camp_state
 !! by solving the chemistry over the time step specified in the
 !! second argument. We're keeping the time step small (\f$10^{-15}\f$ s)
@@ -365,28 +365,28 @@
 !!
 !! There are two types of input files used by CAMP. We'll start with the
 !! simplest one. This is the file whose path we passed to the
-!! \ref pmc_camp_core::camp_core_t "camp_core_t()" constructor in
+!! \ref camp_camp_core::camp_core_t "camp_core_t()" constructor in
 !! \ref camp_tutorial_part_1 "part 1" of the tutorial. We named this
 !! file \c my_config_file.json and we'll make its contents as follows:
 !! \code{.json}
 !! {
-!!   "pmc-files" : [
+!!   "camp-files" : [
 !!     "my_simple_mechanism.json"
 !!   ]
 !! }
 !! \endcode
 !! CAMP configuration \c json files begin and end with curly brackets
 !! ("{}") that
-!! enclose an object named \b pmc-files, which is
+!! enclose an object named \b camp-files, which is
 !! a comma-separated array of file names that make up the chemical
 !! mechanism to load into CAMP. The mechanism data can be organized
 !! however you like, into as many files as you'd like. Thus, any number of
-!! \b pmc-files may be specified and the arrangement of mechanism
+!! \b camp-files may be specified and the arrangement of mechanism
 !! elements (species, reactions, etc.) within those files is up to you.
 !! Also note that \c json ignores most white
 !! space, so the code above is equivalent to:
 !! \code{.json}
-!! { "pmc-files" :     [ "my_simple_mechanism.json" ]   }
+!! { "camp-files" :     [ "my_simple_mechanism.json" ]   }
 !! \endcode
 !!
 !! One more note about the CAMP \c json files before we move on. CAMP
@@ -397,7 +397,7 @@
 !! \code{.json}
 !! {
 !!   "note" : "Remember to rename 'my simple mechanism' to something more meaningful",
-!!   "pmc-files" : [
+!!   "camp-files" : [
 !!     "my_simple_mechanism.json"
 !!   ],
 !!   "change log" : [
@@ -409,7 +409,7 @@
 !! As far as CAMP is concerned, these files are equivalent. This is also
 !! a way to include comments in your \c json files, as comment
 !! flags are not part of the \c json standard. Note however that adding
-!! extra information as an element of the \b pmc-files array (an array
+!! extra information as an element of the \b camp-files array (an array
 !! that CAMP uses) won't work,
 !! as CAMP expects these to be valid input file names.
 !!
@@ -417,24 +417,24 @@
 !! use the following format:
 !! \code{.json}
 !! {
-!!   "pmc-data" : [
+!!   "camp-data" : [
 !!
 !!      ...
 !!
 !!   ]
 !! }
 !! \endcode
-!! Here, \b pmc-data is a comma-separated array of model element
+!! Here, \b camp-data is a comma-separated array of model element
 !! objects. There can be any number of these input files, but they must
 !! all enclose their model elements with this text.
 !!
 !! We'll start off wth a single file that describes our mechanism,
 !! \c my_simple_mechanism.json. The order of model elements in
-!! the \b pmc-data array is arbitrary. We'll start with chemical
+!! the \b camp-data array is arbitrary. We'll start with chemical
 !! species. In our first mechanism, we'll just have five: \f$\ce{O3}\f$,
 !! \f$\ce{NO}\f$, \f$\ce{NO2}\f$, \f$\ce{O2}\f$ and \f$\ce{O}\f$.
 !! The input data for
-!! these gas-phase species in the \b pmc-data array is:
+!! these gas-phase species in the \b camp-data array is:
 !! \code{.json}
 !!     {
 !!       "name" : "O3",
@@ -556,13 +556,13 @@
 !! the case of our simple mechanism, this is \f$\ce{NO2}\f$ photolysis. CAMP
 !! photolysis reactions need to know the photolysis rate at a given
 !! moment in the model run. Other reactions that need some external help
-!! include \ref pmc_rxn_emission::rxn_emission_t "emissions",
-!! \ref pmc_rxn_first_order_loss::rxn_first_order_loss_t
+!! include \ref camp_rxn_emission::rxn_emission_t "emissions",
+!! \ref camp_rxn_first_order_loss::rxn_first_order_loss_t
 !! "first order loss", and
-!! \ref pmc_rxn_wet_deposition::rxn_wet_deposition_t "wet deposition".
+!! \ref camp_rxn_wet_deposition::rxn_wet_deposition_t "wet deposition".
 !!
 !! Let's update our box model to set the \f$\ce{NO2}\f$ photolysis rate.
-!! Before the call to \ref pmc_camp_core::solver_initialize
+!! Before the call to \ref camp_camp_core::solver_initialize
 !! "solver_initialize()", we'll add the following code:
 !!
 !! \snippet camp_tutorial/boot_camp/part_3_code/box_model.F90 NO2 photolysis modules
@@ -572,19 +572,19 @@
 !! We first find the chemical mechanism, which we named <b>my simple
 !! mechanism</b> in the last part of the tutorial. Next, we cycle through
 !! the reactions in that mechanism looking for
-!! \ref pmc_rxn_photolysis::rxn_photolysis_t "rxn_photolysis_t"
+!! \ref camp_rxn_photolysis::rxn_photolysis_t "rxn_photolysis_t"
 !! reactions. Then, we check the properties of the photolysis reactions
 !! looking for a key-value pair name <b>my photo label</b> and make sure
 !! its value is <b>NO2 photolysis</b>, as we specified in the last
-!! section. The \ref pmc_rxn_data::rxn_data_t::property_set "property_set"
+!! section. The \ref camp_rxn_data::rxn_data_t::property_set "property_set"
 !! of reactions gives you direct access to the input data for each reaction.
 !! This includes the information CAMP uses, like \b reactants and \b A, as
 !! well as those it doesn't use, like our <b>my photo label</b>. There are
 !! functions to get string, integers, real numbers, and subsets of
 !! properties from
-!! \ref pmc_rxn_data::rxn_data_t::property_set "property_set". To see
-!! the available functions, see \ref pmc_property. The last step is to
-!! fix our \ref pmc_rxn_photolysis::rxn_update_data_photolysis_t
+!! \ref camp_rxn_data::rxn_data_t::property_set "property_set". To see
+!! the available functions, see \ref camp_property. The last step is to
+!! fix our \ref camp_rxn_photolysis::rxn_update_data_photolysis_t
 !! "rxn_update_data_photolysis_t" object to the \f$\ce{NO2}\f$
 !! photolysis reaction we located, then at the end just make sure we
 !! found the reaction we were looking for. This and similar objects for
@@ -599,7 +599,7 @@
 !! Here, we simply set the reaction property of interest in our update
 !! data object, in this case the photolysis rate, and then pass this data
 !! to CAMP. This can be done before any call to
-!! \ref pmc_camp_core::solve "solve()". This rate will remain the same
+!! \ref camp_camp_core::solve "solve()". This rate will remain the same
 !! until we change it again.
 !!
 !! Now, our box model code and our input files are complete. To compile
@@ -649,8 +649,8 @@
 !! \endcode
 !! Back outside the container:
 !! \code{.sh}
-!!   docker cp pmc:/boot-camp/results.png .
-!!   docker container rm pmc
+!!   docker cp camp:/boot-camp/results.png .
+!!   docker container rm camp
 !!   open results.png
 !! \endcode
 !!
@@ -714,7 +714,7 @@
 !! in a conditional statement
 !! that ensures we load the input data and initialize CAMP on the
 !! primary process only (we're including the existing call to the
-!! \ref pmc_camp_core::camp_core_t "camp_core_t" constructor and
+!! \ref camp_camp_core::camp_core_t "camp_core_t" constructor and
 !! `camp_core_t::initialize()` to show the
 !! placement of the start of our new conditional block):
 !!
@@ -724,22 +724,22 @@
 !! model elements to take their input data and condense it down into a
 !! small data block containing only the information they need to solve the
 !! chemical system during calls to `camp_core_t::solve()`. The
-!! \ref pmc_camp_core::camp_core_t "camp_core_t" MPI functions pass only
+!! \ref camp_camp_core::camp_core_t "camp_core_t" MPI functions pass only
 !! this condensed data to other processes. So, after the core is passed,
 !! you will not have access
-!! to the raw input data or model \ref pmc_property::property_t "property_t"
+!! to the raw input data or model \ref camp_property::property_t "property_t"
 !! objects that we used to set up the
-!! \ref pmc_rxn_data::rxn_update_data_t "rxn_update_data_t" objects in
+!! \ref camp_rxn_data::rxn_update_data_t "rxn_update_data_t" objects in
 !! \ref camp_tutorial_part_3 "part 3".
 !! Thus, all the setup of
-!! \ref pmc_rxn_data::rxn_update_data_t "rxn_update_data_t"
+!! \ref camp_rxn_data::rxn_update_data_t "rxn_update_data_t"
 !! objects must be done on the
 !! primary process, before passing the core and update objects to the
 !! other processes.
 !!
 !! So, let's end our first MPI conditional block after we setup
 !! the \f$\ce{NO2}\f$ photolysis
-!! \ref pmc_rxn_data::rxn_update_data "rxn_update_data_t" object and
+!! \ref camp_rxn_data::rxn_update_data "rxn_update_data_t" object and
 !! before the call to `camp_core_t::solver_initialize()`.
 !! The first step is to get the size of the buffer to be used to pass
 !! the objects
@@ -768,7 +768,7 @@
 !!
 !! \snippet camp_tutorial/boot_camp/part_4_code/box_model.F90 unpack the objects
 !!
-!! Note that we call the \ref pmc_camp_core::camp_core_t "camp_core_t"
+!! Note that we call the \ref camp_camp_core::camp_core_t "camp_core_t"
 !! constructor without passing the input file list. This creates an
 !! empty core on the secondary processes that we can fill with the packed
 !! data from the buffer.
@@ -782,8 +782,8 @@
 !! The `camp_state_t::state_var(:)` array can be accessed directly and
 !! passed however your model passes double-precision
 !! floating-point arrays, or you can use the
-!! `pmc_mpi_pack_size_real_array()`, `pmc_mpi_pack_real_array()`,
-!! and `pmc_mpi_unpack_real_array()` functions.
+!! `camp_mpi_pack_size_real_array()`, `camp_mpi_pack_real_array()`,
+!! and `camp_mpi_unpack_real_array()` functions.
 !!
 !! To finish up, let's add a conditional block around the output to
 !! print the results from the first secondary process, just
@@ -815,7 +815,7 @@
 !!   cd partmc
 !!   git checkout develop-85-tutorial
 !!   docker build -f Dockerfile.mpi -t partmc-test-mpi .
-!!   docker run ---name pmc -it partmc-test-mpi bash
+!!   docker run ---name camp -it partmc-test-mpi bash
 !! \endcode
 !! Inside the container:
 !! \code{.sh}
@@ -830,8 +830,8 @@
 !! \endcode
 !! Back outside the container:
 !! \code{.sh}
-!!   docker cp pmc:/boot-camp/results.png .
-!!   docker container rm pmc
+!!   docker cp camp:/boot-camp/results.png .
+!!   docker container rm camp
 !!   open results.png
 !! \endcode
 !! You should get the same results as described in

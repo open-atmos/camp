@@ -2,7 +2,7 @@
   "description" : [
     "CB05 -- HERMES anthropogenic emission reactions"
   ],
-  "pmc-data" : [
+  "camp-data" : [
     {
       "name" : "MONARCH mod37",
       "type" : "MECHANISM",

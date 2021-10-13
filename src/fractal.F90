@@ -3,7 +3,7 @@
 ! option) any later version. See the file COPYING for details.
 
 !> \file
-!> The pmc_fractal module.
+!> The camp_fractal module.
 
 !> The fractal_t structure and associated subroutines.
 !!
@@ -32,12 +32,12 @@
 !! the dynamics of fractal aerosols, <i>Journal of Aerosol Science</i>,
 !! 34(10), 1371-1397. The equations are written in detail in the file
 !! \c doc/fractal/fractal.tex.
-module pmc_fractal
+module camp_fractal
 
-  use pmc_spec_file
-  use pmc_constants
-  use pmc_netcdf
-  use pmc_mpi
+  use camp_spec_file
+  use camp_constants
+  use camp_netcdf
+  use camp_mpi
 
   !> Constant \f$A\f$ in slip correction equation in Eq. 22 of Naumann [2003].
   real(kind=dp), parameter :: FRACTAL_A_SLIP = 1.142d0
@@ -486,22 +486,22 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Determines the number of bytes required to pack the given value.
-  integer function pmc_mpi_pack_size_fractal(val)
+  integer function camp_mpi_pack_size_fractal(val)
 
     !> Value to pack.
     type(fractal_t), intent(in) :: val
 
-    pmc_mpi_pack_size_fractal = &
-         pmc_mpi_pack_size_real(val%frac_dim) &
-         + pmc_mpi_pack_size_real(val%prime_radius) &
-         + pmc_mpi_pack_size_real(val%vol_fill_factor)
+    camp_mpi_pack_size_fractal = &
+         camp_mpi_pack_size_real(val%frac_dim) &
+         + camp_mpi_pack_size_real(val%prime_radius) &
+         + camp_mpi_pack_size_real(val%vol_fill_factor)
 
-  end function pmc_mpi_pack_size_fractal
+  end function camp_mpi_pack_size_fractal
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Packs the given value into the buffer, advancing position.
-  subroutine pmc_mpi_pack_fractal(buffer, position, val)
+  subroutine camp_mpi_pack_fractal(buffer, position, val)
 
     !> Memory buffer.
     character, intent(inout) :: buffer(:)
@@ -513,18 +513,18 @@ contains
     integer :: prev_position
 
     prev_position = position
-    call pmc_mpi_pack_real(buffer, position, val%frac_dim)
-    call pmc_mpi_pack_real(buffer, position, val%prime_radius)
-    call pmc_mpi_pack_real(buffer, position, val%vol_fill_factor)
+    call camp_mpi_pack_real(buffer, position, val%frac_dim)
+    call camp_mpi_pack_real(buffer, position, val%prime_radius)
+    call camp_mpi_pack_real(buffer, position, val%vol_fill_factor)
     call assert(287864891, &
-         position - prev_position <= pmc_mpi_pack_size_fractal(val))
+         position - prev_position <= camp_mpi_pack_size_fractal(val))
 
-  end subroutine pmc_mpi_pack_fractal
+  end subroutine camp_mpi_pack_fractal
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Unpacks the given value from the buffer, advancing position.
-  subroutine pmc_mpi_unpack_fractal(buffer, position, val)
+  subroutine camp_mpi_unpack_fractal(buffer, position, val)
 
     !> Memory buffer.
     character, intent(inout) :: buffer(:)
@@ -536,13 +536,13 @@ contains
     integer :: prev_position
 
     prev_position = position
-    call pmc_mpi_unpack_real(buffer, position, val%frac_dim)
-    call pmc_mpi_unpack_real(buffer, position, val%prime_radius)
-    call pmc_mpi_unpack_real(buffer, position, val%vol_fill_factor)
+    call camp_mpi_unpack_real(buffer, position, val%frac_dim)
+    call camp_mpi_unpack_real(buffer, position, val%prime_radius)
+    call camp_mpi_unpack_real(buffer, position, val%vol_fill_factor)
     call assert(294756245, &
-         position - prev_position <= pmc_mpi_pack_size_fractal(val))
+         position - prev_position <= camp_mpi_pack_size_fractal(val))
 
-  end subroutine pmc_mpi_unpack_fractal
+  end subroutine camp_mpi_unpack_fractal
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -615,12 +615,12 @@ contains
     !> NetCDF file ID, in data mode.
     integer, intent(in) :: ncid
 
-    call pmc_nc_write_real(ncid, fractal%frac_dim, "fractal_dimension", &
+    call camp_nc_write_real(ncid, fractal%frac_dim, "fractal_dimension", &
          unit="1", description="particle volume fractal dimension")
-    call pmc_nc_write_real(ncid, fractal%prime_radius, &
+    call camp_nc_write_real(ncid, fractal%prime_radius, &
          "fractal_prime_radius", unit="m", &
          description="radius of primary particles")
-    call pmc_nc_write_real(ncid, fractal%vol_fill_factor, &
+    call camp_nc_write_real(ncid, fractal%vol_fill_factor, &
          "fractal_vol_fill_factor", unit="1", &
          description="volume filling factor")
 
@@ -636,13 +636,13 @@ contains
     !> NetCDF file ID, in data mode.
     integer, intent(in) :: ncid
 
-    call pmc_nc_read_real(ncid, fractal%frac_dim, "fractal_dimension")
-    call pmc_nc_read_real(ncid, fractal%prime_radius, "fractal_prime_radius")
-    call pmc_nc_read_real(ncid, fractal%vol_fill_factor, &
+    call camp_nc_read_real(ncid, fractal%frac_dim, "fractal_dimension")
+    call camp_nc_read_real(ncid, fractal%prime_radius, "fractal_prime_radius")
+    call camp_nc_read_real(ncid, fractal%vol_fill_factor, &
          "fractal_vol_fill_factor")
 
   end subroutine fractal_input_netcdf
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end module pmc_fractal
+end module camp_fractal

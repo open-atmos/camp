@@ -3,12 +3,12 @@
 ! option) any later version. See the file COPYING for details.
 
 !> \file
-!> The pmc_spec_line module.
+!> The camp_spec_line module.
 
 !> A single line of formatted test for input.
-module pmc_spec_line
+module camp_spec_line
 
-  use pmc_util
+  use camp_util
 
   !> Maximum size of a single line.
   integer, parameter :: SPEC_LINE_MAX_LEN = 10000
@@ -105,4 +105,4 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end module pmc_spec_line
+end module camp_spec_line

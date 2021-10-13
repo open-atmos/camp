@@ -1,6 +1,6 @@
 {
   "note" : "Test data for ZSR aerosol water calculation. Parameters for JACOBSON molality calculation are from Jacobson et al., 1996 Table 2 for NaCl (CaCl2 is used in the test just to test the code when different numbers of cations and anions are present.) Parameters for EQSAM molality calculation are from EQSAM_v03d for NaCl",
-  "pmc-data" : [
+  "camp-data" : [
   {
     "name" : "H2O",
     "type" : "CHEM_SPEC"

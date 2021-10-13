@@ -3,18 +3,18 @@
 ! option) any later version. See the file COPYING for details.
 
 !> \file
-!> The pmc_mosaic module.
+!> The camp_mosaic module.
 
 !> Interface to the MOSAIC aerosol and gas phase chemistry code.
-module pmc_mosaic
+module camp_mosaic
 
-  use pmc_aero_data
-  use pmc_aero_state
-  use pmc_constants
-  use pmc_env_state
-  use pmc_gas_data
-  use pmc_gas_state
-  use pmc_util
+  use camp_aero_data
+  use camp_aero_state
+  use camp_constants
+  use camp_env_state
+  use camp_gas_data
+  use camp_gas_state
+  use camp_util
 
 contains
 
@@ -529,4 +529,4 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end module pmc_mosaic
+end module camp_mosaic

@@ -4,7 +4,7 @@
     "Parameter for the bins and modes were taken from Spada et al. (2015) manuscript -",
     "'Global aerosols in the online multiscale NMMB/BSC Chemical Transport Model'"
   ],
-  "pmc-data" : [
+  "camp-data" : [
     {
       "name" : "MONARCH mass-based",
       "type" : "AERO_REP_MODAL_BINNED_MASS",

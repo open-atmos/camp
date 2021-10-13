@@ -82,7 +82,7 @@ void rxn_wet_deposition_update_ids(ModelData *model_data, int *deriv_ids,
  *
  *  - \b int rxn_id (Id of one or more wet deposition reactions set by the
  *       host model using the
- *       \c pmc_rxn_wet_deposition::rxn_wet_deposition_t::set_rxn_id
+ *       \c camp_rxn_wet_deposition::rxn_wet_deposition_t::set_rxn_id
  *       function prior to initializing the solver.)
  *  - \b double rate_const (New pre-scaling rate constant.)
  *

@@ -10,8 +10,8 @@ from pyx import *
 sys.path.append(".")
 from fig_helper import *
 sys.path.append("../tool")
-from pmc_data_nc import *
-from pmc_pyx import *
+from camp_data_nc import *
+from camp_pyx import *
 
 out_prefix = "figs_prop/aero_2d_bc_ss"
 
@@ -34,9 +34,9 @@ def get_plot_data_bc(filename, value_max = None):
     comp_frac = particles.mass(include = ["BC"]) \
                 / particles.mass(exclude = ["H2O"]) * 100
 
-    x_axis = pmc_log_axis(min = diameter_axis_min, max = diameter_axis_max,
+    x_axis = camp_log_axis(min = diameter_axis_min, max = diameter_axis_max,
                           n_bin = num_diameter_bins)
-    y_axis = pmc_linear_axis(min = bc_axis_min, max = bc_axis_max,
+    y_axis = camp_linear_axis(min = bc_axis_min, max = bc_axis_max,
                              n_bin = num_bc_bins)
     x_bin = x_axis.find(diameter)
     # hack to avoid landing just around the integer boundaries
@@ -62,7 +62,7 @@ def get_plot_data_bc(filename, value_max = None):
         value = value / value_max
     value = value.clip(0.0, 1.0)
 
-    rects = pmc_histogram_2d_multi([value],
+    rects = camp_histogram_2d_multi([value],
                                     x_axis, y_axis)
     return (rects, env_state)
 
@@ -75,9 +75,9 @@ def get_plot_data_ss(filename, value_max = None):
     diameter = particles.dry_diameter() * 1e6
     critical_ss = (particles.kappa_rh(env_state, const) - 1.0) * 100.0
 
-    x_axis = pmc_log_axis(min = diameter_axis_min, max = diameter_axis_max,
+    x_axis = camp_log_axis(min = diameter_axis_min, max = diameter_axis_max,
                           n_bin = num_diameter_bins)
-    y_axis = pmc_log_axis(min = ss_axis_min, max = ss_axis_max,
+    y_axis = camp_log_axis(min = ss_axis_min, max = ss_axis_max,
                           n_bin = num_ss_bins)
     x_bin = x_axis.find(diameter)
     # hack to avoid landing just around the integer boundaries
@@ -103,7 +103,7 @@ def get_plot_data_ss(filename, value_max = None):
         value = value / value_max
     value = value.clip(0.0, 1.0)
 
-    rects = pmc_histogram_2d_multi([value],
+    rects = camp_histogram_2d_multi([value],
                                     x_axis, y_axis)
     return (rects, env_state)
 

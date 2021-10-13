@@ -17,7 +17,7 @@ extern "C" {
 #include "aero_reps_gpu.h"
 
 // Aerosol representations (Must match parameters defined in
-// pmc_aero_rep_gpu_factory
+// camp_aero_rep_gpu_factory
 #define AERO_REP_SINGLE_PARTICLE 1
 #define AERO_REP_MODAL_BINNED_MASS 2
 

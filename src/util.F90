@@ -3,12 +3,12 @@
 ! option) any later version. See the file COPYING for details.
 
 !> \file
-!> The pmc_util module.
+!> The camp_util module.
 
 !> Common utility subroutines.
-module pmc_util
+module camp_util
 
-  use pmc_constants
+  use camp_constants
 #ifdef PMC_USE_MPI
   use mpi
 #endif
@@ -1890,4 +1890,4 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end module pmc_util
+end module camp_util

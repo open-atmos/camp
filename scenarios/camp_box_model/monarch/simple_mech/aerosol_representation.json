@@ -2,7 +2,7 @@
   "description" : [
     "This is the aerosol representation for the simple chemistry mechanism"
   ],
-  "pmc-data" : [
+  "camp-data" : [
     {
       "name" : "MONARCH mass-based",
       "type" : "AERO_REP_MODAL_BINNED_MASS",

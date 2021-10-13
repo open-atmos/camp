@@ -11,8 +11,8 @@ from pyx import *
 sys.path.append(".")
 from fig_helper import *
 sys.path.append("../tool")
-from pmc_data_nc import *
-from pmc_pyx import *
+from camp_data_nc import *
+from camp_pyx import *
 
 out_prefix = "figs_aging/aging_aero_2d_aging_time"
 
@@ -41,7 +41,7 @@ for plot_info in aging_time_infos:
     value = (value - log(min_val)) / (log(max_val) - log(min_val))
     value = value.clip(0.0, 1.0)
 
-    plot_data = pmc_histogram_2d(value, diameter_axis, aging_time_axis, mask = mask)
+    plot_data = camp_histogram_2d(value, diameter_axis, aging_time_axis, mask = mask)
 
     for color in [True, False]:
         g = graph.graphxy(

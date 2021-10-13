@@ -3,10 +3,10 @@
 ! option) any later version. See the file COPYING for details.
 
 !> \file
-!> The pmc_constants module.
+!> The camp_constants module.
 
 !> Physical constants.
-module pmc_constants
+module camp_constants
 
   !> Kind of a single precision real number.
   integer, parameter :: sp = kind(0.0)
@@ -26,7 +26,7 @@ module pmc_constants
   !! principle could change should go in scenario.f90.
   !!
   !! To access a constant in a subroutine you should <tt>use
-  !! pmc_constants</tt> and then the constant value is accessed with
+  !! camp_constants</tt> and then the constant value is accessed with
   !! \c const%%pi or similar. Note that the type is called \c const_t
   !! (with a trailing _t) but the single saved variable to access them
   !! is just called \c const.
@@ -70,10 +70,10 @@ module pmc_constants
   !> Fixed variable for accessing the constant's values.
   !!
   !! To access a constant in a subroutine you should <tt>use
-  !! pmc_constants</tt> and then the constant value is accessed with
+  !! camp_constants</tt> and then the constant value is accessed with
   !! \c const%%pi or similar. Note that the type is called \c const_t
   !! (with a trailing _t) but the single saved variable to access them
   !! is just called \c const.
   type(const_t), save :: const
 
-end module pmc_constants
+end module camp_constants

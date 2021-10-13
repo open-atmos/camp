@@ -176,26 +176,26 @@
 !! The CAMP_core interface follows an structure based on classes, where the
 !! more relevants are:
 !!
-!!  - \ref pmc_camp_core::camp_core_t "camp_core":
+!!  - \ref camp_camp_core::camp_core_t "camp_core":
 !!  Main class, includes and manage all the program classes.
-!!  - \ref pmc_camp_state::camp_state_t "camp_state":
+!!  - \ref camp_camp_state::camp_state_t "camp_state":
 !!  Includes concentration array and the env_state class.
-!!  - \ref pmc_env_state::env_state_t "env_state": Includes all the
+!!  - \ref camp_env_state::env_state_t "env_state": Includes all the
 !!  environmental program variables. The most remarkables are temperature
 !!  and pressure.
-!!  - \ref pmc_camp_solver_data "camp_solver_data":
+!!  - \ref camp_camp_solver_data "camp_solver_data":
 !!  Allows the CAMP_core interface (programmed in Fortran)
 !!  use the functions from the solving system (programmed in C as a
 !!  requisite of the CVODE package).
-!!  - \ref pmc_chem_spec_data "chem_spec_data" : Reads JSON data.
+!!  - \ref camp_chem_spec_data "chem_spec_data" : Reads JSON data.
 !!  The user can found here the species data defined in JSON files
 !!  by searching the reactants names like "O3" or "NO2".
-!!  - \ref pmc_rxn_data::rxn_data_t "rxn_data" : Also read JSON data by calling
-!!  \ref pmc_property::property_t "property_t".
+!!  - \ref camp_rxn_data::rxn_data_t "rxn_data" : Also read JSON data by calling
+!!  \ref camp_property::property_t "property_t".
 !!  Includes declarations of the arrays where JSON data is stored: one array for
 !!  integer type data and other for floating data (for example, qty from \ref
 !!  camp_rxn_arrhenius "arrheniufs reaction" is an integer, but \f$A\f$ is floating data).
-!!  - \ref pmc_rxn_arrhenius::rxn_arrhenius_t "rxn_REACTIONTYPE" : Set of classes,
+!!  - \ref camp_rxn_arrhenius::rxn_arrhenius_t "rxn_REACTIONTYPE" : Set of classes,
 !!  one for each reaction type defined in CAMP,
 !!  where REACTIONTYPE is the reaction name (arrhenius, photolysis, etc.)
 !!  Extends from rxn_data, meaning that also has the same variables
@@ -203,14 +203,14 @@
 !!  and stores them in the integer and float arrays defined in rxn_data. It also
 !!  adds to the integer array some data necesary for future calculations and
 !!  iterate the arrays, like the number of reactants and products.
-!!  - \ref pmc_mpi "pmc_mpi" : Interface to MPI library. Apart from including a MPI
+!!  - \ref camp_mpi "camp_mpi" : Interface to MPI library. Apart from including a MPI
 !!  call on each function, these functions checks if the MPI call success. The
 !!  purpose is to compress complex MPI implementations in one call (for example,
 !!  broadcasting to all nodes a 2d matrix).
-!!  - \ref pmc_rxn_factory::rxn_factory_t "rxn_factory": Interface to create and
+!!  - \ref camp_rxn_factory::rxn_factory_t "rxn_factory": Interface to create and
 !!  add to the system a new reaction in runtime. Apart from JSON files, this can be
 !!  another way to enter the reaction data. Check \ref camp_rxn_add for more information.
-!!  - \ref pmc_util "pmc_util": Treat an array of characters as a string_t object.
+!!  - \ref camp_util "camp_util": Treat an array of characters as a string_t object.
 !!   Used to store string information like species names in chem_spec_data or camp_core.
 !!
 !! The workflow corresponds to:

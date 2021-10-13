@@ -17,7 +17,7 @@ extern "C" {
 }
 
 
-// Reaction types (Must match parameters defined in pmc_rxn_factory)
+// Reaction types (Must match parameters defined in camp_rxn_factory)
 #define RXN_ARRHENIUS 1
 #define RXN_TROE 2
 #define RXN_CMAQ_H2O2 3

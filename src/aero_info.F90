@@ -3,14 +3,14 @@
 ! option) any later version. See the file COPYING for details.
 
 !> \file
-!> The pmc_aero_info module.
+!> The camp_aero_info module.
 
 !> The aero_info_t structure and associated subroutines.
-module pmc_aero_info
+module camp_aero_info
 
-  use pmc_util
-  use pmc_spec_file
-  use pmc_mpi
+  use camp_util
+  use camp_spec_file
+  use camp_mpi
 #ifdef PMC_USE_MPI
   use mpi
 #endif
@@ -33,7 +33,7 @@ module pmc_aero_info
   !! the aero_info_t structure gives the ID of the removed particle
   !! and the action (dilution, coagulation, emission, etc) that caused
   !! the removal. The action must be one of the AERO_INFO_* parameters
-  !! in the pmc_aero_info module. If the action is AERO_INFO_COAG then
+  !! in the camp_aero_info module. If the action is AERO_INFO_COAG then
   !! the other_id field will store the ID of the particle that was
   !! produced by the coagulation.
   !!
@@ -60,7 +60,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Determines the number of bytes required to pack the given value.
-  integer function pmc_mpi_pack_size_aero_info(val)
+  integer function camp_mpi_pack_size_aero_info(val)
 
     !> Value to pack.
     type(aero_info_t), intent(in) :: val
@@ -68,17 +68,17 @@ contains
     integer :: total_size
 
     total_size = 0
-    total_size = total_size + pmc_mpi_pack_size_integer(val%id)
-    total_size = total_size + pmc_mpi_pack_size_integer(val%action)
-    total_size = total_size + pmc_mpi_pack_size_integer(val%other_id)
-    pmc_mpi_pack_size_aero_info = total_size
+    total_size = total_size + camp_mpi_pack_size_integer(val%id)
+    total_size = total_size + camp_mpi_pack_size_integer(val%action)
+    total_size = total_size + camp_mpi_pack_size_integer(val%other_id)
+    camp_mpi_pack_size_aero_info = total_size
 
-  end function pmc_mpi_pack_size_aero_info
+  end function camp_mpi_pack_size_aero_info
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Packs the given value into the buffer, advancing position.
-  subroutine pmc_mpi_pack_aero_info(buffer, position, val)
+  subroutine camp_mpi_pack_aero_info(buffer, position, val)
 
     !> Memory buffer.
     character, intent(inout) :: buffer(:)
@@ -91,19 +91,19 @@ contains
     integer :: prev_position
 
     prev_position = position
-    call pmc_mpi_pack_integer(buffer, position, val%id)
-    call pmc_mpi_pack_integer(buffer, position, val%action)
-    call pmc_mpi_pack_integer(buffer, position, val%other_id)
+    call camp_mpi_pack_integer(buffer, position, val%id)
+    call camp_mpi_pack_integer(buffer, position, val%action)
+    call camp_mpi_pack_integer(buffer, position, val%other_id)
     call assert(842929827, &
-         position - prev_position <= pmc_mpi_pack_size_aero_info(val))
+         position - prev_position <= camp_mpi_pack_size_aero_info(val))
 #endif
 
-  end subroutine pmc_mpi_pack_aero_info
+  end subroutine camp_mpi_pack_aero_info
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Unpacks the given value from the buffer, advancing position.
-  subroutine pmc_mpi_unpack_aero_info(buffer, position, val)
+  subroutine camp_mpi_unpack_aero_info(buffer, position, val)
 
     !> Memory buffer.
     character, intent(inout) :: buffer(:)
@@ -116,15 +116,15 @@ contains
     integer :: prev_position
 
     prev_position = position
-    call pmc_mpi_unpack_integer(buffer, position, val%id)
-    call pmc_mpi_unpack_integer(buffer, position, val%action)
-    call pmc_mpi_unpack_integer(buffer, position, val%other_id)
+    call camp_mpi_unpack_integer(buffer, position, val%id)
+    call camp_mpi_unpack_integer(buffer, position, val%action)
+    call camp_mpi_unpack_integer(buffer, position, val%other_id)
     call assert(841267392, &
-         position - prev_position <= pmc_mpi_pack_size_aero_info(val))
+         position - prev_position <= camp_mpi_pack_size_aero_info(val))
 #endif
 
-  end subroutine pmc_mpi_unpack_aero_info
+  end subroutine camp_mpi_unpack_aero_info
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end module pmc_aero_info
+end module camp_aero_info

@@ -3,7 +3,7 @@
 ! option) any later version. See the file COPYING for details.
 
 !> \file
-!> The pmc_rxn_photolysis module.
+!> The camp_rxn_photolysis module.
 
 !> \page camp_rxn_photolysis CAMP: Photolysis
 !!
@@ -18,12 +18,12 @@
 !!
 !! Photolysis rate constants (including the \f$\mbox{\ch{h $\nu$}}\f$ term)
 !! can be constant or set from an external photolysis module using the
-!! \c pmc_rxn_photolysis::rxn_update_data_photolysis_t object.
+!! \c camp_rxn_photolysis::rxn_update_data_photolysis_t object.
 !! External modules can use the
-!! \c pmc_rxn_photolysis::rxn_photolysis_t::get_property_set() function during
+!! \c camp_rxn_photolysis::rxn_photolysis_t::get_property_set() function during
 !! initilialization to access any needed reaction parameters to identify
 !! certain photolysis reactions.
-!! An \c pmc_rxn_photolysis::update_data_photolysis_t object should be
+!! An \c camp_rxn_photolysis::update_data_photolysis_t object should be
 !! initialized for each photolysis reaction. These objects can then be used
 !! during solving to update the photolysis rate from an external module.
 !!
@@ -58,16 +58,16 @@
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 !> The rxn_photolysis_t type and associated functions.
-module pmc_rxn_photolysis
+module camp_rxn_photolysis
 
-  use pmc_aero_rep_data
-  use pmc_chem_spec_data
-  use pmc_constants,                        only: const
-  use pmc_camp_state
-  use pmc_mpi
-  use pmc_property
-  use pmc_rxn_data
-  use pmc_util,                             only: i_kind, dp, to_string, &
+  use camp_aero_rep_data
+  use camp_chem_spec_data
+  use camp_constants,                        only: const
+  use camp_camp_state
+  use camp_mpi
+  use camp_property
+  use camp_rxn_data
+  use camp_util,                             only: i_kind, dp, to_string, &
                                                   assert, assert_msg, die_msg
 
   use iso_c_binding
@@ -359,7 +359,7 @@ contains
   !> Initialize update data
   subroutine update_data_initialize(this, update_data, rxn_type)
 
-    use pmc_rand,                                only : generate_int_id
+    use camp_rand,                                only : generate_int_id
 
     !> The reaction to update
     class(rxn_photolysis_t), intent(inout) :: this
@@ -392,8 +392,8 @@ contains
     integer, intent(in) :: comm
 
     pack_size = &
-      pmc_mpi_pack_size_logical(this%is_malloced, comm) + &
-      pmc_mpi_pack_size_integer(this%rxn_unique_id, comm)
+      camp_mpi_pack_size_logical(this%is_malloced, comm) + &
+      camp_mpi_pack_size_integer(this%rxn_unique_id, comm)
 
   end function internal_pack_size
 
@@ -415,8 +415,8 @@ contains
     integer :: prev_position
 
     prev_position = pos
-    call pmc_mpi_pack_logical(buffer, pos, this%is_malloced, comm)
-    call pmc_mpi_pack_integer(buffer, pos, this%rxn_unique_id, comm)
+    call camp_mpi_pack_logical(buffer, pos, this%is_malloced, comm)
+    call camp_mpi_pack_integer(buffer, pos, this%rxn_unique_id, comm)
     call assert(649543400, &
          pos - prev_position <= this%pack_size(comm))
 #endif
@@ -441,8 +441,8 @@ contains
     integer :: prev_position
 
     prev_position = pos
-    call pmc_mpi_unpack_logical(buffer, pos, this%is_malloced, comm)
-    call pmc_mpi_unpack_integer(buffer, pos, this%rxn_unique_id, comm)
+    call camp_mpi_unpack_logical(buffer, pos, this%is_malloced, comm)
+    call camp_mpi_unpack_integer(buffer, pos, this%rxn_unique_id, comm)
     call assert(254749806, &
          pos - prev_position <= this%pack_size(comm))
     this%update_data = rxn_photolysis_create_rate_update_data()
@@ -464,4 +464,4 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end module pmc_rxn_photolysis
+end module camp_rxn_photolysis

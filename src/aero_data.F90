@@ -3,21 +3,21 @@
 ! option) any later version. See the file COPYING for details.
 
 !> \file
-!> The pmc_aero_data module.
+!> The camp_aero_data module.
 
 !> The aero_data_t structure and associated subroutines.
-module pmc_aero_data
+module camp_aero_data
 
-  use pmc_spec_file
-  use pmc_mpi
-  use pmc_util
-  use pmc_fractal
-  use pmc_netcdf
-  use pmc_camp_core
-  use pmc_chem_spec_data
-  use pmc_aero_rep_data
-  use pmc_aero_rep_single_particle
-  use pmc_property
+  use camp_spec_file
+  use camp_mpi
+  use camp_util
+  use camp_fractal
+  use camp_netcdf
+  use camp_camp_core
+  use camp_chem_spec_data
+  use camp_aero_rep_data
+  use camp_aero_rep_single_particle
+  use camp_property
 #ifdef PMC_USE_MPI
   use mpi
 #endif
@@ -479,29 +479,29 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Determines the number of bytes required to pack the given value.
-  integer function pmc_mpi_pack_size_aero_data(val)
+  integer function camp_mpi_pack_size_aero_data(val)
 
     !> Value to pack.
     type(aero_data_t), intent(in) :: val
 
-    pmc_mpi_pack_size_aero_data = &
-         pmc_mpi_pack_size_integer(val%i_water) &
-         + pmc_mpi_pack_size_string_array(val%name) &
-         + pmc_mpi_pack_size_integer_array(val%mosaic_index) &
-         + pmc_mpi_pack_size_real_array(val%density) &
-         + pmc_mpi_pack_size_integer_array(val%num_ions) &
-         + pmc_mpi_pack_size_real_array(val%molec_weight) &
-         + pmc_mpi_pack_size_real_array(val%kappa) &
-         + pmc_mpi_pack_size_string_array(val%source_name) &
-         + pmc_mpi_pack_size_fractal(val%fractal) &
+    camp_mpi_pack_size_aero_data = &
+         camp_mpi_pack_size_integer(val%i_water) &
+         + camp_mpi_pack_size_string_array(val%name) &
+         + camp_mpi_pack_size_integer_array(val%mosaic_index) &
+         + camp_mpi_pack_size_real_array(val%density) &
+         + camp_mpi_pack_size_integer_array(val%num_ions) &
+         + camp_mpi_pack_size_real_array(val%molec_weight) &
+         + camp_mpi_pack_size_real_array(val%kappa) &
+         + camp_mpi_pack_size_string_array(val%source_name) &
+         + camp_mpi_pack_size_fractal(val%fractal) &
          + val%update_number%pack_size()
 
-  end function pmc_mpi_pack_size_aero_data
+  end function camp_mpi_pack_size_aero_data
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Packs the given value into the buffer, advancing position.
-  subroutine pmc_mpi_pack_aero_data(buffer, position, val)
+  subroutine camp_mpi_pack_aero_data(buffer, position, val)
 
     !> Memory buffer.
     character, intent(inout) :: buffer(:)
@@ -514,26 +514,26 @@ contains
     integer :: prev_position
 
     prev_position = position
-    call pmc_mpi_pack_integer(buffer, position, val%i_water)
-    call pmc_mpi_pack_string_array(buffer, position, val%name)
-    call pmc_mpi_pack_integer_array(buffer, position, val%mosaic_index)
-    call pmc_mpi_pack_real_array(buffer, position, val%density)
-    call pmc_mpi_pack_integer_array(buffer, position, val%num_ions)
-    call pmc_mpi_pack_real_array(buffer, position, val%molec_weight)
-    call pmc_mpi_pack_real_array(buffer, position, val%kappa)
-    call pmc_mpi_pack_string_array(buffer, position, val%source_name)
-    call pmc_mpi_pack_fractal(buffer, position, val%fractal)
+    call camp_mpi_pack_integer(buffer, position, val%i_water)
+    call camp_mpi_pack_string_array(buffer, position, val%name)
+    call camp_mpi_pack_integer_array(buffer, position, val%mosaic_index)
+    call camp_mpi_pack_real_array(buffer, position, val%density)
+    call camp_mpi_pack_integer_array(buffer, position, val%num_ions)
+    call camp_mpi_pack_real_array(buffer, position, val%molec_weight)
+    call camp_mpi_pack_real_array(buffer, position, val%kappa)
+    call camp_mpi_pack_string_array(buffer, position, val%source_name)
+    call camp_mpi_pack_fractal(buffer, position, val%fractal)
     call val%update_number%bin_pack(buffer, position)
     call assert(183834856, &
-         position - prev_position <= pmc_mpi_pack_size_aero_data(val))
+         position - prev_position <= camp_mpi_pack_size_aero_data(val))
 #endif
 
-  end subroutine pmc_mpi_pack_aero_data
+  end subroutine camp_mpi_pack_aero_data
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Unpacks the given value from the buffer, advancing position.
-  subroutine pmc_mpi_unpack_aero_data(buffer, position, val)
+  subroutine camp_mpi_unpack_aero_data(buffer, position, val)
 
     !> Memory buffer.
     character, intent(inout) :: buffer(:)
@@ -546,21 +546,21 @@ contains
     integer :: prev_position
 
     prev_position = position
-    call pmc_mpi_unpack_integer(buffer, position, val%i_water)
-    call pmc_mpi_unpack_string_array(buffer, position, val%name)
-    call pmc_mpi_unpack_integer_array(buffer, position, val%mosaic_index)
-    call pmc_mpi_unpack_real_array(buffer, position, val%density)
-    call pmc_mpi_unpack_integer_array(buffer, position, val%num_ions)
-    call pmc_mpi_unpack_real_array(buffer, position, val%molec_weight)
-    call pmc_mpi_unpack_real_array(buffer, position, val%kappa)
-    call pmc_mpi_unpack_string_array(buffer, position, val%source_name)
-    call pmc_mpi_unpack_fractal(buffer, position, val%fractal)
+    call camp_mpi_unpack_integer(buffer, position, val%i_water)
+    call camp_mpi_unpack_string_array(buffer, position, val%name)
+    call camp_mpi_unpack_integer_array(buffer, position, val%mosaic_index)
+    call camp_mpi_unpack_real_array(buffer, position, val%density)
+    call camp_mpi_unpack_integer_array(buffer, position, val%num_ions)
+    call camp_mpi_unpack_real_array(buffer, position, val%molec_weight)
+    call camp_mpi_unpack_real_array(buffer, position, val%kappa)
+    call camp_mpi_unpack_string_array(buffer, position, val%source_name)
+    call camp_mpi_unpack_fractal(buffer, position, val%fractal)
     call val%update_number%bin_unpack(buffer, position)
     call assert(188522823, &
-         position - prev_position <= pmc_mpi_pack_size_aero_data(val))
+         position - prev_position <= camp_mpi_pack_size_aero_data(val))
 #endif
 
-  end subroutine pmc_mpi_unpack_aero_data
+  end subroutine camp_mpi_unpack_aero_data
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -586,12 +586,12 @@ contains
     ! try to get the dimension ID
     status = nf90_inq_dimid(ncid, "aero_species", dimid_aero_species)
     if (status == NF90_NOERR) return
-    if (status /= NF90_EBADDIM) call pmc_nc_check(status)
+    if (status /= NF90_EBADDIM) call camp_nc_check(status)
 
     ! dimension not defined, so define now define it
-    call pmc_nc_check(nf90_redef(ncid))
+    call camp_nc_check(nf90_redef(ncid))
 
-    call pmc_nc_check(nf90_def_dim(ncid, "aero_species", &
+    call camp_nc_check(nf90_def_dim(ncid, "aero_species", &
          aero_data_n_spec(aero_data), dimid_aero_species))
     aero_species_names = ""
     do i_spec = 1,aero_data_n_spec(aero_data)
@@ -601,20 +601,20 @@ contains
           aero_species_names((len_trim(aero_species_names) + 1):) = ","
        end if
     end do
-    call pmc_nc_check(nf90_def_var(ncid, "aero_species", NF90_INT, &
+    call camp_nc_check(nf90_def_var(ncid, "aero_species", NF90_INT, &
          dimid_aero_species, varid_aero_species))
-    call pmc_nc_check(nf90_put_att(ncid, varid_aero_species, "names", &
+    call camp_nc_check(nf90_put_att(ncid, varid_aero_species, "names", &
          aero_species_names))
-    call pmc_nc_check(nf90_put_att(ncid, varid_aero_species, "description", &
+    call camp_nc_check(nf90_put_att(ncid, varid_aero_species, "description", &
          "dummy dimension variable (no useful value) - read species names " &
          // "as comma-separated values from the 'names' attribute"))
 
-    call pmc_nc_check(nf90_enddef(ncid))
+    call camp_nc_check(nf90_enddef(ncid))
 
     do i_spec = 1,aero_data_n_spec(aero_data)
        aero_species_centers(i_spec) = i_spec
     end do
-    call pmc_nc_check(nf90_put_var(ncid, varid_aero_species, &
+    call camp_nc_check(nf90_put_var(ncid, varid_aero_species, &
          aero_species_centers))
 
   end subroutine aero_data_netcdf_dim_aero_species
@@ -643,12 +643,12 @@ contains
     ! try to get the dimension ID
     status = nf90_inq_dimid(ncid, "aero_source", dimid_aero_source)
     if (status == NF90_NOERR) return
-    if (status /= NF90_EBADDIM) call pmc_nc_check(status)
+    if (status /= NF90_EBADDIM) call camp_nc_check(status)
 
     ! dimension not defined, so define now define it
-    call pmc_nc_check(nf90_redef(ncid))
+    call camp_nc_check(nf90_redef(ncid))
 
-    call pmc_nc_check(nf90_def_dim(ncid, "aero_source", &
+    call camp_nc_check(nf90_def_dim(ncid, "aero_source", &
          aero_data_n_source(aero_data), dimid_aero_source))
     aero_source_names = ""
     do i_source = 1,aero_data_n_source(aero_data)
@@ -658,20 +658,20 @@ contains
           aero_source_names((len_trim(aero_source_names) + 1):) = ","
        end if
     end do
-    call pmc_nc_check(nf90_def_var(ncid, "aero_source", NF90_INT, &
+    call camp_nc_check(nf90_def_var(ncid, "aero_source", NF90_INT, &
          dimid_aero_source, varid_aero_source))
-    call pmc_nc_check(nf90_put_att(ncid, varid_aero_source, "names", &
+    call camp_nc_check(nf90_put_att(ncid, varid_aero_source, "names", &
          aero_source_names))
-    call pmc_nc_check(nf90_put_att(ncid, varid_aero_source, "description", &
+    call camp_nc_check(nf90_put_att(ncid, varid_aero_source, "description", &
          "dummy dimension variable (no useful value) - read source names " &
          // "as comma-separated values from the 'names' attribute"))
 
-    call pmc_nc_check(nf90_enddef(ncid))
+    call camp_nc_check(nf90_enddef(ncid))
 
     do i_source = 1,aero_data_n_source(aero_data)
        aero_source_centers(i_source) = i_source
     end do
-    call pmc_nc_check(nf90_put_var(ncid, varid_aero_source, &
+    call camp_nc_check(nf90_put_var(ncid, varid_aero_source, &
          aero_source_centers))
 
   end subroutine aero_data_netcdf_dim_aero_source
@@ -722,20 +722,20 @@ contains
          dimid_aero_source)
 
     if (allocated(aero_data%mosaic_index)) then
-       call pmc_nc_write_integer_1d(ncid, aero_data%mosaic_index, &
+       call camp_nc_write_integer_1d(ncid, aero_data%mosaic_index, &
             "aero_mosaic_index", (/ dimid_aero_species /), &
              long_name="MOSAIC indices of aerosol species")
     end if
-    call pmc_nc_write_real_1d(ncid, aero_data%density, &
+    call camp_nc_write_real_1d(ncid, aero_data%density, &
          "aero_density", (/ dimid_aero_species /), unit="kg/m^3", &
          long_name="densities of aerosol species")
-    call pmc_nc_write_integer_1d(ncid, aero_data%num_ions, &
+    call camp_nc_write_integer_1d(ncid, aero_data%num_ions, &
          "aero_num_ions", (/ dimid_aero_species /), &
          long_name="number of ions after dissociation of aerosol species")
-    call pmc_nc_write_real_1d(ncid, aero_data%molec_weight, &
+    call camp_nc_write_real_1d(ncid, aero_data%molec_weight, &
          "aero_molec_weight", (/ dimid_aero_species /), unit="kg/mol", &
          long_name="molecular weights of aerosol species")
-    call pmc_nc_write_real_1d(ncid, aero_data%kappa, &
+    call camp_nc_write_real_1d(ncid, aero_data%kappa, &
          "aero_kappa", (/ dimid_aero_species /), unit="1", &
          long_name="hygroscopicity parameters (kappas) of aerosol species")
     call fractal_output_netcdf(aero_data%fractal, ncid)
@@ -765,28 +765,28 @@ contains
          :: aero_source_names
     type(aero_data_t) :: camp_aero_data
 
-    call pmc_nc_check(nf90_inq_dimid(ncid, "aero_species", &
+    call camp_nc_check(nf90_inq_dimid(ncid, "aero_species", &
          dimid_aero_species))
-    call pmc_nc_check(nf90_Inquire_Dimension(ncid, &
+    call camp_nc_check(nf90_Inquire_Dimension(ncid, &
          dimid_aero_species, name, n_spec))
     call assert(141013948, n_spec < MAX_SPECIES)
 
-    call pmc_nc_check(nf90_inq_dimid(ncid, "aero_source", &
+    call camp_nc_check(nf90_inq_dimid(ncid, "aero_source", &
          dimid_aero_source))
-    call pmc_nc_check(nf90_Inquire_Dimension(ncid, &
+    call camp_nc_check(nf90_Inquire_Dimension(ncid, &
          dimid_aero_source, name, n_source))
     call assert(739238793, n_source < MAX_SOURCES)
 
-    call pmc_nc_read_integer_1d(ncid, aero_data%mosaic_index, &
+    call camp_nc_read_integer_1d(ncid, aero_data%mosaic_index, &
          "aero_mosaic_index")
-    call pmc_nc_read_real_1d(ncid, aero_data%density, "aero_density")
-    call pmc_nc_read_integer_1d(ncid, aero_data%num_ions, "aero_num_ions")
-    call pmc_nc_read_real_1d(ncid, aero_data%molec_weight, "aero_molec_weight")
-    call pmc_nc_read_real_1d(ncid, aero_data%kappa, "aero_kappa")
+    call camp_nc_read_real_1d(ncid, aero_data%density, "aero_density")
+    call camp_nc_read_integer_1d(ncid, aero_data%num_ions, "aero_num_ions")
+    call camp_nc_read_real_1d(ncid, aero_data%molec_weight, "aero_molec_weight")
+    call camp_nc_read_real_1d(ncid, aero_data%kappa, "aero_kappa")
 
-    call pmc_nc_check(nf90_inq_varid(ncid, "aero_species", &
+    call camp_nc_check(nf90_inq_varid(ncid, "aero_species", &
          varid_aero_species))
-    call pmc_nc_check(nf90_get_att(ncid, varid_aero_species, "names", &
+    call camp_nc_check(nf90_get_att(ncid, varid_aero_species, "names", &
          aero_species_names))
     ! aero_species_names are comma-separated, so unpack them
     call ensure_string_array_size(aero_data%name, n_spec)
@@ -802,9 +802,9 @@ contains
     end do
     call assert(729138192, aero_species_names == "")
 
-    call pmc_nc_check(nf90_inq_varid(ncid, "aero_source", &
+    call camp_nc_check(nf90_inq_varid(ncid, "aero_source", &
          varid_aero_source))
-    call pmc_nc_check(nf90_get_att(ncid, varid_aero_source, "names", &
+    call camp_nc_check(nf90_get_att(ncid, varid_aero_source, "names", &
          aero_source_names))
     ! aero_source_names are comma-separated, so unpack them
     call ensure_string_array_size(aero_data%source_name, n_source)
@@ -965,4 +965,4 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end module pmc_aero_data
+end module camp_aero_data

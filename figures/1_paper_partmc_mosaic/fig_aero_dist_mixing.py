@@ -8,8 +8,8 @@ import copy as module_copy
 from Scientific.IO.NetCDF import *
 from pyx import *
 sys.path.append("../tool")
-from pmc_data_nc import *
-from pmc_pyx import *
+from camp_data_nc import *
+from camp_pyx import *
 sys.path.append(".")
 from fig_helper import *
 
@@ -33,7 +33,7 @@ disp_lines = [
 
 out_prefix = "figs/aero_dist_mixing"
 
-x_axis = pmc_linear_axis(min = bc_axis_min, max = bc_axis_max,
+x_axis = camp_linear_axis(min = bc_axis_min, max = bc_axis_max,
                          n_bin = num_bc_bins)
 
 time_filename_list_wc = get_time_filename_list(netcdf_dir_wc, netcdf_pattern_wc)

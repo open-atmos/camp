@@ -3,16 +3,16 @@
 ! option) any later version. See the file COPYING for details.
 
 !> \file
-!> The pmc_bin_grid module.
+!> The camp_bin_grid module.
 
 !> The bin_grid_t structure and associated subroutines.
-module pmc_bin_grid
+module camp_bin_grid
 
-  use pmc_constants
-  use pmc_util
-  use pmc_spec_file
-  use pmc_mpi
-  use pmc_netcdf
+  use camp_constants
+  use camp_util
+  use camp_spec_file
+  use camp_mpi
+  use camp_netcdf
 #ifdef PMC_USE_MPI
   use mpi
 #endif
@@ -278,23 +278,23 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Determines the number of bytes required to pack the given value.
-  integer function pmc_mpi_pack_size_bin_grid(val)
+  integer function camp_mpi_pack_size_bin_grid(val)
 
     !> Value to pack.
     type(bin_grid_t), intent(in) :: val
 
-    pmc_mpi_pack_size_bin_grid = &
-         pmc_mpi_pack_size_integer(val%type) &
-         + pmc_mpi_pack_size_real_array(val%centers) &
-         + pmc_mpi_pack_size_real_array(val%edges) &
-         + pmc_mpi_pack_size_real_array(val%widths)
+    camp_mpi_pack_size_bin_grid = &
+         camp_mpi_pack_size_integer(val%type) &
+         + camp_mpi_pack_size_real_array(val%centers) &
+         + camp_mpi_pack_size_real_array(val%edges) &
+         + camp_mpi_pack_size_real_array(val%widths)
 
-  end function pmc_mpi_pack_size_bin_grid
+  end function camp_mpi_pack_size_bin_grid
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Packs the given value into the buffer, advancing position.
-  subroutine pmc_mpi_pack_bin_grid(buffer, position, val)
+  subroutine camp_mpi_pack_bin_grid(buffer, position, val)
 
     !> Memory buffer.
     character, intent(inout) :: buffer(:)
@@ -307,20 +307,20 @@ contains
     integer :: prev_position
 
     prev_position = position
-    call pmc_mpi_pack_integer(buffer, position, val%type)
-    call pmc_mpi_pack_real_array(buffer, position, val%centers)
-    call pmc_mpi_pack_real_array(buffer, position, val%edges)
-    call pmc_mpi_pack_real_array(buffer, position, val%widths)
+    call camp_mpi_pack_integer(buffer, position, val%type)
+    call camp_mpi_pack_real_array(buffer, position, val%centers)
+    call camp_mpi_pack_real_array(buffer, position, val%edges)
+    call camp_mpi_pack_real_array(buffer, position, val%widths)
     call assert(385455586, &
-         position - prev_position <= pmc_mpi_pack_size_bin_grid(val))
+         position - prev_position <= camp_mpi_pack_size_bin_grid(val))
 #endif
 
-  end subroutine pmc_mpi_pack_bin_grid
+  end subroutine camp_mpi_pack_bin_grid
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Unpacks the given value from the buffer, advancing position.
-  subroutine pmc_mpi_unpack_bin_grid(buffer, position, val)
+  subroutine camp_mpi_unpack_bin_grid(buffer, position, val)
 
     !> Memory buffer.
     character, intent(inout) :: buffer(:)
@@ -333,51 +333,51 @@ contains
     integer :: prev_position
 
     prev_position = position
-    call pmc_mpi_unpack_integer(buffer, position, val%type)
-    call pmc_mpi_unpack_real_array(buffer, position, val%centers)
-    call pmc_mpi_unpack_real_array(buffer, position, val%edges)
-    call pmc_mpi_unpack_real_array(buffer, position, val%widths)
+    call camp_mpi_unpack_integer(buffer, position, val%type)
+    call camp_mpi_unpack_real_array(buffer, position, val%centers)
+    call camp_mpi_unpack_real_array(buffer, position, val%edges)
+    call camp_mpi_unpack_real_array(buffer, position, val%widths)
     call assert(741838730, &
-         position - prev_position <= pmc_mpi_pack_size_bin_grid(val))
+         position - prev_position <= camp_mpi_pack_size_bin_grid(val))
 #endif
 
-  end subroutine pmc_mpi_unpack_bin_grid
+  end subroutine camp_mpi_unpack_bin_grid
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Check whether all processors have the same value.
-  logical function pmc_mpi_allequal_bin_grid(val)
+  logical function camp_mpi_allequal_bin_grid(val)
 
     !> Value to compare.
     type(bin_grid_t), intent(inout) :: val
 
 #ifdef PMC_USE_MPI
-    if (.not. pmc_mpi_allequal_integer(val%type)) then
-       pmc_mpi_allequal_bin_grid = .false.
+    if (.not. camp_mpi_allequal_integer(val%type)) then
+       camp_mpi_allequal_bin_grid = .false.
        return
     end if
 
-    if (.not. pmc_mpi_allequal_integer(bin_grid_size(val))) then
-       pmc_mpi_allequal_bin_grid = .false.
+    if (.not. camp_mpi_allequal_integer(bin_grid_size(val))) then
+       camp_mpi_allequal_bin_grid = .false.
        return
     end if
 
     if (bin_grid_size(val) <= 0) then
-       pmc_mpi_allequal_bin_grid = .true.
+       camp_mpi_allequal_bin_grid = .true.
        return
     end if
 
-    if (pmc_mpi_allequal_real(val%edges(1)) &
-         .and. pmc_mpi_allequal_real(val%edges(bin_grid_size(val)))) then
-       pmc_mpi_allequal_bin_grid = .true.
+    if (camp_mpi_allequal_real(val%edges(1)) &
+         .and. camp_mpi_allequal_real(val%edges(bin_grid_size(val)))) then
+       camp_mpi_allequal_bin_grid = .true.
     else
-       pmc_mpi_allequal_bin_grid = .false.
+       camp_mpi_allequal_bin_grid = .false.
     end if
 #else
-    pmc_mpi_allequal_bin_grid = .true.
+    camp_mpi_allequal_bin_grid = .true.
 #endif
 
-  end function pmc_mpi_allequal_bin_grid
+  end function camp_mpi_allequal_bin_grid
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -410,7 +410,7 @@ contains
 
     status = nf90_inq_dimid(ncid, dim_name, dimid)
     if (status == NF90_NOERR) return
-    if (status /= NF90_EBADDIM) call pmc_nc_check(status)
+    if (status /= NF90_EBADDIM) call camp_nc_check(status)
 
     ! dimension not defined, so define now define it
 
@@ -427,12 +427,12 @@ contains
        use_long_name = trim(dim_name)
     end if
 
-    call pmc_nc_check(nf90_redef(ncid))
-    call pmc_nc_check(nf90_def_dim(ncid, dim_name, size(bin_grid%centers), &
+    call camp_nc_check(nf90_redef(ncid))
+    call camp_nc_check(nf90_def_dim(ncid, dim_name, size(bin_grid%centers), &
          dimid))
-    call pmc_nc_check(nf90_def_dim(ncid, dim_name_edges, &
+    call camp_nc_check(nf90_def_dim(ncid, dim_name_edges, &
          size(bin_grid%edges), dimid_edges))
-    call pmc_nc_check(nf90_enddef(ncid))
+    call camp_nc_check(nf90_enddef(ncid))
 
     centers = bin_grid%centers
     edges = bin_grid%edges
@@ -442,18 +442,18 @@ contains
           centers = centers * scale
           edges = edges * scale
        end if
-       call pmc_nc_write_real_1d(ncid, centers, dim_name, (/ dimid /), &
+       call camp_nc_write_real_1d(ncid, centers, dim_name, (/ dimid /), &
             unit=unit, long_name=(trim(use_long_name) // " grid centers"), &
             description=("logarithmically spaced centers of " &
             // trim(use_long_name) // " grid, so that " // trim(dim_name) &
             // "(i) is the geometric mean of " // trim(dim_name_edges) &
             // "(i) and " // trim(dim_name_edges) // "(i + 1)"))
-       call pmc_nc_write_real_1d(ncid, edges, dim_name_edges, &
+       call camp_nc_write_real_1d(ncid, edges, dim_name_edges, &
             (/ dimid_edges /), unit=unit, &
             long_name=(trim(use_long_name) // " grid edges"), &
             description=("logarithmically spaced edges of " &
             // trim(use_long_name) // " grid, with one more edge than center"))
-       call pmc_nc_write_real_1d(ncid, widths, trim(dim_name) // "_widths", &
+       call camp_nc_write_real_1d(ncid, widths, trim(dim_name) // "_widths", &
             (/ dimid /), unit="1", &
             long_name=(trim(use_long_name) // " grid widths"), &
             description=("base-e logarithmic widths of " &
@@ -466,18 +466,18 @@ contains
           edges = edges * scale
           widths = widths * scale
        end if
-       call pmc_nc_write_real_1d(ncid, centers, dim_name, (/ dimid /), &
+       call camp_nc_write_real_1d(ncid, centers, dim_name, (/ dimid /), &
             unit=unit, long_name=(trim(use_long_name) // " grid centers"), &
             description=("linearly spaced centers of " // trim(use_long_name) &
             // " grid, so that " // trim(dim_name) // "(i) is the mean of " &
             // trim(dim_name_edges) // "(i) and " // trim(dim_name_edges) &
             // "(i + 1)"))
-       call pmc_nc_write_real_1d(ncid, edges, dim_name_edges, &
+       call camp_nc_write_real_1d(ncid, edges, dim_name_edges, &
             (/ dimid_edges /), unit=unit, &
             long_name=(trim(use_long_name) // " grid edges"), &
             description=("linearly spaced edges of " &
             // trim(use_long_name) // " grid, with one more edge than center"))
-       call pmc_nc_write_real_1d(ncid, widths, trim(dim_name) // "_widths", &
+       call camp_nc_write_real_1d(ncid, widths, trim(dim_name) // "_widths", &
             (/ dimid /), unit=unit, &
             long_name=(trim(use_long_name) // " grid widths"), &
             description=("widths of " // trim(use_long_name) &
@@ -535,12 +535,12 @@ contains
     character(len=1000) :: name, description
     real(kind=dp), allocatable :: edges(:)
 
-    call pmc_nc_check(nf90_inq_dimid(ncid, dim_name, dimid))
-    call pmc_nc_check(nf90_Inquire_Dimension(ncid, dimid, name, n_bin))
-    call pmc_nc_check(nf90_inq_varid(ncid, dim_name, varid))
-    call pmc_nc_check(nf90_get_att(ncid, varid, "description", description))
+    call camp_nc_check(nf90_inq_dimid(ncid, dim_name, dimid))
+    call camp_nc_check(nf90_Inquire_Dimension(ncid, dimid, name, n_bin))
+    call camp_nc_check(nf90_inq_varid(ncid, dim_name, varid))
+    call camp_nc_check(nf90_get_att(ncid, varid, "description", description))
 
-    call pmc_nc_read_real_1d(ncid, edges, dim_name // "_edges")
+    call camp_nc_read_real_1d(ncid, edges, dim_name // "_edges")
 
     if (starts_with(description, "logarithmically")) then
        type = BIN_GRID_TYPE_LOG
@@ -562,4 +562,4 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end module pmc_bin_grid
+end module camp_bin_grid
