@@ -18,7 +18,7 @@ module camp_aero_weight_array
   use camp_mpi
   use camp_aero_weight
   use camp_aero_data
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
   use mpi
 #endif
 
@@ -454,7 +454,7 @@ contains
     !> Value to pack.
     type(aero_weight_array_t), intent(in) :: val
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: prev_position, i_group, i_class
     logical :: is_allocated
 
@@ -489,7 +489,7 @@ contains
     !> Value to pack.
     type(aero_weight_array_t), intent(inout) :: val
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: prev_position, n_group, n_class, i_group, i_class
     logical :: is_allocated
 

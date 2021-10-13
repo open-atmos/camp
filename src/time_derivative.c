@@ -46,7 +46,7 @@ int time_derivative_initialize(TimeDerivative *time_deriv,
 
   time_deriv->num_spec = num_spec;
 
-#ifdef PMC_DEBUG
+#ifdef CAMP_DEBUG
   time_deriv->last_max_loss_precision = 0.0;
 #endif
 
@@ -70,11 +70,11 @@ void time_derivative_output(TimeDerivative time_deriv, double *dest_array,
   double *r_l = time_deriv.loss_rates;
 #endif
 
-#ifdef PMC_DEBUG
+#ifdef CAMP_DEBUG
   time_deriv.last_max_loss_precision = 1.0;
 #endif
 
-#ifdef PMC_DEBUG_TIME_DERIV
+#ifdef CAMP_DEBUG_TIME_DERIV
   printf("Time_deriv r_p r_l deriv_est scale_fact\n");
 #endif
   for (unsigned int i_spec = 0; i_spec < time_deriv.num_spec; i_spec++) {
@@ -91,13 +91,13 @@ void time_derivative_output(TimeDerivative time_deriv, double *dest_array,
             (1.0 / (*r_p + *r_l) + MAX_PRECISION_LOSS / fabsl(*r_p - *r_l));
         *dest_array =
             scale_fact * (*r_p - *r_l) + (1.0 - scale_fact) * (*deriv_est);
-#ifdef PMC_DEBUG_TIME_DERIV
+#ifdef CAMP_DEBUG_TIME_DERIV
         printf("%-le %-le %-le %-le\n", *r_p, *r_l, *deriv_est, scale_fact);
 #endif
       } else {
         *dest_array = *r_p - *r_l;
       }
-#ifdef PMC_DEBUG
+#ifdef CAMP_DEBUG
       if (*r_p != 0.0 && *r_l != 0.0) {
         prec_loss = *r_p > *r_l ? 1.0 - *r_l / *r_p : 1.0 - *r_p / *r_l;
         if (prec_loss < time_deriv.last_max_loss_precision)
@@ -111,7 +111,7 @@ void time_derivative_output(TimeDerivative time_deriv, double *dest_array,
     ++r_l;
     ++dest_array;
     if (deriv_est) ++deriv_est;
-#ifdef PMC_DEBUG
+#ifdef CAMP_DEBUG
     if (output_precision == 1) {
       printf("\nspec %d prec_loss %le", i_spec, -log(prec_loss) / log(2.0));
     }
@@ -134,7 +134,7 @@ void time_derivative_add_value(TimeDerivative time_deriv, unsigned int spec_id,
   }
 }
 
-#ifdef PMC_DEBUG
+#ifdef CAMP_DEBUG
 double time_derivative_max_loss_precision(TimeDerivative time_deriv) {
   return -log(time_deriv.last_max_loss_precision) / log(2.0);
 }

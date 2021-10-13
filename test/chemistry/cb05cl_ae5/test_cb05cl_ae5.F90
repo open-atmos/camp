@@ -28,7 +28,7 @@ program camp_test_cb05cl_ae5
   use camp_rxn_photolysis
   use camp_rxn_factory
   use camp_property
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
   use json_module
 #endif
 
@@ -753,7 +753,7 @@ contains
           trim(to_string(camp_init(chem_spec_data%gas_state_id( &
                   ebi_spec_names(i_spec)%string)))))
 
-#ifndef PMC_USE_MPI
+#ifndef CAMP_USE_MPI
 #ifdef COMPARE_CAMP_FILE
       associate (camp_var=>camp_state%state_var( &
               chem_spec_data%gas_state_id( &
@@ -790,7 +790,7 @@ contains
           "; camp init: "//trim(to_string(camp_init( &
                   chem_spec_data%gas_state_id( &
                   str_temp%string)))))
-#ifndef PMC_USE_MPI
+#ifndef CAMP_USE_MPI
 #ifdef COMPARE_CAMP_FILE
       associate (camp_var=>camp_state%state_var( &
               chem_spec_data%gas_state_id( &

@@ -38,7 +38,7 @@ __device__ void solveBcgCudaDevice(
         ,int n_cells, double tolmax, double *ddiag //Init variables
         ,double *dr0, double *dr0h, double *dn0, double *dp0
         ,double *dt, double *ds, double *dAx2, double *dy, double *dz// Auxiliary vectors
-#ifdef PMC_DEBUG_GPU
+#ifdef CAMP_DEBUG_GPU
         ,int *it_pointer
 #endif
 );

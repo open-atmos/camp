@@ -18,8 +18,8 @@ program test_fractal_self_preserve
   use camp_constants
   use getopt_m
 
-  character(len=PMC_MAX_FILENAME_LEN) :: in_prefix, out_filename
-  character(len=PMC_MAX_FILENAME_LEN), allocatable :: filename_list(:)
+  character(len=CAMP_MAX_FILENAME_LEN) :: in_prefix, out_filename
+  character(len=CAMP_MAX_FILENAME_LEN), allocatable :: filename_list(:)
   character(len=1000) :: tmp_str
   type(bin_grid_t) :: dimless_vol_grid
   type(aero_data_t) :: aero_data
@@ -29,7 +29,7 @@ program test_fractal_self_preserve
   real(kind=dp) :: time, del_t
   type(aero_particle_t), pointer :: aero_particle
   real(kind=dp) :: dimless_vol_min, dimless_vol_max, log_width
-  character(len=PMC_UUID_LEN) :: uuid, run_uuid
+  character(len=CAMP_UUID_LEN) :: uuid, run_uuid
   real(kind=dp), allocatable :: diameters(:), num_concs(:)
   real(kind=dp), allocatable :: vol_concs(:), hist(:)
   real(kind=dp), allocatable :: dimless_vol(:), dimless_num_conc(:)

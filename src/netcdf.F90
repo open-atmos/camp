@@ -99,7 +99,7 @@ contains
     !> NetCDF file ID, in data mode.
     integer, intent(in) :: ncid
     !> UUID for this data set.
-    character(len=PMC_UUID_LEN), intent(in) :: uuid
+    character(len=CAMP_UUID_LEN), intent(in) :: uuid
     !> Source name for this data.
     character(len=*), intent(in) :: source
     !> Rank to write into file.
@@ -132,7 +132,7 @@ contains
        use_n_proc = camp_mpi_size()
     end if
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     call camp_nc_write_integer(ncid, use_rank + 1, "process", &
          description="the process number (starting from 1) " &
          // "that output this data file")

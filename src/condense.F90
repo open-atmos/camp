@@ -34,7 +34,7 @@ module camp_condense
   use camp_util
   use camp_aero_particle
   use camp_constants
-#ifdef PMC_USE_SUNDIALS
+#ifdef CAMP_USE_SUNDIALS
   use iso_c_binding
 #endif
 
@@ -46,21 +46,21 @@ module camp_condense
   logical, parameter :: CONDENSE_DO_TEST_COUNTS = .false.
 
   !> Result code indicating successful completion.
-  integer, parameter :: PMC_CONDENSE_SOLVER_SUCCESS        = 0
+  integer, parameter :: CAMP_CONDENSE_SOLVER_SUCCESS        = 0
   !> Result code indicating failure to allocate \c y vector.
-  integer, parameter :: PMC_CONDENSE_SOLVER_INIT_Y         = 1
+  integer, parameter :: CAMP_CONDENSE_SOLVER_INIT_Y         = 1
   !> Result code indicating failure to allocate \c abstol vector.
-  integer, parameter :: PMC_CONDENSE_SOLVER_INIT_ABSTOL    = 2
+  integer, parameter :: CAMP_CONDENSE_SOLVER_INIT_ABSTOL    = 2
   !> Result code indicating failure to create the solver.
-  integer, parameter :: PMC_CONDENSE_SOLVER_INIT_CVODE_MEM = 3
+  integer, parameter :: CAMP_CONDENSE_SOLVER_INIT_CVODE_MEM = 3
   !> Result code indicating failure to initialize the solver.
-  integer, parameter :: PMC_CONDENSE_SOLVER_INIT_CVODE     = 4
+  integer, parameter :: CAMP_CONDENSE_SOLVER_INIT_CVODE     = 4
   !> Result code indicating failure to set tolerances.
-  integer, parameter :: PMC_CONDENSE_SOLVER_SVTOL          = 5
+  integer, parameter :: CAMP_CONDENSE_SOLVER_SVTOL          = 5
   !> Result code indicating failure to set maximum steps.
-  integer, parameter :: PMC_CONDENSE_SOLVER_SET_MAX_STEPS  = 6
+  integer, parameter :: CAMP_CONDENSE_SOLVER_SET_MAX_STEPS  = 6
   !> Result code indicating failure of the solver.
-  integer, parameter :: PMC_CONDENSE_SOLVER_FAIL           = 7
+  integer, parameter :: CAMP_CONDENSE_SOLVER_FAIL           = 7
 
   !> Internal-use structure for storing the inputs for the
   !> rate-calculation function.
@@ -169,7 +169,7 @@ contains
     real(kind=dp) :: vapor_vol_conc_initial, vapor_vol_conc_final
     real(kind=dp) :: d_water_vol_conc, d_vapor_vol_conc
     real(kind=dp) :: V_comp_ratio, water_rel_error
-#ifdef PMC_USE_SUNDIALS
+#ifdef CAMP_USE_SUNDIALS
     real(kind=c_double), target :: state_f(aero_state_n_part(aero_state) + 1)
     real(kind=c_double), target :: abstol_f(aero_state_n_part(aero_state) + 1)
     type(c_ptr) :: state_f_p, abstol_f_p
@@ -177,7 +177,7 @@ contains
     real(kind=c_double) :: reltol_f, t_initial_f, t_final_f
 #endif
 
-#ifdef PMC_USE_SUNDIALS
+#ifdef CAMP_USE_SUNDIALS
 #ifndef DOXYGEN_SKIP_DOC
     interface
        integer(kind=c_int) function condense_solver(neq, x_f, abstol_f, &
@@ -236,7 +236,7 @@ contains
     state(aero_state_n_part(aero_state) + 1) = env_state_initial%rel_humid
     abs_tol_vector(aero_state_n_part(aero_state) + 1) = 1d-10
 
-#ifdef PMC_USE_SUNDIALS
+#ifdef CAMP_USE_SUNDIALS
     ! call SUNDIALS solver
     n_eqn = aero_state_n_part(aero_state) + 1
     n_eqn_f = int(n_eqn, kind=c_int)
@@ -325,34 +325,34 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-#ifdef PMC_USE_SUNDIALS
+#ifdef CAMP_USE_SUNDIALS
   !> Check the return code from the condense_solver() function.
   subroutine condense_check_solve(value)
 
     !> Return code to check.
     integer(kind=c_int), intent(in) :: value
 
-    if (value == PMC_CONDENSE_SOLVER_SUCCESS) then
+    if (value == CAMP_CONDENSE_SOLVER_SUCCESS) then
        return
-    elseif (value == PMC_CONDENSE_SOLVER_INIT_Y) then
+    elseif (value == CAMP_CONDENSE_SOLVER_INIT_Y) then
        call die_msg(123749472, "condense_solver: " &
             // "failed to allocate y vector")
-    elseif (value == PMC_CONDENSE_SOLVER_INIT_ABSTOL) then
+    elseif (value == CAMP_CONDENSE_SOLVER_INIT_ABSTOL) then
        call die_msg(563665949, "condense_solver: " &
             // "failed to allocate abstol vector")
-    elseif (value == PMC_CONDENSE_SOLVER_INIT_CVODE_MEM) then
+    elseif (value == CAMP_CONDENSE_SOLVER_INIT_CVODE_MEM) then
        call die_msg(700541443, "condense_solver: " &
             // "failed to create the solver")
-    elseif (value == PMC_CONDENSE_SOLVER_INIT_CVODE) then
+    elseif (value == CAMP_CONDENSE_SOLVER_INIT_CVODE) then
        call die_msg(297559183, "condense_solver: " &
             // "failure to initialize the solver")
-    elseif (value == PMC_CONDENSE_SOLVER_SVTOL) then
+    elseif (value == CAMP_CONDENSE_SOLVER_SVTOL) then
        call die_msg(848342417, "condense_solver: " &
             // "failed to set tolerances")
-    elseif (value == PMC_CONDENSE_SOLVER_SET_MAX_STEPS) then
+    elseif (value == CAMP_CONDENSE_SOLVER_SET_MAX_STEPS) then
        call die_msg(275591501, "condense_solver: " &
             // "failed to set maximum steps")
-    elseif (value == PMC_CONDENSE_SOLVER_FAIL) then
+    elseif (value == CAMP_CONDENSE_SOLVER_FAIL) then
        call die_msg(862254233, "condense_solver: solver failed")
     else
        call die_msg(635697577, "condense_solver: unknown return code: " &
@@ -502,7 +502,7 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-#ifdef PMC_USE_SUNDIALS
+#ifdef CAMP_USE_SUNDIALS
   !> Compute the condensation rates (Ddot and Hdot) at the current
   !> value of the state (D and H).
   subroutine condense_vf_f(n_eqn, time, state_p, state_dot_p) bind(c)
@@ -558,7 +558,7 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-#ifdef PMC_USE_SUNDIALS
+#ifdef CAMP_USE_SUNDIALS
   !> Compute the Jacobian given by the derivatives of the condensation
   !> rates (Ddot and Hdot) with respect to the input variables (D and
   !> H).
@@ -617,7 +617,7 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-#ifdef PMC_USE_SUNDIALS
+#ifdef CAMP_USE_SUNDIALS
   !> Solve the system \f$ Pz = r \f$ where \f$ P = I - \gamma J \f$
   !> and \f$ J = \partial f / \partial y \f$. The solution is returned
   !> in the \f$ r \f$ vector.

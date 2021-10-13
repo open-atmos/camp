@@ -186,10 +186,10 @@
 !> The aero_rep_factory_t type and associated subroutines.
 module camp_aero_rep_factory
 
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
   use json_module
 #endif
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
   use mpi
 #endif
   use camp_aero_rep_data
@@ -269,7 +269,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Load an aerosol represenation based on its type
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
   function load(this, json, j_obj) result (new_obj)
 
     !> An aerosol representation
@@ -409,7 +409,7 @@ contains
     !> MPI communicator
     integer, intent(in) :: comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: aero_rep_type, i_aero_rep, prev_position
 
     prev_position = pos
@@ -446,7 +446,7 @@ contains
     !> MPI communicator
     integer, intent(in) :: comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: aero_rep_type, i_aero_rep, prev_position
 
     prev_position = pos

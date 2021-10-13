@@ -16,7 +16,7 @@ module camp_coagulation_dist
   use camp_aero_weight_array
   use camp_coagulation
   use camp_mpi
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
   use mpi
 #endif
 
@@ -123,7 +123,7 @@ contains
     integer, parameter :: s2 = 1
     integer, parameter :: sc = 1
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     logical :: samps_remaining, sent_dones
     integer :: i_bin, j_bin, n_samp, i_samp, i_proc, n_proc
     integer :: ierr, status(MPI_STATUS_SIZE), current_i, current_j, i_req
@@ -270,7 +270,7 @@ contains
     !> Which processes are finished with coagulation.
     logical, intent(inout) :: procs_done(:)
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: status(MPI_STATUS_SIZE), ierr
 
     call mpi_probe(MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, &
@@ -382,7 +382,7 @@ contains
     !> Remote process number chosen at random.
     integer, intent(out) :: remote_proc
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     call assert(770964285, size(n_parts, 2) == camp_mpi_size())
     remote_proc = sample_disc_pdf(n_parts(remote_bin, :)) - 1
 #else
@@ -437,7 +437,7 @@ contains
     !> Remote bin number.
     integer, intent(in) :: remote_bin
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     character :: buffer(COAG_DIST_MAX_BUFFER_SIZE)
     integer :: buffer_size, max_buffer_size, position, ierr
 
@@ -466,7 +466,7 @@ contains
     integer, parameter :: s2 = 1
     integer, parameter :: sc = 1
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: buffer_size, position, request_bin, sent_proc
     integer :: ierr, remote_proc, status(MPI_STATUS_SIZE)
     character :: buffer(COAG_DIST_MAX_BUFFER_SIZE)
@@ -512,7 +512,7 @@ contains
     !> Bin number where there was no particle.
     integer, intent(in) :: i_bin
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     character :: buffer(COAG_DIST_MAX_BUFFER_SIZE)
     integer :: buffer_size, max_buffer_size, position, ierr
 
@@ -541,7 +541,7 @@ contains
     !> Aerosol state.
     type(aero_state_t), intent(inout) :: aero_state
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     logical :: found_request
     integer :: buffer_size, position, sent_bin, sent_proc, i_req
     integer :: ierr, status(MPI_STATUS_SIZE)
@@ -598,7 +598,7 @@ contains
     !> Process number to send particle to.
     integer, intent(in) :: dest_proc
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     character :: buffer(COAG_DIST_MAX_BUFFER_SIZE)
     integer :: buffer_size, max_buffer_size, position, ierr
 
@@ -648,7 +648,7 @@ contains
     integer, parameter :: s2 = 1
     integer, parameter :: sc = 1
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     logical :: found_request, remove_1, remove_2
     integer :: buffer_size, position, sent_bin, sent_proc, i_req
     integer :: ierr, status(MPI_STATUS_SIZE)
@@ -729,7 +729,7 @@ contains
     !> Process to send the particle to.
     integer, intent(in) :: dest_proc
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     character :: buffer(COAG_DIST_MAX_BUFFER_SIZE)
     integer :: buffer_size, max_buffer_size, position, ierr
 
@@ -757,7 +757,7 @@ contains
     !> Aerosol data.
     type(aero_data_t), intent(in) :: aero_data
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     logical :: found_request
     integer :: buffer_size, position, sent_proc, ierr
     character :: buffer(COAG_DIST_MAX_BUFFER_SIZE)
@@ -797,7 +797,7 @@ contains
     !> Process to send the message to.
     integer, intent(in) :: dest_proc
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     character :: buffer(COAG_DIST_MAX_BUFFER_SIZE)
     integer :: buffer_size, ierr
 
@@ -817,7 +817,7 @@ contains
     !> Which processes are finished with coagulation.
     logical, intent(inout) :: procs_done(:)
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: buffer_size, sent_proc, ierr
     character :: buffer(COAG_DIST_MAX_BUFFER_SIZE)
     integer :: status(MPI_STATUS_SIZE)

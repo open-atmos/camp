@@ -14,7 +14,7 @@ module camp_mpi
 
   use camp_util
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
   use mpi
 #endif
 
@@ -27,7 +27,7 @@ contains
   !> Whether MPI support is compiled in.
   logical function camp_mpi_support()
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     camp_mpi_support = .true.
 #else
     camp_mpi_support = .false.
@@ -43,7 +43,7 @@ contains
     !> MPI status code.
     integer, intent(in) :: ierr
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     if (ierr /= MPI_SUCCESS) then
        call camp_mpi_abort(1)
     end if
@@ -56,7 +56,7 @@ contains
   !> Initialize MPI.
   subroutine camp_mpi_init()
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: ierr
 
     call mpi_init(ierr)
@@ -74,7 +74,7 @@ contains
     !> Status flag to abort with.
     integer, intent(in) :: status
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: ierr
 
     call mpi_abort(MPI_COMM_WORLD, status, ierr)
@@ -89,7 +89,7 @@ contains
   !> Shut down MPI.
   subroutine camp_mpi_finalize()
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: ierr
 
     call mpi_finalize(ierr)
@@ -106,7 +106,7 @@ contains
     !> MPI communicator
     integer, intent(in), optional :: comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: ierr, l_comm
 
     if (present(comm)) then
@@ -129,7 +129,7 @@ contains
     !> MPI communicator
     integer, intent(in), optional :: comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: rank, ierr, l_comm
 
     if (present(comm)) then
@@ -155,7 +155,7 @@ contains
     !> MPI communicator
     integer, intent(in), optional :: comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: size, ierr, l_comm
 
     if (present(comm)) then
@@ -178,7 +178,7 @@ contains
   !> Perform basic sanity checks on send/receive.
   subroutine camp_mpi_test()
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     real(kind=dp), parameter :: test_real = 2.718281828459d0
     complex(kind=dc), parameter :: test_complex &
          = (0.707106781187d0, 1.4142135624d0)
@@ -320,7 +320,7 @@ contains
     !> MPI communicator
     integer, intent(in), optional :: comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: root, ierr, l_comm
 
     if (present(comm)) then
@@ -347,7 +347,7 @@ contains
     !> MPI communicator
     integer, intent(in), optional :: comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: root, ierr, l_comm
 
     if (present(comm)) then
@@ -374,7 +374,7 @@ contains
     !> MPI communicator
     integer, intent(in), optional :: comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: root, ierr, l_comm
 
     if (present(comm)) then
@@ -403,7 +403,7 @@ contains
 
     integer :: ierr, l_comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     if (present(comm)) then
       l_comm = comm
     else
@@ -431,7 +431,7 @@ contains
 
     integer :: ierr, l_comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     if (present(comm)) then
       l_comm = comm
     else
@@ -459,7 +459,7 @@ contains
 
     integer :: ierr, l_comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     if (present(comm)) then
       l_comm = comm
     else
@@ -489,7 +489,7 @@ contains
 
     integer :: ierr, l_comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     if (present(comm)) then
       l_comm = comm
     else
@@ -517,7 +517,7 @@ contains
 
     integer :: ierr, l_comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     if (present(comm)) then
       l_comm = comm
     else
@@ -545,7 +545,7 @@ contains
 
     integer :: total_size, ierr, l_comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     logical :: is_allocated
 
     if (present(comm)) then
@@ -583,7 +583,7 @@ contains
 
     integer :: total_size, ierr, l_comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     logical :: is_allocated
 
     if (present(comm)) then
@@ -620,7 +620,7 @@ contains
     integer, intent(in), optional :: comm
 
     integer :: i, total_size, l_comm
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     logical :: is_allocated
 
     if (present(comm)) then
@@ -656,7 +656,7 @@ contains
 
     integer :: total_size, ierr, l_comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     logical :: is_allocated
 
     if (present(comm)) then
@@ -698,7 +698,7 @@ contains
     !> MPI communicator
     integer, intent(in), optional :: comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: prev_position, ierr, l_comm
 
     if (present(comm)) then
@@ -731,7 +731,7 @@ contains
     !> MPI communicator
     integer, intent(in), optional :: comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: prev_position, ierr, l_comm
 
     if (present(comm)) then
@@ -764,7 +764,7 @@ contains
     !> MPI communicator
     integer, intent(in), optional :: comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: prev_position, length, ierr, l_comm
 
     if (present(comm)) then
@@ -799,7 +799,7 @@ contains
     !> MPI communicator
     integer, intent(in), optional :: comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: prev_position, ierr, l_comm
 
     if (present(comm)) then
@@ -832,7 +832,7 @@ contains
     !> MPI communicator
     integer, intent(in), optional :: comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: prev_position, ierr, l_comm
 
     if (present(comm)) then
@@ -865,7 +865,7 @@ contains
     !> MPI communicator
     integer, intent(in), optional :: comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: prev_position, n, ierr, l_comm
     logical :: is_allocated
 
@@ -906,7 +906,7 @@ contains
     !> MPI communicator
     integer, intent(in), optional :: comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: prev_position, n, ierr, l_comm
     logical :: is_allocated
 
@@ -946,7 +946,7 @@ contains
     !> MPI communicator
     integer, intent(in), optional :: comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: prev_position, i, n, l_comm
     logical :: is_allocated
 
@@ -987,7 +987,7 @@ contains
     !> MPI communicator
     integer, intent(in), optional :: comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: prev_position, n1, n2, ierr, l_comm
     logical :: is_allocated
 
@@ -1030,7 +1030,7 @@ contains
     !> MPI communicator
     integer, intent(in), optional :: comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: prev_position, ierr, l_comm
 
     if (present(comm)) then
@@ -1065,7 +1065,7 @@ contains
     !> MPI communicator
     integer, intent(in), optional :: comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: prev_position, ierr, l_comm
 
     if (present(comm)) then
@@ -1100,7 +1100,7 @@ contains
     !> MPI communicator
     integer, intent(in), optional :: comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: prev_position, length, ierr, l_comm
 
     if (present(comm)) then
@@ -1138,7 +1138,7 @@ contains
     !> MPI communicator
     integer, intent(in), optional :: comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: prev_position, ierr, l_comm
 
     if (present(comm)) then
@@ -1173,7 +1173,7 @@ contains
     !> MPI communicator
     integer, intent(in), optional :: comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: prev_position, ierr, l_comm
 
     if (present(comm)) then
@@ -1208,7 +1208,7 @@ contains
     !> MPI communicator
     integer, intent(in), optional :: comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: prev_position, n, ierr, l_comm
     logical :: is_allocated
 
@@ -1249,7 +1249,7 @@ contains
     !> MPI communicator
     integer, intent(in), optional :: comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: prev_position, n, ierr, l_comm
     logical :: is_allocated
 
@@ -1290,7 +1290,7 @@ contains
     !> MPI communicator
     integer, intent(in), optional :: comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: prev_position, i, n, l_comm
     logical :: is_allocated
 
@@ -1331,7 +1331,7 @@ contains
     !> MPI communicator
     integer, intent(in), optional :: comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: prev_position, n1, n2, ierr, l_comm
     logical :: is_allocated
 
@@ -1369,7 +1369,7 @@ contains
     !> Result.
     real(kind=dp), intent(out) :: val_avg
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: ierr
 
     call mpi_reduce(val, val_avg, 1, MPI_DOUBLE_PRECISION, MPI_SUM, 0, &
@@ -1398,7 +1398,7 @@ contains
     !> Process to send to.
     integer, intent(in) :: to_proc
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: rank, ierr, status(MPI_STATUS_SIZE)
 
     rank = camp_mpi_rank()
@@ -1437,7 +1437,7 @@ contains
     !> Process to send to.
     integer, intent(in) :: to_proc
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: rank, ierr, status(MPI_STATUS_SIZE)
 
     rank = camp_mpi_rank()
@@ -1473,7 +1473,7 @@ contains
     !> Result.
     integer, intent(out) :: val_sum
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: ierr
 
     call mpi_reduce(val, val_sum, 1, MPI_INTEGER, MPI_SUM, 0, &
@@ -1496,7 +1496,7 @@ contains
     !> Result.
     integer, intent(out) :: val_sum
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: ierr
 
     call mpi_allreduce(val, val_sum, 1, MPI_INTEGER, MPI_SUM, &
@@ -1519,7 +1519,7 @@ contains
     !> Result.
     real(kind=dp), intent(out) :: val_avg(:)
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: ierr
 
     call assert(915136121, size(val) == size(val_avg))
@@ -1546,7 +1546,7 @@ contains
     !> Result.
     real(kind=dp), intent(out) :: val_avg(:,:)
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: ierr
 
     call assert(131229046, size(val,1) == size(val_avg,1))
@@ -1574,7 +1574,7 @@ contains
     !> Result.
     real(kind=dp), intent(out) :: val_avg
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: ierr
 
     call mpi_allreduce(val, val_avg, 1, MPI_DOUBLE_PRECISION, MPI_SUM, &
@@ -1598,7 +1598,7 @@ contains
     !> Result.
     real(kind=dp), intent(out) :: val_avg(:)
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: ierr
 
     call assert(948533359, size(val) == size(val_avg))
@@ -1623,7 +1623,7 @@ contains
     !> Result.
     integer, intent(out) :: val_min
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: ierr
 
     call mpi_allreduce(val, val_min, 1, MPI_INTEGER, MPI_MIN, &
@@ -1646,7 +1646,7 @@ contains
     !> Result.
     integer, intent(out) :: val_max
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: ierr
 
     call mpi_allreduce(val, val_max, 1, MPI_INTEGER, MPI_MAX, &
@@ -1669,7 +1669,7 @@ contains
     !> Result.
     real(kind=dp), intent(out) :: val_min
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: ierr
 
     call mpi_allreduce(val, val_min, 1, MPI_DOUBLE_PRECISION, MPI_MIN, &
@@ -1692,7 +1692,7 @@ contains
     !> Result.
     real(kind=dp), intent(out) :: val_max
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: ierr
 
     call mpi_allreduce(val, val_max, 1, MPI_DOUBLE_PRECISION, MPI_MAX, &
@@ -1712,7 +1712,7 @@ contains
     !> Value to compare.
     integer, intent(in) :: val
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: min_val, max_val
 
     call camp_mpi_allreduce_min_integer(val, min_val)
@@ -1736,7 +1736,7 @@ contains
     !> Value to compare.
     real(kind=dp), intent(in) :: val
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     real(kind=dp) :: min_val, max_val
 
     call camp_mpi_allreduce_min_real(val, min_val)
@@ -1762,7 +1762,7 @@ contains
     !> Values to receive (must be one per process).
     integer, intent(out) :: recv(size(send))
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: ierr
 
     call mpi_alltoall(send, 1, MPI_INTEGER, recv, 1, MPI_INTEGER, &
@@ -1785,7 +1785,7 @@ contains
     !> Values to receive (will be the same on all processes.
     integer, intent(out) :: recv(:,:)
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: n_proc, n_bin, n_data, ierr
     integer, allocatable :: send_buf(:), recv_buf(:)
 
@@ -1820,7 +1820,7 @@ contains
     !> Values to receive (will be the same on all processes.
     real(kind=dp), intent(out) :: recv(:,:)
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: n_proc, n_bin, n_data, ierr
     real(kind=dp), allocatable :: send_buf(:), recv_buf(:)
 

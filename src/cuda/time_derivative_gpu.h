@@ -63,7 +63,7 @@ __host__ __device__
 void time_derivative_add_value_gpu(TimeDerivativeGPU time_deriv, unsigned int spec_id,
                                double rate_contribution);
 
-#ifdef PMC_DEBUG
+#ifdef CAMP_DEBUG
 /** \brief Maximum loss of precision at the last output of the derivative
  *         in bits
  *

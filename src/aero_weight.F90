@@ -16,7 +16,7 @@ module camp_aero_weight
   use camp_aero_data
   use camp_netcdf
   use camp_mpi
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
   use mpi
 #endif
 
@@ -333,7 +333,7 @@ contains
     !> Value to pack.
     type(aero_weight_t), intent(in) :: val
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: prev_position
 
     prev_position = position
@@ -358,7 +358,7 @@ contains
     !> Value to pack.
     type(aero_weight_t), intent(inout) :: val
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: prev_position
 
     prev_position = position

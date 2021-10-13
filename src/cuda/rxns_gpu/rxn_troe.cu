@@ -154,7 +154,7 @@ void * rxn_gpu_troe_pre_calc(ModelDataGPU *model_data, void *rxn_data)
  * \param time_step Current time step being computed (s)
  * \return The rxn_data pointer advanced by the size of the reaction data
  */
-#ifdef PMC_USE_SUNDIALS
+#ifdef CAMP_USE_SUNDIALS
 #ifdef __CUDA_ARCH__
 __host__ __device__
 #endif
@@ -228,7 +228,7 @@ void rxn_gpu_troe_calc_deriv_contrib(ModelDataGPU *model_data, TimeDerivativeGPU
  * \param time_step Current time step being calculated (s)
  * \return The rxn_data pointer advanced by the size of the reaction data
  */
-#ifdef PMC_USE_SUNDIALS
+#ifdef CAMP_USE_SUNDIALS
 #ifdef __CUDA_ARCH__
 __host__ __device__
 #endif

@@ -22,8 +22,8 @@ program test_fractal_dimless_time
   integer, parameter :: REGIME_FREE = 1
   integer, parameter :: REGIME_CONT = 2
 
-  character(len=PMC_MAX_FILENAME_LEN) :: in_prefix, out_filename
-  character(len=PMC_MAX_FILENAME_LEN), allocatable :: filename_list(:)
+  character(len=CAMP_MAX_FILENAME_LEN) :: in_prefix, out_filename
+  character(len=CAMP_MAX_FILENAME_LEN), allocatable :: filename_list(:)
   character(len=1000) :: tmp_str
   type(aero_data_t) :: aero_data
   type(aero_state_t) :: aero_state
@@ -32,7 +32,7 @@ program test_fractal_dimless_time
   integer :: i_file, n_file, regime
   real(kind=dp) :: time, del_t, density, n_init
   type(aero_particle_t), pointer :: aero_particle
-  character(len=PMC_UUID_LEN) :: uuid, run_uuid
+  character(len=CAMP_UUID_LEN) :: uuid, run_uuid
   real(kind=dp), allocatable :: particle_num_concs(:), particle_masses(:)
   real(kind=dp), allocatable :: particle_volumes(:)
   real(kind=dp), allocatable :: times(:), time_num_concs(:)

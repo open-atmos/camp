@@ -15,7 +15,7 @@ program camp_test_CMAQ_H2O2
   use camp_camp_state
   use camp_chem_spec_data
   use camp_solver_stats
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
   use json_module
 #endif
   use camp_mpi
@@ -86,7 +86,7 @@ contains
     character(len=:), allocatable :: key
     integer(kind=i_kind) :: i_time, i_spec
     real(kind=dp) :: time_step, time
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     character, allocatable :: buffer(:), buffer_copy(:)
     integer(kind=i_kind) :: pack_size, pos, i_elem, results
 #endif
@@ -112,7 +112,7 @@ contains
     ! Set output time step (s)
     time_step = 1.0
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     ! Load the model data on the root process and pass it to process 1 for solving
     if (camp_mpi_rank().eq.0) then
 #endif
@@ -144,7 +144,7 @@ contains
       call assert(545328169, idx_B.gt.0)
       call assert(375171265, idx_C.gt.0)
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
       ! pack the camp core
       pack_size = camp_core%pack_size()
       allocate(buffer(pack_size))
@@ -206,7 +206,7 @@ contains
       ! Set the initial concentrations in the model
       camp_state%state_var(:) = model_conc(0,:)
 
-#ifdef PMC_DEBUG
+#ifdef CAMP_DEBUG
       ! Evaluate the Jacobian during solving
       solver_stats%eval_Jac = .true.
 #endif
@@ -219,7 +219,7 @@ contains
                               solver_stats = solver_stats)
         model_conc(i_time,:) = camp_state%state_var(:)
 
-#ifdef PMC_DEBUG
+#ifdef CAMP_DEBUG
         ! Check the Jacobian evaluations
         call assert_msg(246262196, solver_stats%Jac_eval_fails.eq.0, &
                         trim( to_string( solver_stats%Jac_eval_fails ) )// &
@@ -265,7 +265,7 @@ contains
 
       deallocate(camp_state)
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
       ! convert the results to an integer
       if (run_CMAQ_H2O2_test) then
         results = 0

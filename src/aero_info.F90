@@ -11,7 +11,7 @@ module camp_aero_info
   use camp_util
   use camp_spec_file
   use camp_mpi
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
   use mpi
 #endif
 
@@ -87,7 +87,7 @@ contains
     !> Value to pack.
     type(aero_info_t), intent(in) :: val
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: prev_position
 
     prev_position = position
@@ -112,7 +112,7 @@ contains
     !> Value to pack.
     type(aero_info_t), intent(inout) :: val
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: prev_position
 
     prev_position = position

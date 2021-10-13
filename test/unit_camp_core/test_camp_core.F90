@@ -8,7 +8,7 @@
 !> Test class for the camp_core_t type
 program camp_test_camp_core
 
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
   use json_module
 #endif
   use camp_chem_spec_data
@@ -56,7 +56,7 @@ contains
     type(chem_spec_data_t), pointer :: chem_spec_data
     character(len=:), allocatable :: input_file_path
     character(len=:), allocatable :: key_name
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     type(camp_core_t), pointer :: passed_core
     character, allocatable :: buffer(:), buffer_copy(:)
     integer(kind=i_kind) :: pos, pack_size, i_elem
@@ -84,7 +84,7 @@ contains
     ! Make sure all three reactions were loaded
     call assert(360948482, mechanism%size().eq.3)
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     call camp_core%initialize()
     pack_size = camp_core%pack_size()
     allocate(buffer(pack_size))

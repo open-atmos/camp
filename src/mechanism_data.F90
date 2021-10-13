@@ -27,10 +27,10 @@
 !> The mechanism_data_t structure and associated subroutines.
 module camp_mechanism_data
 
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
   use json_module
 #endif
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
   use mpi
 #endif
   use camp_aero_rep_data
@@ -189,7 +189,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Load a chemical mechanism from an input file
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
   subroutine load(this, json, j_obj)
 
     !> Chemical mechanism
@@ -347,7 +347,7 @@ contains
     !> MPI communicator
     integer, intent(in) :: comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     type(rxn_factory_t) :: rxn_factory
     integer :: i_rxn, prev_position
 
@@ -378,7 +378,7 @@ contains
     !> MPI communicator
     integer, intent(in) :: comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     type(rxn_factory_t) :: rxn_factory
     integer :: i_rxn, prev_position, num_rxn
 

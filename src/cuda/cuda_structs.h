@@ -14,7 +14,7 @@ typedef struct
   int*    iA;
   double* aux;
 
-#ifdef PMC_DEBUG_GPU
+#ifdef CAMP_DEBUG_GPU
   int counterNewtonIt;
   int counterLinSolSetup;
   int counterLinSolSolve;
@@ -70,7 +70,7 @@ typedef struct {
     // long double is treated as double in GPU
     double *production_rates;  // Production rates for all species
     double *loss_rates;        // Loss rates for all species
-#ifdef PMC_DEBUG
+#ifdef CAMP_DEBUG
     double last_max_loss_precision;  // Maximum loss of precision at last output
 #endif
 
@@ -197,7 +197,7 @@ typedef struct {
     int nstlj;
     int cv_ncfn;
 
-#ifdef PMC_DEBUG_GPU
+#ifdef CAMP_DEBUG_GPU
     int countercvStep;
     int counterDerivGPU;
     int counterBCGInternal;
@@ -350,7 +350,7 @@ typedef struct {
     ModelDataVariable *mdvo;
 
 //ODE stats
-#ifdef PMC_DEBUG_GPU
+#ifdef CAMP_DEBUG_GPU
     int clock_khz;
     double *tguessNewton;
     double *dtNewtonIteration;

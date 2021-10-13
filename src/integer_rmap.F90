@@ -348,7 +348,7 @@ contains
     !> Value to pack.
     type(integer_rmap_t), intent(in) :: val
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: prev_position, i
     logical :: is_allocated
 
@@ -381,7 +381,7 @@ contains
     !> Value to pack.
     type(integer_rmap_t), intent(inout) :: val
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: prev_position, i, n
     logical :: is_allocated
 

@@ -13,11 +13,11 @@ program camp_test_aero_phase_data
   use camp_property
   use camp_aero_phase_data
   use camp_chem_spec_data
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
   use json_module
 #endif
   use camp_mpi
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
   use mpi
 #endif
 
@@ -58,7 +58,7 @@ contains
     type(aero_phase_data_t), pointer :: aero_phase_data
     type(aero_phase_data_ptr), allocatable :: aero_phase_data_set(:)
     type(chem_spec_data_t), pointer :: chem_spec_data
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
     type(json_file) :: j_file
     type(json_core), pointer :: json
     type(json_value), pointer :: j_obj, j_next
@@ -68,7 +68,7 @@ contains
     character(len=:), allocatable :: key
     real(kind=dp) :: temp_real
     logical :: temp_logical
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     type(aero_phase_data_ptr), allocatable :: aero_phase_passed_data_set(:)
     character, allocatable :: buffer(:)
     integer(kind=i_kind) :: pos, pack_size, i_prop
@@ -133,7 +133,7 @@ contains
     call assert(608559165, aero_phase_data_set(2)%val%size().eq.3)
     call assert(438402261, aero_phase_data_set(3)%val%size().eq.2)
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     pack_size = 0
     do i_phase = 1, 3
       pack_size = pack_size + aero_phase_data_set(i_phase)%val%pack_size(MPI_COMM_WORLD)

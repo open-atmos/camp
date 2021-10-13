@@ -15,15 +15,15 @@ program extract_aero_time
   use camp_mpi
   use getopt_m
 
-  character(len=PMC_MAX_FILENAME_LEN) :: in_prefix, out_filename
-  character(len=PMC_MAX_FILENAME_LEN), allocatable :: filename_list(:)
+  character(len=CAMP_MAX_FILENAME_LEN) :: in_prefix, out_filename
+  character(len=CAMP_MAX_FILENAME_LEN), allocatable :: filename_list(:)
   character(len=1000) :: tmp_str
   type(aero_data_t) :: aero_data
   type(aero_state_t) :: aero_state
   integer :: index, i_repeat, i_spec, out_unit
   integer :: i_file, n_file
   real(kind=dp) :: time, del_t
-  character(len=PMC_UUID_LEN) :: uuid, run_uuid
+  character(len=CAMP_UUID_LEN) :: uuid, run_uuid
   real(kind=dp), allocatable :: particle_num_concs(:), particle_masses(:)
   real(kind=dp), allocatable :: times(:), time_num_concs(:), time_mass_concs(:)
   real(kind=dp), allocatable :: time_species_concs(:,:)

@@ -49,7 +49,7 @@ module camp_camp_box_model_data
     procedure :: print => profile_do_print
   end type profile_t
 
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
   !> Constructor for profile_t
   interface profile_t
     procedure :: profile_constructor
@@ -67,7 +67,7 @@ module camp_camp_box_model_data
     final :: rxn_profile_finalize
   end type rxn_profile_t
 
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
   !> Constructor for rxn_profile_t
   interface rxn_profile_t
     procedure :: rxn_profile_constructor
@@ -89,7 +89,7 @@ module camp_camp_box_model_data
     final :: aero_rep_profile_finalize
   end type aero_rep_profile_t
 
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
   !> Constructor for aero_rep_profile_t
   interface aero_rep_profile_t
     procedure :: aero_rep_profile_constructor
@@ -144,7 +144,7 @@ contains
   !> Constructor for the CAMP box model
   function constructor( config_file ) result( new_obj )
 
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
     use json_module
 #endif
 
@@ -152,7 +152,7 @@ contains
     type(camp_box_model_data_t), pointer :: new_obj
     !> Box model configuration file
     character(len=*), intent(in) :: config_file
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
     type(json_core), target :: json
     type(json_file) :: j_file
     type(json_value), pointer :: j_obj, j_next, j_box_config
@@ -537,7 +537,7 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
   !> Constructor for profile_t
   function profile_constructor( json, j_obj ) result( new_obj )
 
@@ -686,7 +686,7 @@ contains
   end subroutine profile_do_print
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
   !> Constructor for rxn_profile_t
   function rxn_profile_constructor( camp_core, json, j_obj ) result( new_obj )
 
@@ -801,7 +801,7 @@ contains
   end subroutine rxn_profile_finalize
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
   !> Constructor for aero_rep_profile_t
   function aero_rep_profile_constructor( camp_core, json, j_obj ) &
       result( new_obj )

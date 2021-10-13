@@ -589,7 +589,7 @@ contains
     !> Value to pack.
     type(aero_sorted_t), intent(in) :: val
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: prev_position
 
     prev_position = position
@@ -614,7 +614,7 @@ contains
     !> Value to pack.
     type(aero_sorted_t), intent(inout) :: val
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: prev_position, n_bin, n_group, n_class
 
     prev_position = position

@@ -14,15 +14,15 @@ program extract_sectional_aero_time
   use camp_mpi
   use getopt_m
 
-  character(len=PMC_MAX_FILENAME_LEN) :: in_prefix, out_filename
-  character(len=PMC_MAX_FILENAME_LEN), allocatable :: filename_list(:)
+  character(len=CAMP_MAX_FILENAME_LEN) :: in_prefix, out_filename
+  character(len=CAMP_MAX_FILENAME_LEN), allocatable :: filename_list(:)
   type(bin_grid_t) :: bin_grid
   type(aero_data_t) :: aero_data
   type(aero_binned_t) :: aero_binned
   integer :: index, out_unit
   integer :: i_file, n_file, i_spec
   real(kind=dp) :: time, del_t
-  character(len=PMC_UUID_LEN) :: uuid, run_uuid
+  character(len=CAMP_UUID_LEN) :: uuid, run_uuid
   real(kind=dp), allocatable :: times(:), time_num_concs(:), time_mass_concs(:)
   real(kind=dp), allocatable :: time_species_concs(:,:)
   type(option_s) :: opts(2)

@@ -205,7 +205,7 @@ contains
     !> Value to pack.
     type(integer_varray_t), intent(in) :: val
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     logical :: is_allocated
     integer :: prev_position
     integer, allocatable :: tmp_entry(:)
@@ -235,7 +235,7 @@ contains
     !> Value to pack.
     type(integer_varray_t), intent(inout) :: val
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: prev_position
     logical :: is_allocated
     integer, allocatable :: tmp_entry(:)

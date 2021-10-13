@@ -198,7 +198,7 @@ void * rxn_gpu_condensed_phase_arrhenius_pre_calc(ModelDataGPU *model_data,
  * \param time_step Current time step of the itegrator (s)
  * \return The rxn_data pointer advanced by the size of the reaction data
  */
-#ifdef PMC_USE_SUNDIALS
+#ifdef CAMP_USE_SUNDIALS
 #ifdef __CUDA_ARCH__
 __host__ __device__
 #endif
@@ -279,7 +279,7 @@ void rxn_gpu_condensed_phase_arrhenius_calc_deriv_contrib(ModelDataGPU *model_da
  * \param time_step Current time step of the itegrator (s)
  * \return The rxn_data pointer advanced by the size of the reaction data
  */
-#ifdef PMC_USE_SUNDIALS
+#ifdef CAMP_USE_SUNDIALS
 #ifdef __CUDA_ARCH__
 __host__ __device__
 #endif

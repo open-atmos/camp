@@ -15,7 +15,7 @@ module camp_gas_state
   use camp_mpi
   use camp_netcdf
   use camp_camp_state
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
   use mpi
 #endif
 
@@ -479,7 +479,7 @@ contains
     !> Value to average.
     type(gas_state_t), intent(inout) :: val
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     type(gas_state_t) :: val_avg
 
     call gas_state_set_size(val_avg, size(val%mix_rat))
@@ -498,7 +498,7 @@ contains
     !> Value to average.
     type(gas_state_t), intent(inout) :: val
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     type(gas_state_t) :: val_avg
 
     call gas_state_set_size(val_avg, size(val%mix_rat))
@@ -535,7 +535,7 @@ contains
     !> Value to pack.
     type(gas_state_t), intent(in) :: val
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: prev_position
 
     prev_position = position
@@ -558,7 +558,7 @@ contains
     !> Value to pack.
     type(gas_state_t), intent(inout) :: val
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: prev_position
 
     prev_position = position

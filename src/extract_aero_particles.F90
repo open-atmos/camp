@@ -15,12 +15,12 @@ program extract_aero_particles
   use camp_mpi
   use getopt_m
 
-  character(len=PMC_MAX_FILENAME_LEN) :: in_filename, out_filename
+  character(len=CAMP_MAX_FILENAME_LEN) :: in_filename, out_filename
   type(aero_data_t) :: aero_data
   type(aero_state_t) :: aero_state
   integer :: index, i_repeat, i_part, i_spec, out_unit, i_char
   real(kind=dp) :: time, del_t
-  character(len=PMC_UUID_LEN) :: uuid
+  character(len=CAMP_UUID_LEN) :: uuid
   type(option_s) :: opts(2)
 
   call camp_mpi_init()

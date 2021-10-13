@@ -21,7 +21,7 @@ module camp_coagulation
   use camp_mpi
   use camp_coag_kernel
   use camp_aero_sorted
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
   use mpi
 #endif
 

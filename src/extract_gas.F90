@@ -14,15 +14,15 @@ program extract_gas
   use camp_mpi
   use getopt_m
 
-  character(len=PMC_MAX_FILENAME_LEN) :: in_prefix, out_filename
-  character(len=PMC_MAX_FILENAME_LEN), allocatable :: filename_list(:)
+  character(len=CAMP_MAX_FILENAME_LEN) :: in_prefix, out_filename
+  character(len=CAMP_MAX_FILENAME_LEN), allocatable :: filename_list(:)
   character(len=1000) :: tmp_str
   type(gas_data_t) :: gas_data
   type(gas_state_t) :: gas_state
   integer :: index, i_repeat, i_spec, out_unit
   integer :: i_file, n_file
   real(kind=dp) :: time, del_t
-  character(len=PMC_UUID_LEN) :: uuid, run_uuid
+  character(len=CAMP_UUID_LEN) :: uuid, run_uuid
   real(kind=dp), allocatable :: times(:), gas_mixing_ratios(:,:)
   type(option_s) :: opts(2)
 

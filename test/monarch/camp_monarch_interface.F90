@@ -24,10 +24,10 @@ module camp_monarch_interface
   use camp_rxn_data,                  only : rxn_data_t
   use camp_rxn_photolysis
   use camp_solver_stats
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
   use mpi
 #endif
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
   use json_module
 #endif
 
@@ -163,7 +163,7 @@ contains
     ! Computation time variable
     real(kind=dp) :: comp_start, comp_end
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: local_comm
 
     if (present(mpi_comm)) then
@@ -264,7 +264,7 @@ contains
       ! Load the initial concentrations
       call this%load_init_conc()
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
 
       pack_size = this%camp_core%pack_size() + &
               update_data_GMD%pack_size() + &
@@ -390,7 +390,7 @@ contains
 #endif
     end if
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     deallocate(buffer)
 #endif
 
@@ -749,7 +749,7 @@ contains
 
             !write(*,*) "State_var input",this%camp_state%state_var(this%map_camp_id(:)+(z*state_size_per_cell))
 
-            ! Integrate the PMC mechanism
+            ! Integrate the CAMP mechanism
             call cpu_time(comp_start)
             call this%camp_core%solve(this%camp_state, real(time_step*60., kind=dp),solver_stats=solver_stats)
             call cpu_time(comp_end)
@@ -759,7 +759,7 @@ contains
             !call assert_msg(376450931, solver_stats%status_code.eq.0, &
             !"Solver failed with code "// to_string(solver_stats%solver_flag))
 
-#ifdef PMC_DEBUG
+#ifdef CAMP_DEBUG
             ! Check the Jacobian evaluations
             call assert_msg(611569150, solver_stats%Jac_eval_fails.eq.0,&
                           trim( to_string( solver_stats%Jac_eval_fails ) )// &
@@ -907,7 +907,7 @@ contains
 
       !print*, "state", this%camp_state%state_var(:)
 
-      ! Integrate the PMC mechanism
+      ! Integrate the CAMP mechanism
       call cpu_time(comp_start)
       call this%camp_core%solve(this%camp_state, &
               real(time_step*60., kind=dp), solver_stats = solver_stats)
@@ -950,7 +950,7 @@ if(this%ADD_EMISIONS.eq."ON") then
   deallocate(rate_emi)
 end if
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
 
 if (camp_mpi_rank().eq.0) then
   !call solver_stats%print( )
@@ -970,7 +970,7 @@ end if
     !> Interface configuration file path
     character(len=:), allocatable :: config_file
 
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
 
     type(json_core), pointer :: json
     type(json_file) :: j_file
@@ -1413,11 +1413,11 @@ end if
     conc_deviation_perc=0.!0.2
     NUM_VERT_CELLS=size(MONARCH_conc,3)
 
-    ! Reset the species concentrations in PMC and MONARCH
+    ! Reset the species concentrations in CAMP and MONARCH
     this%camp_state%state_var(:) = 0.0
     MONARCH_conc(:,:,:,:) = 0.0
 
-    ! Set initial concentrations in PMC
+    ! Set initial concentrations in CAMP
     this%init_conc(:) = this%init_conc(:)
     this%camp_state%state_var(this%init_conc_camp_id(:)) = this%init_conc(:)
 

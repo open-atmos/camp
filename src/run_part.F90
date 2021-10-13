@@ -26,10 +26,10 @@ module camp_run_part
   use camp_camp_state
   use camp_camp_interface
   use camp_photolysis
-#ifdef PMC_USE_SUNDIALS
+#ifdef CAMP_USE_SUNDIALS
   use camp_condense
 #endif
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
   use mpi
 #endif
 
@@ -101,7 +101,7 @@ module camp_run_part
      !> Whether to run CAMP
      logical :: do_camp_chem
      !> UUID for this simulation.
-     character(len=PMC_UUID_LEN) :: uuid
+     character(len=CAMP_UUID_LEN) :: uuid
   end type run_part_opt_t
 
 contains
@@ -260,7 +260,7 @@ contains
           progress_n_coag = progress_n_coag + n_coag
        end if
 
-#ifdef PMC_USE_SUNDIALS
+#ifdef CAMP_USE_SUNDIALS
        if (run_part_opt%do_condensation) then
           call condense_particles(aero_state, aero_data, old_env_state, &
                env_state, run_part_opt%del_t)
@@ -277,7 +277,7 @@ contains
        progress_n_dil_in = progress_n_dil_in + n_dil_in
        progress_n_dil_out = progress_n_dil_out + n_dil_out
 
-#ifdef PMC_USE_SUNDIALS
+#ifdef CAMP_USE_SUNDIALS
        if (run_part_opt%do_camp_chem) then
           call camp_camp_interface_solve(camp_core, camp_state, &
                camp_pre_aero_state, camp_post_aero_state, aero_data, &
@@ -475,7 +475,7 @@ contains
     !> Value to pack.
     type(run_part_opt_t), intent(in) :: val
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: prev_position
 
     prev_position = position
@@ -526,7 +526,7 @@ contains
     !> Value to pack.
     type(run_part_opt_t), intent(inout) :: val
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: prev_position
 
     prev_position = position

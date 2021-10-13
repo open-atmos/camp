@@ -116,8 +116,8 @@ void rxn_emission_update_env_state(ModelData *model_data, int *rxn_int_data,
   // Calculate the rate constant in (concentration_units/s)
   RATE_ = SCALING_ * BASE_RATE_;
 
-#ifdef PMC_DEBUG_RATE_CONSTANTS
-#ifdef PMC_USE_MPI
+#ifdef CAMP_DEBUG_RATE_CONSTANTS
+#ifdef CAMP_USE_MPI
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   if (rank == 411 || rank == 0) {
@@ -139,7 +139,7 @@ void rxn_emission_update_env_state(ModelData *model_data, int *rxn_int_data,
  * \param rxn_env_data Pointer to the environment-dependent parameters
  * \param time_step Current time step being computed (s)
  */
-#ifdef PMC_USE_SUNDIALS
+#ifdef CAMP_USE_SUNDIALS
 
 void rxn_emission_calc_deriv_contrib(ModelData *model_data,
                                      TimeDerivative time_deriv,
@@ -173,7 +173,7 @@ void rxn_emission_calc_deriv_contrib(ModelData *model_data,
  * \param rxn_env_data Pointer to the environment-dependent parameters
  * \param time_step Current time step being calculated (s)
  */
-#ifdef PMC_USE_SUNDIALS
+#ifdef CAMP_USE_SUNDIALS
 void rxn_emission_calc_jac_contrib(ModelData *model_data, Jacobian jac,
                                    int *rxn_int_data, double *rxn_float_data,
                                    double *rxn_env_data, realtype time_step) {

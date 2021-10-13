@@ -27,7 +27,7 @@ typedef struct {
   double *production_rates;  // Production rates for all species
   double *loss_rates;        // Loss rates for all species
 #endif
-#ifdef PMC_DEBUG
+#ifdef CAMP_DEBUG
   double last_max_loss_precision;  // Maximum loss of precision at last output
 #endif
 } TimeDerivative;
@@ -74,7 +74,7 @@ void time_derivative_add_value(TimeDerivative time_deriv, unsigned int spec_id,
                                double rate_contribution);
 #endif
 
-#ifdef PMC_DEBUG
+#ifdef CAMP_DEBUG
 /** \brief Maximum loss of precision at the last output of the derivative
  *         in bits
  *

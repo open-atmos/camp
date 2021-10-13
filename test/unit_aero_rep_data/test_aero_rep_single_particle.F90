@@ -8,10 +8,10 @@
 !> Test class for the aero_rep_data_t extending types
 program camp_test_aero_rep_data
 
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
   use json_module
 #endif
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
   use mpi
 #endif
   use camp_aero_rep_data
@@ -110,13 +110,13 @@ contains
     type(camp_state_t), pointer :: camp_state
     class(aero_rep_data_t), pointer :: aero_rep
 
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
 
     integer(kind=i_kind) :: i_spec, j_spec, i_rep, i_phase
     type(string_t), allocatable :: rep_names(:)
     character(len=:), allocatable :: rep_name, spec_name, phase_name
     type(string_t), allocatable :: file_list(:), unique_names(:)
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     type(aero_rep_factory_t) :: aero_rep_factory
     type(aero_rep_data_ptr), allocatable :: aero_rep_passed_data_set(:)
     character, allocatable :: buffer(:)
@@ -228,7 +228,7 @@ contains
     call assert(676257369, .not.camp_core%get_aero_rep(rep_name, aero_rep))
     call assert(453526213, .not.associated(aero_rep))
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     pack_size = 0
     do i_rep = 1, size(rep_names)
       call assert(778520709, &

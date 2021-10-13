@@ -18,28 +18,28 @@
 
 /** \brief Result code indicating successful completion.
  */
-#define PMC_CONDENSE_SOLVER_SUCCESS        0
+#define CAMP_CONDENSE_SOLVER_SUCCESS        0
 /** \brief Result code indicating failure to allocate \c y vector.
  */
-#define PMC_CONDENSE_SOLVER_INIT_Y         1
+#define CAMP_CONDENSE_SOLVER_INIT_Y         1
 /** \brief Result code indicating failure to allocate \c abstol vector.
  */
-#define PMC_CONDENSE_SOLVER_INIT_ABSTOL    2
+#define CAMP_CONDENSE_SOLVER_INIT_ABSTOL    2
 /** \brief Result code indicating failure to create the solver.
  */
-#define PMC_CONDENSE_SOLVER_INIT_CVODE_MEM 3
+#define CAMP_CONDENSE_SOLVER_INIT_CVODE_MEM 3
 /** \brief Result code indicating failure to initialize the solver.
  */
-#define PMC_CONDENSE_SOLVER_INIT_CVODE     4
+#define CAMP_CONDENSE_SOLVER_INIT_CVODE     4
 /** \brief Result code indicating failure to set tolerances.
  */
-#define PMC_CONDENSE_SOLVER_SVTOL          5
+#define CAMP_CONDENSE_SOLVER_SVTOL          5
 /** \brief Result code indicating failure to set maximum steps.
  */
-#define PMC_CONDENSE_SOLVER_SET_MAX_STEPS  6
+#define CAMP_CONDENSE_SOLVER_SET_MAX_STEPS  6
 /** \brief Result code indicating failure of the solver.
  */
-#define PMC_CONDENSE_SOLVER_FAIL           7
+#define CAMP_CONDENSE_SOLVER_FAIL           7
 
 static int condense_vf(realtype t, N_Vector y, N_Vector ydot, void *user_data);
 
@@ -87,11 +87,11 @@ int condense_solver(int neq, double *x_f, double *abstol_f, double reltol_f,
 
 	y = N_VNew_Serial(neq);
 	if (condense_check_flag((void *)y, "N_VNew_Serial", 0))
-                return PMC_CONDENSE_SOLVER_INIT_Y;
+                return CAMP_CONDENSE_SOLVER_INIT_Y;
 
 	abstol = N_VNew_Serial(neq);
 	if (condense_check_flag((void *)abstol, "N_VNew_Serial", 0))
-                return PMC_CONDENSE_SOLVER_INIT_ABSTOL;
+                return CAMP_CONDENSE_SOLVER_INIT_ABSTOL;
 
 	y_data = NV_DATA_S(y);
 	abstol_data = NV_DATA_S(abstol);
@@ -106,19 +106,19 @@ int condense_solver(int neq, double *x_f, double *abstol_f, double reltol_f,
 
 	cvode_mem = CVodeCreate(CV_BDF, CV_NEWTON);
 	if (condense_check_flag((void *)cvode_mem, "CVodeCreate", 0))
-                return PMC_CONDENSE_SOLVER_INIT_CVODE_MEM;
+                return CAMP_CONDENSE_SOLVER_INIT_CVODE_MEM;
 
 	flag = CVodeInit(cvode_mem, condense_vf, t_initial, y);
 	if (condense_check_flag(&flag, "CVodeInit", 1))
-                return PMC_CONDENSE_SOLVER_INIT_CVODE;
+                return CAMP_CONDENSE_SOLVER_INIT_CVODE;
 
 	flag = CVodeSVtolerances(cvode_mem, reltol, abstol);
 	if (condense_check_flag(&flag, "CVodeSVtolerances", 1))
-                return PMC_CONDENSE_SOLVER_SVTOL;
+                return CAMP_CONDENSE_SOLVER_SVTOL;
 
 	flag = CVodeSetMaxNumSteps(cvode_mem, 100000);
 	if (condense_check_flag(&flag, "CVodeSetMaxNumSteps", 1))
-                return PMC_CONDENSE_SOLVER_SET_MAX_STEPS;
+                return CAMP_CONDENSE_SOLVER_SET_MAX_STEPS;
 
         /*******************************************************/
 	// dense solver
@@ -152,7 +152,7 @@ int condense_solver(int neq, double *x_f, double *abstol_f, double reltol_f,
 	t = t_initial;
 	flag = CVode(cvode_mem, t_final, y, &t, CV_NORMAL);
 	if (condense_check_flag(&flag, "CVode", 1))
-                return PMC_CONDENSE_SOLVER_FAIL;
+                return CAMP_CONDENSE_SOLVER_FAIL;
 
 	for (i = 0; i < neq; i++) {
 		x_f[i] = y_data[i];
@@ -161,7 +161,7 @@ int condense_solver(int neq, double *x_f, double *abstol_f, double reltol_f,
 	N_VDestroy_Serial(y);
 	N_VDestroy_Serial(abstol);
 	CVodeFree(&cvode_mem);
-	return PMC_CONDENSE_SOLVER_SUCCESS;
+	return CAMP_CONDENSE_SOLVER_SUCCESS;
 }
 
 void condense_vf_f(int neq, realtype t, double *y_f, double *y_dot);

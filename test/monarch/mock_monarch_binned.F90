@@ -13,7 +13,7 @@ program mock_monarch
                                                 to_string
   use camp_monarch_interface
   use camp_mpi
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
   use json_module
 #endif
 
@@ -167,7 +167,7 @@ program mock_monarch
   integer(kind=i_kind) :: size_gas_species_to_print, size_aerosol_species_to_print
 
   ! MPI
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
   character, allocatable :: buffer(:)
   integer(kind=i_kind) :: pos, pack_size
 #endif
@@ -460,7 +460,7 @@ program mock_monarch
 
     end do
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     if (camp_mpi_rank().eq.0) then
       write(*,*) "Model run time: ", comp_time, " s"
     end if
@@ -550,7 +550,7 @@ program mock_monarch
 
   !print*,"MPI_FINALIZE RANK",camp_mpi_rank()
 
-!#ifdef PMC_USE_MPI
+!#ifdef CAMP_USE_MPI
 
   deallocate(camp_interface)
 
@@ -1020,7 +1020,7 @@ contains
         call json%add(photo_rates, trim(i_str), auxr)
       end do
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
       mpi_rank = camp_mpi_rank()
 
       write(mpi_rank_str,*) mpi_rank

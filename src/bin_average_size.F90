@@ -30,7 +30,7 @@ program bin_average_size
   character(len=1000) :: tmp_str
   logical :: record_removals, dry_volume, bin_center, record_optical
   logical :: preserve_number
-  character(len=PMC_UUID_LEN) :: uuid
+  character(len=CAMP_UUID_LEN) :: uuid
 
   ! process commandline arguments
   if (command_argument_count() .ne. 8) then

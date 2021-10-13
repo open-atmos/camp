@@ -20,7 +20,7 @@ program camp_test_ZSR_aerosol_water
   use camp_aero_rep_factory
   use camp_aero_rep_single_particle
   use camp_solver_stats
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
   use json_module
 #endif
   use camp_mpi
@@ -110,7 +110,7 @@ contains
             i_RH, i_spec, idx_phase
     real(kind=dp) :: RH_step, RH, ppm_to_RH, molal_NaCl, molal_CaCl2, &
             NaCl_conc, CaCl2_conc, water_NaCl, water_CaCl2, temp, pressure
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     character, allocatable :: buffer(:), buffer_copy(:)
     integer(kind=i_kind) :: pack_size, pos, i_elem, results
 #endif
@@ -126,7 +126,7 @@ contains
     ! Set RH step (unitless)
     RH_step = 1.0/NUM_RH_STEP
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     ! Load the model data on root process and pass it to process 1 for solving
     if (camp_mpi_rank().eq.0) then
 #endif
@@ -168,7 +168,7 @@ contains
       call assert(427633087, idx_Cl_m.gt.0)
       call assert(317220276, idx_Ca_pp.gt.0)
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
       ! pack the camp core
       pack_size = camp_core%pack_size()
       allocate(buffer(pack_size))
@@ -240,7 +240,7 @@ contains
       ppm_to_RH = exp(ppm_to_RH)  ! VP of water (atm)
       ppm_to_RH = (pressure/101325.0d0) / ppm_to_RH * 1.0d-6 ! ppm -> RH (0-1)
 
-#ifdef PMC_DEBUG
+#ifdef CAMP_DEBUG
       ! Evaluate the Jacobian during solving
       solver_stats%eval_Jac = .true.
 #endif
@@ -261,7 +261,7 @@ contains
                               solver_stats = solver_stats)
         model_conc(i_RH,:) = camp_state%state_var(:)
 
-#ifdef PMC_DEBUG
+#ifdef CAMP_DEBUG
         ! Check the Jacobian evaluations
         call assert_msg(961242557, solver_stats%Jac_eval_fails.eq.0, &
                         trim( to_string( solver_stats%Jac_eval_fails ) )// &
@@ -330,7 +330,7 @@ contains
 
       deallocate(camp_state)
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
       ! convert the results to an integer
       if (run_ZSR_aerosol_water_test) then
         results = 0

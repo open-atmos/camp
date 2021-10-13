@@ -20,7 +20,7 @@ void sub_model_set_jac_map(ModelData *model_data, Jacobian jac);
 void sub_model_update_ids(ModelData *model_data, int *deriv_ids, Jacobian jac);
 void sub_model_update_env_state(ModelData *model_data);
 void sub_model_calculate(ModelData *model_data);
-#ifdef PMC_USE_SUNDIALS
+#ifdef CAMP_USE_SUNDIALS
 void sub_model_get_jac_contrib(ModelData *model_data, double *J_data,
                                realtype time_step);
 #endif

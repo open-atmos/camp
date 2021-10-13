@@ -43,7 +43,7 @@ void camp_solver_update_model_state_gpu(N_Vector solver_state, SolverData *sd,
 /*
 __device__
 void cudaDevicef0(
-#ifdef PMC_DEBUG_GPU
+#ifdef CAMP_DEBUG_GPU
         int counterDeriv2,
 #endif
         //check_model_state

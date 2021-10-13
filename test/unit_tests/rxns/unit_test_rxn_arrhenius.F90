@@ -409,7 +409,7 @@ contains
     !> MPI communicator
     integer, intent(in), optional :: comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: l_comm
 
     if (present(comm)) then
@@ -443,7 +443,7 @@ contains
     !> MPI communicator
     integer, intent(in), optional ::comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: prev_position, l_comm
 
     if (present(comm)) then
@@ -480,7 +480,7 @@ contains
     !> MPI communicator
     integer, intent(in), optional :: comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: prev_position, l_comm
 
     if (present(comm)) then

@@ -8,7 +8,7 @@
 /** \file
  * \brief Reaction solver functions
  */
-#define PMC_DEBUG_SPEC_ 118
+#define CAMP_DEBUG_SPEC_ 118
 
 #include "rxn_solver.h"
 #include <stdio.h>
@@ -253,7 +253,7 @@ void rxn_update_env_state(ModelData *model_data) {
  * \param time_deriv TimeDerivative to use to build derivative array
  * \param time_step Current model time step (s)
  */
-#ifdef PMC_USE_SUNDIALS
+#ifdef CAMP_USE_SUNDIALS
 
 #ifdef DERIV_LOOP_CELLS_RXN
 
@@ -372,7 +372,7 @@ void rxn_calc_deriv(ModelData *model_data, TimeDerivative time_deriv,
       model_data->grid_cell_state =
           &(model_data->total_state[i_cell * model_data->n_per_cell_state_var]);
       model_data->grid_cell_env =
-          &(model_data->total_env[i_cell * PMC_NUM_ENV_PARAM_]);
+          &(model_data->total_env[i_cell * CAMP_NUM_ENV_PARAM_]);
     model_data->grid_cell_rxn_env_data =
             &(model_data->rxn_env_data[i_cell * model_data->n_rxn_env_data]);
 
@@ -461,7 +461,7 @@ void rxn_calc_deriv(ModelData *model_data, TimeDerivative time_deriv,
  * \param time_deriv TimeDerivative to use to build derivative array
  * \param time_step Current model time step (s)
  */
-#ifdef PMC_USE_SUNDIALS
+#ifdef CAMP_USE_SUNDIALS
 void rxn_calc_deriv_aeros(ModelData *model_data,
                                    TimeDerivative time_deriv,
                                    realtype time_step) {
@@ -504,7 +504,7 @@ void rxn_calc_deriv_aeros(ModelData *model_data,
  * \param jac The reaction Jacobian (for one grid cell)
  * \param time_step Current model time step (s)
  */
-#ifdef PMC_USE_SUNDIALS
+#ifdef CAMP_USE_SUNDIALS
 void rxn_calc_jac(ModelData *model_data, Jacobian jac, realtype time_step) {
   // Get the number of reactions
   int n_rxn = model_data->n_rxn;
@@ -591,7 +591,7 @@ void rxn_calc_jac(ModelData *model_data, Jacobian jac, realtype time_step) {
  * \param jac The reaction Jacobian (for one grid cell)
  * \param time_step Current model time step (s)
  */
-#ifdef PMC_USE_SUNDIALS
+#ifdef CAMP_USE_SUNDIALS
 
 void rxn_calc_jac_specific_types(ModelData *model_data, Jacobian jac,
                                  realtype time_step) {

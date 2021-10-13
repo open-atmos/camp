@@ -26,7 +26,7 @@ void solver_set_spec_name(void *solver_data, char *spec_name,
                           int size_spec_name, int i);
 void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
                        int max_steps, int max_conv_fails);
-#ifdef PMC_DEBUG
+#ifdef CAMP_DEBUG
 int solver_set_debug_out(void *solver_data, bool do_output);
 int solver_set_eval_jac(void *solver_data, bool eval_Jac);
 #endif
@@ -46,12 +46,12 @@ void export_camp_input(void *solver_data, double *init_state, char *path);
 void solver_free(void *solver_data);
 void model_free(ModelData model_data);
 
-#ifdef PMC_USE_SUNDIALS
+#ifdef CAMP_USE_SUNDIALS
 /* Functions called by the solver */
 int f(realtype t, N_Vector y, N_Vector deriv, void *model_data);
 int Jac(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *model_data,
         N_Vector tmp1, N_Vector tmp2, N_Vector tmp3);
-#ifdef PMC_USE_GPU
+#ifdef CAMP_USE_GPU
 int f_gpu(realtype t, N_Vector y, N_Vector deriv, void *model_data);
 int Jac_gpu(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *model_data,
         N_Vector tmp1, N_Vector tmp2, N_Vector tmp3);
@@ -79,7 +79,7 @@ static void print_derivative(SolverData *sd, N_Vector deriv);
 static void print_derivative_in_out(SolverData *sd, N_Vector deriv_in, N_Vector deriv);
 bool is_anything_going_on_here(SolverData *sd, realtype t_initial,
                                realtype t_final);
-#ifdef PMC_USE_GSL
+#ifdef CAMP_USE_GSL
 double gsl_f(double x, void *param);
 typedef struct {
   int ind_var;              // independent variable index

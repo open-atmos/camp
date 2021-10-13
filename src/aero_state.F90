@@ -24,7 +24,7 @@ module camp_aero_state
   use camp_aero_info_array
   use camp_aero_weight
   use camp_aero_weight_array
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
   use mpi
 #endif
 
@@ -1673,7 +1673,7 @@ contains
     !> means total mixing).
     real(kind=dp), optional, intent(in) :: specify_prob_transfer
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: rank, n_proc, i_proc, ierr
     integer :: buffer_size, buffer_size_check
     character, allocatable :: buffer(:)
@@ -1750,7 +1750,7 @@ contains
     !> Array of aero_states to receives (one per process).
     type(aero_state_t), intent(inout) :: recv(size(send))
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     character, allocatable :: sendbuf(:), recvbuf(:)
     integer :: sendcounts(size(send)), sdispls(size(send))
     integer :: recvcounts(size(send)), rdispls(size(send))
@@ -2130,7 +2130,7 @@ contains
     !> Value to pack.
     type(aero_state_t), intent(in) :: val
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: prev_position, i_group
 
     prev_position = position
@@ -2156,7 +2156,7 @@ contains
     !> Value to pack.
     type(aero_state_t), intent(inout) :: val
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: prev_position, i_group, n_group
 
     val%valid_sort = .false.
@@ -2183,7 +2183,7 @@ contains
     !> Aero data values.
     type(aero_data_t), intent(in) :: aero_data
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     type(aero_state_t) :: aero_state_transfer
     integer :: n_proc, ierr, status(MPI_STATUS_SIZE)
     integer :: buffer_size, max_buffer_size, i_proc, position
@@ -2194,7 +2194,7 @@ contains
        aero_state_total = aero_state
     end if
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
 
     if (camp_mpi_rank() /= 0) then
        ! send data from remote processes

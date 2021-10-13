@@ -209,7 +209,7 @@ contains
     !> Value to pack.
     type(chamber_t), intent(in) :: val
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: prev_position, i
 
     prev_position = position
@@ -236,7 +236,7 @@ contains
     !> Value to pack.
     type(chamber_t), intent(inout) :: val
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: prev_position, i
 
     prev_position = position

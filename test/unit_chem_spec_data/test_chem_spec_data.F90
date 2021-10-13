@@ -8,7 +8,7 @@
 !> Unit tests for the camp_chem_spec_data module.
 program camp_chem_spec_data_test
 
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
   use json_module
 #endif
   use camp_chem_spec_data
@@ -51,7 +51,7 @@ contains
 
     type(chem_spec_data_t), pointer :: spec_data
     integer(kind=i_kind) :: i_spec
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
     character(len=:), allocatable :: json_string
 
     type(json_file) :: j_file

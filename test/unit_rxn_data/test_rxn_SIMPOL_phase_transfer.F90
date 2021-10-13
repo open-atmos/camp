@@ -21,7 +21,7 @@ program camp_test_SIMPOL_phase_transfer
   use camp_aero_rep_modal_binned_mass
   use camp_aero_rep_single_particle
   use camp_solver_stats
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
   use json_module
 #endif
   use camp_mpi
@@ -116,7 +116,7 @@ contains
     real(kind=dp) :: VP_ethanol, k_forward, k_backward
     real(kind=dp) :: equil_ethanol, equil_ethanol_aq
     real(kind=dp) :: total_mass, water_mass, VP_0_mass
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     character, allocatable :: buffer(:), buffer_copy(:)
     integer(kind=i_kind) :: pack_size, pos, i_elem, results
 #endif
@@ -166,7 +166,7 @@ contains
     ! Set output time step (s)
     time_step = 1.0d-11
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     ! Load the model data on root process and pass it to process 1 for solving
     if (camp_mpi_rank().eq.0) then
 #endif
@@ -236,7 +236,7 @@ contains
       call assert(379146109, idx_ethanol_aq.gt.0)
       call assert(208989205, idx_H2O_aq.gt.0)
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
       ! pack the camp core
       pack_size = camp_core%pack_size()
       if (scenario.eq.1) then
@@ -392,7 +392,7 @@ contains
       ! Set the initial state in the model
       camp_state%state_var(:) = model_conc(0,:)
 
-#ifdef PMC_DEBUG
+#ifdef CAMP_DEBUG
       ! Evaluate the Jacobian during solving
       solver_stats%eval_Jac = .true.
 #endif
@@ -405,7 +405,7 @@ contains
                               solver_stats = solver_stats)
         model_conc(i_time,:) = camp_state%state_var(:)
 
-#ifdef PMC_DEBUG
+#ifdef CAMP_DEBUG
         ! Check the Jacobian evaluations
         call assert_msg(173108608, solver_stats%Jac_eval_fails.eq.0, &
                         trim( to_string( solver_stats%Jac_eval_fails ) )// &
@@ -474,7 +474,7 @@ contains
 #endif
       deallocate(camp_state)
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
       ! convert the results to an integer
       if (run_SIMPOL_phase_transfer_test) then
         results = 0

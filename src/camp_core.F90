@@ -99,10 +99,10 @@
 !> The camp_core_t structure and associated subroutines.
 module camp_camp_core
 
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
   use json_module
 #endif
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
   use mpi
 #endif
   use camp_aero_phase_data
@@ -326,7 +326,7 @@ contains
     !> Part-MC input file paths
     character(len=*), intent(in) :: input_file_path
 
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
     type(json_core), target :: json
     type(json_file) :: j_file
     type(json_value), pointer :: j_obj, j_next
@@ -448,7 +448,7 @@ contains
     type(string_t), allocatable, intent(in) :: input_file_path(:)
 
     integer(kind=i_kind) :: i_file, cell
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
     type(json_core), pointer :: json
     type(json_file) :: j_file
     type(json_value), pointer :: j_obj, j_next
@@ -1174,7 +1174,7 @@ contains
     call assert_msg(662920365, .not.this%solver_is_initialized, &
             "Attempting to initialize the solver twice.")
 
-#ifdef PMC_DEBUG2_GPU
+#ifdef CAMP_DEBUG2_GPU
     spec_names = this%unique_names()
 #endif
 
@@ -1595,7 +1595,7 @@ contains
     end do
     nullify(photo_rates)
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     mpi_rank = camp_mpi_rank()
 
     write(mpi_rank_str,*) mpi_rank
@@ -1646,7 +1646,7 @@ contains
             i_sub_model, l_comm
     type(string_t), allocatable :: spec_names(:)
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
 
     character(len=:), allocatable :: spec_name
     integer(kind=i_kind) :: max_spec_name_size = 128
@@ -1741,7 +1741,7 @@ contains
     !> MPI communicator
     integer, intent(in), optional :: comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     type(aero_rep_factory_t) :: aero_rep_factory
     type(sub_model_factory_t) :: sub_model_factory
     class(aero_rep_data_t), pointer :: aero_rep
@@ -1840,7 +1840,7 @@ contains
     integer, intent(in), optional :: comm
     integer :: i_cell, i_state_elem
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     type(aero_rep_factory_t) :: aero_rep_factory
     type(sub_model_factory_t) :: sub_model_factory
     integer(kind=i_kind) :: i, j, i_mech, i_phase, i_rep, i_sub_model, &

@@ -24,7 +24,7 @@ program camp_test_eqsam_v03d
   use camp_rxn_data
   use camp_rxn_photolysis
   use camp_property
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
   use json_module
 #endif
 

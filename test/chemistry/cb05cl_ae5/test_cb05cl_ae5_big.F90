@@ -29,13 +29,13 @@ program camp_test_cb05cl_ae5
   use camp_rxn_photolysis
   use camp_rxn_factory
   use camp_property
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
   use json_module
 #endif
   use camp_netcdf
 
-!todo hide PMC_MONARCH_INPUT until N2 and other init concs can be obtained... (otherwise the results will be always different)
-!#define PMC_MONARCH_INPUT
+!todo hide CAMP_MONARCH_INPUT until N2 and other init concs can be obtained... (otherwise the results will be always different)
+!#define CAMP_MONARCH_INPUT
 
   ! EBI Solver
   use module_bsc_chem_data
@@ -52,7 +52,7 @@ program camp_test_cb05cl_ae5
   integer(kind=i_kind), parameter :: CAMP_FILE_UNIT = 12
   ! CAMP-chem output profiling stats file unit
   integer(kind=i_kind), parameter :: CAMP_FILE_UNIT_PROFILE = 13
-#ifdef PMC_MONARCH_INPUT
+#ifdef CAMP_MONARCH_INPUT
   ! EBI solver output file unit
   integer(kind=i_kind), parameter :: CAMP_EBI_FILE_UNIT = 14
   ! file unit
@@ -169,7 +169,7 @@ contains
 
     ! EBI-solver species names
     type(string_t), dimension(NUM_EBI_SPEC) :: ebi_spec_names
-#ifdef PMC_MONARCH_INPUT
+#ifdef CAMP_MONARCH_INPUT
     ! EBI-solver species names in MONARCH order
     type(string_t), dimension(NUM_EBI_SPEC) :: monarch_spec_names
 #endif
@@ -187,7 +187,7 @@ contains
     logical :: is_sunny
     ! Photolysis rates (\min)
     real, allocatable :: photo_rates(:)
-#ifdef PMC_MONARCH_INPUT
+#ifdef CAMP_MONARCH_INPUT
     real, allocatable :: new_rates(:)
 #endif
     ! Temperature (K)
@@ -213,7 +213,7 @@ contains
     class(rxn_data_t), pointer :: rxn
     type(property_t), pointer :: prop_set
     character(len=:), allocatable :: key, spec_name, string_val, camp_input_file
-#ifdef PMC_MONARCH_INPUT
+#ifdef CAMP_MONARCH_INPUT
     character(500) :: name_cell
 #endif
     real(kind=dp) :: real_val, camp_rate, camp_rate_const
@@ -239,7 +239,7 @@ contains
     ! Arrays to hold starting concentrations
     real(kind=dp), allocatable :: ebi_init(:), kpp_init(:), camp_init(:)
     real(kind=dp), allocatable :: temperatures(:), pressures(:)
-#ifdef PMC_MONARCH_INPUT
+#ifdef CAMP_MONARCH_INPUT
     real(kind=dp), dimension(NUM_EBI_SPEC) :: ebi_monarch_init
     integer, dimension(NUM_EBI_SPEC) :: map_ebi_monarch
     integer :: rank_monarch
@@ -257,7 +257,7 @@ contains
     integer :: status_code
     integer :: camp_multicells
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     character, allocatable :: buffer(:), buffer_copy(:)
     integer(kind=i_kind) :: pack_size, pos, i_elem, results, mpi_threads
 #endif
@@ -326,7 +326,7 @@ contains
     LOSS(:) = 0.0
     PNEG(:) = 0.0
     ! Set the timestep (min)
-#ifdef PMC_MONARCH_INPUT
+#ifdef CAMP_MONARCH_INPUT
     EBI_TMSTEP = 3. !monarch:3 !orig:0.1
 #else
     EBI_TMSTEP = 0.1
@@ -359,7 +359,7 @@ contains
     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     !!! Initialize camp-chem !!!
     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     if( camp_mpi_rank( ) .eq. 0 ) then
 #endif
     call cpu_time(comp_start)
@@ -408,7 +408,7 @@ contains
     end do
     call assert(322300770, n_photo_rxn.eq.i_photo_rxn)
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
 
     ! Pack the cores and the unit test
     pack_size = camp_core%pack_size( )
@@ -500,7 +500,7 @@ contains
     ! Set the photolysis rates (dummy values for solver comparison)
     is_sunny = .true.
     allocate(photo_rates(n_photo_rxn))
-#ifdef PMC_MONARCH_INPUT
+#ifdef CAMP_MONARCH_INPUT
     allocate(new_rates(n_photo_rxn))
 
     !v48
@@ -543,7 +543,7 @@ contains
         call jo2_rate_update%set_rate(real(0.0, kind=dp))
         call camp_core%update_data(jo2_rate_update,i_cell+1)
         do i_photo_rxn = 1, n_photo_rxn
-#ifdef PMC_MONARCH_INPUT
+#ifdef CAMP_MONARCH_INPUT
           call rate_update(i_photo_rxn)%set_rate(real(photo_rates(i_photo_rxn)/60, kind=dp))
 #else
           call rate_update(i_photo_rxn)%set_rate(real(0.0001+0.0000001*(i_cell-1), kind=dp))
@@ -556,7 +556,7 @@ contains
       call jo2_rate_update%set_rate(real(0.0, kind=dp))
       call camp_core%update_data(jo2_rate_update)
       do i_photo_rxn = 1, n_photo_rxn
-#ifdef PMC_MONARCH_INPUT
+#ifdef CAMP_MONARCH_INPUT
         call rate_update(i_photo_rxn)%set_rate(real(photo_rates(i_photo_rxn)/60, kind=dp))
 #else
         !print*,i_photo_rxn, photo_rates(i_photo_rxn)/60
@@ -596,7 +596,7 @@ contains
     allocate(pressures(n_cells))
     pressures(:) = pressure*const%air_std_press
 
-#ifdef PMC_MONARCH_INPUT
+#ifdef CAMP_MONARCH_INPUT
     write(*,*) "size(camp_state%state_var)",size(camp_state%state_var), "state_size_cell", state_size_cell
 
     rank_monarch=0!411
@@ -787,7 +787,7 @@ contains
     call assert(892572866, associated(prop_set))
     call assert(722411962, prop_set%get_real(key, real_val))
 
-#ifdef PMC_MONARCH_INPUT
+#ifdef CAMP_MONARCH_INPUT
     do i_cell = 0, n_cells-1
       model_conc(i_cell*state_size_cell+i_DUMMY) = real_val
       model_conc(i_cell*state_size_cell+i_M)=camp_state%state_var(i_M)
@@ -806,7 +806,7 @@ contains
             action="write")
     open(CAMP_FILE_UNIT, file="out/cb05cl_ae5_camp_results.txt", status="replace", &
             action="write")
-#ifdef PMC_MONARCH_INPUT
+#ifdef CAMP_MONARCH_INPUT
     open(CAMP_EBI_FILE_UNIT, file="out/cb05cl_ae5_camp_ebi_diff.txt", status="replace", &
             action="write")
     open(CAMP_KPP_FILE_UNIT, file="out/cb05cl_ae5_camp_kpp_diff.txt", status="replace", &
@@ -825,7 +825,7 @@ contains
     KPP_NSPEC)
     write(CAMP_FILE_UNIT,*) "time ", (camp_spec_names(i_spec)%string//" ", i_spec=1, &
             size(camp_spec_names))
-#ifdef PMC_MONARCH_INPUT
+#ifdef CAMP_MONARCH_INPUT
     write(CAMP_EBI_FILE_UNIT,*) "CAMP order: ", (camp_spec_names(i_spec)%string//" ", i_spec=1, &
             NUM_EBI_SPEC)
 #endif
@@ -896,7 +896,7 @@ contains
     KPP_PRESS = pressure * 1013.25 ! KPP pressure in hPa
     CALL KPP_Update_RCONST()
 
-#ifdef PMC_MONARCH_INPUT
+#ifdef CAMP_MONARCH_INPUT
     state_size_cell = size(chem_spec_data%get_spec_names())
 #else
     state_size_cell = size(chem_spec_data%get_spec_names()) !size(camp_state%state_var) / n_cells
@@ -918,14 +918,14 @@ contains
         do j = 1, state_size_cell
           if(camp_multicells.eq.1) then
             !todo is this necessary when everything is stored in model_conc and updated later?
-#ifdef PMC_MONARCH_INPUT
+#ifdef CAMP_MONARCH_INPUT
             camp_state%state_var(i_cell*state_size_cell+j) = camp_state%state_var(i_cell*state_size_cell+j) + offset_conc*i_cell !0.1*j
             !camp_state%state_var(i_cell*state_size_cell+j) = model_conc(i_block*(state_size_cell*n_cells_block)+i_cell*state_size_cell+j) + offset_conc*i_cell
 #else
             camp_state%state_var(i_cell*state_size_cell+j) = camp_state%state_var(j) + offset_conc*i_cell !0.1*j !todo this should be i_cell...repeat tests
 #endif
           else
-#ifdef PMC_MONARCH_INPUT
+#ifdef CAMP_MONARCH_INPUT
             camp_state%state_var(j) = model_conc(j) + offset_conc*i_cell !+ 0.1*i_cell
 #else
             model_conc(i_cell*state_size_cell+j) = camp_state%state_var(j) + offset_conc*i_cell !+ 0.1*i_cell !todo improve this part (make it more clear)
@@ -949,7 +949,7 @@ contains
     allocate(ebi_init(size(YC)))
     allocate(kpp_init(size(KPP_C)))
 
-!#ifdef PMC_USE_MPI
+!#ifdef CAMP_USE_MPI
     !allocate(camp_init(size(camp_state%state_var/mpi_threads)))
     allocate(camp_init(size(camp_state%state_var)))
 !#else
@@ -1018,7 +1018,7 @@ contains
             end do
         if(camp_multicells.eq.1) then
             do i = 0, n_cells_block-1
-#ifdef PMC_MONARCH_INPUT
+#ifdef CAMP_MONARCH_INPUT
 #else
               !camp_state%state_var( &
               !  chem_spec_data%gas_state_id( &
@@ -1046,7 +1046,7 @@ contains
         comp_kpp = comp_kpp + (comp_end-comp_start)
 
         if(camp_multicells.eq.1) then
-#ifndef PMC_MULTICELLS2
+#ifndef CAMP_MULTICELLS2
           n_blocks=1
 #endif
           do i_block = 0, n_blocks-1
@@ -1062,7 +1062,7 @@ contains
 
             call cpu_time(comp_start)
 
-#ifndef PMC_MULTICELLS2
+#ifndef CAMP_MULTICELLS2
             call camp_core%solve(camp_state, real(EBI_TMSTEP*60.0, kind=dp), &
                     n_cells=1, solver_stats = solver_stats)
 #else
@@ -1074,7 +1074,7 @@ contains
             call cpu_time(comp_end)
             comp_camp = comp_camp + (comp_end-comp_start)
           end do
-#ifndef PMC_MULTICELLS2
+#ifndef CAMP_MULTICELLS2
           n_cells=n_cells_block*n_blocks
 #endif
         else
@@ -1112,7 +1112,7 @@ contains
     write(*,*) "KPP calculation time: ", comp_kpp," s"
     write(*,*) "CAMP-chem calculation time: ", comp_camp," s"
 
-#ifdef PMC_MONARCH_INPUT
+#ifdef CAMP_MONARCH_INPUT
     write(CAMP_EBI_FILE_UNIT,*) "Repeat", i_repeat, "timestep ", NUM_TIME_STEPS
     write(CAMP_EBI_FILE_UNIT,*) "spec_name, concentrations rel. error [(camp_state-ebi)/(camp_state+ebi)], camp_state, ebi"
     write(CAMP_KPP_FILE_UNIT,*) "Repeat", i_repeat, "timestep ", NUM_TIME_STEPS
@@ -1131,7 +1131,7 @@ contains
     ! Compare the results
     ! EBI <-> CAMP-chem
     do i_spec = 1, NUM_EBI_SPEC
-#ifdef PMC_COMPARE
+#ifdef CAMP_COMPARE
       call assert_msg(749090387, almost_equal(real(YC(i_spec), kind=dp), &
           camp_state%state_var( &
                   chem_spec_data%gas_state_id( &
@@ -1152,7 +1152,7 @@ contains
                   ebi_spec_names(i_spec)%string)))))
 #endif
 
-#ifdef PMC_MONARCH_INPUT
+#ifdef CAMP_MONARCH_INPUT
       associate (camp_var=>camp_state%state_var( &
               chem_spec_data%gas_state_id( &
                       monarch_spec_names(i_spec)%string)))
@@ -1166,7 +1166,7 @@ contains
 #endif
     end do
 
-#ifdef PMC_COMPARE_KPP
+#ifdef CAMP_COMPARE_KPP
     ! KPP <-> CAMP-chem
     do i_spec = 1, KPP_NSPEC
       str_temp%string = trim(KPP_SPC_NAMES(i_spec))
@@ -1208,7 +1208,7 @@ contains
     close(KPP_FILE_UNIT)
     close(CAMP_FILE_UNIT)
 
-#ifdef PMC_MONARCH_INPUT
+#ifdef CAMP_MONARCH_INPUT
     close(CAMP_EBI_FILE_UNIT)
     close(CAMP_KPP_FILE_UNIT)
     close(EBI_KPP_FILE_UNIT)
@@ -1297,7 +1297,7 @@ contains
     integer :: k_n = 5 !48
     integer :: t_n = 1 !1
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     if( camp_mpi_rank( ) .eq. 0 ) then
 #endif
 
@@ -1392,7 +1392,7 @@ contains
     deallocate (aux_array)
     deallocate(water_concs)
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     else
       write (*,*) "Not rank 0!"
     end if
@@ -2049,7 +2049,7 @@ contains
     call get_command_argument(id, arg, status=status_code)
 
     if (LEN_TRIM(arg) == 0) then
-#ifdef PMC_DEBUG
+#ifdef CAMP_DEBUG
       print*, "Argument ", id, " not present, setting default values..."
 #endif
     else

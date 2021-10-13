@@ -21,10 +21,10 @@
 #include "aero_rep_solver.h"
 #include "rxn_solver.h"
 #include "sub_model_solver.h"
-#ifdef PMC_USE_GPU
+#ifdef CAMP_USE_GPU
 #include "cuda/cvode_gpu.h"
 #endif
-#ifdef PMC_USE_GSL
+#ifdef CAMP_USE_GSL
 #include <gsl/gsl_deriv.h>
 #include <gsl/gsl_math.h>
 #include <gsl/gsl_roots.h>
@@ -32,7 +32,7 @@
 #include "camp_debug.h"
 #include "debug_and_stats/camp_debug_2.h"
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
 #include <mpi.h>
 #endif
 
@@ -104,8 +104,8 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
     exit(EXIT_FAILURE);
   }
 
-#ifdef PMC_USE_SUNDIALS
-#ifdef PMC_DEBUG
+#ifdef CAMP_USE_SUNDIALS
+#ifdef CAMP_DEBUG
   // Default to no debugging output
   sd->debug_out = SUNFALSE;
 
@@ -143,7 +143,7 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
   // Save the number of solver variables per grid cell
   sd->model_data.n_per_cell_dep_var = n_dep_var;
 
-#ifdef PMC_USE_SUNDIALS
+#ifdef CAMP_USE_SUNDIALS
 
 #ifdef DERIV_LOOP_CELLS_RXN
   int n_time_deriv_specs=n_dep_var;
@@ -370,14 +370,14 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
   sd->model_data.sub_model_env_idx[0] = 0;
   sd->use_cpu = 1;
 
-#ifdef PMC_USE_GPU
+#ifdef CAMP_USE_GPU
   get_camp_config_variables(sd);
   solver_new_gpu_cu(sd, n_dep_var, n_state_var, n_rxn,
                     n_rxn_int_param, n_rxn_float_param, n_rxn_env_param,
                     n_cells);
 #endif
 
-#ifdef PMC_DEBUG
+#ifdef CAMP_DEBUG
   if (sd->debug_out) print_data_sizes(&(sd->model_data));
 #endif
 
@@ -385,7 +385,7 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
   sd->model_data.counterPhoto = 0;
 #endif
 
-#ifdef PMC_DEBUG_GPU
+#ifdef CAMP_DEBUG_GPU
 
   //printf("sd->use_cpu %d\n",sd->use_cpu);
 
@@ -428,7 +428,7 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
 void solver_set_spec_name(void *solver_data, char *spec_name,
                           int size_spec_name, int i) {
 // todo check if exists a name (ranks without a spec name crashes)
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);  // ok its not comm_world :/
   // I have to send de comm to camp_core and only call this funct in that case
@@ -464,7 +464,7 @@ void solver_set_spec_name(void *solver_data, char *spec_name,
  */
 void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
                        int max_steps, int max_conv_fails) {
-#ifdef PMC_USE_SUNDIALS
+#ifdef CAMP_USE_SUNDIALS
   SolverData *sd;   // SolverData object
   int flag;         // return code from SUNDIALS functions
   int n_dep_var;    // number of dependent variables per grid cell
@@ -558,7 +558,7 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
   check_flag_fail(&flag, "CVodeSetDlsGuessHelper", 1);
 
 // Set gpu rxn values
-#ifdef PMC_USE_GPU
+#ifdef CAMP_USE_GPU
   solver_init_int_double_gpu(sd);
   alloc_solver_gpu2(sd->cvode_mem, sd);
 #endif
@@ -573,14 +573,14 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
 #endif
 }
 
-#ifdef PMC_DEBUG
+#ifdef CAMP_DEBUG
 /** \brief Set the flag indicating whether to output debugging information
  *
  * \param solver_data A pointer to the solver data
  * \param do_output Whether to output debugging information during solving
  */
 int solver_set_debug_out(void *solver_data, bool do_output) {
-#ifdef PMC_USE_SUNDIALS
+#ifdef CAMP_USE_SUNDIALS
   SolverData *sd = (SolverData *)solver_data;
 
   sd->debug_out = do_output == true ? SUNTRUE : SUNFALSE;
@@ -591,7 +591,7 @@ int solver_set_debug_out(void *solver_data, bool do_output) {
 }
 #endif
 
-#ifdef PMC_DEBUG
+#ifdef CAMP_DEBUG
 /** \brief Set the flag indicating whether to evalute the Jacobian during
  **        solving
  *
@@ -600,7 +600,7 @@ int solver_set_debug_out(void *solver_data, bool do_output) {
  *                 solving
  */
 int solver_set_eval_jac(void *solver_data, bool eval_Jac) {
-#ifdef PMC_USE_SUNDIALS
+#ifdef CAMP_USE_SUNDIALS
   SolverData *sd = (SolverData *)solver_data;
 
   sd->eval_Jac = eval_Jac == true ? SUNTRUE : SUNFALSE;
@@ -611,12 +611,12 @@ int solver_set_eval_jac(void *solver_data, bool eval_Jac) {
 }
 #endif
 
-#ifdef PMC_DEBUG_GPU
+#ifdef CAMP_DEBUG_GPU
 
 
 void printSolverCounters_cpu(SolverData *sd){
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
@@ -658,15 +658,15 @@ void printSolverCounters_cpu(SolverData *sd){
  */
 int solver_run(void *solver_data, double *state, double *env, double t_initial,
                double t_final, int n_cells) {
-#ifdef PMC_USE_SUNDIALS
+#ifdef CAMP_USE_SUNDIALS
   SolverData *sd = (SolverData *)solver_data;
   ModelData *md = &(sd->model_data);
   int n_state_var = sd->model_data.n_per_cell_state_var;
   int flag;
   int rank = 0;
 
-#ifdef PMC_DEBUG_GPU
-#ifdef PMC_USE_MPI
+#ifdef CAMP_DEBUG_GPU
+#ifdef CAMP_USE_MPI
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     if (rank==999 || rank==999 )
     if (sd->counterSolve==0 && sd->counterFail==0)
@@ -710,7 +710,7 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
   sd->model_data.total_env = env;
 
 #ifdef EXPORT_CAMP_INPUT
-#ifdef PMC_DEBUG_GPU
+#ifdef CAMP_DEBUG_GPU
   // Save initial state
   double init_state[md->n_per_cell_state_var * n_cells];
   if (sd->counterFail==0)
@@ -720,8 +720,8 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
 #endif
 #endif
 /*
-#ifdef PMC_DEBUG_GPU
-#ifdef PMC_USE_MPI
+#ifdef CAMP_DEBUG_GPU
+#ifdef CAMP_USE_MPI
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   if (rank == 999 || rank == 999) {
     if (sd->counterSolve == 0 ) {
@@ -734,7 +734,7 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
 #endif
  */
 
-#ifdef PMC_DEBUG
+#ifdef CAMP_DEBUG
   // Update the debug output flag in CVODES and the linear solver
   flag = CVodeSetDebugOut(sd->cvode_mem, sd->debug_out);
   check_flag_fail(&flag, "CVodeSetDebugOut", 1);
@@ -752,7 +752,7 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
     // Set the grid cell state pointers
     md->grid_cell_id = i_cell;
     md->grid_cell_state = &(md->total_state[i_cell * md->n_per_cell_state_var]);
-    md->grid_cell_env = &(md->total_env[i_cell * PMC_NUM_ENV_PARAM_]);
+    md->grid_cell_env = &(md->total_env[i_cell * CAMP_NUM_ENV_PARAM_]);
     md->grid_cell_rxn_env_data =
         &(md->rxn_env_data[i_cell * md->n_rxn_env_data]);
     md->grid_cell_aero_rep_env_data =
@@ -767,11 +767,11 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
   }
 
 // Update data for new environmental state on GPU
-#ifdef PMC_USE_GPU
+#ifdef CAMP_USE_GPU
   rxn_update_env_state_gpu(sd);
 #endif
 
-  PMC_DEBUG_JAC_STRUCT(sd->model_data.J_init, "Begin solving");
+  CAMP_DEBUG_JAC_STRUCT(sd->model_data.J_init, "Begin solving");
 
   //Reset Jacobian tmp
   N_VConst(0.0, md->J_state);
@@ -824,11 +824,11 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
 
   if (!sd->no_solve) {
 
-#ifdef PMC_DEBUG_GPU
+#ifdef CAMP_DEBUG_GPU
   double starttimeCvode = MPI_Wtime();
 #endif
 
-#ifdef PMC_USE_GPU
+#ifdef CAMP_USE_GPU
 
     if(sd->use_cpu==1){
       flag = CVode(sd->cvode_mem, (realtype)t_final, sd->y, &t_rt, CV_NORMAL);
@@ -850,7 +850,7 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
     flag = CVode(sd->cvode_mem, (realtype)t_final, sd->y, &t_rt, CV_NORMAL);
 #endif
 
-#ifdef PMC_DEBUG_GPU
+#ifdef CAMP_DEBUG_GPU
   sd->timeCVode += (MPI_Wtime() - starttimeCvode);
 #endif
 
@@ -866,7 +866,7 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
       }
       N_Vector deriv = N_VClone(sd->y);
       flag = f(t_initial, sd->y, deriv, sd);
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
       MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 #endif
       if (flag != 0)
@@ -874,8 +874,8 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
     flag, rank);
     /*for (int i_cell = 0; i_cell < md->n_cells; ++i_cell) {
       printf("\n Cell: %d ", i_cell);
-      printf("temp = %le pressure = %le\n", env[i_cell * PMC_NUM_ENV_PARAM_],
-             env[i_cell * PMC_NUM_ENV_PARAM_ + 1]);
+      printf("temp = %le pressure = %le\n", env[i_cell * CAMP_NUM_ENV_PARAM_],
+             env[i_cell * CAMP_NUM_ENV_PARAM_ + 1]);
       for (int i_spec = 0, i_dep_var = 0; i_spec < md->n_per_cell_state_var;
            i_spec++)
         if (md->var_type[i_spec] == CHEM_SPEC_VARIABLE) {
@@ -892,8 +892,8 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
     solver_print_stats(sd->cvode_mem);
 #endif
 
-#ifdef PMC_DEBUG_GPU
-#ifdef PMC_USE_MPI
+#ifdef CAMP_DEBUG_GPU
+#ifdef CAMP_USE_MPI
 
       MPI_Comm_rank(MPI_COMM_WORLD, &rank);
       if (rank == 0) {
@@ -930,8 +930,8 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
     }
   }
 
-#ifdef PMC_DEBUG_GPU
-#ifdef PMC_USE_MPI
+#ifdef CAMP_DEBUG_GPU
+#ifdef CAMP_USE_MPI
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   if (rank >= 0) {
     sd->counterDerivTotal += sd->counterDerivCPU;
@@ -1015,7 +1015,7 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
                            double *max_loss_precision,
                            int *counters, double *times
                            ) {
-#ifdef PMC_USE_SUNDIALS
+#ifdef CAMP_USE_SUNDIALS
   SolverData *sd = (SolverData *)solver_data;
   long int nst, nfe, nsetups, nje, nfeLS, nni, ncfn, netf, nge;
   realtype last_h, curr_h;
@@ -1058,7 +1058,7 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
   if (check_flag(&flag, "CVodeGetCurrentStep", 1) == CAMP_SOLVER_FAIL) return;
   *next_time_step__s = (double)curr_h;
   *Jac_eval_fails = sd->Jac_eval_fails;
-#ifdef PMC_DEBUG
+#ifdef CAMP_DEBUG
   *RHS_evals_total = sd->counterDeriv;
   *Jac_evals_total = sd->counterJac;
   *RHS_time__s = ((double)sd->timeDeriv) / CLOCKS_PER_SEC;
@@ -1081,7 +1081,7 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
   }
   //printf("sd->ntimers ncounters %d %d\n",sd->ntimers,sd->ncounters);
 
-#ifdef PMC_DEBUG_GPU
+#ifdef CAMP_DEBUG_GPU
 
   if(sd->use_cpu==1){
 
@@ -1102,7 +1102,7 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
   }
   else{
 
-#ifdef PMC_USE_GPU
+#ifdef CAMP_USE_GPU
     itsolver *bicg = &(sd->bicg);
 
     solver_get_statistics_gpu(sd);
@@ -1150,7 +1150,7 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
 #endif
 }
 
-#ifdef PMC_USE_SUNDIALS
+#ifdef CAMP_USE_SUNDIALS
 
 /** \brief Update the model state from the current solver state
  *
@@ -1203,7 +1203,7 @@ int camp_solver_update_model_state(N_Vector solver_state, SolverData *sd,
           if(sd->counter_fail_solve_print<1){
             printf("Failed model state update (Innacurate results): [spec %d] = %le\n", i_spec,
                NV_DATA_S(solver_state)[i_dep_var]);
-#ifdef PMC_DEBUG_GPU
+#ifdef CAMP_DEBUG_GPU
             printf("CounterDerivCPU %d CounterJac %d\n",
                     sd->counterDerivCPU,sd->counterJacCPU );
             //printf("y failed model state:\n");
@@ -1229,7 +1229,7 @@ int camp_solver_update_model_state(N_Vector solver_state, SolverData *sd,
     }
   }
 
-#ifdef PMC_USE_GPU
+#ifdef CAMP_USE_GPU
 
   if(sd->use_cpu==0)
     //Update gpu from cpu changes
@@ -1249,7 +1249,7 @@ int camp_solver_update_model_state(N_Vector solver_state, SolverData *sd,
  * \return Status code
  */
 
-#ifdef PMC_USE_GPU
+#ifdef CAMP_USE_GPU
 int f_gpu(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
   SolverData *sd = (SolverData *)solver_data;
   ModelData *md = &(sd->model_data);
@@ -1305,7 +1305,7 @@ int f_gpu(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
     // Set the grid cell state pointers
     md->grid_cell_id = i_cell;
     md->grid_cell_state = &(md->total_state[i_cell * n_state_var]);
-    md->grid_cell_env = &(md->total_env[i_cell * PMC_NUM_ENV_PARAM_]);
+    md->grid_cell_env = &(md->total_env[i_cell * CAMP_NUM_ENV_PARAM_]);
     md->grid_cell_rxn_env_data =
         &(md->rxn_env_data[i_cell * md->n_rxn_env_data]);
     md->grid_cell_aero_rep_env_data =
@@ -1363,7 +1363,7 @@ int f_gpu(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
 #endif
 
 
-#ifdef PMC_DEBUG_GPU
+#ifdef CAMP_DEBUG_GPU
 
   //if(sd->counterDerivCPU<=0) print_derivative(deriv);
 
@@ -1488,7 +1488,7 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
   realtype time_step;
   int MAX_COUNTER_PRINT=1;
 
-#ifdef PMC_DEBUG
+#ifdef CAMP_DEBUG
   sd->counterDeriv++;
   clock_t start3 = clock();
 #endif
@@ -1500,16 +1500,16 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
   // default value
   time_step = time_step > ZERO ? time_step : sd->init_time_step;
 
-#ifdef PMC_DEBUG
+#ifdef CAMP_DEBUG
   // Measure calc_deriv time execution
   clock_t start = clock();
 #endif
 
-#ifdef PMC_DEBUG_GPU
+#ifdef CAMP_DEBUG_GPU
   clock_t start10 = clock();
 #endif
 
-#ifdef PMC_DEBUG_DERIV_CPU
+#ifdef CAMP_DEBUG_DERIV_CPU
   int counterPrintDeriv=13;
   if(sd->counterDerivCPU<=counterPrintDeriv){
     sd->y_first = N_VClone(y);
@@ -1553,7 +1553,7 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
     // Set the grid cell state pointers
     md->grid_cell_id = i_cell;
     md->grid_cell_state = &(md->total_state[i_cell * n_state_var]);
-    md->grid_cell_env = &(md->total_env[i_cell * PMC_NUM_ENV_PARAM_]);
+    md->grid_cell_env = &(md->total_env[i_cell * CAMP_NUM_ENV_PARAM_]);
     md->grid_cell_rxn_env_data =
         &(md->rxn_env_data[i_cell * md->n_rxn_env_data]);
     md->grid_cell_aero_rep_env_data =
@@ -1585,7 +1585,7 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
                              sd->output_precision);
     }
 
-#ifdef PMC_DEBUG
+#ifdef CAMP_DEBUG
     sd->max_loss_precision = time_derivative_max_loss_precision(sd->time_deriv);
 #endif
 
@@ -1597,7 +1597,7 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
 // Not DERIV_LOOP_CELLS_RXN
 #else
 
-#ifdef PMC_DEBUG
+#ifdef CAMP_DEBUG
   // Measure calc_deriv time execution
   clock_t start2 = clock();
 #endif
@@ -1606,7 +1606,7 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
       // Set the grid cell state pointers
       md->grid_cell_id = i_cell;
       md->grid_cell_state = &(md->total_state[i_cell * n_state_var]);
-      md->grid_cell_env = &(md->total_env[i_cell * PMC_NUM_ENV_PARAM_]);
+      md->grid_cell_env = &(md->total_env[i_cell * CAMP_NUM_ENV_PARAM_]);
       md->grid_cell_rxn_env_data =
           &(md->rxn_env_data[i_cell * md->n_rxn_env_data]);
       md->grid_cell_aero_rep_env_data =
@@ -1636,7 +1636,7 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
                            sd->output_precision);
   }
 
-#ifdef PMC_DEBUG
+#ifdef CAMP_DEBUG
   clock_t end2 = clock();
   sd->timeDeriv += (end2 - start2);
   sd->max_loss_precision = time_derivative_max_loss_precision(sd->time_deriv);
@@ -1645,7 +1645,7 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
 // DERIV_LOOP_CELLS_RXN
 #endif
 
-#ifdef PMC_DEBUG_DERIV_CPU
+#ifdef CAMP_DEBUG_DERIV_CPU
   if(
   //sd->counter_deriv_print<sd->max_deriv_print &&
   //NV_DATA_S(sd->y_first)[0] != NV_DATA_S(y)[0]){
@@ -1667,14 +1667,14 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
   }
 #endif
 
-#ifdef PMC_DEBUG_GPU
+#ifdef CAMP_DEBUG_GPU
 
   // sd->timeDerivCPU += (clock() - start3);
   sd->timeDerivCPU += (clock() - start10);
   sd->counterDerivCPU++;
   // printf("%d",sd->counterDerivCPU);
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   // if (rank>=0)
@@ -1711,7 +1711,7 @@ int Jac(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_data,
   ModelData *md = &(sd->model_data);
   realtype time_step;
 
-#ifdef PMC_DEBUG
+#ifdef CAMP_DEBUG
   sd->counterJac++;
 #endif
 
@@ -1729,7 +1729,7 @@ int Jac(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_data,
   // !!!! Do not use tmp2 - it is the same as y !!!! //
   // FIXME Find out why cvode is sending tmp2 as y
 
-#ifdef PMC_DEBUG_JAC_CPU
+#ifdef CAMP_DEBUG_JAC_CPU
   int counterPrintJac=1;
   if(sd->counterJacCPU<=counterPrintJac){
     printf("Jac iter %d\n",sd->counterJacCPU);
@@ -1770,16 +1770,16 @@ int Jac(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_data,
     (SM_DATA_S(J))[i] = (realtype)0.0;
   }
 
-#ifdef PMC_DEBUG
+#ifdef CAMP_DEBUG
   clock_t start2 = clock();
 #endif
 
-#ifdef PMC_USE_GPU
+#ifdef CAMP_USE_GPU
   // Calculate the Jacobian
 //  rxn_calc_jac_gpu(sd, J, time_step);
 #endif
 
-#ifdef PMC_DEBUG
+#ifdef CAMP_DEBUG
   clock_t end2 = clock();
   sd->timeJac += (end2 - start2);
 #endif
@@ -1789,7 +1789,7 @@ int Jac(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_data,
     // Set the grid cell state pointers
     md->grid_cell_id = i_cell;
     md->grid_cell_state = &(md->total_state[i_cell * n_state_var]);
-    md->grid_cell_env = &(md->total_env[i_cell * PMC_NUM_ENV_PARAM_]);
+    md->grid_cell_env = &(md->total_env[i_cell * CAMP_NUM_ENV_PARAM_]);
     md->grid_cell_rxn_env_data =
         &(md->rxn_env_data[i_cell * md->n_rxn_env_data]);
     md->grid_cell_aero_rep_env_data =
@@ -1808,9 +1808,9 @@ int Jac(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_data,
     // Run the sub models and get the sub-model Jacobian
     sub_model_calculate(md);
     sub_model_get_jac_contrib(md, J_param_data, time_step);
-    PMC_DEBUG_JAC(md->J_params, "sub-model Jacobian");
+    CAMP_DEBUG_JAC(md->J_params, "sub-model Jacobian");
 
-#ifdef PMC_DEBUG
+#ifdef CAMP_DEBUG
     clock_t start = clock();
 #endif
 
@@ -1820,12 +1820,12 @@ int Jac(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_data,
 //#endif
 
 // rxn_calc_jac_specific_types(md, J_rxn_data, time_step);
-#ifdef PMC_DEBUG
+#ifdef CAMP_DEBUG
     clock_t end = clock();
     sd->timeJac += (end - start);
 #endif
 
-#ifdef PMC_DEBUG_JAC_CPU
+#ifdef CAMP_DEBUG_JAC_CPU
   check_isnand(sd->jac.production_partials,sd->jac.num_elem,"pre jacobian_output");
   check_isnand(sd->jac.loss_partials,sd->jac.num_elem,"pre jacobian_output");
   check_isnand(SM_DATA_S(md->J_rxn),SM_NNZ_S(md->J_rxn),"pre jacobian_output J_rxn");
@@ -1833,9 +1833,9 @@ int Jac(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_data,
 
     // Output the Jacobian to the SUNDIALS J_rxn
     jacobian_output(sd->jac, SM_DATA_S(md->J_rxn));
-    PMC_DEBUG_JAC(md->J_rxn, "reaction Jacobian");
+    CAMP_DEBUG_JAC(md->J_rxn, "reaction Jacobian");
 
-#ifdef PMC_DEBUG_JAC_CPU
+#ifdef CAMP_DEBUG_JAC_CPU
   check_isnand(sd->jac.production_partials,sd->jac.num_elem,"post jacobian_output");
   check_isnand(sd->jac.loss_partials,sd->jac.num_elem,"post jacobian_output");
   check_isnand(SM_DATA_S(md->J_rxn),SM_NNZ_S(md->J_rxn),"post jacobian_output J_rxn");
@@ -1850,14 +1850,14 @@ int Jac(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_data,
           SM_DATA_S(md->J_rxn)[jac_map[i_map].rxn_id] *
           //0.0;
           SM_DATA_S(md->J_params)[jac_map[i_map].param_id];
-    PMC_DEBUG_JAC(J, "solver Jacobian");
+    CAMP_DEBUG_JAC(J, "solver Jacobian");
   }
 
   //check_isnand(J_param_data,SM_NNZ_S(md->J_params),k++);
   //check_isnand(J_rxn_data,SM_NNZ_S(md->J_rxn),k++);
   //check_isnand(SM_DATA_S(J),SM_NNZ_S(J),k++);
 
-#ifdef PMC_DEBUG_JAC_CPU
+#ifdef CAMP_DEBUG_JAC_CPU
   check_isnand(SM_DATA_S(md->J_rxn),SM_NNZ_S(md->J_rxn),"post J_rxn");
   check_isnand(SM_DATA_S(md->J_params),SM_NNZ_S(md->J_params),"post J_params");
 #endif
@@ -1868,12 +1868,12 @@ int Jac(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_data,
   N_VScale(1.0, y, md->J_state);
   N_VScale(1.0, deriv, md->J_deriv);
 
-#ifdef PMC_USE_GPU
+#ifdef CAMP_USE_GPU
   if(sd->use_cpu==0)
     set_jac_data_gpu(sd, SM_DATA_S(J));
 #endif
 
-#ifdef PMC_DEBUG
+#ifdef CAMP_DEBUG
   // Evaluate the Jacobian if flagged to do so
   if (sd->eval_Jac == SUNTRUE) {
     if (!check_Jac(t, y, J, deriv, tmp1, tmp3, solver_data)) {
@@ -1890,10 +1890,10 @@ int Jac(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_data,
   // if(sd->counterJacCPU==0) print_jacobian_file(J, "");
   // if(sd->counterJacCPU==0) print_jacobian(J);
 
-#ifdef PMC_DEBUG_GPU
+#ifdef CAMP_DEBUG_GPU
   sd->timeJacCPU += (clock() - start4);
   sd->counterJacCPU++;
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   // if (rank>=0)
@@ -1941,7 +1941,7 @@ bool check_Jac(realtype t, N_Vector y, SUNMatrix J, N_Vector deriv,
   realtype *d_deriv = NV_DATA_S(deriv);
   bool retval = true;
 
-#ifdef PMC_USE_GSL
+#ifdef CAMP_USE_GSL
   GSLParam gsl_param;
   gsl_function gsl_func;
 
@@ -1968,7 +1968,7 @@ bool check_Jac(realtype t, N_Vector y, SUNMatrix J, N_Vector deriv,
     // If GSL is available, use their numerical differentiation to
     // calculate the partial derivatives. Otherwise, estimate them by
     // advancing the state.
-#ifdef PMC_USE_GSL
+#ifdef CAMP_USE_GSL
 
     // Reset tmp to the initial state
     N_VScale(ONE, y, tmp);
@@ -2048,7 +2048,7 @@ bool check_Jac(realtype t, N_Vector y, SUNMatrix J, N_Vector deriv,
   return retval;
 }
 
-#ifdef PMC_USE_GSL
+#ifdef CAMP_USE_GSL
 /** \brief Wrapper function for derivative calculations for numerical solving
  *
  * Wraps the f(t,y) function for use by the GSL numerical differentiation
@@ -2085,7 +2085,7 @@ double gsl_f(double x, void *param) {
 static int g(realtype t, N_Vector y, realtype *gout, void *solver_data)
 {
 
-#ifdef PMC_USE_GPU
+#ifdef CAMP_USE_GPU
   printf("ERROR: GPU ODE CODE IS NOT PREPARED FOR G FUNCTION, USE CPU VERSION WITH CVODE");
   exit(0);
 #endif
@@ -2150,7 +2150,7 @@ int guess_helper(const realtype t_n, const realtype h_n, N_Vector y_n,
   }
 
 
-  PMC_DEBUG_PRINT_FULL("Trying to improve guess");
+  CAMP_DEBUG_PRINT_FULL("Trying to improve guess");
 
 #ifdef DEBUG_GUESS_HELPER
     //for(int j=0;j<mGPU->nrows;j++)
@@ -2166,7 +2166,7 @@ int guess_helper(const realtype t_n, const realtype h_n, N_Vector y_n,
   } else {
     N_VScale(ONE, hf, corr);
   }
-  PMC_DEBUG_PRINT("Got f0");
+  CAMP_DEBUG_PRINT("Got f0");
 
   // Advance state interatively
   realtype t_0 = h_n > ZERO ? t_n - h_n : t_n - ONE;
@@ -2209,7 +2209,7 @@ int guess_helper(const realtype t_n, const realtype h_n, N_Vector y_n,
 
     // Advance the state
     N_VLinearSum(ONE, tmp1, h_j, corr, tmp1);
-    PMC_DEBUG_PRINT_FULL("Advanced state");
+    CAMP_DEBUG_PRINT_FULL("Advanced state");
 
     // Advance t_j
     t_j += h_j;
@@ -2217,7 +2217,7 @@ int guess_helper(const realtype t_n, const realtype h_n, N_Vector y_n,
     //printf("Derivguess_helper before\n");
     // Recalculate the time derivative \f$f(t_j)\f$
     if (f(t_0 + t_j, tmp1, corr, solver_data) != 0) {
-      PMC_DEBUG_PRINT("Unexpected failure in guess helper!");
+      CAMP_DEBUG_PRINT("Unexpected failure in guess helper!");
       N_VConst(ZERO, corr);
 #ifdef DEBUG_GUESS_HELPER
       printf("CudaDeviceguess_helper f(t)\n");
@@ -2228,7 +2228,7 @@ int guess_helper(const realtype t_n, const realtype h_n, N_Vector y_n,
     ((CVodeMem)sd->cvode_mem)->cv_nfe++;
 
     if (iter == GUESS_MAX_ITER - 1 && t_0 + t_j < t_n) {
-      PMC_DEBUG_PRINT("Max guess iterations reached!");
+      CAMP_DEBUG_PRINT("Max guess iterations reached!");
 #ifdef DEBUG_GUESS_HELPER
       printf("CudaDeviceguess_helper GUESS_MAX_ITER\n");
 #endif
@@ -2236,7 +2236,7 @@ int guess_helper(const realtype t_n, const realtype h_n, N_Vector y_n,
     }
   }
 
-  PMC_DEBUG_PRINT_INT("Guessed y_h in steps:", iter);
+  CAMP_DEBUG_PRINT_INT("Guessed y_h in steps:", iter);
 
   // Set the correction vector
   N_VLinearSum(ONE, tmp1, -ONE, y_n, corr);
@@ -2534,17 +2534,17 @@ SUNMatrix get_jac_init(SolverData *sd) {
     }
   }
 
-  PMC_DEBUG_JAC_STRUCT(sd->model_data.J_params, "Param struct");
-  PMC_DEBUG_JAC_STRUCT(sd->model_data.J_rxn, "Reaction struct");
-  PMC_DEBUG_JAC_STRUCT(M, "Solver struct");
+  CAMP_DEBUG_JAC_STRUCT(sd->model_data.J_params, "Param struct");
+  CAMP_DEBUG_JAC_STRUCT(sd->model_data.J_rxn, "Reaction struct");
+  CAMP_DEBUG_JAC_STRUCT(M, "Solver struct");
 
   // camp_debug_print_jac_struct2(sd, sd->model_data.J_rxn, "RXN struct"); //Fine
   // camp_debug_print_jac_rel(sd, sd->model_data.J_rxn, "RXN relations"); //Fine
   // but strange reactants affecting reactants camp_debug_print_jac_rel(sd, M, "M
   // relations"); //todo miss jacmap indices to print correct names
 
-#ifdef PMC_DEBUG2_GPU
-#ifdef PMC_USE_MPI
+#ifdef CAMP_DEBUG2_GPU
+#ifdef CAMP_USE_MPI
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   if (rank == MPI_RANK_DEBUG) {
@@ -2569,7 +2569,7 @@ SUNMatrix get_jac_init(SolverData *sd) {
   N_VConst(0.0, sd->model_data.J_state);
   N_VConst(0.0, sd->model_data.J_deriv);
 
-#ifdef PMC_USE_GPU
+#ifdef CAMP_USE_GPU
   if(sd->use_cpu==0)
     init_jac_gpu(sd, SM_DATA_S(M));
 #endif
@@ -2594,7 +2594,7 @@ SUNMatrix get_jac_init(SolverData *sd) {
 int check_flag(void *flag_value, char *func_name, int opt) {
   int *err_flag;
   int rank = 999;
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 #endif
 
@@ -2641,11 +2641,11 @@ void check_flag_fail(void *flag_value, char *func_name, int opt) {
  *
  * \param solver_data Pointer to the SolverData object with timers to reset
  */
-#ifdef PMC_USE_SUNDIALS
+#ifdef CAMP_USE_SUNDIALS
 void solver_reset_timers(void *solver_data) {
   SolverData *sd = (SolverData *)solver_data;
 
-#ifdef PMC_DEBUG
+#ifdef CAMP_DEBUG
   sd->counterDeriv = 0;
   sd->counterJac = 0;
   sd->timeDeriv = 0;
@@ -2660,7 +2660,7 @@ void export_camp_input(void *solver_data, double *init_state, char *in_path) {
   ModelData *md = &(sd->model_data);
   int n_cells = sd->model_data.n_cells;
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
 
   // char rel_path[] = "../../../test/monarch/exports/camp_input"; //path for
   // mock_monarch test
@@ -2677,7 +2677,7 @@ void export_camp_input(void *solver_data, double *init_state, char *in_path) {
   char mpi_path[1024];
   char rank_str[64];
 
-#ifdef PMC_DEBUG_GPU
+#ifdef CAMP_DEBUG_GPU
   printf("Exporting camp input rank %d counterFail %d counterSolve %d\n", rank,
          sd->counterFail, sd->counterSolve);
 #else
@@ -2786,7 +2786,7 @@ static void solver_print_stats(void *cvode_mem) {
   printf("Last time step = %le Next time step = %le\n", last_h, curr_h);
 }
 
-#endif  // PMC_USE_SUNDIALS
+#endif  // CAMP_USE_SUNDIALS
 
 /** \brief Free a SolverData object
  *
@@ -2796,11 +2796,11 @@ void solver_free(void *solver_data) {
   SolverData *sd = (SolverData *)solver_data;
   ModelData *md = &(sd->model_data);
 
-#ifdef PMC_DEBUG_GPU
+#ifdef CAMP_DEBUG_GPU
 
   //export_counters_open(sd);
 
-#ifdef PMC_USE_GPU
+#ifdef CAMP_USE_GPU
 
   if(sd->use_cpu==0){
     printSolverCounters_gpu2(sd);
@@ -2822,7 +2822,7 @@ void solver_free(void *solver_data) {
 
 #endif
 
-#ifdef PMC_USE_SUNDIALS
+#ifdef CAMP_USE_SUNDIALS
   // free the SUNDIALS solver
   CVodeFree(&(sd->cvode_mem));
 
@@ -2849,13 +2849,13 @@ void solver_free(void *solver_data) {
   SUNLinSolFree(sd->ls);
 #endif
 
-#ifdef PMC_USE_GPU
+#ifdef CAMP_USE_GPU
   free_ode_gpu2(sd);
 #endif
 
 }
 
-#ifdef PMC_USE_SUNDIALS
+#ifdef CAMP_USE_SUNDIALS
 /** \brief Determine if there is anything to solve
  *
  * If the solver state concentrations and the derivative vector are very small,
@@ -2905,7 +2905,7 @@ void error_handler(int error_code, const char *module, const char *function,
  */
 void model_free(ModelData model_data) {
 
-#ifdef PMC_USE_SUNDIALS
+#ifdef CAMP_USE_SUNDIALS
   // Destroy the initialized Jacbobian matrix
   SUNMatDestroy(model_data.J_init);
   SUNMatDestroy(model_data.J_rxn);

@@ -1,14 +1,12 @@
-! Copyright (C) 2017-2018 Matt Dawson
-! Licensed under the GNU General Public License version 2 or (at your
-! option) any later version. See the file COPYING for details.
+! Copyright (C) 2021 Barcelona Supercomputing Center and University of
+! Illinois at Urbana-Champaign
+! SPDX-License-Identifier: MIT
 
 !> \file
 !> The camp_camp_solver_data module.
 
 !> The camp_solver_data_t structure and associated subroutines.
 module camp_camp_solver_data
-#define CAMP_SOLVER_SUCCESS 0
-#define CAMP_SOLVER_FAIL 1
 
   use camp_aero_phase_data
   use camp_aero_rep_data
@@ -33,14 +31,14 @@ module camp_camp_solver_data
   public :: camp_solver_data_t
 
   !> Default relative tolerance for integration
-  real(kind=dp), parameter :: PMC_SOLVER_DEFAULT_REL_TOL = 1.0D-8
+  real(kind=dp), parameter :: CAMP_SOLVER_DEFAULT_REL_TOL = 1.0D-8
   !> Default max number of integration steps
-  integer(kind=i_kind), parameter :: PMC_SOLVER_DEFAULT_MAX_STEPS = 10000
+  integer(kind=i_kind), parameter :: CAMP_SOLVER_DEFAULT_MAX_STEPS = 10000
   !> Default maximum number of integration convergence failures
-  integer(kind=i_kind), parameter :: PMC_SOLVER_DEFAULT_MAX_CONV_FAILS = 1000
+  integer(kind=i_kind), parameter :: CAMP_SOLVER_DEFAULT_MAX_CONV_FAILS = 1000
 
   !> Result code indicating successful completion
-  integer, parameter :: PMC_SOLVER_SUCCESS = 0
+  integer, parameter :: CAMP_SOLVER_SUCCESS = 0
 
   !> Interface to c ODE solver functions
   interface
@@ -126,7 +124,7 @@ module camp_camp_solver_data
       integer(kind=c_int), value :: max_conv_fails
     end subroutine solver_initialize
 
-#ifdef PMC_DEBUG
+#ifdef CAMP_DEBUG
     !> Set the debug output flag for the solver
     integer(kind=c_int) function solver_set_debug_out(solver_data, &
                     do_output) bind (c)
@@ -404,12 +402,12 @@ module camp_camp_solver_data
     !> C Solver object
     type(c_ptr), public :: solver_c_ptr
     !> Relative tolerance for the integration
-    real(kind=dp), public :: rel_tol = PMC_SOLVER_DEFAULT_REL_TOL
+    real(kind=dp), public :: rel_tol = CAMP_SOLVER_DEFAULT_REL_TOL
     !> Maximum number of timesteps
-    integer(kind=i_kind), public :: max_steps = PMC_SOLVER_DEFAULT_MAX_STEPS
+    integer(kind=i_kind), public :: max_steps = CAMP_SOLVER_DEFAULT_MAX_STEPS
     !> Maximum number of convergence failures
     integer(kind=i_kind), public :: max_conv_fails = &
-            PMC_SOLVER_DEFAULT_MAX_CONV_FAILS
+            CAMP_SOLVER_DEFAULT_MAX_CONV_FAILS
     !> Flag indicating whether the solver was intialized
     logical :: initialized = .false.
   contains
@@ -811,7 +809,7 @@ contains
     !do i=1,int(size(var_type_c), kind=c_int) ! Size of the state variable
     !write (*,*) "size(spec_names)",size(spec_names)
 
-#ifdef PMC_DEBUG2_GPU
+#ifdef CAMP_DEBUG2_GPU
     !todo fix mpi==0 case
     do i=1,size(spec_names)
     !do i=1,40 !approximate gas size (without crashes)
@@ -960,7 +958,7 @@ contains
 
     integer(kind=c_int) :: solver_status
 
-#ifdef PMC_DEBUG
+#ifdef CAMP_DEBUG
     if (present(solver_stats)) then
       ! Update the debugging output flag in the solver data
       if (solver_stats%debug_out) then
@@ -1081,7 +1079,7 @@ contains
     !> Solver data
     class(camp_solver_data_t), intent(in) :: this
 
-#ifdef PMC_USE_SUNDIALS
+#ifdef CAMP_USE_SUNDIALS
     is_solver_available = .true.
 #else
     is_solver_available = .false.

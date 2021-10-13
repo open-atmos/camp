@@ -82,7 +82,7 @@ if(ENABLE_GSL)
   set(GSL_SRC src/rand_gsl.c)
   set(GSL_LIBS ${GSL_LIB} ${GSL_CBLAS_LIB} ${M_LIB})
   include_directories(${GSL_INCLUDE_DIR})
-  add_definitions(-DPMC_USE_GSL)
+  add_definitions(-DCAMP_USE_GSL)
 endif()
 
 ######################################################################
@@ -90,7 +90,7 @@ endif()
 
 if(ENABLE_C_SORT)
   set(C_SORT_SRC src/sort.c)
-  add_definitions(-DPMC_USE_C_SORT)
+  add_definitions(-DCAMP_USE_C_SORT)
 endif()
 
 ######################################################################
@@ -104,7 +104,7 @@ if(ENABLE_MOSAIC)
     DOC "MOSAIC library"
     PATHS $ENV{MOSAIC_HOME} $ENV{MOSAIC_HOME}/lib)
   include_directories(${MOSAIC_INCLUDE_DIR})
-  add_definitions(-DPMC_USE_MOSAIC)
+  add_definitions(-DCAMP_USE_MOSAIC)
 endif()
 
 ######################################################################
@@ -116,7 +116,7 @@ if(ENABLE_MPI)
         message( WARNING "Not MPI found")
     endif()
 
-  add_definitions(-DPMC_USE_MPI)
+  add_definitions(-DCAMP_USE_MPI)
 endif()
 
 ######################################################################
@@ -152,7 +152,7 @@ if(ENABLE_SUNDIALS)
     ${SUITE_SPARSE_KLU_LIB} ${SUNDIALS_KLU_LIB} ${SUNDIALS_SUNMATRIX_SPARSE_LIB})
   set(SUNDIALS_SRC src/condense_solver.c)
   include_directories(${SUNDIALS_INCLUDE_DIR} ${SUITE_SPARSE_INCLUDE_DIR})
-  add_definitions(-DPMC_USE_SUNDIALS)
+  add_definitions(-DCAMP_USE_SUNDIALS)
 endif()
 
 ######################################################################
@@ -166,14 +166,14 @@ if (ENABLE_JSON)
     DOC "json-fortran library"
     PATHS $ENV{JSON_FORTRAN_HOME}/lib /opt/local/lib /usr/local/lib)
   include_directories(${JSON_INCLUDE_DIR})
-  add_definitions(-DPMC_USE_JSON)
+  add_definitions(-DCAMP_USE_JSON)
 endif()
 
 ######################################################################
 ##CXX
 
 if(ENABLE_CXX)
-  add_definitions(-DPMC_USE_CXX)
+  add_definitions(-DCAMP_USE_CXX)
   enable_language(CXX)
     #if(NOT CXX_FOUND)
     #    message( WARNING "Not C++ compiler found")
@@ -190,10 +190,10 @@ if (ENABLE_GPU)
   if (CUDA_FOUND)
     enable_language(CUDA)
     #Define global variable of use gpu no matter what test to include user main test
-    add_definitions(-DPMC_USE_GPU)
+    add_definitions(-DCAMP_USE_GPU)
     #debug gpu add a considerable overhead in time
     if (ENABLE_ODE_GPU)
-      add_definitions(-DPMC_USE_ODE_GPU)
+      add_definitions(-DCAMP_USE_ODE_GPU)
     endif()
 
   else()
@@ -205,14 +205,14 @@ endif()
 # debugging options
 
 if (ENABLE_DEBUG)
-  add_definitions(-DPMC_DEBUG)
+  add_definitions(-DCAMP_DEBUG)
 endif()
 if (FAILURE_DETAIL)
   add_definitions(-DFAILURE_DETAIL)
 endif()
 if (ENABLE_DEBUG_GPU)
   if(ENABLE_MPI)
-    add_definitions(-DPMC_DEBUG_GPU)
+    add_definitions(-DCAMP_DEBUG_GPU)
   else()
     #ENABLE_DEBUG_GPU uses MPI timers
     message( ERROR "ENABLE_DEBUG_GPU NEEDS ENABLE_MPI")

@@ -45,7 +45,7 @@ program numeric_diff
   integer, parameter :: NORM_TWO = 2
   integer, parameter :: NORM_SUP = 3
 
-  character(len=PMC_MAX_FILENAME_LEN) :: filename1, filename2
+  character(len=CAMP_MAX_FILENAME_LEN) :: filename1, filename2
   integer :: by, norm, min_row, max_row, min_col, max_col, n_row, n_col
   real(kind=dp) :: abs_tol, rel_tol
   real(kind=dp), allocatable, target, dimension(:,:) :: data1, data2

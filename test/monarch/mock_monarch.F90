@@ -14,7 +14,7 @@ program mock_monarch
   use camp_monarch_interface
   use camp_mpi
   use camp_solver_stats
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
   use json_module
 #endif
 
@@ -171,7 +171,7 @@ program mock_monarch
   integer(kind=i_kind) ::  size_gas_species_to_print, size_aerosol_species_to_print
 
   ! MPI
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
   character, allocatable :: buffer(:)
   integer(kind=i_kind) :: pos, pack_size, mpi_threads
 #endif
@@ -533,7 +533,7 @@ program mock_monarch
                                  solver_stats,DIFF_CELLS)
     curr_time = curr_time + TIME_STEP
 
-#ifdef PMC_DEBUG_GPU
+#ifdef CAMP_DEBUG_GPU
     call export_solver_stats(curr_time,camp_interface,solver_stats,ncounters,ntimers)
 #endif
 
@@ -592,7 +592,7 @@ program mock_monarch
 
   end do
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
   if (camp_mpi_rank().eq.0) then
     write(*,*) "Model run time: ", comp_time, " s"
   end if
@@ -659,7 +659,7 @@ program mock_monarch
   deallocate(output_file_prefix)
   deallocate(output_file_title)
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
 
   !call MPI_COMM_SIZE(MPI_COMM_WORLD, mpi_threads)
   mpi_threads = camp_mpi_size()!1
@@ -1296,7 +1296,7 @@ contains
         call json%add(photo_rates, trim(i_str), auxr)
       end do
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
       mpi_rank = camp_mpi_rank()
 
       write(mpi_rank_str,*) mpi_rank
@@ -2019,7 +2019,7 @@ contains
     allocate(counters_max(ncounters))
     allocate(times_max(ntimers))
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
 
     l_comm = MPI_COMM_WORLD
 

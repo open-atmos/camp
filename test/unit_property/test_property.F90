@@ -8,7 +8,7 @@
 !> Unit tests for the camp_property module.
 program camp_property_test
 
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
   use json_module
 #endif
   use camp_mpi
@@ -203,7 +203,7 @@ contains
 
   !> Test loading properties from a json
   logical function load_property_set_test()
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
     ! Property set
     type(property_t), pointer :: props, sub_props, prop2
     ! JSON string

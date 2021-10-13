@@ -9,10 +9,10 @@
 module camp_util
 
   use camp_constants
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
   use mpi
 #endif
-#ifdef PMC_USE_C_SORT
+#ifdef CAMP_USE_C_SORT
   use iso_c_binding
 #endif
 
@@ -24,9 +24,9 @@ module camp_util
   logical, save :: unit_used(max_units) = .false.
 
   !> Length of string for converting numbers.
-  integer, parameter :: PMC_UTIL_CONVERT_STRING_LEN = 100
+  integer, parameter :: CAMP_UTIL_CONVERT_STRING_LEN = 100
   !> Maximum length of filenames.
-  integer, parameter :: PMC_MAX_FILENAME_LEN = 300
+  integer, parameter :: CAMP_MAX_FILENAME_LEN = 300
 
   !> Interface for to_string functions
   interface to_string
@@ -134,13 +134,13 @@ contains
     logical, intent(in) :: condition_ok
     !> Msg if assertion fails.
     character(len=*), intent(in) :: error_msg
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: ierr
 #endif
     if (.not. condition_ok) then
        write(0,'(a)') 'ERROR (PartMC-' // trim(integer_to_string(code)) &
             // '): ' // trim(error_msg)
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
        call mpi_abort(MPI_COMM_WORLD, code, ierr)
 #else
        stop 3
@@ -826,12 +826,12 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Convert an integer to a string format.
-  character(len=PMC_UTIL_CONVERT_STRING_LEN) function integer_to_string(val)
+  character(len=CAMP_UTIL_CONVERT_STRING_LEN) function integer_to_string(val)
 
     !> Value to convert.
     integer, intent(in) :: val
 
-    character(len=PMC_UTIL_CONVERT_STRING_LEN) :: ret_val
+    character(len=CAMP_UTIL_CONVERT_STRING_LEN) :: ret_val
 
     ret_val = ""
     write(ret_val, '(i30)') val
@@ -842,12 +842,12 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 !> Convert a double precision real to a string format.
-  character(len=PMC_UTIL_CONVERT_STRING_LEN) function real_dp_to_string(val)
+  character(len=CAMP_UTIL_CONVERT_STRING_LEN) function real_dp_to_string(val)
 
     !> Value to convert.
     real(kind=dp), intent(in) :: val
 
-    character(len=PMC_UTIL_CONVERT_STRING_LEN) :: ret_val
+    character(len=CAMP_UTIL_CONVERT_STRING_LEN) :: ret_val
 
     ret_val = ""
     write(ret_val, '(g30.20)') val
@@ -858,12 +858,12 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Convert a single precision real to a string format.
-  character(len=PMC_UTIL_CONVERT_STRING_LEN) function real_sp_to_string(val)
+  character(len=CAMP_UTIL_CONVERT_STRING_LEN) function real_sp_to_string(val)
 
     !> Value to convert.
     real(kind=sp), intent(in) :: val
 
-    character(len=PMC_UTIL_CONVERT_STRING_LEN) :: ret_val
+    character(len=CAMP_UTIL_CONVERT_STRING_LEN) :: ret_val
 
     ret_val = ""
     write(ret_val, '(g30.20)') val
@@ -874,12 +874,12 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Convert a logical to a string format.
-  character(len=PMC_UTIL_CONVERT_STRING_LEN) function logical_to_string(val)
+  character(len=CAMP_UTIL_CONVERT_STRING_LEN) function logical_to_string(val)
 
     !> Value to convert.
     logical, intent(in) :: val
 
-    character(len=PMC_UTIL_CONVERT_STRING_LEN) :: ret_val
+    character(len=CAMP_UTIL_CONVERT_STRING_LEN) :: ret_val
 
     ret_val = ""
     if (val) then
@@ -894,12 +894,12 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Convert a complex to a string format.
-  character(len=PMC_UTIL_CONVERT_STRING_LEN) function complex_to_string(val)
+  character(len=CAMP_UTIL_CONVERT_STRING_LEN) function complex_to_string(val)
 
     !> Value to convert.
     complex(kind=dc), intent(in) :: val
 
-    character(len=PMC_UTIL_CONVERT_STRING_LEN) :: ret_val
+    character(len=CAMP_UTIL_CONVERT_STRING_LEN) :: ret_val
 
     ret_val = ""
     ret_val = "(" // trim(to_string(real(val))) &
@@ -911,7 +911,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Convert an integer to a string format of maximum length.
-  character(len=PMC_UTIL_CONVERT_STRING_LEN) &
+  character(len=CAMP_UTIL_CONVERT_STRING_LEN) &
        function integer_to_string_max_len(val, max_len)
 
     !> Value to convert.
@@ -919,7 +919,7 @@ contains
     !> Maximum length of resulting string.
     integer, intent(in) :: max_len
 
-    character(len=PMC_UTIL_CONVERT_STRING_LEN) :: ret_val
+    character(len=CAMP_UTIL_CONVERT_STRING_LEN) :: ret_val
 
     ret_val = integer_to_string(val)
     if (len_trim(ret_val) > max_len) then
@@ -932,7 +932,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Convert a real to a string format of maximum length.
-  character(len=PMC_UTIL_CONVERT_STRING_LEN) &
+  character(len=CAMP_UTIL_CONVERT_STRING_LEN) &
        function real_to_string_max_len(val, max_len)
 
     !> Value to convert.
@@ -940,7 +940,7 @@ contains
     !> Maximum length of resulting string.
     integer, intent(in) :: max_len
 
-    character(len=PMC_UTIL_CONVERT_STRING_LEN) :: ret_val, exp_str, frac_str
+    character(len=CAMP_UTIL_CONVERT_STRING_LEN) :: ret_val, exp_str, frac_str
     integer :: exp_val, exp_len, frac_len, use_frac_len, min_frac_len, i
     real(kind=dp) :: frac_val
 
@@ -987,7 +987,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Convert a time to a string format of maximum length.
-  character(len=PMC_UTIL_CONVERT_STRING_LEN) &
+  character(len=CAMP_UTIL_CONVERT_STRING_LEN) &
        function time_to_string_max_len(time, max_len)
 
     !> Time to convert (s).
@@ -998,7 +998,7 @@ contains
     integer, dimension(4), parameter :: scale  = (/   1,  60,  60,  24 /)
     character, dimension(4), parameter :: unit = (/ "s", "m", "h", "d" /)
 
-    character(len=PMC_UTIL_CONVERT_STRING_LEN) :: ret_val
+    character(len=CAMP_UTIL_CONVERT_STRING_LEN) :: ret_val
     integer :: i
     logical :: len_ok
     real(kind=dp) :: scaled_time
@@ -1531,7 +1531,7 @@ contains
     !> Permutation defining the sort: <tt>new_data(i) = data(perm(i))</tt>.
     integer, intent(out) :: perm(size(data))
 
-#ifdef PMC_USE_C_SORT
+#ifdef CAMP_USE_C_SORT
     integer(kind=c_int) :: n_c
     integer(kind=c_int), target :: data_c(size(data))
     integer(kind=c_int), target :: perm_c(size(data))

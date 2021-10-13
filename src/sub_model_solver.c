@@ -350,7 +350,7 @@ void sub_model_calculate(ModelData *model_data) {
  * \param J_data Pointer to sub-model Jacobian data
  * \param time_step Current time step [s]
  */
-#ifdef PMC_USE_SUNDIALS
+#ifdef CAMP_USE_SUNDIALS
 void sub_model_get_jac_contrib(ModelData *model_data, double *J_data,
                                realtype time_step) {
   // Get the number of sub models

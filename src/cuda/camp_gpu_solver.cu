@@ -76,7 +76,7 @@ void solver_new_gpu_cu(SolverData *sd, int n_dep_var,
   ModelData *md = &(sd->model_data);
   md->state_size = n_state_var * n_cells * sizeof(double);
   md->deriv_size = n_dep_var * n_cells * sizeof(double);
-  md->env_size = PMC_NUM_ENV_PARAM_ * n_cells * sizeof(double); //Temp and pressure
+  md->env_size = CAMP_NUM_ENV_PARAM_ * n_cells * sizeof(double); //Temp and pressure
   md->rxn_env_data_size = n_rxn_env_param * n_cells * sizeof(double);
   md->rxn_env_data_idx_size = (n_rxn+1) * sizeof(int);
   md->map_state_deriv_size = n_dep_var * n_cells * sizeof(int);
@@ -177,11 +177,11 @@ void solver_new_gpu_cu(SolverData *sd, int n_dep_var,
     exit(0);
   }
 
-#ifdef PMC_DEBUG_PRINT_GPU_SPECS
+#ifdef CAMP_DEBUG_PRINT_GPU_SPECS
   print_gpu_specs();
 #endif
 
-#ifdef PMC_DEBUG_GPU
+#ifdef CAMP_DEBUG_GPU
 
   md->timeDerivKernel=0.0;
   cudaEventCreate(&md->startDerivKernel);
@@ -781,7 +781,7 @@ __device__ void solveRXN0(
 }
 
 __device__ void cudaDevicecalc_deriv0(
-#ifdef PMC_DEBUG_GPU
+#ifdef CAMP_DEBUG_GPU
         int counterDeriv2,
 #endif
         //check_model_state
@@ -854,7 +854,7 @@ __device__ void cudaDevicecalc_deriv0(
     deriv_data.loss_rates = &( md->loss_rates[deriv_length_cell*i_cell]);
 
     md->grid_cell_state = &( md->state[state_size_cell*i_cell]);
-    md->grid_cell_env = &( md->env[PMC_NUM_ENV_PARAM_*i_cell]);
+    md->grid_cell_env = &( md->env[CAMP_NUM_ENV_PARAM_*i_cell]);
 
     /*
     md->grid_cell_aero_rep_env_data =
@@ -933,7 +933,7 @@ __device__ void cudaDevicecalc_deriv0(
 
 __device__
 void cudaDevicef0(
-#ifdef PMC_DEBUG_GPU
+#ifdef CAMP_DEBUG_GPU
         int counterDeriv2,
 #endif
         //check_model_state
@@ -958,7 +958,7 @@ void cudaDevicef0(
     return;
 
   cudaDevicecalc_deriv0(
-#ifdef PMC_DEBUG_GPU
+#ifdef CAMP_DEBUG_GPU
            counterDeriv2,
 #endif
         //check_model_state          md->map_state_deriv, threshhold, replacement_value, flag,
@@ -971,7 +971,7 @@ void cudaDevicef0(
 
 __global__
 void cudaGlobalf(
-#ifdef PMC_DEBUG_GPU
+#ifdef CAMP_DEBUG_GPU
         int counterDeriv2,
 #endif
         //check_model_state
@@ -985,7 +985,7 @@ void cudaGlobalf(
 {
 
   cudaDevicef0(
-#ifdef PMC_DEBUG_GPU
+#ifdef CAMP_DEBUG_GPU
           counterDeriv2,
 #endif
           //check_model_state
@@ -1002,7 +1002,7 @@ void cudaGlobalf(
 /** Old routine
  */
 __global__ void solveDerivative(
-#ifdef PMC_DEBUG_GPU
+#ifdef CAMP_DEBUG_GPU
         int counterDeriv2,
 #endif
         double time_step, int deriv_length_cell, int state_size_cell,
@@ -1073,7 +1073,7 @@ __global__ void solveDerivative(
     deriv_data.loss_rates = &( md->loss_rates[deriv_length_cell*i_cell]);
 
     md->grid_cell_state = &( md->state[state_size_cell*i_cell]);
-    md->grid_cell_env = &( md->env[PMC_NUM_ENV_PARAM_*i_cell]);
+    md->grid_cell_env = &( md->env[CAMP_NUM_ENV_PARAM_*i_cell]);
 
     //Filter threads for n_rxn
     int n_rxn = md->n_rxn;
@@ -1188,7 +1188,7 @@ int rxn_calc_deriv_gpu(SolverData *sd, N_Vector y, N_Vector deriv, double time_s
   HANDLE_ERROR(cudaMemset(md->deriv_data_gpu, 0.0, md->deriv_size));
 #endif
 
-#ifdef PMC_DEBUG_GPU
+#ifdef CAMP_DEBUG_GPU
   //timeDerivSend += (clock() - t1);
   //clock_t t2 = clock();
 
@@ -1229,7 +1229,7 @@ int rxn_calc_deriv_gpu(SolverData *sd, N_Vector y, N_Vector deriv, double time_s
     //cudaDeviceSynchronize();
     //solveDerivative << < (n_blocks), threads_block >> >(
     cudaGlobalf << < (n_blocks), threads_block >> >(
-#ifdef PMC_DEBUG_GPU
+#ifdef CAMP_DEBUG_GPU
     sd->counterDerivGPU,
 #endif
     //update_state
@@ -1245,7 +1245,7 @@ int rxn_calc_deriv_gpu(SolverData *sd, N_Vector y, N_Vector deriv, double time_s
   if(flag==CAMP_SOLVER_FAIL)
     return flag;
 
-#ifdef PMC_DEBUG_GPU
+#ifdef CAMP_DEBUG_GPU
   /*cudaDeviceSynchronize();
   timeDerivKernel += (clock() - t2);
   t3 = clock();*/
@@ -1303,7 +1303,7 @@ int rxn_calc_deriv_gpu(SolverData *sd, N_Vector y, N_Vector deriv, double time_s
   }
 */
 
-#ifdef PMC_DEBUG_GPU
+#ifdef CAMP_DEBUG_GPU
   /*timeDerivReceive += (clock() - t3);
   timeDeriv += (clock() - t1);
   t3 = clock();*/
@@ -1458,7 +1458,7 @@ __device__ void solveRXNJac0(
 }
 
 __device__ void cudaDevicecalc_Jac0(
-#ifdef PMC_DEBUG_GPU
+#ifdef CAMP_DEBUG_GPU
         int counterDeriv2,
 #endif
         //check_model_state
@@ -1532,7 +1532,7 @@ __device__ void cudaDevicecalc_Jac0(
     jacobian_reset_gpu(jacBlock);
 
     md->grid_cell_state = &( md->state[state_size_cell*i_cell]);
-    md->grid_cell_env = &( md->env[PMC_NUM_ENV_PARAM_*i_cell]);
+    md->grid_cell_env = &( md->env[CAMP_NUM_ENV_PARAM_*i_cell]);
 
     /*
     md->grid_cell_aero_rep_env_data =
@@ -1704,7 +1704,7 @@ __device__ void cudaDevicecalc_Jac0(
 
 __device__
 void cudaDeviceJac0(
-#ifdef PMC_DEBUG_GPU
+#ifdef CAMP_DEBUG_GPU
         int counterDeriv2,
 #endif
         //check_model_state
@@ -1726,7 +1726,7 @@ void cudaDeviceJac0(
   ModelDataGPU *md = &md_object;
 
   cudaDevicef0(
-#ifdef PMC_DEBUG_GPU
+#ifdef CAMP_DEBUG_GPU
           counterDeriv2,
 #endif
           //check_model_state
@@ -1775,7 +1775,7 @@ void cudaDeviceJac0(
   //if(tid==0)printf("cudaDeviceJac01\n");
 
   cudaDevicecalc_Jac0(
-#ifdef PMC_DEBUG_GPU
+#ifdef CAMP_DEBUG_GPU
           counterDeriv2,
 #endif
           //check_model_state          md->map_state_deriv, threshhold, replacement_value, flag,
@@ -1810,7 +1810,7 @@ void cudaDeviceJac0(
 
 __global__
 void cudaGlobalJac0(
-#ifdef PMC_DEBUG_GPU
+#ifdef CAMP_DEBUG_GPU
         int counterDeriv2,
 #endif
         //check_model_state
@@ -1830,7 +1830,7 @@ void cudaGlobalJac0(
   //__syncthreads();
 
   cudaDeviceJac0(
-#ifdef PMC_DEBUG_GPU
+#ifdef CAMP_DEBUG_GPU
           counterDeriv2,
 #endif
           //check_model_state
@@ -1924,7 +1924,7 @@ int rxn_calc_jac_gpu(SolverData *sd, SUNMatrix J, double time_step, N_Vector der
     //cudaDeviceSynchronize();
     //solveDerivative << < (n_blocks), threads_block >> >(
     cudaGlobalJac0 << < (n_blocks), threads_block >> >(
-#ifdef PMC_DEBUG_GPU
+#ifdef CAMP_DEBUG_GPU
             sd->counterDerivGPU,
 #endif
             //update_state
@@ -1983,7 +1983,7 @@ void free_gpu_cu(SolverData *sd) {
 
   free(sd->flagCells);
 
-#ifdef PMC_DEBUG_GPU
+#ifdef CAMP_DEBUG_GPU
 
   printf("timeDerivKernel %lf\n", md->timeDerivKernel/1000);
 

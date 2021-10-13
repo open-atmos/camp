@@ -11,10 +11,10 @@ program process
   use camp_output
   use camp_stats
 
-  character(len=PMC_MAX_FILENAME_LEN), parameter :: prefix &
+  character(len=CAMP_MAX_FILENAME_LEN), parameter :: prefix &
        = "out/urban_plume"
 
-  character(len=PMC_MAX_FILENAME_LEN) :: in_filename, out_filename
+  character(len=CAMP_MAX_FILENAME_LEN) :: in_filename, out_filename
   type(bin_grid_t) :: diam_grid, bc_grid, sc_grid
   type(aero_data_t) :: aero_data
   type(aero_state_t) :: aero_state
@@ -22,7 +22,7 @@ program process
   integer :: ncid, index, repeat, i_index, i_repeat, n_index, n_repeat
   real(kind=dp) :: time, del_t, tot_num_conc, tot_mass_conc
   real(kind=dp) :: d_alpha, d_gamma, chi
-  character(len=PMC_UUID_LEN) :: uuid
+  character(len=CAMP_UUID_LEN) :: uuid
   real(kind=dp), allocatable :: times(:), dry_diameters(:), num_concs(:), &
        dry_masses(:), masses(:), bc_masses(:), bc_fracs(:), &
        crit_rhs(:), scs(:), num_dist(:), &

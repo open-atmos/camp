@@ -433,7 +433,7 @@ c..Get rate constants
      &                        ATMPRES, H2O, RKI )
 !OJORBA3
 
-#ifdef PMC_DEBUG
+#ifdef CAMP_DEBUG
           !call MPI_COMM_RANK(MPI_COMM_WORLD, MYPE, MPIERROR)
           !if (MYPE.eq.18) then
           !if (C.eq.277 .and. JTS.eq.1) then !MYPE.eq.18 cells id

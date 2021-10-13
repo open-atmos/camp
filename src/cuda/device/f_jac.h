@@ -34,7 +34,7 @@ extern "C" {
 /*
 __device__
 void cudaDevicef(
-#ifdef PMC_DEBUG_GPU
+#ifdef CAMP_DEBUG_GPU
         int counterDeriv2,
 #endif
         //check_model_state

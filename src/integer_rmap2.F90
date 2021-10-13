@@ -414,7 +414,7 @@ contains
     !> Value to pack.
     type(integer_rmap2_t), intent(in) :: val
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: prev_position, i_1, i_2
     logical :: is_allocated
 
@@ -452,7 +452,7 @@ contains
     !> Value to pack.
     type(integer_rmap2_t), intent(inout) :: val
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: prev_position, i_1, i_2, n_1, n_2
     logical :: is_allocated
 

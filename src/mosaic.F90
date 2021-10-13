@@ -23,7 +23,7 @@ contains
   !> Whether MOSAIC support is compiled in.
   logical function mosaic_support()
 
-#ifdef PMC_USE_MOSAIC
+#ifdef CAMP_USE_MOSAIC
     mosaic_support = .true.
 #else
     mosaic_support = .false.
@@ -36,7 +36,7 @@ contains
   !> Initialize all MOSAIC data-structures.
   subroutine mosaic_init(env_state, aero_data, del_t, do_optical)
 
-#ifdef PMC_USE_MOSAIC
+#ifdef CAMP_USE_MOSAIC
     use module_data_mosaic_aero, only: alpha_ASTEM, rtol_eqb_ASTEM, &
          ptol_mol_ASTEM, mGAS_AER_XFER, mDYNAMIC_SOLVER
 
@@ -55,7 +55,7 @@ contains
     !> Whether to compute optical properties.
     logical, intent(in) :: do_optical
 
-#ifdef PMC_USE_MOSAIC
+#ifdef CAMP_USE_MOSAIC
     ! MOSAIC function interfaces
     interface
        subroutine LoadPeroxyParameters()
@@ -128,7 +128,7 @@ contains
   !> Clean-up after running MOSAIC, deallocating memory.
   subroutine mosaic_cleanup()
 
-#ifdef PMC_USE_MOSAIC
+#ifdef CAMP_USE_MOSAIC
     ! MOSAIC function interfaces
     interface
        subroutine DeallocateMemory()
@@ -146,7 +146,7 @@ contains
   subroutine mosaic_from_partmc(env_state, aero_data, &
        aero_state, gas_data, gas_state)
 
-#ifdef PMC_USE_MOSAIC
+#ifdef CAMP_USE_MOSAIC
     use module_data_mosaic_aero, only: nbin_a, aer, num_a, jhyst_leg, &
          jtotal, water_a
 
@@ -166,7 +166,7 @@ contains
     !> Gas state.
     type(gas_state_t), intent(in) :: gas_state
 
-#ifdef PMC_USE_MOSAIC
+#ifdef CAMP_USE_MOSAIC
     ! local variables
     real(kind=dp) :: time_UTC    ! 24-hr UTC clock time (hr).
     real(kind=dp) :: tmar21_sec  ! Time at noon, march 21, UTC (s).
@@ -272,7 +272,7 @@ contains
   subroutine mosaic_to_partmc(env_state, aero_data, aero_state, gas_data, &
        gas_state)
 
-#ifdef PMC_USE_MOSAIC
+#ifdef CAMP_USE_MOSAIC
     use module_data_mosaic_aero, only: nbin_a, aer, num_a, jhyst_leg, &
          jtotal, water_a
 
@@ -292,7 +292,7 @@ contains
     !> Gas state.
     type(gas_state_t), intent(inout) :: gas_state
 
-#ifdef PMC_USE_MOSAIC
+#ifdef CAMP_USE_MOSAIC
     ! local variables
     real(kind=dp) :: conv_fac(aero_data_n_spec(aero_data)), dum_var, num_conc
     integer :: i_part, i_spec, i_spec_mosaic
@@ -366,7 +366,7 @@ contains
   subroutine mosaic_timestep(env_state, aero_data, aero_state, gas_data, &
        gas_state, do_optical)
 
-#ifdef PMC_USE_MOSAIC
+#ifdef CAMP_USE_MOSAIC
     use module_data_mosaic_main, only: msolar
 #endif
 
@@ -383,7 +383,7 @@ contains
     !> Whether to compute optical properties.
     logical, intent(in) :: do_optical
 
-#ifdef PMC_USE_MOSAIC
+#ifdef CAMP_USE_MOSAIC
     ! MOSAIC function interfaces
     interface
        subroutine SolarZenithAngle()
@@ -430,7 +430,7 @@ contains
   subroutine mosaic_aero_optical(env_state, aero_data, &
        aero_state, gas_data, gas_state)
 
-#ifdef PMC_USE_MOSAIC
+#ifdef CAMP_USE_MOSAIC
     use module_data_mosaic_aero, only: ri_shell_a, ri_core_a, &
          ext_cross, scat_cross, asym_particle, dp_core_a
 #endif
@@ -446,7 +446,7 @@ contains
     !> Gas state.
     type(gas_state_t), intent(in) :: gas_state
 
-#ifdef PMC_USE_MOSAIC
+#ifdef CAMP_USE_MOSAIC
     ! MOSAIC function interfaces
     interface
        subroutine aerosol_optical()
@@ -488,7 +488,7 @@ contains
   subroutine mosaic_aero_optical_init(env_state, aero_data, &
        aero_state, gas_data, gas_state)
 
-#ifdef PMC_USE_MOSAIC
+#ifdef CAMP_USE_MOSAIC
     use module_data_mosaic_aero, only: ri_shell_a, ri_core_a, &
          ext_cross, scat_cross, asym_particle, dp_core_a
 #endif
@@ -504,7 +504,7 @@ contains
     !> Gas state.
     type(gas_state_t), intent(in) :: gas_state
 
-#ifdef PMC_USE_MOSAIC
+#ifdef CAMP_USE_MOSAIC
     ! MOSAIC function interfaces
     interface
        subroutine load_mosaic_parameters()

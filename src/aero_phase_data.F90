@@ -44,10 +44,10 @@
 !> The abstract aero_phase_data_t structure and associated subroutines.
 module camp_aero_phase_data
 
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
   use json_module
 #endif
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
   use mpi
 #endif
   use camp_chem_spec_data
@@ -224,7 +224,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Load species from an input file
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
   subroutine load(this, json, j_obj)
 
     !> Aerosol phase data
@@ -515,7 +515,7 @@ contains
     !> MPI communicator
     integer, intent(in) :: comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: prev_position
 
     prev_position = pos
@@ -541,7 +541,7 @@ contains
     !> MPI communicator
     integer, intent(in) :: comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: prev_position
 
     prev_position = pos

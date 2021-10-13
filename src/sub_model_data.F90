@@ -24,10 +24,10 @@
 !> The abstract sub_model_data_t structure and associated subroutines.
 module camp_sub_model_data
 
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
   use json_module
 #endif
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
   use mpi
 #endif
   use camp_constants,                    only : i_kind, dp
@@ -293,7 +293,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Load a sub-model from an input file
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
   subroutine load(this, json, j_obj)
 
     !> Sub model data
@@ -373,7 +373,7 @@ contains
     !> MPI communicator
     integer, intent(in) :: comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: prev_position
 
     prev_position = pos
@@ -400,7 +400,7 @@ contains
     !> MPI communicator
     integer, intent(in) :: comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: prev_position
 
     prev_position = pos
@@ -516,7 +516,7 @@ contains
     !> MPI communicator
     integer, intent(in), optional :: comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: l_comm
 
     if (present(comm)) then
@@ -551,7 +551,7 @@ contains
     !> MPI communicator
     integer, intent(in), optional :: comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: prev_position, l_comm
 
     if (present(comm)) then
@@ -587,7 +587,7 @@ contains
     !> MPI communicator
     integer, intent(in), optional :: comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: prev_position, l_comm
     integer(kind=i_kind) :: temp_int
 

@@ -8,7 +8,7 @@
 !> The property_t structure and associated subroutines.
 module camp_property
 
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
   use json_module
 #endif
   use camp_constants,                only : i_kind, dp
@@ -136,7 +136,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Load a property set from input data
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
   recursive subroutine load(this, json, j_obj, as_object, owner_name, &
             allow_duplicates)
 

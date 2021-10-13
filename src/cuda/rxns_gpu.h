@@ -14,7 +14,7 @@
 #include "camp_gpu_solver.h"
 
 
-//#define PMC_USE_SUNDIALS
+//#define CAMP_USE_SUNDIALS
 
 // aqueous_equilibrium
 void * rxn_gpu_aqueous_equilibrium_get_used_jac_elem(
@@ -31,7 +31,7 @@ void * rxn_gpu_aqueous_equilibrium_skip(
 void * rxn_gpu_aqueous_equilibrium_print(
           void *rxn_data);
 
-#ifdef PMC_USE_SUNDIALS
+#ifdef CAMP_USE_SUNDIALS
 //__device__ double rxn_aqueous_equilibrium_calc_overall_rate(int *rxn_data,
 //     double *rxn_double_gpu, double *rxn_env_data, double *state,
 //     double react_fact, double prod_fact, double water, int i_phase, int n_rxn2)
@@ -64,7 +64,7 @@ void * rxn_gpu_arrhenius_skip(
           void *rxn_data);
 void * rxn_gpu_arrhenius_print(
           void *rxn_data);
-#ifdef PMC_USE_SUNDIALS
+#ifdef CAMP_USE_SUNDIALS
 void rxn_cpu_arrhenius_calc_deriv_contrib(double *rxn_env_data, double *state,
           double *deriv, void *rxn_data, double * rxn_double_gpu, double time_step, int n_rxn);
 #ifdef __CUDA_ARCH__
@@ -100,7 +100,7 @@ void * rxn_gpu_CMAQ_H2O2_skip(
           void *rxn_data);
 void * rxn_gpu_CMAQ_H2O2_print(
           void *rxn_data);
-#ifdef PMC_USE_SUNDIALS
+#ifdef CAMP_USE_SUNDIALS
 #ifdef __CUDA_ARCH__
 __host__ __device__
 #endif
@@ -134,7 +134,7 @@ void * rxn_gpu_CMAQ_OH_HNO3_skip(
           void *rxn_data);
 void * rxn_gpu_CMAQ_OH_HNO3_print(
           void *rxn_data);
-#ifdef PMC_USE_SUNDIALS
+#ifdef CAMP_USE_SUNDIALS
 void rxn_cpu_CMAQ_OH_HNO3_calc_deriv_contrib(double *rxn_env_data, double *state,
           double *deriv, void *rxn_data, double * rxn_double_gpu, double time_step, int n_rxn);
 #ifdef __CUDA_ARCH__
@@ -170,7 +170,7 @@ void * rxn_gpu_condensed_phase_arrhenius_skip(
           void *rxn_data);
 void * rxn_gpu_condensed_phase_arrhenius_print(
           void *rxn_data);
-#ifdef PMC_USE_SUNDIALS
+#ifdef CAMP_USE_SUNDIALS
 void rxn_cpu_condensed_phase_arrhenius_calc_deriv_contrib(double *rxn_env_data, double *state,
           double *deriv, void *rxn_data, double * rxn_double_gpu, double time_step, int n_rxn);
 #ifdef __CUDA_ARCH__
@@ -202,7 +202,7 @@ void * rxn_gpu_emission_skip(
           void *rxn_data);
 void * rxn_gpu_emission_print(
           void *rxn_data);
-#ifdef PMC_USE_SUNDIALS
+#ifdef CAMP_USE_SUNDIALS
 void rxn_cpu_emission_calc_deriv_contrib(double *rxn_env_data, double *state,
           double *deriv, void *rxn_data, double * rxn_double_gpu, double time_step, int n_rxn);
 #ifdef __CUDA_ARCH__
@@ -237,7 +237,7 @@ void * rxn_gpu_first_order_loss_skip(
           void *rxn_data);
 void * rxn_gpu_first_order_loss_print(
           void *rxn_data);
-#ifdef PMC_USE_SUNDIALS
+#ifdef CAMP_USE_SUNDIALS
 void rxn_cpu_first_order_loss_calc_deriv_contrib(double *rxn_env_data, double *state,
           double *deriv, void *rxn_data, double * rxn_double_gpu, double time_step, int n_rxn);
 #ifdef __CUDA_ARCH__
@@ -264,7 +264,7 @@ void * rxn_gpu_HL_phase_transfer_skip(
           void *rxn_data);
 void * rxn_gpu_HL_phase_transfer_print(
           void *rxn_data);
-#ifdef PMC_USE_SUNDIALS
+#ifdef CAMP_USE_SUNDIALS
 #ifdef __CUDA_ARCH__
 __host__ __device__
 #endif
@@ -294,7 +294,7 @@ void * rxn_gpu_photolysis_skip(
           void *rxn_data);
 void * rxn_gpu_photolysis_print(
           void *rxn_data);
-#ifdef PMC_USE_SUNDIALS
+#ifdef CAMP_USE_SUNDIALS
 void rxn_cpu_photolysis_calc_deriv_contrib(double *rxn_env_data, double *state,
           double *deriv, void *rxn_data, double * rxn_double_gpu, double time_step, int n_rxn);
 #ifdef __CUDA_ARCH__
@@ -327,7 +327,7 @@ void * rxn_gpu_SIMPOL_phase_transfer_skip(
           void *rxn_data);
 void * rxn_gpu_SIMPOL_phase_transfer_print(
           void *rxn_data);
-#ifdef PMC_USE_SUNDIALS
+#ifdef CAMP_USE_SUNDIALS
 #ifdef __CUDA_ARCH__
 __host__ __device__
 #endif
@@ -354,7 +354,7 @@ void * rxn_gpu_troe_skip(
           void *rxn_data);
 void * rxn_gpu_troe_print(
           void *rxn_data);
-#ifdef PMC_USE_SUNDIALS
+#ifdef CAMP_USE_SUNDIALS
 void rxn_cpu_troe_calc_deriv_contrib(double *rxn_env_data, double *state, double *deriv,
           void *rxn_data, double * rxn_double_gpu, double time_step, int n_rxn);
 #ifdef __CUDA_ARCH__
@@ -392,7 +392,7 @@ void * rxn_gpu_wet_deposition_skip(
           void *rxn_data);
 void * rxn_gpu_wet_deposition_print(
           void *rxn_data);
-#ifdef PMC_USE_SUNDIALS
+#ifdef CAMP_USE_SUNDIALS
 void rxn_cpu_wet_deposition_calc_deriv_contrib(double *rxn_env_data, double *state,
           double *deriv, void *rxn_data, double * rxn_double_gpu, double time_step, int n_rxn);
 #ifdef __CUDA_ARCH__

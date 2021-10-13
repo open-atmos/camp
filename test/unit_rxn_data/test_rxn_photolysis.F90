@@ -19,7 +19,7 @@ program camp_test_photolysis
   use camp_camp_core
   use camp_camp_state
   use camp_solver_stats
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
   use json_module
 #endif
   use camp_mpi
@@ -93,7 +93,7 @@ contains
     real(kind=dp) :: photo_rate_A, photo_rate_B
     type(chem_spec_data_t), pointer :: chem_spec_data
     class(rxn_data_t), pointer :: rxn
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     character, allocatable :: buffer(:), buffer_copy(:)
     integer(kind=i_kind) :: pack_size, pos, i_elem, results
 #endif
@@ -118,7 +118,7 @@ contains
     ! Set output time step (s)
     time_step = 1.0
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     ! Load the model data on the root process and pass it to process 1 for solving
     if (camp_mpi_rank().eq.0) then
 #endif
@@ -182,7 +182,7 @@ contains
       call assert(226395220, idx_B.gt.0)
       call assert(338713565, idx_C.gt.0)
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
       ! pack the camp core
       pack_size = camp_core%pack_size() &
                 + rate_update_A%pack_size() &
@@ -262,7 +262,7 @@ contains
       call rate_update_B%set_rate(photo_rate_B)
       call camp_core%update_data(rate_update_B)
 
-#ifdef PMC_DEBUG
+#ifdef CAMP_DEBUG
       ! Evaluate the Jacobian during solving
       solver_stats%eval_Jac = .true.
 #endif
@@ -275,7 +275,7 @@ contains
                               solver_stats = solver_stats)
         model_conc(i_time,:) = camp_state%state_var(:)
 
-#ifdef PMC_DEBUG
+#ifdef CAMP_DEBUG
         ! Check the Jacobian evaluations
         call assert_msg(635103259, solver_stats%Jac_eval_fails.eq.0, &
                         trim( to_string( solver_stats%Jac_eval_fails ) )// &
@@ -321,7 +321,7 @@ contains
 
       deallocate(camp_state)
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
       ! convert the results to an integer
       if (run_photolysis_test) then
         results = 0

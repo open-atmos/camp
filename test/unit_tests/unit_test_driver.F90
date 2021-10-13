@@ -58,7 +58,7 @@ program unit_test_driver
   real(kind=dp) :: time
   logical :: passed
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
   character, allocatable :: buffer(:), buffer_copy(:)
   integer(kind=i_kind) :: pack_size, pos, i_elem, results
 #endif
@@ -71,7 +71,7 @@ program unit_test_driver
   ! Seed the random number generator
   call camp_srand(0,0)
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
   ! Load the model data and initialize the cores on the primary process, then
   ! pass the cores to process 1 for solving
   if( camp_mpi_rank( ) .eq. 0 ) then
@@ -91,7 +91,7 @@ program unit_test_driver
     ! Initialize the unit test
     call unit_test%initialize( one_cell_core )
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     ! Pack the cores and the unit test
     pack_size = one_cell_core%pack_size( )  + &
                 multicell_core%pack_size( ) + &
@@ -201,7 +201,7 @@ program unit_test_driver
 
     end do
 
-#ifdef PMC_DEBUG
+#ifdef CAMP_DEBUG
     ! Evaluate the Jacobian during solving
     solver_stats%eval_Jac = .true.
 #endif
@@ -223,7 +223,7 @@ program unit_test_driver
                                  unit_test%time_step_size( ), &
                                  solver_stats = solver_stats )
 
-#ifdef PMC_DEBUG
+#ifdef CAMP_DEBUG
       ! Check the Jacobian evaluations
       call assert_msg( 673820325, solver_stats%Jac_eval_fails.eq.0, &
                        trim( to_string( solver_stats%Jac_eval_fails ) )// &
@@ -251,7 +251,7 @@ program unit_test_driver
                                   unit_test%time_step_size( ), &
                                   solver_stats = solver_stats )
 
-#ifdef PMC_DEBUG
+#ifdef CAMP_DEBUG
         ! Check the Jacobian evaluations
         call assert_msg( 781326658, solver_stats%Jac_eval_fails.eq.0, &
                          trim( to_string( solver_stats%Jac_eval_fails ) )// &
@@ -313,7 +313,7 @@ program unit_test_driver
     deallocate( multicell_state )
     deallocate( multicell_cell_state )
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     ! convert the results to an integer
     if( passed ) then
       results = 0

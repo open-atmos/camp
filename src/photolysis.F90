@@ -157,7 +157,7 @@ contains
 
     integer(kind=i_kind) :: i_rxn, l_comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     if (present(comm)) then
       l_comm = comm
     else
@@ -196,7 +196,7 @@ contains
     !> MPI communicator
     integer, intent(in), optional :: comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: l_comm, i_rxn, prev_position
 
     if (present(comm)) then
@@ -235,7 +235,7 @@ contains
     !> MPI communicator
     integer, intent(in), optional :: comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: l_comm, i_rxn, n_rxns, prev_position
 
     if (present(comm)) then

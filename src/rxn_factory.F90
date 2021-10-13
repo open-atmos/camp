@@ -169,10 +169,10 @@
 !> The abstract rxn_factory_t structure and associated subroutines.
 module camp_rxn_factory
 
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
   use json_module
 #endif
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
   use mpi
 #endif
   use camp_constants,                  only : i_kind, dp
@@ -291,7 +291,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Load an aerosol represenation from input data
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
   function load(this, json, j_obj) result (new_obj)
 
     !> A chemical reaction
@@ -456,7 +456,7 @@ contains
     !> MPI communicator
     integer, intent(in) :: comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: rxn_type, i_rxn, prev_position
 
     prev_position = pos
@@ -512,7 +512,7 @@ contains
     !> MPI communicator
     integer, intent(in) :: comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: rxn_type, i_rxn, prev_position
 
     prev_position = pos

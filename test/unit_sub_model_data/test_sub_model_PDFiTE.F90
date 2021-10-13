@@ -20,7 +20,7 @@ program camp_test_PDFiTE
   use camp_aero_rep_single_particle
   use camp_chem_spec_data
   use camp_solver_stats
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
   use json_module
 #endif
   use camp_mpi
@@ -96,7 +96,7 @@ contains
             NH42SO4_B2, NH42SO4_B3, NH4NO3_B0, NH4NO3_B1, NH4NO3_B2, &
             NH4NO3_B3, H_p_mol_m3, NH4_p_mol_m3, SO4_mm_mol_m3, &
             NO3_m_mol_m3, temp, pressure, a_w
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     character, allocatable :: buffer(:), buffer_copy(:)
     integer(kind=i_kind) :: pack_size, pos, i_elem, results
 #endif
@@ -112,7 +112,7 @@ contains
     ! Set output time step (s)
     time_step = 1.0d0
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     ! Load the model data on root process and pass it to process 1 for solving
     if (camp_mpi_rank().eq.0) then
 #endif
@@ -169,7 +169,7 @@ contains
       call assert(442660651, idx_H_NO3.gt.0)
       call assert(272503747, idx_H2_SO4.gt.0)
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
       ! pack the camp core
       pack_size = camp_core%pack_size()
       allocate(buffer(pack_size))
@@ -293,7 +293,7 @@ contains
       ! Set the initial state in the model
       camp_state%state_var(:) = model_conc(0,:)
 
-#ifdef PMC_DEBUG
+#ifdef CAMP_DEBUG
       ! Evaluate the Jacobian during solving
       solver_stats%eval_Jac = .true.
 #endif
@@ -312,7 +312,7 @@ contains
                               solver_stats = solver_stats)
         model_conc(i_RH,:) = camp_state%state_var(:)
 
-#ifdef PMC_DEBUG
+#ifdef CAMP_DEBUG
         ! Check the Jacobian evaluations
         call assert_msg(404462844, solver_stats%Jac_eval_fails.eq.0, &
                         trim( to_string( solver_stats%Jac_eval_fails ) )// &
@@ -449,7 +449,7 @@ contains
 
       deallocate(camp_state)
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
       ! convert the results to an integer
       if (run_PDFiTE_test) then
         results = 0

@@ -11,7 +11,7 @@ module camp_camp_state
 ! Define array size for contain temperature and pressure
 #define CAMP_STATE_NUM_ENV_PARAM 2
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
   use mpi
 #endif
   use camp_env_state

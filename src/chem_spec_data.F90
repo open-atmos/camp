@@ -31,7 +31,7 @@
 !> The chem_spec_data_t structure and associated subroutines.
 module camp_chem_spec_data
 
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
   use json_module
 #endif
   use camp_constants,                  only : dp, i_kind
@@ -208,7 +208,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Load species from an input file
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
   subroutine load(this, json, j_obj)
 
     !> Species dataset

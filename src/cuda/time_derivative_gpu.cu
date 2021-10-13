@@ -56,7 +56,7 @@ __host__ __device__
 void time_derivative_output_gpu(TimeDerivativeGPU time_deriv, double *dest_array,
                             double *deriv_est, unsigned int output_precision) {
 
-#ifdef PMC_DEBUG
+#ifdef CAMP_DEBUG
   time_deriv.last_max_loss_precision = 1.0;
 #endif
 
@@ -111,7 +111,7 @@ void time_derivative_output_gpu(TimeDerivativeGPU time_deriv, double *dest_array
       } else {
         *dest_array = *r_p - *r_l;
       }
-#ifdef PMC_DEBUG
+#ifdef CAMP_DEBUG
       if (*r_p != 0.0 && *r_l != 0.0) {
         prec_loss = *r_p > *r_l ? 1.0 - *r_l / *r_p : 1.0 - *r_p / *r_l;
         if (prec_loss < time_deriv.last_max_loss_precision)
@@ -125,7 +125,7 @@ void time_derivative_output_gpu(TimeDerivativeGPU time_deriv, double *dest_array
     ++r_l;
     ++dest_array;
     if (deriv_est) ++deriv_est;
-#ifdef PMC_DEBUG
+#ifdef CAMP_DEBUG
     if (output_precision == 1) {
       printf("\nspec %d prec_loss %le", i_spec, -log(prec_loss) / log(2.0));
     }
@@ -160,7 +160,7 @@ void time_derivative_add_value_gpu(TimeDerivativeGPU time_deriv, unsigned int sp
 #endif
 }
 
-#ifdef PMC_DEBUG
+#ifdef CAMP_DEBUG
 double time_derivative_max_loss_precision(TimeDerivativeGPU time_deriv) {
   return -log(time_deriv.last_max_loss_precision) / log(2.0);
 }

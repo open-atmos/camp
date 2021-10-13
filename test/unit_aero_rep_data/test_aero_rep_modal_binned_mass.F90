@@ -16,10 +16,10 @@ program camp_test_aero_rep_data
   use camp_aero_rep_data
   use camp_aero_rep_factory
   use camp_aero_rep_modal_binned_mass
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
   use json_module
 #endif
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
   use mpi
 #endif
   use camp_mpi
@@ -99,12 +99,12 @@ contains
     type(camp_state_t), pointer :: camp_state
     class(aero_rep_data_t), pointer :: aero_rep
 
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
 
     integer(kind=i_kind) :: i_spec, j_spec, i_phase
     character(len=:), allocatable :: rep_name, spec_name, phase_name
     type(string_t), allocatable :: file_list(:), unique_names(:)
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     type(string_t), allocatable :: rep_names(:)
     type(aero_rep_factory_t) :: aero_rep_factory
     type(aero_rep_data_ptr), allocatable :: aero_rep_passed_data_set(:)
@@ -213,7 +213,7 @@ contains
     call assert(366369046, .not.associated(aero_rep))
 
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     allocate(rep_names(1))
     rep_names(1)%string = "my modal/binned mass aerosol rep"
     pack_size = 0

@@ -13,10 +13,10 @@
 !> The sub_model_factory_t type and associated subroutines
 module camp_sub_model_factory
 
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
   use json_module
 #endif
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
   use mpi
 #endif
   use camp_constants,                    only : i_kind, dp
@@ -94,7 +94,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Load a sub-model based on its type
-#ifdef PMC_USE_JSON
+#ifdef CAMP_USE_JSON
   function load(this, json, j_obj) result (new_obj)
 
     !> A new sub-model
@@ -214,7 +214,7 @@ contains
     !> MPI communicator
     integer, intent(in) :: comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: sub_model_data_type, i_sub_model, prev_position
 
     prev_position = pos
@@ -252,7 +252,7 @@ contains
     !> MPI communicator
     integer, intent(in) :: comm
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: sub_model_data_type, i_sub_model, prev_position
 
     prev_position = pos

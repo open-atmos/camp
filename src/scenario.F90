@@ -18,7 +18,7 @@ module camp_scenario
   use camp_gas_data
   use camp_chamber
   use camp_mpi
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
   use mpi
 #endif
 
@@ -759,7 +759,7 @@ contains
     !> Scenario data.
     type(scenario_t), intent(inout) :: scenario
 
-    character(len=PMC_MAX_FILENAME_LEN) :: sub_filename
+    character(len=CAMP_MAX_FILENAME_LEN) :: sub_filename
     type(spec_file_t) :: sub_file
     character(len=SPEC_LINE_MAX_VAR_LEN) :: function_name
 
@@ -1045,7 +1045,7 @@ contains
     !> Value to pack.
     type(scenario_t), intent(in) :: val
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: prev_position, i
 
     prev_position = position
@@ -1104,7 +1104,7 @@ contains
     !> Value to pack.
     type(scenario_t), intent(inout) :: val
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: prev_position, i
 
     prev_position = position

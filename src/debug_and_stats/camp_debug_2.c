@@ -14,7 +14,7 @@
 
 #include <unistd.h>
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
 #include <mpi.h>
 #endif
 
@@ -202,7 +202,7 @@ void export_counters_open(SolverData *sd)
 
   ModelData *md = &(sd->model_data);
 
-#ifdef PMC_DEBUG_GPU
+#ifdef CAMP_DEBUG_GPU
 
   //char rel_path[] = "../../../../../exported_counters_";
   //char rel_path[] =
@@ -217,7 +217,7 @@ void export_counters_open(SolverData *sd)
   char rank_str[64];
   char path[1024];
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
 
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);

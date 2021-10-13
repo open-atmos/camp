@@ -33,7 +33,7 @@ module camp_run_exact
      !> Type of coagulation kernel.
      integer :: coag_kernel_type
      !> UUID of the simulation.
-     character(len=PMC_UUID_LEN) :: uuid
+     character(len=CAMP_UUID_LEN) :: uuid
   end type run_exact_opt_t
 
 contains

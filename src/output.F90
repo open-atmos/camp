@@ -78,7 +78,7 @@ module camp_output
   use camp_util
   use camp_gas_data
   use camp_mpi
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
   use mpi
 #endif
 
@@ -138,10 +138,10 @@ contains
     !> Whether to output aerosol optical properties.
     logical, intent(in) :: record_optical
     !> UUID of the simulation.
-    character(len=PMC_UUID_LEN), intent(in) :: uuid
+    character(len=CAMP_UUID_LEN), intent(in) :: uuid
 
     integer :: rank, n_proc
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     type(env_state_t) :: env_state_write
     type(gas_state_t) :: gas_state_write
     type(aero_state_t) :: aero_state_write
@@ -158,7 +158,7 @@ contains
           call output_state_to_file(prefix, aero_data, aero_state, gas_data, &
                gas_state, env_state, index, time, del_t, i_repeat, &
                record_removals, record_optical, uuid, rank, n_proc)
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
           do i_proc = 1,(n_proc - 1)
              call recv_output_state_central(prefix, aero_data, gas_data, &
                   index, time, del_t, i_repeat, record_removals, &
@@ -179,7 +179,7 @@ contains
                gas_state, env_state, index, time, del_t, i_repeat, &
                record_removals, record_optical, uuid, rank, n_proc)
        else
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
           ! collect all data onto process 0 and then write it to a
           ! single file
           env_state_write = env_state
@@ -305,7 +305,7 @@ contains
     !> Whether to output aerosol optical properties.
     logical, intent(in) :: record_optical
     !> UUID of the simulation.
-    character(len=PMC_UUID_LEN), intent(in) :: uuid
+    character(len=CAMP_UUID_LEN), intent(in) :: uuid
     !> Rank to write into file.
     integer, intent(in), optional :: write_rank
     !> Number of processes to write into file.
@@ -393,7 +393,7 @@ contains
     !> Environment state.
     type(env_state_t), intent(in) :: env_state
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: buffer_size, max_buffer_size, position, ierr
     character, allocatable :: buffer(:)
 
@@ -448,11 +448,11 @@ contains
     !> Whether to output aerosol_optical_properties.
     logical, intent(in) :: record_optical
     !> UUID of the simulation.
-    character(len=PMC_UUID_LEN), intent(in) :: uuid
+    character(len=CAMP_UUID_LEN), intent(in) :: uuid
     !> Process number to receive from.
     integer, intent(in) :: remote_proc
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     type(env_state_t) :: env_state
     type(gas_state_t) :: gas_state
     type(aero_state_t) :: aero_state
@@ -508,7 +508,7 @@ contains
     !> Current repeat number.
     integer, intent(out) :: i_repeat
     !> UUID of the simulation.
-    character(len=PMC_UUID_LEN), intent(out) :: uuid
+    character(len=CAMP_UUID_LEN), intent(out) :: uuid
     !> Aerosol data.
     type(aero_data_t), optional, intent(inout) :: aero_data
     !> Aerosol state.
@@ -691,7 +691,7 @@ contains
     !> Current output time-step (s).
     real(kind=dp), intent(in) :: del_t
     !> UUID of the simulation.
-    character(len=PMC_UUID_LEN), intent(in) :: uuid
+    character(len=CAMP_UUID_LEN), intent(in) :: uuid
 
     integer :: ncid
     character(len=len(prefix)+100) :: filename
@@ -730,7 +730,7 @@ contains
     !> Current output time-step (s).
     real(kind=dp), intent(out) :: del_t
     !> UUID of the simulation.
-    character(len=PMC_UUID_LEN), intent(out) :: uuid
+    character(len=CAMP_UUID_LEN), intent(out) :: uuid
     !> Bin grid.
     type(bin_grid_t), optional, intent(inout) :: bin_grid
     !> Aerosol data.

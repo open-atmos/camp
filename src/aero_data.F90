@@ -18,7 +18,7 @@ module camp_aero_data
   use camp_aero_rep_data
   use camp_aero_rep_single_particle
   use camp_property
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
   use mpi
 #endif
 
@@ -510,7 +510,7 @@ contains
     !> Value to pack.
     type(aero_data_t), intent(in) :: val
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: prev_position
 
     prev_position = position
@@ -542,7 +542,7 @@ contains
     !> Value to pack.
     type(aero_data_t), intent(inout) :: val
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: prev_position
 
     prev_position = position

@@ -19,8 +19,8 @@ program extract_aero_size
   integer, parameter :: DIST_TYPE_NUM = 1
   integer, parameter :: DIST_TYPE_MASS = 2
 
-  character(len=PMC_MAX_FILENAME_LEN) :: in_prefix, out_filename
-  character(len=PMC_MAX_FILENAME_LEN), allocatable :: filename_list(:)
+  character(len=CAMP_MAX_FILENAME_LEN) :: in_prefix, out_filename
+  character(len=CAMP_MAX_FILENAME_LEN), allocatable :: filename_list(:)
   character(len=1000) :: tmp_str
   type(bin_grid_t) :: diam_grid
   type(aero_data_t) :: aero_data
@@ -29,7 +29,7 @@ program extract_aero_size
   integer :: i_file, n_file, i_bin, n_bin, dist_type
   real(kind=dp) :: time, del_t
   real(kind=dp) :: d_min, d_max, diam, volume
-  character(len=PMC_UUID_LEN) :: uuid, run_uuid
+  character(len=CAMP_UUID_LEN) :: uuid, run_uuid
   real(kind=dp), allocatable :: diameters(:), num_concs(:), masses(:), hist(:)
   real(kind=dp), allocatable :: aero_dist(:,:)
   type(option_s) :: opts(7)

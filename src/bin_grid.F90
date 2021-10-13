@@ -13,7 +13,7 @@ module camp_bin_grid
   use camp_spec_file
   use camp_mpi
   use camp_netcdf
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
   use mpi
 #endif
 
@@ -303,7 +303,7 @@ contains
     !> Value to pack.
     type(bin_grid_t), intent(in) :: val
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: prev_position
 
     prev_position = position
@@ -329,7 +329,7 @@ contains
     !> Value to pack.
     type(bin_grid_t), intent(inout) :: val
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: prev_position
 
     prev_position = position
@@ -351,7 +351,7 @@ contains
     !> Value to compare.
     type(bin_grid_t), intent(inout) :: val
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     if (.not. camp_mpi_allequal_integer(val%type)) then
        camp_mpi_allequal_bin_grid = .false.
        return

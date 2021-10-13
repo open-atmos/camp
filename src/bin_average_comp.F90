@@ -30,7 +30,7 @@ program bin_average_comp
   real(kind=dp) :: d_min, d_max, time, del_t
   character(len=1000) :: tmp_str
   logical :: record_removals, dry_volume, record_optical
-  character(len=PMC_UUID_LEN) :: uuid
+  character(len=CAMP_UUID_LEN) :: uuid
 
   ! process commandline arguments
   if (command_argument_count() .ne. 6) then

@@ -947,7 +947,7 @@ void solveBcgCuda(
         ,int n_cells, double tolmax, double *ddiag //Init variables
         ,double *dr0, double *dr0h, double *dn0, double *dp0
         ,double *dt, double *ds, double *dAx2, double *dy, double *dz// Auxiliary vectors
-#ifdef PMC_DEBUG_GPU
+#ifdef CAMP_DEBUG_GPU
         ,int *it_pointer
 #endif
 )
@@ -1004,7 +1004,7 @@ void solveBcgCuda(
     //gpu_yequalsx(dr0h,dr0,nrows,blocks,threads);  //r0h=r0
     cudaDeviceyequalsx(dr0h,dr0,nrows);
 
-#ifdef PMC_DEBUG_GPU
+#ifdef CAMP_DEBUG_GPU
     //int it=*it_pointer;
     int it=0;
 #else
@@ -1190,7 +1190,7 @@ void solveBcgCuda(
 
     //dvcheck_input_gpud(dr0,nrows,k++);
 
-#ifdef PMC_DEBUG_GPU
+#ifdef CAMP_DEBUG_GPU
 
 #ifdef solveBcgCuda_sum_it
 
@@ -1267,7 +1267,7 @@ void solveGPU_block_thr(int blocks, int threads_block, int n_shr_memory, int n_s
   }
 #endif
 
-#ifdef PMC_DEBUG_GPU
+#ifdef CAMP_DEBUG_GPU
   int *dit_ptr;
 
 #ifdef solveBcgCuda_sum_it
@@ -1295,13 +1295,13 @@ void solveGPU_block_thr(int blocks, int threads_block, int n_shr_memory, int n_s
                                            //solveBcgCuda << < blocks, threads_block, threads_block * sizeof(double) >> >
                                            (dA, djA, diA, dx, dtempv, nrows, blocks, n_shr_empty, maxIt, mattype, n_cells,
                                                    tolmax, ddiag, dr0, dr0h, dn0, dp0, dt, ds, dAx2, dy, dz
-#ifdef PMC_DEBUG_GPU
+#ifdef CAMP_DEBUG_GPU
                                                    ,dit_ptr
 #endif
                                            );
 
 
-#ifdef PMC_DEBUG_GPU
+#ifdef CAMP_DEBUG_GPU
   cudaFree(dit_ptr);
 #endif
 

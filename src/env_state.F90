@@ -13,7 +13,7 @@ module camp_env_state
   use camp_spec_file
   use camp_mpi
   use camp_netcdf
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
   use mpi
 #endif
 
@@ -287,7 +287,7 @@ contains
     !> Value to average.
     type(env_state_t), intent(inout) :: val
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     type(env_state_t) :: val_avg
 
     call camp_mpi_allreduce_average_real(val%temp, val_avg%temp)
@@ -309,7 +309,7 @@ contains
     !> Value to average.
     type(env_state_t), intent(inout) :: val
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     type(env_state_t) :: val_avg
 
     call camp_mpi_reduce_avg_real(val%temp, val_avg%temp)
@@ -359,7 +359,7 @@ contains
     !> Value to pack.
     class(env_state_t), intent(in) :: val
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: prev_position
 
     prev_position = position
@@ -392,7 +392,7 @@ contains
     !> Value to pack.
     class(env_state_t), intent(inout) :: val
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: prev_position
 
     prev_position = position

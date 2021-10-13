@@ -11,17 +11,17 @@ program process
   use camp_output
   use camp_stats
 
-  character(len=PMC_MAX_FILENAME_LEN), parameter :: prefix &
+  character(len=CAMP_MAX_FILENAME_LEN), parameter :: prefix &
        = "out/chamber"
 
-  character(len=PMC_MAX_FILENAME_LEN) :: in_filename, out_filename
+  character(len=CAMP_MAX_FILENAME_LEN) :: in_filename, out_filename
   type(bin_grid_t) :: diam_grid
   type(aero_data_t) :: aero_data
   type(aero_state_t) :: aero_state
   type(env_state_t) :: env_state
   integer :: ncid, index, repeat, i_index, i_repeat, n_index, n_repeat
   real(kind=dp) :: time, del_t, tot_num_conc, tot_mass_conc
-  character(len=PMC_UUID_LEN) :: uuid
+  character(len=CAMP_UUID_LEN) :: uuid
   real(kind=dp), allocatable :: times(:), mobility_diameters(:), &
        num_concs(:), dry_masses(:), masses(:), num_dist(:), mass_dist(:)
   type(stats_1d_t) :: stats_num_dist, stats_mass_dist, stats_tot_num_conc, &

@@ -120,7 +120,7 @@ program mock_monarch
   integer(kind=i_kind) :: size_gas_species_to_print, size_aerosol_species_to_print
 
   ! MPI
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
   character, allocatable :: buffer(:)
   integer(kind=i_kind) :: pos, pack_size
 #endif
@@ -301,7 +301,7 @@ program mock_monarch
 
     end do
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     if (camp_mpi_rank().eq.0) then
       write(*,*) "Model run time: ", comp_time, " s"
     end if
@@ -323,7 +323,7 @@ program mock_monarch
 
   !#ifdef DEBUG
   !print*, "SPECIES CONC", species_conc(:,1,1,100)
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
 #else
   !print*, "SPECIES CONC COPY", species_conc_copy(:,1,1,100)
 #endif
@@ -373,7 +373,7 @@ program mock_monarch
   call camp_mpi_finalize()
 
   ! Free the interface and the solver
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
 
   !not work on MPI
   !if (camp_mpi_rank().eq.0) then

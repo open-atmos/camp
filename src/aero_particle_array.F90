@@ -12,7 +12,7 @@ module camp_aero_particle_array
   use camp_util
   use camp_spec_file
   use camp_mpi
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
   use mpi
 #endif
 
@@ -230,7 +230,7 @@ contains
     !> Value to pack.
     type(aero_particle_array_t), intent(in) :: val
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: prev_position, i
 
     prev_position = position
@@ -257,7 +257,7 @@ contains
     !> Value to pack.
     type(aero_particle_array_t), intent(inout) :: val
 
-#ifdef PMC_USE_MPI
+#ifdef CAMP_USE_MPI
     integer :: prev_position, i, n
 
     prev_position = position
