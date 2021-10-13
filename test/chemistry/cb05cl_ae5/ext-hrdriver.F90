@@ -433,29 +433,6 @@ c..Get rate constants
      &                        ATMPRES, H2O, RKI )
 !OJORBA3
 
-#ifdef CAMP_DEBUG
-          !call MPI_COMM_RANK(MPI_COMM_WORLD, MYPE, MPIERROR)
-          !if (MYPE.eq.18) then
-          !if (C.eq.277 .and. JTS.eq.1) then !MYPE.eq.18 cells id
-          !  if(L.eq.1.) then !v-flip (For concs)=46
-              !write (0,*)"cell ITS:",C,",JTS:",R,",V:",L
-              write (0,*) "TEMP ebi", TEMP
-              write (0,*) "ATMPRES ebi", ATMPRES
-              write (0,*) "id, RJIN" !/60 to be equal to CAMP
-              do NPH=1,23
-                write (0,*) NPH, RJIN(NPH)
-              end do
-              write (0,*) "H2O", H2O
-              write (0,*) "id, YC"
-              !do NPH=1, size(YC)
-              do NPH=1, N_GC_SPC_CHEM
-                write (0,*) NPH, YC(NPH)
-              end do
-              write (0,*) "YC",YC(:)
-            !end if
-          !endif
-#endif
-
 c..Call EBI solver
                N_EBI_IT = 0
 !OJORBA3

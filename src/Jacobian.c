@@ -1,6 +1,6 @@
-/* Copyright (C) 2019 Matthew Dawson
- * Licensed under the GNU General Public License version 2 or (at your
- * option) any later version. See the file COPYING for details.
+/* Copyright (C) 2021 Barcelona Supercomputing Center and University of
+ * Illinois at Urbana-Champaign
+ * SPDX-License-Identifier: MIT
  *
  * Jacobian functions
  *
@@ -219,19 +219,6 @@ void jacobian_reset(Jacobian jac) {
     jac.loss_partials[i_elem] = 0.0;
   }
 }
-/*
-void check_isnanld(long double *x, int len, char *s){
-
-  int n_zeros=0;
-  for (int i=0; i<len; i++){
-    if(isnan(x[i])){
-      printf("NAN %s %d[%d]",s,i);
-      exit(0);
-    }
-  }
-
-}
- */
 
 void jacobian_output(Jacobian jac, double *dest_array) {
   for (unsigned int i_col = 0; i_col < jac.num_spec; ++i_col) {
@@ -239,10 +226,6 @@ void jacobian_output(Jacobian jac, double *dest_array) {
          i_elem < jac.col_ptrs[i_col + 1]; ++i_elem) {
       long double drf_dy = jac.production_partials[i_elem];
       long double drr_dy = jac.loss_partials[i_elem];
-
-      //check_isnanld(&drf_dy,1,"post jacobian_output drf_dy");
-      //check_isnanld(&drr_dy,1,"post jacobian_output drr_dy");
-
       dest_array[i_elem] = drf_dy - drr_dy;
     }
   }
@@ -261,8 +244,6 @@ void jacobian_add_value(Jacobian jac, unsigned int elem_id,
     jac.production_partials[elem_id] += jac_contribution;
   if (prod_or_loss == JACOBIAN_LOSS)
     jac.loss_partials[elem_id] += jac_contribution;
-
-  //check_isnanld(&jac_contribution,1,"post jacobian_add_value jac_contribution");
 }
 
 void jacobian_print(Jacobian jac) {

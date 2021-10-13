@@ -10,7 +10,7 @@
 
 
 !todo: regroup cells by stiffness in mpi cell division
-!todo improve test to handle all cases
+!todo use python test to handle all cases (or move this test to mock_monarch as an option)
 
 program camp_test_cb05cl_ae5
 

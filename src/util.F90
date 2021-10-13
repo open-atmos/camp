@@ -1,6 +1,6 @@
-! Copyright (C) 2005-2016 Nicole Riemer and Matthew West
-! Licensed under the GNU General Public License version 2 or (at your
-! option) any later version. See the file COPYING for details.
+! Copyright (C) 2005-2021 Barcelona Supercomputing Center and University of
+! Illinois at Urbana-Champaign
+! SPDX-License-Identifier: MIT
 
 !> \file
 !> The camp_util module.
@@ -134,12 +134,21 @@ contains
     logical, intent(in) :: condition_ok
     !> Msg if assertion fails.
     character(len=*), intent(in) :: error_msg
+
+    integer, parameter :: kErrorFileId = 10
 #ifdef CAMP_USE_MPI
     integer :: ierr
 #endif
     if (.not. condition_ok) then
        write(0,'(a)') 'ERROR (CAMP-' // trim(integer_to_string(code)) &
             // '): ' // trim(error_msg)
+      open(unit=kErrorFileId, file = "error.json", action = "WRITE")
+      write(kErrorFileId,'(A)') '{'
+      write(kErrorFileId,'(A)') '  "code" : "'//                              &
+                                    trim(integer_to_string(code))//'",'
+      write(kErrorFileId,'(A)') '  "message" : "'//trim(error_msg)//'"'
+      write(kErrorFileId,'(A)') '}'
+      close(kErrorFileId)
 #ifdef CAMP_USE_MPI
        call mpi_abort(MPI_COMM_WORLD, code, ierr)
 #else
@@ -1256,15 +1265,6 @@ contains
     string_array_find = 0
 
   end function string_array_find
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-  !integer function resize_string(in_string, n) result(out_string)
-  !  implicit none
-  !  character(len=*), intent(in)    :: in_string
-  !  integer, intent(in)             :: n
-  !  character(len=n) :: out_string
-  !end function resize_string
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 

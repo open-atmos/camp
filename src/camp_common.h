@@ -56,7 +56,6 @@
 
 #endif
 
-
 // State variable types (Must match parameters defined in camp_chem_spec_data
 // module)
 #define CHEM_SPEC_UNKNOWN_TYPE 0
@@ -76,7 +75,7 @@
 #endif
 
 /* Number of environmental parameters */
-#define CAMP_NUM_ENV_PARAM_ 2  // !!! Must match the value in camp_state.f90 !!!
+#define CAMP_NUM_ENV_PARAM_ 2 // !!! Must match the value in camp_state.f90 !!!
 
 /* boolean definition */
 // CUDA/C++ already has bool definition: Avoid issues disabling it for GPU
@@ -270,17 +269,17 @@ typedef struct {
 /* Solver data structure */
 typedef struct {
 #ifdef CAMP_USE_SUNDIALS
-  N_Vector abs_tol_nv;  // abosolute tolerance vector
-  N_Vector y;           // vector of solver variables
+  N_Vector abs_tol_nv;        // abosolute tolerance vector
+  N_Vector y;                 // vector of solver variables
   SUNLinearSolver ls;         // linear solver
   TimeDerivative time_deriv;  // CAMP derivative structure for use in
                               // calculating deriv
   Jacobian jac;               // CAMP Jacobian structure for use in
                               // calculating the Jacobian
-  N_Vector deriv;  // used to calculate the derivative outside the solver
-  SUNMatrix J;  // Jacobian matrix
-  SUNMatrix J_guess;  // Jacobian matrix for improving guesses sent to linear
-                      // solver
+  N_Vector deriv;      // used to calculate the derivative outside the solver
+  SUNMatrix J;         // Jacobian matrix
+  SUNMatrix J_guess;   // Jacobian matrix for improving guesses sent to linear
+                       // solver
   bool curr_J_guess;   // Flag indicating the Jacobian used by the guess helper
                        // is current
   realtype J_guess_t;  // Last time (t) for which J_guess was calculated

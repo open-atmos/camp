@@ -1,6 +1,6 @@
-! Copyright (C) 2007-2015 Matthew West
-! Licensed under the GNU General Public License version 2 or (at your
-! option) any later version. See the file COPYING for details.
+! Copyright (C) 2007-2021 Barcelona Supercomputing Center and University of
+! Illinois at Urbana-Champaign
+! SPDX-License-Identifier: MIT
 
 !> \file
 !> The camp_mpi module.

@@ -1,6 +1,6 @@
-/* Copyright (C) 2015-2018 Matthew Dawson
- * Licensed under the GNU General Public License version 2 or (at your
- * option) any later version. See the file COPYING for details.
+/* Copyright (C) 2021 Barcelona Supercomputing Center and University of
+ * Illinois at Urbana-Champaign
+ * SPDX-License-Identifier: MIT
  *
  * Header file with some debugging functions for use with camp_solver.c
  *
@@ -19,16 +19,17 @@ int file_name_prefix = 1;
 
 #ifdef CAMP_DEBUG
 #define CAMP_DEBUG_SPEC_ 0
-#define CAMP_DEBUG_PRINT(x) \
+#define CAMP_DEBUG_PRINT(x)                                                    \
   camp_debug_print(sd->cvode_mem, x, false, 0, __LINE__, __func__)
-#define CAMP_DEBUG_PRINT_INT(x, y) \
+#define CAMP_DEBUG_PRINT_INT(x, y)                                             \
   camp_debug_print(sd->cvode_mem, x, false, y, __LINE__, __func__)
-#define CAMP_DEBUG_PRINT_FULL(x) \
+#define CAMP_DEBUG_PRINT_FULL(x)                                               \
   camp_debug_print(sd->cvode_mem, x, true, 0, __LINE__, __func__)
-#define CAMP_DEBUG_JAC_STRUCT(J, x) camp_debug_print_jac_struct((void *)sd, J, x)
+#define CAMP_DEBUG_JAC_STRUCT(J, x)                                            \
+  camp_debug_print_jac_struct((void *)sd, J, x)
 #define CAMP_DEBUG_JAC(J, x) camp_debug_print_jac((void *)sd, J, x)
 void camp_debug_print(void *cvode_mem, const char *message, bool do_full,
-                     const int int_val, const int line, const char *func) {
+                      const int int_val, const int line, const char *func) {
 #ifdef CAMP_USE_SUNDIALS
   CVodeMem cv_mem = (CVodeMem)cvode_mem;
   if (!(cv_mem->cv_debug_out)) return;
@@ -61,7 +62,7 @@ void camp_debug_print(void *cvode_mem, const char *message, bool do_full,
 #endif
 }
 void camp_debug_print_jac_struct(void *solver_data, SUNMatrix J,
-                                const char *message) {
+                                 const char *message) {
 #ifdef CAMP_USE_SUNDIALS
   SolverData *sd = (SolverData *)solver_data;
 

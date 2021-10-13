@@ -1,7 +1,7 @@
 /**
  * err_code_gen.c
  *
- * Tool to generate error codes for use in CAMP
+ * Tool to generate error codes
  */
 #include <stdio.h>
 #include <stdlib.h>

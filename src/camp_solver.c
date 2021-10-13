@@ -1,6 +1,6 @@
-/* Copyright (C) 2015-2018 Matthew Dawson
- * Licensed under the GNU General Public License version 2 or (at your
- * option) any later version. See the file COPYING for details.
+/* Copyright (C) 2021 Barcelona Supercomputing Center and University of
+ * Illinois at Urbana-Champaign
+ * SPDX-License-Identifier: MIT
  *
  * This is the c ODE solver for the chemistry module
  * It is currently set up to use the SUNDIALS BDF method, Newton
@@ -1170,23 +1170,15 @@ int camp_solver_update_model_state(N_Vector solver_state, SolverData *sd,
   int n_dep_var = model_data->n_per_cell_dep_var;
   int n_cells = model_data->n_cells;
 
-  //double replacement_value = ZERO;
-  //double replacement_value = SMALL;
   double replacement_value = TINY;
   double threshhold = -SMALL;
-  //double threshhold = -1.0E-12;
 
 #ifdef DEBUG_CAMP_SOLVER_UPDATE_MODEL_STATE
-
   if(replacement_value==0.0){
     printf("ERROR camp_solver_update_model_state replacement_value"
            " can't be zero to avoid divisions by zero\n")
      exit(0);
   }
-
-  //if(sd->counterSolve<1)
-    //printf("camp_solver_update_model_state replacement_value %-le\n",replacement_value);
-
 #endif
 
   int i_dep_var = 0;
@@ -1194,21 +1186,12 @@ int camp_solver_update_model_state(N_Vector solver_state, SolverData *sd,
     for (int i_spec = 0; i_spec < n_state_var; ++i_spec) {
       if (model_data->var_type[i_spec] == CHEM_SPEC_VARIABLE) {
 
-        //if (NV_DATA_S(solver_state)[i_dep_var] <= -SMALL)
-        //if (NV_DATA_S(solver_state)[i_dep_var] <= ZERO)
         if (NV_DATA_S(solver_state)[i_dep_var] < threshhold) //Avoid innacurate results
         {
-
 #ifdef FAILURE_DETAIL
           if(sd->counter_fail_solve_print<1){
             printf("Failed model state update (Innacurate results): [spec %d] = %le\n", i_spec,
                NV_DATA_S(solver_state)[i_dep_var]);
-#ifdef CAMP_DEBUG_GPU
-            printf("CounterDerivCPU %d CounterJac %d\n",
-                    sd->counterDerivCPU,sd->counterJacCPU );
-            //printf("y failed model state:\n");
-            //print_derivative(solver_state);
-#endif
           }
           sd->counter_fail_solve_print++;
 #endif
@@ -1216,14 +1199,10 @@ int camp_solver_update_model_state(N_Vector solver_state, SolverData *sd,
           return CAMP_SOLVER_FAIL;
         }
         // Assign model state to solver_state
-
-        //Set concs near zero to fixed threshhold value
         model_data->total_state[i_spec + i_cell * n_state_var] =
             NV_DATA_S(solver_state)[i_dep_var] <= threshhold
                 ? replacement_value
                 : NV_DATA_S(solver_state)[i_dep_var];
-
-        // printf("(%d) %-le \n", i_spec+1, model_data->total_state[i_spec]);
         i_dep_var++;
       }
     }
@@ -1748,10 +1727,10 @@ int Jac(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_data,
   }
   sd->use_deriv_est = 1;
 
+    //todo check duplicated call to update_model_state (previous f funct already updates the state)
   // Update the state array with the current dependent variable values
   // Signal a recoverable error (positive return value) for negative
   // concentrations.
-  //todo check duplicated call to update_model_state (previous f funct already updates the state)
   if (camp_solver_update_model_state(y, sd, -SMALL, TINY) != CAMP_SOLVER_SUCCESS)
     return 1;
 
@@ -2896,8 +2875,6 @@ void error_handler(int error_code, const char *module, const char *function,
                    char *msg, void *sd) {
   // Do nothing
 }
-
-
 
 /** \brief Free a ModelData object
  *
