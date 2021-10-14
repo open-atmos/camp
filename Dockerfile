@@ -4,7 +4,6 @@ RUN dnf -y update \
     && dnf -y install \
         gcc-gfortran \
         gcc-c++ \
-        netcdf-fortran-devel \
         gsl-devel \
         metis-devel \
         lapack-devel \
@@ -13,7 +12,8 @@ RUN dnf -y update \
     && dnf clean all
 
 # Build the SuiteSparse libraries for sparse matrix support
-RUN curl -LO http://faculty.cse.tamu.edu/davis/SuiteSparse/SuiteSparse-5.1.0.tar.gz \
+# (-k included because of problem with SuiteSparse security certificate - 1 Aug 2021)
+RUN curl -kLO http://faculty.cse.tamu.edu/davis/SuiteSparse/SuiteSparse-5.1.0.tar.gz \
     && tar -zxvf SuiteSparse-5.1.0.tar.gz \
     && export CXX=/usr/bin/cc \
     && cd SuiteSparse \
@@ -53,10 +53,8 @@ RUN tar -zxvf /camp/cvode-3.4-alpha.tar.gz \
     && cd build \
     && export JSON_FORTRAN_HOME="/usr/local/jsonfortran-gnu-6.1.0" \
     && cmake -D CMAKE_BUILD_TYPE=release \
-             -D CMAKE_C_FLAGS_DEBUG="-g -pg" \
-             -D CMAKE_Fortran_FLAGS_DEBUG="-g -pg" \
-             -D CMAKE_MODULE_LINKER_FLAGS="-pg" \
-             -D ENABLE_SUNDIALS:BOOL=TRUE \
+             -D CMAKE_C_FLAGS_DEBUG="-g" \
+             -D CMAKE_Fortran_FLAGS_DEBUG="-g" \
              -D ENABLE_GSL:BOOL=TRUE \
              -D SUNDIALS_CVODE_LIB=/usr/local/lib/libsundials_cvode.so \
              -D SUNDIALS_INCLUDE_DIR=/usr/local/include \
