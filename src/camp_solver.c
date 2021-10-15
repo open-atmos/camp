@@ -862,7 +862,7 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
   // Update the state array with the current dependent variable values.
   // Signal a recoverable error (positive return value) for negative
   // concentrations.
-  if (camp_solver_update_model_state(y, md, ZERO, ZERO) != CAMP_SOLVER_SUCCESS)
+  if (camp_solver_update_model_state(y, md, -SMALL, TINY) != CAMP_SOLVER_SUCCESS)
     return 1;
 
   // Get the Jacobian-estimated derivative
@@ -1006,7 +1006,7 @@ int Jac(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_data,
   // Update the state array with the current dependent variable values
   // Signal a recoverable error (positive return value) for negative
   // concentrations.
-  if (camp_solver_update_model_state(y, md, ZERO, ZERO) != CAMP_SOLVER_SUCCESS)
+  if (camp_solver_update_model_state(y, md, -SMALL, TINY) != CAMP_SOLVER_SUCCESS)
     return 1;
 
   // Get the current integrator time step (s)
