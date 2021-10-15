@@ -191,6 +191,10 @@ program mock_monarch
   ! initialize mpi (to take the place of a similar MONARCH call)
   call camp_mpi_init()
 
+#ifdef CAMP_USE_MPI
+  !print*,"CAMP_USE_MPI enabled"
+#endif
+
   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   ! **** Add to MONARCH during initialization **** !
   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

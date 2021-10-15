@@ -157,7 +157,7 @@ def run_cell(config_file,diff_cells,mpi,mpiProcessesList,n_cells_aux,timesteps,
 def run_case(config_file,diff_cells,mpi,mpiProcessesList,cells,timesteps,
              cases,cases_gpu_cpu,cases_multicells_onecell,results_file,plot_y_key):
 
-  #cases=casesList[0]
+  #cases=casesL[0]
 
   datay=[]
   for i in range(len(cells)):
@@ -228,7 +228,7 @@ def plot_historic(cases_gpu_cpu,cases_multicells_onecell,cells,diff_cells,timest
 
   plot_functions.plot(namex,namey,datax,datay,plot_title,columns,SAVE_PLOT)
 
-def plot_cases(casesList,cases_gpu_cpu2,cases_multicells_onecell2,cells,diff_cells,timesteps,plot_y_key,
+def plot_cases(casesL,cases_gpu_cpu2,cases_multicells_onecell2,cells,diff_cells,timesteps,plot_y_key,
                    mpiProcessesList,datacases,SAVE_PLOT):
 
   plot_title=""
@@ -245,8 +245,8 @@ def plot_cases(casesList,cases_gpu_cpu2,cases_multicells_onecell2,cells,diff_cel
   if plot_y_key=="MAPE":
     namey="MAPE [%]"
 
-  for j in range(len(casesList)):
-    cases=casesList[j]
+  for j in range(len(casesL)):
+    cases=casesL[j]
     cases_gpu_cpu=[""]*len(cases)
     cases_multicells_onecell=[""]*len(cases)
     for i in range(len(cases)):
@@ -265,13 +265,13 @@ def plot_cases(casesList,cases_gpu_cpu2,cases_multicells_onecell2,cells,diff_cel
         if cases_gpu_cpu[i]=="GPU":
           cases_gpu_cpu[i]=str(gpus) + " GPU"
 
-    if(len(casesList)>1):
+    if(len(casesL)>1):
 
       column=cases_gpu_cpu[1] + " " + cases_multicells_onecell[1]
 
       columns.append(column)
 
-  if(len(casesList)>1):
+  if(len(casesL)>1):
     plot_title+="Case vs " + cases_gpu_cpu[0] + " " + cases_multicells_onecell[0] + " "
     plot_title+=diff_cells+" test"
 
@@ -317,17 +317,35 @@ def all_timesteps():
   mpi="yes"
   #mpi="no"
 
-  mpiProcessesList = [1]
-  #mpiProcessesList = [40,1]
+  #mpiProcessesList = [1]
+  mpiProcessesList = [40,1]
 
-  #cells = [100]
-  cells = [100,1000]
+  cells = [100]
+  #cells = [100,1000]
   #cells = [100,500,1000]
   #cells = [1,5,10,50,100]
   #cells = [100,500,1000,5000,10000]
 
   timesteps = 1#5 #720=24h #30=1h
   TIME_STEP = 2 #pending send TIME_STEP to mock_monarch
+
+  #caseBase="CPU One-cell"
+  caseBase="CPU Multi-cells"
+  #caseBase="GPU Block-cells(N)"
+
+  casesOptim=[]
+  #casesOptim.append("GPU Block-cells(1)")
+  #casesOptim.append("GPU Block-cells(N)")
+  casesOptim.append("GPU Multi-cells")
+  #casesOptim.append("CPU Multi-cells")
+  #casesOptim.append("GPU One-cell")
+
+  casesL=[]
+  cases=[]
+  for caseOptim in casesOptim:
+    cases.append(caseBase)
+    cases.append(caseOptim)
+    casesL.append(cases)
 
   #cases = ["Historic"]
   #cases = ["CPU One-cell"]
@@ -337,7 +355,7 @@ def all_timesteps():
   #cases = ["CPU One-cell","GPU Block-cells(N)"]
   #cases = ["CPU One-cell","GPU Block-cells(1)"]
   #cases = ["CPU Multi-cells","GPU Block-cells(N)"]
-  cases = ["CPU Multi-cells","GPU Block-cells(1)"]
+  #cases = ["CPU Multi-cells","GPU Block-cells(1)"]
   #cases = ["GPU Block-cells(1)","GPU Block-cells(N)"]
   #cases = ["CPU One-cell","GPU One-cell"]
   #cases = ["CPU Multi-cells","GPU Multi-cells"]
@@ -364,7 +382,7 @@ def all_timesteps():
 
   #plot_y_key = "% Time data transfers CPU-GPU BCG"
   #plot_y_key="NRMSE"
-  plot_y_key="MAPE"#todo check old ls option (cvode_gpu)
+  plot_y_key="MAPE"
   #plot_y_key="SMAPE"
 
   #remove_iters=0#10 #360
@@ -393,23 +411,22 @@ def all_timesteps():
   SAVE_PLOT=False
   start_time = time.perf_counter()
 
-  casesList=[]
   if(cases[0]=="Historic"):
     if(len(cells)<2):
       print("WARNING: PENDING TEST HISTORIC WITH TIMESTEPS AS AXIS X")
 
-    casesList.append(["CPU One-cell","GPU Block-cells(1)"])
-    casesList.append(["CPU One-cell","GPU Block-cells(N)"])
-    casesList.append(["CPU One-cell","GPU Multi-cells"])
-    casesList.append(["CPU One-cell","CPU Multi-cells"])
-    casesList.append(["CPU One-cell","GPU One-cell"])
-  else:
-    casesList.append(cases)
+    casesL.append(["CPU One-cell","GPU Block-cells(1)"])
+    casesL.append(["CPU One-cell","GPU Block-cells(N)"])
+    casesL.append(["CPU One-cell","GPU Multi-cells"])
+    casesL.append(["CPU One-cell","CPU Multi-cells"])
+    casesL.append(["CPU One-cell","GPU One-cell"])
+  elif(len(casesL)==0):
+    casesL.append(cases)
 
   datacases=[]
   columns=[]
-  for j in range(len(casesList)):
-    cases=casesList[j]
+  for j in range(len(casesL)):
+    cases=casesL[j]
     cases_gpu_cpu=[""]*len(cases)
     cases_multicells_onecell=[""]*len(cases)
     for i in range(len(cases)):
@@ -427,7 +444,7 @@ def all_timesteps():
   if time_s>60:
     SAVE_PLOT=True
 
-  plot_cases(casesList,cases_gpu_cpu,cases_multicells_onecell,cells,diff_cells,timesteps,plot_y_key,
+  plot_cases(casesL,cases_gpu_cpu,cases_multicells_onecell,cells,diff_cells,timesteps,plot_y_key,
             mpiProcessesList,datacases,SAVE_PLOT)
 
 
