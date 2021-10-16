@@ -15,11 +15,9 @@ import time
 def write_itsolver_config_file(cases_multicells_onecell):
   file1 = open("itsolver_options.txt","w")
 
-  #print(case_gpu_cpu)
-
   cells_method_str="CELLS_METHOD="+cases_multicells_onecell
   file1.write(cells_method_str)
-  print(cells_method_str)
+  #print(cells_method_str)
 
   file1.close()
 
@@ -311,8 +309,8 @@ def all_timesteps():
   #config_file="monarch_cb05"
   config_file="monarch_binned"
 
-  diff_cells="Realistic"
-  #diff_cells="Ideal"
+  #diff_cells="Realistic"
+  diff_cells="Ideal"
 
   mpi="yes"
   #mpi="no"
@@ -320,25 +318,25 @@ def all_timesteps():
   #mpiProcessesList = [1]
   mpiProcessesList = [40,1]
 
-  cells = [100]
+  cells = [40]
   #cells = [100,1000]
   #cells = [100,500,1000]
   #cells = [1,5,10,50,100]
   #cells = [100,500,1000,5000,10000]
 
-  timesteps = 1#5 #720=24h #30=1h
+  timesteps = 5#5 #720=24h #30=1h
   TIME_STEP = 2 #pending send TIME_STEP to mock_monarch
 
-  #caseBase="CPU One-cell"
-  caseBase="CPU Multi-cells"
+  caseBase="CPU One-cell"
+  #caseBase="CPU Multi-cells"
   #caseBase="GPU Block-cells(N)"
 
   casesOptim=[]
   #casesOptim.append("GPU Block-cells(1)")
   #casesOptim.append("GPU Block-cells(N)")
-  casesOptim.append("GPU Multi-cells")
+  #casesOptim.append("GPU Multi-cells")
   #casesOptim.append("CPU Multi-cells")
-  #casesOptim.append("GPU One-cell")
+  casesOptim.append("GPU One-cell")
 
   casesL=[]
   cases=[]

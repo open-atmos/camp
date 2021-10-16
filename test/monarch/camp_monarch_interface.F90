@@ -537,9 +537,9 @@ contains
     integer :: NUM_VERT_CELLS, i_hour_max
 
     character(len=:), allocatable :: DIFF_CELLS_EMI
-    real :: press_init, press_end, press_range, cells_init, cells_end,&
-            cells_range, emi_slide, press_norm
-    integer :: n_cells_range, n_cells
+    real :: press_init, press_end, press_range,&
+            emi_slide, press_norm
+    integer :: n_cells
 
     ! Computation time variables
     real(kind=dp) :: comp_start, comp_end
@@ -600,10 +600,6 @@ contains
         press_init = pressure(I_W,I_S,1)!100000.
         press_end = 85000.
         press_range = press_end-press_init
-        cells_init = 1.
-        cells_end = 0.
-        cells_range = cells_end-cells_init
-        n_cells_range=0
 
         do i=I_W, I_E
           do j=I_S, I_N
@@ -613,17 +609,13 @@ contains
 
               press_norm=&
                       (press_end-pressure(i,j,k))/(press_range)
-                      !(pressure(i,j,k)-press_end)/(press_init-press_end)
-              !mod_press=dmod(pressure(i,j,k),press_range)
-
-              !print*,press_norm, pressure(i,j,k)
 
               if(press_norm.ge.0) then
                 do t=1,12
                   rate_emi(t,z+1)=press_norm
                 end do
               else
-                do t=1,12
+                do t=1,12 !12 first hours
                   rate_emi(t,z+1)=0.0
                 end do
               end if
@@ -631,7 +623,6 @@ contains
               do t=13,30
                 rate_emi(t,z+1)=0.0
               end do
-
 
             end do
           end do

@@ -271,7 +271,6 @@ program mock_monarch
   if(status_code.eq.0) then
     if(arg.eq."Realistic") then
       DIFF_CELLS = "ON"
-      !print*,"DIFF_CELLS ",DIFF_CELLS
     else
       DIFF_CELLS = "OFF"
     end if
@@ -279,6 +278,7 @@ program mock_monarch
     DIFF_CELLS = "OFF"
     print*, "WARNING: not DIFF_CELLS parameter received, value set to ",DIFF_CELLS
   end if
+  !print*,"DIFF_CELLS ",DIFF_CELLS
 
   call get_command_argument(9, arg, status=status_code)
   if(status_code.eq.0) then
@@ -689,7 +689,7 @@ contains
     character(len=:), allocatable :: file_name
     character(len=:), allocatable :: aux_str, aux_str_py, str_stats_names
     character(len=128) :: i_str !if len !=128 crashes (e.g len=100)
-    integer :: z,o,i,j,k,r,i_cell,i_spec
+    integer :: z,o,i,j,k,r,i_cell,i_spec,mpi_size,ncells,tid,ncells_mpi
     integer :: n_cells_print
     real :: temp_init,press,press_init,press_end,press_range,press_slide
 
@@ -750,24 +750,35 @@ contains
     write(STATSOUT_FILE_UNIT2, "(A)", advance="no") str_stats_names
     write(STATSOUT_FILE_UNIT2, '(a)') ''
 
-
     species_conc(:,:,:,:) = 0.0
     height=1. !(m)
 
     if(ADD_EMISIONS.eq."ON") then
 
-      water_conc(:,:,:,WATER_VAPOR_ID) = 0. !0.01165447 !this is equal to 95% RH !1e-14 !0.01 !kg_h2o/kg-1_air
+      water_conc(:,:,:,WATER_VAPOR_ID) = 0.
       temp_init = 290.016
       press_init = 100000.
 
       if(DIFF_CELLS.eq."ON") then
 
+        ncells=(I_E - I_W+1)*(I_N - I_S+1)*NUM_VERT_CELLS
+
+#ifdef CAMP_USE_MPI
+        mpi_size=camp_mpi_size()
+        tid=camp_mpi_rank()
+        ncells_mpi=ncells*mpi_size
+#else
+        mpi_size=1
+        tid=0
+        ncells_mpi=ncells
+#endif
+
         press_end = 10000.
         press_range = press_end-press_init
-        if(((I_E - I_W+1)*(I_N - I_S+1)*NUM_VERT_CELLS-1).eq.0) then
+        if((ncells_mpi).eq.0) then
           press_slide = 0.
         else
-          press_slide = press_range/((I_E - I_W+1)*(I_N - I_S+1)*NUM_VERT_CELLS-1)
+          press_slide = press_range/(ncells_mpi-1)
         end if
 
         do i=I_W,I_E
@@ -775,10 +786,10 @@ contains
             do k=1,NUM_VERT_CELLS
               o = (j-1)*(I_E) + (i-1) !Index to 3D
               z = (k-1)*(I_E*I_N) + o !Index for 2D
+              z = tid*ncells+z
 
               pressure(i,j,k)=press_init+press_slide*z
               temperature(i,j,k)=temp_init*((pressure(i,j,k)/press_init)**(287./1004.)) !dry_adiabatic formula
-              !temperature(i,j,k)=296.15*((70500./84500.)**(287./1004.))
 
             end do
           end do
@@ -790,13 +801,9 @@ contains
 
       end if
 
-      !print*, temperature(:,:,:)
-      !print*, pressure(:,:,:)
-
       air_density(:,:,:) = pressure(:,:,:)/(287.04*temperature(:,:,:)* &
               (1.+0.60813824*water_conc(:,:,:,WATER_VAPOR_ID))) !kg m-3
       conv=0.02897/air_density(1,1,1)*(TIME_STEP*60.)*1e6/height !units of time_step to seconds
-      !    conv=0.02897/air_density(1,1,1)*(TIME_STEP)*1e6/height !units of time_step to seconds
 
     else
 
@@ -806,24 +813,10 @@ contains
       conv=0.02897/air_density(1,1,1)*(TIME_STEP*60.)*1e6/height !units of time_step to seconds
       water_conc(:,:,:,WATER_VAPOR_ID) = 0.03!0.01
 
-      !Initialize different axis values
-      !Species_conc is modified in monarch_interface%get_init_conc
-      !do i=I_W, I_E
-      !  temperature(i,:,:) = temperature(i,:,:) !+ 0.1*i
-      !  pressure(i,:,:) = pressure(i,:,:) !- 1*i
-      !end do
-
-      !do j=I_S, I_N
-      !  temperature(:,j,:) = temperature(:,j,:)! + 0.3*j
-      !  pressure(:,:,j) = pressure(:,:,j) !- 3*j
-      !end do
-
-      !do k=1, NUM_VERT_CELLS
-      !  temperature(:,:,k) = temperature(:,:,k)! + 0.6*k
-      !  pressure(:,k,:) = pressure(:,k,:) !- 6*k
-      !end do
-
     end if
+
+    print*,camp_mpi_rank(),pressure
+    call camp_mpi_barrier()
 
     deallocate(file_name)
     deallocate(aux_str)
