@@ -309,8 +309,8 @@ def all_timesteps():
   #config_file="monarch_cb05"
   config_file="monarch_binned"
 
-  #diff_cells="Realistic"
-  diff_cells="Ideal"
+  diff_cells="Realistic"
+  #diff_cells="Ideal"
 
   mpi="yes"
   #mpi="no"
@@ -324,7 +324,7 @@ def all_timesteps():
   #cells = [1,5,10,50,100]
   #cells = [100,500,1000,5000,10000]
 
-  timesteps = 1#5 #720=24h #30=1h
+  timesteps = 5#5 #720=24h #30=1h
   TIME_STEP = 2 #pending send TIME_STEP to mock_monarch
 
   caseBase="CPU One-cell"

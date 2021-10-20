@@ -175,7 +175,7 @@ program mock_monarch
 #endif
 
   character(len=500) :: arg
-  integer :: status_code, i_time, i_spec, i_case, i, j, k, z,n_cells_plot,cell_to_print
+  integer :: status_code, i_time, i_spec, i_case, i, j, k, z,r,n_cells_plot,cell_to_print
   !> Partmc nº of cases to test
   integer :: plot_case, new_v_cells, aux_int
   type(solver_stats_t), target :: solver_stats
@@ -312,7 +312,6 @@ program mock_monarch
   if (camp_mpi_rank().eq.0) then
     write(*,*) "Num time-steps:", NUM_TIME_STEP, "Num cells:",&
             NUM_WE_CELLS*NUM_SN_CELLS*NUM_VERT_CELLS
-    !print*," ncounters ntimers",ncounters,ntimers
   end if
 
   allocate(temperature(NUM_WE_CELLS,NUM_SN_CELLS,NUM_VERT_CELLS))
@@ -499,6 +498,19 @@ program mock_monarch
       call print_state_gnuplot(curr_time,camp_interface, name_gas_species_to_print,id_gas_species_to_print&
              ,name_aerosol_species_to_print,id_aerosol_species_to_print,RESULTS_FILE_UNIT)
     end if
+#endif
+
+#ifdef DEBUG_MOCK_MONARCH
+    do i=i_W, I_E
+      do j=I_S, I_N
+        do k=1, NUM_VERT_CELLS
+          do r=2,size(camp_interface%map_monarch_id)
+            print*,species_conc(i,j,k,camp_interface%map_monarch_id(r)),&
+                    camp_interface%camp_state%state_var(camp_interface%map_camp_id(r)), camp_mpi_rank()
+          end do
+        end do
+      end do
+    end do
 #endif
 
     call camp_interface%integrate(curr_time,         & ! Starting time (min)
@@ -770,7 +782,7 @@ contains
 
     end if
 
-    print*,camp_mpi_rank(),pressure
+    !print*,camp_mpi_rank(),pressure
     call camp_mpi_barrier()
 
     deallocate(file_name)
@@ -792,8 +804,6 @@ contains
     integer :: n_cells_print,ncells
 
 #ifdef CAMP_USE_MPI
-
-    !print*,"size(species_conc)",size(species_conc)
 
     ncells=(I_E - I_W+1)*(I_N - I_S+1)*NUM_VERT_CELLS
 
@@ -845,19 +855,18 @@ contains
     ncells=(I_E - I_W+1)*(I_N - I_S+1)*NUM_VERT_CELLS
     len=size(species_conc)!n_cells*NUM_MONARCH_SPEC!size(species_conc)
 
-    print*,"len",len
-
 #ifdef CAMP_USE_MPI
 
+
+#ifdef DEBUG_export_file_results_all_cells
       !print*,"export_file_results_all_cells state_var",camp_interface%camp_state%state_var
       !print*,"export_file_results_all_cells species_conc ",&
       !        species_conc(1,1,1,camp_interface%map_monarch_id(:)),&
       !        "state_var",camp_interface%camp_state%state_var(camp_interface%map_camp_id(:))
 
-    print*,"species_conc"
+    !print*,"species_conc", camp_mpi_rank()
     call camp_mpi_barrier(MPI_COMM_WORLD)
 
-    do n=1,camp_mpi_size()
       do i=I_W,I_E
         do j=I_S,I_N
           do k=1,NUM_VERT_CELLS
@@ -869,8 +878,6 @@ contains
               print*,species_conc(i,j,k,camp_interface%map_monarch_id(r)),&
                       camp_interface%camp_state%state_var(camp_interface%map_camp_id(r))
 
-              !camp_interface%camp_state%state_var(r+z*state_size_per_cell) = &
-              !        camp_interface%camp_state%state_var(r)
             end do
 
             write(RESULTS_ALL_CELLS_FILE_UNIT, '(a)') ''
@@ -878,10 +885,11 @@ contains
           end do
         end do
       end do
-    end do
 
     call camp_mpi_barrier(MPI_COMM_WORLD)
-    print*,"species_conc_mpi"
+    !print*,"species_conc_mpi",camp_mpi_rank()
+
+#endif
 
     call MPI_GATHER(species_conc, len, MPI_REAL, species_conc_mpi,&
             len,MPI_REAL, 0, MPI_COMM_WORLD, ierr)
@@ -902,8 +910,8 @@ contains
 
               do r=2,size(camp_interface%map_monarch_id)
 
-                print*,species_conc_mpi(i,j,k,camp_interface%map_monarch_id(r),n),&
-                        camp_interface%camp_state%state_var(camp_interface%map_camp_id(r))
+                !print*,species_conc_mpi(i,j,k,camp_interface%map_monarch_id(r),n),&
+                !        camp_interface%camp_state%state_var(camp_interface%map_camp_id(r))
 
                 write(RESULTS_ALL_CELLS_FILE_UNIT, "(A)", advance="no") ","
                 write(RESULTS_ALL_CELLS_FILE_UNIT, "(ES13.6)", advance="no") &
