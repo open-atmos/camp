@@ -279,7 +279,6 @@ contains
               camp_mpi_pack_size_integer(i_sect_sulf) + &
               camp_mpi_pack_size_integer(i_sect_opm)
 
-
       do z=1, size(this%monarch_species_names)
         call assert(307722742,len_trim(this%monarch_species_names(z)%string).lt.max_spec_name_size)
         pack_size = pack_size +  camp_mpi_pack_size_string(trim(this%monarch_species_names(z)%string))
@@ -291,6 +290,7 @@ contains
         do i = 1, this%n_photo_rxn
           pack_size = pack_size + this%photo_rxns(i)%pack_size( local_comm )
         end do
+        pack_size = pack_size + camp_mpi_pack_size_real_array(this%base_rates)
       endif
 
       !print*, "monarch_interface_t pack_size() end"
@@ -325,6 +325,7 @@ contains
         do i = 1, this%n_photo_rxn
           call this%photo_rxns(i)%bin_pack( buffer, pos, local_comm )
         end do
+        call camp_mpi_pack_real_array(buffer, pos, this%base_rates)
       endif
 
       !print*, "monarch_interface_t bin_pack() end"
@@ -385,6 +386,7 @@ contains
         do i = 1, this%n_photo_rxn
           call this%photo_rxns(i)%bin_unpack( buffer, pos, local_comm )
         end do
+        call camp_mpi_unpack_real_array(buffer, pos, this%base_rates)
       end if
 
 #endif
@@ -408,20 +410,16 @@ contains
     !print*,"MPI RANK",camp_mpi_rank(), this%interface_input_file, this%ADD_EMISIONS
 
     if(this%ADD_EMISIONS.eq."ON" &
-      .or. this%interface_input_file.eq."interface_monarch_cb05.json") then
-      ! Set the photolysis rates
-
-      do i_photo_rxn = 1, this%n_photo_rxn
-        !todo fix update for all mpi ranks
-        call this%photo_rxns(i_photo_rxn)%set_rate(real(this%base_rates(i_photo_rxn), kind=dp))
+    .or. this%interface_input_file.eq."interface_monarch_cb05.json") then
+      do i = 1, this%n_photo_rxn
+        print*,"base rate",this%base_rates(i), camp_mpi_rank()
+        call this%photo_rxns(i)%set_rate(real(this%base_rates(i), kind=dp))
         !call this%photo_rxns(i_photo_rxn)%set_rate(real(0.0, kind=dp))
-        call this%camp_core%update_data(this%photo_rxns(i_photo_rxn))
+        call this%camp_core%update_data(this%photo_rxns(i))
       end do
-
     end if
 
     call camp_mpi_barrier(MPI_COMM_WORLD)
-
 
     ! Set the aerosol mode dimensions
     ! organic matter
@@ -641,7 +639,6 @@ contains
       end if
 
       !call camp_mpi_barrier(MPI_COMM_WORLD)
-      !print*,"MPI RANK",camp_mpi_rank()
 
       i_hour = int(curr_time/60)+1
       if(mod(int(curr_time),60).eq.0) then
@@ -738,7 +735,11 @@ contains
                               +MEOH_emi(1)*rate_emi(i_hour,z+1)*conv
             end if
 
-            !write(*,*) "State_var input",this%camp_state%state_var(this%map_camp_id(:)+(z*state_size_per_cell))
+            if (camp_mpi_rank().eq.0 .and. z==0) then
+              print*, "this%camp_core%solve start",this%camp_state%state_var(1)
+            end if
+
+            call camp_mpi_barrier(MPI_COMM_WORLD)
 
             ! Integrate the CAMP mechanism
             call cpu_time(comp_start)
@@ -746,9 +747,11 @@ contains
             call cpu_time(comp_end)
             comp_time = comp_time + (comp_end-comp_start)
 
-            !assert_msg when cvode fails ocurrs, stop the execution
-            !call assert_msg(376450931, solver_stats%status_code.eq.0, &
-            !"Solver failed with code "// to_string(solver_stats%solver_flag))
+            call camp_mpi_barrier(MPI_COMM_WORLD)
+
+            if (camp_mpi_rank().eq.0 .and. z==0) then
+              print*, "this%camp_core%solve end",this%camp_state%state_var(1)
+            end if
 
 #ifdef CAMP_DEBUG
             ! Check the Jacobian evaluations
@@ -762,15 +765,9 @@ contains
             solver_stats%eval_Jac = .false.
 #endif
 
-#ifdef ISSUE41
             ! Update the MONARCH tracer array with new species concentrations
             MONARCH_conc(i,j,k,this%map_monarch_id(:)) = &
                     this%camp_state%state_var(this%map_camp_id(:))
-#else
-            ! Update the MONARCH tracer array with new species concentrations
-            MONARCH_conc(i,j,k,this%map_monarch_id(:)) = &
-                    this%camp_state%state_var(this%map_camp_id(:))
-#endif
 
           end do
         end do
@@ -788,7 +785,6 @@ contains
       !                trim(to_string(this%n_cells)))
 
       ! Set initial conditions and environmental parameters for each grid cell
-
       !input diff
       !this%camp_state%state_var(this%map_camp_id(:))=&
       !        MONARCH_conc(1,1,1,this%map_monarch_id(:))-MONARCH_conc(1,1,2,this%map_monarch_id(:))
@@ -898,6 +894,10 @@ contains
 
       !print*, "state", this%camp_state%state_var(:)
 
+      if (camp_mpi_rank().eq.0) then
+        print*, "this%camp_core%solve start",this%camp_state%state_var(1)
+      end if
+
       ! Integrate the CAMP mechanism
       call cpu_time(comp_start)
       call this%camp_core%solve(this%camp_state, &
@@ -905,8 +905,11 @@ contains
       call cpu_time(comp_end)
       comp_time = comp_time + (comp_end-comp_start)
 
+      if (camp_mpi_rank().eq.0) then
+        print*, "this%camp_core%solve end",this%camp_state%state_var(1)
+      end if
+
       !print*,this%camp_state%state_var(1)
-#ifdef ISSUE41
       do i=I_W, I_E
         do j=I_S, I_N
           do k=1, NUM_VERT_CELLS
@@ -919,21 +922,6 @@ contains
           end do
         end do
       end do
-#else
-      do i=I_W, I_E
-        do j=I_S, I_N
-          do k=1, NUM_VERT_CELLS
-            o = (j-1)*(I_E) + (i-1) !Index to 3D
-            z = (k-1)*(I_E*I_N) + o !Index for 2D
-
-            MONARCH_conc(i,j,k,this%map_monarch_id(:)) = &
-                    this%camp_state%state_var(this%map_camp_id(:)+(z*state_size_per_cell))
-            !print*, "camp_state", this%camp_state%state_var(this%map_camp_id(:)+(z*state_size_per_cell))
-          end do
-        end do
-      end do
-
-#endif
 
     end if
 
@@ -942,6 +930,8 @@ if(this%ADD_EMISIONS.eq."ON") then
 end if
 
 #ifdef CAMP_USE_MPI
+
+  !call camp_mpi_barrier(MPI_COMM_WORLD)
 
 if (camp_mpi_rank().eq.0) then
   !call solver_stats%print( )

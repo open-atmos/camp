@@ -140,9 +140,6 @@ program mock_monarch
   !> Emissions hour counter
   integer :: i_hour = 0
 
-  !> Comparison values
-  real, allocatable :: species_conc_copy(:, :, :, :)
-
   !> Starting time for mock model run (min since midnight)
   !! is tracked in MONARCH
   real :: curr_time = START_TIME
@@ -173,7 +170,8 @@ program mock_monarch
   ! MPI
 #ifdef CAMP_USE_MPI
   character, allocatable :: buffer(:)
-  integer(kind=i_kind) :: pos, pack_size, mpi_threads
+  integer(kind=i_kind) :: pos, pack_size, mpi_threads, ierr
+  real, allocatable  :: species_conc_mpi(:,:,:,:,:)
 #endif
 
   character(len=500) :: arg
@@ -322,7 +320,6 @@ program mock_monarch
   allocate(water_conc(NUM_WE_CELLS,NUM_SN_CELLS,NUM_VERT_CELLS,WATER_VAPOR_ID))
   allocate(air_density(NUM_WE_CELLS,NUM_SN_CELLS,NUM_VERT_CELLS))
   allocate(pressure(NUM_WE_CELLS,NUM_SN_CELLS,NUM_VERT_CELLS))
-  allocate(species_conc_copy(NUM_WE_CELLS,NUM_SN_CELLS,NUM_VERT_CELLS,NUM_MONARCH_SPEC))
 
   n_cells_plot = 1
   cell_to_print = 1
@@ -487,12 +484,6 @@ program mock_monarch
   end if
 #endif
 
-#ifdef ISSUE41
-
-  species_conc_copy(:,:,:,:) = species_conc(:,:,:,:)
-
-#endif
-
   !call camp_mpi_barrier(MPI_COMM_WORLD)
   !print*,"MPI RANK",camp_mpi_rank()
 
@@ -503,20 +494,11 @@ program mock_monarch
     ! **** Add to MONARCH during runtime for each time step **** !
     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
+#ifdef PRINT_STATE_GNUPLOT
     if (camp_mpi_rank().eq.0) then
       call print_state_gnuplot(curr_time,camp_interface, name_gas_species_to_print,id_gas_species_to_print&
              ,name_aerosol_species_to_print,id_aerosol_species_to_print,RESULTS_FILE_UNIT)
     end if
-
-#ifdef ISSUE41
-
-    !if(i_time.eq.(NUM_TIME_STEP/2)) then
-
-    aux_int=mod(i_time,8)
-    if(aux_int.eq.0) then
-      species_conc(:,:,:,:) = species_conc_copy(:,:,:,:)
-    end if
-
 #endif
 
     call camp_interface%integrate(curr_time,         & ! Starting time (min)
@@ -545,37 +527,8 @@ program mock_monarch
       call export_file_results_all_cells(camp_interface)
     end if
 
-#ifdef ISSUE41
-
-    !if(i_time.eq.(NUM_TIME_STEP/2)) then
-
-    aux_int=mod(i_time,8)
-    if(aux_int.eq.0) then
-      if (camp_mpi_rank().eq.0) then
-      !if (camp_mpi_rank().eq.999) then
-        do i = I_E,I_E!I_W, I_E
-          do j = I_N,I_N!I_S, I_N
-            do k = NUM_VERT_CELLS, NUM_VERT_CELLS!1,NUM_VERT_CELLS!1, NUM_VERT_CELLS
-              do z=1, size(name_gas_species_to_print)
-                print*,id_gas_species_to_print(z),name_gas_species_to_print(z)%string,&
-                        species_conc(i,j,k,id_gas_species_to_print(z))
-              end do
-              if (plot_case.gt.0) then
-                do z=1, size(name_aerosol_species_to_print)
-                  print*,id_aerosol_species_to_print(z),name_aerosol_species_to_print(z)%string,&
-                          species_conc(i,j,k,id_aerosol_species_to_print(z))
-                end do
-              end if
-            end do
-          end do
-        end do
-      end if
-    end if
-
-#endif
-
-    !if (camp_mpi_rank().eq.0) then
-    if (camp_mpi_rank().eq.999) then
+#ifdef DEBUG_MOCK_MONARCH
+    if (camp_mpi_rank().eq.0) then
       do i = I_E,I_E!I_W, I_E
         do j = I_N,I_N!I_S, I_N
           do k = NUM_VERT_CELLS, NUM_VERT_CELLS!1,NUM_VERT_CELLS!1, NUM_VERT_CELLS
@@ -593,6 +546,7 @@ program mock_monarch
         end do
       end do
     end if
+#endif
 
   end do
 
@@ -636,9 +590,10 @@ program mock_monarch
   ! Output results and scripts
   if (camp_mpi_rank().eq.0) then
     !write(*,*) "MONARCH interface tests - PASS"
-    !call print_state_gnuplot(curr_time,camp_interface,species_conc)
+#ifdef PRINT_STATE_GNUPLOT
     call print_state_gnuplot(curr_time,camp_interface, name_gas_species_to_print,id_gas_species_to_print&
             ,name_aerosol_species_to_print,id_aerosol_species_to_print,RESULTS_FILE_UNIT)
+#endif
     call create_gnuplot_script(camp_interface, output_file_prefix, &
             plot_start_time, curr_time)
     !call create_gnuplot_persist(camp_interface, output_file_prefix, &
@@ -834,27 +789,48 @@ contains
     character(len=:), allocatable :: file_name
     character(len=:), allocatable :: aux_str
     integer :: z
-    integer :: n_cells_print
+    integer :: n_cells_print,ncells
 
-    file_name = file_prefix//"_results_all_cells.csv"
-    !print*,file_name
-    open(RESULTS_ALL_CELLS_FILE_UNIT, file=file_name, status="replace", action="write")
+#ifdef CAMP_USE_MPI
 
-    if(NUM_WE_CELLS*NUM_SN_CELLS*NUM_VERT_CELLS.gt.1000) then
-      print*,"WARNING: Maybe too much data to save in a txt file (RESULTS_ALL_CELLS)"
+    !print*,"size(species_conc)",size(species_conc)
+
+    ncells=(I_E - I_W+1)*(I_N - I_S+1)*NUM_VERT_CELLS
+
+    !allocate(species_conc_mpi(n_cells*camp_mpi_size(),NUM_MONARCH_SPEC))
+    !allocate(species_conc_mpi(ncells*camp_mpi_size(),NUM_MONARCH_SPEC))
+
+    allocate(species_conc_mpi(NUM_WE_CELLS,NUM_SN_CELLS,&
+            NUM_VERT_CELLS,NUM_MONARCH_SPEC,camp_mpi_size()))
+
+    if (camp_mpi_rank().eq.0) then
+#endif
+
+      !allocate(species_conc_mpi(n_cells*camp_mpi_size()))
+
+      file_name = file_prefix//"_results_all_cells.csv"
+      !print*,file_name
+      open(RESULTS_ALL_CELLS_FILE_UNIT, file=file_name, status="replace", action="write")
+
+      if(NUM_WE_CELLS*NUM_SN_CELLS*NUM_VERT_CELLS.gt.1000) then
+        print*,"WARNING: Maybe too much data to save in a txt file (RESULTS_ALL_CELLS)"
+      end if
+
+      aux_str = camp_interface%monarch_species_names(1)%string
+
+      do z=2, size(camp_interface%monarch_species_names)
+        !print*,camp_interface%monarch_species_names(z)%string
+        aux_str = aux_str//","//camp_interface%monarch_species_names(z)%string
+      end do
+
+      write(RESULTS_ALL_CELLS_FILE_UNIT, "(A)", advance="no") aux_str
+      write(RESULTS_ALL_CELLS_FILE_UNIT, '(a)') ''
+
+      deallocate(aux_str)
+
+#ifdef CAMP_USE_MPI
     end if
-
-    aux_str = camp_interface%monarch_species_names(1)%string
-
-    do z=2, size(camp_interface%monarch_species_names)
-      !print*,camp_interface%monarch_species_names(z)%string
-      aux_str = aux_str//","//camp_interface%monarch_species_names(z)%string
-    end do
-
-    write(RESULTS_ALL_CELLS_FILE_UNIT, "(A)", advance="no") aux_str
-    write(RESULTS_ALL_CELLS_FILE_UNIT, '(a)') ''
-
-    deallocate(aux_str)
+#endif
 
   end subroutine
 
@@ -864,11 +840,90 @@ contains
 
     character(len=:), allocatable :: aux_str
     character(len=128) :: i_str
-    integer :: z,o,i,j,k,r,i_cell,i_spec
+    integer :: z,o,i,j,k,r,i_cell,i_spec,n,ncells,len
+
+    ncells=(I_E - I_W+1)*(I_N - I_S+1)*NUM_VERT_CELLS
+    len=size(species_conc)!n_cells*NUM_MONARCH_SPEC!size(species_conc)
+
+    print*,"len",len
+
+#ifdef CAMP_USE_MPI
+
+      !print*,"export_file_results_all_cells state_var",camp_interface%camp_state%state_var
+      !print*,"export_file_results_all_cells species_conc ",&
+      !        species_conc(1,1,1,camp_interface%map_monarch_id(:)),&
+      !        "state_var",camp_interface%camp_state%state_var(camp_interface%map_camp_id(:))
+
+    print*,"species_conc"
+    call camp_mpi_barrier(MPI_COMM_WORLD)
+
+    do n=1,camp_mpi_size()
+      do i=I_W,I_E
+        do j=I_S,I_N
+          do k=1,NUM_VERT_CELLS
+            o = (j-1)*(I_E) + (i-1) !Index to 3D
+            z = (k-1)*(I_E*I_N) + o !Index for 2D
+            !z = n*ncells+z
+            do r=2,size(camp_interface%map_monarch_id)
+
+              print*,species_conc(i,j,k,camp_interface%map_monarch_id(r)),&
+                      camp_interface%camp_state%state_var(camp_interface%map_camp_id(r))
+
+              !camp_interface%camp_state%state_var(r+z*state_size_per_cell) = &
+              !        camp_interface%camp_state%state_var(r)
+            end do
+
+            write(RESULTS_ALL_CELLS_FILE_UNIT, '(a)') ''
+
+          end do
+        end do
+      end do
+    end do
+
+    call camp_mpi_barrier(MPI_COMM_WORLD)
+    print*,"species_conc_mpi"
+
+    call MPI_GATHER(species_conc, len, MPI_REAL, species_conc_mpi,&
+            len,MPI_REAL, 0, MPI_COMM_WORLD, ierr)
 
     if (camp_mpi_rank().eq.0) then
+      do n=1,camp_mpi_size()
+        do i=I_W,I_E
+          do j=I_S,I_N
+            do k=1,NUM_VERT_CELLS
+              o = (j-1)*(I_E) + (i-1) !Index to 3D
+              z = (k-1)*(I_E*I_N) + o !Index for 2D
+              !z = n*ncells+z
 
-      !print*, size(camp_interface%camp_state%state_var), size(camp_interface%map_monarch_id)
+              write(RESULTS_ALL_CELLS_FILE_UNIT, "(ES13.6)", advance="no") &
+                      species_conc_mpi(i,j,k,camp_interface%map_monarch_id(1),n)
+
+              !print*,"export_file_results_all_cells species_conc_mpi", species_conc_mpi(z,camp_interface%map_monarch_id(1))
+
+              do r=2,size(camp_interface%map_monarch_id)
+
+                print*,species_conc_mpi(i,j,k,camp_interface%map_monarch_id(r),n),&
+                        camp_interface%camp_state%state_var(camp_interface%map_camp_id(r))
+
+                write(RESULTS_ALL_CELLS_FILE_UNIT, "(A)", advance="no") ","
+                write(RESULTS_ALL_CELLS_FILE_UNIT, "(ES13.6)", advance="no") &
+                        species_conc_mpi(i,j,k,camp_interface%map_monarch_id(r),n)
+
+                !camp_interface%camp_state%state_var(r+z*state_size_per_cell) = &
+                !        camp_interface%camp_state%state_var(r)
+              end do
+
+              write(RESULTS_ALL_CELLS_FILE_UNIT, '(a)') ''
+
+            end do
+          end do
+        end do
+      end do
+    end if
+
+#else
+
+    if (camp_mpi_rank().eq.0) then
 
       do i=I_W,I_E
         do j=I_S,I_N
@@ -881,14 +936,14 @@ contains
 
             do r=2,size(camp_interface%map_monarch_id)
 
-              !print*,species_conc(i,j,k,camp_interface%map_monarch_id(r))
+              print*,species_conc(i,j,k,camp_interface%map_monarch_id(r)),&
+                      camp_interface%camp_state%state_var(camp_interface%map_camp_id(r))
+
 
               write(RESULTS_ALL_CELLS_FILE_UNIT, "(A)", advance="no") ","
               write(RESULTS_ALL_CELLS_FILE_UNIT, "(ES13.6)", advance="no") &
                       species_conc(i,j,k,camp_interface%map_monarch_id(r))
 
-              !camp_interface%camp_state%state_var(r+z*state_size_per_cell) = &
-              !        camp_interface%camp_state%state_var(r)
             end do
 
             write(RESULTS_ALL_CELLS_FILE_UNIT, '(a)') ''
@@ -896,8 +951,8 @@ contains
           end do
         end do
       end do
-
     end if
+#endif
 
   end subroutine
 
@@ -2262,24 +2317,5 @@ contains
     photo_id_camp(23) = 25 !0.0s
 
   end subroutine set_ebi_photo_ids_with_camp
-
-
-  !Compare results
-  !do i = I_W, I_E
-  !  do j = I_S, I_N
-  !    do k = 1, NUM_VERT_CELLS
-  !      do i_spec = START_CAMP_ID, END_CAMP_ID
-  !        call assert_msg( 394742768, &
-  !                almost_equal( real( species_conc(i,j,k,i_spec), kind=dp ), &
-  !                       real( species_conc_copy(i,j,k,i_spec), kind=dp ), &
-  !                        1.d-5, 1d-4 ), &
-  !                "Concentration species mismatch for species "// &
-  !                        trim( to_string( i_spec ) )//". Expected: "// &
-  !                        trim( to_string( species_conc(i,j,k,i_spec) ) )//", got: "// &
-  !                        trim( to_string( species_conc_copy(i,j,k,i_spec) ) ) )
-  !      end do
-  !    end do
-  !  end do
-  !end do
 
 end program mock_monarch

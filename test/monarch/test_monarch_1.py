@@ -316,15 +316,15 @@ def all_timesteps():
   #mpi="no"
 
   #mpiProcessesList = [1]
-  mpiProcessesList = [40,1]
+  mpiProcessesList = [2,1]
 
-  cells = [40]
+  cells = [2]
   #cells = [100,1000]
   #cells = [100,500,1000]
   #cells = [1,5,10,50,100]
   #cells = [100,500,1000,5000,10000]
 
-  timesteps = 5#5 #720=24h #30=1h
+  timesteps = 1#5 #720=24h #30=1h
   TIME_STEP = 2 #pending send TIME_STEP to mock_monarch
 
   caseBase="CPU One-cell"
@@ -335,8 +335,8 @@ def all_timesteps():
   #casesOptim.append("GPU Block-cells(1)")
   #casesOptim.append("GPU Block-cells(N)")
   #casesOptim.append("GPU Multi-cells")
-  #casesOptim.append("CPU Multi-cells")
-  casesOptim.append("GPU One-cell")
+  casesOptim.append("CPU Multi-cells")
+  #casesOptim.append("GPU One-cell")
 
   casesL=[]
   cases=[]
@@ -359,6 +359,7 @@ def all_timesteps():
   #cases = ["CPU Multi-cells","GPU Multi-cells"]
   #cases = ["GPU Multi-cells","GPU Block-cells(N)"]
   #cases = ["GPU Block-cells(N)","GPU Block-cells(1)"]
+  #cases = ["CPU One-cell","CPU One-cell"]
 
   #plot_y_key = "counterBCG"
   #plot_y_key = "Average BCG internal iterations per call"
