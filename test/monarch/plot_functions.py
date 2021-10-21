@@ -620,7 +620,7 @@ def plotsns(namex, namey, datax, datay, plot_title, legend):
   ax.set_xlabel(namex)
   ax.set_ylabel(namey)
 
-  if(legend):
+  if(len(legend)>1):
 
     print("WARNING: Increase plot window manually to take better screenshot")
 

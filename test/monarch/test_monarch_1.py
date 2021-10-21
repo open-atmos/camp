@@ -169,11 +169,12 @@ def run_case(config_file,diff_cells,mpi,mpiProcessesList,cells,timesteps,
 
   return datacase
 
-def run_diff_cells(datacolumns,legend,column,config_file,diff_cells,mpi,mpiProcessesList,cells,timesteps,
+def run_diff_cells(datacolumns,legend,columnHeader,config_file,diff_cells,mpi,mpiProcessesList,cells,timesteps,
              casesL,results_file,plot_y_key):
 
-  print("run_diff_cells start run_diff_cells",datacolumns)
-
+  #print("run_diff_cells start run_diff_cells",datacolumns)
+  gpus=1
+  column=columnHeader
   for j in range(len(casesL)):
     cases=casesL[j]
     cases_gpu_cpu=[""]*len(cases)
@@ -197,11 +198,8 @@ def run_diff_cells(datacolumns,legend,column,config_file,diff_cells,mpi,mpiProce
           cases_gpu_cpu_name[i]=str(gpus) + " GPU"
 
     if(len(casesL)>1):
-      column+=cases_gpu_cpu_name[1]+" "+cases_multicells_onecell_name[1]
-
-      #legend2.append(column)
-      print("run_diff_cells column",column)
-      column=""
+      column=columnHeader+cases_gpu_cpu_name[1]+" "+cases_multicells_onecell_name[1]
+      #print("run_diff_cells column",column)
 
     legend.append(column)
 
@@ -209,16 +207,30 @@ def run_diff_cells(datacolumns,legend,column,config_file,diff_cells,mpi,mpiProce
                         cases,cases_gpu_cpu,cases_multicells_onecell,results_file,plot_y_key)
     datacolumns.append(datacase)
 
-    print("run_diff_cells end run_diff_cells",datacolumns)
+  if(len(casesL)>1):
+    plot_title="Case vs " + cases_gpu_cpu_name[0] + " " + cases_multicells_onecell_name[0] + " "
+    print(" len(casesL)>1",plot_title)
+  else:
+    first_word= cases_gpu_cpu_name[1] + " " + cases_multicells_onecell_name[1] + " "
+    second_word= cases_gpu_cpu_name[0] + " " + cases_multicells_onecell_name[0] + " "
+    plot_title=first_word + "vs " + second_word
+    print("else len(casesL)>1",plot_title)
 
-def plot_cases(datayL,legend,casesL,cells,diff_cells,timesteps,plot_y_key,
+  print("plot_title",plot_title)
+
+  #plot_titleL.append(plot_title)
+  return plot_title
+
+  #print("run_diff_cells end datacolumns",datacolumns)
+
+def plot_cases(datayL,legend,plot_title,casesL,cells,diff_cells,timesteps,plot_y_key,
                    mpiProcessesList,SAVE_PLOT):
 
-  plot_title=""
   first_word=""
   second_word=""
   gpus=1
 
+  #todo use names from previous funct (or just get a title from previous funct)
   for j in range(len(casesL)):
     cases=casesL[j]
     cases_gpu_cpu=[""]*len(cases)
@@ -239,13 +251,6 @@ def plot_cases(datayL,legend,casesL,cells,diff_cells,timesteps,plot_y_key,
         if cases_gpu_cpu[i]=="GPU":
           cases_gpu_cpu[i]=str(gpus) + " GPU"
 
-    if(len(casesL)>1):
-
-      column=cases_gpu_cpu[1] + " " + cases_multicells_onecell[1]
-      #print("plot_cases column",column)
-      #legend.append(column)
-
-
   namey="Speedup"
   if plot_y_key=="Speedup normalized computational timeLS":
     namey="Speedup without CPU-GPU data transfers"
@@ -256,15 +261,15 @@ def plot_cases(datayL,legend,casesL,cells,diff_cells,timesteps,plot_y_key,
 
   datay=datayL
 
-  if(len(casesL)>1):
-    plot_title+="Case vs " + cases_gpu_cpu[0] + " " + cases_multicells_onecell[0] + " "
-    plot_title+=diff_cells+" test"
+  #if(len(casesL)>1):
+  #  plot_title+="Case vs " + cases_gpu_cpu[0] + " " + cases_multicells_onecell[0] + " "
+  #  plot_title+=diff_cells+" test"
 
-  else:
-    first_word+= cases_gpu_cpu[1] + " " + cases_multicells_onecell[1] + " "
-    second_word+= cases_gpu_cpu[0] + " " + cases_multicells_onecell[0] + " "
-    plot_title+=first_word + "vs " + second_word
-    plot_title+=diff_cells+" test"
+  #else:
+  #  first_word+= cases_gpu_cpu[1] + " " + cases_multicells_onecell[1] + " "
+  #  second_word+= cases_gpu_cpu[0] + " " + cases_multicells_onecell[0] + " "
+  #  plot_title+=first_word + "vs " + second_word
+  #  plot_title+=diff_cells+" test"
 
     #datay=datayL[0]
 
@@ -276,7 +281,6 @@ def plot_cases(datayL,legend,casesL,cells,diff_cells,timesteps,plot_y_key,
       plot_title+=", Timesteps: "+str(timesteps)
     datax=cells
     plot_x_key="Cells"
-
   else:
     plot_title+=", Cells: "+str(cells[0])
     datax=list(range(1,timesteps+1,1))
@@ -343,17 +347,6 @@ def all_timesteps():
   #cases = ["CPU One-cell"]
   #cases = ["CPU Multi-cells"]
   #cases = ["GPU One-cell"]
-  #cases = ["CPU One-cell","CPU Multi-cells"]
-  #cases = ["CPU One-cell","GPU Block-cells(N)"]
-  #cases = ["CPU One-cell","GPU Block-cells(1)"]
-  #cases = ["CPU Multi-cells","GPU Block-cells(N)"]
-  #cases = ["CPU Multi-cells","GPU Block-cells(1)"]
-  #cases = ["GPU Block-cells(1)","GPU Block-cells(N)"]
-  #cases = ["CPU One-cell","GPU One-cell"]
-  #cases = ["CPU Multi-cells","GPU Multi-cells"]
-  #cases = ["GPU Multi-cells","GPU Block-cells(N)"]
-  #cases = ["GPU Block-cells(N)","GPU Block-cells(1)"]
-  #cases = ["CPU One-cell","CPU One-cell"]
 
   #plot_y_key = "counterBCG"
   #plot_y_key = "Average BCG internal iterations per call"
@@ -415,8 +408,7 @@ def all_timesteps():
 
   datacolumns=[]
   legend=[]
-
-  #diff_cells=diff_cellsL[0]
+  plot_title=""
   for diff_cells in diff_cellsL:
     if(config_file=="monarch_cb05"):
       diff_cells="Ideal"
@@ -426,7 +418,7 @@ def all_timesteps():
     if(len(diff_cellsL)>1):
       column+=diff_cells+" "
 
-    run_diff_cells(datacolumns,legend,column,config_file,diff_cells,mpi,mpiProcessesList,cells,timesteps,
+    plot_title=run_diff_cells(datacolumns,legend,column,config_file,diff_cells,mpi,mpiProcessesList,cells,timesteps,
            casesL,results_file,plot_y_key)
 
   end_time=time.perf_counter()
@@ -435,7 +427,12 @@ def all_timesteps():
   if time_s>60:
     SAVE_PLOT=True
 
-  plot_cases(datacolumns,legend,casesL,cells,diff_cells,timesteps,plot_y_key,
+  print("main plot_title",plot_title)
+
+  if(len(diff_cellsL)==1):
+    plot_title+=diff_cells+" test"
+
+  plot_cases(datacolumns,legend,plot_title,casesL,cells,diff_cells,timesteps,plot_y_key,
             mpiProcessesList,SAVE_PLOT)
 
 
