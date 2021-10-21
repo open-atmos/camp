@@ -724,7 +724,7 @@ contains
 
       water_conc(:,:,:,WATER_VAPOR_ID) = 0.
       temp_init = 290.016
-      press_init = 100000.
+      press_init = 100000. !Should be the same than camp_monarch_interface
 
       if(DIFF_CELLS.eq."ON") then
 
@@ -782,7 +782,7 @@ contains
 
     end if
 
-    !print*,camp_mpi_rank(),pressure
+    !print*,"model_initialize",camp_mpi_rank(),pressure
     call camp_mpi_barrier()
 
     deallocate(file_name)

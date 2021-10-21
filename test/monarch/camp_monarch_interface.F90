@@ -557,9 +557,12 @@ contains
 
       if(DIFF_CELLS_EMI.eq."ON") then
 
-        press_init = pressure(I_W,I_S,1)!100000.
+        press_init = 100000.!Should be the same than mock_monarch
         press_end = 85000.
         press_range = press_end-press_init
+
+        !print*,press_end,"-",press_init,"=",press_range,"rank:",camp_mpi_rank()
+        call camp_mpi_barrier(MPI_COMM_WORLD)
 
         do i=I_W, I_E
           do j=I_S, I_N
@@ -569,6 +572,8 @@ contains
 
               press_norm=&
                       (press_end-pressure(i,j,k))/(press_range)
+
+              !print*,press_init,press_end,press_range,pressure(i,j,k),press_norm,camp_mpi_rank()
 
               if(press_norm.ge.0) then
                 do t=1,12

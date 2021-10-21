@@ -300,7 +300,7 @@ def plot_cases(casesL,cases_gpu_cpu2,cases_multicells_onecell2,cells,diff_cells,
 
   print(namey,":",datay)
 
-  #plot_functions.plot(namex,namey,datax,datay,plot_title,columns,SAVE_PLOT)
+  plot_functions.plot(namex,namey,datax,datay,plot_title,columns,SAVE_PLOT)
 
 
 def all_timesteps():
@@ -316,9 +316,9 @@ def all_timesteps():
   #mpi="no"
 
   #mpiProcessesList = [1]
-  mpiProcessesList = [2,1]
+  mpiProcessesList = [40,1]
 
-  cells = [2]
+  cells = [80]
   #cells = [100,1000]
   #cells = [100,500,1000]
   #cells = [1,5,10,50,100]
