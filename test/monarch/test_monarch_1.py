@@ -79,7 +79,7 @@ def run(config_file,diff_cells,mpi,mpiProcesses,n_cells,timesteps,
 
   return data
 
-def run_cell(config_file,diff_cells,mpi,mpiProcessesList,n_cells_aux,timesteps,
+def run_cell(datayL,legend,config_file,diff_cells,mpi,mpiProcessesList,n_cells_aux,timesteps,
              cases,cases_gpu_cpu,cases_multicells_onecell,results_file,plot_y_key):
 
   y_key_words = plot_y_key.split()
@@ -118,7 +118,7 @@ def run_cell(config_file,diff_cells,mpi,mpiProcessesList,n_cells_aux,timesteps,
         raise Exception("Unkown normalized case",y_key)
 
   if(len(cases)!=2):
-    raise Exception("Only one case to compare, check cases")
+    raise Exception("Cases to compare != 2, check cases")
 
   if("(Comp.timeLS/counterBCG)" in plot_y_key):
     data=plot_functions.calculate_computational_timeLS( \
@@ -152,96 +152,68 @@ def run_cell(config_file,diff_cells,mpi,mpiProcessesList,n_cells_aux,timesteps,
 
   return datay
 
-def run_case(config_file,diff_cells,mpi,mpiProcessesList,cells,timesteps,
+def run_case(datayL,legend,config_file,diff_cells,mpi,mpiProcessesList,cells,timesteps,
              cases,cases_gpu_cpu,cases_multicells_onecell,results_file,plot_y_key):
-
-  #cases=casesL[0]
 
   datay=[]
   for i in range(len(cells)):
-    datay_cell = run_cell(config_file,diff_cells,mpi,mpiProcessesList,cells[i],timesteps,
+    datay_cell = run_cell(datayL,legend,config_file,diff_cells,mpi,mpiProcessesList,cells[i],timesteps,
                           cases,cases_gpu_cpu,cases_multicells_onecell,results_file,plot_y_key)
 
     #print(datay_cell)
     if(len(cells)>1):
-      #Default metric
+      #Mean timesteps
       datay.append(np.mean(datay_cell))
     else:
       datay=datay_cell
 
   return datay
 
-def plot_historic(cases_gpu_cpu,cases_multicells_onecell,cells,diff_cells,timesteps,plot_y_key,
-              mpiProcessesList,datay,SAVE_PLOT):
-  print("plot_historic")
+def run_diff_cells(datayL,legend,config_file,diff_cells,mpi,mpiProcessesList,cells,timesteps,
+             casesL,results_file,plot_y_key):
 
-  for i in range(2):
-    if cases_multicells_onecell[i]=="Block-cells(N)":
-      cases_multicells_onecell[i]="Block-cells (N)"
-    if cases_multicells_onecell[i]=="Block-cells(1)":
-      cases_multicells_onecell[i]="Block-cells (1)"
+  datacases=[]
+  for j in range(len(casesL)):
+    cases=casesL[j]
+    cases_gpu_cpu=[""]*len(cases)
+    cases_multicells_onecell=[""]*len(cases)
+    for i in range(len(cases)):
+      cases_words=cases[i].split()
+      cases_gpu_cpu[i]=cases_words[0]
+      cases_multicells_onecell[i]=cases_words[1]
+      cases_multicells_onecell_name=cases_multicells_onecell.copy()
+      cases_gpu_cpu_name=cases_gpu_cpu.copy()
 
-  gpus=1
-  if(len(mpiProcessesList)==2):
-    for i in range(len(cases_multicells_onecell)):
-      if cases_gpu_cpu[i]=="CPU":
-        cases_gpu_cpu[i]=str(mpiProcessesList[0]) + " MPI processes"
-      if cases_gpu_cpu[i]=="GPU":
-        cases_gpu_cpu[i]=str(gpus) + " GPU"
+      if cases_multicells_onecell[i]=="Block-cells(N)":
+        cases_multicells_onecell_name[i]="Block-cells (N)"
+      if cases_multicells_onecell[i]=="Block-cells(1)":
+        cases_multicells_onecell_name[i]="Block-cells (1)"
 
-  plot_title=""
-  first_word=""
-  second_word=""
+      if(len(mpiProcessesList)==2):
+        if cases_gpu_cpu[i]=="CPU":
+          cases_gpu_cpu_name[i]=str(mpiProcessesList[0]) + " MPI processes"
+        if cases_gpu_cpu[i]=="GPU":
+          cases_gpu_cpu_name[i]=str(gpus) + " GPU"
 
-  first_word+= cases_gpu_cpu[1] + " " + cases_multicells_onecell[1] + " "
-  second_word+= cases_gpu_cpu[0] + " " + cases_multicells_onecell[0] + " "
+    if(len(casesL)>1):
+      column=cases_gpu_cpu_name[1]+" "+cases_multicells_onecell_name[1]
+      #legend.append(column)
+      #print("main column")
 
-  plot_title+=first_word + "vs " + second_word
-  plot_title+=diff_cells+" test"
+    datacase = run_case(datayL,legend,config_file,diff_cells,mpi,mpiProcessesList,cells,timesteps,
+                        cases,cases_gpu_cpu,cases_multicells_onecell,results_file,plot_y_key)
+    datacases.append(datacase)
 
-  if(len(cells)>1):
+  return datacases
 
-    print_timesteps_title=False
-    if print_timesteps_title:
-      plot_title+=", Mean over "+str(timesteps)+ " timesteps"
-    datax=cells
-    plot_x_key="Cells"
-
-  else:
-    plot_title+=", Cells: "+str(cells[0])
-    datax=list(range(1,timesteps+1,1))
-    plot_x_key = "Timesteps"
-
-  namey="Speedup"
-  if plot_y_key=="Speedup normalized computational timeLS":
-    namey="Speedup without CPU-GPU data transfers"
-  if plot_y_key=="Speedup counterLS":
-    namey="Proportion of calls reduced"
-  if plot_y_key=="MAPE":
-    namey="MAPE [%]"
-
-  namex=plot_x_key
-
-  columns=[]
-
-  plot_functions.plot(namex,namey,datax,datay,plot_title,columns,SAVE_PLOT)
-
-def plot_cases(casesL,cases_gpu_cpu2,cases_multicells_onecell2,cells,diff_cells,timesteps,plot_y_key,
-                   mpiProcessesList,datacases,SAVE_PLOT):
+def plot_cases(datayL,legend,casesL,cells,diff_cells,timesteps,plot_y_key,
+                   mpiProcessesList,SAVE_PLOT):
 
   plot_title=""
-  columns=[]
+  #legend=[]
   first_word=""
   second_word=""
   gpus=1
-
-  namey="Speedup"
-  if plot_y_key=="Speedup normalized computational timeLS":
-    namey="Speedup without CPU-GPU data transfers"
-  if plot_y_key=="Speedup counterLS":
-    namey="Proportion of calls reduced"
-  if plot_y_key=="MAPE":
-    namey="MAPE [%]"
 
   for j in range(len(casesL)):
     cases=casesL[j]
@@ -266,21 +238,30 @@ def plot_cases(casesL,cases_gpu_cpu2,cases_multicells_onecell2,cells,diff_cells,
     if(len(casesL)>1):
 
       column=cases_gpu_cpu[1] + " " + cases_multicells_onecell[1]
+      #print("plot_cases column",column)
+      legend.append(column)
 
-      columns.append(column)
+
+  namey="Speedup"
+  if plot_y_key=="Speedup normalized computational timeLS":
+    namey="Speedup without CPU-GPU data transfers"
+  if plot_y_key=="Speedup counterLS":
+    namey="Proportion of calls reduced"
+  if plot_y_key=="MAPE":
+    namey="MAPE [%]"
 
   if(len(casesL)>1):
     plot_title+="Case vs " + cases_gpu_cpu[0] + " " + cases_multicells_onecell[0] + " "
     plot_title+=diff_cells+" test"
 
-    datay=datacases
+    datay=datayL
   else:
     first_word+= cases_gpu_cpu[1] + " " + cases_multicells_onecell[1] + " "
     second_word+= cases_gpu_cpu[0] + " " + cases_multicells_onecell[0] + " "
     plot_title+=first_word + "vs " + second_word
     plot_title+=diff_cells+" test"
 
-    datay=datacases[0]
+    datay=datayL[0]
 
   if(len(cells)>1):
     #print_timesteps_title=True
@@ -300,7 +281,7 @@ def plot_cases(casesL,cases_gpu_cpu2,cases_multicells_onecell2,cells,diff_cells,
 
   print(namey,":",datay)
 
-  plot_functions.plot(namex,namey,datax,datay,plot_title,columns,SAVE_PLOT)
+  plot_functions.plot(namex,namey,datax,datay,plot_title,legend,SAVE_PLOT)
 
 
 def all_timesteps():
@@ -309,22 +290,26 @@ def all_timesteps():
   #config_file="monarch_cb05"
   config_file="monarch_binned"
 
-  diff_cells="Realistic"
+  diff_cellsL=[]
+  #diff_cellsL.append("Realistic")
+  diff_cellsL.append("Ideal")
+
+  #diff_cells="Realistic"
   #diff_cells="Ideal"
 
   mpi="yes"
   #mpi="no"
 
-  #mpiProcessesList = [1]
-  mpiProcessesList = [40,1]
+  mpiProcessesList = [1]
+  #mpiProcessesList = [40,1]
 
-  cells = [80]
+  cells = [1,10]
   #cells = [100,1000]
   #cells = [100,500,1000]
   #cells = [1,5,10,50,100]
   #cells = [100,500,1000,5000,10000]
 
-  timesteps = 5#5 #720=24h #30=1h
+  timesteps = 1#5 #720=24h #30=1h
   TIME_STEP = 2 #pending send TIME_STEP to mock_monarch
 
   caseBase="CPU One-cell"
@@ -334,15 +319,17 @@ def all_timesteps():
   casesOptim=[]
   #casesOptim.append("GPU Block-cells(1)")
   #casesOptim.append("GPU Block-cells(N)")
-  #casesOptim.append("GPU Multi-cells")
+  casesOptim.append("GPU Multi-cells")
   casesOptim.append("CPU Multi-cells")
   #casesOptim.append("GPU One-cell")
 
   casesL=[]
   cases=[]
   for caseOptim in casesOptim:
-    cases.append(caseBase)
-    cases.append(caseOptim)
+
+    #cases.append(caseBase)
+    #cases.append(caseOptim)
+    cases=[caseBase]+[caseOptim]
     casesL.append(cases)
 
   #cases = ["Historic"]
@@ -400,6 +387,7 @@ def all_timesteps():
   elif "counterBCG" in plot_y_key:
     print("WARNING: Remember to disable solveBcgCuda_sum_it")
 
+  diff_cells=diff_cellsL[0]
   if(config_file=="monarch_cb05"):
     diff_cells="Ideal"
     print("WARNING: ENSURE DERIV_CPU_ON_GPU IS OFF")
@@ -420,22 +408,13 @@ def all_timesteps():
     casesL.append(["CPU One-cell","CPU Multi-cells"])
     casesL.append(["CPU One-cell","GPU One-cell"])
   elif(len(casesL)==0):
+    print("len(casesL)==0")
     casesL.append(cases)
 
-  datacases=[]
-  columns=[]
-  for j in range(len(casesL)):
-    cases=casesL[j]
-    cases_gpu_cpu=[""]*len(cases)
-    cases_multicells_onecell=[""]*len(cases)
-    for i in range(len(cases)):
-      cases_words=cases[i].split()
-      cases_gpu_cpu[i]=cases_words[0]
-      cases_multicells_onecell[i]=cases_words[1]
-
-    datacase = run_case(config_file,diff_cells,mpi,mpiProcessesList,cells,timesteps,
-             cases,cases_gpu_cpu,cases_multicells_onecell,results_file,plot_y_key)
-    datacases.append(datacase)
+  datayL=[]
+  legend=[]
+  datayL = run_diff_cells(datayL,legend,config_file,diff_cells,mpi,mpiProcessesList,cells,timesteps,
+           casesL,results_file,plot_y_key)
 
   end_time=time.perf_counter()
   time_s=end_time-start_time
@@ -443,8 +422,8 @@ def all_timesteps():
   if time_s>60:
     SAVE_PLOT=True
 
-  plot_cases(casesL,cases_gpu_cpu,cases_multicells_onecell,cells,diff_cells,timesteps,plot_y_key,
-            mpiProcessesList,datacases,SAVE_PLOT)
+  plot_cases(datayL,legend,casesL,cells,diff_cells,timesteps,plot_y_key,
+            mpiProcessesList,SAVE_PLOT)
 
 
 """
@@ -462,14 +441,14 @@ def plotsns():
 
     datay2=[[1, 2, 3], [4, 5, 6], [7, 8, 9], [10, 11, 12]]
     datax=[123, 346, 789]
-    columns=["GPU Block-cells(1)",
+    legend=["GPU Block-cells(1)",
              "GPU Block-cells(2)",
              "GPU Block-cells(3)",
              "GPU Block-cells(4)"]
   else:
     datay2=[[1, 2, 3], [4, 5, 6]]
     datax=[123, 346, 789]
-    columns=["GPU Block-cells(1)",
+    legend=["GPU Block-cells(1)",
            "GPU Block-cells(2)"]
 
   #datay=map(list,)
@@ -491,7 +470,7 @@ def plotsns():
   sns.set_context("paper", font_scale=1.25)
 
   #data = pd.DataFrame(datay, datax)
-  data = pd.DataFrame(datay, datax, columns=columns)
+  data = pd.DataFrame(datay, datax, columns=legend)
 
   fig = plt.figure()
   ax = plt.subplot(111)
@@ -516,7 +495,7 @@ def plotsns():
     #ax.set_position([box.x0, box.y0 + box.height * 0.1,
     #             box.width, box.height * 0.75])
     #ax.legend(bbox_to_anchor=(0.5, -0.05), loc='upper center',
-    #          labels=columns,ncol=4, mode="expand", borderaxespad=0.)
+    #          labels=legend,ncol=4, mode="expand", borderaxespad=0.)
     #fig.subplots_adjust(bottom=0.35)
     #borderaxespad=1. to move down more the legend
 
@@ -524,10 +503,10 @@ def plotsns():
     ax.set_title(plot_title, y=1.06)
 
     ax.legend(loc='lower center', bbox_to_anchor=(0.5, 1),
-          ncol=len(columns), labels=columns,frameon=True,shadow=False, borderaxespad=0.)
+          ncol=len(legend), labels=legend,frameon=True,shadow=False, borderaxespad=0.)
 
     #ax.legend(loc='lower center', bbox_to_anchor=(0.5, 1),
-    #          ncol=len(columns), labels=columns,frameon=False, shadow=False, borderaxespad=0.)#fine
+    #          ncol=len(legend), labels=legend,frameon=False, shadow=False, borderaxespad=0.)#fine
 
 
     #ax.subplots_adjust(top=0.25) #not work
@@ -537,7 +516,7 @@ def plotsns():
     #sns.lineplot(data=data, palette="tab10", linewidth=2.5)
     #box=ax.get_position()
     #ax.set_position([box.x0, box.y0, box.width * 0.7, box.height])
-    #ax.legend(bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0,labels=columns)
+    #ax.legend(bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0,labels=legend)
 
   else:
     ax.set_title(plot_title)
@@ -547,7 +526,7 @@ def plotsns():
 #rs = np.random.RandomState(365)
 #values = rs.randn(365, 4).cumsum(axis=0)
 #dates = pd.date_range("1 1 2016", periods=365, freq="D")
-#data = pd.DataFrame(values, dates, columns=["A", "B", "C", "D"])
+#data = pd.DataFrame(values, dates, legend=["A", "B", "C", "D"])
 #data = data.rolling(7).mean()
 
 #plotsns()

@@ -605,7 +605,7 @@ def plotplt(namex, namey, datax, datay, plot_title, SAVE_PLOT):
   plt.xticks()
   plt.title(plot_title)
 
-def plotsns(namex, namey, datax, datay, plot_title, columns):
+def plotsns(namex, namey, datax, datay, plot_title, legend):
 
   #print(sns.__version__)
   sns.set_style("whitegrid")
@@ -620,7 +620,7 @@ def plotsns(namex, namey, datax, datay, plot_title, columns):
   ax.set_xlabel(namex)
   ax.set_ylabel(namey)
 
-  if(columns):
+  if(legend):
 
     print("WARNING: Increase plot window manually to take better screenshot")
 
@@ -632,7 +632,7 @@ def plotsns(namex, namey, datax, datay, plot_title, columns):
     #print(datay)
     #print(datax)
 
-    data = pd.DataFrame(datay, datax, columns=columns)
+    data = pd.DataFrame(datay, datax, columns=legend)
     sns.lineplot(data=data, palette="tab10", linewidth=2.5)
 
     #ax.set_position([box.x0, box.y0 + box.height * 0.1,
@@ -643,14 +643,14 @@ def plotsns(namex, namey, datax, datay, plot_title, columns):
     #ax.set_position([box.x0, box.y0 + box.height * 0.1,
     #             box.width, box.height * 0.75])
     #ax.legend(bbox_to_anchor=(0.5, -0.05), loc='upper center',
-    #          labels=columns,ncol=4, mode="expand", borderaxespad=0.)
+    #          labels=legend,ncol=4, mode="expand", borderaxespad=0.)
     #fig.subplots_adjust(bottom=0.35)
     #borderaxespad=1. to move down more the legend
 
     #Legend up the plot (problem: hide title)
     ax.set_title(plot_title, y=1.06)
     ax.legend(loc='lower center', bbox_to_anchor=(0.5, 1),
-              ncol=len(columns), labels=columns,frameon=True,shadow=False, borderaxespad=0.)
+              ncol=len(legend), labels=legend,frameon=True,shadow=False, borderaxespad=0.)
 
 
     #ax.subplots_adjust(top=0.25) #not work
@@ -667,10 +667,10 @@ def plotsns(namex, namey, datax, datay, plot_title, columns):
     data = pd.DataFrame(datay, datax)
     sns.lineplot(data=data, palette="tab10", linewidth=2.5, legend=False)
 
-def plot(namex, namey, datax, datay, plot_title, columns, SAVE_PLOT):
+def plot(namex, namey, datax, datay, plot_title, legend, SAVE_PLOT):
 
   #plotplt(namex, namey, datax, datay, plot_title, SAVE_PLOT)
-  plotsns(namex, namey, datax, datay, plot_title, columns)
+  plotsns(namex, namey, datax, datay, plot_title, legend)
 
   if SAVE_PLOT:
     now = datetime.datetime.now()
@@ -808,165 +808,5 @@ def plot_species(file):
 
 """
 
-  i_color=0
-  for i_gas in range(n_gases):
-    #print("times",times[cell_to_plot],"axes",gases[cell_to_plot][i_gas], "labels", labels[i_gas+2])
-    axes.plot(times[cell_to_plot], gases[cell_to_plot][i_gas], label=labels[i_gas+2], color=list_colors[i_color], marker=list_markers[i_color])
-    i_color+=1
-
-  axes.set_ylabel('Gas mixing ratio (ppm)')
-  axes.set_xlabel('Time (min)')
-  #axes.set_yscale('log')
-  #axes.set_xlim([0,1440])
-  #axes.set_ylim([1e-20,1])
-  plt.xticks()
-
-  # Now the aerosols on the other axes
-  ax2 = axes.twinx()
-  for i_aerosol in range(n_aerosols):
-    #print("times",times[cell_to_plot],"axes",aerosols[cell_to_plot][i_aerosol], "labels", labels[i_aerosol+n_gases+2])
-    ax2.plot(times[cell_to_plot], aerosols[cell_to_plot][i_aerosol], label=labels[i_aerosol+n_gases+2], color=list_colors[i_color], marker=list_markers[i_color])#linestyle='None',
-    i_color+=1
-
-  ax2.set_ylabel('Aerosol mass concentration (kg m$^{-3}$)');
-  ax2.set_yscale('log')
-  #ax2.set_ylim([1e-17,1e-7])
-
-  # Add a legend
-  legend_x = .5
-  legend_y = .08
-  h1, l1 = axes.get_legend_handles_labels()
-  h2, l2 = ax2.get_legend_handles_labels()
-  fig.legend(handles=h1+h2,labels=l1+l2,bbox_to_anchor=(legend_x, legend_y), \
-             loc='center',ncol=3)
-  #out_filename = 'camp_case1_soa_one_particle.pdf'
-  #fig.savefig(out_filename)
-
-  plt.show()
-
-
-
-
-
-  for i in data1:
-    data1_values = data1[i]
-    data2_values = data2[i]
-
-    for j in range(timesteps):
-      len_timestep=int(len(data1_values)/timesteps)
-
-      #data1_timestep=data1[0+j*len_timestep:len_timestep+j*len_timestep]
-      #data1_timestep=data1_values[j*len_timestep:len_timestep*(1+j)]
-      #data2_timestep=data2_values[j*len_timestep:len_timestep*(1+j)]
-
-      l=j*len_timestep
-      r=len_timestep*(1+j)
-
-      #d1=np.array(data1_values[l:r])
-      #d2=np.array(data2_values[l:r])
-
-      #d1=np.reshape(d1,(-1,1))
-      #d2=np.reshape(d2,(-1,1))
-
-      #scaler.fit(d1)
-      #scaler.fit(d2)
-
-      #data1_timestep=scaler.transform(d1)
-      #data2_timestep=scaler.transform(d2)
-
-      #d1=(d1/(d1.max()-d1.min()))
-      #d2=(d2/(d1.max()-d2.min()))
-
-      #out1.append(data1_timestep.tolist())
-      #out2.append(data2_timestep.tolist())
-
-      #print("d1",d1)
-
-      #data1_timestep=preprocessing.normalize(d1)
-      #data2_timestep=preprocessing.normalize(d2)
-
-      #out1.append(data1_timestep.tolist())
-      #out2.append(data2_timestep.tolist())
-
-      #out2.append([data2_timestep[:]/ \
-      #            (max(data2_timestep)-min(data2_timestep))])
-
-
-      out1.append(data1_values[l:r])
-      out2.append(data2_values[l:r])
-
-      #Normalize species
-
-
-      #MSE = mean_squared_error(data1_timestep, data2_timestep)
-      #RMSE = math.sqrt(MSE)
-
-      #data_timestep=data1_timestep+data2_timestep
-
-      #NRMSEs_species[i][j]=RMSE/(max(data_timestep)-min(data_timestep))
-
-
-  #NRMSE among all species
-
-  print("out1",out1)
-
-  NRMSEs=[0]*timesteps
-  for i in range(timesteps):
-
-    MSE = mean_squared_error(out1[i], out2[i])
-    RMSE = math.sqrt(MSE)
-
-    aux_out=out1[i]+out2[i]
-
-    print("out1[i]",out1[i])
-
-    NRMSEs[i]=RMSE/(max(aux_out)-min(aux_out))
-
-
-"""
-
-
-"""
-#Jeff code
-n_times = 145
-times = get_times(file, n_times)
-var = "ISOP"
-mix_rat = get_gas_mixing_ratio(file, n_times, var) / 1000
-axes.plot(times, mix_rat,'r+',label=var)
-var = 'ISOP-P1'
-mix_rat = get_gas_mixing_ratio(file, n_times, var) / 1000
-axes.plot(times, mix_rat,'gx', label=var)
-var = 'ISOP-P2'
-mix_rat = get_gas_mixing_ratio(file, n_times, var) / 1000
-axes.plot(times, mix_rat,'b*',label=var)
-
-axes.set_ylabel('Gas mixing ratio (ppm)')
-axes.set_xlabel('Time (min)')
-axes.set_xlim([0,1440])
-axes.set_yscale('log')
-axes.set_ylim([1e-20,1])
-
-# Now the aerosols on the other axes
-ax2 = axes.twinx()
-var = 'organic_matter.ISOP-P1_aero'
-mass_conc = get_mass_conc(file, n_times,var)
-ax2.plot(times,mass_conc, 'ms', label=var)
-var = 'organic_matter.ISOP-P2_aero'
-mass_conc = get_mass_conc(file, n_times,var)
-ax2.plot(times,mass_conc, color='cyan', marker='s', label=var)
-
-ax2.set_ylabel('Aerosol mass concentration (kg m$^{-3}$)');
-ax2.set_yscale('log')
-ax2.set_ylim([1e-17,1e-7])
-    
-# Add a legend
-legend_x = .5
-legend_y = .08
-h1, l1 = axes.get_legend_handles_labels()
-h2, l2 = ax2.get_legend_handles_labels()
-fig.legend(handles=h1+h2,labels=l1+l2,bbox_to_anchor=(legend_x, legend_y), \
-     loc='center',ncol=3)
-out_filename = 'camp_case1_soa_one_particle.pdf'
-fig.savefig(out_filename)
 """
 
