@@ -34,7 +34,7 @@ def write_camp_config_file(case_gpu_cpu):
   file1.close()
 
 def run(config_file,diff_cells,mpi,mpiProcesses,n_cells,timesteps,
-        case_gpu_cpu,case,results_file):
+        case_gpu_cpu,cases_multicells_onecell,results_file):
 
   #MPI
   exec_str=""
@@ -47,7 +47,7 @@ def run(config_file,diff_cells,mpi,mpiProcesses,n_cells,timesteps,
     profileCuda=False
     #profileCuda=True
   if(profileCuda):
-    exec_str+="nvprof --analysis-metrics -f -o "+config_file+case+".nvprof "
+    exec_str+="nvprof --analysis-metrics -f -o "+config_file+cases_multicells_onecell+".nvprof "
   #--print-gpu-summary
 
   exec_str+="../../mock_monarch config_"+config_file+".json "+"interface_"+config_file \
@@ -63,18 +63,18 @@ def run(config_file,diff_cells,mpi,mpiProcesses,n_cells,timesteps,
   write_camp_config_file(case_gpu_cpu)
 
   #Onecell-Multicells itsolver
-  write_itsolver_config_file(case)
-  if(case_gpu_cpu=="GPU" and case!="One-cell"):
+  write_itsolver_config_file(cases_multicells_onecell)
+  if(case_gpu_cpu=="GPU" and cases_multicells_onecell!="One-cell"):
     #print("case_gpu_cpu==GPU and case!=One-cell")
-    case="Multi-cells"
+    cases_multicells_onecell="Multi-cells"
 
   #Onecell-Multicells
 
-  print(exec_str +" " + str(n_cells) + " " + case + " " + str(timesteps)+" "+diff_cells)
-  os.system(exec_str +" " + str(n_cells) + " " + case + " " + str(timesteps)+" "+diff_cells)
+  print(exec_str +" " + str(n_cells) + " " + cases_multicells_onecell + " " + str(timesteps)+" "+diff_cells)
+  os.system(exec_str +" " + str(n_cells) + " " + cases_multicells_onecell + " " + str(timesteps)+" "+diff_cells)
 
   data={}
-  file = 'out/'+config_file+'_'+case+results_file
+  file = 'out/'+config_file+'_'+cases_multicells_onecell+results_file
   plot_functions.read_solver_stats(file, data)
 
   return data
@@ -170,10 +170,9 @@ def run_case(config_file,diff_cells,mpi,mpiProcessesList,cells,timesteps,
   return datacase
 
 def run_diff_cells(datacolumns,legend,columnHeader,config_file,diff_cells,mpi,mpiProcessesList,cells,timesteps,
-             casesL,results_file,plot_y_key):
+             casesL,results_file,plot_y_key,diff_arquiOptim):
 
   #print("run_diff_cells start run_diff_cells",datacolumns)
-  gpus=1
   column=columnHeader
   for j in range(len(casesL)):
     cases=casesL[j]
@@ -197,14 +196,20 @@ def run_diff_cells(datacolumns,legend,columnHeader,config_file,diff_cells,mpi,mp
         if cases_gpu_cpu[i]=="CPU":
           cases_gpu_cpu_name[i]=str(mpiProcessesList[i]) + " MPI"
           #print("cases_gpu_cpu[i]==CPU",cases_gpu_cpu_name[i])
-        if cases_gpu_cpu[i]=="GPU":
-          cases_gpu_cpu_name[i]=str(gpus) + " GPU"
+        #elif cases_gpu_cpu[i]=="GPU":
+        #  cases_gpu_cpu_name[i]=str(gpus) + " GPU" #always 1 GPU, so comment this on the test section
+        else:
+          cases_gpu_cpu_name[i]=cases_gpu_cpu[i]
       else:
         cases_gpu_cpu_name[i]=cases_gpu_cpu[i]
 
+    #print("cases_gpu_cpu",cases_gpu_cpu)
     if(len(casesL)>1):
-      column=columnHeader+cases_gpu_cpu_name[1]+" "+cases_multicells_onecell_name[1]
-      #print("run_diff_cells column",column)
+      column=columnHeader+cases_multicells_onecell_name[1]
+      if(diff_arquiOptim):
+        column=columnHeader+cases_gpu_cpu_name[1]+" "+cases_multicells_onecell_name[1]
+      #
+        #todo add GPU name only if its different
 
     legend.append(column)
 
@@ -212,12 +217,16 @@ def run_diff_cells(datacolumns,legend,columnHeader,config_file,diff_cells,mpi,mp
                         cases,cases_gpu_cpu,cases_multicells_onecell,results_file,plot_y_key)
     datacolumns.append(datacase)
 
+  plot_title=""
   if(len(casesL)>1):
-    plot_title="Case vs "+cases_gpu_cpu_name[0]+" "+\
-               cases_multicells_onecell_name[0]+" "
+    if(not diff_arquiOptim):
+      plot_title+=cases_gpu_cpu_name[1] + " "
+    plot_title+="Implementations vs "+cases_gpu_cpu_name[0]+" "+ \
+                 cases_multicells_onecell_name[0]
+
   else:
     first_word= cases_gpu_cpu_name[1] + " " + cases_multicells_onecell_name[1] + " "
-    second_word= cases_gpu_cpu_name[0] + " " + cases_multicells_onecell_name[0] + " "
+    second_word= cases_gpu_cpu_name[0] + " " + cases_multicells_onecell_name[0]
     plot_title=first_word + "vs " + second_word
 
   return plot_title
@@ -278,16 +287,15 @@ def all_timesteps():
   mpi="yes"
   #mpi="no"
 
-  #todo fix mpi name title and legend
-  #mpiProcessesList = [1]
-  mpiProcessesList = [2,1]
+  mpiProcessesList = [1]
+  #mpiProcessesList = [2,1]
 
   #todo fix cells=1 realistic test
-  cells = [10]
-  #cells = [100,1000]
+  #cells = [10]
+  #cells = [10,100]
   #cells = [100,500,1000]
   #cells = [1,5,10,50,100]
-  #cells = [100,500,1000,5000,10000]
+  cells = [100,500,1000,5000,10000]
 
   timesteps = 1#5 #720=24h #30=1h
   TIME_STEP = 2 #pending send TIME_STEP to mock_monarch
@@ -296,22 +304,12 @@ def all_timesteps():
   #caseBase="CPU Multi-cells"
   #caseBase="GPU Block-cells(N)"
 
-  #todo execute casebase only 1 time and then the casesOptim
   casesOptim=[]
   casesOptim.append("GPU Block-cells(1)")
   casesOptim.append("GPU Block-cells(N)")
-  #casesOptim.append("GPU Multi-cells")
-  casesOptim.append("CPU Multi-cells")
-  #casesOptim.append("GPU One-cell")
-
-  casesL=[]
-  cases=[]
-  for caseOptim in casesOptim:
-
-    #cases.append(caseBase)
-    #cases.append(caseOptim)
-    cases=[caseBase]+[caseOptim]
-    casesL.append(cases)
+  casesOptim.append("GPU Multi-cells")
+  #casesOptim.append("CPU Multi-cells")
+  casesOptim.append("GPU One-cell")
 
   #cases = ["Historic"]
   #cases = ["CPU One-cell"]
@@ -363,6 +361,24 @@ def all_timesteps():
   SAVE_PLOT=False
   start_time = time.perf_counter()
 
+  casesL=[]
+  cases=[]
+  diff_arquiOptim=False
+  cases_words=casesOptim[0].split()
+  lastArquiOptim=cases_words[0]
+  for caseOptim in casesOptim:
+    #cases.append(caseBase)
+    #cases.append(caseOptim)
+    cases=[caseBase]+[caseOptim]
+    casesL.append(cases)
+
+    cases_words=caseOptim.split()
+    arqui=cases_words[0]
+    if(lastArquiOptim!=arqui):
+      diff_arquiOptim=True
+    lastArquiOptim=arqui
+
+
   if(cases[0]=="Historic"):
     if(len(cells)<2):
       print("WARNING: PENDING TEST HISTORIC WITH TIMESTEPS AS AXIS X")
@@ -389,7 +405,7 @@ def all_timesteps():
       column+=diff_cells+" "
 
     plot_title=run_diff_cells(datacolumns,legend,column,config_file,diff_cells,mpi,mpiProcessesList,cells,timesteps,
-           casesL,results_file,plot_y_key)
+           casesL,results_file,plot_y_key,diff_arquiOptim)
 
   end_time=time.perf_counter()
   time_s=end_time-start_time
@@ -400,7 +416,7 @@ def all_timesteps():
   print("main plot_title",plot_title)
 
   if(len(diff_cellsL)==1):
-    plot_title+=diff_cells+" test"
+    plot_title+=", "+diff_cells+" test"
 
   plot_cases(datacolumns,legend,plot_title,cells,timesteps,
              plot_y_key,SAVE_PLOT)
