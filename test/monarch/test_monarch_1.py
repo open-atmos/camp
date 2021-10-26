@@ -144,8 +144,9 @@ def run_cell(config_file,diff_cells,mpi,mpiProcessesList,n_cells_aux,timesteps,
     #y_key = y_key_words[-1]
     #print(y_key)
     datay=plot_functions.calculate_speedup2(data,y_key)
-  elif plot_y_key== "% Time data transfers CPU-GPU BCG":
+  elif plot_y_key== "Percentage data transfers CPU-GPU [%]":
     y_key="timeBiconjGradMemcpy"
+    print("elif plot_y_key==Time data transfers")
     datay=plot_functions.calculate_BCGPercTimeDataTransfers(data,y_key)
   else:
     raise Exception("Not found plot function for plot_y_key")
@@ -218,27 +219,30 @@ def run_diff_cells(datacolumns,legend,columnHeader,config_file,diff_cells,mpi,mp
     datacolumns.append(datacase)
 
   plot_title=""
+  first_word= cases_gpu_cpu_name[1] + " " + cases_multicells_onecell_name[1]
+
+  if plot_y_key=="Percentage data transfers CPU-GPU [%]":
+    second_word=""
+  else:#Speedup
+    second_word=" vs "+cases_gpu_cpu_name[0] + " " + cases_multicells_onecell_name[0]
+
   if(len(casesL)>1):
     if(not diff_arquiOptim):
       plot_title+=cases_gpu_cpu_name[1] + " "
-    plot_title+="Implementations vs "+cases_gpu_cpu_name[0]+" "+ \
-                 cases_multicells_onecell_name[0]
-
+    plot_title+="Implementations"+second_word
   else:
-    first_word= cases_gpu_cpu_name[1] + " " + cases_multicells_onecell_name[1] + " "
-    second_word= cases_gpu_cpu_name[0] + " " + cases_multicells_onecell_name[0]
-    plot_title=first_word + "vs " + second_word
+    plot_title=first_word+second_word
 
   return plot_title
 
 def plot_cases(datayL,legend,plot_title,cells,timesteps,
                plot_y_key,SAVE_PLOT):
 
-  namey="Speedup"
+  namey=plot_y_key
   if plot_y_key=="Speedup normalized computational timeLS":
-    namey="Speedup without CPU-GPU data transfers"
+    namey="Speedup without data transfers CPU-GPU"
   if plot_y_key=="Speedup counterLS":
-    namey="Iterations ratio"
+    namey="Speedup iterations CVODE solving"
   if plot_y_key=="Speedup normalized timeLS":
     namey="Speedup linear solver"
   if plot_y_key=="Speedup timeCVode":
@@ -288,14 +292,14 @@ def all_timesteps():
   #mpi="no"
 
   mpiProcessesList = [1]
-  #mpiProcessesList = [2,1]
+  #mpiProcessesList = [40,1]
 
   #todo fix cells=1 realistic test
-  #cells = [10]
-  #cells = [10,100]
+  cells = [10,100]
+  #cells = [5,10]
   #cells = [100,500,1000]
   #cells = [1,5,10,50,100]
-  cells = [100,500,1000,5000,10000]
+  #cells = [100,500,1000,5000,10000]
 
   timesteps = 1#5 #720=24h #30=1h
   TIME_STEP = 2 #pending send TIME_STEP to mock_monarch
@@ -307,9 +311,9 @@ def all_timesteps():
   casesOptim=[]
   casesOptim.append("GPU Block-cells(1)")
   casesOptim.append("GPU Block-cells(N)")
-  casesOptim.append("GPU Multi-cells")
+  #casesOptim.append("GPU Multi-cells")
+  #casesOptim.append("GPU One-cell")
   #casesOptim.append("CPU Multi-cells")
-  casesOptim.append("GPU One-cell")
 
   #cases = ["Historic"]
   #cases = ["CPU One-cell"]
@@ -323,21 +327,23 @@ def all_timesteps():
 
   #plot_y_key = "Speedup timeCVode"
   #plot_y_key = "Speedup counterLS"
-  plot_y_key = "Speedup normalized timeLS"
+  #plot_y_key = "Speedup normalized timeLS"
   #plot_y_key = "Speedup normalized computational timeLS"
   #plot_y_key = "Speedup counterBCG"
   #plot_y_key = "Speedup total iterations - counterBCG"
   #plot_y_key = "Speedup normalized counterBCG"
   #plot_y_key = "Speedup BCG iteration (Comp.timeLS/counterBCG)"
-  #plot_y_key = "Percentages solveCVODEGPU" #Uncomment function
   #plot_y_key = "Speedup timecvStep"
   #plot_y_key = "Speedup normalized timecvStep"#not needed, is always normalized
   #plot_y_key = "Speedup device timecvStep"
+  plot_y_key = "Percentage data transfers CPU-GPU [%]"
 
-  #plot_y_key = "% Time data transfers CPU-GPU BCG"
-  #plot_y_key="NRMSE"
+
+  #plot_y_key = "Percentages solveCVODEGPU" #Pending function
   #plot_y_key="MAPE"
   #plot_y_key="SMAPE"
+  #plot_y_key="NRMSE"
+
 
   #remove_iters=0#10 #360
 

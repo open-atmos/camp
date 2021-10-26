@@ -1316,7 +1316,7 @@ void solveGPU_block(SolverData *sd, double *dA, int *djA, int *diA, double *dx, 
   ModelData *md = &(sd->model_data);
   ModelDataGPU *mGPU = &sd->mGPU;
 
-#ifndef DEBUG_SOLVEBCGCUDA
+#ifdef DEBUG_SOLVEBCGCUDA
   if(bicg->counterBiConjGrad==0) {
     printf("solveGPUBlock\n");
   }
@@ -1339,16 +1339,24 @@ void solveGPU_block(SolverData *sd, double *dA, int *djA, int *diA, double *dx, 
 
   //Common kernel (Launch all blocks except the last)
   //blocks=blocks-1;
-  if(bicg->cells_method==2//todo lower speedup with Block-cells(1), which makes no sense
+  if(bicg->cells_method==2
   //if(bicg->cells_method
   //&& blocks!=0
   ) {
 
     blocks=blocks-1;
 
-    if(blocks!=0)//myb not needed
-    solveGPU_block_thr(blocks, threads_block, max_threads_block, n_shr_empty, offset_cells,
+    if(blocks!=0){//myb not needed
+      solveGPU_block_thr(blocks, threads_block, max_threads_block, n_shr_empty, offset_cells,
                        sd);
+    }
+#ifdef DEBUG_SOLVEBCGCUDA
+    else{
+      if(bicg->counterBiConjGrad==0){
+        printf("solveGPU_block blocks==0\n");
+      }
+    }
+#endif
 
     //todo fix case one-cell updating vars
 
