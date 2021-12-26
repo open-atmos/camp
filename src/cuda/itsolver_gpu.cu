@@ -16,11 +16,11 @@ void read_options(itsolver *bicg){
   }
   fscanf(fp, "%s", buff);
 
-  if(strstr(buff,"CELLS_METHOD=Block-cells(1)")!=NULL){
+  if(strstr(buff,"CELLS_METHOD=Block-cells1")!=NULL){
     //printf("itsolver read_options CELLS_METHOD=Block-cells(1)\n");
     bicg->cells_method=3; //One-cell per block (Independent cells)
   }
-  else if(strstr(buff,"CELLS_METHOD=Block-cells(N)")!=NULL){
+  else if(strstr(buff,"CELLS_METHOD=Block-cellsN")!=NULL){
     //printf("itsolver read_options CELLS_METHOD=Block-cells(N)\n");
     bicg->cells_method=2; //One-cell per block (Independent cells)
   }

@@ -34,16 +34,13 @@ def write_camp_config_file(case_gpu_cpu):
   file1.close()
 
 def run(config_file,diff_cells,mpi,mpiProcesses,n_cells,timesteps,
-        case_gpu_cpu,cases_multicells_onecell,results_file):
+        case_gpu_cpu,cases_multicells_onecell,results_file,profileCuda):
 
-  #MPI
   exec_str=""
   if mpi=="yes":
     exec_str+="mpirun -v -np "+str(mpiProcesses)+" --bind-to none "
     #exec_str+="srun -n "+str(mpiProcesses)+" "
 
-  profileCuda=False
-  #profileCuda=True
   if(profileCuda and case_gpu_cpu=="GPU"):
     exec_str+="nvprof --analysis-metrics -f -o "+config_file+cases_multicells_onecell+".nvprof "
   #--print-gpu-summary
@@ -78,7 +75,7 @@ def run(config_file,diff_cells,mpi,mpiProcesses,n_cells,timesteps,
   return data
 
 def run_cell(config_file,diff_cells,mpi,mpiProcessesList,n_cells_aux,timesteps,
-             cases,cases_gpu_cpu,cases_multicells_onecell,results_file,plot_y_key,tol):
+             cases,cases_gpu_cpu,cases_multicells_onecell,results_file,plot_y_key,tol,profileCuda):
 
   y_key_words = plot_y_key.split()
   y_key = y_key_words[-1]
@@ -99,7 +96,7 @@ def run_cell(config_file,diff_cells,mpi,mpiProcessesList,n_cells_aux,timesteps,
       n_cells=n_cells_aux
 
     data[cases[i]] = run(config_file,diff_cells,mpi,mpiProcesses,
-                         n_cells,timesteps,cases_gpu_cpu[i],cases_multicells_onecell[i],results_file)
+                         n_cells,timesteps,cases_gpu_cpu[i],cases_multicells_onecell[i],results_file,profileCuda)
 
     if("timeLS" in plot_y_key and "computational" in plot_y_key):
       data=plot_functions.calculate_computational_timeLS( \
@@ -152,12 +149,12 @@ def run_cell(config_file,diff_cells,mpi,mpiProcessesList,n_cells_aux,timesteps,
   return datay
 
 def run_case(config_file,diff_cells,mpi,mpiProcessesList,cells,timesteps,
-             cases,cases_gpu_cpu,cases_multicells_onecell,results_file,plot_y_key,tol):
+             cases,cases_gpu_cpu,cases_multicells_onecell,results_file,plot_y_key,tol,profileCuda):
 
   datacase=[]
   for i in range(len(cells)):
     datay_cell = run_cell(config_file,diff_cells,mpi,mpiProcessesList,cells[i],timesteps,
-                          cases,cases_gpu_cpu,cases_multicells_onecell,results_file,plot_y_key,tol)
+                          cases,cases_gpu_cpu,cases_multicells_onecell,results_file,plot_y_key,tol,profileCuda)
 
     #print(datay_cell)
     if(len(cells)>1):
@@ -169,7 +166,7 @@ def run_case(config_file,diff_cells,mpi,mpiProcessesList,cells,timesteps,
   return datacase
 
 def run_diff_cells(datacolumns,legend,columnHeader,config_file,diff_cells,mpi,mpiProcessesList,cells,timesteps,
-             casesL,results_file,plot_y_key,diff_arquiOptim,tol):
+             casesL,results_file,plot_y_key,diff_arquiOptim,tol,profileCuda):
 
   #print("run_diff_cells start run_diff_cells",datacolumns)
   column=columnHeader
@@ -184,9 +181,9 @@ def run_diff_cells(datacolumns,legend,columnHeader,config_file,diff_cells,mpi,mp
       cases_gpu_cpu[i]=cases_words[0]
       cases_multicells_onecell[i]=cases_words[1]
 
-      if cases_multicells_onecell[i]=="Block-cells(N)":
+      if cases_multicells_onecell[i]=="Block-cellsN":
         cases_multicells_onecell_name[i]="Block-cells (N)"
-      elif cases_multicells_onecell[i]=="Block-cells(1)":
+      elif cases_multicells_onecell[i]=="Block-cells1":
         cases_multicells_onecell_name[i]="Block-cells (1)"
       else:
         cases_multicells_onecell_name[i]=cases_multicells_onecell[i]
@@ -213,7 +210,7 @@ def run_diff_cells(datacolumns,legend,columnHeader,config_file,diff_cells,mpi,mp
     legend.append(column)
 
     datacase = run_case(config_file,diff_cells,mpi,mpiProcessesList,cells,timesteps,
-                        cases,cases_gpu_cpu,cases_multicells_onecell,results_file,plot_y_key,tol)
+                        cases,cases_gpu_cpu,cases_multicells_onecell,results_file,plot_y_key,tol,profileCuda)
     datacolumns.append(datacase)
 
   plot_title=""
@@ -286,6 +283,9 @@ def all_timesteps():
   mpi="yes"
   #mpi="no"
 
+  profileCuda=False
+  #profileCuda=True
+
   mpiProcessesList = [1]
   #mpiProcessesList = [40,1]
 
@@ -299,16 +299,16 @@ def all_timesteps():
   timesteps = 1#5 #720=24h #30=1h
   TIME_STEP = 2 #pending send TIME_STEP to mock_monarch
 
-  #caseBase="CPU One-cell"
+  caseBase="CPU One-cell"
   #caseBase="CPU Multi-cells"
-  caseBase="GPU Block-cells(N)"
+  #caseBase="GPU Block-cellsN"
 
   casesOptim=[]
-  #casesOptim.append("GPU Block-cells(1)")
-  #casesOptim.append("GPU Block-cells(N)")
+  #casesOptim.append("GPU Block-cells1")
+  casesOptim.append("GPU Block-cellsN")
   #casesOptim.append("GPU Multi-cells")
   #casesOptim.append("GPU One-cell")
-  casesOptim.append("CPU Multi-cells")
+  #casesOptim.append("CPU Multi-cells")
 
   #cases = ["Historic"]
   #cases = ["CPU One-cell"]
@@ -380,8 +380,8 @@ def all_timesteps():
     if(len(cells)<2):
       print("WARNING: PENDING TEST HISTORIC WITH TIMESTEPS AS AXIS X")
 
-    casesL.append(["CPU One-cell","GPU Block-cells(1)"])
-    casesL.append(["CPU One-cell","GPU Block-cells(N)"])
+    casesL.append(["CPU One-cell","GPU Block-cells1"])
+    casesL.append(["CPU One-cell","GPU Block-cellsN"])
     casesL.append(["CPU One-cell","GPU Multi-cells"])
     casesL.append(["CPU One-cell","CPU Multi-cells"])
     casesL.append(["CPU One-cell","GPU One-cell"])
@@ -402,7 +402,7 @@ def all_timesteps():
       column+=diff_cells+" "
 
     plot_title=run_diff_cells(datacolumns,legend,column,config_file,diff_cells,mpi,mpiProcessesList,cells,timesteps,
-           casesL,results_file,plot_y_key,diff_arquiOptim,tol)
+           casesL,results_file,plot_y_key,diff_arquiOptim,tol,profileCuda)
 
   end_time=time.perf_counter()
   time_s=end_time-start_time
