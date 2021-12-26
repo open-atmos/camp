@@ -840,8 +840,6 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
 #else
       flag = cudaCVode(sd->cvode_mem, (realtype)t_final, sd->y,
             &t_rt, CV_NORMAL, sd);
-      //flag = CVode_gpu2(sd->cvode_mem, (realtype)t_final, sd->y,
-      //      &t_rt, CV_NORMAL, sd);
 #endif
 
     }

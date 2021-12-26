@@ -43,10 +43,8 @@ def run(config_file,diff_cells,mpi,mpiProcesses,n_cells,timesteps,
     #exec_str+="srun -n "+str(mpiProcesses)+" "
 
   profileCuda=False
-  if(case_gpu_cpu=="GPU"):
-    profileCuda=False
-    #profileCuda=True
-  if(profileCuda):
+  #profileCuda=True
+  if(profileCuda and case_gpu_cpu=="GPU"):
     exec_str+="nvprof --analysis-metrics -f -o "+config_file+cases_multicells_onecell+".nvprof "
   #--print-gpu-summary
 
@@ -80,7 +78,7 @@ def run(config_file,diff_cells,mpi,mpiProcesses,n_cells,timesteps,
   return data
 
 def run_cell(config_file,diff_cells,mpi,mpiProcessesList,n_cells_aux,timesteps,
-             cases,cases_gpu_cpu,cases_multicells_onecell,results_file,plot_y_key):
+             cases,cases_gpu_cpu,cases_multicells_onecell,results_file,plot_y_key,tol):
 
   y_key_words = plot_y_key.split()
   y_key = y_key_words[-1]
@@ -135,7 +133,7 @@ def run_cell(config_file,diff_cells,mpi,mpiProcessesList,n_cells_aux,timesteps,
   if(plot_y_key=="NRMSE"):
     datay=plot_functions.calculate_NMRSE(data,timesteps)
   elif(plot_y_key=="MAPE"):
-    datay=plot_functions.calculate_MAPE(data,timesteps)
+    datay=plot_functions.calculate_MAPE(data,timesteps,tol)
   elif(plot_y_key=="SMAPE"):
     datay=plot_functions.calculate_SMAPE(data,timesteps)
   elif("Speedup" in plot_y_key):
@@ -154,12 +152,12 @@ def run_cell(config_file,diff_cells,mpi,mpiProcessesList,n_cells_aux,timesteps,
   return datay
 
 def run_case(config_file,diff_cells,mpi,mpiProcessesList,cells,timesteps,
-             cases,cases_gpu_cpu,cases_multicells_onecell,results_file,plot_y_key):
+             cases,cases_gpu_cpu,cases_multicells_onecell,results_file,plot_y_key,tol):
 
   datacase=[]
   for i in range(len(cells)):
     datay_cell = run_cell(config_file,diff_cells,mpi,mpiProcessesList,cells[i],timesteps,
-                          cases,cases_gpu_cpu,cases_multicells_onecell,results_file,plot_y_key)
+                          cases,cases_gpu_cpu,cases_multicells_onecell,results_file,plot_y_key,tol)
 
     #print(datay_cell)
     if(len(cells)>1):
@@ -171,7 +169,7 @@ def run_case(config_file,diff_cells,mpi,mpiProcessesList,cells,timesteps,
   return datacase
 
 def run_diff_cells(datacolumns,legend,columnHeader,config_file,diff_cells,mpi,mpiProcessesList,cells,timesteps,
-             casesL,results_file,plot_y_key,diff_arquiOptim):
+             casesL,results_file,plot_y_key,diff_arquiOptim,tol):
 
   #print("run_diff_cells start run_diff_cells",datacolumns)
   column=columnHeader
@@ -215,7 +213,7 @@ def run_diff_cells(datacolumns,legend,columnHeader,config_file,diff_cells,mpi,mp
     legend.append(column)
 
     datacase = run_case(config_file,diff_cells,mpi,mpiProcessesList,cells,timesteps,
-                        cases,cases_gpu_cpu,cases_multicells_onecell,results_file,plot_y_key)
+                        cases,cases_gpu_cpu,cases_multicells_onecell,results_file,plot_y_key,tol)
     datacolumns.append(datacase)
 
   plot_title=""
@@ -272,7 +270,7 @@ def plot_cases(datayL,legend,plot_title,cells,timesteps,
 
   print(namey,":",datay)
 
-  plot_functions.plot(namex,namey,datax,datay,plot_title,legend,SAVE_PLOT)
+  #plot_functions.plot(namex,namey,datax,datay,plot_title,legend,SAVE_PLOT)
 
 
 def all_timesteps():
@@ -285,9 +283,6 @@ def all_timesteps():
   diff_cellsL.append("Realistic")
   #diff_cellsL.append("Ideal")
 
-  #diff_cells="Realistic"
-  #diff_cells="Ideal"
-
   mpi="yes"
   #mpi="no"
 
@@ -295,7 +290,7 @@ def all_timesteps():
   #mpiProcessesList = [40,1]
 
   #todo fix cells=1 realistic test
-  cells = [10,100]
+  cells = [100]
   #cells = [5,10]
   #cells = [100,500,1000]
   #cells = [1,5,10,50,100]
@@ -304,30 +299,25 @@ def all_timesteps():
   timesteps = 1#5 #720=24h #30=1h
   TIME_STEP = 2 #pending send TIME_STEP to mock_monarch
 
-  caseBase="CPU One-cell"
+  #caseBase="CPU One-cell"
   #caseBase="CPU Multi-cells"
-  #caseBase="GPU Block-cells(N)"
+  caseBase="GPU Block-cells(N)"
 
   casesOptim=[]
-  casesOptim.append("GPU Block-cells(1)")
-  casesOptim.append("GPU Block-cells(N)")
+  #casesOptim.append("GPU Block-cells(1)")
+  #casesOptim.append("GPU Block-cells(N)")
   #casesOptim.append("GPU Multi-cells")
   #casesOptim.append("GPU One-cell")
-  #casesOptim.append("CPU Multi-cells")
+  casesOptim.append("CPU Multi-cells")
 
   #cases = ["Historic"]
   #cases = ["CPU One-cell"]
   #cases = ["CPU Multi-cells"]
   #cases = ["GPU One-cell"]
 
-  #plot_y_key = "counterBCG"
-  #plot_y_key = "Average BCG internal iterations per call"
-  #plot_y_key = "Average BCG time per call" #This metric makes no sense, One-cell would always be faster because is computing way less cells
-  #plot_y_key = "Speedup normalized timeLS"
-
   #plot_y_key = "Speedup timeCVode"
   #plot_y_key = "Speedup counterLS"
-  #plot_y_key = "Speedup normalized timeLS"
+  plot_y_key = "Speedup normalized timeLS"
   #plot_y_key = "Speedup normalized computational timeLS"
   #plot_y_key = "Speedup counterBCG"
   #plot_y_key = "Speedup total iterations - counterBCG"
@@ -336,13 +326,14 @@ def all_timesteps():
   #plot_y_key = "Speedup timecvStep"
   #plot_y_key = "Speedup normalized timecvStep"#not needed, is always normalized
   #plot_y_key = "Speedup device timecvStep"
-  plot_y_key = "Percentage data transfers CPU-GPU [%]"
-
+  #plot_y_key = "Percentage data transfers CPU-GPU [%]"
 
   #plot_y_key = "Percentages solveCVODEGPU" #Pending function
   #plot_y_key="MAPE"
   #plot_y_key="SMAPE"
   #plot_y_key="NRMSE"
+  tol=1.0E-4 #MAPE=0
+  #tol=1.0E-6 #MAPE~=0.5
 
 
   #remove_iters=0#10 #360
@@ -411,7 +402,7 @@ def all_timesteps():
       column+=diff_cells+" "
 
     plot_title=run_diff_cells(datacolumns,legend,column,config_file,diff_cells,mpi,mpiProcessesList,cells,timesteps,
-           casesL,results_file,plot_y_key,diff_arquiOptim)
+           casesL,results_file,plot_y_key,diff_arquiOptim,tol)
 
   end_time=time.perf_counter()
   time_s=end_time-start_time

@@ -1288,9 +1288,6 @@ void solveGPU_block_thr(int blocks, int threads_block, int n_shr_memory, int n_s
 
 #endif
 
-  //max_threads_block = nextPowerOfTwo(nrows);
-  //n_shr_empty = max_threads_block-threads_block;
-
   solveBcgCuda << < blocks, threads_block, n_shr_memory * sizeof(double) >> >
                                            //solveBcgCuda << < blocks, threads_block, threads_block * sizeof(double) >> >
                                            (dA, djA, diA, dx, dtempv, nrows, blocks, n_shr_empty, maxIt, mattype, n_cells,
@@ -1325,7 +1322,7 @@ void solveGPU_block(SolverData *sd, double *dA, int *djA, int *diA, double *dx, 
   int len_cell = mGPU->nrows/mGPU->n_cells;
   int max_threads_block=nextPowerOfTwo(len_cell);
   if(bicg->cells_method==2) {
-    max_threads_block = mGPU->threads;//mGPU->threads; 128;
+    max_threads_block = mGPU->threads;//1024;
   }
 
   int n_cells_block =  max_threads_block/len_cell;

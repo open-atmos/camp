@@ -260,6 +260,27 @@ extern "C++" void gpu_yequalsx(double *dy, double* dx, int nrows, int blocks, in
 
 }
 
+__global__ void cudareducey(double *g_odata, unsigned int n)
+{
+  extern __shared__ double sdata[];
+  unsigned int tid = threadIdx.x;
+
+  double mySum =  (tid < n) ? g_odata[tid] : 0;
+
+  sdata[tid] = mySum;
+  __syncthreads();
+
+  for (unsigned int s=blockDim.x/2; s>0; s>>=1)
+  {
+    if (tid < s)
+      sdata[tid] = mySum = mySum + sdata[tid + s];
+
+    __syncthreads();
+  }
+
+  if (tid == 0) g_odata[blockIdx.x] = sdata[0];
+}
+
 __global__ void cudadotxy(double *g_idata1, double *g_idata2, double *g_odata, unsigned int n)
 {
   extern __shared__ double sdata[];
@@ -276,27 +297,6 @@ __global__ void cudadotxy(double *g_idata1, double *g_idata2, double *g_odata, u
   __syncthreads();
 
   //for (unsigned int s=(blockDim.x+1)/2; s>0; s>>=1)
-  for (unsigned int s=blockDim.x/2; s>0; s>>=1)
-  {
-    if (tid < s)
-      sdata[tid] = mySum = mySum + sdata[tid + s];
-
-    __syncthreads();
-  }
-
-  if (tid == 0) g_odata[blockIdx.x] = sdata[0];
-}
-
-__global__ void cudareducey(double *g_odata, unsigned int n)
-{
-  extern __shared__ double sdata[];
-  unsigned int tid = threadIdx.x;
-
-  double mySum =  (tid < n) ? g_odata[tid] : 0;
-
-  sdata[tid] = mySum;
-  __syncthreads();
-
   for (unsigned int s=blockDim.x/2; s>0; s>>=1)
   {
     if (tid < s)

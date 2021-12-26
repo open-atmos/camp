@@ -322,7 +322,7 @@ def calculate_NMRSE(data,timesteps):
 
   return NRMSEs
 
-def calculate_MAPE(data,timesteps):
+def calculate_MAPE(data,timesteps,max_tol):
 
   #Extract data
 
@@ -339,7 +339,9 @@ def calculate_MAPE(data,timesteps):
   species_names=list(species1.keys())
   len_timestep=int(len(species1[species_names[0]])/timesteps)
   max_err=0.0
-  max_tol=1.0E-60
+  #max_tol=1.0E-60
+  count_tol=0
+
   for j in range(timesteps):
     MAPE=0.0
     #MAPE=1.0E-60
@@ -354,16 +356,12 @@ def calculate_MAPE(data,timesteps):
 
       for k in range(len(out1)):
 
-        #if(out1[k]<max_tol):
-        #  out1[k]=1.0E-60
-        #if(out2[k]<max_tol):
-        #  out2[k]=1.0E-60
-
         #Filter low concs
         if abs(out1[k]-out2[k]) < max_tol or (out1[k] == 0):
           err=0.
         else:
           err=abs((out1[k]-out2[k])/out1[k])
+          count_tol=count_tol+1
 
         #if(out1[k]==0.0):
         #  out1[k]+=1.0E-60
@@ -381,7 +379,7 @@ def calculate_MAPE(data,timesteps):
           #print(name,out1[k],out2[k])
     MAPEs[j]=MAPE/n*100
 
-  print("max_error:"+str(max_err*100)+"%")
+  print("max_error:"+str(max_err*100)+"%", "count_tol",count_tol)
   #print(NRMSEs)
 
   return MAPEs
