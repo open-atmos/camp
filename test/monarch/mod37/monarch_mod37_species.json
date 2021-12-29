@@ -1,0 +1,18 @@
+{
+  "description" : "Gas- and aerosol-phase MONARCH species that are not part of the base CB05 mechanism but are included in the 'mod37' configuration",
+  "camp-data" : [
+    {
+      "name" : "NH3",
+      "type" : "CHEM_SPEC",
+      "absolute integration tolerance" : 1.0E-03,
+      "description" : "ammonia"
+    },
+    {
+      "name" : "DMS",
+      "type" : "CHEM_SPEC",
+      "absolute integration tolerance" : 1.0E-03,
+      "description" : "dimethylsulfide"
+    }
+  ]
+}
+

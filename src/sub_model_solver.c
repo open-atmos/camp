@@ -372,7 +372,7 @@ void sub_model_get_jac_contrib(ModelData *model_data, double *J_data,
     // Get the sub model type
     int sub_model_type = *(sub_model_int_data++);
 
-#ifndef DEBUG_SUB_MODEL_GET_JAC_CONTRIB
+#ifdef DEBUG_SUB_MODEL_GET_JAC_CONTRIB
   printf("sub_model_type %d\n",sub_model_type);
 #endif
 
@@ -396,7 +396,7 @@ void sub_model_get_jac_contrib(ModelData *model_data, double *J_data,
     }
   }
 
-#ifndef DEBUG_SUB_MODEL_GET_JAC_CONTRIB
+#ifdef DEBUG_SUB_MODEL_GET_JAC_CONTRIB
 
   int k=0;
 
@@ -410,7 +410,7 @@ void sub_model_get_jac_contrib(ModelData *model_data, double *J_data,
         J_data[model_data->jac_map_params[i_map].rxn_id] *
         J_data[model_data->jac_map_params[i_map].param_id];
 
-#ifndef DEBUG_SUB_MODEL_GET_JAC_CONTRIB
+#ifdef DEBUG_SUB_MODEL_GET_JAC_CONTRIB
 
   check_isnand(J_data,SM_NNZ_S(model_data->J_params),k++);
 
