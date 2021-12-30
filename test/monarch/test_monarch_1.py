@@ -35,7 +35,7 @@ def write_camp_config_file(case_gpu_cpu):
 
   file1.close()
 
-def run(conf,config_file_old,diff_cells,mpi,mpiProcesses,n_cells,timesteps,
+def run(conf,mpi,mpiProcesses,n_cells,timesteps,
         case_gpu_cpu,cases_multicells_onecell,results_file,profileCuda):
 
   exec_str=""
@@ -73,8 +73,8 @@ def run(conf,config_file_old,diff_cells,mpi,mpiProcesses,n_cells,timesteps,
 
   #Onecell-Multicells
 
-  print(exec_str +" " + str(n_cells) + " " + cases_multicells_onecell + " " + str(timesteps)+" "+diff_cells)
-  os.system(exec_str +" " + str(n_cells) + " " + cases_multicells_onecell + " " + str(timesteps)+" "+diff_cells)
+  print(exec_str +" " + str(n_cells) + " " + cases_multicells_onecell + " " + str(timesteps)+" "+conf["diff_cells"])
+  os.system(exec_str +" " + str(n_cells) + " " + cases_multicells_onecell + " " + str(timesteps)+" "+conf["diff_cells"])
 
   data={}
   file = 'out/'+conf["chem_file"]+'_'+cases_multicells_onecell+results_file
@@ -82,8 +82,8 @@ def run(conf,config_file_old,diff_cells,mpi,mpiProcesses,n_cells,timesteps,
 
   return data
 
-def run_cell(conf,config_file,diff_cells,mpi,mpiProcessesList,n_cells_aux,timesteps,
-             cases,cases_gpu_cpu,cases_multicells_onecell,results_file,plot_y_key,tol,profileCuda):
+def run_cell(conf,mpi,mpiProcessesList,n_cells_aux,timesteps,
+             cases,cases_gpu_cpu,cases_multicells_onecell,results_file,plot_y_key,MAPE_tol,profileCuda):
 
   y_key_words = plot_y_key.split()
   y_key = y_key_words[-1]
@@ -103,7 +103,7 @@ def run_cell(conf,config_file,diff_cells,mpi,mpiProcessesList,n_cells_aux,timest
       mpiProcesses=mpiProcessesList[0]
       n_cells=n_cells_aux
 
-    data[cases[i]] = run(conf,config_file,diff_cells,mpi,mpiProcesses,
+    data[cases[i]] = run(conf,mpi,mpiProcesses,
                          n_cells,timesteps,cases_gpu_cpu[i],cases_multicells_onecell[i],results_file,profileCuda)
 
     if("timeLS" in plot_y_key and "computational" in plot_y_key):
@@ -138,7 +138,7 @@ def run_cell(conf,config_file,diff_cells,mpi,mpiProcessesList,n_cells_aux,timest
   if(plot_y_key=="NRMSE"):
     datay=plot_functions.calculate_NMRSE(data,timesteps)
   elif(plot_y_key=="MAPE"):
-    datay=plot_functions.calculate_MAPE(data,timesteps,tol)
+    datay=plot_functions.calculate_MAPE(data,timesteps,MAPE_tol)
   elif(plot_y_key=="SMAPE"):
     datay=plot_functions.calculate_SMAPE(data,timesteps)
   elif("Speedup" in plot_y_key):
@@ -156,13 +156,13 @@ def run_cell(conf,config_file,diff_cells,mpi,mpiProcessesList,n_cells_aux,timest
 
   return datay
 
-def run_case(conf,config_file,diff_cells,mpi,mpiProcessesList,cells,timesteps,
-             cases,cases_gpu_cpu,cases_multicells_onecell,results_file,plot_y_key,tol,profileCuda):
+def run_case(conf,mpi,mpiProcessesList,cells,timesteps,
+             cases,cases_gpu_cpu,cases_multicells_onecell,results_file,plot_y_key,MAPE_tol,profileCuda):
 
   datacase=[]
   for i in range(len(cells)):
-    datay_cell = run_cell(conf,config_file,diff_cells,mpi,mpiProcessesList,cells[i],timesteps,
-                          cases,cases_gpu_cpu,cases_multicells_onecell,results_file,plot_y_key,tol,profileCuda)
+    datay_cell = run_cell(conf,mpi,mpiProcessesList,cells[i],timesteps,
+                          cases,cases_gpu_cpu,cases_multicells_onecell,results_file,plot_y_key,MAPE_tol,profileCuda)
 
     #print(datay_cell)
     if(len(cells)>1):
@@ -173,8 +173,8 @@ def run_case(conf,config_file,diff_cells,mpi,mpiProcessesList,cells,timesteps,
 
   return datacase
 
-def run_diff_cells(datacolumns,legend,columnHeader,config_file,diff_cells,mpi,mpiProcessesList,cells,timesteps,
-             casesL,results_file,plot_y_key,diff_arquiOptim,tol,profileCuda,conf):
+def run_diff_cells(datacolumns,legend,columnHeader,mpi,mpiProcessesList,cells,timesteps,
+             casesL,results_file,plot_y_key,diff_arquiOptim,MAPE_tol,profileCuda,conf):
 
   #print("run_diff_cells start run_diff_cells",datacolumns)
   column=columnHeader
@@ -215,8 +215,8 @@ def run_diff_cells(datacolumns,legend,columnHeader,config_file,diff_cells,mpi,mp
 
     legend.append(column)
 
-    datacase = run_case(conf,config_file,diff_cells,mpi,mpiProcessesList,cells,timesteps,
-                        cases,cases_gpu_cpu,cases_multicells_onecell,results_file,plot_y_key,tol,profileCuda)
+    datacase = run_case(conf,mpi,mpiProcessesList,cells,timesteps,
+                        cases,cases_gpu_cpu,cases_multicells_onecell,results_file,plot_y_key,MAPE_tol,profileCuda)
     datacolumns.append(datacase)
 
   plot_title=""
@@ -280,25 +280,23 @@ def all_timesteps():
 
   conf={}
 
-  #config_file="simple"
-  #config_file="monarch_cb05"
-  config_file="monarch_binned"
+  #conf["chem_file"]="simple"
+  #conf["chem_file"]="monarch_cb05"
   conf["chem_file"]="monarch_binned"
 
-  diff_cellsL=[]
-  diff_cellsL.append("Realistic")
-  #diff_cellsL.append("Ideal")
-
-  mpi="yes"
-  #mpi="no"
+  conf["diff_cellsL"]=[]
+  conf["diff_cellsL"].append("Realistic")
+  #conf["diff_cellsL"].append("Ideal")
 
   profileCuda=False
   #profileCuda=True
 
+  mpi="yes"
+  #mpi="no"
+
   mpiProcessesList = [1]
   #mpiProcessesList = [40,1]
 
-  #todo fix cells=1 realistic test
   cells = [100]
   #cells = [5,10]
   #cells = [100,500,1000]
@@ -343,10 +341,12 @@ def all_timesteps():
   #plot_y_key="MAPE"
   #plot_y_key="SMAPE"
   #plot_y_key="NRMSE"
-  tol=1.0E-4 #MAPE=0
-  #tol=1.0E-6 #MAPE~=0.5
+  MAPE_tol=1.0E-4 #MAPE=0
+  #MAPE_tol=1.0E-6 #MAPE~=0.5
 
   #remove_iters=0#10 #360
+
+  """END OF CONFIGURATION VARIABLES"""
 
   results_file="_solver_stats.csv"
   if(plot_y_key=="NRMSE" or plot_y_key=="MAPE" or plot_y_key=="SMAPE"):
@@ -362,7 +362,7 @@ def all_timesteps():
   elif "counterBCG" in plot_y_key:
     print("WARNING: Remember to disable solveBcgCuda_sum_it")
 
-  if config_file=="monarch_binned":
+  if conf["chem_file"]=="monarch_binned":
     print("WARNING: ENSURE DERIV_CPU_ON_GPU IS ON")
 
   SAVE_PLOT=False
@@ -402,17 +402,18 @@ def all_timesteps():
   datacolumns=[]
   legend=[]
   plot_title=""
-  for diff_cells in diff_cellsL:
-    if(config_file=="monarch_cb05"):
-      diff_cells="Ideal"
+  for diff_cells in conf["diff_cellsL"]:
+    conf["diff_cells"]=diff_cells
+    if(conf["chem_file"]=="monarch_cb05"):
+      conf["diff_cells"]="Ideal"
       print("WARNING: ENSURE DERIV_CPU_ON_GPU IS OFF")
 
     column=""
-    if(len(diff_cellsL)>1):
-      column+=diff_cells+" "
+    if(len(conf["diff_cellsL"])>1):
+      column+=conf["diff_cells"]+" "
 
-    plot_title=run_diff_cells(datacolumns,legend,column,config_file,diff_cells,mpi,mpiProcessesList,cells,timesteps,
-           casesL,results_file,plot_y_key,diff_arquiOptim,tol,profileCuda,conf)
+    plot_title=run_diff_cells(datacolumns,legend,column,mpi,mpiProcessesList,cells,timesteps,
+           casesL,results_file,plot_y_key,diff_arquiOptim,MAPE_tol,profileCuda,conf)
 
   end_time=time.perf_counter()
   time_s=end_time-start_time
@@ -422,8 +423,8 @@ def all_timesteps():
 
   print("main plot_title",plot_title)
 
-  if(len(diff_cellsL)==1):
-    plot_title+=", "+diff_cells+" test"
+  if(len(conf["diff_cellsL"])==1):
+    plot_title+=", "+conf["diff_cells"]+" test"
 
   plot_cases(datacolumns,legend,plot_title,cells,timesteps,
              plot_y_key,SAVE_PLOT)

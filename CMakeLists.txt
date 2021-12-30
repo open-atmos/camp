@@ -254,7 +254,6 @@ set(STD_C_FLAGS "-std=c99")
 #Warning-lineinfo takes  longer time
 set(STD_CUDA_FLAGS "-lineinfo -arch=compute_70 -code=sm_70 -dc --compiler-options '-fPIC' -lcusolver -lcudart -lcudadevrt -lcublas -lcusparse_static -lculibos -lpthread -ldl")
 
-
 #Simplified (Pending to check)
 #set(STD_CUDA_FLAGS "-arch=compute_70 -code=sm_70 -dc --compiler-options '-fPIC' -lcublas -lcusparse_static -lpthread -ldl")
 
