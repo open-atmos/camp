@@ -45,7 +45,9 @@ class TestMonarch:
         self.savePlot = True
         self.mpiProcesses = 1
         self.nCells = 1
+        self.casesGpuCpu = []
         self.caseGpuCpu = ""
+        self.casesMulticellsOnecells = []
         self.caseMulticellsOnecell = ""
         self.nCellsCase = 1
 
@@ -136,9 +138,7 @@ def run(conf):
 
     return data
 
-
-def run_cell(conf2,conf, mpi, mpiProcessesList, nCellsCase, timeSteps,
-             cases, cases_gpu_cpu, cases_multicells_onecell, results_file, plotYKey, MAPE_tol, profileCuda):
+def run_cell(conf):
     y_key_words = conf.plotYKey.split()
     y_key = y_key_words[-1]
     data = {}
@@ -155,8 +155,8 @@ def run_cell(conf2,conf, mpi, mpiProcessesList, nCellsCase, timeSteps,
             conf.mpiProcesses = conf.mpiProcessesList[0]
             conf.nCells = conf.nCellsCase
 
-        conf.caseMulticellsOnecell=cases_multicells_onecell[i]
-        conf.caseGpuCpu=cases_gpu_cpu[i]
+        conf.caseMulticellsOnecell=conf.casesMulticellsOnecell[i]
+        conf.caseGpuCpu=conf.casesGpuCpu[i]
         data[conf.cases[i]] = run(conf)
 
         if ("timeLS" in conf.plotYKey and "computational" in conf.plotYKey):
@@ -210,15 +210,12 @@ def run_cell(conf2,conf, mpi, mpiProcessesList, nCellsCase, timeSteps,
     return datay
 
 
-def run_case(conf2,conf, mpi, mpiProcessesList, cells, timeSteps,
-             cases, cases_gpu_cpu, cases_multicells_onecell, results_file, plotYKey, MAPE_tol, profileCuda):
+def run_case(conf):
     datacase = []
     for i in range(len(conf.cells)):
 
         conf.nCellsCase = conf.cells[i]
-        datay_cell = run_cell(conf2,conf, mpi, mpiProcessesList, conf.cells[i], timeSteps,
-                              conf.cases, cases_gpu_cpu, cases_multicells_onecell, results_file, plotYKey, MAPE_tol,
-                              profileCuda)
+        datay_cell = run_cell(conf)
 
         # print(datay_cell)
         if (len(conf.cells) > 1):
@@ -230,39 +227,38 @@ def run_case(conf2,conf, mpi, mpiProcessesList, cells, timeSteps,
     return datacase
 
 
-def run_diff_cells(conf2,conf,datacolumns, legend, columnHeader, mpi, mpiProcessesList, cells, timeSteps,
-                   casesL, results_file, plotYKey, diffArquiOptim, MAPE_tol, profileCuda):
+def run_diff_cells(conf):
 
     for j in range(len(conf.casesL)):
         conf.cases = conf.casesL[j]
-        cases_gpu_cpu = [""] * len(conf.cases)
-        cases_multicells_onecell = [""] * len(conf.cases)
+        conf.casesGpuCpu = [""] * len(conf.cases)
+        conf.casesMulticellsOnecell = [""] * len(conf.cases)
         cases_multicells_onecell_name = [""] * len(conf.cases)
         cases_gpu_cpu_name = [""] * len(conf.cases)
         for i in range(len(conf.cases)):
             cases_words = conf.cases[i].split()
-            cases_gpu_cpu[i] = cases_words[0]
-            cases_multicells_onecell[i] = cases_words[1]
+            conf.casesGpuCpu[i] = cases_words[0]
+            conf.casesMulticellsOnecell[i] = cases_words[1]
 
-            if cases_multicells_onecell[i] == "Block-cellsN":
+            if conf.casesMulticellsOnecell[i] == "Block-cellsN":
                 cases_multicells_onecell_name[i] = "Block-cells (N)"
-            elif cases_multicells_onecell[i] == "Block-cells1":
+            elif conf.casesMulticellsOnecell[i] == "Block-cells1":
                 cases_multicells_onecell_name[i] = "Block-cells (1)"
             else:
-                cases_multicells_onecell_name[i] = cases_multicells_onecell[i]
+                cases_multicells_onecell_name[i] = conf.casesMulticellsOnecell[i]
 
             if (len(conf.mpiProcessesList) == 2):
-                if cases_gpu_cpu[i] == "CPU":
+                if conf.casesGpuCpu[i] == "CPU":
                     cases_gpu_cpu_name[i] = str(conf.mpiProcessesList[i]) + " MPI"
-                    # print("cases_gpu_cpu[i]==CPU",cases_gpu_cpu_name[i])
-                # elif cases_gpu_cpu[i]=="GPU":
+                    # print("conf.casesGpuCpu[i]==CPU",cases_gpu_cpu_name[i])
+                # elif conf.casesGpuCpu[i]=="GPU":
                 #  cases_gpu_cpu_name[i]=str(gpus) + " GPU" #always 1 GPU, so comment this on the test section
                 else:
-                    cases_gpu_cpu_name[i] = cases_gpu_cpu[i]
+                    cases_gpu_cpu_name[i] = conf.casesGpuCpu[i]
             else:
-                cases_gpu_cpu_name[i] = cases_gpu_cpu[i]
+                cases_gpu_cpu_name[i] = conf.casesGpuCpu[i]
 
-        # print("cases_gpu_cpu",cases_gpu_cpu)
+        # print("conf.casesGpuCpu",conf.casesGpuCpu)
         if (len(conf.casesL) > 1):
             conf.column = conf.column + cases_multicells_onecell_name[1]
             if (conf.diffArquiOptim):
@@ -270,9 +266,7 @@ def run_diff_cells(conf2,conf,datacolumns, legend, columnHeader, mpi, mpiProcess
 
         conf.legend.append(conf.column)
 
-        datacase = run_case(conf2,conf, mpi, mpiProcessesList, cells, timeSteps,
-                            conf.cases, cases_gpu_cpu, cases_multicells_onecell, results_file, plotYKey, MAPE_tol,
-                            profileCuda)
+        datacase = run_case(conf)
         conf.datacolumns.append(datacase)
 
     conf.plotTitle = ""
@@ -468,11 +462,7 @@ def all_timesteps():
         if (len(conf.diffCellsL) > 1):
             conf.column += conf.diffCells + " "
 
-        run_diff_cells(conf2,conf,conf.datacolumns, conf.legend,
-                                    conf.column, mpi, mpiProcessesList, conf.cells, timeSteps,
-                                    conf.casesL, conf.results_file, conf.plotYKey, conf.diffArquiOptim,
-                                    conf.MAPETol, conf.profileCuda
-                                    )
+        run_diff_cells(conf)
 
     end_time = time.perf_counter()
     time_s = end_time - start_time
