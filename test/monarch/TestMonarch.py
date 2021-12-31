@@ -16,7 +16,6 @@ import json
 from pathlib import Path
 
 
-# todo: https://pythonexamples.org/convert-python-class-object-to-json/
 class TestMonarch:
     def __init__(self):
         #Configuration
@@ -62,13 +61,6 @@ class TestMonarch:
             raise
         self._chemFile = new_chemFile
 
-
-# mark = Geeks()
-
-# mark.age = 19
-
-# print(mark.age)
-
 def write_itsolver_config_file(conf):
     file1 = open("itsolver_options.txt", "w")
 
@@ -96,7 +88,7 @@ def run(conf):
         exec_str += "mpirun -v -np " + str(conf.mpiProcesses) + " --bind-to none "
         # exec_str+="srun -n "+str(conf.mpiProcesses)+" "
 
-    if (conf.profileCuda and conf.caseGpuCpu == "GPU"):
+    if conf.profileCuda and conf.caseGpuCpu == "GPU":
         pathNvprof = "nvprof/"
         Path(pathNvprof).mkdir(parents=True, exist_ok=True)
         exec_str += "nvprof --analysis-metrics -f -o " + pathNvprof + \
@@ -120,12 +112,11 @@ def run(conf):
 
     # Onecell-Multicells itsolver
     write_itsolver_config_file(conf)
-    if conf.caseGpuCpu == "GPU" and conf.caseMulticellsOnecell != "One-cell":
-        # print("conf.caseGpuCpu==GPU and case!=One-cell")
-        conf.caseMulticellsOnecell = "Multi-cells"
 
-    # Onecell-Multicells
+    with open('TestMonarch.json', 'w', encoding='utf-8') as jsonFile:
+        json.dump(conf.__dict__, jsonFile, indent=4,sort_keys=True)
 
+    # Main
     print(exec_str + " " + str(conf.nCells) + " " + conf.caseMulticellsOnecell +
           " " + str(conf.timeSteps) + " " + conf.diffCells)
     os.system(
@@ -146,7 +137,6 @@ def run_cell(conf):
     for i in range(len(conf.cases)):
 
         if len(conf.mpiProcessesList) == len(conf.cases):
-            # print("len(conf.mpiProcessesList)==len(conf.cases)",len(conf.cases))
             conf.mpiProcesses = conf.mpiProcessesList[i]
             conf.nCells = int(conf.nCellsCase / conf.mpiProcesses)
             if conf.nCells == 0:
@@ -180,13 +170,10 @@ def run_cell(conf):
         data = plot_functions.calculate_computational_timeLS( \
             data, "timeBiconjGradMemcpy")
         y_key = "timeLS"
-        # print(data)
         for case in conf.cases:
             for i in range(len(data[case][y_key])):
                 data[case][y_key][i] = data[case][y_key][i] \
                                        / data[case]["counterBCG"][i]
-
-    # print(data)
 
     if (conf.plotYKey == "NRMSE"):
         datay = plot_functions.calculate_NMRSE(data, conf.timeSteps)
@@ -199,7 +186,7 @@ def run_cell(conf):
         # y_key_words = conf.plotYKey.split()
         # y_key = y_key_words[-1]
         # print(y_key)
-        datay = plot_functions.calculate_speedup2(data, y_key)
+        datay = plot_functions.calculate_speedup(data, y_key)
     elif conf.plotYKey == "Percentage data transfers CPU-GPU [%]":
         y_key = "timeBiconjGradMemcpy"
         print("elif conf.plotYKey==Time data transfers")
@@ -208,7 +195,6 @@ def run_cell(conf):
         raise Exception("Not found plot function for conf.plotYKey")
 
     return datay
-
 
 def run_case(conf):
     datacase = []
@@ -225,7 +211,6 @@ def run_case(conf):
             datacase = datay_cell
 
     return datacase
-
 
 def run_diff_cells(conf):
 
@@ -327,8 +312,6 @@ def all_timesteps():
 
     conf = TestMonarch()
 
-    conf2 = {}
-
     # conf.chemFile="simple"
     # conf.chemFile="monarch_cb05"
     #conf.chemFile = "monarch_binned"
@@ -341,16 +324,13 @@ def all_timesteps():
     conf.profileCuda = False
     # conf.profileCuda = True
 
-    mpi = "yes"
     conf.mpi = "yes"
     # conf.mpi = "no"
 
-    mpiProcessesList = [1]
     conf.mpiProcessesList = [1]
     # conf.mpiProcessesList =  [40,1]
 
     conf.cells = [100]
-    cells = [100]
     # conf.cells = [5,10]
     # conf.cells = [100,500,1000]
     # conf.cells = [1,5,10,50,100]
@@ -360,18 +340,18 @@ def all_timesteps():
     timeSteps = 1
     conf.timeStepsDt = 2  # TODO pending send timeStepsDt to mock_monarch
 
-    # conf.caseBase="CPU One-cell"
-    conf.caseBase = "CPU Multi-cells"
+    conf.caseBase="CPU One-cell"
+    #conf.caseBase = "CPU Multi-cells"
     # conf.caseBase="GPU Multi-cells"
     # conf.caseBase="GPU Block-cellsN"
     # conf.caseBase="GPU Block-cells1"
 
     conf.casesOptim = []
-    conf.casesOptim.append("GPU Block-cells1")
+    #conf.casesOptim.append("GPU Block-cells1")
     # conf.casesOptim.append("GPU Block-cellsN")
     # conf.casesOptim.append("GPU Multi-cells")
     # conf.casesOptim.append("GPU One-cell")
-    # conf.casesOptim.append("CPU Multi-cells")
+    conf.casesOptim.append("CPU Multi-cells")
 
     # conf.cases = ["Historic"]
     # conf.cases = ["CPU One-cell"]

@@ -156,7 +156,8 @@ program mock_monarch
   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> CAMP-chem input file file
-  character(len=:), allocatable :: camp_input_file
+  character(len=:), allocatable :: camp_input_file, chemFile,&
+  caseMulticellsOnecell
   !> CAMP-camp <-> MONARCH interface configuration file
   character(len=:), allocatable :: interface_input_file
   !> Results file prefix
@@ -185,6 +186,11 @@ program mock_monarch
   integer :: ncounters, ntimers != 0 != 2
   integer :: export_results_all_cells
   integer :: plot_species = 0
+  type(json_file) :: jfile
+  type(json_core) :: json
+  character(len=:), allocatable :: export_path
+  character(len=128) :: i_str
+  integer :: id
 
   ! initialize mpi (to take the place of a similar MONARCH call)
   call camp_mpi_init()
@@ -199,22 +205,53 @@ program mock_monarch
 
   !Options
   export_results_all_cells=1
+  I_W=1
+  I_E=1
+  I_S=1
+  I_N=1
+  NUM_WE_CELLS = I_E-I_W+1
+  NUM_SN_CELLS = I_N-I_S+1
+
+  !Read configuration from TestMonarch.json
+
+  call jfile%initialize()
+  export_path = "TestMonarch"//".json"
+  call jfile%load_file(export_path); if (jfile%failed()) print*,&
+          "JSON not found at ",export_path
+
+  call jfile%get('_chemFile',output_file_title)
+  camp_input_file = "config_"//output_file_title//".json"
+  interface_input_file = "interface_"//output_file_title//".json"
+  output_file_prefix = "out/"//output_file_title
+  ADD_EMISIONS = "OFF"
+  if(output_file_title.eq."monarch_binned") then
+    ADD_EMISIONS = "ON"
+  end if
+  call jfile%get('nCells',NUM_VERT_CELLS)
+  call jfile%get('caseMulticellsOnecell',caseMulticellsOnecell)
+  output_file_prefix = output_file_prefix//"_"//caseMulticellsOnecell
+  if(caseMulticellsOnecell.eq."One-cell") then
+    n_cells = 1
+  else
+    n_cells = (I_E - I_W+1)*(I_N - I_S+1)*NUM_VERT_CELLS
+  end if
+
+  !print*,"json ", camp_input_file
 
   call get_command_argument(1, arg, status=status_code)
   call assert_msg(678165802, status_code.eq.0, "Error getting CAMP-camp "//&
           "configuration file name")
-  camp_input_file = trim(arg)
+  !camp_input_file = trim(arg)
   call get_command_argument(2, arg, status=status_code)
   call assert_msg(664104564, status_code.eq.0, "Error getting CAMP-camp "//&
           "<-> MONARCH interface configuration file name")
-  interface_input_file = trim(arg)
+  !interface_input_file = trim(arg)
 
   ! Initialize the mock model
   call get_command_argument(3, arg, status=status_code)
   call assert_msg(234156729, status_code.eq.0, "Error getting output file prefix")
   output_file_title = ""//trim(arg)
-  !output_file_title = "Mock_"//trim(arg)
-  output_file_prefix = "out/"//trim(arg)
+  !output_file_prefix = "out/"//trim(arg)
 
   call get_command_argument(4, arg, status=status_code)
   if(status_code.eq.0) then
@@ -227,35 +264,13 @@ program mock_monarch
   call get_command_argument(5, arg, status=status_code)
   if(status_code.eq.0) then
     str_to_int_aux = trim(arg)
-    read(str_to_int_aux, *) NUM_VERT_CELLS
+    !read(str_to_int_aux, *) NUM_VERT_CELLS
   else
     print*, "WARNING: not n_cells parameter received, value set to 1"
-    NUM_VERT_CELLS = 1
+    !NUM_VERT_CELLS = 1
   end if
-
-  I_W=1
-  I_E=1
-  I_S=1
-  I_N=1
-  NUM_WE_CELLS = I_E-I_W+1
-  NUM_SN_CELLS = I_N-I_S+1
 
   call get_command_argument(6, arg, status=status_code)
-  if(status_code.eq.0) then
-    if(arg.eq."Multi-cells") then
-      n_cells = (I_E - I_W+1)*(I_N - I_S+1)*NUM_VERT_CELLS
-    elseif(arg.eq."One-cell") then
-      n_cells = 1
-    else
-      print*, "WARNING: not Multi-cells or One-cell parameter received"
-    end if
-    output_file_prefix = output_file_prefix//"_"//trim(arg)
-  else
-    !One-cell case as default
-    print*, "WARNING: not Multi-cells flag parameter received, value set to One-cell"
-    n_cells = 1
-    output_file_prefix = output_file_prefix//"_"//"one_cell"
-  end if
 
   call get_command_argument(7, arg, status=status_code)
   if(status_code.eq.0) then
@@ -1096,16 +1111,12 @@ contains
     write(mpi_rank_str,*) mpi_rank
     mpi_rank_str=adjustl(mpi_rank_str)
 
-    !export_path = "/gpfs/scratch/bsc32/bsc32815/a2s8/nmmb-monarch/MODEL/"&
-    !        //"SRC_LIBS/camp/test/monarch/exports/camp_in_out_"&
-    !        //trim(mpi_rank_str)//".json"
+    call jfile%initialize()
 
     export_path = "exports/camp_in_out_"//trim(mpi_rank_str)//".json"
 
-    call jfile%initialize()
-
     call jfile%load_file(export_path); if (jfile%failed()) print*,&
-            "import_camp_input_json: JSON not found at ",export_path
+            "JSON not found at ",export_path
 
     if (camp_mpi_rank().eq.0) then
       write(*,*) "Importing camp input json"
