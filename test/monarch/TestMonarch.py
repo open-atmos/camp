@@ -38,6 +38,7 @@ class TestMonarch:
         self.legend = []
         self.column = ""
         self.casesL = []
+        self.cases = []
         self.results_file = "_solver_stats.csv"
         self.diffArquiOptim = False
         self.plotTitle = ""
@@ -46,6 +47,7 @@ class TestMonarch:
         self.nCells = 1
         self.caseGpuCpu = ""
         self.caseMulticellsOnecell = ""
+        self.nCellsCase = 1
 
 
     @property
@@ -70,26 +72,23 @@ def write_itsolver_config_file(conf):
 
     cells_method_str = "CELLS_METHOD=" + conf.caseMulticellsOnecell
     file1.write(cells_method_str)
-    # print(cells_method_str)
+    # print("Saved", cells_method_str)
 
     file1.close()
-
 
 def write_camp_config_file(conf):
     file1 = open("config_variables_c_solver.txt", "w")
 
-    # print(conf.caseGpuCpu)
 
     if (conf.caseGpuCpu == "CPU"):
         file1.write("USE_CPU=ON\n")
     else:
         file1.write("USE_CPU=OFF\n")
+    # print("Saved", conf.caseGpuCpu)
 
     file1.close()
 
-
-def run(conf2,conf, mpi, mpiProcesses, n_cells, timeSteps,
-        case_gpu_cpu, case_multicells_onecell, results_file, profileCuda):
+def run(conf):
     exec_str = ""
     if conf.mpi == "yes":
         exec_str += "mpirun -v -np " + str(conf.mpiProcesses) + " --bind-to none "
@@ -99,7 +98,7 @@ def run(conf2,conf, mpi, mpiProcesses, n_cells, timeSteps,
         pathNvprof = "nvprof/"
         Path(pathNvprof).mkdir(parents=True, exist_ok=True)
         exec_str += "nvprof --analysis-metrics -f -o " + pathNvprof + \
-                    conf2.chemFile + \
+                    conf.chemFile + \
                     conf.caseMulticellsOnecell + str(conf.nCells) + ".nvprof "
         # --print-gpu-summary
         print("Nvprof file saved in ", os.path.abspath(os.getcwd()) \
@@ -138,46 +137,43 @@ def run(conf2,conf, mpi, mpiProcesses, n_cells, timeSteps,
     return data
 
 
-def run_cell(conf2,conf, mpi, mpiProcessesList, n_cells_aux, timeSteps,
+def run_cell(conf2,conf, mpi, mpiProcessesList, nCellsCase, timeSteps,
              cases, cases_gpu_cpu, cases_multicells_onecell, results_file, plotYKey, MAPE_tol, profileCuda):
     y_key_words = conf.plotYKey.split()
     y_key = y_key_words[-1]
     data = {}
 
-    for i in range(len(cases)):
+    for i in range(len(conf.cases)):
 
-        if len(conf.mpiProcessesList) == len(cases):
-            # print("len(conf.mpiProcessesList)==len(cases)",len(cases))
+        if len(conf.mpiProcessesList) == len(conf.cases):
+            # print("len(conf.mpiProcessesList)==len(conf.cases)",len(conf.cases))
             conf.mpiProcesses = conf.mpiProcessesList[i]
-            conf.nCells = int(n_cells_aux / conf.mpiProcesses)
+            conf.nCells = int(conf.nCellsCase / conf.mpiProcesses)
             if conf.nCells == 0:
                 conf.nCells = 1
-            # conf.nCells=n_cells_aux
         else:
             conf.mpiProcesses = conf.mpiProcessesList[0]
-            conf.nCells = n_cells_aux
+            conf.nCells = conf.nCellsCase
 
         conf.caseMulticellsOnecell=cases_multicells_onecell[i]
         conf.caseGpuCpu=cases_gpu_cpu[i]
-        data[cases[i]] = run(conf2,conf, mpi, conf.mpiProcesses,
-                             conf.nCells, conf.timeSteps, cases_gpu_cpu[i], cases_multicells_onecell[i], results_file,
-                             profileCuda)
+        data[conf.cases[i]] = run(conf)
 
         if ("timeLS" in conf.plotYKey and "computational" in conf.plotYKey):
             data = plot_functions.calculate_computational_timeLS( \
-                data, "timeBiconjGradMemcpy", cases[i])
+                data, "timeBiconjGradMemcpy", conf.cases[i])
 
         if ("normalized" in conf.plotYKey):
             if (y_key == "counterBCG" or y_key == "timeLS"):
                 data = plot_functions.normalize_by_counterLS_and_cells( \
-                    data, y_key, conf.nCells, cases[i])
+                    data, y_key, conf.nCells, conf.cases[i])
             elif (y_key == "timecvStep"):
                 data = plot_functions.normalize_by_countercvStep_and_cells( \
-                    data, "timecvStep", conf.nCells, cases[i])
+                    data, "timecvStep", conf.nCells, conf.cases[i])
             else:
                 raise Exception("Unkown normalized case", y_key)
 
-    if (len(cases) != 2):
+    if (len(conf.cases) != 2):
         raise Exception("Cases to compare != 2, check cases")
 
     if ("(Comp.timeLS/counterBCG)" in conf.plotYKey):
@@ -185,7 +181,7 @@ def run_cell(conf2,conf, mpi, mpiProcessesList, n_cells_aux, timeSteps,
             data, "timeBiconjGradMemcpy")
         y_key = "timeLS"
         # print(data)
-        for case in cases:
+        for case in conf.cases:
             for i in range(len(data[case][y_key])):
                 data[case][y_key][i] = data[case][y_key][i] \
                                        / data[case]["counterBCG"][i]
@@ -218,8 +214,10 @@ def run_case(conf2,conf, mpi, mpiProcessesList, cells, timeSteps,
              cases, cases_gpu_cpu, cases_multicells_onecell, results_file, plotYKey, MAPE_tol, profileCuda):
     datacase = []
     for i in range(len(conf.cells)):
+
+        conf.nCellsCase = conf.cells[i]
         datay_cell = run_cell(conf2,conf, mpi, mpiProcessesList, conf.cells[i], timeSteps,
-                              cases, cases_gpu_cpu, cases_multicells_onecell, results_file, plotYKey, MAPE_tol,
+                              conf.cases, cases_gpu_cpu, cases_multicells_onecell, results_file, plotYKey, MAPE_tol,
                               profileCuda)
 
         # print(datay_cell)
@@ -236,13 +234,13 @@ def run_diff_cells(conf2,conf,datacolumns, legend, columnHeader, mpi, mpiProcess
                    casesL, results_file, plotYKey, diffArquiOptim, MAPE_tol, profileCuda):
 
     for j in range(len(conf.casesL)):
-        cases = conf.casesL[j]
-        cases_gpu_cpu = [""] * len(cases)
-        cases_multicells_onecell = [""] * len(cases)
-        cases_multicells_onecell_name = [""] * len(cases)
-        cases_gpu_cpu_name = [""] * len(cases)
-        for i in range(len(cases)):
-            cases_words = cases[i].split()
+        conf.cases = conf.casesL[j]
+        cases_gpu_cpu = [""] * len(conf.cases)
+        cases_multicells_onecell = [""] * len(conf.cases)
+        cases_multicells_onecell_name = [""] * len(conf.cases)
+        cases_gpu_cpu_name = [""] * len(conf.cases)
+        for i in range(len(conf.cases)):
+            cases_words = conf.cases[i].split()
             cases_gpu_cpu[i] = cases_words[0]
             cases_multicells_onecell[i] = cases_words[1]
 
@@ -273,7 +271,7 @@ def run_diff_cells(conf2,conf,datacolumns, legend, columnHeader, mpi, mpiProcess
         conf.legend.append(conf.column)
 
         datacase = run_case(conf2,conf, mpi, mpiProcessesList, cells, timeSteps,
-                            cases, cases_gpu_cpu, cases_multicells_onecell, results_file, plotYKey, MAPE_tol,
+                            conf.cases, cases_gpu_cpu, cases_multicells_onecell, results_file, plotYKey, MAPE_tol,
                             profileCuda)
         conf.datacolumns.append(datacase)
 
@@ -381,10 +379,10 @@ def all_timesteps():
     # conf.casesOptim.append("GPU One-cell")
     # conf.casesOptim.append("CPU Multi-cells")
 
-    # cases = ["Historic"]
-    # cases = ["CPU One-cell"]
-    # cases = ["CPU Multi-cells"]
-    # cases = ["GPU One-cell"]
+    # conf.cases = ["Historic"]
+    # conf.cases = ["CPU One-cell"]
+    # conf.cases = ["CPU Multi-cells"]
+    # conf.cases = ["GPU One-cell"]
 
     # conf.plotYKey = "Speedup timeCVode"
     # conf.plotYKey = "Speedup counterLS"
@@ -429,15 +427,13 @@ def all_timesteps():
     start_time = time.perf_counter()
 
     conf.casesL = []
-    cases = []
+    conf.cases = []
     conf.diffArquiOptim = False
     cases_words = conf.casesOptim[0].split()
     lastArquiOptim = cases_words[0]
     for caseOptim in conf.casesOptim:
-        # cases.append(conf.caseBase)
-        # cases.append(caseOptim)
-        cases = [conf.caseBase] + [caseOptim]
-        conf.casesL.append(cases)
+        conf.cases = [conf.caseBase] + [caseOptim]
+        conf.casesL.append(conf.cases)
 
         cases_words = caseOptim.split()
         arqui = cases_words[0]
@@ -445,7 +441,7 @@ def all_timesteps():
             conf.diffArquiOptim = True
         lastArquiOptim = arqui
 
-    if (cases[0] == "Historic"):
+    if (conf.cases[0] == "Historic"):
         if (len(conf.cells) < 2):
             # TODO check if still pending
             print("WARNING: PENDING TEST HISTORIC WITH TIMESTEPS AS AXIS X")
@@ -457,7 +453,7 @@ def all_timesteps():
         conf.casesL.append(["CPU One-cell", "GPU One-cell"])
     elif (len(conf.casesL) == 0):
         print("len(conf.casesL)==0")
-        conf.casesL.append(cases)
+        conf.casesL.append(conf.cases)
 
     conf.datacolumns = []
     conf.legend = []
