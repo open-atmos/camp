@@ -244,8 +244,10 @@ program mock_monarch
   if(status_code.eq.0) then
     if(arg.eq."Multi-cells") then
       n_cells = (I_E - I_W+1)*(I_N - I_S+1)*NUM_VERT_CELLS
-    else
+    elseif(arg.eq."One-cell") then
       n_cells = 1
+    else
+      print*, "WARNING: not Multi-cells or One-cell parameter received"
     end if
     output_file_prefix = output_file_prefix//"_"//trim(arg)
   else
