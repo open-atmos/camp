@@ -342,8 +342,8 @@ def all_timesteps():
     conf.timeSteps = 1
     conf.timeStepsDt = 2
 
-    #conf.caseBase="CPU One-cell"
-    conf.caseBase = "CPU Multi-cells"
+    conf.caseBase="CPU One-cell"
+    #conf.caseBase = "CPU Multi-cells"
     # conf.caseBase="GPU Multi-cells"
     # conf.caseBase="GPU Block-cellsN"
     # conf.caseBase="GPU Block-cells1"
@@ -352,13 +352,8 @@ def all_timesteps():
     #conf.casesOptim.append("GPU Block-cells1")
     #conf.casesOptim.append("GPU Block-cellsN")
     # conf.casesOptim.append("GPU Multi-cells")
-    # conf.casesOptim.append("GPU One-cell")
+    conf.casesOptim.append("GPU One-cell")
     conf.casesOptim.append("CPU Multi-cells")
-
-    # conf.cases = ["Historic"]
-    # conf.cases = ["CPU One-cell"]
-    # conf.cases = ["CPU Multi-cells"]
-    # conf.cases = ["GPU One-cell"]
 
     # conf.plotYKey = "Speedup timeCVode"
     # conf.plotYKey = "Speedup counterLS"
@@ -421,20 +416,6 @@ def all_timesteps():
         if (lastArquiOptim != arqui):
             conf.diffArquiOptim = True
         lastArquiOptim = arqui
-
-    if (conf.cases[0] == "Historic"):
-        if (len(conf.cells) < 2):
-            # TODO check if still pending
-            print("WARNING: PENDING TEST HISTORIC WITH TIMESTEPS AS AXIS X")
-
-        conf.casesL.append(["CPU One-cell", "GPU Block-cells1"])
-        conf.casesL.append(["CPU One-cell", "GPU Block-cellsN"])
-        conf.casesL.append(["CPU One-cell", "GPU Multi-cells"])
-        conf.casesL.append(["CPU One-cell", "CPU Multi-cells"])
-        conf.casesL.append(["CPU One-cell", "GPU One-cell"])
-    elif (len(conf.casesL) == 0):
-        print("len(conf.casesL)==0")
-        conf.casesL.append(conf.cases)
 
     conf.datacolumns = []
     conf.legend = []
