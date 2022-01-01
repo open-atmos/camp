@@ -103,42 +103,22 @@ def calculate_percentages_solveCVODEGPU(din):
 
     return data
 
-
 def normalize_by_counterLS_and_cells(data, plot_y_key, cells, case):
-    # plot_y_key = "timeLS"
-    # new_plot_y_key="Normalized timeLS"
-
-    # print("normalize_by_counterLS_and_cells")
-    # print(data[cases[0]][plot_y_key])
-
+    nSystemsOfCells = 1
     if ("One-cell" in case):
-        cells_multiply = cells
-    elif ("Multi-cells" in case or "GPU" in case):
-        cells_multiply = 1
-    else:
-        raise Exception("normalize_by_counterLS_and_cells case without One-cell or Multi-cells key name")
+        nSystemsOfCells = cells
 
-    # print(cells_multiply)
-    # print(data)
-
-    # data[case][new_plot_y_key] = []
     for i in range(len(data[case][plot_y_key])):
-        # print(base_data[i],new_data[i], base_data[i]/new_data[i])
-        data[case][plot_y_key][i] = data[case][plot_y_key][i] \
-                                    / data[case]["counterLS"][i] * cells_multiply
-        # data[case][new_plot_y_key].append(data[case][plot_y_key][i] \
-        #                                  / data[case]["counterLS"][i]*cells_multiply)
-
-    # print(data)
+        iters = data[case]["counterLS"][i]
+        itersPerAllCells = iters / nSystemsOfCells
+        timePerIter = data[case][plot_y_key][i] / itersPerAllCells
+        data[case][plot_y_key][i] = timePerIter
 
     return data
-
 
 def normalize_by_countercvStep_and_cells(data, plot_y_key, cells, case):
     # plot_y_key = "timeLS"
     # new_plot_y_key="Normalized timeLS"
-
-    print("normalize_by_countercvStep_and_cells")
 
     # print(data[cases[0]][plot_y_key])
 
@@ -149,9 +129,7 @@ def normalize_by_countercvStep_and_cells(data, plot_y_key, cells, case):
         print("Multi-cells")
         cells_multiply = 1
     else:
-        raise Exception("normalize_by_counterLS_and_cells case without One-cell or Multi-cells key name")
-
-    # print(cells_multiply)
+        raise Exception("normalize_by_countercvStep_and_cells case without One-cell or Multi-cells key name")
 
     # data[case][new_plot_y_key] = []
     for i in range(len(data[plot_y_key])):

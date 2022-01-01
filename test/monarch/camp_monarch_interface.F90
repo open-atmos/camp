@@ -470,7 +470,7 @@ contains
     !> Integration start time (min since midnight)
     real, intent(in) :: curr_time
     !> Integration time step
-    real, intent(in) :: time_step
+    real(kind=dp), intent(in) :: time_step
     !> Grid-cell W->E starting index
     integer, intent(in) :: I_W
     !> Grid-cell W->E ending index

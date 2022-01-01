@@ -103,7 +103,7 @@ program mock_monarch
   !> Ending index for camp-chem species in tracer array
   integer, parameter :: END_CAMP_ID = 210!350
   !> Time step (min)
-  real :: TIME_STEP
+  real(kind=dp):: TIME_STEP
   !> Number of time steps to integrate over
   !integer, parameter :: NUM_TIME_STEP = 20!1!camp_paper=720!36
   integer :: NUM_TIME_STEP !1!camp_paper=720!36
@@ -157,7 +157,7 @@ program mock_monarch
 
   !> CAMP-chem input file file
   character(len=:), allocatable :: camp_input_file, chemFile,&
-  caseMulticellsOnecell
+  caseMulticellsOnecell, diffCells
   !> CAMP-camp <-> MONARCH interface configuration file
   character(len=:), allocatable :: interface_input_file
   !> Results file prefix
@@ -211,6 +211,8 @@ program mock_monarch
   I_N=1
   NUM_WE_CELLS = I_E-I_W+1
   NUM_SN_CELLS = I_N-I_S+1
+  ncounters = 4 ! number of metric counters (e.g. counter LS iterations)
+  ntimers = 14 ! number of metric timers (e.g. time Linear solving)
 
   !Read configuration from TestMonarch.json
 
@@ -227,6 +229,7 @@ program mock_monarch
   if(output_file_title.eq."monarch_binned") then
     ADD_EMISIONS = "ON"
   end if
+
   call jfile%get('nCells',NUM_VERT_CELLS)
   call jfile%get('caseMulticellsOnecell',caseMulticellsOnecell)
   output_file_prefix = output_file_prefix//"_"//caseMulticellsOnecell
@@ -236,82 +239,16 @@ program mock_monarch
     n_cells = (I_E - I_W+1)*(I_N - I_S+1)*NUM_VERT_CELLS
   end if
 
-  !print*,"json ", camp_input_file
-
-  call get_command_argument(1, arg, status=status_code)
-  call assert_msg(678165802, status_code.eq.0, "Error getting CAMP-camp "//&
-          "configuration file name")
-  !camp_input_file = trim(arg)
-  call get_command_argument(2, arg, status=status_code)
-  call assert_msg(664104564, status_code.eq.0, "Error getting CAMP-camp "//&
-          "<-> MONARCH interface configuration file name")
-  !interface_input_file = trim(arg)
-
-  ! Initialize the mock model
-  call get_command_argument(3, arg, status=status_code)
-  call assert_msg(234156729, status_code.eq.0, "Error getting output file prefix")
-  output_file_title = ""//trim(arg)
-  !output_file_prefix = "out/"//trim(arg)
-
-  call get_command_argument(4, arg, status=status_code)
-  if(status_code.eq.0) then
-    ADD_EMISIONS = trim(arg)
-  else
-    print*, "WARNING: not ADD_EMISIONS parameter received, value set to OFF"
-    ADD_EMISIONS = "OFF"
-  end if
-
-  call get_command_argument(5, arg, status=status_code)
-  if(status_code.eq.0) then
-    str_to_int_aux = trim(arg)
-    !read(str_to_int_aux, *) NUM_VERT_CELLS
-  else
-    print*, "WARNING: not n_cells parameter received, value set to 1"
-    !NUM_VERT_CELLS = 1
-  end if
-
-  call get_command_argument(6, arg, status=status_code)
-
-  call get_command_argument(7, arg, status=status_code)
-  if(status_code.eq.0) then
-    str_to_int_aux = trim(arg)
-    read(str_to_int_aux, *) NUM_TIME_STEP
-  else
-    NUM_TIME_STEP = 1
-    print*, "WARNING: not NUM_TIME_STEP parameter received, value set to ",NUM_TIME_STEP
-  end if
-
+  call jfile%get('timeSteps',NUM_TIME_STEP)
+  call jfile%get('timeStepsDt',TIME_STEP)
+  call jfile%get('diffCells',diffCells)
   DIFF_CELLS = "OFF"
-  call get_command_argument(8, arg, status=status_code)
-  if(status_code.eq.0) then
-    if(arg.eq."Realistic") then
-      DIFF_CELLS = "ON"
-    else
-      DIFF_CELLS = "OFF"
-    end if
+  if(diffCells.eq."Realistic") then
+    DIFF_CELLS = "ON"
   else
     DIFF_CELLS = "OFF"
-    print*, "WARNING: not DIFF_CELLS parameter received, value set to ",DIFF_CELLS
   end if
-  !print*,"DIFF_CELLS ",DIFF_CELLS
-
-  call get_command_argument(9, arg, status=status_code)
-  if(status_code.eq.0) then
-    str_to_int_aux = trim(arg)
-    read(str_to_int_aux, *) ncounters
-  else
-    ncounters = 4
-    !print*, "WARNING: not ncounters parameter received, value set to ",ncounters
-  end if
-
-  call get_command_argument(10, arg, status=status_code)
-  if(status_code.eq.0) then
-    str_to_int_aux = trim(arg)
-    read(str_to_int_aux, *) ntimers
-  else
-    ntimers = 14!5 !todo read automatically in .py
-    !print*, "WARNING: not ntimers parameter received, value set to ",ntimers
-  end if
+  print*,"DIFF_CELLS1 ",DIFF_CELLS
 
   allocate(counters(ncounters))
   allocate(times(ntimers))
@@ -319,12 +256,6 @@ program mock_monarch
   times(:)=0.0
 
   call solver_stats%allocate(ncounters,ntimers)
-
-  if(interface_input_file.eq."interface_monarch_cb05.json") then
-    TIME_STEP=3. !Monarch case
-  else
-    TIME_STEP=2. !CAMP paper case
-  end if
 
   if (camp_mpi_rank().eq.0) then
     write(*,*) "Num time-steps:", NUM_TIME_STEP, "Num cells:",&
@@ -449,7 +380,6 @@ program mock_monarch
 
   call model_initialize(output_file_prefix)
   path_solver_stats = output_file_prefix//"_solver_stats.csv"
-
 
   camp_interface => monarch_interface_t(camp_input_file, interface_input_file, &
           START_CAMP_ID, END_CAMP_ID, n_cells, ADD_EMISIONS, ncounters, ntimers)!, n_cells

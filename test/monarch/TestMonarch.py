@@ -305,6 +305,8 @@ def plot_cases(conf):
 
     print(namey, ":", datay)
 
+    #TODO fix legend
+
     #plot_functions.plot(namex,namey,datax,datay,conf.plotTitle,conf.legend,conf.savePlot)
 
 
@@ -319,7 +321,7 @@ def all_timesteps():
 
     conf.diffCellsL = []
     conf.diffCellsL.append("Realistic")
-    # conf.diffCellsL.append("Ideal")
+    #conf.diffCellsL.append("Ideal")
 
     conf.profileCuda = False
     # conf.profileCuda = True
@@ -331,27 +333,26 @@ def all_timesteps():
     # conf.mpiProcessesList =  [40,1]
 
     conf.cells = [100]
-    # conf.cells = [5,10]
-    # conf.cells = [100,500,1000]
-    # conf.cells = [1,5,10,50,100]
-    # conf.cells = [100,500,1000,5000,10000]
+    #conf.cells = [5,10]
+    #conf.cells = [100,500,1000]
+    #conf.cells = [1,5,10,50,100]
+    #conf.cells = [100,500,1000,5000,10000]
 
     conf.timeSteps = 1
-    timeSteps = 1
-    conf.timeStepsDt = 2  # TODO pending send timeStepsDt to mock_monarch
+    conf.timeStepsDt = 2
 
-    conf.caseBase="CPU One-cell"
-    #conf.caseBase = "CPU Multi-cells"
+    #conf.caseBase="CPU One-cell"
+    conf.caseBase = "CPU Multi-cells"
     # conf.caseBase="GPU Multi-cells"
     # conf.caseBase="GPU Block-cellsN"
     # conf.caseBase="GPU Block-cells1"
 
     conf.casesOptim = []
-    #conf.casesOptim.append("GPU Block-cells1")
-    # conf.casesOptim.append("GPU Block-cellsN")
-    # conf.casesOptim.append("GPU Multi-cells")
-    # conf.casesOptim.append("GPU One-cell")
-    conf.casesOptim.append("CPU Multi-cells")
+    conf.casesOptim.append("GPU Block-cells1")
+    #conf.casesOptim.append("GPU Block-cellsN")
+    #conf.casesOptim.append("GPU Multi-cells")
+    #conf.casesOptim.append("GPU One-cell")
+    #conf.casesOptim.append("CPU Multi-cells")
 
     # conf.cases = ["Historic"]
     # conf.cases = ["CPU One-cell"]
@@ -393,9 +394,10 @@ def all_timesteps():
         print("WARNING: Remember to enable solveBcgCuda_sum_it")
     elif "counterBCG" in conf.plotYKey:
         print("WARNING: Remember to disable solveBcgCuda_sum_it")
-
     if conf.chemFile == "monarch_binned":
         print("WARNING: ENSURE DERIV_CPU_ON_GPU IS ON")
+    if conf.chemFile == "monarch_cb05":
+        conf.timeStepsDt = 3
 
     conf.savePlot = False
     start_time = time.perf_counter()
