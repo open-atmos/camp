@@ -307,13 +307,9 @@ def plot_cases(conf):
 
     namex = plot_x_key
 
-    print(namey, ":", datay)
-    print("legend", ":", conf.legend)
-    print("plotTitle", ":", conf.plotTitle)
+    print(namey, ":", datay,"plotTitle:",conf.plotTitle,"legend:",conf.legend)
 
-    # TODO fix legend
-
-    plot_functions.plot(namex, namey, datax, datay, conf.plotTitle, conf.legend, conf.savePlot)
+    #plot_functions.plot(namex, namey, datax, datay, conf.plotTitle, conf.legend, conf.savePlot)
 
 
 def all_timesteps():
@@ -326,7 +322,7 @@ def all_timesteps():
 
     conf.diffCellsL = []
     conf.diffCellsL.append("Realistic")
-    conf.diffCellsL.append("Ideal")
+    #conf.diffCellsL.append("Ideal")
 
     conf.profileCuda = False
     # conf.profileCuda = True
@@ -337,7 +333,7 @@ def all_timesteps():
     conf.mpiProcessesList = [1]
     # conf.mpiProcessesList =  [40,1]
 
-    conf.cells = [10, 100]
+    conf.cells = [100]
     # conf.cells = [5,10]
     # conf.cells = [100,500,1000]
     # conf.cells = [1,5,10,50,100]
@@ -346,18 +342,18 @@ def all_timesteps():
     conf.timeSteps = 1
     conf.timeStepsDt = 2
 
-    # conf.caseBase="CPU One-cell"
+    #conf.caseBase="CPU One-cell"
     conf.caseBase = "CPU Multi-cells"
     # conf.caseBase="GPU Multi-cells"
     # conf.caseBase="GPU Block-cellsN"
     # conf.caseBase="GPU Block-cells1"
 
     conf.casesOptim = []
-    conf.casesOptim.append("GPU Block-cells1")
-    conf.casesOptim.append("GPU Block-cellsN")
+    #conf.casesOptim.append("GPU Block-cells1")
+    #conf.casesOptim.append("GPU Block-cellsN")
     # conf.casesOptim.append("GPU Multi-cells")
     # conf.casesOptim.append("GPU One-cell")
-    # conf.casesOptim.append("CPU Multi-cells") #todo crashing
+    conf.casesOptim.append("CPU Multi-cells")
 
     # conf.cases = ["Historic"]
     # conf.cases = ["CPU One-cell"]
@@ -393,7 +389,6 @@ def all_timesteps():
     if not os.path.exists('out'):
         os.makedirs('out')
 
-    print("WARNING: DEVELOPING CSR")
 
     if "total" in conf.plotYKey:
         print("WARNING: Remember to enable solveBcgCuda_sum_it")
@@ -413,6 +408,11 @@ def all_timesteps():
     cases_words = conf.casesOptim[0].split()
     lastArquiOptim = cases_words[0]
     for caseOptim in conf.casesOptim:
+        if caseOptim == conf.caseBase:
+            #logger = logging.getLogger(__name__)
+            #logger.error(error)
+            print ("Error: caseOptim == caseBase")
+            raise
         conf.cases = [conf.caseBase] + [caseOptim]
         conf.casesL.append(conf.cases)
 
