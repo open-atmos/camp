@@ -18,7 +18,7 @@ from pathlib import Path
 
 class TestMonarch:
     def __init__(self):
-        #Configuration
+        # Configuration
         self._chemFile = "monarch_binned"  # Read.json
         self.diffCellsL = "Realistic"
         self.profileCuda = False
@@ -31,11 +31,12 @@ class TestMonarch:
         self.casesOptim = ["GPU Block-cells1"]
         self.plotYKey = "Speedup normalized timeLS"
         self.MAPETol = 1.0E-4
-        #Auxiliar
-        self.diffCells=""
+        # Auxiliar
+        self.diffCells = ""
         self.datacolumns = []
         self.legend = []
         self.column = ""
+        self.columnDiffCells = ""
         self.casesL = []
         self.cases = []
         self.results_file = "_solver_stats.csv"
@@ -50,7 +51,6 @@ class TestMonarch:
         self.caseMulticellsOnecell = ""
         self.nCellsCase = 1
 
-
     @property
     def chemFile(self):
         return self._chemFile
@@ -61,6 +61,7 @@ class TestMonarch:
             raise
         self._chemFile = new_chemFile
 
+
 def write_itsolver_config_file(conf):
     file1 = open("itsolver_options.txt", "w")
 
@@ -70,9 +71,9 @@ def write_itsolver_config_file(conf):
 
     file1.close()
 
+
 def write_camp_config_file(conf):
     file1 = open("config_variables_c_solver.txt", "w")
-
 
     if (conf.caseGpuCpu == "CPU"):
         file1.write("USE_CPU=ON\n")
@@ -81,6 +82,7 @@ def write_camp_config_file(conf):
     # print("Saved", conf.caseGpuCpu)
 
     file1.close()
+
 
 def run(conf):
     exec_str = ""
@@ -114,7 +116,7 @@ def run(conf):
     write_itsolver_config_file(conf)
 
     with open('TestMonarch.json', 'w', encoding='utf-8') as jsonFile:
-        json.dump(conf.__dict__, jsonFile, indent=4,sort_keys=True)
+        json.dump(conf.__dict__, jsonFile, indent=4, sort_keys=True)
 
     # Main
     print(exec_str + " " + str(conf.nCells) + " " + conf.caseMulticellsOnecell +
@@ -128,6 +130,7 @@ def run(conf):
     plot_functions.read_solver_stats(file, data)
 
     return data
+
 
 def run_cell(conf):
     y_key_words = conf.plotYKey.split()
@@ -145,8 +148,8 @@ def run_cell(conf):
             conf.mpiProcesses = conf.mpiProcessesList[0]
             conf.nCells = conf.nCellsCase
 
-        conf.caseMulticellsOnecell=conf.casesMulticellsOnecell[i]
-        conf.caseGpuCpu=conf.casesGpuCpu[i]
+        conf.caseMulticellsOnecell = conf.casesMulticellsOnecell[i]
+        conf.caseGpuCpu = conf.casesGpuCpu[i]
         data[conf.cases[i]] = run(conf)
 
         if ("timeLS" in conf.plotYKey and "computational" in conf.plotYKey):
@@ -196,6 +199,7 @@ def run_cell(conf):
 
     return datay
 
+
 def run_case(conf):
     datacase = []
     for i in range(len(conf.cells)):
@@ -212,8 +216,8 @@ def run_case(conf):
 
     return datacase
 
-def run_diff_cells(conf):
 
+def run_diff_cells(conf):
     for j in range(len(conf.casesL)):
         conf.cases = conf.casesL[j]
         conf.casesGpuCpu = [""] * len(conf.cases)
@@ -245,9 +249,9 @@ def run_diff_cells(conf):
 
         # print("conf.casesGpuCpu",conf.casesGpuCpu)
         if (len(conf.casesL) > 1):
-            conf.column = conf.column + cases_multicells_onecell_name[1]
+            conf.column = conf.columnDiffCells + cases_multicells_onecell_name[1]
             if (conf.diffArquiOptim):
-                conf.column = conf.column + cases_gpu_cpu_name[1] + " " + cases_multicells_onecell_name[1]
+                conf.column = conf.columnDiffCells + cases_gpu_cpu_name[1] + " " + cases_multicells_onecell_name[1]
 
         conf.legend.append(conf.column)
 
@@ -269,8 +273,8 @@ def run_diff_cells(conf):
     else:
         conf.plotTitle = first_word + second_word
 
-def plot_cases(conf):
 
+def plot_cases(conf):
     namey = conf.plotYKey
     if conf.plotYKey == "Speedup normalized computational timeLS":
         namey = "Speedup without data transfers CPU-GPU"
@@ -304,24 +308,25 @@ def plot_cases(conf):
     namex = plot_x_key
 
     print(namey, ":", datay)
+    print("legend", ":", conf.legend)
+    print("plotTitle", ":", conf.plotTitle)
 
-    #TODO fix legend
+    # TODO fix legend
 
-    #plot_functions.plot(namex,namey,datax,datay,conf.plotTitle,conf.legend,conf.savePlot)
+    plot_functions.plot(namex, namey, datax, datay, conf.plotTitle, conf.legend, conf.savePlot)
 
 
 def all_timesteps():
-
     conf = TestMonarch()
 
     # conf.chemFile="simple"
     # conf.chemFile="monarch_cb05"
-    #conf.chemFile = "monarch_binned"
+    # conf.chemFile = "monarch_binned"
     conf.chemFile = "monarch_binned"
 
     conf.diffCellsL = []
     conf.diffCellsL.append("Realistic")
-    #conf.diffCellsL.append("Ideal")
+    conf.diffCellsL.append("Ideal")
 
     conf.profileCuda = False
     # conf.profileCuda = True
@@ -332,16 +337,16 @@ def all_timesteps():
     conf.mpiProcessesList = [1]
     # conf.mpiProcessesList =  [40,1]
 
-    conf.cells = [100]
-    #conf.cells = [5,10]
-    #conf.cells = [100,500,1000]
-    #conf.cells = [1,5,10,50,100]
-    #conf.cells = [100,500,1000,5000,10000]
+    conf.cells = [10, 100]
+    # conf.cells = [5,10]
+    # conf.cells = [100,500,1000]
+    # conf.cells = [1,5,10,50,100]
+    # conf.cells = [100,500,1000,5000,10000]
 
     conf.timeSteps = 1
     conf.timeStepsDt = 2
 
-    #conf.caseBase="CPU One-cell"
+    # conf.caseBase="CPU One-cell"
     conf.caseBase = "CPU Multi-cells"
     # conf.caseBase="GPU Multi-cells"
     # conf.caseBase="GPU Block-cellsN"
@@ -349,10 +354,10 @@ def all_timesteps():
 
     conf.casesOptim = []
     conf.casesOptim.append("GPU Block-cells1")
-    #conf.casesOptim.append("GPU Block-cellsN")
-    #conf.casesOptim.append("GPU Multi-cells")
-    #conf.casesOptim.append("GPU One-cell")
-    #conf.casesOptim.append("CPU Multi-cells")
+    conf.casesOptim.append("GPU Block-cellsN")
+    # conf.casesOptim.append("GPU Multi-cells")
+    # conf.casesOptim.append("GPU One-cell")
+    # conf.casesOptim.append("CPU Multi-cells") #todo crashing
 
     # conf.cases = ["Historic"]
     # conf.cases = ["CPU One-cell"]
@@ -440,9 +445,9 @@ def all_timesteps():
             conf.diffCells = "Ideal"
             print("WARNING: ENSURE DERIV_CPU_ON_GPU IS OFF")
 
-        conf.column = ""
+        conf.columnDiffCells = ""
         if (len(conf.diffCellsL) > 1):
-            conf.column += conf.diffCells + " "
+            conf.columnDiffCells += conf.diffCells + " "
 
         run_diff_cells(conf)
 
@@ -476,14 +481,14 @@ def plotsns():
         datay2 = [[1, 2, 3], [4, 5, 6], [7, 8, 9], [10, 11, 12]]
         datax = [123, 346, 789]
         conf.legend = ["GPU Block-cells(1)",
-                  "GPU Block-cells(2)",
-                  "GPU Block-cells(3)",
-                  "GPU Block-cells(4)"]
+                       "GPU Block-cells(2)",
+                       "GPU Block-cells(3)",
+                       "GPU Block-cells(4)"]
     else:
         datay2 = [[1, 2, 3], [4, 5, 6]]
         datax = [123, 346, 789]
         conf.legend = ["GPU Block-cells(1)",
-                  "GPU Block-cells(2)"]
+                       "GPU Block-cells(2)"]
 
     # datay=map(list,)
 

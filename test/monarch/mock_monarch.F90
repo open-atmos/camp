@@ -248,7 +248,6 @@ program mock_monarch
   else
     DIFF_CELLS = "OFF"
   end if
-  print*,"DIFF_CELLS1 ",DIFF_CELLS
 
   allocate(counters(ncounters))
   allocate(times(ntimers))
