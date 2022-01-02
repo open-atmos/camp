@@ -375,7 +375,7 @@ def all_timesteps():
     # conf.plotYKey="MAPE"
     # conf.plotYKey="SMAPE"
     # conf.plotYKey="NRMSE"
-    conf.MAPETol = 1.0E-4  # MAPE=0
+      # MAPE=0
     # conf.MAPETol=1.0E-6 #MAPE~=0.5
 
     """END OF CONFIGURATION VARIABLES"""
@@ -383,6 +383,10 @@ def all_timesteps():
     conf.results_file = "_solver_stats.csv"
     if conf.plotYKey == "NRMSE" or conf.plotYKey == "MAPE" or conf.plotYKey == "SMAPE":
         conf.results_file = '_results_all_cells.csv'
+
+    jsonFile = open("monarch_box_binned/cb05_abs_tol.json")
+    jsonData = json.load(jsonFile)
+    conf.MAPETol = jsonData["camp-data"][0]["value"] # Default: 1.0E-4
 
     if not os.path.exists('out'):
         os.makedirs('out')

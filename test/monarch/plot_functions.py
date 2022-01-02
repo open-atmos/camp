@@ -479,7 +479,6 @@ def plot_speedup_cells(x, y, x_name, y_name, plot_title):
 
 
 def plot_solver_stats_mpi(data, plot_x_key, plot_y_key, plot_title):
-    # todo generalize function
 
     # print(data)
 
@@ -670,7 +669,6 @@ def plot_species(file):
     # file = 'out_01/urban_plume_0001_'
     # file = 'out/monarch_cb05_soa_urban_plume_0001.txt'
     # file = 'out/monarch_cb05_urban_plume_0001.txt'
-    # todo fix case cb05 (only working cb05_soa)
 
     print(file)
 
@@ -699,7 +697,7 @@ def plot_species(file):
         n_aerosols = 2
         cell_to_plot = 0
     if (plot_case == 4):
-        # todo plot 4 fix
+        # plot 4 not working
         n_cells = 1
         n_gases = 5
         n_aerosols = 2

@@ -14,7 +14,6 @@ List of configuration variables:
 * caseBase = Case to be compared with caseOptim (e.g. Speedup is defined as time caseBase/caseOptim)
 * caseOptim = Case Optimized (e.g. Speedup is defined as time caseBase/caseOptim)
 * plotYKey = Metric to evaluate (e.g. Speedup of the linear solver)
-* MAPE_tol = Tolerance for MAPE calculation. Should be equal to CVODE tolerance.
 
 Plotting elements:
 * Axe X: By default corresponds to "timesteps" value. It uses "cells" in case of more than one value in "cells". Then,  the mean over "time-steps" is calculated.
