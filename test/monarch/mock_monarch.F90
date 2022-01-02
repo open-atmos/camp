@@ -1600,12 +1600,6 @@ contains
 
     write(file_unit, *) ""
 
-    !todo include water_conc with species_conc to easy access
-    !write(RESULTS_FILE_UNIT, *) curr_time, &
-    !        species_conc(1,1,1,START_CAMP_ID:END_CAMP_ID), &
-    !        water_conc(1,1,1,WATER_VAPOR_ID)
-
-
   end subroutine print_state_gnuplot
 
   !> Output the model results
@@ -1689,11 +1683,6 @@ contains
     end do
 
     write(RESULTS_FILE_UNIT, "(A)", advance="yes") " "
-
-    !todo include water_conc with species_conc
-    !write(RESULTS_FILE_UNIT, *) curr_time, &
-    !        species_conc(1,1,1,START_CAMP_ID:END_CAMP_ID), &
-    !        water_conc(1,1,1,WATER_VAPOR_ID)
 
   end subroutine output_results
 

@@ -75,11 +75,15 @@ def write_itsolver_config_file(conf):
 def write_camp_config_file(conf):
     file1 = open("config_variables_c_solver.txt", "w")
 
-    if (conf.caseGpuCpu == "CPU"):
+    if conf.caseGpuCpu == "CPU":
         file1.write("USE_CPU=ON\n")
     else:
         file1.write("USE_CPU=OFF\n")
-    # print("Saved", conf.caseGpuCpu)
+
+    if conf.chemFile == "monarch_binned":
+        file1.write("USE_F_CPU=ON\n")
+    else:
+        file1.write("USE_F_CPU=OFF\n")
 
     file1.close()
 
@@ -307,9 +311,9 @@ def plot_cases(conf):
 
     namex = plot_x_key
 
-    print(namey, ":", datay,"plotTitle:",conf.plotTitle,"legend:",conf.legend)
+    print(namey, ":", datay)
 
-    #plot_functions.plot(namex, namey, datax, datay, conf.plotTitle, conf.legend, conf.savePlot)
+    # plot_functions.plot(namex, namey, datax, datay, conf.plotTitle, conf.legend, conf.savePlot)
 
 
 def all_timesteps():
@@ -322,7 +326,7 @@ def all_timesteps():
 
     conf.diffCellsL = []
     conf.diffCellsL.append("Realistic")
-    #conf.diffCellsL.append("Ideal")
+    # conf.diffCellsL.append("Ideal")
 
     conf.profileCuda = False
     # conf.profileCuda = True
@@ -342,18 +346,18 @@ def all_timesteps():
     conf.timeSteps = 1
     conf.timeStepsDt = 2
 
-    conf.caseBase="CPU One-cell"
-    #conf.caseBase = "CPU Multi-cells"
+    #conf.caseBase = "CPU One-cell"
+    conf.caseBase = "CPU Multi-cells"
     # conf.caseBase="GPU Multi-cells"
     # conf.caseBase="GPU Block-cellsN"
     # conf.caseBase="GPU Block-cells1"
 
     conf.casesOptim = []
-    #conf.casesOptim.append("GPU Block-cells1")
-    #conf.casesOptim.append("GPU Block-cellsN")
+    conf.casesOptim.append("GPU Block-cells1")
+    # conf.casesOptim.append("GPU Block-cellsN")
     # conf.casesOptim.append("GPU Multi-cells")
-    conf.casesOptim.append("GPU One-cell")
-    conf.casesOptim.append("CPU Multi-cells")
+    # conf.casesOptim.append("GPU One-cell")
+    # conf.casesOptim.append("CPU Multi-cells")
 
     # conf.plotYKey = "Speedup timeCVode"
     # conf.plotYKey = "Speedup counterLS"
@@ -368,7 +372,6 @@ def all_timesteps():
     # conf.plotYKey = "Speedup device timecvStep"
     # conf.plotYKey = "Percentage data transfers CPU-GPU [%]"
 
-    # conf.plotYKey = "Percentages solveCVODEGPU" #Pending function
     # conf.plotYKey="MAPE"
     # conf.plotYKey="SMAPE"
     # conf.plotYKey="NRMSE"
@@ -384,13 +387,12 @@ def all_timesteps():
     if not os.path.exists('out'):
         os.makedirs('out')
 
-
     if "total" in conf.plotYKey:
         print("WARNING: Remember to enable solveBcgCuda_sum_it")
     elif "counterBCG" in conf.plotYKey:
         print("WARNING: Remember to disable solveBcgCuda_sum_it")
     if conf.chemFile == "monarch_binned":
-        print("WARNING: ENSURE DERIV_CPU_ON_GPU IS ON")
+        print("WARNING: ENSURE DERIV_CPU_ON_GPU IS ON")  # TODO
     if conf.chemFile == "monarch_cb05":
         conf.timeStepsDt = 3
 
@@ -404,8 +406,8 @@ def all_timesteps():
     lastArquiOptim = cases_words[0]
     for caseOptim in conf.casesOptim:
         if caseOptim == conf.caseBase:
-            #logger = logging.getLogger(__name__)
-            #logger.error(error)
+            # logger = logging.getLogger(__name__)
+            # logger.error(error)
             print ("Error: caseOptim == caseBase")
             raise
         conf.cases = [conf.caseBase] + [caseOptim]
@@ -434,11 +436,10 @@ def all_timesteps():
 
     end_time = time.perf_counter()
     time_s = end_time - start_time
-    # print("time_s:",time_s)
     if time_s > 60:
         conf.savePlot = True
 
-    print("plotTitle", conf.plotTitle)
+    print("plotTitle: ", conf.plotTitle, ", legend:", conf.legend)
 
     if (len(conf.diffCellsL) == 1):
         conf.plotTitle += ", " + conf.diffCells + " test"
@@ -446,107 +447,4 @@ def all_timesteps():
     plot_cases(conf)
 
 
-"""
-"""
-
-
-def plotsns():
-    namex = "Cells"
-    namey = "Speedup"
-    plot_title = "Test plotsns"
-
-    ncol = 4
-    # ncol=2
-    if (ncol == 4):
-
-        datay2 = [[1, 2, 3], [4, 5, 6], [7, 8, 9], [10, 11, 12]]
-        datax = [123, 346, 789]
-        conf.legend = ["GPU Block-cells(1)",
-                       "GPU Block-cells(2)",
-                       "GPU Block-cells(3)",
-                       "GPU Block-cells(4)"]
-    else:
-        datay2 = [[1, 2, 3], [4, 5, 6]]
-        datax = [123, 346, 789]
-        conf.legend = ["GPU Block-cells(1)",
-                       "GPU Block-cells(2)"]
-
-    # datay=map(list,)
-
-    # datay=datay2
-    datay = list(map(list, zip(*datay2)))  # short circuits at shortest nested list if table is jagged
-    # numpy_array = np.array(datay2)
-    # transpose = numpy_array.T
-    # datay = transpose.tolist()
-
-    print(datay)
-    print(datax)
-
-    # print(sns.__version__)
-    sns.set_style("whitegrid")
-
-    # sns.set(font_scale=2)
-    # sns.set_context("paper", rc={"font.size":8,"axes.titlesize":8,"axes.labelsize":5})
-    sns.set_context("paper", font_scale=1.25)
-
-    # data = pd.DataFrame(datay, datax)
-    data = pd.DataFrame(datay, datax, columns=legend)
-
-    fig = plt.figure()
-    ax = plt.subplot(111)
-
-    ax.set_xlabel(namex)
-    ax.set_ylabel(namey)
-    # ax.set_title(plot_title)
-
-    legend = True
-    if (legend == True):
-
-        print("WARNING: Increase plot window manually to take better screenshot")
-
-        sns.lineplot(data=data, palette="tab10", linewidth=2.5)
-
-        # ax.set_position([box.x0, box.y0 + box.height * 0.1,
-        #               box.width, box.height * 0.9])
-
-        # Legend under the plot
-        # box = ax.get_position()
-        # ax.set_position([box.x0, box.y0 + box.height * 0.1,
-        #             box.width, box.height * 0.75])
-        # ax.legend(bbox_to_anchor=(0.5, -0.05), loc='upper center',
-        #          labels=legend,ncol=4, mode="expand", borderaxespad=0.)
-        # fig.subplots_adjust(bottom=0.35)
-        # borderaxespad=1. to move down more the legend
-
-        # Legend up the plot (problem: hide title)
-        ax.set_title(plot_title, y=1.06)
-
-        ax.legend(loc='lower center', bbox_to_anchor=(0.5, 1),
-                  ncol=len(legend), labels=legend, frameon=True, shadow=False, borderaxespad=0.)
-
-        # ax.legend(loc='lower center', bbox_to_anchor=(0.5, 1),
-        #          ncol=len(legend), labels=legend,frameon=False, shadow=False, borderaxespad=0.)#fine
-
-        # ax.subplots_adjust(top=0.25) #not work
-        # fig.subplots_adjust(top=0.25)
-
-        # legend out of the plot at the right (problem: plot feels very small)
-        # sns.lineplot(data=data, palette="tab10", linewidth=2.5)
-        # box=ax.get_position()
-        # ax.set_position([box.x0, box.y0, box.width * 0.7, box.height])
-        # ax.legend(bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0,labels=legend)
-
-    else:
-        ax.set_title(plot_title)
-        sns.lineplot(data=data, palette="tab10", linewidth=2.5, legend=False)
-    plt.show()
-
-
-# rs = np.random.RandomState(365)
-# values = rs.randn(365, 4).cumsum(axis=0)
-# dates = pd.date_range("1 1 2016", periods=365, freq="D")
-# data = pd.DataFrame(values, dates, legend=["A", "B", "C", "D"])
-# data = data.rolling(7).mean()
-
-# plotsns()
 all_timesteps()

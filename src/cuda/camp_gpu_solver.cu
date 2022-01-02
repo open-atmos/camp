@@ -71,7 +71,6 @@ void solver_new_gpu_cu(SolverData *sd, int n_dep_var,
                        int n_state_var, int n_rxn,
                        int n_rxn_int_param, int n_rxn_float_param, int n_rxn_env_param,
                        int n_cells) {
-  //TODO: Select what % of data we want to compute on GPU simultaneously with CPU remaining %
   //Lengths
   ModelData *md = &(sd->model_data);
   md->state_size = n_state_var * n_cells * sizeof(double);
@@ -80,7 +79,6 @@ void solver_new_gpu_cu(SolverData *sd, int n_dep_var,
   md->rxn_env_data_size = n_rxn_env_param * n_cells * sizeof(double);
   md->rxn_env_data_idx_size = (n_rxn+1) * sizeof(int);
   md->map_state_deriv_size = n_dep_var * n_cells * sizeof(int);
-  md->small_data = 0;
 
   //Allocate streams array and update variables related to streams
   //md->md_id = n_solver_objects;
@@ -89,12 +87,6 @@ void solver_new_gpu_cu(SolverData *sd, int n_dep_var,
       //md->stream_gpu = (cudaStream_t *)malloc(n_streams * sizeof(cudaStream_t));
   //}
   //n_solver_objects++;
-
-  //Detect if we are working with few data values
-  //todo check if it's worth to maintain this case (we will use small_data?)
-  if (n_dep_var*n_cells < DATA_SIZE_LIMIT_OPT){
-    md->small_data = 0;//1;
-  }
 
   //Set working GPU: we have 4 gpu available on power9. as default, it should be assign to gpu 0
   int device=0;
@@ -148,17 +140,8 @@ void solver_new_gpu_cu(SolverData *sd, int n_dep_var,
 
   //HANDLE_ERROR(cudaMemcpy(md->int_pointer_gpu, int_pointer, rxn_int_length*sizeof(int), cudaMemcpyHostToDevice));
 
-  //GPU allocation few data on pinned memory
-  if(md->small_data){
-    //Notice auxiliar variables are created because we
-    // can't pin directly variables initialized before
-    cudaMallocHost((void**)&md->deriv_aux, md->deriv_size);
-  }
-  else{
-    md->deriv_aux = (realtype *)malloc(md->deriv_size);
-  }
+  md->deriv_aux = (realtype *)malloc(md->deriv_size);
 
-  //printf("small_data:%d\n", md->small_data);
   //printf("threads_per_block :%d\n", md->max_n_gpu_thread);
 
   //GPU create streams
@@ -260,7 +243,6 @@ void set_reverse_int_double_rxn(
       rxn_double[n_rxn*j + i_rxn] = rxn_float_data_aux[j];
     }
     //Reorder the rate indices
-    //Todo update on main code the rxn_env_data to read consecutively in cpu
     rxn_env_data_idx_aux[i_rxn] = rxn_env_idx[i_pos];
   }
 
@@ -387,7 +369,6 @@ void init_jac_gpu(SolverData *sd, double *J){
   ModelData *md = &(sd->model_data);
   ModelDataGPU *mGPU = &sd->mGPU;
 
-  //todo reduce allocations (use tmp pointers from cvode for j_tmp)
   md->jac_size = md->n_per_cell_solver_jac_elem * md->n_cells * sizeof(double);
   md->nnz_J_solver = SM_NNZ_S(md->J_solver);
   md->nrows_J_solver = SM_NP_S(md->J_solver);
@@ -438,10 +419,6 @@ void init_jac_gpu(SolverData *sd, double *J){
 
   jacobian_initialize_gpu(sd);
 
-  if(md->small_data){
-    cudaMallocHost((void**)&md->jac_aux, md->jac_size);
-  }
-
 }
 
 void set_jac_data_gpu(SolverData *sd, double *J){
@@ -491,26 +468,17 @@ void rxn_update_env_state_gpu(SolverData *sd){
   int n_blocks = ((n_threads + md->max_n_gpu_thread - 1) / md->max_n_gpu_thread);
   ModelDataGPU *mGPU = &sd->mGPU;
 
-  //Faster, use for few values
-  if (md->small_data){
-    //This method of passing them as a function parameter has a theoric maximum of 4kb of data
-    mGPU->rxn_env_data = rxn_env_data;
-    mGPU->env = env;
-  }
-  //Slower, use for large values
-  else{
-    //Async memcpy
-    //HANDLE_ERROR(cudaMemcpyAsync(md->rxn_env_data_gpu, rxn_env_data,
-    //        md->rxn_env_data_size, cudaMemcpyHostToDevice, md->stream_gpu[STREAM_RXN_ENV_GPU]));
-    //HANDLE_ERROR(cudaMemcpyAsync(md->env_gpu, env, md->env_size,
-    //        cudaMemcpyHostToDevice, md->stream_gpu[STREAM_ENV_GPU]));
+  //Async memcpy
+  //HANDLE_ERROR(cudaMemcpyAsync(md->rxn_env_data_gpu, rxn_env_data,
+  //        md->rxn_env_data_size, cudaMemcpyHostToDevice, md->stream_gpu[STREAM_RXN_ENV_GPU]));
+  //HANDLE_ERROR(cudaMemcpyAsync(md->env_gpu, env, md->env_size,
+  //        cudaMemcpyHostToDevice, md->stream_gpu[STREAM_ENV_GPU]));
+
+  HANDLE_ERROR(cudaMemcpy(mGPU->rxn_env_data, rxn_env_data, md->rxn_env_data_size, cudaMemcpyHostToDevice));
+  HANDLE_ERROR(cudaMemcpy(mGPU->env, env, md->env_size, cudaMemcpyHostToDevice));
+  HANDLE_ERROR(cudaMemcpy(mGPU->state, md->total_state, md->state_size, cudaMemcpyHostToDevice));
 
 
-    HANDLE_ERROR(cudaMemcpy(mGPU->rxn_env_data, rxn_env_data, md->rxn_env_data_size, cudaMemcpyHostToDevice));
-    HANDLE_ERROR(cudaMemcpy(mGPU->env, env, md->env_size, cudaMemcpyHostToDevice));
-    HANDLE_ERROR(cudaMemcpy(mGPU->state, md->total_state, md->state_size, cudaMemcpyHostToDevice));
-
-  }
 }
 
 __device__
@@ -1139,7 +1107,6 @@ int rxn_calc_deriv_gpu(SolverData *sd, N_Vector y, N_Vector deriv, double time_s
   double *deriv_data = N_VGetArrayPointer(deriv);
   int n_cells = md->n_cells;
   int n_kernels = 1; // Divide load into multiple kernel calls
-  //todo n_kernels case division left residual, an extra kernel computes remain residual
   int n_per_cell_dep_var = md->n_per_cell_dep_var;
   int total_threads = n_per_cell_dep_var * n_cells/n_kernels;
   int n_shr_empty = md->max_n_gpu_thread%n_per_cell_dep_var;
@@ -1152,164 +1119,104 @@ int rxn_calc_deriv_gpu(SolverData *sd, N_Vector y, N_Vector deriv, double time_s
   double threshhold = -SMALL;
   int flag = CAMP_SOLVER_SUCCESS; //0
 
-#ifndef DERIV_CPU_ON_GPU
+  if(sd->use_f_cpu==1){
 
-  //Transfer cv_ftemp() not needed because mGPU->dftemp=md->deriv_data_gpu;
-  //cudaMemcpy(cv_ftemp_data,mGPU->dftemp,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
+    HANDLE_ERROR(cudaMemcpy(mGPU->deriv_data, deriv_data, md->deriv_size, cudaMemcpyHostToDevice));
+    HANDLE_ERROR(cudaMemcpy(mGPU->state, md->total_state, md->state_size, cudaMemcpyHostToDevice));
 
-  HANDLE_ERROR(cudaMemcpy(mGPU->deriv_data, deriv_data, md->deriv_size, cudaMemcpyHostToDevice));
-  HANDLE_ERROR(cudaMemcpy(mGPU->state, md->total_state, md->state_size, cudaMemcpyHostToDevice));
-
-#else
+  }else{
 
 #ifdef DEBUG_rxn_calc_deriv_gpu
 
-  printf("rxn_calc_deriv_gpu start\n");
+    printf("rxn_calc_deriv_gpu start\n");
 
 #endif
 
-  if (camp_solver_check_model_state_gpu(y, sd, -SMALL, TINY) != CAMP_SOLVER_SUCCESS)
-    return 1;
+    if (camp_solver_check_model_state_gpu(y, sd, -SMALL, TINY) != CAMP_SOLVER_SUCCESS)
+      return 1;
 
- //debug
- /*
-  if(sd->counterDerivGPU<=0){
-    printf("f_gpu start total_state [(id),conc], n_state_var %d, n_cells %d\n", md->n_per_cell_state_var, n_cells);
-    printf("n_deriv %d\n", md->n_per_cell_dep_var);
-    for (int i = 0; i < md->n_per_cell_state_var*n_cells; i++) {
-      printf("(%d) %-le \n",i+1, md->total_state[i]);
+   //debug
+   /*
+    if(sd->counterDerivGPU<=0){
+      printf("f_gpu start total_state [(id),conc], n_state_var %d, n_cells %d\n", md->n_per_cell_state_var, n_cells);
+      printf("n_deriv %d\n", md->n_per_cell_dep_var);
+      for (int i = 0; i < md->n_per_cell_state_var*n_cells; i++) {
+        printf("(%d) %-le \n",i+1, md->total_state[i]);
+      }
     }
-  }
-  */
+    */
 
 #ifdef BASIC_CALC_DERIV
   //Reset deriv gpu
   //check if cudamemset work fine with doubles
-  HANDLE_ERROR(cudaMemset(md->deriv_data_gpu, 0.0, md->deriv_size));
+    HANDLE_ERROR(cudaMemset(md->deriv_data_gpu, 0.0, md->deriv_size));
 #endif
 
 #ifdef CAMP_DEBUG_GPU
   //timeDerivSend += (clock() - t1);
   //clock_t t2 = clock();
 
-  cudaEventRecord(md->startDerivKernel);
+    cudaEventRecord(md->startDerivKernel);
 
 #endif
 
 #ifdef AEROS_CPU
 
-  update_aero_contrib_gpu(sd);
-
-  //printf("hola");
+    update_aero_contrib_gpu(sd);
 
 #endif
 
 #ifdef DEBUG_solveDerivative_J_DERIV_IN_CPU
 
-/*
-  if(sd->counterDerivGPU<=1 ){
-    printf("f_gpu start J_TMP [(id),conc], n_state_var %d, n_cells %d\n", md->n_per_cell_state_var, n_cells);
-    int size_j = NV_LENGTH_S(deriv);
-    printf("length_deriv %d \n", size_j);
-    for (int i = 0; i < 1; i++) {//n_cells
-      printf("cell %d \n", i);
-      for (int j = 0; j < size_j; j++) {  // NV_LENGTH_S(deriv)
-        printf("(%d) %-le ", j + 1, NV_DATA_S(md->J_tmp)[j+i*size_j]);
-      }
-      printf("\n");
-    }
-  }*/
-
-  HANDLE_ERROR(cudaMemcpy(mGPU->J_tmp, J_tmp, md->deriv_size, cudaMemcpyHostToDevice));
+    HANDLE_ERROR(cudaMemcpy(mGPU->J_tmp, J_tmp, md->deriv_size, cudaMemcpyHostToDevice));
 
 #endif
 
   //Loop to test multiple kernel executions
-  for (int i_kernel=0; i_kernel<n_kernels; i_kernel++){
-    //cudaDeviceSynchronize();
-    //solveDerivative << < (n_blocks), threads_block >> >(
-    cudaGlobalf << < (n_blocks), threads_block >> >(
+    for (int i_kernel=0; i_kernel<n_kernels; i_kernel++){
+      //cudaDeviceSynchronize();
+      //solveDerivative << < (n_blocks), threads_block >> >(
+      cudaGlobalf << < (n_blocks), threads_block >> >(
 #ifdef CAMP_DEBUG_GPU
-    sd->counterDerivGPU,
+     sd->counterDerivGPU,
 #endif
-    //update_state
-    threshhold, replacement_value, &flag,
-     //f_gpu
-    time_step, md->n_per_cell_dep_var,
-     md->n_per_cell_state_var,n_cells,
-     i_kernel, threads_block,n_shr_empty, mGPU->dcv_y,
-     sd->mGPU
-     );
-  }
-
-  if(flag==CAMP_SOLVER_FAIL)
-    return flag;
-
-#ifdef CAMP_DEBUG_GPU
-  /*cudaDeviceSynchronize();
-  timeDerivKernel += (clock() - t2);
-  t3 = clock();*/
-
-
-  cudaEventRecord(md->stopDerivKernel);
-  cudaEventSynchronize(md->stopDerivKernel);
-  float msDerivKernel = 0.0;
-  cudaEventElapsedTime(&msDerivKernel, md->startDerivKernel, md->stopDerivKernel);
-  md->timeDerivKernel+= msDerivKernel;
-
-
-#endif
-
-  //Use pinned memory for few values
-  if (md->small_data){
-
-    HANDLE_ERROR(cudaMemcpy(md->deriv_aux, mGPU->deriv_data, md->deriv_size, cudaMemcpyDeviceToHost));
-
-    memcpy(deriv_data, md->deriv_aux, md->deriv_size);
-  }
-  else {
-    //Async
-    //HANDLE_ERROR(cudaMemcpyAsync(md->deriv_aux, md->deriv_data_gpu,
-    //md->deriv_size, cudaMemcpyDeviceToHost, md->stream_gpu[STREAM_DERIV_GPU]));
-
-    //Sync
-    //HANDLE_ERROR(cudaMemcpy(md->deriv_aux, md->deriv_data_gpu, md->deriv_size, cudaMemcpyDeviceToHost));
-
-    HANDLE_ERROR(cudaMemcpy(deriv_data, mGPU->deriv_data, md->deriv_size, cudaMemcpyDeviceToHost));
-
-
-    //HANDLE_ERROR(cudaMemcpy(mGPU->deriv_data, deriv_data, md->deriv_size, cudaMemcpyHostToDevice));
-    //HANDLE_ERROR(cudaMemcpy(mGPU->dcv_y, deriv_data, md->deriv_size, cudaMemcpyHostToDevice));
-    //HANDLE_ERROR(cudaMemcpy(mGPU->state, md->total_state, md->state_size, cudaMemcpyHostToDevice));
-
-
-  }
-
-  //cudaDeviceSynchronize();
-
- //debug
- /*
-  if(sd->counterDerivGPU<=0 ){
-    printf("f_gpu end deriv [(id),conc], n_state_var %d, n_cells %d\n", md->n_per_cell_state_var, n_cells);
-    int size_j = NV_LENGTH_S(deriv);
-    printf("length_deriv %d \n", size_j);
-    for (int i = 0; i < 1; i++) {//n_cells
-      printf("cell %d \n", i);
-      for (int j = 0; j < size_j; j++) {  // NV_LENGTH_S(deriv)
-        printf("(%d) %-le ", j + 1, NV_DATA_S(deriv)[j+i*size_j]);
-      }
-      printf("\n");
+      //update_state
+      threshhold, replacement_value, &flag,
+       //f_gpu
+      time_step, md->n_per_cell_dep_var,
+       md->n_per_cell_state_var,n_cells,
+       i_kernel, threads_block,n_shr_empty, mGPU->dcv_y,
+       sd->mGPU
+       );
     }
-  }
-*/
+
+    if(flag==CAMP_SOLVER_FAIL)
+      return flag;
 
 #ifdef CAMP_DEBUG_GPU
-  /*timeDerivReceive += (clock() - t3);
-  timeDeriv += (clock() - t1);
-  t3 = clock();*/
-#endif
+
+    cudaEventRecord(md->stopDerivKernel);
+    cudaEventSynchronize(md->stopDerivKernel);
+    float msDerivKernel = 0.0;
+    cudaEventElapsedTime(&msDerivKernel, md->startDerivKernel, md->stopDerivKernel);
+   md->timeDerivKernel+= msDerivKernel;
 
 #endif
+
+      //Async
+      //HANDLE_ERROR(cudaMemcpyAsync(md->deriv_aux, md->deriv_data_gpu,
+      //md->deriv_size, cudaMemcpyDeviceToHost, md->stream_gpu[STREAM_DERIV_GPU]));
+
+      //Sync
+      //HANDLE_ERROR(cudaMemcpy(md->deriv_aux, md->deriv_data_gpu, md->deriv_size, cudaMemcpyDeviceToHost));
+
+      HANDLE_ERROR(cudaMemcpy(deriv_data, mGPU->deriv_data, md->deriv_size, cudaMemcpyDeviceToHost));
+
+      //HANDLE_ERROR(cudaMemcpy(mGPU->deriv_data, deriv_data, md->deriv_size, cudaMemcpyHostToDevice));
+      //HANDLE_ERROR(cudaMemcpy(mGPU->dcv_y, deriv_data, md->deriv_size, cudaMemcpyHostToDevice));
+      //HANDLE_ERROR(cudaMemcpy(mGPU->state, md->total_state, md->state_size, cudaMemcpyHostToDevice));
+
+  }
 
   return 0;
 }
@@ -1345,13 +1252,9 @@ void rxn_fusion_deriv_gpu(ModelData *md, N_Vector deriv) {
   //HANDLE_ERROR(cudaMemsetAsync(md->deriv_data_gpu, 0.0,
   //        md->deriv_size, md->stream_gpu[STREAM_DERIV_GPU]));
 
-  if (md->small_data){
-  }
-  else {
-    for (int i = 0; i < NV_LENGTH_S(deriv); i++) {  // NV_LENGTH_S(deriv)
-      //Add to deriv the auxiliar contributions from gpu
-      deriv_data[i] += md->deriv_aux[i];
-    }
+  for (int i = 0; i < NV_LENGTH_S(deriv); i++) {  // NV_LENGTH_S(deriv)
+    //Add to deriv the auxiliar contributions from gpu
+    deriv_data[i] += md->deriv_aux[i];
   }
 
 }
@@ -1503,8 +1406,6 @@ __device__ void cudaDevicecalc_Jac0(
 
 #ifdef DEV_MULTICELLSGPU
 
-    //todo not working
-
     jacBlock.num_elem[0] = jac->num_elem[0]*(blockDim.x/deriv_length_cell);
 
 #else
@@ -1614,7 +1515,6 @@ __device__ void cudaDevicecalc_Jac0(
 
 #ifdef DEV_REMOVE_threadIdx0
 
-    //todo use diA and djA pointers to better memory access
     JacMap *jac_map = md->jac_map;
 
     int nnz = md->n_mapped_values[0];
@@ -1755,7 +1655,6 @@ void cudaDeviceJac0(
 
 
 #ifdef DEV_RESET_JAC_GPU_TO_INIT
-  //todo ensure dont needed
   SM_NNZ_S(J) = SM_NNZ_S(md->J_init);
   for (int i = 0; i <= SM_NP_S(J); i++) {
     (SM_INDEXPTRS_S(J))[i] = (SM_INDEXPTRS_S(md->J_init))[i];
@@ -1859,7 +1758,6 @@ int rxn_calc_jac_gpu(SolverData *sd, SUNMatrix J, double time_step, N_Vector der
   double *deriv_data = N_VGetArrayPointer(deriv);
   int n_cells = md->n_cells;
   int n_kernels = 1; // Divide load into multiple kernel calls
-  //todo n_kernels case division left residual, an extra kernel computes remain residual
 #ifdef DEV_MULTICELLSGPU
   int total_threads = md->n_per_cell_dep_var * n_cells/n_kernels;
   int n_shr_empty = md->max_n_gpu_thread%md->n_per_cell_dep_var;
@@ -2000,16 +1898,11 @@ void free_gpu_cu(SolverData *sd) {
   HANDLE_ERROR(cudaFree(mGPU->deriv_data));
   //HANDLE_ERROR(cudaFree(J_solver_gpu));
 
-  if(md->small_data){
-  }
-  else{
-    free(md->deriv_aux);
-    HANDLE_ERROR(cudaFree(mGPU->state));
-    HANDLE_ERROR(cudaFree(mGPU->env));
-    HANDLE_ERROR(cudaFree(mGPU->rxn_env_data));
-    HANDLE_ERROR(cudaFree(mGPU->rxn_env_data_idx));
-
-  }
+  free(md->deriv_aux);
+  HANDLE_ERROR(cudaFree(mGPU->state));
+  HANDLE_ERROR(cudaFree(mGPU->env));
+  HANDLE_ERROR(cudaFree(mGPU->rxn_env_data));
+  HANDLE_ERROR(cudaFree(mGPU->rxn_env_data_idx));
 
 }
 

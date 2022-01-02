@@ -417,17 +417,18 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
 
 #endif
 
-
-  // todo optimize, use for only rank 0 or debug flag
+#ifdef CAMP_SOLVER_SPEC_NAMES
   sd->spec_names = (char **)malloc(sizeof(char *) * n_state_var);
+#endif
 
   // Return a pointer to the new SolverData object
   return (void *)sd;
 }
 
+#ifdef CAMP_SOLVER_SPEC_NAMES
+
 void solver_set_spec_name(void *solver_data, char *spec_name,
                           int size_spec_name, int i) {
-// todo check if exists a name (ranks without a spec name crashes)
 #ifdef CAMP_USE_MPI
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);  // ok its not comm_world :/
@@ -450,6 +451,8 @@ void solver_set_spec_name(void *solver_data, char *spec_name,
   }
 #endif
 }
+
+#endif
 
 /** \brief Solver initialization
  *
@@ -512,7 +515,7 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
   check_flag_fail(&flag, "CVodeSVtolerances", 1);
 
   // Add a pointer in the model data to the absolute tolerances for use during
-  // solving. TODO find a better way to do this
+  // solving.
   sd->model_data.abs_tol = abs_tol;
 
   // Set the maximum number of iterations
@@ -523,7 +526,7 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
   flag = CVodeSetMaxConvFails(sd->cvode_mem, max_conv_fails);
   check_flag_fail(&flag, "CVodeSetMaxConvFails", 1);
 
-  // Set the maximum number of error test failures (TODO make separate input?)
+  // Set the maximum number of error test failures
   flag = CVodeSetMaxErrTestFails(sd->cvode_mem, max_conv_fails);
   check_flag_fail(&flag, "CVodeSetMaxErrTestFails", 1);
 
@@ -833,15 +836,13 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
     if(sd->use_cpu==1){
       flag = CVode(sd->cvode_mem, (realtype)t_final, sd->y, &t_rt, CV_NORMAL);
     }else{
-
-#ifndef DERIV_CPU_ON_GPU
-      flag = CVode_gpu2(sd->cvode_mem, (realtype)t_final, sd->y,
-            &t_rt, CV_NORMAL, sd);
-#else
+      if(sd->use_f_cpu==1){
+        flag = CVode_gpu2(sd->cvode_mem, (realtype)t_final, sd->y,
+             &t_rt, CV_NORMAL, sd);
+      }else{
       flag = cudaCVode(sd->cvode_mem, (realtype)t_final, sd->y,
-            &t_rt, CV_NORMAL, sd);
-#endif
-
+          &t_rt, CV_NORMAL, sd);
+      }
     }
 
 #else
@@ -1233,90 +1234,84 @@ int f_gpu(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
   realtype time_step;
   int flag=0;
 
-#ifndef DERIV_CPU_ON_GPU
+  if(sd->use_f_cpu==1){
 
-  flag = f(t, y, deriv, solver_data);
+    flag = f(t, y, deriv, solver_data);
 
-  rxn_calc_deriv_gpu(sd, y, deriv, (double)time_step);
+    rxn_calc_deriv_gpu(sd, y, deriv, (double)time_step);
 
-  return flag;
+  }else{
 
-  //Transfer cv_ftemp() not needed because mGPU->dftemp=md->deriv_data_gpu;
-  //cudaMemcpy(cv_ftemp_data,mGPU->dftemp,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
+    // Get the current integrator time step (s)
+    CVodeGetCurrentStep(sd->cvode_mem, &time_step);
 
-#else
+    // On the first call to f(), the time step hasn't been set yet, so use the
+    // default value
+    time_step = time_step > ZERO ? time_step : sd->init_time_step;
+    //time_step = t;
 
-  // Get the current integrator time step (s)
-  CVodeGetCurrentStep(sd->cvode_mem, &time_step);
+    // Update the state array with the current dependent variable values.
+    // Signal a recoverable error (positive return value) for negative
+    // concentrations.
+    //if (camp_solver_check_model_state_gpu(y, sd, -SMALL, TINY) != CAMP_SOLVER_SUCCESS)
+    //  return 1;
 
-  // On the first call to f(), the time step hasn't been set yet, so use the
-  // default value
-  time_step = time_step > ZERO ? time_step : sd->init_time_step;
-  //time_step = t;
+    //int flag=0;
+    //flag = f(t, y, deriv, solver_data);
 
-  // Update the state array with the current dependent variable values.
-  // Signal a recoverable error (positive return value) for negative
-  // concentrations.
-  //if (camp_solver_check_model_state_gpu(y, sd, -SMALL, TINY) != CAMP_SOLVER_SUCCESS)
-  //  return 1;
+    //rxn_calc_deriv_gpu(sd, y, deriv, (double)time_step);
 
-  //int flag=0;
-  //flag = f(t, y, deriv, solver_data);
-
-  //rxn_calc_deriv_gpu(sd, y, deriv, (double)time_step);
-
-  //return flag;
+    //return flag;
 
 #ifdef AEROS_CPU
 
-  //todo fix not working (search another way to treat monarhc_binned atm, like computing all deriv in CPU
-  //if it the case
+    //NOT WORKING
 
-  // Get the grid cell dimensions
-  int n_cells = md->n_cells;
-  int n_state_var = md->n_per_cell_state_var;
-  int n_dep_var = md->n_per_cell_dep_var;
+    // Get the grid cell dimensions
+    int n_cells = md->n_cells;
+    int n_state_var = md->n_per_cell_state_var;
+    int n_dep_var = md->n_per_cell_dep_var;
 
-    // Loop through the grid cells and update the derivative array
-  for (int i_cell = 0; i_cell < n_cells; ++i_cell) {
-    // Set the grid cell state pointers
-    md->grid_cell_id = i_cell;
-    md->grid_cell_state = &(md->total_state[i_cell * n_state_var]);
-    md->grid_cell_env = &(md->total_env[i_cell * CAMP_NUM_ENV_PARAM_]);
-    md->grid_cell_rxn_env_data =
-        &(md->rxn_env_data[i_cell * md->n_rxn_env_data]);
-    md->grid_cell_aero_rep_env_data =
-        &(md->aero_rep_env_data[i_cell * md->n_aero_rep_env_data]);
-    md->grid_cell_sub_model_env_data =
-        &(md->sub_model_env_data[i_cell * md->n_sub_model_env_data]);
+      // Loop through the grid cells and update the derivative array
+    for (int i_cell = 0; i_cell < n_cells; ++i_cell) {
+      // Set the grid cell state pointers
+      md->grid_cell_id = i_cell;
+      md->grid_cell_state = &(md->total_state[i_cell * n_state_var]);
+      md->grid_cell_env = &(md->total_env[i_cell * CAMP_NUM_ENV_PARAM_]);
+      md->grid_cell_rxn_env_data =
+          &(md->rxn_env_data[i_cell * md->n_rxn_env_data]);
+      md->grid_cell_aero_rep_env_data =
+          &(md->aero_rep_env_data[i_cell * md->n_aero_rep_env_data]);
+      md->grid_cell_sub_model_env_data =
+          &(md->sub_model_env_data[i_cell * md->n_sub_model_env_data]);
 
-    // Update the aerosol representations
-    aero_rep_update_state(md);
+      // Update the aerosol representations
+      aero_rep_update_state(md);
 
-    // Run the sub models
-    sub_model_calculate(md);
+      // Run the sub models
+      sub_model_calculate(md);
 
-    // Reset the TimeDerivative
-    time_derivative_reset(sd->time_deriv);
+      // Reset the TimeDerivative
+      time_derivative_reset(sd->time_deriv);
 
-    // Calculate the time derivative f(t,y)
-    rxn_calc_deriv_aeros(md, sd->time_deriv, (double)time_step);
+      // Calculate the time derivative f(t,y)
+      rxn_calc_deriv_aeros(md, sd->time_deriv, (double)time_step);
 
-  }
+    }
 
 #endif
 
 #ifdef DEBUG_solveDerivative_J_DERIV_IN_CPU
 
-  N_VLinearSum(1.0, y, -1.0, md->J_state, md->J_tmp);
-  SUNMatMatvec(md->J_solver, md->J_tmp, md->J_tmp2);
-  N_VLinearSum(1.0, md->J_deriv, 1.0, md->J_tmp2, md->J_tmp);
+    N_VLinearSum(1.0, y, -1.0, md->J_state, md->J_tmp);
+    SUNMatMatvec(md->J_solver, md->J_tmp, md->J_tmp2);
+    N_VLinearSum(1.0, md->J_deriv, 1.0, md->J_tmp2, md->J_tmp);
 
 #endif
 
-  flag = rxn_calc_deriv_gpu(sd, y, deriv, (double)time_step);
+    flag = rxn_calc_deriv_gpu(sd, y, deriv, (double)time_step);
 
-#endif
+    }
 
 #ifdef CHECK_F_GPU_WITH_CPU
 
@@ -1704,7 +1699,6 @@ int Jac(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_data,
   double *J_rxn_data = SM_DATA_S(md->J_rxn);
 
   // !!!! Do not use tmp2 - it is the same as y !!!! //
-  // FIXME Find out why cvode is sending tmp2 as y
 
 #ifdef CAMP_DEBUG_JAC_CPU
   int counterPrintJac=1;
@@ -1725,7 +1719,6 @@ int Jac(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_data,
   }
   sd->use_deriv_est = 1;
 
-    //todo check duplicated call to update_model_state (previous f funct already updates the state)
   // Update the state array with the current dependent variable values
   // Signal a recoverable error (positive return value) for negative
   // concentrations.
@@ -1736,8 +1729,6 @@ int Jac(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_data,
   CVodeGetCurrentStep(sd->cvode_mem, &time_step);
 
   // Reset the primary Jacobian
-  /// \todo #83 Figure out how to stop CVODE from resizing the Jacobian
-  ///       during solving
   SM_NNZ_S(J) = SM_NNZ_S(md->J_init);
   for (int i = 0; i <= SM_NP_S(J); i++) {
     (SM_INDEXPTRS_S(J))[i] = (SM_INDEXPTRS_S(md->J_init))[i];
@@ -2518,9 +2509,9 @@ SUNMatrix get_jac_init(SolverData *sd) {
   // camp_debug_print_jac_struct2(sd, sd->model_data.J_rxn, "RXN struct"); //Fine
   // camp_debug_print_jac_rel(sd, sd->model_data.J_rxn, "RXN relations"); //Fine
   // but strange reactants affecting reactants camp_debug_print_jac_rel(sd, M, "M
-  // relations"); //todo miss jacmap indices to print correct names
+  // relations");
 
-#ifdef CAMP_DEBUG2_GPU
+#ifdef CAMP_SOLVER_SPEC_NAMES
 #ifdef CAMP_USE_MPI
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -2793,8 +2784,6 @@ void solver_free(void *solver_data) {
   }
 
   //fclose(sd->file);
-
-  //todo test
   //free_gpu_cu(sd);
 
 #endif

@@ -248,9 +248,6 @@ typedef struct {
   size_t rxn_env_data_size;
   size_t rxn_env_data_idx_size;
   size_t map_state_deriv_size;
-  int small_data;
-  //int model_data_id;  // Id of the modelData object
-  // cudaStream_t *stream_gpu;
 
 #ifdef CAMP_DEBUG_GPU
 
@@ -299,7 +296,8 @@ typedef struct {
       max_loss_precision;  // Maximum loss of precision during last call to f()
 #endif
 
-  int use_cpu; //too try bool instead of int
+  int use_cpu;
+  int use_f_cpu;
 
 #ifdef CAMP_DEBUG_GPU
   int counterDerivTotal;

@@ -804,13 +804,14 @@ contains
     end do
     sub_model => null()
 
-    !Set spec names
-    !todo include gas and aero names to send all the state variable
+
+
+#ifdef CAMP_SOLVER_SPEC_NAMES
+    ! Set spec names
+    !todo fix mpi==0 case
+    !include gas and aero names to send all the state variable
     !do i=1,int(size(var_type_c), kind=c_int) ! Size of the state variable
     !write (*,*) "size(spec_names)",size(spec_names)
-
-#ifdef CAMP_DEBUG2_GPU
-    !todo fix mpi==0 case
     do i=1,size(spec_names)
     !do i=1,40 !approximate gas size (without crashes)
       spec_name = spec_names(i)%string
@@ -852,8 +853,6 @@ contains
     class(sub_model_update_data_t), intent(inout) :: update_data
     integer, intent(in) :: n_cells
     integer :: i
-
-    !todo check loop all cells
 
     !call sub_model_update_data( &
     !        update_data%get_cell_id()-1,     & ! Grid cell to update

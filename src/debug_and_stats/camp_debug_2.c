@@ -172,19 +172,15 @@ void print_current_directory(){
 
 void get_camp_config_variables(SolverData *sd){
 
-  //printf("get_camp_config_variables\n");
-
   FILE *fp;
   char buff[255];
 
-  //print_current_directory();
-
   fp = fopen("config_variables_c_solver.txt", "r");
   if (fp == NULL){
-    printf("Could not open file get_camp_config_variables");
+    printf("WARNING: Could not open file get_camp_config_variables");
   }
-  fscanf(fp, "%s", buff);
 
+  fscanf(fp, "%s", buff);
   if(strstr(buff,"USE_CPU=ON")!=NULL){
     sd->use_cpu=1;
   }
@@ -192,7 +188,13 @@ void get_camp_config_variables(SolverData *sd){
     sd->use_cpu=0;
   }
 
-  //printf("get_camp_config_variables\n");
+  fscanf(fp, "%s", buff);
+  if(strstr(buff,"USE_F_CPU=ON")!=NULL){
+    sd->use_f_cpu=1;
+  }
+  else{
+    sd->use_f_cpu=0;
+  }
 
   fclose(fp);
 }

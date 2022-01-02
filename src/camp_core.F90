@@ -86,7 +86,6 @@
 !! Incorporating \ref camp_chem "CAMP" into another host
 !! model can be done in the following steps:
 !!
-!! TODO: Finish
 !!
 
 !> The camp_core_t structure and associated subroutines.
@@ -781,7 +780,6 @@ contains
     this%core_is_initialized = .true.
 
     ! Set the initial state values
-    !todo init_state depends on n_cells, but we dont have same n_cells for all ranks...
     allocate(this%init_state_cell(this%size_state_per_cell))
     allocate(this%init_state(this%size_state_per_cell * this%n_cells))
 
@@ -1167,7 +1165,7 @@ contains
     call assert_msg(662920365, .not.this%solver_is_initialized, &
             "Attempting to initialize the solver twice.")
 
-#ifdef CAMP_DEBUG2_GPU
+#ifdef CAMP_SOLVER_SPEC_NAMES
     spec_names = this%unique_names()
 #endif
 
