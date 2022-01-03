@@ -326,7 +326,7 @@ def all_timesteps():
 
     conf.diffCellsL = []
     conf.diffCellsL.append("Realistic")
-    # conf.diffCellsL.append("Ideal")
+    #conf.diffCellsL.append("Ideal")
 
     conf.profileCuda = False
     # conf.profileCuda = True
@@ -337,7 +337,7 @@ def all_timesteps():
     conf.mpiProcessesList = [1]
     # conf.mpiProcessesList =  [40,1]
 
-    conf.cells = [100]
+    conf.cells = [1]
     # conf.cells = [5,10]
     # conf.cells = [100,500,1000]
     # conf.cells = [1,5,10,50,100]
@@ -346,17 +346,17 @@ def all_timesteps():
     conf.timeSteps = 1
     conf.timeStepsDt = 2
 
-    #conf.caseBase = "CPU One-cell"
-    conf.caseBase = "CPU Multi-cells"
+    conf.caseBase = "CPU One-cell"
+    #conf.caseBase = "CPU Multi-cells"
     # conf.caseBase="GPU Multi-cells"
     # conf.caseBase="GPU Block-cellsN"
     # conf.caseBase="GPU Block-cells1"
 
     conf.casesOptim = []
-    conf.casesOptim.append("GPU Block-cells1")
+    #conf.casesOptim.append("GPU Block-cells1")
     # conf.casesOptim.append("GPU Block-cellsN")
     # conf.casesOptim.append("GPU Multi-cells")
-    # conf.casesOptim.append("GPU One-cell")
+    conf.casesOptim.append("GPU One-cell")
     # conf.casesOptim.append("CPU Multi-cells")
 
     # conf.plotYKey = "Speedup timeCVode"
@@ -387,6 +387,7 @@ def all_timesteps():
     jsonFile = open("monarch_box_binned/cb05_abs_tol.json")
     jsonData = json.load(jsonFile)
     conf.MAPETol = jsonData["camp-data"][0]["value"] # Default: 1.0E-4
+    jsonData.clear()
 
     if not os.path.exists('out'):
         os.makedirs('out')

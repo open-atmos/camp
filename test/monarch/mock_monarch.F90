@@ -688,7 +688,7 @@ contains
 
         press_end = 10000.
         press_range = press_end-press_init
-        if((ncells_mpi).eq.0) then
+        if((ncells_mpi).eq.1) then
           press_slide = 0.
         else
           press_slide = press_range/(ncells_mpi-1)
