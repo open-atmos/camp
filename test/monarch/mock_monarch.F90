@@ -670,7 +670,7 @@ contains
 
       water_conc(:,:,:,WATER_VAPOR_ID) = 0.
       temp_init = 290.016
-      press_init = 100000. !Should be the same than camp_monarch_interface
+      press_init = 100000. !Should be equal to camp_monarch_interface
 
       if(DIFF_CELLS.eq."ON") then
 
