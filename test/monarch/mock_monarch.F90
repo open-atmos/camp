@@ -2037,10 +2037,13 @@ contains
 
       do i=1, ncounters
         write(STATSOUT_FILE_UNIT2, "(A)", advance="no") ","
-        write(STATSOUT_FILE_UNIT2, "(I6)", advance="no") &
+
+
+        write(STATSOUT_FILE_UNIT2, "(I10)", advance="no") &
                 counters_max(i)-counters(i)
+
         !print*,"counters_max(i),counters(i)",&
-        !        counters_max(i),counters(i), counters_max(i)-counters(i)
+        !       counters_max(i),counters(i), counters_max(i)-counters(i)
         counters(i)=counters_max(i)
       end do
 

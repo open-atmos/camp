@@ -313,7 +313,7 @@ def plot_cases(conf):
 
     print(namey, ":", datay)
 
-    plot_functions.plot(namex, namey, datax, datay, conf.plotTitle, conf.legend, conf.savePlot)
+    #plot_functions.plot(namex, namey, datax, datay, conf.plotTitle, conf.legend, conf.savePlot)
 
 
 def all_timesteps():
@@ -337,11 +337,11 @@ def all_timesteps():
     conf.mpiProcessesList = [1]
     # conf.mpiProcessesList =  [40,1]
 
-    #conf.cells = [100]
+    conf.cells = [10]
     # conf.cells = [5,10]
     # conf.cells = [100,500,1000]
     # conf.cells = [1,5,10,50,100]
-    conf.cells = [100,500,1000,5000,10000]
+    #conf.cells = [100,500,1000,5000,10000]
 
     conf.timeSteps = 1
     conf.timeStepsDt = 2
@@ -354,9 +354,9 @@ def all_timesteps():
 
     conf.casesOptim = []
     conf.casesOptim.append("GPU Block-cells1")
-    conf.casesOptim.append("GPU Block-cellsN")
-    conf.casesOptim.append("GPU Multi-cells")
-    conf.casesOptim.append("GPU One-cell")
+    #conf.casesOptim.append("GPU Block-cellsN")
+    #conf.casesOptim.append("GPU Multi-cells")
+    #conf.casesOptim.append("GPU One-cell")
     # conf.casesOptim.append("CPU Multi-cells")
 
     # conf.plotYKey = "Speedup timeCVode"

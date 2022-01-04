@@ -558,11 +558,10 @@ contains
       if(DIFF_CELLS_EMI.eq."ON") then
 
         press_init = 100000.!Should be equal to mock_monarch
-        press_end = 10000.!10000.  85000.
+        press_end = 85000.!10000.  85000.
         press_range = press_end-press_init
 
         !print*,press_end,"-",press_init,"=",press_range,"rank:",camp_mpi_rank()
-        call camp_mpi_barrier(MPI_COMM_WORLD)
 
         do i=I_W, I_E
           do j=I_S, I_N
@@ -576,11 +575,11 @@ contains
               !print*,press_init,press_end,press_range,pressure(i,j,k),press_norm,camp_mpi_rank()
 
               if(press_norm.ge.0) then
-                do t=1,12
+                do t=1,12 !12 first hours
                   rate_emi(t,z+1)=press_norm
                 end do
               else
-                do t=1,12 !12 first hours
+                do t=1,12
                   rate_emi(t,z+1)=0.0
                 end do
               end if
@@ -605,7 +604,7 @@ contains
 
       end if
 
-      !call camp_mpi_barrier(MPI_COMM_WORLD)
+      call camp_mpi_barrier(MPI_COMM_WORLD)
 
       i_hour = int(curr_time/60)+1
       if(mod(int(curr_time),60).eq.0) then

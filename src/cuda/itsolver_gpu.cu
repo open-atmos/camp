@@ -316,7 +316,7 @@ void cudaDeviceswapCSC_CSR(int n_row, int n_col, int* Ap, int* Aj, double* Ax, i
     }
 #endif
 
-    //TODO efficient cumsum http://www.eecs.umich.edu/courses/eecs570/hw/parprefix.pdf
+    //efficient cumsum http://www.eecs.umich.edu/courses/eecs570/hw/parprefix.pdf
     /*int offset = 1;
     for (int d = n_col>>1; d > 0; d >>= 1) // build sum in place up the tree
     {
