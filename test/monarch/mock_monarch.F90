@@ -386,7 +386,6 @@ program mock_monarch
   !call camp_mpi_barrier(MPI_COMM_WORLD)
   !print*,"monarch_interface_t end MPI RANK",camp_mpi_rank()
 
-
   if(export_results_all_cells.eq.1) then
     call init_file_results_all_cells(camp_interface, output_file_prefix)
   end if
@@ -999,16 +998,13 @@ contains
       !if (camp_mpi_rank().eq.1) then
       !camp_interface%base_rates(i_photo_rxn) = camp_interface%base_rates(i_photo_rxn)!+0.01
       !camp_interface%base_rates(i_photo_rxn) = 0.01
-      !write(*,*), "rates",i_photo_rxn, camp_interface%base_rates(i_photo_rxn)
+      !write(*,*) "rates",i_photo_rxn, camp_interface%base_rates(i_photo_rxn)
       !end if
-      !write(*,*), "rates",i_photo_rxn, camp_interface%base_rates(i_photo_rxn)
-
+      !write(*,*) "rates",i_photo_rxn, camp_interface%base_rates(i_photo_rxn)
 
       !camp_interface%base_rates(i_photo_rxn)=0.
       call camp_interface%photo_rxns(i_photo_rxn)%set_rate(real(camp_interface%base_rates(i_photo_rxn), kind=dp))
       !call camp_interface%photo_rxns(i_photo_rxn)%set_rate(real(0.0, kind=dp)) !works
-
-      call camp_interface%camp_core%update_data(camp_interface%photo_rxns(i_photo_rxn),z)
 
       !print*,"id photo_rate", camp_interface%base_rates(i_photo_rxn)
     end do
@@ -1130,8 +1126,6 @@ contains
       !camp_interface%base_rates(i_photo_rxn)=0.
       call camp_interface%photo_rxns(i_photo_rxn)%set_rate(real(camp_interface%base_rates(i_photo_rxn), kind=dp))
       !call camp_interface%photo_rxns(i_photo_rxn)%set_rate(real(0.0, kind=dp)) !works
-
-      call camp_interface%camp_core%update_data(camp_interface%photo_rxns(i_photo_rxn))
 
       !print*,"id photo_rate", camp_interface%base_rates(i_photo_rxn)
     end do

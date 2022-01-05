@@ -854,16 +854,9 @@ contains
     integer, intent(in) :: n_cells
     integer :: i
 
-    !call sub_model_update_data( &
-    !        update_data%get_cell_id()-1,     & ! Grid cell to update
-    !        update_data%sub_model_solver_id, & ! Solver's sub model id
-    !        update_data%get_type(),          & ! Sub-model type to update
-    !        update_data%get_data(),          & ! Data needed to perform update
-    !        this%solver_c_ptr                & ! Pointer to solver data
-    !        )
     do i=1, n_cells
       call sub_model_update_data( &
-              i-1,     & ! Grid cell to update
+              update_data%get_cell_id()+i-2,      & ! Grid cell to update
               update_data%sub_model_solver_id, & ! Solver's sub model id
               update_data%get_type(),          & ! Sub-model type to update
               update_data%get_data(),          & ! Data needed to perform update
@@ -887,16 +880,9 @@ contains
 
     !TODO: Improve this to consider different update_rates (like monarch multicells case)
 
-    !call rxn_update_data( &
-    !        update_data%get_cell_id()-1,     & ! Grid cell to update
-    !        update_data%rxn_solver_id,       & ! Solver's reaction id
-    !        update_data%get_type(),          & ! Reaction type to update
-    !        update_data%get_data(),          & ! Data needed to perform update
-    !        this%solver_c_ptr                & ! Pointer to solver data
-    !        )
     do i=1, n_cells
       call rxn_update_data( &
-              i-1,     & ! Grid cell to update
+              update_data%get_cell_id()+i-2,      & ! Grid cell to update
               update_data%rxn_solver_id,       & ! Solver's reaction id
               update_data%get_type(),          & ! Reaction type to update
               update_data%get_data(),          & ! Data needed to perform update
@@ -919,16 +905,9 @@ contains
     integer, intent(in) :: n_cells
     integer :: i
 
-    !call aero_rep_update_data( &
-    !        update_data%get_cell_id()-1,     & ! Grid cell to update
-    !        update_data%aero_rep_solver_id,  & ! Solver's aero rep id
-    !        update_data%get_type(),          & ! Aerosol representation type
-    !        update_data%get_data(),          & ! Data needed to perform update
-    !        this%solver_c_ptr                & ! Pointer to solver data
-    !        )
     do i=1, n_cells
       call aero_rep_update_data( &
-              i-1,     & ! Grid cell to update
+              update_data%get_cell_id()+i-2,      & ! Grid cell to update
               update_data%aero_rep_solver_id,  & ! Solver's aero rep id
               update_data%get_type(),          & ! Aerosol representation type
               update_data%get_data(),          & ! Data needed to perform update

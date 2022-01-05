@@ -70,8 +70,9 @@ module camp_monarch_interface
     !> Interface input data
     type(property_t), pointer :: property_set
     type(rxn_update_data_photolysis_t), allocatable :: photo_rxns(:)
-    real(kind=dp), allocatable :: base_rates(:),specs_emi(:)
+    real(kind=dp), allocatable :: base_rates(:),specs_emi(:),offset_photo_rates_cells(:)
     integer :: n_photo_rxn
+    integer :: nrates_cells
     !> Solve multiple grid cells at once?
     logical :: solve_multiple_cells = .false.
     ! KPP reaction labels
@@ -153,6 +154,7 @@ contains
     type(string_t), allocatable :: unique_names(:)
     character(len=:), allocatable :: spec_name
     integer :: max_spec_name_size=512
+    real(kind=dp) :: base_rate
 
     class(aero_rep_data_t), pointer :: aero_rep
     integer(kind=i_kind) :: i_sect_om, i_sect_bc, i_sect_sulf, i_sect_opm, i, z
@@ -405,15 +407,30 @@ contains
 
     !call camp_mpi_barrier(MPI_COMM_WORLD)
 
+    !Options
+    this%nrates_cells = this%n_cells ! this%n_cells 1
+    allocate(this%offset_photo_rates_cells(this%nrates_cells))
+    this%offset_photo_rates_cells(:) = 0. !0 0.1
+
     if(this%ADD_EMISIONS.eq."ON" &
     .or. this%interface_input_file.eq."interface_monarch_cb05.json") then
-      do i = 1, this%n_photo_rxn
-        !print*,"base rate",this%base_rates(i), camp_mpi_rank()
-        call this%photo_rxns(i)%set_rate(real(this%base_rates(i), kind=dp))
-        !call this%photo_rxns(i_photo_rxn)%set_rate(real(0.0, kind=dp))
-        call this%camp_core%update_data(this%photo_rxns(i))
+
+      do z =1, this%nrates_cells
+        do i = 1, this%n_photo_rxn
+          base_rate = this%base_rates(i) &
+                  + this%base_rates(i)*(this%offset_photo_rates_cells(z)/z)
+
+          !print*,"offset",(this%offset_photo_rates_cells(z)/z)!"z",z,"n_cells",n_cells,this%n_cells
+          !print*,"this%base_rates(i), base rate",this%base_rates(i),&
+          !        base_rate, camp_mpi_rank()
+
+          call this%photo_rxns(i)%set_rate(base_rate)
+          !call this%photo_rxns(i_photo_rxn)%set_rate(real(0.0, kind=dp))
+          call this%camp_core%update_data(this%photo_rxns(i),z)
+        end do
       end do
-      !print*,"this%specs_emi(1)",this%specs_emi(1),camp_mpi_rank()
+
+
     end if
 
     call camp_mpi_barrier(MPI_COMM_WORLD)
@@ -558,7 +575,7 @@ contains
       if(DIFF_CELLS_EMI.eq."ON") then
 
         press_init = 100000.!Should be equal to mock_monarch
-        press_end = 85000.!10000.  85000.
+        press_end = 10000.!10000.  85000.
         press_range = press_end-press_init
 
         !print*,press_end,"-",press_init,"=",press_range,"rank:",camp_mpi_rank()

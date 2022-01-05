@@ -1357,22 +1357,23 @@ contains
     class(aero_rep_update_data_t), intent(inout) :: update_data
     !> Cell id
     integer(kind=i_kind), optional :: cell_id
+    integer :: n_cells_update
 
-    !write(*,*) "rxn_update_data"
+    n_cells_update = 1
     if (present(cell_id)) then
+      n_cells_update = 1
       update_data%cell_id=cell_id;
     else
-      !write(*,*) "B", this%n_cells
-      !call assert_msg(593328368, this%n_cells.eq.1,                   &
-      !        "Missing cell_id on aero_rep_update_data when using multicells" )
+      n_cells_update = this%n_cells
+      update_data%cell_id=1;
     end if
 
     if (associated(this%solver_data_gas)) &
-            call this%solver_data_gas%update_aero_rep_data(update_data, this%n_cells)
+            call this%solver_data_gas%update_aero_rep_data(update_data, n_cells_update)
     if (associated(this%solver_data_aero)) &
-            call this%solver_data_aero%update_aero_rep_data(update_data, this%n_cells)
+            call this%solver_data_aero%update_aero_rep_data(update_data, n_cells_update)
     if (associated(this%solver_data_gas_aero)) &
-            call this%solver_data_gas_aero%update_aero_rep_data(update_data, this%n_cells)
+            call this%solver_data_gas_aero%update_aero_rep_data(update_data, n_cells_update)
 
   end subroutine aero_rep_update_data
 
@@ -1390,21 +1391,23 @@ contains
     class(rxn_update_data_t), intent(inout) :: update_data
     !> Cell id
     integer(kind=i_kind), optional :: cell_id
+    integer :: n_cells_update
 
+    n_cells_update = 1
     if (present(cell_id)) then
+      n_cells_update = 1
       update_data%cell_id=cell_id;
     else
-      !write(*,*) "B"
-        !call assert_msg(593328368, this%n_cells.eq.1,                   &
-        !        "Missing cell_id on rxn_update_data when using multicells" )
+      n_cells_update = this%n_cells
+      update_data%cell_id=1;
     end if
 
     if (associated(this%solver_data_gas)) &
-            call this%solver_data_gas%update_rxn_data(update_data, this%n_cells)
+            call this%solver_data_gas%update_rxn_data(update_data, n_cells_update)
     if (associated(this%solver_data_aero)) &
-            call this%solver_data_aero%update_rxn_data(update_data, this%n_cells)
+            call this%solver_data_aero%update_rxn_data(update_data, n_cells_update)
     if (associated(this%solver_data_gas_aero)) &
-            call this%solver_data_gas_aero%update_rxn_data(update_data, this%n_cells)
+            call this%solver_data_gas_aero%update_rxn_data(update_data, n_cells_update)
 
   end subroutine rxn_update_data
 
@@ -1420,20 +1423,23 @@ contains
     class(sub_model_update_data_t), intent(inout) :: update_data
     !> Cell id
     integer(kind=i_kind), optional :: cell_id
+    integer :: n_cells_update
 
+    n_cells_update = 1
     if (present(cell_id)) then
+      n_cells_update = 1
       update_data%cell_id=cell_id;
     else
-      !call assert_msg(593328368, this%n_cells.eq.1,                   &
-      !        "Missing cell_id on sub_model_update_data when using multicells" )
+      n_cells_update = this%n_cells
+      update_data%cell_id=1;
     end if
 
     if (associated(this%solver_data_gas)) &
-            call this%solver_data_gas%update_sub_model_data(update_data, this%n_cells)
+            call this%solver_data_gas%update_sub_model_data(update_data, n_cells_update)
     if (associated(this%solver_data_aero)) &
-            call this%solver_data_aero%update_sub_model_data(update_data, this%n_cells)
+            call this%solver_data_aero%update_sub_model_data(update_data, n_cells_update)
     if (associated(this%solver_data_gas_aero)) &
-            call this%solver_data_gas_aero%update_sub_model_data(update_data, this%n_cells)
+            call this%solver_data_gas_aero%update_sub_model_data(update_data, n_cells_update)
 
   end subroutine sub_model_update_data
 

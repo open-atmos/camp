@@ -311,6 +311,7 @@ def plot_cases(conf):
 
     namex = plot_x_key
 
+    print(namex,":",datax)
     print(namey, ":", datay)
 
     #plot_functions.plot(namex, namey, datax, datay, conf.plotTitle, conf.legend, conf.savePlot)
@@ -337,9 +338,9 @@ def all_timesteps():
     conf.mpiProcessesList = [1]
     # conf.mpiProcessesList =  [40,1]
 
-    conf.cells = [10]
+    conf.cells = [100]
     # conf.cells = [5,10]
-    # conf.cells = [100,500,1000]
+    #conf.cells = [100,1000]
     # conf.cells = [1,5,10,50,100]
     #conf.cells = [100,500,1000,5000,10000]
 
@@ -357,7 +358,7 @@ def all_timesteps():
     #conf.casesOptim.append("GPU Block-cellsN")
     #conf.casesOptim.append("GPU Multi-cells")
     #conf.casesOptim.append("GPU One-cell")
-    # conf.casesOptim.append("CPU Multi-cells")
+    #conf.casesOptim.append("CPU Multi-cells")
 
     # conf.plotYKey = "Speedup timeCVode"
     # conf.plotYKey = "Speedup counterLS"
@@ -392,12 +393,8 @@ def all_timesteps():
     if not os.path.exists('out'):
         os.makedirs('out')
 
-    if "total" in conf.plotYKey:
+    if "total" in conf.plotYKey and "counterBCG" in conf.plotYKey:
         print("WARNING: Remember to enable solveBcgCuda_sum_it")
-    elif "counterBCG" in conf.plotYKey:
-        print("WARNING: Remember to disable solveBcgCuda_sum_it")
-    if conf.chemFile == "monarch_binned":
-        print("WARNING: ENSURE DERIV_CPU_ON_GPU IS ON")  # TODO
     if conf.chemFile == "monarch_cb05":
         conf.timeStepsDt = 3
 
