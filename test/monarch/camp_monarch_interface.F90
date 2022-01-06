@@ -408,7 +408,7 @@ contains
     !call camp_mpi_barrier(MPI_COMM_WORLD)
 
     !Options
-    this%nrates_cells = this%n_cells ! this%n_cells 1
+    this%nrates_cells = 1 ! this%n_cells 1
     allocate(this%offset_photo_rates_cells(this%nrates_cells))
     this%offset_photo_rates_cells(:) = 0. !0 0.1
 

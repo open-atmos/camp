@@ -533,7 +533,7 @@ def plot_solver_stats(data, plot_x_key, plot_y_key, plot_title):
     plt.show()
 
 
-def plotplt(namex, namey, datax, datay, plot_title, SAVE_PLOT):
+def plotplt(namex, namey, datax, datay, plot_title, savePlot):
     # fig = plt.figure(figsize=(7, 4.25))
     fig = plt.figure()
     spec2 = mpl.gridspec.GridSpec(ncols=1, nrows=1, wspace=.35, hspace=.1, bottom=.25, top=.85, left=.1, right=.9)
@@ -614,11 +614,11 @@ def plotsns(namex, namey, datax, datay, plot_title, legend):
         sns.lineplot(data=data, palette="tab10", linewidth=2.5, legend=False)
 
 
-def plot(namex, namey, datax, datay, plot_title, legend, SAVE_PLOT):
-    # plotplt(namex, namey, datax, datay, plot_title, SAVE_PLOT)
+def plot(namex, namey, datax, datay, plot_title, legend, savePlot):
+    # plotplt(namex, namey, datax, datay, plot_title, savePlot)
     plotsns(namex, namey, datax, datay, plot_title, legend)
 
-    if SAVE_PLOT:
+    if savePlot:
         now = datetime.datetime.now()
         dt_string = now.strftime("%d-%m-%Y %H:%M:%S")
         # print(dt_string)

@@ -222,6 +222,9 @@ def run_case(conf):
 
 
 def run_diff_cells(conf):
+
+    #column=columnHeader
+    #conf.column = conf.columnDiffCells
     for j in range(len(conf.casesL)):
         conf.cases = conf.casesL[j]
         conf.casesGpuCpu = [""] * len(conf.cases)
@@ -251,11 +254,11 @@ def run_diff_cells(conf):
             else:
                 cases_gpu_cpu_name[i] = conf.casesGpuCpu[i]
 
-        # print("conf.casesGpuCpu",conf.casesGpuCpu)
-        if (len(conf.casesL) > 1):
-            conf.column = conf.columnDiffCells + cases_multicells_onecell_name[1]
+        conf.column = conf.columnDiffCells
+        if len(conf.casesL) > 1:
+            conf.column +=cases_multicells_onecell_name[1]
             if (conf.diffArquiOptim):
-                conf.column = conf.columnDiffCells + cases_gpu_cpu_name[1] + " " + cases_multicells_onecell_name[1]
+                conf.column += cases_gpu_cpu_name[1] + " " + cases_multicells_onecell_name[1]
 
         conf.legend.append(conf.column)
 
@@ -311,10 +314,11 @@ def plot_cases(conf):
 
     namex = plot_x_key
 
+    print("plotTitle: ", conf.plotTitle, ", legend:", conf.legend)
     print(namex,":",datax)
     print(namey, ":", datay)
 
-    #plot_functions.plot(namex, namey, datax, datay, conf.plotTitle, conf.legend, conf.savePlot)
+    plot_functions.plot(namex, namey, datax, datay, conf.plotTitle, conf.legend, conf.savePlot)
 
 
 def all_timesteps():
@@ -327,7 +331,7 @@ def all_timesteps():
 
     conf.diffCellsL = []
     conf.diffCellsL.append("Realistic")
-    #conf.diffCellsL.append("Ideal")
+    conf.diffCellsL.append("Ideal")
 
     conf.profileCuda = False
     # conf.profileCuda = True
@@ -338,10 +342,9 @@ def all_timesteps():
     conf.mpiProcessesList = [1]
     # conf.mpiProcessesList =  [40,1]
 
-    conf.cells = [100]
-    # conf.cells = [5,10]
+    conf.cells = [10]
     #conf.cells = [100,1000]
-    # conf.cells = [1,5,10,50,100]
+    #conf.cells = [1,5,10,50,100]
     #conf.cells = [100,500,1000,5000,10000]
 
     conf.timeSteps = 1
@@ -354,15 +357,15 @@ def all_timesteps():
     # conf.caseBase="GPU Block-cells1"
 
     conf.casesOptim = []
-    conf.casesOptim.append("GPU Block-cells1")
+    #conf.casesOptim.append("GPU Block-cells1")
     #conf.casesOptim.append("GPU Block-cellsN")
     #conf.casesOptim.append("GPU Multi-cells")
     #conf.casesOptim.append("GPU One-cell")
-    #conf.casesOptim.append("CPU Multi-cells")
+    conf.casesOptim.append("CPU Multi-cells")
 
-    # conf.plotYKey = "Speedup timeCVode"
-    # conf.plotYKey = "Speedup counterLS"
-    conf.plotYKey = "Speedup normalized timeLS"
+    conf.plotYKey = "Speedup timeCVode"
+    #conf.plotYKey = "Speedup counterLS"
+    #conf.plotYKey = "Speedup normalized timeLS"
     # conf.plotYKey = "Speedup normalized computational timeLS"
     # conf.plotYKey = "Speedup counterBCG"
     # conf.plotYKey = "Speedup total iterations - counterBCG"
@@ -428,10 +431,9 @@ def all_timesteps():
         conf.diffCells = diff_cells
         if (conf.chemFile == "monarch_cb05"):
             conf.diffCells = "Ideal"
-            print("WARNING: ENSURE DERIV_CPU_ON_GPU IS OFF")
 
         conf.columnDiffCells = ""
-        if (len(conf.diffCellsL) > 1):
+        if len(conf.diffCellsL) > 1:
             conf.columnDiffCells += conf.diffCells + " "
 
         run_diff_cells(conf)
@@ -440,8 +442,6 @@ def all_timesteps():
     time_s = end_time - start_time
     if time_s > 60:
         conf.savePlot = True
-
-    print("plotTitle: ", conf.plotTitle, ", legend:", conf.legend)
 
     if (len(conf.diffCellsL) == 1):
         conf.plotTitle += ", " + conf.diffCells + " test"
