@@ -318,7 +318,7 @@ def plot_cases(conf):
     print(namex,":",datax)
     print(namey, ":", datay)
 
-    plot_functions.plot(namex, namey, datax, datay, conf.plotTitle, conf.legend, conf.savePlot)
+    #plot_functions.plot(namex, namey, datax, datay, conf.plotTitle, conf.legend, conf.savePlot)
 
 
 def all_timesteps():
@@ -330,7 +330,7 @@ def all_timesteps():
     conf.chemFile = "monarch_binned"
 
     conf.diffCellsL = []
-    conf.diffCellsL.append("Realistic")
+    #conf.diffCellsL.append("Realistic")
     conf.diffCellsL.append("Ideal")
 
     conf.profileCuda = False
@@ -342,7 +342,7 @@ def all_timesteps():
     conf.mpiProcessesList = [1]
     # conf.mpiProcessesList =  [40,1]
 
-    conf.cells = [10]
+    conf.cells = [100]
     #conf.cells = [100,1000]
     #conf.cells = [1,5,10,50,100]
     #conf.cells = [100,500,1000,5000,10000]

@@ -572,10 +572,12 @@ contains
 
       rate_emi(:,:)=0.0
 
+      !print*,"DIFF_CELLS_EMI",DIFF_CELLS_EMI
+
       if(DIFF_CELLS_EMI.eq."ON") then
 
         press_init = 100000.!Should be equal to mock_monarch
-        press_end = 10000.!10000.  85000.
+        press_end = 85000.!10000.  85000.
         press_range = press_end-press_init
 
         !print*,press_end,"-",press_init,"=",press_range,"rank:",camp_mpi_rank()
