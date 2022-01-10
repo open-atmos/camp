@@ -1125,8 +1125,6 @@ contains
       call camp_interface%photo_rxns(i_photo_rxn)%set_rate(real(camp_interface%base_rates(i_photo_rxn), kind=dp))
       !call camp_interface%photo_rxns(i_photo_rxn)%set_rate(real(0.0, kind=dp)) !works
 
-      call camp_interface%camp_core%update_data(camp_interface%photo_rxns(i_photo_rxn))
-
       !print*,"id photo_rate", camp_interface%base_rates(i_photo_rxn)
     end do
 
