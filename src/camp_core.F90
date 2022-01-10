@@ -5,34 +5,13 @@
 !> \file
 !> The camp_camp_core module.
 
-!> \page camp_chem Chemistry Across Multiple Phases (CAMP)
+!> \mainpage CAMP Documentation
 !!
-!! Chemistry Across Multiple Phases (CAMP) is a
-!! module within PartMC designed to provide a flexible framework for
-!! incorporating chemical mechanisms into PartMC or another host model. In
-!! general, \ref camp_chem "CAMP" solves one or more
-!! \ref camp_mechanism "mechanisms" composed of a set of \ref camp_rxn
-!! "reactions" over a time-step specified by the host model. \ref camp_rxn
-!! "Reactions" can take place in the gas phase, in one of several \ref
-!! camp_aero_phase "aerosol phases", or across an interface between phases
-!! (gas or aerosol). \ref camp_chem "CAMP" is designed to
-!! work with any \ref camp_aero_rep "aerosol representation" used by the
-!! host model (e.g., binned, modal, single particle) by abstracting the
-!! chemistry from the \ref camp_aero_rep "aerosol representation" through the
-!! use of custom extending types of the abstract
-!! \c camp_aero_rep_data::aero_rep_data_t type that implement a set of
-!! \ref camp_aero_phase "aerosol phases" based on the configuration of the
-!! host model. A set of \ref camp_sub_model "sub-models" may also be included
-!! to calculate parameters needed by \ref camp_rxn "reactions" during solving.
-!!
-!! \ref camp_chem "CAMP" uses \ref ss_json
-!! "json input files" to load \ref input_format_species "chemical species",
-!! \ref input_format_mechanism "mechanisms", \ref input_format_aero_phase
-!! "aerosol phases", \ref input_format_aero_rep "aerosol representations",
-!! and \ref input_format_sub_model "sub-models" at runtime. This allows a user
-!! to modify any of these data without recompiling the model, permits host
-!! models to choose which mechanisms to solve based on model conditions, and
-!! allows multiple mechanisms to be solved simultaneously.
+!! \ref index "CAMP" is software for
+!! solving multi-phase chemistry in atmospheric models. For a overview of what
+!! \ref index "CAMP" can do, check out
+!! \ref camp_tutorial_part_0 "part 0 of the CAMP tutorial".
+!! A description of the CAMP model elements and how to use them follows.
 !!
 !! # CAMP Input Classes #
 !!
@@ -45,48 +24,65 @@
 !!
 !! # Usage #
 !!
+!! \ref index "CAMP" uses
+!! json input files to load \ref input_format_species "chemical species",
+!! \ref input_format_mechanism "mechanisms", \ref input_format_aero_phase
+!! "aerosol phases", \ref input_format_aero_rep "aerosol representations",
+!! and \ref input_format_sub_model "sub-models" at runtime. How to use
+!! \ref index "CAMP" in a new or existing model is described in the
+!! \ref camp_tutorial "Boot CAMP" tutorial.
+!!
 !! ## Compiling ##
 !!
-!! To include \ref camp_chem "CAMP" in a PartMC library installation,
-!! set the ccmake flags \c ENABLE_JSON and \c ENABLE_SUNDIALS to \c ON.
-!! (<a href="http://www.llnl.gov/casc/sundials/">SUNDIALS</a> and
-!! <a href="https://github.com/jacobwilliams/json-fortran">json-fortran</a>
-!! must be installed).
+!! You will need to have c and Fortran compilers along with CMake to build
+!! the CAMP library. In addition, CAMP has the following dependencies:
 !!
-!! ## Input files ##
+!! | Library      | Version | Source                                        |
+!! |--------------|---------|-----------------------------------------------|
+!! | SUNDIALS     | custom  | camp/cvode-3.4-alpha.tar.gz                   |
+!! | SuiteSparse  | 5.1.0   | http://faculty.cse.tamu.edu/davis/SuiteSparse/SuiteSparse-5.1.0.tar.gz |
+!! | GSL          |         | https://www.gnu.org/software/gsl/             |
+!! | json-fortran | 6.1.0   | https://github.com/jacobwilliams/json-fortran/archive/6.1.0.tar.gz |
 !!
-!! \ref camp_chem "CAMP" uses two types of input files:
+!! The SUNDIALS library must be built with the `ENABLE_KLU` flag set to `ON`
+!! and the KLU library and include paths set according to the SuiteSparse
+!! installation.
+!!
+!! To install CAMP locally, from the `camp/` folder:
+!!
+!! \code{.sh}
+!!   mkdir build
+!!   cd build
+!!   cmake ..
+!!   make install
+!! \endcode
+!!
+!! You can also check out
+!! \ref ./Dockerfile
+!! (or \ref ./Dockerfile.mpi for MPI applications) to see how CAMP is
+!! is built for automated testing.
+!!
+!!## Input files ##
+!!
+!! \ref index "CAMP" uses two types of input files:
 !!
 !!  - \subpage input_format_camp_file_list "File List" A \c json file
-!!             containing a list of \ref camp_chem "CAMP" configuration
+!!             containing a list of \ref index "CAMP" configuration
 !!             file names.
 !!  - \subpage input_format_camp_config "Configuration File" One or more
-!!             \c json files containing all the \ref camp_chem "CAMP"
+!!             \c json files containing all the \ref index "CAMP"
 !!             configuration data.
 !!
-!! To initialize \ref camp_chem "CAMP" , the path to the
+!! To initialize \ref index "CAMP" , the path to the
 !! \ref input_format_camp_file_list "file list" must be passed to the
 !! \ref camp_camp_core::camp_core_t constructor. The method by which this is
 !! done depends on the host model configuration.
 !!
-!! ## PartMC scenarios ##
+!! ## CAMP tutorial ##
 !!
-!! Using \ref camp_chem "CAMP" in a PartMC scenario requires modifying
-!! the \ref input_format "spec file" and providing a \ref
-!! input_format_camp_file_list "CAMP file list" file and one or more
-!! \ref input_format_camp_config "CAMP configuration" files that
-!! describe the \ref camp_species "chemical species", \ref camp_mechanism
-!! "mechanism(s)", \ref camp_aero_phase "aerosol phase(s)", \ref
-!! camp_aero_rep "aerosol representation", and \ref camp_sub_model
-!! "sub-model(s)". A description of the input files required for a PartMC run
-!! can be found \ref input_format "here".
-!!
-!! ## CAMP-chem in another host model ##
-!!
-!! Incorporating \ref camp_chem "CAMP" into another host
-!! model can be done in the following steps:
-!!
-!!
+!! Follow the \ref camp_tutorial "Boot CAMP" tutorial to see how to
+!! integrate CAMP into your favorite model!
+
 
 !> The camp_core_t structure and associated subroutines.
 module camp_camp_core
@@ -161,6 +157,8 @@ module camp_camp_core
     type(camp_solver_data_t), pointer, public :: solver_data_aero => null()
     !> Solver data (mixed gas- and aerosol-phase reactions)
     type(camp_solver_data_t), pointer, public :: solver_data_gas_aero => null()
+    integer :: counters(4)
+    real(kind=dp) :: times(14)
     integer(kind=i_kind) :: counterSolve
     integer(kind=i_kind) :: counterFail
     real(kind=dp), allocatable :: init_state_var(:)
@@ -1153,14 +1151,12 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Initialize the solver
-  subroutine solver_initialize(this, ncounters, ntimers)
+  subroutine solver_initialize(this)
 
     !> Chemical model
     class(camp_core_t), intent(inout) :: this
     type(string_t), allocatable :: spec_names(:)
     integer :: i_spec, n_gas_spec
-    integer, optional :: ncounters
-    integer, optional :: ntimers
 
     call assert_msg(662920365, .not.this%solver_is_initialized, &
             "Attempting to initialize the solver twice.")
@@ -1168,13 +1164,6 @@ contains
 #ifdef CAMP_SOLVER_SPEC_NAMES
     spec_names = this%unique_names()
 #endif
-
-    if(.not.present(ncounters)) then
-      ncounters=0
-    end if
-    if(.not.present(ntimers)) then
-      ntimers=0
-    end if
 
 
     !Get spec names
@@ -1213,8 +1202,8 @@ contains
                 GAS_RXN,         & ! Reaction phase
                 this%n_cells,    & ! # of cells computed simultaneosly
                 spec_names,       & ! Species names
-                ncounters, & ! # of profiling variables (Times and counters)
-                ntimers & ! # of profiling variables (Times and counters)
+                size(this%counters), & ! # of profiling variables (Times and counters)
+                size(this%times) & ! # of profiling variables (Times and counters)
       )
       call this%solver_data_aero%initialize( &
                 this%var_type,   & ! State array variable types
@@ -1226,8 +1215,8 @@ contains
                 AERO_RXN,        & ! Reaction phase
                 this%n_cells,    & ! # of cells computed simultaneosly
                 spec_names,       & ! Species names
-                ncounters, & ! # of profiling variables (Times and counters)
-                ntimers & ! # of profiling variables (Times and counters)
+                size(this%counters), & ! # of profiling variables (Times and counters)
+                size(this%times) & ! # of profiling variables (Times and counters)
       )
     else
 
@@ -1250,8 +1239,8 @@ contains
                 GAS_AERO_RXN,    & ! Reaction phase
                 this%n_cells,    & ! # of cells computed simultaneosly
                 spec_names,       & ! Species names
-                ncounters, & ! # of profiling variables (Times and counters)
-                ntimers & ! # of profiling variables (Times and counters)
+                size(this%counters), & ! # of profiling variables (Times and counters)
+                size(this%times) & ! # of profiling variables (Times and counters)
               )
 
     end if

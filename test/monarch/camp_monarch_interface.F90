@@ -127,7 +127,7 @@ contains
   !! species in the tracer array.
   function constructor(camp_config_file, interface_config_file, &
                        starting_id, ending_id, n_cells, &
-          ADD_EMISIONS, ncounters, ntimers, mpi_comm) result (this)
+          ADD_EMISIONS, mpi_comm) result (this)
 
     !> A new MONARCH interface
     type(monarch_interface_t), pointer :: this
@@ -144,8 +144,6 @@ contains
     !> Num cells to compute simulatenously
     integer, optional :: n_cells
     character(len=:), allocatable, optional :: ADD_EMISIONS
-    integer, optional :: ncounters
-    integer, optional :: ntimers
 
     type(camp_solver_data_t), pointer :: camp_solver_data
     character, allocatable :: buffer(:)
@@ -191,13 +189,6 @@ contains
       print*,"monarch_interface_t start"
     end if
 
-    if(.not.present(ncounters)) then
-      ncounters = 0
-    end if
-    if(.not.present(ntimers)) then
-      ntimers = 0
-    end if
-
     this%interface_input_file=interface_config_file
     this%ADD_EMISIONS=ADD_EMISIONS
 
@@ -219,6 +210,8 @@ contains
 
       call assert_msg(304676624, present(camp_config_file), &
               "Missing CAMP-camp configuration file list")
+      call assert_msg(194027509, present(interface_config_file), &
+              "Missing MartMC-camp <-> MONARCH interface configuration file")
       call assert_msg(937567597, present(starting_id), &
               "Missing starting tracer index for chemical species")
       call assert_msg(593895016, present(ending_id), &
@@ -232,12 +225,27 @@ contains
 
       ! Set the aerosol representation id
       if (this%camp_core%get_aero_rep("MONARCH mass-based", aero_rep)) then
+
         select type (aero_rep)
           type is (aero_rep_modal_binned_mass_t)
             call this%camp_core%initialize_update_object( aero_rep, &
                                                              update_data_GMD)
             call this%camp_core%initialize_update_object( aero_rep, &
                                                              update_data_GSD)
+
+
+            print*,"this%interface_input_file ",this%interface_input_file
+            if(this%interface_input_file.eq."mod37/interface_monarch_mod37.json") then
+
+              call assert(889473105, &
+                      aero_rep%get_section_id("organic matter", i_sect_om))
+              call assert(648042550, &
+                      aero_rep%get_section_id("black carbon", i_sect_bc))
+              call assert(760360895, &
+                      aero_rep%get_section_id("sulfate", i_sect_sulf))
+              call assert(307728742, &
+                      aero_rep%get_section_id("other PM", i_sect_opm))
+            else
             call assert(889473105, &
                         aero_rep%get_section_id("organic_matter", i_sect_om))
             call assert(648042550, &
@@ -247,6 +255,8 @@ contains
             i_sect_sulf=-1
             call assert(307728742, &
                         aero_rep%get_section_id("other_PM", i_sect_opm))
+
+            end if
           class default
             call die_msg(351392791, &
                          "Wrong type for aerosol representation "// &
@@ -400,7 +410,7 @@ contains
 
     print*,"time",time()
 
-    call this%camp_core%solver_initialize(ncounters, ntimers)
+    call this%camp_core%solver_initialize()
 
     !call camp_mpi_barrier(MPI_COMM_WORLD)
 
@@ -413,13 +423,13 @@ contains
 
     print*,"time",time()
 
-    !Options
-    this%nrates_cells = this%n_cells
-    allocate(this%offset_photo_rates_cells(this%nrates_cells))
-    this%offset_photo_rates_cells(:) = 0. !0 0.1
-
     if(this%ADD_EMISIONS.eq."ON" &
     .or. this%interface_input_file.eq."interface_monarch_cb05.json") then
+
+      !Options
+      this%nrates_cells = this%n_cells
+      allocate(this%offset_photo_rates_cells(this%nrates_cells))
+      this%offset_photo_rates_cells(:) = 0. !0 0.1
 
       do z =1, this%nrates_cells
         do i = 1, this%n_photo_rxn
@@ -436,6 +446,7 @@ contains
         end do
       end do
 
+      deallocate(this%offset_photo_rates_cells)
 
     end if
 

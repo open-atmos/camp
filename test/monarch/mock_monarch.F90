@@ -214,6 +214,11 @@ program mock_monarch
   ncounters = 4 ! number of metric counters (e.g. counter LS iterations)
   ntimers = 14 ! number of metric timers (e.g. time Linear solving)
 
+  !ncounters = size(solver_stats%counters2)
+  !ntimers = size(solver_stats%times2)
+
+
+
   !Read configuration from TestMonarch.json
 
   call get_command_argument(1, arg, status=status_code)
@@ -272,12 +277,7 @@ program mock_monarch
 
   end if
 
-  allocate(counters(ncounters))
-  allocate(times(ntimers))
-  counters(:)=0
-  times(:)=0.0
 
-  call solver_stats%allocate(ncounters,ntimers)
 
   if (camp_mpi_rank().eq.0) then
     write(*,*) "Num time-steps:", NUM_TIME_STEP, "Num cells:",&
@@ -404,7 +404,17 @@ program mock_monarch
   path_solver_stats = output_file_prefix//"_solver_stats.csv"
 
   camp_interface => monarch_interface_t(camp_input_file, interface_input_file, &
-          START_CAMP_ID, END_CAMP_ID, n_cells, ADD_EMISIONS, ncounters, ntimers)!, n_cells
+          START_CAMP_ID, END_CAMP_ID, n_cells, ADD_EMISIONS)!, n_cells
+
+  ncounters = size(camp_interface%camp_core%counters)
+  ntimers = size(camp_interface%camp_core%times)
+
+  allocate(counters(ncounters))
+  allocate(times(ntimers))
+  counters(:)=0
+  times(:)=0.0
+
+  call solver_stats%allocate(ncounters,ntimers)
 
   !call camp_mpi_barrier(MPI_COMM_WORLD)
   print*,"monarch_interface_t end MPI RANK",camp_mpi_rank()

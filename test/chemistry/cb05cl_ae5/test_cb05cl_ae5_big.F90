@@ -32,7 +32,9 @@ program camp_test_cb05cl_ae5
 #ifdef CAMP_USE_JSON
   use json_module
 #endif
+#ifdef NETCDF_INPUT
   use camp_netcdf
+#endif
 
 !todo hide CAMP_MONARCH_INPUT until N2 and other init concs can be obtained... (otherwise the results will be always different)
 !#define CAMP_MONARCH_INPUT
@@ -370,6 +372,7 @@ contains
       camp_core => camp_core_t(camp_input_file)
     endif
     ! Initialize the model
+
     call camp_core%initialize()
 
     ! Find the CB5 mechanism
@@ -458,6 +461,8 @@ contains
     end if
 
 #endif
+
+    print*,"camp_core"
 
     ! Initialize the solver
     call camp_core%solver_initialize()
@@ -1263,6 +1268,8 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
+#ifdef NETCDF_INPUT
+
   subroutine set_input_from_netcdf(camp_state, state_size_cell, spec_names&
           ,model_conc, temperatures, pressures, n_cells)
 
@@ -1399,6 +1406,8 @@ contains
 #endif
 
   end subroutine set_input_from_netcdf
+
+#endif
 
   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 

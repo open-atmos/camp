@@ -104,6 +104,8 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
     exit(EXIT_FAILURE);
   }
 
+  printf("solver_new start\n");
+
 #ifdef CAMP_USE_SUNDIALS
 #ifdef CAMP_DEBUG
   // Default to no debugging output
