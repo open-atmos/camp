@@ -214,11 +214,6 @@ program mock_monarch
   ncounters = 4 ! number of metric counters (e.g. counter LS iterations)
   ntimers = 14 ! number of metric timers (e.g. time Linear solving)
 
-  !ncounters = size(solver_stats%counters2)
-  !ntimers = size(solver_stats%times2)
-
-
-
   !Read configuration from TestMonarch.json
 
   call get_command_argument(1, arg, status=status_code)
@@ -414,8 +409,6 @@ program mock_monarch
   counters(:)=0
   times(:)=0.0
 
-  call solver_stats%allocate(ncounters,ntimers)
-
   !call camp_mpi_barrier(MPI_COMM_WORLD)
   print*,"monarch_interface_t end MPI RANK",camp_mpi_rank()
 
@@ -601,8 +594,6 @@ program mock_monarch
   ! Deallocation
   deallocate(counters)
   deallocate(times)
-  call solver_stats%deallocate()
-  !if (associated(solver_stats)) deallocate(solver_stats)
   deallocate(camp_input_file)
   deallocate(interface_input_file)
   deallocate(output_file_prefix)
@@ -2039,17 +2030,17 @@ contains
 
     l_comm = MPI_COMM_WORLD
 
-    call mpi_reduce(solver_stats%counters, counters_max, ncounters, MPI_INTEGER, MPI_MAX, 0, &
+    call mpi_reduce(camp_interface%camp_core%counters, counters_max, ncounters, MPI_INTEGER, MPI_MAX, 0, &
             l_comm, ierr)
     call camp_mpi_check_ierr(ierr)
-    call mpi_reduce(solver_stats%times, times_max, ntimers, MPI_DOUBLE, MPI_MAX, 0, &
+    call mpi_reduce(camp_interface%camp_core%times, times_max, ntimers, MPI_DOUBLE, MPI_MAX, 0, &
             l_comm, ierr)
     call camp_mpi_check_ierr(ierr)
 
 #else
 
-    counters_max(:)=solver_stats%counters(:)
-    times_max(:)=solver_stats%times(:)
+    counters_max(:)=camp_interface%camp_core%counters(:)
+    times_max(:)=camp_interface%camp_core%times(:)
 
 #endif
 

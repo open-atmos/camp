@@ -497,10 +497,6 @@ set_source_files_properties(${CB5_EBI_SOLVER} PROPERTIES COMPILE_FLAGS
 # MONARCH interface
 
 
-#add_executable(mock_monarch_2 test/monarch/mock_monarch_2.F90
- #        test/monarch/camp_monarch_interface_2.F90)
-#target_link_libraries(mock_monarch_2 camplib)
-
 
 add_executable(mock_monarch test/monarch/mock_monarch.F90
         test/monarch/camp_monarch_interface.F90
@@ -508,9 +504,14 @@ add_executable(mock_monarch test/monarch/mock_monarch.F90
         test/chemistry/cb05cl_ae5/module_BSC_CHEM_DATA.F90)
 target_link_libraries(mock_monarch camplib)
 
-
-
 if (ENABLE_TESTS)
+
+  add_executable(test_chemistry_cb05cl_ae5
+          test/chemistry/cb05cl_ae5/test_cb05cl_ae5.F90
+          ${CB5_EBI_SOLVER} ${CB5_KPP_SOLVER}
+          test/chemistry/cb05cl_ae5/module_BSC_CHEM_DATA.F90)
+  target_link_libraries(test_chemistry_cb05cl_ae5 camplib)
+
 
   add_executable(test_chemistry_cb05cl_ae5_big
           test/chemistry/cb05cl_ae5/test_cb05cl_ae5_big.F90
@@ -519,11 +520,6 @@ if (ENABLE_TESTS)
   target_link_libraries(test_chemistry_cb05cl_ae5_big camplib)
 
 
-  add_executable(test_chemistry_cb05cl_ae5
-          test/chemistry/cb05cl_ae5/test_cb05cl_ae5.F90
-          ${CB5_EBI_SOLVER} ${CB5_KPP_SOLVER}
-          test/chemistry/cb05cl_ae5/module_BSC_CHEM_DATA.F90)
-  target_link_libraries(test_chemistry_cb05cl_ae5 camplib)
 
   ######################################################################
   # test_chemistry_cb05cl_ae5_big

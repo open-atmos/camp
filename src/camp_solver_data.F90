@@ -1017,12 +1017,14 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Get solver statistics
-  subroutine get_solver_stats( this, solver_stats )
+  subroutine get_solver_stats( this, solver_stats,counters,times)
 
     !> Solver data
     class(camp_solver_data_t), intent(inout) :: this
     !> Solver statistics
     type(solver_stats_t), intent(inout), target :: solver_stats
+    integer,  target, intent(inout) :: counters(:)
+    real(kind=dp),target, intent(inout) :: times(:)
 
     call solver_get_statistics( &
             this%solver_c_ptr,                             & ! Solver data
@@ -1043,8 +1045,8 @@ contains
             c_loc( solver_stats%RHS_time__s           ),   & ! Compute time f() [s]
             c_loc( solver_stats%Jac_time__s           ),   & ! Compute time Jac() [s]
             c_loc( solver_stats%max_loss_precision),& ! Maximum loss of precision
-            c_loc( solver_stats%counters),& !Profiling
-            c_loc( solver_stats%times)& !Profiling
+            c_loc( counters),& !Profiling
+            c_loc( times)& !Profiling
     )
 
   end subroutine get_solver_stats

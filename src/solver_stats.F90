@@ -57,10 +57,6 @@ module camp_solver_stats
     real(kind=dp) :: RHS_time__s
     !> Compute time for calls to `Jac()` [s]
     real(kind=dp) :: Jac_time__s
-    !> Counters array for profiling [iterations]
-    integer, allocatable :: counters(:)
-    !> Timers array for profiling [s]
-    real(kind=dp), allocatable :: times(:)
 
     !> Maximum loss of precision on last deriv call
     real(kind=dp) :: max_loss_precision
@@ -77,27 +73,12 @@ module camp_solver_stats
     !> Assignment
     procedure :: assignValue
 
-    procedure :: allocate
-    procedure :: deallocate
-
     generic :: assignment(=) => assignValue
   end type solver_stats_t
 
 contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-  subroutine allocate(this,ncounters,ntimers)
-
-    !> A new set of model parameters
-    class(solver_stats_t), intent(inout) :: this
-    integer, intent(inout) :: ncounters
-    integer, intent(inout) :: ntimers
-
-    allocate(this%counters(ncounters))
-    allocate(this%times(ntimers))
-
-  end subroutine allocate
 
   !> Print the solver statistics
   subroutine do_print( this, file_unit )
@@ -166,15 +147,6 @@ contains
     this%max_loss_precision    = new_value
 
   end subroutine assignValue
-
-  subroutine deallocate(this)
-
-    class(solver_stats_t), intent(inout) :: this
-
-    deallocate(this%counters)
-    deallocate(this%times)
-
-  end subroutine deallocate
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
