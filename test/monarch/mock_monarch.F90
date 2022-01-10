@@ -410,7 +410,6 @@ program mock_monarch
   times(:)=0.0
 
   !call camp_mpi_barrier(MPI_COMM_WORLD)
-  print*,"monarch_interface_t end MPI RANK",camp_mpi_rank()
 
   if(export_results_all_cells.eq.1) then
     call init_file_results_all_cells(camp_interface, output_file_prefix)
@@ -438,9 +437,13 @@ program mock_monarch
   ! **** end initialization modification **** !
   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
+  print*,"monarch_interface_t end MPI RANK",camp_mpi_rank()
+
   ! Set conc from mock_model
   call camp_interface%get_init_conc(species_conc, water_conc, WATER_VAPOR_ID, &
           air_density,i_W,I_E,I_S,I_N)
+
+  print*,"monarch_interface_t end MPI RANK",camp_mpi_rank()
 
   if(interface_input_file.eq."interface_monarch_cb05.json") then
     !call import_camp_input(camp_interface)
@@ -453,6 +456,8 @@ program mock_monarch
     call solve_ebi(camp_interface)
   end if
 #endif
+
+  print*,"monarch_interface_t end MPI RANK",camp_mpi_rank()
 
   !call camp_mpi_barrier(MPI_COMM_WORLD)
   !print*,"MPI RANK",camp_mpi_rank()

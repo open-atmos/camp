@@ -1335,6 +1335,8 @@ end if
 
     state_size_per_cell = this%camp_core%state_size_per_cell()
 
+    !print*,"get_init_conc"
+
     do i=i_W, I_E
       do j=I_S, I_N
         do k=1, NUM_VERT_CELLS
