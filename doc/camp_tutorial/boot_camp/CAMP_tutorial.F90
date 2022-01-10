@@ -18,12 +18,12 @@
 !! - \ref camp_tutorial_part_7
 !!
 !! Model code described in Boot CAMP can be found in
-!! \c doc/camp_tutorial/boot_camp/boot_camp.
+!! \c doc/camp_tutorial/boot_camp.
 !!
 !! If you have Docker installed and want to quickly run the code
 !! described in the tutorial, start a container with CAMP:
 !! \code{.sh}
-!!   docker run -it compdyn/camp:develop-85-tutorial bash
+!!   docker run --name camp -it ghcr.io/open-atmos/camp:main bash
 !! \endcode
 !! Then, follow the instructions at the bottom of the
 !! sections of the tutorial that include executable code.
@@ -56,7 +56,8 @@
 !! on atmospheric systems can use CAMP to \ref bc0_ss_example "rapidly deploy"
 !! their new chemistry to a suite of atmospheric models.
 !!
-!! ## \anchor bc0_ss_combined_solving Combined solving ##
+!! \anchor bc0_ss_combined_solving
+!! ## Combined solving ##
 !!
 !! Typically, chemical systems are spread across several distinct modules
 !! within atmospheric models (\ref bc0_fig_typical_model "Fig. 1")
@@ -101,7 +102,8 @@
 !!
 !!
 !!
-!! ## \anchor bc0_ss_runtime_config Run-time configuration ##
+!! \anchor bc0_ss_runtime_config
+!! ## Run-time configuration ##
 !!
 !! Another key feature of CAMP is its run-time configurability. As a
 !! stand-alone library, you don't need to modify any of the CAMP source
@@ -125,7 +127,8 @@
 !!
 !!
 !!
-!! ## \anchor bc0_ss_portability Portability ##
+!! \anchor bc0_ss_portability
+!! ## Portability ##
 !!
 !! The last thing we'll mention that makes CAMP unique is its
 !! portability across models with different aerosol representations. We'll
@@ -162,7 +165,8 @@
 !!
 !!
 !!
-!! ## \anchor bc0_ss_example How you might CAMP ##
+!! \anchor bc0_ss_example
+!! ## How you might CAMP ##
 !!
 !! To demonstrate how CAMP functionality can be used in a real-world
 !! scenario, imagine you are a reasearch chemist who just discovered a new
@@ -189,10 +193,13 @@
 !! You evaluate the model results and tweak the reaction parameters
 !! until you're able to fit your experimental results.
 !!
-!! Next, you take your mechanism input files and run them in a CAMP
+!! Next, you take your mechanism input files and run them in a
+!! <a href="https://github.com/compdyn/partmc">PartMC</a>
 !! particle-resolved urban plume scenario to evaluate the effects of
 !! mixing state on your newly discovered system. Then you try out your
-!! mechanism in the MONARCH chemical weather prediction system to see the
+!! mechanism in the
+!! <a href="">MONARCH</a>
+!! chemical weather prediction system to see the
 !! regional and global scale impacts of your new chemistry. What is most
 !! important about this process, and what makes CAMP so unique, is that
 !! you use the \a the \a same \a input \a files in all three models and
@@ -217,8 +224,8 @@
 !> \page camp_tutorial_part_1 Boot CAMP: Part 1 - Box Model
 !!
 !! Prior to beginning this tutorial, the CAMP library should be
-!! installed on your system with CAMP-CAMP enabled. Installation
-!! instructions can be found \ref camp_chem "here". Alternatively,
+!! installed on your system. Installation
+!! instructions can be found \ref index "here". Alternatively,
 !! you can run CAMP in Docker following the instructions
 !! \ref camp_tutorial "here".
 !!
@@ -236,7 +243,8 @@
 !! The box-model code in this tutorial is designed to make
 !! clear how to interact with CAMP, but it is not meant to represent
 !! a well-designed model.
-!! The code used in the tutorial can be found in `doc/camp_tutorial`.
+!! The code used in the tutorial can be found in
+!! `doc/camp_tutorial/boot_camp`.
 !!
 !! ## CAMP box model ##
 !!
@@ -611,7 +619,7 @@
 !! files are installed. If you have trouble compiling or running because
 !! of missing libraries, make sure your `LD_LIBRARY_PATH` and `PATH`
 !! include the directories where the CAMP, json-fortran, SUNDIALS,
-!! netCDF, and SuiteSparse libraries are installed.
+!! and SuiteSparse libraries are installed.
 !!
 !! Then, to run to mechanism:
 !! \code{.sh}
@@ -794,7 +802,7 @@
 !! To compile the model code with mpi, be sure to include the `USE_MPI`
 !! flag definition:
 !! \code{.sh}
-!!   mpif90 -o run_box_model box_model.F90 -DUSE_MPI -lcamp -I/usr/local/include/camp
+!!   mpif90 -o run_box_model box_model.F90 -DCAMP_USE_MPI -lcamp -I/usr/local/include/camp
 !!   mpirun -v -np 2 run_box_model > output.txt
 !! \endcode
 !!
@@ -811,11 +819,10 @@
 !! image locally. So, we'll clone the CAMP repo, build the container
 !! with MPI and then run it:
 !! \code{.sh}
-!!   git clone https://github.com/compdyn/camp.git
+!!   git clone https://github.com/open-atmos/camp.git
 !!   cd camp
-!!   git checkout develop-85-tutorial
 !!   docker build -f Dockerfile.mpi -t camp-test-mpi .
-!!   docker run ---name camp -it camp-test-mpi bash
+!!   docker run --name camp -it camp-test-mpi bash
 !! \endcode
 !! Inside the container:
 !! \code{.sh}
@@ -823,14 +830,14 @@
 !!   mkdir boot-camp
 !!   cd boot-camp
 !!   cp ../camp/doc/camp_tutorial/boot_camp/part_4_code/* .
-!!   mpif90 -o run_box_model box_model.F90 -DUSE_MPI -lcamp -I/usr/local/include/camp
+!!   mpif90 -o run_box_model box_model.F90 -DCAMP_USE_MPI -lcamp -I/usr/local/include/camp
 !!   mpirun -v -np 2 run_box_model > output.txt
 !!   gnuplot plot.conf
 !!   exit
 !! \endcode
 !! Back outside the container:
 !! \code{.sh}
-!!   docker cp camp:/boot-camp/results.png .
+!!   docker cp camp:/home/test_user/boot-camp/results.png .
 !!   docker container rm camp
 !!   open results.png
 !! \endcode
@@ -851,12 +858,14 @@
 
 !> \page camp_tutorial_part_5 Boot CAMP: Part 5 - Aerosol Representations
 !!
-!! \todo finish
+!! You've reached the end of the guided part of the trail! Until the
+!! rest of the tutorial is finished, you can follow the patterns in the
+!! tests to begin to implement aerosol-related features of CAMP. We
+!! recommend looking at the following tests to see how these can be
+!! introduced:
 !!
-!!
-!!
-!!
-!!
+!! - `test/unit_rxn_data/test_rxn_HL_phase_transfer.F90`
+!! - `test/unit_rxn_data/test_rxn_SIMPOL_phase_transfer.F90`
 !!
 !! <hr>
 !! <b> < Previous: </b> \ref camp_tutorial_part_4
@@ -872,12 +881,14 @@
 
 !> \page camp_tutorial_part_6 Boot CAMP: Part 6 - Aerosol Representation Input Data
 !!
-!! \todo finish
+!! You've reached the end of the guided part of the trail! Until the
+!! rest of the tutorial is finished, you can follow the patterns in the
+!! tests to begin to implement aerosol-related features of CAMP. We
+!! recommend looking at the following tests to see how these can be
+!! introduced:
 !!
-!!
-!!
-!!
-!!
+!! - `test/unit_rxn_data/test_rxn_HL_phase_transfer.F90`
+!! - `test/unit_rxn_data/test_rxn_SIMPOL_phase_transfer.F90`
 !!
 !! <hr>
 !! <b> < Previous: </b> \ref camp_tutorial_part_5
@@ -893,12 +904,14 @@
 
 !> \page camp_tutorial_part_7 Boot CAMP: Part 7 - Sub Models
 !!
-!! \todo finish
+!! You've reached the end of the guided part of the trail! Until the
+!! rest of the tutorial is finished, you can follow the patterns in the
+!! tests to begin to implement sub-modules in CAMP. We recommend looking
+!! at the following tests to see how these can be implemented:
 !!
-!!
-!!
-!!
-!!
+!! - `test/unit_sub_model_data/test_sub_model_PDFiTE.F90`
+!! - `test/unit_sub_model_data/test_sub_model_UNIFAC.F90`
+!! - `test/unit_sub_model_data/test_sub_model_ZSR_aerosol_water.F90`
 !!
 !! <hr>
 !! <b> < Previous: </b> \ref camp_tutorial_part_6

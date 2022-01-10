@@ -10,7 +10,7 @@ program box_model
   use camp_rxn_factory
 
   !! [MPI modules]
-#ifdef USE_MPI
+#ifdef CAMP_USE_MPI
   use mpi
   use camp_mpi
 #endif
@@ -37,14 +37,14 @@ program box_model
   type(rxn_update_data_photolysis_t) :: NO2_photolysis
 
   !! [MPI variables]
-#ifdef USE_MPI
+#ifdef CAMP_USE_MPI
   integer(kind=i_kind) :: pos, pack_size
   character, allocatable :: buffer(:)
 #endif
   !! [MPI variables]
 
   !! [wrap initialization]
-#ifdef USE_MPI
+#ifdef CAMP_USE_MPI
   call camp_mpi_init( )
 
   if( camp_mpi_rank( ) .eq. 0 ) then
@@ -79,19 +79,14 @@ program box_model
         class is( rxn_photolysis_t )
           if( photo_rxn%property_set%get_string( "my photo label", photo_label ) ) then
             if( photo_label .eq. "NO2 photolysis" ) then
-              call rxn_factory%initialize_update_data( photo_rxn, NO2_photolysis )
+              call camp_core%initialize_update_object( photo_rxn, NO2_photolysis )
             end if
           end if
       end select
     end do
 
     !! [get pack size]
-    if( .not.NO2_photolysis%is_attached( ) ) then
-      write(*,*) "Missing NO2 photolysis reaction!"
-      stop 3
-    end if
-
-#ifdef USE_MPI
+#ifdef CAMP_USE_MPI
     ! Pack the core and the NO2 photolysis update data object
     pack_size = camp_core%pack_size( )               + &
                 NO2_photolysis%pack_size( )
@@ -140,9 +135,8 @@ program box_model
   call camp_core%solver_initialize( )
   camp_state => camp_core%new_state( )
 
-  camp_state%env_state%temp     = 275.4    ! Temperature in K
-  camp_state%env_state%pressure = 101532.2 ! Pressure in Pa
-  call camp_state%update_env_state( )
+  call camp_state%env_states(1)%set_temperature_K(  275.4_dp )
+  call camp_state%env_states(1)%set_pressure_Pa( 101532.2_dp )
 
   camp_state%state_var( idx_O3   ) = 0.13  ! [O3] in ppm
   camp_state%state_var( idx_NO   ) = 0.02  ! [NO] in ppm
@@ -151,11 +145,11 @@ program box_model
 
   !! [Set NO2 photolysis]
   call NO2_photolysis%set_rate( 12.2d0 ) ! rate in s-1
-  call camp_core%update_rxn_data( NO2_photolysis )
+  call camp_core%update_data( NO2_photolysis )
   !! [Set NO2 photolysis]
 
   !! [output]
-#ifdef USE_MPI
+#ifdef CAMP_USE_MPI
   if( camp_mpi_rank( ) .eq. 1 ) then
 #endif
 
@@ -169,7 +163,7 @@ program box_model
                        camp_state%state_var( idx_O2  )
     end do
 
-#ifdef USE_MPI
+#ifdef CAMP_USE_MPI
   end if
 
   call camp_mpi_finalize( )

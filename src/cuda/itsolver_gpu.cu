@@ -12,28 +12,32 @@ void read_options(itsolver *bicg){
 
   fp = fopen("itsolver_options.txt", "r");
   if (fp == NULL){
-    printf("Could not open file %s",path);
-  }
-  fscanf(fp, "%s", buff);
-
-  if(strstr(buff,"CELLS_METHOD=Block-cells1")!=NULL){
-    //printf("itsolver read_options CELLS_METHOD=Block-cells(1)\n");
-    bicg->cells_method=3; //One-cell per block (Independent cells)
-  }
-  else if(strstr(buff,"CELLS_METHOD=Block-cellsN")!=NULL){
-    //printf("itsolver read_options CELLS_METHOD=Block-cells(N)\n");
-    bicg->cells_method=2; //One-cell per block (Independent cells)
-  }
-  else if(strstr(buff,"CELLS_METHOD=Multi-cells")!=NULL){
-    //printf("itsolver read_options CELLS_METHOD=Multi-cells\n");
-    bicg->cells_method=1; //One-cell per block (Independent cells)
-  }
-  else if(strstr(buff,"CELLS_METHOD=One-cell")!=NULL){
-    //printf("itsolver read_options CELLS_METHOD=One-cell\n");
+    printf("Could not open file %s, setting itsolver to One-cell",path);
     bicg->cells_method=0;
   }else{
-    printf("ERROR: solveGPU_block unkonwn cells_method");
-    exit(0);
+
+    fscanf(fp, "%s", buff);
+
+    if(strstr(buff,"CELLS_METHOD=Block-cells1")!=NULL){
+      //printf("itsolver read_options CELLS_METHOD=Block-cells(1)\n");
+      bicg->cells_method=3; //One-cell per block (Independent cells)
+    }
+    else if(strstr(buff,"CELLS_METHOD=Block-cellsN")!=NULL){
+      //printf("itsolver read_options CELLS_METHOD=Block-cells(N)\n");
+      bicg->cells_method=2; //One-cell per block (Independent cells)
+    }
+    else if(strstr(buff,"CELLS_METHOD=Multi-cells")!=NULL){
+      //printf("itsolver read_options CELLS_METHOD=Multi-cells\n");
+      bicg->cells_method=1; //One-cell per block (Independent cells)
+    }
+    else if(strstr(buff,"CELLS_METHOD=One-cell")!=NULL){
+      //printf("itsolver read_options CELLS_METHOD=One-cell\n");
+      bicg->cells_method=0;
+    }else{
+      printf("ERROR: solveGPU_block unkonwn cells_method");
+      exit(0);
+    }
+    fclose(fp);
   }
 
 }

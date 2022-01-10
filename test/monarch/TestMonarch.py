@@ -50,6 +50,9 @@ class TestMonarch:
         self.casesMulticellsOnecells = []
         self.caseMulticellsOnecell = ""
         self.nCellsCase = 1
+        self.itsolverConfigFile = "itsolver_options"
+        self.campSolverConfigFile = "config_variables_c_solver.txt"
+
 
     @property
     def chemFile(self):
@@ -61,9 +64,14 @@ class TestMonarch:
             raise
         self._chemFile = new_chemFile
 
+    def __del__(self):
+        if os.path.exists(self.itsolverConfigFile):
+            os.remove(self.itsolverConfigFile)
+        if os.path.exists(self.campSolverConfigFile):
+            os.remove(self.campSolverConfigFile)
 
 def write_itsolver_config_file(conf):
-    file1 = open("itsolver_options.txt", "w")
+    file1 = open(conf.itsolverConfigFile, "w")
 
     cells_method_str = "CELLS_METHOD=" + conf.caseMulticellsOnecell
     file1.write(cells_method_str)
@@ -73,7 +81,7 @@ def write_itsolver_config_file(conf):
 
 
 def write_camp_config_file(conf):
-    file1 = open("config_variables_c_solver.txt", "w")
+    file1 = open(conf.campSolverConfigFile, "w")
 
     if conf.caseGpuCpu == "CPU":
         file1.write("USE_CPU=ON\n")
@@ -104,14 +112,7 @@ def run(conf):
         print("Nvprof file saved in ", os.path.abspath(os.getcwd()) \
               + "/" + pathNvprof)
 
-    exec_str += "../../mock_monarch config_" + conf.chemFile + ".json " + "interface_" + conf.chemFile \
-                + ".json " + conf.chemFile
-
-    ADD_EMISIONS = "OFF"
-    if conf.chemFile == "monarch_binned":
-        ADD_EMISIONS = "ON"
-
-    exec_str += " " + ADD_EMISIONS
+    exec_str += "../../mock_monarch"
 
     # CAMP solver option GPU-CPU
     write_camp_config_file(conf)
@@ -123,11 +124,8 @@ def run(conf):
         json.dump(conf.__dict__, jsonFile, indent=4, sort_keys=True)
 
     # Main
-    print(exec_str + " " + str(conf.nCells) + " " + conf.caseMulticellsOnecell +
-          " " + str(conf.timeSteps) + " " + conf.diffCells)
-    os.system(
-        exec_str + " " + str(conf.nCells) + " " + conf.caseMulticellsOnecell +
-        " " + str(conf.timeSteps) + " " + conf.diffCells)
+    print(exec_str)
+    os.system(exec_str)
 
     data = {}
     file = 'out/' + conf.chemFile + '_' + conf.caseMulticellsOnecell + conf.results_file
@@ -448,6 +446,7 @@ def all_timesteps():
         conf.plotTitle += ", " + conf.diffCells + " test"
 
     plot_cases(conf)
+    del conf
 
 
 all_timesteps()

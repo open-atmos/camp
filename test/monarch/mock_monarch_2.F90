@@ -6,11 +6,11 @@
 !> The mock_monarch program
 
 !> Mock version of the MONARCH model for testing integration with PartMC
-program mock_monarch
+program mock_monarch_2
 
   use camp_util,                          only : assert_msg, almost_equal, &
-          to_string
-  use camp_monarch_interface
+                                                to_string
+  use camp_monarch_interface_2
   use camp_mpi
 
   implicit none
@@ -171,17 +171,17 @@ program mock_monarch
 
       call output_results(curr_time)
       call camp_interface%integrate(curr_time,         & ! Starting time (min)
-              TIME_STEP,         & ! Time step (min)
-              I_W,               & ! Starting W->E grid cell
-              I_E,               & ! Ending W->E grid cell
-              I_S,               & ! Starting S->N grid cell
-              I_N,               & ! Ending S->N grid cell
-              temperature,       & ! Temperature (K)
-              species_conc,      & ! Tracer array
-              water_conc,        & ! Water concentrations (kg_H2O/kg_air)
-              WATER_VAPOR_ID,    & ! Index in water_conc() corresponding to water vapor
-              air_density,       & ! Air density (kg_air/m^3)
-              pressure)            ! Air pressure (Pa)
+                                   TIME_STEP,         & ! Time step (min)
+                                   I_W,               & ! Starting W->E grid cell
+                                   I_E,               & ! Ending W->E grid cell
+                                   I_S,               & ! Starting S->N grid cell
+                                   I_N,               & ! Ending S->N grid cell
+                                   temperature,       & ! Temperature (K)
+                                   species_conc,      & ! Tracer array
+                                   water_conc,        & ! Water concentrations (kg_H2O/kg_air)
+                                   WATER_VAPOR_ID,    & ! Index in water_conc() corresponding to water vapor
+                                   air_density,       & ! Air density (kg_air/m^3)
+                                   pressure)            ! Air pressure (Pa)
       curr_time = curr_time + TIME_STEP
 
       !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -210,13 +210,13 @@ program mock_monarch
         do k = 1, NUM_VERT_CELLS
           do i_spec = START_CAMP_ID, END_CAMP_ID
             call assert_msg( 394742768, &
-                    almost_equal( real( species_conc(i,j,k,i_spec), kind=dp ), &
-                            real( species_conc_copy(i,j,k,i_spec), kind=dp ), &
-                            1.d-5, 1d-4 ), &
-                    "Concentration species mismatch for species "// &
-                            trim( to_string( i_spec ) )//". Expected: "// &
-                            trim( to_string( species_conc_copy(i,j,k,i_spec) ) )//", got: "// &
-                            trim( to_string( species_conc(i,j,k,i_spec) ) ) )
+              almost_equal( real( species_conc(i,j,k,i_spec), kind=dp ), &
+                  real( species_conc_copy(i,j,k,i_spec), kind=dp ), &
+                  1.d-5, 1d-4 ), &
+              "Concentration species mismatch for species "// &
+                  trim( to_string( i_spec ) )//". Expected: "// &
+                  trim( to_string( species_conc_copy(i,j,k,i_spec) ) )//", got: "// &
+                  trim( to_string( species_conc(i,j,k,i_spec) ) ) )
           end do
         end do
       end do
@@ -236,19 +236,6 @@ program mock_monarch
   ! The evaluation is based on a run with reasonable seeming values and
   ! few solver modifications. It is used to make sure future modifications
   ! to the solver do not affect the results
-#if 0
-  do i_spec = START_CAMP_ID, END_CAMP_ID
-    call assert_msg( 394742768, &
-        almost_equal( real( species_conc(10,15,1,i_spec), kind=dp ), &
-                      real( comp_species_conc(i_time,i_spec), kind=dp ), &
-                      1.d-4, 1d-3 ), &
-        "Concentration species mismatch for species "// &
-        trim( to_string( i_spec ) )//" at time step "// &
-        trim( to_string( i_time ) )//". Expected: "// &
-        trim( to_string( comp_species_conc(i_time,i_spec) ) )//", got: "// &
-        trim( to_string( species_conc(10,15,1,i_spec) ) ) )
-  end do
-#endif
 
   ! Deallocation
   deallocate(camp_input_file)
@@ -283,10 +270,6 @@ contains
 
     ! Open the compare file
     ! TODO Implement once results are stable
-#if 0
-    file_name = file_prefix//"_comp.txt"
-    open(COMPARE_FILE_UNIT, file=file_name, action="read")
-#endif
 
     ! TODO refine initial model conditions
     temperature(:,:,:) = 300.614166259766
@@ -318,104 +301,100 @@ contains
 
     ! Read the compare file
     ! TODO Implement once results are stable
-#if 0
-    call read_comp_file()
-    close(COMPARE_FILE_UNIT)
-#endif
 
-end subroutine model_initialize
+  end subroutine model_initialize
 
-        !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-        !> Read the comparison file (must have same dimensions as current config)
-        subroutine read_comp_file()
+  !> Read the comparison file (must have same dimensions as current config)
+  subroutine read_comp_file()
 
-                integer :: i_time
-                real :: time, water
+    integer :: i_time
+    real :: time, water
 
-                do i_time = 0, NUM_TIME_STEP + 1
-                read(COMPARE_FILE_UNIT, *) time, &
-                comp_species_conc(i_time, START_CAMP_ID:END_CAMP_ID), &
-                water
-                end do
+    do i_time = 0, NUM_TIME_STEP + 1
+      read(COMPARE_FILE_UNIT, *) time, &
+             comp_species_conc(i_time, START_CAMP_ID:END_CAMP_ID), &
+             water
+    end do
 
-                end subroutine read_comp_file
+  end subroutine read_comp_file
 
-                !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-                !> Output the model results
-                subroutine output_results(curr_time)
+  !> Output the model results
+  subroutine output_results(curr_time)
 
-        !> Current model time (min since midnight)
-        real, intent(in) :: curr_time
+    !> Current model time (min since midnight)
+    real, intent(in) :: curr_time
 
-        write(RESULTS_FILE_UNIT, *) curr_time, &
-        species_conc(2,3,1,START_CAMP_ID:END_CAMP_ID), &
-        water_conc(2,3,1,WATER_VAPOR_ID)
+    write(RESULTS_FILE_UNIT, *) curr_time, &
+            species_conc(2,3,1,START_CAMP_ID:END_CAMP_ID), &
+            water_conc(2,3,1,WATER_VAPOR_ID)
 
-                end subroutine output_results
+  end subroutine output_results
 
-                !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-                !> Create a gnuplot script for viewing species concentrations
-                subroutine create_gnuplot_script(camp_interface, file_prefix, start_time, &
-        end_time)
+  !> Create a gnuplot script for viewing species concentrations
+  subroutine create_gnuplot_script(camp_interface, file_prefix, start_time, &
+            end_time)
 
-        !> PartMC-camp <-> MONARCH interface
-        type(monarch_interface_t), intent(in) :: camp_interface
-        !> File prefix for gnuplot script
-        character(len=:), allocatable :: file_prefix
-        !> Plot start time
-        real :: start_time
-                !> Plot end time
-                real :: end_time
+    !> PartMC-camp <-> MONARCH interface
+    type(monarch_interface_t), intent(in) :: camp_interface
+    !> File prefix for gnuplot script
+    character(len=:), allocatable :: file_prefix
+    !> Plot start time
+    real :: start_time
+    !> Plot end time
+    real :: end_time
 
-                type(string_t), allocatable :: species_names(:)
-        integer(kind=i_kind), allocatable :: tracer_ids(:)
-                character(len=:), allocatable :: file_name, spec_name
-                integer(kind=i_kind) :: i_char, i_spec, tracer_id
+    type(string_t), allocatable :: species_names(:)
+    integer(kind=i_kind), allocatable :: tracer_ids(:)
+    character(len=:), allocatable :: file_name, spec_name
+    integer(kind=i_kind) :: i_char, i_spec, tracer_id
 
-                ! Get the species names and ids
-                call camp_interface%get_MONARCH_species(species_names, tracer_ids)
+    ! Get the species names and ids
+    call camp_interface%get_MONARCH_species(species_names, tracer_ids)
 
-        ! Adjust the tracer ids to match the results file
-        tracer_ids(:) = tracer_ids(:) - START_CAMP_ID + 2
+    ! Adjust the tracer ids to match the results file
+    tracer_ids(:) = tracer_ids(:) - START_CAMP_ID + 2
 
-        ! Create the gnuplot script
-        file_name = file_prefix//".conf"
-        open(unit=SCRIPTS_FILE_UNIT, file=file_name, status="replace", action="write")
-                write(SCRIPTS_FILE_UNIT,*) "# "//file_name
-                write(SCRIPTS_FILE_UNIT,*) "# Run as: gnuplot "//file_name
-        write(SCRIPTS_FILE_UNIT,*) "set terminal png truecolor"
-        write(SCRIPTS_FILE_UNIT,*) "set autoscale"
-        write(SCRIPTS_FILE_UNIT,*) "set xrange [", start_time, ":", end_time, "]"
-                do i_spec = 1, size(species_names)
-                spec_name = species_names(i_spec)%string
-        forall (i_char = 1:len(spec_name), spec_name(i_char:i_char).eq.'/') &
-        spec_name(i_char:i_char) = '_'
-        write(SCRIPTS_FILE_UNIT,*) "set output '"//file_prefix//"_"// &
-        spec_name//".png'"
-                write(SCRIPTS_FILE_UNIT,*) "plot\"
-                write(SCRIPTS_FILE_UNIT,*) " '"//file_prefix//"_results.txt'\"
-        write(SCRIPTS_FILE_UNIT,*) " using 1:"// &
-        trim(to_string(tracer_ids(i_spec)))//" title '"// &
-        species_names(i_spec)%string//" (MONARCH)'"
-        end do
-        tracer_id = END_CAMP_ID - START_CAMP_ID + 3
-        write(SCRIPTS_FILE_UNIT,*) "set output '"//file_prefix//"_H2O.png'"
-        write(SCRIPTS_FILE_UNIT,*) "plot\"
-        write(SCRIPTS_FILE_UNIT,*) " '"//file_prefix//"_results.txt'\"
-        write(SCRIPTS_FILE_UNIT,*) " using 1:"// &
-        trim(to_string(tracer_id))//" title 'H2O (MONARCH)'"
-        close(SCRIPTS_FILE_UNIT)
+    ! Create the gnuplot script
+    file_name = file_prefix//".conf"
+    open(unit=SCRIPTS_FILE_UNIT, file=file_name, status="replace", action="write")
+    write(SCRIPTS_FILE_UNIT,*) "# "//file_name
+    write(SCRIPTS_FILE_UNIT,*) "# Run as: gnuplot "//file_name
+    write(SCRIPTS_FILE_UNIT,*) "set terminal png truecolor"
+    write(SCRIPTS_FILE_UNIT,*) "set autoscale"
+    write(SCRIPTS_FILE_UNIT,*) "set xrange [", start_time, ":", end_time, "]"
+    do i_spec = 1, size(species_names)
+      spec_name = species_names(i_spec)%string
+      forall (i_char = 1:len(spec_name), spec_name(i_char:i_char).eq.'/') &
+                spec_name(i_char:i_char) = '_'
+      write(SCRIPTS_FILE_UNIT,*) "set output '"//file_prefix//"_"// &
+              spec_name//".png'"
+      write(SCRIPTS_FILE_UNIT,*) "plot\"
+      write(SCRIPTS_FILE_UNIT,*) " '"//file_prefix//"_results.txt'\"
+      write(SCRIPTS_FILE_UNIT,*) " using 1:"// &
+              trim(to_string(tracer_ids(i_spec)))//" title '"// &
+              species_names(i_spec)%string//" (MONARCH)'"
+    end do
+    tracer_id = END_CAMP_ID - START_CAMP_ID + 3
+    write(SCRIPTS_FILE_UNIT,*) "set output '"//file_prefix//"_H2O.png'"
+    write(SCRIPTS_FILE_UNIT,*) "plot\"
+    write(SCRIPTS_FILE_UNIT,*) " '"//file_prefix//"_results.txt'\"
+    write(SCRIPTS_FILE_UNIT,*) " using 1:"// &
+            trim(to_string(tracer_id))//" title 'H2O (MONARCH)'"
+    close(SCRIPTS_FILE_UNIT)
 
-                deallocate(species_names)
-        deallocate(tracer_ids)
-        deallocate(file_name)
-        deallocate(spec_name)
+    deallocate(species_names)
+    deallocate(tracer_ids)
+    deallocate(file_name)
+    deallocate(spec_name)
 
-        end subroutine create_gnuplot_script
+  end subroutine create_gnuplot_script
 
-        !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-        end program mock_monarch
+end program

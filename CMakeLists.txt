@@ -11,6 +11,19 @@ set(PACKAGE_STRING "CAMP 1.0.0")
 set(PACKAGE_TARNAME "camp")
 set(PACKAGE_VERSION "1.0.0")
 
+if ( "${CMAKE_SYSTEM_NAME}" MATCHES "Darwin" )
+  set ( ENABLE_DYLIBS_USE_RPATH TRUE CACHE BOOL
+    "Enable @rpath install name for dylibs" )
+  mark_as_advanced ( ENABLE_DYLIBS_USE_RPATH )
+endif ()
+
+if ( ENABLE_DYLIBS_USE_RPATH )
+  set ( CMAKE_MACOSX_RPATH TRUE )
+else ()
+  set ( CMAKE_INSTALL_NAME_DIR
+    "${CMAKE_INSTALL_FULL_LIBDIR}" )
+endif ()
+
 ######################################################################
 # options
 
@@ -184,7 +197,7 @@ endif()
 
 macro(do_unit_test test_name result)
   if(ENABLE_MPI)
-    add_test(unit_test_${test_name} mpiexec_mpt -v -np 2 ${CMAKE_BINARY_DIR}/unit_test_${test_name})
+    add_test(unit_test_${test_name} mpirun -v -np 2 ${CMAKE_BINARY_DIR}/unit_test_${test_name})
   else()
     add_test(unit_test_${test_name} ${CMAKE_BINARY_DIR}/unit_test_${test_name})
   endif()
@@ -195,10 +208,11 @@ endmacro(do_unit_test)
 ######################################################################
 # copy dirs
 
+add_custom_target(copy_data ALL ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/data ${CMAKE_BINARY_DIR}/data_run)
 add_custom_target(copy_test ALL ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/test ${CMAKE_BINARY_DIR}/test_run)
 add_custom_target(copy_mechanism ALL ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/mechanisms ${CMAKE_BINARY_DIR}/mechanisms_run)
-add_custom_target(copy_scenario ALL ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/scenarios ${CMAKE_BINARY_DIR}/scenarios_run)
-set_property(DIRECTORY PROPERTY ADDITIONAL_MAKE_CLEAN_FILES test_run mechanisms_run scenarios_run)
+add_custom_target(copy_boot_camp ALL ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/doc/camp_tutorial/boot_camp ${CMAKE_BINARY_DIR}/boot_camp_run)
+set_property(DIRECTORY PROPERTY ADDITIONAL_MAKE_CLEAN_FILES test_run mechanisms_run scenarios_run boot_camp_run)
 
 ######################################################################
 # tests
@@ -241,6 +255,12 @@ add_test(test_chem_mech_solver ${CMAKE_BINARY_DIR}/test_run/chemistry/test_chemi
 add_test(test_chemistry_cb05cl_ae5 ${CMAKE_BINARY_DIR}/test_run/chemistry/cb05cl_ae5/test_chemistry_cb05cl_ae5.sh ${MPI_TEST_FLAG})
 add_test(test_chemistry_eqsam_v03d ${CMAKE_BINARY_DIR}/test_run/chemistry/eqsam_v03d/test_chemistry_eqsam_v03d.sh ${MPI_TEST_FLAG})
 add_test(test_MONARCH_2 ${CMAKE_BINARY_DIR}/test_run/monarch/test_monarch_2.sh ${MPI_TEST_FLAG})
+add_test(boot_camp_part_1 ${CMAKE_BINARY_DIR}/boot_camp_run/part_2_code/run_part_1.sh ${MPI_TEST_FLAG})
+add_test(boot_camp_part_2 ${CMAKE_BINARY_DIR}/boot_camp_run/part_2_code/run_part_2.sh ${MPI_TEST_FLAG})
+add_test(boot_camp_part_3 ${CMAKE_BINARY_DIR}/boot_camp_run/part_3_code/run_part_3.sh ${MPI_TEST_FLAG})
+add_test(boot_camp_part_4 ${CMAKE_BINARY_DIR}/boot_camp_run/part_4_code/run_part_4.sh ${MPI_TEST_FLAG})
+add_test(camp_v1_paper_binned ${CMAKE_BINARY_DIR}/data_run/CAMP_v1_paper/binned/test_monarch_binned.sh ${MPI_TEST_FLAG})
+add_test(camp_v1_paper_modal ${CMAKE_BINARY_DIR}/data_run/CAMP_v1_paper/modal/test_monarch_modal.sh ${MPI_TEST_FLAG})
 
 endif()
 
@@ -251,9 +271,6 @@ set(STD_C_FLAGS "-std=c99")
 
 #set(STD_CUDA_FLAGS "-arch=compute_70 -code=sm_70 -dc --compiler-options '-fPIC' -lcusolver -lcudart -lcudadevrt -lcublas -lcusparse_static -lculibos -lpthread -ldl")
 set(STD_CUDA_FLAGS "-lineinfo -arch=compute_70 -code=sm_70 -dc --compiler-options '-fPIC' -lcusolver -lcudart -lcudadevrt -lcublas -lcusparse_static -lculibos -lpthread -ldl")
-
-#Simplified (Pending to check)
-#set(STD_CUDA_FLAGS "-arch=compute_70 -code=sm_70 -dc --compiler-options '-fPIC' -lcublas -lcusparse_static -lpthread -ldl")
 
 if(ENABLE_CXX)
   set(STD_CXX_FLAGS "-fpermissive")
@@ -488,9 +505,9 @@ add_executable(mock_monarch test/monarch/mock_monarch.F90
         test/chemistry/cb05cl_ae5/module_BSC_CHEM_DATA.F90)
 target_link_libraries(mock_monarch camplib)
 
-#add_executable(mock_monarch_2 test/monarch/mock_monarch_2.F90
- #       test/monarch/camp_monarch_interface_2.F90)
-#target_link_libraries(mock_monarch_2 camplib)
+add_executable(mock_monarch_2 test/monarch/mock_monarch_2.F90
+        test/monarch/camp_monarch_interface_2.F90)
+target_link_libraries(mock_monarch_2 camplib)
 
 if (ENABLE_TESTS)
 
@@ -660,6 +677,47 @@ target_link_libraries(unit_test_aero_rep_modal_binned_mass camplib)
 add_executable(test_chem_mech_solver test/chemistry/test_chem_mech_solver.F90)
 
 target_link_libraries(test_chem_mech_solver camplib)
+
+######################################################################
+# BootCAMP Tutorial Exercises
+######################################################################
+
+######################################################################
+# Part 1
+
+add_executable(boot_camp_part_1 doc/camp_tutorial/boot_camp/part_1_code/box_model.F90)
+
+target_link_libraries(boot_camp_part_1 camplib)
+
+######################################################################
+# Part 3
+
+add_executable(boot_camp_part_3 doc/camp_tutorial/boot_camp/part_3_code/box_model.F90)
+
+target_link_libraries(boot_camp_part_3 camplib)
+
+######################################################################
+# Part 4
+
+add_executable(boot_camp_part_4 doc/camp_tutorial/boot_camp/part_4_code/box_model.F90)
+
+target_link_libraries(boot_camp_part_4 camplib)
+
+######################################################################
+# CAMP v1.0.0 paper configurations
+######################################################################
+
+add_executable(camp_v1_paper_binned data/CAMP_v1_paper/binned/camp_monarch_interface.F90
+                                    data/CAMP_v1_paper/binned/mock_monarch.F90)
+
+target_link_libraries(camp_v1_paper_binned camplib)
+
+######################################################################
+
+add_executable(camp_v1_paper_modal data/CAMP_v1_paper/modal/camp_monarch_interface.F90
+                                   data/CAMP_v1_paper/modal/mock_monarch.F90)
+
+target_link_libraries(camp_v1_paper_modal camplib)
 
 ######################################################################
 endif()

@@ -175,28 +175,33 @@ void get_camp_config_variables(SolverData *sd){
   FILE *fp;
   char buff[255];
 
+  char path[] = "config_variables_c_solver.txt";
   fp = fopen("config_variables_c_solver.txt", "r");
+
   if (fp == NULL){
-    printf("WARNING: Could not open file get_camp_config_variables");
-  }
-
-  fscanf(fp, "%s", buff);
-  if(strstr(buff,"USE_CPU=ON")!=NULL){
+    printf("Could not open file %s, setting use_cpu ON ",path);
     sd->use_cpu=1;
-  }
-  else{
-    sd->use_cpu=0;
-  }
-
-  fscanf(fp, "%s", buff);
-  if(strstr(buff,"USE_F_CPU=ON")!=NULL){
     sd->use_f_cpu=1;
-  }
-  else{
-    sd->use_f_cpu=0;
+  }else{
+
+    fscanf(fp, "%s", buff);
+    if(strstr(buff,"USE_CPU=ON")!=NULL){
+      sd->use_cpu=1;
+    }
+    else{
+      sd->use_cpu=0;
+    }
+
+    fscanf(fp, "%s", buff);
+    if(strstr(buff,"USE_F_CPU=ON")!=NULL){
+      sd->use_f_cpu=1;
+    }
+    else{
+      sd->use_f_cpu=0;
+    }
+    fclose(fp);
   }
 
-  fclose(fp);
 }
 
 void export_counters_open(SolverData *sd)

@@ -43,9 +43,9 @@ module camp_monarch_interface
   type :: monarch_interface_t
     !private
     !> CAMP-chem core
-    type(camp_core_t), pointer :: camp_core
+    type(camp_core_t), pointer :: camp_core => null( )
     !> CAMP-chem state
-    type(camp_state_t), pointer :: camp_state
+    type(camp_state_t), pointer :: camp_state => null( )
     !> MONARCH species names
     type(string_t), allocatable :: monarch_species_names(:)
     character(len=:), allocatable :: interface_input_file
@@ -62,13 +62,13 @@ module camp_monarch_interface
     !> Ending index for CAMP species on the MONARCH tracer array
     integer(kind=i_kind) :: tracer_ending_id
     !> CAMP-camp <-> MONARCH species map input data
-    type(property_t), pointer :: species_map_data
+    type(property_t), pointer :: species_map_data  => null( )
     !> Gas-phase water id in CAMP-camp
     integer(kind=i_kind) :: gas_phase_water_id
     !> Initial concentration data
-    type(property_t), pointer :: init_conc_data
+    type(property_t), pointer :: init_conc_data => null( )
     !> Interface input data
-    type(property_t), pointer :: property_set
+    type(property_t), pointer :: property_set  => null( )
     type(rxn_update_data_photolysis_t), allocatable :: photo_rxns(:)
     real(kind=dp), allocatable :: base_rates(:),specs_emi(:),offset_photo_rates_cells(:)
     integer :: n_photo_rxn
@@ -157,7 +157,7 @@ contains
     real(kind=dp) :: base_rate
 
     class(aero_rep_data_t), pointer :: aero_rep
-    integer(kind=i_kind) :: i_sect_om, i_sect_bc, i_sect_sulf, i_sect_opm, i, z
+    integer(kind=i_kind) :: i_sect_om, i_sect_bc, i_sect_sulf, i_sect_opm, i, z,time
     type(aero_rep_factory_t) :: aero_rep_factory
     type(aero_rep_update_data_modal_binned_mass_GMD_t) :: update_data_GMD
     type(aero_rep_update_data_modal_binned_mass_GSD_t) :: update_data_GSD
@@ -398,14 +398,20 @@ contains
 
     ! Initialize the solver on all nodes
 
+    print*,"time",time()
+
     call this%camp_core%solver_initialize(ncounters, ntimers)
 
     !call camp_mpi_barrier(MPI_COMM_WORLD)
+
+    print*,"time",time()
 
     ! Create a state variable on each node
     this%camp_state => this%camp_core%new_state()
 
     !call camp_mpi_barrier(MPI_COMM_WORLD)
+
+    print*,"time",time()
 
     !Options
     this%nrates_cells = this%n_cells

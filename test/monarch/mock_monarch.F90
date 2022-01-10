@@ -216,37 +216,60 @@ program mock_monarch
 
   !Read configuration from TestMonarch.json
 
-  call jfile%initialize()
-  export_path = "TestMonarch"//".json"
-  call jfile%load_file(export_path); if (jfile%failed()) print*,&
-          "JSON not found at ",export_path
+  call get_command_argument(1, arg, status=status_code)
+  camp_input_file = trim(arg)
+  call get_command_argument(2, arg, status=status_code)
+  interface_input_file = trim(arg)
+  call get_command_argument(3, arg, status=status_code)
+  output_file_prefix = trim(arg)
 
-  call jfile%get('_chemFile',output_file_title)
-  camp_input_file = "config_"//output_file_title//".json"
-  interface_input_file = "interface_"//output_file_title//".json"
-  output_file_prefix = "out/"//output_file_title
+  print*,"status_code",status_code
+
   ADD_EMISIONS = "OFF"
-  if(output_file_title.eq."monarch_binned") then
-    ADD_EMISIONS = "ON"
-  end if
-
-  call jfile%get('nCells',NUM_VERT_CELLS)
-  call jfile%get('caseMulticellsOnecell',caseMulticellsOnecell)
-  output_file_prefix = output_file_prefix//"_"//caseMulticellsOnecell
-  if(caseMulticellsOnecell.eq."One-cell") then
-    n_cells = 1
-  else
-    n_cells = (I_E - I_W+1)*(I_N - I_S+1)*NUM_VERT_CELLS
-  end if
-
-  call jfile%get('timeSteps',NUM_TIME_STEP)
-  call jfile%get('timeStepsDt',TIME_STEP)
-  call jfile%get('diffCells',diffCells)
   DIFF_CELLS = "OFF"
-  if(diffCells.eq."Realistic") then
-    DIFF_CELLS = "ON"
+
+  if(status_code.eq.0) then
+
+    !START_TIME = 360
+    NUM_TIME_STEP = 1 !5
+    TIME_STEP = 1.6
+    NUM_VERT_CELLS = 15
+    n_cells = 1
+    output_file_title = "Test_monarch_X"
+
   else
-    DIFF_CELLS = "OFF"
+
+    call jfile%initialize()
+    export_path = "TestMonarch"//".json"
+    call jfile%load_file(export_path); if (jfile%failed()) print*,&
+            "JSON not found at ",export_path
+
+    call jfile%get('_chemFile',output_file_title)
+    camp_input_file = "config_"//output_file_title//".json"
+    interface_input_file = "interface_"//output_file_title//".json"
+    output_file_prefix = "out/"//output_file_title
+    if(output_file_title.eq."monarch_binned") then
+      ADD_EMISIONS = "ON"
+    end if
+
+    call jfile%get('nCells',NUM_VERT_CELLS)
+    call jfile%get('caseMulticellsOnecell',caseMulticellsOnecell)
+    output_file_prefix = output_file_prefix//"_"//caseMulticellsOnecell
+    if(caseMulticellsOnecell.eq."One-cell") then
+      n_cells = 1
+    else
+      n_cells = (I_E - I_W+1)*(I_N - I_S+1)*NUM_VERT_CELLS
+    end if
+
+    call jfile%get('timeSteps',NUM_TIME_STEP)
+    call jfile%get('timeStepsDt',TIME_STEP)
+    call jfile%get('diffCells',diffCells)
+    if(diffCells.eq."Realistic") then
+      DIFF_CELLS = "ON"
+    else
+      DIFF_CELLS = "OFF"
+    end if
+
   end if
 
   allocate(counters(ncounters))
@@ -384,7 +407,7 @@ program mock_monarch
           START_CAMP_ID, END_CAMP_ID, n_cells, ADD_EMISIONS, ncounters, ntimers)!, n_cells
 
   !call camp_mpi_barrier(MPI_COMM_WORLD)
-  !print*,"monarch_interface_t end MPI RANK",camp_mpi_rank()
+  print*,"monarch_interface_t end MPI RANK",camp_mpi_rank()
 
   if(export_results_all_cells.eq.1) then
     call init_file_results_all_cells(camp_interface, output_file_prefix)

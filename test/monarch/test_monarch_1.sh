@@ -9,7 +9,7 @@ cd ${0%/*}
 # make the output directory if it doesn't exist
 mkdir -p out
 # copy the compare file to the output directory
-cp mod37/monarch_mod37_comp.txt out/monarch_mod37_comp.txt
+cp simple_comp.txt out/simple_comp.txt
 
 ((counter = 1))
 while [ true ]
@@ -17,9 +17,9 @@ do
   echo Attempt $counter
 
 if [[ $1 == "MPI" ]]; then
-  exec_str="mpirun -v -np 2 ../../mock_monarch_2 mod37/config_monarch_mod37.json mod37/interface_monarch_mod37.json out/monarch_mod37"
+  exec_str="mpirun -v -np 2 ../../mock_monarch config_simple.json interface_simple.json out/simple"
 else
-  exec_str="../../mock_monarch_2 mod37/config_monarch_mod37.json mod37/interface_monarch_mod37.json out/monarch_mod37"
+  exec_str="../../mock_monarch config_simple.json interface_simple.json out/simple"
 fi
 
   if ! $exec_str; then

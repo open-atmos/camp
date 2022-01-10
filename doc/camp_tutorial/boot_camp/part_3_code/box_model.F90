@@ -13,6 +13,11 @@ program box_model
 
   !! [NO2 photolysis modules]
 
+#ifdef CAMP_USE_MPI
+  use mpi
+  use camp_mpi
+#endif
+
   implicit none
 
   type(camp_core_t), pointer :: camp_core
@@ -35,6 +40,11 @@ program box_model
   type(rxn_update_data_photolysis_t) :: NO2_photolysis
 
   !! [NO2 photolysis variables]
+
+  ! allows example to run with MPI supprt compiled in
+#ifdef CAMP_USE_MPI
+  call camp_mpi_init( )
+#endif
 
   camp_core => camp_core_t( "my_config_file.json" )
   call camp_core%initialize( )
@@ -65,24 +75,18 @@ program box_model
       class is( rxn_photolysis_t )
         if( photo_rxn%property_set%get_string( "my photo label", photo_label ) ) then
           if( photo_label .eq. "NO2 photolysis" ) then
-            call rxn_factory%initialize_update_data( photo_rxn, NO2_photolysis )
+            call camp_core%initialize_update_object( photo_rxn, NO2_photolysis )
           end if
         end if
     end select
   end do
-
-  if( .not.NO2_photolysis%is_attached( ) ) then
-    write(*,*) "Missing NO2 photolysis reaction!"
-    stop 3
-  end if
   !! [Find NO2 photolysis]
 
   call camp_core%solver_initialize( )
   camp_state => camp_core%new_state( )
 
-  camp_state%env_state%temp     = 275.4    ! Temperature in K
-  camp_state%env_state%pressure = 101532.2 ! Pressure in Pa
-  call camp_state%update_env_state( )
+  call camp_state%env_states(1)%set_temperature_K(  275.4_dp )
+  call camp_state%env_states(1)%set_pressure_Pa( 101532.2_dp )
 
   camp_state%state_var( idx_O3   ) = 0.13  ! [O3] in ppm
   camp_state%state_var( idx_NO   ) = 0.02  ! [NO] in ppm
@@ -91,7 +95,7 @@ program box_model
 
   !! [Set NO2 photolysis]
   call NO2_photolysis%set_rate( 12.2d0 ) ! rate in s-1
-  call camp_core%update_rxn_data( NO2_photolysis )
+  call camp_core%update_data( NO2_photolysis )
   !! [Set NO2 photolysis]
 
   write(*,fmt_hdr) "time", "O3", "NO", "NO2", "O2"
@@ -106,5 +110,9 @@ program box_model
 
   deallocate( camp_core )
   deallocate( camp_state )
+
+#ifdef CAMP_USE_MPI
+  call camp_mpi_finalize( )
+#endif
 
 end program box_model

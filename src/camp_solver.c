@@ -371,10 +371,13 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
   sd->use_cpu = 1;
 
 #ifdef CAMP_USE_GPU
+  printf("solver_new\n");
   get_camp_config_variables(sd);
+  printf("solver_new\n");
   solver_new_gpu_cu(sd, n_dep_var, n_state_var, n_rxn,
                     n_rxn_int_param, n_rxn_float_param, n_rxn_env_param,
                     n_cells);
+  printf("solver_new\n");
 #endif
 
 #ifdef CAMP_DEBUG
@@ -417,9 +420,13 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
 
 #endif
 
+  printf("solver_new\n");
+
 #ifdef CAMP_SOLVER_SPEC_NAMES
   sd->spec_names = (char **)malloc(sizeof(char *) * n_state_var);
 #endif
+
+  printf("solver_new\n");
 
   // Return a pointer to the new SolverData object
   return (void *)sd;

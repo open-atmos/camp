@@ -1,1 +1,11 @@
-../part_2_code/my_config_file.json
+{
+  "note" : "Remember to rename 'my simple mechanism' to something more meaningful",
+  "camp-files" : [
+    "my_simple_mechanism.json"
+  ],
+  "change log" : [
+    "031919 - md created file",
+    "031019 - md revised file"
+  ]
+}
+

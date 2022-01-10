@@ -59,9 +59,8 @@ program box_model
   call camp_core%solver_initialize( )
   camp_state => camp_core%new_state( )
 
-  camp_state%env_state%temp     = 275.4    ! Temperature in K
-  camp_state%env_state%pressure = 101532.2 ! Pressure in Pa
-  call camp_state%update_env_state( )
+  call camp_state%env_states(1)%set_temperature_K(  275.4_dp )
+  call camp_state%env_states(1)%set_pressure_Pa( 101532.2_dp )
 
   camp_state%state_var( idx_O3   ) = 0.13  ! [O3] in ppm
   camp_state%state_var( idx_NO   ) = 0.02  ! [NO] in ppm
