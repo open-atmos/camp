@@ -103,7 +103,8 @@ program mock_monarch_2
   !> Ending index for camp-chem species in tracer array
   integer, parameter :: END_CAMP_ID = 260
   !> Time step (min)
-  real, parameter :: TIME_STEP = 1.6
+  real(kind=dp):: TIME_STEP
+  real, parameter :: TIME_STEP_MONARCH37= 1.6
   !> Number of time steps to integrate over
   integer, parameter :: NUM_TIME_STEP = 5
   !> Index for water vapor in water_conc()
@@ -139,6 +140,10 @@ program mock_monarch_2
   !> Comparison values
   real :: comp_species_conc(0:NUM_TIME_STEP, NUM_MONARCH_SPEC)
   real :: species_conc_copy(NUM_WE_CELLS, NUM_SN_CELLS, NUM_VERT_CELLS, NUM_MONARCH_SPEC)
+  real :: conv
+  real :: height
+  !> Emissions hour counter
+  integer :: i_hour = 0
 
   !> Starting time for mock model run (min since midnight)
   !! is tracked in MONARCH
@@ -163,15 +168,22 @@ program mock_monarch_2
   character(len=:), allocatable :: output_file_prefix
 
   character(len=500) :: arg
-  integer :: status_code, i_time, i_spec, i, j, k
+  integer :: status_code, i_time, i_spec, i_case, i, j, k, z,r,n_cells_plot,cell_to_print
   !> Partmc nº of cases to test
+  integer :: plot_case, new_v_cells, aux_int
   integer :: camp_cases = 1
+  type(solver_stats_t), target :: solver_stats
 
-
-  ! Check the command line arguments
-  call assert_msg(129432506, command_argument_count().eq.3, "Usage: "// &
-          "./mock_monarch camp_input_file_list.json "// &
-          "interface_input_file.json output_file_prefix")
+  integer, allocatable :: counters(:)
+  real(kind=dp), allocatable :: times(:)
+  integer :: ncounters, ntimers != 0 != 2
+  integer :: export_results_all_cells
+  integer :: plot_species = 0
+  type(json_file) :: jfile
+  type(json_core) :: json
+  character(len=:), allocatable :: export_path
+  character(len=128) :: i_str
+  integer :: id
 
   ! initialize mpi (to take the place of a similar MONARCH call)
   call camp_mpi_init()
@@ -203,6 +215,25 @@ program mock_monarch_2
   call assert_msg(234156729, status_code.eq.0, "Error getting output file prefix")
   output_file_prefix = trim(arg)
 
+  print*,"status_code",status_code
+
+  ADD_EMISIONS = "OFF"
+  DIFF_CELLS = "OFF"
+
+  if(status_code.eq.0) then
+
+
+    TIME_STEP = 1.6 !1.6
+
+
+
+  else
+
+    export_path = "TestMonarch"//".json"
+
+  end if
+
+
   call model_initialize(output_file_prefix)
 
   !Repeat in case we want create a checksum
@@ -230,18 +261,22 @@ program mock_monarch_2
       !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
       call output_results(curr_time)
-      call camp_interface%integrate(curr_time,         & ! Starting time (min)
-                                   TIME_STEP,         & ! Time step (min)
-                                   I_W,               & ! Starting W->E grid cell
-                                   I_E,               & ! Ending W->E grid cell
-                                   I_S,               & ! Starting S->N grid cell
-                                   I_N,               & ! Ending S->N grid cell
-                                   temperature,       & ! Temperature (K)
-                                   species_conc,      & ! Tracer array
-                                   water_conc,        & ! Water concentrations (kg_H2O/kg_air)
-                                   WATER_VAPOR_ID,    & ! Index in water_conc() corresponding to water vapor
-                                   air_density,       & ! Air density (kg_air/m^3)
-                                   pressure)            ! Air pressure (Pa)
+      call camp_interface%integrate_mod37(curr_time,         & ! Starting time (min)
+              TIME_STEP_MONARCH37,         & ! Time step (min)
+              I_W,               & ! Starting W->E grid cell
+              I_E,               & ! Ending W->E grid cell
+              I_S,               & ! Starting S->N grid cell
+              I_N,               & ! Ending S->N grid cell
+              temperature,       & ! Temperature (K)
+              species_conc,      & ! Tracer array
+              water_conc,        & ! Water concentrations (kg_H2O/kg_air)
+              WATER_VAPOR_ID,    & ! Index in water_conc() corresponding to water vapor
+              air_density,       & ! Air density (kg_air/m^3)
+              pressure,          & ! Air pressure (Pa)
+              conv,              &
+              i_hour,&
+              NUM_TIME_STEP,&
+              solver_stats,DIFF_CELLS)
       curr_time = curr_time + TIME_STEP
 
       !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -334,10 +369,12 @@ contains
     ! TODO refine initial model conditions
     temperature(:,:,:) = 300.614166259766
     species_conc(:,:,:,:) = 0.0
+    height=1. !(m)
     water_conc(:,:,:,:) = 0.0
     water_conc(:,:,:,WATER_VAPOR_ID) = 0.01
     air_density(:,:,:) = 1.225
     pressure(:,:,:) = 94165.7187500000
+    conv=0.02897/air_density(1,1,1)*(TIME_STEP*60.)*1e6/height !units of time_step to seconds
 
     !Initialize different axis values
     !Species_conc is modified in monarch_interface%get_init_conc

@@ -128,10 +128,10 @@ contains
   !! species in the tracer array.
   function constructor(camp_config_file, interface_config_file, &
                        starting_id, ending_id, n_cells, &
-          ADD_EMISIONS, mpi_comm) result (new_obj)
+          ADD_EMISIONS, mpi_comm) result (this)
 
     !> A new MONARCH interface
-    type(monarch_interface_t), pointer :: new_obj
+    type(monarch_interface_t), pointer :: this
     !> Path to the CAMP-camp configuration file list
     character(len=:), allocatable, optional :: camp_config_file
     !> Path to the CAMP-camp <-> MONARCH interface input file
@@ -177,13 +177,13 @@ contains
     MONARCH_PROCESS = camp_mpi_rank()
 
     ! Create a new interface object
-    allocate(new_obj)
+    allocate(this)
 
     if (.not.present(n_cells).or.n_cells.eq.1) then
-      new_obj%solve_multiple_cells = .false.
+      this%solve_multiple_cells = .false.
     else
-      new_obj%solve_multiple_cells = .true.
-      new_obj%n_cells=n_cells
+      this%solve_multiple_cells = .true.
+      this%n_cells=n_cells
     end if
 
     ! Check for an available solver
@@ -191,6 +191,9 @@ contains
     call assert_msg(332298164, camp_solver_data%is_solver_available(), &
             "No solver available")
     deallocate(camp_solver_data)
+
+    allocate(this%specs_emi_id(15))
+    allocate(this%specs_emi(size(this%specs_emi_id)))
 
     ! Initialize the time-invariant model data on each node
     if (MONARCH_PROCESS.eq.0) then
@@ -208,19 +211,19 @@ contains
               "Missing ending tracer index for chemical species")
 
       ! Load the interface data
-      call new_obj%load(interface_config_file)
+      call this%load(interface_config_file)
 
       ! Initialize the camp-chem core
-      new_obj%camp_core => camp_core_t(camp_config_file, new_obj%n_cells)
-      call new_obj%camp_core%initialize()
+      this%camp_core => camp_core_t(camp_config_file, this%n_cells)
+      call this%camp_core%initialize()
 
       ! Set the aerosol representation id
-      if (new_obj%camp_core%get_aero_rep("MONARCH mass-based", aero_rep)) then
+      if (this%camp_core%get_aero_rep("MONARCH mass-based", aero_rep)) then
         select type (aero_rep)
           type is (aero_rep_modal_binned_mass_t)
-            call new_obj%camp_core%initialize_update_object( aero_rep, &
+            call this%camp_core%initialize_update_object( aero_rep, &
                                                              update_data_GMD)
-            call new_obj%camp_core%initialize_update_object( aero_rep, &
+            call this%camp_core%initialize_update_object( aero_rep, &
                                                              update_data_GSD)
             call assert(889473105, &
                         aero_rep%get_section_id("organic matter", i_sect_om))
@@ -243,38 +246,38 @@ contains
       end if
 
       ! Set the MONARCH tracer array bounds
-      new_obj%tracer_starting_id = starting_id
-      new_obj%tracer_ending_id = ending_id
+      this%tracer_starting_id = starting_id
+      this%tracer_ending_id = ending_id
 
       ! Generate the CAMP-camp <-> MONARCH species map
-      call new_obj%create_map()
+      call this%create_map()
 
       ! Load the initial concentrations
-      call new_obj%load_init_conc()
+      call this%load_init_conc()
 
 #ifdef CAMP_USE_MPI
-      pack_size = new_obj%camp_core%pack_size() + &
+      pack_size = this%camp_core%pack_size() + &
               update_data_GMD%pack_size() + &
               update_data_GSD%pack_size() + &
-              camp_mpi_pack_size_integer_array(new_obj%map_monarch_id) + &
-              camp_mpi_pack_size_integer_array(new_obj%map_camp_id) + &
-              camp_mpi_pack_size_integer_array(new_obj%init_conc_camp_id) + &
-              camp_mpi_pack_size_real_array(new_obj%init_conc) + &
-              camp_mpi_pack_size_integer(new_obj%gas_phase_water_id) + &
+              camp_mpi_pack_size_integer_array(this%map_monarch_id) + &
+              camp_mpi_pack_size_integer_array(this%map_camp_id) + &
+              camp_mpi_pack_size_integer_array(this%init_conc_camp_id) + &
+              camp_mpi_pack_size_real_array(this%init_conc) + &
+              camp_mpi_pack_size_integer(this%gas_phase_water_id) + &
               camp_mpi_pack_size_integer(i_sect_om) + &
               camp_mpi_pack_size_integer(i_sect_bc) + &
               camp_mpi_pack_size_integer(i_sect_sulf) + &
               camp_mpi_pack_size_integer(i_sect_opm)
       allocate(buffer(pack_size))
       pos = 0
-      call new_obj%camp_core%bin_pack(buffer, pos)
+      call this%camp_core%bin_pack(buffer, pos)
       call update_data_GMD%bin_pack(buffer, pos)
       call update_data_GSD%bin_pack(buffer, pos)
-      call camp_mpi_pack_integer_array(buffer, pos, new_obj%map_monarch_id)
-      call camp_mpi_pack_integer_array(buffer, pos, new_obj%map_camp_id)
-      call camp_mpi_pack_integer_array(buffer, pos, new_obj%init_conc_camp_id)
-      call camp_mpi_pack_real_array(buffer, pos, new_obj%init_conc)
-      call camp_mpi_pack_integer(buffer, pos, new_obj%gas_phase_water_id)
+      call camp_mpi_pack_integer_array(buffer, pos, this%map_monarch_id)
+      call camp_mpi_pack_integer_array(buffer, pos, this%map_camp_id)
+      call camp_mpi_pack_integer_array(buffer, pos, this%init_conc_camp_id)
+      call camp_mpi_pack_real_array(buffer, pos, this%init_conc)
+      call camp_mpi_pack_integer(buffer, pos, this%gas_phase_water_id)
       call camp_mpi_pack_integer(buffer, pos, i_sect_om)
       call camp_mpi_pack_integer(buffer, pos, i_sect_bc)
       call camp_mpi_pack_integer(buffer, pos, i_sect_sulf)
@@ -294,16 +297,16 @@ contains
 
     if (MONARCH_PROCESS.ne.0) then
       ! unpack the data
-      new_obj%camp_core => camp_core_t()
+      this%camp_core => camp_core_t()
       pos = 0
-      call new_obj%camp_core%bin_unpack(buffer, pos)
+      call this%camp_core%bin_unpack(buffer, pos)
       call update_data_GMD%bin_unpack(buffer, pos)
       call update_data_GSD%bin_unpack(buffer, pos)
-      call camp_mpi_unpack_integer_array(buffer, pos, new_obj%map_monarch_id)
-      call camp_mpi_unpack_integer_array(buffer, pos, new_obj%map_camp_id)
-      call camp_mpi_unpack_integer_array(buffer, pos, new_obj%init_conc_camp_id)
-      call camp_mpi_unpack_real_array(buffer, pos, new_obj%init_conc)
-      call camp_mpi_unpack_integer(buffer, pos, new_obj%gas_phase_water_id)
+      call camp_mpi_unpack_integer_array(buffer, pos, this%map_monarch_id)
+      call camp_mpi_unpack_integer_array(buffer, pos, this%map_camp_id)
+      call camp_mpi_unpack_integer_array(buffer, pos, this%init_conc_camp_id)
+      call camp_mpi_unpack_real_array(buffer, pos, this%init_conc)
+      call camp_mpi_unpack_integer(buffer, pos, this%gas_phase_water_id)
       call camp_mpi_unpack_integer(buffer, pos, i_sect_om)
       call camp_mpi_unpack_integer(buffer, pos, i_sect_bc)
       call camp_mpi_unpack_integer(buffer, pos, i_sect_sulf)
@@ -316,10 +319,10 @@ contains
 #endif
 
     ! Initialize the solver on all nodes
-    call new_obj%camp_core%solver_initialize()
+    call this%camp_core%solver_initialize()
 
     ! Create a state variable on each node
-    new_obj%camp_state => new_obj%camp_core%new_state()
+    this%camp_state => this%camp_core%new_state()
 
     ! Set the aerosol mode dimensions
 
@@ -327,36 +330,36 @@ contains
     if (i_sect_om.gt.0) then
       call update_data_GMD%set_GMD(i_sect_om, 2.12d-8)
       call update_data_GSD%set_GSD(i_sect_om, 2.24d0)
-      call new_obj%camp_core%update_data(update_data_GMD)
-      call new_obj%camp_core%update_data(update_data_GSD)
+      call this%camp_core%update_data(update_data_GMD)
+      call this%camp_core%update_data(update_data_GSD)
     end if
     if (i_sect_bc.gt.0) then
     ! black carbon
       call update_data_GMD%set_GMD(i_sect_bc, 1.18d-8)
       call update_data_GSD%set_GSD(i_sect_bc, 2.00d0)
-      call new_obj%camp_core%update_data(update_data_GMD)
-      call new_obj%camp_core%update_data(update_data_GSD)
+      call this%camp_core%update_data(update_data_GMD)
+      call this%camp_core%update_data(update_data_GSD)
     end if
     if (i_sect_sulf.gt.0) then
     ! sulfate
       call update_data_GMD%set_GMD(i_sect_sulf, 6.95d-8)
       call update_data_GSD%set_GSD(i_sect_sulf, 2.12d0)
-      call new_obj%camp_core%update_data(update_data_GMD)
-      call new_obj%camp_core%update_data(update_data_GSD)
+      call this%camp_core%update_data(update_data_GMD)
+      call this%camp_core%update_data(update_data_GSD)
     end if
     if (i_sect_opm.gt.0) then
     ! other PM
       call update_data_GMD%set_GMD(i_sect_opm, 2.12d-8)
       call update_data_GSD%set_GSD(i_sect_opm, 2.24d0)
-      call new_obj%camp_core%update_data(update_data_GMD)
-      call new_obj%camp_core%update_data(update_data_GSD)
+      call this%camp_core%update_data(update_data_GMD)
+      call this%camp_core%update_data(update_data_GSD)
     end if
 
     ! Calculate the intialization time
     if (MONARCH_PROCESS.eq.0) then
       call cpu_time(comp_end)
       write(*,*) "Initialization time: ", comp_end-comp_start, " s"
-      !call new_obj%camp_core%print()
+      !call this%camp_core%print()
     end if
 
   end function constructor
@@ -1023,7 +1026,15 @@ contains
     class(aero_rep_data_t), pointer :: aero_rep_ptr
     type(property_t), pointer :: gas_species_list, aero_species_list, species_data
     character(len=:), allocatable :: key_name, spec_name, rep_name
-    integer(kind=i_kind) :: i_spec, num_spec
+    integer(kind=i_kind) :: i_spec, num_spec, i
+    type(string_t), allocatable :: spec_names(:)
+    real :: factor_ppb_to_ppm
+
+    if(this%ADD_EMISIONS.eq."ON") then
+      factor_ppb_to_ppm=1.0E-3
+    else
+      factor_ppb_to_ppm=1.0
+    end if
 
     num_spec = 0
 
@@ -1066,6 +1077,8 @@ contains
                 species_data%get_real(key_name, this%init_conc(i_spec)), &
                 "Missing 'init conc' for species '"//spec_name//" for "// &
                 "CAMP-camp initial concentrations.")
+        ! Unit change json gases in ppb - camp works with ppm
+        this%init_conc(i_spec) = this%init_conc(i_spec) * factor_ppb_to_ppm
 
         this%init_conc_camp_id(i_spec) = &
                 chem_spec_data%gas_state_id(spec_name)
@@ -1117,6 +1130,42 @@ contains
       end do
     end if
 
+    spec_names = this%camp_core%unique_names();
+
+    !Set specs_emi and specs_emi_id
+
+    this%specs_emi_id(1)=chem_spec_data%gas_state_id("SO2")
+    this%specs_emi_id(2)=chem_spec_data%gas_state_id("NO2")
+    this%specs_emi_id(3)=chem_spec_data%gas_state_id("NO")
+    this%specs_emi_id(4)=chem_spec_data%gas_state_id("NH3")
+    this%specs_emi_id(5)=chem_spec_data%gas_state_id("CO")
+    this%specs_emi_id(6)=chem_spec_data%gas_state_id("ALD2")
+    this%specs_emi_id(7)=chem_spec_data%gas_state_id("FORM")
+    this%specs_emi_id(8)=chem_spec_data%gas_state_id("ETH")
+    this%specs_emi_id(9)=chem_spec_data%gas_state_id("IOLE")
+    this%specs_emi_id(10)=chem_spec_data%gas_state_id("OLE")
+    this%specs_emi_id(11)=chem_spec_data%gas_state_id("TOL")
+    this%specs_emi_id(12)=chem_spec_data%gas_state_id("XYL")
+    this%specs_emi_id(13)=chem_spec_data%gas_state_id("PAR")
+    this%specs_emi_id(14)=chem_spec_data%gas_state_id("ISOP")
+    this%specs_emi_id(15)=chem_spec_data%gas_state_id("MEOH")
+
+    this%specs_emi(1)=1.06E-09
+    this%specs_emi(2)=7.56E-12
+    this%specs_emi(3)=1.44E-10
+    this%specs_emi(4)=8.93E-09
+    this%specs_emi(5)=1.96E-09
+    this%specs_emi(6)=4.25E-12
+    this%specs_emi(7)=1.02E-11
+    this%specs_emi(8)=4.62E-11
+    this%specs_emi(9)=1.49E-11
+    this%specs_emi(10)=1.49E-11
+    this%specs_emi(11)=1.53E-11
+    this%specs_emi(12)=1.40E-11
+    this%specs_emi(13)=4.27E-10
+    this%specs_emi(14)=6.03E-12
+    this%specs_emi(15)=5.92E-13
+
   end subroutine load_init_conc
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -1165,8 +1214,6 @@ contains
 
   end subroutine get_init_conc
 
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
   !> Get the MONARCH species names and indices (for testing only)
   subroutine get_MONARCH_species(this, species_names, MONARCH_ids)
 
@@ -1182,8 +1229,6 @@ contains
 
   end subroutine get_MONARCH_species
 
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
   !> Print the CAMP-camp data
   subroutine do_print(this)
 
@@ -1194,8 +1239,6 @@ contains
 
   end subroutine do_print
 
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
   !> Finalize the interface
   elemental subroutine finalize(this)
 
@@ -1204,8 +1247,11 @@ contains
 
     if (associated(this%camp_core)) &
             deallocate(this%camp_core)
-    if (associated(this%camp_state)) &
-            deallocate(this%camp_state)
+
+    !bug deallocating camp_state with MPI process > 1
+    !if (associated(this%camp_state)) &
+    !      deallocate(this%camp_state)
+
     if (allocated(this%monarch_species_names)) &
             deallocate(this%monarch_species_names)
     if (allocated(this%map_monarch_id)) &
@@ -1216,12 +1262,6 @@ contains
             deallocate(this%init_conc_camp_id)
     if (allocated(this%init_conc)) &
             deallocate(this%init_conc)
-    if (associated(this%species_map_data)) &
-            deallocate(this%species_map_data)
-    if (associated(this%init_conc_data)) &
-            deallocate(this%init_conc_data)
-    if (associated(this%property_set)) &
-            deallocate(this%property_set)
 
   end subroutine finalize
 
