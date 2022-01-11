@@ -331,7 +331,7 @@ typedef struct {
   int counter_deriv_print;
 #endif
 
-#ifdef FAILURE_DETAIL
+#ifndef FAILURE_DETAIL
   int counter_fail_solve_print;
 #endif
 

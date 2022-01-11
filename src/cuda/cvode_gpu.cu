@@ -454,7 +454,7 @@ int cudaDevicecamp_solver_check_model_state(ModelDataGPU *md, ModelDataVariable 
       //printf("tid %d map_state_deriv %d\n", tid, map_state_deriv[tid]);
     } else {
       *status = CAMP_SOLVER_FAIL;
-#ifdef FAILURE_DETAIL
+#ifndef FAILURE_DETAIL
       printf("\nFailed model state update gpu (Negative value on 'y'):[spec %d] = %le",tid,y[tid]);
 #endif
     }
@@ -883,7 +883,7 @@ int CudaDeviceguess_helper(double t_n, double h_n, double* y_n,
 
     //if (i_fast >= 0 && h_n > 0.)
     if (h_n > 0.)
-      h_j *= 0.95 + 0.1;
+      h_j *= 0.95 + 0.1; //todo use the same than cpu version( pull request 8 github)
     //h_j *= 0.95 + 0.1 * rand() / (double)RAND_MAX;
     h_j = t_n < t_0 + t_j + h_j ? t_n - (t_0 + t_j) : h_j;
 
@@ -1974,7 +1974,7 @@ void alloc_solver_gpu2(CVodeMem cv_mem, SolverData *sd)
   sd->mdv.nstlj=0;
 
   //Check if everything is correct
-#ifdef FAILURE_DETAIL
+#ifndef FAILURE_DETAIL
   if(md->n_per_cell_dep_var > prop.maxThreadsPerBlock/2)
     printf("ERROR: The GPU can't handle so much species"
            " [NOT ENOUGH THREADS/BLOCK FOR ALL THE SPECIES]\n");
@@ -7710,7 +7710,7 @@ int linsolsetup_gpu2(SolverData *sd, CVodeMem cv_mem,int convfail,N_Vector vtemp
   bicg->timeBiConjGrad+= msBiConjGradMemcpy/1000;
 #endif
 
-#ifdef FAILURE_DETAIL
+#ifndef FAILURE_DETAIL
   //check if jac is correct
   int flag = check_jac_status_error_gpu2(cvdls_mem->A);
   //printf("Jac returned error flag %d\n",flag);

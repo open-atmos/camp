@@ -498,7 +498,7 @@ void cudaDevicecamp_solver_check_model_state0(double *state, double *y,
 
       //*flag = CAMP_SOLVER_FAIL;
       flag_shr[0] = CAMP_SOLVER_FAIL;
-#ifdef FAILURE_DETAIL
+#ifndef FAILURE_DETAIL
       printf("\nFailed model state update gpu (Negative value on 'y'):[spec %d] = %le",tid,y[tid]);
 #endif
 
@@ -522,7 +522,7 @@ void cudaDevicecamp_solver_check_model_state0(double *state, double *y,
       //printf("tid %d map_state_deriv %d\n", tid, map_state_deriv[tid]);
     } else {
       *status = CAMP_SOLVER_FAIL;
-#ifdef FAILURE_DETAIL
+#ifndef FAILURE_DETAIL
       printf("\nFailed model state update gpu (Negative value on 'y'):[spec %d] = %le",tid,y[tid]);
 #endif
     }
@@ -548,7 +548,7 @@ void camp_solver_check_model_state_cuda(double *state_init, double *y,
     if (y[tid] < threshhold) {
 
       *flag = CAMP_SOLVER_FAIL;
-#ifdef FAILURE_DETAIL
+#ifndef FAILURE_DETAIL
       printf("\nFailed model state update gpu (Negative value on 'y'):[spec %d] = %le",tid,y[tid]);
 #endif
 
@@ -572,7 +572,7 @@ void camp_solver_check_model_state_cuda(double *state_init, double *y,
       //printf("tid %d map_state_deriv %d\n", tid, map_state_deriv[tid]);
     } else {
       *status = CAMP_SOLVER_FAIL;
-#ifdef FAILURE_DETAIL
+#ifndef FAILURE_DETAIL
       printf("\nFailed model state update gpu (Negative value on 'y'):[spec %d] = %le",tid,y[tid]);
 #endif
     }
@@ -1985,7 +1985,7 @@ int camp_solver_update_model_state_cpu(N_Vector solver_state, ModelData *md,
               ? NV_DATA_S(solver_state)[i_dep_var] : replacement_value;
       status = CAMP_SOLVER_SUCCESS;
     } else { //error
-#ifdef FAILURE_DETAIL
+#ifndef FAILURE_DETAIL
       printf("\nFailed model state update: [spec %d] = %le", i_spec,
                  NV_DATA_S(solver_state)[i_dep_var]);
 #endif

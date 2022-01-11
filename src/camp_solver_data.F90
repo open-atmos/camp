@@ -878,8 +878,6 @@ contains
     integer, intent(in) :: n_cells
     integer :: i
 
-    !TODO: Improve this to consider different update_rates (like monarch multicells case)
-
     do i=1, n_cells
       call rxn_update_data( &
               update_data%get_cell_id()+i-2,      & ! Grid cell to update

@@ -289,7 +289,7 @@ contains
 
   !> \page input_format_camp_file_list Input File Format: CAMP-Chem Configuration File List
   !!
-  !! A list of files containing configuration data for the \ref camp_chem
+  !! A list of files containing configuration data for the \ref index
   !! "CAMP". The file should be in \c json format
   !! and the general structure should be the following:
   !! \code{.json}
@@ -383,7 +383,7 @@ contains
   !> \page input_format_camp_config Input File Format: CAMP-Chem Configuration Data
   !!
   !! Configuration data for the
-  !! \ref camp_chem "CAMP". The files are in
+  !! \ref index "CAMP". The files are in
   !! \c json format and their general structure should be the following:
   !! \code{.json}
   !! { "camp-data" : [
