@@ -5,7 +5,7 @@
 !> \file
 !> The monarch_interface_t object and related functions
 
-!> Interface for the MONACH model and PartMC-camp
+!> Interface for the MONACH model and CAMP-camp
 module camp_monarch_interface_2
 
   use camp_constants,                  only : i_kind
@@ -20,6 +20,9 @@ module camp_monarch_interface_2
   use camp_chem_spec_data
   use camp_property
   use camp_camp_solver_data
+  use camp_mechanism_data,            only : mechanism_data_t
+  use camp_rxn_data,                  only : rxn_data_t
+  use camp_rxn_photolysis
   use camp_solver_stats
 #ifdef CAMP_USE_MPI
   use mpi
@@ -33,52 +36,65 @@ module camp_monarch_interface_2
 
   public :: monarch_interface_t
 
-  !> PartMC <-> MONARCH interface
+  !> CAMP <-> MONARCH interface
   !!
-  !! Contains all data required to intialize and run PartMC from MONARCH data
-  !! and map state variables between PartMC and MONARCH
+  !! Contains all data required to intialize and run CAMP from MONARCH data
+  !! and map state variables between CAMP and MONARCH
   type :: monarch_interface_t
-    private
+    !private
     !> CAMP-chem core
     type(camp_core_t), pointer :: camp_core
     !> CAMP-chem state
     type(camp_state_t), pointer :: camp_state
     !> MONARCH species names
     type(string_t), allocatable :: monarch_species_names(:)
-    !> MONARCH <-> PartMC species map
+    character(len=:), allocatable :: interface_input_file
+    !> MONARCH <-> CAMP species map
     integer(kind=i_kind), allocatable :: map_monarch_id(:), map_camp_id(:)
-    !> PartMC-camp ids for initial concentrations
-    integer(kind=i_kind), allocatable :: init_conc_camp_id(:)
+    !> CAMP-camp ids for initial concentrations
+    integer(kind=i_kind), allocatable :: init_conc_camp_id(:),specs_emi_id(:)
     !> Initial species concentrations
     real(kind=dp), allocatable :: init_conc(:)
     !> Number of cells to compute simultaneously
     integer(kind=i_kind) :: n_cells = 1
-    !> Starting index for PartMC species on the MONARCH tracer array
+    !> Starting index for CAMP species on the MONARCH tracer array
     integer(kind=i_kind) :: tracer_starting_id
-    !> Ending index for PartMC species on the MONARCH tracer array
+    !> Ending index for CAMP species on the MONARCH tracer array
     integer(kind=i_kind) :: tracer_ending_id
-    !> PartMC-camp <-> MONARCH species map input data
+    !> CAMP-camp <-> MONARCH species map input data
     type(property_t), pointer :: species_map_data
-    !> Gas-phase water id in PartMC-camp
+    !> Gas-phase water id in CAMP-camp
     integer(kind=i_kind) :: gas_phase_water_id
     !> Initial concentration data
     type(property_t), pointer :: init_conc_data
     !> Interface input data
     type(property_t), pointer :: property_set
+    type(rxn_update_data_photolysis_t), allocatable :: photo_rxns(:)
+    real(kind=dp), allocatable :: base_rates(:),specs_emi(:),offset_photo_rates_cells(:)
+    integer :: n_photo_rxn
+    integer :: nrates_cells
     !> Solve multiple grid cells at once?
     logical :: solve_multiple_cells = .false.
+    ! KPP reaction labels
+    type(string_t), allocatable :: kpp_rxn_labels(:)
+    ! KPP rstate
+    real(kind=dp) :: KPP_RSTATE(20)
+    ! KPP control variables
+    integer :: KPP_ICNTRL(20)
+    character(len=:), allocatable :: ADD_EMISIONS
   contains
-    !> Integrate PartMC for the current MONARCH state over a specified time step
+    !> Integrate CAMP for the current MONARCH state over a specified time step
     procedure :: integrate
+    procedure :: integrate_mod37
     !> Get initial concentrations (for testing only)
     procedure :: get_init_conc
     !> Get monarch species names and ids (for testing only)
     procedure :: get_MONARCH_species
-    !> Print the PartMC-camp data
+    !> Print the CAMP-camp data
     procedure :: print => do_print
     !> Load interface data from a set of input files
     procedure, private :: load
-    !> Create the PartMC <-> MONARCH species map
+    !> Create the CAMP <-> MONARCH species map
     procedure, private :: create_map
     !> Load the initial concentrations
     procedure, private :: load_init_conc
@@ -86,7 +102,7 @@ module camp_monarch_interface_2
     final :: finalize
   end type monarch_interface_t
 
-  !> PartMC <-> MONARCH interface constructor
+  !> CAMP <-> MONARCH interface constructor
   interface monarch_interface_t
     procedure :: constructor
   end interface monarch_interface_t
@@ -95,7 +111,9 @@ module camp_monarch_interface_2
   integer(kind=i_kind) :: MONARCH_PROCESS ! TODO replace with MONARCH param
   ! TEMPORARY
   real(kind=dp), public, save :: comp_time = 0.0d0
-
+  ! Parameters
+  real(kind=dp), parameter :: mwair = 28.9628 !mean molecular weight for dry air [ g/mol ]
+  real(kind=dp), parameter :: mwwat = 18.0153 ! mean molecular weight for water vapor [ g/mol ]
 contains
 
 
@@ -105,17 +123,18 @@ contains
   !!
   !! Create a monarch_interface_t object at the beginning of the  model run
   !! for each node. The master node should pass a string containing the path
-  !! to the PartMC confirguration file list, the path to the interface
+  !! to the CAMP confirguration file list, the path to the interface
   !! configuration file and the starting and ending indices for chemical
   !! species in the tracer array.
   function constructor(camp_config_file, interface_config_file, &
-                       starting_id, ending_id, n_cells, mpi_comm) result (new_obj)
+                       starting_id, ending_id, n_cells, &
+          ADD_EMISIONS, mpi_comm) result (new_obj)
 
     !> A new MONARCH interface
     type(monarch_interface_t), pointer :: new_obj
-    !> Path to the PartMC-camp configuration file list
+    !> Path to the CAMP-camp configuration file list
     character(len=:), allocatable, optional :: camp_config_file
-    !> Path to the PartMC-camp <-> MONARCH interface input file
+    !> Path to the CAMP-camp <-> MONARCH interface input file
     character(len=:), allocatable, optional :: interface_config_file
     !> Starting index for chemical species in the MONARCH tracer array
     integer, optional :: starting_id
@@ -125,15 +144,19 @@ contains
     integer, intent(in), optional :: mpi_comm
     !> Num cells to compute simulatenously
     integer, optional :: n_cells
+    character(len=:), allocatable, optional :: ADD_EMISIONS
 
     type(camp_solver_data_t), pointer :: camp_solver_data
     character, allocatable :: buffer(:)
     integer(kind=i_kind) :: pos, pack_size
-    integer(kind=i_kind) :: i_spec
+    integer(kind=i_kind) :: i_spec, i_photo_rxn
     type(string_t), allocatable :: unique_names(:)
+    character(len=:), allocatable :: spec_name
+    integer :: max_spec_name_size=512
+    real(kind=dp) :: base_rate
 
     class(aero_rep_data_t), pointer :: aero_rep
-    integer(kind=i_kind) :: i_sect_om, i_sect_bc, i_sect_sulf, i_sect_opm
+    integer(kind=i_kind) :: i_sect_om, i_sect_bc, i_sect_sulf, i_sect_opm, i, z
     type(aero_rep_factory_t) :: aero_rep_factory
     type(aero_rep_update_data_modal_binned_mass_GMD_t) :: update_data_GMD
     type(aero_rep_update_data_modal_binned_mass_GSD_t) :: update_data_GSD
@@ -176,7 +199,7 @@ contains
       call cpu_time(comp_start)
 
       call assert_msg(304676624, present(camp_config_file), &
-              "Missing PartMC-camp configuration file list")
+              "Missing CAMP-camp configuration file list")
       call assert_msg(194027509, present(interface_config_file), &
               "Missing MartMC-camp <-> MONARCH interface configuration file")
       call assert_msg(937567597, present(starting_id), &
@@ -223,7 +246,7 @@ contains
       new_obj%tracer_starting_id = starting_id
       new_obj%tracer_ending_id = ending_id
 
-      ! Generate the PartMC-camp <-> MONARCH species map
+      ! Generate the CAMP-camp <-> MONARCH species map
       call new_obj%create_map()
 
       ! Load the initial concentrations
@@ -340,12 +363,232 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  !> Integrate the PartMC mechanism for a particular set of cells and timestep
+  !> Integrate the CAMP mechanism for a particular set of cells and timestep
+  subroutine integrate_mod37(this, start_time, time_step, i_start, i_end, j_start, &
+          j_end, temperature, MONARCH_conc, water_conc, &
+          water_vapor_index, air_density, pressure,conv, i_hour,&
+          NUM_TIME_STEP,solver_stats, DIFF_CELLS)
+
+    !> CAMP-camp <-> MONARCH interface
+    class(monarch_interface_t) :: this
+    !> Integration start time (min since midnight)
+    real, intent(in) :: start_time
+    !> Integration time step
+    real, intent(in) :: time_step
+    !> Grid-cell W->E starting index
+    integer, intent(in) :: i_start
+    !> Grid-cell W->E ending index
+    integer, intent(in) :: i_end
+    !> Grid-cell S->N starting index
+    integer, intent(in) :: j_start
+    !> Grid-cell S->N ending index
+    integer, intent(in) :: j_end
+
+    !> NMMB style arrays (W->E, S->N, top->bottom, ...)
+    !> Temperature (K)
+    real, intent(in) :: temperature(:,:,:)
+    !> MONARCH species concentration (ppm or ug/m^3)
+    real, intent(inout) :: MONARCH_conc(:,:,:,:)
+    !> Atmospheric water concentrations (kg_H2O/kg_air)
+    real, intent(in) :: water_conc(:,:,:,:)
+    !> Index in water_conc corresponding to water vapor
+    integer, intent(in) :: water_vapor_index
+
+    !> WRF-style arrays (W->E, bottom->top, N->S)
+    !> Air density (kg_air/m^3)
+    real, intent(in) :: air_density(:,:,:)
+    !> Pressure (Pa)
+    real, intent(in) :: pressure(:,:,:)
+    real, intent(in) :: conv
+    integer, intent(inout) :: i_hour
+    integer, intent(in) :: NUM_TIME_STEP
+    character(len=*),intent(in) :: DIFF_CELLS
+
+    type(chem_spec_data_t), pointer :: chem_spec_data
+
+    integer, parameter :: emi_len=1
+    real, allocatable :: rate_emi(:,:)
+
+    ! MPI
+    character, allocatable :: buffer(:)
+    integer(kind=i_kind) :: pos, pack_size
+    integer :: local_comm
+    real(kind=dp), allocatable :: mpi_conc(:)
+
+    integer :: i, j, k, i_spec, z, o, t, r, i_cell, i_photo_rxn, k_end, k_flip
+    integer :: NUM_VERT_CELLS, i_hour_max
+
+    character(len=:), allocatable :: DIFF_CELLS_EMI
+    real :: press_init, press_end, press_range,&
+            emi_slide, press_norm
+    integer :: n_cells
+
+    ! Computation time variables
+    real(kind=dp) :: comp_start, comp_end
+
+    !type(solver_stats_t), target :: solver_stats
+    type(solver_stats_t), intent(inout) :: solver_stats
+    integer :: state_size_per_cell, n_cell_check
+    integer :: counterLS = 0
+    real :: timeLS = 0.0
+    real :: timeCvode = 0.0
+
+    if(this%n_cells.eq.1) then
+      state_size_per_cell = 0
+    else
+      state_size_per_cell = this%camp_core%state_size_per_cell()
+    end if
+
+
+#ifdef CAMP_DEBUG
+    ! Evaluate the Jacobian during solving
+    solver_stats%eval_Jac = .true.
+#endif
+
+    k_end = size(MONARCH_conc,3)
+
+    call cpu_time(comp_start)
+
+    if(.not.this%solve_multiple_cells) then
+      do i=i_start, i_end
+        do j=j_start, j_end
+          do k=1, k_end
+
+            ! Calculate the vertical index for NMMB-style arrays
+            k_flip = size(MONARCH_conc,3) - k + 1
+
+            ! Update the environmental state
+            call this%camp_state%env_states(1)%set_temperature_K( &
+              real( temperature(i,j,k_flip), kind=dp ) )
+            call this%camp_state%env_states(1)%set_pressure_Pa(   &
+              real( pressure(i,k,j), kind=dp ) )
+
+            this%camp_state%state_var(:) = 0.0
+
+            this%camp_state%state_var(this%map_camp_id(:)) = &
+                    this%camp_state%state_var(this%map_camp_id(:)) + &
+                            MONARCH_conc(i,j,k_flip,this%map_monarch_id(:))
+            this%camp_state%state_var(this%gas_phase_water_id) = &
+                    water_conc(i,j,k_flip,water_vapor_index) * &
+                    air_density(i,k,j) * 1.0d9
+
+            ! Start the computation timer
+            if (MONARCH_PROCESS.eq.0 .and. i.eq.i_start .and. j.eq.j_start &
+                    .and. k.eq.1) then
+              !solver_stats%debug_out = .false.
+            else
+              !solver_stats%debug_out = .false.
+            end if
+
+            ! Integrate the CAMP mechanism
+            call this%camp_core%solve(this%camp_state, &
+                    real(time_step, kind=dp), solver_stats = solver_stats)
+
+            call assert_msg(376450931, solver_stats%status_code.eq.0, &
+                            "Solver failed with code "// &
+                            to_string(solver_stats%solver_flag))
+
+#ifdef CAMP_DEBUG
+            ! Check the Jacobian evaluations
+            call assert_msg(611569150, solver_stats%Jac_eval_fails.eq.0,&
+                          trim( to_string( solver_stats%Jac_eval_fails ) )// &
+                          " Jacobian evaluation failures at time "// &
+                          trim( to_string( start_time ) ) )
+
+            ! Only evaluate the Jacobian for the first cell because it is
+            ! time consuming
+            solver_stats%eval_Jac = .false.
+#endif
+
+            ! Update the MONARCH tracer array with new species concentrations
+            MONARCH_conc(i,j,k_flip,this%map_monarch_id(:)) = &
+                    this%camp_state%state_var(this%map_camp_id(:))
+
+          end do
+        end do
+      end do
+
+    else
+
+      ! solve multiple grid cells at once
+      !  FIXME this only works if this%n_cells ==
+      !       (i_end - i_start + 1) * (j_end - j_start + 1 ) * k_end
+      n_cell_check = (i_end - i_start + 1) * (j_end - j_start + 1 ) * k_end
+      call assert_msg(559245176, this%n_cells .eq. n_cell_check, &
+              "Grid cell number mismatch, got "// &
+                      trim(to_string(n_cell_check))//", expected "// &
+                      trim(to_string(this%n_cells)))
+
+      ! Set initial conditions and environmental parameters for each grid cell
+      do i=i_start, i_end
+        do j=j_start, j_end
+          do k=1, k_end
+            !Remember fortran read matrix in inverse order for optimization!
+            ! TODO add descriptions for o and z, or preferably use descriptive
+            !      variable names
+            o = (j-1)*(i_end) + (i-1) !Index to 3D
+            z = (k-1)*(i_end*j_end) + o !Index for 2D
+
+            ! Calculate the vertical index for NMMB-style arrays
+            k_flip = size(MONARCH_conc,3) - k + 1
+
+            ! Update the environmental state
+            call this%camp_state%env_states(1)%set_temperature_K( &
+              real( temperature(i,j,k_flip), kind=dp ) )
+            call this%camp_state%env_states(1)%set_pressure_Pa(   &
+              real( pressure(i,k,j), kind=dp ) )
+
+            !Reset state conc
+            this%camp_state%state_var(this%map_camp_id(:) + &
+                                       (z*state_size_per_cell)) = 0.0
+
+            this%camp_state%state_var(this%map_camp_id(:) + &
+                                       (z*state_size_per_cell)) = &
+                    this%camp_state%state_var(this%map_camp_id(:) + &
+                                               (z*state_size_per_cell)) + &
+                    MONARCH_conc(i,j,k_flip,this%map_monarch_id(:))
+            this%camp_state%state_var(this%gas_phase_water_id + &
+                                       (z*state_size_per_cell)) = &
+                    water_conc(i,j,k_flip,water_vapor_index) * &
+                          air_density(i,k,j) * 1.0d9
+
+          end do
+        end do
+      end do
+
+      ! Integrate the CAMP mechanism
+      call this%camp_core%solve(this%camp_state, &
+              real(time_step, kind=dp), solver_stats = solver_stats)
+
+      do i=i_start, i_end
+        do j=j_start, j_end
+          do k=1, k_end
+            o = (j-1)*(i_end) + (i-1) !Index to 3D
+            z = (k-1)*(i_end*j_end) + o !Index for 2D
+
+            k_flip = size(MONARCH_conc,3) - k + 1
+            MONARCH_conc(i,j,k_flip,this%map_monarch_id(:)) = &
+                    this%camp_state%state_var(this%map_camp_id(:) + &
+                                               (z*state_size_per_cell))
+          end do
+        end do
+      end do
+
+    end if
+
+    call cpu_time(comp_end)
+    comp_time = comp_time + (comp_end-comp_start)
+
+    ! call solver_stats%print( )
+
+  end subroutine
+
+  !> Integrate the CAMP mechanism for a particular set of cells and timestep
   subroutine integrate(this, start_time, time_step, i_start, i_end, j_start, &
                   j_end, temperature, MONARCH_conc, water_conc, &
                   water_vapor_index, air_density, pressure)
 
-    !> PartMC-camp <-> MONARCH interface
+    !> CAMP-camp <-> MONARCH interface
     class(monarch_interface_t) :: this
     !> Integration start time (min since midnight)
     real, intent(in) :: start_time
@@ -537,10 +780,10 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  !> Load the MONARCH <-> PartMC-camp interface input data
+  !> Load the MONARCH <-> CAMP-camp interface input data
   subroutine load(this, config_file)
 
-    !> PartMC-camp <-> MONARCH interface
+    !> CAMP-camp <-> MONARCH interface
     class(monarch_interface_t) :: this
     !> Interface configuration file path
     character(len=:), allocatable :: config_file
@@ -635,7 +878,7 @@ contains
     deallocate(json)
 
 #else
-    call die_msg(635417227, "PartMC-camp <-> MONARCH interface requires "// &
+    call die_msg(635417227, "CAMP-camp <-> MONARCH interface requires "// &
                   "JSON file support.")
 #endif
 
@@ -643,10 +886,10 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  !> Create the PartMC-camp <-> MONARCH species map
+  !> Create the CAMP-camp <-> MONARCH species map
   subroutine create_map(this)
 
-    !> PartMC-camp <-> MONARCH interface
+    !> CAMP-camp <-> MONARCH interface
     class(monarch_interface_t) :: this
 
     type(chem_spec_data_t), pointer :: chem_spec_data
@@ -697,14 +940,14 @@ contains
 
       call assert_msg(599522862, &
               gas_species_list%get_property_t(val=species_data), &
-              "Missing species data for '"//spec_name//"' in PartMC-camp "// &
+              "Missing species data for '"//spec_name//"' in CAMP-camp "// &
               "<-> MONARCH species map.")
 
       key_name = "monarch id"
       call assert_msg(643926329, &
               species_data%get_int(key_name, this%map_monarch_id(i_spec)), &
               "Missing monarch id for species '"//spec_name//" in "// &
-              "PartMC-camp <-> MONARCH species map.")
+              "CAMP-camp <-> MONARCH species map.")
       this%map_monarch_id(i_spec) = this%map_monarch_id(i_spec) + &
               this%tracer_starting_id - 1
       call assert_msg(450258014, &
@@ -714,7 +957,7 @@ contains
 
       this%map_camp_id(i_spec) = chem_spec_data%gas_state_id(spec_name)
       call assert_msg(916977002, this%map_camp_id(i_spec).gt.0, &
-                "Could not find species '"//spec_name//"' in PartMC-camp.")
+                "Could not find species '"//spec_name//"' in CAMP-camp.")
 
       call gas_species_list%iter_next()
       i_spec = i_spec + 1
@@ -731,13 +974,13 @@ contains
         call assert_msg(567689501, &
                 aero_species_list%get_property_t(val=species_data), &
                 "Missing species data for '"//spec_name//"' in " //&
-                "PartMC-camp <-> MONARCH species map.")
+                "CAMP-camp <-> MONARCH species map.")
 
         key_name = "monarch id"
         call assert_msg(615451741, &
                 species_data%get_int(key_name, this%map_monarch_id(i_spec)), &
                 "Missing monarch id for species '"//spec_name//"' in "// &
-                "PartMC-camp <-> MONARCH species map.")
+                "CAMP-camp <-> MONARCH species map.")
         this%map_monarch_id(i_spec) = this%map_monarch_id(i_spec) + &
                 this%tracer_starting_id - 1
         call assert_msg(382644266, &
@@ -749,9 +992,9 @@ contains
         call assert_msg(963222513, &
                 species_data%get_string(key_name, rep_name), &
                 "Missing aerosol representation name for species '"// &
-                spec_name//"' in PartMC-camp <-> MONARCH species map.")
+                spec_name//"' in CAMP-camp <-> MONARCH species map.")
 
-        ! Find the species PartMC id
+        ! Find the species CAMP id
         this%map_camp_id(i_spec) = 0
         call assert_msg(377850668, &
                 this%camp_core%get_aero_rep(rep_name, aero_rep_ptr), &
@@ -773,7 +1016,7 @@ contains
   !> Load initial concentrations
   subroutine load_init_conc(this)
 
-    !> PartMC-camp <-> MONARCH interface
+    !> CAMP-camp <-> MONARCH interface
     class(monarch_interface_t) :: this
 
     type(chem_spec_data_t), pointer :: chem_spec_data
@@ -816,18 +1059,18 @@ contains
         call assert_msg(325582312, &
                 gas_species_list%get_property_t(val=species_data), &
                 "Missing species data for '"//spec_name//"' for "// &
-                "PartMC-camp initial concentrations.")
+                "CAMP-camp initial concentrations.")
 
         key_name = "init conc"
         call assert_msg(445070498, &
                 species_data%get_real(key_name, this%init_conc(i_spec)), &
                 "Missing 'init conc' for species '"//spec_name//" for "// &
-                "PartMC-camp initial concentrations.")
+                "CAMP-camp initial concentrations.")
 
         this%init_conc_camp_id(i_spec) = &
                 chem_spec_data%gas_state_id(spec_name)
         call assert_msg(940200584, this%init_conc_camp_id(i_spec).gt.0, &
-                "Could not find species '"//spec_name//"' in PartMC-camp.")
+                "Could not find species '"//spec_name//"' in CAMP-camp.")
 
         call gas_species_list%iter_next()
         i_spec = i_spec + 1
@@ -844,21 +1087,21 @@ contains
         call assert_msg(331096555, &
                 aero_species_list%get_property_t(val=species_data), &
                 "Missing species data for '"//spec_name//"' for " //&
-                "PartMC-camp initial concentrations.")
+                "CAMP-camp initial concentrations.")
 
         key_name = "init conc"
         call assert_msg(782275469, &
                 species_data%get_real(key_name, this%init_conc(i_spec)), &
                 "Missing 'init conc' for species '"//spec_name//"' for "// &
-                "PartMC-camp initial concentrations.")
+                "CAMP-camp initial concentrations.")
 
         key_name = "aerosol representation name"
         call assert_msg(150863332, &
                 species_data%get_string(key_name, rep_name), &
                 "Missing aerosol representation name for species '"// &
-                spec_name//"' for PartMC-camp initial concentrations.")
+                spec_name//"' for CAMP-camp initial concentrations.")
 
-        ! Find the species PartMC id
+        ! Find the species CAMP id
         this%init_conc_camp_id(i_spec) = 0
         call assert_msg(258814777, &
                 this%camp_core%get_aero_rep(rep_name, aero_rep_ptr), &
@@ -880,20 +1123,22 @@ contains
 
   !> Get initial concentrations for the mock MONARCH model (for testing only)
   subroutine get_init_conc(this, MONARCH_conc, MONARCH_water_conc, &
-      WATER_VAPOR_ID, MONARCH_air_density)
+      WATER_VAPOR_ID, MONARCH_air_density,i_W,I_E,I_S,I_N)
 
-    !> PartMC-camp <-> MONARCH interface
+    !> CAMP-camp <-> MONARCH interface
     class(monarch_interface_t) :: this
     !> MONARCH species concentrations to update
     real, intent(inout) :: MONARCH_conc(:,:,:,:)
     !> Atmospheric water concentrations (kg_H2O/kg_air)
-    real, intent(out) :: MONARCH_water_conc(:,:,:,:)
+    real, intent(inout) :: MONARCH_water_conc(:,:,:,:)
     !> Index in water_conc corresponding to water vapor
     integer, intent(in) :: WATER_VAPOR_ID
     !> Air density (kg_air/m^3)
-    real, intent(out) :: MONARCH_air_density(:,:,:)
+    real, intent(inout) :: MONARCH_air_density(:,:,:)
+    integer, intent(in) :: i_W,I_E,I_S,I_N
 
-    integer(kind=i_kind) :: i_spec, water_id, i,j,k
+    integer(kind=i_kind) :: i_spec, water_id,i,j,k,r,NUM_VERT_CELLS,state_size_per_cell, last_cell
+    real :: conc_deviation_perc
 
     ! Reset the species concentrations in CAMP and MONARCH
     this%camp_state%state_var(:) = 0.0
@@ -925,7 +1170,7 @@ contains
   !> Get the MONARCH species names and indices (for testing only)
   subroutine get_MONARCH_species(this, species_names, MONARCH_ids)
 
-    !> PartMC-camp <-> MONARCH interface
+    !> CAMP-camp <-> MONARCH interface
     class(monarch_interface_t) :: this
     !> Set of MONARCH species names
     type(string_t), allocatable, intent(out) :: species_names(:)
@@ -939,10 +1184,10 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  !> Print the PartMC-camp data
+  !> Print the CAMP-camp data
   subroutine do_print(this)
 
-    !> PartMC-camp <-> MONARCH interface
+    !> CAMP-camp <-> MONARCH interface
     class(monarch_interface_t) :: this
 
     call this%camp_core%print()
@@ -954,7 +1199,7 @@ contains
   !> Finalize the interface
   elemental subroutine finalize(this)
 
-    !> PartMC-camp <-> MONARCH interface
+    !> CAMP-camp <-> MONARCH interface
     type(monarch_interface_t), intent(inout) :: this
 
     if (associated(this%camp_core)) &

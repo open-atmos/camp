@@ -104,6 +104,7 @@ program mock_monarch
   integer, parameter :: END_CAMP_ID = 260!350
   !> Time step (min)
   real(kind=dp):: TIME_STEP
+  real, parameter :: TIME_STEP_MONARCH37= 1.6
   !> Number of time steps to integrate over
   !integer, parameter :: NUM_TIME_STEP = 20!1!camp_paper=720!36
   integer :: NUM_TIME_STEP !1!camp_paper=720!36
@@ -195,10 +196,6 @@ program mock_monarch
   ! initialize mpi (to take the place of a similar MONARCH call)
   call camp_mpi_init()
 
-#ifdef CAMP_USE_MPI
-  !print*,"CAMP_USE_MPI enabled"
-#endif
-
   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   ! **** Add to MONARCH during initialization **** !
   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -211,8 +208,6 @@ program mock_monarch
   I_N=1
   NUM_WE_CELLS = I_E-I_W+1
   NUM_SN_CELLS = I_N-I_S+1
-  ncounters = 4 ! number of metric counters (e.g. counter LS iterations)
-  ntimers = 14 ! number of metric timers (e.g. time Linear solving)
 
   !Read configuration from TestMonarch.json
 
@@ -230,12 +225,11 @@ program mock_monarch
 
   if(status_code.eq.0) then
 
-    !START_TIME = 360
     NUM_TIME_STEP = 1 !5
     TIME_STEP = 1.6 !1.6
     NUM_VERT_CELLS = 1
     n_cells = 1
-    output_file_title = "Test_monarch_X"
+    output_file_title = "test_monarch_mod37"
 
   else
 
@@ -272,8 +266,6 @@ program mock_monarch
 
   end if
 
-
-
   if (camp_mpi_rank().eq.0) then
     write(*,*) "Num time-steps:", NUM_TIME_STEP, "Num cells:",&
             NUM_WE_CELLS*NUM_SN_CELLS*NUM_VERT_CELLS
@@ -282,12 +274,17 @@ program mock_monarch
   allocate(temperature(NUM_WE_CELLS,NUM_SN_CELLS,NUM_VERT_CELLS))
   allocate(species_conc(NUM_WE_CELLS,NUM_SN_CELLS,NUM_VERT_CELLS,NUM_MONARCH_SPEC))
   allocate(water_conc(NUM_WE_CELLS,NUM_SN_CELLS,NUM_VERT_CELLS,WATER_VAPOR_ID))
-  allocate(air_density(NUM_WE_CELLS,NUM_SN_CELLS,NUM_VERT_CELLS))
-  allocate(pressure(NUM_WE_CELLS,NUM_SN_CELLS,NUM_VERT_CELLS))
+
+  if(output_file_prefix.eq."out/monarch_mod37") then
+    allocate(air_density(NUM_WE_CELLS, NUM_VERT_CELLS, NUM_SN_CELLS))
+    allocate(pressure(NUM_WE_CELLS, NUM_VERT_CELLS, NUM_SN_CELLS))
+  else
+    allocate(air_density(NUM_WE_CELLS,NUM_SN_CELLS,NUM_VERT_CELLS))
+    allocate(pressure(NUM_WE_CELLS,NUM_SN_CELLS,NUM_VERT_CELLS))
+  end if
 
   n_cells_plot = 1
   cell_to_print = 1
-  !cell_to_print = n_cells
 
   if(interface_input_file.eq."interface_simple.json") then
 
@@ -437,13 +434,9 @@ program mock_monarch
   ! **** end initialization modification **** !
   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  print*,"monarch_interface_t end MPI RANK",camp_mpi_rank()
-
   ! Set conc from mock_model
   call camp_interface%get_init_conc(species_conc, water_conc, WATER_VAPOR_ID, &
           air_density,i_W,I_E,I_S,I_N)
-
-  print*,"monarch_interface_t end MPI RANK",camp_mpi_rank()
 
   if(interface_input_file.eq."interface_monarch_cb05.json") then
     !call import_camp_input(camp_interface)
@@ -456,8 +449,6 @@ program mock_monarch
     call solve_ebi(camp_interface)
   end if
 #endif
-
-  print*,"monarch_interface_t end MPI RANK",camp_mpi_rank()
 
   !call camp_mpi_barrier(MPI_COMM_WORLD)
   !print*,"MPI RANK",camp_mpi_rank()
@@ -489,6 +480,28 @@ program mock_monarch
     end do
 #endif
 
+  if(interface_input_file.eq."mod37/interface_monarch_mod37.json") then
+
+    print*,"integrate_mod37"
+    call camp_interface%integrate_mod37(curr_time,         & ! Starting time (min)
+            TIME_STEP_MONARCH37,         & ! Time step (min)
+            I_W,               & ! Starting W->E grid cell
+            I_E,               & ! Ending W->E grid cell
+            I_S,               & ! Starting S->N grid cell
+            I_N,               & ! Ending S->N grid cell
+            temperature,       & ! Temperature (K)
+            species_conc,      & ! Tracer array
+            water_conc,        & ! Water concentrations (kg_H2O/kg_air)
+            WATER_VAPOR_ID,    & ! Index in water_conc() corresponding to water vapor
+            air_density,       & ! Air density (kg_air/m^3)
+            pressure,          & ! Air pressure (Pa)
+            conv,              &
+            i_hour,&
+            NUM_TIME_STEP,&
+            solver_stats,DIFF_CELLS)
+
+  else
+
     call camp_interface%integrate(curr_time,         & ! Starting time (min)
                                  TIME_STEP,         & ! Time step (min)
                                  I_W,               & ! Starting W->E grid cell
@@ -505,7 +518,8 @@ program mock_monarch
                                  i_hour,&
                                  NUM_TIME_STEP,&
                                  solver_stats,DIFF_CELLS)
-    curr_time = curr_time + TIME_STEP
+    end if
+  curr_time = curr_time + TIME_STEP
 
 #ifdef CAMP_DEBUG_GPU
     call export_solver_stats(curr_time,camp_interface,solver_stats,ncounters,ntimers)
@@ -752,7 +766,29 @@ contains
       pressure(:,:,:) = 94165.7187500000
       air_density(:,:,:) = 1.225
       conv=0.02897/air_density(1,1,1)*(TIME_STEP*60.)*1e6/height !units of time_step to seconds
-      water_conc(:,:,:,WATER_VAPOR_ID) = 0.03!0.01
+
+      if(file_prefix.eq."out/monarch_mod37") then
+        water_conc(:,:,:,:) = 0.0
+        water_conc(:,:,:,WATER_VAPOR_ID) = 0.01
+
+        do i=I_W, I_E
+          temperature(i,:,:) = temperature(i,:,:) + 0.1*i
+          pressure(i,:,:) = pressure(i,:,:) - 1*i
+        end do
+
+        do j=I_S, I_N
+          temperature(:,j,:) = temperature(:,j,:) + 0.3*j
+          pressure(:,:,j) = pressure(:,:,j) - 3*j
+        end do
+
+        do k=1, NUM_VERT_CELLS
+          temperature(:,:,k) = temperature(:,:,k) + 0.6*k
+          pressure(:,k,:) = pressure(:,k,:) - 6*k
+        end do
+
+      else
+        water_conc(:,:,:,WATER_VAPOR_ID) = 0.03
+      end if
 
     end if
 

@@ -8,10 +8,54 @@
 !> Mock version of the MONARCH model for testing integration with PartMC
 program mock_monarch_2
 
+  use camp_constants,                    only: const
   use camp_util,                          only : assert_msg, almost_equal, &
                                                 to_string
   use camp_monarch_interface_2
   use camp_mpi
+  use camp_solver_stats
+#ifdef CAMP_USE_JSON
+  use json_module
+#endif
+
+#ifdef SOLVE_EBI_IMPORT_CAMP_INPUT
+
+  ! EBI Solver
+  use module_bsc_chem_data
+  use EXT_HRDATA
+  use EXT_RXCM,                               only : NRXNS, RXLABEL
+
+  ! KPP Solver
+  use cb05cl_ae5_Initialize,                  only : KPP_Initialize => Initialize
+  use cb05cl_ae5_Model,                       only : KPP_NSPEC => NSPEC, &
+          KPP_STEPMIN => STEPMIN, &
+          KPP_STEPMAX => STEPMAX, &
+          KPP_RTOL => RTOL, &
+          KPP_ATOL => ATOL, &
+          KPP_TIME => TIME, &
+          KPP_C => C, &
+          KPP_RCONST => RCONST, &
+          KPP_Update_RCONST => Update_RCONST, &
+          KPP_INTEGRATE => INTEGRATE, &
+          KPP_SPC_NAMES => SPC_NAMES, &
+          KPP_PHOTO_RATES => PHOTO_RATES, &
+          KPP_TEMP => TEMP, &
+          KPP_PRESS => PRESS, &
+          KPP_SUN => SUN, &
+          KPP_M => M, &
+          KPP_N2 => N2, &
+          KPP_O2 => O2, &
+          KPP_H2 => H2, &
+          KPP_H2O => H2O, &
+          KPP_N2O => N2O, &
+          KPP_CH4 => CH4, &
+          KPP_NVAR => NVAR, &
+          KPP_NREACT => NREACT, &
+          KPP_DT => DT
+  use cb05cl_ae5_Parameters,                  only : KPP_IND_O2 => IND_O2
+  use cb05cl_ae5_Initialize, ONLY: Initialize
+
+#endif
 
   implicit none
 
@@ -23,13 +67,23 @@ program mock_monarch_2
   integer, parameter :: SCRIPTS_FILE_UNIT = 8
   !> File unit for results comparison
   integer, parameter :: COMPARE_FILE_UNIT = 9
+  integer, parameter :: RESULTS_FILE_UNIT_TABLE = 10
+  integer, parameter :: RESULTS_FILE_UNIT_PY = 11
+  integer, parameter :: IMPORT_FILE_UNIT = 12
+  integer, parameter :: STATSOUT_FILE_UNIT2 = 13
+  integer, parameter :: STATSIN_FILE_UNIT = 14
+  integer, parameter :: RESULTS_ALL_CELLS_FILE_UNIT = 15
+
+  integer(kind=i_kind), parameter :: NUM_CAMP_SPEC = 79
+  integer(kind=i_kind), parameter :: NUM_EBI_SPEC = 72
+  integer(kind=i_kind), parameter :: NUM_EBI_PHOTO_RXN = 23
 
   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   ! Parameters for mock MONARCH model !
   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Number of total species in mock MONARCH
-  integer, parameter :: NUM_MONARCH_SPEC = 800
+  integer, parameter :: NUM_MONARCH_SPEC = 250
   !> Number of vertical cells in mock MONARCH
   integer, parameter :: NUM_VERT_CELLS = 3
   !> Starting W-E cell for camp-chem call
@@ -61,6 +115,8 @@ program mock_monarch_2
   !integer :: n_cells = (I_E - I_W+1)*(I_N - I_S+1)*NUM_VERT_CELLS
   !> Check multiple cells results are correct?
   logical :: check_multiple_cells = .false.
+  character(len=:), allocatable :: ADD_EMISIONS
+  character(len=:), allocatable :: DIFF_CELLS
 
   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   ! State variables for mock MONARCH model !
@@ -125,6 +181,9 @@ program mock_monarch_2
     camp_cases=2
   end if
 
+  ADD_EMISIONS = "OFF"
+  DIFF_CELLS = "OFF"
+
   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   ! **** Add to MONARCH during initialization **** !
   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -150,17 +209,18 @@ program mock_monarch_2
   do i=1, camp_cases
 
     camp_interface => monarch_interface_t(camp_input_file, interface_input_file, &
-            START_CAMP_ID, END_CAMP_ID, n_cells)!, n_cells
+            START_CAMP_ID, END_CAMP_ID, n_cells, ADD_EMISIONS)!, n_cells
 
     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     ! **** end initialization modification **** !
     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-    ! Set conc from mock_model
-    call camp_interface%get_init_conc(species_conc, water_conc, WATER_VAPOR_ID, &
-            air_density)
+  ! Set conc from mock_model
+  call camp_interface%get_init_conc(species_conc, water_conc, WATER_VAPOR_ID, &
+          air_density,i_W,I_E,I_S,I_N)
 
-    ! call camp_interface%print( )
+  !call camp_mpi_barrier(MPI_COMM_WORLD)
+  !print*,"MPI RANK",camp_mpi_rank()
 
     ! Run the model
     do i_time=0, NUM_TIME_STEP
