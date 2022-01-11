@@ -415,19 +415,16 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
   sd->timeguess_helper = 0.0;
   sd->tguessNewton = 0.0;
 
+#endif
+
   sd->ncounters = ncounters;
   sd->ntimers = ntimers;
-
-
-#endif
 
   printf("solver_new\n");
 
 #ifdef CAMP_SOLVER_SPEC_NAMES
   sd->spec_names = (char **)malloc(sizeof(char *) * n_state_var);
 #endif
-
-  printf("solver_new\n");
 
   // Return a pointer to the new SolverData object
   return (void *)sd;

@@ -298,6 +298,8 @@ typedef struct {
 
   int use_cpu;
   int use_f_cpu;
+  int ncounters;
+  int ntimers;
 
 #ifdef CAMP_DEBUG_GPU
   int counterDerivTotal;
@@ -321,9 +323,6 @@ typedef struct {
   double timeRXNJac;
   double timef;
   double timeguess_helper;
-  int ncounters;
-  int ntimers;
-  FILE *file; //todo clean file
 #endif
 
 #ifdef CAMP_DEBUG_DERIV_CPU

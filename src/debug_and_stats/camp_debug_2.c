@@ -246,14 +246,16 @@ void export_counters_open(SolverData *sd)
   strcat(path, rank_str);
   strcat(path, ".csv");
 
-  sd->file = fopen(path, "w");
+  FILE *file;
 
-  if (sd->file == NULL) {
+  file = fopen(path, "w");
+
+  if (file == NULL) {
     printf("Can't create file in function export_counters_open \n");
     exit(1);
   }
 
-  fprintf(sd->file, "mpi_rank %d\n", rank);
+  fprintf(file, "mpi_rank %d\n", rank);
 
 #endif
 

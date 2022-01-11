@@ -491,6 +491,9 @@ set_source_files_properties(${CB5_EBI_SOLVER} PROPERTIES COMPILE_FLAGS
 ######################################################################
 # MONARCH interface
 
+add_executable(mock_monarch_2 test/monarch/mock_monarch_2.F90
+        test/monarch/camp_monarch_interface_2.F90)
+target_link_libraries(mock_monarch_2 camplib)
 
 add_executable(mock_monarch test/monarch/mock_monarch.F90
         test/monarch/camp_monarch_interface.F90
