@@ -104,8 +104,6 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
     exit(EXIT_FAILURE);
   }
 
-  printf("solver_new start\n");
-
 #ifdef CAMP_USE_SUNDIALS
 #ifdef CAMP_DEBUG
   // Default to no debugging output
@@ -153,6 +151,7 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
   int n_time_deriv_specs=n_dep_var*n_cells;
 #endif
 
+  // Set up a TimeDerivative object to use during solving
   if (time_derivative_initialize(&(sd->time_deriv), n_time_deriv_specs) != 1) {
     printf("\n\nERROR initializing the TimeDerivative\n\n");
     exit(EXIT_FAILURE);
@@ -2105,7 +2104,6 @@ int guess_helper(const realtype t_n, const realtype h_n, N_Vector y_n,
                  N_Vector y_n1, N_Vector hf, void *solver_data, N_Vector tmp1,
                  N_Vector corr) {
   SolverData *sd = (SolverData *)solver_data;
-  itsolver *bicg = &(sd->bicg);
   realtype *ay_n = NV_DATA_S(y_n);
   realtype *ay_n1 = NV_DATA_S(y_n1);
   realtype *atmp1 = NV_DATA_S(tmp1);
@@ -2171,8 +2169,8 @@ int guess_helper(const realtype t_n, const realtype h_n, N_Vector y_n,
 
     // Scale incomplete jumps
     if (i_fast >= 0 && h_n > ZERO)
-      h_j *= 0.95 + 0.1 ;
-      //h_j *= 0.95 + 0.1 * iter / (double)GUESS_MAX_ITER;
+      //h_j *= 0.95 + 0.1 ;
+      h_j *= 0.95 + 0.1 * iter / (double)GUESS_MAX_ITER;
       //h_j *= 0.95 + 0.1 * rand() / (double)RAND_MAX;
     h_j = t_n < t_0 + t_j + h_j ? t_n - (t_0 + t_j) : h_j;
 

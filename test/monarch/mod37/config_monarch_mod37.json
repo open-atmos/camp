@@ -1,7 +1,7 @@
 {
   "camp-files" : [
-    "../../mechanisms_run/cb05cl_ae5/cb05cl_ae5_mechanism.json",
-    "../../mechanisms_run/cb05cl_ae5/cb05cl_ae5_species.json",
+    "mod37/cb05cl_ae5_mechanism.json",
+    "mod37/cb05cl_ae5_species.json",
     "mod37/cb05cl_ae5_abs_tol.json",
     "mod37/monarch_mod37_species.json",
     "mod37/monarch_mod37_aerosol_species.json",

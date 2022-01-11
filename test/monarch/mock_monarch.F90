@@ -101,7 +101,7 @@ program mock_monarch
   !> Starting index for camp-chem species in tracer array
   integer, parameter :: START_CAMP_ID = 1!100
   !> Ending index for camp-chem species in tracer array
-  integer, parameter :: END_CAMP_ID = 210!350
+  integer, parameter :: END_CAMP_ID = 260!350
   !> Time step (min)
   real(kind=dp):: TIME_STEP
   !> Number of time steps to integrate over
@@ -232,8 +232,8 @@ program mock_monarch
 
     !START_TIME = 360
     NUM_TIME_STEP = 1 !5
-    TIME_STEP = 1.6
-    NUM_VERT_CELLS = 15
+    TIME_STEP = 1.6 !1.6
+    NUM_VERT_CELLS = 1
     n_cells = 1
     output_file_title = "Test_monarch_X"
 

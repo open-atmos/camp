@@ -1027,6 +1027,8 @@ end if
       num_spec = num_spec + aero_species_list%size()
     end if
 
+    print*,"monarch_species_names num_spec",num_spec
+
     ! Set up the species map and MONARCH names array
     allocate(this%monarch_species_names(num_spec))
     allocate(this%map_monarch_id(num_spec))
@@ -1173,6 +1175,8 @@ end if
     call assert_msg(885063268, &
             this%camp_core%get_chem_spec_data(chem_spec_data), &
             "No chemical species data in camp_core.")
+
+    print*,"init_conc_camp_id num_spec",num_spec
 
     ! Allocate space for the initial concentrations and indices
     allocate(this%init_conc_camp_id(num_spec))
@@ -1325,7 +1329,7 @@ end if
     ! Set initial concentrations in CAMP
     this%camp_state%state_var(this%init_conc_camp_id(:)) = this%init_conc(:)
 
-    !print*,"get_init_conc this%camp_state%state_var",this%camp_state%state_var(1), camp_mpi_rank()
+    print*,"get_init_conc this%camp_state%state_var",this%camp_state%state_var(1), camp_mpi_rank()
 
     !do r=2,size(this%map_monarch_id)
     !  print*, this%camp_state%state_var(this%map_camp_id(r)), camp_mpi_rank()
@@ -1335,7 +1339,7 @@ end if
 
     state_size_per_cell = this%camp_core%state_size_per_cell()
 
-    !print*,"get_init_conc"
+    print*,"get_init_conc"
 
     do i=i_W, I_E
       do j=I_S, I_N
@@ -1348,10 +1352,17 @@ end if
             last_cell=((I_E - I_W+1)*(I_N - I_S+1)*NUM_VERT_CELLS)-1
           end if
 
+          print*,"size(this%map_monarch_id)",size(this%map_monarch_id)
+          print*,"size(this%camp_state%state_var)",size(this%camp_state%state_var)
+          print*,"size(this%init_conc_camp_id)",size(this%init_conc_camp_id)
+          print*,"this%init_conc_camp_id(:)",this%init_conc_camp_id(:)
+
           forall (i_spec = 1:size(this%map_monarch_id))
             this%camp_state%state_var(this%init_conc_camp_id(i_spec)&
             +r*state_size_per_cell) = this%init_conc(i_spec)
           end forall
+
+          print*,this%camp_state%state_var(:)
 
           !Last cell = First cell
           if(r.ne.last_cell) then
@@ -1392,6 +1403,8 @@ end if
         end do
       end do
     end do
+
+    print*,"get_init_conc"
 
     !print*,"get_init_conc this%camp_state%state_var2",this%camp_state%state_var(1), camp_mpi_rank()
 
