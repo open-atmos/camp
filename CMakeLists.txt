@@ -37,7 +37,6 @@ option(ENABLE_DEBUG "Compile debugging functions" OFF)
 option(FAILURE_DETAIL "Output conditions before and after solver failures" OFF)
 option(ENABLE_CXX "Enable C++" OFF)
 option(ENABLE_GPU "Enable use of GPUs in chemistry solving" OFF)
-option(ENABLE_ODE_GPU "Enable ODE solving in GPUs" OFF)
 option(ENABLE_DEBUG_GPU "Compile debugging GPU functions" OFF)
 
 mark_as_advanced(FORCE ENABLE_DEBUG FAILURE_DETAIL)
@@ -163,10 +162,6 @@ if (ENABLE_GPU)
     enable_language(CUDA)
     #Define global variable of use gpu no matter what test to include user main test
     add_definitions(-DCAMP_USE_GPU)
-    #debug gpu add a considerable overhead in time
-    if (ENABLE_ODE_GPU)
-      add_definitions(-DCAMP_USE_ODE_GPU)
-    endif()
 
   else()
     message( WARNING "Not CUDA module found, can't support GPU computation")
@@ -502,10 +497,6 @@ add_executable(mock_monarch test/monarch/mock_monarch.F90
         ${CB5_EBI_SOLVER} ${CB5_KPP_SOLVER}
         test/chemistry/cb05cl_ae5/module_BSC_CHEM_DATA.F90)
 target_link_libraries(mock_monarch camplib)
-
-add_executable(mock_monarch_2 test/monarch/mock_monarch_2.F90
-        test/monarch/camp_monarch_interface_2.F90)
-target_link_libraries(mock_monarch_2 camplib)
 
 if (ENABLE_TESTS)
 
