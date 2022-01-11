@@ -449,10 +449,12 @@ contains
 
     ! organic matter
     if (i_sect_om.gt.0) then
-      !call update_data_GMD%set_GMD(i_sect_om, 2.12d-8)
-      !call update_data_GSD%set_GSD(i_sect_om, 2.24d0)
-      !call this%camp_core%update_data(update_data_GMD)
-      !call this%camp_core%update_data(update_data_GSD)
+      if(this%interface_input_file.eq."mod37/interface_monarch_mod37.json") then
+      call update_data_GMD%set_GMD(i_sect_om, 2.12d-8)
+      call update_data_GSD%set_GSD(i_sect_om, 2.24d0)
+      call this%camp_core%update_data(update_data_GMD)
+      call this%camp_core%update_data(update_data_GSD)
+      end if
     end if
     if (i_sect_bc.gt.0) then
     ! black carbon
@@ -1521,6 +1523,7 @@ end if
 
     if(this%interface_input_file.eq."mod37/interface_monarch_mod37.json") then
 
+
       MONARCH_water_conc(:,:,:,WATER_VAPOR_ID) = 0.0
 
       ! Set the air density to a nominal value
@@ -1549,7 +1552,7 @@ end if
     ! Set initial concentrations in CAMP
     this%camp_state%state_var(this%init_conc_camp_id(:)) = this%init_conc(:)
 
-    print*,"get_init_conc this%camp_state%state_var",this%camp_state%state_var(1), camp_mpi_rank()
+    !print*,"get_init_conc this%camp_state%state_var",this%camp_state%state_var(1), camp_mpi_rank()
 
     !do r=2,size(this%map_monarch_id)
     !  print*, this%camp_state%state_var(this%map_camp_id(r)), camp_mpi_rank()
@@ -1626,7 +1629,7 @@ end if
 
     end if
 
-    print*,"get_init_conc"
+    !print*,"get_init_conc"
 
     !print*,"get_init_conc this%camp_state%state_var2",this%camp_state%state_var(1), camp_mpi_rank()
 

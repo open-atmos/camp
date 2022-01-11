@@ -206,8 +206,6 @@ program mock_monarch
   I_E=1
   I_S=1
   I_N=1
-  NUM_WE_CELLS = I_E-I_W+1
-  NUM_SN_CELLS = I_N-I_S+1
 
   !Read configuration from TestMonarch.json
 
@@ -218,16 +216,18 @@ program mock_monarch
   call get_command_argument(3, arg, status=status_code)
   output_file_prefix = trim(arg)
 
-  print*,"status_code",status_code
-
   ADD_EMISIONS = "OFF"
   DIFF_CELLS = "OFF"
 
   if(status_code.eq.0) then
 
-    NUM_TIME_STEP = 1 !5
+    I_W=1
+    I_E=5
+    I_S=1
+    I_N=5
+    NUM_TIME_STEP = 5 !5
     TIME_STEP = 1.6 !1.6
-    NUM_VERT_CELLS = 1
+    NUM_VERT_CELLS = 3
     n_cells = 1
     output_file_title = "test_monarch_mod37"
 
@@ -265,6 +265,9 @@ program mock_monarch
     end if
 
   end if
+
+  NUM_WE_CELLS = I_E-I_W+1
+  NUM_SN_CELLS = I_N-I_S+1
 
   if (camp_mpi_rank().eq.0) then
     write(*,*) "Num time-steps:", NUM_TIME_STEP, "Num cells:",&
@@ -482,7 +485,6 @@ program mock_monarch
 
   if(interface_input_file.eq."mod37/interface_monarch_mod37.json") then
 
-    print*,"integrate_mod37"
     call camp_interface%integrate_mod37(curr_time,         & ! Starting time (min)
             TIME_STEP_MONARCH37,         & ! Time step (min)
             I_W,               & ! Starting W->E grid cell
