@@ -7,13 +7,13 @@
 
 !> \page camp_mechanism CAMP: Chemical Mechanism
 !!
-!! A mechanism in the \ref camp_chem "camp-chem" module is a set of
+!! A mechanism in the \ref index "camp-chem" module is a set of
 !! \ref camp_rxn "reactions" that occur in the gas-phase or within one of
 !! several \ref camp_aero_phase "aerosol phases" or across an interface
 !! between two phases (gas or aerosol). One or several mechanisms may be
-!! included in a \ref camp_chem "camp-chem" model run.
+!! included in a \ref index "camp-chem" model run.
 !!
-!! Every mechanism in a \ref camp_chem "camp-chem" run will have access to
+!! Every mechanism in a \ref index "camp-chem" run will have access to
 !! the same set of \ref camp_species "chemical species" and \ref
 !! camp_aero_phase "aerosol phases", so phase and species names must be
 !! consistent across all concurrently loaded mechanisms. The division of \ref

@@ -8,7 +8,7 @@
 !> \page camp_aero_rep CAMP: Aerosol Representation (general)
 !!
 !! An aerosol representation acts as an interface between an aerosol
-!! micro-physics model and the \ref camp_chem "camp-chem" chemistry module.
+!! micro-physics model and \ref index "CAMP".
 !! Types that extend the abstract \c aero_rep_data_t type should be developed
 !! for each type of aerosol representation used by an external model (e.g.,
 !! binned, modal, single particle).
@@ -19,9 +19,6 @@
 !!
 !! The general input format for an aerosol representation can be found
 !! \subpage input_format_aero_rep "here".
-!!
-!! General instructions for adding a new aerosol representation can be found
-!! \subpage camp_aero_rep_add "here".
 
 !> The abstract aero_rep_data_t structure and associated subroutines.
 module camp_aero_rep_data

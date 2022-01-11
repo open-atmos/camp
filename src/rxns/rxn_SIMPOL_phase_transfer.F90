@@ -28,18 +28,25 @@
 !! If \f$\Delta H\f$ and \f$\Delta S\f$ are not provided, the mass accomodation
 !! coefficient is assumed to be 0.1 (\cite Zaveri2008).
 !!
-!! Condensation rate constants are calculated as:
-!! \f[
-!!   k_{f} = (\frac{r^2}{3D_g} + \frac{4r}{3 \langle c \rangle \alpha})^{-1}
-!! \f]
-!! where \f$r\f$ is the particle radius (\f$\mbox{m}\f$) and
-!! \f$\langle c \rangle \f$ is the mean speed of the gas-phase molecules:
-!! \f[
-!!   \langle c \rangle = \sqrt{\frac{8RT}{\pi MW}}
-!! \f]
-!! where \f$R\f$ is the ideal gas constant
-!! (\f$\mbox{J}\,\mbox{K}^{-1}\,\mbox{mol}^{-1}\f$). The particle radius used
-!! to calculate \f$k_{f}\f$ is the effective radius (\f$r_{eff}\f$), which is
+!! Condensation rate constants are calculated following \cite Zaveri2008 as:
+!!  \f[
+!!    k_c = 4 \pi r D_g f_{fs}( K_n, \alpha )
+!!  \f]
+!!  where \f$r\f$ is the radius of the particle(s) [m], \f$D_g\f$ is the
+!! diffusion coefficient of the gas-phase species [\f$\mbox{m}^2\,\mbox{s}^{-1}\f$],
+!! \f$f_{fs}( K_n, \alpha )\f$ is the Fuchs Sutugin transition regime correction
+!! factor [unitless], \f$K_n\f$ is the Knudsen Number [unitess], and \f$\alpha\f$
+!! is the mass accomodation coefficient.
+!!
+!!  Rates can be calculated as:
+!!  \f[
+!!    r_c = [G] N_a k_c
+!!  \f]
+!!  where \f$[G]\f$ is the gas-phase species concentration [ppm], \f$N_a\f$ is
+!! the number concentration of particles [\f$\mbox{particle}\,\mbox{m}^{-3}\f$] and
+!! the rate \f$r_c\f$ is in [\f$\mbox{ppm}\,\mbox{s}^{-1}\f$].
+!!  The particle radius used
+!! to calculate \f$k_{f}\f$ is the effective radius [\f$r_{eff}\f$], which is
 !! taken as the "least-wrong" choice for condensation rates, as it is weighted
 !! to surface area \cite Zender2002 .
 !!

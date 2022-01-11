@@ -93,8 +93,8 @@
 !! electrolyte includes. Each species must correspond to a species present in
 !! \b aerosol \b phase and  have a \b charge parameter that specifies their
 !! charge (uncharged species are not permitted in this set) and a
-!! \b molecular \b weight \b [kg \b mol-1]
-!! (\f$\mbox{\si{\kilo\gram\per\mole}}\f$) property.
+!! \b molecular \b weight \b [\b kg \b mol-1]
+!! (\f$\mbox{kg}\,\mbox{mol}^{-1}\f$) property.
 !! Ions without a \b qty specified are assumed to appear once in the binary
 !! electrolyte. The total molecular weight for the binary electroly
 !! \f$MW_i\f$ is calculated as a sum of its ionic components, and the ion

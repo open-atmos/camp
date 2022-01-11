@@ -37,7 +37,6 @@ option(ENABLE_DEBUG "Compile debugging functions" OFF)
 option(FAILURE_DETAIL "Output conditions before and after solver failures" OFF)
 option(ENABLE_CXX "Enable C++" OFF)
 option(ENABLE_GPU "Enable use of GPUs in chemistry solving" OFF)
-option(ENABLE_DEBUG_GPU "Compile debugging GPU functions" OFF)
 
 mark_as_advanced(FORCE ENABLE_DEBUG FAILURE_DETAIL)
 
@@ -177,14 +176,12 @@ endif()
 if (FAILURE_DETAIL)
   add_definitions(-DFAILURE_DETAIL)
 endif()
-if (ENABLE_DEBUG_GPU)
-  if(ENABLE_MPI)
+
+if(ENABLE_MPI)
     add_definitions(-DCAMP_DEBUG_GPU)
-  else()
+else()
     #ENABLE_DEBUG_GPU uses MPI timers
     message( ERROR "ENABLE_DEBUG_GPU NEEDS ENABLE_MPI")
-  endif()
-  #add_definitions(-DCHECK_GPU_LINSOLVE)
 endif()
 
 ######################################################################

@@ -35,19 +35,19 @@ program mock_monarch_2
   !> Starting W-E cell for camp-chem call
   integer, parameter :: I_W = 1
   !> Ending W-E cell for camp-chem call
-  integer, parameter :: I_E = 5
+  integer, parameter :: I_E = 1
   !> Starting S-N cell for camp-chem call
   integer, parameter :: I_S = 1
   !> Ending S-N cell for camp-chem call
-  integer, parameter :: I_N = 5
+  integer, parameter :: I_N = 1
   !> Number of W-E cells in mock MONARCH
   integer, parameter :: NUM_WE_CELLS = I_E-I_W+1
   !> Number of S-N cells in mock MONARCH
   integer, parameter :: NUM_SN_CELLS = I_N-I_S+1
   !> Starting index for camp-chem species in tracer array
-  integer, parameter :: START_CAMP_ID = 100
+  integer, parameter :: START_CAMP_ID = 1
   !> Ending index for camp-chem species in tracer array
-  integer, parameter :: END_CAMP_ID = 650
+  integer, parameter :: END_CAMP_ID = 260
   !> Time step (min)
   real, parameter :: TIME_STEP = 1.6
   !> Number of time steps to integrate over
@@ -329,8 +329,8 @@ contains
     real, intent(in) :: curr_time
 
     write(RESULTS_FILE_UNIT, *) curr_time, &
-            species_conc(2,3,1,START_CAMP_ID:END_CAMP_ID), &
-            water_conc(2,3,1,WATER_VAPOR_ID)
+            species_conc(1,1,1,START_CAMP_ID:END_CAMP_ID), &
+            water_conc(1,1,1,WATER_VAPOR_ID)
 
   end subroutine output_results
 

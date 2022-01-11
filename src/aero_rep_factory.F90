@@ -10,7 +10,7 @@
 !! NOTE: These instructions are out-of-date. TODO update
 !!
 !! Adding an \ref camp_aero_rep "aerosol representation" to the \ref
-!! camp_chem "camp-chem" module can be done in the following steps:
+!! index "camp-chem" module can be done in the following steps:
 !!
 !! ## Step 1. Create a new aerosol representation module ##
 !!   The module should be placed in the \c /src/aero_reps folder and

@@ -9,7 +9,7 @@
 !!
 !! \b Note: these instructions are out-of-date. TODO update
 !!
-!! Adding a \ref camp_rxn "reaction" to the \ref camp_chem "camp-chem"
+!! Adding a \ref camp_rxn "reaction" to the \ref index "camp-chem"
 !! module can be done in the following steps:
 !!
 !! ## Step 1. Create a new reaction module ##

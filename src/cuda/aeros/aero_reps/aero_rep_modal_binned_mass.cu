@@ -678,7 +678,7 @@ bool aero_rep_gpu_modal_binned_mass_update_data(void *update_data,
     ///
     double ln_gsd = log(GSD_(*section_id));
     EFFECTIVE_RADIUS_(*section_id, 0) =
-            GMD_(*section_id) / 2.0 * exp(2.0 * ln_gsd * ln_gsd);
+            GMD_(*section_id) / 2.0 * exp(5.0 * ln_gsd * ln_gsd / 2.0);
   }
 
   return ret_val;

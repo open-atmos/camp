@@ -17,9 +17,6 @@
 !!
 !! The general input format for a sub-model can be found
 !! \subpage input_format_sub_model "here".
-!!
-!! General instructions for adding a new sub-model can be found
-!! \subpage camp_sub_model_add "here".
 
 !> The abstract sub_model_data_t structure and associated subroutines.
 module camp_sub_model_data

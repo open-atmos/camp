@@ -18,18 +18,23 @@
  * \f[
  *   \lambda = 3.0 D_g / v
  * \f]
- * where \f$D_g\f$ is the gas-phase diffusion coefficient [m2 s-1] and
- * \f$v\f$ is the mean speed of the gas-phase molecules [m s-1]:
+ * where \f$D_g\f$ is the gas-phase diffusion coefficient
+ * [\f$\mbox{m}^2\,\mbox{s}^{-1}\f$] and
+ * \f$v\f$ is the mean speed of the gas-phase molecules
+ * [ \f$\mbox{m}\,\mbox{s}^{-1}\f$ ] :
  * \f[
  *   v = \sqrt{\frac{8RT}{\pi MW}}
  * \f]
- * where R is the ideal gas constant [J K-1 mol-1], T is temperature [K],
- * and MW is the molecular weight of the gas-phase species [kg mol-1]
+ * where R is the ideal gas constant [\f$\mbox{J}\, \mbox{K}^{-1}\,
+ * \mbox{mol}^{-1}\f$], T is temperature [K], and MW is the molecular weight of
+ * the gas-phase species
+ * [\f$\mbox{kg}\, \mbox{mol}^{-1}\f$]
  *
- * @param diffusion_coeff__m2_s Diffusion coefficient of the gas species [m2
- * s-1]
+ * @param diffusion_coeff__m2_s Diffusion coefficient of the gas species
+ * [\f$\mbox{m}^2\, \mbox{s}^{-1}\f$]
  * @param temperature__K Temperature [K]
- * @param mw__kg_mol Molecular weight of the gas-phase species [kg mol-1]
+ * @param mw__kg_mol Molecular weight of the gas-phase species [\f$\mbox{kg}\,
+ * \mbox{mol}^{-1}\f$]
  */
 #ifdef __CUDA_ARCH__
 __host__ __device__
@@ -44,8 +49,8 @@ static inline double mean_free_path__m(double diffusion_coeff__m2_s,
 /** Calculate the transition regime correction factor [unitless] \cite Fuchs1971
  * : \f[ f(K_n,\alpha) = \frac{0.75 \alpha ( 1 + K_n )}{K_n(1+K_n) + 0.283\alpha
  * K_n + 0.75 \alpha} \f] where the Knudsen Number \f$K_n = \lambda / r\f$
- * (where \f$\lambda\f$ is the mean free path (m) of the gas-phase species and
- * \f$r\f$ is the effective radius of the particles (m)), and \f$ \alpha \f$ is
+ * (where \f$\lambda\f$ is the mean free path [m] of the gas-phase species and
+ * \f$r\f$ is the effective radius of the particles [m]), and \f$ \alpha \f$ is
  * the mass accomodation coefficient, which is typically assumed to equal 0.1
  * \cite Zaveri2008.
  *
@@ -70,8 +75,8 @@ static inline double transition_regime_correction_factor(
  * (0.283-0.75)\alpha)}{r^2(K_n^2 + (1+0.283\alpha)K_n + 0.75\alpha)^2} \f]
  *  \todo double check the correction factor derivative equation
  *  where the Knudsen Number \f$K_n = \lambda / r\f$ (where \f$\lambda\f$ is the
- *  mean free path (m) of the gas-phase species and \f$r\f$ is the effective
- * radius of the particles (m)), and \f$ \alpha \f$ is the mass accomodation
+ *  mean free path [m] of the gas-phase species and \f$r\f$ is the effective
+ * radius of the particles [m]), and \f$ \alpha \f$ is the mass accomodation
  * coefficient, which is typically assumed to equal 0.1 \cite Zaveri2008.
  *
  *  @param mean_free_path__m mean free path of the gas-phase species [m]
@@ -92,28 +97,29 @@ static inline double d_transition_regime_correction_factor_d_radius(
 }
 
 /** Calculate the gas-aerosol reaction rate constant for the transition regime
- * [m3 #-1 s-1]
+ * [\f$\mbox{m}^3\, \mbox{particle}^{-1}\, \mbox{s}^{-1}\f$]
  *
  *  The rate constant \f$k_c\f$ is calculated according to \cite Zaveri2008 as:
  *  \f[
  *    k_c = 4 \pi r D_g f_{fs}( K_n, \alpha )
  *  \f]
  *  where \f$r\f$ is the radius of the particle(s) [m], \f$D_g\f$ is the
- * diffusion coefficient of the gas-phase species [m2 s-1] and \f$f_{fs}( K_n,
- * \alpha )\f$ is the Fuchs Sutugin transition regime correction factor
- * [unitless] (\f$K_n\f$ is the Knudsen Number [unitess] and \f$\alpha\f$ is the
- * mass accomodation coefficient.
+ * diffusion coefficient of the gas-phase species
+ * [\f$\mbox{m}^2\,\mbox{s}^{-1}\f$], \f$f_{fs}( K_n, \alpha )\f$ is the Fuchs
+ * Sutugin transition regime correction factor [unitless], \f$K_n\f$ is the
+ * Knudsen Number [unitess], and \f$\alpha\f$ is the mass accomodation
+ * coefficient.
  *
  *  Rates can be calculated as:
  *  \f[
  *    r_c = [G] N_a k_c
  *  \f]
  *  where \f$[G]\f$ is the gas-phase species concentration [ppm], \f$N_a\f$ is
- * the number concentration of particles [# m-3] and the rate \f$r_c\f$ is in
- * [ppm s-1].
+ * the number concentration of particles [\f$\mbox{particle}\,\mbox{m}^{-3}\f$]
+ * and the rate \f$r_c\f$ is in [\f$\mbox{ppm}\,\mbox{s}^{-1}\f$].
  *
- *  @param diffusion_coeff__m2_s Diffusion coefficent of the gas species [m2
- * s-1]
+ *  @param diffusion_coeff__m2_s Diffusion coefficent of the gas species
+ *  [\f$\mbox{m}^2\, \mbox{s}^{-1}\f$]
  *  @param mean_free_path__m Mean free path of gas molecules [m]
  *  @param radius__m Particle radius [m]
  *  @param alpha Mass accomodation coefficient [unitless]
@@ -135,13 +141,13 @@ static inline double gas_aerosol_rxn_rate_constant(double diffusion_coeff__m2_s,
  *   \frac{d k_c}{d r} = 4 \pi D_g ( f_{fs} + r \frac{d_{fs}}{d r} )
  * \f]
  *  where \f$r\f$ is the radius of the particle(s) [m], \f$D_g\f$ is the
- * diffusion coefficient of the gas-phase species [m2 s-1] and \f$f_{fs}( K_n,
- * \alpha )\f$ is the Fuchs Sutugin transition regime correction factor
- * [unitless] (\f$K_n\f$ is the Knudsen Number [unitess] and \f$\alpha\f$ is the
- * mass accomodation coefficient.
+ * diffusion coefficient of the gas-phase species [\f$\mbox{m}^2\,
+ * \mbox{s}^{-1}\f$] and \f$f_{fs}( K_n, \alpha )\f$ is the Fuchs Sutugin
+ * transition regime correction factor [unitless] (\f$K_n\f$ is the Knudsen
+ * Number [unitess] and \f$\alpha\f$ is the mass accomodation coefficient.
  *
- *  @param diffusion_coeff__m2_s Diffusion coefficent of the gas species [m2
- * s-1]
+ *  @param diffusion_coeff__m2_s Diffusion coefficent of the gas species
+ *  [\f$\mbox{m}^2\, \mbox{s}^{-1}\f$]
  *  @param mean_free_path__m Mean free path of gas molecules [m]
  *  @param radius__m Particle radius [m]
  *  @param alpha Mass accomodation coefficient [unitless]

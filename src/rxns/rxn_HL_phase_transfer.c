@@ -233,7 +233,7 @@ void rxn_HL_phase_transfer_update_env_state(ModelData *model_data,
   MFP_M_ = mean_free_path__m(DIFF_COEFF_, TEMPERATURE_K_, ALPHA_);
 
   // Calculate the Henry's Law equilibrium rate constant in units of
-  // (ug_x/ug_H2O/ppm) where x is the aerosol-phase species. (A is in
+  // (kg_x/kg_H2O/ppm) where x is the aerosol-phase species. (A is in
   // units of M/Pa.)
   if (C_ == 0.0) {
     EQUIL_CONST_ = A_ * PRESSURE_PA_ * 1.0e-6 * MW_;

@@ -422,8 +422,6 @@ void rxn_SIMPOL_phase_transfer_calc_jac_contrib(ModelData *model_data,
   double *state = model_data->grid_cell_state;
   double *env_data = model_data->grid_cell_env;
 
-  long double jac_contrib;
-
   // Calculate derivative contributions for each aerosol phase
   for (int i_phase = 0; i_phase < NUM_AERO_PHASE_; i_phase++) {
     // Get the particle effective radius (m)

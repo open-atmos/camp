@@ -57,7 +57,6 @@ module camp_solver_stats
     real(kind=dp) :: RHS_time__s
     !> Compute time for calls to `Jac()` [s]
     real(kind=dp) :: Jac_time__s
-
     !> Maximum loss of precision on last deriv call
     real(kind=dp) :: max_loss_precision
 #ifdef CAMP_DEBUG
@@ -72,7 +71,6 @@ module camp_solver_stats
     procedure :: print => do_print
     !> Assignment
     procedure :: assignValue
-
     generic :: assignment(=) => assignValue
   end type solver_stats_t
 

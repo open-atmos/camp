@@ -146,7 +146,6 @@ void rxn_wet_deposition_update_env_state(ModelData *model_data,
  * \param time_step Current time step being computed (s)
  */
 #ifdef CAMP_USE_SUNDIALS
-
 void rxn_wet_deposition_calc_deriv_contrib(
     ModelData *model_data, TimeDerivative time_deriv, int *rxn_int_data,
     double *rxn_float_data, double *rxn_env_data, realtype time_step) {
