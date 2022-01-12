@@ -419,38 +419,59 @@ set(CAMP_LIB_SRC
   ${CAMP_C_SRC} ${AEROSOL_REPS_SRC} ${SUB_MODELS_SRC} ${REACTIONS_SRC}
   ${CAMP_CUDA_SRC} ${GSL_SRC} ${CAMP_CXX_SRC} )
 
-#add_library(camplib SHARED ${CAMP_LIB_SRC})
-#add_library(camplib-static STATIC ${CAMP_LIB_SRC})
+add_library(camplib SHARED ${CAMP_LIB_SRC}) #nvlink warning (issue 9 github)
+#add_library(camplib ${CAMP_LIB_SRC}) #fine
 
-add_library(camplib ${CAMP_LIB_SRC})
+add_library(camplib-static STATIC ${CAMP_LIB_SRC})
 
 if (CUDA_FOUND)
 
   target_link_libraries(camplib ${SUNDIALS_LIBS} ${GSL_LIBS} ${JSON_LIB} ${CUDA_LIBRARIES})
-  #target_link_libraries(camplib-static ${SUNDIALS_LIBS} ${GSL_LIBS} ${JSON_LIB} ${CUDA_LIBRARIES})
+  target_link_libraries(camplib-static ${SUNDIALS_LIBS} ${GSL_LIBS} ${JSON_LIB} ${CUDA_LIBRARIES})
 
   set_target_properties(camplib PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
-  #set_target_properties(camplib-static  PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
-
+  set_target_properties(camplib-static  PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
 
 else()
   #target_link_libraries(camplib ${NETCDF_LIBS} ${SUNDIALS_LIBS}
    #  ${MOSAIC_LIB} ${GSL_LIBS} ${JSON_LIB})
   target_link_libraries(camplib ${SUNDIALS_LIBS} ${GSL_LIBS} ${JSON_LIB})
-  #target_link_libraries(camplib-static ${SUNDIALS_LIBS} ${GSL_LIBS} ${JSON_LIB})
+  target_link_libraries(camplib-static ${SUNDIALS_LIBS} ${GSL_LIBS} ${JSON_LIB})
 
 endif()
 
-set_target_properties(camplib PROPERTIES OUTPUT_NAME camp)
+set(MODULE_DIR "${CMAKE_BINARY_DIR}/include")
 
-#set(MODULE_DIR "${CMAKE_BINARY_DIR}/include")
-
-
+set_target_properties(camplib PROPERTIES
+                         OUTPUT_NAME camp
+                         PREFIX lib
+                         VERSION ${PACKAGE_VERSION}
+                         SOVERSION ${PACKAGE_VERSION}
+                         LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
+                         Fortran_MODULE_DIRECTORY ${CMAKE_BINARY_DIR})
+set_target_properties(camplib-static PROPERTIES
+                         OUTPUT_NAME camp
+                         PREFIX lib
+                         VERSION ${PACKAGE_VERSION}
+                         ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
+                         Fortran_MODULE_DIRECTORY ${MODULE_DIR})
 
 ######################################################################
 # Install options
 
+include(GNUInstallDirs)
+install(TARGETS camplib camplib-static
+        EXPORT camplib-targets
+        LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+        ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+       )
 
+set(MOD_DIR_TO_INSTALL "${MODULE_DIR}")
+set(MOD_DESTINATION_DIR "${CMAKE_INSTALL_INCLUDEDIR}/camp")
+install(
+  CODE "file(GLOB_RECURSE MODULE_FILES \"${MOD_DIR_TO_INSTALL}/*.mod\")"
+  CODE "file(INSTALL \${MODULE_FILES} DESTINATION \"\${CMAKE_INSTALL_PREFIX}/${MOD_DESTINATION_DIR}\")"
+  )
 
 ######################################################################
 # camp-chem box model
