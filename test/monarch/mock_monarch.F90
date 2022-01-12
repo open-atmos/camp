@@ -222,9 +222,9 @@ program mock_monarch
   if(status_code.eq.0) then
 
     I_W=1
-    I_E=5
+    I_E=3
     I_S=1
-    I_N=5
+    I_N=3
     NUM_TIME_STEP = 5 !5
     TIME_STEP = 1.6 !1.6
     NUM_VERT_CELLS = 3

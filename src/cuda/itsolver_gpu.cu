@@ -12,7 +12,7 @@ void read_options(itsolver *bicg){
 
   fp = fopen("itsolver_options.txt", "r");
   if (fp == NULL){
-    printf("Could not open file %s, setting itsolver to One-cell",path);
+    printf("Could not open file %s, setting itsolver to One-cell\n",path);
     bicg->cells_method=0;
   }else{
 

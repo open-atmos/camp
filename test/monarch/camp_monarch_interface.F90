@@ -1562,8 +1562,6 @@ end if
 
     state_size_per_cell = this%camp_core%state_size_per_cell()
 
-    print*,"get_init_conc"
-
     do i=i_W, I_E
       do j=I_S, I_N
         do k=1, NUM_VERT_CELLS
@@ -1575,17 +1573,10 @@ end if
             last_cell=((I_E - I_W+1)*(I_N - I_S+1)*NUM_VERT_CELLS)-1
           end if
 
-          print*,"size(this%map_monarch_id)",size(this%map_monarch_id)
-          print*,"size(this%camp_state%state_var)",size(this%camp_state%state_var)
-          print*,"size(this%init_conc_camp_id)",size(this%init_conc_camp_id)
-          print*,"this%init_conc_camp_id(:)",this%init_conc_camp_id(:)
-
           forall (i_spec = 1:size(this%map_monarch_id))
             this%camp_state%state_var(this%init_conc_camp_id(i_spec)&
             +r*state_size_per_cell) = this%init_conc(i_spec)
           end forall
-
-          print*,this%camp_state%state_var(:)
 
           !Last cell = First cell
           if(r.ne.last_cell) then

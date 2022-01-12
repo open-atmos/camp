@@ -151,8 +151,6 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
   int n_time_deriv_specs=n_dep_var*n_cells;
 #endif
 
-  printf("solver_new n_cells %d\n",n_cells);
-
   // Set up a TimeDerivative object to use during solving
   if (time_derivative_initialize(&(sd->time_deriv), n_time_deriv_specs) != 1) {
     printf("\n\nERROR initializing the TimeDerivative\n\n");
@@ -374,13 +372,10 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
   sd->use_cpu = 1;
 
 #ifdef CAMP_USE_GPU
-  printf("solver_new\n");
   get_camp_config_variables(sd);
-  printf("solver_new\n");
   solver_new_gpu_cu(sd, n_dep_var, n_state_var, n_rxn,
                     n_rxn_int_param, n_rxn_float_param, n_rxn_env_param,
                     n_cells);
-  printf("solver_new\n");
 #endif
 
 #ifdef CAMP_DEBUG
@@ -417,10 +412,9 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
 
 #endif
 
+
   sd->ncounters = ncounters;
   sd->ntimers = ntimers;
-
-  printf("solver_new end\n");
 
 #ifdef CAMP_SOLVER_SPEC_NAMES
   sd->spec_names = (char **)malloc(sizeof(char *) * n_state_var);

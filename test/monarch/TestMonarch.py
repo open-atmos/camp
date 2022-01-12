@@ -50,7 +50,7 @@ class TestMonarch:
         self.casesMulticellsOnecells = []
         self.caseMulticellsOnecell = ""
         self.nCellsCase = 1
-        self.itsolverConfigFile = "itsolver_options"
+        self.itsolverConfigFile = "itsolver_options.txt"
         self.campSolverConfigFile = "config_variables_c_solver.txt"
 
 

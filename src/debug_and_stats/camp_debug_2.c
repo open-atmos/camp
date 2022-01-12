@@ -179,7 +179,7 @@ void get_camp_config_variables(SolverData *sd){
   fp = fopen("config_variables_c_solver.txt", "r");
 
   if (fp == NULL){
-    printf("Could not open file %s, setting use_cpu ON ",path);
+    printf("Could not open file %s, setting use_cpu ON\n",path);
     sd->use_cpu=1;
     sd->use_f_cpu=1;
   }else{
