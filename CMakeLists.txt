@@ -245,7 +245,7 @@ add_test(test_sub_model_UNIFAC ${CMAKE_BINARY_DIR}/test_run/unit_sub_model_data/
 add_test(test_sub_model_ZSR_aerosol_water ${CMAKE_BINARY_DIR}/test_run/unit_sub_model_data/test_ZSR_aerosol_water.sh ${MPI_TEST_FLAG})
 add_test(test_chem_mech_solver ${CMAKE_BINARY_DIR}/test_run/chemistry/test_chemistry_1.sh ${MPI_TEST_FLAG})
 add_test(test_chemistry_cb05cl_ae5 ${CMAKE_BINARY_DIR}/test_run/chemistry/cb05cl_ae5/test_chemistry_cb05cl_ae5.sh ${MPI_TEST_FLAG})
-add_test(test_chemistry_eqsam_v03d ${CMAKE_BINARY_DIR}/test_run/chemistry/eqsam_v03d/test_chemistry_eqsam_v03d.sh ${MPI_TEST_FLAG})
+add_test(test_MONARCH_1 ${CMAKE_BINARY_DIR}/test_run/monarch/test_monarch_1.sh ${MPI_TEST_FLAG})
 add_test(test_MONARCH_2 ${CMAKE_BINARY_DIR}/test_run/monarch/test_monarch_2.sh ${MPI_TEST_FLAG})
 add_test(boot_camp_part_1 ${CMAKE_BINARY_DIR}/boot_camp_run/part_2_code/run_part_1.sh ${MPI_TEST_FLAG})
 add_test(boot_camp_part_2 ${CMAKE_BINARY_DIR}/boot_camp_run/part_2_code/run_part_2.sh ${MPI_TEST_FLAG})
@@ -403,42 +403,60 @@ else()
   set(CAMP_CUDA_SRC "")
 endif()
 
-set(CAMP_F_SRC
-        src/constants.F90
-        src/util.F90
-        src/mpi.F90
-        src/env_state.F90
-        src/rand.F90
-        src/property.F90 src/chem_spec_data.F90
-        src/rxn_data.F90 src/camp_state.F90 src/mechanism_data.F90
-        src/camp_core.F90 src/camp_solver_data.F90 src/aero_rep_data.F90
-        src/aero_phase_data.F90 src/aero_rep_factory.F90
-        src/rxn_factory.F90 src/sub_model_data.F90 src/sub_model_factory.F90
-        src/solver_stats.F90 src/camp_box_model_data.F90
-        src/debug_diff_check.F90
-        )
-
-add_library(camplib ${CAMP_F_SRC}
+set(CAMP_LIB_SRC
+  src/constants.F90
+  src/util.F90
+  src/mpi.F90
+  src/env_state.F90
+  src/rand.F90
+  src/property.F90 src/chem_spec_data.F90
+  src/rxn_data.F90 src/camp_state.F90 src/mechanism_data.F90
+  src/camp_core.F90 src/camp_solver_data.F90 src/aero_rep_data.F90
+  src/aero_phase_data.F90 src/aero_rep_factory.F90
+  src/rxn_factory.F90 src/sub_model_data.F90 src/sub_model_factory.F90
+  src/solver_stats.F90
+  src/debug_diff_check.F90
   ${CAMP_C_SRC} ${AEROSOL_REPS_SRC} ${SUB_MODELS_SRC} ${REACTIONS_SRC}
-        ${CAMP_CUDA_SRC} ${GSL_SRC} ${CAMP_CXX_SRC} ${CAMP_CUDA_SRC_2} )
+  ${CAMP_CUDA_SRC} ${GSL_SRC} ${CAMP_CXX_SRC} )
+
+#add_library(camplib SHARED ${CAMP_LIB_SRC})
+#add_library(camplib-static STATIC ${CAMP_LIB_SRC})
+
+add_library(camplib ${CAMP_LIB_SRC})
 
 if (CUDA_FOUND)
 
   target_link_libraries(camplib ${SUNDIALS_LIBS} ${GSL_LIBS} ${JSON_LIB} ${CUDA_LIBRARIES})
+  #target_link_libraries(camplib-static ${SUNDIALS_LIBS} ${GSL_LIBS} ${JSON_LIB} ${CUDA_LIBRARIES})
 
   set_target_properties(camplib PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
-  set_target_properties(camplib PROPERTIES OUTPUT_NAME camp)
+  #set_target_properties(camplib-static  PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
+
 
 else()
-  target_link_libraries(camplib ${NETCDF_LIBS} ${SUNDIALS_LIBS}
-    ${MOSAIC_LIB} ${GSL_LIBS} ${JSON_LIB})
-  set_target_properties(camplib PROPERTIES OUTPUT_NAME camp)
+  #target_link_libraries(camplib ${NETCDF_LIBS} ${SUNDIALS_LIBS}
+   #  ${MOSAIC_LIB} ${GSL_LIBS} ${JSON_LIB})
+  target_link_libraries(camplib ${SUNDIALS_LIBS} ${GSL_LIBS} ${JSON_LIB})
+  #target_link_libraries(camplib-static ${SUNDIALS_LIBS} ${GSL_LIBS} ${JSON_LIB})
+
 endif()
+
+set_target_properties(camplib PROPERTIES OUTPUT_NAME camp)
+
+#set(MODULE_DIR "${CMAKE_BINARY_DIR}/include")
+
+
+
+######################################################################
+# Install options
+
+
 
 ######################################################################
 # camp-chem box model
 
-add_executable(camp_box_model src/camp_box_model.F90)
+add_executable(camp_box_model test/camp_box_model_data.F90
+                              test/camp_box_model.F90)
 
 target_link_libraries(camp_box_model camplib)
 
@@ -488,10 +506,6 @@ set_source_files_properties(${CB5_EBI_SOLVER} PROPERTIES COMPILE_FLAGS
 ######################################################################
 # MONARCH interface
 
-add_executable(mock_monarch_2 test/monarch/mock_monarch_2.F90
-        test/monarch/camp_monarch_interface_2.F90)
-target_link_libraries(mock_monarch_2 camplib)
-
 add_executable(mock_monarch test/monarch/mock_monarch.F90
         test/monarch/camp_monarch_interface.F90
         ${CB5_EBI_SOLVER} ${CB5_KPP_SOLVER}
@@ -500,59 +514,23 @@ target_link_libraries(mock_monarch camplib)
 
 if (ENABLE_TESTS)
 
-  add_executable(test_chemistry_cb05cl_ae5
-          test/chemistry/cb05cl_ae5/test_cb05cl_ae5.F90
-          ${CB5_EBI_SOLVER} ${CB5_KPP_SOLVER}
-          test/chemistry/cb05cl_ae5/module_BSC_CHEM_DATA.F90)
-  target_link_libraries(test_chemistry_cb05cl_ae5 camplib)
-
-
-  add_executable(test_chemistry_cb05cl_ae5_big
-          test/chemistry/cb05cl_ae5/test_cb05cl_ae5_big.F90
-          ${CB5_EBI_SOLVER} ${CB5_KPP_SOLVER}
-          test/chemistry/cb05cl_ae5/module_BSC_CHEM_DATA.F90)
-  target_link_libraries(test_chemistry_cb05cl_ae5_big camplib)
-
-
-
-
   ######################################################################
   # test_chemistry_cb05cl_ae5_big
 
-
-
-  #if (CUDA_FOUND AND NOT ENABLE_GPU AND ENABLE_TESTS)
-  #    add_executable(test_chemistry_cb05cl_ae5_gpu
-  #            test/chemistry/cb05cl_ae5/test_cb05cl_ae5.F90
-  #            ${CB5_EBI_SOLVER} ${CB5_KPP_SOLVER}
-  #            test/chemistry/cb05cl_ae5/module_BSC_CHEM_DATA.F90)
-  #    target_link_libraries(test_chemistry_cb05cl_ae5_gpu camplib_gpu)
-  #endif()
+add_executable(test_chemistry_cb05cl_ae5_big
+        test/chemistry/cb05cl_ae5/test_cb05cl_ae5_big.F90
+        ${CB5_EBI_SOLVER} ${CB5_KPP_SOLVER}
+        test/chemistry/cb05cl_ae5/module_BSC_CHEM_DATA.F90)
+target_link_libraries(test_chemistry_cb05cl_ae5_big camplib)
 
 ######################################################################
 # test_chemistry_cb05cl_ae5
 
-
-
-#if (CUDA_FOUND AND ENABLE_GPU AND ENABLE_TESTS)
-#    add_executable(test_chemistry_cb05cl_ae5_big_gpu
-#            test/chemistry/cb05cl_ae5/test_cb05cl_ae5_big.F90
-#            ${CB5_EBI_SOLVER} ${CB5_KPP_SOLVER}
-#            test/chemistry/cb05cl_ae5/module_BSC_CHEM_DATA.F90)
-#    target_link_libraries(test_chemistry_cb05cl_ae5_big_gpu camplib_gpu)
-#endif()
-
-######################################################################
-# test_chemistry_eqsam_v03d
-
-set(EQSAM_V03D
-	test/chemistry/eqsam_v03d/eqsam_v03d.F90
-	)
-
-add_executable(test_chemistry_eqsam_v03d test/chemistry/eqsam_v03d/test_eqsam_v03d.F90
-	${EQSAM_V03D})
-
-target_link_libraries(test_chemistry_eqsam_v03d camplib)
+add_executable(test_chemistry_cb05cl_ae5
+    test/chemistry/cb05cl_ae5/test_cb05cl_ae5.F90
+    ${CB5_EBI_SOLVER} ${CB5_KPP_SOLVER}
+    test/chemistry/cb05cl_ae5/module_BSC_CHEM_DATA.F90)
+target_link_libraries(test_chemistry_cb05cl_ae5 camplib)
 
 ######################################################################
 # test_property
