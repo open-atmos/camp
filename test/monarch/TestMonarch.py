@@ -285,11 +285,11 @@ def plot_cases(conf):
     if conf.plotYKey == "Speedup normalized computational timeLS":
         namey = "Speedup without data transfers CPU-GPU"
     if conf.plotYKey == "Speedup counterLS":
-        namey = "Speedup iterations CVODE solving"
+        namey = "Speedup iterations CAMP solving"
     if conf.plotYKey == "Speedup normalized timeLS":
         namey = "Speedup linear solver"
     if conf.plotYKey == "Speedup timeCVode":
-        namey = "Speedup CVODE solving"
+        namey = "Speedup CAMP solving"
     if conf.plotYKey == "MAPE":
         namey = "MAPE [%]"
 
@@ -325,7 +325,6 @@ def all_timesteps():
 
     # conf.chemFile="simple"
     # conf.chemFile="monarch_cb05"
-    # conf.chemFile = "monarch_binned"
     conf.chemFile = "monarch_binned"
 
     conf.diffCellsL = []

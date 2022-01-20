@@ -1423,15 +1423,12 @@ void solveGPU(SolverData *sd, double *dA, int *djA, int *diA, double *dx, double
 
   gpu_yequalsx(dr0h,dr0,nrows,blocks,threads);  //r0h=r0
 
-  gpu_yequalsconst(dn0,0.0,nrows,blocks,threads);  //n0=0.0 //memset???
+  gpu_yequalsconst(dn0,0.0,nrows,blocks,threads);  //n0=0.0
   gpu_yequalsconst(dp0,0.0,nrows,blocks,threads);  //p0=0.0
 
   alpha  = 1.0;
   rho0   = 1.0;
   omega0 = 1.0;
-
-  //printf("temp1 %-le", temp1);
-  //printf("rho1 %f", rho1);
 
 #ifdef DEBUG_SOLVEBCGCUDA_DEEP
 
@@ -1454,8 +1451,6 @@ void solveGPU(SolverData *sd, double *dA, int *djA, int *diA, double *dx, double
 
     beta=(rho1/rho0)*(alpha/omega0);
 
-    //    cout<<"rho1 "<<rho1<<" beta "<<beta<<endl;
-
     gpu_zaxpbypc(dp0,dr0,dn0,beta,-1.0*omega0*beta,nrows,blocks,threads);   //z = ax + by + c
 
     gpu_multxy(dy,ddiag,dp0,nrows,blocks,threads);  // precond y= p0*diag
@@ -1470,8 +1465,6 @@ void solveGPU(SolverData *sd, double *dA, int *djA, int *diA, double *dx, double
 #endif
 
     alpha=rho1/temp1;
-
-    //       cout<<"temp1 "<<temp1<<" alpha "<<alpha<<endl;
 
     gpu_zaxpby(1.0,dr0,-1.0*alpha,dn0,ds,nrows,blocks,threads);
 
@@ -1489,7 +1482,6 @@ void solveGPU(SolverData *sd, double *dA, int *djA, int *diA, double *dx, double
     gpu_multxy(dAx2,ddiag,dt,nrows,blocks,threads);
 
     temp1=gpu_dotxy(dz, dAx2, aux, daux, nrows,(blocks + 1) / 2, threads);
-    //temp1=gpu_dotxy(dz, dAx2, aux, daux, nrows,blocks, threads);
 
 #ifdef DEBUG_SOLVEBCGCUDA_DEEP
     cudaMemcpy(aux_x1,dAx2,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
@@ -1505,7 +1497,6 @@ void solveGPU(SolverData *sd, double *dA, int *djA, int *diA, double *dx, double
 #endif
 
     temp2=gpu_dotxy(dAx2, dAx2, aux, daux, nrows,(blocks + 1) / 2, threads);
-    //temp2=gpu_dotxy(dAx2, dAx2, aux, daux, nrows,blocks, threads);
 
 #ifdef DEBUG_SOLVEBCGCUDA_DEEP
     printf("%d temp2 %-le\n",it,temp2);
@@ -1520,16 +1511,9 @@ void solveGPU(SolverData *sd, double *dA, int *djA, int *diA, double *dx, double
     gpu_zaxpby(1.0,ds,-1.0*omega0,dt,dr0,nrows,blocks,threads);
 
     temp1=gpu_dotxy(dr0, dr0, aux, daux, nrows,(blocks + 1) / 2, threads);
-    //temp1=gpu_dotxy(dr0, dr0, aux, daux, nrows,blocks, threads);
     temp1=sqrt(temp1);
 
-  //cout<<it<<": "<<temp1<<endl;
-
     rho0=rho1;
-
-    //if(temp1<tolmax){
-    //  break;}}
-
     it++;
   }while(it<maxIt && temp1>tolmax);
 

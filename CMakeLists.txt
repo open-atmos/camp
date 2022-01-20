@@ -189,7 +189,11 @@ endif()
 
 macro(do_unit_test test_name result)
   if(ENABLE_MPI)
-    add_test(unit_test_${test_name} mpirun -v -np 2 ${CMAKE_BINARY_DIR}/unit_test_${test_name})
+    if( $ENV{BSC_MACHINE} STREQUAL  "power") #CTE-POWER cluster from BSC
+      add_test(unit_test_${test_name} mpirun -v -np 1 ${CMAKE_BINARY_DIR}/unit_test_${test_name})
+    else()
+      add_test(unit_test_${test_name} mpirun -v -np 2 ${CMAKE_BINARY_DIR}/unit_test_${test_name})
+    endif()
   else()
     add_test(unit_test_${test_name} ${CMAKE_BINARY_DIR}/unit_test_${test_name})
   endif()
@@ -419,8 +423,8 @@ set(CAMP_LIB_SRC
   ${CAMP_C_SRC} ${AEROSOL_REPS_SRC} ${SUB_MODELS_SRC} ${REACTIONS_SRC}
   ${CAMP_CUDA_SRC} ${GSL_SRC} ${CAMP_CXX_SRC} )
 
-add_library(camplib SHARED ${CAMP_LIB_SRC}) #nvlink warning (issue 9 github)
-#add_library(camplib ${CAMP_LIB_SRC}) #fine
+#add_library(camplib SHARED ${CAMP_LIB_SRC}) #nvlink warning (issue 9 github)
+add_library(camplib ${CAMP_LIB_SRC}) #fine
 
 add_library(camplib-static STATIC ${CAMP_LIB_SRC})
 

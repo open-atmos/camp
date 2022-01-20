@@ -13,7 +13,7 @@
 
 #include "libsolv.h"
 
-//#include<cublas.h> //todo fix cublas not compiling fine
+//#include<cublas.h>
 //#include<cublas_v2.h>
 
 using namespace std;

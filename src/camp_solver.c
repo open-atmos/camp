@@ -145,7 +145,7 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
 
 #ifdef CAMP_USE_SUNDIALS
 
-#ifndef DERIV_LOOP_CELLS_RXN
+#ifdef DERIV_LOOP_CELLS_RXN
   int n_time_deriv_specs=n_dep_var;
 #else
   int n_time_deriv_specs=n_dep_var*n_cells;
@@ -565,7 +565,7 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
   alloc_solver_gpu2(sd->cvode_mem, sd);
 #endif
 
-#ifndef FAILURE_DETAIL
+#ifdef FAILURE_DETAIL
   // Set a custom error handling function
   flag = CVodeSetErrHandlerFn(sd->cvode_mem, error_handler, (void *)sd);
   check_flag_fail(&flag, "CVodeSetErrHandlerFn", 0);
@@ -760,7 +760,7 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
   CAMP_DEBUG_JAC_STRUCT(sd->model_data.J_init, "Begin solving");
 
 
-  /*
+#ifndef RESET_JAC_SOLVING
   //Reset Jacobian tmp
   N_VConst(0.0, md->J_state);
   N_VConst(0.0, md->J_deriv);
@@ -775,7 +775,7 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
     (SM_INDEXVALS_S(md->J_solver))[i] = (SM_INDEXVALS_S(md->J_init))[i];
     (SM_DATA_S(md->J_solver))[i] = 0.0;//(SM_DATA_S(md->J_init))[i]; //0.0
   }
-*/
+#endif
 
   // Reset the flag indicating a current J_guess
   sd->curr_J_guess = false;
@@ -839,7 +839,7 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
 #endif
 
     sd->solver_flag = flag;
-#ifndef FAILURE_DETAIL
+#ifdef FAILURE_DETAIL
     if (flag < 0) {
 #else
     if (check_flag(&flag, "CVode", 1) == CAMP_SOLVER_FAIL) {
@@ -936,7 +936,7 @@ sd->counterDerivTotal,sd->timeCVode/CLOCKS_PER_SEC,sd->timeCVodeTotal/CLOCKS_PER
 
   }
 #endif
-#ifndef FAILURE_DETAIL
+#ifdef FAILURE_DETAIL
   sd->counter_fail_solve_print=0;
 #endif
   sd->counterDerivCPU = 0;
@@ -1168,7 +1168,7 @@ int camp_solver_update_model_state(N_Vector solver_state, SolverData *sd,
       if (model_data->var_type[i_spec] == CHEM_SPEC_VARIABLE) {
         if (NV_DATA_S(solver_state)[i_dep_var] < -SMALL)
         {
-#ifndef FAILURE_DETAIL
+#ifdef FAILURE_DETAIL
           if(sd->counter_fail_solve_print<1){
             printf("Failed model state update (Innacurate results): [spec %d] = %le\n", i_spec,
                NV_DATA_S(solver_state)[i_dep_var]);
@@ -1270,7 +1270,7 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
   SUNMatMatvec(md->J_solver, md->J_tmp, md->J_tmp2);
   N_VLinearSum(1.0, md->J_deriv, 1.0, md->J_tmp2, md->J_tmp);
 
-#ifndef DERIV_LOOP_CELLS_RXN
+#ifdef DERIV_LOOP_CELLS_RXN
 
   // Loop through the grid cells and update the derivative array
   for (int i_cell = 0; i_cell < n_cells; ++i_cell) {
@@ -1379,7 +1379,7 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
     printf("Deriv iter: %d\n",sd->counterDerivCPU);
     print_derivative_in_out(sd, y, deriv);
     //print_time_derivative(sd);
-#ifndef DERIV_LOOP_CELLS_RXN
+#ifdef DERIV_LOOP_CELLS_RXN
 #else
     //printf("Time_deriv prod loss jac_deriv_data\n");
     //for (int i = 0; i < sd->time_deriv.num_spec; i++)

@@ -255,7 +255,7 @@ void rxn_update_env_state(ModelData *model_data) {
  */
 #ifdef CAMP_USE_SUNDIALS
 
-#ifndef DERIV_LOOP_CELLS_RXN
+#ifdef DERIV_LOOP_CELLS_RXN
 
 void rxn_calc_deriv(ModelData *model_data, TimeDerivative time_deriv,
                     realtype time_step) {

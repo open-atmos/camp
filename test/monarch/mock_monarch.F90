@@ -3,15 +3,15 @@
 ! SPDX-License-Identifier: MIT
 
 !> \file
-!> The mock_monarch program
+!> The mock_monarch_t program
 
 !> Mock version of the MONARCH model for testing integration with CAMP
-program mock_monarch
+program mock_monarch_t
 
   use camp_constants,                    only: const
   use camp_util,                          only : assert_msg, almost_equal, &
                                                 to_string
-  use camp_monarch_interface
+  use camp_monarch_interface_2
   use camp_mpi
   use camp_solver_stats
 #ifdef CAMP_USE_JSON
@@ -150,7 +150,7 @@ program mock_monarch
   real :: plot_start_time = START_TIME
 
   !> !!! Add to MONARCH variables !!!
-  type(monarch_interface_t), pointer :: camp_interface
+  type(camp_monarch_interface_t), pointer :: camp_interface
 
   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   ! Mock model setup and evaluation variables !
@@ -398,7 +398,7 @@ program mock_monarch
   call model_initialize(output_file_prefix)
   path_solver_stats = output_file_prefix//"_solver_stats.csv"
 
-  camp_interface => monarch_interface_t(camp_input_file, interface_input_file, &
+  camp_interface => camp_monarch_interface_t(camp_input_file, interface_input_file, &
           START_CAMP_ID, END_CAMP_ID, n_cells, ADD_EMISIONS)!, n_cells
 
   ncounters = size(camp_interface%camp_core%counters)
@@ -808,7 +808,7 @@ contains
   subroutine init_file_results_all_cells(camp_interface, file_prefix)
 
     character(len=:), allocatable, intent(in) :: file_prefix
-    type(monarch_interface_t), intent(inout) :: camp_interface
+    type(camp_monarch_interface_t), intent(inout) :: camp_interface
 
     character(len=:), allocatable :: file_name
     character(len=:), allocatable :: aux_str
@@ -858,7 +858,7 @@ contains
 
   subroutine export_file_results_all_cells(camp_interface)
 
-    type(monarch_interface_t), intent(inout) :: camp_interface
+    type(camp_monarch_interface_t), intent(inout) :: camp_interface
 
     character(len=:), allocatable :: aux_str
     character(len=128) :: i_str
@@ -978,7 +978,7 @@ contains
 
   subroutine import_camp_input(camp_interface)
 
-    type(monarch_interface_t), intent(inout) :: camp_interface
+    type(camp_monarch_interface_t), intent(inout) :: camp_interface
     integer :: z,i,j,k,r,o,i_cell,i_spec,i_photo_rxn
     integer :: state_size_per_cell
 
@@ -1082,7 +1082,7 @@ contains
 
   subroutine import_camp_input_json(camp_interface)
 
-    type(monarch_interface_t), intent(inout) :: camp_interface
+    type(camp_monarch_interface_t), intent(inout) :: camp_interface
     integer :: z,i,j,k,r,o,i_cell,i_spec,i_photo_rxn
     integer :: state_size_per_cell
 
@@ -1205,7 +1205,7 @@ contains
 
   subroutine solve_ebi(camp_interface)
 
-    type(monarch_interface_t), intent(inout) :: camp_interface
+    type(camp_monarch_interface_t), intent(inout) :: camp_interface
     integer :: z,i,j,k,r,o,i_cell,i_spec,i_photo_rxn,i_time
 
     real(kind=dp) :: dt, temp, press_json, auxr
@@ -1418,7 +1418,7 @@ contains
 
   subroutine solve_kpp(camp_interface)
 
-    type(monarch_interface_t), intent(inout) :: camp_interface
+    type(camp_monarch_interface_t), intent(inout) :: camp_interface
     integer :: z,i,j,k,r,o,i_cell,i_spec,i_photo_rxn,i_time
 
     ! Set the step limits
@@ -1438,7 +1438,7 @@ contains
 
   subroutine compare_ebi_camp_json(camp_interface)
 
-    type(monarch_interface_t), intent(inout) :: camp_interface
+    type(camp_monarch_interface_t), intent(inout) :: camp_interface
     integer :: z,i,j,k,r,o,i_cell,i_spec,i_photo_rxn,i_time
 
     type(json_file) :: jfile
@@ -1576,7 +1576,7 @@ contains
 
     !> Current model time (min since midnight)
     real, intent(in) :: curr_time_in
-    type(monarch_interface_t), intent(in) :: camp_interface
+    type(camp_monarch_interface_t), intent(in) :: camp_interface
     type(string_t), allocatable, intent(inout) :: name_gas_species_to_print(:), name_aerosol_species_to_print(:)
     integer(kind=i_kind), allocatable, intent(inout) :: id_gas_species_to_print(:), id_aerosol_species_to_print(:)
     integer, intent(inout), optional :: n_cells_to_print
@@ -1666,7 +1666,7 @@ contains
 
     !> Current model time (min since midnight)
     real, intent(in) :: curr_time
-    type(monarch_interface_t), intent(in) :: camp_interface
+    type(camp_monarch_interface_t), intent(in) :: camp_interface
     integer :: z,i,j,k
     real, intent(inout) :: species_conc(:,:,:,:)
     !type(string_t), allocatable :: species_names(:)
@@ -1752,7 +1752,7 @@ contains
             end_time)
 
     !> CAMP-camp <-> MONARCH interface
-    type(monarch_interface_t), intent(in) :: camp_interface
+    type(camp_monarch_interface_t), intent(in) :: camp_interface
     !> File prefix for gnuplot script
     character(len=:), allocatable :: file_path
     !> Plot start time
@@ -1813,7 +1813,7 @@ contains
           start_time, end_time, n_cells_plot, i_cell)
 
     !> CAMP-camp <-> MONARCH interface
-    type(monarch_interface_t), intent(in) :: camp_interface
+    type(camp_monarch_interface_t), intent(in) :: camp_interface
     !> File prefix for gnuplot script
     character(len=:), allocatable :: plot_title, file_path
     !> Plot start time
@@ -1950,7 +1950,7 @@ contains
           end_time)
 
     !> CAMP-camp <-> MONARCH interface
-    type(monarch_interface_t), intent(in) :: camp_interface
+    type(camp_monarch_interface_t), intent(in) :: camp_interface
     !> File prefix for gnuplot script
     character(len=:), allocatable :: file_prefix
     !> Plot start time
@@ -2056,7 +2056,7 @@ contains
   subroutine export_solver_stats(curr_time, camp_interface, solver_stats, ncounters, ntimers)
 
     real, intent(in) :: curr_time
-    type(monarch_interface_t), intent(in) :: camp_interface
+    type(camp_monarch_interface_t), intent(in) :: camp_interface
     type(solver_stats_t), intent(inout) :: solver_stats
     integer, intent(inout) :: ncounters
     integer, intent(inout) :: ntimers
@@ -2319,4 +2319,4 @@ contains
 
   end subroutine set_ebi_photo_ids_with_camp
 
-end program mock_monarch
+end program mock_monarch_t

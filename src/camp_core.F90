@@ -1688,6 +1688,8 @@ contains
 
 #else
 
+#ifdef ISSUE_18
+
     !print*,"camp_core pack_size start"
 
     !allocate(spec_names(this%size_state_per_cell))
@@ -1704,6 +1706,8 @@ contains
     end do
 
     !print*,"camp_core pack_size end"
+
+#endif
 
 #endif
 
@@ -1795,11 +1799,14 @@ contains
 
     !this%spec_names = this%unique_names()
 
+#ifdef ISSUE_18
+
     do i=1, size(this%spec_names)
       !print*,"camp_core pack_size",i
       !print*,"camp_core pack_size",this%spec_names(i)%string
       call camp_mpi_pack_string(buffer, pos, trim(this%spec_names(i)%string), l_comm)
     end do
+#endif
 
     !print*,"camp_core pack_size end"
 
@@ -1895,6 +1902,8 @@ contains
 
     !print*,"camp_core bin_unpack start"
 
+#ifdef ISSUE_18
+
     allocate(this%spec_names(this%size_state_per_cell))
     !this%spec_names(i)=this%unique_names()
 
@@ -1911,13 +1920,13 @@ contains
       !print*,this%spec_names(i)%string
     end do
 
-    !print*,"camp_core bin_unpack end"
+#endif
 
 #endif
 
     this%core_is_initialized = .true.
-    !call assert(291557168, &
-    !        pos - prev_position <= this%pack_size(l_comm))
+    call assert(291557168, &
+            pos - prev_position <= this%pack_size(l_comm))
 
     allocate(this%init_state(this%size_state_per_cell * this%n_cells))
     do i_cell = 0, this%n_cells - 1

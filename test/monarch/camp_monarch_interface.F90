@@ -3,10 +3,10 @@
 ! SPDX-License-Identifier: MIT
 
 !> \file
-!> The monarch_interface_t object and related functions
+!> The camp_monarch_interface_t object and related functions
 
 !> Interface for the MONACH model and CAMP-camp
-module camp_monarch_interface
+module camp_monarch_interface_2
 
   use camp_constants,                  only : i_kind
   use camp_mpi
@@ -34,13 +34,13 @@ module camp_monarch_interface
   implicit none
   private
 
-  public :: monarch_interface_t
+  public :: camp_monarch_interface_t
 
   !> CAMP <-> MONARCH interface
   !!
   !! Contains all data required to intialize and run CAMP from MONARCH data
   !! and map state variables between CAMP and MONARCH
-  type :: monarch_interface_t
+  type :: camp_monarch_interface_t
     !private
     !> CAMP-chem core
     type(camp_core_t), pointer :: camp_core
@@ -100,12 +100,12 @@ module camp_monarch_interface
     procedure, private :: load_init_conc
     !> Finalize the interface
     final :: finalize
-  end type monarch_interface_t
+  end type camp_monarch_interface_t
 
   !> CAMP <-> MONARCH interface constructor
-  interface monarch_interface_t
+  interface camp_monarch_interface_t
     procedure :: constructor
-  end interface monarch_interface_t
+  end interface camp_monarch_interface_t
 
   !> MPI node id from MONARCH
   integer(kind=i_kind) :: MONARCH_PROCESS ! TODO replace with MONARCH param
@@ -119,9 +119,9 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  !> Create and initialize a new monarch_interface_t object
+  !> Create and initialize a new camp_monarch_interface_t object
   !!
-  !! Create a monarch_interface_t object at the beginning of the  model run
+  !! Create a camp_monarch_interface_t object at the beginning of the  model run
   !! for each node. The master node should pass a string containing the path
   !! to the CAMP confirguration file list, the path to the interface
   !! configuration file and the starting and ending indices for chemical
@@ -131,7 +131,7 @@ contains
           ADD_EMISIONS, mpi_comm) result (this)
 
     !> A new MONARCH interface
-    type(monarch_interface_t), pointer :: this
+    type(camp_monarch_interface_t), pointer :: this
     !> Path to the CAMP-camp configuration file list
     character(len=:), allocatable, optional :: camp_config_file
     !> Path to the CAMP-camp <-> MONARCH interface input file
@@ -187,7 +187,7 @@ contains
     end if
 
     if (MONARCH_PROCESS.eq.0) then
-      print*,"monarch_interface_t start"
+      print*,"camp_monarch_interface_t start"
     end if
 
     this%interface_input_file=interface_config_file
@@ -496,7 +496,7 @@ contains
           NUM_TIME_STEP,solver_stats, DIFF_CELLS)
 
     !> CAMP-camp <-> MONARCH interface
-    class(monarch_interface_t) :: this
+    class(camp_monarch_interface_t) :: this
     !> Integration start time (min since midnight)
     real, intent(in) :: start_time
     !> Integration time step
@@ -707,7 +707,7 @@ contains
 
     ! call solver_stats%print( )
 
-  end subroutine
+  end subroutine integrate_mod37
 
   !> Integrate the CAMP mechanism for a particular set of cells and timestep
   subroutine integrate(this, curr_time, time_step, I_W, I_E, I_S, &
@@ -716,7 +716,7 @@ contains
           NUM_TIME_STEP,solver_stats, DIFF_CELLS)
 
     !> CAMP-camp <-> MONARCH interface
-    class(monarch_interface_t) :: this
+    class(camp_monarch_interface_t) :: this
     !> Integration start time (min since midnight)
     real, intent(in) :: curr_time
     !> Integration time step
@@ -1053,7 +1053,7 @@ end if
   subroutine load(this, config_file)
 
     !> CAMP-camp <-> MONARCH interface
-    class(monarch_interface_t) :: this
+    class(camp_monarch_interface_t) :: this
     !> Interface configuration file path
     character(len=:), allocatable :: config_file
 
@@ -1159,7 +1159,7 @@ end if
   subroutine create_map(this)
 
     !> CAMP-camp <-> MONARCH interface
-    class(monarch_interface_t) :: this
+    class(camp_monarch_interface_t) :: this
 
     type(chem_spec_data_t), pointer :: chem_spec_data
     class(aero_rep_data_t), pointer :: aero_rep_ptr
@@ -1348,7 +1348,7 @@ end if
   subroutine load_init_conc(this)
 
     !> CAMP-camp <-> MONARCH interface
-    class(monarch_interface_t) :: this
+    class(camp_monarch_interface_t) :: this
 
     type(chem_spec_data_t), pointer :: chem_spec_data
     class(aero_rep_data_t), pointer :: aero_rep_ptr
@@ -1503,7 +1503,7 @@ end if
       WATER_VAPOR_ID, MONARCH_air_density,i_W,I_E,I_S,I_N)
 
     !> CAMP-camp <-> MONARCH interface
-    class(monarch_interface_t) :: this
+    class(camp_monarch_interface_t) :: this
     !> MONARCH species concentrations to update
     real, intent(inout) :: MONARCH_conc(:,:,:,:)
     !> Atmospheric water concentrations (kg_H2O/kg_air)
@@ -1630,7 +1630,7 @@ end if
   subroutine get_MONARCH_species(this, species_names, MONARCH_ids)
 
     !> CAMP-camp <-> MONARCH interface
-    class(monarch_interface_t) :: this
+    class(camp_monarch_interface_t) :: this
     !> Set of MONARCH species names
     type(string_t), allocatable, intent(out) :: species_names(:)
     !> MONARCH tracer ids
@@ -1645,7 +1645,7 @@ end if
   subroutine do_print(this)
 
     !> CAMP-camp <-> MONARCH interface
-    class(monarch_interface_t) :: this
+    class(camp_monarch_interface_t) :: this
 
     call this%camp_core%print()
 
@@ -1655,7 +1655,7 @@ end if
   elemental subroutine finalize(this)
 
     !> CAMP-camp <-> MONARCH interface
-    type(monarch_interface_t), intent(inout) :: this
+    type(camp_monarch_interface_t), intent(inout) :: this
 
     if (associated(this%camp_core)) &
             deallocate(this%camp_core)
