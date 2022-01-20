@@ -121,7 +121,7 @@ program unit_test_driver
 
     ! unpack the data
     one_cell_core  => camp_core_t( )
-    multicell_core => camp_core_t( )
+    multicell_core => camp_core_t( n_cells=N_CELLS )
     unit_test      => UNIT_TEST_TYPE_
     pos = 0
     call one_cell_core%bin_unpack(  buffer, pos )
@@ -320,7 +320,7 @@ program unit_test_driver
     else
       results = 1
     end if
-  end if
+
 
   ! Send the results back to the primary process
   call camp_mpi_transfer_integer(results, results, 1, 0)
@@ -332,6 +332,8 @@ program unit_test_driver
     else
       passed = .false.
     end if
+  end if
+
   end if
 
   deallocate( buffer )
