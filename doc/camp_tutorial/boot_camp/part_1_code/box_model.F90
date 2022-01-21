@@ -79,11 +79,7 @@ program box_model
                      camp_state%state_var( idx_O2  )
   end do
 
-  print*,"deallocate start"
-  deallocate( camp_core )
-  print*,"deallocate end1"
   deallocate( camp_state )
-  print*,"deallocate end2"
 
 end program box_model
 !! [Solve and output]

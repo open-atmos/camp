@@ -108,7 +108,6 @@ program box_model
                      camp_state%state_var( idx_O2  )
   end do
 
-  deallocate( camp_core )
   deallocate( camp_state )
 
 #ifdef CAMP_USE_MPI
