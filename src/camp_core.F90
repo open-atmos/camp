@@ -783,6 +783,11 @@ contains
 
     ! Set species concentrations to zero
     this%init_state_cell(:) = 0.0
+    this%init_state(:) = 0.0
+
+#ifndef ISSUE_18
+
+    !todo seems not the cause of the problem in issue 18
 
     ! Set activity coefficients to 1.0
     do i_aero_rep = 1, size(this%aero_rep)
@@ -795,7 +800,7 @@ contains
       ! Set the activity coefficients to 1.0 as default
       do i_name = 1, size(unique_names)
         i_state_elem = rep%spec_state_id(unique_names(i_name)%string)
-        this%init_state_cell(i_state_elem + i_cell * this%size_state_per_cell) = &
+        this%init_state_cell(i_state_elem) = &
                 real(1.0d0, kind=dp)
       end do
 
@@ -809,6 +814,33 @@ contains
                 this%init_state_cell(i_state_elem)
       end do
     end do
+
+#else
+
+    ! Set activity coefficients to 1.0
+      do i_cell = 0, this%n_cells - 1
+        do i_aero_rep = 1, size(this%aero_rep)
+
+          rep => this%aero_rep(i_aero_rep)%val
+
+          ! Get the ion pairs for which activity coefficients can be calculated
+          unique_names = rep%unique_names(tracer_type = CHEM_SPEC_ACTIVITY_COEFF)
+
+          ! Set the activity coefficients to 1.0 as default
+          do i_name = 1, size(unique_names)
+            i_state_elem = rep%spec_state_id(unique_names(i_name)%string)
+            this%init_state(i_state_elem + i_cell * this%size_state_per_cell) = &
+                    real(1.0d0, kind=dp)
+            this%init_state_cell(i_state_elem) = &
+                    this%init_state(i_state_elem + i_cell * this%size_state_per_cell)
+          end do
+
+          deallocate(unique_names)
+
+        end do
+      end do
+
+#endif
 
   end subroutine initialize
 
@@ -1435,8 +1467,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Integrate the chemical mechanism
-  subroutine solve(this, camp_state, time_step, rxn_phase, solver_stats, n_cells)!,&
-          !update_data)
+  subroutine solve(this, camp_state, time_step, rxn_phase, solver_stats, n_cells)
 
     use camp_rxn_data
     use camp_solver_stats
@@ -1924,10 +1955,6 @@ contains
 
 #endif
 
-    this%core_is_initialized = .true.
-    call assert(291557168, &
-            pos - prev_position <= this%pack_size(l_comm))
-
     allocate(this%init_state(this%size_state_per_cell * this%n_cells))
     do i_cell = 0, this%n_cells - 1
       do i_state_elem = 1, this%size_state_per_cell
@@ -1935,6 +1962,10 @@ contains
                 this%init_state_cell(i_state_elem)
       end do
     end do
+
+    this%core_is_initialized = .true.
+    call assert(291557168, &
+            pos - prev_position <= this%pack_size(l_comm))
 
 #endif
 

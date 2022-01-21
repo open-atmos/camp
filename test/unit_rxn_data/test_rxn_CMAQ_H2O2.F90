@@ -274,19 +274,20 @@ contains
       end if
     end if
 
-    ! Send the results back to the primary process
-    call camp_mpi_transfer_integer(results, results, 1, 0)
+      ! Send the results back to the primary process
+      call camp_mpi_transfer_integer(results, results, 1, 0)
 
-    ! convert the results back to a logical value
-    if (camp_mpi_rank().eq.0) then
-      if (results.eq.0) then
-        run_CMAQ_H2O2_test = .true.
-      else
-        run_CMAQ_H2O2_test = .false.
+      ! convert the results back to a logical value
+      if (camp_mpi_rank().eq.0) then
+        if (results.eq.0) then
+          run_CMAQ_H2O2_test = .true.
+        else
+          run_CMAQ_H2O2_test = .false.
+        end if
       end if
-    end if
 
     deallocate(buffer)
+
 #endif
 
     deallocate(camp_core)

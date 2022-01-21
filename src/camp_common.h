@@ -32,14 +32,10 @@
 #include <cvode/cvode_direct.h> /* CVDls interface                     */
 #include <cvode/cvode_impl.h>   /* CVodeMem structure                  */
 
-// todo ifndef GPU
-//#ifdef CAMP_USE_GPU
 //  #include <nvector/nvector_cuda.h>      /* access to cuda N_Vector */
 //  #include <sunlinsol/sunlinsol_spgmr.h> /* access to SPGMR SUNLinearSolver */
-//#else
 #include <nvector/nvector_serial.h>  /* Serial N_Vector types, fcts, macros */
 #include <sunlinsol/sunlinsol_klu.h> /* KLU SUNLinearSolver                 */
-//#endif
 
 #include <sundials/sundials_nvector.h>
 #include <sunmatrix/sunmatrix_sparse.h> /* sparse SUNMatrix                    */

@@ -560,7 +560,7 @@ set_source_files_properties(${UNIT_TEST_RXN_ARRHENIUS_SRC} PROPERTIES COMPILE_FL
 add_executable(unit_test_rxn_arrhenius ${UNIT_TEST_RXN_ARRHENIUS_SRC})
 target_link_libraries(unit_test_rxn_arrhenius camplib)
 
-if (NOT ENABLE_TESTS)
+if (ENABLE_TESTS)
 
   ######################################################################
   # test_chemistry_cb05cl_ae5_big

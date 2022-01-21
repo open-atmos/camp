@@ -322,18 +322,17 @@ program unit_test_driver
     end if
 
 
-  ! Send the results back to the primary process
-  call camp_mpi_transfer_integer(results, results, 1, 0)
+    ! Send the results back to the primary process
+    call camp_mpi_transfer_integer(results, results, 1, 0)
 
-  ! Convert the results back to a logical
-  if( camp_mpi_rank( ) .eq. 0 ) then
-    if( results .eq. 0 ) then
-      passed = .true.
-    else
-      passed = .false.
+    ! Convert the results back to a logical
+    if( camp_mpi_rank( ) .eq. 0 ) then
+      if( results .eq. 0 ) then
+        passed = .true.
+      else
+        passed = .false.
+      end if
     end if
-  end if
-
   end if
 
   deallocate( buffer )

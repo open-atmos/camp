@@ -928,7 +928,7 @@ contains
     real(kind=dp), intent(in) :: t_initial
     !> End time (s)
     real(kind=dp), intent(in) :: t_final
-    !> Solver statisticsz
+    !> Solver statistics
     type(solver_stats_t), intent(inout), optional, target :: solver_stats
     integer, intent(in), optional:: n_cells
 
@@ -986,19 +986,8 @@ contains
     class(camp_solver_data_t), intent(inout) :: this
     real(kind=dp), allocatable, intent(inout) :: rate_constants(:)
     real(kind=c_double), pointer :: rate_constants_c(:)
-    !integer(kind=c_int), pointer :: var_type_c(:)
-
-    !allocate(rate_constants_c(size(rate_constants)))
-    !rate_constants_c(:) = int(rate_constants(:), kind=c_double)
-    !call rxn_get_base_rate(this%solver_c_ptr,c_loc(rate_constants_c))
 
     call rxn_get_base_rate(this%solver_c_ptr,rate_constants(1))
-
-    !allocate(var_type_c(size(var_type)))
-    !var_type_c(:) = int(var_type(:), kind=c_int)
-    !call rxn_get_base_rate(this%solver_c_ptr,c_loc(var_type_c))
-
-
 
   end subroutine get_base_rate
 
