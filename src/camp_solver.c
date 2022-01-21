@@ -145,10 +145,10 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
 
 #ifdef CAMP_USE_SUNDIALS
 
-#ifdef DERIV_LOOP_CELLS_RXN
-  int n_time_deriv_specs=n_dep_var;
-#else
+#ifndef SWAP_DERIV_LOOP_CELLS
   int n_time_deriv_specs=n_dep_var*n_cells;
+#else
+  int n_time_deriv_specs=n_dep_var;
 #endif
 
   // Set up a TimeDerivative object to use during solving
@@ -1272,7 +1272,55 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
   SUNMatMatvec(md->J_solver, md->J_tmp, md->J_tmp2);
   N_VLinearSum(1.0, md->J_deriv, 1.0, md->J_tmp2, md->J_tmp);
 
-#ifdef DERIV_LOOP_CELLS_RXN
+#ifndef SWAP_DERIV_LOOP_CELLS
+
+#ifdef CAMP_DEBUG
+  // Measure calc_deriv time execution
+  clock_t start2 = clock();
+#endif
+
+    for (int i_cell = 0; i_cell < n_cells; ++i_cell) {
+      // Set the grid cell state pointers
+      md->grid_cell_id = i_cell;
+      md->grid_cell_state = &(md->total_state[i_cell * n_state_var]);
+      md->grid_cell_env = &(md->total_env[i_cell * CAMP_NUM_ENV_PARAM_]);
+      md->grid_cell_rxn_env_data =
+          &(md->rxn_env_data[i_cell * md->n_rxn_env_data]);
+      md->grid_cell_aero_rep_env_data =
+          &(md->aero_rep_env_data[i_cell * md->n_aero_rep_env_data]);
+      md->grid_cell_sub_model_env_data =
+          &(md->sub_model_env_data[i_cell * md->n_sub_model_env_data]);
+
+      // Update the aerosol representations
+      aero_rep_update_state(md);
+
+      // Run the sub models
+      sub_model_calculate(md);
+
+  }
+
+  time_derivative_reset(sd->time_deriv);
+
+  // Calculate the time derivative f(t,y)
+  rxn_calc_deriv(md, sd->time_deriv, (double)time_step);
+
+  // Update the deriv array
+  if (sd->use_deriv_est == 1) {
+    time_derivative_output(sd->time_deriv, deriv_data, jac_deriv_data,
+                           sd->output_precision);
+  } else {
+    time_derivative_output(sd->time_deriv, deriv_data, NULL,
+                           sd->output_precision);
+  }
+
+#ifdef CAMP_DEBUG
+  clock_t end2 = clock();
+  sd->timeDeriv += (end2 - start2);
+  sd->max_loss_precision = time_derivative_max_loss_precision(sd->time_deriv);
+#endif
+
+  // Not SWAP_DERIV_LOOP_CELLS
+#else
 
   // Loop through the grid cells and update the derivative array
   for (int i_cell = 0; i_cell < n_cells; ++i_cell) {
@@ -1320,54 +1368,6 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
     jac_deriv_data += n_dep_var;
   }
 
-// Not DERIV_LOOP_CELLS_RXN
-#else
-
-#ifdef CAMP_DEBUG
-  // Measure calc_deriv time execution
-  clock_t start2 = clock();
-#endif
-
-    for (int i_cell = 0; i_cell < n_cells; ++i_cell) {
-      // Set the grid cell state pointers
-      md->grid_cell_id = i_cell;
-      md->grid_cell_state = &(md->total_state[i_cell * n_state_var]);
-      md->grid_cell_env = &(md->total_env[i_cell * CAMP_NUM_ENV_PARAM_]);
-      md->grid_cell_rxn_env_data =
-          &(md->rxn_env_data[i_cell * md->n_rxn_env_data]);
-      md->grid_cell_aero_rep_env_data =
-          &(md->aero_rep_env_data[i_cell * md->n_aero_rep_env_data]);
-      md->grid_cell_sub_model_env_data =
-          &(md->sub_model_env_data[i_cell * md->n_sub_model_env_data]);
-
-      // Update the aerosol representations
-      aero_rep_update_state(md);
-
-      // Run the sub models
-      sub_model_calculate(md);
-
-  }
-
-  time_derivative_reset(sd->time_deriv);
-
-  // Calculate the time derivative f(t,y)
-  rxn_calc_deriv(md, sd->time_deriv, (double)time_step);
-
-  // Update the deriv array
-  if (sd->use_deriv_est == 1) {
-    time_derivative_output(sd->time_deriv, deriv_data, jac_deriv_data,
-                           sd->output_precision);
-  } else {
-    time_derivative_output(sd->time_deriv, deriv_data, NULL,
-                           sd->output_precision);
-  }
-
-#ifdef CAMP_DEBUG
-  clock_t end2 = clock();
-  sd->timeDeriv += (end2 - start2);
-  sd->max_loss_precision = time_derivative_max_loss_precision(sd->time_deriv);
-#endif
-
 // DERIV_LOOP_CELLS_RXN
 #endif
 
@@ -1381,14 +1381,6 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
     printf("Deriv iter: %d\n",sd->counterDerivCPU);
     print_derivative_in_out(sd, y, deriv);
     //print_time_derivative(sd);
-#ifdef DERIV_LOOP_CELLS_RXN
-#else
-    //printf("Time_deriv prod loss jac_deriv_data\n");
-    //for (int i = 0; i < sd->time_deriv.num_spec; i++)
-    //  printf("(%d) %-le %-le %-le\n",i,sd->time_deriv.production_rates[i],
-    //        sd->time_deriv.loss_rates[i], jac_deriv_data[i]);
-#endif
-
     sd->counter_deriv_print++;
   }
 #endif
