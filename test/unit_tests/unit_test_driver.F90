@@ -321,7 +321,6 @@ program unit_test_driver
       results = 1
     end if
 
-
     ! Send the results back to the primary process
     call camp_mpi_transfer_integer(results, results, 1, 0)
 

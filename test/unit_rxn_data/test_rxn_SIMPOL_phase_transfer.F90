@@ -519,7 +519,6 @@ contains
           run_SIMPOL_phase_transfer_test = .false.
         end if
       end if
-
     end if
 
     deallocate(buffer)

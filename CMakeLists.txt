@@ -537,29 +537,6 @@ add_executable(mock_monarch test/monarch/mock_monarch.F90
         test/chemistry/cb05cl_ae5/module_BSC_CHEM_DATA.F90)
 target_link_libraries(mock_monarch camplib)
 
-######################################################################
-# New unit tests (UNDER DEVELOPMENT)
-
-set(UNIT_TEST_SRC
-        test/unit_tests/unit_test_data.F90
-        test/unit_tests/unit_test_driver.F90)
-
-set(UNIT_TEST_RXN_ARRHENIUS_SRC
-        test/unit_tests/rxns/unit_test_rxn_arrhenius.F90 ${UNIT_TEST_SRC})
-if(${CMAKE_Fortran_COMPILER_ID} MATCHES "Intel")
-  set_source_files_properties(${UNIT_TEST_RXN_ARRHENIUS_SRC} PROPERTIES COMPILE_DEFINITIONS
-          "UNIT_TEST_MODULE_=camp_unit_test_rxn_arrhenius \
-    ;UNIT_TEST_TYPE_='unit_test_rxn_arrhenius_t()'")
-elseif(${CMAKE_Fortran_COMPILER_ID} MATCHES "GNU")
-  set_source_files_properties(${UNIT_TEST_RXN_ARRHENIUS_SRC} PROPERTIES COMPILE_DEFINITIONS
-          "UNIT_TEST_MODULE_=camp_unit_test_rxn_arrhenius \
-    ;UNIT_TEST_TYPE_=unit_test_rxn_arrhenius_t()")
-endif()
-set_source_files_properties(${UNIT_TEST_RXN_ARRHENIUS_SRC} PROPERTIES COMPILE_FLAGS
-        ${STD_F_FLAGS})
-add_executable(unit_test_rxn_arrhenius ${UNIT_TEST_RXN_ARRHENIUS_SRC})
-target_link_libraries(unit_test_rxn_arrhenius camplib)
-
 if (ENABLE_TESTS)
 
   ######################################################################
@@ -638,6 +615,29 @@ add_executable(test_sub_model_ZSR_aerosol_water
                test/unit_sub_model_data/test_sub_model_ZSR_aerosol_water.c
                test/unit_sub_model_data/test_sub_model_ZSR_aerosol_water.F90)
 target_link_libraries(test_sub_model_ZSR_aerosol_water camplib)
+
+######################################################################
+# New unit tests (UNDER DEVELOPMENT)
+
+set(UNIT_TEST_SRC
+    test/unit_tests/unit_test_data.F90
+    test/unit_tests/unit_test_driver.F90)
+
+set(UNIT_TEST_RXN_ARRHENIUS_SRC
+    test/unit_tests/rxns/unit_test_rxn_arrhenius.F90 ${UNIT_TEST_SRC})
+if(${CMAKE_Fortran_COMPILER_ID} MATCHES "Intel")
+  set_source_files_properties(${UNIT_TEST_RXN_ARRHENIUS_SRC} PROPERTIES COMPILE_DEFINITIONS
+    "UNIT_TEST_MODULE_=camp_unit_test_rxn_arrhenius \
+    ;UNIT_TEST_TYPE_='unit_test_rxn_arrhenius_t()'")
+elseif(${CMAKE_Fortran_COMPILER_ID} MATCHES "GNU")
+  set_source_files_properties(${UNIT_TEST_RXN_ARRHENIUS_SRC} PROPERTIES COMPILE_DEFINITIONS
+    "UNIT_TEST_MODULE_=camp_unit_test_rxn_arrhenius \
+    ;UNIT_TEST_TYPE_=unit_test_rxn_arrhenius_t()")
+endif()
+set_source_files_properties(${UNIT_TEST_RXN_ARRHENIUS_SRC} PROPERTIES COMPILE_FLAGS
+                            ${STD_F_FLAGS})
+add_executable(unit_test_rxn_arrhenius ${UNIT_TEST_RXN_ARRHENIUS_SRC})
+target_link_libraries(unit_test_rxn_arrhenius camplib)
 
 ######################################################################
 # test_camp_core

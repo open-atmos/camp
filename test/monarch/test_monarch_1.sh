@@ -19,10 +19,10 @@ do
 if [[ $1 == "MPI" ]]; then
   exec_str="mpirun -v -np 2 ../../mock_monarch config_simple.json interface_simple.json out/simple"
 else
-  if [ $HOSTNAME == "p9login2"  ]; then # My plogin2 bashrc reserves a node by default through salloc - cguzman
-    exec_str="mpirun -v -np 1 --bind-to none  ../../mock_monarch config_simple.json interface_simple.json out/simple"
-  else
+  if [ -z ${SLURM_TASK_PID+x} ]; then
     exec_str="../../mock_monarch config_simple.json interface_simple.json out/simple"
+  else
+    exec_str="mpirun -v -np 1 --bind-to none  ../../mock_monarch config_simple.json interface_simple.json out/simple"
   fi
 fi
 

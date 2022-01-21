@@ -287,8 +287,7 @@ contains
           run_consecutive_mech_test = .false.
         end if
       end if
-
-      end if
+    end if
 
     deallocate(buffer)
 #endif

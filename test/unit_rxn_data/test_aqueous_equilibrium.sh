@@ -17,11 +17,10 @@ do
 if [[ $1 = "MPI" ]]; then
   exec_str="mpirun -v -np 2 ../../test_rxn_aqueous_equilibrium"
 else
-  exec_str="../../test_rxn_aqueous_equilibrium"
-    if [ $HOSTNAME == "p9login2"  ]; then # My plogin2 bashrc reserves a node by default through salloc - cguzman
-    exec_str="mpirun -v -np 1 --bind-to none  ../../test_rxn_aqueous_equilibrium"
-  else
+  if [ -z ${SLURM_TASK_PID+x} ]; then
     exec_str="../../test_rxn_aqueous_equilibrium"
+  else
+    exec_str="mpirun -v -np 1 --bind-to none  ../../test_rxn_aqueous_equilibrium"
   fi
 fi
 
