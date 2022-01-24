@@ -145,7 +145,7 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
 
 #ifdef CAMP_USE_SUNDIALS
 
-#ifndef SWAP_DERIV_LOOP_CELLS
+#ifdef SWAP_DERIV_LOOP_CELLS
   int n_time_deriv_specs=n_dep_var*n_cells;
 #else
   int n_time_deriv_specs=n_dep_var;
@@ -1270,7 +1270,7 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
   SUNMatMatvec(md->J_solver, md->J_tmp, md->J_tmp2);
   N_VLinearSum(1.0, md->J_deriv, 1.0, md->J_tmp2, md->J_tmp);
 
-#ifndef SWAP_DERIV_LOOP_CELLS
+#ifdef SWAP_DERIV_LOOP_CELLS
 
 #ifdef CAMP_DEBUG
   // Measure calc_deriv time execution

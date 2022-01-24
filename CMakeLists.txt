@@ -37,6 +37,7 @@ option(ENABLE_DEBUG "Compile debugging functions" OFF)
 option(FAILURE_DETAIL "Output conditions before and after solver failures" OFF)
 option(ENABLE_CXX "Enable C++" OFF)
 option(ENABLE_GPU "Enable use of GPUs in chemistry solving" OFF)
+option(ENABLE_SWAP_DERIV_LOOP_CELLS "Optimization for sligth speedup in One-cell version, more info at https://earth.bsc.es/gitlab/ac/camp/-/issues/22" OFF)
 
 mark_as_advanced(FORCE ENABLE_DEBUG FAILURE_DETAIL)
 
@@ -185,6 +186,13 @@ else()
 endif()
 
 ######################################################################
+# Optimization options
+
+if (ENABLE_SWAP_DERIV_LOOP_CELLS)
+  add_definitions(-DSWAP_DERIV_LOOP_CELLS)
+endif()
+
+######################################################################
 # Unit test macro
 
 macro(do_unit_test test_name result)
@@ -228,7 +236,7 @@ else()
   set(MPI_TEST_FLAG serial)
 endif()
 
-if (NOT ENABLE_TESTS)
+if (ENABLE_TESTS)
       # New unit tests (UNDER DEVELOPMENT)
   add_test(test_rxn_arrhenius_mech ${CMAKE_BINARY_DIR}/test_run/unit_tests/input_files/run_rxn_arrhenius.sh ${MPI_TEST_FLAG})
 
@@ -537,7 +545,7 @@ add_executable(mock_monarch test/monarch/mock_monarch.F90
         test/chemistry/cb05cl_ae5/module_BSC_CHEM_DATA.F90)
 target_link_libraries(mock_monarch camplib)
 
-if (NOT ENABLE_TESTS)
+if (ENABLE_TESTS)
 
   ######################################################################
   # test_chemistry_cb05cl_ae5_big
