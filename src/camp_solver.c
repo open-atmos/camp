@@ -761,7 +761,6 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
 
 
 #ifndef RESET_JAC_SOLVING
-#ifndef ISSUE_18
   //Reset Jacobian tmp
   N_VConst(0.0, md->J_state);
   N_VConst(0.0, md->J_deriv);
@@ -776,7 +775,6 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
     (SM_INDEXVALS_S(md->J_solver))[i] = (SM_INDEXVALS_S(md->J_init))[i];
     (SM_DATA_S(md->J_solver))[i] = 0.0;//(SM_DATA_S(md->J_init))[i]; //0.0
   }
-#endif
 #endif
 
   // Reset the flag indicating a current J_guess

@@ -163,6 +163,7 @@ module camp_camp_core
     integer(kind=i_kind) :: counterFail
     real(kind=dp), allocatable :: init_state_var(:)
     type(string_t), allocatable :: spec_names(:)
+    logical :: export_flag
     !> Flag indicating the model data has been initialized
     logical :: core_is_initialized = .false.
     !> Flag indicating the solver has been initialized
@@ -235,6 +236,8 @@ module camp_camp_core
     !> Print the core data
     procedure :: print => do_print
     procedure :: print_state_gnuplot
+    !> Export camp input concentrations
+    procedure :: export_camp_input
     !> Finalize the core
     final :: finalize
 
@@ -282,6 +285,8 @@ contains
     if (present(input_file_path)) then
       call new_obj%load_files(trim(input_file_path))
     end if
+
+    new_obj%export_flag = .true.
 
   end function constructor
 
@@ -785,38 +790,6 @@ contains
     this%init_state_cell(:) = 0.0
     this%init_state(:) = 0.0
 
-#ifndef ISSUE_18
-
-    !todo seems not the cause of the problem in issue 18
-
-    ! Set activity coefficients to 1.0
-    do i_aero_rep = 1, size(this%aero_rep)
-
-      rep => this%aero_rep(i_aero_rep)%val
-
-      ! Get the ion pairs for which activity coefficients can be calculated
-      unique_names = rep%unique_names(tracer_type = CHEM_SPEC_ACTIVITY_COEFF)
-
-      ! Set the activity coefficients to 1.0 as default
-      do i_name = 1, size(unique_names)
-        i_state_elem = rep%spec_state_id(unique_names(i_name)%string)
-        this%init_state_cell(i_state_elem) = &
-                real(1.0d0, kind=dp)
-      end do
-
-      deallocate(unique_names)
-
-    end do
-
-    do i_cell = 0, this%n_cells - 1
-      do i_state_elem = 1, this%size_state_per_cell
-        this%init_state(i_state_elem + i_cell * this%size_state_per_cell)=&
-                this%init_state_cell(i_state_elem)
-      end do
-    end do
-
-#else
-
     ! Set activity coefficients to 1.0
       do i_cell = 0, this%n_cells - 1
         do i_aero_rep = 1, size(this%aero_rep)
@@ -839,8 +812,6 @@ contains
 
         end do
       end do
-
-#endif
 
   end subroutine initialize
 
@@ -1277,8 +1248,6 @@ contains
 
     end if
 
-    !deallocate(spec_names)
-
     this%solver_is_initialized = .true.
 
   end subroutine solver_initialize
@@ -1492,19 +1461,6 @@ contains
     real(kind=dp) :: t_initial
     real(kind=dp) :: t_final
 
-#ifdef EXPORT_CAMP_INPUT
-    type(json_core) :: json
-    type(json_value),pointer :: p, input, output, species_in,&
-            species_out, photo_rates
-    character(len=:), allocatable :: export_path, spec_name
-    integer :: mpi_rank, i, i_cell
-    character(len=128) :: mpi_rank_str, i_str
-    type(string_t), allocatable :: spec_names(:)
-    !character(len=*), allocatable :: spec_names(:)
-
-    real(kind=dp), allocatable :: base_rate(:)
-#endif
-
     ! Phase to solve
     integer(kind=i_kind) :: phase
     ! Pointer to solver data
@@ -1550,11 +1506,6 @@ contains
     t_initial = real(0.0, kind=dp)
     t_final = time_step
 
-#ifdef EXPORT_CAMP_INPUT
-    allocate(this%init_state_var(size(camp_state%state_var)))
-    this%init_state_var(:)=camp_state%state_var(:)
-#endif
-
     ! Run the integration
     if (present(solver_stats)) then
       solver_status = solver%solve(camp_state, t_initial, t_final,    &
@@ -1567,77 +1518,6 @@ contains
     else
       solver_status = solver%solve(camp_state, t_initial, t_final, n_cells_aux)
     end if
-
-#ifdef EXPORT_CAMP_INPUT
-
-    if(solver_status.eq.CAMP_SOLVER_FAIL) then!1
-      this%counterFail=this%counterFail+1
-    end if
-    this%counterSolve=this%counterSolve+1
-
-    !if (this%counterSolve.eq.1) then
-    if (this%counterFail.eq.1) then
-    !if (camp_mpi_rank().eq.0 .and. this%counterSolve.eq.1) then
-
-    call json%initialize()
-    call json%create_object(p,'')
-    call json%create_object(input,'input')
-    call json%add(p, input)
-    call json%add(input, "dt", t_final-t_initial)
-    call json%add(input, "temperature", camp_state%env_var(1))
-    call json%add(input, "pressure", camp_state%env_var(2))
-    call json%create_object(species_in,'species')
-    call json%add(input, species_in)
-
-    call json%create_object(output,'output')
-    call json%add(p, output)
-    call json%create_object(species_out,'species')
-    call json%add(output, species_out)
-
-    do i=1, size(this%spec_names)
-      call json%add(species_in, this%spec_names(i)%string, this%init_state_var(i))
-      call json%add(species_out, this%spec_names(i)%string, camp_state%state_var(i))
-    end do
-
-    if(.not.allocated(base_rate)) then
-      allocate(base_rate(25))
-    end if
-    call solver%get_base_rate(base_rate)
-    call json%create_object(photo_rates,'photo_rates')
-    call json%add(input, photo_rates)
-    do i=1, size(base_rate)
-      write(i_str,*) i
-      i_str=adjustl(i_str)
-      call json%add(photo_rates, trim(i_str), base_rate(i))
-    end do
-    nullify(photo_rates)
-
-#ifdef CAMP_USE_MPI
-    mpi_rank = camp_mpi_rank()
-
-    write(mpi_rank_str,*) mpi_rank
-    mpi_rank_str=adjustl(mpi_rank_str)
-
-    !export_path = "/gpfs/scratch/bsc32/bsc32815/a2s8/nmmb-monarch/MODEL/"&
-    !        //"SRC_LIBS/camp/test/monarch/exports/camp_in_out_"&
-    !        //trim(mpi_rank_str)//".json"
-    export_path = "exports/camp_in_out_"//trim(mpi_rank_str)//".json"
-#else
-    !export_path = "/gpfs/scratch/bsc32/bsc32815/a2s8/nmmb-monarch/MODEL/"&
-    !        //"SRC_LIBS/camp/test/monarch/exports/camp_in_out.json"
-    export_path = "exports/camp_in_out.json"
-#endif
-    call json%print(p,export_path)
-
-    !cleanup:
-    call json%destroy(p)
-    if (json%failed()) stop 1
-
-    end if
-
-    deallocate(this%init_state_var)
-
-#endif
 
     if (.not.present(solver_stats)) then
       call warn_assert_msg(997420005, solver_status.eq.0, "Solver failed")
@@ -1659,15 +1539,10 @@ contains
     type(sub_model_factory_t) :: sub_model_factory
     class(aero_rep_data_t), pointer :: aero_rep
     class(sub_model_data_t), pointer :: sub_model
-    integer(kind=i_kind) :: i, j, i_mech, i_phase, i_rep,&
+    integer(kind=i_kind) :: i_mech, i_phase, i_rep,&
             i_sub_model, l_comm
-    type(string_t), allocatable :: spec_names(:)
 
 #ifdef CAMP_USE_MPI
-
-    character(len=:), allocatable :: spec_name
-    integer(kind=i_kind) :: max_spec_name_size = 128
-
     if (present(comm)) then
       l_comm = comm
     else
@@ -1704,45 +1579,6 @@ contains
                 camp_mpi_pack_size_real_array(this%abs_tol, l_comm) + &
                 camp_mpi_pack_size_integer_array(this%var_type, l_comm) + &
                 camp_mpi_pack_size_real_array(this%init_state_cell, l_comm)
-
-
-#ifdef EXPORT_CAMP_INPUT
-
-    spec_name=""
-    do j=1, max_spec_name_size
-      spec_name=spec_name//"a"
-    end do
-
-    do i=1, this%size_state_per_cell
-      pack_size = pack_size + camp_mpi_pack_size_string(spec_name, l_comm)
-    end do
-
-#else
-
-#ifdef ISSUE_18
-
-    !print*,"camp_core pack_size start"
-
-    !allocate(spec_names(this%size_state_per_cell))
-    this%spec_names = this%unique_names()
-
-    !print*,"camp_core pack_size start",size(this%spec_names)
-
-    do i=1, size(this%spec_names)
-      call assert_msg(307712742,len_trim(this%spec_names(i)%string).lt.&
-              max_spec_name_size,&
-              "species name too large")
-      pack_size = pack_size + &
-              camp_mpi_pack_size_string(trim(this%spec_names(i)%string),l_comm)
-    end do
-
-    !print*,"camp_core pack_size end"
-
-#endif
-
-#endif
-
-
 #else
     pack_size = 0
 #endif
@@ -1767,10 +1603,8 @@ contains
     type(sub_model_factory_t) :: sub_model_factory
     class(aero_rep_data_t), pointer :: aero_rep
     class(sub_model_data_t), pointer :: sub_model
-    integer(kind=i_kind) :: i, j, i_mech, i_phase, i_rep, i_sub_model, &
+    integer(kind=i_kind) :: i_mech, i_phase, i_rep, i_sub_model, &
             prev_position, l_comm
-    type(string_t), allocatable :: spec_names(:)
-    integer(kind=i_kind) :: max_spec_name_size = 128
 
     if (present(comm)) then
       l_comm = comm
@@ -1808,41 +1642,6 @@ contains
     call camp_mpi_pack_real_array(buffer, pos, this%abs_tol, l_comm)
     call camp_mpi_pack_integer_array(buffer, pos, this%var_type, l_comm)
     call camp_mpi_pack_real_array(buffer, pos, this%init_state_cell, l_comm)
-
-#ifdef EXPORT_CAMP_INPUT
-
-    allocate(spec_names(this%size_state_per_cell))
-    this%spec_names = this%unique_names()
-
-    do i=1, this%size_state_per_cell*this%n_cells
-      spec_names(i)%string=trim(this%spec_names(i)%string)
-      do j=len(spec_names(i)%string), max_spec_name_size
-        spec_names(i)%string=spec_names(i)%string//" "
-      end do
-
-      call camp_mpi_pack_string(buffer, pos, trim(spec_names(i)%string), l_comm)
-
-    end do
-
-#else
-
-    !print*,"camp_core bin_pack start"
-
-    !this%spec_names = this%unique_names()
-
-#ifdef ISSUE_18
-
-    do i=1, size(this%spec_names)
-      !print*,"camp_core pack_size",i
-      !print*,"camp_core pack_size",this%spec_names(i)%string
-      call camp_mpi_pack_string(buffer, pos, trim(this%spec_names(i)%string), l_comm)
-    end do
-#endif
-
-    !print*,"camp_core pack_size end"
-
-#endif
-
     call assert(184050835, &
          pos - prev_position <= this%pack_size(l_comm))
 #endif
@@ -1867,12 +1666,9 @@ contains
 #ifdef CAMP_USE_MPI
     type(aero_rep_factory_t) :: aero_rep_factory
     type(sub_model_factory_t) :: sub_model_factory
-    integer(kind=i_kind) :: i, j, i_mech, i_phase, i_rep, i_sub_model, &
+    integer(kind=i_kind) :: i_mech, i_phase, i_rep, i_sub_model, &
             prev_position, num_mech, num_phase, num_rep, num_sub_model, &
             l_comm
-    type(string_t), allocatable :: spec_names(:)
-    character(len=:), allocatable :: spec_name
-    integer :: max_spec_name_size=128
 
     if (present(comm)) then
       l_comm = comm
@@ -1914,47 +1710,6 @@ contains
     call camp_mpi_unpack_integer_array(buffer, pos, this%var_type, l_comm)
     call camp_mpi_unpack_real_array(buffer, pos, this%init_state_cell, l_comm)
 
-#ifdef EXPORT_CAMP_INPUT
-
-    spec_name=""
-    do j=1,max_spec_name_size
-      spec_name=spec_name//"a"
-    end do
-
-    allocate(this%spec_names(this%size_state_per_cell))
-    do i=1, this%size_state_per_cell*this%n_cells
-
-      call camp_mpi_unpack_string(buffer, pos, spec_name, l_comm)
-      this%spec_names(i)%string = trim(spec_name)
-
-    end do
-
-#else
-
-    !print*,"camp_core bin_unpack start"
-
-#ifdef ISSUE_18
-
-    allocate(this%spec_names(this%size_state_per_cell))
-    !this%spec_names(i)=this%unique_names()
-
-    spec_name=""
-    do i=1,max_spec_name_size
-      spec_name=spec_name//" "
-    end do
-
-    !print*,"camp_core this%size_state_per_cell",this%size_state_per_cell
-
-    do i=1, this%size_state_per_cell
-      call camp_mpi_unpack_string(buffer, pos, spec_name)
-      this%spec_names(i)%string = trim(spec_name)
-      !print*,this%spec_names(i)%string
-    end do
-
-#endif
-
-#endif
-
     allocate(this%init_state(this%size_state_per_cell * this%n_cells))
     do i_cell = 0, this%n_cells - 1
       do i_state_elem = 1, this%size_state_per_cell
@@ -1966,7 +1721,6 @@ contains
     this%core_is_initialized = .true.
     call assert(291557168, &
             pos - prev_position <= this%pack_size(l_comm))
-
 #endif
 
   end subroutine bin_unpack
@@ -2278,6 +2032,210 @@ contains
     this%sub_model => new_sub_model
 
   end subroutine add_sub_model
+
+  subroutine export_camp_input(this, camp_state, time_step, rxn_phase,&
+          solver_status_in, solver_stats, n_cells)
+
+  use camp_rxn_data
+  use camp_solver_stats
+  use iso_c_binding
+
+  !> Chemical model
+  class(camp_core_t), intent(inout) :: this
+  !> Current model state
+  type(camp_state_t), intent(inout), target :: camp_state
+  !> Time step over which to integrate (s)
+  real(kind=dp), intent(in) :: time_step
+  integer(kind=c_int), intent(in), optional:: solver_status_in
+  !> Phase to solve - gas, aerosol, or both (default)
+  !! Use parameters in camp_rxn_data to specify phase:
+  !! GAS_RXN, AERO_RXN, GAS_AERO_RXN
+  integer(kind=i_kind), intent(in), optional :: rxn_phase
+  !> Return solver statistics to the host model
+  type(solver_stats_t), intent(inout), optional, target :: solver_stats
+  integer, intent(in), optional :: n_cells
+  !class(rxn_update_data_t), intent(inout), optional :: update_data
+  integer :: n_cells_aux, solver_status
+  real(kind=dp) :: t_initial
+  real(kind=dp) :: t_final
+  type(json_core) :: json
+  type(json_value),pointer :: p, input, output, species_in,&
+          species_out, photo_rates
+  character(len=:), allocatable :: export_path, spec_name
+  integer :: mpi_rank, i, i_cell, z
+  integer(kind=i_kind) :: pos, pack_size
+  character(len=128) :: mpi_rank_str, i_str
+  type(string_t), allocatable :: spec_names(:)
+  character, allocatable :: buffer(:)
+  integer :: max_spec_name_size=512
+  CHARACTER(len=255) :: cwd
+
+  real(kind=dp), allocatable :: base_rate(:)
+
+  ! Phase to solve
+  integer(kind=i_kind) :: phase
+  ! Pointer to solver data
+  type(camp_solver_data_t), pointer :: solver
+
+  ! Update the solver array of environmental states
+  call camp_state%update_env_state( )
+
+  if (present(solver_status_in)) then
+    solver_status = solver_status_in
+  else
+    solver_status = 1
+  end if
+
+  ! Get the phase(s) to solve for
+  if (present(rxn_phase)) then
+    phase = rxn_phase
+  else
+    phase = GAS_AERO_RXN
+  end if
+
+  ! Determine the solver to use
+  if (phase.eq.GAS_RXN) then
+    solver => this%solver_data_gas
+  else if (phase.eq.AERO_RXN) then
+    solver => this%solver_data_aero
+  else if (phase.eq.GAS_AERO_RXN) then
+    solver => this%solver_data_gas_aero
+  else
+    call die_msg(704896254, "Invalid rxn phase specified for chemistry "// &
+            "solver: "//to_string(phase))
+  end if
+
+  t_initial = real(0.0, kind=dp)
+  t_final = time_step
+
+  allocate(this%init_state_var(size(camp_state%state_var)))
+  this%init_state_var(:)=camp_state%state_var(:)
+
+  if(solver_status.eq.CAMP_SOLVER_FAIL) then!1
+    this%counterFail=this%counterFail+1
+  end if
+  this%counterSolve=this%counterSolve+1
+
+#ifdef CAMP_USE_MPI
+
+  mpi_rank = camp_mpi_rank()
+
+  !if(.not.c_associated(c_loc(this%spec_names))) then
+  !if(.not.associated(c_loc(this%spec_names(1)%string))) then
+  !if(.not.associated(this%spec_names(1)%string)) then
+  if(this%export_flag) then
+
+    if (mpi_rank.eq.0) then
+
+    this%spec_names = this%unique_names()
+    pack_size = 0
+    do z=1, this%size_state_per_cell
+      pack_size = pack_size +  camp_mpi_pack_size_string(trim(this%spec_names(z)%string))
+      !print*,pack_size
+    end do
+
+    allocate(buffer(pack_size))
+    pos = 0
+
+    do z=1, this%size_state_per_cell
+      call camp_mpi_pack_string(buffer, pos, trim(this%spec_names(z)%string))
+    end do
+
+    end if
+
+    ! broadcast the buffer size
+    call camp_mpi_bcast_integer(pack_size, MPI_COMM_WORLD)
+
+    if (mpi_rank.ne.0) then
+      ! allocate the buffer to receive data
+      allocate(buffer(pack_size))
+    end if
+
+    call camp_mpi_bcast_packed(buffer, MPI_COMM_WORLD)
+
+    if (mpi_rank.ne.0) then
+      pos = 0
+
+      allocate(this%spec_names(this%size_state_per_cell))
+      spec_name=""
+      do z=1,max_spec_name_size
+        spec_name=spec_name//" "
+      end do
+      do z=1, this%size_state_per_cell
+        call camp_mpi_unpack_string(buffer, pos, spec_name)
+        this%spec_names(z)%string= trim(spec_name)
+        !print*,this%spec_names(z)%string
+      end do
+
+    end if
+
+    deallocate(buffer)
+
+    this%export_flag = .false.
+
+  end if
+
+#endif
+
+  call camp_mpi_barrier(MPI_COMM_WORLD)
+
+  !if (this%counterSolve.eq.1) then
+  !if (this%counterFail.eq.1) then
+  if (this%counterFail.le.1 .or. this%counterSolve.le.1) then
+    !if (camp_mpi_rank().eq.0 .and. this%counterSolve.eq.1) then
+
+    call json%initialize()
+    call json%create_object(p,'')
+    call json%create_object(input,'input')
+    call json%add(p, input)
+    call json%add(input, "dt", t_final-t_initial)
+    call json%add(input, "temperature", camp_state%env_var(1))
+    call json%add(input, "pressure", camp_state%env_var(2))
+    call json%create_object(species_in,'species')
+    call json%add(input, species_in)
+
+    do i=1, size(this%spec_names)
+      call json%add(species_in, this%spec_names(i)%string, this%init_state_var(i))
+    end do
+
+    if(.not.allocated(base_rate)) then
+      allocate(base_rate(25))
+    end if
+    call solver%get_base_rate(base_rate)
+    call json%create_object(photo_rates,'photo_rates')
+    call json%add(input, photo_rates)
+    do i=1, size(base_rate)
+      write(i_str,*) i
+      i_str=adjustl(i_str)
+      call json%add(photo_rates, trim(i_str), base_rate(i))
+    end do
+    nullify(photo_rates)
+
+#ifdef CAMP_USE_MPI
+
+    write(mpi_rank_str,*) mpi_rank
+    mpi_rank_str=adjustl(mpi_rank_str)
+
+    !export_path = "/gpfs/scratch/bsc32/bsc32815/a2s8/nmmb-monarch/MODEL/"&
+    !        //"SRC_LIBS/camp/test/monarch/exports/camp_in_out_"&
+    !        //trim(mpi_rank_str)//".json"
+    export_path = "exports/camp_in_out_"//trim(mpi_rank_str)//".json"
+    !export_path = "./../../test/monarch/exports/camp_in_out_"//trim(mpi_rank_str)//".json" !wrong
+#else
+    export_path = "exports/camp_in_out.json"
+#endif
+
+    call json%print(p,export_path)
+
+    call json%destroy(p)
+    if (json%failed()) stop 1
+
+  end if
+
+  deallocate(this%init_state_var)
+
+
+end subroutine
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
