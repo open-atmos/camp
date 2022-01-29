@@ -1413,7 +1413,7 @@ $(function() {
 <div class="line"><a name="l01355"></a><span class="lineno"> 1355</span>&#160; </div>
 <div class="line"><a name="l01356"></a><span class="lineno"> 1356</span>&#160;    <span class="comment">// Scale incomplete jumps</span></div>
 <div class="line"><a name="l01357"></a><span class="lineno"> 1357</span>&#160;    <span class="keywordflow">if</span> (i_fast &gt;= 0 &amp;&amp; h_n &gt; <a class="code" href="camp__common_8h.html#ac328e551bde3d39b6d7b8cc9e048d941">ZERO</a>)</div>
-<div class="line"><a name="l01358"></a><span class="lineno"> 1358</span>&#160;      h_j *= 0.95 + 0.1 * rand() / (double)RAND_MAX;</div>
+<div class="line"><a name="l01358"></a><span class="lineno"> 1358</span>&#160;      h_j *= 0.95 + 0.1 * iter / (double)<a class="code" href="camp__solver_8c.html#a4744760cc248d0346b6ace3829f58ddb">GUESS_MAX_ITER</a>;</div>
 <div class="line"><a name="l01359"></a><span class="lineno"> 1359</span>&#160;    h_j = t_n &lt; t_0 + t_j + h_j ? t_n - (t_0 + t_j) : h_j;</div>
 <div class="line"><a name="l01360"></a><span class="lineno"> 1360</span>&#160; </div>
 <div class="line"><a name="l01361"></a><span class="lineno"> 1361</span>&#160;    <span class="comment">// Only make small changes to adjustment vectors used in Newton iteration</span></div>
