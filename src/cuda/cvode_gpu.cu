@@ -7,7 +7,6 @@
  */
 
 #include "itsolver_gpu.h"
-//#include "camp_gpu_solver.h" //wrong, produce crashes at the start
 
 extern "C" {
 #include "cvode_gpu.h"
@@ -18,6 +17,8 @@ extern "C" {
 #include "Jacobian_gpu.h"
 
 }
+
+#include "cusolver.h"
 
 #ifdef CAMP_USE_MPI
 #include <mpi.h>
@@ -1954,6 +1955,7 @@ void constructor_cvode_gpu(CVodeMem cv_mem, SolverData *sd)
 
   //Init Linear Solver variables
   createSolver(sd);
+  createCuSolver(sd);
 
   sd->mdv.cv_reltol=((CVodeMem) sd->cvode_mem)->cv_reltol;
   sd->mdv.cv_nfe=0;

@@ -1,10 +1,6 @@
 #include "itsolver_gpu.h"
 //#include "../debug_and_stats/camp_debug_2.h"
 
-#include <cusolverSp.h>//fine
-#include <cuda_runtime_api.h>
-#include <cusparse.h>
-
 
 void read_options(itsolver *bicg){
 
@@ -46,18 +42,16 @@ void read_options(itsolver *bicg){
 
 }
 
-void createcuSolver(SolverData *sd){
+void createcuSolver2(SolverData *sd){
 
-
-
-  printf("createcuSolver start");
+  printf("createCuSolver start");
 
   cusolverSpHandle_t handle; // handle to cusolver library
   csrqrInfo_t info = NULL;
   cusparseMatDescr_t descrA = NULL;
   void *pBuffer = NULL; // working space for numerical factorization
 
-  printf("createcuSolver end");
+  printf("createCuSolver end");
 }
 
 void createSolver(SolverData *sd)
@@ -112,7 +106,7 @@ void createSolver(SolverData *sd)
   cudaMalloc(daux,nrows*sizeof(double));
   bicg->aux=(double*)malloc(sizeof(double)*blocks);
 
-  createcuSolver(sd);
+  //createcuSolver2(sd);
 
 }
 
@@ -1216,9 +1210,6 @@ void solveBcgCuda(
       }
     //printf("it_pointer %d\n",*it_pointer);
     }
-
-  //if(tid==0 && gridDim.x>1)*it_pointer = it;
-  //if(tid==0 && gridDim.x>1) printf("it_pointer %d\n",*it_pointer);
 
 #endif
 

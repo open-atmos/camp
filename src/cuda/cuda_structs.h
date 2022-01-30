@@ -18,7 +18,7 @@ typedef struct
     //cusolverSpHandle_t cusolverH;// = NULL;
     size_t size_qr;
 
-} CUSOLVER;
+} CuSolver;
 */
 
 //#include "cusolverSp.h>"//wrong

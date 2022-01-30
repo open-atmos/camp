@@ -343,6 +343,7 @@ typedef struct {
 #endif
 #ifdef CAMP_USE_GPU
   itsolver bicg;
+  void *cus;
   ModelDataGPU mGPU;
   ModelDataVariable mdv;
   int *flagCells;

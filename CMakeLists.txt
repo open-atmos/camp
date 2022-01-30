@@ -407,8 +407,7 @@ if (CUDA_FOUND AND ENABLE_GPU)
           src/cuda/itsolver_gpu.cu
           src/cuda/time_derivative_gpu.cu
           src/cuda/Jacobian_gpu.cu
-          #src/cuda/camp_gpu_cusolver.cu
-          src/cuda/device/f_jac.cu
+          src/cuda/cusolver.cu
           )
 
   set_source_files_properties(${CAMP_CUDA_SRC} PROPERTIES COMPILE_FLAGS
