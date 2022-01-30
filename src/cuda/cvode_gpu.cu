@@ -9,7 +9,6 @@
 #include "itsolver_gpu.h"
 //#include "camp_gpu_solver.h" //wrong, produce crashes at the start
 
-
 extern "C" {
 #include "cvode_gpu.h"
 //#include "cuda_structs.h"
@@ -1840,19 +1839,8 @@ void solveBcgCudaDeviceCVODE(
 
 #ifdef CAMP_DEBUG_GPU
 
-#ifdef solveBcgCuda_sum_it
-
-  if(threadIdx.x==0)
-    dmdv->counterBCGInternal[blockIdx.x]=it;
-
-#else
-
-  //*it_pointer = it;
   dmdv->counterBCGInternal += it;
   dmdv->counterBCG++;
-
-
-#endif
 
 #endif
 
@@ -1860,7 +1848,7 @@ void solveBcgCudaDeviceCVODE(
 
 }
 
-void alloc_solver_gpu2(CVodeMem cv_mem, SolverData *sd)
+void constructor_cvode_gpu(CVodeMem cv_mem, SolverData *sd)
 {
   itsolver *bicg = &(sd->bicg);
   ModelData *md = &(sd->model_data);
@@ -2065,6 +2053,7 @@ void alloc_solver_gpu2(CVodeMem cv_mem, SolverData *sd)
 #endif
 
   cudaMemcpy(mGPU->mdv,&sd->mdv,sizeof(ModelDataVariable),cudaMemcpyHostToDevice);
+  cudaMemcpy(mGPU->mdvo,&sd->mdv,sizeof(ModelDataVariable),cudaMemcpyHostToDevice); //todo check this is fine for cudacvode
 
   if(cv_mem->cv_sldeton){
     printf("ERROR: cudaDevicecvBDFStab is pending to implement "
@@ -4498,6 +4487,10 @@ int CVode_gpu2(void *cvode_mem, realtype tout, N_Vector yout,
   } /* end looping for internal steps */
 
 #ifdef CAMP_DEBUG_GPU
+
+  ModelDataGPU *mGPU = &sd->mGPU;
+  cudaMemcpy(&sd->mdv, mGPU->mdvo, sizeof(ModelDataVariable), cudaMemcpyDeviceToHost);
+
   cudaEventRecord(bicg->stopcvStep);
   cudaEventSynchronize(bicg->stopcvStep);
   float mscvStep = 0.0;
@@ -7923,7 +7916,11 @@ int linsolsolve_gpu2(SolverData *sd, CVodeMem cv_mem)
 
     if(bicg->cells_method==1) {//Sync with CPU
       solveGPU(sd,mGPU->dA,mGPU->djA,mGPU->diA,mGPU->dx,mGPU->dtempv);
-    }else {
+    }
+    else if(bicg->cells_method==4){
+      solvecuSolver(sd);
+    }
+    else {
       solveGPU_block(sd,mGPU->dA,mGPU->djA,mGPU->diA,mGPU->dx,mGPU->dtempv);
     }
 

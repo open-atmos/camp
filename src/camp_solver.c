@@ -562,7 +562,7 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
 // Set gpu rxn values
 #ifdef CAMP_USE_GPU
   solver_init_int_double_gpu(sd);
-  alloc_solver_gpu2(sd->cvode_mem, sd);
+  constructor_cvode_gpu(sd->cvode_mem, sd);
 #endif
 
 #ifdef FAILURE_DETAIL
@@ -759,8 +759,8 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
 
   CAMP_DEBUG_JAC_STRUCT(sd->model_data.J_init, "Begin solving");
 
+#ifdef RESET_JAC_SOLVING
 
-#ifndef RESET_JAC_SOLVING
   //Reset Jacobian tmp
   N_VConst(0.0, md->J_state);
   N_VConst(0.0, md->J_deriv);

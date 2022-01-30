@@ -292,6 +292,8 @@ def plot_cases(conf):
         namey = "Speedup CAMP solving"
     if conf.plotYKey == "MAPE":
         namey = "MAPE [%]"
+    if conf.plotYKey == "Speedup total iterations - counterBCG":
+        namey = "Speedup solving iterations BCG"
 
     if (len(conf.datacolumns) > 1):
         datay = conf.datacolumns
@@ -338,7 +340,7 @@ def all_timesteps():
     # conf.mpi = "no"
 
     conf.mpiProcessesList = [1]
-    #conf.mpiProcessesList = [2,1]
+    #conf.mpiProcessesList = [40,1]
 
     conf.cells = [100]
     #conf.cells = [100,1000]
@@ -349,24 +351,25 @@ def all_timesteps():
     conf.timeStepsDt = 2
 
     #conf.caseBase = "CPU One-cell"
-    conf.caseBase = "CPU Multi-cells"
+    #conf.caseBase = "CPU Multi-cells"
     # conf.caseBase="GPU Multi-cells"
-    # conf.caseBase="GPU Block-cellsN"
+    conf.caseBase="GPU Block-cellsN"
     # conf.caseBase="GPU Block-cells1"
 
     conf.casesOptim = []
+    #conf.casesOptim.append("GPU cuSolver")
     conf.casesOptim.append("GPU Block-cells1")
     #conf.casesOptim.append("GPU Block-cellsN")
     #conf.casesOptim.append("GPU Multi-cells")
     #conf.casesOptim.append("GPU One-cell")
     #conf.casesOptim.append("CPU Multi-cells")
 
-    conf.plotYKey = "Speedup timeCVode"
+    #conf.plotYKey = "Speedup timeCVode"
     #conf.plotYKey = "Speedup counterLS"
     #conf.plotYKey = "Speedup normalized timeLS"
     # conf.plotYKey = "Speedup normalized computational timeLS"
     # conf.plotYKey = "Speedup counterBCG"
-    # conf.plotYKey = "Speedup total iterations - counterBCG"
+    conf.plotYKey = "Speedup total iterations - counterBCG"
     # conf.plotYKey = "Speedup normalized counterBCG"
     # conf.plotYKey = "Speedup BCG iteration (Comp.timeLS/counterBCG)"
     # conf.plotYKey = "Speedup timecvStep"
@@ -394,8 +397,6 @@ def all_timesteps():
     if not os.path.exists('out'):
         os.makedirs('out')
 
-    if "total" in conf.plotYKey and "counterBCG" in conf.plotYKey:
-        print("WARNING: Remember to enable solveBcgCuda_sum_it")
     if conf.chemFile == "monarch_cb05":
         conf.timeStepsDt = 3
 

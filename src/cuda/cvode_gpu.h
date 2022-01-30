@@ -6,11 +6,14 @@
 #include <stdlib.h>
 #include "../camp_common.h"
 
-//#include<cublas.h>
-//#include<cublas_v2.h>
+/*
+extern C{
+#include <cusolverSp.h>
+#include <cusparse.h>
+};
+*/
 
-
-void alloc_solver_gpu2(CVodeMem cv_mem, SolverData *sd);
+void constructor_cvode_gpu(CVodeMem cv_mem, SolverData *sd);
 int CVode_gpu2(void *cvode_mem, realtype tout, N_Vector yout,
               realtype *tret, int itask, SolverData *sd);
 int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,

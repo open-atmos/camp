@@ -1,12 +1,15 @@
 #include "itsolver_gpu.h"
 //#include "../debug_and_stats/camp_debug_2.h"
 
+#include <cusolverSp.h>//fine
+#include <cuda_runtime_api.h>
+#include <cusparse.h>
+
+
 void read_options(itsolver *bicg){
 
   FILE *fp;
   char buff[255];
-
-  //print_current_directory();
 
   char path[] = "itsolver_options.txt";
 
@@ -18,20 +21,19 @@ void read_options(itsolver *bicg){
 
     fscanf(fp, "%s", buff);
 
-    if(strstr(buff,"CELLS_METHOD=Block-cells1")!=NULL){
-      //printf("itsolver read_options CELLS_METHOD=Block-cells(1)\n");
-      bicg->cells_method=3; //One-cell per block (Independent cells)
+    if(strstr(buff,"CELLS_METHOD=cuSolver")!=NULL){
+      bicg->cells_method=4;
+    }
+    else if(strstr(buff,"CELLS_METHOD=Block-cells1")!=NULL){
+      bicg->cells_method=3;
     }
     else if(strstr(buff,"CELLS_METHOD=Block-cellsN")!=NULL){
-      //printf("itsolver read_options CELLS_METHOD=Block-cells(N)\n");
-      bicg->cells_method=2; //One-cell per block (Independent cells)
+      bicg->cells_method=2;
     }
     else if(strstr(buff,"CELLS_METHOD=Multi-cells")!=NULL){
-      //printf("itsolver read_options CELLS_METHOD=Multi-cells\n");
-      bicg->cells_method=1; //One-cell per block (Independent cells)
+      bicg->cells_method=1;
     }
     else if(strstr(buff,"CELLS_METHOD=One-cell")!=NULL){
-      //printf("itsolver read_options CELLS_METHOD=One-cell\n");
       bicg->cells_method=0;
     }else{
       printf("ERROR: solveGPU_block unkonwn cells_method");
@@ -40,6 +42,22 @@ void read_options(itsolver *bicg){
     fclose(fp);
   }
 
+  //printf("itsolver read_options CELLS_METHOD %d\n",bicg->cells_method);
+
+}
+
+void createcuSolver(SolverData *sd){
+
+
+
+  printf("createcuSolver start");
+
+  cusolverSpHandle_t handle; // handle to cusolver library
+  csrqrInfo_t info = NULL;
+  cusparseMatDescr_t descrA = NULL;
+  void *pBuffer = NULL; // working space for numerical factorization
+
+  printf("createcuSolver end");
 }
 
 void createSolver(SolverData *sd)
@@ -94,6 +112,7 @@ void createSolver(SolverData *sd)
   cudaMalloc(daux,nrows*sizeof(double));
   bicg->aux=(double*)malloc(sizeof(double)*blocks);
 
+  createcuSolver(sd);
 
 }
 
@@ -939,10 +958,6 @@ void dvcheck_input_gpud(double *x, int len, const char* s)
   }
 }
 
-
-
-
-
 //Algorithm: Biconjugate gradient
 __global__
 void solveBcgCuda(
@@ -952,7 +967,7 @@ void solveBcgCuda(
         ,double *dr0, double *dr0h, double *dn0, double *dp0
         ,double *dt, double *ds, double *dAx2, double *dy, double *dz// Auxiliary vectors
 #ifdef CAMP_DEBUG_GPU
-        ,int *it_pointer
+        ,int *it_pointer, int last_blockN
 #endif
 )
 {
@@ -1009,10 +1024,7 @@ void solveBcgCuda(
     cudaDeviceyequalsx(dr0h,dr0,nrows);
 
 #ifdef CAMP_DEBUG_GPU
-    //int it=*it_pointer;
-    int it=0;
-#else
-    int it=0;
+    int it=*it_pointer;
 #endif
 
 #ifdef DEBUG_SOLVEBCGCUDA_DEEP
@@ -1191,22 +1203,22 @@ void solveBcgCuda(
 
     //if(it>=maxIt-1)
     //  dvcheck_input_gpud(dr0,nrows,999);
-
     //dvcheck_input_gpud(dr0,nrows,k++);
 
 #ifdef CAMP_DEBUG_GPU
 
-#ifdef solveBcgCuda_sum_it
+    if(tid==0) {
+      if(last_blockN==1){
+        if(*it_pointer-it>*it_pointer)*it_pointer = it;
+    }
+    else{
+      *it_pointer = it;
+      }
+    //printf("it_pointer %d\n",*it_pointer);
+    }
 
-  //printf("it %d %d\n",i,it);
-  if(tid==0)
-    it_pointer[blockIdx.x]=it;
-
-#else
-
-  *it_pointer = it;
-
-#endif
+  //if(tid==0 && gridDim.x>1)*it_pointer = it;
+  //if(tid==0 && gridDim.x>1) printf("it_pointer %d\n",*it_pointer);
 
 #endif
 
@@ -1215,7 +1227,7 @@ void solveBcgCuda(
 }
 
 void solveGPU_block_thr(int blocks, int threads_block, int n_shr_memory, int n_shr_empty, int offset_cells,
-        SolverData *sd)
+        SolverData *sd, int last_blockN)
 {
   itsolver *bicg = &(sd->bicg);
   ModelData *md = &(sd->model_data);
@@ -1271,40 +1283,16 @@ void solveGPU_block_thr(int blocks, int threads_block, int n_shr_memory, int n_s
   }
 #endif
 
-#ifdef CAMP_DEBUG_GPU
-  int *dit_ptr;
-
-#ifdef solveBcgCuda_sum_it
-
-  //cudaMalloc((void**)&dit_ptr,nrows*sizeof(int));
-  //cudaMemset(dit_ptr, 0, mGPU->nrows*sizeof(int));
-
-  cudaMalloc((void**)&dit_ptr,blocks*sizeof(int));
-  cudaMemset(dit_ptr, 0, blocks*sizeof(int));
-
-#else
-
-
-  cudaMalloc((void**)&dit_ptr,sizeof(int));
-  cudaMemset(dit_ptr, 0, sizeof(int));
-
-#endif
-
-#endif
-
   solveBcgCuda << < blocks, threads_block, n_shr_memory * sizeof(double) >> >
                                            //solveBcgCuda << < blocks, threads_block, threads_block * sizeof(double) >> >
                                            (dA, djA, diA, dx, dtempv, nrows, blocks, n_shr_empty, maxIt, mattype, n_cells,
                                                    tolmax, ddiag, dr0, dr0h, dn0, dp0, dt, ds, dAx2, dy, dz
 #ifdef CAMP_DEBUG_GPU
-                                                   ,dit_ptr
+                                                   ,&mGPU->mdvo->counterBCGInternal
+                                                   , last_blockN
 #endif
                                            );
 
-
-#ifdef CAMP_DEBUG_GPU
-  cudaFree(dit_ptr);
-#endif
 
 }
 
@@ -1335,21 +1323,18 @@ void solveGPU_block(SolverData *sd, double *dA, int *djA, int *diA, double *dx, 
   int blocks = (mGPU->nrows+threads_block-1)/threads_block;
 
   int offset_cells=0;
-
-#ifndef ALL_BLOCKS_EQUAL_SIZE
+  int last_blockN=0;
 
   //Common kernel (Launch all blocks except the last)
-  //blocks=blocks-1;
   if(bicg->cells_method==2
-  //if(bicg->cells_method
-  //&& blocks!=0
   ) {
 
     blocks=blocks-1;
 
-    if(blocks!=0){//myb not needed
+    if(blocks!=0){
       solveGPU_block_thr(blocks, threads_block, max_threads_block, n_shr_empty, offset_cells,
-                       sd);
+                       sd, last_blockN);
+      last_blockN = 1;
     }
 #ifdef DEBUG_SOLVEBCGCUDA
     else{
@@ -1358,8 +1343,6 @@ void solveGPU_block(SolverData *sd, double *dA, int *djA, int *diA, double *dx, 
       }
     }
 #endif
-
-    //todo fix case one-cell updating vars
 
     //Update vars to launch last kernel
     offset_cells=n_cells_block*blocks;
@@ -1371,12 +1354,24 @@ void solveGPU_block(SolverData *sd, double *dA, int *djA, int *diA, double *dx, 
 
   }
 
-#endif
-
   solveGPU_block_thr(blocks, threads_block, max_threads_block, n_shr_empty, offset_cells,
-           sd);
+           sd, last_blockN);
 
 }
+
+void solvecuSolver(SolverData *sd)
+{
+  ModelDataGPU *mGPU = &sd->mGPU;
+
+  printf("solvecuSolver start\n");
+
+
+
+  printf("WARNING: Pending to implement, running solveGPU_block instead\n");
+  solveGPU_block(sd,mGPU->dA,mGPU->djA,mGPU->diA,mGPU->dx,mGPU->dtempv);
+
+}
+
 
 //Algorithm: Biconjugate gradient
 void solveGPU(SolverData *sd, double *dA, int *djA, int *diA, double *dx, double *dtempv)

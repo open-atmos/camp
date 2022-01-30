@@ -25,7 +25,16 @@
 #ifdef CAMP_USE_GPU
 #include <cuda.h>
 #include <cuda_runtime.h>
-#include "cuda/cuda_structs.h" //todo reorganize cuda_structs (set Jac struct to Jac, etc)
+
+#include <cuda_runtime_api.h>
+
+//extern "C" {//wrong
+//#include <cusolverSp.h>
+//}
+//#include <cusolverSp.h>//wrong
+//#include <cusparse.h>
+
+#include "cuda/cuda_structs.h"
 #endif
 
 #include <cvode/cvode.h>        /* Protoypes for CVODE fcts., consts.  */

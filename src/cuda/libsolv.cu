@@ -914,26 +914,11 @@ __device__ void cudaDevicedotxy(double *g_idata1, double *g_idata2,
 
   //Needed, when testing be careful with SRAM data remanesce https://stackoverflow.com/questions/22172881/why-does-my-kernels-shared-memory-seems-to-be-initialized-to-zero
 
-#ifndef ALL_BLOCKS_EQUAL_SIZE
-
   //first threads update empty positions
   if(tid<n_shr_empty)
     sdata[tid+blockDim.x]=0.;
 
-  __syncthreads(); //Not needed (should)
-
-#else
-
-//slower
-  if (tid == 0){
-    for (int j=0; j<blockDim.x+n_shr_empty; j++)
-      sdata[j] = 0.;
-  }
-
   __syncthreads();
-
-#endif
-
   sdata[tid] = g_idata1[i]*g_idata2[i];
   __syncthreads();
 

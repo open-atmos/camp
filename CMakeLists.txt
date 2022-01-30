@@ -38,6 +38,7 @@ option(FAILURE_DETAIL "Output conditions before and after solver failures" OFF)
 option(ENABLE_CXX "Enable C++" OFF)
 option(ENABLE_GPU "Enable use of GPUs in chemistry solving" OFF)
 option(ENABLE_SWAP_DERIV_LOOP_CELLS "Optimization for sligth speedup in One-cell version, more info at https://earth.bsc.es/gitlab/ac/camp/-/issues/22" OFF)
+option(ENABLE_RESET_JAC_SOLVING "Precondition Jacobian matrix with default value (ON) or previous execution value (OFF), better speedup ON but easier to debug OFF, more info at https://earth.bsc.es/gitlab/ac/camp/-/issues/21" OFF)
 
 mark_as_advanced(FORCE ENABLE_DEBUG FAILURE_DETAIL)
 
@@ -190,6 +191,10 @@ endif()
 
 if (ENABLE_SWAP_DERIV_LOOP_CELLS)
   add_definitions(-DSWAP_DERIV_LOOP_CELLS)
+endif()
+
+if (ENABLE_RESET_JAC_SOLVING)
+  add_definitions(-DRESET_JAC_SOLVING)
 endif()
 
 ######################################################################
