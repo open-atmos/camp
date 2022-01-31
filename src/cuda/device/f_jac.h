@@ -9,9 +9,6 @@
 #ifndef F_JAC_H_
 #define F_JAC_H_
 
-//#include <cusolverSp.h>
-//#include <cuda_runtime_api.h>
-
 #include<stdio.h>
 #include<stdlib.h>
 #include<math.h>

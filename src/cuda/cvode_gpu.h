@@ -6,13 +6,6 @@
 #include <stdlib.h>
 #include "../camp_common.h"
 
-/*
-extern C{
-#include <cusolverSp.h>
-#include <cusparse.h>
-};
-*/
-
 void constructor_cvode_gpu(CVodeMem cv_mem, SolverData *sd);
 int CVode_gpu2(void *cvode_mem, realtype tout, N_Vector yout,
               realtype *tret, int itask, SolverData *sd);

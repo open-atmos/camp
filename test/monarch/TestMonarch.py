@@ -357,7 +357,6 @@ def all_timesteps():
     # conf.caseBase="GPU Block-cells1"
 
     conf.casesOptim = []
-    #conf.casesOptim.append("GPU cuSolver")
     conf.casesOptim.append("GPU Block-cells1")
     #conf.casesOptim.append("GPU Block-cellsN")
     #conf.casesOptim.append("GPU Multi-cells")

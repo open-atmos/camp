@@ -3,26 +3,6 @@
 #ifndef CAMPGPU_CUDA_STRUCTS_H
 #define CAMPGPU_CUDA_STRUCTS_H
 
-/* //wrong
- extern C{
-#include <cusolverSp.h>
-#include <cuda_runtime_api.h>
-#include <cusparse.h>
-};
-*/
-
-/*
-typedef struct
-{
-    //Init variables ("public")
-    //cusolverSpHandle_t cusolverH;// = NULL;
-    size_t size_qr;
-
-} CuSolver;
-*/
-
-//#include "cusolverSp.h>"//wrong
-
 typedef struct
 {
   //Init variables ("public")

@@ -22,10 +22,6 @@ extern "C" {
 #include "../camp_solver.h"
 }
 
-#include <cusolverSp.h>//fine
-#include <cuda_runtime_api.h>
-#include <cusparse.h>
-
 void createSolver(SolverData *sd);
 __device__
 void cudaDeviceswapCSC_CSR1ThreadBlock(int n_row, int n_col, int* Ap, int* Aj, double* Ax, int* BpGlobal, int* Bi, double* Bx);

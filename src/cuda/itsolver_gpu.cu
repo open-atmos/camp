@@ -17,10 +17,7 @@ void read_options(itsolver *bicg){
 
     fscanf(fp, "%s", buff);
 
-    if(strstr(buff,"CELLS_METHOD=cuSolver")!=NULL){
-      bicg->cells_method=4;
-    }
-    else if(strstr(buff,"CELLS_METHOD=Block-cells1")!=NULL){
+   if(strstr(buff,"CELLS_METHOD=Block-cells1")!=NULL){
       bicg->cells_method=3;
     }
     else if(strstr(buff,"CELLS_METHOD=Block-cellsN")!=NULL){

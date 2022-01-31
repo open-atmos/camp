@@ -28,12 +28,6 @@
 
 #include <cuda_runtime_api.h>
 
-//extern "C" {//wrong
-//#include <cusolverSp.h>
-//}
-//#include <cusolverSp.h>//wrong
-//#include <cusparse.h>
-
 #include "cuda/cuda_structs.h"
 #endif
 
@@ -86,10 +80,8 @@
 // CUDA/C++ already has bool definition: Avoid issues disabling it for GPU
 #ifndef CAMP_GPU_SOLVER_H_
 #ifndef CVODE_gpu2_SOLVER_H_
-#ifndef CAMP_GPU_CUSOLVER_H_
 #ifndef ITSOLVERGPU_H
 typedef enum { false, true } bool;
-#endif
 #endif
 #endif
 #endif

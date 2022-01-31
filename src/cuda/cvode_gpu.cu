@@ -18,12 +18,9 @@ extern "C" {
 
 }
 
-#include "cusolver.h"
-
 #ifdef CAMP_USE_MPI
 #include <mpi.h>
 #endif
-
 
 #define CV_SUCCESS               0
 
@@ -1955,7 +1952,6 @@ void constructor_cvode_gpu(CVodeMem cv_mem, SolverData *sd)
 
   //Init Linear Solver variables
   createSolver(sd);
-  createCuSolver(sd);
 
   sd->mdv.cv_reltol=((CVodeMem) sd->cvode_mem)->cv_reltol;
   sd->mdv.cv_nfe=0;
@@ -7815,9 +7811,6 @@ int linsolsolve_gpu2(SolverData *sd, CVodeMem cv_mem)
 
     if(bicg->cells_method==1) {//Sync with CPU
       solveGPU(sd,mGPU->dA,mGPU->djA,mGPU->diA,mGPU->dx,mGPU->dtempv);
-    }
-    else if(bicg->cells_method==4){
-      solveCuSolver(sd);
     }
     else {
       solveGPU_block(sd,mGPU->dA,mGPU->djA,mGPU->diA,mGPU->dx,mGPU->dtempv);

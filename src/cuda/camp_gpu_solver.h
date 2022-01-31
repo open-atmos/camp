@@ -10,9 +10,6 @@
 #define CAMP_GPU_SOLVER_H_
 #include <cuda.h>
 
-//#include <cusolverSp.h>
-//#include <cuda_runtime_api.h>
-
 #include <stdio.h>
 #include <stdlib.h>
 //extern "C" {
