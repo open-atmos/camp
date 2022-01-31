@@ -7804,109 +7804,6 @@ int linsolsolve_gpu2(SolverData *sd, CVodeMem cv_mem)
     cudaEventRecord(bicg->startBCG);
 #endif
 
-#ifdef CHECK_GPU_LINSOLVE
-    //cudaMemcpy(x,mGPU->dx,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
-    /*
-      Seems CMake definitions only affects the current directory, so I can't apply this definitions in a separate CMakeLists... well, at the moment I left it as a only option `ENABLE_DEBUG` and then alognside `add_definitions(-DCAMP_USE_GPU)` I added the rest of debug definitions if `ENABLE_DEBUG` is defined
-    */
-    //printf("Checking SolveGPU linear solver...\n");
-
-    if(bicg->counterBiConjGrad<=2){
-
-      double *aux_x1=(double*)malloc(mGPU->nrows*sizeof(double));
-      double *aux_x2=(double*)malloc(mGPU->nrows*sizeof(double));
-      double *aux_dx;
-      cudaMalloc((void**)&aux_dx,mGPU->nrows*sizeof(double));
-      /*
-      double *aux_dtempv;
-      cudaMalloc((void**)&aux_dtempv,mGPU->nrows*sizeof(double));
-      double *aux_dA;
-      cudaMalloc((void**)&aux_dA,mGPU->nnz*sizeof(double));
-      */
-
-      gpu_yequalsx(aux_dx, mGPU->dx, mGPU->nrows, mGPU->blocks, mGPU->threads);
-      //gpu_yequalsx(aux_dtempv, mGPU->dtempv, mGPU->nrows, mGPU->blocks, mGPU->threads);
-      //gpu_yequalsx(aux_dA, mGPU->dA, mGPU->nnz, mGPU->blocks, mGPU->threads);
-      cudaDeviceSynchronize();
-
-      //equals matrix dA
-      //Compute case 1
-      solveGPU(sd,mGPU->dA,mGPU->djA,mGPU->diA,mGPU->dx,mGPU->dtempv);
-      //solveGPU_block(sd,mGPU->dA,mGPU->djA,mGPU->diA,mGPU->dx,mGPU->dtempv);
-
-      //Save result
-      cudaMemcpy(aux_x1,mGPU->dx,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
-      //printf("Case 1: dx3_4 %f %f,", aux_x1[3], aux_x1[4]); //seems working
-
-      //Reset input
-      gpu_yequalsx(mGPU->dx, aux_dx, mGPU->nrows, mGPU->blocks, mGPU->threads);
-      //gpu_yequalsx(mGPU->dtempv, aux_dtempv, mGPU->nrows, mGPU->blocks, mGPU->threads);
-      //gpu_yequalsx(mGPU->dA, aux_dA, mGPU->nnz, mGPU->blocks, mGPU->threads);
-      cudaDeviceSynchronize();
-
-      //Compute case 2
-      solveGPU_block(sd,mGPU->dA,mGPU->djA,mGPU->diA,mGPU->dx,mGPU->dtempv);
-      //solveGPU(sd,mGPU->dA,mGPU->djA,mGPU->diA,mGPU->dx,mGPU->dtempv);
-
-      //Save result
-      cudaMemcpy(aux_x2,mGPU->dx,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
-
-      //Reset input
-      gpu_yequalsx(mGPU->dx, aux_dx, mGPU->nrows, mGPU->blocks, mGPU->threads);
-      //gpu_yequalsx(mGPU->dtempv, aux_dtempv, mGPU->nrows, mGPU->blocks, mGPU->threads);
-      //gpu_yequalsx(mGPU->dA, aux_dA, mGPU->nnz, mGPU->blocks, mGPU->threads);
-      cudaDeviceSynchronize();
-
-      //printf("Case 2: dx3_4 %f %f\n", aux_x2[3], aux_x2[4]);
-      //Print accuracy
-      printf("aux_x1[0] aux_x2[0] %-le %-le\n", aux_x1[0], aux_x2[0]);
-      double error;
-      double max_error = aux_x1[0]- aux_x2[0];
-      int max_error_i = 0;
-      double aux1 = 0.0;
-      double aux2 = 0.0;
-      for (int i=0; i<mGPU->nrows; i++){
-        error = fabs(aux_x1[i]-aux_x2[i]);
-        //printf("%d %-le %-le\n", i, aux_x1[i], aux_x2[i]);
-        if (error > max_error){
-          max_error = error;
-          max_error_i = i;
-          aux1 = aux_x1[i];
-          aux2 = aux_x2[i];
-        }
-      }
-      //Local max error
-      //printf("Max Error linsolver dx %-le[%d] %-le %-le\n",max_error, max_error_i, aux1, aux2);
-      printf("Max Error linsolver dx %-le[%d]\n",max_error, max_error_i);
-
-      //Global max error (During ODE solver)
-      if (max_error > sd->max_error_linsolver){
-        sd->max_error_linsolver = max_error;
-        sd->max_error_linsolver_i = sd->n_linsolver_i;
-      }
-      //printf("Global max Error linsolver dx %-le at iter %d\n",sd->max_error_linsolver,sd->max_error_linsolver_i);
-
-      //Iter linsolve
-      sd->n_linsolver_i++;
-      free(aux_x1);
-      free(aux_x2);
-      cudaFree(aux_dx);
-      //cudaFree(aux_dtempv);
-      //cudaFree(aux_dA);
-    }
-
-#endif
-
-#ifdef DEBUG_LINEAR_SOLVERS
-
-  double *aux_x2;
-  if(bicg->counterBiConjGrad==0){
-    aux_x2=(double*)malloc(mGPU->nrows*sizeof(double));
-    cudaMemcpy(aux_x2,mGPU->dtempv,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
-  }
-
-#endif
-
 #ifdef DEBUG_LINSOLSOLVEGPU
 
   //int k=0;
@@ -7920,31 +7817,11 @@ int linsolsolve_gpu2(SolverData *sd, CVodeMem cv_mem)
       solveGPU(sd,mGPU->dA,mGPU->djA,mGPU->diA,mGPU->dx,mGPU->dtempv);
     }
     else if(bicg->cells_method==4){
-      solvecuSolver(sd);
+      solveCuSolver(sd);
     }
     else {
       solveGPU_block(sd,mGPU->dA,mGPU->djA,mGPU->diA,mGPU->dx,mGPU->dtempv);
     }
-
-#ifdef DEBUG_LINEAR_SOLVERS
-
-  if(bicg->counterBiConjGrad==0){
-
-    printf("DEBUG_SOLVEBCGCUDA call %d\n",bicg->counterBiConjGrad);
-    double *aux_x1;//output case 1
-    aux_x1=(double*)malloc(mGPU->nrows*sizeof(double));
-    cudaMemcpy(aux_x1,mGPU->dx,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
-
-    //printf("%d %-le",mGPU->nrows,aux_x1[mGPU->nrows]);
-    printf("dx in out\n");//mGPU->nrows
-    for (int i=0; i<mGPU->nrows; i++){
-      printf("(%d) %-le %-le\n",i+1,aux_x2[i],aux_x1[i]);
-    }
-
-    free(aux_x1);
-    free(aux_x2);
-  }
-#endif
 
 #ifdef CAMP_DEBUG_GPU
     cudaEventRecord(bicg->stopBCG);

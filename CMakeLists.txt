@@ -279,7 +279,7 @@ endif()
 set(STD_C_FLAGS "-std=c99")
 
 #set(STD_CUDA_FLAGS "-arch=compute_70 -code=sm_70 -dc --compiler-options '-fPIC' -lcusolver -lcudart -lcudadevrt -lcublas -lcusparse_static -lculibos -lpthread -ldl")
-set(STD_CUDA_FLAGS "-lineinfo -arch=compute_70 -code=sm_70 -dc --compiler-options '-fPIC' -lcusolver -lcudart -lcudadevrt -lcublas -lcusparse_static -lculibos -lpthread -ldl")
+set(STD_CUDA_FLAGS "-lineinfo -arch=compute_70 -code=sm_70 -dc --compiler-options '-fPIC' -lcudart -lcublas -lcusolver -lcudadevrt -lcusparse_static -lculibos -lpthread -ldl")
 
 if(ENABLE_CXX)
   set(STD_CXX_FLAGS "-fpermissive")
@@ -437,7 +437,6 @@ set(CAMP_LIB_SRC
 
 #add_library(camplib SHARED ${CAMP_LIB_SRC}) #nvlink warning (issue 9 github)
 add_library(camplib ${CAMP_LIB_SRC}) #fine
-
 add_library(camplib-static STATIC ${CAMP_LIB_SRC})
 
 if (CUDA_FOUND)

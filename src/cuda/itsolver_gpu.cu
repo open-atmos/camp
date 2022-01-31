@@ -42,18 +42,6 @@ void read_options(itsolver *bicg){
 
 }
 
-void createcuSolver2(SolverData *sd){
-
-  printf("createCuSolver start");
-
-  cusolverSpHandle_t handle; // handle to cusolver library
-  csrqrInfo_t info = NULL;
-  cusparseMatDescr_t descrA = NULL;
-  void *pBuffer = NULL; // working space for numerical factorization
-
-  printf("createCuSolver end");
-}
-
 void createSolver(SolverData *sd)
 {
   itsolver *bicg = &(sd->bicg);
@@ -105,8 +93,6 @@ void createSolver(SolverData *sd)
   cudaMalloc(ddiag,nrows*sizeof(double));
   cudaMalloc(daux,nrows*sizeof(double));
   bicg->aux=(double*)malloc(sizeof(double)*blocks);
-
-  //createcuSolver2(sd);
 
 }
 
@@ -1289,6 +1275,8 @@ void solveGPU_block_thr(int blocks, int threads_block, int n_shr_memory, int n_s
 
 //solveGPU_block: Each block will compute only a cell/group of cells
 //Algorithm: Biconjugate gradient
+// dx: Input and output RHS
+// dtempv: Input preconditioner RHS
 void solveGPU_block(SolverData *sd, double *dA, int *djA, int *diA, double *dx, double *dtempv)
 {
 
@@ -1349,20 +1337,6 @@ void solveGPU_block(SolverData *sd, double *dA, int *djA, int *diA, double *dx, 
            sd, last_blockN);
 
 }
-
-void solvecuSolver(SolverData *sd)
-{
-  ModelDataGPU *mGPU = &sd->mGPU;
-
-  printf("solvecuSolver start\n");
-
-
-
-  printf("WARNING: Pending to implement, running solveGPU_block instead\n");
-  solveGPU_block(sd,mGPU->dA,mGPU->djA,mGPU->diA,mGPU->dx,mGPU->dtempv);
-
-}
-
 
 //Algorithm: Biconjugate gradient
 void solveGPU(SolverData *sd, double *dA, int *djA, int *diA, double *dx, double *dtempv)

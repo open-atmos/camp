@@ -36,7 +36,6 @@ void cudaGlobalswapCSC_CSR(int n_row, int n_col, int* Ap, int* Aj, double* Ax, i
 void swapCSC_CSR_BCG(SolverData *sd);
 void solveGPU(SolverData *sd, double *dA, int *djA, int *diA, double *dx, double *dtempv);
 void solveGPU_block(SolverData *sd, double *dA, int *djA, int *diA, double *dx, double *dtempv);
-void solvecuSolver(SolverData *sd);
 __device__ void solveBcgCudaDevice(
         double *dA, int *djA, int *diA, double *dx, double *dtempv //Input data
         ,int nrows, int blocks, int n_shr_empty, int maxIt, int mattype
