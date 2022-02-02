@@ -22,6 +22,12 @@ extern "C" {
 #include "../camp_solver.h"
 }
 
+#define ONECELL 1
+#define MULTICELLS 2
+#define  BLOCKCELLSN 3
+#define BLOCKCELLS1 4
+#define BLOCKCELLSNHALF 5
+
 void createSolver(SolverData *sd);
 __device__
 void cudaDeviceswapCSC_CSR1ThreadBlock(int n_row, int n_col, int* Ap, int* Aj, double* Ax, int* BpGlobal, int* Bi, double* Bx);
