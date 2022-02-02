@@ -38,7 +38,7 @@ void read_options(itsolver *bicg){
     fclose(fp);
   }
 
-  //printf("itsolver read_options CELLS_METHOD %d\n",bicg->cells_method);
+  printf("itsolver read_options CELLS_METHOD %d\n",bicg->cells_method);
 
 }
 

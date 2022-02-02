@@ -124,7 +124,7 @@ def run(conf):
         json.dump(conf.__dict__, jsonFile, indent=4, sort_keys=True)
 
     # Main
-    print(exec_str)
+    print(exec_str,conf.caseGpuCpu,conf.caseMulticellsOnecell)
     os.system(exec_str)
 
     data = {}
@@ -354,38 +354,36 @@ def all_timesteps():
     conf.timeSteps = 1
     conf.timeStepsDt = 2
 
-    #conf.caseBase = "CPU One-cell"
-    conf.caseBase = "CPU Multi-cells"
+    conf.caseBase = "CPU One-cell"
+    #conf.caseBase = "CPU Multi-cells"
     # conf.caseBase="GPU Multi-cells"
     #conf.caseBase="GPU Block-cellsN"
     #conf.caseBase="GPU Block-cells1"
 
     conf.casesOptim = []
     #conf.casesOptim.append("GPU Block-cellsNhalf")
-    conf.casesOptim.append("GPU Block-cells1")
+    #conf.casesOptim.append("GPU Block-cells1")
     #conf.casesOptim.append("GPU Block-cellsN")
     #conf.casesOptim.append("GPU Multi-cells")
-    #conf.casesOptim.append("GPU One-cell")
+    conf.casesOptim.append("GPU One-cell")
     #conf.casesOptim.append("CPU Multi-cells")
 
     #conf.plotYKey = "Speedup timeCVode"
     #conf.plotYKey = "Speedup counterLS"
-    #conf.plotYKey = "Speedup normalized timeLS"
+    conf.plotYKey = "Speedup normalized timeLS"
     # conf.plotYKey = "Speedup normalized computational timeLS"
     # conf.plotYKey = "Speedup counterBCG"
-    conf.plotYKey = "Speedup total iterations - counterBCG"
+    #conf.plotYKey = "Speedup total iterations - counterBCG"
     # conf.plotYKey = "Speedup normalized counterBCG"
     # conf.plotYKey = "Speedup BCG iteration (Comp.timeLS/counterBCG)"
     # conf.plotYKey = "Speedup timecvStep"
     # conf.plotYKey = "Speedup normalized timecvStep"#not needed, is always normalized
     # conf.plotYKey = "Speedup device timecvStep"
     #conf.plotYKey = "Percentage data transfers CPU-GPU [%]"
-
     # conf.plotYKey="MAPE"
     # conf.plotYKey="SMAPE"
     # conf.plotYKey="NRMSE"
-      # MAPE=0
-    # conf.MAPETol=1.0E-6 #MAPE~=0.5
+    # conf.MAPETol=1.0E-6
 
     """END OF CONFIGURATION VARIABLES"""
 
