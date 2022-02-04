@@ -427,7 +427,7 @@ def calculate_speedup(data, plot_y_key):
     new_data = data[cases[1]][plot_y_key]
 
     # print(plot_y_key)
-    print("calculate_speedup",data)
+    #print("calculate_speedup",data)
 
     # data[new_plot_y_key] = data.get(new_plot_y_key,[])
     datay = [0.] * len(base_data)
@@ -690,7 +690,7 @@ def plot_species(file):
         n_aerosols = 2
         cell_to_plot = 0
     if (plot_case == 4):
-        # plot 4 not working
+        # not implemented
         n_cells = 1
         n_gases = 5
         n_aerosols = 2

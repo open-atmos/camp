@@ -140,14 +140,13 @@ def run_case2(conf):
 
     data = run(conf)
 
-    y_key_words = conf.plotYKey.split()
-    y_key = y_key_words[-1]
-
     if "timeLS" in conf.plotYKey and "computational" in conf.plotYKey\
         and "GPU" in conf.case:
         for i in range(len(data["timeLS"])):
             data["timeLS"][i] = data["timeLS"][i] - data["timeBiconjGradMemcpy"][i]
 
+    y_key_words = conf.plotYKey.split()
+    y_key = y_key_words[-1]
     if "normalized" in conf.plotYKey:
         if y_key == "counterBCG" or y_key == "timeLS":
             nSystemsOfCells = 1
@@ -186,19 +185,6 @@ def run_case2(conf):
 
     return data
 
-def run_cells2(conf):
-    datacase = []
-
-    for i in range(len(conf.cells)): #todo iria primero las celdas y dentro del loop estaria el caso
-
-
-
-        conf.nCellsCase = conf.cells[i]
-        run_cases2(conf)
-
-
-    return datacase
-
 
 def run_cases2(conf):
 
@@ -230,6 +216,7 @@ def run_cases2(conf):
     datacases = []
     datacase = []
     i = 0
+    print("conf.casesOptim",conf.casesOptim)
     for caseOptim in conf.casesOptim:
         cases_words = caseOptim.split()
         conf.caseGpuCpu = cases_words[0]
@@ -262,7 +249,8 @@ def run_cases2(conf):
             #datacase = [np.mean(datay)]
             #datacase.append(np.mean(datay))
 
-            datacase = np.mean(datay)
+            datacases.append(np.mean(datay))
+            #datacase = np.mean(datay)
             print("datacase",datacase)
 
             #conf.datacolumns[i].append(datacase)
@@ -270,22 +258,25 @@ def run_cases2(conf):
             #print("run_cases2 conf.datacolumns", conf.datacolumns)
             #conf.datacolumns[i] = datacase
             #conf.datacolumns[i].append(datacase)
-            conf.datacolumns[i][conf.iCell] = datacase #todo use append
+            #conf.datacolumns[i][conf.iCell] = datacase
 
         else: #todo do this case
-            datacase = datay
+            #datacases = datay
+            datacases.append(datay)
+
             #datacase = [datay]
             #conf.datacolumns[i].append(datacase)
 
-        datacases.append(datacase)
+        #datacases.append(datacase)
+        data.pop(caseOptim)
         i += 1
 
-    #print("run_cases2 conf.datacolumns", conf.datacolumns)
+    print("run_cases2 datacases", datacases)
 
     return datacases
 
 def run_cells2(conf):
-    conf.datacolumns = [[0 for x in range(len(conf.cells))] for y in range(len(conf.casesOptim))] #todo move
+    #conf.datacolumns = [[0 for x in range(len(conf.cells))] for y in range(len(conf.casesOptim))] #todo move
 
     datacells = []
     for i in range(len(conf.cells)):
@@ -297,9 +288,15 @@ def run_cells2(conf):
         datacases = run_cases2(conf)
         #run_cases2(conf)
 
-        datacells.append(datacases)
+        if len(conf.cells) > 1:  # Mean timeSteps
+            datacells.append(datacases)
 
     print("run_cells2 datacells", datacells)
+    #print("run_cells2 conf.datacolumns", conf.datacolumns)
+    if len(conf.cells) > 1:  # Mean timeSteps
+        conf.datacolumns = np.transpose(datacells)
+    else:
+        conf.datacolumns = datacases
     print("run_cells2 conf.datacolumns", conf.datacolumns)
 
     #conf.datacolumns.append(datacases)
@@ -350,7 +347,7 @@ def plot_cases2(conf):
 
         conf.column = conf.columnDiffCells
         #if len(conf.casesL) > 1:
-        if len(conf.casesOptim) > 1:
+        if len(conf.casesOptim) > 1: #todo fix column with Ideal Realistic cases
             if conf.isSameArquiOptim:
                 conf.column += case_gpu_cpu_name + " " + case_multicells_onecell_name
             else:
@@ -574,7 +571,7 @@ def plot_cases(conf):
     if conf.plotYKey == "Speedup total iterations - counterBCG":
         namey = "Speedup solving iterations BCG"
 
-    if (len(conf.datacolumns) > 1):
+    if len(conf.datacolumns) > 1:
         datay = conf.datacolumns
     else:
         datay = conf.datacolumns[0]
@@ -598,7 +595,7 @@ def plot_cases(conf):
     print(namex,":",datax)
     print(namey, ":", datay)
 
-    #plot_functions.plot(namex, namey, datax, datay, conf.plotTitle, conf.legend, conf.savePlot)
+    plot_functions.plot(namex, namey, datax, datay, conf.plotTitle, conf.legend, conf.savePlot)
 
 
 def all_timesteps():
@@ -621,12 +618,12 @@ def all_timesteps():
     conf.mpiProcessesList = [1]
     #conf.mpiProcessesList = [40,1]
 
-    conf.cells = [10,100]
+    conf.cells = [10]
     #conf.cells = [100,1000]
     #conf.cells = [1,5,10,50,100]
     #conf.cells = [100,500,1000,5000,10000]
 
-    conf.timeSteps = 1
+    conf.timeSteps = 2
     conf.timeStepsDt = 2
 
     #conf.caseBase = "CPU One-cell"
@@ -638,7 +635,7 @@ def all_timesteps():
     conf.casesOptim = []
     #conf.casesOptim.append("GPU Block-cellsNhalf")
     conf.casesOptim.append("GPU Block-cells1")
-    #conf.casesOptim.append("GPU Block-cellsN")
+    conf.casesOptim.append("GPU Block-cellsN")
     #conf.casesOptim.append("GPU Multi-cells")
     #conf.casesOptim.append("GPU One-cell")
     #conf.casesOptim.append("CPU Multi-cells")
