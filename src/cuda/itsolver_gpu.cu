@@ -38,7 +38,7 @@ void read_options(itsolver *bicg){
     fclose(fp);
   }
 
-  printf("itsolver read_options CELLS_METHOD %d\n",bicg->cells_method);
+  //printf("itsolver read_options CELLS_METHOD %d\n",bicg->cells_method);
 
 }
 
@@ -1174,7 +1174,7 @@ void solveBcgCuda(
 
       //if (tid==0) it++;
       it++;
-    } while(it<maxIt && temp1>tolmax);//while(it<maxIt && temp1>tolmax);//while(0);
+    } while(it<maxIt+*it_pointer && temp1>tolmax);//while(it<maxIt && temp1>tolmax);//while(0);
 
 #ifdef DEBUG_SOLVEBCGCUDA_DEEP
     if(tid==0)

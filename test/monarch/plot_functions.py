@@ -31,31 +31,23 @@ def get_values_same_timestep(timestep_to_plot, mpiProcessesList, \
 
     return new_data
 
+def calculate_computational_timeLS2(data, plot_y_key):
+
+    data_timeBiconjGradMemcpy = data[plot_y_key]
+    data_timeLS = data["timeLS"]
+    for i in range(len(data_timeLS)):
+        data_timeLS[i] = data_timeLS[i] - data_timeBiconjGradMemcpy[i]
+
+    return data
+
 
 def calculate_computational_timeLS(data, plot_y_key, case):
-    # cases=list(data.keys())
 
-    # gpu_exist=False
-
-    # for case in cases:
     if ("GPU" in case):
         data_timeBiconjGradMemcpy = data[case][plot_y_key]
         data_timeLS = data[case]["timeLS"]
-        # print(data_timeBiconjGradMemcpy)
-        # print(data_timeLS)
         for i in range(len(data_timeLS)):
             data_timeLS[i] = data_timeLS[i] - data_timeBiconjGradMemcpy[i]
-        # print(data_timeLS)
-        # gpu_exist=True
-
-    # if(gpu_exist==False):
-    #  raise Exception("Not GPU case for calculate_computational_timeLS metric")
-
-    # print("calculate_computational_timeLS")
-    # print(data_timeLS)
-
-    # for i in range(len(data_timeLS)):
-    #  data_timeLS[i]=data_timeLS[i]-data_timeBiconjGradMemcpy[i]
 
     return data
 
@@ -103,6 +95,16 @@ def calculate_percentages_solveCVODEGPU(din):
 
     return data
 
+def normalize_by_counterLS_and_cells2(data, y_key, nSystemsOfCells):
+
+    for i in range(len(data[y_key])):
+        iters = data["counterLS"][i]
+        itersPerAllCells = iters / nSystemsOfCells
+        timePerIter = data[y_key][i] / itersPerAllCells
+        data[y_key][i] = timePerIter
+
+    return data
+
 def normalize_by_counterLS_and_cells(data, plot_y_key, cells, case):
     nSystemsOfCells = 1
     if ("One-cell" in case):
@@ -117,10 +119,6 @@ def normalize_by_counterLS_and_cells(data, plot_y_key, cells, case):
     return data
 
 def normalize_by_countercvStep_and_cells(data, plot_y_key, cells, case):
-    # plot_y_key = "timeLS"
-    # new_plot_y_key="Normalized timeLS"
-
-    # print(data[cases[0]][plot_y_key])
 
     if ("One-cell" in case):
         print("One-cell")
@@ -131,14 +129,9 @@ def normalize_by_countercvStep_and_cells(data, plot_y_key, cells, case):
     else:
         raise Exception("normalize_by_countercvStep_and_cells case without One-cell or Multi-cells key name")
 
-    # data[case][new_plot_y_key] = []
     for i in range(len(data[plot_y_key])):
-        # print(base_data[i],new_data[i], base_data[i]/new_data[i])
         data[plot_y_key][i] = data[plot_y_key][i] \
                               / data["countercvStep"][i] * cells_multiply
-
-    # print(data[cases[0]][plot_y_key])
-    # print(data)
 
     return data
 
@@ -434,7 +427,7 @@ def calculate_speedup(data, plot_y_key):
     new_data = data[cases[1]][plot_y_key]
 
     # print(plot_y_key)
-    # print(base_data)
+    print("calculate_speedup",data)
 
     # data[new_plot_y_key] = data.get(new_plot_y_key,[])
     datay = [0.] * len(base_data)
