@@ -54,7 +54,6 @@ class TestMonarch:
         self.itsolverConfigFile = "itsolver_options.txt"
         self.campSolverConfigFile = "config_variables_c_solver.txt"
         self.dataCaseBase = {}
-        self.iCell=0
 
     @property
     def chemFile(self):
@@ -214,9 +213,6 @@ def run_cases2(conf):
         conf.nCells = 1
 
     datacases = []
-    datacase = []
-    i = 0
-    print("conf.casesOptim",conf.casesOptim)
     for caseOptim in conf.casesOptim:
         cases_words = caseOptim.split()
         conf.caseGpuCpu = cases_words[0]
@@ -245,66 +241,69 @@ def run_cases2(conf):
             raise Exception("Not found plot function for conf.plotYKey")
 
         if len(conf.cells) > 1:  # Mean timeSteps
-            #datacase = np.mean(datay)
-            #datacase = [np.mean(datay)]
-            #datacase.append(np.mean(datay))
-
+            #datacases.append(np.mean(datay))
             datacases.append(np.mean(datay))
-            #datacase = np.mean(datay)
-            print("datacase",datacase)
-
-            #conf.datacolumns[i].append(datacase)
-            #print(i)
-            #print("run_cases2 conf.datacolumns", conf.datacolumns)
-            #conf.datacolumns[i] = datacase
-            #conf.datacolumns[i].append(datacase)
-            #conf.datacolumns[i][conf.iCell] = datacase
-
-        else: #todo do this case
-            #datacases = datay
+        else:  # todo
             datacases.append(datay)
+            #datacases = datay
 
-            #datacase = [datay]
-            #conf.datacolumns[i].append(datacase)
-
-        #datacases.append(datacase)
         data.pop(caseOptim)
-        i += 1
 
     print("run_cases2 datacases", datacases)
 
     return datacases
 
 def run_cells2(conf):
-    #conf.datacolumns = [[0 for x in range(len(conf.cells))] for y in range(len(conf.casesOptim))] #todo move
-
     datacells = []
     for i in range(len(conf.cells)):
-
         conf.nCellsCase = conf.cells[i]
-
-        conf.iCell = i
-        #conf.datacolumns.append([])
         datacases = run_cases2(conf)
-        #run_cases2(conf)
 
         if len(conf.cells) > 1:  # Mean timeSteps
             datacells.append(datacases)
+            #conf.datacolumns.append(datacases)
+        else:  # todo
+            datacells = datacases
+            #conf.datacolumns = datacases
+            #conf.datacolumns.append(datacases)
 
     print("run_cells2 datacells", datacells)
-    #print("run_cells2 conf.datacolumns", conf.datacolumns)
+
     if len(conf.cells) > 1:  # Mean timeSteps
-        conf.datacolumns = np.transpose(datacells)
-    else:
-        conf.datacolumns = datacases
+        datacellsTranspose = np.transpose(datacells)
+        datacells = datacellsTranspose.tolist()
+
+
+    print("run_cells2 datacells", datacells)
     print("run_cells2 conf.datacolumns", conf.datacolumns)
 
-    #conf.datacolumns.append(datacases)
+    return datacells
+
+def run_diffCells(conf):
+
+    #todo dont reset datacells, we need to store next iter
+    for diff_cells in conf.diffCellsL:
+        conf.diffCells = diff_cells
+        data = run_cells2(conf)
+        #if len(conf.cells) > 1:  # Mean timeSteps
+        #conf.datacolumns.append(data)
+        conf.datacolumns += data
+
+
+    #conf.datacolumns = data
+
+    #if len(conf.cells) > 1:  # Mean timeSteps
+     #   conf.datacolumns = np.transpose(conf.datacolumns)
+        #  conf.datacolumns.append(np.transpose(datacells))
+    #else:
+        #conf.datacolumns = datacases
+        #conf.datacolumns.append(data)
+
+    print("run_diffCells conf.datacolumns", conf.datacolumns)
 
 def plot_cases2(conf):
 
     #Set plot info
-    #todo set these names at the end, just before setting the legend/plotTitle, after running all, to ensure that this is not needed for run and is a only matter for plot
 
     cases_words = conf.caseBase.split()
     conf.caseGpuCpu = cases_words[0]
@@ -324,38 +323,43 @@ def plot_cases2(conf):
         #todo remove casesGpuCpu and others cases not used
 
     baseCaseName = ""
-    if conf.plotYKey != "Percentage data transfers CPU-GPU [%]": # Speedup
+    if conf.plotYKey != "Percentage data transfers CPU-GPU [%]":  # Speedup
         baseCaseName = " vs " + case_gpu_cpu_name+ " " + case_multicells_onecell_name
 
-    for caseOptim in conf.casesOptim:
-        cases_words = caseOptim.split()
-        conf.caseGpuCpu = cases_words[0]
-        conf.caseMulticellsOnecell = cases_words[1]
+    for diff_cells in conf.diffCellsL:
+        conf.diffCells = diff_cells
+        conf.columnDiffCells = ""
+        if len(conf.diffCellsL) > 1:
+            conf.columnDiffCells += conf.diffCells + " "
 
-        if conf.caseMulticellsOnecell== "Block-cellsN":
-            case_multicells_onecell_name = "Block-cells (N)"
-        elif conf.caseMulticellsOnecell == "Block-cells1":
-            case_multicells_onecell_name = "Block-cells (1)"
-        elif conf.caseMulticellsOnecell == "Block-cellsNhalf":
-            case_multicells_onecell_name = "Block-cells (N/2)"
-        else:
-            case_multicells_onecell_name = conf.caseMulticellsOnecell
+        for caseOptim in conf.casesOptim:
+            cases_words = caseOptim.split()
+            conf.caseGpuCpu = cases_words[0]
+            conf.caseMulticellsOnecell = cases_words[1]
 
-        case_gpu_cpu_name = conf.caseGpuCpu
-        if len(conf.mpiProcessesList) == 2 and conf.caseGpuCpu == "CPU":
-            case_gpu_cpu_name = str(conf.mpiProcessesList[-1]) + " MPI"
-
-        conf.column = conf.columnDiffCells
-        #if len(conf.casesL) > 1:
-        if len(conf.casesOptim) > 1: #todo fix column with Ideal Realistic cases
-            if conf.isSameArquiOptim:
-                conf.column += case_gpu_cpu_name + " " + case_multicells_onecell_name
+            if conf.caseMulticellsOnecell== "Block-cellsN":
+                case_multicells_onecell_name = "Block-cells (N)"
+            elif conf.caseMulticellsOnecell == "Block-cells1":
+                case_multicells_onecell_name = "Block-cells (1)"
+            elif conf.caseMulticellsOnecell == "Block-cellsNhalf":
+                case_multicells_onecell_name = "Block-cells (N/2)"
             else:
-                conf.column += case_multicells_onecell_name
-        conf.legend.append(conf.column)
+                case_multicells_onecell_name = conf.caseMulticellsOnecell
+
+            case_gpu_cpu_name = conf.caseGpuCpu
+            if len(conf.mpiProcessesList) == 2 and conf.caseGpuCpu == "CPU":
+                case_gpu_cpu_name = str(conf.mpiProcessesList[-1]) + " MPI"
+
+            conf.column = conf.columnDiffCells
+            #if len(conf.casesL) > 1:
+            if len(conf.casesOptim) > 1: #todo fix column with Ideal Realistic cases
+                if conf.isSameArquiOptim:
+                    conf.column += case_multicells_onecell_name
+                else:
+                    conf.column += case_gpu_cpu_name + " " + case_multicells_onecell_name
+            conf.legend.append(conf.column)
 
     optimCaseName = case_gpu_cpu_name + " " + case_multicells_onecell_name
-
     conf.plotTitle = ""
     if len(conf.casesL) > 1:
         if conf.isSameArquiOptim:
@@ -364,6 +368,9 @@ def plot_cases2(conf):
     else:
         conf.plotTitle = optimCaseName
     conf.plotTitle += baseCaseName
+
+    if len(conf.diffCellsL) == 1:
+        conf.plotTitle += ", " + conf.diffCells + " test"
 
 
     namey = conf.plotYKey
@@ -404,8 +411,7 @@ def plot_cases2(conf):
     print(namex,":",datax)
     print(namey, ":", datay)
 
-    #plot_functions.plot(namex, namey, datax, datay, conf.plotTitle, conf.legend, conf.savePlot)
-
+    plot_functions.plot(namex, namey, datax, datay, conf.plotTitle, conf.legend, conf.savePlot)
 
 def run_cell(conf):
     y_key_words = conf.plotYKey.split()
@@ -493,8 +499,6 @@ def run_case(conf):
 
 def run_diff_cells(conf):
 
-    #column=columnHeader
-    #conf.column = conf.columnDiffCells
     for j in range(len(conf.casesL)):
         conf.cases = conf.casesL[j]
         conf.casesGpuCpu = [""] * len(conf.cases)
@@ -531,9 +535,9 @@ def run_diff_cells(conf):
         conf.column = conf.columnDiffCells
         if len(conf.casesL) > 1:
             if conf.isSameArquiOptim:
-                conf.column += cases_gpu_cpu_name[1] + " " + cases_multicells_onecell_name[1]
-            else:
                 conf.column += cases_multicells_onecell_name[1]
+            else:
+                conf.column += cases_gpu_cpu_name[1] + " " + cases_multicells_onecell_name[1]
 
         conf.legend.append(conf.column)
 
@@ -595,7 +599,7 @@ def plot_cases(conf):
     print(namex,":",datax)
     print(namey, ":", datay)
 
-    plot_functions.plot(namex, namey, datax, datay, conf.plotTitle, conf.legend, conf.savePlot)
+    #plot_functions.plot(namex, namey, datax, datay, conf.plotTitle, conf.legend, conf.savePlot)
 
 
 def all_timesteps():
@@ -607,7 +611,7 @@ def all_timesteps():
 
     conf.diffCellsL = []
     conf.diffCellsL.append("Realistic")
-    #conf.diffCellsL.append("Ideal")
+    conf.diffCellsL.append("Ideal")
 
     conf.profileCuda = False
     # conf.profileCuda = True
@@ -618,16 +622,16 @@ def all_timesteps():
     conf.mpiProcessesList = [1]
     #conf.mpiProcessesList = [40,1]
 
-    conf.cells = [10]
+    conf.cells = [100]
     #conf.cells = [100,1000]
     #conf.cells = [1,5,10,50,100]
     #conf.cells = [100,500,1000,5000,10000]
 
-    conf.timeSteps = 2
+    conf.timeSteps = 5
     conf.timeStepsDt = 2
 
-    #conf.caseBase = "CPU One-cell"
-    conf.caseBase = "CPU Multi-cells"
+    conf.caseBase = "CPU One-cell"
+    #conf.caseBase = "CPU Multi-cells"
     # conf.caseBase="GPU Multi-cells"
     #conf.caseBase="GPU Block-cellsN"
     #conf.caseBase="GPU Block-cells1"
@@ -635,14 +639,14 @@ def all_timesteps():
     conf.casesOptim = []
     #conf.casesOptim.append("GPU Block-cellsNhalf")
     conf.casesOptim.append("GPU Block-cells1")
-    conf.casesOptim.append("GPU Block-cellsN")
+    #conf.casesOptim.append("GPU Block-cellsN")
     #conf.casesOptim.append("GPU Multi-cells")
     #conf.casesOptim.append("GPU One-cell")
-    #conf.casesOptim.append("CPU Multi-cells")
+    conf.casesOptim.append("CPU Multi-cells")
 
-    #conf.plotYKey = "Speedup timeCVode"
+    conf.plotYKey = "Speedup timeCVode"
     #conf.plotYKey = "Speedup counterLS"
-    conf.plotYKey = "Speedup normalized timeLS"
+    #conf.plotYKey = "Speedup normalized timeLS"
     # conf.plotYKey = "Speedup normalized computational timeLS"
     # conf.plotYKey = "Speedup counterBCG"
     #conf.plotYKey = "Speedup total iterations - counterBCG"
@@ -673,9 +677,8 @@ def all_timesteps():
 
     if conf.chemFile == "monarch_cb05":
         conf.timeStepsDt = 3
-
-    conf.savePlot = False
-    start_time = time.perf_counter()
+        for i, diff_cells in enumerate(conf.diffCellsL):
+            conf.diffCellsL[i] = "Ideal"
 
     conf.casesL = []
     conf.cases = []
@@ -701,29 +704,41 @@ def all_timesteps():
 
     conf.datacolumns = []
     conf.legend = []
-    conf.plotTitle = ""
-    for diff_cells in conf.diffCellsL:
-        conf.diffCells = diff_cells
-        if (conf.chemFile == "monarch_cb05"):
-            conf.diffCells = "Ideal"
+    conf.plotTitle = "" #todo move this
+    start_time = time.perf_counter()
 
-        conf.columnDiffCells = ""
-        if len(conf.diffCellsL) > 1:
-            conf.columnDiffCells += conf.diffCells + " "
+    issue4 = True
+    #issue4 = False
 
-        #run_diff_cells(conf)
-        run_cells2(conf)
+    if issue4:
+     run_diffCells(conf)
+    else:
+        for diff_cells in conf.diffCellsL:
+            conf.diffCells = diff_cells
+            if (conf.chemFile == "monarch_cb05"):
+                conf.diffCells = "Ideal"
+
+            conf.columnDiffCells = ""
+            if len(conf.diffCellsL) > 1:
+                conf.columnDiffCells += conf.diffCells + " "
+
+            run_diff_cells(conf)
 
     end_time = time.perf_counter()
     time_s = end_time - start_time
     if time_s > 60:
         conf.savePlot = True
+    else:
+        conf.savePlot = False
 
-    if (len(conf.diffCellsL) == 1):
+    if len(conf.diffCellsL) == 1:
         conf.plotTitle += ", " + conf.diffCells + " test"
 
-    #plot_cases(conf)
-    plot_cases2(conf)
+    if issue4:
+        plot_cases2(conf)
+    else:
+        plot_cases(conf)
+
     del conf
 
 
