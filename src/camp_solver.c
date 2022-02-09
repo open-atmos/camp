@@ -821,12 +821,12 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
     if(sd->use_cpu==1){
       flag = CVode(sd->cvode_mem, (realtype)t_final, sd->y, &t_rt, CV_NORMAL);
     }else{
-      if(sd->use_f_cpu==1){
-        flag = CVode_gpu2(sd->cvode_mem, (realtype)t_final, sd->y,
-             &t_rt, CV_NORMAL, sd);
-      }else{
+      if(sd->use_gpu_cvode==1){
       flag = cudaCVode(sd->cvode_mem, (realtype)t_final, sd->y,
           &t_rt, CV_NORMAL, sd);
+      }else{
+      flag = CVode_gpu2(sd->cvode_mem, (realtype)t_final, sd->y,
+             &t_rt, CV_NORMAL, sd);
       }
     }
 
@@ -1634,7 +1634,7 @@ int f_gpu(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
   realtype time_step;
   int flag=0;
 
-  if(sd->use_f_cpu==1){
+  if(sd->use_gpu_cvode==0){
 
     flag = f(t, y, deriv, solver_data);
 

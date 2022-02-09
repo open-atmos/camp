@@ -1119,7 +1119,7 @@ int rxn_calc_deriv_gpu(SolverData *sd, N_Vector y, N_Vector deriv, double time_s
   double threshhold = -SMALL;
   int flag = CAMP_SOLVER_SUCCESS; //0
 
-  if(sd->use_f_cpu==1){
+  if(sd->use_gpu_cvode==0){
 
     HANDLE_ERROR(cudaMemcpy(mGPU->deriv_data, deriv_data, md->deriv_size, cudaMemcpyHostToDevice));
     HANDLE_ERROR(cudaMemcpy(mGPU->state, md->total_state, md->state_size, cudaMemcpyHostToDevice));

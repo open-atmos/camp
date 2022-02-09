@@ -294,7 +294,7 @@ typedef struct {
 #endif
 
   int use_cpu;
-  int use_f_cpu;
+  int use_gpu_cvode;
   int ncounters;
   int ntimers;
 

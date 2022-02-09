@@ -181,9 +181,8 @@ void get_camp_config_variables(SolverData *sd){
   if (fp == NULL){
     printf("Could not open file %s, setting use_cpu ON\n",path);
     sd->use_cpu=1;
-    sd->use_f_cpu=1;
+    sd->use_gpu_cvode=0;
   }else{
-
     fscanf(fp, "%s", buff);
     if(strstr(buff,"USE_CPU=ON")!=NULL){
       sd->use_cpu=1;
@@ -193,11 +192,11 @@ void get_camp_config_variables(SolverData *sd){
     }
 
     fscanf(fp, "%s", buff);
-    if(strstr(buff,"USE_F_CPU=ON")!=NULL){
-      sd->use_f_cpu=1;
+    if(strstr(buff,"USE_GPU_CVODE=ON")!=NULL){
+      sd->use_gpu_cvode=1;
     }
     else{
-      sd->use_f_cpu=0;
+      sd->use_gpu_cvode=0;
     }
     fclose(fp);
   }
