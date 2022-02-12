@@ -1120,11 +1120,18 @@ contains
     !camp_spec_names=camp_interface%monarch_species_names
     !unique_names=camp_interface%camp_core%unique_names()
     unique_names=camp_interface%camp_core%unique_names()
-    !camp_spec_names=unique_names
-    !camp_spec_names=camp_interface%camp_core%unique_names()
-    camp_spec_names=camp_interface%camp_core%spec_names
 
-    !print*,size(camp_interface%monarch_species_names),size(unique_names) !72,29
+    !print*,"unique_names",size(unique_names)
+
+    camp_spec_names=unique_names
+    !camp_spec_names=camp_interface%camp_core%unique_names()
+    !camp_spec_names=camp_interface%camp_core%spec_names
+
+    !todo improve import-export: Read concs from import instead from interface.json,
+    ! and ensure export makes something similar than the interface file
+
+    !print*,"monarch_species_names",size(camp_interface%monarch_species_names)
+    !print*,"state_size_per_cell",state_size_per_cell
     !print*, camp_interface%monarch_species_names(:)%string,&
     !        unique_names(:)%string
     do i=1, size(camp_spec_names)
@@ -1197,7 +1204,7 @@ contains
 
     close(IMPORT_FILE_UNIT)
 
-    !print*, "import_camp_input_json end"
+    print*, "import_camp_input_json end"
 
   end subroutine import_camp_input_json
 

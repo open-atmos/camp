@@ -2051,7 +2051,7 @@ void constructor_cvode_gpu(CVodeMem cv_mem, SolverData *sd)
 #endif
 
   cudaMemcpy(mGPU->mdv,&sd->mdv,sizeof(ModelDataVariable),cudaMemcpyHostToDevice);
-  cudaMemcpy(mGPU->mdvo,&sd->mdv,sizeof(ModelDataVariable),cudaMemcpyHostToDevice); //todo check this is fine for cudacvode
+  cudaMemcpy(mGPU->mdvo,&sd->mdv,sizeof(ModelDataVariable),cudaMemcpyHostToDevice); //todo check this is fine for cudacvod
 
   if(cv_mem->cv_sldeton){
     printf("ERROR: cudaDevicecvBDFStab is pending to implement "
@@ -4511,6 +4511,8 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
   ModelDataGPU *mGPU = &sd->mGPU;
   ModelData *md = &(sd->model_data);
   //double *youtArray = N_VGetArrayPointer(yout);
+
+  printf("cudaCVode start\n");
 
   /*
    * -------------------------------------

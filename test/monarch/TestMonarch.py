@@ -54,8 +54,6 @@ class TestMonarch:
 
     @chemFile.setter
     def chemFile(self, new_chemFile):
-        if new_chemFile not in self._chemFile:
-            raise
         self._chemFile = new_chemFile
 
     def __del__(self):
@@ -374,14 +372,14 @@ def plot_cases(conf):
     print(namex,":",datax)
     print(namey, ":", datay)
 
-    plot_functions.plot(namex, namey, datax, datay, conf.plotTitle, conf.legend, conf.savePlot)
+    #plot_functions.plot(namex, namey, datax, datay, conf.plotTitle, conf.legend, conf.savePlot)
 
 def all_timesteps():
     conf = TestMonarch()
 
-    # conf.chemFile="simple"
-    # conf.chemFile="monarch_cb05"
-    conf.chemFile = "monarch_binned"
+    # conf.chemFile = "simple"
+    conf.chemFile = "monarch_cb05"
+    #conf.chemFile = "monarch_binned"
 
     #conf.useGpuCvode = True
     conf.useGpuCvode = False
@@ -396,10 +394,10 @@ def all_timesteps():
     conf.mpi = "yes"
     # conf.mpi = "no"
 
-    #conf.mpiProcessesList = [1]
-    conf.mpiProcessesList = [40,1]
+    conf.mpiProcessesList = [1]
+    #conf.mpiProcessesList = [40,1]
 
-    conf.cells = [400,2000,4000] #8000, 12000
+    conf.cells = [100]
     #conf.cells = [100,1000]
     #conf.cells = [1,5,10,50,100]
     #conf.cells = [100,500,1000,5000,10000]
@@ -416,10 +414,10 @@ def all_timesteps():
     conf.casesOptim = []
     #conf.casesOptim.append("GPU Block-cellsNhalf")
     conf.casesOptim.append("GPU Block-cells1")
-    conf.casesOptim.append("GPU Block-cellsN")
-    conf.casesOptim.append("GPU Multi-cells")
+    #conf.casesOptim.append("GPU Block-cellsN")
+    #conf.casesOptim.append("GPU Multi-cells")
     #conf.casesOptim.append("GPU One-cell")
-    #conf.casesOptim.append("CPU Multi-cells")
+    conf.casesOptim.append("CPU Multi-cells")
 
     #conf.plotYKey = "Speedup timeCVode"
     #conf.plotYKey = "Speedup counterLS"
@@ -433,7 +431,7 @@ def all_timesteps():
     # conf.plotYKey = "Speedup normalized timecvStep"#not needed, is always normalized
     # conf.plotYKey = "Speedup device timecvStep"
     #conf.plotYKey = "Percentage data transfers CPU-GPU [%]"
-    # conf.plotYKey="MAPE"
+    #conf.plotYKey="MAPE"
     # conf.plotYKey="SMAPE"
     # conf.plotYKey="NRMSE"
     # conf.MAPETol=1.0E-6
@@ -455,7 +453,7 @@ def all_timesteps():
     if conf.chemFile == "monarch_cb05":
         conf.timeStepsDt = 3
         conf.diffCellsL = ["Ideal"]
-        if conf.useGpuCvode and (len(conf.casesOptim > 2) or conf.casesOptim[0] != "GPU Block-cells1") :
+        if conf.useGpuCvode and (len(conf.casesOptim) > 2 or conf.casesOptim[0] != "GPU Block-cells1") :
             print("Warning: Setting caseOptim to GPU Block-cells1, because useGpuCvode is enabled and it uses this option")
             conf.casesOptim = ["GPU Block-cells1"]
 
