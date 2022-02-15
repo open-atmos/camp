@@ -378,8 +378,8 @@ def all_timesteps():
     conf = TestMonarch()
 
     # conf.chemFile = "simple"
-    conf.chemFile = "monarch_cb05"
-    #conf.chemFile = "monarch_binned"
+    #conf.chemFile = "monarch_cb05"
+    conf.chemFile = "monarch_binned"
 
     #conf.useGpuCvode = True
     conf.useGpuCvode = False
@@ -394,11 +394,11 @@ def all_timesteps():
     conf.mpi = "yes"
     # conf.mpi = "no"
 
-    conf.mpiProcessesList = [1]
-    #conf.mpiProcessesList = [40,1]
+    #conf.mpiProcessesList = [1]
+    conf.mpiProcessesList = [40,1]
 
-    conf.cells = [100]
-    #conf.cells = [100,1000]
+    conf.cells = [1000]
+    #conf.cells = [100]
     #conf.cells = [1,5,10,50,100]
     #conf.cells = [100,500,1000,5000,10000]
 
@@ -417,7 +417,7 @@ def all_timesteps():
     #conf.casesOptim.append("GPU Block-cellsN")
     #conf.casesOptim.append("GPU Multi-cells")
     #conf.casesOptim.append("GPU One-cell")
-    conf.casesOptim.append("CPU Multi-cells")
+    #conf.casesOptim.append("CPU Multi-cells")
 
     #conf.plotYKey = "Speedup timeCVode"
     #conf.plotYKey = "Speedup counterLS"
@@ -427,7 +427,7 @@ def all_timesteps():
     #conf.plotYKey = "Speedup total iterations - counterBCG"
     # conf.plotYKey = "Speedup normalized counterBCG"
     # conf.plotYKey = "Speedup BCG iteration (Comp.timeLS/counterBCG)"
-    # conf.plotYKey = "Speedup timecvStep"
+    #conf.plotYKey = "Speedup timecvStep"
     # conf.plotYKey = "Speedup normalized timecvStep"#not needed, is always normalized
     # conf.plotYKey = "Speedup device timecvStep"
     #conf.plotYKey = "Percentage data transfers CPU-GPU [%]"

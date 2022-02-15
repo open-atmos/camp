@@ -732,11 +732,7 @@ __device__ void cudaDeviceSpmv(double* dx, double* db, int nrows, double* dA, in
 {
 
   __syncthreads();
-#ifndef CSR_SPMV
-  cudaDeviceSpmvCSR(dx,db,nrows,dA,djA,diA);
-#else
   cudaDeviceSpmvCSC_block(dx,db,nrows,dA,djA,diA,n_shr_empty);
-#endif
   __syncthreads();
 
 }
