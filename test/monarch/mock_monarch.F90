@@ -1089,12 +1089,16 @@ contains
     type(json_file) :: jfile
     type(json_core) :: json
     character(len=:), allocatable :: export_path, spec_name_json
-    character(len=128) :: mpi_rank_str, i_str
-    integer :: mpi_rank, id
     real(kind=dp) :: dt, temp, press, real_val
     type(string_t), allocatable :: camp_spec_names(:), unique_names(:)
     real, dimension(NUM_EBI_PHOTO_RXN) :: ebi_photo_rates
     integer, dimension(NUM_EBI_PHOTO_RXN) :: photo_id_camp
+    character(len=128) :: mpi_rank_str, i_str
+    integer :: mpi_rank, id
+    character, allocatable :: buffer(:)
+    integer :: max_spec_name_size=512
+    integer(kind=i_kind) :: pos, pack_size, size_state_per_cell
+    character(len=:), allocatable :: spec_name
 
     state_size_per_cell = camp_interface%camp_core%state_size_per_cell()
 
@@ -1111,24 +1115,62 @@ contains
             "JSON not found at ",export_path
 
     if (camp_mpi_rank().eq.0) then
-      write(*,*) "Importing camp input json"
+      write(*,*) "Importing camp input json from ", export_path
       if(n_cells.gt.1) then
         print*, "Importing data from a cell to the rest"
       end if
     end if
 
-    !camp_spec_names=camp_interface%monarch_species_names
-    !unique_names=camp_interface%camp_core%unique_names()
-    unique_names=camp_interface%camp_core%unique_names()
+    size_state_per_cell = camp_interface%camp_core%size_state_per_cell
+    mpi_rank = camp_mpi_rank()
+    if (mpi_rank.eq.0) then
 
-    !print*,"unique_names",size(unique_names)
+    !this%camp_spec_names = this%unique_names()
+    unique_names=camp_interface%camp_core%unique_names()
+    pack_size = 0
+
+    do z=1, size_state_per_cell
+      pack_size = pack_size +  camp_mpi_pack_size_string(trim(unique_names(z)%string))
+    end do
+
+    allocate(buffer(pack_size))
+    pos = 0
+
+    do z=1, size(unique_names)
+      call camp_mpi_pack_string(buffer, pos, trim(unique_names(z)%string))
+    end do
+
+    end if
+
+    ! broadcast the buffer size
+    call camp_mpi_bcast_integer(pack_size, MPI_COMM_WORLD)
+
+    if (mpi_rank.ne.0) then
+      ! allocate the buffer to receive data
+      allocate(buffer(pack_size))
+    end if
+
+    call camp_mpi_bcast_packed(buffer, MPI_COMM_WORLD)
+
+    if (mpi_rank.ne.0) then
+      pos = 0
+
+      allocate(unique_names(size_state_per_cell))
+      spec_name=""
+      do z=1,max_spec_name_size
+        spec_name=spec_name//" "
+      end do
+      do z=1, size_state_per_cell
+        call camp_mpi_unpack_string(buffer, pos, spec_name)
+        unique_names(z)%string= trim(spec_name)
+        !print*,this%spec_names(z)%string
+      end do
+
+    end if
+
+    deallocate(buffer)
 
     camp_spec_names=unique_names
-    !camp_spec_names=camp_interface%camp_core%unique_names()
-    !camp_spec_names=camp_interface%camp_core%spec_names
-
-    !todo improve import-export: Read concs from import instead from interface.json,
-    ! and ensure export makes something similar than the interface file
 
     !print*,"monarch_species_names",size(camp_interface%monarch_species_names)
     !print*,"state_size_per_cell",state_size_per_cell
@@ -1204,7 +1246,7 @@ contains
 
     close(IMPORT_FILE_UNIT)
 
-    print*, "import_camp_input_json end"
+    !print*, "import_camp_input_json end"
 
   end subroutine import_camp_input_json
 

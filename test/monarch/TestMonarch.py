@@ -19,18 +19,18 @@ from pathlib import Path
 class TestMonarch:
     def __init__(self):
         # Configuration
-        self._chemFile = "monarch_binned"  # Read.json
+        self._chemFile = "monarch_binned"
         self.useGpuCvode = False
-        self.diffCellsL = "Realistic"
+        self.diffCellsL = ""
         self.profileCuda = False
         self.mpi = "yes"
         self.mpiProcessesList = [1]
         self.cells = [100]
         self.timeSteps = 1
         self.timeStepsDt = 2
-        self.caseBase = "CPU Multi-cells"
-        self.casesOptim = ["GPU Block-cells1"]
-        self.plotYKey = "Speedup normalized timeLS"
+        self.caseBase = ""
+        self.casesOptim = [""]
+        self.plotYKey = ""
         self.MAPETol = 1.0E-4
         # Auxiliar
         self.diffCells = ""
@@ -378,11 +378,11 @@ def all_timesteps():
     conf = TestMonarch()
 
     # conf.chemFile = "simple"
-    #conf.chemFile = "monarch_cb05"
-    conf.chemFile = "monarch_binned"
+    conf.chemFile = "monarch_cb05"
+    #conf.chemFile = "monarch_binned"
 
-    #conf.useGpuCvode = True
-    conf.useGpuCvode = False
+    conf.useGpuCvode = True
+    #conf.useGpuCvode = False
 
     conf.diffCellsL = []
     conf.diffCellsL.append("Realistic")
@@ -397,7 +397,7 @@ def all_timesteps():
     #conf.mpiProcessesList = [1]
     conf.mpiProcessesList = [40,1]
 
-    conf.cells = [1000]
+    conf.cells = [400,800,4000]
     #conf.cells = [100]
     #conf.cells = [1,5,10,50,100]
     #conf.cells = [100,500,1000,5000,10000]
@@ -412,6 +412,7 @@ def all_timesteps():
     #conf.caseBase="GPU Block-cells1"
 
     conf.casesOptim = []
+    #conf.casesOptim.append("GPU DeviceCVODE")
     #conf.casesOptim.append("GPU Block-cellsNhalf")
     conf.casesOptim.append("GPU Block-cells1")
     #conf.casesOptim.append("GPU Block-cellsN")
@@ -421,13 +422,13 @@ def all_timesteps():
 
     #conf.plotYKey = "Speedup timeCVode"
     #conf.plotYKey = "Speedup counterLS"
-    conf.plotYKey = "Speedup normalized timeLS"
+    #conf.plotYKey = "Speedup normalized timeLS"
     # conf.plotYKey = "Speedup normalized computational timeLS"
     # conf.plotYKey = "Speedup counterBCG"
     #conf.plotYKey = "Speedup total iterations - counterBCG"
     # conf.plotYKey = "Speedup normalized counterBCG"
     # conf.plotYKey = "Speedup BCG iteration (Comp.timeLS/counterBCG)"
-    #conf.plotYKey = "Speedup timecvStep"
+    conf.plotYKey = "Speedup timecvStep"
     # conf.plotYKey = "Speedup normalized timecvStep"#not needed, is always normalized
     # conf.plotYKey = "Speedup device timecvStep"
     #conf.plotYKey = "Percentage data transfers CPU-GPU [%]"

@@ -2068,7 +2068,6 @@ contains
   type(string_t), allocatable :: spec_names(:)
   character, allocatable :: buffer(:)
   integer :: max_spec_name_size=512
-  CHARACTER(len=255) :: cwd
 
   real(kind=dp), allocatable :: base_rate(:)
 
