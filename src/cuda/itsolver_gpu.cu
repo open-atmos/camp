@@ -50,7 +50,7 @@ void createSolver(SolverData *sd)
   //Init variables ("public")
   int nrows = mGPU->nrows;
   int blocks = mGPU->blocks;
-  read_options(bicg);
+  if(sd->use_gpu_cvode==0) read_options(bicg);
   mGPU->maxIt=1000;
   mGPU->tolmax=1.0e-30; //cv_mem->cv_reltol CAMP selected accuracy (1e-8) //1e-10;//1e-6
 #ifndef CSR_SPMV_CPU

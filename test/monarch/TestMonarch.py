@@ -20,7 +20,6 @@ class TestMonarch:
     def __init__(self):
         # Configuration
         self._chemFile = "monarch_binned"
-        self.useGpuCvode = False
         self.diffCellsL = ""
         self.profileCuda = False
         self.mpi = "yes"
@@ -79,7 +78,7 @@ def write_camp_config_file(conf):
     else:
         file1.write("USE_CPU=OFF\n")
 
-    if conf.useGpuCvode:
+    if conf.caseMulticellsOnecell == "CVODE":
         if conf.chemFile == "monarch_binned":
             print("Warning: monarch_binned can not run GPU CVODE, disabling GPU CVODE ")
             file1.write("USE_GPU_CVODE=OFF\n")
@@ -257,20 +256,25 @@ def run_diffCells(conf):
         data = run_cells(conf)
         conf.datacolumns += data
 
+def getCaseName(conf):
+    if conf.caseMulticellsOnecell == "Block-cellsN":
+        case_multicells_onecell_name = "Block-cells (N)"
+    elif conf.caseMulticellsOnecell == "Block-cells1":
+        case_multicells_onecell_name = "Block-cells (1)"
+    elif conf.caseMulticellsOnecell == "Block-cellsNhalf":
+        case_multicells_onecell_name = "Block-cells (N/2)"
+    else:
+        case_multicells_onecell_name = conf.caseMulticellsOnecell
+
+    return case_multicells_onecell_name
+
 def plot_cases(conf):
 
     #Set plot info
     cases_words = conf.caseBase.split()
     conf.caseGpuCpu = cases_words[0]
     conf.caseMulticellsOnecell = cases_words[1]
-
-    case_multicells_onecell_name = conf.caseMulticellsOnecell
-    if conf.caseMulticellsOnecell== "Block-cellsN":
-        case_multicells_onecell_name = "Block-cells (N)"
-    elif conf.caseMulticellsOnecell == "Block-cells1":
-        case_multicells_onecell_name = "Block-cells (1)"
-    elif conf.caseMulticellsOnecell == "Block-cellsNhalf":
-        case_multicells_onecell_name = "Block-cells (N/2)"
+    case_multicells_onecell_name = getCaseName(conf)
 
     case_gpu_cpu_name = conf.caseGpuCpu
     if len(conf.mpiProcessesList) == 2 and conf.caseGpuCpu == "CPU":
@@ -294,15 +298,7 @@ def plot_cases(conf):
             cases_words = caseOptim.split()
             conf.caseGpuCpu = cases_words[0]
             conf.caseMulticellsOnecell = cases_words[1]
-
-            if conf.caseMulticellsOnecell== "Block-cellsN":
-                case_multicells_onecell_name = "Block-cells (N)"
-            elif conf.caseMulticellsOnecell == "Block-cells1":
-                case_multicells_onecell_name = "Block-cells (1)"
-            elif conf.caseMulticellsOnecell == "Block-cellsNhalf":
-                case_multicells_onecell_name = "Block-cells (N/2)"
-            else:
-                case_multicells_onecell_name = conf.caseMulticellsOnecell
+            case_multicells_onecell_name = getCaseName(conf)
 
             case_gpu_cpu_name = conf.caseGpuCpu
             if len(conf.mpiProcessesList) == 2 and conf.caseGpuCpu == "CPU":
@@ -372,7 +368,7 @@ def plot_cases(conf):
     print(namex,":",datax)
     print(namey, ":", datay)
 
-    #plot_functions.plot(namex, namey, datax, datay, conf.plotTitle, conf.legend, conf.savePlot)
+    plot_functions.plot(namex, namey, datax, datay, conf.plotTitle, conf.legend, conf.savePlot)
 
 def all_timesteps():
     conf = TestMonarch()
@@ -380,9 +376,6 @@ def all_timesteps():
     # conf.chemFile = "simple"
     conf.chemFile = "monarch_cb05"
     #conf.chemFile = "monarch_binned"
-
-    conf.useGpuCvode = True
-    #conf.useGpuCvode = False
 
     conf.diffCellsL = []
     conf.diffCellsL.append("Realistic")
@@ -394,13 +387,13 @@ def all_timesteps():
     conf.mpi = "yes"
     # conf.mpi = "no"
 
-    #conf.mpiProcessesList = [1]
-    conf.mpiProcessesList = [40,1]
+    conf.mpiProcessesList = [1]
+    #conf.mpiProcessesList = [40,1]
 
-    conf.cells = [400,800,4000]
+    #conf.cells = [100]
     #conf.cells = [100]
     #conf.cells = [1,5,10,50,100]
-    #conf.cells = [100,500,1000,5000,10000]
+    conf.cells = [100,500,1000,5000,10000]
 
     conf.timeSteps = 1
     conf.timeStepsDt = 2
@@ -412,7 +405,7 @@ def all_timesteps():
     #conf.caseBase="GPU Block-cells1"
 
     conf.casesOptim = []
-    #conf.casesOptim.append("GPU DeviceCVODE")
+    conf.casesOptim.append("GPU CVODE")
     #conf.casesOptim.append("GPU Block-cellsNhalf")
     conf.casesOptim.append("GPU Block-cells1")
     #conf.casesOptim.append("GPU Block-cellsN")
@@ -453,10 +446,12 @@ def all_timesteps():
 
     if conf.chemFile == "monarch_cb05":
         conf.timeStepsDt = 3
-        conf.diffCellsL = ["Ideal"]
-        if conf.useGpuCvode and (len(conf.casesOptim) > 2 or conf.casesOptim[0] != "GPU Block-cells1") :
-            print("Warning: Setting caseOptim to GPU Block-cells1, because useGpuCvode is enabled and it uses this option")
-            conf.casesOptim = ["GPU Block-cells1"]
+        if "Realistic" in conf.diffCellsL:
+            print ("Warning: chemFile == monarch_cb05 only works with Ideal test, setting test to Ideal")
+            conf.diffCellsL = ["Ideal"]
+        #if "GPU CVODE" in conf.useGpuCvode and (len(conf.casesOptim) > 2 or conf.casesOptim[0] != "GPU Block-cells1") :
+         #   print("Warning: Setting caseOptim to GPU Block-cells1, because useGpuCvode is enabled and it uses this option")
+          #   conf.casesOptim = ["GPU Block-cells1"]
 
     conf.isSameArquiOptim = True
     cases_words = conf.casesOptim[0].split()
