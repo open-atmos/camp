@@ -371,7 +371,7 @@ def plot_cases(conf):
     namex = plot_x_key
 
     print("plotTitle: ", conf.plotTitle, ", legend:", conf.legend)
-    print(namex,":",datax)
+    print(namex,":",datax) #TODO: print datax with max 2 decimals to better readibilty, instead of printing much more decimals
     print(namey, ":", datay)
 
     #plot_functions.plot(namex, namey, datax, datay, conf.plotTitle, conf.legend, conf.savePlot)
@@ -413,9 +413,9 @@ def all_timesteps():
     conf.casesOptim = []
     conf.casesOptim.append("GPU CVODE")
     #conf.casesOptim.append("GPU Block-cellsNhalf")
-    conf.casesOptim.append("GPU Block-cells1")
+    #conf.casesOptim.append("GPU Block-cells1")
     #conf.casesOptim.append("GPU Block-cellsN")
-    conf.casesOptim.append("GPU Multi-cells")
+    #conf.casesOptim.append("GPU Multi-cells")
     #conf.casesOptim.append("GPU One-cell")
     #conf.casesOptim.append("CPU Multi-cells")
 

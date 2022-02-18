@@ -353,6 +353,10 @@ def calculate_MAPE(data, timesteps, max_tol):
                 # print(name,out1[k],out2[k])
         MAPEs[j] = MAPE / n * 100
 
+    if concs_are_zero > concs_below_tol + concs_above_tol:
+        print ("Error: More concs are zero than real values, check for errors")
+        raise
+
     print("max_error:" + str(max_err * 100) + "%", "concs_above_tol", concs_above_tol,
           "concs_below_tol", concs_below_tol , "concs_are_zero", concs_are_zero)
     # print(NRMSEs)

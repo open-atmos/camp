@@ -119,4 +119,7 @@ Installation
         make
         make test
 
+Compile on [CTE-POWER](https://www.bsc.es/user-support/power.php) 
+============
 
+Go to folder camp/compile/power9/README.md for more instructions.

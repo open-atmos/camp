@@ -871,19 +871,11 @@ int CudaDeviceguess_helper(double t_n, double h_n, double* y_n,
 #endif
 
     // Scale incomplete jumps
-    /*
-    if (i_fast >= 0 && h_n > ZERO)
-      h_j *= 0.95 + 0.1 ;
-    //h_j *= 0.95 + 0.1 * rand() / (double)RAND_MAX;
-    h_j = t_n < t_0 + t_j + h_j ? t_n - (t_0 + t_j) : h_j;
-     */
 
     //if (i_fast >= 0 && h_n > 0.)
     if (h_n > 0.)
-      h_j *= 0.95 + 0.1; //todo use the same than cpu version( pull request 8 github)
-    //h_j *= 0.95 + 0.1 * rand() / (double)RAND_MAX;
+      h_j *= 0.95 + 0.1 * iter / (double)GUESS_MAX_ITER;
     h_j = t_n < t_0 + t_j + h_j ? t_n - (t_0 + t_j) : h_j;
-
 
     __syncthreads();
     // Only make small changes to adjustment vectors used in Newton iteration

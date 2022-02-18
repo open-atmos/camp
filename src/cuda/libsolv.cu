@@ -721,7 +721,7 @@ __device__ void cudaDeviceSpmvCSC_block(double* dx, double* db, int nrows, doubl
     {
       mult = db[row]*dA[j];
       //atomicAdd(&(dx[djA[j]]),mult);
-      atomicAdd(&(dx[djA[j]]),mult);
+      atomicAdd_block(&(dx[djA[j]]),mult);
 //		dx[djA[j]]+= db[row]*dA[j];
     }
   }
@@ -731,9 +731,7 @@ __device__ void cudaDeviceSpmvCSC_block(double* dx, double* db, int nrows, doubl
 __device__ void cudaDeviceSpmv(double* dx, double* db, int nrows, double* dA, int* djA, int* diA, int n_shr_empty)
 {
 
-  __syncthreads();
   cudaDeviceSpmvCSC_block(dx,db,nrows,dA,djA,diA,n_shr_empty);
-  __syncthreads();
 
 }
 
