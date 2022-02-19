@@ -396,7 +396,7 @@ def all_timesteps():
     conf.mpiProcessesList = [1]
     #conf.mpiProcessesList = [40,1]
 
-    conf.cells = [100]
+    conf.cells = [10,100]
     #conf.cells = [100]
     #conf.cells = [1,5,10,50,100]
     #conf.cells = [100,500,1000,5000,10000]
@@ -413,7 +413,7 @@ def all_timesteps():
     conf.casesOptim = []
     conf.casesOptim.append("GPU CVODE")
     #conf.casesOptim.append("GPU Block-cellsNhalf")
-    #conf.casesOptim.append("GPU Block-cells1")
+    conf.casesOptim.append("GPU Block-cells1")
     #conf.casesOptim.append("GPU Block-cellsN")
     #conf.casesOptim.append("GPU Multi-cells")
     #conf.casesOptim.append("GPU One-cell")
@@ -461,6 +461,10 @@ def all_timesteps():
         if "Realistic" in conf.diffCellsL:
             print ("Warning: chemFile == monarch_cb05 only works with Ideal test, setting test to Ideal")
             conf.diffCellsL = ["Ideal"]
+
+    if not conf.caseBase:
+        print("ERROR: caseBase is empty")
+        raise
 
     conf.isSameArquiOptim = True
     cases_words = conf.casesOptim[0].split()

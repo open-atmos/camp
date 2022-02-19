@@ -27,7 +27,7 @@ export JSON_FORTRAN_HOME=$(pwd)/../../../json-fortran-6.1.0/install/jsonfortran-
 #export GSL_HOME=${GSL_DIR}
 
 
-cd ../../.
+cd ../../
 rm -rf build
 mkdir build
 cd build
@@ -54,4 +54,4 @@ cmake -D CMAKE_C_COMPILER=$(which mpicc) \
 ..
 
 make -j 4 VERBOSE=1
-cd ../../camp/build/compile
+cd ../compile/power9
