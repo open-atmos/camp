@@ -224,9 +224,9 @@ def run_cases(conf):
             raise Exception("Not found plot function for conf.plotYKey")
 
         if len(conf.cells) > 1:  # Mean timeSteps
-            datacases.append(np.mean(datay))
+            datacases.append(round(np.mean(datay),2))
         else:
-            datacases.append(datay)
+            datacases.append([ round(elem, 2) for elem in datay ])
 
         data.pop(caseOptim)
 
@@ -371,10 +371,10 @@ def plot_cases(conf):
     namex = plot_x_key
 
     print("plotTitle: ", conf.plotTitle, ", legend:", conf.legend)
-    print(namex,":",datax) #TODO: print datax with max 2 decimals to better readibilty, instead of printing much more decimals
+    print(namex,":",datax)
     print(namey, ":", datay)
 
-    #plot_functions.plot(namex, namey, datax, datay, conf.plotTitle, conf.legend, conf.savePlot)
+    plot_functions.plot(namex, namey, datax, datay, conf.plotTitle, conf.legend, conf.savePlot)
 
 def all_timesteps():
     conf = TestMonarch()
@@ -491,6 +491,5 @@ def all_timesteps():
     plot_cases(conf)
 
     del conf
-
 
 all_timesteps()
