@@ -132,8 +132,6 @@ program mock_monarch_t
   real, allocatable  :: air_density(:, :, :)
   !> Air pressure (Pa)
   real, allocatable  :: pressure(:, :, :)
-  !> Cell height (m)
-  real :: height
 
   !> Emissions parameters
   !> Emission conversion parameter (mol s-1 m-2 to ppmv)
@@ -394,7 +392,7 @@ program mock_monarch_t
     endif
   end if
 
-  !call model_initialize(output_file_prefix)
+  call init_output_files(output_file_prefix)
 
   camp_interface => camp_monarch_interface_t(camp_input_file, interface_input_file, &
           START_CAMP_ID, END_CAMP_ID, n_cells, ADD_EMISIONS)!, n_cells
@@ -442,9 +440,9 @@ program mock_monarch_t
   if(interface_input_file.eq."interface_monarch_cb05.json") then
     !call import_camp_input(camp_interface)
     call import_camp_input_json(camp_interface)
+  else
+    call set_env(output_file_prefix)
   end if
-
-  call model_initialize(output_file_prefix)
 
 #ifdef SOLVE_EBI_IMPORT_CAMP_INPUT
   if (camp_mpi_rank().eq.0&
@@ -639,7 +637,7 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  subroutine model_initialize(file_prefix)
+  subroutine init_output_files(file_prefix)
 
     character(len=:), allocatable, intent(in) :: file_prefix
 
@@ -707,8 +705,22 @@ contains
     write(STATSOUT_FILE_UNIT2, "(A)", advance="no") str_stats_names
     write(STATSOUT_FILE_UNIT2, '(a)') ''
 
-    !species_conc(:,:,:,:) = 0.0
-    height=1. !(m)
+    call camp_mpi_barrier()
+
+    deallocate(file_name)
+    deallocate(aux_str)
+    deallocate(aux_str_py)
+
+  end subroutine
+
+  subroutine set_env(file_prefix)
+
+    character(len=:), allocatable, intent(in) :: file_prefix
+
+    character(len=:), allocatable :: file_name
+    integer :: z,o,i,j,k,r,i_cell,i_spec,mpi_size,ncells,tid,ncells_mpi
+    integer :: n_cells_print
+    real :: temp_init,press,press_init,press_end,press_range,press_slide
 
     if(ADD_EMISIONS.eq."monarch_binned") then
 
@@ -758,15 +770,13 @@ contains
 
       end if
 
-      !air_density(:,:,:) = pressure(:,:,:)/(287.04*temperature(:,:,:)* &
-      !        (1.+0.60813824*water_conc(:,:,:,WATER_VAPOR_ID))) !kg m-3
-      !conv=0.02897/air_density(1,1,1)*(TIME_STEP*60.)*1e6/height !units of time_step to seconds
+      air_density(:,:,:) = pressure(:,:,:)/(287.04*temperature(:,:,:)* &
+              (1.+0.60813824*water_conc(:,:,:,WATER_VAPOR_ID))) !kg m-3
+      conv=0.02897/air_density(1,1,1)*(TIME_STEP*60.)*1e6 !units of time_step to seconds
 
     else
 
-      temperature(:,:,:) = 300.614166259766
-      pressure(:,:,:) = 94165.7187500000
-      !air_density(:,:,:) = 1.225
+      air_density(:,:,:) = 1.225
 
       if(file_prefix.eq."out/monarch_mod37") then
         !water_conc(:,:,:,:) = 0.0
@@ -787,24 +797,19 @@ contains
           pressure(:,k,:) = pressure(:,k,:) - 6*k
         end do
 
-      !else
-       ! water_conc(:,:,:,WATER_VAPOR_ID) = 0.03
+        !else
+        ! water_conc(:,:,:,WATER_VAPOR_ID) = 0.03
       end if
 
     end if
 
-    air_density(:,:,:) = pressure(:,:,:)/(287.04*temperature(:,:,:)* &
-            (1.+0.60813824*water_conc(:,:,:,WATER_VAPOR_ID))) !kg m-3
-    conv=0.02897/air_density(1,1,1)*(TIME_STEP*60.)*1e6/height !units of time_step to seconds
+    !air_density(:,:,:) = pressure(:,:,:)/(287.04*temperature(:,:,:)* &
+    !        (1.+0.60813824*water_conc(:,:,:,WATER_VAPOR_ID))) !kg m-3
+    !conv=0.02897/air_density(1,1,1)*(TIME_STEP*60.)*1e6 !units of time_step to seconds
 
-    !print*,"model_initialize",camp_mpi_rank(),pressure
     call camp_mpi_barrier()
 
-    deallocate(file_name)
-    deallocate(aux_str)
-    deallocate(aux_str_py)
-
-  end subroutine model_initialize
+  end subroutine
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 

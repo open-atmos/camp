@@ -1279,7 +1279,7 @@ end if
 
   !> Get initial concentrations for the mock MONARCH model (for testing only)
   subroutine get_init_conc(this, MONARCH_conc, water_conc, &
-      WATER_VAPOR_ID, MONARCH_air_density,i_W,I_E,I_S,I_N,&
+      WATER_VAPOR_ID, air_density,i_W,I_E,I_S,I_N,&
           output_file_title)
 
     !> CAMP-camp <-> MONARCH interface
@@ -1291,7 +1291,7 @@ end if
     !> Index in water_conc corresponding to water vapor
     integer, intent(in) :: WATER_VAPOR_ID
     !> Air density (kg_air/m^3)
-    real, intent(inout) :: MONARCH_air_density(:,:,:)
+    real, intent(inout) :: air_density(:,:,:)
     integer, intent(in) :: i_W,I_E,I_S,I_N
     character(len=:), allocatable, intent(in) :: output_file_title
 
@@ -1304,11 +1304,10 @@ end if
 
     if(this%interface_input_file.eq."mod37/interface_monarch_mod37.json") then
 
-
       water_conc(:,:,:,WATER_VAPOR_ID) = 0.0
 
       ! Set the air density to a nominal value
-      MONARCH_air_density(:,:,:) = 1.225
+      air_density(:,:,:) = 1.225
 
       ! Set initial concentrations in CAMP
       this%camp_state%state_var(this%init_conc_camp_id(:)) = &
@@ -1350,7 +1349,7 @@ end if
       water_conc(:,:,:,:) = 0.0
       water_conc(:,:,:,WATER_VAPOR_ID) = 0.01
     elseif(output_file_title.eq."monarch_cb05") then
-      print*,"output_file_title.eq.monarch_cb05"
+      !print*,"output_file_title.eq.monarch_cb05"
       water_conc(:,:,:,WATER_VAPOR_ID) = 0.03
     end if
 
