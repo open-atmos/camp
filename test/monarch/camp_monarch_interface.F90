@@ -173,7 +173,7 @@ contains
       local_comm = MPI_COMM_WORLD
     endif
 #endif
-    ! Set the MPI rank (TODO replace with MONARCH param)
+
     MONARCH_PROCESS = camp_mpi_rank()
 
     ! Create a new interface object
@@ -298,7 +298,7 @@ contains
         pack_size = pack_size +  camp_mpi_pack_size_string(trim(this%monarch_species_names(z)%string))
       end do
 
-      if(this%ADD_EMISIONS.eq."ON" &
+      if(this%ADD_EMISIONS.eq."monarch_binned" &
               .or. this%interface_input_file.eq."interface_monarch_cb05.json") then
         pack_size = pack_size + camp_mpi_pack_size_integer(this%n_photo_rxn)
         do i = 1, this%n_photo_rxn
@@ -328,7 +328,7 @@ contains
         call camp_mpi_pack_string(buffer, pos, trim(this%monarch_species_names(z)%string))
       end do
 
-      if(this%ADD_EMISIONS.eq."ON" &
+      if(this%ADD_EMISIONS.eq."monarch_binned" &
         .or. this%interface_input_file.eq."interface_monarch_cb05.json") then
         call camp_mpi_pack_integer(buffer, pos, this%n_photo_rxn)
         do i = 1, this%n_photo_rxn
@@ -380,7 +380,7 @@ contains
         this%monarch_species_names(z)%string= trim(spec_name)
       end do
 
-      if(this%ADD_EMISIONS.eq."ON" &
+      if(this%ADD_EMISIONS.eq."monarch_binned" &
           .or. this%interface_input_file.eq."interface_monarch_cb05.json") then
         call camp_mpi_unpack_integer(buffer, pos, this%n_photo_rxn)
         if( allocated( this%photo_rxns  ) ) deallocate( this%photo_rxns  )
@@ -412,7 +412,7 @@ contains
 
     !call camp_mpi_barrier(MPI_COMM_WORLD)
 
-    if(this%ADD_EMISIONS.eq."ON" &
+    if(this%ADD_EMISIONS.eq."monarch_binned" &
     .or. this%interface_input_file.eq."interface_monarch_cb05.json") then
 
       !Options
@@ -563,7 +563,7 @@ contains
 
     NUM_VERT_CELLS = size(MONARCH_conc,3)
 
-    if(this%ADD_EMISIONS.eq."ON") then
+    if(this%ADD_EMISIONS.eq."monarch_binned") then
 
       call assert_msg(731700229, &
               this%camp_core%get_chem_spec_data(chem_spec_data), &
@@ -677,7 +677,7 @@ contains
 
             !print*, "water_conc: id, value", this%gas_phase_water_id, water_conc(i,j,k,water_vapor_index)
 
-            if(this%ADD_EMISIONS.eq."ON") then
+            if(this%ADD_EMISIONS.eq."monarch_binned") then
               !Add emissions
 
               do r=1,size(this%specs_emi_id)
@@ -762,7 +762,7 @@ contains
                       water_conc(1,1,1,water_vapor_index) * mwair / mwwat * 1.e6
             end if
 
-            if(this%ADD_EMISIONS.eq."ON") then
+            if(this%ADD_EMISIONS.eq."monarch_binned") then
               !Add emissions
               do r=1,size(this%specs_emi_id)
                 this%camp_state%state_var(this%specs_emi_id(r)+z*state_size_per_cell)=&
@@ -810,7 +810,7 @@ contains
 
     end if
 
-if(this%ADD_EMISIONS.eq."ON") then
+if(this%ADD_EMISIONS.eq."monarch_binned") then
   deallocate(rate_emi)
 end if
 
@@ -953,7 +953,7 @@ end if
     real(kind=dp) :: rate_val
     type(string_t), allocatable :: spec_names(:)
 
-    if(this%ADD_EMISIONS.eq."ON" &
+    if(this%ADD_EMISIONS.eq."monarch_binned" &
       .or. this%interface_input_file.eq."interface_monarch_cb05.json") then
 
       key = "MONARCH mod37"
@@ -1137,7 +1137,7 @@ end if
     type(string_t), allocatable :: spec_names(:)
     real :: factor_ppb_to_ppm
 
-    if(this%ADD_EMISIONS.eq."ON") then
+    if(this%ADD_EMISIONS.eq."monarch_binned") then
       factor_ppb_to_ppm=1.0E-3
     else
       factor_ppb_to_ppm=1.0
@@ -1278,20 +1278,22 @@ end if
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Get initial concentrations for the mock MONARCH model (for testing only)
-  subroutine get_init_conc(this, MONARCH_conc, MONARCH_water_conc, &
-      WATER_VAPOR_ID, MONARCH_air_density,i_W,I_E,I_S,I_N)
+  subroutine get_init_conc(this, MONARCH_conc, water_conc, &
+      WATER_VAPOR_ID, MONARCH_air_density,i_W,I_E,I_S,I_N,&
+          output_file_title)
 
     !> CAMP-camp <-> MONARCH interface
     class(camp_monarch_interface_t) :: this
     !> MONARCH species concentrations to update
     real, intent(inout) :: MONARCH_conc(:,:,:,:)
     !> Atmospheric water concentrations (kg_H2O/kg_air)
-    real, intent(inout) :: MONARCH_water_conc(:,:,:,:)
+    real, intent(inout) :: water_conc(:,:,:,:)
     !> Index in water_conc corresponding to water vapor
     integer, intent(in) :: WATER_VAPOR_ID
     !> Air density (kg_air/m^3)
     real, intent(inout) :: MONARCH_air_density(:,:,:)
     integer, intent(in) :: i_W,I_E,I_S,I_N
+    character(len=:), allocatable, intent(in) :: output_file_title
 
     integer(kind=i_kind) :: i_spec, water_id,i,j,k,r,NUM_VERT_CELLS,state_size_per_cell, last_cell
     real :: conc_deviation_perc
@@ -1303,7 +1305,7 @@ end if
     if(this%interface_input_file.eq."mod37/interface_monarch_mod37.json") then
 
 
-      MONARCH_water_conc(:,:,:,WATER_VAPOR_ID) = 0.0
+      water_conc(:,:,:,WATER_VAPOR_ID) = 0.0
 
       ! Set the air density to a nominal value
       MONARCH_air_density(:,:,:) = 1.225
@@ -1319,11 +1321,11 @@ end if
       end forall
 
       ! Set the relative humidity
-      MONARCH_water_conc(:,:,:,WATER_VAPOR_ID) = &
+      water_conc(:,:,:,WATER_VAPOR_ID) = &
               this%camp_state%state_var(this%gas_phase_water_id) * &
                       1.0d-9 / 1.225d0
 
-    else
+  else
 
     conc_deviation_perc=0.!0.2
     NUM_VERT_CELLS=size(MONARCH_conc,3)
@@ -1340,6 +1342,17 @@ end if
     call camp_mpi_barrier(MPI_COMM_WORLD)
 
     state_size_per_cell = this%camp_core%state_size_per_cell()
+
+    water_conc(:,:,:,WATER_VAPOR_ID) = 0.
+    if(this%ADD_EMISIONS.eq."monarch_binned") then
+      water_conc(:,:,:,WATER_VAPOR_ID) = 0.
+    elseif(output_file_title.eq."monarch_mod37") then
+      water_conc(:,:,:,:) = 0.0
+      water_conc(:,:,:,WATER_VAPOR_ID) = 0.01
+    elseif(output_file_title.eq."monarch_cb05") then
+      print*,"output_file_title.eq.monarch_cb05"
+      water_conc(:,:,:,WATER_VAPOR_ID) = 0.03
+    end if
 
     do i=i_W, I_E
       do j=I_S, I_N
@@ -1377,12 +1390,12 @@ end if
 
           if(this%interface_input_file.eq."interface_simple.json") then
             !Not much good water_conc implementation, tries to don't use monarch_1 case
-            MONARCH_water_conc(:,:,:,WATER_VAPOR_ID) = &
+            water_conc(:,:,:,WATER_VAPOR_ID) = &
                     this%camp_state%state_var(this%gas_phase_water_id +(r*state_size_per_cell)) !* &
             !                1.0d-9 / 1.225d0
           else
             this%camp_state%state_var(this%gas_phase_water_id +(r*state_size_per_cell)) = &
-                    MONARCH_water_conc(i,j,k,WATER_VAPOR_ID) * &
+                    water_conc(i,j,k,WATER_VAPOR_ID) * &
                             mwair / mwwat * 1.e6
           end if
 

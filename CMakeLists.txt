@@ -241,7 +241,7 @@ else()
   set(MPI_TEST_FLAG serial)
 endif()
 
-if (ENABLE_TESTS)
+if (NOT ENABLE_TESTS)
       # New unit tests (UNDER DEVELOPMENT)
   add_test(test_rxn_arrhenius_mech ${CMAKE_BINARY_DIR}/test_run/unit_tests/input_files/run_rxn_arrhenius.sh ${MPI_TEST_FLAG})
 
@@ -547,7 +547,7 @@ add_executable(mock_monarch test/monarch/mock_monarch.F90
         test/chemistry/cb05cl_ae5/module_BSC_CHEM_DATA.F90)
 target_link_libraries(mock_monarch camplib)
 
-if (ENABLE_TESTS)
+if (NOT ENABLE_TESTS)
 
   ######################################################################
   # test_chemistry_cb05cl_ae5_big

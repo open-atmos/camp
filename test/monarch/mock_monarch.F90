@@ -162,8 +162,7 @@ program mock_monarch_t
   !> CAMP-camp <-> MONARCH interface configuration file
   character(len=:), allocatable :: interface_input_file
   !> Results file prefix
-  character(len=:), allocatable :: output_file_prefix, output_file_title, str_to_int_aux,&
-          path_solver_stats
+  character(len=:), allocatable :: output_file_prefix, output_file_title, str_to_int_aux
   !> CAMP-chem input file file
   type(string_t), allocatable :: name_gas_species_to_print(:), name_aerosol_species_to_print(:)
   integer(kind=i_kind), allocatable :: id_gas_species_to_print(:), id_aerosol_species_to_print(:)
@@ -229,7 +228,7 @@ program mock_monarch_t
     TIME_STEP = 1.6 !1.6
     NUM_VERT_CELLS = 3
     n_cells = 1
-    output_file_title = "test_monarch_mod37"
+    output_file_title = "monarch_mod37"
 
   else
 
@@ -243,7 +242,7 @@ program mock_monarch_t
     interface_input_file = "interface_"//output_file_title//".json"
     output_file_prefix = "out/"//output_file_title
     if(output_file_title.eq."monarch_binned") then
-      ADD_EMISIONS = "ON"
+      ADD_EMISIONS = "monarch_binned"
     end if
 
     call jfile%get('nCells',NUM_VERT_CELLS)
@@ -313,7 +312,7 @@ program mock_monarch_t
       write(*,*) "Config complex (test 2)"
     end if
 
-    if(ADD_EMISIONS.eq."ON") then
+    if(ADD_EMISIONS.eq."monarch_binned") then
       plot_case=2
     else
       plot_case=0
@@ -395,8 +394,7 @@ program mock_monarch_t
     endif
   end if
 
-  call model_initialize(output_file_prefix)
-  path_solver_stats = output_file_prefix//"_solver_stats.csv"
+  !call model_initialize(output_file_prefix)
 
   camp_interface => camp_monarch_interface_t(camp_input_file, interface_input_file, &
           START_CAMP_ID, END_CAMP_ID, n_cells, ADD_EMISIONS)!, n_cells
@@ -439,12 +437,14 @@ program mock_monarch_t
 
   ! Set conc from mock_model
   call camp_interface%get_init_conc(species_conc, water_conc, WATER_VAPOR_ID, &
-          air_density,i_W,I_E,I_S,I_N)
+          air_density,i_W,I_E,I_S,I_N,output_file_title)
 
   if(interface_input_file.eq."interface_monarch_cb05.json") then
     !call import_camp_input(camp_interface)
     call import_camp_input_json(camp_interface)
   end if
+
+  call model_initialize(output_file_prefix)
 
 #ifdef SOLVE_EBI_IMPORT_CAMP_INPUT
   if (camp_mpi_rank().eq.0&
@@ -707,12 +707,12 @@ contains
     write(STATSOUT_FILE_UNIT2, "(A)", advance="no") str_stats_names
     write(STATSOUT_FILE_UNIT2, '(a)') ''
 
-    species_conc(:,:,:,:) = 0.0
+    !species_conc(:,:,:,:) = 0.0
     height=1. !(m)
 
-    if(ADD_EMISIONS.eq."ON") then
+    if(ADD_EMISIONS.eq."monarch_binned") then
 
-      water_conc(:,:,:,WATER_VAPOR_ID) = 0.
+      !water_conc(:,:,:,WATER_VAPOR_ID) = 0.
       temp_init = 290.016
       press_init = 100000. !Should be equal to camp_monarch_interface
 
@@ -758,20 +758,19 @@ contains
 
       end if
 
-      air_density(:,:,:) = pressure(:,:,:)/(287.04*temperature(:,:,:)* &
-              (1.+0.60813824*water_conc(:,:,:,WATER_VAPOR_ID))) !kg m-3
-      conv=0.02897/air_density(1,1,1)*(TIME_STEP*60.)*1e6/height !units of time_step to seconds
+      !air_density(:,:,:) = pressure(:,:,:)/(287.04*temperature(:,:,:)* &
+      !        (1.+0.60813824*water_conc(:,:,:,WATER_VAPOR_ID))) !kg m-3
+      !conv=0.02897/air_density(1,1,1)*(TIME_STEP*60.)*1e6/height !units of time_step to seconds
 
     else
 
       temperature(:,:,:) = 300.614166259766
       pressure(:,:,:) = 94165.7187500000
-      air_density(:,:,:) = 1.225
-      conv=0.02897/air_density(1,1,1)*(TIME_STEP*60.)*1e6/height !units of time_step to seconds
+      !air_density(:,:,:) = 1.225
 
       if(file_prefix.eq."out/monarch_mod37") then
-        water_conc(:,:,:,:) = 0.0
-        water_conc(:,:,:,WATER_VAPOR_ID) = 0.01
+        !water_conc(:,:,:,:) = 0.0
+        !water_conc(:,:,:,WATER_VAPOR_ID) = 0.01
 
         do i=I_W, I_E
           temperature(i,:,:) = temperature(i,:,:) + 0.1*i
@@ -788,11 +787,15 @@ contains
           pressure(:,k,:) = pressure(:,k,:) - 6*k
         end do
 
-      else
-        water_conc(:,:,:,WATER_VAPOR_ID) = 0.03
+      !else
+       ! water_conc(:,:,:,WATER_VAPOR_ID) = 0.03
       end if
 
     end if
+
+    air_density(:,:,:) = pressure(:,:,:)/(287.04*temperature(:,:,:)* &
+            (1.+0.60813824*water_conc(:,:,:,WATER_VAPOR_ID))) !kg m-3
+    conv=0.02897/air_density(1,1,1)*(TIME_STEP*60.)*1e6/height !units of time_step to seconds
 
     !print*,"model_initialize",camp_mpi_rank(),pressure
     call camp_mpi_barrier()
