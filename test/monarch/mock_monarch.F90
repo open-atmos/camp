@@ -434,15 +434,25 @@ program mock_monarch_t
   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   ! Set conc from mock_model
+
+  camp_interface%camp_state%state_var(:) = 0.0
+  species_conc(:,:,:,:) = 0.0
+  air_density(:,:,:) = 1.225
+  water_conc(:,:,:,WATER_VAPOR_ID) = 0.
+  if(output_file_title.eq."monarch_mod37") then
+    water_conc(:,:,:,WATER_VAPOR_ID) = 0.01
+  end if
+
+  !call set_env(camp_interface,output_file_prefix)
   call camp_interface%get_init_conc(species_conc, water_conc, WATER_VAPOR_ID, &
-          air_density,i_W,I_E,I_S,I_N,output_file_title)
+          i_W,I_E,I_S,I_N,output_file_title)
 
   if(interface_input_file.eq."interface_monarch_cb05.json") then
     !call import_camp_input(camp_interface)
     call import_camp_input_json(camp_interface)
-  else
-    call set_env(output_file_prefix)
   end if
+
+  call set_env(camp_interface,output_file_prefix)
 
 #ifdef SOLVE_EBI_IMPORT_CAMP_INPUT
   if (camp_mpi_rank().eq.0&
@@ -453,6 +463,8 @@ program mock_monarch_t
 
   !call camp_mpi_barrier(MPI_COMM_WORLD)
   !print*,"MPI RANK",camp_mpi_rank()
+
+  print*,"pressure", pressure
 
   ! Run the model
   do i_time=1, NUM_TIME_STEP
@@ -498,7 +510,7 @@ program mock_monarch_t
             conv,              &
             i_hour,&
             NUM_TIME_STEP,&
-            solver_stats,DIFF_CELLS)
+            solver_stats)
 
   else
 
@@ -713,8 +725,9 @@ contains
 
   end subroutine
 
-  subroutine set_env(file_prefix)
+  subroutine set_env(camp_interface,file_prefix)
 
+    type(camp_monarch_interface_t), intent(inout) :: camp_interface
     character(len=:), allocatable, intent(in) :: file_prefix
 
     character(len=:), allocatable :: file_name
@@ -722,90 +735,61 @@ contains
     integer :: n_cells_print
     real :: temp_init,press,press_init,press_end,press_range,press_slide
 
-    if(ADD_EMISIONS.eq."monarch_binned") then
+    temp_init = 290.016
+    press_init = 100000. !Should be equal to camp_monarch_interface
 
-      !water_conc(:,:,:,WATER_VAPOR_ID) = 0.
-      temp_init = 290.016
-      press_init = 100000. !Should be equal to camp_monarch_interface
+    if(DIFF_CELLS.eq."ON") then
 
-      if(DIFF_CELLS.eq."ON") then
-
-        ncells=(I_E - I_W+1)*(I_N - I_S+1)*NUM_VERT_CELLS
+      ncells=(I_E - I_W+1)*(I_N - I_S+1)*NUM_VERT_CELLS
 
 #ifdef CAMP_USE_MPI
-        mpi_size=camp_mpi_size()
-        tid=camp_mpi_rank()
-        ncells_mpi=ncells*mpi_size
+      mpi_size=camp_mpi_size()
+      tid=camp_mpi_rank()
+      ncells_mpi=ncells*mpi_size
 #else
-        mpi_size=1
-        tid=0
-        ncells_mpi=ncells
+      mpi_size=1
+      tid=0
+      ncells_mpi=ncells
 #endif
 
-        press_end = 10000.
-        press_range = press_end-press_init
-        if((ncells_mpi).eq.1) then
-          press_slide = 0.
-        else
-          press_slide = press_range/(ncells_mpi-1)
-        end if
+      press_end = 10000.
+      press_range = press_end-press_init
+      if((ncells_mpi).eq.1) then
+        press_slide = 0.
+      else
+        press_slide = press_range/(ncells_mpi-1)
+      end if
 
-        do i=I_W,I_E
-          do j=I_S,I_N
-            do k=1,NUM_VERT_CELLS
-              o = (j-1)*(I_E) + (i-1) !Index to 3D
-              z = (k-1)*(I_E*I_N) + o !Index for 2D
-              z = tid*ncells+z
+      do i=I_W,I_E
+        do j=I_S,I_N
+          do k=1,NUM_VERT_CELLS
+            o = (j-1)*(I_E) + (i-1) !Index to 3D
+            z = (k-1)*(I_E*I_N) + o !Index for 2D
+            z = tid*ncells+z
 
-              pressure(i,j,k)=press_init+press_slide*z
-              temperature(i,j,k)=temp_init*((pressure(i,j,k)/press_init)**(287./1004.)) !dry_adiabatic formula
+            pressure(i,j,k)=press_init+press_slide*z
+            temperature(i,j,k)=temp_init*((pressure(i,j,k)/press_init)**(287./1004.)) !dry_adiabatic formula
 
-            end do
           end do
         end do
-      else
+      end do
 
+    else
+
+      if(ADD_EMISIONS.eq."monarch_binned") then
         temperature(:,:,:) = temp_init
         pressure(:,:,:) = press_init
-
       end if
+
+    end if
+
+    if(ADD_EMISIONS.eq."monarch_binned") then
 
       air_density(:,:,:) = pressure(:,:,:)/(287.04*temperature(:,:,:)* &
               (1.+0.60813824*water_conc(:,:,:,WATER_VAPOR_ID))) !kg m-3
       conv=0.02897/air_density(1,1,1)*(TIME_STEP*60.)*1e6 !units of time_step to seconds
 
-    else
-
-      air_density(:,:,:) = 1.225
-
-      if(file_prefix.eq."out/monarch_mod37") then
-        !water_conc(:,:,:,:) = 0.0
-        !water_conc(:,:,:,WATER_VAPOR_ID) = 0.01
-
-        do i=I_W, I_E
-          temperature(i,:,:) = temperature(i,:,:) + 0.1*i
-          pressure(i,:,:) = pressure(i,:,:) - 1*i
-        end do
-
-        do j=I_S, I_N
-          temperature(:,j,:) = temperature(:,j,:) + 0.3*j
-          pressure(:,:,j) = pressure(:,:,j) - 3*j
-        end do
-
-        do k=1, NUM_VERT_CELLS
-          temperature(:,:,k) = temperature(:,:,k) + 0.6*k
-          pressure(:,k,:) = pressure(:,k,:) - 6*k
-        end do
-
-        !else
-        ! water_conc(:,:,:,WATER_VAPOR_ID) = 0.03
-      end if
-
     end if
-
-    !air_density(:,:,:) = pressure(:,:,:)/(287.04*temperature(:,:,:)* &
-    !        (1.+0.60813824*water_conc(:,:,:,WATER_VAPOR_ID))) !kg m-3
-    !conv=0.02897/air_density(1,1,1)*(TIME_STEP*60.)*1e6 !units of time_step to seconds
 
     call camp_mpi_barrier()
 
@@ -1179,7 +1163,6 @@ contains
     deallocate(buffer)
 
     camp_spec_names=unique_names
-
     !print*,"monarch_species_names",size(camp_interface%monarch_species_names)
     !print*,"state_size_per_cell",state_size_per_cell
     !print*, camp_interface%monarch_species_names(:)%string,&

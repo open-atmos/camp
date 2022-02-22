@@ -384,7 +384,7 @@ def all_timesteps():
     #conf.chemFile = "monarch_binned"
 
     conf.diffCellsL = []
-    #conf.diffCellsL.append("Realistic")
+    conf.diffCellsL.append("Realistic")
     conf.diffCellsL.append("Ideal")
 
     conf.profileCuda = False
@@ -458,9 +458,9 @@ def all_timesteps():
         if conf.timeStepsDt != 3:
             print ("Warning: Setting timeStepsDt to 3, since it is the usual value for the measures with monarch_cb05")
         conf.timeStepsDt = 3
-        if "Realistic" in conf.diffCellsL:
-            print ("Warning: chemFile == monarch_cb05 only works with Ideal test, setting test to Ideal")
-            conf.diffCellsL = ["Ideal"]
+        #if "Realistic" in conf.diffCellsL:
+          #  print ("Warning: chemFile == monarch_cb05 only works with Ideal test, setting test to Ideal")
+           # conf.diffCellsL = ["Ideal"]
 
     if not conf.caseBase:
         print("ERROR: caseBase is empty")

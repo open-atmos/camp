@@ -1279,7 +1279,7 @@ end if
 
   !> Get initial concentrations for the mock MONARCH model (for testing only)
   subroutine get_init_conc(this, MONARCH_conc, water_conc, &
-      WATER_VAPOR_ID, air_density,i_W,I_E,I_S,I_N,&
+      WATER_VAPOR_ID,i_W,I_E,I_S,I_N,&
           output_file_title)
 
     !> CAMP-camp <-> MONARCH interface
@@ -1290,24 +1290,13 @@ end if
     real, intent(inout) :: water_conc(:,:,:,:)
     !> Index in water_conc corresponding to water vapor
     integer, intent(in) :: WATER_VAPOR_ID
-    !> Air density (kg_air/m^3)
-    real, intent(inout) :: air_density(:,:,:)
     integer, intent(in) :: i_W,I_E,I_S,I_N
     character(len=:), allocatable, intent(in) :: output_file_title
 
     integer(kind=i_kind) :: i_spec, water_id,i,j,k,r,NUM_VERT_CELLS,state_size_per_cell, last_cell
     real :: conc_deviation_perc
 
-    ! Reset the species concentrations in CAMP and MONARCH
-    this%camp_state%state_var(:) = 0.0
-    MONARCH_conc(:,:,:,:) = 0.0
-
     if(this%interface_input_file.eq."mod37/interface_monarch_mod37.json") then
-
-      water_conc(:,:,:,WATER_VAPOR_ID) = 0.0
-
-      ! Set the air density to a nominal value
-      air_density(:,:,:) = 1.225
 
       ! Set initial concentrations in CAMP
       this%camp_state%state_var(this%init_conc_camp_id(:)) = &
@@ -1341,17 +1330,6 @@ end if
     call camp_mpi_barrier(MPI_COMM_WORLD)
 
     state_size_per_cell = this%camp_core%state_size_per_cell()
-
-    water_conc(:,:,:,WATER_VAPOR_ID) = 0.
-    if(this%ADD_EMISIONS.eq."monarch_binned") then
-      water_conc(:,:,:,WATER_VAPOR_ID) = 0.
-    elseif(output_file_title.eq."monarch_mod37") then
-      water_conc(:,:,:,:) = 0.0
-      water_conc(:,:,:,WATER_VAPOR_ID) = 0.01
-    elseif(output_file_title.eq."monarch_cb05") then
-      !print*,"output_file_title.eq.monarch_cb05"
-      water_conc(:,:,:,WATER_VAPOR_ID) = 0.03
-    end if
 
     do i=i_W, I_E
       do j=I_S, I_N
@@ -1388,7 +1366,6 @@ end if
           !MONARCH_conc(i,j,k,:) = MONARCH_conc(1,1,1,:)
 
           if(this%interface_input_file.eq."interface_simple.json") then
-            !Not much good water_conc implementation, tries to don't use monarch_1 case
             water_conc(:,:,:,WATER_VAPOR_ID) = &
                     this%camp_state%state_var(this%gas_phase_water_id +(r*state_size_per_cell)) !* &
             !                1.0d-9 / 1.225d0
@@ -1411,9 +1388,7 @@ end if
 
     end if
 
-    !print*,"get_init_conc"
-
-    !print*,"get_init_conc this%camp_state%state_var2",this%camp_state%state_var(1), camp_mpi_rank()
+    !print*,"get_init_conc end"
 
   end subroutine get_init_conc
 
@@ -1436,7 +1411,7 @@ end if
   subroutine integrate_mod37(this, start_time, time_step, i_start, i_end, j_start, &
           j_end, temperature, MONARCH_conc, water_conc, &
           water_vapor_index, air_density, pressure,conv, i_hour,&
-          NUM_TIME_STEP,solver_stats, DIFF_CELLS)
+          NUM_TIME_STEP,solver_stats)
 
     !> CAMP-camp <-> MONARCH interface
     class(camp_monarch_interface_t) :: this
@@ -1471,7 +1446,6 @@ end if
     real, intent(in) :: conv
     integer, intent(inout) :: i_hour
     integer, intent(in) :: NUM_TIME_STEP
-    character(len=*),intent(in) :: DIFF_CELLS
 
     type(chem_spec_data_t), pointer :: chem_spec_data
 
