@@ -374,7 +374,7 @@ def plot_cases(conf):
     print(namex,":",datax)
     print(namey, ":", datay)
 
-    plot_functions.plot(namex, namey, datax, datay, conf.plotTitle, conf.legend, conf.savePlot)
+    #plot_functions.plot(namex, namey, datax, datay, conf.plotTitle, conf.legend, conf.savePlot)
 
 def all_timesteps():
     conf = TestMonarch()
@@ -396,24 +396,24 @@ def all_timesteps():
     conf.mpiProcessesList = [1]
     #conf.mpiProcessesList = [40,1]
 
-    conf.cells = [10,100]
-    #conf.cells = [100]
+    conf.cells = [100]
+    #conf.cells = [1000,10000]
     #conf.cells = [1,5,10,50,100]
     #conf.cells = [100,500,1000,5000,10000]
 
     conf.timeSteps = 1
     conf.timeStepsDt = 3
 
-    conf.caseBase = "CPU One-cell"
+    #conf.caseBase = "CPU One-cell"
     #conf.caseBase = "CPU Multi-cells"
     # conf.caseBase="GPU Multi-cells"
     #conf.caseBase="GPU Block-cellsN"
-    #conf.caseBase="GPU Block-cells1"
+    conf.caseBase="GPU Block-cells1"
 
     conf.casesOptim = []
     conf.casesOptim.append("GPU CVODE")
     #conf.casesOptim.append("GPU Block-cellsNhalf")
-    conf.casesOptim.append("GPU Block-cells1")
+    #conf.casesOptim.append("GPU Block-cells1")
     #conf.casesOptim.append("GPU Block-cellsN")
     #conf.casesOptim.append("GPU Multi-cells")
     #conf.casesOptim.append("GPU One-cell")
@@ -427,11 +427,11 @@ def all_timesteps():
     #conf.plotYKey = "Speedup total iterations - counterBCG"
     # conf.plotYKey = "Speedup normalized counterBCG"
     # conf.plotYKey = "Speedup BCG iteration (Comp.timeLS/counterBCG)"
-    conf.plotYKey = "Speedup timecvStep"
+    #conf.plotYKey = "Speedup timecvStep"
     # conf.plotYKey = "Speedup normalized timecvStep"#not needed, is always normalized
     # conf.plotYKey = "Speedup device timecvStep"
     #conf.plotYKey = "Percentage data transfers CPU-GPU [%]"
-    #conf.plotYKey="MAPE"
+    conf.plotYKey="MAPE"
     # conf.plotYKey="SMAPE"
     # conf.plotYKey="NRMSE"
     # conf.MAPETol=1.0E-6

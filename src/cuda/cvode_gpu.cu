@@ -1823,14 +1823,14 @@ void solveBcgCudaDeviceCVODE(
 
     //if(it>=maxIt-1)
     //  dvcheck_input_gpud(dr0,nrows,999);
-
     //dvcheck_input_gpud(dr0,nrows,k++);
-
 
 #ifdef CAMP_DEBUG_GPU
 
   dmdv->counterBCGInternal += it;
   dmdv->counterBCG++;
+
+  //if(threadIdx.x==0)printf("counterBCGInternal %d blockIdx.x %d it %d\n",dmdv->counterBCGInternal,blockIdx.x, it);
 
 #endif
 

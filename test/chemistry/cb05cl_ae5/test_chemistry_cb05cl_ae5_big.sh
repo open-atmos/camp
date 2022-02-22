@@ -65,10 +65,13 @@ if $READ_NETCDF ; then
       echo "${i[$id]},${j[$id]},${k[$id]},\
   ${t[$id]},${i_n[$id]},${j_n[$id]},${k_n[$id]},${t_n[$id]},1" >> ../../../../../profile_stats.csv
 
-
-  # Original
-      exec_str="../../../test_chemistry_cb05cl_ae5_big ${i[$id]} ${j[$id]} ${k[$id]} \
-  ${t[$id]} ${i_n[$id]} ${j_n[$id]} ${k_n[$id]} ${t_n[$id]}"
+     if [ -z ${SLURM_TASK_PID+x} ]; then
+        exec_str="../../../test_chemistry_cb05cl_ae5_big ${i[$id]} ${j[$id]} ${k[$id]} \
+    ${t[$id]} ${i_n[$id]} ${j_n[$id]} ${k_n[$id]} ${t_n[$id]}"
+    else
+      exec_str="mpirun -v -np 1 --bind-to none  ../../../test_chemistry_cb05cl_ae5_big ${i[$id]} ${j[$id]} ${k[$id]} \
+    ${t[$id]} ${i_n[$id]} ${j_n[$id]} ${k_n[$id]} ${t_n[$id]}"
+    fi
 
   #need cd to directory, and the info isn't completed (missing cvode and cuda)
   #    exec_str="gprof ../../../test_chemistry_cb05cl_ae5_big ${i[$id]} ${j[$id]} ${k[$id]} \

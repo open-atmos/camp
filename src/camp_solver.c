@@ -2723,7 +2723,7 @@ void solver_free(void *solver_data) {
 #endif
 
 #ifdef CAMP_USE_GPU
-  free_ode_gpu2(sd);
+  if(sd->use_cpu==0) free_ode_gpu2(sd);
 #endif
 
 }

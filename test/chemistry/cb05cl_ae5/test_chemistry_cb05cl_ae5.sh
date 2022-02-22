@@ -14,7 +14,13 @@ while [ true ]
 do
   echo Attempt $counter
 
-if ! ../../../test_chemistry_cb05cl_ae5; then 
+  if [ -z ${SLURM_TASK_PID+x} ]; then
+    exec_str="../../../test_chemistry_cb05cl_ae5"
+  else
+    exec_str="mpirun -v -np 1 --bind-to none  ../../../test_chemistry_cb05cl_ae5"
+  fi
+
+if ! $exec_str; then
 	  echo Failure "$counter"
 	  if [ "$counter" -gt 0 ]
 	  then

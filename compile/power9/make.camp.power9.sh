@@ -22,10 +22,14 @@ cd test_run/monarch
 FILE=TestMonarch.py
 if test -f "$FILE"; then
   python $FILE
+  cd ../../
+
   #./test_monarch_1.sh MPI
+  #./test_run/chemistry/cb05cl_ae5/test_chemistry_cb05cl_ae5.sh
+  #./unit_test_aero_rep_single_particle
 else
   echo "Running old commits with file test_monarch_1.py ."
   python test_monarch_1.py
 fi
 
-cd ../../../../camp/compile/power9
+cd ../../camp/compile/power9

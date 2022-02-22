@@ -118,6 +118,8 @@ program camp_test_cb05cl_ae5
   close(DEBUG_UNIT)
 #endif
 
+  call camp_mpi_finalize()
+
 contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

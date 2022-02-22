@@ -88,6 +88,8 @@ program camp_test_cb05cl_ae5
   close(DEBUG_UNIT)
 #endif
 
+  call camp_mpi_finalize()
+
 contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -208,8 +210,8 @@ contains
 
     KPP_ICNTRL( : ) = 0
 
-    temperature = 272.5 !v9:202.9565 !v48:297.93 !orig:272.5
-    pressure = 0.8 !v9:0.1456779 !v48:0.998 !orig:0.8
+    temperature = 272.5
+    pressure = 0.8
     water_conc = 0.0 ! (Set by CAMP-chem initial concentration)
 
     passed = .false.
