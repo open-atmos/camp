@@ -464,8 +464,6 @@ program mock_monarch_t
   !call camp_mpi_barrier(MPI_COMM_WORLD)
   !print*,"MPI RANK",camp_mpi_rank()
 
-  print*,"pressure", pressure
-
   ! Run the model
   do i_time=1, NUM_TIME_STEP
 
