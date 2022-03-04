@@ -435,8 +435,8 @@ def calculate_speedup(data, plot_y_key):
     base_data = data[cases[0]][plot_y_key]
     new_data = data[cases[1]][plot_y_key]
 
-    # print(plot_y_key)
-    #print("calculate_speedup",data)
+    #print("calculate_speedup start",data)
+    #print(plot_y_key)
 
     # data[new_plot_y_key] = data.get(new_plot_y_key,[])
     datay = [0.] * len(base_data)
@@ -444,7 +444,7 @@ def calculate_speedup(data, plot_y_key):
         # print(base_data[i],new_data[i], base_data[i]/new_data[i])
         datay[i] = base_data[i] / new_data[i]
 
-    # print(data)
+    print(datay)
 
     return datay
 

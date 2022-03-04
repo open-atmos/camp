@@ -1640,20 +1640,8 @@ void solveBcgCudaDeviceCVODE(
     rho0   = 1.0;
     omega0 = 1.0;*/
 
-    //gpu_yequalsconst(dn0,0.0,nrows,blocks,threads);  //n0=0.0 //memset???
-    //gpu_yequalsconst(dp0,0.0,nrows,blocks,threads);  //p0=0.0
     cudaDevicesetconst(dn0, 0.0, nrows);
     cudaDevicesetconst(dp0, 0.0, nrows);
-
-    //Not needed
-    /*
-    cudaDevicesetconst(dr0h, 0.0, nrows);
-    cudaDevicesetconst(dt, 0.0, nrows);
-    cudaDevicesetconst(ds, 0.0, nrows);
-    cudaDevicesetconst(dAx2, 0.0, nrows);
-    cudaDevicesetconst(dy, 0.0, nrows);
-    cudaDevicesetconst(dz, 0.0, nrows);
-     */
 
     __syncthreads();
     cudaDeviceSpmv(dr0,dx,nrows,dA,djA,diA,n_shr_empty); //y=A*x
@@ -2230,7 +2218,6 @@ int cudaDevicecvNewtonIteration(
 
 #ifdef CAMP_DEBUG_GPU
 
-    //Useful for %: https://stackoverflow.com/questions/19527038/how-to-measure-the-time-of-the-device-functions-when-they-are-called-in-kernel-f
     start = clock();
 
 #endif
@@ -2593,7 +2580,6 @@ int cudaDevicecvNlsNewton(
 #endif
 #endif
 
-      //if (i == 0)
       dmdv->cv_nsetups++; //needed?
       callSetup = 0;
       dmdv->cv_gamrat = dmdv->cv_crate = 1.0;
@@ -2670,7 +2656,7 @@ int cudaDevicecvNlsNewton(
     __syncthreads();
 
 
-  }//for(;;)
+  } //for(;;)
 
   //if(threadIdx.x==0)printf("cudaDevicecvNlsNewton2 flag_shr[0] %d block %d\n",flag_shr[0], blockIdx.x);
 

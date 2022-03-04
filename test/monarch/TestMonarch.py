@@ -172,8 +172,6 @@ def run_case(conf):
                 data[y_key][i] = data[y_key][i] \
                               / data["countercvStep"][i] * cells_multiply
 
-
-
         else:
             raise Exception("Unkown normalized case", y_key)
 
@@ -187,6 +185,8 @@ def run_case(conf):
         for j in range(len(data["timeLS"])):
             data["timeLS"][j] = data["timeLS"][j] \
                                             / data["counterBCG"][j]
+
+    print("run_case end data",data)
 
     return data
 
@@ -402,7 +402,7 @@ def all_timesteps():
     #conf.chemFile = "monarch_binned"
 
     conf.diffCellsL = []
-    conf.diffCellsL.append("Realistic")
+    #conf.diffCellsL.append("Realistic")
     conf.diffCellsL.append("Ideal")
 
     conf.profileCuda = False
@@ -422,8 +422,8 @@ def all_timesteps():
     conf.timeSteps = 1
     conf.timeStepsDt = 3
 
-    conf.caseBase = "CPU One-cell"
-    #conf.caseBase = "CPU Multi-cells"
+    #conf.caseBase = "CPU One-cell"
+    conf.caseBase = "CPU Multi-cells"
     # conf.caseBase="GPU Multi-cells"
     #conf.caseBase="GPU Block-cellsN"
     #conf.caseBase="GPU Block-cells1"
@@ -445,8 +445,9 @@ def all_timesteps():
     #conf.plotYKey = "Speedup total iterations - counterBCG"
     # conf.plotYKey = "Speedup normalized counterBCG"
     # conf.plotYKey = "Speedup BCG iteration (Comp.timeLS/counterBCG)"
-    conf.plotYKey = "Speedup timecvStep"
+    #conf.plotYKey = "Speedup timecvStep"
     #conf.plotYKey = "Speedup normalized timecvStep"
+    conf.plotYKey = "Speedup countercvStep"
     # conf.plotYKey = "Speedup device timecvStep"
     #conf.plotYKey = "Percentage data transfers CPU-GPU [%]"
     #conf.plotYKey="MAPE"
