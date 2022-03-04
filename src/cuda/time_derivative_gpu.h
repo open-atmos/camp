@@ -1,13 +1,8 @@
-/* Copyright (C) 2019 Matthew Dawson
- * Licensed under the GNU General Public License version 2 or (at your
- * option) any later version. See the file COPYING for details.
- *
- * Header for the time derivative structure and related functions
- *
+/* Copyright (C) 2021 Barcelona Supercomputing Center and University of
+ * Illinois at Urbana-Champaign
+ * SPDX-License-Identifier: MIT
  */
-/** \file
- * \brief Header for the time derivative structure and related functions
- */
+
 #ifndef TIME_DERIVATIVE_H_GPU
 #define TIME_DERIVATIVE_H_GPU
 

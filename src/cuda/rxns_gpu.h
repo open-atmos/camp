@@ -1,14 +1,8 @@
-/* Copyright (C) 2019 Christian Guzman
- * Licensed under the GNU General Public License version 1 or (at your
- * option) any later version. See the file COPYING for details.
- *
- * Header file for reaction functions
- *
- *
-*/
-/** \file
- * \brief Header file for reaction solver functions
-*/
+/* Copyright (C) 2021 Barcelona Supercomputing Center and University of
+ * Illinois at Urbana-Champaign
+ * SPDX-License-Identifier: MIT
+ */
+
 #ifndef RXNS_H_
 #define RXNS_H_
 #include "camp_gpu_solver.h"

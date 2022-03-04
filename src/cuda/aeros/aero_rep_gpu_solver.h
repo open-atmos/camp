@@ -1,12 +1,8 @@
-/* Copyright (C) 2019 Christian Guzman
- * Licensed under the GNU General Public License version 1 or (at your
- * option) any later version. See the file COPYING for details.
- *
- * Header for aerosol representations functions
+/* Copyright (C) 2021 Barcelona Supercomputing Center and University of
+ * Illinois at Urbana-Champaign
+ * SPDX-License-Identifier: MIT
  */
-/** \file
- * \brief Header file for abstract aerosol representation functions
- */
+
 #ifndef aero_rep_gpu_SOLVER_H
 #define aero_rep_gpu_SOLVER_H
 #include "../camp_gpu_solver.h"

@@ -1,9 +1,6 @@
-/* Copyright (C) 2019 Christian Guzman
- * Licensed under the GNU General Public License version 1 or (at your
- * option) any later version. See the file COPYING for details.
- *
- * Header file for solver functions
- *
+/* Copyright (C) 2021 Barcelona Supercomputing Center and University of
+ * Illinois at Urbana-Champaign
+ * SPDX-License-Identifier: MIT
  */
 
 #ifndef CAMP_GPU_SOLVER_H_

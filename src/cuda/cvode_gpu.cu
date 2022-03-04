@@ -1,9 +1,6 @@
-/* Copyright (C) 2020 Christian Guzman
- * Licensed under the GNU General Public License version 1 or (at your
- * option) any later version. See the file COPYING for details.
- *
- * ODE GPU solver
- *
+/* Copyright (C) 2021 Barcelona Supercomputing Center and University of
+ * Illinois at Urbana-Champaign
+ * SPDX-License-Identifier: MIT
  */
 
 #include "itsolver_gpu.h"
@@ -924,10 +921,6 @@ int CudaDeviceguess_helper(double t_n, double h_n, double* y_n,
       return -1;
     }*/
 
-
-//#ifndef DEV_CudaDeviceguess_helper
-//#else
-
 #ifdef DEV_printmin
     printmin(md,md->state,"cudaDevicef start state");
 #endif
@@ -963,14 +956,8 @@ int CudaDeviceguess_helper(double t_n, double h_n, double* y_n,
      return -1;
     }
 
-//#endif
-//DEV_CudaDeviceguess_helper
-
-    //((CVodeMem)sd->cvode_mem)->cv_nfe++;
-
     if (iter == GUESS_MAX_ITER - 1 && t_0 + t_j < t_n) {
       if (h_n == 0.){
-
 
 #ifdef CAMP_DEBUG_GPU
 #ifdef cudaGlobalCVode_timers_max_blocks
@@ -2251,7 +2238,6 @@ int cudaDevicecvNewtonIteration(
 
     cudaDevicezaxpby(dmdv->cv_rl1, (dzn + 1 * nrows), 1.0, cv_acor, dtempv, nrows);
     cudaDevicezaxpby(dmdv->cv_gamma, dftemp, -1.0, dtempv, dtempv, nrows);
-    //}//GOOD
 
     //if(i==0)printf("cudaDevicecvNewtonIteration dftemp %le dtempv %le dcv_y %le it %d block %d\n",
     //               dftemp[(blockDim.x-1)*0],dtempv[(blockDim.x-1)*0],dcv_y[(blockDim.x-1)*0],it,blockIdx.x);
@@ -3670,11 +3656,7 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
   printmin(md,md->state,"cudaDeviceCVode start state");
 #endif
 
-#ifndef DEV_CUDACVODE
-
   for(;;) {
-
-#endif
 
 #ifdef DEV_ATOMICMAX
   atomicMin(md->flag,md->jJ_solver[i]);
@@ -3848,12 +3830,7 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
     }
 
-#ifndef DEV_CUDACVODE
   }
-  //return CV_SUCCESS;//needed?, it should always return instead of break and never reach here
-#else
-  return dmdv->kflag2;
-#endif
 
 }
 
@@ -4840,13 +4817,6 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
   cudaMemcpy(mGPU->flagCells, sd->flagCells, mGPU->n_cells*sizeof(int), cudaMemcpyHostToDevice);
   HANDLE_ERROR(cudaMemcpy(mGPU->state, md->total_state, md->state_size, cudaMemcpyHostToDevice));
 
-#ifndef DEV_CUDACVODE
-
-#else
-  for(;;) {
-
-#endif
-
   sd->mdv.init_time_step = sd->init_time_step;
   sd->mdv.cv_mxstep = cv_mem->cv_mxstep;
   sd->mdv.cv_taskc = cv_mem->cv_taskc;
@@ -5020,16 +4990,10 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
       break;
     }
   }
-#ifndef DEV_CUDACVODE
     istate=flag;
-#else
-    kflag=flag;
-#endif
 
     //printf("DEV_cudacvStep counterBiConjGrad %d\n",bicg->counterBiConjGrad);
     //printf("cudaCVode flag %d kflag %d\n",flag, sd->mdv.flag);
-
-#ifndef DEV_CUDACVODE
 
     // In NORMAL mode, check if tout reached
     //if ( (cv_mem->cv_tn-tout)*cv_mem->cv_h >= ZERO ) {
@@ -5047,7 +5011,6 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
       cv_mem->cv_next_h = sd->mdv.cv_hprime;
 
     }else{
-#endif
 
       if (kflag != CV_SUCCESS) {
         printf("cudaCVode2 kflag %d\n",kflag);
@@ -5057,10 +5020,6 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
 
         cv_mem->cv_next_h = sd->mdv.cv_next_h;
 
-#ifndef DEV_CUDACVODE
-#else
-        break;
-#endif
       }
 
       if ( (itask == CV_NORMAL) &&  (cv_mem->cv_tn-tout)*cv_mem->cv_h >= ZERO ) {
@@ -5069,10 +5028,6 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
         (void) CVodeGetDky(cv_mem, tout, 0, yout);
         cv_mem->cv_next_q = cv_mem->cv_qprime;
         cv_mem->cv_next_h = cv_mem->cv_hprime;
-#ifndef DEV_CUDACVODE
-#else
-        break;
-#endif
       }
 
       // Reset and check ewt
@@ -5084,10 +5039,6 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
           cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "CVode",
                          MSGCV_EWT_NOW_BAD, cv_mem->cv_tn);
         //Remove break after removing for(;;) in cpu
-#ifndef DEV_CUDACVODE
-#else
-        break;
-#endif
       }
 
       // Check for too many steps
@@ -5097,10 +5048,6 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
         istate = CV_TOO_MUCH_WORK;
         //cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
         //N_VScale(ONE, cv_mem->cv_zn[0], yout);
-#ifndef DEV_CUDACVODE
-#else
-        break;
-#endif
       }
 
       // Check for too much accuracy requested
@@ -5113,10 +5060,6 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
         //cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
         //N_VScale(ONE, cv_mem->cv_zn[0], yout);
         //cv_mem->cv_tolsf *= TWO;
-#ifndef DEV_CUDACVODE
-#else
-        break;
-#endif
       }
 
       //Check for h below roundoff level in tn
@@ -5137,11 +5080,6 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
           //cv_mem->cv_tretlast = *tret = cv_mem->cv_tstop;
           //cv_mem->cv_tstopset = SUNFALSE;
           istate = CV_TSTOP_RETURN;
-
-#ifndef DEV_CUDACVODE
-#else
-          break;
-#endif
         }
 
         if ( (cv_mem->cv_tn + cv_mem->cv_hprime - cv_mem->cv_tstop)*cv_mem->cv_h > ZERO ) {
@@ -5151,16 +5089,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
 
       }
 
-#ifndef DEV_CUDACVODE
     }
-#endif
-
-#ifndef DEV_CUDACVODE
-#else
-
-  } /* end looping for internal steps */
-
-#endif
 
 #ifdef CAMP_DEBUG_GPU
   cudaEventRecord(bicg->stopcvStep);

@@ -1,4 +1,7 @@
-
+/* Copyright (C) 2021 Barcelona Supercomputing Center and University of
+ * Illinois at Urbana-Champaign
+ * SPDX-License-Identifier: MIT
+ */
 
 #ifndef CAMPGPU_CUDA_STRUCTS_H
 #define CAMPGPU_CUDA_STRUCTS_H
@@ -201,6 +204,7 @@ typedef struct {
     int counterDerivGPU;
     int counterBCGInternal;
     int counterBCG;
+
     double dtBCG;
     double dtcudaDeviceCVode;
     double dtPostBCG;

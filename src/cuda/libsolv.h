@@ -1,9 +1,6 @@
-/* Copyright (C) 2020 Christian Guzman and Guillermo Oyarzun
- * Licensed under the GNU General Public License version 1 or (at your
- * option) any later version. See the file COPYING for details.
- *
- * Basic GPU functions
- *
+/* Copyright (C) 2021 Barcelona Supercomputing Center and University of
+ * Illinois at Urbana-Champaign
+ * SPDX-License-Identifier: MIT
  */
 
 #ifndef LIBSOLV_H

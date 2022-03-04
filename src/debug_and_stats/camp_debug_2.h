@@ -1,6 +1,10 @@
-//
-// Created by cguzman on 10/24/19.
-//
+/*
+ * -----------------------------------------------------------------
+ * Programmer(s): Christian G. Ruiz and Mario Acosta
+ * -----------------------------------------------------------------
+ * Copyright (C) 2022 Barcelona Supercomputing Center
+ * SPDX-License-Identifier: MIT
+ */
 
 #ifndef CAMP_DEBUG_2_H
 #define CAMP_DEBUG_2_H

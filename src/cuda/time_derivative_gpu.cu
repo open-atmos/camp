@@ -1,12 +1,6 @@
-/* Copyright (C) 2019 Matthew Dawson
- * Licensed under the GNU General Public License version 2 or (at your
- * option) any later version. See the file COPYING for details.
- *
- * Functions of the time derivative structure
- *
- */
-/** \file
- * \brief Functions of the time derivative structure
+/* Copyright (C) 2021 Barcelona Supercomputing Center and University of
+ * Illinois at Urbana-Champaign
+ * SPDX-License-Identifier: MIT
  */
 
 extern "C" {

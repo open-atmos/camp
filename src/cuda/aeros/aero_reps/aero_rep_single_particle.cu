@@ -1,13 +1,8 @@
-/* Copyright (C) 2019 Christian Guzman
- * Licensed under the GNU General Public License version 1 or (at your
- * option) any later version. See the file COPYING for details.
- *
- * Single particle aerosol representation functions
- *
+/* Copyright (C) 2021 Barcelona Supercomputing Center and University of
+ * Illinois at Urbana-Champaign
+ * SPDX-License-Identifier: MIT
  */
-/** \file
- * \brief Single particle aerosol representation functions
- */
+
 extern "C" {
 #include <stdio.h>
 #include <stdlib.h>

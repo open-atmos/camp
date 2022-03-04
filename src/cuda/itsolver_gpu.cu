@@ -1,3 +1,8 @@
+/* Copyright (C) 2021 Barcelona Supercomputing Center and University of
+ * Illinois at Urbana-Champaign
+ * SPDX-License-Identifier: MIT
+ */
+
 #include "itsolver_gpu.h"
 //#include "../debug_and_stats/camp_debug_2.h"
 

@@ -123,3 +123,12 @@ Compile on [CTE-POWER](https://www.bsc.es/user-support/power.php)
 ============
 
 Go to folder camp/compile/power9/README.md for more instructions.
+
+Authors
+============
+
+The Open-Atmos Team: Matthew Dawson, Matthew West, Nicole Riemer,
+Christian G. Ruiz, Jeffrey Curtis, Mario Acosta and Oriol Jorba.
+
+We also acknowledge past contributions of Andrew Conley, 
+Shupeng Zhu and Donald Dabdub.

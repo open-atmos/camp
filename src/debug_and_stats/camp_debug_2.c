@@ -1,9 +1,9 @@
-/* Copyright (C) 2019 Christian Guzman
- * Licensed under the GNU General Public License version 1 or (at your
- * option) any later version. See the file COPYING for details.
- *
- * Debug and stats functions
- *
+/*
+ * -----------------------------------------------------------------
+ * Programmer(s): Christian G. Ruiz and Mario Acosta
+ * -----------------------------------------------------------------
+ * Copyright (C) 2022 Barcelona Supercomputing Center
+ * SPDX-License-Identifier: MIT
  */
 
 #include "camp_debug_2.h"

@@ -1,3 +1,13 @@
+#
+# -----------------------------------------------------------------
+# Programmer(s): Matthew Dawson, Christian G. Ruiz and
+# Mario Acosta
+# -----------------------------------------------------------------
+# Copyright (C) 2022 Barcelona Supercomputing Center and University of
+# Illinois at Urbana-Champaign
+# SPDX-License-Identifier: MIT
+#
+
 import matplotlib as mpl
 
 mpl.use('TkAgg')
@@ -14,7 +24,6 @@ import seaborn as sns
 import time
 import json
 from pathlib import Path
-
 
 class TestMonarch:
     def __init__(self):
@@ -155,9 +164,16 @@ def run_case(conf):
             else:
                 raise Exception("normalize_by_countercvStep_and_cells case without One-cell or Multi-cells key name")
 
+            #todo normalize internal loops
+
+
+
             for i in range(len(data[y_key])):
                 data[y_key][i] = data[y_key][i] \
                               / data["countercvStep"][i] * cells_multiply
+
+
+
         else:
             raise Exception("Unkown normalized case", y_key)
 
@@ -343,6 +359,8 @@ def plot_cases(conf):
         namey = "Speedup iterations CAMP solving"
     if conf.plotYKey == "Speedup normalized timeLS":
         namey = "Speedup linear solver"
+    if conf.plotYKey == "Speedup normalized timecvStep":
+        namey = "Speedup CVODE loop"
     if conf.plotYKey == "Speedup timeCVode":
         namey = "Speedup CAMP solving"
     if conf.plotYKey == "MAPE":
@@ -428,7 +446,7 @@ def all_timesteps():
     # conf.plotYKey = "Speedup normalized counterBCG"
     # conf.plotYKey = "Speedup BCG iteration (Comp.timeLS/counterBCG)"
     conf.plotYKey = "Speedup timecvStep"
-    # conf.plotYKey = "Speedup normalized timecvStep"#not needed, is always normalized
+    #conf.plotYKey = "Speedup normalized timecvStep"
     # conf.plotYKey = "Speedup device timecvStep"
     #conf.plotYKey = "Percentage data transfers CPU-GPU [%]"
     #conf.plotYKey="MAPE"

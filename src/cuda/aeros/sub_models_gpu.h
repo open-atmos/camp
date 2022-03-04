@@ -1,12 +1,8 @@
-/* Copyright (C) 2019 Christian Guzman
- * Licensed under the GNU General Public License version 1 or (at your
- * option) any later version. See the file COPYING for details.
- *
- * Header file for sub model calculations
+/* Copyright (C) 2021 Barcelona Supercomputing Center and University of
+ * Illinois at Urbana-Champaign
+ * SPDX-License-Identifier: MIT
  */
-/** \file
- * \brief Header file for sub model functions
- */
+
 #ifndef SUB_MODELS_H
 #define SUB_MODELS_H
 #include "../camp_gpu_solver.h"
