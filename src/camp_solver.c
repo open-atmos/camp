@@ -756,6 +756,8 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
 
 #ifdef RESET_JAC_SOLVING
 
+  //printf("RESET_JAC_SOLVING start\n");
+
   //Reset Jacobian tmp
   N_VConst(0.0, md->J_state);
   N_VConst(0.0, md->J_deriv);

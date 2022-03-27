@@ -7684,7 +7684,6 @@ int linsolsolve_gpu2(SolverData *sd, CVodeMem cv_mem)
 #ifndef CSR_SPMV_CPU
 
     swapCSC_CSR_BCG(sd);
-    //cudaGlobalswapCSC_CSR
     //CSCtoCSR(bicg);
 
 #endif
@@ -7755,7 +7754,6 @@ int linsolsolve_gpu2(SolverData *sd, CVodeMem cv_mem)
 
     //Swap is fine here, but not in in GPU device (problems of sync one-kernel)
     swapCSC_CSR_BCG(sd);
-    //cudaGlobalswapCSC_CSR
     //CSRtoCSC(bicg);
 
 #endif

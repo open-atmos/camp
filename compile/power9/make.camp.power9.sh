@@ -2,7 +2,6 @@
 #SBATCH --qos=debug
 #SBATCH --job-name=test_cb05_232
 #SBATCH --output=out_test_monarch.txt
-###SBATCH --output=%j_outcb05_.txt
 #SBATCH --error=err_test_monarch.txt
 ##SBATCH --ntasks=1
 #SBATCH --ntasks=40

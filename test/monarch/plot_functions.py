@@ -95,29 +95,6 @@ def calculate_percentages_solveCVODEGPU(din):
 
     return data
 
-def normalize_by_counterLS_and_cells2(data, y_key, nSystemsOfCells):
-
-    for i in range(len(data[y_key])):
-        iters = data["counterLS"][i]
-        itersPerAllCells = iters / nSystemsOfCells
-        timePerIter = data[y_key][i] / itersPerAllCells
-        data[y_key][i] = timePerIter
-
-    return data
-
-def normalize_by_counterLS_and_cells(data, plot_y_key, cells, case):
-    nSystemsOfCells = 1
-    if ("One-cell" in case):
-        nSystemsOfCells = cells
-
-    for i in range(len(data[case][plot_y_key])):
-        iters = data[case]["counterLS"][i]
-        itersPerAllCells = iters / nSystemsOfCells
-        timePerIter = data[case][plot_y_key][i] / itersPerAllCells
-        data[case][plot_y_key][i] = timePerIter
-
-    return data
-
 def normalize_by_countercvStep_and_cells(data, plot_y_key, cells, case):
 
     if ("One-cell" in case):
@@ -138,7 +115,6 @@ def normalize_by_countercvStep_and_cells(data, plot_y_key, cells, case):
 
 def normalized_timeLS(new_plot_y_key, cases_multicells_onecell, data, cells):
     plot_y_key = "timeLS"
-    # new_plot_y_key="Normalized timeLS"
 
     # base_data=data[cases_multicells_onecell[0]][plot_y_key]
     # new_data=data[cases_multicells_onecell[1]][plot_y_key]
@@ -444,7 +420,7 @@ def calculate_speedup(data, plot_y_key):
         # print(base_data[i],new_data[i], base_data[i]/new_data[i])
         datay[i] = base_data[i] / new_data[i]
 
-    print(datay)
+    #print(datay)
 
     return datay
 
@@ -622,9 +598,9 @@ def plot(namex, namey, datax, datay, plot_title, legend, savePlot):
 
     if savePlot:
         now = datetime.datetime.now()
-        dt_string = now.strftime("%d-%m-%Y %H:%M:%S")
-        # print(dt_string)
+        dt_string = now.strftime("%d-%m-%Y %H.%M.%S")
         save_folder = "out/plots/" + namey + " " + plot_title
+        save_folder = save_folder.replace(":", "")
         if not os.path.exists(save_folder):
             os.makedirs(save_folder)
         save_path = save_folder + "/" + dt_string + ".png"
@@ -632,7 +608,6 @@ def plot(namex, namey, datax, datay, plot_title, legend, savePlot):
         plt.savefig(save_path)
 
     plt.show()
-
 
 def read_solver_stats(file, data):
     with open(file) as f:
