@@ -26,6 +26,7 @@ import json
 from pathlib import Path
 import shutil
 import zipfile
+from os import walk
 
 class TestMonarch:
     def __init__(self):
@@ -46,7 +47,7 @@ class TestMonarch:
         # Auxiliar
         self.diffCells = ""
         self.datacolumns = []
-        self.exportPath= "test/monarch/exports"
+        self.exportPath = "test/monarch/exports"
         self.legend = []
         self.case = []
         self.results_file = "_solver_stats.csv"
@@ -103,16 +104,51 @@ def write_camp_config_file(conf):
 
     file1.close()
 
-def read_conf():
-
-    jsonFile = open(last_file_created)
-    jsonData = json.load(jsonFile)
-    print(jsonData)
-
-def export(conf, tmp_path):
+def import_data(conf,tmp_path):
 
     init_path = os.path.abspath(os.getcwd())
     tmp_path_abs = os.path.abspath(os.getcwd()) + "/" + tmp_path
+    is_data_imported = False
+    os.chdir("../../..")
+    exportPath = conf.exportPath
+
+    if not os.path.exists(exportPath):
+        return False
+
+    conf_path = exportPath + "/conf"
+    path_to_zip_file = conf_path + ".zip"
+    if os.path.exists(path_to_zip_file):
+        directory_to_extract_to = conf_path
+        with zipfile.ZipFile(path_to_zip_file, 'r') as zip_ref:
+            zip_ref.extractall(directory_to_extract_to)
+    else:
+        return False
+
+    filenames = next(walk(conf_path), (None, None, []))[2]  # [] if no file
+
+    for filename in filenames:
+        jsonFile = open(filename)
+        conf_imported = json.load(jsonFile)
+        conf_dict = json.dumps(conf.__dict__)
+        conf_imported["timeSteps"] = conf_dict["timeSteps"]
+        print("conf_imported", conf_imported)
+        print("conf_dict", conf_dict)
+        if conf_imported == conf_dict:
+            is_data_imported = True
+            tmp_path = conf_path + "/" + filename
+
+    print("is_data_imported",is_data_imported)
+    print("tmp_path",tmp_path)
+    conf_imported.clear()
+
+    os.chdir(init_path)
+
+    return is_data_imported
+
+def export(conf, data_path, data_name):
+
+    init_path = os.path.abspath(os.getcwd())
+    data_path_abs = os.path.abspath(os.getcwd()) + "/" + data_path
     exportPath = conf.exportPath
 
     os.chdir("../../..")
@@ -130,26 +166,27 @@ def export(conf, tmp_path):
 
     now = datetime.datetime.now()
     dt_string = now.strftime("%d-%m-%Y-%H.%M.%S")
-    conf_name = conf_path + "/" + dt_string
+    conf_name = conf_path + "/" + dt_string + ".json"
     with open(conf_name, 'w', encoding='utf-8') as jsonFile:
         json.dump(conf.__dict__, jsonFile, indent=4, sort_keys=True)
 
     path_to_zip_file = conf_path
     shutil.make_archive(path_to_zip_file, 'zip', conf_path)
+    
     print("Configuration saved to", os.path.abspath(os.getcwd()) + path_to_zip_file)
-    #print("Configuration saved to", os.path.abspath(os.getcwd())+"/"+conf_path)
 
     path_to_zip_file = exportPath +"/data"
     if not os.path.exists(path_to_zip_file):
         os.makedirs(path_to_zip_file)
 
     path_to_zip_file = exportPath +"/data/" + dt_string + ".zip"
-    zipfile.ZipFile(path_to_zip_file, mode='w').write(tmp_path_abs)
+    new_data_name = dt_string + ".csv"
+    new_data_path = exportPath +"/data/" + new_data_name
+    os.rename(data_path_abs,new_data_path)
+    zipfile.ZipFile(path_to_zip_file, mode='w').write(new_data_path,arcname=new_data_name)
     #zipfile.ZipFile('hello.zip', mode='w').write("hello.csv")
+    os.rename(new_data_path,data_path_abs)
 
-    #shutil.make_archive(path_to_zip_file, 'zip', tmp_path_abs)
-    #data_path = exportPath + "/data/" + dt_string
-    #shutil.copy2(tmp_path_abs,data_path)
     print("Data saved to", os.path.abspath(os.getcwd())+"/"+path_to_zip_file)
 
     if os.path.getsize(exportPath) > 1000000000:
@@ -193,16 +230,18 @@ def run(conf):
     with open(conf_name, 'w', encoding='utf-8') as jsonFile:
         json.dump(conf.__dict__, jsonFile, indent=4, sort_keys=True)
 
-     # Main
-    os.system(exec_str)
-
     data_name = conf.chemFile + '_' + conf.caseMulticellsOnecell + conf.results_file
-    tmp_path = 'out/' + data_name
+    data_path = 'out/' + data_name
+    #is_data_imported = import_data(conf,data_path)
+    is_data_imported = False
 
-    export(conf,tmp_path)
+    if not is_data_imported:
+         # Main
+        os.system(exec_str)
+        export(conf,data_path,data_name)
 
     data = {}
-    plot_functions.read_solver_stats(tmp_path, data)
+    plot_functions.read_solver_stats(data_path, data)
 
     return data
 
@@ -352,29 +391,6 @@ def getCaseName(conf):
 
     return case_multicells_onecell_name
 
-def saveConf(conf, namex, namey, datax, datay, plot_title, legend):
-
-    init_path = os.path.abspath(os.getcwd())
-
-    os.chdir("../../.." )
-    save_folder = "test/monarch/savedConf/"
-    if os.path.getsize(save_folder) > 1000000000:
-        print("WARNING: More than 1GB in", os.path.abspath(os.getcwd())+"/"+save_folder)
-    save_folder = save_folder + namey + " " + plot_title + " Timesteps " + str(conf.timeSteps)
-    save_folder = save_folder.replace(":", "")
-    #now = datetime.datetime.now()
-    #dt_string = now.strftime("%d-%m-%Y %H.%M.%S")
-    dt_string = "saveConf"
-    if not os.path.exists(save_folder):
-        os.makedirs(save_folder)
-    save_path = save_folder + "/" + dt_string + ".json"
-    with open(save_path, 'w', encoding='utf-8') as jsonFile:
-        json.dump(conf.__dict__, jsonFile, indent=4, sort_keys=True)
-
-    print("Configuration saved to", os.path.abspath(os.getcwd())+"/"+save_path)
-
-    #os.chdir(init_path)
-
 def plot_cases(conf):
     # Set plot info
     cases_words = conf.caseBase.split()
@@ -477,12 +493,6 @@ def plot_cases(conf):
         print("Mean:", round(np.mean(datay), 2))
     print(namex, ":", datax)
     print(namey, ":", datay)
-
-    #save_data = True
-    #save_data=False
-    #if save_data:
-    #    saveConf(conf, namex, namey, datax, datay, conf.plotTitle, conf.legend)
-    #else:
 
     #plot_functions.plot(namex, namey, datax, datay, conf.plotTitle, conf.legend, conf.savePlot)
 
@@ -610,29 +620,6 @@ def all_timesteps():
 
     del conf
 
-def test_copy_conf():
-    conf = TestMonarch()
-
-    init_path = os.path.abspath(os.getcwd())
-    os.chdir("../../..")
-    save_folder = "test/monarch/savedConf/"
-
-    now = datetime.datetime.now()
-    dt_string = now.strftime("%d-%m-%Y %H.%M.%S")
-    if not os.path.exists(save_folder):
-        os.makedirs(save_folder)
-    save_path = save_folder + dt_string + ".json"
-
-    with open(save_path, 'w', encoding='utf-8') as jsonFile:
-        json.dump(conf.__dict__, jsonFile, indent=4, sort_keys=True)
-
-    print("Configuration saved to", os.path.abspath(os.getcwd())+"/"+save_path)
-    os.chdir(init_path)
-    print(os.getcwd())
-
-
-#test_copy_conf()
-#read_conf()
 all_timesteps()
 
 
