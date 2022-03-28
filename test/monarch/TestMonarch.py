@@ -126,26 +126,41 @@ def import_data(conf,tmp_path):
 
     filenames = next(walk(conf_path), (None, None, []))[2]  # [] if no file
 
+    data_path = exportPath + "/data"
     for filename in filenames:
-        jsonFile = open(filename)
+        conf_name = conf_path + "/" + filename
+        print(conf_name)
+        print("filename path", os.path.abspath(os.getcwd())+"/"+conf_name)
+        jsonFile = open(conf_name)
         conf_imported = json.load(jsonFile)
-        conf_dict = json.dumps(conf.__dict__)
+        conf_dict = vars(conf)
+        print("conf_imported", type(conf_imported), conf_imported)
+        print("conf_dict", type(conf_dict), conf_dict)
         conf_imported["timeSteps"] = conf_dict["timeSteps"]
-        print("conf_imported", conf_imported)
-        print("conf_dict", conf_dict)
         if conf_imported == conf_dict:
             is_data_imported = True
-            tmp_path = conf_path + "/" + filename
+            #data_name = filename + ".csv"
+            #data_path = data_path + data_name
+            #path_to_zip_file = data_path + filename + ".zip"
+            #zipfile.ZipFile(path_to_zip_file, mode='w').write(data_path,arcname=data_name)
+            directory_to_extract_to = data_path
+            basename = os.path.splitext(filename)[0]
+            path_to_zip_file = data_path + "/" + basename + ".zip"
+            with zipfile.ZipFile(path_to_zip_file, 'r') as zip_ref:
+                zip_ref.extractall(directory_to_extract_to)
+            tmp_path = directory_to_extract_to + basename + ".csv"
+            break
 
     print("is_data_imported",is_data_imported)
     print("tmp_path",tmp_path)
     conf_imported.clear()
+    shutil.rmtree(conf_path)
 
     os.chdir(init_path)
 
     return is_data_imported
 
-def export(conf, data_path, data_name):
+def export(conf, data_path):
 
     init_path = os.path.abspath(os.getcwd())
     data_path_abs = os.path.abspath(os.getcwd()) + "/" + data_path
@@ -162,16 +177,19 @@ def export(conf, data_path, data_name):
         with zipfile.ZipFile(path_to_zip_file, 'r') as zip_ref:
             zip_ref.extractall(directory_to_extract_to)
     else:
+        if os.path.exists(conf_path):
+            shutil.rmtree(conf_path)
         os.makedirs(conf_path)
 
     now = datetime.datetime.now()
     dt_string = now.strftime("%d-%m-%Y-%H.%M.%S")
     conf_name = conf_path + "/" + dt_string + ".json"
     with open(conf_name, 'w', encoding='utf-8') as jsonFile:
-        json.dump(conf.__dict__, jsonFile, indent=4, sort_keys=True)
+        json.dump(conf.__dict__, jsonFile, indent=4, sort_keys=False)
 
     path_to_zip_file = conf_path
     shutil.make_archive(path_to_zip_file, 'zip', conf_path)
+    shutil.rmtree(conf_path)
     
     print("Configuration saved to", os.path.abspath(os.getcwd()) + path_to_zip_file)
 
@@ -184,7 +202,6 @@ def export(conf, data_path, data_name):
     new_data_path = exportPath +"/data/" + new_data_name
     os.rename(data_path_abs,new_data_path)
     zipfile.ZipFile(path_to_zip_file, mode='w').write(new_data_path,arcname=new_data_name)
-    #zipfile.ZipFile('hello.zip', mode='w').write("hello.csv")
     os.rename(new_data_path,data_path_abs)
 
     print("Data saved to", os.path.abspath(os.getcwd())+"/"+path_to_zip_file)
@@ -228,17 +245,18 @@ def run(conf):
 
     conf_name = "TestMonarch.json"
     with open(conf_name, 'w', encoding='utf-8') as jsonFile:
-        json.dump(conf.__dict__, jsonFile, indent=4, sort_keys=True)
+        json.dump(conf.__dict__, jsonFile, indent=4, sort_keys=False)
 
     data_name = conf.chemFile + '_' + conf.caseMulticellsOnecell + conf.results_file
     data_path = 'out/' + data_name
-    #is_data_imported = import_data(conf,data_path)
-    is_data_imported = False
+    is_data_imported = import_data(conf,data_path)
+    #is_data_imported = False
 
     if not is_data_imported:
          # Main
+        print("not is_data_imported")
         os.system(exec_str)
-        export(conf,data_path,data_name)
+        export(conf,data_path)
 
     data = {}
     plot_functions.read_solver_stats(data_path, data)
