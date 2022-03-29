@@ -107,13 +107,14 @@ def write_camp_config_file(conf):
 def import_data(conf,tmp_path):
 
     init_path = os.path.abspath(os.getcwd())
-    tmp_path_abs = os.path.abspath(os.getcwd()) + "/" + tmp_path
     is_data_imported = False
     os.chdir("../../..")
     exportPath = conf.exportPath
+    new_path = tmp_path
 
     if not os.path.exists(exportPath):
-        return False
+        os.chdir(init_path)
+        return False,new_path
 
     conf_path = exportPath + "/conf"
     path_to_zip_file = conf_path + ".zip"
@@ -122,43 +123,35 @@ def import_data(conf,tmp_path):
         with zipfile.ZipFile(path_to_zip_file, 'r') as zip_ref:
             zip_ref.extractall(directory_to_extract_to)
     else:
-        return False
+        os.chdir(init_path)
+        return False,new_path
 
     filenames = next(walk(conf_path), (None, None, []))[2]  # [] if no file
 
-    data_path = exportPath + "/data"
+    data_path = exportPath + "/data/"
     for filename in filenames:
         conf_name = conf_path + "/" + filename
-        print(conf_name)
-        print("filename path", os.path.abspath(os.getcwd())+"/"+conf_name)
         jsonFile = open(conf_name)
         conf_imported = json.load(jsonFile)
         conf_dict = vars(conf)
-        print("conf_imported", type(conf_imported), conf_imported)
-        print("conf_dict", type(conf_dict), conf_dict)
         conf_imported["timeSteps"] = conf_dict["timeSteps"]
         if conf_imported == conf_dict:
             is_data_imported = True
-            #data_name = filename + ".csv"
-            #data_path = data_path + data_name
-            #path_to_zip_file = data_path + filename + ".zip"
-            #zipfile.ZipFile(path_to_zip_file, mode='w').write(data_path,arcname=data_name)
             directory_to_extract_to = data_path
             basename = os.path.splitext(filename)[0]
-            path_to_zip_file = data_path + "/" + basename + ".zip"
+            path_to_zip_file = data_path + basename + ".zip"
             with zipfile.ZipFile(path_to_zip_file, 'r') as zip_ref:
                 zip_ref.extractall(directory_to_extract_to)
-            tmp_path = directory_to_extract_to + basename + ".csv"
+            new_path = os.path.abspath(os.getcwd()) + "/" + directory_to_extract_to + basename + ".csv"
+            print("Imported data from",new_path)
             break
 
-    print("is_data_imported",is_data_imported)
-    print("tmp_path",tmp_path)
     conf_imported.clear()
     shutil.rmtree(conf_path)
 
     os.chdir(init_path)
 
-    return is_data_imported
+    return is_data_imported,new_path
 
 def export(conf, data_path):
 
@@ -167,7 +160,9 @@ def export(conf, data_path):
     exportPath = conf.exportPath
 
     os.chdir("../../..")
+    print(os.path.abspath(os.getcwd()) + "/" + exportPath)
     if not os.path.exists(exportPath):
+        print("NOT EXISTS")
         os.makedirs(exportPath)
 
     conf_path = exportPath + "/conf"
@@ -248,18 +243,23 @@ def run(conf):
         json.dump(conf.__dict__, jsonFile, indent=4, sort_keys=False)
 
     data_name = conf.chemFile + '_' + conf.caseMulticellsOnecell + conf.results_file
-    data_path = 'out/' + data_name
-    is_data_imported = import_data(conf,data_path)
-    #is_data_imported = False
+    tmp_path = 'out/' + data_name
+    is_data_imported,data_path = import_data(conf,tmp_path)
+    #is_data_imported, data_path = False, tmp_path
+
+    print(data_path)
 
     if not is_data_imported:
          # Main
-        print("not is_data_imported")
         os.system(exec_str)
         export(conf,data_path)
 
     data = {}
     plot_functions.read_solver_stats(data_path, data)
+
+    if is_data_imported:
+        print("Remove ", data_path)
+        os.remove(data_path)
 
     return data
 
@@ -535,7 +535,7 @@ def all_timesteps():
     conf.mpiProcessesList = [1]
     #conf.mpiProcessesList = [40, 1]
 
-    conf.cells = [10]
+    conf.cells = [100]
     # conf.cells = [400,2000,4000]
     # conf.cells = [1,5,10,50,100]
     # conf.cells = [100,500,1000,5000,10000]
