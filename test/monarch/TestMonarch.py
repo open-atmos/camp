@@ -134,7 +134,8 @@ def import_data(conf,tmp_path):
         jsonFile = open(conf_name)
         conf_imported = json.load(jsonFile)
         conf_dict = vars(conf)
-        conf_imported["timeSteps"] = conf_dict["timeSteps"]
+        if conf_imported["timeSteps"] >= conf_dict["timeSteps"]:
+            conf_imported["timeSteps"] = conf_dict["timeSteps"]
         if conf_imported == conf_dict:
             is_data_imported = True
             directory_to_extract_to = data_path
@@ -202,8 +203,8 @@ def export(conf, data_path):
     print("Data saved to", os.path.abspath(os.getcwd())+"/"+path_to_zip_file)
 
     if os.path.getsize(exportPath) > 1000000000:
-        print("ERROR: More than 1GB saved in ", os.path.abspath(os.getcwd())+"/"+exportPath)
-        raise
+        print("WARNING: More than 1GB saved in ", os.path.abspath(os.getcwd())+"/"+exportPath)
+        #raise
 
     os.chdir(init_path)
 
@@ -231,12 +232,7 @@ def run(conf):
     # Onecell-Multicells itsolver
     write_itsolver_config_file(conf)
 
-    print(exec_str, conf.caseGpuCpu, conf.caseMulticellsOnecell)
-
-    #if save_folder
-    #if not os.path.exists(save_folder):
-    #if os.path.exists(save_folder):
-    #os.makedirs(save_folder)
+    print("exec_str:",exec_str, conf.caseGpuCpu, conf.caseMulticellsOnecell)
 
     conf_name = "TestMonarch.json"
     with open(conf_name, 'w', encoding='utf-8') as jsonFile:
@@ -266,8 +262,6 @@ def run(conf):
 
 def run_case(conf):
     data = run(conf)
-
-    #if conf.readData:
 
     if "timeLS" in conf.plotYKey and "computational" in conf.plotYKey \
         and "GPU" in conf.case:
@@ -493,8 +487,8 @@ def plot_cases(conf):
         datay = conf.datacolumns[0]
 
     if (len(conf.cells) > 1):
-        print_timesteps_title = True
-        # print_timesteps_title = False
+        #print_timesteps_title = True
+        print_timesteps_title = False
         if print_timesteps_title:
             conf.plotTitle += ", Timesteps: " + str(conf.timeSteps)
         datax = conf.cells
@@ -524,7 +518,7 @@ def all_timesteps():
 
     conf.diffCellsL = []
     conf.diffCellsL.append("Realistic")
-    # conf.diffCellsL.append("Ideal")
+    #conf.diffCellsL.append("Ideal")
 
     conf.profileCuda = False
     # conf.profileCuda = True
@@ -538,13 +532,13 @@ def all_timesteps():
     conf.cells = [100]
     # conf.cells = [400,2000,4000]
     # conf.cells = [1,5,10,50,100]
-    # conf.cells = [100,500,1000,5000,10000]
+    #conf.cells = [100,500,1000,5000,10000]
 
     conf.timeSteps = 1
     conf.timeStepsDt = 3
 
-    #conf.caseBase = "CPU One-cell"
-    conf.caseBase = "CPU Multi-cells"
+    conf.caseBase = "CPU One-cell"
+    #conf.caseBase = "CPU Multi-cells"
     # conf.caseBase="GPU Multi-cells"
     # conf.caseBase="GPU Block-cellsN"
     # conf.caseBase="GPU Block-cells1"
@@ -553,10 +547,10 @@ def all_timesteps():
     # conf.casesOptim.append("GPU CVODE")
     # conf.casesOptim.append("GPU Block-cellsNhalf")
     conf.casesOptim.append("GPU Block-cells1")
-    # conf.casesOptim.append("GPU Block-cellsN")
+    #conf.casesOptim.append("GPU Block-cellsN")
     #conf.casesOptim.append("GPU Multi-cells")
-    # conf.casesOptim.append("GPU One-cell")
-    # conf.casesOptim.append("CPU Multi-cells")
+    #conf.casesOptim.append("GPU One-cell")
+    #conf.casesOptim.append("CPU Multi-cells")
 
     # conf.plotYKey = "Speedup timeCVode"
     # conf.plotYKey = "Speedup counterLS"

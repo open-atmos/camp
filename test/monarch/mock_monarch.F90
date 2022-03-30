@@ -267,8 +267,10 @@ program mock_monarch_t
   NUM_SN_CELLS = I_N-I_S+1
 
   if (camp_mpi_rank().eq.0) then
-    write(*,*) "Num time-steps:", NUM_TIME_STEP, "Num cells:",&
-            NUM_WE_CELLS*NUM_SN_CELLS*NUM_VERT_CELLS
+    write(*,*) "Time-steps:", NUM_TIME_STEP, "Cells:",&
+            NUM_WE_CELLS*NUM_SN_CELLS*NUM_VERT_CELLS, &
+            diffCells,  caseMulticellsOnecell, "MPI size",camp_mpi_size()
+
   end if
 
   allocate(temperature(NUM_WE_CELLS,NUM_SN_CELLS,NUM_VERT_CELLS))
