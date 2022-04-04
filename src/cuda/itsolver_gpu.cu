@@ -123,14 +123,13 @@ void exportConfBCG(SolverData *sd, const char *filepath){
   ModelData *md = &(sd->model_data);
   ModelDataGPU *mGPU = &sd->mGPU;
   FILE *fp = fopen(filepath, "w+");
-  //FILE *fp = fopen("confBCG.txt", "w+");
 
   fprintf(fp, "%d\n",  mGPU->n_cells);
   fprintf(fp, "%d\n",  mGPU->nrows);
   fprintf(fp, "%d\n",  mGPU->nnz);
   fprintf(fp, "%d\n",  mGPU->maxIt);
   fprintf(fp, "%d\n",  mGPU->mattype);
-  fprintf(fp, "%f\n",  mGPU->tolmax);
+  fprintf(fp, "%le\n",  mGPU->tolmax);
 
   int *jA=(int*)malloc(mGPU->nnz*sizeof(int));
   int *iA=(int*)malloc((mGPU->nrows+1)*sizeof(int));
@@ -155,16 +154,78 @@ void exportConfBCG(SolverData *sd, const char *filepath){
     fprintf(fp, "%d ",  iA[i]);
   fprintf(fp, "\n");
   for(int i=0; i<mGPU->nnz; i++)
-    fprintf(fp, "%f ",  A[i]);
+    fprintf(fp, "%le ",  A[i]);
   fprintf(fp, "\n");
   for(int i=0; i<mGPU->nrows; i++)
-    fprintf(fp, "%f ",  diag[i]);
+    fprintf(fp, "%le ",  diag[i]);
   fprintf(fp, "\n");
   for(int i=0; i<mGPU->nrows; i++)
-    fprintf(fp, "%f ",  x[i]);
+    fprintf(fp, "%le ",  x[i]);
   fprintf(fp, "\n");
   for(int i=0; i<mGPU->nrows; i++)
-    fprintf(fp, "%f ",  tempv[i]);
+    fprintf(fp, "%le ",  tempv[i]);
+
+  fclose(fp);
+
+#ifdef IS_IMPORTBCG
+
+  fp = fopen("confBCG.txt", "r");
+  if (fp == NULL) {
+    printf("File not found \n");
+    exit(EXIT_FAILURE);
+  }
+
+  fscanf(fp, "%d", &mGPU->n_cells);
+  fscanf(fp, "%d", &mGPU->nrows);
+  fscanf(fp, "%d", &mGPU->nnz);
+  fscanf(fp, "%d", &mGPU->maxIt);
+  fscanf(fp, "%d", &mGPU->mattype);
+  fscanf(fp, "%le", &mGPU->tolmax);
+
+  for(int i=0; i<mGPU->nnz; i++){
+    fscanf(fp, "%d", &jA[i]);
+    //printf("%d %d\n",i, jA[i]);
+  }
+
+  for(int i=0; i<mGPU->nrows+1; i++){
+    fscanf(fp, "%d", &iA[i]);
+    //printf("%d %d\n",i, iA[i]);
+  }
+
+  for(int i=0; i<mGPU->nnz; i++){
+    fscanf(fp, "%le", &A[i]);
+    //printf("%d %lf\n",i, A[i]);
+  }
+
+  for(int i=0; i<mGPU->nrows; i++){
+    fscanf(fp, "%le", &diag[i]);
+    //printf("%d %lf\n",i, diag[i]);
+  }
+
+  for(int i=0; i<mGPU->nrows; i++){
+    fscanf(fp, "%le", &x[i]);
+    //printf("%d %lf\n",i, x[i]);
+  }
+
+  for(int i=0; i<mGPU->nrows; i++){
+    fscanf(fp, "%le", &tempv[i]);
+    //printf("%d %lf\n",i, tempv[i]);
+  }
+
+  fclose(fp);
+
+  cudaMemcpy(mGPU->djA,jA,mGPU->nnz*sizeof(int),cudaMemcpyHostToDevice);
+  cudaMemcpy(mGPU->diA,iA,(mGPU->nrows+1)*sizeof(int),cudaMemcpyHostToDevice);
+
+  cudaMemcpy(mGPU->dA,A,mGPU->nnz*sizeof(double),cudaMemcpyHostToDevice);
+
+  cudaMemcpy(mGPU->ddiag,diag,mGPU->nrows*sizeof(double),cudaMemcpyHostToDevice);
+  cudaMemcpy(mGPU->dx,x,mGPU->nrows*sizeof(double),cudaMemcpyHostToDevice);
+  cudaMemcpy(mGPU->dtempv,tempv,mGPU->nrows*sizeof(double),cudaMemcpyHostToDevice);
+  /**/
+  printf("IMPORTBCG: Data read from %s\n",filepath);
+
+#endif
 
   free(jA);
   free(iA);
@@ -174,8 +235,6 @@ void exportConfBCG(SolverData *sd, const char *filepath){
   free(tempv);
 
   printf("exportConfBCG: Data saved to %s\n",filepath);
-
-  fclose(fp);
   //exit(0);
 }
 
@@ -195,13 +254,13 @@ void exportOutBCG(SolverData *sd, const char *filepath){
   cudaMemcpy(tempv,mGPU->dtempv,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
 
   for(int i=0; i<mGPU->nnz; i++)
-    fprintf(fp, "%f ",  A[i]);
+    fprintf(fp, "%le ",  A[i]);
   fprintf(fp, "\n");
   for(int i=0; i<mGPU->nrows; i++)
-    fprintf(fp, "%f ",  x[i]);
+    fprintf(fp, "%le ",  x[i]);
   fprintf(fp, "\n");
   for(int i=0; i<mGPU->nrows; i++)
-    fprintf(fp, "%f ",  tempv[i]);
+    fprintf(fp, "%le ",  tempv[i]);
 
   free(A);
   free(x);
@@ -624,7 +683,7 @@ void solveBcgCuda(
       it++;
     } while(it<maxIt+*it_pointer && temp1>tolmax);//while(it<maxIt && temp1>tolmax);//while(0);
 
-#ifdef DEBUG_SOLVEBCGCUDA_DEEP
+#ifndef DEBUG_SOLVEBCGCUDA_DEEP
     if(tid==0)
       printf("%d %d %-le %-le\n",tid,it,temp1,tolmax);
 #endif
@@ -684,11 +743,9 @@ void solveGPU_block_thr(int blocks, int threads_block, int n_shr_memory, int n_s
   //int offset_nnz=0;
   //int offset_nrows=0;
 
-
   //Works always supposing the same jac structure for all cells (same reactions on all cells)
   int *djA=mGPU->djA;
   int *diA=mGPU->diA;
-
   double *dA=mGPU->dA+offset_nnz;
   double *ddiag=mGPU->ddiag+offset_nrows;
   double *dx=mGPU->dx+offset_nrows;
@@ -696,7 +753,7 @@ void solveGPU_block_thr(int blocks, int threads_block, int n_shr_memory, int n_s
 
   int len_cell=nrows/n_cells;
 
-#ifdef IS_EXPORTBCG
+#ifndef IS_EXPORTBCG
   exportConfBCG(sd,"confBCG.txt");
 #endif
 
@@ -722,7 +779,7 @@ void solveGPU_block_thr(int blocks, int threads_block, int n_shr_memory, int n_s
 #endif
                                            );
 
-#ifdef IS_EXPORTBCG
+#ifndef IS_EXPORTBCG
   exportOutBCG(sd,"outBCG.txt");
 #endif
 
