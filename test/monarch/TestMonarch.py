@@ -53,6 +53,7 @@ class TestMonarch:
         self.results_file = "_solver_stats.csv"
         self.plotTitle = ""
         self.savePlot = True
+        self.is_import_export = False
         self.mpiProcesses = 1
         self.nCells = 1
         self.nCellsCase = 1
@@ -240,8 +241,11 @@ def run(conf):
 
     data_name = conf.chemFile + '_' + conf.caseMulticellsOnecell + conf.results_file
     tmp_path = 'out/' + data_name
-    is_data_imported,data_path = import_data(conf,tmp_path)
-    #is_data_imported, data_path = False, tmp_path
+
+    if conf.is_import_export:
+        is_data_imported,data_path = import_data(conf,tmp_path)
+    else:
+        is_data_imported, data_path = False, tmp_path
 
     print(data_path)
 
@@ -523,13 +527,16 @@ def all_timesteps():
     conf.profileCuda = False
     # conf.profileCuda = True
 
+    conf.is_import_export = False
+    #conf.is_import_export = True
+
     conf.mpi = "yes"
     # conf.mpi = "no"
 
     conf.mpiProcessesList = [1]
     #conf.mpiProcessesList = [40, 1]
 
-    conf.cells = [100]
+    conf.cells = [10]
     # conf.cells = [400,2000,4000]
     # conf.cells = [1,5,10,50,100]
     #conf.cells = [100,500,1000,5000,10000]
@@ -570,6 +577,7 @@ def all_timesteps():
     # conf.plotYKey="SMAPE"
     # conf.plotYKey="NRMSE"
     # conf.MAPETol=1.0E-6
+
 
     """END OF CONFIGURATION VARIABLES"""
 

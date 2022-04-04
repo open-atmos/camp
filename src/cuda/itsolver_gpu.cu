@@ -117,6 +117,102 @@ int nextPowerOfTwo(int v){
   return v;
 }
 
+void exportConfBCG(SolverData *sd, const char *filepath){
+
+  itsolver *bicg = &(sd->bicg);
+  ModelData *md = &(sd->model_data);
+  ModelDataGPU *mGPU = &sd->mGPU;
+  FILE *fp = fopen(filepath, "w+");
+  //FILE *fp = fopen("confBCG.txt", "w+");
+
+  fprintf(fp, "%d\n",  mGPU->n_cells);
+  fprintf(fp, "%d\n",  mGPU->nrows);
+  fprintf(fp, "%d\n",  mGPU->nnz);
+  fprintf(fp, "%d\n",  mGPU->maxIt);
+  fprintf(fp, "%d\n",  mGPU->mattype);
+  fprintf(fp, "%f\n",  mGPU->tolmax);
+
+  int *jA=(int*)malloc(mGPU->nnz*sizeof(int));
+  int *iA=(int*)malloc((mGPU->nrows+1)*sizeof(int));
+  double *A=(double*)malloc(mGPU->nnz*sizeof(double));
+  double *diag=(double*)malloc(mGPU->nrows*sizeof(double));
+  double *x=(double*)malloc(mGPU->nrows*sizeof(double));
+  double *tempv=(double*)malloc(mGPU->nrows*sizeof(double));
+
+  cudaMemcpy(jA, mGPU->djA,mGPU->nnz*sizeof(int),cudaMemcpyDeviceToHost);
+  cudaMemcpy(iA, mGPU->diA,(mGPU->nrows+1)*sizeof(int),cudaMemcpyDeviceToHost);
+  cudaMemcpy(A, mGPU->dA,mGPU->nnz*sizeof(double),cudaMemcpyDeviceToHost);
+  cudaMemcpy(diag,mGPU->ddiag,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
+  cudaMemcpy(x,mGPU->dx,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
+  cudaMemcpy(tempv,mGPU->dtempv,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
+
+  for(int i=0; i<mGPU->nnz; i++){
+    //printf("%d\n",mGPU->djA[i]);
+    fprintf(fp, "%d ",  jA[i]);
+  }
+  fprintf(fp, "\n");
+  for(int i=0; i<mGPU->nrows+1; i++)
+    fprintf(fp, "%d ",  iA[i]);
+  fprintf(fp, "\n");
+  for(int i=0; i<mGPU->nnz; i++)
+    fprintf(fp, "%f ",  A[i]);
+  fprintf(fp, "\n");
+  for(int i=0; i<mGPU->nrows; i++)
+    fprintf(fp, "%f ",  diag[i]);
+  fprintf(fp, "\n");
+  for(int i=0; i<mGPU->nrows; i++)
+    fprintf(fp, "%f ",  x[i]);
+  fprintf(fp, "\n");
+  for(int i=0; i<mGPU->nrows; i++)
+    fprintf(fp, "%f ",  tempv[i]);
+
+  free(jA);
+  free(iA);
+  free(A);
+  free(diag);
+  free(x);
+  free(tempv);
+
+  printf("exportConfBCG: Data saved to %s\n",filepath);
+
+  fclose(fp);
+  //exit(0);
+}
+
+void exportOutBCG(SolverData *sd, const char *filepath){
+
+  itsolver *bicg = &(sd->bicg);
+  ModelData *md = &(sd->model_data);
+  ModelDataGPU *mGPU = &sd->mGPU;
+  FILE *fp = fopen(filepath, "w+");
+
+  double *A=(double*)malloc(mGPU->nnz*sizeof(double));
+  double *x=(double*)malloc(mGPU->nrows*sizeof(double));
+  double *tempv=(double*)malloc(mGPU->nrows*sizeof(double));
+
+  cudaMemcpy(A, mGPU->dA,mGPU->nnz*sizeof(double),cudaMemcpyDeviceToHost);
+  cudaMemcpy(x,mGPU->dx,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
+  cudaMemcpy(tempv,mGPU->dtempv,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
+
+  for(int i=0; i<mGPU->nnz; i++)
+    fprintf(fp, "%f ",  A[i]);
+  fprintf(fp, "\n");
+  for(int i=0; i<mGPU->nrows; i++)
+    fprintf(fp, "%f ",  x[i]);
+  fprintf(fp, "\n");
+  for(int i=0; i<mGPU->nrows; i++)
+    fprintf(fp, "%f ",  tempv[i]);
+
+  free(A);
+  free(x);
+  free(tempv);
+
+  printf("exportOutBCG: Data saved to %s\n",filepath);
+
+  fclose(fp);
+  exit(0);
+}
+
 //Based on
 // https://github.com/scipy/scipy/blob/3b36a574dc657d1ca116f6e230be694f3de31afc/scipy/sparse/sparsetools/csr.h#L363
 void swapCSC_CSR(int n_row, int n_col, int* Ap, int* Aj, double* Ax, int* Bp, int* Bi, double* Bx){
@@ -600,6 +696,10 @@ void solveGPU_block_thr(int blocks, int threads_block, int n_shr_memory, int n_s
 
   int len_cell=nrows/n_cells;
 
+#ifdef IS_EXPORTBCG
+  exportConfBCG(sd,"confBCG.txt");
+#endif
+
 #ifndef DEBUG_SOLVEBCGCUDA
   if(bicg->counterBiConjGrad==0) {
     printf("solveGPU_block_thr n_cells %d len_cell %d nrows %d nnz %d max_threads_block %d blocks %d threads_block %d n_shr_empty %d offset_cells %d\n",
@@ -621,6 +721,10 @@ void solveGPU_block_thr(int blocks, int threads_block, int n_shr_memory, int n_s
                                                    , last_blockN
 #endif
                                            );
+
+#ifdef IS_EXPORTBCG
+  exportOutBCG(sd,"outBCG.txt");
+#endif
 
 
 }

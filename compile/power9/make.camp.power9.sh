@@ -9,7 +9,7 @@ export JSON_FORTRAN_HOME=$(pwd)/../../../json-fortran-6.1.0/install/jsonfortran-
 is_sbatch="false"
 
 mkdir_if_not_exists(){
-  if [ ! -d $1 ]; then
+  if [ !-d $1 ]; then
       mkdir $1
   fi
 }
