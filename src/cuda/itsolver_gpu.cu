@@ -753,7 +753,7 @@ void solveGPU_block_thr(int blocks, int threads_block, int n_shr_memory, int n_s
 
   int len_cell=nrows/n_cells;
 
-#ifndef IS_EXPORTBCG
+#ifdef IS_EXPORTBCG
   exportConfBCG(sd,"confBCG.txt");
 #endif
 
@@ -779,7 +779,7 @@ void solveGPU_block_thr(int blocks, int threads_block, int n_shr_memory, int n_s
 #endif
                                            );
 
-#ifndef IS_EXPORTBCG
+#ifdef IS_EXPORTBCG
   exportOutBCG(sd,"outBCG.txt");
 #endif
 

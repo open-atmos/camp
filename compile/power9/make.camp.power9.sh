@@ -5,29 +5,28 @@ export SUITE_SPARSE_HOME=$(pwd)/../../../SuiteSparse
 export JSON_FORTRAN_HOME=$(pwd)/../../../json-fortran-6.1.0/install/jsonfortran-gnu-6.1.0
 #export GSL_HOME=${GSL_DIR}
 
-#is_sbatch="true"
-is_sbatch="false"
+is_sbatch="true"
+#is_sbatch="false"
 
 mkdir_if_not_exists(){
-  if [ !-d $1 ]; then
+  if [ ! -d $1 ]; then
       mkdir $1
   fi
 }
 
+rm_old_logs(){
+find $1 -type f -mtime +90 -exec rm -rf {} \;
+}
+
+
 if [ $is_sbatch == "true" ]; then
-  ./make.camp.power9.sbatch.sh
 
-  search_dir=log/out/
-  for entry in "$search_dir"/*
-  do
-    echo "$entry"
-    mkdir_if_not_exists ../../test/monarch/exports/log
-    mkdir_if_not_exists ../../test/monarch/exports/log/err
-    mkdir_if_not_exists ../../test/monarch/exports/log/out
+  rm_old_logs log/out/
+  rm_old_logs log/err/
 
-  done
 
-#get %j from file (osea dividir el nombre y la extension y sacar el numero)
+
+  #./make.camp.power9.sbatch.sh
 
 else
 
