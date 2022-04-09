@@ -5,8 +5,8 @@ export SUITE_SPARSE_HOME=$(pwd)/../../../SuiteSparse
 export JSON_FORTRAN_HOME=$(pwd)/../../../json-fortran-6.1.0/install/jsonfortran-gnu-6.1.0
 #export GSL_HOME=${GSL_DIR}
 
-is_sbatch="true"
-#is_sbatch="false"
+#is_sbatch="true"
+is_sbatch="false"
 
 mkdir_if_not_exists(){
   if [ ! -d $1 ]; then
@@ -30,6 +30,7 @@ if [ $is_sbatch == "true" ]; then
   cd ../../..
   mkdir_if_not_exists camp_jobs
   rm_old_dirs_jobs camp_jobs/
+  echo "Copying camp folder to " camp_jobs/camp$id
   cp -r camp camp_jobs/camp$id
   cd camp/compile/power9
 

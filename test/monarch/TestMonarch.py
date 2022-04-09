@@ -561,7 +561,7 @@ def all_timesteps():
     # conf.cells = [1,5,10,50,100]
     #conf.cells = [100,500,1000,5000,10000]
 
-    conf.timeSteps = 1
+    conf.timeSteps = 9
     conf.timeStepsDt = 3
 
     conf.caseBase = "CPU One-cell"
@@ -644,18 +644,10 @@ def all_timesteps():
     if len(conf.mpiProcessesList) > 2 or len(conf.mpiProcessesList) < 1:
         raise Exception("Length of mpiProcessesList should be between 1 and 2")
 
-    start_time = time.perf_counter()
     conf.datacolumns = []
-
     run_diffCells(conf)
 
-    end_time = time.perf_counter()
-    time_s = end_time - start_time
-    if time_s > 1:
-        conf.savePlot = True
-    else:
-        conf.savePlot = False
-
+    conf.savePlot = False #todo more like saveData than savePlot, to avoid too much files on export folder
     plot_cases(conf)
 
     del conf
@@ -663,7 +655,16 @@ def all_timesteps():
 all_timesteps()
 
 
-
+"""
+    start_time = time.perf_counter()
+    end_time = time.perf_counter()
+    
+    if time_s > 1:
+        conf.savePlot = True
+    else:
+        conf.savePlot = False
+        time_s = end_time - start_time
+"""
 
 
 

@@ -3,7 +3,7 @@
 #SBATCH --job-name=test_monarch
 #SBATCH --output=log/out/%j.txt
 #SBATCH --error=log/err/%j.txt
-#SBATCH --ntasks=1
+##SBATCH --ntasks=1
 #SBATCH --ntasks=40
 #SBATCH --gres=gpu:1
 ##SBATCH --exclusive
@@ -27,7 +27,8 @@ compile_run(){
   FILE=TestMonarch.py
   if test -f "$FILE"; then
     python $FILE
-    cp -r -u ../../../test/monarch/exports/* ../../../../camp/test/monarch/exports/
+    srun --qos=debug --ntasks=1 cp -r -u ../../../test/monarch/exports/* ../../../../camp/test/monarch/exports/ #seems fine
+    #cp -r -u ../../../test/monarch/exports/* ../../../../camp/test/monarch/exports/
     cd ../../
 
     #./test_monarch_1.sh MPI
@@ -39,7 +40,8 @@ compile_run(){
   fi
 
   cd ../../
-  rm -rf camp_jobs/camp$id
+  srun --qos=debug --ntasks=1 rm -rf camp_jobs/camp$id #fine
+  #rm -rf camp_jobs/camp$id
   cd camp/compile/power9
 }
 
