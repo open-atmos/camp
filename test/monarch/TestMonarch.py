@@ -27,6 +27,9 @@ from pathlib import Path
 import shutil
 import zipfile
 from os import walk
+import importlib
+import subprocess
+import glob
 
 class TestMonarch:
     def __init__(self):
@@ -44,6 +47,7 @@ class TestMonarch:
         self.plotYKey = ""
         self.MAPETol = 1.0E-4
         self.readData = False
+        self.commit = ""
         # Auxiliar
         self.diffCells = ""
         self.datacolumns = []
@@ -105,8 +109,17 @@ def write_camp_config_file(conf):
 
     file1.close()
 
-def import_data(conf,tmp_path):
+def get_commit_hash():
+    try:
+        commit = subprocess.check_output(
+            ['git', 'rev-parse', '--short', 'HEAD']).decode().strip()
+    # Not copying .git folder into docker container
+    except subprocess.CalledProcessError:
+        commit = "0000000"
+    #print(' > Git Hash: {}'.format(commit))
+    return str(commit)
 
+def import_data(conf,tmp_path):
     init_path = os.path.abspath(os.getcwd())
     is_data_imported = False
     os.chdir("../../..")
@@ -137,6 +150,10 @@ def import_data(conf,tmp_path):
         conf_dict = vars(conf)
         if conf_imported["timeSteps"] >= conf_dict["timeSteps"]:
             conf_imported["timeSteps"] = conf_dict["timeSteps"]
+        if conf_dict["commit"] == "MATCH_IMPORTED_CONF":
+            conf.commit=get_commit_hash()
+        else:
+            conf_imported["commit"] = conf_dict["commit"]
         if conf_imported == conf_dict:
             is_data_imported = True
             directory_to_extract_to = data_path
@@ -156,10 +173,10 @@ def import_data(conf,tmp_path):
     return is_data_imported,new_path
 
 def export(conf, data_path):
-
     init_path = os.path.abspath(os.getcwd())
     data_path_abs = os.path.abspath(os.getcwd()) + "/" + data_path
     exportPath = conf.exportPath
+    conf.commit=get_commit_hash()
 
     os.chdir("../../..")
     print(os.path.abspath(os.getcwd()) + "/" + exportPath)
@@ -187,7 +204,7 @@ def export(conf, data_path):
     path_to_zip_file = conf_path
     shutil.make_archive(path_to_zip_file, 'zip', conf_path)
     shutil.rmtree(conf_path)
-    
+
     print("Configuration saved to", os.path.abspath(os.getcwd()) + path_to_zip_file)
 
     path_to_zip_file = exportPath +"/data"
@@ -527,16 +544,19 @@ def all_timesteps():
     conf.profileCuda = False
     # conf.profileCuda = True
 
-    conf.is_import_export = False
-    #conf.is_import_export = True
+    #conf.is_import_export = False
+    conf.is_import_export = True
+
+    conf.commit = "MATCH_IMPORTED_CONF"
+    #conf.commit = ""
 
     conf.mpi = "yes"
     # conf.mpi = "no"
 
-    conf.mpiProcessesList = [1]
-    #conf.mpiProcessesList = [40, 1]
+    #conf.mpiProcessesList = [1]
+    conf.mpiProcessesList = [40, 1]
 
-    conf.cells = [10]
+    conf.cells = [100]
     # conf.cells = [400,2000,4000]
     # conf.cells = [1,5,10,50,100]
     #conf.cells = [100,500,1000,5000,10000]
@@ -641,6 +661,7 @@ def all_timesteps():
     del conf
 
 all_timesteps()
+
 
 
 

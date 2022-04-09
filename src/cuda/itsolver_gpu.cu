@@ -683,7 +683,7 @@ void solveBcgCuda(
       it++;
     } while(it<maxIt+*it_pointer && temp1>tolmax);//while(it<maxIt && temp1>tolmax);//while(0);
 
-#ifndef DEBUG_SOLVEBCGCUDA_DEEP
+#ifdef DEBUG_SOLVEBCGCUDA_DEEP
     if(tid==0)
       printf("%d %d %-le %-le\n",tid,it,temp1,tolmax);
 #endif

@@ -15,18 +15,27 @@ mkdir_if_not_exists(){
 }
 
 rm_old_logs(){
-find $1 -type f -mtime +90 -exec rm -rf {} \;
+find $1 -type f -mtime +30 -exec rm -rf {} \;
 }
-
+rm_old_dirs_jobs(){
+find $1 -type d -ctime +10 -exec rm -rf {} +
+}
 
 if [ $is_sbatch == "true" ]; then
 
   rm_old_logs log/out/
   rm_old_logs log/err/
 
+  id=$(date +%s%N)
+  cd ../../..
+  mkdir_if_not_exists camp_jobs
+  rm_old_dirs_jobs camp_jobs/
+  cp -r camp camp_jobs/camp$id
+  cd camp/compile/power9
 
-
-  #./make.camp.power9.sbatch.sh
+  job_id=$(sbatch --parsable ./sbatch.make.camp.power9.sh $id)
+  #./sbatch.make.camp.power9.sh $id
+  echo "Sent job " $job_id
 
 else
 
