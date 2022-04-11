@@ -6,6 +6,8 @@
 #ifndef CAMPGPU_CUDA_STRUCTS_H
 #define CAMPGPU_CUDA_STRUCTS_H
 
+#include "../defines.h"
+
 typedef struct
 {
   //Init variables ("public")
@@ -17,6 +19,9 @@ typedef struct
   double* aux;
 
 #ifdef CAMP_DEBUG_GPU
+  int* counters;
+  double* times;
+
   int counterNewtonIt;
   int counterLinSolSetup;
   int counterLinSolSolve;
@@ -355,6 +360,10 @@ typedef struct {
 //ODE stats
 #ifdef CAMP_DEBUG_GPU
     int clock_khz;
+
+    int* counters;
+    double* times;
+
     double *tguessNewton;
     double *dtNewtonIteration;
     double *dtJac;
@@ -368,6 +377,6 @@ typedef struct {
     double *dtPostBCG;
 #endif
 
-} ModelDataGPU;
+} ModelDataGPU; //GPU variables
 
 

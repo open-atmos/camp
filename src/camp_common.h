@@ -14,6 +14,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include "defines.h"
 #include "Jacobian.h"
 #include "time_derivative.h"
 

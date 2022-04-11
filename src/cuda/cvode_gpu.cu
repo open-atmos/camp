@@ -1982,6 +1982,13 @@ void constructor_cvode_gpu(CVodeMem cv_mem, SolverData *sd)
   cudaMalloc((void**)&mGPU->dtguess_helper,lendt*sizeof(double));
   cudaMemset(mGPU->dtguess_helper, 0., lendt*sizeof(double));
 
+  bicg->counters= (int *)calloc(SIZE_TIMES, sizeof(int));
+  bicg->times= (double *)calloc(SIZE_TIMES, sizeof(double));
+  cudaMalloc((void**)&mGPU->counters,SIZE_TIMES*sizeof(int));
+  cudaMemset(mGPU->counters, 0, SIZE_TIMES*sizeof(int));
+  cudaMalloc((void**)&mGPU->times,SIZE_TIMES*sizeof(double));
+  cudaMemset(mGPU->times, 0., SIZE_TIMES*sizeof(double));
+
   bicg->timeNewtonIt=CAMP_TINY;
   bicg->timeLinSolSetup=CAMP_TINY;
   bicg->timeLinSolSolve=CAMP_TINY;
@@ -4870,20 +4877,8 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
 
   cudaMemcpy(mGPU->mdv, &sd->mdv, sizeof(ModelDataVariable), cudaMemcpyHostToDevice);
 
-#ifdef CAMP_DEBUG_GPU
-    //cudaEventRecord(bicg->startBCG);
-#endif
-
   solveCVODEGPU(sd, cv_mem);
   cudaDeviceSynchronize();
-
-#ifdef CAMP_DEBUG_GPU
-  //cudaEventRecord(bicg->stopBCG);
-  //cudaEventSynchronize(bicg->stopBCG);
-  //float msBiConjGrad = 0.0;
-  //cudaEventElapsedTime(&msBiConjGrad, bicg->startBCG, bicg->stopBCG);
-  //bicg->timeBiConjGrad+= msBiConjGrad;
-#endif
 
   cudaMemcpy(&sd->mdv, mGPU->mdvo, sizeof(ModelDataVariable), cudaMemcpyDeviceToHost);
 
@@ -4978,7 +4973,6 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
   }
     istate=flag;
 
-    //printf("DEV_cudacvStep counterBiConjGrad %d\n",bicg->counterBiConjGrad);
     //printf("cudaCVode flag %d kflag %d\n",flag, sd->mdv.flag);
 
     // In NORMAL mode, check if tout reached
