@@ -1,0 +1,33 @@
+Traceback (most recent call last):
+  File "TestMonarch.py", line 671, in <module>
+    all_timesteps()
+  File "TestMonarch.py", line 663, in all_timesteps
+    run_diffCells(conf)
+  File "TestMonarch.py", line 420, in run_diffCells
+    data = run_cells(conf)
+  File "TestMonarch.py", line 403, in run_cells
+    datacases = run_cases(conf)
+  File "TestMonarch.py", line 351, in run_cases
+    dataCaseBase = run_case(conf)
+  File "TestMonarch.py", line 300, in run_case
+    data = run(conf)
+  File "TestMonarch.py", line 279, in run
+    is_import, data_path = import_data(conf, tmp_path)
+  File "TestMonarch.py", line 184, in import_data
+    shutil.rmtree(conf_path)
+  File "/gpfs/projects/bsc32/software/rhel/7.4/ppc64le/POWER9/software/Python/3.7.0-foss-2018b/lib/python3.7/shutil.py", line 485, in rmtree
+    _rmtree_safe_fd(fd, path, onerror)
+  File "/gpfs/projects/bsc32/software/rhel/7.4/ppc64le/POWER9/software/Python/3.7.0-foss-2018b/lib/python3.7/shutil.py", line 443, in _rmtree_safe_fd
+    onerror(os.unlink, fullname, sys.exc_info())
+  File "/gpfs/projects/bsc32/software/rhel/7.4/ppc64le/POWER9/software/Python/3.7.0-foss-2018b/lib/python3.7/shutil.py", line 441, in _rmtree_safe_fd
+    os.unlink(entry.name, dir_fd=topfd)
+FileNotFoundError: [Errno 2] No such file or directory: '09-04-2022-15.49.36.json'
+/usr/bin/cp: ‘../../../test/monarch/exports/camp_in_out_0.json’ and ‘../../../../camp/test/monarch/exports/camp_in_out_0.json’ are the same file
+srun: error: p9r3n13: task 0: Exited with exit code 1
+srun: Terminating job step 6002181.0
+/usr/bin/cp: ‘../../../test/monarch/exports/camp_in_out_0_mapping_photcb05.json’ and ‘../../../../camp/test/monarch/exports/camp_in_out_0_mapping_photcb05.json’ are the same file
+/usr/bin/cp: ‘../../../test/monarch/exports/camp_in_out_0_working_photo_rates.json’ and ‘../../../../camp/test/monarch/exports/camp_in_out_0_working_photo_rates.json’ are the same file
+/usr/bin/cp: ‘../../../test/monarch/exports/camp_input18.json’ and ‘../../../../camp/test/monarch/exports/camp_input18.json’ are the same file
+/usr/bin/cp: ‘../../../test/monarch/exports/camp_input_18.txt’ and ‘../../../../camp/test/monarch/exports/camp_input_18.txt’ are the same file
+/usr/bin/cp: ‘../../../test/monarch/exports/conf.zip’ and ‘../../../../camp/test/monarch/exports/conf.zip’ are the same file
+/usr/bin/cp: ‘../../../test/monarch/exports/data’ and ‘../../../../camp/test/monarch/exports/data’ are the same file

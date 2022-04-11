@@ -511,7 +511,7 @@ def plot_solver_stats(data, plot_x_key, plot_y_key, plot_title):
     plt.show()
 
 
-def plotplt(namex, namey, datax, datay, plot_title, savePlot):
+def plotplt(namex, namey, datax, datay, plot_title):
     # fig = plt.figure(figsize=(7, 4.25))
     fig = plt.figure()
     spec2 = mpl.gridspec.GridSpec(ncols=1, nrows=1, wspace=.35, hspace=.1, bottom=.25, top=.85, left=.1, right=.9)
@@ -592,21 +592,9 @@ def plotsns(namex, namey, datax, datay, plot_title, legend):
         sns.lineplot(data=data, palette="tab10", linewidth=2.5, legend=False)
 
 
-def plot(namex, namey, datax, datay, plot_title, legend, savePlot):
-    # plotplt(namex, namey, datax, datay, plot_title, savePlot)
+def plot(namex, namey, datax, datay, plot_title, legend):
+    # plotplt(namex, namey, datax, datay, plot_title)
     plotsns(namex, namey, datax, datay, plot_title, legend)
-
-    if savePlot:
-        now = datetime.datetime.now()
-        dt_string = now.strftime("%d-%m-%Y %H.%M.%S")
-        save_folder = "out/plots/" + namey + " " + plot_title
-        save_folder = save_folder.replace(":", "")
-        if not os.path.exists(save_folder):
-            os.makedirs(save_folder)
-        save_path = save_folder + "/" + dt_string + ".png"
-        print("Plot saved to", save_path)
-        plt.savefig(save_path)
-
     plt.show()
 
 def read_solver_stats(file, data):

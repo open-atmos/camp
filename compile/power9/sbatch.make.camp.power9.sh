@@ -1,12 +1,11 @@
 #!/usr/bin/env bash
-#SBATCH --qos=debug
+##SBATCH --qos=debug
 #SBATCH --job-name=test_monarch
 #SBATCH --output=log/out/%j.txt
 #SBATCH --error=log/err/%j.txt
-##SBATCH --ntasks=1
 #SBATCH --ntasks=40
 #SBATCH --gres=gpu:1
-##SBATCH --exclusive
+#SBATCH --exclusive
 
 export SUNDIALS_HOME=$(pwd)/../../../cvode-3.4-alpha/install
 export SUITE_SPARSE_HOME=$(pwd)/../../../SuiteSparse
@@ -26,9 +25,8 @@ compile_run(){
 
   FILE=TestMonarch.py
   if test -f "$FILE"; then
-    python $FILE
+    python $FILE  "sbatch=true"
     srun --qos=debug --ntasks=1 cp -r -u ../../../test/monarch/exports/* ../../../../camp/test/monarch/exports/ #seems fine
-    #cp -r -u ../../../test/monarch/exports/* ../../../../camp/test/monarch/exports/
     cd ../../
 
     #./test_monarch_1.sh MPI
@@ -41,7 +39,6 @@ compile_run(){
 
   cd ../../
   srun --qos=debug --ntasks=1 rm -rf camp_jobs/camp$id #fine
-  #rm -rf camp_jobs/camp$id
   cd camp/compile/power9
 }
 

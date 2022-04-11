@@ -1,0 +1,54 @@
+id 1649537924041787259
+[  0%] Built target copy_boot_camp
+[ 42%] Built target copy_data
+[ 85%] Built target copy_mechanism
+Built target camplib
+Built target camp_box_model
+Built target camplib-static
+Built target mock_monarch
+Built target copy_test
+ Time-steps:        1440 Cells:           2 RealisticOne-cellMPI size          40
+ Config complex (test 2)
+ Initialization time:   0.68876800000000005       s
+ i_hour loop           1
+ i_hour loop           2
+ i_hour loop           3
+ i_hour loop           4
+ i_hour loop           5
+ i_hour loop           6
+ i_hour loop           7
+ i_hour loop           8
+ i_hour loop           9
+ i_hour loop          10
+ i_hour loop          11
+ i_hour loop          12
+ i_hour loop          13
+ i_hour loop          14
+ i_hour loop          15
+ i_hour loop          16
+ i_hour loop          17
+ i_hour loop          18
+ i_hour loop          19
+ i_hour loop          20
+ i_hour loop          21
+ i_hour loop          22
+ i_hour loop          23
+ i_hour loop          24
+ i_hour loop          25
+ i_hour loop          26
+ i_hour loop          27
+ i_hour loop          28
+ i_hour loop          29
+ i_hour loop          30
+ i_hour loop          31
+ i_hour loop          32
+ i_hour loop          33
+ i_hour loop          34
+ i_hour loop          35
+
+SUNDIALS Solver Statistics:
+number of steps = 10000  RHS evals = 43258  LS setups = 10886 
+error test fails = 5      LS iters = 16096  NLS iters = 7612  
+NL conv fails = 7612   Dls Jac evals = 8871   Dls RHS evals = 0      G evals = 0     
+Last time step = 1.966399e-11 Next time step = 1.966399e-11
+

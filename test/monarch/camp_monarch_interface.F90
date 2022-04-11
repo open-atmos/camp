@@ -186,9 +186,9 @@ contains
       this%n_cells=n_cells
     end if
 
-    if (MONARCH_PROCESS.eq.0) then
-      print*,"camp_monarch_interface_t start"
-    end if
+    !if (MONARCH_PROCESS.eq.0) then
+    !  print*,"camp_monarch_interface_t start"
+    !end if
 
     this%interface_input_file=interface_config_file
     this%ADD_EMISIONS=ADD_EMISIONS

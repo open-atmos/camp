@@ -31,6 +31,7 @@ import importlib
 import subprocess
 import glob
 
+
 class TestMonarch:
     def __init__(self):
         # Configuration
@@ -48,6 +49,7 @@ class TestMonarch:
         self.MAPETol = 1.0E-4
         self.readData = False
         self.commit = ""
+        self.is_export = False
         # Auxiliar
         self.diffCells = ""
         self.datacolumns = []
@@ -56,8 +58,6 @@ class TestMonarch:
         self.case = []
         self.results_file = "_solver_stats.csv"
         self.plotTitle = ""
-        self.savePlot = True
-        self.is_import_export = False
         self.mpiProcesses = 1
         self.nCells = 1
         self.nCellsCase = 1
@@ -80,6 +80,17 @@ class TestMonarch:
         if os.path.exists(self.campSolverConfigFile):
             os.remove(self.campSolverConfigFile)
 
+
+def get_is_sbatch():
+    try:
+        if sys.argv[1] == "sbatch=true":
+            return True
+        else:
+            return False
+    except Exception:
+        return False
+
+
 def write_itsolver_config_file(conf):
     file1 = open(conf.itsolverConfigFile, "w")
 
@@ -88,6 +99,7 @@ def write_itsolver_config_file(conf):
     # print("Saved", cells_method_str)
 
     file1.close()
+
 
 def write_camp_config_file(conf):
     file1 = open(conf.campSolverConfigFile, "w")
@@ -109,6 +121,7 @@ def write_camp_config_file(conf):
 
     file1.close()
 
+
 def get_commit_hash():
     try:
         commit = subprocess.check_output(
@@ -116,19 +129,20 @@ def get_commit_hash():
     # Not copying .git folder into docker container
     except subprocess.CalledProcessError:
         commit = "0000000"
-    #print(' > Git Hash: {}'.format(commit))
+    # print(' > Git Hash: {}'.format(commit))
     return str(commit)
 
-def import_data(conf,tmp_path):
+
+def import_data(conf, tmp_path):
     init_path = os.path.abspath(os.getcwd())
-    is_data_imported = False
+    is_import = False
     os.chdir("../../..")
     exportPath = conf.exportPath
     new_path = tmp_path
 
     if not os.path.exists(exportPath):
         os.chdir(init_path)
-        return False,new_path
+        return False, new_path
 
     conf_path = exportPath + "/conf"
     path_to_zip_file = conf_path + ".zip"
@@ -138,7 +152,7 @@ def import_data(conf,tmp_path):
             zip_ref.extractall(directory_to_extract_to)
     else:
         os.chdir(init_path)
-        return False,new_path
+        return False, new_path
 
     filenames = next(walk(conf_path), (None, None, []))[2]  # [] if no file
 
@@ -148,21 +162,22 @@ def import_data(conf,tmp_path):
         jsonFile = open(conf_name)
         conf_imported = json.load(jsonFile)
         conf_dict = vars(conf)
+        conf_imported["is_export"] = conf_dict["is_export"]
         if conf_imported["timeSteps"] >= conf_dict["timeSteps"]:
             conf_imported["timeSteps"] = conf_dict["timeSteps"]
         if conf_dict["commit"] == "MATCH_IMPORTED_CONF":
-            conf.commit=get_commit_hash()
+            conf.commit = get_commit_hash()
         else:
             conf_imported["commit"] = conf_dict["commit"]
         if conf_imported == conf_dict:
-            is_data_imported = True
+            is_import = True
             directory_to_extract_to = data_path
             basename = os.path.splitext(filename)[0]
             path_to_zip_file = data_path + basename + ".zip"
             with zipfile.ZipFile(path_to_zip_file, 'r') as zip_ref:
                 zip_ref.extractall(directory_to_extract_to)
             new_path = os.path.abspath(os.getcwd()) + "/" + directory_to_extract_to + basename + ".csv"
-            print("Imported data from",new_path)
+            print("Imported data from", new_path)
             break
 
     conf_imported.clear()
@@ -170,13 +185,14 @@ def import_data(conf,tmp_path):
 
     os.chdir(init_path)
 
-    return is_data_imported,new_path
+    return is_import, new_path
+
 
 def export(conf, data_path):
     init_path = os.path.abspath(os.getcwd())
     data_path_abs = os.path.abspath(os.getcwd()) + "/" + data_path
     exportPath = conf.exportPath
-    conf.commit=get_commit_hash()
+    conf.commit = get_commit_hash()
 
     os.chdir("../../..")
     print(os.path.abspath(os.getcwd()) + "/" + exportPath)
@@ -207,24 +223,25 @@ def export(conf, data_path):
 
     print("Configuration saved to", os.path.abspath(os.getcwd()) + path_to_zip_file)
 
-    path_to_zip_file = exportPath +"/data"
+    path_to_zip_file = exportPath + "/data"
     if not os.path.exists(path_to_zip_file):
         os.makedirs(path_to_zip_file)
 
-    path_to_zip_file = exportPath +"/data/" + dt_string + ".zip"
+    path_to_zip_file = exportPath + "/data/" + dt_string + ".zip"
     new_data_name = dt_string + ".csv"
-    new_data_path = exportPath +"/data/" + new_data_name
-    os.rename(data_path_abs,new_data_path)
-    zipfile.ZipFile(path_to_zip_file, mode='w').write(new_data_path,arcname=new_data_name)
-    os.rename(new_data_path,data_path_abs)
+    new_data_path = exportPath + "/data/" + new_data_name
+    os.rename(data_path_abs, new_data_path)
+    zipfile.ZipFile(path_to_zip_file, mode='w').write(new_data_path, arcname=new_data_name)
+    os.rename(new_data_path, data_path_abs)
 
-    print("Data saved to", os.path.abspath(os.getcwd())+"/"+path_to_zip_file)
+    print("Data saved to", os.path.abspath(os.getcwd()) + "/" + path_to_zip_file)
 
     if os.path.getsize(exportPath) > 1000000000:
-        print("WARNING: More than 1GB saved in ", os.path.abspath(os.getcwd())+"/"+exportPath)
-        #raise
+        print("WARNING: More than 1GB saved in ", os.path.abspath(os.getcwd()) + "/" + exportPath)
+        # raise
 
     os.chdir(init_path)
+
 
 def run(conf):
     exec_str = ""
@@ -250,7 +267,7 @@ def run(conf):
     # Onecell-Multicells itsolver
     write_itsolver_config_file(conf)
 
-    print("exec_str:",exec_str, conf.caseGpuCpu, conf.caseMulticellsOnecell)
+    print("exec_str:", exec_str, conf.caseGpuCpu, conf.caseMulticellsOnecell)
 
     conf_name = "TestMonarch.json"
     with open(conf_name, 'w', encoding='utf-8') as jsonFile:
@@ -259,22 +276,20 @@ def run(conf):
     data_name = conf.chemFile + '_' + conf.caseMulticellsOnecell + conf.results_file
     tmp_path = 'out/' + data_name
 
-    if conf.is_import_export:
-        is_data_imported,data_path = import_data(conf,tmp_path)
-    else:
-        is_data_imported, data_path = False, tmp_path
+    is_import, data_path = import_data(conf, tmp_path)
+    # is_import, data_path = False, tmp_path
 
     print(data_path)
-
-    if not is_data_imported:
-         # Main
+    if not is_import:
+        # Main
         os.system(exec_str)
-        export(conf,data_path)
+        if conf.is_export:
+            export(conf, data_path)
 
     data = {}
     plot_functions.read_solver_stats(data_path, data)
 
-    if is_data_imported:
+    if is_import:
         print("Remove ", data_path)
         os.remove(data_path)
 
@@ -424,6 +439,7 @@ def getCaseName(conf):
 
     return case_multicells_onecell_name
 
+
 def plot_cases(conf):
     # Set plot info
     cases_words = conf.caseBase.split()
@@ -508,7 +524,7 @@ def plot_cases(conf):
         datay = conf.datacolumns[0]
 
     if (len(conf.cells) > 1):
-        #print_timesteps_title = True
+        # print_timesteps_title = True
         print_timesteps_title = False
         if print_timesteps_title:
             conf.plotTitle += ", Timesteps: " + str(conf.timeSteps)
@@ -527,7 +543,7 @@ def plot_cases(conf):
     print(namex, ":", datax)
     print(namey, ":", datay)
 
-    #plot_functions.plot(namex, namey, datax, datay, conf.plotTitle, conf.legend, conf.savePlot)
+    # plot_functions.plot(namex, namey, datax, datay, conf.plotTitle, conf.legend)
 
 
 def all_timesteps():
@@ -544,28 +560,29 @@ def all_timesteps():
     conf.profileCuda = False
     # conf.profileCuda = True
 
-    #conf.is_import_export = False
-    conf.is_import_export = True
+    conf.is_export = get_is_sbatch()
+    #conf.is_export = False
+    #conf.is_export = True
 
-    conf.commit = "MATCH_IMPORTED_CONF"
-    #conf.commit = ""
+    #conf.commit = "MATCH_IMPORTED_CONF"
+    conf.commit = ""
 
     conf.mpi = "yes"
     # conf.mpi = "no"
 
-    #conf.mpiProcessesList = [1]
-    conf.mpiProcessesList = [40, 1]
+    conf.mpiProcessesList = [1]
+    #conf.mpiProcessesList = [40, 1]
 
     conf.cells = [100]
     # conf.cells = [400,2000,4000]
     # conf.cells = [1,5,10,50,100]
     #conf.cells = [100,500,1000,5000,10000]
 
-    conf.timeSteps = 9
+    conf.timeSteps = 2
     conf.timeStepsDt = 3
 
     conf.caseBase = "CPU One-cell"
-    #conf.caseBase = "CPU Multi-cells"
+    # conf.caseBase = "CPU Multi-cells"
     # conf.caseBase="GPU Multi-cells"
     # conf.caseBase="GPU Block-cellsN"
     # conf.caseBase="GPU Block-cells1"
@@ -584,7 +601,7 @@ def all_timesteps():
     conf.plotYKey = "Speedup normalized timeLS"
     # conf.plotYKey = "Speedup normalized computational timeLS"
     # conf.plotYKey = "Speedup counterBCG"
-    #conf.plotYKey = "Speedup normalized counterBCG"
+    # conf.plotYKey = "Speedup normalized counterBCG"
     # conf.plotYKey = "Speedup total iterations - counterBCG"
     # conf.plotYKey = "Speedup BCG iteration (Comp.timeLS/counterBCG)"
     # conf.plotYKey = "Speedup timecvStep"
@@ -597,7 +614,6 @@ def all_timesteps():
     # conf.plotYKey="SMAPE"
     # conf.plotYKey="NRMSE"
     # conf.MAPETol=1.0E-6
-
 
     """END OF CONFIGURATION VARIABLES"""
 
@@ -615,12 +631,12 @@ def all_timesteps():
 
     if conf.chemFile == "monarch_binned":
         if conf.timeStepsDt != 2:
-            print (
+            print(
                 "Warning: Setting timeStepsDt to 2, since it is the usual value for the measures with monarch_binned")
         conf.timeStepsDt = 2
     elif conf.chemFile == "monarch_cb05":
         if conf.timeStepsDt != 3:
-            print ("Warning: Setting timeStepsDt to 3, since it is the usual value for the measures with monarch_cb05")
+            print("Warning: Setting timeStepsDt to 3, since it is the usual value for the measures with monarch_cb05")
         conf.timeStepsDt = 3
         # if "Realistic" in conf.diffCellsL:
         #  print ("Warning: chemFile == monarch_cb05 only works with Ideal test, setting test to Ideal")
@@ -632,13 +648,12 @@ def all_timesteps():
 
     conf.isSameArquiOptim = True
     cases_words = conf.casesOptim[0].split()
-    lastArquiOptim = cases_words[0]
 
     for caseOptim in conf.casesOptim:
         if caseOptim == conf.caseBase:
             # logger = logging.getLogger(__name__)
             # logger.error(error)
-            print ("Error: caseOptim == caseBase")
+            print("Error: caseOptim == caseBase")
             raise
 
     if len(conf.mpiProcessesList) > 2 or len(conf.mpiProcessesList) < 1:
@@ -647,24 +662,10 @@ def all_timesteps():
     conf.datacolumns = []
     run_diffCells(conf)
 
-    conf.savePlot = False #todo more like saveData than savePlot, to avoid too much files on export folder
     plot_cases(conf)
 
     del conf
 
-all_timesteps()
 
-
-"""
-    start_time = time.perf_counter()
-    end_time = time.perf_counter()
-    
-    if time_s > 1:
-        conf.savePlot = True
-    else:
-        conf.savePlot = False
-        time_s = end_time - start_time
-"""
-
-
-
+if __name__ == "__main__":
+    all_timesteps()
