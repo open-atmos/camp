@@ -757,7 +757,7 @@ void solveGPU_block_thr(int blocks, int threads_block, int n_shr_memory, int n_s
   exportConfBCG(sd,"confBCG.txt");
 #endif
 
-#ifndef DEBUG_SOLVEBCGCUDA
+#ifdef DEBUG_SOLVEBCGCUDA
   if(bicg->counterBiConjGrad==0) {
     printf("solveGPU_block_thr n_cells %d len_cell %d nrows %d nnz %d max_threads_block %d blocks %d threads_block %d n_shr_empty %d offset_cells %d\n",
            mGPU->n_cells,len_cell,mGPU->nrows,mGPU->nnz,n_shr_memory,blocks,threads_block,n_shr_empty,offset_cells);

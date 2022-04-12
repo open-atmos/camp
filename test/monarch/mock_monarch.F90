@@ -306,9 +306,9 @@ program mock_monarch_t
 
   else
 
-    if (camp_mpi_rank().eq.0) then
-      write(*,*) "Config complex (test 2)"
-    end if
+    !if (camp_mpi_rank().eq.0) then
+    !  write(*,*) "Config complex (test 2)"
+    !end if
 
     if(ADD_EMISIONS.eq."monarch_binned") then
       plot_case=2
@@ -567,6 +567,7 @@ program mock_monarch_t
   write(*,*) "Model run time: ", comp_time, " s"
 #endif
 
+#ifdef MOCK_MONARCH_PRINT_SPECIES
   if (camp_mpi_rank().eq.0) then
   !if (camp_mpi_rank().eq.999) then
     do i = I_E,I_E!I_W, I_E
@@ -588,6 +589,7 @@ program mock_monarch_t
   end if
   !print*,"Rank",camp_mpi_rank(), "conc",&
   !        species_conc(1,1,1,camp_interface%map_monarch_id(:))
+#endif
 
 #ifdef SOLVE_EBI_IMPORT_CAMP_INPUT
       if (camp_mpi_rank().eq.0&

@@ -145,12 +145,7 @@ def import_data(conf, tmp_path):
         return False, new_path
 
     conf_path = exportPath + "/conf"
-    path_to_zip_file = conf_path + ".zip"
-    if os.path.exists(path_to_zip_file):
-        directory_to_extract_to = conf_path
-        with zipfile.ZipFile(path_to_zip_file, 'r') as zip_ref:
-            zip_ref.extractall(directory_to_extract_to)
-    else:
+    if not os.path.exists(conf_path):
         os.chdir(init_path)
         return False, new_path
 
@@ -158,9 +153,15 @@ def import_data(conf, tmp_path):
 
     data_path = exportPath + "/data/"
     for filename in filenames:
-        conf_name = conf_path + "/" + filename
+        dir_to_extract = conf_path + "/"
+        basename = os.path.splitext(filename)[0]
+        path_to_zip_file = dir_to_extract + basename + ".zip"
+        with zipfile.ZipFile(path_to_zip_file, 'r') as zip_ref:
+            zip_ref.extractall(dir_to_extract)
+        conf_name = conf_path + "/" + basename + ".json"
         jsonFile = open(conf_name)
         conf_imported = json.load(jsonFile)
+        os.remove(conf_name)
         conf_dict = vars(conf)
         conf_imported["is_export"] = conf_dict["is_export"]
         if conf_imported["timeSteps"] >= conf_dict["timeSteps"]:
@@ -171,18 +172,15 @@ def import_data(conf, tmp_path):
             conf_imported["commit"] = conf_dict["commit"]
         if conf_imported == conf_dict:
             is_import = True
-            directory_to_extract_to = data_path
-            basename = os.path.splitext(filename)[0]
+            dir_to_extract = data_path
             path_to_zip_file = data_path + basename + ".zip"
             with zipfile.ZipFile(path_to_zip_file, 'r') as zip_ref:
-                zip_ref.extractall(directory_to_extract_to)
-            new_path = os.path.abspath(os.getcwd()) + "/" + directory_to_extract_to + basename + ".csv"
+                zip_ref.extractall(dir_to_extract)
+            new_path = os.path.abspath(os.getcwd()) + "/" + dir_to_extract + basename + ".csv"
             print("Imported data from", new_path)
             break
 
     conf_imported.clear()
-    shutil.rmtree(conf_path)
-
     os.chdir(init_path)
 
     return is_import, new_path
@@ -200,33 +198,23 @@ def export(conf, data_path):
         print("NOT EXISTS")
         os.makedirs(exportPath)
 
-    conf_path = exportPath + "/conf"
-    path_to_zip_file = conf_path + ".zip"
-    if os.path.exists(path_to_zip_file):
-        directory_to_extract_to = conf_path
-        with zipfile.ZipFile(path_to_zip_file, 'r') as zip_ref:
-            zip_ref.extractall(directory_to_extract_to)
-    else:
-        if os.path.exists(conf_path):
-            shutil.rmtree(conf_path)
-        os.makedirs(conf_path)
-
+    conf_dir = exportPath + "/conf"
+    if not os.path.exists(conf_dir):
+        os.makedirs(conf_dir)
     now = datetime.datetime.now()
     dt_string = now.strftime("%d-%m-%Y-%H.%M.%S")
-    conf_name = conf_path + "/" + dt_string + ".json"
-    with open(conf_name, 'w', encoding='utf-8') as jsonFile:
+    conf_path = conf_dir + "/" + dt_string + ".json"
+    with open(conf_path, 'w', encoding='utf-8') as jsonFile:
         json.dump(conf.__dict__, jsonFile, indent=4, sort_keys=False)
-
-    path_to_zip_file = conf_path
-    shutil.make_archive(path_to_zip_file, 'zip', conf_path)
-    shutil.rmtree(conf_path)
-
+    conf_name = dt_string + ".json"
+    path_to_zip_file = conf_dir + "/" + dt_string + ".zip"
+    zipfile.ZipFile(path_to_zip_file, mode='w').write(conf_path, arcname=conf_name)
+    os.remove(conf_path)
     print("Configuration saved to", os.path.abspath(os.getcwd()) + path_to_zip_file)
 
     path_to_zip_file = exportPath + "/data"
     if not os.path.exists(path_to_zip_file):
         os.makedirs(path_to_zip_file)
-
     path_to_zip_file = exportPath + "/data/" + dt_string + ".zip"
     new_data_name = dt_string + ".csv"
     new_data_path = exportPath + "/data/" + new_data_name
@@ -279,7 +267,7 @@ def run(conf):
     is_import, data_path = import_data(conf, tmp_path)
     # is_import, data_path = False, tmp_path
 
-    print(data_path)
+    #print(data_path)
     if not is_import:
         # Main
         os.system(exec_str)
@@ -290,7 +278,6 @@ def run(conf):
     plot_functions.read_solver_stats(data_path, data)
 
     if is_import:
-        print("Remove ", data_path)
         os.remove(data_path)
 
     return data
@@ -560,9 +547,9 @@ def all_timesteps():
     conf.profileCuda = False
     # conf.profileCuda = True
 
-    conf.is_export = get_is_sbatch()
+    #conf.is_export = get_is_sbatch()
+    conf.is_export = True
     #conf.is_export = False
-    #conf.is_export = True
 
     #conf.commit = "MATCH_IMPORTED_CONF"
     conf.commit = ""
@@ -632,11 +619,11 @@ def all_timesteps():
     if conf.chemFile == "monarch_binned":
         if conf.timeStepsDt != 2:
             print(
-                "Warning: Setting timeStepsDt to 2, since it is the usual value for the measures with monarch_binned")
+                "Warning: Setting timeStepsDt to 2, since it is the usual value for monarch_binned")
         conf.timeStepsDt = 2
     elif conf.chemFile == "monarch_cb05":
         if conf.timeStepsDt != 3:
-            print("Warning: Setting timeStepsDt to 3, since it is the usual value for the measures with monarch_cb05")
+            print("Warning: Setting timeStepsDt to 3, since it is the usual value for monarch_cb05")
         conf.timeStepsDt = 3
         # if "Realistic" in conf.diffCellsL:
         #  print ("Warning: chemFile == monarch_cb05 only works with Ideal test, setting test to Ideal")

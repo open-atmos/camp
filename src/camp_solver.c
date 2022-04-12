@@ -608,41 +608,6 @@ int solver_set_eval_jac(void *solver_data, bool eval_Jac) {
 }
 #endif
 
-#ifdef CAMP_DEBUG_GPU
-
-
-void printSolverCounters_cpu(SolverData *sd){
-
-#ifdef CAMP_USE_MPI
-  int rank;
-  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-
-  if (rank == 0){
-
-    /*printf("timeDerivCPU %lf, counterDerivCPU %d\n", sd->timeDerivCPU / CLOCKS_PER_SEC,
-           sd->counterDerivCPU);
-
-    printf("timeJacCPU %lf, counterJac %d\n", sd->timeJacCPU / CLOCKS_PER_SEC,
-           sd->counterJac);*/
-
-    printf("timeCVode %lf\n", sd->timeCVode);
-
-    /*fprintf(sd->file,"timeDerivCPU %lf\ncounterDerivCPU %d\n", sd->timeDerivCPU / CLOCKS_PER_SEC,
-           sd->counterDerivCPU);
-    fprintf(sd->file,"timeJacCPU %lf\counterJac %d\n", sd->timeJacCPU / CLOCKS_PER_SEC,
-           sd->counterJac);
-    fprintf(sd->file,"timeCVode %lf\n", sd->timeCVode / CLOCKS_PER_SEC);*/
-
-    //fprintf(f, "n_cells %d\n", md->n_cells);
-
-  }
-
-#endif
-
-}
-
-#endif
-
 /** \brief Solve for a given timestep
  *
  * \param solver_data A pointer to the initialized solver data
@@ -2676,30 +2641,6 @@ static void solver_print_stats(void *cvode_mem) {
 void solver_free(void *solver_data) {
   SolverData *sd = (SolverData *)solver_data;
   ModelData *md = &(sd->model_data);
-
-#ifdef CAMP_DEBUG_GPU
-
-  //export_counters_open(sd);
-
-#ifdef CAMP_USE_GPU
-
-  if(sd->use_cpu==0){
-    printSolverCounters_gpu2(sd);
-#ifdef CHECK_GPU_LINSOLVE
-  printf("Max error linsolve %-le\n", sd->max_error_linsolver);
-#endif
-  }
-
-#endif
-
-  if(sd->use_cpu==0){
-    printSolverCounters_cpu(sd);
-  }
-
-  //fclose(sd->file);
-  //free_gpu_cu(sd);
-
-#endif
 
 #ifdef CAMP_USE_SUNDIALS
   // free the SUNDIALS solver
