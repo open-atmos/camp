@@ -1982,13 +1982,6 @@ void constructor_cvode_gpu(CVodeMem cv_mem, SolverData *sd)
   cudaMalloc((void**)&mGPU->dtguess_helper,lendt*sizeof(double));
   cudaMemset(mGPU->dtguess_helper, 0., lendt*sizeof(double));
 
-  bicg->counters= (int *)calloc(SIZE_TIMES, sizeof(int));
-  bicg->times= (double *)calloc(SIZE_TIMES, sizeof(double));
-  cudaMalloc((void**)&mGPU->counters,SIZE_TIMES*sizeof(int));
-  cudaMemset(mGPU->counters, 0, SIZE_TIMES*sizeof(int));
-  cudaMalloc((void**)&mGPU->times,SIZE_TIMES*sizeof(double));
-  cudaMemset(mGPU->times, 0., SIZE_TIMES*sizeof(double));
-
   bicg->timeNewtonIt=CAMP_TINY;
   bicg->timeLinSolSetup=CAMP_TINY;
   bicg->timeLinSolSolve=CAMP_TINY;
@@ -7947,6 +7940,31 @@ void solver_get_statistics_gpu(SolverData *sd){
 #endif
 
 }
+
+void solver_reset_statistics_gpu(SolverData *sd){
+
+  ModelDataGPU *mGPU = &sd->mGPU;
+
+  //printf("solver_reset_statistics_gpu\n");
+
+#ifdef CAMP_DEBUG_GPU
+
+  cudaMemset(mGPU->tguessNewton, 0., sizeof(double));
+  cudaMemset(mGPU->dtNewtonIteration, 0., sizeof(double));
+  cudaMemset(mGPU->dtJac, 0., sizeof(double));
+  cudaMemset(mGPU->dtlinsolsetup, 0., sizeof(double));
+  cudaMemset(mGPU->dtcalc_Jac, 0., sizeof(double));
+  cudaMemset(mGPU->dtRXNJac, 0., sizeof(double));
+  cudaMemset(mGPU->dtf, 0., sizeof(double));
+  cudaMemset(mGPU->dtguess_helper, 0., sizeof(double));
+
+  cudaMemcpy(mGPU->mdv,&sd->mdv,sizeof(ModelDataVariable),cudaMemcpyHostToDevice);
+
+#endif
+
+
+}
+
 
 void printSolverCounters_gpu2(SolverData *sd)
 {

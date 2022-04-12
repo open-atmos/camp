@@ -15,9 +15,8 @@ export JSON_FORTRAN_HOME=$(pwd)/../../../json-fortran-6.1.0/install/jsonfortran-
 compile_run(){
 
   id=$1
-  echo "id" "$id"
 
-  cd ../../
+  cd cd ../../../camp_jobs/camp$id
   cd build
   make -j 4
 
@@ -26,7 +25,7 @@ compile_run(){
   FILE=TestMonarch.py
   if test -f "$FILE"; then
     python $FILE  "sbatch=true"
-    srun --qos=debug --ntasks=1 cp -r -u ../../../test/monarch/exports/* ../../../../camp/test/monarch/exports/ #seems fine
+    srun --qos=debug --ntasks=1 cp -r -u ../../../test/monarch/exports/* ../../../../camp/test/monarch/exports/
     cd ../../
 
     #./test_monarch_1.sh MPI
@@ -38,7 +37,7 @@ compile_run(){
   fi
 
   cd ../../
-  srun --qos=debug --ntasks=1 rm -rf camp_jobs/camp$id #fine
+  #srun --qos=debug --ntasks=1 rm -rf camp_jobs/camp$id
   cd camp/compile/power9
 }
 

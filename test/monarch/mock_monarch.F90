@@ -534,7 +534,9 @@ program mock_monarch_t
   curr_time = curr_time + TIME_STEP
 
 #ifdef CAMP_DEBUG_GPU
+    call camp_interface%camp_core%get_solver_stats(solver_stats=solver_stats)
     call export_solver_stats(curr_time,camp_interface,solver_stats,ncounters,ntimers)
+
 #endif
 
     if(export_results_all_cells.eq.1) then

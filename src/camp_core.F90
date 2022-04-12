@@ -193,6 +193,8 @@ module camp_camp_core
     procedure :: get_rel_tol
     !> Get the absolute tolerance for a species on the state array
     procedure :: get_abs_tol
+    procedure :: get_solver_stats
+    procedure :: reset_solver_stats
     !> Get a new model state variable
     procedure :: new_state_one_cell
     procedure :: new_state_multi_cell
@@ -1511,7 +1513,6 @@ contains
       solver_status = solver%solve(camp_state, t_initial, t_final,    &
               n_cells_aux, solver_stats)
 
-      call solver%get_solver_stats( solver_stats,this%counters,this%times)
       solver_stats%status_code   = solver_status
       solver_stats%start_time__s = t_initial
       solver_stats%end_time__s   = t_final
@@ -1524,6 +1525,74 @@ contains
     end if
 
   end subroutine solve
+
+  subroutine get_solver_stats(this, rxn_phase, solver_stats)
+
+    use camp_rxn_data
+    use camp_solver_stats
+    use iso_c_binding
+
+    class(camp_core_t), intent(inout) :: this
+    integer(kind=i_kind), intent(in), optional :: rxn_phase
+    type(solver_stats_t), intent(inout), target :: solver_stats
+
+    integer(kind=i_kind) :: phase
+    type(camp_solver_data_t), pointer :: solver
+
+    if (present(rxn_phase)) then
+      phase = rxn_phase
+    else
+      phase = GAS_AERO_RXN
+    end if
+
+    if (phase.eq.GAS_RXN) then
+      solver => this%solver_data_gas
+    else if (phase.eq.AERO_RXN) then
+      solver => this%solver_data_aero
+    else if (phase.eq.GAS_AERO_RXN) then
+      solver => this%solver_data_gas_aero
+    else
+      call die_msg(704896254, "Invalid rxn phase specified for chemistry "// &
+              "solver: "//to_string(phase))
+    end if
+
+    call solver%get_solver_stats( solver_stats,this%counters,this%times)
+
+  end subroutine
+
+  subroutine reset_solver_stats(this, rxn_phase, solver_stats)
+
+    use camp_rxn_data
+    use camp_solver_stats
+    use iso_c_binding
+
+    class(camp_core_t), intent(inout) :: this
+    integer(kind=i_kind), intent(in), optional :: rxn_phase
+    type(solver_stats_t), intent(inout), target :: solver_stats
+
+    integer(kind=i_kind) :: phase
+    type(camp_solver_data_t), pointer :: solver
+
+    if (present(rxn_phase)) then
+      phase = rxn_phase
+    else
+      phase = GAS_AERO_RXN
+    end if
+
+    if (phase.eq.GAS_RXN) then
+      solver => this%solver_data_gas
+    else if (phase.eq.AERO_RXN) then
+      solver => this%solver_data_aero
+    else if (phase.eq.GAS_AERO_RXN) then
+      solver => this%solver_data_gas_aero
+    else
+      call die_msg(704896254, "Invalid rxn phase specified for chemistry "// &
+              "solver: "//to_string(phase))
+    end if
+
+    call solver%reset_solver_stats( solver_stats,this%counters,this%times)
+
+  end subroutine
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 

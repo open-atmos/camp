@@ -994,7 +994,6 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
                            double *max_loss_precision,
                            int *counters, double *times
                            ) {
-#ifdef CAMP_USE_SUNDIALS
   SolverData *sd = (SolverData *)solver_data;
   long int nst, nfe, nsetups, nje, nfeLS, nni, ncfn, netf, nge;
   realtype last_h, curr_h;
@@ -1118,6 +1117,8 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
              "and counters profilign variables with ncounters || ntimers < 1");
     }
 
+    solver_reset_statistics_gpu(sd);
+
 #endif
   }
 
@@ -1125,8 +1126,77 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
 
 #endif
 
-#endif
 }
+
+void solver_reset_statistics(void *solver_data, int *counters, double *times)
+{
+
+  SolverData *sd = (SolverData *)solver_data;
+
+  for(int i=0; i<sd->ncounters; i++){
+    counters[i]=0;
+  }
+  for(int i=0; i<sd->ntimers; i++){
+    times[i]=0.0;
+  }
+  //printf("sd->ntimers ncounters %d %d\n",sd->ntimers,sd->ncounters);
+
+#ifdef CAMP_DEBUG_GPU
+
+  if(sd->use_cpu==1){
+
+    if(sd->ntimers>0 && sd->ncounters>0){
+
+      CVodeResettimesCounters(sd->cvode_mem, &times[0], &counters[1]);
+      sd->timeCVode=0;
+    }
+    else{
+      printf("WARNING: In function solver_get_statistics trying to assign times "
+             "and counters profilign variables with ncounters || ntimers < 1");
+    }
+
+  }
+  else{
+
+#ifdef CAMP_USE_GPU
+    itsolver *bicg = &(sd->bicg);
+
+    if(sd->ncounters>0){
+      sd->mdv.counterBCGInternal=0;
+      bicg->counterBiConjGrad=0;
+      bicg->countersolveCVODEGPU=0;
+      sd->mdv.countercvStep=0;
+    }
+    if(sd->ntimers>0){
+      bicg->timeBiConjGrad=0;
+      bicg->timeBiConjGradMemcpy=0;
+      sd->timeCVode=0;
+      sd->mdv.dtcudaDeviceCVode=0;
+      sd->mdv.dtPostBCG=0;
+      bicg->timesolveCVODEGPU=0;
+      sd->timeNewtonIteration=0;
+      sd->timeJac=0;
+      sd->timelinsolsetup=0;
+      sd->timecalc_Jac=0;
+      sd->timeRXNJac=0;
+      sd->timef=0;
+      sd->timeguess_helper=0;
+      bicg->timecvStep=0;
+    }
+    else{
+      printf("WARNING: In function solver_get_statistics trying to assign times "
+             "and counters profilign variables with ncounters || ntimers < 1");
+    }
+    
+#endif
+  }
+
+  //printf("times[0] %le counters[1] %d\n",times[0],counters[1]);
+
+#endif
+
+}
+
 
 #ifdef CAMP_USE_SUNDIALS
 
@@ -2508,23 +2578,6 @@ void check_flag_fail(void *flag_value, char *func_name, int opt) {
     exit(EXIT_FAILURE);
   }
 }
-
-/** \brief Reset the timers for solver functions
- *
- * \param solver_data Pointer to the SolverData object with timers to reset
- */
-#ifdef CAMP_USE_SUNDIALS
-void solver_reset_timers(void *solver_data) {
-  SolverData *sd = (SolverData *)solver_data;
-
-#ifdef CAMP_DEBUG
-  sd->counterDeriv = 0;
-  sd->counterJac = 0;
-  sd->timeDeriv = 0;
-  sd->timeJac = 0;
-#endif
-}
-#endif
 
 //Old routine for Monarch metrics
 void export_camp_input(void *solver_data, double *init_state, char *in_path) {

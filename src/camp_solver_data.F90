@@ -172,13 +172,6 @@ module camp_camp_solver_data
       !integer(kind=c_int) :: rxn_id
     end subroutine rxn_get_base_rate
 
-    !> Reset the solver function timers
-    subroutine solver_reset_timers( solver_data ) bind(c)
-      use iso_c_binding
-      !> Pointer to the solver data
-      type(c_ptr), value :: solver_data
-    end subroutine solver_reset_timers
-
     !> Get the solver statistics
     subroutine solver_get_statistics( solver_data, solver_flag, num_steps, &
                     RHS_evals, LS_setups, error_test_fails, NLS_iters, &
@@ -226,6 +219,14 @@ module camp_camp_solver_data
       type(c_ptr), value :: counters
       type(c_ptr), value :: times
     end subroutine solver_get_statistics
+
+    subroutine solver_reset_statistics( solver_data, counters, times) bind (c)
+      use iso_c_binding
+      !> Pointer to the solver data
+      type(c_ptr), value :: solver_data
+      type(c_ptr), value :: counters
+      type(c_ptr), value :: times
+    end subroutine
 
     !> Add condensed reaction data to the solver data block
     subroutine rxn_add_condensed_data(rxn_type, n_int_param, &
@@ -426,6 +427,8 @@ module camp_camp_solver_data
     procedure, private :: reset_timers
     !> Get the solver statistics from the last run
     procedure:: get_solver_stats
+    !> Reset the solver statistics from the last run
+    procedure:: reset_solver_stats
     !> Checks whether a solver is available
     procedure :: is_solver_available
     !> Print the solver data
@@ -962,8 +965,6 @@ contains
       end if
     end if
 
-    ! Reset the solver function timers
-    call this%reset_timers( )
 #endif
 
     ! Run the solver
@@ -990,16 +991,6 @@ contains
     call rxn_get_base_rate(this%solver_c_ptr,rate_constants(1))
 
   end subroutine get_base_rate
-
-  !> Reset the solver function timers
-  subroutine reset_timers( this )
-
-    !> Solver data
-    class(camp_solver_data_t), intent(inout) :: this
-
-    call solver_reset_timers( this%solver_c_ptr )
-
-  end subroutine reset_timers
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -1037,6 +1028,24 @@ contains
     )
 
   end subroutine get_solver_stats
+
+  !> Get solver statistics
+  subroutine reset_solver_stats( this, solver_stats,counters,times)
+
+    !> Solver data
+    class(camp_solver_data_t), intent(inout) :: this
+    !> Solver statistics
+    type(solver_stats_t), intent(inout), target :: solver_stats
+    integer,  target, intent(inout) :: counters(:)
+    real(kind=dp),target, intent(inout) :: times(:)
+
+    call solver_reset_statistics( &
+            this%solver_c_ptr,                             & ! Solver data
+            c_loc( counters),& !Profiling
+            c_loc( times)& !Profiling
+            )
+
+  end subroutine reset_solver_stats
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
