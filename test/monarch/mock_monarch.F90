@@ -179,8 +179,6 @@ program mock_monarch_t
   integer :: plot_case, new_v_cells, aux_int
   type(solver_stats_t), target :: solver_stats
 
-  integer, allocatable :: counters(:)
-  real(kind=dp), allocatable :: times(:)
   integer :: ncounters, ntimers != 0 != 2
   integer :: export_results_all_cells
   integer :: plot_species = 0
@@ -402,11 +400,6 @@ program mock_monarch_t
   ncounters = size(camp_interface%camp_core%counters)
   ntimers = size(camp_interface%camp_core%times)
 
-  allocate(counters(ncounters))
-  allocate(times(ntimers))
-  counters(:)=0
-  times(:)=0.0
-
   !call camp_mpi_barrier(MPI_COMM_WORLD)
 
   if(export_results_all_cells.eq.1) then
@@ -536,7 +529,7 @@ program mock_monarch_t
 #ifdef CAMP_DEBUG_GPU
     call camp_interface%camp_core%get_solver_stats(solver_stats=solver_stats)
     call export_solver_stats(curr_time,camp_interface,solver_stats,ncounters,ntimers)
-
+    call camp_interface%camp_core%reset_solver_stats(solver_stats=solver_stats)
 #endif
 
     if(export_results_all_cells.eq.1) then
@@ -625,8 +618,6 @@ program mock_monarch_t
   close(STATSOUT_FILE_UNIT2)
 
   ! Deallocation
-  deallocate(counters)
-  deallocate(times)
   deallocate(camp_input_file)
   deallocate(interface_input_file)
   deallocate(output_file_prefix)
@@ -862,40 +853,6 @@ contains
     len=size(species_conc)!n_cells*NUM_MONARCH_SPEC!size(species_conc)
 
 #ifdef CAMP_USE_MPI
-
-
-#ifdef DEBUG_export_file_results_all_cells
-      !print*,"export_file_results_all_cells state_var",camp_interface%camp_state%state_var
-      !print*,"export_file_results_all_cells species_conc ",&
-      !        species_conc(1,1,1,camp_interface%map_monarch_id(:)),&
-      !        "state_var",camp_interface%camp_state%state_var(camp_interface%map_camp_id(:))
-
-    !print*,"species_conc", camp_mpi_rank()
-    call camp_mpi_barrier(MPI_COMM_WORLD)
-
-      do i=I_W,I_E
-        do j=I_S,I_N
-          do k=1,NUM_VERT_CELLS
-            o = (j-1)*(I_E) + (i-1) !Index to 3D
-            z = (k-1)*(I_E*I_N) + o !Index for 2D
-            !z = n*ncells+z
-            do r=2,size(camp_interface%map_monarch_id)
-
-              print*,species_conc(i,j,k,camp_interface%map_monarch_id(r)),&
-                      camp_interface%camp_state%state_var(camp_interface%map_camp_id(r))
-
-            end do
-
-            write(RESULTS_ALL_CELLS_FILE_UNIT, '(a)') ''
-
-          end do
-        end do
-      end do
-
-    call camp_mpi_barrier(MPI_COMM_WORLD)
-    !print*,"species_conc_mpi",camp_mpi_rank()
-
-#endif
 
     call MPI_GATHER(species_conc, len, MPI_REAL, species_conc_mpi,&
             len,MPI_REAL, 0, MPI_COMM_WORLD, ierr)
@@ -1587,9 +1544,6 @@ contains
     print*, "Specs with error greater than MAX_REL_ERROR_TOL",MAX_REL_ERROR_TOL
     print*, "Name, init_state_var, out_state_var, &
             ,rel. error [(init-out)/(init+out)]"
-#endif
-
-#ifdef DEBUG_INPUT_OUTPUT
       rel_error_in_out=abs((this%init_state_var(i)-camp_state%state_var(i))/&
             (this%init_state_var(i)+camp_state%state_var(i)+1.0d-30))
     if(rel_error_in_out.gt.MAX_REL_ERROR_TOL) then
@@ -2137,31 +2091,22 @@ contains
       write(STATSOUT_FILE_UNIT2, "(A)", advance="no") trim(time_str)
 
       do i=1, ncounters
+        !print*,"counters_max(i)", counters_max(i)
         write(STATSOUT_FILE_UNIT2, "(A)", advance="no") ","
-
-
         write(STATSOUT_FILE_UNIT2, "(I10)", advance="no") &
-                counters_max(i)-counters(i)
-
-        !print*,"counters_max(i),counters(i)",&
-        !       counters_max(i),counters(i), counters_max(i)-counters(i)
-        counters(i)=counters_max(i)
+                counters_max(i)
       end do
 
       do i=1, ntimers
+        !print*,"times_max,i",times_max(i),i!,solver_stats%times(i)
         write(STATSOUT_FILE_UNIT2, "(A)", advance="no") ","
         write(STATSOUT_FILE_UNIT2, "(ES13.6)", advance="no") &
-                times_max(i)-times(i)
-
-        !print*,"times_max,i",times_max(i),i!,solver_stats%times(i)
-
-        times(i)=times_max(i)
+                times_max(i)
       end do
 
       write(STATSOUT_FILE_UNIT2, '(a)') ''
 
     end if
-
 
     deallocate(counters_max)
     deallocate(times_max)

@@ -72,7 +72,6 @@ bool check_Jac(realtype t, N_Vector y, SUNMatrix J, N_Vector deriv,
                N_Vector tmp, N_Vector tmp1, void *solver_data);
 int check_flag(void *flag_value, char *func_name, int opt);
 void check_flag_fail(void *flag_value, char *func_name, int opt);
-void solver_reset_timers(void *solver_data);
 static void solver_print_stats(void *cvode_mem);
 static void print_data_sizes(ModelData *md);
 static void print_jacobian(SUNMatrix M);

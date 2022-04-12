@@ -423,8 +423,6 @@ module camp_camp_solver_data
     !> Integrate over a given time step
     procedure :: solve
     procedure :: get_base_rate
-    !> Reset the solver function timers
-    procedure, private :: reset_timers
     !> Get the solver statistics from the last run
     procedure:: get_solver_stats
     !> Reset the solver statistics from the last run

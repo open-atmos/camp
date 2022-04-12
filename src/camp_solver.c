@@ -386,7 +386,7 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
   sd->counterDerivTotal = 0;
   sd->counterDerivCPU = 0;
   sd->counterDerivGPU = 0;
-  sd->counterJacCPU = 0;
+  sd->counterJac=0;
   sd->counterSolve = 0;
   sd->counterFail = 0;
   sd->counterBCG = 0;
@@ -622,15 +622,15 @@ void printSolverCounters_cpu(SolverData *sd){
     /*printf("timeDerivCPU %lf, counterDerivCPU %d\n", sd->timeDerivCPU / CLOCKS_PER_SEC,
            sd->counterDerivCPU);
 
-    printf("timeJacCPU %lf, counterJacCPU %d\n", sd->timeJacCPU / CLOCKS_PER_SEC,
-           sd->counterJacCPU);*/
+    printf("timeJacCPU %lf, counterJac %d\n", sd->timeJacCPU / CLOCKS_PER_SEC,
+           sd->counterJac);*/
 
     printf("timeCVode %lf\n", sd->timeCVode);
 
     /*fprintf(sd->file,"timeDerivCPU %lf\ncounterDerivCPU %d\n", sd->timeDerivCPU / CLOCKS_PER_SEC,
            sd->counterDerivCPU);
-    fprintf(sd->file,"timeJacCPU %lf\ncounterJacCPU %d\n", sd->timeJacCPU / CLOCKS_PER_SEC,
-           sd->counterJacCPU);
+    fprintf(sd->file,"timeJacCPU %lf\counterJac %d\n", sd->timeJacCPU / CLOCKS_PER_SEC,
+           sd->counterJac);
     fprintf(sd->file,"timeCVode %lf\n", sd->timeCVode / CLOCKS_PER_SEC);*/
 
     //fprintf(f, "n_cells %d\n", md->n_cells);
@@ -915,22 +915,6 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
   if (rank >= 0) {
     sd->counterDerivTotal += sd->counterDerivCPU;
     sd->timeCVodeTotal += sd->timeCVode;
-    if (sd->counterSolve == 0) {
-      /*printf("state after cvode [(id),conc], length %d\n",
-md->n_per_cell_state_var); for (int i = 0; i < md->n_per_cell_state_var; i++) {
-// NV_LENGTH_S(deriv) printf("(%d) %-le ", i, state[i]);
-}
-printf("\n");
-printf("env [temp, press]\n%-le, %-le\n", env[0], env[1]);
-
-printf("Rank %d counterSolve %d counterDeriv %d counterDerivTotal %d sd->timeCVode
-%lf sd->timeCVodeTotal %lf" " %%timeDerivCPU/CVodeTotal %lf \n",rank,sd->counterSolve
-       ,sd->counterDerivCPU,
-sd->counterDerivTotal,sd->timeCVode/CLOCKS_PER_SEC,sd->timeCVodeTotal/CLOCKS_PER_SEC
-       ,(sd->timeDerivCPU/CLOCKS_PER_SEC)/(sd->timeCVodeTotal/CLOCKS_PER_SEC)*100);
-*/
-    }
-
   }
 #endif
 #ifdef FAILURE_DETAIL
@@ -938,7 +922,7 @@ sd->counterDerivTotal,sd->timeCVode/CLOCKS_PER_SEC,sd->timeCVodeTotal/CLOCKS_PER
 #endif
   sd->counterDerivCPU = 0;
   sd->counterDerivGPU = 0;
-  sd->counterJacCPU = 0;
+  sd->counterJac = 0;
   sd->counterSolve++;
 
 #endif
@@ -1037,10 +1021,10 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
   *next_time_step__s = (double)curr_h;
   *Jac_eval_fails = sd->Jac_eval_fails;
 #ifdef CAMP_DEBUG
-  *RHS_evals_total = sd->counterDeriv;
-  *Jac_evals_total = sd->counterJac;
-  *RHS_time__s = ((double)sd->timeDeriv) / CLOCKS_PER_SEC;
-  *Jac_time__s = ((double)sd->timeJac) / CLOCKS_PER_SEC;
+  *RHS_evals_total = -1;
+  *Jac_evals_total = -1;
+  *RHS_time__s = 0.0;
+  *Jac_time__s = 0.0;
   *max_loss_precision = sd->max_loss_precision;
 #else
   *RHS_evals_total = -1;
@@ -1280,7 +1264,6 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
   int MAX_COUNTER_PRINT=1;
 
 #ifdef CAMP_DEBUG
-  sd->counterDeriv++;
   clock_t start3 = clock();
 #endif
 
@@ -1379,8 +1362,6 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
   }
 
 #ifdef CAMP_DEBUG
-  clock_t end2 = clock();
-  sd->timeDeriv += (end2 - start2);
   sd->max_loss_precision = time_derivative_max_loss_precision(sd->time_deriv);
 #endif
 
@@ -1464,7 +1445,7 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
   if (rank == 999 || rank == 999) {
     if (sd->counterDerivCPU > 100 && sd->counterDerivCPU < 103) {
       // printf("Rank %d deriv iter %d jac iter %d counterSolve %d", rank,
-      // sd->counterDerivCPU, sd->counterJacCPU, sd->counterSolve);
+      // sd->counterDerivCPU, sd->counterJac, sd->counterSolve);
       // print_derivative(sd, deriv);
     }
   }
@@ -1494,10 +1475,6 @@ int Jac(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_data,
   ModelData *md = &(sd->model_data);
   realtype time_step;
 
-#ifdef CAMP_DEBUG
-  sd->counterJac++;
-#endif
-
   clock_t start4 = clock();
 
   // Get the grid cell dimensions
@@ -1513,8 +1490,8 @@ int Jac(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_data,
 
 #ifdef CAMP_DEBUG_JAC_CPU
   int counterPrintJac=1;
-  if(sd->counterJacCPU<=counterPrintJac){
-    printf("Jac iter %d\n",sd->counterJacCPU);
+  if(sd->counterJac<=counterPrintJac){
+    printf("Jac iter %d\n",sd->counterJac);
     //print_derivative(sd, y);
   }
   int k=0;
@@ -1558,11 +1535,6 @@ int Jac(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_data,
 //  rxn_calc_jac_gpu(sd, J, time_step);
 #endif
 
-#ifdef CAMP_DEBUG
-  clock_t end2 = clock();
-  sd->timeJac += (end2 - start2);
-#endif
-
   // Loop over the grid cells to calculate sub-model and rxn Jacobians
   for (int i_cell = 0; i_cell < n_cells; ++i_cell) {
     // Set the grid cell state pointers
@@ -1589,20 +1561,12 @@ int Jac(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_data,
     sub_model_get_jac_contrib(md, J_param_data, time_step);
     CAMP_DEBUG_JAC(md->J_params, "sub-model Jacobian");
 
-#ifdef CAMP_DEBUG
-    clock_t start = clock();
-#endif
-
     // Calculate the reaction Jacobian
     rxn_calc_jac(md, sd->jac, time_step);
 
 //#endif
 
 // rxn_calc_jac_specific_types(md, J_rxn_data, time_step);
-#ifdef CAMP_DEBUG
-    clock_t end = clock();
-    sd->timeJac += (end - start);
-#endif
 
 #ifdef CAMP_DEBUG_JAC_CPU
   check_isnand(sd->jac.production_partials,sd->jac.num_elem,"pre jacobian_output");
@@ -1660,28 +1624,20 @@ int Jac(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_data,
   }
 #endif
 
-  // if(sd->counterJacCPU==0)camp_debug_print_jac_rel(sd,J,"J relations");//wrong
-  // species name seems, maybe I need jac_map or something
-  // if(sd->counterJacCPU==0)camp_debug_print_jac_rel(sd,md->J_rxn,"RXN relations");
-
-  // sd->counterJacCPU++;
-  // if(sd->counterJacCPU==0) print_jacobian_file(J, "");
-  // if(sd->counterJacCPU==0) print_jacobian(J);
-
 #ifdef CAMP_DEBUG_GPU
-  sd->timeJacCPU += (clock() - start4);
-  sd->counterJacCPU++;
+  sd->counterJac += (clock() - start4);
+  sd->counterJac++;
 #ifdef CAMP_USE_MPI
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   // if (rank>=0)
   if (rank == 999 || rank == 999) {
-    if (sd->counterJacCPU < 0) {
+    if (sd->counterJac < 0) {
       printf("Rank %d deriv iter %d jac iter %d counterSolve %d", rank,
-             sd->counterDerivCPU, sd->counterJacCPU, sd->counterSolve);
+             sd->counterDerivCPU, sd->counterJac, sd->counterSolve);
       print_jacobian(J);
       // printf("Rank %d deriv iter %d jac iter %d counterSolve %d", rank,
-      // sd->counterDerivCPU, sd->counterJacCPU, sd->counterSolve);
+      // sd->counterDerivCPU, sd->counterJac, sd->counterSolve);
       // camp_debug_print_jac_struct2(sd, J, "RXN struct");
     }
     if (sd->counterDerivCPU > 100 && sd->counterDerivCPU < 103) {
@@ -1867,13 +1823,13 @@ int Jac_gpu(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_da
 
 
   //Compare input
-  if(sd->counterJacCPU<=10){
+  if(sd->counterJac<=10){
     //printf("CHECK_JAC_GPU_WITH_CPU %d\n",sd->counterDerivGPU);
     int flag_c=compare_doubles(total_state_cpu,
             md->total_state,md->n_per_cell_state_var*md->n_cells,"CHECK_STATE_GPU_WITH_CPU");
     //printf("f_gpu flag %d flag_f %d\n",flag,flag_f);
     if(flag_c==0){
-      printf("false compare_doubles at counterJacCPU %d",sd->counterJacCPU);
+      printf("false compare_doubles at counterJac %d",sd->counterJac);
       exit(0);
     }
   }
@@ -1885,13 +1841,13 @@ int Jac_gpu(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_da
   flag = rxn_calc_jac_gpu(sd, J, time_step);
 
   //Compare
-  if(sd->counterJacCPU<=10){
+  if(sd->counterJac<=10){
     //printf("CHECK_JAC_GPU_WITH_CPU %d\n",sd->counterDerivGPU);
     int flag_c=compare_doubles(SM_DATA_S(md->J_init),
             SM_DATA_S(J),NV_LENGTH_S(deriv),"CHECK_JAC_GPU_WITH_CPU");
     //printf("f_gpu flag %d flag_f %d\n",flag,flag_f);
     if(flag_c==0){
-      printf("false compare_doubles at counterJacCPU %d",sd->counterJacCPU);
+      printf("false compare_doubles at counterJac %d",sd->counterJac);
       exit(0);
     }
   }

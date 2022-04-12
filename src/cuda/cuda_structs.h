@@ -24,7 +24,6 @@ typedef struct
   int counterDerivNewton;
   int counterBiConjGrad;
   int counterDerivSolve;
-  int counterJac;
   int countersolveCVODEGPU;
 
   double timeNewtonIt;

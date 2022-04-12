@@ -1950,7 +1950,6 @@ void constructor_cvode_gpu(CVodeMem cv_mem, SolverData *sd)
   bicg->counterDerivNewton=0;
   bicg->counterBiConjGrad=0;
   bicg->counterDerivSolve=0;
-  bicg->counterJac=0;
   bicg->countersolveCVODEGPU=0;
 
 #ifdef cudaGlobalCVode_timers_max_blocks
@@ -1990,7 +1989,6 @@ void constructor_cvode_gpu(CVodeMem cv_mem, SolverData *sd)
   bicg->timeBiConjGrad=CAMP_TINY;
   bicg->timeBiConjGradMemcpy=CAMP_TINY;
   bicg->timeDerivSolve=CAMP_TINY;
-  bicg->timeJac=CAMP_TINY;
   bicg->timesolveCVODEGPU=CAMP_TINY;
 
   cudaEventCreate(&bicg->startDerivNewton);
@@ -7541,8 +7539,8 @@ int linsolsetup_gpu2(SolverData *sd, CVodeMem cv_mem,int convfail,N_Vector vtemp
     cudaEventSynchronize(bicg->stopJac);
     float msJac = 0.0;
     cudaEventElapsedTime(&msJac, bicg->startJac, bicg->stopJac);
-    bicg->timeJac+= msJac;
-    bicg->counterJac++;
+    sd->timeJac+= msJac;
+    sd->counterJac++;
 #endif
 
     if (retval < 0) {

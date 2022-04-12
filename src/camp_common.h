@@ -14,7 +14,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include "defines.h"
 #include "Jacobian.h"
 #include "time_derivative.h"
 
@@ -286,10 +285,6 @@ typedef struct {
 #ifdef CAMP_DEBUG
   booleantype debug_out;  // Output debugging information during solving
   booleantype eval_Jac;   // Evalute Jacobian data during solving
-  int counterDeriv;       // Total calls to f()
-  int counterJac;         // Total calls to Jac()
-  clock_t timeDeriv;      // Compute time for calls to f()
-  clock_t timeJac;        // Compute time for calls to Jac()
   double
       max_loss_precision;  // Maximum loss of precision during last call to f()
 #endif
@@ -303,7 +298,7 @@ typedef struct {
   int counterDerivTotal;
   int counterDerivCPU;
   int counterDerivGPU;
-  int counterJacCPU;
+  int counterJac;
   int counterSolve;
   int counterFail;
   int counterBCG;
