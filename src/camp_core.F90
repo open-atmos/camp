@@ -1513,6 +1513,7 @@ contains
       solver_status = solver%solve(camp_state, t_initial, t_final,    &
               n_cells_aux, solver_stats)
 
+      !call solver%get_solver_stats( solver_stats,this%counters,this%times)
       solver_stats%status_code   = solver_status
       solver_stats%start_time__s = t_initial
       solver_stats%end_time__s   = t_final

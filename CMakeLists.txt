@@ -39,6 +39,7 @@ option(ENABLE_CXX "Enable C++" OFF)
 option(ENABLE_GPU "Enable use of GPUs in chemistry solving" OFF)
 option(ENABLE_SWAP_DERIV_LOOP_CELLS "Optimization for sligth speedup in One-cell version, more info at https://earth.bsc.es/gitlab/ac/camp/-/issues/22" OFF)
 option(ENABLE_RESET_JAC_SOLVING "Precondition Jacobian matrix with default value (ON) or previous execution value (OFF), better speedup ON but easier to debug OFF, more info at https://earth.bsc.es/gitlab/ac/camp/-/issues/21" OFF)
+option(ENABLE_NETCDF "Include NETCDF package OFF")
 
 mark_as_advanced(FORCE ENABLE_DEBUG FAILURE_DETAIL)
 
@@ -50,6 +51,38 @@ SET(CPACK_SOURCE_PACKAGE_FILE_NAME "${PACKAGE_TARNAME}-${PACKAGE_VERSION}")
 set(CPACK_SOURCE_IGNORE_FILES "${CPACK_SOURCE_IGNORE_FILES};/.*~$;/[.].*/;/build/;/figures/;/scenarios/[^1234].*/;/old/;/tool/;/TODO")
 
 include(CPack)
+
+######################################################################
+# NetCDF
+
+if(ENABLE_NETCDF)
+
+find_path(NETCDF_INCLUDE_DIR netcdf.mod NETCDF.mod
+  DOC "NetCDF include directory (must contain netcdf.mod)"
+  PATHS
+  $ENV{NETCDF_FORTRAN_HOME}/include
+  $ENV{NETCDF_HOME}/include
+  /usr/lib/gfortran/modules
+  /usr/lib64/gfortran/modules
+  /opt/local/include)
+find_library(NETCDF_C_LIB netcdf
+  DOC "NetCDF C library"
+  PATHS $ENV{NETCDF_HOME}/lib $ENV{NETCDF_HOME}/lib64 /opt/local/lib)
+find_library(NETCDF_FORTRAN_LIB netcdff
+  DOC "NetCDF Fortran library"
+  PATHS
+  $ENV{NETCDF_HOME}/lib $ENV{NETCDF_HOME}/lib64
+  $ENV{NETCDF_FORTRAN_HOME}/lib $ENV{NETCDF_FORTRAN_HOME}/lib64
+  /opt/local/lib)
+set(NETCDF_LIBS ${NETCDF_C_LIB})
+if(NETCDF_FORTRAN_LIB)
+  set(NETCDF_LIBS ${NETCDF_LIBS} ${NETCDF_FORTRAN_LIB})
+endif()
+include_directories(${NETCDF_INCLUDE_DIR})
+else()
+    set(NETCDF_LIBS "")
+    add_definitions(-DCAMP_DISABLE_NETCDF)
+endif()
 
 ######################################################################
 # GSL
@@ -432,7 +465,7 @@ set(CAMP_LIB_SRC
   src/solver_stats.F90
   src/debug_diff_check.F90
   ${CAMP_C_SRC} ${AEROSOL_REPS_SRC} ${SUB_MODELS_SRC} ${REACTIONS_SRC}
-  ${CAMP_CUDA_SRC} ${GSL_SRC} ${CAMP_CXX_SRC} )
+  ${CAMP_CUDA_SRC} ${GSL_SRC} ${NETCDF_LIBS} ${CAMP_CXX_SRC} )
 
 #add_library(camplib SHARED ${CAMP_LIB_SRC}) #nvlink warning (issue 9 github)
 add_library(camplib ${CAMP_LIB_SRC}) #fine

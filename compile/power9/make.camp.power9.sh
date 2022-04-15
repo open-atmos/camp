@@ -30,13 +30,13 @@ if [ $is_sbatch == "true" ]; then
   cd ../../..
   mkdir_if_not_exists camp_jobs
   rm_old_dirs_jobs camp_jobs/
-  echo "Copying camp folder to " camp_jobs/camp$id
+  echo "Copying camp folder to" camp_jobs/camp$id
   cp -r camp camp_jobs/camp$id
   cd camp/compile/power9
 
-  job_id=$(sbatch --parsable ./sbatch.make.camp.power9.sh $id)
-  #./sbatch.make.camp.power9.sh $id
+  job_id=$(sbatch --parsable ./sbatch.make.camp.power9.sh "$id")
   echo "Sent job " $job_id
+  #./sbatch.make.camp.power9.sh  "$id"
 
 else
 

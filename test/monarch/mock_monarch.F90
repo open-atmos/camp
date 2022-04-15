@@ -156,7 +156,7 @@ program mock_monarch_t
 
   !> CAMP-chem input file file
   character(len=:), allocatable :: camp_input_file, chemFile,&
-  caseMulticellsOnecell, diffCells
+  caseMulticellsOnecell, diffCells,results_file
   !> CAMP-camp <-> MONARCH interface configuration file
   character(len=:), allocatable :: interface_input_file
   !> Results file prefix
@@ -196,7 +196,6 @@ program mock_monarch_t
   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !Options
-  export_results_all_cells=1
   I_W=1
   I_E=1
   I_S=1
@@ -257,6 +256,13 @@ program mock_monarch_t
       DIFF_CELLS = "ON"
     else
       DIFF_CELLS = "OFF"
+    end if
+
+    call jfile%get('results_file',results_file)
+    if(results_file.eq."_results_all_cells.csv") then
+      export_results_all_cells = 1
+    else
+      export_results_all_cells = 0
     end if
 
   end if
@@ -818,7 +824,6 @@ contains
       !allocate(species_conc_mpi(n_cells*camp_mpi_size()))
 
       file_name = file_prefix//"_results_all_cells.csv"
-      !print*,file_name
       open(RESULTS_ALL_CELLS_FILE_UNIT, file=file_name, status="replace", action="write")
 
       if(NUM_WE_CELLS*NUM_SN_CELLS*NUM_VERT_CELLS.gt.1000) then
@@ -928,6 +933,97 @@ contains
 #endif
 
   end subroutine
+
+#ifdef CAMP_DISABLE_NETCDF
+#else
+
+  subroutine export_results_netcdf(camp_interface)
+
+    use netcdf
+    type(camp_monarch_interface_t), intent(inout) :: camp_interface
+
+    character(len=:), allocatable :: aux_str
+    character(len=128) :: i_str
+    integer :: z,o,i,j,k,r,i_cell,i_spec,n,ncells,len
+
+    ncells=(I_E - I_W+1)*(I_N - I_S+1)*NUM_VERT_CELLS
+    len=size(species_conc)!n_cells*NUM_MONARCH_SPEC!size(species_conc)
+
+#ifdef CAMP_USE_MPI
+
+    call MPI_GATHER(species_conc, len, MPI_REAL, species_conc_mpi,&
+            len,MPI_REAL, 0, MPI_COMM_WORLD, ierr)
+
+    if (camp_mpi_rank().eq.0) then
+      do n=1,camp_mpi_size()
+        do i=I_W,I_E
+          do j=I_S,I_N
+            do k=1,NUM_VERT_CELLS
+              o = (j-1)*(I_E) + (i-1) !Index to 3D
+              z = (k-1)*(I_E*I_N) + o !Index for 2D
+
+              write(RESULTS_ALL_CELLS_FILE_UNIT, "(ES13.6)", advance="no") &
+                      species_conc_mpi(i,j,k,camp_interface%map_monarch_id(1),n)
+
+              !print*,"export_file_results_all_cells species_conc_mpi", species_conc_mpi(z,camp_interface%map_monarch_id(1))
+
+              do r=2,size(camp_interface%map_monarch_id)
+
+                !print*,species_conc_mpi(i,j,k,camp_interface%map_monarch_id(r),n),&
+                !        camp_interface%camp_state%state_var(camp_interface%map_camp_id(r))
+
+                write(RESULTS_ALL_CELLS_FILE_UNIT, "(A)", advance="no") ","
+                write(RESULTS_ALL_CELLS_FILE_UNIT, "(ES13.6)", advance="no") &
+                        species_conc_mpi(i,j,k,camp_interface%map_monarch_id(r),n)
+
+                !camp_interface%camp_state%state_var(r+z*state_size_per_cell) = &
+                !        camp_interface%camp_state%state_var(r)
+              end do
+
+              write(RESULTS_ALL_CELLS_FILE_UNIT, '(a)') ''
+
+            end do
+          end do
+        end do
+      end do
+    end if
+
+#else
+
+    if (camp_mpi_rank().eq.0) then
+
+      do i=I_W,I_E
+        do j=I_S,I_N
+          do k=1,NUM_VERT_CELLS
+            o = (j-1)*(I_E) + (i-1) !Index to 3D
+            z = (k-1)*(I_E*I_N) + o !Index for 2D
+
+            write(RESULTS_ALL_CELLS_FILE_UNIT, "(ES13.6)", advance="no") &
+                    species_conc(i,j,k,camp_interface%map_monarch_id(1))
+
+            do r=2,size(camp_interface%map_monarch_id)
+
+              print*,species_conc(i,j,k,camp_interface%map_monarch_id(r)),&
+                      camp_interface%camp_state%state_var(camp_interface%map_camp_id(r))
+
+              write(RESULTS_ALL_CELLS_FILE_UNIT, "(A)", advance="no") ","
+              write(RESULTS_ALL_CELLS_FILE_UNIT, "(ES13.6)", advance="no") &
+                      species_conc(i,j,k,camp_interface%map_monarch_id(r))
+
+            end do
+
+            write(RESULTS_ALL_CELLS_FILE_UNIT, '(a)') ''
+
+          end do
+        end do
+      end do
+    end if
+#endif
+
+  end subroutine
+
+#endif
+
 
   subroutine import_camp_input(camp_interface)
 

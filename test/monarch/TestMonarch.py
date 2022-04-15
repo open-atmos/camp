@@ -50,6 +50,7 @@ class TestMonarch:
         self.readData = False
         self.commit = ""
         self.is_export = False
+        self.sbatch_job_id = ""
         # Auxiliar
         self.diffCells = ""
         self.datacolumns = []
@@ -83,7 +84,7 @@ class TestMonarch:
 
 def get_is_sbatch():
     try:
-        if sys.argv[1] == "sbatch=true":
+        if sys.argv[1]:
             return True
         else:
             return False
@@ -164,6 +165,7 @@ def import_data(conf, tmp_path):
         os.remove(conf_name)
         conf_dict = vars(conf)
         conf_imported["is_export"] = conf_dict["is_export"]
+        conf_imported["sbatch_job_id"] = conf_dict["sbatch_job_id"]
         if conf_imported["timeSteps"] >= conf_dict["timeSteps"]:
             conf_imported["timeSteps"] = conf_dict["timeSteps"]
         if conf_dict["commit"] == "MATCH_IMPORTED_CONF":
@@ -191,6 +193,8 @@ def export(conf, data_path):
     data_path_abs = os.path.abspath(os.getcwd()) + "/" + data_path
     exportPath = conf.exportPath
     conf.commit = get_commit_hash()
+    if len(sys.argv) > 1:
+        conf.sbatch_job_id = sys.argv[1]
 
     os.chdir("../../..")
     print(os.path.abspath(os.getcwd()) + "/" + exportPath)
@@ -202,12 +206,12 @@ def export(conf, data_path):
     if not os.path.exists(conf_dir):
         os.makedirs(conf_dir)
     now = datetime.datetime.now()
-    dt_string = now.strftime("%d-%m-%Y-%H.%M.%S")
-    conf_path = conf_dir + "/" + dt_string + ".json"
+    basename = now.strftime("%d-%m-%Y-%H.%M.%S") + "-" + conf.sbatch_job_id
+    conf_path = conf_dir + "/" + basename + ".json"
     with open(conf_path, 'w', encoding='utf-8') as jsonFile:
         json.dump(conf.__dict__, jsonFile, indent=4, sort_keys=False)
-    conf_name = dt_string + ".json"
-    path_to_zip_file = conf_dir + "/" + dt_string + ".zip"
+    conf_name = basename + ".json"
+    path_to_zip_file = conf_dir + "/" + basename + ".zip"
     zipfile.ZipFile(path_to_zip_file, mode='w').write(conf_path, arcname=conf_name)
     os.remove(conf_path)
     print("Configuration saved to", os.path.abspath(os.getcwd()) + path_to_zip_file)
@@ -215,8 +219,8 @@ def export(conf, data_path):
     path_to_zip_file = exportPath + "/data"
     if not os.path.exists(path_to_zip_file):
         os.makedirs(path_to_zip_file)
-    path_to_zip_file = exportPath + "/data/" + dt_string + ".zip"
-    new_data_name = dt_string + ".csv"
+    path_to_zip_file = exportPath + "/data/" + basename + ".zip"
+    new_data_name = basename + ".csv"
     new_data_path = exportPath + "/data/" + new_data_name
     os.rename(data_path_abs, new_data_path)
     zipfile.ZipFile(path_to_zip_file, mode='w').write(new_data_path, arcname=new_data_name)
@@ -264,8 +268,9 @@ def run(conf):
     data_name = conf.chemFile + '_' + conf.caseMulticellsOnecell + conf.results_file
     tmp_path = 'out/' + data_name
 
-    is_import, data_path = import_data(conf, tmp_path)
-    # is_import, data_path = False, tmp_path
+    #is_import, data_path = import_data(conf, tmp_path)
+    is_import, data_path = False, tmp_path
+    #print("IMPORT DATA", is_import)
 
     #print(data_path)
     if not is_import:
@@ -320,7 +325,8 @@ def run_case(conf):
             data["timeLS"][j] = data["timeLS"][j] \
                                 / data["counterBCG"][j]
 
-    print("run_case", conf.case, y_key, ":", data[y_key])
+    if conf.plotYKey != "MAPE":
+        print("run_case", conf.case, y_key, ":", data[y_key])
 
     return data
 
@@ -547,8 +553,8 @@ def all_timesteps():
     conf.profileCuda = False
     # conf.profileCuda = True
 
-    #conf.is_export = get_is_sbatch()
-    conf.is_export = True
+    conf.is_export = get_is_sbatch()
+    #conf.is_export = True
     #conf.is_export = False
 
     #conf.commit = "MATCH_IMPORTED_CONF"
@@ -564,6 +570,9 @@ def all_timesteps():
     # conf.cells = [400,2000,4000]
     # conf.cells = [1,5,10,50,100]
     #conf.cells = [100,500,1000,5000,10000]
+
+    #print("sys.argv[1]",sys.argv[1])
+    #print("sys.argv[2]",sys.argv[2])
 
     conf.timeSteps = 2
     conf.timeStepsDt = 3
@@ -585,7 +594,7 @@ def all_timesteps():
 
     # conf.plotYKey = "Speedup timeCVode"
     # conf.plotYKey = "Speedup counterLS"
-    conf.plotYKey = "Speedup normalized timeLS"
+    #conf.plotYKey = "Speedup normalized timeLS"
     # conf.plotYKey = "Speedup normalized computational timeLS"
     # conf.plotYKey = "Speedup counterBCG"
     # conf.plotYKey = "Speedup normalized counterBCG"
@@ -597,7 +606,7 @@ def all_timesteps():
     # conf.plotYKey = "Speedup countercvStep"
     # conf.plotYKey = "Speedup device timecvStep"
     # conf.plotYKey = "Percentage data transfers CPU-GPU [%]"
-    # conf.plotYKey="MAPE"
+    conf.plotYKey="MAPE"
     # conf.plotYKey="SMAPE"
     # conf.plotYKey="NRMSE"
     # conf.MAPETol=1.0E-6

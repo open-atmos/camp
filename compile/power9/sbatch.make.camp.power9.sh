@@ -16,7 +16,7 @@ compile_run(){
 
   id=$1
 
-  cd cd ../../../camp_jobs/camp$id
+  cd ../../../camp_jobs/camp$id
   cd build
   make -j 4
 
@@ -24,8 +24,8 @@ compile_run(){
 
   FILE=TestMonarch.py
   if test -f "$FILE"; then
-    python $FILE  "sbatch=true"
-    srun --qos=debug --ntasks=1 cp -r -u ../../../test/monarch/exports/* ../../../../camp/test/monarch/exports/
+    python $FILE  "$id"
+    srun --qos=debug --ntasks=1 cp -r -u ../../../test/monarch/exports/* ../../../../../camp/test/monarch/exports/
     cd ../../
 
     #./test_monarch_1.sh MPI
@@ -36,8 +36,8 @@ compile_run(){
     python test_monarch_1.py
   fi
 
-  cd ../../
-  #srun --qos=debug --ntasks=1 rm -rf camp_jobs/camp$id
+  cd ../../../
+  srun --qos=debug --ntasks=1 rm -rf camp_jobs/camp$id
   cd camp/compile/power9
 }
 
