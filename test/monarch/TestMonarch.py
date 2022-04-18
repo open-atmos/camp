@@ -9,7 +9,6 @@
 #
 
 import matplotlib as mpl
-
 mpl.use('TkAgg')
 import matplotlib.pyplot as plt
 import csv
@@ -19,8 +18,6 @@ import numpy as np
 from pylab import imread, subplot, imshow, show
 import plot_functions
 import datetime
-import pandas as pd
-import seaborn as sns
 import time
 import json
 from pathlib import Path
@@ -563,10 +560,10 @@ def all_timesteps():
     conf.mpi = "yes"
     # conf.mpi = "no"
 
-    conf.mpiProcessesList = [1]
-    #conf.mpiProcessesList = [40, 1]
+    #conf.mpiProcessesList = [1]
+    conf.mpiProcessesList = [40, 1]
 
-    conf.cells = [100]
+    conf.cells = [1000]
     # conf.cells = [400,2000,4000]
     # conf.cells = [1,5,10,50,100]
     #conf.cells = [100,500,1000,5000,10000]

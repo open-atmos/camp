@@ -239,7 +239,7 @@ module camp_camp_core
     procedure :: print => do_print
     procedure :: print_state_gnuplot
     !> Export camp input concentrations
-    procedure :: export_camp_input
+    procedure :: export_camp_input_json
     !> Finalize the core
     final :: finalize
 
@@ -2103,7 +2103,7 @@ contains
 
   end subroutine add_sub_model
 
-  subroutine export_camp_input(this, camp_state, time_step, rxn_phase,&
+  subroutine export_camp_input_json(this, camp_state, time_step, rxn_phase,&
           solver_status_in, solver_stats, n_cells)
 
   use camp_rxn_data

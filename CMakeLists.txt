@@ -323,7 +323,7 @@ endif()
 if(${CMAKE_Fortran_COMPILER_ID} MATCHES "Intel")
   set(STD_F_FLAGS "-extend_source -warn truncated_source")
 elseif(${CMAKE_Fortran_COMPILER_ID} MATCHES "GNU")
-  set(STD_F_FLAGS "-ffree-line-length-none")
+  set(STD_F_FLAGS "-ffree-line-length-none -lnetcdf -lnetcdff")
 endif()
 
 set(REACTIONS_F_SRC
@@ -465,7 +465,7 @@ set(CAMP_LIB_SRC
   src/solver_stats.F90
   src/debug_diff_check.F90
   ${CAMP_C_SRC} ${AEROSOL_REPS_SRC} ${SUB_MODELS_SRC} ${REACTIONS_SRC}
-  ${CAMP_CUDA_SRC} ${GSL_SRC} ${NETCDF_LIBS} ${CAMP_CXX_SRC} )
+  ${CAMP_CUDA_SRC} ${GSL_SRC} ${CAMP_CXX_SRC} )
 
 #add_library(camplib SHARED ${CAMP_LIB_SRC}) #nvlink warning (issue 9 github)
 add_library(camplib ${CAMP_LIB_SRC}) #fine
@@ -473,8 +473,8 @@ add_library(camplib-static STATIC ${CAMP_LIB_SRC})
 
 if (CUDA_FOUND)
 
-  target_link_libraries(camplib ${SUNDIALS_LIBS} ${GSL_LIBS} ${JSON_LIB} ${CUDA_LIBRARIES})
-  target_link_libraries(camplib-static ${SUNDIALS_LIBS} ${GSL_LIBS} ${JSON_LIB} ${CUDA_LIBRARIES})
+  target_link_libraries(camplib  ${NETCDF_LIBS} ${SUNDIALS_LIBS} ${GSL_LIBS} ${JSON_LIB} ${CUDA_LIBRARIES})
+  target_link_libraries(camplib-static  ${NETCDF_LIBS} ${SUNDIALS_LIBS} ${GSL_LIBS} ${JSON_LIB} ${CUDA_LIBRARIES})
 
   set_target_properties(camplib PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
   set_target_properties(camplib-static  PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
@@ -482,8 +482,8 @@ if (CUDA_FOUND)
 else()
   #target_link_libraries(camplib ${NETCDF_LIBS} ${SUNDIALS_LIBS}
    #  ${MOSAIC_LIB} ${GSL_LIBS} ${JSON_LIB})
-  target_link_libraries(camplib ${SUNDIALS_LIBS} ${GSL_LIBS} ${JSON_LIB})
-  target_link_libraries(camplib-static ${SUNDIALS_LIBS} ${GSL_LIBS} ${JSON_LIB})
+  target_link_libraries(camplib  ${NETCDF_LIBS} ${SUNDIALS_LIBS} ${GSL_LIBS} ${JSON_LIB})
+  target_link_libraries(camplib-static  ${NETCDF_LIBS} ${SUNDIALS_LIBS} ${GSL_LIBS} ${JSON_LIB})
 
 endif()
 

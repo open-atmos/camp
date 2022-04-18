@@ -780,7 +780,7 @@ contains
         !print*, "this%camp_core%solve start",this%camp_state%state_var(1),camp_mpi_rank()
       !end if
 
-      !call this%camp_core%export_camp_input(this%camp_state, &
+      !call this%camp_core%export_camp_input_json(this%camp_state, &
        !       real(time_step, kind=dp), solver_stats = solver_stats)
 
       ! Integrate the CAMP mechanism
