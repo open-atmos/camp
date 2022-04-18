@@ -18,7 +18,7 @@ rm_old_logs(){
 find $1 -type f -mtime +30 -exec rm -rf {} \;
 }
 rm_old_dirs_jobs(){
-find $1 -type d -ctime +10 -exec rm -rf {} +
+find $1 -type d -ctime +30 -exec rm -rf {} +
 }
 
 if [ $is_sbatch == "true" ]; then

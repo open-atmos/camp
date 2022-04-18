@@ -37,7 +37,7 @@ compile_run(){
   fi
 
   cd ../../../
-  srun --qos=debug --ntasks=1 rm -rf camp_jobs/camp$id
+  #srun --qos=debug --ntasks=1 rm -rf camp_jobs/camp$id
   cd camp/compile/power9
 }
 

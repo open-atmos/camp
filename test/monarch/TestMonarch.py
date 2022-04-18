@@ -47,6 +47,7 @@ class TestMonarch:
         self.readData = False
         self.commit = ""
         self.is_export = False
+        self.is_import = False
         self.sbatch_job_id = ""
         # Auxiliar
         self.diffCells = ""
@@ -149,7 +150,14 @@ def import_data(conf, tmp_path):
 
     filenames = next(walk(conf_path), (None, None, []))[2]  # [] if no file
 
+    if not filenames:
+        print("WARNING: Import folder is empty. Path:",os.path.abspath(os.getcwd())+"/"+conf_path)
+        os.chdir(init_path)
+        return False, new_path
+
     data_path = exportPath + "/data/"
+    print(filenames)
+    print("conf_path",os.path.abspath(os.getcwd())+"/"+conf_path)
     for filename in filenames:
         dir_to_extract = conf_path + "/"
         basename = os.path.splitext(filename)[0]
@@ -162,6 +170,8 @@ def import_data(conf, tmp_path):
         os.remove(conf_name)
         conf_dict = vars(conf)
         conf_imported["is_export"] = conf_dict["is_export"]
+        if conf_imported["is_import"]:
+            conf_imported["is_import"] = conf_dict["is_import"]
         conf_imported["sbatch_job_id"] = conf_dict["sbatch_job_id"]
         if conf_imported["timeSteps"] >= conf_dict["timeSteps"]:
             conf_imported["timeSteps"] = conf_dict["timeSteps"]
@@ -191,7 +201,7 @@ def export(conf, data_path):
     exportPath = conf.exportPath
     conf.commit = get_commit_hash()
     if len(sys.argv) > 1:
-        conf.sbatch_job_id = sys.argv[1]
+        conf.sbatch_job_id = "-" + sys.argv[1]
 
     os.chdir("../../..")
     print(os.path.abspath(os.getcwd()) + "/" + exportPath)
@@ -203,7 +213,7 @@ def export(conf, data_path):
     if not os.path.exists(conf_dir):
         os.makedirs(conf_dir)
     now = datetime.datetime.now()
-    basename = now.strftime("%d-%m-%Y-%H.%M.%S") + "-" + conf.sbatch_job_id
+    basename = now.strftime("%d-%m-%Y-%H.%M.%S") + conf.sbatch_job_id
     conf_path = conf_dir + "/" + basename + ".json"
     with open(conf_path, 'w', encoding='utf-8') as jsonFile:
         json.dump(conf.__dict__, jsonFile, indent=4, sort_keys=False)
@@ -265,8 +275,10 @@ def run(conf):
     data_name = conf.chemFile + '_' + conf.caseMulticellsOnecell + conf.results_file
     tmp_path = 'out/' + data_name
 
-    #is_import, data_path = import_data(conf, tmp_path)
-    is_import, data_path = False, tmp_path
+    if conf.is_import:
+        is_import, data_path = import_data(conf, tmp_path)
+    else:
+        is_import, data_path = False, tmp_path
     #print("IMPORT DATA", is_import)
 
     #print(data_path)
@@ -554,6 +566,9 @@ def all_timesteps():
     #conf.is_export = True
     #conf.is_export = False
 
+    conf.is_import= True
+    #conf.is_import = False
+
     #conf.commit = "MATCH_IMPORTED_CONF"
     conf.commit = ""
 
@@ -563,7 +578,7 @@ def all_timesteps():
     #conf.mpiProcessesList = [1]
     conf.mpiProcessesList = [40, 1]
 
-    conf.cells = [1000]
+    conf.cells = [100]
     # conf.cells = [400,2000,4000]
     # conf.cells = [1,5,10,50,100]
     #conf.cells = [100,500,1000,5000,10000]
@@ -591,7 +606,7 @@ def all_timesteps():
 
     # conf.plotYKey = "Speedup timeCVode"
     # conf.plotYKey = "Speedup counterLS"
-    #conf.plotYKey = "Speedup normalized timeLS"
+    conf.plotYKey = "Speedup normalized timeLS"
     # conf.plotYKey = "Speedup normalized computational timeLS"
     # conf.plotYKey = "Speedup counterBCG"
     # conf.plotYKey = "Speedup normalized counterBCG"
@@ -603,7 +618,7 @@ def all_timesteps():
     # conf.plotYKey = "Speedup countercvStep"
     # conf.plotYKey = "Speedup device timecvStep"
     # conf.plotYKey = "Percentage data transfers CPU-GPU [%]"
-    conf.plotYKey="MAPE"
+    #conf.plotYKey="MAPE"
     # conf.plotYKey="SMAPE"
     # conf.plotYKey="NRMSE"
     # conf.MAPETol=1.0E-6
