@@ -884,7 +884,7 @@ void solveGPU(SolverData *sd, double *dA, int *djA, int *diA, double *dx, double
   double *aux = bicg->aux;
   double *daux = mGPU->daux;
 
-#ifndef DEBUG_SOLVEBCGCUDA
+#ifdef DEBUG_SOLVEBCGCUDA
   if(bicg->counterBiConjGrad==0) {
     printf("solveGPU\n");
   }

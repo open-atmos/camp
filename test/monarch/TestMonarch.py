@@ -31,37 +31,39 @@ import glob
 
 class TestMonarch:
     def __init__(self):
-        # Configuration
+        # Case configuration
         self._chemFile = "monarch_binned"
-        self.diffCellsL = ""
+        self.diffCells = ""
         self.profileCuda = False
         self.mpi = "yes"
-        self.mpiProcessesList = [1]
-        self.cells = [100]
         self.timeSteps = 1
         self.timeStepsDt = 2
+        self.MAPETol = 1.0E-4
+        self.commit = ""
+        self.case = []
+        self.nCells = 1
+        self.caseGpuCpu = ""
+        self.caseMulticellsOnecell = ""
+        # Cases configuration
+        self.is_start_cases_attributes = True
+        self.diffCellsL = ""
+        self.mpiProcessesList = [1]
+        self.cells = [100]
         self.caseBase = ""
         self.casesOptim = [""]
         self.plotYKey = ""
-        self.MAPETol = 1.0E-4
-        self.readData = False
-        self.commit = ""
         self.is_export = False
         self.is_import = False
+        # Auxiliary
+        self.is_start_auxiliary_attributes = True
         self.sbatch_job_id = ""
-        # Auxiliar
-        self.diffCells = ""
         self.datacolumns = []
         self.exportPath = "test/monarch/exports"
         self.legend = []
-        self.case = []
         self.results_file = "_solver_stats.csv"
         self.plotTitle = ""
         self.mpiProcesses = 1
-        self.nCells = 1
-        self.nCellsCase = 1
-        self.caseGpuCpu = ""
-        self.caseMulticellsOnecell = ""
+        self.nCellsProcesses = 1
         self.itsolverConfigFile = "itsolver_options.txt"
         self.campSolverConfigFile = "config_variables_c_solver.txt"
 
@@ -131,6 +133,67 @@ def get_commit_hash():
     # print(' > Git Hash: {}'.format(commit))
     return str(commit)
 
+def import_data_excluding_attributes(conf, tmp_path):
+    init_path = os.path.abspath(os.getcwd())
+    is_import = False
+    os.chdir("../../..")
+    exportPath = conf.exportPath
+    new_path = tmp_path
+
+    if not os.path.exists(exportPath):
+        os.chdir(init_path)
+        return False, new_path
+
+    conf_path = exportPath + "/conf"
+    if not os.path.exists(conf_path):
+        os.chdir(init_path)
+        return False, new_path
+
+    filenames = next(walk(conf_path), (None, None, []))[2]  # [] if no file
+
+    if not filenames:
+        print("WARNING: Import folder is empty. Path:",os.path.abspath(os.getcwd())+"/"+conf_path)
+        os.chdir(init_path)
+        return False, new_path
+
+    data_path = exportPath + "/data/"
+    #print(filenames)
+    #print("conf_path",os.path.abspath(os.getcwd())+"/"+conf_path)
+    for filename in filenames:
+        dir_to_extract = conf_path + "/"
+        basename = os.path.splitext(filename)[0]
+        path_to_zip_file = dir_to_extract + basename + ".zip"
+        with zipfile.ZipFile(path_to_zip_file, 'r') as zip_ref:
+            zip_ref.extractall(dir_to_extract)
+        conf_name = conf_path + "/" + basename + ".json"
+        jsonFile = open(conf_name)
+        conf_imported = json.load(jsonFile)
+        os.remove(conf_name)
+        conf_dict = vars(conf)
+        conf_imported["is_export"] = conf_dict["is_export"]
+        if conf_imported["is_import"]:
+            conf_imported["is_import"] = conf_dict["is_import"]
+        conf_imported["sbatch_job_id"] = conf_dict["sbatch_job_id"]
+        if conf_imported["timeSteps"] >= conf_dict["timeSteps"]:
+            conf_imported["timeSteps"] = conf_dict["timeSteps"]
+        if conf_dict["commit"] == "MATCH_IMPORTED_CONF":
+            conf.commit = get_commit_hash()
+        else:
+            conf_imported["commit"] = conf_dict["commit"]
+        if conf_imported == conf_dict:
+            is_import = True
+            dir_to_extract = data_path
+            path_to_zip_file = data_path + basename + ".zip"
+            with zipfile.ZipFile(path_to_zip_file, 'r') as zip_ref:
+                zip_ref.extractall(dir_to_extract)
+            new_path = os.path.abspath(os.getcwd()) + "/" + dir_to_extract + basename + ".csv"
+            print("Imported data from", new_path)
+            break
+
+    conf_imported.clear()
+    os.chdir(init_path)
+
+    return is_import, new_path
 
 def import_data(conf, tmp_path):
     init_path = os.path.abspath(os.getcwd())
@@ -156,8 +219,8 @@ def import_data(conf, tmp_path):
         return False, new_path
 
     data_path = exportPath + "/data/"
-    print(filenames)
-    print("conf_path",os.path.abspath(os.getcwd())+"/"+conf_path)
+    #print("filenames:",filenames)
+    #print("conf_path",os.path.abspath(os.getcwd())+"/"+conf_path)
     for filename in filenames:
         dir_to_extract = conf_path + "/"
         basename = os.path.splitext(filename)[0]
@@ -169,17 +232,26 @@ def import_data(conf, tmp_path):
         conf_imported = json.load(jsonFile)
         os.remove(conf_name)
         conf_dict = vars(conf)
-        conf_imported["is_export"] = conf_dict["is_export"]
-        if conf_imported["is_import"]:
-            conf_imported["is_import"] = conf_dict["is_import"]
-        conf_imported["sbatch_job_id"] = conf_dict["sbatch_job_id"]
-        if conf_imported["timeSteps"] >= conf_dict["timeSteps"]:
-            conf_imported["timeSteps"] = conf_dict["timeSteps"]
-        if conf_dict["commit"] == "MATCH_IMPORTED_CONF":
-            conf.commit = get_commit_hash()
-        else:
-            conf_imported["commit"] = conf_dict["commit"]
-        if conf_imported == conf_dict:
+        #print(conf_dict)
+        is_same_conf_case = True
+        for confKey in conf_dict:
+            #print("confKey",confKey)
+            if confKey == "is_start_cases_attributes":
+                #print("BREAK")
+                break
+            if conf_imported["timeSteps"] >= conf_dict["timeSteps"]:
+                conf_imported["timeSteps"] = conf_dict["timeSteps"]
+            if conf_dict["commit"] == "MATCH_IMPORTED_CONF":
+                conf.commit = get_commit_hash()
+            else:
+                conf_imported["commit"] = conf_dict["commit"]
+            if conf_imported[confKey] != conf_dict[confKey]:
+                #print(conf_dict[confKey])
+                is_same_conf_case = False
+        #print("basename",basename)
+        #if basename == "16-04-2022-02.30.57-1649810070774628350":
+           #print("conf_imported",conf_imported,"conf_dict",conf_dict)
+        if is_same_conf_case:
             is_import = True
             dir_to_extract = data_path
             path_to_zip_file = data_path + basename + ".zip"
@@ -334,8 +406,8 @@ def run_case(conf):
             data["timeLS"][j] = data["timeLS"][j] \
                                 / data["counterBCG"][j]
 
-    if conf.plotYKey != "MAPE":
-        print("run_case", conf.case, y_key, ":", data[y_key])
+    #if conf.plotYKey != "MAPE":
+    #    print("run_case", conf.case, y_key, ":", data[y_key])
 
     return data
 
@@ -343,7 +415,7 @@ def run_case(conf):
 def run_cases(conf):
     # Run base case
     conf.mpiProcesses = conf.mpiProcessesList[0]
-    conf.nCells = int(conf.nCellsCase / conf.mpiProcesses)
+    conf.nCells = int(conf.nCellsProcesses / conf.mpiProcesses)
 
     cases_words = conf.caseBase.split()
     conf.caseGpuCpu = cases_words[0]
@@ -355,7 +427,7 @@ def run_cases(conf):
 
     # Run OptimCases
     conf.mpiProcesses = conf.mpiProcessesList[-1]
-    conf.nCells = int(conf.nCellsCase / conf.mpiProcesses)
+    conf.nCells = int(conf.nCellsProcesses / conf.mpiProcesses)
     if conf.nCells == 0:
         print("WARNING: Configured less cells than MPI processes, setting 1 cell per process")
         conf.nCells = 1
@@ -401,7 +473,7 @@ def run_cases(conf):
 def run_cells(conf):
     datacells = []
     for i in range(len(conf.cells)):
-        conf.nCellsCase = conf.cells[i]
+        conf.nCellsProcesses = conf.cells[i]
         datacases = run_cases(conf)
 
         if len(conf.cells) > 1:  # Mean timeSteps
@@ -545,7 +617,7 @@ def plot_cases(conf):
     print(namex, ":", datax)
     print(namey, ":", datay)
 
-    # plot_functions.plot(namex, namey, datax, datay, conf.plotTitle, conf.legend)
+    plot_functions.plot(namex, namey, datax, datay, conf.plotTitle, conf.legend)
 
 
 def all_timesteps():
@@ -575,10 +647,10 @@ def all_timesteps():
     conf.mpi = "yes"
     # conf.mpi = "no"
 
-    #conf.mpiProcessesList = [1]
-    conf.mpiProcessesList = [40, 1]
+    conf.mpiProcessesList = [1]
+    #conf.mpiProcessesList = [40, 1]
 
-    conf.cells = [100]
+    conf.cells = [100,500,1000,5000]
     # conf.cells = [400,2000,4000]
     # conf.cells = [1,5,10,50,100]
     #conf.cells = [100,500,1000,5000,10000]
@@ -677,3 +749,11 @@ def all_timesteps():
 
 if __name__ == "__main__":
     all_timesteps()
+    #conf = TestMonarch()
+    #conf_dict = vars(conf)
+    #print(conf_dict)
+    #for key in conf_dict:
+     #  if key == "is_start_cases_attributes":
+      #     break
+       #else:
+        #    print(conf_dict[key])
