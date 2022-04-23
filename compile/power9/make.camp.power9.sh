@@ -5,8 +5,12 @@ export SUITE_SPARSE_HOME=$(pwd)/../../../SuiteSparse
 export JSON_FORTRAN_HOME=$(pwd)/../../../json-fortran-6.1.0/install/jsonfortran-gnu-6.1.0
 #export GSL_HOME=${GSL_DIR}
 
-#is_sbatch="true"
-is_sbatch="false"
+if [ "$1" == "1" ]; then
+  is_sbatch="true"
+else
+  #is_sbatch="true"
+  is_sbatch="false"
+fi
 
 mkdir_if_not_exists(){
   if [ ! -d $1 ]; then
@@ -34,14 +38,13 @@ if [ $is_sbatch == "true" ]; then
   cp -r camp camp_jobs/camp$id
   cd camp/compile/power9
 
+  echo "Sending job " $job_id
   job_id=$(sbatch --parsable ./sbatch.make.camp.power9.sh "$id")
-  echo "Sent job " $job_id
   #./sbatch.make.camp.power9.sh  "$id"
 
 else
 
-  cd ../../
-  cd build
+  cd  ../../build
   make -j 4
 
   cd test_run/monarch

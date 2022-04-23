@@ -123,7 +123,7 @@ def normalized_timeLS(new_plot_y_key, cases_multicells_onecell, data, cells):
 
     for case in cases_multicells_onecell:
 
-        if (case == "One-cell"):
+        if case == "One-cell":
             cells_multiply = cells
         else:
             cells_multiply = 1
@@ -388,6 +388,7 @@ def calculate_BCGPercTimeDataTransfers(data, plot_y_key):
     gpu_exist = False
 
     for case in cases:
+        print("WARNING: Deprecated checking in calculate_BCGPercTimeDataTransfers")
         if ("GPU" in case):
             data_timeBiconjGradMemcpy = data[case][plot_y_key]
             data_timeLS = data[case]["timeLS"]
@@ -531,7 +532,7 @@ def plotplt(namex, namey, datax, datay, plot_title):
     plt.title(plot_title)
 
 
-def plotsns(namex, namey, datax, datay, plot_title, legend):
+def plotsns(namex, namey, datax, datay, std, plot_title, legend):
     # print(sns.__version__)
     sns.set_style("whitegrid")
 
@@ -545,20 +546,48 @@ def plotsns(namex, namey, datax, datay, plot_title, legend):
     ax.set_xlabel(namex)
     ax.set_ylabel(namey)
 
-    if (len(legend) > 1):
+    if len(legend) > 1:
 
         print("WARNING: Increase plot window manually to take better screenshot")
 
+        #print(datay)
         datay = list(map(list, zip(*datay)))
+        std = list(map(list, zip(*std)))
         # numpy_array = np.array(datay2)
         # transpose = numpy_array.T
         # datay = transpose.tolist()
 
-        # print(datay)
+        #print("datay zip",datay)
+        # print(datax)
         # print(datax)
 
         data = pd.DataFrame(datay, datax, columns=legend)
         sns.lineplot(data=data, palette="tab10", linewidth=2.5)
+
+        if len(std):
+            #print("datay",datay)
+            #print("datay",std)
+
+            y1 = [[0 for i in range(len(datay[0]))] for j in range(len(datay))]
+            y2 = [[0 for i in range(len(datay[0]))] for j in range(len(datay))]
+            #y1 = [[0 for i in range(len(datay))] for j in range(len(datay[0]))]
+            #y2 = [[0 for i in range(len(datay))] for j in range(len(datay[0]))]
+            for i in range(len(datay)):
+                for j in range(len(datay[0])):
+                    y1[i][j] = datay[i][j] - std[i][j]
+                    y2[i][j] = datay[i][j] + std[i][j]
+                #print("y1[i]",y1[i])
+
+            y1Transpose = np.transpose(y1)
+            y1 = y1Transpose.tolist()
+            y2Transpose = np.transpose(y2)
+            y2 = y2Transpose.tolist()
+
+            #print("y1",y1)
+            for i in range(len(y1)):
+                #print("y1[i]",y1[i])
+                ax.fill_between(datax, y1=y1[i],y2=y2[i], alpha=.5)
+
 
         # ax.set_position([box.x0, box.y0 + box.height * 0.1,
         #               box.width, box.height * 0.9])
@@ -589,22 +618,21 @@ def plotsns(namex, namey, datax, datay, plot_title, legend):
     else:
         ax.set_title(plot_title)
         data = pd.DataFrame(datay, datax)
+
+        #sns.catplot(data=data,capsize=.2, palette="YlGnBu_d", linewidth=2.5,kind="point", legend=False)
+        #sns.pointplot(data=data, palette="tab10", linewidth=2.5, legend=False)
+
+
         sns.lineplot(data=data, palette="tab10", linewidth=2.5, legend=False)
 
-
-def plot(namex, namey, datax, datay, plot_title, legend):
-    # plotplt(namex, namey, datax, datay, plot_title)
-    plotsns(namex, namey, datax, datay, plot_title, legend)
     plt.show()
 
-def read_solver_stats(file, data):
+
+def read_solver_stats_all(file, data):
     with open(file) as f:
         csv_reader = csv.reader(f, delimiter=',')
-
         i_row = 0
-
         for row in csv_reader:
-
             if i_row == 0:
                 labels = row
                 # print(row)
@@ -613,17 +641,25 @@ def read_solver_stats(file, data):
                     # print(labels[col])
                     # print(row[col])
                     data[labels[col]] = data.get(labels[col], []) + [float(row[col])]
-
             i_row += 1
 
-    # print(data)
-    # Normalize accumulative timers
-    # for key in data:
-    #  for i in range(len(data[key])):
-    #    if(i != 0):
-    #      data[key][i]=data[key][i]-data[key][i-1]
-    # print(data)
 
+def read_solver_stats(file, data, nrows):
+    with open(file) as f:
+        csv_reader = csv.reader(f, delimiter=',')
+        i_row = 0
+        for row in csv_reader:
+            if i_row == 0:
+                labels = row
+                # print(row)
+            else:
+                for col in range(len(row)):
+                    # print(labels[col])
+                    # print(row[col])
+                    data[labels[col]] = data.get(labels[col], []) + [float(row[col])]
+            if i_row >= nrows:
+                break
+            i_row += 1
 
 def plot_species(file):
     fig = plt.figure(figsize=(7, 4.25))

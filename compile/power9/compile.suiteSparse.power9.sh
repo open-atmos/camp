@@ -7,7 +7,19 @@
 #module load pnetcdf/1.9.0
 #module load netcdf/4.4.1.1
 #module load lapack/3.8.0
-cd ../../../SuiteSparse
+
+library_path="../../../"
+if [ "$1" == "from_camp_jobs" ]; then
+  library_path="../../../../"
+fi
+
+cd $library_path/SuiteSparse
 make BLAS="-L${EBROOTOPENBLAS}/lib -lopenblas" LAPACK=""
-export SUITE_SPARSE_CAMP_ROOT=$(pwd)/../../../
-cd ../camp/build/compile
+export SUITE_SPARSE_CAMP_ROOT=$(pwd)/$library_path/
+
+camp_folder=camp
+if [ ! -z "$2" ]; then
+  camp_folder=camp_jobs/camp$2
+fi
+
+cd ../$camp_folder/build/compile

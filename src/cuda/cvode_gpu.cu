@@ -3878,7 +3878,7 @@ void solveCVODEGPU_thr(int blocks, int threads_block, int n_shr_memory, int n_sh
 
    */
 
-#ifndef DEBUG_SOLVEBCGCUDA
+#ifdef DEBUG_SOLVEBCGCUDA
   if(bicg->counterBiConjGrad==0) {
     printf("solveCVODEGPU_thr n_cells %d len_cell %d nrows %d nnz %d max_threads_block %d blocks %d threads_block %d n_shr_empty %d offset_cells %d\n",
            mGPU->n_cells,len_cell,mGPU->nrows,mGPU->nnz,n_shr_memory,blocks,threads_block,n_shr_empty,offset_cells);
@@ -3901,7 +3901,7 @@ void solveCVODEGPU(SolverData *sd, CVodeMem cv_mem)
   itsolver *bicg = &(sd->bicg);
   ModelDataGPU *mGPU = &sd->mGPU;
 
-#ifndef DEBUG_SOLVEBCGCUDA
+#ifdef DEBUG_SOLVEBCGCUDA
   if(bicg->counterBiConjGrad==0) {
     printf("solveCVODEGPU\n");
   }
@@ -4464,8 +4464,6 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
   ModelDataGPU *mGPU = &sd->mGPU;
   ModelData *md = &(sd->model_data);
   //double *youtArray = N_VGetArrayPointer(yout);
-
-  printf("cudaCVode start\n");
 
   /*
    * -------------------------------------

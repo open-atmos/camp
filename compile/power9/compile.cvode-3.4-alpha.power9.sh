@@ -1,11 +1,16 @@
+#!/usr/bin/env bash
 
-if [ -z "$SUITE_SPARSE_CAMP_ROOT" ]; then
-	SUITE_SPARSE_CAMP_ROOT=$(pwd)/../../../SuiteSparse
+library_path="../../../"
+if [ "$1" == "from_camp_jobs" ]; then
+  library_path="../../../../"
 fi
 
+if [ -z "$SUITE_SPARSE_CAMP_ROOT" ]; then
+	SUITE_SPARSE_CAMP_ROOT=$(pwd)/$library_path/SuiteSparse
+fi
 
 #tar -zxvf camp/cvode-3.4-alpha.tar.gz
-cd ../../../cvode-3.4-alpha
+cd $library_path/cvode-3.4-alpha
 #rm -r build
 mkdir build
 mkdir install
@@ -29,9 +34,14 @@ cmake -D CMAKE_BUILD_TYPE=debug \
 #-D CMAKE_CUDA_FLAGS="-Xcompiler="-fpermissive" -lcudart -lcublas" \
 #-D EXAMPLES_ENABLE_C=OFF \
 
+camp_folder=camp
+if [ ! -z "$2" ]; then
+  camp_folder=camp_jobs/camp$2
+fi
+
 #make -j 4 #not working
 make install
-cd ../../camp/build/compile
+cd ../../$camp_folder/build/compile
 
 
 #./cvode-3.4-alpha/build/examples/cvode/serial/cvRoberts_klu

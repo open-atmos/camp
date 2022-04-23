@@ -1,5 +1,4 @@
-
-
+#!/usr/bin/env bash
 #MONARCH P9 compilation
 module load bsc/commands
 module load GCC/7.3.0-2.30
@@ -21,11 +20,15 @@ export NETCDF_HOME=${EBROOTNETCDF}
 export NETCDF_FORTRAN_LIB="/gpfs/projects/bsc32/software/rhel/7.5/ppc64le/POWER9/software/netCDF-Fortran/4.4.4-foss-2018b/lib/libnetcdff.so"
 export NETCDF_INCLUDE_DIR="/gpfs/projects/bsc32/software/rhel/7.5/ppc64le/POWER9/software/netCDF/4.6.1-foss-2018b/include"
 
-export SUNDIALS_HOME=$(pwd)/../../../cvode-3.4-alpha/install
-export SUITE_SPARSE_HOME=$(pwd)/../../../SuiteSparse
-export JSON_FORTRAN_HOME=$(pwd)/../../../json-fortran-6.1.0/install/jsonfortran-gnu-6.1.0
-#export GSL_HOME=${GSL_DIR}
+relative_path="../../../"
+if [ "$1" == "from_camp_jobs" ]; then
+  relative_path="../../../../"
+fi
 
+export SUNDIALS_HOME=$(pwd)/$relative_path/cvode-3.4-alpha/install
+export SUITE_SPARSE_HOME=$(pwd)/$relative_path/SuiteSparse
+export JSON_FORTRAN_HOME=$(pwd)/$relative_path/json-fortran-6.1.0/install/jsonfortran-gnu-6.1.0
+#export GSL_HOME=${GSL_DIR}
 
 cd ../../
 rm -rf build

@@ -1,26 +1,36 @@
 #!/usr/bin/env bash
 ##SBATCH --qos=debug
-#SBATCH --job-name=test_monarch
+#SBATCH --job-name=camp_test_monarch
 #SBATCH --output=log/out/%j.txt
 #SBATCH --error=log/err/%j.txt
 #SBATCH --ntasks=40
 #SBATCH --gres=gpu:1
 #SBATCH --exclusive
 
-export SUNDIALS_HOME=$(pwd)/../../../cvode-3.4-alpha/install
-export SUITE_SPARSE_HOME=$(pwd)/../../../SuiteSparse
-export JSON_FORTRAN_HOME=$(pwd)/../../../json-fortran-6.1.0/install/jsonfortran-gnu-6.1.0
+relative_path="../../../"
+if [ ! -z "$1" ]; then
+  relative_path="../../../../"
+fi
+
+export SUNDIALS_HOME=$(pwd)/$relative_path/cvode-3.4-alpha/install
+export SUITE_SPARSE_HOME=$(pwd)/$relative_path/SuiteSparse
+export JSON_FORTRAN_HOME=$(pwd)/$relative_path/json-fortran-6.1.0/install/jsonfortran-gnu-6.1.0
 #export GSL_HOME=${GSL_DIR}
 
 compile_run(){
 
   id=$1
 
-  cd ../../../camp_jobs/camp$id
-  cd build
-  make -j 4
+  echo "Starting job " "$id"
 
-  cd test_run/monarch
+  cd ../../../camp_jobs/camp$id/compile/power9
+
+  ./compile.camp.power9.sh "from_camp_jobs" $id
+  cd ../../build/test_run/monarch
+
+  #cd ../../build
+  #make -j 4
+  #cd test_run/monarch
 
   FILE=TestMonarch.py
   if test -f "$FILE"; then

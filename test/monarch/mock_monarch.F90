@@ -160,7 +160,7 @@ program mock_monarch_t
 
   !> CAMP-chem input file file
   character(len=:), allocatable :: camp_input_file, chemFile,&
-  caseMulticellsOnecell, diffCells,results_file
+  caseMulticellsOnecell, diffCells,results_file,caseGpuCpu
   !> CAMP-camp <-> MONARCH interface configuration file
   character(len=:), allocatable :: interface_input_file
   !> Results file prefix
@@ -281,7 +281,7 @@ program mock_monarch_t
   if (camp_mpi_rank().eq.0) then
     write(*,*) "Time-steps:", NUM_TIME_STEP, "Cells:",&
             NUM_WE_CELLS*NUM_SN_CELLS*NUM_VERT_CELLS, &
-            diffCells,  caseMulticellsOnecell, "MPI size",camp_mpi_size()
+            diffCells,  caseMulticellsOnecell,caseGpuCpu, "MPI processes",camp_mpi_size()
 
   end if
 
@@ -1047,7 +1047,7 @@ contains
 
     ncells=(I_E - I_W+1)*(I_N - I_S+1)*NUM_VERT_CELLS
     call check( nf90_def_dim(ncid, "cell",ncells,ncells_dimid) )
-    call check( nf90_def_dim(ncid, "rank",camp_mpi_size(), rank_dimid) )
+    !call check( nf90_def_dim(ncid, "rank",camp_mpi_size(), rank_dimid) )
     call check( nf90_def_dim(ncid, "time",NF90_UNLIMITED, time_dimid) )
 
     !call check( nf90_def_var(ncid, LAT_NAME, NF90_REAL, lat_dimid, lat_varid) )

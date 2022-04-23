@@ -44,10 +44,19 @@ export NETCDF_INCLUDE_DIR="/gpfs/projects/bsc32/software/rhel/7.5/ppc64le/POWER9
 #make install
 #cd ../..
 
-./compile.json-fortran-6.1.0.power9.sh
-./compile.suiteSparse.power9.sh
-./compile.cvode-3.4-alpha.power9.sh
-./compile.camp.power9.sh
+if [ "$1" == "from_camp_jobs" ]; then
+  echo "Running from_camp_jobs folder"
+fi
+
+camp_folder=camp
+if [ ! -z "$2" ]; then
+  echo "Running job" $2
+fi
+
+./compile.json-fortran-6.1.0.power9.sh $1 $2
+./compile.suiteSparse.power9.sh $1 $2
+./compile.cvode-3.4-alpha.power9.sh $1 $2
+./compile.camp.power9.sh $1 $2
 
 #export SUNDIALS_HOME=$(pwd)/cvode-3.4-alpha/install
 #export SUITE_SPARSE_HOME=$(pwd)/SuiteSparse
