@@ -607,21 +607,21 @@ def all_timesteps():
     conf.mpi = "yes"
     # conf.mpi = "no"
 
-    #conf.mpiProcessesCaseBase = 1
-    conf.mpiProcessesCaseBase = 40
+    conf.mpiProcessesCaseBase = 1
+    #conf.mpiProcessesCaseBase = 40
 
     conf.mpiProcessesCaseOptimList.append(1)
     #conf.mpiProcessesCaseOptimList.append(40)
     #conf.mpiProcessesCaseOptimList = [1,4,8,16,32,40]
 
-    conf.cells = [1000]
+    conf.cells = [100]
     #conf.cells = [100,1000,10000]
     #conf.cells = [100,500,1000,5000,10000]
 
     #print("sys.argv[1]",sys.argv[1])
     #print("sys.argv[2]",sys.argv[2])
 
-    conf.timeSteps = 1
+    conf.timeSteps = 720
     conf.timeStepsDt = 3
 
     conf.caseBase = "CPU One-cell"
@@ -640,15 +640,15 @@ def all_timesteps():
     #conf.casesOptim.append("GPU CVODE")
     # conf.casesOptim.append("GPU Block-cellsNhalf")
     conf.casesOptim.append("GPU Block-cells1")
-    #conf.casesOptim.append("GPU Block-cellsN")
-    #conf.casesOptim.append("GPU Multi-cells")
+    conf.casesOptim.append("GPU Block-cellsN")
+    conf.casesOptim.append("GPU Multi-cells")
     #conf.casesOptim.append("GPU One-cell")
     #conf.casesOptim.append("CPU Multi-cells")
     #conf.casesOptim.append("CPU One-cell")
 
     #conf.plotYKey = "Speedup timeCVode"
     # conf.plotYKey = "Speedup counterLS"
-    #conf.plotYKey = "Speedup normalized timeLS"
+    conf.plotYKey = "Speedup normalized timeLS"
     # conf.plotYKey = "Speedup normalized computational timeLS"
     # conf.plotYKey = "Speedup counterBCG"
     # conf.plotYKey = "Speedup normalized counterBCG"
@@ -659,7 +659,7 @@ def all_timesteps():
     # conf.plotYKey = "Speedup countercvStep"
     # conf.plotYKey = "Speedup device timecvStep"
     # conf.plotYKey = "Percentage data transfers CPU-GPU [%]"
-    conf.plotYKey="MAPE"
+    #conf.plotYKey="MAPE"
     # conf.plotYKey="SMAPE"
     # conf.plotYKey="NRMSE"
     # conf.MAPETol=1.0E-6

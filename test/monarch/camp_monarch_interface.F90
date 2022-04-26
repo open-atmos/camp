@@ -521,7 +521,7 @@ contains
     real, intent(in) :: air_density(:,:,:)
     !> Pressure (Pa)
     real, intent(in) :: pressure(:,:,:)
-    real, intent(in) :: conv
+    real, intent(in) :: conv(:,:,:)
     integer, intent(inout) :: i_hour
     integer, intent(in) :: NUM_TIME_STEP
     character(len=*),intent(in) :: DIFF_CELLS
@@ -618,6 +618,12 @@ contains
           end do
         end do
 
+        !if (camp_mpi_rank().eq.0) then
+        !   print*,"pressure"
+        !end if
+        !write(*, "(ES13.6)", advance="no") pressure(:,:,:)
+        !write(*, *) camp_mpi_rank()
+
       else
 
         !NUM_TIME_STEP
@@ -662,6 +668,10 @@ contains
             this%camp_state%state_var(this%map_camp_id(:)) = &
                             MONARCH_conc(i,j,k,this%map_monarch_id(:))
 
+            !if (camp_mpi_rank().eq.0) then
+            !   print*,"integrate camp_state"
+            !end if
+            !print*, this%camp_state%state_var(:), camp_mpi_rank()
             !print*,"i_cell",z,"camp_state", this%camp_state%state_var(this%map_camp_id(:))
 
             if(this%interface_input_file.eq."interface_simple.json" .or.&
@@ -680,11 +690,13 @@ contains
             if(this%ADD_EMISIONS.eq."monarch_binned") then
               !Add emissions
 
+              !print*,"integrate camp_state ADD_EMISIONS"
+
               do r=1,size(this%specs_emi_id)
 
                 this%camp_state%state_var(this%specs_emi_id(r))=&
                         this%camp_state%state_var(this%specs_emi_id(r))&
-                                +this%specs_emi(r)*rate_emi(i_hour,z+1)*conv
+                                +this%specs_emi(r)*rate_emi(i_hour,z+1)*conv(i,j,k)
 
               end do
 
@@ -767,7 +779,7 @@ contains
               do r=1,size(this%specs_emi_id)
                 this%camp_state%state_var(this%specs_emi_id(r)+z*state_size_per_cell)=&
                         this%camp_state%state_var(this%specs_emi_id(r)+z*state_size_per_cell)&
-                                +this%specs_emi(r)*rate_emi(i_hour,z+1)*conv
+                                +this%specs_emi(r)*rate_emi(i_hour,z+1)*conv(i,j,k)
               end do
             endif
           end do
@@ -1443,7 +1455,7 @@ end if
     real, intent(in) :: air_density(:,:,:)
     !> Pressure (Pa)
     real, intent(in) :: pressure(:,:,:)
-    real, intent(in) :: conv
+    real, intent(in) :: conv(:,:,:)
     integer, intent(inout) :: i_hour
     integer, intent(in) :: NUM_TIME_STEP
 

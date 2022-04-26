@@ -139,7 +139,7 @@ program mock_monarch_t
 
   !> Emissions parameters
   !> Emission conversion parameter (mol s-1 m-2 to ppmv)
-  real :: conv
+  real, allocatable  :: conv(:, :, :)
   !> Emissions hour counter
   integer :: i_hour = 0
 
@@ -332,10 +332,12 @@ program mock_monarch_t
   if(output_file_prefix.eq."out/monarch_mod37") then
     allocate(air_density(NUM_WE_CELLS, NUM_VERT_CELLS, NUM_SN_CELLS))
     allocate(pressure(NUM_WE_CELLS, NUM_VERT_CELLS, NUM_SN_CELLS))
+    allocate(conv(NUM_WE_CELLS, NUM_VERT_CELLS, NUM_SN_CELLS))
     print*,"WARNING: test monarch_mod37 is not fully tested"
   else
     allocate(air_density(NUM_WE_CELLS,NUM_SN_CELLS,NUM_VERT_CELLS))
     allocate(pressure(NUM_WE_CELLS,NUM_SN_CELLS,NUM_VERT_CELLS))
+    allocate(conv(NUM_WE_CELLS, NUM_SN_CELLS, NUM_VERT_CELLS))
   end if
 
   n_cells_plot = 1
@@ -790,9 +792,27 @@ contains
 
       air_density(:,:,:) = pressure(:,:,:)/(287.04*temperature(:,:,:)* &
               (1.+0.60813824*water_conc(:,:,:,WATER_VAPOR_ID))) !kg m-3
-      conv=0.02897/air_density(1,1,1)*(TIME_STEP*60.)*1e6 !units of time_step to seconds
+      conv(:,:,:)=0.02897/air_density(:,:,:)*(TIME_STEP*60.)*1e6 !units of time_step to seconds
 
     end if
+
+    !if (camp_mpi_rank().eq.0) then
+    !   print*,"pressure"
+    !end if
+    !write(*, "(ES13.6)", advance="no") pressure(:,:,:)
+    !write(*, *) camp_mpi_rank()
+
+#ifdef DEBUG_set_env
+
+    if (mpi_size.eq.1) then
+      write(*, "(ES13.6)") pressure(:,:,:)
+    else
+      !print*, pressure(:,:,:), camp_mpi_rank()
+      write(*, "(ES13.6)", advance="no") pressure(:,:,:)
+      write(*, *) camp_mpi_rank()
+    end if
+
+#endif
 
     call camp_mpi_barrier()
 
@@ -846,6 +866,8 @@ contains
     ncells=(I_E - I_W+1)*(I_N - I_S+1)*NUM_VERT_CELLS
     len=size(species_conc)!n_cells*NUM_MONARCH_SPEC!size(species_conc)
 
+    !print*,"export_file_results_all_cells start"
+
 #ifdef CAMP_USE_MPI
 
     call MPI_GATHER(species_conc, len, MPI_REAL, species_conc_mpi,&
@@ -856,6 +878,13 @@ contains
 
 #endif
 
+    !if (camp_mpi_rank().eq.0) then
+    !   print*,"export_file_results_all_cells species_conc"
+    !end if
+    !write(*, "(ES13.6)", advance="no") species_conc(:,:,:,1)
+    !write(*, *) camp_mpi_rank()
+
+    !write(*, "(ES13.6)") species_conc(:,:,:,:)
     if (camp_mpi_rank().eq.0) then
       do n=1,camp_mpi_size()
         do i=I_W,I_E

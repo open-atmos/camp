@@ -285,6 +285,8 @@ def calculate_MAPE(data, timesteps, max_tol):
     species_names = list(species1.keys())
     len_timestep = int(len(species1[species_names[0]]) / timesteps)
     max_err = 0.0
+    max_err_name = ""
+    max_err_k = 0
     # max_tol=1.0E-60
     concs_above_tol = 0
     concs_below_tol = 0
@@ -323,17 +325,20 @@ def calculate_MAPE(data, timesteps, max_tol):
                 # err=abs((out1[k]-out2[k])/out1[k])
                 MAPE += err
                 n += 1
-                if (err > max_err):
+                if err > max_err:
                     max_err = err
+                    max_err_name = name
+                    max_err_k = k
                 # if(err>1):
-                # print(name,out1[k],out2[k])
+                #print(name,out1[k],out2[k])
         MAPEs[j] = MAPE / n * 100
 
     if concs_are_zero > concs_below_tol + concs_above_tol:
         print ("Error: More concs are zero than real values, check for errors")
         raise
 
-    print("max_error:" + str(max_err * 100) + "%", "concs_above_tol", concs_above_tol,
+    print("max_error:" + str(max_err * 100) + "%" + " at species and id: " + max_err_name + " " + str(max_err_k)
+          , "concs_above_tol", concs_above_tol,
           "concs_below_tol", concs_below_tol , "concs_are_zero", concs_are_zero)
     # print(NRMSEs)
 
