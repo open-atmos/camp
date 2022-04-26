@@ -40,6 +40,10 @@ option(ENABLE_GPU "Enable use of GPUs in chemistry solving" OFF)
 option(ENABLE_SWAP_DERIV_LOOP_CELLS "Optimization for sligth speedup in One-cell version, more info at https://earth.bsc.es/gitlab/ac/camp/-/issues/22" OFF)
 option(ENABLE_RESET_JAC_SOLVING "Precondition Jacobian matrix with default value (ON) or previous execution value (OFF), better speedup ON but easier to debug OFF, more info at https://earth.bsc.es/gitlab/ac/camp/-/issues/21" OFF)
 option(ENABLE_NETCDF "Include NETCDF package OFF")
+option(use_maxrregcount127 "Compiling with maxxregcount127" OFF)
+option(use_maxrregcount64 "Compiling with maxxregcount64" OFF)
+option(use_maxrregcount24 "Compiling with maxxregcount24" OFF)
+
 
 mark_as_advanced(FORCE ENABLE_DEBUG FAILURE_DETAIL)
 
@@ -311,8 +315,21 @@ endif()
 
 set(STD_C_FLAGS "-std=c99")
 
-#set(STD_CUDA_FLAGS "-arch=compute_70 -code=sm_70 -dc --compiler-options '-fPIC' -lcusolver -lcudart -lcudadevrt -lcublas -lcusparse_static -lculibos -lpthread -ldl")
-set(STD_CUDA_FLAGS "-lineinfo -arch=compute_70 -code=sm_70 -dc --compiler-options '-fPIC' -lcudart -lcublas -lcusolver -lcudadevrt -lcusparse_static -lculibos -lpthread -ldl")
+
+if(use_maxrregcount127)
+  add_definitions(-DCAMP_USE_MAXRREGCOUNT127)
+  set(STD_CUDA_FLAGS "--maxrregcount 127 -lineinfo -arch=compute_70 -code=sm_70 -dc --compiler-options '-fPIC' -lcudart -lcublas -lcusolver -lcudadevrt -lcusparse_static -lculibos -lpthread -ldl")
+elseif(use_maxrregcount24)
+  add_definitions(-DCAMP_USE_MAXRREGCOUNT24)
+  set(STD_CUDA_FLAGS "--maxrregcount 24 -lineinfo -arch=compute_70 -code=sm_70 -dc --compiler-options '-fPIC' -lcudart -lcublas -lcusolver -lcudadevrt -lcusparse_static -lculibos -lpthread -ldl")
+elseif(use_maxrregcount64)
+  add_definitions(-DCAMP_USE_MAXRREGCOUNT64)
+  set(STD_CUDA_FLAGS "--maxrregcount 64 -lineinfo -arch=compute_70 -code=sm_70 -dc --compiler-options '-fPIC' -lcudart -lcublas -lcusolver -lcudadevrt -lcusparse_static -lculibos -lpthread -ldl")
+else()
+  #set(STD_CUDA_FLAGS "-arch=compute_70 -code=sm_70 -dc --compiler-options '-fPIC' -lcusolver -lcudart -lcudadevrt -lcublas -lcusparse_static -lculibos -lpthread -ldl")
+  set(STD_CUDA_FLAGS "-lineinfo -arch=compute_70 -code=sm_70 -dc --compiler-options '-fPIC' -lcudart -lcublas -lcusolver -lcudadevrt -lcusparse_static -lculibos -lpthread -ldl")
+endif()
+
 
 if(ENABLE_CXX)
   set(STD_CXX_FLAGS "-fpermissive")

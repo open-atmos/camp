@@ -588,10 +588,8 @@ def plotsns(namex, namey, datax, datay, std, plot_title, legend):
                 #print("y1[i]",y1[i])
                 ax.fill_between(datax, y1=y1[i],y2=y2[i], alpha=.5)
 
-
         # ax.set_position([box.x0, box.y0 + box.height * 0.1,
         #               box.width, box.height * 0.9])
-
         # Legend under the plot
         # box = ax.get_position()
         # ax.set_position([box.x0, box.y0 + box.height * 0.1,
@@ -606,24 +604,28 @@ def plotsns(namex, namey, datax, datay, std, plot_title, legend):
         ax.legend(loc='lower center', bbox_to_anchor=(0.5, 1),
                   ncol=len(legend), labels=legend, frameon=True, shadow=False, borderaxespad=0.)
 
-        # ax.subplots_adjust(top=0.25) #not work
-        # fig.subplots_adjust(top=0.25)
-
-        # legend out of the plot at the right (problem: plot feels very small)
-        # sns.lineplot(data=data, palette="tab10", linewidth=2.5)
-        # box=ax.get_position()
-        # ax.set_position([box.x0, box.y0, box.width * 0.7, box.height])
-        # ax.legend(bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0,labels=columns)
-
     else:
         ax.set_title(plot_title)
+        datay=datay[0]
         data = pd.DataFrame(datay, datax)
 
         #sns.catplot(data=data,capsize=.2, palette="YlGnBu_d", linewidth=2.5,kind="point", legend=False)
         #sns.pointplot(data=data, palette="tab10", linewidth=2.5, legend=False)
 
+        #print("plot datay",datay)
 
         sns.lineplot(data=data, palette="tab10", linewidth=2.5, legend=False)
+
+        if len(std):
+            std = std[0]
+            print("std,datay",std,datay)
+            y1=[0 for i in range(len(datay))]
+            y2=[0 for i in range(len(datay))]
+            for i in range(len(datay)):
+                y1[i] = datay[i] - std[i]
+                y2[i] = datay[i] + std[i]
+            ax.fill_between(datax, y1=y1,y2=y2, alpha=.5)
+
 
     plt.show()
 

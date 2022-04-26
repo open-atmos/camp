@@ -415,6 +415,13 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
   sd->spec_names = (char **)malloc(sizeof(char *) * n_state_var);
 #endif
 
+#ifdef DEBUG_CAMP_SOLVER_NEW
+
+  printf("camp solver_run new  n_state_var %d, n_cells %d n_dep_var %d\n",
+         sd->model_data.n_per_cell_state_var, n_cells, sd->model_data.n_per_cell_dep_var);
+
+#endif
+
   // Return a pointer to the new SolverData object
   return (void *)sd;
 }
@@ -425,9 +432,7 @@ void solver_set_spec_name(void *solver_data, char *spec_name,
                           int size_spec_name, int i) {
 #ifdef CAMP_USE_MPI
   int rank;
-  MPI_Comm_rank(MPI_COMM_WORLD, &rank);  // ok its not comm_world :/
-  // I have to send de comm to camp_core and only call this funct in that case
-  // and i guess it will work then?
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   if (rank == MPI_RANK_DEBUG) {
     // printf("%d aaa", size_spec_name);
     SolverData *sd;

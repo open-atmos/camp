@@ -257,6 +257,45 @@ program mock_monarch_t
       n_cells = (I_E - I_W+1)*(I_N - I_S+1)*NUM_VERT_CELLS
     end if
 
+#ifdef CAMP_USE_MAXRREGCOUNT24
+#else
+
+    if(caseMulticellsOnecell.eq."maxrregcount-24") then
+      print*,"ENABLE maxrregcount-24 in CMakeLists.txt"
+#ifdef CAMP_USE_MPI
+       call mpi_abort(MPI_COMM_WORLD, status_code, ierr)
+#endif
+      stop 3
+    end if
+
+#endif
+
+#ifdef CAMP_USE_MAXRREGCOUNT64
+#else
+
+    if(caseMulticellsOnecell.eq."maxrregcount-64") then
+      print*,"ENABLE maxrregcount-64 in CMakeLists.txt"
+#ifdef CAMP_USE_MPI
+       call mpi_abort(MPI_COMM_WORLD, status_code, ierr)
+#endif
+      stop 3
+    end if
+
+#endif
+
+#ifdef CAMP_USE_MAXRREGCOUNT127
+#else
+
+    if(caseMulticellsOnecell.eq."maxrregcount-127") then
+#ifdef CAMP_USE_MPI
+       call mpi_abort(MPI_COMM_WORLD, status_code, ierr)
+#endif
+      print*,"ENABLE maxrregcount-127 in CMakeLists.txt"
+      stop 3
+    end if
+
+#endif
+
     call jfile%get('timeSteps',NUM_TIME_STEP)
     call jfile%get('timeStepsDt',TIME_STEP)
     call jfile%get('diffCells',diffCells)
@@ -278,6 +317,7 @@ program mock_monarch_t
   NUM_WE_CELLS = I_E-I_W+1
   NUM_SN_CELLS = I_N-I_S+1
 
+  call jfile%get('caseGpuCpu',caseGpuCpu)
   if (camp_mpi_rank().eq.0) then
     write(*,*) "Time-steps:", NUM_TIME_STEP, "Cells:",&
             NUM_WE_CELLS*NUM_SN_CELLS*NUM_VERT_CELLS, &

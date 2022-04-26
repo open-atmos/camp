@@ -110,7 +110,8 @@ def write_camp_config_file(conf):
     else:
         file1.write("USE_CPU=OFF\n")
 
-    if conf.caseMulticellsOnecell == "CVODE":
+    if conf.caseMulticellsOnecell == "CVODE" or conf.caseMulticellsOnecell.find("maxrregcount") != -1:
+        #print("FOUND MAXRREGCOUNT")
         if conf.chemFile == "monarch_binned":
             print("Error: monarch_binned can not run GPU CVODE, disable GPU CVODE or use a valid chemFile like monarch_cb05")
             raise
@@ -295,6 +296,8 @@ def run(conf):
     #print(data_path)
     if not is_import:
         # Main
+        #if conf.caseGpuCpu.find("maxrregcount") != -1:
+         #   conf.caseGpuCpu = "maxrregcount"
         os.system(exec_str)
         if conf.is_export:
             export(conf, data_path)
@@ -408,8 +411,10 @@ def run_cases(conf):
                 #print("datacases",datacases)
                 #print("stdCases",stdCases)
             else:
+                #datacases.append([round(elem, 2) for elem in datay])
                 datacases.append([round(elem, 2) for elem in datay])
-                #for j in range(datay):
+
+            #for j in range(datay):
                  #   datacases[i][j] = round(datay[j],2)
                 #i=i+1
 
@@ -425,7 +430,7 @@ def run_cells(conf):
         conf.nCellsProcesses = conf.cells[i]
         datacases, stdCases = run_cases(conf)
 
-        print("datacases",datacases)
+        #print("datacases",datacases)
         #print("stdCases",stdCases)
 
         if len(conf.cells) > 1:  # Mean timeSteps
@@ -435,13 +440,7 @@ def run_cells(conf):
             datacells = datacases
             stdCells = stdCases
 
-    print("datacells",datacells)
-
-    #if len(conf.cells) == 1:  # Plot timeSteps
-        #print("WARNING: CHECK WITH MPILIST")
-       # datacellsTranspose = np.transpose(datacells)
-        #datacells = datacellsTranspose.tolist()
-        #print(datacellsTranspose)
+    #print("datacells",datacells)
 
     if len(conf.cells) > 1:  # Mean timeSteps
         datacellsTranspose = np.transpose(datacells)
@@ -462,34 +461,10 @@ def run_diffCells(conf):
         conf.datacolumns += datacells
         conf.stdColumns += stdcells
 
-        #if len(conf.diffCellsL) == 1:
-        #    conf.datacolumns += datacells
-         #   conf.stdColumns += stdcells
-        #else:
-
-            #conf.datacolumns[i] += datacells
-
-            #datacellsTranspose = np.transpose(datacells)
-            #datacells = datacellsTranspose.tolist()
-            #conf.datacolumns += datacells
-            #stdcellsTranspose = np.transpose(stdcells)
-            #stdcells = stdcellsTranspose.tolist()
-            #conf.datacolumns += datacells
-            #conf.stdColumns += stdcells
-
-    #if len(conf.diffCellsL) > 1:
-     #   datacolumnsTranspose = np.transpose(conf.datacolumns)
-        #conf.datacolumns = datacolumnsTranspose.tolist()
-        #stdColumnsTranspose = np.transpose(conf.stdColumns)
-        #conf.stdColumns = stdColumnsTranspose.tolist()
-
 def getCaseName(conf):
-    if conf.caseMulticellsOnecell != "CVODE" and conf.caseGpuCpu == "GPU":
+    case_multicells_onecell_name = ""
+    #if conf.caseMulticellsOnecell != "CVODE" and conf.caseGpuCpu == "GPU":
         # case_multicells_onecell_name = "LS "
-        case_multicells_onecell_name = ""
-    else:
-        case_multicells_onecell_name = ""
-
     if conf.caseMulticellsOnecell == "Block-cellsN":
         case_multicells_onecell_name += "Block-cells (N)"
     elif conf.caseMulticellsOnecell == "Block-cells1":
@@ -602,7 +577,7 @@ def plot_cases(conf):
     print(namex, ":", datax)
     print(namey, ":", datay)
 
-    plot_functions.plotsns(namex, namey, datax, datay, conf.stdColumns, conf.plotTitle, conf.legend)
+    #plot_functions.plotsns(namex, namey, datax, datay, conf.stdColumns, conf.plotTitle, conf.legend)
 
 
 def all_timesteps():
@@ -632,21 +607,21 @@ def all_timesteps():
     conf.mpi = "yes"
     # conf.mpi = "no"
 
-    conf.mpiProcessesCaseBase = 1
-    #conf.mpiProcessesCaseBase = 40
+    #conf.mpiProcessesCaseBase = 1
+    conf.mpiProcessesCaseBase = 40
 
     conf.mpiProcessesCaseOptimList.append(1)
     #conf.mpiProcessesCaseOptimList.append(40)
     #conf.mpiProcessesCaseOptimList = [1,4,8,16,32,40]
 
     conf.cells = [1000]
-    #conf.cells = [100,500,1000,10000]
+    #conf.cells = [100,1000,10000]
     #conf.cells = [100,500,1000,5000,10000]
 
     #print("sys.argv[1]",sys.argv[1])
     #print("sys.argv[2]",sys.argv[2])
 
-    conf.timeSteps = 720
+    conf.timeSteps = 1
     conf.timeStepsDt = 3
 
     conf.caseBase = "CPU One-cell"
@@ -655,20 +630,25 @@ def all_timesteps():
     # conf.caseBase="GPU Block-cellsN"
     # conf.caseBase="GPU Block-cells1"
     #conf.caseBase = "GPU CVODE"
+    #conf.caseBase = "GPU maxrregcount-64"
+    #conf.caseBase = "GPU maxrregcount-24" #Minimum
 
     conf.casesOptim = []
+    #conf.casesOptim.append("GPU maxrregcount-24")
+    #conf.casesOptim.append("GPU maxrregcount-64")
+    #conf.casesOptim.append("GPU maxrregcount-127")
     #conf.casesOptim.append("GPU CVODE")
     # conf.casesOptim.append("GPU Block-cellsNhalf")
     conf.casesOptim.append("GPU Block-cells1")
-    conf.casesOptim.append("GPU Block-cellsN")
-    conf.casesOptim.append("GPU Multi-cells")
+    #conf.casesOptim.append("GPU Block-cellsN")
+    #conf.casesOptim.append("GPU Multi-cells")
     #conf.casesOptim.append("GPU One-cell")
     #conf.casesOptim.append("CPU Multi-cells")
     #conf.casesOptim.append("CPU One-cell")
 
     #conf.plotYKey = "Speedup timeCVode"
     # conf.plotYKey = "Speedup counterLS"
-    conf.plotYKey = "Speedup normalized timeLS"
+    #conf.plotYKey = "Speedup normalized timeLS"
     # conf.plotYKey = "Speedup normalized computational timeLS"
     # conf.plotYKey = "Speedup counterBCG"
     # conf.plotYKey = "Speedup normalized counterBCG"
@@ -676,11 +656,10 @@ def all_timesteps():
     # conf.plotYKey = "Speedup BCG iteration (Comp.timeLS/counterBCG)"
     #conf.plotYKey = "Speedup timecvStep"
     #conf.plotYKey = "Speedup timecvStep normalized by countercvStep"
-    # conf.plotYKey = "Speedup normalized countercvStep"
     # conf.plotYKey = "Speedup countercvStep"
     # conf.plotYKey = "Speedup device timecvStep"
     # conf.plotYKey = "Percentage data transfers CPU-GPU [%]"
-    #conf.plotYKey="MAPE"
+    conf.plotYKey="MAPE"
     # conf.plotYKey="SMAPE"
     # conf.plotYKey="NRMSE"
     # conf.MAPETol=1.0E-6
