@@ -551,7 +551,7 @@ def plotsns(namex, namey, datax, datay, std, plot_title, legend):
     ax.set_xlabel(namex)
     ax.set_ylabel(namey)
 
-    if len(legend) > 1:
+    if legend and len(legend) > 1:
 
         print("WARNING: Increase plot window manually to take better screenshot")
 
@@ -611,7 +611,7 @@ def plotsns(namex, namey, datax, datay, std, plot_title, legend):
 
     else:
         ax.set_title(plot_title)
-        datay=datay[0]
+        #datay=datay[0]
         data = pd.DataFrame(datay, datax)
 
         #sns.catplot(data=data,capsize=.2, palette="YlGnBu_d", linewidth=2.5,kind="point", legend=False)
@@ -622,8 +622,8 @@ def plotsns(namex, namey, datax, datay, std, plot_title, legend):
         sns.lineplot(data=data, palette="tab10", linewidth=2.5, legend=False)
 
         if len(std):
-            std = std[0]
-            print("std,datay",std,datay)
+            #std = std[0]
+            #print("std,datay",std,datay)
             y1=[0 for i in range(len(datay))]
             y2=[0 for i in range(len(datay))]
             for i in range(len(datay)):

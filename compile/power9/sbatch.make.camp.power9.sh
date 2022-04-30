@@ -3,8 +3,9 @@
 #SBATCH --job-name=camp_test_monarch
 #SBATCH --output=log/out/%j.txt
 #SBATCH --error=log/err/%j.txt
-#SBATCH --ntasks=40
-#SBATCH --gres=gpu:1
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=160
+#SBATCH --gres=gpu:4
 #SBATCH --exclusive
 
 relative_path="../../../"
@@ -36,6 +37,7 @@ compile_run(){
   if test -f "$FILE"; then
     python $FILE  "$id"
     srun --qos=debug --ntasks=1 cp -r -u ../../../test/monarch/exports/* ../../../../../camp/test/monarch/exports/
+    #cp -r -u ../../../test/monarch/exports/* ../../../../../camp/test/monarch/exports/
     cd ../../
 
     #./test_monarch_1.sh MPI

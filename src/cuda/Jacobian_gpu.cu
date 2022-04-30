@@ -177,7 +177,6 @@ void jacobian_output_gpu(JacobianGPU jac, double *dest_array) {
   __syncthreads();
   //todo if this works, delete col_ptrs since it's not used during calc jac
   if(threadIdx.x==0){
-    int i_col = blockIdx.x * blockDim.x + threadIdx.x;
     int nnz = jac.num_elem[0];
     //for (int n = (nnz/gridDim.x)*blockIdx.x; n < (nnz/gridDim.x)*(blockIdx.x+1); n++) {
     for (int n = 0; n < nnz; n++) {
@@ -192,41 +191,6 @@ void jacobian_output_gpu(JacobianGPU jac, double *dest_array) {
   }__syncthreads();
 
 #endif
-
-  /*
-  if(threadIdx.x==0){
-    int i_col = blockIdx.x * blockDim.x + threadIdx.x;
-    for (unsigned int i_col = blockDim.x/gridDim.x*blockIdx.x;
-    i_col < blockDim.x/gridDim.x*(blockIdx.x+1); ++i_col) {
-      for (unsigned int i_elem = jac.col_ptrs[i_col];
-           i_elem < jac.col_ptrs[i_col + 1]; ++i_elem) {
-         double drf_dy = jac.production_partials[i_elem];
-         double drr_dy = jac.loss_partials[i_elem];
-
-        //check_isnanld(&drf_dy,1,"post jacobian_output drf_dy");
-        //check_isnanld(&drr_dy,1,"post jacobian_output drr_dy");
-
-        dest_array[i_elem] = drf_dy - drr_dy;
-      }
-    }
-  }
-   */
-
-  //todo check if this works:
-  //crashes
-  /*
-    int i_col = blockIdx.x * blockDim.x + threadIdx.x;
-    for (unsigned int i_elem = jac.col_ptrs[i_col];
-         i_elem < jac.col_ptrs[i_col + 1]; ++i_elem) {
-       double drf_dy = jac.production_partials[i_elem];
-       double drr_dy = jac.loss_partials[i_elem];
-
-      //check_isnanld(&drf_dy,1,"post jacobian_output drf_dy");
-      //check_isnanld(&drr_dy,1,"post jacobian_output drr_dy");
-
-      dest_array[i_elem] = drf_dy - drr_dy;
-  }
-   */
 
 #else
   /*

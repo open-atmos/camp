@@ -1040,6 +1040,8 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
 
 #ifdef CAMP_USE_GPU
     itsolver *bicg = &(sd->bicg);
+   ModelDataGPU *mGPU = &sd->mGPU;
+   ModelDataVariable *mdv = mGPU->mdvCPU;
 
     solver_get_statistics_gpu(sd);
     int i;

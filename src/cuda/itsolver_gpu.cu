@@ -464,7 +464,6 @@ void solveBcgCuda(
 
   //if(tid==0)printf("blockDim.x %d\n",blockDim.x);
 
-
   //if(i<1){
   if(i<active_threads){
 

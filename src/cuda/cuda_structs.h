@@ -348,6 +348,15 @@ typedef struct {
     int*    djsavedJ;
     int*    disavedJ;
 
+    size_t deriv_size;
+    size_t jac_size;
+    size_t state_size;
+    size_t env_size;
+    size_t rxn_env_data_size;
+    size_t rxn_env_data_idx_size;
+    size_t map_state_deriv_size;
+
+    ModelDataVariable mdvCPU;
     ModelDataVariable *mdv;
     ModelDataVariable *mdvo;
 

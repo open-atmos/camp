@@ -257,9 +257,41 @@ program mock_monarch_t
       n_cells = (I_E - I_W+1)*(I_N - I_S+1)*NUM_VERT_CELLS
     end if
 
+#ifdef CAMP_USE_MAXRREGCOUNT48
+#else
+    if(caseMulticellsOnecell.eq."maxrregcount-48") then
+      print*,"ENABLE maxrregcount-48 in CMakeLists.txt"
+#ifdef CAMP_USE_MPI
+       call mpi_abort(MPI_COMM_WORLD, status_code, ierr)
+#endif
+      stop 3
+    end if
+#endif
+
+#ifdef CAMP_USE_MAXRREGCOUNT68
+#else
+    if(caseMulticellsOnecell.eq."maxrregcount-68") then
+      print*,"ENABLE maxrregcount-68 in CMakeLists.txt"
+#ifdef CAMP_USE_MPI
+       call mpi_abort(MPI_COMM_WORLD, status_code, ierr)
+#endif
+      stop 3
+    end if
+#endif
+
+#ifdef CAMP_USE_MAXRREGCOUNT62
+#else
+    if(caseMulticellsOnecell.eq."maxrregcount-62") then
+      print*,"ENABLE maxrregcount-62 in CMakeLists.txt"
+#ifdef CAMP_USE_MPI
+       call mpi_abort(MPI_COMM_WORLD, status_code, ierr)
+#endif
+      stop 3
+    end if
+#endif
+
 #ifdef CAMP_USE_MAXRREGCOUNT24
 #else
-
     if(caseMulticellsOnecell.eq."maxrregcount-24") then
       print*,"ENABLE maxrregcount-24 in CMakeLists.txt"
 #ifdef CAMP_USE_MPI
@@ -267,12 +299,10 @@ program mock_monarch_t
 #endif
       stop 3
     end if
-
 #endif
 
 #ifdef CAMP_USE_MAXRREGCOUNT64
 #else
-
     if(caseMulticellsOnecell.eq."maxrregcount-64") then
       print*,"ENABLE maxrregcount-64 in CMakeLists.txt"
 #ifdef CAMP_USE_MPI
@@ -280,12 +310,10 @@ program mock_monarch_t
 #endif
       stop 3
     end if
-
 #endif
 
 #ifdef CAMP_USE_MAXRREGCOUNT127
 #else
-
     if(caseMulticellsOnecell.eq."maxrregcount-127") then
 #ifdef CAMP_USE_MPI
        call mpi_abort(MPI_COMM_WORLD, status_code, ierr)
@@ -293,7 +321,6 @@ program mock_monarch_t
       print*,"ENABLE maxrregcount-127 in CMakeLists.txt"
       stop 3
     end if
-
 #endif
 
     call jfile%get('timeSteps',NUM_TIME_STEP)

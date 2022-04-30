@@ -68,7 +68,6 @@ void solver_new_gpu_cu(SolverData *sd, int n_dep_var,
                        int n_state_var, int n_rxn,
                        int n_rxn_int_param, int n_rxn_float_param, int n_rxn_env_param,
                        int n_cells) {
-  //Lengths
   ModelData *md = &(sd->model_data);
   md->state_size = n_state_var * n_cells * sizeof(double);
   md->deriv_size = n_dep_var * n_cells * sizeof(double);
@@ -85,21 +84,35 @@ void solver_new_gpu_cu(SolverData *sd, int n_dep_var,
   //}
   //n_solver_objects++;
 
-  //Set working GPU: we have 4 gpu available on power9. as default, it should be assign to gpu 0
-  int device=0;
-  cudaSetDevice(device);
+  cudaGetDeviceCount(&sd->nDevices);
+  ModelDataGPU *mGPU = &sd->mGPU;
+  sd->mGPUs = (ModelDataGPU *)malloc(sd->nDevices * sizeof(ModelDataGPU));
+  /*
+  sd->nCellsPerDevice = (int *)malloc(sd->nDevices * sizeof(int));
+  for (int i = 0; i < nDevices; i++) {
+    sd->nCellsPerDevice[i] = int(sd->nDevices / n_cells);
+  }
+  int remainder=sd->nDevices%n_cells;
+  if (remainder!=0){
+    printf("WARNING:  PENDING TO CHECK THAT WORKS CASE: sd->nDevices%n_cells!=0");
+    sd->nCellsPerDevice[0]+=remainder;
+  }
+*/
 
-  //Set GPU properties
+  for (int iDevice = 0; i < nDevices; i++) {
+  ModelDataGPU *mGPU = &(sd->mGPUs[iDevice]);
+
+
+  cudaSetDevice(iDevice);
   cudaDeviceProp prop;
-  cudaGetDeviceProperties(&prop, device);
-
-  //Set max threads without triggering too many resources error
+  cudaGetDeviceProperties(&prop, iDevice);
   md->max_n_gpu_thread = prop.maxThreadsPerBlock/2;
   md->max_n_gpu_blocks = prop.maxGridSize[1];
   int n_blocks = (n_rxn + md->max_n_gpu_thread - 1) / md->max_n_gpu_thread;
 
   //GPU allocation
-  ModelDataGPU *mGPU = &sd->mGPU;
+  //ModelDataGPU *mGPU = &sd->mGPU;
+
   HANDLE_ERROR(cudaMalloc((void **) &mGPU->deriv_data, md->deriv_size));
   mGPU->n_rxn=md->n_rxn;
   //printf("md->n_rxn %d\n",md->n_rxn);
@@ -114,7 +127,6 @@ void solver_new_gpu_cu(SolverData *sd, int n_dep_var,
   cudaMalloc((void **) &mGPU->rxn_env_data, md->rxn_env_data_size);
   cudaMalloc((void **) &mGPU->rxn_env_data_idx, md->rxn_env_data_idx_size);
   HANDLE_ERROR(cudaMalloc((void **) &mGPU->map_state_deriv, md->map_state_deriv_size));
-
 
   time_derivative_initialize_gpu(sd);
 
@@ -149,6 +161,8 @@ void solver_new_gpu_cu(SolverData *sd, int n_dep_var,
   if( n_blocks > md->max_n_gpu_blocks){
     printf("\nWarning: More blocks assigned: %d than maximum block numbers: %d",
            n_blocks, md->max_n_gpu_blocks);
+  }
+
   }
 
   if(n_dep_var<32 && sd->use_cpu==0) {

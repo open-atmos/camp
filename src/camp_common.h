@@ -238,13 +238,6 @@ typedef struct {
   double *jac_aux;
   int *indexvals_gpu;
   int *indexptrs_gpu;
-  size_t deriv_size;
-  size_t jac_size;
-  size_t state_size;
-  size_t env_size;
-  size_t rxn_env_data_size;
-  size_t rxn_env_data_idx_size;
-  size_t map_state_deriv_size;
 
 #ifdef CAMP_DEBUG_GPU
 
@@ -332,9 +325,11 @@ typedef struct {
 #ifdef CAMP_USE_GPU
   itsolver bicg;
   void *cus;
+  ModelDataGPU *mGPUs;
   ModelDataGPU mGPU;
-  ModelDataVariable mdv;
+  ModelDataVariable mdv;//todo array or put inside mGPU?
   int *flagCells;
+  int nDevices;
 #ifdef CHECK_GPU_LINSOLVE
   double max_error_linsolver;
   int max_error_linsolver_i;
