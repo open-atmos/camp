@@ -198,6 +198,7 @@ void get_camp_config_variables(SolverData *sd){
     else{
       sd->use_gpu_cvode=0;
     }
+
     fclose(fp);
   }
 

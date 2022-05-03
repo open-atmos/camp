@@ -11,11 +11,9 @@ extern "C" {
 int time_derivative_initialize_gpu(SolverData *sd) {
 
   ModelData *md = &(sd->model_data);
+  ModelDataGPU *mGPU = sd->mGPU;
 
-  int num_spec = md->n_per_cell_dep_var*md->n_cells;
-  //Pre-allocation related arrays (internal struct arrays are mandatory)
-
-  ModelDataGPU *mGPU = &sd->mGPU;
+  int num_spec = md->n_per_cell_dep_var*mGPU->n_cells;
   cudaMalloc((void **) &(mGPU->production_rates),num_spec*sizeof(mGPU->production_rates));
   cudaMalloc((void **) &(mGPU->loss_rates),num_spec*sizeof(mGPU->loss_rates));
 

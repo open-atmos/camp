@@ -229,15 +229,6 @@ typedef struct {
   // GPU data
 // Gpu definitions
 #ifdef CAMP_USE_GPU
-  int max_n_gpu_thread;
-  int max_n_gpu_blocks;
-  int *map_state_deriv;
-  double *deriv_aux;
-  int nnz_J_solver;
-  int nrows_J_solver;
-  double *jac_aux;
-  int *indexvals_gpu;
-  int *indexptrs_gpu;
 
 #ifdef CAMP_DEBUG_GPU
 
@@ -326,8 +317,7 @@ typedef struct {
   itsolver bicg;
   void *cus;
   ModelDataGPU *mGPUs;
-  ModelDataGPU mGPU;
-  ModelDataVariable mdv;//todo array or put inside mGPU?
+  ModelDataGPU *mGPU;
   int *flagCells;
   int nDevices;
 #ifdef CHECK_GPU_LINSOLVE

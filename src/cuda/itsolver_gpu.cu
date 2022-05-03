@@ -47,10 +47,10 @@ void read_options(itsolver *bicg){
 
 }
 
-void createSolver(SolverData *sd)
+void createLinearSolver(SolverData *sd)
 {
   itsolver *bicg = &(sd->bicg);
-  ModelDataGPU *mGPU = &sd->mGPU;
+  ModelDataGPU *mGPU = sd->mGPU;
 
   //Init variables ("public")
   int nrows = mGPU->nrows;
@@ -97,7 +97,7 @@ void createSolver(SolverData *sd)
   cudaMalloc(dz,nrows*sizeof(double));
   cudaMalloc(ddiag,nrows*sizeof(double));
   cudaMalloc(daux,nrows*sizeof(double));
-  bicg->aux=(double*)malloc(sizeof(double)*blocks);
+  mGPU->aux=(double*)malloc(sizeof(double)*blocks);
 
 }
 
@@ -120,8 +120,7 @@ int nextPowerOfTwo(int v){
 void exportConfBCG(SolverData *sd, const char *filepath){
 
   itsolver *bicg = &(sd->bicg);
-  ModelData *md = &(sd->model_data);
-  ModelDataGPU *mGPU = &sd->mGPU;
+  ModelDataGPU *mGPU = sd->mGPU;
   FILE *fp = fopen(filepath, "w+");
 
   fprintf(fp, "%d\n",  mGPU->n_cells);
@@ -241,8 +240,7 @@ void exportConfBCG(SolverData *sd, const char *filepath){
 void exportOutBCG(SolverData *sd, const char *filepath){
 
   itsolver *bicg = &(sd->bicg);
-  ModelData *md = &(sd->model_data);
-  ModelDataGPU *mGPU = &sd->mGPU;
+  ModelDataGPU *mGPU = sd->mGPU;
   FILE *fp = fopen(filepath, "w+");
 
   double *A=(double*)malloc(mGPU->nnz*sizeof(double));
@@ -316,8 +314,7 @@ void swapCSC_CSR(int n_row, int n_col, int* Ap, int* Aj, double* Ax, int* Bp, in
 void swapCSC_CSR_BCG(SolverData *sd){
 
   itsolver *bicg = &(sd->bicg);
-  ModelData *md = &(sd->model_data);
-  ModelDataGPU *mGPU = &sd->mGPU;
+  ModelDataGPU *mGPU = sd->mGPU;
 
 #ifdef TEST_CSCtoCSR
 
@@ -350,16 +347,17 @@ void swapCSC_CSR_BCG(SolverData *sd){
   int n_row=mGPU->nrows;
   int n_col=mGPU->nrows;
   int nnz=mGPU->nnz;
-  int* Ap=bicg->iA;
-  int* Aj=bicg->jA;
-  double* Ax=bicg->A;
+  int* Ap=mGPU->iA;
+  int* Aj=mGPU->jA;
+  double* Ax=mGPU->A;
+  printf("WARNING: swapCSC_CSR_BCG WAS USING OLD MATRIX FROM BICG INSTEAD OF UPDATED J\n");
   int* Bp=(int*)malloc((mGPU->nrows+1)*sizeof(int));
   int* Bi=(int*)malloc(mGPU->nnz*sizeof(int));
   double* Bx=(double*)malloc(nnz*sizeof(double));
 
 #endif
 
-  swapCSC_CSR(n_row,n_col,Ap,Aj,Ax,Bp,Bi,Bx);
+    swapCSC_CSR(n_row,n_col,Ap,Aj,Ax,Bp,Bi,Bx);
 
 #ifdef TEST_CSCtoCSR
 
@@ -713,8 +711,7 @@ void solveGPU_block_thr(int blocks, int threads_block, int n_shr_memory, int n_s
         SolverData *sd, int last_blockN)
 {
   itsolver *bicg = &(sd->bicg);
-  ModelData *md = &(sd->model_data);
-  ModelDataGPU *mGPU = &sd->mGPU;
+  ModelDataGPU *mGPU = sd->mGPU;
 
   //Init variables ("public")
   int nrows = mGPU->nrows;
@@ -761,9 +758,9 @@ void solveGPU_block_thr(int blocks, int threads_block, int n_shr_memory, int n_s
     printf("solveGPU_block_thr n_cells %d len_cell %d nrows %d nnz %d max_threads_block %d blocks %d threads_block %d n_shr_empty %d offset_cells %d\n",
            mGPU->n_cells,len_cell,mGPU->nrows,mGPU->nnz,n_shr_memory,blocks,threads_block,n_shr_empty,offset_cells);
 
-    //print_double(bicg->A,nnz,"A");
-    //print_int(bicg->jA,nnz,"jA");
-    //print_int(bicg->iA,nrows+1,"iA");
+    //print_double(mGPU->A,nnz,"A");
+    //print_int(mGPU->jA,nnz,"jA");
+    //print_int(mGPU->iA,nrows+1,"iA");
 
   }
 #endif
@@ -793,8 +790,7 @@ void solveGPU_block(SolverData *sd, double *dA, int *djA, int *diA, double *dx, 
 {
 
   itsolver *bicg = &(sd->bicg);
-  ModelData *md = &(sd->model_data);
-  ModelDataGPU *mGPU = &sd->mGPU;
+  ModelDataGPU *mGPU = sd->mGPU;
 
 #ifdef DEBUG_SOLVEBCGCUDA
   if(bicg->counterBiConjGrad==0) {
@@ -859,8 +855,7 @@ void solveGPU(SolverData *sd, double *dA, int *djA, int *diA, double *dx, double
   //Init variables ("public")
 
   itsolver *bicg = &(sd->bicg);
-  ModelData *md = &(sd->model_data);
-  ModelDataGPU *mGPU = &sd->mGPU;
+  ModelDataGPU *mGPU = sd->mGPU;
 
   int nrows = mGPU->nrows;
   int blocks = mGPU->blocks;
@@ -880,7 +875,7 @@ void solveGPU(SolverData *sd, double *dA, int *djA, int *diA, double *dx, double
   double *dAx2 = mGPU->dAx2;
   double *dy = mGPU->dy;
   double *dz = mGPU->dz;
-  double *aux = bicg->aux;
+  double *aux = mGPU->aux;
   double *daux = mGPU->daux;
 
 #ifdef DEBUG_SOLVEBCGCUDA
@@ -1001,7 +996,7 @@ void solveGPU(SolverData *sd, double *dA, int *djA, int *diA, double *dx, double
 void free_itsolver(SolverData *sd)
 {
   itsolver *bicg = &(sd->bicg);
-  ModelDataGPU *mGPU = &sd->mGPU;
+  ModelDataGPU *mGPU = sd->mGPU;
 
   //Auxiliary vectors ("private")
   double ** dr0 = &mGPU->dr0;
@@ -1027,7 +1022,7 @@ void free_itsolver(SolverData *sd)
   cudaFree(dz);
   cudaFree(ddiag);
   cudaFree(daux);
-  free(bicg->aux);
+  free(mGPU->aux);
 
 }
 

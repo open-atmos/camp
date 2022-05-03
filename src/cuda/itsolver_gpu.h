@@ -25,7 +25,7 @@ extern "C" {
 #define BLOCKCELLS1 4
 #define BLOCKCELLSNHALF 5
 
-void createSolver(SolverData *sd);
+void createLinearSolver(SolverData *sd);
 __device__
 void cudaDeviceswapCSC_CSR1ThreadBlock(int n_row, int n_col, int* Ap, int* Aj, double* Ax, int* BpGlobal, int* Bi, double* Bx);
 __device__

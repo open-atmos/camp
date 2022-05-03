@@ -42,16 +42,18 @@ class TestMonarch:
         self.caseGpuCpu = ""
         self.caseMulticellsOnecell = ""
         self.mpiProcesses = 1
+        self.nGPUs = 1
         # Cases configuration
         self.is_start_cases_attributes = True
         self.diffCellsL = ""
         self.mpiProcessesCaseBase = 1
         self.mpiProcessesCaseOptimList = []
+        self.nGPUsList = [1]
         self.cells = [100]
         self.caseBase = ""
         self.casesOptim = [""]
         self.plotYKey = ""
-        self.plotXKey = "MPI processes"
+        self.plotXKey = ""
         self.is_export = False
         self.is_import = False
         self.profileCuda = False
@@ -600,8 +602,8 @@ def all_timesteps():
     conf = TestMonarch()
 
     # conf.chemFile = "simple"
-    #conf.chemFile = "monarch_cb05"
-    conf.chemFile = "monarch_binned"
+    conf.chemFile = "monarch_cb05"
+    #conf.chemFile = "monarch_binned"
 
     conf.diffCellsL = []
     conf.diffCellsL.append("Realistic")
@@ -631,7 +633,9 @@ def all_timesteps():
     #conf.mpiProcessesCaseOptimList.append(40)
     #conf.mpiProcessesCaseOptimList = [1,4,8,16,32,40]
 
-    conf.cells = [20]
+    conf.nGPUsList = [1]
+
+    conf.cells = [40]
     #conf.cells = [100,1000,10000]
     #conf.cells = [100,500,1000,5000,10000]
 
@@ -659,9 +663,9 @@ def all_timesteps():
     #conf.casesOptim.append("GPU maxrregcount-24")
     #conf.casesOptim.append("GPU maxrregcount-64")
     #conf.casesOptim.append("GPU maxrregcount-127")
-    #conf.casesOptim.append("GPU CVODE")
+    conf.casesOptim.append("GPU CVODE")
     # conf.casesOptim.append("GPU Block-cellsNhalf")
-    conf.casesOptim.append("GPU Block-cells1")
+    #conf.casesOptim.append("GPU Block-cells1")
     #conf.casesOptim.append("GPU Block-cellsN")
     #conf.casesOptim.append("GPU Multi-cells")
     #conf.casesOptim.append("GPU One-cell")
@@ -670,7 +674,7 @@ def all_timesteps():
 
     #conf.plotYKey = "Speedup timeCVode"
     # conf.plotYKey = "Speedup counterLS"
-    conf.plotYKey = "Speedup normalized timeLS"
+    #conf.plotYKey = "Speedup normalized timeLS"
     # conf.plotYKey = "Speedup normalized computational timeLS"
     # conf.plotYKey = "Speedup counterBCG"
     # conf.plotYKey = "Speedup normalized counterBCG"
@@ -681,7 +685,7 @@ def all_timesteps():
     # conf.plotYKey = "Speedup countercvStep"
     # conf.plotYKey = "Speedup device timecvStep"
     # conf.plotYKey = "Percentage data transfers CPU-GPU [%]"
-    #conf.plotYKey ="MAPE"
+    conf.plotYKey ="MAPE"
     # conf.plotYKey ="SMAPE"
     # conf.plotYKey ="NRMSE"
     # conf.MAPETol = 1.0E-6
@@ -715,6 +719,8 @@ def all_timesteps():
             conf.diffCellsL = ["Realistic"]
         # conf.diffCellsL = ["Ideal"]
 
+    print("WARNING: Setting device function times from GPU 0, pending to save other GPUs");
+
     if not conf.caseBase:
         print("ERROR: caseBase is empty")
         raise
@@ -726,12 +732,10 @@ def all_timesteps():
                 print("WARNING: Configured less cells than MPI processes, setting 1 cell per process")
                 conf.mpiProcessesCaseOptimList[i] = cellsProcesses
 
-    #for caseOptim in conf.casesOptim:
-     #   if caseOptim == conf.caseBase:
-            # logger = logging.getLogger(__name__)
-            # logger.error(error)
-        #    print("Error: caseOptim == caseBase")
-          #  raise
+    for caseOptim in conf.casesOptim:
+        if caseOptim !="GPU CVODE":
+            print("ERROR:PENDING TO DO NOTGPUCVODE CASES WITH MULTI-DEVICES")
+            raise
 
     run_diffCells(conf)
 

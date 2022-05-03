@@ -8,64 +8,19 @@ extern "C" {
 #include <stdio.h>
 #include <stdlib.h>
 #include "Jacobian_gpu.h"
-//#include "time_derivative.h"
 
 #define BUFFER_SIZE 10
 #define SMALL_NUMBER 1e-90
 
-/*
-int jacobian_initialize_empty_gpu(SolverData *sd) {
-
-  jac->num_spec = num_spec;
-  jac->num_elem = 0;
-  jac->elements = (JacobianColumnElements *)malloc(
-      num_spec * sizeof(JacobianColumnElements));
-  if (!jac->elements) {
-    jacobian_free(jac);
-    return 0;
-  }
-  for (unsigned int i_col = 0; i_col < num_spec; ++i_col) {
-    jac->elements[i_col].array_size = BUFFER_SIZE;
-    jac->elements[i_col].number_of_elements = 0;
-    jac->elements[i_col].row_ids =
-        (unsigned int *)malloc(BUFFER_SIZE * sizeof(unsigned int));
-    if (!jac->elements[i_col].row_ids) {
-      jacobian_free(jac);
-      return 0;
-    }
-  }
-  jac->col_ptrs = NULL;
-  jac->row_ids = NULL;
-  jac->production_partials = NULL;
-  jac->loss_partials = NULL;
-
-
-  cudaMalloc((void **) &(mGPU->production_rates),num_spec*sizeof(mGPU->production_rates));
-
-
-  return 1;
-}
-*/
-
 int jacobian_initialize_gpu(SolverData *sd) {
 
-  ModelData *md = &(sd->model_data);
-  ModelDataGPU *mGPU = &sd->mGPU;
-  JacobianGPU *jacgpu = &(sd->mGPU.jac);//&mGPU->jac;
+  ModelDataGPU *mGPU = sd->mGPU;
+  JacobianGPU *jacgpu = &(mGPU->jac);
   Jacobian *jac = &sd->jac;
 
-#ifdef __CUDA_ARCH__
   int num_spec = jac->num_spec;
-#else
-  //int num_spec = jacgpu->num_spec = jac->num_spec;
-  int num_spec = jac->num_spec;
-#endif
-
-  //int num_elem = jacgpu->num_elem = jac->num_elem;
-  //int num_elem = jac->num_elem;
-  int num_elem = jac->num_elem * md->n_cells;
-  cudaMalloc((void **) &jacgpu->num_elem, 1*sizeof(jacgpu->num_elem));//*md->n_mapped_values should be the same
-  //cudaMalloc((void **) &(mGPU->jac.num_elem), 1*sizeof(mGPU->jac.num_elem));//*md->n_mapped_values should be the same
+  int num_elem = jac->num_elem * mGPU->n_cells;
+  cudaMalloc((void **) &jacgpu->num_elem, 1*sizeof(jacgpu->num_elem));//n_mapped_values should be the same
 
   //printf("jac->num_elem %d\n",jac->num_elem);
 
@@ -80,8 +35,6 @@ int jacobian_initialize_gpu(SolverData *sd) {
   cudaMemcpy(jacgpu->col_ptrs, jac->col_ptrs, (num_spec + 1) * sizeof(jacgpu->col_ptrs), cudaMemcpyHostToDevice);
 
   cudaMemcpy(jacgpu->num_elem, &jac->num_elem, 1*sizeof(jacgpu->num_elem), cudaMemcpyHostToDevice);
-  //cudaMemcpy(mGPU->jac.num_elem, &num_elem, 1*sizeof(mGPU->jac.num_elem), cudaMemcpyHostToDevice);
-
 
   return 1;
 }

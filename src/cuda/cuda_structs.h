@@ -211,7 +211,12 @@ typedef struct {
 }ModelDataVariable; //variables to pass between gpu and cpu
 
 typedef struct {
-    //double *deriv_data_gpu;
+
+    //CPU
+    double* A;
+    int*    jA;
+    int*    iA;
+    double* aux;
 
     //Allocated from CPU (used during CPU / need some cudamemcpy)
     int threads,blocks;
@@ -348,6 +353,12 @@ typedef struct {
     int*    djsavedJ;
     int*    disavedJ;
 
+    int nnz_J_solver;
+    int nrows_J_solver;
+    double *jac_aux;
+    int *indexvals_gpu;
+    int *indexptrs_gpu;
+
     size_t deriv_size;
     size_t jac_size;
     size_t state_size;
@@ -355,6 +366,9 @@ typedef struct {
     size_t rxn_env_data_size;
     size_t rxn_env_data_idx_size;
     size_t map_state_deriv_size;
+    int max_n_gpu_thread;
+    int max_n_gpu_blocks;
+    int *map_state_derivCPU;
 
     ModelDataVariable mdvCPU;
     ModelDataVariable *mdv;
