@@ -1,6 +1,4 @@
 <map id="camp_rxn_condensed_phase_arrhenius::rxn_condensed_phase_arrhenius_t" name="camp_rxn_condensed_phase_arrhenius::rxn_condensed_phase_arrhenius_t">
-<area shape="rect" id="node1" title="Generic test reaction data type." alt="" coords="5,319,211,375"/>
-<area shape="rect" id="node2" href="$structcamp__rxn__data_1_1rxn__data__t.html" title="Abstract reaction data type." alt="" coords="41,228,175,269"/>
-<area shape="rect" id="node3" href="$structcamp__property_1_1property__t.html" title="Property data." alt="" coords="23,139,193,165"/>
-<area shape="rect" id="node4" href="$structcamp__property_1_1property__link__t.html" title="Property link data." alt="" coords="29,5,187,47"/>
+<area shape="rect" id="node1" title="Generic test reaction data type." alt="" coords="5,95,211,151"/>
+<area shape="rect" id="node2" href="$structcamp__rxn__data_1_1rxn__data__t.html" title="Abstract reaction data type." alt="" coords="41,5,175,47"/>
 </map>

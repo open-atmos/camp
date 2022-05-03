@@ -1,0 +1,3 @@
+<map id="camp_chem_spec_data::find" name="camp_chem_spec_data::find">
+<area shape="rect" id="node1" title="Get the index of a chemical species by name. Returns true if the species is found or false otherwise." alt="" coords="5,29,165,71"/>
+</map>

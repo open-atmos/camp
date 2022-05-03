@@ -1,0 +1,3 @@
+<map id="camp_rand::rand_poisson" name="camp_rand::rand_poisson">
+<area shape="rect" id="node1" title="Generate a Poisson&#45;distributed random number with the given mean." alt="" coords="5,29,175,56"/>
+</map>

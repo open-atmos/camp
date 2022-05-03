@@ -1,4 +1,6 @@
 <map id="camp_camp_core::state_size_per_cell" name="camp_camp_core::state_size_per_cell">
 <area shape="rect" id="node1" title="Get the size of the state array for each grid cell." alt="" coords="5,5,165,47"/>
-<area shape="rect" id="node2" href="$namespacecamp__camp__core.html#a2c02881a75a5df27cae9f8c92345803c" title="Get the size of the state array." alt="" coords="213,13,404,39"/>
+<area shape="rect" id="node2" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="452,13,604,39"/>
+<area shape="rect" id="node4" href="$namespacecamp__camp__core.html#a2c02881a75a5df27cae9f8c92345803c" title="Get the size of the state array." alt="" coords="213,50,404,77"/>
+<area shape="rect" id="node3" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="652,5,775,47"/>
 </map>

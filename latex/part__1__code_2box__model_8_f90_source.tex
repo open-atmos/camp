@@ -1,0 +1,92 @@
+\hypertarget{part__1__code_2box__model_8_f90_source}{}\doxysection{part\+\_\+1\+\_\+code/box\+\_\+model.F90}
+\label{part__1__code_2box__model_8_f90_source}\index{box\_model.F90@{box\_model.F90}}
+\mbox{\hyperlink{part__1__code_2box__model_8_f90}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00001}00001 \textcolor{comment}{!! [Modules to use]}}
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00002}\mbox{\hyperlink{part__1__code_2box__model_8_f90_a3f8c0234515cc17b2f3e366868b8646b}{00002}} \textcolor{keyword}{program} \mbox{\hyperlink{part__1__code_2box__model_8_f90_a3f8c0234515cc17b2f3e366868b8646b}{box\_model}}}
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00003}00003 }
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00004}00004   \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacecamp__camp__core}{camp\_camp\_core}}}
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00005}00005   \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacecamp__camp__state}{camp\_camp\_state}}}
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00006}00006   \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacecamp__constants}{camp\_constants}}}
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00007}00007   \textcolor{comment}{!! [Modules to use]}}
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00008}00008 }
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00009}00009   \textcolor{comment}{!! [Chem-\/spec data module]}}
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00010}00010   \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacecamp__chem__spec__data}{camp\_chem\_spec\_data}}}
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00011}00011 }
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00012}00012   \textcolor{comment}{!! [Chem-\/spec data module]}}
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00013}00013 }
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00014}00014   \textcolor{comment}{!! [Core and state]}}
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00015}00015   \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\_core\_t}}), \textcolor{keywordtype}{pointer} :: camp\_core}
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00016}00016   \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t}{camp\_state\_t}}), \textcolor{keywordtype}{pointer} :: camp\_state}
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00017}00017 }
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00018}00018   \textcolor{comment}{!! [Core and state]}}
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00019}00019 }
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00020}00020   \textcolor{comment}{!! [Species ids]}}
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00021}00021   \textcolor{keywordtype}{integer(kind=i\_kind)} :: idx\_o3, idx\_no, idx\_no2, idx\_o2}
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00022}00022   \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t}{chem\_spec\_data\_t}}), \textcolor{keywordtype}{pointer} :: chem\_spec\_data}
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00023}00023 }
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00024}00024   \textcolor{comment}{!! [Species ids]}}
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00025}00025 }
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00026}00026   \textcolor{comment}{!! [Output variables]}}
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00027}00027   \textcolor{keywordtype}{character(len=*)}, \textcolor{keywordtype}{parameter} :: fmt\_hdr = \textcolor{stringliteral}{"{}(A10,',',A10,',',A10,',',A10,',',A10)"{}}}
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00028}00028   \textcolor{keywordtype}{character(len=*)}, \textcolor{keywordtype}{parameter} :: fmt\_dat = \textcolor{stringliteral}{"{}(ES10.4,',',ES10.4,',',ES10.4,',',ES10.4,',',ES10.4)"{}}}
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00029}00029 }
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00030}00030   \textcolor{comment}{!! [Output variables]}}
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00031}00031 }
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00032}00032   \textcolor{comment}{!! [Time id]}}
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00033}00033   \textcolor{keywordtype}{integer(kind=i\_kind)} :: i\_time}
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00034}00034 }
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00035}00035   \textcolor{comment}{!! [Time id]}}
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00036}00036 }
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00037}00037   \textcolor{comment}{!! [Initialize core]}}
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00038}00038   camp\_core => \mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\_core\_t}}( \textcolor{stringliteral}{"{}my\_config\_file.json"{}} )}
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00039}00039   \textcolor{keyword}{call }camp\_core\%initialize( )}
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00040}00040   \textcolor{comment}{!! [Initialize core]}}
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00041}00041 }
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00042}00042   \textcolor{comment}{!! [Get species ids]}}
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00043}00043   \textcolor{keywordflow}{if}( .not.camp\_core\%get\_chem\_spec\_data( chem\_spec\_data ) ) \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00044}00044     \textcolor{keyword}{write}(*,*) \textcolor{stringliteral}{"{}Something's gone wrong!"{}}}
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00045}00045     stop 3}
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00046}00046 \textcolor{keywordflow}{  end if}}
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00047}00047 }
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00048}00048   idx\_o3  = chem\_spec\_data\%gas\_state\_id( \textcolor{stringliteral}{"{}O3"{}}  )}
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00049}00049   idx\_no  = chem\_spec\_data\%gas\_state\_id( \textcolor{stringliteral}{"{}NO"{}}  )}
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00050}00050   idx\_no2 = chem\_spec\_data\%gas\_state\_id( \textcolor{stringliteral}{"{}NO2"{}} )}
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00051}00051   idx\_o2  = chem\_spec\_data\%gas\_state\_id( \textcolor{stringliteral}{"{}O2"{}}  )}
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00052}00052   \textcolor{keywordflow}{if}( idx\_o3.eq.0 .or. idx\_no2.eq.0 .or.idx\_o2.eq.0 ) \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00053}00053     \textcolor{keyword}{write}(*,*) \textcolor{stringliteral}{"{}Missing species!"{}}}
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00054}00054     stop 3}
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00055}00055 \textcolor{keywordflow}{  end if}}
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00056}00056   \textcolor{comment}{!! [Get species ids]}}
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00057}00057 }
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00058}00058   \textcolor{comment}{!! [Set initial conditions]}}
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00059}00059   \textcolor{keyword}{call }camp\_core\%solver\_initialize( )}
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00060}00060   camp\_state => camp\_core\%new\_state( )}
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00061}00061 }
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00062}00062   \textcolor{keyword}{call }camp\_state\%env\_states(1)\%set\_temperature\_K(  275.4\_dp )}
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00063}00063   \textcolor{keyword}{call }camp\_state\%env\_states(1)\%set\_pressure\_Pa( 101532.2\_dp )}
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00064}00064 }
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00065}00065   camp\_state\%state\_var( idx\_o3   ) = 0.13  \textcolor{comment}{! [O3] in ppm}}
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00066}00066   camp\_state\%state\_var( idx\_no   ) = 0.02  \textcolor{comment}{! [NO] in ppm}}
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00067}00067   camp\_state\%state\_var( idx\_no2  ) = 0.053 \textcolor{comment}{! [NO2] in ppm}}
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00068}00068   camp\_state\%state\_var( idx\_o2   ) = 2.1e5 \textcolor{comment}{! [O2] in ppm}}
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00069}00069   \textcolor{comment}{!! [Set initial conditions]}}
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00070}00070 }
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00071}00071   \textcolor{comment}{!! [Solve and output]}}
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00072}00072   \textcolor{keyword}{write}(*,fmt\_hdr) \textcolor{stringliteral}{"{}time"{}}, \textcolor{stringliteral}{"{}O3"{}}, \textcolor{stringliteral}{"{}NO"{}}, \textcolor{stringliteral}{"{}NO2"{}}, \textcolor{stringliteral}{"{}O2"{}}}
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00073}00073   \textcolor{keywordflow}{do} i\_time = 1, 100}
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00074}00074     \textcolor{keyword}{call }camp\_core\%solve( camp\_state, 1.0d-\/15 ) \textcolor{comment}{! time step in s}}
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00075}00075     \textcolor{keyword}{write}(*,fmt\_dat) i\_time*1.0e-\/15, \&}
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00076}00076                      camp\_state\%state\_var( idx\_o3  ), \&}
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00077}00077                      camp\_state\%state\_var( idx\_no  ), \&}
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00078}00078                      camp\_state\%state\_var( idx\_no2 ), \&}
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00079}00079                      camp\_state\%state\_var( idx\_o2  )}
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00080}00080 \textcolor{keywordflow}{  end do}}
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00081}00081 }
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00082}00082   \textcolor{keyword}{deallocate}( camp\_core )}
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00083}00083   \textcolor{keyword}{deallocate}( camp\_state )}
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00084}00084 }
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00085}00085 \textcolor{keyword}{end program }\mbox{\hyperlink{part__1__code_2box__model_8_f90_a3f8c0234515cc17b2f3e366868b8646b}{box\_model}}}
+\DoxyCodeLine{\Hypertarget{part__1__code_2box__model_8_f90_source_l00086}00086 \textcolor{comment}{!! [Solve and output]}}
+
+\end{DoxyCode}

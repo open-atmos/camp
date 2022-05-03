@@ -42,7 +42,9 @@ Let\textquotesingle{}s update our box model to set the $\ce{NO2}$ photolysis rat
 \DoxyCodeLine{\textcolor{keywordflow}{  end do}}
 
 \end{DoxyCodeInclude}
- We first find the chemical mechanism, which we named {\bfseries{my simple mechanism}} in the last part of the tutorial. Next, we cycle through the reactions in that mechanism looking for \mbox{\hyperlink{structcamp__rxn__photolysis_1_1rxn__photolysis__t}{rxn\+\_\+photolysis\+\_\+t}} reactions. Then, we check the properties of the photolysis reactions looking for a key-\/value pair name {\bfseries{my photo label}} and make sure its value is {\bfseries{NO2 photolysis}}, as we specified in the last section. The \mbox{\hyperlink{structcamp__rxn__data_1_1rxn__data__t_adeab6a80bd18af573d65b3789311a99b}{property\+\_\+set}} of reactions gives you direct access to the input data for each reaction. This includes the information CAMP uses, like {\bfseries{reactants}} and {\bfseries{A}}, as well as those it doesn\textquotesingle{}t use, like our {\bfseries{my photo label}}. There are functions to get string, integers, real numbers, and subsets of properties from \mbox{\hyperlink{structcamp__rxn__data_1_1rxn__data__t_adeab6a80bd18af573d65b3789311a99b}{property\+\_\+set}}. To see the available functions, see \mbox{\hyperlink{namespacecamp__property}{camp\+\_\+property}}. The last step is to fix our \mbox{\hyperlink{structcamp__rxn__photolysis_1_1rxn__update__data__photolysis__t}{rxn\+\_\+update\+\_\+data\+\_\+photolysis\+\_\+t}} object to the $\ce{NO2}$ photolysis reaction we located, then at the end just make sure we found the reaction we were looking for. This and similar objects for other reactions that accept external updates allow you to change reaction parameters during a model run.
+
+
+We first find the chemical mechanism, which we named {\bfseries{my simple mechanism}} in the last part of the tutorial. Next, we cycle through the reactions in that mechanism looking for \mbox{\hyperlink{structcamp__rxn__photolysis_1_1rxn__photolysis__t}{rxn\+\_\+photolysis\+\_\+t}} reactions. Then, we check the properties of the photolysis reactions looking for a key-\/value pair name {\bfseries{my photo label}} and make sure its value is {\bfseries{NO2 photolysis}}, as we specified in the last section. The \mbox{\hyperlink{structcamp__rxn__data_1_1rxn__data__t_adeab6a80bd18af573d65b3789311a99b}{property\+\_\+set}} of reactions gives you direct access to the input data for each reaction. This includes the information CAMP uses, like {\bfseries{reactants}} and {\bfseries{A}}, as well as those it doesn\textquotesingle{}t use, like our {\bfseries{my photo label}}. There are functions to get string, integers, real numbers, and subsets of properties from \mbox{\hyperlink{structcamp__rxn__data_1_1rxn__data__t_adeab6a80bd18af573d65b3789311a99b}{property\+\_\+set}}. To see the available functions, see \mbox{\hyperlink{namespacecamp__property}{camp\+\_\+property}}. The last step is to fix our \mbox{\hyperlink{structcamp__rxn__photolysis_1_1rxn__update__data__photolysis__t}{rxn\+\_\+update\+\_\+data\+\_\+photolysis\+\_\+t}} object to the $\ce{NO2}$ photolysis reaction we located, then at the end just make sure we found the reaction we were looking for. This and similar objects for other reactions that accept external updates allow you to change reaction parameters during a model run.
 
 Finally, we\textquotesingle{}ll add the following code before we start to loop over time and solve the chemistry\+:
 
@@ -52,7 +54,9 @@ Finally, we\textquotesingle{}ll add the following code before we start to loop o
 \DoxyCodeLine{  \textcolor{keyword}{call }camp\_core\%update\_data( no2\_photolysis )}
 
 \end{DoxyCodeInclude}
- Here, we simply set the reaction property of interest in our update data object, in this case the photolysis rate, and then pass this data to CAMP. This can be done before any call to \mbox{\hyperlink{namespacecamp__camp__core_a2c930e794dab3e8c87b47cbc35ea28a0}{solve()}}. This rate will remain the same until we change it again.
+
+
+Here, we simply set the reaction property of interest in our update data object, in this case the photolysis rate, and then pass this data to CAMP. This can be done before any call to \mbox{\hyperlink{namespacecamp__camp__core_a2c930e794dab3e8c87b47cbc35ea28a0}{solve()}}. This rate will remain the same until we change it again.
 
 Now, our box model code and our input files are complete. To compile the code, try something like\+: 
 \begin{DoxyCode}{0}
@@ -103,4 +107,4 @@ Inside the container\+:
 
 
 \DoxyHorRuler{0}
- {\bfseries{ $<$ Previous\+: }} \mbox{\hyperlink{camp_tutorial_part_2}{Boot CAMP\+: Part 2 -\/ Mechanism}}  \mbox{\hyperlink{camp_tutorial}{Index}}  {\bfseries{ Next\+: }} \mbox{\hyperlink{camp_tutorial_part_4}{Boot CAMP\+: Part 4 -\/ Message Passing}} {\bfseries{ $>$ }} 
+ {\bfseries{ \texorpdfstring{$<$}{<} Previous\+: }} \mbox{\hyperlink{camp_tutorial_part_2}{Boot CAMP\+: Part 2 -\/ Mechanism}}  \mbox{\hyperlink{camp_tutorial}{Index}}  {\bfseries{ Next\+: }} \mbox{\hyperlink{camp_tutorial_part_4}{Boot CAMP\+: Part 4 -\/ Message Passing}} {\bfseries{ \texorpdfstring{$>$}{>} }} 

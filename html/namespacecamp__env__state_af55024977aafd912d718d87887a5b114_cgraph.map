@@ -1,12 +1,12 @@
 <map id="camp_env_state::camp_mpi_reduce_avg_env_state" name="camp_env_state::camp_mpi_reduce_avg_env_state">
-<area shape="rect" id="node1" title="Computes the average of val across all processes, storing the result in val_avg on the root process." alt="" coords="5,16,193,58"/>
-<area shape="rect" id="node2" href="$namespacecamp__mpi.html#a96549d22ee106f1fa29af89dcaa0ab71" title="Computes the average of val across all processes, storing the result in val_avg on the root process." alt="" coords="241,16,389,58"/>
-<area shape="rect" id="node3" href="$namespacecamp__mpi.html#adb95beaf933131229f017a03af8352ad" title="Dies if ierr is not ok." alt="" coords="665,16,813,58"/>
-<area shape="rect" id="node9" href="$namespacecamp__mpi.html#a071b987e3ccab55010a23029249b73a4" title="Returns the rank of the current process." alt="" coords="437,24,617,50"/>
-<area shape="rect" id="node10" href="$namespacecamp__mpi.html#ac12772749475620730de7ac0fd2f88d7" title="Returns the total number of processes." alt="" coords="438,74,617,101"/>
-<area shape="rect" id="node4" href="$namespacecamp__mpi.html#a7c0deeecbf4c64fe7fcade1797e1aab8" title="Abort the program." alt="" coords="861,16,1009,58"/>
-<area shape="rect" id="node5" href="$namespacecamp__util.html#aa942add404bf8b611e5b4b8c777ca7f6" title="Error immediately." alt="" coords="1057,24,1159,50"/>
-<area shape="rect" id="node6" href="$namespacecamp__util.html#a32cf43c1b618a3ecf93810383e960ef2" title="Errors unless condition_ok is true." alt="" coords="1207,24,1327,50"/>
-<area shape="rect" id="node7" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="1375,24,1527,50"/>
-<area shape="rect" id="node8" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="1575,16,1697,58"/>
+<area shape="rect" id="node1" title="Computes the average of val across all processes, storing the result in val_avg on the root process." alt="" coords="5,46,193,87"/>
+<area shape="rect" id="node2" href="$namespacecamp__mpi.html#a96549d22ee106f1fa29af89dcaa0ab71" title="Computes the average of val across all processes, storing the result in val_avg on the root process." alt="" coords="241,46,389,87"/>
+<area shape="rect" id="node3" href="$namespacecamp__mpi.html#adb95beaf933131229f017a03af8352ad" title="Dies if ierr is not ok." alt="" coords="665,46,813,87"/>
+<area shape="rect" id="node9" href="$namespacecamp__mpi.html#a071b987e3ccab55010a23029249b73a4" title="Returns the rank of the current process." alt="" coords="437,53,617,80"/>
+<area shape="rect" id="node10" href="$namespacecamp__mpi.html#ac12772749475620730de7ac0fd2f88d7" title="Returns the total number of processes." alt="" coords="438,128,617,154"/>
+<area shape="rect" id="node4" href="$namespacecamp__mpi.html#a7c0deeecbf4c64fe7fcade1797e1aab8" title="Abort the program." alt="" coords="861,46,1009,87"/>
+<area shape="rect" id="node5" href="$namespacecamp__util.html#aa942add404bf8b611e5b4b8c777ca7f6" title="Error immediately." alt="" coords="1057,53,1159,80"/>
+<area shape="rect" id="node6" href="$namespacecamp__util.html#a32cf43c1b618a3ecf93810383e960ef2" title="Errors unless condition_ok is true." alt="" coords="1207,53,1327,80"/>
+<area shape="rect" id="node7" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="1375,53,1527,80"/>
+<area shape="rect" id="node8" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="1575,46,1697,87"/>
 </map>

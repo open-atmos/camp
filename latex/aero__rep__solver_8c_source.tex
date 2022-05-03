@@ -1,0 +1,595 @@
+\hypertarget{aero__rep__solver_8c_source}{}\doxysection{aero\+\_\+rep\+\_\+solver.\+c}
+\label{aero__rep__solver_8c_source}\index{aero\_rep\_solver.c@{aero\_rep\_solver.c}}
+\mbox{\hyperlink{aero__rep__solver_8c}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00001}00001 \textcolor{comment}{/* Copyright (C) 2021 Barcelona Supercomputing Center and University of}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00002}00002 \textcolor{comment}{ * Illinois at Urbana-\/Champaign}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00003}00003 \textcolor{comment}{ * SPDX-\/License-\/Identifier: MIT}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00004}00004 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00005}00005 \textcolor{comment}{ * Aerosol representation-\/specific functions for use by the solver}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00006}00006 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00007}00007 \textcolor{comment}{ */}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00008}00008 \textcolor{comment}{/** \(\backslash\)file}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00009}00009 \textcolor{comment}{ * \(\backslash\)brief Aerosol representation functions}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00010}00010 \textcolor{comment}{ */}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00011}00011 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{aero__rep__solver_8h}{aero\_rep\_solver.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00012}00012 \textcolor{preprocessor}{\#include <math.h>}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00013}00013 \textcolor{preprocessor}{\#include <stdio.h>}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00014}00014 \textcolor{preprocessor}{\#include <stdlib.h>}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00015}00015 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{aero__reps_8h}{aero\_reps.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00016}00016 }
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00017}00017 \textcolor{comment}{// Aerosol representations (Must match parameters defined in}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00018}00018 \textcolor{comment}{// camp\_aero\_rep\_factory}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00019}\mbox{\hyperlink{aero__rep__solver_8c_abd343caa3fd45aa4f4a5282226312b87}{00019}} \textcolor{preprocessor}{\#define AERO\_REP\_SINGLE\_PARTICLE 1}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00020}\mbox{\hyperlink{aero__rep__solver_8c_a13fef657c14bb2fec70d437fa2ee2ee8}{00020}} \textcolor{preprocessor}{\#define AERO\_REP\_MODAL\_BINNED\_MASS 2}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00021}00021 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00022}00022 \textcolor{comment}{/** \(\backslash\)brief Flag Jacobian elements used to calculated mass, volume, etc.}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00023}00023 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00024}00024 \textcolor{comment}{ * \(\backslash\)param model\_data A pointer to the model data}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00025}00025 \textcolor{comment}{ * \(\backslash\)param aero\_rep\_idx Index of aerosol representation to use for calculation}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00026}00026 \textcolor{comment}{ * \(\backslash\)param aero\_phase\_idx Index of the aerosol phase within the aerosol}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00027}00027 \textcolor{comment}{ *                       representation}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00028}00028 \textcolor{comment}{ * \(\backslash\)param jac\_struct 1D array of flags indicating potentially non-\/zero}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00029}00029 \textcolor{comment}{ *                   Jacobian elements. (The dependent variable should have}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00030}00030 \textcolor{comment}{ *                   been chosen by the calling function.)}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00031}00031 \textcolor{comment}{ * \(\backslash\)return Number of Jacobian elements flagged}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00032}00032 \textcolor{comment}{ */}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00033}\mbox{\hyperlink{aero__rep__solver_8c_a020684f657e2d323f672bd5500ceae22}{00033}} \textcolor{keywordtype}{int} \mbox{\hyperlink{aero__rep__solver_8c_a020684f657e2d323f672bd5500ceae22}{aero\_rep\_get\_used\_jac\_elem}}(\mbox{\hyperlink{struct_model_data}{ModelData}} *model\_data, \textcolor{keywordtype}{int} aero\_rep\_idx,}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00034}00034                                \textcolor{keywordtype}{int} aero\_phase\_idx, \textcolor{keywordtype}{bool} *jac\_struct) \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00035}00035   \textcolor{keywordtype}{int} num\_flagged\_elem = 0;}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00036}00036 }
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00037}00037   \textcolor{comment}{// Get pointers to the aerosol data}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00038}00038   \textcolor{keywordtype}{int} *aero\_rep\_int\_data = \&(}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00039}00039       model\_data}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00040}00040           -\/>\mbox{\hyperlink{struct_model_data_aa8b643835763bea7fb798a5ebaf591d5}{aero\_rep\_int\_data}}[model\_data-\/>\mbox{\hyperlink{struct_model_data_a30fd4a3977e5cbe722b78edca520de8a}{aero\_rep\_int\_indices}}[aero\_rep\_idx]]);}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00041}00041   \textcolor{keywordtype}{double} *aero\_rep\_float\_data =}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00042}00042       \&(model\_data-\/>\mbox{\hyperlink{struct_model_data_a76c330ce84e08a094bee566a857b77f0}{aero\_rep\_float\_data}}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00043}00043             [model\_data-\/>\mbox{\hyperlink{struct_model_data_a9ce72389308619c42c66645ec29dea63}{aero\_rep\_float\_indices}}[aero\_rep\_idx]]);}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00044}00044 }
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00045}00045   \textcolor{comment}{// Get the aerosol representation type}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00046}00046   \textcolor{keywordtype}{int} aero\_rep\_type = *(aero\_rep\_int\_data++);}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00047}00047 }
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00048}00048   \textcolor{comment}{// Get the particle radius and set of partial derivatives}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00049}00049   \textcolor{keywordflow}{switch} (aero\_rep\_type) \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00050}00050     \textcolor{keywordflow}{case} \mbox{\hyperlink{aero__rep__solver_8c_a13fef657c14bb2fec70d437fa2ee2ee8}{AERO\_REP\_MODAL\_BINNED\_MASS}}:}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00051}00051       num\_flagged\_elem = \mbox{\hyperlink{aero__reps_8h_ac5a65892343b17ff334e280f4d6ae5f9}{aero\_rep\_modal\_binned\_mass\_get\_used\_jac\_elem}}(}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00052}00052           model\_data, aero\_phase\_idx, aero\_rep\_int\_data, aero\_rep\_float\_data,}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00053}00053           jac\_struct);}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00054}00054       \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00055}00055     \textcolor{keywordflow}{case} \mbox{\hyperlink{aero__rep__solver_8c_abd343caa3fd45aa4f4a5282226312b87}{AERO\_REP\_SINGLE\_PARTICLE}}:}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00056}00056       num\_flagged\_elem = \mbox{\hyperlink{aero__reps_8h_a076423c54855479ccee0af37f2d9840a}{aero\_rep\_single\_particle\_get\_used\_jac\_elem}}(}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00057}00057           model\_data, aero\_phase\_idx, aero\_rep\_int\_data, aero\_rep\_float\_data,}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00058}00058           jac\_struct);}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00059}00059       \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00060}00060   \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00061}00061 }
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00062}00062   \textcolor{keywordflow}{return} num\_flagged\_elem;}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00063}00063 \}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00064}00064 \textcolor{comment}{/** \(\backslash\)brief Get state array elements used by aerosol representation functions}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00065}00065 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00066}00066 \textcolor{comment}{ * \(\backslash\)param model\_data A pointer to the model data}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00067}00067 \textcolor{comment}{ * \(\backslash\)param state\_flags An array of flags the length of the state array}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00068}00068 \textcolor{comment}{ *                    indicating species used}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00069}00069 \textcolor{comment}{ */}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00070}\mbox{\hyperlink{aero__rep__solver_8c_ad9f40249b3d38d5fe7a18adf836ef430}{00070}} \textcolor{keywordtype}{void} \mbox{\hyperlink{aero__rep__solver_8c_ad9f40249b3d38d5fe7a18adf836ef430}{aero\_rep\_get\_dependencies}}(\mbox{\hyperlink{struct_model_data}{ModelData}} *model\_data, \textcolor{keywordtype}{bool} *state\_flags) \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00071}00071   \textcolor{comment}{// Get the number of aerosol representations}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00072}00072   \textcolor{keywordtype}{int} n\_aero\_rep = model\_data-\/>\mbox{\hyperlink{struct_model_data_aecf1c141902afe70202cdf1a73b892fc}{n\_aero\_rep}};}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00073}00073 }
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00074}00074   \textcolor{comment}{// Loop through the aerosol representations to determine the Jacobian elements}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00075}00075   \textcolor{comment}{// used advancing the aero\_rep\_data pointer each time}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00076}00076   \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_aero\_rep = 0; i\_aero\_rep < n\_aero\_rep; i\_aero\_rep++) \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00077}00077     \textcolor{comment}{// Get pointers to the aerosol data}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00078}00078     \textcolor{keywordtype}{int} *aero\_rep\_int\_data = \&(}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00079}00079         model\_data}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00080}00080             -\/>\mbox{\hyperlink{struct_model_data_aa8b643835763bea7fb798a5ebaf591d5}{aero\_rep\_int\_data}}[model\_data-\/>\mbox{\hyperlink{struct_model_data_a30fd4a3977e5cbe722b78edca520de8a}{aero\_rep\_int\_indices}}[i\_aero\_rep]]);}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00081}00081     \textcolor{keywordtype}{double} *aero\_rep\_float\_data =}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00082}00082         \&(model\_data-\/>\mbox{\hyperlink{struct_model_data_a76c330ce84e08a094bee566a857b77f0}{aero\_rep\_float\_data}}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00083}00083               [model\_data-\/>\mbox{\hyperlink{struct_model_data_a9ce72389308619c42c66645ec29dea63}{aero\_rep\_float\_indices}}[i\_aero\_rep]]);}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00084}00084 }
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00085}00085     \textcolor{comment}{// Get the aerosol representation type}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00086}00086     \textcolor{keywordtype}{int} aero\_rep\_type = *(aero\_rep\_int\_data++);}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00087}00087 }
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00088}00088     \textcolor{comment}{// Call the appropriate function}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00089}00089     \textcolor{keywordflow}{switch} (aero\_rep\_type) \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00090}00090       \textcolor{keywordflow}{case} \mbox{\hyperlink{aero__rep__solver_8c_a13fef657c14bb2fec70d437fa2ee2ee8}{AERO\_REP\_MODAL\_BINNED\_MASS}}:}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00091}00091         \mbox{\hyperlink{aero__reps_8h_a8e10757d85c3a844a6c76141dbeb2350}{aero\_rep\_modal\_binned\_mass\_get\_dependencies}}(}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00092}00092             aero\_rep\_int\_data, aero\_rep\_float\_data, state\_flags);}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00093}00093         \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00094}00094       \textcolor{keywordflow}{case} \mbox{\hyperlink{aero__rep__solver_8c_abd343caa3fd45aa4f4a5282226312b87}{AERO\_REP\_SINGLE\_PARTICLE}}:}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00095}00095         \mbox{\hyperlink{aero__reps_8h_ac118d92685e58dda51e1a4a7ac16ddda}{aero\_rep\_single\_particle\_get\_dependencies}}(}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00096}00096             aero\_rep\_int\_data, aero\_rep\_float\_data, state\_flags);}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00097}00097         \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00098}00098     \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00099}00099   \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00100}00100 \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00101}00101 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00102}00102 \textcolor{comment}{/** \(\backslash\)brief Update the aerosol representations for new environmental conditions}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00103}00103 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00104}00104 \textcolor{comment}{ * \(\backslash\)param model\_data Pointer to the model data}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00105}00105 \textcolor{comment}{ */}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00106}\mbox{\hyperlink{aero__rep__solver_8c_a12de9a6d2ba14abd79aff561014feeb9}{00106}} \textcolor{keywordtype}{void} \mbox{\hyperlink{aero__rep__solver_8c_a12de9a6d2ba14abd79aff561014feeb9}{aero\_rep\_update\_env\_state}}(\mbox{\hyperlink{struct_model_data}{ModelData}} *model\_data) \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00107}00107   \textcolor{comment}{// Get the number of aerosol representations}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00108}00108   \textcolor{keywordtype}{int} n\_aero\_rep = model\_data-\/>\mbox{\hyperlink{struct_model_data_aecf1c141902afe70202cdf1a73b892fc}{n\_aero\_rep}};}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00109}00109 }
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00110}00110   \textcolor{comment}{// Loop through the aerosol representations to update the environmental}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00111}00111   \textcolor{comment}{// conditions advancing the aero\_rep\_data pointer each time}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00112}00112   \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_aero\_rep = 0; i\_aero\_rep < n\_aero\_rep; i\_aero\_rep++) \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00113}00113     \textcolor{comment}{// Get pointers to the aerosol data}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00114}00114     \textcolor{keywordtype}{int} *aero\_rep\_int\_data = \&(}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00115}00115         model\_data}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00116}00116             -\/>\mbox{\hyperlink{struct_model_data_aa8b643835763bea7fb798a5ebaf591d5}{aero\_rep\_int\_data}}[model\_data-\/>\mbox{\hyperlink{struct_model_data_a30fd4a3977e5cbe722b78edca520de8a}{aero\_rep\_int\_indices}}[i\_aero\_rep]]);}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00117}00117     \textcolor{keywordtype}{double} *aero\_rep\_float\_data =}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00118}00118         \&(model\_data-\/>\mbox{\hyperlink{struct_model_data_a76c330ce84e08a094bee566a857b77f0}{aero\_rep\_float\_data}}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00119}00119               [model\_data-\/>\mbox{\hyperlink{struct_model_data_a9ce72389308619c42c66645ec29dea63}{aero\_rep\_float\_indices}}[i\_aero\_rep]]);}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00120}00120     \textcolor{keywordtype}{double} *aero\_rep\_env\_data =}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00121}00121         \&(model\_data-\/>\mbox{\hyperlink{struct_model_data_ab47ec8a0099eba1474a7ee7336f4fa1f}{grid\_cell\_aero\_rep\_env\_data}}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00122}00122               [model\_data-\/>\mbox{\hyperlink{struct_model_data_a0b6a1ff7d6550e3a887e550a46f6986c}{aero\_rep\_env\_idx}}[i\_aero\_rep]]);}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00123}00123 }
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00124}00124     \textcolor{comment}{// Get the aerosol representation type}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00125}00125     \textcolor{keywordtype}{int} aero\_rep\_type = *(aero\_rep\_int\_data++);}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00126}00126 }
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00127}00127     \textcolor{comment}{// Call the appropriate function}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00128}00128     \textcolor{keywordflow}{switch} (aero\_rep\_type) \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00129}00129       \textcolor{keywordflow}{case} \mbox{\hyperlink{aero__rep__solver_8c_a13fef657c14bb2fec70d437fa2ee2ee8}{AERO\_REP\_MODAL\_BINNED\_MASS}}:}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00130}00130         \mbox{\hyperlink{aero__reps_8h_a643ed1219181994b7427b80b71e0ce23}{aero\_rep\_modal\_binned\_mass\_update\_env\_state}}(}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00131}00131             model\_data, aero\_rep\_int\_data, aero\_rep\_float\_data,}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00132}00132             aero\_rep\_env\_data);}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00133}00133         \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00134}00134       \textcolor{keywordflow}{case} \mbox{\hyperlink{aero__rep__solver_8c_abd343caa3fd45aa4f4a5282226312b87}{AERO\_REP\_SINGLE\_PARTICLE}}:}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00135}00135         \mbox{\hyperlink{aero__reps_8h_abb3778ac04df76a32ac3359b8cabe51b}{aero\_rep\_single\_particle\_update\_env\_state}}(model\_data, aero\_rep\_int\_data,}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00136}00136                                                   aero\_rep\_float\_data,}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00137}00137                                                   aero\_rep\_env\_data);}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00138}00138         \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00139}00139     \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00140}00140   \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00141}00141 \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00142}00142 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00143}00143 \textcolor{comment}{/** \(\backslash\)brief Update the aerosol representations for a new state}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00144}00144 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00145}00145 \textcolor{comment}{ * \(\backslash\)param model\_data Pointer to the model data}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00146}00146 \textcolor{comment}{ */}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00147}\mbox{\hyperlink{aero__rep__solver_8c_a42041b486fc391bc9abeee5d1ad666b2}{00147}} \textcolor{keywordtype}{void} \mbox{\hyperlink{aero__rep__solver_8c_a42041b486fc391bc9abeee5d1ad666b2}{aero\_rep\_update\_state}}(\mbox{\hyperlink{struct_model_data}{ModelData}} *model\_data) \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00148}00148   \textcolor{comment}{// Get the number of aerosol representations}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00149}00149   \textcolor{keywordtype}{int} n\_aero\_rep = model\_data-\/>\mbox{\hyperlink{struct_model_data_aecf1c141902afe70202cdf1a73b892fc}{n\_aero\_rep}};}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00150}00150 }
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00151}00151   \textcolor{comment}{// Loop through the aerosol representations to update the state}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00152}00152   \textcolor{comment}{// advancing the aero\_rep\_data pointer each time}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00153}00153   \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_aero\_rep = 0; i\_aero\_rep < n\_aero\_rep; i\_aero\_rep++) \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00154}00154     \textcolor{comment}{// Get pointers to the aerosol data}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00155}00155     \textcolor{keywordtype}{int} *aero\_rep\_int\_data = \&(}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00156}00156         model\_data}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00157}00157             -\/>\mbox{\hyperlink{struct_model_data_aa8b643835763bea7fb798a5ebaf591d5}{aero\_rep\_int\_data}}[model\_data-\/>\mbox{\hyperlink{struct_model_data_a30fd4a3977e5cbe722b78edca520de8a}{aero\_rep\_int\_indices}}[i\_aero\_rep]]);}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00158}00158     \textcolor{keywordtype}{double} *aero\_rep\_float\_data =}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00159}00159         \&(model\_data-\/>\mbox{\hyperlink{struct_model_data_a76c330ce84e08a094bee566a857b77f0}{aero\_rep\_float\_data}}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00160}00160               [model\_data-\/>\mbox{\hyperlink{struct_model_data_a9ce72389308619c42c66645ec29dea63}{aero\_rep\_float\_indices}}[i\_aero\_rep]]);}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00161}00161     \textcolor{keywordtype}{double} *aero\_rep\_env\_data =}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00162}00162         \&(model\_data-\/>\mbox{\hyperlink{struct_model_data_ab47ec8a0099eba1474a7ee7336f4fa1f}{grid\_cell\_aero\_rep\_env\_data}}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00163}00163               [model\_data-\/>\mbox{\hyperlink{struct_model_data_a0b6a1ff7d6550e3a887e550a46f6986c}{aero\_rep\_env\_idx}}[i\_aero\_rep]]);}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00164}00164 }
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00165}00165     \textcolor{comment}{// Get the aerosol representation type}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00166}00166     \textcolor{keywordtype}{int} aero\_rep\_type = *(aero\_rep\_int\_data++);}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00167}00167 }
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00168}00168     \textcolor{comment}{// Call the appropriate function}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00169}00169     \textcolor{keywordflow}{switch} (aero\_rep\_type) \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00170}00170       \textcolor{keywordflow}{case} \mbox{\hyperlink{aero__rep__solver_8c_a13fef657c14bb2fec70d437fa2ee2ee8}{AERO\_REP\_MODAL\_BINNED\_MASS}}:}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00171}00171         \mbox{\hyperlink{aero__reps_8h_a567e448c1ea25085add6257c6b8930c6}{aero\_rep\_modal\_binned\_mass\_update\_state}}(model\_data, aero\_rep\_int\_data,}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00172}00172                                                 aero\_rep\_float\_data,}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00173}00173                                                 aero\_rep\_env\_data);}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00174}00174         \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00175}00175       \textcolor{keywordflow}{case} \mbox{\hyperlink{aero__rep__solver_8c_abd343caa3fd45aa4f4a5282226312b87}{AERO\_REP\_SINGLE\_PARTICLE}}:}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00176}00176         \mbox{\hyperlink{aero__reps_8h_afc5e4c6a81bf52bf0c8ee88037a4954d}{aero\_rep\_single\_particle\_update\_state}}(model\_data, aero\_rep\_int\_data,}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00177}00177                                               aero\_rep\_float\_data,}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00178}00178                                               aero\_rep\_env\_data);}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00179}00179         \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00180}00180     \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00181}00181   \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00182}00182 \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00183}00183 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00184}00184 \textcolor{comment}{/** \(\backslash\)brief Get the effective particle radius, \(\backslash\)f\$r\_\{eff\}\(\backslash\)f\$ (m)}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00185}00185 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00186}00186 \textcolor{comment}{ * Calculates effective particle radius \(\backslash\)f\$r\_\{eff\}\(\backslash\)f\$ (m), as well as the set of}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00187}00187 \textcolor{comment}{ * \(\backslash\)f\$\(\backslash\)frac\{\(\backslash\)partial r\_\{eff\}\}\{\(\backslash\)partial y\}\(\backslash\)f\$ where \(\backslash\)f\$y\(\backslash\)f\$ are variables on the}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00188}00188 \textcolor{comment}{ * solver state array.}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00189}00189 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00190}00190 \textcolor{comment}{ * \(\backslash\)param model\_data Pointer to the model data}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00191}00191 \textcolor{comment}{ * \(\backslash\)param aero\_rep\_idx Index of aerosol representation to use for calculation}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00192}00192 \textcolor{comment}{ * \(\backslash\)param aero\_phase\_idx Index of the aerosol phase within the aerosol}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00193}00193 \textcolor{comment}{ *                       representation}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00194}00194 \textcolor{comment}{ * \(\backslash\)param radius Pointer to hold effective particle radius (m)}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00195}00195 \textcolor{comment}{ * \(\backslash\)param partial\_deriv Pointer to the set of partial derivatives to be}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00196}00196 \textcolor{comment}{ *                      calculated \(\backslash\)f\$\(\backslash\)frac\{\(\backslash\)partial r\_\{eff\}\}\{\(\backslash\)partial y\}\(\backslash\)f\$,}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00197}00197 \textcolor{comment}{ *                      or a NULL pointer if no partial derivatives are needed}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00198}00198 \textcolor{comment}{ */}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00199}\mbox{\hyperlink{aero__rep__solver_8c_aab8fc9de2c9bfe5d012e80322a5b653b}{00199}} \textcolor{keywordtype}{void} \mbox{\hyperlink{aero__rep__solver_8c_aab8fc9de2c9bfe5d012e80322a5b653b}{aero\_rep\_get\_effective\_radius\_\_m}}(\mbox{\hyperlink{struct_model_data}{ModelData}} *model\_data, \textcolor{keywordtype}{int} aero\_rep\_idx,}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00200}00200                                       \textcolor{keywordtype}{int} aero\_phase\_idx, \textcolor{keywordtype}{double} *radius,}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00201}00201                                       \textcolor{keywordtype}{double} *partial\_deriv) \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00202}00202   \textcolor{comment}{// Get pointers to the aerosol data}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00203}00203   \textcolor{keywordtype}{int} *aero\_rep\_int\_data = \&(}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00204}00204       model\_data}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00205}00205           -\/>\mbox{\hyperlink{struct_model_data_aa8b643835763bea7fb798a5ebaf591d5}{aero\_rep\_int\_data}}[model\_data-\/>\mbox{\hyperlink{struct_model_data_a30fd4a3977e5cbe722b78edca520de8a}{aero\_rep\_int\_indices}}[aero\_rep\_idx]]);}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00206}00206   \textcolor{keywordtype}{double} *aero\_rep\_float\_data =}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00207}00207       \&(model\_data-\/>\mbox{\hyperlink{struct_model_data_a76c330ce84e08a094bee566a857b77f0}{aero\_rep\_float\_data}}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00208}00208             [model\_data-\/>\mbox{\hyperlink{struct_model_data_a9ce72389308619c42c66645ec29dea63}{aero\_rep\_float\_indices}}[aero\_rep\_idx]]);}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00209}00209   \textcolor{keywordtype}{double} *aero\_rep\_env\_data =}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00210}00210       \&(model\_data-\/>\mbox{\hyperlink{struct_model_data_ab47ec8a0099eba1474a7ee7336f4fa1f}{grid\_cell\_aero\_rep\_env\_data}}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00211}00211             [model\_data-\/>\mbox{\hyperlink{struct_model_data_a0b6a1ff7d6550e3a887e550a46f6986c}{aero\_rep\_env\_idx}}[aero\_rep\_idx]]);}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00212}00212 }
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00213}00213   \textcolor{comment}{// Get the aerosol representation type}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00214}00214   \textcolor{keywordtype}{int} aero\_rep\_type = *(aero\_rep\_int\_data++);}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00215}00215 }
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00216}00216   \textcolor{comment}{// Get the particle radius and set of partial derivatives}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00217}00217   \textcolor{keywordflow}{switch} (aero\_rep\_type) \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00218}00218     \textcolor{keywordflow}{case} \mbox{\hyperlink{aero__rep__solver_8c_a13fef657c14bb2fec70d437fa2ee2ee8}{AERO\_REP\_MODAL\_BINNED\_MASS}}:}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00219}00219       \mbox{\hyperlink{aero__reps_8h_a8d5bf734337581d90c2280ab858ccf96}{aero\_rep\_modal\_binned\_mass\_get\_effective\_radius\_\_m}}(}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00220}00220           model\_data, aero\_phase\_idx, radius, partial\_deriv, aero\_rep\_int\_data,}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00221}00221           aero\_rep\_float\_data, aero\_rep\_env\_data);}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00222}00222       \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00223}00223     \textcolor{keywordflow}{case} \mbox{\hyperlink{aero__rep__solver_8c_abd343caa3fd45aa4f4a5282226312b87}{AERO\_REP\_SINGLE\_PARTICLE}}:}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00224}00224       \mbox{\hyperlink{aero__reps_8h_a48b11d345d89071d34e67b5063b1b891}{aero\_rep\_single\_particle\_get\_effective\_radius\_\_m}}(}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00225}00225           model\_data, aero\_phase\_idx, radius, partial\_deriv, aero\_rep\_int\_data,}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00226}00226           aero\_rep\_float\_data, aero\_rep\_env\_data);}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00227}00227       \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00228}00228   \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00229}00229   \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00230}00230 \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00231}00231 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00232}00232 \textcolor{comment}{/** \(\backslash\)brief Get the particle number concentration \(\backslash\)f\$n\(\backslash\)f\$}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00233}00233 \textcolor{comment}{ * (\(\backslash\)f\$\(\backslash\)mbox\{\(\backslash\)si\{\(\backslash\)\#\(\backslash\)per\(\backslash\)cubic\(\backslash\)metre\}\}\(\backslash\)f\$)}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00234}00234 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00235}00235 \textcolor{comment}{ * Calculates particle number concentration, \(\backslash\)f\$n\(\backslash\)f\$}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00236}00236 \textcolor{comment}{ * (\(\backslash\)f\$\(\backslash\)mbox\{\(\backslash\)si\{\(\backslash\)\#\(\backslash\)per\(\backslash\)cubic\(\backslash\)metre\}\}\(\backslash\)f\$), as well as the set of}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00237}00237 \textcolor{comment}{ * \(\backslash\)f\$\(\backslash\)frac\{\(\backslash\)partial n\}\{\(\backslash\)partial y\}\(\backslash\)f\$ where \(\backslash\)f\$y\(\backslash\)f\$ are variables on the}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00238}00238 \textcolor{comment}{ * solver state array.}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00239}00239 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00240}00240 \textcolor{comment}{ * \(\backslash\)param model\_data Pointer to the model data}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00241}00241 \textcolor{comment}{ * \(\backslash\)param aero\_rep\_idx Index of aerosol representation to use for calculation}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00242}00242 \textcolor{comment}{ * \(\backslash\)param aero\_phase\_idx Index of the aerosol phase within the aerosol}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00243}00243 \textcolor{comment}{ *                       representation}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00244}00244 \textcolor{comment}{ * \(\backslash\)param number\_conc Pointer to hold calculated number concentration, \(\backslash\)f\$n\(\backslash\)f\$}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00245}00245 \textcolor{comment}{ *                    (\(\backslash\)f\$\(\backslash\)mbox\{\(\backslash\)si\{\(\backslash\)\#\(\backslash\)per\(\backslash\)cubic\(\backslash\)metre\}\}\(\backslash\)f\$)}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00246}00246 \textcolor{comment}{ * \(\backslash\)param partial\_deriv Pointer to the set of partial derivatives to be}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00247}00247 \textcolor{comment}{ *                      calculated \(\backslash\)f\$\(\backslash\)frac\{\(\backslash\)partial n\}\{\(\backslash\)partial y\}\(\backslash\)f\$, or a}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00248}00248 \textcolor{comment}{ *                      NULL pointer if no partial derivatives are required}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00249}00249 \textcolor{comment}{ */}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00250}\mbox{\hyperlink{aero__rep__solver_8c_aa56870eb4fe20532461b1634d7688210}{00250}} \textcolor{keywordtype}{void} \mbox{\hyperlink{aero__rep__solver_8c_aa56870eb4fe20532461b1634d7688210}{aero\_rep\_get\_number\_conc\_\_n\_m3}}(\mbox{\hyperlink{struct_model_data}{ModelData}} *model\_data, \textcolor{keywordtype}{int} aero\_rep\_idx,}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00251}00251                                     \textcolor{keywordtype}{int} aero\_phase\_idx, \textcolor{keywordtype}{double} *number\_conc,}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00252}00252                                     \textcolor{keywordtype}{double} *partial\_deriv) \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00253}00253   \textcolor{comment}{// Get pointers to the aerosol data}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00254}00254   \textcolor{keywordtype}{int} *aero\_rep\_int\_data = \&(}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00255}00255       model\_data}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00256}00256           -\/>\mbox{\hyperlink{struct_model_data_aa8b643835763bea7fb798a5ebaf591d5}{aero\_rep\_int\_data}}[model\_data-\/>\mbox{\hyperlink{struct_model_data_a30fd4a3977e5cbe722b78edca520de8a}{aero\_rep\_int\_indices}}[aero\_rep\_idx]]);}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00257}00257   \textcolor{keywordtype}{double} *aero\_rep\_float\_data =}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00258}00258       \&(model\_data-\/>\mbox{\hyperlink{struct_model_data_a76c330ce84e08a094bee566a857b77f0}{aero\_rep\_float\_data}}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00259}00259             [model\_data-\/>\mbox{\hyperlink{struct_model_data_a9ce72389308619c42c66645ec29dea63}{aero\_rep\_float\_indices}}[aero\_rep\_idx]]);}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00260}00260   \textcolor{keywordtype}{double} *aero\_rep\_env\_data =}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00261}00261       \&(model\_data-\/>\mbox{\hyperlink{struct_model_data_ab47ec8a0099eba1474a7ee7336f4fa1f}{grid\_cell\_aero\_rep\_env\_data}}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00262}00262             [model\_data-\/>\mbox{\hyperlink{struct_model_data_a0b6a1ff7d6550e3a887e550a46f6986c}{aero\_rep\_env\_idx}}[aero\_rep\_idx]]);}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00263}00263 }
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00264}00264   \textcolor{comment}{// Get the aerosol representation type}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00265}00265   \textcolor{keywordtype}{int} aero\_rep\_type = *(aero\_rep\_int\_data++);}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00266}00266 }
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00267}00267   \textcolor{comment}{// Get the particle number concentration}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00268}00268   \textcolor{keywordflow}{switch} (aero\_rep\_type) \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00269}00269     \textcolor{keywordflow}{case} \mbox{\hyperlink{aero__rep__solver_8c_a13fef657c14bb2fec70d437fa2ee2ee8}{AERO\_REP\_MODAL\_BINNED\_MASS}}:}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00270}00270       \mbox{\hyperlink{aero__reps_8h_a2e585253c19aa48dec8c55b963999e9d}{aero\_rep\_modal\_binned\_mass\_get\_number\_conc\_\_n\_m3}}(}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00271}00271           model\_data, aero\_phase\_idx, number\_conc, partial\_deriv,}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00272}00272           aero\_rep\_int\_data, aero\_rep\_float\_data, aero\_rep\_env\_data);}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00273}00273       \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00274}00274     \textcolor{keywordflow}{case} \mbox{\hyperlink{aero__rep__solver_8c_abd343caa3fd45aa4f4a5282226312b87}{AERO\_REP\_SINGLE\_PARTICLE}}:}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00275}00275       \mbox{\hyperlink{aero__reps_8h_afa7d35b774d0ab4d7cad7fb30d75e897}{aero\_rep\_single\_particle\_get\_number\_conc\_\_n\_m3}}(}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00276}00276           model\_data, aero\_phase\_idx, number\_conc, partial\_deriv,}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00277}00277           aero\_rep\_int\_data, aero\_rep\_float\_data, aero\_rep\_env\_data);}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00278}00278       \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00279}00279   \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00280}00280   \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00281}00281 \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00282}00282 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00283}00283 \textcolor{comment}{/** \(\backslash\)brief Check whether aerosol concentrations are per-\/particle or total for}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00284}00284 \textcolor{comment}{ * each phase}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00285}00285 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00286}00286 \textcolor{comment}{ * \(\backslash\)param model\_data Pointer to the model data}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00287}00287 \textcolor{comment}{ * \(\backslash\)param aero\_rep\_idx Index of aerosol representation to use for calculation}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00288}00288 \textcolor{comment}{ * \(\backslash\)param aero\_phase\_idx Index of the aerosol phase within the aerosol}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00289}00289 \textcolor{comment}{ *                       representation}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00290}00290 \textcolor{comment}{ * \(\backslash\)return 0 for per-\/particle; 1 for total for each phase}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00291}00291 \textcolor{comment}{ */}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00292}\mbox{\hyperlink{aero__rep__solver_8c_a00aee7bec2d9284a74c0eb26d346dc81}{00292}} \textcolor{keywordtype}{int} \mbox{\hyperlink{aero__rep__solver_8c_a00aee7bec2d9284a74c0eb26d346dc81}{aero\_rep\_get\_aero\_conc\_type}}(\mbox{\hyperlink{struct_model_data}{ModelData}} *model\_data, \textcolor{keywordtype}{int} aero\_rep\_idx,}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00293}00293                                 \textcolor{keywordtype}{int} aero\_phase\_idx) \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00294}00294   \textcolor{comment}{// Initialize the aerosol concentration type}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00295}00295   \textcolor{keywordtype}{int} aero\_conc\_type = 0;}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00296}00296 }
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00297}00297   \textcolor{comment}{// Get pointers to the aerosol data}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00298}00298   \textcolor{keywordtype}{int} *aero\_rep\_int\_data = \&(}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00299}00299       model\_data}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00300}00300           -\/>\mbox{\hyperlink{struct_model_data_aa8b643835763bea7fb798a5ebaf591d5}{aero\_rep\_int\_data}}[model\_data-\/>\mbox{\hyperlink{struct_model_data_a30fd4a3977e5cbe722b78edca520de8a}{aero\_rep\_int\_indices}}[aero\_rep\_idx]]);}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00301}00301   \textcolor{keywordtype}{double} *aero\_rep\_float\_data =}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00302}00302       \&(model\_data-\/>\mbox{\hyperlink{struct_model_data_a76c330ce84e08a094bee566a857b77f0}{aero\_rep\_float\_data}}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00303}00303             [model\_data-\/>\mbox{\hyperlink{struct_model_data_a9ce72389308619c42c66645ec29dea63}{aero\_rep\_float\_indices}}[aero\_rep\_idx]]);}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00304}00304   \textcolor{keywordtype}{double} *aero\_rep\_env\_data =}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00305}00305       \&(model\_data-\/>\mbox{\hyperlink{struct_model_data_ab47ec8a0099eba1474a7ee7336f4fa1f}{grid\_cell\_aero\_rep\_env\_data}}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00306}00306             [model\_data-\/>\mbox{\hyperlink{struct_model_data_a0b6a1ff7d6550e3a887e550a46f6986c}{aero\_rep\_env\_idx}}[aero\_rep\_idx]]);}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00307}00307 }
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00308}00308   \textcolor{comment}{// Get the aerosol representation type}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00309}00309   \textcolor{keywordtype}{int} aero\_rep\_type = *(aero\_rep\_int\_data++);}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00310}00310 }
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00311}00311   \textcolor{comment}{// Get the type of aerosol concentration}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00312}00312   \textcolor{keywordflow}{switch} (aero\_rep\_type) \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00313}00313     \textcolor{keywordflow}{case} \mbox{\hyperlink{aero__rep__solver_8c_a13fef657c14bb2fec70d437fa2ee2ee8}{AERO\_REP\_MODAL\_BINNED\_MASS}}:}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00314}00314       \mbox{\hyperlink{aero__reps_8h_a5806fae1fe7d70369bfb7a0d9c54d12f}{aero\_rep\_modal\_binned\_mass\_get\_aero\_conc\_type}}(}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00315}00315           aero\_phase\_idx, \&aero\_conc\_type, aero\_rep\_int\_data,}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00316}00316           aero\_rep\_float\_data, aero\_rep\_env\_data);}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00317}00317       \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00318}00318     \textcolor{keywordflow}{case} \mbox{\hyperlink{aero__rep__solver_8c_abd343caa3fd45aa4f4a5282226312b87}{AERO\_REP\_SINGLE\_PARTICLE}}:}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00319}00319       \mbox{\hyperlink{aero__reps_8h_a59114de73dd305d5825a8547155b8946}{aero\_rep\_single\_particle\_get\_aero\_conc\_type}}(}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00320}00320           aero\_phase\_idx, \&aero\_conc\_type, aero\_rep\_int\_data,}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00321}00321           aero\_rep\_float\_data, aero\_rep\_env\_data);}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00322}00322       \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00323}00323   \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00324}00324   \textcolor{keywordflow}{return} aero\_conc\_type;}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00325}00325 \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00326}00326 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00327}00327 \textcolor{comment}{/** \(\backslash\)brief Get the total mass of an aerosol phase in this representation}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00328}00328 \textcolor{comment}{ **        \(\backslash\)f\$m\(\backslash\)f\$ (\(\backslash\)f\$\(\backslash\)mbox\{\(\backslash\)si\{\(\backslash\)kilogram\(\backslash\)per\(\backslash\)cubic\(\backslash\)metre\}\}\(\backslash\)f\$)}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00329}00329 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00330}00330 \textcolor{comment}{ * Calculates total aerosol phase mass, \(\backslash\)f\$m\(\backslash\)f\$}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00331}00331 \textcolor{comment}{ * (\(\backslash\)f\$\(\backslash\)mbox\{\(\backslash\)si\{\(\backslash\)kilogram\(\backslash\)per\(\backslash\)cubic\(\backslash\)metre\}\}\(\backslash\)f\$), as well as the set of}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00332}00332 \textcolor{comment}{ * \(\backslash\)f\$\(\backslash\)frac\{\(\backslash\)partial m\}\{\(\backslash\)partial y\}\(\backslash\)f\$ where \(\backslash\)f\$y\(\backslash\)f\$ are variables on the}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00333}00333 \textcolor{comment}{ * solver state array.}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00334}00334 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00335}00335 \textcolor{comment}{ * \(\backslash\)param model\_data Pointer to the model data}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00336}00336 \textcolor{comment}{ * \(\backslash\)param aero\_rep\_idx Index of aerosol representation to use for calculation}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00337}00337 \textcolor{comment}{ * \(\backslash\)param aero\_phase\_idx Index of the aerosol phase within the aerosol}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00338}00338 \textcolor{comment}{ *                       representation}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00339}00339 \textcolor{comment}{ * \(\backslash\)param aero\_phase\_mass Pointer to hold calculated aerosol-\/phase mass,}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00340}00340 \textcolor{comment}{ *                        \(\backslash\)f\$m\(\backslash\)f\$}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00341}00341 \textcolor{comment}{ *                        (\(\backslash\)f\$\(\backslash\)mbox\{\(\backslash\)si\{\(\backslash\)kilogram\(\backslash\)per\(\backslash\)cubic\(\backslash\)metre\}\}\(\backslash\)f\$)}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00342}00342 \textcolor{comment}{ * \(\backslash\)param partial\_deriv Pointer to the set of partial derivatives to be}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00343}00343 \textcolor{comment}{ *                      calculated \(\backslash\)f\$\(\backslash\)frac\{\(\backslash\)partial m\}\{\(\backslash\)partial y\}\(\backslash\)f\$, or a}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00344}00344 \textcolor{comment}{ *                      NULL pointer if no partial derivatives are needed}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00345}00345 \textcolor{comment}{ */}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00346}\mbox{\hyperlink{aero__rep__solver_8c_a0d5fc5c14f5fc182d80811b27c644e86}{00346}} \textcolor{keywordtype}{void} \mbox{\hyperlink{aero__rep__solver_8c_a0d5fc5c14f5fc182d80811b27c644e86}{aero\_rep\_get\_aero\_phase\_mass\_\_kg\_m3}}(\mbox{\hyperlink{struct_model_data}{ModelData}} *model\_data,}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00347}00347                                          \textcolor{keywordtype}{int} aero\_rep\_idx, \textcolor{keywordtype}{int} aero\_phase\_idx,}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00348}00348                                          \textcolor{keywordtype}{double} *aero\_phase\_mass,}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00349}00349                                          \textcolor{keywordtype}{double} *partial\_deriv) \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00350}00350   \textcolor{comment}{// Get pointers to the aerosol data}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00351}00351   \textcolor{keywordtype}{int} *aero\_rep\_int\_data = \&(}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00352}00352       model\_data}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00353}00353           -\/>\mbox{\hyperlink{struct_model_data_aa8b643835763bea7fb798a5ebaf591d5}{aero\_rep\_int\_data}}[model\_data-\/>\mbox{\hyperlink{struct_model_data_a30fd4a3977e5cbe722b78edca520de8a}{aero\_rep\_int\_indices}}[aero\_rep\_idx]]);}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00354}00354   \textcolor{keywordtype}{double} *aero\_rep\_float\_data =}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00355}00355       \&(model\_data-\/>\mbox{\hyperlink{struct_model_data_a76c330ce84e08a094bee566a857b77f0}{aero\_rep\_float\_data}}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00356}00356             [model\_data-\/>\mbox{\hyperlink{struct_model_data_a9ce72389308619c42c66645ec29dea63}{aero\_rep\_float\_indices}}[aero\_rep\_idx]]);}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00357}00357   \textcolor{keywordtype}{double} *aero\_rep\_env\_data =}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00358}00358       \&(model\_data-\/>\mbox{\hyperlink{struct_model_data_ab47ec8a0099eba1474a7ee7336f4fa1f}{grid\_cell\_aero\_rep\_env\_data}}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00359}00359             [model\_data-\/>\mbox{\hyperlink{struct_model_data_a0b6a1ff7d6550e3a887e550a46f6986c}{aero\_rep\_env\_idx}}[aero\_rep\_idx]]);}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00360}00360 }
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00361}00361   \textcolor{comment}{// Get the aerosol representation type}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00362}00362   \textcolor{keywordtype}{int} aero\_rep\_type = *(aero\_rep\_int\_data++);}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00363}00363 }
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00364}00364   \textcolor{comment}{// Get the particle number concentration}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00365}00365   \textcolor{keywordflow}{switch} (aero\_rep\_type) \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00366}00366     \textcolor{keywordflow}{case} \mbox{\hyperlink{aero__rep__solver_8c_a13fef657c14bb2fec70d437fa2ee2ee8}{AERO\_REP\_MODAL\_BINNED\_MASS}}:}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00367}00367       \mbox{\hyperlink{aero__reps_8h_aa84e95ce69656ab640edfdb32cc71d4c}{aero\_rep\_modal\_binned\_mass\_get\_aero\_phase\_mass\_\_kg\_m3}}(}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00368}00368           model\_data, aero\_phase\_idx, aero\_phase\_mass, partial\_deriv,}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00369}00369           aero\_rep\_int\_data, aero\_rep\_float\_data, aero\_rep\_env\_data);}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00370}00370       \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00371}00371     \textcolor{keywordflow}{case} \mbox{\hyperlink{aero__rep__solver_8c_abd343caa3fd45aa4f4a5282226312b87}{AERO\_REP\_SINGLE\_PARTICLE}}:}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00372}00372       \mbox{\hyperlink{aero__reps_8h_ad49c89b34b57e5b644d6506ead9dea34}{aero\_rep\_single\_particle\_get\_aero\_phase\_mass\_\_kg\_m3}}(}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00373}00373           model\_data, aero\_phase\_idx, aero\_phase\_mass, partial\_deriv,}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00374}00374           aero\_rep\_int\_data, aero\_rep\_float\_data, aero\_rep\_env\_data);}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00375}00375       \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00376}00376   \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00377}00377 \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00378}00378 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00379}00379 \textcolor{comment}{/** \(\backslash\)brief Get the average molecular weight of an aerosol phase in this}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00380}00380 \textcolor{comment}{ **        representation \(\backslash\)f\$m\(\backslash\)f\$}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00381}00381 \textcolor{comment}{ *(\(\backslash\)f\$\(\backslash\)mbox\{\(\backslash\)si\{\(\backslash\)micro\(\backslash\)gram\(\backslash\)per\(\backslash\)cubic\(\backslash\)metre\}\}\(\backslash\)f\$)}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00382}00382 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00383}00383 \textcolor{comment}{ * Calculates total aerosol phase mass, \(\backslash\)f\$m\(\backslash\)f\$}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00384}00384 \textcolor{comment}{ * (\(\backslash\)f\$\(\backslash\)mbox\{\(\backslash\)si\{\(\backslash\)micro\(\backslash\)gram\(\backslash\)per\(\backslash\)cubic\(\backslash\)metre\}\}\(\backslash\)f\$), as well as the set of}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00385}00385 \textcolor{comment}{ * \(\backslash\)f\$\(\backslash\)frac\{\(\backslash\)partial m\}\{\(\backslash\)partial y\}\(\backslash\)f\$ where \(\backslash\)f\$y\(\backslash\)f\$ are variables on the}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00386}00386 \textcolor{comment}{ * solver state array.}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00387}00387 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00388}00388 \textcolor{comment}{ * \(\backslash\)param model\_data Pointer to the model data}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00389}00389 \textcolor{comment}{ * \(\backslash\)param aero\_rep\_idx Index of aerosol representation to use for calculation}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00390}00390 \textcolor{comment}{ * \(\backslash\)param aero\_phase\_idx Index of the aerosol phase within the aerosol}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00391}00391 \textcolor{comment}{ *                       representation}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00392}00392 \textcolor{comment}{ * \(\backslash\)param aero\_phase\_avg\_MW Pointer to hold calculated average MW in the}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00393}00393 \textcolor{comment}{ *                          aerosol phase (\(\backslash\)f\$\(\backslash\)mbox\{\(\backslash\)si\{\(\backslash\)kilogram\(\backslash\)per\(\backslash\)mole\}\}\(\backslash\)f\$)}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00394}00394 \textcolor{comment}{ * \(\backslash\)param partial\_deriv Pointer to the set of partial derivatives to be}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00395}00395 \textcolor{comment}{ *                      calculated \(\backslash\)f\$\(\backslash\)frac\{\(\backslash\)partial m\}\{\(\backslash\)partial y\}\(\backslash\)f\$, or a}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00396}00396 \textcolor{comment}{ *                      NULL pointer if no partial derivatives are needed}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00397}00397 \textcolor{comment}{ */}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00398}\mbox{\hyperlink{aero__rep__solver_8c_a513044e29b338d17d02b5bc472a8046f}{00398}} \textcolor{keywordtype}{void} \mbox{\hyperlink{aero__rep__solver_8c_a513044e29b338d17d02b5bc472a8046f}{aero\_rep\_get\_aero\_phase\_avg\_MW\_\_kg\_mol}}(\mbox{\hyperlink{struct_model_data}{ModelData}} *model\_data,}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00399}00399                                             \textcolor{keywordtype}{int} aero\_rep\_idx,}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00400}00400                                             \textcolor{keywordtype}{int} aero\_phase\_idx,}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00401}00401                                             \textcolor{keywordtype}{double} *aero\_phase\_avg\_MW,}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00402}00402                                             \textcolor{keywordtype}{double} *partial\_deriv) \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00403}00403   \textcolor{comment}{// Get pointers to the aerosol data}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00404}00404   \textcolor{keywordtype}{int} *aero\_rep\_int\_data = \&(}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00405}00405       model\_data}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00406}00406           -\/>\mbox{\hyperlink{struct_model_data_aa8b643835763bea7fb798a5ebaf591d5}{aero\_rep\_int\_data}}[model\_data-\/>\mbox{\hyperlink{struct_model_data_a30fd4a3977e5cbe722b78edca520de8a}{aero\_rep\_int\_indices}}[aero\_rep\_idx]]);}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00407}00407   \textcolor{keywordtype}{double} *aero\_rep\_float\_data =}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00408}00408       \&(model\_data-\/>\mbox{\hyperlink{struct_model_data_a76c330ce84e08a094bee566a857b77f0}{aero\_rep\_float\_data}}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00409}00409             [model\_data-\/>\mbox{\hyperlink{struct_model_data_a9ce72389308619c42c66645ec29dea63}{aero\_rep\_float\_indices}}[aero\_rep\_idx]]);}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00410}00410   \textcolor{keywordtype}{double} *aero\_rep\_env\_data =}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00411}00411       \&(model\_data-\/>\mbox{\hyperlink{struct_model_data_ab47ec8a0099eba1474a7ee7336f4fa1f}{grid\_cell\_aero\_rep\_env\_data}}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00412}00412             [model\_data-\/>\mbox{\hyperlink{struct_model_data_a0b6a1ff7d6550e3a887e550a46f6986c}{aero\_rep\_env\_idx}}[aero\_rep\_idx]]);}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00413}00413 }
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00414}00414   \textcolor{comment}{// Get the aerosol representation type}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00415}00415   \textcolor{keywordtype}{int} aero\_rep\_type = *(aero\_rep\_int\_data++);}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00416}00416 }
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00417}00417   \textcolor{comment}{// Get the particle number concentration}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00418}00418   \textcolor{keywordflow}{switch} (aero\_rep\_type) \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00419}00419     \textcolor{keywordflow}{case} \mbox{\hyperlink{aero__rep__solver_8c_a13fef657c14bb2fec70d437fa2ee2ee8}{AERO\_REP\_MODAL\_BINNED\_MASS}}:}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00420}00420       \mbox{\hyperlink{aero__reps_8h_a2c1fd8badaa6ebffd2b45ab5314c1279}{aero\_rep\_modal\_binned\_mass\_get\_aero\_phase\_avg\_MW\_\_kg\_mol}}(}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00421}00421           model\_data, aero\_phase\_idx, aero\_phase\_avg\_MW, partial\_deriv,}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00422}00422           aero\_rep\_int\_data, aero\_rep\_float\_data, aero\_rep\_env\_data);}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00423}00423       \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00424}00424     \textcolor{keywordflow}{case} \mbox{\hyperlink{aero__rep__solver_8c_abd343caa3fd45aa4f4a5282226312b87}{AERO\_REP\_SINGLE\_PARTICLE}}:}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00425}00425       \mbox{\hyperlink{aero__reps_8h_a203b6931fd5a504b7cc1750eb582b60c}{aero\_rep\_single\_particle\_get\_aero\_phase\_avg\_MW\_\_kg\_mol}}(}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00426}00426           model\_data, aero\_phase\_idx, aero\_phase\_avg\_MW, partial\_deriv,}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00427}00427           aero\_rep\_int\_data, aero\_rep\_float\_data, aero\_rep\_env\_data);}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00428}00428       \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00429}00429   \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00430}00430 \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00431}00431 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00432}00432 \textcolor{comment}{/** \(\backslash\)brief Add condensed data to the condensed data block for aerosol}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00433}00433 \textcolor{comment}{ * representations}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00434}00434 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00435}00435 \textcolor{comment}{ * \(\backslash\)param aero\_rep\_type Aerosol representation type}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00436}00436 \textcolor{comment}{ * \(\backslash\)param n\_int\_param Number of integer parameters}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00437}00437 \textcolor{comment}{ * \(\backslash\)param n\_float\_param Number of floating-\/point parameters}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00438}00438 \textcolor{comment}{ * \(\backslash\)param n\_env\_param Number of environment-\/dependent parameters}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00439}00439 \textcolor{comment}{ * \(\backslash\)param int\_param Pointer to integer parameter array}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00440}00440 \textcolor{comment}{ * \(\backslash\)param float\_param Pointer to floating-\/point parameter array}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00441}00441 \textcolor{comment}{ * \(\backslash\)param solver\_data Pointer to solver data}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00442}00442 \textcolor{comment}{ */}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00443}\mbox{\hyperlink{aero__rep__solver_8c_a0429119f0c3a2ad73e6c291462571090}{00443}} \textcolor{keywordtype}{void} \mbox{\hyperlink{aero__rep__solver_8c_a0429119f0c3a2ad73e6c291462571090}{aero\_rep\_add\_condensed\_data}}(\textcolor{keywordtype}{int} aero\_rep\_type, \textcolor{keywordtype}{int} n\_int\_param,}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00444}00444                                  \textcolor{keywordtype}{int} n\_float\_param, \textcolor{keywordtype}{int} n\_env\_param,}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00445}00445                                  \textcolor{keywordtype}{int} *int\_param, \textcolor{keywordtype}{double} *float\_param,}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00446}00446                                  \textcolor{keywordtype}{void} *solver\_data) \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00447}00447   \mbox{\hyperlink{struct_model_data}{ModelData}} *model\_data =}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00448}00448       (\mbox{\hyperlink{struct_model_data}{ModelData}} *)\&(((\mbox{\hyperlink{struct_solver_data}{SolverData}} *)solver\_data)-\/>model\_data);}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00449}00449 }
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00450}00450   \textcolor{comment}{// Get pointers to the aerosol representation data}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00451}00451   \textcolor{keywordtype}{int} *aero\_rep\_int\_data =}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00452}00452       \&(model\_data-\/>\mbox{\hyperlink{struct_model_data_aa8b643835763bea7fb798a5ebaf591d5}{aero\_rep\_int\_data}}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00453}00453             [model\_data-\/>\mbox{\hyperlink{struct_model_data_a30fd4a3977e5cbe722b78edca520de8a}{aero\_rep\_int\_indices}}[model\_data-\/>\mbox{\hyperlink{struct_model_data_a2074ac2be7848780274cf8babd4a767c}{n\_added\_aero\_reps}}]]);}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00454}00454   \textcolor{keywordtype}{double} *aero\_rep\_float\_data = \&(}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00455}00455       model\_data-\/>\mbox{\hyperlink{struct_model_data_a76c330ce84e08a094bee566a857b77f0}{aero\_rep\_float\_data}}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00456}00456           [model\_data-\/>\mbox{\hyperlink{struct_model_data_a9ce72389308619c42c66645ec29dea63}{aero\_rep\_float\_indices}}[model\_data-\/>\mbox{\hyperlink{struct_model_data_a2074ac2be7848780274cf8babd4a767c}{n\_added\_aero\_reps}}]]);}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00457}00457 }
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00458}00458   \textcolor{comment}{// Save next indices by adding lengths}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00459}00459   model\_data-\/>\mbox{\hyperlink{struct_model_data_a30fd4a3977e5cbe722b78edca520de8a}{aero\_rep\_int\_indices}}[model\_data-\/>\mbox{\hyperlink{struct_model_data_a2074ac2be7848780274cf8babd4a767c}{n\_added\_aero\_reps}} + 1] =}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00460}00460       (n\_int\_param + 1) +}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00461}00461       model\_data}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00462}00462           -\/>aero\_rep\_int\_indices[model\_data-\/>\mbox{\hyperlink{struct_model_data_a2074ac2be7848780274cf8babd4a767c}{n\_added\_aero\_reps}}];  \textcolor{comment}{//+1 is type}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00463}00463   model\_data-\/>\mbox{\hyperlink{struct_model_data_a9ce72389308619c42c66645ec29dea63}{aero\_rep\_float\_indices}}[model\_data-\/>\mbox{\hyperlink{struct_model_data_a2074ac2be7848780274cf8babd4a767c}{n\_added\_aero\_reps}} + 1] =}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00464}00464       n\_float\_param +}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00465}00465       model\_data-\/>\mbox{\hyperlink{struct_model_data_a9ce72389308619c42c66645ec29dea63}{aero\_rep\_float\_indices}}[model\_data-\/>\mbox{\hyperlink{struct_model_data_a2074ac2be7848780274cf8babd4a767c}{n\_added\_aero\_reps}}];}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00466}00466   model\_data-\/>\mbox{\hyperlink{struct_model_data_a0b6a1ff7d6550e3a887e550a46f6986c}{aero\_rep\_env\_idx}}[model\_data-\/>\mbox{\hyperlink{struct_model_data_a2074ac2be7848780274cf8babd4a767c}{n\_added\_aero\_reps}} + 1] =}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00467}00467       model\_data-\/>\mbox{\hyperlink{struct_model_data_a0b6a1ff7d6550e3a887e550a46f6986c}{aero\_rep\_env\_idx}}[model\_data-\/>\mbox{\hyperlink{struct_model_data_a2074ac2be7848780274cf8babd4a767c}{n\_added\_aero\_reps}}] + n\_env\_param;}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00468}00468   ++(model\_data-\/>\mbox{\hyperlink{struct_model_data_a2074ac2be7848780274cf8babd4a767c}{n\_added\_aero\_reps}});}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00469}00469 }
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00470}00470   \textcolor{comment}{// Add the aerosol representation type}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00471}00471   *(aero\_rep\_int\_data++) = aero\_rep\_type;}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00472}00472 }
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00473}00473   \textcolor{comment}{// Add integer parameters}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00474}00474   \textcolor{keywordflow}{for} (; n\_int\_param > 0; -\/-\/n\_int\_param)}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00475}00475     *(aero\_rep\_int\_data++) = *(int\_param++);}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00476}00476 }
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00477}00477   \textcolor{comment}{// Add floating-\/point parameters}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00478}00478   \textcolor{keywordflow}{for} (; n\_float\_param > 0; -\/-\/n\_float\_param)}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00479}00479     *(aero\_rep\_float\_data++) = (double)*(float\_param++);}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00480}00480 }
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00481}00481   model\_data-\/>\mbox{\hyperlink{struct_model_data_a168975ad6f012360482052d8ff06397c}{n\_aero\_rep\_env\_data}} += n\_env\_param;}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00482}00482 \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00483}00483 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00484}00484 \textcolor{comment}{/** \(\backslash\)brief Update aerosol representation data}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00485}00485 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00486}00486 \textcolor{comment}{ * \(\backslash\)param cell\_id Id of the grid cell to update}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00487}00487 \textcolor{comment}{ * \(\backslash\)param aero\_rep\_id Aerosol representation id (or 0 if unknown)}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00488}00488 \textcolor{comment}{ * \(\backslash\)param update\_aero\_rep\_type Aerosol representation type to update}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00489}00489 \textcolor{comment}{ * \(\backslash\)param update\_data Pointer to data needed for update}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00490}00490 \textcolor{comment}{ * \(\backslash\)param solver\_data Pointer to solver data}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00491}00491 \textcolor{comment}{ */}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00492}\mbox{\hyperlink{aero__rep__solver_8c_a6abd8e7eb53f014367be50869ae5d091}{00492}} \textcolor{keywordtype}{void} \mbox{\hyperlink{aero__rep__solver_8c_a6abd8e7eb53f014367be50869ae5d091}{aero\_rep\_update\_data}}(\textcolor{keywordtype}{int} cell\_id, \textcolor{keywordtype}{int} *aero\_rep\_id,}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00493}00493                           \textcolor{keywordtype}{int} update\_aero\_rep\_type, \textcolor{keywordtype}{void} *update\_data,}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00494}00494                           \textcolor{keywordtype}{void} *solver\_data) \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00495}00495   \mbox{\hyperlink{struct_model_data}{ModelData}} *model\_data =}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00496}00496       (\mbox{\hyperlink{struct_model_data}{ModelData}} *)\&(((\mbox{\hyperlink{struct_solver_data}{SolverData}} *)solver\_data)-\/>model\_data);}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00497}00497 }
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00498}00498   \textcolor{comment}{// Point to the environment-\/dependent data for the grid cell}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00499}00499   model\_data-\/>\mbox{\hyperlink{struct_model_data_ab47ec8a0099eba1474a7ee7336f4fa1f}{grid\_cell\_aero\_rep\_env\_data}} = \&(}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00500}00500       model\_data-\/>\mbox{\hyperlink{struct_model_data_a43745aa4a1fef9c32eb2f29b8ca7d277}{aero\_rep\_env\_data}}[cell\_id * model\_data-\/>\mbox{\hyperlink{struct_model_data_a168975ad6f012360482052d8ff06397c}{n\_aero\_rep\_env\_data}}]);}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00501}00501 }
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00502}00502   \textcolor{comment}{// Get the number of aerosol representations}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00503}00503   \textcolor{keywordtype}{int} n\_aero\_rep = model\_data-\/>\mbox{\hyperlink{struct_model_data_aecf1c141902afe70202cdf1a73b892fc}{n\_aero\_rep}};}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00504}00504 }
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00505}00505   \textcolor{comment}{// Loop through the aerosol representations advancing the pointer each time}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00506}00506   \textcolor{keywordflow}{for} (; (*aero\_rep\_id) < n\_aero\_rep; (*aero\_rep\_id)++) \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00507}00507     \textcolor{comment}{// Get pointers to the aerosol data}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00508}00508     \textcolor{keywordtype}{int} *aero\_rep\_int\_data =}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00509}00509         \&(model\_data-\/>\mbox{\hyperlink{struct_model_data_aa8b643835763bea7fb798a5ebaf591d5}{aero\_rep\_int\_data}}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00510}00510               [model\_data-\/>\mbox{\hyperlink{struct_model_data_a30fd4a3977e5cbe722b78edca520de8a}{aero\_rep\_int\_indices}}[*aero\_rep\_id]]);}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00511}00511     \textcolor{keywordtype}{double} *aero\_rep\_float\_data =}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00512}00512         \&(model\_data-\/>\mbox{\hyperlink{struct_model_data_a76c330ce84e08a094bee566a857b77f0}{aero\_rep\_float\_data}}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00513}00513               [model\_data-\/>\mbox{\hyperlink{struct_model_data_a9ce72389308619c42c66645ec29dea63}{aero\_rep\_float\_indices}}[*aero\_rep\_id]]);}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00514}00514     \textcolor{keywordtype}{double} *aero\_rep\_env\_data =}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00515}00515         \&(model\_data-\/>\mbox{\hyperlink{struct_model_data_ab47ec8a0099eba1474a7ee7336f4fa1f}{grid\_cell\_aero\_rep\_env\_data}}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00516}00516               [model\_data-\/>\mbox{\hyperlink{struct_model_data_a0b6a1ff7d6550e3a887e550a46f6986c}{aero\_rep\_env\_idx}}[*aero\_rep\_id]]);}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00517}00517 }
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00518}00518     \textcolor{comment}{// Get the aerosol representation type}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00519}00519     \textcolor{keywordtype}{int} aero\_rep\_type = *(aero\_rep\_int\_data++);}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00520}00520 }
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00521}00521     \textcolor{keywordtype}{bool} found = \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00522}00522 }
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00523}00523     \textcolor{comment}{// Find aerosol representations of the correct type}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00524}00524     \textcolor{keywordflow}{if} (aero\_rep\_type == update\_aero\_rep\_type) \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00525}00525       \textcolor{keywordflow}{switch} (aero\_rep\_type) \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00526}00526         \textcolor{keywordflow}{case} \mbox{\hyperlink{aero__rep__solver_8c_a13fef657c14bb2fec70d437fa2ee2ee8}{AERO\_REP\_MODAL\_BINNED\_MASS}}:}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00527}00527           found = \mbox{\hyperlink{aero__reps_8h_a1af186a816b0a6be0f3ee39f126351f1}{aero\_rep\_modal\_binned\_mass\_update\_data}}(}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00528}00528               (\textcolor{keywordtype}{void} *)update\_data, aero\_rep\_int\_data, aero\_rep\_float\_data,}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00529}00529               aero\_rep\_env\_data);}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00530}00530           \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00531}00531         \textcolor{keywordflow}{case} \mbox{\hyperlink{aero__rep__solver_8c_abd343caa3fd45aa4f4a5282226312b87}{AERO\_REP\_SINGLE\_PARTICLE}}:}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00532}00532           found = \mbox{\hyperlink{aero__reps_8h_abe4da510bed46cee8a75f90917764311}{aero\_rep\_single\_particle\_update\_data}}(}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00533}00533               (\textcolor{keywordtype}{void} *)update\_data, aero\_rep\_int\_data, aero\_rep\_float\_data,}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00534}00534               aero\_rep\_env\_data);}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00535}00535           \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00536}00536       \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00537}00537       \textcolor{keywordflow}{if} (found) \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00538}00538     \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00539}00539   \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00540}00540 \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00541}00541 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00542}00542 \textcolor{comment}{/** \(\backslash\)brief Print the aerosol representation data}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00543}00543 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00544}00544 \textcolor{comment}{ * \(\backslash\)param solver\_data Pointer to the solver data}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00545}00545 \textcolor{comment}{ */}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00546}\mbox{\hyperlink{aero__rep__solver_8c_a30423679f8e93388b9c18043254585cd}{00546}} \textcolor{keywordtype}{void} \mbox{\hyperlink{aero__rep__solver_8c_a30423679f8e93388b9c18043254585cd}{aero\_rep\_print\_data}}(\textcolor{keywordtype}{void} *solver\_data) \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00547}00547   \mbox{\hyperlink{struct_model_data}{ModelData}} *model\_data =}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00548}00548       (\mbox{\hyperlink{struct_model_data}{ModelData}} *)\&(((\mbox{\hyperlink{struct_solver_data}{SolverData}} *)solver\_data)-\/>model\_data);}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00549}00549 }
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00550}00550   \textcolor{comment}{// Get the number of aerosol representations}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00551}00551   \textcolor{keywordtype}{int} n\_aero\_rep = model\_data-\/>\mbox{\hyperlink{struct_model_data_aecf1c141902afe70202cdf1a73b892fc}{n\_aero\_rep}};}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00552}00552 }
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00553}00553   printf(}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00554}00554       \textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)nAerosol representation data\(\backslash\)n\(\backslash\)nnumber of aerosol "{}}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00555}00555       \textcolor{stringliteral}{"{}representations: \%d\(\backslash\)n\(\backslash\)n"{}},}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00556}00556       n\_aero\_rep);}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00557}00557 }
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00558}00558   \textcolor{comment}{// Loop through the aerosol representations advancing the pointer each time}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00559}00559   \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_aero\_rep = 0; i\_aero\_rep < n\_aero\_rep; i\_aero\_rep++) \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00560}00560     \textcolor{comment}{// Get pointers to the aerosol data}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00561}00561     \textcolor{keywordtype}{int} *aero\_rep\_int\_data = \&(}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00562}00562         model\_data}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00563}00563             -\/>\mbox{\hyperlink{struct_model_data_aa8b643835763bea7fb798a5ebaf591d5}{aero\_rep\_int\_data}}[model\_data-\/>\mbox{\hyperlink{struct_model_data_a30fd4a3977e5cbe722b78edca520de8a}{aero\_rep\_int\_indices}}[i\_aero\_rep]]);}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00564}00564     \textcolor{keywordtype}{double} *aero\_rep\_float\_data =}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00565}00565         \&(model\_data-\/>\mbox{\hyperlink{struct_model_data_a76c330ce84e08a094bee566a857b77f0}{aero\_rep\_float\_data}}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00566}00566               [model\_data-\/>\mbox{\hyperlink{struct_model_data_a9ce72389308619c42c66645ec29dea63}{aero\_rep\_float\_indices}}[i\_aero\_rep]]);}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00567}00567 }
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00568}00568     \textcolor{comment}{// Get the aerosol representation type}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00569}00569     \textcolor{keywordtype}{int} aero\_rep\_type = *(aero\_rep\_int\_data++);}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00570}00570 }
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00571}00571     \textcolor{comment}{// Call the appropriate printing function}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00572}00572     \textcolor{keywordflow}{switch} (aero\_rep\_type) \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00573}00573       \textcolor{keywordflow}{case} \mbox{\hyperlink{aero__rep__solver_8c_a13fef657c14bb2fec70d437fa2ee2ee8}{AERO\_REP\_MODAL\_BINNED\_MASS}}:}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00574}00574         \mbox{\hyperlink{aero__reps_8h_a720cd5bdec5b2338509109814f0f94c6}{aero\_rep\_modal\_binned\_mass\_print}}(aero\_rep\_int\_data,}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00575}00575                                          aero\_rep\_float\_data);}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00576}00576         \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00577}00577       \textcolor{keywordflow}{case} \mbox{\hyperlink{aero__rep__solver_8c_abd343caa3fd45aa4f4a5282226312b87}{AERO\_REP\_SINGLE\_PARTICLE}}:}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00578}00578         \mbox{\hyperlink{aero__reps_8h_a93b022b244ab389f594b3c1ee8956d26}{aero\_rep\_single\_particle\_print}}(aero\_rep\_int\_data, aero\_rep\_float\_data);}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00579}00579         \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00580}00580     \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00581}00581   \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00582}00582   fflush(stdout);}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00583}00583 \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00584}00584 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00585}00585 \textcolor{comment}{/** \(\backslash\)brief Free an update data object}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00586}00586 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00587}00587 \textcolor{comment}{ * \(\backslash\)param update\_data Object to free}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00588}00588 \textcolor{comment}{ */}}
+\DoxyCodeLine{\Hypertarget{aero__rep__solver_8c_source_l00589}\mbox{\hyperlink{aero__rep__solver_8c_a0acd579d3c095f13b5cf4ad7fa2380bc}{00589}} \textcolor{keywordtype}{void} \mbox{\hyperlink{aero__rep__solver_8c_a0acd579d3c095f13b5cf4ad7fa2380bc}{aero\_rep\_free\_update\_data}}(\textcolor{keywordtype}{void} *update\_data) \{ free(update\_data); \}}
+
+\end{DoxyCode}

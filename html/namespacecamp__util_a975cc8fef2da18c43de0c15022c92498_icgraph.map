@@ -1,0 +1,3 @@
+<map id="camp_util::logspace" name="camp_util::logspace">
+<area shape="rect" id="node1" title="Makes a logarithmically spaced array of length n from min to max." alt="" coords="5,29,141,56"/>
+</map>

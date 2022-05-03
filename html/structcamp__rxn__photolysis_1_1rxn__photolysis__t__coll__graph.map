@@ -1,6 +1,4 @@
 <map id="camp_rxn_photolysis::rxn_photolysis_t" name="camp_rxn_photolysis::rxn_photolysis_t">
-<area shape="rect" id="node1" title="Generic test reaction data type." alt="" coords="19,319,162,360"/>
-<area shape="rect" id="node2" href="$structcamp__rxn__data_1_1rxn__data__t.html" title="Abstract reaction data type." alt="" coords="24,228,157,269"/>
-<area shape="rect" id="node3" href="$structcamp__property_1_1property__t.html" title="Property data." alt="" coords="5,139,176,165"/>
-<area shape="rect" id="node4" href="$structcamp__property_1_1property__link__t.html" title="Property link data." alt="" coords="11,5,170,47"/>
+<area shape="rect" id="node1" title="Generic test reaction data type." alt="" coords="5,95,148,136"/>
+<area shape="rect" id="node2" href="$structcamp__rxn__data_1_1rxn__data__t.html" title="Abstract reaction data type." alt="" coords="10,5,143,47"/>
 </map>

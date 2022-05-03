@@ -48,11 +48,11 @@ Include dependency graph for rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+c\+:
 \item 
 \#define \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_ae761e39657aac155d83eae9b338be571}{REACT\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + x\mbox{]} -\/ 1)
 \item 
-\#define \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_a9fda90058c6a41b1dda6ded03321c4da}{PROD\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{rxn__troe_8_f90_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + x\mbox{]} -\/ 1)
+\#define \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_a9fda90058c6a41b1dda6ded03321c4da}{PROD\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + x\mbox{]} -\/ 1)
 \item 
-\#define \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_af9fc34858d09e71d3cffd88cf942bdf9}{DERIV\+\_\+\+ID\+\_\+}}(x)~int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{rxn__troe_8_f90_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + \mbox{\hyperlink{rxn__troe_8_f90_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}} + x\mbox{]}
+\#define \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_af9fc34858d09e71d3cffd88cf942bdf9}{DERIV\+\_\+\+ID\+\_\+}}(x)~int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + \mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}} + x\mbox{]}
 \item 
-\#define \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\+\_\+\+ID\+\_\+}}(x)~int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 2 $\ast$ (\mbox{\hyperlink{rxn__troe_8_f90_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + \mbox{\hyperlink{rxn__troe_8_f90_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}}) + x\mbox{]}
+\#define \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\+\_\+\+ID\+\_\+}}(x)~int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 2 $\ast$ (\mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + \mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}}) + x\mbox{]}
 \item 
 \#define \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_a9ae244708fd9c438bf840ed319733651}{YIELD\+\_\+}}(x)~float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}{NUM\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+}} + x\mbox{]}
 \end{DoxyCompactItemize}
@@ -78,6 +78,10 @@ CMAQ\+\_\+\+H2\+O2 reaction solver functions.
 
 
 
+Definition in file \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_source}{rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+c}}.
+
+
+
 \doxysubsection{Macro Definition Documentation}
 \mbox{\Hypertarget{rxn___c_m_a_q___h2_o2_8c_a91cd74713029c0906e8136c8628d548d}\label{rxn___c_m_a_q___h2_o2_8c_a91cd74713029c0906e8136c8628d548d}} 
 \index{rxn\_CMAQ\_H2O2.c@{rxn\_CMAQ\_H2O2.c}!CONV\_@{CONV\_}}
@@ -87,27 +91,27 @@ CMAQ\+\_\+\+H2\+O2 reaction solver functions.
 
 
 
-Definition at line 28 of file rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+c.
+Definition at line \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_source_l00028}{28}} of file \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_source}{rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+c}}.
 
 \mbox{\Hypertarget{rxn___c_m_a_q___h2_o2_8c_af9fc34858d09e71d3cffd88cf942bdf9}\label{rxn___c_m_a_q___h2_o2_8c_af9fc34858d09e71d3cffd88cf942bdf9}} 
 \index{rxn\_CMAQ\_H2O2.c@{rxn\_CMAQ\_H2O2.c}!DERIV\_ID\_@{DERIV\_ID\_}}
 \index{DERIV\_ID\_@{DERIV\_ID\_}!rxn\_CMAQ\_H2O2.c@{rxn\_CMAQ\_H2O2.c}}
 \doxysubsubsection{\texorpdfstring{DERIV\_ID\_}{DERIV\_ID\_}}
-{\footnotesize\ttfamily \#define DERIV\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{rxn__troe_8_f90_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + \mbox{\hyperlink{rxn__troe_8_f90_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}} + x\mbox{]}}
+{\footnotesize\ttfamily \#define DERIV\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + \mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}} + x\mbox{]}}
 
 
 
-Definition at line 35 of file rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+c.
+Definition at line \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_source_l00035}{35}} of file \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_source}{rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+c}}.
 
 \mbox{\Hypertarget{rxn___c_m_a_q___h2_o2_8c_ab831aae98d4453927c63a93f55ee5a86}\label{rxn___c_m_a_q___h2_o2_8c_ab831aae98d4453927c63a93f55ee5a86}} 
 \index{rxn\_CMAQ\_H2O2.c@{rxn\_CMAQ\_H2O2.c}!JAC\_ID\_@{JAC\_ID\_}}
 \index{JAC\_ID\_@{JAC\_ID\_}!rxn\_CMAQ\_H2O2.c@{rxn\_CMAQ\_H2O2.c}}
 \doxysubsubsection{\texorpdfstring{JAC\_ID\_}{JAC\_ID\_}}
-{\footnotesize\ttfamily \#define JAC\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 2 $\ast$ (\mbox{\hyperlink{rxn__troe_8_f90_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + \mbox{\hyperlink{rxn__troe_8_f90_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}}) + x\mbox{]}}
+{\footnotesize\ttfamily \#define JAC\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 2 $\ast$ (\mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + \mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}}) + x\mbox{]}}
 
 
 
-Definition at line 36 of file rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+c.
+Definition at line \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_source_l00036}{36}} of file \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_source}{rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+c}}.
 
 \mbox{\Hypertarget{rxn___c_m_a_q___h2_o2_8c_ac57efe35f8950ae0d3761805e76c9620}\label{rxn___c_m_a_q___h2_o2_8c_ac57efe35f8950ae0d3761805e76c9620}} 
 \index{rxn\_CMAQ\_H2O2.c@{rxn\_CMAQ\_H2O2.c}!k1\_A\_@{k1\_A\_}}
@@ -117,7 +121,7 @@ Definition at line 36 of file rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+c.
 
 
 
-Definition at line 22 of file rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+c.
+Definition at line \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_source_l00022}{22}} of file \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_source}{rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+c}}.
 
 \mbox{\Hypertarget{rxn___c_m_a_q___h2_o2_8c_adb06ea9da37583f7053d2ac6fe82fcde}\label{rxn___c_m_a_q___h2_o2_8c_adb06ea9da37583f7053d2ac6fe82fcde}} 
 \index{rxn\_CMAQ\_H2O2.c@{rxn\_CMAQ\_H2O2.c}!k1\_B\_@{k1\_B\_}}
@@ -127,7 +131,7 @@ Definition at line 22 of file rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+c.
 
 
 
-Definition at line 23 of file rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+c.
+Definition at line \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_source_l00023}{23}} of file \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_source}{rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+c}}.
 
 \mbox{\Hypertarget{rxn___c_m_a_q___h2_o2_8c_aead9745be446565306f490e27dce7ade}\label{rxn___c_m_a_q___h2_o2_8c_aead9745be446565306f490e27dce7ade}} 
 \index{rxn\_CMAQ\_H2O2.c@{rxn\_CMAQ\_H2O2.c}!k1\_C\_@{k1\_C\_}}
@@ -137,7 +141,7 @@ Definition at line 23 of file rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+c.
 
 
 
-Definition at line 24 of file rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+c.
+Definition at line \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_source_l00024}{24}} of file \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_source}{rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+c}}.
 
 \mbox{\Hypertarget{rxn___c_m_a_q___h2_o2_8c_a70c29a18f162c9a83914bba9b1e1206e}\label{rxn___c_m_a_q___h2_o2_8c_a70c29a18f162c9a83914bba9b1e1206e}} 
 \index{rxn\_CMAQ\_H2O2.c@{rxn\_CMAQ\_H2O2.c}!k2\_A\_@{k2\_A\_}}
@@ -147,7 +151,7 @@ Definition at line 24 of file rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+c.
 
 
 
-Definition at line 25 of file rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+c.
+Definition at line \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_source_l00025}{25}} of file \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_source}{rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+c}}.
 
 \mbox{\Hypertarget{rxn___c_m_a_q___h2_o2_8c_a60be7ab754b46342b1fa3b91760c4c2a}\label{rxn___c_m_a_q___h2_o2_8c_a60be7ab754b46342b1fa3b91760c4c2a}} 
 \index{rxn\_CMAQ\_H2O2.c@{rxn\_CMAQ\_H2O2.c}!k2\_B\_@{k2\_B\_}}
@@ -157,7 +161,7 @@ Definition at line 25 of file rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+c.
 
 
 
-Definition at line 26 of file rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+c.
+Definition at line \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_source_l00026}{26}} of file \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_source}{rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+c}}.
 
 \mbox{\Hypertarget{rxn___c_m_a_q___h2_o2_8c_a3c3ebe2b0fdababa4fcb32c28461ae7e}\label{rxn___c_m_a_q___h2_o2_8c_a3c3ebe2b0fdababa4fcb32c28461ae7e}} 
 \index{rxn\_CMAQ\_H2O2.c@{rxn\_CMAQ\_H2O2.c}!k2\_C\_@{k2\_C\_}}
@@ -167,7 +171,7 @@ Definition at line 26 of file rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+c.
 
 
 
-Definition at line 27 of file rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+c.
+Definition at line \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_source_l00027}{27}} of file \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_source}{rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+c}}.
 
 \mbox{\Hypertarget{rxn___c_m_a_q___h2_o2_8c_a1f68a3544ae39a7815cbb5c09dfdeff0}\label{rxn___c_m_a_q___h2_o2_8c_a1f68a3544ae39a7815cbb5c09dfdeff0}} 
 \index{rxn\_CMAQ\_H2O2.c@{rxn\_CMAQ\_H2O2.c}!NUM\_ENV\_PARAM\_@{NUM\_ENV\_PARAM\_}}
@@ -177,7 +181,7 @@ Definition at line 27 of file rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+c.
 
 
 
-Definition at line 32 of file rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+c.
+Definition at line \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_source_l00032}{32}} of file \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_source}{rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+c}}.
 
 \mbox{\Hypertarget{rxn___c_m_a_q___h2_o2_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}\label{rxn___c_m_a_q___h2_o2_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}} 
 \index{rxn\_CMAQ\_H2O2.c@{rxn\_CMAQ\_H2O2.c}!NUM\_FLOAT\_PROP\_@{NUM\_FLOAT\_PROP\_}}
@@ -187,7 +191,7 @@ Definition at line 32 of file rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+c.
 
 
 
-Definition at line 31 of file rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+c.
+Definition at line \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_source_l00031}{31}} of file \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_source}{rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+c}}.
 
 \mbox{\Hypertarget{rxn___c_m_a_q___h2_o2_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}\label{rxn___c_m_a_q___h2_o2_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}} 
 \index{rxn\_CMAQ\_H2O2.c@{rxn\_CMAQ\_H2O2.c}!NUM\_INT\_PROP\_@{NUM\_INT\_PROP\_}}
@@ -197,7 +201,7 @@ Definition at line 31 of file rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+c.
 
 
 
-Definition at line 30 of file rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+c.
+Definition at line \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_source_l00030}{30}} of file \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_source}{rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+c}}.
 
 \mbox{\Hypertarget{rxn___c_m_a_q___h2_o2_8c_acf951e890da75cd2d503ed6ce8211fc2}\label{rxn___c_m_a_q___h2_o2_8c_acf951e890da75cd2d503ed6ce8211fc2}} 
 \index{rxn\_CMAQ\_H2O2.c@{rxn\_CMAQ\_H2O2.c}!NUM\_PROD\_@{NUM\_PROD\_}}
@@ -207,7 +211,7 @@ Definition at line 30 of file rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+c.
 
 
 
-Definition at line 21 of file rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+c.
+Definition at line \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_source_l00021}{21}} of file \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_source}{rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+c}}.
 
 \mbox{\Hypertarget{rxn___c_m_a_q___h2_o2_8c_a05ef845cf6ed7ab9a774440c42af34fa}\label{rxn___c_m_a_q___h2_o2_8c_a05ef845cf6ed7ab9a774440c42af34fa}} 
 \index{rxn\_CMAQ\_H2O2.c@{rxn\_CMAQ\_H2O2.c}!NUM\_REACT\_@{NUM\_REACT\_}}
@@ -217,7 +221,7 @@ Definition at line 21 of file rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+c.
 
 
 
-Definition at line 20 of file rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+c.
+Definition at line \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_source_l00020}{20}} of file \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_source}{rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+c}}.
 
 \mbox{\Hypertarget{rxn___c_m_a_q___h2_o2_8c_a32cc078fd8ca9ad0684c48ae0aad7135}\label{rxn___c_m_a_q___h2_o2_8c_a32cc078fd8ca9ad0684c48ae0aad7135}} 
 \index{rxn\_CMAQ\_H2O2.c@{rxn\_CMAQ\_H2O2.c}!PRESSURE\_PA\_@{PRESSURE\_PA\_}}
@@ -227,17 +231,17 @@ Definition at line 20 of file rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+c.
 
 
 
-Definition at line 18 of file rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+c.
+Definition at line \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_source_l00018}{18}} of file \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_source}{rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+c}}.
 
 \mbox{\Hypertarget{rxn___c_m_a_q___h2_o2_8c_a9fda90058c6a41b1dda6ded03321c4da}\label{rxn___c_m_a_q___h2_o2_8c_a9fda90058c6a41b1dda6ded03321c4da}} 
 \index{rxn\_CMAQ\_H2O2.c@{rxn\_CMAQ\_H2O2.c}!PROD\_@{PROD\_}}
 \index{PROD\_@{PROD\_}!rxn\_CMAQ\_H2O2.c@{rxn\_CMAQ\_H2O2.c}}
 \doxysubsubsection{\texorpdfstring{PROD\_}{PROD\_}}
-{\footnotesize\ttfamily \#define PROD\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{rxn__troe_8_f90_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + x\mbox{]} -\/ 1)}
+{\footnotesize\ttfamily \#define PROD\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + x\mbox{]} -\/ 1)}
 
 
 
-Definition at line 34 of file rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+c.
+Definition at line \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_source_l00034}{34}} of file \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_source}{rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+c}}.
 
 \mbox{\Hypertarget{rxn___c_m_a_q___h2_o2_8c_a6d62af2f44a112ef5b324cf406a830c2}\label{rxn___c_m_a_q___h2_o2_8c_a6d62af2f44a112ef5b324cf406a830c2}} 
 \index{rxn\_CMAQ\_H2O2.c@{rxn\_CMAQ\_H2O2.c}!RATE\_CONSTANT\_@{RATE\_CONSTANT\_}}
@@ -247,7 +251,7 @@ Definition at line 34 of file rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+c.
 
 
 
-Definition at line 29 of file rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+c.
+Definition at line \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_source_l00029}{29}} of file \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_source}{rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+c}}.
 
 \mbox{\Hypertarget{rxn___c_m_a_q___h2_o2_8c_ae761e39657aac155d83eae9b338be571}\label{rxn___c_m_a_q___h2_o2_8c_ae761e39657aac155d83eae9b338be571}} 
 \index{rxn\_CMAQ\_H2O2.c@{rxn\_CMAQ\_H2O2.c}!REACT\_@{REACT\_}}
@@ -257,7 +261,7 @@ Definition at line 29 of file rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+c.
 
 
 
-Definition at line 33 of file rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+c.
+Definition at line \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_source_l00033}{33}} of file \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_source}{rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+c}}.
 
 \mbox{\Hypertarget{rxn___c_m_a_q___h2_o2_8c_aa90d2b6c48aceb4d7ac3d93d5249bb60}\label{rxn___c_m_a_q___h2_o2_8c_aa90d2b6c48aceb4d7ac3d93d5249bb60}} 
 \index{rxn\_CMAQ\_H2O2.c@{rxn\_CMAQ\_H2O2.c}!TEMPERATURE\_K\_@{TEMPERATURE\_K\_}}
@@ -267,7 +271,7 @@ Definition at line 33 of file rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+c.
 
 
 
-Definition at line 17 of file rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+c.
+Definition at line \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_source_l00017}{17}} of file \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_source}{rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+c}}.
 
 \mbox{\Hypertarget{rxn___c_m_a_q___h2_o2_8c_a9ae244708fd9c438bf840ed319733651}\label{rxn___c_m_a_q___h2_o2_8c_a9ae244708fd9c438bf840ed319733651}} 
 \index{rxn\_CMAQ\_H2O2.c@{rxn\_CMAQ\_H2O2.c}!YIELD\_@{YIELD\_}}
@@ -277,7 +281,7 @@ Definition at line 17 of file rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+c.
 
 
 
-Definition at line 37 of file rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+c.
+Definition at line \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_source_l00037}{37}} of file \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_source}{rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+c}}.
 
 
 
@@ -309,7 +313,7 @@ Calculate contributions to the time derivative $f(t,y)$ from this reaction.
 \end{DoxyParams}
 
 
-Definition at line 139 of file rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+c.
+Definition at line \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_source_l00139}{139}} of file \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_source}{rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+c}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -317,14 +321,6 @@ Here is the call graph for this function\+:
 \begin{center}
 \leavevmode
 \includegraphics[width=338pt]{rxn___c_m_a_q___h2_o2_8c_abd5c2b96cafc63baffd8934dd8b8f14f_cgraph}
-\end{center}
-\end{figure}
-Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{rxn___c_m_a_q___h2_o2_8c_abd5c2b96cafc63baffd8934dd8b8f14f_icgraph}
 \end{center}
 \end{figure}
 \mbox{\Hypertarget{rxn___c_m_a_q___h2_o2_8c_acad0ab1be9adfd4d8ac11a772245434a}\label{rxn___c_m_a_q___h2_o2_8c_acad0ab1be9adfd4d8ac11a772245434a}} 
@@ -354,7 +350,7 @@ Calculate contributions to the \mbox{\hyperlink{struct_jacobian}{Jacobian}} from
 \end{DoxyParams}
 
 
-Definition at line 185 of file rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+c.
+Definition at line \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_source_l00185}{185}} of file \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_source}{rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+c}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -362,14 +358,6 @@ Here is the call graph for this function\+:
 \begin{center}
 \leavevmode
 \includegraphics[width=336pt]{rxn___c_m_a_q___h2_o2_8c_acad0ab1be9adfd4d8ac11a772245434a_cgraph}
-\end{center}
-\end{figure}
-Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{rxn___c_m_a_q___h2_o2_8c_acad0ab1be9adfd4d8ac11a772245434a_icgraph}
 \end{center}
 \end{figure}
 \mbox{\Hypertarget{rxn___c_m_a_q___h2_o2_8c_aaf19aa3c701ef961a31fa085f3a95b68}\label{rxn___c_m_a_q___h2_o2_8c_aaf19aa3c701ef961a31fa085f3a95b68}} 
@@ -393,7 +381,7 @@ Flag \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used by this reaction
 \end{DoxyParams}
 
 
-Definition at line 45 of file rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+c.
+Definition at line \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_source_l00045}{45}} of file \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_source}{rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+c}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -430,7 +418,7 @@ Print the CMAQ\+\_\+\+H2\+O2 reaction parameters.
 \end{DoxyParams}
 
 
-Definition at line 227 of file rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+c.
+Definition at line \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_source_l00227}{227}} of file \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_source}{rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+c}}.
 
 Here is the caller graph for this function\+:
 \nopagebreak
@@ -465,7 +453,7 @@ For CMAQ\+\_\+\+H2\+O2 reaction this only involves recalculating the rate consta
 \end{DoxyParams}
 
 
-Definition at line 106 of file rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+c.
+Definition at line \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_source_l00106}{106}} of file \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_source}{rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+c}}.
 
 Here is the caller graph for this function\+:
 \nopagebreak
@@ -500,7 +488,7 @@ Update the time derivative and Jacbobian array indices.
 \end{DoxyParams}
 
 
-Definition at line 70 of file rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+c.
+Definition at line \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_source_l00070}{70}} of file \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_source}{rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+c}}.
 
 Here is the call graph for this function\+:
 \nopagebreak

@@ -1,0 +1,6 @@
+<map id="camp_mechanism_data::initialize" name="camp_mechanism_data::initialize">
+<area shape="rect" id="node1" title="Initialize the mechanism." alt="" coords="5,5,165,47"/>
+<area shape="rect" id="node2" href="$namespacecamp__util.html#a32cf43c1b618a3ecf93810383e960ef2" title="Errors unless condition_ok is true." alt="" coords="213,13,333,39"/>
+<area shape="rect" id="node3" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="381,13,533,39"/>
+<area shape="rect" id="node4" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="581,5,704,47"/>
+</map>

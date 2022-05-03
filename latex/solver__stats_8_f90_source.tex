@@ -1,0 +1,157 @@
+\hypertarget{solver__stats_8_f90_source}{}\doxysection{solver\+\_\+stats.\+F90}
+\label{solver__stats_8_f90_source}\index{solver\_stats.F90@{solver\_stats.F90}}
+\mbox{\hyperlink{solver__stats_8_f90}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00001}00001 \textcolor{comment}{! Copyright (C) 2021 Barcelona Supercomputing Center and University of}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00002}00002 \textcolor{comment}{! Illinois at Urbana-\/Champaign}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00003}00003 \textcolor{comment}{! SPDX-\/License-\/Identifier: MIT}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00004}00004 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00005}00005 \textcolor{comment}{!> \(\backslash\)file}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00006}00006 \textcolor{comment}{!> The camp\_solver\_stats module}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00007}00007 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00008}00008 \textcolor{comment}{!> The solver\_stats\_t type and associated subroutines}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00009}\mbox{\hyperlink{namespacecamp__solver__stats}{00009}} \textcolor{keyword}{module} \mbox{\hyperlink{namespacecamp__solver__stats}{camp\_solver\_stats}}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00010}00010 }
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00011}00011   \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacecamp__constants}{camp\_constants}},                  \textcolor{keywordtype}{only} : \mbox{\hyperlink{namespacecamp__constants_aec214d61ec1cbcbe6ad8bea430b9b957}{i\_kind}}, \mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00012}00012 }
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00013}00013   \textcolor{keywordtype}{implicit none}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00014}00014   \textcolor{keywordtype}{private}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00015}00015 }
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00016}00016   \textcolor{keywordtype}{public} :: \mbox{\hyperlink{structcamp__solver__stats_1_1solver__stats__t}{solver\_stats\_t}}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00017}00017 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00018}00018 \textcolor{comment}{  !> Solver statistics}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00019}00019 \textcolor{comment}{  !!}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00020}00020 \textcolor{comment}{  !! Holds information related to a solver run}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00021}\mbox{\hyperlink{structcamp__solver__stats_1_1solver__stats__t}{00021}}   \textcolor{keyword}{type} :: \mbox{\hyperlink{structcamp__solver__stats_1_1solver__stats__t}{solver\_stats\_t}}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00022}00022 \textcolor{comment}{    !> Status code}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00023}\mbox{\hyperlink{structcamp__solver__stats_1_1solver__stats__t_ad64d980b0066054497a5e1719bbeb4c8}{00023}}     \textcolor{keywordtype}{integer(kind=i\_kind)} :: status\_code\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00024}00024 \textcolor{comment}{    !> Integration start time [s]}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00025}\mbox{\hyperlink{structcamp__solver__stats_1_1solver__stats__t_abfcc9f2476f0ebde555d93b8074a7234}{00025}} \textcolor{keywordtype}{    real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) :: start\_time\_\_s\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00026}00026 \textcolor{comment}{    !> Integration end time [s]}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00027}\mbox{\hyperlink{structcamp__solver__stats_1_1solver__stats__t_a13228638e7fe72f24ccfea03608d53fc}{00027}} \textcolor{keywordtype}{    real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) :: end\_time\_\_s\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00028}00028 \textcolor{comment}{    !> Last flag returned by the solver}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00029}\mbox{\hyperlink{structcamp__solver__stats_1_1solver__stats__t_ae6048320ae5565d582f1e652b7cc339a}{00029}}     \textcolor{keywordtype}{integer(kind=i\_kind)} :: solver\_flag\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00030}00030 \textcolor{comment}{    !> Number of steps}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00031}\mbox{\hyperlink{structcamp__solver__stats_1_1solver__stats__t_a7665cc5eb98fa6088b20931a4df47418}{00031}}     \textcolor{keywordtype}{integer(kind=i\_kind)} :: num\_steps\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00032}00032 \textcolor{comment}{    !> Right-\/hand side evaluations}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00033}\mbox{\hyperlink{structcamp__solver__stats_1_1solver__stats__t_aca3fe5894af98bba81969c4121ae763c}{00033}}     \textcolor{keywordtype}{integer(kind=i\_kind)} :: rhs\_evals\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00034}00034 \textcolor{comment}{    !> Linear solver setups}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00035}\mbox{\hyperlink{structcamp__solver__stats_1_1solver__stats__t_a6ee360b300fc190059e7b547f529a4f9}{00035}}     \textcolor{keywordtype}{integer(kind=i\_kind)} :: ls\_setups\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00036}00036 \textcolor{comment}{    !> Error test failures}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00037}\mbox{\hyperlink{structcamp__solver__stats_1_1solver__stats__t_a2be2767fb91d173072737847d21d79f0}{00037}}     \textcolor{keywordtype}{integer(kind=i\_kind)} :: error\_test\_fails\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00038}00038 \textcolor{comment}{    !> Non-\/Linear solver iterations}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00039}\mbox{\hyperlink{structcamp__solver__stats_1_1solver__stats__t_a8ef52c5d88c3b61e806f9fbd6faaa4bc}{00039}}     \textcolor{keywordtype}{integer(kind=i\_kind)} :: nls\_iters\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00040}00040 \textcolor{comment}{    !> Non-\/Linear solver convergence failures}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00041}\mbox{\hyperlink{structcamp__solver__stats_1_1solver__stats__t_a1c5e55ed67bd6e234629bb9e34b908fd}{00041}}     \textcolor{keywordtype}{integer(kind=i\_kind)} :: nls\_convergence\_fails\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00042}00042 \textcolor{comment}{    !> Direct Linear Solver Jacobian evaluations}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00043}\mbox{\hyperlink{structcamp__solver__stats_1_1solver__stats__t_a6abf85497bbd233fb98cde95d9592341}{00043}}     \textcolor{keywordtype}{integer(kind=i\_kind)} :: dls\_jac\_evals\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00044}00044 \textcolor{comment}{    !> Direct Linear Solver right-\/hand size evaluations}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00045}\mbox{\hyperlink{structcamp__solver__stats_1_1solver__stats__t_ade8dcc1530f70378b6e51a6a5193d53c}{00045}}     \textcolor{keywordtype}{integer(kind=i\_kind)} :: dls\_rhs\_evals\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00046}00046 \textcolor{comment}{    !> Last time step [s]}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00047}\mbox{\hyperlink{structcamp__solver__stats_1_1solver__stats__t_ae2b4d4cc2c6b4efef4a1613f1fc264ac}{00047}} \textcolor{keywordtype}{    real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) :: last\_time\_step\_\_s\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00048}00048 \textcolor{comment}{    !> Next time step [s]}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00049}\mbox{\hyperlink{structcamp__solver__stats_1_1solver__stats__t_aa6c6f90f2e081910b00b9e176f228968}{00049}} \textcolor{keywordtype}{    real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) :: next\_time\_step\_\_s\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00050}00050 \textcolor{comment}{    !> Jacobian evaluation failures}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00051}\mbox{\hyperlink{structcamp__solver__stats_1_1solver__stats__t_a8c8220cd389300eb739f27056180b77c}{00051}}     \textcolor{keywordtype}{integer(kind=i\_kind)} :: jac\_eval\_fails\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00052}00052 \textcolor{comment}{    !> Total calls to `f()`}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00053}\mbox{\hyperlink{structcamp__solver__stats_1_1solver__stats__t_aa7b39ff5a5aab23a9ff1c61aa94ffe2c}{00053}}     \textcolor{keywordtype}{integer(kind=i\_kind)} :: rhs\_evals\_total\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00054}00054 \textcolor{comment}{    !> Total calls to `Jac()`}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00055}\mbox{\hyperlink{structcamp__solver__stats_1_1solver__stats__t_a58865c2ba90821fc8e036d846743aaf7}{00055}}     \textcolor{keywordtype}{integer(kind=i\_kind)} :: jac\_evals\_total\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00056}00056 \textcolor{comment}{    !> Compute time for calls to `f()` [s]}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00057}\mbox{\hyperlink{structcamp__solver__stats_1_1solver__stats__t_ad04e4e6b041032fce6e049554a1bbfee}{00057}} \textcolor{keywordtype}{    real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) :: rhs\_time\_\_s\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00058}00058 \textcolor{comment}{    !> Compute time for calls to `Jac()` [s]}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00059}\mbox{\hyperlink{structcamp__solver__stats_1_1solver__stats__t_a0952c383f87d3fbf8229c8c89c159e48}{00059}} \textcolor{keywordtype}{    real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) :: jac\_time\_\_s\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00060}00060 \textcolor{comment}{    !> Maximum loss of precision on last deriv call}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00061}\mbox{\hyperlink{structcamp__solver__stats_1_1solver__stats__t_a3d4a96d76c9c72cb52e2fd081b3295c2}{00061}} \textcolor{keywordtype}{    real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) :: max\_loss\_precision}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00062}00062 \textcolor{preprocessor}{\#ifdef CAMP\_DEBUG}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00063}00063 \textcolor{preprocessor}{}\textcolor{comment}{    !> Flag to output debugging info during solving}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00064}00064 \textcolor{comment}{    !! THIS PRINTS A LOT OF TEXT TO THE STANDARD OUTPUT}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00065}00065     \textcolor{keywordtype}{logical} :: debug\_out = .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c}{false}}.\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00066}00066 \textcolor{comment}{    !> Evalute the Jacobian during solving}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00067}00067     \textcolor{keywordtype}{logical} :: eval\_jac = .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c}{false}}.}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00068}00068 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00069}00069 \textcolor{preprocessor}{}  \textcolor{keyword}{contains}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00070}00070 \textcolor{comment}{    !> Print the solver statistics}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00071}\mbox{\hyperlink{structcamp__solver__stats_1_1solver__stats__t_a1216303773ff0881acc429792fb7bca1}{00071}}     \textcolor{keywordtype}{procedure} :: print => \mbox{\hyperlink{namespacecamp__solver__stats_a3cdc043242090d784cac1e90352137a6}{do\_print}}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00072}00072 \textcolor{comment}{    !> Assignment}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00073}\mbox{\hyperlink{structcamp__solver__stats_1_1solver__stats__t_a4a6d598cdf521d9aca03e8b9bdf5b8cf}{00073}}     \textcolor{keywordtype}{procedure} :: \mbox{\hyperlink{namespacecamp__solver__stats_ab8914e3d99ac5b3030da01c9ad47133a}{assignvalue}}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00074}\mbox{\hyperlink{structcamp__solver__stats_1_1solver__stats__t_a422eab9bfd2098bd6259b58e96d972e0}{00074}}     generic :: \textcolor{keyword}{assignment}(=) => \mbox{\hyperlink{namespacecamp__solver__stats_ab8914e3d99ac5b3030da01c9ad47133a}{assignvalue}}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00075}00075   \textcolor{keyword}{end type }\mbox{\hyperlink{structcamp__solver__stats_1_1solver__stats__t}{solver\_stats\_t}}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00076}00076 }
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00077}00077 \textcolor{keyword}{contains}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00078}00078 }
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00079}00079 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00080}00080 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00081}00081 \textcolor{comment}{  !> Print the solver statistics}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00082}\mbox{\hyperlink{namespacecamp__solver__stats_a3cdc043242090d784cac1e90352137a6}{00082}}   \textcolor{keyword}{subroutine }\mbox{\hyperlink{namespacecamp__solver__stats_a3cdc043242090d784cac1e90352137a6}{do\_print}}( this, file\_unit )}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00083}00083 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00084}00084 \textcolor{comment}{    !> Solver statistics}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00085}00085     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__solver__stats_1_1solver__stats__t}{solver\_stats\_t}}), \textcolor{keywordtype}{intent(in)} :: this\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00086}00086 \textcolor{comment}{    !> File unit to output to}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00087}00087     \textcolor{keywordtype}{integer(kind=i\_kind)}, \textcolor{keywordtype}{optional} :: file\_unit}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00088}00088 }
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00089}00089     \textcolor{keywordtype}{integer(kind=i\_kind)} :: f\_unit}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00090}00090 }
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00091}00091     f\_unit = 6}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00092}00092 }
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00093}00093     \textcolor{keywordflow}{if}( \textcolor{keyword}{present}( file\_unit ) ) f\_unit = file\_unit}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00094}00094 }
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00095}00095     \textcolor{keyword}{write}(f\_unit,*) \textcolor{stringliteral}{"{}Status code:                 "{}}, this\%status\_code}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00096}00096     \textcolor{keyword}{write}(f\_unit,*) \textcolor{stringliteral}{"{}Integration start time [s]:  "{}}, this\%start\_time\_\_s}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00097}00097     \textcolor{keyword}{write}(f\_unit,*) \textcolor{stringliteral}{"{}Integration end time [s]:    "{}}, this\%end\_time\_\_s}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00098}00098     \textcolor{keyword}{write}(f\_unit,*) \textcolor{stringliteral}{"{}Last solver flag:            "{}}, this\%solver\_flag}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00099}00099     \textcolor{keyword}{write}(f\_unit,*) \textcolor{stringliteral}{"{}Number of steps:             "{}}, this\%num\_steps}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00100}00100     \textcolor{keyword}{write}(f\_unit,*) \textcolor{stringliteral}{"{}Right-\/hand side evals:       "{}}, this\%RHS\_evals}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00101}00101     \textcolor{keyword}{write}(f\_unit,*) \textcolor{stringliteral}{"{}Linear solver setups:        "{}}, this\%LS\_setups}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00102}00102     \textcolor{keyword}{write}(f\_unit,*) \textcolor{stringliteral}{"{}Error test failures:         "{}}, this\%error\_test\_fails}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00103}00103     \textcolor{keyword}{write}(f\_unit,*) \textcolor{stringliteral}{"{}Non-\/Linear solver iterations:"{}}, this\%NLS\_iters}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00104}00104     \textcolor{keyword}{write}(f\_unit,*) \textcolor{stringliteral}{"{}Non-\/Linear convergence fails:"{}}, this\%NLS\_convergence\_fails}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00105}00105     \textcolor{keyword}{write}(f\_unit,*) \textcolor{stringliteral}{"{}DLS Jacobian evals:          "{}}, this\%DLS\_Jac\_evals}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00106}00106     \textcolor{keyword}{write}(f\_unit,*) \textcolor{stringliteral}{"{}DLS Right-\/hand side evals:   "{}}, this\%DLS\_RHS\_evals}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00107}00107     \textcolor{keyword}{write}(f\_unit,*) \textcolor{stringliteral}{"{}Last time step [s]:          "{}}, this\%last\_time\_step\_\_s}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00108}00108     \textcolor{keyword}{write}(f\_unit,*) \textcolor{stringliteral}{"{}Next time step [s]:          "{}}, this\%next\_time\_step\_\_s}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00109}00109     \textcolor{keyword}{write}(f\_unit,*) \textcolor{stringliteral}{"{}Maximum loss of precision    "{}}, this\%max\_loss\_precision}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00110}00110 \textcolor{preprocessor}{\#ifdef CAMP\_DEBUG}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00111}00111 \textcolor{preprocessor}{}    \textcolor{keyword}{write}(f\_unit,*) \textcolor{stringliteral}{"{}Output debugging info:       "{}}, this\%debug\_out}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00112}00112     \textcolor{keyword}{write}(f\_unit,*) \textcolor{stringliteral}{"{}Evaluate Jacobian:           "{}}, this\%eval\_Jac}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00113}00113     \textcolor{keywordflow}{if} (this\%eval\_Jac) \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00114}00114       \textcolor{keyword}{write}(f\_unit,*) \textcolor{stringliteral}{"{}Jacobian evaluation failures:"{}}, this\%Jac\_eval\_fails}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00115}00115 \textcolor{keywordflow}{    end if}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00116}00116 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00117}00117 \textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00118}00118   \textcolor{keyword}{end subroutine }\mbox{\hyperlink{namespacecamp__solver__stats_a3cdc043242090d784cac1e90352137a6}{do\_print}}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00119}00119 }
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00120}00120 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00121}00121 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00122}00122 \textcolor{comment}{  !> Assign a value to all members of solver stats}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00123}\mbox{\hyperlink{namespacecamp__solver__stats_ab8914e3d99ac5b3030da01c9ad47133a}{00123}}   \textcolor{keyword}{subroutine }\mbox{\hyperlink{namespacecamp__solver__stats_ab8914e3d99ac5b3030da01c9ad47133a}{assignvalue}}( this, new\_value )}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00124}00124 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00125}00125 \textcolor{comment}{    !> Solver statistics}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00126}00126     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__solver__stats_1_1solver__stats__t}{solver\_stats\_t}}), \textcolor{keywordtype}{intent(inout)} :: this\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00127}00127 \textcolor{comment}{    !> Value to assign}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00128}00128     \textcolor{keywordtype}{integer(kind=i\_kind)}, \textcolor{keywordtype}{intent(in)} :: new\_value}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00129}00129 }
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00130}00130     this\%status\_code           = new\_value}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00131}00131     this\%start\_time\_\_s         = real( new\_value, kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}} )}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00132}00132     this\%end\_time\_\_s           = real( new\_value, kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}} )}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00133}00133     this\%solver\_flag           = new\_value}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00134}00134     this\%num\_steps             = new\_value}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00135}00135     this\%RHS\_evals             = new\_value}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00136}00136     this\%LS\_setups             = new\_value}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00137}00137     this\%error\_test\_fails      = new\_value}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00138}00138     this\%NLS\_iters             = new\_value}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00139}00139     this\%NLS\_convergence\_fails = new\_value}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00140}00140     this\%DLS\_Jac\_evals         = new\_value}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00141}00141     this\%DLS\_RHS\_evals         = new\_value}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00142}00142     this\%last\_time\_step\_\_s     = real( new\_value, kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}} )}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00143}00143     this\%next\_time\_step\_\_s     = real( new\_value, kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}} )}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00144}00144     this\%Jac\_eval\_fails        = new\_value}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00145}00145     this\%max\_loss\_precision    = new\_value}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00146}00146 }
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00147}00147   \textcolor{keyword}{end subroutine }\mbox{\hyperlink{namespacecamp__solver__stats_ab8914e3d99ac5b3030da01c9ad47133a}{assignvalue}}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00148}00148 }
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00149}00149 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00150}00150 }
+\DoxyCodeLine{\Hypertarget{solver__stats_8_f90_source_l00151}00151 \textcolor{keyword}{end module }\mbox{\hyperlink{namespacecamp__solver__stats}{camp\_solver\_stats}}}
+
+\end{DoxyCode}

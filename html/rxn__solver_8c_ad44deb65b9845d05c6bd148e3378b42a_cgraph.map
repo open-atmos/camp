@@ -1,38 +1,41 @@
 <map id="rxn_calc_jac" name="rxn_calc_jac">
-<area shape="rect" id="node1" title="Calculate the Jacobian." alt="" coords="5,386,100,413"/>
-<area shape="rect" id="node2" href="$rxn__aqueous__equilibrium_8c.html#a223e07042b82fc3b1391e1354acfdc5d" title="Calculate contributions to the Jacobian from this reaction." alt="" coords="161,5,325,47"/>
-<area shape="rect" id="node4" href="$rxn__arrhenius_8c.html#a94a77852fae3b39722aa865747915a95" title="Calculate contributions to the Jacobian from this reaction." alt="" coords="178,71,309,112"/>
-<area shape="rect" id="node5" href="$rxn___c_m_a_q___h2_o2_8c.html#acad0ab1be9adfd4d8ac11a772245434a" title="Calculate contributions to the Jacobian from this reaction." alt="" coords="165,136,322,177"/>
-<area shape="rect" id="node6" href="$rxn___c_m_a_q___o_h___h_n_o3_8c.html#a64502ded9861c3e462d29af918d08c04" title="Calculate contributions to the Jacobian from this reaction." alt="" coords="150,201,337,243"/>
-<area shape="rect" id="node7" href="$rxn__condensed__phase__arrhenius_8c.html#a670e87785981a83efecb80fa1c56ff0e" title="Calculate contributions to the Jacobian from this reaction." alt="" coords="168,266,319,322"/>
-<area shape="rect" id="node8" href="$rxn__emission_8c.html#ab50d43d95dad6b99d9d3fa5c8c887884" title="Calculate contributions to the Jacobian from this reaction." alt="" coords="167,724,320,765"/>
-<area shape="rect" id="node9" href="$rxn__first__order__loss_8c.html#a07413cad7e1d96989ea035941a53e915" title="Calculate contributions to the Jacobian from this reaction." alt="" coords="176,345,311,387"/>
-<area shape="rect" id="node10" href="$rxn___h_l__phase__transfer_8c.html#a4e04c50da5215b9886991e6f0c98cccc" title="Calculate contributions to the Jacobian from this reaction." alt="" coords="165,593,322,635"/>
-<area shape="rect" id="node26" href="$rxn__photolysis_8c.html#a12201d188bd114013b835e74912fdf53" title="Calculate contributions to the Jacobian from this reaction." alt="" coords="176,411,311,452"/>
-<area shape="rect" id="node27" href="$rxn___s_i_m_p_o_l__phase__transfer_8c.html#a2c6b4163ab0a9e65eec7dd8286d67885" title="Calculate contributions to the Jacobian from this reaction." alt="" coords="148,659,339,700"/>
-<area shape="rect" id="node35" href="$rxn__troe_8c.html#a4f34c34a0b24bbbb11a127246e3fd35e" title="Calculate contributions to the Jacobian from this reaction." alt="" coords="159,477,328,503"/>
-<area shape="rect" id="node36" href="$rxn__wet__deposition_8c.html#ad84c0373895c3b2bfad55408c9066f16" title="Calculate contributions to the Jacobian from this reaction." alt="" coords="177,528,310,569"/>
-<area shape="rect" id="node3" href="$_jacobian_8c.html#a844d8b2784c48a794ada38d053b1d1b3" title="Add a contribution to the Jacobian." alt="" coords="416,346,552,373"/>
-<area shape="rect" id="node11" href="$aero__rep__solver_8c.html#a00aee7bec2d9284a74c0eb26d346dc81" title="Check whether aerosol concentrations are per&#45;particle or total for each phase." alt="" coords="387,761,581,787"/>
-<area shape="rect" id="node14" href="$aero__rep__solver_8c.html#aab8fc9de2c9bfe5d012e80322a5b653b" title="Get the effective particle radius, &#160;(m)" alt="" coords="407,593,561,635"/>
-<area shape="rect" id="node18" href="$aero__rep__solver_8c.html#aa56870eb4fe20532461b1634d7688210" title="Get the particle number concentration &#160;( )" alt="" coords="411,659,557,700"/>
-<area shape="rect" id="node21" href="$util_8h.html#ad31f0cb5f01c257931b6e82d91b6fb23" title=" " alt="" coords="405,463,563,504"/>
-<area shape="rect" id="node25" href="$util_8h.html#ada92558814324f22e19743fbf25ceb0f" title=" " alt="" coords="411,397,557,439"/>
-<area shape="rect" id="node12" href="$aero__rep__modal__binned__mass_8c.html#a5806fae1fe7d70369bfb7a0d9c54d12f" title="Get the type of aerosol concentration used." alt="" coords="646,789,830,831"/>
-<area shape="rect" id="node13" href="$aero__rep__single__particle_8c.html#a59114de73dd305d5825a8547155b8946" title="Get the type of aerosol concentration used." alt="" coords="657,855,819,896"/>
-<area shape="rect" id="node15" href="$aero__rep__modal__binned__mass_8c.html#a8d5bf734337581d90c2280ab858ccf96" title="Get the effective particle radius &#160;(m)" alt="" coords="633,528,843,569"/>
-<area shape="rect" id="node16" href="$aero__rep__single__particle_8c.html#a48b11d345d89071d34e67b5063b1b891" title="Get the effective particle radius &#160;(m)" alt="" coords="653,593,823,635"/>
-<area shape="rect" id="node17" href="$aero__phase__solver_8c.html#a6e493e863924f29d6bd06598fa657f08" title="Get the volume of an aerosol phase." alt="" coords="895,659,1057,700"/>
-<area shape="rect" id="node19" href="$aero__rep__modal__binned__mass_8c.html#a2e585253c19aa48dec8c55b963999e9d" title="Get the particle number concentration &#160;( )" alt="" coords="629,724,847,765"/>
-<area shape="rect" id="node20" href="$aero__rep__single__particle_8c.html#afa7d35b774d0ab4d7cad7fb30d75e897" title="Get the particle number concentration &#160;( )" alt="" coords="649,659,827,700"/>
-<area shape="rect" id="node22" href="$util_8h.html#af0918da54a73bf30e7079908caea2efd" title=" " alt="" coords="668,449,808,505"/>
-<area shape="rect" id="node23" href="$util_8h.html#ae1c969544a10c17746622cf73186835c" title=" " alt="" coords="906,369,1046,395"/>
-<area shape="rect" id="node24" href="$util_8h.html#a0ade6cf865e738fbd0629ca08500679d" title=" " alt="" coords="645,332,831,373"/>
-<area shape="rect" id="node28" href="$aero__rep__solver_8c.html#a513044e29b338d17d02b5bc472a8046f" title="Get the average molecular weight of an aerosol phase in this representation &#160;( )" alt="" coords="399,1071,569,1112"/>
-<area shape="rect" id="node32" href="$aero__rep__solver_8c.html#a0d5fc5c14f5fc182d80811b27c644e86" title="Get the total mass of an aerosol phase in this representation &#160;( )" alt="" coords="399,927,569,968"/>
-<area shape="rect" id="node29" href="$aero__rep__modal__binned__mass_8c.html#a2c1fd8badaa6ebffd2b45ab5314c1279" title="Get the average molecular weight in an aerosol phase &#160;( )" alt="" coords="658,1063,818,1119"/>
-<area shape="rect" id="node31" href="$aero__rep__single__particle_8c.html#a203b6931fd5a504b7cc1750eb582b60c" title="Get the average molecular weight in an aerosol phase &#160;( )" alt="" coords="649,1143,827,1199"/>
-<area shape="rect" id="node30" href="$aero__phase__solver_8c.html#a965e0b9fc79db694be201edd05377dd1" title="Get the mass and average MW in an aerosol phase." alt="" coords="899,1035,1053,1076"/>
-<area shape="rect" id="node33" href="$aero__rep__modal__binned__mass_8c.html#aa84e95ce69656ab640edfdb32cc71d4c" title="Get the total mass in an aerosol phase &#160;( )" alt="" coords="658,919,818,975"/>
-<area shape="rect" id="node34" href="$aero__rep__single__particle_8c.html#ad49c89b34b57e5b644d6506ead9dea34" title="Get the total mass in an aerosol phase &#160;( )" alt="" coords="631,999,845,1040"/>
+<area shape="rect" id="node1" title="Calculate the Jacobian." alt="" coords="5,483,100,510"/>
+<area shape="rect" id="node2" href="$rxns_8h.html#a3a1c1ef70d2f51a82338eab340b90d15" title=" " alt="" coords="161,5,325,47"/>
+<area shape="rect" id="node3" href="$rxns_8h.html#a6625604c5e4db9e3ee2840ec5c7ac958" title=" " alt="" coords="178,71,309,112"/>
+<area shape="rect" id="node4" href="$rxns_8h.html#a3bb761f27db80079d009bfc5a6360549" title=" " alt="" coords="165,136,322,177"/>
+<area shape="rect" id="node5" href="$rxns_8h.html#ac8fab368dc4dda8e35c017a3647baa80" title=" " alt="" coords="150,201,337,243"/>
+<area shape="rect" id="node6" href="$rxns_8h.html#a213c32e23ab79e40722d07eb9d3a43d0" title=" " alt="" coords="168,266,319,322"/>
+<area shape="rect" id="node7" href="$rxn__emission_8c.html#ab50d43d95dad6b99d9d3fa5c8c887884" title="Calculate contributions to the Jacobian from this reaction." alt="" coords="167,345,320,387"/>
+<area shape="rect" id="node8" href="$rxn__first__order__loss_8c.html#a07413cad7e1d96989ea035941a53e915" title="Calculate contributions to the Jacobian from this reaction." alt="" coords="176,411,311,452"/>
+<area shape="rect" id="node10" href="$rxn___h_l__phase__transfer_8c.html#a4e04c50da5215b9886991e6f0c98cccc" title="Calculate contributions to the Jacobian from this reaction." alt="" coords="165,737,322,779"/>
+<area shape="rect" id="node26" href="$rxn__photolysis_8c.html#a12201d188bd114013b835e74912fdf53" title="Calculate contributions to the Jacobian from this reaction." alt="" coords="176,476,311,517"/>
+<area shape="rect" id="node27" href="$rxn___s_i_m_p_o_l__phase__transfer_8c.html#a2c6b4163ab0a9e65eec7dd8286d67885" title="Calculate contributions to the Jacobian from this reaction." alt="" coords="148,803,339,844"/>
+<area shape="rect" id="node35" href="$rxn__ternary__chemical__activation_8c.html#a0e03361890588fa6e5b8d43b5f63d208" title="Calculate contributions to the Jacobian from this reaction." alt="" coords="171,541,315,597"/>
+<area shape="rect" id="node36" href="$rxn__troe_8c.html#a4f34c34a0b24bbbb11a127246e3fd35e" title="Calculate contributions to the Jacobian from this reaction." alt="" coords="159,621,328,647"/>
+<area shape="rect" id="node37" href="$rxns_8h.html#ae08ec58e30aea84e496cc2d253b34802" title=" " alt="" coords="169,868,317,909"/>
+<area shape="rect" id="node38" href="$rxns_8h.html#ac1f9c72aea45cd152bdcc765fd486868" title=" " alt="" coords="163,933,324,975"/>
+<area shape="rect" id="node39" href="$rxn__wet__deposition_8c.html#ad84c0373895c3b2bfad55408c9066f16" title="Calculate contributions to the Jacobian from this reaction." alt="" coords="177,672,310,713"/>
+<area shape="rect" id="node9" href="$_jacobian_8c.html#a844d8b2784c48a794ada38d053b1d1b3" title="Add a contribution to the Jacobian." alt="" coords="416,555,552,582"/>
+<area shape="rect" id="node11" href="$aero__rep__solver_8c.html#a00aee7bec2d9284a74c0eb26d346dc81" title="Check whether aerosol concentrations are per&#45;particle or total for each phase." alt="" coords="387,905,581,931"/>
+<area shape="rect" id="node14" href="$aero__rep__solver_8c.html#aab8fc9de2c9bfe5d012e80322a5b653b" title="Get the effective particle radius, &#160;(m)" alt="" coords="407,737,561,779"/>
+<area shape="rect" id="node18" href="$aero__rep__solver_8c.html#aa56870eb4fe20532461b1634d7688210" title="Get the particle number concentration &#160;( )" alt="" coords="411,803,557,844"/>
+<area shape="rect" id="node21" href="$util_8h.html#ad31f0cb5f01c257931b6e82d91b6fb23" title=" " alt="" coords="405,672,563,713"/>
+<area shape="rect" id="node25" href="$util_8h.html#ada92558814324f22e19743fbf25ceb0f" title=" " alt="" coords="411,607,557,648"/>
+<area shape="rect" id="node12" href="$aero__rep__modal__binned__mass_8c.html#a5806fae1fe7d70369bfb7a0d9c54d12f" title="Get the type of aerosol concentration used." alt="" coords="646,933,830,975"/>
+<area shape="rect" id="node13" href="$aero__rep__single__particle_8c.html#a59114de73dd305d5825a8547155b8946" title="Get the type of aerosol concentration used." alt="" coords="657,999,819,1040"/>
+<area shape="rect" id="node15" href="$aero__rep__modal__binned__mass_8c.html#a8d5bf734337581d90c2280ab858ccf96" title="Get the effective particle radius &#160;(m)" alt="" coords="633,672,843,713"/>
+<area shape="rect" id="node16" href="$aero__rep__single__particle_8c.html#a48b11d345d89071d34e67b5063b1b891" title="Get the effective particle radius &#160;(m)" alt="" coords="653,737,823,779"/>
+<area shape="rect" id="node17" href="$aero__phase__solver_8c.html#a6e493e863924f29d6bd06598fa657f08" title="Get the volume of an aerosol phase." alt="" coords="895,803,1057,844"/>
+<area shape="rect" id="node19" href="$aero__rep__modal__binned__mass_8c.html#a2e585253c19aa48dec8c55b963999e9d" title="Get the particle number concentration &#160;( )" alt="" coords="629,868,847,909"/>
+<area shape="rect" id="node20" href="$aero__rep__single__particle_8c.html#afa7d35b774d0ab4d7cad7fb30d75e897" title="Get the particle number concentration &#160;( )" alt="" coords="649,803,827,844"/>
+<area shape="rect" id="node22" href="$util_8h.html#af0918da54a73bf30e7079908caea2efd" title=" " alt="" coords="668,593,808,649"/>
+<area shape="rect" id="node23" href="$util_8h.html#ae1c969544a10c17746622cf73186835c" title=" " alt="" coords="906,513,1046,539"/>
+<area shape="rect" id="node24" href="$util_8h.html#a0ade6cf865e738fbd0629ca08500679d" title=" " alt="" coords="645,476,831,517"/>
+<area shape="rect" id="node28" href="$aero__rep__solver_8c.html#a513044e29b338d17d02b5bc472a8046f" title="Get the average molecular weight of an aerosol phase in this representation &#160;( )" alt="" coords="399,1215,569,1256"/>
+<area shape="rect" id="node32" href="$aero__rep__solver_8c.html#a0d5fc5c14f5fc182d80811b27c644e86" title="Get the total mass of an aerosol phase in this representation &#160;( )" alt="" coords="399,1071,569,1112"/>
+<area shape="rect" id="node29" href="$aero__rep__modal__binned__mass_8c.html#a2c1fd8badaa6ebffd2b45ab5314c1279" title="Get the average molecular weight in an aerosol phase &#160;( )" alt="" coords="658,1207,818,1263"/>
+<area shape="rect" id="node31" href="$aero__rep__single__particle_8c.html#a203b6931fd5a504b7cc1750eb582b60c" title="Get the average molecular weight in an aerosol phase &#160;( )" alt="" coords="649,1287,827,1343"/>
+<area shape="rect" id="node30" href="$aero__phase__solver_8c.html#a965e0b9fc79db694be201edd05377dd1" title="Get the mass and average MW in an aerosol phase." alt="" coords="899,1179,1053,1220"/>
+<area shape="rect" id="node33" href="$aero__rep__modal__binned__mass_8c.html#aa84e95ce69656ab640edfdb32cc71d4c" title="Get the total mass in an aerosol phase &#160;( )" alt="" coords="658,1063,818,1119"/>
+<area shape="rect" id="node34" href="$aero__rep__single__particle_8c.html#ad49c89b34b57e5b644d6506ead9dea34" title="Get the total mass in an aerosol phase &#160;( )" alt="" coords="631,1143,845,1184"/>
 </map>

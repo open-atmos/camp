@@ -1,0 +1,550 @@
+\hypertarget{sub__model__solver_8c_source}{}\doxysection{sub\+\_\+model\+\_\+solver.\+c}
+\label{sub__model__solver_8c_source}\index{sub\_model\_solver.c@{sub\_model\_solver.c}}
+\mbox{\hyperlink{sub__model__solver_8c}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00001}00001 \textcolor{comment}{/* Copyright (C) 2021 Barcelona Supercomputing Center and University of}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00002}00002 \textcolor{comment}{ * Illinois at Urbana-\/Champaign}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00003}00003 \textcolor{comment}{ * SPDX-\/License-\/Identifier: MIT}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00004}00004 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00005}00005 \textcolor{comment}{ * Sub model-\/specific functions for use by the solver}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00006}00006 \textcolor{comment}{ */}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00007}00007 \textcolor{comment}{/** \(\backslash\)file}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00008}00008 \textcolor{comment}{ * \(\backslash\)brief Sub model solver functions}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00009}00009 \textcolor{comment}{ */}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00010}00010 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{sub__model__solver_8h}{sub\_model\_solver.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00011}00011 \textcolor{preprocessor}{\#include <stdio.h>}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00012}00012 \textcolor{preprocessor}{\#include <stdlib.h>}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00013}00013 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{sub__models_8h}{sub\_models.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00014}00014 }
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00015}00015 \textcolor{comment}{// Sub model types (Must match parameters in camp\_sub\_model\_factory)}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00016}\mbox{\hyperlink{sub__model__solver_8c_abe344a8755ba09d26ffa38022aea4530}{00016}} \textcolor{preprocessor}{\#define SUB\_MODEL\_UNIFAC 1}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00017}\mbox{\hyperlink{sub__model__solver_8c_a497cb5cfc3c9293b4627617d18e9836f}{00017}} \textcolor{preprocessor}{\#define SUB\_MODEL\_ZSR\_AEROSOL\_WATER 2}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00018}\mbox{\hyperlink{sub__model__solver_8c_a11353981e82548216308c1746eb4e196}{00018}} \textcolor{preprocessor}{\#define SUB\_MODEL\_PDFITE 3}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00019}00019 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00020}00020 \textcolor{comment}{/** \(\backslash\)brief Get the Jacobian elements used by a particular sub model}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00021}00021 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00022}00022 \textcolor{comment}{ * \(\backslash\)param model\_data A pointer to the model data}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00023}00023 \textcolor{comment}{ * \(\backslash\)param jac Jacobian}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00024}00024 \textcolor{comment}{ */}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00025}\mbox{\hyperlink{sub__model__solver_8c_a4b1d9807c5fc6b0f2129eb420fa191ad}{00025}} \textcolor{keywordtype}{void} \mbox{\hyperlink{sub__model__solver_8c_a4b1d9807c5fc6b0f2129eb420fa191ad}{sub\_model\_get\_used\_jac\_elem}}(\mbox{\hyperlink{struct_model_data}{ModelData}} *model\_data, \mbox{\hyperlink{struct_jacobian}{Jacobian}} *jac) \{}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00026}00026   \textcolor{comment}{// Set up local Jacobian to collect used elements}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00027}00027   \mbox{\hyperlink{struct_jacobian}{Jacobian}} local\_jac;}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00028}00028   \textcolor{keywordflow}{if} (\mbox{\hyperlink{_jacobian_8c_a3ea16d25b8523ab15b3f505fe00e2ed2}{jacobian\_initialize\_empty}}(}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00029}00029           \&local\_jac, (\textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int})model\_data-\/>\mbox{\hyperlink{struct_model_data_a178342b9966d83bcd4fa78b265688440}{n\_per\_cell\_state\_var}}) != 1) \{}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00030}00030     printf(}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00031}00031         \textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)nERROR allocating sub-\/model Jacobian structure for sub-\/model "{}}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00032}00032         \textcolor{stringliteral}{"{}interdepenedence\(\backslash\)n\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00033}00033     exit(EXIT\_FAILURE);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00034}00034   \}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00035}00035 }
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00036}00036   \textcolor{comment}{// Get the number of sub models}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00037}00037   \textcolor{keywordtype}{int} n\_sub\_model = model\_data-\/>\mbox{\hyperlink{struct_model_data_a75a7b9101543eb10e5c646859a92a904}{n\_sub\_model}};}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00038}00038 }
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00039}00039   \textcolor{comment}{// Loop through the sub models and get their Jacobian elements}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00040}00040   \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_sub\_model = 0; i\_sub\_model < n\_sub\_model; i\_sub\_model++) \{}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00041}00041     \textcolor{keywordtype}{int} *sub\_model\_int\_data =}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00042}00042         \&(model\_data-\/>\mbox{\hyperlink{struct_model_data_a05fc229efdc542ddec6f0530b9265545}{sub\_model\_int\_data}}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00043}00043               [model\_data-\/>\mbox{\hyperlink{struct_model_data_a1777c7ed1bf986cca9ba89bb564f5955}{sub\_model\_int\_indices}}[i\_sub\_model]]);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00044}00044     \textcolor{keywordtype}{double} *sub\_model\_float\_data =}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00045}00045         \&(model\_data-\/>\mbox{\hyperlink{struct_model_data_a8e2962b67462cbde79247f671abc5303}{sub\_model\_float\_data}}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00046}00046               [model\_data-\/>\mbox{\hyperlink{struct_model_data_af3cd7a963f4eba06489929eb6e3b930f}{sub\_model\_float\_indices}}[i\_sub\_model]]);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00047}00047 }
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00048}00048     \textcolor{comment}{// Get the sub model type}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00049}00049     \textcolor{keywordtype}{int} sub\_model\_type = *(sub\_model\_int\_data++);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00050}00050 }
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00051}00051     \textcolor{keywordflow}{switch} (sub\_model\_type) \{}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00052}00052       \textcolor{keywordflow}{case} \mbox{\hyperlink{sub__model__solver_8c_a11353981e82548216308c1746eb4e196}{SUB\_MODEL\_PDFITE}}:}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00053}00053         \mbox{\hyperlink{sub__models_8h_a1c3598c177755e3ca9d3bde1ace7c0e0}{sub\_model\_PDFiTE\_get\_used\_jac\_elem}}(sub\_model\_int\_data,}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00054}00054                                            sub\_model\_float\_data, \&local\_jac);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00055}00055         \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00056}00056       \textcolor{keywordflow}{case} \mbox{\hyperlink{sub__model__solver_8c_abe344a8755ba09d26ffa38022aea4530}{SUB\_MODEL\_UNIFAC}}:}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00057}00057         \mbox{\hyperlink{sub__models_8h_a6895ac51f6122ce830f30d8b1f09d052}{sub\_model\_UNIFAC\_get\_used\_jac\_elem}}(sub\_model\_int\_data,}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00058}00058                                            sub\_model\_float\_data, \&local\_jac);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00059}00059         \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00060}00060       \textcolor{keywordflow}{case} \mbox{\hyperlink{sub__model__solver_8c_a497cb5cfc3c9293b4627617d18e9836f}{SUB\_MODEL\_ZSR\_AEROSOL\_WATER}}:}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00061}00061         \mbox{\hyperlink{sub__models_8h_a0c47a7f4b91fa19f71a1a69237a6754e}{sub\_model\_ZSR\_aerosol\_water\_get\_used\_jac\_elem}}(}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00062}00062             sub\_model\_int\_data, sub\_model\_float\_data, \&local\_jac);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00063}00063         \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00064}00064     \}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00065}00065   \}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00066}00066 }
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00067}00067   \textcolor{comment}{// Build the sparse Jacobian}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00068}00068   \textcolor{keywordflow}{if} (\mbox{\hyperlink{_jacobian_8c_a2e954524b21f4e097996b2dc0d3cf999}{jacobian\_build\_matrix}}(\&local\_jac) != 1) \{}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00069}00069     printf(\textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)nERROR building sparse Jacobian for sub models\(\backslash\)n\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00070}00070     exit(EXIT\_FAILURE);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00071}00071   \}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00072}00072 }
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00073}00073   \textcolor{comment}{// Add registered elements to sub-\/model Jacobian}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00074}00074   \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} i\_ind = 0; i\_ind < model\_data-\/>\mbox{\hyperlink{struct_model_data_a178342b9966d83bcd4fa78b265688440}{n\_per\_cell\_state\_var}};}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00075}00075        ++i\_ind) \{}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00076}00076     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} i\_elem = \mbox{\hyperlink{_jacobian_8c_a0a9b073f122e923fe6bad96d0611a4ac}{jacobian\_column\_pointer\_value}}(local\_jac, i\_ind);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00077}00077          i\_elem < \mbox{\hyperlink{_jacobian_8c_a0a9b073f122e923fe6bad96d0611a4ac}{jacobian\_column\_pointer\_value}}(local\_jac, i\_ind + 1);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00078}00078          ++i\_elem) \{}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00079}00079       \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} i\_dep = \mbox{\hyperlink{_jacobian_8c_ae72fb841b0dd527b9e463e7ce208d856}{jacobian\_row\_index}}(local\_jac, i\_elem);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00080}00080       \mbox{\hyperlink{_jacobian_8c_aac51ac6b1cf239a84899308dab229441}{jacobian\_register\_element}}(jac, i\_dep, i\_ind);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00081}00081     \}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00082}00082   \}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00083}00083 }
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00084}00084   \textcolor{comment}{// Add elements for sub-\/model interdependence and save number of}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00085}00085   \textcolor{comment}{// interdepenedent elements}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00086}00086   model\_data-\/>\mbox{\hyperlink{struct_model_data_a4098b9a0a4d6acb169f45bb3a5fb20f8}{n\_mapped\_params}} = 0;}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00087}00087   \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} i\_ind = 0; i\_ind < model\_data-\/>\mbox{\hyperlink{struct_model_data_a178342b9966d83bcd4fa78b265688440}{n\_per\_cell\_state\_var}};}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00088}00088        ++i\_ind) \{}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00089}00089     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} i\_elem = \mbox{\hyperlink{_jacobian_8c_a0a9b073f122e923fe6bad96d0611a4ac}{jacobian\_column\_pointer\_value}}(local\_jac, i\_ind);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00090}00090          i\_elem < \mbox{\hyperlink{_jacobian_8c_a0a9b073f122e923fe6bad96d0611a4ac}{jacobian\_column\_pointer\_value}}(local\_jac, i\_ind + 1);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00091}00091          ++i\_elem) \{}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00092}00092       \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} i\_dep = \mbox{\hyperlink{_jacobian_8c_ae72fb841b0dd527b9e463e7ce208d856}{jacobian\_row\_index}}(local\_jac, i\_elem);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00093}00093       \textcolor{keywordflow}{if} (i\_dep != i\_ind \&\& model\_data-\/>\mbox{\hyperlink{struct_model_data_a24ff4cb5a71b0302982382a3f1ac7c0c}{var\_type}}[i\_ind] != \mbox{\hyperlink{aero__phase__solver_8c_a10e72ce63e142fef6dce2428a7de2580}{CHEM\_SPEC\_VARIABLE}}) \{}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00094}00094         \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} j\_ind = 0; j\_ind < model\_data-\/>\mbox{\hyperlink{struct_model_data_a178342b9966d83bcd4fa78b265688440}{n\_per\_cell\_state\_var}};}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00095}00095              ++j\_ind) \{}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00096}00096           \textcolor{keywordflow}{if} (\mbox{\hyperlink{_jacobian_8c_a7b43d5884ec62826389d6d739b7f25eb}{jacobian\_get\_element\_id}}(local\_jac, i\_ind, j\_ind) != -\/1) \{}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00097}00097             \mbox{\hyperlink{_jacobian_8c_aac51ac6b1cf239a84899308dab229441}{jacobian\_register\_element}}(jac, i\_dep, j\_ind);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00098}00098             ++(model\_data-\/>\mbox{\hyperlink{struct_model_data_a4098b9a0a4d6acb169f45bb3a5fb20f8}{n\_mapped\_params}});}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00099}00099           \}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00100}00100         \}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00101}00101       \}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00102}00102     \}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00103}00103   \}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00104}00104 }
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00105}00105   \mbox{\hyperlink{_jacobian_8c_a0c0108de18ada97dc46782f7223ceef8}{jacobian\_free}}(\&local\_jac);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00106}00106 \}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00107}00107 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00108}00108 \textcolor{comment}{/** \(\backslash\)brief Set the map for sub-\/model interdependence}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00109}00109 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00110}00110 \textcolor{comment}{ * Uses the indices provided in \(\backslash\)c jac\_struct along with individual}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00111}00111 \textcolor{comment}{ * calls to the sub-\/model \(\backslash\)c get\_used\_jac\_elem() functions to set up a map}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00112}00112 \textcolor{comment}{ * to account for the dependence of sub model calculations on the results}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00113}00113 \textcolor{comment}{ * of other sub model calculations. The sub model priorities used to}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00114}00114 \textcolor{comment}{ * assemble the array of sub models, must result in independent sub-\/model}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00115}00115 \textcolor{comment}{ * calculations appearing before dependent sub-\/model calculations in}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00116}00116 \textcolor{comment}{ * the sub-\/model array.}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00117}00117 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00118}00118 \textcolor{comment}{ * \(\backslash\)param model\_data Pointer to the model data}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00119}00119 \textcolor{comment}{ * \(\backslash\)param jac Jacobian}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00120}00120 \textcolor{comment}{ */}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00121}\mbox{\hyperlink{sub__model__solver_8c_a61bf1cc1ad435b59182e1db138cc1b53}{00121}} \textcolor{keywordtype}{void} \mbox{\hyperlink{sub__model__solver_8c_a61bf1cc1ad435b59182e1db138cc1b53}{sub\_model\_set\_jac\_map}}(\mbox{\hyperlink{struct_model_data}{ModelData}} *model\_data, \mbox{\hyperlink{struct_jacobian}{Jacobian}} jac) \{}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00122}00122   \textcolor{comment}{// Allocate the map}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00123}00123   model\_data-\/>\mbox{\hyperlink{struct_model_data_adadfdd13b4d4c8e1f3be51753d90fe68}{jac\_map\_params}} =}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00124}00124       malloc(\textcolor{keyword}{sizeof}(\mbox{\hyperlink{struct_jac_map}{JacMap}}) * model\_data-\/>\mbox{\hyperlink{struct_model_data_a4098b9a0a4d6acb169f45bb3a5fb20f8}{n\_mapped\_params}});}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00125}00125   \textcolor{keywordflow}{if} (model\_data-\/>\mbox{\hyperlink{struct_model_data_adadfdd13b4d4c8e1f3be51753d90fe68}{jac\_map\_params}} == NULL) \{}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00126}00126     printf(\textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)nError allocating sub model Jacobian map\(\backslash\)n\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00127}00127     exit(EXIT\_FAILURE);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00128}00128   \}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00129}00129 }
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00130}00130   \textcolor{comment}{// Set up an index for map elements;}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00131}00131   \textcolor{keywordtype}{int} i\_map = 0;}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00132}00132 }
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00133}00133   \textcolor{comment}{// Get the number of sub models}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00134}00134   \textcolor{keywordtype}{int} n\_sub\_model = model\_data-\/>\mbox{\hyperlink{struct_model_data_a75a7b9101543eb10e5c646859a92a904}{n\_sub\_model}};}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00135}00135 }
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00136}00136   \textcolor{comment}{// Loop through the sub models and get their Jacobian elements}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00137}00137   \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_sub\_model = 0; i\_sub\_model < n\_sub\_model; i\_sub\_model++) \{}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00138}00138     \textcolor{comment}{// Set up a local Jacobian for individual sub-\/model Jacobian elements}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00139}00139     \mbox{\hyperlink{struct_jacobian}{Jacobian}} local\_jac;}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00140}00140     \textcolor{keywordflow}{if} (\mbox{\hyperlink{_jacobian_8c_a3ea16d25b8523ab15b3f505fe00e2ed2}{jacobian\_initialize\_empty}}(}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00141}00141             \&local\_jac, (\textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int})model\_data-\/>\mbox{\hyperlink{struct_model_data_a178342b9966d83bcd4fa78b265688440}{n\_per\_cell\_state\_var}}) != 1) \{}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00142}00142       printf(}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00143}00143           \textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)nERROR allocating sub-\/model Jacobian structure for sub-\/model "{}}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00144}00144           \textcolor{stringliteral}{"{}interdepenedence\(\backslash\)n\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00145}00145       exit(EXIT\_FAILURE);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00146}00146     \}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00147}00147 }
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00148}00148     \textcolor{keywordtype}{int} *sub\_model\_int\_data =}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00149}00149         \&(model\_data-\/>\mbox{\hyperlink{struct_model_data_a05fc229efdc542ddec6f0530b9265545}{sub\_model\_int\_data}}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00150}00150               [model\_data-\/>\mbox{\hyperlink{struct_model_data_a1777c7ed1bf986cca9ba89bb564f5955}{sub\_model\_int\_indices}}[i\_sub\_model]]);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00151}00151     \textcolor{keywordtype}{double} *sub\_model\_float\_data =}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00152}00152         \&(model\_data-\/>\mbox{\hyperlink{struct_model_data_a8e2962b67462cbde79247f671abc5303}{sub\_model\_float\_data}}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00153}00153               [model\_data-\/>\mbox{\hyperlink{struct_model_data_af3cd7a963f4eba06489929eb6e3b930f}{sub\_model\_float\_indices}}[i\_sub\_model]]);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00154}00154 }
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00155}00155     \textcolor{comment}{// Get the sub model type}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00156}00156     \textcolor{keywordtype}{int} sub\_model\_type = *(sub\_model\_int\_data++);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00157}00157 }
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00158}00158     \textcolor{keywordflow}{switch} (sub\_model\_type) \{}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00159}00159       \textcolor{keywordflow}{case} \mbox{\hyperlink{sub__model__solver_8c_a11353981e82548216308c1746eb4e196}{SUB\_MODEL\_PDFITE}}:}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00160}00160         \mbox{\hyperlink{sub__models_8h_a1c3598c177755e3ca9d3bde1ace7c0e0}{sub\_model\_PDFiTE\_get\_used\_jac\_elem}}(sub\_model\_int\_data,}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00161}00161                                            sub\_model\_float\_data, \&local\_jac);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00162}00162         \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00163}00163       \textcolor{keywordflow}{case} \mbox{\hyperlink{sub__model__solver_8c_abe344a8755ba09d26ffa38022aea4530}{SUB\_MODEL\_UNIFAC}}:}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00164}00164         \mbox{\hyperlink{sub__models_8h_a6895ac51f6122ce830f30d8b1f09d052}{sub\_model\_UNIFAC\_get\_used\_jac\_elem}}(sub\_model\_int\_data,}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00165}00165                                            sub\_model\_float\_data, \&local\_jac);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00166}00166         \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00167}00167       \textcolor{keywordflow}{case} \mbox{\hyperlink{sub__model__solver_8c_a497cb5cfc3c9293b4627617d18e9836f}{SUB\_MODEL\_ZSR\_AEROSOL\_WATER}}:}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00168}00168         \mbox{\hyperlink{sub__models_8h_a0c47a7f4b91fa19f71a1a69237a6754e}{sub\_model\_ZSR\_aerosol\_water\_get\_used\_jac\_elem}}(}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00169}00169             sub\_model\_int\_data, sub\_model\_float\_data, \&local\_jac);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00170}00170         \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00171}00171     \}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00172}00172 }
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00173}00173     \textcolor{comment}{// Build the Jacobian}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00174}00174     \textcolor{keywordflow}{if} (\mbox{\hyperlink{_jacobian_8c_a2e954524b21f4e097996b2dc0d3cf999}{jacobian\_build\_matrix}}(\&local\_jac) != 1) \{}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00175}00175       printf(}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00176}00176           \textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)nERROR building sub-\/model Jacobian structure for sub-\/model "{}}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00177}00177           \textcolor{stringliteral}{"{}interdependence\(\backslash\)n\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00178}00178       exit(EXIT\_FAILURE);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00179}00179     \}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00180}00180 }
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00181}00181     \textcolor{comment}{// Check for dependence on sub-\/model calculations and set mapping elements}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00182}00182     \textcolor{comment}{// if necessary}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00183}00183     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} i\_ind = 0; i\_ind < model\_data-\/>\mbox{\hyperlink{struct_model_data_a178342b9966d83bcd4fa78b265688440}{n\_per\_cell\_state\_var}};}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00184}00184          ++i\_ind) \{}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00185}00185       \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} i\_elem =}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00186}00186                \mbox{\hyperlink{_jacobian_8c_a0a9b073f122e923fe6bad96d0611a4ac}{jacobian\_column\_pointer\_value}}(local\_jac, i\_ind);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00187}00187            i\_elem < \mbox{\hyperlink{_jacobian_8c_a0a9b073f122e923fe6bad96d0611a4ac}{jacobian\_column\_pointer\_value}}(local\_jac, i\_ind + 1);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00188}00188            ++i\_elem) \{}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00189}00189         \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} i\_dep = \mbox{\hyperlink{_jacobian_8c_ae72fb841b0dd527b9e463e7ce208d856}{jacobian\_row\_index}}(local\_jac, i\_elem);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00190}00190         \textcolor{keywordflow}{if} (i\_dep != i\_ind \&\&}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00191}00191             model\_data-\/>\mbox{\hyperlink{struct_model_data_a24ff4cb5a71b0302982382a3f1ac7c0c}{var\_type}}[i\_ind] != \mbox{\hyperlink{aero__phase__solver_8c_a10e72ce63e142fef6dce2428a7de2580}{CHEM\_SPEC\_VARIABLE}}) \{}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00192}00192           \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} j\_ind = 0; j\_ind < model\_data-\/>\mbox{\hyperlink{struct_model_data_a178342b9966d83bcd4fa78b265688440}{n\_per\_cell\_state\_var}};}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00193}00193                ++j\_ind) \{}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00194}00194             \textcolor{keywordflow}{if} (\mbox{\hyperlink{_jacobian_8c_a7b43d5884ec62826389d6d739b7f25eb}{jacobian\_get\_element\_id}}(jac, i\_ind, j\_ind) != -\/1) \{}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00195}00195               model\_data-\/>\mbox{\hyperlink{struct_model_data_adadfdd13b4d4c8e1f3be51753d90fe68}{jac\_map\_params}}[i\_map].\mbox{\hyperlink{struct_jac_map_af1cb67398b5865c724a62f50b5be54a8}{solver\_id}} =}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00196}00196                   \mbox{\hyperlink{_jacobian_8c_a7b43d5884ec62826389d6d739b7f25eb}{jacobian\_get\_element\_id}}(jac, i\_dep, j\_ind);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00197}00197               model\_data-\/>\mbox{\hyperlink{struct_model_data_adadfdd13b4d4c8e1f3be51753d90fe68}{jac\_map\_params}}[i\_map].\mbox{\hyperlink{struct_jac_map_ac08e40716bcd710824d254a983eebf96}{rxn\_id}} =}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00198}00198                   \mbox{\hyperlink{_jacobian_8c_a7b43d5884ec62826389d6d739b7f25eb}{jacobian\_get\_element\_id}}(jac, i\_dep, i\_ind);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00199}00199               model\_data-\/>\mbox{\hyperlink{struct_model_data_adadfdd13b4d4c8e1f3be51753d90fe68}{jac\_map\_params}}[i\_map].\mbox{\hyperlink{struct_jac_map_a1965a8b7ac43c805d691fb36ac94be9c}{param\_id}} =}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00200}00200                   \mbox{\hyperlink{_jacobian_8c_a7b43d5884ec62826389d6d739b7f25eb}{jacobian\_get\_element\_id}}(jac, i\_ind, j\_ind);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00201}00201               ++i\_map;}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00202}00202             \}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00203}00203           \}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00204}00204         \}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00205}00205       \}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00206}00206     \}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00207}00207 }
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00208}00208     \textcolor{comment}{// free the local Jacobian}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00209}00209     \mbox{\hyperlink{_jacobian_8c_a0c0108de18ada97dc46782f7223ceef8}{jacobian\_free}}(\&local\_jac);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00210}00210   \}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00211}00211 }
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00212}00212   \textcolor{keywordflow}{if} (i\_map != model\_data-\/>\mbox{\hyperlink{struct_model_data_a4098b9a0a4d6acb169f45bb3a5fb20f8}{n\_mapped\_params}}) \{}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00213}00213     printf(\textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)nError mapping sub-\/model Jacobian elements \%d \%d\(\backslash\)n\(\backslash\)n"{}}, i\_map,}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00214}00214            model\_data-\/>\mbox{\hyperlink{struct_model_data_a4098b9a0a4d6acb169f45bb3a5fb20f8}{n\_mapped\_params}});}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00215}00215     exit(EXIT\_FAILURE);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00216}00216   \}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00217}00217 \}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00218}00218 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00219}00219 \textcolor{comment}{/** \(\backslash\)brief Update the time derivative and Jacobian array ids}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00220}00220 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00221}00221 \textcolor{comment}{ * \(\backslash\)param model\_data Pointer to the model data}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00222}00222 \textcolor{comment}{ * \(\backslash\)param deriv\_ids Ids for state variables on the time derivative array}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00223}00223 \textcolor{comment}{ * \(\backslash\)param jac Jacobian}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00224}00224 \textcolor{comment}{ */}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00225}\mbox{\hyperlink{sub__model__solver_8c_a38ebe393b32d9f9ac185b12801c69e17}{00225}} \textcolor{keywordtype}{void} \mbox{\hyperlink{sub__model__solver_8c_a38ebe393b32d9f9ac185b12801c69e17}{sub\_model\_update\_ids}}(\mbox{\hyperlink{struct_model_data}{ModelData}} *model\_data, \textcolor{keywordtype}{int} *deriv\_ids, \mbox{\hyperlink{struct_jacobian}{Jacobian}} jac) \{}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00226}00226   \textcolor{comment}{// Get the number of sub models}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00227}00227   \textcolor{keywordtype}{int} n\_sub\_model = model\_data-\/>\mbox{\hyperlink{struct_model_data_a75a7b9101543eb10e5c646859a92a904}{n\_sub\_model}};}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00228}00228 }
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00229}00229   \textcolor{comment}{// Loop through the sub models and get their Jacobian elements}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00230}00230   \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_sub\_model = 0; i\_sub\_model < n\_sub\_model; i\_sub\_model++) \{}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00231}00231     \textcolor{keywordtype}{int} *sub\_model\_int\_data =}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00232}00232         \&(model\_data-\/>\mbox{\hyperlink{struct_model_data_a05fc229efdc542ddec6f0530b9265545}{sub\_model\_int\_data}}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00233}00233               [model\_data-\/>\mbox{\hyperlink{struct_model_data_a1777c7ed1bf986cca9ba89bb564f5955}{sub\_model\_int\_indices}}[i\_sub\_model]]);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00234}00234     \textcolor{keywordtype}{double} *sub\_model\_float\_data =}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00235}00235         \&(model\_data-\/>\mbox{\hyperlink{struct_model_data_a8e2962b67462cbde79247f671abc5303}{sub\_model\_float\_data}}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00236}00236               [model\_data-\/>\mbox{\hyperlink{struct_model_data_af3cd7a963f4eba06489929eb6e3b930f}{sub\_model\_float\_indices}}[i\_sub\_model]]);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00237}00237 }
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00238}00238     \textcolor{comment}{// Get the sub model type}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00239}00239     \textcolor{keywordtype}{int} sub\_model\_type = *(sub\_model\_int\_data++);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00240}00240 }
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00241}00241     \textcolor{keywordflow}{switch} (sub\_model\_type) \{}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00242}00242       \textcolor{keywordflow}{case} \mbox{\hyperlink{sub__model__solver_8c_a11353981e82548216308c1746eb4e196}{SUB\_MODEL\_PDFITE}}:}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00243}00243         \mbox{\hyperlink{sub__models_8h_ad0578f51652ce992842c2e65c8d84e55}{sub\_model\_PDFiTE\_update\_ids}}(sub\_model\_int\_data, sub\_model\_float\_data,}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00244}00244                                     deriv\_ids, jac);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00245}00245         \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00246}00246       \textcolor{keywordflow}{case} \mbox{\hyperlink{sub__model__solver_8c_abe344a8755ba09d26ffa38022aea4530}{SUB\_MODEL\_UNIFAC}}:}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00247}00247         \mbox{\hyperlink{sub__models_8h_a2674d98846a9c4933d56156ec1f0deb5}{sub\_model\_UNIFAC\_update\_ids}}(sub\_model\_int\_data, sub\_model\_float\_data,}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00248}00248                                     deriv\_ids, jac);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00249}00249         \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00250}00250       \textcolor{keywordflow}{case} \mbox{\hyperlink{sub__model__solver_8c_a497cb5cfc3c9293b4627617d18e9836f}{SUB\_MODEL\_ZSR\_AEROSOL\_WATER}}:}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00251}00251         \mbox{\hyperlink{sub__models_8h_af42c83e6bae3321e17f4bf21620e36ed}{sub\_model\_ZSR\_aerosol\_water\_update\_ids}}(}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00252}00252             sub\_model\_int\_data, sub\_model\_float\_data, deriv\_ids, jac);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00253}00253         \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00254}00254     \}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00255}00255   \}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00256}00256 }
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00257}00257   \textcolor{comment}{// Set the sub model interdependence Jacobian map}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00258}00258   \mbox{\hyperlink{sub__model__solver_8c_a61bf1cc1ad435b59182e1db138cc1b53}{sub\_model\_set\_jac\_map}}(model\_data, jac);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00259}00259 \}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00260}00260 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00261}00261 \textcolor{comment}{/** \(\backslash\)brief Update sub model data for a new environmental state}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00262}00262 \textcolor{comment}{ * \(\backslash\)param model\_data Pointer to the model data with updated env state}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00263}00263 \textcolor{comment}{ */}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00264}\mbox{\hyperlink{sub__model__solver_8c_a78345e452d180e21b072ca0bc574042b}{00264}} \textcolor{keywordtype}{void} \mbox{\hyperlink{sub__model__solver_8c_a78345e452d180e21b072ca0bc574042b}{sub\_model\_update\_env\_state}}(\mbox{\hyperlink{struct_model_data}{ModelData}} *model\_data) \{}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00265}00265   \textcolor{comment}{// Get the number of sub models}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00266}00266   \textcolor{keywordtype}{int} n\_sub\_model = model\_data-\/>\mbox{\hyperlink{struct_model_data_a75a7b9101543eb10e5c646859a92a904}{n\_sub\_model}};}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00267}00267 }
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00268}00268   \textcolor{comment}{// Loop through the sub models to update the environmental conditions}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00269}00269   \textcolor{comment}{// advancing the sub\_model\_data pointer each time}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00270}00270   \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_sub\_model = 0; i\_sub\_model < n\_sub\_model; i\_sub\_model++) \{}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00271}00271     \textcolor{keywordtype}{int} *sub\_model\_int\_data =}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00272}00272         \&(model\_data-\/>\mbox{\hyperlink{struct_model_data_a05fc229efdc542ddec6f0530b9265545}{sub\_model\_int\_data}}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00273}00273               [model\_data-\/>\mbox{\hyperlink{struct_model_data_a1777c7ed1bf986cca9ba89bb564f5955}{sub\_model\_int\_indices}}[i\_sub\_model]]);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00274}00274     \textcolor{keywordtype}{double} *sub\_model\_float\_data =}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00275}00275         \&(model\_data-\/>\mbox{\hyperlink{struct_model_data_a8e2962b67462cbde79247f671abc5303}{sub\_model\_float\_data}}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00276}00276               [model\_data-\/>\mbox{\hyperlink{struct_model_data_af3cd7a963f4eba06489929eb6e3b930f}{sub\_model\_float\_indices}}[i\_sub\_model]]);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00277}00277     \textcolor{keywordtype}{double} *sub\_model\_env\_data =}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00278}00278         \&(model\_data-\/>\mbox{\hyperlink{struct_model_data_ac6f5cab01e33c18c7764fb0d246d19f2}{grid\_cell\_sub\_model\_env\_data}}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00279}00279               [model\_data-\/>\mbox{\hyperlink{struct_model_data_ae3387a11501ce652f3a90697fc17152e}{sub\_model\_env\_idx}}[i\_sub\_model]]);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00280}00280 }
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00281}00281     \textcolor{comment}{// Get the sub model type}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00282}00282     \textcolor{keywordtype}{int} sub\_model\_type = *(sub\_model\_int\_data++);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00283}00283 }
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00284}00284     \textcolor{comment}{// Call the appropriate function}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00285}00285     \textcolor{keywordflow}{switch} (sub\_model\_type) \{}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00286}00286       \textcolor{keywordflow}{case} \mbox{\hyperlink{sub__model__solver_8c_a11353981e82548216308c1746eb4e196}{SUB\_MODEL\_PDFITE}}:}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00287}00287         \mbox{\hyperlink{sub__models_8h_ae2d20ec59ac4397714d038f51324809d}{sub\_model\_PDFiTE\_update\_env\_state}}(sub\_model\_int\_data,}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00288}00288                                           sub\_model\_float\_data,}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00289}00289                                           sub\_model\_env\_data, model\_data);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00290}00290         \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00291}00291       \textcolor{keywordflow}{case} \mbox{\hyperlink{sub__model__solver_8c_abe344a8755ba09d26ffa38022aea4530}{SUB\_MODEL\_UNIFAC}}:}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00292}00292         \mbox{\hyperlink{sub__models_8h_a43f3628a20f1bf545034554576e9c85c}{sub\_model\_UNIFAC\_update\_env\_state}}(sub\_model\_int\_data,}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00293}00293                                           sub\_model\_float\_data,}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00294}00294                                           sub\_model\_env\_data, model\_data);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00295}00295         \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00296}00296       \textcolor{keywordflow}{case} \mbox{\hyperlink{sub__model__solver_8c_a497cb5cfc3c9293b4627617d18e9836f}{SUB\_MODEL\_ZSR\_AEROSOL\_WATER}}:}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00297}00297         \mbox{\hyperlink{sub__models_8h_a915b2885008bfb4bd6c9c37efd6e8d82}{sub\_model\_ZSR\_aerosol\_water\_update\_env\_state}}(}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00298}00298             sub\_model\_int\_data, sub\_model\_float\_data, sub\_model\_env\_data,}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00299}00299             model\_data);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00300}00300         \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00301}00301     \}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00302}00302   \}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00303}00303 \}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00304}00304 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00305}00305 \textcolor{comment}{/** \(\backslash\)brief Perform the sub model calculations for the current model state}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00306}00306 \textcolor{comment}{ * \(\backslash\)param model\_data Pointer to the model data}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00307}00307 \textcolor{comment}{ */}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00308}\mbox{\hyperlink{sub__model__solver_8c_a7f9027610b25bafcc5b6c5af1344dd65}{00308}} \textcolor{keywordtype}{void} \mbox{\hyperlink{sub__model__solver_8c_a7f9027610b25bafcc5b6c5af1344dd65}{sub\_model\_calculate}}(\mbox{\hyperlink{struct_model_data}{ModelData}} *model\_data) \{}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00309}00309   \textcolor{comment}{// Get the number of sub models}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00310}00310   \textcolor{keywordtype}{int} n\_sub\_model = model\_data-\/>\mbox{\hyperlink{struct_model_data_a75a7b9101543eb10e5c646859a92a904}{n\_sub\_model}};}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00311}00311 }
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00312}00312   \textcolor{comment}{// Loop through the sub models to trigger their calculation}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00313}00313   \textcolor{comment}{// advancing the sub\_model\_data pointer each time}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00314}00314   \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_sub\_model = 0; i\_sub\_model < n\_sub\_model; i\_sub\_model++) \{}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00315}00315     \textcolor{keywordtype}{int} *sub\_model\_int\_data =}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00316}00316         \&(model\_data-\/>\mbox{\hyperlink{struct_model_data_a05fc229efdc542ddec6f0530b9265545}{sub\_model\_int\_data}}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00317}00317               [model\_data-\/>\mbox{\hyperlink{struct_model_data_a1777c7ed1bf986cca9ba89bb564f5955}{sub\_model\_int\_indices}}[i\_sub\_model]]);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00318}00318     \textcolor{keywordtype}{double} *sub\_model\_float\_data =}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00319}00319         \&(model\_data-\/>\mbox{\hyperlink{struct_model_data_a8e2962b67462cbde79247f671abc5303}{sub\_model\_float\_data}}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00320}00320               [model\_data-\/>\mbox{\hyperlink{struct_model_data_af3cd7a963f4eba06489929eb6e3b930f}{sub\_model\_float\_indices}}[i\_sub\_model]]);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00321}00321     \textcolor{keywordtype}{double} *sub\_model\_env\_data =}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00322}00322         \&(model\_data-\/>\mbox{\hyperlink{struct_model_data_ac6f5cab01e33c18c7764fb0d246d19f2}{grid\_cell\_sub\_model\_env\_data}}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00323}00323               [model\_data-\/>\mbox{\hyperlink{struct_model_data_ae3387a11501ce652f3a90697fc17152e}{sub\_model\_env\_idx}}[i\_sub\_model]]);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00324}00324 }
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00325}00325     \textcolor{comment}{// Get the sub model type}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00326}00326     \textcolor{keywordtype}{int} sub\_model\_type = *(sub\_model\_int\_data++);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00327}00327 }
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00328}00328     \textcolor{comment}{// Call the appropriate function}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00329}00329     \textcolor{keywordflow}{switch} (sub\_model\_type) \{}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00330}00330       \textcolor{keywordflow}{case} \mbox{\hyperlink{sub__model__solver_8c_a11353981e82548216308c1746eb4e196}{SUB\_MODEL\_PDFITE}}:}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00331}00331         \mbox{\hyperlink{sub__models_8h_a2f46f791a4a74c77e283b5afb91911aa}{sub\_model\_PDFiTE\_calculate}}(sub\_model\_int\_data, sub\_model\_float\_data,}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00332}00332                                    sub\_model\_env\_data, model\_data);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00333}00333         \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00334}00334       \textcolor{keywordflow}{case} \mbox{\hyperlink{sub__model__solver_8c_abe344a8755ba09d26ffa38022aea4530}{SUB\_MODEL\_UNIFAC}}:}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00335}00335         \mbox{\hyperlink{sub__models_8h_a91d55564c556bf61d6bf0ccac7b43e4b}{sub\_model\_UNIFAC\_calculate}}(sub\_model\_int\_data, sub\_model\_float\_data,}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00336}00336                                    sub\_model\_env\_data, model\_data);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00337}00337         \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00338}00338       \textcolor{keywordflow}{case} \mbox{\hyperlink{sub__model__solver_8c_a497cb5cfc3c9293b4627617d18e9836f}{SUB\_MODEL\_ZSR\_AEROSOL\_WATER}}:}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00339}00339         \mbox{\hyperlink{sub__models_8h_a6639a32646d84e02917b64167f36ea89}{sub\_model\_ZSR\_aerosol\_water\_calculate}}(sub\_model\_int\_data,}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00340}00340                                               sub\_model\_float\_data,}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00341}00341                                               sub\_model\_env\_data, model\_data);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00342}00342         \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00343}00343     \}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00344}00344   \}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00345}00345 \}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00346}00346 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00347}00347 \textcolor{comment}{/** \(\backslash\)brief Calculate the Jacobian constributions from sub model calculations}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00348}00348 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00349}00349 \textcolor{comment}{ * \(\backslash\)param model\_data Pointer to the model data}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00350}00350 \textcolor{comment}{ * \(\backslash\)param J\_data Pointer to sub-\/model Jacobian data}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00351}00351 \textcolor{comment}{ * \(\backslash\)param time\_step Current time step [s]}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00352}00352 \textcolor{comment}{ */}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00353}00353 \textcolor{preprocessor}{\#ifdef CAMP\_USE\_SUNDIALS}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00354}\mbox{\hyperlink{sub__model__solver_8c_a9575eb8104f46d396268c361164e88fb}{00354}} \textcolor{keywordtype}{void} \mbox{\hyperlink{sub__model__solver_8c_a9575eb8104f46d396268c361164e88fb}{sub\_model\_get\_jac\_contrib}}(\mbox{\hyperlink{struct_model_data}{ModelData}} *model\_data, \textcolor{keywordtype}{double} *J\_data,}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00355}00355                                realtype time\_step) \{}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00356}00356   \textcolor{comment}{// Get the number of sub models}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00357}00357   \textcolor{keywordtype}{int} n\_sub\_model = model\_data-\/>\mbox{\hyperlink{struct_model_data_a75a7b9101543eb10e5c646859a92a904}{n\_sub\_model}};}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00358}00358 }
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00359}00359   \textcolor{comment}{// Loop through the sub models to trigger their Jacobian calculation}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00360}00360   \textcolor{comment}{// advancing the sub\_model\_data pointer each time}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00361}00361   \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_sub\_model = 0; i\_sub\_model < n\_sub\_model; i\_sub\_model++) \{}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00362}00362     \textcolor{keywordtype}{int} *sub\_model\_int\_data =}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00363}00363         \&(model\_data-\/>\mbox{\hyperlink{struct_model_data_a05fc229efdc542ddec6f0530b9265545}{sub\_model\_int\_data}}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00364}00364               [model\_data-\/>\mbox{\hyperlink{struct_model_data_a1777c7ed1bf986cca9ba89bb564f5955}{sub\_model\_int\_indices}}[i\_sub\_model]]);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00365}00365     \textcolor{keywordtype}{double} *sub\_model\_float\_data =}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00366}00366         \&(model\_data-\/>\mbox{\hyperlink{struct_model_data_a8e2962b67462cbde79247f671abc5303}{sub\_model\_float\_data}}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00367}00367               [model\_data-\/>\mbox{\hyperlink{struct_model_data_af3cd7a963f4eba06489929eb6e3b930f}{sub\_model\_float\_indices}}[i\_sub\_model]]);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00368}00368     \textcolor{keywordtype}{double} *sub\_model\_env\_data =}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00369}00369         \&(model\_data-\/>\mbox{\hyperlink{struct_model_data_ac6f5cab01e33c18c7764fb0d246d19f2}{grid\_cell\_sub\_model\_env\_data}}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00370}00370               [model\_data-\/>\mbox{\hyperlink{struct_model_data_ae3387a11501ce652f3a90697fc17152e}{sub\_model\_env\_idx}}[i\_sub\_model]]);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00371}00371 }
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00372}00372     \textcolor{comment}{// Get the sub model type}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00373}00373     \textcolor{keywordtype}{int} sub\_model\_type = *(sub\_model\_int\_data++);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00374}00374 }
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00375}00375     \textcolor{comment}{// Call the appropriate function}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00376}00376     \textcolor{keywordflow}{switch} (sub\_model\_type) \{}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00377}00377       \textcolor{keywordflow}{case} \mbox{\hyperlink{sub__model__solver_8c_a11353981e82548216308c1746eb4e196}{SUB\_MODEL\_PDFITE}}:}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00378}00378         \mbox{\hyperlink{sub__models_8h_a50d2ccc5a5c4b40019447f6b7dd5feab}{sub\_model\_PDFiTE\_get\_jac\_contrib}}(}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00379}00379             sub\_model\_int\_data, sub\_model\_float\_data, sub\_model\_env\_data,}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00380}00380             model\_data, J\_data, (\textcolor{keywordtype}{double})time\_step);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00381}00381         \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00382}00382       \textcolor{keywordflow}{case} \mbox{\hyperlink{sub__model__solver_8c_abe344a8755ba09d26ffa38022aea4530}{SUB\_MODEL\_UNIFAC}}:}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00383}00383         \mbox{\hyperlink{sub__models_8h_a0301d06b09af90fcfe49f9a1ba7c6742}{sub\_model\_UNIFAC\_get\_jac\_contrib}}(}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00384}00384             sub\_model\_int\_data, sub\_model\_float\_data, sub\_model\_env\_data,}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00385}00385             model\_data, J\_data, (\textcolor{keywordtype}{double})time\_step);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00386}00386         \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00387}00387       \textcolor{keywordflow}{case} \mbox{\hyperlink{sub__model__solver_8c_a497cb5cfc3c9293b4627617d18e9836f}{SUB\_MODEL\_ZSR\_AEROSOL\_WATER}}:}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00388}00388         \mbox{\hyperlink{sub__models_8h_aa6bf886e4a9fadb02913dab07e19018b}{sub\_model\_ZSR\_aerosol\_water\_get\_jac\_contrib}}(}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00389}00389             sub\_model\_int\_data, sub\_model\_float\_data, sub\_model\_env\_data,}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00390}00390             model\_data, J\_data, (\textcolor{keywordtype}{double})time\_step);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00391}00391         \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00392}00392     \}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00393}00393   \}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00394}00394 }
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00395}00395   \textcolor{comment}{// Account for sub-\/model interdependence}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00396}00396   \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_map = 0; i\_map < model\_data-\/>\mbox{\hyperlink{struct_model_data_a4098b9a0a4d6acb169f45bb3a5fb20f8}{n\_mapped\_params}}; ++i\_map)}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00397}00397     J\_data[model\_data-\/>\mbox{\hyperlink{struct_model_data_adadfdd13b4d4c8e1f3be51753d90fe68}{jac\_map\_params}}[i\_map].\mbox{\hyperlink{struct_jac_map_af1cb67398b5865c724a62f50b5be54a8}{solver\_id}}] +=}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00398}00398         J\_data[model\_data-\/>\mbox{\hyperlink{struct_model_data_adadfdd13b4d4c8e1f3be51753d90fe68}{jac\_map\_params}}[i\_map].\mbox{\hyperlink{struct_jac_map_ac08e40716bcd710824d254a983eebf96}{rxn\_id}}] *}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00399}00399         J\_data[model\_data-\/>\mbox{\hyperlink{struct_model_data_adadfdd13b4d4c8e1f3be51753d90fe68}{jac\_map\_params}}[i\_map].\mbox{\hyperlink{struct_jac_map_a1965a8b7ac43c805d691fb36ac94be9c}{param\_id}}];}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00400}00400 \}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00401}00401 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00402}00402 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00403}00403 \textcolor{comment}{/** \(\backslash\)brief Add condensed data to the condensed data block for sub models}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00404}00404 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00405}00405 \textcolor{comment}{ * \(\backslash\)param sub\_model\_type Sub model type}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00406}00406 \textcolor{comment}{ * \(\backslash\)param n\_int\_param Number of integer parameters}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00407}00407 \textcolor{comment}{ * \(\backslash\)param n\_float\_param Number of floating-\/point parameters}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00408}00408 \textcolor{comment}{ * \(\backslash\)param n\_env\_param Number of environment-\/dependent parameters}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00409}00409 \textcolor{comment}{ * \(\backslash\)param int\_param Pointer to integer parameter array}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00410}00410 \textcolor{comment}{ * \(\backslash\)param float\_param Pointer to floating-\/point parameter array}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00411}00411 \textcolor{comment}{ * \(\backslash\)param solver\_data Pointer to solver data}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00412}00412 \textcolor{comment}{ */}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00413}\mbox{\hyperlink{sub__model__solver_8c_a3ef9393f60afb047fbf0d457f811ba03}{00413}} \textcolor{keywordtype}{void} \mbox{\hyperlink{sub__model__solver_8c_a3ef9393f60afb047fbf0d457f811ba03}{sub\_model\_add\_condensed\_data}}(\textcolor{keywordtype}{int} sub\_model\_type, \textcolor{keywordtype}{int} n\_int\_param,}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00414}00414                                   \textcolor{keywordtype}{int} n\_float\_param, \textcolor{keywordtype}{int} n\_env\_param,}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00415}00415                                   \textcolor{keywordtype}{int} *int\_param, \textcolor{keywordtype}{double} *float\_param,}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00416}00416                                   \textcolor{keywordtype}{void} *solver\_data) \{}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00417}00417   \mbox{\hyperlink{struct_model_data}{ModelData}} *model\_data =}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00418}00418       (\mbox{\hyperlink{struct_model_data}{ModelData}} *)\&(((\mbox{\hyperlink{struct_solver_data}{SolverData}} *)solver\_data)-\/>model\_data);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00419}00419 }
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00420}00420   \textcolor{comment}{// Get pointers to the sub model data}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00421}00421   \textcolor{keywordtype}{int} *sub\_model\_int\_data = \&(}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00422}00422       model\_data-\/>\mbox{\hyperlink{struct_model_data_a05fc229efdc542ddec6f0530b9265545}{sub\_model\_int\_data}}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00423}00423           [model\_data-\/>\mbox{\hyperlink{struct_model_data_a1777c7ed1bf986cca9ba89bb564f5955}{sub\_model\_int\_indices}}[model\_data-\/>\mbox{\hyperlink{struct_model_data_a47128eccba057b68399ef405972673fd}{n\_added\_sub\_models}}]]);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00424}00424   \textcolor{keywordtype}{double} *sub\_model\_float\_data =}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00425}00425       \&(model\_data-\/>\mbox{\hyperlink{struct_model_data_a8e2962b67462cbde79247f671abc5303}{sub\_model\_float\_data}}[model\_data-\/>\mbox{\hyperlink{struct_model_data_af3cd7a963f4eba06489929eb6e3b930f}{sub\_model\_float\_indices}}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00426}00426                                              [model\_data-\/>\mbox{\hyperlink{struct_model_data_a47128eccba057b68399ef405972673fd}{n\_added\_sub\_models}}]]);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00427}00427 }
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00428}00428   \textcolor{comment}{// Save next indices by adding lengths}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00429}00429   model\_data-\/>\mbox{\hyperlink{struct_model_data_a1777c7ed1bf986cca9ba89bb564f5955}{sub\_model\_int\_indices}}[model\_data-\/>\mbox{\hyperlink{struct_model_data_a47128eccba057b68399ef405972673fd}{n\_added\_sub\_models}} + 1] =}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00430}00430       (n\_int\_param + 1) +}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00431}00431       model\_data}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00432}00432           -\/>sub\_model\_int\_indices[model\_data-\/>\mbox{\hyperlink{struct_model_data_a47128eccba057b68399ef405972673fd}{n\_added\_sub\_models}}];  \textcolor{comment}{//+1 is type}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00433}00433   model\_data-\/>\mbox{\hyperlink{struct_model_data_af3cd7a963f4eba06489929eb6e3b930f}{sub\_model\_float\_indices}}[model\_data-\/>\mbox{\hyperlink{struct_model_data_a47128eccba057b68399ef405972673fd}{n\_added\_sub\_models}} + 1] =}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00434}00434       n\_float\_param +}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00435}00435       model\_data-\/>\mbox{\hyperlink{struct_model_data_af3cd7a963f4eba06489929eb6e3b930f}{sub\_model\_float\_indices}}[model\_data-\/>\mbox{\hyperlink{struct_model_data_a47128eccba057b68399ef405972673fd}{n\_added\_sub\_models}}];}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00436}00436   model\_data-\/>\mbox{\hyperlink{struct_model_data_ae3387a11501ce652f3a90697fc17152e}{sub\_model\_env\_idx}}[model\_data-\/>\mbox{\hyperlink{struct_model_data_a47128eccba057b68399ef405972673fd}{n\_added\_sub\_models}} + 1] =}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00437}00437       model\_data-\/>\mbox{\hyperlink{struct_model_data_ae3387a11501ce652f3a90697fc17152e}{sub\_model\_env\_idx}}[model\_data-\/>\mbox{\hyperlink{struct_model_data_a47128eccba057b68399ef405972673fd}{n\_added\_sub\_models}}] +}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00438}00438       n\_env\_param;}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00439}00439   ++(model\_data-\/>\mbox{\hyperlink{struct_model_data_a47128eccba057b68399ef405972673fd}{n\_added\_sub\_models}});}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00440}00440 }
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00441}00441   \textcolor{comment}{// Add the sub model type}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00442}00442   *(sub\_model\_int\_data++) = sub\_model\_type;}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00443}00443 }
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00444}00444   \textcolor{comment}{// Add integer parameters}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00445}00445   \textcolor{keywordflow}{for} (; n\_int\_param > 0; -\/-\/n\_int\_param)}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00446}00446     *(sub\_model\_int\_data++) = *(int\_param++);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00447}00447 }
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00448}00448   \textcolor{comment}{// Add floating-\/point parameters}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00449}00449   \textcolor{keywordflow}{for} (; n\_float\_param > 0; -\/-\/n\_float\_param)}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00450}00450     *(sub\_model\_float\_data++) = (double)*(float\_param++);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00451}00451 }
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00452}00452   model\_data-\/>\mbox{\hyperlink{struct_model_data_ae18d47d83ec679f1d1634b40caa204a7}{n\_sub\_model\_env\_data}} += n\_env\_param;}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00453}00453 \}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00454}00454 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00455}00455 \textcolor{comment}{/** \(\backslash\)brief Update sub-\/model data}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00456}00456 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00457}00457 \textcolor{comment}{ * Update data for one or more sub-\/models. Sub-\/models of a certain type are}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00458}00458 \textcolor{comment}{ * passed a void pointer to updated data that must be in the format specified}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00459}00459 \textcolor{comment}{ * by the sub-\/model type. This data could be used to find specific sub-\/models}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00460}00460 \textcolor{comment}{ * of the specified type and change some model parameter(s).}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00461}00461 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00462}00462 \textcolor{comment}{ * \(\backslash\)param cell\_id Id of the grid cell to update}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00463}00463 \textcolor{comment}{ * \(\backslash\)param sub\_model\_id Index of the sub model to update (or 0 if unknown)}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00464}00464 \textcolor{comment}{ * \(\backslash\)param update\_sub\_model\_type Type of the sub-\/model}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00465}00465 \textcolor{comment}{ * \(\backslash\)param update\_data Pointer to updated data to pass to the sub-\/model}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00466}00466 \textcolor{comment}{ * \(\backslash\)param solver\_data Pointer to solver data}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00467}00467 \textcolor{comment}{ */}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00468}\mbox{\hyperlink{sub__model__solver_8c_a9e9e2ecadad11db30c4954768a69ccda}{00468}} \textcolor{keywordtype}{void} \mbox{\hyperlink{sub__model__solver_8c_a9e9e2ecadad11db30c4954768a69ccda}{sub\_model\_update\_data}}(\textcolor{keywordtype}{int} cell\_id, \textcolor{keywordtype}{int} *sub\_model\_id,}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00469}00469                            \textcolor{keywordtype}{int} update\_sub\_model\_type, \textcolor{keywordtype}{void} *update\_data,}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00470}00470                            \textcolor{keywordtype}{void} *solver\_data) \{}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00471}00471   \mbox{\hyperlink{struct_model_data}{ModelData}} *model\_data =}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00472}00472       (\mbox{\hyperlink{struct_model_data}{ModelData}} *)\&(((\mbox{\hyperlink{struct_solver_data}{SolverData}} *)solver\_data)-\/>model\_data);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00473}00473 }
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00474}00474   \textcolor{comment}{// Point to the environment-\/dependent data for the grid cell}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00475}00475   model\_data-\/>\mbox{\hyperlink{struct_model_data_ac6f5cab01e33c18c7764fb0d246d19f2}{grid\_cell\_sub\_model\_env\_data}} =}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00476}00476       \&(model\_data}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00477}00477             -\/>\mbox{\hyperlink{struct_model_data_ad2d4167bbc346d5adb114d822233b2ad}{sub\_model\_env\_data}}[cell\_id * model\_data-\/>\mbox{\hyperlink{struct_model_data_ae18d47d83ec679f1d1634b40caa204a7}{n\_sub\_model\_env\_data}}]);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00478}00478 }
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00479}00479   \textcolor{comment}{// Get the number of sub models}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00480}00480   \textcolor{keywordtype}{int} n\_sub\_model = model\_data-\/>\mbox{\hyperlink{struct_model_data_a75a7b9101543eb10e5c646859a92a904}{n\_sub\_model}};}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00481}00481 }
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00482}00482   \textcolor{comment}{// Loop through the sub models advancing the sub\_model\_data pointer each time}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00483}00483   \textcolor{keywordflow}{for} (; (*sub\_model\_id) < n\_sub\_model; (*sub\_model\_id)++) \{}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00484}00484     \textcolor{keywordtype}{int} *sub\_model\_int\_data =}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00485}00485         \&(model\_data-\/>\mbox{\hyperlink{struct_model_data_a05fc229efdc542ddec6f0530b9265545}{sub\_model\_int\_data}}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00486}00486               [model\_data-\/>\mbox{\hyperlink{struct_model_data_a1777c7ed1bf986cca9ba89bb564f5955}{sub\_model\_int\_indices}}[*sub\_model\_id]]);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00487}00487     \textcolor{keywordtype}{double} *sub\_model\_float\_data =}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00488}00488         \&(model\_data-\/>\mbox{\hyperlink{struct_model_data_a8e2962b67462cbde79247f671abc5303}{sub\_model\_float\_data}}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00489}00489               [model\_data-\/>\mbox{\hyperlink{struct_model_data_af3cd7a963f4eba06489929eb6e3b930f}{sub\_model\_float\_indices}}[*sub\_model\_id]]);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00490}00490     \textcolor{keywordtype}{double} *sub\_model\_env\_data = \&(}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00491}00491         model\_data-\/>\mbox{\hyperlink{struct_model_data_ac6f5cab01e33c18c7764fb0d246d19f2}{grid\_cell\_sub\_model\_env\_data}}[model\_data-\/>\mbox{\hyperlink{struct_model_data_ae3387a11501ce652f3a90697fc17152e}{sub\_model\_env\_idx}}[(}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00492}00492             *sub\_model\_id)]]);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00493}00493 }
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00494}00494     \textcolor{comment}{// Get the sub model type}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00495}00495     \textcolor{keywordtype}{int} sub\_model\_type = *(sub\_model\_int\_data++);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00496}00496 }
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00497}00497     \textcolor{keywordtype}{bool} found = \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00498}00498 }
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00499}00499     \textcolor{comment}{// Skip sub-\/models of other types}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00500}00500     \textcolor{keywordflow}{if} (sub\_model\_type != update\_sub\_model\_type) \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00501}00501 }
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00502}00502     \textcolor{comment}{// Currently there are no sub-\/models with update data functions}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00503}00503   \}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00504}00504 \}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00505}00505 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00506}00506 \textcolor{comment}{/** \(\backslash\)brief Print the sub model data}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00507}00507 \textcolor{comment}{ * \(\backslash\)param solver\_data Pointer to the solver data}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00508}00508 \textcolor{comment}{ */}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00509}\mbox{\hyperlink{sub__model__solver_8c_a1e59f0e39671190ef139baa1021d9edf}{00509}} \textcolor{keywordtype}{void} \mbox{\hyperlink{sub__model__solver_8c_a1e59f0e39671190ef139baa1021d9edf}{sub\_model\_print\_data}}(\textcolor{keywordtype}{void} *solver\_data) \{}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00510}00510   \mbox{\hyperlink{struct_model_data}{ModelData}} *model\_data =}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00511}00511       (\mbox{\hyperlink{struct_model_data}{ModelData}} *)\&(((\mbox{\hyperlink{struct_solver_data}{SolverData}} *)solver\_data)-\/>model\_data);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00512}00512 }
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00513}00513   \textcolor{comment}{// Get the number of sub models}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00514}00514   \textcolor{keywordtype}{int} n\_sub\_model = model\_data-\/>\mbox{\hyperlink{struct_model_data_a75a7b9101543eb10e5c646859a92a904}{n\_sub\_model}};}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00515}00515 }
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00516}00516   \textcolor{comment}{// Loop through the sub models to print their data}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00517}00517   \textcolor{comment}{// advancing the sub\_model\_data pointer each time}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00518}00518   \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_sub\_model = 0; i\_sub\_model < n\_sub\_model; i\_sub\_model++) \{}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00519}00519     \textcolor{keywordtype}{int} *sub\_model\_int\_data =}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00520}00520         \&(model\_data-\/>\mbox{\hyperlink{struct_model_data_a05fc229efdc542ddec6f0530b9265545}{sub\_model\_int\_data}}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00521}00521               [model\_data-\/>\mbox{\hyperlink{struct_model_data_a1777c7ed1bf986cca9ba89bb564f5955}{sub\_model\_int\_indices}}[i\_sub\_model]]);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00522}00522     \textcolor{keywordtype}{double} *sub\_model\_float\_data =}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00523}00523         \&(model\_data-\/>\mbox{\hyperlink{struct_model_data_a8e2962b67462cbde79247f671abc5303}{sub\_model\_float\_data}}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00524}00524               [model\_data-\/>\mbox{\hyperlink{struct_model_data_af3cd7a963f4eba06489929eb6e3b930f}{sub\_model\_float\_indices}}[i\_sub\_model]]);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00525}00525 }
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00526}00526     \textcolor{comment}{// Get the sub model type}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00527}00527     \textcolor{keywordtype}{int} sub\_model\_type = *(sub\_model\_int\_data++);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00528}00528 }
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00529}00529     \textcolor{comment}{// Call the appropriate function}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00530}00530     \textcolor{keywordflow}{switch} (sub\_model\_type) \{}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00531}00531       \textcolor{keywordflow}{case} \mbox{\hyperlink{sub__model__solver_8c_a11353981e82548216308c1746eb4e196}{SUB\_MODEL\_PDFITE}}:}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00532}00532         \mbox{\hyperlink{sub__models_8h_a57f2820ce385881014fed09a82ae5364}{sub\_model\_PDFiTE\_print}}(sub\_model\_int\_data, sub\_model\_float\_data);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00533}00533         \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00534}00534       \textcolor{keywordflow}{case} \mbox{\hyperlink{sub__model__solver_8c_abe344a8755ba09d26ffa38022aea4530}{SUB\_MODEL\_UNIFAC}}:}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00535}00535         \mbox{\hyperlink{sub__models_8h_ac47310b67585f52b71ff6aac1c603ba5}{sub\_model\_UNIFAC\_print}}(sub\_model\_int\_data, sub\_model\_float\_data);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00536}00536         \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00537}00537       \textcolor{keywordflow}{case} \mbox{\hyperlink{sub__model__solver_8c_a497cb5cfc3c9293b4627617d18e9836f}{SUB\_MODEL\_ZSR\_AEROSOL\_WATER}}:}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00538}00538         \mbox{\hyperlink{sub__models_8h_a74a95ee9cc01c0905493fcb19e00c8b0}{sub\_model\_ZSR\_aerosol\_water\_print}}(sub\_model\_int\_data,}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00539}00539                                           sub\_model\_float\_data);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00540}00540         \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00541}00541     \}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00542}00542   \}}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00543}00543   fflush(stdout);}
+\DoxyCodeLine{\Hypertarget{sub__model__solver_8c_source_l00544}00544 \}}
+
+\end{DoxyCode}

@@ -1,6 +1,4 @@
 <map id="camp_rxn_cmaq_oh_hno3::rxn_cmaq_oh_hno3_t" name="camp_rxn_cmaq_oh_hno3::rxn_cmaq_oh_hno3_t">
-<area shape="rect" id="node1" title="Generic test reaction data type." alt="" coords="5,319,179,360"/>
-<area shape="rect" id="node2" href="$structcamp__rxn__data_1_1rxn__data__t.html" title="Abstract reaction data type." alt="" coords="25,228,159,269"/>
-<area shape="rect" id="node3" href="$structcamp__property_1_1property__t.html" title="Property data." alt="" coords="7,139,177,165"/>
-<area shape="rect" id="node4" href="$structcamp__property_1_1property__link__t.html" title="Property link data." alt="" coords="13,5,171,47"/>
+<area shape="rect" id="node1" title="Generic test reaction data type." alt="" coords="5,95,179,136"/>
+<area shape="rect" id="node2" href="$structcamp__rxn__data_1_1rxn__data__t.html" title="Abstract reaction data type." alt="" coords="25,5,159,47"/>
 </map>

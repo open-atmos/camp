@@ -1,0 +1,53 @@
+\hypertarget{rxn__solver_8h_source}{}\doxysection{rxn\+\_\+solver.\+h}
+\label{rxn__solver_8h_source}\index{rxn\_solver.h@{rxn\_solver.h}}
+\mbox{\hyperlink{rxn__solver_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{rxn__solver_8h_source_l00001}00001 \textcolor{comment}{/* Copyright (C) 2021 Barcelona Supercomputing Center and University of}}
+\DoxyCodeLine{\Hypertarget{rxn__solver_8h_source_l00002}00002 \textcolor{comment}{ * Illinois at Urbana-\/Champaign}}
+\DoxyCodeLine{\Hypertarget{rxn__solver_8h_source_l00003}00003 \textcolor{comment}{ * SPDX-\/License-\/Identifier: MIT}}
+\DoxyCodeLine{\Hypertarget{rxn__solver_8h_source_l00004}00004 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{rxn__solver_8h_source_l00005}00005 \textcolor{comment}{ * Header file for rxn\_solver.c}}
+\DoxyCodeLine{\Hypertarget{rxn__solver_8h_source_l00006}00006 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{rxn__solver_8h_source_l00007}00007 \textcolor{comment}{ */}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__solver_8h_source_l00008}00008 \textcolor{comment}{/** \(\backslash\)file}}
+\DoxyCodeLine{\Hypertarget{rxn__solver_8h_source_l00009}00009 \textcolor{comment}{ * \(\backslash\)brief Header file for abstract reaction functions}}
+\DoxyCodeLine{\Hypertarget{rxn__solver_8h_source_l00010}00010 \textcolor{comment}{ */}}
+\DoxyCodeLine{\Hypertarget{rxn__solver_8h_source_l00011}00011 \textcolor{preprocessor}{\#ifndef RXN\_SOLVER\_H}}
+\DoxyCodeLine{\Hypertarget{rxn__solver_8h_source_l00012}00012 \textcolor{preprocessor}{\#define RXN\_SOLVER\_H}}
+\DoxyCodeLine{\Hypertarget{rxn__solver_8h_source_l00013}00013 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{_jacobian_8h}{Jacobian.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{rxn__solver_8h_source_l00014}00014 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{camp__common_8h}{camp\_common.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{rxn__solver_8h_source_l00015}00015 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__solver_8h_source_l00016}00016 \textcolor{comment}{/** Public reaction functions **/}}
+\DoxyCodeLine{\Hypertarget{rxn__solver_8h_source_l00017}00017 }
+\DoxyCodeLine{\Hypertarget{rxn__solver_8h_source_l00018}00018 \textcolor{comment}{/* Solver functions */}}
+\DoxyCodeLine{\Hypertarget{rxn__solver_8h_source_l00019}00019 \textcolor{keywordtype}{void} \mbox{\hyperlink{rxn__solver_8h_a6816597d1e59964f558cfc82b004549e}{rxn\_get\_used\_jac\_elem}}(\mbox{\hyperlink{struct_model_data}{ModelData}} *model\_data, \mbox{\hyperlink{struct_jacobian}{Jacobian}} *jac);}
+\DoxyCodeLine{\Hypertarget{rxn__solver_8h_source_l00020}00020 \textcolor{keywordtype}{void} \mbox{\hyperlink{rxn__solver_8h_a04e1414725ffbbb0b16fca416d826c1d}{rxn\_update\_ids}}(\mbox{\hyperlink{struct_model_data}{ModelData}} *model\_data, \textcolor{keywordtype}{int} *deriv\_ids, \mbox{\hyperlink{struct_jacobian}{Jacobian}} jac);}
+\DoxyCodeLine{\Hypertarget{rxn__solver_8h_source_l00021}00021 \textcolor{keywordtype}{void} \mbox{\hyperlink{rxn__solver_8h_ab3d4bbab05647b5931a81ead002a5805}{rxn\_update\_env\_state}}(\mbox{\hyperlink{struct_model_data}{ModelData}} *model\_data);}
+\DoxyCodeLine{\Hypertarget{rxn__solver_8h_source_l00022}\mbox{\hyperlink{rxn__solver_8h_a26cb09c8c727eaf3d6ffcadef09c2558}{00022}} \textcolor{keywordtype}{void} \mbox{\hyperlink{rxn__solver_8h_a26cb09c8c727eaf3d6ffcadef09c2558}{rxn\_reset\_state\_adjustments}}(\mbox{\hyperlink{struct_model_data}{ModelData}} *model\_data);}
+\DoxyCodeLine{\Hypertarget{rxn__solver_8h_source_l00023}\mbox{\hyperlink{rxn__solver_8h_afad5f98a024caf885890a5dc22a95e34}{00023}} \textcolor{keywordtype}{void} \mbox{\hyperlink{rxn__solver_8h_afad5f98a024caf885890a5dc22a95e34}{rxn\_adjust\_state}}(\mbox{\hyperlink{struct_model_data}{ModelData}} *model\_data);}
+\DoxyCodeLine{\Hypertarget{rxn__solver_8h_source_l00024}00024 \textcolor{keywordtype}{void} \mbox{\hyperlink{rxn__solver_8h_a607b803e7a4b427940312560ae0e5ba3}{rxn\_print\_data}}(\textcolor{keywordtype}{void} *solver\_data);}
+\DoxyCodeLine{\Hypertarget{rxn__solver_8h_source_l00025}00025 \textcolor{preprocessor}{\#ifdef CAMP\_USE\_SUNDIALS}}
+\DoxyCodeLine{\Hypertarget{rxn__solver_8h_source_l00026}\mbox{\hyperlink{rxn__solver_8h_a433d6326b9ec30d4525bf974cbef30d5}{00026}} \textcolor{keywordtype}{void} \mbox{\hyperlink{rxn__solver_8h_a433d6326b9ec30d4525bf974cbef30d5}{rxn\_calc\_deriv}}(\mbox{\hyperlink{struct_model_data}{ModelData}} *model\_data, \mbox{\hyperlink{struct_time_derivative}{TimeDerivative}} time\_deriv,}
+\DoxyCodeLine{\Hypertarget{rxn__solver_8h_source_l00027}00027                     \textcolor{keywordtype}{double} time\_step);}
+\DoxyCodeLine{\Hypertarget{rxn__solver_8h_source_l00028}\mbox{\hyperlink{rxn__solver_8h_a0dfcff0b669aa2322b0bea608aacd9e1}{00028}} \textcolor{keywordtype}{void} \mbox{\hyperlink{rxn__solver_8h_a0dfcff0b669aa2322b0bea608aacd9e1}{rxn\_calc\_deriv\_specific\_types}}(\mbox{\hyperlink{struct_model_data}{ModelData}} *model\_data,}
+\DoxyCodeLine{\Hypertarget{rxn__solver_8h_source_l00029}00029                                    \mbox{\hyperlink{struct_time_derivative}{TimeDerivative}} time\_deriv, \textcolor{keywordtype}{double} time\_step);}
+\DoxyCodeLine{\Hypertarget{rxn__solver_8h_source_l00030}\mbox{\hyperlink{rxn__solver_8h_aaaf970bdabbe2794bddb385a3606f01f}{00030}} \textcolor{keywordtype}{void} \mbox{\hyperlink{rxn__solver_8h_aaaf970bdabbe2794bddb385a3606f01f}{rxn\_calc\_jac}}(\mbox{\hyperlink{struct_model_data}{ModelData}} *model\_data, \mbox{\hyperlink{struct_jacobian}{Jacobian}} jac, \textcolor{keywordtype}{double} time\_step);}
+\DoxyCodeLine{\Hypertarget{rxn__solver_8h_source_l00031}\mbox{\hyperlink{rxn__solver_8h_af903ecb6a69d0f1f080fc88c93edc33f}{00031}} \textcolor{keywordtype}{void} \mbox{\hyperlink{rxn__solver_8h_af903ecb6a69d0f1f080fc88c93edc33f}{rxn\_calc\_jac\_specific\_types}}(\mbox{\hyperlink{struct_model_data}{ModelData}} *model\_data, \mbox{\hyperlink{struct_jacobian}{Jacobian}} jac,}
+\DoxyCodeLine{\Hypertarget{rxn__solver_8h_source_l00032}00032                                  \textcolor{keywordtype}{double} time\_step);}
+\DoxyCodeLine{\Hypertarget{rxn__solver_8h_source_l00033}00033 \textcolor{comment}{// void rxn\_calc\_jac\_specific\_types(ModelData *model\_data, double *J\_data,}}
+\DoxyCodeLine{\Hypertarget{rxn__solver_8h_source_l00034}00034 \textcolor{comment}{// double time\_step)}}
+\DoxyCodeLine{\Hypertarget{rxn__solver_8h_source_l00035}00035 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{rxn__solver_8h_source_l00036}00036 }
+\DoxyCodeLine{\Hypertarget{rxn__solver_8h_source_l00037}00037 \textcolor{comment}{/* Setup functions */}}
+\DoxyCodeLine{\Hypertarget{rxn__solver_8h_source_l00038}00038 \textcolor{keywordtype}{void} \mbox{\hyperlink{rxn__solver_8h_a411c814fb8bd6d71da9c339f632e4a4b}{rxn\_add\_condensed\_data}}(\textcolor{keywordtype}{int} rxn\_type, \textcolor{keywordtype}{int} n\_int\_param, \textcolor{keywordtype}{int} n\_float\_param,}
+\DoxyCodeLine{\Hypertarget{rxn__solver_8h_source_l00039}00039                             \textcolor{keywordtype}{int} n\_env\_param, \textcolor{keywordtype}{int} *int\_param,}
+\DoxyCodeLine{\Hypertarget{rxn__solver_8h_source_l00040}00040                             \textcolor{keywordtype}{double} *float\_param, \textcolor{keywordtype}{void} *solver\_data);}
+\DoxyCodeLine{\Hypertarget{rxn__solver_8h_source_l00041}00041 }
+\DoxyCodeLine{\Hypertarget{rxn__solver_8h_source_l00042}00042 \textcolor{comment}{/* Update data functions */}}
+\DoxyCodeLine{\Hypertarget{rxn__solver_8h_source_l00043}00043 \textcolor{keywordtype}{void} \mbox{\hyperlink{rxn__solver_8h_ae35bddd1d3cc8d012789600176c7595b}{rxn\_update\_data}}(\textcolor{keywordtype}{int} cell\_id, \textcolor{keywordtype}{int} *rxn\_id, \textcolor{keywordtype}{int} update\_rxn\_type,}
+\DoxyCodeLine{\Hypertarget{rxn__solver_8h_source_l00044}00044                      \textcolor{keywordtype}{void} *update\_data, \textcolor{keywordtype}{void} *solver\_data);}
+\DoxyCodeLine{\Hypertarget{rxn__solver_8h_source_l00045}00045 \textcolor{keywordtype}{void} \mbox{\hyperlink{rxn__solver_8h_a64380078ecb4d18fdf6bbf2d3bdff9e8}{rxn\_free\_update\_data}}(\textcolor{keywordtype}{void} *update\_data);}
+\DoxyCodeLine{\Hypertarget{rxn__solver_8h_source_l00046}00046 }
+\DoxyCodeLine{\Hypertarget{rxn__solver_8h_source_l00047}00047 \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

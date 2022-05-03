@@ -1,6 +1,8 @@
 <map id="camp_camp_core::camp_core_t::initialize_update_object" name="camp_camp_core::camp_core_t::initialize_update_object">
 <area shape="rect" id="node1" title=" " alt="" coords="5,63,168,119"/>
 <area shape="rect" id="node2" href="$namespacecamp__camp__core.html#a048e8aa3d620f11cc977a7633c5ca7e3" title="Initialize an update data object for an aerosol representation." alt="" coords="217,5,395,47"/>
-<area shape="rect" id="node3" href="$namespacecamp__camp__core.html#a94f34a7d8629869fcebd9dfcf036cdb8" title="Initialize an update data object for a reaction." alt="" coords="217,71,395,112"/>
-<area shape="rect" id="node4" href="$namespacecamp__camp__core.html#af184d87f847c14093e3378711dd86f63" title="Initialize an update data object for a sub model." alt="" coords="216,136,396,177"/>
+<area shape="rect" id="node5" href="$namespacecamp__camp__core.html#a94f34a7d8629869fcebd9dfcf036cdb8" title="Initialize an update data object for a reaction." alt="" coords="217,71,395,112"/>
+<area shape="rect" id="node6" href="$namespacecamp__camp__core.html#af184d87f847c14093e3378711dd86f63" title="Initialize an update data object for a sub model." alt="" coords="216,136,396,177"/>
+<area shape="rect" id="node3" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="444,78,596,105"/>
+<area shape="rect" id="node4" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="644,71,767,112"/>
 </map>

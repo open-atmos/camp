@@ -1,6 +1,6 @@
 <map id="camp_util::get_unit" name="camp_util::get_unit">
-<area shape="rect" id="node1" title="Returns an available unit number. This should be freed by free_unit()." alt="" coords="5,13,136,39"/>
-<area shape="rect" id="node2" href="$namespacecamp__util.html#a970b40b46d26e937fb3cdc0b9217b86c" title="Error immediately." alt="" coords="184,13,317,39"/>
-<area shape="rect" id="node3" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="365,13,517,39"/>
-<area shape="rect" id="node4" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="565,5,688,47"/>
+<area shape="rect" id="node1" title="Returns an available unit number. This should be freed by free_unit()." alt="" coords="5,29,136,56"/>
+<area shape="rect" id="node2" href="$namespacecamp__util.html#a970b40b46d26e937fb3cdc0b9217b86c" title="Error immediately." alt="" coords="184,29,317,56"/>
+<area shape="rect" id="node3" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="365,29,517,56"/>
+<area shape="rect" id="node4" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="565,22,688,63"/>
 </map>

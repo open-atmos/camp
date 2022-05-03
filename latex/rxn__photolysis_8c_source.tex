@@ -1,0 +1,289 @@
+\hypertarget{rxn__photolysis_8c_source}{}\doxysection{rxn\+\_\+photolysis.\+c}
+\label{rxn__photolysis_8c_source}\index{rxn\_photolysis.c@{rxn\_photolysis.c}}
+\mbox{\hyperlink{rxn__photolysis_8c}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00001}00001 \textcolor{comment}{/* Copyright (C) 2021 Barcelona Supercomputing Center and University of}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00002}00002 \textcolor{comment}{ * Illinois at Urbana-\/Champaign}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00003}00003 \textcolor{comment}{ * SPDX-\/License-\/Identifier: MIT}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00004}00004 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00005}00005 \textcolor{comment}{ * Photolysis reaction solver functions}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00006}00006 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00007}00007 \textcolor{comment}{ */}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00008}00008 \textcolor{comment}{/** \(\backslash\)file}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00009}00009 \textcolor{comment}{ * \(\backslash\)brief Photolysis reaction solver functions}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00010}00010 \textcolor{comment}{ */}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00011}00011 \textcolor{preprocessor}{\#include <math.h>}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00012}00012 \textcolor{preprocessor}{\#include <stdio.h>}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00013}00013 \textcolor{preprocessor}{\#include <stdlib.h>}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00014}00014 \textcolor{preprocessor}{\#include "{}../rxns.h"{}}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00015}00015 }
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00016}00016 \textcolor{comment}{// TODO Lookup environmental indicies during initialization}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00017}\mbox{\hyperlink{rxn__photolysis_8c_aa90d2b6c48aceb4d7ac3d93d5249bb60}{00017}} \textcolor{preprocessor}{\#define TEMPERATURE\_K\_ env\_data[0]}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00018}\mbox{\hyperlink{rxn__photolysis_8c_a32cc078fd8ca9ad0684c48ae0aad7135}{00018}} \textcolor{preprocessor}{\#define PRESSURE\_PA\_ env\_data[1]}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00019}00019 }
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00020}\mbox{\hyperlink{rxn__photolysis_8c_a05ef845cf6ed7ab9a774440c42af34fa}{00020}} \textcolor{preprocessor}{\#define NUM\_REACT\_ int\_data[0]}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00021}\mbox{\hyperlink{rxn__photolysis_8c_acf951e890da75cd2d503ed6ce8211fc2}{00021}} \textcolor{preprocessor}{\#define NUM\_PROD\_ int\_data[1]}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00022}\mbox{\hyperlink{rxn__photolysis_8c_a90cc89c1a8af0668561f9fc8cdbb9dde}{00022}} \textcolor{preprocessor}{\#define RXN\_ID\_ int\_data[2]}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00023}\mbox{\hyperlink{rxn__photolysis_8c_a1757f332a0485799c2ee77edff00c38a}{00023}} \textcolor{preprocessor}{\#define SCALING\_ float\_data[0]}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00024}\mbox{\hyperlink{rxn__photolysis_8c_a6d62af2f44a112ef5b324cf406a830c2}{00024}} \textcolor{preprocessor}{\#define RATE\_CONSTANT\_ (rxn\_env\_data[0])}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00025}\mbox{\hyperlink{rxn__photolysis_8c_a8a6abdf49f8b3b17aea4f4595bcbc0cc}{00025}} \textcolor{preprocessor}{\#define BASE\_RATE\_ (rxn\_env\_data[1])}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00026}\mbox{\hyperlink{rxn__photolysis_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{00026}} \textcolor{preprocessor}{\#define NUM\_INT\_PROP\_ 3}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00027}\mbox{\hyperlink{rxn__photolysis_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}{00027}} \textcolor{preprocessor}{\#define NUM\_FLOAT\_PROP\_ 1}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00028}\mbox{\hyperlink{rxn__photolysis_8c_a1f68a3544ae39a7815cbb5c09dfdeff0}{00028}} \textcolor{preprocessor}{\#define NUM\_ENV\_PARAM\_ 2}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00029}\mbox{\hyperlink{rxn__photolysis_8c_ae761e39657aac155d83eae9b338be571}{00029}} \textcolor{preprocessor}{\#define REACT\_(x) (int\_data[NUM\_INT\_PROP\_ + x] -\/ 1)}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00030}\mbox{\hyperlink{rxn__photolysis_8c_a9fda90058c6a41b1dda6ded03321c4da}{00030}} \textcolor{preprocessor}{\#define PROD\_(x) (int\_data[NUM\_INT\_PROP\_ + NUM\_REACT\_ + x] -\/ 1)}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00031}\mbox{\hyperlink{rxn__photolysis_8c_af9fc34858d09e71d3cffd88cf942bdf9}{00031}} \textcolor{preprocessor}{\#define DERIV\_ID\_(x) int\_data[NUM\_INT\_PROP\_ + NUM\_REACT\_ + NUM\_PROD\_ + x]}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00032}\mbox{\hyperlink{rxn__photolysis_8c_ab831aae98d4453927c63a93f55ee5a86}{00032}} \textcolor{preprocessor}{\#define JAC\_ID\_(x) int\_data[NUM\_INT\_PROP\_ + 2 * (NUM\_REACT\_ + NUM\_PROD\_) + x]}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00033}\mbox{\hyperlink{rxn__photolysis_8c_a9ae244708fd9c438bf840ed319733651}{00033}} \textcolor{preprocessor}{\#define YIELD\_(x) float\_data[NUM\_FLOAT\_PROP\_ + x]}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00034}00034 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00035}00035 \textcolor{comment}{/** \(\backslash\)brief Flag Jacobian elements used by this reaction}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00036}00036 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00037}00037 \textcolor{comment}{ * \(\backslash\)param rxn\_int\_data Pointer to the reaction integer data}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00038}00038 \textcolor{comment}{ * \(\backslash\)param rxn\_float\_data Pointer to the reaction floating-\/point data}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00039}00039 \textcolor{comment}{ * \(\backslash\)param jac Jacobian}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00040}00040 \textcolor{comment}{ */}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00041}\mbox{\hyperlink{rxns_8h_ab3c375e49f672106491c96e4b4455745}{00041}} \textcolor{keywordtype}{void} \mbox{\hyperlink{rxn__photolysis_8c_ab3c375e49f672106491c96e4b4455745}{rxn\_photolysis\_get\_used\_jac\_elem}}(\textcolor{keywordtype}{int} *rxn\_int\_data, \textcolor{keywordtype}{double} *rxn\_float\_data,}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00042}00042                                       \mbox{\hyperlink{struct_jacobian}{Jacobian}} *jac) \{}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00043}00043   \textcolor{keywordtype}{int} *int\_data = rxn\_int\_data;}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00044}00044   \textcolor{keywordtype}{double} *float\_data = rxn\_float\_data;}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00045}00045 }
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00046}00046   \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_ind = 0; i\_ind < \mbox{\hyperlink{rxn__photolysis_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}}; i\_ind++) \{}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00047}00047     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_dep = 0; i\_dep < \mbox{\hyperlink{rxn__photolysis_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}}; i\_dep++) \{}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00048}00048       \mbox{\hyperlink{_jacobian_8c_aac51ac6b1cf239a84899308dab229441}{jacobian\_register\_element}}(jac, \mbox{\hyperlink{rxn__photolysis_8c_ae761e39657aac155d83eae9b338be571}{REACT\_}}(i\_dep), \mbox{\hyperlink{rxn__photolysis_8c_ae761e39657aac155d83eae9b338be571}{REACT\_}}(i\_ind));}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00049}00049     \}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00050}00050     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_dep = 0; i\_dep < \mbox{\hyperlink{rxn__photolysis_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}}; i\_dep++) \{}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00051}00051       \mbox{\hyperlink{_jacobian_8c_aac51ac6b1cf239a84899308dab229441}{jacobian\_register\_element}}(jac, \mbox{\hyperlink{rxn__photolysis_8c_a9fda90058c6a41b1dda6ded03321c4da}{PROD\_}}(i\_dep), \mbox{\hyperlink{rxn__photolysis_8c_ae761e39657aac155d83eae9b338be571}{REACT\_}}(i\_ind));}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00052}00052     \}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00053}00053   \}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00054}00054 }
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00055}00055   \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00056}00056 \}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00057}00057 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00058}00058 \textcolor{comment}{/** \(\backslash\)brief Update the time derivative and Jacbobian array indices}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00059}00059 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00060}00060 \textcolor{comment}{ * \(\backslash\)param model\_data Pointer to the model data}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00061}00061 \textcolor{comment}{ * \(\backslash\)param deriv\_ids Id of each state variable in the derivative array}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00062}00062 \textcolor{comment}{ * \(\backslash\)param jac Jacobian}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00063}00063 \textcolor{comment}{ * \(\backslash\)param rxn\_int\_data Pointer to the reaction integer data}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00064}00064 \textcolor{comment}{ * \(\backslash\)param rxn\_float\_data Pointer to the reaction floating-\/point data}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00065}00065 \textcolor{comment}{ */}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00066}\mbox{\hyperlink{rxns_8h_af81c275e7f6f9ebe2a244235d0f6fd77}{00066}} \textcolor{keywordtype}{void} \mbox{\hyperlink{rxn__photolysis_8c_af81c275e7f6f9ebe2a244235d0f6fd77}{rxn\_photolysis\_update\_ids}}(\mbox{\hyperlink{struct_model_data}{ModelData}} *model\_data, \textcolor{keywordtype}{int} *deriv\_ids,}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00067}00067                                \mbox{\hyperlink{struct_jacobian}{Jacobian}} jac, \textcolor{keywordtype}{int} *rxn\_int\_data,}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00068}00068                                \textcolor{keywordtype}{double} *rxn\_float\_data) \{}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00069}00069   \textcolor{keywordtype}{int} *int\_data = rxn\_int\_data;}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00070}00070   \textcolor{keywordtype}{double} *float\_data = rxn\_float\_data;}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00071}00071 }
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00072}00072   \textcolor{comment}{// Update the time derivative ids}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00073}00073   \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i = 0; i < \mbox{\hyperlink{rxn__photolysis_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}}; i++) \mbox{\hyperlink{rxn__photolysis_8c_af9fc34858d09e71d3cffd88cf942bdf9}{DERIV\_ID\_}}(i) = deriv\_ids[\mbox{\hyperlink{rxn__photolysis_8c_ae761e39657aac155d83eae9b338be571}{REACT\_}}(i)];}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00074}00074   \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i = 0; i < \mbox{\hyperlink{rxn__photolysis_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}}; i++)}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00075}00075     \mbox{\hyperlink{rxn__photolysis_8c_af9fc34858d09e71d3cffd88cf942bdf9}{DERIV\_ID\_}}(i + \mbox{\hyperlink{rxn__photolysis_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}}) = deriv\_ids[\mbox{\hyperlink{rxn__photolysis_8c_a9fda90058c6a41b1dda6ded03321c4da}{PROD\_}}(i)];}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00076}00076 }
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00077}00077   \textcolor{comment}{// Update the Jacobian ids}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00078}00078   \textcolor{keywordtype}{int} i\_jac = 0;}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00079}00079   \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_ind = 0; i\_ind < \mbox{\hyperlink{rxn__photolysis_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}}; i\_ind++) \{}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00080}00080     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_dep = 0; i\_dep < \mbox{\hyperlink{rxn__photolysis_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}}; i\_dep++) \{}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00081}00081       \mbox{\hyperlink{rxn__photolysis_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\_ID\_}}(i\_jac++) =}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00082}00082           \mbox{\hyperlink{_jacobian_8c_a7b43d5884ec62826389d6d739b7f25eb}{jacobian\_get\_element\_id}}(jac, \mbox{\hyperlink{rxn__photolysis_8c_ae761e39657aac155d83eae9b338be571}{REACT\_}}(i\_dep), \mbox{\hyperlink{rxn__photolysis_8c_ae761e39657aac155d83eae9b338be571}{REACT\_}}(i\_ind));}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00083}00083     \}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00084}00084     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_dep = 0; i\_dep < \mbox{\hyperlink{rxn__photolysis_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}}; i\_dep++) \{}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00085}00085       \mbox{\hyperlink{rxn__photolysis_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\_ID\_}}(i\_jac++) =}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00086}00086           \mbox{\hyperlink{_jacobian_8c_a7b43d5884ec62826389d6d739b7f25eb}{jacobian\_get\_element\_id}}(jac, \mbox{\hyperlink{rxn__photolysis_8c_a9fda90058c6a41b1dda6ded03321c4da}{PROD\_}}(i\_dep), \mbox{\hyperlink{rxn__photolysis_8c_ae761e39657aac155d83eae9b338be571}{REACT\_}}(i\_ind));}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00087}00087     \}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00088}00088   \}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00089}00089   \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00090}00090 \}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00091}00091 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00092}00092 \textcolor{comment}{/** \(\backslash\)brief Update reaction data}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00093}00093 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00094}00094 \textcolor{comment}{ * Photolysis reactions can have their base (pre-\/scaling) rate constants updated}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00095}00095 \textcolor{comment}{ * from the host model based on the calculations of an external photolysis}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00096}00096 \textcolor{comment}{ * module. The structure of the update data is:}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00097}00097 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00098}00098 \textcolor{comment}{ *  -\/ \(\backslash\)b int photo\_id (Id of one or more photolysis reactions set by the host}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00099}00099 \textcolor{comment}{ *       model using the camp\_rxn\_photolysis::rxn\_photolysis\_t::set\_photo\_id}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00100}00100 \textcolor{comment}{ *       function prior to initializing the solver.)}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00101}00101 \textcolor{comment}{ *  -\/ \(\backslash\)b double rate\_const (New pre-\/scaling rate constant.)}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00102}00102 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00103}00103 \textcolor{comment}{ * \(\backslash\)param update\_data Pointer to the updated reaction data}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00104}00104 \textcolor{comment}{ * \(\backslash\)param rxn\_int\_data Pointer to the reaction integer data}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00105}00105 \textcolor{comment}{ * \(\backslash\)param rxn\_float\_data Pointer to the reaction floating-\/point data}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00106}00106 \textcolor{comment}{ * \(\backslash\)param rxn\_env\_data Pointer to the environment-\/dependent data}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00107}00107 \textcolor{comment}{ * \(\backslash\)return Flag indicating whether this is the reaction to update}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00108}00108 \textcolor{comment}{ */}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00109}\mbox{\hyperlink{rxns_8h_a6a060bc8fc2eedb3117ad3c8a768c880}{00109}} \textcolor{keywordtype}{bool} \mbox{\hyperlink{rxn__photolysis_8c_a6a060bc8fc2eedb3117ad3c8a768c880}{rxn\_photolysis\_update\_data}}(\textcolor{keywordtype}{void} *update\_data, \textcolor{keywordtype}{int} *rxn\_int\_data,}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00110}00110                                 \textcolor{keywordtype}{double} *rxn\_float\_data, \textcolor{keywordtype}{double} *rxn\_env\_data) \{}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00111}00111   \textcolor{keywordtype}{int} *int\_data = rxn\_int\_data;}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00112}00112   \textcolor{keywordtype}{double} *float\_data = rxn\_float\_data;}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00113}00113 }
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00114}00114   \textcolor{keywordtype}{int} *photo\_id = (\textcolor{keywordtype}{int} *)update\_data;}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00115}00115   \textcolor{keywordtype}{double} *base\_rate = (\textcolor{keywordtype}{double} *)\&(photo\_id[1]);}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00116}00116 }
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00117}00117   \textcolor{comment}{// Set the base photolysis rate constants for matching reactions}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00118}00118   \textcolor{keywordflow}{if} (*photo\_id == \mbox{\hyperlink{rxn__photolysis_8c_a90cc89c1a8af0668561f9fc8cdbb9dde}{RXN\_ID\_}} \&\& \mbox{\hyperlink{rxn__photolysis_8c_a90cc89c1a8af0668561f9fc8cdbb9dde}{RXN\_ID\_}} > 0) \{}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00119}00119     \mbox{\hyperlink{rxn__photolysis_8c_a8a6abdf49f8b3b17aea4f4595bcbc0cc}{BASE\_RATE\_}} = (double)*base\_rate;}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00120}00120     \mbox{\hyperlink{rxn__photolysis_8c_a6d62af2f44a112ef5b324cf406a830c2}{RATE\_CONSTANT\_}} = \mbox{\hyperlink{rxn__photolysis_8c_a1757f332a0485799c2ee77edff00c38a}{SCALING\_}} * \mbox{\hyperlink{rxn__photolysis_8c_a8a6abdf49f8b3b17aea4f4595bcbc0cc}{BASE\_RATE\_}};}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00121}00121     \textcolor{keywordflow}{return} \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00122}00122   \}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00123}00123 }
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00124}00124   \textcolor{keywordflow}{return} \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00125}00125 \}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00126}00126 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00127}00127 \textcolor{comment}{/** \(\backslash\)brief Update reaction data for new environmental conditions}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00128}00128 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00129}00129 \textcolor{comment}{ * For Photolysis reaction this only involves recalculating the rate}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00130}00130 \textcolor{comment}{ * constant.}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00131}00131 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00132}00132 \textcolor{comment}{ * \(\backslash\)param model\_data Pointer to the model data}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00133}00133 \textcolor{comment}{ * \(\backslash\)param rxn\_int\_data Pointer to the reaction integer data}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00134}00134 \textcolor{comment}{ * \(\backslash\)param rxn\_float\_data Pointer to the reaction floating-\/point data}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00135}00135 \textcolor{comment}{ * \(\backslash\)param rxn\_env\_data Pointer to the environment-\/dependent parameters}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00136}00136 \textcolor{comment}{ */}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00137}\mbox{\hyperlink{rxns_8h_a7050f9c7df2b337474e90b49cd563d1d}{00137}} \textcolor{keywordtype}{void} \mbox{\hyperlink{rxn__photolysis_8c_a7050f9c7df2b337474e90b49cd563d1d}{rxn\_photolysis\_update\_env\_state}}(\mbox{\hyperlink{struct_model_data}{ModelData}} *model\_data, \textcolor{keywordtype}{int} *rxn\_int\_data,}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00138}00138                                      \textcolor{keywordtype}{double} *rxn\_float\_data,}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00139}00139                                      \textcolor{keywordtype}{double} *rxn\_env\_data) \{}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00140}00140   \textcolor{keywordtype}{int} *int\_data = rxn\_int\_data;}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00141}00141   \textcolor{keywordtype}{double} *float\_data = rxn\_float\_data;}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00142}00142   \textcolor{keywordtype}{double} *env\_data = model\_data-\/>\mbox{\hyperlink{struct_model_data_a847bd594a8e88da48104655fdc8524d7}{grid\_cell\_env}};}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00143}00143 }
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00144}00144   \textcolor{comment}{// Calculate the rate constant in (1/s)}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00145}00145   \mbox{\hyperlink{rxn__photolysis_8c_a6d62af2f44a112ef5b324cf406a830c2}{RATE\_CONSTANT\_}} = \mbox{\hyperlink{rxn__photolysis_8c_a1757f332a0485799c2ee77edff00c38a}{SCALING\_}} * \mbox{\hyperlink{rxn__photolysis_8c_a8a6abdf49f8b3b17aea4f4595bcbc0cc}{BASE\_RATE\_}};}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00146}00146 }
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00147}00147   \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00148}00148 \}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00149}00149 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00150}00150 \textcolor{comment}{/** \(\backslash\)brief Calculate contributions to the time derivative \(\backslash\)f\$f(t,y)\(\backslash\)f\$ from}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00151}00151 \textcolor{comment}{ * this reaction.}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00152}00152 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00153}00153 \textcolor{comment}{ * \(\backslash\)param model\_data Pointer to the model data, including the state array}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00154}00154 \textcolor{comment}{ * \(\backslash\)param time\_deriv TimeDerivative object}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00155}00155 \textcolor{comment}{ * \(\backslash\)param rxn\_int\_data Pointer to the reaction integer data}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00156}00156 \textcolor{comment}{ * \(\backslash\)param rxn\_float\_data Pointer to the reaction floating-\/point data}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00157}00157 \textcolor{comment}{ * \(\backslash\)param rxn\_env\_data Pointer to the environment-\/dependent parameters}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00158}00158 \textcolor{comment}{ * \(\backslash\)param time\_step Current time step being computed (s)}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00159}00159 \textcolor{comment}{ */}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00160}00160 \textcolor{preprocessor}{\#ifdef CAMP\_USE\_SUNDIALS}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00161}\mbox{\hyperlink{rxns_8h_a821ebabf2abba0aa6b465747178f33d6}{00161}} \textcolor{keywordtype}{void} \mbox{\hyperlink{rxn__photolysis_8c_a821ebabf2abba0aa6b465747178f33d6}{rxn\_photolysis\_calc\_deriv\_contrib}}(}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00162}00162     \mbox{\hyperlink{struct_model_data}{ModelData}} *model\_data, \mbox{\hyperlink{struct_time_derivative}{TimeDerivative}} time\_deriv, \textcolor{keywordtype}{int} *rxn\_int\_data,}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00163}00163     \textcolor{keywordtype}{double} *rxn\_float\_data, \textcolor{keywordtype}{double} *rxn\_env\_data, realtype time\_step) \{}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00164}00164   \textcolor{keywordtype}{int} *int\_data = rxn\_int\_data;}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00165}00165   \textcolor{keywordtype}{double} *float\_data = rxn\_float\_data;}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00166}00166   \textcolor{keywordtype}{double} *state = model\_data-\/>\mbox{\hyperlink{struct_model_data_a97655058cfc0116225582920128111ef}{grid\_cell\_state}};}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00167}00167   \textcolor{keywordtype}{double} *env\_data = model\_data-\/>\mbox{\hyperlink{struct_model_data_a847bd594a8e88da48104655fdc8524d7}{grid\_cell\_env}};}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00168}00168 }
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00169}00169   \textcolor{comment}{// Calculate the reaction rate}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00170}00170   \textcolor{keywordtype}{long} \textcolor{keywordtype}{double} rate = \mbox{\hyperlink{rxn__photolysis_8c_a6d62af2f44a112ef5b324cf406a830c2}{RATE\_CONSTANT\_}};}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00171}00171   \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_spec = 0; i\_spec < \mbox{\hyperlink{rxn__photolysis_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}}; i\_spec++)}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00172}00172     rate *= state[\mbox{\hyperlink{rxn__photolysis_8c_ae761e39657aac155d83eae9b338be571}{REACT\_}}(i\_spec)];}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00173}00173 }
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00174}00174   \textcolor{comment}{// Add contributions to the time derivative}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00175}00175   \textcolor{keywordflow}{if} (rate != \mbox{\hyperlink{camp__common_8h_ac328e551bde3d39b6d7b8cc9e048d941}{ZERO}}) \{}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00176}00176     \textcolor{keywordtype}{int} i\_dep\_var = 0;}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00177}00177     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_spec = 0; i\_spec < \mbox{\hyperlink{rxn__photolysis_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}}; i\_spec++, i\_dep\_var++) \{}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00178}00178       \textcolor{keywordflow}{if} (\mbox{\hyperlink{rxn__photolysis_8c_af9fc34858d09e71d3cffd88cf942bdf9}{DERIV\_ID\_}}(i\_dep\_var) < 0) \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00179}00179       \mbox{\hyperlink{time__derivative_8c_af4c9ab5040b544a8ec4b63a1c75922e2}{time\_derivative\_add\_value}}(time\_deriv, \mbox{\hyperlink{rxn__photolysis_8c_af9fc34858d09e71d3cffd88cf942bdf9}{DERIV\_ID\_}}(i\_dep\_var), -\/rate);}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00180}00180     \}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00181}00181     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_spec = 0; i\_spec < \mbox{\hyperlink{rxn__photolysis_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}}; i\_spec++, i\_dep\_var++) \{}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00182}00182       \textcolor{keywordflow}{if} (\mbox{\hyperlink{rxn__photolysis_8c_af9fc34858d09e71d3cffd88cf942bdf9}{DERIV\_ID\_}}(i\_dep\_var) < 0) \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00183}00183 }
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00184}00184       \textcolor{comment}{// Negative yields are allowed, but prevented from causing negative}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00185}00185       \textcolor{comment}{// concentrations that lead to solver failures}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00186}00186       \textcolor{keywordflow}{if} (-\/rate * \mbox{\hyperlink{rxn__photolysis_8c_a9ae244708fd9c438bf840ed319733651}{YIELD\_}}(i\_spec) * time\_step <= state[\mbox{\hyperlink{rxn__photolysis_8c_a9fda90058c6a41b1dda6ded03321c4da}{PROD\_}}(i\_spec)]) \{}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00187}00187         \mbox{\hyperlink{time__derivative_8c_af4c9ab5040b544a8ec4b63a1c75922e2}{time\_derivative\_add\_value}}(time\_deriv, \mbox{\hyperlink{rxn__photolysis_8c_af9fc34858d09e71d3cffd88cf942bdf9}{DERIV\_ID\_}}(i\_dep\_var),}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00188}00188                                   rate * \mbox{\hyperlink{rxn__photolysis_8c_a9ae244708fd9c438bf840ed319733651}{YIELD\_}}(i\_spec));}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00189}00189       \}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00190}00190     \}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00191}00191   \}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00192}00192 }
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00193}00193   \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00194}00194 \}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00195}00195 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00196}00196 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00197}00197 \textcolor{comment}{/** \(\backslash\)brief Calculate contributions to the Jacobian from this reaction}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00198}00198 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00199}00199 \textcolor{comment}{ * \(\backslash\)param model\_data Pointer to the model data}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00200}00200 \textcolor{comment}{ * \(\backslash\)param jac Reaction Jacobian}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00201}00201 \textcolor{comment}{ * \(\backslash\)param rxn\_int\_data Pointer to the reaction integer data}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00202}00202 \textcolor{comment}{ * \(\backslash\)param rxn\_float\_data Pointer to the reaction floating-\/point data}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00203}00203 \textcolor{comment}{ * \(\backslash\)param rxn\_env\_data Pointer to the environment-\/dependent parameters}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00204}00204 \textcolor{comment}{ * \(\backslash\)param time\_step Current time step being calculated (s)}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00205}00205 \textcolor{comment}{ */}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00206}00206 \textcolor{preprocessor}{\#ifdef CAMP\_USE\_SUNDIALS}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00207}\mbox{\hyperlink{rxns_8h_a12201d188bd114013b835e74912fdf53}{00207}} \textcolor{keywordtype}{void} \mbox{\hyperlink{rxn__photolysis_8c_a12201d188bd114013b835e74912fdf53}{rxn\_photolysis\_calc\_jac\_contrib}}(\mbox{\hyperlink{struct_model_data}{ModelData}} *model\_data, \mbox{\hyperlink{struct_jacobian}{Jacobian}} jac,}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00208}00208                                      \textcolor{keywordtype}{int} *rxn\_int\_data, \textcolor{keywordtype}{double} *rxn\_float\_data,}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00209}00209                                      \textcolor{keywordtype}{double} *rxn\_env\_data, realtype time\_step) \{}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00210}00210   \textcolor{keywordtype}{int} *int\_data = rxn\_int\_data;}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00211}00211   \textcolor{keywordtype}{double} *float\_data = rxn\_float\_data;}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00212}00212   \textcolor{keywordtype}{double} *state = model\_data-\/>\mbox{\hyperlink{struct_model_data_a97655058cfc0116225582920128111ef}{grid\_cell\_state}};}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00213}00213   \textcolor{keywordtype}{double} *env\_data = model\_data-\/>\mbox{\hyperlink{struct_model_data_a847bd594a8e88da48104655fdc8524d7}{grid\_cell\_env}};}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00214}00214 }
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00215}00215   \textcolor{comment}{// Add contributions to the Jacobian}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00216}00216   \textcolor{keywordtype}{int} i\_elem = 0;}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00217}00217   \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_ind = 0; i\_ind < \mbox{\hyperlink{rxn__photolysis_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}}; i\_ind++) \{}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00218}00218     \textcolor{comment}{// Calculate d\_rate / d\_i\_ind}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00219}00219     realtype rate = \mbox{\hyperlink{rxn__photolysis_8c_a6d62af2f44a112ef5b324cf406a830c2}{RATE\_CONSTANT\_}};}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00220}00220     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_spec = 0; i\_spec < \mbox{\hyperlink{rxn__photolysis_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}}; i\_spec++)}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00221}00221       \textcolor{keywordflow}{if} (i\_spec != i\_ind) rate *= state[\mbox{\hyperlink{rxn__photolysis_8c_ae761e39657aac155d83eae9b338be571}{REACT\_}}(i\_spec)];}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00222}00222 }
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00223}00223     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_dep = 0; i\_dep < \mbox{\hyperlink{rxn__photolysis_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}}; i\_dep++, i\_elem++) \{}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00224}00224       \textcolor{keywordflow}{if} (\mbox{\hyperlink{rxn__photolysis_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\_ID\_}}(i\_elem) < 0) \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00225}00225       \mbox{\hyperlink{_jacobian_8c_a844d8b2784c48a794ada38d053b1d1b3}{jacobian\_add\_value}}(jac, (\textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int})\mbox{\hyperlink{rxn__photolysis_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\_ID\_}}(i\_elem), \mbox{\hyperlink{_jacobian_8h_a1c0a4f1846373ae097290829cd23fc06}{JACOBIAN\_LOSS}},}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00226}00226                          rate);}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00227}00227     \}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00228}00228     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_dep = 0; i\_dep < \mbox{\hyperlink{rxn__photolysis_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}}; i\_dep++, i\_elem++) \{}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00229}00229       \textcolor{keywordflow}{if} (\mbox{\hyperlink{rxn__photolysis_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\_ID\_}}(i\_elem) < 0) \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00230}00230       \textcolor{comment}{// Negative yields are allowed, but prevented from causing negative}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00231}00231       \textcolor{comment}{// concentrations that lead to solver failures}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00232}00232       \textcolor{keywordflow}{if} (-\/rate * state[\mbox{\hyperlink{rxn__photolysis_8c_ae761e39657aac155d83eae9b338be571}{REACT\_}}(i\_ind)] * \mbox{\hyperlink{rxn__photolysis_8c_a9ae244708fd9c438bf840ed319733651}{YIELD\_}}(i\_dep) * time\_step <=}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00233}00233           state[\mbox{\hyperlink{rxn__photolysis_8c_a9fda90058c6a41b1dda6ded03321c4da}{PROD\_}}(i\_dep)]) \{}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00234}00234         \mbox{\hyperlink{_jacobian_8c_a844d8b2784c48a794ada38d053b1d1b3}{jacobian\_add\_value}}(jac, (\textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int})\mbox{\hyperlink{rxn__photolysis_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\_ID\_}}(i\_elem),}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00235}00235                            \mbox{\hyperlink{_jacobian_8h_ab017277870084c5c04c2cc8b9cccc22f}{JACOBIAN\_PRODUCTION}}, \mbox{\hyperlink{rxn__photolysis_8c_a9ae244708fd9c438bf840ed319733651}{YIELD\_}}(i\_dep) * rate);}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00236}00236       \}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00237}00237     \}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00238}00238   \}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00239}00239 }
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00240}00240   \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00241}00241 \}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00242}00242 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00243}00243 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00244}00244 \textcolor{comment}{/** \(\backslash\)brief Print the Photolysis reaction parameters}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00245}00245 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00246}00246 \textcolor{comment}{ * \(\backslash\)param rxn\_int\_data Pointer to the reaction integer data}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00247}00247 \textcolor{comment}{ * \(\backslash\)param rxn\_float\_data Pointer to the reaction floating-\/point data}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00248}00248 \textcolor{comment}{ */}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00249}\mbox{\hyperlink{rxns_8h_aebf6ecbc65d08e278100b817110e7018}{00249}} \textcolor{keywordtype}{void} \mbox{\hyperlink{rxn__photolysis_8c_aebf6ecbc65d08e278100b817110e7018}{rxn\_photolysis\_print}}(\textcolor{keywordtype}{int} *rxn\_int\_data, \textcolor{keywordtype}{double} *rxn\_float\_data) \{}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00250}00250   \textcolor{keywordtype}{int} *int\_data = rxn\_int\_data;}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00251}00251   \textcolor{keywordtype}{double} *float\_data = rxn\_float\_data;}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00252}00252 }
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00253}00253   printf(\textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)nPhotolysis reaction\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00254}00254 }
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00255}00255   \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00256}00256 \}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00257}00257 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00258}00258 \textcolor{comment}{/** \(\backslash\)brief Create update data for new photolysis rates}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00259}00259 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00260}00260 \textcolor{comment}{ * \(\backslash\)return Pointer to a new rate update data object}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00261}00261 \textcolor{comment}{ */}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00262}\mbox{\hyperlink{rxns_8h_a7e9d33d9fa28139e1c87566f0179fd51}{00262}} \textcolor{keywordtype}{void} *\mbox{\hyperlink{rxn__photolysis_8c_a7e9d33d9fa28139e1c87566f0179fd51}{rxn\_photolysis\_create\_rate\_update\_data}}() \{}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00263}00263   \textcolor{keywordtype}{int} *update\_data = (\textcolor{keywordtype}{int} *)malloc(\textcolor{keyword}{sizeof}(\textcolor{keywordtype}{int}) + \textcolor{keyword}{sizeof}(double));}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00264}00264   \textcolor{keywordflow}{if} (update\_data == NULL) \{}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00265}00265     printf(\textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)nERROR allocating space for photolysis update data\(\backslash\)n\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00266}00266     exit(1);}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00267}00267   \}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00268}00268   \textcolor{keywordflow}{return} (\textcolor{keywordtype}{void} *)update\_data;}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00269}00269 \}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00270}00270 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00271}00271 \textcolor{comment}{/** \(\backslash\)brief Set rate update data}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00272}00272 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00273}00273 \textcolor{comment}{ * \(\backslash\)param update\_data Pointer to an allocated rate update data object}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00274}00274 \textcolor{comment}{ * \(\backslash\)param photo\_id Id of photolysis reactions to update}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00275}00275 \textcolor{comment}{ * \(\backslash\)param base\_rate New pre-\/scaling photolysis rate}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00276}00276 \textcolor{comment}{ */}}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00277}\mbox{\hyperlink{rxns_8h_aff89be509538350520f38c29bce5e5f0}{00277}} \textcolor{keywordtype}{void} \mbox{\hyperlink{rxn__photolysis_8c_aff89be509538350520f38c29bce5e5f0}{rxn\_photolysis\_set\_rate\_update\_data}}(\textcolor{keywordtype}{void} *update\_data, \textcolor{keywordtype}{int} photo\_id,}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00278}00278                                          \textcolor{keywordtype}{double} base\_rate) \{}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00279}00279   \textcolor{keywordtype}{int} *new\_photo\_id = (\textcolor{keywordtype}{int} *)update\_data;}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00280}00280   \textcolor{keywordtype}{double} *new\_base\_rate = (\textcolor{keywordtype}{double} *)\&(new\_photo\_id[1]);}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00281}00281   *new\_photo\_id = photo\_id;}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00282}00282   *new\_base\_rate = base\_rate;}
+\DoxyCodeLine{\Hypertarget{rxn__photolysis_8c_source_l00283}00283 \}}
+
+\end{DoxyCode}

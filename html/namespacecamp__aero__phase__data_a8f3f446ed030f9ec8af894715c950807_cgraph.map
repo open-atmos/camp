@@ -1,13 +1,13 @@
 <map id="camp_aero_phase_data::pack_size" name="camp_aero_phase_data::pack_size">
-<area shape="rect" id="node1" title="Determine the size of a binary required to pack the aerosol representation data." alt="" coords="5,60,165,102"/>
-<area shape="rect" id="node2" href="$namespacecamp__mpi.html#a8ad192802e37c5dcaa41d053909318ab" title="Determines the number of bytes required to pack the given value." alt="" coords="213,27,381,68"/>
-<area shape="rect" id="node11" href="$namespacecamp__mpi.html#a7d5bd45d25af1d118c3f36eb507aca3f" title="Determines the number of bytes required to pack the given value." alt="" coords="222,92,373,134"/>
-<area shape="rect" id="node3" href="$namespacecamp__mpi.html#adb95beaf933131229f017a03af8352ad" title="Dies if ierr is not ok." alt="" coords="625,60,773,102"/>
-<area shape="rect" id="node9" href="$namespacecamp__mpi.html#abfca35b6c1f158dcb853326861d7e558" title="Determines the number of bytes required to pack the given value." alt="" coords="429,27,577,68"/>
-<area shape="rect" id="node10" href="$namespacecamp__mpi.html#a91e386d6f20f660ab0762c32bb55e3a7" title="Determines the number of bytes required to pack the given value." alt="" coords="429,92,577,134"/>
-<area shape="rect" id="node4" href="$namespacecamp__mpi.html#a7c0deeecbf4c64fe7fcade1797e1aab8" title="Abort the program." alt="" coords="821,60,969,102"/>
-<area shape="rect" id="node5" href="$namespacecamp__util.html#aa942add404bf8b611e5b4b8c777ca7f6" title="Error immediately." alt="" coords="1017,68,1119,94"/>
-<area shape="rect" id="node6" href="$namespacecamp__util.html#a32cf43c1b618a3ecf93810383e960ef2" title="Errors unless condition_ok is true." alt="" coords="1167,68,1287,94"/>
-<area shape="rect" id="node7" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="1335,68,1487,94"/>
-<area shape="rect" id="node8" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="1535,60,1657,102"/>
+<area shape="rect" id="node1" title="Determine the size of a binary required to pack the aerosol representation data." alt="" coords="5,101,165,143"/>
+<area shape="rect" id="node2" href="$namespacecamp__mpi.html#a8ad192802e37c5dcaa41d053909318ab" title="Determines the number of bytes required to pack the given value." alt="" coords="213,56,381,97"/>
+<area shape="rect" id="node11" href="$namespacecamp__mpi.html#a7d5bd45d25af1d118c3f36eb507aca3f" title="Determines the number of bytes required to pack the given value." alt="" coords="222,145,373,187"/>
+<area shape="rect" id="node3" href="$namespacecamp__mpi.html#adb95beaf933131229f017a03af8352ad" title="Dies if ierr is not ok." alt="" coords="625,101,773,143"/>
+<area shape="rect" id="node9" href="$namespacecamp__mpi.html#abfca35b6c1f158dcb853326861d7e558" title="Determines the number of bytes required to pack the given value." alt="" coords="429,56,577,97"/>
+<area shape="rect" id="node10" href="$namespacecamp__mpi.html#a91e386d6f20f660ab0762c32bb55e3a7" title="Determines the number of bytes required to pack the given value." alt="" coords="429,145,577,187"/>
+<area shape="rect" id="node4" href="$namespacecamp__mpi.html#a7c0deeecbf4c64fe7fcade1797e1aab8" title="Abort the program." alt="" coords="821,101,969,143"/>
+<area shape="rect" id="node5" href="$namespacecamp__util.html#aa942add404bf8b611e5b4b8c777ca7f6" title="Error immediately." alt="" coords="1017,109,1119,135"/>
+<area shape="rect" id="node6" href="$namespacecamp__util.html#a32cf43c1b618a3ecf93810383e960ef2" title="Errors unless condition_ok is true." alt="" coords="1167,109,1287,135"/>
+<area shape="rect" id="node7" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="1335,109,1487,135"/>
+<area shape="rect" id="node8" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="1535,101,1657,143"/>
 </map>

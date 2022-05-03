@@ -1,0 +1,563 @@
+\hypertarget{rxn__wennberg__no__ro2_8c}{}\doxysection{rxn\+\_\+wennberg\+\_\+no\+\_\+ro2.\+c File Reference}
+\label{rxn__wennberg__no__ro2_8c}\index{rxn\_wennberg\_no\_ro2.c@{rxn\_wennberg\_no\_ro2.c}}
+
+
+Wennberg NO + RO2 reaction solver functions.  
+
+
+Include dependency graph for rxn\+\_\+wennberg\+\_\+no\+\_\+ro2.\+c\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{rxn__wennberg__no__ro2_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_aa90d2b6c48aceb4d7ac3d93d5249bb60}{TEMPERATURE\+\_\+\+K\+\_\+}}~env\+\_\+data\mbox{[}0\mbox{]}
+\item 
+\#define \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_a32cc078fd8ca9ad0684c48ae0aad7135}{PRESSURE\+\_\+\+PA\+\_\+}}~env\+\_\+data\mbox{[}1\mbox{]}
+\item 
+\#define \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}}~int\+\_\+data\mbox{[}0\mbox{]}
+\item 
+\#define \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_a0b96d2dea50942df2f4c8984406c58d7}{NUM\+\_\+\+ALKOXY\+\_\+\+PROD\+\_\+}}~int\+\_\+data\mbox{[}1\mbox{]}
+\item 
+\#define \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_ab8b0a0d79759ec55dd621c6be56c4ae9}{NUM\+\_\+\+NITRATE\+\_\+\+PROD\+\_\+}}~int\+\_\+data\mbox{[}2\mbox{]}
+\item 
+\#define \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_a7ee28c6cb90082f39d9c7279f39040f8}{X\+\_\+}}~float\+\_\+data\mbox{[}0\mbox{]}
+\item 
+\#define \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_ad2a80e6291860455870ffabf2cd284e3}{Y\+\_\+}}~float\+\_\+data\mbox{[}1\mbox{]}
+\item 
+\#define \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_a06dc246184afdfb15cc91925898bfd7c}{a0\+\_\+}}~float\+\_\+data\mbox{[}2\mbox{]}
+\item 
+\#define \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_aefa6a395878e8e7282419620791a3364}{n\+\_\+}}~float\+\_\+data\mbox{[}3\mbox{]}
+\item 
+\#define \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_a91cd74713029c0906e8136c8628d548d}{CONV\+\_\+}}~float\+\_\+data\mbox{[}4\mbox{]}
+\item 
+\#define \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_a776a7d275b7f040b74aa965e62559f57}{ALKOXY\+\_\+\+RATE\+\_\+\+CONSTANT\+\_\+}}~rxn\+\_\+env\+\_\+data\mbox{[}0\mbox{]}
+\item 
+\#define \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_aa325176c9bb8980310d2145514f127fd}{NITRATE\+\_\+\+RATE\+\_\+\+CONSTANT\+\_\+}}~rxn\+\_\+env\+\_\+data\mbox{[}1\mbox{]}
+\item 
+\#define \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}}~3
+\item 
+\#define \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}{NUM\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+}}~5
+\item 
+\#define \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_a1f68a3544ae39a7815cbb5c09dfdeff0}{NUM\+\_\+\+ENV\+\_\+\+PARAM\+\_\+}}~2
+\item 
+\#define \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_ae761e39657aac155d83eae9b338be571}{REACT\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + x\mbox{]} -\/ 1)
+\item 
+\#define \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_a9fda90058c6a41b1dda6ded03321c4da}{PROD\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + x\mbox{]} -\/ 1)
+\item 
+\#define \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_af9fc34858d09e71d3cffd88cf942bdf9}{DERIV\+\_\+\+ID\+\_\+}}(x)
+\item 
+\#define \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\+\_\+\+ID\+\_\+}}(x)
+\item 
+\#define \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_a9ae244708fd9c438bf840ed319733651}{YIELD\+\_\+}}(x)~float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}{NUM\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+}} + x\mbox{]}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_aa0313faf4bb8c560811072042700aafa}{rxn\+\_\+wennberg\+\_\+no\+\_\+ro2\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem}} (int $\ast$rxn\+\_\+int\+\_\+data, double $\ast$rxn\+\_\+float\+\_\+data, \mbox{\hyperlink{struct_jacobian}{Jacobian}} $\ast$jac)
+\begin{DoxyCompactList}\small\item\em Flag \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used by this reaction. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_ac00a498c0e68bb445a5ca2cba0c17d32}{rxn\+\_\+wennberg\+\_\+no\+\_\+ro2\+\_\+update\+\_\+ids}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, int $\ast$deriv\+\_\+ids, \mbox{\hyperlink{struct_jacobian}{Jacobian}} jac, int $\ast$rxn\+\_\+int\+\_\+data, double $\ast$rxn\+\_\+float\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Update the time derivative and Jacbobian array indices. \end{DoxyCompactList}\item 
+double \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_a030d97a6aca1f035049ca6e8bb86afe3}{calculate\+\_\+A}} (double T, double M, double n)
+\begin{DoxyCompactList}\small\item\em Calculates the Troe-\/like parameter A(\+T, \mbox{[}\+M\mbox{]}, n) \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_a8d2b2b0c571f1601ab1458bec2df79a0}{rxn\+\_\+wennberg\+\_\+no\+\_\+ro2\+\_\+update\+\_\+env\+\_\+state}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, int $\ast$rxn\+\_\+int\+\_\+data, double $\ast$rxn\+\_\+float\+\_\+data, double $\ast$rxn\+\_\+env\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Update reaction data for new environmental conditions. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_af79524415b6129127837f00986a70cdb}{rxn\+\_\+wennberg\+\_\+no\+\_\+ro2\+\_\+calc\+\_\+deriv\+\_\+contrib}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, \mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}} time\+\_\+deriv, int $\ast$rxn\+\_\+int\+\_\+data, double $\ast$rxn\+\_\+float\+\_\+data, double $\ast$rxn\+\_\+env\+\_\+data, double time\+\_\+step)
+\begin{DoxyCompactList}\small\item\em Calculate contributions to the time derivative $f(t,y)$ from this reaction. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_a548df130894fc55ab07d65f276e642e2}{rxn\+\_\+wennberg\+\_\+no\+\_\+ro2\+\_\+calc\+\_\+jac\+\_\+contrib}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, \mbox{\hyperlink{struct_jacobian}{Jacobian}} jac, int $\ast$rxn\+\_\+int\+\_\+data, double $\ast$rxn\+\_\+float\+\_\+data, double $\ast$rxn\+\_\+env\+\_\+data, double time\+\_\+step)
+\begin{DoxyCompactList}\small\item\em Calculate contributions to the \mbox{\hyperlink{struct_jacobian}{Jacobian}} from this reaction. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_af1a2cd28e8838e7123ad9ecac5e13c7c}{rxn\+\_\+wennberg\+\_\+no\+\_\+ro2\+\_\+print}} (int $\ast$rxn\+\_\+int\+\_\+data, double $\ast$rxn\+\_\+float\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Print the Wennberg NO + RO2 reaction parameters. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Wennberg NO + RO2 reaction solver functions. 
+
+
+
+Definition in file \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_source}{rxn\+\_\+wennberg\+\_\+no\+\_\+ro2.\+c}}.
+
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{rxn__wennberg__no__ro2_8c_a06dc246184afdfb15cc91925898bfd7c}\label{rxn__wennberg__no__ro2_8c_a06dc246184afdfb15cc91925898bfd7c}} 
+\index{rxn\_wennberg\_no\_ro2.c@{rxn\_wennberg\_no\_ro2.c}!a0\_@{a0\_}}
+\index{a0\_@{a0\_}!rxn\_wennberg\_no\_ro2.c@{rxn\_wennberg\_no\_ro2.c}}
+\doxysubsubsection{\texorpdfstring{a0\_}{a0\_}}
+{\footnotesize\ttfamily \#define a0\+\_\+~float\+\_\+data\mbox{[}2\mbox{]}}
+
+
+
+Definition at line \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_source_l00026}{26}} of file \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_source}{rxn\+\_\+wennberg\+\_\+no\+\_\+ro2.\+c}}.
+
+\mbox{\Hypertarget{rxn__wennberg__no__ro2_8c_a776a7d275b7f040b74aa965e62559f57}\label{rxn__wennberg__no__ro2_8c_a776a7d275b7f040b74aa965e62559f57}} 
+\index{rxn\_wennberg\_no\_ro2.c@{rxn\_wennberg\_no\_ro2.c}!ALKOXY\_RATE\_CONSTANT\_@{ALKOXY\_RATE\_CONSTANT\_}}
+\index{ALKOXY\_RATE\_CONSTANT\_@{ALKOXY\_RATE\_CONSTANT\_}!rxn\_wennberg\_no\_ro2.c@{rxn\_wennberg\_no\_ro2.c}}
+\doxysubsubsection{\texorpdfstring{ALKOXY\_RATE\_CONSTANT\_}{ALKOXY\_RATE\_CONSTANT\_}}
+{\footnotesize\ttfamily \#define ALKOXY\+\_\+\+RATE\+\_\+\+CONSTANT\+\_\+~rxn\+\_\+env\+\_\+data\mbox{[}0\mbox{]}}
+
+
+
+Definition at line \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_source_l00029}{29}} of file \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_source}{rxn\+\_\+wennberg\+\_\+no\+\_\+ro2.\+c}}.
+
+\mbox{\Hypertarget{rxn__wennberg__no__ro2_8c_a91cd74713029c0906e8136c8628d548d}\label{rxn__wennberg__no__ro2_8c_a91cd74713029c0906e8136c8628d548d}} 
+\index{rxn\_wennberg\_no\_ro2.c@{rxn\_wennberg\_no\_ro2.c}!CONV\_@{CONV\_}}
+\index{CONV\_@{CONV\_}!rxn\_wennberg\_no\_ro2.c@{rxn\_wennberg\_no\_ro2.c}}
+\doxysubsubsection{\texorpdfstring{CONV\_}{CONV\_}}
+{\footnotesize\ttfamily \#define CONV\+\_\+~float\+\_\+data\mbox{[}4\mbox{]}}
+
+
+
+Definition at line \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_source_l00028}{28}} of file \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_source}{rxn\+\_\+wennberg\+\_\+no\+\_\+ro2.\+c}}.
+
+\mbox{\Hypertarget{rxn__wennberg__no__ro2_8c_af9fc34858d09e71d3cffd88cf942bdf9}\label{rxn__wennberg__no__ro2_8c_af9fc34858d09e71d3cffd88cf942bdf9}} 
+\index{rxn\_wennberg\_no\_ro2.c@{rxn\_wennberg\_no\_ro2.c}!DERIV\_ID\_@{DERIV\_ID\_}}
+\index{DERIV\_ID\_@{DERIV\_ID\_}!rxn\_wennberg\_no\_ro2.c@{rxn\_wennberg\_no\_ro2.c}}
+\doxysubsubsection{\texorpdfstring{DERIV\_ID\_}{DERIV\_ID\_}}
+{\footnotesize\ttfamily \#define DERIV\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{  int\_data[\mbox{\hyperlink{rxn__wennberg__no__ro2_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\_INT\_PROP\_}} + \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}} + \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_a0b96d2dea50942df2f4c8984406c58d7}{NUM\_ALKOXY\_PROD\_}} + \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_ab8b0a0d79759ec55dd621c6be56c4ae9}{NUM\_NITRATE\_PROD\_}} + \(\backslash\)}
+\DoxyCodeLine{           x]}
+
+\end{DoxyCode}
+
+
+Definition at line \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_source_l00036}{36}} of file \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_source}{rxn\+\_\+wennberg\+\_\+no\+\_\+ro2.\+c}}.
+
+\mbox{\Hypertarget{rxn__wennberg__no__ro2_8c_ab831aae98d4453927c63a93f55ee5a86}\label{rxn__wennberg__no__ro2_8c_ab831aae98d4453927c63a93f55ee5a86}} 
+\index{rxn\_wennberg\_no\_ro2.c@{rxn\_wennberg\_no\_ro2.c}!JAC\_ID\_@{JAC\_ID\_}}
+\index{JAC\_ID\_@{JAC\_ID\_}!rxn\_wennberg\_no\_ro2.c@{rxn\_wennberg\_no\_ro2.c}}
+\doxysubsubsection{\texorpdfstring{JAC\_ID\_}{JAC\_ID\_}}
+{\footnotesize\ttfamily \#define JAC\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{  int\_data[\mbox{\hyperlink{rxn__wennberg__no__ro2_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\_INT\_PROP\_}} + \(\backslash\)}
+\DoxyCodeLine{           2 * (\mbox{\hyperlink{rxn__wennberg__no__ro2_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}} + \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_a0b96d2dea50942df2f4c8984406c58d7}{NUM\_ALKOXY\_PROD\_}} + \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_ab8b0a0d79759ec55dd621c6be56c4ae9}{NUM\_NITRATE\_PROD\_}}) + x]}
+
+\end{DoxyCode}
+
+
+Definition at line \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_source_l00039}{39}} of file \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_source}{rxn\+\_\+wennberg\+\_\+no\+\_\+ro2.\+c}}.
+
+\mbox{\Hypertarget{rxn__wennberg__no__ro2_8c_aefa6a395878e8e7282419620791a3364}\label{rxn__wennberg__no__ro2_8c_aefa6a395878e8e7282419620791a3364}} 
+\index{rxn\_wennberg\_no\_ro2.c@{rxn\_wennberg\_no\_ro2.c}!n\_@{n\_}}
+\index{n\_@{n\_}!rxn\_wennberg\_no\_ro2.c@{rxn\_wennberg\_no\_ro2.c}}
+\doxysubsubsection{\texorpdfstring{n\_}{n\_}}
+{\footnotesize\ttfamily \#define n\+\_\+~float\+\_\+data\mbox{[}3\mbox{]}}
+
+
+
+Definition at line \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_source_l00027}{27}} of file \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_source}{rxn\+\_\+wennberg\+\_\+no\+\_\+ro2.\+c}}.
+
+\mbox{\Hypertarget{rxn__wennberg__no__ro2_8c_aa325176c9bb8980310d2145514f127fd}\label{rxn__wennberg__no__ro2_8c_aa325176c9bb8980310d2145514f127fd}} 
+\index{rxn\_wennberg\_no\_ro2.c@{rxn\_wennberg\_no\_ro2.c}!NITRATE\_RATE\_CONSTANT\_@{NITRATE\_RATE\_CONSTANT\_}}
+\index{NITRATE\_RATE\_CONSTANT\_@{NITRATE\_RATE\_CONSTANT\_}!rxn\_wennberg\_no\_ro2.c@{rxn\_wennberg\_no\_ro2.c}}
+\doxysubsubsection{\texorpdfstring{NITRATE\_RATE\_CONSTANT\_}{NITRATE\_RATE\_CONSTANT\_}}
+{\footnotesize\ttfamily \#define NITRATE\+\_\+\+RATE\+\_\+\+CONSTANT\+\_\+~rxn\+\_\+env\+\_\+data\mbox{[}1\mbox{]}}
+
+
+
+Definition at line \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_source_l00030}{30}} of file \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_source}{rxn\+\_\+wennberg\+\_\+no\+\_\+ro2.\+c}}.
+
+\mbox{\Hypertarget{rxn__wennberg__no__ro2_8c_a0b96d2dea50942df2f4c8984406c58d7}\label{rxn__wennberg__no__ro2_8c_a0b96d2dea50942df2f4c8984406c58d7}} 
+\index{rxn\_wennberg\_no\_ro2.c@{rxn\_wennberg\_no\_ro2.c}!NUM\_ALKOXY\_PROD\_@{NUM\_ALKOXY\_PROD\_}}
+\index{NUM\_ALKOXY\_PROD\_@{NUM\_ALKOXY\_PROD\_}!rxn\_wennberg\_no\_ro2.c@{rxn\_wennberg\_no\_ro2.c}}
+\doxysubsubsection{\texorpdfstring{NUM\_ALKOXY\_PROD\_}{NUM\_ALKOXY\_PROD\_}}
+{\footnotesize\ttfamily \#define NUM\+\_\+\+ALKOXY\+\_\+\+PROD\+\_\+~int\+\_\+data\mbox{[}1\mbox{]}}
+
+
+
+Definition at line \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_source_l00022}{22}} of file \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_source}{rxn\+\_\+wennberg\+\_\+no\+\_\+ro2.\+c}}.
+
+\mbox{\Hypertarget{rxn__wennberg__no__ro2_8c_a1f68a3544ae39a7815cbb5c09dfdeff0}\label{rxn__wennberg__no__ro2_8c_a1f68a3544ae39a7815cbb5c09dfdeff0}} 
+\index{rxn\_wennberg\_no\_ro2.c@{rxn\_wennberg\_no\_ro2.c}!NUM\_ENV\_PARAM\_@{NUM\_ENV\_PARAM\_}}
+\index{NUM\_ENV\_PARAM\_@{NUM\_ENV\_PARAM\_}!rxn\_wennberg\_no\_ro2.c@{rxn\_wennberg\_no\_ro2.c}}
+\doxysubsubsection{\texorpdfstring{NUM\_ENV\_PARAM\_}{NUM\_ENV\_PARAM\_}}
+{\footnotesize\ttfamily \#define NUM\+\_\+\+ENV\+\_\+\+PARAM\+\_\+~2}
+
+
+
+Definition at line \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_source_l00033}{33}} of file \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_source}{rxn\+\_\+wennberg\+\_\+no\+\_\+ro2.\+c}}.
+
+\mbox{\Hypertarget{rxn__wennberg__no__ro2_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}\label{rxn__wennberg__no__ro2_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}} 
+\index{rxn\_wennberg\_no\_ro2.c@{rxn\_wennberg\_no\_ro2.c}!NUM\_FLOAT\_PROP\_@{NUM\_FLOAT\_PROP\_}}
+\index{NUM\_FLOAT\_PROP\_@{NUM\_FLOAT\_PROP\_}!rxn\_wennberg\_no\_ro2.c@{rxn\_wennberg\_no\_ro2.c}}
+\doxysubsubsection{\texorpdfstring{NUM\_FLOAT\_PROP\_}{NUM\_FLOAT\_PROP\_}}
+{\footnotesize\ttfamily \#define NUM\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+~5}
+
+
+
+Definition at line \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_source_l00032}{32}} of file \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_source}{rxn\+\_\+wennberg\+\_\+no\+\_\+ro2.\+c}}.
+
+\mbox{\Hypertarget{rxn__wennberg__no__ro2_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}\label{rxn__wennberg__no__ro2_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}} 
+\index{rxn\_wennberg\_no\_ro2.c@{rxn\_wennberg\_no\_ro2.c}!NUM\_INT\_PROP\_@{NUM\_INT\_PROP\_}}
+\index{NUM\_INT\_PROP\_@{NUM\_INT\_PROP\_}!rxn\_wennberg\_no\_ro2.c@{rxn\_wennberg\_no\_ro2.c}}
+\doxysubsubsection{\texorpdfstring{NUM\_INT\_PROP\_}{NUM\_INT\_PROP\_}}
+{\footnotesize\ttfamily \#define NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+~3}
+
+
+
+Definition at line \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_source_l00031}{31}} of file \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_source}{rxn\+\_\+wennberg\+\_\+no\+\_\+ro2.\+c}}.
+
+\mbox{\Hypertarget{rxn__wennberg__no__ro2_8c_ab8b0a0d79759ec55dd621c6be56c4ae9}\label{rxn__wennberg__no__ro2_8c_ab8b0a0d79759ec55dd621c6be56c4ae9}} 
+\index{rxn\_wennberg\_no\_ro2.c@{rxn\_wennberg\_no\_ro2.c}!NUM\_NITRATE\_PROD\_@{NUM\_NITRATE\_PROD\_}}
+\index{NUM\_NITRATE\_PROD\_@{NUM\_NITRATE\_PROD\_}!rxn\_wennberg\_no\_ro2.c@{rxn\_wennberg\_no\_ro2.c}}
+\doxysubsubsection{\texorpdfstring{NUM\_NITRATE\_PROD\_}{NUM\_NITRATE\_PROD\_}}
+{\footnotesize\ttfamily \#define NUM\+\_\+\+NITRATE\+\_\+\+PROD\+\_\+~int\+\_\+data\mbox{[}2\mbox{]}}
+
+
+
+Definition at line \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_source_l00023}{23}} of file \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_source}{rxn\+\_\+wennberg\+\_\+no\+\_\+ro2.\+c}}.
+
+\mbox{\Hypertarget{rxn__wennberg__no__ro2_8c_a05ef845cf6ed7ab9a774440c42af34fa}\label{rxn__wennberg__no__ro2_8c_a05ef845cf6ed7ab9a774440c42af34fa}} 
+\index{rxn\_wennberg\_no\_ro2.c@{rxn\_wennberg\_no\_ro2.c}!NUM\_REACT\_@{NUM\_REACT\_}}
+\index{NUM\_REACT\_@{NUM\_REACT\_}!rxn\_wennberg\_no\_ro2.c@{rxn\_wennberg\_no\_ro2.c}}
+\doxysubsubsection{\texorpdfstring{NUM\_REACT\_}{NUM\_REACT\_}}
+{\footnotesize\ttfamily \#define NUM\+\_\+\+REACT\+\_\+~int\+\_\+data\mbox{[}0\mbox{]}}
+
+
+
+Definition at line \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_source_l00021}{21}} of file \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_source}{rxn\+\_\+wennberg\+\_\+no\+\_\+ro2.\+c}}.
+
+\mbox{\Hypertarget{rxn__wennberg__no__ro2_8c_a32cc078fd8ca9ad0684c48ae0aad7135}\label{rxn__wennberg__no__ro2_8c_a32cc078fd8ca9ad0684c48ae0aad7135}} 
+\index{rxn\_wennberg\_no\_ro2.c@{rxn\_wennberg\_no\_ro2.c}!PRESSURE\_PA\_@{PRESSURE\_PA\_}}
+\index{PRESSURE\_PA\_@{PRESSURE\_PA\_}!rxn\_wennberg\_no\_ro2.c@{rxn\_wennberg\_no\_ro2.c}}
+\doxysubsubsection{\texorpdfstring{PRESSURE\_PA\_}{PRESSURE\_PA\_}}
+{\footnotesize\ttfamily \#define PRESSURE\+\_\+\+PA\+\_\+~env\+\_\+data\mbox{[}1\mbox{]}}
+
+
+
+Definition at line \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_source_l00019}{19}} of file \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_source}{rxn\+\_\+wennberg\+\_\+no\+\_\+ro2.\+c}}.
+
+\mbox{\Hypertarget{rxn__wennberg__no__ro2_8c_a9fda90058c6a41b1dda6ded03321c4da}\label{rxn__wennberg__no__ro2_8c_a9fda90058c6a41b1dda6ded03321c4da}} 
+\index{rxn\_wennberg\_no\_ro2.c@{rxn\_wennberg\_no\_ro2.c}!PROD\_@{PROD\_}}
+\index{PROD\_@{PROD\_}!rxn\_wennberg\_no\_ro2.c@{rxn\_wennberg\_no\_ro2.c}}
+\doxysubsubsection{\texorpdfstring{PROD\_}{PROD\_}}
+{\footnotesize\ttfamily \#define PROD\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + x\mbox{]} -\/ 1)}
+
+
+
+Definition at line \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_source_l00035}{35}} of file \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_source}{rxn\+\_\+wennberg\+\_\+no\+\_\+ro2.\+c}}.
+
+\mbox{\Hypertarget{rxn__wennberg__no__ro2_8c_ae761e39657aac155d83eae9b338be571}\label{rxn__wennberg__no__ro2_8c_ae761e39657aac155d83eae9b338be571}} 
+\index{rxn\_wennberg\_no\_ro2.c@{rxn\_wennberg\_no\_ro2.c}!REACT\_@{REACT\_}}
+\index{REACT\_@{REACT\_}!rxn\_wennberg\_no\_ro2.c@{rxn\_wennberg\_no\_ro2.c}}
+\doxysubsubsection{\texorpdfstring{REACT\_}{REACT\_}}
+{\footnotesize\ttfamily \#define REACT\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + x\mbox{]} -\/ 1)}
+
+
+
+Definition at line \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_source_l00034}{34}} of file \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_source}{rxn\+\_\+wennberg\+\_\+no\+\_\+ro2.\+c}}.
+
+\mbox{\Hypertarget{rxn__wennberg__no__ro2_8c_aa90d2b6c48aceb4d7ac3d93d5249bb60}\label{rxn__wennberg__no__ro2_8c_aa90d2b6c48aceb4d7ac3d93d5249bb60}} 
+\index{rxn\_wennberg\_no\_ro2.c@{rxn\_wennberg\_no\_ro2.c}!TEMPERATURE\_K\_@{TEMPERATURE\_K\_}}
+\index{TEMPERATURE\_K\_@{TEMPERATURE\_K\_}!rxn\_wennberg\_no\_ro2.c@{rxn\_wennberg\_no\_ro2.c}}
+\doxysubsubsection{\texorpdfstring{TEMPERATURE\_K\_}{TEMPERATURE\_K\_}}
+{\footnotesize\ttfamily \#define TEMPERATURE\+\_\+\+K\+\_\+~env\+\_\+data\mbox{[}0\mbox{]}}
+
+
+
+Definition at line \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_source_l00018}{18}} of file \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_source}{rxn\+\_\+wennberg\+\_\+no\+\_\+ro2.\+c}}.
+
+\mbox{\Hypertarget{rxn__wennberg__no__ro2_8c_a7ee28c6cb90082f39d9c7279f39040f8}\label{rxn__wennberg__no__ro2_8c_a7ee28c6cb90082f39d9c7279f39040f8}} 
+\index{rxn\_wennberg\_no\_ro2.c@{rxn\_wennberg\_no\_ro2.c}!X\_@{X\_}}
+\index{X\_@{X\_}!rxn\_wennberg\_no\_ro2.c@{rxn\_wennberg\_no\_ro2.c}}
+\doxysubsubsection{\texorpdfstring{X\_}{X\_}}
+{\footnotesize\ttfamily \#define X\+\_\+~float\+\_\+data\mbox{[}0\mbox{]}}
+
+
+
+Definition at line \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_source_l00024}{24}} of file \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_source}{rxn\+\_\+wennberg\+\_\+no\+\_\+ro2.\+c}}.
+
+\mbox{\Hypertarget{rxn__wennberg__no__ro2_8c_ad2a80e6291860455870ffabf2cd284e3}\label{rxn__wennberg__no__ro2_8c_ad2a80e6291860455870ffabf2cd284e3}} 
+\index{rxn\_wennberg\_no\_ro2.c@{rxn\_wennberg\_no\_ro2.c}!Y\_@{Y\_}}
+\index{Y\_@{Y\_}!rxn\_wennberg\_no\_ro2.c@{rxn\_wennberg\_no\_ro2.c}}
+\doxysubsubsection{\texorpdfstring{Y\_}{Y\_}}
+{\footnotesize\ttfamily \#define Y\+\_\+~float\+\_\+data\mbox{[}1\mbox{]}}
+
+
+
+Definition at line \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_source_l00025}{25}} of file \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_source}{rxn\+\_\+wennberg\+\_\+no\+\_\+ro2.\+c}}.
+
+\mbox{\Hypertarget{rxn__wennberg__no__ro2_8c_a9ae244708fd9c438bf840ed319733651}\label{rxn__wennberg__no__ro2_8c_a9ae244708fd9c438bf840ed319733651}} 
+\index{rxn\_wennberg\_no\_ro2.c@{rxn\_wennberg\_no\_ro2.c}!YIELD\_@{YIELD\_}}
+\index{YIELD\_@{YIELD\_}!rxn\_wennberg\_no\_ro2.c@{rxn\_wennberg\_no\_ro2.c}}
+\doxysubsubsection{\texorpdfstring{YIELD\_}{YIELD\_}}
+{\footnotesize\ttfamily \#define YIELD\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}{NUM\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+}} + x\mbox{]}}
+
+
+
+Definition at line \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_source_l00042}{42}} of file \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_source}{rxn\+\_\+wennberg\+\_\+no\+\_\+ro2.\+c}}.
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{rxn__wennberg__no__ro2_8c_a030d97a6aca1f035049ca6e8bb86afe3}\label{rxn__wennberg__no__ro2_8c_a030d97a6aca1f035049ca6e8bb86afe3}} 
+\index{rxn\_wennberg\_no\_ro2.c@{rxn\_wennberg\_no\_ro2.c}!calculate\_A@{calculate\_A}}
+\index{calculate\_A@{calculate\_A}!rxn\_wennberg\_no\_ro2.c@{rxn\_wennberg\_no\_ro2.c}}
+\doxysubsubsection{\texorpdfstring{calculate\_A()}{calculate\_A()}}
+{\footnotesize\ttfamily double calculate\+\_\+A (\begin{DoxyParamCaption}\item[{double}]{T,  }\item[{double}]{M,  }\item[{double}]{n }\end{DoxyParamCaption})}
+
+
+
+Calculates the Troe-\/like parameter A(\+T, \mbox{[}\+M\mbox{]}, n) 
+
+k0 = 2e-\/22 e$^\wedge$n kinf = 0.\+43 $\ast$ (T/298)$^\wedge$-\/8 A = k0 \mbox{[}M\mbox{]} / ( 1 + k0 \mbox{[}M\mbox{]} / kinf ) $\ast$ 0.\+41$^\wedge$( 1 / ( 1 + \mbox{[} log10( k0 \mbox{[}M\mbox{]} / kinf ) \mbox{]}$^\wedge$2 ) )
+
+
+\begin{DoxyParams}{Parameters}
+{\em T} & temperature \mbox{[}K\mbox{]} \\
+\hline
+{\em M} & air density \mbox{[}\#/cc\mbox{]} \\
+\hline
+{\em n} & number of heavy atoms in RO2 species \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_source_l00111}{111}} of file \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_source}{rxn\+\_\+wennberg\+\_\+no\+\_\+ro2.\+c}}.
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{rxn__wennberg__no__ro2_8c_a030d97a6aca1f035049ca6e8bb86afe3_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{rxn__wennberg__no__ro2_8c_af79524415b6129127837f00986a70cdb}\label{rxn__wennberg__no__ro2_8c_af79524415b6129127837f00986a70cdb}} 
+\index{rxn\_wennberg\_no\_ro2.c@{rxn\_wennberg\_no\_ro2.c}!rxn\_wennberg\_no\_ro2\_calc\_deriv\_contrib@{rxn\_wennberg\_no\_ro2\_calc\_deriv\_contrib}}
+\index{rxn\_wennberg\_no\_ro2\_calc\_deriv\_contrib@{rxn\_wennberg\_no\_ro2\_calc\_deriv\_contrib}!rxn\_wennberg\_no\_ro2.c@{rxn\_wennberg\_no\_ro2.c}}
+\doxysubsubsection{\texorpdfstring{rxn\_wennberg\_no\_ro2\_calc\_deriv\_contrib()}{rxn\_wennberg\_no\_ro2\_calc\_deriv\_contrib()}}
+{\footnotesize\ttfamily void rxn\+\_\+wennberg\+\_\+no\+\_\+ro2\+\_\+calc\+\_\+deriv\+\_\+contrib (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{\mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}}}]{time\+\_\+deriv,  }\item[{int $\ast$}]{rxn\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+env\+\_\+data,  }\item[{double}]{time\+\_\+step }\end{DoxyParamCaption})}
+
+
+
+Calculate contributions to the time derivative $f(t,y)$ from this reaction. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em model\+\_\+data} & \mbox{\hyperlink{struct_model}{Model}} data \\
+\hline
+{\em time\+\_\+deriv} & \mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}} object \\
+\hline
+{\em rxn\+\_\+int\+\_\+data} & Pointer to the reaction integer data \\
+\hline
+{\em rxn\+\_\+float\+\_\+data} & Pointer to the reaction floating-\/point data \\
+\hline
+{\em rxn\+\_\+env\+\_\+data} & Pointer to the environment-\/dependent parameters \\
+\hline
+{\em time\+\_\+step} & Current time step being computed (s) \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_source_l00161}{161}} of file \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_source}{rxn\+\_\+wennberg\+\_\+no\+\_\+ro2.\+c}}.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=331pt]{rxn__wennberg__no__ro2_8c_af79524415b6129127837f00986a70cdb_cgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{rxn__wennberg__no__ro2_8c_a548df130894fc55ab07d65f276e642e2}\label{rxn__wennberg__no__ro2_8c_a548df130894fc55ab07d65f276e642e2}} 
+\index{rxn\_wennberg\_no\_ro2.c@{rxn\_wennberg\_no\_ro2.c}!rxn\_wennberg\_no\_ro2\_calc\_jac\_contrib@{rxn\_wennberg\_no\_ro2\_calc\_jac\_contrib}}
+\index{rxn\_wennberg\_no\_ro2\_calc\_jac\_contrib@{rxn\_wennberg\_no\_ro2\_calc\_jac\_contrib}!rxn\_wennberg\_no\_ro2.c@{rxn\_wennberg\_no\_ro2.c}}
+\doxysubsubsection{\texorpdfstring{rxn\_wennberg\_no\_ro2\_calc\_jac\_contrib()}{rxn\_wennberg\_no\_ro2\_calc\_jac\_contrib()}}
+{\footnotesize\ttfamily void rxn\+\_\+wennberg\+\_\+no\+\_\+ro2\+\_\+calc\+\_\+jac\+\_\+contrib (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}}}]{jac,  }\item[{int $\ast$}]{rxn\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+env\+\_\+data,  }\item[{double}]{time\+\_\+step }\end{DoxyParamCaption})}
+
+
+
+Calculate contributions to the \mbox{\hyperlink{struct_jacobian}{Jacobian}} from this reaction. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em model\+\_\+data} & \mbox{\hyperlink{struct_model}{Model}} data \\
+\hline
+{\em jac} & Reaction \mbox{\hyperlink{struct_jacobian}{Jacobian}} \\
+\hline
+{\em rxn\+\_\+int\+\_\+data} & Pointer to the reaction integer data \\
+\hline
+{\em rxn\+\_\+float\+\_\+data} & Pointer to the reaction floating-\/point data \\
+\hline
+{\em rxn\+\_\+env\+\_\+data} & Pointer to the environment-\/dependent parameters \\
+\hline
+{\em time\+\_\+step} & Current time step being calculated (s) \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_source_l00221}{221}} of file \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_source}{rxn\+\_\+wennberg\+\_\+no\+\_\+ro2.\+c}}.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=329pt]{rxn__wennberg__no__ro2_8c_a548df130894fc55ab07d65f276e642e2_cgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{rxn__wennberg__no__ro2_8c_aa0313faf4bb8c560811072042700aafa}\label{rxn__wennberg__no__ro2_8c_aa0313faf4bb8c560811072042700aafa}} 
+\index{rxn\_wennberg\_no\_ro2.c@{rxn\_wennberg\_no\_ro2.c}!rxn\_wennberg\_no\_ro2\_get\_used\_jac\_elem@{rxn\_wennberg\_no\_ro2\_get\_used\_jac\_elem}}
+\index{rxn\_wennberg\_no\_ro2\_get\_used\_jac\_elem@{rxn\_wennberg\_no\_ro2\_get\_used\_jac\_elem}!rxn\_wennberg\_no\_ro2.c@{rxn\_wennberg\_no\_ro2.c}}
+\doxysubsubsection{\texorpdfstring{rxn\_wennberg\_no\_ro2\_get\_used\_jac\_elem()}{rxn\_wennberg\_no\_ro2\_get\_used\_jac\_elem()}}
+{\footnotesize\ttfamily void rxn\+\_\+wennberg\+\_\+no\+\_\+ro2\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem (\begin{DoxyParamCaption}\item[{int $\ast$}]{rxn\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+float\+\_\+data,  }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}} $\ast$}]{jac }\end{DoxyParamCaption})}
+
+
+
+Flag \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used by this reaction. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em rxn\+\_\+int\+\_\+data} & Pointer to the reaction integer data \\
+\hline
+{\em rxn\+\_\+float\+\_\+data} & Pointer to the reaction floating-\/point data \\
+\hline
+{\em jac} & \mbox{\hyperlink{struct_jacobian}{Jacobian}} \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_source_l00050}{50}} of file \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_source}{rxn\+\_\+wennberg\+\_\+no\+\_\+ro2.\+c}}.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{rxn__wennberg__no__ro2_8c_aa0313faf4bb8c560811072042700aafa_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{rxn__wennberg__no__ro2_8c_aa0313faf4bb8c560811072042700aafa_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{rxn__wennberg__no__ro2_8c_af1a2cd28e8838e7123ad9ecac5e13c7c}\label{rxn__wennberg__no__ro2_8c_af1a2cd28e8838e7123ad9ecac5e13c7c}} 
+\index{rxn\_wennberg\_no\_ro2.c@{rxn\_wennberg\_no\_ro2.c}!rxn\_wennberg\_no\_ro2\_print@{rxn\_wennberg\_no\_ro2\_print}}
+\index{rxn\_wennberg\_no\_ro2\_print@{rxn\_wennberg\_no\_ro2\_print}!rxn\_wennberg\_no\_ro2.c@{rxn\_wennberg\_no\_ro2.c}}
+\doxysubsubsection{\texorpdfstring{rxn\_wennberg\_no\_ro2\_print()}{rxn\_wennberg\_no\_ro2\_print()}}
+{\footnotesize\ttfamily void rxn\+\_\+wennberg\+\_\+no\+\_\+ro2\+\_\+print (\begin{DoxyParamCaption}\item[{int $\ast$}]{rxn\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+float\+\_\+data }\end{DoxyParamCaption})}
+
+
+
+Print the Wennberg NO + RO2 reaction parameters. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em rxn\+\_\+int\+\_\+data} & Pointer to the reaction integer data \\
+\hline
+{\em rxn\+\_\+float\+\_\+data} & Pointer to the reaction floating-\/point data \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_source_l00278}{278}} of file \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_source}{rxn\+\_\+wennberg\+\_\+no\+\_\+ro2.\+c}}.
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=304pt]{rxn__wennberg__no__ro2_8c_af1a2cd28e8838e7123ad9ecac5e13c7c_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{rxn__wennberg__no__ro2_8c_a8d2b2b0c571f1601ab1458bec2df79a0}\label{rxn__wennberg__no__ro2_8c_a8d2b2b0c571f1601ab1458bec2df79a0}} 
+\index{rxn\_wennberg\_no\_ro2.c@{rxn\_wennberg\_no\_ro2.c}!rxn\_wennberg\_no\_ro2\_update\_env\_state@{rxn\_wennberg\_no\_ro2\_update\_env\_state}}
+\index{rxn\_wennberg\_no\_ro2\_update\_env\_state@{rxn\_wennberg\_no\_ro2\_update\_env\_state}!rxn\_wennberg\_no\_ro2.c@{rxn\_wennberg\_no\_ro2.c}}
+\doxysubsubsection{\texorpdfstring{rxn\_wennberg\_no\_ro2\_update\_env\_state()}{rxn\_wennberg\_no\_ro2\_update\_env\_state()}}
+{\footnotesize\ttfamily void rxn\+\_\+wennberg\+\_\+no\+\_\+ro2\+\_\+update\+\_\+env\+\_\+state (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{int $\ast$}]{rxn\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+env\+\_\+data }\end{DoxyParamCaption})}
+
+
+
+Update reaction data for new environmental conditions. 
+
+For Wennberg NO + RO2 reaction this only involves recalculating the rate constant.
+
+
+\begin{DoxyParams}{Parameters}
+{\em model\+\_\+data} & Pointer to the model data \\
+\hline
+{\em rxn\+\_\+int\+\_\+data} & Pointer to the reaction integer data \\
+\hline
+{\em rxn\+\_\+float\+\_\+data} & Pointer to the reaction floating-\/point data \\
+\hline
+{\em rxn\+\_\+env\+\_\+data} & Pointer to the environment-\/dependent parameters \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_source_l00129}{129}} of file \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_source}{rxn\+\_\+wennberg\+\_\+no\+\_\+ro2.\+c}}.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=295pt]{rxn__wennberg__no__ro2_8c_a8d2b2b0c571f1601ab1458bec2df79a0_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{rxn__wennberg__no__ro2_8c_a8d2b2b0c571f1601ab1458bec2df79a0_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{rxn__wennberg__no__ro2_8c_ac00a498c0e68bb445a5ca2cba0c17d32}\label{rxn__wennberg__no__ro2_8c_ac00a498c0e68bb445a5ca2cba0c17d32}} 
+\index{rxn\_wennberg\_no\_ro2.c@{rxn\_wennberg\_no\_ro2.c}!rxn\_wennberg\_no\_ro2\_update\_ids@{rxn\_wennberg\_no\_ro2\_update\_ids}}
+\index{rxn\_wennberg\_no\_ro2\_update\_ids@{rxn\_wennberg\_no\_ro2\_update\_ids}!rxn\_wennberg\_no\_ro2.c@{rxn\_wennberg\_no\_ro2.c}}
+\doxysubsubsection{\texorpdfstring{rxn\_wennberg\_no\_ro2\_update\_ids()}{rxn\_wennberg\_no\_ro2\_update\_ids()}}
+{\footnotesize\ttfamily void rxn\+\_\+wennberg\+\_\+no\+\_\+ro2\+\_\+update\+\_\+ids (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{int $\ast$}]{deriv\+\_\+ids,  }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}}}]{jac,  }\item[{int $\ast$}]{rxn\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+float\+\_\+data }\end{DoxyParamCaption})}
+
+
+
+Update the time derivative and Jacbobian array indices. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em model\+\_\+data} & Pointer to the model data \\
+\hline
+{\em deriv\+\_\+ids} & Id of each state variable in the derivative array \\
+\hline
+{\em jac} & \mbox{\hyperlink{struct_jacobian}{Jacobian}} \\
+\hline
+{\em rxn\+\_\+int\+\_\+data} & Pointer to the reaction integer data \\
+\hline
+{\em rxn\+\_\+float\+\_\+data} & Pointer to the reaction floating-\/point data \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_source_l00076}{76}} of file \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_source}{rxn\+\_\+wennberg\+\_\+no\+\_\+ro2.\+c}}.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{rxn__wennberg__no__ro2_8c_ac00a498c0e68bb445a5ca2cba0c17d32_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{rxn__wennberg__no__ro2_8c_ac00a498c0e68bb445a5ca2cba0c17d32_icgraph}
+\end{center}
+\end{figure}

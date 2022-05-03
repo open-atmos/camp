@@ -1,0 +1,3 @@
+<map id="camp_rand::prob_round" name="camp_rand::prob_round">
+<area shape="rect" id="node1" title="Round val to floor(val) or ceiling(val) with probability proportional to the relative distance from v..." alt="" coords="5,29,161,56"/>
+</map>

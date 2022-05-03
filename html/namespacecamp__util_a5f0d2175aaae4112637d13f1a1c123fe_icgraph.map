@@ -1,4 +1,4 @@
 <map id="camp_util::find_1d" name="camp_util::find_1d">
-<area shape="rect" id="node1" title="Find the position of a real number in an arbitrary 1D array." alt="" coords="191,5,316,32"/>
-<area shape="rect" id="node2" href="$namespacecamp__util.html#a489620eee18a7ea836aa645fbf6569a0" title="1D linear interpolation." alt="" coords="5,5,143,32"/>
+<area shape="rect" id="node1" title="Find the position of a real number in an arbitrary 1D array." alt="" coords="191,29,316,56"/>
+<area shape="rect" id="node2" href="$namespacecamp__util.html#a489620eee18a7ea836aa645fbf6569a0" title="1D linear interpolation." alt="" coords="5,29,143,56"/>
 </map>

@@ -24,7 +24,7 @@ This graph shows which files directly or indirectly include this file\+:
 \doxysubsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
-void $\ast$ \mbox{\hyperlink{camp__solver_8h_a8652eb17aa4aec193810f8351c248c0e}{solver\+\_\+new}} (int n\+\_\+state\+\_\+var, int n\+\_\+cells, int $\ast$var\+\_\+type, int n\+\_\+rxn, int n\+\_\+rxn\+\_\+int\+\_\+param, int n\+\_\+rxn\+\_\+float\+\_\+param, int n\+\_\+rxn\+\_\+env\+\_\+param, int n\+\_\+aero\+\_\+phase, int n\+\_\+aero\+\_\+phase\+\_\+int\+\_\+param, int n\+\_\+aero\+\_\+phase\+\_\+float\+\_\+param, int n\+\_\+aero\+\_\+rep, int n\+\_\+aero\+\_\+rep\+\_\+int\+\_\+param, int n\+\_\+aero\+\_\+rep\+\_\+float\+\_\+param, int n\+\_\+aero\+\_\+rep\+\_\+env\+\_\+param, int n\+\_\+sub\+\_\+model, int n\+\_\+sub\+\_\+model\+\_\+int\+\_\+param, int n\+\_\+sub\+\_\+model\+\_\+float\+\_\+param, int n\+\_\+sub\+\_\+model\+\_\+env\+\_\+param)
+void $\ast$ \mbox{\hyperlink{camp__solver_8h_a68b93bb3ad0a17bb25dba4061bbf52d8}{solver\+\_\+new}} (int n\+\_\+state\+\_\+var, int n\+\_\+cells, int $\ast$var\+\_\+type, int n\+\_\+rxn, int n\+\_\+rxn\+\_\+int\+\_\+param, int n\+\_\+rxn\+\_\+float\+\_\+param, int n\+\_\+rxn\+\_\+env\+\_\+param, int n\+\_\+aero\+\_\+phase, int n\+\_\+aero\+\_\+phase\+\_\+int\+\_\+param, int n\+\_\+aero\+\_\+phase\+\_\+float\+\_\+param, int n\+\_\+aero\+\_\+rep, int n\+\_\+aero\+\_\+rep\+\_\+int\+\_\+param, int n\+\_\+aero\+\_\+rep\+\_\+float\+\_\+param, int n\+\_\+aero\+\_\+rep\+\_\+env\+\_\+param, int n\+\_\+sub\+\_\+model, int n\+\_\+sub\+\_\+model\+\_\+int\+\_\+param, int n\+\_\+sub\+\_\+model\+\_\+float\+\_\+param, int n\+\_\+sub\+\_\+model\+\_\+env\+\_\+param)
 \begin{DoxyCompactList}\small\item\em Get a new solver object. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{camp__solver_8h_a599ffdef916b139a1690bfd41aa386b6}{solver\+\_\+initialize}} (void $\ast$solver\+\_\+data, double $\ast$abs\+\_\+tol, double rel\+\_\+tol, int max\+\_\+steps, int max\+\_\+conv\+\_\+fails)
 \begin{DoxyCompactList}\small\item\em Solver initialization. \end{DoxyCompactList}\item 
@@ -73,6 +73,10 @@ Header file for solver functions.
 
 
 
+Definition in file \mbox{\hyperlink{camp__solver_8h_source}{camp\+\_\+solver.\+h}}.
+
+
+
 \doxysubsection{Function Documentation}
 \mbox{\Hypertarget{camp__solver_8h_a21373e1f8bad206f6437deeea571f51c}\label{camp__solver_8h_a21373e1f8bad206f6437deeea571f51c}} 
 \index{camp\_solver.h@{camp\_solver.h}!camp\_solver\_update\_model\_state@{camp\_solver\_update\_model\_state}}
@@ -100,7 +104,7 @@ CAMP\+\_\+\+SOLVER\+\_\+\+SUCCESS for successful update or CAMP\+\_\+\+SOLVER\+\
 \end{DoxyReturn}
 
 
-Definition at line 797 of file camp\+\_\+solver.\+c.
+Definition at line \mbox{\hyperlink{camp__solver_8c_source_l00797}{797}} of file \mbox{\hyperlink{camp__solver_8c_source}{camp\+\_\+solver.\+c}}.
 
 Here is the caller graph for this function\+:
 \nopagebreak
@@ -134,7 +138,7 @@ Flag indicating CAMP\+\_\+\+SOLVER\+\_\+\+SUCCESS or CAMP\+\_\+\+SOLVER\+\_\+\+F
 \end{DoxyReturn}
 
 
-Definition at line 1713 of file camp\+\_\+solver.\+c.
+Definition at line \mbox{\hyperlink{camp__solver_8c_source_l01713}{1713}} of file \mbox{\hyperlink{camp__solver_8c_source}{camp\+\_\+solver.\+c}}.
 
 Here is the caller graph for this function\+:
 \nopagebreak
@@ -165,7 +169,7 @@ Check the return value of a SUNDIALS function and exit on failure.
 \end{DoxyParams}
 
 
-Definition at line 1743 of file camp\+\_\+solver.\+c.
+Definition at line \mbox{\hyperlink{camp__solver_8c_source_l01743}{1743}} of file \mbox{\hyperlink{camp__solver_8c_source}{camp\+\_\+solver.\+c}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -217,7 +221,7 @@ True if \mbox{\hyperlink{struct_jacobian}{Jacobian}} values are accurate, false 
 \end{DoxyReturn}
 
 
-Definition at line 1138 of file camp\+\_\+solver.\+c.
+Definition at line \mbox{\hyperlink{camp__solver_8c_source_l01138}{1138}} of file \mbox{\hyperlink{camp__solver_8c_source}{camp\+\_\+solver.\+c}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -247,7 +251,7 @@ Custom error handling function.
 
 This is used for quiet operation. Solver failures are returned with a flag from the \mbox{\hyperlink{camp__solver_8c_afc5ec8680b419e7ab49530d53a76cee4}{solver\+\_\+run()}} function. 
 
-Definition at line 1896 of file camp\+\_\+solver.\+c.
+Definition at line \mbox{\hyperlink{camp__solver_8c_source_l01896}{1896}} of file \mbox{\hyperlink{camp__solver_8c_source}{camp\+\_\+solver.\+c}}.
 
 Here is the caller graph for this function\+:
 \nopagebreak
@@ -283,7 +287,7 @@ Status code
 \end{DoxyReturn}
 
 
-Definition at line 835 of file camp\+\_\+solver.\+c.
+Definition at line \mbox{\hyperlink{camp__solver_8c_source_l00835}{835}} of file \mbox{\hyperlink{camp__solver_8c_source}{camp\+\_\+solver.\+c}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -323,7 +327,7 @@ Sparse \mbox{\hyperlink{struct_jacobian}{Jacobian}} matrix with all possible non
 \item[\mbox{\hyperlink{todo__todo000002}{Todo}}]Make the \mbox{\hyperlink{struct_jacobian}{Jacobian}} mapping recursive for sub model parameters that depend on other sub model parameters \end{DoxyRefDesc}
 
 
-Definition at line 1407 of file camp\+\_\+solver.\+c.
+Definition at line \mbox{\hyperlink{camp__solver_8c_source_l01407}{1407}} of file \mbox{\hyperlink{camp__solver_8c_source}{camp\+\_\+solver.\+c}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -377,7 +381,7 @@ This function checks if there are any negative guessed concentrations, and if th
 \end{DoxyReturn}
 
 
-Definition at line 1312 of file camp\+\_\+solver.\+c.
+Definition at line \mbox{\hyperlink{camp__solver_8c_source_l01312}{1312}} of file \mbox{\hyperlink{camp__solver_8c_source}{camp\+\_\+solver.\+c}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -407,7 +411,7 @@ Determine if there is anything to solve.
 
 If the solver state concentrations and the derivative vector are very small, there is no point running the solver 
 
-Definition at line 1865 of file camp\+\_\+solver.\+c.
+Definition at line \mbox{\hyperlink{camp__solver_8c_source_l01865}{1865}} of file \mbox{\hyperlink{camp__solver_8c_source}{camp\+\_\+solver.\+c}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -461,7 +465,7 @@ Status code
 \item[\mbox{\hyperlink{todo__todo000001}{Todo}}]\#83 Figure out how to stop CVODE from resizing the \mbox{\hyperlink{struct_jacobian}{Jacobian}} during solving \end{DoxyRefDesc}
 
 
-Definition at line 964 of file camp\+\_\+solver.\+c.
+Definition at line \mbox{\hyperlink{camp__solver_8c_source_l00964}{964}} of file \mbox{\hyperlink{camp__solver_8c_source}{camp\+\_\+solver.\+c}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -496,7 +500,7 @@ Free a \mbox{\hyperlink{struct_model_data}{Model\+Data}} object.
 \end{DoxyParams}
 
 
-Definition at line 1905 of file camp\+\_\+solver.\+c.
+Definition at line \mbox{\hyperlink{camp__solver_8c_source_l01905}{1905}} of file \mbox{\hyperlink{camp__solver_8c_source}{camp\+\_\+solver.\+c}}.
 
 Here is the caller graph for this function\+:
 \nopagebreak
@@ -541,7 +545,7 @@ Free a \mbox{\hyperlink{struct_solver_data}{Solver\+Data}} object.
 \end{DoxyParams}
 
 
-Definition at line 1822 of file camp\+\_\+solver.\+c.
+Definition at line \mbox{\hyperlink{camp__solver_8c_source_l01822}{1822}} of file \mbox{\hyperlink{camp__solver_8c_source}{camp\+\_\+solver.\+c}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -602,7 +606,7 @@ Get solver statistics after an integration attempt.
 \end{DoxyParams}
 
 
-Definition at line 717 of file camp\+\_\+solver.\+c.
+Definition at line \mbox{\hyperlink{camp__solver_8c_source_l00717}{717}} of file \mbox{\hyperlink{camp__solver_8c_source}{camp\+\_\+solver.\+c}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -639,21 +643,21 @@ Allocate and initialize solver objects
 \end{DoxyParams}
 
 
-Definition at line 374 of file camp\+\_\+solver.\+c.
+Definition at line \mbox{\hyperlink{camp__solver_8c_source_l00374}{374}} of file \mbox{\hyperlink{camp__solver_8c_source}{camp\+\_\+solver.\+c}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=350pt]{camp__solver_8h_a599ffdef916b139a1690bfd41aa386b6_cgraph}
+\includegraphics[height=550pt]{camp__solver_8h_a599ffdef916b139a1690bfd41aa386b6_cgraph}
 \end{center}
 \end{figure}
-\mbox{\Hypertarget{camp__solver_8h_a8652eb17aa4aec193810f8351c248c0e}\label{camp__solver_8h_a8652eb17aa4aec193810f8351c248c0e}} 
+\mbox{\Hypertarget{camp__solver_8h_a68b93bb3ad0a17bb25dba4061bbf52d8}\label{camp__solver_8h_a68b93bb3ad0a17bb25dba4061bbf52d8}} 
 \index{camp\_solver.h@{camp\_solver.h}!solver\_new@{solver\_new}}
 \index{solver\_new@{solver\_new}!camp\_solver.h@{camp\_solver.h}}
 \doxysubsubsection{\texorpdfstring{solver\_new()}{solver\_new()}}
-{\footnotesize\ttfamily void$\ast$ solver\+\_\+new (\begin{DoxyParamCaption}\item[{int}]{n\+\_\+state\+\_\+var,  }\item[{int}]{n\+\_\+cells,  }\item[{int $\ast$}]{var\+\_\+type,  }\item[{int}]{n\+\_\+rxn,  }\item[{int}]{n\+\_\+rxn\+\_\+int\+\_\+param,  }\item[{int}]{n\+\_\+rxn\+\_\+float\+\_\+param,  }\item[{int}]{n\+\_\+rxn\+\_\+env\+\_\+param,  }\item[{int}]{n\+\_\+aero\+\_\+phase,  }\item[{int}]{n\+\_\+aero\+\_\+phase\+\_\+int\+\_\+param,  }\item[{int}]{n\+\_\+aero\+\_\+phase\+\_\+float\+\_\+param,  }\item[{int}]{n\+\_\+aero\+\_\+rep,  }\item[{int}]{n\+\_\+aero\+\_\+rep\+\_\+int\+\_\+param,  }\item[{int}]{n\+\_\+aero\+\_\+rep\+\_\+float\+\_\+param,  }\item[{int}]{n\+\_\+aero\+\_\+rep\+\_\+env\+\_\+param,  }\item[{int}]{n\+\_\+sub\+\_\+model,  }\item[{int}]{n\+\_\+sub\+\_\+model\+\_\+int\+\_\+param,  }\item[{int}]{n\+\_\+sub\+\_\+model\+\_\+float\+\_\+param,  }\item[{int}]{n\+\_\+sub\+\_\+model\+\_\+env\+\_\+param }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void $\ast$ solver\+\_\+new (\begin{DoxyParamCaption}\item[{int}]{n\+\_\+state\+\_\+var,  }\item[{int}]{n\+\_\+cells,  }\item[{int $\ast$}]{var\+\_\+type,  }\item[{int}]{n\+\_\+rxn,  }\item[{int}]{n\+\_\+rxn\+\_\+int\+\_\+param,  }\item[{int}]{n\+\_\+rxn\+\_\+float\+\_\+param,  }\item[{int}]{n\+\_\+rxn\+\_\+env\+\_\+param,  }\item[{int}]{n\+\_\+aero\+\_\+phase,  }\item[{int}]{n\+\_\+aero\+\_\+phase\+\_\+int\+\_\+param,  }\item[{int}]{n\+\_\+aero\+\_\+phase\+\_\+float\+\_\+param,  }\item[{int}]{n\+\_\+aero\+\_\+rep,  }\item[{int}]{n\+\_\+aero\+\_\+rep\+\_\+int\+\_\+param,  }\item[{int}]{n\+\_\+aero\+\_\+rep\+\_\+float\+\_\+param,  }\item[{int}]{n\+\_\+aero\+\_\+rep\+\_\+env\+\_\+param,  }\item[{int}]{n\+\_\+sub\+\_\+model,  }\item[{int}]{n\+\_\+sub\+\_\+model\+\_\+int\+\_\+param,  }\item[{int}]{n\+\_\+sub\+\_\+model\+\_\+float\+\_\+param,  }\item[{int}]{n\+\_\+sub\+\_\+model\+\_\+env\+\_\+param }\end{DoxyParamCaption})}
 
 
 
@@ -705,14 +709,14 @@ Pointer to the new \mbox{\hyperlink{struct_solver_data}{Solver\+Data}} object
 \end{DoxyReturn}
 
 
-Definition at line 83 of file camp\+\_\+solver.\+c.
+Definition at line \mbox{\hyperlink{camp__solver_8c_source_l00083}{83}} of file \mbox{\hyperlink{camp__solver_8c_source}{camp\+\_\+solver.\+c}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=304pt]{camp__solver_8h_a8652eb17aa4aec193810f8351c248c0e_cgraph}
+\includegraphics[width=304pt]{camp__solver_8h_a68b93bb3ad0a17bb25dba4061bbf52d8_cgraph}
 \end{center}
 \end{figure}
 \mbox{\Hypertarget{camp__solver_8h_aa27659e81a1e22c9ab59889e8e7cd341}\label{camp__solver_8h_aa27659e81a1e22c9ab59889e8e7cd341}} 
@@ -738,7 +742,7 @@ Reset the timers for solver functions.
 \end{DoxyParams}
 
 
-Definition at line 1754 of file camp\+\_\+solver.\+c.
+Definition at line \mbox{\hyperlink{camp__solver_8c_source_l01754}{1754}} of file \mbox{\hyperlink{camp__solver_8c_source}{camp\+\_\+solver.\+c}}.
 
 \mbox{\Hypertarget{camp__solver_8h_afc5ec8680b419e7ab49530d53a76cee4}\label{camp__solver_8h_afc5ec8680b419e7ab49530d53a76cee4}} 
 \index{camp\_solver.h@{camp\_solver.h}!solver\_run@{solver\_run}}
@@ -768,7 +772,7 @@ Flag indicating CAMP\+\_\+\+SOLVER\+\_\+\+SUCCESS or CAMP\+\_\+\+SOLVER\+\_\+\+F
 \end{DoxyReturn}
 
 
-Definition at line 536 of file camp\+\_\+solver.\+c.
+Definition at line \mbox{\hyperlink{camp__solver_8c_source_l00536}{536}} of file \mbox{\hyperlink{camp__solver_8c_source}{camp\+\_\+solver.\+c}}.
 
 Here is the call graph for this function\+:
 \nopagebreak

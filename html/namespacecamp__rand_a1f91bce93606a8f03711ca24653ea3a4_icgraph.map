@@ -1,4 +1,4 @@
 <map id="camp_rand::sample_cts_pdf" name="camp_rand::sample_cts_pdf">
-<area shape="rect" id="node1" title="Sample the given continuous probability density function." alt="" coords="216,13,400,39"/>
-<area shape="rect" id="node2" href="$namespacecamp__rand.html#a24c8c27808b19383b261d200b91b69de" title="Convert a real&#45;valued vector into an integer&#45;valued vector by sampling." alt="" coords="5,5,168,47"/>
+<area shape="rect" id="node1" title="Sample the given continuous probability density function." alt="" coords="216,29,400,56"/>
+<area shape="rect" id="node2" href="$namespacecamp__rand.html#a24c8c27808b19383b261d200b91b69de" title="Convert a real&#45;valued vector into an integer&#45;valued vector by sampling." alt="" coords="5,22,168,63"/>
 </map>

@@ -1,6 +1,4 @@
 <map id="camp_rxn_hl_phase_transfer::rxn_hl_phase_transfer_t" name="camp_rxn_hl_phase_transfer::rxn_hl_phase_transfer_t">
-<area shape="rect" id="node1" title="Generic test reaction data type." alt="" coords="5,319,193,360"/>
-<area shape="rect" id="node2" href="$structcamp__rxn__data_1_1rxn__data__t.html" title="Abstract reaction data type." alt="" coords="33,228,166,269"/>
-<area shape="rect" id="node3" href="$structcamp__property_1_1property__t.html" title="Property data." alt="" coords="14,139,185,165"/>
-<area shape="rect" id="node4" href="$structcamp__property_1_1property__link__t.html" title="Property link data." alt="" coords="20,5,179,47"/>
+<area shape="rect" id="node1" title="Generic test reaction data type." alt="" coords="5,95,193,136"/>
+<area shape="rect" id="node2" href="$structcamp__rxn__data_1_1rxn__data__t.html" title="Abstract reaction data type." alt="" coords="33,5,166,47"/>
 </map>

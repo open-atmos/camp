@@ -1,0 +1,153 @@
+\hypertarget{rxn__wennberg__tunneling_8_f90}{}\doxysection{rxn\+\_\+wennberg\+\_\+tunneling.\+F90 File Reference}
+\label{rxn__wennberg__tunneling_8_f90}\index{rxn\_wennberg\_tunneling.F90@{rxn\_wennberg\_tunneling.F90}}
+
+
+The \mbox{\hyperlink{namespacecamp__rxn__wennberg__tunneling}{camp\+\_\+rxn\+\_\+wennberg\+\_\+tunneling}} module.  
+
+
+\doxysubsection*{Data Types}
+\begin{DoxyCompactItemize}
+\item 
+interface \mbox{\hyperlink{structcamp__rxn__wennberg__tunneling_1_1rxn__wennberg__tunneling__t}{camp\+\_\+rxn\+\_\+wennberg\+\_\+tunneling\+::rxn\+\_\+wennberg\+\_\+tunneling\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em Generic test reaction data type. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Modules}
+\begin{DoxyCompactItemize}
+\item 
+module \mbox{\hyperlink{namespacecamp__rxn__wennberg__tunneling}{camp\+\_\+rxn\+\_\+wennberg\+\_\+tunneling}}
+\begin{DoxyCompactList}\small\item\em The \mbox{\hyperlink{structcamp__rxn__wennberg__tunneling_1_1rxn__wennberg__tunneling__t}{rxn\+\_\+wennberg\+\_\+tunneling\+\_\+t}} type and associated functions. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}}~this\%condensed\+\_\+data\+\_\+int(1)
+\item 
+\#define \mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}}~this\%condensed\+\_\+data\+\_\+int(2)
+\item 
+\#define \mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_a71700f5633db3f99b43c798b09c60bd2}{A\+\_\+}}~this\%condensed\+\_\+data\+\_\+real(1)
+\item 
+\#define \mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_a97097eeee58a37a9710a05f559d84a6b}{B\+\_\+}}~this\%condensed\+\_\+data\+\_\+real(2)
+\item 
+\#define \mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_ad010fec48ee67af5ba75e0ec6c3f5ce4}{C\+\_\+}}~this\%condensed\+\_\+data\+\_\+real(3)
+\item 
+\#define \mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_a91cd74713029c0906e8136c8628d548d}{CONV\+\_\+}}~this\%condensed\+\_\+data\+\_\+real(4)
+\item 
+\#define \mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}}~2
+\item 
+\#define \mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_aa9808eb54fa06bcf890dd1aa1fc6ca5b}{NUM\+\_\+\+REAL\+\_\+\+PROP\+\_\+}}~4
+\item 
+\#define \mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_a1f68a3544ae39a7815cbb5c09dfdeff0}{NUM\+\_\+\+ENV\+\_\+\+PARAM\+\_\+}}~1
+\item 
+\#define \mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_ae761e39657aac155d83eae9b338be571}{REACT\+\_\+}}(x)~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + x)
+\item 
+\#define \mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_a9fda90058c6a41b1dda6ded03321c4da}{PROD\+\_\+}}(x)~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + x)
+\item 
+\#define \mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_af9fc34858d09e71d3cffd88cf942bdf9}{DERIV\+\_\+\+ID\+\_\+}}(x)~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + \mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}} + x)
+\item 
+\#define \mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_ab831aae98d4453927c63a93f55ee5a86}{JAC\+\_\+\+ID\+\_\+}}(x)~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 2$\ast$(\mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}}+\mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}}) + x)
+\item 
+\#define \mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_a9ae244708fd9c438bf840ed319733651}{YIELD\+\_\+}}(x)~this\%condensed\+\_\+data\+\_\+real(\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_aa9808eb54fa06bcf890dd1aa1fc6ca5b}{NUM\+\_\+\+REAL\+\_\+\+PROP\+\_\+}} + x)
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions/\+Subroutines}
+\begin{DoxyCompactItemize}
+\item 
+type(rxn\+\_\+wennberg\+\_\+tunneling\+\_\+t) function, pointer \mbox{\hyperlink{namespacecamp__rxn__wennberg__tunneling_aeaf1ee2c3cead3c9320a75a384baff00}{camp\+\_\+rxn\+\_\+wennberg\+\_\+tunneling\+::constructor}} ()
+\begin{DoxyCompactList}\small\item\em Constructor for Wennberg tunneling reaction. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__rxn__wennberg__tunneling_aea3274c0e9f67632a485c3571c3aa02b}{camp\+\_\+rxn\+\_\+wennberg\+\_\+tunneling\+::initialize}} (this, chem\+\_\+spec\+\_\+data, aero\+\_\+rep, n\+\_\+cells)
+\begin{DoxyCompactList}\small\item\em Initialize the reaction data, validating component data and loading any required information into the condensed data arrays for use during solving. \end{DoxyCompactList}\item 
+elemental subroutine \mbox{\hyperlink{namespacecamp__rxn__wennberg__tunneling_a9ace54cc1f1ba5ed71aa4f6360c1b42f}{camp\+\_\+rxn\+\_\+wennberg\+\_\+tunneling\+::finalize}} (this)
+\begin{DoxyCompactList}\small\item\em Finalize the reaction. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+The \mbox{\hyperlink{namespacecamp__rxn__wennberg__tunneling}{camp\+\_\+rxn\+\_\+wennberg\+\_\+tunneling}} module. 
+
+
+
+Definition in file \mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_source}{rxn\+\_\+wennberg\+\_\+tunneling.\+F90}}.
+
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{rxn__wennberg__tunneling_8_f90_a71700f5633db3f99b43c798b09c60bd2}\label{rxn__wennberg__tunneling_8_f90_a71700f5633db3f99b43c798b09c60bd2}} 
+\index{rxn\_wennberg\_tunneling.F90@{rxn\_wennberg\_tunneling.F90}!A\_@{A\_}}
+\index{A\_@{A\_}!rxn\_wennberg\_tunneling.F90@{rxn\_wennberg\_tunneling.F90}}
+\doxysubsubsection{\texorpdfstring{A\_}{A\_}}
+{\footnotesize\ttfamily \#define A\+\_\+~this\%condensed\+\_\+data\+\_\+real(1)}
+
+\mbox{\Hypertarget{rxn__wennberg__tunneling_8_f90_a97097eeee58a37a9710a05f559d84a6b}\label{rxn__wennberg__tunneling_8_f90_a97097eeee58a37a9710a05f559d84a6b}} 
+\index{rxn\_wennberg\_tunneling.F90@{rxn\_wennberg\_tunneling.F90}!B\_@{B\_}}
+\index{B\_@{B\_}!rxn\_wennberg\_tunneling.F90@{rxn\_wennberg\_tunneling.F90}}
+\doxysubsubsection{\texorpdfstring{B\_}{B\_}}
+{\footnotesize\ttfamily \#define B\+\_\+~this\%condensed\+\_\+data\+\_\+real(2)}
+
+\mbox{\Hypertarget{rxn__wennberg__tunneling_8_f90_ad010fec48ee67af5ba75e0ec6c3f5ce4}\label{rxn__wennberg__tunneling_8_f90_ad010fec48ee67af5ba75e0ec6c3f5ce4}} 
+\index{rxn\_wennberg\_tunneling.F90@{rxn\_wennberg\_tunneling.F90}!C\_@{C\_}}
+\index{C\_@{C\_}!rxn\_wennberg\_tunneling.F90@{rxn\_wennberg\_tunneling.F90}}
+\doxysubsubsection{\texorpdfstring{C\_}{C\_}}
+{\footnotesize\ttfamily \#define C\+\_\+~this\%condensed\+\_\+data\+\_\+real(3)}
+
+\mbox{\Hypertarget{rxn__wennberg__tunneling_8_f90_a91cd74713029c0906e8136c8628d548d}\label{rxn__wennberg__tunneling_8_f90_a91cd74713029c0906e8136c8628d548d}} 
+\index{rxn\_wennberg\_tunneling.F90@{rxn\_wennberg\_tunneling.F90}!CONV\_@{CONV\_}}
+\index{CONV\_@{CONV\_}!rxn\_wennberg\_tunneling.F90@{rxn\_wennberg\_tunneling.F90}}
+\doxysubsubsection{\texorpdfstring{CONV\_}{CONV\_}}
+{\footnotesize\ttfamily \#define CONV\+\_\+~this\%condensed\+\_\+data\+\_\+real(4)}
+
+\mbox{\Hypertarget{rxn__wennberg__tunneling_8_f90_af9fc34858d09e71d3cffd88cf942bdf9}\label{rxn__wennberg__tunneling_8_f90_af9fc34858d09e71d3cffd88cf942bdf9}} 
+\index{rxn\_wennberg\_tunneling.F90@{rxn\_wennberg\_tunneling.F90}!DERIV\_ID\_@{DERIV\_ID\_}}
+\index{DERIV\_ID\_@{DERIV\_ID\_}!rxn\_wennberg\_tunneling.F90@{rxn\_wennberg\_tunneling.F90}}
+\doxysubsubsection{\texorpdfstring{DERIV\_ID\_}{DERIV\_ID\_}}
+{\footnotesize\ttfamily \#define DERIV\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + \mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}} + x)}
+
+\mbox{\Hypertarget{rxn__wennberg__tunneling_8_f90_ab831aae98d4453927c63a93f55ee5a86}\label{rxn__wennberg__tunneling_8_f90_ab831aae98d4453927c63a93f55ee5a86}} 
+\index{rxn\_wennberg\_tunneling.F90@{rxn\_wennberg\_tunneling.F90}!JAC\_ID\_@{JAC\_ID\_}}
+\index{JAC\_ID\_@{JAC\_ID\_}!rxn\_wennberg\_tunneling.F90@{rxn\_wennberg\_tunneling.F90}}
+\doxysubsubsection{\texorpdfstring{JAC\_ID\_}{JAC\_ID\_}}
+{\footnotesize\ttfamily \#define JAC\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 2$\ast$(\mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}}+\mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}}) + x)}
+
+\mbox{\Hypertarget{rxn__wennberg__tunneling_8_f90_a1f68a3544ae39a7815cbb5c09dfdeff0}\label{rxn__wennberg__tunneling_8_f90_a1f68a3544ae39a7815cbb5c09dfdeff0}} 
+\index{rxn\_wennberg\_tunneling.F90@{rxn\_wennberg\_tunneling.F90}!NUM\_ENV\_PARAM\_@{NUM\_ENV\_PARAM\_}}
+\index{NUM\_ENV\_PARAM\_@{NUM\_ENV\_PARAM\_}!rxn\_wennberg\_tunneling.F90@{rxn\_wennberg\_tunneling.F90}}
+\doxysubsubsection{\texorpdfstring{NUM\_ENV\_PARAM\_}{NUM\_ENV\_PARAM\_}}
+{\footnotesize\ttfamily \#define NUM\+\_\+\+ENV\+\_\+\+PARAM\+\_\+~1}
+
+\mbox{\Hypertarget{rxn__wennberg__tunneling_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}\label{rxn__wennberg__tunneling_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}} 
+\index{rxn\_wennberg\_tunneling.F90@{rxn\_wennberg\_tunneling.F90}!NUM\_INT\_PROP\_@{NUM\_INT\_PROP\_}}
+\index{NUM\_INT\_PROP\_@{NUM\_INT\_PROP\_}!rxn\_wennberg\_tunneling.F90@{rxn\_wennberg\_tunneling.F90}}
+\doxysubsubsection{\texorpdfstring{NUM\_INT\_PROP\_}{NUM\_INT\_PROP\_}}
+{\footnotesize\ttfamily \#define NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+~2}
+
+\mbox{\Hypertarget{rxn__wennberg__tunneling_8_f90_acf951e890da75cd2d503ed6ce8211fc2}\label{rxn__wennberg__tunneling_8_f90_acf951e890da75cd2d503ed6ce8211fc2}} 
+\index{rxn\_wennberg\_tunneling.F90@{rxn\_wennberg\_tunneling.F90}!NUM\_PROD\_@{NUM\_PROD\_}}
+\index{NUM\_PROD\_@{NUM\_PROD\_}!rxn\_wennberg\_tunneling.F90@{rxn\_wennberg\_tunneling.F90}}
+\doxysubsubsection{\texorpdfstring{NUM\_PROD\_}{NUM\_PROD\_}}
+{\footnotesize\ttfamily \#define NUM\+\_\+\+PROD\+\_\+~this\%condensed\+\_\+data\+\_\+int(2)}
+
+\mbox{\Hypertarget{rxn__wennberg__tunneling_8_f90_a05ef845cf6ed7ab9a774440c42af34fa}\label{rxn__wennberg__tunneling_8_f90_a05ef845cf6ed7ab9a774440c42af34fa}} 
+\index{rxn\_wennberg\_tunneling.F90@{rxn\_wennberg\_tunneling.F90}!NUM\_REACT\_@{NUM\_REACT\_}}
+\index{NUM\_REACT\_@{NUM\_REACT\_}!rxn\_wennberg\_tunneling.F90@{rxn\_wennberg\_tunneling.F90}}
+\doxysubsubsection{\texorpdfstring{NUM\_REACT\_}{NUM\_REACT\_}}
+{\footnotesize\ttfamily \#define NUM\+\_\+\+REACT\+\_\+~this\%condensed\+\_\+data\+\_\+int(1)}
+
+\mbox{\Hypertarget{rxn__wennberg__tunneling_8_f90_aa9808eb54fa06bcf890dd1aa1fc6ca5b}\label{rxn__wennberg__tunneling_8_f90_aa9808eb54fa06bcf890dd1aa1fc6ca5b}} 
+\index{rxn\_wennberg\_tunneling.F90@{rxn\_wennberg\_tunneling.F90}!NUM\_REAL\_PROP\_@{NUM\_REAL\_PROP\_}}
+\index{NUM\_REAL\_PROP\_@{NUM\_REAL\_PROP\_}!rxn\_wennberg\_tunneling.F90@{rxn\_wennberg\_tunneling.F90}}
+\doxysubsubsection{\texorpdfstring{NUM\_REAL\_PROP\_}{NUM\_REAL\_PROP\_}}
+{\footnotesize\ttfamily \#define NUM\+\_\+\+REAL\+\_\+\+PROP\+\_\+~4}
+
+\mbox{\Hypertarget{rxn__wennberg__tunneling_8_f90_a9fda90058c6a41b1dda6ded03321c4da}\label{rxn__wennberg__tunneling_8_f90_a9fda90058c6a41b1dda6ded03321c4da}} 
+\index{rxn\_wennberg\_tunneling.F90@{rxn\_wennberg\_tunneling.F90}!PROD\_@{PROD\_}}
+\index{PROD\_@{PROD\_}!rxn\_wennberg\_tunneling.F90@{rxn\_wennberg\_tunneling.F90}}
+\doxysubsubsection{\texorpdfstring{PROD\_}{PROD\_}}
+{\footnotesize\ttfamily \#define PROD\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + x)}
+
+\mbox{\Hypertarget{rxn__wennberg__tunneling_8_f90_ae761e39657aac155d83eae9b338be571}\label{rxn__wennberg__tunneling_8_f90_ae761e39657aac155d83eae9b338be571}} 
+\index{rxn\_wennberg\_tunneling.F90@{rxn\_wennberg\_tunneling.F90}!REACT\_@{REACT\_}}
+\index{REACT\_@{REACT\_}!rxn\_wennberg\_tunneling.F90@{rxn\_wennberg\_tunneling.F90}}
+\doxysubsubsection{\texorpdfstring{REACT\_}{REACT\_}}
+{\footnotesize\ttfamily \#define REACT\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + x)}
+
+\mbox{\Hypertarget{rxn__wennberg__tunneling_8_f90_a9ae244708fd9c438bf840ed319733651}\label{rxn__wennberg__tunneling_8_f90_a9ae244708fd9c438bf840ed319733651}} 
+\index{rxn\_wennberg\_tunneling.F90@{rxn\_wennberg\_tunneling.F90}!YIELD\_@{YIELD\_}}
+\index{YIELD\_@{YIELD\_}!rxn\_wennberg\_tunneling.F90@{rxn\_wennberg\_tunneling.F90}}
+\doxysubsubsection{\texorpdfstring{YIELD\_}{YIELD\_}}
+{\footnotesize\ttfamily \#define YIELD\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~this\%condensed\+\_\+data\+\_\+real(\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_aa9808eb54fa06bcf890dd1aa1fc6ca5b}{NUM\+\_\+\+REAL\+\_\+\+PROP\+\_\+}} + x)}
+

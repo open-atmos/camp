@@ -1,6 +1,0 @@
-<map id="rxn_CMAQ_H2O2_calc_jac_contrib" name="rxn_CMAQ_H2O2_calc_jac_contrib">
-<area shape="rect" id="node1" title="Calculate contributions to the Jacobian from this reaction." alt="" coords="397,5,555,47"/>
-<area shape="rect" id="node2" href="$rxn__solver_8c.html#ad44deb65b9845d05c6bd148e3378b42a" title="Calculate the Jacobian." alt="" coords="255,13,349,39"/>
-<area shape="rect" id="node3" href="$camp__solver_8c.html#a13451d507558a61a2353adfed58db468" title="Compute the Jacobian." alt="" coords="164,13,207,39"/>
-<area shape="rect" id="node4" href="$camp__solver_8c.html#a599ffdef916b139a1690bfd41aa386b6" title="Solver initialization." alt="" coords="5,13,116,39"/>
-</map>

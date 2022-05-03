@@ -1,0 +1,458 @@
+\hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source}{}\doxysection{rxn\+\_\+\+SIMPOL\+\_\+phase\+\_\+transfer.\+F90}
+\label{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source}\index{rxn\_SIMPOL\_phase\_transfer.F90@{rxn\_SIMPOL\_phase\_transfer.F90}}
+\mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8_f90}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00001}00001 \textcolor{comment}{! Copyright (C) 2021 Barcelona Supercomputing Center and University of}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00002}00002 \textcolor{comment}{! Illinois at Urbana-\/Champaign}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00003}00003 \textcolor{comment}{! SPDX-\/License-\/Identifier: MIT}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00004}00004 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00005}00005 \textcolor{comment}{!> \(\backslash\)file}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00006}00006 \textcolor{comment}{!> The camp\_rxn\_SIMPOL\_phase\_transfer module.}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00007}00007 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00008}00008 \textcolor{comment}{!> \(\backslash\)page camp\_rxn\_SIMPOL\_phase\_transfer CAMP: SIMPOL.1 Phase-\/Transfer Reaction}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00009}00009 \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00010}00010 \textcolor{comment}{!! SIMPOL phase transfer reactions are based on the SIMPOL.1 model}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00011}00011 \textcolor{comment}{!! calculations of vapor pressure described by Pankow and Asher (2008)}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00012}00012 \textcolor{comment}{!! \(\backslash\)cite Pankow2008.}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00013}00013 \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00014}00014 \textcolor{comment}{!! Mass accomodation coefficients and condensation rate constants are}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00015}00015 \textcolor{comment}{!! calculated using the method of Ervans et al. (2003) \(\backslash\)cite Ervens2003 and}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00016}00016 \textcolor{comment}{!! references therein. Mass accomodation coefficients (\(\backslash\)f\$\(\backslash\)alpha\(\backslash\)f\$) are}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00017}00017 \textcolor{comment}{!! calculated as:}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00018}00018 \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00019}00019 \textcolor{comment}{!! \(\backslash\)f[}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00020}00020 \textcolor{comment}{!!   \(\backslash\)Delta H\_\{obs\} = -\/10 \(\backslash\)times (N\string^*-\/1) + 7.53 \(\backslash\)times (N\string^\{*2/3\}-\/1) -\/ 0.1 \(\backslash\)times 10 \(\backslash\)quad (\(\backslash\)mbox\{kcal\}\(\backslash\),\(\backslash\)mbox\{M\}\string^\{-\/1\})}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00021}00021 \textcolor{comment}{!! \(\backslash\)f]}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00022}00022 \textcolor{comment}{!! \(\backslash\)f[}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00023}00023 \textcolor{comment}{!!   \(\backslash\)Delta S\_\{obs\} = -\/13 \(\backslash\)times (N\string^*-\/1) -\/ 19 \(\backslash\)times (N\string^*-\/1) + 9.21 \(\backslash\)times (N\string^\{*2/3\}-\/1) -\/ 0.1 \(\backslash\)times 13 \(\backslash\)quad (\(\backslash\)mbox\{cal\}\(\backslash\),\(\backslash\)mbox\{M\}\string^\{-\/1\}\(\backslash\),\(\backslash\)mbox\{K\}\string^\{-\/1\})}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00024}00024 \textcolor{comment}{!! \(\backslash\)f]}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00025}00025 \textcolor{comment}{!! \(\backslash\)f[}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00026}00026 \textcolor{comment}{!!   \(\backslash\)frac\{\(\backslash\)alpha\}\{1-\/\(\backslash\)alpha\} = e\string^\{\(\backslash\)frac\{-\/\(\backslash\)Delta G\string^\{*\}\}\{RT\}\}}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00027}00027 \textcolor{comment}{!! \(\backslash\)f]}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00028}00028 \textcolor{comment}{!! If \(\backslash\)f\$\(\backslash\)Delta H\(\backslash\)f\$ and \(\backslash\)f\$\(\backslash\)Delta S\(\backslash\)f\$ are not provided, the mass accomodation}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00029}00029 \textcolor{comment}{!! coefficient is assumed to be 0.1 (\(\backslash\)cite Zaveri2008).}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00030}00030 \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00031}00031 \textcolor{comment}{!! Condensation rate constants are calculated following \(\backslash\)cite Zaveri2008 as:}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00032}00032 \textcolor{comment}{!!  \(\backslash\)f[}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00033}00033 \textcolor{comment}{!!    k\_c = 4 \(\backslash\)pi r D\_g f\_\{fs\}( K\_n, \(\backslash\)alpha )}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00034}00034 \textcolor{comment}{!!  \(\backslash\)f]}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00035}00035 \textcolor{comment}{!!  where \(\backslash\)f\$r\(\backslash\)f\$ is the radius of the particle(s) [m], \(\backslash\)f\$D\_g\(\backslash\)f\$ is the}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00036}00036 \textcolor{comment}{!! diffusion coefficient of the gas-\/phase species [\(\backslash\)f\$\(\backslash\)mbox\{m\}\string^2\(\backslash\),\(\backslash\)mbox\{s\}\string^\{-\/1\}\(\backslash\)f\$],}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00037}00037 \textcolor{comment}{!! \(\backslash\)f\$f\_\{fs\}( K\_n, \(\backslash\)alpha )\(\backslash\)f\$ is the Fuchs Sutugin transition regime correction}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00038}00038 \textcolor{comment}{!! factor [unitless], \(\backslash\)f\$K\_n\(\backslash\)f\$ is the Knudsen Number [unitess], and \(\backslash\)f\$\(\backslash\)alpha\(\backslash\)f\$}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00039}00039 \textcolor{comment}{!! is the mass accomodation coefficient.}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00040}00040 \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00041}00041 \textcolor{comment}{!!  Rates can be calculated as:}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00042}00042 \textcolor{comment}{!!  \(\backslash\)f[}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00043}00043 \textcolor{comment}{!!    r\_c = [G] N\_a k\_c}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00044}00044 \textcolor{comment}{!!  \(\backslash\)f]}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00045}00045 \textcolor{comment}{!!  where \(\backslash\)f\$[G]\(\backslash\)f\$ is the gas-\/phase species concentration [ppm], \(\backslash\)f\$N\_a\(\backslash\)f\$ is}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00046}00046 \textcolor{comment}{!! the number concentration of particles [\(\backslash\)f\$\(\backslash\)mbox\{particle\}\(\backslash\),\(\backslash\)mbox\{m\}\string^\{-\/3\}\(\backslash\)f\$] and}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00047}00047 \textcolor{comment}{!! the rate \(\backslash\)f\$r\_c\(\backslash\)f\$ is in [\(\backslash\)f\$\(\backslash\)mbox\{ppm\}\(\backslash\),\(\backslash\)mbox\{s\}\string^\{-\/1\}\(\backslash\)f\$].}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00048}00048 \textcolor{comment}{!!  The particle radius used}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00049}00049 \textcolor{comment}{!! to calculate \(\backslash\)f\$k\_\{f\}\(\backslash\)f\$ is the effective radius [\(\backslash\)f\$r\_\{eff\}\(\backslash\)f\$], which is}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00050}00050 \textcolor{comment}{!! taken as the "{}least-\/wrong"{} choice for condensation rates, as it is weighted}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00051}00051 \textcolor{comment}{!! to surface area \(\backslash\)cite Zender2002 .}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00052}00052 \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00053}00053 \textcolor{comment}{!! Input data for SIMPOL phase transfer reactions have the following format :}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00054}00054 \textcolor{comment}{!! \(\backslash\)code\{.json\}}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00055}00055 \textcolor{comment}{!!   \{}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00056}00056 \textcolor{comment}{!!     "{}type"{} : "{}SIMPOL\_PHASE\_TRANSFER"{},}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00057}00057 \textcolor{comment}{!!     "{}gas-\/phase species"{} : "{}my gas spec"{},}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00058}00058 \textcolor{comment}{!!     "{}aerosol phase"{} : "{}my aero phase"{},}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00059}00059 \textcolor{comment}{!!     "{}aerosol-\/phase species"{} : "{}my aero spec"{},}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00060}00060 \textcolor{comment}{!!     "{}aerosol-\/phase activity coefficient"{} : "{}my aero act coeff"{}}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00061}00061 \textcolor{comment}{!!     "{}B"{} : [ 123.2e3, -\/41.24, 2951.2, -\/1.245e-\/4 ]}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00062}00062 \textcolor{comment}{!!       ...}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00063}00063 \textcolor{comment}{!!   \}}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00064}00064 \textcolor{comment}{!! \(\backslash\)endcode}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00065}00065 \textcolor{comment}{!! The key-\/value pairs \(\backslash\)b gas-\/phase \(\backslash\)b species, \(\backslash\)b aerosol \(\backslash\)b phase and}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00066}00066 \textcolor{comment}{!! \(\backslash\)b aerosol-\/phase \(\backslash\)b species are required. Only one gas-\/ and one}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00067}00067 \textcolor{comment}{!! aerosol-\/phase species are allowed per phase-\/transfer reaction. The}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00068}00068 \textcolor{comment}{!! key-\/value pair \(\backslash\)b aerosol-\/phase \(\backslash\)b activity \(\backslash\)b coefficient is optional.}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00069}00069 \textcolor{comment}{!! When it is included its value must be the name of an species of type}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00070}00070 \textcolor{comment}{!! \(\backslash\)c ACTIVITY\_COEFF that is present in the specified aerosol phase. When}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00071}00071 \textcolor{comment}{!! it is not included, activity coefficients are assume to be 1.0.}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00072}00072 \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00073}00073 \textcolor{comment}{!! Gas-\/phase species must include parameters named}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00074}00074 \textcolor{comment}{!! \(\backslash\)b diffusion \(\backslash\)b coeff \(\backslash\)b [\(\backslash\)b m2 \(\backslash\)b s-\/1], which specifies the diffusion}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00075}00075 \textcolor{comment}{!! coefficient in \(\backslash\)f\$\(\backslash\)mbox\{m\}\string^2\(\backslash\),\(\backslash\)mbox\{s\}\string^\{-\/1\}\(\backslash\)f\$, and \(\backslash\)b molecular}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00076}00076 \textcolor{comment}{!! \(\backslash\)b weight \(\backslash\)b [\(\backslash\)b kg \(\backslash\)b mol-\/1], which specifies the molecular weight of the}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00077}00077 \textcolor{comment}{!! species in \(\backslash\)f\$\(\backslash\)mbox\{kg\}\(\backslash\),\(\backslash\)mbox\{mol\}\string^\{-\/1\}\(\backslash\)f\$. They may optionally}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00078}00078 \textcolor{comment}{!! include the parameter \(\backslash\)b N \(\backslash\)b star, which will be used to calculate th}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00079}00079 \textcolor{comment}{!! mass accomodation coefficient. When this parameter is not included, the}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00080}00080 \textcolor{comment}{!! mass accomodation coefficient is assumed to be 1.0.}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00081}00081 \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00082}00082 \textcolor{comment}{!! The key-\/value pair \(\backslash\)b B is also required and must have a value of an array}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00083}00083 \textcolor{comment}{!! of exactly four members that specifies the SIMPOL parameters for the}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00084}00084 \textcolor{comment}{!! partitioning species. The \(\backslash\)b B parameters can be obtained by summing the}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00085}00085 \textcolor{comment}{!! contributions of each functional group present in the partitioning species}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00086}00086 \textcolor{comment}{!! to the overall \(\backslash\)f\$B\_\{n,i\}\(\backslash\)f\$ for species \(\backslash\)f\$i\(\backslash\)f\$, such that:}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00087}00087 \textcolor{comment}{!! \(\backslash\)f[}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00088}00088 \textcolor{comment}{!!   B\_\{n,i\} = \(\backslash\)sum\_\{k\} \(\backslash\)nu\_\{k,i\} B\_\{n,k\} \(\backslash\)forall n \(\backslash\)in [1...4]}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00089}00089 \textcolor{comment}{!! \(\backslash\)f]}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00090}00090 \textcolor{comment}{!! where \(\backslash\)f\$\(\backslash\)nu\_\{k,i\}\(\backslash\)f\$ is the number of functional groups \(\backslash\)f\$k\(\backslash\)f\$ in species}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00091}00091 \textcolor{comment}{!! \(\backslash\)f\$i\(\backslash\)f\$ and the parameters \(\backslash\)f\$B\_\{n,k\}\(\backslash\)f\$ for each functional group \(\backslash\)f\$k\(\backslash\)f\$}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00092}00092 \textcolor{comment}{!! can be found in table 5 of Pankow and Asher (2008) \(\backslash\)cite Pankow2008.}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00093}00093 }
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00094}00094 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00095}00095 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00096}00096 \textcolor{comment}{!> The rxn\_SIMPOL\_phase\_transfer\_t type and associated functions.}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00097}\mbox{\hyperlink{namespacecamp__rxn__simpol__phase__transfer}{00097}} \textcolor{keyword}{module} \mbox{\hyperlink{namespacecamp__rxn__simpol__phase__transfer}{camp\_rxn\_simpol\_phase\_transfer}}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00098}00098 }
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00099}00099   \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacecamp__aero__phase__data}{camp\_aero\_phase\_data}}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00100}00100   \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacecamp__aero__rep__data}{camp\_aero\_rep\_data}}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00101}00101   \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacecamp__chem__spec__data}{camp\_chem\_spec\_data}}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00102}00102   \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacecamp__constants}{camp\_constants}},                        \textcolor{keywordtype}{only}: \mbox{\hyperlink{namespacecamp__constants_aab17f4f4c76dc9812d8ab58b137081de}{const}}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00103}00103   \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacecamp__camp__state}{camp\_camp\_state}}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00104}00104   \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacecamp__property}{camp\_property}}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00105}00105   \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacecamp__rxn__data}{camp\_rxn\_data}}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00106}00106   \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacecamp__util}{camp\_util}},                             \textcolor{keywordtype}{only}: \mbox{\hyperlink{namespacecamp__constants_aec214d61ec1cbcbe6ad8bea430b9b957}{i\_kind}}, \mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}, \mbox{\hyperlink{interfacecamp__util_1_1to__string}{to\_string}}, \&}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00107}00107                                                   \mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}, \mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}, \&}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00108}00108                                                   \mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}, \mbox{\hyperlink{structcamp__util_1_1string__t}{string\_t}}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00109}00109 }
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00110}00110   \textcolor{keywordtype}{implicit none}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00111}00111   \textcolor{keywordtype}{private}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00112}00112 }
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00113}00113 \textcolor{preprocessor}{\#define DELTA\_H\_ this\%condensed\_data\_real(1)}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00114}00114 \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define DELTA\_S\_ this\%condensed\_data\_real(2)}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00115}00115 \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define DIFF\_COEFF\_ this\%condensed\_data\_real(3)}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00116}00116 \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define PRE\_C\_AVG\_ this\%condensed\_data\_real(4)}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00117}00117 \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define B1\_ this\%condensed\_data\_real(5)}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00118}00118 \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define B2\_ this\%condensed\_data\_real(6)}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00119}00119 \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define B3\_ this\%condensed\_data\_real(7)}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00120}00120 \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define B4\_ this\%condensed\_data\_real(8)}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00121}00121 \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define CONV\_ this\%condensed\_data\_real(9)}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00122}00122 \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define MW\_ this\%condensed\_data\_real(10)}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00123}00123 \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define NUM\_AERO\_PHASE\_ this\%condensed\_data\_int(1)}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00124}00124 \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define GAS\_SPEC\_ this\%condensed\_data\_int(2)}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00125}00125 \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define NUM\_INT\_PROP\_ 2}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00126}00126 \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define NUM\_REAL\_PROP\_ 10}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00127}00127 \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define NUM\_ENV\_PARAM\_ 4}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00128}00128 \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define AERO\_SPEC\_(x) this\%condensed\_data\_int(NUM\_INT\_PROP\_+x)}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00129}00129 \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define AERO\_ACT\_ID\_(x) this\%condensed\_data\_int(NUM\_INT\_PROP\_+NUM\_AERO\_PHASE\_+x)}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00130}00130 \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define AERO\_PHASE\_ID\_(x) this\%condensed\_data\_int(NUM\_INT\_PROP\_+2*NUM\_AERO\_PHASE\_+x)}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00131}00131 \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define AERO\_REP\_ID\_(x) this\%condensed\_data\_int(NUM\_INT\_PROP\_+3*NUM\_AERO\_PHASE\_+x)}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00132}00132 \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define DERIV\_ID\_(x) this\%condensed\_data\_int(NUM\_INT\_PROP\_+4*NUM\_AERO\_PHASE\_+x)}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00133}00133 \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define GAS\_ACT\_JAC\_ID\_(x) this\%condensed\_data\_int(NUM\_INT\_PROP\_+1+5*NUM\_AERO\_PHASE\_+x)}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00134}00134 \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define AERO\_ACT\_JAC\_ID\_(x) this\%condensed\_data\_int(NUM\_INT\_PROP\_+1+6*NUM\_AERO\_PHASE\_+x)}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00135}00135 \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define JAC\_ID\_(x) this\%condensed\_data\_int(NUM\_INT\_PROP\_+1+7*NUM\_AERO\_PHASE\_+x)}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00136}00136 \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define PHASE\_INT\_LOC\_(x) this\%condensed\_data\_int(NUM\_INT\_PROP\_+2+10*NUM\_AERO\_PHASE\_+x)}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00137}00137 \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define PHASE\_REAL\_LOC\_(x) this\%condensed\_data\_int(NUM\_INT\_PROP\_+2+11*NUM\_AERO\_PHASE\_+x)}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00138}00138 \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define NUM\_AERO\_PHASE\_JAC\_ELEM\_(x) this\%condensed\_data\_int(PHASE\_INT\_LOC\_(x))}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00139}00139 \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define PHASE\_JAC\_ID\_(x,s,e) this\%condensed\_data\_int(PHASE\_INT\_LOC\_(x)+(s-\/1)*NUM\_AERO\_PHASE\_JAC\_ELEM\_(x)+e)}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00140}00140 \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define EFF\_RAD\_JAC\_ELEM\_(x,e) this\%condensed\_data\_real(PHASE\_REAL\_LOC\_(x)-\/1+e)}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00141}00141 \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define NUM\_CONC\_JAC\_ELEM\_(x,e) this\%condensed\_data\_real(PHASE\_REAL\_LOC\_(x)-\/1+NUM\_AERO\_PHASE\_JAC\_ELEM\_(x)+e)}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00142}00142 \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define MASS\_JAC\_ELEM\_(x,e) this\%condensed\_data\_real(PHASE\_REAL\_LOC\_(x)-\/1+2*NUM\_AERO\_PHASE\_JAC\_ELEM\_(x)+e)}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00143}00143 \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define MW\_JAC\_ELEM\_(x,e) this\%condensed\_data\_real(PHASE\_REAL\_LOC\_(x)-\/1+3*NUM\_AERO\_PHASE\_JAC\_ELEM\_(x)+e)}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00144}00144 \textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00145}00145   \textcolor{keywordtype}{public} :: \mbox{\hyperlink{structcamp__rxn__simpol__phase__transfer_1_1rxn__simpol__phase__transfer__t}{rxn\_simpol\_phase\_transfer\_t}}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00146}00146 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00147}00147 \textcolor{comment}{  !> Generic test reaction data type}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00148}\mbox{\hyperlink{structcamp__rxn__simpol__phase__transfer_1_1rxn__simpol__phase__transfer__t}{00148}}   \textcolor{keyword}{type}, \textcolor{keyword}{extends}(\mbox{\hyperlink{structcamp__rxn__data_1_1rxn__data__t}{rxn\_data\_t}}) :: \mbox{\hyperlink{structcamp__rxn__simpol__phase__transfer_1_1rxn__simpol__phase__transfer__t}{rxn\_simpol\_phase\_transfer\_t}}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00149}00149   \textcolor{keyword}{contains}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00150}00150 \textcolor{comment}{    !> Reaction initialization}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00151}\mbox{\hyperlink{structcamp__rxn__simpol__phase__transfer_1_1rxn__simpol__phase__transfer__t_a799eda4ba2a618cd77252f98cfa18e1e}{00151}}     \textcolor{keywordtype}{procedure} :: \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1initialize}{initialize}}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00152}00152 \textcolor{comment}{    !> Finalize the reaction}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00153}\mbox{\hyperlink{structcamp__rxn__simpol__phase__transfer_1_1rxn__simpol__phase__transfer__t_acb72b63f8e216ac7fa0bf6d25771dfd5}{00153}}     final :: \mbox{\hyperlink{namespacecamp__aero__phase__data_a18e6adfc1bb22f7514247a1920d86090}{finalize}}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00154}00154   \textcolor{keyword}{end type }\mbox{\hyperlink{structcamp__rxn__simpol__phase__transfer_1_1rxn__simpol__phase__transfer__t}{rxn\_simpol\_phase\_transfer\_t}}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00155}00155 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00156}00156 \textcolor{comment}{  !> Constructor for rxn\_SIMPOL\_phase\_transfer\_t}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00157}00157   \textcolor{keyword}{interface} \mbox{\hyperlink{structcamp__rxn__simpol__phase__transfer_1_1rxn__simpol__phase__transfer__t}{rxn\_simpol\_phase\_transfer\_t}}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00158}00158     \textcolor{keywordtype}{procedure} :: \mbox{\hyperlink{namespacecamp__aero__phase__data_a750a31ddcd49989a85e6c30a8bc424e4}{constructor}}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00159}00159   \textcolor{keyword}{end interface }\mbox{\hyperlink{structcamp__rxn__simpol__phase__transfer_1_1rxn__simpol__phase__transfer__t}{rxn\_simpol\_phase\_transfer\_t}}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00160}00160 }
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00161}00161 \textcolor{keyword}{contains}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00162}00162 }
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00163}00163 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00164}00164 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00165}00165 \textcolor{comment}{  !> Constructor for Phase transfer reaction}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00166}\mbox{\hyperlink{namespacecamp__rxn__simpol__phase__transfer_a5621b401b9f6b4fdd17bd7014fc3b546}{00166}}   \textcolor{keyword}{function }\mbox{\hyperlink{namespacecamp__aero__phase__data_a750a31ddcd49989a85e6c30a8bc424e4}{constructor}}() \textcolor{keyword}{result}(new\_obj)}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00167}00167 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00168}00168 \textcolor{comment}{    !> A new reaction instance}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00169}00169     \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__rxn__simpol__phase__transfer_1_1rxn__simpol__phase__transfer__t}{rxn\_simpol\_phase\_transfer\_t}}), \textcolor{keywordtype}{pointer} :: new\_obj}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00170}00170 }
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00171}00171     \textcolor{keyword}{allocate}(new\_obj)}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00172}00172     new\_obj\%rxn\_phase = \mbox{\hyperlink{namespacecamp__rxn__data_a5af1c18da3738674ca3911fe3acf3102}{aero\_rxn}}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00173}00173 }
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00174}00174   \textcolor{keyword}{end function }\mbox{\hyperlink{namespacecamp__aero__phase__data_a750a31ddcd49989a85e6c30a8bc424e4}{constructor}}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00175}00175 }
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00176}00176 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00177}00177 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00178}00178 \textcolor{comment}{  !> Initialize the reaction data, validating component data and loading}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00179}00179 \textcolor{comment}{  !! any required information into the condensed data arrays for use during}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00180}00180 \textcolor{comment}{  !! solving}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00181}\mbox{\hyperlink{namespacecamp__rxn__simpol__phase__transfer_a356ee35a6341ba8f13878ad206b869b3}{00181}}   \textcolor{keyword}{subroutine }\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1initialize}{initialize}}(this, chem\_spec\_data, aero\_rep, n\_cells)}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00182}00182 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00183}00183 \textcolor{comment}{    !> Reaction data}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00184}00184     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__rxn__simpol__phase__transfer_1_1rxn__simpol__phase__transfer__t}{rxn\_simpol\_phase\_transfer\_t}}), \textcolor{keywordtype}{intent(inout)} :: this\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00185}00185 \textcolor{comment}{    !> Chemical species data}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00186}00186     \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t}{chem\_spec\_data\_t}}), \textcolor{keywordtype}{intent(in)} :: chem\_spec\_data\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00187}00187 \textcolor{comment}{    !> Aerosol representations}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00188}00188     \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__ptr}{aero\_rep\_data\_ptr}}), \textcolor{keywordtype}{pointer}, \textcolor{keywordtype}{intent(in)} :: aero\_rep(:)\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00189}00189 \textcolor{comment}{    !> Number of grid cells to solve simultaneously}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00190}00190     \textcolor{keywordtype}{integer(kind=i\_kind)}, \textcolor{keywordtype}{intent(in)} :: n\_cells}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00191}00191 }
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00192}00192     \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__property_1_1property__t}{property\_t}}), \textcolor{keywordtype}{pointer} :: spec\_props, b\_params}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00193}00193     \textcolor{keywordtype}{character(len=:)}, \textcolor{keywordtype}{allocatable} :: key\_name, gas\_spec\_name, aero\_spec\_name}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00194}00194     \textcolor{keywordtype}{character(len=:)}, \textcolor{keywordtype}{allocatable} :: phase\_name, act\_name, error\_msg}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00195}00195     \textcolor{keywordtype}{integer(kind=i\_kind)} :: i\_spec, i\_aero\_rep, n\_aero\_ids, i\_aero\_id}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00196}00196     \textcolor{keywordtype}{integer(kind=i\_kind)} :: i\_phase, n\_aero\_jac\_elem, tmp\_size}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00197}00197     \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__util_1_1string__t}{string\_t}}), \textcolor{keywordtype}{allocatable} :: unique\_spec\_names(:), unique\_act\_names(:)}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00198}00198     \textcolor{keywordtype}{integer(kind=i\_kind)}, \textcolor{keywordtype}{allocatable} :: phase\_ids(:)}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00199}00199 \textcolor{keywordtype}{    real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) :: temp\_real, n\_star}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00200}00200     \textcolor{keywordtype}{logical} :: has\_act\_coeff}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00201}00201 }
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00202}00202     \textcolor{comment}{! Get the property set}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00203}00203     \textcolor{keywordflow}{if} (.not. \textcolor{keyword}{associated}(this\%property\_set)) \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(382913491, \&}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00204}00204             \textcolor{stringliteral}{"{}Missing property set needed to initialize reaction"{}})}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00205}00205 }
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00206}00206     \textcolor{comment}{! Get the gas-\/phase species name}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00207}00207     key\_name = \textcolor{stringliteral}{"{}gas-\/phase species"{}}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00208}00208     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(740333884, \&}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00209}00209             this\%property\_set\%get\_string(key\_name, gas\_spec\_name), \&}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00210}00210             \textcolor{stringliteral}{"{}Missing gas-\/phase species in SIMPOL.1 phase transfer reaction"{}})}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00211}00211 }
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00212}00212     \textcolor{comment}{! Get the aerosol phase name}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00213}00213     key\_name = \textcolor{stringliteral}{"{}aerosol phase"{}}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00214}00214     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(325074932, \&}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00215}00215             this\%property\_set\%get\_string(key\_name, phase\_name), \&}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00216}00216             \textcolor{stringliteral}{"{}Missing aerosol phase in SIMPOL.1 phase-\/transfer reaction"{}})}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00217}00217 }
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00218}00218     \textcolor{comment}{! Get the aerosol-\/phase species name}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00219}00219     key\_name = \textcolor{stringliteral}{"{}aerosol-\/phase species"{}}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00220}00220     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(988456388, \&}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00221}00221             this\%property\_set\%get\_string(key\_name, aero\_spec\_name), \&}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00222}00222             \textcolor{stringliteral}{"{}Missing aerosol-\/phase species in SIMPOL.1 phase-\/transfer "{}}// \&}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00223}00223             \textcolor{stringliteral}{"{}reaction"{}})}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00224}00224 }
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00225}00225     \textcolor{comment}{! Set up a general error message}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00226}00226     error\_msg = \textcolor{stringliteral}{"{} for SIMPOL.1 phase transfer of gas species '"{}}// \&}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00227}00227                 gas\_spec\_name//\textcolor{stringliteral}{"{}' to aerosol-\/phase species '"{}}// \&}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00228}00228                 aero\_spec\_name//\textcolor{stringliteral}{"{}' in phase '"{}}//phase\_name//\textcolor{stringliteral}{"{}'"{}}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00229}00229 }
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00230}00230     \textcolor{comment}{! Get the aerosol-\/phase activity coeffcient name}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00231}00231     key\_name = \textcolor{stringliteral}{"{}aerosol-\/phase activity coefficient"{}}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00232}00232     has\_act\_coeff = this\%property\_set\%get\_string(key\_name, act\_name)}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00233}00233 }
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00234}00234     \textcolor{comment}{! Check for aerosol representations}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00235}00235     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(260518827, \textcolor{keyword}{associated}(aero\_rep), \&}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00236}00236             \textcolor{stringliteral}{"{}Missing aerosol representation"{}}//error\_msg)}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00237}00237     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(590304021, \textcolor{keyword}{size}(aero\_rep).gt.0, \&}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00238}00238             \textcolor{stringliteral}{"{}Missing aerosol representation"{}}//error\_msg)}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00239}00239 }
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00240}00240     \textcolor{comment}{! Count the instances of this phase/species pair}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00241}00241     n\_aero\_ids = 0}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00242}00242     n\_aero\_jac\_elem = 0}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00243}00243     \textcolor{keywordflow}{do} i\_aero\_rep = 1, \textcolor{keyword}{size}(aero\_rep)}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00244}00244 }
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00245}00245       \textcolor{comment}{! Get the unique names in this aerosol representation for the}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00246}00246       \textcolor{comment}{! partitioning species}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00247}00247       unique\_spec\_names = aero\_rep(i\_aero\_rep)\%val\%unique\_names( \&}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00248}00248               phase\_name = phase\_name, \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}} = aero\_spec\_name)}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00249}00249 }
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00250}00250       \textcolor{comment}{! Skip aerosol representations that do not contain this phase}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00251}00251       \textcolor{keywordflow}{if} (.not.\textcolor{keyword}{allocated}(unique\_spec\_names)) cycle}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00252}00252 }
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00253}00253       \textcolor{comment}{! Add these instances to the list}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00254}00254       n\_aero\_ids = n\_aero\_ids + \textcolor{keyword}{size}(unique\_spec\_names)}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00255}00255 }
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00256}00256       \textcolor{comment}{! Get the number of Jacobian elements for calculations of mass, volume,}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00257}00257       \textcolor{comment}{! number, etc. for this partitioning into this phase}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00258}00258       phase\_ids = aero\_rep(i\_aero\_rep)\%val\%phase\_ids(phase\_name)}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00259}00259       \textcolor{keywordflow}{do} i\_phase = 1, \textcolor{keyword}{size}(phase\_ids)}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00260}00260         n\_aero\_jac\_elem = n\_aero\_jac\_elem + \&}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00261}00261                 aero\_rep(i\_aero\_rep)\%val\%num\_jac\_elem(phase\_ids(i\_phase))}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00262}00262 \textcolor{keywordflow}{      end do}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00263}00263 }
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00264}00264       \textcolor{keyword}{deallocate}(unique\_spec\_names)}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00265}00265 }
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00266}00266 \textcolor{keywordflow}{    end do}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00267}00267 }
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00268}00268     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(314000134, n\_aero\_ids.gt.0, \&}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00269}00269                     \textcolor{stringliteral}{"{}Aerosol species not found"{}}//error\_msg)}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00270}00270 }
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00271}00271     \textcolor{comment}{! Allocate space in the condensed data arrays}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00272}00272     \textcolor{keyword}{allocate}(this\%condensed\_data\_int(num\_int\_prop\_ + 2 + n\_aero\_ids * 13 + \&}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00273}00273                                      n\_aero\_jac\_elem * 2))}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00274}00274     \textcolor{keyword}{allocate}(this\%condensed\_data\_real(num\_real\_prop\_ + n\_aero\_jac\_elem * 4))}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00275}00275     this\%condensed\_data\_int(:) = int(0, kind=\mbox{\hyperlink{namespacecamp__constants_aec214d61ec1cbcbe6ad8bea430b9b957}{i\_kind}})}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00276}00276     this\%condensed\_data\_real(:) = real(0.0, kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00277}00277 }
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00278}00278     \textcolor{comment}{! Save space for the environment-\/dependent parameters}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00279}00279     this\%num\_env\_params = num\_env\_param\_}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00280}00280 }
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00281}00281     \textcolor{comment}{! Set the number of aerosol-\/species instances}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00282}00282     num\_aero\_phase\_ = n\_aero\_ids}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00283}00283 }
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00284}00284     \textcolor{comment}{! Get the properties required of the aerosol species}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00285}00285     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(162662115, \&}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00286}00286             chem\_spec\_data\%get\_property\_set(aero\_spec\_name, spec\_props), \&}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00287}00287             \textcolor{stringliteral}{"{}Missing properties"{}}//error\_msg)}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00288}00288 }
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00289}00289     \textcolor{comment}{! Get the aerosol species molecular weight}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00290}00290     key\_name = \textcolor{stringliteral}{"{}molecular weight [kg mol-\/1]"{}}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00291}00291     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(839930958, spec\_props\%get\_real(key\_name, mw\_), \&}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00292}00292             \textcolor{stringliteral}{"{}Missing property 'MW'"{}}//error\_msg)}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00293}00293 }
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00294}00294     \textcolor{comment}{! Set the kg/m3 -\/> ppm conversion prefactor (multiply by T/P to get}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00295}00295     \textcolor{comment}{! conversion)}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00296}00296     \textcolor{comment}{! (ppm\_x*Pa\_air*m\string^3/K/kg\_x) = Pa\_air*m\string^3/mol\_air/K * mol\_x/kg\_x *}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00297}00297     \textcolor{comment}{!                   1.0e6ppm\_x*mol\_air/mol\_x}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00298}00298     conv\_ = \mbox{\hyperlink{namespacecamp__constants_aab17f4f4c76dc9812d8ab58b137081de}{const}}\%univ\_gas\_const / mw\_ * 1.0e6}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00299}00299 }
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00300}00300     \textcolor{comment}{! Set the ids of each aerosol-\/phase species instance}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00301}00301     i\_aero\_id = 1}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00302}00302     phase\_int\_loc\_(i\_aero\_id)  = num\_int\_prop\_+12*num\_aero\_phase\_+3}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00303}00303     phase\_real\_loc\_(i\_aero\_id) = num\_real\_prop\_+1}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00304}00304     \textcolor{keywordflow}{do} i\_aero\_rep = 1, \textcolor{keyword}{size}(aero\_rep)}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00305}00305 }
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00306}00306       \textcolor{comment}{! Get the unique names in this aerosol representation for the}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00307}00307       \textcolor{comment}{! partitioning species}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00308}00308       unique\_spec\_names = aero\_rep(i\_aero\_rep)\%val\%unique\_names( \&}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00309}00309               phase\_name = phase\_name, \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}} = aero\_spec\_name)}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00310}00310 }
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00311}00311       \textcolor{comment}{! Find the corresponding activity coefficients, if specified}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00312}00312       \textcolor{keywordflow}{if} (has\_act\_coeff) \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00313}00313         unique\_act\_names = aero\_rep(i\_aero\_rep)\%val\%unique\_names( \&}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00314}00314               phase\_name = phase\_name, \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}} = act\_name)}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00315}00315         \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(236251734, \textcolor{keyword}{size}(unique\_act\_names).eq. \&}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00316}00316                         \textcolor{keyword}{size}(unique\_spec\_names), \&}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00317}00317                         \textcolor{stringliteral}{"{}Mismatch of SIMPOL species and activity coeffs"{}}// \&}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00318}00318                         error\_msg)}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00319}00319 \textcolor{keywordflow}{      end if}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00320}00320 }
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00321}00321       \textcolor{comment}{! Get the phase ids for this aerosol phase}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00322}00322       phase\_ids = aero\_rep(i\_aero\_rep)\%val\%phase\_ids(phase\_name)}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00323}00323 }
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00324}00324       \textcolor{comment}{! Add the species concentration and activity coefficient ids to}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00325}00325       \textcolor{comment}{! the condensed data, and set the number of Jacobian elements for}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00326}00326       \textcolor{comment}{! the aerosol representations and the locations of the real data}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00327}00327       \textcolor{keywordflow}{do} i\_spec = 1, \textcolor{keyword}{size}(unique\_spec\_names)}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00328}00328         num\_aero\_phase\_jac\_elem\_(i\_aero\_id) = \&}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00329}00329               aero\_rep(i\_aero\_rep)\%val\%num\_jac\_elem(phase\_ids(i\_spec))}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00330}00330         aero\_spec\_(i\_aero\_id) = \&}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00331}00331               aero\_rep(i\_aero\_rep)\%val\%spec\_state\_id( \&}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00332}00332               unique\_spec\_names(i\_spec)\%string)}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00333}00333         \textcolor{keywordflow}{if} (has\_act\_coeff) \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00334}00334           aero\_act\_id\_(i\_aero\_id) = \&}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00335}00335               aero\_rep(i\_aero\_rep)\%val\%spec\_state\_id( \&}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00336}00336               unique\_act\_names(i\_spec)\%string)}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00337}00337         \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00338}00338           aero\_act\_id\_(i\_aero\_id) = -\/1}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00339}00339 \textcolor{keywordflow}{        end if}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00340}00340         aero\_phase\_id\_(i\_aero\_id) = phase\_ids(i\_spec)}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00341}00341         aero\_rep\_id\_(i\_aero\_id) = i\_aero\_rep}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00342}00342         i\_aero\_id = i\_aero\_id + 1}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00343}00343         \textcolor{keywordflow}{if} (i\_aero\_id .le. num\_aero\_phase\_) \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00344}00344           phase\_int\_loc\_(i\_aero\_id)  = phase\_int\_loc\_(i\_aero\_id -\/ 1) + 1 + \&}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00345}00345                                      2*num\_aero\_phase\_jac\_elem\_(i\_aero\_id -\/ 1)}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00346}00346           phase\_real\_loc\_(i\_aero\_id) = phase\_real\_loc\_(i\_aero\_id -\/ 1) + \&}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00347}00347                                      4*num\_aero\_phase\_jac\_elem\_(i\_aero\_id -\/ 1)}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00348}00348 \textcolor{keywordflow}{        end if}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00349}00349 \textcolor{keywordflow}{      end do}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00350}00350 }
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00351}00351       \textcolor{keyword}{deallocate}(unique\_spec\_names)}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00352}00352 }
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00353}00353 \textcolor{keywordflow}{    end do}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00354}00354 }
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00355}00355     \textcolor{comment}{! Get the SIMPOL.1 parameters}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00356}00356     key\_name = \textcolor{stringliteral}{"{}B"{}}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00357}00357     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(882881186, \&}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00358}00358             this\%property\_set\%get\_property\_t(key\_name, b\_params), \&}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00359}00359             \textcolor{stringliteral}{"{}Missing 'B' parameters"{}}//error\_msg)}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00360}00360     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(654885723, b\_params\%size().eq.4, \&}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00361}00361             \textcolor{stringliteral}{"{}Incorrect number of 'B' parameters"{}}//error\_msg)}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00362}00362     \textcolor{keyword}{call }b\_params\%iter\_reset()}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00363}00363     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(694024883, b\_params\%get\_real(val = b1\_), \&}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00364}00364             \textcolor{stringliteral}{"{}Got non-\/real 'B1' parameter"{}}//error\_msg)}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00365}00365     \textcolor{keyword}{call }b\_params\%iter\_next()}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00366}00366     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(231316411, b\_params\%get\_real(val = b2\_), \&}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00367}00367             \textcolor{stringliteral}{"{}Got non-\/real 'B2' parameter"{}}//error\_msg)}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00368}00368     \textcolor{keyword}{call }b\_params\%iter\_next()}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00369}00369     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(126167907, b\_params\%get\_real(val = b3\_), \&}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00370}00370             \textcolor{stringliteral}{"{}Got non-\/real 'B3' parameter"{}}//error\_msg)}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00371}00371     \textcolor{keyword}{call }b\_params\%iter\_next()}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00372}00372     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(573535753, b\_params\%get\_real(val = b4\_), \&}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00373}00373             \textcolor{stringliteral}{"{}Got non-\/real 'B4' parameter"{}}//error\_msg)}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00374}00374 }
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00375}00375     \textcolor{comment}{! Save the index of the gas-\/phase species in the state variable array}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00376}00376     gas\_spec\_ = chem\_spec\_data\%gas\_state\_id(gas\_spec\_name)}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00377}00377 }
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00378}00378     \textcolor{comment}{! Make sure the species exists}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00379}00379     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(551477581, gas\_spec\_.gt.0, \&}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00380}00380             \textcolor{stringliteral}{"{}Missing gas-\/phase species"{}}//error\_msg)}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00381}00381 }
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00382}00382     \textcolor{comment}{! Get the required properties for the gas-\/phase species}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00383}00383     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(611221674, \&}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00384}00384             chem\_spec\_data\%get\_property\_set(gas\_spec\_name, spec\_props), \&}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00385}00385             \textcolor{stringliteral}{"{}Missing properties for gas-\/phase species"{}}//error\_msg)}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00386}00386 }
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00387}00387     \textcolor{comment}{! Get N* to calculate the mass accomodation coefficient. If it is not}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00388}00388     \textcolor{comment}{! present, set DELTA\_H\_ and DELTA\_S\_ to zero to indicate a mass}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00389}00389     \textcolor{comment}{! accomodation coefficient of 1.0}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00390}00390     \textcolor{comment}{! Mass accomodation equation is based on equations in:}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00391}00391     \textcolor{comment}{! Ervens, B., et al., 2003. "{}CAPRAM 2.4 (MODAC mechanism): An extended}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00392}00392     \textcolor{comment}{! and condensed tropospheric aqueous mechanism and its application."{}}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00393}00393     \textcolor{comment}{! J. Geophys. Res. 108, 4426. doi:10.1029/2002JD002202}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00394}00394     key\_name = \textcolor{stringliteral}{"{}N star"{}}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00395}00395     \textcolor{keywordflow}{if} (spec\_props\%get\_real(key\_name, n\_star)) \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00396}00396       \textcolor{comment}{! enthalpy change (kcal mol-\/1)}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00397}00397       delta\_h\_ = real(-\/ 10.0d0*(n\_star-\/1.0d0) + \&}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00398}00398               7.53d0*(n\_star**(2.0d0/3.0d0)-\/1.0d0) -\/ 1.0d0, kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00399}00399       \textcolor{comment}{! entropy change (cal mol-\/1)}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00400}00400       delta\_s\_ = real(-\/ 32.0d0*(n\_star-\/1.0d0) + \&}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00401}00401               9.21d0*(n\_star**(2.0d0/3.0d0)-\/1.0d0) -\/ 1.3d0, kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00402}00402       \textcolor{comment}{! Convert dH and dS to (J mol-\/1)}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00403}00403       delta\_h\_ = real(delta\_h\_ * 4184.0d0, kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00404}00404       delta\_s\_ = real(delta\_s\_ * 4.184d0, kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00405}00405     \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00406}00406       delta\_h\_ = real(0.0, kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00407}00407       delta\_s\_ = real(0.0, kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00408}00408 \textcolor{keywordflow}{    end if}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00409}00409 }
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00410}00410     \textcolor{comment}{! Get the diffusion coefficient (m\string^2/s)}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00411}00411     key\_name = \textcolor{stringliteral}{"{}diffusion coeff [m2 s-\/1]"{}}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00412}00412     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(948176709, spec\_props\%get\_real(key\_name, diff\_coeff\_), \&}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00413}00413             \textcolor{stringliteral}{"{}Missing diffusion coefficient"{}}//error\_msg)}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00414}00414 }
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00415}00415     \textcolor{comment}{! Calculate the constant portion of c\_rms [m /( K\string^(1/2) * s )]}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00416}00416     key\_name = \textcolor{stringliteral}{"{}molecular weight [kg mol-\/1]"{}}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00417}00417     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(272813400, spec\_props\%get\_real(key\_name, temp\_real), \&}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00418}00418             \textcolor{stringliteral}{"{}Missing molecular weight"{}}//error\_msg)}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00419}00419     pre\_c\_avg\_ = sqrt(8.0*\mbox{\hyperlink{namespacecamp__constants_aab17f4f4c76dc9812d8ab58b137081de}{const}}\%univ\_gas\_const/(\mbox{\hyperlink{namespacecamp__constants_aab17f4f4c76dc9812d8ab58b137081de}{const}}\%pi*temp\_real))}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00420}00420 }
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00421}00421     \textcolor{comment}{! Check the sizes of the data arrays}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00422}00422     tmp\_size = phase\_int\_loc\_(i\_aero\_id -\/ 1) + 1 + \&}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00423}00423                2*num\_aero\_phase\_jac\_elem\_(i\_aero\_id -\/ 1) -\/ 1}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00424}00424     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(625802519, \textcolor{keyword}{size}(this\%condensed\_data\_int) .eq. tmp\_size, \&}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00425}00425                     \textcolor{stringliteral}{"{}int array size mismatch"{}}//error\_msg)}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00426}00426     tmp\_size = phase\_real\_loc\_(i\_aero\_id -\/ 1) + \&}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00427}00427                4*num\_aero\_phase\_jac\_elem\_(i\_aero\_id -\/ 1) -\/ 1}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00428}00428     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(391089510, \textcolor{keyword}{size}(this\%condensed\_data\_real) .eq. tmp\_size, \&}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00429}00429                     \textcolor{stringliteral}{"{}real array size mismatch"{}}//error\_msg)}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00430}00430 }
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00431}00431   \textcolor{keyword}{end subroutine }\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1initialize}{initialize}}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00432}00432 }
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00433}00433 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00434}00434 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00435}00435 \textcolor{comment}{  !> Finalize the reaction}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00436}\mbox{\hyperlink{namespacecamp__rxn__simpol__phase__transfer_a9b1a0b6d5065325ddad17b4dec28d19d}{00436}}   \textcolor{keywordtype}{elemental} \textcolor{keyword}{subroutine }\mbox{\hyperlink{namespacecamp__aero__phase__data_a18e6adfc1bb22f7514247a1920d86090}{finalize}}(this)}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00437}00437 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00438}00438 \textcolor{comment}{    !> Reaction data}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00439}00439     \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__rxn__simpol__phase__transfer_1_1rxn__simpol__phase__transfer__t}{rxn\_simpol\_phase\_transfer\_t}}), \textcolor{keywordtype}{intent(inout)} :: this}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00440}00440 }
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00441}00441     \textcolor{keywordflow}{if} (\textcolor{keyword}{associated}(this\%property\_set)) \&}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00442}00442             \textcolor{keyword}{deallocate}(this\%property\_set)}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00443}00443     \textcolor{keywordflow}{if} (\textcolor{keyword}{allocated}(this\%condensed\_data\_real)) \&}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00444}00444             \textcolor{keyword}{deallocate}(this\%condensed\_data\_real)}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00445}00445     \textcolor{keywordflow}{if} (\textcolor{keyword}{allocated}(this\%condensed\_data\_int)) \&}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00446}00446             \textcolor{keyword}{deallocate}(this\%condensed\_data\_int)}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00447}00447 }
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00448}00448   \textcolor{keyword}{end subroutine }\mbox{\hyperlink{namespacecamp__aero__phase__data_a18e6adfc1bb22f7514247a1920d86090}{finalize}}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00449}00449 }
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00450}00450 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00451}00451 }
+\DoxyCodeLine{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00452}00452 \textcolor{keyword}{end module }\mbox{\hyperlink{namespacecamp__rxn__simpol__phase__transfer}{camp\_rxn\_simpol\_phase\_transfer}}}
+
+\end{DoxyCode}

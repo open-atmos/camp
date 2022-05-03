@@ -1,0 +1,199 @@
+\hypertarget{camp__state_8_f90_source}{}\doxysection{camp\+\_\+state.\+F90}
+\label{camp__state_8_f90_source}\index{camp\_state.F90@{camp\_state.F90}}
+\mbox{\hyperlink{camp__state_8_f90}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00001}00001 \textcolor{comment}{! Copyright (C) 2021 Barcelona Supercomputing Center and University of}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00002}00002 \textcolor{comment}{! Illinois at Urbana-\/Champaign}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00003}00003 \textcolor{comment}{! SPDX-\/License-\/Identifier: MIT}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00004}00004 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00005}00005 \textcolor{comment}{!> \(\backslash\)file}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00006}00006 \textcolor{comment}{!> The camp\_camp\_state module.}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00007}00007 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00008}00008 \textcolor{comment}{!> The camp\_state\_t structure and associated subroutines.}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00009}\mbox{\hyperlink{namespacecamp__camp__state}{00009}} \textcolor{keyword}{module} \mbox{\hyperlink{namespacecamp__camp__state}{camp\_camp\_state}}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00010}00010 }
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00011}00011 \textcolor{comment}{! Define array size for contain temperature and pressure}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00012}00012 \textcolor{preprocessor}{\#define CAMP\_STATE\_NUM\_ENV\_PARAM 2}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00013}00013 \textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00014}00014 \textcolor{preprocessor}{\#ifdef CAMP\_USE\_MPI}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00015}00015 \textcolor{preprocessor}{}  \textcolor{keywordtype}{use }mpi}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00016}00016 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00017}00017 \textcolor{preprocessor}{}  \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacecamp__env__state}{camp\_env\_state}}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00018}00018   \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacecamp__mpi}{camp\_mpi}}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00019}00019   \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacecamp__util}{camp\_util}},                       \textcolor{keywordtype}{only} : \mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}, \mbox{\hyperlink{structcamp__util_1_1string__t}{string\_t}}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00020}00020 }
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00021}00021   \textcolor{keywordtype}{implicit none}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00022}00022   \textcolor{keywordtype}{private}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00023}00023 }
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00024}00024   \textcolor{keywordtype}{public} :: \mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t}{camp\_state\_t}}, \mbox{\hyperlink{structcamp__camp__state_1_1camp__state__ptr}{camp\_state\_ptr}}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00025}00025 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00026}00026 \textcolor{comment}{  !> Model state}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00027}00027 \textcolor{comment}{  !!}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00028}00028 \textcolor{comment}{  !! Temporal state of the model}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00029}\mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t}{00029}}   \textcolor{keyword}{type} \mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t}{camp\_state\_t}}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00030}00030 \textcolor{comment}{    !> Environmental state array. This array will include one entry}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00031}00031 \textcolor{comment}{    !! for every environmental variable requried to solve the}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00032}00032 \textcolor{comment}{    !! chemical mechanism(s)}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00033}\mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t_ab61ab8a23f61585ad1a6dbd5d8e94d92}{00033}} \textcolor{keywordtype}{    real}(kind=dp), \textcolor{keywordtype}{allocatable} :: env\_var(:)\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00034}00034 \textcolor{comment}{    !> State variable array. This array includes one entry for each}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00035}00035 \textcolor{comment}{    !! variable whose state will be solved for during the mechanism}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00036}00036 \textcolor{comment}{    !! integration.}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00037}00037 \textcolor{comment}{    !! units are ppm (gases) or kg m-\/3 (aerosol species)}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00038}\mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t_a5405d5023175234c25e2c2371d924c67}{00038}} \textcolor{keywordtype}{    real}(kind=dp), \textcolor{keywordtype}{allocatable} :: state\_var(:)\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00039}00039 \textcolor{comment}{    !> Environmental conditions}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00040}\mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t_aeabc5f63f0a72b13911d2261ffa6b8ee}{00040}}     \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__env__state_1_1env__state__ptr}{env\_state\_ptr}}), \textcolor{keywordtype}{pointer} :: env\_states(:)\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00041}00041 \textcolor{comment}{    !> Flag indicating whether the env\_state object is owned by the}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00042}00042 \textcolor{comment}{    !! state object}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00043}\mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t_a42447972ea18f2d14b0ff5c0e96ba359}{00043}}     \textcolor{keywordtype}{logical}, \textcolor{keywordtype}{private} :: owns\_env\_states = .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c}{false}}.}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00044}00044   \textcolor{keyword}{contains}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00045}00045 \textcolor{comment}{    !> Update the environmental state array}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00046}\mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t_a462a3a8567f71663b53a92722b451746}{00046}}     \textcolor{keywordtype}{procedure} :: \mbox{\hyperlink{namespacecamp__camp__state_a9a2bdbcfc5f7bb9c17265dec43939afa}{update\_env\_state}}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00047}00047 \textcolor{comment}{    !> Finalize the state}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00048}\mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t_a45806e0832a3c886ad505b40920b6886}{00048}}     final :: \mbox{\hyperlink{namespacecamp__camp__state_a5522f7056d1ff8bb1626e36c97dfff5a}{finalize}}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00049}00049   \textcolor{keyword}{end type }\mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t}{camp\_state\_t}}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00050}00050 }
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00051}00051   \textcolor{comment}{! Constructor for camp\_state\_t}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00052}00052   \textcolor{keyword}{interface} \mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t}{camp\_state\_t}}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00053}00053     \textcolor{keywordtype}{procedure} :: \mbox{\hyperlink{namespacecamp__camp__state_a2b2716d1db42ed52b90dca4f7f7db7c3}{constructor\_one\_cell}}, \mbox{\hyperlink{namespacecamp__camp__state_ab1cccfaf74c7229b279becfcb2fedef9}{constructor\_multi\_cell}}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00054}00054   \textcolor{keyword}{end interface }\mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t}{camp\_state\_t}}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00055}00055 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00056}00056 \textcolor{comment}{  !> Pointer type for building arrays}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00057}\mbox{\hyperlink{structcamp__camp__state_1_1camp__state__ptr}{00057}}   \textcolor{keyword}{type} \mbox{\hyperlink{structcamp__camp__state_1_1camp__state__ptr}{camp\_state\_ptr}}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00058}\mbox{\hyperlink{structcamp__camp__state_1_1camp__state__ptr_a438077529c85800ef5c383046d5b370d}{00058}}     \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t}{camp\_state\_t}}), \textcolor{keywordtype}{pointer} :: val => null()}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00059}00059   \textcolor{keyword}{contains}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00060}00060 \textcolor{comment}{    !> Dereference the pointer}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00061}\mbox{\hyperlink{structcamp__camp__state_1_1camp__state__ptr_a7f2b66f1b09d4789092ce658b0a3d0ae}{00061}}     \textcolor{keywordtype}{procedure} :: \mbox{\hyperlink{namespacecamp__camp__state_a9b65b77ad6df50721576ea826cd89ad2}{dereference}}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00062}00062 \textcolor{comment}{    !> Finalize the pointer}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00063}\mbox{\hyperlink{structcamp__camp__state_1_1camp__state__ptr_a53f70d5e016bd82fb2e5527ff83bf73c}{00063}}     final :: \mbox{\hyperlink{namespacecamp__camp__state_a53dc45e0ad3a368f40a41f2e1eb2816a}{ptr\_finalize}}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00064}00064   \textcolor{keyword}{end type }\mbox{\hyperlink{structcamp__camp__state_1_1camp__state__ptr}{camp\_state\_ptr}}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00065}00065 }
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00066}00066 \textcolor{keyword}{contains}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00067}00067 }
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00068}00068 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00069}00069 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00070}00070 \textcolor{comment}{  !> Constructor for camp\_state\_t}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00071}\mbox{\hyperlink{namespacecamp__camp__state_a2b2716d1db42ed52b90dca4f7f7db7c3}{00071}}   \textcolor{keyword}{function }\mbox{\hyperlink{namespacecamp__camp__state_a2b2716d1db42ed52b90dca4f7f7db7c3}{constructor\_one\_cell}}(env\_state) \textcolor{keyword}{result} (new\_obj)}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00072}00072 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00073}00073 \textcolor{comment}{    !> New model state}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00074}00074     \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t}{camp\_state\_t}}), \textcolor{keywordtype}{pointer} :: new\_obj\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00075}00075 \textcolor{comment}{    !> Environmental state}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00076}00076     \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__env__state_1_1env__state__t}{env\_state\_t}}), \textcolor{keywordtype}{target}, \textcolor{keywordtype}{intent(in)}, \textcolor{keywordtype}{optional} :: env\_state}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00077}00077 }
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00078}00078     \textcolor{comment}{! Allocate space for the new object}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00079}00079     \textcolor{keyword}{allocate}(new\_obj)}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00080}00080     \textcolor{keyword}{allocate}(new\_obj\%env\_states(1))}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00081}00081 }
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00082}00082     \textcolor{comment}{! Set the environmental state (if present)}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00083}00083     \textcolor{keywordflow}{if} (\textcolor{keyword}{present}(env\_state)) \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00084}00084       new\_obj\%env\_states(1)\%val => env\_state}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00085}00085     \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00086}00086       \textcolor{keyword}{allocate}(new\_obj\%env\_states(1)\%val)}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00087}00087       new\_obj\%owns\_env\_states = .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b}{true}}.}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00088}00088 \textcolor{keywordflow}{    end if}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00089}00089 }
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00090}00090     \textcolor{comment}{! Set up the environmental state array}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00091}00091     \textcolor{keyword}{allocate}(new\_obj\%env\_var(camp\_state\_num\_env\_param))}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00092}00092 }
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00093}00093   \textcolor{keyword}{end function }\mbox{\hyperlink{namespacecamp__camp__state_a2b2716d1db42ed52b90dca4f7f7db7c3}{constructor\_one\_cell}}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00094}00094 }
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00095}00095 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00096}00096 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00097}00097 \textcolor{comment}{  !> Constructor for camp\_state\_t}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00098}\mbox{\hyperlink{namespacecamp__camp__state_ab1cccfaf74c7229b279becfcb2fedef9}{00098}}   \textcolor{keyword}{function }\mbox{\hyperlink{namespacecamp__camp__state_ab1cccfaf74c7229b279becfcb2fedef9}{constructor\_multi\_cell}}(num\_cells, env\_states) \textcolor{keyword}{result} (new\_obj)}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00099}00099 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00100}00100 \textcolor{comment}{    !> New model state}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00101}00101     \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t}{camp\_state\_t}}), \textcolor{keywordtype}{pointer} :: new\_obj\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00102}00102 \textcolor{comment}{    !> Number of grid cells to solve simultaneously}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00103}00103     \textcolor{keywordtype}{integer(kind=i\_kind)}, \textcolor{keywordtype}{intent(in)} :: num\_cells\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00104}00104 \textcolor{comment}{    !> Environmental state}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00105}00105     \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__env__state_1_1env__state__ptr}{env\_state\_ptr}}), \textcolor{keywordtype}{target}, \textcolor{keywordtype}{intent(in)}, \textcolor{keywordtype}{optional} :: env\_states(:)}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00106}00106 }
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00107}00107     \textcolor{keywordtype}{integer(kind=i\_kind)} :: i\_cell}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00108}00108 }
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00109}00109     \textcolor{comment}{! Allocate space for the new object}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00110}00110     \textcolor{keyword}{allocate}(new\_obj)}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00111}00111 }
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00112}00112     \textcolor{comment}{! Set the environmental state (if present)}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00113}00113     \textcolor{keywordflow}{if} (\textcolor{keyword}{present}(env\_states)) \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00114}00114       new\_obj\%env\_states => env\_states}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00115}00115     \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00116}00116       \textcolor{keyword}{allocate}(new\_obj\%env\_states(num\_cells))}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00117}00117       \textcolor{keywordflow}{do} i\_cell = 1, num\_cells}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00118}00118         \textcolor{keyword}{allocate}(new\_obj\%env\_states(i\_cell)\%val)}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00119}00119 \textcolor{keywordflow}{      end do}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00120}00120       new\_obj\%owns\_env\_states = .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b}{true}}.}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00121}00121 \textcolor{keywordflow}{    end if}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00122}00122 }
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00123}00123     \textcolor{comment}{! Set up the environmental state array}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00124}00124     \textcolor{keyword}{allocate}(new\_obj\%env\_var(camp\_state\_num\_env\_param*num\_cells))}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00125}00125 }
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00126}00126   \textcolor{keyword}{end function }\mbox{\hyperlink{namespacecamp__camp__state_ab1cccfaf74c7229b279becfcb2fedef9}{constructor\_multi\_cell}}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00127}00127 }
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00128}00128 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00129}00129 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00130}00130 \textcolor{comment}{  !> Update the environmental state array}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00131}\mbox{\hyperlink{namespacecamp__camp__state_a9a2bdbcfc5f7bb9c17265dec43939afa}{00131}}   \textcolor{keyword}{subroutine }\mbox{\hyperlink{namespacecamp__camp__state_a9a2bdbcfc5f7bb9c17265dec43939afa}{update\_env\_state}}(this)}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00132}00132 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00133}00133 \textcolor{comment}{    !> Model state}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00134}00134     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t}{camp\_state\_t}}), \textcolor{keywordtype}{intent(inout)} :: this}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00135}00135 }
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00136}00136     \textcolor{keywordtype}{integer} :: i\_cell, grid\_offset}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00137}00137 }
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00138}00138     \textcolor{keywordflow}{do} i\_cell = 1, \textcolor{keyword}{size}(this\%env\_states)}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00139}00139       grid\_offset = (i\_cell-\/1)*camp\_state\_num\_env\_param}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00140}00140       this\%env\_var(grid\_offset+1) = this\%env\_states(i\_cell)\%val\%temp          \textcolor{comment}{! Temperature (K)}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00141}00141       this\%env\_var(grid\_offset+2) = this\%env\_states(i\_cell)\%val\%pressure      \textcolor{comment}{! Pressure (Pa)}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00142}00142 \textcolor{keywordflow}{    end do}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00143}00143 }
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00144}00144   \textcolor{keyword}{end subroutine }\mbox{\hyperlink{namespacecamp__camp__state_a9a2bdbcfc5f7bb9c17265dec43939afa}{update\_env\_state}}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00145}00145 }
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00146}00146 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00147}00147 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00148}00148 \textcolor{comment}{  !> Finalize the state}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00149}\mbox{\hyperlink{namespacecamp__camp__state_a5522f7056d1ff8bb1626e36c97dfff5a}{00149}}   \textcolor{keywordtype}{elemental} \textcolor{keyword}{subroutine }\mbox{\hyperlink{namespacecamp__camp__state_a5522f7056d1ff8bb1626e36c97dfff5a}{finalize}}(this)}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00150}00150 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00151}00151 \textcolor{comment}{    !> CAMP model state}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00152}00152     \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t}{camp\_state\_t}}), \textcolor{keywordtype}{intent(inout)} :: this}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00153}00153 }
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00154}00154     \textcolor{keywordtype}{integer(kind=i\_kind)} :: i\_cell}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00155}00155 }
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00156}00156     \textcolor{keywordflow}{if} (\textcolor{keyword}{allocated}(this\%env\_var)) \textcolor{keyword}{deallocate}(this\%env\_var)}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00157}00157     \textcolor{keywordflow}{if} (\textcolor{keyword}{allocated}(this\%state\_var)) \textcolor{keyword}{deallocate}(this\%state\_var)}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00158}00158     \textcolor{keywordflow}{if} (\textcolor{keyword}{associated}(this\%env\_states) .and. this\%owns\_env\_states) \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00159}00159       \textcolor{keywordflow}{do} i\_cell = 1, \textcolor{keyword}{size}(this\%env\_states)}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00160}00160         \textcolor{keyword}{deallocate}(this\%env\_states(i\_cell)\%val)}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00161}00161 \textcolor{keywordflow}{      end do}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00162}00162       \textcolor{keyword}{deallocate}(this\%env\_states)}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00163}00163 \textcolor{keywordflow}{    end if}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00164}00164 }
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00165}00165   \textcolor{keyword}{end subroutine }\mbox{\hyperlink{namespacecamp__camp__state_a5522f7056d1ff8bb1626e36c97dfff5a}{finalize}}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00166}00166 }
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00167}00167 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00168}00168 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00169}00169 \textcolor{comment}{  !> Deference a pointer to a camp state}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00170}\mbox{\hyperlink{namespacecamp__camp__state_a9b65b77ad6df50721576ea826cd89ad2}{00170}}   \textcolor{keywordtype}{elemental} \textcolor{keyword}{subroutine }\mbox{\hyperlink{namespacecamp__camp__state_a9b65b77ad6df50721576ea826cd89ad2}{dereference}}(this)}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00171}00171 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00172}00172 \textcolor{comment}{    !> Pointer to the camp state}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00173}00173     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__camp__state_1_1camp__state__ptr}{camp\_state\_ptr}}), \textcolor{keywordtype}{intent(inout)} :: this}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00174}00174 }
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00175}00175     this\%val => null()}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00176}00176 }
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00177}00177   \textcolor{keyword}{end subroutine }\mbox{\hyperlink{namespacecamp__camp__state_a9b65b77ad6df50721576ea826cd89ad2}{dereference}}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00178}00178 }
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00179}00179 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00180}00180 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00181}00181 \textcolor{comment}{  !> Finalize a pointer to a camp state}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00182}\mbox{\hyperlink{namespacecamp__camp__state_a53dc45e0ad3a368f40a41f2e1eb2816a}{00182}}   \textcolor{keywordtype}{elemental} \textcolor{keyword}{subroutine }\mbox{\hyperlink{namespacecamp__camp__state_a53dc45e0ad3a368f40a41f2e1eb2816a}{ptr\_finalize}}(this)}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00183}00183 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00184}00184 \textcolor{comment}{    !> Pointer to the camp state}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00185}00185     \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__camp__state_1_1camp__state__ptr}{camp\_state\_ptr}}), \textcolor{keywordtype}{intent(inout)} :: this}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00186}00186 }
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00187}00187     \textcolor{keywordflow}{if} (\textcolor{keyword}{associated}(this\%val)) \textcolor{keyword}{deallocate}(this\%val)}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00188}00188 }
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00189}00189   \textcolor{keyword}{end subroutine }\mbox{\hyperlink{namespacecamp__camp__state_a53dc45e0ad3a368f40a41f2e1eb2816a}{ptr\_finalize}}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00190}00190 }
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00191}00191 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00192}00192 }
+\DoxyCodeLine{\Hypertarget{camp__state_8_f90_source_l00193}00193 \textcolor{keyword}{end module }\mbox{\hyperlink{namespacecamp__camp__state}{camp\_camp\_state}}}
+
+\end{DoxyCode}

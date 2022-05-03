@@ -1,0 +1,70 @@
+\hypertarget{_dockerfile_source}{}\doxysection{Dockerfile}
+\mbox{\hyperlink{_dockerfile}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00001}00001 FROM fedora:27}
+\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00002}00002 }
+\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00003}00003 RUN dnf -\/y update \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00004}00004     \&\& dnf -\/y install \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00005}00005         gcc-\/gfortran \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00006}00006         gcc-\/c++ \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00007}00007         gsl-\/devel \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00008}00008         metis-\/devel \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00009}00009         lapack-\/devel \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00010}00010         openblas-\/devel \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00011}00011         cmake \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00012}00012     \&\& dnf clean all}
+\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00013}00013 }
+\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00014}00014 \# Build the SuiteSparse libraries for sparse matrix support}
+\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00015}00015 \# (-\/k included because of problem with SuiteSparse security certificate -\/ 1 Aug 2021)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00016}00016 RUN curl -\/kLO http://faculty.cse.tamu.edu/davis/SuiteSparse/SuiteSparse-\/5.1.0.tar.gz \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00017}00017     \&\& tar -\/zxvf SuiteSparse-\/5.1.0.tar.gz \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00018}00018     \&\& export CXX=/usr/bin/cc \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00019}00019     \&\& cd SuiteSparse \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00020}00020     \&\& make install INSTALL=/usr/local BLAS="{}-\/L/lib64 -\/lopenblas"{}}
+\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00021}00021 }
+\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00022}00022 \# Install json-\/fortran}
+\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00023}00023 RUN curl -\/LO https://github.com/jacobwilliams/json-\/fortran/archive/6.1.0.tar.gz \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00024}00024     \&\& tar -\/zxvf 6.1.0.tar.gz \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00025}00025     \&\& cd json-\/fortran-\/6.1.0 \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00026}00026     \&\& export FC=gfortran \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00027}00027     \&\& mkdir build \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00028}00028     \&\& cd build \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00029}00029     \&\& cmake -\/D SKIP\_DOC\_GEN:BOOL=TRUE .. \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00030}00030     \&\& make install}
+\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00031}00031 }
+\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00032}00032 \# copy CAMP source code and data}
+\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00033}00033 COPY . /camp/}
+\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00034}00034 }
+\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00035}00035 \# Install a modified version of CVODE}
+\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00036}00036 RUN tar -\/zxvf /camp/cvode-\/3.4-\/alpha.tar.gz \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00037}00037     \&\& cd cvode-\/3.4-\/alpha \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00038}00038     \&\& mkdir build \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00039}00039     \&\& cd build \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00040}00040     \&\& cmake -\/D CMAKE\_BUILD\_TYPE=release \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00041}00041              -\/D CMAKE\_C\_FLAGS\_DEBUG="{}-\/g -\/pg"{} \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00042}00042              -\/D CMAKE\_EXE\_LINKER\_FLAGS\_DEBUG="{}-\/pg"{} \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00043}00043              -\/D CMAKE\_MODULE\_LINKER\_FLAGS\_DEBUG="{}-\/pg"{} \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00044}00044              -\/D CMAKE\_SHARED\_LINKER\_FLAGS\_DEBUG="{}-\/pg"{} \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00045}00045              -\/D KLU\_ENABLE:BOOL=TRUE \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00046}00046              -\/D KLU\_LIBRARY\_DIR=/usr/local/lib \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00047}00047              -\/D KLU\_INCLUDE\_DIR=/usr/local/include \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00048}00048              .. \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00049}00049     \&\& make install}
+\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00050}00050 }
+\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00051}00051 \# Update environment variables}
+\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00052}00052 ENV LD\_LIBRARY\_PATH="{}\$\{LD\_LIBRARY\_PATH\}:/usr/local/lib:/usr/local/lib64:/usr/local/jsonfortran-\/gnu-\/6.1.0/lib"{}}
+\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00053}00053 ENV PATH="{}\$\{PATH\}:/usr/local/jsonfortran-\/gnu-\/6.1.0/lib"{}}
+\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00054}00054 }
+\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00055}00055 \# Build CAMP}
+\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00056}00056  RUN mkdir build \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00057}00057     \&\& cd build \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00058}00058     \&\& export JSON\_FORTRAN\_HOME="{}/usr/local/jsonfortran-\/gnu-\/6.1.0"{} \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00059}00059     \&\& cmake -\/D CMAKE\_BUILD\_TYPE=release \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00060}00060              -\/D CMAKE\_C\_FLAGS\_DEBUG="{}-\/pg"{} \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00061}00061              -\/D CMAKE\_Fortran\_FLAGS\_DEBUG="{}-\/pg"{} \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00062}00062              -\/D CMAKE\_MODULE\_LINKER\_FLAGS="{}-\/pg"{} \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00063}00063              -\/D ENABLE\_GSL:BOOL=TRUE \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00064}00064              /camp \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00065}00065     \&\& make install}
+
+\end{DoxyCode}

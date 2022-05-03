@@ -1,0 +1,314 @@
+\hypertarget{rxn__arrhenius_8_f90_source}{}\doxysection{rxn\+\_\+arrhenius.\+F90}
+\label{rxn__arrhenius_8_f90_source}\index{rxn\_arrhenius.F90@{rxn\_arrhenius.F90}}
+\mbox{\hyperlink{rxn__arrhenius_8_f90}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00001}00001 \textcolor{comment}{! Copyright (C) 2021 Barcelona Supercomputing Center and University of}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00002}00002 \textcolor{comment}{! Illinois at Urbana-\/Champaign}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00003}00003 \textcolor{comment}{! SPDX-\/License-\/Identifier: MIT}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00004}00004 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00005}00005 \textcolor{comment}{!> \(\backslash\)file}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00006}00006 \textcolor{comment}{!> The camp\_rxn\_arrhenius module.}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00007}00007 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00008}00008 \textcolor{comment}{!> \(\backslash\)page camp\_rxn\_arrhenius CAMP: Arrhenius Reaction}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00009}00009 \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00010}00010 \textcolor{comment}{!! Arrhenius-\/like reaction rate constant equations are calculated as follows:}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00011}00011 \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00012}00012 \textcolor{comment}{!! \(\backslash\)f[}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00013}00013 \textcolor{comment}{!!   Ae\string^\{(\(\backslash\)frac\{-\/E\_a\}\{k\_bT\})\}(\(\backslash\)frac\{T\}\{D\})\string^B(1.0+E*P)}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00014}00014 \textcolor{comment}{!! \(\backslash\)f]}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00015}00015 \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00016}00016 \textcolor{comment}{!! where \(\backslash\)f\$A\(\backslash\)f\$ is the pre-\/exponential factor}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00017}00017 \textcolor{comment}{!! (\# \(\backslash\)f\$(\(\backslash\)mbox\{cm\}\string^\{-\/3\})\string^\{-\/(n-\/1)\}\(\backslash\)mbox\{s\}\string^\{-\/1\}\(\backslash\)f\$),}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00018}00018 \textcolor{comment}{!! \(\backslash\)f\$n\(\backslash\)f\$ is the number of reactants, \(\backslash\)f\$E\_a\(\backslash\)f\$ is the activation energy (J),}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00019}00019 \textcolor{comment}{!! \(\backslash\)f\$k\_b\(\backslash\)f\$ is the Boltzmann constant (J/K), \(\backslash\)f\$D\(\backslash\)f\$ (K), \(\backslash\)f\$B\(\backslash\)f\$ (unitless)}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00020}00020 \textcolor{comment}{!! and \(\backslash\)f\$E\(\backslash\)f\$ (\(\backslash\)f\$Pa\string^\{-\/1\}\(\backslash\)f\$) are reaction parameters, \(\backslash\)f\$T\(\backslash\)f\$ is the}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00021}00021 \textcolor{comment}{!! temperature (K), and \(\backslash\)f\$P\(\backslash\)f\$ is the pressure (Pa). The first two terms are}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00022}00022 \textcolor{comment}{!! described in Finlayson-\/Pitts and Pitts (2000) \(\backslash\)cite Finlayson-\/Pitts2000 .}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00023}00023 \textcolor{comment}{!! The final term is included to accomodate CMAQ EBI solver type 7 rate}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00024}00024 \textcolor{comment}{!! constants.}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00025}00025 \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00026}00026 \textcolor{comment}{!! Input data for Arrhenius equations has the following format:}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00027}00027 \textcolor{comment}{!! \(\backslash\)code\{.json\}}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00028}00028 \textcolor{comment}{!!   \{}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00029}00029 \textcolor{comment}{!!     "{}type"{} : "{}ARRHENIUS"{},}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00030}00030 \textcolor{comment}{!!     "{}A"{} : 123.45,}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00031}00031 \textcolor{comment}{!!     "{}Ea"{} : 123.45,}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00032}00032 \textcolor{comment}{!!     "{}B"{}  : 1.3,}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00033}00033 \textcolor{comment}{!!     "{}D"{}  : 300.0,}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00034}00034 \textcolor{comment}{!!     "{}E"{}  : 0.6E-\/5,}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00035}00035 \textcolor{comment}{!!     "{}time unit"{} : "{}MIN"{},}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00036}00036 \textcolor{comment}{!!     "{}reactants"{} : \{}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00037}00037 \textcolor{comment}{!!       "{}spec1"{} : \{\},}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00038}00038 \textcolor{comment}{!!       "{}spec2"{} : \{ "{}qty"{} : 2 \},}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00039}00039 \textcolor{comment}{!!       ...}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00040}00040 \textcolor{comment}{!!     \},}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00041}00041 \textcolor{comment}{!!     "{}products"{} : \{}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00042}00042 \textcolor{comment}{!!       "{}spec3"{} : \{\},}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00043}00043 \textcolor{comment}{!!       "{}spec4"{} : \{ "{}yield"{} : 0.65 \},}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00044}00044 \textcolor{comment}{!!       ...}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00045}00045 \textcolor{comment}{!!     \}}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00046}00046 \textcolor{comment}{!!   \}}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00047}00047 \textcolor{comment}{!! \(\backslash\)endcode}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00048}00048 \textcolor{comment}{!! The key-\/value pairs \(\backslash\)b reactants, and \(\backslash\)b products are required. Reactants}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00049}00049 \textcolor{comment}{!! without a \(\backslash\)b qty value are assumed to appear once in the reaction equation.}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00050}00050 \textcolor{comment}{!! Products without a specified \(\backslash\)b yield are assumed to have a \(\backslash\)b yield of}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00051}00051 \textcolor{comment}{!! 1.0.}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00052}00052 \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00053}00053 \textcolor{comment}{!! Optionally, a parameter \(\backslash\)b C may be included, and is taken to equal}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00054}00054 \textcolor{comment}{!! \(\backslash\)f\$\(\backslash\)frac\{-\/E\_a\}\{k\_b\}\(\backslash\)f\$. Note that either \(\backslash\)b Ea or \(\backslash\)b C may be included, but}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00055}00055 \textcolor{comment}{!! not both. When neither \(\backslash\)b Ea or \(\backslash\)b C are included, they are assumed to be}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00056}00056 \textcolor{comment}{!! 0.0. When \(\backslash\)b A is not included, it is assumed to be 1.0, when \(\backslash\)b D is not}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00057}00057 \textcolor{comment}{!! included, it is assumed to be 300.0 K, when \(\backslash\)b B is not included, it is}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00058}00058 \textcolor{comment}{!! assumed to be 0.0, and when \(\backslash\)b E is not included, it is assumed to be 0.0.}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00059}00059 \textcolor{comment}{!! The unit for time is assumed to be s, but inclusion of the optional}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00060}00060 \textcolor{comment}{!! key-\/value pair \(\backslash\)b time \(\backslash\)b unit = \(\backslash\)b MIN can be used to indicate a rate}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00061}00061 \textcolor{comment}{!! with min as the time unit.}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00062}00062 }
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00063}00063 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00064}00064 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00065}00065 \textcolor{comment}{!> The rxn\_arrhenius\_t type and associated functions.}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00066}\mbox{\hyperlink{namespacecamp__rxn__arrhenius}{00066}} \textcolor{keyword}{module} \mbox{\hyperlink{namespacecamp__rxn__arrhenius}{camp\_rxn\_arrhenius}}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00067}00067 }
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00068}00068   \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacecamp__aero__rep__data}{camp\_aero\_rep\_data}}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00069}00069   \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacecamp__chem__spec__data}{camp\_chem\_spec\_data}}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00070}00070   \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacecamp__constants}{camp\_constants}},                        \textcolor{keywordtype}{only}: \mbox{\hyperlink{namespacecamp__constants_aab17f4f4c76dc9812d8ab58b137081de}{const}}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00071}00071   \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacecamp__camp__state}{camp\_camp\_state}}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00072}00072   \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacecamp__property}{camp\_property}}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00073}00073   \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacecamp__rxn__data}{camp\_rxn\_data}}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00074}00074   \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacecamp__util}{camp\_util}},                             \textcolor{keywordtype}{only}: \mbox{\hyperlink{namespacecamp__constants_aec214d61ec1cbcbe6ad8bea430b9b957}{i\_kind}}, \mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}, \mbox{\hyperlink{interfacecamp__util_1_1to__string}{to\_string}}, \&}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00075}00075                                                   \mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}, \mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}, \mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00076}00076 }
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00077}00077   \textcolor{keywordtype}{implicit none}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00078}00078   \textcolor{keywordtype}{private}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00079}00079 }
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00080}00080 \textcolor{preprocessor}{\#define NUM\_REACT\_ this\%condensed\_data\_int(1)}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00081}00081 \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define NUM\_PROD\_ this\%condensed\_data\_int(2)}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00082}00082 \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define A\_ this\%condensed\_data\_real(1)}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00083}00083 \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define B\_ this\%condensed\_data\_real(2)}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00084}00084 \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define C\_ this\%condensed\_data\_real(3)}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00085}00085 \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define D\_ this\%condensed\_data\_real(4)}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00086}00086 \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define E\_ this\%condensed\_data\_real(5)}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00087}00087 \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define CONV\_ this\%condensed\_data\_real(6)}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00088}00088 \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define NUM\_INT\_PROP\_ 2}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00089}00089 \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define NUM\_REAL\_PROP\_ 6}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00090}00090 \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define NUM\_ENV\_PARAM\_ 1}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00091}00091 \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define REACT\_(x) this\%condensed\_data\_int(NUM\_INT\_PROP\_ + x)}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00092}00092 \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define PROD\_(x) this\%condensed\_data\_int(NUM\_INT\_PROP\_ + NUM\_REACT\_ + x)}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00093}00093 \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define DERIV\_ID\_(x) this\%condensed\_data\_int(NUM\_INT\_PROP\_ + NUM\_REACT\_ + NUM\_PROD\_ + x)}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00094}00094 \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define JAC\_ID\_(x) this\%condensed\_data\_int(NUM\_INT\_PROP\_ + 2*(NUM\_REACT\_+NUM\_PROD\_) + x)}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00095}00095 \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define YIELD\_(x) this\%condensed\_data\_real(NUM\_REAL\_PROP\_ + x)}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00096}00096 \textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00097}00097   \textcolor{keywordtype}{public} :: \mbox{\hyperlink{structcamp__rxn__arrhenius_1_1rxn__arrhenius__t}{rxn\_arrhenius\_t}}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00098}00098 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00099}00099 \textcolor{comment}{  !> Generic test reaction data type}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00100}\mbox{\hyperlink{structcamp__rxn__arrhenius_1_1rxn__arrhenius__t}{00100}}   \textcolor{keyword}{type}, \textcolor{keyword}{extends}(\mbox{\hyperlink{structcamp__rxn__data_1_1rxn__data__t}{rxn\_data\_t}}) :: \mbox{\hyperlink{structcamp__rxn__arrhenius_1_1rxn__arrhenius__t}{rxn\_arrhenius\_t}}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00101}00101   \textcolor{keyword}{contains}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00102}00102 \textcolor{comment}{    !> Reaction initialization}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00103}\mbox{\hyperlink{structcamp__rxn__arrhenius_1_1rxn__arrhenius__t_a912d16bbc66f20c1714af24694a54f4c}{00103}}     \textcolor{keywordtype}{procedure} :: \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1initialize}{initialize}}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00104}00104 \textcolor{comment}{    !> Finalize the reaction}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00105}\mbox{\hyperlink{structcamp__rxn__arrhenius_1_1rxn__arrhenius__t_adf6bbf4598f9ca07055dcc5217a15ace}{00105}}     final :: \mbox{\hyperlink{namespacecamp__camp__state_a5522f7056d1ff8bb1626e36c97dfff5a}{finalize}}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00106}00106   \textcolor{keyword}{end type }\mbox{\hyperlink{structcamp__rxn__arrhenius_1_1rxn__arrhenius__t}{rxn\_arrhenius\_t}}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00107}00107 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00108}00108 \textcolor{comment}{  !> Constructor for rxn\_arrhenius\_t}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00109}00109   \textcolor{keyword}{interface} \mbox{\hyperlink{structcamp__rxn__arrhenius_1_1rxn__arrhenius__t}{rxn\_arrhenius\_t}}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00110}00110     \textcolor{keywordtype}{procedure} :: \mbox{\hyperlink{namespacecamp__chem__spec__data_aab9472c40fc0e9d8eb0bf4b8ae4eb025}{constructor}}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00111}00111   \textcolor{keyword}{end interface }\mbox{\hyperlink{structcamp__rxn__arrhenius_1_1rxn__arrhenius__t}{rxn\_arrhenius\_t}}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00112}00112 }
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00113}00113 \textcolor{keyword}{contains}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00114}00114 }
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00115}00115 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00116}00116 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00117}00117 \textcolor{comment}{  !> Constructor for Arrhenius reaction}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00118}\mbox{\hyperlink{namespacecamp__rxn__arrhenius_a940a2139c9cadbed7e2c9d63a5971da6}{00118}}   \textcolor{keyword}{function }\mbox{\hyperlink{namespacecamp__chem__spec__data_aab9472c40fc0e9d8eb0bf4b8ae4eb025}{constructor}}() \textcolor{keyword}{result}(new\_obj)}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00119}00119 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00120}00120 \textcolor{comment}{    !> A new reaction instance}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00121}00121     \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__rxn__arrhenius_1_1rxn__arrhenius__t}{rxn\_arrhenius\_t}}), \textcolor{keywordtype}{pointer} :: new\_obj}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00122}00122 }
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00123}00123     \textcolor{keyword}{allocate}(new\_obj)}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00124}00124     new\_obj\%rxn\_phase = \mbox{\hyperlink{namespacecamp__rxn__data_a1ff1b61ed572674155f271c550e473ab}{gas\_rxn}}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00125}00125 }
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00126}00126   \textcolor{keyword}{end function }\mbox{\hyperlink{namespacecamp__chem__spec__data_aab9472c40fc0e9d8eb0bf4b8ae4eb025}{constructor}}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00127}00127 }
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00128}00128 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00129}00129 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00130}00130 \textcolor{comment}{  !> Initialize the reaction data, validating component data and loading}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00131}00131 \textcolor{comment}{  !! any required information into the condensed data arrays for use during}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00132}00132 \textcolor{comment}{  !! solving}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00133}\mbox{\hyperlink{namespacecamp__rxn__arrhenius_a6f006a7032915fe7e70c0cb03a712096}{00133}}   \textcolor{keyword}{subroutine }\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1initialize}{initialize}}(this, chem\_spec\_data, aero\_rep, n\_cells)}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00134}00134 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00135}00135 \textcolor{comment}{    !> Reaction data}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00136}00136     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__rxn__arrhenius_1_1rxn__arrhenius__t}{rxn\_arrhenius\_t}}), \textcolor{keywordtype}{intent(inout)} :: this\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00137}00137 \textcolor{comment}{    !> Chemical species data}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00138}00138     \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t}{chem\_spec\_data\_t}}), \textcolor{keywordtype}{intent(in)} :: chem\_spec\_data\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00139}00139 \textcolor{comment}{    !> Aerosol representations}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00140}00140     \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__ptr}{aero\_rep\_data\_ptr}}), \textcolor{keywordtype}{pointer}, \textcolor{keywordtype}{intent(in)} :: aero\_rep(:)\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00141}00141 \textcolor{comment}{    !> Number of grid cells being solved simultaneously}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00142}00142     \textcolor{keywordtype}{integer(kind=i\_kind)}, \textcolor{keywordtype}{intent(in)} :: n\_cells}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00143}00143 }
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00144}00144     \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__property_1_1property__t}{property\_t}}), \textcolor{keywordtype}{pointer} :: spec\_props, reactants, products}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00145}00145     \textcolor{keywordtype}{character(len=:)}, \textcolor{keywordtype}{allocatable} :: key\_name, spec\_name, string\_val}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00146}00146     \textcolor{keywordtype}{integer(kind=i\_kind)} :: i\_spec, i\_qty}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00147}00147 }
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00148}00148     \textcolor{keywordtype}{integer(kind=i\_kind)} :: temp\_int}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00149}00149 \textcolor{keywordtype}{    real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) :: temp\_real}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00150}00150 }
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00151}00151     \textcolor{comment}{! Get the species involved}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00152}00152     \textcolor{keywordflow}{if} (.not. \textcolor{keyword}{associated}(this\%property\_set)) \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(255324828, \&}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00153}00153             \textcolor{stringliteral}{"{}Missing property set needed to initialize reaction"{}})}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00154}00154     key\_name = \textcolor{stringliteral}{"{}reactants"{}}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00155}00155     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(250060521, \&}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00156}00156             this\%property\_set\%get\_property\_t(key\_name, reactants), \&}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00157}00157             \textcolor{stringliteral}{"{}Arrhenius reaction is missing reactants"{}})}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00158}00158     key\_name = \textcolor{stringliteral}{"{}products"{}}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00159}00159     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(304540307, \&}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00160}00160             this\%property\_set\%get\_property\_t(key\_name, products), \&}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00161}00161             \textcolor{stringliteral}{"{}Arrhenius reaction is missing products"{}})}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00162}00162 }
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00163}00163     \textcolor{comment}{! Count the number of reactants (including those with a qty specified)}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00164}00164     \textcolor{keyword}{call }reactants\%iter\_reset()}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00165}00165     i\_spec = 0}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00166}00166     \textcolor{keywordflow}{do} \textcolor{keywordflow}{while} (reactants\%get\_key(\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}}))}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00167}00167       \textcolor{comment}{! Get properties included with this reactant in the reaction data}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00168}00168       \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(243342975, reactants\%get\_property\_t(val=spec\_props))}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00169}00169       key\_name = \textcolor{stringliteral}{"{}qty"{}}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00170}00170       \textcolor{keywordflow}{if} (spec\_props\%get\_int(key\_name, temp\_int)) i\_spec = i\_spec+temp\_int-\/1}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00171}00171       \textcolor{keyword}{call }reactants\%iter\_next()}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00172}00172       i\_spec = i\_spec + 1}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00173}00173 \textcolor{keywordflow}{    end do}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00174}00174 }
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00175}00175     \textcolor{comment}{! Allocate space in the condensed data arrays}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00176}00176     \textcolor{keyword}{allocate}(this\%condensed\_data\_int(num\_int\_prop\_ + \&}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00177}00177             (i\_spec + 2) * (i\_spec + products\%size())))}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00178}00178     \textcolor{keyword}{allocate}(this\%condensed\_data\_real(num\_real\_prop\_ + products\%size()))}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00179}00179     this\%condensed\_data\_int(:) = int(0, kind=\mbox{\hyperlink{namespacecamp__constants_aec214d61ec1cbcbe6ad8bea430b9b957}{i\_kind}})}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00180}00180     this\%condensed\_data\_real(:) = real(0.0, kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00181}00181 }
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00182}00182     \textcolor{comment}{! Save space for the environment dependent parameters}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00183}00183     this\%num\_env\_params = num\_env\_param\_}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00184}00184 }
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00185}00185     \textcolor{comment}{! Save the size of the reactant and product arrays (for reactions where}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00186}00186     \textcolor{comment}{! these can vary)}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00187}00187     num\_react\_ = i\_spec}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00188}00188     num\_prod\_ = products\%size()}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00189}00189 }
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00190}00190     \textcolor{comment}{! Set the \#/cc -\/> ppm conversion prefactor}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00191}00191     conv\_ = \mbox{\hyperlink{namespacecamp__constants_aab17f4f4c76dc9812d8ab58b137081de}{const}}\%avagadro / \mbox{\hyperlink{namespacecamp__constants_aab17f4f4c76dc9812d8ab58b137081de}{const}}\%univ\_gas\_const * 10.0d0**(-\/12.0d0)}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00192}00192 }
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00193}00193     \textcolor{comment}{! Get reaction parameters (it might be easiest to keep these at the}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00194}00194     \textcolor{comment}{! beginning of the condensed data array, so they can be accessed using}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00195}00195     \textcolor{comment}{! compliler flags)}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00196}00196     key\_name = \textcolor{stringliteral}{"{}A"{}}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00197}00197     \textcolor{keywordflow}{if} (.not. this\%property\_set\%get\_real(key\_name, a\_)) \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00198}00198       a\_ = 1.0}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00199}00199 \textcolor{keywordflow}{    end if}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00200}00200     key\_name = \textcolor{stringliteral}{"{}time unit"{}}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00201}00201     \textcolor{keywordflow}{if} (this\%property\_set\%get\_string(key\_name, string\_val)) \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00202}00202       \textcolor{keywordflow}{if} (trim(string\_val).eq.\textcolor{stringliteral}{"{}MIN"{}}) \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00203}00203         a\_ = a\_ / 60.0}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00204}00204 \textcolor{keywordflow}{      end if}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00205}00205 \textcolor{keywordflow}{    endif}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00206}00206     key\_name = \textcolor{stringliteral}{"{}Ea"{}}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00207}00207     \textcolor{keywordflow}{if} (this\%property\_set\%get\_real(key\_name, temp\_real)) \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00208}00208       c\_ = -\/temp\_real/\mbox{\hyperlink{namespacecamp__constants_aab17f4f4c76dc9812d8ab58b137081de}{const}}\%boltzmann}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00209}00209       key\_name = \textcolor{stringliteral}{"{}C"{}}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00210}00210       \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(297370315, \&}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00211}00211               .not.this\%property\_set\%get\_real(key\_name, temp\_real), \&}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00212}00212               \textcolor{stringliteral}{"{}Received both Ea and C parameter for Arrhenius equation"{}})}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00213}00213     \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00214}00214       key\_name = \textcolor{stringliteral}{"{}C"{}}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00215}00215       \textcolor{keywordflow}{if} (.not. this\%property\_set\%get\_real(key\_name, c\_)) \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00216}00216         c\_ = 0.0}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00217}00217 \textcolor{keywordflow}{      end if}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00218}00218 \textcolor{keywordflow}{    end if}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00219}00219     key\_name = \textcolor{stringliteral}{"{}D"{}}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00220}00220     \textcolor{keywordflow}{if} (.not. this\%property\_set\%get\_real(key\_name, d\_)) \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00221}00221       d\_ = 300.0}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00222}00222 \textcolor{keywordflow}{    end if}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00223}00223     key\_name = \textcolor{stringliteral}{"{}B"{}}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00224}00224     \textcolor{keywordflow}{if} (.not. this\%property\_set\%get\_real(key\_name, b\_)) \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00225}00225       b\_ = 0.0}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00226}00226 \textcolor{keywordflow}{    end if}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00227}00227     key\_name = \textcolor{stringliteral}{"{}E"{}}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00228}00228     \textcolor{keywordflow}{if} (.not. this\%property\_set\%get\_real(key\_name, e\_)) \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00229}00229       e\_ = 0.0}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00230}00230 \textcolor{keywordflow}{    end if}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00231}00231 }
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00232}00232     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(344705857, .not. ((b\_.ne.real(0.0, kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})) \&}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00233}00233             .and.(d\_.eq.real(0.0, kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}))), \&}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00234}00234             \textcolor{stringliteral}{"{}D cannot be zero if B is non-\/zero in Arrhenius reaction."{}})}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00235}00235 }
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00236}00236     \textcolor{comment}{! Get the indices and chemical properties for the reactants}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00237}00237     \textcolor{keyword}{call }reactants\%iter\_reset()}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00238}00238     i\_spec = 1}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00239}00239     \textcolor{keywordflow}{do} \textcolor{keywordflow}{while} (reactants\%get\_key(\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}}))}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00240}00240 }
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00241}00241       \textcolor{comment}{! Save the index of this species in the state variable array}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00242}00242       react\_(i\_spec) = chem\_spec\_data\%gas\_state\_id(\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}})}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00243}00243 }
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00244}00244       \textcolor{comment}{! Make sure the species exists}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00245}00245       \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(751684145, react\_(i\_spec).gt.0, \&}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00246}00246               \textcolor{stringliteral}{"{}Missing Arrhenius reactant: "{}}//\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}})}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00247}00247 }
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00248}00248       \textcolor{comment}{! Get properties included with this reactant in the reaction data}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00249}00249       \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(796763915, reactants\%get\_property\_t(val=spec\_props))}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00250}00250       key\_name = \textcolor{stringliteral}{"{}qty"{}}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00251}00251       \textcolor{keywordflow}{if} (spec\_props\%get\_int(key\_name, temp\_int)) \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00252}00252         \textcolor{keywordflow}{do} i\_qty = 1, temp\_int -\/ 1}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00253}00253           react\_(i\_spec + i\_qty) = react\_(i\_spec)}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00254}00254 \textcolor{keywordflow}{        end do}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00255}00255         i\_spec = i\_spec + temp\_int -\/ 1}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00256}00256 \textcolor{keywordflow}{      end if}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00257}00257 }
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00258}00258       \textcolor{keyword}{call }reactants\%iter\_next()}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00259}00259       i\_spec = i\_spec + 1}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00260}00260 \textcolor{keywordflow}{    end do}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00261}00261 }
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00262}00262     \textcolor{comment}{! Get the indices and chemical properties for the products}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00263}00263     \textcolor{keyword}{call }products\%iter\_reset()}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00264}00264     i\_spec = 1}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00265}00265     \textcolor{keywordflow}{do} \textcolor{keywordflow}{while} (products\%get\_key(\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}}))}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00266}00266 }
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00267}00267       \textcolor{comment}{! Save the index of this species in the state variable array}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00268}00268       prod\_(i\_spec) = chem\_spec\_data\%gas\_state\_id(\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}})}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00269}00269 }
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00270}00270       \textcolor{comment}{! Make sure the species exists}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00271}00271       \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(234495887, prod\_(i\_spec).gt.0, \&}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00272}00272               \textcolor{stringliteral}{"{}Missing Arrhenius product: "{}}//\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}})}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00273}00273 }
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00274}00274       \textcolor{comment}{! Get properties included with this product in the reaction data}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00275}00275       \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(451185800, products\%get\_property\_t(val=spec\_props))}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00276}00276       key\_name = \textcolor{stringliteral}{"{}yield"{}}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00277}00277       \textcolor{keywordflow}{if} (spec\_props\%get\_real(key\_name, temp\_real)) \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00278}00278         yield\_(i\_spec) = temp\_real}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00279}00279       \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00280}00280         yield\_(i\_spec) = 1.0}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00281}00281 \textcolor{keywordflow}{      end if}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00282}00282 }
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00283}00283       \textcolor{keyword}{call }products\%iter\_next()}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00284}00284       i\_spec = i\_spec + 1}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00285}00285 \textcolor{keywordflow}{    end do}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00286}00286 }
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00287}00287   \textcolor{keyword}{end subroutine }\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1initialize}{initialize}}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00288}00288 }
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00289}00289 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00290}00290 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00291}00291 \textcolor{comment}{  !> Finalize the reaction}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00292}\mbox{\hyperlink{namespacecamp__rxn__arrhenius_a9efeacc19f39703b1e8ed82522606e21}{00292}}   \textcolor{keywordtype}{elemental} \textcolor{keyword}{subroutine }\mbox{\hyperlink{namespacecamp__camp__state_a5522f7056d1ff8bb1626e36c97dfff5a}{finalize}}(this)}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00293}00293 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00294}00294 \textcolor{comment}{    !> Reaction data}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00295}00295     \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__rxn__arrhenius_1_1rxn__arrhenius__t}{rxn\_arrhenius\_t}}), \textcolor{keywordtype}{intent(inout)} :: this}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00296}00296 }
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00297}00297     \textcolor{keywordflow}{if} (\textcolor{keyword}{associated}(this\%property\_set)) \&}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00298}00298             \textcolor{keyword}{deallocate}(this\%property\_set)}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00299}00299     \textcolor{keywordflow}{if} (\textcolor{keyword}{allocated}(this\%condensed\_data\_real)) \&}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00300}00300             \textcolor{keyword}{deallocate}(this\%condensed\_data\_real)}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00301}00301     \textcolor{keywordflow}{if} (\textcolor{keyword}{allocated}(this\%condensed\_data\_int)) \&}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00302}00302             \textcolor{keyword}{deallocate}(this\%condensed\_data\_int)}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00303}00303 }
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00304}00304   \textcolor{keyword}{end subroutine }\mbox{\hyperlink{namespacecamp__camp__state_a5522f7056d1ff8bb1626e36c97dfff5a}{finalize}}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00305}00305 }
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00306}00306 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00307}00307 }
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00308}00308 \textcolor{keyword}{end module }\mbox{\hyperlink{namespacecamp__rxn__arrhenius}{camp\_rxn\_arrhenius}}}
+
+\end{DoxyCode}

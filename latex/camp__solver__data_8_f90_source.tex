@@ -1,0 +1,1016 @@
+\hypertarget{camp__solver__data_8_f90_source}{}\doxysection{camp\+\_\+solver\+\_\+data.\+F90}
+\label{camp__solver__data_8_f90_source}\index{camp\_solver\_data.F90@{camp\_solver\_data.F90}}
+\mbox{\hyperlink{camp__solver__data_8_f90}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00001}00001 \textcolor{comment}{! Copyright (C) 2021 Barcelona Supercomputing Center and University of}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00002}00002 \textcolor{comment}{! Illinois at Urbana-\/Champaign}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00003}00003 \textcolor{comment}{! SPDX-\/License-\/Identifier: MIT}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00004}00004 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00005}00005 \textcolor{comment}{!> \(\backslash\)file}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00006}00006 \textcolor{comment}{!> The camp\_camp\_solver\_data module.}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00007}00007 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00008}00008 \textcolor{comment}{!> The camp\_solver\_data\_t structure and associated subroutines.}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00009}\mbox{\hyperlink{namespacecamp__camp__solver__data}{00009}} \textcolor{keyword}{module} \mbox{\hyperlink{namespacecamp__camp__solver__data}{camp\_camp\_solver\_data}}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00010}00010 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00011}00011   \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacecamp__aero__phase__data}{camp\_aero\_phase\_data}}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00012}00012   \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacecamp__aero__rep__data}{camp\_aero\_rep\_data}}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00013}00013   \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacecamp__aero__rep__factory}{camp\_aero\_rep\_factory}}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00014}00014   \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacecamp__constants}{camp\_constants}},                   \textcolor{keywordtype}{only} : \mbox{\hyperlink{namespacecamp__constants_aec214d61ec1cbcbe6ad8bea430b9b957}{i\_kind}}, \mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00015}00015   \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacecamp__mechanism__data}{camp\_mechanism\_data}}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00016}00016   \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacecamp__camp__state}{camp\_camp\_state}}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00017}00017   \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacecamp__rxn__data}{camp\_rxn\_data}}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00018}00018   \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacecamp__rxn__factory}{camp\_rxn\_factory}}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00019}00019   \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacecamp__solver__stats}{camp\_solver\_stats}}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00020}00020   \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacecamp__sub__model__data}{camp\_sub\_model\_data}}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00021}00021   \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacecamp__sub__model__factory}{camp\_sub\_model\_factory}}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00022}00022   \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacecamp__util}{camp\_util}},                        \textcolor{keywordtype}{only} : \mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}, \mbox{\hyperlink{interfacecamp__util_1_1to__string}{to\_string}}, \&}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00023}00023                                               \mbox{\hyperlink{namespacecamp__util_afbc01957ee97134229c7d4a779138f9f}{warn\_assert\_msg}}, \mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00024}00024 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00025}00025   \textcolor{keywordtype}{use }iso\_c\_binding}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00026}00026 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00027}00027   \textcolor{keywordtype}{implicit none}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00028}00028   \textcolor{keywordtype}{private}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00029}00029 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00030}00030   \textcolor{keywordtype}{public} :: \mbox{\hyperlink{structcamp__camp__solver__data_1_1camp__solver__data__t}{camp\_solver\_data\_t}}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00031}00031 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00032}00032 \textcolor{comment}{  !> Default relative tolerance for integration}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00033}\mbox{\hyperlink{namespacecamp__camp__solver__data_ac0c0056598910f8b5cca68b75d7460f4}{00033}} \textcolor{keywordtype}{  real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}), \textcolor{keywordtype}{parameter} :: \mbox{\hyperlink{namespacecamp__camp__solver__data_ac0c0056598910f8b5cca68b75d7460f4}{camp\_solver\_default\_rel\_tol}} = 1.0d-\/8\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00034}00034 \textcolor{comment}{  !> Default max number of integration steps}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00035}\mbox{\hyperlink{namespacecamp__camp__solver__data_ae440ef611384ecf49647866444d9e65b}{00035}}   \textcolor{keywordtype}{integer(kind=i\_kind)}, \textcolor{keywordtype}{parameter} :: \mbox{\hyperlink{namespacecamp__camp__solver__data_ae440ef611384ecf49647866444d9e65b}{camp\_solver\_default\_max\_steps}} = 10000\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00036}00036 \textcolor{comment}{  !> Default maximum number of integration convergence failures}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00037}\mbox{\hyperlink{namespacecamp__camp__solver__data_ad7cc6d74aeef337af13d5809432d6580}{00037}}   \textcolor{keywordtype}{integer(kind=i\_kind)}, \textcolor{keywordtype}{parameter} :: \mbox{\hyperlink{namespacecamp__camp__solver__data_ad7cc6d74aeef337af13d5809432d6580}{camp\_solver\_default\_max\_conv\_fails}} = 1000}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00038}00038 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00039}00039 \textcolor{comment}{  !> Result code indicating successful completion}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00040}\mbox{\hyperlink{namespacecamp__camp__solver__data_ad0bb6041c4a3c7383bf17a04876fc2ca}{00040}}   \textcolor{keywordtype}{integer}, \textcolor{keywordtype}{parameter} :: \mbox{\hyperlink{namespacecamp__camp__solver__data_ad0bb6041c4a3c7383bf17a04876fc2ca}{camp\_solver\_success}} = 0}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00041}00041 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00042}00042 \textcolor{comment}{  !> Interface to c ODE solver functions}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00043}00043   \textcolor{keyword}{interface}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00044}00044 \textcolor{comment}{    !> Get a new solver}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00045}\mbox{\hyperlink{interfacecamp__camp__solver__data_1_1solver__new_ab9163618d6720f5c032c37bb5c89cd15}{00045}}     \textcolor{keywordtype}{type}(c\_ptr) function \mbox{\hyperlink{interfacecamp__camp__solver__data_1_1solver__new}{solver\_new}}(n\_state\_var, n\_cells, var\_type, \&}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00046}00046                     n\_rxn, n\_rxn\_int\_param, n\_rxn\_float\_param, \&}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00047}00047                     n\_rxn\_env\_param, n\_aero\_phase, n\_aero\_phase\_int\_param, \&}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00048}00048                     n\_aero\_phase\_float\_param, n\_aero\_rep, \&}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00049}00049                     n\_aero\_rep\_int\_param, n\_aero\_rep\_float\_param, \&}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00050}00050                     n\_aero\_rep\_env\_param, n\_sub\_model, n\_sub\_model\_int\_param,\&}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00051}00051                     n\_sub\_model\_float\_param, n\_sub\_model\_env\_param) \textcolor{keyword}{bind (c)}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00052}00052       \textcolor{keywordtype}{use }iso\_c\_binding\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00053}00053 \textcolor{comment}{      !> Number of variables on the state array per grid cell}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00054}00054 \textcolor{comment}{      !! (including const, PSSA, etc.)}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00055}00055       \textcolor{keywordtype}{integer(kind=c\_int)}, \textcolor{keywordtype}{value} :: n\_state\_var\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00056}00056 \textcolor{comment}{      !> Number of cells to compute}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00057}00057       \textcolor{keywordtype}{integer(kind=c\_int)}, \textcolor{keywordtype}{value} :: n\_cells\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00058}00058 \textcolor{comment}{      !> Pointer to array of state variable types (solver, constant, PSSA)}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00059}00059       \textcolor{keywordtype}{type}(c\_ptr), \textcolor{keywordtype}{value} :: var\_type\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00060}00060 \textcolor{comment}{      !> Number of reactions to solve}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00061}00061       \textcolor{keywordtype}{integer(kind=c\_int)}, \textcolor{keywordtype}{value} :: n\_rxn\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00062}00062 \textcolor{comment}{      !> Total number of integer parameters for all reactions}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00063}00063       \textcolor{keywordtype}{integer(kind=c\_int)}, \textcolor{keywordtype}{value} :: n\_rxn\_int\_param\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00064}00064 \textcolor{comment}{      !> Total number of floating-\/point parameters for all reactions}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00065}00065       \textcolor{keywordtype}{integer(kind=c\_int)}, \textcolor{keywordtype}{value} :: n\_rxn\_float\_param\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00066}00066 \textcolor{comment}{      !> Total number of environment-\/dependent parameters for all reactions}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00067}00067       \textcolor{keywordtype}{integer(kind=c\_int)}, \textcolor{keywordtype}{value} :: n\_rxn\_env\_param\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00068}00068 \textcolor{comment}{      !> Number of aerosol phases}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00069}00069       \textcolor{keywordtype}{integer(kind=c\_int)}, \textcolor{keywordtype}{value} :: n\_aero\_phase\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00070}00070 \textcolor{comment}{      !> Total number of integer parameters for all aerosol phases}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00071}00071       \textcolor{keywordtype}{integer(kind=c\_int)}, \textcolor{keywordtype}{value} :: n\_aero\_phase\_int\_param\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00072}00072 \textcolor{comment}{      !> Total number of floating-\/point parameters for all aerosol phases}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00073}00073       \textcolor{keywordtype}{integer(kind=c\_int)}, \textcolor{keywordtype}{value} :: n\_aero\_phase\_float\_param\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00074}00074 \textcolor{comment}{      !> Number of aerosol representations}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00075}00075       \textcolor{keywordtype}{integer(kind=c\_int)}, \textcolor{keywordtype}{value} :: n\_aero\_rep\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00076}00076 \textcolor{comment}{      !> Total number of integer parameters for all aerosol representations}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00077}00077       \textcolor{keywordtype}{integer(kind=c\_int)}, \textcolor{keywordtype}{value} :: n\_aero\_rep\_int\_param\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00078}00078 \textcolor{comment}{      !> Total number of floating-\/point parameters for all aerosol}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00079}00079 \textcolor{comment}{      !! representations}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00080}00080       \textcolor{keywordtype}{integer(kind=c\_int)}, \textcolor{keywordtype}{value} :: n\_aero\_rep\_float\_param\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00081}00081 \textcolor{comment}{      !> Total number of environment-\/dependent parameters for all aerosol}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00082}00082 \textcolor{comment}{      !> representations}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00083}00083       \textcolor{keywordtype}{integer(kind=c\_int)}, \textcolor{keywordtype}{value} :: n\_aero\_rep\_env\_param\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00084}00084 \textcolor{comment}{      !> Number of sub models}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00085}00085       \textcolor{keywordtype}{integer(kind=c\_int)}, \textcolor{keywordtype}{value} :: n\_sub\_model\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00086}00086 \textcolor{comment}{      !> Total number of integer parameters for all sub models}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00087}00087       \textcolor{keywordtype}{integer(kind=c\_int)}, \textcolor{keywordtype}{value} :: n\_sub\_model\_int\_param\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00088}00088 \textcolor{comment}{      !> Total number of floating-\/point parameters for all sub models}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00089}00089       \textcolor{keywordtype}{integer(kind=c\_int)}, \textcolor{keywordtype}{value} :: n\_sub\_model\_float\_param\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00090}00090 \textcolor{comment}{      !> Total number of environment-\/dependent parameters for all sub models}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00091}00091       \textcolor{keywordtype}{integer(kind=c\_int)}, \textcolor{keywordtype}{value} :: n\_sub\_model\_env\_param}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00092}00092     \textcolor{keyword}{end function }\mbox{\hyperlink{interfacecamp__camp__solver__data_1_1solver__new}{solver\_new}}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00093}00093 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00094}00094 \textcolor{comment}{    !> Solver initialization}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00095}\mbox{\hyperlink{interfacecamp__camp__solver__data_1_1solver__initialize_ad21ef9b98e9e37bd196ac5d2e7dcbe0b}{00095}}     \textcolor{keyword}{subroutine }\mbox{\hyperlink{interfacecamp__camp__solver__data_1_1solver__initialize}{solver\_initialize}}(solver\_data, abs\_tol, rel\_tol, max\_steps, \&}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00096}00096                     max\_conv\_fails) \textcolor{keyword}{bind (c)}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00097}00097       \textcolor{keywordtype}{use }iso\_c\_binding\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00098}00098 \textcolor{comment}{      !> Pointer to a SolverData object}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00099}00099       \textcolor{keywordtype}{type}(c\_ptr), \textcolor{keywordtype}{value} :: solver\_data\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00100}00100 \textcolor{comment}{      !> Pointer to array of absolute toleracnes}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00101}00101       \textcolor{keywordtype}{type}(c\_ptr), \textcolor{keywordtype}{value} :: abs\_tol\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00102}00102 \textcolor{comment}{      !> Relative integration tolerance}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00103}00103 \textcolor{keywordtype}{      real}(kind=c\_double), \textcolor{keywordtype}{value} :: rel\_tol\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00104}00104 \textcolor{comment}{      !> Maximum number of internal integration steps}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00105}00105       \textcolor{keywordtype}{integer(kind=c\_int)}, \textcolor{keywordtype}{value} :: max\_steps\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00106}00106 \textcolor{comment}{      !> Maximum number of convergence failures}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00107}00107       \textcolor{keywordtype}{integer(kind=c\_int)}, \textcolor{keywordtype}{value} :: max\_conv\_fails}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00108}00108     \textcolor{keyword}{end subroutine }\mbox{\hyperlink{interfacecamp__camp__solver__data_1_1solver__initialize}{solver\_initialize}}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00109}00109 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00110}00110 \textcolor{preprocessor}{\#ifdef CAMP\_DEBUG}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00111}00111 \textcolor{preprocessor}{}\textcolor{comment}{    !> Set the debug output flag for the solver}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00112}00112     \textcolor{keyword}{integer(kind=c\_int) }\textcolor{keyword}{function }solver\_set\_debug\_out(solver\_data, \&}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00113}00113                     do\_output) \textcolor{keyword}{bind (c)}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00114}00114       \textcolor{keywordtype}{use }iso\_c\_binding\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00115}00115 \textcolor{comment}{      !> Pointer to a SolverData object}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00116}00116       \textcolor{keywordtype}{type}(c\_ptr), \textcolor{keywordtype}{value} :: solver\_data\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00117}00117 \textcolor{comment}{      !> Flag indicating whether to output debugging information}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00118}00118       \textcolor{keywordtype}{integer(kind=c\_int)}, \textcolor{keywordtype}{value} :: do\_output}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00119}00119     \textcolor{keyword}{end function }solver\_set\_debug\_out}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00120}00120 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00121}00121 \textcolor{comment}{    !> Set the Jacobian evaluation flag for the solver}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00122}00122     \textcolor{keyword}{integer(kind=c\_int) }\textcolor{keyword}{function }solver\_set\_eval\_jac(solver\_data, \&}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00123}00123                     eval\_Jac) \textcolor{keyword}{bind (c)}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00124}00124       \textcolor{keywordtype}{use }iso\_c\_binding\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00125}00125 \textcolor{comment}{      !> Pointer to a SolverData object}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00126}00126       \textcolor{keywordtype}{type}(c\_ptr), \textcolor{keywordtype}{value} :: solver\_data\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00127}00127 \textcolor{comment}{      !> Flag indicating whether to evaluate the Jacobian during solving}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00128}00128       \textcolor{keywordtype}{integer(kind=c\_int)}, \textcolor{keywordtype}{value} :: eval\_Jac}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00129}00129     \textcolor{keyword}{end function }solver\_set\_eval\_jac}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00130}00130 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00131}00131 \textcolor{preprocessor}{}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00132}00132 \textcolor{comment}{    !> Run the solver}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00133}\mbox{\hyperlink{interfacecamp__camp__solver__data_1_1solver__run_a99ba3f2eaa3a04552708281f745722d5}{00133}}     \textcolor{keyword}{integer(kind=c\_int) }\textcolor{keyword}{function }\mbox{\hyperlink{interfacecamp__camp__solver__data_1_1solver__run}{solver\_run}}(solver\_data, state, env, \&}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00134}00134                     t\_initial, t\_final) \textcolor{keyword}{bind (c)}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00135}00135       \textcolor{keywordtype}{use }iso\_c\_binding\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00136}00136 \textcolor{comment}{      !> Pointer to the initialized solver data}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00137}00137       \textcolor{keywordtype}{type}(c\_ptr), \textcolor{keywordtype}{value} :: solver\_data\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00138}00138 \textcolor{comment}{      !> Pointer to the state array}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00139}00139       \textcolor{keywordtype}{type}(c\_ptr), \textcolor{keywordtype}{value} :: state\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00140}00140 \textcolor{comment}{      !> Pointer to the environmental state array}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00141}00141       \textcolor{keywordtype}{type}(c\_ptr), \textcolor{keywordtype}{value} :: env\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00142}00142 \textcolor{comment}{      !> Initial time (s)}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00143}00143 \textcolor{keywordtype}{      real}(kind=c\_double), \textcolor{keywordtype}{value} :: t\_initial\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00144}00144 \textcolor{comment}{      !> Final time (s)}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00145}00145 \textcolor{keywordtype}{      real}(kind=c\_double), \textcolor{keywordtype}{value} :: t\_final}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00146}00146     \textcolor{keyword}{end function }\mbox{\hyperlink{interfacecamp__camp__solver__data_1_1solver__run}{solver\_run}}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00147}00147 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00148}00148 \textcolor{comment}{    !> Reset the solver function timers}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00149}\mbox{\hyperlink{interfacecamp__camp__solver__data_1_1solver__reset__timers_aa1bf57ae4dc0606601871919889683f6}{00149}}     \textcolor{keyword}{subroutine }\mbox{\hyperlink{interfacecamp__camp__solver__data_1_1solver__reset__timers}{solver\_reset\_timers}}( solver\_data ) \textcolor{keyword}{bind(c)}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00150}00150       \textcolor{keywordtype}{use }iso\_c\_binding\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00151}00151 \textcolor{comment}{      !> Pointer to the solver data}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00152}00152       \textcolor{keywordtype}{type}(c\_ptr), \textcolor{keywordtype}{value} :: solver\_data}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00153}00153     \textcolor{keyword}{end subroutine }\mbox{\hyperlink{interfacecamp__camp__solver__data_1_1solver__reset__timers}{solver\_reset\_timers}}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00154}00154 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00155}00155 \textcolor{comment}{    !> Get the solver statistics}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00156}\mbox{\hyperlink{interfacecamp__camp__solver__data_1_1solver__get__statistics_a2d7cb7438e764ae72c3595e7121a2879}{00156}}     \textcolor{keyword}{subroutine }\mbox{\hyperlink{interfacecamp__camp__solver__data_1_1solver__get__statistics}{solver\_get\_statistics}}( solver\_data, solver\_flag, num\_steps, \&}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00157}00157                     RHS\_evals, LS\_setups, error\_test\_fails, NLS\_iters, \&}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00158}00158                     NLS\_convergence\_fails, DLS\_Jac\_evals, DLS\_RHS\_evals, \&}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00159}00159                     last\_time\_step\_\_s, next\_time\_step\_\_s, Jac\_eval\_fails, \&}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00160}00160                     RHS\_evals\_total, Jac\_evals\_total, RHS\_time\_\_s, \&}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00161}00161                     Jac\_time\_\_s, max\_loss\_precision) \textcolor{keyword}{bind (c)}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00162}00162       \textcolor{keywordtype}{use }iso\_c\_binding\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00163}00163 \textcolor{comment}{      !> Pointer to the solver data}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00164}00164       \textcolor{keywordtype}{type}(c\_ptr), \textcolor{keywordtype}{value} :: solver\_data\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00165}00165 \textcolor{comment}{      !> Last flag returned by the solver}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00166}00166       \textcolor{keywordtype}{type}(c\_ptr), \textcolor{keywordtype}{value} :: solver\_flag\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00167}00167 \textcolor{comment}{      !> Number of steps}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00168}00168       \textcolor{keywordtype}{type}(c\_ptr), \textcolor{keywordtype}{value} :: num\_steps\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00169}00169 \textcolor{comment}{      !> Right-\/hand side evaluations}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00170}00170       \textcolor{keywordtype}{type}(c\_ptr), \textcolor{keywordtype}{value} :: RHS\_evals\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00171}00171 \textcolor{comment}{      !> Linear solver setups}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00172}00172       \textcolor{keywordtype}{type}(c\_ptr), \textcolor{keywordtype}{value} :: LS\_setups\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00173}00173 \textcolor{comment}{      !> Error test failures}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00174}00174       \textcolor{keywordtype}{type}(c\_ptr), \textcolor{keywordtype}{value} :: error\_test\_fails\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00175}00175 \textcolor{comment}{      !> Non-\/Linear solver iterations}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00176}00176       \textcolor{keywordtype}{type}(c\_ptr), \textcolor{keywordtype}{value} :: NLS\_iters\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00177}00177 \textcolor{comment}{      !> Non-\/Linear solver failures}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00178}00178       \textcolor{keywordtype}{type}(c\_ptr), \textcolor{keywordtype}{value} :: NLS\_convergence\_fails\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00179}00179 \textcolor{comment}{      !> Direct Linear Solver Jacobian evaluations}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00180}00180       \textcolor{keywordtype}{type}(c\_ptr), \textcolor{keywordtype}{value} :: DLS\_Jac\_evals\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00181}00181 \textcolor{comment}{      !> Direct Linear Solver right-\/hand side evaluations}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00182}00182       \textcolor{keywordtype}{type}(c\_ptr), \textcolor{keywordtype}{value} :: DLS\_RHS\_evals\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00183}00183 \textcolor{comment}{      !> Last time step [s]}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00184}00184       \textcolor{keywordtype}{type}(c\_ptr), \textcolor{keywordtype}{value} :: last\_time\_step\_\_s\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00185}00185 \textcolor{comment}{      !> Next time step [s]}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00186}00186       \textcolor{keywordtype}{type}(c\_ptr), \textcolor{keywordtype}{value} :: next\_time\_step\_\_s\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00187}00187 \textcolor{comment}{      !> Number of Jacobian evaluation failures}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00188}00188       \textcolor{keywordtype}{type}(c\_ptr), \textcolor{keywordtype}{value} :: Jac\_eval\_fails\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00189}00189 \textcolor{comment}{      !> Total number of calls to `f()`}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00190}00190       \textcolor{keywordtype}{type}(c\_ptr), \textcolor{keywordtype}{value} :: RHS\_evals\_total\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00191}00191 \textcolor{comment}{      !> Total number of calls to `Jac()`}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00192}00192       \textcolor{keywordtype}{type}(c\_ptr), \textcolor{keywordtype}{value} :: Jac\_evals\_total\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00193}00193 \textcolor{comment}{      !> Compute time for calls to `f()`}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00194}00194       \textcolor{keywordtype}{type}(c\_ptr), \textcolor{keywordtype}{value} :: RHS\_time\_\_s\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00195}00195 \textcolor{comment}{      !> Compute time for calls to `Jac()`}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00196}00196       \textcolor{keywordtype}{type}(c\_ptr), \textcolor{keywordtype}{value} :: Jac\_time\_\_s\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00197}00197 \textcolor{comment}{      !> Maximum loss of precision on last call the f()}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00198}00198       \textcolor{keywordtype}{type}(c\_ptr), \textcolor{keywordtype}{value} :: max\_loss\_precision}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00199}00199     \textcolor{keyword}{end subroutine }\mbox{\hyperlink{interfacecamp__camp__solver__data_1_1solver__get__statistics}{solver\_get\_statistics}}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00200}00200 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00201}00201 \textcolor{comment}{    !> Add condensed reaction data to the solver data block}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00202}\mbox{\hyperlink{interfacecamp__camp__solver__data_1_1rxn__add__condensed__data_a5d7d11b235d11220f273d5635c5c6ccf}{00202}}     \textcolor{keyword}{subroutine }\mbox{\hyperlink{interfacecamp__camp__solver__data_1_1rxn__add__condensed__data}{rxn\_add\_condensed\_data}}(rxn\_type, n\_int\_param, \&}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00203}00203                     n\_float\_param, n\_env\_param, int\_param, float\_param, \&}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00204}00204                     solver\_data)  \textcolor{keyword}{bind (c)}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00205}00205       \textcolor{keywordtype}{use }iso\_c\_binding\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00206}00206 \textcolor{comment}{      !> Reaction type}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00207}00207       \textcolor{keywordtype}{integer(kind=c\_int)}, \textcolor{keywordtype}{value} :: rxn\_type\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00208}00208 \textcolor{comment}{      !> Number of integer parameters to add}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00209}00209       \textcolor{keywordtype}{integer(kind=c\_int)}, \textcolor{keywordtype}{value} :: n\_int\_param\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00210}00210 \textcolor{comment}{      !> Number of floating-\/point parameters to add}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00211}00211       \textcolor{keywordtype}{integer(kind=c\_int)}, \textcolor{keywordtype}{value} :: n\_float\_param\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00212}00212 \textcolor{comment}{      !> Number of environment-\/dependent parameters to add}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00213}00213       \textcolor{keywordtype}{integer(kind=c\_int)}, \textcolor{keywordtype}{value} :: n\_env\_param\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00214}00214 \textcolor{comment}{      !> Pointer to the integer parameter array}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00215}00215       \textcolor{keywordtype}{type}(c\_ptr), \textcolor{keywordtype}{value} :: int\_param\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00216}00216 \textcolor{comment}{      !> Pointer to the floating-\/point parameter array}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00217}00217       \textcolor{keywordtype}{type}(c\_ptr), \textcolor{keywordtype}{value} :: float\_param\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00218}00218 \textcolor{comment}{      !> Pointer to the solver data}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00219}00219       \textcolor{keywordtype}{type}(c\_ptr), \textcolor{keywordtype}{value} :: solver\_data}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00220}00220     \textcolor{keyword}{end subroutine }\mbox{\hyperlink{interfacecamp__camp__solver__data_1_1rxn__add__condensed__data}{rxn\_add\_condensed\_data}}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00221}00221 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00222}00222 \textcolor{comment}{    !> Update reaction data}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00223}\mbox{\hyperlink{interfacecamp__camp__solver__data_1_1rxn__update__data_aeb7b25c136f0bd5590310ce13bd5f3c2}{00223}}     \textcolor{keyword}{subroutine }\mbox{\hyperlink{interfacecamp__camp__solver__data_1_1rxn__update__data}{rxn\_update\_data}}(cell\_id, rxn\_id, rxn\_type, update\_data, \&}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00224}00224         solver\_data) \textcolor{keyword}{bind(c)}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00225}00225       \textcolor{keywordtype}{use }iso\_c\_binding\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00226}00226 \textcolor{comment}{      !> Grid cell to update}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00227}00227       \textcolor{keywordtype}{integer(kind=c\_int)}, \textcolor{keywordtype}{value} :: cell\_id\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00228}00228 \textcolor{comment}{      !> Reaction id}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00229}00229       \textcolor{keywordtype}{integer(kind=c\_int)} :: rxn\_id\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00230}00230 \textcolor{comment}{      !> Reaction type to updateto update}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00231}00231       \textcolor{keywordtype}{integer(kind=c\_int)}, \textcolor{keywordtype}{value} :: rxn\_type\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00232}00232 \textcolor{comment}{      !> Data required by reaction for updates}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00233}00233       \textcolor{keywordtype}{type}(c\_ptr), \textcolor{keywordtype}{value} :: update\_data\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00234}00234 \textcolor{comment}{      !> Solver data}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00235}00235       \textcolor{keywordtype}{type}(c\_ptr), \textcolor{keywordtype}{value} :: solver\_data}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00236}00236     \textcolor{keyword}{end subroutine }\mbox{\hyperlink{interfacecamp__camp__solver__data_1_1rxn__update__data}{rxn\_update\_data}}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00237}00237 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00238}00238 \textcolor{comment}{    !> Print the solver data}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00239}\mbox{\hyperlink{interfacecamp__camp__solver__data_1_1rxn__print__data_adee5ead75d807a38e3aff3049c68548c}{00239}}     \textcolor{keyword}{subroutine }\mbox{\hyperlink{interfacecamp__camp__solver__data_1_1rxn__print__data}{rxn\_print\_data}}(solver\_data) \textcolor{keyword}{bind(c)}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00240}00240       \textcolor{keywordtype}{use }iso\_c\_binding\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00241}00241 \textcolor{comment}{      !> Solver data}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00242}00242       \textcolor{keywordtype}{type}(c\_ptr), \textcolor{keywordtype}{value} :: solver\_data}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00243}00243     \textcolor{keyword}{end subroutine }\mbox{\hyperlink{interfacecamp__camp__solver__data_1_1rxn__print__data}{rxn\_print\_data}}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00244}00244 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00245}00245 \textcolor{comment}{    !> Add condensed sub model data to the solver data block}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00246}\mbox{\hyperlink{interfacecamp__camp__solver__data_1_1sub__model__add__condensed__data_ae7037a55a61ff9d14654572df2bbbe66}{00246}}     \textcolor{keyword}{subroutine }\mbox{\hyperlink{interfacecamp__camp__solver__data_1_1sub__model__add__condensed__data}{sub\_model\_add\_condensed\_data}}(sub\_model\_type, n\_int\_param, \&}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00247}00247                   n\_float\_param, n\_env\_param, int\_param, float\_param, \&}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00248}00248                   solver\_data) \textcolor{keyword}{bind(c)}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00249}00249       \textcolor{keywordtype}{use }iso\_c\_binding\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00250}00250 \textcolor{comment}{      !> Sub model  type}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00251}00251       \textcolor{keywordtype}{integer(kind=c\_int)}, \textcolor{keywordtype}{value} :: sub\_model\_type\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00252}00252 \textcolor{comment}{      !> Number of integer parameters to add}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00253}00253       \textcolor{keywordtype}{integer(kind=c\_int)}, \textcolor{keywordtype}{value} :: n\_int\_param\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00254}00254 \textcolor{comment}{      !> Number of floating-\/point parameters to add}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00255}00255       \textcolor{keywordtype}{integer(kind=c\_int)}, \textcolor{keywordtype}{value} :: n\_float\_param\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00256}00256 \textcolor{comment}{      !> Number of environment-\/dependent parameters to add}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00257}00257       \textcolor{keywordtype}{integer(kind=c\_int)}, \textcolor{keywordtype}{value} :: n\_env\_param\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00258}00258 \textcolor{comment}{      !> Pointer to the integer parameter array}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00259}00259       \textcolor{keywordtype}{type}(c\_ptr), \textcolor{keywordtype}{value} :: int\_param\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00260}00260 \textcolor{comment}{      !> Pointer to the floating-\/point parameter array}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00261}00261       \textcolor{keywordtype}{type}(c\_ptr), \textcolor{keywordtype}{value} :: float\_param\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00262}00262 \textcolor{comment}{      !> Pointer to the solver data}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00263}00263       \textcolor{keywordtype}{type}(c\_ptr), \textcolor{keywordtype}{value} :: solver\_data}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00264}00264     \textcolor{keyword}{end subroutine }\mbox{\hyperlink{interfacecamp__camp__solver__data_1_1sub__model__add__condensed__data}{sub\_model\_add\_condensed\_data}}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00265}00265 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00266}00266 \textcolor{comment}{    !> Update reaction data}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00267}\mbox{\hyperlink{interfacecamp__camp__solver__data_1_1sub__model__update__data_a22cbef670bb9eaf8fcadb6549497426e}{00267}}     \textcolor{keyword}{subroutine }\mbox{\hyperlink{interfacecamp__camp__solver__data_1_1sub__model__update__data}{sub\_model\_update\_data}}(cell\_id, sub\_model\_id, sub\_model\_type, \&}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00268}00268         update\_data, solver\_data) \textcolor{keyword}{bind(c)}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00269}00269       \textcolor{keywordtype}{use }iso\_c\_binding\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00270}00270 \textcolor{comment}{      !> Grid cell to update}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00271}00271       \textcolor{keywordtype}{integer(kind=c\_int)}, \textcolor{keywordtype}{value} :: cell\_id\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00272}00272 \textcolor{comment}{      !> Sub model solver id}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00273}00273       \textcolor{keywordtype}{integer(kind=c\_int)} :: sub\_model\_id\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00274}00274 \textcolor{comment}{      !> Reaction type to updateto update}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00275}00275       \textcolor{keywordtype}{integer(kind=c\_int)}, \textcolor{keywordtype}{value} :: sub\_model\_type\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00276}00276 \textcolor{comment}{      !> Data required by reaction for updates}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00277}00277       \textcolor{keywordtype}{type}(c\_ptr), \textcolor{keywordtype}{value} :: update\_data\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00278}00278 \textcolor{comment}{      !> Solver data}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00279}00279       \textcolor{keywordtype}{type}(c\_ptr), \textcolor{keywordtype}{value} :: solver\_data}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00280}00280     \textcolor{keyword}{end subroutine }\mbox{\hyperlink{interfacecamp__camp__solver__data_1_1sub__model__update__data}{sub\_model\_update\_data}}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00281}00281 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00282}00282 \textcolor{comment}{    !> Print the solver data}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00283}\mbox{\hyperlink{interfacecamp__camp__solver__data_1_1sub__model__print__data_a4ee5ddda31053105006eedbdb370df81}{00283}}     \textcolor{keyword}{subroutine }\mbox{\hyperlink{interfacecamp__camp__solver__data_1_1sub__model__print__data}{sub\_model\_print\_data}}(solver\_data) \textcolor{keyword}{bind(c)}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00284}00284       \textcolor{keywordtype}{use }iso\_c\_binding\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00285}00285 \textcolor{comment}{      !> Solver data}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00286}00286       \textcolor{keywordtype}{type}(c\_ptr), \textcolor{keywordtype}{value} :: solver\_data}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00287}00287     \textcolor{keyword}{end subroutine }\mbox{\hyperlink{interfacecamp__camp__solver__data_1_1sub__model__print__data}{sub\_model\_print\_data}}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00288}00288 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00289}00289 \textcolor{comment}{    !> Add condensed aerosol phase data to the solver data block}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00290}\mbox{\hyperlink{interfacecamp__camp__solver__data_1_1aero__phase__add__condensed__data_a10f55f213869c736e4bbd8e6541bd322}{00290}}     \textcolor{keyword}{subroutine }\mbox{\hyperlink{interfacecamp__camp__solver__data_1_1aero__phase__add__condensed__data}{aero\_phase\_add\_condensed\_data}}(n\_int\_param, n\_float\_param, \&}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00291}00291                   int\_param, float\_param, solver\_data) \textcolor{keyword}{bind(c)}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00292}00292       \textcolor{keywordtype}{use }iso\_c\_binding\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00293}00293 \textcolor{comment}{      !> Number of integer parameters to add}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00294}00294       \textcolor{keywordtype}{integer(kind=c\_int)}, \textcolor{keywordtype}{value} :: n\_int\_param\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00295}00295 \textcolor{comment}{      !> Number of floating-\/point parameters to add}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00296}00296       \textcolor{keywordtype}{integer(kind=c\_int)}, \textcolor{keywordtype}{value} :: n\_float\_param\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00297}00297 \textcolor{comment}{      !> Pointer to the integer parameter array}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00298}00298       \textcolor{keywordtype}{type}(c\_ptr), \textcolor{keywordtype}{value} :: int\_param\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00299}00299 \textcolor{comment}{      !> Pointer to the floating-\/point parameter array}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00300}00300       \textcolor{keywordtype}{type}(c\_ptr), \textcolor{keywordtype}{value} :: float\_param\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00301}00301 \textcolor{comment}{      !> Pointer to the solver data}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00302}00302       \textcolor{keywordtype}{type}(c\_ptr), \textcolor{keywordtype}{value} :: solver\_data}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00303}00303     \textcolor{keyword}{end subroutine }\mbox{\hyperlink{interfacecamp__camp__solver__data_1_1aero__phase__add__condensed__data}{aero\_phase\_add\_condensed\_data}}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00304}00304 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00305}00305 \textcolor{comment}{    !> Print the solver data}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00306}\mbox{\hyperlink{interfacecamp__camp__solver__data_1_1aero__phase__print__data_a589115f2a7831dd60b475f2adfe227c4}{00306}}     \textcolor{keyword}{subroutine }\mbox{\hyperlink{interfacecamp__camp__solver__data_1_1aero__phase__print__data}{aero\_phase\_print\_data}}(solver\_data) \textcolor{keyword}{bind(c)}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00307}00307       \textcolor{keywordtype}{use }iso\_c\_binding\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00308}00308 \textcolor{comment}{      !> Solver data}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00309}00309       \textcolor{keywordtype}{type}(c\_ptr), \textcolor{keywordtype}{value} :: solver\_data}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00310}00310     \textcolor{keyword}{end subroutine }\mbox{\hyperlink{interfacecamp__camp__solver__data_1_1aero__phase__print__data}{aero\_phase\_print\_data}}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00311}00311 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00312}00312 \textcolor{comment}{    !> Add condensed aerosol representation data to the solver data block}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00313}\mbox{\hyperlink{interfacecamp__camp__solver__data_1_1aero__rep__add__condensed__data_a7663a9eaf6df095141c6bae3bb95b1de}{00313}}     \textcolor{keyword}{subroutine }\mbox{\hyperlink{interfacecamp__camp__solver__data_1_1aero__rep__add__condensed__data}{aero\_rep\_add\_condensed\_data}}(aero\_rep\_type, n\_int\_param, \&}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00314}00314                   n\_float\_param, n\_env\_param, int\_param, float\_param, \&}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00315}00315                   solver\_data) \textcolor{keyword}{bind(c)}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00316}00316       \textcolor{keywordtype}{use }iso\_c\_binding\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00317}00317 \textcolor{comment}{      !> Aerosol representation type}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00318}00318       \textcolor{keywordtype}{integer(kind=c\_int)}, \textcolor{keywordtype}{value} :: aero\_rep\_type\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00319}00319 \textcolor{comment}{      !> Number of integer parameters to add}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00320}00320       \textcolor{keywordtype}{integer(kind=c\_int)}, \textcolor{keywordtype}{value} :: n\_int\_param\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00321}00321 \textcolor{comment}{      !> Number of floating-\/point parameters to add}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00322}00322       \textcolor{keywordtype}{integer(kind=c\_int)}, \textcolor{keywordtype}{value} :: n\_float\_param\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00323}00323 \textcolor{comment}{      !> Number of environment-\/dependent parameters to add}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00324}00324       \textcolor{keywordtype}{integer(kind=c\_int)}, \textcolor{keywordtype}{value} :: n\_env\_param\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00325}00325 \textcolor{comment}{      !> Pointer to the integer parameter array}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00326}00326       \textcolor{keywordtype}{type}(c\_ptr), \textcolor{keywordtype}{value} :: int\_param\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00327}00327 \textcolor{comment}{      !> Pointer to the floating-\/point parameter array}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00328}00328       \textcolor{keywordtype}{type}(c\_ptr), \textcolor{keywordtype}{value} :: float\_param\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00329}00329 \textcolor{comment}{      !> Pointer to the solver data}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00330}00330       \textcolor{keywordtype}{type}(c\_ptr), \textcolor{keywordtype}{value} :: solver\_data}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00331}00331     \textcolor{keyword}{end subroutine }\mbox{\hyperlink{interfacecamp__camp__solver__data_1_1aero__rep__add__condensed__data}{aero\_rep\_add\_condensed\_data}}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00332}00332 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00333}00333 \textcolor{comment}{    !> Update aerosol representation data}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00334}\mbox{\hyperlink{interfacecamp__camp__solver__data_1_1aero__rep__update__data_a517a800978490d4c3115fffae6f7a098}{00334}}     \textcolor{keyword}{subroutine }\mbox{\hyperlink{interfacecamp__camp__solver__data_1_1aero__rep__update__data}{aero\_rep\_update\_data}}(cell\_id, aero\_rep\_id, aero\_rep\_type, \&}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00335}00335         update\_data, solver\_data)  \textcolor{keyword}{bind(c)}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00336}00336       \textcolor{keywordtype}{use }iso\_c\_binding\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00337}00337 \textcolor{comment}{      !> Grid cell to update}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00338}00338       \textcolor{keywordtype}{integer(kind=c\_int)}, \textcolor{keywordtype}{value} :: cell\_id\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00339}00339 \textcolor{comment}{      !> Aerosol representation solver id}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00340}00340       \textcolor{keywordtype}{integer(kind=c\_int)} :: aero\_rep\_id\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00341}00341 \textcolor{comment}{      !> Aerosol representation type to updateto update}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00342}00342       \textcolor{keywordtype}{integer(kind=c\_int)}, \textcolor{keywordtype}{value} :: aero\_rep\_type\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00343}00343 \textcolor{comment}{      !> Data required by aerosol representation for updates}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00344}00344       \textcolor{keywordtype}{type}(c\_ptr), \textcolor{keywordtype}{value} :: update\_data\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00345}00345 \textcolor{comment}{      !> Solver data}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00346}00346       \textcolor{keywordtype}{type}(c\_ptr), \textcolor{keywordtype}{value} :: solver\_data}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00347}00347     \textcolor{keyword}{end subroutine }\mbox{\hyperlink{interfacecamp__camp__solver__data_1_1aero__rep__update__data}{aero\_rep\_update\_data}}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00348}00348 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00349}00349 \textcolor{comment}{    !> Print the aerosol representation data}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00350}\mbox{\hyperlink{interfacecamp__camp__solver__data_1_1aero__rep__print__data_a81833596d3f71bb0080e54afe7cc0695}{00350}}     \textcolor{keyword}{subroutine }\mbox{\hyperlink{interfacecamp__camp__solver__data_1_1aero__rep__print__data}{aero\_rep\_print\_data}}(solver\_data) \textcolor{keyword}{bind(c)}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00351}00351       \textcolor{keywordtype}{use }iso\_c\_binding\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00352}00352 \textcolor{comment}{      !> Pointer to the solver data}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00353}00353       \textcolor{keywordtype}{type}(c\_ptr), \textcolor{keywordtype}{value} :: solver\_data}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00354}00354     \textcolor{keyword}{end subroutine }\mbox{\hyperlink{interfacecamp__camp__solver__data_1_1aero__rep__print__data}{aero\_rep\_print\_data}}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00355}00355 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00356}00356 \textcolor{comment}{    !> Free the memory associated with a solver}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00357}\mbox{\hyperlink{interfacecamp__camp__solver__data_1_1solver__free_a163e312e204feeea7181770dc9bc8e78}{00357}}     \textcolor{keywordtype}{pure} \textcolor{keyword}{subroutine }\mbox{\hyperlink{interfacecamp__camp__solver__data_1_1solver__free}{solver\_free}}(solver\_data) \textcolor{keyword}{bind(c)}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00358}00358       \textcolor{keywordtype}{use }iso\_c\_binding\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00359}00359 \textcolor{comment}{      !> Pointer to the solver data}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00360}00360       \textcolor{keywordtype}{type}(c\_ptr), \textcolor{keywordtype}{value}, \textcolor{keywordtype}{intent(in)} :: solver\_data}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00361}00361     \textcolor{keyword}{end subroutine }\mbox{\hyperlink{interfacecamp__camp__solver__data_1_1solver__free}{solver\_free}}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00362}00362 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00363}00363   \textcolor{keyword}{end interface}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00364}00364 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00365}00365 \textcolor{comment}{  !> Solver data}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00366}00366 \textcolor{comment}{  !!}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00367}00367 \textcolor{comment}{  !! Acts as the interface between the camp-\/chem module and the solver.}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00368}00368 \textcolor{comment}{  !! Instances of the type hold a pointer to a solver c object and provide}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00369}00369 \textcolor{comment}{  !! functions to initialize the solver with model data and run the solver}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00370}00370 \textcolor{comment}{  !! over a specified time step.}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00371}\mbox{\hyperlink{structcamp__camp__solver__data_1_1camp__solver__data__t}{00371}}   \textcolor{keyword}{type} :: \mbox{\hyperlink{structcamp__camp__solver__data_1_1camp__solver__data__t}{camp\_solver\_data\_t}}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00372}00372     \textcolor{keywordtype}{private}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00373}00373 \textcolor{comment}{    !> C Solver object}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00374}\mbox{\hyperlink{structcamp__camp__solver__data_1_1camp__solver__data__t_a60fe5ae83eba67e63196462a4fd7e802}{00374}}     \textcolor{keywordtype}{type}(c\_ptr), \textcolor{keywordtype}{public} :: solver\_c\_ptr\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00375}00375 \textcolor{comment}{    !> Relative tolerance for the integration}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00376}\mbox{\hyperlink{structcamp__camp__solver__data_1_1camp__solver__data__t_a2d34803c8a6080d9967dc493ddcbc5f9}{00376}} \textcolor{keywordtype}{    real}(kind=dp), \textcolor{keywordtype}{public} :: rel\_tol = \mbox{\hyperlink{namespacecamp__camp__solver__data_ac0c0056598910f8b5cca68b75d7460f4}{camp\_solver\_default\_rel\_tol}}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00377}00377 \textcolor{comment}{    !> Maximum number of timesteps}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00378}\mbox{\hyperlink{structcamp__camp__solver__data_1_1camp__solver__data__t_a81f469e0bc15eac2886bb21f22563448}{00378}}     \textcolor{keywordtype}{integer(kind=i\_kind)}, \textcolor{keywordtype}{public} :: max\_steps = \mbox{\hyperlink{namespacecamp__camp__solver__data_ae440ef611384ecf49647866444d9e65b}{camp\_solver\_default\_max\_steps}}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00379}00379 \textcolor{comment}{    !> Maximum number of convergence failures}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00380}\mbox{\hyperlink{structcamp__camp__solver__data_1_1camp__solver__data__t_a739f0eb1ee8791bb35da72e831a8b414}{00380}}     \textcolor{keywordtype}{integer(kind=i\_kind)}, \textcolor{keywordtype}{public} :: max\_conv\_fails = \&}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00381}00381             \mbox{\hyperlink{namespacecamp__camp__solver__data_ad7cc6d74aeef337af13d5809432d6580}{camp\_solver\_default\_max\_conv\_fails}}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00382}00382 \textcolor{comment}{    !> Flag indicating whether the solver was intialized}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00383}\mbox{\hyperlink{structcamp__camp__solver__data_1_1camp__solver__data__t_a0a0d6edcc997f9c33c267323ac7e16f3}{00383}}     \textcolor{keywordtype}{logical} :: initialized = .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c}{false}}.}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00384}00384   \textcolor{keyword}{contains}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00385}00385 \textcolor{comment}{    !> Initialize the solver}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00386}\mbox{\hyperlink{structcamp__camp__solver__data_1_1camp__solver__data__t_a848e45e3cef26cb32807ab7e31e10cd8}{00386}}     \textcolor{keywordtype}{procedure} :: \mbox{\hyperlink{namespacecamp__camp__solver__data_abf81c7a12d2d007b6b2925b53b1c3579}{initialize}}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00387}00387 \textcolor{comment}{    !> Update sub-\/model data}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00388}\mbox{\hyperlink{structcamp__camp__solver__data_1_1camp__solver__data__t_aa3e4f37d1c48e99d4d22366cebef35a0}{00388}}     \textcolor{keywordtype}{procedure} :: \mbox{\hyperlink{namespacecamp__camp__solver__data_a78dde4ec2c39ecc009fb4170379a80ed}{update\_sub\_model\_data}}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00389}00389 \textcolor{comment}{    !> Update reactions data}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00390}\mbox{\hyperlink{structcamp__camp__solver__data_1_1camp__solver__data__t_a556ecfe10cf6e8783df910c114a54981}{00390}}     \textcolor{keywordtype}{procedure} :: \mbox{\hyperlink{namespacecamp__camp__solver__data_a703e1dfb9ca03cbee99cdaa9959be2cb}{update\_rxn\_data}}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00391}00391 \textcolor{comment}{    !> Update aerosol representation data}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00392}\mbox{\hyperlink{structcamp__camp__solver__data_1_1camp__solver__data__t_aca5caeb82e8264d9b11f028182d28d72}{00392}}     \textcolor{keywordtype}{procedure} :: \mbox{\hyperlink{namespacecamp__camp__solver__data_adf4819e7439fd3f634d6e242dd7294f4}{update\_aero\_rep\_data}}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00393}00393 \textcolor{comment}{    !> Integrate over a given time step}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00394}\mbox{\hyperlink{structcamp__camp__solver__data_1_1camp__solver__data__t_a88094e8db883904f08b9ee05254a6959}{00394}}     \textcolor{keywordtype}{procedure} :: \mbox{\hyperlink{namespacecamp__camp__solver__data_ad854d73d29a9018f94db4666c3afe7fb}{solve}}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00395}00395 \textcolor{comment}{    !> Reset the solver function timers}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00396}\mbox{\hyperlink{structcamp__camp__solver__data_1_1camp__solver__data__t_aa5bc7829700283f7221acf15baecc009}{00396}}     \textcolor{keywordtype}{procedure}, \textcolor{keywordtype}{private} :: \mbox{\hyperlink{namespacecamp__camp__solver__data_a8d0f89a2f8ee620f2c87e19fb4aff155}{reset\_timers}}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00397}00397 \textcolor{comment}{    !> Get the solver statistics from the last run}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00398}\mbox{\hyperlink{structcamp__camp__solver__data_1_1camp__solver__data__t_af4fad242839b267024d003040fdd0bf4}{00398}}     \textcolor{keywordtype}{procedure}, \textcolor{keywordtype}{private} :: \mbox{\hyperlink{namespacecamp__camp__solver__data_a2f98a02209d71cedf443f279f19e8af4}{get\_solver\_stats}}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00399}00399 \textcolor{comment}{    !> Checks whether a solver is available}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00400}\mbox{\hyperlink{structcamp__camp__solver__data_1_1camp__solver__data__t_af196e8c1b35805362c1e3b45c28510df}{00400}}     \textcolor{keywordtype}{procedure} :: \mbox{\hyperlink{namespacecamp__camp__solver__data_a99614bacadbc849ac1dad41b05fc0686}{is\_solver\_available}}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00401}00401 \textcolor{comment}{    !> Print the solver data}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00402}\mbox{\hyperlink{structcamp__camp__solver__data_1_1camp__solver__data__t_ada76cc798a8103a6e8ae8470d32c9d48}{00402}}     \textcolor{keywordtype}{procedure} :: print => \mbox{\hyperlink{namespacecamp__camp__solver__data_a80cd4aadfc872604af5dfd9b74b846ec}{do\_print}}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00403}00403 \textcolor{comment}{    !> Finalize the solver data}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00404}\mbox{\hyperlink{structcamp__camp__solver__data_1_1camp__solver__data__t_a82d204adf356b743a0d75bc286c26cf5}{00404}}     final :: \mbox{\hyperlink{namespacecamp__camp__solver__data_a796df1d4fec284ab15d806853e81a7a2}{finalize}}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00405}00405   \textcolor{keyword}{end type }\mbox{\hyperlink{structcamp__camp__solver__data_1_1camp__solver__data__t}{camp\_solver\_data\_t}}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00406}00406 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00407}00407   \textcolor{comment}{! Constructor for camp\_solver\_data\_t}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00408}00408   \textcolor{keyword}{interface} \mbox{\hyperlink{structcamp__camp__solver__data_1_1camp__solver__data__t}{camp\_solver\_data\_t}}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00409}00409     \textcolor{keywordtype}{procedure} :: \mbox{\hyperlink{namespacecamp__camp__solver__data_a7b3f1b357c1e183b796a76eab992dcc5}{constructor}}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00410}00410   \textcolor{keyword}{end interface }\mbox{\hyperlink{structcamp__camp__solver__data_1_1camp__solver__data__t}{camp\_solver\_data\_t}}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00411}00411 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00412}00412 \textcolor{keyword}{contains}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00413}00413 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00414}00414 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00415}00415 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00416}00416 \textcolor{comment}{  !> Constructor for camp\_solver\_data\_t}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00417}\mbox{\hyperlink{namespacecamp__camp__solver__data_a7b3f1b357c1e183b796a76eab992dcc5}{00417}}   \textcolor{keyword}{function }\mbox{\hyperlink{namespacecamp__camp__solver__data_a7b3f1b357c1e183b796a76eab992dcc5}{constructor}}() \textcolor{keyword}{result} (new\_obj)}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00418}00418 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00419}00419 \textcolor{comment}{    !> New solver variable}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00420}00420     \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__camp__solver__data_1_1camp__solver__data__t}{camp\_solver\_data\_t}}), \textcolor{keywordtype}{pointer} :: new\_obj}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00421}00421 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00422}00422 \textcolor{comment}{    !> Allocate space for the new object}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00423}00423     \textcolor{keyword}{allocate}(new\_obj)}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00424}00424 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00425}00425   \textcolor{keyword}{end function }\mbox{\hyperlink{namespacecamp__camp__solver__data_a7b3f1b357c1e183b796a76eab992dcc5}{constructor}}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00426}00426 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00427}00427 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00428}00428 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00429}00429 \textcolor{comment}{  !> Initialize the solver}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00430}\mbox{\hyperlink{namespacecamp__camp__solver__data_abf81c7a12d2d007b6b2925b53b1c3579}{00430}}   \textcolor{keyword}{subroutine }\mbox{\hyperlink{namespacecamp__camp__solver__data_abf81c7a12d2d007b6b2925b53b1c3579}{initialize}}(this, var\_type, abs\_tol, mechanisms, aero\_phases, \&}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00431}00431                   aero\_reps, sub\_models, rxn\_phase, n\_cells)}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00432}00432 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00433}00433 \textcolor{comment}{    !> Solver data}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00434}00434     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__camp__solver__data_1_1camp__solver__data__t}{camp\_solver\_data\_t}}), \textcolor{keywordtype}{intent(inout)} :: this\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00435}00435 \textcolor{comment}{    !> Variable type for each species in the state array. This array must be}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00436}00436 \textcolor{comment}{    !! of the same length as the state array.}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00437}00437     \textcolor{keywordtype}{integer(kind=i\_kind)}, \textcolor{keywordtype}{allocatable}, \textcolor{keywordtype}{intent(in)} :: var\_type(:)\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00438}00438 \textcolor{comment}{    !> Absolute tolerance for each species in the state array. This array must}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00439}00439 \textcolor{comment}{    !! be of the same length as the state array. Values for CONST and PSSA}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00440}00440 \textcolor{comment}{    !! species will be ignored by the solver.}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00441}00441 \textcolor{keywordtype}{    real}(kind=dp), \textcolor{keywordtype}{allocatable}, \textcolor{keywordtype}{intent(in)} :: abs\_tol(:)\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00442}00442 \textcolor{comment}{    !> Mechanisms to include in solver}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00443}00443     \textcolor{keywordtype}{type}(mechanism\_data\_ptr), \textcolor{keywordtype}{pointer}, \textcolor{keywordtype}{intent(in)} :: mechanisms(:)\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00444}00444 \textcolor{comment}{    !> Aerosol phases to include}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00445}00445     \textcolor{keywordtype}{type}(aero\_phase\_data\_ptr), \textcolor{keywordtype}{pointer}, \textcolor{keywordtype}{intent(in)} :: aero\_phases(:)\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00446}00446 \textcolor{comment}{    !> Aerosol representations to include}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00447}00447     \textcolor{keywordtype}{type}(aero\_rep\_data\_ptr), \textcolor{keywordtype}{pointer}, \textcolor{keywordtype}{intent(in)} :: aero\_reps(:)\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00448}00448 \textcolor{comment}{    !> Sub models to include}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00449}00449     \textcolor{keywordtype}{type}(sub\_model\_data\_ptr), \textcolor{keywordtype}{pointer}, \textcolor{keywordtype}{intent(in)} :: sub\_models(:)\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00450}00450 \textcolor{comment}{    !> Reactions phase to solve -\/-\/ gas, aerosol, or both (default)}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00451}00451 \textcolor{comment}{    !! Use parameters in camp\_rxn\_data to specify phase:}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00452}00452 \textcolor{comment}{    !! GAS\_RXN, AERO\_RXN, GAS\_AERO\_RXN}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00453}00453     \textcolor{keywordtype}{integer(kind=i\_kind)}, \textcolor{keywordtype}{intent(in)} :: rxn\_phase\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00454}00454 \textcolor{comment}{    !> Number of cells to compute}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00455}00455     \textcolor{keywordtype}{integer(kind=i\_kind)}, \textcolor{keywordtype}{optional} :: n\_cells}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00456}00456 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00457}00457     \textcolor{comment}{! Variable types}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00458}00458     \textcolor{keywordtype}{integer(kind=c\_int)}, \textcolor{keywordtype}{pointer} :: var\_type\_c(:)}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00459}00459     \textcolor{comment}{! Absolute tolerances}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00460}00460 \textcolor{keywordtype}{    real}(kind=c\_double), \textcolor{keywordtype}{pointer} :: abs\_tol\_c(:)}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00461}00461     \textcolor{comment}{! Indices for iteration}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00462}00462     \textcolor{keywordtype}{integer(kind=i\_kind)} :: i\_mech, i\_rxn, i\_aero\_phase, i\_aero\_rep, \&}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00463}00463             i\_sub\_model}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00464}00464     \textcolor{comment}{! Reaction pointer}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00465}00465     \textcolor{keywordtype}{class}(rxn\_data\_t), \textcolor{keywordtype}{pointer} :: rxn}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00466}00466     \textcolor{comment}{! Reaction factory object for getting reaction type}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00467}00467     \textcolor{keywordtype}{type}(rxn\_factory\_t) :: rxn\_factory}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00468}00468     \textcolor{comment}{! Aerosol phase pointer}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00469}00469     \textcolor{keywordtype}{type}(aero\_phase\_data\_t), \textcolor{keywordtype}{pointer} :: aero\_phase}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00470}00470     \textcolor{comment}{! Aerosol representation pointer}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00471}00471     \textcolor{keywordtype}{class}(aero\_rep\_data\_t), \textcolor{keywordtype}{pointer} :: aero\_rep}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00472}00472     \textcolor{comment}{! Aerosol representation factory object for getting aerosol}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00473}00473     \textcolor{comment}{! representation type}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00474}00474     \textcolor{keywordtype}{type}(aero\_rep\_factory\_t) :: aero\_rep\_factory}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00475}00475     \textcolor{comment}{! Sub model pointer}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00476}00476     \textcolor{keywordtype}{class}(sub\_model\_data\_t), \textcolor{keywordtype}{pointer} :: sub\_model}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00477}00477     \textcolor{comment}{! Sub model factory for getting sub model type}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00478}00478     \textcolor{keywordtype}{type}(sub\_model\_factory\_t) :: sub\_model\_factory}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00479}00479     \textcolor{comment}{! Integer parameters being transfered}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00480}00480     \textcolor{keywordtype}{integer(kind=c\_int)}, \textcolor{keywordtype}{pointer} :: int\_param(:)}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00481}00481     \textcolor{comment}{! Floating point parameters being transfered}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00482}00482 \textcolor{keywordtype}{    real}(kind=c\_double), \textcolor{keywordtype}{pointer} :: float\_param(:)}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00483}00483     \textcolor{comment}{! Number of reactions}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00484}00484     \textcolor{keywordtype}{integer(kind=c\_int)} :: n\_rxn}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00485}00485     \textcolor{comment}{! Number of integer reaction parameters}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00486}00486     \textcolor{keywordtype}{integer(kind=c\_int)} :: n\_rxn\_int\_param}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00487}00487     \textcolor{comment}{! Number of floating-\/point reaction parameters}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00488}00488     \textcolor{keywordtype}{integer(kind=c\_int)} :: n\_rxn\_float\_param}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00489}00489     \textcolor{comment}{! Number of environment-\/dependent reaction parameters}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00490}00490     \textcolor{keywordtype}{integer(kind=c\_int)} :: n\_rxn\_env\_param}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00491}00491     \textcolor{comment}{! Number of aerosol phases}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00492}00492     \textcolor{keywordtype}{integer(kind=c\_int)} :: n\_aero\_phase}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00493}00493     \textcolor{comment}{! Number of integer aerosol phase  parameters}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00494}00494     \textcolor{keywordtype}{integer(kind=c\_int)} :: n\_aero\_phase\_int\_param}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00495}00495     \textcolor{comment}{! Number of floating-\/point aerosol phase parameters}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00496}00496     \textcolor{keywordtype}{integer(kind=c\_int)} :: n\_aero\_phase\_float\_param}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00497}00497     \textcolor{comment}{! Number of aerosol representations}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00498}00498     \textcolor{keywordtype}{integer(kind=c\_int)} :: n\_aero\_rep}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00499}00499     \textcolor{comment}{! Number of integer aerosol representation parameters}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00500}00500     \textcolor{keywordtype}{integer(kind=c\_int)} :: n\_aero\_rep\_int\_param}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00501}00501     \textcolor{comment}{! Number of floating-\/point aerosol representation parameters}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00502}00502     \textcolor{keywordtype}{integer(kind=c\_int)} :: n\_aero\_rep\_float\_param}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00503}00503     \textcolor{comment}{! Number of environment-\/dependent aerosol representation parameters}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00504}00504     \textcolor{keywordtype}{integer(kind=c\_int)} :: n\_aero\_rep\_env\_param}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00505}00505     \textcolor{comment}{! Number of sub models}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00506}00506     \textcolor{keywordtype}{integer(kind=c\_int)} :: n\_sub\_model}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00507}00507     \textcolor{comment}{! Number of integer sub model parameters}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00508}00508     \textcolor{keywordtype}{integer(kind=c\_int)} :: n\_sub\_model\_int\_param}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00509}00509     \textcolor{comment}{! Number of floating-\/point sub model parameters}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00510}00510     \textcolor{keywordtype}{integer(kind=c\_int)} :: n\_sub\_model\_float\_param}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00511}00511     \textcolor{comment}{! Number of environment-\/dependent sub model parameters}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00512}00512     \textcolor{keywordtype}{integer(kind=c\_int)} :: n\_sub\_model\_env\_param}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00513}00513     \textcolor{comment}{! Number of cells to compute}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00514}00514     \textcolor{keywordtype}{integer(kind=c\_int)} :: l\_n\_cells}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00515}00515 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00516}00516     \textcolor{keywordflow}{if} (\textcolor{keyword}{present}(n\_cells)) \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00517}00517       l\_n\_cells = n\_cells}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00518}00518     \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00519}00519       l\_n\_cells = 1}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00520}00520 \textcolor{keywordflow}{    end if}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00521}00521 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00522}00522     \textcolor{comment}{! Make sure the variable type and absolute tolerance arrays are of}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00523}00523     \textcolor{comment}{! equal length}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00524}00524     \textcolor{keyword}{call }assert\_msg(825843466, \textcolor{keyword}{size}(abs\_tol).eq.\textcolor{keyword}{size}(var\_type), \&}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00525}00525             \textcolor{stringliteral}{"{}Mismatched absolute tolerance and variable type arrays: "{}}// \&}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00526}00526             \textcolor{stringliteral}{"{}abs\_tol size: "{}}//trim(to\_string(\textcolor{keyword}{size}(abs\_tol)))// \&}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00527}00527             \textcolor{stringliteral}{"{}; var\_type: "{}}//trim(to\_string(\textcolor{keyword}{size}(var\_type))))}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00528}00528 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00529}00529     \textcolor{comment}{! Set the absolute tolerance and variable type arrays}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00530}00530     \textcolor{keyword}{allocate}(var\_type\_c(\textcolor{keyword}{size}(var\_type)))}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00531}00531     \textcolor{keyword}{allocate}(abs\_tol\_c(\textcolor{keyword}{size}(abs\_tol)))}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00532}00532     var\_type\_c(:) = int(var\_type(:), kind=c\_int)}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00533}00533     abs\_tol\_c(:) = real(abs\_tol(:), kind=c\_double)}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00534}00534 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00535}00535     \textcolor{comment}{! Initialize the counters}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00536}00536     n\_rxn = 0}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00537}00537     n\_rxn\_int\_param = 0}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00538}00538     n\_rxn\_float\_param = 0}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00539}00539     n\_rxn\_env\_param = 0}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00540}00540 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00541}00541     \textcolor{comment}{! Calculate the number of reactions and the size of the condensed data}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00542}00542     \textcolor{keywordflow}{do} i\_mech=1, \textcolor{keyword}{size}(mechanisms)}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00543}00543       \textcolor{keywordflow}{do} i\_rxn=1, mechanisms(i\_mech)\%val\%size()}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00544}00544         rxn => mechanisms(i\_mech)\%val\%get\_rxn(i\_rxn)}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00545}00545         \textcolor{keywordflow}{select case} (rxn\%rxn\_phase)}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00546}00546           \textcolor{keywordflow}{case} (gas\_rxn)}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00547}00547             \textcolor{keywordflow}{if} (rxn\_phase.eq.aero\_rxn) cycle}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00548}00548           \textcolor{keywordflow}{case} (aero\_rxn)}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00549}00549             \textcolor{keywordflow}{if} (rxn\_phase.eq.gas\_rxn) cycle}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00550}00550           \textcolor{keywordflow}{case} (gas\_aero\_rxn)}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00551}00551             \textcolor{keywordflow}{if} (rxn\_phase.eq.gas\_rxn) cycle}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00552}00552 \textcolor{keywordflow}{        end select}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00553}00553         n\_rxn = n\_rxn + 1}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00554}00554         n\_rxn\_int\_param = n\_rxn\_int\_param + \textcolor{keyword}{size}(rxn\%condensed\_data\_int)}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00555}00555         n\_rxn\_float\_param = n\_rxn\_float\_param + \textcolor{keyword}{size}(rxn\%condensed\_data\_real)}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00556}00556         n\_rxn\_env\_param = n\_rxn\_env\_param + rxn\%num\_env\_params}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00557}00557 \textcolor{keywordflow}{      end do}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00558}00558 \textcolor{keywordflow}{    end do}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00559}00559     rxn => null()}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00560}00560 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00561}00561     \textcolor{comment}{! Initialize the aerosol phase counters}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00562}00562     n\_aero\_phase = \textcolor{keyword}{size}(aero\_phases)}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00563}00563     n\_aero\_phase\_int\_param = 0}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00564}00564     n\_aero\_phase\_float\_param = 0}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00565}00565 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00566}00566     \textcolor{comment}{! Calculate the size of the aerosol phases condensed data}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00567}00567     \textcolor{keywordflow}{do} i\_aero\_phase=1, n\_aero\_phase}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00568}00568       aero\_phase => aero\_phases(i\_aero\_phase)\%val}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00569}00569       n\_aero\_phase\_int\_param = n\_aero\_phase\_int\_param + \&}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00570}00570               \textcolor{keyword}{size}(aero\_phase\%condensed\_data\_int)}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00571}00571       n\_aero\_phase\_float\_param = n\_aero\_phase\_float\_param + \&}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00572}00572               \textcolor{keyword}{size}(aero\_phase\%condensed\_data\_real)}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00573}00573 \textcolor{keywordflow}{    end do}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00574}00574     aero\_phase => null()}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00575}00575 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00576}00576     \textcolor{comment}{! Initialize the aerosol representation counters}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00577}00577     n\_aero\_rep = \textcolor{keyword}{size}(aero\_reps)}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00578}00578     n\_aero\_rep\_int\_param = 0}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00579}00579     n\_aero\_rep\_float\_param = 0}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00580}00580     n\_aero\_rep\_env\_param = 0}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00581}00581 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00582}00582     \textcolor{comment}{! Calculate the size of the aerosol representations condensed data}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00583}00583     \textcolor{keywordflow}{do} i\_aero\_rep=1, n\_aero\_rep}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00584}00584       aero\_rep => aero\_reps(i\_aero\_rep)\%val}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00585}00585       n\_aero\_rep\_int\_param = n\_aero\_rep\_int\_param + \&}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00586}00586               \textcolor{keyword}{size}(aero\_rep\%condensed\_data\_int)}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00587}00587       n\_aero\_rep\_float\_param = n\_aero\_rep\_float\_param + \&}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00588}00588               \textcolor{keyword}{size}(aero\_rep\%condensed\_data\_real)}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00589}00589       n\_aero\_rep\_env\_param = n\_aero\_rep\_env\_param + \&}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00590}00590               aero\_rep\%num\_env\_params}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00591}00591 \textcolor{keywordflow}{    end do}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00592}00592     aero\_rep => null()}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00593}00593 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00594}00594     \textcolor{comment}{! Initialize the sub model counters}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00595}00595     n\_sub\_model = \textcolor{keyword}{size}(sub\_models)}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00596}00596     n\_sub\_model\_int\_param = 0}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00597}00597     n\_sub\_model\_float\_param = 0}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00598}00598     n\_sub\_model\_env\_param = 0}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00599}00599 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00600}00600     \textcolor{comment}{! Calculate the size of the sub model condensed data}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00601}00601     \textcolor{keywordflow}{do} i\_sub\_model=1, n\_sub\_model}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00602}00602       sub\_model => sub\_models(i\_sub\_model)\%val}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00603}00603       n\_sub\_model\_int\_param = n\_sub\_model\_int\_param + \&}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00604}00604               \textcolor{keyword}{size}(sub\_model\%condensed\_data\_int)}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00605}00605       n\_sub\_model\_float\_param = n\_sub\_model\_float\_param + \&}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00606}00606               \textcolor{keyword}{size}(sub\_model\%condensed\_data\_real)}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00607}00607       n\_sub\_model\_env\_param = n\_sub\_model\_env\_param + sub\_model\%num\_env\_params}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00608}00608 \textcolor{keywordflow}{    end do}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00609}00609     sub\_model => null()}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00610}00610 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00611}00611     \textcolor{comment}{! Get a new solver object}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00612}00612     this\%solver\_c\_ptr = \mbox{\hyperlink{interfacecamp__camp__solver__data_1_1solver__new}{solver\_new}}( \&}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00613}00613             int(\textcolor{keyword}{size}(var\_type\_c), kind=c\_int), \& \textcolor{comment}{! Size of the state variable}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00614}00614             l\_n\_cells,                         \& \textcolor{comment}{! \# of cells computed at once}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00615}00615             c\_loc(var\_type\_c),                 \& \textcolor{comment}{! Variable types}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00616}00616             n\_rxn,                             \& \textcolor{comment}{! \# of reactions}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00617}00617             n\_rxn\_int\_param,                   \& \textcolor{comment}{! \# of rxn data int params}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00618}00618             n\_rxn\_float\_param,                 \& \textcolor{comment}{! \# of rxn data real params}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00619}00619             n\_rxn\_env\_param,                   \& \textcolor{comment}{! \# of rxn env-\/dependent params}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00620}00620             n\_aero\_phase,                      \& \textcolor{comment}{! \# of aero phases}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00621}00621             n\_aero\_phase\_int\_param,            \& \textcolor{comment}{! \# of aero phase int params}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00622}00622             n\_aero\_phase\_float\_param,          \& \textcolor{comment}{! \# of aero phase real params}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00623}00623             n\_aero\_rep,                        \& \textcolor{comment}{! \# of aero reps}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00624}00624             n\_aero\_rep\_int\_param,              \& \textcolor{comment}{! \# of aero rep int params}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00625}00625             n\_aero\_rep\_float\_param,            \& \textcolor{comment}{! \# of aero rep real params}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00626}00626             n\_aero\_rep\_env\_param,              \& \textcolor{comment}{! \# of aero rep env params}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00627}00627             n\_sub\_model,                       \& \textcolor{comment}{! \# of sub models}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00628}00628             n\_sub\_model\_int\_param,             \& \textcolor{comment}{! \# of sub model int params}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00629}00629             n\_sub\_model\_float\_param,           \& \textcolor{comment}{! \# of sub model real params}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00630}00630             n\_sub\_model\_env\_param              \& \textcolor{comment}{! \# of sub model env params}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00631}00631             )}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00632}00632 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00633}00633     \textcolor{comment}{! Add all the condensed reaction data to the solver data block for}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00634}00634     \textcolor{comment}{! reactions of the specified phase}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00635}00635     \textcolor{keywordflow}{do} i\_mech=1, \textcolor{keyword}{size}(mechanisms)}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00636}00636       \textcolor{keywordflow}{do} i\_rxn=1, mechanisms(i\_mech)\%val\%size()}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00637}00637 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00638}00638         \textcolor{comment}{! FIXME Put ZSR aerosol water first, so water is available for other}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00639}00639         \textcolor{comment}{! reactions -\/ and find a better way to account for inter-\/dependence}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00640}00640         \textcolor{comment}{! of reactions/sub-\/models}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00641}00641 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00642}00642         \textcolor{comment}{! Assign rxn to the current reaction}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00643}00643         rxn => mechanisms(i\_mech)\%val\%get\_rxn(i\_rxn)}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00644}00644 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00645}00645         \textcolor{comment}{! Check reaction phase}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00646}00646         \textcolor{keywordflow}{select case} (rxn\%rxn\_phase)}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00647}00647           \textcolor{keywordflow}{case} (gas\_rxn)}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00648}00648             \textcolor{keywordflow}{if} (rxn\_phase.eq.aero\_rxn) cycle}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00649}00649           \textcolor{keywordflow}{case} (aero\_rxn)}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00650}00650             \textcolor{keywordflow}{if} (rxn\_phase.eq.gas\_rxn) cycle}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00651}00651           \textcolor{keywordflow}{case} (gas\_aero\_rxn)}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00652}00652             \textcolor{keywordflow}{if} (rxn\_phase.eq.gas\_rxn) cycle}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00653}00653 \textcolor{keywordflow}{        end select}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00654}00654 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00655}00655         \textcolor{comment}{! Load temporary data arrays}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00656}00656         \textcolor{keyword}{allocate}(int\_param(\textcolor{keyword}{size}(rxn\%condensed\_data\_int)))}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00657}00657         \textcolor{keyword}{allocate}(float\_param(\textcolor{keyword}{size}(rxn\%condensed\_data\_real)))}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00658}00658         int\_param(:) = int(rxn\%condensed\_data\_int(:), kind=c\_int)}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00659}00659         float\_param(:) = real(rxn\%condensed\_data\_real(:), kind=c\_double)}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00660}00660 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00661}00661         \textcolor{comment}{! Send the condensed data to the solver}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00662}00662         \textcolor{keyword}{call }\mbox{\hyperlink{interfacecamp__camp__solver__data_1_1rxn__add__condensed__data}{rxn\_add\_condensed\_data}} ( \&}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00663}00663                 int(rxn\_factory\%get\_type(rxn), kind=c\_int),\& \textcolor{comment}{! Rxn type}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00664}00664                 int(\textcolor{keyword}{size}(int\_param), kind=c\_int),          \& \textcolor{comment}{! Int array size}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00665}00665                 int(\textcolor{keyword}{size}(float\_param), kind=c\_int),        \& \textcolor{comment}{! Real array size}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00666}00666                 rxn\%num\_env\_params,                        \& \textcolor{comment}{! Env-\/dep array size}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00667}00667                 c\_loc(int\_param),                          \& \textcolor{comment}{! Int array ptr}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00668}00668                 c\_loc(float\_param),                        \& \textcolor{comment}{! Real array ptr}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00669}00669                 this\%solver\_c\_ptr                          \& \textcolor{comment}{! Solver data ptr}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00670}00670                 )}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00671}00671 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00672}00672         \textcolor{comment}{! Deallocate temporary arrays}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00673}00673         \textcolor{keyword}{deallocate}(int\_param)}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00674}00674         \textcolor{keyword}{deallocate}(float\_param)}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00675}00675 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00676}00676 \textcolor{keywordflow}{      end do}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00677}00677 \textcolor{keywordflow}{    end do}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00678}00678     rxn => null()}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00679}00679 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00680}00680     \textcolor{comment}{! Add all the condensed aerosol phase data to the solver data block}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00681}00681     \textcolor{keywordflow}{do} i\_aero\_phase=1, \textcolor{keyword}{size}(aero\_phases)}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00682}00682 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00683}00683       \textcolor{comment}{! Assign aero\_phase to the current aerosol phase}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00684}00684       aero\_phase => aero\_phases(i\_aero\_phase)\%val}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00685}00685 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00686}00686       \textcolor{comment}{! Load temporary data arrays}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00687}00687       \textcolor{keyword}{allocate}(int\_param(\textcolor{keyword}{size}(aero\_phase\%condensed\_data\_int)))}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00688}00688       \textcolor{keyword}{allocate}(float\_param(\textcolor{keyword}{size}(aero\_phase\%condensed\_data\_real)))}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00689}00689       int\_param(:) = int(aero\_phase\%condensed\_data\_int(:), kind=c\_int)}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00690}00690       float\_param(:) = real(aero\_phase\%condensed\_data\_real(:), kind=c\_double)}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00691}00691 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00692}00692       \textcolor{comment}{! Send the condensed data to the solver}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00693}00693       \textcolor{keyword}{call }\mbox{\hyperlink{interfacecamp__camp__solver__data_1_1aero__phase__add__condensed__data}{aero\_phase\_add\_condensed\_data}} ( \&}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00694}00694               int(\textcolor{keyword}{size}(int\_param), kind=c\_int),   \& \textcolor{comment}{! Int array size}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00695}00695               int(\textcolor{keyword}{size}(float\_param), kind=c\_int), \& \textcolor{comment}{! Real array size}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00696}00696               c\_loc(int\_param),                   \& \textcolor{comment}{! Int array ptr}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00697}00697               c\_loc(float\_param),                 \& \textcolor{comment}{! Real array ptr}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00698}00698               this\%solver\_c\_ptr                   \& \textcolor{comment}{! Solver data ptr}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00699}00699               )}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00700}00700 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00701}00701       \textcolor{comment}{! Deallocate temporary arrays}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00702}00702       \textcolor{keyword}{deallocate}(int\_param)}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00703}00703       \textcolor{keyword}{deallocate}(float\_param)}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00704}00704 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00705}00705 \textcolor{keywordflow}{    end do}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00706}00706     aero\_phase => null()}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00707}00707 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00708}00708     \textcolor{comment}{! Add all the condensed aerosol representation data to the solver data}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00709}00709     \textcolor{comment}{! block}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00710}00710     \textcolor{keywordflow}{do} i\_aero\_rep=1, \textcolor{keyword}{size}(aero\_reps)}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00711}00711 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00712}00712       \textcolor{comment}{! Assign aero\_rep to the current aerosol representation}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00713}00713       aero\_rep => aero\_reps(i\_aero\_rep)\%val}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00714}00714 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00715}00715       \textcolor{comment}{! Load temporary data arrays}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00716}00716       \textcolor{keyword}{allocate}(int\_param(\textcolor{keyword}{size}(aero\_rep\%condensed\_data\_int)))}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00717}00717       \textcolor{keyword}{allocate}(float\_param(\textcolor{keyword}{size}(aero\_rep\%condensed\_data\_real)))}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00718}00718       int\_param(:) = int(aero\_rep\%condensed\_data\_int(:), kind=c\_int)}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00719}00719       float\_param(:) = real(aero\_rep\%condensed\_data\_real(:), kind=c\_double)}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00720}00720 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00721}00721       \textcolor{comment}{! Send the condensed data to the solver}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00722}00722       \textcolor{keyword}{call }\mbox{\hyperlink{interfacecamp__camp__solver__data_1_1aero__rep__add__condensed__data}{aero\_rep\_add\_condensed\_data}} ( \&}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00723}00723               int(aero\_rep\_factory\%get\_type(aero\_rep), kind=c\_int), \&}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00724}00724                                                     \textcolor{comment}{! Aero rep type}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00725}00725               int(\textcolor{keyword}{size}(int\_param), kind=c\_int),   \& \textcolor{comment}{! Int array size}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00726}00726               int(\textcolor{keyword}{size}(float\_param), kind=c\_int), \& \textcolor{comment}{! Real array size}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00727}00727               aero\_rep\%num\_env\_params,            \& \textcolor{comment}{! Env-\/dep array size}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00728}00728               c\_loc(int\_param),                   \& \textcolor{comment}{! Int array ptr}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00729}00729               c\_loc(float\_param),                 \& \textcolor{comment}{! Real array ptr}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00730}00730               this\%solver\_c\_ptr                   \& \textcolor{comment}{! Solver data ptr}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00731}00731               )}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00732}00732 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00733}00733       \textcolor{comment}{! Deallocate temporary arrays}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00734}00734       \textcolor{keyword}{deallocate}(int\_param)}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00735}00735       \textcolor{keyword}{deallocate}(float\_param)}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00736}00736 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00737}00737 \textcolor{keywordflow}{    end do}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00738}00738     aero\_rep => null()}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00739}00739 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00740}00740     \textcolor{comment}{! Add all the condensed sub model data to the solver data block}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00741}00741     \textcolor{keywordflow}{do} i\_sub\_model=1, \textcolor{keyword}{size}(sub\_models)}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00742}00742 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00743}00743       \textcolor{comment}{! Assign sub\_model to the current sub model}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00744}00744       sub\_model => sub\_models(i\_sub\_model)\%val}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00745}00745 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00746}00746       \textcolor{comment}{! Load temporary data arrays}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00747}00747       \textcolor{keyword}{allocate}(int\_param(\textcolor{keyword}{size}(sub\_model\%condensed\_data\_int)))}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00748}00748       \textcolor{keyword}{allocate}(float\_param(\textcolor{keyword}{size}(sub\_model\%condensed\_data\_real)))}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00749}00749       int\_param(:) = int(sub\_model\%condensed\_data\_int(:), kind=c\_int)}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00750}00750       float\_param(:) = real(sub\_model\%condensed\_data\_real(:), kind=c\_double)}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00751}00751 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00752}00752       \textcolor{comment}{! Send the condensed data to the solver}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00753}00753       \textcolor{keyword}{call }\mbox{\hyperlink{interfacecamp__camp__solver__data_1_1sub__model__add__condensed__data}{sub\_model\_add\_condensed\_data}} ( \&}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00754}00754               int(sub\_model\_factory\%get\_type(sub\_model), kind=c\_int), \&}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00755}00755                                                     \textcolor{comment}{! Sub model type}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00756}00756               int(\textcolor{keyword}{size}(int\_param), kind=c\_int),   \& \textcolor{comment}{! Int array size}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00757}00757               int(\textcolor{keyword}{size}(float\_param), kind=c\_int), \& \textcolor{comment}{! Real array size}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00758}00758               sub\_model\%num\_env\_params,           \& \textcolor{comment}{! Env-\/dep array size}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00759}00759               c\_loc(int\_param),                   \& \textcolor{comment}{! Int array ptr}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00760}00760               c\_loc(float\_param),                 \& \textcolor{comment}{! Real array ptr}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00761}00761               this\%solver\_c\_ptr                   \& \textcolor{comment}{! Solver data ptr}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00762}00762               )}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00763}00763 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00764}00764       \textcolor{comment}{! Deallocate temporary arrays}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00765}00765       \textcolor{keyword}{deallocate}(int\_param)}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00766}00766       \textcolor{keyword}{deallocate}(float\_param)}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00767}00767 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00768}00768 \textcolor{keywordflow}{    end do}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00769}00769     sub\_model => null()}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00770}00770 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00771}00771     \textcolor{comment}{! Initialize the solver}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00772}00772     \textcolor{keyword}{call }\mbox{\hyperlink{interfacecamp__camp__solver__data_1_1solver__initialize}{solver\_initialize}}( \&}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00773}00773             this\%solver\_c\_ptr,                  \& \textcolor{comment}{! Pointer to solver data}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00774}00774             c\_loc(abs\_tol\_c),                   \& \textcolor{comment}{! Absolute tolerances}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00775}00775 \textcolor{keywordtype}{            real}(this\%rel\_tol, kind=c\_double),  \& \textcolor{comment}{! Relative tolerance}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00776}00776             int(this\%max\_steps, kind=c\_int),    \& \textcolor{comment}{! Max \# of integration steps}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00777}00777             int(this\%max\_conv\_fails, kind=c\_int)\& \textcolor{comment}{! Max \# of convergence fails}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00778}00778             )}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00779}00779 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00780}00780     \textcolor{comment}{! Flag the solver as initialized}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00781}00781     this\%initialized = .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b}{true}}.}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00782}00782 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00783}00783     \textcolor{comment}{! Free memory allocated for solver initialization}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00784}00784     \textcolor{keyword}{deallocate}(abs\_tol\_c)}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00785}00785     \textcolor{keyword}{deallocate}(var\_type\_c)}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00786}00786 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00787}00787   \textcolor{keyword}{end subroutine }\mbox{\hyperlink{namespacecamp__camp__solver__data_abf81c7a12d2d007b6b2925b53b1c3579}{initialize}}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00788}00788 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00789}00789 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00790}00790 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00791}00791 \textcolor{comment}{  !> Update sub-\/model data}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00792}\mbox{\hyperlink{namespacecamp__camp__solver__data_a78dde4ec2c39ecc009fb4170379a80ed}{00792}}   \textcolor{keyword}{subroutine }\mbox{\hyperlink{namespacecamp__camp__solver__data_a78dde4ec2c39ecc009fb4170379a80ed}{update\_sub\_model\_data}}(this, update\_data)}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00793}00793 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00794}00794 \textcolor{comment}{    !> Solver data}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00795}00795     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__camp__solver__data_1_1camp__solver__data__t}{camp\_solver\_data\_t}}), \textcolor{keywordtype}{intent(inout)} :: this\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00796}00796 \textcolor{comment}{    !> Update data}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00797}00797     \textcolor{keywordtype}{class}(sub\_model\_update\_data\_t), \textcolor{keywordtype}{intent(in)} :: update\_data}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00798}00798 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00799}00799     \textcolor{keyword}{call }\mbox{\hyperlink{interfacecamp__camp__solver__data_1_1sub__model__update__data}{sub\_model\_update\_data}}( \&}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00800}00800             update\_data\%get\_cell\_id()-\/1,     \& \textcolor{comment}{! Grid cell to update}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00801}00801             update\_data\%sub\_model\_solver\_id, \& \textcolor{comment}{! Solver's sub model id}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00802}00802             update\_data\%get\_type(),          \& \textcolor{comment}{! Sub-\/model type to update}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00803}00803             update\_data\%get\_data(),          \& \textcolor{comment}{! Data needed to perform update}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00804}00804             this\%solver\_c\_ptr                \& \textcolor{comment}{! Pointer to solver data}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00805}00805             )}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00806}00806 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00807}00807   \textcolor{keyword}{end subroutine }\mbox{\hyperlink{namespacecamp__camp__solver__data_a78dde4ec2c39ecc009fb4170379a80ed}{update\_sub\_model\_data}}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00808}00808 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00809}00809 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00810}00810 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00811}00811 \textcolor{comment}{  !> Update reaction data}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00812}\mbox{\hyperlink{namespacecamp__camp__solver__data_a703e1dfb9ca03cbee99cdaa9959be2cb}{00812}}   \textcolor{keyword}{subroutine }\mbox{\hyperlink{namespacecamp__camp__solver__data_a703e1dfb9ca03cbee99cdaa9959be2cb}{update\_rxn\_data}}(this, update\_data)}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00813}00813 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00814}00814 \textcolor{comment}{    !> Solver data}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00815}00815     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__camp__solver__data_1_1camp__solver__data__t}{camp\_solver\_data\_t}}), \textcolor{keywordtype}{intent(inout)} :: this\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00816}00816 \textcolor{comment}{    !> Update data}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00817}00817     \textcolor{keywordtype}{class}(rxn\_update\_data\_t), \textcolor{keywordtype}{intent(in)} :: update\_data}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00818}00818 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00819}00819     \textcolor{keyword}{call }\mbox{\hyperlink{interfacecamp__camp__solver__data_1_1rxn__update__data}{rxn\_update\_data}}( \&}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00820}00820             update\_data\%get\_cell\_id()-\/1,     \& \textcolor{comment}{! Grid cell to update}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00821}00821             update\_data\%rxn\_solver\_id,       \& \textcolor{comment}{! Solver's reaction id}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00822}00822             update\_data\%get\_type(),          \& \textcolor{comment}{! Reaction type to update}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00823}00823             update\_data\%get\_data(),          \& \textcolor{comment}{! Data needed to perform update}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00824}00824             this\%solver\_c\_ptr                \& \textcolor{comment}{! Pointer to solver data}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00825}00825             )}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00826}00826 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00827}00827   \textcolor{keyword}{end subroutine }\mbox{\hyperlink{namespacecamp__camp__solver__data_a703e1dfb9ca03cbee99cdaa9959be2cb}{update\_rxn\_data}}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00828}00828 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00829}00829 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00830}00830 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00831}00831 \textcolor{comment}{  !> Update aerosol representation data based on data passed from the host}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00832}00832 \textcolor{comment}{  !! model related to aerosol properties}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00833}\mbox{\hyperlink{namespacecamp__camp__solver__data_adf4819e7439fd3f634d6e242dd7294f4}{00833}}   \textcolor{keyword}{subroutine }\mbox{\hyperlink{namespacecamp__camp__solver__data_adf4819e7439fd3f634d6e242dd7294f4}{update\_aero\_rep\_data}}(this, update\_data)}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00834}00834 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00835}00835 \textcolor{comment}{    !> Solver data}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00836}00836     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__camp__solver__data_1_1camp__solver__data__t}{camp\_solver\_data\_t}}), \textcolor{keywordtype}{intent(inout)} :: this\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00837}00837 \textcolor{comment}{    !> Update data}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00838}00838     \textcolor{keywordtype}{class}(aero\_rep\_update\_data\_t), \textcolor{keywordtype}{intent(in)} :: update\_data}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00839}00839 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00840}00840     \textcolor{keyword}{call }\mbox{\hyperlink{interfacecamp__camp__solver__data_1_1aero__rep__update__data}{aero\_rep\_update\_data}}( \&}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00841}00841             update\_data\%get\_cell\_id()-\/1,     \& \textcolor{comment}{! Grid cell to update}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00842}00842             update\_data\%aero\_rep\_solver\_id,  \& \textcolor{comment}{! Solver's aero rep id}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00843}00843             update\_data\%get\_type(),          \& \textcolor{comment}{! Aerosol representation type}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00844}00844             update\_data\%get\_data(),          \& \textcolor{comment}{! Data needed to perform update}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00845}00845             this\%solver\_c\_ptr                \& \textcolor{comment}{! Pointer to solver data}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00846}00846             )}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00847}00847 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00848}00848   \textcolor{keyword}{end subroutine }\mbox{\hyperlink{namespacecamp__camp__solver__data_adf4819e7439fd3f634d6e242dd7294f4}{update\_aero\_rep\_data}}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00849}00849 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00850}00850 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00851}00851 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00852}00852 \textcolor{comment}{  !> Solve the mechanism(s) for a specified timestep}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00853}\mbox{\hyperlink{namespacecamp__camp__solver__data_ad854d73d29a9018f94db4666c3afe7fb}{00853}}   \textcolor{keyword}{subroutine }\mbox{\hyperlink{namespacecamp__camp__solver__data_ad854d73d29a9018f94db4666c3afe7fb}{solve}}(this, camp\_state, t\_initial, t\_final, solver\_stats)}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00854}00854 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00855}00855 \textcolor{comment}{    !> Solver data}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00856}00856     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__camp__solver__data_1_1camp__solver__data__t}{camp\_solver\_data\_t}}), \textcolor{keywordtype}{intent(inout)} :: this\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00857}00857 \textcolor{comment}{    !> Model state}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00858}00858     \textcolor{keywordtype}{type}(camp\_state\_t), \textcolor{keywordtype}{target}, \textcolor{keywordtype}{intent(inout)} :: camp\_state\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00859}00859 \textcolor{comment}{    !> Start time (s)}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00860}00860 \textcolor{keywordtype}{    real}(kind=dp), \textcolor{keywordtype}{intent(in)} :: t\_initial\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00861}00861 \textcolor{comment}{    !> End time (s)}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00862}00862 \textcolor{keywordtype}{    real}(kind=dp), \textcolor{keywordtype}{intent(in)} :: t\_final\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00863}00863 \textcolor{comment}{    !> Solver statistics}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00864}00864     \textcolor{keywordtype}{type}(solver\_stats\_t), \textcolor{keywordtype}{intent(inout)}, \textcolor{keywordtype}{optional}, \textcolor{keywordtype}{target} :: solver\_stats}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00865}00865 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00866}00866     \textcolor{keywordtype}{integer(kind=c\_int)} :: solver\_status}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00867}00867 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00868}00868 \textcolor{preprocessor}{\#ifdef CAMP\_DEBUG}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00869}00869 \textcolor{preprocessor}{}    \textcolor{keywordflow}{if} (\textcolor{keyword}{present}(solver\_stats)) \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00870}00870       \textcolor{comment}{! Update the debugging output flag in the solver data}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00871}00871       \textcolor{keywordflow}{if} (solver\_stats\%debug\_out) \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00872}00872         solver\_status = solver\_set\_debug\_out( \&}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00873}00873             this\%solver\_c\_ptr,              \& \textcolor{comment}{! Pointer to the solver data}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00874}00874             int(1, kind=c\_int)              \& \textcolor{comment}{! Debug flag}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00875}00875             )}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00876}00876       \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00877}00877         solver\_status = solver\_set\_debug\_out( \&}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00878}00878             this\%solver\_c\_ptr,              \& \textcolor{comment}{! Pointer to the solver data}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00879}00879             int(0, kind=c\_int)              \& \textcolor{comment}{! Debug flag}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00880}00880             )}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00881}00881 \textcolor{keywordflow}{      end if}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00882}00882       \textcolor{comment}{! Update Jacobian evaluation flag in the solver data}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00883}00883       \textcolor{keywordflow}{if} (solver\_stats\%eval\_Jac) \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00884}00884         solver\_stats = solver\_set\_eval\_jac( \&}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00885}00885             this\%solver\_c\_ptr,              \& \textcolor{comment}{! Pointer to the solver data}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00886}00886             int(1, kind=c\_int)              \& \textcolor{comment}{! Jac eval flag}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00887}00887             )}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00888}00888       \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00889}00889         solver\_stats = solver\_set\_eval\_jac( \&}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00890}00890             this\%solver\_c\_ptr,              \& \textcolor{comment}{! Pointer to the solver data}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00891}00891             int(0, kind=c\_int)              \& \textcolor{comment}{! Jac eval flag}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00892}00892             )}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00893}00893 \textcolor{keywordflow}{      end if}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00894}00894 \textcolor{keywordflow}{    end if}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00895}00895 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00896}00896     \textcolor{comment}{! Reset the solver function timers}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00897}00897     \textcolor{keyword}{call }this\%reset\_timers( )}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00898}00898 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00899}00899 \textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00900}00900     \textcolor{comment}{! Run the solver}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00901}00901     solver\_status = \mbox{\hyperlink{interfacecamp__camp__solver__data_1_1solver__run}{solver\_run}}( \&}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00902}00902             this\%solver\_c\_ptr,              \& \textcolor{comment}{! Pointer to intialized solver}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00903}00903             c\_loc(camp\_state\%state\_var),    \& \textcolor{comment}{! Pointer to state array}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00904}00904             c\_loc(camp\_state\%env\_var),      \& \textcolor{comment}{! Pointer to environmental vars}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00905}00905 \textcolor{keywordtype}{            real}(t\_initial, kind=c\_double), \& \textcolor{comment}{! Start time (s)}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00906}00906 \textcolor{keywordtype}{            real}(t\_final, kind=c\_double)    \& \textcolor{comment}{! Final time (s)}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00907}00907             )}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00908}00908 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00909}00909     \textcolor{comment}{! Get the solver statistics}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00910}00910     \textcolor{keywordflow}{if} (\textcolor{keyword}{present}(solver\_stats)) \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00911}00911       \textcolor{keyword}{call }this\%get\_solver\_stats( solver\_stats )}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00912}00912       solver\_stats\%status\_code   = solver\_status}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00913}00913       solver\_stats\%start\_time\_\_s = t\_initial}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00914}00914       solver\_stats\%end\_time\_\_s   = t\_final}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00915}00915     \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00916}00916       \textcolor{keyword}{call }warn\_assert\_msg(997420005, solver\_status.eq.0, \textcolor{stringliteral}{"{}Solver failed"{}})}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00917}00917 \textcolor{keywordflow}{    end if}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00918}00918 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00919}00919   \textcolor{keyword}{end subroutine }\mbox{\hyperlink{namespacecamp__camp__solver__data_ad854d73d29a9018f94db4666c3afe7fb}{solve}}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00920}00920 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00921}00921 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00922}00922 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00923}00923 \textcolor{comment}{  !> Reset the solver function timers}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00924}\mbox{\hyperlink{namespacecamp__camp__solver__data_a8d0f89a2f8ee620f2c87e19fb4aff155}{00924}}   \textcolor{keyword}{subroutine }\mbox{\hyperlink{namespacecamp__camp__solver__data_a8d0f89a2f8ee620f2c87e19fb4aff155}{reset\_timers}}( this )}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00925}00925 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00926}00926 \textcolor{comment}{    !> Solver data}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00927}00927     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__camp__solver__data_1_1camp__solver__data__t}{camp\_solver\_data\_t}}), \textcolor{keywordtype}{intent(inout)} :: this}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00928}00928 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00929}00929     \textcolor{keyword}{call }\mbox{\hyperlink{interfacecamp__camp__solver__data_1_1solver__reset__timers}{solver\_reset\_timers}}( this\%solver\_c\_ptr )}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00930}00930 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00931}00931   \textcolor{keyword}{end subroutine }\mbox{\hyperlink{namespacecamp__camp__solver__data_a8d0f89a2f8ee620f2c87e19fb4aff155}{reset\_timers}}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00932}00932 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00933}00933 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00934}00934 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00935}00935 \textcolor{comment}{  !> Get solver statistics}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00936}\mbox{\hyperlink{namespacecamp__camp__solver__data_a2f98a02209d71cedf443f279f19e8af4}{00936}}   \textcolor{keyword}{subroutine }\mbox{\hyperlink{namespacecamp__camp__solver__data_a2f98a02209d71cedf443f279f19e8af4}{get\_solver\_stats}}( this, solver\_stats )}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00937}00937 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00938}00938 \textcolor{comment}{    !> Solver data}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00939}00939     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__camp__solver__data_1_1camp__solver__data__t}{camp\_solver\_data\_t}}), \textcolor{keywordtype}{intent(inout)} :: this\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00940}00940 \textcolor{comment}{    !> Solver statistics}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00941}00941     \textcolor{keywordtype}{type}(solver\_stats\_t), \textcolor{keywordtype}{intent(inout)}, \textcolor{keywordtype}{target} :: solver\_stats}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00942}00942 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00943}00943     \textcolor{keyword}{call }\mbox{\hyperlink{interfacecamp__camp__solver__data_1_1solver__get__statistics}{solver\_get\_statistics}}( \&}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00944}00944             this\%solver\_c\_ptr,                             \& \textcolor{comment}{! Solver data}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00945}00945             c\_loc( solver\_stats\%solver\_flag           ),   \& \textcolor{comment}{! Last flag returned CVode}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00946}00946             c\_loc( solver\_stats\%num\_steps             ),   \& \textcolor{comment}{! Number of steps}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00947}00947             c\_loc( solver\_stats\%RHS\_evals             ),   \& \textcolor{comment}{! Right-\/hand side evals}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00948}00948             c\_loc( solver\_stats\%LS\_setups             ),   \& \textcolor{comment}{! Linear solver setups}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00949}00949             c\_loc( solver\_stats\%error\_test\_fails      ),   \& \textcolor{comment}{! Error test failures}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00950}00950             c\_loc( solver\_stats\%NLS\_iters             ),   \& \textcolor{comment}{! Non-\/Linear solver interations}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00951}00951             c\_loc( solver\_stats\%NLS\_convergence\_fails ),   \& \textcolor{comment}{! Non-\/Linear solver fails}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00952}00952             c\_loc( solver\_stats\%DLS\_Jac\_evals         ),   \& \textcolor{comment}{! Jacobian evals}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00953}00953             c\_loc( solver\_stats\%DLS\_RHS\_evals         ),   \& \textcolor{comment}{! DLS Right-\/hand side evals}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00954}00954             c\_loc( solver\_stats\%last\_time\_step\_\_s     ),   \& \textcolor{comment}{! Last time step [s]}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00955}00955             c\_loc( solver\_stats\%next\_time\_step\_\_s     ),   \& \textcolor{comment}{! Next time step [s]}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00956}00956             c\_loc( solver\_stats\%Jac\_eval\_fails        ),   \& \textcolor{comment}{! Number of Jac eval fails}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00957}00957             c\_loc( solver\_stats\%RHS\_evals\_total       ),   \& \textcolor{comment}{! total f() calls}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00958}00958             c\_loc( solver\_stats\%Jac\_evals\_total       ),   \& \textcolor{comment}{! total Jac() calls}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00959}00959             c\_loc( solver\_stats\%RHS\_time\_\_s           ),   \& \textcolor{comment}{! Compute time f() [s]}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00960}00960             c\_loc( solver\_stats\%Jac\_time\_\_s           ),   \& \textcolor{comment}{! Compute time Jac() [s]}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00961}00961             c\_loc( solver\_stats\%max\_loss\_precision    ) )    \textcolor{comment}{! Maximum loss of precision}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00962}00962 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00963}00963   \textcolor{keyword}{end subroutine }\mbox{\hyperlink{namespacecamp__camp__solver__data_a2f98a02209d71cedf443f279f19e8af4}{get\_solver\_stats}}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00964}00964 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00965}00965 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00966}00966 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00967}00967 \textcolor{comment}{  !> Check whether a solver is available for the integration}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00968}\mbox{\hyperlink{namespacecamp__camp__solver__data_a99614bacadbc849ac1dad41b05fc0686}{00968}}   \textcolor{keyword}{logical }\textcolor{keyword}{function }\mbox{\hyperlink{namespacecamp__camp__solver__data_a99614bacadbc849ac1dad41b05fc0686}{is\_solver\_available}}(this)}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00969}00969 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00970}00970 \textcolor{comment}{    !> Solver data}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00971}00971     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__camp__solver__data_1_1camp__solver__data__t}{camp\_solver\_data\_t}}), \textcolor{keywordtype}{intent(in)} :: this}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00972}00972 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00973}00973 \textcolor{preprocessor}{\#ifdef CAMP\_USE\_SUNDIALS}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00974}00974 \textcolor{preprocessor}{}    \mbox{\hyperlink{namespacecamp__camp__solver__data_a99614bacadbc849ac1dad41b05fc0686}{is\_solver\_available}} = .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b}{true}}.}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00975}00975 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00976}00976 \textcolor{preprocessor}{}    \mbox{\hyperlink{namespacecamp__camp__solver__data_a99614bacadbc849ac1dad41b05fc0686}{is\_solver\_available}} = .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c}{false}}.}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00977}00977 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00978}00978 \textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00979}00979   \textcolor{keyword}{end function }\mbox{\hyperlink{namespacecamp__camp__solver__data_a99614bacadbc849ac1dad41b05fc0686}{is\_solver\_available}}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00980}00980 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00981}00981 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00982}00982 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00983}00983 \textcolor{comment}{  !> Print the solver data}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00984}\mbox{\hyperlink{namespacecamp__camp__solver__data_a80cd4aadfc872604af5dfd9b74b846ec}{00984}}   \textcolor{keyword}{subroutine }\mbox{\hyperlink{namespacecamp__camp__solver__data_a80cd4aadfc872604af5dfd9b74b846ec}{do\_print}}(this)}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00985}00985 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00986}00986 \textcolor{comment}{    !> Solver data}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00987}00987     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__camp__solver__data_1_1camp__solver__data__t}{camp\_solver\_data\_t}}), \textcolor{keywordtype}{intent(in)} :: this}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00988}00988 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00989}00989     \textcolor{keyword}{call }\mbox{\hyperlink{interfacecamp__camp__solver__data_1_1rxn__print__data}{rxn\_print\_data}}(this\%solver\_c\_ptr)}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00990}00990     \textcolor{keyword}{call }\mbox{\hyperlink{interfacecamp__camp__solver__data_1_1aero__phase__print__data}{aero\_phase\_print\_data}}(this\%solver\_c\_ptr)}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00991}00991     \textcolor{keyword}{call }\mbox{\hyperlink{interfacecamp__camp__solver__data_1_1aero__rep__print__data}{aero\_rep\_print\_data}}(this\%solver\_c\_ptr)}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00992}00992     \textcolor{keyword}{call }\mbox{\hyperlink{interfacecamp__camp__solver__data_1_1sub__model__print__data}{sub\_model\_print\_data}}(this\%solver\_c\_ptr)}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00993}00993 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00994}00994   \textcolor{keyword}{end subroutine }\mbox{\hyperlink{namespacecamp__camp__solver__data_a80cd4aadfc872604af5dfd9b74b846ec}{do\_print}}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00995}00995 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00996}00996 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00997}00997 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00998}00998 \textcolor{comment}{  !> Finalize the solver data}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00999}\mbox{\hyperlink{namespacecamp__camp__solver__data_a796df1d4fec284ab15d806853e81a7a2}{00999}}   \textcolor{keywordtype}{elemental} \textcolor{keyword}{subroutine }\mbox{\hyperlink{namespacecamp__camp__solver__data_a796df1d4fec284ab15d806853e81a7a2}{finalize}}(this)}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l01000}01000 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l01001}01001 \textcolor{comment}{    !> Solver data}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l01002}01002     \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__camp__solver__data_1_1camp__solver__data__t}{camp\_solver\_data\_t}}), \textcolor{keywordtype}{intent(inout)} :: this}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l01003}01003 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l01004}01004     \textcolor{keywordflow}{if} (this\%initialized) \textcolor{keyword}{call }\mbox{\hyperlink{interfacecamp__camp__solver__data_1_1solver__free}{solver\_free}}(this\%solver\_c\_ptr)}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l01005}01005 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l01006}01006   \textcolor{keyword}{end subroutine }\mbox{\hyperlink{namespacecamp__camp__solver__data_a796df1d4fec284ab15d806853e81a7a2}{finalize}}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l01007}01007 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l01008}01008 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l01009}01009 }
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l01010}01010 \textcolor{keyword}{end module }\mbox{\hyperlink{namespacecamp__camp__solver__data}{camp\_camp\_solver\_data}}}
+
+\end{DoxyCode}

@@ -12,12 +12,12 @@ We\textquotesingle{}ll wrap our MPI code with a compiler flag named {\ttfamily U
 \hline
 \PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Process   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Operation    }\\\cline{1-2}
 \endhead
-primary   &{\ttfamily camp\+\_\+core =$>$ camp\+\_\+core\+\_\+t( input\+\_\+files )}    \\\cline{1-2}
+primary   &{\ttfamily camp\+\_\+core =\texorpdfstring{$>$}{>} camp\+\_\+core\+\_\+t( input\+\_\+files )}    \\\cline{1-2}
 primary   &{\ttfamily call camp\+\_\+core\%initialize( )}    \\\cline{1-2}
 primary   &access {\ttfamily camp\+\_\+core\+\_\+t} properties/set up {\ttfamily update\+\_\+data\+\_\+t} objects    \\\cline{1-2}
 primary   &pack all objects on a buffer    \\\cline{1-2}
 all   &pass the buffer    \\\cline{1-2}
-secondary   &{\ttfamily camp\+\_\+core =$>$ camp\+\_\+core\+\_\+t( )}    \\\cline{1-2}
+secondary   &{\ttfamily camp\+\_\+core =\texorpdfstring{$>$}{>} camp\+\_\+core\+\_\+t( )}    \\\cline{1-2}
 secondary   &unpack the {\ttfamily camp\+\_\+core\+\_\+t} and other objects from the buffer    \\\cline{1-2}
 all   &{\ttfamily call camp\+\_\+core\%solver\+\_\+initialize( )}    \\\cline{1-2}
 all   &use {\ttfamily update\+\_\+data\+\_\+t} objects to update rates, etc.    \\\cline{1-2}
@@ -40,7 +40,9 @@ First, let\textquotesingle{}s add the modules we need for MPI. We\textquotesingl
 \DoxyCodeLine{\textcolor{preprocessor}{\#endif}}
 
 \end{DoxyCodeInclude}
- Now we\textquotesingle{}ll declare a buffer, a position index, and a pack size
+
+
+Now we\textquotesingle{}ll declare a buffer, a position index, and a pack size
 
 
 \begin{DoxyCodeInclude}{0}
@@ -50,7 +52,9 @@ First, let\textquotesingle{}s add the modules we need for MPI. We\textquotesingl
 \DoxyCodeLine{\textcolor{preprocessor}{\#endif}}
 
 \end{DoxyCodeInclude}
- Next, let\textquotesingle{}s initialize MPI and wrap some of our existing code in a conditional statement that ensures we load the input data and initialize CAMP on the primary process only (we\textquotesingle{}re including the existing call to the \mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\+\_\+core\+\_\+t}} constructor and {\ttfamily \mbox{\hyperlink{namespacecamp__aero__phase__data_a408fc2dbd4214ae958b98296176e71cb}{camp\+\_\+core\+\_\+t\+::initialize()}}} to show the placement of the start of our new conditional block)\+:
+
+
+Next, let\textquotesingle{}s initialize MPI and wrap some of our existing code in a conditional statement that ensures we load the input data and initialize CAMP on the primary process only (we\textquotesingle{}re including the existing call to the \mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\+\_\+core\+\_\+t}} constructor and {\ttfamily \mbox{\hyperlink{namespacecamp__aero__phase__data_a408fc2dbd4214ae958b98296176e71cb}{camp\+\_\+core\+\_\+t\+::initialize()}}} to show the placement of the start of our new conditional block)\+:
 
 
 \begin{DoxyCodeInclude}{0}
@@ -64,7 +68,9 @@ First, let\textquotesingle{}s add the modules we need for MPI. We\textquotesingl
 \DoxyCodeLine{    \textcolor{keyword}{call }camp\_core\%initialize( )}
 
 \end{DoxyCodeInclude}
- The {\ttfamily \mbox{\hyperlink{namespacecamp__aero__phase__data_a408fc2dbd4214ae958b98296176e71cb}{camp\+\_\+core\+\_\+t\+::initialize()}}} subroutine instructs the internal model elements to take their input data and condense it down into a small data block containing only the information they need to solve the chemical system during calls to {\ttfamily \mbox{\hyperlink{namespacecamp__camp__core_a2c930e794dab3e8c87b47cbc35ea28a0}{camp\+\_\+core\+\_\+t\+::solve()}}}. The \mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\+\_\+core\+\_\+t}} MPI functions pass only this condensed data to other processes. So, after the core is passed, you will not have access to the raw input data or model \mbox{\hyperlink{structcamp__property_1_1property__t}{property\+\_\+t}} objects that we used to set up the \mbox{\hyperlink{structcamp__rxn__data_1_1rxn__update__data__t}{rxn\+\_\+update\+\_\+data\+\_\+t}} objects in \mbox{\hyperlink{camp_tutorial_part_3}{part 3}}. Thus, all the setup of \mbox{\hyperlink{structcamp__rxn__data_1_1rxn__update__data__t}{rxn\+\_\+update\+\_\+data\+\_\+t}} objects must be done on the primary process, before passing the core and update objects to the other processes.
+
+
+The {\ttfamily \mbox{\hyperlink{namespacecamp__aero__phase__data_a408fc2dbd4214ae958b98296176e71cb}{camp\+\_\+core\+\_\+t\+::initialize()}}} subroutine instructs the internal model elements to take their input data and condense it down into a small data block containing only the information they need to solve the chemical system during calls to {\ttfamily \mbox{\hyperlink{namespacecamp__camp__core_a2c930e794dab3e8c87b47cbc35ea28a0}{camp\+\_\+core\+\_\+t\+::solve()}}}. The \mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\+\_\+core\+\_\+t}} MPI functions pass only this condensed data to other processes. So, after the core is passed, you will not have access to the raw input data or model \mbox{\hyperlink{structcamp__property_1_1property__t}{property\+\_\+t}} objects that we used to set up the \mbox{\hyperlink{structcamp__rxn__data_1_1rxn__update__data__t}{rxn\+\_\+update\+\_\+data\+\_\+t}} objects in \mbox{\hyperlink{camp_tutorial_part_3}{part 3}}. Thus, all the setup of \mbox{\hyperlink{structcamp__rxn__data_1_1rxn__update__data__t}{rxn\+\_\+update\+\_\+data\+\_\+t}} objects must be done on the primary process, before passing the core and update objects to the other processes.
 
 So, let\textquotesingle{}s end our first MPI conditional block after we setup the $\ce{NO2}$ photolysis \mbox{\hyperlink{rxn__solver_8h_ae35bddd1d3cc8d012789600176c7595b}{rxn\+\_\+update\+\_\+data\+\_\+t}} object and before the call to {\ttfamily \mbox{\hyperlink{namespacecamp__camp__core_afc097bb26f6704f9398d96eea873ba79}{camp\+\_\+core\+\_\+t\+::solver\+\_\+initialize()}}}. The first step is to get the size of the buffer to be used to pass the objects (the existing check that the $\ce{NO2}$ photolysis update data object is attached is included to show the placement of the following code block)\+:
 
@@ -77,7 +83,9 @@ So, let\textquotesingle{}s end our first MPI conditional block after we setup th
 \DoxyCodeLine{    \textcolor{keyword}{allocate}( buffer( pack\_size ) )}
 
 \end{DoxyCodeInclude}
- After we allocate the buffer on the primary process, we\textquotesingle{}ll pack it with the object data\+:
+
+
+After we allocate the buffer on the primary process, we\textquotesingle{}ll pack it with the object data\+:
 
 
 \begin{DoxyCodeInclude}{0}
@@ -88,7 +96,9 @@ So, let\textquotesingle{}s end our first MPI conditional block after we setup th
 \DoxyCodeLine{\textcolor{keywordflow}{  end if} \textcolor{comment}{! primary process}}
 
 \end{DoxyCodeInclude}
- Next, we\textquotesingle{}ll pass the species indexes we looked up. (Remember, we won\textquotesingle{}t be able to do this on the secondary processes.)
+
+
+Next, we\textquotesingle{}ll pass the species indexes we looked up. (Remember, we won\textquotesingle{}t be able to do this on the secondary processes.)
 
 
 \begin{DoxyCodeInclude}{0}
@@ -98,7 +108,9 @@ So, let\textquotesingle{}s end our first MPI conditional block after we setup th
 \DoxyCodeLine{  \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__mpi_a7b8bd92bfd70d41355c71943d41a528c}{camp\_mpi\_bcast\_integer}}( idx\_o2  )}
 
 \end{DoxyCodeInclude}
- After we pack the objects and exit the primary process block, we\textquotesingle{}ll pass the buffer to the other processes\+:
+
+
+After we pack the objects and exit the primary process block, we\textquotesingle{}ll pass the buffer to the other processes\+:
 
 
 \begin{DoxyCodeInclude}{0}
@@ -111,7 +123,9 @@ So, let\textquotesingle{}s end our first MPI conditional block after we setup th
 \DoxyCodeLine{  \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__mpi_a2b70614f7b7ae69f1ea2dc0256e5cc61}{camp\_mpi\_bcast\_packed}}( buffer )}
 
 \end{DoxyCodeInclude}
- Next, we\textquotesingle{}ll unpack the objects on the secondary processes\+:
+
+
+Next, we\textquotesingle{}ll unpack the objects on the secondary processes\+:
 
 
 \begin{DoxyCodeInclude}{0}
@@ -128,7 +142,9 @@ So, let\textquotesingle{}s end our first MPI conditional block after we setup th
 \DoxyCodeLine{\textcolor{preprocessor}{\#endif}}
 
 \end{DoxyCodeInclude}
- Note that we call the \mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\+\_\+core\+\_\+t}} constructor without passing the input file list. This creates an empty core on the secondary processes that we can fill with the packed data from the buffer. After unpacking the objects and deallocating the buffer, our message passing is complete, and the rest of the code remains the same, beginning with the call to {\ttfamily \mbox{\hyperlink{namespacecamp__camp__core_afc097bb26f6704f9398d96eea873ba79}{solver\+\_\+initialize()}}}.
+
+
+Note that we call the \mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\+\_\+core\+\_\+t}} constructor without passing the input file list. This creates an empty core on the secondary processes that we can fill with the packed data from the buffer. After unpacking the objects and deallocating the buffer, our message passing is complete, and the rest of the code remains the same, beginning with the call to {\ttfamily \mbox{\hyperlink{namespacecamp__camp__core_afc097bb26f6704f9398d96eea873ba79}{solver\+\_\+initialize()}}}.
 
 This is not a very useful parallelization of our box model, as we\textquotesingle{}re just solving the same system on every process, but it demonstrates how to initialize and pass the {\ttfamily camp\+\_\+core\+\_\+t} and {\ttfamily update\+\_\+data\+\_\+t} objects. The {\ttfamily camp\+\_\+state\+\_\+t\+::state\+\_\+var(\+:)} array can be accessed directly and passed however your model passes double-\/precision floating-\/point arrays, or you can use the {\ttfamily \mbox{\hyperlink{namespacecamp__mpi_a7d5bd45d25af1d118c3f36eb507aca3f}{camp\+\_\+mpi\+\_\+pack\+\_\+size\+\_\+real\+\_\+array()}}}, {\ttfamily \mbox{\hyperlink{namespacecamp__mpi_a1dae044c008ae5c6b304ee24b4e059fe}{camp\+\_\+mpi\+\_\+pack\+\_\+real\+\_\+array()}}}, and {\ttfamily \mbox{\hyperlink{namespacecamp__mpi_aeca685c68939372a57f9c9dae80b8936}{camp\+\_\+mpi\+\_\+unpack\+\_\+real\+\_\+array()}}} functions.
 
@@ -157,7 +173,9 @@ To finish up, let\textquotesingle{}s add a conditional block around the output t
 \DoxyCodeLine{\textcolor{preprocessor}{\#endif}}
 
 \end{DoxyCodeInclude}
- To compile the model code with mpi, be sure to include the {\ttfamily USE\+\_\+\+MPI} flag definition\+: 
+
+
+To compile the model code with mpi, be sure to include the {\ttfamily USE\+\_\+\+MPI} flag definition\+: 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{mpif90 -\/o run\_box\_model box\_model.F90 -\/DCAMP\_USE\_MPI -\/lcamp -\/I/usr/local/include/camp}
 \DoxyCodeLine{mpirun -\/v -\/np 2 run\_box\_model > output.txt}
@@ -201,4 +219,4 @@ To run a Docker container with MPI support, we\textquotesingle{}ll need to build
  You should get the same results as described in \mbox{\hyperlink{camp_tutorial_part_3}{Boot CAMP\+: Part 3 -\/ Updating CAMP Parameters}}
 
 \DoxyHorRuler{0}
- {\bfseries{ $<$ Previous\+: }} \mbox{\hyperlink{camp_tutorial_part_3}{Boot CAMP\+: Part 3 -\/ Updating CAMP Parameters}}  \mbox{\hyperlink{camp_tutorial}{Index}}  {\bfseries{ Next\+: }} \mbox{\hyperlink{camp_tutorial_part_5}{Boot CAMP\+: Part 5 -\/ Aerosol Representations}} {\bfseries{ $>$ }} 
+ {\bfseries{ \texorpdfstring{$<$}{<} Previous\+: }} \mbox{\hyperlink{camp_tutorial_part_3}{Boot CAMP\+: Part 3 -\/ Updating CAMP Parameters}}  \mbox{\hyperlink{camp_tutorial}{Index}}  {\bfseries{ Next\+: }} \mbox{\hyperlink{camp_tutorial_part_5}{Boot CAMP\+: Part 5 -\/ Aerosol Representations}} {\bfseries{ \texorpdfstring{$>$}{>} }} 

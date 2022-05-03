@@ -10,15 +10,18 @@ Valid reaction types include\+:
 \begin{DoxyItemize}
 \item \mbox{\hyperlink{camp_rxn_aqueous_equilibrium}{aqueous-\/phase equilibrium}}
 \item \mbox{\hyperlink{camp_rxn_arrhenius}{Arrhenius}}
-\item \mbox{\hyperlink{camp_rxn_CMAQ_H2O2}{CMAQ special reaction type for 2\+HO2 (+ H2O) -\/$>$ H2\+O2}}
-\item \mbox{\hyperlink{camp_rxn_CMAQ_OH_HNO3}{CMAQ special reaction type for OH + HNO3 -\/$>$ NO3 + H2O}}
+\item \mbox{\hyperlink{camp_rxn_CMAQ_H2O2}{CMAQ special reaction type for 2\+HO2 (+ H2O) -\/\texorpdfstring{$>$}{>} H2\+O2}}
+\item \mbox{\hyperlink{camp_rxn_CMAQ_OH_HNO3}{CMAQ special reaction type for OH + HNO3 -\/\texorpdfstring{$>$}{>} NO3 + H2O}}
 \item \mbox{\hyperlink{camp_rxn_condensed_phase_arrhenius}{condensed-\/chase Arrhenius}}
 \item \mbox{\hyperlink{camp_rxn_emission}{emission}}
 \item \mbox{\hyperlink{camp_rxn_first_order_loss}{first-\/order loss}}
 \item \mbox{\hyperlink{camp_rxn_HL_phase_transfer}{Henry\textquotesingle{}s Law phase transfer}}
 \item \mbox{\hyperlink{camp_rxn_photolysis}{photolysis}}
 \item \mbox{\hyperlink{camp_rxn_SIMPOL_phase_transfer}{SIMPOL.1 phase transfer}}
+\item \mbox{\hyperlink{camp_rxn_ternary_chemical_activation}{ternary chemical activation}}
 \item \mbox{\hyperlink{camp_rxn_troe}{Troe (fall-\/off)}}
+\item \mbox{\hyperlink{camp_rxn_wennberg_no_ro2}{Wennberg NO + RO2}}
+\item \mbox{\hyperlink{camp_rxn_wennberg_tunneling}{Wennberg tunneling}}
 \item \mbox{\hyperlink{camp_rxn_wet_deposition}{wet deposition}}
 \end{DoxyItemize}
 
@@ -331,7 +334,44 @@ Input data for SIMPOL phase transfer reactions have the following format \+:
 
 Gas-\/phase species must include parameters named {\bfseries{diffusion}} {\bfseries{coeff}} {\bfseries{}}\mbox{[}{\bfseries{m2}} {\bfseries{s-\/1}}\mbox{]}, which specifies the diffusion coefficient in $\mbox{m}^2\,\mbox{s}^{-1}$, and {\bfseries{molecular}} {\bfseries{weight}} {\bfseries{}}\mbox{[}{\bfseries{kg}} {\bfseries{mol-\/1}}\mbox{]}, which specifies the molecular weight of the species in $\mbox{kg}\,\mbox{mol}^{-1}$. They may optionally include the parameter {\bfseries{N}} {\bfseries{star}}, which will be used to calculate th mass accomodation coefficient. When this parameter is not included, the mass accomodation coefficient is assumed to be 1.\+0.
 
-The key-\/value pair {\bfseries{B}} is also required and must have a value of an array of exactly four members that specifies the SIMPOL parameters for the partitioning species. The {\bfseries{B}} parameters can be obtained by summing the contributions of each functional group present in the partitioning species to the overall $B_{n,i}$ for species $i$, such that\+: \[ B_{n,i} = \sum_{k} \nu_{k,i} B_{n,k} \forall n \in [1...4] \] where $\nu_{k,i}$ is the number of functional groups $k$ in species $i$ and the parameters $B_{n,k}$ for each functional group $k$ can be found in table 5 of Pankow and Asher (2008) {\bfseries [Pankow2008]}. \hypertarget{camp_rxn_troe}{}\doxysection{CAMP\+: Troe Reaction}\label{camp_rxn_troe}
+The key-\/value pair {\bfseries{B}} is also required and must have a value of an array of exactly four members that specifies the SIMPOL parameters for the partitioning species. The {\bfseries{B}} parameters can be obtained by summing the contributions of each functional group present in the partitioning species to the overall $B_{n,i}$ for species $i$, such that\+: \[ B_{n,i} = \sum_{k} \nu_{k,i} B_{n,k} \forall n \in [1...4] \] where $\nu_{k,i}$ is the number of functional groups $k$ in species $i$ and the parameters $B_{n,k}$ for each functional group $k$ can be found in table 5 of Pankow and Asher (2008) {\bfseries [Pankow2008]}. \hypertarget{camp_rxn_ternary_chemical_activation}{}\doxysection{CAMP\+: Ternary Chemical Activation Reaction}\label{camp_rxn_ternary_chemical_activation}
+Ternary Chemical Activation reaction rate constant equations take the form\+:
+
+\[ \frac{k_0}{1+k_0[\mbox{M}]/k_{\inf}}F_C^{(1+1/N[log_{10}(k_0[\mbox{M}]/k_{\inf})]^2)^{-1}} \]
+
+where $k_0$ is the low-\/pressure limiting rate constant, $k_{\inf}$ is the high-\/pressure limiting rate constant, $[\mbox{M}]$ is the density of air, and $F_C$ and $N$ are parameters that determine the shape of the fall-\/off curve, and are typically 0.\+6 and 1.\+0, respectively {\bfseries [JPL15]}. $k_0$ and $k_{\inf}$ are calculated as \mbox{\hyperlink{camp_rxn_arrhenius}{Arrhenius}} rate constants with $D=300$ and $E=0$.
+
+Input data for Ternary Chemical Activation reactions have the following format \+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{  "{}type"{} : "{}TERNARY\_CHEMICAL\_ACTIVATION"{},}
+\DoxyCodeLine{  "{}k0\_A"{} : 5.6E-\/12,}
+\DoxyCodeLine{  "{}k0\_B"{} : -\/1.8,}
+\DoxyCodeLine{  "{}k0\_C"{} : 180.0,}
+\DoxyCodeLine{  "{}kinf\_A"{} : 3.4E-\/12,}
+\DoxyCodeLine{  "{}kinf\_B"{} : -\/1.6,}
+\DoxyCodeLine{  "{}kinf\_C"{} : 104.1,}
+\DoxyCodeLine{  "{}Fc"{}  : 0.7,}
+\DoxyCodeLine{  "{}N"{}  : 0.9,}
+\DoxyCodeLine{  "{}time unit"{} : "{}MIN"{},}
+\DoxyCodeLine{  "{}reactants"{} : \{}
+\DoxyCodeLine{    "{}spec1"{} : \{\},}
+\DoxyCodeLine{    "{}spec2"{} : \{ "{}qty"{} : 2 \},}
+\DoxyCodeLine{    ...}
+\DoxyCodeLine{  \},}
+\DoxyCodeLine{  "{}products"{} : \{}
+\DoxyCodeLine{    "{}spec3"{} : \{\},}
+\DoxyCodeLine{    "{}spec4"{} : \{ "{}yield"{} : 0.65 \},}
+\DoxyCodeLine{    ...}
+\DoxyCodeLine{  \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+ The key-\/value pairs {\bfseries{reactants}}, and {\bfseries{products}} are required. Reactants without a {\bfseries{qty}} value are assumed to appear once in the reaction equation. Products without a specified {\bfseries{yield}} are assumed to have a {\bfseries{yield}} of 1.\+0.
+
+The two sets of parameters beginning with {\bfseries{k0\+\_\+}} and {\bfseries{kinf\+\_\+}} are the \mbox{\hyperlink{camp_rxn_arrhenius}{Arrhenius}} parameters for the $k_0$ and $k_{\inf}$ rate constants, respectively. When not present, {\bfseries{\+\_\+A}} parameters are assumed to be 1.\+0, {\bfseries{\+\_\+B}} to be 0.\+0, {\bfseries{\+\_\+C}} to be 0.\+0, {\bfseries{Fc}} to be 0.\+6 and {\bfseries{N}} to be 1.\+0.
+
+The unit for time is assumed to be s, but inclusion of the optional key-\/value pair {\bfseries{time}} {\bfseries{unit}} = {\bfseries{MIN}} can be used to indicate a rate with min as the time unit. \hypertarget{camp_rxn_troe}{}\doxysection{CAMP\+: Troe Reaction}\label{camp_rxn_troe}
 Troe (fall-\/off) reaction rate constant equations take the form\+:
 
 \[ \frac{k_0[\mbox{M}]}{1+k_0[\mbox{M}]/k_{\inf}}F_C^{(1+1/N[log_{10}(k_0[\mbox{M}]/k_{\inf})]^2)^{-1}} \]
@@ -368,7 +408,77 @@ Input data for Troe reactions have the following format \+:
 
 The two sets of parameters beginning with {\bfseries{k0\+\_\+}} and {\bfseries{kinf\+\_\+}} are the \mbox{\hyperlink{camp_rxn_arrhenius}{Arrhenius}} parameters for the $k_0$ and $k_{\inf}$ rate constants, respectively. When not present, {\bfseries{\+\_\+A}} parameters are assumed to be 1.\+0, {\bfseries{\+\_\+B}} to be 0.\+0, {\bfseries{\+\_\+C}} to be 0.\+0, {\bfseries{Fc}} to be 0.\+6 and {\bfseries{N}} to be 1.\+0.
 
-The unit for time is assumed to be s, but inclusion of the optional key-\/value pair {\bfseries{time}} {\bfseries{unit}} = {\bfseries{MIN}} can be used to indicate a rate with min as the time unit. \hypertarget{camp_rxn_wet_deposition}{}\doxysection{CAMP\+: Wet Deposition}\label{camp_rxn_wet_deposition}
+The unit for time is assumed to be s, but inclusion of the optional key-\/value pair {\bfseries{time}} {\bfseries{unit}} = {\bfseries{MIN}} can be used to indicate a rate with min as the time unit. \hypertarget{camp_rxn_wennberg_no_ro2}{}\doxysection{CAMP\+: Wennberg NO + RO2 Reaction}\label{camp_rxn_wennberg_no_ro2}
+Wennberg NO + RO2 reactions are branched reactions with one branch forming alkoxy radicals plus $\ce{NO2}$ and the other forming organic nitrates {\bfseries [Wennberg2018]} . The rate constants for each branch are based on an Arrhenius rate constant and a temperature-\/ and structure-\/dependent branching ratio calculated as\+:
+
+\begin{align} k_{nitrate} & = \left(X e^{-Y/T}\right) \left(\frac{A(T, \mbox{[M]}, n)}{A(T, \mbox{[M]}, n) + Z}\right) \\ k_{alkoxy} & = \left(X e^{-Y/T}\right)\left(\frac{Z}{Z + A(T, \mbox{[M]}, n)}\right) \\ A(T, \mbox{[M]}, n) & = \frac{2 \times 10^{-22} e^n \mbox{[M]}}{1 + \frac{2 \times 10^{-22} e^n \mbox{[M]}}{0.43(T/298)^{-8}}} 0.41^{(1+[log( \frac{2 \times 10^{-22} e^n \mbox{[M]}}{0.43(T/298)^{-8}})]^2)^{-1}} \end{align}
+
+where $T$ is temperature (K), \mbox{[}M\mbox{]} is the number density of air (molecules $\mbox{cm}^{-3}$), $X$ and $Y$ are Arrhenius parameters for the overall reaction, $n$ is the number of heavy atoms in the $\ce{RO2}$ reacting species (excluding the peroxy moiety), and $Z$ is defined as a function of two parameters ( $\alpha_0, n$)\+:
+
+\[ Z( \alpha_0, n) = A(T = 293 \mbox{K}, \mbox{[M]} = 2.45 \times 10^{19} \frac{\mbox{molec}}{\mbox{cm}^3}, n) \frac{(1-\alpha_0)}{\alpha_0} \]
+
+More details can be found in Wennberg et al. (2018) {\bfseries [Wennberg2018]} .
+
+Input data for Wennberg NO + RO2 equations has the following format\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{  "{}type"{} : "{}WENNBERG\_NO\_RO2"{},}
+\DoxyCodeLine{  "{}X"{} : 123.45,}
+\DoxyCodeLine{  "{}Y"{}  : 1200.0,}
+\DoxyCodeLine{  "{}a0"{}  : 1.0e8,}
+\DoxyCodeLine{  "{}n"{} : 6,}
+\DoxyCodeLine{  "{}time unit"{} : "{}MIN"{},}
+\DoxyCodeLine{  "{}reactants"{} : \{}
+\DoxyCodeLine{    "{}spec1"{} : \{\},}
+\DoxyCodeLine{    "{}spec2"{} : \{ "{}qty"{} : 2 \},}
+\DoxyCodeLine{    ...}
+\DoxyCodeLine{  \},}
+\DoxyCodeLine{  "{}alkoxy products"{} : \{}
+\DoxyCodeLine{    "{}spec3"{} : \{\},}
+\DoxyCodeLine{    "{}spec4"{} : \{ "{}yield"{} : 0.65 \},}
+\DoxyCodeLine{    ...}
+\DoxyCodeLine{  \},}
+\DoxyCodeLine{  "{}nitrate products"{} : \{}
+\DoxyCodeLine{    "{}spec5"{} : \{\},}
+\DoxyCodeLine{    "{}spec6"{} : \{ "{}yield"{} : 0.32 \},}
+\DoxyCodeLine{    ...}
+\DoxyCodeLine{  \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+ The key-\/value pairs {\bfseries{reactants}}, and both sets of {\bfseries{products}} are required. Reactants without a {\bfseries{qty}} value are assumed to appear once in the reaction equation. Products without a specified {\bfseries{yield}} are assumed to have a {\bfseries{yield}} of 1.\+0.
+
+When {\bfseries{X}} is not included, it is assumed to be 1.\+0, when {\bfseries{Y}} is not included, it is assumed to be 0.\+0 K, when {\bfseries{a0}} is not included, it is assumed to be 1.\+0, and when {\bfseries{n}} is not included, it is assumed to be 0. The unit for time is assumed to be s, but inclusion of the optional key-\/value pair {\bfseries{time}} {\bfseries{unit}} = {\bfseries{MIN}} can be used to indicate a rate with min as the time unit. \hypertarget{camp_rxn_wennberg_tunneling}{}\doxysection{CAMP\+: Wennberg Tunneling Reaction}\label{camp_rxn_wennberg_tunneling}
+Wennberg tunneling reaction rate constant equations are calculated as follows\+:
+
+\[ Ae^{(\frac{-B}{T})}e^{(\frac{C}{T^3})} \]
+
+where $A$ is the pre-\/exponential factor ( $(\mbox{#}\,\mbox{cm}^{-3})^{-(n-1)}\mbox{s}^{-1}$), and $B$ and $C$ are parameters that capture the temperature dependence as described in Wennberg et al. (2018) {\bfseries [Wennberg2018]} .
+
+Input data for Wennberg tunneling equations has the following format\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{  "{}type"{} : "{}WENNBERG\_TUNNELING"{},}
+\DoxyCodeLine{  "{}A"{} : 123.45,}
+\DoxyCodeLine{  "{}B"{}  : 1200.0,}
+\DoxyCodeLine{  "{}C"{}  : 1.0e8,}
+\DoxyCodeLine{  "{}time unit"{} : "{}MIN"{},}
+\DoxyCodeLine{  "{}reactants"{} : \{}
+\DoxyCodeLine{    "{}spec1"{} : \{\},}
+\DoxyCodeLine{    "{}spec2"{} : \{ "{}qty"{} : 2 \},}
+\DoxyCodeLine{    ...}
+\DoxyCodeLine{  \},}
+\DoxyCodeLine{  "{}products"{} : \{}
+\DoxyCodeLine{    "{}spec3"{} : \{\},}
+\DoxyCodeLine{    "{}spec4"{} : \{ "{}yield"{} : 0.65 \},}
+\DoxyCodeLine{    ...}
+\DoxyCodeLine{  \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+ The key-\/value pairs {\bfseries{reactants}}, and {\bfseries{products}} are required. Reactants without a {\bfseries{qty}} value are assumed to appear once in the reaction equation. Products without a specified {\bfseries{yield}} are assumed to have a {\bfseries{yield}} of 1.\+0.
+
+When {\bfseries{A}} is not included, it is assumed to be 1.\+0, when {\bfseries{B}} is not included, it is assumed to be 0.\+0 K, and when {\bfseries{C}} is not included, it is assumed to be 0.\+0 $\mbox{K}^3$. The unit for time is assumed to be s, but inclusion of the optional key-\/value pair {\bfseries{time}} {\bfseries{unit}} = {\bfseries{MIN}} can be used to indicate a rate with min as the time unit. \hypertarget{camp_rxn_wet_deposition}{}\doxysection{CAMP\+: Wet Deposition}\label{camp_rxn_wet_deposition}
 Wet Deposition reactions take the form\+:
 
 \[ \mbox{X} \rightarrow \]

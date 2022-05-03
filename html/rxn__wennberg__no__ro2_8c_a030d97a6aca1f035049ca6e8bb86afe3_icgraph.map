@@ -1,0 +1,6 @@
+<map id="calculate_A" name="calculate_A">
+<area shape="rect" id="node1" title="Calculates the Troe&#45;like parameter A(T, [M], n)" alt="" coords="529,13,620,39"/>
+<area shape="rect" id="node2" href="$rxn__wennberg__no__ro2_8c.html#a8d2b2b0c571f1601ab1458bec2df79a0" title="Update reaction data for new environmental conditions." alt="" coords="333,5,481,47"/>
+<area shape="rect" id="node3" href="$rxn__solver_8c.html#ab3d4bbab05647b5931a81ead002a5805" title="Update reaction data for new environmental state." alt="" coords="136,13,285,39"/>
+<area shape="rect" id="node4" href="$camp__solver_8c.html#afc5ec8680b419e7ab49530d53a76cee4" title="Solve for a given timestep." alt="" coords="5,13,88,39"/>
+</map>

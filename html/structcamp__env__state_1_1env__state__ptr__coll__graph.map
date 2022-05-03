@@ -1,4 +1,0 @@
-<map id="camp_env_state::env_state_ptr" name="camp_env_state::env_state_ptr">
-<area shape="rect" id="node1" title="Pointer for env_state_t." alt="" coords="5,109,151,151"/>
-<area shape="rect" id="node2" href="$structcamp__env__state_1_1env__state__t.html" title="Current environment state." alt="" coords="5,5,151,47"/>
-</map>

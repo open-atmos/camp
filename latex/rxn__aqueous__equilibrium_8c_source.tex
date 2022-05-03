@@ -1,0 +1,562 @@
+\hypertarget{rxn__aqueous__equilibrium_8c_source}{}\doxysection{rxn\+\_\+aqueous\+\_\+equilibrium.\+c}
+\label{rxn__aqueous__equilibrium_8c_source}\index{rxn\_aqueous\_equilibrium.c@{rxn\_aqueous\_equilibrium.c}}
+\mbox{\hyperlink{rxn__aqueous__equilibrium_8c}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00001}00001 \textcolor{comment}{/* Copyright (C) 2021 Barcelona Supercomputing Center and University of}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00002}00002 \textcolor{comment}{ * Illinois at Urbana-\/Champaign}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00003}00003 \textcolor{comment}{ * SPDX-\/License-\/Identifier: MIT}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00004}00004 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00005}00005 \textcolor{comment}{ * Aqueous Equilibrium reaction solver functions}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00006}00006 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00007}00007 \textcolor{comment}{ */}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00008}00008 \textcolor{comment}{/** \(\backslash\)file}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00009}00009 \textcolor{comment}{ * \(\backslash\)brief Aqueous Equilibrium reaction solver functions}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00010}00010 \textcolor{comment}{ */}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00011}00011 \textcolor{preprocessor}{\#include <math.h>}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00012}00012 \textcolor{preprocessor}{\#include <stdio.h>}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00013}00013 \textcolor{preprocessor}{\#include <stdlib.h>}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00014}00014 \textcolor{preprocessor}{\#include "{}../rxns.h"{}}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00015}00015 }
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00016}00016 \textcolor{comment}{// TODO Lookup environmental indices during initialization}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00017}\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_aa90d2b6c48aceb4d7ac3d93d5249bb60}{00017}} \textcolor{preprocessor}{\#define TEMPERATURE\_K\_ env\_data[0]}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00018}\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a32cc078fd8ca9ad0684c48ae0aad7135}{00018}} \textcolor{preprocessor}{\#define PRESSURE\_PA\_ env\_data[1]}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00019}00019 }
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00020}00020 \textcolor{comment}{// Small number}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00021}\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_ad75f0b37ea60f72b08dfc39101a21671}{00021}} \textcolor{preprocessor}{\#define SMALL\_NUMBER\_ 1.0e-\/30}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00022}00022 }
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00023}00023 \textcolor{comment}{// Factor used to calculate minimum water concentration for aqueous}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00024}00024 \textcolor{comment}{// phase equilibrium reactions}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00025}\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a4bbdf0ebb220103f51252a2b56f22cdf}{00025}} \textcolor{preprocessor}{\#define MIN\_WATER\_ 1.0e-\/4}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00026}00026 }
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00027}\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{00027}} \textcolor{preprocessor}{\#define NUM\_REACT\_ (int\_data[0])}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00028}\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{00028}} \textcolor{preprocessor}{\#define NUM\_PROD\_ (int\_data[1])}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00029}\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_adf4b84135880d5ac73ce37df877d91fb}{00029}} \textcolor{preprocessor}{\#define NUM\_AERO\_PHASE\_ (int\_data[2])}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00030}\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a71700f5633db3f99b43c798b09c60bd2}{00030}} \textcolor{preprocessor}{\#define A\_ (float\_data[0])}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00031}\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_ad010fec48ee67af5ba75e0ec6c3f5ce4}{00031}} \textcolor{preprocessor}{\#define C\_ (float\_data[1])}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00032}\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a6691394a09f2e41e036e3dd389032763}{00032}} \textcolor{preprocessor}{\#define RATE\_CONST\_REVERSE\_ (float\_data[2])}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00033}\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a7a7be1a044251bca9454b2306e958ab0}{00033}} \textcolor{preprocessor}{\#define WATER\_CONC\_ (float\_data[3])}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00034}\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_ad25dbd402979ada7d7f24fe5429b92ba}{00034}} \textcolor{preprocessor}{\#define ACTIVITY\_COEFF\_VALUE\_ (float\_data[4])}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00035}\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a66c602144d40f31d965505fae08401a1}{00035}} \textcolor{preprocessor}{\#define RATE\_CONST\_FORWARD\_ (rxn\_env\_data[0])}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00036}\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{00036}} \textcolor{preprocessor}{\#define NUM\_INT\_PROP\_ 3}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00037}\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}{00037}} \textcolor{preprocessor}{\#define NUM\_FLOAT\_PROP\_ 5}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00038}\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a1f68a3544ae39a7815cbb5c09dfdeff0}{00038}} \textcolor{preprocessor}{\#define NUM\_ENV\_PARAM\_ 1}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00039}\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_ae761e39657aac155d83eae9b338be571}{00039}} \textcolor{preprocessor}{\#define REACT\_(x) (int\_data[NUM\_INT\_PROP\_ + x] -\/ 1)}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00040}\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a9fda90058c6a41b1dda6ded03321c4da}{00040}} \textcolor{preprocessor}{\#define PROD\_(x) \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00041}00041 \textcolor{preprocessor}{  (int\_data[NUM\_INT\_PROP\_ + NUM\_REACT\_ * NUM\_AERO\_PHASE\_ + x] -\/ 1)}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00042}\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a21d22248f675f2c8aed5aa05e839290f}{00042}} \textcolor{preprocessor}{\#define WATER\_(x) \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00043}00043 \textcolor{preprocessor}{  (int\_data[NUM\_INT\_PROP\_ + (NUM\_REACT\_ + NUM\_PROD\_) * NUM\_AERO\_PHASE\_ + x] -\/ 1)}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00044}\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a853f717855396c45b4e2e439932d7b8f}{00044}} \textcolor{preprocessor}{\#define ACTIVITY\_COEFF\_(x)                                                   \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00045}00045 \textcolor{preprocessor}{  (int\_data[NUM\_INT\_PROP\_ + (NUM\_REACT\_ + NUM\_PROD\_ + 1) * NUM\_AERO\_PHASE\_ + \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00046}00046 \textcolor{preprocessor}{            x] -\/                                                             \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00047}00047 \textcolor{preprocessor}{   1)}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00048}\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_af9fc34858d09e71d3cffd88cf942bdf9}{00048}} \textcolor{preprocessor}{\#define DERIV\_ID\_(x) \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00049}00049 \textcolor{preprocessor}{  (int\_data[NUM\_INT\_PROP\_ + (NUM\_REACT\_ + NUM\_PROD\_ + 2) * NUM\_AERO\_PHASE\_ + x])}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00050}\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_ab831aae98d4453927c63a93f55ee5a86}{00050}} \textcolor{preprocessor}{\#define JAC\_ID\_(x)          \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00051}00051 \textcolor{preprocessor}{  (int\_data[NUM\_INT\_PROP\_ + \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00052}00052 \textcolor{preprocessor}{            (2 * (NUM\_REACT\_ + NUM\_PROD\_) + 2) * NUM\_AERO\_PHASE\_ + x])}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00053}\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a77130e76053b87f8e8ed225d0d6206d8}{00053}} \textcolor{preprocessor}{\#define MASS\_FRAC\_TO\_M\_(x) (float\_data[NUM\_FLOAT\_PROP\_ + x])}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00054}\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a57ec91c5d8fc0e67d395f3748e368d5c}{00054}} \textcolor{preprocessor}{\#define REACT\_CONC\_(x) \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00055}00055 \textcolor{preprocessor}{  (float\_data[NUM\_FLOAT\_PROP\_ + NUM\_REACT\_ + NUM\_PROD\_ + x])}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00056}\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_adf6032a096c8fae01588f07f3c34c496}{00056}} \textcolor{preprocessor}{\#define PROD\_CONC\_(x) \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00057}00057 \textcolor{preprocessor}{  (float\_data[NUM\_FLOAT\_PROP\_ + 2 * NUM\_REACT\_ + NUM\_PROD\_ + x])}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00058}\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a21721f706408d9a4a6e1b02c537c5c8b}{00058}} \textcolor{preprocessor}{\#define SMALL\_WATER\_CONC\_(x) \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00059}00059 \textcolor{preprocessor}{  (float\_data[NUM\_FLOAT\_PROP\_ + 2 * NUM\_REACT\_ + 2 * NUM\_PROD\_ + x])}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00060}\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a7ab0f8638f4cb41541b5d0f5b00d0985}{00060}} \textcolor{preprocessor}{\#define SMALL\_CONC\_(x)                                           \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00061}00061 \textcolor{preprocessor}{  (float\_data[NUM\_FLOAT\_PROP\_ + 2 * NUM\_REACT\_ + 2 * NUM\_PROD\_ + \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00062}00062 \textcolor{preprocessor}{              NUM\_AERO\_PHASE\_ + x])}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00063}00063 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00064}00064 \textcolor{comment}{/** \(\backslash\)brief Flag Jacobian elements used by this reaction}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00065}00065 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00066}00066 \textcolor{comment}{ * \(\backslash\)param rxn\_int\_data Pointer to the reaction integer data}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00067}00067 \textcolor{comment}{ * \(\backslash\)param rxn\_float\_data Pointer to the reaction floating-\/point data}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00068}00068 \textcolor{comment}{ * \(\backslash\)param jac Jacobian}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00069}00069 \textcolor{comment}{ */}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00070}\mbox{\hyperlink{rxns_8h_aba2b7971289b789830bb3986d8c26143}{00070}} \textcolor{keywordtype}{void} \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_aba2b7971289b789830bb3986d8c26143}{rxn\_aqueous\_equilibrium\_get\_used\_jac\_elem}}(\textcolor{keywordtype}{int} *rxn\_int\_data,}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00071}00071                                                \textcolor{keywordtype}{double} *rxn\_float\_data,}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00072}00072                                                \mbox{\hyperlink{struct_jacobian}{Jacobian}} *jac) \{}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00073}00073   \textcolor{keywordtype}{int} *int\_data = rxn\_int\_data;}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00074}00074   \textcolor{keywordtype}{double} *float\_data = rxn\_float\_data;}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00075}00075 }
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00076}00076   \textcolor{comment}{// Loop over all the instances of the specified phase}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00077}00077   \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_phase = 0; i\_phase < \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_adf4b84135880d5ac73ce37df877d91fb}{NUM\_AERO\_PHASE\_}}; i\_phase++) \{}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00078}00078     \textcolor{comment}{// Add dependence on reactants for reactants and products (forward reaction)}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00079}00079     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_react\_ind = i\_phase * \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}};}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00080}00080          i\_react\_ind < (i\_phase + 1) * \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}}; i\_react\_ind++) \{}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00081}00081       \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_react\_dep = i\_phase * \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}};}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00082}00082            i\_react\_dep < (i\_phase + 1) * \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}}; i\_react\_dep++)}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00083}00083         \mbox{\hyperlink{_jacobian_8c_aac51ac6b1cf239a84899308dab229441}{jacobian\_register\_element}}(jac, \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_ae761e39657aac155d83eae9b338be571}{REACT\_}}(i\_react\_dep),}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00084}00084                                   \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_ae761e39657aac155d83eae9b338be571}{REACT\_}}(i\_react\_ind));}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00085}00085       \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_prod\_dep = i\_phase * \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}};}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00086}00086            i\_prod\_dep < (i\_phase + 1) * \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}}; i\_prod\_dep++)}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00087}00087         \mbox{\hyperlink{_jacobian_8c_aac51ac6b1cf239a84899308dab229441}{jacobian\_register\_element}}(jac, \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a9fda90058c6a41b1dda6ded03321c4da}{PROD\_}}(i\_prod\_dep), \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_ae761e39657aac155d83eae9b338be571}{REACT\_}}(i\_react\_ind));}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00088}00088     \}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00089}00089 }
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00090}00090     \textcolor{comment}{// Add dependence on products for reactants and products (reverse reaction)}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00091}00091     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_prod\_ind = i\_phase * \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}};}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00092}00092          i\_prod\_ind < (i\_phase + 1) * \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}}; i\_prod\_ind++) \{}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00093}00093       \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_react\_dep = i\_phase * \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}};}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00094}00094            i\_react\_dep < (i\_phase + 1) * \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}}; i\_react\_dep++)}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00095}00095         \mbox{\hyperlink{_jacobian_8c_aac51ac6b1cf239a84899308dab229441}{jacobian\_register\_element}}(jac, \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_ae761e39657aac155d83eae9b338be571}{REACT\_}}(i\_react\_dep), \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a9fda90058c6a41b1dda6ded03321c4da}{PROD\_}}(i\_prod\_ind));}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00096}00096       \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_prod\_dep = i\_phase * \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}};}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00097}00097            i\_prod\_dep < (i\_phase + 1) * \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}}; i\_prod\_dep++)}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00098}00098         \mbox{\hyperlink{_jacobian_8c_aac51ac6b1cf239a84899308dab229441}{jacobian\_register\_element}}(jac, \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a9fda90058c6a41b1dda6ded03321c4da}{PROD\_}}(i\_prod\_dep), \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a9fda90058c6a41b1dda6ded03321c4da}{PROD\_}}(i\_prod\_ind));}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00099}00099     \}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00100}00100 }
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00101}00101     \textcolor{comment}{// Add dependence on aerosol-\/phase water for reactants and products}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00102}00102     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_react\_dep = i\_phase * \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}};}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00103}00103          i\_react\_dep < (i\_phase + 1) * \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}}; i\_react\_dep++)}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00104}00104       \mbox{\hyperlink{_jacobian_8c_aac51ac6b1cf239a84899308dab229441}{jacobian\_register\_element}}(jac, \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_ae761e39657aac155d83eae9b338be571}{REACT\_}}(i\_react\_dep), \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a21d22248f675f2c8aed5aa05e839290f}{WATER\_}}(i\_phase));}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00105}00105     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_prod\_dep = i\_phase * \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}};}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00106}00106          i\_prod\_dep < (i\_phase + 1) * \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}}; i\_prod\_dep++)}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00107}00107       \mbox{\hyperlink{_jacobian_8c_aac51ac6b1cf239a84899308dab229441}{jacobian\_register\_element}}(jac, \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a9fda90058c6a41b1dda6ded03321c4da}{PROD\_}}(i\_prod\_dep), \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a21d22248f675f2c8aed5aa05e839290f}{WATER\_}}(i\_phase));}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00108}00108 }
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00109}00109     \textcolor{comment}{// Add dependence on activity coefficients for reactants and products}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00110}00110     \textcolor{keywordflow}{if} (\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a853f717855396c45b4e2e439932d7b8f}{ACTIVITY\_COEFF\_}}(i\_phase) < 0) \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00111}00111     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_react\_dep = i\_phase * \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}};}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00112}00112          i\_react\_dep < (i\_phase + 1) * \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}}; ++i\_react\_dep)}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00113}00113       \mbox{\hyperlink{_jacobian_8c_aac51ac6b1cf239a84899308dab229441}{jacobian\_register\_element}}(jac, \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_ae761e39657aac155d83eae9b338be571}{REACT\_}}(i\_react\_dep),}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00114}00114                                 \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a853f717855396c45b4e2e439932d7b8f}{ACTIVITY\_COEFF\_}}(i\_phase));}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00115}00115     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_prod\_dep = i\_phase * \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}};}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00116}00116          i\_prod\_dep < (i\_phase + 1) * \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}}; ++i\_prod\_dep)}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00117}00117       \mbox{\hyperlink{_jacobian_8c_aac51ac6b1cf239a84899308dab229441}{jacobian\_register\_element}}(jac, \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a9fda90058c6a41b1dda6ded03321c4da}{PROD\_}}(i\_prod\_dep),}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00118}00118                                 \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a853f717855396c45b4e2e439932d7b8f}{ACTIVITY\_COEFF\_}}(i\_phase));}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00119}00119   \}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00120}00120 }
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00121}00121   \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00122}00122 \}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00123}00123 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00124}00124 \textcolor{comment}{/** \(\backslash\)brief Update the time derivative and Jacbobian array indices}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00125}00125 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00126}00126 \textcolor{comment}{ * \(\backslash\)param model\_data Pointer to the model data}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00127}00127 \textcolor{comment}{ * \(\backslash\)param deriv\_ids Id of each state variable in the derivative array}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00128}00128 \textcolor{comment}{ * \(\backslash\)param jac Jacobian}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00129}00129 \textcolor{comment}{ * \(\backslash\)param rxn\_int\_data Pointer to the reaction integer data}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00130}00130 \textcolor{comment}{ * \(\backslash\)param rxn\_float\_data Pointer to the reaction floating-\/point data}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00131}00131 \textcolor{comment}{ */}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00132}\mbox{\hyperlink{rxns_8h_af61bf85579cdea2f2c8ee0ea4fd8a96d}{00132}} \textcolor{keywordtype}{void} \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_af61bf85579cdea2f2c8ee0ea4fd8a96d}{rxn\_aqueous\_equilibrium\_update\_ids}}(\mbox{\hyperlink{struct_model_data}{ModelData}} *model\_data, \textcolor{keywordtype}{int} *deriv\_ids,}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00133}00133                                         \mbox{\hyperlink{struct_jacobian}{Jacobian}} jac, \textcolor{keywordtype}{int} *rxn\_int\_data,}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00134}00134                                         \textcolor{keywordtype}{double} *rxn\_float\_data) \{}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00135}00135   \textcolor{keywordtype}{int} *int\_data = rxn\_int\_data;}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00136}00136   \textcolor{keywordtype}{double} *float\_data = rxn\_float\_data;}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00137}00137 }
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00138}00138   \textcolor{comment}{// Update the time derivative ids}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00139}00139   \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_phase = 0, i\_deriv = 0; i\_phase < \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_adf4b84135880d5ac73ce37df877d91fb}{NUM\_AERO\_PHASE\_}}; i\_phase++) \{}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00140}00140     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_react = 0; i\_react < \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}}; i\_react++)}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00141}00141       \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_af9fc34858d09e71d3cffd88cf942bdf9}{DERIV\_ID\_}}(i\_deriv++) = deriv\_ids[\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_ae761e39657aac155d83eae9b338be571}{REACT\_}}(i\_phase * \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}} + i\_react)];}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00142}00142     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_prod = 0; i\_prod < \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}}; i\_prod++)}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00143}00143       \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_af9fc34858d09e71d3cffd88cf942bdf9}{DERIV\_ID\_}}(i\_deriv++) = deriv\_ids[\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a9fda90058c6a41b1dda6ded03321c4da}{PROD\_}}(i\_phase * \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}} + i\_prod)];}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00144}00144   \}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00145}00145 }
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00146}00146   \textcolor{comment}{// Update the Jacobian ids}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00147}00147   \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_phase = 0, i\_jac = 0; i\_phase < \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_adf4b84135880d5ac73ce37df877d91fb}{NUM\_AERO\_PHASE\_}}; i\_phase++) \{}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00148}00148     \textcolor{comment}{// Add dependence on reactants for reactants and products (forward reaction)}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00149}00149     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_react\_ind = i\_phase * \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}};}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00150}00150          i\_react\_ind < (i\_phase + 1) * \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}}; i\_react\_ind++) \{}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00151}00151       \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_react\_dep = i\_phase * \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}};}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00152}00152            i\_react\_dep < (i\_phase + 1) * \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}}; i\_react\_dep++)}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00153}00153         \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\_ID\_}}(i\_jac++) = \mbox{\hyperlink{_jacobian_8c_a7b43d5884ec62826389d6d739b7f25eb}{jacobian\_get\_element\_id}}(jac, \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_ae761e39657aac155d83eae9b338be571}{REACT\_}}(i\_react\_dep),}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00154}00154                                                    \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_ae761e39657aac155d83eae9b338be571}{REACT\_}}(i\_react\_ind));}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00155}00155       \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_prod\_dep = i\_phase * \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}};}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00156}00156            i\_prod\_dep < (i\_phase + 1) * \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}}; i\_prod\_dep++)}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00157}00157         \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\_ID\_}}(i\_jac++) = \mbox{\hyperlink{_jacobian_8c_a7b43d5884ec62826389d6d739b7f25eb}{jacobian\_get\_element\_id}}(jac, \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a9fda90058c6a41b1dda6ded03321c4da}{PROD\_}}(i\_prod\_dep),}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00158}00158                                                    \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_ae761e39657aac155d83eae9b338be571}{REACT\_}}(i\_react\_ind));}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00159}00159     \}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00160}00160 }
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00161}00161     \textcolor{comment}{// Add dependence on products for reactants and products (reverse reaction)}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00162}00162     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_prod\_ind = i\_phase * \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}};}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00163}00163          i\_prod\_ind < (i\_phase + 1) * \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}}; i\_prod\_ind++) \{}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00164}00164       \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_react\_dep = i\_phase * \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}};}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00165}00165            i\_react\_dep < (i\_phase + 1) * \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}}; i\_react\_dep++)}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00166}00166         \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\_ID\_}}(i\_jac++) = \mbox{\hyperlink{_jacobian_8c_a7b43d5884ec62826389d6d739b7f25eb}{jacobian\_get\_element\_id}}(jac, \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_ae761e39657aac155d83eae9b338be571}{REACT\_}}(i\_react\_dep),}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00167}00167                                                    \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a9fda90058c6a41b1dda6ded03321c4da}{PROD\_}}(i\_prod\_ind));}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00168}00168       \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_prod\_dep = i\_phase * \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}};}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00169}00169            i\_prod\_dep < (i\_phase + 1) * \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}}; i\_prod\_dep++)}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00170}00170         \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\_ID\_}}(i\_jac++) =}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00171}00171             \mbox{\hyperlink{_jacobian_8c_a7b43d5884ec62826389d6d739b7f25eb}{jacobian\_get\_element\_id}}(jac, \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a9fda90058c6a41b1dda6ded03321c4da}{PROD\_}}(i\_prod\_dep), \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a9fda90058c6a41b1dda6ded03321c4da}{PROD\_}}(i\_prod\_ind));}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00172}00172     \}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00173}00173 }
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00174}00174     \textcolor{comment}{// Add dependence on aerosol-\/phase water for reactants and products}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00175}00175     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_react\_dep = i\_phase * \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}};}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00176}00176          i\_react\_dep < (i\_phase + 1) * \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}}; i\_react\_dep++)}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00177}00177       \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\_ID\_}}(i\_jac++) =}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00178}00178           \mbox{\hyperlink{_jacobian_8c_a7b43d5884ec62826389d6d739b7f25eb}{jacobian\_get\_element\_id}}(jac, \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_ae761e39657aac155d83eae9b338be571}{REACT\_}}(i\_react\_dep), \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a21d22248f675f2c8aed5aa05e839290f}{WATER\_}}(i\_phase));}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00179}00179     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_prod\_dep = i\_phase * \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}};}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00180}00180          i\_prod\_dep < (i\_phase + 1) * \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}}; i\_prod\_dep++)}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00181}00181       \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\_ID\_}}(i\_jac++) =}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00182}00182           \mbox{\hyperlink{_jacobian_8c_a7b43d5884ec62826389d6d739b7f25eb}{jacobian\_get\_element\_id}}(jac, \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a9fda90058c6a41b1dda6ded03321c4da}{PROD\_}}(i\_prod\_dep), \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a21d22248f675f2c8aed5aa05e839290f}{WATER\_}}(i\_phase));}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00183}00183 }
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00184}00184     \textcolor{comment}{// Add dependence on activity coefficients for reactants and products}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00185}00185     \textcolor{keywordflow}{if} (\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a853f717855396c45b4e2e439932d7b8f}{ACTIVITY\_COEFF\_}}(i\_phase) < 0) \{}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00186}00186       \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_react\_dep = i\_phase * \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}};}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00187}00187            i\_react\_dep < (i\_phase + 1) * \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}}; ++i\_react\_dep)}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00188}00188         \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\_ID\_}}(i\_jac++) = -\/1;}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00189}00189       \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_prod\_dep = i\_phase * \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}};}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00190}00190            i\_prod\_dep < (i\_phase + 1) * \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}}; ++i\_prod\_dep)}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00191}00191         \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\_ID\_}}(i\_jac++) = -\/1;}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00192}00192     \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00193}00193       \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_react\_dep = i\_phase * \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}};}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00194}00194            i\_react\_dep < (i\_phase + 1) * \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}}; ++i\_react\_dep)}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00195}00195         \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\_ID\_}}(i\_jac++) = \mbox{\hyperlink{_jacobian_8c_a7b43d5884ec62826389d6d739b7f25eb}{jacobian\_get\_element\_id}}(jac, \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_ae761e39657aac155d83eae9b338be571}{REACT\_}}(i\_react\_dep),}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00196}00196                                                    \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a853f717855396c45b4e2e439932d7b8f}{ACTIVITY\_COEFF\_}}(i\_phase));}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00197}00197       \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_prod\_dep = i\_phase * \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}};}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00198}00198            i\_prod\_dep < (i\_phase + 1) * \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}}; ++i\_prod\_dep)}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00199}00199         \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\_ID\_}}(i\_jac++) = \mbox{\hyperlink{_jacobian_8c_a7b43d5884ec62826389d6d739b7f25eb}{jacobian\_get\_element\_id}}(jac, \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a9fda90058c6a41b1dda6ded03321c4da}{PROD\_}}(i\_prod\_dep),}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00200}00200                                                    \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a853f717855396c45b4e2e439932d7b8f}{ACTIVITY\_COEFF\_}}(i\_phase));}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00201}00201     \}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00202}00202   \}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00203}00203 }
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00204}00204   \textcolor{comment}{// Calculate a small concentration for aerosol-\/phase species based on the}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00205}00205   \textcolor{comment}{// integration tolerances to use during solving. TODO find a better place}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00206}00206   \textcolor{comment}{// to do this}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00207}00207   \textcolor{keywordtype}{double} *abs\_tol = (\textcolor{keywordtype}{double} *)model\_data-\/>\mbox{\hyperlink{struct_model_data_a9d43e842e50fe4269fffc6474da817ca}{abs\_tol}};}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00208}00208   for (\textcolor{keywordtype}{int} i\_phase = 0; i\_phase < \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_adf4b84135880d5ac73ce37df877d91fb}{NUM\_AERO\_PHASE\_}}; i\_phase++) \{}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00209}00209     \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a7ab0f8638f4cb41541b5d0f5b00d0985}{SMALL\_CONC\_}}(i\_phase) = 99999.0;}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00210}00210     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_react = 0; i\_react < \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}}; i\_react++) \{}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00211}00211       \textcolor{keywordflow}{if} (\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a7ab0f8638f4cb41541b5d0f5b00d0985}{SMALL\_CONC\_}}(i\_phase) >}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00212}00212           abs\_tol[\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_ae761e39657aac155d83eae9b338be571}{REACT\_}}(i\_phase * \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}} + i\_react)] / 100.0)}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00213}00213         \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a7ab0f8638f4cb41541b5d0f5b00d0985}{SMALL\_CONC\_}}(i\_phase) =}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00214}00214             abs\_tol[\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_ae761e39657aac155d83eae9b338be571}{REACT\_}}(i\_phase * \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}} + i\_react)] / 100.0;}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00215}00215     \}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00216}00216     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_prod = 0; i\_prod < \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}}; i\_prod++) \{}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00217}00217       \textcolor{keywordflow}{if} (\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a7ab0f8638f4cb41541b5d0f5b00d0985}{SMALL\_CONC\_}}(i\_phase) >}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00218}00218           abs\_tol[\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a9fda90058c6a41b1dda6ded03321c4da}{PROD\_}}(i\_phase * \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}} + i\_prod)] / 100.0)}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00219}00219         \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a7ab0f8638f4cb41541b5d0f5b00d0985}{SMALL\_CONC\_}}(i\_phase) =}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00220}00220             abs\_tol[\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a9fda90058c6a41b1dda6ded03321c4da}{PROD\_}}(i\_phase * \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}} + i\_prod)] / 100.0;}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00221}00221     \}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00222}00222   \}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00223}00223 }
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00224}00224   \textcolor{comment}{// Calculate a small concentration for aerosol-\/phase water based on the}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00225}00225   \textcolor{comment}{// integration tolerances to use during solving. TODO find a better place}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00226}00226   \textcolor{comment}{// to do this}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00227}00227   \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_phase = 0; i\_phase < \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_adf4b84135880d5ac73ce37df877d91fb}{NUM\_AERO\_PHASE\_}}; i\_phase++) \{}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00228}00228     \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a21721f706408d9a4a6e1b02c537c5c8b}{SMALL\_WATER\_CONC\_}}(i\_phase) = abs\_tol[\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a21d22248f675f2c8aed5aa05e839290f}{WATER\_}}(i\_phase)] / 10.0;}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00229}00229   \}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00230}00230 }
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00231}00231   \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00232}00232 \}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00233}00233 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00234}00234 \textcolor{comment}{/** \(\backslash\)brief Update reaction data for new environmental conditions}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00235}00235 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00236}00236 \textcolor{comment}{ * For Aqueous Equilibrium reaction this only involves recalculating the}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00237}00237 \textcolor{comment}{ * forward rate constant.}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00238}00238 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00239}00239 \textcolor{comment}{ * \(\backslash\)param model\_data Pointer to the model data}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00240}00240 \textcolor{comment}{ * \(\backslash\)param rxn\_int\_data Pointer to the reaction integer data}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00241}00241 \textcolor{comment}{ * \(\backslash\)param rxn\_float\_data Pointer to the reaction floating-\/point data}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00242}00242 \textcolor{comment}{ * \(\backslash\)param rxn\_env\_data Pointer to the environment-\/dependent parameters}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00243}00243 \textcolor{comment}{ */}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00244}\mbox{\hyperlink{rxns_8h_a0195133a7e3e489e6580f8feae67b6ee}{00244}} \textcolor{keywordtype}{void} \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a0195133a7e3e489e6580f8feae67b6ee}{rxn\_aqueous\_equilibrium\_update\_env\_state}}(\mbox{\hyperlink{struct_model_data}{ModelData}} *model\_data,}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00245}00245                                               \textcolor{keywordtype}{int} *rxn\_int\_data,}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00246}00246                                               \textcolor{keywordtype}{double} *rxn\_float\_data,}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00247}00247                                               \textcolor{keywordtype}{double} *rxn\_env\_data) \{}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00248}00248   \textcolor{keywordtype}{int} *int\_data = rxn\_int\_data;}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00249}00249   \textcolor{keywordtype}{double} *float\_data = rxn\_float\_data;}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00250}00250   \textcolor{keywordtype}{double} *env\_data = model\_data-\/>\mbox{\hyperlink{struct_model_data_a847bd594a8e88da48104655fdc8524d7}{grid\_cell\_env}};}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00251}00251 }
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00252}00252   \textcolor{comment}{// Calculate the equilibrium constant}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00253}00253   \textcolor{comment}{// (assumes reactant and product concentrations in M)}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00254}00254   \textcolor{keywordtype}{double} equil\_const;}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00255}00255   \textcolor{keywordflow}{if} (\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_ad010fec48ee67af5ba75e0ec6c3f5ce4}{C\_}} == 0.0) \{}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00256}00256     equil\_const = \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a71700f5633db3f99b43c798b09c60bd2}{A\_}};}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00257}00257   \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00258}00258     equil\_const = \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a71700f5633db3f99b43c798b09c60bd2}{A\_}} * exp(\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_ad010fec48ee67af5ba75e0ec6c3f5ce4}{C\_}} * (1.0 / \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_aa90d2b6c48aceb4d7ac3d93d5249bb60}{TEMPERATURE\_K\_}} -\/ 1.0 / 298.0));}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00259}00259   \}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00260}00260 }
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00261}00261   \textcolor{comment}{// Set the forward rate constant}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00262}00262   \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a66c602144d40f31d965505fae08401a1}{RATE\_CONST\_FORWARD\_}} = equil\_const * \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a6691394a09f2e41e036e3dd389032763}{RATE\_CONST\_REVERSE\_}};}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00263}00263 }
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00264}00264   \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00265}00265 \}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00266}00266 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00267}00267 \textcolor{comment}{/** \(\backslash\)brief Calculate the reaction rate for a set of conditions using the}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00268}00268 \textcolor{comment}{ *         standard equation per mixing ratio of water [M\_X/s*kg\_H2O/m\string^3]}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00269}00269 \textcolor{comment}{ * \(\backslash\)param rxn\_int\_data Pointer to the reaction integer data}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00270}00270 \textcolor{comment}{ * \(\backslash\)param rxn\_float\_data Pointer to the reaction floating point data}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00271}00271 \textcolor{comment}{ * \(\backslash\)param rxn\_env\_data Pointer to the environment-\/dependent parameters}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00272}00272 \textcolor{comment}{ * \(\backslash\)param is\_water\_partial Flag indicating whether the calculation should}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00273}00273 \textcolor{comment}{ *                         return the partial derivative d\_rate/d\_H2O}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00274}00274 \textcolor{comment}{ * \(\backslash\)param rate\_forward [output] calculated forward rate}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00275}00275 \textcolor{comment}{ * \(\backslash\)param rate\_reverse [output] calculated reverse rate}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00276}00276 \textcolor{comment}{ * \(\backslash\)return reaction rate per mixing ratio of water [M\_X/s*kg\_H2O/m\string^3]}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00277}00277 \textcolor{comment}{ */}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00278}\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_afbf4752793cab50cd6c964aeaf26f531}{00278}} \textcolor{keywordtype}{long} \textcolor{keywordtype}{double} \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_afbf4752793cab50cd6c964aeaf26f531}{calc\_standard\_rate}}(\textcolor{keywordtype}{int} *rxn\_int\_data, \textcolor{keywordtype}{double} *rxn\_float\_data,}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00279}00279                                \textcolor{keywordtype}{double} *rxn\_env\_data, \textcolor{keywordtype}{bool} is\_water\_partial,}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00280}00280                                \textcolor{keywordtype}{long} \textcolor{keywordtype}{double} *rate\_forward,}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00281}00281                                \textcolor{keywordtype}{long} \textcolor{keywordtype}{double} *rate\_reverse) \{}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00282}00282   \textcolor{keywordtype}{int} *int\_data = rxn\_int\_data;}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00283}00283   \textcolor{keywordtype}{double} *float\_data = rxn\_float\_data;}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00284}00284 }
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00285}00285   \textcolor{keywordtype}{long} \textcolor{keywordtype}{double} react\_fact, prod\_fact;}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00286}00286   \textcolor{keywordtype}{long} \textcolor{keywordtype}{double} water = \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a7a7be1a044251bca9454b2306e958ab0}{WATER\_CONC\_}};}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00287}00287 }
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00288}00288   \textcolor{comment}{// Get the product of all reactants}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00289}00289   react\_fact = (\textcolor{keywordtype}{long} double)\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a57ec91c5d8fc0e67d395f3748e368d5c}{REACT\_CONC\_}}(0) * \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a77130e76053b87f8e8ed225d0d6206d8}{MASS\_FRAC\_TO\_M\_}}(0);}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00290}00290   \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_react = 1; i\_react < \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}}; i\_react++) \{}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00291}00291     react\_fact *= \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a57ec91c5d8fc0e67d395f3748e368d5c}{REACT\_CONC\_}}(i\_react) * \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a77130e76053b87f8e8ed225d0d6206d8}{MASS\_FRAC\_TO\_M\_}}(i\_react) / water;}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00292}00292   \}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00293}00293 }
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00294}00294   \textcolor{comment}{// Get the product of all product}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00295}00295   prod\_fact = (\textcolor{keywordtype}{long} double)\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_adf6032a096c8fae01588f07f3c34c496}{PROD\_CONC\_}}(0) * \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a77130e76053b87f8e8ed225d0d6206d8}{MASS\_FRAC\_TO\_M\_}}(\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}});}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00296}00296   prod\_fact *= (\textcolor{keywordtype}{long} double)\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_ad25dbd402979ada7d7f24fe5429b92ba}{ACTIVITY\_COEFF\_VALUE\_}};}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00297}00297   \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_prod = 1; i\_prod < \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}}; i\_prod++) \{}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00298}00298     prod\_fact *=}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00299}00299         \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_adf6032a096c8fae01588f07f3c34c496}{PROD\_CONC\_}}(i\_prod) * \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a77130e76053b87f8e8ed225d0d6206d8}{MASS\_FRAC\_TO\_M\_}}(\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}} + i\_prod) / water;}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00300}00300   \}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00301}00301 }
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00302}00302   *rate\_forward = \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a66c602144d40f31d965505fae08401a1}{RATE\_CONST\_FORWARD\_}} * react\_fact;}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00303}00303   *rate\_reverse = \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a6691394a09f2e41e036e3dd389032763}{RATE\_CONST\_REVERSE\_}} * prod\_fact;}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00304}00304 }
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00305}00305   \textcolor{keywordflow}{if} (is\_water\_partial) \{}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00306}00306     \textcolor{keywordflow}{return} *rate\_forward * (\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}} -\/ 1) -\/ *rate\_reverse * (\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}} -\/ 1);}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00307}00307   \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00308}00308     \textcolor{keywordflow}{return} *rate\_forward -\/ *rate\_reverse;}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00309}00309   \}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00310}00310 \}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00311}00311 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00312}00312 \textcolor{comment}{/** \(\backslash\)brief Calculate contributions to the time derivative \(\backslash\)f\$f(t,y)\(\backslash\)f\$ from}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00313}00313 \textcolor{comment}{ * this reaction.}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00314}00314 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00315}00315 \textcolor{comment}{ * \(\backslash\)param model\_data Pointer to the model data, including the state array}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00316}00316 \textcolor{comment}{ * \(\backslash\)param time\_deriv TimeDerivative object}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00317}00317 \textcolor{comment}{ * \(\backslash\)param rxn\_int\_data Pointer to the reaction integer data}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00318}00318 \textcolor{comment}{ * \(\backslash\)param rxn\_float\_data Pointer to the reaction floating-\/point data}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00319}00319 \textcolor{comment}{ * \(\backslash\)param rxn\_env\_data Pointer to the environment-\/dependent parameters}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00320}00320 \textcolor{comment}{ * \(\backslash\)param time\_step Current time step of the itegrator (s)}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00321}00321 \textcolor{comment}{ */}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00322}00322 \textcolor{preprocessor}{\#ifdef CAMP\_USE\_SUNDIALS}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00323}\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a71247df341cf33530652f240a86e8e22}{00323}} \textcolor{keywordtype}{void} \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a71247df341cf33530652f240a86e8e22}{rxn\_aqueous\_equilibrium\_calc\_deriv\_contrib}}(}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00324}00324     \mbox{\hyperlink{struct_model_data}{ModelData}} *model\_data, \mbox{\hyperlink{struct_time_derivative}{TimeDerivative}} time\_deriv, \textcolor{keywordtype}{int} *rxn\_int\_data,}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00325}00325     \textcolor{keywordtype}{double} *rxn\_float\_data, \textcolor{keywordtype}{double} *rxn\_env\_data, \textcolor{keywordtype}{double} time\_step) \{}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00326}00326   \textcolor{keywordtype}{int} *int\_data = rxn\_int\_data;}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00327}00327   \textcolor{keywordtype}{double} *float\_data = rxn\_float\_data;}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00328}00328   \textcolor{keywordtype}{double} *state = model\_data-\/>\mbox{\hyperlink{struct_model_data_a97655058cfc0116225582920128111ef}{grid\_cell\_state}};}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00329}00329   \textcolor{keywordtype}{double} *env\_data = model\_data-\/>\mbox{\hyperlink{struct_model_data_a847bd594a8e88da48104655fdc8524d7}{grid\_cell\_env}};}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00330}00330 }
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00331}00331   \textcolor{comment}{// Calculate derivative contributions for each aerosol phase}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00332}00332   \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_phase = 0, i\_deriv = 0; i\_phase < \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_adf4b84135880d5ac73ce37df877d91fb}{NUM\_AERO\_PHASE\_}}; i\_phase++) \{}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00333}00333     \textcolor{comment}{// If no aerosol water is present, no reaction occurs}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00334}00334     \textcolor{keywordtype}{long} \textcolor{keywordtype}{double} water = state[\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a21d22248f675f2c8aed5aa05e839290f}{WATER\_}}(i\_phase)];}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00335}00335     \textcolor{keywordflow}{if} (water < \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a4bbdf0ebb220103f51252a2b56f22cdf}{MIN\_WATER\_}} * \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a21721f706408d9a4a6e1b02c537c5c8b}{SMALL\_WATER\_CONC\_}}(i\_phase)) \{}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00336}00336       i\_deriv += \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}} + \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}};}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00337}00337       \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00338}00338     \}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00339}00339 }
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00340}00340     \textcolor{comment}{// Set the concentrations for all species and the activity coefficient}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00341}00341     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_react = 0; i\_react < \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}}; ++i\_react)}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00342}00342       \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a57ec91c5d8fc0e67d395f3748e368d5c}{REACT\_CONC\_}}(i\_react) = state[\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_ae761e39657aac155d83eae9b338be571}{REACT\_}}(i\_phase * \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}} + i\_react)];}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00343}00343     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_prod = 0; i\_prod < \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}}; ++i\_prod)}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00344}00344       \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_adf6032a096c8fae01588f07f3c34c496}{PROD\_CONC\_}}(i\_prod) = state[\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a9fda90058c6a41b1dda6ded03321c4da}{PROD\_}}(i\_phase * \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}} + i\_prod)];}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00345}00345     \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a7a7be1a044251bca9454b2306e958ab0}{WATER\_CONC\_}} = state[\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a21d22248f675f2c8aed5aa05e839290f}{WATER\_}}(i\_phase)];}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00346}00346     \textcolor{keywordflow}{if} (\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a853f717855396c45b4e2e439932d7b8f}{ACTIVITY\_COEFF\_}}(i\_phase) >= 0) \{}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00347}00347       \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_ad25dbd402979ada7d7f24fe5429b92ba}{ACTIVITY\_COEFF\_VALUE\_}} = state[\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a853f717855396c45b4e2e439932d7b8f}{ACTIVITY\_COEFF\_}}(i\_phase)];}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00348}00348     \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00349}00349       \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_ad25dbd402979ada7d7f24fe5429b92ba}{ACTIVITY\_COEFF\_VALUE\_}} = 1.0;}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00350}00350     \}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00351}00351 }
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00352}00352     \textcolor{comment}{// Get the rate using the standard calculation}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00353}00353     \textcolor{keywordtype}{long} \textcolor{keywordtype}{double} rate\_forward, rate\_reverse;}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00354}00354     \textcolor{keywordtype}{long} \textcolor{keywordtype}{double} rate =}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00355}00355         \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_afbf4752793cab50cd6c964aeaf26f531}{calc\_standard\_rate}}(rxn\_int\_data, rxn\_float\_data, rxn\_env\_data, \textcolor{keyword}{false},}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00356}00356                            \&rate\_forward, \&rate\_reverse);}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00357}00357     \textcolor{keywordflow}{if} (rate == \mbox{\hyperlink{camp__common_8h_ac328e551bde3d39b6d7b8cc9e048d941}{ZERO}}) \{}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00358}00358       i\_deriv += \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}} + \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}};}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00359}00359       \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00360}00360     \}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00361}00361 }
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00362}00362     \textcolor{comment}{// Reactants change as (reverse -\/ forward) (kg/m3/s)}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00363}00363     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_react = 0; i\_react < \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}}; i\_react++) \{}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00364}00364       \textcolor{keywordflow}{if} (\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_af9fc34858d09e71d3cffd88cf942bdf9}{DERIV\_ID\_}}(i\_deriv) < 0) \{}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00365}00365         i\_deriv++;}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00366}00366         \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00367}00367       \}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00368}00368       \mbox{\hyperlink{time__derivative_8c_af4c9ab5040b544a8ec4b63a1c75922e2}{time\_derivative\_add\_value}}(time\_deriv, \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_af9fc34858d09e71d3cffd88cf942bdf9}{DERIV\_ID\_}}(i\_deriv),}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00369}00369                                 -\/rate\_forward / \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a77130e76053b87f8e8ed225d0d6206d8}{MASS\_FRAC\_TO\_M\_}}(i\_react));}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00370}00370       \mbox{\hyperlink{time__derivative_8c_af4c9ab5040b544a8ec4b63a1c75922e2}{time\_derivative\_add\_value}}(time\_deriv, \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_af9fc34858d09e71d3cffd88cf942bdf9}{DERIV\_ID\_}}(i\_deriv++),}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00371}00371                                 rate\_reverse / \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a77130e76053b87f8e8ed225d0d6206d8}{MASS\_FRAC\_TO\_M\_}}(i\_react));}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00372}00372     \}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00373}00373 }
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00374}00374     \textcolor{comment}{// Products change as (forward -\/ reverse) (kg/m3/s)}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00375}00375     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_prod = 0; i\_prod < \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}}; i\_prod++) \{}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00376}00376       \textcolor{keywordflow}{if} (\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_af9fc34858d09e71d3cffd88cf942bdf9}{DERIV\_ID\_}}(i\_deriv) < 0) \{}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00377}00377         i\_deriv++;}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00378}00378         \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00379}00379       \}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00380}00380       \mbox{\hyperlink{time__derivative_8c_af4c9ab5040b544a8ec4b63a1c75922e2}{time\_derivative\_add\_value}}(}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00381}00381           time\_deriv, \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_af9fc34858d09e71d3cffd88cf942bdf9}{DERIV\_ID\_}}(i\_deriv),}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00382}00382           rate\_forward / \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a77130e76053b87f8e8ed225d0d6206d8}{MASS\_FRAC\_TO\_M\_}}(\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}} + i\_prod));}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00383}00383       \mbox{\hyperlink{time__derivative_8c_af4c9ab5040b544a8ec4b63a1c75922e2}{time\_derivative\_add\_value}}(}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00384}00384           time\_deriv, \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_af9fc34858d09e71d3cffd88cf942bdf9}{DERIV\_ID\_}}(i\_deriv++),}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00385}00385           -\/rate\_reverse / \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a77130e76053b87f8e8ed225d0d6206d8}{MASS\_FRAC\_TO\_M\_}}(\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}} + i\_prod));}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00386}00386     \}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00387}00387   \}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00388}00388 }
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00389}00389   \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00390}00390 \}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00391}00391 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00392}00392 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00393}00393 \textcolor{comment}{/** \(\backslash\)brief Calculate contributions to the Jacobian from this reaction}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00394}00394 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00395}00395 \textcolor{comment}{ * \(\backslash\)param model\_data Pointer to the model data}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00396}00396 \textcolor{comment}{ * \(\backslash\)param jac Reaction Jacobian}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00397}00397 \textcolor{comment}{ * \(\backslash\)param rxn\_int\_data Pointer to the reaction integer data}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00398}00398 \textcolor{comment}{ * \(\backslash\)param rxn\_float\_data Pointer to the reaction floating-\/point data}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00399}00399 \textcolor{comment}{ * \(\backslash\)param rxn\_env\_data Pointer to the environment-\/dependent parameters}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00400}00400 \textcolor{comment}{ * \(\backslash\)param time\_step Current time step of the itegrator (s)}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00401}00401 \textcolor{comment}{ */}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00402}00402 \textcolor{preprocessor}{\#ifdef CAMP\_USE\_SUNDIALS}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00403}\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a223e07042b82fc3b1391e1354acfdc5d}{00403}} \textcolor{keywordtype}{void} \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a223e07042b82fc3b1391e1354acfdc5d}{rxn\_aqueous\_equilibrium\_calc\_jac\_contrib}}(\mbox{\hyperlink{struct_model_data}{ModelData}} *model\_data,}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00404}00404                                               \mbox{\hyperlink{struct_jacobian}{Jacobian}} jac, \textcolor{keywordtype}{int} *rxn\_int\_data,}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00405}00405                                               \textcolor{keywordtype}{double} *rxn\_float\_data,}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00406}00406                                               \textcolor{keywordtype}{double} *rxn\_env\_data,}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00407}00407                                               \textcolor{keywordtype}{double} time\_step) \{}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00408}00408   \textcolor{keywordtype}{int} *int\_data = rxn\_int\_data;}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00409}00409   \textcolor{keywordtype}{double} *float\_data = rxn\_float\_data;}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00410}00410   \textcolor{keywordtype}{double} *state = model\_data-\/>\mbox{\hyperlink{struct_model_data_a97655058cfc0116225582920128111ef}{grid\_cell\_state}};}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00411}00411   \textcolor{keywordtype}{double} *env\_data = model\_data-\/>\mbox{\hyperlink{struct_model_data_a847bd594a8e88da48104655fdc8524d7}{grid\_cell\_env}};}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00412}00412 }
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00413}00413   \textcolor{comment}{// Calculate Jacobian contributions for each aerosol phase}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00414}00414   \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_phase = 0, i\_jac = 0; i\_phase < \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_adf4b84135880d5ac73ce37df877d91fb}{NUM\_AERO\_PHASE\_}}; i\_phase++) \{}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00415}00415     \textcolor{comment}{// If not aerosol water is present, no reaction occurs}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00416}00416     \textcolor{keywordtype}{long} \textcolor{keywordtype}{double} water = state[\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a21d22248f675f2c8aed5aa05e839290f}{WATER\_}}(i\_phase)];}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00417}00417     \textcolor{keywordflow}{if} (water < \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a4bbdf0ebb220103f51252a2b56f22cdf}{MIN\_WATER\_}} * \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a21721f706408d9a4a6e1b02c537c5c8b}{SMALL\_WATER\_CONC\_}}(i\_phase)) \{}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00418}00418       i\_jac += (\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}} + \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}}) * (\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}} + \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}} + 2);}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00419}00419       \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00420}00420     \}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00421}00421 }
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00422}00422     \textcolor{comment}{// Calculate the forward rate (M/s)}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00423}00423     \textcolor{keywordtype}{long} \textcolor{keywordtype}{double} forward\_rate = \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a66c602144d40f31d965505fae08401a1}{RATE\_CONST\_FORWARD\_}};}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00424}00424     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_react = 0; i\_react < \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}}; i\_react++) \{}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00425}00425       forward\_rate *= state[\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_ae761e39657aac155d83eae9b338be571}{REACT\_}}(i\_phase * \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}} + i\_react)] *}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00426}00426                       \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a77130e76053b87f8e8ed225d0d6206d8}{MASS\_FRAC\_TO\_M\_}}(i\_react) / water;}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00427}00427     \}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00428}00428 }
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00429}00429     \textcolor{comment}{// Calculate the reverse rate (M/s)}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00430}00430     \textcolor{keywordtype}{long} \textcolor{keywordtype}{double} reverse\_rate = \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a6691394a09f2e41e036e3dd389032763}{RATE\_CONST\_REVERSE\_}};}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00431}00431     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_prod = 0; i\_prod < \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}}; i\_prod++) \{}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00432}00432       reverse\_rate *= state[\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a9fda90058c6a41b1dda6ded03321c4da}{PROD\_}}(i\_phase * \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}} + i\_prod)] *}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00433}00433                       \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a77130e76053b87f8e8ed225d0d6206d8}{MASS\_FRAC\_TO\_M\_}}(\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}} + i\_prod) / water;}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00434}00434     \}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00435}00435     \textcolor{keywordflow}{if} (\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a853f717855396c45b4e2e439932d7b8f}{ACTIVITY\_COEFF\_}}(i\_phase) >= 0)}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00436}00436       reverse\_rate *= state[\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a853f717855396c45b4e2e439932d7b8f}{ACTIVITY\_COEFF\_}}(i\_phase)];}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00437}00437 }
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00438}00438     \textcolor{comment}{// Add dependence on reactants for reactants and products (forward reaction)}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00439}00439     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_react\_ind = 0; i\_react\_ind < \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}}; i\_react\_ind++) \{}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00440}00440       \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_react\_dep = 0; i\_react\_dep < \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}}; i\_react\_dep++) \{}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00441}00441         \textcolor{keywordflow}{if} (\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\_ID\_}}(i\_jac) < 0 || forward\_rate == 0.0) \{}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00442}00442           i\_jac++;}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00443}00443           \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00444}00444         \}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00445}00445         \mbox{\hyperlink{_jacobian_8c_a844d8b2784c48a794ada38d053b1d1b3}{jacobian\_add\_value}}(}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00446}00446             jac, (\textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int})\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\_ID\_}}(i\_jac++), \mbox{\hyperlink{_jacobian_8h_a1c0a4f1846373ae097290829cd23fc06}{JACOBIAN\_LOSS}},}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00447}00447             forward\_rate / state[\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_ae761e39657aac155d83eae9b338be571}{REACT\_}}(i\_phase * \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}} + i\_react\_ind)] /}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00448}00448                 \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a77130e76053b87f8e8ed225d0d6206d8}{MASS\_FRAC\_TO\_M\_}}(i\_react\_dep) * water);}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00449}00449       \}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00450}00450       \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_prod\_dep = 0; i\_prod\_dep < \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}}; i\_prod\_dep++) \{}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00451}00451         \textcolor{keywordflow}{if} (\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\_ID\_}}(i\_jac) < 0 || forward\_rate == 0.0) \{}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00452}00452           i\_jac++;}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00453}00453           \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00454}00454         \}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00455}00455         \mbox{\hyperlink{_jacobian_8c_a844d8b2784c48a794ada38d053b1d1b3}{jacobian\_add\_value}}(}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00456}00456             jac, (\textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int})\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\_ID\_}}(i\_jac++), \mbox{\hyperlink{_jacobian_8h_ab017277870084c5c04c2cc8b9cccc22f}{JACOBIAN\_PRODUCTION}},}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00457}00457             forward\_rate / state[\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_ae761e39657aac155d83eae9b338be571}{REACT\_}}(i\_phase * \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}} + i\_react\_ind)] /}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00458}00458                 \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a77130e76053b87f8e8ed225d0d6206d8}{MASS\_FRAC\_TO\_M\_}}(\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}} + i\_prod\_dep) * water);}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00459}00459       \}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00460}00460     \}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00461}00461 }
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00462}00462     \textcolor{comment}{// Add dependence on products for reactants and products (reverse reaction)}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00463}00463     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_prod\_ind = 0; i\_prod\_ind < \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}}; i\_prod\_ind++) \{}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00464}00464       \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_react\_dep = 0; i\_react\_dep < \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}}; i\_react\_dep++) \{}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00465}00465         \textcolor{keywordflow}{if} (\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\_ID\_}}(i\_jac) < 0 || reverse\_rate == 0.0) \{}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00466}00466           i\_jac++;}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00467}00467           \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00468}00468         \}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00469}00469         \mbox{\hyperlink{_jacobian_8c_a844d8b2784c48a794ada38d053b1d1b3}{jacobian\_add\_value}}(}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00470}00470             jac, (\textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int})\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\_ID\_}}(i\_jac++), \mbox{\hyperlink{_jacobian_8h_ab017277870084c5c04c2cc8b9cccc22f}{JACOBIAN\_PRODUCTION}},}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00471}00471             reverse\_rate / state[\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a9fda90058c6a41b1dda6ded03321c4da}{PROD\_}}(i\_phase * \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}} + i\_prod\_ind)] /}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00472}00472                 \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a77130e76053b87f8e8ed225d0d6206d8}{MASS\_FRAC\_TO\_M\_}}(i\_react\_dep) * water);}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00473}00473       \}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00474}00474       \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_prod\_dep = 0; i\_prod\_dep < \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}}; i\_prod\_dep++) \{}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00475}00475         \textcolor{keywordflow}{if} (\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\_ID\_}}(i\_jac) < 0 || reverse\_rate == 0.0) \{}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00476}00476           i\_jac++;}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00477}00477           \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00478}00478         \}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00479}00479         \mbox{\hyperlink{_jacobian_8c_a844d8b2784c48a794ada38d053b1d1b3}{jacobian\_add\_value}}(}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00480}00480             jac, (\textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int})\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\_ID\_}}(i\_jac++), \mbox{\hyperlink{_jacobian_8h_a1c0a4f1846373ae097290829cd23fc06}{JACOBIAN\_LOSS}},}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00481}00481             reverse\_rate / state[\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a9fda90058c6a41b1dda6ded03321c4da}{PROD\_}}(i\_phase * \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}} + i\_prod\_ind)] /}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00482}00482                 \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a77130e76053b87f8e8ed225d0d6206d8}{MASS\_FRAC\_TO\_M\_}}(\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}} + i\_prod\_dep) * water);}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00483}00483       \}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00484}00484     \}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00485}00485 }
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00486}00486     \textcolor{comment}{// Add dependence on aerosol-\/phase water for reactants and products}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00487}00487     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_react\_dep = 0; i\_react\_dep < \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}}; i\_react\_dep++) \{}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00488}00488       \textcolor{keywordflow}{if} (\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\_ID\_}}(i\_jac) < 0) \{}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00489}00489         i\_jac++;}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00490}00490         \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00491}00491       \}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00492}00492       \mbox{\hyperlink{_jacobian_8c_a844d8b2784c48a794ada38d053b1d1b3}{jacobian\_add\_value}}(}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00493}00493           jac, (\textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int})\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\_ID\_}}(i\_jac), \mbox{\hyperlink{_jacobian_8h_a1c0a4f1846373ae097290829cd23fc06}{JACOBIAN\_LOSS}},}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00494}00494           -\/forward\_rate / \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a77130e76053b87f8e8ed225d0d6206d8}{MASS\_FRAC\_TO\_M\_}}(i\_react\_dep) * (\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}} -\/ 1));}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00495}00495       \mbox{\hyperlink{_jacobian_8c_a844d8b2784c48a794ada38d053b1d1b3}{jacobian\_add\_value}}(}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00496}00496           jac, (\textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int})\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\_ID\_}}(i\_jac++), \mbox{\hyperlink{_jacobian_8h_ab017277870084c5c04c2cc8b9cccc22f}{JACOBIAN\_PRODUCTION}},}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00497}00497           -\/reverse\_rate / \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a77130e76053b87f8e8ed225d0d6206d8}{MASS\_FRAC\_TO\_M\_}}(i\_react\_dep) * (\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}} -\/ 1));}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00498}00498     \}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00499}00499     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_prod\_dep = 0; i\_prod\_dep < \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}}; i\_prod\_dep++) \{}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00500}00500       \textcolor{keywordflow}{if} (\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\_ID\_}}(i\_jac) < 0) \{}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00501}00501         i\_jac++;}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00502}00502         \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00503}00503       \}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00504}00504       \mbox{\hyperlink{_jacobian_8c_a844d8b2784c48a794ada38d053b1d1b3}{jacobian\_add\_value}}(jac, (\textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int})\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\_ID\_}}(i\_jac), \mbox{\hyperlink{_jacobian_8h_ab017277870084c5c04c2cc8b9cccc22f}{JACOBIAN\_PRODUCTION}},}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00505}00505                          -\/forward\_rate /}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00506}00506                              \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a77130e76053b87f8e8ed225d0d6206d8}{MASS\_FRAC\_TO\_M\_}}(\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}} + i\_prod\_dep) *}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00507}00507                              (\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}} -\/ 1));}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00508}00508       \mbox{\hyperlink{_jacobian_8c_a844d8b2784c48a794ada38d053b1d1b3}{jacobian\_add\_value}}(jac, (\textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int})\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\_ID\_}}(i\_jac++), \mbox{\hyperlink{_jacobian_8h_a1c0a4f1846373ae097290829cd23fc06}{JACOBIAN\_LOSS}},}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00509}00509                          -\/reverse\_rate /}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00510}00510                              \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a77130e76053b87f8e8ed225d0d6206d8}{MASS\_FRAC\_TO\_M\_}}(\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}} + i\_prod\_dep) *}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00511}00511                              (\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}} -\/ 1));}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00512}00512     \}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00513}00513 }
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00514}00514     \textcolor{comment}{// Add dependence on activity coefficients for reactants and products}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00515}00515     \textcolor{keywordflow}{if} (\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a853f717855396c45b4e2e439932d7b8f}{ACTIVITY\_COEFF\_}}(i\_phase) < 0) \{}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00516}00516       i\_jac += \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}} + \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}};}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00517}00517       \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00518}00518     \}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00519}00519     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_react\_dep = 0; i\_react\_dep < \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}}; i\_react\_dep++) \{}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00520}00520       \textcolor{keywordflow}{if} (\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\_ID\_}}(i\_jac) < 0) \{}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00521}00521         i\_jac++;}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00522}00522         \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00523}00523       \}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00524}00524       \mbox{\hyperlink{_jacobian_8c_a844d8b2784c48a794ada38d053b1d1b3}{jacobian\_add\_value}}(jac, (\textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int})\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\_ID\_}}(i\_jac++),}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00525}00525                          \mbox{\hyperlink{_jacobian_8h_ab017277870084c5c04c2cc8b9cccc22f}{JACOBIAN\_PRODUCTION}},}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00526}00526                          reverse\_rate / state[\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a853f717855396c45b4e2e439932d7b8f}{ACTIVITY\_COEFF\_}}(i\_phase)] /}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00527}00527                              \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a77130e76053b87f8e8ed225d0d6206d8}{MASS\_FRAC\_TO\_M\_}}(i\_react\_dep) * water);}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00528}00528     \}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00529}00529     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_prod\_dep = 0; i\_prod\_dep < \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}}; i\_prod\_dep++) \{}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00530}00530       \textcolor{keywordflow}{if} (\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\_ID\_}}(i\_jac) < 0) \{}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00531}00531         i\_jac++;}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00532}00532         \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00533}00533       \}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00534}00534       \mbox{\hyperlink{_jacobian_8c_a844d8b2784c48a794ada38d053b1d1b3}{jacobian\_add\_value}}(jac, (\textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int})\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\_ID\_}}(i\_jac++), \mbox{\hyperlink{_jacobian_8h_a1c0a4f1846373ae097290829cd23fc06}{JACOBIAN\_LOSS}},}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00535}00535                          reverse\_rate / state[\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a853f717855396c45b4e2e439932d7b8f}{ACTIVITY\_COEFF\_}}(i\_phase)] /}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00536}00536                              \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a77130e76053b87f8e8ed225d0d6206d8}{MASS\_FRAC\_TO\_M\_}}(\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}} + i\_prod\_dep) * water);}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00537}00537     \}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00538}00538   \}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00539}00539 }
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00540}00540   \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00541}00541 \}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00542}00542 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00543}00543 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00544}00544 \textcolor{comment}{/** \(\backslash\)brief Print the Aqueous Equilibrium reaction parameters}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00545}00545 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00546}00546 \textcolor{comment}{ * \(\backslash\)param rxn\_int\_data Pointer to the reaction integer data}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00547}00547 \textcolor{comment}{ * \(\backslash\)param rxn\_float\_data Pointer to the reaction floating-\/point data}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00548}00548 \textcolor{comment}{ */}}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00549}\mbox{\hyperlink{rxns_8h_a797af130ae2247ebb2879055e8d3d8f8}{00549}} \textcolor{keywordtype}{void} \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a797af130ae2247ebb2879055e8d3d8f8}{rxn\_aqueous\_equilibrium\_print}}(\textcolor{keywordtype}{int} *rxn\_int\_data, \textcolor{keywordtype}{double} *rxn\_float\_data) \{}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00550}00550   \textcolor{keywordtype}{int} *int\_data = rxn\_int\_data;}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00551}00551   \textcolor{keywordtype}{double} *float\_data = rxn\_float\_data;}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00552}00552 }
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00553}00553   printf(\textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)nAqueous Equilibrium reaction\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00554}00554 }
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00555}00555   \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{rxn__aqueous__equilibrium_8c_source_l00556}00556 \}}
+
+\end{DoxyCode}

@@ -8,32 +8,32 @@ The abstract \mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__t}
 \doxysubsection*{Data Types}
 \begin{DoxyCompactItemize}
 \item 
-type \mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__t}{aero\+\_\+rep\+\_\+data\+\_\+t}}
-\begin{DoxyCompactList}\small\item\em Abstract aerosol representation data type. \end{DoxyCompactList}\item 
 type \mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__ptr}{aero\+\_\+rep\+\_\+data\+\_\+ptr}}
 \begin{DoxyCompactList}\small\item\em Pointer to \mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__t}{aero\+\_\+rep\+\_\+data\+\_\+t}} extending types. \end{DoxyCompactList}\item 
+type \mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__t}{aero\+\_\+rep\+\_\+data\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em Abstract aerosol representation data type. \end{DoxyCompactList}\item 
 type \mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__update__data__t}{aero\+\_\+rep\+\_\+update\+\_\+data\+\_\+t}}
 \begin{DoxyCompactList}\small\item\em Update cookie. \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1get__size}{get\+\_\+size}}
+\begin{DoxyCompactList}\small\item\em Get the size of the section of the {\ttfamily \mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t_a5405d5023175234c25e2c2371d924c67}{camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t\+::state\+\_\+var}}} array required for this aerosol representation. \end{DoxyCompactList}\item 
 interface \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1initialize}{initialize}}
 \begin{DoxyCompactList}\small\item\em Initialize the aerosol representation data, validating component data and loading any required information from the {\ttfamily \mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__t_acf1f8af8cd9982684614af214f64759e}{aero\+\_\+rep\+\_\+data\+\_\+t\+::property\+\_\+set}}}. This routine should be called once for each aerosol representation at the beginning of a model run after all the input files have been read in. It ensures all data required during the model run are included in the condensed data arrays. \end{DoxyCompactList}\item 
-interface \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1internal__pack__size}{internal\+\_\+pack\+\_\+size}}
-\begin{DoxyCompactList}\small\item\em Extending-\/type binary pack size (internal use only) \end{DoxyCompactList}\item 
 interface \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1internal__bin__pack}{internal\+\_\+bin\+\_\+pack}}
 \begin{DoxyCompactList}\small\item\em Extending-\/type binary pack function (Internal use only) \end{DoxyCompactList}\item 
 interface \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1internal__bin__unpack}{internal\+\_\+bin\+\_\+unpack}}
 \begin{DoxyCompactList}\small\item\em Extending-\/type binary unpack function (Internal use only) \end{DoxyCompactList}\item 
-interface \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1get__size}{get\+\_\+size}}
-\begin{DoxyCompactList}\small\item\em Get the size of the section of the {\ttfamily \mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t_a5405d5023175234c25e2c2371d924c67}{camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t\+::state\+\_\+var}}} array required for this aerosol representation. \end{DoxyCompactList}\item 
-interface \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1unique__names}{unique\+\_\+names}}
-\begin{DoxyCompactList}\small\item\em Get a list of unique names for each element on the {\ttfamily \mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t_a5405d5023175234c25e2c2371d924c67}{camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t\+::state\+\_\+var}}} array for this aerosol representation. \end{DoxyCompactList}\item 
-interface \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__state__id}{spec\+\_\+state\+\_\+id}}
-\begin{DoxyCompactList}\small\item\em Get a species id on the {\ttfamily \mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t_a5405d5023175234c25e2c2371d924c67}{camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t\+::state\+\_\+var}}} array by unique name. These are unique ids for each element on the state array for this \mbox{\hyperlink{camp_aero_rep}{aerosol representation}} and are numbered\+: \end{DoxyCompactList}\item 
-interface \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\+\_\+name}}
-\begin{DoxyCompactList}\small\item\em Get the non-\/unique name of a chemical species by its unique name. \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1internal__pack__size}{internal\+\_\+pack\+\_\+size}}
+\begin{DoxyCompactList}\small\item\em Extending-\/type binary pack size (internal use only) \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1num__jac__elem}{num\+\_\+jac\+\_\+elem}}
+\begin{DoxyCompactList}\small\item\em Get the number of \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used in calculations of aerosol mass, volume, number, etc. for a particular phase. \end{DoxyCompactList}\item 
 interface \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1num__phase__instances}{num\+\_\+phase\+\_\+instances}}
 \begin{DoxyCompactList}\small\item\em Get the number of instances of a specified aerosol phase. \end{DoxyCompactList}\item 
-interface \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1num__jac__elem}{num\+\_\+jac\+\_\+elem}}
-\begin{DoxyCompactList}\small\item\em Get the number of \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used in calculations of aerosol mass, volume, number, etc. for a particular phase. \end{DoxyCompactList}\end{DoxyCompactItemize}
+interface \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\+\_\+name}}
+\begin{DoxyCompactList}\small\item\em Get the non-\/unique name of a chemical species by its unique name. \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__state__id}{spec\+\_\+state\+\_\+id}}
+\begin{DoxyCompactList}\small\item\em Get a species id on the {\ttfamily \mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t_a5405d5023175234c25e2c2371d924c67}{camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t\+::state\+\_\+var}}} array by unique name. These are unique ids for each element on the state array for this \mbox{\hyperlink{camp_aero_rep}{aerosol representation}} and are numbered\+: \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1unique__names}{unique\+\_\+names}}
+\begin{DoxyCompactList}\small\item\em Get a list of unique names for each element on the {\ttfamily \mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t_a5405d5023175234c25e2c2371d924c67}{camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t\+::state\+\_\+var}}} array for this aerosol representation. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Functions/\+Subroutines}
 \begin{DoxyCompactItemize}
 \item 
@@ -98,7 +98,7 @@ Pack the given value to the buffer, advancing position.
 \end{DoxyParams}
 
 
-Definition at line 713 of file aero\+\_\+rep\+\_\+data.\+F90.
+Definition at line \mbox{\hyperlink{aero__rep__data_8_f90_source_l00713}{713}} of file \mbox{\hyperlink{aero__rep__data_8_f90_source}{aero\+\_\+rep\+\_\+data.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -131,7 +131,7 @@ Unpack the given value from the buffer, advancing position.
 \end{DoxyParams}
 
 
-Definition at line 749 of file aero\+\_\+rep\+\_\+data.\+F90.
+Definition at line \mbox{\hyperlink{aero__rep__data_8_f90_source_l00749}{749}} of file \mbox{\hyperlink{aero__rep__data_8_f90_source}{aero\+\_\+rep\+\_\+data.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -161,7 +161,7 @@ Grid cell id
 \end{DoxyParams}
 
 
-Definition at line 653 of file aero\+\_\+rep\+\_\+data.\+F90.
+Definition at line \mbox{\hyperlink{aero__rep__data_8_f90_source_l00653}{653}} of file \mbox{\hyperlink{aero__rep__data_8_f90_source}{aero\+\_\+rep\+\_\+data.\+F90}}.
 
 \mbox{\Hypertarget{namespacecamp__aero__rep__data_a175f9a37f800d223ff24cfe473e5bf7e}\label{namespacecamp__aero__rep__data_a175f9a37f800d223ff24cfe473e5bf7e}} 
 \index{camp\_aero\_rep\_data@{camp\_aero\_rep\_data}!aero\_rep\_update\_data\_get\_data@{aero\_rep\_update\_data\_get\_data}}
@@ -183,7 +183,7 @@ Update data ptr
 \end{DoxyParams}
 
 
-Definition at line 667 of file aero\+\_\+rep\+\_\+data.\+F90.
+Definition at line \mbox{\hyperlink{aero__rep__data_8_f90_source_l00667}{667}} of file \mbox{\hyperlink{aero__rep__data_8_f90_source}{aero\+\_\+rep\+\_\+data.\+F90}}.
 
 \mbox{\Hypertarget{namespacecamp__aero__rep__data_a9a05458716dcec70056a07266c682a4b}\label{namespacecamp__aero__rep__data_a9a05458716dcec70056a07266c682a4b}} 
 \index{camp\_aero\_rep\_data@{camp\_aero\_rep\_data}!aero\_rep\_update\_data\_get\_type@{aero\_rep\_update\_data\_get\_type}}
@@ -205,7 +205,7 @@ Aerosol representation type
 \end{DoxyParams}
 
 
-Definition at line 639 of file aero\+\_\+rep\+\_\+data.\+F90.
+Definition at line \mbox{\hyperlink{aero__rep__data_8_f90_source_l00639}{639}} of file \mbox{\hyperlink{aero__rep__data_8_f90_source}{aero\+\_\+rep\+\_\+data.\+F90}}.
 
 \mbox{\Hypertarget{namespacecamp__aero__rep__data_a2cbe750986350959de8042b064fa4678}\label{namespacecamp__aero__rep__data_a2cbe750986350959de8042b064fa4678}} 
 \index{camp\_aero\_rep\_data@{camp\_aero\_rep\_data}!aero\_rep\_update\_data\_pack\_size@{aero\_rep\_update\_data\_pack\_size}}
@@ -226,7 +226,7 @@ Determine the size of a binary required to pack the reaction data.
 \end{DoxyParams}
 
 
-Definition at line 681 of file aero\+\_\+rep\+\_\+data.\+F90.
+Definition at line \mbox{\hyperlink{aero__rep__data_8_f90_source_l00681}{681}} of file \mbox{\hyperlink{aero__rep__data_8_f90_source}{aero\+\_\+rep\+\_\+data.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -259,7 +259,7 @@ Pack the given value to the buffer, advancing position.
 \end{DoxyParams}
 
 
-Definition at line 536 of file aero\+\_\+rep\+\_\+data.\+F90.
+Definition at line \mbox{\hyperlink{aero__rep__data_8_f90_source_l00536}{536}} of file \mbox{\hyperlink{aero__rep__data_8_f90_source}{aero\+\_\+rep\+\_\+data.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -292,7 +292,7 @@ Unpack the given value from the buffer, advancing position.
 \end{DoxyParams}
 
 
-Definition at line 563 of file aero\+\_\+rep\+\_\+data.\+F90.
+Definition at line \mbox{\hyperlink{aero__rep__data_8_f90_source_l00563}{563}} of file \mbox{\hyperlink{aero__rep__data_8_f90_source}{aero\+\_\+rep\+\_\+data.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -319,7 +319,7 @@ Deference a pointer to an aerosol representation.
 \end{DoxyParams}
 
 
-Definition at line 615 of file aero\+\_\+rep\+\_\+data.\+F90.
+Definition at line \mbox{\hyperlink{aero__rep__data_8_f90_source_l00615}{615}} of file \mbox{\hyperlink{aero__rep__data_8_f90_source}{aero\+\_\+rep\+\_\+data.\+F90}}.
 
 \mbox{\Hypertarget{namespacecamp__aero__rep__data_a0555e5b1d8bf52e31435731c535e31f1}\label{namespacecamp__aero__rep__data_a0555e5b1d8bf52e31435731c535e31f1}} 
 \index{camp\_aero\_rep\_data@{camp\_aero\_rep\_data}!do\_aero\_rep\_update\_data\_print@{do\_aero\_rep\_update\_data\_print}}
@@ -340,7 +340,7 @@ Print the update data.
 \end{DoxyParams}
 
 
-Definition at line 785 of file aero\+\_\+rep\+\_\+data.\+F90.
+Definition at line \mbox{\hyperlink{aero__rep__data_8_f90_source_l00785}{785}} of file \mbox{\hyperlink{aero__rep__data_8_f90_source}{aero\+\_\+rep\+\_\+data.\+F90}}.
 
 \mbox{\Hypertarget{namespacecamp__aero__rep__data_a361ddb02ca802bce038d2b9471f4b923}\label{namespacecamp__aero__rep__data_a361ddb02ca802bce038d2b9471f4b923}} 
 \index{camp\_aero\_rep\_data@{camp\_aero\_rep\_data}!do\_print@{do\_print}}
@@ -361,7 +361,7 @@ Print the aerosol representation data.
 \end{DoxyParams}
 
 
-Definition at line 591 of file aero\+\_\+rep\+\_\+data.\+F90.
+Definition at line \mbox{\hyperlink{aero__rep__data_8_f90_source_l00591}{591}} of file \mbox{\hyperlink{aero__rep__data_8_f90_source}{aero\+\_\+rep\+\_\+data.\+F90}}.
 
 \mbox{\Hypertarget{namespacecamp__aero__rep__data_abb54bde42dbbd4ca280370cbb874b968}\label{namespacecamp__aero__rep__data_abb54bde42dbbd4ca280370cbb874b968}} 
 \index{camp\_aero\_rep\_data@{camp\_aero\_rep\_data}!get\_name@{get\_name}}
@@ -383,14 +383,22 @@ Aerosol representation name
 \end{DoxyParams}
 
 
-Definition at line 477 of file aero\+\_\+rep\+\_\+data.\+F90.
+Definition at line \mbox{\hyperlink{aero__rep__data_8_f90_source_l00477}{477}} of file \mbox{\hyperlink{aero__rep__data_8_f90_source}{aero\+\_\+rep\+\_\+data.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=343pt]{namespacecamp__aero__rep__data_abb54bde42dbbd4ca280370cbb874b968_cgraph}
+\includegraphics[width=187pt]{namespacecamp__aero__rep__data_abb54bde42dbbd4ca280370cbb874b968_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=187pt]{namespacecamp__aero__rep__data_abb54bde42dbbd4ca280370cbb874b968_icgraph}
 \end{center}
 \end{figure}
 \mbox{\Hypertarget{namespacecamp__aero__rep__data_a6382f457a6313e92f81831a73aa16b07}\label{namespacecamp__aero__rep__data_a6382f457a6313e92f81831a73aa16b07}} 
@@ -414,7 +422,7 @@ Load an aerosol representation from an input file.
 \end{DoxyParams}
 
 
-Definition at line 417 of file aero\+\_\+rep\+\_\+data.\+F90.
+Definition at line \mbox{\hyperlink{aero__rep__data_8_f90_source_l00417}{417}} of file \mbox{\hyperlink{aero__rep__data_8_f90_source}{aero\+\_\+rep\+\_\+data.\+F90}}.
 
 \mbox{\Hypertarget{namespacecamp__aero__rep__data_a4a1d35f1a4f0f3a24aae257c90eb7d7b}\label{namespacecamp__aero__rep__data_a4a1d35f1a4f0f3a24aae257c90eb7d7b}} 
 \index{camp\_aero\_rep\_data@{camp\_aero\_rep\_data}!pack\_size@{pack\_size}}
@@ -435,7 +443,7 @@ Determine the size of a binary required to pack the aerosol representation data.
 \end{DoxyParams}
 
 
-Definition at line 519 of file aero\+\_\+rep\+\_\+data.\+F90.
+Definition at line \mbox{\hyperlink{aero__rep__data_8_f90_source_l00519}{519}} of file \mbox{\hyperlink{aero__rep__data_8_f90_source}{aero\+\_\+rep\+\_\+data.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -475,8 +483,24 @@ List of phase ids
 \end{DoxyParams}
 
 
-Definition at line 492 of file aero\+\_\+rep\+\_\+data.\+F90.
+Definition at line \mbox{\hyperlink{aero__rep__data_8_f90_source_l00492}{492}} of file \mbox{\hyperlink{aero__rep__data_8_f90_source}{aero\+\_\+rep\+\_\+data.\+F90}}.
 
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=187pt]{namespacecamp__aero__rep__data_a2188ebf731ce22e43117bcd92d8c6803_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=187pt]{namespacecamp__aero__rep__data_a2188ebf731ce22e43117bcd92d8c6803_icgraph}
+\end{center}
+\end{figure}
 \mbox{\Hypertarget{namespacecamp__aero__rep__data_ab3b32282b8f6c9afc8734361f7b47d97}\label{namespacecamp__aero__rep__data_ab3b32282b8f6c9afc8734361f7b47d97}} 
 \index{camp\_aero\_rep\_data@{camp\_aero\_rep\_data}!ptr\_finalize@{ptr\_finalize}}
 \index{ptr\_finalize@{ptr\_finalize}!camp\_aero\_rep\_data@{camp\_aero\_rep\_data}}
@@ -494,7 +518,7 @@ Finalize a pointer to an aerosol representation.
 \end{DoxyParams}
 
 
-Definition at line 627 of file aero\+\_\+rep\+\_\+data.\+F90.
+Definition at line \mbox{\hyperlink{aero__rep__data_8_f90_source_l00627}{627}} of file \mbox{\hyperlink{aero__rep__data_8_f90_source}{aero\+\_\+rep\+\_\+data.\+F90}}.
 
 Here is the caller graph for this function\+:
 \nopagebreak

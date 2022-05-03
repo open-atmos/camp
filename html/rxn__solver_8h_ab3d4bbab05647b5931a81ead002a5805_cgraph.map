@@ -1,5 +1,5 @@
 <map id="rxn_update_env_state" name="rxn_update_env_state">
-<area shape="rect" id="node1" title="Update reaction data for new environmental state." alt="" coords="5,373,155,399"/>
+<area shape="rect" id="node1" title="Update reaction data for new environmental state." alt="" coords="5,470,155,497"/>
 <area shape="rect" id="node2" href="$rxn__aqueous__equilibrium_8c.html#a0195133a7e3e489e6580f8feae67b6ee" title="Update reaction data for new environmental conditions." alt="" coords="222,5,386,47"/>
 <area shape="rect" id="node3" href="$rxn__arrhenius_8c.html#aa80f17dc28b8494f62c9e8df1c9fa68e" title="Update reaction data for new environmental conditions." alt="" coords="231,71,377,112"/>
 <area shape="rect" id="node4" href="$rxn___c_m_a_q___h2_o2_8c.html#a21dfd7c08cc181e0d64fe5df3f6459fd" title="Update reaction data for new environmental conditions." alt="" coords="218,136,390,177"/>
@@ -10,7 +10,11 @@
 <area shape="rect" id="node9" href="$rxn___h_l__phase__transfer_8c.html#a53a6e2e8532852ea1b23266b2ff3db12" title="Update reaction data for new environmental conditions." alt="" coords="225,463,383,504"/>
 <area shape="rect" id="node11" href="$rxn__photolysis_8c.html#a7050f9c7df2b337474e90b49cd563d1d" title="Update reaction data for new environmental conditions." alt="" coords="229,528,379,569"/>
 <area shape="rect" id="node12" href="$rxn___s_i_m_p_o_l__phase__transfer_8c.html#a16e926c16f84b0d8628f10553fc63ce6" title="Update reaction data for new environmental conditions." alt="" coords="209,593,399,635"/>
-<area shape="rect" id="node13" href="$rxn__troe_8c.html#ad2f31b90abffa527604e554295d3a40f" title="Update reaction data for new environmental conditions." alt="" coords="233,659,375,700"/>
-<area shape="rect" id="node14" href="$rxn__wet__deposition_8c.html#a639ae40ecdc8940c3c36a240738092df" title="Update reaction data for new environmental conditions." alt="" coords="237,724,371,765"/>
+<area shape="rect" id="node13" href="$rxn__ternary__chemical__activation_8c.html#a1aa5967c48da08c40704695d30025ab5" title="Update reaction data for new environmental conditions." alt="" coords="207,659,401,700"/>
+<area shape="rect" id="node14" href="$rxn__troe_8c.html#ad2f31b90abffa527604e554295d3a40f" title="Update reaction data for new environmental conditions." alt="" coords="233,724,375,765"/>
+<area shape="rect" id="node15" href="$rxn__wennberg__no__ro2_8c.html#a8d2b2b0c571f1601ab1458bec2df79a0" title="Update reaction data for new environmental conditions." alt="" coords="230,789,378,831"/>
+<area shape="rect" id="node17" href="$rxn__wennberg__tunneling_8c.html#adc3b7a604cd2f2e0af17b22e7aac0670" title="Update reaction data for new environmental conditions." alt="" coords="223,855,385,896"/>
+<area shape="rect" id="node18" href="$rxn__wet__deposition_8c.html#a639ae40ecdc8940c3c36a240738092df" title="Update reaction data for new environmental conditions." alt="" coords="237,920,371,961"/>
 <area shape="rect" id="node10" href="$util_8h.html#ae1c969544a10c17746622cf73186835c" title=" " alt="" coords="453,535,593,562"/>
+<area shape="rect" id="node16" href="$rxn__wennberg__no__ro2_8c.html#a030d97a6aca1f035049ca6e8bb86afe3" title="Calculates the Troe&#45;like parameter A(T, [M], n)" alt="" coords="478,797,569,823"/>
 </map>

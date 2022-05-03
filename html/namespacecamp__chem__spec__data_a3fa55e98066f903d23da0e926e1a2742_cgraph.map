@@ -1,6 +1,7 @@
 <map id="camp_chem_spec_data::load" name="camp_chem_spec_data::load">
-<area shape="rect" id="node1" title="Load species from an input file." alt="" coords="5,5,165,47"/>
-<area shape="rect" id="node2" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="395,13,547,39"/>
-<area shape="rect" id="node4" href="$namespacecamp__util.html#a970b40b46d26e937fb3cdc0b9217b86c" title="Error immediately." alt="" coords="213,38,347,65"/>
-<area shape="rect" id="node3" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="595,5,717,47"/>
+<area shape="rect" id="node1" title="Load species from an input file." alt="" coords="5,14,165,56"/>
+<area shape="rect" id="node2" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="395,22,547,48"/>
+<area shape="rect" id="node4" href="$namespacecamp__util.html#a970b40b46d26e937fb3cdc0b9217b86c" title="Error immediately." alt="" coords="213,22,347,48"/>
+<area shape="rect" id="node5" href="$namespacecamp__util.html#ab72bff2627c9468e4c352118b8dc7046" title="Prints a warning message." alt="" coords="399,72,543,99"/>
+<area shape="rect" id="node3" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="595,40,717,81"/>
 </map>

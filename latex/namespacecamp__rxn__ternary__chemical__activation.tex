@@ -1,0 +1,96 @@
+\hypertarget{namespacecamp__rxn__ternary__chemical__activation}{}\doxysection{camp\+\_\+rxn\+\_\+ternary\+\_\+chemical\+\_\+activation Module Reference}
+\label{namespacecamp__rxn__ternary__chemical__activation}\index{camp\_rxn\_ternary\_chemical\_activation@{camp\_rxn\_ternary\_chemical\_activation}}
+
+
+The \mbox{\hyperlink{structcamp__rxn__ternary__chemical__activation_1_1rxn__ternary__chemical__activation__t}{rxn\+\_\+ternary\+\_\+chemical\+\_\+activation\+\_\+t}} type and associated functions.  
+
+
+\doxysubsection*{Data Types}
+\begin{DoxyCompactItemize}
+\item 
+interface \mbox{\hyperlink{structcamp__rxn__ternary__chemical__activation_1_1rxn__ternary__chemical__activation__t}{rxn\+\_\+ternary\+\_\+chemical\+\_\+activation\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em Generic test reaction data type. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Functions/\+Subroutines}
+\begin{DoxyCompactItemize}
+\item 
+type(\mbox{\hyperlink{structcamp__rxn__ternary__chemical__activation_1_1rxn__ternary__chemical__activation__t}{rxn\+\_\+ternary\+\_\+chemical\+\_\+activation\+\_\+t}}) function, pointer \mbox{\hyperlink{namespacecamp__rxn__ternary__chemical__activation_a4a8da3de2e3c8a8465cea4604be3c8bc}{constructor}} ()
+\begin{DoxyCompactList}\small\item\em Constructor for Ternary Chemical Activation reaction. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__rxn__ternary__chemical__activation_a84bcd38b7a8b4aaba3b38e22a99efb13}{initialize}} (this, chem\+\_\+spec\+\_\+data, aero\+\_\+rep, n\+\_\+cells)
+\begin{DoxyCompactList}\small\item\em Initialize the reaction data, validating component data and loading any required information into the condensed data arrays for use during solving. \end{DoxyCompactList}\item 
+elemental subroutine \mbox{\hyperlink{namespacecamp__rxn__ternary__chemical__activation_a7fd1849ceee82bb44c56094d0c9e23ba}{finalize}} (this)
+\begin{DoxyCompactList}\small\item\em Finalize the reaction. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+The \mbox{\hyperlink{structcamp__rxn__ternary__chemical__activation_1_1rxn__ternary__chemical__activation__t}{rxn\+\_\+ternary\+\_\+chemical\+\_\+activation\+\_\+t}} type and associated functions. 
+
+\doxysubsection{Function/\+Subroutine Documentation}
+\mbox{\Hypertarget{namespacecamp__rxn__ternary__chemical__activation_a4a8da3de2e3c8a8465cea4604be3c8bc}\label{namespacecamp__rxn__ternary__chemical__activation_a4a8da3de2e3c8a8465cea4604be3c8bc}} 
+\index{camp\_rxn\_ternary\_chemical\_activation@{camp\_rxn\_ternary\_chemical\_activation}!constructor@{constructor}}
+\index{constructor@{constructor}!camp\_rxn\_ternary\_chemical\_activation@{camp\_rxn\_ternary\_chemical\_activation}}
+\doxysubsubsection{\texorpdfstring{constructor()}{constructor()}}
+{\footnotesize\ttfamily type(\mbox{\hyperlink{structcamp__rxn__ternary__chemical__activation_1_1rxn__ternary__chemical__activation__t}{rxn\+\_\+ternary\+\_\+chemical\+\_\+activation\+\_\+t}}) function, pointer camp\+\_\+rxn\+\_\+ternary\+\_\+chemical\+\_\+activation\+::constructor\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Constructor for Ternary Chemical Activation reaction. 
+
+\begin{DoxyReturn}{Returns}
+A new reaction instance 
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{rxn__ternary__chemical__activation_8_f90_source_l00124}{124}} of file \mbox{\hyperlink{rxn__ternary__chemical__activation_8_f90_source}{rxn\+\_\+ternary\+\_\+chemical\+\_\+activation.\+F90}}.
+
+\mbox{\Hypertarget{namespacecamp__rxn__ternary__chemical__activation_a7fd1849ceee82bb44c56094d0c9e23ba}\label{namespacecamp__rxn__ternary__chemical__activation_a7fd1849ceee82bb44c56094d0c9e23ba}} 
+\index{camp\_rxn\_ternary\_chemical\_activation@{camp\_rxn\_ternary\_chemical\_activation}!finalize@{finalize}}
+\index{finalize@{finalize}!camp\_rxn\_ternary\_chemical\_activation@{camp\_rxn\_ternary\_chemical\_activation}}
+\doxysubsubsection{\texorpdfstring{finalize()}{finalize()}}
+{\footnotesize\ttfamily elemental subroutine camp\+\_\+rxn\+\_\+ternary\+\_\+chemical\+\_\+activation\+::finalize (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__rxn__ternary__chemical__activation_1_1rxn__ternary__chemical__activation__t}{rxn\+\_\+ternary\+\_\+chemical\+\_\+activation\+\_\+t}}), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Finalize the reaction. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & Reaction data \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{rxn__ternary__chemical__activation_8_f90_source_l00304}{304}} of file \mbox{\hyperlink{rxn__ternary__chemical__activation_8_f90_source}{rxn\+\_\+ternary\+\_\+chemical\+\_\+activation.\+F90}}.
+
+\mbox{\Hypertarget{namespacecamp__rxn__ternary__chemical__activation_a84bcd38b7a8b4aaba3b38e22a99efb13}\label{namespacecamp__rxn__ternary__chemical__activation_a84bcd38b7a8b4aaba3b38e22a99efb13}} 
+\index{camp\_rxn\_ternary\_chemical\_activation@{camp\_rxn\_ternary\_chemical\_activation}!initialize@{initialize}}
+\index{initialize@{initialize}!camp\_rxn\_ternary\_chemical\_activation@{camp\_rxn\_ternary\_chemical\_activation}}
+\doxysubsubsection{\texorpdfstring{initialize()}{initialize()}}
+{\footnotesize\ttfamily subroutine \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1initialize}{camp\+\_\+rxn\+\_\+ternary\+\_\+chemical\+\_\+activation\+::initialize}} (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__rxn__ternary__chemical__activation_1_1rxn__ternary__chemical__activation__t}{rxn\+\_\+ternary\+\_\+chemical\+\_\+activation\+\_\+t}}), intent(inout)}]{this,  }\item[{type(\mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t}{chem\+\_\+spec\+\_\+data\+\_\+t}}), intent(in)}]{chem\+\_\+spec\+\_\+data,  }\item[{type(\mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__ptr}{aero\+\_\+rep\+\_\+data\+\_\+ptr}}), dimension(\+:), intent(in), pointer}]{aero\+\_\+rep,  }\item[{integer(kind=i\+\_\+kind), intent(in)}]{n\+\_\+cells }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Initialize the reaction data, validating component data and loading any required information into the condensed data arrays for use during solving. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & Reaction data \\
+\hline
+\mbox{\texttt{ in}}  & {\em chem\+\_\+spec\+\_\+data} & Chemical species data \\
+\hline
+\mbox{\texttt{ in}}  & {\em aero\+\_\+rep} & Aerosol representations \\
+\hline
+\mbox{\texttt{ in}}  & {\em n\+\_\+cells} & Number of grid cells to solve simultaneously \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{rxn__ternary__chemical__activation_8_f90_source_l00139}{139}} of file \mbox{\hyperlink{rxn__ternary__chemical__activation_8_f90_source}{rxn\+\_\+ternary\+\_\+chemical\+\_\+activation.\+F90}}.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacecamp__rxn__ternary__chemical__activation_a84bcd38b7a8b4aaba3b38e22a99efb13_cgraph}
+\end{center}
+\end{figure}
