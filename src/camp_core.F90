@@ -59,7 +59,7 @@
 !!
 !! You can also check out
 !! \ref ./Dockerfile
-!! (or \ref ./Dockerfile.mpi for MPI applications) to see how CAMP is
+!! (or \ref ./Dockerfile.mpi for MPI applications) to see how CAMP
 !! is built for automated testing.
 !!
 !!## Input files ##
