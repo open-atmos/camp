@@ -1819,6 +1819,7 @@ void constructor_cvode_gpu(CVodeMem cv_mem, SolverData *sd)
   cudaDeviceProp prop;
   int device = 0;
 
+  sd->flagCells = (int *) malloc((md->n_cells) * sizeof(int));
   sd->mGPU = &(sd->mGPUs[0]);
   ModelDataGPU *mGPU = sd->mGPU;
   mGPU->mdvCPU.cv_reltol = ((CVodeMem) sd->cvode_mem)->cv_reltol;
@@ -1917,11 +1918,6 @@ void constructor_cvode_gpu(CVodeMem cv_mem, SolverData *sd)
     double *cv_last_yn = N_VGetArrayPointer(cv_mem->cv_last_yn)+offset_nrows;
     double *cv_acor_init = N_VGetArrayPointer(cv_mem->cv_acor_init)+offset_nrows;
 
-    offset_nnz += mGPU->nnz;
-    offset_nrows += mGPU->nrows;
-
-    sd->flagCells = (int *) malloc((mGPU->n_cells) * sizeof(int));
-
     cudaMalloc((void **) &mGPU->mdv, sizeof(ModelDataVariable));
     cudaMalloc((void **) &mGPU->mdvo, sizeof(ModelDataVariable));
     cudaMalloc((void **) &mGPU->flag, 1 * sizeof(int));
@@ -2010,6 +2006,8 @@ void constructor_cvode_gpu(CVodeMem cv_mem, SolverData *sd)
     cudaMemcpy(mGPU->mdvo, &mGPU->mdvCPU, sizeof(ModelDataVariable),
                cudaMemcpyHostToDevice); //todo check this is fine for cudacvod
 
+    offset_nnz += mGPU->nnz;
+    offset_nrows += mGPU->nrows;
   }
 
   if(cv_mem->cv_sldeton){
@@ -4449,7 +4447,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
   ModelData *md = &(sd->model_data);
   //double *youtArray = N_VGetArrayPointer(yout);
 
-  printf("cudaCVode start \n");
+  //printf("cudaCVode start \n");
 
   /*
    * -------------------------------------
@@ -4748,7 +4746,11 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
   kflag = 99;
   nstloc = 0;
   int flag;
+  for (int i = 0; i < md->n_cells; i++)
+    sd->flagCells[i] = 99;
 
+  int offset_state = 0;
+  int offset_ncells = 0;
   int offset_nrows = 0;
   for (int iDevice = 0; iDevice < sd->nDevices; iDevice++) {
     cudaSetDevice(iDevice);
@@ -4784,14 +4786,10 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     for (int i = 0; i <= cv_mem->cv_qmax; i++) {//cv_qmax+1 (6)?
       double *zn = NV_DATA_S(cv_mem->cv_zn[i])+offset_nrows;
       cudaMemcpyAsync((i * mGPU->nrows + mGPU->dzn), zn, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice, 0);
-
     }
 
-    for (int i = 0; i < mGPU->n_cells; i++)
-      sd->flagCells[i] = 99;
-
-    cudaMemcpyAsync(mGPU->flagCells, sd->flagCells, mGPU->n_cells * sizeof(int), cudaMemcpyHostToDevice, 0);
-    HANDLE_ERROR(cudaMemcpyAsync(mGPU->state, md->total_state, mGPU->state_size, cudaMemcpyHostToDevice, 0));
+    cudaMemcpyAsync(mGPU->flagCells, sd->flagCells+offset_ncells, mGPU->n_cells * sizeof(int), cudaMemcpyHostToDevice, 0);
+    HANDLE_ERROR(cudaMemcpyAsync(mGPU->state, md->total_state+offset_state, mGPU->state_size, cudaMemcpyHostToDevice, 0));
 
     mGPU->mdvCPU.init_time_step = sd->init_time_step;
     mGPU->mdvCPU.cv_mxstep = cv_mem->cv_mxstep;
@@ -4858,14 +4856,14 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     mGPU->mdvCPU.kflag = kflag;
     mGPU->mdvCPU.kflag2 = 99;
 
-    cudaMemcpyAsync(mGPU->mdv, &mGPU->mdvCPU, sizeof(ModelDataVariable), cudaMemcpyHostToDevice, 0);
+    cudaMemcpy(mGPU->mdv, &mGPU->mdvCPU, sizeof(ModelDataVariable), cudaMemcpyHostToDevice);
 
 #ifdef CAMP_DEBUG_GPU
     cudaEventRecord(bicg->startsolveCVODEGPU);
 #endif
 
     solveCVODEGPU(sd, cv_mem);
-    //cudaDeviceSynchronize();//todo needed?
+    cudaDeviceSynchronize();//todo needed?
 
 #ifdef CAMP_DEBUG_GPU
     cudaEventRecord(bicg->stopsolveCVODEGPU);
@@ -4960,7 +4958,14 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
       cudaMemcpyAsync(zn, (i * mGPU->nrows + mGPU->dzn), mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost, 0);
     }
 
-    HANDLE_ERROR(cudaMemcpyAsync(sd->flagCells, mGPU->flagCells, mGPU->n_cells * sizeof(int), cudaMemcpyDeviceToHost, 0));
+    HANDLE_ERROR(cudaMemcpy(sd->flagCells+offset_ncells, mGPU->flagCells, mGPU->n_cells * sizeof(int), cudaMemcpyDeviceToHost));
+    //HANDLE_ERROR(cudaMemcpyAsync(sd->flagCells+offset_ncells, mGPU->flagCells, mGPU->n_cells * sizeof(int), cudaMemcpyDeviceToHost, 0));//todo chek async
+
+    offset_state += mGPU->state_size_cell * mGPU->n_cells;
+    offset_ncells += mGPU->n_cells;
+    offset_nrows += mGPU->nrows;
+    }
+
     flag = CV_SUCCESS;
     for (int i = 0; i < mGPU->n_cells; i++) {
       if (sd->flagCells[i] != flag) {
@@ -4968,9 +4973,6 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
         break;
       }
     }
-
-    offset_nrows += mGPU->nrows;
-  }
     istate=flag;
 
     //printf("cudaCVode flag %d kflag %d\n",flag, mGPU->mdvCPU.flag);

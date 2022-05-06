@@ -66,19 +66,17 @@ void solver_new_gpu_cu(SolverData *sd, int n_dep_var,
                        int n_cells_total) {
   ModelData *md = &(sd->model_data);
   ModelDataGPU *mGPU;
-  //cudaGetDeviceCount(&sd->nDevices);
-  sd->nDevices = 4; //todo fix nDevices=4 and =1 for LS
   sd->mGPUs = (ModelDataGPU *)malloc(sd->nDevices * sizeof(ModelDataGPU));
   int remainder = n_cells_total % sd->nDevices;
 
-  /*
+  //sd->nDevices = 4;
   int nDevicesMax;
   cudaGetDeviceCount(&nDevicesMax);
-  if(sd->nDevices > nDevicesMax)
-     printf("ERROR: TOO FEW SPECIES FOR GPU (Species < 32),"
-           " use CPU case instead (More info: https://earth.bsc.es/gitlab/ac/camp/-/issues/49 \n");
+  if(sd->nDevices > nDevicesMax){
+     printf("ERROR: Not enough GPUs to launch, nDevices %d nDevicesMax %d\n"
+           , sd->nDevices, nDevicesMax);
     exit(0);
-*/
+  }
 
   for (int iDevice = 0; iDevice < sd->nDevices; iDevice++) {
   cudaSetDevice(iDevice);

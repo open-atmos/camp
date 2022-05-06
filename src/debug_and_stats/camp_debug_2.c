@@ -176,6 +176,9 @@ void get_camp_config_variables(SolverData *sd){
   char buff[255];
 
   char path[] = "config_variables_c_solver.txt";
+
+  //printf("get_camp_config_variables\n");
+
   fp = fopen("config_variables_c_solver.txt", "r");
 
   if (fp == NULL){
@@ -190,7 +193,6 @@ void get_camp_config_variables(SolverData *sd){
     else{
       sd->use_cpu=0;
     }
-
     fscanf(fp, "%s", buff);
     if(strstr(buff,"USE_GPU_CVODE=ON")!=NULL){
       sd->use_gpu_cvode=1;
@@ -198,9 +200,12 @@ void get_camp_config_variables(SolverData *sd){
     else{
       sd->use_gpu_cvode=0;
     }
+    fscanf(fp, "%d", &sd->nDevices);
 
     fclose(fp);
   }
+
+  //printf("get_camp_config_variables\n");
 
 }
 
