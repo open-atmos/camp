@@ -23,6 +23,10 @@ compile_run(){
   id=$1
 
   echo "Starting job " "$id"
+  echo "SLURM_NNODES " "$SLURM_NNODES"
+  echo "SLURM_NTASKS " "$SLURM_NTASKS"
+  echo "SLURM_NTASKS_PER_NODE " "$SLURM_NTASKS_PER_NODE"
+  #echo "SBATCH_GPUS_PER_NODE " "$SBATCH_GPUS_PER_NODE"
 
   cd ../../../camp_jobs/camp$id/compile/power9
 

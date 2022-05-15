@@ -331,7 +331,7 @@ def export(conf, data_path):
 def run(conf):
     exec_str = ""
     if conf.mpi == "yes":
-        exec_str += "mpirun -v -np " + str(conf.mpiProcesses) + " --bind-to core "  # + " --bind-to none "
+        exec_str += "mpirun -v -np " + str(conf.mpiProcesses) + " --bind-to core "
         # exec_str+="srun -n "+str(conf.mpiProcesses)+" "
 
     if conf.profileCuda and conf.caseGpuCpu == "GPU":
@@ -354,7 +354,7 @@ def run(conf):
     # Onecell-Multicells itsolver
     write_itsolver_config_file(conf)
 
-    print("exec_str:", exec_str, conf.diffCells, conf.caseGpuCpu, conf.caseMulticellsOnecell)
+    print("exec_str:", exec_str, conf.diffCells, conf.caseGpuCpu, conf.caseMulticellsOnecell,conf.nGPUs)
 
     conf_name = "TestMonarch.json"
     with open(conf_name, 'w', encoding='utf-8') as jsonFile:
@@ -378,8 +378,8 @@ def run(conf):
         if conf.is_export:
             export(conf, data_path)
 
-    new_path = os.path.abspath(os.getcwd()) + "/" + data_path
-    print("data_path", new_path)
+    #new_path = os.path.abspath(os.getcwd()) + "/" + data_path
+    #print("data_path", new_path)
 
     data = {}
     if conf.plotYKey == "MAPE":
@@ -621,7 +621,7 @@ def plot_cases(conf):
                         legend_name += conf.diffCells + " "
                     if len(conf.mpiProcessesCaseOptimList) > 1 and conf.plotXKey == "MPI processes":
                         legend_name += str(mpiProcessesCaseOptim) + " MPI "
-                    if len(conf.nGPUsCaseOptimList) > 1 and conf.plotXKey == "GPUs":
+                    if len(conf.nGPUsCaseOptimList) > 1:# and conf.plotXKey == "GPUs":
                         legend_name += str(nGPUs) + " GPU "
                     if not is_same_arch_optim:
                         legend_name += conf.caseGpuCpu + " "
@@ -633,8 +633,8 @@ def plot_cases(conf):
     conf.plotTitle = ""
     if not is_same_diff_cells and len(conf.diffCellsL) == 1:
         conf.plotTitle += conf.diffCells + " test: "
-    #if len(conf.mpiProcessesCaseOptimList) == 1 and conf.caseGpuCpu == "CPU":
-    if len(conf.mpiProcessesCaseOptimList) == 1:
+    if len(conf.mpiProcessesCaseOptimList) == 1 and conf.caseGpuCpu == "CPU":
+    #if len(conf.mpiProcessesCaseOptimList) == 1:
         conf.plotTitle += str(mpiProcessesCaseOptim) + " MPI "
     if len(conf.nGPUsCaseOptimList) == 1 and conf.plotXKey == "GPUs":
         conf.plotTitle += str(nGPUs) + " GPUs "
@@ -657,7 +657,7 @@ def plot_cases(conf):
 
     namey = conf.plotYKey
     if conf.plotYKey == "Speedup normalized computational timeLS":
-        namey = "Speedup without data transfers CPU-GPU"
+        namey = "Speedup linear solver kernel"
     if conf.plotYKey == "Speedup counterLS":
         namey = "Speedup iterations CAMP solving"
     if conf.plotYKey == "Speedup normalized timeLS":
@@ -697,6 +697,7 @@ def plot_cases(conf):
     namex = plot_x_key
     datay = conf.datacolumns
 
+    print("Nodes:", conf.allocatedNodes)
     print("plotTitle: ", conf.plotTitle, " legend:", conf.legend)
     if namex == "Timesteps":
         print("Mean:", round(np.mean(datay), 2))
@@ -711,11 +712,10 @@ def plot_cases(conf):
 
 def all_timesteps():
     conf = TestMonarch()
-    conf_default = TestMonarch()
 
     # conf.chemFile = "simple"
     conf.chemFile = "monarch_cb05"
-    # conf.chemFile = "monarch_binned"
+    #conf.chemFile = "monarch_binned"
 
     conf.diffCellsL = []
     conf.diffCellsL.append("Realistic")
@@ -738,32 +738,36 @@ def all_timesteps():
     # conf.nGPUsCaseBase = 4
 
     conf.nGPUsCaseOptimList = [1]
-    # conf.nGPUsCaseOptimList = [2]
-    # conf.nGPUsCaseOptimList = [1,2,3,4]
+    #conf.nGPUsCaseOptimList = [1]
+    #conf.nGPUsCaseOptimList = [1,2,3,4]
 
     conf.mpi = "yes"
     # conf.mpi = "no"
 
     conf.mpiProcessesCaseBase = 1
-    # conf.mpiProcessesCaseBase = 10
+    #conf.mpiProcessesCaseBase = 40
 
     conf.mpiProcessesCaseOptimList.append(1)
-    #conf.mpiProcessesCaseOptimList.append(30)
+    #conf.mpiProcessesCaseOptimList.append(40)
+    #conf.mpiProcessesCaseOptimList = [10,20,40]
     #conf.mpiProcessesCaseOptimList = [1,4,8,16,32,40]
 
-    conf.allocatedNodes = conf_default.allocatedNodes # 1
-    #conf.allocatedNodes = 2
-    #conf.allocatedNodes = get_mpiNodes_sbatch() #todo
+    conf.allocatedNodes = 1
+    #conf.allocatedNodes = 4
+    #conf.allocatedNodes = get_allocatedNodes_sbatch() #todo
 
-    conf.allocatedTasksPerNode = conf_default.allocatedTasksPerNode # 160
+    conf.allocatedTasksPerNode = 160
+    #conf.allocatedTasksPerNode = 40
    # conf.allocatedTasksPerNode = 320
     #conf.allocatedTasksPerNode = get_ntasksPerNode_sbatch() #todo
 
-    conf.cells = [500]
+    conf.cells = [2]
     #conf.cells = [100,500,1000,5000,10000]
     #conf.cells = [50000,100000,500000,1000000]
 
-    conf.timeSteps = 1
+    conf.timeSteps = 6
+    #conf.timeSteps = 720
+
     conf.timeStepsDt = 2
 
     conf.caseBase = "CPU One-cell"
@@ -792,22 +796,22 @@ def all_timesteps():
     #conf.casesOptim.append("GPU Multi-cells")
     #conf.casesOptim.append("GPU One-cell")
     # conf.casesOptim.append("CPU Multi-cells")
-   # conf.casesOptim.append("CPU One-cell")
+    #conf.casesOptim.append("CPU One-cell")
 
     # conf.plotYKey = "Speedup timeCVode"
     # conf.plotYKey = "Speedup counterLS"
-    # conf.plotYKey = "Speedup normalized timeLS"
-    # conf.plotYKey = "Speedup normalized computational timeLS"
+    #conf.plotYKey = "Speedup normalized timeLS"
+    #conf.plotYKey = "Speedup normalized computational timeLS"
     # conf.plotYKey = "Speedup counterBCG"
     # conf.plotYKey = "Speedup normalized counterBCG"
     # conf.plotYKey = "Speedup total iterations - counterBCG"
     # conf.plotYKey = "Speedup BCG iteration (Comp.timeLS/counterBCG)"
-    conf.plotYKey = "Speedup timecvStep"
+    #conf.plotYKey = "Speedup timecvStep"
     # conf.plotYKey = "Speedup timecvStep normalized by countercvStep"
     # conf.plotYKey = "Speedup countercvStep"
     # conf.plotYKey = "Speedup device timecvStep"
     # conf.plotYKey = "Percentage data transfers CPU-GPU [%]"
-    # conf.plotYKey ="MAPE"
+    conf.plotYKey ="MAPE"
     # conf.plotYKey ="SMAPE"
     # conf.plotYKey ="NRMSE"
     # conf.MAPETol = 1.0E-6
@@ -845,8 +849,6 @@ def all_timesteps():
             conf.diffCellsL = ["Realistic"]
         # conf.diffCellsL = ["Ideal"]
 
-    print("WARNING: Setting device function times from GPU 0, pending to save other GPUs");
-
     if not conf.caseBase:
         print("ERROR: caseBase is empty")
         raise
@@ -857,11 +859,6 @@ def all_timesteps():
             if nCells == 0:
                 print("WARNING: Configured less cells than MPI processes, setting 1 cell per process")
                 conf.mpiProcessesCaseOptimList[i] = cellsProcesses
-
-    for caseOptim in conf.casesOptim:
-        if caseOptim != "GPU BDF" and conf.nGPUsCaseOptimList[0] != 1:
-            print("ERROR:PENDING TO DO NOTGPUCVODE CASES WITH MULTI-DEVICES")
-            # raise
 
     run_diffCells(conf)
 

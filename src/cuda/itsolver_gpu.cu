@@ -37,7 +37,7 @@ void read_options(itsolver *bicg){
     else if(strstr(buff,"CELLS_METHOD=One-cell")!=NULL){
       bicg->cells_method=ONECELL;
     }else{
-      printf("ERROR: solveGPU_block unkonwn cells_method");
+      printf("ERROR: solveBCGBlocks unkonwn cells_method");
       exit(0);
     }
     fclose(fp);
@@ -350,7 +350,6 @@ void swapCSC_CSR_BCG(SolverData *sd){
   int* Ap=mGPU->iA;
   int* Aj=mGPU->jA;
   double* Ax=mGPU->A;
-  printf("WARNING: swapCSC_CSR_BCG WAS USING OLD MATRIX FROM BICG INSTEAD OF UPDATED J\n");
   int* Bp=(int*)malloc((mGPU->nrows+1)*sizeof(int));
   int* Bi=(int*)malloc(mGPU->nnz*sizeof(int));
   double* Bx=(double*)malloc(nnz*sizeof(double));
@@ -404,9 +403,9 @@ void swapCSC_CSR_BCG(SolverData *sd){
 
 #else
 
-  cudaMemcpy(mGPU->diA,Bp,(mGPU->nrows+1)*sizeof(int),cudaMemcpyHostToDevice);
-  cudaMemcpy(mGPU->djA,Bi,mGPU->nnz*sizeof(int),cudaMemcpyHostToDevice);
-  cudaMemcpy(mGPU->dA,Bx,mGPU->nnz*sizeof(double),cudaMemcpyHostToDevice);
+  cudaMemcpyAsync(mGPU->diA,Bp,(mGPU->nrows+1)*sizeof(int),cudaMemcpyHostToDevice, 0);
+  cudaMemcpyAsync(mGPU->djA,Bi,mGPU->nnz*sizeof(int),cudaMemcpyHostToDevice, 0);
+  cudaMemcpyAsync(mGPU->dA,Bx,mGPU->nnz*sizeof(double),cudaMemcpyHostToDevice, 0);
 
 #endif
 
@@ -782,11 +781,11 @@ void solveGPU_block_thr(int blocks, int threads_block, int n_shr_memory, int n_s
 
 }
 
-//solveGPU_block: Each block will compute only a cell/group of cells
+//solveBCGBlocks: Each block will compute only a cell/group of cells
 //Algorithm: Biconjugate gradient
 // dx: Input and output RHS
 // dtempv: Input preconditioner RHS
-void solveGPU_block(SolverData *sd, double *dA, int *djA, int *diA, double *dx, double *dtempv)
+void solveBCGBlocks(SolverData *sd, double *dA, int *djA, int *diA, double *dx, double *dtempv)
 {
 
   itsolver *bicg = &(sd->bicg);
@@ -829,7 +828,7 @@ void solveGPU_block(SolverData *sd, double *dA, int *djA, int *diA, double *dx, 
 #ifdef DEBUG_SOLVEBCGCUDA
     else{
       if(bicg->counterBiConjGrad==0){
-        printf("solveGPU_block blocks==0\n");
+        printf("solveBCGBlocks blocks==0\n");
       }
     }
 #endif
@@ -850,7 +849,7 @@ void solveGPU_block(SolverData *sd, double *dA, int *djA, int *diA, double *dx, 
 }
 
 //Algorithm: Biconjugate gradient
-void solveGPU(SolverData *sd, double *dA, int *djA, int *diA, double *dx, double *dtempv)
+void solveBCG(SolverData *sd, double *dA, int *djA, int *diA, double *dx, double *dtempv)
 {
   //Init variables ("public")
 
@@ -880,7 +879,7 @@ void solveGPU(SolverData *sd, double *dA, int *djA, int *diA, double *dx, double
 
 #ifdef DEBUG_SOLVEBCGCUDA
   if(bicg->counterBiConjGrad==0) {
-    printf("solveGPU\n");
+    printf("solveBCG\n");
   }
 #endif
 

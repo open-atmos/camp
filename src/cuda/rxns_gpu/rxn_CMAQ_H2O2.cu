@@ -181,34 +181,14 @@ void rxn_gpu_CMAQ_H2O2_calc_deriv_contrib(ModelDataGPU *model_data, TimeDerivati
     int i_dep_var = 0;
     for (int i_spec=0; i_spec<NUM_REACT_; i_spec++, i_dep_var++) {
       if (DERIV_ID_(i_dep_var) < 0) continue;
-#ifdef BASIC_CALC_DERIV
-#ifdef __CUDA_ARCH__
-      atomicAdd((double*)&(deriv[DERIV_ID_(i_dep_var)]),-rate);
-      //atomicAdd(&(deriv[DERIV_ID_(i_dep_var)]),0.5); //debug
-      //DERIV_ID_(i_dep_var)=0.5; //debug
-#else
-      deriv[DERIV_ID_(i_dep_var)] -= rate;
-#endif
-#else
       time_derivative_add_value_gpu(time_deriv, DERIV_ID_(i_dep_var), -rate);
-#endif
     }
     for (int i_spec=0; i_spec<NUM_PROD_; i_spec++, i_dep_var++) {
       if (DERIV_ID_(i_dep_var) < 0) continue;
       // Negative yields are allowed, but prevented from causing negative
       // concentrations that lead to solver failures
       if (-rate*YIELD_(i_spec)*time_step <= state[PROD_(i_spec)]) {
-#ifdef BASIC_CALC_DERIV
-#ifdef __CUDA_ARCH__
-        atomicAdd((double*)&(deriv[DERIV_ID_(i_dep_var)]),rate*YIELD_(i_spec));
-        //atomicAdd(&(deriv[DERIV_ID_(i_dep_var)]),0.1); //debug
-        //DERIV_ID_(i_dep_var)=0.5; //debug
-#else
-        deriv[DERIV_ID_(i_dep_var)] += rate*YIELD_(i_spec);
-#endif
-#else
         time_derivative_add_value_gpu(time_deriv, DERIV_ID_(i_dep_var),rate*YIELD_(i_spec));
-#endif
       }
     }
   }

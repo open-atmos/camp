@@ -136,12 +136,8 @@ void time_derivative_add_value_gpu(TimeDerivativeGPU time_deriv, unsigned int sp
 #ifdef __CUDA_ARCH__
   if (rate_contribution > 0.0) {
     atomicAdd_block(&(time_deriv.production_rates[spec_id]),rate_contribution);
-    //atomicAdd(&(time_deriv.production_rates[spec_id]),rate_contribution);
-    //atomicAdd(&(time_deriv.production_rates[spec_id]),0.2); //debug
   } else {
     atomicAdd_block(&(time_deriv.loss_rates[spec_id]),-rate_contribution);
-    //atomicAdd(&(time_deriv.loss_rates[spec_id]),-rate_contribution);
-    //atomicAdd(&(time_deriv.loss_rates[spec_id]),-0.1); //debug
   }
 #else
   if (rate_contribution > 0.0) {

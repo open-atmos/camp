@@ -670,7 +670,6 @@ __device__ void cudaDeviceSpmvCSC_block(double* dx, double* db, int nrows, doubl
 #ifndef cudaDeviceSpmvCSC_block_atomicadd
 
     mult = db[row]*dA[j];
-    //atomicAdd(&(dx[djA[j]]),mult);
     atomicAdd_block(&(dx[djA[j]]),mult);
 #else
 

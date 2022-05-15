@@ -105,7 +105,7 @@ typedef struct {
 #endif
     //unsigned int num_elem;   // Number of potentially non-zero Jacobian elements
     int *num_elem;   // Number of potentially non-zero Jacobian elements
-    unsigned int *col_ptrs;  // Index of start/end of each column in data array
+    int *col_ptrs;  // Index of start/end of each column in data array
     //unsigned int *row_ids;   // Row id of each Jacobian element in data array
     double *production_partials;    // Data array for productions rate partial derivs
     double *loss_partials;  // Data array for loss rate partial derivs

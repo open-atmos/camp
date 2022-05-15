@@ -1022,6 +1022,7 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
   }
   //printf("sd->ntimers ncounters %d %d\n",sd->ntimers,sd->ncounters);
 
+#ifdef CAMP_USE_GPU
 #ifdef CAMP_DEBUG_GPU
 
   if(sd->use_cpu==1){
@@ -1043,60 +1044,57 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
   }
   else{
 
-#ifdef CAMP_USE_GPU
     itsolver *bicg = &(sd->bicg);
     ModelDataGPU *mGPU;
 
     int iDevice = 0;
-   //for (int iDevice = 0; iDevice < 1; iDevice++) {
-      cudaSetDevice(iDevice);
-      sd->mGPU = &(sd->mGPUs[iDevice]);
-      mGPU = sd->mGPU;
+    cudaSetDevice(iDevice);
+    sd->mGPU = &(sd->mGPUs[iDevice]);
+    mGPU = sd->mGPU;
 
-      solver_get_statistics_gpu(sd);
+    solver_get_statistics_gpu(sd);
+    mGPU = sd->mGPU;
 
-      int i;
-      if(sd->ncounters>0){
-        i=0;
-        counters[i++]=mGPU->mdvCPU.counterBCGInternal;
-        counters[i++]=bicg->counterBiConjGrad;
-        counters[i++]=bicg->countersolveCVODEGPU;
-        counters[i++]=mGPU->mdvCPU.countercvStep;
-      }
-      if(sd->ntimers>0){
-        i=0;
-        times[i++]=bicg->timeBiConjGrad;
-        times[i++]=bicg->timeBiConjGradMemcpy;
-        times[i++]=sd->timeCVode;
-        times[i++]=mGPU->mdvCPU.dtcudaDeviceCVode;
-        times[i++]=mGPU->mdvCPU.dtPostBCG;
-        times[i++]=bicg->timesolveCVODEGPU;
-        times[i++]=sd->timeNewtonIteration;
-        times[i++]=sd->timeJac;
-        times[i++]=sd->timelinsolsetup;
-        times[i++]=sd->timecalc_Jac;
-        times[i++]=sd->timeRXNJac;
-        times[i++]=sd->timef;
-        times[i++]=sd->timeguess_helper;
-        times[i++]=bicg->timecvStep;
+    int i;
+    if(sd->ncounters>0){
+      i=0;
+      counters[i++]=mGPU->mdvCPU.counterBCGInternal;
+      counters[i++]=bicg->counterBiConjGrad;
+      counters[i++]=bicg->countersolveCVODEGPU;
+      counters[i++]=mGPU->mdvCPU.countercvStep;
+    }
+    if(sd->ntimers>0){
+      i=0;
+      times[i++]=bicg->timeBiConjGrad;
+      times[i++]=bicg->timeBiConjGradMemcpy;
+      times[i++]=sd->timeCVode;
+      times[i++]=mGPU->mdvCPU.dtcudaDeviceCVode;
+      times[i++]=mGPU->mdvCPU.dtPostBCG;
+      times[i++]=bicg->timesolveCVODEGPU;
+      times[i++]=sd->timeNewtonIteration;
+      times[i++]=sd->timeJac;
+      times[i++]=sd->timelinsolsetup;
+      times[i++]=sd->timecalc_Jac;
+      times[i++]=sd->timeRXNJac;
+      times[i++]=sd->timef;
+      times[i++]=sd->timeguess_helper;
+      times[i++]=bicg->timecvStep;
 
-        //for(int i=0;i<sd->ntimers;i++)
-          //printf("times[%d]=%le\n",i,times[i]);
-      }
-      else{
-        printf("WARNING: In function solver_get_statistics trying to assign times "
-               "and counters profilign variables with ncounters || ntimers < 1");
-      }
+      //for(int i=0;i<sd->ntimers;i++)
+        //printf("times[%d]=%le\n",i,times[i]);
+    }
+    else{
+      printf("WARNING: In function solver_get_statistics trying to assign times "
+             "and counters profilign variables with ncounters || ntimers < 1");
+    }
 
-      solver_reset_statistics_gpu(sd);
+    solver_reset_statistics_gpu(sd);
 
     //}
-
-#endif
   }
 
   //printf("times[0] %le counters[1] %d\n",times[0],counters[1]);
-
+#endif
 #endif
 
 }
@@ -1114,6 +1112,7 @@ void solver_reset_statistics(void *solver_data, int *counters, double *times)
   }
   //printf("sd->ntimers ncounters %d %d\n",sd->ntimers,sd->ncounters);
 
+#ifdef CAMP_USE_GPU
 #ifdef CAMP_DEBUG_GPU
 
   if(sd->use_cpu==1){
@@ -1131,12 +1130,11 @@ void solver_reset_statistics(void *solver_data, int *counters, double *times)
   }
   else{
 
-#ifdef CAMP_USE_GPU
+
     itsolver *bicg = &(sd->bicg);
     ModelDataGPU *mGPU;
 
-    int iDevice = 0;
-   //for (int iDevice = 0; iDevice < 1; iDevice++) {
+   for (int iDevice = 0; iDevice < sd->nDevices; iDevice++) {
       cudaSetDevice(iDevice);
       sd->mGPU = &(sd->mGPUs[iDevice]);
       mGPU = sd->mGPU;
@@ -1167,12 +1165,11 @@ void solver_reset_statistics(void *solver_data, int *counters, double *times)
         printf("WARNING: In function solver_get_statistics trying to assign times "
                "and counters profilign variables with ncounters || ntimers < 1");
       }
-    //}
-#endif
+    }
   }
-
   //printf("times[0] %le counters[1] %d\n",times[0],counters[1]);
 
+#endif
 #endif
 
 }

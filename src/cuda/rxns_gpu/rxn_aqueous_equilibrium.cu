@@ -191,7 +191,7 @@ void rxn_gpu_aqueous_equilibrium_calc_deriv_contrib(ModelDataGPU *model_data, re
     for (int i_react = 0; i_react < NUM_REACT_; i_react++) {
       if (DERIV_ID_(i_deriv)<0) {i_deriv++; continue;}
 #ifdef __CUDA_ARCH__
-      atomicAdd(&(deriv[DERIV_ID_(i_deriv++)]), -(rate /
+      atomicAdd_block(&(deriv[DERIV_ID_(i_deriv++)]), -(rate /
         MASS_FRAC_TO_M_(i_react)) * water);
 #else
       deriv[DERIV_ID_(i_deriv++)] -= (rate / MASS_FRAC_TO_M_(i_react)) * water;
