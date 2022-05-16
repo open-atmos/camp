@@ -353,12 +353,12 @@ void init_jac_gpu(SolverData *sd, double *J_ptr){
     cudaMalloc((void **) &mGPU->J_rxn,sizeof(double) * SM_NNZ_S(md->J_rxn)*mGPU->n_cells);
     cudaMalloc((void **) &mGPU->n_mapped_values, 1 * sizeof(int));
 
-    /*
+
     printf("md->n_per_cell_dep_var %d sd->jac.num_spec %d md->n_per_cell_solver_jac_elem %d "
            "md->n_mapped_values %d SM_NNZ_S(md->J_rxn) %d offset_nnz_J_solver %d  mGPU->nnz_J_solver %d mGPU->nrows_J_solver %d\n",
            md->n_per_cell_dep_var,sd->jac.num_spec,md->n_per_cell_solver_jac_elem, md->n_mapped_values,
            SM_NNZ_S(md->J_rxn), offset_nnz_J_solver,mGPU->nnz_J_solver, mGPU->nrows_J_solver);
-*/
+
 
     //Transfer sunindextype to int
     int *jJ_solver = (int *) malloc(sizeof(int) * mGPU->nnz_J_solver);
@@ -373,9 +373,9 @@ void init_jac_gpu(SolverData *sd, double *J_ptr){
 
     HANDLE_ERROR(cudaMemcpy(mGPU->J, J_ptr+offset_nnz_J_solver, mGPU->jac_size, cudaMemcpyHostToDevice));
     double *J_solver = SM_DATA_S(md->J_solver)+offset_nnz_J_solver;
-    HANDLE_ERROR(cudaMemcpy(mGPU->J_solver, J_solver, mGPU->jac_size, cudaMemcpyHostToDevice));
-    HANDLE_ERROR(cudaMemcpy(mGPU->jJ_solver, jJ_solver, mGPU->nnz_J_solver * sizeof(int), cudaMemcpyHostToDevice));
-    HANDLE_ERROR(cudaMemcpy(mGPU->iJ_solver, iJ_solver, (mGPU->nrows_J_solver + 1) * sizeof(int), cudaMemcpyHostToDevice));
+    cudaMemcpy(mGPU->J_solver, J_solver, mGPU->jac_size, cudaMemcpyHostToDevice);
+    cudaMemcpy(mGPU->jJ_solver, jJ_solver, mGPU->nnz_J_solver * sizeof(int), cudaMemcpyHostToDevice);
+    cudaMemcpy(mGPU->iJ_solver, iJ_solver, (mGPU->nrows_J_solver + 1) * sizeof(int), cudaMemcpyHostToDevice);
     free(jJ_solver);
     free(iJ_solver);
 

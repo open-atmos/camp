@@ -2288,7 +2288,7 @@ SUNMatrix get_jac_init(SolverData *sd) {
   // set to 0 which maps to a fixed value of 1.0
   int i_mapped_value = 0;
   for (unsigned int i_ind = 0; i_ind < n_state_var; ++i_ind) {
-    for (unsigned int i_elem =
+    for (int i_elem =
              jacobian_column_pointer_value(sd->jac, i_ind);
          i_elem < jacobian_column_pointer_value(sd->jac, i_ind + 1);
          ++i_elem) {

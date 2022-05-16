@@ -8,7 +8,7 @@ extern "C" {
 #include <stdio.h>
 #include <stdlib.h>
 #include "Jacobian_gpu.h"
-#include "../debug_and_stats/camp_debug_2.h"
+//#include "../debug_and_stats/camp_debug_2.h"
 
 #define BUFFER_SIZE 10
 #define SMALL_NUMBER 1e-90
@@ -40,7 +40,26 @@ int jacobian_initialize_gpu(SolverData *sd) {
     cudaMemcpy(jacgpu->loss_partials, jac->loss_partials+offset_nnz, num_elem * sizeof(jacgpu->loss_partials),
                cudaMemcpyHostToDevice);
 
-    //print_int(jac->col_ptrs,jac.num_spec,"jac->col_ptrs");
+    //print_int(jac->col_ptrs,jac->num_spec+1,"jac->col_ptrs");
+
+    /*
+
+    for (int i = 0; i < jac->num_elem; ++i) {
+      printf(" jac.production_partials[%d]=%d\n",i,jac->production_partials[i]);
+    }
+
+    for (unsigned int i_col = 0; i_col < jac->num_spec; ++i_col) {
+      printf(" jac.col_ptrs[%d]=%d\n",i_col,jac->col_ptrs[i_col]);
+      for (int i_elem = jac->col_ptrs[i_col];
+           i_elem < jac->col_ptrs[i_col + 1]; ++i_elem) {
+        printf(" jac.production_partials[%d]=%d\n",i_elem,jac->production_partials[i_elem]);
+      }
+    }
+*/
+
+   // for (int i=0; i<jac->num_spec+1; i++){
+   //   printf("jac->col_ptrs[%d]=%d\n",i,jac->col_ptrs[i]);
+    //}
 
     /*
     for (unsigned int i_col = 0; i_col < jac.num_spec; ++i_col){
@@ -66,31 +85,16 @@ void jacobian_reset_gpu(JacobianGPU jac) {
 #ifdef __CUDA_ARCH__
 
   __syncthreads();
-#ifdef DEV_REMOVE_threadIdx0
+#ifndef DEV_REMOVE_threadIdx0
 
-  //todo use col_ptrs*i_cell and num_spec to better memory access than nnz_left
+  //fine
 
   int i_col = threadIdx.x;
 
-  if (blockIdx.x>=0){
-    printf("tid %d jac.col_ptrs[i_col] %d\n",threadIdx.x,jac.col_ptrs[i_col]);
-  }
-
-  for (int i_elem = jac.col_ptrs[i_col]; i_elem < jac.col_ptrs[i_col + 1]; i_elem++) {
+  for (int i_elem = jac.col_ptrs[i_col]; i_elem < jac.col_ptrs[i_col+1]; i_elem++) {
     jac.production_partials[i_elem] = 0.0;
     jac.loss_partials[i_elem] = 0.0;
   }
-
-/*
-  for (unsigned int i_col = 0; i_col < jac.num_spec; ++i_col) {
-    for (unsigned int i_elem = jac.col_ptrs[i_col];
-         i_elem < jac.col_ptrs[i_col + 1]; ++i_elem) {
-      long double drf_dy = jac.production_partials[i_elem];
-      long double drr_dy = jac.loss_partials[i_elem];
-      dest_array[i_elem] = drf_dy - drr_dy;
-    }
-  }
-  */
 
 #else
 
@@ -121,12 +125,11 @@ void jacobian_output_gpu(JacobianGPU jac, double *dest_array) {
 
   __syncthreads();
 
-#ifdef DEV_REMOVE_threadIdx0
+#ifndef DEV_REMOVE_threadIdx0
 
-  //todo use col_ptrs*i_cell and num_spec to better memory access than nnz_left
+  //fine
 
-  int tid = blockIdx.x * blockDim.x + threadIdx.x;
-  int i_col = tid;
+  int i_col = threadIdx.x;
   for (int i_elem = jac.col_ptrs[i_col]; i_elem < jac.col_ptrs[i_col + 1]; i_elem++) {
       double drf_dy = jac.production_partials[i_elem];
       double drr_dy = jac.loss_partials[i_elem];
@@ -134,8 +137,8 @@ void jacobian_output_gpu(JacobianGPU jac, double *dest_array) {
   }
 
 /*
-  for (unsigned int i_col = 0; i_col < jac.num_spec; ++i_col) {
-    for (unsigned int i_elem = jac.col_ptrs[i_col];
+  for (int i_col = 0; i_col < jac.num_spec; ++i_col) {
+    for (int i_elem = jac.col_ptrs[i_col];
          i_elem < jac.col_ptrs[i_col + 1]; ++i_elem) {
       long double drf_dy = jac.production_partials[i_elem];
       long double drr_dy = jac.loss_partials[i_elem];

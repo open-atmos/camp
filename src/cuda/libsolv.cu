@@ -574,8 +574,6 @@ __device__ void cudaDeviceSpmvCSC_blockReduce( double g_idata,
 {
   extern __shared__ double sdata[];
   unsigned int tid = threadIdx.x;
-  //unsigned int i = blockIdx.x*(blockDim.x*2) + threadIdx.x;
-  unsigned int i = blockIdx.x*blockDim.x + threadIdx.x;
 
   //if(i>=n)sdata[tid]=0.;
 
@@ -619,7 +617,7 @@ __device__ void cudaDeviceaddD(double *g_odata, double in, volatile double *sdat
   if(tid<n_shr_empty)
     sdata[tid+blockDim.x]=sdata[tid];
 
-  __syncthreads(); //Not needed (should)
+  __syncthreads();
 
   //if(blockIdx.x==0)printf("i %d in %le sdata[tid] %le\n",i,in,sdata[tid]);
 
@@ -693,7 +691,11 @@ __device__ void cudaDeviceSpmvCSC_block(double* dx, double* db, int nrows, doubl
 __device__ void cudaDeviceSpmv(double* dx, double* db, int nrows, double* dA, int* djA, int* diA, int n_shr_empty)
 {
 
+#ifdef ODE_CSR_SPMV_CPU
+  cudaDeviceSpmvCSR(dx,db,nrows,dA,djA,diA);
+#else
   cudaDeviceSpmvCSC_block(dx,db,nrows,dA,djA,diA,n_shr_empty);
+#endif
 
 }
 
