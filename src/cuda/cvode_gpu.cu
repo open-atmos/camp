@@ -376,6 +376,254 @@ int nextPowerOfTwoCVODE(int v){
   return v;
 }
 
+void copyAllToDevice(CVodeMem cv_mem, SolverData *sd){
+  itsolver *bicg = &(sd->bicg);
+  ModelData *md = &(sd->model_data);
+  ModelDataGPU *mGPU;
+  CVDlsMem cvdls_mem = (CVDlsMem) cv_mem->cv_lmem;
+
+  int offset_state = 0;
+  int offset_ncells = 0;
+  int offset_nrows = 0;
+  for (int iDevice = 0; iDevice < sd->nDevices; iDevice++) {
+    cudaSetDevice(iDevice);
+    sd->mGPU = &(sd->mGPUs[iDevice]);
+    mGPU = sd->mGPU;
+
+    double *ewt = NV_DATA_S(cv_mem->cv_ewt)+offset_nrows;
+    double *acor = NV_DATA_S(cv_mem->cv_acor)+offset_nrows;
+    double *tempv = NV_DATA_S(cv_mem->cv_tempv)+offset_nrows;
+    double *ftemp = NV_DATA_S(cv_mem->cv_ftemp)+offset_nrows;
+    double *cv_last_yn = N_VGetArrayPointer(cv_mem->cv_last_yn)+offset_nrows;
+    double *cv_acor_init = N_VGetArrayPointer(cv_mem->cv_acor_init)+offset_nrows;
+    //double *youtArray = N_VGetArrayPointer(yout)+offset_nrows;
+    double *cv_Vabstol = N_VGetArrayPointer(cv_mem->cv_Vabstol)+offset_nrows;
+
+    //Commands from constructo
+
+    cudaMemcpy(mGPU->djA, mGPU->jA, mGPU->nnz * sizeof(int), cudaMemcpyHostToDevice);
+    cudaMemcpy(mGPU->diA, mGPU->iA, (mGPU->nrows + 1) * sizeof(int), cudaMemcpyHostToDevice);
+    cudaMemcpy(mGPU->dsavedJ, mGPU->A, mGPU->nnz * sizeof(double), cudaMemcpyHostToDevice);
+    cudaMemcpy(mGPU->djsavedJ, mGPU->jA, mGPU->nnz * sizeof(int), cudaMemcpyHostToDevice);
+    cudaMemcpy(mGPU->disavedJ, mGPU->iA, (mGPU->nrows + 1) * sizeof(int), cudaMemcpyHostToDevice);
+    cudaMemcpy(mGPU->dx, tempv, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice);
+    int flag = 999; //CAMP_SOLVER_SUCCESS
+    cudaMemcpy(mGPU->flag, &flag, 1 * sizeof(int), cudaMemcpyHostToDevice);
+    mGPU->mdvCPU.cv_reltol = ((CVodeMem) sd->cvode_mem)->cv_reltol;
+
+    //Commands from cudacvod
+    cudaMemcpyAsync(mGPU->dewt, ewt, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice, 0);
+    cudaMemcpyAsync(mGPU->cv_acor, acor, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice, 0);
+    cudaMemcpyAsync(mGPU->dtempv, tempv, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice, 0);
+    cudaMemcpyAsync(mGPU->dftemp, ftemp, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice, 0);
+    cudaMemcpyAsync(mGPU->cv_last_yn, cv_last_yn, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice, 0);
+    cudaMemcpyAsync(mGPU->cv_acor_init, cv_acor_init, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice, 0);
+    //cudaMemcpyAsync(mGPU->yout, youtArray, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice, 0);
+    cudaMemcpyAsync(mGPU->cv_Vabstol, cv_Vabstol, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice, 0);
+
+    for (int i = 0; i < mGPU->n_cells; i++) {
+      cudaMemcpyAsync(mGPU->cv_l + i * L_MAX, cv_mem->cv_l, L_MAX * sizeof(double), cudaMemcpyHostToDevice, 0);
+      cudaMemcpyAsync(mGPU->cv_tau + i * (L_MAX + 1), cv_mem->cv_tau, (L_MAX + 1) * sizeof(double),
+                      cudaMemcpyHostToDevice, 0);
+      cudaMemcpyAsync(mGPU->cv_tq + i * (NUM_TESTS + 1), cv_mem->cv_tq, (NUM_TESTS + 1) * sizeof(double),
+                      cudaMemcpyHostToDevice, 0);
+    }
+
+    for (int i = 0; i <= cv_mem->cv_qmax; i++) {//cv_qmax+1 (6)?
+      double *zn = NV_DATA_S(cv_mem->cv_zn[i])+offset_nrows;
+      cudaMemcpyAsync((i * mGPU->nrows + mGPU->dzn), zn, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice, 0);
+    }
+
+    cudaMemcpyAsync(mGPU->flagCells, sd->flagCells+offset_ncells, mGPU->n_cells * sizeof(int), cudaMemcpyHostToDevice, 0);
+    HANDLE_ERROR(cudaMemcpyAsync(mGPU->state, md->total_state+offset_state, mGPU->state_size, cudaMemcpyHostToDevice, 0));
+
+    mGPU->mdvCPU.init_time_step = sd->init_time_step;
+    mGPU->mdvCPU.cv_mxstep = cv_mem->cv_mxstep;
+    mGPU->mdvCPU.cv_taskc = cv_mem->cv_taskc;
+    mGPU->mdvCPU.cv_uround = cv_mem->cv_uround;
+    mGPU->mdvCPU.cv_nrtfn = cv_mem->cv_nrtfn;
+    mGPU->mdvCPU.cv_tretlast = cv_mem->cv_tretlast;
+    mGPU->mdvCPU.cv_hmax_inv = cv_mem->cv_hmax_inv;
+    mGPU->mdvCPU.cv_lmm = cv_mem->cv_lmm;
+    mGPU->mdvCPU.cv_iter = cv_mem->cv_iter;
+    mGPU->mdvCPU.cv_itol = cv_mem->cv_itol;
+    mGPU->mdvCPU.cv_reltol = cv_mem->cv_reltol;
+    mGPU->mdvCPU.cv_nhnil = cv_mem->cv_nhnil;
+    mGPU->mdvCPU.cv_etaqm1 = cv_mem->cv_etaqm1;
+    mGPU->mdvCPU.cv_etaq = cv_mem->cv_etaq;
+    mGPU->mdvCPU.cv_etaqp1 = cv_mem->cv_etaqp1;
+    mGPU->mdvCPU.cv_lrw1 = cv_mem->cv_lrw1;
+    mGPU->mdvCPU.cv_liw1 = cv_mem->cv_liw1;
+    mGPU->mdvCPU.cv_lrw = (int) cv_mem->cv_lrw;
+    mGPU->mdvCPU.cv_liw = (int) cv_mem->cv_liw;
+    mGPU->mdvCPU.cv_saved_tq5 = cv_mem->cv_saved_tq5;
+    mGPU->mdvCPU.cv_tolsf = cv_mem->cv_tolsf;
+    mGPU->mdvCPU.cv_qmax_alloc = cv_mem->cv_qmax_alloc;
+    mGPU->mdvCPU.cv_indx_acor = cv_mem->cv_indx_acor;
+    mGPU->mdvCPU.cv_qu = cv_mem->cv_qu;
+    mGPU->mdvCPU.cv_h0u = cv_mem->cv_h0u;
+    mGPU->mdvCPU.cv_hu = cv_mem->cv_hu;
+    mGPU->mdvCPU.cv_jcur = cv_mem->cv_jcur;
+    mGPU->mdvCPU.cv_mnewt = cv_mem->cv_mnewt;
+    mGPU->mdvCPU.cv_maxcor = cv_mem->cv_maxcor;
+    mGPU->mdvCPU.cv_nstlp = (int) cv_mem->cv_nstlp;
+    mGPU->mdvCPU.cv_qmax = cv_mem->cv_qmax;
+    mGPU->mdvCPU.cv_L = cv_mem->cv_L;
+    mGPU->mdvCPU.cv_maxnef = cv_mem->cv_maxnef;
+    mGPU->mdvCPU.cv_netf = (int) cv_mem->cv_netf;
+    mGPU->mdvCPU.cv_acnrm = cv_mem->cv_acnrm;
+    mGPU->mdvCPU.cv_tstop = cv_mem->cv_tstop;
+    mGPU->mdvCPU.cv_tstopset = cv_mem->cv_tstopset;
+    mGPU->mdvCPU.cv_nlscoef = cv_mem->cv_nlscoef;
+    mGPU->mdvCPU.cv_qwait = cv_mem->cv_qwait;
+    mGPU->mdvCPU.cv_crate = cv_mem->cv_crate;
+    mGPU->mdvCPU.cv_gamrat = cv_mem->cv_gamrat;
+    mGPU->mdvCPU.cv_gammap = cv_mem->cv_gammap;
+    mGPU->mdvCPU.cv_nst = cv_mem->cv_nst;
+    mGPU->mdvCPU.cv_gamma = cv_mem->cv_gamma;
+    mGPU->mdvCPU.cv_rl1 = cv_mem->cv_rl1;
+    mGPU->mdvCPU.cv_eta = cv_mem->cv_eta;
+    mGPU->mdvCPU.cv_q = cv_mem->cv_q;
+    mGPU->mdvCPU.cv_qprime = cv_mem->cv_qprime;
+    mGPU->mdvCPU.cv_h = cv_mem->cv_h;
+    mGPU->mdvCPU.cv_next_h = cv_mem->cv_next_h;//needed?
+    mGPU->mdvCPU.cv_hscale = cv_mem->cv_hscale;
+    mGPU->mdvCPU.cv_nscon = cv_mem->cv_nscon;
+    mGPU->mdvCPU.cv_hprime = cv_mem->cv_hprime;
+    mGPU->mdvCPU.cv_hmin = cv_mem->cv_hmin;
+    mGPU->mdvCPU.cv_tn = cv_mem->cv_tn;
+    mGPU->mdvCPU.cv_etamax = cv_mem->cv_etamax;
+    mGPU->mdvCPU.cv_maxncf = cv_mem->cv_maxncf;
+
+    //mGPU->mdvCPU.nstloc = (int) nstloc;
+    //mGPU->mdvCPU.tout = tout;
+   // mGPU->mdvCPU.tret = *tret;
+   //mGPU->mdvCPU.istate = istate;
+    //mGPU->mdvCPU.kflag = kflag;
+    //mGPU->mdvCPU.kflag2 = 99;
+    cudaMemcpy(mGPU->mdv, &mGPU->mdvCPU, sizeof(ModelDataVariable), cudaMemcpyHostToDevice);
+
+    offset_state += mGPU->state_size_cell * mGPU->n_cells;
+    offset_ncells += mGPU->n_cells;
+    offset_nrows += mGPU->nrows;
+
+  }
+
+}
+
+void copyAllFromDevice(CVodeMem cv_mem, SolverData *sd){
+  itsolver *bicg = &(sd->bicg);
+  ModelData *md = &(sd->model_data);
+  ModelDataGPU *mGPU;
+  CVDlsMem cvdls_mem = (CVDlsMem) cv_mem->cv_lmem;
+
+  int offset_state = 0;
+  int offset_ncells = 0;
+  int offset_nrows = 0;
+  for (int iDevice = 0; iDevice < sd->nDevices; iDevice++) {
+    cudaSetDevice(iDevice);
+    sd->mGPU = &(sd->mGPUs[iDevice]);
+    mGPU = sd->mGPU;
+
+    double *ewt = NV_DATA_S(cv_mem->cv_ewt)+offset_nrows;
+    double *acor = NV_DATA_S(cv_mem->cv_acor)+offset_nrows;
+    double *tempv = NV_DATA_S(cv_mem->cv_tempv)+offset_nrows;
+    double *ftemp = NV_DATA_S(cv_mem->cv_ftemp)+offset_nrows;
+    double *cv_last_yn = N_VGetArrayPointer(cv_mem->cv_last_yn)+offset_nrows;
+    double *cv_acor_init = N_VGetArrayPointer(cv_mem->cv_acor_init)+offset_nrows;
+    //double *youtArray = N_VGetArrayPointer(yout)+offset_nrows;
+    double *cv_Vabstol = N_VGetArrayPointer(cv_mem->cv_Vabstol)+offset_nrows;
+
+    cudaMemcpy(&mGPU->mdvCPU, mGPU->mdvo, sizeof(ModelDataVariable), cudaMemcpyDeviceToHost);
+
+    cv_mem->cv_next_q = mGPU->mdvCPU.cv_next_q;
+    //tout = mGPU->mdvCPU.tout; //Not output?
+    cv_mem->cv_taskc = mGPU->mdvCPU.cv_taskc;
+    cv_mem->cv_uround = mGPU->mdvCPU.cv_uround;
+    cv_mem->cv_nrtfn = mGPU->mdvCPU.cv_nrtfn;
+    //nstloc = mGPU->mdvCPU.nstloc;
+    cv_mem->cv_tretlast = mGPU->mdvCPU.cv_tretlast;
+    cv_mem->cv_hmax_inv = mGPU->mdvCPU.cv_hmax_inv;
+    cv_mem->cv_lmm = mGPU->mdvCPU.cv_lmm;
+    cv_mem->cv_iter = mGPU->mdvCPU.cv_iter;
+    cv_mem->cv_itol = mGPU->mdvCPU.cv_itol;
+    cv_mem->cv_reltol = mGPU->mdvCPU.cv_reltol;
+    cv_mem->cv_nhnil = mGPU->mdvCPU.cv_nhnil;
+    cv_mem->cv_etaqm1 = mGPU->mdvCPU.cv_etaqm1;
+    cv_mem->cv_etaq = mGPU->mdvCPU.cv_etaq;
+    cv_mem->cv_etaqp1 = mGPU->mdvCPU.cv_etaqp1;
+    cv_mem->cv_lrw1 = mGPU->mdvCPU.cv_lrw1;
+    cv_mem->cv_liw1 = mGPU->mdvCPU.cv_liw1;
+    cv_mem->cv_lrw = mGPU->mdvCPU.cv_lrw;
+    cv_mem->cv_liw = mGPU->mdvCPU.cv_liw;
+    cv_mem->cv_saved_tq5 = mGPU->mdvCPU.cv_saved_tq5;
+    cv_mem->cv_tolsf = mGPU->mdvCPU.cv_tolsf;
+    cv_mem->cv_qmax_alloc = mGPU->mdvCPU.cv_qmax_alloc;
+    cv_mem->cv_indx_acor = mGPU->mdvCPU.cv_indx_acor;
+    cv_mem->cv_qu = mGPU->mdvCPU.cv_qu;
+    cv_mem->cv_h0u = mGPU->mdvCPU.cv_h0u;
+    cv_mem->cv_hu = mGPU->mdvCPU.cv_hu;
+    cv_mem->cv_jcur = mGPU->mdvCPU.cv_jcur;//not needed?
+    cv_mem->cv_mnewt = mGPU->mdvCPU.cv_mnewt;
+    cv_mem->cv_maxcor = mGPU->mdvCPU.cv_maxcor;
+    cv_mem->cv_nstlp = mGPU->mdvCPU.cv_nstlp;
+    cv_mem->cv_qmax = mGPU->mdvCPU.cv_qmax;
+    cv_mem->cv_L = mGPU->mdvCPU.cv_L;
+    cv_mem->cv_maxnef = mGPU->mdvCPU.cv_maxnef;
+    cv_mem->cv_netf = mGPU->mdvCPU.cv_netf;
+    cv_mem->cv_acnrm = mGPU->mdvCPU.cv_acnrm;
+    cv_mem->cv_tstop = mGPU->mdvCPU.cv_tstop;
+    cv_mem->cv_tstopset = mGPU->mdvCPU.cv_tstopset;
+    cv_mem->cv_nlscoef = mGPU->mdvCPU.cv_nlscoef;
+    cv_mem->cv_qwait = mGPU->mdvCPU.cv_qwait;
+    cv_mem->cv_crate = mGPU->mdvCPU.cv_crate;
+    cv_mem->cv_gamrat = mGPU->mdvCPU.cv_gamrat;
+    cv_mem->cv_gammap = mGPU->mdvCPU.cv_gammap;
+    cv_mem->cv_nst = mGPU->mdvCPU.cv_nst;
+    cv_mem->cv_gamma = mGPU->mdvCPU.cv_gamma;
+    cv_mem->cv_rl1 = mGPU->mdvCPU.cv_rl1;
+    cv_mem->cv_eta = mGPU->mdvCPU.cv_eta;
+    cv_mem->cv_q = mGPU->mdvCPU.cv_q;
+    cv_mem->cv_qprime = mGPU->mdvCPU.cv_qprime;
+    cv_mem->cv_h = mGPU->mdvCPU.cv_h;
+    cv_mem->cv_hscale = mGPU->mdvCPU.cv_hscale;
+    cv_mem->cv_nscon = mGPU->mdvCPU.cv_nscon;
+    cv_mem->cv_hprime = mGPU->mdvCPU.cv_hprime;
+    cv_mem->cv_hmin = mGPU->mdvCPU.cv_hmin;
+    cv_mem->cv_etamax = mGPU->mdvCPU.cv_etamax;
+    cv_mem->cv_maxncf = mGPU->mdvCPU.cv_maxncf;
+    cv_mem->cv_tn = mGPU->mdvCPU.cv_tn;
+
+    cudaMemcpy(cv_mem->cv_l, mGPU->cv_l, L_MAX * sizeof(double), cudaMemcpyDeviceToHost);
+    cudaMemcpy(cv_mem->cv_tau, mGPU->cv_tau, (L_MAX + 1) * sizeof(double), cudaMemcpyDeviceToHost);
+    cudaMemcpy(cv_mem->cv_tq, mGPU->cv_tq, (NUM_TESTS + 1) * sizeof(double), cudaMemcpyDeviceToHost);
+
+    cudaMemcpy(&mGPU->mdvCPU, mGPU->mdvo, sizeof(ModelDataVariable), cudaMemcpyDeviceToHost);
+
+    cudaMemcpyAsync(ewt, mGPU->dewt, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost, 0);
+    cudaMemcpyAsync(acor, mGPU->cv_acor, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost, 0);
+    cudaMemcpyAsync(tempv, mGPU->dtempv, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost, 0);
+    cudaMemcpyAsync(ftemp, mGPU->dftemp, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost, 0);
+    cudaMemcpyAsync(cv_last_yn, mGPU->cv_last_yn, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost, 0);
+    cudaMemcpyAsync(cv_acor_init, mGPU->cv_acor_init, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost, 0);
+    //cudaMemcpyAsync(youtArray, mGPU->yout, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost, 0);
+    cudaMemcpyAsync(cv_Vabstol, mGPU->cv_Vabstol, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost, 0);
+
+    for (int i = 0; i <= cv_mem->cv_qmax; i++) {//cv_qmax+1 (6)?
+      double *zn = NV_DATA_S(cv_mem->cv_zn[i]) + offset_nrows;
+      cudaMemcpyAsync(zn, (i * mGPU->nrows + mGPU->dzn), mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost, 0);
+    }
+
+    HANDLE_ERROR(cudaMemcpy(sd->flagCells + offset_ncells, mGPU->flagCells, mGPU->n_cells * sizeof(int),
+                            cudaMemcpyDeviceToHost));
+
+    offset_state += mGPU->state_size_cell * mGPU->n_cells;
+    offset_ncells += mGPU->n_cells;
+    offset_nrows += mGPU->nrows;
+  }
+
+}
+
 __device__
 void printmin(ModelDataGPU *md,double* y, const char *s) {
 
@@ -4829,6 +5077,10 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     mGPU->mdvCPU.cv_etamax = cv_mem->cv_etamax;
     mGPU->mdvCPU.cv_maxncf = cv_mem->cv_maxncf;
 
+    //todo changue to asyncs memcpy
+
+    //copyAllToDevice(cv_mem,sd);
+
     mGPU->mdvCPU.nstloc = (int) nstloc;
     mGPU->mdvCPU.tout = tout;
     mGPU->mdvCPU.tret = *tret;
@@ -4836,8 +5088,8 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     mGPU->mdvCPU.kflag = kflag;
     mGPU->mdvCPU.kflag2 = 99;
 
-    //todo changue to asyncs memcpy
     cudaMemcpy(mGPU->mdv, &mGPU->mdvCPU, sizeof(ModelDataVariable), cudaMemcpyHostToDevice);
+
 
 #ifdef CAMP_DEBUG_GPU
     cudaEventRecord(bicg->startsolveCVODEGPU);
@@ -4856,6 +5108,8 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
 
     bicg->countersolveCVODEGPU++;
 #endif
+
+    //copyAllFromDevice(cv_mem,sd);
 
     cudaMemcpy(&mGPU->mdvCPU, mGPU->mdvo, sizeof(ModelDataVariable), cudaMemcpyDeviceToHost);
 
@@ -7906,6 +8160,1292 @@ int linsolsolve_gpu2(SolverData *sd, CVodeMem cv_mem)
     }
 
   }
+}
+
+int linsolsolveDebug_gpu2(SolverData *sd, CVodeMem cv_mem)
+{
+  itsolver *bicg = &(sd->bicg);
+  ModelDataGPU *mGPU;
+  int offset_nrows = 0;
+  int m, retval;
+  realtype del, delp, dcon;
+
+  //printf("linsolsolve_gpu2 start\n");
+
+  cv_mem->cv_mnewt = m = 0;
+
+  //Delp = del from last iter (reduce iterations)
+  del = delp = 0.0;
+
+  double *acor = NV_DATA_S(cv_mem->cv_acor);
+  double *cv_y = NV_DATA_S(cv_mem->cv_y);
+  double *tempv = NV_DATA_S(cv_mem->cv_tempv);
+  double *cv_ftemp = NV_DATA_S(cv_mem->cv_ftemp);
+  //CVDlsMem cvdls_mem = (CVDlsMem) cv_mem->cv_lmem;
+  //double *x = NV_DATA_S(cvdls_mem->x);
+
+  N_Vector b;
+  b=cv_mem->cv_tempv;
+  double *b_ptr=NV_DATA_S(b);
+
+  // Looping point for Newton iteration
+  for(;;) {
+
+    offset_nrows = 0;
+    for (int iDevice = 0; iDevice < sd->nDevices; iDevice++) {
+      cudaSetDevice(iDevice);
+      sd->mGPU = &(sd->mGPUs[iDevice]);
+      mGPU = sd->mGPU;
+
+      // Evaluate the residual of the nonlinear system
+      // a*x + b*y = z
+      gpu_zaxpby(cv_mem->cv_rl1, (mGPU->dzn + 1 * mGPU->nrows), 1.0, mGPU->cv_acor, mGPU->dtempv, mGPU->nrows,
+                 mGPU->blocks, mGPU->threads);
+      gpu_zaxpby(cv_mem->cv_gamma, mGPU->dftemp, -1.0, mGPU->dtempv, mGPU->dtempv, mGPU->nrows, mGPU->blocks,
+                 mGPU->threads);
+      //N_VLinearSum(cv_mem->cv_rl1, cv_mem->cv_zn[1], ONE,
+      //             cv_mem->cv_acor, cv_mem->cv_tempv);
+      //N_VLinearSum(cv_mem->cv_gamma, cv_mem->cv_ftemp, -ONE,
+      //             cv_mem->cv_tempv, cv_mem->cv_tempv);
+
+#ifndef CSR_SPMV_CPU
+
+      swapCSC_CSR_BCG(sd);
+
+#endif
+
+    }
+
+#ifndef LINSOLSOLVEGPU_INCLUDE_CUDAMEMCPY
+
+    cudaEventRecord(bicg->startBCGMemcpy);
+
+    offset_nrows = 0;
+    for (int iDevice = 0; iDevice < sd->nDevices; iDevice++) {
+      cudaSetDevice(iDevice);
+      sd->mGPU = &(sd->mGPUs[iDevice]);
+      mGPU = sd->mGPU;
+
+      //Simulate data movement cost of copy of tempv to dtempv by copying to empty array (daux)
+      HANDLE_ERROR(cudaMemcpyAsync(mGPU->daux, tempv+offset_nrows, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice, 0));
+
+      offset_nrows += mGPU->nrows;
+    }
+    cudaDeviceSynchronize();
+
+    cudaEventRecord(bicg->stopBCGMemcpy);
+    cudaEventSynchronize(bicg->stopBCGMemcpy);
+    float msBiConjGradMemcpy = 0.0;
+    cudaEventElapsedTime(&msBiConjGradMemcpy, bicg->startBCGMemcpy, bicg->stopBCGMemcpy);
+    bicg->timeBiConjGradMemcpy+= msBiConjGradMemcpy/1000;
+    bicg->timeBiConjGrad+= msBiConjGradMemcpy/1000;
+
+#endif
+
+#ifdef CAMP_DEBUG_GPU
+    cudaEventRecord(bicg->startBCG);
+#endif
+
+    offset_nrows = 0;
+    for (int iDevice = 0; iDevice < sd->nDevices; iDevice++) {
+      cudaSetDevice(iDevice);
+      sd->mGPU = &(sd->mGPUs[iDevice]);
+      mGPU = sd->mGPU;
+
+      if (bicg->cells_method == MULTICELLS) {//Sync with CPU
+        solveBCG(sd, mGPU->dA, mGPU->djA, mGPU->diA, mGPU->dx, mGPU->dtempv);
+      } else {
+        solveBCGBlocks(sd, mGPU->dA, mGPU->djA, mGPU->diA, mGPU->dx, mGPU->dtempv);
+      }
+
+    }
+
+#ifdef CAMP_DEBUG_GPU
+    cudaEventRecord(bicg->stopBCG);
+
+    cudaEventSynchronize(bicg->stopBCG); //at the end is the same that cudadevicesynchronyze
+    float msBiConjGrad = 0.0;
+    cudaEventElapsedTime(&msBiConjGrad, bicg->startBCG, bicg->stopBCG);
+    bicg->timeBiConjGrad+= msBiConjGrad/1000;
+
+    bicg->counterBiConjGrad++;
+#endif
+
+#ifndef LINSOLSOLVEGPU_INCLUDE_CUDAMEMCPY
+
+    cudaEventRecord(bicg->startBCGMemcpy);
+
+    offset_nrows = 0;
+    for (int iDevice = 0; iDevice < sd->nDevices; iDevice++) {
+      cudaSetDevice(iDevice);
+      sd->mGPU = &(sd->mGPUs[iDevice]);
+      mGPU = sd->mGPU;
+
+      //Simulate data movement cost of copy of tempv to dtempv by copying to empty array (aux)
+      HANDLE_ERROR(cudaMemcpyAsync(tempv+offset_nrows, mGPU->dtempv, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost, 0));
+
+      offset_nrows += mGPU->nrows;
+    }
+
+    cudaEventRecord(bicg->stopBCGMemcpy);
+    cudaEventSynchronize(bicg->stopBCGMemcpy);
+    cudaEventElapsedTime(&msBiConjGradMemcpy, bicg->startBCGMemcpy, bicg->stopBCGMemcpy);
+    bicg->timeBiConjGradMemcpy+= msBiConjGradMemcpy/1000;
+    bicg->timeBiConjGrad+= msBiConjGradMemcpy/1000;
+
+#endif
+
+    offset_nrows = 0;
+    for (int iDevice = 0; iDevice < sd->nDevices; iDevice++) {
+      cudaSetDevice(iDevice);
+      sd->mGPU = &(sd->mGPUs[iDevice]);
+      mGPU = sd->mGPU;
+
+#ifndef CSR_SPMV_CPU
+
+      swapCSC_CSR_BCG(sd);
+
+#endif
+
+      // Get WRMS norm of correction
+      del = gpu_VWRMS_Norm(mGPU->nrows, mGPU->dx, mGPU->dewt, mGPU->aux, mGPU->daux, (mGPU->blocks + 1) / 2, mGPU->threads);
+
+      cudaMemcpy(cv_ftemp+offset_nrows, mGPU->dftemp, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost);
+      cudaMemcpy(cv_y+offset_nrows, mGPU->dcv_y, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost);
+      cudaMemcpy(b_ptr+offset_nrows, mGPU->dx, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost);
+
+      offset_nrows += mGPU->nrows;
+    }
+
+    if (cv_mem->cv_ghfun) {
+      N_VLinearSum(ONE, cv_mem->cv_y, ONE, b, cv_mem->cv_ftemp);
+      retval = cv_mem->cv_ghfun(cv_mem->cv_tn, ZERO, cv_mem->cv_ftemp,
+                                cv_mem->cv_y, b, cv_mem->cv_user_data,
+                                cv_mem->cv_tempv1, cv_mem->cv_tempv2);
+
+      if (retval==1) {
+      } else if (retval<0) {
+        if ((!cv_mem->cv_jcur) && (cv_mem->cv_lsetup))
+          return(TRY_AGAIN);
+        else
+          return(RHSFUNC_RECVR);
+      }
+    }
+    // Check for negative concentrations
+    N_VLinearSum(ONE, cv_mem->cv_y, ONE, b, cv_mem->cv_ftemp);
+    if (N_VMin(cv_mem->cv_ftemp) < -CAMP_TINY) {
+      return(CONV_FAIL);
+    }
+
+    offset_nrows = 0;
+    for (int iDevice = 0; iDevice < sd->nDevices; iDevice++) {
+      cudaSetDevice(iDevice);
+      sd->mGPU = &(sd->mGPUs[iDevice]);
+      mGPU = sd->mGPU;
+
+      cudaMemcpy(mGPU->dftemp, cv_ftemp+offset_nrows, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice);
+
+      offset_nrows += mGPU->nrows;
+
+      //cudaMemcpy(mGPU->dftemp,cv_mem->cv_tempv2,mGPU->nrows*sizeof(double),cudaMemcpyHostToDevice);
+
+      //add correction to acor and y
+      // a*x + b*y = z
+      gpu_zaxpby(1.0, mGPU->cv_acor, 1.0, mGPU->dx, mGPU->cv_acor, mGPU->nrows, mGPU->blocks, mGPU->threads);
+      gpu_zaxpby(1.0, mGPU->dzn, 1.0, mGPU->cv_acor, mGPU->dcv_y, mGPU->nrows, mGPU->blocks, mGPU->threads);
+
+      //(T a, const T *X, T b, const T *Y, T *Z, I n)
+      //Z[i] = a*X[i] + b*Y[i];
+      //N_VLinearSum(ONE, cv_mem->cv_acor, ONE, b, cv_mem->cv_acor);
+      //N_VLinearSum(ONE, cv_mem->cv_zn[0], ONE, cv_mem->cv_acor, cv_mem->cv_y);
+
+    }
+
+    // Test for convergence.  If m > 0, an estimate of the convergence
+    // rate constant is stored in crate, and used in the test.
+    if (m > 0) {
+      cv_mem->cv_crate = SUNMAX(0.3 * cv_mem->cv_crate, del / delp);
+    }
+
+    dcon = del * SUNMIN(1.0, cv_mem->cv_crate) / cv_mem->cv_tq[4];
+
+    if (dcon <= 1.0) {
+
+      offset_nrows = 0;
+      for (int iDevice = 0; iDevice < sd->nDevices; iDevice++) {
+        cudaSetDevice(iDevice);
+        sd->mGPU = &(sd->mGPUs[iDevice]);
+        mGPU = sd->mGPU;
+
+        cudaMemcpy(acor+offset_nrows,mGPU->cv_acor,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
+        cudaMemcpy(tempv+offset_nrows,mGPU->dx,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
+
+        offset_nrows += mGPU->nrows;
+      }
+
+      cudaSetDevice(0); //todo cv_acnrm of all GPUs
+      sd->mGPU = &(sd->mGPUs[0]);
+      mGPU = sd->mGPU;
+      //cv_mem->cv_acnrm = N_VWrmsNorm(cv_mem->cv_acor, cv_mem->cv_ewt);
+      cv_mem->cv_acnrm = gpu_VWRMS_Norm(mGPU->nrows, mGPU->cv_acor, mGPU->dewt, bicg->aux,
+                                        mGPU->daux, (mGPU->blocks + 1) / 2, mGPU->threads);
+      cv_mem->cv_jcur = SUNFALSE;
+      return (CV_SUCCESS);
+    }
+    cv_mem->cv_mnewt = ++m;
+
+    // Stop at maxcor iterations or if iter. seems to be diverging.
+    //     If still not converged and Jacobian data is not current,
+    //     signal to try the solution again
+    if ((m == cv_mem->cv_maxcor) || ((m >= 2) && (del > RDIV * delp))) {
+
+      offset_nrows = 0;
+      for (int iDevice = 0; iDevice < sd->nDevices; iDevice++) {
+        cudaSetDevice(iDevice);
+        sd->mGPU = &(sd->mGPUs[iDevice]);
+        mGPU = sd->mGPU;
+
+        cudaMemcpy(acor+offset_nrows,mGPU->cv_acor,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
+        cudaMemcpy(tempv+offset_nrows,mGPU->dx,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
+
+        offset_nrows += mGPU->nrows;
+      }
+
+      if ((!cv_mem->cv_jcur) && (cv_mem->cv_lsetup)) {
+        return (TRY_AGAIN);
+      } else {
+        return (CONV_FAIL);
+      }
+    }
+
+    // Save norm of correction, evaluate f, and loop again
+    delp = del;
+
+    offset_nrows = 0;
+    for (int iDevice = 0; iDevice < sd->nDevices; iDevice++) {
+      cudaSetDevice(iDevice);
+      sd->mGPU = &(sd->mGPUs[iDevice]);
+      mGPU = sd->mGPU;
+
+      //check if its needed (i think only for f_CPU case, for f_gpu not)
+      cudaMemcpy(cv_y+offset_nrows, mGPU->dcv_y, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost);
+      //retval = cv_mem->cv_f(cv_mem->cv_tn, cv_mem->cv_y,
+      //                      cv_mem->cv_ftemp, cv_mem->cv_user_data);
+      //int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data)
+
+      offset_nrows += mGPU->nrows;
+    }
+
+#ifdef CAMP_DEBUG_GPU
+    //start=clock();
+    cudaEventRecord(bicg->startDerivSolve);
+#endif
+
+    //retval = f(cv_mem->cv_tn, cv_mem->cv_y, cv_mem->cv_ftemp, cv_mem->cv_user_data);
+    retval = f_gpu(cv_mem->cv_tn, cv_mem->cv_y, cv_mem->cv_ftemp, cv_mem->cv_user_data);
+
+#ifdef CAMP_DEBUG_GPU
+    cudaEventRecord(bicg->stopDerivSolve);
+
+    cudaEventSynchronize(bicg->stopDerivSolve);
+    float msDerivSolve = 0.0;
+    cudaEventElapsedTime(&msDerivSolve, bicg->startDerivSolve, bicg->stopDerivSolve);
+    bicg->timeDerivSolve+= msDerivSolve;
+
+    //bicg->timeDerivSolve+= clock() - start;
+    bicg->counterDerivSolve++;
+#endif
+
+    //Transfer cv_ftemp() not needed because mGPU->dftemp=mGPU->deriv_data;
+    //cudaMemcpy(cv_ftemp_data,mGPU->dftemp,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
+
+    for (int iDevice = 0; iDevice < sd->nDevices; iDevice++) {
+      cudaSetDevice(iDevice);
+      sd->mGPU = &(sd->mGPUs[iDevice]);
+      mGPU = sd->mGPU;
+
+      //N_VLinearSum(ONE, cv_mem->cv_y, -ONE, cv_mem->cv_zn[0], cv_mem->cv_acor);
+      // a*x + b*y = z
+      gpu_zaxpby(1.0, mGPU->dcv_y, -1.0, mGPU->dzn, mGPU->cv_acor, mGPU->nrows, mGPU->blocks, mGPU->threads);
+
+    }
+
+    cv_mem->cv_nfe++;
+    if (retval < 0){
+      offset_nrows = 0;
+      for (int iDevice = 0; iDevice < sd->nDevices; iDevice++) {
+        cudaSetDevice(iDevice);
+        sd->mGPU = &(sd->mGPUs[iDevice]);
+        mGPU = sd->mGPU;
+
+        cudaMemcpy(acor+offset_nrows,mGPU->cv_acor,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
+        cudaMemcpy(tempv+offset_nrows,mGPU->dx,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
+
+        offset_nrows += mGPU->nrows;
+      }
+      return(CV_RHSFUNC_FAIL);
+    }
+    if (retval > 0) {
+      offset_nrows = 0;
+      for (int iDevice = 0; iDevice < sd->nDevices; iDevice++) {
+        cudaSetDevice(iDevice);
+        sd->mGPU = &(sd->mGPUs[iDevice]);
+        mGPU = sd->mGPU;
+
+        cudaMemcpy(acor+offset_nrows,mGPU->cv_acor,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
+        cudaMemcpy(tempv+offset_nrows,mGPU->dx,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
+
+        offset_nrows += mGPU->nrows;
+      }
+      if ((!cv_mem->cv_jcur) && (cv_mem->cv_lsetup))
+        return(TRY_AGAIN);
+      else
+        return(RHSFUNC_RECVR);
+    }
+
+  }
+}
+
+
+int linsolsetupDebug_gpu2(SolverData *sd, CVodeMem cv_mem,int convfail,N_Vector vtemp1,N_Vector vtemp2,N_Vector vtemp3)
+{
+  itsolver *bicg = &(sd->bicg);
+  booleantype jbad, jok;
+  realtype dgamma;
+  CVDlsMem cvdls_mem = (CVDlsMem) cv_mem->cv_lmem;;
+  int retval = 0;
+
+  ModelDataGPU *mGPU;
+  int offset_nrows = 0;
+
+  //printf("linsolsetup_gpu2 start\n");
+
+  /* Use nst, gamma/gammap, and convfail to set J eval. flag jok */
+  dgamma = fabs((cv_mem->cv_gamma/cv_mem->cv_gammap) - ONE); //In GPU is fabs too
+  //dgamma = SUNRabs((cv_mem->cv_gamma/cv_mem->cv_gammap) - ONE);
+  jbad = (cv_mem->cv_nst == 0) ||
+         (cv_mem->cv_nst > cvdls_mem->nstlj + CVD_MSBJ) ||
+         ((convfail == CV_FAIL_BAD_J) && (dgamma < CVD_DGMAX)) ||
+         (convfail == CV_FAIL_OTHER);
+  jok = !jbad;
+
+  // If jok = SUNTRUE, use saved copy of J
+  if (jok) {
+    //if (0) {
+    cv_mem->cv_jcur = SUNFALSE;
+    retval = SUNMatCopy(cvdls_mem->savedJ, cvdls_mem->A);
+
+    /* If jok = SUNFALSE, reset J, call jac routine for new J value and save a copy */
+  } else {
+    cvdls_mem->nje++;
+    cvdls_mem->nstlj = cv_mem->cv_nst;
+    cv_mem->cv_jcur = SUNTRUE;
+    //retval = SUNMatZero(cvdls_mem->A);//we already set this to zero in our calc_jac
+
+    //clock_t start = clock();
+
+    //int Jac(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_data,
+    //        N_Vector tmp1, N_Vector tmp2, N_Vector tmp3) {
+
+    //retval = cvdls_mem->jac(cv_mem->cv_tn, cv_mem->cv_y,cv_mem->cv_ftemp, cvdls_mem->A,
+    //                        cvdls_mem->J_data, vtemp1, vtemp2, vtemp3);
+
+#ifdef CAMP_DEBUG_GPU
+    cudaEventRecord(bicg->startJac);
+#endif
+
+    double *cv_y = NV_DATA_S(cv_mem->cv_y);
+    offset_nrows = 0;
+    for (int iDevice = 0; iDevice < sd->nDevices; iDevice++) {
+      cudaSetDevice(iDevice);
+      sd->mGPU = &(sd->mGPUs[iDevice]);
+      mGPU = sd->mGPU;
+
+      //Ensure cv_y is loaded
+
+      cudaMemcpy(cv_y+offset_nrows, mGPU->dcv_y, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost);
+
+      offset_nrows += mGPU->nrows;
+    }
+#ifdef DEBUG_linsolsetup_gpu2
+    check_isnand(mGPU->A,mGPU->nnz,"prejac");
+#endif
+
+    retval = Jac(cv_mem->cv_tn, cv_mem->cv_y,cv_mem->cv_ftemp, cvdls_mem->A,cvdls_mem->J_data, vtemp1, vtemp2, vtemp3);
+
+    //wrong
+    //retval = Jac_gpu(cv_mem->cv_tn, cv_mem->cv_y,cv_mem->cv_ftemp, cvdls_mem->A,cvdls_mem->J_data, vtemp1, vtemp2, vtemp3);
+
+#ifdef DEBUG_linsolsetup_gpu2
+    check_isnand(mGPU->A,mGPU->nnz,"postjac");
+#endif
+
+#ifdef CAMP_DEBUG_GPU
+    cudaEventRecord(bicg->stopJac);
+
+    cudaEventSynchronize(bicg->stopJac);
+    float msJac = 0.0;
+    cudaEventElapsedTime(&msJac, bicg->startJac, bicg->stopJac);
+    sd->timeJac+= msJac;
+    sd->counterJac++;
+#endif
+
+    if (retval < 0) {
+      cvProcessError(cv_mem, CVDLS_JACFUNC_UNRECVR, "CVDLS",
+                     "cvDlsSetup",  MSGD_JACFUNC_FAILED);
+      cvdls_mem->last_flag = CVDLS_JACFUNC_UNRECVR;
+      return(-1);
+    }
+    if (retval > 0) {
+      cvdls_mem->last_flag = CVDLS_JACFUNC_RECVR;
+      return(1);
+    }
+
+#ifdef CAMP_DEBUG_GPU
+    //clock_t start = clock();
+#endif
+
+    retval = SUNMatCopy(cvdls_mem->A, cvdls_mem->savedJ);
+
+#ifdef CAMP_DEBUG_GPU
+    //bicg->timeMatCopy+= clock() - start;
+    //bicg->counterMatCopy++;
+#endif
+
+    if (retval) {
+      cvProcessError(cv_mem, CVDLS_SUNMAT_FAIL, "CVDLS",
+                     "cvDlsSetup",  MSGD_MATCOPY_FAILED);
+      cvdls_mem->last_flag = CVDLS_SUNMAT_FAIL;
+      return(-1);
+    }
+
+  }
+
+#ifdef CAMP_DEBUG_GPU
+  //clock_t start = clock();
+#endif
+
+#ifndef LINSOLSOLVEGPU_INCLUDE_CUDAMEMCPY
+  cudaEventRecord(bicg->startBCGMemcpy);
+#endif
+
+  for (int iDevice = 0; iDevice < sd->nDevices; iDevice++) {
+    cudaSetDevice(iDevice);
+    sd->mGPU = &(sd->mGPUs[iDevice]);
+    mGPU = sd->mGPU;
+
+    cudaMemcpyAsync(mGPU->diA, mGPU->iA, (mGPU->nrows + 1) * sizeof(int), cudaMemcpyHostToDevice, 0);
+    cudaMemcpyAsync(mGPU->djA, mGPU->jA, mGPU->nnz * sizeof(int), cudaMemcpyHostToDevice, 0);
+    cudaMemcpyAsync(mGPU->dA, mGPU->A, mGPU->nnz * sizeof(double), cudaMemcpyHostToDevice, 0);
+
+  }
+  cudaDeviceSynchronize();
+
+#ifndef LINSOLSOLVEGPU_INCLUDE_CUDAMEMCPY
+  cudaEventRecord(bicg->stopBCGMemcpy);
+  cudaEventSynchronize(bicg->stopBCGMemcpy);
+  float msBiConjGradMemcpy = 0.0;
+  cudaEventElapsedTime(&msBiConjGradMemcpy, bicg->startBCGMemcpy, bicg->stopBCGMemcpy);
+  bicg->timeBiConjGradMemcpy+= msBiConjGradMemcpy/1000;
+  bicg->timeBiConjGrad+= msBiConjGradMemcpy/1000;
+#endif
+
+#ifdef FAILURE_DETAIL
+  //check if jac is correct
+  int flag = check_jac_status_error_gpu2(cvdls_mem->A);
+  //printf("Jac returned error flag %d\n",flag);
+#endif
+
+  for (int iDevice = 0; iDevice < sd->nDevices; iDevice++) {
+    cudaSetDevice(iDevice);
+    sd->mGPU = &(sd->mGPUs[iDevice]);
+    mGPU = sd->mGPU;
+
+    gpu_matScaleAddI(mGPU->nrows,mGPU->dA,mGPU->djA,mGPU->diA,-cv_mem->cv_gamma,mGPU->blocks,mGPU->threads);
+    cudaMemcpy(mGPU->A, mGPU->dA, mGPU->nnz * sizeof(double), cudaMemcpyDeviceToHost);
+    gpu_diagprecond(mGPU->nrows,mGPU->dA,mGPU->djA,mGPU->diA,mGPU->ddiag,mGPU->blocks,mGPU->threads); //Setup linear solver
+
+  }
+
+#ifdef DEBUG_linsolsetup_gpu2
+
+  cvcheck_input_globald<<<mGPU->blocks,mGPU->threads>>>(mGPU->ddiag,mGPU->nrows,"mGPU->ddiag");
+
+#endif
+
+
+  //return(cvdls_mem->last_flag);
+  return retval;
+}
+
+
+int cvNlsNewtonDebug_gpu2(SolverData *sd, CVodeMem cv_mem, int nflag)
+{
+  itsolver *bicg = &(sd->bicg);
+  ModelData *md = &(sd->model_data);
+  ModelDataGPU *mGPU;
+  N_Vector vtemp1, vtemp2, vtemp3;
+  int convfail, retval, ier;
+  booleantype callSetup;
+
+  double *acor = NV_DATA_S(cv_mem->cv_acor);
+  double *cv_y = NV_DATA_S(cv_mem->cv_y);
+  double *tempv = NV_DATA_S(cv_mem->cv_tempv);
+  double *ftemp = NV_DATA_S(cv_mem->cv_ftemp);
+  double *J_deriv = N_VGetArrayPointer(md->J_deriv);
+
+  int offset_nrows = 0;
+  for (int iDevice = 0; iDevice < sd->nDevices; iDevice++) {
+    cudaSetDevice(iDevice);
+    sd->mGPU = &(sd->mGPUs[iDevice]);
+    mGPU = sd->mGPU;
+
+    cudaMemcpy(mGPU->cv_tq, cv_mem->cv_tq, 5 * sizeof(double), cudaMemcpyHostToDevice);
+    int znUsedOnNewtonIt = 2;//Only used zn[0] and zn[1] //0.01s
+    for (int i = 0; i < znUsedOnNewtonIt; i++) {//cv_qmax+1
+      double *zn = NV_DATA_S(cv_mem->cv_zn[i])+offset_nrows;
+      cudaMemcpy((i * mGPU->nrows + mGPU->dzn), zn, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice);
+    }
+    offset_nrows += mGPU->nrows;
+  }
+
+  //printf("cvNlsNewton_gpu2 start\n");
+
+  /* Set flag convfail, input to lsetup for its evaluation decision */
+  convfail = ((nflag == FIRST_CALL) || (nflag == PREV_ERR_FAIL)) ?
+             CV_NO_FAILURES : CV_FAIL_OTHER;
+
+  /* Decide whether or not to call setup routine (if one exists) */
+  if (cv_mem->cv_lsetup) {
+    callSetup = (nflag == PREV_CONV_FAIL) || (nflag == PREV_ERR_FAIL) ||
+                (cv_mem->cv_nst == 0) ||
+                (cv_mem->cv_nst >= cv_mem->cv_nstlp + MSBP) ||
+                (SUNRabs(cv_mem->cv_gamrat-ONE) > DGMAX);
+  } else {
+    cv_mem->cv_crate = ONE;
+    callSetup = SUNFALSE;
+  }
+
+  /* Call a user-supplied function to improve guesses for zn(0), if one exists */
+  //if not, set to zero
+  //N_VConst(ZERO, cv_mem->cv_acor_init);
+
+  if (cv_mem->cv_ghfun) {
+
+    //all are cpu pointers and gpu pointers are dftemp etc
+    N_VLinearSum(ONE, cv_mem->cv_zn[0], -ONE, cv_mem->cv_last_yn, cv_mem->cv_ftemp);
+    retval = cv_mem->cv_ghfun(cv_mem->cv_tn, cv_mem->cv_h, cv_mem->cv_zn[0],
+                              cv_mem->cv_last_yn, cv_mem->cv_ftemp, cv_mem->cv_user_data,
+                              cv_mem->cv_tempv, cv_mem->cv_acor_init);
+    if (retval<0) return(RHSFUNC_RECVR);
+  }
+
+  offset_nrows = 0;
+  for (int iDevice = 0; iDevice < sd->nDevices; iDevice++) {
+    cudaSetDevice(iDevice);
+    sd->mGPU = &(sd->mGPUs[iDevice]);
+    mGPU = sd->mGPU;
+
+    cudaMemcpy(mGPU->cv_acor, acor+offset_nrows, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice);
+    cudaMemcpy(mGPU->dtempv, tempv+offset_nrows, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice);
+    cudaMemcpy(mGPU->dftemp, ftemp+offset_nrows, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice);
+
+    offset_nrows += mGPU->nrows;
+  }
+
+  //remove temps, not used in jac
+  vtemp1 = cv_mem->cv_acor;  /* rename acor as vtemp1 for readability  */
+  vtemp2 = cv_mem->cv_acor;  /* rename y as vtemp2 for readability     */
+  vtemp3 = cv_mem->cv_acor;  /* rename tempv as vtemp3 for readability */
+
+  /* Looping point for the solution of the nonlinear system.
+     Evaluate f at the predicted y, call lsetup if indicated, and
+     call cvNewtonIteration for the Newton iteration itself.      */
+  for(;;) {
+
+    offset_nrows = 0;
+    for (int iDevice = 0; iDevice < sd->nDevices; iDevice++) {
+      cudaSetDevice(iDevice);
+      sd->mGPU = &(sd->mGPUs[iDevice]);
+      mGPU = sd->mGPU;
+      /* Load prediction into y vector */
+      //N_VLinearSum(ONE, cv_mem->cv_zn[0], ONE, cv_mem->cv_acor_init, cv_mem->cv_y);
+      //gpu_yequalsx is not thread safe (need cuda_devicesync previously!)
+      cudaDeviceSynchronize();
+      gpu_yequalsx(mGPU->dcv_y,mGPU->dzn, mGPU->nrows, mGPU->blocks, mGPU->threads);//Consider acor_init=0
+      cudaDeviceSynchronize();
+
+      //copy cv_y to enable debug on cpu
+      cudaMemcpy(cv_y+offset_nrows, mGPU->dcv_y, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost);
+      offset_nrows += mGPU->nrows;
+    }
+
+#ifdef CAMP_DEBUG_GPU
+    //start=clock();
+    cudaEventRecord(bicg->startDerivNewton);
+#endif
+
+    //retval = f(cv_mem->cv_tn, cv_mem->cv_y, cv_mem->cv_ftemp, cv_mem->cv_user_data);
+    retval = f_gpu(cv_mem->cv_tn, cv_mem->cv_y, cv_mem->cv_ftemp, cv_mem->cv_user_data);
+
+#ifdef CAMP_DEBUG_GPU
+    cudaEventRecord(bicg->stopDerivNewton);
+    cudaEventSynchronize(bicg->stopDerivNewton);
+    float msDerivNewton = 0.0;
+    cudaEventElapsedTime(&msDerivNewton, bicg->startDerivNewton, bicg->stopDerivNewton);
+    bicg->timeDerivNewton+= msDerivNewton;
+
+    //bicg->timeDerivNewton+= clock() - start;
+    bicg->counterDerivNewton++;
+#endif
+
+    if (retval < 0) return(CV_RHSFUNC_FAIL);
+    if (retval > 0) return(RHSFUNC_RECVR);
+
+    cv_mem->cv_nfe++;
+    if (callSetup)
+    {
+
+#ifdef CAMP_DEBUG_GPU
+      //start=clock();
+      cudaEventRecord(bicg->startLinSolSetup);
+#endif
+
+      ier = linsolsetupDebug_gpu2(sd, cv_mem, convfail, vtemp1, vtemp2, vtemp3);
+
+#ifdef CAMP_DEBUG_GPU
+      cudaEventRecord(bicg->stopLinSolSetup);
+
+    cudaEventSynchronize(bicg->stopLinSolSetup);
+    float msLinSolSetup = 0.0;
+    cudaEventElapsedTime(&msLinSolSetup, bicg->startLinSolSetup, bicg->stopLinSolSetup);
+    bicg->timeLinSolSetup+= msLinSolSetup;
+
+    //bicg->timeLinSolSetup+= clock() - start;
+    bicg->counterLinSolSetup++;
+#endif
+
+      cv_mem->cv_nsetups++;
+      callSetup = SUNFALSE;
+      cv_mem->cv_gamrat = cv_mem->cv_crate = ONE;
+      cv_mem->cv_gammap = cv_mem->cv_gamma;
+      cv_mem->cv_nstlp = cv_mem->cv_nst;
+      // Return if lsetup failed
+      if (ier < 0) return(CV_LSETUP_FAIL);
+      if (ier > 0) return(CONV_FAIL);
+    }
+
+    // Set acor to the initial guess for adjustments to the y vector
+    //N_VScale(ONE, cv_mem->cv_acor_init, cv_mem->cv_acor);
+    //gpu_yequalsx(mGPU->cv_acor, bicg->cv_acor_init, mGPU->nrows, mGPU->blocks, mGPU->threads);
+
+    for (int iDevice = 0; iDevice < sd->nDevices; iDevice++) {
+      cudaSetDevice(iDevice);
+      sd->mGPU = &(sd->mGPUs[iDevice]);
+      mGPU = sd->mGPU;
+
+      cudaMemset(mGPU->cv_acor, 0.0, mGPU->nrows * sizeof(double));
+    }
+
+#ifdef CAMP_DEBUG_GPU
+    cudaEventRecord(bicg->startLinSolSolve);
+#endif
+
+    // Do the Newton iteration
+    //ier = cvNewtonIteration(cv_mem);
+    ier = linsolsolveDebug_gpu2(sd, cv_mem);
+
+#ifdef CAMP_DEBUG_GPU
+    cudaEventRecord(bicg->stopLinSolSolve);
+
+    cudaEventSynchronize(bicg->stopLinSolSolve);
+    float msLinSolSolve = 0.0;
+    cudaEventElapsedTime(&msLinSolSolve, bicg->startLinSolSolve, bicg->stopLinSolSolve);
+    bicg->timeLinSolSolve+= msLinSolSolve;
+    bicg->counterLinSolSolve++;
+#endif
+    // If there is a convergence failure and the Jacobian-related
+    //   data appears not to be current, loop again with a call to lsetup
+    //   in which convfail=CV_FAIL_BAD_J.  Otherwise return.
+    if (ier != TRY_AGAIN) return(ier);
+
+    callSetup = SUNTRUE;
+    convfail = CV_FAIL_BAD_J;
+
+  }
+}
+
+
+int cvStepDebug_gpu2(SolverData *sd, CVodeMem cv_mem)
+{
+  ModelDataGPU *mGPU = sd->mGPU;
+  realtype saved_t, dsm;
+  int ncf, nef;
+  int nflag, kflag, eflag;
+
+  //printf("cvStep_gpu2 start\n");
+
+  double *ewt = NV_DATA_S(cv_mem->cv_ewt);
+  int offset_nrows = 0;
+  for (int iDevice = 0; iDevice < sd->nDevices; iDevice++) {
+    cudaSetDevice(iDevice);
+    sd->mGPU = &(sd->mGPUs[iDevice]);
+    mGPU = sd->mGPU;
+
+    cudaMemcpy(mGPU->dewt, ewt+offset_nrows, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice);
+
+    offset_nrows += mGPU->nrows;
+  }
+
+  saved_t = cv_mem->cv_tn;
+  ncf = nef = 0;
+  nflag = FIRST_CALL;
+
+  if ((cv_mem->cv_nst > 0) && (cv_mem->cv_hprime != cv_mem->cv_h))
+    cvAdjustParams_gpu2(cv_mem);
+
+  /* Looping point for attempts to take a step */
+  for(;;) {
+
+    cvPredict_gpu2(cv_mem);
+
+    cvSet_gpu2(cv_mem);
+
+    //nflag = cvNls(cv_mem, nflag);
+    nflag = cvNlsNewtonDebug_gpu2(sd, cv_mem, nflag);//f(y)+BCG
+
+    kflag = cvHandleNFlag_gpu2(cv_mem, &nflag, saved_t, &ncf);
+
+    /* Go back in loop if we need to predict again (nflag=PREV_CONV_FAIL)*/
+    if (kflag == PREDICT_AGAIN) continue;
+
+    /* Return if nonlinear solve failed and recovery not possible. */
+    if (kflag != DO_ERROR_TEST) return(kflag);
+
+    /* Perform error test (nflag=CV_SUCCESS) */
+    eflag = cvDoErrorTest_gpu2(cv_mem, &nflag, saved_t, &nef, &dsm);
+
+    /* Go back in loop if we need to predict again (nflag=PREV_ERR_FAIL) */
+    if (eflag == TRY_AGAIN)  continue;
+
+    /* Return if error test failed and recovery not possible. */
+    if (eflag != CV_SUCCESS) return(eflag);
+
+    /* Error test passed (eflag=CV_SUCCESS), break from loop */
+    break;
+
+  }
+
+  /* Nonlinear system solve and error test were both successful.
+     Update data, and consider change of step and/or order.       */
+
+  cvCompleteStep_gpu2(cv_mem);
+
+  cvPrepareNextStep_gpu2(cv_mem, dsm);//use tq calculated in cvset and tempv calc in cvnewton
+
+  /* If Stablilty Limit Detection is turned on, call stability limit
+     detection routine for possible order reduction. */
+
+  if (cv_mem->cv_sldeton) cvBDFStab_gpu2(cv_mem);
+
+  cv_mem->cv_etamax = (cv_mem->cv_nst <= SMALL_NST) ? ETAMX2 : ETAMX3;
+
+  /*  Finally, we rescale the acor array to be the
+      estimated local error vector. */
+
+  N_VScale(cv_mem->cv_tq[2], cv_mem->cv_acor, cv_mem->cv_acor);
+  return(CV_SUCCESS);
+
+}
+
+
+int CVodeDebug_gpu2(void *cvode_mem, realtype tout, N_Vector yout,
+                    realtype *tret, int itask, SolverData *sd)
+{
+  CVodeMem cv_mem;
+  long int nstloc;
+  int retval, hflag, kflag, istate, ir, ier, irfndp;
+  int ewtsetOK;
+  realtype troundoff, tout_hin, rh, nrm;
+  booleantype inactive_roots;
+
+  itsolver *bicg = &(sd->bicg);
+  ModelDataGPU *mGPU;
+
+  /*
+   * -------------------------------------
+   * 1. Check and process inputs
+   * -------------------------------------
+   */
+
+  /* Check if cvode_mem exists */
+  if (cvode_mem == NULL) {
+    cvProcessError(NULL, CV_MEM_NULL, "CVODE", "CVode", MSGCV_NO_MEM);
+    return(CV_MEM_NULL);
+  }
+  cv_mem = (CVodeMem) cvode_mem;
+
+  /* Check if cvode_mem was allocated */
+  if (cv_mem->cv_MallocDone == SUNFALSE) {
+    cvProcessError(cv_mem, CV_NO_MALLOC, "CVODE", "CVode", MSGCV_NO_MALLOC);
+    return(CV_NO_MALLOC);
+  }
+
+  /* Check for yout != NULL */
+  if ((cv_mem->cv_y = yout) == NULL) {
+    cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "CVode", MSGCV_YOUT_NULL);
+    return(CV_ILL_INPUT);
+  }
+
+  /* Check for tret != NULL */
+  if (tret == NULL) {
+    cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "CVode", MSGCV_TRET_NULL);
+    return(CV_ILL_INPUT);
+  }
+
+  /* Check for valid itask */
+  if ( (itask != CV_NORMAL) && (itask != CV_ONE_STEP) ) {
+    cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "CVode", MSGCV_BAD_ITASK);
+    return(CV_ILL_INPUT);
+  }
+
+  if (itask == CV_NORMAL) cv_mem->cv_toutc = tout;
+  cv_mem->cv_taskc = itask;
+
+  /*
+   * ----------------------------------------
+   * 2. Initializations performed only at
+   *    the first step (nst=0):
+   *    - initial setup
+   *    - initialize Nordsieck history array
+   *    - compute initial step size
+   *    - check for approach to tstop
+   *    - check for approach to a root
+   * ----------------------------------------
+   */
+
+  // GPU initializations
+  //set_data_gpu2(cv_mem, sd);
+
+  if (cv_mem->cv_nst == 0) {
+
+    cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
+
+    ier = cvInitialSetup_gpu2(cv_mem);
+    if (ier!= CV_SUCCESS) return(ier);
+
+    /* Call f at (t0,y0), set zn[1] = y'(t0),
+       set initial h (from H0 or cvHin), and scale zn[1] by h.
+       Also check for zeros of root function g at and near t0.    */
+    //retval = cv_mem->cv_f(cv_mem->cv_tn, cv_mem->cv_zn[0],
+    //                      cv_mem->cv_zn[1], cv_mem->cv_user_data);
+    retval = f(cv_mem->cv_tn, cv_mem->cv_zn[0], cv_mem->cv_zn[1], cv_mem->cv_user_data);
+
+    N_VScale(ONE, cv_mem->cv_zn[0], yout);
+
+    cv_mem->cv_nfe++;
+    if (retval < 0) {
+      cvProcessError(cv_mem, CV_RHSFUNC_FAIL, "CVODE", "CVode",
+                     MSGCV_RHSFUNC_FAILED, cv_mem->cv_tn);
+      return(CV_RHSFUNC_FAIL);
+    }
+    if (retval > 0) {
+      cvProcessError(cv_mem, CV_FIRST_RHSFUNC_ERR, "CVODE", "CVode",
+                     MSGCV_RHSFUNC_FIRST);
+      return(CV_FIRST_RHSFUNC_ERR);
+    }
+
+
+
+    /* Test input tstop for legality. */
+
+    if (cv_mem->cv_tstopset) {
+      if ( (cv_mem->cv_tstop - cv_mem->cv_tn)*(tout - cv_mem->cv_tn) <= ZERO ) {
+        cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "CVode",
+                       MSGCV_BAD_TSTOP, cv_mem->cv_tstop, cv_mem->cv_tn);
+        return(CV_ILL_INPUT);
+      }
+    }
+
+    /* Set initial h (from H0 or cvHin). */
+
+    cv_mem->cv_h = cv_mem->cv_hin;
+    if ( (cv_mem->cv_h != ZERO) && ((tout-cv_mem->cv_tn)*cv_mem->cv_h < ZERO) ) {
+      cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "CVode", MSGCV_BAD_H0);
+      return(CV_ILL_INPUT);
+    }
+    if (cv_mem->cv_h == ZERO) {
+      tout_hin = tout;
+      if ( cv_mem->cv_tstopset && (tout-cv_mem->cv_tn)*(tout-cv_mem->cv_tstop) > ZERO )
+        tout_hin = cv_mem->cv_tstop;
+      hflag = cvHin_gpu2(cv_mem, tout_hin); //set cv_y
+      if (hflag != CV_SUCCESS) {
+        istate = cvHandleFailure_gpu2(cv_mem, hflag);
+        return(istate);
+      }
+    }
+    rh = SUNRabs(cv_mem->cv_h)*cv_mem->cv_hmax_inv;
+    if (rh > ONE) cv_mem->cv_h /= rh;
+    if (SUNRabs(cv_mem->cv_h) < cv_mem->cv_hmin)
+      cv_mem->cv_h *= cv_mem->cv_hmin/SUNRabs(cv_mem->cv_h);
+
+    /* Check for approach to tstop */
+
+    if (cv_mem->cv_tstopset) {
+      if ( (cv_mem->cv_tn + cv_mem->cv_h - cv_mem->cv_tstop)*cv_mem->cv_h > ZERO )
+        cv_mem->cv_h = (cv_mem->cv_tstop - cv_mem->cv_tn)*(ONE-FOUR*cv_mem->cv_uround);
+    }
+
+    /* Scale zn[1] by h.*/
+
+    cv_mem->cv_hscale = cv_mem->cv_h;
+    cv_mem->cv_h0u    = cv_mem->cv_h;
+    cv_mem->cv_hprime = cv_mem->cv_h;
+
+    N_VScale(cv_mem->cv_h, cv_mem->cv_zn[1], cv_mem->cv_zn[1]);
+    /* Try to improve initial guess of zn[1] */
+    if (cv_mem->cv_ghfun) {
+
+      N_VLinearSum(ONE, cv_mem->cv_zn[0], ONE, cv_mem->cv_zn[1], cv_mem->cv_tempv1);
+      cv_mem->cv_ghfun(cv_mem->cv_tn + cv_mem->cv_h, cv_mem->cv_h, cv_mem->cv_tempv1,
+                       cv_mem->cv_zn[0], cv_mem->cv_zn[1], cv_mem->cv_user_data,
+                       cv_mem->cv_tempv2, cv_mem->cv_acor_init);
+    }
+    /* Check for zeros of root function g at and near t0. */
+
+    if (cv_mem->cv_nrtfn > 0) {
+
+      retval = cvRcheck1_gpu2(cv_mem);
+
+      if (retval == CV_RTFUNC_FAIL) {
+        cvProcessError(cv_mem, CV_RTFUNC_FAIL, "CVODE", "cvRcheck1",
+                       MSGCV_RTFUNC_FAILED, cv_mem->cv_tn);
+        return(CV_RTFUNC_FAIL);
+      }
+
+    }
+
+  } /* end of first call block */
+
+  /*
+   * ------------------------------------------------------
+   * 3. At following steps, perform stop tests:
+   *    - check for root in last step
+   *    - check if we passed tstop
+   *    - check if we passed tout (NORMAL mode)
+   *    - check if current tn was returned (ONE_STEP mode)
+   *    - check if we are close to tstop
+   *      (adjust step size if needed)
+   * -------------------------------------------------------
+   */
+
+  if (cv_mem->cv_nst > 0) {
+
+    /* Estimate an infinitesimal time interval to be used as
+       a roundoff for time quantities (based on current time
+       and step size) */
+    troundoff = FUZZ_FACTOR*cv_mem->cv_uround*(SUNRabs(cv_mem->cv_tn) + SUNRabs(cv_mem->cv_h));
+
+    /* First, check for a root in the last step taken, other than the
+       last root found, if any.  If itask = CV_ONE_STEP and y(tn) was not
+       returned because of an intervening root, return y(tn) now.     */
+    if (cv_mem->cv_nrtfn > 0) {
+
+      irfndp = cv_mem->cv_irfnd;
+
+      retval = cvRcheck2_gpu2(cv_mem);
+
+      if (retval == CLOSERT) {
+        cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "cvRcheck2",
+                       MSGCV_CLOSE_ROOTS, cv_mem->cv_tlo);
+        return(CV_ILL_INPUT);
+      } else if (retval == CV_RTFUNC_FAIL) {
+        cvProcessError(cv_mem, CV_RTFUNC_FAIL, "CVODE", "cvRcheck2",
+                       MSGCV_RTFUNC_FAILED, cv_mem->cv_tlo);
+        return(CV_RTFUNC_FAIL);
+      } else if (retval == RTFOUND) {
+        cv_mem->cv_tretlast = *tret = cv_mem->cv_tlo;
+        return(CV_ROOT_RETURN);
+      }
+
+      /* If tn is distinct from tretlast (within roundoff),
+         check remaining interval for roots */
+      if ( SUNRabs(cv_mem->cv_tn - cv_mem->cv_tretlast) > troundoff ) {
+
+        retval = cvRcheck3_gpu2(cv_mem);
+
+        if (retval == CV_SUCCESS) {     /* no root found */
+          cv_mem->cv_irfnd = 0;
+          if ((irfndp == 1) && (itask == CV_ONE_STEP)) {
+            cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
+            N_VScale(ONE, cv_mem->cv_zn[0], yout);
+            return(CV_SUCCESS);
+          }
+        } else if (retval == RTFOUND) {  /* a new root was found */
+          cv_mem->cv_irfnd = 1;
+          cv_mem->cv_tretlast = *tret = cv_mem->cv_tlo;
+          return(CV_ROOT_RETURN);
+        } else if (retval == CV_RTFUNC_FAIL) {  /* g failed */
+          cvProcessError(cv_mem, CV_RTFUNC_FAIL, "CVODE", "cvRcheck3",
+                         MSGCV_RTFUNC_FAILED, cv_mem->cv_tlo);
+          return(CV_RTFUNC_FAIL);
+        }
+
+      }
+
+    } /* end of root stop check */
+
+    /* In CV_NORMAL mode, test if tout was reached */
+    if ( (itask == CV_NORMAL) && ((cv_mem->cv_tn-tout)*cv_mem->cv_h >= ZERO) ) {
+      cv_mem->cv_tretlast = *tret = tout;
+      ier =  CVodeGetDky(cv_mem, tout, 0, yout);
+      if (ier != CV_SUCCESS) {
+        cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "CVode",
+                       MSGCV_BAD_TOUT, tout);
+        return(CV_ILL_INPUT);
+      }
+      return(CV_SUCCESS);
+    }
+
+    /* In CV_ONE_STEP mode, test if tn was returned */
+    if ( itask == CV_ONE_STEP &&
+         SUNRabs(cv_mem->cv_tn - cv_mem->cv_tretlast) > troundoff ) {
+      cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
+      N_VScale(ONE, cv_mem->cv_zn[0], yout);
+      return(CV_SUCCESS);
+    }
+
+    /* Test for tn at tstop or near tstop */
+    if ( cv_mem->cv_tstopset ) {
+
+      if ( SUNRabs(cv_mem->cv_tn - cv_mem->cv_tstop) <= troundoff) {
+        ier =  CVodeGetDky(cv_mem, cv_mem->cv_tstop, 0, yout);
+        if (ier != CV_SUCCESS) {
+          cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "CVode",
+                         MSGCV_BAD_TSTOP, cv_mem->cv_tstop, cv_mem->cv_tn);
+          return(CV_ILL_INPUT);
+        }
+        cv_mem->cv_tretlast = *tret = cv_mem->cv_tstop;
+        cv_mem->cv_tstopset = SUNFALSE;
+        return(CV_TSTOP_RETURN);
+      }
+
+      /* If next step would overtake tstop, adjust stepsize */
+      if ( (cv_mem->cv_tn + cv_mem->cv_hprime - cv_mem->cv_tstop)*cv_mem->cv_h > ZERO ) {
+        cv_mem->cv_hprime = (cv_mem->cv_tstop - cv_mem->cv_tn)*(ONE-FOUR*cv_mem->cv_uround);
+        cv_mem->cv_eta = cv_mem->cv_hprime/cv_mem->cv_h;
+      }
+
+    }
+
+  } /* end stopping tests block */
+
+  /*
+   * --------------------------------------------------
+   * 4. Looping point for internal steps
+   *
+   *    4.1. check for errors (too many steps, too much
+   *         accuracy requested, step size too small)
+   *    4.2. take a new step (call cvStep)
+   *    4.3. stop on error
+   *    4.4. perform stop tests:
+   *         - check for root in last step
+   *         - check if tout was passed
+   *         - check if close to tstop
+   *         - check if in ONE_STEP mode (must return)
+   * --------------------------------------------------
+   */
+
+#ifdef CAMP_DEBUG_GPU
+  cudaEventRecord(bicg->startcvStep);
+#endif
+
+  nstloc = 0;
+  for(;;) {
+
+#ifdef CAMP_DEBUG_GPU
+    for (int iDevice = 0; iDevice < sd->nDevices; iDevice++) {
+      cudaSetDevice(iDevice);
+      sd->mGPU = &(sd->mGPUs[iDevice]);
+      mGPU = sd->mGPU;
+
+      mGPU->mdvCPU.countercvStep++;
+    }
+#endif
+
+    cv_mem->cv_next_h = cv_mem->cv_h;
+    cv_mem->cv_next_q = cv_mem->cv_q;
+
+    /* Reset and check ewt */
+    if (cv_mem->cv_nst > 0) {
+
+      ewtsetOK = cv_mem->cv_efun(cv_mem->cv_zn[0], cv_mem->cv_ewt, cv_mem->cv_e_data);
+      //set here copy of ewt to gpu
+
+      if (ewtsetOK != 0) {
+
+        if (cv_mem->cv_itol == CV_WF)
+          cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "CVode",
+                         MSGCV_EWT_NOW_FAIL, cv_mem->cv_tn);
+        else
+          cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "CVode",
+                         MSGCV_EWT_NOW_BAD, cv_mem->cv_tn);
+
+        istate = CV_ILL_INPUT;
+        cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
+        N_VScale(ONE, cv_mem->cv_zn[0], yout);
+        break;
+
+      }
+    }
+
+    /* Check for too many steps */
+    if ( (cv_mem->cv_mxstep>0) && (nstloc >= cv_mem->cv_mxstep) ) {
+      cvProcessError(cv_mem, CV_TOO_MUCH_WORK, "CVODE", "CVode",
+                     MSGCV_MAX_STEPS, cv_mem->cv_tn);
+      istate = CV_TOO_MUCH_WORK;
+      cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
+      N_VScale(ONE, cv_mem->cv_zn[0], yout);
+      break;
+    }
+
+    /* Check for too much accuracy requested */
+    nrm = N_VWrmsNorm(cv_mem->cv_zn[0], cv_mem->cv_ewt);
+    cv_mem->cv_tolsf = cv_mem->cv_uround * nrm;
+    if (cv_mem->cv_tolsf > ONE) {
+      cvProcessError(cv_mem, CV_TOO_MUCH_ACC, "CVODE", "CVode",
+                     MSGCV_TOO_MUCH_ACC, cv_mem->cv_tn);
+      istate = CV_TOO_MUCH_ACC;
+      cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
+      N_VScale(ONE, cv_mem->cv_zn[0], yout);
+      cv_mem->cv_tolsf *= TWO;
+      break;
+    } else {
+      cv_mem->cv_tolsf = ONE;
+    }
+
+    /* Check for h below roundoff level in tn */
+    if (cv_mem->cv_tn + cv_mem->cv_h == cv_mem->cv_tn) {
+      cv_mem->cv_nhnil++;
+      if (cv_mem->cv_nhnil <= cv_mem->cv_mxhnil)
+        cvProcessError(cv_mem, CV_WARNING, "CVODE", "CVode",
+                       MSGCV_HNIL, cv_mem->cv_tn, cv_mem->cv_h);
+      if (cv_mem->cv_nhnil == cv_mem->cv_mxhnil)
+        cvProcessError(cv_mem, CV_WARNING, "CVODE", "CVode", MSGCV_HNIL_DONE);
+    }
+
+    /* Call cvStep to take a step */
+    //kflag = cvStep(cv_mem);
+    kflag = cvStepDebug_gpu2(sd, cv_mem);
+    //kflag = cudacvStep(sd, cv_mem);
+
+    /* Process failed step cases, and exit loop */
+    if (kflag != CV_SUCCESS) {
+      istate = cvHandleFailure_gpu2(cv_mem, kflag);
+      cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
+      N_VScale(ONE, cv_mem->cv_zn[0], yout);
+      break;
+    }
+
+    nstloc++;
+
+    /* Check for root in last step taken. */
+    if (cv_mem->cv_nrtfn > 0) {
+
+      retval = cvRcheck3_gpu2(cv_mem);
+
+      if (retval == RTFOUND) {  /* A new root was found */
+        cv_mem->cv_irfnd = 1;
+        istate = CV_ROOT_RETURN;
+        cv_mem->cv_tretlast = *tret = cv_mem->cv_tlo;
+        break;
+      } else if (retval == CV_RTFUNC_FAIL) { /* g failed */
+        cvProcessError(cv_mem, CV_RTFUNC_FAIL, "CVODE", "cvRcheck3",
+                       MSGCV_RTFUNC_FAILED, cv_mem->cv_tlo);
+        istate = CV_RTFUNC_FAIL;
+        break;
+      }
+
+      /* If we are at the end of the first step and we still have
+       * some event functions that are inactive, issue a warning
+       * as this may indicate a user error in the implementation
+       * of the root function. */
+
+      if (cv_mem->cv_nst==1) {
+        inactive_roots = SUNFALSE;
+        for (ir=0; ir<cv_mem->cv_nrtfn; ir++) {
+          if (!cv_mem->cv_gactive[ir]) {
+            inactive_roots = SUNTRUE;
+            break;
+          }
+        }
+        if ((cv_mem->cv_mxgnull > 0) && inactive_roots) {
+          cvProcessError(cv_mem, CV_WARNING, "CVODES", "CVode",
+                         MSGCV_INACTIVE_ROOTS);
+        }
+      }
+
+    }
+
+    /* In NORMAL mode, check if tout reached */
+    if ( (itask == CV_NORMAL) &&  (cv_mem->cv_tn-tout)*cv_mem->cv_h >= ZERO ) {
+      istate = CV_SUCCESS;
+      cv_mem->cv_tretlast = *tret = tout;
+      (void) CVodeGetDky(cv_mem, tout, 0, yout);
+      cv_mem->cv_next_q = cv_mem->cv_qprime;
+      cv_mem->cv_next_h = cv_mem->cv_hprime;
+      break;
+    }
+
+    /* Check if tn is at tstop or near tstop */
+    if ( cv_mem->cv_tstopset ) {
+
+      troundoff = FUZZ_FACTOR*cv_mem->cv_uround*(SUNRabs(cv_mem->cv_tn) + SUNRabs(cv_mem->cv_h));
+      if ( SUNRabs(cv_mem->cv_tn - cv_mem->cv_tstop) <= troundoff) {
+        (void) CVodeGetDky(cv_mem, cv_mem->cv_tstop, 0, yout);
+        cv_mem->cv_tretlast = *tret = cv_mem->cv_tstop;
+        cv_mem->cv_tstopset = SUNFALSE;
+        istate = CV_TSTOP_RETURN;
+        break;
+      }
+
+      if ( (cv_mem->cv_tn + cv_mem->cv_hprime - cv_mem->cv_tstop)*cv_mem->cv_h > ZERO ) {
+        cv_mem->cv_hprime = (cv_mem->cv_tstop - cv_mem->cv_tn)*(ONE-FOUR*cv_mem->cv_uround);
+        cv_mem->cv_eta = cv_mem->cv_hprime/cv_mem->cv_h;
+      }
+
+    }
+
+    /* In ONE_STEP mode, copy y and exit loop */
+    if (itask == CV_ONE_STEP) {
+      istate = CV_SUCCESS;
+      cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
+      N_VScale(ONE, cv_mem->cv_zn[0], yout);
+      cv_mem->cv_next_q = cv_mem->cv_qprime;
+      cv_mem->cv_next_h = cv_mem->cv_hprime;
+      break;
+    }
+
+  } /* end looping for internal steps */
+
+#ifdef CAMP_DEBUG_GPU
+
+  cudaEventRecord(bicg->stopcvStep);
+    cudaEventSynchronize(bicg->stopcvStep);
+    float mscvStep = 0.0;
+    cudaEventElapsedTime(&mscvStep, bicg->startcvStep, bicg->stopcvStep);
+    bicg->timecvStep+= mscvStep/1000;
+
+#endif
+
+  for (int iDevice = 0; iDevice < sd->nDevices; iDevice++) {
+    cudaSetDevice(iDevice);
+    sd->mGPU = &(sd->mGPUs[iDevice]);
+    mGPU = sd->mGPU;
+    cudaMemcpy(&mGPU->mdvCPU, mGPU->mdvo, sizeof(ModelDataVariable), cudaMemcpyDeviceToHost);
+  }
+
+  return(istate);
 }
 
 void free_ode_gpu2(SolverData *sd)

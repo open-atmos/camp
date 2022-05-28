@@ -90,6 +90,26 @@ def get_is_sbatch():
     except Exception:
         return False
 
+def getCaseName(conf):
+    case_multicells_onecell_name = ""
+    # if conf.caseMulticellsOnecell != "BDF" and conf.caseGpuCpu == "GPU":
+    # case_multicells_onecell_name = "LS "
+    if conf.caseMulticellsOnecell == "Block-cellsN":
+        case_multicells_onecell_name += "Block-cells (N)"
+    elif conf.caseMulticellsOnecell == "Block-cells1":
+        case_multicells_onecell_name += "Block-cells (1)"
+    elif conf.caseMulticellsOnecell == "Block-cellsNhalf":
+        case_multicells_onecell_name += "Block-cells (N/2)"
+    elif conf.caseMulticellsOnecell.find("maxrregcount") != -1:
+        case_multicells_onecell_name += ""
+        print("WARNING: Changed name maxrregcount to",case_multicells_onecell_name)
+        #case_multicells_onecell_name += conf.caseMulticellsOnecell
+    elif conf.caseMulticellsOnecell.find("One") != -1:
+        case_multicells_onecell_name += "Base version"
+    else:
+        case_multicells_onecell_name += conf.caseMulticellsOnecell
+
+    return case_multicells_onecell_name
 
 def write_itsolver_config_file(conf):
     file1 = open(conf.itsolverConfigFile, "w")
@@ -270,6 +290,7 @@ def import_data(conf, tmp_path):
             is_import = True
             dir_to_extract = data_path
             path_to_zip_file = data_path + basename + ".zip"
+            print("path_to_zip_file",path_to_zip_file)
             with zipfile.ZipFile(path_to_zip_file, 'r') as zip_ref:
                 zip_ref.extractall(dir_to_extract)
             new_path = os.path.abspath(os.getcwd()) + "/" + dir_to_extract + basename + ".csv"
@@ -369,6 +390,7 @@ def run(conf):
         is_import, data_path = False, tmp_path
     # print("IMPORT DATA", is_import)
 
+
     # print(data_path)
     if not is_import:
         # Main
@@ -437,7 +459,6 @@ def run_case(conf):
 
     return data
 
-
 def run_cases(conf):
     # Run base case
     conf.mpiProcesses = conf.mpiProcessesCaseBase
@@ -455,12 +476,17 @@ def run_cases(conf):
     # Run OptimCases
     datacases = []
     stdCases = []
-    for nGpus in conf.nGPUsCaseOptimList:
-        conf.nGPUs = nGpus
-        for mpiProcesses in conf.mpiProcessesCaseOptimList:
-            conf.mpiProcesses = mpiProcesses
+    for nGPUs in conf.nGPUsCaseOptimList:
+        conf.nGPUs = nGPUs
+        for mpiProcessesCaseOptim in conf.mpiProcessesCaseOptimList:
+            conf.mpiProcesses = mpiProcessesCaseOptim
             conf.nCells = int(conf.nCellsProcesses / conf.mpiProcesses)
             for caseOptim in conf.casesOptim:
+                if conf.plotXKey == "MPI processes":
+                    if (caseOptim == conf.caseBase and mpiProcessesCaseOptim == conf.mpiProcessesCaseBase)\
+                    or (caseOptim != conf.caseBase and mpiProcessesCaseOptim != conf.mpiProcessesCaseBase):
+                        continue
+
                 cases_words = caseOptim.split()
                 conf.caseGpuCpu = cases_words[0]
                 conf.caseMulticellsOnecell = cases_words[1]
@@ -537,29 +563,6 @@ def run_diffCells(conf):
         conf.datacolumns += datacells
         conf.stdColumns += stdcells
 
-
-def getCaseName(conf):
-    case_multicells_onecell_name = ""
-    # if conf.caseMulticellsOnecell != "BDF" and conf.caseGpuCpu == "GPU":
-    # case_multicells_onecell_name = "LS "
-    if conf.caseMulticellsOnecell == "Block-cellsN":
-        case_multicells_onecell_name += "Block-cells (N)"
-    elif conf.caseMulticellsOnecell == "Block-cells1":
-        case_multicells_onecell_name += "Block-cells (1)"
-    elif conf.caseMulticellsOnecell == "Block-cellsNhalf":
-        case_multicells_onecell_name += "Block-cells (N/2)"
-    elif conf.caseMulticellsOnecell.find("maxrregcount") != -1:
-        case_multicells_onecell_name += "BDF"
-        print("WARNING: Changed name maxrregcount to",case_multicells_onecell_name)
-        #case_multicells_onecell_name += conf.caseMulticellsOnecell
-    elif conf.caseMulticellsOnecell.find("One") != -1:
-        case_multicells_onecell_name += "Base version"
-    else:
-        case_multicells_onecell_name += conf.caseMulticellsOnecell
-
-    return case_multicells_onecell_name
-
-
 def plot_cases(conf):
     # Set plot info
     cases_words = conf.caseBase.split()
@@ -581,7 +584,7 @@ def plot_cases(conf):
 
     baseCaseName = ""
     if conf.plotYKey != "Percentage data transfers CPU-GPU [%]":  # Speedup
-        baseCaseName = " vs " + case_gpu_cpu_name + " " + case_multicells_onecell_name
+        baseCaseName = "vs " + case_gpu_cpu_name + " " + case_multicells_onecell_name
 
     conf.legend = []
     cases_words = conf.casesOptim[0].split()
@@ -606,24 +609,27 @@ def plot_cases(conf):
     is_same_diff_cells = False
     for diff_cells in conf.diffCellsL:
         conf.diffCells = diff_cells
-        for caseOptim in conf.casesOptim:
-            cases_words = caseOptim.split()
-            conf.caseGpuCpu = cases_words[0]
-            conf.caseMulticellsOnecell = cases_words[1]
-            case_multicells_onecell_name = getCaseName(conf)
-            if conf.caseMulticellsOnecell.find("BDF") != -1 or conf.caseMulticellsOnecell.find("maxrregcount") != -1:
-                is_same_diff_cells = True
-                #case_multicells_onecell_name = ""
+        for nGPUs in conf.nGPUsCaseOptimList:
             for mpiProcessesCaseOptim in conf.mpiProcessesCaseOptimList:
-                for nGPUs in conf.nGPUsCaseOptimList:
+                for caseOptim in conf.casesOptim:
+                    if conf.plotXKey == "MPI processes":
+                        if (caseOptim == conf.caseBase and mpiProcessesCaseOptim == conf.mpiProcessesCaseBase) \
+                                or (caseOptim != conf.caseBase and mpiProcessesCaseOptim != conf.mpiProcessesCaseBase):
+                            continue
+                    cases_words = caseOptim.split()
+                    conf.caseGpuCpu = cases_words[0]
+                    conf.caseMulticellsOnecell = cases_words[1]
+                    case_multicells_onecell_name = getCaseName(conf)
+                    if conf.caseMulticellsOnecell.find("BDF") != -1 or conf.caseMulticellsOnecell.find("maxrregcount") != -1:
+                         is_same_diff_cells = True
                     legend_name = ""
                     if len(conf.diffCellsL) > 1:
                         legend_name += conf.diffCells + " "
                     if len(conf.mpiProcessesCaseOptimList) > 1 and conf.plotXKey == "MPI processes":
                         legend_name += str(mpiProcessesCaseOptim) + " MPI "
-                    if len(conf.nGPUsCaseOptimList) > 1:# and conf.plotXKey == "GPUs":
-                        legend_name += str(nGPUs) + " GPU "
-                    if not is_same_arch_optim:
+                    if len(conf.nGPUsCaseOptimList) > 1 and conf.caseGpuCpu == "GPU":
+                        legend_name += str(nGPUs) + "GPU "
+                    elif not is_same_arch_optim:
                         legend_name += conf.caseGpuCpu + " "
                     if not is_same_case_optim:
                         legend_name += case_multicells_onecell_name
@@ -637,7 +643,8 @@ def plot_cases(conf):
     #if len(conf.mpiProcessesCaseOptimList) == 1:
         conf.plotTitle += str(mpiProcessesCaseOptim) + " MPI "
     if len(conf.nGPUsCaseOptimList) == 1 and conf.plotXKey == "GPUs":
-        conf.plotTitle += str(nGPUs) + " GPUs "
+        #conf.plotTitle += str(nGPUs) + " GPUs "
+        conf.plotTitle += " GPUs "
     # print("is_same_arch_optim",is_same_arch_optim)
     if is_same_arch_optim:
         if conf.plotXKey == "MPI processes":
@@ -645,13 +652,19 @@ def plot_cases(conf):
         elif conf.plotXKey == "GPUs":
             conf.plotTitle += ""
         else:
+            #conf.plotTitle += str(nGPUs) + " "
             conf.plotTitle += conf.caseGpuCpu + " "
-    if len(conf.legend) == 1 or not conf.legend:
-        conf.plotTitle += case_multicells_onecell_name
+    if len(conf.legend) == 1 or not conf.legend or len(conf.diffCellsL) > 1:
+        conf.plotTitle += case_multicells_onecell_name + " "
+        if len(conf.diffCellsL) > 1:
+            conf.plotTitle += "Implementations "
     else:
         if conf.plotXKey == "GPUs":
             conf.plotTitle += "GPU "
-        conf.plotTitle += "Implementations"
+        if conf.plotXKey == "MPI processes":
+            conf.plotTitle += "Speedup against 1 MPI CPU-based version"
+        else:
+            conf.plotTitle += "Implementations "
     if not conf.plotXKey == "MPI processes":
         conf.plotTitle += baseCaseName
 
@@ -663,7 +676,7 @@ def plot_cases(conf):
     if conf.plotYKey == "Speedup normalized timeLS":
         namey = "Speedup linear solver"
     if conf.plotYKey == "Speedup timecvStep":
-        namey = "Speedup BDF loop"
+        namey = "Speedup"
     if conf.plotYKey == "Speedup countercvStep":
         namey = "Speedup iterations BDF loop"
     if conf.plotYKey == "Speedup timeCVode":
@@ -675,6 +688,7 @@ def plot_cases(conf):
 
     if len(conf.cells) > 1:
         namey += " [Mean and \u03C3]"
+        #namey += " [Average]"
         # print_timesteps_title = True
         print_timesteps_title = False
         if print_timesteps_title:
@@ -707,19 +721,19 @@ def plot_cases(conf):
     print(namex, ":", datax)
     print(namey, ":", datay)
 
-    #plot_functions.plotsns(namex, namey, datax, datay, conf.stdColumns, conf.plotTitle, conf.legend)
+    plot_functions.plotsns(namex, namey, datax, datay, conf.stdColumns, conf.plotTitle, conf.legend)
 
 
 def all_timesteps():
     conf = TestMonarch()
 
     # conf.chemFile = "simple"
-    conf.chemFile = "monarch_cb05"
-    #conf.chemFile = "monarch_binned"
+    #conf.chemFile = "monarch_cb05"
+    conf.chemFile = "monarch_binned"
 
     conf.diffCellsL = []
     conf.diffCellsL.append("Realistic")
-    # conf.diffCellsL.append("Ideal")
+    conf.diffCellsL.append("Ideal")
 
     conf.profileCuda = False
     # conf.profileCuda = True
@@ -761,12 +775,12 @@ def all_timesteps():
    # conf.allocatedTasksPerNode = 320
     #conf.allocatedTasksPerNode = get_ntasksPerNode_sbatch() #todo
 
-    conf.cells = [2]
-    #conf.cells = [100,500,1000,5000,10000]
+    #conf.cells = [2]
+    conf.cells = [100,500,1000,5000,10000]
     #conf.cells = [50000,100000,500000,1000000]
 
-    conf.timeSteps = 6
-    #conf.timeSteps = 720
+    #conf.timeSteps = 6
+    conf.timeSteps = 720
 
     conf.timeStepsDt = 2
 
@@ -789,9 +803,9 @@ def all_timesteps():
     # conf.casesOptim.append("GPU maxrregcount-24")
     #conf.casesOptim.append("GPU maxrregcount-64")
     # conf.casesOptim.append("GPU maxrregcount-127")
-    conf.casesOptim.append("GPU BDF")
+    #conf.casesOptim.append("GPU BDF")
     # conf.casesOptim.append("GPU Block-cellsNhalf")
-    #conf.casesOptim.append("GPU Block-cells1")
+    conf.casesOptim.append("GPU Block-cells1")
     #conf.casesOptim.append("GPU Block-cellsN")
     #conf.casesOptim.append("GPU Multi-cells")
     #conf.casesOptim.append("GPU One-cell")
@@ -800,7 +814,7 @@ def all_timesteps():
 
     # conf.plotYKey = "Speedup timeCVode"
     # conf.plotYKey = "Speedup counterLS"
-    #conf.plotYKey = "Speedup normalized timeLS"
+    conf.plotYKey = "Speedup normalized timeLS"
     #conf.plotYKey = "Speedup normalized computational timeLS"
     # conf.plotYKey = "Speedup counterBCG"
     # conf.plotYKey = "Speedup normalized counterBCG"
@@ -811,7 +825,7 @@ def all_timesteps():
     # conf.plotYKey = "Speedup countercvStep"
     # conf.plotYKey = "Speedup device timecvStep"
     # conf.plotYKey = "Percentage data transfers CPU-GPU [%]"
-    conf.plotYKey ="MAPE"
+    #conf.plotYKey ="MAPE"
     # conf.plotYKey ="SMAPE"
     # conf.plotYKey ="NRMSE"
     # conf.MAPETol = 1.0E-6

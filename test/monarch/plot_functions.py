@@ -456,7 +456,7 @@ def plot_speedup_cells(x, y, x_name, y_name, plot_title):
 
     # saveImage=True
     saveImage = False
-    if (saveImage == True):
+    if saveImage:
         plt.savefig('out/plot_speedup_cells.png')
     else:
         plt.show()
@@ -588,9 +588,7 @@ def plotsns(namex, namey, datax, datay, std, plot_title, legend):
             y2Transpose = np.transpose(y2)
             y2 = y2Transpose.tolist()
 
-            #print("y1",y1)
             for i in range(len(y1)):
-                #print("y1[i]",y1[i])
                 ax.fill_between(datax, y1=y1[i],y2=y2[i], alpha=.5)
 
         # ax.set_position([box.x0, box.y0 + box.height * 0.1,
@@ -604,7 +602,7 @@ def plotsns(namex, namey, datax, datay, std, plot_title, legend):
         # fig.subplots_adjust(bottom=0.35)
         # borderaxespad=1. to move down more the legend
 
-        # Legend up the plot (problem: hide title)
+        # Legend up the plot
         ax.set_title(plot_title, y=1.06)
         ax.legend(loc='lower center', bbox_to_anchor=(0.5, 1),
                   ncol=len(legend), labels=legend, frameon=True, shadow=False, borderaxespad=0.)
@@ -630,7 +628,6 @@ def plotsns(namex, namey, datax, datay, std, plot_title, legend):
                 y1[i] = datay[i] - std[i]
                 y2[i] = datay[i] + std[i]
             ax.fill_between(datax, y1=y1,y2=y2, alpha=.5)
-
 
     plt.show()
 
