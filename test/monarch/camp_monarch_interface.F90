@@ -422,8 +422,8 @@ contains
 
       do z =1, this%nrates_cells
         do i = 1, this%n_photo_rxn
-          base_rate = this%base_rates(i) &
-                  + this%base_rates(i)*(this%offset_photo_rates_cells(z)/z)
+          base_rate = this%base_rates(i)! &
+                  !+ this%base_rates(i)*(this%offset_photo_rates_cells(z)/z)
 
           !print*,"offset",(this%offset_photo_rates_cells(z)/z)!"z",z,"n_cells",n_cells,this%n_cells
           !print*,"this%base_rates(i), base rate",this%base_rates(i),&
@@ -431,7 +431,9 @@ contains
 
           call this%photo_rxns(i)%set_rate(base_rate)
           !call this%photo_rxns(i_photo_rxn)%set_rate(real(0.0, kind=dp))
+
           call this%camp_core%update_data(this%photo_rxns(i),z)
+          !print*,"2id photo_rate", base_rate
         end do
       end do
 
