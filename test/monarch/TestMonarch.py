@@ -5,6 +5,7 @@
 #
 
 import matplotlib as mpl
+
 mpl.use('TkAgg')
 import matplotlib.pyplot as plt
 import csv
@@ -90,6 +91,7 @@ def get_is_sbatch():
     except Exception:
         return False
 
+
 def getCaseName(conf):
     case_multicells_onecell_name = ""
     # if conf.caseMulticellsOnecell != "BDF" and conf.caseGpuCpu == "GPU":
@@ -102,14 +104,15 @@ def getCaseName(conf):
         case_multicells_onecell_name += "Block-cells (N/2)"
     elif conf.caseMulticellsOnecell.find("maxrregcount") != -1:
         case_multicells_onecell_name += ""
-        print("WARNING: Changed name maxrregcount to",case_multicells_onecell_name)
-        #case_multicells_onecell_name += conf.caseMulticellsOnecell
+        print("WARNING: Changed name maxrregcount to", case_multicells_onecell_name)
+        # case_multicells_onecell_name += conf.caseMulticellsOnecell
     elif conf.caseMulticellsOnecell.find("One") != -1:
         case_multicells_onecell_name += "Base version"
     else:
         case_multicells_onecell_name += conf.caseMulticellsOnecell
 
     return case_multicells_onecell_name
+
 
 def write_itsolver_config_file(conf):
     file1 = open(conf.itsolverConfigFile, "w")
@@ -143,15 +146,13 @@ def write_camp_config_file(conf):
 
         file1.write(str(conf.nGPUs))
 
-
         file1.close()
 
-
-        #new_path = os.path.abspath(os.getcwd()) + "/" + conf.campSolverConfigFile
-        #print("write_camp_config_file in", new_path)
-        #conf.debug_path = new_path
-        #file_exists = os.path.exists(conf.debug_path)
-        #print(file_exists)
+        # new_path = os.path.abspath(os.getcwd()) + "/" + conf.campSolverConfigFile
+        # print("write_camp_config_file in", new_path)
+        # conf.debug_path = new_path
+        # file_exists = os.path.exists(conf.debug_path)
+        # print(file_exists)
 
     except Exception as e:
         print("write_camp_config_file fails", e)
@@ -168,15 +169,18 @@ def get_commit_hash():
     return str(commit)
 
 
-def remove(conf,sbatch_job_id):
-
+def remove_to_tmp(conf, sbatch_job_id):
     init_path = os.path.abspath(os.getcwd())
     os.chdir("../../..")
     exportPath = conf.exportPath
 
     extra_str_name = " bind-to-none"
     now = datetime.datetime.now()
-    tmp_dir = exportPath + "/tmp "+ now.strftime("%d-%m-%Y-%H.%M.%S") + extra_str_name
+    tmp_dir = exportPath + "/tmp/" + now.strftime("%d-%m-%Y")  # + extra_str_name
+    if not os.path.exists(tmp_dir):
+        os.makedirs(tmp_dir)
+        os.makedirs(tmp_dir + "/conf")
+        os.makedirs(tmp_dir + "/data")
 
     conf_path = exportPath + "/conf"
     filenames = next(walk(conf_path), (None, None, []))[2]
@@ -203,19 +207,21 @@ def remove(conf,sbatch_job_id):
         # print("conf_dict",conf_dict)
         is_same_conf_case = True
         if conf_imported["sbatch_job_id"] == sbatch_job_id or conf_imported["sbatch_job_id"] == "-" + sbatch_job_id:
-            tmp_dir += "/conf/"+ basename + ".zip"
-            #os.remove(path_to_zip_file)
-            os.rename(path_to_zip_file,tmp_dir)
-            #print("Moved conf from",os.path.abspath(os.getcwd()) + "/" + path_to_zip_file, "to", tmp_dir)
+            tmp_dir_conf = tmp_dir + "/conf/" + basename + ".zip"
+            # os.remove(path_to_zip_file)
+            os.rename(path_to_zip_file, tmp_dir_conf)
+            # print("Moved conf from",os.path.abspath(os.getcwd()) + "/" + path_to_zip_file, "to", tmp_dir)
             path_to_zip_file = data_path + basename + ".zip"
-            #os.remove(path_to_zip_file)
-            tmp_dir += "/data/" + basename + ".zip"
-            os.rename(path_to_zip_file,tmp_dir)
-            print("Moved data from",os.path.abspath(os.getcwd()) + "/" + path_to_zip_file, "to", os.path.abspath(os.getcwd()) + "/" + tmp_dir)
+            # os.remove(path_to_zip_file)
+            tmp_dir_data = tmp_dir + "/data/" + basename + ".zip"
+            os.rename(path_to_zip_file, tmp_dir_data)
+            print("Moved data from", os.path.abspath(os.getcwd()) + "/" + path_to_zip_file, "to",
+                  os.path.abspath(os.getcwd()) + "/" + tmp_dir)
 
     raise
 
     return True
+
 
 def import_data(conf, tmp_path):
     init_path = os.path.abspath(os.getcwd())
@@ -249,6 +255,7 @@ def import_data(conf, tmp_path):
         dir_to_extract = conf_path + "/"
         basename = os.path.splitext(filename)[0]
         path_to_zip_file = dir_to_extract + basename + ".zip"
+        # print("import_data path_to_zip_file",path_to_zip_file)
         with zipfile.ZipFile(path_to_zip_file, 'r') as zip_ref:
             zip_ref.extractall(dir_to_extract)
         conf_name = conf_path + "/" + basename + ".json"
@@ -273,12 +280,12 @@ def import_data(conf, tmp_path):
             if confKey not in conf_imported:
                 conf_imported[confKey] = conf_default[confKey]
 
-            #if "allocatedTasksPerNode" not in conf_imported:
-               # conf_imported["allocatedTasksPerNode"] = 160
-            #if "allocatedNodes" not in conf_imported:
-               # conf_imported["allocatedNodes"] = 1
-            #if "nGPUs" not in conf_imported:
-               # conf_imported["nGPUs"] = 1
+            # if "allocatedTasksPerNode" not in conf_imported:
+            # conf_imported["allocatedTasksPerNode"] = 160
+            # if "allocatedNodes" not in conf_imported:
+            # conf_imported["allocatedNodes"] = 1
+            # if "nGPUs" not in conf_imported:
+            # conf_imported["nGPUs"] = 1
 
             if conf_imported[confKey] != conf_dict[confKey]:
                 # print(conf_dict[confKey])
@@ -290,9 +297,14 @@ def import_data(conf, tmp_path):
             is_import = True
             dir_to_extract = data_path
             path_to_zip_file = data_path + basename + ".zip"
-            print("path_to_zip_file",path_to_zip_file)
-            with zipfile.ZipFile(path_to_zip_file, 'r') as zip_ref:
-                zip_ref.extractall(dir_to_extract)
+
+            try:
+                with zipfile.ZipFile(path_to_zip_file, 'r') as zip_ref:
+                    zip_ref.extractall(dir_to_extract)
+            except BaseException as err:
+                print("path_to_zip_file", path_to_zip_file)
+                print(err)
+                raise
             new_path = os.path.abspath(os.getcwd()) + "/" + dir_to_extract + basename + ".csv"
             print("Imported data from", new_path)
             break
@@ -313,7 +325,6 @@ def export(conf, data_path):
     os.chdir("../../..")
     print(os.path.abspath(os.getcwd()) + "/" + exportPath)
     if not os.path.exists(exportPath):
-        print("NOT EXISTS")
         os.makedirs(exportPath)
 
     conf_dir = exportPath + "/conf"
@@ -375,7 +386,8 @@ def run(conf):
     # Onecell-Multicells itsolver
     write_itsolver_config_file(conf)
 
-    print("exec_str:", exec_str, conf.diffCells, conf.caseGpuCpu, conf.caseMulticellsOnecell,conf.nGPUs)
+    print("exec_str:", exec_str, conf.diffCells, conf.caseGpuCpu, conf.caseMulticellsOnecell, conf.mpiProcesses,
+          conf.nGPUs)
 
     conf_name = "TestMonarch.json"
     with open(conf_name, 'w', encoding='utf-8') as jsonFile:
@@ -390,7 +402,6 @@ def run(conf):
         is_import, data_path = False, tmp_path
     # print("IMPORT DATA", is_import)
 
-
     # print(data_path)
     if not is_import:
         # Main
@@ -400,8 +411,8 @@ def run(conf):
         if conf.is_export:
             export(conf, data_path)
 
-    #new_path = os.path.abspath(os.getcwd()) + "/" + data_path
-    #print("data_path", new_path)
+    # new_path = os.path.abspath(os.getcwd()) + "/" + data_path
+    # print("data_path", new_path)
 
     data = {}
     if conf.plotYKey == "MAPE":
@@ -459,6 +470,7 @@ def run_case(conf):
 
     return data
 
+
 def run_cases(conf):
     # Run base case
     conf.mpiProcesses = conf.mpiProcessesCaseBase
@@ -483,8 +495,8 @@ def run_cases(conf):
             conf.nCells = int(conf.nCellsProcesses / conf.mpiProcesses)
             for caseOptim in conf.casesOptim:
                 if conf.plotXKey == "MPI processes":
-                    if (caseOptim == conf.caseBase and mpiProcessesCaseOptim == conf.mpiProcessesCaseBase)\
-                    or (caseOptim != conf.caseBase and mpiProcessesCaseOptim != conf.mpiProcessesCaseBase):
+                    if (caseOptim == conf.caseBase and mpiProcessesCaseOptim == conf.mpiProcessesCaseBase) \
+                            or (caseOptim != conf.caseBase and mpiProcessesCaseOptim != conf.mpiProcessesCaseBase):
                         continue
 
                 cases_words = caseOptim.split()
@@ -563,13 +575,14 @@ def run_diffCells(conf):
         conf.datacolumns += datacells
         conf.stdColumns += stdcells
 
+
 def plot_cases(conf):
     # Set plot info
     cases_words = conf.caseBase.split()
     conf.caseGpuCpu = cases_words[0]
     conf.caseMulticellsOnecell = cases_words[1]
     case_multicells_onecell_name = getCaseName(conf)
-    #if conf.caseMulticellsOnecell.find("One-cell") != -1:
+    # if conf.caseMulticellsOnecell.find("One-cell") != -1:
     #    case_multicells_onecell_name = "Base version"
 
     case_gpu_cpu_name = ""
@@ -620,8 +633,9 @@ def plot_cases(conf):
                     conf.caseGpuCpu = cases_words[0]
                     conf.caseMulticellsOnecell = cases_words[1]
                     case_multicells_onecell_name = getCaseName(conf)
-                    if conf.caseMulticellsOnecell.find("BDF") != -1 or conf.caseMulticellsOnecell.find("maxrregcount") != -1:
-                         is_same_diff_cells = True
+                    if conf.caseMulticellsOnecell.find("BDF") != -1 or conf.caseMulticellsOnecell.find(
+                            "maxrregcount") != -1:
+                        is_same_diff_cells = True
                     legend_name = ""
                     if len(conf.diffCellsL) > 1:
                         legend_name += conf.diffCells + " "
@@ -640,10 +654,10 @@ def plot_cases(conf):
     if not is_same_diff_cells and len(conf.diffCellsL) == 1:
         conf.plotTitle += conf.diffCells + " test: "
     if len(conf.mpiProcessesCaseOptimList) == 1 and conf.caseGpuCpu == "CPU":
-    #if len(conf.mpiProcessesCaseOptimList) == 1:
+        # if len(conf.mpiProcessesCaseOptimList) == 1:
         conf.plotTitle += str(mpiProcessesCaseOptim) + " MPI "
     if len(conf.nGPUsCaseOptimList) == 1 and conf.plotXKey == "GPUs":
-        #conf.plotTitle += str(nGPUs) + " GPUs "
+        # conf.plotTitle += str(nGPUs) + " GPUs "
         conf.plotTitle += " GPUs "
     # print("is_same_arch_optim",is_same_arch_optim)
     if is_same_arch_optim:
@@ -652,7 +666,7 @@ def plot_cases(conf):
         elif conf.plotXKey == "GPUs":
             conf.plotTitle += ""
         else:
-            #conf.plotTitle += str(nGPUs) + " "
+            # conf.plotTitle += str(nGPUs) + " "
             conf.plotTitle += conf.caseGpuCpu + " "
     if len(conf.legend) == 1 or not conf.legend or len(conf.diffCellsL) > 1:
         conf.plotTitle += case_multicells_onecell_name + " "
@@ -683,12 +697,12 @@ def plot_cases(conf):
         namey = "Speedup CAMP solving"
     if conf.plotYKey == "MAPE":
         namey = "MAPE [%]"
-    if conf.plotYKey == "Speedup total iterations - counterBCG":
+    if conf.plotYKey == "Speedup counterBCG":
         namey = "Speedup solving iterations BCG"
 
     if len(conf.cells) > 1:
         namey += " [Mean and \u03C3]"
-        #namey += " [Average]"
+        # namey += " [Average]"
         # print_timesteps_title = True
         print_timesteps_title = False
         if print_timesteps_title:
@@ -721,19 +735,19 @@ def plot_cases(conf):
     print(namex, ":", datax)
     print(namey, ":", datay)
 
-    plot_functions.plotsns(namex, namey, datax, datay, conf.stdColumns, conf.plotTitle, conf.legend)
+    #plot_functions.plotsns(namex, namey, datax, datay, conf.stdColumns, conf.plotTitle, conf.legend)
 
 
 def all_timesteps():
     conf = TestMonarch()
 
     # conf.chemFile = "simple"
-    #conf.chemFile = "monarch_cb05"
-    conf.chemFile = "monarch_binned"
+    conf.chemFile = "monarch_cb05"
+    #conf.chemFile = "monarch_binned"
 
     conf.diffCellsL = []
     conf.diffCellsL.append("Realistic")
-    conf.diffCellsL.append("Ideal")
+    # conf.diffCellsL.append("Ideal")
 
     conf.profileCuda = False
     # conf.profileCuda = True
@@ -752,35 +766,35 @@ def all_timesteps():
     # conf.nGPUsCaseBase = 4
 
     conf.nGPUsCaseOptimList = [1]
-    #conf.nGPUsCaseOptimList = [1]
-    #conf.nGPUsCaseOptimList = [1,2,3,4]
+    # conf.nGPUsCaseOptimList = [1]
+    # conf.nGPUsCaseOptimList = [1,2,3,4]
 
     conf.mpi = "yes"
     # conf.mpi = "no"
 
     conf.mpiProcessesCaseBase = 1
-    #conf.mpiProcessesCaseBase = 40
+    # conf.mpiProcessesCaseBase = 40
 
     conf.mpiProcessesCaseOptimList.append(1)
     #conf.mpiProcessesCaseOptimList.append(40)
-    #conf.mpiProcessesCaseOptimList = [10,20,40]
-    #conf.mpiProcessesCaseOptimList = [1,4,8,16,32,40]
+    # conf.mpiProcessesCaseOptimList = [10,20,40]
+    # conf.mpiProcessesCaseOptimList = [1,4,8,16,32,40]
 
     conf.allocatedNodes = 1
-    #conf.allocatedNodes = 4
-    #conf.allocatedNodes = get_allocatedNodes_sbatch() #todo
+    # conf.allocatedNodes = 4
+    # conf.allocatedNodes = get_allocatedNodes_sbatch() #todo
 
     conf.allocatedTasksPerNode = 160
-    #conf.allocatedTasksPerNode = 40
-   # conf.allocatedTasksPerNode = 320
-    #conf.allocatedTasksPerNode = get_ntasksPerNode_sbatch() #todo
+    # conf.allocatedTasksPerNode = 40
+    # conf.allocatedTasksPerNode = 320
+    # conf.allocatedTasksPerNode = get_ntasksPerNode_sbatch() #todo
 
-    #conf.cells = [2]
-    conf.cells = [100,500,1000,5000,10000]
-    #conf.cells = [50000,100000,500000,1000000]
+    conf.cells = [1]
+    #conf.cells = [100, 500, 1000, 5000, 10000]
+    # conf.cells = [50000,100000,500000,1000000]
 
-    #conf.timeSteps = 6
-    conf.timeSteps = 720
+    conf.timeSteps = 20
+    #conf.timeSteps = 720
 
     conf.timeStepsDt = 2
 
@@ -788,9 +802,9 @@ def all_timesteps():
     # conf.caseBase = "CPU Multi-cells"
     # conf.caseBase="GPU Multi-cells"
     # conf.caseBase="GPU Block-cellsN"
-    #conf.caseBase="GPU Block-cells1"
+    # conf.caseBase="GPU Block-cells1"
     # conf.caseBase = "GPU BDF"
-    #conf.caseBase = "GPU maxrregcount-64"
+    # conf.caseBase = "GPU maxrregcount-64"
     # conf.caseBase = "GPU maxrregcount-24" #Minimum
     # conf.caseBase = "GPU maxrregcount-62"
     # conf.caseBase = "GPU maxrregcount-68"
@@ -801,21 +815,22 @@ def all_timesteps():
     # conf.casesOptim.append("GPU maxrregcount-68")
     # conf.casesOptim.append("GPU maxrregcount-62")
     # conf.casesOptim.append("GPU maxrregcount-24")
-    #conf.casesOptim.append("GPU maxrregcount-64")
+    # conf.casesOptim.append("GPU maxrregcount-64")
     # conf.casesOptim.append("GPU maxrregcount-127")
-    #conf.casesOptim.append("GPU BDF")
+    # conf.casesOptim.append("GPU BDF")
     # conf.casesOptim.append("GPU Block-cellsNhalf")
-    conf.casesOptim.append("GPU Block-cells1")
-    #conf.casesOptim.append("GPU Block-cellsN")
-    #conf.casesOptim.append("GPU Multi-cells")
-    #conf.casesOptim.append("GPU One-cell")
+    # conf.casesOptim.append("GPU Block-cells1")
+    # conf.casesOptim.append("GPU Block-cellsN")
+    # conf.casesOptim.append("GPU Multi-cells")
+    # conf.casesOptim.append("GPU One-cell")
     # conf.casesOptim.append("CPU Multi-cells")
     #conf.casesOptim.append("CPU One-cell")
+    conf.casesOptim.append("CPU EBI")
 
     # conf.plotYKey = "Speedup timeCVode"
     # conf.plotYKey = "Speedup counterLS"
-    conf.plotYKey = "Speedup normalized timeLS"
-    #conf.plotYKey = "Speedup normalized computational timeLS"
+    #conf.plotYKey = "Speedup normalized timeLS"
+    # conf.plotYKey = "Speedup normalized computational timeLS"
     # conf.plotYKey = "Speedup counterBCG"
     # conf.plotYKey = "Speedup normalized counterBCG"
     # conf.plotYKey = "Speedup total iterations - counterBCG"
@@ -825,18 +840,18 @@ def all_timesteps():
     # conf.plotYKey = "Speedup countercvStep"
     # conf.plotYKey = "Speedup device timecvStep"
     # conf.plotYKey = "Percentage data transfers CPU-GPU [%]"
-    #conf.plotYKey ="MAPE"
+    conf.plotYKey ="MAPE"
     # conf.plotYKey ="SMAPE"
     # conf.plotYKey ="NRMSE"
     # conf.MAPETol = 1.0E-6
 
-    #conf.plotXKey = "MPI processes"
+    # conf.plotXKey = "MPI processes"
     # conf.plotXKey = "GPUs"
 
     """END OF CONFIGURATION VARIABLES"""
 
-    #Utility functions
-    #remove(conf,"1651238119918435620")
+    # Utility functions
+    # remove_to_tmp(conf,"1653646090223272794")
 
     conf.results_file = "_solver_stats.csv"
     if conf.plotYKey == "NRMSE" or conf.plotYKey == "MAPE" or conf.plotYKey == "SMAPE":
@@ -866,6 +881,14 @@ def all_timesteps():
     if not conf.caseBase:
         print("ERROR: caseBase is empty")
         raise
+
+    if conf.caseBase == "CPU EBI" and conf.chemFile != "monarch_cb05":
+        print("Error: Set conf.chemFile = monarch_cb05 to run CPU EBI")
+        raise Exception
+    for caseOptim in conf.casesOptim:
+        if caseOptim == "CPU EBI" and conf.chemFile != "monarch_cb05":
+            print("Error: Set conf.chemFile = monarch_cb05 to run CPU EBI")
+            raise Exception
 
     for i, mpiProcesses in enumerate(conf.mpiProcessesCaseOptimList):
         for j, cellsProcesses in enumerate(conf.cells):

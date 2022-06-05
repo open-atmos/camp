@@ -22,7 +22,7 @@ program mock_monarch_t
   use netcdf
 #endif
 
-#ifdef SOLVE_EBI_IMPORT_CAMP_INPUT
+#ifndef SOLVE_EBI_IMPORT_CAMP_INPUT
 
   ! EBI Solver
   use module_bsc_chem_data
@@ -540,98 +540,101 @@ program mock_monarch_t
 
   call set_env(camp_interface,output_file_prefix)
 
-#ifdef SOLVE_EBI_IMPORT_CAMP_INPUT
-  if (camp_mpi_rank().eq.0&
-    .and.interface_input_file.eq."interface_monarch_cb05.json") then
+#ifndef SOLVE_EBI_IMPORT_CAMP_INPUT
+  if(caseMulticellsOnecell.eq."EBI") then
     call solve_ebi(camp_interface)
   end if
 #endif
 
-  !call camp_mpi_barrier(MPI_COMM_WORLD)
-  !print*,"MPI RANK",camp_mpi_rank()
+  if(.not.caseMulticellsOnecell.eq."EBI") then
 
-  ! Run the model
-  do i_time=1, NUM_TIME_STEP
+    !call camp_mpi_barrier(MPI_COMM_WORLD)
+    !print*,"MPI RANK",camp_mpi_rank()
 
-    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    ! **** Add to MONARCH during runtime for each time step **** !
-    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    ! Run the model
+    do i_time=1, NUM_TIME_STEP
+
+      !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      ! **** Add to MONARCH during runtime for each time step **** !
+      !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 #ifdef ENABLE_PRINT_STATE_GNUPLOT
-    if (camp_mpi_rank().eq.0) then
-      call print_state_gnuplot(curr_time,camp_interface, name_gas_species_to_print,id_gas_species_to_print&
-             ,name_aerosol_species_to_print,id_aerosol_species_to_print,RESULTS_FILE_UNIT)
-    end if
+      if (camp_mpi_rank().eq.0) then
+        call print_state_gnuplot(curr_time,camp_interface, name_gas_species_to_print,id_gas_species_to_print&
+               ,name_aerosol_species_to_print,id_aerosol_species_to_print,RESULTS_FILE_UNIT)
+      end if
 #endif
 
 #ifdef DEBUG_MOCK_MONARCH
-    do i=i_W, I_E
-      do j=I_S, I_N
-        do k=1, NUM_VERT_CELLS
-          do r=2,size(camp_interface%map_monarch_id)
-            print*,species_conc(i,j,k,camp_interface%map_monarch_id(r)),&
-                    camp_interface%camp_state%state_var(camp_interface%map_camp_id(r)), camp_mpi_rank()
+      do i=i_W, I_E
+        do j=I_S, I_N
+          do k=1, NUM_VERT_CELLS
+            do r=2,size(camp_interface%map_monarch_id)
+              print*,species_conc(i,j,k,camp_interface%map_monarch_id(r)),&
+                      camp_interface%camp_state%state_var(camp_interface%map_camp_id(r)), camp_mpi_rank()
+            end do
           end do
         end do
       end do
-    end do
 #endif
 
-  if(interface_input_file.eq."mod37/interface_monarch_mod37.json") then
+    if(interface_input_file.eq."mod37/interface_monarch_mod37.json") then
 
-    call camp_interface%integrate_mod37(curr_time,         & ! Starting time (min)
-            TIME_STEP_MONARCH37,         & ! Time step (min)
-            I_W,               & ! Starting W->E grid cell
-            I_E,               & ! Ending W->E grid cell
-            I_S,               & ! Starting S->N grid cell
-            I_N,               & ! Ending S->N grid cell
-            temperature,       & ! Temperature (K)
-            species_conc,      & ! Tracer array
-            water_conc,        & ! Water concentrations (kg_H2O/kg_air)
-            WATER_VAPOR_ID,    & ! Index in water_conc() corresponding to water vapor
-            air_density,       & ! Air density (kg_air/m^3)
-            pressure,          & ! Air pressure (Pa)
-            conv,              &
-            i_hour,&
-            NUM_TIME_STEP,&
-            solver_stats)
+      call camp_interface%integrate_mod37(curr_time,         & ! Starting time (min)
+              TIME_STEP_MONARCH37,         & ! Time step (min)
+              I_W,               & ! Starting W->E grid cell
+              I_E,               & ! Ending W->E grid cell
+              I_S,               & ! Starting S->N grid cell
+              I_N,               & ! Ending S->N grid cell
+              temperature,       & ! Temperature (K)
+              species_conc,      & ! Tracer array
+              water_conc,        & ! Water concentrations (kg_H2O/kg_air)
+              WATER_VAPOR_ID,    & ! Index in water_conc() corresponding to water vapor
+              air_density,       & ! Air density (kg_air/m^3)
+              pressure,          & ! Air pressure (Pa)
+              conv,              &
+              i_hour,&
+              NUM_TIME_STEP,&
+              solver_stats)
 
-  else
+    else
 
-    call camp_interface%integrate(curr_time,         & ! Starting time (min)
-                                 TIME_STEP,         & ! Time step (min)
-                                 I_W,               & ! Starting W->E grid cell
-                                 I_E,               & ! Ending W->E grid cell
-                                 I_S,               & ! Starting S->N grid cell
-                                 I_N,               & ! Ending S->N grid cell
-                                 temperature,       & ! Temperature (K)
-                                 species_conc,      & ! Tracer array
-                                 water_conc,        & ! Water concentrations (kg_H2O/kg_air)
-                                 WATER_VAPOR_ID,    & ! Index in water_conc() corresponding to water vapor
-                                 air_density,       & ! Air density (kg_air/m^3)
-                                 pressure,          & ! Air pressure (Pa)
-                                 conv,              &
-                                 i_hour,&
-                                 NUM_TIME_STEP,&
-                                 solver_stats,DIFF_CELLS)
-    end if
-  curr_time = curr_time + TIME_STEP
+      call camp_interface%integrate(curr_time,         & ! Starting time (min)
+                                   TIME_STEP,         & ! Time step (min)
+                                   I_W,               & ! Starting W->E grid cell
+                                   I_E,               & ! Ending W->E grid cell
+                                   I_S,               & ! Starting S->N grid cell
+                                   I_N,               & ! Ending S->N grid cell
+                                   temperature,       & ! Temperature (K)
+                                   species_conc,      & ! Tracer array
+                                   water_conc,        & ! Water concentrations (kg_H2O/kg_air)
+                                   WATER_VAPOR_ID,    & ! Index in water_conc() corresponding to water vapor
+                                   air_density,       & ! Air density (kg_air/m^3)
+                                   pressure,          & ! Air pressure (Pa)
+                                   conv,              &
+                                   i_hour,&
+                                   NUM_TIME_STEP,&
+                                   solver_stats,DIFF_CELLS)
+      end if
+    curr_time = curr_time + TIME_STEP
 
 #ifdef CAMP_DEBUG_GPU
-    call camp_interface%camp_core%get_solver_stats(solver_stats=solver_stats)
-    call export_solver_stats(curr_time,camp_interface,solver_stats,ncounters,ntimers)
-    call camp_interface%camp_core%reset_solver_stats(solver_stats=solver_stats)
+      call camp_interface%camp_core%get_solver_stats(solver_stats=solver_stats)
+      call export_solver_stats(curr_time,camp_interface,solver_stats,ncounters,ntimers)
+      call camp_interface%camp_core%reset_solver_stats(solver_stats=solver_stats)
 #endif
 
-    if(export_results_all_cells.eq.1) then
-      call export_file_results_all_cells(camp_interface)
+      if(export_results_all_cells.eq.1) then
+        call export_file_results_all_cells(camp_interface)
 #ifndef CAMP_DISABLE_NETCDF
 #else
-      !call export_results_netcdf(camp_interface)
+        !call export_results_netcdf(camp_interface)
 #endif
-    end if
+      end if
 
-  end do
+    end do
+
+  end if
 
 #ifdef CAMP_USE_MPI
   if (camp_mpi_rank().eq.0) then
@@ -665,11 +668,11 @@ program mock_monarch_t
   !        species_conc(1,1,1,camp_interface%map_monarch_id(:))
 #endif
 
-#ifdef SOLVE_EBI_IMPORT_CAMP_INPUT
-      if (camp_mpi_rank().eq.0&
-          .and.interface_input_file.eq."interface_monarch_cb05.json") then
-      call compare_ebi_camp_json(camp_interface)
-    end if
+#ifndef SOLVE_EBI_IMPORT_CAMP_INPUT
+      !if (camp_mpi_rank().eq.0&
+      !    .and.interface_input_file.eq."interface_monarch_cb05.json") then
+      !call compare_ebi_camp_json(camp_interface)
+    !end if
 #endif
 
   ! Output results and scripts
@@ -893,6 +896,7 @@ contains
     ncells=(I_E - I_W+1)*(I_N - I_S+1)*NUM_VERT_CELLS
     len=size(species_conc)!n_cells*NUM_MONARCH_SPEC!size(species_conc)
 
+    !print*,species_conc
     !print*,"export_file_results_all_cells start"
 
 #ifdef CAMP_USE_MPI
@@ -1516,9 +1520,245 @@ contains
 
   end subroutine import_camp_input_json
 
-#ifdef SOLVE_EBI_IMPORT_CAMP_INPUT
+#ifndef SOLVE_EBI_IMPORT_CAMP_INPUT
 
   subroutine solve_ebi(camp_interface)
+
+    type(camp_monarch_interface_t), intent(inout) :: camp_interface
+    integer :: z,i,j,k,r,o,i_cell,i_spec,i_photo_rxn,i_time
+
+    real(kind=dp) :: dt, temp, press_json, auxr
+    real :: press
+    type(json_core) :: json
+    type(json_value),pointer :: p, species_in, species_out, input, output&
+            , photo_rates
+    character(len=:), allocatable :: export_path, spec_name
+    integer :: mpi_rank
+    character(len=128) :: mpi_rank_str, i_str
+
+    type(string_t), dimension(NUM_EBI_SPEC) :: ebi_spec_names
+    type(string_t), dimension(NUM_EBI_SPEC) :: monarch_spec_names
+    type(string_t), allocatable :: camp_spec_names(:), monarch_species_names(:)
+    integer, dimension(NUM_EBI_SPEC) :: map_ebi_monarch
+    logical :: is_sunny
+    real, dimension(NUM_EBI_PHOTO_RXN) :: ebi_photo_rates
+    integer, dimension(NUM_EBI_PHOTO_RXN) :: photo_id_camp
+    real(kind=dp) :: rel_error_in_out
+    real(kind=dp), allocatable :: ebi_init(:)
+    real(kind=dp) :: mwair = 28.9628 !mean molecular weight for dry air [ g/mol ]
+    real(kind=dp) :: mwwat = 18.0153 ! mean molecular weight for water vapor [ g/mol ]
+
+    ! Set the BSC chem parameters
+    call init_bsc_chem_data()
+    ! Set the output unit
+    LOGDEV = 6
+    ! Set the aerosol flag
+    L_AE_VRSN = .false.
+    ! Set the aq. chem flag
+    L_AQ_VRSN = .false.
+    ! Initialize the solver
+    call EXT_HRINIT
+    RKI(:) = 0.0
+    RXRAT(:) = 0.0
+    YC(:) = 0.0
+    YC0(:) = 0.0
+    YCP(:) = 0.0
+    PROD(:) = 0.0
+    LOSS(:) = 0.0
+    PNEG(:) = 0.0
+    EBI_TMSTEP = TIME_STEP
+    N_EBI_STEPS = 1
+    N_INR_STEPS = 1
+
+    is_sunny = .true.
+
+    allocate(ebi_init(size(YC)))
+
+    call set_ebi_species(ebi_spec_names)
+    !call set_monarch_species(monarch_spec_names)
+    camp_spec_names=camp_interface%camp_core%unique_names()!monarch_species_name
+    monarch_species_names=camp_interface%monarch_species_names!monarch_species_name
+
+    !print*,"size(monarch_species_names)",size(monarch_species_names),&
+    !        "size(camp_spec_names)",size(camp_spec_names)  !72 79
+
+    call set_ebi_photo_ids_with_camp(photo_id_camp)
+    do i=1, NUM_EBI_PHOTO_RXN
+      ebi_photo_rates(i)=&
+              camp_interface%base_rates(photo_id_camp(i))*60
+      !print*,i,ebi_photo_rates(i)
+    end do
+
+    do i = 1, NUM_EBI_SPEC
+      do z = 1, size(monarch_species_names)
+        if (trim(ebi_spec_names(i)%string).eq.trim(monarch_species_names(z)%string)) then
+
+          !YC(i) = camp_interface%camp_state%state_var(z)
+          !map_ebi_monarch(z) = i
+          map_ebi_monarch(camp_interface%map_monarch_id(z)) = i
+
+          !print*,YC(map_ebi_monarch(z)),YC(i)
+
+          !debug
+          ebi_init(i) = YC(i)
+
+          !print*,ebi_spec_names(i)%string, camp_interface%camp_state%state_var(j)
+        end if
+      end do
+    end do
+
+    do i = 1, size(camp_spec_names)
+      if (trim(camp_spec_names(i)%string).eq."H2O") then
+        water_conc(1,1,1,WATER_VAPOR_ID) = camp_interface%camp_state%state_var(i)
+        !print*,"EBI H2O",water_conc(1,1,1,WATER_VAPOR_ID)
+      end if
+    end do
+    water_conc(:,:,:,WATER_VAPOR_ID) = water_conc(1,1,1,WATER_VAPOR_ID)
+
+    do i_time=1, NUM_TIME_STEP
+
+      do i=I_W,I_E
+      do j=I_S,I_N
+      do k=1,NUM_VERT_CELLS
+
+        do z = 1, size(monarch_species_names)
+          YC(map_ebi_monarch(z)) = species_conc(i,j,k,z)
+          !print*,ebi_spec_names(i)%string, camp_interface%camp_state%state_var(j)
+        end do
+
+      press=pressure(i,j,k)/const%air_std_press
+      !print*,"EBI press, pressure(1,1,1), const%air_std_press"&
+      !,press,pressure(1,1,1),const%air_std_press
+
+      call EXT_HRCALCKS( NUM_EBI_PHOTO_RXN,       & ! Number of EBI solver photolysis reactions
+              is_sunny,                & ! Flag for sunlight
+              ebi_photo_rates,             & ! Photolysis rates
+              temperature(1,1,1),             & ! Temperature (K)
+              press,                & ! Air pressure (atm)
+              water_conc(1,1,1,WATER_VAPOR_ID),&! * mwair / mwwat * 1.e6, &
+              !water_conc(1,1,1,WATER_VAPOR_ID) ,              & ! Water vapor concentration (ppmV)
+              RKI)                       ! Rate constants
+      call EXT_HRSOLVER( 2018012, 070000, 1, 1, 1) ! These dummy variables are just for output
+
+      !H2O  = MAX(WATER(C,R,kflip,P_QV) * MAOMV * 1.0e+06,0.0)
+
+      !print*,YC(:)
+
+      do z = 1, size(monarch_species_names)
+       species_conc(i,j,k,z) = YC(map_ebi_monarch(z))
+        !print*,ebi_spec_names(i)%string, camp_interface%camp_state%state_var(j)
+      end do
+
+      end do
+      end do
+      end do
+
+      if(export_results_all_cells.eq.1) then
+        call export_file_results_all_cells(camp_interface)
+#ifndef CAMP_DISABLE_NETCDF
+#else
+        !call export_results_netcdf(camp_interface)
+#endif
+      end if
+
+    end do
+
+
+    if (camp_mpi_rank().eq.0) then
+
+      call json%initialize()
+      call json%create_object(p,'')
+      call json%create_object(input,'input')
+      !call json%add(p, "id", 1) !test
+      call json%add(p, input)
+
+      z=1
+      r=1
+      o=1
+      i_cell=(o-1)*(I_E*I_N) + (r-1)*(I_E) + z
+      call json%add(input, "cell", i_cell)
+      dt=TIME_STEP*60
+      call json%add(input, "dt",dt)
+      temp=temperature(z,r,o)
+      call json%add(input, "temperature", temp)
+      press_json=pressure(z,r,o)/const%air_std_press
+      call json%add(input, "pressure", press_json)
+
+      call json%create_object(species_in,'species')
+      call json%add(input, species_in)
+      call json%create_object(output,'output')
+      call json%add(p, output)
+      call json%create_object(species_out,'species')
+      call json%add(output, species_out)
+
+      do j = 1, NUM_EBI_SPEC
+        !i = ebi_spec_id_to_camp(j) !CAMP order
+        i = j !EBI order
+        auxr=ebi_init(i)
+        call json%add(species_in, ebi_spec_names(i)%string, auxr)
+        auxr=YC(i)
+        call json%add(species_out, ebi_spec_names(i)%string, auxr)
+      end do
+
+      call json%create_object(photo_rates,'photo_rates')
+      call json%add(input, photo_rates)
+      do i=1, size(ebi_photo_rates)
+        write(i_str,*) i
+        i_str=adjustl(i_str)
+        auxr=ebi_photo_rates(i)
+        call json%add(photo_rates, trim(i_str), auxr)
+      end do
+
+#ifdef CAMP_USE_MPI
+      mpi_rank = camp_mpi_rank()
+
+      write(mpi_rank_str,*) mpi_rank
+      mpi_rank_str=adjustl(mpi_rank_str)
+
+      !export_path = "/gpfs/scratch/bsc32/bsc32815/a2s8/nmmb-monarch/MODEL/"&
+      !        //"SRC_LIBS/camp/test/monarch/exports/ebi_in_out_"&
+      !       //trim(mpi_rank_str)//".json"
+      export_path = "exports/ebi_in_out_"//trim(mpi_rank_str)//".json"
+
+#else
+      !export_path = "/gpfs/scratch/bsc32/bsc32815/a2s8/nmmb-monarch/MODEL/"&
+      !        //"SRC_LIBS/camp/test/monarch/exports/ebi_in_out.json"
+      export_path = "exports/ebi_in_out.json"
+#endif
+      call json%print(p,export_path)
+
+      !cleanup:
+      call json%destroy(p)
+      if (json%failed()) stop 1
+
+    end if
+
+#ifdef PRINT_EBI_INPUT
+    print*,"EBI species"
+    print*, "TIME_STEP", TIME_STEP
+    print*, "Temp", temperature(1,1,1)
+    print*, "Press", pressure(1,1,1)
+    print*,"water_conc",water_conc(1,1,1,WATER_VAPOR_ID)
+    print*,"ebi_photo_rates:", ebi_photo_rates(:)
+    print*,"species_conc:", species_conc
+    print*,"ebi_init:", ebi_init
+#endif
+
+#ifdef PRINT_EBI_SPEC_BY_EBI_ORDER
+    print*,"EBI order:"
+    print*,"Name, id, init, out, rel. error [(init-out)/(init+out)]"
+    do j = 1, NUM_EBI_SPEC
+      i = j
+      rel_error_in_out=abs((ebi_init(i)-YC(i))/&
+              (ebi_init(i)+YC(i)+1.0d-30))
+      print*,ebi_spec_names(i)%string, i, ebi_init(i)&
+              ,YC(i)!, rel_error_in_out
+    end do
+#endif
+
+  end subroutine
+
+  subroutine solve_ebi_cell(camp_interface)
 
     type(camp_monarch_interface_t), intent(inout) :: camp_interface
     integer :: z,i,j,k,r,o,i_cell,i_spec,i_photo_rxn,i_time
@@ -1647,7 +1887,7 @@ contains
       press_json=pressure(z,r,o)/const%air_std_press
       call json%add(input, "pressure", press_json)
 
-      call json%create_object(st_startpecies_in,'species')
+      call json%create_object(species_in,'species')
       call json%add(input, species_in)
       call json%create_object(output,'output')
       call json%add(p, output)
@@ -1729,7 +1969,7 @@ contains
     end do
 #endif
 
-  end subroutine solve_ebi
+  end subroutine
 
   subroutine solve_kpp(camp_interface)
 
@@ -1877,7 +2117,7 @@ contains
     end do
 #endif
 
-  end subroutine compare_ebi_camp_json
+  end subroutine
 
 #endif
 
@@ -2066,8 +2306,8 @@ contains
     write(RESULTS_FILE_UNIT_TABLE, *) "Time_step:", curr_time
 
     do i=I_W,I_E
-      do j=I_W,I_E
-        do k=I_W,I_E
+      do j=I_S,I_N
+        do k=1,NUM_VERT_CELLS
           write(RESULTS_FILE_UNIT_TABLE, *) "i:",i,"j:",j,"k:",k
           write(RESULTS_FILE_UNIT_TABLE, *) "Spec_name, Concentrations, Map_monarch_id"
           do z=1, size(camp_interface%monarch_species_names)
