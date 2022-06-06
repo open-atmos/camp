@@ -429,10 +429,11 @@ contains
           !print*,"this%base_rates(i), base rate",this%base_rates(i),&
           !        base_rate, camp_mpi_rank()
 
-          call this%photo_rxns(i)%set_rate(base_rate)
-          !call this%photo_rxns(i_photo_rxn)%set_rate(real(0.0, kind=dp))
+          call this%photo_rxns(i)%set_rate(base_rate) !not used if exported cb05
+          !call this%photo_rxns(i)%set_rate(real(0.0, kind=dp))
 
-          call this%camp_core%update_data(this%photo_rxns(i),z)
+          !call this%camp_core%update_data(this%photo_rxns(i),z)
+          call this%camp_core%update_data(this%photo_rxns(i))
           !print*,"2id photo_rate", base_rate
         end do
       end do

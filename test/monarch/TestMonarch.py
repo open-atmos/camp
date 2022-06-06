@@ -789,7 +789,7 @@ def all_timesteps():
     # conf.allocatedTasksPerNode = 320
     # conf.allocatedTasksPerNode = get_ntasksPerNode_sbatch() #todo
 
-    conf.cells = [2]
+    conf.cells = [100]
     #conf.cells = [100, 500, 1000, 5000, 10000]
     # conf.cells = [50000,100000,500000,1000000]
 
@@ -873,10 +873,10 @@ def all_timesteps():
         if conf.timeStepsDt != 3:
             print("Warning: Setting timeStepsDt to 3, since it is the usual value for monarch_cb05")
         conf.timeStepsDt = 3
-        if "Ideal" in conf.diffCellsL:
-            print("Warning: Setting Realistic, chemFile == monarch_cb05 has no difference between Realistic and Ideal")
-            conf.diffCellsL = ["Realistic"]
-        # conf.diffCellsL = ["Ideal"]
+        if "Realistic" in conf.diffCellsL:
+            print("Warning: Setting Ideal, chemFile == monarch_cb05 only has information from one-cell and we do not know if is fine using different temp and pressure (e.g. converge or not)")
+            #conf.diffCellsL = ["Realistic"]
+            conf.diffCellsL = ["Ideal"]
 
     if not conf.caseBase:
         print("ERROR: caseBase is empty")

@@ -1510,9 +1510,9 @@ contains
 
         !camp_interface%base_rates(i_photo_rxn)=0.
         call camp_interface%photo_rxns(i_photo_rxn)%set_rate(camp_interface%base_rates(i_photo_rxn))
-        !call camp_interface%photo_rxns(i_photo_rxn)%set_rate(real(0.0, kind=dp)) !works
 
         call camp_interface%camp_core%update_data(camp_interface%photo_rxns(i_photo_rxn),z)
+        !call camp_interface%camp_core%update_data(camp_interface%photo_rxns(i_photo_rxn)) !equivalent if photo_rates are the same for all cells
 
         !print*,"id photo_rate", camp_interface%base_rates(i_photo_rxn)
       end do
@@ -1634,12 +1634,15 @@ contains
       !print*,"EBI press, pressure(1,1,1), const%air_std_press"&
       !,press,pressure(1,1,1),const%air_std_press
 
+      !print*,temperature
+      !print*,pressure
+
       call EXT_HRCALCKS( NUM_EBI_PHOTO_RXN,       & ! Number of EBI solver photolysis reactions
               is_sunny,                & ! Flag for sunlight
               ebi_photo_rates,             & ! Photolysis rates
-              temperature(1,1,1),             & ! Temperature (K)
+              temperature(i,j,k),             & ! Temperature (K)
               press,                & ! Air pressure (atm)
-              water_conc(1,1,1,WATER_VAPOR_ID),&! * mwair / mwwat * 1.e6, &
+              water_conc(i,j,k,WATER_VAPOR_ID),&! * mwair / mwwat * 1.e6, &
               !water_conc(1,1,1,WATER_VAPOR_ID) ,              & ! Water vapor concentration (ppmV)
               RKI)                       ! Rate constants
       call EXT_HRSOLVER( 2018012, 070000, 1, 1, 1) ! These dummy variables are just for output
