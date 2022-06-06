@@ -703,10 +703,10 @@ def plot_cases(conf):
     if len(conf.cells) > 1:
         namey += " [Mean and \u03C3]"
         # namey += " [Average]"
-        # print_timesteps_title = True
-        print_timesteps_title = False
+        print_timesteps_title = True
+        #print_timesteps_title = False
         if print_timesteps_title:
-            conf.plotTitle += ", Timesteps: " + str(conf.timeSteps)
+            conf.plotTitle += ", " + str(conf.timeSteps)+" timesteps"
         datax = conf.cells
         plot_x_key = "Cells"
     elif conf.plotXKey == "MPI processes":
@@ -789,12 +789,12 @@ def all_timesteps():
     # conf.allocatedTasksPerNode = 320
     # conf.allocatedTasksPerNode = get_ntasksPerNode_sbatch() #todo
 
-    conf.cells = [100]
+    conf.cells = [10,100]
     #conf.cells = [100, 500, 1000, 5000, 10000]
     # conf.cells = [50000,100000,500000,1000000]
 
-    conf.timeSteps = 20
-   #conf.timeSteps = 720
+    conf.timeSteps = 60
+    #conf.timeSteps = 720
 
     conf.timeStepsDt = 2
 
@@ -827,9 +827,9 @@ def all_timesteps():
     #conf.casesOptim.append("CPU One-cell")
     conf.casesOptim.append("CPU EBI")
 
-    # conf.plotYKey = "Speedup timeCVode"
+    conf.plotYKey = "Speedup timeCVode"
     # conf.plotYKey = "Speedup counterLS"
-    #conf.plotYKey = "Speedup normalized timeLS"
+    #conf.plotYKey = "Speedup nrrormalized timeLS"
     # conf.plotYKey = "Speedup normalized computational timeLS"
     # conf.plotYKey = "Speedup counterBCG"
     # conf.plotYKey = "Speedup normalized counterBCG"
@@ -840,7 +840,7 @@ def all_timesteps():
     # conf.plotYKey = "Speedup countercvStep"
     # conf.plotYKey = "Speedup device timecvStep"
     # conf.plotYKey = "Percentage data transfers CPU-GPU [%]"
-    conf.plotYKey ="MAPE"
+    #conf.plotYKey ="MAPE"
     # conf.plotYKey ="SMAPE"
     # conf.plotYKey ="NRMSE"
     # conf.MAPETol = 1.0E-6
@@ -882,10 +882,14 @@ def all_timesteps():
         print("ERROR: caseBase is empty")
         raise
 
+    if conf.caseBase  == "CPU EBI":
+        print("Warning: Disable CAMP_PROFILING in CVODE to better profiling")
     if conf.caseBase == "CPU EBI" and conf.chemFile != "monarch_cb05":
         print("Error: Set conf.chemFile = monarch_cb05 to run CPU EBI")
         raise Exception
     for caseOptim in conf.casesOptim:
+        if caseOptim == "CPU EBI":
+            print("Warning: Disable CAMP_PROFILING in CVODE to better profiling")
         if caseOptim == "CPU EBI" and conf.chemFile != "monarch_cb05":
             print("Error: Set conf.chemFile = monarch_cb05 to run CPU EBI")
             raise Exception
