@@ -742,8 +742,8 @@ def all_timesteps():
     conf = TestMonarch()
 
     # conf.chemFile = "simple"
-    conf.chemFile = "monarch_cb05"
-    #conf.chemFile = "monarch_binned"
+    #conf.chemFile = "monarch_cb05"
+    conf.chemFile = "monarch_binned"
 
     conf.diffCellsL = []
     conf.diffCellsL.append("Realistic")
@@ -789,15 +789,16 @@ def all_timesteps():
     # conf.allocatedTasksPerNode = 320
     # conf.allocatedTasksPerNode = get_ntasksPerNode_sbatch() #todo
 
-    conf.cells = [10,100]
+    conf.cells = [200]
     #conf.cells = [100, 500, 1000, 5000, 10000]
     # conf.cells = [50000,100000,500000,1000000]
 
-    conf.timeSteps = 60
+    conf.timeSteps = 1
     #conf.timeSteps = 720
 
     conf.timeStepsDt = 2
 
+    #conf.caseBase = "CPU EBI"
     conf.caseBase = "CPU One-cell"
     # conf.caseBase = "CPU Multi-cells"
     # conf.caseBase="GPU Multi-cells"
@@ -819,13 +820,13 @@ def all_timesteps():
     # conf.casesOptim.append("GPU maxrregcount-127")
     #conf.casesOptim.append("GPU BDF")
     # conf.casesOptim.append("GPU Block-cellsNhalf")
-    #conf.casesOptim.append("GPU Block-cells1")
+    conf.casesOptim.append("GPU Block-cells1")
     # conf.casesOptim.append("GPU Block-cellsN")
     # conf.casesOptim.append("GPU Multi-cells")
     # conf.casesOptim.append("GPU One-cell")
     #conf.casesOptim.append("CPU Multi-cells")
     #conf.casesOptim.append("CPU One-cell")
-    conf.casesOptim.append("CPU EBI")
+    #conf.casesOptim.append("CPU EBI")
 
     conf.plotYKey = "Speedup timeCVode"
     # conf.plotYKey = "Speedup counterLS"
