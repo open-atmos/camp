@@ -391,7 +391,9 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
 
   // Create a new solver object
   sd->cvode_mem = CVodeCreate(CV_BDF
-#if SUNDIALS_VERSION_MAJOR < 3
+#ifndef SUNDIALS_VERSION_MAJOR
+#  error SUNDIALS_VERSION_MAJOR not defined
+#elif SUNDIALS_VERSION_MAJOR < 4
     , CV_NEWTON
 #endif
   );
