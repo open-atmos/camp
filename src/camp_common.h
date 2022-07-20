@@ -19,7 +19,9 @@
 #ifdef CAMP_USE_SUNDIALS
 #include <cvode/cvode.h>             /* Protoypes for CVODE fcts., consts.  */
 #include <cvode/cvode_direct.h>      /* CVDls interface                     */
-#include <cvode/cvode_impl.h>        /* CVodeMem structure                  */
+#ifdef CAMP_CUSTOM_CVODE
+#  include <cvode/cvode_impl.h>        /* CVodeMem structure                  */
+#endif
 #include <nvector/nvector_serial.h>  /* Serial N_Vector types, fcts, macros */
 #include <sundials/sundials_math.h>  /* SUNDIALS math function macros       */
 #include <sundials/sundials_types.h> /* definition of types                 */

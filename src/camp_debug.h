@@ -143,15 +143,15 @@ static void print_data_sizes(ModelData *md) {
  * \param M Jacobian matrix
  */
 static void print_jacobian(SUNMatrix M) {
-  printf("\n NNZ JAC: %lld \n", SM_NNZ_S(M));
+  printf("\n NNZ JAC: %lld \n", (long long)SM_NNZ_S(M));
   printf("DATA | INDEXVALS:\n");
   for (int i = 0; i < SM_NNZ_S(M); i++) {
     printf("% -le \n", (SM_DATA_S(M))[i]);
-    printf("%lld \n", (SM_INDEXVALS_S(M))[i]);
+    printf("%lld \n", (long long)((SM_INDEXVALS_S(M))[i]));
   }
   printf("PTRS:\n");
   for (int i = 0; i <= SM_NP_S(M); i++) {
-    printf("%lld \n", (SM_INDEXPTRS_S(M))[i]);
+    printf("%lld \n", (long long)((SM_INDEXPTRS_S(M))[i]));
   }
 }
 
