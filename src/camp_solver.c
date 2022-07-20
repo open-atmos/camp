@@ -390,7 +390,11 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
   sd = (SolverData *)solver_data;
 
   // Create a new solver object
-  sd->cvode_mem = CVodeCreate(CV_BDF, CV_NEWTON);
+  sd->cvode_mem = CVodeCreate(CV_BDF
+#if SUNDIALS_VERSION_MAJOR < 3
+    , CV_NEWTON
+#endif
+  );
   check_flag_fail((void *)sd->cvode_mem, "CVodeCreate", 0);
 
   // Get the number of total and dependent variables on the state array,
@@ -462,9 +466,11 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
   flag = CVDlsSetJacFn(sd->cvode_mem, Jac);
   check_flag_fail(&flag, "CVDlsSetJacFn", 1);
 
+#ifdef CAMP_CUSTOM_CVODE
   // Set a function to improve guesses for y sent to the linear solver
   flag = CVodeSetDlsGuessHelper(sd->cvode_mem, guess_helper);
   check_flag_fail(&flag, "CVodeSetDlsGuessHelper", 1);
+#endif
 
 // Allocate Jacobian on GPU
 #ifdef CAMP_USE_GPU
@@ -1309,6 +1315,7 @@ double gsl_f(double x, void *param) {
  * \param corr Vector of calculated adjustments to \f$y(t_n)\f$ [output]
  * \return 1 if corrections were calculated, 0 if not
  */
+#ifdef CAMP_CUSTOM_CVODE
 int guess_helper(const realtype t_n, const realtype h_n, N_Vector y_n,
                  N_Vector y_n1, N_Vector hf, void *solver_data, N_Vector tmp1,
                  N_Vector corr) {
@@ -1397,6 +1404,7 @@ int guess_helper(const realtype t_n, const realtype h_n, N_Vector y_n,
 
   return 1;
 }
+#endif
 
 /** \brief Create a sparse Jacobian matrix based on model data
  *

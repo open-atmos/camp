@@ -123,6 +123,7 @@ set(SUNDIALS_LIBS ${SUNDIALS_NVECSERIAL_LIB} ${SUNDIALS_CVODE_LIB}
   ${SUITE_SPARSE_CONFIG_LIB})
 include_directories(${SUNDIALS_INCLUDE_DIR} ${SUITE_SPARSE_INCLUDE_DIR})
 add_definitions(-DCAMP_USE_SUNDIALS)
+add_definitions(-DCAMP_CUSTOM_CVODE)
 
 ######################################################################
 # json-fortran
