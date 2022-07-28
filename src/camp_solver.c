@@ -22,7 +22,7 @@
 #ifdef CAMP_USE_GSL
 #include <gsl/gsl_deriv.h>
 #include <gsl/gsl_math.h>
-#include <gsl/gsl_roots.h>
+#include <gsl/gsl_roots.gpupartmch>
 #endif
 #include "camp_debug.h"
 #include "debug_and_stats/camp_debug_2.h"
@@ -802,7 +802,7 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
       flag = cudaCVode(sd->cvode_mem, (realtype)t_final, sd->y,
           &t_rt, CV_NORMAL, sd);
       }else{
-      flag = CVode_gpu2(sd->cvode_mem, (realtype)t_final, sd->y,
+      flag = CVode_gpu(sd->cvode_mem, (realtype)t_final, sd->y,
              &t_rt, CV_NORMAL, sd);
       }
     }

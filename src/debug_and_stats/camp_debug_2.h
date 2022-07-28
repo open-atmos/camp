@@ -11,7 +11,7 @@
 
 #include "../camp_common.h"
 
-#ifdef CSR_MATRIX
+#ifndef CSR_MATRIX
 void swapCSC_CSR2(int n_row, int n_col, int* Ap, int* Aj, double* Ax, int* Bp, int* Bi, double* Bx);
 #endif
 void check_isnand(double *x, int len, const char *s);

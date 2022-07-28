@@ -415,6 +415,7 @@ def calculate_speedup(data, plot_y_key):
     cases = list(data.keys())
 
     base_data = data[cases[0]][plot_y_key]
+    #print(data[cases[1]])
     new_data = data[cases[1]][plot_y_key]
 
     #print("calculate_speedup start",data)

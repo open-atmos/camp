@@ -65,7 +65,7 @@ class TestMonarch:
         self.sbatch_job_id = ""
         self.datacolumns = []
         self.stdColumns = []
-        self.exportPath = "test/monarch/exports"
+        self.exportPath = "data_tests/monarch"
         self.legend = []
         self.results_file = "_solver_stats.csv"
         self.plotTitle = ""
@@ -747,14 +747,14 @@ def all_timesteps():
 
     conf.diffCellsL = []
     conf.diffCellsL.append("Realistic")
-    # conf.diffCellsL.append("Ideal")
+    #conf.diffCellsL.append("Ideal")
 
     conf.profileCuda = False
     # conf.profileCuda = True
 
     conf.is_export = get_is_sbatch()
-    # conf.is_export = True
-    # conf.is_export = False
+    #conf.is_export = True
+    #conf.is_export = False
 
     conf.is_import = True
     # conf.is_import = False
@@ -789,11 +789,11 @@ def all_timesteps():
     # conf.allocatedTasksPerNode = 320
     # conf.allocatedTasksPerNode = get_ntasksPerNode_sbatch() #todo
 
-    conf.cells = [200]
+    conf.cells = [100]
     #conf.cells = [100, 500, 1000, 5000, 10000]
     # conf.cells = [50000,100000,500000,1000000]
 
-    conf.timeSteps = 1
+    conf.timeSteps = 2
     #conf.timeSteps = 720
 
     conf.timeStepsDt = 2
@@ -821,16 +821,16 @@ def all_timesteps():
     #conf.casesOptim.append("GPU BDF")
     # conf.casesOptim.append("GPU Block-cellsNhalf")
     conf.casesOptim.append("GPU Block-cells1")
-    # conf.casesOptim.append("GPU Block-cellsN")
+    #conf.casesOptim.append("GPU Block-cellsN")
     # conf.casesOptim.append("GPU Multi-cells")
     # conf.casesOptim.append("GPU One-cell")
     #conf.casesOptim.append("CPU Multi-cells")
     #conf.casesOptim.append("CPU One-cell")
     #conf.casesOptim.append("CPU EBI")
 
-    conf.plotYKey = "Speedup timeCVode"
+    #conf.plotYKey = "Speedup timeCVode"
     # conf.plotYKey = "Speedup counterLS"
-    #conf.plotYKey = "Speedup nrrormalized timeLS"
+    conf.plotYKey = "Speedup normalized timeLS"
     # conf.plotYKey = "Speedup normalized computational timeLS"
     # conf.plotYKey = "Speedup counterBCG"
     # conf.plotYKey = "Speedup normalized counterBCG"
@@ -841,7 +841,7 @@ def all_timesteps():
     # conf.plotYKey = "Speedup countercvStep"
     # conf.plotYKey = "Speedup device timecvStep"
     # conf.plotYKey = "Percentage data transfers CPU-GPU [%]"
-    #conf.plotYKey ="MAPE"
+    #conf.plotYKey = "MAPE"
     # conf.plotYKey ="SMAPE"
     # conf.plotYKey ="NRMSE"
     # conf.MAPETol = 1.0E-6
@@ -865,6 +865,9 @@ def all_timesteps():
 
     if not os.path.exists('out'):
         os.makedirs('out')
+
+    if conf.plotYKey == "":
+        print("conf.plotYKey is empty")
 
     if conf.chemFile == "monarch_binned":
         if conf.timeStepsDt != 2:

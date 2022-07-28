@@ -1500,7 +1500,7 @@ contains
     do z =1, camp_interface%nrates_cells
       do i_photo_rxn = 1, camp_interface%n_photo_rxn
 
-        !camp_interface%base_rates(i_photo_rxn)=0.
+        camp_interface%base_rates(i_photo_rxn)=0.
         call camp_interface%photo_rxns(i_photo_rxn)%set_rate(camp_interface%base_rates(i_photo_rxn))
 
         call camp_interface%camp_core%update_data(camp_interface%photo_rxns(i_photo_rxn),z)
@@ -1575,11 +1575,7 @@ contains
 
     call set_ebi_species(ebi_spec_names)
     !call set_monarch_species(monarch_spec_names)
-    camp_spec_names=camp_interface%camp_core%unique_names()!monarch_species_name
     monarch_species_names=camp_interface%monarch_species_names!monarch_species_name
-
-    !print*,"size(monarch_species_names)",size(monarch_species_names),&
-    !        "size(camp_spec_names)",size(camp_spec_names)  !72 79
 
     call set_ebi_photo_ids_with_camp(photo_id_camp)
     do i=1, NUM_EBI_PHOTO_RXN
@@ -1606,15 +1602,12 @@ contains
       end do
     end do
 
-    do i = 1, size(camp_spec_names)
-      if (trim(camp_spec_names(i)%string).eq."H2O") then
-        water_conc(1,1,1,WATER_VAPOR_ID) = camp_interface%camp_state%state_var(i)
-        !print*,"EBI H2O",water_conc(1,1,1,WATER_VAPOR_ID)
-      end if
-    end do
-    water_conc(:,:,:,WATER_VAPOR_ID) = water_conc(1,1,1,WATER_VAPOR_ID)
+    !print*, water_conc(1,1,1,WATER_VAPOR_ID)
 
+#ifdef CAMP_DEBUG_GPU
     call camp_interface%camp_core%reset_solver_stats(solver_stats=solver_stats)
+    camp_interface%camp_core%times(3) = 0
+#endif
 
     do i_time=1, NUM_TIME_STEP
 
