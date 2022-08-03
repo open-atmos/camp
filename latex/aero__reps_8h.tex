@@ -302,7 +302,13 @@ Get the effective particle radius $r_{eff}$ (m)
 
 The modal mass effective radius is calculated for a log-\/normal distribution where the geometric mean diameter ( $\tilde{D}_n$) and geometric standard deviation ( $\sigma_g$) are set by the aerosol model prior to solving the chemistry. Thus, all $\frac{\partial r_{eff}}{\partial y}$ are zero. The effective radius is calculated according to the equation given in Table 1 of Zender {\bfseries [Zender2002]} \+:
 
-\[ \tilde{\sigma_g} \equiv ln( \sigma_g ) \] \[ D_s = D_{eff} = \tilde{D_n} e^{5 \tilde{\sigma}_g^2 / 2} \] \[ r_{eff} = \frac{D_{eff}}{2} \]
+\[
+\tilde{\sigma_g} \equiv ln( \sigma_g )
+\] \[
+D_s = D_{eff} = \tilde{D_n} e^{5 \tilde{\sigma}_g^2 / 2}
+\] \[
+r_{eff} = \frac{D_{eff}}{2}
+\]
 
 For bins, $r_{eff}$ is assumed to be the bin radius.
 
@@ -345,9 +351,15 @@ Here is the caller graph for this function\+:
 
 Get the particle number concentration $n$ ( $\mbox{\si{\#\per\cubic\metre}}$) 
 
-The modal mass number concentration is calculated for a log-\/normal distribution where the geometric mean diameter ( $\tilde{D}_n$) and geometric standard deviation ( $\tilde{\sigma}_g$) are set by the aerosol model prior to solving the chemistry. The number concentration is calculated according to the equation given in Table 1 of Zender {\bfseries [Zender2002]} \+: \[ n = N_0 = \frac{6V_0}{\pi}\tilde{D}_n^{-3}e^{-9 ln(\tilde{\sigma}_g)^2/2} \] \[ V_0 = \sum_i{\frac{m_i}{\rho_i}} \] where $\rho_i$ and $m_i$ are the density and total mass of species $i$ in the specified mode.
+The modal mass number concentration is calculated for a log-\/normal distribution where the geometric mean diameter ( $\tilde{D}_n$) and geometric standard deviation ( $\tilde{\sigma}_g$) are set by the aerosol model prior to solving the chemistry. The number concentration is calculated according to the equation given in Table 1 of Zender {\bfseries [Zender2002]} \+: \[
+     n = N_0 = \frac{6V_0}{\pi}\tilde{D}_n^{-3}e^{-9
+ln(\tilde{\sigma}_g)^2/2} \] \[ V_0 = \sum_i{\frac{m_i}{\rho_i}} \] where $\rho_i$ and $m_i$ are the density and total mass of species $i$ in the specified mode.
 
-The binned number concentration is calculated according to\+: \[ n = V_0 / V_p \] \[ V_p = \frac{4}{3}\pi r^{3} \] where $r$ is the radius of the size bin and $V_0$ is defined as above.
+The binned number concentration is calculated according to\+: \[
+    n = V_0 / V_p
+\] \[
+    V_p = \frac{4}{3}\pi r^{3}
+\] where $r$ is the radius of the size bin and $V_0$ is defined as above.
 
 
 \begin{DoxyParams}{Parameters}
@@ -547,7 +559,13 @@ Flag indicating whether this is the aerosol representation to update
 \end{DoxyReturn}
 Recalculate the effective radius \mbox{[}m\mbox{]}
 
-Equation based on {\bfseries [Zender2002]} Table 1 effective diameter $(D_s, D_{eff}$) equations\+: \[ \tilde{\sigma_g} \equiv ln( \sigma_g ) \] \[ D_s = D_{eff} = \tilde{D_n} e^{5 \tilde{\sigma}_g^2 / 2} \] \[ r_{eff} = \frac{D_{eff}}{2} \] where $\tilde{D_n}$ is the geometric mean diameter \mbox{[}m\mbox{]}, $\sigma_g$ is the geometric standard deviation \mbox{[}unitless\mbox{]}, and $r_{eff}$ is the effective radius \mbox{[}m\mbox{]}.
+Equation based on {\bfseries [Zender2002]} Table 1 effective diameter $(D_s, D_{eff}$) equations\+: \[
+\tilde{\sigma_g} \equiv ln( \sigma_g )
+\] \[
+D_s = D_{eff} = \tilde{D_n} e^{5 \tilde{\sigma}_g^2 / 2}
+\] \[
+r_{eff} = \frac{D_{eff}}{2}
+\] where $\tilde{D_n}$ is the geometric mean diameter \mbox{[}m\mbox{]}, $\sigma_g$ is the geometric standard deviation \mbox{[}unitless\mbox{]}, and $r_{eff}$ is the effective radius \mbox{[}m\mbox{]}.
 
 Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00594}{594}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c}}.
 

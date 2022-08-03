@@ -241,7 +241,9 @@ Species in the specified phase for whom acitivity coefficients will be calculate
  \hypertarget{camp_sub_model_ZSR_aerosol_water}{}\doxysection{CAMP\+: ZSR Aerosol Water}\label{camp_sub_model_ZSR_aerosol_water}
 ZSR aerosol water calculates equilibrium aerosol water content based on the Zdanovski-\/\+Stokes-\/\+Robinson mixing rule {\bfseries [Jacobson1996]} in the following generalized format\+:
 
-\[ W = \sum\limits_{i=0}^{n}\frac{1000 M_i}{MW_i m_{i}(a_w)} \]
+\[
+   W = \sum\limits_{i=0}^{n}\frac{1000 M_i}{MW_i m_{i}(a_w)}
+ \]
 
 where $M$ is the concentration of binary electrolyte $i$ ( $\mbox{$\mu$g}\,\mbox{m}^{-3}$) with molecular weight $MW_i$ ( $\mbox{kg}\,\mbox{mol}^{-1}$) and molality $m_{i}$ at a given water activity $a_w$ (RH; 0--1) contributing to the total aerosol water content $W$ ( $\mbox{$\mu$g}\,\mbox{m}^{-3}$).
 
@@ -284,7 +286,9 @@ Each binary electrolyte must include a {\bfseries{type}} that refers to a method
 
 Aerosol water from ion pairs with type {\bfseries{JACOBSON}} use equations (28) and (29) in Jacobson et al. (1996) {\bfseries [Jacobson1996]} where experimentally determined binary solution molalities are fit to a polynomial as\+:
 
-\[ \sqrt{m_{i}(a_w)} = Y_0 + Y_1 a_w + Y_2 a_w^2 + Y_3 a_w^3 + ..., \]
+\[
+   \sqrt{m_{i}(a_w)} = Y_0 + Y_1 a_w + Y_2 a_w^2 + Y_3 a_w^3 + ...,
+ \]
 
 where $Y_j$ are the fitting parameters. Thus, $m_i(a_w)$ is calculated at each time step, assuming constant $a_w$. These values must be included in a key-\/value pair {\bfseries{Y\+\_\+j}} whose value is an array with the $Y_j$ parameters. The size of the array corresponds to the order of the polynomial equation, which must be greater than 1. The key-\/value pair {\bfseries{low}} {\bfseries{RH}} is required to specify the lowest RH (0--1) for which this fit is valid. This value for RH will be used for all lower RH in calculations of $m_i(a_w)$ as per Jacobson et al. (1996) {\bfseries [Jacobson1996]}.
 
@@ -330,7 +334,9 @@ For the above example, the following input data should be present\+:
 \end{DoxyCode}
  Aerosol water from ion pairs with type {\bfseries{EQSAM}} use the parameterization of Metzger et al. (2002) {\bfseries [Metzger2002]} for aerosol water content\+:
 
-\[ \sqrt{m_{i}(a_w)} = (NW_i MW_{H2O}/MW_i (1/a_w-1))^{ZW_i} \]
+\[
+   \sqrt{m_{i}(a_w)} = (NW_i MW_{H2O}/MW_i (1/a_w-1))^{ZW_i}
+ \]
 
 where $NW_i$ and $ZW_i$ are fitting parameters {\bfseries [Metzger2002]}, and must be provided in key-\/value pairs {\bfseries{NW}} and {\bfseries{ZW}}, along with the binary electrolyte molecular weight {\bfseries{MW}} ( $\mbox{kg}\,\mbox{mol}^{-1}$). The key-\/value pair {\bfseries{ions}} must contain a set of ions that can be summed to calculate $M_i$ at runtime. \hypertarget{input_format_sub_model}{}\doxysection{Input JSON Object Format\+: Sub-\/\+Model (general)}\label{input_format_sub_model}
 A {\ttfamily json} object containing the information required by a \mbox{\hyperlink{camp_sub_model}{sub-\/model}} of the form\+:
@@ -596,7 +602,9 @@ Species in the specified phase for whom acitivity coefficients will be calculate
  \hypertarget{camp_sub_model_ZSR_aerosol_water}{}\doxysubsection{CAMP\+: ZSR Aerosol Water}\label{camp_sub_model_ZSR_aerosol_water}
 ZSR aerosol water calculates equilibrium aerosol water content based on the Zdanovski-\/\+Stokes-\/\+Robinson mixing rule {\bfseries [Jacobson1996]} in the following generalized format\+:
 
-\[ W = \sum\limits_{i=0}^{n}\frac{1000 M_i}{MW_i m_{i}(a_w)} \]
+\[
+   W = \sum\limits_{i=0}^{n}\frac{1000 M_i}{MW_i m_{i}(a_w)}
+ \]
 
 where $M$ is the concentration of binary electrolyte $i$ ( $\mbox{$\mu$g}\,\mbox{m}^{-3}$) with molecular weight $MW_i$ ( $\mbox{kg}\,\mbox{mol}^{-1}$) and molality $m_{i}$ at a given water activity $a_w$ (RH; 0--1) contributing to the total aerosol water content $W$ ( $\mbox{$\mu$g}\,\mbox{m}^{-3}$).
 
@@ -639,7 +647,9 @@ Each binary electrolyte must include a {\bfseries{type}} that refers to a method
 
 Aerosol water from ion pairs with type {\bfseries{JACOBSON}} use equations (28) and (29) in Jacobson et al. (1996) {\bfseries [Jacobson1996]} where experimentally determined binary solution molalities are fit to a polynomial as\+:
 
-\[ \sqrt{m_{i}(a_w)} = Y_0 + Y_1 a_w + Y_2 a_w^2 + Y_3 a_w^3 + ..., \]
+\[
+   \sqrt{m_{i}(a_w)} = Y_0 + Y_1 a_w + Y_2 a_w^2 + Y_3 a_w^3 + ...,
+ \]
 
 where $Y_j$ are the fitting parameters. Thus, $m_i(a_w)$ is calculated at each time step, assuming constant $a_w$. These values must be included in a key-\/value pair {\bfseries{Y\+\_\+j}} whose value is an array with the $Y_j$ parameters. The size of the array corresponds to the order of the polynomial equation, which must be greater than 1. The key-\/value pair {\bfseries{low}} {\bfseries{RH}} is required to specify the lowest RH (0--1) for which this fit is valid. This value for RH will be used for all lower RH in calculations of $m_i(a_w)$ as per Jacobson et al. (1996) {\bfseries [Jacobson1996]}.
 
@@ -685,6 +695,8 @@ For the above example, the following input data should be present\+:
 \end{DoxyCode}
  Aerosol water from ion pairs with type {\bfseries{EQSAM}} use the parameterization of Metzger et al. (2002) {\bfseries [Metzger2002]} for aerosol water content\+:
 
-\[ \sqrt{m_{i}(a_w)} = (NW_i MW_{H2O}/MW_i (1/a_w-1))^{ZW_i} \]
+\[
+   \sqrt{m_{i}(a_w)} = (NW_i MW_{H2O}/MW_i (1/a_w-1))^{ZW_i}
+ \]
 
 where $NW_i$ and $ZW_i$ are fitting parameters {\bfseries [Metzger2002]}, and must be provided in key-\/value pairs {\bfseries{NW}} and {\bfseries{ZW}}, along with the binary electrolyte molecular weight {\bfseries{MW}} ( $\mbox{kg}\,\mbox{mol}^{-1}$). The key-\/value pair {\bfseries{ions}} must contain a set of ions that can be summed to calculate $M_i$ at runtime. 

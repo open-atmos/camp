@@ -299,7 +299,9 @@ Here is the caller graph for this function\+:
 
 Check a \mbox{\hyperlink{struct_jacobian}{Jacobian}} for accuracy. 
 
-This function compares \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements against differences in derivative calculations for small changes to the state array\+: \[ J_{ij}(x) = \frac{f_i(x+\sum_j e_j) - f_i(x)}{\epsilon} \] where $\epsilon_j = 10^{-8} \left|x_j\right|$
+This function compares \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements against differences in derivative calculations for small changes to the state array\+: \[
+  J_{ij}(x) = \frac{f_i(x+\sum_j e_j) - f_i(x)}{\epsilon}
+\] where $\epsilon_j = 10^{-8} \left|x_j\right|$
 
 
 \begin{DoxyParams}{Parameters}
@@ -457,7 +459,13 @@ Here is the caller graph for this function\+:
 
 Try to improve guesses of y sent to the linear solver. 
 
-This function checks if there are any negative guessed concentrations, and if there are it calculates a set of initial corrections to the guessed state using the state at time $t_{n-1}$ and the derivative $f_{n-1}$ and advancing the state according to\+: \[ y_n = y_{n-1} + \sum_{j=1}^m h_j * f_j \] where $h_j$ is the largest timestep possible where \[ y_{j-1} + h_j * f_j > 0 \] and \[ t_n = t_{n-1} + \sum_{j=1}^m h_j \]
+This function checks if there are any negative guessed concentrations, and if there are it calculates a set of initial corrections to the guessed state using the state at time $t_{n-1}$ and the derivative $f_{n-1}$ and advancing the state according to\+: \[
+  y_n = y_{n-1} + \sum_{j=1}^m h_j * f_j
+\] where $h_j$ is the largest timestep possible where \[
+  y_{j-1} + h_j * f_j > 0
+\] and \[
+  t_n = t_{n-1} + \sum_{j=1}^m h_j
+\]
 
 
 \begin{DoxyParams}{Parameters}

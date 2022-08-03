@@ -42,7 +42,11 @@ Fig. 4. How modal (top) binned (middle) and single-\/particle (bottom) aerosol r
 \label{camp_tutorial_part_0_bc0_ss_example}%
 \Hypertarget{camp_tutorial_part_0_bc0_ss_example}%
 \hypertarget{camp_tutorial_part_0_autotoc_md20}{}\doxysubsection{How you might CAMP}\label{camp_tutorial_part_0_autotoc_md20}
-To demonstrate how CAMP functionality can be used in a real-\/world scenario, imagine you are a reasearch chemist who just discovered a new gas-\/phase reaction\+: \[\ce{ A + OH -> B }\] Species B can partition to an aqueous phase where it reacts with nitrate\+: \[\ce{ B + NO3- -> C }\] Species C can then repartition back to the gas-\/phase.
+To demonstrate how CAMP functionality can be used in a real-\/world scenario, imagine you are a reasearch chemist who just discovered a new gas-\/phase reaction\+: \[\ce{
+   A + OH -> B
+ }\] Species B can partition to an aqueous phase where it reacts with nitrate\+: \[\ce{
+   B + NO3- -> C
+ }\] Species C can then repartition back to the gas-\/phase.
 
 You first try this out in a box model running CAMP with a standard gas and aerosol phase mechansim by adding a single {\ttfamily JSON} file to the CAMP input file list. Your new file has three \mbox{\hyperlink{input_format_species}{chemical species}}, one \mbox{\hyperlink{camp_rxn_arrhenius}{gas-\/phase Arrhenius}} reaction, one \mbox{\hyperlink{camp_rxn_HL_phase_transfer}{Henry\textquotesingle{}s law phase transfer}} reaction, and one \mbox{\hyperlink{camp_rxn_condensed_phase_arrhenius}{condensed-\/phase Arrhenius}} reaction. The only modification to the existing mechanism input files you make is to add species C to the \char`\"{}aequeous\char`\"{} aerosol phase. You evaluate the model results and tweak the reaction parameters until you\textquotesingle{}re able to fit your experimental results.
 

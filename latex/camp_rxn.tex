@@ -28,7 +28,9 @@ Valid reaction types include\+:
 The general input format for a reaction can be found \mbox{\hyperlink{input_format_rxn}{here}}. \hypertarget{camp_rxn_aqueous_equilibrium}{}\doxysection{CAMP\+: Aqueous-\/\+Phase Equilibrium}\label{camp_rxn_aqueous_equilibrium}
 Aqueous equilibrium reactions are calculated as forward and reverse reactions. The reverse rate constant must be provided as part of the input data and the forward rate constant is calculated using the provided reverse rate constant and an equilibrium constant of the following format\+:
 
-\[ Ae^{C({1/T-1/298})} \]
+\[
+   Ae^{C({1/T-1/298})}
+ \]
 
 where $A$ is the pre-\/exponential factor ( $s^{-1}$), $C$ is a constant and $T$ is the temperature (K).
 
@@ -64,7 +66,9 @@ When {\bfseries{A}} is not included, it is assumed to be 1.\+0, when {\bfseries{
 The unit for time is assumed to be s, but inclusion of the optional key-\/value pair {\bfseries{time}} {\bfseries{unit}} = {\bfseries{MIN}} can be used to indicate a rate with min as the time unit. \hypertarget{camp_rxn_arrhenius}{}\doxysection{CAMP\+: Arrhenius Reaction}\label{camp_rxn_arrhenius}
 Arrhenius-\/like reaction rate constant equations are calculated as follows\+:
 
-\[ Ae^{(\frac{-E_a}{k_bT})}(\frac{T}{D})^B(1.0+E*P) \]
+\[
+   Ae^{(\frac{-E_a}{k_bT})}(\frac{T}{D})^B(1.0+E*P)
+ \]
 
 where $A$ is the pre-\/exponential factor (\# $(\mbox{cm}^{-3})^{-(n-1)}\mbox{s}^{-1}$), $n$ is the number of reactants, $E_a$ is the activation energy (J), $k_b$ is the Boltzmann constant (J/K), $D$ (K), $B$ (unitless) and $E$ ( $Pa^{-1}$) are reaction parameters, $T$ is the temperature (K), and $P$ is the pressure (Pa). The first two terms are described in Finlayson-\/\+Pitts and Pitts (2000) {\bfseries [Finlayson-\/\+Pitts2000]} . The final term is included to accomodate CMAQ EBI solver type 7 rate constants.
 
@@ -96,11 +100,17 @@ Input data for Arrhenius equations has the following format\+:
 Optionally, a parameter {\bfseries{C}} may be included, and is taken to equal $\frac{-E_a}{k_b}$. Note that either {\bfseries{Ea}} or {\bfseries{C}} may be included, but not both. When neither {\bfseries{Ea}} or {\bfseries{C}} are included, they are assumed to be 0.\+0. When {\bfseries{A}} is not included, it is assumed to be 1.\+0, when {\bfseries{D}} is not included, it is assumed to be 300.\+0 K, when {\bfseries{B}} is not included, it is assumed to be 0.\+0, and when {\bfseries{E}} is not included, it is assumed to be 0.\+0. The unit for time is assumed to be s, but inclusion of the optional key-\/value pair {\bfseries{time}} {\bfseries{unit}} = {\bfseries{MIN}} can be used to indicate a rate with min as the time unit. \hypertarget{camp_rxn_CMAQ_H2O2}{}\doxysection{CAMP\+: Special CMAQ Reaction for H2\+O2}\label{camp_rxn_CMAQ_H2O2}
 For the reactions\+:
 
-\[\ce{ HO2 + HO2 ->[k] H2O2 }\] \[\ce{ HO2 + HO2 + H2O ->[k] H2O2 }\]
+\[\ce{
+   HO2 + HO2 ->[k] H2O2
+ }\] \[\ce{
+   HO2 + HO2 + H2O ->[k] H2O2
+ }\]
 
 CMAQ rate constants are calculated as\+:
 
-\[ k=k_1+k_2[\mbox{M}] \]
+\[
+   k=k_1+k_2[\mbox{M}]
+ \]
 
 where $k_1$ and $k_2$ are \mbox{\hyperlink{camp_rxn_arrhenius}{Arrhenius}} rate constants with $D=300$ and $E=0$, and $[\mbox{M}]$ is the concentration of air {\bfseries [Gipson]}.
 
@@ -135,11 +145,15 @@ The two sets of parameters beginning with {\bfseries{k1\+\_\+}} and {\bfseries{k
 The unit for time is assumed to be s, but inclusion of the optional key-\/value pair {\bfseries{time}} {\bfseries{unit}} = {\bfseries{MIN}} can be used to indicate a rate with min as the time unit. \hypertarget{camp_rxn_CMAQ_OH_HNO3}{}\doxysection{CAMP\+: Special CMAQ Reaction for OH+\+HNO3}\label{camp_rxn_CMAQ_OH_HNO3}
 For the reaction\+:
 
-\[\ce{ OH + HNO3 ->[k] NO3 + H2O }\]
+\[\ce{
+   OH + HNO3 ->[k] NO3 + H2O
+ }\]
 
 CMAQ rate constants are calculated as\+:
 
-\[ k=k_0+(\frac{k_3[\mbox{M}]}{1+k_3[\mbox{M}]/k_2}) \]
+\[
+   k=k_0+(\frac{k_3[\mbox{M}]}{1+k_3[\mbox{M}]/k_2})
+ \]
 
 where $k_0$, $k_2$ and $k_3$ are \mbox{\hyperlink{camp_rxn_arrhenius}{Arrhenius}} rate constants with $D=300$ and $E=0$, and $[\mbox{M}]$ is the concentration of air {\bfseries [Gipson]}.
 
@@ -177,7 +191,9 @@ The three sets of parameters beginning with {\bfseries{k0\+\_\+}}, {\bfseries{k2
 The unit for time is assumed to be s, but inclusion of the optional key-\/value pair {\bfseries{time}} {\bfseries{unit}} = {\bfseries{MIN}} can be used to indicate a rate with min as the time unit. \hypertarget{camp_rxn_condensed_phase_arrhenius}{}\doxysection{CAMP\+: Condensed-\/\+Phase Arrhenius Reaction}\label{camp_rxn_condensed_phase_arrhenius}
 Condensed-\/phase Arrhenius reactions are calculated using an Arrhenius-\/like rate constant that takes the form\+:
 
-\[ Ae^{(\frac{-E_a}{k_bT})}(\frac{T}{D})^B(1.0+E*P) \]
+\[
+   Ae^{(\frac{-E_a}{k_bT})}(\frac{T}{D})^B(1.0+E*P)
+ \]
 
 where $A$ is the pre-\/exponential factor ( $[\mbox{U}]^{-(n-1)} s^{-1}$), $U$ is the unit of the reactants and products, which can be $M$ for aqueous-\/phase reactions or mol $\mbox{m}^{-3}$ for all other condensed-\/phase reactions, $n$ is the number of reactants, $E_a$ is the activation energy (J), $k_b$ is the Boltzmann constant (J/K), $D$ (K), $B$ (unitless) and $E$ ( $Pa^{-1}$) are reaction parameters, $T$ is the temperature (K), and $P$ is the pressure (Pa). The first two terms are described in Finlayson-\/\+Pitts and Pitts (2000) {\bfseries [Finlayson-\/\+Pitts2000]} . The final term is included to accomodate CMAQ EBI solver type 7 rate constants {\bfseries [Gipson]}.
 
@@ -218,7 +234,9 @@ The key-\/value pair {\bfseries{aerosol}} {\bfseries{phase}} is required and mus
 Optionally, a parameter {\bfseries{C}} may be included, and is taken to equal $\frac{-E_a}{k_b}$. Note that either {\bfseries{Ea}} or {\bfseries{C}} may be included, but not both. When neither {\bfseries{Ea}} or {\bfseries{C}} are included, they are assumed to be 0.\+0. When {\bfseries{A}} is not included, it is assumed to be 1.\+0, when {\bfseries{D}} is not included, it is assumed to be 300.\+0 K, when {\bfseries{B}} is not included, it is assumed to be 0.\+0, and when {\bfseries{E}} is not included, it is assumed to be 0.\+0. \hypertarget{camp_rxn_emission}{}\doxysection{CAMP\+: Emission}\label{camp_rxn_emission}
 Emission reactions take the form\+:
 
-\[ \rightarrow \mbox{X} \]
+\[
+   \rightarrow \mbox{X}
+ \]
 
 where $\ce{X}$ is the species being emitted.
 
@@ -237,7 +255,9 @@ Input data for emission reactions have the following format \+:
  The key-\/value pair {\bfseries{species}} is required and its value must be the name of the species being emitted. The {\bfseries{scaling}} {\bfseries{factor}} is optional, and can be used to set a constant scaling factor for the rate. When a {\bfseries{scaling}} {\bfseries{factor}} is not provided, it is assumed to be 1.\+0. All other data is optional and will be available to external modules during initialization. Rates are in units of $\mbox{concentration units} \quad s^{-1}$, and must be set using a {\ttfamily rxn\+\_\+update\+\_\+data\+\_\+emission\+\_\+t} object. \hypertarget{camp_rxn_first_order_loss}{}\doxysection{CAMP\+: First-\/\+Order Loss}\label{camp_rxn_first_order_loss}
 First-\/\+Order Loss reactions take the form\+:
 
-\[ \mbox{X} \rightarrow \]
+\[
+   \mbox{X} \rightarrow
+ \]
 
 where $\ce{X}$ is the species being lost.
 
@@ -256,17 +276,29 @@ Input data for first-\/order loss reactions have the following format \+:
  The key-\/value pairs {\bfseries{species}} is required and its value must be the name of the species being removed by the reaction. The {\bfseries{scaling}} {\bfseries{factor}} is optional, and can be used to set a constant scaling factor for the rate constant. When a {\bfseries{scaling}} {\bfseries{factor}} is not provided, it is assumed to be 1.\+0. All other data is optional and will be available to external modules during initialization. Rate constants are in units of $s^{-1}$, and must be set using a {\ttfamily rxn\+\_\+first\+\_\+order\+\_\+loss\+\_\+update\+\_\+data\+\_\+t} object. \hypertarget{camp_rxn_HL_phase_transfer}{}\doxysection{CAMP\+: Henry\textquotesingle{}s Law Phase-\/\+Transfer Reaction}\label{camp_rxn_HL_phase_transfer}
 Henry\textquotesingle{}s Law phase-\/trasfer reactions use equilibrium rate constants that are calculated as\+:
 
-\[ HLC(298K) * e^{C({1/T-1/298})} \]
+\[
+   HLC(298K) * e^{C({1/T-1/298})}
+ \]
 
 where $HLC(298K)$ is the Henry\textquotesingle{}s Law constant at 298 K \mbox{[}M $\mbox{Pa}^{-1}$\mbox{]}, $C$ is a constant \mbox{[}K\mbox{]} and $T$ is the temperature \mbox{[}K\mbox{]}. Uptake kinetics are based on the particle effective radius, $r_{eff}$ \mbox{[} $\mbox{m}$\mbox{]}, the condensing species gas-\/phase diffusion coefficient, $D_g$ \mbox{[} $\mbox{m}^2\,\mbox{s}^{-1}$\mbox{]}, its molecular weight $MW$ \mbox{[}kg $\mbox{mol}^{-3}$\mbox{]}, and $N^{*}$, which is used to calculate the mass accomodation coefficient.
 
 Mass accomodation coefficients and condensation rate constants are calculated using the method of Ervans et al. (2003) {\bfseries [Ervens2003]} and references therein. Mass accomodation coefficients ( $\alpha$) are calculated as\+:
 
-\[ \Delta H_{obs} = -10 \times (N^*-1) + 7.53 \times (N^{*2/3}-1) - 0.1 \times 10 \quad (\mbox{kcal}\,\mbox{M}^{-1}) \] \[ \Delta S_{obs} = -13 \times (N^*-1) - 19 \times (N^*-1) + 9.21 \times (N^{*2/3}-1) - 0.1 \times 13 \quad (\mbox{cal}\,\mbox{M}^{-1}\,\mbox{K}^{-1}) \] \[ \frac{\alpha}{1-\alpha} = e^{\frac{-\Delta G^{*}}{RT}} \] If $\Delta H$ and $\Delta S$ are not provided, $\alpha$ is set to 0.\+1 {\bfseries [Zaveri2008]}.
+\[
+   \Delta H_{obs} = -10 \times (N^*-1) + 7.53 \times (N^{*2/3}-1) - 0.1 \times 10 \quad (\mbox{kcal}\,\mbox{M}^{-1})
+ \] \[
+   \Delta S_{obs} = -13 \times (N^*-1) - 19 \times (N^*-1) + 9.21 \times (N^{*2/3}-1) - 0.1 \times 13 \quad (\mbox{cal}\,\mbox{M}^{-1}\,\mbox{K}^{-1})
+ \] \[
+   \frac{\alpha}{1-\alpha} = e^{\frac{-\Delta G^{*}}{RT}}
+ \] If $\Delta H$ and $\Delta S$ are not provided, $\alpha$ is set to 0.\+1 {\bfseries [Zaveri2008]}.
 
-Condensation rate constants are calculated following {\bfseries [Zaveri2008]} as\+: \[ k_c = 4 \pi r D_g f_{fs}( K_n, \alpha ) \] where $r$ is the radius of the particle(s) \mbox{[}m\mbox{]}, $D_g$ is the diffusion coefficient of the gas-\/phase species \mbox{[} $\mbox{m}^2\,\mbox{s}^{-1}$\mbox{]}, $f_{fs}( K_n, \alpha )$ is the Fuchs Sutugin transition regime correction factor \mbox{[}unitless\mbox{]}, $K_n$ is the Knudsen Number \mbox{[}unitess\mbox{]}, and $\alpha$ is the mass accomodation coefficient.
+Condensation rate constants are calculated following {\bfseries [Zaveri2008]} as\+: \[
+    k_c = 4 \pi r D_g f_{fs}( K_n, \alpha )
+  \] where $r$ is the radius of the particle(s) \mbox{[}m\mbox{]}, $D_g$ is the diffusion coefficient of the gas-\/phase species \mbox{[} $\mbox{m}^2\,\mbox{s}^{-1}$\mbox{]}, $f_{fs}( K_n, \alpha )$ is the Fuchs Sutugin transition regime correction factor \mbox{[}unitless\mbox{]}, $K_n$ is the Knudsen Number \mbox{[}unitess\mbox{]}, and $\alpha$ is the mass accomodation coefficient.
 
-Rates can be calculated as\+: \[ r_c = [G] N_a k_c \] where $[G]$ is the gas-\/phase species concentration \mbox{[}ppm\mbox{]}, $N_a$ is the number concentration of particles \mbox{[} $\mbox{particle}\,\mbox{m}^{-3}$\mbox{]} and the rate $r_c$ is in \mbox{[} $\mbox{ppm}\,\mbox{s}^{-1}$\mbox{]}. The particle radius used to calculate $k_{f}$ is the effective radius \mbox{[} $r_{eff}$\mbox{]}, which is taken as the \char`\"{}least-\/wrong\char`\"{} choice for condensation rates, as it is weighted to surface area {\bfseries [Zender2002]} .
+Rates can be calculated as\+: \[
+    r_c = [G] N_a k_c
+  \] where $[G]$ is the gas-\/phase species concentration \mbox{[}ppm\mbox{]}, $N_a$ is the number concentration of particles \mbox{[} $\mbox{particle}\,\mbox{m}^{-3}$\mbox{]} and the rate $r_c$ is in \mbox{[} $\mbox{ppm}\,\mbox{s}^{-1}$\mbox{]}. The particle radius used to calculate $k_{f}$ is the effective radius \mbox{[} $r_{eff}$\mbox{]}, which is taken as the \char`\"{}least-\/wrong\char`\"{} choice for condensation rates, as it is weighted to surface area {\bfseries [Zender2002]} .
 
 Input data for Phase transfer equations have the following format \+: 
 \begin{DoxyCode}{0}
@@ -283,7 +315,9 @@ Input data for Phase transfer equations have the following format \+:
  The key-\/value pairs {\bfseries{gas-\/phase}} {\bfseries{species}}, and {\bfseries{aerosol-\/phase}} {\bfseries{species}} are required. Only one gas-\/ and one aerosol-\/phase species are allowed per phase-\/transfer reaction. Additionally, gas-\/phase species must include parameters named {\bfseries{HLC(298\+K)}} {\bfseries{}}\mbox{[}{\bfseries{M}} {\bfseries{Pa-\/1}}\mbox{]}, which is the Henry\textquotesingle{}s Law constant at 298 K, {\bfseries{HLC}} {\bfseries{exp}} {\bfseries{factor}} {\bfseries{}}\mbox{[}{\bfseries{K}}\mbox{]}, which is the Henry\textquotesingle{}s Law constant exponential factor \char`\"{}\+C\char`\"{}, {\bfseries{diffusion}} {\bfseries{coeff}} {\bfseries{}}\mbox{[}{\bfseries{m2}} {\bfseries{s-\/1}}\mbox{]}, which specifies the diffusion coefficient in $\mbox{m}^2\,\mbox{s}^{-1}$, and {\bfseries{molecular}} {\bfseries{weight}} {\bfseries{}}\mbox{[}{\bfseries{kg}} {\bfseries{mol-\/1}}\mbox{]}, which specifies the molecular weight of the species in $\mbox{kg}\,\mbox{mol}^{-1}$. They may optionally include the parameter {\bfseries{N}} {\bfseries{star}}, which will be used to calculate the mass accomodation coefficient. When this parameter is not included, the mass accomodation coefficient is assumed to be 1.\+0. \hypertarget{camp_rxn_photolysis}{}\doxysection{CAMP\+: Photolysis}\label{camp_rxn_photolysis}
 Photolysis reactions take the form\+:
 
-\[\ce{ X + h $\nu$ -> Y_1 ( + Y_2 \dots ) }\]
+\[\ce{
+   X + h $\nu$ -> Y_1 ( + Y_2 \dots )
+ }\]
 
 where $\ce{X}$ is the species being photolyzed, and $\ce{Y_n}$ are the photolysis products.
 
@@ -311,11 +345,21 @@ SIMPOL phase transfer reactions are based on the SIMPOL.\+1 model calculations o
 
 Mass accomodation coefficients and condensation rate constants are calculated using the method of Ervans et al. (2003) {\bfseries [Ervens2003]} and references therein. Mass accomodation coefficients ( $\alpha$) are calculated as\+:
 
-\[ \Delta H_{obs} = -10 \times (N^*-1) + 7.53 \times (N^{*2/3}-1) - 0.1 \times 10 \quad (\mbox{kcal}\,\mbox{M}^{-1}) \] \[ \Delta S_{obs} = -13 \times (N^*-1) - 19 \times (N^*-1) + 9.21 \times (N^{*2/3}-1) - 0.1 \times 13 \quad (\mbox{cal}\,\mbox{M}^{-1}\,\mbox{K}^{-1}) \] \[ \frac{\alpha}{1-\alpha} = e^{\frac{-\Delta G^{*}}{RT}} \] If $\Delta H$ and $\Delta S$ are not provided, the mass accomodation coefficient is assumed to be 0.\+1 ({\bfseries [Zaveri2008]}).
+\[
+   \Delta H_{obs} = -10 \times (N^*-1) + 7.53 \times (N^{*2/3}-1) - 0.1 \times 10 \quad (\mbox{kcal}\,\mbox{M}^{-1})
+ \] \[
+   \Delta S_{obs} = -13 \times (N^*-1) - 19 \times (N^*-1) + 9.21 \times (N^{*2/3}-1) - 0.1 \times 13 \quad (\mbox{cal}\,\mbox{M}^{-1}\,\mbox{K}^{-1})
+ \] \[
+   \frac{\alpha}{1-\alpha} = e^{\frac{-\Delta G^{*}}{RT}}
+ \] If $\Delta H$ and $\Delta S$ are not provided, the mass accomodation coefficient is assumed to be 0.\+1 ({\bfseries [Zaveri2008]}).
 
-Condensation rate constants are calculated following {\bfseries [Zaveri2008]} as\+: \[ k_c = 4 \pi r D_g f_{fs}( K_n, \alpha ) \] where $r$ is the radius of the particle(s) \mbox{[}m\mbox{]}, $D_g$ is the diffusion coefficient of the gas-\/phase species \mbox{[} $\mbox{m}^2\,\mbox{s}^{-1}$\mbox{]}, $f_{fs}( K_n, \alpha )$ is the Fuchs Sutugin transition regime correction factor \mbox{[}unitless\mbox{]}, $K_n$ is the Knudsen Number \mbox{[}unitess\mbox{]}, and $\alpha$ is the mass accomodation coefficient.
+Condensation rate constants are calculated following {\bfseries [Zaveri2008]} as\+: \[
+    k_c = 4 \pi r D_g f_{fs}( K_n, \alpha )
+  \] where $r$ is the radius of the particle(s) \mbox{[}m\mbox{]}, $D_g$ is the diffusion coefficient of the gas-\/phase species \mbox{[} $\mbox{m}^2\,\mbox{s}^{-1}$\mbox{]}, $f_{fs}( K_n, \alpha )$ is the Fuchs Sutugin transition regime correction factor \mbox{[}unitless\mbox{]}, $K_n$ is the Knudsen Number \mbox{[}unitess\mbox{]}, and $\alpha$ is the mass accomodation coefficient.
 
-Rates can be calculated as\+: \[ r_c = [G] N_a k_c \] where $[G]$ is the gas-\/phase species concentration \mbox{[}ppm\mbox{]}, $N_a$ is the number concentration of particles \mbox{[} $\mbox{particle}\,\mbox{m}^{-3}$\mbox{]} and the rate $r_c$ is in \mbox{[} $\mbox{ppm}\,\mbox{s}^{-1}$\mbox{]}. The particle radius used to calculate $k_{f}$ is the effective radius \mbox{[} $r_{eff}$\mbox{]}, which is taken as the \char`\"{}least-\/wrong\char`\"{} choice for condensation rates, as it is weighted to surface area {\bfseries [Zender2002]} .
+Rates can be calculated as\+: \[
+    r_c = [G] N_a k_c
+  \] where $[G]$ is the gas-\/phase species concentration \mbox{[}ppm\mbox{]}, $N_a$ is the number concentration of particles \mbox{[} $\mbox{particle}\,\mbox{m}^{-3}$\mbox{]} and the rate $r_c$ is in \mbox{[} $\mbox{ppm}\,\mbox{s}^{-1}$\mbox{]}. The particle radius used to calculate $k_{f}$ is the effective radius \mbox{[} $r_{eff}$\mbox{]}, which is taken as the \char`\"{}least-\/wrong\char`\"{} choice for condensation rates, as it is weighted to surface area {\bfseries [Zender2002]} .
 
 Input data for SIMPOL phase transfer reactions have the following format \+: 
 \begin{DoxyCode}{0}
@@ -334,10 +378,14 @@ Input data for SIMPOL phase transfer reactions have the following format \+:
 
 Gas-\/phase species must include parameters named {\bfseries{diffusion}} {\bfseries{coeff}} {\bfseries{}}\mbox{[}{\bfseries{m2}} {\bfseries{s-\/1}}\mbox{]}, which specifies the diffusion coefficient in $\mbox{m}^2\,\mbox{s}^{-1}$, and {\bfseries{molecular}} {\bfseries{weight}} {\bfseries{}}\mbox{[}{\bfseries{kg}} {\bfseries{mol-\/1}}\mbox{]}, which specifies the molecular weight of the species in $\mbox{kg}\,\mbox{mol}^{-1}$. They may optionally include the parameter {\bfseries{N}} {\bfseries{star}}, which will be used to calculate th mass accomodation coefficient. When this parameter is not included, the mass accomodation coefficient is assumed to be 1.\+0.
 
-The key-\/value pair {\bfseries{B}} is also required and must have a value of an array of exactly four members that specifies the SIMPOL parameters for the partitioning species. The {\bfseries{B}} parameters can be obtained by summing the contributions of each functional group present in the partitioning species to the overall $B_{n,i}$ for species $i$, such that\+: \[ B_{n,i} = \sum_{k} \nu_{k,i} B_{n,k} \forall n \in [1...4] \] where $\nu_{k,i}$ is the number of functional groups $k$ in species $i$ and the parameters $B_{n,k}$ for each functional group $k$ can be found in table 5 of Pankow and Asher (2008) {\bfseries [Pankow2008]}. \hypertarget{camp_rxn_ternary_chemical_activation}{}\doxysection{CAMP\+: Ternary Chemical Activation Reaction}\label{camp_rxn_ternary_chemical_activation}
+The key-\/value pair {\bfseries{B}} is also required and must have a value of an array of exactly four members that specifies the SIMPOL parameters for the partitioning species. The {\bfseries{B}} parameters can be obtained by summing the contributions of each functional group present in the partitioning species to the overall $B_{n,i}$ for species $i$, such that\+: \[
+   B_{n,i} = \sum_{k} \nu_{k,i} B_{n,k} \forall n \in [1...4]
+ \] where $\nu_{k,i}$ is the number of functional groups $k$ in species $i$ and the parameters $B_{n,k}$ for each functional group $k$ can be found in table 5 of Pankow and Asher (2008) {\bfseries [Pankow2008]}. \hypertarget{camp_rxn_ternary_chemical_activation}{}\doxysection{CAMP\+: Ternary Chemical Activation Reaction}\label{camp_rxn_ternary_chemical_activation}
 Ternary Chemical Activation reaction rate constant equations take the form\+:
 
-\[ \frac{k_0}{1+k_0[\mbox{M}]/k_{\inf}}F_C^{(1+1/N[log_{10}(k_0[\mbox{M}]/k_{\inf})]^2)^{-1}} \]
+\[
+   \frac{k_0}{1+k_0[\mbox{M}]/k_{\inf}}F_C^{(1+1/N[log_{10}(k_0[\mbox{M}]/k_{\inf})]^2)^{-1}}
+ \]
 
 where $k_0$ is the low-\/pressure limiting rate constant, $k_{\inf}$ is the high-\/pressure limiting rate constant, $[\mbox{M}]$ is the density of air, and $F_C$ and $N$ are parameters that determine the shape of the fall-\/off curve, and are typically 0.\+6 and 1.\+0, respectively {\bfseries [JPL15]}. $k_0$ and $k_{\inf}$ are calculated as \mbox{\hyperlink{camp_rxn_arrhenius}{Arrhenius}} rate constants with $D=300$ and $E=0$.
 
@@ -374,7 +422,9 @@ The two sets of parameters beginning with {\bfseries{k0\+\_\+}} and {\bfseries{k
 The unit for time is assumed to be s, but inclusion of the optional key-\/value pair {\bfseries{time}} {\bfseries{unit}} = {\bfseries{MIN}} can be used to indicate a rate with min as the time unit. \hypertarget{camp_rxn_troe}{}\doxysection{CAMP\+: Troe Reaction}\label{camp_rxn_troe}
 Troe (fall-\/off) reaction rate constant equations take the form\+:
 
-\[ \frac{k_0[\mbox{M}]}{1+k_0[\mbox{M}]/k_{\inf}}F_C^{(1+1/N[log_{10}(k_0[\mbox{M}]/k_{\inf})]^2)^{-1}} \]
+\[
+   \frac{k_0[\mbox{M}]}{1+k_0[\mbox{M}]/k_{\inf}}F_C^{(1+1/N[log_{10}(k_0[\mbox{M}]/k_{\inf})]^2)^{-1}}
+ \]
 
 where $k_0$ is the low-\/pressure limiting rate constant, $k_{\inf}$ is the high-\/pressure limiting rate constant, $[\mbox{M}]$ is the density of air, and $F_C$ and $N$ are parameters that determine the shape of the fall-\/off curve, and are typically 0.\+6 and 1.\+0, respectively {\bfseries [Finlayson-\/\+Pitts2000]} {\bfseries [Gipson]}. $k_0$ and $k_{\inf}$ are calculated as \mbox{\hyperlink{camp_rxn_arrhenius}{Arrhenius}} rate constants with $D=300$ and $E=0$.
 
@@ -411,11 +461,17 @@ The two sets of parameters beginning with {\bfseries{k0\+\_\+}} and {\bfseries{k
 The unit for time is assumed to be s, but inclusion of the optional key-\/value pair {\bfseries{time}} {\bfseries{unit}} = {\bfseries{MIN}} can be used to indicate a rate with min as the time unit. \hypertarget{camp_rxn_wennberg_no_ro2}{}\doxysection{CAMP\+: Wennberg NO + RO2 Reaction}\label{camp_rxn_wennberg_no_ro2}
 Wennberg NO + RO2 reactions are branched reactions with one branch forming alkoxy radicals plus $\ce{NO2}$ and the other forming organic nitrates {\bfseries [Wennberg2018]} . The rate constants for each branch are based on an Arrhenius rate constant and a temperature-\/ and structure-\/dependent branching ratio calculated as\+:
 
-\begin{align} k_{nitrate} & = \left(X e^{-Y/T}\right) \left(\frac{A(T, \mbox{[M]}, n)}{A(T, \mbox{[M]}, n) + Z}\right) \\ k_{alkoxy} & = \left(X e^{-Y/T}\right)\left(\frac{Z}{Z + A(T, \mbox{[M]}, n)}\right) \\ A(T, \mbox{[M]}, n) & = \frac{2 \times 10^{-22} e^n \mbox{[M]}}{1 + \frac{2 \times 10^{-22} e^n \mbox{[M]}}{0.43(T/298)^{-8}}} 0.41^{(1+[log( \frac{2 \times 10^{-22} e^n \mbox{[M]}}{0.43(T/298)^{-8}})]^2)^{-1}} \end{align}
+\begin{align}
+   k_{nitrate} & = \left(X e^{-Y/T}\right) \left(\frac{A(T, \mbox{[M]}, n)}{A(T, \mbox{[M]}, n) + Z}\right) \\
+   k_{alkoxy} & = \left(X e^{-Y/T}\right)\left(\frac{Z}{Z + A(T, \mbox{[M]}, n)}\right) \\
+   A(T, \mbox{[M]}, n) & = \frac{2 \times 10^{-22} e^n \mbox{[M]}}{1 + \frac{2 \times 10^{-22} e^n \mbox{[M]}}{0.43(T/298)^{-8}}} 0.41^{(1+[log( \frac{2 \times 10^{-22} e^n \mbox{[M]}}{0.43(T/298)^{-8}})]^2)^{-1}}
+ \end{align}
 
 where $T$ is temperature (K), \mbox{[}M\mbox{]} is the number density of air (molecules $\mbox{cm}^{-3}$), $X$ and $Y$ are Arrhenius parameters for the overall reaction, $n$ is the number of heavy atoms in the $\ce{RO2}$ reacting species (excluding the peroxy moiety), and $Z$ is defined as a function of two parameters ( $\alpha_0, n$)\+:
 
-\[ Z( \alpha_0, n) = A(T = 293 \mbox{K}, \mbox{[M]} = 2.45 \times 10^{19} \frac{\mbox{molec}}{\mbox{cm}^3}, n) \frac{(1-\alpha_0)}{\alpha_0} \]
+\[
+   Z( \alpha_0, n) = A(T = 293 \mbox{K}, \mbox{[M]} = 2.45 \times 10^{19} \frac{\mbox{molec}}{\mbox{cm}^3}, n) \frac{(1-\alpha_0)}{\alpha_0}
+ \]
 
 More details can be found in Wennberg et al. (2018) {\bfseries [Wennberg2018]} .
 
@@ -451,7 +507,9 @@ Input data for Wennberg NO + RO2 equations has the following format\+:
 When {\bfseries{X}} is not included, it is assumed to be 1.\+0, when {\bfseries{Y}} is not included, it is assumed to be 0.\+0 K, when {\bfseries{a0}} is not included, it is assumed to be 1.\+0, and when {\bfseries{n}} is not included, it is assumed to be 0. The unit for time is assumed to be s, but inclusion of the optional key-\/value pair {\bfseries{time}} {\bfseries{unit}} = {\bfseries{MIN}} can be used to indicate a rate with min as the time unit. \hypertarget{camp_rxn_wennberg_tunneling}{}\doxysection{CAMP\+: Wennberg Tunneling Reaction}\label{camp_rxn_wennberg_tunneling}
 Wennberg tunneling reaction rate constant equations are calculated as follows\+:
 
-\[ Ae^{(\frac{-B}{T})}e^{(\frac{C}{T^3})} \]
+\[
+   Ae^{(\frac{-B}{T})}e^{(\frac{C}{T^3})}
+ \]
 
 where $A$ is the pre-\/exponential factor ( $(\mbox{#}\,\mbox{cm}^{-3})^{-(n-1)}\mbox{s}^{-1}$), and $B$ and $C$ are parameters that capture the temperature dependence as described in Wennberg et al. (2018) {\bfseries [Wennberg2018]} .
 
@@ -481,7 +539,9 @@ Input data for Wennberg tunneling equations has the following format\+:
 When {\bfseries{A}} is not included, it is assumed to be 1.\+0, when {\bfseries{B}} is not included, it is assumed to be 0.\+0 K, and when {\bfseries{C}} is not included, it is assumed to be 0.\+0 $\mbox{K}^3$. The unit for time is assumed to be s, but inclusion of the optional key-\/value pair {\bfseries{time}} {\bfseries{unit}} = {\bfseries{MIN}} can be used to indicate a rate with min as the time unit. \hypertarget{camp_rxn_wet_deposition}{}\doxysection{CAMP\+: Wet Deposition}\label{camp_rxn_wet_deposition}
 Wet Deposition reactions take the form\+:
 
-\[ \mbox{X} \rightarrow \]
+\[
+   \mbox{X} \rightarrow
+ \]
 
 where $\ce{X}$ is a set of species in an aerosol phase undergoing wet deposition at a given rate.
 
@@ -557,7 +617,9 @@ A {\ttfamily json} object containing information about a chemical reaction or ph
 All remaining data are optional and may include any valid {\ttfamily json} value, including nested objects. However, extending types (i.\+e. reactions) will have specific requirements for the remaining data. Additionally it is recommended to use the above format for reactants and products when developing derived types that extend {\ttfamily \mbox{\hyperlink{structcamp__rxn__data_1_1rxn__data__t}{rxn\+\_\+data\+\_\+t}}}, and to use {\bfseries{type}} values that match the name of the extending derived-\/type. For example, the reaction type {\ttfamily rxn\+\_\+photolysis\+\_\+t} would have a {\bfseries{type}} of {\bfseries{PHOTOLYSIS}}. \hypertarget{camp_rxn_arrhenius}{}\doxysubsection{CAMP\+: Arrhenius Reaction}\label{camp_rxn_arrhenius}
 Arrhenius-\/like reaction rate constant equations are calculated as follows\+:
 
-\[ Ae^{(\frac{-E_a}{k_bT})}(\frac{T}{D})^B(1.0+E*P) \]
+\[
+   Ae^{(\frac{-E_a}{k_bT})}(\frac{T}{D})^B(1.0+E*P)
+ \]
 
 where $A$ is the pre-\/exponential factor (\# $(\mbox{cm}^{-3})^{-(n-1)}\mbox{s}^{-1}$), $n$ is the number of reactants, $E_a$ is the activation energy (J), $k_b$ is the Boltzmann constant (J/K), $D$ (K), $B$ (unitless) and $E$ ( $Pa^{-1}$) are reaction parameters, $T$ is the temperature (K), and $P$ is the pressure (Pa). The first two terms are described in Finlayson-\/\+Pitts and Pitts (2000) {\bfseries [Finlayson-\/\+Pitts2000]} . The final term is included to accomodate CMAQ EBI solver type 7 rate constants.
 
@@ -589,7 +651,9 @@ Input data for Arrhenius equations has the following format\+:
 Optionally, a parameter {\bfseries{C}} may be included, and is taken to equal $\frac{-E_a}{k_b}$. Note that either {\bfseries{Ea}} or {\bfseries{C}} may be included, but not both. When neither {\bfseries{Ea}} or {\bfseries{C}} are included, they are assumed to be 0.\+0. When {\bfseries{A}} is not included, it is assumed to be 1.\+0, when {\bfseries{D}} is not included, it is assumed to be 300.\+0 K, when {\bfseries{B}} is not included, it is assumed to be 0.\+0, and when {\bfseries{E}} is not included, it is assumed to be 0.\+0. The unit for time is assumed to be s, but inclusion of the optional key-\/value pair {\bfseries{time}} {\bfseries{unit}} = {\bfseries{MIN}} can be used to indicate a rate with min as the time unit. \hypertarget{camp_rxn_aqueous_equilibrium}{}\doxysubsection{CAMP\+: Aqueous-\/\+Phase Equilibrium}\label{camp_rxn_aqueous_equilibrium}
 Aqueous equilibrium reactions are calculated as forward and reverse reactions. The reverse rate constant must be provided as part of the input data and the forward rate constant is calculated using the provided reverse rate constant and an equilibrium constant of the following format\+:
 
-\[ Ae^{C({1/T-1/298})} \]
+\[
+   Ae^{C({1/T-1/298})}
+ \]
 
 where $A$ is the pre-\/exponential factor ( $s^{-1}$), $C$ is a constant and $T$ is the temperature (K).
 
@@ -625,11 +689,17 @@ When {\bfseries{A}} is not included, it is assumed to be 1.\+0, when {\bfseries{
 The unit for time is assumed to be s, but inclusion of the optional key-\/value pair {\bfseries{time}} {\bfseries{unit}} = {\bfseries{MIN}} can be used to indicate a rate with min as the time unit. \hypertarget{camp_rxn_CMAQ_H2O2}{}\doxysubsection{CAMP\+: Special CMAQ Reaction for H2\+O2}\label{camp_rxn_CMAQ_H2O2}
 For the reactions\+:
 
-\[\ce{ HO2 + HO2 ->[k] H2O2 }\] \[\ce{ HO2 + HO2 + H2O ->[k] H2O2 }\]
+\[\ce{
+   HO2 + HO2 ->[k] H2O2
+ }\] \[\ce{
+   HO2 + HO2 + H2O ->[k] H2O2
+ }\]
 
 CMAQ rate constants are calculated as\+:
 
-\[ k=k_1+k_2[\mbox{M}] \]
+\[
+   k=k_1+k_2[\mbox{M}]
+ \]
 
 where $k_1$ and $k_2$ are \mbox{\hyperlink{camp_rxn_arrhenius}{Arrhenius}} rate constants with $D=300$ and $E=0$, and $[\mbox{M}]$ is the concentration of air {\bfseries [Gipson]}.
 
@@ -664,11 +734,15 @@ The two sets of parameters beginning with {\bfseries{k1\+\_\+}} and {\bfseries{k
 The unit for time is assumed to be s, but inclusion of the optional key-\/value pair {\bfseries{time}} {\bfseries{unit}} = {\bfseries{MIN}} can be used to indicate a rate with min as the time unit. \hypertarget{camp_rxn_CMAQ_OH_HNO3}{}\doxysubsection{CAMP\+: Special CMAQ Reaction for OH+\+HNO3}\label{camp_rxn_CMAQ_OH_HNO3}
 For the reaction\+:
 
-\[\ce{ OH + HNO3 ->[k] NO3 + H2O }\]
+\[\ce{
+   OH + HNO3 ->[k] NO3 + H2O
+ }\]
 
 CMAQ rate constants are calculated as\+:
 
-\[ k=k_0+(\frac{k_3[\mbox{M}]}{1+k_3[\mbox{M}]/k_2}) \]
+\[
+   k=k_0+(\frac{k_3[\mbox{M}]}{1+k_3[\mbox{M}]/k_2})
+ \]
 
 where $k_0$, $k_2$ and $k_3$ are \mbox{\hyperlink{camp_rxn_arrhenius}{Arrhenius}} rate constants with $D=300$ and $E=0$, and $[\mbox{M}]$ is the concentration of air {\bfseries [Gipson]}.
 
@@ -706,7 +780,9 @@ The three sets of parameters beginning with {\bfseries{k0\+\_\+}}, {\bfseries{k2
 The unit for time is assumed to be s, but inclusion of the optional key-\/value pair {\bfseries{time}} {\bfseries{unit}} = {\bfseries{MIN}} can be used to indicate a rate with min as the time unit. \hypertarget{camp_rxn_condensed_phase_arrhenius}{}\doxysubsection{CAMP\+: Condensed-\/\+Phase Arrhenius Reaction}\label{camp_rxn_condensed_phase_arrhenius}
 Condensed-\/phase Arrhenius reactions are calculated using an Arrhenius-\/like rate constant that takes the form\+:
 
-\[ Ae^{(\frac{-E_a}{k_bT})}(\frac{T}{D})^B(1.0+E*P) \]
+\[
+   Ae^{(\frac{-E_a}{k_bT})}(\frac{T}{D})^B(1.0+E*P)
+ \]
 
 where $A$ is the pre-\/exponential factor ( $[\mbox{U}]^{-(n-1)} s^{-1}$), $U$ is the unit of the reactants and products, which can be $M$ for aqueous-\/phase reactions or mol $\mbox{m}^{-3}$ for all other condensed-\/phase reactions, $n$ is the number of reactants, $E_a$ is the activation energy (J), $k_b$ is the Boltzmann constant (J/K), $D$ (K), $B$ (unitless) and $E$ ( $Pa^{-1}$) are reaction parameters, $T$ is the temperature (K), and $P$ is the pressure (Pa). The first two terms are described in Finlayson-\/\+Pitts and Pitts (2000) {\bfseries [Finlayson-\/\+Pitts2000]} . The final term is included to accomodate CMAQ EBI solver type 7 rate constants {\bfseries [Gipson]}.
 
@@ -747,17 +823,29 @@ The key-\/value pair {\bfseries{aerosol}} {\bfseries{phase}} is required and mus
 Optionally, a parameter {\bfseries{C}} may be included, and is taken to equal $\frac{-E_a}{k_b}$. Note that either {\bfseries{Ea}} or {\bfseries{C}} may be included, but not both. When neither {\bfseries{Ea}} or {\bfseries{C}} are included, they are assumed to be 0.\+0. When {\bfseries{A}} is not included, it is assumed to be 1.\+0, when {\bfseries{D}} is not included, it is assumed to be 300.\+0 K, when {\bfseries{B}} is not included, it is assumed to be 0.\+0, and when {\bfseries{E}} is not included, it is assumed to be 0.\+0. \hypertarget{camp_rxn_HL_phase_transfer}{}\doxysubsection{CAMP\+: Henry\textquotesingle{}s Law Phase-\/\+Transfer Reaction}\label{camp_rxn_HL_phase_transfer}
 Henry\textquotesingle{}s Law phase-\/trasfer reactions use equilibrium rate constants that are calculated as\+:
 
-\[ HLC(298K) * e^{C({1/T-1/298})} \]
+\[
+   HLC(298K) * e^{C({1/T-1/298})}
+ \]
 
 where $HLC(298K)$ is the Henry\textquotesingle{}s Law constant at 298 K \mbox{[}M $\mbox{Pa}^{-1}$\mbox{]}, $C$ is a constant \mbox{[}K\mbox{]} and $T$ is the temperature \mbox{[}K\mbox{]}. Uptake kinetics are based on the particle effective radius, $r_{eff}$ \mbox{[} $\mbox{m}$\mbox{]}, the condensing species gas-\/phase diffusion coefficient, $D_g$ \mbox{[} $\mbox{m}^2\,\mbox{s}^{-1}$\mbox{]}, its molecular weight $MW$ \mbox{[}kg $\mbox{mol}^{-3}$\mbox{]}, and $N^{*}$, which is used to calculate the mass accomodation coefficient.
 
 Mass accomodation coefficients and condensation rate constants are calculated using the method of Ervans et al. (2003) {\bfseries [Ervens2003]} and references therein. Mass accomodation coefficients ( $\alpha$) are calculated as\+:
 
-\[ \Delta H_{obs} = -10 \times (N^*-1) + 7.53 \times (N^{*2/3}-1) - 0.1 \times 10 \quad (\mbox{kcal}\,\mbox{M}^{-1}) \] \[ \Delta S_{obs} = -13 \times (N^*-1) - 19 \times (N^*-1) + 9.21 \times (N^{*2/3}-1) - 0.1 \times 13 \quad (\mbox{cal}\,\mbox{M}^{-1}\,\mbox{K}^{-1}) \] \[ \frac{\alpha}{1-\alpha} = e^{\frac{-\Delta G^{*}}{RT}} \] If $\Delta H$ and $\Delta S$ are not provided, $\alpha$ is set to 0.\+1 {\bfseries [Zaveri2008]}.
+\[
+   \Delta H_{obs} = -10 \times (N^*-1) + 7.53 \times (N^{*2/3}-1) - 0.1 \times 10 \quad (\mbox{kcal}\,\mbox{M}^{-1})
+ \] \[
+   \Delta S_{obs} = -13 \times (N^*-1) - 19 \times (N^*-1) + 9.21 \times (N^{*2/3}-1) - 0.1 \times 13 \quad (\mbox{cal}\,\mbox{M}^{-1}\,\mbox{K}^{-1})
+ \] \[
+   \frac{\alpha}{1-\alpha} = e^{\frac{-\Delta G^{*}}{RT}}
+ \] If $\Delta H$ and $\Delta S$ are not provided, $\alpha$ is set to 0.\+1 {\bfseries [Zaveri2008]}.
 
-Condensation rate constants are calculated following {\bfseries [Zaveri2008]} as\+: \[ k_c = 4 \pi r D_g f_{fs}( K_n, \alpha ) \] where $r$ is the radius of the particle(s) \mbox{[}m\mbox{]}, $D_g$ is the diffusion coefficient of the gas-\/phase species \mbox{[} $\mbox{m}^2\,\mbox{s}^{-1}$\mbox{]}, $f_{fs}( K_n, \alpha )$ is the Fuchs Sutugin transition regime correction factor \mbox{[}unitless\mbox{]}, $K_n$ is the Knudsen Number \mbox{[}unitess\mbox{]}, and $\alpha$ is the mass accomodation coefficient.
+Condensation rate constants are calculated following {\bfseries [Zaveri2008]} as\+: \[
+    k_c = 4 \pi r D_g f_{fs}( K_n, \alpha )
+  \] where $r$ is the radius of the particle(s) \mbox{[}m\mbox{]}, $D_g$ is the diffusion coefficient of the gas-\/phase species \mbox{[} $\mbox{m}^2\,\mbox{s}^{-1}$\mbox{]}, $f_{fs}( K_n, \alpha )$ is the Fuchs Sutugin transition regime correction factor \mbox{[}unitless\mbox{]}, $K_n$ is the Knudsen Number \mbox{[}unitess\mbox{]}, and $\alpha$ is the mass accomodation coefficient.
 
-Rates can be calculated as\+: \[ r_c = [G] N_a k_c \] where $[G]$ is the gas-\/phase species concentration \mbox{[}ppm\mbox{]}, $N_a$ is the number concentration of particles \mbox{[} $\mbox{particle}\,\mbox{m}^{-3}$\mbox{]} and the rate $r_c$ is in \mbox{[} $\mbox{ppm}\,\mbox{s}^{-1}$\mbox{]}. The particle radius used to calculate $k_{f}$ is the effective radius \mbox{[} $r_{eff}$\mbox{]}, which is taken as the \char`\"{}least-\/wrong\char`\"{} choice for condensation rates, as it is weighted to surface area {\bfseries [Zender2002]} .
+Rates can be calculated as\+: \[
+    r_c = [G] N_a k_c
+  \] where $[G]$ is the gas-\/phase species concentration \mbox{[}ppm\mbox{]}, $N_a$ is the number concentration of particles \mbox{[} $\mbox{particle}\,\mbox{m}^{-3}$\mbox{]} and the rate $r_c$ is in \mbox{[} $\mbox{ppm}\,\mbox{s}^{-1}$\mbox{]}. The particle radius used to calculate $k_{f}$ is the effective radius \mbox{[} $r_{eff}$\mbox{]}, which is taken as the \char`\"{}least-\/wrong\char`\"{} choice for condensation rates, as it is weighted to surface area {\bfseries [Zender2002]} .
 
 Input data for Phase transfer equations have the following format \+: 
 \begin{DoxyCode}{0}
@@ -776,11 +864,21 @@ SIMPOL phase transfer reactions are based on the SIMPOL.\+1 model calculations o
 
 Mass accomodation coefficients and condensation rate constants are calculated using the method of Ervans et al. (2003) {\bfseries [Ervens2003]} and references therein. Mass accomodation coefficients ( $\alpha$) are calculated as\+:
 
-\[ \Delta H_{obs} = -10 \times (N^*-1) + 7.53 \times (N^{*2/3}-1) - 0.1 \times 10 \quad (\mbox{kcal}\,\mbox{M}^{-1}) \] \[ \Delta S_{obs} = -13 \times (N^*-1) - 19 \times (N^*-1) + 9.21 \times (N^{*2/3}-1) - 0.1 \times 13 \quad (\mbox{cal}\,\mbox{M}^{-1}\,\mbox{K}^{-1}) \] \[ \frac{\alpha}{1-\alpha} = e^{\frac{-\Delta G^{*}}{RT}} \] If $\Delta H$ and $\Delta S$ are not provided, the mass accomodation coefficient is assumed to be 0.\+1 ({\bfseries [Zaveri2008]}).
+\[
+   \Delta H_{obs} = -10 \times (N^*-1) + 7.53 \times (N^{*2/3}-1) - 0.1 \times 10 \quad (\mbox{kcal}\,\mbox{M}^{-1})
+ \] \[
+   \Delta S_{obs} = -13 \times (N^*-1) - 19 \times (N^*-1) + 9.21 \times (N^{*2/3}-1) - 0.1 \times 13 \quad (\mbox{cal}\,\mbox{M}^{-1}\,\mbox{K}^{-1})
+ \] \[
+   \frac{\alpha}{1-\alpha} = e^{\frac{-\Delta G^{*}}{RT}}
+ \] If $\Delta H$ and $\Delta S$ are not provided, the mass accomodation coefficient is assumed to be 0.\+1 ({\bfseries [Zaveri2008]}).
 
-Condensation rate constants are calculated following {\bfseries [Zaveri2008]} as\+: \[ k_c = 4 \pi r D_g f_{fs}( K_n, \alpha ) \] where $r$ is the radius of the particle(s) \mbox{[}m\mbox{]}, $D_g$ is the diffusion coefficient of the gas-\/phase species \mbox{[} $\mbox{m}^2\,\mbox{s}^{-1}$\mbox{]}, $f_{fs}( K_n, \alpha )$ is the Fuchs Sutugin transition regime correction factor \mbox{[}unitless\mbox{]}, $K_n$ is the Knudsen Number \mbox{[}unitess\mbox{]}, and $\alpha$ is the mass accomodation coefficient.
+Condensation rate constants are calculated following {\bfseries [Zaveri2008]} as\+: \[
+    k_c = 4 \pi r D_g f_{fs}( K_n, \alpha )
+  \] where $r$ is the radius of the particle(s) \mbox{[}m\mbox{]}, $D_g$ is the diffusion coefficient of the gas-\/phase species \mbox{[} $\mbox{m}^2\,\mbox{s}^{-1}$\mbox{]}, $f_{fs}( K_n, \alpha )$ is the Fuchs Sutugin transition regime correction factor \mbox{[}unitless\mbox{]}, $K_n$ is the Knudsen Number \mbox{[}unitess\mbox{]}, and $\alpha$ is the mass accomodation coefficient.
 
-Rates can be calculated as\+: \[ r_c = [G] N_a k_c \] where $[G]$ is the gas-\/phase species concentration \mbox{[}ppm\mbox{]}, $N_a$ is the number concentration of particles \mbox{[} $\mbox{particle}\,\mbox{m}^{-3}$\mbox{]} and the rate $r_c$ is in \mbox{[} $\mbox{ppm}\,\mbox{s}^{-1}$\mbox{]}. The particle radius used to calculate $k_{f}$ is the effective radius \mbox{[} $r_{eff}$\mbox{]}, which is taken as the \char`\"{}least-\/wrong\char`\"{} choice for condensation rates, as it is weighted to surface area {\bfseries [Zender2002]} .
+Rates can be calculated as\+: \[
+    r_c = [G] N_a k_c
+  \] where $[G]$ is the gas-\/phase species concentration \mbox{[}ppm\mbox{]}, $N_a$ is the number concentration of particles \mbox{[} $\mbox{particle}\,\mbox{m}^{-3}$\mbox{]} and the rate $r_c$ is in \mbox{[} $\mbox{ppm}\,\mbox{s}^{-1}$\mbox{]}. The particle radius used to calculate $k_{f}$ is the effective radius \mbox{[} $r_{eff}$\mbox{]}, which is taken as the \char`\"{}least-\/wrong\char`\"{} choice for condensation rates, as it is weighted to surface area {\bfseries [Zender2002]} .
 
 Input data for SIMPOL phase transfer reactions have the following format \+: 
 \begin{DoxyCode}{0}
@@ -799,10 +897,14 @@ Input data for SIMPOL phase transfer reactions have the following format \+:
 
 Gas-\/phase species must include parameters named {\bfseries{diffusion}} {\bfseries{coeff}} {\bfseries{}}\mbox{[}{\bfseries{m2}} {\bfseries{s-\/1}}\mbox{]}, which specifies the diffusion coefficient in $\mbox{m}^2\,\mbox{s}^{-1}$, and {\bfseries{molecular}} {\bfseries{weight}} {\bfseries{}}\mbox{[}{\bfseries{kg}} {\bfseries{mol-\/1}}\mbox{]}, which specifies the molecular weight of the species in $\mbox{kg}\,\mbox{mol}^{-1}$. They may optionally include the parameter {\bfseries{N}} {\bfseries{star}}, which will be used to calculate th mass accomodation coefficient. When this parameter is not included, the mass accomodation coefficient is assumed to be 1.\+0.
 
-The key-\/value pair {\bfseries{B}} is also required and must have a value of an array of exactly four members that specifies the SIMPOL parameters for the partitioning species. The {\bfseries{B}} parameters can be obtained by summing the contributions of each functional group present in the partitioning species to the overall $B_{n,i}$ for species $i$, such that\+: \[ B_{n,i} = \sum_{k} \nu_{k,i} B_{n,k} \forall n \in [1...4] \] where $\nu_{k,i}$ is the number of functional groups $k$ in species $i$ and the parameters $B_{n,k}$ for each functional group $k$ can be found in table 5 of Pankow and Asher (2008) {\bfseries [Pankow2008]}. \hypertarget{camp_rxn_photolysis}{}\doxysubsection{CAMP\+: Photolysis}\label{camp_rxn_photolysis}
+The key-\/value pair {\bfseries{B}} is also required and must have a value of an array of exactly four members that specifies the SIMPOL parameters for the partitioning species. The {\bfseries{B}} parameters can be obtained by summing the contributions of each functional group present in the partitioning species to the overall $B_{n,i}$ for species $i$, such that\+: \[
+   B_{n,i} = \sum_{k} \nu_{k,i} B_{n,k} \forall n \in [1...4]
+ \] where $\nu_{k,i}$ is the number of functional groups $k$ in species $i$ and the parameters $B_{n,k}$ for each functional group $k$ can be found in table 5 of Pankow and Asher (2008) {\bfseries [Pankow2008]}. \hypertarget{camp_rxn_photolysis}{}\doxysubsection{CAMP\+: Photolysis}\label{camp_rxn_photolysis}
 Photolysis reactions take the form\+:
 
-\[\ce{ X + h $\nu$ -> Y_1 ( + Y_2 \dots ) }\]
+\[\ce{
+   X + h $\nu$ -> Y_1 ( + Y_2 \dots )
+ }\]
 
 where $\ce{X}$ is the species being photolyzed, and $\ce{Y_n}$ are the photolysis products.
 
@@ -828,7 +930,9 @@ Input data for photolysis reactions have the following format \+:
  The key-\/value pairs {\bfseries{reactants}}, and {\bfseries{products}} are required. There must be exactly one key-\/value pair in the {\bfseries{reactants}} object whose name is the species being photolyzed and whose value is an empty {\ttfamily json} object. Any number of products may be present. Products without a specified {\bfseries{yield}} are assumed to have a {\bfseries{yield}} of 1.\+0. The {\bfseries{scaling}} {\bfseries{factor}} is optional, and can be used to set a constant scaling factor for the rate constant. When the {\bfseries{scaling}} {\bfseries{factor}} is not provided, it is assumed to be 1.\+0. All other data is optional and will be available to external photolysis modules during initialization. Rate constants are in units of $s^{-1}$, and must be set using a {\ttfamily rxn\+\_\+photolysis\+\_\+update\+\_\+data\+\_\+t} object. \hypertarget{camp_rxn_troe}{}\doxysubsection{CAMP\+: Troe Reaction}\label{camp_rxn_troe}
 Troe (fall-\/off) reaction rate constant equations take the form\+:
 
-\[ \frac{k_0[\mbox{M}]}{1+k_0[\mbox{M}]/k_{\inf}}F_C^{(1+1/N[log_{10}(k_0[\mbox{M}]/k_{\inf})]^2)^{-1}} \]
+\[
+   \frac{k_0[\mbox{M}]}{1+k_0[\mbox{M}]/k_{\inf}}F_C^{(1+1/N[log_{10}(k_0[\mbox{M}]/k_{\inf})]^2)^{-1}}
+ \]
 
 where $k_0$ is the low-\/pressure limiting rate constant, $k_{\inf}$ is the high-\/pressure limiting rate constant, $[\mbox{M}]$ is the density of air, and $F_C$ and $N$ are parameters that determine the shape of the fall-\/off curve, and are typically 0.\+6 and 1.\+0, respectively {\bfseries [Finlayson-\/\+Pitts2000]} {\bfseries [Gipson]}. $k_0$ and $k_{\inf}$ are calculated as \mbox{\hyperlink{camp_rxn_arrhenius}{Arrhenius}} rate constants with $D=300$ and $E=0$.
 
