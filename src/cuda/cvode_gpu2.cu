@@ -6,7 +6,7 @@
 #include "itsolver_gpu.h"
 
 extern "C" {
-#include "cvode_gpu.h"
+#include "cvode2_gpu.h"
 //#include "cuda_structs.h"
 #include "rxns_gpu.h"
 #include "aeros/aero_rep_gpu_solver.h"
@@ -14,247 +14,6 @@ extern "C" {
 #include "Jacobian_gpu.h"
 
 }
-
-#ifdef CAMP_USE_MPI
-#include <mpi.h>
-#endif
-
-#define CV_SUCCESS               0
-
-#define DO_ERROR_TEST    +2
-#define PREDICT_AGAIN    +3
-#define CONV_FAIL        +4
-#define TRY_AGAIN        +5
-#define FIRST_CALL       +6
-#define PREV_CONV_FAIL   +7
-#define PREV_ERR_FAIL    +8
-#define RHSFUNC_RECVR    +9
-
-#define NUM_TESTS    5     /* number of error test quantities     */
-
-/*=================================================================*/
-/*             CVODE Private Constants                             */
-/*=================================================================*/
-
-//#define ZERO    RCONST(0.0)     /* real 0.0     */
-//#define TINY    RCONST(1.0e-10) /* small number */
-#define PT1     RCONST(0.1)     /* real 0.1     */
-#define POINT2  RCONST(0.2)     /* real 0.2     */
-#define FOURTH  RCONST(0.25)    /* real 0.25    */
-//#define HALF    RCONST(0.5)     /* real 0.5     */
-//#define ONE     RCONST(1.0)     /* real 1.0     */
-#define TWO     RCONST(2.0)     /* real 2.0     */
-#define THREE   RCONST(3.0)     /* real 3.0     */
-#define FOUR    RCONST(4.0)     /* real 4.0     */
-#define FIVE    RCONST(5.0)     /* real 5.0     */
-#define TWELVE  RCONST(12.0)    /* real 12.0    */
-#define HUNDRED RCONST(100.0)   /* real 100.0   */
-#define CAMP_TINY RCONST(1.0e-30) /* small number for CAMP */
-
-/*=================================================================*/
-/*             CVODE Routine-Specific Constants                    */
-/*=================================================================*/
-
-/*
- * Control constants for lower-level functions used by cvStep
- * ----------------------------------------------------------
- *
- * cvHin return values:
- *    CV_SUCCESS
- *    CV_RHSFUNC_FAIL
- *    CV_TOO_CLOSE
- *
- * cvStep control constants:
- *    DO_ERROR_TEST
- *    PREDICT_AGAIN
- *
- * cvStep return values:
- *    CV_SUCCESS,
- *    CV_LSETUP_FAIL,  CV_LSOLVE_FAIL,
- *    CV_RHSFUNC_FAIL, CV_RTFUNC_FAIL
- *    CV_CONV_FAILURE, CV_ERR_FAILURE,
- *    CV_FIRST_RHSFUNC_ERR
- *
- * cvNls input nflag values:
- *    FIRST_CALL
- *    PREV_CONV_FAIL
- *    PREV_ERR_FAIL
- *
- * cvNls return values:
- *    CV_SUCCESS,
- *    CV_LSETUP_FAIL, CV_LSOLVE_FAIL, CV_RHSFUNC_FAIL,
- *    CONV_FAIL, RHSFUNC_RECVR
- *
- * cvNewtonIteration return values:
- *    CV_SUCCESS,
- *    CV_LSOLVE_FAIL, CV_RHSFUNC_FAIL
- *    CONV_FAIL, RHSFUNC_RECVR,
- *    TRY_AGAIN
- *
- */
-
-#define DO_ERROR_TEST    +2
-#define PREDICT_AGAIN    +3
-
-#define CONV_FAIL        +4
-#define TRY_AGAIN        +5
-
-#define FIRST_CALL       +6
-#define PREV_CONV_FAIL   +7
-#define PREV_ERR_FAIL    +8
-
-#define RHSFUNC_RECVR    +9
-
-/*
- * Control constants for lower-level rootfinding functions
- * -------------------------------------------------------
- *
- * cvRcheck1 return values:
- *    CV_SUCCESS,
- *    CV_RTFUNC_FAIL,
- * cvRcheck2 return values:
- *    CV_SUCCESS
- *    CV_RTFUNC_FAIL,
- *    CLOSERT
- *    RTFOUND
- * cvRcheck3 return values:
- *    CV_SUCCESS
- *    CV_RTFUNC_FAIL,
- *    RTFOUND
- * cvRootfind return values:
- *    CV_SUCCESS
- *    CV_RTFUNC_FAIL,
- *    RTFOUND
- */
-
-#define RTFOUND          +1
-#define CLOSERT          +3
-
-/*
- * Control constants for tolerances
- * --------------------------------
- */
-
-#define CV_NN  0
-#define CV_SS  1
-#define CV_SV  2
-#define CV_WF  3
-
-/*
- * Algorithmic constants
- * ---------------------
- *
- * CVodeGetDky and cvStep
- *
- *    FUZZ_FACTOR
- *
- * cvHin
- *
- *    HLB_FACTOR
- *    HUB_FACTOR
- *    H_BIAS
- *    MAX_ITERS
- *
- * CVodeCreate
- *
- *   CORTES
- *
- * cvStep
- *
- *    THRESH
- *    ETAMX1
- *    ETAMX2
- *    ETAMX3
- *    ETAMXF
- *    ETAMIN
- *    ETACF
- *    ADDON
- *    BIAS1
- *    BIAS2
- *    BIAS3
- *    ONEPSM
- *
- *    SMALL_NST   nst > SMALL_NST => use ETAMX3
- *    MXNCF       max no. of convergence failures during one step try
- *    MXNEF       max no. of error test failures during one step try
- *    MXNEF1      max no. of error test failures before forcing a reduction of order
- *    SMALL_NEF   if an error failure occurs and SMALL_NEF <= nef <= MXNEF1, then
- *                reset eta =  SUNMIN(eta, ETAMXF)
- *    LONG_WAIT   number of steps to wait before considering an order change when
- *                q==1 and MXNEF1 error test failures have occurred
- *
- * cvNls
- *
- *    NLS_MAXCOR  maximum no. of corrector iterations for the nonlinear solver
- *    CRDOWN      constant used in the estimation of the convergence rate (crate)
- *                of the iterates for the nonlinear equation
- *    DGMAX       iter == CV_NEWTON, |gamma/gammap-1| > DGMAX => call lsetup
- *    RDIV        declare divergence if ratio del/delp > RDIV
- *    MSBP        max no. of steps between lsetup calls
- *
- */
-
-#define FUZZ_FACTOR RCONST(100.0)
-
-#define HLB_FACTOR RCONST(100.0)
-#define HUB_FACTOR RCONST(0.1)
-#define H_BIAS     HALF
-#define MAX_ITERS  4000
-
-#define CORTES RCONST(0.1)
-
-#define THRESH RCONST(1.5)
-#define ETAMX1 RCONST(10000.0)
-#define ETAMX2 RCONST(10.0)
-#define ETAMX3 RCONST(10.0)
-#define ETAMXF RCONST(0.2)
-#define ETAMIN RCONST(0.1)
-#define ETACF  RCONST(0.25)
-#define ADDON  RCONST(0.000001)
-#define BIAS1  RCONST(6.0)
-#define BIAS2  RCONST(6.0)
-#define BIAS3  RCONST(10.0)
-#define ONEPSM RCONST(1.000001)
-
-#define SMALL_NST    10
-#define MXNCF        10
-#define MXNEF         7
-#define MXNEF1        3
-#define SMALL_NEF     2
-#define LONG_WAIT    10
-
-#define NLS_MAXCOR 3
-#define CRDOWN RCONST(0.3)
-#define DGMAX  RCONST(0.3)
-
-#define RDIV      TWO
-#define MSBP       20
-
-
-
-// Reaction types (Must match parameters defined in camp_rxn_factory)
-#define RXN_ARRHENIUS 1
-#define RXN_TROE 2
-#define RXN_CMAQ_H2O2 3
-#define RXN_CMAQ_OH_HNO3 4
-#define RXN_PHOTOLYSIS 5
-#define RXN_HL_PHASE_TRANSFER 6
-#define RXN_AQUEOUS_EQUILIBRIUM 7
-#define RXN_SIMPOL_PHASE_TRANSFER 10
-#define RXN_CONDENSED_PHASE_ARRHENIUS 11
-#define RXN_FIRST_ORDER_LOSS 12
-#define RXN_EMISSION 13
-#define RXN_WET_DEPOSITION 14
-
-#define STREAM_RXN_ENV_GPU 0
-#define STREAM_ENV_GPU 1
-#define STREAM_DERIV_GPU 2
-
-// Status codes for calls to camp_solver functions
-#define CAMP_SOLVER_SUCCESS 0
-#define CAMP_SOLVER_FAIL 1
-
-#define HANDLE_ERROR( err ) (HandleError( err, __FILE__, __LINE__ ))
 
 static void HandleError(cudaError_t err,
                         const char *file,
@@ -1434,6 +1193,7 @@ __device__ void cudaDevicecalc_Jac(
     //  printf("deriv_length_cell %d blockDim.x %d\n",deriv_length_cell, blockDim.x);
     //}
 
+
     //if(threadIdx.x==0) printf("*jac->num_elem %d\n",jac->num_elem[0]);
     //if(threadIdx.x==0) printf("deriv_length_cell %d\n",deriv_length_cell);
     //if(threadIdx.x==0) printf("state_size_cell %d\n",state_size_cell);
@@ -1441,8 +1201,11 @@ __device__ void cudaDevicecalc_Jac(
     __syncthreads();
     int i_cell = tid/deriv_length_cell;
     dmdv->i_cell = i_cell;
+    //jacBlock.production_partials = &( jac->production_partials[jac.num_elem[0]*i_cell]);
+    //jacBlock.loss_partials = &( jac->loss_partials[jac.num_elem[0]*i_cell]);
     jacBlock.production_partials = &( jac->production_partials[jacBlock.num_elem[0]*blockIdx.x]);
     jacBlock.loss_partials = &( jac->loss_partials[jacBlock.num_elem[0]*blockIdx.x]);
+    jacBlock.col_ptrs = jac->col_ptrs;
 
     __syncthreads();
 
@@ -1512,10 +1275,9 @@ __device__ void cudaDevicecalc_Jac(
     }
     __syncthreads();
 
-//#ifdef DEV_REMOVE_threadIdx0
-//#else
+
     jacobian_output_gpu(jacBlock, &(md->J_rxn[jacBlock.num_elem[0]*blockIdx.x]) );
-//#endif
+
 
 #ifdef DEBUG_cudaDevicecalc_Jac
 
@@ -1532,22 +1294,41 @@ __device__ void cudaDevicecalc_Jac(
     __syncthreads();
 #ifndef DEV_REMOVE_threadIdx0
 
-  JacMap *jac_map = md->jac_map;
-  int nnz = md->n_mapped_values[0];
-  int n_iters = nnz / blockDim.x;
-  for (int i = 0; i < n_iters; i++) {
-    int j = threadIdx.x + i*blockDim.x;
-    md->J[jac_map[j].solver_id + nnz * blockIdx.x] = 0.0;
-    md->J[jac_map[j].solver_id + nnz * blockIdx.x] =
-      md->J_rxn[jac_map[j].rxn_id + jacBlock.num_elem[0] * blockIdx.x];
+    //fine
+
+    JacMap *jac_map = md->jac_map;
+    int n;
+    int nnz = md->n_mapped_values[0];
+    if( tid_cell < nnz) {
+      int n_iters = nnz / deriv_length_cell;
+      //Repeat if there are more reactions than species
+      for (int i = 0; i < n_iters; i++) {
+        n = tid_cell + i*deriv_length_cell;
+
+        //md->J[jac_map[n].solver_id + nnz * blockIdx.x] = 0.0;
+        md->J[jac_map[n].solver_id + nnz * blockIdx.x] =
+                md->J_rxn[jac_map[n].rxn_id + jacBlock.num_elem[0] * blockIdx.x];
+      }
+
+      //Limit tid to pending rxns to compute
+      int residual=nnz-(deriv_length_cell*n_iters);
+      if(tid_cell < residual){
+        n = tid_cell + deriv_length_cell*n_iters;
+
+        //md->J[jac_map[n].solver_id + nnz * blockIdx.x] = 0.0;
+        md->J[jac_map[n].solver_id + nnz * blockIdx.x] =
+                md->J_rxn[jac_map[n].rxn_id + jacBlock.num_elem[0] * blockIdx.x];
+      }
+    }
+
+    /*
+  int tid = blockIdx.x * blockDim.x + threadIdx.x;
+  int i_elem = tid;
+  for (int i_elem = jac.col_ptrs[i_col]; i_elem < jac.col_ptrs[i_col + 1]; i_elem++) {
+    if(mapped_values exists)
+     md->J[jac_map[n].solver_id + nnz * blockIdx.x] = 0.0;
   }
-  int residual=nnz-(blockDim.x*n_iters);
-  if(threadIdx.x < residual){
-    int j = threadIdx.x + n_iters*blockDim.x;
-    md->J[jac_map[j].solver_id + nnz * blockIdx.x] = 0.0;
-    md->J[jac_map[j].solver_id + nnz * blockIdx.x] =
-      md->J_rxn[jac_map[j].rxn_id + jacBlock.num_elem[0] * blockIdx.x];
-  }
+*/
 
 #else
 
@@ -1657,20 +1438,31 @@ int cudaDeviceJac(
  printmin(md,dftemp,"cudaDevicecalc_Jac end dftemp");
 #endif
 
+  if(i<active_threads){
+
     __syncthreads();
 #ifndef DEV_REMOVE_threadIdx0
 
-  int nnz = md->n_mapped_values[0];
-  int n_iters = nnz / blockDim.x;
-  for (int i = 0; i < n_iters; i++) {
-    int j = threadIdx.x + i*blockDim.x;
-    md->J_solver[j]=md->J[j];
-  }
-  int residual=nnz-(blockDim.x*n_iters);
-  if(threadIdx.x < residual){
-    int j = threadIdx.x + n_iters*blockDim.x;
-    md->J_solver[j]=md->J[j];
-  }
+    int tid_cell=tid%deriv_length_cell;
+    int n;
+    int nnz = md->n_mapped_values[0];
+    if(tid_cell < nnz) {
+      int n_iters = nnz / deriv_length_cell;
+      //Repeat if there are more reactions than species
+      for (int j = 0; j < n_iters; j++) {
+        n = tid_cell + j*deriv_length_cell;
+
+        md->J_solver[n]=md->J[n];
+      }
+
+      //Limit tid to pending rxns to compute
+      int residual=nnz-(deriv_length_cell*n_iters);
+      if(tid_cell < residual){
+        n = tid_cell + deriv_length_cell*n_iters;
+
+        md->J_solver[n]=md->J[n];
+      }
+    }
 
 #else
     if(threadIdx.x==0) {
@@ -1682,17 +1474,18 @@ int cudaDeviceJac(
 #endif
     __syncthreads();
 
-    md->J_state[tid]=y[tid];
-    md->J_deriv[tid]=dftemp[tid];
+    md->J_state[i]=y[i];
+    md->J_deriv[i]=dftemp[i];
+  }
 
 #ifdef CAMP_DEBUG_GPU
 #ifdef cudaGlobalCVode_timers_max_blocks
 
-    md->dtJac[tid] += ((double)(clock() - start))/(clock_khz*1000);
+    md->dtJac[i] += ((double)(clock() - start))/(clock_khz*1000);
 
 #else
 
-    if(tid==0) *md->dtJac += ((double)(clock() - start))/(clock_khz*1000);
+    if(i==0) *md->dtJac += ((double)(clock() - start))/(clock_khz*1000);
 
 #endif
 #endif
@@ -2231,7 +2024,7 @@ void constructor_cvode_gpu(CVodeMem cv_mem, SolverData *sd)
 
 }
 
-int check_jac_status_error_gpu(SUNMatrix A)
+int check_jac_status_error_gpu2(SUNMatrix A)
 {
   sunindextype j, i, newvals, M, N;
   booleantype newmat, found;
@@ -2310,7 +2103,7 @@ int check_jac_status_error_gpu(SUNMatrix A)
  * It returns to CVode the value that CVode is to return to the user.
  */
 
-int cvHandleFailure_gpu(CVodeMem cv_mem, int flag)
+int cvHandleFailure_gpu2(CVodeMem cv_mem, int flag)
 {
 
   /* Set vector of  absolute weighted local errors */
@@ -3248,7 +3041,7 @@ int cudaDevicecvDoErrorTest(ModelDataGPU *md, ModelDataVariable *dmdv,
     dmdv->cv_hmin / fabs(dmdv->cv_h));
     //never enters?
     //if(i==0)printf("dmdv->cv_q > 1\n");
-    //cvAdjustOrder_gpu(cv_mem,-1);
+    //cvAdjustOrder_gpu2(cv_mem,-1);
     cudaDevicecvDecreaseBDF(md, dmdv);
 
     dmdv->cv_L = dmdv->cv_q;
@@ -3947,7 +3740,7 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
 
     if (dmdv->kflag2 != CV_SUCCESS) {
 
-      //istate = cvHandleFailure_gpu(cv_mem, kflag);
+      //istate = cvHandleFailure_gpu2(cv_mem, kflag);
 
       //cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
       dmdv->cv_tretlast = dmdv->tret = dmdv->cv_tn;
@@ -4197,13 +3990,13 @@ int CVode_gpu(void *cvode_mem, realtype tout, N_Vector yout,
    */
 
   // GPU initializations
-  //set_data_gpu(cv_mem, sd);
+  //set_data_gpu2(cv_mem, sd);
 
   if (cv_mem->cv_nst == 0) {
 
     cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
 
-    ier = cvInitialSetup_gpu(cv_mem);
+    ier = cvInitialSetup_gpu2(cv_mem);
     if (ier!= CV_SUCCESS) return(ier);
 
     /* Call f at (t0,y0), set zn[1] = y'(t0),
@@ -4250,9 +4043,9 @@ int CVode_gpu(void *cvode_mem, realtype tout, N_Vector yout,
       tout_hin = tout;
       if ( cv_mem->cv_tstopset && (tout-cv_mem->cv_tn)*(tout-cv_mem->cv_tstop) > ZERO )
         tout_hin = cv_mem->cv_tstop;
-      hflag = cvHin_gpu(cv_mem, tout_hin); //set cv_y
+      hflag = cvHin_gpu2(cv_mem, tout_hin); //set cv_y
       if (hflag != CV_SUCCESS) {
-        istate = cvHandleFailure_gpu(cv_mem, hflag);
+        istate = cvHandleFailure_gpu2(cv_mem, hflag);
         return(istate);
       }
     }
@@ -4287,7 +4080,7 @@ int CVode_gpu(void *cvode_mem, realtype tout, N_Vector yout,
 
     if (cv_mem->cv_nrtfn > 0) {
 
-      retval = cvRcheck1_gpu(cv_mem);
+      retval = cvRcheck1_gpu2(cv_mem);
 
       if (retval == CV_RTFUNC_FAIL) {
         cvProcessError(cv_mem, CV_RTFUNC_FAIL, "CVODE", "cvRcheck1",
@@ -4325,7 +4118,7 @@ int CVode_gpu(void *cvode_mem, realtype tout, N_Vector yout,
 
       irfndp = cv_mem->cv_irfnd;
 
-      retval = cvRcheck2_gpu(cv_mem);
+      retval = cvRcheck2_gpu2(cv_mem);
 
       if (retval == CLOSERT) {
         cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "cvRcheck2",
@@ -4344,7 +4137,7 @@ int CVode_gpu(void *cvode_mem, realtype tout, N_Vector yout,
          check remaining interval for roots */
       if ( SUNRabs(cv_mem->cv_tn - cv_mem->cv_tretlast) > troundoff ) {
 
-        retval = cvRcheck3_gpu(cv_mem);
+        retval = cvRcheck3_gpu2(cv_mem);
 
         if (retval == CV_SUCCESS) {     /* no root found */
           cv_mem->cv_irfnd = 0;
@@ -4508,12 +4301,12 @@ int CVode_gpu(void *cvode_mem, realtype tout, N_Vector yout,
 
     /* Call cvStep to take a step */
     //kflag = cvStep(cv_mem);
-    kflag = cvStep_gpu(sd, cv_mem);
+    kflag = cvStep_gpu2(sd, cv_mem);
     //kflag = cudacvStep(sd, cv_mem);
 
     /* Process failed step cases, and exit loop */
     if (kflag != CV_SUCCESS) {
-      istate = cvHandleFailure_gpu(cv_mem, kflag);
+      istate = cvHandleFailure_gpu2(cv_mem, kflag);
       cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
       N_VScale(ONE, cv_mem->cv_zn[0], yout);
       break;
@@ -4524,7 +4317,7 @@ int CVode_gpu(void *cvode_mem, realtype tout, N_Vector yout,
     /* Check for root in last step taken. */
     if (cv_mem->cv_nrtfn > 0) {
 
-      retval = cvRcheck3_gpu(cv_mem);
+      retval = cvRcheck3_gpu2(cv_mem);
 
       if (retval == RTFOUND) {  /* A new root was found */
         cv_mem->cv_irfnd = 1;
@@ -4688,13 +4481,13 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
    */
 
   // GPU initializations
-  //set_data_gpu(cv_mem, sd);
+  //set_data_gpu2(cv_mem, sd);
 
   if (cv_mem->cv_nst == 0) {
 
     cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
 
-    ier = cvInitialSetup_gpu(cv_mem);
+    ier = cvInitialSetup_gpu2(cv_mem);
     if (ier!= CV_SUCCESS) return(ier);
 
     /* Call f at (t0,y0), set zn[1] = y'(t0),
@@ -4741,9 +4534,9 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
       tout_hin = tout;
       if ( cv_mem->cv_tstopset && (tout-cv_mem->cv_tn)*(tout-cv_mem->cv_tstop) > ZERO )
         tout_hin = cv_mem->cv_tstop;
-      hflag = cvHin_gpu(cv_mem, tout_hin); //set cv_y
+      hflag = cvHin_gpu2(cv_mem, tout_hin); //set cv_y
       if (hflag != CV_SUCCESS) {
-        istate = cvHandleFailure_gpu(cv_mem, hflag);
+        istate = cvHandleFailure_gpu2(cv_mem, hflag);
         return(istate);
       }
     }
@@ -4778,7 +4571,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
 
     if (cv_mem->cv_nrtfn > 0) {
 
-      retval = cvRcheck1_gpu(cv_mem);
+      retval = cvRcheck1_gpu2(cv_mem);
 
       if (retval == CV_RTFUNC_FAIL) {
         cvProcessError(cv_mem, CV_RTFUNC_FAIL, "CVODE", "cvRcheck1",
@@ -4816,7 +4609,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
 
       irfndp = cv_mem->cv_irfnd;
 
-      retval = cvRcheck2_gpu(cv_mem);
+      retval = cvRcheck2_gpu2(cv_mem);
 
       if (retval == CLOSERT) {
         cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "cvRcheck2",
@@ -4835,7 +4628,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
          check remaining interval for roots */
       if ( SUNRabs(cv_mem->cv_tn - cv_mem->cv_tretlast) > troundoff ) {
 
-        retval = cvRcheck3_gpu(cv_mem);
+        retval = cvRcheck3_gpu2(cv_mem);
 
         if (retval == CV_SUCCESS) {     /* no root found */
           cv_mem->cv_irfnd = 0;
@@ -5121,6 +4914,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
 
     //printf("cudaCVode flag %d kflag %d\n",flag, mGPU->mdvCPU.flag);
 
+
     // In NORMAL mode, check if tout reached
     //if ( (cv_mem->cv_tn-tout)*cv_mem->cv_h >= ZERO ) {
     if ( istate==CV_SUCCESS ) {
@@ -5136,7 +4930,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
 
       if (kflag != CV_SUCCESS) {
         printf("cudaCVode2 kflag %d\n",kflag);
-        istate = cvHandleFailure_gpu(cv_mem, kflag);
+        istate = cvHandleFailure_gpu2(cv_mem, kflag);
         //cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
         //N_VScale(ONE, cv_mem->cv_zn[0], yout);
 
@@ -5205,8 +4999,290 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
 }
 
 
+
 /*-----------------------------------------------------------------*/
 
+/*
+ * CVodeGetDky
+ *
+ * This routine computes the k-th derivative of the interpolating
+ * polynomial at the time t and stores the result in the vector dky.
+ * The formula is:
+ *         q
+ *  dky = SUM c(j,k) * (t - tn)^(j-k) * h^(-j) * zn[j] ,
+ *        j=k
+ * where c(j,k) = j*(j-1)*...*(j-k+1), q is the current order, and
+ * zn[j] is the j-th column of the Nordsieck history array.
+ *
+ * This function is called by CVode with k = 0 and t = tout, but
+ * may also be called directly by the user.
+ */
+
+int CVodeGetDky_gpu2(void *cvode_mem, realtype t, int k, N_Vector dky)
+{
+  realtype s, c, r;
+  realtype tfuzz, tp, tn1;
+  int i, j;
+  CVodeMem cv_mem;
+
+  /* Check all inputs for legality */
+
+  if (cvode_mem == NULL) {
+    cvProcessError(NULL, CV_MEM_NULL, "CVODE", "CVodeGetDky", MSGCV_NO_MEM);
+    return(CV_MEM_NULL);
+  }
+  cv_mem = (CVodeMem) cvode_mem;
+
+  if (dky == NULL) {
+    cvProcessError(cv_mem, CV_BAD_DKY, "CVODE", "CVodeGetDky", MSGCV_NULL_DKY);
+    return(CV_BAD_DKY);
+  }
+
+  if ((k < 0) || (k > cv_mem->cv_q)) {
+    cvProcessError(cv_mem, CV_BAD_K, "CVODE", "CVodeGetDky", MSGCV_BAD_K);
+    return(CV_BAD_K);
+  }
+
+  /* Allow for some slack */
+  tfuzz = FUZZ_FACTOR * cv_mem->cv_uround * (SUNRabs(cv_mem->cv_tn) + SUNRabs(cv_mem->cv_hu));
+  if (cv_mem->cv_hu < ZERO) tfuzz = -tfuzz;
+  tp = cv_mem->cv_tn - cv_mem->cv_hu - tfuzz;
+  tn1 = cv_mem->cv_tn + tfuzz;
+  if ((t-tp)*(t-tn1) > ZERO) {
+    cvProcessError(cv_mem, CV_BAD_T, "CVODE", "CVodeGetDky", MSGCV_BAD_T,
+                   t, cv_mem->cv_tn-cv_mem->cv_hu, cv_mem->cv_tn);
+    return(CV_BAD_T);
+  }
+
+  /* Sum the differentiated interpolating polynomial */
+
+  s = (t - cv_mem->cv_tn) / cv_mem->cv_h;
+  for (j=cv_mem->cv_q; j >= k; j--) {
+    c = ONE;
+    for (i=j; i >= j-k+1; i--) c *= i;
+    if (j == cv_mem->cv_q) {
+      N_VScale(c, cv_mem->cv_zn[cv_mem->cv_q], dky);
+    } else {
+      N_VLinearSum(c, cv_mem->cv_zn[j], s, dky, dky);
+    }
+  }
+  if (k == 0) return(CV_SUCCESS);
+  r = SUNRpowerI(cv_mem->cv_h,-k);
+  N_VScale(r, dky, dky);
+  return(CV_SUCCESS);
+}
+
+/*
+ * CVodeFree
+ *
+ * This routine frees the problem memory allocated by CVodeInit.
+ * Such memory includes all the vectors allocated by cvAllocVectors,
+ * and the memory lmem for the linear solver (deallocated by a call
+ * to lfree).
+ */
+
+void CVodeFree_gpu2(void **cvode_mem)
+{
+  CVodeMem cv_mem;
+
+  if (*cvode_mem == NULL) return;
+
+  cv_mem = (CVodeMem) (*cvode_mem);
+
+  cvFreeVectors_gpu2(cv_mem);
+
+  if (cv_mem->cv_lfree != NULL) cv_mem->cv_lfree(cv_mem);
+
+  if (cv_mem->cv_nrtfn > 0) {
+    free(cv_mem->cv_glo); cv_mem->cv_glo = NULL;
+    free(cv_mem->cv_ghi); cv_mem->cv_ghi = NULL;
+    free(cv_mem->cv_grout); cv_mem->cv_grout = NULL;
+    free(cv_mem->cv_iroots); cv_mem->cv_iroots = NULL;
+    free(cv_mem->cv_rootdir); cv_mem->cv_rootdir = NULL;
+    free(cv_mem->cv_gactive); cv_mem->cv_gactive = NULL;
+  }
+
+  free(*cvode_mem);
+  *cvode_mem = NULL;
+}
+
+/*
+ * =================================================================
+ *  Private Functions Implementation
+ * =================================================================
+ */
+
+/*
+ * cvCheckNvector
+ * This routine checks if all required vector operations are present.
+ * If any of them is missing it returns SUNFALSE.
+ */
+
+booleantype cvCheckNvector_gpu2(N_Vector tmpl)
+{
+  if((tmpl->ops->nvclone     == NULL) ||
+     (tmpl->ops->nvdestroy   == NULL) ||
+     (tmpl->ops->nvlinearsum == NULL) ||
+     (tmpl->ops->nvconst     == NULL) ||
+     (tmpl->ops->nvprod      == NULL) ||
+     (tmpl->ops->nvdiv       == NULL) ||
+     (tmpl->ops->nvscale     == NULL) ||
+     (tmpl->ops->nvabs       == NULL) ||
+     (tmpl->ops->nvinv       == NULL) ||
+     (tmpl->ops->nvaddconst  == NULL) ||
+     (tmpl->ops->nvmaxnorm   == NULL) ||
+     (tmpl->ops->nvwrmsnorm  == NULL) ||
+     (tmpl->ops->nvmin       == NULL))
+    return(SUNFALSE);
+  else
+    return(SUNTRUE);
+}
+
+/*
+ * cvAllocVectors
+ *
+ * This routine allocates the CVODE vectors ewt, acor, tempv, ftemp, and
+ * zn[0], ..., zn[maxord].
+ * If all memory allocations are successful, cvAllocVectors returns SUNTRUE.
+ * Otherwise all allocated memory is freed and cvAllocVectors returns SUNFALSE.
+ * This routine also sets the optional outputs lrw and liw, which are
+ * (respectively) the lengths of the real and integer work spaces
+ * allocated here.
+ */
+
+booleantype cvAllocVectors_gpu2(CVodeMem cv_mem, N_Vector tmpl)
+{
+  int i, j;
+
+  /* Allocate ewt, acor, tempv, ftemp */
+
+  cv_mem->cv_ewt = N_VClone(tmpl);
+  if (cv_mem->cv_ewt == NULL) return(SUNFALSE);
+
+  cv_mem->cv_acor = N_VClone(tmpl);
+  if (cv_mem->cv_acor == NULL) {
+    N_VDestroy(cv_mem->cv_ewt);
+    return(SUNFALSE);
+  }
+
+  cv_mem->cv_tempv = N_VClone(tmpl);
+  if (cv_mem->cv_tempv == NULL) {
+    N_VDestroy(cv_mem->cv_ewt);
+    N_VDestroy(cv_mem->cv_acor);
+    return(SUNFALSE);
+  }
+  N_VConst(ZERO, cv_mem->cv_tempv);
+
+  cv_mem->cv_tempv1 = N_VClone(tmpl);
+  if (cv_mem->cv_tempv1 == NULL) {
+    N_VDestroy(cv_mem->cv_tempv);
+    N_VDestroy(cv_mem->cv_ewt);
+    N_VDestroy(cv_mem->cv_acor);
+    return(SUNFALSE);
+  }
+  N_VConst(ZERO, cv_mem->cv_tempv1);
+
+  cv_mem->cv_tempv2 = N_VClone(tmpl);
+  if (cv_mem->cv_tempv2 == NULL) {
+    N_VDestroy(cv_mem->cv_tempv);
+    N_VDestroy(cv_mem->cv_tempv1);
+    N_VDestroy(cv_mem->cv_ewt);
+    N_VDestroy(cv_mem->cv_acor);
+    return(SUNFALSE);
+  }
+  N_VConst(ZERO, cv_mem->cv_tempv2);
+  cv_mem->cv_acor_init = N_VClone(tmpl);
+  if (cv_mem->cv_acor_init == NULL) {
+    N_VDestroy(cv_mem->cv_tempv);
+    N_VDestroy(cv_mem->cv_tempv1);
+    N_VDestroy(cv_mem->cv_tempv2);
+    N_VDestroy(cv_mem->cv_ewt);
+    N_VDestroy(cv_mem->cv_acor);
+    return(SUNFALSE);
+  }
+
+  cv_mem->cv_last_yn = N_VClone(tmpl);
+  if (cv_mem->cv_last_yn == NULL) {
+    N_VDestroy(cv_mem->cv_acor_init);
+    N_VDestroy(cv_mem->cv_tempv);
+    N_VDestroy(cv_mem->cv_tempv1);
+    N_VDestroy(cv_mem->cv_tempv2);
+    N_VDestroy(cv_mem->cv_ewt);
+    N_VDestroy(cv_mem->cv_acor);
+    return(SUNFALSE);
+  }
+
+  cv_mem->cv_ftemp = N_VClone(tmpl);
+  if (cv_mem->cv_ftemp == NULL) {
+    N_VDestroy(cv_mem->cv_last_yn);
+    N_VDestroy(cv_mem->cv_acor_init);
+    N_VDestroy(cv_mem->cv_tempv);
+    N_VDestroy(cv_mem->cv_tempv1);
+    N_VDestroy(cv_mem->cv_tempv2);
+    N_VDestroy(cv_mem->cv_ewt);
+    N_VDestroy(cv_mem->cv_acor);
+    return(SUNFALSE);
+  }
+
+  /* Allocate zn[0] ... zn[qmax] */
+
+  for (j=0; j <= cv_mem->cv_qmax; j++) {
+    cv_mem->cv_zn[j] = N_VClone(tmpl);
+    if (cv_mem->cv_zn[j] == NULL) {
+      N_VDestroy(cv_mem->cv_ewt);
+      N_VDestroy(cv_mem->cv_acor);
+      N_VDestroy(cv_mem->cv_acor_init);
+      N_VDestroy(cv_mem->cv_last_yn);
+      N_VDestroy(cv_mem->cv_tempv);
+      N_VDestroy(cv_mem->cv_tempv1);
+      N_VDestroy(cv_mem->cv_tempv2);
+      N_VDestroy(cv_mem->cv_ftemp);
+      for (i=0; i < j; i++) N_VDestroy(cv_mem->cv_zn[i]);
+      return(SUNFALSE);
+    }
+  }
+
+  /* Update solver workspace lengths  */
+  cv_mem->cv_lrw += (cv_mem->cv_qmax + 5)*cv_mem->cv_lrw1;
+  cv_mem->cv_liw += (cv_mem->cv_qmax + 5)*cv_mem->cv_liw1;
+
+  /* Store the value of qmax used here */
+  cv_mem->cv_qmax_alloc = cv_mem->cv_qmax;
+
+  return(SUNTRUE);
+}
+
+/*
+ * cvFreeVectors
+ *
+ * This routine frees the CVODE vectors allocated in cvAllocVectors.
+ */
+
+void cvFreeVectors_gpu2(CVodeMem cv_mem)
+{
+  int j, maxord;
+
+  maxord = cv_mem->cv_qmax_alloc;
+
+  N_VDestroy(cv_mem->cv_ewt);
+  N_VDestroy(cv_mem->cv_acor);
+  N_VDestroy(cv_mem->cv_tempv);
+  N_VDestroy(cv_mem->cv_tempv1);
+  N_VDestroy(cv_mem->cv_tempv2);
+  N_VDestroy(cv_mem->cv_acor_init);
+  N_VDestroy(cv_mem->cv_last_yn);
+  N_VDestroy(cv_mem->cv_ftemp);
+  for (j=0; j <= maxord; j++) N_VDestroy(cv_mem->cv_zn[j]);
+
+  cv_mem->cv_lrw -= (maxord + 5)*cv_mem->cv_lrw1;
+  cv_mem->cv_liw -= (maxord + 5)*cv_mem->cv_liw1;
+
+  if (cv_mem->cv_VabstolMallocDone) {
+    N_VDestroy(cv_mem->cv_Vabstol);
+    cv_mem->cv_lrw -= cv_mem->cv_lrw1;
+    cv_mem->cv_liw -= cv_mem->cv_liw1;
+  }
+}
 
 /*
  * cvInitialSetup
@@ -5216,7 +5292,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
  * linear solver initialization routine.
  */
 
-int cvInitialSetup_gpu(CVodeMem cv_mem)
+int cvInitialSetup_gpu2(CVodeMem cv_mem)
 {
   int ier;
 
@@ -5297,7 +5373,7 @@ int cvInitialSetup_gpu(CVodeMem cv_mem)
  *
  * Finally, we apply a bias (0.5) and verify that h0 is within bounds.
  */
-int cvHin_gpu(CVodeMem cv_mem, realtype tout)
+int cvHin_gpu2(CVodeMem cv_mem, realtype tout)
 {
   int retval, sign, count1, count2;
   realtype tdiff, tdist, tround, hlb, hub;
@@ -5321,7 +5397,7 @@ int cvHin_gpu(CVodeMem cv_mem, realtype tout)
   */
 
   hlb = HLB_FACTOR * tround;
-  hub = cvUpperBoundH0_gpu(cv_mem, tdist);
+  hub = cvUpperBoundH0_gpu2(cv_mem, tdist);
 
   hg  = SUNRsqrt(hlb*hub);
 
@@ -5344,7 +5420,7 @@ int cvHin_gpu(CVodeMem cv_mem, realtype tout)
 
     for (count2 = 1; count2 <= MAX_ITERS; count2++) {
       hgs = hg*sign;
-      retval = cvYddNorm_gpu(cv_mem, hgs, &yddnrm);
+      retval = cvYddNorm_gpu2(cv_mem, hgs, &yddnrm);
       /* If f() failed unrecoverably, give up */
       if (retval < 0) return(CV_RHSFUNC_FAIL);
       /* If successful, we can use ydd */
@@ -5408,7 +5484,7 @@ int cvHin_gpu(CVodeMem cv_mem, realtype tout)
  * tdist = tn - t0 and the values of y[i]/y'[i].
  */
 
-realtype cvUpperBoundH0_gpu(CVodeMem cv_mem, realtype tdist)
+realtype cvUpperBoundH0_gpu2(CVodeMem cv_mem, realtype tdist)
 {
   realtype hub_inv, hub;
   N_Vector temp1, temp2;
@@ -5453,7 +5529,7 @@ realtype cvUpperBoundH0_gpu(CVodeMem cv_mem, realtype tdist)
  * using a difference quotient, and returns its WRMS norm.
  */
 
-int cvYddNorm_gpu(CVodeMem cv_mem, realtype hg, realtype *yddnrm)
+int cvYddNorm_gpu2(CVodeMem cv_mem, realtype hg, realtype *yddnrm)
 {
   int retval;
 
@@ -5491,7 +5567,7 @@ int cvYddNorm_gpu(CVodeMem cv_mem, realtype hg, realtype *yddnrm)
  *  CV_SUCCESS     = 0 otherwise.
  */
 
-int cvRcheck1_gpu(CVodeMem cv_mem)
+int cvRcheck1_gpu2(CVodeMem cv_mem)
 {
   int i, retval;
   realtype smallh, hratio, tplus;
@@ -5560,7 +5636,7 @@ int cvRcheck1_gpu(CVodeMem cv_mem)
  *     CV_SUCCESS      = 0 otherwise.
  */
 
-int cvRcheck2_gpu(CVodeMem cv_mem)
+int cvRcheck2_gpu2(CVodeMem cv_mem)
 {
   int i, retval;
   realtype smallh, hratio, tplus;
@@ -5632,7 +5708,7 @@ int cvRcheck2_gpu(CVodeMem cv_mem)
  *     CV_SUCCESS      = 0 otherwise.
  */
 
-int cvRcheck3_gpu(CVodeMem cv_mem)
+int cvRcheck3_gpu2(CVodeMem cv_mem)
 {
   int i, ier, retval;
 
@@ -5659,7 +5735,7 @@ int cvRcheck3_gpu(CVodeMem cv_mem)
 
   cv_mem->cv_ttol = (SUNRabs(cv_mem->cv_tn) + SUNRabs(cv_mem->cv_h)) *
                     cv_mem->cv_uround * HUNDRED;
-  ier = cvRootfind_gpu(cv_mem);
+  ier = cvRootfind_gpu2(cv_mem);
   if (ier == CV_RTFUNC_FAIL) return(CV_RTFUNC_FAIL);
   for(i=0; i<cv_mem->cv_nrtfn; i++) {
     if(!cv_mem->cv_gactive[i] && cv_mem->cv_grout[i] != ZERO)
@@ -5754,7 +5830,7 @@ int cvRcheck3_gpu(CVodeMem cv_mem)
  *      CV_SUCCESS      = 0 otherwise.
  */
 
-int cvRootfind_gpu(CVodeMem cv_mem)
+int cvRootfind_gpu2(CVodeMem cv_mem)
 {
   realtype alph, tmid, gfrac, maxfrac, fracint, fracsub;
   int i, retval, imax, side, sideprev;
@@ -5936,14 +6012,14 @@ int cvRootfind_gpu(CVodeMem cv_mem)
  * On a failure in the nonlinear system solution or error test, the
  * step may be reattempted, depending on the nature of the failure.
  */
-int cvStep_gpu(SolverData *sd, CVodeMem cv_mem)
+int cvStep_gpu2(SolverData *sd, CVodeMem cv_mem)
 {
   ModelDataGPU *mGPU = sd->mGPU;
   realtype saved_t, dsm;
   int ncf, nef;
   int nflag, kflag, eflag;
 
-  //printf("cvStep_gpu start\n");
+  //printf("cvStep_gpu2 start\n");
 
   double *ewt = NV_DATA_S(cv_mem->cv_ewt);
   int offset_nrows = 0;
@@ -5962,19 +6038,19 @@ int cvStep_gpu(SolverData *sd, CVodeMem cv_mem)
   nflag = FIRST_CALL;
 
   if ((cv_mem->cv_nst > 0) && (cv_mem->cv_hprime != cv_mem->cv_h))
-    cvAdjustParams_gpu(cv_mem);
+    cvAdjustParams_gpu2(cv_mem);
 
   /* Looping point for attempts to take a step */
   for(;;) {
 
-    cvPredict_gpu(cv_mem);
+    cvPredict_gpu2(cv_mem);
 
-    cvSet_gpu(cv_mem);
+    cvSet_gpu2(cv_mem);
 
     //nflag = cvNls(cv_mem, nflag);
-    nflag = cvNlsNewton_gpu(sd, cv_mem, nflag);//f(y)+BCG
+    nflag = cvNlsNewton_gpu2(sd, cv_mem, nflag);//f(y)+BCG
 
-    kflag = cvHandleNFlag_gpu(cv_mem, &nflag, saved_t, &ncf);
+    kflag = cvHandleNFlag_gpu2(cv_mem, &nflag, saved_t, &ncf);
 
     /* Go back in loop if we need to predict again (nflag=PREV_CONV_FAIL)*/
     if (kflag == PREDICT_AGAIN) continue;
@@ -5983,7 +6059,7 @@ int cvStep_gpu(SolverData *sd, CVodeMem cv_mem)
     if (kflag != DO_ERROR_TEST) return(kflag);
 
     /* Perform error test (nflag=CV_SUCCESS) */
-    eflag = cvDoErrorTest_gpu(cv_mem, &nflag, saved_t, &nef, &dsm);
+    eflag = cvDoErrorTest_gpu2(cv_mem, &nflag, saved_t, &nef, &dsm);
 
     /* Go back in loop if we need to predict again (nflag=PREV_ERR_FAIL) */
     if (eflag == TRY_AGAIN)  continue;
@@ -5999,14 +6075,14 @@ int cvStep_gpu(SolverData *sd, CVodeMem cv_mem)
   /* Nonlinear system solve and error test were both successful.
      Update data, and consider change of step and/or order.       */
 
-  cvCompleteStep_gpu(cv_mem);
+  cvCompleteStep_gpu2(cv_mem);
 
-  cvPrepareNextStep_gpu(cv_mem, dsm);//use tq calculated in cvset and tempv calc in cvnewton
+  cvPrepareNextStep_gpu2(cv_mem, dsm);//use tq calculated in cvset and tempv calc in cvnewton
 
   /* If Stablilty Limit Detection is turned on, call stability limit
      detection routine for possible order reduction. */
 
-  if (cv_mem->cv_sldeton) cvBDFStab_gpu(cv_mem);
+  if (cv_mem->cv_sldeton) cvBDFStab_gpu2(cv_mem);
 
   cv_mem->cv_etamax = (cv_mem->cv_nst <= SMALL_NST) ? ETAMX2 : ETAMX3;
 
@@ -6028,7 +6104,7 @@ int cvStep_gpu(SolverData *sd, CVodeMem cv_mem)
  * resets h and rescales the Nordsieck array.
  */
 
-void cvAdjustParams_gpu(CVodeMem cv_mem)
+void cvAdjustParams_gpu2(CVodeMem cv_mem)
 {
   if (cv_mem->cv_qprime != cv_mem->cv_q) {
     //cvAdjustOrder(cv_mem, cv_mem->cv_qprime-cv_mem->cv_q);
@@ -6036,10 +6112,10 @@ void cvAdjustParams_gpu(CVodeMem cv_mem)
     int deltaq = cv_mem->cv_qprime-cv_mem->cv_q;
     switch(deltaq) {
       case 1:
-        cvIncreaseBDF_gpu(cv_mem);
+        cvIncreaseBDF_gpu2(cv_mem);
         break;
       case -1:
-        cvDecreaseBDF_gpu(cv_mem);
+        cvDecreaseBDF_gpu2(cv_mem);
         break;
     }
 
@@ -6047,7 +6123,7 @@ void cvAdjustParams_gpu(CVodeMem cv_mem)
     cv_mem->cv_L = cv_mem->cv_q+1;
     cv_mem->cv_qwait = cv_mem->cv_L;
   }
-  cvRescale_gpu(cv_mem);
+  cvRescale_gpu2(cv_mem);
 }
 
 /*
@@ -6062,7 +6138,7 @@ void cvAdjustParams_gpu(CVodeMem cv_mem)
  * where xi_j = [t_n - t_(n-j)]/h.
  */
 
-void cvIncreaseBDF_gpu(CVodeMem cv_mem)
+void cvIncreaseBDF_gpu2(CVodeMem cv_mem)
 {
   realtype alpha0, alpha1, prod, xi, xiold, hsum, A1;
   int i, j;
@@ -6101,7 +6177,7 @@ void cvIncreaseBDF_gpu(CVodeMem cv_mem)
  *   x*x*(x+xi_1)*...*(x+xi_j), where xi_j = [t_n - t_(n-j)]/h.
  */
 
-void cvDecreaseBDF_gpu(CVodeMem cv_mem)
+void cvDecreaseBDF_gpu2(CVodeMem cv_mem)
 {
   realtype hsum, xi;
   int i, j;
@@ -6129,7 +6205,7 @@ void cvDecreaseBDF_gpu(CVodeMem cv_mem)
  * h is rescaled by eta, and hscale is reset to h.
  */
 
-void cvRescale_gpu(CVodeMem cv_mem)
+void cvRescale_gpu2(CVodeMem cv_mem)
 {
   int j;
   realtype factor;
@@ -6155,7 +6231,7 @@ void cvRescale_gpu(CVodeMem cv_mem)
  * and in that case, we reset tn (after incrementing by h) to tstop.
  */
 
-void cvPredict_gpu(CVodeMem cv_mem)
+void cvPredict_gpu2(CVodeMem cv_mem)
 {
   int j, k;
 
@@ -6190,10 +6266,10 @@ void cvPredict_gpu(CVodeMem cv_mem)
  *           the est. local error at order q+1
  */
 
-void cvSet_gpu(CVodeMem cv_mem)
+void cvSet_gpu2(CVodeMem cv_mem)
 {
 
-  cvSetBDF_gpu(cv_mem);
+  cvSetBDF_gpu2(cv_mem);
   cv_mem->cv_rl1 = ONE / cv_mem->cv_l[1];
   cv_mem->cv_gamma = cv_mem->cv_h * cv_mem->cv_rl1;
   if (cv_mem->cv_nst == 0) cv_mem->cv_gammap = cv_mem->cv_gamma;
@@ -6219,7 +6295,7 @@ void cvSet_gpu(CVodeMem cv_mem)
  * test, the error test, and the selection of h at a new order.
  */
 
-void cvSetBDF_gpu(CVodeMem cv_mem)
+void cvSetBDF_gpu2(CVodeMem cv_mem)
 {
   realtype alpha0, alpha0_hat, xi_inv, xistar_inv, hsum;
   int i,j;
@@ -6247,7 +6323,7 @@ void cvSetBDF_gpu(CVodeMem cv_mem)
       cv_mem->cv_l[i] += cv_mem->cv_l[i-1]*xistar_inv;
   }
 
-  cvSetTqBDF_gpu(cv_mem, hsum, alpha0, alpha0_hat, xi_inv, xistar_inv);
+  cvSetTqBDF_gpu2(cv_mem, hsum, alpha0, alpha0_hat, xi_inv, xistar_inv);
 }
 
 /*
@@ -6257,7 +6333,7 @@ void cvSetBDF_gpu(CVodeMem cv_mem)
  * lmm == CV_BDF.
  */
 
-void cvSetTqBDF_gpu(CVodeMem cv_mem, realtype hsum, realtype alpha0,
+void cvSetTqBDF_gpu2(CVodeMem cv_mem, realtype hsum, realtype alpha0,
                        realtype alpha0_hat, realtype xi_inv, realtype xistar_inv)
 {
   realtype A1, A2, A3, A4, A5, A6;
@@ -6319,7 +6395,7 @@ void cvSetTqBDF_gpu(CVodeMem cv_mem, realtype hsum, realtype alpha0,
  *
  */
 
-int cvHandleNFlag_gpu(CVodeMem cv_mem, int *nflagPtr, realtype saved_t,
+int cvHandleNFlag_gpu2(CVodeMem cv_mem, int *nflagPtr, realtype saved_t,
                          int *ncfPtr)
 {
   int nflag;
@@ -6330,7 +6406,7 @@ int cvHandleNFlag_gpu(CVodeMem cv_mem, int *nflagPtr, realtype saved_t,
 
   /* The nonlinear soln. failed; increment ncfn and restore zn */
   cv_mem->cv_ncfn++;
-  cvRestore_gpu(cv_mem, saved_t);
+  cvRestore_gpu2(cv_mem, saved_t);
 
   /* Return if lsetup, lsolve, or rhs failed unrecoverably */
   if (nflag == CV_LSETUP_FAIL)  return(CV_LSETUP_FAIL);
@@ -6355,7 +6431,7 @@ int cvHandleNFlag_gpu(CVodeMem cv_mem, int *nflagPtr, realtype saved_t,
 
   cv_mem->cv_eta = SUNMAX(ETACF, cv_mem->cv_hmin / SUNRabs(cv_mem->cv_h));
   *nflagPtr = PREV_CONV_FAIL;
-  cvRescale_gpu(cv_mem);
+  cvRescale_gpu2(cv_mem);
 
   return(PREDICT_AGAIN);
 }
@@ -6368,7 +6444,7 @@ int cvHandleNFlag_gpu(CVodeMem cv_mem, int *nflagPtr, realtype saved_t,
  * the same values as before the call to cvPredict.
  */
 
-void cvRestore_gpu(CVodeMem cv_mem, realtype saved_t)
+void cvRestore_gpu2(CVodeMem cv_mem, realtype saved_t)
 {
   int j, k;
 
@@ -6402,7 +6478,7 @@ void cvRestore_gpu(CVodeMem cv_mem, realtype saved_t)
  *   - otherwise, set *nflagPtr to PREV_ERR_FAIL, and return TRY_AGAIN.
  *
  */
-booleantype cvDoErrorTest_gpu(CVodeMem cv_mem, int *nflagPtr,
+booleantype cvDoErrorTest_gpu2(CVodeMem cv_mem, int *nflagPtr,
                                  realtype saved_t, int *nefPtr, realtype *dsmPtr)
 {
   realtype dsm;
@@ -6432,7 +6508,7 @@ booleantype cvDoErrorTest_gpu(CVodeMem cv_mem, int *nflagPtr,
   (*nefPtr)++;
   cv_mem->cv_netf++;
   *nflagPtr = PREV_ERR_FAIL;
-  cvRestore_gpu(cv_mem, saved_t);
+  cvRestore_gpu2(cv_mem, saved_t);
 
   /* At maxnef failures or |h| = hmin, return CV_ERR_FAILURE */
   if ((SUNRabs(cv_mem->cv_h) <= cv_mem->cv_hmin*ONEPSM) ||
@@ -6447,7 +6523,7 @@ booleantype cvDoErrorTest_gpu(CVodeMem cv_mem, int *nflagPtr,
     cv_mem->cv_eta = SUNMAX(ETAMIN, SUNMAX(cv_mem->cv_eta,
                                            cv_mem->cv_hmin / SUNRabs(cv_mem->cv_h)));
     if (*nefPtr >= SMALL_NEF) cv_mem->cv_eta = SUNMIN(cv_mem->cv_eta, ETAMXF);
-    cvRescale_gpu(cv_mem);
+    cvRescale_gpu2(cv_mem);
     return(TRY_AGAIN);
   }
 
@@ -6455,13 +6531,13 @@ booleantype cvDoErrorTest_gpu(CVodeMem cv_mem, int *nflagPtr,
   if (cv_mem->cv_q > 1) {
     cv_mem->cv_eta = SUNMAX(ETAMIN, cv_mem->cv_hmin / SUNRabs(cv_mem->cv_h));
 
-    //cvAdjustOrder_gpu(cv_mem,-1);
-    cvDecreaseBDF_gpu(cv_mem);
+    //cvAdjustOrder_gpu2(cv_mem,-1);
+    cvDecreaseBDF_gpu2(cv_mem);
 
     cv_mem->cv_L = cv_mem->cv_q;
     cv_mem->cv_q--;
     cv_mem->cv_qwait = cv_mem->cv_L;
-    cvRescale_gpu(cv_mem);
+    cvRescale_gpu2(cv_mem);
     return(TRY_AGAIN);
   }
 
@@ -6505,7 +6581,7 @@ booleantype cvDoErrorTest_gpu(CVodeMem cv_mem, int *nflagPtr,
  * The counter qwait is decremented, and if qwait == 1 (and q < qmax)
  * we save acor and cv_mem->cv_tq[5] for a possible order increase.
  */
-void cvCompleteStep_gpu(CVodeMem cv_mem)
+void cvCompleteStep_gpu2(CVodeMem cv_mem)
 {
   int i, j;
 
@@ -6540,7 +6616,7 @@ void cvCompleteStep_gpu(CVodeMem cv_mem)
  * ratio eta = hprime/h.  It also updates other state variables
  * related to a change of step size or order.
  */
-void cvPrepareNextStep_gpu(CVodeMem cv_mem, realtype dsm)
+void cvPrepareNextStep_gpu2(CVodeMem cv_mem, realtype dsm)
 {
   /* If etamax = 1, defer step size or order changes */
   if (cv_mem->cv_etamax == ONE) {
@@ -6558,7 +6634,7 @@ void cvPrepareNextStep_gpu(CVodeMem cv_mem, realtype dsm)
   if (cv_mem->cv_qwait != 0) {
     cv_mem->cv_eta = cv_mem->cv_etaq;
     cv_mem->cv_qprime = cv_mem->cv_q;
-    cvSetEta_gpu(cv_mem);
+    cvSetEta_gpu2(cv_mem);
     return;
   }
 
@@ -6567,7 +6643,7 @@ void cvPrepareNextStep_gpu(CVodeMem cv_mem, realtype dsm)
      cvChooseEta selects the largest; cvSetEta adjusts eta and acor */
   cv_mem->cv_qwait = 2;
 
-  //cv_mem->cv_etaqm1 = cvComputeEtaqm1_gpu(cv_mem);
+  //cv_mem->cv_etaqm1 = cvComputeEtaqm1_gpu2(cv_mem);
   //compute cv_etaqm1
   realtype ddn;
   cv_mem->cv_etaqm1 = ZERO;
@@ -6576,7 +6652,7 @@ void cvPrepareNextStep_gpu(CVodeMem cv_mem, realtype dsm)
     cv_mem->cv_etaqm1 = ONE/(SUNRpowerR(BIAS1*ddn, ONE/cv_mem->cv_q) + ADDON);
   }
 
-  //cv_mem->cv_etaqp1 = cvComputeEtaqp1_gpu(cv_mem);
+  //cv_mem->cv_etaqp1 = cvComputeEtaqp1_gpu2(cv_mem);
   //compute cv_etaqp1
   realtype dup, cquot;
   cv_mem->cv_etaqp1 = ZERO;
@@ -6590,8 +6666,8 @@ void cvPrepareNextStep_gpu(CVodeMem cv_mem, realtype dsm)
     cv_mem->cv_etaqp1 = ONE / (SUNRpowerR(BIAS3*dup, ONE/(cv_mem->cv_L+1)) + ADDON);
   }
 
-  cvChooseEta_gpu(cv_mem);
-  cvSetEta_gpu(cv_mem);
+  cvChooseEta_gpu2(cv_mem);
+  cvSetEta_gpu2(cv_mem);
 }
 
 /*
@@ -6601,7 +6677,7 @@ void cvPrepareNextStep_gpu(CVodeMem cv_mem, realtype dsm)
  * heuristic limits and the optional input hmax.
  */
 
-void cvSetEta_gpu(CVodeMem cv_mem)
+void cvSetEta_gpu2(CVodeMem cv_mem)
 {
 
   /* If eta below the threshhold THRESH, reject a change of step size */
@@ -6628,7 +6704,7 @@ void cvSetEta_gpu(CVodeMem cv_mem)
  * is below the threshhold THRESH, the order is kept unchanged and
  * eta is set to 1.
  */
-void cvChooseEta_gpu(CVodeMem cv_mem)
+void cvChooseEta_gpu2(CVodeMem cv_mem)
 {
   realtype etam;
 
@@ -6687,7 +6763,7 @@ void cvChooseEta_gpu(CVodeMem cv_mem)
  * size is reset accordingly.
  */
 
-void cvBDFStab_gpu(CVodeMem cv_mem)
+void cvBDFStab_gpu2(CVodeMem cv_mem)
 {
   int i,k, ldflag, factorial;
   realtype sq, sqm1, sqm2;
@@ -6718,7 +6794,7 @@ void cvBDFStab_gpu(CVodeMem cv_mem)
        nscon >= q+5, then call stability limit detection routine.  */
 
     if ( (cv_mem->cv_q >= 3) && (cv_mem->cv_nscon >= cv_mem->cv_q+5) ) {
-      ldflag = cvSLdet_gpu(cv_mem);
+      ldflag = cvSLdet_gpu2(cv_mem);
       if (ldflag > 3) {
         /* A stability limit violation is indicated by
            a return flag of 4, 5, or 6.
@@ -6776,7 +6852,7 @@ void cvBDFStab_gpu(CVodeMem cv_mem)
  *    kflag = -9 -> R via sigsq[k] disagrees with R from data.
  */
 
-int cvSLdet_gpu(CVodeMem cv_mem)
+int cvSLdet_gpu2(CVodeMem cv_mem)
 {
   int i, k, j, it, kmin = 0, kflag = 0;
   realtype rat[5][4], rav[4], qkr[4], sigsq[4], smax[4], ssmax[4];
@@ -7050,6 +7126,25 @@ int cvSLdet_gpu(CVodeMem cv_mem)
 
 }
 
+/*
+ * cvEwtSetSV
+ *
+ * This routine sets ewt as decribed above in the case tol_type = CV_SV.
+ * It tests for non-positive components before inverting. cvEwtSetSV
+ * returns 0 if ewt is successfully set to a positive vector
+ * and -1 otherwise. In the latter case, ewt is considered undefined.
+ */
+int cvEwtSetSV_gpu2(CVodeMem cv_mem, N_Vector cv_ewt, N_Vector weight)
+{
+  N_VAbs(cv_ewt, cv_mem->cv_tempv);
+  N_VLinearSum(cv_mem->cv_reltol, cv_mem->cv_tempv, ONE,
+               cv_mem->cv_Vabstol, cv_mem->cv_tempv);
+  if (N_VMin(cv_mem->cv_tempv) <= ZERO) return(-1);
+  N_VInv(cv_mem->cv_tempv, weight);
+  return(0);
+}
+
+
 __global__ void cudaGlobalVWRMS_Norm(double *g_idata1, double *g_idata2, double *g_odata, int n, int n_shr)
 {
   extern __shared__ double sdata[];
@@ -7087,7 +7182,7 @@ __global__ void cudaGlobalVWRMS_Norm(double *g_idata1, double *g_idata2, double 
 }
 
 
-int cvNlsNewton_gpu(SolverData *sd, CVodeMem cv_mem, int nflag)
+int cvNlsNewton_gpu2(SolverData *sd, CVodeMem cv_mem, int nflag)
 {
   itsolver *bicg = &(sd->bicg);
   ModelData *md = &(sd->model_data);
@@ -7117,7 +7212,7 @@ int cvNlsNewton_gpu(SolverData *sd, CVodeMem cv_mem, int nflag)
     offset_nrows += mGPU->nrows;
   }
 
-  //printf("cvNlsNewton_gpu start\n");
+  //printf("cvNlsNewton_gpu2 start\n");
 
   /* Set flag convfail, input to lsetup for its evaluation decision */
   convfail = ((nflag == FIRST_CALL) || (nflag == PREV_ERR_FAIL)) ?
@@ -7219,7 +7314,7 @@ int cvNlsNewton_gpu(SolverData *sd, CVodeMem cv_mem, int nflag)
       cudaEventRecord(bicg->startLinSolSetup);
 #endif
 
-      ier = linsolsetup_gpu(sd, cv_mem, convfail, vtemp1, vtemp2, vtemp3);
+      ier = linsolsetup_gpu2(sd, cv_mem, convfail, vtemp1, vtemp2, vtemp3);
 
 #ifdef CAMP_DEBUG_GPU
     cudaEventRecord(bicg->stopLinSolSetup);
@@ -7261,7 +7356,7 @@ int cvNlsNewton_gpu(SolverData *sd, CVodeMem cv_mem, int nflag)
 
     // Do the Newton iteration
     //ier = cvNewtonIteration(cv_mem);
-    ier = linsolsolve_gpu(sd, cv_mem);
+    ier = linsolsolve_gpu2(sd, cv_mem);
 
 #ifdef CAMP_DEBUG_GPU
     cudaEventRecord(bicg->stopLinSolSolve);
@@ -7311,7 +7406,7 @@ void check_input(double *dx, int len, int var_id){
   free(x);
 }
 
-int linsolsetup_gpu(SolverData *sd, CVodeMem cv_mem,int convfail,N_Vector vtemp1,N_Vector vtemp2,N_Vector vtemp3)
+int linsolsetup_gpu2(SolverData *sd, CVodeMem cv_mem,int convfail,N_Vector vtemp1,N_Vector vtemp2,N_Vector vtemp3)
 {
   itsolver *bicg = &(sd->bicg);
   booleantype jbad, jok;
@@ -7322,7 +7417,7 @@ int linsolsetup_gpu(SolverData *sd, CVodeMem cv_mem,int convfail,N_Vector vtemp1
   ModelDataGPU *mGPU;
   int offset_nrows = 0;
 
-  //printf("linsolsetup_gpu start\n");
+  //printf("linsolsetup_gpu2 start\n");
 
   /* Use nst, gamma/gammap, and convfail to set J eval. flag jok */
   dgamma = fabs((cv_mem->cv_gamma/cv_mem->cv_gammap) - ONE); //In GPU is fabs too
@@ -7371,7 +7466,7 @@ int linsolsetup_gpu(SolverData *sd, CVodeMem cv_mem,int convfail,N_Vector vtemp1
 
       offset_nrows += mGPU->nrows;
     }
-#ifdef DEBUG_linsolsetup_gpu
+#ifdef DEBUG_linsolsetup_gpu2
     check_isnand(mGPU->A,mGPU->nnz,"prejac");
 #endif
 
@@ -7380,7 +7475,7 @@ int linsolsetup_gpu(SolverData *sd, CVodeMem cv_mem,int convfail,N_Vector vtemp1
     //wrong
     //retval = Jac_gpu(cv_mem->cv_tn, cv_mem->cv_y,cv_mem->cv_ftemp, cvdls_mem->A,cvdls_mem->J_data, vtemp1, vtemp2, vtemp3);
 
-#ifdef DEBUG_linsolsetup_gpu
+#ifdef DEBUG_linsolsetup_gpu2
     check_isnand(mGPU->A,mGPU->nnz,"postjac");
 #endif
 
@@ -7456,7 +7551,7 @@ int linsolsetup_gpu(SolverData *sd, CVodeMem cv_mem,int convfail,N_Vector vtemp1
 
 #ifdef FAILURE_DETAIL
   //check if jac is correct
-  int flag = check_jac_status_error_gpu(cvdls_mem->A);
+  int flag = check_jac_status_error_gpu2(cvdls_mem->A);
   //printf("Jac returned error flag %d\n",flag);
 #endif
 
@@ -7471,7 +7566,7 @@ int linsolsetup_gpu(SolverData *sd, CVodeMem cv_mem,int convfail,N_Vector vtemp1
 
   }
 
-#ifdef DEBUG_linsolsetup_gpu
+#ifdef DEBUG_linsolsetup_gpu2
 
   cvcheck_input_globald<<<mGPU->blocks,mGPU->threads>>>(mGPU->ddiag,mGPU->nrows,"mGPU->ddiag");
 
@@ -7483,7 +7578,7 @@ int linsolsetup_gpu(SolverData *sd, CVodeMem cv_mem,int convfail,N_Vector vtemp1
 }
 
 
-int linsolsolve_gpu(SolverData *sd, CVodeMem cv_mem)
+int linsolsolve_gpu2(SolverData *sd, CVodeMem cv_mem)
 {
   itsolver *bicg = &(sd->bicg);
   ModelDataGPU *mGPU;
@@ -7491,7 +7586,7 @@ int linsolsolve_gpu(SolverData *sd, CVodeMem cv_mem)
   int m, retval;
   realtype del, delp, dcon;
 
-  //printf("linsolsolve_gpu start\n");
+  //printf("linsolsolve_gpu2 start\n");
 
   cv_mem->cv_mnewt = m = 0;
 
@@ -7826,9 +7921,7 @@ int linsolsolve_gpu(SolverData *sd, CVodeMem cv_mem)
   }
 }
 
-#ifdef DEV_CUDACVODE2
-
-int linsolsolve_gpu2(SolverData *sd, CVodeMem cv_mem)
+int linsolsolveDebug_gpu2(SolverData *sd, CVodeMem cv_mem)
 {
   itsolver *bicg = &(sd->bicg);
   ModelDataGPU *mGPU;
@@ -7836,7 +7929,7 @@ int linsolsolve_gpu2(SolverData *sd, CVodeMem cv_mem)
   int m, retval;
   realtype del, delp, dcon;
 
-  //printf("linsolsolve_gpu start\n");
+  //printf("linsolsolve_gpu2 start\n");
 
   cv_mem->cv_mnewt = m = 0;
 
@@ -7928,7 +8021,8 @@ int linsolsolve_gpu2(SolverData *sd, CVodeMem cv_mem)
 
 #ifdef CAMP_DEBUG_GPU
     cudaEventRecord(bicg->stopBCG);
-    cudaEventSynchronize(bicg->stopBCG);
+
+    cudaEventSynchronize(bicg->stopBCG); //at the end is the same that cudadevicesynchronyze
     float msBiConjGrad = 0.0;
     cudaEventElapsedTime(&msBiConjGrad, bicg->startBCG, bicg->stopBCG);
     bicg->timeBiConjGrad+= msBiConjGrad/1000;
@@ -8171,7 +8265,8 @@ int linsolsolve_gpu2(SolverData *sd, CVodeMem cv_mem)
   }
 }
 
-int linsolsetup_gpu2(SolverData *sd, CVodeMem cv_mem,int convfail,N_Vector vtemp1,N_Vector vtemp2,N_Vector vtemp3)
+
+int linsolsetupDebug_gpu2(SolverData *sd, CVodeMem cv_mem,int convfail,N_Vector vtemp1,N_Vector vtemp2,N_Vector vtemp3)
 {
   itsolver *bicg = &(sd->bicg);
   booleantype jbad, jok;
@@ -8182,7 +8277,7 @@ int linsolsetup_gpu2(SolverData *sd, CVodeMem cv_mem,int convfail,N_Vector vtemp
   ModelDataGPU *mGPU;
   int offset_nrows = 0;
 
-  //printf("linsolsetup_gpu start\n");
+  //printf("linsolsetup_gpu2 start\n");
 
   /* Use nst, gamma/gammap, and convfail to set J eval. flag jok */
   dgamma = fabs((cv_mem->cv_gamma/cv_mem->cv_gammap) - ONE); //In GPU is fabs too
@@ -8231,7 +8326,7 @@ int linsolsetup_gpu2(SolverData *sd, CVodeMem cv_mem,int convfail,N_Vector vtemp
 
       offset_nrows += mGPU->nrows;
     }
-#ifdef DEBUG_linsolsetup_gpu
+#ifdef DEBUG_linsolsetup_gpu2
     check_isnand(mGPU->A,mGPU->nnz,"prejac");
 #endif
 
@@ -8240,7 +8335,7 @@ int linsolsetup_gpu2(SolverData *sd, CVodeMem cv_mem,int convfail,N_Vector vtemp
     //wrong
     //retval = Jac_gpu(cv_mem->cv_tn, cv_mem->cv_y,cv_mem->cv_ftemp, cvdls_mem->A,cvdls_mem->J_data, vtemp1, vtemp2, vtemp3);
 
-#ifdef DEBUG_linsolsetup_gpu
+#ifdef DEBUG_linsolsetup_gpu2
     check_isnand(mGPU->A,mGPU->nnz,"postjac");
 #endif
 
@@ -8316,7 +8411,7 @@ int linsolsetup_gpu2(SolverData *sd, CVodeMem cv_mem,int convfail,N_Vector vtemp
 
 #ifdef FAILURE_DETAIL
   //check if jac is correct
-  int flag = check_jac_status_error_gpu(cvdls_mem->A);
+  int flag = check_jac_status_error_gpu2(cvdls_mem->A);
   //printf("Jac returned error flag %d\n",flag);
 #endif
 
@@ -8331,7 +8426,7 @@ int linsolsetup_gpu2(SolverData *sd, CVodeMem cv_mem,int convfail,N_Vector vtemp
 
   }
 
-#ifdef DEBUG_linsolsetup_gpu
+#ifdef DEBUG_linsolsetup_gpu2
 
   cvcheck_input_globald<<<mGPU->blocks,mGPU->threads>>>(mGPU->ddiag,mGPU->nrows,"mGPU->ddiag");
 
@@ -8342,7 +8437,8 @@ int linsolsetup_gpu2(SolverData *sd, CVodeMem cv_mem,int convfail,N_Vector vtemp
   return retval;
 }
 
-int cvNlsNewton_gpu2(SolverData *sd, CVodeMem cv_mem, int nflag)
+
+int cvNlsNewtonDebug_gpu2(SolverData *sd, CVodeMem cv_mem, int nflag)
 {
   itsolver *bicg = &(sd->bicg);
   ModelData *md = &(sd->model_data);
@@ -8372,7 +8468,7 @@ int cvNlsNewton_gpu2(SolverData *sd, CVodeMem cv_mem, int nflag)
     offset_nrows += mGPU->nrows;
   }
 
-  //printf("cvNlsNewton_gpu start\n");
+  //printf("cvNlsNewton_gpu2 start\n");
 
   /* Set flag convfail, input to lsetup for its evaluation decision */
   convfail = ((nflag == FIRST_CALL) || (nflag == PREV_ERR_FAIL)) ?
@@ -8434,7 +8530,7 @@ int cvNlsNewton_gpu2(SolverData *sd, CVodeMem cv_mem, int nflag)
       /* Load prediction into y vector */
       //N_VLinearSum(ONE, cv_mem->cv_zn[0], ONE, cv_mem->cv_acor_init, cv_mem->cv_y);
       //gpu_yequalsx is not thread safe (need cuda_devicesync previously!)
-      cudaDeviceSynchronize();//todo it is needed?
+      cudaDeviceSynchronize();
       gpu_yequalsx(mGPU->dcv_y,mGPU->dzn, mGPU->nrows, mGPU->blocks, mGPU->threads);//Consider acor_init=0
       cudaDeviceSynchronize();
 
@@ -8474,7 +8570,7 @@ int cvNlsNewton_gpu2(SolverData *sd, CVodeMem cv_mem, int nflag)
       cudaEventRecord(bicg->startLinSolSetup);
 #endif
 
-      ier = linsolsetup_gpu2(sd, cv_mem, convfail, vtemp1, vtemp2, vtemp3);
+      ier = linsolsetupDebug_gpu2(sd, cv_mem, convfail, vtemp1, vtemp2, vtemp3);
 
 #ifdef CAMP_DEBUG_GPU
       cudaEventRecord(bicg->stopLinSolSetup);
@@ -8516,7 +8612,7 @@ int cvNlsNewton_gpu2(SolverData *sd, CVodeMem cv_mem, int nflag)
 
     // Do the Newton iteration
     //ier = cvNewtonIteration(cv_mem);
-    ier = linsolsolve_gpu2(sd, cv_mem);
+    ier = linsolsolveDebug_gpu2(sd, cv_mem);
 
 #ifdef CAMP_DEBUG_GPU
     cudaEventRecord(bicg->stopLinSolSolve);
@@ -8538,14 +8634,15 @@ int cvNlsNewton_gpu2(SolverData *sd, CVodeMem cv_mem, int nflag)
   }
 }
 
-int cvStep_gpu2(SolverData *sd, CVodeMem cv_mem)
+
+int cvStepDebug_gpu2(SolverData *sd, CVodeMem cv_mem)
 {
   ModelDataGPU *mGPU = sd->mGPU;
   realtype saved_t, dsm;
   int ncf, nef;
   int nflag, kflag, eflag;
 
-  //printf("cvStep_gpu start\n");
+  //printf("cvStep_gpu2 start\n");
 
   double *ewt = NV_DATA_S(cv_mem->cv_ewt);
   int offset_nrows = 0;
@@ -8564,19 +8661,19 @@ int cvStep_gpu2(SolverData *sd, CVodeMem cv_mem)
   nflag = FIRST_CALL;
 
   if ((cv_mem->cv_nst > 0) && (cv_mem->cv_hprime != cv_mem->cv_h))
-    cvAdjustParams_gpu(cv_mem);
+    cvAdjustParams_gpu2(cv_mem);
 
   /* Looping point for attempts to take a step */
   for(;;) {
 
-    cvPredict_gpu(cv_mem);
+    cvPredict_gpu2(cv_mem);
 
-    cvSet_gpu(cv_mem);
+    cvSet_gpu2(cv_mem);
 
     //nflag = cvNls(cv_mem, nflag);
-    nflag = cvNlsNewton_gpu2(sd, cv_mem, nflag);//f(y)+BCG
+    nflag = cvNlsNewtonDebug_gpu2(sd, cv_mem, nflag);//f(y)+BCG
 
-    kflag = cvHandleNFlag_gpu(cv_mem, &nflag, saved_t, &ncf);
+    kflag = cvHandleNFlag_gpu2(cv_mem, &nflag, saved_t, &ncf);
 
     /* Go back in loop if we need to predict again (nflag=PREV_CONV_FAIL)*/
     if (kflag == PREDICT_AGAIN) continue;
@@ -8585,7 +8682,7 @@ int cvStep_gpu2(SolverData *sd, CVodeMem cv_mem)
     if (kflag != DO_ERROR_TEST) return(kflag);
 
     /* Perform error test (nflag=CV_SUCCESS) */
-    eflag = cvDoErrorTest_gpu(cv_mem, &nflag, saved_t, &nef, &dsm);
+    eflag = cvDoErrorTest_gpu2(cv_mem, &nflag, saved_t, &nef, &dsm);
 
     /* Go back in loop if we need to predict again (nflag=PREV_ERR_FAIL) */
     if (eflag == TRY_AGAIN)  continue;
@@ -8601,14 +8698,14 @@ int cvStep_gpu2(SolverData *sd, CVodeMem cv_mem)
   /* Nonlinear system solve and error test were both successful.
      Update data, and consider change of step and/or order.       */
 
-  cvCompleteStep_gpu(cv_mem);
+  cvCompleteStep_gpu2(cv_mem);
 
-  cvPrepareNextStep_gpu(cv_mem, dsm);//use tq calculated in cvset and tempv calc in cvnewton
+  cvPrepareNextStep_gpu2(cv_mem, dsm);//use tq calculated in cvset and tempv calc in cvnewton
 
   /* If Stablilty Limit Detection is turned on, call stability limit
      detection routine for possible order reduction. */
 
-  if (cv_mem->cv_sldeton) cvBDFStab_gpu(cv_mem);
+  if (cv_mem->cv_sldeton) cvBDFStab_gpu2(cv_mem);
 
   cv_mem->cv_etamax = (cv_mem->cv_nst <= SMALL_NST) ? ETAMX2 : ETAMX3;
 
@@ -8620,8 +8717,9 @@ int cvStep_gpu2(SolverData *sd, CVodeMem cv_mem)
 
 }
 
-int CVode_gpu2(void *cvode_mem, realtype tout, N_Vector yout,
-              realtype *tret, int itask, SolverData *sd)
+
+int CVodeDebug_gpu2(void *cvode_mem, realtype tout, N_Vector yout,
+                    realtype *tret, int itask, SolverData *sd)
 {
   CVodeMem cv_mem;
   long int nstloc;
@@ -8686,13 +8784,13 @@ int CVode_gpu2(void *cvode_mem, realtype tout, N_Vector yout,
    */
 
   // GPU initializations
-  //set_data_gpu(cv_mem, sd);
+  //set_data_gpu2(cv_mem, sd);
 
   if (cv_mem->cv_nst == 0) {
 
     cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
 
-    ier = cvInitialSetup_gpu(cv_mem);
+    ier = cvInitialSetup_gpu2(cv_mem);
     if (ier!= CV_SUCCESS) return(ier);
 
     /* Call f at (t0,y0), set zn[1] = y'(t0),
@@ -8739,9 +8837,9 @@ int CVode_gpu2(void *cvode_mem, realtype tout, N_Vector yout,
       tout_hin = tout;
       if ( cv_mem->cv_tstopset && (tout-cv_mem->cv_tn)*(tout-cv_mem->cv_tstop) > ZERO )
         tout_hin = cv_mem->cv_tstop;
-      hflag = cvHin_gpu(cv_mem, tout_hin); //set cv_y
+      hflag = cvHin_gpu2(cv_mem, tout_hin); //set cv_y
       if (hflag != CV_SUCCESS) {
-        istate = cvHandleFailure_gpu(cv_mem, hflag);
+        istate = cvHandleFailure_gpu2(cv_mem, hflag);
         return(istate);
       }
     }
@@ -8776,7 +8874,7 @@ int CVode_gpu2(void *cvode_mem, realtype tout, N_Vector yout,
 
     if (cv_mem->cv_nrtfn > 0) {
 
-      retval = cvRcheck1_gpu(cv_mem);
+      retval = cvRcheck1_gpu2(cv_mem);
 
       if (retval == CV_RTFUNC_FAIL) {
         cvProcessError(cv_mem, CV_RTFUNC_FAIL, "CVODE", "cvRcheck1",
@@ -8814,7 +8912,7 @@ int CVode_gpu2(void *cvode_mem, realtype tout, N_Vector yout,
 
       irfndp = cv_mem->cv_irfnd;
 
-      retval = cvRcheck2_gpu(cv_mem);
+      retval = cvRcheck2_gpu2(cv_mem);
 
       if (retval == CLOSERT) {
         cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "cvRcheck2",
@@ -8833,7 +8931,7 @@ int CVode_gpu2(void *cvode_mem, realtype tout, N_Vector yout,
          check remaining interval for roots */
       if ( SUNRabs(cv_mem->cv_tn - cv_mem->cv_tretlast) > troundoff ) {
 
-        retval = cvRcheck3_gpu(cv_mem);
+        retval = cvRcheck3_gpu2(cv_mem);
 
         if (retval == CV_SUCCESS) {     /* no root found */
           cv_mem->cv_irfnd = 0;
@@ -8997,12 +9095,12 @@ int CVode_gpu2(void *cvode_mem, realtype tout, N_Vector yout,
 
     /* Call cvStep to take a step */
     //kflag = cvStep(cv_mem);
-    kflag = cvStep_gpu2(sd, cv_mem);
+    kflag = cvStepDebug_gpu2(sd, cv_mem);
     //kflag = cudacvStep(sd, cv_mem);
 
     /* Process failed step cases, and exit loop */
     if (kflag != CV_SUCCESS) {
-      istate = cvHandleFailure_gpu(cv_mem, kflag);
+      istate = cvHandleFailure_gpu2(cv_mem, kflag);
       cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
       N_VScale(ONE, cv_mem->cv_zn[0], yout);
       break;
@@ -9013,7 +9111,7 @@ int CVode_gpu2(void *cvode_mem, realtype tout, N_Vector yout,
     /* Check for root in last step taken. */
     if (cv_mem->cv_nrtfn > 0) {
 
-      retval = cvRcheck3_gpu(cv_mem);
+      retval = cvRcheck3_gpu2(cv_mem);
 
       if (retval == RTFOUND) {  /* A new root was found */
         cv_mem->cv_irfnd = 1;
@@ -9109,8 +9207,6 @@ int CVode_gpu2(void *cvode_mem, realtype tout, N_Vector yout,
   return(istate);
 }
 
-#endif
-
 void solver_get_statistics_gpu(SolverData *sd){
 
   cudaSetDevice(0);
@@ -9184,7 +9280,6 @@ void solver_reset_statistics_gpu(SolverData *sd){
   }
 
 }
-
 
 void printSolverCounters_gpu(SolverData *sd)
 {

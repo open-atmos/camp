@@ -88,7 +88,6 @@ __global__ void cudamatScaleAddI(int nrows, double* dA, int* djA, int* diA, doub
 }
 
 // A = I - gamma*J
-// Based on CSR format, works on CSC too
 // dA  : Matrix values (nnz size)
 // djA : Matrix columns (nnz size)
 // diA : Matrix rows (nrows+1 size)

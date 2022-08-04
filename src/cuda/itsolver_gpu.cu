@@ -121,7 +121,7 @@ void exportConfBCG(SolverData *sd, const char *filepath){
 
   itsolver *bicg = &(sd->bicg);
   ModelDataGPU *mGPU = sd->mGPU;
-  FILE *fp = fopen(filepath, "w+");
+  FILE *fp = fopen(filepath, "w");
 
   fprintf(fp, "%d\n",  mGPU->n_cells);
   fprintf(fp, "%d\n",  mGPU->nrows);
@@ -241,28 +241,17 @@ void exportOutBCG(SolverData *sd, const char *filepath){
 
   itsolver *bicg = &(sd->bicg);
   ModelDataGPU *mGPU = sd->mGPU;
-  FILE *fp = fopen(filepath, "w+");
+  FILE *fp = fopen(filepath, "w");
 
-  double *A=(double*)malloc(mGPU->nnz*sizeof(double));
   double *x=(double*)malloc(mGPU->nrows*sizeof(double));
-  double *tempv=(double*)malloc(mGPU->nrows*sizeof(double));
 
-  cudaMemcpy(A, mGPU->dA,mGPU->nnz*sizeof(double),cudaMemcpyDeviceToHost);
   cudaMemcpy(x,mGPU->dx,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
-  cudaMemcpy(tempv,mGPU->dtempv,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
 
-  for(int i=0; i<mGPU->nnz; i++)
-    fprintf(fp, "%le ",  A[i]);
-  fprintf(fp, "\n");
   for(int i=0; i<mGPU->nrows; i++)
     fprintf(fp, "%le ",  x[i]);
-  fprintf(fp, "\n");
-  for(int i=0; i<mGPU->nrows; i++)
-    fprintf(fp, "%le ",  tempv[i]);
+  //fprintf(fp, "\n");
 
-  free(A);
   free(x);
-  free(tempv);
 
   printf("exportOutBCG: Data saved to %s\n",filepath);
 
@@ -787,7 +776,21 @@ void solveGPU_block_thr(int blocks, int threads_block, int n_shr_memory, int n_s
   int len_cell=nrows/n_cells;
 
 #ifdef IS_EXPORTBCG
+#ifdef IS_EXPORTBCG_1CELL
+  int nrows2 = mGPU->nrows;
+  int nnz2 = mGPU->nnz;
+  int n_cells2 = mGPU->n_cells;
+  mGPU->nrows/=mGPU->n_cells;
+  mGPU->nnz/=mGPU->n_cells;
+  mGPU->n_cells=1;
+#endif
   exportConfBCG(sd,"confBCG.txt");
+#ifdef IS_EXPORTBCG_1CELL
+  mGPU->nrows=nrows2;
+  mGPU->nnz=nnz2;
+  mGPU->n_cells=n_cells2;
+#endif
+
 #endif
 
 #ifdef DEBUG_SOLVEBCGCUDA
@@ -813,6 +816,11 @@ void solveGPU_block_thr(int blocks, int threads_block, int n_shr_memory, int n_s
                                            );
 
 #ifdef IS_EXPORTBCG
+#ifdef IS_EXPORTBCG_1CELL
+  mGPU->nrows/=mGPU->n_cells;
+  mGPU->nnz/=mGPU->n_cells;
+  mGPU->n_cells=1;
+#endif
   exportOutBCG(sd,"outBCG.txt");
 #endif
 

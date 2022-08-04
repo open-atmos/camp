@@ -105,7 +105,6 @@ typedef struct {
 #endif
     //unsigned int num_elem;   // Number of potentially non-zero Jacobian elements
     int *num_elem;   // Number of potentially non-zero Jacobian elements
-    int *col_ptrs;  // Index of start/end of each column in data array
     //unsigned int *row_ids;   // Row id of each Jacobian element in data array
     double *production_partials;    // Data array for productions rate partial derivs
     double *loss_partials;  // Data array for loss rate partial derivs
@@ -208,7 +207,7 @@ typedef struct {
     double dtcudaDeviceCVode;
     double dtPostBCG;
 #endif
-}ModelDataVariable; //variables to pass between gpu and cpu
+}ModelDataVariable; //variables to pass between gpu and cpu (different data between cells)
 
 typedef struct {
 
@@ -370,9 +369,9 @@ typedef struct {
     int max_n_gpu_blocks;
     int *map_state_derivCPU;
 
-    ModelDataVariable mdvCPU;
-    ModelDataVariable *mdv;
-    ModelDataVariable *mdvo;
+    ModelDataVariable mdvCPU; //cpu equivalent to gpu
+    ModelDataVariable *mdv; //device
+    ModelDataVariable *mdvo; //out device
 
 //ODE stats
 #ifdef CAMP_DEBUG_GPU
@@ -390,6 +389,6 @@ typedef struct {
     double *dtPostBCG;
 #endif
 
-} ModelDataGPU; //GPU variables
+} ModelDataGPU; //CPU and GPU structs
 
 

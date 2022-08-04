@@ -7,26 +7,17 @@
 import matplotlib as mpl
 
 mpl.use('TkAgg')
-import matplotlib.pyplot as plt
-import csv
+#import plot_functions #comment to save ~2s execution time
+import math_functions
 import sys, getopt
 import os
 import numpy as np
-from pylab import imread, subplot, imshow, show
-import plot_functions
 import datetime
-import time
 import json
 from pathlib import Path
-import shutil
 import zipfile
 from os import walk
-import importlib
 import subprocess
-import glob
-import pandas as pd
-import seaborn as sns
-
 
 class TestMonarch:
     def __init__(self):
@@ -65,7 +56,7 @@ class TestMonarch:
         self.sbatch_job_id = ""
         self.datacolumns = []
         self.stdColumns = []
-        self.exportPath = "test/monarch/exports"
+        self.exportPath = "exports"
         self.legend = []
         self.results_file = "_solver_stats.csv"
         self.plotTitle = ""
@@ -170,11 +161,8 @@ def get_commit_hash():
 
 
 def remove_to_tmp(conf, sbatch_job_id):
-    init_path = os.path.abspath(os.getcwd())
-    os.chdir("../../..")
     exportPath = conf.exportPath
 
-    extra_str_name = " bind-to-none"
     now = datetime.datetime.now()
     tmp_dir = exportPath + "/tmp/" + now.strftime("%d-%m-%Y")  # + extra_str_name
     if not os.path.exists(tmp_dir):
@@ -187,7 +175,6 @@ def remove_to_tmp(conf, sbatch_job_id):
 
     if not filenames:
         print("WARNING: Import folder is empty. Path:", os.path.abspath(os.getcwd()) + "/" + conf_path)
-        os.chdir(init_path)
         raise
 
     data_path = exportPath + "/data/"
@@ -224,26 +211,21 @@ def remove_to_tmp(conf, sbatch_job_id):
 
 
 def import_data(conf, tmp_path):
-    init_path = os.path.abspath(os.getcwd())
     is_import = False
-    os.chdir("../../..")
     exportPath = conf.exportPath
     new_path = tmp_path
 
     if not os.path.exists(exportPath):
-        os.chdir(init_path)
         return False, new_path
 
     conf_path = exportPath + "/conf"
     if not os.path.exists(conf_path):
-        os.chdir(init_path)
         return False, new_path
 
     filenames = next(walk(conf_path), (None, None, []))[2]
 
     if not filenames:
         print("WARNING: Import folder is empty. Path:", os.path.abspath(os.getcwd()) + "/" + conf_path)
-        os.chdir(init_path)
         return False, new_path
 
     data_path = exportPath + "/data/"
@@ -309,20 +291,16 @@ def import_data(conf, tmp_path):
             print("Imported data from", new_path)
             break
 
-    os.chdir(init_path)
-
     return is_import, new_path
 
 
 def export(conf, data_path):
-    init_path = os.path.abspath(os.getcwd())
     data_path_abs = os.path.abspath(os.getcwd()) + "/" + data_path
     exportPath = conf.exportPath
     conf.commit = get_commit_hash()
     if len(sys.argv) > 1:
         conf.sbatch_job_id = sys.argv[1]
 
-    os.chdir("../../..")
     print(os.path.abspath(os.getcwd()) + "/" + exportPath)
     if not os.path.exists(exportPath):
         os.makedirs(exportPath)
@@ -357,9 +335,6 @@ def export(conf, data_path):
         print("WARNING: More than 1GB saved in ", os.path.abspath(os.getcwd()) + "/" + exportPath)
         # raise
 
-    os.chdir(init_path)
-
-
 def run(conf):
     exec_str = ""
     if conf.mpi == "yes":
@@ -378,7 +353,8 @@ def run(conf):
         print("Saving Nvprof file in ", os.path.abspath(os.getcwd()) \
               + "/" + pathNvprof)
 
-    exec_str += "../../mock_monarch"
+    path_exec = "../../build/mock_monarch"
+    exec_str += path_exec
 
     # CAMP solver option GPU-CPU
     write_camp_config_file(conf)
@@ -417,9 +393,9 @@ def run(conf):
     data = {}
     if conf.plotYKey == "MAPE":
         # print("Pending to import data from MAPE and read only the desired timesteps and cells")
-        plot_functions.read_solver_stats_all(data_path, data)
+        math_functions.read_solver_stats_all(data_path, data)
     else:
-        plot_functions.read_solver_stats(data_path, data, conf.timeSteps)
+        math_functions.read_solver_stats(data_path, data, conf.timeSteps)
 
     # print("The size of the dictionary is {} bytes".format(sys.getsizeof(data)))
     # print("The size of the dictionary is {} bytes".format(sys.getsizeof(data["timeLS"])))
@@ -434,7 +410,7 @@ def run_case(conf):
     data = run(conf)
 
     if "timeLS" in conf.plotYKey and "computational" in conf.plotYKey \
-            and "GPU" in conf.case:
+        and "GPU" in conf.case:
         for i in range(len(data["timeLS"])):
             data["timeLS"][i] = data["timeLS"][i] - data["timeBiconjGradMemcpy"][i]
 
@@ -496,7 +472,7 @@ def run_cases(conf):
             for caseOptim in conf.casesOptim:
                 if conf.plotXKey == "MPI processes":
                     if (caseOptim == conf.caseBase and mpiProcessesCaseOptim == conf.mpiProcessesCaseBase) \
-                            or (caseOptim != conf.caseBase and mpiProcessesCaseOptim != conf.mpiProcessesCaseBase):
+                        or (caseOptim != conf.caseBase and mpiProcessesCaseOptim != conf.mpiProcessesCaseBase):
                         continue
 
                 cases_words = caseOptim.split()
@@ -508,20 +484,20 @@ def run_cases(conf):
 
                 # calculate measures between caseBase and caseOptim
                 if conf.plotYKey == "NRMSE":
-                    datay = plot_functions.calculate_NMRSE(data, conf.timeSteps)
+                    datay = math_functions.calculate_NMRSE(data, conf.timeSteps)
                 elif conf.plotYKey == "MAPE":
-                    datay = plot_functions.calculate_MAPE(data, conf.timeSteps, conf.MAPETol)
+                    datay = math_functions.calculate_MAPE(data, conf.timeSteps, conf.MAPETol)
                 elif conf.plotYKey == "SMAPE":
-                    datay = plot_functions.calculate_SMAPE(data, conf.timeSteps)
+                    datay = math_functions.calculate_SMAPE(data, conf.timeSteps)
                 elif "Speedup" in conf.plotYKey:
                     y_key_words = conf.plotYKey.split()
                     y_key = y_key_words[-1]
                     # print("WARNING: Check y_key is correct:",y_key)
-                    datay = plot_functions.calculate_speedup(data, y_key)
+                    datay = math_functions.calculate_speedup(data, y_key)
                 elif conf.plotYKey == "Percentage data transfers CPU-GPU [%]":
                     y_key = "timeBiconjGradMemcpy"
                     print("elif conf.plotYKey==Time data transfers")
-                    datay = plot_functions.calculate_BCGPercTimeDataTransfers(data, y_key)
+                    datay = math_functions.calculate_BCGPercTimeDataTransfers(data, y_key)
                 else:
                     raise Exception("Not found plot function for conf.plotYKey")
 
@@ -627,14 +603,14 @@ def plot_cases(conf):
                 for caseOptim in conf.casesOptim:
                     if conf.plotXKey == "MPI processes":
                         if (caseOptim == conf.caseBase and mpiProcessesCaseOptim == conf.mpiProcessesCaseBase) \
-                                or (caseOptim != conf.caseBase and mpiProcessesCaseOptim != conf.mpiProcessesCaseBase):
+                            or (caseOptim != conf.caseBase and mpiProcessesCaseOptim != conf.mpiProcessesCaseBase):
                             continue
                     cases_words = caseOptim.split()
                     conf.caseGpuCpu = cases_words[0]
                     conf.caseMulticellsOnecell = cases_words[1]
                     case_multicells_onecell_name = getCaseName(conf)
                     if conf.caseMulticellsOnecell.find("BDF") != -1 or conf.caseMulticellsOnecell.find(
-                            "maxrregcount") != -1:
+                        "maxrregcount") != -1:
                         is_same_diff_cells = True
                     legend_name = ""
                     if len(conf.diffCellsL) > 1:
@@ -742,19 +718,19 @@ def all_timesteps():
     conf = TestMonarch()
 
     # conf.chemFile = "simple"
-    #conf.chemFile = "monarch_cb05"
-    conf.chemFile = "monarch_binned"
+    conf.chemFile = "monarch_cb05"
+    #conf.chemFile = "monarch_binned"
 
     conf.diffCellsL = []
     conf.diffCellsL.append("Realistic")
-    # conf.diffCellsL.append("Ideal")
+    #conf.diffCellsL.append("Ideal")
 
     conf.profileCuda = False
     # conf.profileCuda = True
 
     conf.is_export = get_is_sbatch()
-    # conf.is_export = True
-    # conf.is_export = False
+    #conf.is_export = True
+    #conf.is_export = False
 
     conf.is_import = True
     # conf.is_import = False
@@ -789,22 +765,22 @@ def all_timesteps():
     # conf.allocatedTasksPerNode = 320
     # conf.allocatedTasksPerNode = get_ntasksPerNode_sbatch() #todo
 
-    conf.cells = [200]
+    conf.cells = [1000]
     #conf.cells = [100, 500, 1000, 5000, 10000]
     # conf.cells = [50000,100000,500000,1000000]
 
-    conf.timeSteps = 1
+    conf.timeSteps = 10
     #conf.timeSteps = 720
 
     conf.timeStepsDt = 2
 
     #conf.caseBase = "CPU EBI"
-    conf.caseBase = "CPU One-cell"
+    #conf.caseBase = "CPU One-cell"
     # conf.caseBase = "CPU Multi-cells"
     # conf.caseBase="GPU Multi-cells"
     # conf.caseBase="GPU Block-cellsN"
     # conf.caseBase="GPU Block-cells1"
-    # conf.caseBase = "GPU BDF"
+    conf.caseBase = "GPU BDF"
     # conf.caseBase = "GPU maxrregcount-64"
     # conf.caseBase = "GPU maxrregcount-24" #Minimum
     # conf.caseBase = "GPU maxrregcount-62"
@@ -821,16 +797,16 @@ def all_timesteps():
     #conf.casesOptim.append("GPU BDF")
     # conf.casesOptim.append("GPU Block-cellsNhalf")
     conf.casesOptim.append("GPU Block-cells1")
-    # conf.casesOptim.append("GPU Block-cellsN")
+    #conf.casesOptim.append("GPU Block-cellsN")
     # conf.casesOptim.append("GPU Multi-cells")
     # conf.casesOptim.append("GPU One-cell")
     #conf.casesOptim.append("CPU Multi-cells")
     #conf.casesOptim.append("CPU One-cell")
     #conf.casesOptim.append("CPU EBI")
 
-    conf.plotYKey = "Speedup timeCVode"
+    #conf.plotYKey = "Speedup timeCVode"
     # conf.plotYKey = "Speedup counterLS"
-    #conf.plotYKey = "Speedup nrrormalized timeLS"
+    #conf.plotYKey = "Speedup normalized timeLS"
     # conf.plotYKey = "Speedup normalized computational timeLS"
     # conf.plotYKey = "Speedup counterBCG"
     # conf.plotYKey = "Speedup normalized counterBCG"
@@ -841,7 +817,7 @@ def all_timesteps():
     # conf.plotYKey = "Speedup countercvStep"
     # conf.plotYKey = "Speedup device timecvStep"
     # conf.plotYKey = "Percentage data transfers CPU-GPU [%]"
-    #conf.plotYKey ="MAPE"
+    conf.plotYKey = "MAPE"
     # conf.plotYKey ="SMAPE"
     # conf.plotYKey ="NRMSE"
     # conf.MAPETol = 1.0E-6
@@ -866,6 +842,9 @@ def all_timesteps():
     if not os.path.exists('out'):
         os.makedirs('out')
 
+    if conf.plotYKey == "":
+        print("conf.plotYKey is empty")
+
     if conf.chemFile == "monarch_binned":
         if conf.timeStepsDt != 2:
             print("Warning: Setting timeStepsDt to 2, since it is the usual value for monarch_binned")
@@ -875,8 +854,7 @@ def all_timesteps():
             print("Warning: Setting timeStepsDt to 3, since it is the usual value for monarch_cb05")
         conf.timeStepsDt = 3
         if "Realistic" in conf.diffCellsL:
-            print("Warning: Setting Ideal, chemFile == monarch_cb05 only has information from one-cell and we do not know if is fine using different temp and pressure (e.g. converge or not)")
-            #conf.diffCellsL = ["Realistic"]
+            print("Warning: Setting Ideal, chemFile == monarch_cb05 only has ideal case implemented")
             conf.diffCellsL = ["Ideal"]
 
     if not conf.caseBase:
@@ -909,7 +887,5 @@ def all_timesteps():
 
 
 if __name__ == "__main__":
+    #print("main start")
     all_timesteps()
-    # sns.set_theme(style="darkgrid")
-    # tips = sns.load_dataset("tips")
-    # ax = sns.pointplot(x="time", y="total_bill", hue="smoker", data=tips)

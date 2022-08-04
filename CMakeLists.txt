@@ -39,7 +39,9 @@ option(ENABLE_CXX "Enable C++" OFF)
 option(ENABLE_GPU "Enable use of GPUs in chemistry solving" OFF)
 option(ENABLE_SWAP_DERIV_LOOP_CELLS "Optimization for sligth speedup in One-cell version, more info at https://earth.bsc.es/gitlab/ac/camp/-/issues/22" OFF)
 option(ENABLE_RESET_JAC_SOLVING "Precondition Jacobian matrix with default value (ON) or previous execution value (OFF), better speedup ON but easier to debug OFF, more info at https://earth.bsc.es/gitlab/ac/camp/-/issues/21" OFF)
-option(ENABLE_NETCDF "Include NETCDF package OFF")
+option(ENABLE_NETCDF "Include NETCDF package" OFF)
+option(ENABLE_BOOTCAMP "" ON)
+option(ENABLE_DATA "" ON)
 option(use_maxrregcount127 "Compiling with maxxregcount127" OFF)
 option(use_maxrregcount64 "Compiling with maxxregcount64" OFF)
 option(use_maxrregcount24 "Compiling with maxxregcount24" OFF)
@@ -256,10 +258,19 @@ endmacro(do_unit_test)
 ######################################################################
 # copy dirs
 
+if(ENABLE_DATA)
 add_custom_target(copy_data ALL ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/data ${CMAKE_BINARY_DIR}/data_run)
+endif()
+
+if (ENABLE_TESTS)
 add_custom_target(copy_test ALL ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/test ${CMAKE_BINARY_DIR}/test_run)
 add_custom_target(copy_mechanism ALL ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/mechanisms ${CMAKE_BINARY_DIR}/mechanisms_run)
-add_custom_target(copy_boot_camp ALL ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/doc/camp_tutorial/boot_camp ${CMAKE_BINARY_DIR}/boot_camp_run)
+endif()
+
+if(ENABLE_BOOTCAMP)
+  add_custom_target(copy_boot_camp ALL ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/doc/camp_tutorial/boot_camp ${CMAKE_BINARY_DIR}/boot_camp_run)
+endif()
+
 set_property(DIRECTORY PROPERTY ADDITIONAL_MAKE_CLEAN_FILES test_run mechanisms_run scenarios_run boot_camp_run)
 
 ######################################################################

@@ -18,7 +18,7 @@
 #include <mpi.h>
 #endif
 
-#ifdef CSR_MATRIX
+#ifndef CSR_MATRIX
 void swapCSC_CSR2(int n_row, int n_col, int* Ap, int* Aj, double* Ax, int* Bp, int* Bi, double* Bx){
 
   int nnz=Ap[n_row];

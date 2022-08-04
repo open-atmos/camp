@@ -45,22 +45,25 @@ if [ $is_sbatch == "true" ]; then
 else
 
   cd  ../../build
-  make -j 4
+  time make -j 4
+  cd ../test/monarch
 
-  cd test_run/monarch
+  #echo "make end"
 
   FILE=TestMonarch.py
   if test -f "$FILE"; then
-    python $FILE
-    cd ../../
+    #echo "python TestMonarch.py start"
+    time python $FILE
 
     #./test_monarch_1.sh MPI
     #./test_run/chemistry/cb05cl_ae5/test_chemistry_cb05cl_ae5.sh
     #./unit_test_aero_rep_single_particle
+
+    cd ../../compile/power9
   else
     echo "Running old commits with file test_monarch_1.py ."
     python test_monarch_1.py
+    cd ../../camp/compile/power9
   fi
-  cd ../../camp/compile/power9
 
 fi

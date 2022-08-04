@@ -22,7 +22,7 @@
 #ifdef CAMP_USE_GSL
 #include <gsl/gsl_deriv.h>
 #include <gsl/gsl_math.h>
-#include <gsl/gsl_roots.h>
+#include <gsl/gsl_roots.gpupartmch>
 #endif
 #include "camp_debug.h"
 #include "debug_and_stats/camp_debug_2.h"
@@ -801,8 +801,10 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
       if(sd->use_gpu_cvode==1){
       flag = cudaCVode(sd->cvode_mem, (realtype)t_final, sd->y,
           &t_rt, CV_NORMAL, sd);
+      //flag = CVode_gpu2(sd->cvode_mem, (realtype)t_final, sd->y,
+      //       &t_rt, CV_NORMAL, sd);
       }else{
-      flag = CVode_gpu2(sd->cvode_mem, (realtype)t_final, sd->y,
+      flag = CVode_gpu(sd->cvode_mem, (realtype)t_final, sd->y,
              &t_rt, CV_NORMAL, sd);
       }
     }
@@ -2589,6 +2591,15 @@ void solver_free(void *solver_data) {
 
   // free the linear solver
   SUNLinSolFree(sd->ls);
+#endif
+
+#ifdef CAMP_USE_GPU
+
+  if(sd->use_cpu==0){
+  //todo multigpu
+    //free_gpu_cu(sd);
+  }
+
 #endif
 
 }

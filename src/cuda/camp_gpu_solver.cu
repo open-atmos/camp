@@ -329,7 +329,6 @@ void init_jac_gpu(SolverData *sd, double *J_ptr){
   ModelDataGPU *mGPU;
 
   int offset_nnz_J_solver = 0;
-  int offset_nnz_j_rxn = 0;
   int offset_nrows = 0;
   for (int iDevice = 0; iDevice < sd->nDevices; iDevice++) {
     cudaSetDevice(iDevice);
@@ -355,9 +354,9 @@ void init_jac_gpu(SolverData *sd, double *J_ptr){
 
 
     printf("md->n_per_cell_dep_var %d sd->jac.num_spec %d md->n_per_cell_solver_jac_elem %d "
-           "md->n_mapped_values %d SM_NNZ_S(md->J_rxn) %d offset_nnz_J_solver %d  mGPU->nnz_J_solver %d mGPU->nrows_J_solver %d\n",
+           "md->n_mapped_values %d SM_NNZ_S(md->J_rxn) %d jac->num_elem %d offset_nnz_J_solver %d  mGPU->nnz_J_solver %d mGPU->nrows_J_solver %d\n",
            md->n_per_cell_dep_var,sd->jac.num_spec,md->n_per_cell_solver_jac_elem, md->n_mapped_values,
-           SM_NNZ_S(md->J_rxn), offset_nnz_J_solver,mGPU->nnz_J_solver, mGPU->nrows_J_solver);
+           SM_NNZ_S(md->J_rxn), sd->jac.num_elem, offset_nnz_J_solver,mGPU->nnz_J_solver, mGPU->nrows_J_solver);
 
 
     //Transfer sunindextype to int
@@ -1239,6 +1238,8 @@ void free_gpu_cu(SolverData *sd) {
   ModelData *md = &(sd->model_data);
   ModelDataGPU *mGPU = sd->mGPU;
 
+  printf("free_gpu_cu start\n");
+
   free(sd->flagCells);
 
 #ifdef CAMP_DEBUG_GPU
@@ -1247,21 +1248,100 @@ void free_gpu_cu(SolverData *sd) {
 
 #endif
 
-  //for (int i = 0; i < n_streams; ++i)
-  //  HANDLE_ERROR( cudaStreamDestroy(md->stream_gpu[i]) );
-/*
+  //ModelDataGPU Start
+  cudaFree(mGPU->map_state_deriv);
+  cudaFree(mGPU->deriv_data);
+  cudaFree(mGPU->J);
+  cudaFree(mGPU->J_solver);
+  cudaFree(mGPU->jJ_solver);
+  cudaFree(mGPU->iJ_solver);
+  cudaFree(mGPU->J_state);
+  cudaFree(mGPU->J_deriv);
+  cudaFree(mGPU->J_tmp);
+  cudaFree(mGPU->J_tmp2);
+  cudaFree(mGPU->indexvals);
+  cudaFree(mGPU->indexptrs);
+  cudaFree(mGPU->rxn_int);
+  cudaFree(mGPU->rxn_double);
+  cudaFree(mGPU->state);
+  cudaFree(mGPU->env);
+  cudaFree(mGPU->rxn_env_data);
+  cudaFree(mGPU->rxn_env_data_idx);
+  cudaFree(mGPU->production_rates);
+  cudaFree(mGPU->loss_rates);
+  cudaFree(mGPU->rxn_int_indices);
+  cudaFree(mGPU->rxn_float_indices);
+  cudaFree(mGPU->aero_rep_int_indices);
+  cudaFree(mGPU->aero_rep_float_indices);
+  cudaFree(mGPU->aero_rep_env_idx);
+  cudaFree(mGPU->aero_rep_int_data);
+  cudaFree(mGPU->aero_rep_float_data);
+  cudaFree(mGPU->aero_rep_env_data);
+  cudaFree(mGPU->n_mapped_values);
+  cudaFree(mGPU->J_rxn);
+  cudaFree(mGPU->jac_map);
+  cudaFree(mGPU->yout);
+  cudaFree(mGPU->cv_Vabstol);
+  cudaFree(mGPU->grid_cell_state);
+  cudaFree(mGPU->grid_cell_env);
+  cudaFree(mGPU->grid_cell_aero_rep_env_data);
+  cudaFree(mGPU->cv_l);
+  cudaFree(mGPU->cv_tau);
+  cudaFree(mGPU->cv_tq);
+  cudaFree(mGPU->cv_last_yn);
+  cudaFree(mGPU->cv_acor_init);
+  cudaFree(mGPU->dA);
+  cudaFree(mGPU->djA);
+  cudaFree(mGPU->diA);
+  cudaFree(mGPU->dx);
+  cudaFree(mGPU->dtempv);
+  cudaFree(mGPU->ddiag);
+  cudaFree(mGPU->dr0);
+  cudaFree(mGPU->dr0h);
+  cudaFree(mGPU->dn0);
+  cudaFree(mGPU->dp0);
+  cudaFree(mGPU->dt);
+  cudaFree(mGPU->ds);
+  cudaFree(mGPU->dAx2);
+  cudaFree(mGPU->dy);
+  cudaFree(mGPU->dz);
+  cudaFree(mGPU->daux);
+  cudaFree(mGPU->dB);
+  cudaFree(mGPU->djB);
+  cudaFree(mGPU->diB);
+  cudaFree(mGPU->dftemp);
+  cudaFree(mGPU->dcv_y);
+  cudaFree(mGPU->dtempv1);
+  cudaFree(mGPU->dtempv2);
+  cudaFree(mGPU->flag);
+  cudaFree(mGPU->flagCells);
+  cudaFree(mGPU->cv_acor);
+  cudaFree(mGPU->dzn);
+  cudaFree(mGPU->dewt);
+  cudaFree(mGPU->dsavedJ);
+  cudaFree(mGPU->djsavedJ);
+  cudaFree(mGPU->disavedJ);
+  cudaFree(mGPU->jac_aux);
+  cudaFree(mGPU->indexvals_gpu);
+  cudaFree(mGPU->indexptrs_gpu);
+  cudaFree(mGPU->map_state_derivCPU);
+  cudaFree(mGPU->mdv);
+  cudaFree(mGPU->mdvo);
 
-  */
-  //free(md->jac_aux);
-  HANDLE_ERROR(cudaFree(mGPU->rxn_int));
-  HANDLE_ERROR(cudaFree(mGPU->rxn_double));
-  HANDLE_ERROR(cudaFree(mGPU->deriv_data));
-  //HANDLE_ERROR(cudaFree(J_solver_gpu));
-
-  HANDLE_ERROR(cudaFree(mGPU->state));
-  HANDLE_ERROR(cudaFree(mGPU->env));
-  HANDLE_ERROR(cudaFree(mGPU->rxn_env_data));
-  HANDLE_ERROR(cudaFree(mGPU->rxn_env_data_idx));
+#ifdef CAMP_DEBUG_GPU
+  cudaFree(mGPU->tguessNewton);
+  cudaFree(mGPU->dtNewtonIteration);
+  cudaFree(mGPU->dtJac);
+  cudaFree(mGPU->dtlinsolsetup);
+  cudaFree(mGPU->dtcalc_Jac);
+  cudaFree(mGPU->dtRXNJac);
+  cudaFree(mGPU->dtf);
+  cudaFree(mGPU->dtguess_helper);
+  cudaFree(mGPU->dtBCG);
+  cudaFree(mGPU->dtcudaDeviceCVode);
+  cudaFree(mGPU->dtPostBCG);
+#endif
+  //ModelDataGPU end
 
 }
 
@@ -1292,6 +1372,8 @@ void bubble_sort_gpu(unsigned int *n_zeros, unsigned int *rxn_position, int n_rx
 
 }
 
+
+
 /* Prints */
 
 void print_gpu_specs() {
@@ -1316,6 +1398,8 @@ void print_gpu_specs() {
     printf("  sharedMemPerBlock: %zu\n", prop.sharedMemPerBlock); //bytes
     printf("  multiProcessorCount: %d\n", prop.multiProcessorCount);
   }
+
+
 
 }
 
