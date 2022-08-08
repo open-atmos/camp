@@ -22,7 +22,6 @@
 
 //Functions to debug cuda errors
 #define HANDLE_ERROR( err ) (HandleError( err, __FILE__, __LINE__ ))
-#define HANDLE_ERROR2( ) (HandleError2( __FILE__, __LINE__ ))
 
 void solver_new_gpu_cu(SolverData *sd, int n_dep_var, int n_state_var, int n_rxn,
      int n_rxn_int_param, int n_rxn_float_param, int n_rxn_env_param, int n_cells_total);

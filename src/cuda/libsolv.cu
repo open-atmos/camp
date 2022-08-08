@@ -190,8 +190,8 @@ __global__ void cudaSpmvCSR(double* dx, double* db, int nrows, double* dA, int* 
 
 __global__ void cudaSpmvCSC(double* dx, double* db, int nrows, double* dA, int* djA, int* diA)
 {
-	double mult;
-	int row= threadIdx.x + blockDim.x*blockIdx.x;
+  double mult;
+  int row= threadIdx.x + blockDim.x*blockIdx.x;
   if(row < nrows)
   {
     int jstart = diA[row];
@@ -204,20 +204,20 @@ __global__ void cudaSpmvCSC(double* dx, double* db, int nrows, double* dA, int* 
 	}
 }
 
-extern "C++" void gpu_spmv(double* dx ,double* db, int nrows, double* dA, int *djA,int *diA,int mattype,int blocks,int  threads)
+extern "C++" void gpu_spmv(double* dx ,double* db, int nrows, double* dA, int *djA,int *diA,int blocks,int  threads)
 {
    dim3 dimGrid(blocks,1,1);
    dim3 dimBlock(threads,1,1);
 
-   if(mattype==0)
-   {
-     cudaSpmvCSR<<<dimGrid,dimBlock>>>(dx, db, nrows, dA, djA, diA);
-   }
-   else
-   {
-	    cudasetconst<<<dimGrid,dimBlock>>>(dx, 0.0, nrows);
-	    cudaSpmvCSC<<<dimGrid,dimBlock>>>(dx, db, nrows, dA, djA, diA);
-   }
+#ifndef CSR_SPMV_CPU
+
+   cudaSpmvCSR<<<dimGrid,dimBlock>>>(dx, db, nrows, dA, djA, diA);
+
+#else
+    cudasetconst<<<dimGrid,dimBlock>>>(dx, 0.0, nrows);
+    cudaSpmvCSC<<<dimGrid,dimBlock>>>(dx, db, nrows, dA, djA, diA);
+#endif
+
 }
 
 // y= a*x+ b*y

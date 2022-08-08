@@ -2,14 +2,14 @@
     "_chemFile": "monarch_cb05",
     "diffCells": "Ideal",
     "mpi": "yes",
-    "timeSteps": 1,
+    "timeSteps": 20,
     "timeStepsDt": 3,
     "MAPETol": 0.0001,
     "commit": "",
-    "case": "GPU BDF",
-    "nCells": 1000,
-    "caseGpuCpu": "GPU",
-    "caseMulticellsOnecell": "BDF",
+    "case": "CPU One-cell",
+    "nCells": 10,
+    "caseGpuCpu": "CPU",
+    "caseMulticellsOnecell": "One-cell",
     "mpiProcesses": 1,
     "allocatedNodes": 1,
     "allocatedTasksPerNode": 160,
@@ -26,10 +26,12 @@
         1
     ],
     "cells": [
-        1000
+        10
     ],
     "caseBase": "GPU BDF",
-    "casesOptim": [],
+    "casesOptim": [
+        "CPU One-cell"
+    ],
     "plotYKey": "MAPE",
     "plotXKey": "",
     "is_export": false,
@@ -43,7 +45,7 @@
     "legend": [],
     "results_file": "_results_all_cells.csv",
     "plotTitle": "",
-    "nCellsProcesses": 1000,
+    "nCellsProcesses": 10,
     "itsolverConfigFile": "itsolver_options.txt",
     "campSolverConfigFile": "config_variables_c_solver.txt",
     "nGPUsCaseBase": 1

@@ -18,6 +18,7 @@
 #include "sub_model_solver.h"
 #ifdef CAMP_USE_GPU
 #include "cuda/cvode_gpu.h"
+#include "cuda/cvode_ls_gpu.h"
 #endif
 #ifdef CAMP_USE_GSL
 #include <gsl/gsl_deriv.h>
@@ -801,8 +802,6 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
       if(sd->use_gpu_cvode==1){
       flag = cudaCVode(sd->cvode_mem, (realtype)t_final, sd->y,
           &t_rt, CV_NORMAL, sd);
-      //flag = CVode_gpu2(sd->cvode_mem, (realtype)t_final, sd->y,
-      //       &t_rt, CV_NORMAL, sd);
       }else{
       flag = CVode_gpu(sd->cvode_mem, (realtype)t_final, sd->y,
              &t_rt, CV_NORMAL, sd);

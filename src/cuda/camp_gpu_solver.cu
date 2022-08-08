@@ -28,10 +28,6 @@ extern "C" {
 #define RXN_EMISSION 13
 #define RXN_WET_DEPOSITION 14
 
-#define STREAM_RXN_ENV_GPU 0
-#define STREAM_ENV_GPU 1
-#define STREAM_DERIV_GPU 2
-
 // Status codes for calls to camp_solver functions
 #define CAMP_SOLVER_SUCCESS 0
 #define CAMP_SOLVER_FAIL 1
@@ -352,12 +348,12 @@ void init_jac_gpu(SolverData *sd, double *J_ptr){
     cudaMalloc((void **) &mGPU->J_rxn,sizeof(double) * SM_NNZ_S(md->J_rxn)*mGPU->n_cells);
     cudaMalloc((void **) &mGPU->n_mapped_values, 1 * sizeof(int));
 
-
+#ifdef DEBUG_init_jac_gpu
     printf("md->n_per_cell_dep_var %d sd->jac.num_spec %d md->n_per_cell_solver_jac_elem %d "
            "md->n_mapped_values %d SM_NNZ_S(md->J_rxn) %d jac->num_elem %d offset_nnz_J_solver %d  mGPU->nnz_J_solver %d mGPU->nrows_J_solver %d\n",
            md->n_per_cell_dep_var,sd->jac.num_spec,md->n_per_cell_solver_jac_elem, md->n_mapped_values,
            SM_NNZ_S(md->J_rxn), sd->jac.num_elem, offset_nnz_J_solver,mGPU->nnz_J_solver, mGPU->nrows_J_solver);
-
+#endif
 
     //Transfer sunindextype to int
     int *jJ_solver = (int *) malloc(sizeof(int) * mGPU->nnz_J_solver);
@@ -1215,22 +1211,6 @@ int rxn_calc_deriv_gpu(SolverData *sd, N_Vector y, N_Vector deriv, double time_s
   return 0;
 }
 
-void get_f_from_gpu(SolverData *sd){
-
-  //HANDLE_ERROR(cudaMemcpy(mGPU->state, J, mGPU->jac_size, cudaMemcpyHostToDevice));
-
-}
-
-void get_guess_helper_from_gpu(N_Vector y_n, N_Vector y_n1,
-        N_Vector hf, void *solver_data, N_Vector tmp1,
-        N_Vector corr){
-
-  //HANDLE_ERROR(cudaMemcpy(mGPU->state, J, mGPU->jac_size, cudaMemcpyHostToDevice));
-
-
-}
-
-
 /** \brief Free GPU data structures
  */
 void free_gpu_cu(SolverData *sd) {
@@ -1319,7 +1299,6 @@ void free_gpu_cu(SolverData *sd) {
   cudaFree(mGPU->dzn);
   cudaFree(mGPU->dewt);
   cudaFree(mGPU->dsavedJ);
-  cudaFree(mGPU->djsavedJ);
   cudaFree(mGPU->disavedJ);
   cudaFree(mGPU->jac_aux);
   cudaFree(mGPU->indexvals_gpu);

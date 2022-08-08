@@ -304,7 +304,6 @@ typedef struct {
     int nrows;
     int n_shr_empty;
     int maxIt;
-    int mattype;
     int n_cells;
     double tolmax;
     double *ddiag;
@@ -349,7 +348,6 @@ typedef struct {
 
     //Auxiliar variables
     double* dsavedJ;
-    int*    djsavedJ;
     int*    disavedJ;
 
     int nnz_J_solver;

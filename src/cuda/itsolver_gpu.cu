@@ -58,13 +58,6 @@ void createLinearSolver(SolverData *sd)
   if(sd->use_gpu_cvode==0) read_options(bicg);
   mGPU->maxIt=1000;
   mGPU->tolmax=1.0e-30; //cv_mem->cv_reltol CAMP selected accuracy (1e-8) //1e-10;//1e-6
-#ifndef CSR_SPMV_CPU
-  mGPU->mattype=0;
-  //printf("BCG Mattype=CSR\n");
-#else
-  mGPU->mattype=1; //CSC
-  //printf("BCG Mattype=CSC\n");
-#endif
 
   int len_cell=mGPU->nrows/mGPU->n_cells;
   if(len_cell>mGPU->threads){
@@ -127,7 +120,12 @@ void exportConfBCG(SolverData *sd, const char *filepath){
   fprintf(fp, "%d\n",  mGPU->nrows);
   fprintf(fp, "%d\n",  mGPU->nnz);
   fprintf(fp, "%d\n",  mGPU->maxIt);
-  fprintf(fp, "%d\n",  mGPU->mattype);
+#ifndef CSR_SPMV_CPU
+  int mattype=0;
+#else
+  int mattype=1; //CSC
+#endif
+  fprintf(fp, "%d\n",  mattype);
   fprintf(fp, "%le\n",  mGPU->tolmax);
 
   int *jA=(int*)malloc(mGPU->nnz*sizeof(int));
@@ -178,7 +176,7 @@ void exportConfBCG(SolverData *sd, const char *filepath){
   fscanf(fp, "%d", &mGPU->nrows);
   fscanf(fp, "%d", &mGPU->nnz);
   fscanf(fp, "%d", &mGPU->maxIt);
-  fscanf(fp, "%d", &mGPU->mattype);
+  fscanf(fp, "%d", &mattype);
   fscanf(fp, "%le", &mGPU->tolmax);
 
   for(int i=0; i<mGPU->nnz; i++){
@@ -473,7 +471,7 @@ void dvcheck_input_gpud(double *x, int len, const char* s)
 __global__
 void solveBcgCuda(
         double *dA, int *djA, int *diA, double *dx, double *dtempv //Input data
-        ,int nrows, int blocks, int n_shr_empty, int maxIt, int mattype
+        ,int nrows, int blocks, int n_shr_empty, int maxIt
         ,int n_cells, double tolmax, double *ddiag //Init variables
         ,double *dr0, double *dr0h, double *dn0, double *dp0
         ,double *dt, double *ds, double *dAx2, double *dy, double *dz// Auxiliary vectors
@@ -583,7 +581,7 @@ void solveBcgCuda(
 
       __syncthreads();
       cudaDevicesetconst(dn0, 0.0, nrows);
-      //gpu_spmv(dn0,dy,nrows,dA,djA,diA,mattype,blocks,threads);  // n0= A*y
+      //gpu_spmv(dn0,dy,nrows,dA,djA,diA,blocks,threads);  // n0= A*y
 #ifndef CSR_SPMV_CPU
       cudaDeviceSpmvCSR(dn0, dy, nrows, dA, djA, diA);
 #else
@@ -634,7 +632,7 @@ void solveBcgCuda(
       //gpu_multxy(dz,ddiag,ds,nrows,blocks,threads); // precond z=diag*s
       cudaDevicemultxy(dz, ddiag, ds, nrows); // precond z=diag*s
 
-      //gpu_spmv(dt,dz,nrows,dA,djA,diA,mattype,blocks,threads);
+      //gpu_spmv(dt,dz,nrows,dA,djA,diA,blocks,threads);
 #ifndef CSR_SPMV_CPU
       cudaDeviceSpmvCSR(dt, dz, nrows, dA, djA, diA);
 #else
@@ -744,7 +742,6 @@ void solveGPU_block_thr(int blocks, int threads_block, int n_shr_memory, int n_s
   int nnz = mGPU->nnz;
   int n_cells = mGPU->n_cells;
   int maxIt = mGPU->maxIt;
-  int mattype = mGPU->mattype;
   double tolmax = mGPU->tolmax;
 
   // Auxiliary vectors ("private")
@@ -807,7 +804,7 @@ void solveGPU_block_thr(int blocks, int threads_block, int n_shr_memory, int n_s
 
   solveBcgCuda << < blocks, threads_block, n_shr_memory * sizeof(double) >> >
                                            //solveBcgCuda << < blocks, threads_block, threads_block * sizeof(double) >> >
-                                           (dA, djA, diA, dx, dtempv, nrows, blocks, n_shr_empty, maxIt, mattype, n_cells,
+                                           (dA, djA, diA, dx, dtempv, nrows, blocks, n_shr_empty, maxIt, n_cells,
                                                    tolmax, ddiag, dr0, dr0h, dn0, dp0, dt, ds, dAx2, dy, dz
 #ifdef CAMP_DEBUG_GPU
                                                    ,&mGPU->mdvo->counterBCGInternal
@@ -906,7 +903,6 @@ void solveBCG(SolverData *sd, double *dA, int *djA, int *diA, double *dx, double
   int blocks = mGPU->blocks;
   int threads = mGPU->threads;
   int maxIt = mGPU->maxIt;
-  int mattype = mGPU->mattype;
   double tolmax = mGPU->tolmax;
   double *ddiag = mGPU->ddiag;
 
@@ -932,7 +928,7 @@ void solveBCG(SolverData *sd, double *dA, int *djA, int *diA, double *dx, double
   //Function private variables
   double alpha,rho0,omega0,beta,rho1,temp1,temp2;
 
-  gpu_spmv(dr0,dx,nrows,dA,djA,diA,mattype,blocks,threads);  // r0= A*x
+  gpu_spmv(dr0,dx,nrows,dA,djA,diA,blocks,threads);  // r0= A*x
 
   gpu_axpby(dr0,dtempv,1.0,-1.0,nrows,blocks,threads); // r0=1.0*rhs+-1.0r0 //y=ax+by
 
@@ -970,7 +966,7 @@ void solveBCG(SolverData *sd, double *dA, int *djA, int *diA, double *dx, double
 
     gpu_multxy(dy,ddiag,dp0,nrows,blocks,threads);  // precond y= p0*diag
 
-    gpu_spmv(dn0,dy,nrows,dA,djA,diA,mattype,blocks,threads);  // n0= A*y
+    gpu_spmv(dn0,dy,nrows,dA,djA,diA,blocks,threads);  // n0= A*y
 
     temp1=gpu_dotxy(dr0h, dn0, aux, daux, nrows,(blocks + 1) / 2, threads);
     //temp1=gpu_dotxy(dr0h, dn0, aux, daux, nrows, blocks, threads);
@@ -992,7 +988,7 @@ void solveBCG(SolverData *sd, double *dA, int *djA, int *diA, double *dx, double
 
     gpu_multxy(dz,ddiag,ds,nrows,blocks,threads); // precond z=diag*s
 
-    gpu_spmv(dt,dz,nrows,dA,djA,diA,mattype,blocks,threads);
+    gpu_spmv(dt,dz,nrows,dA,djA,diA,blocks,threads);
 
     gpu_multxy(dAx2,ddiag,dt,nrows,blocks,threads);
 

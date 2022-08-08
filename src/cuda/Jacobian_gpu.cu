@@ -8,10 +8,19 @@ extern "C" {
 #include <stdio.h>
 #include <stdlib.h>
 #include "Jacobian_gpu.h"
-//#include "../debug_and_stats/camp_debug_2.h"
 
 #define BUFFER_SIZE 10
 #define SMALL_NUMBER 1e-90
+
+__global__
+void init_jac_partials(double* production_partials, double* loss_partials) {
+
+  int tid = blockIdx.x * blockDim.x + threadIdx.x;
+
+  production_partials[tid]=0.0;
+  loss_partials[tid]=0.0;
+
+}
 
 int jacobian_initialize_gpu(SolverData *sd) {
   ModelDataGPU *mGPU = sd->mGPU;
@@ -28,112 +37,61 @@ int jacobian_initialize_gpu(SolverData *sd) {
     cudaMemcpy(jacgpu->num_elem, &jac->num_elem, 1 * sizeof(jacgpu->num_elem), cudaMemcpyHostToDevice);
 
     int num_elem = jac->num_elem * mGPU->n_cells;
-    int num_spec = jac->num_spec;
     cudaMalloc((void **) &(jacgpu->production_partials), num_elem * sizeof(jacgpu->production_partials));
     cudaMalloc((void **) &(jacgpu->loss_partials), num_elem * sizeof(jacgpu->loss_partials));
 
-    //printf("jac->num_elem %d\n",jac->num_elem);
-    //printf("jac->num_spec %d\n",num_spec);
-
-    cudaMemcpy(jacgpu->production_partials, jac->production_partials+offset_nnz, num_elem * sizeof(jacgpu->production_partials),
-               cudaMemcpyHostToDevice);
-    cudaMemcpy(jacgpu->loss_partials, jac->loss_partials+offset_nnz, num_elem * sizeof(jacgpu->loss_partials),
-               cudaMemcpyHostToDevice);
-
-    //print_int(jac->col_ptrs,jac->num_spec+1,"jac->col_ptrs");
+    int threads_block = jac->num_elem;
+    int blocks = mGPU->n_cells;
+    init_jac_partials <<<blocks,threads_block>>>(jacgpu->production_partials,jacgpu->loss_partials);
 
     /*
-
-    for (int i = 0; i < jac->num_elem; ++i) {
-      printf(" jac.production_partials[%d]=%d\n",i,jac->production_partials[i]);
+    int num_spec = jac->num_spec;
+     for (int i = 0; i < num_elem; i++) {
+      //printf("%lf ",jac->production_partials[i+offset_nnz]);
+      //printf("%lf ",jac->loss_partials[i+offset_nnz]);
+      jac->production_partials[i+offset_nnz]=0.0;
+      jac->loss_partials[i+offset_nnz]=0.0;
     }
 
-    for (unsigned int i_col = 0; i_col < jac->num_spec; ++i_col) {
-      printf(" jac.col_ptrs[%d]=%d\n",i_col,jac->col_ptrs[i_col]);
-      for (int i_elem = jac->col_ptrs[i_col];
-           i_elem < jac->col_ptrs[i_col + 1]; ++i_elem) {
-        printf(" jac.production_partials[%d]=%d\n",i_elem,jac->production_partials[i_elem]);
-      }
-    }
-*/
 
-    /*
-    for (int i=0; i<jac->num_spec+1; i++){
-      printf("jac->col_ptrs[%d]=%d\n",i,jac->col_ptrs[i]);
-    }
-
-    for (unsigned int i_col = 0; i_col < jac.num_spec; ++i_col){
-      printf("\n");
-
-    }
+    cudaMemcpy(jacgpu->production_partials, jac->production_partials+offset_nnz, num_elem * sizeof(jacgpu->production_partials),cudaMemcpyHostToDevice);
+    cudaMemcpy(jacgpu->loss_partials, jac->loss_partials+offset_nnz, num_elem * sizeof(jacgpu->loss_partials),cudaMemcpyHostToDevice);
 */
 
     offset_nnz += num_elem;
   }
 
-  return 1;
-}
+  //print_int(jac->col_ptrs,jac->num_spec+1,"jac->col_ptrs");
+  //printf("jac->num_elem %d\n",jac->num_elem);
+  //printf("jac->num_spec %d\n",num_spec);
 
-#ifdef __CUDA_ARCH__
-__host__ __device__
-#endif
-void jacobian_reset_gpu(JacobianGPU jac) {
-
-#ifdef __CUDA_ARCH__
-
-  __syncthreads();
-#ifndef DEV_REMOVE_threadIdx0
-
-  //int i_col = threadIdx.x;
-  //int num_spec = jac.num_spec[0];
-
-  //fine
-
-  int nnz = jac.num_elem[0];
-  int n_iters = nnz / blockDim.x;
-  for (int i = 0; i < n_iters; i++) {
-    int j = threadIdx.x + i*blockDim.x;
-    jac.production_partials[j] = 0.0;
-    jac.loss_partials[j] = 0.0;
-  }
-  int residual=nnz-(blockDim.x*n_iters);
-  if(threadIdx.x < residual){
-    int j = threadIdx.x + n_iters*blockDim.x;
-    jac.production_partials[j] = 0.0;
-    jac.loss_partials[j] = 0.0;
-    }
-
-  //wrong because 73 threads but 79 num_spec
   /*
-  if(threadIdx.x==0){
-    for(int i_col=0; i_col<blockDim.x;i_col++){
-      for (int i_elem = jac.col_ptrs[i_col]; i_elem < jac.col_ptrs[i_col+1]; i_elem++) {
-        //if(blockIdx.x==0)printf("%d ",i_elem);
-        jac.production_partials[i_elem] = 0.0;
-        jac.loss_partials[i_elem] = 0.0;
-      }
-    }
-    //if(blockIdx.x==0)printf("\n");
+
+  for (int i = 0; i < jac->num_elem; ++i) {
+    printf(" jac.production_partials[%d]=%d\n",i,jac->production_partials[i]);
   }
-   */
 
-#else
-
-  if(threadIdx.x==0){
-    int nnz = jac.num_elem[0];
-    //for (int n = (nnz/gridDim.x)*blockIdx.x; n < (nnz/gridDim.x)*(blockIdx.x+1); n++) {
-    for (int n = 0; n < nnz; n++) {
-      jac.production_partials[n] = 0.0;
-      jac.loss_partials[n] = 0.0;
+  for (unsigned int i_col = 0; i_col < jac->num_spec; ++i_col) {
+    printf(" jac.col_ptrs[%d]=%d\n",i_col,jac->col_ptrs[i_col]);
+    for (int i_elem = jac->col_ptrs[i_col];
+         i_elem < jac->col_ptrs[i_col + 1]; ++i_elem) {
+      printf(" jac.production_partials[%d]=%d\n",i_elem,jac->production_partials[i_elem]);
     }
- }
+  }
+  */
 
-#endif
+  /*
+  for (int i=0; i<jac->num_spec+1; i++){
+    printf("jac->col_ptrs[%d]=%d\n",i,jac->col_ptrs[i]);
+  }
 
-__syncthreads();
+  for (unsigned int i_col = 0; i_col < jac.num_spec; ++i_col){
+    printf("\n");
 
-#endif
+  }
+*/
 
+  return 1;
 }
 
 #ifdef __CUDA_ARCH__
@@ -145,34 +103,21 @@ void jacobian_output_gpu(JacobianGPU jac, double *dest_array) {
 
   __syncthreads();
 
-#ifndef DEV_REMOVE_threadIdx0
-
   int nnz = jac.num_elem[0];
   int n_iters = nnz / blockDim.x;
   for (int i = 0; i < n_iters; i++) {
     int j = threadIdx.x + i*blockDim.x;
     dest_array[j] = jac.production_partials[j] - jac.loss_partials[j];
+    jac.production_partials[j] = 0.0;
+    jac.loss_partials[j] = 0.0;
   }
   int residual=nnz-(blockDim.x*n_iters);
   if(threadIdx.x < residual){
     int j = threadIdx.x + n_iters*blockDim.x;
     dest_array[j] = jac.production_partials[j] - jac.loss_partials[j];
+    jac.production_partials[j] = 0.0;
+    jac.loss_partials[j] = 0.0;
   }
-
-#else
-
-  if(threadIdx.x==0){
-    int nnz = jac.num_elem[0];
-    //for (int n = (nnz/gridDim.x)*blockIdx.x; n < (nnz/gridDim.x)*(blockIdx.x+1); n++) {
-    for (int n = 0; n < nnz; n++) {
-        //check_isnanld(&drf_dy,1,"post jacobian_output drf_dy");
-        //check_isnanld(&drr_dy,1,"post jacobian_output drr_dy");
-
-        dest_array[n] = jac.production_partials[n] - jac.loss_partials[n];
-    }
-  }
-
-#endif
 
 __syncthreads();
 #endif

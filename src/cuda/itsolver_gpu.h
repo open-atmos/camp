@@ -36,16 +36,6 @@ void swapCSC_CSR_BCG(SolverData *sd);
 void swapCSC_CSR_ODE(SolverData *sd);
 void solveBCG(SolverData *sd, double *dA, int *djA, int *diA, double *dx, double *dtempv);
 void solveBCGBlocks(SolverData *sd, double *dA, int *djA, int *diA, double *dx, double *dtempv);
-__device__ void solveBcgCudaDevice(
-        double *dA, int *djA, int *diA, double *dx, double *dtempv //Input data
-        ,int nrows, int blocks, int n_shr_empty, int maxIt, int mattype
-        ,int n_cells, double tolmax, double *ddiag //Init variables
-        ,double *dr0, double *dr0h, double *dn0, double *dp0
-        ,double *dt, double *ds, double *dAx2, double *dy, double *dz// Auxiliary vectors
-#ifdef CAMP_DEBUG_GPU
-        ,int *it_pointer
-#endif
-);
 
 void free_itsolver(SolverData *sd);
 
