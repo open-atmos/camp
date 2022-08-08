@@ -109,15 +109,9 @@ extern "C"{
 #ifdef __CUDA_ARCH__
 __host__ __device__
 #endif
-#ifdef BASIC_CALC_DERIV
-void rxn_gpu_SIMPOL_phase_calc_deriv_contrib(ModelDataGPU *model_data, realtype *deriv,
-                                      int *rxn_int_data, double *rxn_float_data,
-                                      double *rxn_env_data, double time_step)
-#else
 void rxn_gpu_SIMPOL_phase_transfer_calc_deriv_contrib(ModelDataGPU *model_data, TimeDerivativeGPU time_deriv,
                                           int *rxn_int_data, double *rxn_float_data,
                                           double *rxn_env_data, double time_step)
-#endif
 {
 #ifdef __CUDA_ARCH__
   int n_rxn=model_data->n_rxn;

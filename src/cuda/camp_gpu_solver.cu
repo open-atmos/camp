@@ -628,11 +628,7 @@ void camp_solver_update_model_state_gpu(N_Vector solver_state, SolverData *sd,
 }
 
 __device__ void solveRXN0(
-#ifdef BASIC_CALC_DERIV
-        double *deriv_data,
-#else
         TimeDerivativeGPU deriv_data,
-#endif
        double time_step,
        ModelDataGPU *md
 )
@@ -713,11 +709,8 @@ __device__ void solveRXN0(
       //        rxn_int_data, rxn_float_data, rxn_env_data, time_step);
       break;
     case RXN_TROE :
-#ifdef BASIC_CALC_DERIV
-#else
       rxn_gpu_troe_calc_deriv_contrib(md, deriv_data, rxn_int_data,
                                       rxn_float_data, rxn_env_data,time_step);
-#endif
       break;
     case RXN_WET_DEPOSITION :
       //rxn_gpu_wet_deposition_calc_deriv_contrib(md, deriv_data, rxn_int_data,
@@ -777,15 +770,6 @@ __device__ void cudaDevicecalc_deriv0(
       //printf("gpu threads %d\n", active_threads);
     }
 */
-
-#ifdef BASIC_CALC_DERIV
-    md->i_rxn=tid%n_rxn;
-    double *deriv_init = md->deriv_data;
-    md->deriv_data = &( md->deriv_init[deriv_length_cell*md->i_cell]);
-    if(tid < n_rxn*n_cells){
-        solveRXN(deriv_data, time_step, md);
-    }
-#else
     TimeDerivativeGPU deriv_data;
     deriv_data.num_spec = deriv_length_cell*n_cells;
 
@@ -861,7 +845,6 @@ __device__ void cudaDevicecalc_deriv0(
     deriv_data.loss_rates = md->loss_rates;
     __syncthreads();
     time_derivative_output_gpu(deriv_data, md->deriv_data, md->J_tmp,0);
-#endif
 
     /*
     if(tid<deriv_data.num_spec && tid>1022){
@@ -996,14 +979,6 @@ __global__ void solveDerivative(
     }
 */
 
-#ifdef BASIC_CALC_DERIV
-    md->i_rxn=tid%n_rxn;
-    double *deriv_init = md->deriv_data;
-    md->deriv_data = &( md->deriv_init[deriv_length_cell*md->i_cell]);
-    if(tid < n_rxn*n_cells){
-        solveRXN0(deriv_data, time_step, md);
-    }
-#else
     TimeDerivativeGPU deriv_data;
     deriv_data.num_spec = deriv_length_cell*n_cells;
 
@@ -1054,7 +1029,6 @@ __global__ void solveDerivative(
     deriv_data.loss_rates = md->loss_rates;
     __syncthreads();
     time_derivative_output_gpu(deriv_data, md->deriv_data, md->J_tmp,0);
-#endif
 
     /*
     if(tid<deriv_data.num_spec && tid>1022){
@@ -1137,12 +1111,6 @@ int rxn_calc_deriv_gpu(SolverData *sd, N_Vector y, N_Vector deriv, double time_s
       }
     }
     */
-
-#ifdef BASIC_CALC_DERIV
-  //Reset deriv gpu
-  //check if cudamemset work fine with doubles
-    HANDLE_ERROR(cudaMemset(md->deriv_data_gpu, 0.0, mGPU->deriv_size));
-#endif
 
 #ifdef CAMP_DEBUG_GPU
   //timeDerivSend += (clock() - t1);

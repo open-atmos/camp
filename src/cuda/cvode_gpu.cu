@@ -1123,11 +1123,7 @@ int cudaDevicecamp_solver_check_model_state(ModelDataGPU *md, ModelDataVariable 
 
 
 __device__ void solveRXN(
-#ifdef BASIC_CALC_DERIV
-        double *deriv_data,
-#else
         TimeDerivativeGPU deriv_data,
-#endif
         double time_step,
         ModelDataGPU *md, ModelDataVariable *dmdv
 )
@@ -1207,11 +1203,8 @@ __device__ void solveRXN(
       //        rxn_int_data, rxn_float_data, rxn_env_data, time_step);
       break;
     case RXN_TROE :
-#ifdef BASIC_CALC_DERIV //todo delete
-#else
       rxn_gpu_troe_calc_deriv_contrib(md, deriv_data, rxn_int_data,
                                       rxn_float_data, rxn_env_data,time_step);
-#endif
       break;
     case RXN_WET_DEPOSITION :
       //printf("RXN_WET_DEPOSITION");
@@ -1224,15 +1217,14 @@ __device__ void solveRXN(
 }
 
 __device__ void cudaDevicecalc_deriv(
-        double time_step, int deriv_length_cell, int state_size_cell,
-        int n_cells,
-        int i_kernel, int threads_block, int n_shr_empty, double *y,
+        double time_step, double *y,
         double *yout, ModelDataGPU *md, ModelDataVariable *dmdv
 ) //Interface CPU/GPU
 {
   int tid = blockIdx.x * blockDim.x + threadIdx.x;
+  int deriv_length_cell = md->deriv_length_cell;
   int tid_cell=tid%deriv_length_cell;
-  //int active_threads = md->n_cells*md->deriv_length_cell;
+  int state_size_cell = md->state_size_cell;
   int active_threads = md->nrows;
 
 #ifdef DEBUG_DERIV_GPU
@@ -1269,7 +1261,7 @@ __device__ void cudaDevicecalc_deriv(
     printmin(md,md->J_state,"cudaDevicecalc_deriv start end J_state");
 #endif
     TimeDerivativeGPU deriv_data;
-    deriv_data.num_spec = deriv_length_cell*n_cells;
+    deriv_data.num_spec = deriv_length_cell*gridDim.x;
 
 #ifdef AEROS_CPU
 #else
@@ -1327,7 +1319,7 @@ __device__
 int cudaDevicef(
         double time_step, double *y,
         double *yout, ModelDataGPU *md, ModelDataVariable *dmdv, int *flag
-) //Interface CPU/GPU
+)
 {
   int i = blockIdx.x * blockDim.x + threadIdx.x;
 
@@ -1385,8 +1377,7 @@ int cudaDevicef(
 #endif
   cudaDevicecalc_deriv(
           //f_gpu
-          time_step, deriv_length_cell, state_size_cell,
-          n_cells, i_kernel, threads_block, n_shr_empty, y,
+          time_step, y,
           yout, md, dmdv
   );
 
@@ -2416,7 +2407,6 @@ int cudaDevicecvNewtonIteration(ModelDataGPU *md, ModelDataVariable *dmdv
   double* dx = md->dx;
   double* dtempv = md->dtempv;
   int nrows = md->nrows;
-  int n_shr_empty = md->n_shr_empty;
   double cv_tn = dmdv->cv_tn;
   double* dftemp = md->dftemp;
   double* dcv_y = md->dcv_y;
@@ -2432,6 +2422,7 @@ int cudaDevicecvNewtonIteration(ModelDataGPU *md, ModelDataVariable *dmdv
   int i_kernel = md->i_kernel;
   int n_cells=md->n_cells;//gridDim.x;
   int threads_block=md->threads_block;//blockDim.x;
+  int n_shr_empty = md->n_shr_empty;
 
   double* cv_acor = md->cv_acor;
   double* dzn = md->dzn;
