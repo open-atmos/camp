@@ -1,6 +1,6 @@
 <map id="jacobian_get_element_id" name="jacobian_get_element_id">
 <area shape="rect" id="node1" title="Get an element id in the Jacobian data arrays." alt="" coords="777,568,943,595"/>
-<area shape="rect" id="node2" href="$camp__solver_8c.html#a5b485fa25356197023889f3795888e98" title="Create a sparse Jacobian matrix based on model data." alt="" coords="164,584,252,611"/>
+<area shape="rect" id="node2" href="$camp__solver_8c.html#a5b485fa25356197023889f3795888e98" title="Try to improve guesses of y sent to the linear solver." alt="" coords="164,584,252,611"/>
 <area shape="rect" id="node4" href="$rxn__aqueous__equilibrium_8c.html#af61bf85579cdea2f2c8ee0ea4fd8a96d" title="Update the time derivative and Jacbobian array indices." alt="" coords="534,61,698,102"/>
 <area shape="rect" id="node6" href="$rxn__arrhenius_8c.html#a7fe41e1fef6917179eadba8adc9d1bae" title="Update the time derivative and Jacbobian array indices." alt="" coords="531,127,701,154"/>
 <area shape="rect" id="node7" href="$rxn___c_m_a_q___h2_o2_8c.html#a0126b0de107f5aac11387864f2523387" title="Update the time derivative and Jacbobian array indices." alt="" coords="518,178,714,204"/>

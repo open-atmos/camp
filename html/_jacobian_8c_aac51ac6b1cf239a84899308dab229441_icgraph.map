@@ -1,6 +1,6 @@
 <map id="jacobian_register_element" name="jacobian_register_element">
 <area shape="rect" id="node1" title="Adds an element to the sparse matrix." alt="" coords="956,596,1129,623"/>
-<area shape="rect" id="node2" href="$camp__solver_8c.html#a5b485fa25356197023889f3795888e98" title="Create a sparse Jacobian matrix based on model data." alt="" coords="164,721,252,748"/>
+<area shape="rect" id="node2" href="$camp__solver_8c.html#a5b485fa25356197023889f3795888e98" title="Try to improve guesses of y sent to the linear solver." alt="" coords="164,721,252,748"/>
 <area shape="rect" id="node4" href="$rxn__aqueous__equilibrium_8c.html#aba2b7971289b789830bb3986d8c26143" title="Flag Jacobian elements used by this reaction." alt="" coords="731,118,895,159"/>
 <area shape="rect" id="node6" href="$rxn__arrhenius_8c.html#a7f830056ddb14553c6c27e13895a27a1" title="Flag Jacobian elements used by this reaction." alt="" coords="733,183,892,225"/>
 <area shape="rect" id="node7" href="$rxn___c_m_a_q___h2_o2_8c.html#aaf19aa3c701ef961a31fa085f3a95b68" title="Flag Jacobian elements used by this reaction." alt="" coords="719,249,906,290"/>

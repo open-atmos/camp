@@ -147,15 +147,15 @@
 \DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00143}00143 \textcolor{comment}{ * \(\backslash\)param M Jacobian matrix}}
 \DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00144}00144 \textcolor{comment}{ */}}
 \DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00145}\mbox{\hyperlink{camp__debug_8h_a5e1481fdcb1fc315878002edb9346b77}{00145}} \textcolor{keyword}{static} \textcolor{keywordtype}{void} \mbox{\hyperlink{camp__debug_8h_a5e1481fdcb1fc315878002edb9346b77}{print\_jacobian}}(SUNMatrix M) \{}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00146}00146   printf(\textcolor{stringliteral}{"{}\(\backslash\)n NNZ JAC: \%lld \(\backslash\)n"{}}, SM\_NNZ\_S(M));}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00146}00146   printf(\textcolor{stringliteral}{"{}\(\backslash\)n NNZ JAC: \%lld \(\backslash\)n"{}}, (\textcolor{keywordtype}{long} \textcolor{keywordtype}{long})SM\_NNZ\_S(M));}
 \DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00147}00147   printf(\textcolor{stringliteral}{"{}DATA | INDEXVALS:\(\backslash\)n"{}});}
 \DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00148}00148   \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i = 0; i < SM\_NNZ\_S(M); i++) \{}
 \DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00149}00149     printf(\textcolor{stringliteral}{"{}\% -\/le \(\backslash\)n"{}}, (SM\_DATA\_S(M))[i]);}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00150}00150     printf(\textcolor{stringliteral}{"{}\%lld \(\backslash\)n"{}}, (SM\_INDEXVALS\_S(M))[i]);}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00150}00150     printf(\textcolor{stringliteral}{"{}\%lld \(\backslash\)n"{}}, (\textcolor{keywordtype}{long} \textcolor{keywordtype}{long})((SM\_INDEXVALS\_S(M))[i]));}
 \DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00151}00151   \}}
 \DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00152}00152   printf(\textcolor{stringliteral}{"{}PTRS:\(\backslash\)n"{}});}
 \DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00153}00153   \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i = 0; i <= SM\_NP\_S(M); i++) \{}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00154}00154     printf(\textcolor{stringliteral}{"{}\%lld \(\backslash\)n"{}}, (SM\_INDEXPTRS\_S(M))[i]);}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00154}00154     printf(\textcolor{stringliteral}{"{}\%lld \(\backslash\)n"{}}, (\textcolor{keywordtype}{long} \textcolor{keywordtype}{long})((SM\_INDEXPTRS\_S(M))[i]));}
 \DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00155}00155   \}}
 \DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00156}00156 \}}
 \DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00157}00157 \textcolor{comment}{}}

@@ -41,13 +41,13 @@ int \mbox{\hyperlink{camp__solver_8h_a8a734481deea8aa979d12919f1085b65}{f}} (rea
 int \mbox{\hyperlink{camp__solver_8h_a78e694c3221a39e0b96a5f40fa0fc0dd}{Jac}} (realtype t, N\+\_\+\+Vector y, N\+\_\+\+Vector deriv, SUNMatrix J, void $\ast$model\+\_\+data, N\+\_\+\+Vector tmp1, N\+\_\+\+Vector tmp2, N\+\_\+\+Vector tmp3)
 \begin{DoxyCompactList}\small\item\em Compute the \mbox{\hyperlink{struct_jacobian}{Jacobian}}. \end{DoxyCompactList}\item 
 int \mbox{\hyperlink{camp__solver_8h_a2fa3892570de5fd26fb97da6b91568ff}{guess\+\_\+helper}} (const realtype t\+\_\+n, const realtype h\+\_\+n, N\+\_\+\+Vector y\+\_\+n, N\+\_\+\+Vector y\+\_\+n1, N\+\_\+\+Vector hf, void $\ast$solver\+\_\+data, N\+\_\+\+Vector tmp1, N\+\_\+\+Vector corr)
-\begin{DoxyCompactList}\small\item\em Try to improve guesses of y sent to the linear solver. \end{DoxyCompactList}\item 
+\item 
 void \mbox{\hyperlink{camp__solver_8h_ac1241091f152db7fd2aa734994c48b24}{error\+\_\+handler}} (int error\+\_\+code, const char $\ast$module, const char $\ast$function, char $\ast$msg, void $\ast$sd)
 \begin{DoxyCompactList}\small\item\em Custom error handling function. \end{DoxyCompactList}\item 
 int \mbox{\hyperlink{camp__solver_8h_a21373e1f8bad206f6437deeea571f51c}{camp\+\_\+solver\+\_\+update\+\_\+model\+\_\+state}} (N\+\_\+\+Vector solver\+\_\+state, \mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, realtype threshhold, realtype replacement\+\_\+value)
 \begin{DoxyCompactList}\small\item\em Update the model state from the current solver state. \end{DoxyCompactList}\item 
 SUNMatrix \mbox{\hyperlink{camp__solver_8h_a5b485fa25356197023889f3795888e98}{get\+\_\+jac\+\_\+init}} (\mbox{\hyperlink{struct_solver_data}{Solver\+Data}} $\ast$solver\+\_\+data)
-\begin{DoxyCompactList}\small\item\em Create a sparse \mbox{\hyperlink{struct_jacobian}{Jacobian}} matrix based on model data. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Try to improve guesses of y sent to the linear solver. \end{DoxyCompactList}\item 
 \mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1}{bool}} \mbox{\hyperlink{camp__solver_8h_ad45be595da1a1d6fd40179d9743a9a65}{check\+\_\+\+Jac}} (realtype t, N\+\_\+\+Vector y, SUNMatrix J, N\+\_\+\+Vector deriv, N\+\_\+\+Vector tmp, N\+\_\+\+Vector tmp1, void $\ast$solver\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Check a \mbox{\hyperlink{struct_jacobian}{Jacobian}} for accuracy. \end{DoxyCompactList}\item 
 int \mbox{\hyperlink{camp__solver_8h_a08519bb4526ffd3db7f49b33ba7600aa}{check\+\_\+flag}} (void $\ast$flag\+\_\+value, char $\ast$func\+\_\+name, int opt)
@@ -104,7 +104,7 @@ CAMP\+\_\+\+SOLVER\+\_\+\+SUCCESS for successful update or CAMP\+\_\+\+SOLVER\+\
 \end{DoxyReturn}
 
 
-Definition at line \mbox{\hyperlink{camp__solver_8c_source_l00797}{797}} of file \mbox{\hyperlink{camp__solver_8c_source}{camp\+\_\+solver.\+c}}.
+Definition at line \mbox{\hyperlink{camp__solver_8c_source_l00805}{805}} of file \mbox{\hyperlink{camp__solver_8c_source}{camp\+\_\+solver.\+c}}.
 
 Here is the caller graph for this function\+:
 \nopagebreak
@@ -138,7 +138,7 @@ Flag indicating CAMP\+\_\+\+SOLVER\+\_\+\+SUCCESS or CAMP\+\_\+\+SOLVER\+\_\+\+F
 \end{DoxyReturn}
 
 
-Definition at line \mbox{\hyperlink{camp__solver_8c_source_l01713}{1713}} of file \mbox{\hyperlink{camp__solver_8c_source}{camp\+\_\+solver.\+c}}.
+Definition at line \mbox{\hyperlink{camp__solver_8c_source_l01723}{1723}} of file \mbox{\hyperlink{camp__solver_8c_source}{camp\+\_\+solver.\+c}}.
 
 Here is the caller graph for this function\+:
 \nopagebreak
@@ -169,7 +169,7 @@ Check the return value of a SUNDIALS function and exit on failure.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{camp__solver_8c_source_l01743}{1743}} of file \mbox{\hyperlink{camp__solver_8c_source}{camp\+\_\+solver.\+c}}.
+Definition at line \mbox{\hyperlink{camp__solver_8c_source_l01753}{1753}} of file \mbox{\hyperlink{camp__solver_8c_source}{camp\+\_\+solver.\+c}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -223,7 +223,7 @@ True if \mbox{\hyperlink{struct_jacobian}{Jacobian}} values are accurate, false 
 \end{DoxyReturn}
 
 
-Definition at line \mbox{\hyperlink{camp__solver_8c_source_l01138}{1138}} of file \mbox{\hyperlink{camp__solver_8c_source}{camp\+\_\+solver.\+c}}.
+Definition at line \mbox{\hyperlink{camp__solver_8c_source_l01146}{1146}} of file \mbox{\hyperlink{camp__solver_8c_source}{camp\+\_\+solver.\+c}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -253,7 +253,7 @@ Custom error handling function.
 
 This is used for quiet operation. Solver failures are returned with a flag from the \mbox{\hyperlink{camp__solver_8c_afc5ec8680b419e7ab49530d53a76cee4}{solver\+\_\+run()}} function. 
 
-Definition at line \mbox{\hyperlink{camp__solver_8c_source_l01896}{1896}} of file \mbox{\hyperlink{camp__solver_8c_source}{camp\+\_\+solver.\+c}}.
+Definition at line \mbox{\hyperlink{camp__solver_8c_source_l01906}{1906}} of file \mbox{\hyperlink{camp__solver_8c_source}{camp\+\_\+solver.\+c}}.
 
 Here is the caller graph for this function\+:
 \nopagebreak
@@ -289,7 +289,7 @@ Status code
 \end{DoxyReturn}
 
 
-Definition at line \mbox{\hyperlink{camp__solver_8c_source_l00835}{835}} of file \mbox{\hyperlink{camp__solver_8c_source}{camp\+\_\+solver.\+c}}.
+Definition at line \mbox{\hyperlink{camp__solver_8c_source_l00843}{843}} of file \mbox{\hyperlink{camp__solver_8c_source}{camp\+\_\+solver.\+c}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -312,46 +312,6 @@ Here is the caller graph for this function\+:
 \index{get\_jac\_init@{get\_jac\_init}!camp\_solver.h@{camp\_solver.h}}
 \doxysubsubsection{\texorpdfstring{get\_jac\_init()}{get\_jac\_init()}}
 {\footnotesize\ttfamily SUNMatrix get\+\_\+jac\+\_\+init (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_solver_data}{Solver\+Data}} $\ast$}]{solver\+\_\+data }\end{DoxyParamCaption})}
-
-
-
-Create a sparse \mbox{\hyperlink{struct_jacobian}{Jacobian}} matrix based on model data. 
-
-
-\begin{DoxyParams}{Parameters}
-{\em solver\+\_\+data} & A pointer to the \mbox{\hyperlink{struct_solver_data}{Solver\+Data}} \\
-\hline
-\end{DoxyParams}
-\begin{DoxyReturn}{Returns}
-Sparse \mbox{\hyperlink{struct_jacobian}{Jacobian}} matrix with all possible non-\/zero elements intialize to 1.\+0 
-\end{DoxyReturn}
-\begin{DoxyRefDesc}{Todo}
-\item[\mbox{\hyperlink{todo__todo000002}{Todo}}]Make the \mbox{\hyperlink{struct_jacobian}{Jacobian}} mapping recursive for sub model parameters that depend on other sub model parameters \end{DoxyRefDesc}
-
-
-Definition at line \mbox{\hyperlink{camp__solver_8c_source_l01407}{1407}} of file \mbox{\hyperlink{camp__solver_8c_source}{camp\+\_\+solver.\+c}}.
-
-Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{camp__solver_8h_a5b485fa25356197023889f3795888e98_cgraph}
-\end{center}
-\end{figure}
-Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=265pt]{camp__solver_8h_a5b485fa25356197023889f3795888e98_icgraph}
-\end{center}
-\end{figure}
-\mbox{\Hypertarget{camp__solver_8h_a2fa3892570de5fd26fb97da6b91568ff}\label{camp__solver_8h_a2fa3892570de5fd26fb97da6b91568ff}} 
-\index{camp\_solver.h@{camp\_solver.h}!guess\_helper@{guess\_helper}}
-\index{guess\_helper@{guess\_helper}!camp\_solver.h@{camp\_solver.h}}
-\doxysubsubsection{\texorpdfstring{guess\_helper()}{guess\_helper()}}
-{\footnotesize\ttfamily int guess\+\_\+helper (\begin{DoxyParamCaption}\item[{const realtype}]{t\+\_\+n,  }\item[{const realtype}]{h\+\_\+n,  }\item[{N\+\_\+\+Vector}]{y\+\_\+n,  }\item[{N\+\_\+\+Vector}]{y\+\_\+n1,  }\item[{N\+\_\+\+Vector}]{hf,  }\item[{void $\ast$}]{solver\+\_\+data,  }\item[{N\+\_\+\+Vector}]{tmp1,  }\item[{N\+\_\+\+Vector}]{corr }\end{DoxyParamCaption})}
 
 
 
@@ -385,20 +345,46 @@ This function checks if there are any negative guessed concentrations, and if th
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-1 if corrections were calculated, 0 if not 
+1 if corrections were calculated, 0 if not
 \end{DoxyReturn}
+Create a sparse \mbox{\hyperlink{struct_jacobian}{Jacobian}} matrix based on model data
 
 
-Definition at line \mbox{\hyperlink{camp__solver_8c_source_l01312}{1312}} of file \mbox{\hyperlink{camp__solver_8c_source}{camp\+\_\+solver.\+c}}.
+\begin{DoxyParams}{Parameters}
+{\em solver\+\_\+data} & A pointer to the \mbox{\hyperlink{struct_solver_data}{Solver\+Data}} \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Sparse \mbox{\hyperlink{struct_jacobian}{Jacobian}} matrix with all possible non-\/zero elements intialize to 1.\+0 
+\end{DoxyReturn}
+\begin{DoxyRefDesc}{Todo}
+\item[\mbox{\hyperlink{todo__todo000002}{Todo}}]Make the \mbox{\hyperlink{struct_jacobian}{Jacobian}} mapping recursive for sub model parameters that depend on other sub model parameters \end{DoxyRefDesc}
+
+
+Definition at line \mbox{\hyperlink{camp__solver_8c_source_l01417}{1417}} of file \mbox{\hyperlink{camp__solver_8c_source}{camp\+\_\+solver.\+c}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=350pt]{camp__solver_8h_a2fa3892570de5fd26fb97da6b91568ff_cgraph}
+\includegraphics[width=350pt]{camp__solver_8h_a5b485fa25356197023889f3795888e98_cgraph}
 \end{center}
 \end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=265pt]{camp__solver_8h_a5b485fa25356197023889f3795888e98_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{camp__solver_8h_a2fa3892570de5fd26fb97da6b91568ff}\label{camp__solver_8h_a2fa3892570de5fd26fb97da6b91568ff}} 
+\index{camp\_solver.h@{camp\_solver.h}!guess\_helper@{guess\_helper}}
+\index{guess\_helper@{guess\_helper}!camp\_solver.h@{camp\_solver.h}}
+\doxysubsubsection{\texorpdfstring{guess\_helper()}{guess\_helper()}}
+{\footnotesize\ttfamily int guess\+\_\+helper (\begin{DoxyParamCaption}\item[{const realtype}]{t\+\_\+n,  }\item[{const realtype}]{h\+\_\+n,  }\item[{N\+\_\+\+Vector}]{y\+\_\+n,  }\item[{N\+\_\+\+Vector}]{y\+\_\+n1,  }\item[{N\+\_\+\+Vector}]{hf,  }\item[{void $\ast$}]{solver\+\_\+data,  }\item[{N\+\_\+\+Vector}]{tmp1,  }\item[{N\+\_\+\+Vector}]{corr }\end{DoxyParamCaption})}
+
 Here is the caller graph for this function\+:
 \nopagebreak
 \begin{figure}[H]
@@ -419,7 +405,7 @@ Determine if there is anything to solve.
 
 If the solver state concentrations and the derivative vector are very small, there is no point running the solver 
 
-Definition at line \mbox{\hyperlink{camp__solver_8c_source_l01865}{1865}} of file \mbox{\hyperlink{camp__solver_8c_source}{camp\+\_\+solver.\+c}}.
+Definition at line \mbox{\hyperlink{camp__solver_8c_source_l01875}{1875}} of file \mbox{\hyperlink{camp__solver_8c_source}{camp\+\_\+solver.\+c}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -473,7 +459,7 @@ Status code
 \item[\mbox{\hyperlink{todo__todo000001}{Todo}}]\#83 Figure out how to stop CVODE from resizing the \mbox{\hyperlink{struct_jacobian}{Jacobian}} during solving \end{DoxyRefDesc}
 
 
-Definition at line \mbox{\hyperlink{camp__solver_8c_source_l00964}{964}} of file \mbox{\hyperlink{camp__solver_8c_source}{camp\+\_\+solver.\+c}}.
+Definition at line \mbox{\hyperlink{camp__solver_8c_source_l00972}{972}} of file \mbox{\hyperlink{camp__solver_8c_source}{camp\+\_\+solver.\+c}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -508,7 +494,7 @@ Free a \mbox{\hyperlink{struct_model_data}{Model\+Data}} object.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{camp__solver_8c_source_l01905}{1905}} of file \mbox{\hyperlink{camp__solver_8c_source}{camp\+\_\+solver.\+c}}.
+Definition at line \mbox{\hyperlink{camp__solver_8c_source_l01915}{1915}} of file \mbox{\hyperlink{camp__solver_8c_source}{camp\+\_\+solver.\+c}}.
 
 Here is the caller graph for this function\+:
 \nopagebreak
@@ -553,7 +539,7 @@ Free a \mbox{\hyperlink{struct_solver_data}{Solver\+Data}} object.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{camp__solver_8c_source_l01822}{1822}} of file \mbox{\hyperlink{camp__solver_8c_source}{camp\+\_\+solver.\+c}}.
+Definition at line \mbox{\hyperlink{camp__solver_8c_source_l01832}{1832}} of file \mbox{\hyperlink{camp__solver_8c_source}{camp\+\_\+solver.\+c}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -614,7 +600,7 @@ Get solver statistics after an integration attempt.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{camp__solver_8c_source_l00717}{717}} of file \mbox{\hyperlink{camp__solver_8c_source}{camp\+\_\+solver.\+c}}.
+Definition at line \mbox{\hyperlink{camp__solver_8c_source_l00725}{725}} of file \mbox{\hyperlink{camp__solver_8c_source}{camp\+\_\+solver.\+c}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -750,7 +736,7 @@ Reset the timers for solver functions.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{camp__solver_8c_source_l01754}{1754}} of file \mbox{\hyperlink{camp__solver_8c_source}{camp\+\_\+solver.\+c}}.
+Definition at line \mbox{\hyperlink{camp__solver_8c_source_l01764}{1764}} of file \mbox{\hyperlink{camp__solver_8c_source}{camp\+\_\+solver.\+c}}.
 
 \mbox{\Hypertarget{camp__solver_8h_afc5ec8680b419e7ab49530d53a76cee4}\label{camp__solver_8h_afc5ec8680b419e7ab49530d53a76cee4}} 
 \index{camp\_solver.h@{camp\_solver.h}!solver\_run@{solver\_run}}
@@ -780,7 +766,7 @@ Flag indicating CAMP\+\_\+\+SOLVER\+\_\+\+SUCCESS or CAMP\+\_\+\+SOLVER\+\_\+\+F
 \end{DoxyReturn}
 
 
-Definition at line \mbox{\hyperlink{camp__solver_8c_source_l00536}{536}} of file \mbox{\hyperlink{camp__solver_8c_source}{camp\+\_\+solver.\+c}}.
+Definition at line \mbox{\hyperlink{camp__solver_8c_source_l00544}{544}} of file \mbox{\hyperlink{camp__solver_8c_source}{camp\+\_\+solver.\+c}}.
 
 Here is the call graph for this function\+:
 \nopagebreak

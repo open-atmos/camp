@@ -1,5 +1,5 @@
 <map id="sub_model_get_used_jac_elem" name="sub_model_get_used_jac_elem">
 <area shape="rect" id="node1" title="Get the Jacobian elements used by a particular sub model." alt="" coords="300,5,445,47"/>
-<area shape="rect" id="node2" href="$camp__solver_8c.html#a5b485fa25356197023889f3795888e98" title="Create a sparse Jacobian matrix based on model data." alt="" coords="164,13,252,39"/>
+<area shape="rect" id="node2" href="$camp__solver_8c.html#a5b485fa25356197023889f3795888e98" title="Try to improve guesses of y sent to the linear solver." alt="" coords="164,13,252,39"/>
 <area shape="rect" id="node3" href="$camp__solver_8c.html#a599ffdef916b139a1690bfd41aa386b6" title="Solver initialization." alt="" coords="5,13,116,39"/>
 </map>

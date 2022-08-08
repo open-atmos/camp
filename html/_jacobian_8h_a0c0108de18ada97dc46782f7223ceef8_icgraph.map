@@ -1,6 +1,6 @@
 <map id="jacobian_free" name="jacobian_free">
 <area shape="rect" id="node1" title="Free memory associated with a Jacobian." alt="" coords="912,150,1011,177"/>
-<area shape="rect" id="node2" href="$camp__solver_8c.html#a5b485fa25356197023889f3795888e98" title="Create a sparse Jacobian matrix based on model data." alt="" coords="164,121,252,147"/>
+<area shape="rect" id="node2" href="$camp__solver_8c.html#a5b485fa25356197023889f3795888e98" title="Try to improve guesses of y sent to the linear solver." alt="" coords="164,121,252,147"/>
 <area shape="rect" id="node4" href="$_jacobian_8c.html#a2e954524b21f4e097996b2dc0d3cf999" title="Builds the sparse matrix with the registered elements." alt="" coords="717,70,864,97"/>
 <area shape="rect" id="node5" href="$sub__model__solver_8c.html#a4b1d9807c5fc6b0f2129eb420fa191ad" title="Get the Jacobian elements used by a particular sub model." alt="" coords="513,113,659,155"/>
 <area shape="rect" id="node6" href="$sub__model__solver_8c.html#a61bf1cc1ad435b59182e1db138cc1b53" title="Set the map for sub&#45;model interdependence." alt="" coords="503,230,669,257"/>

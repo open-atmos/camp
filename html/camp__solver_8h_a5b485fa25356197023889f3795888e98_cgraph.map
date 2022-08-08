@@ -1,5 +1,5 @@
 <map id="get_jac_init" name="get_jac_init">
-<area shape="rect" id="node1" title="Create a sparse Jacobian matrix based on model data." alt="" coords="5,399,93,426"/>
+<area shape="rect" id="node1" title="Try to improve guesses of y sent to the linear solver." alt="" coords="5,399,93,426"/>
 <area shape="rect" id="node2" href="$_jacobian_8c.html#a2e954524b21f4e097996b2dc0d3cf999" title="Builds the sparse matrix with the registered elements." alt="" coords="641,40,787,67"/>
 <area shape="rect" id="node5" href="$_jacobian_8c.html#a0c0108de18ada97dc46782f7223ceef8" title="Free memory associated with a Jacobian." alt="" coords="903,188,1002,215"/>
 <area shape="rect" id="node7" href="$_jacobian_8c.html#a0a9b073f122e923fe6bad96d0611a4ac" title="Returns the value of a column pointer." alt="" coords="631,142,797,184"/>

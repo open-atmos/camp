@@ -2,7 +2,7 @@
 <area shape="rect" id="node1" title="Get the Jacobian elements used for a particular row of the matrix." alt="" coords="717,35,884,76"/>
 <area shape="rect" id="node2" href="$sub__model__solver_8c.html#a4b1d9807c5fc6b0f2129eb420fa191ad" title="Get the Jacobian elements used by a particular sub model." alt="" coords="305,5,450,47"/>
 <area shape="rect" id="node5" href="$sub__model__solver_8c.html#a61bf1cc1ad435b59182e1db138cc1b53" title="Set the map for sub&#45;model interdependence." alt="" coords="503,67,669,94"/>
-<area shape="rect" id="node3" href="$camp__solver_8c.html#a5b485fa25356197023889f3795888e98" title="Create a sparse Jacobian matrix based on model data." alt="" coords="164,42,252,69"/>
+<area shape="rect" id="node3" href="$camp__solver_8c.html#a5b485fa25356197023889f3795888e98" title="Try to improve guesses of y sent to the linear solver." alt="" coords="164,42,252,69"/>
 <area shape="rect" id="node4" href="$camp__solver_8c.html#a599ffdef916b139a1690bfd41aa386b6" title="Solver initialization." alt="" coords="5,42,116,69"/>
 <area shape="rect" id="node6" href="$sub__model__solver_8c.html#a38ebe393b32d9f9ac185b12801c69e17" title="Update the time derivative and Jacobian array ids." alt="" coords="300,71,455,98"/>
 </map>

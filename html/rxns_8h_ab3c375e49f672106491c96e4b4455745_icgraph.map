@@ -1,6 +1,6 @@
 <map id="rxn_photolysis_get_used_jac_elem" name="rxn_photolysis_get_used_jac_elem">
 <area shape="rect" id="node1" title="Flag Jacobian elements used by this reaction." alt="" coords="507,5,636,47"/>
 <area shape="rect" id="node2" href="$rxn__solver_8c.html#a6816597d1e59964f558cfc82b004549e" title="Get the Jacobian elements used by a particular reaction." alt="" coords="300,13,459,39"/>
-<area shape="rect" id="node3" href="$camp__solver_8c.html#a5b485fa25356197023889f3795888e98" title="Create a sparse Jacobian matrix based on model data." alt="" coords="164,13,252,39"/>
+<area shape="rect" id="node3" href="$camp__solver_8c.html#a5b485fa25356197023889f3795888e98" title="Try to improve guesses of y sent to the linear solver." alt="" coords="164,13,252,39"/>
 <area shape="rect" id="node4" href="$camp__solver_8c.html#a599ffdef916b139a1690bfd41aa386b6" title="Solver initialization." alt="" coords="5,13,116,39"/>
 </map>
