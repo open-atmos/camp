@@ -1498,19 +1498,6 @@ contains
 
     call jfile%destroy()
 
-    do z =1, camp_interface%nrates_cells
-      do i_photo_rxn = 1, camp_interface%n_photo_rxn
-
-        camp_interface%base_rates(i_photo_rxn)=0.
-        call camp_interface%photo_rxns(i_photo_rxn)%set_rate(camp_interface%base_rates(i_photo_rxn))
-
-        call camp_interface%camp_core%update_data(camp_interface%photo_rxns(i_photo_rxn),z)
-        !call camp_interface%camp_core%update_data(camp_interface%photo_rxns(i_photo_rxn)) !equivalent if photo_rates are the same for all cells
-
-        !print*,"id photo_rate", camp_interface%base_rates(i_photo_rxn)
-      end do
-    end do
-
     close(IMPORT_FILE_UNIT)
 
     !print*, "import_camp_input_json end"

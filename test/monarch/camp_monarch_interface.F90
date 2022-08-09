@@ -422,8 +422,14 @@ contains
 
       do z =1, this%nrates_cells
         do i = 1, this%n_photo_rxn
-          base_rate = this%base_rates(i)! &
-                  !+ this%base_rates(i)*(this%offset_photo_rates_cells(z)/z)
+
+          base_rate = this%base_rates(i)!
+
+          if(this%interface_input_file.eq."interface_monarch_cb05.json") then
+            base_rate = 0.
+          else
+            base_rate = this%base_rates(i) !+ this%base_rates(i)*(this%offset_photo_rates_cells(z)/z)
+          end if
 
           !print*,"offset",(this%offset_photo_rates_cells(z)/z)!"z",z,"n_cells",n_cells,this%n_cells
           !print*,"this%base_rates(i), base rate",this%base_rates(i),&

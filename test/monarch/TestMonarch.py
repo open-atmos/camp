@@ -699,14 +699,15 @@ def plot_cases(conf):
     datay = conf.datacolumns
 
     print("Nodes:", conf.allocatedNodes)
-    print("plotTitle: ", conf.plotTitle, " legend:", conf.legend)
     if namex == "Timesteps":
         print("Mean:", round(np.mean(datay), 2))
         print("Std", round(np.std(datay), 2))
     else:
         print("Std", conf.stdColumns)
     print(namex, ":", datax)
+    print("plotTitle: ", conf.plotTitle, " legend:", conf.legend)
     print(namey, ":", datay)
+
 
     #plot_functions.plotsns(namex, namey, datax, datay, conf.stdColumns, conf.plotTitle, conf.legend)
 
@@ -745,8 +746,8 @@ def all_timesteps():
     conf.mpi = "yes"
     # conf.mpi = "no"
 
-    conf.mpiProcessesCaseBase = 1
-    #conf.mpiProcessesCaseBase = 40
+    #conf.mpiProcessesCaseBase = 1
+    conf.mpiProcessesCaseBase = 20
 
     conf.mpiProcessesCaseOptimList.append(1)
     #conf.mpiProcessesCaseOptimList.append(40)
@@ -762,11 +763,11 @@ def all_timesteps():
     # conf.allocatedTasksPerNode = 320
     # conf.allocatedTasksPerNode = get_ntasksPerNode_sbatch() #todo
 
-    conf.cells = [10]
+    conf.cells = [1000]
     #conf.cells = [100, 500, 1000, 5000, 10000]
     # conf.cells = [50000,100000,500000,1000000]
 
-    conf.timeSteps = 30
+    conf.timeSteps = 10
     #conf.timeSteps = 720
 
     conf.timeStepsDt = 2
@@ -776,7 +777,7 @@ def all_timesteps():
     # conf.caseBase = "CPU Multi-cells"
     # conf.caseBase="GPU Multi-cells"
     # conf.caseBase="GPU Block-cellsN"
-    # conf.caseBase="GPU Block-cells1"
+    #conf.caseBase="GPU Block-cells1"
     #conf.caseBase = "GPU BDF"
     conf.caseBase = "GPU maxrregcount-64"
     # conf.caseBase = "GPU maxrregcount-24" #Minimum

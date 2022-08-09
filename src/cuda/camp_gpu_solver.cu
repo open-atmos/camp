@@ -1190,12 +1190,6 @@ void free_gpu_cu(SolverData *sd) {
 
   free(sd->flagCells);
 
-#ifdef CAMP_DEBUG_GPU
-
-  printf("timeDerivKernel %lf\n", md->timeDerivKernel/1000);
-
-#endif
-
   //ModelDataGPU Start
   cudaFree(mGPU->map_state_deriv);
   cudaFree(mGPU->deriv_data);
