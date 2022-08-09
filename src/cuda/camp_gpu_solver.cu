@@ -1253,7 +1253,6 @@ void free_gpu_cu(SolverData *sd) {
   cudaFree(mGPU->dAx2);
   cudaFree(mGPU->dy);
   cudaFree(mGPU->dz);
-  cudaFree(mGPU->daux);
   cudaFree(mGPU->dB);
   cudaFree(mGPU->djB);
   cudaFree(mGPU->diB);
@@ -1267,7 +1266,6 @@ void free_gpu_cu(SolverData *sd) {
   cudaFree(mGPU->dzn);
   cudaFree(mGPU->dewt);
   cudaFree(mGPU->dsavedJ);
-  cudaFree(mGPU->disavedJ);
   cudaFree(mGPU->jac_aux);
   cudaFree(mGPU->indexvals_gpu);
   cudaFree(mGPU->indexptrs_gpu);

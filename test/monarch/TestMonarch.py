@@ -95,9 +95,9 @@ def getCaseName(conf):
     elif conf.caseMulticellsOnecell == "Block-cellsNhalf":
         case_multicells_onecell_name += "Block-cells (N/2)"
     elif conf.caseMulticellsOnecell.find("maxrregcount") != -1:
-        case_multicells_onecell_name += ""
-        print("WARNING: Changed name maxrregcount to", case_multicells_onecell_name)
-        # case_multicells_onecell_name += conf.caseMulticellsOnecell
+        #case_multicells_onecell_name += ""
+        #print("WARNING: Changed name maxrregcount to", case_multicells_onecell_name)
+        case_multicells_onecell_name += conf.caseMulticellsOnecell
     elif conf.caseMulticellsOnecell.find("One") != -1:
         case_multicells_onecell_name += "Base version"
     else:
@@ -442,8 +442,9 @@ def run_case(conf):
             data["timeLS"][j] = data["timeLS"][j] \
                                 / data["counterBCG"][j]
 
-    # if conf.plotYKey != "MAPE":
-    #    print("run_case", conf.case, y_key, ":", data[y_key])
+    if conf.plotYKey != "MAPE":
+        print("run_case", conf.case, y_key, ":", data[y_key])
+    #print("data",data)
 
     return data
 
@@ -505,8 +506,6 @@ def run_cases(conf):
                 if len(conf.cells) > 1 or conf.plotXKey == "MPI processes":
                     datacases.append(round(np.mean(datay), 2))
                     stdCases.append(round(np.std(datay), 2))
-                    # print("datacases",datacases)
-                    # print("stdCases",stdCases)
                 else:
                     # datacases.append([round(elem, 2) for elem in datay])
                     datacases.append([round(elem, 2) for elem in datay])
@@ -520,9 +519,6 @@ def run_cells(conf):
     for i in range(len(conf.cells)):
         conf.nCellsProcesses = conf.cells[i]
         datacases, stdCases = run_cases(conf)
-
-        # print("datacases",datacases)
-        # print("stdCases",stdCases)
 
         if len(conf.cells) == 1:
             datacells = datacases
@@ -750,7 +746,7 @@ def all_timesteps():
     # conf.mpi = "no"
 
     conf.mpiProcessesCaseBase = 1
-    # conf.mpiProcessesCaseBase = 40
+    #conf.mpiProcessesCaseBase = 40
 
     conf.mpiProcessesCaseOptimList.append(1)
     #conf.mpiProcessesCaseOptimList.append(40)
@@ -766,11 +762,11 @@ def all_timesteps():
     # conf.allocatedTasksPerNode = 320
     # conf.allocatedTasksPerNode = get_ntasksPerNode_sbatch() #todo
 
-    conf.cells = [10]
+    conf.cells = [1000]
     #conf.cells = [100, 500, 1000, 5000, 10000]
     # conf.cells = [50000,100000,500000,1000000]
 
-    conf.timeSteps = 20
+    conf.timeSteps = 1
     #conf.timeSteps = 720
 
     conf.timeStepsDt = 2
@@ -781,19 +777,18 @@ def all_timesteps():
     # conf.caseBase="GPU Multi-cells"
     # conf.caseBase="GPU Block-cellsN"
     # conf.caseBase="GPU Block-cells1"
-    conf.caseBase = "GPU BDF"
-    # conf.caseBase = "GPU maxrregcount-64"
+    #conf.caseBase = "GPU BDF"
+    conf.caseBase = "GPU maxrregcount-64"
     # conf.caseBase = "GPU maxrregcount-24" #Minimum
     # conf.caseBase = "GPU maxrregcount-62"
     # conf.caseBase = "GPU maxrregcount-68"
     # conf.caseBase = "GPU maxrregcount-48"
 
     conf.casesOptim = []
-    # conf.casesOptim.append("GPU LaunchBounds-64")
     # conf.casesOptim.append("GPU maxrregcount-68")
     # conf.casesOptim.append("GPU maxrregcount-62")
     # conf.casesOptim.append("GPU maxrregcount-24")
-    # conf.casesOptim.append("GPU maxrregcount-64")
+    #conf.casesOptim.append("GPU maxrregcount-64")
     # conf.casesOptim.append("GPU maxrregcount-127")
     #conf.casesOptim.append("GPU BDF")
     # conf.casesOptim.append("GPU Block-cellsNhalf")
@@ -802,7 +797,7 @@ def all_timesteps():
     # conf.casesOptim.append("GPU Multi-cells")
     # conf.casesOptim.append("GPU One-cell")
     #conf.casesOptim.append("CPU Multi-cells")
-    conf.casesOptim.append("CPU One-cell")
+    #conf.casesOptim.append("CPU One-cell")
     #conf.casesOptim.append("CPU EBI")
 
     #conf.plotYKey = "Speedup timeCVode"
@@ -813,12 +808,12 @@ def all_timesteps():
     # conf.plotYKey = "Speedup normalized counterBCG"
     # conf.plotYKey = "Speedup total iterations - counterBCG"
     # conf.plotYKey = "Speedup BCG iteration (Comp.timeLS/counterBCG)"
-    #conf.plotYKey = "Speedup timecvStep"
+    conf.plotYKey = "Speedup timecvStep"
     # conf.plotYKey = "Speedup timecvStep normalized by countercvStep"
     # conf.plotYKey = "Speedup countercvStep"
-    # conf.plotYKey = "Speedup device timecvStep"
+    #conf.plotYKey = "Speedup device timecvStep"
     # conf.plotYKey = "Percentage data transfers CPU-GPU [%]"
-    conf.plotYKey = "MAPE"
+    #conf.plotYKey = "MAPE"
     # conf.plotYKey ="SMAPE"
     # conf.plotYKey ="NRMSE"
     # conf.MAPETol = 1.0E-6

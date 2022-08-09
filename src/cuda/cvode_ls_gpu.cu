@@ -2839,8 +2839,8 @@ int linsolsolve_gpu(SolverData *sd, CVodeMem cv_mem)
       sd->mGPU = &(sd->mGPUs[iDevice]);
       mGPU = sd->mGPU;
 
-      //Simulate data movement cost of copy of tempv to dtempv by copying to empty array (daux)
-      HANDLE_ERROR(cudaMemcpyAsync(mGPU->daux, tempv+offset_nrows, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice, 0));
+      //Simulate data movement cost of copy of tempv to dtempv by copying to empty array (dtempv2)
+      HANDLE_ERROR(cudaMemcpyAsync(mGPU->dtempv2, tempv+offset_nrows, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice, 0));
 
       offset_nrows += mGPU->nrows;
     }
@@ -2920,7 +2920,7 @@ int linsolsolve_gpu(SolverData *sd, CVodeMem cv_mem)
 #endif
 
       // Get WRMS norm of correction
-      del = gpu_VWRMS_Norm(mGPU->nrows, mGPU->dx, mGPU->dewt, mGPU->aux, mGPU->daux, (mGPU->blocks + 1) / 2, mGPU->threads);
+      del = gpu_VWRMS_Norm(mGPU->nrows, mGPU->dx, mGPU->dewt, mGPU->aux, mGPU->dtempv2, (mGPU->blocks + 1) / 2, mGPU->threads);
 
       cudaMemcpy(cv_ftemp+offset_nrows, mGPU->dftemp, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost);
       cudaMemcpy(cv_y+offset_nrows, mGPU->dcv_y, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost);
@@ -3000,7 +3000,7 @@ int linsolsolve_gpu(SolverData *sd, CVodeMem cv_mem)
       mGPU = sd->mGPU;
       //cv_mem->cv_acnrm = N_VWrmsNorm(cv_mem->cv_acor, cv_mem->cv_ewt);
       cv_mem->cv_acnrm = gpu_VWRMS_Norm(mGPU->nrows, mGPU->cv_acor, mGPU->dewt, bicg->aux,
-                                        mGPU->daux, (mGPU->blocks + 1) / 2, mGPU->threads);
+                                        mGPU->dtempv2, (mGPU->blocks + 1) / 2, mGPU->threads);
       cv_mem->cv_jcur = SUNFALSE;
       return (CV_SUCCESS);
     }

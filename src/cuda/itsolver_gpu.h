@@ -37,7 +37,4 @@ void swapCSC_CSR_ODE(SolverData *sd);
 void solveBCG(SolverData *sd, double *dA, int *djA, int *diA, double *dx, double *dtempv);
 void solveBCGBlocks(SolverData *sd, double *dA, int *djA, int *diA, double *dx, double *dtempv);
 
-void free_itsolver(SolverData *sd);
-
-
 #endif

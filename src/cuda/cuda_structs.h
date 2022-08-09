@@ -316,7 +316,6 @@ typedef struct {
     double *dAx2;
     double *dy;
     double *dz;
-    double *daux;
 
     //swapCSC_CSR_BCG
     double* dB;
@@ -338,8 +337,6 @@ typedef struct {
     //f_gpu
     int deriv_length_cell;
     int state_size_cell;
-    int i_kernel;
-    int threads_block;
 
     //cudacvNewtonIteration
     double* cv_acor;
@@ -348,7 +345,6 @@ typedef struct {
 
     //Auxiliar variables
     double* dsavedJ;
-    int*    disavedJ;
 
     int nnz_J_solver;
     int nrows_J_solver;

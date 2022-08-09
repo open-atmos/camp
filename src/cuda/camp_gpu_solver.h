@@ -33,22 +33,6 @@ int camp_solver_check_model_state_gpu(N_Vector solver_state, SolverData *sd,
                                        double threshold, double replacement_value);
 void camp_solver_update_model_state_gpu(N_Vector solver_state, SolverData *sd,
                                        double threshold, double replacement_value);
-/*
-__device__
-void cudaDevicef0(
-#ifdef CAMP_DEBUG_GPU
-        int counterDeriv2,
-#endif
-        //check_model_state
-        double threshhold, double replacement_value, int *flag,
-        //f_gpu
-        double time_step, int deriv_length_cell, int state_size_cell,
-        int n_cells,
-        int i_kernel, int threads_block, int n_shr_empty, double *y,
-        ModelDataGPU md_object
-); //Interface CPU/GPU
-*/
-
 int rxn_calc_deriv_gpu(SolverData *sd, N_Vector y, N_Vector deriv, double time_step);
 void rxn_calc_deriv_aux(ModelData *model_data, double *deriv_data, double time_step);
 void rxn_fusion_deriv_gpu(ModelData *model_data, N_Vector deriv);
