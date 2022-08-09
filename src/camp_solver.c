@@ -2595,7 +2595,6 @@ void solver_free(void *solver_data) {
 #ifdef CAMP_USE_GPU
 
   if(sd->use_cpu==0){
-  //todo multigpu
     printf("TODO MULTIGPU FREE_GPU_CPU\n");
     free_gpu_cu(sd);
   }

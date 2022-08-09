@@ -736,7 +736,7 @@ def all_timesteps():
     # conf.commit = "MATCH_IMPORTED_CONF"
     conf.commit = ""
 
-    conf.nGPUsCaseBase = 1
+    conf.nGPUsCaseBase = 2
     # conf.nGPUsCaseBase = 4
 
     conf.nGPUsCaseOptimList = [1]
@@ -746,8 +746,8 @@ def all_timesteps():
     conf.mpi = "yes"
     # conf.mpi = "no"
 
-    #conf.mpiProcessesCaseBase = 1
-    conf.mpiProcessesCaseBase = 20
+    conf.mpiProcessesCaseBase = 1
+    #conf.mpiProcessesCaseBase = 20
 
     conf.mpiProcessesCaseOptimList.append(1)
     #conf.mpiProcessesCaseOptimList.append(40)
@@ -793,12 +793,12 @@ def all_timesteps():
     # conf.casesOptim.append("GPU maxrregcount-127")
     #conf.casesOptim.append("GPU BDF")
     # conf.casesOptim.append("GPU Block-cellsNhalf")
-    #conf.casesOptim.append("GPU Block-cells1")
+    conf.casesOptim.append("GPU Block-cells1")
     #conf.casesOptim.append("GPU Block-cellsN")
     # conf.casesOptim.append("GPU Multi-cells")
     # conf.casesOptim.append("GPU One-cell")
     #conf.casesOptim.append("CPU Multi-cells")
-    conf.casesOptim.append("CPU One-cell")
+    #conf.casesOptim.append("CPU One-cell")
     #conf.casesOptim.append("CPU EBI")
 
     #conf.plotYKey = "Speedup timeCVode"
