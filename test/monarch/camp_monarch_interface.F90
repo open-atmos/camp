@@ -432,8 +432,9 @@ contains
           call this%photo_rxns(i)%set_rate(base_rate) !not used if exported cb05
           !call this%photo_rxns(i)%set_rate(real(0.0, kind=dp))
 
-          !call this%camp_core%update_data(this%photo_rxns(i),z)
-          call this%camp_core%update_data(this%photo_rxns(i))
+          call this%camp_core%update_data(this%photo_rxns(i),z) !todo needed? mock_monarch also has that
+          !call this%camp_core%update_data(this%photo_rxns(i))
+
           !print*,"2id photo_rate", base_rate
         end do
       end do

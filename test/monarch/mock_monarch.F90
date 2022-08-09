@@ -22,7 +22,7 @@ program mock_monarch_t
   use netcdf
 #endif
 
-#ifndef SOLVE_EBI_IMPORT_CAMP_INPUT
+#ifdef SOLVE_EBI_IMPORT_CAMP_INPUT
 
   ! EBI Solver
   use module_bsc_chem_data
@@ -541,7 +541,7 @@ program mock_monarch_t
 
   call set_env(camp_interface,output_file_prefix)
 
-#ifndef SOLVE_EBI_IMPORT_CAMP_INPUT
+#ifdef SOLVE_EBI_IMPORT_CAMP_INPUT
   if(caseMulticellsOnecell.eq."EBI") then
     call solve_ebi(camp_interface)
   end if
@@ -1517,7 +1517,7 @@ contains
 
   end subroutine import_camp_input_json
 
-#ifndef SOLVE_EBI_IMPORT_CAMP_INPUT
+#ifdef SOLVE_EBI_IMPORT_CAMP_INPUT
 
   subroutine solve_ebi(camp_interface)
 
@@ -1721,7 +1721,7 @@ contains
 
     KPP_PHOTO_RATES(:) = camp_interface%base_rates(:)
 
-  end subroutine solve_kpp
+  end subroutine
 
 #endif
 
