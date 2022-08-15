@@ -1,7 +1,8 @@
-import csv
 import numpy as np
 from sklearn.metrics import mean_squared_error
 from math import sqrt
+import time
+import pandas as pd
 
 def get_values_same_timestep(timestep_to_plot, mpiProcessesList, \
                              data, plot_x_key, plot_y_key):
@@ -18,8 +19,8 @@ def get_values_same_timestep(timestep_to_plot, mpiProcessesList, \
 
     return new_data
 
-def calculate_computational_timeLS2(data, plot_y_key):
 
+def calculate_computational_timeLS2(data, plot_y_key):
     data_timeBiconjGradMemcpy = data[plot_y_key]
     data_timeLS = data["timeLS"]
     for i in range(len(data_timeLS)):
@@ -29,7 +30,6 @@ def calculate_computational_timeLS2(data, plot_y_key):
 
 
 def calculate_computational_timeLS(data, plot_y_key, case):
-
     if ("GPU" in case):
         data_timeBiconjGradMemcpy = data[case][plot_y_key]
         data_timeLS = data[case]["timeLS"]
@@ -82,8 +82,8 @@ def calculate_percentages_solveCVODEGPU(din):
 
     return data
 
-def normalize_by_countercvStep_and_cells(data, plot_y_key, cells, case):
 
+def normalize_by_countercvStep_and_cells(data, plot_y_key, cells, case):
     if ("One-cell" in case):
         print("One-cell")
         cells_multiply = cells
@@ -317,16 +317,16 @@ def calculate_MAPE(data, timesteps, max_tol):
                     max_err_name = name
                     max_err_k = k
                 # if(err>1):
-                #print(name,out1[k],out2[k])
+                # print(name,out1[k],out2[k])
         MAPEs[j] = MAPE / n * 100
 
     if concs_are_zero > concs_below_tol + concs_above_tol:
-        print ("Error: More concs are zero than real values, check for errors")
+        print("Error: More concs are zero than real values, check for errors")
         raise
 
     print("max_error:" + str(max_err * 100) + "%" + " at species and id: " + max_err_name + " " + str(max_err_k)
           , "concs_above_tol", concs_above_tol,
-          "concs_below_tol", concs_below_tol , "concs_are_zero", concs_are_zero)
+          "concs_below_tol", concs_below_tol, "concs_are_zero", concs_are_zero)
     # print(NRMSEs)
 
     return MAPEs
@@ -404,8 +404,8 @@ def calculate_speedup(data, plot_y_key):
     base_data = data[cases[0]][plot_y_key]
     new_data = data[cases[1]][plot_y_key]
 
-    #print("calculate_speedup start",data)
-    #print(plot_y_key)
+    # print("calculate_speedup start",data)
+    # print(plot_y_key)
 
     # data[new_plot_y_key] = data.get(new_plot_y_key,[])
     datay = [0.] * len(base_data)
@@ -413,39 +413,13 @@ def calculate_speedup(data, plot_y_key):
         # print(base_data[i],new_data[i], base_data[i]/new_data[i])
         datay[i] = base_data[i] / new_data[i]
 
-    #print(datay)
+    # print(datay)
 
     return datay
 
-def read_solver_stats_all(file, data):
-    with open(file) as f:
-        csv_reader = csv.reader(f, delimiter=',')
-        i_row = 0
-        for row in csv_reader:
-            if i_row == 0:
-                labels = row
-                # print(row)
-            else:
-                for col in range(len(row)):
-                    # print(labels[col])
-                    # print(row[col])
-                    data[labels[col]] = data.get(labels[col], []) + [float(row[col])]
-            i_row += 1
-
-
-def read_solver_stats(file, data, nrows):
-    with open(file) as f:
-        csv_reader = csv.reader(f, delimiter=',')
-        i_row = 0
-        for row in csv_reader:
-            if i_row == 0:
-                labels = row
-                # print(row)
-            else:
-                for col in range(len(row)):
-                    # print(labels[col])
-                    # print(row[col])
-                    data[labels[col]] = data.get(labels[col], []) + [float(row[col])]
-            if i_row >= nrows:
-                break
-            i_row += 1
+def read_solver_stats(file, nrows):
+    #start = time.time()
+    df = pd.read_csv(file, nrows=nrows)
+    data = df.to_dict('list')
+    #print("time", time.time() - start)
+    return data

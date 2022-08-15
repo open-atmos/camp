@@ -854,6 +854,10 @@ void constructor_cvode_gpu(CVodeMem cv_mem, SolverData *sd)
   sd->flagCells = (int *) malloc((md->n_cells) * sizeof(int));
   ModelDataGPU *mGPU = sd->mGPU;
 
+#ifndef DEBUG_constructor_cvode_gpu
+  printf("DEBUG_constructor_cvode_gpu start \n");
+#endif
+
 #ifdef CAMP_DEBUG_GPU
 
   bicg->counterNewtonIt=0;
@@ -901,7 +905,7 @@ void constructor_cvode_gpu(CVodeMem cv_mem, SolverData *sd)
 
   int offset_nnz = 0;
   int offset_nrows = 0;
-  for (int iDevice = 0; iDevice < sd->nDevices; iDevice++) {
+  for (int iDevice = sd->startDevice; iDevice < sd->endDevice; iDevice++) {
     cudaSetDevice(iDevice);
     sd->mGPU = &(sd->mGPUs[iDevice]);
     mGPU = sd->mGPU;
@@ -969,7 +973,7 @@ void constructor_cvode_gpu(CVodeMem cv_mem, SolverData *sd)
     cudaMemcpy(mGPU->dftemp, ewt, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice);
     cudaMemcpy(mGPU->dx, tempv, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice);
     cudaMemcpy(mGPU->cv_last_yn, cv_last_yn, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice);
-    cudaMemcpy(mGPU->cv_acor_init, cv_acor_init, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice);
+    HANDLE_ERROR(cudaMemcpy(mGPU->cv_acor_init, cv_acor_init, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice));
 
     mGPU->replacement_value = TINY;
     mGPU->threshhold = -SMALL;
@@ -1020,7 +1024,7 @@ void constructor_cvode_gpu(CVodeMem cv_mem, SolverData *sd)
 #endif
 
     cudaMemcpy(mGPU->mdv, &mGPU->mdvCPU, sizeof(ModelDataVariable), cudaMemcpyHostToDevice);
-    cudaMemcpy(mGPU->mdvo, &mGPU->mdvCPU, sizeof(ModelDataVariable), cudaMemcpyHostToDevice);
+    HANDLE_ERROR(cudaMemcpy(mGPU->mdvo, &mGPU->mdvCPU, sizeof(ModelDataVariable), cudaMemcpyHostToDevice));
 
     mGPU->mdvCPU.cv_reltol = ((CVodeMem) sd->cvode_mem)->cv_reltol;
     mGPU->mdvCPU.cv_nfe = 0;
@@ -1042,6 +1046,10 @@ void constructor_cvode_gpu(CVodeMem cv_mem, SolverData *sd)
   sd->max_error_linsolver = 0.0;
   sd->max_error_linsolver_i = 0;
   sd->n_linsolver_i = 0;
+#endif
+
+#ifndef DEBUG_constructor_cvode_gpu
+  printf("DEBUG_constructor_cvode_gpu end \n");
 #endif
 
 }
@@ -4229,7 +4237,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
 #ifdef CAMP_DEBUG_GPU
     cudaEventRecord(bicg->startsolveCVODEGPU);
 #endif
-  for (int iDevice = 0; iDevice < sd->nDevices; iDevice++) {
+  for (int iDevice = sd->startDevice; iDevice < sd->endDevice; iDevice++) {
     cudaSetDevice(iDevice);
     sd->mGPU = &(sd->mGPUs[iDevice]);
     mGPU = sd->mGPU;
@@ -4372,12 +4380,14 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     offset_nrows += mGPU->nrows;
   }
 
-  for (int iDevice = 1; iDevice < sd->nDevices; iDevice++) {
+  for (int iDevice = sd->startDevice+1; iDevice < sd->endDevice; iDevice++) {
     cudaSetDevice(iDevice);
     cudaDeviceSynchronize();
   }
 
-  cudaSetDevice(0);
+  cudaSetDevice(sd->startDevice);
+  sd->mGPU = &(sd->mGPUs[sd->startDevice]);
+  mGPU = sd->mGPU;
 
 #ifdef CAMP_DEBUG_GPU
     cudaEventRecord(bicg->stopsolveCVODEGPU);
@@ -4486,8 +4496,8 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
 
 void solver_get_statistics_gpu(SolverData *sd){
 
-  cudaSetDevice(0);
-  sd->mGPU = &(sd->mGPUs[0]);
+  cudaSetDevice(sd->startDevice);
+  sd->mGPU = &(sd->mGPUs[sd->startDevice]);
   ModelDataGPU *mGPU = sd->mGPU;
 
   cudaMemcpy(&mGPU->mdvCPU,mGPU->mdvo,sizeof(ModelDataVariable),cudaMemcpyDeviceToHost);
@@ -4496,7 +4506,7 @@ void solver_get_statistics_gpu(SolverData *sd){
   //printf("solver_get_statistics_gpu\n");
   //printf("mGPU->mdvCPU.counterBCGInternal %d\n",mGPU->mdvCPU.counterBCGInternal);
 
-  for (int iDevice = 1; iDevice < sd->nDevices; iDevice++) {
+  for (int iDevice = sd->startDevice+1; iDevice < sd->endDevice; iDevice++) {
     cudaSetDevice(iDevice);
     sd->mGPU = &(sd->mGPUs[iDevice]);
     mGPU = sd->mGPU;
@@ -4535,7 +4545,7 @@ void solver_reset_statistics_gpu(SolverData *sd){
 
   //printf("solver_reset_statistics_gpu\n");
 
-  for (int iDevice = 0; iDevice < sd->nDevices; iDevice++) {
+  for (int iDevice = sd->startDevice; iDevice < sd->endDevice; iDevice++) {
     cudaSetDevice(iDevice);
     sd->mGPU = &(sd->mGPUs[iDevice]);
     mGPU = sd->mGPU;

@@ -243,7 +243,7 @@ program mock_monarch_t
     call jfile%get('_chemFile',output_file_title)
     camp_input_file = "config_"//output_file_title//".json"
     interface_input_file = "interface_"//output_file_title//".json"
-    output_file_prefix = "out/"//output_file_title
+    output_file_prefix = "../../build/test_run/monarch/out/"//output_file_title
     if(output_file_title.eq."monarch_binned") then
       ADD_EMISIONS = "monarch_binned"
     end if
@@ -702,6 +702,7 @@ program mock_monarch_t
 #endif
 
   ! Deallocation
+  !print*,"deallocate start", camp_mpi_rank()
   deallocate(camp_input_file)
   deallocate(interface_input_file)
   deallocate(output_file_prefix)
@@ -717,6 +718,8 @@ program mock_monarch_t
   else
     deallocate(camp_interface)
   end if
+
+  !print*,"deallocate end", camp_mpi_rank()
 
   call camp_mpi_finalize()
 
@@ -890,7 +893,9 @@ contains
     len=size(species_conc)!n_cells*NUM_MONARCH_SPEC!size(species_conc)
 
     !print*,species_conc
-    !print*,"export_file_results_all_cells start"
+    !if (camp_mpi_rank().eq.0) then
+    !  print*,"export_file_results_all_cells start"
+    !end if
 
 #ifdef CAMP_USE_MPI
 
@@ -910,6 +915,7 @@ contains
 
     !write(*, "(ES13.6)") species_conc(:,:,:,:)
     if (camp_mpi_rank().eq.0) then
+      !print*,"gather end end"
       do n=1,camp_mpi_size()
         do i=I_W,I_E
           do j=I_S,I_N
@@ -941,6 +947,7 @@ contains
           end do
         end do
       end do
+      !print*,"export_file_results_all_cells end"
     end if
 
   end subroutine

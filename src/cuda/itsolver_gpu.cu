@@ -6,6 +6,17 @@
 #include "itsolver_gpu.h"
 //#include "../debug_and_stats/camp_debug_2.h"
 
+#define HANDLE_ERROR( err ) (HandleError( err, __FILE__, __LINE__ ))
+
+static void HandleError(cudaError_t err,
+                        const char *file,
+                        int line) {
+  if (err != cudaSuccess) {
+    printf("%s in %s at line %d\n", cudaGetErrorString(err),
+           file, line);
+    exit(EXIT_FAILURE);
+  }
+}
 
 void read_options(itsolver *bicg){
 
@@ -87,7 +98,7 @@ void createLinearSolver(SolverData *sd)
   cudaMalloc(dAx2,nrows*sizeof(double));
   cudaMalloc(dy,nrows*sizeof(double));
   cudaMalloc(dz,nrows*sizeof(double));
-  cudaMalloc(ddiag,nrows*sizeof(double));
+  HANDLE_ERROR(cudaMalloc(ddiag,nrows*sizeof(double)));
   mGPU->aux=(double*)malloc(sizeof(double)*blocks);
 
 }

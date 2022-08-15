@@ -65,7 +65,6 @@ void solver_new_gpu_cu(SolverData *sd, int n_dep_var,
   sd->mGPUs = (ModelDataGPU *)malloc(sd->nDevices * sizeof(ModelDataGPU));
   int remainder = n_cells_total % sd->nDevices;
 
-  //sd->nDevices = 4;
   int nDevicesMax;
   cudaGetDeviceCount(&nDevicesMax);
   if(sd->nDevices > nDevicesMax){
@@ -74,7 +73,7 @@ void solver_new_gpu_cu(SolverData *sd, int n_dep_var,
     exit(0);
   }
 
-  for (int iDevice = 0; iDevice < sd->nDevices; iDevice++) {
+  for (int iDevice = sd->startDevice; iDevice < sd->endDevice; iDevice++) {
   cudaSetDevice(iDevice);
   sd->mGPU = &(sd->mGPUs[iDevice]);
   mGPU = sd->mGPU;
@@ -234,7 +233,7 @@ void set_reverse_int_double_rxn(
 
   //GPU allocation
   cudaMalloc((void **) &mGPU->rxn_int, rxn_int_length * sizeof(int));
-  cudaMalloc((void **) &mGPU->rxn_double, rxn_double_length * sizeof(double));
+  HANDLE_ERROR(cudaMalloc((void **) &mGPU->rxn_double, rxn_double_length * sizeof(double)));
 
   //Save data to GPU
   HANDLE_ERROR(cudaMemcpy(mGPU->rxn_int, rxn_int, rxn_int_length*sizeof(int), cudaMemcpyHostToDevice));
@@ -283,7 +282,11 @@ void solver_init_int_double_gpu(SolverData *sd) {
   ModelData *md = &(sd->model_data);
   ModelDataGPU *mGPU;
 
-  for (int iDevice = 0; iDevice < sd->nDevices; iDevice++) {
+#ifndef DEBUG_solver_init_int_double_gpu
+  printf("solver_init_int_double_gpu start \n");
+#endif
+
+  for (int iDevice = sd->startDevice; iDevice < sd->endDevice; iDevice++) {
     cudaSetDevice(iDevice);
     sd->mGPU = &(sd->mGPUs[iDevice]);
     mGPU = sd->mGPU;
@@ -317,6 +320,10 @@ void solver_init_int_double_gpu(SolverData *sd) {
 
   }
 
+#ifndef DEBUG_solver_init_int_double_gpu
+  printf("solver_init_int_double_gpu end \n");
+#endif
+
 }
 
 void init_jac_gpu(SolverData *sd, double *J_ptr){
@@ -324,9 +331,15 @@ void init_jac_gpu(SolverData *sd, double *J_ptr){
   ModelData *md = &(sd->model_data);
   ModelDataGPU *mGPU;
 
+#ifndef DEBUG_get_jac_init
+
+  printf("init_jac_gpu start \n");
+
+#endif
+
   int offset_nnz_J_solver = 0;
   int offset_nrows = 0;
-  for (int iDevice = 0; iDevice < sd->nDevices; iDevice++) {
+  for (int iDevice = sd->startDevice; iDevice < sd->endDevice; iDevice++) {
     cudaSetDevice(iDevice);
     sd->mGPU = &(sd->mGPUs[iDevice]);
     mGPU = sd->mGPU;
@@ -345,8 +358,8 @@ void init_jac_gpu(SolverData *sd, double *J_ptr){
     cudaMalloc((void **) &mGPU->J_tmp, mGPU->deriv_size);
     cudaMalloc((void **) &mGPU->J_tmp2, mGPU->deriv_size);
     cudaMalloc((void **) &mGPU->jac_map, sizeof(JacMap) * md->n_mapped_values);
-    cudaMalloc((void **) &mGPU->J_rxn,sizeof(double) * SM_NNZ_S(md->J_rxn)*mGPU->n_cells);
-    cudaMalloc((void **) &mGPU->n_mapped_values, 1 * sizeof(int));
+    HANDLE_ERROR(cudaMalloc((void **) &mGPU->J_rxn,sizeof(double) * SM_NNZ_S(md->J_rxn)*mGPU->n_cells));
+    HANDLE_ERROR(cudaMalloc((void **) &mGPU->n_mapped_values, 1 * sizeof(int)));
 
 #ifdef DEBUG_init_jac_gpu
     printf("md->n_per_cell_dep_var %d sd->jac.num_spec %d md->n_per_cell_solver_jac_elem %d "
@@ -366,13 +379,20 @@ void init_jac_gpu(SolverData *sd, double *J_ptr){
       //printf("%lld \n",iJ_solver[i]);
     }
 
+    printf("init_jac_gpu start \n");
+
     HANDLE_ERROR(cudaMemcpy(mGPU->J, J_ptr+offset_nnz_J_solver, mGPU->jac_size, cudaMemcpyHostToDevice));
     double *J_solver = SM_DATA_S(md->J_solver)+offset_nnz_J_solver;
     cudaMemcpy(mGPU->J_solver, J_solver, mGPU->jac_size, cudaMemcpyHostToDevice);
     cudaMemcpy(mGPU->jJ_solver, jJ_solver, mGPU->nnz_J_solver * sizeof(int), cudaMemcpyHostToDevice);
     cudaMemcpy(mGPU->iJ_solver, iJ_solver, (mGPU->nrows_J_solver + 1) * sizeof(int), cudaMemcpyHostToDevice);
+
+    printf("free start \n");
+
     free(jJ_solver);
     free(iJ_solver);
+
+    printf("cudaMemcpy start \n");
 
     double *J_state = N_VGetArrayPointer(md->J_state)+offset_nrows;
     double *J_deriv = N_VGetArrayPointer(md->J_deriv)+offset_nrows;
@@ -384,16 +404,29 @@ void init_jac_gpu(SolverData *sd, double *J_ptr){
     HANDLE_ERROR(cudaMemset(mGPU->J_tmp2, 0.0, mGPU->deriv_size));
     HANDLE_ERROR(cudaMemcpy(mGPU->jac_map, md->jac_map, sizeof(JacMap) * md->n_mapped_values, cudaMemcpyHostToDevice));
 
+    printf("J_data start \n");
+
     double *J_data = SM_DATA_S(md->J_rxn);
+
+    printf(" SM_NNZ_S(md->J_rxn)*mGPU->n_cells %d\n", SM_NNZ_S(md->J_rxn)*mGPU->n_cells);
     HANDLE_ERROR(cudaMemcpy(mGPU->J_rxn, J_data, sizeof(double) * SM_NNZ_S(md->J_rxn)*mGPU->n_cells,
                             cudaMemcpyHostToDevice));
-    HANDLE_ERROR(cudaMemcpy(mGPU->n_mapped_values, &md->n_mapped_values, 1 * sizeof(int), cudaMemcpyHostToDevice));
+
+  printf("n_mapped_values start \n");
+
+HANDLE_ERROR(cudaMemcpy(mGPU->n_mapped_values, &md->n_mapped_values, 1 * sizeof(int), cudaMemcpyHostToDevice));
 
     offset_nnz_J_solver += mGPU->nnz_J_solver;
     offset_nrows += md->n_per_cell_dep_var* mGPU->n_cells;
   }
 
   jacobian_initialize_gpu(sd);
+
+#ifndef DEBUG_get_jac_init
+
+  printf("init_jac_gpu end \n");
+
+#endif
 
 }
 
@@ -404,7 +437,7 @@ void set_jac_data_gpu(SolverData *sd, double *J){
 
   int offset_nnz_J_solver = 0;
   int offset_nrows = 0;
-  for (int iDevice = 0; iDevice < sd->nDevices; iDevice++) {
+  for (int iDevice = sd->startDevice; iDevice < sd->endDevice; iDevice++) {
     cudaSetDevice(iDevice);
     sd->mGPU = &(sd->mGPUs[iDevice]);
     mGPU = sd->mGPU;
@@ -438,7 +471,7 @@ void rxn_update_env_state_gpu(SolverData *sd) {
   double *env = md->total_env;
   double *total_state = md->total_state;
 
-  for (int iDevice = 0; iDevice < sd->nDevices; iDevice++) {
+  for (int iDevice = sd->startDevice; iDevice < sd->endDevice; iDevice++) {
     cudaSetDevice(iDevice);
     sd->mGPU = &(sd->mGPUs[iDevice]);
     mGPU = sd->mGPU;
@@ -571,7 +604,7 @@ int camp_solver_check_model_state_gpu(N_Vector solver_state, SolverData *sd,
   double replacement_value = TINY;
   double threshhold = -SMALL;
 
-  for (int iDevice = 0; iDevice < sd->nDevices; iDevice++) {
+  for (int iDevice = sd->startDevice; iDevice < sd->endDevice; iDevice++) {
     cudaSetDevice(iDevice);
     sd->mGPU = &(sd->mGPUs[iDevice]);
     mGPU = sd->mGPU;
@@ -614,7 +647,7 @@ void camp_solver_update_model_state_gpu(N_Vector solver_state, SolverData *sd,
   ModelDataGPU *mGPU;
   double *total_state = md->total_state;
 
-  for (int iDevice = 0; iDevice < sd->nDevices; iDevice++) {
+  for (int iDevice = sd->startDevice; iDevice < sd->endDevice; iDevice++) {
     cudaSetDevice(iDevice);
     sd->mGPU = &(sd->mGPUs[iDevice]);
     mGPU = sd->mGPU;
@@ -1063,7 +1096,7 @@ int rxn_calc_deriv_gpu(SolverData *sd, N_Vector y, N_Vector deriv, double time_s
   double *deriv_data = N_VGetArrayPointer(deriv);
   if(sd->use_gpu_cvode==0){
 
-    for (int iDevice = 0; iDevice < sd->nDevices; iDevice++) {
+    for (int iDevice = sd->startDevice; iDevice < sd->endDevice; iDevice++) {
       cudaSetDevice(iDevice);
       sd->mGPU = &(sd->mGPUs[iDevice]);
       mGPU = sd->mGPU;
@@ -1186,11 +1219,11 @@ void free_gpu_cu(SolverData *sd) {
   ModelData *md = &(sd->model_data);
   ModelDataGPU *mGPU = sd->mGPU;
 
-  printf("free_gpu_cu start\n");
+  //printf("free_gpu_cu start\n");
 
   free(sd->flagCells);
 
-  for (int iDevice = 0; iDevice < sd->nDevices; iDevice++) {
+  for (int iDevice = sd->startDevice; iDevice < sd->endDevice; iDevice++) {
     cudaSetDevice(iDevice);
     sd->mGPU = &(sd->mGPUs[iDevice]);
     mGPU = sd->mGPU;
@@ -1325,9 +1358,9 @@ void print_gpu_specs() {
 
   printf("GPU specifications \n");
 
-  int nDevices;
-  cudaGetDeviceCount(&nDevices);
-  for (int i = 0; i < nDevices; i++) {
+  int nDevicesMax;
+  cudaGetDeviceCount(&nDevicesMax);
+  for (int i = 0; i < nDevicesMax; i++) {
     cudaDeviceProp prop;
     cudaGetDeviceProperties(&prop, i);
     printf("Device Number: %d\n", i);

@@ -200,7 +200,41 @@ void get_camp_config_variables(SolverData *sd){
     else{
       sd->use_gpu_cvode=0;
     }
+    sd->nDevices = 1;
     fscanf(fp, "%d", &sd->nDevices);
+    sd->startDevice=0;
+    sd->endDevice=1;
+
+    if(sd->use_cpu==0){
+
+      int coresPerNode=40;
+      int size;
+      MPI_Comm_size(MPI_COMM_WORLD, &size);
+      if(size > 40 && size % coresPerNode != 0) {
+        printf("ERROR: MORE THAN 40 MPI PROCESSES AND NOT MULTIPLE OF 40, WHEN CTE-POWER ONLY HAS 40 CORES PER NODE\n");
+        exit(0);
+      }
+
+      int rank;
+      MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+
+      if(sd->nDevices>1){
+        sd->endDevice=2;
+      }
+
+      if(rank % coresPerNode >= coresPerNode/2 ){ //rank > 20
+        //printf("get_camp_config_variables  rank %d\n",rank);
+        if(sd->nDevices<3){
+          printf("ERROR: Only %d GPU for 2 CPUs. Use more GPUs, since a CPU is only connected to 2 devices\n", sd->nDevices);
+          exit(0);
+        }
+
+        sd->startDevice=2;
+        sd->endDevice=3;
+        if(sd->nDevices==4)
+          sd->endDevice=4;
+      }
+    }
 
     fclose(fp);
   }

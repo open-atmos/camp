@@ -12,6 +12,18 @@ extern "C" {
 #define BUFFER_SIZE 10
 #define SMALL_NUMBER 1e-90
 
+#define HANDLE_ERROR( err ) (HandleError( err, __FILE__, __LINE__ ))
+
+static void HandleError(cudaError_t err,
+                        const char *file,
+                        int line) {
+  if (err != cudaSuccess) {
+    printf("%s in %s at line %d\n", cudaGetErrorString(err),
+           file, line);
+    exit(EXIT_FAILURE);
+  }
+}
+
 __global__
 void init_jac_partials(double* production_partials, double* loss_partials) {
 
@@ -26,22 +38,37 @@ int jacobian_initialize_gpu(SolverData *sd) {
   ModelDataGPU *mGPU = sd->mGPU;
   Jacobian *jac = &sd->jac;
 
+#ifndef DEBUG_jacobian_initialize_gpu
+  printf("jacobian_initialize_gpu start \n");
+#endif
+
   int offset_nnz = 0;
-  for (int iDevice = 0; iDevice < sd->nDevices; iDevice++) {
+  for (int iDevice = sd->startDevice; iDevice < sd->endDevice; iDevice++) {
     cudaSetDevice(iDevice);
     sd->mGPU = &(sd->mGPUs[iDevice]);
     mGPU = sd->mGPU;
 
     JacobianGPU *jacgpu = &(mGPU->jac);
+
     cudaMalloc((void **) &jacgpu->num_elem, 1 * sizeof(jacgpu->num_elem));
+
+    printf("jacobian_initialize_gpu start \n");
+
     cudaMemcpy(jacgpu->num_elem, &jac->num_elem, 1 * sizeof(jacgpu->num_elem), cudaMemcpyHostToDevice);
+
+    printf("jacobian_initialize_gpu start \n");
 
     int num_elem = jac->num_elem * mGPU->n_cells;
     cudaMalloc((void **) &(jacgpu->production_partials), num_elem * sizeof(jacgpu->production_partials));
-    cudaMalloc((void **) &(jacgpu->loss_partials), num_elem * sizeof(jacgpu->loss_partials));
+
+   printf("jacobian_initialize_gpu start \n");
+
+    HANDLE_ERROR(cudaMalloc((void **) &(jacgpu->loss_partials), num_elem * sizeof(jacgpu->loss_partials)));
 
     int threads_block = jac->num_elem;
     int blocks = mGPU->n_cells;
+    printf("init_jac_partials start \n");
+
     init_jac_partials <<<blocks,threads_block>>>(jacgpu->production_partials,jacgpu->loss_partials);
 
     /*
@@ -90,6 +117,10 @@ int jacobian_initialize_gpu(SolverData *sd) {
 
   }
 */
+
+#ifndef DEBUG_jacobian_initialize_gpu
+  printf("jacobian_initialize_gpu end \n");
+#endif
 
   return 1;
 }

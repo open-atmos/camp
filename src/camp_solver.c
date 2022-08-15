@@ -417,7 +417,7 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
   sd->spec_names = (char **)malloc(sizeof(char *) * n_state_var);
 #endif
 
-#ifdef DEBUG_CAMP_SOLVER_NEW
+#ifndef DEBUG_CAMP_SOLVER_NEW
 
   printf("camp solver_run new  n_state_var %d, n_cells %d n_dep_var %d\n",
          sd->model_data.n_per_cell_state_var, n_cells, sd->model_data.n_per_cell_dep_var);
@@ -478,6 +478,12 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
   int n_cells;      // number of cells to solve simultaneously
   int *var_type;    // state variable types
 
+#ifndef DEBUG_solver_initialize
+
+  printf("camp solver_initialize start \n");
+
+#endif
+
   // Seed the random number generator
   srand((unsigned int)100);
 
@@ -535,10 +541,18 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
   flag = CVodeSetMaxHnilWarns(sd->cvode_mem, MAX_TIMESTEP_WARNINGS);
   check_flag_fail(&flag, "CVodeSetMaxHnilWarns", 1);
 
+  printf("camp solver_initialize start \n");
+
   // Get the structure of the Jacobian matrix
   sd->J = get_jac_init(sd);
+
   sd->model_data.J_init = SUNMatClone(sd->J);
+
+  printf("camp solver_initialize SUNMatClone \n");
+
   SUNMatCopy(sd->J, sd->model_data.J_init);
+
+  printf("camp solver_initialize start \n");
 
   // Create a Jacobian matrix for correcting negative predicted concentrations
   // during solving
@@ -548,6 +562,8 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
   // Create a KLU SUNLinearSolver
   sd->ls = SUNKLU(sd->y, sd->J);
   check_flag_fail((void *)sd->ls, "SUNKLU", 0);
+
+  printf("camp solver_initialize start \n");
 
   // Attach the linear solver and Jacobian to the CVodeMem object
   flag = CVDlsSetLinearSolver(sd->cvode_mem, sd->ls, sd->J);
@@ -574,6 +590,12 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
   flag = CVodeSetErrHandlerFn(sd->cvode_mem, error_handler, (void *)sd);
   check_flag_fail(&flag, "CVodeSetErrHandlerFn", 0);
   sd->counter_fail_solve_print=0;
+#endif
+
+#ifndef DEBUG_solver_initialize
+
+  printf("solver_initialize end\n");
+
 #endif
 
 #endif
@@ -1048,9 +1070,8 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
     itsolver *bicg = &(sd->bicg);
     ModelDataGPU *mGPU;
 
-    int iDevice = 0;
-    cudaSetDevice(iDevice);
-    sd->mGPU = &(sd->mGPUs[iDevice]);
+    cudaSetDevice(sd->startDevice);
+    sd->mGPU = &(sd->mGPUs[sd->startDevice]);
     mGPU = sd->mGPU;
 
     solver_get_statistics_gpu(sd);
@@ -1135,7 +1156,7 @@ void solver_reset_statistics(void *solver_data, int *counters, double *times)
     itsolver *bicg = &(sd->bicg);
     ModelDataGPU *mGPU;
 
-   for (int iDevice = 0; iDevice < sd->nDevices; iDevice++) {
+   for (int iDevice = sd->startDevice; iDevice < sd->endDevice; iDevice++) {
       cudaSetDevice(iDevice);
       sd->mGPU = &(sd->mGPUs[iDevice]);
       mGPU = sd->mGPU;
@@ -2061,6 +2082,13 @@ SUNMatrix get_jac_init(SolverData *sd) {
                                      elements in the reaction matrix*/
   sunindextype n_jac_elem_solver; /* number of potentially non-zero Jacobian
                                      elements in the reaction matrix*/
+
+#ifndef DEBUG_get_jac_init
+
+  printf("get_jac_init start \n");
+
+#endif
+
   // Number of grid cells
   int n_cells = sd->model_data.n_cells;
 
@@ -2356,14 +2384,21 @@ SUNMatrix get_jac_init(SolverData *sd) {
   N_VConst(0.0, sd->model_data.J_deriv);
 
 #ifdef CAMP_USE_GPU
-  if(sd->use_cpu==0)
+  if(sd->use_cpu==0){
     init_jac_gpu(sd, SM_DATA_S(M));
+  }
 #endif
 
   // Free the memory used
   jacobian_free(&param_jac);
   jacobian_free(&solver_jac);
   free(deriv_ids);
+
+#ifndef DEBUG_get_jac_init
+
+  printf("get_jac_init end \n");
+
+#endif
 
   return M;
 }
@@ -2565,6 +2600,8 @@ void solver_free(void *solver_data) {
   SolverData *sd = (SolverData *)solver_data;
   ModelData *md = &(sd->model_data);
 
+  //printf("solver_free start\n");
+
 #ifdef CAMP_USE_SUNDIALS
   // free the SUNDIALS solver
   CVodeFree(&(sd->cvode_mem));
@@ -2595,7 +2632,7 @@ void solver_free(void *solver_data) {
 #ifdef CAMP_USE_GPU
 
   if(sd->use_cpu==0){
-    printf("TODO MULTIGPU FREE_GPU_CPU\n");
+    //printf("free_gpu_cu commented\n");
     free_gpu_cu(sd);
   }
 

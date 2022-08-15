@@ -371,7 +371,7 @@ def run(conf):
         json.dump(conf.__dict__, jsonFile, indent=4, sort_keys=False)
 
     data_name = conf.chemFile + '_' + conf.caseMulticellsOnecell + conf.results_file
-    tmp_path = 'out/' + data_name
+    tmp_path = '../../build/test_run/monarch/out/' + data_name
 
     if conf.is_import and conf.plotYKey != "MAPE":
         is_import, data_path = import_data(conf, tmp_path)
@@ -391,12 +391,10 @@ def run(conf):
     # new_path = os.path.abspath(os.getcwd()) + "/" + data_path
     # print("data_path", new_path)
 
-    data = {}
-    if conf.plotYKey == "MAPE":
-        # print("Pending to import data from MAPE and read only the desired timesteps and cells")
-        math_functions.read_solver_stats_all(data_path, data)
-    else:
-        math_functions.read_solver_stats(data_path, data, conf.timeSteps)
+    data = math_functions.read_solver_stats(data_path, conf.timeSteps)
+    #y_key_words = conf.plotYKey.split()
+    #y_key = y_key_words[-1]
+    #print(data[y_key])
 
     # print("The size of the dictionary is {} bytes".format(sys.getsizeof(data)))
     # print("The size of the dictionary is {} bytes".format(sys.getsizeof(data["timeLS"])))
@@ -639,9 +637,13 @@ def plot_cases(conf):
         elif conf.plotXKey == "GPUs":
             conf.plotTitle += ""
         else:
-            # conf.plotTitle += str(nGPUs) + " "
-            conf.plotTitle += conf.caseGpuCpu + " "
+            if conf.caseGpuCpu == "GPU" and len(conf.nGPUsCaseOptimList) == 1 and conf.nGPUsCaseOptimList[0] > 1 :
+                conf.plotTitle += str(conf.nGPUsCaseOptimList[0]) + " GPUs "
+            else:
+                conf.plotTitle += conf.caseGpuCpu + " "
     if len(conf.legend) == 1 or not conf.legend or len(conf.diffCellsL) > 1:
+        if len(conf.mpiProcessesCaseOptimList) > 1:
+            legend_name += str(mpiProcessesCaseOptim) + " MPI "
         conf.plotTitle += case_multicells_onecell_name + " "
         if len(conf.diffCellsL) > 1:
             conf.plotTitle += "Implementations "
@@ -736,21 +738,21 @@ def all_timesteps():
     # conf.commit = "MATCH_IMPORTED_CONF"
     conf.commit = ""
 
-    conf.nGPUsCaseBase = 2
-    # conf.nGPUsCaseBase = 4
+    conf.nGPUsCaseBase = 1
+    #conf.nGPUsCaseBase = 4
 
     conf.nGPUsCaseOptimList = [1]
-    # conf.nGPUsCaseOptimList = [1]
+    #conf.nGPUsCaseOptimList = [4]
     # conf.nGPUsCaseOptimList = [1,2,3,4]
 
     conf.mpi = "yes"
     # conf.mpi = "no"
 
     conf.mpiProcessesCaseBase = 1
-    #conf.mpiProcessesCaseBase = 20
+    #conf.mpiProcessesCaseBase = 40
 
-    conf.mpiProcessesCaseOptimList.append(1)
-    #conf.mpiProcessesCaseOptimList.append(40)
+    #conf.mpiProcessesCaseOptimList.append(1)
+    conf.mpiProcessesCaseOptimList.append(40)
     # conf.mpiProcessesCaseOptimList = [10,20,40]
     # conf.mpiProcessesCaseOptimList = [1,4,8,16,32,40]
 
@@ -774,7 +776,7 @@ def all_timesteps():
 
     #conf.caseBase = "CPU EBI"
     #conf.caseBase = "CPU One-cell"
-    # conf.caseBase = "CPU Multi-cells"
+    #conf.caseBase = "CPU Multi-cells"
     # conf.caseBase="GPU Multi-cells"
     # conf.caseBase="GPU Block-cellsN"
     #conf.caseBase="GPU Block-cells1"
@@ -793,12 +795,12 @@ def all_timesteps():
     # conf.casesOptim.append("GPU maxrregcount-127")
     #conf.casesOptim.append("GPU BDF")
     # conf.casesOptim.append("GPU Block-cellsNhalf")
-    conf.casesOptim.append("GPU Block-cells1")
+    #conf.casesOptim.append("GPU Block-cells1")
     #conf.casesOptim.append("GPU Block-cellsN")
     # conf.casesOptim.append("GPU Multi-cells")
     # conf.casesOptim.append("GPU One-cell")
     #conf.casesOptim.append("CPU Multi-cells")
-    #conf.casesOptim.append("CPU One-cell")
+    conf.casesOptim.append("CPU One-cell")
     #conf.casesOptim.append("CPU EBI")
 
     #conf.plotYKey = "Speedup timeCVode"

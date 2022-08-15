@@ -319,6 +319,8 @@ typedef struct {
   ModelDataGPU *mGPUs;
   ModelDataGPU *mGPU;
   int *flagCells;
+  int endDevice;
+  int startDevice;
   int nDevices;
 #ifdef CHECK_GPU_LINSOLVE
   double max_error_linsolver;
