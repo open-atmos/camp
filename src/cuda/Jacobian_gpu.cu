@@ -38,7 +38,7 @@ int jacobian_initialize_gpu(SolverData *sd) {
   ModelDataGPU *mGPU = sd->mGPU;
   Jacobian *jac = &sd->jac;
 
-#ifndef DEBUG_jacobian_initialize_gpu
+#ifdef DEBUG_jacobian_initialize_gpu
   printf("jacobian_initialize_gpu start \n");
 #endif
 
@@ -52,22 +52,15 @@ int jacobian_initialize_gpu(SolverData *sd) {
 
     cudaMalloc((void **) &jacgpu->num_elem, 1 * sizeof(jacgpu->num_elem));
 
-    printf("jacobian_initialize_gpu start \n");
-
     cudaMemcpy(jacgpu->num_elem, &jac->num_elem, 1 * sizeof(jacgpu->num_elem), cudaMemcpyHostToDevice);
-
-    printf("jacobian_initialize_gpu start \n");
 
     int num_elem = jac->num_elem * mGPU->n_cells;
     cudaMalloc((void **) &(jacgpu->production_partials), num_elem * sizeof(jacgpu->production_partials));
-
-   printf("jacobian_initialize_gpu start \n");
 
     HANDLE_ERROR(cudaMalloc((void **) &(jacgpu->loss_partials), num_elem * sizeof(jacgpu->loss_partials)));
 
     int threads_block = jac->num_elem;
     int blocks = mGPU->n_cells;
-    printf("init_jac_partials start \n");
 
     init_jac_partials <<<blocks,threads_block>>>(jacgpu->production_partials,jacgpu->loss_partials);
 
@@ -118,7 +111,7 @@ int jacobian_initialize_gpu(SolverData *sd) {
   }
 */
 
-#ifndef DEBUG_jacobian_initialize_gpu
+#ifdef DEBUG_jacobian_initialize_gpu
   printf("jacobian_initialize_gpu end \n");
 #endif
 

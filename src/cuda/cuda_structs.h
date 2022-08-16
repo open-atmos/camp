@@ -317,11 +317,6 @@ typedef struct {
     double *dy;
     double *dz;
 
-    //swapCSC_CSR_BCG
-    double* dB;
-    int*    djB;
-    int*    diB;
-
     //Guess_helper
     double* dftemp;
     double* dcv_y;

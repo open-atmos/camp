@@ -351,8 +351,6 @@ void init_jac_gpu(SolverData *sd, double *J_ptr){
     //mGPU->n_per_cell_solver_jac_elem = md->n_per_cell_solver_jac_elem;
     cudaMalloc((void **) &mGPU->J, mGPU->jac_size);
     cudaMalloc((void **) &mGPU->J_solver, mGPU->jac_size);
-    cudaMalloc((void **) &mGPU->jJ_solver, mGPU->nnz_J_solver * sizeof(int));
-    cudaMalloc((void **) &mGPU->iJ_solver, (mGPU->nrows_J_solver + 1) * sizeof(int));
     cudaMalloc((void **) &mGPU->J_state, mGPU->deriv_size);
     cudaMalloc((void **) &mGPU->J_deriv, mGPU->deriv_size);
     cudaMalloc((void **) &mGPU->J_tmp, mGPU->deriv_size);
@@ -369,23 +367,48 @@ void init_jac_gpu(SolverData *sd, double *J_ptr){
 #endif
 
     //Transfer sunindextype to int
-    int *jJ_solver = (int *) malloc(sizeof(int) * mGPU->nnz_J_solver);
-    int *iJ_solver = (int *) malloc(sizeof(int) * mGPU->nrows_J_solver + 1);
-    for (int i = 0; i < mGPU->nnz_J_solver; i++)
+
+#ifdef DEV_REDUCE_JAC_INDICES
+
+    cudaMalloc((void **) &mGPU->jJ_solver, mGPU->nnz_J_solver/mGPU->n_cells * sizeof(int));
+    cudaMalloc((void **) &mGPU->iJ_solver, (mGPU->nrows_J_solver/mGPU->n_cells + 1) * sizeof(int));
+
+    int *jJ_solver = (int *) malloc(sizeof(int) * mGPU->nnz_J_solver/mGPU->n_cells);
+    int *iJ_solver = (int *) malloc(sizeof(int) * (mGPU->nrows_J_solver/mGPU->n_cells) + 1);
+    for (int i = 0; i < mGPU->nnz_J_solver/mGPU->n_cells; i++)
       jJ_solver[i] = SM_INDEXVALS_S(md->J_solver)[i];
     //printf("J_solver PTRS:\n");
-    for (int i = 0; i <= mGPU->nrows_J_solver; i++){
+    for (int i = 0; i <= mGPU->nrows_J_solver/mGPU->n_cells; i++){
       iJ_solver[i] = SM_INDEXPTRS_S(md->J_solver)[i];
       //printf("%lld \n",iJ_solver[i]);
     }
 
-    printf("init_jac_gpu start \n");
+  cudaMemcpy(mGPU->jJ_solver, jJ_solver, mGPU->nnz_J_solver/mGPU->n_cells * sizeof(int), cudaMemcpyHostToDevice);
+  cudaMemcpy(mGPU->iJ_solver, iJ_solver, (mGPU->nrows_J_solver/mGPU->n_cells + 1) * sizeof(int), cudaMemcpyHostToDevice);
+
+#else
+
+  cudaMalloc((void **) &mGPU->jJ_solver, mGPU->nnz_J_solver * sizeof(int));
+  cudaMalloc((void **) &mGPU->iJ_solver, (mGPU->nrows_J_solver + 1) * sizeof(int));
+
+  int *jJ_solver = (int *) malloc(sizeof(int) * mGPU->nnz_J_solver);
+  int *iJ_solver = (int *) malloc(sizeof(int) * (mGPU->nrows_J_solver) + 1);
+  for (int i = 0; i < mGPU->nnz_J_solver; i++)
+    jJ_solver[i] = SM_INDEXVALS_S(md->J_solver)[i];
+  //printf("J_solver PTRS:\n");
+  for (int i = 0; i <= mGPU->nrows_J_solver; i++){
+    iJ_solver[i] = SM_INDEXPTRS_S(md->J_solver)[i];
+    //printf("%lld \n",iJ_solver[i]);
+  }
+
+  cudaMemcpy(mGPU->jJ_solver, jJ_solver, mGPU->nnz_J_solver * sizeof(int), cudaMemcpyHostToDevice);
+  cudaMemcpy(mGPU->iJ_solver, iJ_solver, (mGPU->nrows_J_solver + 1) * sizeof(int), cudaMemcpyHostToDevice);
+
+#endif
 
     HANDLE_ERROR(cudaMemcpy(mGPU->J, J_ptr+offset_nnz_J_solver, mGPU->jac_size, cudaMemcpyHostToDevice));
     double *J_solver = SM_DATA_S(md->J_solver)+offset_nnz_J_solver;
     cudaMemcpy(mGPU->J_solver, J_solver, mGPU->jac_size, cudaMemcpyHostToDevice);
-    cudaMemcpy(mGPU->jJ_solver, jJ_solver, mGPU->nnz_J_solver * sizeof(int), cudaMemcpyHostToDevice);
-    cudaMemcpy(mGPU->iJ_solver, iJ_solver, (mGPU->nrows_J_solver + 1) * sizeof(int), cudaMemcpyHostToDevice);
 
     printf("free start \n");
 
@@ -1284,9 +1307,6 @@ void free_gpu_cu(SolverData *sd) {
     cudaFree(mGPU->dAx2);
     cudaFree(mGPU->dy);
     cudaFree(mGPU->dz);
-    cudaFree(mGPU->dB);
-    cudaFree(mGPU->djB);
-    cudaFree(mGPU->diB);
     cudaFree(mGPU->dftemp);
     cudaFree(mGPU->dcv_y);
     cudaFree(mGPU->dtempv1);

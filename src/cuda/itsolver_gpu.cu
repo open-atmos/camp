@@ -407,44 +407,6 @@ void swapCSC_CSR_BCG(SolverData *sd){
 
 }
 
-void swapCSC_CSR_ODE(SolverData *sd){
-
-  swapCSC_CSR_BCG(sd);
-
-  ModelDataGPU *mGPU = sd->mGPU;
-
-  int* iJ_solver=(int*)malloc((mGPU->nrows_J_solver + 1) * sizeof(int));
-  int* jJ_solver=(int*)malloc(mGPU->nnz_J_solver * sizeof(int));
-  double* J_solver=(double*)malloc(mGPU->jac_size);
-  cudaMemcpy(J_solver, mGPU->J_solver, mGPU->jac_size, cudaMemcpyDeviceToHost);
-  cudaMemcpy(jJ_solver,mGPU->jJ_solver, mGPU->nnz_J_solver * sizeof(int), cudaMemcpyDeviceToHost);
-  cudaMemcpy(iJ_solver,mGPU->iJ_solver, (mGPU->nrows_J_solver + 1) * sizeof(int), cudaMemcpyDeviceToHost);
-
-  int n_row=mGPU->nrows_J_solver;
-  int n_col=mGPU->nrows_J_solver;
-  int nnz=mGPU->jac_size/sizeof(double);
-  int* Ap=iJ_solver;
-  int* Aj=jJ_solver;
-  double* Ax=J_solver;
-  int* Bp=(int*)malloc((n_row+1)*sizeof(int));
-  int* Bi=(int*)malloc(nnz*sizeof(int));
-  double* Bx=(double*)malloc(nnz*sizeof(double));
-
-  swapCSC_CSR(n_row,n_col,Ap,Aj,Ax,Bp,Bi,Bx);
-
-  cudaMemcpyAsync(mGPU->iJ_solver,Bp,(n_row+1)*sizeof(int),cudaMemcpyHostToDevice, 0);
-  cudaMemcpyAsync(mGPU->jJ_solver,Bi,nnz*sizeof(int),cudaMemcpyHostToDevice, 0);
-  cudaMemcpyAsync(mGPU->J_solver,Bx,nnz*sizeof(double),cudaMemcpyHostToDevice, 0);
-
-  free(J_solver);
-  free(jJ_solver);
-  free(iJ_solver);
-  free(Bp);
-  free(Bi);
-  free(Bx);
-
-}
-
 void print_int(int *x, int len, const char *s){
 
   for (int i=0; i<len; i++){
