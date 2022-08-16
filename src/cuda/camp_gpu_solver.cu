@@ -331,7 +331,7 @@ void init_jac_gpu(SolverData *sd, double *J_ptr){
   ModelData *md = &(sd->model_data);
   ModelDataGPU *mGPU;
 
-#ifndef DEBUG_get_jac_init
+#ifdef DEBUG_get_jac_init
 
   printf("init_jac_gpu start \n");
 
@@ -356,19 +356,18 @@ void init_jac_gpu(SolverData *sd, double *J_ptr){
     cudaMalloc((void **) &mGPU->J_tmp, mGPU->deriv_size);
     cudaMalloc((void **) &mGPU->J_tmp2, mGPU->deriv_size);
     cudaMalloc((void **) &mGPU->jac_map, sizeof(JacMap) * md->n_mapped_values);
-    HANDLE_ERROR(cudaMalloc((void **) &mGPU->J_rxn,sizeof(double) * SM_NNZ_S(md->J_rxn)*mGPU->n_cells));
     HANDLE_ERROR(cudaMalloc((void **) &mGPU->n_mapped_values, 1 * sizeof(int)));
 
 #ifdef DEBUG_init_jac_gpu
     printf("md->n_per_cell_dep_var %d sd->jac.num_spec %d md->n_per_cell_solver_jac_elem %d "
-           "md->n_mapped_values %d SM_NNZ_S(md->J_rxn) %d jac->num_elem %d offset_nnz_J_solver %d  mGPU->nnz_J_solver %d mGPU->nrows_J_solver %d\n",
+           "md->n_mapped_values %d %d jac->num_elem %d offset_nnz_J_solver %d  mGPU->nnz_J_solver %d mGPU->nrows_J_solver %d\n",
            md->n_per_cell_dep_var,sd->jac.num_spec,md->n_per_cell_solver_jac_elem, md->n_mapped_values,
-           SM_NNZ_S(md->J_rxn), sd->jac.num_elem, offset_nnz_J_solver,mGPU->nnz_J_solver, mGPU->nrows_J_solver);
+           sd->jac.num_elem, offset_nnz_J_solver,mGPU->nnz_J_solver, mGPU->nrows_J_solver);
 #endif
 
     //Transfer sunindextype to int
 
-#ifdef DEV_REDUCE_JAC_INDICES
+#ifndef DEV_REDUCE_JAC_INDICES
 
     cudaMalloc((void **) &mGPU->jJ_solver, mGPU->nnz_J_solver/mGPU->n_cells * sizeof(int));
     cudaMalloc((void **) &mGPU->iJ_solver, (mGPU->nrows_J_solver/mGPU->n_cells + 1) * sizeof(int));
@@ -395,10 +394,8 @@ void init_jac_gpu(SolverData *sd, double *J_ptr){
   int *iJ_solver = (int *) malloc(sizeof(int) * (mGPU->nrows_J_solver) + 1);
   for (int i = 0; i < mGPU->nnz_J_solver; i++)
     jJ_solver[i] = SM_INDEXVALS_S(md->J_solver)[i];
-  //printf("J_solver PTRS:\n");
   for (int i = 0; i <= mGPU->nrows_J_solver; i++){
     iJ_solver[i] = SM_INDEXPTRS_S(md->J_solver)[i];
-    //printf("%lld \n",iJ_solver[i]);
   }
 
   cudaMemcpy(mGPU->jJ_solver, jJ_solver, mGPU->nnz_J_solver * sizeof(int), cudaMemcpyHostToDevice);
@@ -410,12 +407,8 @@ void init_jac_gpu(SolverData *sd, double *J_ptr){
     double *J_solver = SM_DATA_S(md->J_solver)+offset_nnz_J_solver;
     cudaMemcpy(mGPU->J_solver, J_solver, mGPU->jac_size, cudaMemcpyHostToDevice);
 
-    printf("free start \n");
-
     free(jJ_solver);
     free(iJ_solver);
-
-    printf("cudaMemcpy start \n");
 
     double *J_state = N_VGetArrayPointer(md->J_state)+offset_nrows;
     double *J_deriv = N_VGetArrayPointer(md->J_deriv)+offset_nrows;
@@ -427,17 +420,16 @@ void init_jac_gpu(SolverData *sd, double *J_ptr){
     HANDLE_ERROR(cudaMemset(mGPU->J_tmp2, 0.0, mGPU->deriv_size));
     HANDLE_ERROR(cudaMemcpy(mGPU->jac_map, md->jac_map, sizeof(JacMap) * md->n_mapped_values, cudaMemcpyHostToDevice));
 
-    printf("J_data start \n");
+#ifndef DEV_REMOVE_J_RXN
+#else
 
     double *J_data = SM_DATA_S(md->J_rxn);
-
-    printf(" SM_NNZ_S(md->J_rxn)*mGPU->n_cells %d\n", SM_NNZ_S(md->J_rxn)*mGPU->n_cells);
+    HANDLE_ERROR(cudaMalloc((void **) &mGPU->J_rxn,sizeof(double) * SM_NNZ_S(md->J_rxn)*mGPU->n_cells));
     HANDLE_ERROR(cudaMemcpy(mGPU->J_rxn, J_data, sizeof(double) * SM_NNZ_S(md->J_rxn)*mGPU->n_cells,
-                            cudaMemcpyHostToDevice));
+                          cudaMemcpyHostToDevice));
+#endif
 
-  printf("n_mapped_values start \n");
-
-HANDLE_ERROR(cudaMemcpy(mGPU->n_mapped_values, &md->n_mapped_values, 1 * sizeof(int), cudaMemcpyHostToDevice));
+    HANDLE_ERROR(cudaMemcpy(mGPU->n_mapped_values, &md->n_mapped_values, 1 * sizeof(int), cudaMemcpyHostToDevice));
 
     offset_nnz_J_solver += mGPU->nnz_J_solver;
     offset_nrows += md->n_per_cell_dep_var* mGPU->n_cells;
@@ -445,7 +437,7 @@ HANDLE_ERROR(cudaMemcpy(mGPU->n_mapped_values, &md->n_mapped_values, 1 * sizeof(
 
   jacobian_initialize_gpu(sd);
 
-#ifndef DEBUG_get_jac_init
+#ifdef DEBUG_get_jac_init
 
   printf("init_jac_gpu end \n");
 
@@ -621,7 +613,6 @@ int camp_solver_check_model_state_gpu(N_Vector solver_state, SolverData *sd,
   int n_dep_var;
   int n_threads;
   int n_blocks;
-  int *var_type = md->var_type;
   ModelDataGPU *mGPU;
 
   double replacement_value = TINY;

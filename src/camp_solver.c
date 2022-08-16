@@ -417,7 +417,7 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
   sd->spec_names = (char **)malloc(sizeof(char *) * n_state_var);
 #endif
 
-#ifndef DEBUG_CAMP_SOLVER_NEW
+#ifdef DEBUG_CAMP_SOLVER_NEW
 
   printf("camp solver_run new  n_state_var %d, n_cells %d n_dep_var %d\n",
          sd->model_data.n_per_cell_state_var, n_cells, sd->model_data.n_per_cell_dep_var);
@@ -478,7 +478,7 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
   int n_cells;      // number of cells to solve simultaneously
   int *var_type;    // state variable types
 
-#ifndef DEBUG_solver_initialize
+#ifdef DEBUG_solver_initialize
 
   printf("camp solver_initialize start \n");
 
@@ -541,18 +541,12 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
   flag = CVodeSetMaxHnilWarns(sd->cvode_mem, MAX_TIMESTEP_WARNINGS);
   check_flag_fail(&flag, "CVodeSetMaxHnilWarns", 1);
 
-  printf("camp solver_initialize start \n");
-
   // Get the structure of the Jacobian matrix
   sd->J = get_jac_init(sd);
 
   sd->model_data.J_init = SUNMatClone(sd->J);
 
-  printf("camp solver_initialize SUNMatClone \n");
-
   SUNMatCopy(sd->J, sd->model_data.J_init);
-
-  printf("camp solver_initialize start \n");
 
   // Create a Jacobian matrix for correcting negative predicted concentrations
   // during solving
@@ -562,8 +556,6 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
   // Create a KLU SUNLinearSolver
   sd->ls = SUNKLU(sd->y, sd->J);
   check_flag_fail((void *)sd->ls, "SUNKLU", 0);
-
-  printf("camp solver_initialize start \n");
 
   // Attach the linear solver and Jacobian to the CVodeMem object
   flag = CVDlsSetLinearSolver(sd->cvode_mem, sd->ls, sd->J);
@@ -592,7 +584,7 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
   sd->counter_fail_solve_print=0;
 #endif
 
-#ifndef DEBUG_solver_initialize
+#ifdef DEBUG_solver_initialize
 
   printf("solver_initialize end\n");
 
@@ -1585,8 +1577,8 @@ int Jac(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_data,
 #endif
 
     // Output the Jacobian to the SUNDIALS J_rxn
-    jacobian_output(sd->jac, SM_DATA_S(md->J_rxn));
-    CAMP_DEBUG_JAC(md->J_rxn, "reaction Jacobian");
+    jacobian_output(sd->jac, SM_DATA_S(md->J_rxn)); //todo J_rxn and jacobian_output can be removed, it is only used here
+    CAMP_DEBUG_JAC(md->J_rxn, "reaction Jacobian"); //todo jac_map.solver_id is not needed, rxn_id and param_id is enough
 
 #ifdef CAMP_DEBUG_JAC_CPU
   check_isnand(sd->jac.production_partials,sd->jac.num_elem,"post jacobian_output");
@@ -2083,7 +2075,7 @@ SUNMatrix get_jac_init(SolverData *sd) {
   sunindextype n_jac_elem_solver; /* number of potentially non-zero Jacobian
                                      elements in the reaction matrix*/
 
-#ifndef DEBUG_get_jac_init
+#ifdef DEBUG_get_jac_init
 
   printf("get_jac_init start \n");
 
@@ -2394,7 +2386,7 @@ SUNMatrix get_jac_init(SolverData *sd) {
   jacobian_free(&solver_jac);
   free(deriv_ids);
 
-#ifndef DEBUG_get_jac_init
+#ifdef DEBUG_get_jac_init
 
   printf("get_jac_init end \n");
 

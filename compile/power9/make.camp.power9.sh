@@ -25,12 +25,14 @@ rm_old_dirs_jobs(){
 find $1 -type d -ctime +30 -exec rm -rf {} +
 }
 
-#TODO check cluster name is CTE_POWER, if not print an error that some functionalities may not work, more info in portability.md (multi-gpu needs to have same arch than cte-power)
-
 if [ ! $BSC_MACHINE == "power" ]; then
   echo "ERROR: Not CTE_POWER architecture, some functionalities may fail. More info in portability.md file"
   exit
 fi
+
+mkdir_if_not_exists "../../build/test_run"
+mkdir_if_not_exists "../../build/test_run/monarch"
+mkdir_if_not_exists "../../build/test_run/monarch/out"
 
 if [ $is_sbatch == "true" ]; then
 

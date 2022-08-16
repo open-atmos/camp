@@ -765,11 +765,11 @@ def all_timesteps():
     # conf.allocatedTasksPerNode = 320
     # conf.allocatedTasksPerNode = get_ntasksPerNode_sbatch() #todo
 
-    conf.cells = [10000]
+    conf.cells = [1000]
     #conf.cells = [100, 500, 1000, 5000, 10000]
     # conf.cells = [50000,100000,500000,1000000]
 
-    conf.timeSteps = 1
+    conf.timeSteps = 10
     #conf.timeSteps = 720
 
     conf.timeStepsDt = 2
@@ -780,8 +780,8 @@ def all_timesteps():
     # conf.caseBase="GPU Multi-cells"
     # conf.caseBase="GPU Block-cellsN"
     #conf.caseBase="GPU Block-cells1"
-    #conf.caseBase = "GPU BDF"
-    conf.caseBase = "GPU maxrregcount-64"
+    conf.caseBase = "GPU BDF"
+    #conf.caseBase = "GPU maxrregcount-64" #Fails sometimes (non converge)
     # conf.caseBase = "GPU maxrregcount-24" #Minimum
     # conf.caseBase = "GPU maxrregcount-62"
     # conf.caseBase = "GPU maxrregcount-68"
@@ -791,7 +791,7 @@ def all_timesteps():
     # conf.casesOptim.append("GPU maxrregcount-68")
     # conf.casesOptim.append("GPU maxrregcount-62")
     # conf.casesOptim.append("GPU maxrregcount-24")
-    #conf.casesOptim.append("GPU maxrregcount-64")
+    #conf.casesOptim.append("GPU maxrregcount-64") #Fails sometimes (non converge)
     # conf.casesOptim.append("GPU maxrregcount-127")
     #conf.casesOptim.append("GPU BDF")
     # conf.casesOptim.append("GPU Block-cellsNhalf")
@@ -800,7 +800,7 @@ def all_timesteps():
     # conf.casesOptim.append("GPU Multi-cells")
     # conf.casesOptim.append("GPU One-cell")
     #conf.casesOptim.append("CPU Multi-cells")
-    #conf.casesOptim.append("CPU One-cell")
+    conf.casesOptim.append("CPU One-cell")
     #conf.casesOptim.append("CPU EBI")
 
     #conf.plotYKey = "Speedup timeCVode"

@@ -516,7 +516,7 @@ __device__ void cudaDevicematScaleAddI(int nrows, double* dA, int* djA, int* diA
 {
   int row= threadIdx.x + blockDim.x*blockIdx.x;
 
-#ifdef DEV_REDUCE_JAC_INDICES
+#ifndef DEV_REDUCE_JAC_INDICES
 
     int nnz=diA[blockDim.x];
     int jstart = diA[threadIdx.x];
@@ -556,7 +556,7 @@ __device__ void cudaDevicediagprecond(int nrows, double* dA, int* djA, int* diA,
 {
   int row= threadIdx.x + blockDim.x*blockIdx.x;
 
-#ifdef DEV_REDUCE_JAC_INDICES
+#ifndef DEV_REDUCE_JAC_INDICES
   int nnz=diA[blockDim.x];
   int jstart=diA[threadIdx.x];
   int jend  =diA[threadIdx.x+1];
@@ -617,7 +617,7 @@ __device__ void cudaDeviceSpmvCSC_block(double* dx, double* db, int nrows, doubl
   dx[row]=0.0;
   __syncthreads(); //Multiple threads can save to the same row
 
-#ifdef DEV_REDUCE_JAC_INDICES
+#ifndef DEV_REDUCE_JAC_INDICES
 
   int nnz=diA[blockDim.x];
   for(int j=diA[threadIdx.x]; j<diA[threadIdx.x+1]; j++){

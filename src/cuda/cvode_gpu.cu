@@ -854,7 +854,7 @@ void constructor_cvode_gpu(CVodeMem cv_mem, SolverData *sd)
   sd->flagCells = (int *) malloc((md->n_cells) * sizeof(int));
   ModelDataGPU *mGPU = sd->mGPU;
 
-#ifndef DEBUG_constructor_cvode_gpu
+#ifdef DEBUG_constructor_cvode_gpu
   printf("DEBUG_constructor_cvode_gpu start \n");
 #endif
 
@@ -922,7 +922,7 @@ void constructor_cvode_gpu(CVodeMem cv_mem, SolverData *sd)
     mGPU->A = ((double *) SM_DATA_S(J))+offset_nnz;
     //Using int per default as sundindextype give wrong results in CPU, so translate from int64 to int
 
-#ifdef DEV_REDUCE_JAC_INDICES
+#ifndef DEV_REDUCE_JAC_INDICES
 
     if(sd->use_gpu_cvode==1){
 
@@ -1082,7 +1082,7 @@ void constructor_cvode_gpu(CVodeMem cv_mem, SolverData *sd)
   sd->n_linsolver_i = 0;
 #endif
 
-#ifndef DEBUG_constructor_cvode_gpu
+#ifdef DEBUG_constructor_cvode_gpu
   printf("DEBUG_constructor_cvode_gpu end \n");
 #endif
 
@@ -1095,7 +1095,7 @@ void cudaDeviceJacCopy(int n_row, int* Ap, double* Ax, double* Bx) {
   int tid = threadIdx.x + blockDim.x*blockIdx.x;
   __syncthreads();
 
-#ifdef DEV_REDUCE_JAC_INDICES
+#ifndef DEV_REDUCE_JAC_INDICES
 
   int nnz=Ap[blockDim.x];
   for(int j=Ap[threadIdx.x]; j<Ap[threadIdx.x+1]; j++){
@@ -1921,21 +1921,7 @@ __device__ void cudaDevicecalc_Jac(double *y,
     }
     __syncthreads();
 
-  jacobian_output_gpu(jacBlock, &(md->J_rxn[jacBlock.num_elem[0]*blockIdx.x]) );
-
-#ifdef DEBUG_cudaDevicecalc_Jac
-
-    if(threadIdx.x==0) {
-        printf("jac.num_elem %d\n",jacBlock.num_elem[0]);
-        printf("*md->n_mapped_values %d\n",*md->n_mapped_values);
-        for (int i=0; i<10; i++){//*md->n_mapped_values
-          printf("cudaDevicecalc_Jac0 J_rxn [%d]=%le\n",i,md->J_rxn[i]);
-        }
-      }
-
-#endif
-
-    __syncthreads();
+#ifndef DEV_REMOVE_J_RXN
 
   JacMap *jac_map = md->jac_map;
   int nnz = md->n_mapped_values[0];
@@ -1943,14 +1929,41 @@ __device__ void cudaDevicecalc_Jac(double *y,
   for (int i = 0; i < n_iters; i++) {
     int j = threadIdx.x + i*blockDim.x;
     md->J[jac_map[j].solver_id + nnz * blockIdx.x] =
-      md->J_rxn[jac_map[j].rxn_id + jacBlock.num_elem[0] * blockIdx.x];
+      jacBlock.production_partials[jac_map[j].rxn_id] - jacBlock.loss_partials[jac_map[j].rxn_id];
+    jacBlock.production_partials[jac_map[j].rxn_id] = 0.0;
+    jacBlock.loss_partials[jac_map[j].rxn_id] = 0.0;
   }
   int residual=nnz-(blockDim.x*n_iters);
   if(threadIdx.x < residual){
     int j = threadIdx.x + n_iters*blockDim.x;
+
     md->J[jac_map[j].solver_id + nnz * blockIdx.x] =
-      md->J_rxn[jac_map[j].rxn_id + jacBlock.num_elem[0] * blockIdx.x];
+      jacBlock.production_partials[jac_map[j].rxn_id] - jacBlock.loss_partials[jac_map[j].rxn_id];
+    jacBlock.production_partials[jac_map[j].rxn_id] = 0.0;
+    jacBlock.loss_partials[jac_map[j].rxn_id] = 0.0;
   }
+#else
+
+  jacobian_output_gpu(jacBlock, &(md->J_rxn[jacBlock.num_elem[0]*blockIdx.x]) );
+
+    __syncthreads();
+
+    JacMap *jac_map = md->jac_map;
+    int nnz = md->n_mapped_values[0];
+    int n_iters = nnz / blockDim.x;
+    for (int i = 0; i < n_iters; i++) {
+      int j = threadIdx.x + i*blockDim.x;
+      md->J[jac_map[j].solver_id + nnz * blockIdx.x] =
+        md->J_rxn[jac_map[j].rxn_id + jacBlock.num_elem[0] * blockIdx.x];
+    }
+    int residual=nnz-(blockDim.x*n_iters);
+    if(threadIdx.x < residual){
+      int j = threadIdx.x + n_iters*blockDim.x;
+      md->J[jac_map[j].solver_id + nnz * blockIdx.x] =
+        md->J_rxn[jac_map[j].rxn_id + jacBlock.num_elem[0] * blockIdx.x];
+    }
+
+#endif
 
     __syncthreads();
 
