@@ -282,7 +282,7 @@ void solver_init_int_double_gpu(SolverData *sd) {
   ModelData *md = &(sd->model_data);
   ModelDataGPU *mGPU;
 
-#ifndef DEBUG_solver_init_int_double_gpu
+#ifdef DEBUG_solver_init_int_double_gpu
   printf("solver_init_int_double_gpu start \n");
 #endif
 
@@ -320,7 +320,7 @@ void solver_init_int_double_gpu(SolverData *sd) {
 
   }
 
-#ifndef DEBUG_solver_init_int_double_gpu
+#ifdef DEBUG_solver_init_int_double_gpu
   printf("solver_init_int_double_gpu end \n");
 #endif
 
@@ -365,13 +365,8 @@ void init_jac_gpu(SolverData *sd, double *J_ptr){
            sd->jac.num_elem, offset_nnz_J_solver,mGPU->nnz_J_solver, mGPU->nrows_J_solver);
 #endif
 
-    //Transfer sunindextype to int
-
-#ifndef DEV_REDUCE_JAC_INDICES
-
     cudaMalloc((void **) &mGPU->jJ_solver, mGPU->nnz_J_solver/mGPU->n_cells * sizeof(int));
     cudaMalloc((void **) &mGPU->iJ_solver, (mGPU->nrows_J_solver/mGPU->n_cells + 1) * sizeof(int));
-
     int *jJ_solver = (int *) malloc(sizeof(int) * mGPU->nnz_J_solver/mGPU->n_cells);
     int *iJ_solver = (int *) malloc(sizeof(int) * (mGPU->nrows_J_solver/mGPU->n_cells) + 1);
     for (int i = 0; i < mGPU->nnz_J_solver/mGPU->n_cells; i++)
@@ -381,34 +376,14 @@ void init_jac_gpu(SolverData *sd, double *J_ptr){
       iJ_solver[i] = SM_INDEXPTRS_S(md->J_solver)[i];
       //printf("%lld \n",iJ_solver[i]);
     }
-
-  cudaMemcpy(mGPU->jJ_solver, jJ_solver, mGPU->nnz_J_solver/mGPU->n_cells * sizeof(int), cudaMemcpyHostToDevice);
-  cudaMemcpy(mGPU->iJ_solver, iJ_solver, (mGPU->nrows_J_solver/mGPU->n_cells + 1) * sizeof(int), cudaMemcpyHostToDevice);
-
-#else
-
-  cudaMalloc((void **) &mGPU->jJ_solver, mGPU->nnz_J_solver * sizeof(int));
-  cudaMalloc((void **) &mGPU->iJ_solver, (mGPU->nrows_J_solver + 1) * sizeof(int));
-
-  int *jJ_solver = (int *) malloc(sizeof(int) * mGPU->nnz_J_solver);
-  int *iJ_solver = (int *) malloc(sizeof(int) * (mGPU->nrows_J_solver) + 1);
-  for (int i = 0; i < mGPU->nnz_J_solver; i++)
-    jJ_solver[i] = SM_INDEXVALS_S(md->J_solver)[i];
-  for (int i = 0; i <= mGPU->nrows_J_solver; i++){
-    iJ_solver[i] = SM_INDEXPTRS_S(md->J_solver)[i];
-  }
-
-  cudaMemcpy(mGPU->jJ_solver, jJ_solver, mGPU->nnz_J_solver * sizeof(int), cudaMemcpyHostToDevice);
-  cudaMemcpy(mGPU->iJ_solver, iJ_solver, (mGPU->nrows_J_solver + 1) * sizeof(int), cudaMemcpyHostToDevice);
-
-#endif
+    cudaMemcpy(mGPU->jJ_solver, jJ_solver, mGPU->nnz_J_solver/mGPU->n_cells * sizeof(int), cudaMemcpyHostToDevice);
+    cudaMemcpy(mGPU->iJ_solver, iJ_solver, (mGPU->nrows_J_solver/mGPU->n_cells + 1) * sizeof(int), cudaMemcpyHostToDevice);
+    free(jJ_solver);
+    free(iJ_solver);
 
     HANDLE_ERROR(cudaMemcpy(mGPU->J, J_ptr+offset_nnz_J_solver, mGPU->jac_size, cudaMemcpyHostToDevice));
     double *J_solver = SM_DATA_S(md->J_solver)+offset_nnz_J_solver;
     cudaMemcpy(mGPU->J_solver, J_solver, mGPU->jac_size, cudaMemcpyHostToDevice);
-
-    free(jJ_solver);
-    free(iJ_solver);
 
     double *J_state = N_VGetArrayPointer(md->J_state)+offset_nrows;
     double *J_deriv = N_VGetArrayPointer(md->J_deriv)+offset_nrows;
@@ -419,15 +394,6 @@ void init_jac_gpu(SolverData *sd, double *J_ptr){
     HANDLE_ERROR(cudaMemcpy(mGPU->J_tmp, J_tmp, mGPU->deriv_size, cudaMemcpyHostToDevice));
     HANDLE_ERROR(cudaMemset(mGPU->J_tmp2, 0.0, mGPU->deriv_size));
     HANDLE_ERROR(cudaMemcpy(mGPU->jac_map, md->jac_map, sizeof(JacMap) * md->n_mapped_values, cudaMemcpyHostToDevice));
-
-#ifndef DEV_REMOVE_J_RXN
-#else
-
-    double *J_data = SM_DATA_S(md->J_rxn);
-    HANDLE_ERROR(cudaMalloc((void **) &mGPU->J_rxn,sizeof(double) * SM_NNZ_S(md->J_rxn)*mGPU->n_cells));
-    HANDLE_ERROR(cudaMemcpy(mGPU->J_rxn, J_data, sizeof(double) * SM_NNZ_S(md->J_rxn)*mGPU->n_cells,
-                          cudaMemcpyHostToDevice));
-#endif
 
     HANDLE_ERROR(cudaMemcpy(mGPU->n_mapped_values, &md->n_mapped_values, 1 * sizeof(int), cudaMemcpyHostToDevice));
 
@@ -1271,7 +1237,6 @@ void free_gpu_cu(SolverData *sd) {
     cudaFree(mGPU->aero_rep_float_data);
     cudaFree(mGPU->aero_rep_env_data);
     cudaFree(mGPU->n_mapped_values);
-    cudaFree(mGPU->J_rxn);
     cudaFree(mGPU->jac_map);
     cudaFree(mGPU->yout);
     cudaFree(mGPU->cv_Vabstol);

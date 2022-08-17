@@ -922,8 +922,6 @@ void constructor_cvode_gpu(CVodeMem cv_mem, SolverData *sd)
     mGPU->A = ((double *) SM_DATA_S(J))+offset_nnz;
     //Using int per default as sundindextype give wrong results in CPU, so translate from int64 to int
 
-#ifndef DEV_REDUCE_JAC_INDICES
-
     if(sd->use_gpu_cvode==1){
 
       mGPU->jA = (int *) malloc(sizeof(int) *mGPU->nnz/mGPU->n_cells);
@@ -953,22 +951,6 @@ void constructor_cvode_gpu(CVodeMem cv_mem, SolverData *sd)
       cudaMemcpy(mGPU->diA, mGPU->iA, (mGPU->nrows + 1) * sizeof(int), cudaMemcpyHostToDevice);
 
     }
-
-#else
-
-    mGPU->jA = (int *) malloc(sizeof(int) *mGPU->nnz);
-    mGPU->iA = (int *) malloc(sizeof(int) * (mGPU->nrows + 1));
-    for (int i = 0; i < mGPU->nnz; i++)
-      mGPU->jA[i] = SM_INDEXVALS_S(J)[i];
-    for (int i = 0; i <= mGPU->nrows; i++)
-      mGPU->iA[i] = SM_INDEXPTRS_S(J)[i];
-
-    cudaMalloc((void **) &mGPU->djA, mGPU->nnz * sizeof(int));
-    cudaMalloc((void **) &mGPU->diA, (mGPU->nrows + 1) * sizeof(int));
-    cudaMemcpy(mGPU->djA, mGPU->jA, mGPU->nnz * sizeof(int), cudaMemcpyHostToDevice);
-    cudaMemcpy(mGPU->diA, mGPU->iA, (mGPU->nrows + 1) * sizeof(int), cudaMemcpyHostToDevice);
-
-#endif
 
     mGPU->dA = mGPU->J;//set itsolver gpu pointer to jac pointer initialized at camp
     mGPU->dftemp = mGPU->deriv_data; //deriv is gpu pointer
@@ -1095,20 +1077,10 @@ void cudaDeviceJacCopy(int n_row, int* Ap, double* Ax, double* Bx) {
   int tid = threadIdx.x + blockDim.x*blockIdx.x;
   __syncthreads();
 
-#ifndef DEV_REDUCE_JAC_INDICES
-
   int nnz=Ap[blockDim.x];
   for(int j=Ap[threadIdx.x]; j<Ap[threadIdx.x+1]; j++){
     Bx[j+nnz*blockIdx.x]=Ax[j+nnz*blockIdx.x];
   }
-
-#else
-
-  for(int j=Ap[tid]; j<Ap[tid+1]; j++){
-    Bx[j]=Ax[j];
-  }
-
-#endif
 
   __syncthreads();
 
@@ -1921,8 +1893,6 @@ __device__ void cudaDevicecalc_Jac(double *y,
     }
     __syncthreads();
 
-#ifndef DEV_REMOVE_J_RXN
-
   JacMap *jac_map = md->jac_map;
   int nnz = md->n_mapped_values[0];
   int n_iters = nnz / blockDim.x;
@@ -1942,28 +1912,6 @@ __device__ void cudaDevicecalc_Jac(double *y,
     jacBlock.production_partials[jac_map[j].rxn_id] = 0.0;
     jacBlock.loss_partials[jac_map[j].rxn_id] = 0.0;
   }
-#else
-
-  jacobian_output_gpu(jacBlock, &(md->J_rxn[jacBlock.num_elem[0]*blockIdx.x]) );
-
-    __syncthreads();
-
-    JacMap *jac_map = md->jac_map;
-    int nnz = md->n_mapped_values[0];
-    int n_iters = nnz / blockDim.x;
-    for (int i = 0; i < n_iters; i++) {
-      int j = threadIdx.x + i*blockDim.x;
-      md->J[jac_map[j].solver_id + nnz * blockIdx.x] =
-        md->J_rxn[jac_map[j].rxn_id + jacBlock.num_elem[0] * blockIdx.x];
-    }
-    int residual=nnz-(blockDim.x*n_iters);
-    if(threadIdx.x < residual){
-      int j = threadIdx.x + n_iters*blockDim.x;
-      md->J[jac_map[j].solver_id + nnz * blockIdx.x] =
-        md->J_rxn[jac_map[j].rxn_id + jacBlock.num_elem[0] * blockIdx.x];
-    }
-
-#endif
 
     __syncthreads();
 

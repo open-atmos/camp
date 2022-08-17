@@ -57,7 +57,7 @@ cmake -D CMAKE_C_COMPILER=$(which mpicc) \
 -D ENABLE_NETCDF=OFF \
 -D ENABLE_BOOTCAMP=OFF \
 -D ENABLE_DATA=OFF \
--D use_maxrregcount64=ON \
+-D use_maxrregcount64=OFF \
 ..
 
 make -j 4 VERBOSE=1

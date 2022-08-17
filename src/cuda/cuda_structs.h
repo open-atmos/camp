@@ -268,7 +268,6 @@ typedef struct {
     double *aero_rep_env_data;
 
     int *n_mapped_values;
-    double *J_rxn;
     //JacMap jac_map;
     JacMap *jac_map;
     JacobianGPU jac;

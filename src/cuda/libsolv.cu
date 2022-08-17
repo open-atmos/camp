@@ -516,8 +516,6 @@ __device__ void cudaDevicematScaleAddI(int nrows, double* dA, int* djA, int* diA
 {
   int row= threadIdx.x + blockDim.x*blockIdx.x;
 
-#ifndef DEV_REDUCE_JAC_INDICES
-
     int nnz=diA[blockDim.x];
     int jstart = diA[threadIdx.x];
     int jend   = diA[threadIdx.x+1];
@@ -532,23 +530,6 @@ __device__ void cudaDevicematScaleAddI(int nrows, double* dA, int* djA, int* diA
       }
     }
 
-#else
-
-    int jstart = diA[row];
-    int jend   = diA[row+1];
-    for(int j=jstart; j<jend; j++)
-    {
-      if(djA[j]==row)
-      {
-        dA[j] = 1.0 + alpha*dA[j];
-      }
-      else{
-        dA[j] = alpha*dA[j];
-      }
-    }
-
-#endif
-
 }
 
 // Diagonal precond
@@ -556,7 +537,6 @@ __device__ void cudaDevicediagprecond(int nrows, double* dA, int* djA, int* diA,
 {
   int row= threadIdx.x + blockDim.x*blockIdx.x;
 
-#ifndef DEV_REDUCE_JAC_INDICES
   int nnz=diA[blockDim.x];
   int jstart=diA[threadIdx.x];
   int jend  =diA[threadIdx.x+1];
@@ -569,19 +549,6 @@ __device__ void cudaDevicediagprecond(int nrows, double* dA, int* djA, int* diA,
       }
     }
   }
-#else
-  int jstart=diA[row];
-  int jend  =diA[row+1];
-  for(int j=jstart;j<jend;j++){
-    if(djA[j]==row){
-      if(dA[j]!=0.0)
-        ddiag[row]= 1.0/dA[j];
-      else{
-        ddiag[row]= 1.0;
-      }
-    }
-  }
-#endif
 
 }
 
@@ -617,8 +584,6 @@ __device__ void cudaDeviceSpmvCSC_block(double* dx, double* db, int nrows, doubl
   dx[row]=0.0;
   __syncthreads(); //Multiple threads can save to the same row
 
-#ifndef DEV_REDUCE_JAC_INDICES
-
   int nnz=diA[blockDim.x];
   for(int j=diA[threadIdx.x]; j<diA[threadIdx.x+1]; j++){
     mult = db[row]*dA[j+nnz*blockIdx.x];
@@ -626,15 +591,6 @@ __device__ void cudaDeviceSpmvCSC_block(double* dx, double* db, int nrows, doubl
   //		dx[djA[j]]+= db[row]*dA[j];
   }
   __syncthreads();
-
-#else
-
-  for(int j=diA[row]; j<diA[row+1]; j++){
-    mult = db[row]*dA[j];
-    atomicAdd_block(&(dx[djA[j]]),mult);
-  }
-  __syncthreads();
-#endif
 }
 
 // y= a*x+ b*y
