@@ -59,9 +59,10 @@ int jacobian_initialize_gpu(SolverData *sd) {
 
     HANDLE_ERROR(cudaMalloc((void **) &(jacgpu->loss_partials), num_elem * sizeof(jacgpu->loss_partials)));
 
-    int threads_block = jac->num_elem;
-    int blocks = mGPU->n_cells;
-
+    cudaDeviceProp prop;
+    cudaGetDeviceProperties(&prop, iDevice);
+    int threads_block = prop.maxThreadsPerBlock;;
+    int blocks = (num_elem +threads_block - 1) / threads_block;
     init_jac_partials <<<blocks,threads_block>>>(jacgpu->production_partials,jacgpu->loss_partials);
 
     /*
@@ -116,36 +117,6 @@ int jacobian_initialize_gpu(SolverData *sd) {
 #endif
 
   return 1;
-}
-
-#ifdef __CUDA_ARCH__
-__host__ __device__
-#endif
-void jacobian_output_gpu(JacobianGPU jac, double *dest_array) {
-
-#ifdef __CUDA_ARCH__
-
-  __syncthreads();
-
-  int nnz = jac.num_elem[0];
-  int n_iters = nnz / blockDim.x;
-  for (int i = 0; i < n_iters; i++) {
-    int j = threadIdx.x + i*blockDim.x;
-    dest_array[j] = jac.production_partials[j] - jac.loss_partials[j];
-    jac.production_partials[j] = 0.0;
-    jac.loss_partials[j] = 0.0;
-  }
-  int residual=nnz-(blockDim.x*n_iters);
-  if(threadIdx.x < residual){
-    int j = threadIdx.x + n_iters*blockDim.x;
-    dest_array[j] = jac.production_partials[j] - jac.loss_partials[j];
-    jac.production_partials[j] = 0.0;
-    jac.loss_partials[j] = 0.0;
-  }
-
-__syncthreads();
-#endif
-
 }
 
 #ifdef __CUDA_ARCH__

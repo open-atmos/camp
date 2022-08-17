@@ -16,6 +16,5 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
 
 void solver_get_statistics_gpu(SolverData *sd);
 void solver_reset_statistics_gpu(SolverData *sd);
-void printSolverCounters_gpu(SolverData *sd);
 
 #endif

@@ -114,7 +114,6 @@ typedef struct {
 #ifdef CAMP_USE_SUNDIALS
   SUNMatrix J_init;    // sparse solver Jacobian matrix with used elements
                        // initialized to 1.0
-  SUNMatrix J_rxn;     // Matrix for Jacobian contributions from reactions
   SUNMatrix J_params;  // Matrix for Jacobian contributions from sub model
                        // parameter calculations
   SUNMatrix J_solver;  // Solver Jacobian

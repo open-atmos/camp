@@ -198,6 +198,7 @@ typedef struct {
     int cv_ncfn;
 
 #ifdef CAMP_DEBUG_GPU
+#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     int countercvStep;
     int counterDerivGPU;
     int counterBCGInternal;
@@ -206,6 +207,7 @@ typedef struct {
     double dtBCG;
     double dtcudaDeviceCVode;
     double dtPostBCG;
+#endif
 #endif
 }ModelDataVariable; //variables to pass between gpu and cpu (different data between cells)
 
@@ -363,6 +365,7 @@ typedef struct {
 
 //ODE stats
 #ifdef CAMP_DEBUG_GPU
+#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     int clock_khz;
     double *tguessNewton;
     double *dtNewtonIteration;
@@ -375,6 +378,7 @@ typedef struct {
     double *dtBCG;
     double *dtcudaDeviceCVode;
     double *dtPostBCG;
+#endif
 #endif
 
 } ModelDataGPU; //CPU and GPU structs

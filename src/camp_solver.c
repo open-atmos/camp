@@ -1072,18 +1072,32 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
     int i;
     if(sd->ncounters>0){
       i=0;
+#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
       counters[i++]=mGPU->mdvCPU.counterBCGInternal;
+#else
+      counters[i++]=0;
+#endif
       counters[i++]=bicg->counterBiConjGrad;
       counters[i++]=bicg->countersolveCVODEGPU;
+#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
       counters[i++]=mGPU->mdvCPU.countercvStep;
+#else
+      counters[i++]=0;
+#endif
+
     }
     if(sd->ntimers>0){
       i=0;
       times[i++]=bicg->timeBiConjGrad;
       times[i++]=bicg->timeBiConjGradMemcpy;
       times[i++]=sd->timeCVode;
+#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
       times[i++]=mGPU->mdvCPU.dtcudaDeviceCVode;
       times[i++]=mGPU->mdvCPU.dtPostBCG;
+#else
+      times[i++]=0.;
+      times[i++]=0.;
+#endif
       times[i++]=bicg->timesolveCVODEGPU;
       times[i++]=sd->timeNewtonIteration;
       times[i++]=sd->timeJac;
@@ -1154,17 +1168,23 @@ void solver_reset_statistics(void *solver_data, int *counters, double *times)
       mGPU = sd->mGPU;
 
       if(sd->ncounters>0){
+#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
         mGPU->mdvCPU.counterBCGInternal=0;
+#endif
         bicg->counterBiConjGrad=0;
         bicg->countersolveCVODEGPU=0;
+#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
         mGPU->mdvCPU.countercvStep=0;
+#endif
       }
       if(sd->ntimers>0){
         bicg->timeBiConjGrad=0;
         bicg->timeBiConjGradMemcpy=0;
         sd->timeCVode=0;
+#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
         mGPU->mdvCPU.dtcudaDeviceCVode=0;
         mGPU->mdvCPU.dtPostBCG=0;
+#endif
         bicg->timesolveCVODEGPU=0;
         sd->timeNewtonIteration=0;
         sd->timeJac=0;
@@ -1491,7 +1511,6 @@ int Jac(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_data,
 
   // Get pointers to the rxn and parameter Jacobian arrays
   double *J_param_data = SM_DATA_S(md->J_params);
-  double *J_rxn_data = SM_DATA_S(md->J_rxn);
 
   // !!!! Do not use tmp2 - it is the same as y !!!! //
 
@@ -1568,41 +1587,32 @@ int Jac(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_data,
 
 //#endif
 
-// rxn_calc_jac_specific_types(md, J_rxn_data, time_step);
-
 #ifdef CAMP_DEBUG_JAC_CPU
-  check_isnand(sd->jac.production_partials,sd->jac.num_elem,"pre jacobian_output");
-  check_isnand(sd->jac.loss_partials,sd->jac.num_elem,"pre jacobian_output");
-  check_isnand(SM_DATA_S(md->J_rxn),SM_NNZ_S(md->J_rxn),"pre jacobian_output J_rxn");
+  check_isnand(sd->jac.production_partials,sd->jac.num_elem,"post rxn_calc_jac");
+  check_isnand(sd->jac.loss_partials,sd->jac.num_elem,"post rxn_calc_jac");
 #endif
 
-    // Output the Jacobian to the SUNDIALS J_rxn
-    jacobian_output(sd->jac, SM_DATA_S(md->J_rxn)); //todo J_rxn and jacobian_output can be removed, it is only used here
-    CAMP_DEBUG_JAC(md->J_rxn, "reaction Jacobian"); //todo jac_map.solver_id is not needed, rxn_id and param_id is enough
-
-#ifdef CAMP_DEBUG_JAC_CPU
-  check_isnand(sd->jac.production_partials,sd->jac.num_elem,"post jacobian_output");
-  check_isnand(sd->jac.loss_partials,sd->jac.num_elem,"post jacobian_output");
-  check_isnand(SM_DATA_S(md->J_rxn),SM_NNZ_S(md->J_rxn),"post jacobian_output J_rxn");
-#endif
+    //todo jac_map.solver_id is not needed, rxn_id and param_id is enough
 
     // Set the solver Jacobian using the reaction and sub-model Jacobians
     JacMap *jac_map = md->jac_map;
     SM_DATA_S(md->J_params)[0] = 1.0;  // dummy value for non-sub model calcs
-    for (int i_map = 0; i_map < md->n_mapped_values; ++i_map)
+    for (int i_map = 0; i_map < md->n_mapped_values; ++i_map){
+      long double drf_dy = sd->jac.production_partials[jac_map[i_map].rxn_id];
+      long double drr_dy = sd->jac.loss_partials[jac_map[i_map].rxn_id];
+
       SM_DATA_S(J)
       [i_cell * md->n_per_cell_solver_jac_elem + jac_map[i_map].solver_id] +=
-          SM_DATA_S(md->J_rxn)[jac_map[i_map].rxn_id] *
+          (drf_dy - drr_dy) *
           SM_DATA_S(md->J_params)[jac_map[i_map].param_id];
+    }
     CAMP_DEBUG_JAC(J, "solver Jacobian");
   }
 
   //check_isnand(J_param_data,SM_NNZ_S(md->J_params),k++);
-  //check_isnand(J_rxn_data,SM_NNZ_S(md->J_rxn),k++);
   //check_isnand(SM_DATA_S(J),SM_NNZ_S(J),k++);
 
 #ifdef CAMP_DEBUG_JAC_CPU
-  check_isnand(SM_DATA_S(md->J_rxn),SM_NNZ_S(md->J_rxn),"post J_rxn");
   check_isnand(SM_DATA_S(md->J_params),SM_NNZ_S(md->J_params),"post J_params");
 #endif
 
@@ -2068,8 +2078,6 @@ int guess_helper(const realtype t_n, const realtype h_n, N_Vector y_n,
 SUNMatrix get_jac_init(SolverData *sd) {
   int n_rxn;                      /* number of reactions in the mechanism
                                    * (stored in first position in *rxn_data) */
-  sunindextype n_jac_elem_rxn;    /* number of potentially non-zero Jacobian
-                                     elements in the reaction matrix*/
   sunindextype n_jac_elem_param;  /* number of potentially non-zero Jacobian
                                      elements in the reaction matrix*/
   sunindextype n_jac_elem_solver; /* number of potentially non-zero Jacobian
@@ -2120,29 +2128,6 @@ SUNMatrix get_jac_init(SolverData *sd) {
   if (jacobian_build_matrix(&(sd->jac)) != 1) {
     printf("\n\nERROR building sparse full-state Jacobian\n\n");
     exit(EXIT_FAILURE);
-  }
-
-  // Determine the number of non-zero Jacobian elements per grid cell
-  n_jac_elem_rxn = sd->jac.num_elem;
-
-  //printf("n_jac_elem_rxn %d\n",n_jac_elem_rxn);
-
-  // Save number of reaction jacobian elements per grid cell
-  sd->model_data.n_per_cell_rxn_jac_elem = (int)n_jac_elem_rxn;
-
-  // Initialize the sparse matrix (sized for one grid cell)
-  sd->model_data.J_rxn =
-          SUNSparseMatrix(n_state_var, n_state_var, n_jac_elem_rxn, mattype);
-
-  // Set the column and row indices
-  for (unsigned int i_col = 0; i_col <= n_state_var; ++i_col) {
-    (SM_INDEXPTRS_S(sd->model_data.J_rxn))[i_col] =
-            sd->jac.col_ptrs[i_col];
-  }
-  for (unsigned int i_elem = 0; i_elem < n_jac_elem_rxn; ++i_elem) {
-    (SM_DATA_S(sd->model_data.J_rxn))[i_elem] = (realtype)0.0;
-    (SM_INDEXVALS_S(sd->model_data.J_rxn))[i_elem] =
-            sd->jac.row_ids[i_elem];
   }
 
   // Build the set of time derivative ids
@@ -2346,18 +2331,7 @@ SUNMatrix get_jac_init(SolverData *sd) {
   }
 
   CAMP_DEBUG_JAC_STRUCT(sd->model_data.J_params, "Param struct");
-  CAMP_DEBUG_JAC_STRUCT(sd->model_data.J_rxn, "Reaction struct");
   CAMP_DEBUG_JAC_STRUCT(M, "Solver struct");
-
-#ifdef CAMP_SOLVER_SPEC_NAMES
-#ifdef CAMP_USE_MPI
-  int rank;
-  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  if (rank == MPI_RANK_DEBUG) {
-    camp_debug_print_jac_rel(sd, sd->model_data.J_rxn, "RXN relations");
-  }
-#endif
-#endif
 
   if (i_mapped_value != n_mapped_values) {
     printf("[ERROR-340355266] Internal error");
@@ -2683,7 +2657,6 @@ void model_free(ModelData model_data) {
 #ifdef CAMP_USE_SUNDIALS
   // Destroy the initialized Jacbobian matrix
   SUNMatDestroy(model_data.J_init);
-  SUNMatDestroy(model_data.J_rxn);
   SUNMatDestroy(model_data.J_params);
   SUNMatDestroy(model_data.J_solver);
   N_VDestroy(model_data.J_state);

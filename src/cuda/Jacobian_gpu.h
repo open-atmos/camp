@@ -35,16 +35,6 @@ __host__ __device__
 #endif
 void jacobian_reset_gpu(JacobianGPU jac);
 
-/** \brief Output the JacobianGPU
- *
- * \param jac JacobianGPU object
- * \param dest_array Pointer to the array to save JacobianGPU data to
- */
-#ifdef __CUDA_ARCH__
-__host__ __device__
-#endif
-void jacobian_output_gpu(JacobianGPU jac, double *dest_array);
-
 /** \brief Add a contribution to the JacobianGPU
  *
  * \param jac JacobianGPU object

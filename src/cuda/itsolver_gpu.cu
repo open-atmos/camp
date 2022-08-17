@@ -442,13 +442,9 @@ void solveBcgCuda(
         ,int n_cells, double tolmax, double *ddiag //Init variables
         ,double *dr0, double *dr0h, double *dn0, double *dp0
         ,double *dt, double *ds, double *dAx2, double *dy, double *dz// Auxiliary vectors
-#ifdef CAMP_DEBUG_GPU
-        ,int *it_pointer, int last_blockN
-#endif
 )
 {
   int i = blockIdx.x * blockDim.x + threadIdx.x;
-  unsigned int tid = threadIdx.x;
   int active_threads = nrows;
 
   //if(tid==0)printf("blockDim.x %d\n",blockDim.x);
@@ -499,7 +495,7 @@ void solveBcgCuda(
     cudaDeviceyequalsx(dr0h,dr0,nrows);
 
 #ifdef CAMP_DEBUG_GPU
-    int it=*it_pointer;
+    int it=0;
 #endif
 
 #ifdef DEBUG_SOLVEBCGCUDA_DEEP
@@ -664,7 +660,7 @@ void solveBcgCuda(
 
       //if (tid==0) it++;
       it++;
-    } while(it<maxIt+*it_pointer && temp1>tolmax);//while(it<maxIt && temp1>tolmax);//while(0);
+    } while(it<maxIt && temp1>tolmax);//while(it<maxIt && temp1>tolmax);//while(0);
 
 #ifdef DEBUG_SOLVEBCGCUDA_DEEP
     if(tid==0)
@@ -674,20 +670,6 @@ void solveBcgCuda(
     //if(it>=maxIt-1)
     //  dvcheck_input_gpud(dr0,nrows,999);
     //dvcheck_input_gpud(dr0,nrows,k++);
-
-#ifdef CAMP_DEBUG_GPU
-
-    if(tid==0) {
-      if(last_blockN==1){
-        if(*it_pointer-it>*it_pointer)*it_pointer = it;
-    }
-    else{
-      *it_pointer = it;
-      }
-    //printf("it_pointer %d\n",*it_pointer);
-    }
-
-#endif
 
   }
 
@@ -764,10 +746,6 @@ void solveGPU_block_thr(int blocks, int threads_block, int n_shr_memory, int n_s
                                            //solveBcgCuda << < blocks, threads_block, threads_block * sizeof(double) >> >
                                            (dA, djA, diA, dx, dtempv, nrows, blocks, n_shr_empty, maxIt, n_cells,
                                                    tolmax, ddiag, dr0, dr0h, dn0, dp0, dt, ds, dAx2, dy, dz
-#ifdef CAMP_DEBUG_GPU
-                                                   ,&mGPU->mdvo->counterBCGInternal
-                                                   , last_blockN
-#endif
                                            );
 
 #ifdef IS_EXPORTBCG
