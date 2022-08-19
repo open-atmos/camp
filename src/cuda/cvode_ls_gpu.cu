@@ -246,31 +246,6 @@ int cvHandleFailure_gpu(CVodeMem cv_mem, int flag)
   return(flag);
 }
 
-static int cvEwtSetSV(CVodeMem cv_mem, N_Vector ycur, N_Vector weight)
-{
-  N_VAbs(ycur, cv_mem->cv_tempv);
-  N_VLinearSum(cv_mem->cv_reltol, cv_mem->cv_tempv, ONE,
-               cv_mem->cv_Vabstol, cv_mem->cv_tempv);
-  if (N_VMin(cv_mem->cv_tempv) <= ZERO) return(-1);
-  N_VInv(cv_mem->cv_tempv, weight);
-  return(0);
-}
-
-
-int cvEwtSet(N_Vector ycur, N_Vector weight, void *data)
-{
-  CVodeMem cv_mem;
-  int flag = 0;
-
-  /* data points to cv_mem here */
-
-  cv_mem = (CVodeMem) data;
-
-  flag = cvEwtSetSV(cv_mem, ycur, weight);
-
-  return(flag);
-}
-
 int CVode_gpu(void *cvode_mem, realtype tout, N_Vector yout,
           realtype *tret, int itask, SolverData *sd)
 {
@@ -566,6 +541,9 @@ int CVode_gpu(void *cvode_mem, realtype tout, N_Vector yout,
    */
 
 #ifdef CAMP_DEBUG_GPU
+  cudaSetDevice(sd->startDevice);
+  sd->mGPU = &(sd->mGPUs[sd->startDevice]);
+  mGPU = sd->mGPU;
   cudaEventRecord(bicg->startcvStep);
 #endif
 
@@ -741,11 +719,16 @@ int CVode_gpu(void *cvode_mem, realtype tout, N_Vector yout,
 
 #ifdef CAMP_DEBUG_GPU
 
+  for (int iDevice = sd->startDevice+1; iDevice < sd->endDevice; iDevice++) {
+    cudaSetDevice(iDevice);
+    cudaDeviceSynchronize();
+  }
+  cudaSetDevice(sd->startDevice);
   cudaEventRecord(bicg->stopcvStep);
-    cudaEventSynchronize(bicg->stopcvStep);
-    float mscvStep = 0.0;
-    cudaEventElapsedTime(&mscvStep, bicg->startcvStep, bicg->stopcvStep);
-    bicg->timecvStep+= mscvStep/1000;
+  cudaEventSynchronize(bicg->stopcvStep);
+  float mscvStep = 0.0;
+  cudaEventElapsedTime(&mscvStep, bicg->startcvStep, bicg->stopcvStep);
+  bicg->timecvStep+= mscvStep/1000;
 
 #endif
 
@@ -2517,7 +2500,7 @@ int cvNlsNewton_gpu(SolverData *sd, CVodeMem cv_mem, int nflag)
 #endif
 
     //retval = f(cv_mem->cv_tn, cv_mem->cv_y, cv_mem->cv_ftemp, cv_mem->cv_user_data);
-    retval = f_gpu(cv_mem->cv_tn, cv_mem->cv_y, cv_mem->cv_ftemp, cv_mem->cv_user_data);
+    retval = f_cuda(cv_mem->cv_tn, cv_mem->cv_y, cv_mem->cv_ftemp, cv_mem->cv_user_data);
 
 #ifdef CAMP_DEBUG_GPU
     cudaEventRecord(bicg->stopDerivNewton);
@@ -2639,15 +2622,6 @@ int linsolsetup_gpu(SolverData *sd, CVodeMem cv_mem,int convfail,N_Vector vtemp1
     cvdls_mem->nje++;
     cvdls_mem->nstlj = cv_mem->cv_nst;
     cv_mem->cv_jcur = SUNTRUE;
-    //retval = SUNMatZero(cvdls_mem->A);//we already set this to zero in our calc_jac
-
-    //clock_t start = clock();
-
-    //int Jac(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_data,
-    //        N_Vector dtempv1, N_Vector tmp2, N_Vector tmp3) {
-
-    //retval = cvdls_mem->jac(cv_mem->cv_tn, cv_mem->cv_y,cv_mem->cv_ftemp, cvdls_mem->A,
-    //                        cvdls_mem->J_data, vtemp1, vtemp2, vtemp3);
 
 #ifdef CAMP_DEBUG_GPU
     cudaEventRecord(bicg->startJac);
@@ -2673,7 +2647,7 @@ int linsolsetup_gpu(SolverData *sd, CVodeMem cv_mem,int convfail,N_Vector vtemp1
     retval = Jac(cv_mem->cv_tn, cv_mem->cv_y,cv_mem->cv_ftemp, cvdls_mem->A,cvdls_mem->J_data, vtemp1, vtemp2, vtemp3);
 
     //wrong
-    //retval = Jac_gpu(cv_mem->cv_tn, cv_mem->cv_y,cv_mem->cv_ftemp, cvdls_mem->A,cvdls_mem->J_data, vtemp1, vtemp2, vtemp3);
+    //retval = jac_cuda(cv_mem->cv_tn, cv_mem->cv_y,cv_mem->cv_ftemp, cvdls_mem->A,cvdls_mem->J_data, vtemp1, vtemp2, vtemp3);
 
 #ifdef DEBUG_linsolsetup_gpu
     check_isnand(mGPU->A,mGPU->nnz,"postjac");
@@ -2719,10 +2693,6 @@ int linsolsetup_gpu(SolverData *sd, CVodeMem cv_mem,int convfail,N_Vector vtemp1
     }
 
   }
-
-#ifdef CAMP_DEBUG_GPU
-  //clock_t start = clock();
-#endif
 
 #ifndef LINSOLSOLVEGPU_INCLUDE_CUDAMEMCPY
   cudaEventRecord(bicg->startBCGMemcpy);
@@ -2868,7 +2838,7 @@ int linsolsolve_gpu(SolverData *sd, CVodeMem cv_mem)
       sd->mGPU = &(sd->mGPUs[iDevice]);
       mGPU = sd->mGPU;
 
-      if (bicg->cells_method == MULTICELLS) {//Sync with CPU
+      if (mGPU->cells_method == MULTICELLS) {//Sync with CPU
         solveBCG(sd, mGPU->dA, mGPU->djA, mGPU->diA, mGPU->dx, mGPU->dtempv);
       } else {
         solveBCGBlocks(sd, mGPU->dA, mGPU->djA, mGPU->diA, mGPU->dx, mGPU->dtempv);
@@ -2877,11 +2847,18 @@ int linsolsolve_gpu(SolverData *sd, CVodeMem cv_mem)
     }
 
 #ifdef CAMP_DEBUG_GPU
+    for (int iDevice = sd->startDevice+1; iDevice < sd->endDevice; iDevice++) {
+      cudaSetDevice(iDevice);
+      cudaDeviceSynchronize();
+    }
+    cudaSetDevice(sd->startDevice);
     cudaEventRecord(bicg->stopBCG);
     cudaEventSynchronize(bicg->stopBCG);
     float msBiConjGrad = 0.0;
     cudaEventElapsedTime(&msBiConjGrad, bicg->startBCG, bicg->stopBCG);
     bicg->timeBiConjGrad+= msBiConjGrad/1000;
+
+    printf("bicg->timeBiConjGrad %lf\n",bicg->timeBiConjGrad);
 
     bicg->counterBiConjGrad++;
 #endif
@@ -3042,7 +3019,7 @@ int linsolsolve_gpu(SolverData *sd, CVodeMem cv_mem)
       sd->mGPU = &(sd->mGPUs[iDevice]);
       mGPU = sd->mGPU;
 
-      //check if its needed (i think only for f_CPU case, for f_gpu not)
+      //check if its needed (i think only for f_CPU case, for f_cuda not)
       cudaMemcpy(cv_y+offset_nrows, mGPU->dcv_y, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost);
       //retval = cv_mem->cv_f(cv_mem->cv_tn, cv_mem->cv_y,
       //                      cv_mem->cv_ftemp, cv_mem->cv_user_data);
@@ -3057,7 +3034,7 @@ int linsolsolve_gpu(SolverData *sd, CVodeMem cv_mem)
 #endif
 
     //retval = f(cv_mem->cv_tn, cv_mem->cv_y, cv_mem->cv_ftemp, cv_mem->cv_user_data);
-    retval = f_gpu(cv_mem->cv_tn, cv_mem->cv_y, cv_mem->cv_ftemp, cv_mem->cv_user_data);
+    retval = f_cuda(cv_mem->cv_tn, cv_mem->cv_y, cv_mem->cv_ftemp, cv_mem->cv_user_data);
 
 #ifdef CAMP_DEBUG_GPU
     cudaEventRecord(bicg->stopDerivSolve);

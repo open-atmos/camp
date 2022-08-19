@@ -25,7 +25,7 @@ extern "C" {
 #define BLOCKCELLS1 4
 #define BLOCKCELLSNHALF 5
 
-
+void read_options_bcg(ModelDataGPU *mGPU);
 void createLinearSolver(SolverData *sd);
 __device__
 void cudaDeviceswapCSC_CSR1ThreadBlock(int n_row, int n_col, int* Ap, int* Aj, double* Ax, int* BpGlobal, int* Bi, double* Bx);
@@ -33,6 +33,7 @@ __device__
 void cudaDeviceswapCSC_CSR(int n_row, int n_col, int* Ap, int* Aj, double* Ax, int* BpGlobal, int* Bi, double* Bx);
 __global__
 void cudaGlobalswapCSC_CSR(int n_row, int n_col, int* Ap, int* Aj, double* Ax, int* Cp, int* Ci, double* Cx);
+void swapCSC_CSR(int n_row, int n_col, int* Ap, int* Aj, double* Ax, int* Bp, int* Bi, double* Bx);
 void swapCSC_CSR_BCG(SolverData *sd);
 void solveBCG(SolverData *sd, double *dA, int *djA, int *diA, double *dx, double *dtempv);
 void solveBCGBlocks(SolverData *sd, double *dA, int *djA, int *diA, double *dx, double *dtempv);

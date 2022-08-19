@@ -31,7 +31,7 @@ compile_run(){
   cd ../../../camp_jobs/camp$id/compile/power9
 
   ./compile.camp.power9.sh "from_camp_jobs" $id
-  cd ../../build/test_run/monarch
+  cd ../../test/monarch
 
   #cd ../../build
   #make -j 4

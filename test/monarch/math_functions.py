@@ -56,24 +56,16 @@ def calculate_percentages_solveCVODEGPU(din):
     data["timef"] = []
     data["timeguess_helper"] = []
 
-    for i in range(len(din["timesolveCVODEGPU"])):
-        if (din["timesolveCVODEGPU"][i] != 0):
-            data["timeNewtonIteration"].append(din["timeNewtonIteration"][i] / din["timesolveCVODEGPU"][i] * percNum)
+    for i in range(len(din["timecvStep"])):
+        if (din["timecvStep"][i] != 0):
+            data["timeNewtonIteration"].append(din["timeNewtonIteration"][i] / din["timecvStep"][i] * percNum)
 
-            data["timeJac"].append(din["timeJac"][i] / din["timesolveCVODEGPU"][i] * percNum)
-            data["timelinsolsetup"].append(din["timelinsolsetup"][i] / din["timesolveCVODEGPU"][i] * percNum)
-            data["timecalc_Jac"].append(din["timecalc_Jac"][i] / din["timesolveCVODEGPU"][i] * percNum)
-            data["timeRXNJac"].append(din["timeRXNJac"][i] / din["timesolveCVODEGPU"][i] * percNum)
-            data["timef"].append(din["timef"][i] / din["timesolveCVODEGPU"][i] * percNum)
-            data["timeguess_helper"].append(din["timeguess_helper"][i] / din["timesolveCVODEGPU"][i] * percNum)
-
-            # data["timeNewtonIteration"]=din["timeNewtonIteration"][i]/data["timesolveCVODEGPU"][i]*percNum
-            # data["timeJac"][i]=din["timeJac"][i]/data["timesolveCVODEGPU"][i]*percNum
-            # data["timelinsolsetup"][i]=din["timelinsolsetup"][i]/data["timesolveCVODEGPU"][i]*percNum
-            # data["timecalc_Jac"][i]=din["timecalc_Jac"][i]/data["timesolveCVODEGPU"][i]*percNum
-            # data["timeRXNJac"][i]=din["timeRXNJac"][i]/data["timesolveCVODEGPU"][i]*percNum
-            # data["timef"][i]=din["timef"][i]/data["timesolveCVODEGPU"][i]*percNum
-            # data["timeguess_helper"][i]=din["timeguess_helper"][i]/data["timesolveCVODEGPU"][i]*percNum
+            data["timeJac"].append(din["timeJac"][i] / din["timecvStep"][i] * percNum)
+            data["timelinsolsetup"].append(din["timelinsolsetup"][i] / din["timecvStep"][i] * percNum)
+            data["timecalc_Jac"].append(din["timecalc_Jac"][i] / din["timecvStep"][i] * percNum)
+            data["timeRXNJac"].append(din["timeRXNJac"][i] / din["timecvStep"][i] * percNum)
+            data["timef"].append(din["timef"][i] / din["timecvStep"][i] * percNum)
+            data["timeguess_helper"].append(din["timeguess_helper"][i] / din["timecvStep"][i] * percNum)
 
     # print(data["timeNewtonIteration"])
 

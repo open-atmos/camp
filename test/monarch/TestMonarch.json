@@ -6,37 +6,35 @@
     "timeStepsDt": 3,
     "MAPETol": 0.0001,
     "commit": "",
-    "case": "GPU maxrregcount-64",
-    "nCells": 4000,
+    "case": "GPU BDF2",
+    "nCells": 1000,
     "caseGpuCpu": "GPU",
-    "caseMulticellsOnecell": "maxrregcount-64",
-    "mpiProcesses": 40,
+    "caseMulticellsOnecell": "BDF2",
+    "mpiProcesses": 1,
     "allocatedNodes": 1,
     "allocatedTasksPerNode": 160,
-    "nGPUs": 4,
+    "nGPUs": 2,
     "is_start_cases_attributes": true,
     "diffCellsL": [
         "Ideal"
     ],
-    "mpiProcessesCaseBase": 40,
+    "mpiProcessesCaseBase": 1,
     "mpiProcessesCaseOptimList": [
         40
     ],
     "nGPUsCaseOptimList": [
-        4
+        1
     ],
     "cells": [
-        160000
+        1000
     ],
-    "caseBase": "CPU One-cell",
-    "casesOptim": [
-        "GPU maxrregcount-64"
-    ],
+    "caseBase": "GPU BDF2",
+    "casesOptim": [],
     "plotYKey": "MAPE",
     "plotXKey": "",
     "is_export": false,
     "is_import": true,
-    "profileCuda": false,
+    "profileCuda": "",
     "is_start_auxiliary_attributes": true,
     "sbatch_job_id": "",
     "datacolumns": [],
@@ -45,8 +43,8 @@
     "legend": [],
     "results_file": "_results_all_cells.csv",
     "plotTitle": "",
-    "nCellsProcesses": 160000,
+    "nCellsProcesses": 1000,
     "itsolverConfigFile": "itsolver_options.txt",
     "campSolverConfigFile": "config_variables_c_solver.txt",
-    "nGPUsCaseBase": 1
+    "nGPUsCaseBase": 2
 }

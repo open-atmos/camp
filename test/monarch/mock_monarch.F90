@@ -744,7 +744,7 @@ contains
     open(FILE_SOLVER_STATS_CSV, file=file_name, status="replace", action="write")
 
     str_stats_names = "timestep,counterBCG,counterLS,countersolveCVODEGPU,countercvStep,timeLS,timeBiconjGradMemcpy,timeCVode,&
-            dtcudaDeviceCVode,dtPostBCG,timesolveCVODEGPU,timeNewtonIteration,timeJac,timelinsolsetup,timecalc_Jac,&
+            dtcudaDeviceCVode,dtPostBCG,timeNewtonIteration,timeJac,timelinsolsetup,timecalc_Jac,&
             timeRXNJac,timef,timeguess_helper,timecvStep"
 
     write(FILE_SOLVER_STATS_CSV, "(A)", advance="no") str_stats_names

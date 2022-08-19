@@ -70,7 +70,7 @@ extern "C"{
  *                   Jacobian elements
  * \return The rxn_data pointer advanced by the size of the reaction data
  */
-void * rxn_gpu_arrhenius_get_used_jac_elem(void *rxn_data, bool **jac_struct)
+void rxn_gpu_arrhenius_get_used_jac_elem(void *rxn_data, bool **jac_struct)
 {
   int n_rxn=1;
   int *int_data = (int*) rxn_data;
@@ -85,7 +85,6 @@ void * rxn_gpu_arrhenius_get_used_jac_elem(void *rxn_data, bool **jac_struct)
     }
   }
 
-  return;
 }
 
 /** \brief Update the time derivative and Jacbobian array indices
@@ -248,55 +247,5 @@ void rxn_gpu_arrhenius_calc_jac_contrib(ModelDataGPU *model_data, JacobianGPU ja
 
 }
 #endif
-
-/** \brief Retrieve Int data size
- *
- * \param rxn_data Pointer to the reaction data
- * \return The data size of int array
- */
-void * rxn_gpu_arrhenius_get_float_pointer(void *rxn_data)
-{
-  int n_rxn=1;
-  int *int_data = (int*) rxn_data;
-  double *float_data = (double*) &(int_data[INT_DATA_SIZE_]);
-
-
-  return (void*) float_data;
-}
-
-/** \brief Advance the reaction data pointer to the next reaction
- *
- * \param rxn_data Pointer to the reaction data
- * \return The rxn_data pointer advanced by the size of the reaction data
- */
-void * rxn_gpu_arrhenius_skip(void *rxn_data)
-{
-  int n_rxn=1;
-  int *int_data = (int*) rxn_data;
-  double *float_data = (double*) &(int_data[INT_DATA_SIZE_]);
-
-
-  return (void*) &(float_data[FLOAT_DATA_SIZE_]);
-}
-
-/** \brief Print the Arrhenius reaction parameters
- *
- * \param rxn_data Pointer to the reaction data
- * \return The rxn_data pointer advanced by the size of the reaction data
- */
-void * rxn_gpu_arrhenius_print(void *rxn_data)
-{
-  int n_rxn=1;
-  int *int_data = (int*) rxn_data;
-  double *float_data = (double*) &(int_data[INT_DATA_SIZE_]);
-
-  printf("\n\nArrhenius reaction\n");
-  for (int i=0; i<INT_DATA_SIZE_; i++)
-    printf("  int param %d = %d\n", i, int_data[i]);
-  for (int i=0; i<FLOAT_DATA_SIZE_; i++)
-    printf("  float param %d = %le\n", i, float_data[i]);
-
-  return (void*) &(float_data[FLOAT_DATA_SIZE_]);
-}
 
 }

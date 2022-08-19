@@ -197,6 +197,9 @@ void get_camp_config_variables(SolverData *sd){
     if(strstr(buff,"USE_GPU_CVODE=ON")!=NULL){
       sd->use_gpu_cvode=1;
     }
+    else if(strstr(buff,"USE_GPU_CVODE=2")!=NULL){
+      sd->use_gpu_cvode=2;
+    }
     else{
       sd->use_gpu_cvode=0;
     }

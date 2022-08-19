@@ -458,23 +458,15 @@ endif()
 if (CUDA_FOUND AND ENABLE_GPU)
   set(CAMP_CUDA_SRC
           src/cuda/camp_gpu_solver.cu
-          src/cuda/rxns_gpu/rxn_aqueous_equilibrium.cu
           src/cuda/rxns_gpu/rxn_arrhenius.cu
           src/cuda/rxns_gpu/rxn_CMAQ_H2O2.cu
           src/cuda/rxns_gpu/rxn_CMAQ_OH_HNO3.cu
-          src/cuda/rxns_gpu/rxn_condensed_phase_arrhenius.cu
           src/cuda/rxns_gpu/rxn_emission.cu
           src/cuda/rxns_gpu/rxn_first_order_loss.cu
-          src/cuda/rxns_gpu/rxn_HL_phase_transfer.cu
           src/cuda/rxns_gpu/rxn_photolysis.cu
-          src/cuda/rxns_gpu/rxn_SIMPOL_phase_transfer.cu
           src/cuda/rxns_gpu/rxn_troe.cu
           src/cuda/rxns_gpu/rxn_wet_deposition.cu
-          src/cuda/aeros/aero_phase_solver.cu
-          src/cuda/aeros/aero_rep_solver.cu
-          src/cuda/aeros/sub_model_solver.cu
-          src/cuda/aeros/aero_reps/aero_rep_modal_binned_mass.cu
-          src/cuda/aeros/aero_reps/aero_rep_single_particle.cu
+          src/cuda/cvode_gpu_d2.cu
           src/cuda/cvode_gpu.cu
           src/cuda/cvode_ls_gpu.cu
           src/cuda/libsolv.cu

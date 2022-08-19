@@ -18,6 +18,7 @@
 #include "sub_model_solver.h"
 #ifdef CAMP_USE_GPU
 #include "cuda/cvode_gpu.h"
+#include "cuda/cvode_gpu_d2.h"
 #include "cuda/cvode_ls_gpu.h"
 #endif
 #ifdef CAMP_USE_GSL
@@ -370,9 +371,11 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
 #ifdef CAMP_USE_GPU
   get_camp_config_variables(sd);
   if(sd->use_cpu==0){
-    solver_new_gpu_cu(sd, n_dep_var, n_state_var, n_rxn,
+    if(sd->use_gpu_cvode !=2){
+      solver_new_gpu_cu(sd, n_dep_var, n_state_var, n_rxn,
                       n_rxn_int_param, n_rxn_float_param, n_rxn_env_param,
                       n_cells);
+    }
   }
 #endif
 
@@ -572,8 +575,12 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
 // Set gpu rxn values
 #ifdef CAMP_USE_GPU
   if(sd->use_cpu==0){
-    solver_init_int_double_gpu(sd);
-    constructor_cvode_gpu(sd->cvode_mem, sd);
+    if(sd->use_gpu_cvode != 2) {
+      solver_init_int_double_gpu(sd);
+      constructor_cvode_gpu(sd->cvode_mem, sd);
+    }else{
+      constructor_cvode_cuda_d2(sd->cvode_mem, sd);
+    }
   }
 #endif
 
@@ -743,7 +750,9 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
 // Update data for new environmental state on GPU
 #ifdef CAMP_USE_GPU
   if(sd->use_cpu==0){
-    rxn_update_env_state_gpu(sd);
+    if(sd->use_gpu_cvode !=2) {  // todo join this with cudacvode
+      rxn_update_env_state_gpu(sd);
+    }
   }
 #endif
 
@@ -814,9 +823,13 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
       flag = CVode(sd->cvode_mem, (realtype)t_final, sd->y, &t_rt, CV_NORMAL);
     }else{
       if(sd->use_gpu_cvode==1){
-      flag = cudaCVode(sd->cvode_mem, (realtype)t_final, sd->y,
+        flag = cudaCVode(sd->cvode_mem, (realtype)t_final, sd->y,
           &t_rt, CV_NORMAL, sd);
-      }else{
+      }else if(sd->use_gpu_cvode==2){
+        flag = cudaCVode_d2(sd->cvode_mem, (realtype)t_final, sd->y,
+                         &t_rt, CV_NORMAL, sd);
+      }
+      else{
       flag = CVode_gpu(sd->cvode_mem, (realtype)t_final, sd->y,
              &t_rt, CV_NORMAL, sd);
       }
@@ -1066,7 +1079,11 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
     sd->mGPU = &(sd->mGPUs[sd->startDevice]);
     mGPU = sd->mGPU;
 
+  if(sd->use_gpu_cvode!=2) {
     solver_get_statistics_gpu(sd);
+  }else{
+    solver_get_statistics_cuda_d2(sd);
+  }
     mGPU = sd->mGPU;
 
     int i;
@@ -1098,7 +1115,7 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
       times[i++]=0.;
       times[i++]=0.;
 #endif
-      times[i++]=bicg->timesolveCVODEGPU;
+      times[i++]=0.;
       times[i++]=sd->timeNewtonIteration;
       times[i++]=sd->timeJac;
       times[i++]=sd->timelinsolsetup;
@@ -1116,7 +1133,12 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
              "and counters profilign variables with ncounters || ntimers < 1");
     }
 
-    solver_reset_statistics_gpu(sd);
+    if(sd->use_gpu_cvode !=2) {
+      solver_reset_statistics_gpu(sd);
+    }else{
+      solver_reset_statistics_cuda_d2(sd);
+    }
+
 
     //}
   }
@@ -1185,7 +1207,6 @@ void solver_reset_statistics(void *solver_data, int *counters, double *times)
         mGPU->mdvCPU.dtcudaDeviceCVode=0;
         mGPU->mdvCPU.dtPostBCG=0;
 #endif
-        bicg->timesolveCVODEGPU=0;
         sd->timeNewtonIteration=0;
         sd->timeJac=0;
         sd->timelinsolsetup=0;
@@ -1267,10 +1288,15 @@ int camp_solver_update_model_state(N_Vector solver_state, SolverData *sd,
 
 #ifdef CAMP_USE_GPU
 
-  if(sd->use_cpu==0)
-    //Update gpu from cpu changes
-    camp_solver_update_model_state_gpu(solver_state, sd, threshhold, replacement_value);
-
+  if(sd->use_cpu==0){
+    if(sd->use_gpu_cvode != 2) {
+      camp_solver_update_model_state_gpu(solver_state, sd, threshhold,
+                                         replacement_value);
+    }else{
+      camp_solver_update_model_state_cuda_d2(solver_state, sd, threshhold,
+                                         replacement_value);
+    }
+  }
 #endif
 
   return CAMP_SOLVER_SUCCESS;
@@ -1592,8 +1618,6 @@ int Jac(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_data,
   check_isnand(sd->jac.loss_partials,sd->jac.num_elem,"post rxn_calc_jac");
 #endif
 
-    //todo jac_map.solver_id is not needed, rxn_id and param_id is enough
-
     // Set the solver Jacobian using the reaction and sub-model Jacobians
     JacMap *jac_map = md->jac_map;
     SM_DATA_S(md->J_params)[0] = 1.0;  // dummy value for non-sub model calcs
@@ -1623,8 +1647,14 @@ int Jac(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_data,
   N_VScale(1.0, deriv, md->J_deriv);
 
 #ifdef CAMP_USE_GPU
-  if(sd->use_cpu==0)
-    set_jac_data_gpu(sd, SM_DATA_S(J));
+
+  if(sd->use_cpu==0){
+    if(sd->use_gpu_cvode != 2) {
+      set_jac_data_gpu(sd, SM_DATA_S(J));
+    }else{
+      set_jac_data_cuda_d2(sd, SM_DATA_S(J));
+    }
+  }
 #endif
 
 #ifdef CAMP_DEBUG
@@ -1663,7 +1693,7 @@ int Jac(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_data,
 }
 
 #ifdef CAMP_USE_GPU
-int f_gpu(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
+int f_cuda(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
   SolverData *sd = (SolverData *)solver_data;
   ModelData *md = &(sd->model_data);
   realtype time_step;
@@ -1699,9 +1729,7 @@ int f_gpu(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
     //return flag;
 
 #ifdef AEROS_CPU
-
     //NOT WORKING
-
     // Get the grid cell dimensions
     int n_cells = md->n_cells;
     int n_state_var = md->n_per_cell_state_var;
@@ -1733,53 +1761,19 @@ int f_gpu(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
       rxn_calc_deriv_aeros(md, sd->time_deriv, (double)time_step);
 
     }
-
 #endif
-
 #ifdef DEBUG_solveDerivative_J_DERIV_IN_CPU
-
     N_VLinearSum(1.0, y, -1.0, md->J_state, md->J_tmp);
     SUNMatMatvec(md->J_solver, md->J_tmp, md->J_tmp2);
     N_VLinearSum(1.0, md->J_deriv, 1.0, md->J_tmp2, md->J_tmp);
-
 #endif
-
     flag = rxn_calc_deriv_gpu(sd, y, deriv, (double)time_step);
-
     }
-
-#ifdef CHECK_F_GPU_WITH_CPU
-
-  int flag_f;
-  if(sd->counterDerivGPU<=10){
-    printf("CHECK_F_GPU_WITH_CPU %d\n",sd->counterDerivGPU);
-    //flag = f(time_step, y, md->J_tmp2, solver_data);
-    flag_f = f(time_step, y, md->J_tmp2, solver_data);
-    flag = camp_solver_check_model_state_gpu(y, sd, -SMALL, TINY);
-    //print_derivative_in_out(sd, y, deriv);
-    //print_derivative_in_out(sd, md->J_tmp2, deriv);
-    int flag_c=compare_doubles(N_VGetArrayPointer(md->J_tmp2),
-            N_VGetArrayPointer(deriv),NV_LENGTH_S(deriv),"CHECK_F_GPU_WITH_CPU");
-    printf("f_gpu flag %d flag_f %d\n",flag,flag_f);
-    if(flag_c==0){
-      printf("false compare_doubles at counterDerivGPU %d",sd->counterDerivGPU);
-      //exit(0);
-    }
-  }
-
-#endif
-
-
 #ifdef CAMP_DEBUG_GPU
-
   //if(sd->counterDerivCPU<=0) print_derivative(deriv);
-
   sd->counterDerivGPU++;
   // printf("%d",sd->counterDerivCPU);
-
-
 #endif
-
   // Return 0 if success
   return flag;
 
@@ -2351,7 +2345,9 @@ SUNMatrix get_jac_init(SolverData *sd) {
 
 #ifdef CAMP_USE_GPU
   if(sd->use_cpu==0){
-    init_jac_gpu(sd, SM_DATA_S(M));
+    if(sd->use_gpu_cvode != 2) {
+      init_jac_gpu(sd, SM_DATA_S(M));
+    }
   }
 #endif
 
@@ -2598,8 +2594,11 @@ void solver_free(void *solver_data) {
 #ifdef CAMP_USE_GPU
 
   if(sd->use_cpu==0){
-    //printf("free_gpu_cu commented\n");
-    free_gpu_cu(sd);
+    if(sd->use_gpu_cvode != 2) {
+      free_gpu_cu(sd);
+    }else{
+      free_gpu_cu_d2(sd);
+    }
   }
 
 #endif

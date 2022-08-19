@@ -45,7 +45,7 @@ void rxn_gpu_aqueous_equilibrium_calc_jac_contrib(ModelDataGPU *model_data, Jaco
 #endif
 
 // arrhenius
-void * rxn_gpu_arrhenius_get_used_jac_elem(
+void rxn_gpu_arrhenius_get_used_jac_elem(
           void *rxn_data, bool **jac_struct);
 void * rxn_gpu_arrhenius_update_ids(
           ModelDataGPU *model_data, int *deriv_ids, int **jac_ids, void *rxn_data);
@@ -54,10 +54,6 @@ __device__ void rxn_gpu_arrhenius_update_env_state(double *rxn_env_data,
 void * rxn_gpu_arrhenius_pre_calc(
           ModelDataGPU *model_data, void *rxn_data);
 void * rxn_gpu_arrhenius_get_float_pointer(void *rxn_data);
-void * rxn_gpu_arrhenius_skip(
-          void *rxn_data);
-void * rxn_gpu_arrhenius_print(
-          void *rxn_data);
 #ifdef CAMP_USE_SUNDIALS
 void rxn_cpu_arrhenius_calc_deriv_contrib(double *rxn_env_data, double *state,
           double *deriv, void *rxn_data, double * rxn_double_gpu, double time_step, int n_rxn);

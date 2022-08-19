@@ -29,6 +29,7 @@
 #include <cuda_runtime_api.h>
 
 #include "cuda/cuda_structs.h"
+#include "cuda/cuda_structs_d2.h"
 #endif
 
 #include <cvode/cvode.h>        /* Protoypes for CVODE fcts., consts.  */
@@ -224,9 +225,6 @@ typedef struct {
   int counterArrhenius;
 #endif
 
-  //#ifdef CUDA_FOUND
-  // GPU data
-// Gpu definitions
 #ifdef CAMP_USE_GPU
 
 #ifdef CAMP_DEBUG_GPU
@@ -317,15 +315,12 @@ typedef struct {
   void *cus;
   ModelDataGPU *mGPUs;
   ModelDataGPU *mGPU;
+  ModelDataGPU_d2 *mGPUs_d2;
+  ModelDataGPU_d2 *mGPU_d2;
   int *flagCells;
   int endDevice;
   int startDevice;
   int nDevices;
-#ifdef CHECK_GPU_LINSOLVE
-  double max_error_linsolver;
-  int max_error_linsolver_i;
-  int n_linsolver_i;
-#endif
 #endif
   void *cvode_mem;       // CVodeMem object
   ModelData model_data;  // Model data (used during initialization and solving)

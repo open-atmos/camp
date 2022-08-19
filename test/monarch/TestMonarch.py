@@ -51,7 +51,7 @@ class TestMonarch:
         self.plotXKey = ""
         self.is_export = False
         self.is_import = False
-        self.profileCuda = False
+        self.profileCuda = ""
         # Auxiliary
         self.is_start_auxiliary_attributes = True
         self.sbatch_job_id = ""
@@ -133,6 +133,8 @@ def write_camp_config_file(conf):
                 raise
             else:
                 file1.write("USE_GPU_CVODE=ON\n")
+        elif conf.caseMulticellsOnecell == "BDF2":
+            file1.write("USE_GPU_CVODE=2\n")
         else:
             file1.write("USE_GPU_CVODE=OFF\n")
 
@@ -342,16 +344,23 @@ def run(conf):
         exec_str += "mpirun -v -np " + str(conf.mpiProcesses) + " --bind-to core "
         # exec_str+="srun -n "+str(conf.mpiProcesses)+" "
 
-    if conf.profileCuda and conf.caseGpuCpu == "GPU":
-        pathNvprof = "nvprof/"
+    if conf.profileCuda == "nvprof" and conf.caseGpuCpu == "GPU":
+        pathNvprof = "../../../nvprof/"
         Path(pathNvprof).mkdir(parents=True, exist_ok=True)
-        pathNvprof = "nvprof/" + conf.chemFile + \
-                     conf.caseMulticellsOnecell + str(conf.nCells) + ".nvprof "
-        # now = datetime.datetime.now()
-        # basename = now.strftime("%d-%m-%Y-%H.%M.%S") + conf.sbatch_job_id
+        pathNvprof = pathNvprof+ conf.caseMulticellsOnecell \
+                     + str(conf.nCells) + "Cells" +  ".nvprof "
         exec_str += "nvprof --analysis-metrics -f -o " + pathNvprof
         # --print-gpu-summary
-        print("Saving Nvprof file in ", os.path.abspath(os.getcwd()) \
+        print("Saving profiling file in ", os.path.abspath(os.getcwd()) \
+              + "/" + pathNvprof)
+    elif conf.profileCuda == "nsight" and conf.caseGpuCpu == "GPU":
+        pathNvprof = "../../../nvprof/nsight"
+        Path(pathNvprof).mkdir(parents=True, exist_ok=True)
+        pathNvprof = pathNvprof + conf.caseMulticellsOnecell \
+                     + str(conf.nCells) + "Cells "
+        exec_str += "/apps/NVIDIA-HPC-SDK/21.3/Linux_ppc64le/21.3/profilers/Nsight_Compute/ncu --set full -f -o " \
+                    + pathNvprof
+        print("Saving nsight file in ", os.path.abspath(os.getcwd()) \
               + "/" + pathNvprof)
 
     path_exec = "../../build/mock_monarch"
@@ -725,8 +734,9 @@ def all_timesteps():
     conf.diffCellsL.append("Realistic")
     #conf.diffCellsL.append("Ideal")
 
-    conf.profileCuda = False
-    # conf.profileCuda = True
+    #conf.profileCuda = ""
+    conf.profileCuda = "nvprof"
+    #conf.profileCuda = "nsight"
 
     conf.is_export = get_is_sbatch()
     #conf.is_export = True
@@ -739,7 +749,7 @@ def all_timesteps():
     conf.commit = ""
 
     conf.nGPUsCaseBase = 1
-    #conf.nGPUsCaseBase = 4
+    #conf.nGPUsCaseBase = 2
 
     conf.nGPUsCaseOptimList = [1]
     #conf.nGPUsCaseOptimList = [4]
@@ -749,7 +759,7 @@ def all_timesteps():
     # conf.mpi = "no"
 
     conf.mpiProcessesCaseBase = 1
-    #conf.mpiProcessesCaseBase = 20
+    #conf.mpiProcessesCaseBase = 40
 
     #conf.mpiProcessesCaseOptimList.append(1)
     conf.mpiProcessesCaseOptimList.append(40)
@@ -765,11 +775,11 @@ def all_timesteps():
     # conf.allocatedTasksPerNode = 320
     # conf.allocatedTasksPerNode = get_ntasksPerNode_sbatch() #todo
 
-    conf.cells = [100000]
+    conf.cells = [1000]
     #conf.cells = [100, 500, 1000, 5000, 10000]
     # conf.cells = [50000,100000,500000,1000000]
 
-    conf.timeSteps = 10
+    conf.timeSteps = 1
     #conf.timeSteps = 720
 
     conf.timeStepsDt = 2
@@ -779,8 +789,9 @@ def all_timesteps():
     #conf.caseBase = "CPU Multi-cells"
     # conf.caseBase="GPU Multi-cells"
     # conf.caseBase="GPU Block-cellsN"
-    #conf.caseBase="GPU Block-cells1"
-    conf.caseBase = "GPU BDF"
+   # conf.caseBase="GPU Block-cells1"
+    #conf.caseBase = "GPU BDF"
+    conf.caseBase = "GPU BDF2"
     #conf.caseBase = "GPU maxrregcount-64" #Fails sometimes (non converge)
     # conf.caseBase = "GPU maxrregcount-24" #Minimum
     # conf.caseBase = "GPU maxrregcount-62"
@@ -814,7 +825,7 @@ def all_timesteps():
     #conf.plotYKey = "Speedup timecvStep"
     # conf.plotYKey = "Speedup timecvStep normalized by countercvStep"
     # conf.plotYKey = "Speedup countercvStep"
-    #conf.plotYKey = "Speedup device timecvStep"
+    #conf.plotYKey = "Speedup device timecvStep" //pending fix bug https://earth.bsc.es/gitlab/ac/camp/-/issues/124
     # conf.plotYKey = "Percentage data transfers CPU-GPU [%]"
     conf.plotYKey = "MAPE"
     # conf.plotYKey ="SMAPE"

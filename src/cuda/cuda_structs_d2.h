@@ -1,66 +1,11 @@
-/* Copyright (C) 2021 Barcelona Supercomputing Center and University of
+/*
+ * Copyright (C) 2022 Barcelona Supercomputing Center and University of
  * Illinois at Urbana-Champaign
  * SPDX-License-Identifier: MIT
  */
 
-#ifndef CAMPGPU_CUDA_STRUCTS_H
-#define CAMPGPU_CUDA_STRUCTS_H
-
-typedef struct
-{
-  //Init variables ("public")
-  int cells_method;
-
-  double* A;
-  int*    jA;
-  int*    iA;
-  double* aux;
-
-#ifdef CAMP_DEBUG_GPU
-  int counterNewtonIt;
-  int counterLinSolSetup;
-  int counterLinSolSolve;
-  int countercvStep;
-  int counterDerivNewton;
-  int counterBiConjGrad;
-  int counterDerivSolve;
-  int countersolveCVODEGPU;
-
-  double timeNewtonIt;
-  double timeLinSolSetup;
-  double timeLinSolSolve;
-  double timecvStep;
-  double timeDerivNewton;
-  double timeBiConjGrad;
-  double timeBiConjGradMemcpy;
-  double timeDerivSolve;
-  double timeJac;
-
-  cudaEvent_t startDerivNewton;
-  cudaEvent_t startDerivSolve;
-  cudaEvent_t startLinSolSetup;
-  cudaEvent_t startLinSolSolve;
-  cudaEvent_t startNewtonIt;
-  cudaEvent_t startcvStep;
-  cudaEvent_t startBCG;
-  cudaEvent_t startBCGMemcpy;
-  cudaEvent_t startJac;
-
-  cudaEvent_t stopDerivNewton;
-  cudaEvent_t stopDerivSolve;
-  cudaEvent_t stopLinSolSetup;
-  cudaEvent_t stopLinSolSolve;
-  cudaEvent_t stopNewtonIt;
-  cudaEvent_t stopcvStep;
-  cudaEvent_t stopBCGMemcpy;
-  cudaEvent_t stopBCG;
-  cudaEvent_t stopJac;
-
-#endif
-
-} itsolver;
-
-#endif //CAMPGPU_CUDA_STRUCTS_H
+#ifndef CAMP_CUDA_STRUCTS_D2_H
+#define CAMP_CUDA_STRUCTS_D2_H
 
 typedef struct {
     unsigned int num_spec;          // Number of species in the derivative
@@ -71,7 +16,7 @@ typedef struct {
     double last_max_loss_precision;  // Maximum loss of precision at last output
 #endif
 
-} TimeDerivativeGPU;
+} TimeDerivativeGPU_d2;
 
 #ifndef DEF_JAC_MAP
 #define DEF_JAC_MAP
@@ -95,7 +40,7 @@ typedef struct {
     double *production_partials;    // Data array for productions rate partial derivs
     double *loss_partials;  // Data array for loss rate partial derivs
     //JacobianColumnElements *elements;  // Jacobian elements flagged for inclusion
-} JacobianGPU;
+} JacobianGPU_d2;
 
 typedef struct {
 
@@ -195,165 +140,162 @@ typedef struct {
     double dtPostBCG;
 #endif
 #endif
-}ModelDataVariable; //variables to pass between gpu and cpu (different data between cells)
+}ModelDataVariable_d2; //variables to pass between gpu and cpu (different data between cells)
 
 typedef struct {
 
-    //itsolver
-    int cells_method;
+  //cudacvNewtonIteration
+  double* cv_acor;
+  double* dzn;
+  double* dewt;
 
-    //CPU
-    double* A;
-    int*    jA;
-    int*    iA;
-    double* aux;
+  //LS (BCG)
+  double *dA;
+  int *djA;
+  int *diA;
+  double *dx;
+  double* dtempv;
+  int nrows;
+  int n_shr_empty;
+  int maxIt;
+  int n_cells;
+  double tolmax;
+  double *ddiag;
+  double *dr0;
+  double *dr0h;
+  double *dn0;
+  double *dp0;
+  double *dt;
+  double *ds;
+  double *dAx2;
+  double *dy;
+  double *dz;
 
-    //Allocated from CPU (used during CPU / need some cudamemcpy)
-    int threads,blocks;
-    int *map_state_deriv;
-    double *deriv_data;
-    double *J;
-    double *J_solver;
-    int *jJ_solver;
-    int *iJ_solver;
-    double *J_state;
-    double *J_deriv;
-    double *J_tmp;
-    double *J_tmp2;
-    int *indexvals;
-    int *indexptrs;
-    int *rxn_int;
-    double *rxn_double;
-    double *state;
-    double *env;
-    double *rxn_env_data;
-    int *rxn_env_data_idx;
+  //itsolver
+  double* A;
+  int*    jA;
+  int*    iA;
+  double* aux;
 
-    double *production_rates;
-    double *loss_rates;
+//Guess_helper
+double* dftemp;
+double* dcv_y;
+//double* dtempv1;
+double* dtempv2;
+
+//CVODE
+double *cv_l;
+double *cv_tau;
+double *cv_tq;//NUM_TESTS+1
+double* dsavedJ;
+
+//from CAMP
+  int threads,blocks;
+  int nnz;
+  int *map_state_deriv;
+  double *deriv_data;
+  double *J;
+  double *J_solver;
+  int *jJ_solver;
+  int *iJ_solver;
+  double *J_state;
+  double *J_deriv;
+  double *J_tmp;
+  double *J_tmp2;
+  int *indexvals;
+  int *indexptrs;
+  int *rxn_int;
+  double *rxn_double;
+  double *state;
+  double *env;
+  double *rxn_env_data;
+  int *rxn_env_data_idx;
+
+  double *production_rates;
+  double *loss_rates;
 
 #ifdef REVERSE_INT_FLOAT_MATRIX
 #else
-    int *rxn_int_indices;
-    int *rxn_float_indices;
+  int *rxn_int_indices;
+  int *rxn_float_indices;
 #endif
 
-    int n_rxn;
-    int n_rxn_env_data;
+  int n_rxn;
+  int n_rxn_env_data;
 
-#ifdef DEV_AERO_REACTIONS
-    int n_aero_phase;
-    int n_added_aero_phases;
-    int *aero_phase_int_indices;
-    int *aero_phase_float_indices;
-    int *aero_phase_int_data;
-    double *aero_phase_float_data;
+  int *n_mapped_values;
+  JacMap *jac_map;
+  JacobianGPU jac;
 
-    int n_aero_rep;
-    int n_added_aero_reps;
-    int n_aero_rep_env_data;
-    int *aero_rep_int_indices;
-    int *aero_rep_float_indices;
-    int *aero_rep_env_idx;
-    int *aero_rep_int_data;
-    double *aero_rep_float_data;
-    double *aero_rep_env_data;
-#endif
+  double *yout;
+  double *cv_Vabstol;
 
-    int *n_mapped_values;
-    JacMap *jac_map;
-    JacobianGPU jac;
+  //
+  size_t deriv_size;
+  size_t jac_size;
+  size_t state_size;
+  size_t env_size;
+  size_t rxn_env_data_size;
+  size_t rxn_env_data_idx_size;
+  size_t map_state_deriv_size;
+  int max_n_gpu_thread;
+  int max_n_gpu_blocks;
+  int *map_state_derivCPU;
 
-    int nnz;
-    double *yout;
-    double *cv_Vabstol;
+  //f_cuda
+  int deriv_length_cell;
+  int state_size_cell;
 
-    //Allocated in GPU only
-    int i_cell; //todo remove
-    int i_rxn;
-    int i_aero_rep;
-
-    double *grid_cell_state;
-    double *grid_cell_env;
-    double *grid_cell_aero_rep_env_data;
-
-    double *cv_l;
-    double *cv_tau;
-    double *cv_tq;//NUM_TESTS+1
-
-    //CVODE variables only GPU
-    double *cv_last_yn;
-    double *cv_acor_init;
-
-    //LS (BCG)
-    double *dA;
-    int *djA;
-    int *diA;
-    double *dx;
-    double* dtempv;
-    int nrows;
-    int n_shr_empty;
-    int maxIt;
-    int n_cells;
-    double tolmax;
-    double *ddiag;
-    double *dr0;
-    double *dr0h;
-    double *dn0;
-    double *dp0;
-    double *dt;
-    double *ds;
-    double *dAx2;
-    double *dy;
-    double *dz;
-
-    //Guess_helper
-    double* dftemp;
-    double* dcv_y;
-    double* dtempv1;
-    double* dtempv2;
-
-    //update_state
-    double threshhold;
-    double replacement_value;
-    int *flag;
-    int *flagCells;
-
-    //f_cuda
-    int deriv_length_cell;
-    int state_size_cell;
-
-    //cudacvNewtonIteration
-    double* cv_acor;
-    double* dzn;
-    double* dewt;
-
-    //Auxiliar variables
-    double* dsavedJ;
-
-    int nnz_J_solver;
-    int nrows_J_solver;
-    double *jac_aux;
-    int *indexvals_gpu;
-    int *indexptrs_gpu;
-
-    size_t deriv_size;
-    size_t jac_size;
-    size_t state_size;
-    size_t env_size;
-    size_t rxn_env_data_size;
-    size_t rxn_env_data_idx_size;
-    size_t map_state_deriv_size;
-    int max_n_gpu_thread;
-    int max_n_gpu_blocks;
-    int *map_state_derivCPU;
-
-    ModelDataVariable mdvCPU; //cpu equivalent to gpu
-    ModelDataVariable *mdv; //device
-    ModelDataVariable *mdvo; //out device
+  //jac
+  int nnz_J_solver;
+  int nrows_J_solver;
+  double *jac_aux;
+  int *indexvals_gpu;
+  int *indexptrs_gpu;
 
 //ODE stats
 #ifdef CAMP_DEBUG_GPU
+
+  //itsolver
+  int counterNewtonIt;
+  int counterLinSolSetup;
+  int counterLinSolSolve;
+  int countercvStep;
+  int counterDerivNewton;
+  int counterBiConjGrad;
+  int counterDerivSolve;
+  int countersolveCVODEGPU;
+
+  double timeNewtonIt;
+  double timeLinSolSetup;
+  double timeLinSolSolve;
+  double timecvStep;
+  double timeDerivNewton;
+  double timeBiConjGrad;
+  double timeBiConjGradMemcpy;
+  double timeDerivSolve;
+  double timeJac;
+
+  cudaEvent_t startDerivNewton;
+  cudaEvent_t startDerivSolve;
+  cudaEvent_t startLinSolSetup;
+  cudaEvent_t startLinSolSolve;
+  cudaEvent_t startNewtonIt;
+  cudaEvent_t startcvStep;
+  cudaEvent_t startBCG;
+  cudaEvent_t startBCGMemcpy;
+  cudaEvent_t startJac;
+
+  cudaEvent_t stopDerivNewton;
+  cudaEvent_t stopDerivSolve;
+  cudaEvent_t stopLinSolSetup;
+  cudaEvent_t stopLinSolSolve;
+  cudaEvent_t stopNewtonIt;
+  cudaEvent_t stopcvStep;
+  cudaEvent_t stopBCGMemcpy;
+  cudaEvent_t stopBCG;
+  cudaEvent_t stopJac;
+
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     int clock_khz;
     double *tguessNewton;
@@ -367,9 +309,10 @@ typedef struct {
     double *dtBCG;
     double *dtcudaDeviceCVode;
     double *dtPostBCG;
+
 #endif
 #endif
 
-} ModelDataGPU; //CPU and GPU structs
+} ModelDataGPU_d2; //CPU and GPU structs
 
-
+#endif //CAMP_CUDA_STRUCTS_D2_H

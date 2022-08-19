@@ -26,12 +26,9 @@ static void HandleError(cudaError_t err,
 
 __global__
 void init_jac_partials(double* production_partials, double* loss_partials) {
-
   int tid = blockIdx.x * blockDim.x + threadIdx.x;
-
   production_partials[tid]=0.0;
   loss_partials[tid]=0.0;
-
 }
 
 int jacobian_initialize_gpu(SolverData *sd) {

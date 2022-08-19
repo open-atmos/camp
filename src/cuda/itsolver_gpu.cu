@@ -18,7 +18,7 @@ static void HandleError(cudaError_t err,
   }
 }
 
-void read_options(itsolver *bicg){
+void read_options_bcg(itsolver *bicg){
 
   FILE *fp;
   char buff[255];
@@ -54,7 +54,7 @@ void read_options(itsolver *bicg){
     fclose(fp);
   }
 
-  //printf("itsolver read_options CELLS_METHOD %d\n",bicg->cells_method);
+  //printf("itsolver read_options_bcg CELLS_METHOD %d\n",mGPU->cells_method);
 
 }
 
@@ -64,19 +64,18 @@ void createLinearSolver(SolverData *sd)
   ModelDataGPU *mGPU = sd->mGPU;
 
   //Init variables ("public")
-  int nrows = mGPU->nrows;
-  int blocks = mGPU->blocks;
-  if(sd->use_gpu_cvode==0) read_options(bicg);
+  if(sd->use_gpu_cvode==0) read_options_bcg(bicg);
   mGPU->maxIt=1000;
-  mGPU->tolmax=1.0e-30; //cv_mem->cv_reltol CAMP selected accuracy (1e-8) //1e-10;//1e-6
+  mGPU->tolmax=1.0e-30;
 
-  int len_cell=mGPU->nrows/mGPU->n_cells;
+  int nrows = mGPU->nrows;
+  int len_cell = mGPU->nrows/mGPU->n_cells;
   if(len_cell>mGPU->threads){
     printf("ERROR: Size cell greater than available threads per block");
     exit(0);
   }
 
-  //Auxiliary vectors ("private")
+  //Auxiliary vectors
   double ** dr0 = &mGPU->dr0;
   double ** dr0h = &mGPU->dr0h;
   double ** dn0 = &mGPU->dn0;
@@ -87,8 +86,6 @@ void createLinearSolver(SolverData *sd)
   double ** dy = &mGPU->dy;
   double ** dz = &mGPU->dz;
   double ** ddiag = &mGPU->ddiag;
-
-  //Allocate
   cudaMalloc(dr0,nrows*sizeof(double));
   cudaMalloc(dr0h,nrows*sizeof(double));
   cudaMalloc(dn0,nrows*sizeof(double));
@@ -99,13 +96,12 @@ void createLinearSolver(SolverData *sd)
   cudaMalloc(dy,nrows*sizeof(double));
   cudaMalloc(dz,nrows*sizeof(double));
   HANDLE_ERROR(cudaMalloc(ddiag,nrows*sizeof(double)));
+  int blocks = mGPU->blocks;
   mGPU->aux=(double*)malloc(sizeof(double)*blocks);
 
 }
 
-
 int nextPowerOfTwo(int v){
-
   v--;
   v |= v >> 1;
   v |= v >> 2;
@@ -113,9 +109,6 @@ int nextPowerOfTwo(int v){
   v |= v >> 8;
   v |= v >> 16;
   v++;
-
-  //printf("nextPowerOfTwo %d", v);
-
   return v;
 }
 
@@ -264,8 +257,6 @@ void exportOutBCG(SolverData *sd, const char *filepath){
   exit(0);
 }
 
-//Based on
-// https://github.com/scipy/scipy/blob/3b36a574dc657d1ca116f6e230be694f3de31afc/scipy/sparse/sparsetools/csr.h#L363
 void swapCSC_CSR(int n_row, int n_col, int* Ap, int* Aj, double* Ax, int* Bp, int* Bi, double* Bx){
 
   int nnz=Ap[n_row];
@@ -434,7 +425,6 @@ void dvcheck_input_gpud(double *x, int len, const char* s)
   }
 }
 
-//Algorithm: Biconjugate gradient
 __global__
 void solveBcgCuda(
         double *dA, int *djA, int *diA, double *dx, double *dtempv //Input data
@@ -444,13 +434,13 @@ void solveBcgCuda(
         ,double *dt, double *ds, double *dAx2, double *dy, double *dz// Auxiliary vectors
 )
 {
-  int i = blockIdx.x * blockDim.x + threadIdx.x;
+  int tid = blockIdx.x * blockDim.x + threadIdx.x;
   int active_threads = nrows;
 
   //if(tid==0)printf("blockDim.x %d\n",blockDim.x);
 
   //if(i<1){
-  if(i<active_threads){
+  if(tid<active_threads){
 
     double alpha,rho0,omega0,beta,rho1,temp1,temp2;
     alpha=rho0=omega0=beta=rho1=temp1=temp2=1.0;
@@ -500,9 +490,9 @@ void solveBcgCuda(
 
 #ifdef DEBUG_SOLVEBCGCUDA_DEEP
 
-    if(i==0){
+    if(tid==0){
       //printf("%d dr0[%d] %-le\n",it,i,dr0[i]);
-      printf("%d %d rho1 %-le\n",it,i,rho1);
+      printf("%d %d rho1 %-le\n",it,tid,rho1);
     }
 
     //dvcheck_input_gpud(dx,nrows,"dx");
@@ -518,9 +508,9 @@ void solveBcgCuda(
 
 #ifdef DEBUG_SOLVEBCGCUDA_DEEP
 
-      if(i==0){
-      //printf("%d dr0[%d] %-le\n",it,i,dr0[i]);
-      printf("%d %d rho1 rho0 %-le %-le\n",it,i,rho1,rho0);
+      if(tid==0){
+      //printf("%d dr0[%d] %-le\n",it,tid,dr0[tid]);
+      printf("%d %d rho1 rho0 %-le %-le\n",it,tid,rho1,rho0);
     }
     if(isnan(rho1) || rho1==0.0){
       dvcheck_input_gpud(dx,nrows,"dx");
@@ -553,11 +543,11 @@ void solveBcgCuda(
 #ifdef DEBUG_SOLVEBCGCUDA_DEEP
 
       if(it==0){
-        printf("%d %d dy dn0 ddiag %-le %-le %le\n",it,i,dy[i],dn0[i],ddiag[i]);
-        //printf("%d %d dn0 %-le\n",it,i,dn0[i]);
-        //printf("%d %d &temp1 %p\n",it,i,&temp1);
-        //printf("%d %d &test %p\n",it,i,&test);
-        //printf("%d %d &i %p\n",it,i,&i);
+        printf("%d %d dy dn0 ddiag %-le %-le %le\n",it,tid,dy[tid],dn0[tid],ddiag[tid]);
+        //printf("%d %d dn0 %-le\n",it,tid,dn0[tid]);
+        //printf("%d %d &temp1 %p\n",it,tid,&temp1);
+        //printf("%d %d &test %p\n",it,tid,&test);
+        //printf("%d %d &tid %p\n",it,tid,&tid);
       }
 
 #endif
@@ -566,11 +556,11 @@ void solveBcgCuda(
 
 #ifdef DEBUG_SOLVEBCGCUDA_DEEP
 
-      if(i==0){
-        printf("%d %d temp1 %-le\n",it,i,temp1);
-        //printf("%d %d &temp1 %p\n",it,i,&temp1);
-        //printf("%d %d &test %p\n",it,i,&test);
-        //printf("%d %d &i %p\n",it,i,&i);
+      if(tid==0){
+        printf("%d %d temp1 %-le\n",it,tid,temp1);
+        //printf("%d %d &temp1 %p\n",it,tid,&temp1);
+        //printf("%d %d &test %p\n",it,tid,&test);
+        //printf("%d %d &tid %p\n",it,tid,&tid);
       }
 
 #endif
@@ -583,8 +573,8 @@ void solveBcgCuda(
 
 #ifdef DEBUG_SOLVEBCGCUDA_DEEP
 
-      if(i==0){
-        printf("%d ds[%d] %-le\n",it,i,ds[i]);
+      if(tid==0){
+        printf("%d ds[%d] %-le\n",it,tid,ds[tid]);
       }
 
 #endif
@@ -609,15 +599,8 @@ void solveBcgCuda(
 
 #ifdef DEBUG_SOLVEBCGCUDA_DEEP
 
-      if(i>=0){
-        //printf("%d ddiag[%d] %-le\n",it,i,ddiag[i]);
-        //printf("%d dt[%d] %-le\n",it,i,dt[i]);
-        //printf("%d dAx2[%d] %-le\n",it,i,dAx2[i]);
-        //printf("%d dz[%d] %-le\n",it,i,dz[i]);
-      }
-
-      if(i==0){
-        printf("%d %d temp1 %-le\n",it,i,temp1);
+      if(tid==0){
+        printf("%d %d temp1 %-le\n",it,tid,temp1);
       }
 
 #endif
@@ -627,8 +610,8 @@ void solveBcgCuda(
 
 #ifdef DEBUG_SOLVEBCGCUDA_DEEP
 
-      if(i==0){
-        printf("%d %d temp2 %-le\n",it,i,temp2);
+      if(tid==0){
+        printf("%d %d temp2 %-le\n",it,tid,temp2);
       }
 
 #endif
@@ -760,10 +743,6 @@ void solveGPU_block_thr(int blocks, int threads_block, int n_shr_memory, int n_s
 
 }
 
-//solveBCGBlocks: Each block will compute only a cell/group of cells
-//Algorithm: Biconjugate gradient
-// dx: Input and output RHS
-// dtempv: Input preconditioner RHS
 void solveBCGBlocks(SolverData *sd, double *dA, int *djA, int *diA, double *dx, double *dtempv)
 {
 
