@@ -748,8 +748,8 @@ def all_timesteps():
     # conf.commit = "MATCH_IMPORTED_CONF"
     conf.commit = ""
 
-    #conf.nGPUsCaseBase = 1
-    conf.nGPUsCaseBase = 2
+    conf.nGPUsCaseBase = 1
+    #conf.nGPUsCaseBase = 2
 
     conf.nGPUsCaseOptimList = [1]
     #conf.nGPUsCaseOptimList = [4]
@@ -789,9 +789,9 @@ def all_timesteps():
     #conf.caseBase = "CPU Multi-cells"
     # conf.caseBase="GPU Multi-cells"
     # conf.caseBase="GPU Block-cellsN"
-   # conf.caseBase="GPU Block-cells1"
+    conf.caseBase="GPU Block-cells1"
     #conf.caseBase = "GPU BDF"
-    conf.caseBase = "GPU BDF2"
+    #conf.caseBase = "GPU BDF2"
     #conf.caseBase = "GPU maxrregcount-64" #Fails sometimes (non converge)
     # conf.caseBase = "GPU maxrregcount-24" #Minimum
     # conf.caseBase = "GPU maxrregcount-62"

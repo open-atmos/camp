@@ -2772,9 +2772,6 @@ int linsolsolve_gpu(SolverData *sd, CVodeMem cv_mem)
     float msBiConjGrad = 0.0;
     cudaEventElapsedTime(&msBiConjGrad, bicg->startBCG, bicg->stopBCG);
     bicg->timeBiConjGrad+= msBiConjGrad/1000;
-
-    printf("bicg->timeBiConjGrad %lf\n",bicg->timeBiConjGrad);
-
     bicg->counterBiConjGrad++;
 #endif
 
