@@ -715,74 +715,37 @@ __device__ void cudaDevicedotxy(double *g_idata1, double *g_idata2,
 {
   extern __shared__ double sdata[];
   unsigned int tid = threadIdx.x;
-  //unsigned int i = blockIdx.x*(blockDim.x*2) + threadIdx.x;
   unsigned int i = blockIdx.x*blockDim.x + threadIdx.x;
 
   __syncthreads();
-
-  //Needed, when testing be careful with SRAM data remanesce https://stackoverflow.com/questions/22172881/why-does-my-kernels-shared-memory-seems-to-be-initialized-to-zero
-
-  //first threads update empty positions
   if(tid<n_shr_empty)
     sdata[tid+blockDim.x]=0.;
-
   __syncthreads();
   sdata[tid] = g_idata1[i]*g_idata2[i];
   __syncthreads();
-
-/*
-  for (unsigned int s=(blockDim.x+n_shr_empty)/2; s>0; s>>=1)
-  {
-    if (tid < s)
-      sdata[tid] += sdata[tid + s];
-    __syncthreads();
-  }
-  */
-
-  //todo treat case deriv_length < 32
-  //maybe https://github.com/cudpp/cudpp/blob/master/src/cudpp/kernel/reduce_kernel.cuh
-
-
   unsigned int blockSize = blockDim.x+n_shr_empty;
-
   // do reduction in shared mem
   if ((blockSize >= 1024) && (tid < 512)) {
     sdata[tid] += sdata[tid + 512];
   }
-
   __syncthreads();
-
   if ((blockSize >= 512) && (tid < 256)) {
     sdata[tid] += sdata[tid + 256];
   }
-
   __syncthreads();
-
   if ((blockSize >= 256) && (tid < 128)) {
     sdata[tid] += sdata[tid + 128];
   }
-
   __syncthreads();
-
   if ((blockSize >= 128) && (tid < 64)) {
     sdata[tid] += sdata[tid + 64];
   }
-
   __syncthreads();
-
   if (tid < 32) warpReduce(sdata, tid);
-
   __syncthreads();//not needed?
-
   *g_odata = sdata[0];
   __syncthreads();
-
-
 }
-//n_shr_empty its a different implementation from cuda reduce extended samples ( https://docs.nvidia.com/cuda/cuda-samples/index.html)
-// since n_threads_blocks isnotpowerof2
-// while these samples only takes into account n=notpowerof2, also we need active_threads able to be < max_threads
-// because other operations must work only with this number of threads to ensure work only with complete cells
 
 // z= a*z + x + b*y
 __device__ void cudaDevicezaxpbypc(double* dz, double* dx,double* dy, double a, double b, int nrows)

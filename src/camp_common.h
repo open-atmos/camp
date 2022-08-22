@@ -81,8 +81,10 @@
 // CUDA/C++ already has bool definition: Avoid issues disabling it for GPU
 #ifndef CAMP_GPU_SOLVER_H_
 #ifndef CVODE_gpu_SOLVER_H_
+#ifndef CVODE_gpu_d2_H_
 #ifndef ITSOLVERGPU_H
 typedef enum { false, true } bool;
+#endif
 #endif
 #endif
 #endif

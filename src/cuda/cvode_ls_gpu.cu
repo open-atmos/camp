@@ -114,85 +114,6 @@ static void HandleError(cudaError_t err,
   }
 }
 
-int check_jac_status_error_gpu(SUNMatrix A)
-{
-  sunindextype j, i, newvals, M, N;
-  booleantype newmat, found;
-  sunindextype *Ap, *Ai;
-  //realtype *Ax;
-  int flag;
-
-  /* store shortcuts to matrix dimensions (M is inner dimension, N is outer) */
-  if (SM_SPARSETYPE_S(A) == CSC_MAT) {
-    M = SM_ROWS_S(A);
-    N = SM_COLUMNS_S(A);
-  } else {
-    M = SM_COLUMNS_S(A);
-    N = SM_ROWS_S(A);
-  }
-
-  /* access data arrays from A (return if failure) */
-  Ap = Ai = NULL;
-  //Ax = NULL;
-  if (SM_INDEXPTRS_S(A)) Ap = SM_INDEXPTRS_S(A);
-  else return (-1);
-  if (SM_INDEXVALS_S(A)) Ai = SM_INDEXVALS_S(A);
-  else return (-1);
-  //if (SM_DATA_S(A)) Ax = SM_DATA_S(A);
-  //else return (-1);
-
-
-  /* determine if A: contains values on the diagonal (so I can just be added in);
-     if not, then increment counter for extra storage that should be required. */
-  newvals = 0;
-  for (j = 0; j < SUNMIN(M, N); j++) {
-    /* scan column (row if CSR) of A, searching for diagonal value */
-    found = SUNFALSE;
-    for (i = Ap[j]; i < Ap[j + 1]; i++) {
-      if (Ai[i] == j) {
-        found = SUNTRUE;
-        break;
-      }
-    }
-    /* if no diagonal found, increment necessary storage counter */
-    if (!found) newvals += 1;
-  }
-
-  /* If extra nonzeros required, check whether matrix has sufficient storage space
-     for new nonzero entries  (so I can be inserted into existing storage) */
-  newmat = SUNFALSE;   /* no reallocation needed */
-  if (newvals > (SM_NNZ_S(A) - Ap[N]))
-    newmat = SUNTRUE;
-
-  //case 1: A already contains a diagonal
-  if (newvals == 0) {
-
-    flag = 0;
-    //printf("jac_indices had or need change to fill the diagonal");
-
-    //   case 2: A has sufficient storage, but does not already contain a diagonal
-  } else if (!newmat) {
-
-    printf("Jacobian does not contain a diagonal, jac_indices had/need to change");
-    flag = 1;
-    //case 3: A must be reallocated with sufficient storage */
-  } else {
-
-    printf("Jacobian must be reallocated with sufficient storage");
-    flag = 1;
-  }
-
-  return flag;
-}
-
-/*
- * cvHandleFailure
- *
- * This routine prints error messages for all cases of failure by
- * cvHin and cvStep.
- * It returns to CVode the value that CVode is to return to the user.
- */
-
 int cvHandleFailure_gpu(CVodeMem cv_mem, int flag)
 {
 
@@ -2717,12 +2638,6 @@ int linsolsetup_gpu(SolverData *sd, CVodeMem cv_mem,int convfail,N_Vector vtemp1
   cudaEventElapsedTime(&msBiConjGradMemcpy, bicg->startBCGMemcpy, bicg->stopBCGMemcpy);
   bicg->timeBiConjGradMemcpy+= msBiConjGradMemcpy/1000;
   bicg->timeBiConjGrad+= msBiConjGradMemcpy/1000;
-#endif
-
-#ifdef FAILURE_DETAIL
-  //check if jac is correct
-  int flag = check_jac_status_error_gpu(cvdls_mem->A);
-  //printf("Jac returned error flag %d\n",flag);
 #endif
 
   for (int iDevice = sd->startDevice; iDevice < sd->endDevice; iDevice++) {

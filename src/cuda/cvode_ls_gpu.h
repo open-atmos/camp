@@ -45,7 +45,6 @@ int cvNlsNewton_gpu(SolverData *sd, CVodeMem cv_mem, int nflag);
 int linsolsetup_gpu(SolverData *sd, CVodeMem cv_mem, int convfail, N_Vector vtemp1, N_Vector vtemp2, N_Vector vtemp3);
 int linsolsolve_gpu(SolverData *sd, CVodeMem cv_mem);
 
-int check_jac_status_error_gpu(SUNMatrix A);
 int cvHandleFailure_gpu(CVodeMem cv_mem, int flag);
 
 #endif
