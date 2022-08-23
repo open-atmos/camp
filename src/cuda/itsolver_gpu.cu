@@ -806,7 +806,6 @@ void solveBCGBlocks(SolverData *sd, double *dA, int *djA, int *diA, double *dx, 
 
 }
 
-//Algorithm: Biconjugate gradient
 void solveBCG(SolverData *sd, double *dA, int *djA, int *diA, double *dx, double *dtempv)
 {
   //Init variables ("public")

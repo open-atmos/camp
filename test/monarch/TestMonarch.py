@@ -349,7 +349,8 @@ def run(conf):
         Path(pathNvprof).mkdir(parents=True, exist_ok=True)
         pathNvprof = pathNvprof+ conf.caseMulticellsOnecell \
                      + str(conf.nCells) + "Cells" +  ".nvprof "
-        exec_str += "nvprof --analysis-metrics -f -o " + pathNvprof
+        #exec_str += "nvprof --analysis-metrics -f -o " + pathNvprof #all metrics
+        exec_str += "nvprof --print-gpu-trace " #registers per thread
         # --print-gpu-summary
         print("Saving profiling file in ", os.path.abspath(os.getcwd()) \
               + "/" + pathNvprof)
@@ -795,9 +796,9 @@ def all_timesteps():
     #conf.caseBase = "CPU Multi-cells"
     # conf.caseBase="GPU Multi-cells"
     # conf.caseBase="GPU Block-cellsN"
-    conf.caseBase="GPU Block-cells1"
+    #conf.caseBase="GPU Block-cells1"
     #conf.caseBase = "GPU BDF"
-    #conf.caseBase = "GPU BDF2"
+    conf.caseBase = "GPU BDF2"
     #conf.caseBase = "GPU maxrregcount-64" #Fails sometimes (non converge)
     # conf.caseBase = "GPU maxrregcount-24" #Minimum
     # conf.caseBase = "GPU maxrregcount-62"

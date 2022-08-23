@@ -185,6 +185,9 @@ typedef struct {
   double *dt;
   double *ds;
   double *dy;
+double *dz;
+double *dAx2;
+
 #endif
 
   //itsolver
