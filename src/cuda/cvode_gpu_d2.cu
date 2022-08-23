@@ -2070,6 +2070,12 @@ void solveBCGBlocks_d2_66regs(SolverData *sd, double *dA, int *djA, int *diA, do
 
 }
 
+__noinline__ __device__ void cudaDevicezaxpbypc_d2(double* dz, double* dx,double* dy, double a, double b, int nrows)
+{
+  int row= threadIdx.x + blockDim.x*blockIdx.x;
+  dz[row]=a*dz[row]  + dx[row] + b*dy[row];
+}
+
 __global__
 void solveBcgCuda_d2(
         double *dA, int *djA, int *diA, double *dx, double *dtempv //Input data
@@ -2084,27 +2090,31 @@ void solveBcgCuda_d2(
   if(tid<active_threads){
     double alpha,rho0,omega0,beta,rho1,temp1,temp2;
     alpha=rho0=omega0=beta=rho1=temp1=temp2=1.0;
-    cudaDevicesetconst(dn0, 0.0, nrows);
-    cudaDevicesetconst(dp0, 0.0, nrows);
+    dn0[tid]=0.;
+    dp0[tid]=0.;
 #ifndef CSR_SPMV_CPU
     cudaDeviceSpmvCSR(dr0,dx,dA,djA,diA); //y=A*x
 #else
     cudaDeviceSpmvCSC_block(dr0,dx,dA,djA,diA,n_shr_empty)); //y=A*x
 #endif
-    cudaDeviceaxpby(dr0,dtempv,1.0,-1.0,nrows);
-    __syncthreads();
-    cudaDeviceyequalsx(dr0h,dr0,nrows);
+    //cudaDeviceaxpby(dr0,dtempv,1.0,-1.0,nrows);
+    dr0[tid]=dtempv[tid]-dr0[tid];
+    dr0h[tid]=dr0[tid];
+    //cudaDeviceyequalsx(dr0h,dr0,nrows);
     int it=0;
     do{
-      __syncthreads();
       cudaDevicedotxy(dr0, dr0h, &rho1, n_shr_empty);
-      __syncthreads();
       beta = (rho1 / rho0) * (alpha / omega0);
-      __syncthreads();
-      cudaDevicezaxpbypc(dp0, dr0, dn0, beta, -1.0 * omega0 * beta, nrows);   //z = ax + by + c
-      __syncthreads();
+
+
+        //todo using dp0... uses 50 registers per block, while cudaDevicezaxpbypc or cudaDevicezaxpbypc_d2 uses 46
+//cudaDevicezaxpbypc(dp0, dr0, dn0, beta, -1.0 * omega0 * beta, nrows);   //z = ax + by + c
+//dp0[tid]=beta*dp0[tid]+dr0[tid]+ (-1.0)*omega0 * beta * dn0[tid];
+            cudaDevicezaxpbypc_d2(dp0, dr0, dn0, beta, -1.0 * omega0 * beta, nrows);   //z = ax + by + c
+
+
+
       cudaDevicemultxy(dy, ddiag, dp0, nrows);
-      __syncthreads();
       cudaDevicesetconst(dn0, 0.0, nrows);
 #ifndef CSR_SPMV_CPU
       cudaDeviceSpmvCSR(dn0, dy, dA, djA, diA);
@@ -2112,35 +2122,25 @@ void solveBcgCuda_d2(
       cudaDeviceSpmvCSC_block(dn0, dy, dA, djA, diA,n_shr_empty);
 #endif
       cudaDevicedotxy(dr0h, dn0, &temp1, n_shr_empty);
-      __syncthreads();
       alpha = rho1 / temp1;
       cudaDevicezaxpby(1.0, dr0, -1.0 * alpha, dn0, ds, nrows);
-      __syncthreads();
       cudaDevicemultxy(dz, ddiag, ds, nrows); // precond z=diag*s
 #ifndef CSR_SPMV_CPU
       cudaDeviceSpmvCSR(dt, dz, dA, djA, diA);
 #else
       cudaDeviceSpmvCSC_block(dt, dz, dA, djA, diA,n_shr_empty);
 #endif
-      __syncthreads();
       cudaDevicemultxy(dAx2, ddiag, dt, nrows);
-      __syncthreads();
       cudaDevicedotxy(dz, dAx2, &temp1, n_shr_empty);
-      __syncthreads();
       cudaDevicedotxy(dAx2, dAx2, &temp2, n_shr_empty);
-      __syncthreads();
       omega0 = temp1 / temp2;
       cudaDeviceaxpy(dx, dy, alpha, nrows); // x=alpha*y +x
-      __syncthreads();
       cudaDeviceaxpy(dx, dz, omega0, nrows);
-      __syncthreads();
       cudaDevicezaxpby(1.0, ds, -1.0 * omega0, dt, dr0, nrows);
       cudaDevicesetconst(dt, 0.0, nrows);
-      __syncthreads();
       cudaDevicedotxy(dr0, dr0, &temp1, n_shr_empty);
       temp1 = sqrtf(temp1);
       rho0 = rho1;
-      __syncthreads();
       it++;
     } while(it<maxIt && temp1>tolmax);//while(it<maxIt && temp1>tolmax);//while(0);
   }
