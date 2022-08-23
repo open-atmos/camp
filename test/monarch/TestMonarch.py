@@ -345,7 +345,7 @@ def run(conf):
         # exec_str+="srun -n "+str(conf.mpiProcesses)+" "
 
     if conf.profileCuda == "nvprof" and conf.caseGpuCpu == "GPU":
-        pathNvprof = "../../../nvprof/"
+        pathNvprof = "../../compile/power9/"#"../../../nvprof/"
         Path(pathNvprof).mkdir(parents=True, exist_ok=True)
         pathNvprof = pathNvprof+ conf.caseMulticellsOnecell \
                      + str(conf.nCells) + "Cells" +  ".nvprof "
@@ -354,7 +354,7 @@ def run(conf):
         print("Saving profiling file in ", os.path.abspath(os.getcwd()) \
               + "/" + pathNvprof)
     elif conf.profileCuda == "nsight" and conf.caseGpuCpu == "GPU":
-        pathNvprof = "../../../nvprof/nsight"
+        pathNvprof = "../../compile/power9/"#"../../../nvprof/nsight"
         Path(pathNvprof).mkdir(parents=True, exist_ok=True)
         pathNvprof = pathNvprof + conf.caseMulticellsOnecell \
                      + str(conf.nCells) + "Cells "
@@ -459,6 +459,9 @@ def run_case(conf):
 def run_cases(conf):
     # Run base case
     conf.mpiProcesses = conf.mpiProcessesCaseBase
+    if conf.nCellsProcesses % conf.mpiProcesses !=0:
+        print("ERROR: DIVISION OF CELLS/PROCESSES NOT INTEGER")
+        raise
     conf.nCells = int(conf.nCellsProcesses / conf.mpiProcesses)
     conf.nGPUs = conf.nGPUsCaseBase
 
@@ -477,6 +480,9 @@ def run_cases(conf):
         conf.nGPUs = nGPUs
         for mpiProcessesCaseOptim in conf.mpiProcessesCaseOptimList:
             conf.mpiProcesses = mpiProcessesCaseOptim
+            if conf.nCellsProcesses % conf.mpiProcesses !=0:
+                print("ERROR: DIVISION OF CELLS/PROCESSES NOT INTEGER")
+                raise
             conf.nCells = int(conf.nCellsProcesses / conf.mpiProcesses)
             for caseOptim in conf.casesOptim:
                 if conf.plotXKey == "MPI processes":
@@ -727,15 +733,15 @@ def all_timesteps():
     conf = TestMonarch()
 
     # conf.chemFile = "simple"
-    #conf.chemFile = "monarch_cb05"
-    conf.chemFile = "monarch_binned"
+    conf.chemFile = "monarch_cb05"
+    #conf.chemFile = "monarch_binned"
 
     conf.diffCellsL = []
     conf.diffCellsL.append("Realistic")
     #conf.diffCellsL.append("Ideal")
 
-    conf.profileCuda = ""
-    #conf.profileCuda = "nvprof"
+    #conf.profileCuda = ""
+    conf.profileCuda = "nvprof"
     #conf.profileCuda = "nsight"
 
     conf.is_export = get_is_sbatch()
@@ -761,8 +767,8 @@ def all_timesteps():
     conf.mpiProcessesCaseBase = 1
     #conf.mpiProcessesCaseBase = 40
 
-    #conf.mpiProcessesCaseOptimList.append(1)
-    conf.mpiProcessesCaseOptimList.append(40)
+    conf.mpiProcessesCaseOptimList.append(20)
+    #conf.mpiProcessesCaseOptimList.append(40)
     # conf.mpiProcessesCaseOptimList = [10,20,40]
     # conf.mpiProcessesCaseOptimList = [1,4,8,16,32,40]
 
@@ -775,11 +781,11 @@ def all_timesteps():
     # conf.allocatedTasksPerNode = 320
     # conf.allocatedTasksPerNode = get_ntasksPerNode_sbatch() #todo
 
-    conf.cells = [100]
+    conf.cells = [1000]
     #conf.cells = [100, 500, 1000, 5000, 10000]
     # conf.cells = [50000,100000,500000,1000000]
 
-    conf.timeSteps = 9
+    conf.timeSteps = 1
     #conf.timeSteps = 720
 
     conf.timeStepsDt = 2

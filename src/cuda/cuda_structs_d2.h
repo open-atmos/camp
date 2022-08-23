@@ -7,6 +7,22 @@
 #ifndef CAMP_CUDA_STRUCTS_D2_H
 #define CAMP_CUDA_STRUCTS_D2_H
 
+typedef struct
+{
+  //double* A;
+  //int*    jA;
+  //int*    iA;
+  double* aux;
+
+#ifdef CAMP_DEBUG_GPU
+  int countercvStep;
+  double timecvStep;
+  cudaEvent_t startcvStep;
+  cudaEvent_t stopcvStep;
+#endif
+
+} ModelDataCPU_d2;
+
 typedef struct {
     unsigned int num_spec;          // Number of species in the derivative
     // long double is treated as double in GPU
@@ -149,6 +165,7 @@ typedef struct {
   double* dzn;
   double* dewt;
 
+#ifndef DEV_NEEDED_VARIABLES
   //LS (BCG)
   double *dA;
   int *djA;
@@ -167,9 +184,8 @@ typedef struct {
   double *dp0;
   double *dt;
   double *ds;
-  double *dAx2;
   double *dy;
-  double *dz;
+#endif
 
   //itsolver
   double* A;
@@ -255,47 +271,6 @@ double* dsavedJ;
 
 //ODE stats
 #ifdef CAMP_DEBUG_GPU
-
-  //itsolver
-  int counterNewtonIt;
-  int counterLinSolSetup;
-  int counterLinSolSolve;
-  int countercvStep;
-  int counterDerivNewton;
-  int counterBiConjGrad;
-  int counterDerivSolve;
-  int countersolveCVODEGPU;
-
-  double timeNewtonIt;
-  double timeLinSolSetup;
-  double timeLinSolSolve;
-  double timecvStep;
-  double timeDerivNewton;
-  double timeBiConjGrad;
-  double timeBiConjGradMemcpy;
-  double timeDerivSolve;
-  double timeJac;
-
-  cudaEvent_t startDerivNewton;
-  cudaEvent_t startDerivSolve;
-  cudaEvent_t startLinSolSetup;
-  cudaEvent_t startLinSolSolve;
-  cudaEvent_t startNewtonIt;
-  cudaEvent_t startcvStep;
-  cudaEvent_t startBCG;
-  cudaEvent_t startBCGMemcpy;
-  cudaEvent_t startJac;
-
-  cudaEvent_t stopDerivNewton;
-  cudaEvent_t stopDerivSolve;
-  cudaEvent_t stopLinSolSetup;
-  cudaEvent_t stopLinSolSolve;
-  cudaEvent_t stopNewtonIt;
-  cudaEvent_t stopcvStep;
-  cudaEvent_t stopBCGMemcpy;
-  cudaEvent_t stopBCG;
-  cudaEvent_t stopJac;
-
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     int clock_khz;
     double *tguessNewton;
@@ -309,10 +284,9 @@ double* dsavedJ;
     double *dtBCG;
     double *dtcudaDeviceCVode;
     double *dtPostBCG;
-
 #endif
 #endif
 
-} ModelDataGPU_d2; //CPU and GPU structs
+} ModelDataGPU_d2; //GPU structs
 
 #endif //CAMP_CUDA_STRUCTS_D2_H

@@ -6,16 +6,8 @@
 #ifndef LIBSOLV_H
 #define LIBSOLV_H
 
-#ifdef __cplusplus
-//extern "C" {
-#endif
-
 #include<iostream>
 #include<cuda.h>
-//#include"/usr/local/cuda-10.1/include/cuda_runtime.h"
-//#include"/usr/local/cuda-10.1/include/cuda_runtime_api.h"
-
-//#include<cublas.h>
 
 extern "C++" void cudaMallocDouble(double* &vector,int size);
 extern "C++" void cudaMallocInt(int* &vector,int size);
@@ -44,24 +36,19 @@ extern "C++" void gpu_scaley(double* dy, double a, int nrows, int blocks, int th
 __device__ void cudaDevicematScaleAddI(int nrows, double* dA, int* djA, int* diA, double alpha);
 __device__ void cudaDevicediagprecond(int nrows, double* dA, int* djA, int* diA, double* ddiag);
 __device__ void cudaDevicesetconst(double* dy,double constant,int nrows);
-__device__ void cudaDeviceSpmvCSR(double* dx, double* db, int nrows, double* dA, int* djA, int* diA);
-__device__ void cudaDeviceSpmvCSC(double* dx, double* db, int nrows, double* dA, int* djA, int* diA);
-__device__ void cudaDeviceSpmvCSC_block(double* dx, double* db, int nrows, double* dA, int* djA, int* diA, int n_shr_empty);
+__device__ void cudaDeviceSpmvCSR(double* dx, double* db, double* dA, int* djA, int* diA);
+__device__ void cudaDeviceSpmvCSC_block(double* dx, double* db, double* dA, int* djA, int* diA, int n_shr_empty);
 __device__ void cudaDeviceaxpby(double* dy,double* dx, double a, double b, int nrows);
 __device__ void cudaDeviceyequalsx(double* dy,double* dx,int nrows);
 __device__ void cudaDevicemin(double *g_odata, double in, volatile double *sdata, int n_shr_empty);
 __device__ void cudaDevicemaxI(int *g_odata, int in, volatile double *sdata, int n_shr_empty);
 __device__ void cudaDeviceaddI(int *g_odata, int in, volatile double *sdata, int n_shr_empty);
-__device__ void cudaDevicedotxy(double *g_idata1, double *g_idata2, double *g_odata, unsigned int n, int n_shr_empty);
+__device__ void cudaDevicedotxy(double *g_idata1, double *g_idata2, double *g_odata, int n_shr_empty);
 __device__ void cudaDevicezaxpbypc(double* dz, double* dx,double* dy, double a, double b, int nrows);
 __device__ void cudaDevicemultxy(double* dz, double* dx,double* dy, int nrows);
 __device__ void cudaDevicezaxpby(double a, double* dx, double b, double* dy, double* dz, int nrows);
 __device__ void cudaDeviceaxpy(double* dy,double* dx, double a, int nrows);
 __device__ void cudaDeviceVWRMS_Norm(double *g_idata1, double *g_idata2, double *odata, int n, int n_shr_empty);
 __device__ void cudaDevicescaley(double* dy, double a, int nrows);
-
-#ifdef __cplusplus
-//}
-#endif
 
 #endif

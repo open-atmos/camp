@@ -465,9 +465,9 @@ void solveBcgCuda(
      */
 
 #ifndef CSR_SPMV_CPU
-    cudaDeviceSpmvCSR(dr0,dx,nrows,dA,djA,diA); //y=A*x
+    cudaDeviceSpmvCSR(dr0,dx,dA,djA,diA); //y=A*x
 #else
-    cudaDeviceSpmvCSC_block(dr0,dx,nrows,dA,djA,diA,n_shr_empty)); //y=A*x
+    cudaDeviceSpmvCSC_block(dr0,dx,dA,djA,diA,n_shr_empty)); //y=A*x
 #endif
 
 #ifdef DEBUG_SOLVEBCGCUDA_DEEP
@@ -504,7 +504,7 @@ void solveBcgCuda(
     {
       __syncthreads();
 
-      cudaDevicedotxy(dr0, dr0h, &rho1, nrows, n_shr_empty);
+      cudaDevicedotxy(dr0, dr0h, &rho1, n_shr_empty);
 
 #ifdef DEBUG_SOLVEBCGCUDA_DEEP
 
@@ -535,9 +535,9 @@ void solveBcgCuda(
       cudaDevicesetconst(dn0, 0.0, nrows);
       //gpu_spmv(dn0,dy,nrows,dA,djA,diA,blocks,threads);  // n0= A*y
 #ifndef CSR_SPMV_CPU
-      cudaDeviceSpmvCSR(dn0, dy, nrows, dA, djA, diA);
+      cudaDeviceSpmvCSR(dn0, dy, dA, djA, diA);
 #else
-      cudaDeviceSpmvCSC_block(dn0, dy, nrows, dA, djA, diA,n_shr_empty);
+      cudaDeviceSpmvCSC_block(dn0, dy, dA, djA, diA,n_shr_empty);
 #endif
 
 #ifdef DEBUG_SOLVEBCGCUDA_DEEP
@@ -552,7 +552,7 @@ void solveBcgCuda(
 
 #endif
 
-      cudaDevicedotxy(dr0h, dn0, &temp1, nrows, n_shr_empty);
+      cudaDevicedotxy(dr0h, dn0, &temp1, n_shr_empty);
 
 #ifdef DEBUG_SOLVEBCGCUDA_DEEP
 
@@ -585,9 +585,9 @@ void solveBcgCuda(
 
       //gpu_spmv(dt,dz,nrows,dA,djA,diA,blocks,threads);
 #ifndef CSR_SPMV_CPU
-      cudaDeviceSpmvCSR(dt, dz, nrows, dA, djA, diA);
+      cudaDeviceSpmvCSR(dt, dz, dA, djA, diA);
 #else
-      cudaDeviceSpmvCSC_block(dt, dz, nrows, dA, djA, diA,n_shr_empty);
+      cudaDeviceSpmvCSC_block(dt, dz, dA, djA, diA,n_shr_empty);
 #endif
 
       __syncthreads();
@@ -595,7 +595,7 @@ void solveBcgCuda(
       cudaDevicemultxy(dAx2, ddiag, dt, nrows);
 
       __syncthreads();
-      cudaDevicedotxy(dz, dAx2, &temp1, nrows, n_shr_empty);
+      cudaDevicedotxy(dz, dAx2, &temp1, n_shr_empty);
 
 #ifdef DEBUG_SOLVEBCGCUDA_DEEP
 
@@ -606,7 +606,7 @@ void solveBcgCuda(
 #endif
 
       __syncthreads();
-      cudaDevicedotxy(dAx2, dAx2, &temp2, nrows, n_shr_empty);
+      cudaDevicedotxy(dAx2, dAx2, &temp2, n_shr_empty);
 
 #ifdef DEBUG_SOLVEBCGCUDA_DEEP
 
@@ -631,7 +631,7 @@ void solveBcgCuda(
       cudaDevicesetconst(dt, 0.0, nrows);
 
       __syncthreads();
-      cudaDevicedotxy(dr0, dr0, &temp1, nrows, n_shr_empty);
+      cudaDevicedotxy(dr0, dr0, &temp1, n_shr_empty);
 
       //temp1 = sqrt(temp1);
       temp1 = sqrtf(temp1);

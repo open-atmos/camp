@@ -560,7 +560,7 @@ __device__ void cudaDevicesetconst(double* dy,double constant,int nrows)
 }
 
 // x=A*b
-__device__ void cudaDeviceSpmvCSR(double* dx, double* db, int nrows, double* dA, int* djA, int* diA)
+__device__ void cudaDeviceSpmvCSR(double* dx, double* db, double* dA, int* djA, int* diA)
 {
   __syncthreads();
   int row= threadIdx.x + blockDim.x*blockIdx.x;
@@ -574,9 +574,8 @@ __device__ void cudaDeviceSpmvCSR(double* dx, double* db, int nrows, double* dA,
 
 }
 
-__device__ void cudaDeviceSpmvCSC_block(double* dx, double* db, int nrows, double* dA, int* djA, int* diA, int n_shr_empty)
+__device__ void cudaDeviceSpmvCSC_block(double* dx, double* db, double* dA, int* djA, int* diA, int n_shr_empty)
 {
-  double mult;
   extern __shared__ double sdata[];
   int row = threadIdx.x + blockDim.x*blockIdx.x;
 
@@ -586,7 +585,7 @@ __device__ void cudaDeviceSpmvCSC_block(double* dx, double* db, int nrows, doubl
 
   int nnz=diA[blockDim.x];
   for(int j=diA[threadIdx.x]; j<diA[threadIdx.x+1]; j++){
-    mult = db[row]*dA[j+nnz*blockIdx.x];
+    double mult = db[row]*dA[j+nnz*blockIdx.x];
     atomicAdd_block(&(dx[djA[j]+blockDim.x*blockIdx.x]),mult);
   //		dx[djA[j]]+= db[row]*dA[j];
   }
@@ -709,9 +708,8 @@ __device__ void warpReduce(volatile double *sdata, unsigned int tid) {
   if (blockSize >= 2) sdata[tid] += sdata[tid + 1];
 }
 
-
 __device__ void cudaDevicedotxy(double *g_idata1, double *g_idata2,
-                                 double *g_odata, unsigned int n, int n_shr_empty)
+                                 double *g_odata, int n_shr_empty)
 {
   extern __shared__ double sdata[];
   unsigned int tid = threadIdx.x;

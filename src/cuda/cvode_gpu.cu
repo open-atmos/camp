@@ -1255,7 +1255,7 @@ __device__ void cudaDevicecalc_deriv(
   printmin(md,md->J_state,"cudaDevicecalc_deriv start end J_state");
 #endif
   md->J_tmp[tid]=y[tid]-md->J_state[tid];
-  cudaDeviceSpmvCSC_block(md->J_tmp2, md->J_tmp, active_threads, md->J_solver, md->jJ_solver, md->iJ_solver, 0);
+  cudaDeviceSpmvCSC_block(md->J_tmp2, md->J_tmp, md->J_solver, md->jJ_solver, md->iJ_solver, 0);
   md->J_tmp[tid]=md->J_deriv[tid]+md->J_tmp2[tid];
 
   cudaDevicesetconst(md->J_tmp2, 0.0, active_threads); //Reset for next iter
@@ -2075,7 +2075,7 @@ void solveBcgCudaDeviceCVODE(ModelDataGPU *md, ModelDataVariable *dmdv)
   cudaDevicesetconst(dp0, 0.0, nrows);
 
   __syncthreads();
-  cudaDeviceSpmvCSC_block(dr0,dx,nrows,dA,djA,diA,n_shr_empty); //y=A*x
+  cudaDeviceSpmvCSC_block(dr0,dx,dA,djA,diA,n_shr_empty); //y=A*x
   __syncthreads();
 
 #ifdef DEBUG_SOLVEBCGCUDA_DEEP
@@ -2111,7 +2111,7 @@ void solveBcgCudaDeviceCVODE(ModelDataGPU *md, ModelDataVariable *dmdv)
   {
     __syncthreads();
 
-    cudaDevicedotxy(dr0, dr0h, &rho1, nrows, n_shr_empty);
+    cudaDevicedotxy(dr0, dr0h, &rho1, n_shr_empty);
 
 #ifdef DEBUG_SOLVEBCGCUDA_DEEP
     __syncthreads();
@@ -2138,7 +2138,7 @@ void solveBcgCudaDeviceCVODE(ModelDataGPU *md, ModelDataVariable *dmdv)
     cudaDevicesetconst(dn0, 0.0, nrows);
     //gpu_spmv(dn0,dy,nrows,dA,djA,diA,blocks,threads);  // n0= A*y
     __syncthreads();
-    cudaDeviceSpmvCSC_block(dn0, dy, nrows, dA, djA, diA,n_shr_empty);
+    cudaDeviceSpmvCSC_block(dn0, dy, dA, djA, diA,n_shr_empty);
 
 #ifdef DEBUG_SOLVEBCGCUDA_DEEP
 
@@ -2153,7 +2153,7 @@ void solveBcgCudaDeviceCVODE(ModelDataGPU *md, ModelDataVariable *dmdv)
 #endif
 
     __syncthreads();
-    cudaDevicedotxy(dr0h, dn0, &temp1, nrows, n_shr_empty);
+    cudaDevicedotxy(dr0h, dn0, &temp1, n_shr_empty);
 
     __syncthreads();
     alpha = rho1 / temp1;
@@ -2167,17 +2167,17 @@ void solveBcgCudaDeviceCVODE(ModelDataGPU *md, ModelDataVariable *dmdv)
 
     __syncthreads();
     //gpu_spmv(dt,dz,nrows,dA,djA,diA,blocks,threads);
-    cudaDeviceSpmvCSC_block(dt, dz, nrows, dA, djA, diA,n_shr_empty);
+    cudaDeviceSpmvCSC_block(dt, dz, dA, djA, diA,n_shr_empty);
 
     __syncthreads();
     //gpu_multxy(dAx2,ddiag,dt,nrows,blocks,threads);
     cudaDevicemultxy(dAx2, ddiag, dt, nrows);
 
     __syncthreads();
-    cudaDevicedotxy(dz, dAx2, &temp1, nrows, n_shr_empty);
+    cudaDevicedotxy(dz, dAx2, &temp1, n_shr_empty);
 
     __syncthreads();
-    cudaDevicedotxy(dAx2, dAx2, &temp2, nrows, n_shr_empty);
+    cudaDevicedotxy(dAx2, dAx2, &temp2, n_shr_empty);
 
     __syncthreads();
     omega0 = temp1 / temp2;
@@ -2195,7 +2195,7 @@ void solveBcgCudaDeviceCVODE(ModelDataGPU *md, ModelDataVariable *dmdv)
     cudaDevicesetconst(dt, 0.0, nrows);
 
     __syncthreads();
-    cudaDevicedotxy(dr0, dr0, &temp1, nrows, n_shr_empty);
+    cudaDevicedotxy(dr0, dr0, &temp1, n_shr_empty);
     __syncthreads();
 
     //temp1 = sqrt(temp1);

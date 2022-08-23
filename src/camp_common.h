@@ -314,7 +314,7 @@ typedef struct {
 #endif
 #ifdef CAMP_USE_GPU
   itsolver bicg;
-  void *cus;
+  ModelDataCPU_d2 mCPU;
   ModelDataGPU *mGPUs;
   ModelDataGPU *mGPU;
   ModelDataGPU_d2 *mGPUs_d2;
