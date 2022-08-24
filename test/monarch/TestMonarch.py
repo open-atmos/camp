@@ -741,8 +741,8 @@ def all_timesteps():
     conf.diffCellsL.append("Realistic")
     #conf.diffCellsL.append("Ideal")
 
-    #conf.profileCuda = ""
-    conf.profileCuda = "nvprof"
+    conf.profileCuda = ""
+    #conf.profileCuda = "nvprof"
     #conf.profileCuda = "nsight"
 
     conf.is_export = get_is_sbatch()
@@ -756,7 +756,7 @@ def all_timesteps():
     conf.commit = ""
 
     conf.nGPUsCaseBase = 1
-    #conf.nGPUsCaseBase = 2
+    #conf.nGPUsCaseBase = 4
 
     conf.nGPUsCaseOptimList = [1]
     #conf.nGPUsCaseOptimList = [4]
@@ -768,8 +768,8 @@ def all_timesteps():
     conf.mpiProcessesCaseBase = 1
     #conf.mpiProcessesCaseBase = 40
 
+    #conf.mpiProcessesCaseOptimList.append(1)
     conf.mpiProcessesCaseOptimList.append(20)
-    #conf.mpiProcessesCaseOptimList.append(40)
     # conf.mpiProcessesCaseOptimList = [10,20,40]
     # conf.mpiProcessesCaseOptimList = [1,4,8,16,32,40]
 
@@ -782,11 +782,11 @@ def all_timesteps():
     # conf.allocatedTasksPerNode = 320
     # conf.allocatedTasksPerNode = get_ntasksPerNode_sbatch() #todo
 
-    conf.cells = [1000]
+    conf.cells = [100]
     #conf.cells = [100, 500, 1000, 5000, 10000]
     # conf.cells = [50000,100000,500000,1000000]
 
-    conf.timeSteps = 1
+    conf.timeSteps = 10
     #conf.timeSteps = 720
 
     conf.timeStepsDt = 2
@@ -797,9 +797,9 @@ def all_timesteps():
     # conf.caseBase="GPU Multi-cells"
     # conf.caseBase="GPU Block-cellsN"
     #conf.caseBase="GPU Block-cells1"
-    #conf.caseBase = "GPU BDF"
-    conf.caseBase = "GPU BDF2"
-    #conf.caseBase = "GPU maxrregcount-64" #Fails sometimes (non converge)
+    #conf.caseBase = "GPU BDF" #Inneficient, use maxrregcount
+    #conf.caseBase = "GPU BDF2"
+    conf.caseBase = "GPU maxrregcount-64"
     # conf.caseBase = "GPU maxrregcount-24" #Minimum
     # conf.caseBase = "GPU maxrregcount-62"
     # conf.caseBase = "GPU maxrregcount-68"
@@ -850,6 +850,8 @@ def all_timesteps():
     conf.results_file = "_solver_stats.csv"
     if conf.plotYKey == "NRMSE" or conf.plotYKey == "MAPE" or conf.plotYKey == "SMAPE":
         conf.results_file = '_results_all_cells.csv'
+        conf.is_export = False
+        conf.is_import = False
 
     jsonFile = open("monarch_box_binned/cb05_abs_tol.json")
     jsonData = json.load(jsonFile)

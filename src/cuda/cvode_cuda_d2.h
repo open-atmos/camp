@@ -11,6 +11,8 @@
 #include<cuda_runtime.h>
 #include<cuda_runtime_api.h>
 
+int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv);
+
 __device__ void solveBcgCuda_d2_cvode_cuda(
        double *dA, int *djA, int *diA, double *dx, double *dtempv //Input data
        ,int nrows, int blocks, int n_shr_empty, int maxIt
