@@ -83,7 +83,9 @@
 #ifndef CVODE_gpu_SOLVER_H_
 #ifndef CVODE_gpu_d2_H_
 #ifndef ITSOLVERGPU_H
+#ifndef CVODE_CUDA_H_
 typedef enum { false, true } bool;
+#endif
 #endif
 #endif
 #endif

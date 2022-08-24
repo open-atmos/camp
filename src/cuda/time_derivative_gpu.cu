@@ -148,22 +148,6 @@ void time_derivative_add_value_gpu(TimeDerivativeGPU time_deriv, unsigned int sp
 #endif
 }
 
-#ifdef CAMP_DEBUG
-double time_derivative_max_loss_precision(TimeDerivativeGPU time_deriv) {
-  return -log(time_deriv.last_max_loss_precision) / log(2.0);
-}
-#endif
-
-void time_derivative_free_gpu(TimeDerivativeGPU time_deriv) {
-#ifdef __CUDA_ARCH__
-  cudaFree(time_deriv.production_rates);
-  cudaFree(time_deriv.loss_rates);
-#else
-  free(time_deriv.production_rates);
-  free(time_deriv.loss_rates);
-#endif
-}
-
 }
 
 //todo merge with default time_derivative "class" using .cpp file

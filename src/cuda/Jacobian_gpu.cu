@@ -133,7 +133,6 @@ void jacobian_add_value_gpu(JacobianGPU jac, unsigned int elem_id,
   if (prod_or_loss == JACOBIAN_LOSS)
     jac.loss_partials[elem_id] += jac_contribution;
 #endif
-
   //check_isnanld(&jac_contribution,1,"post jacobian_add_value jac_contribution");
 }
 

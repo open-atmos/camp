@@ -58,20 +58,4 @@ __host__ __device__
 void time_derivative_add_value_gpu(TimeDerivativeGPU time_deriv, unsigned int spec_id,
                                double rate_contribution);
 
-#ifdef CAMP_DEBUG
-/** \brief Maximum loss of precision at the last output of the derivative
- *         in bits
- *
- * \param time_deriv TimeDerivativeGPU object
- * \return maximum loss of precision
- */
-double time_derivative_max_loss_precision(TimeDerivativeGPU time_deriv);
-#endif
-
-/** \brief Free memory associated with a TimeDerivativeGPU
- *
- * \param time_deriv TimeDerivativeGPU object
- */
-void time_derivative_free_gpu(TimeDerivativeGPU time_deriv);
-
 #endif

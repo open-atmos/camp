@@ -37,6 +37,5 @@ void swapCSC_CSR(int n_row, int n_col, int* Ap, int* Aj, double* Ax, int* Bp, in
 void swapCSC_CSR_BCG(SolverData *sd);
 void solveBCG(SolverData *sd, double *dA, int *djA, int *diA, double *dx, double *dtempv);
 void solveBCGBlocks(SolverData *sd, double *dA, int *djA, int *diA, double *dx, double *dtempv);
-//void solveBCGBlocks_d2(SolverData *sd, double *dA, int *djA, int *diA, double *dx, double *dtempv);
 
 #endif

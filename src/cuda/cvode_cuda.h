@@ -1,12 +1,25 @@
 /* Copyright (C) 2021 Barcelona Supercomputing Center and University of
- * Illinois at Urbana-Champaign
- * SPDX-License-Identifier: MIT
- */
+* Illinois at Urbana-Champaign
+* SPDX-License-Identifier: MIT
+*/
 
-#ifndef CVODE_gpu_d2_H_
-#define CVODE_gpu_d2_H_
+#ifndef CVODE_CUDA_H_
+#define CVODE_CUDA_H_
 
-#include "../camp_common.h"
+#include<stdio.h>
+#include<stdlib.h>
+#include<math.h>
+#include<iostream>
+#include<cuda.h>
+#include<cuda_runtime.h>
+#include<cuda_runtime_api.h>
+#include "libsolv.h"
+
+extern "C" {
+#include "../camp_solver.h"
+}
+
+__device__ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv);
 
 #define CV_SUCCESS               0
 #define DO_ERROR_TEST    +2
@@ -69,29 +82,23 @@
 #define NLS_MAXCOR 3
 #define CRDOWN RCONST(0.3)
 #define DGMAX  RCONST(0.3)
-#define RDIV      TWO
+#define RDIV      2.0
 #define MSBP       20
+#define RXN_ARRHENIUS 1
+#define RXN_TROE 2
+#define RXN_CMAQ_H2O2 3
+#define RXN_CMAQ_OH_HNO3 4
+#define RXN_PHOTOLYSIS 5
+#define RXN_HL_PHASE_TRANSFER 6
+#define RXN_AQUEOUS_EQUILIBRIUM 7
+#define RXN_SIMPOL_PHASE_TRANSFER 10
+#define RXN_CONDENSED_PHASE_ARRHENIUS 11
+#define RXN_FIRST_ORDER_LOSS 12
+#define RXN_EMISSION 13
+#define RXN_WET_DEPOSITION 14
+#define CAMP_SOLVER_SUCCESS 0
+#define CAMP_SOLVER_FAIL 1
 
-void constructor_cvode_cuda_d2(CVodeMem cv_mem, SolverData *sd);
-int cudaCVode_d2(void *cvode_mem, realtype tout, N_Vector yout,
-               realtype *tret, int itask, SolverData *sd);
-void set_jac_data_cuda_d2(SolverData *sd, double *J);
-void camp_solver_update_model_state_cuda_d2(N_Vector solver_state, SolverData *sd,
-                                       double threshhold, double replacement_value);
-void solver_get_statistics_cuda_d2(SolverData *sd);
-void solver_reset_statistics_cuda_d2(SolverData *sd);
-void free_gpu_cu_d2(SolverData *sd);
 
-#define HANDLE_ERROR( err ) (HandleError( err, __FILE__, __LINE__ ))
-
-static void HandleError(cudaError_t err,
-                        const char *file,
-                        int line) {
-  if (err != cudaSuccess) {
-    printf("%s in %s at line %d\n", cudaGetErrorString(err),
-           file, line);
-    exit(EXIT_FAILURE);
-  }
-}
 
 #endif

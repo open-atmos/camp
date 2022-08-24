@@ -468,6 +468,7 @@ if (CUDA_FOUND AND ENABLE_GPU)
           src/cuda/rxns_gpu/rxn_wet_deposition.cu
           src/cuda/cvode_gpu_d2.cu
           src/cuda/cvode_cuda_d2.cu
+          src/cuda/cvode_cuda.cu
           src/cuda/cvode_gpu.cu
           src/cuda/cvode_ls_gpu.cu
           src/cuda/libsolv.cu

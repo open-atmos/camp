@@ -4,7 +4,6 @@
  */
 
 #include "itsolver_gpu.h"
-//#include "../debug_and_stats/camp_debug_2.h"
 
 #define HANDLE_ERROR( err ) (HandleError( err, __FILE__, __LINE__ ))
 
@@ -17,6 +16,10 @@ static void HandleError(cudaError_t err,
     exit(EXIT_FAILURE);
   }
 }
+
+
+
+
 
 void read_options_bcg(itsolver *bicg){
 
