@@ -4,6 +4,7 @@
  */
 
 #include "itsolver_gpu.h"
+#include "cvode_cuda_d2.h"
 extern "C" {
 #include "cvode_gpu_d2.h"
 }
@@ -2076,7 +2077,8 @@ __noinline__ __device__ void cudaDevicezaxpbypc_d2(double* dz, double* dx,double
   dz[row]=a*dz[row]  + dx[row] + b*dy[row];
 }
 
-__global__
+
+__device__
 void solveBcgCuda_d2(
         double *dA, int *djA, int *diA, double *dx, double *dtempv //Input data
         ,int nrows, int blocks, int n_shr_empty, int maxIt
@@ -2107,10 +2109,9 @@ void solveBcgCuda_d2(
       beta = (rho1 / rho0) * (alpha / omega0);
 
 
-        //todo using dp0... uses 50 registers per block, while cudaDevicezaxpbypc or cudaDevicezaxpbypc_d2 uses 46
-//cudaDevicezaxpbypc(dp0, dr0, dn0, beta, -1.0 * omega0 * beta, nrows);   //z = ax + by + c
-//dp0[tid]=beta*dp0[tid]+dr0[tid]+ (-1.0)*omega0 * beta * dn0[tid];
-            cudaDevicezaxpbypc_d2(dp0, dr0, dn0, beta, -1.0 * omega0 * beta, nrows);   //z = ax + by + c
+    cudaDevicezaxpbypc(dp0, dr0, dn0, beta, -1.0 * omega0 * beta, nrows);   //z = ax + by + c
+    //dp0[tid]=beta*dp0[tid]+dr0[tid]+ (-1.0)*omega0 * beta * dn0[tid];
+            //cudaDevicezaxpbypc_d2(dp0, dr0, dn0, beta, -1.0 * omega0 * beta, nrows);   //z = ax + by + c
 
 
 
@@ -2146,6 +2147,38 @@ void solveBcgCuda_d2(
   }
 }
 
+__device__
+void solveBcgCuda_d2_device(
+        double *dA, int *djA, int *diA, double *dx, double *dtempv //Input data
+        ,int nrows, int blocks, int n_shr_empty, int maxIt
+        ,int n_cells, double tolmax, double *ddiag //Init variables
+        ,double *dr0, double *dr0h, double *dn0, double *dp0
+        ,double *dt, double *ds, double *dAx2, double *dy, double *dz// Auxiliary vectors
+)
+{
+  int tid = blockIdx.x * blockDim.x + threadIdx.x;
+solveBcgCuda_d2(dA, djA, diA, dx, dtempv, nrows, blocks, n_shr_empty, maxIt, n_cells,
+tolmax, ddiag, dr0, dr0h, dn0, dp0, dt, ds, dAx2, dy, dz
+);
+
+}
+
+__global__
+void cudaGlobalCVode(
+        double *dA, int *djA, int *diA, double *dx, double *dtempv //Input data
+        ,int nrows, int blocks, int n_shr_empty, int maxIt
+        ,int n_cells, double tolmax, double *ddiag //Init variables
+        ,double *dr0, double *dr0h, double *dn0, double *dp0
+        ,double *dt, double *ds, double *dAx2, double *dy, double *dz// Auxiliary vectors
+)
+{
+  int tid = blockIdx.x * blockDim.x + threadIdx.x;
+solveBcgCuda_d2_device(dA, djA, diA, dx, dtempv, nrows, blocks, n_shr_empty, maxIt, n_cells,
+tolmax, ddiag, dr0, dr0h, dn0, dp0, dt, ds, dAx2, dy, dz
+);
+
+}
+
 void solveGPU_block_thr_d2(int blocks, int threads_block, int n_shr_memory, int n_shr_empty, int offset_cells,
         SolverData *sd, int last_blockN)
 {
@@ -2177,8 +2210,7 @@ void solveGPU_block_thr_d2(int blocks, int threads_block, int n_shr_memory, int 
   double *dx=mGPU->dx+offset_nrows;
   double *dtempv=mGPU->dtempv+offset_nrows;
 
-  solveBcgCuda_d2 << < blocks, threads_block, n_shr_memory * sizeof(double) >> >
-                                           //solveBcgCuda << < blocks, threads_block, threads_block * sizeof(double) >> >
+  cudaGlobalCVode << < blocks, threads_block, n_shr_memory * sizeof(double) >> >
                                            (dA, djA, diA, dx, dtempv, nrows, blocks, n_shr_empty, maxIt, n_cells,
                                                    tolmax, ddiag, dr0, dr0h, dn0, dp0, dt, ds, dAx2, dy, dz
                                            );
