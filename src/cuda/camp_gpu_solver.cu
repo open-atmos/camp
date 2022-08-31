@@ -1208,31 +1208,10 @@ void free_gpu_cu(SolverData *sd) {
     cudaFree(mGPU->map_state_derivCPU);
     cudaFree(mGPU->mdv);
     cudaFree(mGPU->mdvo);
-
-#ifdef CAMP_DEBUG_GPU
-#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
-    cudaFree(mGPU->tguessNewton);
-    cudaFree(mGPU->dtNewtonIteration);
-    cudaFree(mGPU->dtJac);
-    cudaFree(mGPU->dtlinsolsetup);
-    cudaFree(mGPU->dtcalc_Jac);
-    cudaFree(mGPU->dtRXNJac);
-    cudaFree(mGPU->dtf);
-    cudaFree(mGPU->dtguess_helper);
-    cudaFree(mGPU->dtBCG);
-    cudaFree(mGPU->dtcudaDeviceCVode);
-    cudaFree(mGPU->dtPostBCG);
-#endif
-#endif
     cudaFree(mGPU);
-//ModelDataGPU end
-
+  }
 }
-
-}
-
 /* Auxiliar functions */
-
 void bubble_sort_gpu(unsigned int *n_zeros, unsigned int *rxn_position, int n_rxn){
 
   int tmp,s=1,i_rxn=n_rxn;

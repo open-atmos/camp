@@ -472,7 +472,7 @@ int CVode_gpu(void *cvode_mem, realtype tout, N_Vector yout,
   for(;;) {
 
 #ifdef CAMP_DEBUG_GPU
-#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
+#ifndef CAMP_PROFILE_DEVICE_FUNCTIONS
 
     for (int iDevice = sd->startDevice; iDevice < sd->endDevice; iDevice++) {
       cudaSetDevice(iDevice);
@@ -2544,10 +2544,6 @@ int linsolsetup_gpu(SolverData *sd, CVodeMem cv_mem,int convfail,N_Vector vtemp1
     cvdls_mem->nstlj = cv_mem->cv_nst;
     cv_mem->cv_jcur = SUNTRUE;
 
-#ifdef CAMP_DEBUG_GPU
-    cudaEventRecord(bicg->startJac);
-#endif
-
     double *cv_y = NV_DATA_S(cv_mem->cv_y);
     offset_nrows = 0;
     for (int iDevice = sd->startDevice; iDevice < sd->endDevice; iDevice++) {
@@ -2572,16 +2568,6 @@ int linsolsetup_gpu(SolverData *sd, CVodeMem cv_mem,int convfail,N_Vector vtemp1
 
 #ifdef DEBUG_linsolsetup_gpu
     check_isnand(mGPU->A,mGPU->nnz,"postjac");
-#endif
-
-#ifdef CAMP_DEBUG_GPU
-    cudaEventRecord(bicg->stopJac);
-
-    cudaEventSynchronize(bicg->stopJac);
-    float msJac = 0.0;
-    cudaEventElapsedTime(&msJac, bicg->startJac, bicg->stopJac);
-    sd->timeJac+= msJac;
-    sd->counterJac++;
 #endif
 
     if (retval < 0) {
@@ -2753,7 +2739,7 @@ int linsolsolve_gpu(SolverData *sd, CVodeMem cv_mem)
       sd->mGPU = &(sd->mGPUs[iDevice]);
       mGPU = sd->mGPU;
 
-      if (mGPU->cells_method == MULTICELLS) {//Sync with CPU
+      if (bicg->cells_method == MULTICELLS) {//Sync with CPU
         solveBCG(sd, mGPU->dA, mGPU->djA, mGPU->diA, mGPU->dx, mGPU->dtempv);
       } else {
         solveBCGBlocks(sd, mGPU->dA, mGPU->djA, mGPU->diA, mGPU->dx, mGPU->dtempv);

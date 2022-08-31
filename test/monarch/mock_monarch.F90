@@ -183,7 +183,7 @@ program mock_monarch_t
   integer :: plot_case, new_v_cells, aux_int
   type(solver_stats_t), target :: solver_stats
 
-  integer :: ncounters, ntimers != 0 != 2
+  integer :: ncounters, ntimers
   integer :: export_results_all_cells
   integer :: plot_species = 0
   type(json_file) :: jfile
@@ -301,8 +301,8 @@ program mock_monarch_t
     end if
 #endif
 
-
 #ifdef CAMP_USE_MAXRREGCOUNT64
+  print*,"mock_monarch CAMP_USE_MAXRREGCOUNT64"
 #else
     if(caseMulticellsOnecell.eq."maxrregcount-64") then
       print*,"ENABLE maxrregcount-64 in CMakeLists.txt"
@@ -482,8 +482,8 @@ program mock_monarch_t
   camp_interface => camp_monarch_interface_t(camp_input_file, interface_input_file, &
           START_CAMP_ID, END_CAMP_ID, n_cells, ADD_EMISIONS)!, n_cells
 
-  ncounters = size(camp_interface%camp_core%counters)
-  ntimers = size(camp_interface%camp_core%times)
+  ncounters = size(camp_interface%camp_core%ncounters)
+  ntimers = size(camp_interface%camp_core%ntimers)
 
   !call camp_mpi_barrier(MPI_COMM_WORLD)
 
@@ -743,8 +743,10 @@ contains
     file_name = file_prefix//"_solver_stats.csv"
     open(FILE_SOLVER_STATS_CSV, file=file_name, status="replace", action="write")
 
-    str_stats_names = "timestep,counterBCG,counterLS,countersolveCVODEGPU,countercvStep,timeLS,timeBiconjGradMemcpy,timeCVode,&
-            dtcudaDeviceCVode,dtPostBCG,timeNewtonIteration,timeJac,timelinsolsetup,timecalc_Jac,&
+    !todo move this to python interface and automatic size
+    str_stats_names = "timestep,counterBCG,counterLS,countersolveCVODEGPU,countercvStep,&
+            timeLS,timeBiconjGradMemcpy,timeCVode,&
+            dtcudaDeviceCVode,dtPostBCG,timeAux,timeNewtonIteration,timeJac,timelinsolsetup,timecalc_Jac,&
             timeRXNJac,timef,timeguess_helper,timecvStep"
 
     write(FILE_SOLVER_STATS_CSV, "(A)", advance="no") str_stats_names
@@ -1601,7 +1603,7 @@ contains
 
 #ifdef CAMP_DEBUG_GPU
     call camp_interface%camp_core%reset_solver_stats(solver_stats=solver_stats)
-    camp_interface%camp_core%times(3) = 0
+    camp_interface%camp_core%ntimers(3) = 0
 #endif
 
     do i_time=1, NUM_TIME_STEP
@@ -1656,7 +1658,7 @@ contains
 #ifdef CAMP_DEBUG_GPU
 
       !print*,"ebi_time",ebi_time
-      camp_interface%camp_core%times(3) = ebi_time ! timeCVODE place
+      camp_interface%camp_core%ntimers(3) = ebi_time ! timeCVODE place
       call export_solver_stats(curr_time,camp_interface,solver_stats,ncounters,ntimers)
 
 #endif
@@ -2296,17 +2298,17 @@ contains
 
     l_comm = MPI_COMM_WORLD
 
-    call mpi_reduce(camp_interface%camp_core%counters, counters_max, ncounters, MPI_INTEGER, MPI_MAX, 0, &
+    call mpi_reduce(camp_interface%camp_core%ncounters, counters_max, ncounters, MPI_INTEGER, MPI_MAX, 0, &
             l_comm, ierr)
     call camp_mpi_check_ierr(ierr)
-    call mpi_reduce(camp_interface%camp_core%times, times_max, ntimers, MPI_DOUBLE, MPI_MAX, 0, &
+    call mpi_reduce(camp_interface%camp_core%ntimers, times_max, ntimers, MPI_DOUBLE, MPI_MAX, 0, &
             l_comm, ierr)
     call camp_mpi_check_ierr(ierr)
 
 #else
 
-    counters_max(:)=camp_interface%camp_core%counters(:)
-    times_max(:)=camp_interface%camp_core%times(:)
+    counters_max(:)=camp_interface%camp_core%ncounters(:)
+    times_max(:)=camp_interface%camp_core%ntimers(:)
 
 #endif
 
@@ -2325,7 +2327,7 @@ contains
       end do
 
       do i=1, ntimers
-        !print*,"times_max,i",times_max(i),i!,solver_stats%times(i)
+        !print*,"times_max,i",times_max(i),i!,solver_stats%ntimers(i)
         write(FILE_SOLVER_STATS_CSV, "(A)", advance="no") ","
         write(FILE_SOLVER_STATS_CSV, "(ES13.6)", advance="no") &
                 times_max(i)

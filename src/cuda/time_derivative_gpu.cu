@@ -149,5 +149,3 @@ void time_derivative_add_value_gpu(TimeDerivativeGPU time_deriv, unsigned int sp
 }
 
 }
-
-//todo merge with default time_derivative "class" using .cpp file

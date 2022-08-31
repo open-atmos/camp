@@ -157,8 +157,8 @@ module camp_camp_core
     type(camp_solver_data_t), pointer, public :: solver_data_aero => null()
     !> Solver data (mixed gas- and aerosol-phase reactions)
     type(camp_solver_data_t), pointer, public :: solver_data_gas_aero => null()
-    integer :: counters(4)
-    real(kind=dp) :: times(14)
+    integer :: ncounters(4)
+    real(kind=dp) :: ntimers(14)
     integer(kind=i_kind) :: counterSolve
     integer(kind=i_kind) :: counterFail
     real(kind=dp), allocatable :: init_state_var(:)
@@ -1207,8 +1207,8 @@ contains
                 GAS_RXN,         & ! Reaction phase
                 this%n_cells,    & ! # of cells computed simultaneosly
                 spec_names,       & ! Species names
-                size(this%counters), & ! # of profiling variables (Times and counters)
-                size(this%times) & ! # of profiling variables (Times and counters)
+                size(this%ncounters), & ! # of profiling variables (Times and counters)
+                size(this%ntimers) & ! # of profiling variables (Times and counters)
       )
       call this%solver_data_aero%initialize( &
                 this%var_type,   & ! State array variable types
@@ -1220,8 +1220,8 @@ contains
                 AERO_RXN,        & ! Reaction phase
                 this%n_cells,    & ! # of cells computed simultaneosly
                 spec_names,       & ! Species names
-                size(this%counters), & ! # of profiling variables (Times and counters)
-                size(this%times) & ! # of profiling variables (Times and counters)
+                size(this%ncounters), & ! # of profiling variables (Times and counters)
+                size(this%ntimers) & ! # of profiling variables (Times and counters)
       )
     else
 
@@ -1244,8 +1244,8 @@ contains
                 GAS_AERO_RXN,    & ! Reaction phase
                 this%n_cells,    & ! # of cells computed simultaneosly
                 spec_names,       & ! Species names
-                size(this%counters), & ! # of profiling variables (Times and counters)
-                size(this%times) & ! # of profiling variables (Times and counters)
+                size(this%ncounters), & ! # of profiling variables (Times and counters)
+                size(this%ntimers) & ! # of profiling variables (Times and counters)
               )
 
     end if
@@ -1513,7 +1513,7 @@ contains
       solver_status = solver%solve(camp_state, t_initial, t_final,    &
               n_cells_aux, solver_stats)
 
-      !call solver%get_solver_stats( solver_stats,this%counters,this%times)
+      !call solver%get_solver_stats( solver_stats,this%ncounters,this%ntimers)
       solver_stats%status_code   = solver_status
       solver_stats%start_time__s = t_initial
       solver_stats%end_time__s   = t_final
@@ -1557,7 +1557,7 @@ contains
               "solver: "//to_string(phase))
     end if
 
-    call solver%get_solver_stats( solver_stats,this%counters,this%times)
+    call solver%get_solver_stats( solver_stats,this%ncounters,this%ntimers)
 
   end subroutine
 
@@ -1591,7 +1591,7 @@ contains
               "solver: "//to_string(phase))
     end if
 
-    call solver%reset_solver_stats( solver_stats,this%counters,this%times)
+    call solver%reset_solver_stats( solver_stats,this%ncounters,this%ntimers)
 
   end subroutine
 

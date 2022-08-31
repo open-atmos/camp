@@ -3217,33 +3217,6 @@ void solver_reset_statistics_cuda_d2(SolverData *sd){
   ModelDataGPU_d2 *mGPU = sd->mGPU_d2;
   //printf("solver_reset_statistics_cuda_d2\n");
 
-/*
-for (int iDevice = sd->startDevice; iDevice < sd->endDevice; iDevice++) {
-  cudaSetDevice(iDevice);
-  sd->mGPU_d2 = &(sd->mGPUs_d2[iDevice]);
-  mGPU = sd->mGPU_d2;
-
-#ifdef CAMP_DEBUG_GPU
-#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
-  cudaMemset(mGPU->tguessNewton, 0., sizeof(double));
-  cudaMemset(mGPU->dtNewtonIteration, 0., sizeof(double));
-  cudaMemset(mGPU->dtJac, 0., sizeof(double));
-  cudaMemset(mGPU->dtlinsolsetup, 0., sizeof(double));
-  cudaMemset(mGPU->dtcalc_Jac, 0., sizeof(double));
-  cudaMemset(mGPU->dtRXNJac, 0., sizeof(double));
-  cudaMemset(mGPU->dtf, 0., sizeof(double));
-  cudaMemset(mGPU->dtguess_helper, 0., sizeof(double));
-#endif
-#ifdef DEV_DMDV_ARRAY
-  for(int i=0; i<mGPU->n_cells;i++){
-    cudaMemcpy(&mGPU->mdv[i], &mGPU->mdvCPU, sizeof(ModelDataVariable), cudaMemcpyHostToDevice);
-  }
-#else
-  cudaMemcpy(mGPU->mdv, &mGPU->mdvCPU, sizeof(ModelDataVariable), cudaMemcpyHostToDevice);
-#endif
-#endif
-}
-*/
 }
 
 void free_gpu_cu_d2(SolverData *sd) {

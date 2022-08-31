@@ -51,12 +51,6 @@ __device__ void cudaDeviceaxpy(double* dy,double* dx, double a, int nrows);
 __device__ void cudaDeviceVWRMS_Norm(double *g_idata1, double *g_idata2, double *odata, int n, int n_shr_empty);
 __device__ void cudaDevicescaley(double* dy, double a, int nrows);
 
-__device__ void solveBcgCuda_d2_libsolv(
-        double *dA, int *djA, int *diA, double *dx, double *dtempv //Input data
-        ,int nrows, int blocks, int n_shr_empty, int maxIt
-        ,int n_cells, double tolmax, double *ddiag //Init variables
-        ,double *dr0, double *dr0h, double *dn0, double *dp0
-        ,double *dt, double *ds, double *dAx2, double *dy, double *dz// Auxiliary vectors
-);
+
 
 #endif

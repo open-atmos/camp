@@ -25,13 +25,9 @@
 #ifdef CAMP_USE_GPU
 #include <cuda.h>
 #include <cuda_runtime.h>
-
 #include <cuda_runtime_api.h>
-
 #include "cuda/cuda_structs.h"
-#include "cuda/cuda_structs_d2.h"
 #endif
-
 #include <cvode/cvode.h>        /* Protoypes for CVODE fcts., consts.  */
 #include <cvode/cvode_direct.h> /* CVDls interface                     */
 #include <cvode/cvode_impl.h>   /* CVodeMem structure                  */
@@ -292,15 +288,6 @@ typedef struct {
   double timeCVodeTotal;
   double timeLS;
   double timeDerivCPU;
-  double timeJacCPU;
-  double timeNewtonIteration;
-  double tguessNewton;
-  double timeJac;
-  double timelinsolsetup;
-  double timecalc_Jac;
-  double timeRXNJac;
-  double timef;
-  double timeguess_helper;
 #endif
 
 #ifdef CAMP_DEBUG_DERIV_CPU
@@ -316,11 +303,8 @@ typedef struct {
 #endif
 #ifdef CAMP_USE_GPU
   itsolver bicg;
-  ModelDataCPU_d2 mCPU;
   ModelDataGPU *mGPUs;
   ModelDataGPU *mGPU;
-  ModelDataGPU_d2 *mGPUs_d2;
-  ModelDataGPU_d2 *mGPU_d2;
   int *flagCells;
   int endDevice;
   int startDevice;

@@ -18,7 +18,6 @@
 #include "sub_model_solver.h"
 #ifdef CAMP_USE_GPU
 #include "cuda/cvode_gpu.h"
-#include "cuda/cvode_gpu_d2.h"
 #include "cuda/cvode_ls_gpu.h"
 #endif
 #ifdef CAMP_USE_GSL
@@ -371,11 +370,9 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
 #ifdef CAMP_USE_GPU
   get_camp_config_variables(sd);
   if(sd->use_cpu==0){
-    if(sd->use_gpu_cvode !=2){
       solver_new_gpu_cu(sd, n_dep_var, n_state_var, n_rxn,
                       n_rxn_int_param, n_rxn_float_param, n_rxn_env_param,
                       n_cells);
-    }
   }
 #endif
 
@@ -400,16 +397,6 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
   sd->timeCVode = 0.0;
   sd->timeCVodeTotal = 0.0;
   sd->timeDerivCPU = 0.0;
-  sd->timeJacCPU = 0.0;
-  sd->timeLS = 0.0;
-  sd->timeNewtonIteration = 0.0;
-  sd->timeJac = 0.0;
-  sd->timelinsolsetup = 0.0;
-  sd->timecalc_Jac = 0.0;
-  sd->timeRXNJac = 0.0;
-  sd->timef = 0.0;
-  sd->timeguess_helper = 0.0;
-  sd->tguessNewton = 0.0;
 
 #endif
 
@@ -575,12 +562,8 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
 // Set gpu rxn values
 #ifdef CAMP_USE_GPU
   if(sd->use_cpu==0){
-    if(sd->use_gpu_cvode != 2) {
       solver_init_int_double_gpu(sd);
       constructor_cvode_gpu(sd->cvode_mem, sd);
-    }else{
-      constructor_cvode_cuda_d2(sd->cvode_mem, sd);
-    }
   }
 #endif
 
@@ -750,9 +733,8 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
 // Update data for new environmental state on GPU
 #ifdef CAMP_USE_GPU
   if(sd->use_cpu==0){
-    if(sd->use_gpu_cvode !=2) {  // todo join this with cudacvode
+     // todo join this with cudacvode
       rxn_update_env_state_gpu(sd);
-    }
   }
 #endif
 
@@ -810,39 +792,28 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
 
   //printf("Pre-Cvode %-le %-le\n",t_final, t_rt);
   //print_derivative(sd, sd->y);
-
   if (!sd->no_solve) {
-
 #ifdef CAMP_DEBUG_GPU
   double starttimeCvode = MPI_Wtime();
 #endif
-
 #ifdef CAMP_USE_GPU
-
     if(sd->use_cpu==1){
       flag = CVode(sd->cvode_mem, (realtype)t_final, sd->y, &t_rt, CV_NORMAL);
     }else{
       if(sd->use_gpu_cvode==1){
         flag = cudaCVode(sd->cvode_mem, (realtype)t_final, sd->y,
           &t_rt, CV_NORMAL, sd);
-      }else if(sd->use_gpu_cvode==2){
-        flag = cudaCVode_d2(sd->cvode_mem, (realtype)t_final, sd->y,
-                         &t_rt, CV_NORMAL, sd);
-      }
-      else{
-      flag = CVode_gpu(sd->cvode_mem, (realtype)t_final, sd->y,
+      }else{
+        flag = CVode_gpu(sd->cvode_mem, (realtype)t_final, sd->y,
              &t_rt, CV_NORMAL, sd);
       }
     }
-
 #else
     flag = CVode(sd->cvode_mem, (realtype)t_final, sd->y, &t_rt, CV_NORMAL);
 #endif
-
 #ifdef CAMP_DEBUG_GPU
   sd->timeCVode += (MPI_Wtime() - starttimeCvode);
 #endif
-
     sd->solver_flag = flag;
 #ifdef FAILURE_DETAIL
     if (flag < 0) {
@@ -1060,7 +1031,7 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
       CVodeGettimesCounters(sd->cvode_mem, &times[0], &counters[1]);
       times[2]=sd->timeCVode;
       //for(int i=0;i<sd->ntimers;i++)
-      //  printf("i %d times %le counters %d\n",i,times[i],counters[i]);
+        //printf("i %d times %le counters %d\n",i,times[i],counters[i]);
       //for(int i=0;i<sd->ncounters;i++)
       //  printf("i %d counters %d\n",i,counters[i]);
     }
@@ -1071,21 +1042,13 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
 
   }
   else{
-
     itsolver *bicg = &(sd->bicg);
+    solver_get_statistics_gpu(sd);
     ModelDataGPU *mGPU;
-
     cudaSetDevice(sd->startDevice);
     sd->mGPU = &(sd->mGPUs[sd->startDevice]);
     mGPU = sd->mGPU;
-
-  if(sd->use_gpu_cvode!=2) {
-    solver_get_statistics_gpu(sd);
-  }else{
-    solver_get_statistics_cuda_d2(sd);
-  }
-    mGPU = sd->mGPU;
-
+    ModelDataVariable mdvCPU=mGPU->mdvCPU;
     int i;
     if(sd->ncounters>0){
       i=0;
@@ -1101,7 +1064,6 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
 #else
       counters[i++]=0;
 #endif
-
     }
     if(sd->ntimers>0){
       i=0;
@@ -1109,22 +1071,31 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
       times[i++]=bicg->timeBiConjGradMemcpy;
       times[i++]=sd->timeCVode;
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
-      times[i++]=mGPU->mdvCPU.dtcudaDeviceCVode;
-      times[i++]=mGPU->mdvCPU.dtPostBCG;
+      times[i++]=mdvCPU.dtcudaDeviceCVode;
+      times[i++]=mdvCPU.dtPostBCG;
 #else
       times[i++]=0.;
       times[i++]=0.;
 #endif
       times[i++]=0.;
-      times[i++]=sd->timeNewtonIteration;
-      times[i++]=sd->timeJac;
-      times[i++]=sd->timelinsolsetup;
-      times[i++]=sd->timecalc_Jac;
-      times[i++]=sd->timeRXNJac;
-      times[i++]=sd->timef;
-      times[i++]=sd->timeguess_helper;
+#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
+      times[i++]=mdvCPU.timeNewtonIteration;
+      times[i++]=mdvCPU.timeJac;
+      times[i++]=mdvCPU.timelinsolsetup;
+      times[i++]=mdvCPU.timecalc_Jac;
+      times[i++]=mdvCPU.timeRXNJac;
+      times[i++]=mdvCPU.timef;
+      times[i++]=mdvCPU.timeguess_helper;
+#else
+      times[i++]=0.;
+      times[i++]=0.;
+      times[i++]=0.;
+      times[i++]=0.;
+      times[i++]=0.;
+      times[i++]=0.;
+      times[i++]=0.;
+#endif
       times[i++]=bicg->timecvStep;
-
       //for(int i=0;i<sd->ntimers;i++)
         //printf("times[%d]=%le\n",i,times[i]);
     }
@@ -1132,18 +1103,8 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
       printf("WARNING: In function solver_get_statistics trying to assign times "
              "and counters profilign variables with ncounters || ntimers < 1");
     }
-
-    if(sd->use_gpu_cvode !=2) {
       solver_reset_statistics_gpu(sd);
-    }else{
-      solver_reset_statistics_cuda_d2(sd);
-    }
-
-
-    //}
   }
-
-  //printf("times[0] %le counters[1] %d\n",times[0],counters[1]);
 #endif
 #endif
 
@@ -1151,9 +1112,7 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
 
 void solver_reset_statistics(void *solver_data, int *counters, double *times)
 {
-
   SolverData *sd = (SolverData *)solver_data;
-
   for(int i=0; i<sd->ncounters; i++){
     counters[i]=0;
   }
@@ -1161,7 +1120,6 @@ void solver_reset_statistics(void *solver_data, int *counters, double *times)
     times[i]=0.0;
   }
   //printf("sd->ntimers ncounters %d %d\n",sd->ntimers,sd->ncounters);
-
 #ifdef CAMP_USE_GPU
 #ifdef CAMP_DEBUG_GPU
 
@@ -1179,16 +1137,14 @@ void solver_reset_statistics(void *solver_data, int *counters, double *times)
 
   }
   else{
-
-
     itsolver *bicg = &(sd->bicg);
     ModelDataGPU *mGPU;
-
    for (int iDevice = sd->startDevice; iDevice < sd->endDevice; iDevice++) {
       cudaSetDevice(iDevice);
       sd->mGPU = &(sd->mGPUs[iDevice]);
       mGPU = sd->mGPU;
 
+      ModelDataVariable mdvCPU=mGPU->mdvCPU;
       if(sd->ncounters>0){
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
         mGPU->mdvCPU.counterBCGInternal=0;
@@ -1204,16 +1160,16 @@ void solver_reset_statistics(void *solver_data, int *counters, double *times)
         bicg->timeBiConjGradMemcpy=0;
         sd->timeCVode=0;
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
-        mGPU->mdvCPU.dtcudaDeviceCVode=0;
-        mGPU->mdvCPU.dtPostBCG=0;
-#endif
-        sd->timeNewtonIteration=0;
-        sd->timeJac=0;
-        sd->timelinsolsetup=0;
-        sd->timecalc_Jac=0;
-        sd->timeRXNJac=0;
-        sd->timef=0;
-        sd->timeguess_helper=0;
+        mdvCPU.dtcudaDeviceCVode=0;
+        mdvCPU.dtPostBCG=0;
+        mdvCPU.timeNewtonIteration=0;
+        mdvCPU.timeJac=0;
+        mdvCPU.timelinsolsetup=0;
+        mdvCPU.timecalc_Jac=0;
+        mdvCPU.timeRXNJac=0;
+        mdvCPU.timef=0;
+        mdvCPU.timeguess_helper=0;
+        #endif
         bicg->timecvStep=0;
       }
       else{
@@ -1226,12 +1182,9 @@ void solver_reset_statistics(void *solver_data, int *counters, double *times)
 
 #endif
 #endif
-
 }
 
-
 #ifdef CAMP_USE_SUNDIALS
-
 /** \brief Update the model state from the current solver state
  *
  * \param solver_state Solver state vector
@@ -1289,13 +1242,8 @@ int camp_solver_update_model_state(N_Vector solver_state, SolverData *sd,
 #ifdef CAMP_USE_GPU
 
   if(sd->use_cpu==0){
-    if(sd->use_gpu_cvode != 2) {
       camp_solver_update_model_state_gpu(solver_state, sd, threshhold,
                                          replacement_value);
-    }else{
-      camp_solver_update_model_state_cuda_d2(solver_state, sd, threshhold,
-                                         replacement_value);
-    }
   }
 #endif
 
@@ -1649,11 +1597,7 @@ int Jac(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_data,
 #ifdef CAMP_USE_GPU
 
   if(sd->use_cpu==0){
-    if(sd->use_gpu_cvode != 2) {
       set_jac_data_gpu(sd, SM_DATA_S(J));
-    }else{
-      set_jac_data_cuda_d2(sd, SM_DATA_S(J));
-    }
   }
 #endif
 
@@ -2076,13 +2020,9 @@ SUNMatrix get_jac_init(SolverData *sd) {
                                      elements in the reaction matrix*/
   sunindextype n_jac_elem_solver; /* number of potentially non-zero Jacobian
                                      elements in the reaction matrix*/
-
 #ifdef DEBUG_get_jac_init
-
   printf("get_jac_init start \n");
-
 #endif
-
   // Number of grid cells
   int n_cells = sd->model_data.n_cells;
 
@@ -2345,9 +2285,7 @@ SUNMatrix get_jac_init(SolverData *sd) {
 
 #ifdef CAMP_USE_GPU
   if(sd->use_cpu==0){
-    if(sd->use_gpu_cvode != 2) {
       init_jac_gpu(sd, SM_DATA_S(M));
-    }
   }
 #endif
 
@@ -2357,11 +2295,8 @@ SUNMatrix get_jac_init(SolverData *sd) {
   free(deriv_ids);
 
 #ifdef DEBUG_get_jac_init
-
   printf("get_jac_init end \n");
-
 #endif
-
   return M;
 }
 
@@ -2594,11 +2529,7 @@ void solver_free(void *solver_data) {
 #ifdef CAMP_USE_GPU
 
   if(sd->use_cpu==0){
-    if(sd->use_gpu_cvode != 2) {
       free_gpu_cu(sd);
-    }else{
-      free_gpu_cu_d2(sd);
-    }
   }
 
 #endif

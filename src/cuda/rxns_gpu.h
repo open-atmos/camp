@@ -42,6 +42,11 @@ __host__ __device__
 #endif
 void rxn_gpu_arrhenius_calc_jac_contrib(ModelDataGPU *model_data, JacobianGPU jac, int *rxn_int_data,
           double *rxn_float_data, double *rxn_env_data, double time_step);
+
+void rxn_arrhenius_get_jac_contrib(ModelData *model_data, Jacobian jac,
+                                    int *rxn_int_data, double *rxn_float_data,
+                                    double *rxn_env_data, double time_step, int *iA, int *jA);
+
 #endif
 
 // CMAQ_H2O2

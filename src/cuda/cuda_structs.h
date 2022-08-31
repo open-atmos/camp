@@ -44,7 +44,6 @@ typedef struct
   cudaEvent_t startcvStep;
   cudaEvent_t startBCG;
   cudaEvent_t startBCGMemcpy;
-  cudaEvent_t startJac;
 
   cudaEvent_t stopDerivNewton;
   cudaEvent_t stopDerivSolve;
@@ -54,7 +53,6 @@ typedef struct
   cudaEvent_t stopcvStep;
   cudaEvent_t stopBCGMemcpy;
   cudaEvent_t stopBCG;
-  cudaEvent_t stopJac;
 
 #endif
 
@@ -184,12 +182,18 @@ typedef struct {
     int cv_ncfn;
 
 #ifdef CAMP_DEBUG_GPU
-#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
+#ifndef CAMP_PROFILE_DEVICE_FUNCTIONS
     int countercvStep;
     int counterDerivGPU;
     int counterBCGInternal;
     int counterBCG;
-
+    double timeNewtonIteration;
+    double timeJac;
+    double timelinsolsetup;
+    double timecalc_Jac;
+    double timeRXNJac;
+    double timef;
+    double timeguess_helper;
     double dtBCG;
     double dtcudaDeviceCVode;
     double dtPostBCG;
@@ -198,9 +202,6 @@ typedef struct {
 }ModelDataVariable; //variables to pass between gpu and cpu (different data between cells)
 
 typedef struct {
-
-    //itsolver
-    int cells_method;
 
     //CPU
     double* A;
@@ -348,25 +349,20 @@ typedef struct {
     int max_n_gpu_blocks;
     int *map_state_derivCPU;
 
+#ifdef DEV_cudaSwapCSC_CSR
+    int* iB;
+    int* jB;
+    double *B;
+#endif
+
     ModelDataVariable mdvCPU; //cpu equivalent to gpu
     ModelDataVariable *mdv; //device
     ModelDataVariable *mdvo; //out device
 
 //ODE stats
 #ifdef CAMP_DEBUG_GPU
-#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
+#ifndef CAMP_PROFILE_DEVICE_FUNCTIONS
     int clock_khz;
-    double *tguessNewton;
-    double *dtNewtonIteration;
-    double *dtJac;
-    double *dtlinsolsetup;
-    double *dtcalc_Jac;
-    double *dtRXNJac;
-    double *dtf;
-    double *dtguess_helper;
-    double *dtBCG;
-    double *dtcudaDeviceCVode;
-    double *dtPostBCG;
 #endif
 #endif
 
