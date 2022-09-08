@@ -40,7 +40,6 @@ extern "C"{
 #define FLOAT_DATA_SIZE_ (NUM_FLOAT_PROP_+NUM_PROD_)
 
 #else
-
 #define NUM_REACT_ int_data[0]
 #define NUM_PROD_ int_data[1]
 #define A_ float_data[0]
@@ -60,20 +59,9 @@ extern "C"{
 #define YIELD_(x) float_data[(NUM_FLOAT_PROP_ + x)]
 #define INT_DATA_SIZE_ (NUM_INT_PROP_+(NUM_REACT_+2)*(NUM_REACT_+NUM_PROD_))
 #define FLOAT_DATA_SIZE_ (NUM_FLOAT_PROP_+NUM_PROD_)
-
 #endif
 
-/** \brief Calculate contributions to the time derivative \f$f(t,y)\f$ from
- * this reaction.
- *
- * \param model_data Pointer to the model data, including the state array
- * \param deriv Pointer to the time derivative to add contributions to
- * \param rxn_data Pointer to the reaction data
- * \param time_step Current time step being computed (s)
- * \return The rxn_data pointer advanced by the size of the reaction data
- */
 #ifdef CAMP_USE_SUNDIALS
-
 #ifdef __CUDA_ARCH__
 __host__ __device__
 #endif
@@ -114,17 +102,8 @@ void rxn_gpu_arrhenius_calc_deriv_contrib(ModelDataGPU *model_data, TimeDerivati
 
 }
 
-
 #endif
 
-/** \brief Calculate contributions to the Jacobian from this reaction
- *
- * \param model_data Pointer to the model data
- * \param J Pointer to the sparse Jacobian matrix to add contributions to
- * \param rxn_data Pointer to the reaction data
- * \param time_step Current time step being calculated (s)
- * \return The rxn_data pointer advanced by the size of the reaction data
- */
 #ifdef CAMP_USE_SUNDIALS
 #ifdef __CUDA_ARCH__
 __host__ __device__
@@ -171,6 +150,49 @@ void rxn_gpu_arrhenius_calc_jac_contrib(ModelDataGPU *model_data, JacobianGPU ja
   }
 
 }
-#endif
 
+void rxn_arrhenius_get_jac_indices(ModelData *model_data, Jacobian jac,
+                                    int *rxn_int_data, double *rxn_float_data,
+                                    double *rxn_env_data, int *colA, int *jA) {
+  int *int_data = rxn_int_data;
+  double *float_data = rxn_float_data;
+  double *state = model_data->grid_cell_state;
+  double *env_data = model_data->grid_cell_env;
+
+  int i_elem = 0;
+  for (int i_ind = 0; i_ind < NUM_REACT_; i_ind++) {
+    //double rate = RATE_CONSTANT_;
+    for (int i_spec = 0; i_spec < NUM_REACT_; i_spec++)
+      if (i_spec != i_ind){
+        //rate *= state[REACT_(i_spec)];
+        *colA=REACT_(i_spec);
+        colA++;
+      }
+
+    for (int i_dep = 0; i_dep < NUM_REACT_; i_dep++, i_elem++) {
+      if (JAC_ID_(i_elem) < 0) continue;
+      /*jacobian_add_value(jac, (unsigned int)JAC_ID_(i_elem), JACOBIAN_LOSS,
+                         rate);*/
+      *jA=JAC_ID_(i_elem);
+        jA++;
+    }
+    for (int i_dep = 0; i_dep < NUM_PROD_; i_dep++, i_elem++) {
+      if (JAC_ID_(i_elem) < 0) continue;
+      // Negative yields are allowed, but prevented from causing negative
+      // concentrations that lead to solver failures
+      /*
+      if (-rate * state[REACT_(i_ind)] * YIELD_(i_dep) * time_step <=
+          state[PROD_(i_dep)]) {
+        jacobian_add_value(jac, (unsigned int)JAC_ID_(i_elem),
+                           JACOBIAN_PRODUCTION, YIELD_(i_dep) * rate);
+      }*/
+        *jA=JAC_ID_(i_elem);
+        jA++;
+    }
+  }
+
+  return;
+}
+
+#endif
 }

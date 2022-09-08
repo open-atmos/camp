@@ -33,11 +33,11 @@ extern "C++" double gpu_VWRMS_Norm(int n, double* vec1,double* vec2,double* h_te
 extern "C++" void gpu_scaley(double* dy, double a, int nrows, int blocks, int threads);
 
 // Device functions (equivalent to global functions but in device to allow calls from gpu)
-__device__ void cudaDevicematScaleAddI(int nrows, double* dA, int* djA, int* diA, double alpha);
-__device__ void cudaDevicediagprecond(int nrows, double* dA, int* djA, int* diA, double* ddiag);
+__device__ void cudaDeviceBCGprecond(double* dA, int* djA, int* diA, double* ddiag, double alpha);
 __device__ void cudaDevicesetconst(double* dy,double constant,int nrows);
 __device__ void cudaDeviceSpmvCSR(double* dx, double* db, double* dA, int* djA, int* diA);
-__device__ void cudaDeviceSpmvCSC_block(double* dx, double* db, double* dA, int* djA, int* diA, int n_shr_empty);
+__device__ void cudaDeviceSpmvCSC_block(double* dx, double* db, double* dA, int* djA, int* diA);
+__device__ void cudaDeviceSpmv(double* dx, double* db, double* dA, int* djA, int* diA);
 __device__ void cudaDeviceaxpby(double* dy,double* dx, double a, double b, int nrows);
 __device__ void cudaDeviceyequalsx(double* dy,double* dx,int nrows);
 __device__ void cudaDevicemin(double *g_odata, double in, volatile double *sdata, int n_shr_empty);
@@ -51,12 +51,6 @@ __device__ void cudaDeviceaxpy(double* dy,double* dx, double a, int nrows);
 __device__ void cudaDeviceVWRMS_Norm(double *g_idata1, double *g_idata2, double *odata, int n, int n_shr_empty);
 __device__ void cudaDevicescaley(double* dy, double a, int nrows);
 
-__device__ void solveBcgCuda_d2_libsolv(
-        double *dA, int *djA, int *diA, double *dx, double *dtempv //Input data
-        ,int nrows, int blocks, int n_shr_empty, int maxIt
-        ,int n_cells, double tolmax, double *ddiag //Init variables
-        ,double *dr0, double *dr0h, double *dn0, double *dp0
-        ,double *dt, double *ds, double *dAx2, double *dy, double *dz// Auxiliary vectors
-);
+
 
 #endif

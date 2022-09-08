@@ -17,10 +17,6 @@ static void HandleError(cudaError_t err,
   }
 }
 
-
-
-
-
 void read_options_bcg(itsolver *bicg){
 
   FILE *fp;
@@ -56,8 +52,6 @@ void read_options_bcg(itsolver *bicg){
     }
     fclose(fp);
   }
-
-  //printf("itsolver read_options_bcg CELLS_METHOD %d\n",mGPU->cells_method);
 
 }
 
@@ -261,15 +255,11 @@ void exportOutBCG(SolverData *sd, const char *filepath){
 }
 
 void swapCSC_CSR(int n_row, int n_col, int* Ap, int* Aj, double* Ax, int* Bp, int* Bi, double* Bx){
-
   int nnz=Ap[n_row];
-
   memset(Bp, 0, (n_row+1)*sizeof(int));
-
   for (int n = 0; n < nnz; n++){
     Bp[Aj[n]]++;
   }
-
   //cumsum the nnz per column to get Bp[]
   for(int col = 0, cumsum = 0; col < n_col; col++){
     int temp  = Bp[col];
@@ -277,33 +267,25 @@ void swapCSC_CSR(int n_row, int n_col, int* Ap, int* Aj, double* Ax, int* Bp, in
     cumsum += temp;
   }
   Bp[n_col] = nnz;
-
   for(int row = 0; row < n_row; row++){
     for(int jj = Ap[row]; jj < Ap[row+1]; jj++){
       int col  = Aj[jj];
       int dest = Bp[col];
-
       Bi[dest] = row;
       Bx[dest] = Ax[jj];
-
       Bp[col]++;
     }
   }
-
   for(int col = 0, last = 0; col <= n_col; col++){
     int temp  = Bp[col];
     Bp[col] = last;
     last    = temp;
   }
-
 }
 
 void swapCSC_CSR_BCG(SolverData *sd){
-
   ModelDataGPU *mGPU = sd->mGPU;
-
 #ifdef TEST_CSCtoCSR
-
   //Example configuration taken from KLU Sparse pdf
   int n_row=3;
   int n_col=n_row;
@@ -314,9 +296,7 @@ void swapCSC_CSR_BCG(SolverData *sd){
   int* Bp=(int*)malloc((n_row+1)*sizeof(int));
   int* Bi=(int*)malloc(nnz*sizeof(int));
   double* Bx=(double*)malloc(nnz*sizeof(double));
-
 #elif TEST_CSRtoCSC
-
   //Example configuration taken from KLU Sparse pdf
   int n_row=3;
   int n_col=n_row;
@@ -327,9 +307,7 @@ void swapCSC_CSR_BCG(SolverData *sd){
   int* Bp=(int*)malloc((n_row+1)*sizeof(int));
   int* Bi=(int*)malloc(nnz*sizeof(int));
   double* Bx=(int*)malloc(nnz*sizeof(double));
-
 #else
-
   int n_row=mGPU->nrows;
   int n_col=mGPU->nrows;
   int nnz=mGPU->nnz;
@@ -339,18 +317,13 @@ void swapCSC_CSR_BCG(SolverData *sd){
   int* Bp=(int*)malloc((mGPU->nrows+1)*sizeof(int));
   int* Bi=(int*)malloc(mGPU->nnz*sizeof(int));
   double* Bx=(double*)malloc(nnz*sizeof(double));
-
 #endif
-
     swapCSC_CSR(n_row,n_col,Ap,Aj,Ax,Bp,Bi,Bx);
-
 #ifdef TEST_CSCtoCSR
-
   //Correct result:
   //int Cp[n_row+1]={0,1,3,6};
   //int Ci[nnz]={0,0,1,0,1,2};
   //int Cx[nnz]={5,4,2,3,1,8};
-
   printf("Bp:\n");
   for(int i=0;i<=n_row;i++)
     printf("%d ",Bp[i]);
@@ -363,11 +336,8 @@ void swapCSC_CSR_BCG(SolverData *sd){
   for(int i=0;i<nnz;i++)
     printf("%-le ",Bx[i]);
   printf("\n");
-
   exit(0);
-
 #elif TEST_CSRtoCSC
-
   //Correct result:
   //int Cp[n_row+1]={0,3,5,6};
   //int Ci[nnz]={0,1,2,1,2,2};
@@ -385,21 +355,162 @@ void swapCSC_CSR_BCG(SolverData *sd){
   for(int i=0;i<nnz;i++)
     printf("%-le ",Bx[i]);
   printf("\n");
-  exit(0);
-
+  exit(0);Swap
 #else
-
   cudaMemcpyAsync(mGPU->diA,Bp,(mGPU->nrows+1)*sizeof(int),cudaMemcpyHostToDevice, 0);
   cudaMemcpyAsync(mGPU->djA,Bi,mGPU->nnz*sizeof(int),cudaMemcpyHostToDevice, 0);
   cudaMemcpyAsync(mGPU->dA,Bx,mGPU->nnz*sizeof(double),cudaMemcpyHostToDevice, 0);
-
 #endif
-
   free(Bp);
   free(Bi);
   free(Bx);
-
 }
+
+#ifndef DEV_cudaSwapCSC_CSR
+/*void SwapCSC_CSR(int n_row, int* iA, int* jA, double* A, int* iB, int* jB, double* B){
+  __syncthreads();
+  int nnz=iA[n_row];
+  memset(iB, 0, (n_row+1)*sizeof(int));
+  for (int n = 0; n < nnz; n++){
+    iB[jA[n]]++;
+  }
+  for(int col = 0, cumsum = 0; col < n_row; col++){
+    int temp  = iB[col];
+    iB[col] = cumsum;
+    cumsum += temp;
+  }
+  iB[n_row] = nnz;
+  for(int row = 0; row < n_row; row++){
+    for(int jj = iA[row]; jj < iA[row+1]; jj++){
+      int col  = jA[jj];
+      int dest = iB[col];
+      jB[dest] = row;
+      B[dest+nnz*blockIdx.x] = A[jj];
+      iB[col]++;
+    }
+  }
+  for(int col = 0, last = 0; col <= n_row; col++){
+    int temp  = iB[col];
+    iB[col] = last;
+    last    = temp;
+  }
+  __syncthreads();
+}
+
+__device__ void cudaSwapCSC_CSR(int n_row, int* iA, int* jA, double* A, int* iB, int* jB, double* B){
+  int tid = blockIdx.x * blockDim.x + threadIdx.x;
+  __syncthreads();
+  int nnz=iA[n_row];
+
+  memset(iB, 0, (n_row+1)*sizeof(int));
+  for (int n = 0; n < nnz; n++){
+    iB[jA[n]]++;
+  }
+  for(int col = 0, cumsum = 0; col < n_row; col++){
+    int temp  = iB[col];
+    iB[col] = cumsum;
+    cumsum += temp;
+  }
+  iB[n_row] = nnz;
+    for(int jj = iA[tid]; jj < iA[tid+1]; jj++){
+      int col  = jA[jj];
+      int dest = iB[col];
+      jB[dest] = tid;
+      B[dest+nnz*blockIdx.x] = A[jj];
+      iB[col]++;
+    }
+  if(threadIdx==0){
+    int last=0;
+    int temp  = iB[tid];
+    iB[tid] = last;
+    last    = temp;
+  }
+  __syncthreads();
+  int last=0;
+  int temp  = iB[tid+1];
+  iB[tid+1] = last;
+  last    = temp;
+  __syncthreads();
+}
+*/
+
+__device__ void cudaCVODESwapCSC_CSRBCG(ModelDataGPU *md, ModelDataVariable *dmdv){
+  __syncthreads();
+  int tid = blockIdx.x * blockDim.x + threadIdx.x;
+  int n_row=md->nrows/md->n_cells;
+  int nnz=md->nnz/md->n_cells;
+  if(threadIdx.x==0){
+  //if(blockIdx.x==5){
+    int* iA=md->diA+n_row*blockIdx.x;
+    int* jA=md->djA+nnz*blockIdx.x;
+    double* A=md->dA+nnz*blockIdx.x;
+    int* iB=md->iB+n_row*blockIdx.x;
+    int* jB=md->jB+nnz*blockIdx.x;
+    double* B=md->B+nnz*blockIdx.x;
+    for(int col = 0; col <= n_row; col++){
+      iB[col] = 0;
+    }
+    for (int n = 0; n < nnz; n++){
+     iB[jA[n]]++;
+    }
+
+    //cumsum the nnz per column to get iB[]
+    for(int col = 0, cumsum = 0; col < n_row; col++){
+      int temp  = iB[col];
+      iB[col] = cumsum;
+      cumsum += temp;
+    }
+
+    iB[n_row] = nnz*blockIdx.x;
+
+    for(int row = 0; row < n_row; row++){
+      for(int jj = iA[row]; jj < iA[row+1]; jj++){
+        int col  = jA[jj];
+        int dest = iB[col];
+        jB[dest] = row;
+        B[dest] = A[jj];
+        iB[col]++;
+     }
+    }
+
+    for(int col = 0, last = 0; col <= n_row; col++){
+      int temp  = iB[col];
+      iB[col] = last;
+      last    = temp;
+    }
+
+    for(int col = 0; col <= n_row; col++){
+      iA[col] = iB[col];
+    }
+    for(int j = 0; j < nnz; j++){
+      jA[j]=jB[j];
+      A[j]=B[j];
+    }
+
+  }
+  __syncthreads();
+}
+/*
+void swapCSC_CSR_Indices(SolverData *sd){
+  ModelDataGPU *mGPU = sd->mGPU;
+  int n_row=mGPU->nrows/mGPU->n_cells;
+  int n_col=n_row;
+  int nnz=mGPU->nnz/mGPU->n_cells;
+  int* Ap=mGPU->iA;
+  int* Aj=mGPU->jA;
+  double* Ax=mGPU->A;
+  int* Bp=(int*)malloc((nrows+1)*sizeof(int));
+  int* Bi=(int*)malloc(nnz*sizeof(int));
+  double* Bx=(double*)malloc(nnz*sizeof(double));
+  swapCSC_CSR(n_row,n_col,Ap,Aj,Ax,Bp,Bi,Bx);
+  cudaMemcpyAsync(mGPU->iB,Bp,(nrows+1)*sizeof(int),cudaMemcpyHostToDevice, 0);
+  cudaMemcpyAsync(mGPU->jB,Bi,nnz*sizeof(int),cudaMemcpyHostToDevice, 0);
+  free(Bp);
+  free(Bi);
+  free(Bx);
+}
+ */
+#endif
 
 void print_int(int *x, int len, const char *s){
 
@@ -470,7 +581,7 @@ void solveBcgCuda(
 #ifndef CSR_SPMV_CPU
     cudaDeviceSpmvCSR(dr0,dx,dA,djA,diA); //y=A*x
 #else
-    cudaDeviceSpmvCSC_block(dr0,dx,dA,djA,diA,n_shr_empty)); //y=A*x
+    cudaDeviceSpmvCSC_block(dr0,dx,dA,djA,diA)); //y=A*x
 #endif
 
 #ifdef DEBUG_SOLVEBCGCUDA_DEEP
@@ -540,7 +651,7 @@ void solveBcgCuda(
 #ifndef CSR_SPMV_CPU
       cudaDeviceSpmvCSR(dn0, dy, dA, djA, diA);
 #else
-      cudaDeviceSpmvCSC_block(dn0, dy, dA, djA, diA,n_shr_empty);
+      cudaDeviceSpmvCSC_block(dn0, dy, dA, djA, diA);
 #endif
 
 #ifdef DEBUG_SOLVEBCGCUDA_DEEP
@@ -590,7 +701,7 @@ void solveBcgCuda(
 #ifndef CSR_SPMV_CPU
       cudaDeviceSpmvCSR(dt, dz, dA, djA, diA);
 #else
-      cudaDeviceSpmvCSC_block(dt, dz, dA, djA, diA,n_shr_empty);
+      cudaDeviceSpmvCSC_block(dt, dz, dA, djA, diA);
 #endif
 
       __syncthreads();
@@ -652,13 +763,10 @@ void solveBcgCuda(
     if(tid==0)
       printf("%d %d %-le %-le\n",tid,it,temp1,tolmax);
 #endif
-
     //if(it>=maxIt-1)
     //  dvcheck_input_gpud(dr0,nrows,999);
     //dvcheck_input_gpud(dr0,nrows,k++);
-
   }
-
 }
 
 void solveGPU_block_thr(int blocks, int threads_block, int n_shr_memory, int n_shr_empty, int offset_cells,

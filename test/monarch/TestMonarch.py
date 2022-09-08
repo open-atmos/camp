@@ -108,11 +108,9 @@ def getCaseName(conf):
 
 def write_itsolver_config_file(conf):
     file1 = open(conf.itsolverConfigFile, "w")
-
     cells_method_str = "CELLS_METHOD=" + conf.caseMulticellsOnecell
     file1.write(cells_method_str)
     # print("Saved", cells_method_str)
-
     file1.close()
 
 
@@ -133,7 +131,7 @@ def write_camp_config_file(conf):
                 raise
             else:
                 file1.write("USE_GPU_CVODE=ON\n")
-        elif conf.caseMulticellsOnecell == "BDF2":
+        elif conf.caseMulticellsOnecell == "CPU":
             file1.write("USE_GPU_CVODE=2\n")
         else:
             file1.write("USE_GPU_CVODE=OFF\n")
@@ -207,9 +205,7 @@ def remove_to_tmp(conf, sbatch_job_id):
             os.rename(path_to_zip_file, tmp_dir_data)
             print("Moved data from", os.path.abspath(os.getcwd()) + "/" + path_to_zip_file, "to",
                   os.path.abspath(os.getcwd()) + "/" + tmp_dir)
-
     raise
-
     return True
 
 
@@ -359,8 +355,15 @@ def run(conf):
         Path(pathNvprof).mkdir(parents=True, exist_ok=True)
         pathNvprof = pathNvprof + conf.caseMulticellsOnecell \
                      + str(conf.nCells) + "Cells "
-        exec_str += "/apps/NVIDIA-HPC-SDK/21.3/Linux_ppc64le/21.3/profilers/Nsight_Compute/ncu --set full -f -o " \
-                    + pathNvprof
+        #exec_str += "/apps/NVIDIA-HPC-SDK/20.9/Linux_ppc64le/2020/profilers/Nsight_Compute/ncu --set full -f -o" + pathNvprof #last working version
+        exec_str += "/apps/NVIDIA-HPC-SDK/20.9/Linux_ppc64le/2020/profilers/Nsight_Compute/ncu "#last working version
+        #wrong exec_str += "/apps/NVIDIA-HPC-SDK/21.3/Linux_ppc64le/21.3/profilers/Nsight_Compute/ncu --set full -f -o " + pathNvprof
+        #wrongexec_str += "/apps/NVIDIA-HPC-SDK/21.3/Linux_ppc64le/21.3/profilers/Nsight_Compute/ncu "
+        #wrong exec_str += "/apps/NVIDIA-HPC-SDK/21.9/Linux_ppc64le/21.9/profilers/Nsight_Compute/ncu "
+        #wrong exec_str += "/apps/NVIDIA-HPC-SDK/21.9/Linux_ppc64le/2021/profilers/Nsight_Compute/ncu "
+        #wrong exec_str += "/apps/NVIDIA-HPC-SDK/22.2/Linux_ppc64le/22.2/profilers/Nsight_Compute/ncu "
+        #wrong exec_str += "/apps/NVIDIA-HPC-SDK/22.3/Linux_ppc64le/22.3/profilers/Nsight_Compute/ncu "
+
         print("Saving nsight file in ", os.path.abspath(os.getcwd()) \
               + "/" + pathNvprof)
 
@@ -417,12 +420,12 @@ def run(conf):
 
 def run_case(conf):
     data = run(conf)
-
     if "timeLS" in conf.plotYKey and "computational" in conf.plotYKey \
         and "GPU" in conf.case:
         for i in range(len(data["timeLS"])):
             data["timeLS"][i] = data["timeLS"][i] - data["timeBiconjGradMemcpy"][i]
-
+    #if conf.plotYKey != "MAPE":
+        #print("data",data)
     y_key_words = conf.plotYKey.split()
     y_key = y_key_words[-1]
     if "normalized" in conf.plotYKey:
@@ -756,10 +759,10 @@ def all_timesteps():
     conf.commit = ""
 
     conf.nGPUsCaseBase = 1
-    #conf.nGPUsCaseBase = 4
+     #conf.nGPUsCaseBase = 2
 
     conf.nGPUsCaseOptimList = [1]
-    #conf.nGPUsCaseOptimList = [4]
+    #conf.nGPUsCaseOptimList = [2]
     # conf.nGPUsCaseOptimList = [1,2,3,4]
 
     conf.mpi = "yes"
@@ -769,7 +772,7 @@ def all_timesteps():
     #conf.mpiProcessesCaseBase = 40
 
     #conf.mpiProcessesCaseOptimList.append(1)
-    conf.mpiProcessesCaseOptimList.append(20)
+    conf.mpiProcessesCaseOptimList.append(1)
     # conf.mpiProcessesCaseOptimList = [10,20,40]
     # conf.mpiProcessesCaseOptimList = [1,4,8,16,32,40]
 
@@ -782,7 +785,7 @@ def all_timesteps():
     # conf.allocatedTasksPerNode = 320
     # conf.allocatedTasksPerNode = get_ntasksPerNode_sbatch() #todo
 
-    conf.cells = [100]
+    conf.cells = [1]
     #conf.cells = [100, 500, 1000, 5000, 10000]
     # conf.cells = [50000,100000,500000,1000000]
 
@@ -797,29 +800,29 @@ def all_timesteps():
     # conf.caseBase="GPU Multi-cells"
     # conf.caseBase="GPU Block-cellsN"
     #conf.caseBase="GPU Block-cells1"
-    #conf.caseBase = "GPU BDF" #Inneficient, use maxrregcount
-    #conf.caseBase = "GPU BDF2"
-    conf.caseBase = "GPU maxrregcount-64"
+    conf.caseBase = "GPU BDF"
+    #conf.caseBase = "GPU CPU"
+    #conf.caseBase = "GPU maxrregcount-64" #wrong 10,000 cells
     # conf.caseBase = "GPU maxrregcount-24" #Minimum
     # conf.caseBase = "GPU maxrregcount-62"
     # conf.caseBase = "GPU maxrregcount-68"
     # conf.caseBase = "GPU maxrregcount-48"
 
     conf.casesOptim = []
+    conf.casesOptim.append("CPU One-cell")
+    #conf.casesOptim.append("CPU Multi-cells")
+    # conf.casesOptim.append("GPU One-cell")
+    # conf.casesOptim.append("GPU Multi-cells")
+    # conf.casesOptim.append("GPU Block-cellsNhalf")
+    #conf.casesOptim.append("GPU Block-cellsN")
+    #conf.casesOptim.append("GPU Block-cells1")
+    #conf.casesOptim.append("CPU EBI")
+    #conf.casesOptim.append("GPU BDF")
+    #conf.casesOptim.append("GPU CPU")
+    #conf.casesOptim.append("GPU maxrregcount-64") #wrong 10,000 cells
     # conf.casesOptim.append("GPU maxrregcount-68")
     # conf.casesOptim.append("GPU maxrregcount-62")
     # conf.casesOptim.append("GPU maxrregcount-24")
-    #conf.casesOptim.append("GPU maxrregcount-64") #Fails sometimes (non converge)
-    # conf.casesOptim.append("GPU maxrregcount-127")
-    #conf.casesOptim.append("GPU BDF")
-    # conf.casesOptim.append("GPU Block-cellsNhalf")
-    #conf.casesOptim.append("GPU Block-cells1")
-    #conf.casesOptim.append("GPU Block-cellsN")
-    # conf.casesOptim.append("GPU Multi-cells")
-    # conf.casesOptim.append("GPU One-cell")
-    #conf.casesOptim.append("CPU Multi-cells")
-    conf.casesOptim.append("CPU One-cell")
-    #conf.casesOptim.append("CPU EBI")
 
     #conf.plotYKey = "Speedup timeCVode"
     # conf.plotYKey = "Speedup counterLS"
@@ -831,7 +834,7 @@ def all_timesteps():
     # conf.plotYKey = "Speedup BCG iteration (Comp.timeLS/counterBCG)"
     #conf.plotYKey = "Speedup timecvStep"
     # conf.plotYKey = "Speedup timecvStep normalized by countercvStep"
-    # conf.plotYKey = "Speedup countercvStep"
+    #conf.plotYKey = "Speedup countercvStep"
     #conf.plotYKey = "Speedup device timecvStep" //pending fix bug https://earth.bsc.es/gitlab/ac/camp/-/issues/124
     # conf.plotYKey = "Percentage data transfers CPU-GPU [%]"
     conf.plotYKey = "MAPE"
@@ -845,14 +848,16 @@ def all_timesteps():
     """END OF CONFIGURATION VARIABLES"""
 
     # Utility functions
-    # remove_to_tmp(conf,"1653646090223272794")
+    #remove_to_tmp(conf,"1661337164911019079")
 
     conf.results_file = "_solver_stats.csv"
     if conf.plotYKey == "NRMSE" or conf.plotYKey == "MAPE" or conf.plotYKey == "SMAPE":
         conf.results_file = '_results_all_cells.csv'
         conf.is_export = False
         conf.is_import = False
-
+    if (conf.nGPUsCaseBase >2 and conf.mpiProcessesCaseBase < 30):
+        print("ERROR: nGPUsCaseBase is more than 2 but MPI processes is not enough, use 40 MPI processes or reduce GPUs to 1 or 2")
+        raise
     jsonFile = open("monarch_box_binned/cb05_abs_tol.json")
     jsonData = json.load(jsonFile)
     conf.MAPETol = jsonData["camp-data"][0]["value"]  # Default: 1.0E-4

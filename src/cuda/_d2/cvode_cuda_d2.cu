@@ -6,10 +6,6 @@
 #include "cvode_cuda_d2.h"
 #include "libsolv.h"
 
-
-
-
-
 __device__
 void solveBcgCuda_d2_cvode_cuda(
         double *dA, int *djA, int *diA, double *dx, double *dtempv //Input data

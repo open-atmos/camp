@@ -39,7 +39,7 @@ export JSON_FORTRAN_HOME=$(pwd)/$relative_path/json-fortran-6.1.0/install/jsonfo
 #export GSL_HOME=${GSL_DIR}
 
 cd ../../
-rm -rf build
+#rm -rf build
 mkdir build
 cd build
 
@@ -65,7 +65,7 @@ cmake -D CMAKE_C_COMPILER=$(which mpicc) \
 -D ENABLE_NETCDF=OFF \
 -D ENABLE_BOOTCAMP=OFF \
 -D ENABLE_DATA=OFF \
--D use_maxrregcount64=ON \
+-D use_maxrregcount64=OFF \
 ..
 
 make -j 4 VERBOSE=1

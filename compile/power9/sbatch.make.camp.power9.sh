@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-#SBATCH --qos=debug
+##SBATCH --qos=debug
 #SBATCH --job-name=camp_test_monarch
 #SBATCH --output=log/out/%j.txt
 #SBATCH --error=log/err/%j.txt

@@ -8,18 +8,6 @@ extern "C" {
 #include <math.h>
 #include <stdio.h>
 
-int time_derivative_initialize_gpu(SolverData *sd) {
-
-  ModelData *md = &(sd->model_data);
-  ModelDataGPU *mGPU = sd->mGPU;
-
-  int num_spec = md->n_per_cell_dep_var*mGPU->n_cells;
-  cudaMalloc((void **) &(mGPU->production_rates),num_spec*sizeof(mGPU->production_rates));
-  cudaMalloc((void **) &(mGPU->loss_rates),num_spec*sizeof(mGPU->loss_rates));
-
-  return 1;
-}
-
 #ifdef __CUDA_ARCH__
 __host__ __device__
 #endif
@@ -149,5 +137,3 @@ void time_derivative_add_value_gpu(TimeDerivativeGPU time_deriv, unsigned int sp
 }
 
 }
-
-//todo merge with default time_derivative "class" using .cpp file

@@ -13,15 +13,6 @@
 // Threshhold for precisition loss in rate calculations
 #define MAX_PRECISION_LOSS 1.0e-14
 
-/** \brief Initialize the derivative
- *
- * \param time_deriv Pointer to the TimeDerivativeGPU object
- * \param num_spec Number of species to include in the derivative
- * \return Flag indicating whether the derivative was sucessfully initialized
- *         (0 = false; 1 = true)
- */
-int time_derivative_initialize_gpu(SolverData *sd);
-
 /** \brief Reset the derivative
  *
  * \param time_deriv TimeDerivativeGPU object
