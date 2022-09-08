@@ -3,11 +3,7 @@
 * SPDX-License-Identifier: MIT
 */
 
-#ifndef DEV_cudaSwapCSC_CSR
-#include "itsolver_gpu.h"
-#endif
 #include "cvode_cuda.h"
-
 extern "C" {
 #include "rxns_gpu.h"
 #include "time_derivative_gpu.h"
@@ -145,14 +141,7 @@ __device__ void cudaDevicecalc_deriv(
   printmin(md,md->J_state,"cudaDevicecalc_deriv start end J_state");
 #endif
   md->J_tmp[tid]=y[tid]-md->J_state[tid];
-#ifndef DEV_cudaSwapCSC_CSR
-//cudaCVODESwapCSC_CSRBCG(md, dmdv,md->J_solver);
-cudaDeviceSpmv(md->J_tmp2, md->J_tmp, md->J_solver, md->djA, md->diA);
-//cudaCVODESwapCSC_CSRBCG(md, dmdv,md->J_solver);
-  //cudaDeviceSpmvCSC_block(md->J_tmp2, md->J_tmp, md->J_solver, md->djA, md->diA);
-#else
   cudaDeviceSpmv(md->J_tmp2, md->J_tmp, md->J_solver, md->djA, md->diA);
-#endif
   md->J_tmp[tid]=md->J_deriv[tid]+md->J_tmp2[tid];
   cudaDevicesetconst(md->J_tmp2, 0.0, active_threads); //Reset for next iter
 #ifdef DEBUG_printmin
@@ -517,22 +506,21 @@ __device__ void cudaDevicecalc_Jac(double *y,ModelDataGPU *md, ModelDataVariable
       }
     }
     __syncthreads();
-
-//cudaCVODESwapCSC_CSRBCG(md, dmdv,md->dA);
-
   JacMap *jac_map = md->jac_map;
-#ifndef DEV_SWAP_CSC_CSR_ODE
   int *jac_rxn_id = md->jac_rxn_id;
-#endif
   int nnz = md->n_mapped_values[0];
   int n_iters = nnz / blockDim.x;
   for (int i = 0; i < n_iters; i++) {
     int j = threadIdx.x + i*blockDim.x;
-#ifndef DEV_SWAP_CSC_CSR_ODE
-    md->dA[jac_rxn_id[j] + nnz * blockIdx.x] =
-      jacBlock.production_partials[jac_map[j].rxn_id] - jacBlock.loss_partials[jac_map[j].rxn_id];
+#ifndef USE_CSR_ODE_GPU
+#ifdef DEV_JOIN_RXN_ID
+   md->dA[j] =jacBlock.production_partials[jac_rxn_id[j]] - jacBlock.loss_partials[jac_rxn_id[j]];
 #else
-    md->dA[jac_map[j].solver_id + nnz * blockIdx.x] =
+  md->dA[jac_rxn_id[j] + nnz * blockIdx.x] =
+    jacBlock.production_partials[jac_map[j].rxn_id] - jacBlock.loss_partials[jac_map[j].rxn_id];
+#endif
+#else
+  md->dA[jac_map[j].solver_id + nnz * blockIdx.x] =
       jacBlock.production_partials[jac_map[j].rxn_id] - jacBlock.loss_partials[jac_map[j].rxn_id];
 #endif
     jacBlock.production_partials[jac_map[j].rxn_id] = 0.0;
@@ -541,18 +529,21 @@ __device__ void cudaDevicecalc_Jac(double *y,ModelDataGPU *md, ModelDataVariable
   int residual=nnz-(blockDim.x*n_iters);
   if(threadIdx.x < residual){
     int j = threadIdx.x + n_iters*blockDim.x;
-#ifndef DEV_SWAP_CSC_CSR_ODE
-    md->dA[jac_rxn_id[j] + nnz * blockIdx.x] =
-      jacBlock.production_partials[jac_map[j].rxn_id] - jacBlock.loss_partials[jac_map[j].rxn_id];
+#ifndef USE_CSR_ODE_GPU
+#ifdef DEV_JOIN_RXN_ID
+   md->dA[j] =jacBlock.production_partials[jac_rxn_id[j]] - jacBlock.loss_partials[jac_rxn_id[j]];
 #else
-    md->dA[jac_map[j].solver_id + nnz * blockIdx.x] =
-        jacBlock.production_partials[jac_map[j].rxn_id] - jacBlock.loss_partials[jac_map[j].rxn_id];
+  md->dA[jac_rxn_id[j] + nnz * blockIdx.x] =
+    jacBlock.production_partials[jac_map[j].rxn_id] - jacBlock.loss_partials[jac_map[j].rxn_id];
+#endif
+#else
+  md->dA[jac_map[j].solver_id + nnz * blockIdx.x] =
+      jacBlock.production_partials[jac_map[j].rxn_id] - jacBlock.loss_partials[jac_map[j].rxn_id];
 #endif
     jacBlock.production_partials[jac_map[j].rxn_id] = 0.0;
     jacBlock.loss_partials[jac_map[j].rxn_id] = 0.0;
   }
     __syncthreads();
-//cudaCVODESwapCSC_CSRBCG(md, dmdv,md->dA);
 #ifdef CAMP_DEBUG_GPU
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     dmdv->timecalc_Jac += ((double)(clock() - start))/(clock_khz*1000);
@@ -796,13 +787,7 @@ int cudaDevicecvNewtonIteration(ModelDataGPU *md, ModelDataVariable *dmdv){
 #endif
     cudaDevicezaxpby(dmdv->cv_rl1, (dzn + 1 * nrows), 1.0, cv_acor, dtempv, nrows);
     cudaDevicezaxpby(dmdv->cv_gamma, dftemp, -1.0, dtempv, dtempv, nrows);
-#ifndef DEV_cudaSwapCSC_CSR
-    //cudaCVODESwapCSC_CSRBCG(md, dmdv,md->dA);
     solveBcgCudaDeviceCVODE(md, dmdv);
-    //cudaCVODESwapCSC_CSRBCG(md, dmdv,md->dA);
-#else
-    solveBcgCudaDeviceCVODE(md, dmdv);
-#endif
     __syncthreads();
 #ifdef CAMP_DEBUG_GPU
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
@@ -1694,9 +1679,7 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
         if(i==0)printf("WARNING: h below roundoff level in tn");
     }
 #endif
-//cudaCVODESwapCSC_CSRBCG(md, dmdv,md->dA);
     int kflag2 = cudaDevicecvStep(md, dmdv);
-//cudaCVODESwapCSC_CSRBCG(md, dmdv,md->dA);
     __syncthreads();
     dmdv->kflag2=kflag2;
     __syncthreads();

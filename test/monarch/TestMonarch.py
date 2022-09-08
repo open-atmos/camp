@@ -768,11 +768,11 @@ def all_timesteps():
     conf.mpi = "yes"
     # conf.mpi = "no"
 
-    conf.mpiProcessesCaseBase = 1
-    #conf.mpiProcessesCaseBase = 40
+    #conf.mpiProcessesCaseBase = 1
+    conf.mpiProcessesCaseBase = 40
 
-    #conf.mpiProcessesCaseOptimList.append(1)
     conf.mpiProcessesCaseOptimList.append(1)
+    #conf.mpiProcessesCaseOptimList.append(40)
     # conf.mpiProcessesCaseOptimList = [10,20,40]
     # conf.mpiProcessesCaseOptimList = [1,4,8,16,32,40]
 
@@ -785,22 +785,22 @@ def all_timesteps():
     # conf.allocatedTasksPerNode = 320
     # conf.allocatedTasksPerNode = get_ntasksPerNode_sbatch() #todo
 
-    conf.cells = [100]
+    conf.cells = [10000]
     #conf.cells = [100, 500, 1000, 5000, 10000]
     # conf.cells = [50000,100000,500000,1000000]
 
-    conf.timeSteps = 10
+    conf.timeSteps = 2
     #conf.timeSteps = 720
 
     conf.timeStepsDt = 2
 
     #conf.caseBase = "CPU EBI"
-    #conf.caseBase = "CPU One-cell"
+    conf.caseBase = "CPU One-cell"
     #conf.caseBase = "CPU Multi-cells"
     # conf.caseBase="GPU Multi-cells"
     # conf.caseBase="GPU Block-cellsN"
     #conf.caseBase="GPU Block-cells1"
-    conf.caseBase = "GPU BDF"
+    #conf.caseBase = "GPU BDF"
     #conf.caseBase = "GPU CPU"
     #conf.caseBase = "GPU maxrregcount-64" #wrong 10,000 cells
     # conf.caseBase = "GPU maxrregcount-24" #Minimum
@@ -809,7 +809,7 @@ def all_timesteps():
     # conf.caseBase = "GPU maxrregcount-48"
 
     conf.casesOptim = []
-    conf.casesOptim.append("CPU One-cell")
+    #conf.casesOptim.append("CPU One-cell")
     #conf.casesOptim.append("CPU Multi-cells")
     # conf.casesOptim.append("GPU One-cell")
     # conf.casesOptim.append("GPU Multi-cells")
@@ -817,7 +817,7 @@ def all_timesteps():
     #conf.casesOptim.append("GPU Block-cellsN")
     #conf.casesOptim.append("GPU Block-cells1")
     #conf.casesOptim.append("CPU EBI")
-    #conf.casesOptim.append("GPU BDF")
+    conf.casesOptim.append("GPU BDF")
     #conf.casesOptim.append("GPU CPU")
     #conf.casesOptim.append("GPU maxrregcount-64") #wrong 10,000 cells
     # conf.casesOptim.append("GPU maxrregcount-68")
@@ -832,12 +832,12 @@ def all_timesteps():
     # conf.plotYKey = "Speedup normalized counterBCG"
     # conf.plotYKey = "Speedup total iterations - counterBCG"
     # conf.plotYKey = "Speedup BCG iteration (Comp.timeLS/counterBCG)"
-    #conf.plotYKey = "Speedup timecvStep"
+    conf.plotYKey = "Speedup timecvStep"
     # conf.plotYKey = "Speedup timecvStep normalized by countercvStep"
     #conf.plotYKey = "Speedup countercvStep"
     #conf.plotYKey = "Speedup device timecvStep" //pending fix bug https://earth.bsc.es/gitlab/ac/camp/-/issues/124
     # conf.plotYKey = "Percentage data transfers CPU-GPU [%]"
-    conf.plotYKey = "MAPE"
+    #conf.plotYKey = "MAPE"
     # conf.plotYKey ="SMAPE"
     # conf.plotYKey ="NRMSE"
     # conf.MAPETol = 1.0E-6

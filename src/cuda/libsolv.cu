@@ -509,8 +509,7 @@ extern "C++" void gpu_scaley(double* dy, double a, int nrows, int blocks, int th
 }
 
 // Device functions (equivalent to global functions but in device to allow calls from gpu)
-__device__ void cudaDeviceBCGprecond(double* dA, int* djA, int* diA, double* ddiag, double alpha)
-{
+__device__ void cudaDeviceBCGprecond(double* dA, int* djA, int* diA, double* ddiag, double alpha){
 int row= threadIdx.x + blockDim.x*blockIdx.x;
 int nnz=diA[blockDim.x];
   for(int j=diA[threadIdx.x];j<diA[threadIdx.x+1];j++){
@@ -562,14 +561,10 @@ __device__ void cudaDeviceSpmvCSC_block(double* dx, double* db, double* dA, int*
 }
 
 __device__ void cudaDeviceSpmv(double* dx, double* db, double* dA, int* djA, int* diA){
-#ifndef DEV_SWAP_CSC_CSR_ODE
-  cudaDeviceSpmvCSR(dx,db,dA,djA,diA);
-#else
-#ifndef DEV_cudaSwapCSC_CSR
+#ifndef USE_CSR_ODE_GPU
   cudaDeviceSpmvCSR(dx,db,dA,djA,diA);
 #else
   cudaDeviceSpmvCSC_block(dx,db,dA,djA,diA);
-#endif
 #endif
 }
 

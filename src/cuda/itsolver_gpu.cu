@@ -366,74 +366,7 @@ void swapCSC_CSR_BCG(SolverData *sd){
   free(Bx);
 }
 
-#ifndef DEV_cudaSwapCSC_CSR
-/*void SwapCSC_CSR(int n_row, int* iA, int* jA, double* A, int* iB, int* jB, double* B){
-  __syncthreads();
-  int nnz=iA[n_row];
-  memset(iB, 0, (n_row+1)*sizeof(int));
-  for (int n = 0; n < nnz; n++){
-    iB[jA[n]]++;
-  }
-  for(int col = 0, cumsum = 0; col < n_row; col++){
-    int temp  = iB[col];
-    iB[col] = cumsum;
-    cumsum += temp;
-  }
-  iB[n_row] = nnz;
-  for(int row = 0; row < n_row; row++){
-    for(int jj = iA[row]; jj < iA[row+1]; jj++){
-      int col  = jA[jj];
-      int dest = iB[col];
-      jB[dest] = row;
-      B[dest+nnz*blockIdx.x] = A[jj];
-      iB[col]++;
-    }
-  }
-  for(int col = 0, last = 0; col <= n_row; col++){
-    int temp  = iB[col];
-    iB[col] = last;
-    last    = temp;
-  }
-  __syncthreads();
-}
-
-__device__ void cudaSwapCSC_CSR(int n_row, int* iA, int* jA, double* A, int* iB, int* jB, double* B){
-  int tid = blockIdx.x * blockDim.x + threadIdx.x;
-  __syncthreads();
-  int nnz=iA[n_row];
-
-  memset(iB, 0, (n_row+1)*sizeof(int));
-  for (int n = 0; n < nnz; n++){
-    iB[jA[n]]++;
-  }
-  for(int col = 0, cumsum = 0; col < n_row; col++){
-    int temp  = iB[col];
-    iB[col] = cumsum;
-    cumsum += temp;
-  }
-  iB[n_row] = nnz;
-    for(int jj = iA[tid]; jj < iA[tid+1]; jj++){
-      int col  = jA[jj];
-      int dest = iB[col];
-      jB[dest] = tid;
-      B[dest+nnz*blockIdx.x] = A[jj];
-      iB[col]++;
-    }
-  if(threadIdx==0){
-    int last=0;
-    int temp  = iB[tid];
-    iB[tid] = last;
-    last    = temp;
-  }
-  __syncthreads();
-  int last=0;
-  int temp  = iB[tid+1];
-  iB[tid+1] = last;
-  last    = temp;
-  __syncthreads();
-}
-*/
-
+#ifdef DEV_cudaSwapCSC
 __device__ void cudaCVODESwapCSC_CSRBCG(ModelDataGPU *md, ModelDataVariable *dmdv, double *dA){
   __syncthreads();
   int tid = blockIdx.x * blockDim.x + threadIdx.x;
@@ -489,26 +422,6 @@ __device__ void cudaCVODESwapCSC_CSRBCG(ModelDataGPU *md, ModelDataVariable *dmd
   }
   __syncthreads();
 }
-/*
-void swapCSC_CSR_Indices(SolverData *sd){
-  ModelDataGPU *mGPU = sd->mGPU;
-  int n_row=mGPU->nrows/mGPU->n_cells;
-  int n_col=n_row;
-  int nnz=mGPU->nnz/mGPU->n_cells;
-  int* Ap=mGPU->iA;
-  int* Aj=mGPU->jA;
-  double* Ax=mGPU->A;
-  int* Bp=(int*)malloc((nrows+1)*sizeof(int));
-  int* Bi=(int*)malloc(nnz*sizeof(int));
-  double* Bx=(double*)malloc(nnz*sizeof(double));
-  swapCSC_CSR(n_row,n_col,Ap,Aj,Ax,Bp,Bi,Bx);
-  cudaMemcpyAsync(mGPU->iB,Bp,(nrows+1)*sizeof(int),cudaMemcpyHostToDevice, 0);
-  cudaMemcpyAsync(mGPU->jB,Bi,nnz*sizeof(int),cudaMemcpyHostToDevice, 0);
-  free(Bp);
-  free(Bi);
-  free(Bx);
-}
- */
 #endif
 
 void print_int(int *x, int len, const char *s){

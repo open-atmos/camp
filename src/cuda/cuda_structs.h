@@ -344,19 +344,17 @@ typedef struct {
     int max_n_gpu_thread;
     int max_n_gpu_blocks;
     int *map_state_derivCPU;
-//DEV _cudaSwapCSC_CSR
+#ifdef DEV_cudaSwapCSC
     int* iB;
     int* jB;
     double *B;
-//#endif
+#endif
 #ifdef DEV_CSR_REACTIONS
     int *colARXN;
     int *jARXN;
     int *iARXN;
 #endif
-//DEV _SWAP_CSC_CSR_ODE
     int *jac_rxn_id;
-//#endif
 
     ModelDataVariable mdvCPU; //cpu equivalent to gpu
     ModelDataVariable *mdv; //device
