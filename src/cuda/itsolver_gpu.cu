@@ -434,7 +434,7 @@ __device__ void cudaSwapCSC_CSR(int n_row, int* iA, int* jA, double* A, int* iB,
 }
 */
 
-__device__ void cudaCVODESwapCSC_CSRBCG(ModelDataGPU *md, ModelDataVariable *dmdv){
+__device__ void cudaCVODESwapCSC_CSRBCG(ModelDataGPU *md, ModelDataVariable *dmdv, double *dA){
   __syncthreads();
   int tid = blockIdx.x * blockDim.x + threadIdx.x;
   int n_row=md->nrows/md->n_cells;
@@ -443,7 +443,7 @@ __device__ void cudaCVODESwapCSC_CSRBCG(ModelDataGPU *md, ModelDataVariable *dmd
   //if(blockIdx.x==5){
     int* iA=md->diA+n_row*blockIdx.x;
     int* jA=md->djA+nnz*blockIdx.x;
-    double* A=md->dA+nnz*blockIdx.x;
+    double* A=dA+nnz*blockIdx.x;
     int* iB=md->iB+n_row*blockIdx.x;
     int* jB=md->jB+nnz*blockIdx.x;
     double* B=md->B+nnz*blockIdx.x;
@@ -462,7 +462,6 @@ __device__ void cudaCVODESwapCSC_CSRBCG(ModelDataGPU *md, ModelDataVariable *dmd
     }
 
     iB[n_row] = nnz*blockIdx.x;
-
     for(int row = 0; row < n_row; row++){
       for(int jj = iA[row]; jj < iA[row+1]; jj++){
         int col  = jA[jj];

@@ -513,7 +513,6 @@ __device__ void cudaDeviceBCGprecond(double* dA, int* djA, int* diA, double* ddi
 {
 int row= threadIdx.x + blockDim.x*blockIdx.x;
 int nnz=diA[blockDim.x];
-#ifdef DEV_SWAP_CSC_CSR_ODE
   for(int j=diA[threadIdx.x];j<diA[threadIdx.x+1];j++){
     if(djA[j]==threadIdx.x){
       dA[j+nnz*blockIdx.x] = 1.0 + alpha*dA[j+nnz*blockIdx.x];
@@ -526,20 +525,6 @@ int nnz=diA[blockDim.x];
       dA[j+nnz*blockIdx.x] = alpha*dA[j+nnz*blockIdx.x];
     }
   }
-#else
-  for(int j=diA[threadIdx.x];j<diA[threadIdx.x+1];j++){
-    if(djA[j]==threadIdx.x){
-      dA[j+nnz*blockIdx.x] = 1.0 + alpha*dA[j+nnz*blockIdx.x];
-      if(dA[j+nnz*blockIdx.x]!=0.0){
-        ddiag[row]= 1.0/dA[j+nnz*blockIdx.x];
-       }else{
-        ddiag[row]= 1.0;
-      }
-    }else{
-      dA[j+nnz*blockIdx.x] = alpha*dA[j+nnz*blockIdx.x];
-    }
-  }
-#endif
 }
 
 // y = constant
@@ -562,7 +547,6 @@ __device__ void cudaDeviceSpmvCSR(double* dx, double* db, double* dA, int* djA, 
 }
 
 __device__ void cudaDeviceSpmvCSC_block(double* dx, double* db, double* dA, int* djA, int* diA){
-  extern __shared__ double sdata[];
   int row = threadIdx.x + blockDim.x*blockIdx.x;
   __syncthreads();
   dx[row]=0.0;
@@ -578,7 +562,7 @@ __device__ void cudaDeviceSpmvCSC_block(double* dx, double* db, double* dA, int*
 }
 
 __device__ void cudaDeviceSpmv(double* dx, double* db, double* dA, int* djA, int* diA){
-#ifdef DEV_SWAP_CSC_CSR_ODE
+#ifndef DEV_SWAP_CSC_CSR_ODE
   cudaDeviceSpmvCSR(dx,db,dA,djA,diA);
 #else
 #ifndef DEV_cudaSwapCSC_CSR

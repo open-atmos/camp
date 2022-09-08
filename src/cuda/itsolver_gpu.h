@@ -33,7 +33,7 @@ __device__
 void cudaDeviceswapCSC_CSR(int n_row, int n_col, int* Ap, int* Aj, double* Ax, int* BpGlobal, int* Bi, double* Bx);
 __global__
 void cudaGlobalswapCSC_CSR(int n_row, int n_col, int* Ap, int* Aj, double* Ax, int* Cp, int* Ci, double* Cx);
-__device__ void cudaCVODESwapCSC_CSRBCG(ModelDataGPU *md, ModelDataVariable *dmdv);
+__device__ void cudaCVODESwapCSC_CSRBCG(ModelDataGPU *md, ModelDataVariable *dmdv, double* dA);
 void swapCSC_CSR(int n_row, int n_col, int* Ap, int* Aj, double* Ax, int* Bp, int* Bi, double* Bx);
 void swapCSC_CSR_BCG(SolverData *sd);
 void swapCSC_CSR_Indices(SolverData *sd);

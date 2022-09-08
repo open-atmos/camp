@@ -330,7 +330,6 @@ typedef struct {
     double* dsavedJ;
 
     int nnz_J_solver;
-    int nrows_J_solver;
     double *jac_aux;
     int *indexvals_gpu;
     int *indexptrs_gpu;

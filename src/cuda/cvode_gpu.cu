@@ -141,7 +141,6 @@ void init_jac_cuda_cvode(SolverData *sd){
 
     mGPU->jac_size = md->n_per_cell_solver_jac_elem * mGPU->n_cells * sizeof(double);
     mGPU->nnz_J_solver = SM_NNZ_S(md->J_solver)/md->n_cells*mGPU->n_cells;
-    mGPU->nrows_J_solver = SM_NP_S(md->J_solver)/md->n_cells*mGPU->n_cells;
 
     //mGPU->n_per_cell_solver_jac_elem = md->n_per_cell_solver_jac_elem;
     cudaMalloc((void **) &mGPU->dA, mGPU->jac_size);
@@ -155,9 +154,9 @@ void init_jac_cuda_cvode(SolverData *sd){
 
 #ifndef DEBUG_init_jac_cuda
     printf("md->n_per_cell_dep_var %d sd->jac.num_spec %d md->n_per_cell_solver_jac_elem %d "
-           "md->n_mapped_values %d jac->num_elem %d offset_nnz_J_solver %d  mGPU->nnz_J_solver %d mGPU->nrows_J_solver %d\n",
+           "md->n_mapped_values %d jac->num_elem %d offset_nnz_J_solver %d  mGPU->nnz_J_solver %d\n",
            md->n_per_cell_dep_var,sd->jac.num_spec,md->n_per_cell_solver_jac_elem, md->n_mapped_values,
-           sd->jac.num_elem, offset_nnz_J_solver,mGPU->nnz_J_solver, mGPU->nrows_J_solver);
+           sd->jac.num_elem, offset_nnz_J_solver,mGPU->nnz_J_solver);
 #endif
     HANDLE_ERROR(cudaMemcpy(mGPU->dA, sd->J+offset_nnz_J_solver, mGPU->jac_size, cudaMemcpyHostToDevice));
     double *J_solver = SM_DATA_S(md->J_solver)+offset_nnz_J_solver;
@@ -407,7 +406,7 @@ void getCSRReactions(SolverData *sd) {
   free(jA);
 }
 #endif
-#ifdef DEV_SWAP_CSC_CSR_ODE
+#ifndef DEV_SWAP_CSC_CSR_ODE
 void swapCSC_CSR_ODE(SolverData *sd){
   ModelDataGPU *mGPU = sd->mGPU;
   int n_row=mGPU->nrows/mGPU->n_cells;
@@ -445,9 +444,11 @@ void swapCSC_CSR_ODE(SolverData *sd){
     Bp[col] = last;
     last    = temp;
   }
+
   cudaMemcpy(mGPU->diA,Bp,(mGPU->nrows+1)*sizeof(int),cudaMemcpyHostToDevice);
   cudaMemcpy(mGPU->djA,Bi,mGPU->nnz*sizeof(int),cudaMemcpyHostToDevice);
   cudaMemcpy(mGPU->dA,Bx,mGPU->nnz*sizeof(double),cudaMemcpyHostToDevice);
+
   free(Bp);
   free(Bi);
   free(Bx);
@@ -593,7 +594,7 @@ void constructor_cvode_gpu(CVodeMem cv_mem, SolverData *sd){
     cudaMalloc((void **) &mGPU->B, mGPU->nnz * sizeof(double));
     //swapCSC_CSR_Indices(sd);
 #endif
-#ifdef DEV_SWAP_CSC_CSR_ODE
+#ifndef DEV_SWAP_CSC_CSR_ODE
     swapCSC_CSR_ODE(sd);
 #endif
     double *ewt = N_VGetArrayPointer(cv_mem->cv_ewt)+offset_nrows;
