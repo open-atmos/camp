@@ -514,10 +514,16 @@ __device__ void cudaDevicecalc_Jac(double *y,ModelDataGPU *md, ModelDataVariable
     int j = threadIdx.x + i*blockDim.x;
 #ifndef USE_CSR_ODE_GPU
 #ifdef DEV_JOIN_RXN_ID
-   md->dA[j] =jacBlock.production_partials[jac_rxn_id[j]] - jacBlock.loss_partials[jac_rxn_id[j]];
+   //md->dA[j+ nnz * blockIdx.x] =jacBlock.production_partials[jac_rxn_id[j]] - jacBlock.loss_partials[jac_rxn_id[j]];
+  md->dA[jac_rxn_id[j]+ nnz * blockIdx.x]=jacBlock.production_partials[j] - jacBlock.loss_partials[j];
+//md->dA[j+nnz*blockIdx.x]=jacBlock.production_partials[jac_map[jac_rxn_id[j]].rxn_id]-jacBlock.loss_partials[jac_map[jac_rxn_id[j]].rxn_id];
+//md->dA[jac_rxn_id[jac_map[j].rxn_id] + nnz * blockIdx.x] =jacBlock.production_partials[j] - jacBlock.loss_partials[j];
+//md->dA[jac_map[jac_rxn_id[j]].rxn_id + nnz * blockIdx.x] =jacBlock.production_partials[j] - jacBlock.loss_partials[j];
+//md->dA[j+ nnz * blockIdx.x] =jacBlock.production_partials[jac_rxn_id[jac_map[j].rxn_id]] - jacBlock.loss_partials[jac_rxn_id[jac_map[j].rxn_id]];
+//jacBlock.production_partials[jac_rxn_id[j]] = 0.0;
+//jacBlock.loss_partials[jac_rxn_id[j]] = 0.0;
 #else
-  md->dA[jac_rxn_id[j] + nnz * blockIdx.x] =
-    jacBlock.production_partials[jac_map[j].rxn_id] - jacBlock.loss_partials[jac_map[j].rxn_id];
+  md->dA[jac_rxn_id[j]+nnz*blockIdx.x]=jacBlock.production_partials[jac_map[j].rxn_id]-jacBlock.loss_partials[jac_map[j].rxn_id];
 #endif
 #else
   md->dA[jac_map[j].solver_id + nnz * blockIdx.x] =
@@ -531,10 +537,12 @@ __device__ void cudaDevicecalc_Jac(double *y,ModelDataGPU *md, ModelDataVariable
     int j = threadIdx.x + n_iters*blockDim.x;
 #ifndef USE_CSR_ODE_GPU
 #ifdef DEV_JOIN_RXN_ID
-   md->dA[j] =jacBlock.production_partials[jac_rxn_id[j]] - jacBlock.loss_partials[jac_rxn_id[j]];
+  //md->dA[j+ nnz * blockIdx.x] =jacBlock.production_partials[jac_rxn_id[j]] - jacBlock.loss_partials[jac_rxn_id[j]];
+  md->dA[jac_rxn_id[j]+ nnz * blockIdx.x]=jacBlock.production_partials[j] - jacBlock.loss_partials[j];
+//jacBlock.production_partials[jac_rxn_id[j]] = 0.0;
+//jacBlock.loss_partials[jac_rxn_id[j]] = 0.0;
 #else
-  md->dA[jac_rxn_id[j] + nnz * blockIdx.x] =
-    jacBlock.production_partials[jac_map[j].rxn_id] - jacBlock.loss_partials[jac_map[j].rxn_id];
+  md->dA[jac_rxn_id[j] + nnz * blockIdx.x] = jacBlock.production_partials[jac_map[j].rxn_id] - jacBlock.loss_partials[jac_map[j].rxn_id];
 #endif
 #else
   md->dA[jac_map[j].solver_id + nnz * blockIdx.x] =

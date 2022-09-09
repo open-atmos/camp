@@ -450,19 +450,48 @@ void swapCSC_CSR_ODE(SolverData *sd){
   free(Bi);
   free(Bx);
 
+#ifdef DEV_JOIN_RXN_ID
+  ModelData *md = &(sd->model_data);
+  nnz=md->n_mapped_values;
+
+int *aux_solver_id2= (int *)malloc(nnz * sizeof(int));
+  for (int i = 0; i < nnz; i++){
+    aux_solver_id2[md->jac_map[i].solver_id]=md->jac_map[i].rxn_id;
+   //aux_solver_id2[i]=md->jac_map[md->jac_map[i].rxn_id].solver_id;
+    //aux_solver_id2[i]=md->jac_map[md->jac_map[i].solver_id].rxn_id;
+  }
+
+  int *aux_solver_id= (int *)malloc(nnz * sizeof(int));
+  for (int i = 0; i < nnz; i++){
+    //aux_solver_id[i]=mapJSPMV[md->jac_map[md->jac_map[i].rxn_id].solver_id];
+    //aux_solver_id[i]=mapJSPMV[md->jac_map[md->jac_map[i].solver_id].rxn_id];
+    //aux_solver_id[mapJSPMV[md->jac_map[i].solver_id]]=md->jac_map[i].rxn_id;
+    //aux_solver_id[i]=mapJSPMV[aux_solver_id2[i]];
+    aux_solver_id[i]=mapJSPMV[md->jac_map[i].solver_id];
+  }free(aux_solver_id2);
+  int *jac_solver_id= (int *)malloc(nnz * sizeof(int));
+  free(mapJSPMV);
+  for (int i = 0; i < nnz; i++){
+    jac_solver_id[i]=aux_solver_id[i];
+    //jac_solver_id[i]=aux_solver_id[md->jac_map[i].rxn_id];
+    //jac_solver_id[md->jac_map[i].rxn_id]=aux_solver_id[i];
+    //jac_solver_id[i]=md->jac_map[aux_solver_id[i]].rxn_id;
+  }
+#else
   ModelData *md = &(sd->model_data);
   nnz=md->n_mapped_values;
   int *aux_solver_id= (int *)malloc(nnz * sizeof(int));
   for (int i = 0; i < nnz; i++){
     aux_solver_id[i]=mapJSPMV[md->jac_map[i].solver_id];
   }
-
   int *jac_solver_id= (int *)malloc(nnz * sizeof(int));
   free(mapJSPMV);
   for (int i = 0; i < nnz; i++){
     jac_solver_id[i]=aux_solver_id[i];
     //jac_solver_id[i]=md->jac_map[i].solver_id;
   }
+#endif
+
 //todo merge jac_solver_id and jac_rxn_id
   cudaMalloc((void **) &(mGPU->jac_rxn_id),nnz*sizeof(int));
   cudaMemcpy(mGPU->jac_rxn_id,jac_solver_id,nnz*sizeof(int),cudaMemcpyHostToDevice);

@@ -47,7 +47,7 @@ void read_options_bcg(itsolver *bicg){
     else if(strstr(buff,"CELLS_METHOD=One-cell")!=NULL){
       bicg->cells_method=ONECELL;
     }else{
-      printf("ERROR: solveBCGBlocks unkonwn cells_method");
+      printf("ERROR: solveBCGBlocks unknown cells_method");
       exit(0);
     }
     fclose(fp);
