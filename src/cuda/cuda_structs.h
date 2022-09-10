@@ -182,7 +182,7 @@ typedef struct {
     int cv_ncfn;
 
 #ifdef CAMP_DEBUG_GPU
-#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
+#ifndef CAMP_PROFILE_DEVICE_FUNCTIONS
     int countercvStep;
     int counterDerivGPU;
     int counterBCGInternal;
@@ -356,13 +356,19 @@ typedef struct {
 #endif
     int *jac_rxn_id;
 
+#ifdef DEV_cudaSwapCSC_CSR
+    int* iB;
+    int* jB;
+    double *B;
+#endif
+
     ModelDataVariable mdvCPU; //cpu equivalent to gpu
     ModelDataVariable *mdv; //device
     ModelDataVariable *mdvo; //out device
 
 //ODE stats
 #ifdef CAMP_DEBUG_GPU
-#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
+#ifndef CAMP_PROFILE_DEVICE_FUNCTIONS
     int clock_khz;
 #endif
 #endif
