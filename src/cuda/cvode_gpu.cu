@@ -471,12 +471,27 @@ int *aux_solver_id2= (int *)malloc(nnz * sizeof(int));
   }free(aux_solver_id2);
   int *jac_solver_id= (int *)malloc(nnz * sizeof(int));
   free(mapJSPMV);
+ /*
   for (int i = 0; i < nnz; i++){
-    jac_solver_id[i]=aux_solver_id[i];
-    //jac_solver_id[i]=aux_solver_id[md->jac_map[i].rxn_id];
-    //jac_solver_id[md->jac_map[i].rxn_id]=aux_solver_id[i];
+    //jac_solver_id[i]=aux_solver_id[i];
+  jac_solver_id[i]=aux_solver_id[md->jac_map[i].rxn_id];
+   // jac_solver_id[md->jac_map[i].rxn_id]=aux_solver_id[i];
     //jac_solver_id[i]=md->jac_map[aux_solver_id[i]].rxn_id;
   }
+  */
+ /*
+   for (int i = 0; i < nnz; i++){
+     for (int j = 0; j < nnz; j++){
+     //if(j==aux_solver_id[i])
+        //jac_solver_id[i]=md->jac_map[j].rxn_id;
+      //if(j==md->jac_map[j].rxn_id)
+        //jac_solver_id[i]=aux_solver_id[j];
+      if(j==md->jac_map[i].rxn_id)
+        jac_solver_id[i]=aux_solver_id[j];
+      }
+    }
+*/
+
 #else
   ModelData *md = &(sd->model_data);
   nnz=md->n_mapped_values;
@@ -492,7 +507,7 @@ int *aux_solver_id2= (int *)malloc(nnz * sizeof(int));
   }
 #endif
 
-//todo merge jac_solver_id and jac_rxn_id
+//todo remove jac_map or substitute jac_rxn_id by jac_map.rxnid
   cudaMalloc((void **) &(mGPU->jac_rxn_id),nnz*sizeof(int));
   cudaMemcpy(mGPU->jac_rxn_id,jac_solver_id,nnz*sizeof(int),cudaMemcpyHostToDevice);
   free(jac_solver_id);
