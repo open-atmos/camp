@@ -65,6 +65,7 @@ cmake -D CMAKE_C_COMPILER=$(which mpicc) \
 -D ENABLE_NETCDF=OFF \
 -D ENABLE_BOOTCAMP=OFF \
 -D ENABLE_DATA=OFF \
+-D ENABLE_STATIC_LIB=OFF \
 -D use_maxrregcount64=OFF \
 ..
 

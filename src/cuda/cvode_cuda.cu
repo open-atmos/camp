@@ -506,62 +506,26 @@ __device__ void cudaDevicecalc_Jac(double *y,ModelDataGPU *md, ModelDataVariable
       }
     }
     __syncthreads();
+
   JacMap *jac_map = md->jac_map;
-  int *jac_rxn_id = md->jac_rxn_id;
   int nnz = md->n_mapped_values[0];
   int n_iters = nnz / blockDim.x;
   for (int i = 0; i < n_iters; i++) {
     int j = threadIdx.x + i*blockDim.x;
-#ifndef USE_CSR_ODE_GPU
-#ifdef DEV_JOIN_RXN_ID
-   //md->dA[j+ nnz * blockIdx.x] =jacBlock.production_partials[jac_rxn_id[j]] - jacBlock.loss_partials[jac_rxn_id[j]];
-  md->dA[jac_rxn_id[j]+ nnz * blockIdx.x]=jacBlock.production_partials[j] - jacBlock.loss_partials[j];
-//md->dA[j+nnz*blockIdx.x]=jacBlock.production_partials[jac_map[jac_rxn_id[j]].rxn_id]-jacBlock.loss_partials[jac_map[jac_rxn_id[j]].rxn_id];
-//md->dA[jac_rxn_id[jac_map[j].rxn_id] + nnz * blockIdx.x] =jacBlock.production_partials[j] - jacBlock.loss_partials[j];
-//md->dA[jac_map[jac_rxn_id[j]].rxn_id + nnz * blockIdx.x] =jacBlock.production_partials[j] - jacBlock.loss_partials[j];
-//md->dA[j+ nnz * blockIdx.x] =jacBlock.production_partials[jac_rxn_id[jac_map[j].rxn_id]] - jacBlock.loss_partials[jac_rxn_id[jac_map[j].rxn_id]];
-#else
-  md->dA[jac_rxn_id[j]+nnz*blockIdx.x]=jacBlock.production_partials[jac_map[j].rxn_id]-jacBlock.loss_partials[jac_map[j].rxn_id];
-#endif
-#else
   md->dA[jac_map[j].solver_id + nnz * blockIdx.x] =
       jacBlock.production_partials[jac_map[j].rxn_id] - jacBlock.loss_partials[jac_map[j].rxn_id];
-#endif
-    //jacBlock.production_partials[jac_map[j].rxn_id] = 0.0;
-    //jacBlock.loss_partials[jac_map[j].rxn_id] = 0.0;
+    jacBlock.production_partials[jac_map[j].rxn_id] = 0.0;
+    jacBlock.loss_partials[jac_map[j].rxn_id] = 0.0;
   }
   int residual=nnz-(blockDim.x*n_iters);
   if(threadIdx.x < residual){
     int j = threadIdx.x + n_iters*blockDim.x;
-#ifndef USE_CSR_ODE_GPU
-#ifdef DEV_JOIN_RXN_ID
-  //md->dA[j+ nnz * blockIdx.x] =jacBlock.production_partials[jac_rxn_id[j]] - jacBlock.loss_partials[jac_rxn_id[j]];
-  md->dA[jac_rxn_id[j]+ nnz * blockIdx.x]=jacBlock.production_partials[j] - jacBlock.loss_partials[j];
-//jacBlock.production_partials[jac_rxn_id[j]] = 0.0;
-//jacBlock.loss_partials[jac_rxn_id[j]] = 0.0;
-#else
-  md->dA[jac_rxn_id[j] + nnz * blockIdx.x] = jacBlock.production_partials[jac_map[j].rxn_id] - jacBlock.loss_partials[jac_map[j].rxn_id];
-#endif
-#else
   md->dA[jac_map[j].solver_id + nnz * blockIdx.x] =
       jacBlock.production_partials[jac_map[j].rxn_id] - jacBlock.loss_partials[jac_map[j].rxn_id];
-#endif
-    //jacBlock.production_partials[jac_map[j].rxn_id] = 0.0;
-    //jacBlock.loss_partials[jac_map[j].rxn_id] = 0.0;
+    jacBlock.production_partials[jac_map[j].rxn_id] = 0.0;
+    jacBlock.loss_partials[jac_map[j].rxn_id] = 0.0;
   }
     __syncthreads();
-  for (int i = 0; i < n_iters; i++) {
-     int j = threadIdx.x + i*blockDim.x;
-     jacBlock.production_partials[jac_map[j].rxn_id] = 0.0;
-     jacBlock.loss_partials[jac_map[j].rxn_id] = 0.0;
-   }
- residual=nnz-(blockDim.x*n_iters);
-  if(threadIdx.x < residual){
-     int j = threadIdx.x + n_iters*blockDim.x;
-     jacBlock.production_partials[jac_map[j].rxn_id] = 0.0;
-     jacBlock.loss_partials[jac_map[j].rxn_id] = 0.0;
-   }
-   __syncthreads();
 #ifdef CAMP_DEBUG_GPU
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     dmdv->timecalc_Jac += ((double)(clock() - start))/(clock_khz*1000);

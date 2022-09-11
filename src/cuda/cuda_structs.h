@@ -354,7 +354,6 @@ typedef struct {
     int *jARXN;
     int *iARXN;
 #endif
-    int *jac_rxn_id;
 
 #ifdef DEV_cudaSwapCSC_CSR
     int* iB;

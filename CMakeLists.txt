@@ -42,6 +42,7 @@ option(ENABLE_RESET_JAC_SOLVING "Precondition Jacobian matrix with default value
 option(ENABLE_NETCDF "Include NETCDF package" OFF)
 option(ENABLE_BOOTCAMP "" ON)
 option(ENABLE_DATA "" ON)
+option(ENABLE_STATIC_LIB "" ON)
 option(use_maxrregcount127 "Compiling with maxxregcount127" OFF)
 option(use_maxrregcount64 "Compiling with maxxregcount64" OFF)
 option(use_maxrregcount24 "Compiling with maxxregcount24" OFF)
@@ -501,22 +502,29 @@ set(CAMP_LIB_SRC
   ${CAMP_CUDA_SRC} ${GSL_SRC} ${CAMP_CXX_SRC} )
 
 #add_library(camplib SHARED ${CAMP_LIB_SRC}) #nvlink warning (issue 9 github)
-add_library(camplib ${CAMP_LIB_SRC}) #fine
+add_library(camplib ${CAMP_LIB_SRC})
+
+if(ENABLE_STATIC_LIB)
 add_library(camplib-static STATIC ${CAMP_LIB_SRC})
+endif()
 
 if (CUDA_FOUND)
 
   target_link_libraries(camplib  ${NETCDF_LIBS} ${SUNDIALS_LIBS} ${GSL_LIBS} ${JSON_LIB} ${CUDA_LIBRARIES})
-  target_link_libraries(camplib-static  ${NETCDF_LIBS} ${SUNDIALS_LIBS} ${GSL_LIBS} ${JSON_LIB} ${CUDA_LIBRARIES})
-
   set_target_properties(camplib PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
+
+if(ENABLE_STATIC_LIB)
+  target_link_libraries(camplib-static  ${NETCDF_LIBS} ${SUNDIALS_LIBS} ${GSL_LIBS} ${JSON_LIB} ${CUDA_LIBRARIES})
   set_target_properties(camplib-static  PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
+endif()
 
 else()
   #target_link_libraries(camplib ${NETCDF_LIBS} ${SUNDIALS_LIBS}
    #  ${MOSAIC_LIB} ${GSL_LIBS} ${JSON_LIB})
   target_link_libraries(camplib  ${NETCDF_LIBS} ${SUNDIALS_LIBS} ${GSL_LIBS} ${JSON_LIB})
+if(ENABLE_STATIC_LIB)
   target_link_libraries(camplib-static  ${NETCDF_LIBS} ${SUNDIALS_LIBS} ${GSL_LIBS} ${JSON_LIB})
+endif()
 
 endif()
 
@@ -529,16 +537,19 @@ set_target_properties(camplib PROPERTIES
                          SOVERSION ${PACKAGE_VERSION}
                          LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
                          Fortran_MODULE_DIRECTORY ${CMAKE_BINARY_DIR})
+if(ENABLE_STATIC_LIB)
 set_target_properties(camplib-static PROPERTIES
                          OUTPUT_NAME camp
                          PREFIX lib
                          VERSION ${PACKAGE_VERSION}
                          ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
                          Fortran_MODULE_DIRECTORY ${MODULE_DIR})
+endif()
 
 ######################################################################
 # Install options
 
+if(ENABLE_STATIC_LIB)
 include(GNUInstallDirs)
 install(TARGETS camplib camplib-static
         EXPORT camplib-targets
@@ -552,14 +563,7 @@ install(
   CODE "file(GLOB_RECURSE MODULE_FILES \"${MOD_DIR_TO_INSTALL}/*.mod\")"
   CODE "file(INSTALL \${MODULE_FILES} DESTINATION \"\${CMAKE_INSTALL_PREFIX}/${MOD_DESTINATION_DIR}\")"
   )
-
-######################################################################
-# camp-chem box model
-
-add_executable(camp_box_model test/camp_box_model_data.F90
-                              test/camp_box_model.F90)
-
-target_link_libraries(camp_box_model camplib)
+endif()
 
 ######################################################################
 # test_chemistry_cb05cl_ae5
@@ -615,7 +619,15 @@ target_link_libraries(mock_monarch camplib)
 
 if (ENABLE_TESTS)
 
-  ######################################################################
+######################################################################
+  # camp-chem box model
+
+  add_executable(camp_box_model test/camp_box_model_data.F90
+          test/camp_box_model.F90)
+
+  target_link_libraries(camp_box_model camplib)
+
+######################################################################
   # test_chemistry_cb05cl_ae5_big
 
 add_executable(test_chemistry_cb05cl_ae5_big
