@@ -6,60 +6,6 @@
 #ifndef CAMPGPU_CUDA_STRUCTS_H
 #define CAMPGPU_CUDA_STRUCTS_H
 
-typedef struct
-{
-  //Init variables ("public")
-  int cells_method;
-
-  double* A;
-  int*    jA;
-  int*    iA;
-  double* aux;
-
-#ifdef CAMP_DEBUG_GPU
-  int counterNewtonIt;
-  int counterLinSolSetup;
-  int counterLinSolSolve;
-  int countercvStep;
-  int counterDerivNewton;
-  int counterBiConjGrad;
-  int counterDerivSolve;
-  int countersolveCVODEGPU;
-
-  double timeNewtonIt;
-  double timeLinSolSetup;
-  double timeLinSolSolve;
-  double timecvStep;
-  double timeDerivNewton;
-  double timeBiConjGrad;
-  double timeBiConjGradMemcpy;
-  double timeDerivSolve;
-  double timeJac;
-
-  cudaEvent_t startDerivNewton;
-  cudaEvent_t startDerivSolve;
-  cudaEvent_t startLinSolSetup;
-  cudaEvent_t startLinSolSolve;
-  cudaEvent_t startNewtonIt;
-  cudaEvent_t startcvStep;
-  cudaEvent_t startBCG;
-  cudaEvent_t startBCGMemcpy;
-
-  cudaEvent_t stopDerivNewton;
-  cudaEvent_t stopDerivSolve;
-  cudaEvent_t stopLinSolSetup;
-  cudaEvent_t stopLinSolSolve;
-  cudaEvent_t stopNewtonIt;
-  cudaEvent_t stopcvStep;
-  cudaEvent_t stopBCGMemcpy;
-  cudaEvent_t stopBCG;
-
-#endif
-
-} itsolver;
-
-#endif //CAMPGPU_CUDA_STRUCTS_H
-
 typedef struct {
     unsigned int num_spec;          // Number of species in the derivative
     // long double is treated as double in GPU
@@ -68,7 +14,6 @@ typedef struct {
 #ifdef CAMP_DEBUG
     double last_max_loss_precision;  // Maximum loss of precision at last output
 #endif
-
 } TimeDerivativeGPU;
 
 #ifndef DEF_JAC_MAP
@@ -175,14 +120,10 @@ typedef struct {
     int cv_maxncf;
 
     //Counters (e.g. iterations of function cvnlsNewton)
-    int cv_nsetups;
-    int cv_nfe;
-    int nje;
     int nstlj;
-    int cv_ncfn;
 
 #ifdef CAMP_DEBUG_GPU
-#ifndef CAMP_PROFILE_DEVICE_FUNCTIONS
+#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     int countercvStep;
     int counterDerivGPU;
     int counterBCGInternal;
@@ -201,16 +142,67 @@ typedef struct {
 #endif
 }ModelDataVariable; //variables to pass between gpu and cpu (different data between cells)
 
+typedef struct{
+  double* A;
+  int*    jA;
+  int*    iA;
+  double* aux;
+  int cells_method;
+  int threads,blocks;
+  int nnz_J_solver;
+  size_t deriv_size;
+  size_t jac_size;
+  size_t state_size;
+  size_t env_size;
+  size_t rxn_env_data_size;
+  size_t rxn_env_data_idx_size;
+  size_t map_state_deriv_size;
+  int max_n_gpu_thread;
+  int max_n_gpu_blocks;
+  int *map_state_derivCPU;
+  ModelDataVariable mdvCPU; //cpu equivalent to gpu
+#ifdef CAMP_DEBUG_GPU
+  int counterNewtonIt;
+  int counterLinSolSetup;
+  int counterLinSolSolve;
+  int countercvStep;
+  int counterDerivNewton;
+  int counterBiConjGrad;
+  int counterDerivSolve;
+  int countersolveCVODEGPU;
+
+  double timeNewtonIt;
+  double timeLinSolSetup;
+  double timeLinSolSolve;
+  double timecvStep;
+  double timeDerivNewton;
+  double timeBiConjGrad;
+  double timeBiConjGradMemcpy;
+  double timeDerivSolve;
+  double timeJac;
+
+  cudaEvent_t startDerivNewton;
+  cudaEvent_t startDerivSolve;
+  cudaEvent_t startLinSolSetup;
+  cudaEvent_t startLinSolSolve;
+  cudaEvent_t startNewtonIt;
+  cudaEvent_t startcvStep;
+  cudaEvent_t startBCG;
+  cudaEvent_t startBCGMemcpy;
+
+  cudaEvent_t stopDerivNewton;
+  cudaEvent_t stopDerivSolve;
+  cudaEvent_t stopLinSolSetup;
+  cudaEvent_t stopLinSolSolve;
+  cudaEvent_t stopNewtonIt;
+  cudaEvent_t stopcvStep;
+  cudaEvent_t stopBCGMemcpy;
+  cudaEvent_t stopBCG;
+#endif
+} ModelDataCPU;
+
 typedef struct {
-
-    //CPU
-    double* A;
-    int*    jA;
-    int*    iA;
-    double* aux;
-
     //Allocated from CPU (used during CPU / need some cudamemcpy)
-    int threads,blocks;
     int *map_state_deriv;
     double *deriv_data;
     double *J_solver;
@@ -229,35 +221,10 @@ typedef struct {
 
     double *production_rates;
     double *loss_rates;
-
-#ifdef REVERSE_INT_FLOAT_MATRIX
-#else
     int *rxn_int_indices;
     int *rxn_float_indices;
-#endif
-
     int n_rxn;
     int n_rxn_env_data;
-
-#ifdef DEV_AERO_REACTIONS
-    int n_aero_phase;
-    int n_added_aero_phases;
-    int *aero_phase_int_indices;
-    int *aero_phase_float_indices;
-    int *aero_phase_int_data;
-    double *aero_phase_float_data;
-
-    int n_aero_rep;
-    int n_added_aero_reps;
-    int n_aero_rep_env_data;
-    int *aero_rep_int_indices;
-    int *aero_rep_float_indices;
-    int *aero_rep_env_idx;
-    int *aero_rep_int_data;
-    double *aero_rep_float_data;
-    double *aero_rep_env_data;
-#endif
-
     int *n_mapped_values;
     JacMap *jac_map;
     JacobianGPU jac;
@@ -265,16 +232,9 @@ typedef struct {
     int nnz;
     double *yout;
     double *cv_Vabstol;
-
-    //Allocated in GPU only
-    int i_cell; //todo remove
-    int i_rxn;
-    int i_aero_rep;
-
     double *grid_cell_state;
     double *grid_cell_env;
     double *grid_cell_aero_rep_env_data;
-
     double *cv_l;
     double *cv_tau;
     double *cv_tq;//NUM_TESTS+1
@@ -329,21 +289,6 @@ typedef struct {
     //Auxiliar variables
     double* dsavedJ;
 
-    int nnz_J_solver;
-    double *jac_aux;
-    int *indexvals_gpu;
-    int *indexptrs_gpu;
-
-    size_t deriv_size;
-    size_t jac_size;
-    size_t state_size;
-    size_t env_size;
-    size_t rxn_env_data_size;
-    size_t rxn_env_data_idx_size;
-    size_t map_state_deriv_size;
-    int max_n_gpu_thread;
-    int max_n_gpu_blocks;
-    int *map_state_derivCPU;
 #ifdef DEV_cudaSwapCSC
     int* iB;
     int* jB;
@@ -355,23 +300,19 @@ typedef struct {
     int *iARXN;
 #endif
 
-#ifdef DEV_cudaSwapCSC_CSR
-    int* iB;
-    int* jB;
-    double *B;
-#endif
-
-    ModelDataVariable mdvCPU; //cpu equivalent to gpu
     ModelDataVariable *mdv; //device
     ModelDataVariable *mdvo; //out device
+    ModelDataVariable *s;
+    ModelDataVariable *sCells;
 
 //ODE stats
 #ifdef CAMP_DEBUG_GPU
-#ifndef CAMP_PROFILE_DEVICE_FUNCTIONS
+#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     int clock_khz;
 #endif
 #endif
-
 } ModelDataGPU; //CPU and GPU structs
+
+#endif //CAMPGPU_CUDA_STRUCTS_H
 
 

@@ -149,36 +149,38 @@ void aero_rep_gpu_update_env_state(ModelDataGPU *model_data) {
  *
  * \param model_data Pointer to the model data
  */
+ /*
 #ifdef __CUDA_ARCH__
 __host__ __device__
 #endif
 void aero_rep_gpu_update_state(ModelDataGPU *md) {
-  // Get the number of aerosol representations
+
+
   int n_aero_rep = md->n_aero_rep;
 
 #ifdef __CUDA_ARCH__
 
-  int *int_data = &(md->aero_rep_int_data[md->aero_rep_int_indices[md->i_aero_rep]]);
+  int *int_data = &(md->aero_rep_int_data[md->aero_rep_int_indices[dmdv->i_aero_rep]]);
   int aero_rep_type = int_data[0];
   int *aero_rep_int_data = (int *) &(int_data[1]);
   double *aero_rep_float_data =
       &(md->aero_rep_float_data
-            [md->aero_rep_float_indices[md->i_aero_rep]]);
+            [md->aero_rep_float_indices[dmdv->i_aero_rep]]);
 
   //Todo update grid_cell_aero_rep for the rest of functions
 
   //double *grid_cell_aero_rep_env_data =
   //    &(md->aero_rep_env_data
-  //    [md->i_cell*md->n_aero_rep_env_data]);
+  //    [dmdv->i_cell*md->n_aero_rep_env_data]);
   double *aero_rep_env_data =
       &(md->grid_cell_aero_rep_env_data
-            [md->aero_rep_env_idx[md->i_aero_rep]]);
+            [md->aero_rep_env_idx[dmdv->i_aero_rep]]);
 
 
   //double *aero_rep_env_data =
   //  &(md->aero_rep_env_data
-  //        [md->i_cell*md->n_aero_rep_env_data+
-  //        md->aero_rep_env_idx[md->i_aero_rep]]);
+  //        [dmdv->i_cell*md->n_aero_rep_env_data+
+  //        md->aero_rep_env_idx[dmdv->i_aero_rep]]);
 
   // Call the appropriate function
   switch (aero_rep_type) {
@@ -227,10 +229,11 @@ void aero_rep_gpu_update_state(ModelDataGPU *md) {
         break;
     }
   }
-
 #endif
 
+
 }
+*/
 
 /** \brief Get the effective particle radius, \f$r_{eff}\f$ (m)
  *

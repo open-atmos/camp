@@ -1036,33 +1036,33 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
 
   }
   else{
-    itsolver *bicg = &(sd->bicg);
+    ModelDataCPU *mCPU = &(sd->mCPU);
     solver_get_statistics_gpu(sd);
     ModelDataGPU *mGPU;
     cudaSetDevice(sd->startDevice);
     sd->mGPU = &(sd->mGPUs[sd->startDevice]);
     mGPU = sd->mGPU;
-    ModelDataVariable mdvCPU=mGPU->mdvCPU;
+    ModelDataVariable mdvCPU=mCPU->mdvCPU;
     int i;
     if(sd->ncounters>0){
       i=0;
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
-      counters[i++]=mGPU->mdvCPU.counterBCGInternal;
+      counters[i++]=mCPU->mdvCPU.counterBCGInternal;
 #else
       counters[i++]=0;
 #endif
-      counters[i++]=bicg->counterBiConjGrad;
-      counters[i++]=bicg->countersolveCVODEGPU;
+      counters[i++]=mCPU->counterBiConjGrad;
+      counters[i++]=mCPU->countersolveCVODEGPU;
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
-      counters[i++]=mGPU->mdvCPU.countercvStep;
+      counters[i++]=mCPU->mdvCPU.countercvStep;
 #else
       counters[i++]=0;
 #endif
     }
     if(sd->ntimers>0){
       i=0;
-      times[i++]=bicg->timeBiConjGrad;
-      times[i++]=bicg->timeBiConjGradMemcpy;
+      times[i++]=mCPU->timeBiConjGrad;
+      times[i++]=mCPU->timeBiConjGradMemcpy;
       times[i++]=sd->timeCVode;
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
       times[i++]=mdvCPU.dtcudaDeviceCVode;
@@ -1089,7 +1089,7 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
       times[i++]=0.;
       times[i++]=0.;
 #endif
-      times[i++]=bicg->timecvStep;
+      times[i++]=mCPU->timecvStep;
       //for(int i=0;i<sd->ntimers;i++)
         //printf("times[%d]=%le\n",i,times[i]);
     }
@@ -1131,27 +1131,27 @@ void solver_reset_statistics(void *solver_data, int *counters, double *times)
 
   }
   else{
-    itsolver *bicg = &(sd->bicg);
+    ModelDataCPU *mCPU = &(sd->mCPU);
     ModelDataGPU *mGPU;
    for (int iDevice = sd->startDevice; iDevice < sd->endDevice; iDevice++) {
       cudaSetDevice(iDevice);
       sd->mGPU = &(sd->mGPUs[iDevice]);
       mGPU = sd->mGPU;
 
-      ModelDataVariable mdvCPU=mGPU->mdvCPU;
+      ModelDataVariable mdvCPU=mCPU->mdvCPU;
       if(sd->ncounters>0){
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
-        mGPU->mdvCPU.counterBCGInternal=0;
+        mCPU->mdvCPU.counterBCGInternal=0;
 #endif
-        bicg->counterBiConjGrad=0;
-        bicg->countersolveCVODEGPU=0;
+        mCPU->counterBiConjGrad=0;
+        mCPU->countersolveCVODEGPU=0;
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
-        mGPU->mdvCPU.countercvStep=0;
+        mCPU->mdvCPU.countercvStep=0;
 #endif
       }
       if(sd->ntimers>0){
-        bicg->timeBiConjGrad=0;
-        bicg->timeBiConjGradMemcpy=0;
+        mCPU->timeBiConjGrad=0;
+        mCPU->timeBiConjGradMemcpy=0;
         sd->timeCVode=0;
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
         mdvCPU.dtcudaDeviceCVode=0;
@@ -1164,7 +1164,7 @@ void solver_reset_statistics(void *solver_data, int *counters, double *times)
         mdvCPU.timef=0;
         mdvCPU.timeguess_helper=0;
         #endif
-        bicg->timecvStep=0;
+        mCPU->timecvStep=0;
       }
       else{
         printf("WARNING: In function solver_get_statistics trying to assign times "
@@ -1624,7 +1624,6 @@ int Jac(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_data,
   }
 #endif
 #endif
-
   return (0);
 }
 
@@ -1641,70 +1640,10 @@ int f_cuda(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
 
     rxn_calc_deriv_gpu(sd, y, deriv, (double)time_step);
 
-  }else{ //Not used
-
-    // Get the current integrator time step (s)
-    CVodeGetCurrentStep(sd->cvode_mem, &time_step);
-
-    // On the first call to f(), the time step hasn't been set yet, so use the
-    // default value
-    time_step = time_step > ZERO ? time_step : sd->init_time_step;
-    //time_step = t;
-
-    // Update the state array with the current dependent variable values.
-    // Signal a recoverable error (positive return value) for negative
-    // concentrations.
-    //if (camp_solver_check_model_state_gpu(y, sd, -SMALL, TINY) != CAMP_SOLVER_SUCCESS)
-    //  return 1;
-
-    //int flag=0;
-    //flag = f(t, y, deriv, solver_data);
-
-    //rxn_calc_deriv_gpu(sd, y, deriv, (double)time_step);
-
-    //return flag;
-
-#ifdef AEROS_CPU
-    //NOT WORKING
-    // Get the grid cell dimensions
-    int n_cells = md->n_cells;
-    int n_state_var = md->n_per_cell_state_var;
-    int n_dep_var = md->n_per_cell_dep_var;
-
-      // Loop through the grid cells and update the derivative array
-    for (int i_cell = 0; i_cell < n_cells; ++i_cell) {
-      // Set the grid cell state pointers
-      md->grid_cell_id = i_cell;
-      md->grid_cell_state = &(md->total_state[i_cell * n_state_var]);
-      md->grid_cell_env = &(md->total_env[i_cell * CAMP_NUM_ENV_PARAM_]);
-      md->grid_cell_rxn_env_data =
-          &(md->rxn_env_data[i_cell * md->n_rxn_env_data]);
-      md->grid_cell_aero_rep_env_data =
-          &(md->aero_rep_env_data[i_cell * md->n_aero_rep_env_data]);
-      md->grid_cell_sub_model_env_data =
-          &(md->sub_model_env_data[i_cell * md->n_sub_model_env_data]);
-
-      // Update the aerosol representations
-      aero_rep_update_state(md);
-
-      // Run the sub models
-      sub_model_calculate(md);
-
-      // Reset the TimeDerivative
-      time_derivative_reset(sd->time_deriv);
-
-      // Calculate the time derivative f(t,y)
-      rxn_calc_deriv_aeros(md, sd->time_deriv, (double)time_step);
-
-    }
-#endif
-#ifdef DEBUG_solveDerivative_J_DERIV_IN_CPU
-    N_VLinearSum(1.0, y, -1.0, md->J_state, md->J_tmp);
-    SUNMatMatvec(md->J_solver, md->J_tmp, md->J_tmp2);
-    N_VLinearSum(1.0, md->J_deriv, 1.0, md->J_tmp2, md->J_tmp);
-#endif
-    flag = rxn_calc_deriv_gpu(sd, y, deriv, (double)time_step);
-    }
+  }else{
+    printf("ERROR f_cuda\n");
+    exit(0);
+  }
 #ifdef CAMP_DEBUG_GPU
   //if(sd->counterDerivCPU<=0) print_derivative(deriv);
   sd->counterDerivGPU++;
@@ -1712,7 +1651,6 @@ int f_cuda(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
 #endif
   // Return 0 if success
   return flag;
-
 }
 
 

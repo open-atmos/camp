@@ -25,15 +25,12 @@
 
 void set_jac_data_gpu(SolverData *sd, double *J);
 void rxn_update_env_state_gpu(SolverData *sd);
-int camp_solver_check_model_state_gpu(N_Vector solver_state, SolverData *sd,
-                                       double threshold, double replacement_value);
 void camp_solver_update_model_state_gpu(N_Vector solver_state, SolverData *sd,
                                        double threshold, double replacement_value);
 int rxn_calc_deriv_gpu(SolverData *sd, N_Vector y, N_Vector deriv, double time_step);
 void rxn_calc_deriv_aux(ModelData *model_data, double *deriv_data, double time_step);
 void rxn_fusion_deriv_gpu(ModelData *model_data, N_Vector deriv);
 void free_gpu_cu(SolverData *sd);
-void bubble_sort_gpu(unsigned int *n_zeros, unsigned int *rxn_position, int n_rxn);
 void print_gpu_specs();
 
 #endif

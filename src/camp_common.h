@@ -226,17 +226,11 @@ typedef struct {
 #endif
 
 #ifdef CAMP_USE_GPU
-
 #ifdef CAMP_DEBUG_GPU
-
   double timeDerivKernel;
-
   cudaEvent_t startDerivKernel;
-
   cudaEvent_t stopDerivKernel;
-
 #endif
-
 #endif
 
 } ModelData;
@@ -302,7 +296,7 @@ typedef struct {
 
 #endif
 #ifdef CAMP_USE_GPU
-  itsolver bicg;
+  ModelDataCPU mCPU;
   ModelDataGPU *mGPUs;
   ModelDataGPU *mGPU;
   int *flagCells;

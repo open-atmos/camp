@@ -506,7 +506,6 @@ __device__ void cudaDevicecalc_Jac(double *y,ModelDataGPU *md, ModelDataVariable
       }
     }
     __syncthreads();
-
   JacMap *jac_map = md->jac_map;
   int nnz = md->n_mapped_values[0];
   int n_iters = nnz / blockDim.x;
@@ -631,7 +630,7 @@ int cudaDevicelinsolsetup(int *flag,
 #endif
   dgamma = fabs((dmdv->cv_gamma / dmdv->cv_gammap) - 1.);//SUNRabs
   jbad = (dmdv->cv_nst == 0) ||
-         (dmdv->cv_nst > dmdv->nstlj + CVD_MSBJ) ||
+         (dmdv->cv_nst > md->s->nstlj + CVD_MSBJ) ||
          ((convfail == CV_FAIL_BAD_J) && (dgamma < CVD_DGMAX)) ||
          (convfail == CV_FAIL_OTHER);
   jok = !jbad;
@@ -642,8 +641,7 @@ int cudaDevicelinsolsetup(int *flag,
     __syncthreads();
   } else {
   __syncthreads();
-    dmdv->nje++;
-    dmdv->nstlj = dmdv->cv_nst;
+    md->s->nstlj = dmdv->cv_nst;
     dmdv->cv_jcur = 1;
   __syncthreads();
     int aux_flag=0;
@@ -857,7 +855,6 @@ int cudaDevicecvNewtonIteration(ModelDataGPU *md, ModelDataVariable *dmdv){
         return RHSFUNC_RECVR;
       }
     }
-    dmdv->cv_nfe=dmdv->cv_nfe+1;
     __syncthreads();
 #ifdef CAMP_DEBUG_GPU
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
@@ -934,10 +931,6 @@ int cudaDevicecvNlsNewton(int *flag,
     if (retval> 0) {
       return RHSFUNC_RECVR;
     }
-    __syncthreads();
-    //if (i == 0)
-    dmdv->cv_nfe++;
-    __syncthreads();
     if (callSetup==1) {
       __syncthreads();
 #ifdef CAMP_DEBUG_GPU
@@ -953,7 +946,6 @@ int cudaDevicecvNlsNewton(int *flag,
       dmdv->timelinsolsetup += ((double)(clock() - start))/(clock_khz*1000);
 #endif
 #endif
-      dmdv->cv_nsetups++; //needed?
       callSetup = 0;
       dmdv->cv_gamrat = dmdv->cv_crate = 1.0;
       dmdv->cv_gammap = dmdv->cv_gamma;
@@ -1041,7 +1033,6 @@ int cudaDevicecvHandleNFlag(ModelDataGPU *md, ModelDataVariable *dmdv, int *nfla
   if (*nflagPtr == CV_SUCCESS){
     return(DO_ERROR_TEST);
   }
-    dmdv->cv_ncfn++;
   cudaDevicecvRestore(md, dmdv, saved_t);
   if (*nflagPtr == CV_LSETUP_FAIL)  return(CV_LSETUP_FAIL);
   if (*nflagPtr == CV_LSOLVE_FAIL)  return(CV_LSOLVE_FAIL);
@@ -1270,7 +1261,6 @@ int cudaDevicecvDoErrorTest(ModelDataGPU *md, ModelDataVariable *dmdv,
   retval=cudaDevicef(
           dmdv->cv_tn, md->dzn, md->dtempv,md,dmdv, &aux_flag
   );
-  dmdv->cv_nfe++;
   if (retval < 0)  return(CV_RHSFUNC_FAIL);
   if (retval > 0)  return(CV_UNREC_RHSFUNC_ERR);
   md->dzn[1*md->nrows+i]=dmdv->cv_h*md->dtempv[i];

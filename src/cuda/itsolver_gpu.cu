@@ -17,7 +17,7 @@ static void HandleError(cudaError_t err,
   }
 }
 
-void read_options_bcg(itsolver *bicg){
+void read_options_bcg(ModelDataCPU *mCPU){
 
   FILE *fp;
   char buff[255];
@@ -26,26 +26,26 @@ void read_options_bcg(itsolver *bicg){
 
   fp = fopen("itsolver_options.txt", "r");
   if (fp == NULL){
-    printf("Could not open file %s, setting itsolver to One-cell\n",path);
-    bicg->cells_method=0;
+    printf("Could not open file %s, setting ModelDataCPU to One-cell\n",path);
+    mCPU->cells_method=0;
   }else{
 
     fscanf(fp, "%s", buff);
 
     if(strstr(buff,"CELLS_METHOD=Block-cellsNhalf")!=NULL){
-      bicg->cells_method=BLOCKCELLSNHALF;
+      mCPU->cells_method=BLOCKCELLSNHALF;
     }
    else if(strstr(buff,"CELLS_METHOD=Block-cells1")!=NULL){
-      bicg->cells_method=BLOCKCELLS1;
+      mCPU->cells_method=BLOCKCELLS1;
     }
     else if(strstr(buff,"CELLS_METHOD=Block-cellsN")!=NULL){
-      bicg->cells_method=BLOCKCELLSN;
+      mCPU->cells_method=BLOCKCELLSN;
     }
     else if(strstr(buff,"CELLS_METHOD=Multi-cells")!=NULL){
-      bicg->cells_method=MULTICELLS;
+      mCPU->cells_method=MULTICELLS;
     }
     else if(strstr(buff,"CELLS_METHOD=One-cell")!=NULL){
-      bicg->cells_method=ONECELL;
+      mCPU->cells_method=ONECELL;
     }else{
       printf("ERROR: solveBCGBlocks unknown cells_method");
       exit(0);
@@ -57,17 +57,17 @@ void read_options_bcg(itsolver *bicg){
 
 void createLinearSolver(SolverData *sd)
 {
-  itsolver *bicg = &(sd->bicg);
+  ModelDataCPU *mCPU = &(sd->mCPU);
   ModelDataGPU *mGPU = sd->mGPU;
 
   //Init variables ("public")
-  if(sd->use_gpu_cvode==0) read_options_bcg(bicg);
+  if(sd->use_gpu_cvode==0) read_options_bcg(mCPU);
   mGPU->maxIt=1000;
   mGPU->tolmax=1.0e-30;
 
   int nrows = mGPU->nrows;
   int len_cell = mGPU->nrows/mGPU->n_cells;
-  if(len_cell>mGPU->threads){
+  if(len_cell>mCPU->threads){
     printf("ERROR: Size cell greater than available threads per block");
     exit(0);
   }
@@ -93,8 +93,8 @@ void createLinearSolver(SolverData *sd)
   cudaMalloc(dy,nrows*sizeof(double));
   cudaMalloc(dz,nrows*sizeof(double));
   HANDLE_ERROR(cudaMalloc(ddiag,nrows*sizeof(double)));
-  int blocks = mGPU->blocks;
-  mGPU->aux=(double*)malloc(sizeof(double)*blocks);
+  int blocks = mCPU->blocks;
+  mCPU->aux=(double*)malloc(sizeof(double)*blocks);
 
 }
 
@@ -285,6 +285,7 @@ void swapCSC_CSR(int n_row, int n_col, int* Ap, int* Aj, double* Ax, int* Bp, in
 
 void swapCSC_CSR_BCG(SolverData *sd){
   ModelDataGPU *mGPU = sd->mGPU;
+  ModelDataCPU *mCPU = &(sd->mCPU);
 #ifdef TEST_CSCtoCSR
   //Example configuration taken from KLU Sparse pdf
   int n_row=3;
@@ -311,9 +312,9 @@ void swapCSC_CSR_BCG(SolverData *sd){
   int n_row=mGPU->nrows;
   int n_col=mGPU->nrows;
   int nnz=mGPU->nnz;
-  int* Ap=mGPU->iA;
-  int* Aj=mGPU->jA;
-  double* Ax=mGPU->A;
+  int* Ap=mCPU->iA;
+  int* Aj=mCPU->jA;
+  double* Ax=mCPU->A;
   int* Bp=(int*)malloc((mGPU->nrows+1)*sizeof(int));
   int* Bi=(int*)malloc(mGPU->nnz*sizeof(int));
   double* Bx=(double*)malloc(nnz*sizeof(double));
@@ -737,13 +738,13 @@ void solveGPU_block_thr(int blocks, int threads_block, int n_shr_memory, int n_s
 #endif
 
 #ifdef DEBUG_SOLVEBCGCUDA
-  if(bicg->counterBiConjGrad==0) {
+  if(mCPU->counterBiConjGrad==0) {
     printf("solveGPU_block_thr n_cells %d len_cell %d nrows %d nnz %d max_threads_block %d blocks %d threads_block %d n_shr_empty %d offset_cells %d\n",
            mGPU->n_cells,len_cell,mGPU->nrows,mGPU->nnz,n_shr_memory,blocks,threads_block,n_shr_empty,offset_cells);
 
-    //print_double(mGPU->A,nnz,"A");
-    //print_int(mGPU->jA,nnz,"jA");
-    //print_int(mGPU->iA,nrows+1,"iA");
+    //print_double(mCPU->A,nnz,"A");
+    //print_int(mCPU->jA,nnz,"jA");
+    //print_int(mCPU->iA,nrows+1,"iA");
 
   }
 #endif
@@ -769,21 +770,21 @@ void solveGPU_block_thr(int blocks, int threads_block, int n_shr_memory, int n_s
 void solveBCGBlocks(SolverData *sd, double *dA, int *djA, int *diA, double *dx, double *dtempv)
 {
 
-  itsolver *bicg = &(sd->bicg);
+  ModelDataCPU *mCPU = &(sd->mCPU);
   ModelDataGPU *mGPU = sd->mGPU;
 
 #ifdef DEBUG_SOLVEBCGCUDA
-  if(bicg->counterBiConjGrad==0) {
+  if(mCPU->counterBiConjGrad==0) {
     printf("solveGPUBlock\n");
   }
 #endif
 
   int len_cell = mGPU->nrows/mGPU->n_cells;
   int max_threads_block=nextPowerOfTwo(len_cell);
-  if(bicg->cells_method==BLOCKCELLSN) {
-    max_threads_block = mGPU->threads;//1024;
-  }else if(bicg->cells_method==BLOCKCELLSNHALF){
-    max_threads_block = mGPU->threads/2;
+  if(mCPU->cells_method==BLOCKCELLSN) {
+    max_threads_block = mCPU->threads;//1024;
+  }else if(mCPU->cells_method==BLOCKCELLSNHALF){
+    max_threads_block = mCPU->threads/2;
   }
 
   int n_cells_block =  max_threads_block/len_cell;
@@ -795,8 +796,8 @@ void solveBCGBlocks(SolverData *sd, double *dA, int *djA, int *diA, double *dx, 
   int last_blockN=0;
 
   //Common kernel (Launch all blocks except the last)
-  if(bicg->cells_method==BLOCKCELLSN ||
-  bicg->cells_method==BLOCKCELLSNHALF
+  if(mCPU->cells_method==BLOCKCELLSN ||
+  mCPU->cells_method==BLOCKCELLSNHALF
   ) {
 
     blocks=blocks-1;
@@ -808,7 +809,7 @@ void solveBCGBlocks(SolverData *sd, double *dA, int *djA, int *diA, double *dx, 
     }
 #ifdef DEBUG_SOLVEBCGCUDA
     else{
-      if(bicg->counterBiConjGrad==0){
+      if(mCPU->counterBiConjGrad==0){
         printf("solveBCGBlocks blocks==0\n");
       }
     }
@@ -832,12 +833,11 @@ void solveBCGBlocks(SolverData *sd, double *dA, int *djA, int *diA, double *dx, 
 void solveBCG(SolverData *sd, double *dA, int *djA, int *diA, double *dx, double *dtempv)
 {
   //Init variables ("public")
-
   ModelDataGPU *mGPU = sd->mGPU;
-
+  ModelDataCPU *mCPU = &(sd->mCPU);
   int nrows = mGPU->nrows;
-  int blocks = mGPU->blocks;
-  int threads = mGPU->threads;
+  int blocks = mCPU->blocks;
+  int threads = mCPU->threads;
   int maxIt = mGPU->maxIt;
   double tolmax = mGPU->tolmax;
   double *ddiag = mGPU->ddiag;
@@ -852,11 +852,11 @@ void solveBCG(SolverData *sd, double *dA, int *djA, int *diA, double *dx, double
   double *dAx2 = mGPU->dAx2;
   double *dy = mGPU->dy;
   double *dz = mGPU->dz;
-  double *aux = mGPU->aux;
+  double *aux = mCPU->aux;
   double *dtempv2 = mGPU->dtempv2;
 
 #ifdef DEBUG_SOLVEBCGCUDA
-  if(bicg->counterBiConjGrad==0) {
+  if(mCPU->counterBiConjGrad==0) {
     printf("solveBCG\n");
   }
 #endif

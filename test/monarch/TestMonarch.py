@@ -374,7 +374,7 @@ def run(conf):
     # CAMP solver option GPU-CPU
     write_camp_config_file(conf)
 
-    # Onecell-Multicells itsolver
+    # Onecell-Multicells ModelDataCPU
     write_itsolver_config_file(conf)
 
     print("exec_str:", exec_str, conf.diffCells, conf.caseGpuCpu, conf.caseMulticellsOnecell, conf.mpiProcesses,
