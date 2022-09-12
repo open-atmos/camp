@@ -2558,7 +2558,7 @@ int linsolsetup_gpu(SolverData *sd, CVodeMem cv_mem,int convfail,N_Vector vtemp1
       offset_nrows += mGPU->nrows;
     }
 #ifdef DEBUG_linsolsetup_gpu
-    check_isnand(mCPU->A,mGPU->nnz,"prejac");
+    check_isnand(mCPU->A,mCPU->nnz,"prejac");
 #endif
 
     retval = Jac(cv_mem->cv_tn, cv_mem->cv_y,cv_mem->cv_ftemp, cvdls_mem->A,cvdls_mem->J_data, vtemp1, vtemp2, vtemp3);
@@ -2567,7 +2567,7 @@ int linsolsetup_gpu(SolverData *sd, CVodeMem cv_mem,int convfail,N_Vector vtemp1
     //retval = jac_cuda(cv_mem->cv_tn, cv_mem->cv_y,cv_mem->cv_ftemp, cvdls_mem->A,cvdls_mem->J_data, vtemp1, vtemp2, vtemp3);
 
 #ifdef DEBUG_linsolsetup_gpu
-    check_isnand(mCPU->A,mGPU->nnz,"postjac");
+    check_isnand(mCPU->A,mCPU->nnz,"postjac");
 #endif
 
     if (retval < 0) {
@@ -2611,8 +2611,8 @@ int linsolsetup_gpu(SolverData *sd, CVodeMem cv_mem,int convfail,N_Vector vtemp1
     mGPU = sd->mGPU;
 
     cudaMemcpyAsync(mGPU->diA, mCPU->iA, (mGPU->nrows + 1) * sizeof(int), cudaMemcpyHostToDevice, 0);
-    cudaMemcpyAsync(mGPU->djA, mCPU->jA, mGPU->nnz * sizeof(int), cudaMemcpyHostToDevice, 0);
-    cudaMemcpyAsync(mGPU->dA, mCPU->A, mGPU->nnz * sizeof(double), cudaMemcpyHostToDevice, 0);
+    cudaMemcpyAsync(mGPU->djA, mCPU->jA, mCPU->nnz * sizeof(int), cudaMemcpyHostToDevice, 0);
+    cudaMemcpyAsync(mGPU->dA, mCPU->A, mCPU->nnz * sizeof(double), cudaMemcpyHostToDevice, 0);
 
   }
   cudaDeviceSynchronize();
@@ -2632,7 +2632,7 @@ int linsolsetup_gpu(SolverData *sd, CVodeMem cv_mem,int convfail,N_Vector vtemp1
     mGPU = sd->mGPU;
 
     gpu_matScaleAddI(mGPU->nrows,mGPU->dA,mGPU->djA,mGPU->diA,-cv_mem->cv_gamma,mCPU->blocks,mCPU->threads);
-    cudaMemcpy(mCPU->A, mGPU->dA, mGPU->nnz * sizeof(double), cudaMemcpyDeviceToHost);
+    cudaMemcpy(mCPU->A, mGPU->dA, mCPU->nnz * sizeof(double), cudaMemcpyDeviceToHost);
     gpu_diagprecond(mGPU->nrows,mGPU->dA,mGPU->djA,mGPU->diA,mGPU->ddiag,mCPU->blocks,mCPU->threads); //Setup linear solver
 
   }

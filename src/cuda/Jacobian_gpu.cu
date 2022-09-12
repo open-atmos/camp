@@ -108,11 +108,9 @@ int jacobian_initialize_gpu(SolverData *sd) {
 
   }
 */
-
 #ifdef DEBUG_jacobian_initialize_gpu
   printf("jacobian_initialize_gpu end \n");
 #endif
-
   return 1;
 }
 

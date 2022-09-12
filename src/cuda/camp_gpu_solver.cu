@@ -73,7 +73,7 @@ void set_jac_data_gpu(SolverData *sd, double *J){
 
     offset_nnz_J_solver += mCPU->nnz_J_solver;
     offset_nrows += md->n_per_cell_dep_var* mGPU->n_cells;
-    cudaMemcpy(mGPU->djA, mCPU->jA, mGPU->nnz/mGPU->n_cells * sizeof(int), cudaMemcpyHostToDevice);
+    cudaMemcpy(mGPU->djA, mCPU->jA, mCPU->nnz/mGPU->n_cells * sizeof(int), cudaMemcpyHostToDevice);
     cudaMemcpy(mGPU->diA, mCPU->iA, (mGPU->nrows/mGPU->n_cells + 1) * sizeof(int), cudaMemcpyHostToDevice);
   }
 }

@@ -1041,7 +1041,7 @@ int cudaDevicecvHandleNFlag(ModelDataGPU *md, ModelDataVariable *dmdv, int *nfla
   dmdv->cv_etamax = 1.;
   __syncthreads();
   if ((fabs(dmdv->cv_h) <= dmdv->cv_hmin*ONEPSM) ||
-      (*ncfPtr == dmdv->cv_maxncf)) {
+      (*ncfPtr == md->s->cv_maxncf)) {
     if (*nflagPtr == CONV_FAIL)     return(CV_CONV_FAILURE);
     if (*nflagPtr == RHSFUNC_RECVR) return(CV_REPTD_RHSFUNC_ERR);
   }

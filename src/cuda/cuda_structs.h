@@ -160,6 +160,7 @@ typedef struct{
   int max_n_gpu_thread;
   int max_n_gpu_blocks;
   int *map_state_derivCPU;
+  int nnz;
   ModelDataVariable mdvCPU; //cpu equivalent to gpu
 #ifdef CAMP_DEBUG_GPU
   int counterNewtonIt;
@@ -229,7 +230,6 @@ typedef struct {
     JacMap *jac_map;
     JacobianGPU jac;
 
-    int nnz;
     double *yout;
     double *cv_Vabstol;
     double *grid_cell_state;
