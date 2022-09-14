@@ -645,7 +645,6 @@ void constructor_cvode_gpu(CVodeMem cv_mem, SolverData *sd){
       cudaMemcpy(mGPU->sCells+i*mGPU->n_cells, &mCPU->mdvCPU, sizeof(ModelDataVariable), cudaMemcpyHostToDevice);
     }
     HANDLE_ERROR(cudaMemcpy(mGPU->mdvo, &mCPU->mdvCPU, sizeof(ModelDataVariable), cudaMemcpyHostToDevice));
-    mCPU->mdvCPU.cv_reltol = ((CVodeMem) sd->cvode_mem)->cv_reltol;
     mCPU->mdvCPU.nstlj = 0;
     offset_nnz += mCPU->nnz;
     offset_nrows += mGPU->nrows;
@@ -690,11 +689,10 @@ void cudaGlobalCVode(ModelDataGPU md_object) {
 #endif
   }
   __syncthreads();
-  dmdv->istate=istate;
-  __syncthreads();
-  if(threadIdx.x==0)md->flagCells[blockIdx.x]=dmdv->istate;
+  if(threadIdx.x==0)md->flagCells[blockIdx.x]=istate;
   ModelDataVariable *mdvo = md->mdvo;
   *mdvo = *dmdv;
+  md->so=md->s;
 }
 
 void solveCVODEGPU(SolverData *sd)
@@ -887,8 +885,6 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     cvProcessError(cv_mem, CV_BAD_DKY, "CVODE", "CVodeGetDky", MSGCV_NULL_DKY);
     return(CV_BAD_DKY);
   }
-  istate = 99;
-  kflag = 99;
   nstloc = 0;
   int flag;
   for (int i = 0; i < md->n_cells; i++)
@@ -935,44 +931,34 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     }
     cudaMemcpyAsync(mGPU->flagCells, sd->flagCells+offset_ncells, mGPU->n_cells * sizeof(int), cudaMemcpyHostToDevice, 0);
     HANDLE_ERROR(cudaMemcpyAsync(mGPU->state, md->total_state+offset_state, mCPU->state_size, cudaMemcpyHostToDevice, 0));
-    mCPU->mdvCPU.init_time_step = sd->init_time_step;
-    mCPU->mdvCPU.cv_mxstep = cv_mem->cv_mxstep;
-    mCPU->mdvCPU.cv_taskc = cv_mem->cv_taskc;
-    mCPU->mdvCPU.cv_uround = cv_mem->cv_uround;
-    mCPU->mdvCPU.cv_nrtfn = cv_mem->cv_nrtfn;
+
+    mGPU->cv_tstop = cv_mem->cv_tstop;
+    mGPU->cv_tstopset = cv_mem->cv_tstopset;
+    mGPU->cv_nlscoef = cv_mem->cv_nlscoef;
+    mGPU->init_time_step = sd->init_time_step;
+    mGPU->cv_mxstep = cv_mem->cv_mxstep;
+    mGPU->cv_uround = cv_mem->cv_uround;
+    mGPU->cv_hmax_inv = cv_mem->cv_hmax_inv;
+    mGPU->cv_reltol = cv_mem->cv_reltol;
+    mGPU->cv_maxcor = cv_mem->cv_maxcor;
+    mGPU->cv_qmax = cv_mem->cv_qmax;
+    mGPU->cv_maxnef = cv_mem->cv_maxnef;
+    mGPU->tout = tout;
     mCPU->mdvCPU.cv_tretlast = cv_mem->cv_tretlast;
-    mCPU->mdvCPU.cv_hmax_inv = cv_mem->cv_hmax_inv;
-    mCPU->mdvCPU.cv_lmm = cv_mem->cv_lmm;
-    mCPU->mdvCPU.cv_iter = cv_mem->cv_iter;
-    mCPU->mdvCPU.cv_itol = cv_mem->cv_itol;
-    mCPU->mdvCPU.cv_reltol = cv_mem->cv_reltol;
+#ifdef ODE_WARNING
     mCPU->mdvCPU.cv_nhnil = cv_mem->cv_nhnil;
+#endif
     mCPU->mdvCPU.cv_etaqm1 = cv_mem->cv_etaqm1;
     mCPU->mdvCPU.cv_etaq = cv_mem->cv_etaq;
     mCPU->mdvCPU.cv_etaqp1 = cv_mem->cv_etaqp1;
-    mCPU->mdvCPU.cv_lrw1 = cv_mem->cv_lrw1;
-    mCPU->mdvCPU.cv_liw1 = cv_mem->cv_liw1;
-    mCPU->mdvCPU.cv_lrw = (int) cv_mem->cv_lrw;
-    mCPU->mdvCPU.cv_liw = (int) cv_mem->cv_liw;
     mCPU->mdvCPU.cv_saved_tq5 = cv_mem->cv_saved_tq5;
     mCPU->mdvCPU.cv_tolsf = cv_mem->cv_tolsf;
-    mCPU->mdvCPU.cv_qmax_alloc = cv_mem->cv_qmax_alloc;
     mCPU->mdvCPU.cv_indx_acor = cv_mem->cv_indx_acor;
-    mCPU->mdvCPU.cv_qu = cv_mem->cv_qu;
-    mCPU->mdvCPU.cv_h0u = cv_mem->cv_h0u;
     mCPU->mdvCPU.cv_hu = cv_mem->cv_hu;
     mCPU->mdvCPU.cv_jcur = cv_mem->cv_jcur;
-    mCPU->mdvCPU.cv_mnewt = cv_mem->cv_mnewt;
-    mCPU->mdvCPU.cv_maxcor = cv_mem->cv_maxcor;
     mCPU->mdvCPU.cv_nstlp = (int) cv_mem->cv_nstlp;
-    mCPU->mdvCPU.cv_qmax = cv_mem->cv_qmax;
     mCPU->mdvCPU.cv_L = cv_mem->cv_L;
-    mCPU->mdvCPU.cv_maxnef = cv_mem->cv_maxnef;
-    mCPU->mdvCPU.cv_netf = (int) cv_mem->cv_netf;
     mCPU->mdvCPU.cv_acnrm = cv_mem->cv_acnrm;
-    mCPU->mdvCPU.cv_tstop = cv_mem->cv_tstop;
-    mCPU->mdvCPU.cv_tstopset = cv_mem->cv_tstopset;
-    mCPU->mdvCPU.cv_nlscoef = cv_mem->cv_nlscoef;
     mCPU->mdvCPU.cv_qwait = cv_mem->cv_qwait;
     mCPU->mdvCPU.cv_crate = cv_mem->cv_crate;
     mCPU->mdvCPU.cv_gamrat = cv_mem->cv_gamrat;
@@ -984,24 +970,25 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     mCPU->mdvCPU.cv_q = cv_mem->cv_q;
     mCPU->mdvCPU.cv_qprime = cv_mem->cv_qprime;
     mCPU->mdvCPU.cv_h = cv_mem->cv_h;
-    mCPU->mdvCPU.cv_next_h = cv_mem->cv_next_h;//needed?
+    mCPU->mdvCPU.cv_next_h = cv_mem->cv_next_h;
     mCPU->mdvCPU.cv_hscale = cv_mem->cv_hscale;
-    mCPU->mdvCPU.cv_nscon = cv_mem->cv_nscon;
     mCPU->mdvCPU.cv_hprime = cv_mem->cv_hprime;
     mCPU->mdvCPU.cv_hmin = cv_mem->cv_hmin;
     mCPU->mdvCPU.cv_tn = cv_mem->cv_tn;
     mCPU->mdvCPU.cv_etamax = cv_mem->cv_etamax;
     mCPU->mdvCPU.cv_maxncf = cv_mem->cv_maxncf;
-    mCPU->mdvCPU.tout = tout;
     mCPU->mdvCPU.tret = *tret;
-    mCPU->mdvCPU.istate = istate;
-    mCPU->mdvCPU.kflag = kflag;
-    mCPU->mdvCPU.kflag2 = 99;
     cudaMemcpyAsync(mGPU->mdv, &mCPU->mdvCPU, sizeof(ModelDataVariable), cudaMemcpyHostToDevice, 0);
     for (int i = 0; i < mGPU->n_cells; i++){
-      cudaMemcpyAsync(mGPU->sCells+i*mGPU->n_cells, &mCPU->mdvCPU, sizeof(ModelDataVariable), cudaMemcpyHostToDevice,0);
+      cudaMemcpyAsync(&mGPU->sCells[i], &mCPU->mdvCPU, sizeof(ModelDataVariable), cudaMemcpyHostToDevice,0);
+      //printf("cv_mem->cv_nst %d\n",cv_mem->cv_nst);
+      //cudaMemcpy(&mGPU->sCells[i], &mCPU->mdvCPU, sizeof(ModelDataVariable), cudaMemcpyHostToDevice);
     }
     solveCVODEGPU(sd);
+    //printf("cv_mem->cv_nst %d\n",cv_mem->cv_nst);
+    //todo update mCPU with md->s (I think it only affects profiling counters)
+    //cudaMemcpyAsync(&mCPU->mdvCPU, mGPU->so, sizeof(ModelDataVariable), cudaMemcpyDeviceToHost, 0);
+    //cudaMemcpy(&mCPU->mdvCPU, mGPU->mdvo, sizeof(ModelDataVariable), cudaMemcpyDeviceToHost);
     cudaMemcpyAsync(&mCPU->mdvCPU, mGPU->mdvo, sizeof(ModelDataVariable), cudaMemcpyDeviceToHost, 0);
     cudaMemcpyAsync(ewt, mGPU->dewt, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost, 0);
     cudaMemcpyAsync(acor, mGPU->cv_acor, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost, 0);
@@ -1049,53 +1036,25 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     mCPU->counterBiConjGrad+=0;
 #endif
 #endif
-  flag = CV_SUCCESS;
-    for (int i = 0; i < mGPU->n_cells; i++) {
-      if (sd->flagCells[i] != flag) {
-        flag = sd->flagCells[i];
-        break;
-      }
+  istate = CV_SUCCESS;
+  for (int i = 0; i < mGPU->n_cells; i++) {
+    if (sd->flagCells[i] != flag) {
+      istate = sd->flagCells[i];
+      break;
     }
-    istate=flag;
+  }
     //printf("cudaCVode flag %d kflag %d\n",flag, mCPU->mdvCPU.flag);
-    if ( istate==CV_SUCCESS ) {
+    if (istate==CV_SUCCESS ) {
       //printf("istate==CV_SUCCESS\n";
       cv_mem->cv_tretlast = mCPU->mdvCPU.cv_tretlast;
       cv_mem->cv_next_q = mCPU->mdvCPU.cv_qprime;
       cv_mem->cv_next_h = mCPU->mdvCPU.cv_hprime;
     }else{
-      if (kflag != CV_SUCCESS) {
-        int rank;
-        MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-        printf("cudaCVode2 kflag %d rank %d\n",kflag,rank);
-        istate = cvHandleFailure_gpu(cv_mem, kflag);
-        cv_mem->cv_next_h = mCPU->mdvCPU.cv_next_h;
-      }
-      if (istate==CV_ILL_INPUT) {
-        if (cv_mem->cv_itol == CV_WF)
-          cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "CVode",
-                         MSGCV_EWT_NOW_FAIL, cv_mem->cv_tn);
-        else
-          cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "CVode",
-                         MSGCV_EWT_NOW_BAD, cv_mem->cv_tn);
-      }
-      if ( (cv_mem->cv_mxstep>0) && (nstloc >= cv_mem->cv_mxstep) ) {
-        cvProcessError(cv_mem, CV_TOO_MUCH_WORK, "CVODE", "CVode",
-                       MSGCV_MAX_STEPS, cv_mem->cv_tn);
-        istate = CV_TOO_MUCH_WORK;
-      }
-      if (cv_mem->cv_tolsf > ONE) {
-        cvProcessError(cv_mem, CV_TOO_MUCH_ACC, "CVODE", "CVode",
-                       MSGCV_TOO_MUCH_ACC, cv_mem->cv_tn);
-        istate = CV_TOO_MUCH_ACC;
-      }
-      if (cv_mem->cv_tn + cv_mem->cv_h == cv_mem->cv_tn) {
-          if (cv_mem->cv_nhnil <= cv_mem->cv_mxhnil)
-            cvProcessError(cv_mem, CV_WARNING, "CVODE", "CVode",
-                           MSGCV_HNIL, cv_mem->cv_tn, cv_mem->cv_h);
-          if (cv_mem->cv_nhnil == cv_mem->cv_mxhnil)
-            cvProcessError(cv_mem, CV_WARNING, "CVODE", "CVode", MSGCV_HNIL_DONE);
-          }
+      int rank;
+      MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+      printf("cudaCVode2 kflag %d rank %d\n",kflag,rank);
+      istate = cvHandleFailure_gpu(cv_mem, kflag);
+      cv_mem->cv_next_h = mCPU->mdvCPU.cv_next_h;
     }
   return(istate);
 }
