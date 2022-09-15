@@ -77,11 +77,9 @@ void init_jac_partials_cvode(double* production_partials, double* loss_partials)
 int jacobian_initialize_cuda_cvode(SolverData *sd) {
   ModelDataGPU *mGPU = sd->mGPU;
   Jacobian *jac = &sd->jac;
-
 #ifdef DEBUG_jacobian_initialize_gpu
   printf("jacobian_initialize_gpu start \n");
 #endif
-
   int offset_nnz = 0;
   for (int iDevice = sd->startDevice; iDevice < sd->endDevice; iDevice++) {
     cudaSetDevice(iDevice);
@@ -89,28 +87,21 @@ int jacobian_initialize_cuda_cvode(SolverData *sd) {
     mGPU = sd->mGPU;
 
     JacobianGPU *jacgpu = &(mGPU->jac);
-
     cudaMalloc((void **) &jacgpu->num_elem, 1 * sizeof(jacgpu->num_elem));
     cudaMemcpy(jacgpu->num_elem, &jac->num_elem, 1 * sizeof(jacgpu->num_elem), cudaMemcpyHostToDevice);
-
     int num_elem = jac->num_elem * mGPU->n_cells;
     cudaMalloc((void **) &(jacgpu->production_partials), num_elem * sizeof(jacgpu->production_partials));
-
     HANDLE_ERROR(cudaMalloc((void **) &(jacgpu->loss_partials), num_elem * sizeof(jacgpu->loss_partials)));
-
     cudaDeviceProp prop;
     cudaGetDeviceProperties(&prop, iDevice);
     int threads_block = prop.maxThreadsPerBlock;
     int blocks = (num_elem +threads_block - 1) / threads_block;
     init_jac_partials_cvode <<<blocks,threads_block>>>(jacgpu->production_partials,jacgpu->loss_partials);
-
     offset_nnz += num_elem;
   }
-
 #ifdef DEBUG_jacobian_initialize_gpu
   printf("jacobian_initialize_gpu end \n");
 #endif
-
   return 1;
 }
 
@@ -176,15 +167,10 @@ void init_jac_cuda_cvode(SolverData *sd){
     offset_nnz_J_solver += mCPU->nnz_J_solver;
     offset_nrows += md->n_per_cell_dep_var* mGPU->n_cells;
   }
-
   jacobian_initialize_cuda_cvode(sd);
-
 #ifdef DEBUG_init_jac_cuda
-
   printf("init_jac_cuda end \n");
-
 #endif
-
 }
 
 void set_int_double_cuda_cvode(
@@ -194,11 +180,8 @@ void set_int_double_cuda_cvode(
     int *rxn_env_idx,
     SolverData *sd
 ) {
-
   ModelData *md = &(sd->model_data);
   ModelDataGPU *mGPU = sd->mGPU;
-
-  //GPU allocation
   cudaMalloc((void **) &mGPU->rxn_int, (md->n_rxn_int_param + md->n_rxn)*sizeof(int));
   cudaMalloc((void **) &mGPU->rxn_double, md->n_rxn_float_param*sizeof(double));
 #ifdef REVERSE_INT_FLOAT_MATRIX
@@ -206,8 +189,6 @@ void set_int_double_cuda_cvode(
   cudaMalloc((void **) &mGPU->rxn_int_indices, (md->n_rxn+1)*sizeof(int));
   cudaMalloc((void **) &mGPU->rxn_float_indices, (md->n_rxn+1)*sizeof(int));
 #endif
-
-  //Save data to GPU
   HANDLE_ERROR(cudaMemcpy(mGPU->rxn_int, rxn_int_data,(md->n_rxn_int_param + md->n_rxn)*sizeof(int), cudaMemcpyHostToDevice));
   HANDLE_ERROR(cudaMemcpy(mGPU->rxn_double, rxn_float_data, md->n_rxn_float_param*sizeof(double), cudaMemcpyHostToDevice));
   HANDLE_ERROR(cudaMemcpy(mGPU->rxn_env_data_idx, rxn_env_idx, rxn_env_data_idx_size, cudaMemcpyHostToDevice));
@@ -216,22 +197,17 @@ void set_int_double_cuda_cvode(
   HANDLE_ERROR(cudaMemcpy(mGPU->rxn_int_indices, md->rxn_int_indices,(md->n_rxn+1)*sizeof(int), cudaMemcpyHostToDevice));
   HANDLE_ERROR(cudaMemcpy(mGPU->rxn_float_indices, md->rxn_float_indices,(md->n_rxn+1)*sizeof(int), cudaMemcpyHostToDevice));
 #endif
-
 }
 
 void solver_init_int_double_cuda_cvode(SolverData *sd) {
-
   ModelData *md = &(sd->model_data);
-  ModelDataGPU *mGPU;
   ModelDataCPU *mCPU = &(sd->mCPU);
-
 #ifdef DEBUG_solver_init_int_double_gpu
   printf("solver_init_int_double_cuda_cvode start \n");
 #endif
   for (int iDevice = sd->startDevice; iDevice < sd->endDevice; iDevice++) {
     cudaSetDevice(iDevice);
     sd->mGPU = &(sd->mGPUs[iDevice]);
-    mGPU = sd->mGPU;
 #ifdef REVERSE_INT_FLOAT_MATRIX
     set_reverse_int_double_rxn(
             md->n_rxn, mCPU->rxn_env_data_idx_size,
@@ -260,8 +236,6 @@ void solver_new_gpu_cu_cvode(SolverData *sd) {
   int n_dep_var=md->n_per_cell_dep_var;
   int n_state_var=md->n_per_cell_state_var;
   int n_rxn=md->n_rxn;
-  int n_rxn_int_param=md->n_rxn_int_param;
-  int n_rxn_float_param=md->n_rxn_float_param;
   int n_rxn_env_param=md->n_rxn_env_data;
   int n_cells_total=md->n_cells;
   sd->mGPUs = (ModelDataGPU *)malloc(sd->nDevices * sizeof(ModelDataGPU));
@@ -685,11 +659,9 @@ void cudaGlobalCVode(ModelDataGPU md_object) {
   if(threadIdx.x==0) md->flagCells[blockIdx.x]=istate;
   ModelDataVariable *mdvo = md->mdvo;
   *mdvo = *md->s;
-  //md->so=md->s;
 }
 
-void solveCVODEGPU(SolverData *sd)
-{
+void solveCVODEGPU(SolverData *sd){
   ModelDataGPU *mGPU = sd->mGPU;
   int len_cell = mGPU->nrows/mGPU->n_cells;
   int threads_block = len_cell;
@@ -703,8 +675,7 @@ void solveCVODEGPU(SolverData *sd)
 int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
                realtype *tret, int itask, SolverData *sd){
   CVodeMem cv_mem;
-  long int nstloc;
-  int retval, hflag, kflag, istate, ier, irfndp;
+  int retval, hflag, istate, ier, irfndp;
   realtype troundoff, tout_hin, rh;
   ModelDataCPU *mCPU = &(sd->mCPU);
   ModelDataGPU *mGPU;
@@ -878,8 +849,6 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     cvProcessError(cv_mem, CV_BAD_DKY, "CVODE", "CVodeGetDky", MSGCV_NULL_DKY);
     return(CV_BAD_DKY);
   }
-  nstloc = 0;
-  int flag;
   for (int i = 0; i < md->n_cells; i++)
     sd->flagCells[i] = 99;
 
@@ -997,9 +966,9 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
   cudaEventRecord(mCPU->stopcvStep);
 #ifdef DEV_CPUGPU
   //sleep(2);
-  int flag = CVode(cvode_mem, tout, yout, tret, itask);
+  int istate = CVode(cvode_mem, tout, yout, tret, itask);
   clock_t
-  return(flag);
+  return(istate);
 #endif
   for (int iDevice = sd->startDevice+1; iDevice < sd->endDevice; iDevice++) {
     cudaSetDevice(iDevice);
@@ -1023,7 +992,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
 #endif
   istate = CV_SUCCESS;
   for (int i = 0; i < mGPU->n_cells; i++) {
-    if (sd->flagCells[i] != flag) {
+    if (sd->flagCells[i] != istate) {
       istate = sd->flagCells[i];
       break;
     }
@@ -1035,8 +1004,8 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
   }else{
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    printf("cudaCVode2 kflag %d rank %d\n",kflag,rank);
-    istate = cvHandleFailure_gpu(cv_mem, kflag);
+    printf("cudaCVode2 kflag %d rank %d\n",istate,rank);
+    istate = cvHandleFailure_gpu(cv_mem, istate);
     cv_mem->cv_next_h = mCPU->mdvCPU.cv_next_h;
   }
   return(istate);
