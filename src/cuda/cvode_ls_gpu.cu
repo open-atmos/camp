@@ -2521,7 +2521,7 @@ int linsolsetup_gpu(SolverData *sd, CVodeMem cv_mem,int convfail,N_Vector vtemp1
   ModelDataGPU *mGPU;
   int offset_nrows = 0;
 
-//printf("linsolsetup_gpu start\n");
+  //printf("linsolsetup_gpu start\n");
 
   /* Use nst, gamma/gammap, and convfail to set J eval. flag jok */
   dgamma = fabs((cv_mem->cv_gamma/cv_mem->cv_gammap) - ONE); //In GPU is fabs too

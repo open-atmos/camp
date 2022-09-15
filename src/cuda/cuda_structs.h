@@ -63,7 +63,6 @@ typedef struct {
     double cv_crate;
     double cv_gamrat;
     double cv_gammap;
-
     int cv_nst;
     double cv_gamma;
     double cv_rl1;
@@ -73,27 +72,22 @@ typedef struct {
     double cv_h;
     double cv_next_h;
     double cv_hscale;
-
     double cv_hprime;
     double cv_hmin;
     double cv_tn;
     double cv_etamax;
     int cv_maxncf;
-
     //Counters (e.g. iterations of function cvnlsNewton)
     int nstlj;
-
 #ifdef CAMP_DEBUG_GPU
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     int countercvStep;
-    int counterDerivGPU;
     int counterBCGInternal;
     int counterBCG;
     double timeNewtonIteration;
     double timeJac;
     double timelinsolsetup;
     double timecalc_Jac;
-    double timeRXNJac;
     double timef;
     double timeguess_helper;
     double dtBCG;
@@ -265,7 +259,6 @@ typedef struct {
     ModelDataVariable *mdvo; //out device
     ModelDataVariable *s;
     ModelDataVariable *sCells;
-    ModelDataVariable *so;
 
   //Constant during solving
   double init_time_step;
@@ -280,7 +273,6 @@ typedef struct {
   double cv_tstop;
   int cv_tstopset; //Used as bool
   double cv_nlscoef;
-
 
 //ODE stats
 #ifdef CAMP_DEBUG_GPU

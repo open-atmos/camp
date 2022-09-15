@@ -219,7 +219,7 @@ int cudaDevicef(
 #ifdef CAMP_DEBUG_GPU
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     int i = blockIdx.x * blockDim.x + threadIdx.x;
-    dmdv->timef += ((double)(int)(clock() - start))/(clock_khz*1000);
+    if(threadIdx.x==0) md->s->timef += ((double)(int)(clock() - start))/(clock_khz*1000);
 #endif
 #endif
 #ifdef DEBUG_cudaDevicef
@@ -238,7 +238,7 @@ int cudaDevicef(
 #ifdef CAMP_DEBUG_GPU
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     int i = blockIdx.x * blockDim.x + threadIdx.x;
-    dmdv->timef += ((double)(int)(clock() - start))/(clock_khz*1000);
+    if(threadIdx.x==0) md->s->timef += ((double)(int)(clock() - start))/(clock_khz*1000);
 #endif
 #endif
   __syncthreads();
@@ -325,7 +325,7 @@ int CudaDeviceguess_helper(double cv_tn, double cv_h, double* y_n,
       __syncthreads();
 #ifdef CAMP_DEBUG_GPU
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
-    dmdv->timeguess_helper += ((double)(clock() - start))/(clock_khz*1000);
+    if(threadIdx.x==0) md->s->timeguess_helper += ((double)(clock() - start))/(clock_khz*1000);
 #endif
 #endif
     return -1;
@@ -359,7 +359,7 @@ int CudaDeviceguess_helper(double cv_tn, double cv_h, double* y_n,
       __syncthreads();
 #ifdef CAMP_DEBUG_GPU
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
-    dmdv->timeguess_helper += ((double)(clock() - start))/(clock_khz*1000);
+    if(threadIdx.x==0) md->s->timeguess_helper += ((double)(clock() - start))/(clock_khz*1000);
 #endif
 #endif
      return -1;
@@ -369,7 +369,7 @@ int CudaDeviceguess_helper(double cv_tn, double cv_h, double* y_n,
         __syncthreads();
 #ifdef CAMP_DEBUG_GPU
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
-    dmdv->timeguess_helper += ((double)(clock() - start))/(clock_khz*1000);
+    if(threadIdx.x==0) md->s->timeguess_helper += ((double)(clock() - start))/(clock_khz*1000);
 #endif
 #endif
         return -1;
@@ -387,7 +387,7 @@ int CudaDeviceguess_helper(double cv_tn, double cv_h, double* y_n,
   __syncthreads();
 #ifdef CAMP_DEBUG_GPU
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
-    dmdv->timeguess_helper += ((double)(clock() - start))/(clock_khz*1000);
+    if(threadIdx.x==0)  md->s->timeguess_helper += ((double)(clock() - start))/(clock_khz*1000);
 #endif
 #endif
   __syncthreads();
@@ -519,7 +519,7 @@ __device__ void cudaDevicecalc_Jac(double *y,ModelDataGPU *md, ModelDataVariable
     __syncthreads();
 #ifdef CAMP_DEBUG_GPU
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
-    dmdv->timecalc_Jac += ((double)(clock() - start))/(clock_khz*1000);
+    if(threadIdx.x==0) md->s->timecalc_Jac += ((double)(clock() - start))/(clock_khz*1000);
 #endif
 #endif
   }
@@ -594,8 +594,8 @@ int cudaDeviceJac(int *flag, ModelDataGPU *md, ModelDataVariable *dmdv
   __syncthreads();
 #ifdef CAMP_DEBUG_GPU
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
-    //if(tid==0)printf("dmdv->timeJac %lf\n",dmdv->timeJac);
-    dmdv->timeJac += ((double)(clock() - start))/(clock_khz*1000);
+    //if(tid==0)printf("md->s->timeJac %lf\n",md->s->timeJac);
+    if(threadIdx.x==0)  md->s->timeJac += ((double)(clock() - start))/(clock_khz*1000);
 #endif
 #endif
   __syncthreads();
@@ -709,8 +709,8 @@ void solveBcgCudaDeviceCVODE(ModelDataGPU *md, ModelDataVariable *dmdv)
   __syncthreads();
 #ifdef CAMP_DEBUG_GPU
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
-  dmdv->counterBCGInternal += it;
-  dmdv->counterBCG++;
+  if(threadIdx.x==0) md->s->counterBCGInternal += it;
+  if(threadIdx.x==0) md->s->counterBCG++;
 #endif
 #endif
 }
@@ -761,8 +761,7 @@ int cudaDevicecvNewtonIteration(ModelDataGPU *md, ModelDataVariable *dmdv){
     __syncthreads();
 #ifdef CAMP_DEBUG_GPU
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
-    //if(threadIdx.x==0)dmdv->dtBCG += ((double)(int)(clock() - start))/(clock_khz*1000);//wrong
-    dmdv->dtBCG += ((double)(int)(clock() - start))/(clock_khz*1000);
+    if(threadIdx.x==0) md->s->dtBCG += ((double)(int)(clock() - start))/(clock_khz*1000);
 #endif
 #endif
     __syncthreads();
@@ -847,7 +846,7 @@ int cudaDevicecvNewtonIteration(ModelDataGPU *md, ModelDataVariable *dmdv){
     __syncthreads();
 #ifdef CAMP_DEBUG_GPU
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
-    if(i==0) dmdv->dtPostBCG += ((double)(clock() - start))/(clock_khz*1000);
+    if(threadIdx.x==0) md->s->dtPostBCG += ((double)(clock() - start))/(clock_khz*1000);
 #endif
 #endif
 #ifdef DEBUG_cudaDevicecvNewtonIteration
@@ -930,7 +929,7 @@ int cudaDevicecvNlsNewton(int nflag,
       __syncthreads();
 #ifdef CAMP_DEBUG_GPU
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
-      dmdv->timelinsolsetup += ((double)(clock() - start))/(clock_khz*1000);
+      if(threadIdx.x==0) md->s->timelinsolsetup += ((double)(clock() - start))/(clock_khz*1000);
 #endif
 #endif
       callSetup = 0;
@@ -961,7 +960,7 @@ int cudaDevicecvNlsNewton(int nflag,
     __syncthreads();
 #ifdef CAMP_DEBUG_GPU
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
-    dmdv->timeNewtonIteration += ((double)(clock() - start))/(clock_khz*1000);
+    if(threadIdx.x==0)  md->s->timeNewtonIteration += ((double)(clock() - start))/(clock_khz*1000);
 #endif
 #endif
     if (nItflag != TRY_AGAIN) {
@@ -1572,7 +1571,7 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
     __syncthreads();
 #ifdef CAMP_DEBUG_GPU
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
-    dmdv->countercvStep++;
+    if(threadIdx.x==0) md->s->countercvStep++;
 #endif
 #endif
     flag_shr[0] = 0;
@@ -1607,16 +1606,10 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
       md->s->cv_tolsf = 1.;
     }
 #ifdef ODE_WARNING
-    // Check for h below roundoff level in tn
     if (md->s->cv_tn + md->s->cv_h == md->s->cv_tn) {
       if(threadIdx.x==0) md->s->cv_nhnil++;
-      //if (md->s->cv_nhnil <= dmdv->cv_mxhnil)
-      //  cvProcessError(dmdv, CV_WARNING, "CVODE", "CVode",
-      //                 MSGCV_HNIL, md->s->cv_tn, md->s->cv_h);
-      //if (md->s->cv_nhnil == dmdv->cv_mxhnil)
-      //  cvProcessError(dmdv, CV_WARNING, "CVODE", "CVode", MSGCV_HNIL_DONE);
-      if ((md->s->cv_nhnil <= dmdv->cv_mxhnil) ||
-              (md->s->cv_nhnil == dmdv->cv_mxhnil))
+      if ((md->s->cv_nhnil <= md->s->cv_mxhnil) ||
+              (md->s->cv_nhnil == md->s->cv_mxhnil))
         if(i==0)printf("WARNING: h below roundoff level in tn");
     }
 #endif
