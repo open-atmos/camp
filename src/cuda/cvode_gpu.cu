@@ -638,7 +638,7 @@ void constructor_cvode_gpu(CVodeMem cv_mem, SolverData *sd){
 #endif
 #endif
     for (int i = 0; i < mGPU->n_cells; i++){
-      cudaMemcpy(mGPU->sCells+i*mGPU->n_cells, &mCPU->mdvCPU, sizeof(ModelDataVariable), cudaMemcpyHostToDevice);
+      cudaMemcpy(&mGPU->sCells[i], &mCPU->mdvCPU, sizeof(ModelDataVariable), cudaMemcpyHostToDevice);
     }
     HANDLE_ERROR(cudaMemcpy(mGPU->mdvo, &mCPU->mdvCPU, sizeof(ModelDataVariable), cudaMemcpyHostToDevice));
     mCPU->mdvCPU.nstlj = 0;
@@ -1060,7 +1060,7 @@ void solver_reset_statistics_gpu(SolverData *sd){
     mGPU = sd->mGPU;
 #ifdef CAMP_DEBUG_GPU
     for (int i = 0; i < mGPU->n_cells; i++){
-      cudaMemcpy(mGPU->sCells+i*mGPU->n_cells, &mCPU->mdvCPU, sizeof(ModelDataVariable), cudaMemcpyHostToDevice);
+      cudaMemcpy(&mGPU->sCells[i], &mCPU->mdvCPU, sizeof(ModelDataVariable), cudaMemcpyHostToDevice);
     }
 #endif
   }
