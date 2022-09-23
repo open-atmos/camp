@@ -14,9 +14,6 @@ extern "C"{
 #include <stdlib.h>
 #include "../rxns_gpu.h"
 
-#ifdef DEV_136_REGS_RXN
-#else
-
 #define TEMPERATURE_K_ env_data[0]
 #define PRESSURE_PA_ env_data[1]
 
@@ -170,6 +167,4 @@ void rxn_arrhenius_get_jac_indices(ModelData *model_data, Jacobian jac,
 }
 
 #endif
-#endif
-
 }

@@ -14,9 +14,6 @@ extern "C"{
 #include <stdlib.h>
 #include "../rxns_gpu.h"
 
-#ifdef DEV_136_REGS_RXN
-#else
-
 #define TEMPERATURE_K_ env_data[0]
 #define PRESSURE_PA_ env_data[1]
 
@@ -152,6 +149,4 @@ void rxn_gpu_troe_calc_jac_contrib(ModelDataGPU *model_data, JacobianGPU jac, in
 #undef YIELD_
 #undef INT_DATA_SIZE_
 #undef FLOAT_DATA_SIZE_
-
-#endif
 }

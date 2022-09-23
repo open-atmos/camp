@@ -91,8 +91,6 @@ __device__ void solveRXN(
     printf("[DEBUG] GPU solveRXN tid %d, \n", tid);
   }
 #endif
-#ifdef DEV_136_REGS_RXN
-#else
   switch (rxn_type) {
     case RXN_ARRHENIUS :
       rxn_gpu_arrhenius_calc_deriv_contrib(md, deriv_data, rxn_int_data,
@@ -115,7 +113,6 @@ __device__ void solveRXN(
                                       rxn_float_data, rxn_env_data,time_step);
       break;
   }
-#endif
 }
 
 __device__ void cudaDevicecalc_deriv(
@@ -151,7 +148,10 @@ __device__ void cudaDevicecalc_deriv(
     printmin(md,md->J_state,"cudaDevicecalc_deriv start end J_state");
 #endif
     TimeDerivativeGPU deriv_data;
+#ifdef DEV_DERIV_NUM_SPEC
+#else
     deriv_data.num_spec = deriv_length_cell*gridDim.x;
+#endif
 #ifdef AEROS_CPU
 #else
     deriv_data.production_rates = md->production_rates;
@@ -420,8 +420,6 @@ __device__ void solveRXNJac(
     printf("[DEBUG] GPU solveRXN tid %d, \n", tid);
   }
 #endif
-#ifdef DEV_136_REGS_RXN
-#else
   switch (rxn_type) {
 #ifdef DEV_CSR_REACTIONS
 #else
@@ -447,7 +445,6 @@ __device__ void solveRXNJac(
                                     rxn_float_data, rxn_env_data,cv_next_h);
       break;
   }
-#endif
 }
 
 __device__ void cudaDevicecalc_Jac(double *y,ModelDataGPU *md, ModelDataVariable *dmdv
@@ -474,15 +471,18 @@ __device__ void cudaDevicecalc_Jac(double *y,ModelDataGPU *md, ModelDataVariable
     __syncthreads();
     JacobianGPU *jac = &md->jac;
     JacobianGPU jacBlock;
-#ifdef DEV_JACOBIANGPUNUMSPEC
-    jac->num_spec = state_size_cell;
-    jacBlock.num_spec = state_size_cell;
-#endif
-    jacBlock.num_elem = jac->num_elem;
     __syncthreads();
     int i_cell = tid/deriv_length_cell;
+
+#ifdef DEV_REMOVE_JAC_RXN
+    jacBlock.production_partials = &( jac->production_partials[md->jacRxnLen*blockIdx.x]);
+    jacBlock.loss_partials = &( jac->loss_partials[md->jacRxnLen*blockIdx.x]);
+#else
+    jacBlock.num_elem = jac->num_elem;
     jacBlock.production_partials = &( jac->production_partials[jacBlock.num_elem[0]*blockIdx.x]);
     jacBlock.loss_partials = &( jac->loss_partials[jacBlock.num_elem[0]*blockIdx.x]);
+#endif
+
     __syncthreads();
     md->grid_cell_state = &( md->state[state_size_cell*i_cell]);
     md->grid_cell_env = &( md->env[CAMP_NUM_ENV_PARAM_*i_cell]);

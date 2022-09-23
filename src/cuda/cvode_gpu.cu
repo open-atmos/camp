@@ -87,8 +87,12 @@ int jacobian_initialize_cuda_cvode(SolverData *sd) {
     mGPU = sd->mGPU;
 
     JacobianGPU *jacgpu = &(mGPU->jac);
+#ifdef DEV_REMOVE_JAC_RXN
+    mGPU->jacRxnLen=jac->num_elem;
+#else
     cudaMalloc((void **) &jacgpu->num_elem, 1 * sizeof(jacgpu->num_elem));
     cudaMemcpy(jacgpu->num_elem, &jac->num_elem, 1 * sizeof(jacgpu->num_elem), cudaMemcpyHostToDevice);
+#endif
     int num_elem = jac->num_elem * mGPU->n_cells;
     cudaMalloc((void **) &(jacgpu->production_partials), num_elem * sizeof(jacgpu->production_partials));
     HANDLE_ERROR(cudaMalloc((void **) &(jacgpu->loss_partials), num_elem * sizeof(jacgpu->loss_partials)));
@@ -140,7 +144,7 @@ void init_jac_cuda_cvode(SolverData *sd){
     cudaMalloc((void **) &mGPU->jac_map, sizeof(JacMap) * md->n_mapped_values);
     HANDLE_ERROR(cudaMalloc((void **) &mGPU->n_mapped_values, 1 * sizeof(int)));
 
-#ifdef DEBUG_init_jac_cuda
+#ifndef DEBUG_init_jac_cuda
     printf("md->n_per_cell_dep_var %d sd->jac.num_spec %d md->n_per_cell_solver_jac_elem %d "
            "md->n_mapped_values %d jac->num_elem %d offset_nnz_J_solver %d  mCPU->nnz_J_solver %d\n",
            md->n_per_cell_dep_var,sd->jac.num_spec,md->n_per_cell_solver_jac_elem, md->n_mapped_values,

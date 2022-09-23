@@ -29,15 +29,12 @@ typedef struct {
 #ifdef __CUDA_ARCH__
 #else
 #endif
-#ifdef DEV_JACOBIANGPUNUMSPEC
-    int num_spec;   // Number of species
-#endif
-    //unsigned int num_elem;   // Number of potentially non-zero Jacobian elements
+#ifdef DEV_REMOVE_JAC_RXN
+#else
     int *num_elem;   // Number of potentially non-zero Jacobian elements
-    //unsigned int *row_ids;   // Row id of each Jacobian element in data array
+#endif
     double *production_partials;    // Data array for productions rate partial derivs
     double *loss_partials;  // Data array for loss rate partial derivs
-    //JacobianColumnElements *elements;  // Jacobian elements flagged for inclusion
 } JacobianGPU;
 
 typedef struct {
@@ -183,6 +180,9 @@ typedef struct {
     int n_rxn_env_data;
     int *n_mapped_values;
     JacMap *jac_map;
+#ifdef DEV_REMOVE_JAC_RXN
+    int jacRxnLen;
+#endif
     JacobianGPU jac;
 
     double *yout;
@@ -260,19 +260,19 @@ typedef struct {
     ModelDataVariable *s;
     ModelDataVariable *sCells;
 
-  //Constant during solving
-  double init_time_step;
-  int cv_mxstep;
-  double tout;
-  double cv_uround;
-  double cv_hmax_inv;
-  double cv_reltol;
-  int cv_maxcor;
-  int cv_qmax;
-  int cv_maxnef;
-  double cv_tstop;
-  int cv_tstopset; //Used as bool
-  double cv_nlscoef;
+    //Constant during solving
+    double init_time_step;
+    int cv_mxstep;
+    double tout;
+    double cv_uround;
+    double cv_hmax_inv;
+    double cv_reltol;
+    int cv_maxcor;
+    int cv_qmax;
+    int cv_maxnef;
+    double cv_tstop;
+    int cv_tstopset; //Used as bool
+    double cv_nlscoef;
 
 //ODE stats
 #ifdef CAMP_DEBUG_GPU
