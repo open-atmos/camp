@@ -383,7 +383,6 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
 
   sd->counterDerivTotal = 0;
   sd->counterDerivCPU = 0;
-  sd->counterDerivGPU = 0;
   sd->counterJac=0;
   sd->counterSolve = 0;
   sd->counterFail = 0;
@@ -894,7 +893,6 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
   sd->counter_fail_solve_print=0;
 #endif
   sd->counterDerivCPU = 0;
-  sd->counterDerivGPU = 0;
   sd->counterJac = 0;
   sd->counterSolve++;
 
@@ -1077,7 +1075,7 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
       times[i++]=mdvCPU.timeJac;
       times[i++]=mdvCPU.timelinsolsetup;
       times[i++]=mdvCPU.timecalc_Jac;
-      times[i++]=mdvCPU.timeRXNJac;
+      times[i++]=0.;//mdvCPU.timeRXNJac;
       times[i++]=mdvCPU.timef;
       times[i++]=mdvCPU.timeguess_helper;
 #else
@@ -1160,7 +1158,6 @@ void solver_reset_statistics(void *solver_data, int *counters, double *times)
         mdvCPU.timeJac=0;
         mdvCPU.timelinsolsetup=0;
         mdvCPU.timecalc_Jac=0;
-        mdvCPU.timeRXNJac=0;
         mdvCPU.timef=0;
         mdvCPU.timeguess_helper=0;
         #endif
@@ -1644,11 +1641,7 @@ int f_cuda(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
     printf("ERROR f_cuda\n");
     exit(0);
   }
-#ifdef CAMP_DEBUG_GPU
-  //if(sd->counterDerivCPU<=0) print_derivative(deriv);
-  sd->counterDerivGPU++;
-  // printf("%d",sd->counterDerivCPU);
-#endif
+
   // Return 0 if success
   return flag;
 }

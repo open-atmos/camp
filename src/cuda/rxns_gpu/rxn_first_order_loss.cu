@@ -14,24 +14,9 @@ extern "C"{
 #include <stdlib.h>
 #include "../rxns_gpu.h"
 
+  /*
 #define TEMPERATURE_K_ env_data[0]
 #define PRESSURE_PA_ env_data[1]
-
-#ifdef REVERSE_INT_FLOAT_MATRIX
-
-#define RXN_ID_ (int_data[0*n_rxn])
-#define REACT_ (int_data[1*n_rxn]-1)
-#define DERIV_ID_ int_data[2*n_rxn]
-#define JAC_ID_ int_data[3*n_rxn]
-#define SCALING_ float_data[0*n_rxn]
-#define RATE_CONSTANT_ rxn_env_data[0*n_rxn]
-#define BASE_RATE_ rxn_env_data[1*n_rxn]
-#define NUM_INT_PROP_ 4
-#define NUM_FLOAT_PROP_ 1
-#define INT_DATA_SIZE_ (NUM_INT_PROP_)
-#define FLOAT_DATA_SIZE_ (NUM_FLOAT_PROP_)
-
-#else
 
 #define RXN_ID_ (int_data[0])
 #define REACT_ (int_data[1]-1)
@@ -45,17 +30,6 @@ extern "C"{
 #define INT_DATA_SIZE_ (NUM_INT_PROP_)
 #define FLOAT_DATA_SIZE_ (NUM_FLOAT_PROP_)
 
-#endif
-
-/** \brief Calculate contributions to the time derivative \f$f(t,y)\f$ from
- * this reaction.
- *
- * \param model_data Pointer to the model data, including the state array
- * \param deriv Pointer to the time derivative to add contributions to
- * \param rxn_data Pointer to the reaction data
- * \param time_step Current time step being computed (s)
- * \return The rxn_data pointer advanced by the size of the reaction data
- */
 #ifdef CAMP_USE_SUNDIALS
 #ifdef __CUDA_ARCH__
 __host__ __device__
@@ -86,17 +60,7 @@ void rxn_gpu_first_order_loss_calc_deriv_contrib(ModelDataGPU *model_data, realt
 #endif
 
 }
-#endif
 
-/** \brief Calculate contributions to the Jacobian from this reaction
- *
- * \param model_data Pointer to the model data
- * \param J Pointer to the sparse Jacobian matrix to add contributions to
- * \param rxn_data Pointer to the reaction data
- * \param time_step Current time step being calculated (s)
- * \return The rxn_data pointer advanced by the size of the reaction data
- */
-#ifdef CAMP_USE_SUNDIALS
 #ifdef __CUDA_ARCH__
 __host__ __device__
 #endif
@@ -135,4 +99,5 @@ void rxn_gpu_first_order_loss_calc_jac_contrib(ModelDataGPU *model_data, Jacobia
 #undef NUM_FLOAT_PROP_
 #undef INT_DATA_SIZE_
 #undef FLOAT_DATA_SIZE_
+*/
 }

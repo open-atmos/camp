@@ -41,61 +41,24 @@ typedef struct {
 } JacobianGPU;
 
 typedef struct {
-
-    int flag;
-    int nflag;
-    int kflag;
-    int kflag2;
-    int eflag;
-
-    //f & jac
-    int i_cell;
-    int i_rxn;
-    int i_aero_rep;
-
-    double init_time_step;
-    int cv_mxstep;
     int cv_next_q;
-    double tout;
-    int cv_taskc;
-    double cv_uround;
-    int cv_nrtfn;
     int nstloc;
     double tret;
     double cv_tretlast;
-    int istate;
-    double cv_hmax_inv;
-    int cv_lmm;                /* lmm = CV_ADAMS or CV_BDF                      */
-    int cv_iter;               /* iter = CV_FUNCTIONAL or CV_NEWTON             */
-    int cv_itol;               /* itol = CV_SS, CV_SV, CV_WF, CV_NN             */
-    double cv_reltol;        /* relative tolerance                            */
+#ifdef ODE_WARNING
     int cv_nhnil;            /* number of messages issued to the user that t + h == t for the next iternal step            */
+#endif
     double cv_etaqm1;      /* ratio of new to old h for order q-1             */
     double cv_etaq;        /* ratio of new to old h for order q               */
     double cv_etaqp1;      /* ratio of new to old h for order q+1             */
-    int cv_lrw1;        /* no. of realtype words in 1 N_Vector             */
-    int cv_liw1;        /* no. of integer words in 1 N_Vector              */
-    int cv_lrw;             /* no. of realtype words in CVODE work vectors     */
-    int cv_liw;             /* no. of integer words in CVODE work vectors      */
     double cv_saved_tq5;       /* saved value of tq[5]                        */
     double cv_tolsf;           /* tolerance scale factor                      */
-    int cv_qmax_alloc;           /* value of qmax used when allocating memory   */
     int cv_indx_acor;            /* index of the zn vector with saved acor      */
-    int cv_qu;
-    double cv_h0u;
     double cv_hu;
     int cv_jcur;
-    int cv_mnewt;
-    int cv_maxcor;
     int cv_nstlp;
-    int cv_qmax;
     int cv_L;
-    int cv_maxnef;
-    int cv_netf;
     double cv_acnrm;
-    double cv_tstop;
-    int cv_tstopset; //Used as bool
-    double cv_nlscoef;
     int cv_qwait;
     double cv_crate;
     double cv_gamrat;
@@ -109,30 +72,22 @@ typedef struct {
     double cv_h;
     double cv_next_h;
     double cv_hscale;
-    int cv_nscon;
-    double saved_t;
-    int ncf;
-    int nef;
     double cv_hprime;
     double cv_hmin;
     double cv_tn;
     double cv_etamax;
     int cv_maxncf;
-
     //Counters (e.g. iterations of function cvnlsNewton)
     int nstlj;
-
 #ifdef CAMP_DEBUG_GPU
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     int countercvStep;
-    int counterDerivGPU;
     int counterBCGInternal;
     int counterBCG;
     double timeNewtonIteration;
     double timeJac;
     double timelinsolsetup;
     double timecalc_Jac;
-    double timeRXNJac;
     double timef;
     double timeguess_helper;
     double dtBCG;
@@ -304,6 +259,20 @@ typedef struct {
     ModelDataVariable *mdvo; //out device
     ModelDataVariable *s;
     ModelDataVariable *sCells;
+
+  //Constant during solving
+  double init_time_step;
+  int cv_mxstep;
+  double tout;
+  double cv_uround;
+  double cv_hmax_inv;
+  double cv_reltol;
+  int cv_maxcor;
+  int cv_qmax;
+  int cv_maxnef;
+  double cv_tstop;
+  int cv_tstopset; //Used as bool
+  double cv_nlscoef;
 
 //ODE stats
 #ifdef CAMP_DEBUG_GPU

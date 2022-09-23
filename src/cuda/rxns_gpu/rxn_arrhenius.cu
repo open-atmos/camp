@@ -14,32 +14,12 @@ extern "C"{
 #include <stdlib.h>
 #include "../rxns_gpu.h"
 
+#ifdef DEV_136_REGS_RXN
+#else
+
 #define TEMPERATURE_K_ env_data[0]
 #define PRESSURE_PA_ env_data[1]
 
-#ifdef REVERSE_INT_FLOAT_MATRIX
-
-#define NUM_REACT_ int_data[0*n_rxn]
-#define NUM_PROD_ int_data[1*n_rxn]
-#define A_ float_data[0*n_rxn]
-#define B_ float_data[1*n_rxn]
-#define C_ float_data[2*n_rxn]
-#define D_ float_data[3*n_rxn]
-#define E_ float_data[4*n_rxn]
-#define CONV_ float_data[5*n_rxn]
-#define RATE_CONSTANT_ rxn_env_data[0*n_rxn]
-#define NUM_INT_PROP_ 2
-#define NUM_FLOAT_PROP_ 6
-#define NUM_ENV_PARAM_ 1
-#define REACT_(x) (int_data[(NUM_INT_PROP_ + x)*n_rxn]-1)
-#define PROD_(x) (int_data[(NUM_INT_PROP_ + NUM_REACT_ + x)*n_rxn]-1)
-#define DERIV_ID_(x) int_data[(NUM_INT_PROP_ + NUM_REACT_ + NUM_PROD_ + x)*n_rxn]
-#define JAC_ID_(x) int_data[(NUM_INT_PROP_ + 2*(NUM_REACT_+NUM_PROD_) + x)*n_rxn]
-#define YIELD_(x) float_data[(NUM_FLOAT_PROP_ + x)*n_rxn]
-#define INT_DATA_SIZE_ (NUM_INT_PROP_+(NUM_REACT_+2)*(NUM_REACT_+NUM_PROD_))
-#define FLOAT_DATA_SIZE_ (NUM_FLOAT_PROP_+NUM_PROD_)
-
-#else
 #define NUM_REACT_ int_data[0]
 #define NUM_PROD_ int_data[1]
 #define A_ float_data[0]
@@ -59,7 +39,6 @@ extern "C"{
 #define YIELD_(x) float_data[(NUM_FLOAT_PROP_ + x)]
 #define INT_DATA_SIZE_ (NUM_INT_PROP_+(NUM_REACT_+2)*(NUM_REACT_+NUM_PROD_))
 #define FLOAT_DATA_SIZE_ (NUM_FLOAT_PROP_+NUM_PROD_)
-#endif
 
 #ifdef CAMP_USE_SUNDIALS
 #ifdef __CUDA_ARCH__
@@ -99,12 +78,8 @@ void rxn_gpu_arrhenius_calc_deriv_contrib(ModelDataGPU *model_data, TimeDerivati
       }
     }
   }
-
 }
 
-#endif
-
-#ifdef CAMP_USE_SUNDIALS
 #ifdef __CUDA_ARCH__
 __host__ __device__
 #endif
@@ -195,4 +170,6 @@ void rxn_arrhenius_get_jac_indices(ModelData *model_data, Jacobian jac,
 }
 
 #endif
+#endif
+
 }

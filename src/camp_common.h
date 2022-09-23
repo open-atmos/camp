@@ -272,7 +272,6 @@ typedef struct {
 #ifdef CAMP_DEBUG_GPU
   int counterDerivTotal;
   int counterDerivCPU;
-  int counterDerivGPU;
   int counterJac;
   int counterSolve;
   int counterFail;

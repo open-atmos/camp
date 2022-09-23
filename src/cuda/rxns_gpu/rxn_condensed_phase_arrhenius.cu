@@ -14,36 +14,13 @@ extern "C"{
 #include <stdlib.h>
 #include "../rxns_gpu.h"
 
+ /*
+
 #define TEMPERATURE_K_ env_data[0]
 #define PRESSURE_PA_ env_data[1]
 
 // Small number
 #define SMALL_NUMBER_ 1.0e-30
-
-#ifdef REVERSE_INT_FLOAT_MATRIX
-
-#define NUM_REACT_ (int_data[0*n_rxn])
-#define NUM_PROD_ (int_data[1*n_rxn])
-#define NUM_AERO_PHASE_ (int_data[2*n_rxn])
-#define A_ (float_data[0*n_rxn])
-#define B_ (float_data[1*n_rxn])
-#define C_ (float_data[2*n_rxn])
-#define D_ (float_data[3*n_rxn])
-#define E_ (float_data[4*n_rxn])
-#define RATE_CONSTANT_ rxn_env_data[0*n_rxn]
-#define NUM_INT_PROP_ 3
-#define NUM_FLOAT_PROP_ 5
-#define REACT_(x) (int_data[(NUM_INT_PROP_ + x)*n_rxn]-1)
-#define PROD_(x) (int_data[(NUM_INT_PROP_+NUM_REACT_*NUM_AERO_PHASE_+x)*n_rxn]-1)
-#define WATER_(x) (int_data[(NUM_INT_PROP_+(NUM_REACT_+NUM_PROD_)*NUM_AERO_PHASE_+x)*n_rxn]-1)
-#define DERIV_ID_(x) (int_data[(NUM_INT_PROP_+(NUM_REACT_+NUM_PROD_+1)*NUM_AERO_PHASE_+x)*n_rxn])
-#define JAC_ID_(x) (int_data[(NUM_INT_PROP_+(2*(NUM_REACT_+NUM_PROD_)+1)*NUM_AERO_PHASE_+x)*n_rxn])
-#define YIELD_(x) (float_data[(NUM_FLOAT_PROP_+x)*n_rxn])
-#define UGM3_TO_MOLM3_(x) (float_data[(NUM_FLOAT_PROP_+NUM_PROD_+x)*n_rxn])
-#define INT_DATA_SIZE_ (NUM_INT_PROP_+((NUM_REACT_+NUM_PROD_)*(NUM_REACT_+3)+1)*NUM_AERO_PHASE_)
-#define FLOAT_DATA_SIZE_ (NUM_FLOAT_PROP_+2*NUM_PROD_+NUM_REACT_)
-
-#else
 
 #define NUM_REACT_ (int_data[0])
 #define NUM_PROD_ (int_data[1])
@@ -66,17 +43,6 @@ extern "C"{
 #define INT_DATA_SIZE_ (NUM_INT_PROP_+((NUM_REACT_+NUM_PROD_)*(NUM_REACT_+3)+1)*NUM_AERO_PHASE_)
 #define FLOAT_DATA_SIZE_ (NUM_FLOAT_PROP_+2*NUM_PROD_+NUM_REACT_)
 
-#endif
-
-/** \brief Calculate contributions to the time derivative f(t,y) from this
- * reaction.
- *
- * \param model_data Pointer to the model data, including the state array
- * \param deriv Pointer to the time derivative to add contributions to
- * \param rxn_data Pointer to the reaction data
- * \param time_step Current time step of the itegrator (s)
- * \return The rxn_data pointer advanced by the size of the reaction data
- */
 #ifdef CAMP_USE_SUNDIALS
 #ifdef __CUDA_ARCH__
 __host__ __device__
@@ -108,7 +74,7 @@ void rxn_gpu_condensed_phase_arrhenius_calc_deriv_contrib(ModelDataGPU *model_da
         i_deriv += NUM_REACT_ + NUM_PROD_;
         continue;
       }
-      unit_conv = 1.0/unit_conv;
+      unit_conv = 1.0/unit_conv;endif
     }
 
     // Calculate the reaction rate rate (M/s or mol/m3/s)
@@ -147,18 +113,7 @@ void rxn_gpu_condensed_phase_arrhenius_calc_deriv_contrib(ModelDataGPU *model_da
   }
 
 }
-#endif
 
-
-/** \brief Calculate contributions to the Jacobian from this reaction
- *
- * \param model_data Pointer to the model data
- * \param J Pointer to the sparse Jacobian matrix to add contributions to
- * \param rxn_data Pointer to the reaction data
- * \param time_step Current time step of the itegrator (s)
- * \return The rxn_data pointer advanced by the size of the reaction data
- */
-#ifdef CAMP_USE_SUNDIALS
 #ifdef __CUDA_ARCH__
 __host__ __device__
 #endif
@@ -204,4 +159,5 @@ void rxn_gpu_condensed_phase_arrhenius_calc_jac_contrib(ModelDataGPU *model_data
 #undef UGM3_TO_MOLM3_
 #undef INT_DATA_SIZE_
 #undef FLOAT_DATA_SIZE_
+*/
 }

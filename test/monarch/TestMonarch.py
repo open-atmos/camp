@@ -355,8 +355,8 @@ def run(conf):
         Path(pathNvprof).mkdir(parents=True, exist_ok=True)
         pathNvprof = pathNvprof + conf.caseMulticellsOnecell \
                      + str(conf.nCells) + "Cells "
-        exec_str += "/apps/NVIDIA-HPC-SDK/20.9/Linux_ppc64le/2020/profilers/Nsight_Compute/ncu --set full -f -o" + pathNvprof #last working version
-        #exec_str += "/apps/NVIDIA-HPC-SDK/20.9/Linux_ppc64le/2020/profilers/Nsight_Compute/ncu "#summary
+        #exec_str += "/apps/NVIDIA-HPC-SDK/20.9/Linux_ppc64le/2020/profilers/Nsight_Compute/ncu --set full -f -o" + pathNvprof #last working version
+        exec_str += "/apps/NVIDIA-HPC-SDK/20.9/Linux_ppc64le/2020/profilers/Nsight_Compute/ncu "#summary
 
         #wrong exec_str += "/apps/NVIDIA-HPC-SDK/21.3/Linux_ppc64le/21.3/profilers/Nsight_Compute/ncu --set full -f -o " + pathNvprof
         #wrongexec_str += "/apps/NVIDIA-HPC-SDK/21.3/Linux_ppc64le/21.3/profilers/Nsight_Compute/ncu "
@@ -426,7 +426,7 @@ def run_case(conf):
         for i in range(len(data["timeLS"])):
             data["timeLS"][i] = data["timeLS"][i] - data["timeBiconjGradMemcpy"][i]
     #if conf.plotYKey != "MAPE":
-        #print("data",data)
+    #print("data",data)
     y_key_words = conf.plotYKey.split()
     y_key = y_key_words[-1]
     if "normalized" in conf.plotYKey:
@@ -745,9 +745,9 @@ def all_timesteps():
     conf.diffCellsL.append("Realistic")
     #conf.diffCellsL.append("Ideal")
 
-    conf.profileCuda = ""
+    #conf.profileCuda = ""
     #conf.profileCuda = "nvprof"
-    #conf.profileCuda = "nsight"
+    conf.profileCuda = "nsight"
 
     conf.is_export = get_is_sbatch()
     #conf.is_export = True
@@ -773,7 +773,7 @@ def all_timesteps():
     #conf.mpiProcessesCaseBase = 40
 
     #conf.mpiProcessesCaseOptimList.append(1)
-    conf.mpiProcessesCaseOptimList.append(1)
+    conf.mpiProcessesCaseOptimList.append(40)
     # conf.mpiProcessesCaseOptimList = [10,20,40]
     # conf.mpiProcessesCaseOptimList = [1,4,8,16,32,40]
 
@@ -786,11 +786,11 @@ def all_timesteps():
     # conf.allocatedTasksPerNode = 320
     # conf.allocatedTasksPerNode = get_ntasksPerNode_sbatch() #todo
 
-    conf.cells = [10]
+    conf.cells = [1000]
     #conf.cells = [100, 500, 1000, 5000, 10000]
     # conf.cells = [50000,100000,500000,1000000]
 
-    conf.timeSteps = 10
+    conf.timeSteps = 1
     #conf.timeSteps = 720
 
     conf.timeStepsDt = 2

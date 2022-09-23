@@ -16,6 +16,8 @@ extern "C"{
 #include <stdlib.h>
 #include "../rxns_gpu.h"
 
+  /*
+
 #define TEMPERATURE_K_ env_data[0]
 #define PRESSURE_PA_ env_data[1]
 
@@ -127,15 +129,6 @@ realtype rxn_gpu_aqueous_equilibrium_calc_overall_rate(int *rxn_int_data,
 return (realtype)rate;
 }
 
-/** \brief Calculate contributions to the time derivative \f$f(t,y)\f$ from
- * this reaction.
- *
- * \param model_data Pointer to the model data, including the state array
- * \param deriv Pointer to the time derivative to add contributions to
- * \param rxn_data Pointer to the reaction data
- * \param time_step Current time step of the itegrator (s)
- * \return The rxn_data pointer advanced by the size of the reaction data
- */
 #ifdef CAMP_USE_SUNDIALS
 #ifdef __CUDA_ARCH__
 __host__ __device__
@@ -216,15 +209,6 @@ void rxn_gpu_aqueous_equilibrium_calc_deriv_contrib(ModelDataGPU *model_data, re
 }
 #endif
 
-/** \brief Calculate contributions to the Jacobian from this reaction
- *
- * \param model_data Pointer to the model data
- * \param J Pointer to the sparse Jacobian matrix to add contributions to
- * \param rxn_data Pointer to the reaction data
- * \param time_step Current time step of the itegrator (s)
- * \return The rxn_data pointer advanced by the size of the reaction data
- */
-
 #ifdef CAMP_USE_SUNDIALS
 #ifdef __CUDA_ARCH__
 __host__ __device__
@@ -246,5 +230,6 @@ void rxn_gpu_aqueous_equilibrium_calc_jac_contrib(ModelDataGPU *model_data, Jaco
 }
 #endif
 
+*/
 
 }

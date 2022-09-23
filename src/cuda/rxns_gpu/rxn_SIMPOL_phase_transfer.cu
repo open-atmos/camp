@@ -12,6 +12,8 @@ extern "C"{
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+
+/*
 #include "../aeros/aero_rep_gpu_solver.h"
 #include "../aeros/sub_model_gpu_solver.h"
 #include "../../util.h"
@@ -26,46 +28,6 @@ extern "C"{
 // Aerosol mass concentration types
 #define PER_PARTICLE_MASS 0
 #define TOTAL_PARTICLE_MASS 1
-
-#ifdef REVERSE_INT_FLOAT_MATRIX
-
-#define DELTA_H_ float_data[0*n_rxn]
-#define DELTA_S_ float_data[1*n_rxn]
-#define DIFF_COEFF_ float_data[2*n_rxn]
-#define PRE_C_AVG_ float_data[3*n_rxn]
-#define B1_ float_data[4*n_rxn]
-#define B2_ float_data[5*n_rxn]
-#define B3_ float_data[6*n_rxn]
-#define B4_ float_data[7*n_rxn]
-#define CONV_ float_data[8*n_rxn]
-#define MW_ float_data[9*n_rxn]
-#define NUM_AERO_PHASE_ int_data[0*n_rxn]
-#define GAS_SPEC_ (int_data[1*n_rxn]-1)
-#define MFP_M_ rxn_env_data[0]
-#define ALPHA_ rxn_env_data[1]
-#define EQUIL_CONST_ rxn_env_data[2]
-#define KGM3_TO_PPM_ rxn_env_data[3]
-#define NUM_INT_PROP_ 2
-#define NUM_FLOAT_PROP_ 10
-#define NUM_ENV_PARAM_ 4
-#define AERO_SPEC_(x) (int_data[(NUM_INT_PROP_ + x)*n_rxn]-1)
-#define AERO_ACT_ID_(x) (int_data[(NUM_INT_PROP_ + NUM_AERO_PHASE_ + x)*n_rxn]-1)
-#define AERO_PHASE_ID_(x) (int_data[(NUM_INT_PROP_ + 2*(NUM_AERO_PHASE_) + x)*n_rxn]-1)
-#define AERO_REP_ID_(x) (int_data[(NUM_INT_PROP_ + 3*(NUM_AERO_PHASE_) + x)*n_rxn]-1)
-#define DERIV_ID_(x) (int_data[(NUM_INT_PROP_ + 4*(NUM_AERO_PHASE_) + x)*n_rxn])
-#define GAS_ACT_JAC_ID_(x) int_data[(NUM_INT_PROP_ + 1 + 5*(NUM_AERO_PHASE_) + x)*n_rxn]
-#define AERO_ACT_JAC_ID_(x) int_data[(NUM_INT_PROP_ + 1 + 6*(NUM_AERO_PHASE_) + x)*n_rxn]
-#define JAC_ID_(x) (int_data[(NUM_INT_PROP_ + 1 + 7*(NUM_AERO_PHASE_) + x)*n_rxn])
-#define PHASE_INT_LOC_(x) (int_data[(NUM_INT_PROP_ + 2 + 10*(NUM_AERO_PHASE_) + x)*n_rxn]-1)
-#define PHASE_FLOAT_LOC_(x) (int_data[(NUM_INT_PROP_ + 2 + 11*(NUM_AERO_PHASE_) + x)*n_rxn]-1)
-#define NUM_AERO_PHASE_JAC_ELEM_(x) (int_data[PHASE_INT_LOC_(x)*n_rxn])
-#define PHASE_JAC_ID_(x,s,e) int_data[(PHASE_INT_LOC_(x)+1+s*NUM_AERO_PHASE_JAC_ELEM_(x)+e)*n_rxn]
-#define EFF_RAD_JAC_ELEM_(x,e) float_data[(PHASE_FLOAT_LOC_(x)+e]
-#define NUM_CONC_JAC_ELEM_(x,e) float_data[(PHASE_FLOAT_LOC_(x)+NUM_AERO_PHASE_JAC_ELEM_(x)+e)*n_rxn]
-#define MASS_JAC_ELEM_(x,e) float_data[(PHASE_FLOAT_LOC_(x)+2*NUM_AERO_PHASE_JAC_ELEM_(x)+e)*n_rxn]
-#define MW_JAC_ELEM_(x,e) float_data[(PHASE_FLOAT_LOC_(x)+3*NUM_AERO_PHASE_JAC_ELEM_(x)+e)*n_rxn]
-
-#else
 
 #define DELTA_H_ float_data[0]
 #define DELTA_S_ float_data[1]
@@ -102,9 +64,6 @@ extern "C"{
 #define NUM_CONC_JAC_ELEM_(x,e) float_data[(PHASE_FLOAT_LOC_(x)+NUM_AERO_PHASE_JAC_ELEM_(x)+e)]
 #define MASS_JAC_ELEM_(x,e) float_data[(PHASE_FLOAT_LOC_(x)+2*NUM_AERO_PHASE_JAC_ELEM_(x)+e)]
 #define MW_JAC_ELEM_(x,e) float_data[(PHASE_FLOAT_LOC_(x)+3*NUM_AERO_PHASE_JAC_ELEM_(x)+e)]
-
-
-#endif
 
 #ifdef __CUDA_ARCH__
 __host__ __device__
@@ -233,6 +192,6 @@ void rxn_gpu_SIMPOL_phase_transfer_calc_deriv_contrib(ModelDataGPU *model_data, 
   }
   return;
 }
-
+*/
 
 }
