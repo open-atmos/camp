@@ -34,7 +34,7 @@ extern "C++" void gpu_scaley(double* dy, double a, int nrows, int blocks, int th
 
 // Device functions (equivalent to global functions but in device to allow calls from gpu)
 __device__ void cudaDeviceBCGprecond(double* dA, int* djA, int* diA, double* ddiag, double alpha);
-__device__ void cudaDevicesetconst(double* dy,double constant,int nrows);
+__device__ void cudaDevicesetconst(double* dy,double constant);
 __device__ void cudaDeviceSpmvCSR(double* dx, double* db, double* dA, int* djA, int* diA);
 __device__ void cudaDeviceSpmvCSC_block(double* dx, double* db, double* dA, int* djA, int* diA);
 __device__ void cudaDeviceSpmv(double* dx, double* db, double* dA, int* djA, int* diA);

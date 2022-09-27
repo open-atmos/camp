@@ -121,10 +121,9 @@ __device__ void cudaDevicecalc_deriv(
 ) //Interface CPU/GPU
 {
   int tid = blockIdx.x * blockDim.x + threadIdx.x;
-  int deriv_length_cell = md->deriv_length_cell;
+  int deriv_length_cell = md->nrows / md->n_cells;
   int tid_cell=tid%deriv_length_cell;
   int state_size_cell = md->state_size_cell;
-  int active_threads = md->nrows;
 #ifdef DEBUG_DERIV_GPU
   if(tid==0){
     printf("[DEBUG] GPU solveDerivative tid %d, \n", tid);
@@ -142,16 +141,13 @@ __device__ void cudaDevicecalc_deriv(
   md->J_tmp[tid]=y[tid]-md->J_state[tid];
   cudaDeviceSpmv(md->J_tmp2, md->J_tmp, md->J_solver, md->djA, md->diA);
   md->J_tmp[tid]=md->J_deriv[tid]+md->J_tmp2[tid];
-  cudaDevicesetconst(md->J_tmp2, 0.0, active_threads); //Reset for next iter
+  cudaDevicesetconst(md->J_tmp2, 0.0); //Reset for next iter
 #ifdef DEBUG_printmin
     printmin(md,md->J_tmp,"cudaDevicecalc_deriv start end J_tmp");
     printmin(md,md->J_state,"cudaDevicecalc_deriv start end J_state");
 #endif
     TimeDerivativeGPU deriv_data;
-#ifdef DEV_DERIV_NUM_SPEC
-#else
     deriv_data.num_spec = deriv_length_cell*gridDim.x;
-#endif
 #ifdef AEROS_CPU
 #else
     deriv_data.production_rates = md->production_rates;
@@ -450,10 +446,10 @@ __device__ void solveRXNJac(
 __device__ void cudaDevicecalc_Jac(double *y,ModelDataGPU *md, ModelDataVariable *dmdv
 ){
   int tid = blockIdx.x * blockDim.x + threadIdx.x;
-  int deriv_length_cell = md->deriv_length_cell;
+  int deriv_length_cell = md->nrows / md->n_cells;
   int state_size_cell = md->state_size_cell;
   int tid_cell=tid%deriv_length_cell;
-  int active_threads = md->n_cells*md->deriv_length_cell;
+  int active_threads = md->nrows;
   __syncthreads();
 #ifdef CAMP_DEBUG_GPU
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
@@ -473,16 +469,9 @@ __device__ void cudaDevicecalc_Jac(double *y,ModelDataGPU *md, ModelDataVariable
     JacobianGPU jacBlock;
     __syncthreads();
     int i_cell = tid/deriv_length_cell;
-
-#ifdef DEV_REMOVE_JAC_RXN
-    jacBlock.production_partials = &( jac->production_partials[md->jacRxnLen*blockIdx.x]);
-    jacBlock.loss_partials = &( jac->loss_partials[md->jacRxnLen*blockIdx.x]);
-#else
     jacBlock.num_elem = jac->num_elem;
     jacBlock.production_partials = &( jac->production_partials[jacBlock.num_elem[0]*blockIdx.x]);
     jacBlock.loss_partials = &( jac->loss_partials[jacBlock.num_elem[0]*blockIdx.x]);
-#endif
-
     __syncthreads();
     md->grid_cell_state = &( md->state[state_size_cell*i_cell]);
     md->grid_cell_env = &( md->env[CAMP_NUM_ENV_PARAM_*i_cell]);
@@ -682,8 +671,8 @@ void solveBcgCudaDeviceCVODE(ModelDataGPU *md, ModelDataVariable *dmdv)
   double* dy = md->dy;
   double alpha,rho0,omega0,beta,rho1,temp1,temp2;
   alpha=rho0=omega0=beta=rho1=temp1=temp2=1.0;
-  cudaDevicesetconst(dn0, 0.0, nrows);
-  cudaDevicesetconst(dp0, 0.0, nrows);
+  cudaDevicesetconst(dn0, 0.0);
+  cudaDevicesetconst(dp0, 0.0);
   cudaDeviceSpmv(dr0,dx,dA,djA,diA);
   cudaDeviceaxpby(dr0,dtempv,1.0,-1.0,nrows);
   cudaDeviceyequalsx(dr0h,dr0,nrows);
@@ -706,7 +695,7 @@ void solveBcgCudaDeviceCVODE(ModelDataGPU *md, ModelDataVariable *dmdv)
     omega0 = temp1 / temp2;
     cudaDeviceaxpy(dx, dy, omega0, nrows);
     cudaDevicezaxpby(1.0, ds, -1.0 * omega0, dt, dr0, nrows);
-    cudaDevicesetconst(dt, 0.0, nrows);
+    cudaDevicesetconst(dt, 0.0);
     cudaDevicedotxy(dr0, dr0, &temp1, n_shr_empty);
     temp1 = sqrtf(temp1);
     rho0 = rho1;

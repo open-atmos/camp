@@ -302,6 +302,7 @@ typedef struct {
   int endDevice;
   int startDevice;
   int nDevices;
+  int nCellsGPUPerc;
 #endif
   void *cvode_mem;       // CVodeMem object
   ModelData model_data;  // Model data (used during initialization and solving)

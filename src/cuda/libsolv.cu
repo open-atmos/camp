@@ -527,7 +527,7 @@ int nnz=diA[blockDim.x];
 }
 
 // y = constant
-__device__ void cudaDevicesetconst(double* dy,double constant,int nrows){
+__device__ void cudaDevicesetconst(double* dy,double constant){
   int row= threadIdx.x + blockDim.x*blockIdx.x;
   dy[row]=constant;
 }

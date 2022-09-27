@@ -726,7 +726,6 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
 // Update data for new environmental state on GPU
 #ifdef CAMP_USE_GPU
   if(sd->use_cpu==0){
-     // todo join this with cudacvode
       rxn_update_env_state_gpu(sd);
   }
 #endif

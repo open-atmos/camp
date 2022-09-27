@@ -367,7 +367,7 @@ void swapCSC_CSR_BCG(SolverData *sd){
   free(Bx);
 }
 
-#ifdef DEV_cudaSwapCSC
+#ifdef cudaCVODESwapCSC_CSRBCG
 __device__ void cudaCVODESwapCSC_CSRBCG(ModelDataGPU *md, ModelDataVariable *dmdv, double *dA){
   __syncthreads();
   int tid = blockIdx.x * blockDim.x + threadIdx.x;
@@ -478,18 +478,8 @@ void solveBcgCuda(
 
     //gpu_yequalsconst(dn0,0.0,nrows,blocks,threads);  //n0=0.0 //memset???
     //gpu_yequalsconst(dp0,0.0,nrows,blocks,threads);  //p0=0.0
-    cudaDevicesetconst(dn0, 0.0, nrows);
-    cudaDevicesetconst(dp0, 0.0, nrows);
-
-    //Not needed
-    /*
-    cudaDevicesetconst(dr0h, 0.0, nrows);
-    cudaDevicesetconst(dt, 0.0, nrows);
-    cudaDevicesetconst(ds, 0.0, nrows);
-    cudaDevicesetconst(dAx2, 0.0, nrows);
-    cudaDevicesetconst(dy, 0.0, nrows);
-    cudaDevicesetconst(dz, 0.0, nrows);
-     */
+    cudaDevicesetconst(dn0, 0.0);
+    cudaDevicesetconst(dp0, 0.0);
 
 #ifndef CSR_SPMV_CPU
     cudaDeviceSpmvCSR(dr0,dx,dA,djA,diA); //y=A*x
@@ -559,7 +549,7 @@ void solveBcgCuda(
       cudaDevicemultxy(dy, ddiag, dp0, nrows);
 
       __syncthreads();
-      cudaDevicesetconst(dn0, 0.0, nrows);
+      cudaDevicesetconst(dn0, 0.0);
       //gpu_spmv(dn0,dy,nrows,dA,djA,diA,blocks,threads);  // n0= A*y
 #ifndef CSR_SPMV_CPU
       cudaDeviceSpmvCSR(dn0, dy, dA, djA, diA);
@@ -655,7 +645,7 @@ void solveBcgCuda(
       __syncthreads();
       //gpu_zaxpby(1.0,ds,-1.0*omega0,dt,dr0,nrows,blocks,threads);
       cudaDevicezaxpby(1.0, ds, -1.0 * omega0, dt, dr0, nrows);
-      cudaDevicesetconst(dt, 0.0, nrows);
+      cudaDevicesetconst(dt, 0.0);
 
       __syncthreads();
       cudaDevicedotxy(dr0, dr0, &temp1, n_shr_empty);

@@ -29,10 +29,7 @@ typedef struct {
 #ifdef __CUDA_ARCH__
 #else
 #endif
-#ifdef DEV_REMOVE_JAC_RXN
-#else
     int *num_elem;   // Number of potentially non-zero Jacobian elements
-#endif
     double *production_partials;    // Data array for productions rate partial derivs
     double *loss_partials;  // Data array for loss rate partial derivs
 } JacobianGPU;
@@ -127,7 +124,6 @@ typedef struct{
   double timeNewtonIt;
   double timeLinSolSetup;
   double timeLinSolSolve;
-  double timecvStep;
   double timeDerivNewton;
   double timeBiConjGrad;
   double timeBiConjGradMemcpy;
@@ -139,7 +135,6 @@ typedef struct{
   cudaEvent_t startLinSolSetup;
   cudaEvent_t startLinSolSolve;
   cudaEvent_t startNewtonIt;
-  cudaEvent_t startcvStep;
   cudaEvent_t startBCG;
   cudaEvent_t startBCGMemcpy;
 
@@ -148,9 +143,14 @@ typedef struct{
   cudaEvent_t stopLinSolSetup;
   cudaEvent_t stopLinSolSolve;
   cudaEvent_t stopNewtonIt;
-  cudaEvent_t stopcvStep;
   cudaEvent_t stopBCGMemcpy;
   cudaEvent_t stopBCG;
+/*
+  double timecvStep;
+  cudaEvent_t startcvStep;
+  cudaEvent_t stopcvStep;
+*/
+
 #endif
 } ModelDataCPU;
 
@@ -180,9 +180,6 @@ typedef struct {
     int n_rxn_env_data;
     int *n_mapped_values;
     JacMap *jac_map;
-#ifdef DEV_REMOVE_JAC_RXN
-    int jacRxnLen;
-#endif
     JacobianGPU jac;
 
     double *yout;
@@ -233,7 +230,6 @@ typedef struct {
     int *flagCells;
 
     //f_cuda
-    int deriv_length_cell;
     int state_size_cell;
 
     //cudacvNewtonIteration
@@ -244,11 +240,6 @@ typedef struct {
     //Auxiliar variables
     double* dsavedJ;
 
-#ifdef DEV_cudaSwapCSC
-    int* iB;
-    int* jB;
-    double *B;
-#endif
 #ifdef DEV_CSR_REACTIONS
     int *colARXN;
     int *jARXN;
@@ -276,6 +267,11 @@ typedef struct {
 
 //ODE stats
 #ifdef CAMP_DEBUG_GPU
+
+  double timecvStep;
+  cudaEvent_t startcvStep;
+  cudaEvent_t stopcvStep;
+
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     int clock_khz;
 #endif

@@ -87,12 +87,8 @@ int jacobian_initialize_cuda_cvode(SolverData *sd) {
     mGPU = sd->mGPU;
 
     JacobianGPU *jacgpu = &(mGPU->jac);
-#ifdef DEV_REMOVE_JAC_RXN
-    mGPU->jacRxnLen=jac->num_elem;
-#else
     cudaMalloc((void **) &jacgpu->num_elem, 1 * sizeof(jacgpu->num_elem));
     cudaMemcpy(jacgpu->num_elem, &jac->num_elem, 1 * sizeof(jacgpu->num_elem), cudaMemcpyHostToDevice);
-#endif
     int num_elem = jac->num_elem * mGPU->n_cells;
     cudaMalloc((void **) &(jacgpu->production_partials), num_elem * sizeof(jacgpu->production_partials));
     HANDLE_ERROR(cudaMalloc((void **) &(jacgpu->loss_partials), num_elem * sizeof(jacgpu->loss_partials)));
@@ -242,6 +238,10 @@ void solver_new_gpu_cu_cvode(SolverData *sd) {
   int n_rxn=md->n_rxn;
   int n_rxn_env_param=md->n_rxn_env_data;
   int n_cells_total=md->n_cells;
+#ifdef DEV_CPUGPU
+  sd->nCellsGPUPerc=0.7;
+  n_cells_total *= sd->nCellsGPUPerc;
+#endif
   sd->mGPUs = (ModelDataGPU *)malloc(sd->nDevices * sizeof(ModelDataGPU));
   int remainder = n_cells_total % sd->nDevices;
 
@@ -547,11 +547,6 @@ void constructor_cvode_gpu(CVodeMem cv_mem, SolverData *sd){
       cudaMemcpy(mGPU->diA, mCPU->iA, (mGPU->nrows + 1) * sizeof(int), cudaMemcpyHostToDevice);
     }
     mGPU->dftemp = mGPU->deriv_data;
-#ifdef DEV_cudaSwapCSC
-    cudaMalloc((void **) &mGPU->jB, mCPU->nnz * sizeof(int));
-    cudaMalloc((void **) &mGPU->iB, (mGPU->nrows + 1) * sizeof(int));
-    cudaMalloc((void **) &mGPU->B, mCPU->nnz * sizeof(double));
-#endif
 #ifndef USE_CSR_ODE_GPU
     swapCSC_CSR_ODE(sd);
 #endif
@@ -590,7 +585,6 @@ void constructor_cvode_gpu(CVodeMem cv_mem, SolverData *sd){
     HANDLE_ERROR(cudaMemcpy(mGPU->cv_acor_init, cv_acor_init, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice));
     mGPU->replacement_value = TINY;
     mGPU->threshhold = -SMALL;
-    mGPU->deriv_length_cell = mGPU->nrows / mGPU->n_cells;
     mGPU->state_size_cell = md->n_per_cell_state_var;
     int flag = 999; //CAMP_SOLVER_SUCCESS
     cudaMemcpy(mGPU->flag, &flag, 1 * sizeof(int), cudaMemcpyHostToDevice);
@@ -663,6 +657,7 @@ void cudaGlobalCVode(ModelDataGPU md_object) {
   if(threadIdx.x==0) md->flagCells[blockIdx.x]=istate;
   ModelDataVariable *mdvo = md->mdvo;
   *mdvo = *md->s;
+  if(tid==0) printf("cudaGlobalCVode end\n");
 }
 
 void solveCVODEGPU(SolverData *sd){
@@ -853,7 +848,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     cvProcessError(cv_mem, CV_BAD_DKY, "CVODE", "CVodeGetDky", MSGCV_NULL_DKY);
     return(CV_BAD_DKY);
   }
-  for (int i = 0; i < md->n_cells; i++)
+  for (int i = 0; i < md->n_cells; i++)//md->nCellsGPU
     sd->flagCells[i] = 99;
 
   int offset_state = 0;
@@ -969,10 +964,37 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
   }
   cudaEventRecord(mCPU->stopcvStep);
 #ifdef DEV_CPUGPU
+
+  int nCellsGPUPerc=sd->nCellsGPUPerc;
+  int nCellsGPU = md->n_cells*nCellsGPUPerc;
+  int nCellsCPU= md->n_cells - nCellsGPU;
+  double* stotal_state=total_state;
+  total_state+=md->n_per_cell_state_var*nCellsGPU;
+  N_Vector sy = N_VClone(sd->y); //todo nvclone(y) or just y=sy?
+  //N_Vector sy = y;
+  N_Vector yAux = N_VNew_Serial(n_dep_var * nCellsCPU);
+  double *yAuxArray = N_VGetArrayPointer(yout);
+  for (int i = 0; i < md->n_per_cell_dep_var*md->nCellsCPU; i++){
+    yAuxArray[i]=youtArray[i+md->n_per_cell_state_var*nCellsGPU];
+  }
+  sd->y=N_VClone(yAux);
+
+
   //sleep(2);
   int istate = CVode(cvode_mem, tout, yout, tret, itask);
-  clock_t
-  return(istate);
+
+  total_state=stotal_state;
+  sd->y=N_VClone(sy);
+  yAuxArray= N_VGetArrayPointer(sd->y);
+  for (int i = 0; i < md->n_per_cell_dep_var*md->nCellsCPU; i++){
+    yAuxArray[i+md->n_per_cell_state_var*nCellsGPU]=youtArray[i];
+  }
+
+  if (istate !=CV_SUCCESS ){
+    printf("ERROR in solving the CPU part of CPU+GPU solving");
+    return(istate);
+  }
+
 #endif
   for (int iDevice = sd->startDevice+1; iDevice < sd->endDevice; iDevice++) {
     cudaSetDevice(iDevice);
@@ -985,7 +1007,9 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     cudaEventSynchronize(mCPU->stopcvStep);
     float mscvStep = 0.0;
     cudaEventElapsedTime(&mscvStep, mCPU->startcvStep, mCPU->stopcvStep);
+    //printf("mCPU->timecvStep %lf\n",mCPU->timecvStep);
     mCPU->timecvStep+= mscvStep/1000;
+    printf("mCPU->timecvStep %lf\n",mCPU->timecvStep);
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     mCPU->timeBiConjGrad=mCPU->timecvStep*mCPU->mdvCPU.dtBCG/mCPU->mdvCPU.dtcudaDeviceCVode;
     mCPU->counterBiConjGrad+= mCPU->mdvCPU.counterBCG;

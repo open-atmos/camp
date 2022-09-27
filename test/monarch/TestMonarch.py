@@ -753,17 +753,17 @@ def all_timesteps():
     #conf.is_export = True
     #conf.is_export = False
 
-    conf.is_import = True
-    # conf.is_import = False
+    #conf.is_import = True
+    conf.is_import = False
 
     # conf.commit = "MATCH_IMPORTED_CONF"
     conf.commit = ""
 
     conf.nGPUsCaseBase = 1
-     #conf.nGPUsCaseBase = 2
+    #conf.nGPUsCaseBase = 2
 
-    conf.nGPUsCaseOptimList = [1]
-    #conf.nGPUsCaseOptimList = [2]
+    #conf.nGPUsCaseOptimList = [1]
+    conf.nGPUsCaseOptimList = [2]
     # conf.nGPUsCaseOptimList = [1,2,3,4]
 
     conf.mpi = "yes"
@@ -786,11 +786,11 @@ def all_timesteps():
     # conf.allocatedTasksPerNode = 320
     # conf.allocatedTasksPerNode = get_ntasksPerNode_sbatch() #todo
 
-    conf.cells = [1000]
+    conf.cells = [100]
     #conf.cells = [100, 500, 1000, 5000, 10000]
     # conf.cells = [50000,100000,500000,1000000]
 
-    conf.timeSteps = 7
+    conf.timeSteps = 2
     #conf.timeSteps = 720
 
     conf.timeStepsDt = 2
@@ -859,6 +859,10 @@ def all_timesteps():
     if (conf.nGPUsCaseBase >2 and conf.mpiProcessesCaseBase < 30):
         print("ERROR: nGPUsCaseBase is more than 2 but MPI processes is not enough, use 40 MPI processes or reduce GPUs to 1 or 2")
         raise
+    for i in range(len(conf.nGPUsCaseOptimList)):
+        if (conf.nGPUsCaseOptimList[i] >2 and conf.nGPUsCaseOptimList[i] < 30):
+            print("ERROR: nGPUsCaseBase is more than 2 but MPI processes is not enough, use 40 MPI processes or reduce GPUs to 1 or 2")
+            raise
     jsonFile = open("monarch_box_binned/cb05_abs_tol.json")
     jsonData = json.load(jsonFile)
     conf.MAPETol = jsonData["camp-data"][0]["value"]  # Default: 1.0E-4
