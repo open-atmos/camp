@@ -1579,12 +1579,14 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
       if (ewtsetOK != 0) {
         md->s->cv_tretlast = md->s->tret = md->s->cv_tn;
         md->yout[i] = md->dzn[i];
+        if(i==0) printf("ERROR: ewtsetOK\n");
         return CV_ILL_INPUT;
       }
     }
     if ((md->cv_mxstep > 0) && (md->s->nstloc >= md->cv_mxstep)) {
       md->s->cv_tretlast = md->s->tret = md->s->cv_tn;
       md->yout[i] = md->dzn[i];
+      if(i==0) printf("ERROR: cv_mxstep\n");
       return CV_TOO_MUCH_WORK;
     }
     double nrm;
@@ -1595,6 +1597,7 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
       md->s->cv_tretlast = md->s->tret = md->s->cv_tn;
       md->yout[i] = md->dzn[i];
       md->s->cv_tolsf *= 2.;
+      if(i==0) printf("ERROR: cv_tolsf\n");
       __syncthreads();
       return CV_TOO_MUCH_ACC;
     } else {
@@ -1620,6 +1623,7 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
     if (kflag2 != CV_SUCCESS) {
       md->s->cv_tretlast = md->s->tret = md->s->cv_tn;
       md->yout[i] = md->dzn[i];
+      if(i==0) printf("ERROR: dmdv->kflag != CV_SUCCESS\n");
       return kflag2;
     }
     md->s->nstloc++;
@@ -1634,11 +1638,13 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
         cudaDeviceCVodeGetDky(md, dmdv, md->cv_tstop, 0, md->yout);
         md->s->cv_tretlast = md->s->tret = md->cv_tstop;
         md->cv_tstopset = SUNFALSE;
+        if(i==0) printf("ERROR: cv_tstopset\n");
         __syncthreads();
         return CV_TSTOP_RETURN;
       }
       if ((md->s->cv_tn + md->s->cv_hprime - md->cv_tstop) * md->s->cv_h > 0.) {
         md->s->cv_hprime = (md->cv_tstop - md->s->cv_tn) * (1.0 - 4.0 * md->cv_uround);
+        if(i==0) printf("ERROR: dmdv->cv_tn + dmdv->cv_hprime - dmdv->cv_tstop\n");
         md->s->cv_eta = md->s->cv_hprime / md->s->cv_h;
       }
     }
