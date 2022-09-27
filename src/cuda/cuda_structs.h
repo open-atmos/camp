@@ -145,11 +145,10 @@ typedef struct{
   cudaEvent_t stopNewtonIt;
   cudaEvent_t stopBCGMemcpy;
   cudaEvent_t stopBCG;
-/*
+
   double timecvStep;
   cudaEvent_t startcvStep;
   cudaEvent_t stopcvStep;
-*/
 
 #endif
 } ModelDataCPU;
@@ -267,11 +266,6 @@ typedef struct {
 
 //ODE stats
 #ifdef CAMP_DEBUG_GPU
-
-  double timecvStep;
-  cudaEvent_t startcvStep;
-  cudaEvent_t stopcvStep;
-
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     int clock_khz;
 #endif

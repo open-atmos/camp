@@ -962,9 +962,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     offset_ncells += mGPU->n_cells;
     offset_nrows += mGPU->nrows;
   }
-  cudaEventRecord(mCPU->stopcvStep);
 #ifdef DEV_CPUGPU
-
   int nCellsGPUPerc=sd->nCellsGPUPerc;
   int nCellsGPU = md->n_cells*nCellsGPUPerc;
   int nCellsCPU= md->n_cells - nCellsGPU;
@@ -994,7 +992,6 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     printf("ERROR in solving the CPU part of CPU+GPU solving");
     return(istate);
   }
-
 #endif
   for (int iDevice = sd->startDevice+1; iDevice < sd->endDevice; iDevice++) {
     cudaSetDevice(iDevice);
@@ -1004,6 +1001,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
   sd->mGPU = &(sd->mGPUs[sd->startDevice]);
   mGPU = sd->mGPU;
 #ifdef CAMP_DEBUG_GPU
+    cudaEventRecord(mCPU->stopcvStep);
     cudaEventSynchronize(mCPU->stopcvStep);
     float mscvStep = 0.0;
     cudaEventElapsedTime(&mscvStep, mCPU->startcvStep, mCPU->stopcvStep);
