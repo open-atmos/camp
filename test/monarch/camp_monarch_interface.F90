@@ -186,10 +186,7 @@ contains
       this%n_cells=n_cells
     end if
 
-    !if (MONARCH_PROCESS.eq.0) then
-    !  print*,"camp_monarch_interface_t start"
-    !end if
-
+    print*,"camp_monarch_interface_t start"
     this%interface_input_file=interface_config_file
     this%ADD_EMISIONS=ADD_EMISIONS
 
@@ -202,6 +199,8 @@ contains
 
     allocate(this%specs_emi_id(15))
     allocate(this%specs_emi(size(this%specs_emi_id)))
+
+    !print*,"camp_monarch_interface_t"
 
     ! Initialize the time-invariant model data on each node
     if (MONARCH_PROCESS.eq.0) then
@@ -223,6 +222,8 @@ contains
 
       this%camp_core => camp_core_t(camp_config_file, this%n_cells)
       call this%camp_core%initialize()
+
+      !print*,"camp_monarch_interface_t"
 
       ! Set the aerosol representation id
       if (this%camp_core%get_aero_rep("MONARCH mass-based", aero_rep)) then
@@ -275,8 +276,12 @@ contains
       ! Generate the CAMP-camp <-> MONARCH species map
       call this%create_map()
 
+      !print*,"camp_monarch_interface_t"
+
       ! Load the initial concentrations
       call this%load_init_conc()
+
+      !print*,"camp_monarch_interface_t"
 
 #ifdef CAMP_USE_MPI
 
@@ -339,6 +344,7 @@ contains
         call camp_mpi_pack_real_array(buffer, pos, this%specs_emi)
       endif
 
+    !print*,"camp_monarch_interface_t"
     endif
 
     ! broadcast the buffer size
@@ -404,7 +410,6 @@ contains
     ! Initialize the solver on all nodes
 
     call this%camp_core%solver_initialize()
-
     !call camp_mpi_barrier(MPI_COMM_WORLD)
 
     ! Create a state variable on each node
@@ -422,25 +427,19 @@ contains
 
       do z =1, this%nrates_cells
         do i = 1, this%n_photo_rxn
-
           base_rate = this%base_rates(i)!
-
           if(this%interface_input_file.eq."interface_monarch_cb05.json") then
             base_rate = 0.
           else
             base_rate = this%base_rates(i) !+ this%base_rates(i)*(this%offset_photo_rates_cells(z)/z)
           end if
-
           !print*,"offset",(this%offset_photo_rates_cells(z)/z)!"z",z,"n_cells",n_cells,this%n_cells
           !print*,"this%base_rates(i), base rate",this%base_rates(i),&
           !        base_rate, camp_mpi_rank()
-
           call this%photo_rxns(i)%set_rate(base_rate) !not used if exported cb05
           !call this%photo_rxns(i)%set_rate(real(0.0, kind=dp))
-
           call this%camp_core%update_data(this%photo_rxns(i),z) !todo needed? mock_monarch also has that
           !call this%camp_core%update_data(this%photo_rxns(i))
-
           !print*,"2id photo_rate", base_rate
         end do
       end do
@@ -1317,6 +1316,8 @@ end if
 
     integer(kind=i_kind) :: i_spec, water_id,i,j,k,r,NUM_VERT_CELLS,state_size_per_cell, last_cell
     real :: conc_deviation_perc
+
+    !print*,"get_init_conc start"
 
     if(this%interface_input_file.eq."mod37/interface_monarch_mod37.json") then
 

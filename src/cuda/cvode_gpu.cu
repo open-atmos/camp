@@ -77,7 +77,7 @@ void init_jac_partials_cvode(double* production_partials, double* loss_partials)
 int jacobian_initialize_cuda_cvode(SolverData *sd) {
   ModelDataGPU *mGPU = sd->mGPU;
   Jacobian *jac = &sd->jac;
-#ifdef DEBUG_jacobian_initialize_gpu
+#ifndef DEBUG_jacobian_initialize_gpu
   printf("jacobian_initialize_gpu start \n");
 #endif
   int offset_nnz = 0;
@@ -99,7 +99,7 @@ int jacobian_initialize_cuda_cvode(SolverData *sd) {
     init_jac_partials_cvode <<<blocks,threads_block>>>(jacgpu->production_partials,jacgpu->loss_partials);
     offset_nnz += num_elem;
   }
-#ifdef DEBUG_jacobian_initialize_gpu
+#ifndef DEBUG_jacobian_initialize_gpu
   printf("jacobian_initialize_gpu end \n");
 #endif
   return 1;
@@ -112,12 +112,10 @@ void init_J_tmp2_cuda_cvode(double* J_tmp2) {
 }
 
 void init_jac_cuda_cvode(SolverData *sd){
-
   ModelData *md = &(sd->model_data);
   ModelDataGPU *mGPU;
   ModelDataCPU *mCPU = &(sd->mCPU);
-
-#ifdef DEBUG_init_jac_cuda
+#ifndef DEBUG_init_jac_cuda
   printf("init_jac_cuda start \n");
 #endif
   int offset_nnz_J_solver = 0;
@@ -129,8 +127,6 @@ void init_jac_cuda_cvode(SolverData *sd){
 
     mCPU->jac_size = md->n_per_cell_solver_jac_elem * mGPU->n_cells * sizeof(double);
     mCPU->nnz_J_solver = SM_NNZ_S(md->J_solver)/md->n_cells*mGPU->n_cells;
-
-    //mGPU->n_per_cell_solver_jac_elem = md->n_per_cell_solver_jac_elem;
     cudaMalloc((void **) &mGPU->dA, mCPU->jac_size);
     cudaMalloc((void **) &mGPU->J_solver, mCPU->jac_size);
     cudaMalloc((void **) &mGPU->J_state, mCPU->deriv_size);
@@ -139,23 +135,24 @@ void init_jac_cuda_cvode(SolverData *sd){
     cudaMalloc((void **) &mGPU->J_tmp2, mCPU->deriv_size);
     cudaMalloc((void **) &mGPU->jac_map, sizeof(JacMap) * md->n_mapped_values);
     HANDLE_ERROR(cudaMalloc((void **) &mGPU->n_mapped_values, 1 * sizeof(int)));
-
-#ifndef DEBUG_init_jac_cuda
+#ifdef DEBUG_init_jac_cuda
     printf("md->n_per_cell_dep_var %d sd->jac.num_spec %d md->n_per_cell_solver_jac_elem %d "
            "md->n_mapped_values %d jac->num_elem %d offset_nnz_J_solver %d  mCPU->nnz_J_solver %d\n",
            md->n_per_cell_dep_var,sd->jac.num_spec,md->n_per_cell_solver_jac_elem, md->n_mapped_values,
            sd->jac.num_elem, offset_nnz_J_solver,mCPU->nnz_J_solver);
 #endif
+    printf("init_jac_cuda start \n");
     HANDLE_ERROR(cudaMemcpy(mGPU->dA, sd->J+offset_nnz_J_solver, mCPU->jac_size, cudaMemcpyHostToDevice));
+    printf("init_jac_cuda start \n");
     double *J_solver = SM_DATA_S(md->J_solver)+offset_nnz_J_solver;
     cudaMemcpy(mGPU->J_solver, J_solver, mCPU->jac_size, cudaMemcpyHostToDevice);
-
+    printf("init_jac_cuda start \n");
     double *J_state = N_VGetArrayPointer(md->J_state)+offset_nrows;
     HANDLE_ERROR(cudaMemcpy(mGPU->J_state, J_state, mCPU->deriv_size, cudaMemcpyHostToDevice));
     double *J_deriv = N_VGetArrayPointer(md->J_deriv)+offset_nrows;
     double *J_tmp2 = N_VGetArrayPointer(md->J_tmp2)+offset_nrows;
     HANDLE_ERROR(cudaMemcpy(mGPU->J_deriv, J_deriv, mCPU->deriv_size, cudaMemcpyHostToDevice));
-
+    printf("init_jac_cuda start \n");
     cudaDeviceProp prop;
     cudaGetDeviceProperties(&prop, iDevice);
     int threads_block = prop.maxThreadsPerBlock;;
@@ -163,12 +160,12 @@ void init_jac_cuda_cvode(SolverData *sd){
     init_J_tmp2_cuda_cvode <<<blocks,threads_block>>>(mGPU->J_tmp2);
     HANDLE_ERROR(cudaMemcpy(mGPU->jac_map, md->jac_map, sizeof(JacMap) * md->n_mapped_values, cudaMemcpyHostToDevice));
     HANDLE_ERROR(cudaMemcpy(mGPU->n_mapped_values, &md->n_mapped_values, 1 * sizeof(int), cudaMemcpyHostToDevice));
-
+    printf("init_jac_cuda start \n");
     offset_nnz_J_solver += mCPU->nnz_J_solver;
     offset_nrows += md->n_per_cell_dep_var* mGPU->n_cells;
   }
   jacobian_initialize_cuda_cvode(sd);
-#ifdef DEBUG_init_jac_cuda
+#ifndef DEBUG_init_jac_cuda
   printf("init_jac_cuda end \n");
 #endif
 }
@@ -202,7 +199,7 @@ void set_int_double_cuda_cvode(
 void solver_init_int_double_cuda_cvode(SolverData *sd) {
   ModelData *md = &(sd->model_data);
   ModelDataCPU *mCPU = &(sd->mCPU);
-#ifdef DEBUG_solver_init_int_double_gpu
+#ifndef DEBUG_solver_init_int_double_gpu
   printf("solver_init_int_double_cuda_cvode start \n");
 #endif
   for (int iDevice = sd->startDevice; iDevice < sd->endDevice; iDevice++) {
@@ -224,7 +221,7 @@ void solver_init_int_double_cuda_cvode(SolverData *sd) {
     );
 #endif
   }
-#ifdef DEBUG_solver_init_int_double_gpu
+#ifndef DEBUG_solver_init_int_double_gpu
   printf("solver_init_int_double_cuda_cvode end \n");
 #endif
 }
@@ -244,7 +241,6 @@ void solver_new_gpu_cu_cvode(SolverData *sd) {
 #endif
   sd->mGPUs = (ModelDataGPU *)malloc(sd->nDevices * sizeof(ModelDataGPU));
   int remainder = n_cells_total % sd->nDevices;
-
   int nDevicesMax;
   cudaGetDeviceCount(&nDevicesMax);
   if(sd->nDevices > nDevicesMax){
@@ -252,7 +248,9 @@ void solver_new_gpu_cu_cvode(SolverData *sd) {
            , sd->nDevices, nDevicesMax);
     exit(0);
   }
-
+#ifndef DEBUG_solver_new_gpu_cu_cvode
+  printf("solver_new_gpu_cu_cvode start \n");
+#endif
   for (int iDevice = sd->startDevice; iDevice < sd->endDevice; iDevice++) {
   cudaSetDevice(iDevice);
   sd->mGPU = &(sd->mGPUs[iDevice]);
@@ -318,6 +316,9 @@ void solver_new_gpu_cu_cvode(SolverData *sd) {
            " use CPU case instead (More info: https://earth.bsc.es/gitlab/ac/camp/-/issues/49 \n");
     exit(0);
   }
+#ifndef DEBUG_solver_new_gpu_cu_cvode
+  printf("solver_new_gpu_cu_cvode end \n");
+#endif
 }
 #ifdef DEV_CSR_REACTIONS
 void getCSRReactions(SolverData *sd) {
@@ -380,7 +381,7 @@ void getCSRReactions(SolverData *sd) {
 }
 #endif
 
-#ifndef USE_CSR_ODE_GPU
+#ifdef USE_CSR_ODE_GPU
 void swapCSC_CSR_ODE(SolverData *sd){
   ModelDataGPU *mGPU = sd->mGPU;
   int n_row=mGPU->nrows/mGPU->n_cells;
@@ -457,6 +458,9 @@ void constructor_cvode_gpu(CVodeMem cv_mem, SolverData *sd){
   SUNMatrix J = cvdls_mem->A;
   sd->flagCells = (int *) malloc((md->n_cells) * sizeof(int));
   ModelDataGPU *mGPU = sd->mGPU;
+#ifndef DEBUG_constructor_cvode_gpu
+  printf("DEBUG_constructor_cvode_gpu start \n");
+#endif
   solver_new_gpu_cu_cvode(sd);
   cudaSetDevice(sd->startDevice);
   sd->mGPU = &(sd->mGPUs[sd->startDevice]);
@@ -468,8 +472,8 @@ void constructor_cvode_gpu(CVodeMem cv_mem, SolverData *sd){
   cudaSetDevice(sd->startDevice);
   sd->mGPU = &(sd->mGPUs[sd->startDevice]);
   mGPU = sd->mGPU;
-#ifdef DEBUG_constructor_cvode_gpu
-  printf("DEBUG_constructor_cvode_gpu start \n");
+#ifndef DEBUG_constructor_cvode_gpu
+  printf("DEBUG_constructor_cvode_gpu start2 \n");
 #endif
 #ifdef CAMP_DEBUG_GPU
   mCPU->counterNewtonIt=0;
@@ -619,7 +623,7 @@ void constructor_cvode_gpu(CVodeMem cv_mem, SolverData *sd){
     offset_nrows += mGPU->nrows;
   }
 
-#ifndef USE_CSR_ODE_GPU
+#ifdef USE_CSR_ODE_GPU
   if(sd->use_gpu_cvode==1) {
     swapCSC_CSR_ODE(sd);
   }
@@ -629,7 +633,7 @@ void constructor_cvode_gpu(CVodeMem cv_mem, SolverData *sd){
     printf("ERROR: cudaDevicecvBDFStab is pending to implement "
            "(disabled by default on CAMP)\n");
     exit(0); }
-#ifdef DEBUG_constructor_cvode_gpu
+#ifndef DEBUG_constructor_cvode_gpu
   printf("DEBUG_constructor_cvode_gpu end \n");
 #endif
 }
@@ -1013,7 +1017,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     float mscvStep = 0.0;
     cudaEventElapsedTime(&mscvStep, mCPU->startcvStep, mCPU->stopcvStep);
     mCPU->timecvStep+= mscvStep/1000;
-    //printf("mCPU->timecvStep %lf\n",mCPU->timecvStep);
+    printf("mCPU->timecvStep %lf\n",mCPU->timecvStep);
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     mCPU->timeBiConjGrad=mCPU->timecvStep*mCPU->mdvCPU.dtBCG/mCPU->mdvCPU.dtcudaDeviceCVode;
     mCPU->counterBiConjGrad+= mCPU->mdvCPU.counterBCG;

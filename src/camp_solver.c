@@ -462,10 +462,8 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
   int n_cells;      // number of cells to solve simultaneously
   int *var_type;    // state variable types
 
-#ifdef DEBUG_solver_initialize
-
+#ifndef DEBUG_solver_initialize
   printf("camp solver_initialize start \n");
-
 #endif
 
   // Seed the random number generator
@@ -528,6 +526,8 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
   // Get the structure of the Jacobian matrix
   sd->J = get_jac_init(sd);
 
+  printf("camp get_jac_init end \n");
+
   sd->model_data.J_init = SUNMatClone(sd->J);
 
   SUNMatCopy(sd->J, sd->model_data.J_init);
@@ -567,10 +567,8 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
   sd->counter_fail_solve_print=0;
 #endif
 
-#ifdef DEBUG_solver_initialize
-
+#ifndef DEBUG_solver_initialize
   printf("solver_initialize end\n");
-
 #endif
 
 #endif
