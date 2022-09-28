@@ -92,7 +92,6 @@ typedef struct {
 }ModelDataVariable; //variables to pass between gpu and cpu (different data between cells)
 
 typedef struct{
-  double* A;
   int*    jA;
   int*    iA;
   double* aux;
@@ -109,7 +108,6 @@ typedef struct{
   int max_n_gpu_thread;
   int max_n_gpu_blocks;
   int *map_state_derivCPU;
-  int nnz;
   ModelDataVariable mdvCPU; //cpu equivalent to gpu
 #ifdef CAMP_DEBUG_GPU
   int counterNewtonIt;
@@ -154,6 +152,10 @@ typedef struct{
 } ModelDataCPU;
 
 typedef struct {
+
+    //CPU (Needed because each GPU points a different CPU pointer
+    double* A;
+
     //Allocated from CPU (used during CPU / need some cudamemcpy)
     int *map_state_deriv;
     double *deriv_data;
@@ -201,6 +203,7 @@ typedef struct {
     double *dx;
     double* dtempv;
     int nrows;
+    int nnz;
     int n_shr_empty;
     int maxIt;
     int n_cells;
