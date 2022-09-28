@@ -135,11 +135,13 @@ void init_jac_cuda_cvode(SolverData *sd){
     cudaMalloc((void **) &mGPU->J_tmp2, mCPU->deriv_size);
     cudaMalloc((void **) &mGPU->jac_map, sizeof(JacMap) * md->n_mapped_values);
     HANDLE_ERROR(cudaMalloc((void **) &mGPU->n_mapped_values, 1 * sizeof(int)));
-#ifdef DEBUG_init_jac_cuda
+#ifndef DEBUG_init_jac_cuda
     printf("md->n_per_cell_dep_var %d sd->jac.num_spec %d md->n_per_cell_solver_jac_elem %d "
-           "md->n_mapped_values %d jac->num_elem %d offset_nnz_J_solver %d  mCPU->nnz_J_solver %d\n",
+           "md->n_mapped_values %d jac->num_elem %d offset_nnz_J_solver %d  mCPU->nnz_J_solver %d "
+           "mCPU->jac_size/sizeof(double) %d SM_NNZ_S(sd->J) %d\n",
            md->n_per_cell_dep_var,sd->jac.num_spec,md->n_per_cell_solver_jac_elem, md->n_mapped_values,
-           sd->jac.num_elem, offset_nnz_J_solver,mCPU->nnz_J_solver);
+           sd->jac.num_elem, offset_nnz_J_solver,mCPU->nnz_J_solver,mCPU->jac_size/sizeof(double),
+           SM_NNZ_S(sd->J));
 #endif
     printf("init_jac_cuda start \n");
     HANDLE_ERROR(cudaMemcpy(mGPU->dA, sd->J+offset_nnz_J_solver, mCPU->jac_size, cudaMemcpyHostToDevice));
@@ -438,10 +440,10 @@ void swapCSC_CSR_ODE(SolverData *sd){
     cudaSetDevice(iDevice);
     sd->mGPU = &(sd->mGPUs[iDevice]);
     mGPU = sd->mGPU;
-    cudaMemcpyAsync(mGPU->diA, Bp, (n_row + 1) * sizeof(int), cudaMemcpyHostToDevice,0);
-    cudaMemcpyAsync(mGPU->djA, Bi, nnz * sizeof(int), cudaMemcpyHostToDevice,0);
-    cudaMemcpyAsync(mGPU->dA, Bx, nnz * sizeof(double), cudaMemcpyHostToDevice,0);
-    HANDLE_ERROR(cudaMemcpyAsync(mGPU->jac_map, md->jac_map, sizeof(JacMap) * md->n_mapped_values, cudaMemcpyHostToDevice,0));
+    cudaMemcpy(mGPU->diA, Bp, (n_row + 1) * sizeof(int), cudaMemcpyHostToDevice);
+    cudaMemcpy(mGPU->djA, Bi, nnz * sizeof(int), cudaMemcpyHostToDevice);
+    cudaMemcpy(mGPU->dA, Bx, nnz * sizeof(double), cudaMemcpyHostToDevice);
+    HANDLE_ERROR(cudaMemcpy(mGPU->jac_map, md->jac_map, sizeof(JacMap) * md->n_mapped_values, cudaMemcpyHostToDevice));
   }
   free(Bp);
   free(Bi);
