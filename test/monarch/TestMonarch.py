@@ -762,7 +762,7 @@ def all_timesteps():
     conf.nGPUsCaseBase = 1
     #conf.nGPUsCaseBase = 2
 
-    conf.nGPUsCaseOptimList = [2]
+    conf.nGPUsCaseOptimList = [1,2]
     #conf.nGPUsCaseOptimList = [2]
     #conf.nGPUsCaseOptimList = [1,2]
 
@@ -786,7 +786,7 @@ def all_timesteps():
     # conf.allocatedTasksPerNode = 320
     # conf.allocatedTasksPerNode = get_ntasksPerNode_sbatch() #todo
 
-    conf.cells = [10000]
+    conf.cells = [1000]
     #conf.cells = [100, 500, 1000, 5000, 10000]
     # conf.cells = [50000,100000,500000,1000000]
 

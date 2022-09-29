@@ -488,10 +488,8 @@ void solveBcgCuda(
 #endif
 
 #ifdef DEBUG_SOLVEBCGCUDA_DEEP
-
     //printf("%d ddiag %-le\n",i,ddiag[i]);
     //printf("%d dr0 %-le\n",i, dr0[i]);
-
 #endif
 
     //gpu_axpby(dr0,dtempv,1.0,-1.0,nrows,blocks,threads); // r0=1.0*rhs+-1.0r0 //y=ax+by
@@ -504,9 +502,7 @@ void solveBcgCuda(
 #ifdef CAMP_DEBUG_GPU
     int it=0;
 #endif
-
 #ifdef DEBUG_SOLVEBCGCUDA_DEEP
-
     if(tid==0){
       //printf("%d dr0[%d] %-le\n",it,i,dr0[i]);
       printf("%d %d rho1 %-le\n",it,tid,rho1);
@@ -514,17 +510,11 @@ void solveBcgCuda(
 
     //dvcheck_input_gpud(dx,nrows,"dx");
     //dvcheck_input_gpud(dr0,nrows,"dr0");
-
 #endif
-
-    do
-    {
+    do{
       __syncthreads();
-
       cudaDevicedotxy(dr0, dr0h, &rho1, n_shr_empty);
-
 #ifdef DEBUG_SOLVEBCGCUDA_DEEP
-
       if(tid==0){
       //printf("%d dr0[%d] %-le\n",it,tid,dr0[tid]);
       printf("%d %d rho1 rho0 %-le %-le\n",it,tid,rho1,rho0);
@@ -534,9 +524,7 @@ void solveBcgCuda(
       dvcheck_input_gpud(dr0h,nrows,"dr0h");
       dvcheck_input_gpud(dr0,nrows,"dr0");
     }
-
 #endif
-
       __syncthreads();
       beta = (rho1 / rho0) * (alpha / omega0);
 
@@ -654,10 +642,7 @@ void solveBcgCuda(
       temp1 = sqrtf(temp1);
 
       rho0 = rho1;
-      /**/
       __syncthreads();
-      /**/
-
       //if (tid==0) it++;
       it++;
     } while(it<maxIt && temp1>tolmax);//while(it<maxIt && temp1>tolmax);//while(0);
@@ -669,6 +654,7 @@ void solveBcgCuda(
     //if(it>=maxIt-1)
     //  dvcheck_input_gpud(dr0,nrows,999);
     //dvcheck_input_gpud(dr0,nrows,k++);
+    //if(tid==0) printf("solveBcgCuda end %d\n",it);
   }
 }
 

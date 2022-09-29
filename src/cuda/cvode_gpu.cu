@@ -936,16 +936,23 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     for (int i = 0; i < mGPU->n_cells; i++) {
       cudaMemcpyAsync(&mGPU->sCells[i], &mCPU->mdvCPU, sizeof(ModelDataVariable), cudaMemcpyHostToDevice, stream);
     }
+
+    offset_state += mGPU->state_size_cell * mGPU->n_cells;
+    offset_ncells += mGPU->n_cells;
+    offset_nrows += mGPU->nrows;
+  }
+
+  for (int iDevice = sd->startDevice; iDevice < sd->endDevice; iDevice++) {
+    cudaSetDevice(iDevice);
+    sd->mGPU = &(sd->mGPUs[iDevice]);
+    mGPU = sd->mGPU;
+    cudaStream_t stream = mCPU->streams[iDevice];
     int len_cell = mGPU->nrows / mGPU->n_cells;
     int threads_block = len_cell;
     int blocks = mGPU->n_cells;
     int n_shr_memory = nextPowerOfTwoCVODE(len_cell);
     int n_shr_empty = mGPU->n_shr_empty = n_shr_memory - threads_block;
     cudaGlobalCVode <<<blocks, threads_block, n_shr_memory * sizeof(double), stream>>>(*sd->mGPU);
-
-    offset_state += mGPU->state_size_cell * mGPU->n_cells;
-    offset_ncells += mGPU->n_cells;
-    offset_nrows += mGPU->nrows;
   }
 
   offset_state = 0;

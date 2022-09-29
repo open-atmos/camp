@@ -2602,6 +2602,7 @@ int linsolsetup_gpu(SolverData *sd, CVodeMem cv_mem,int convfail,N_Vector vtemp1
   }
 
 #ifndef LINSOLSOLVEGPU_INCLUDE_CUDAMEMCPY
+  cudaSetDevice(sd->startDevice);
   cudaEventRecord(mCPU->startBCGMemcpy);
 #endif
 
@@ -2618,6 +2619,7 @@ int linsolsetup_gpu(SolverData *sd, CVodeMem cv_mem,int convfail,N_Vector vtemp1
   cudaDeviceSynchronize();
 
 #ifndef LINSOLSOLVEGPU_INCLUDE_CUDAMEMCPY
+  cudaSetDevice(sd->startDevice);
   cudaEventRecord(mCPU->stopBCGMemcpy);
   cudaEventSynchronize(mCPU->stopBCGMemcpy);
   float msBiConjGradMemcpy = 0.0;
@@ -2702,7 +2704,7 @@ int linsolsolve_gpu(SolverData *sd, CVodeMem cv_mem)
     }
 
 #ifndef LINSOLSOLVEGPU_INCLUDE_CUDAMEMCPY
-
+    cudaSetDevice(sd->startDevice);
     cudaEventRecord(mCPU->startBCGMemcpy);
 
     offset_nrows = 0;
@@ -2717,17 +2719,17 @@ int linsolsolve_gpu(SolverData *sd, CVodeMem cv_mem)
       offset_nrows += mGPU->nrows;
     }
     cudaDeviceSynchronize();
-
+    cudaSetDevice(sd->startDevice);
     cudaEventRecord(mCPU->stopBCGMemcpy);
     cudaEventSynchronize(mCPU->stopBCGMemcpy);
     float msBiConjGradMemcpy = 0.0;
     cudaEventElapsedTime(&msBiConjGradMemcpy, mCPU->startBCGMemcpy, mCPU->stopBCGMemcpy);
     mCPU->timeBiConjGradMemcpy+= msBiConjGradMemcpy/1000;
     mCPU->timeBiConjGrad+= msBiConjGradMemcpy/1000;
-
 #endif
 
 #ifdef CAMP_DEBUG_GPU
+    cudaSetDevice(sd->startDevice);
     cudaEventRecord(mCPU->startBCG);
 #endif
 
@@ -2744,7 +2746,6 @@ int linsolsolve_gpu(SolverData *sd, CVodeMem cv_mem)
       }
 
     }
-
 #ifdef CAMP_DEBUG_GPU
     for (int iDevice = sd->startDevice+1; iDevice < sd->endDevice; iDevice++) {
       cudaSetDevice(iDevice);
@@ -2758,11 +2759,10 @@ int linsolsolve_gpu(SolverData *sd, CVodeMem cv_mem)
     mCPU->timeBiConjGrad+= msBiConjGrad/1000;
     mCPU->counterBiConjGrad++;
 #endif
-
 #ifndef LINSOLSOLVEGPU_INCLUDE_CUDAMEMCPY
 
+    cudaSetDevice(sd->startDevice);
     cudaEventRecord(mCPU->startBCGMemcpy);
-
     offset_nrows = 0;
     for (int iDevice = sd->startDevice; iDevice < sd->endDevice; iDevice++) {
       cudaSetDevice(iDevice);
@@ -2790,9 +2790,7 @@ int linsolsolve_gpu(SolverData *sd, CVodeMem cv_mem)
       mGPU = sd->mGPU;
 
 #ifndef CSR_SPMV_CPU
-
       swapCSC_CSR_BCG(sd);
-
 #endif
 
       // Get WRMS norm of correction
