@@ -154,7 +154,7 @@ void free_gpu_cu(SolverData *sd) {
     cudaSetDevice(iDevice);
     sd->mGPU = &(sd->mGPUs[iDevice]);
     mGPU = sd->mGPU;
-    cudaStreamDestroy(mCPU->streams[iDevice]);
+    //cudaStreamDestroy(mCPU->streams[iDevice]);
     //ModelDataGPU Start
     cudaFree(mGPU->map_state_deriv);
     cudaFree(mGPU->deriv_data);

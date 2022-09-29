@@ -472,7 +472,7 @@ int CVode_gpu(void *cvode_mem, realtype tout, N_Vector yout,
   for(;;) {
 
 #ifdef CAMP_DEBUG_GPU
-#ifndef CAMP_PROFILE_DEVICE_FUNCTIONS
+#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
 
     for (int iDevice = sd->startDevice; iDevice < sd->endDevice; iDevice++) {
       cudaSetDevice(iDevice);
@@ -2428,7 +2428,7 @@ int cvNlsNewton_gpu(SolverData *sd, CVodeMem cv_mem, int nflag)
     cudaEventSynchronize(mCPU->stopDerivNewton);
     float msDerivNewton = 0.0;
     cudaEventElapsedTime(&msDerivNewton, mCPU->startDerivNewton, mCPU->stopDerivNewton);
-    mCPU->timeDerivNewton+= msDerivNewton;
+    mCPU->timeDerivNewton+= msDerivNewton/1000;
 
     //mCPU->timeDerivNewton+= clock() - start;
     mCPU->counterDerivNewton++;
@@ -2454,7 +2454,7 @@ int cvNlsNewton_gpu(SolverData *sd, CVodeMem cv_mem, int nflag)
     cudaEventSynchronize(mCPU->stopLinSolSetup);
     float msLinSolSetup = 0.0;
     cudaEventElapsedTime(&msLinSolSetup, mCPU->startLinSolSetup, mCPU->stopLinSolSetup);
-    mCPU->timeLinSolSetup+= msLinSolSetup;
+    mCPU->timeLinSolSetup+= msLinSolSetup/1000;
 
     //mCPU->timeLinSolSetup+= clock() - start;
     mCPU->counterLinSolSetup++;
@@ -2483,6 +2483,7 @@ int cvNlsNewton_gpu(SolverData *sd, CVodeMem cv_mem, int nflag)
     }
 
 #ifdef CAMP_DEBUG_GPU
+    cudaSetDevice(sd->startDevice);
     cudaEventRecord(mCPU->startLinSolSolve);
 #endif
 
@@ -2491,13 +2492,15 @@ int cvNlsNewton_gpu(SolverData *sd, CVodeMem cv_mem, int nflag)
     ier = linsolsolve_gpu(sd, cv_mem);
 
 #ifdef CAMP_DEBUG_GPU
+    cudaSetDevice(sd->startDevice);
     cudaEventRecord(mCPU->stopLinSolSolve);
 
     cudaEventSynchronize(mCPU->stopLinSolSolve);
     float msLinSolSolve = 0.0;
     cudaEventElapsedTime(&msLinSolSolve, mCPU->startLinSolSolve, mCPU->stopLinSolSolve);
-    mCPU->timeLinSolSolve+= msLinSolSolve;
+    mCPU->timeLinSolSolve+= msLinSolSolve/1000;
     mCPU->counterLinSolSolve++;
+    //printf("mCPU->timeLinSolSolve %lf\n",mCPU->timeLinSolSolve);
 #endif
     // If there is a convergence failure and the Jacobian-related
     //   data appears not to be current, loop again with a call to lsetup
@@ -2936,7 +2939,7 @@ int linsolsolve_gpu(SolverData *sd, CVodeMem cv_mem)
     cudaEventSynchronize(mCPU->stopDerivSolve);
     float msDerivSolve = 0.0;
     cudaEventElapsedTime(&msDerivSolve, mCPU->startDerivSolve, mCPU->stopDerivSolve);
-    mCPU->timeDerivSolve+= msDerivSolve;
+    mCPU->timeDerivSolve+= msDerivSolve/1000;
 
     //mCPU->timeDerivSolve+= clock() - start;
     mCPU->counterDerivSolve++;
