@@ -74,7 +74,7 @@ typedef struct {
     //Counters (e.g. iterations of function cvnlsNewton)
     int nstlj;
 #ifdef CAMP_DEBUG_GPU
-#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
+#ifndef CAMP_PROFILE_DEVICE_FUNCTIONS
     int countercvStep;
     int counterBCGInternal;
     int counterBCG;
@@ -109,6 +109,7 @@ typedef struct{
   int max_n_gpu_blocks;
   int *map_state_derivCPU;
   ModelDataVariable mdvCPU; //cpu equivalent to gpu
+  cudaStream_t *streams;
 #ifdef CAMP_DEBUG_GPU
   int counterNewtonIt;
   int counterLinSolSetup;
@@ -147,7 +148,6 @@ typedef struct{
   double timecvStep;
   cudaEvent_t startcvStep;
   cudaEvent_t stopcvStep;
-
 #endif
 } ModelDataCPU;
 
@@ -230,29 +230,23 @@ typedef struct {
     double replacement_value;
     int *flag;
     int *flagCells;
-
     //f_cuda
     int state_size_cell;
-
     //cudacvNewtonIteration
     double* cv_acor;
     double* dzn;
     double* dewt;
-
     //Auxiliar variables
     double* dsavedJ;
-
 #ifdef DEV_CSR_REACTIONS
     int *colARXN;
     int *jARXN;
     int *iARXN;
 #endif
-
     ModelDataVariable *mdv; //device
     ModelDataVariable *mdvo; //out device
     ModelDataVariable *s;
     ModelDataVariable *sCells;
-
     //Constant during solving
     double init_time_step;
     int cv_mxstep;
@@ -266,10 +260,9 @@ typedef struct {
     double cv_tstop;
     int cv_tstopset; //Used as bool
     double cv_nlscoef;
-
 //ODE stats
 #ifdef CAMP_DEBUG_GPU
-#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
+#ifndef CAMP_PROFILE_DEVICE_FUNCTIONS
     int clock_khz;
 #endif
 #endif
