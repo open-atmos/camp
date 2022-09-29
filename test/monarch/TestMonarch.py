@@ -762,7 +762,7 @@ def all_timesteps():
     conf.nGPUsCaseBase = 1
     #conf.nGPUsCaseBase = 2
 
-    conf.nGPUsCaseOptimList = [1,2]
+    conf.nGPUsCaseOptimList = [2]
     #conf.nGPUsCaseOptimList = [2]
     #conf.nGPUsCaseOptimList = [1,2]
 
