@@ -526,8 +526,6 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
   // Get the structure of the Jacobian matrix
   sd->J = get_jac_init(sd);
 
-  printf("camp get_jac_init end \n");
-
   sd->model_data.J_init = SUNMatClone(sd->J);
 
   SUNMatCopy(sd->J, sd->model_data.J_init);

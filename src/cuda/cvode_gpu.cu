@@ -77,7 +77,7 @@ void init_jac_partials_cvode(double* production_partials, double* loss_partials)
 int jacobian_initialize_cuda_cvode(SolverData *sd) {
   ModelDataGPU *mGPU = sd->mGPU;
   Jacobian *jac = &sd->jac;
-#ifndef DEBUG_jacobian_initialize_gpu
+#ifdef DEBUG_jacobian_initialize_gpu
   printf("jacobian_initialize_gpu start \n");
 #endif
   int offset_nnz = 0;
@@ -99,7 +99,7 @@ int jacobian_initialize_cuda_cvode(SolverData *sd) {
     init_jac_partials_cvode <<<blocks,threads_block>>>(jacgpu->production_partials,jacgpu->loss_partials);
     offset_nnz += num_elem;
   }
-#ifndef DEBUG_jacobian_initialize_gpu
+#ifdef DEBUG_jacobian_initialize_gpu
   printf("jacobian_initialize_gpu end \n");
 #endif
   return 1;
@@ -115,7 +115,7 @@ void init_jac_cuda_cvode(SolverData *sd){
   ModelData *md = &(sd->model_data);
   ModelDataGPU *mGPU;
   ModelDataCPU *mCPU = &(sd->mCPU);
-#ifndef DEBUG_init_jac_cuda
+#ifdef DEBUG_init_jac_cuda
   printf("init_jac_cuda start \n");
 #endif
   int offset_nnz_J_solver = 0;
@@ -124,7 +124,6 @@ void init_jac_cuda_cvode(SolverData *sd){
     cudaSetDevice(iDevice);
     sd->mGPU = &(sd->mGPUs[iDevice]);
     mGPU = sd->mGPU;
-
     mCPU->jac_size = md->n_per_cell_solver_jac_elem * mGPU->n_cells * sizeof(double);
     mCPU->nnz_J_solver = SM_NNZ_S(md->J_solver)/md->n_cells*mGPU->n_cells;
     cudaMalloc((void **) &mGPU->dA, mCPU->jac_size);
@@ -135,7 +134,7 @@ void init_jac_cuda_cvode(SolverData *sd){
     cudaMalloc((void **) &mGPU->J_tmp2, mCPU->deriv_size);
     cudaMalloc((void **) &mGPU->jac_map, sizeof(JacMap) * md->n_mapped_values);
     HANDLE_ERROR(cudaMalloc((void **) &mGPU->n_mapped_values, 1 * sizeof(int)));
-#ifndef DEBUG_init_jac_cuda
+#ifdef DEBUG_init_jac_cuda
     printf("md->n_per_cell_dep_var %d sd->jac.num_spec %d md->n_per_cell_solver_jac_elem %d "
            "md->n_mapped_values %d jac->num_elem %d offset_nnz_J_solver %d  mCPU->nnz_J_solver %d "
            "mCPU->jac_size/sizeof(double) %d SM_NNZ_S(sd->J) %d\n",
@@ -143,18 +142,15 @@ void init_jac_cuda_cvode(SolverData *sd){
            sd->jac.num_elem, offset_nnz_J_solver,mCPU->nnz_J_solver,mCPU->jac_size/sizeof(double),
            SM_NNZ_S(sd->J));
 #endif
-    printf("init_jac_cuda start \n");
-    HANDLE_ERROR(cudaMemcpy(mGPU->dA, sd->J+offset_nnz_J_solver, mCPU->jac_size, cudaMemcpyHostToDevice));
-    printf("init_jac_cuda start \n");
+    double *J = SM_DATA_S(sd->J)+offset_nnz_J_solver;
+    HANDLE_ERROR(cudaMemcpy(mGPU->dA, J, mCPU->jac_size, cudaMemcpyHostToDevice));
     double *J_solver = SM_DATA_S(md->J_solver)+offset_nnz_J_solver;
     cudaMemcpy(mGPU->J_solver, J_solver, mCPU->jac_size, cudaMemcpyHostToDevice);
-    printf("init_jac_cuda start \n");
     double *J_state = N_VGetArrayPointer(md->J_state)+offset_nrows;
     HANDLE_ERROR(cudaMemcpy(mGPU->J_state, J_state, mCPU->deriv_size, cudaMemcpyHostToDevice));
     double *J_deriv = N_VGetArrayPointer(md->J_deriv)+offset_nrows;
     double *J_tmp2 = N_VGetArrayPointer(md->J_tmp2)+offset_nrows;
     HANDLE_ERROR(cudaMemcpy(mGPU->J_deriv, J_deriv, mCPU->deriv_size, cudaMemcpyHostToDevice));
-    printf("init_jac_cuda start \n");
     cudaDeviceProp prop;
     cudaGetDeviceProperties(&prop, iDevice);
     int threads_block = prop.maxThreadsPerBlock;;
@@ -162,12 +158,11 @@ void init_jac_cuda_cvode(SolverData *sd){
     init_J_tmp2_cuda_cvode <<<blocks,threads_block>>>(mGPU->J_tmp2);
     HANDLE_ERROR(cudaMemcpy(mGPU->jac_map, md->jac_map, sizeof(JacMap) * md->n_mapped_values, cudaMemcpyHostToDevice));
     HANDLE_ERROR(cudaMemcpy(mGPU->n_mapped_values, &md->n_mapped_values, 1 * sizeof(int), cudaMemcpyHostToDevice));
-    printf("init_jac_cuda start \n");
     offset_nnz_J_solver += mCPU->nnz_J_solver;
     offset_nrows += md->n_per_cell_dep_var* mGPU->n_cells;
   }
   jacobian_initialize_cuda_cvode(sd);
-#ifndef DEBUG_init_jac_cuda
+#ifdef DEBUG_init_jac_cuda
   printf("init_jac_cuda end \n");
 #endif
 }
@@ -201,7 +196,7 @@ void set_int_double_cuda_cvode(
 void solver_init_int_double_cuda_cvode(SolverData *sd) {
   ModelData *md = &(sd->model_data);
   ModelDataCPU *mCPU = &(sd->mCPU);
-#ifndef DEBUG_solver_init_int_double_gpu
+#ifdef DEBUG_solver_init_int_double_gpu
   printf("solver_init_int_double_cuda_cvode start \n");
 #endif
   for (int iDevice = sd->startDevice; iDevice < sd->endDevice; iDevice++) {
@@ -223,7 +218,7 @@ void solver_init_int_double_cuda_cvode(SolverData *sd) {
     );
 #endif
   }
-#ifndef DEBUG_solver_init_int_double_gpu
+#ifdef DEBUG_solver_init_int_double_gpu
   printf("solver_init_int_double_cuda_cvode end \n");
 #endif
 }
@@ -237,6 +232,9 @@ void solver_new_gpu_cu_cvode(SolverData *sd) {
   int n_rxn=md->n_rxn;
   int n_rxn_env_param=md->n_rxn_env_data;
   int n_cells_total=md->n_cells;
+#ifdef DEBUG_solver_new_gpu_cu_cvode
+  printf("solver_new_gpu_cu_cvode start \n");
+#endif
 #ifdef DEV_CPUGPU
   sd->nCellsGPUPerc=0.7;
   n_cells_total *= sd->nCellsGPUPerc;
@@ -250,21 +248,16 @@ void solver_new_gpu_cu_cvode(SolverData *sd) {
            , sd->nDevices, nDevicesMax);
     exit(0);
   }
-#ifndef DEBUG_solver_new_gpu_cu_cvode
-  printf("solver_new_gpu_cu_cvode start \n");
-#endif
   for (int iDevice = sd->startDevice; iDevice < sd->endDevice; iDevice++) {
   cudaSetDevice(iDevice);
   sd->mGPU = &(sd->mGPUs[iDevice]);
   mGPU = sd->mGPU;
-
   int n_cells = int(n_cells_total / sd->nDevices);
   if (remainder!=0 && iDevice==0 && n_cells_total != 1){
     //printf("WARNING:  PENDING TO CHECK THAT WORKS CASE: sd->nDevicesMODn_cells!=0\n");
     //printf("remainder %d n_cells_total %d nDevices %d n_cells %d\n",remainder,n_cells_total,sd->nDevices,n_cells);
     n_cells+=remainder;
   }
-
   mGPU->n_cells=n_cells;
   mCPU->state_size = n_state_var * n_cells * sizeof(double);
   mCPU->deriv_size = n_dep_var * n_cells * sizeof(double);
@@ -272,7 +265,6 @@ void solver_new_gpu_cu_cvode(SolverData *sd) {
   mCPU->rxn_env_data_size = n_rxn_env_param * n_cells * sizeof(double);
   mCPU->rxn_env_data_idx_size = (n_rxn+1) * sizeof(int);
   mCPU->map_state_deriv_size = n_dep_var * n_cells * sizeof(int);
-
   cudaDeviceProp prop;
   cudaGetDeviceProperties(&prop, iDevice);
   mCPU->max_n_gpu_thread = prop.maxThreadsPerBlock;
@@ -282,21 +274,17 @@ void solver_new_gpu_cu_cvode(SolverData *sd) {
     printf("\nWarning: More blocks assigned: %d than maximum block numbers: %d",
            n_blocks, mCPU->max_n_gpu_blocks);
   }
-
   HANDLE_ERROR(cudaMalloc((void **) &mGPU->deriv_data, mCPU->deriv_size));
   mGPU->n_rxn=md->n_rxn;
   mGPU->n_rxn_env_data=md->n_rxn_env_data;
-
   cudaMalloc((void **) &mGPU->state, mCPU->state_size);
   cudaMalloc((void **) &mGPU->env, mCPU->env_size);
   cudaMalloc((void **) &mGPU->rxn_env_data, mCPU->rxn_env_data_size);
   cudaMalloc((void **) &mGPU->rxn_env_data_idx, mCPU->rxn_env_data_idx_size);
   HANDLE_ERROR(cudaMalloc((void **) &mGPU->map_state_deriv, mCPU->map_state_deriv_size));
-
   int num_spec = md->n_per_cell_dep_var*mGPU->n_cells;
   cudaMalloc((void **) &(mGPU->production_rates),num_spec*sizeof(mGPU->production_rates));
   cudaMalloc((void **) &(mGPU->loss_rates),num_spec*sizeof(mGPU->loss_rates));
-
   mCPU->map_state_derivCPU = (int *)malloc(mCPU->map_state_deriv_size);
   int i_dep_var = 0;
   for (int i_cell = 0; i_cell < n_cells; i_cell++) {
@@ -318,7 +306,7 @@ void solver_new_gpu_cu_cvode(SolverData *sd) {
            " use CPU case instead (More info: https://earth.bsc.es/gitlab/ac/camp/-/issues/49 \n");
     exit(0);
   }
-#ifndef DEBUG_solver_new_gpu_cu_cvode
+#ifdef DEBUG_solver_new_gpu_cu_cvode
   printf("solver_new_gpu_cu_cvode end \n");
 #endif
 }
@@ -460,7 +448,7 @@ void constructor_cvode_gpu(CVodeMem cv_mem, SolverData *sd){
   SUNMatrix J = cvdls_mem->A;
   sd->flagCells = (int *) malloc((md->n_cells) * sizeof(int));
   ModelDataGPU *mGPU = sd->mGPU;
-#ifndef DEBUG_constructor_cvode_gpu
+#ifdef DEBUG_constructor_cvode_gpu
   printf("DEBUG_constructor_cvode_gpu start \n");
 #endif
   solver_new_gpu_cu_cvode(sd);
@@ -474,7 +462,7 @@ void constructor_cvode_gpu(CVodeMem cv_mem, SolverData *sd){
   cudaSetDevice(sd->startDevice);
   sd->mGPU = &(sd->mGPUs[sd->startDevice]);
   mGPU = sd->mGPU;
-#ifndef DEBUG_constructor_cvode_gpu
+#ifdef DEBUG_constructor_cvode_gpu
   printf("DEBUG_constructor_cvode_gpu start2 \n");
 #endif
 #ifdef CAMP_DEBUG_GPU

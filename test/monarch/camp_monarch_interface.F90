@@ -186,7 +186,7 @@ contains
       this%n_cells=n_cells
     end if
 
-    print*,"camp_monarch_interface_t start"
+    !print*,"camp_monarch_interface_t start"
     this%interface_input_file=interface_config_file
     this%ADD_EMISIONS=ADD_EMISIONS
 
