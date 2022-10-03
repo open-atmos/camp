@@ -73,7 +73,7 @@ void set_jac_data_gpu(SolverData *sd, double *J){
 
     offset_nnz_J_solver += mCPU->nnz_J_solver;
     offset_nrows += md->n_per_cell_dep_var* mGPU->n_cells;
-    cudaMemcpy(mGPU->djA, mCPU->jA, mCPU->nnz/mGPU->n_cells * sizeof(int), cudaMemcpyHostToDevice);
+    cudaMemcpy(mGPU->djA, mCPU->jA, mGPU->nnz/mGPU->n_cells * sizeof(int), cudaMemcpyHostToDevice);
     cudaMemcpy(mGPU->diA, mCPU->iA, (mGPU->nrows/mGPU->n_cells + 1) * sizeof(int), cudaMemcpyHostToDevice);
   }
 }
@@ -146,7 +146,6 @@ int rxn_calc_deriv_gpu(SolverData *sd, N_Vector y, N_Vector deriv, double time_s
 }
 
 void free_gpu_cu(SolverData *sd) {
-
   ModelDataGPU *mGPU = sd->mGPU;
   ModelDataCPU *mCPU = &(sd->mCPU);
   //printf("free_gpu_cu start\n");
@@ -155,6 +154,7 @@ void free_gpu_cu(SolverData *sd) {
     cudaSetDevice(iDevice);
     sd->mGPU = &(sd->mGPUs[iDevice]);
     mGPU = sd->mGPU;
+    //cudaStreamDestroy(mCPU->streams[iDevice]);
     //ModelDataGPU Start
     cudaFree(mGPU->map_state_deriv);
     cudaFree(mGPU->deriv_data);

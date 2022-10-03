@@ -345,8 +345,8 @@ def run(conf):
         Path(pathNvprof).mkdir(parents=True, exist_ok=True)
         pathNvprof = pathNvprof+ conf.caseMulticellsOnecell \
                      + str(conf.nCells) + "Cells" +  ".nvprof "
-        #exec_str += "nvprof --analysis-metrics -f -o " + pathNvprof #all metrics
-        exec_str += "nvprof --print-gpu-trace " #registers per thread
+        exec_str += "nvprof --analysis-metrics -f -o " + pathNvprof #all metrics
+        #exec_str += "nvprof --print-gpu-trace " #registers per thread
         # --print-gpu-summary
         print("Saving profiling file in ", os.path.abspath(os.getcwd()) \
               + "/" + pathNvprof)
@@ -738,8 +738,8 @@ def all_timesteps():
     conf = TestMonarch()
 
     # conf.chemFile = "simple"
-    conf.chemFile = "monarch_cb05"
-    #conf.chemFile = "monarch_binned"
+    #conf.chemFile = "monarch_cb05"
+    conf.chemFile = "monarch_binned"
 
     conf.diffCellsL = []
     conf.diffCellsL.append("Realistic")
@@ -762,20 +762,20 @@ def all_timesteps():
     conf.nGPUsCaseBase = 1
     #conf.nGPUsCaseBase = 2
 
-    #conf.nGPUsCaseOptimList = [1]
-    conf.nGPUsCaseOptimList = [2]
-    # conf.nGPUsCaseOptimList = [1,2,3,4]
+    conf.nGPUsCaseOptimList = [1]
+    #conf.nGPUsCaseOptimList = [2]
+    #conf.nGPUsCaseOptimList = [1,2]
 
     conf.mpi = "yes"
     # conf.mpi = "no"
 
-    #conf.mpiProcessesCaseBase = 1
-    conf.mpiProcessesCaseBase = 20
+    conf.mpiProcessesCaseBase = 1
+    #conf.mpiProcessesCaseBase = 40
 
     conf.mpiProcessesCaseOptimList.append(1)
-    #conf.mpiProcessesCaseOptimList.append(20)
+    #conf.mpiProcessesCaseOptimList.append(40)
     # conf.mpiProcessesCaseOptimList = [10,20,40]
-    # conf.mpiProcessesCaseOptimList = [1,4,8,16,32,40]
+    # conf.mpiProcessesCaseOptSet Multi-GPusimList = [1,4,8,16,32,40]
 
     conf.allocatedNodes = 1
     # conf.allocatedNodes = 4
@@ -790,7 +790,7 @@ def all_timesteps():
     #conf.cells = [100, 500, 1000, 5000, 10000]
     # conf.cells = [50000,100000,500000,1000000]
 
-    conf.timeSteps = 2
+    conf.timeSteps = 10
     #conf.timeSteps = 720
 
     conf.timeStepsDt = 2
@@ -811,14 +811,14 @@ def all_timesteps():
 
     conf.casesOptim = []
     #conf.casesOptim.append("CPU One-cell")
-    #conf.casesOptim.append("CPU Multi-cells")
+    conf.casesOptim.append("CPU Multi-cells")
     # conf.casesOptim.append("GPU One-cell")
     # conf.casesOptim.append("GPU Multi-cells")
     # conf.casesOptim.append("GPU Block-cellsNhalf")
     #conf.casesOptim.append("GPU Block-cellsN")
     #conf.casesOptim.append("GPU Block-cells1")
     #conf.casesOptim.append("CPU EBI")
-    conf.casesOptim.append("GPU BDF")
+    #conf.casesOptim.append("GPU BDF")
     #conf.casesOptim.append("GPU CPU")
     #conf.casesOptim.append("GPU maxrregcount-64") #wrong 10,000 cells
     # conf.casesOptim.append("GPU maxrregcount-68")
@@ -836,7 +836,7 @@ def all_timesteps():
     conf.plotYKey = "Speedup timecvStep"
     # conf.plotYKey = "Speedup timecvStep normalized by countercvStep"
     #conf.plotYKey = "Speedup countercvStep"
-    #conf.plotYKey = "Speedup device timecvStep" //pending fix bug https://earth.bsc.es/gitlab/ac/camp/-/issues/124
+    #conf.plotYKey = "Speedup device timecvStep"
     # conf.plotYKey = "Percentage data transfers CPU-GPU [%]"
     #conf.plotYKey = "MAPE"
     # conf.plotYKey ="SMAPE"
@@ -844,7 +844,7 @@ def all_timesteps():
     # conf.MAPETol = 1.0E-6
 
     # conf.plotXKey = "MPI processes"
-    # conf.plotXKey = "GPUs"
+    #conf.plotXKey = "GPUs"
 
     """END OF CONFIGURATION VARIABLES"""
 

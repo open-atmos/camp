@@ -92,7 +92,6 @@ typedef struct {
 }ModelDataVariable; //variables to pass between gpu and cpu (different data between cells)
 
 typedef struct{
-  double* A;
   int*    jA;
   int*    iA;
   double* aux;
@@ -109,8 +108,8 @@ typedef struct{
   int max_n_gpu_thread;
   int max_n_gpu_blocks;
   int *map_state_derivCPU;
-  int nnz;
   ModelDataVariable mdvCPU; //cpu equivalent to gpu
+  cudaStream_t *streams;
 #ifdef CAMP_DEBUG_GPU
   int counterNewtonIt;
   int counterLinSolSetup;
@@ -149,11 +148,14 @@ typedef struct{
   double timecvStep;
   cudaEvent_t startcvStep;
   cudaEvent_t stopcvStep;
-
 #endif
 } ModelDataCPU;
 
 typedef struct {
+
+    //CPU (Needed because each GPU points a different CPU pointer
+    double* A;
+
     //Allocated from CPU (used during CPU / need some cudamemcpy)
     int *map_state_deriv;
     double *deriv_data;
@@ -201,6 +203,7 @@ typedef struct {
     double *dx;
     double* dtempv;
     int nrows;
+    int nnz;
     int n_shr_empty;
     int maxIt;
     int n_cells;
@@ -227,29 +230,23 @@ typedef struct {
     double replacement_value;
     int *flag;
     int *flagCells;
-
     //f_cuda
     int state_size_cell;
-
     //cudacvNewtonIteration
     double* cv_acor;
     double* dzn;
     double* dewt;
-
     //Auxiliar variables
     double* dsavedJ;
-
 #ifdef DEV_CSR_REACTIONS
     int *colARXN;
     int *jARXN;
     int *iARXN;
 #endif
-
     ModelDataVariable *mdv; //device
     ModelDataVariable *mdvo; //out device
     ModelDataVariable *s;
     ModelDataVariable *sCells;
-
     //Constant during solving
     double init_time_step;
     int cv_mxstep;
@@ -263,7 +260,6 @@ typedef struct {
     double cv_tstop;
     int cv_tstopset; //Used as bool
     double cv_nlscoef;
-
 //ODE stats
 #ifdef CAMP_DEBUG_GPU
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS

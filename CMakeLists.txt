@@ -348,10 +348,10 @@ elseif(use_maxrregcount24)
   set(STD_CUDA_FLAGS "--maxrregcount 24 -lineinfo -arch=compute_70 -code=sm_70 -dc --compiler-options '-fPIC' -lcudart -lcublas -lcusolver -lcudadevrt -lcusparse_static -lculibos -lpthread -ldl")
 elseif(use_maxrregcount64)
   add_definitions(-DCAMP_USE_MAXRREGCOUNT64)
-  set(STD_CUDA_FLAGS "--maxrregcount 64 -lineinfo -arch=compute_70 -code=sm_70 -dc --compiler-options '-fPIC' -lcudart -lcublas -lcusolver -lcudadevrt -lcusparse_static -lculibos -lpthread -ldl")
+  set(STD_CUDA_FLAGS "--maxrregcount 64 --default-stream per-thread -lineinfo -arch=compute_70 -code=sm_70 -dc --compiler-options '-fPIC' -lcudart -lcublas -lcusolver -lcudadevrt -lcusparse_static -lculibos -lpthread -ldl")
 else()
   #set(STD_CUDA_FLAGS "-arch=compute_70 -code=sm_70 -dc --compiler-options '-fPIC' -lcusolver -lcudart -lcudadevrt -lcublas -lcusparse_static -lculibos -lpthread -ldl")
-  set(STD_CUDA_FLAGS "-lineinfo -arch=compute_70 -code=sm_70 -dc --compiler-options '-fPIC' -lcudart -lcublas -lcusolver -lcudadevrt -lcusparse_static -lculibos -lpthread -ldl")
+  set(STD_CUDA_FLAGS "--default-stream per-thread -lineinfo -arch=compute_70 -code=sm_70 -dc --compiler-options '-fPIC' -lcudart -lcublas -lcusolver -lcudadevrt -lcusparse_static -lculibos -lpthread -ldl")
 endif()
 
 

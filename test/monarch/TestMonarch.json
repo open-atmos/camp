@@ -6,11 +6,11 @@
     "timeStepsDt": 3,
     "MAPETol": 0.0001,
     "commit": "",
-    "case": "CPU One-cell",
-    "nCells": 25,
-    "caseGpuCpu": "CPU",
-    "caseMulticellsOnecell": "One-cell",
-    "mpiProcesses": 40,
+    "case": "GPU BDF",
+    "nCells": 10000,
+    "caseGpuCpu": "GPU",
+    "caseMulticellsOnecell": "BDF",
+    "mpiProcesses": 1,
     "allocatedNodes": 1,
     "allocatedTasksPerNode": 160,
     "nGPUs": 1,
@@ -18,34 +18,34 @@
     "diffCellsL": [
         "Ideal"
     ],
-    "mpiProcessesCaseBase": 1,
+    "mpiProcessesCaseBase": 40,
     "mpiProcessesCaseOptimList": [
-        40
+        1
     ],
     "nGPUsCaseOptimList": [
         1
     ],
     "cells": [
-        1000
+        10000
     ],
-    "caseBase": "GPU BDF",
+    "caseBase": "CPU One-cell",
     "casesOptim": [
-        "CPU One-cell"
+        "GPU BDF"
     ],
-    "plotYKey": "MAPE",
+    "plotYKey": "Speedup timecvStep",
     "plotXKey": "",
     "is_export": false,
     "is_import": false,
-    "profileCuda": "nsight",
+    "profileCuda": "",
     "is_start_auxiliary_attributes": true,
     "sbatch_job_id": "",
     "datacolumns": [],
     "stdColumns": [],
     "exportPath": "exports",
     "legend": [],
-    "results_file": "_results_all_cells.csv",
+    "results_file": "_solver_stats.csv",
     "plotTitle": "",
-    "nCellsProcesses": 1000,
+    "nCellsProcesses": 10000,
     "itsolverConfigFile": "itsolver_options.txt",
     "campSolverConfigFile": "config_variables_c_solver.txt",
     "nGPUsCaseBase": 1

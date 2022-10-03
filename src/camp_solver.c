@@ -463,9 +463,7 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
   int *var_type;    // state variable types
 
 #ifdef DEBUG_solver_initialize
-
   printf("camp solver_initialize start \n");
-
 #endif
 
   // Seed the random number generator
@@ -568,9 +566,7 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
 #endif
 
 #ifdef DEBUG_solver_initialize
-
   printf("solver_initialize end\n");
-
 #endif
 
 #endif
@@ -843,34 +839,30 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
     }*/
     solver_print_stats(sd->cvode_mem);
 #endif
-
 #ifdef CAMP_DEBUG_GPU
 #ifdef CAMP_USE_MPI
-
       MPI_Comm_rank(MPI_COMM_WORLD, &rank);
       if (rank == 0) {
          printf("CAMP_SOLVER_FAIL %d counterSolve:%d counterDerivCPU:%d rank:%d\n",
                  flag,sd->counterSolve,sd->counterDerivCPU,rank);
       }
-
       sd->counterFail++;
-
 #ifdef EXPORT_CAMP_INPUT
       if (sd->counterFail == 1)
         export_camp_input(sd, init_state, "");
 #endif
-
 #endif
 #endif
       return CAMP_SOLVER_FAIL;
     }
   }
-
   // Update the species concentrations on the state array
   i_dep_var = 0;
+  //printf("NV_Ith_S(sd->y, i_dep_var)\n");
   for (int i_cell = 0; i_cell < n_cells; i_cell++) {
     for (int i_spec = 0; i_spec < n_state_var; i_spec++) {
       if (md->var_type[i_spec] == CHEM_SPEC_VARIABLE) {
+        //printf("%lf ",NV_Ith_S(sd->y, i_dep_var));
         state[i_spec + i_cell * n_state_var] =
             (double)(NV_Ith_S(sd->y, i_dep_var) > 0.0
                          ? NV_Ith_S(sd->y, i_dep_var)
@@ -1159,7 +1151,7 @@ void solver_reset_statistics(void *solver_data, int *counters, double *times)
         mdvCPU.timecalc_Jac=0;
         mdvCPU.timef=0;
         mdvCPU.timeguess_helper=0;
-        #endif
+#endif
         mCPU->timecvStep=0;
       }
       else{

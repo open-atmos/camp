@@ -2428,7 +2428,7 @@ int cvNlsNewton_gpu(SolverData *sd, CVodeMem cv_mem, int nflag)
     cudaEventSynchronize(mCPU->stopDerivNewton);
     float msDerivNewton = 0.0;
     cudaEventElapsedTime(&msDerivNewton, mCPU->startDerivNewton, mCPU->stopDerivNewton);
-    mCPU->timeDerivNewton+= msDerivNewton;
+    mCPU->timeDerivNewton+= msDerivNewton/1000;
 
     //mCPU->timeDerivNewton+= clock() - start;
     mCPU->counterDerivNewton++;
@@ -2454,7 +2454,7 @@ int cvNlsNewton_gpu(SolverData *sd, CVodeMem cv_mem, int nflag)
     cudaEventSynchronize(mCPU->stopLinSolSetup);
     float msLinSolSetup = 0.0;
     cudaEventElapsedTime(&msLinSolSetup, mCPU->startLinSolSetup, mCPU->stopLinSolSetup);
-    mCPU->timeLinSolSetup+= msLinSolSetup;
+    mCPU->timeLinSolSetup+= msLinSolSetup/1000;
 
     //mCPU->timeLinSolSetup+= clock() - start;
     mCPU->counterLinSolSetup++;
@@ -2483,6 +2483,7 @@ int cvNlsNewton_gpu(SolverData *sd, CVodeMem cv_mem, int nflag)
     }
 
 #ifdef CAMP_DEBUG_GPU
+    cudaSetDevice(sd->startDevice);
     cudaEventRecord(mCPU->startLinSolSolve);
 #endif
 
@@ -2491,13 +2492,15 @@ int cvNlsNewton_gpu(SolverData *sd, CVodeMem cv_mem, int nflag)
     ier = linsolsolve_gpu(sd, cv_mem);
 
 #ifdef CAMP_DEBUG_GPU
+    cudaSetDevice(sd->startDevice);
     cudaEventRecord(mCPU->stopLinSolSolve);
 
     cudaEventSynchronize(mCPU->stopLinSolSolve);
     float msLinSolSolve = 0.0;
     cudaEventElapsedTime(&msLinSolSolve, mCPU->startLinSolSolve, mCPU->stopLinSolSolve);
-    mCPU->timeLinSolSolve+= msLinSolSolve;
+    mCPU->timeLinSolSolve+= msLinSolSolve/1000;
     mCPU->counterLinSolSolve++;
+    //printf("mCPU->timeLinSolSolve %lf\n",mCPU->timeLinSolSolve);
 #endif
     // If there is a convergence failure and the Jacobian-related
     //   data appears not to be current, loop again with a call to lsetup
@@ -2558,7 +2561,7 @@ int linsolsetup_gpu(SolverData *sd, CVodeMem cv_mem,int convfail,N_Vector vtemp1
       offset_nrows += mGPU->nrows;
     }
 #ifdef DEBUG_linsolsetup_gpu
-    check_isnand(mCPU->A,mCPU->nnz,"prejac");
+    check_isnand(mGPU->A,mGPU->nnz,"prejac");
 #endif
 
     retval = Jac(cv_mem->cv_tn, cv_mem->cv_y,cv_mem->cv_ftemp, cvdls_mem->A,cvdls_mem->J_data, vtemp1, vtemp2, vtemp3);
@@ -2567,7 +2570,7 @@ int linsolsetup_gpu(SolverData *sd, CVodeMem cv_mem,int convfail,N_Vector vtemp1
     //retval = jac_cuda(cv_mem->cv_tn, cv_mem->cv_y,cv_mem->cv_ftemp, cvdls_mem->A,cvdls_mem->J_data, vtemp1, vtemp2, vtemp3);
 
 #ifdef DEBUG_linsolsetup_gpu
-    check_isnand(mCPU->A,mCPU->nnz,"postjac");
+    check_isnand(mGPU->A,mGPU->nnz,"postjac");
 #endif
 
     if (retval < 0) {
@@ -2602,6 +2605,7 @@ int linsolsetup_gpu(SolverData *sd, CVodeMem cv_mem,int convfail,N_Vector vtemp1
   }
 
 #ifndef LINSOLSOLVEGPU_INCLUDE_CUDAMEMCPY
+  cudaSetDevice(sd->startDevice);
   cudaEventRecord(mCPU->startBCGMemcpy);
 #endif
 
@@ -2611,13 +2615,14 @@ int linsolsetup_gpu(SolverData *sd, CVodeMem cv_mem,int convfail,N_Vector vtemp1
     mGPU = sd->mGPU;
 
     cudaMemcpyAsync(mGPU->diA, mCPU->iA, (mGPU->nrows + 1) * sizeof(int), cudaMemcpyHostToDevice, 0);
-    cudaMemcpyAsync(mGPU->djA, mCPU->jA, mCPU->nnz * sizeof(int), cudaMemcpyHostToDevice, 0);
-    cudaMemcpyAsync(mGPU->dA, mCPU->A, mCPU->nnz * sizeof(double), cudaMemcpyHostToDevice, 0);
+    cudaMemcpyAsync(mGPU->djA, mCPU->jA, mGPU->nnz * sizeof(int), cudaMemcpyHostToDevice, 0);
+    cudaMemcpyAsync(mGPU->dA, mGPU->A, mGPU->nnz * sizeof(double), cudaMemcpyHostToDevice, 0);
 
   }
   cudaDeviceSynchronize();
 
 #ifndef LINSOLSOLVEGPU_INCLUDE_CUDAMEMCPY
+  cudaSetDevice(sd->startDevice);
   cudaEventRecord(mCPU->stopBCGMemcpy);
   cudaEventSynchronize(mCPU->stopBCGMemcpy);
   float msBiConjGradMemcpy = 0.0;
@@ -2632,7 +2637,7 @@ int linsolsetup_gpu(SolverData *sd, CVodeMem cv_mem,int convfail,N_Vector vtemp1
     mGPU = sd->mGPU;
 
     gpu_matScaleAddI(mGPU->nrows,mGPU->dA,mGPU->djA,mGPU->diA,-cv_mem->cv_gamma,mCPU->blocks,mCPU->threads);
-    cudaMemcpy(mCPU->A, mGPU->dA, mCPU->nnz * sizeof(double), cudaMemcpyDeviceToHost);
+    cudaMemcpy(mGPU->A, mGPU->dA, mGPU->nnz * sizeof(double), cudaMemcpyDeviceToHost);
     gpu_diagprecond(mGPU->nrows,mGPU->dA,mGPU->djA,mGPU->diA,mGPU->ddiag,mCPU->blocks,mCPU->threads); //Setup linear solver
 
   }
@@ -2702,7 +2707,7 @@ int linsolsolve_gpu(SolverData *sd, CVodeMem cv_mem)
     }
 
 #ifndef LINSOLSOLVEGPU_INCLUDE_CUDAMEMCPY
-
+    cudaSetDevice(sd->startDevice);
     cudaEventRecord(mCPU->startBCGMemcpy);
 
     offset_nrows = 0;
@@ -2717,17 +2722,17 @@ int linsolsolve_gpu(SolverData *sd, CVodeMem cv_mem)
       offset_nrows += mGPU->nrows;
     }
     cudaDeviceSynchronize();
-
+    cudaSetDevice(sd->startDevice);
     cudaEventRecord(mCPU->stopBCGMemcpy);
     cudaEventSynchronize(mCPU->stopBCGMemcpy);
     float msBiConjGradMemcpy = 0.0;
     cudaEventElapsedTime(&msBiConjGradMemcpy, mCPU->startBCGMemcpy, mCPU->stopBCGMemcpy);
     mCPU->timeBiConjGradMemcpy+= msBiConjGradMemcpy/1000;
     mCPU->timeBiConjGrad+= msBiConjGradMemcpy/1000;
-
 #endif
 
 #ifdef CAMP_DEBUG_GPU
+    cudaSetDevice(sd->startDevice);
     cudaEventRecord(mCPU->startBCG);
 #endif
 
@@ -2744,7 +2749,6 @@ int linsolsolve_gpu(SolverData *sd, CVodeMem cv_mem)
       }
 
     }
-
 #ifdef CAMP_DEBUG_GPU
     for (int iDevice = sd->startDevice+1; iDevice < sd->endDevice; iDevice++) {
       cudaSetDevice(iDevice);
@@ -2758,11 +2762,10 @@ int linsolsolve_gpu(SolverData *sd, CVodeMem cv_mem)
     mCPU->timeBiConjGrad+= msBiConjGrad/1000;
     mCPU->counterBiConjGrad++;
 #endif
-
 #ifndef LINSOLSOLVEGPU_INCLUDE_CUDAMEMCPY
 
+    cudaSetDevice(sd->startDevice);
     cudaEventRecord(mCPU->startBCGMemcpy);
-
     offset_nrows = 0;
     for (int iDevice = sd->startDevice; iDevice < sd->endDevice; iDevice++) {
       cudaSetDevice(iDevice);
@@ -2790,9 +2793,7 @@ int linsolsolve_gpu(SolverData *sd, CVodeMem cv_mem)
       mGPU = sd->mGPU;
 
 #ifndef CSR_SPMV_CPU
-
       swapCSC_CSR_BCG(sd);
-
 #endif
 
       // Get WRMS norm of correction
@@ -2938,7 +2939,7 @@ int linsolsolve_gpu(SolverData *sd, CVodeMem cv_mem)
     cudaEventSynchronize(mCPU->stopDerivSolve);
     float msDerivSolve = 0.0;
     cudaEventElapsedTime(&msDerivSolve, mCPU->startDerivSolve, mCPU->stopDerivSolve);
-    mCPU->timeDerivSolve+= msDerivSolve;
+    mCPU->timeDerivSolve+= msDerivSolve/1000;
 
     //mCPU->timeDerivSolve+= clock() - start;
     mCPU->counterDerivSolve++;
