@@ -647,7 +647,7 @@ void cudaGlobalCVode(ModelDataGPU md_object) {
     __syncthreads();
 #endif
 #endif
-    istate=cudaDeviceCVode(md,md->s);//todo remove md->s from parameters
+    istate=cudaDeviceCVode(md,md->s);//dmdv as a function parameter seems faster than removing it
     __syncthreads();
 #ifdef CAMP_DEBUG_GPU
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
@@ -674,7 +674,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
   ModelDataCPU *mCPU = &(sd->mCPU);
   ModelDataGPU *mGPU;
   ModelData *md = &(sd->model_data);
-  printf("cudaCVode start \n");
+  //printf("cudaCVode start \n");
    // 1. Check and process inputs
   if (cvode_mem == NULL) {
     cvProcessError(NULL, CV_MEM_NULL, "CVODE", "CVode", MSGCV_NO_MEM);
@@ -953,23 +953,8 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     mGPU=&(sd->mGPUs[iDevice]);
     //cudaStream_t stream = mCPU->streams[iDevice];
     cudaStream_t stream = 0;
-    double *ewt = NV_DATA_S(cv_mem->cv_ewt) + offset_nrows;
-    double *acor = NV_DATA_S(cv_mem->cv_acor) + offset_nrows;
-    double *tempv = NV_DATA_S(cv_mem->cv_tempv) + offset_nrows;
-    double *ftemp = NV_DATA_S(cv_mem->cv_ftemp) + offset_nrows;
-    double *cv_last_yn = N_VGetArrayPointer(cv_mem->cv_last_yn) + offset_nrows;
-    double *cv_acor_init = N_VGetArrayPointer(cv_mem->cv_acor_init) + offset_nrows;
     double *youtArray = N_VGetArrayPointer(yout) + offset_nrows;
-    double *cv_Vabstol = N_VGetArrayPointer(cv_mem->cv_Vabstol) + offset_nrows;
-
-    /*
-    cudaMemcpyAsync(ewt, mGPU->dewt, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost, stream);
-    cudaMemcpyAsync(acor, mGPU->cv_acor, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost, stream);
-    cudaMemcpyAsync(tempv, mGPU->dtempv, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost, stream);
-    cudaMemcpyAsync(ftemp, mGPU->dftemp, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost, stream);
-    cudaMemcpyAsync(cv_last_yn, mGPU->cv_last_yn, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost, stream);
-    cudaMemcpyAsync(cv_Vabstol, mGPU->cv_Vabstol, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost, stream);
-*/
+    double *cv_acor_init = N_VGetArrayPointer(cv_mem->cv_acor_init)+offset_nrows;
     cudaMemcpyAsync(cv_acor_init, mGPU->cv_acor_init, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost, stream);
     cudaMemcpyAsync(youtArray, mGPU->yout, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost, stream);
     for (int i = 0; i <= cv_mem->cv_qmax; i++) {//cv_qmax+1 (6)?
@@ -982,25 +967,26 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     offset_nrows += mGPU->nrows;
   }
 #ifdef DEV_CPUGPU
+  printf("todo DEV_CPUGPU: Too much execution time \n");
   int nCellsGPUPerc=sd->nCellsGPUPerc;
   int nCellsGPU = md->n_cells*nCellsGPUPerc;
   int nCellsCPU= md->n_cells - nCellsGPU;
-  double* stotal_state=total_state;
-  total_state+=md->n_per_cell_state_var*nCellsGPU;
+  double* stotal_state=md->total_state;
+  md->total_state+=md->n_per_cell_state_var*nCellsGPU;
   N_Vector sy = N_VClone(sd->y); //todo nvclone(y) or just y=sy?
   //N_Vector sy = y;
-  N_Vector yAux = N_VNew_Serial(n_dep_var * nCellsCPU);
+  N_Vector yAux = N_VNew_Serial(md->n_per_cell_dep_var * nCellsCPU);
   double *yAuxArray = N_VGetArrayPointer(yout);
-  for (int i = 0; i < md->n_per_cell_dep_var*md->nCellsCPU; i++){
+  double *youtArray = N_VGetArrayPointer(yout) + offset_nrows;
+  for (int i = 0; i < md->n_per_cell_dep_var*nCellsCPU; i++){
     yAuxArray[i]=youtArray[i+md->n_per_cell_state_var*nCellsGPU];
   }
   sd->y=N_VClone(yAux);
-  //sleep(2);
-  int istate = CVode(cvode_mem, tout, yout, tret, itask);
-  total_state=stotal_state;
+  istate = CVode(cvode_mem, tout, yout, tret, itask);
+  md->total_state=stotal_state;
   sd->y=N_VClone(sy);
   yAuxArray= N_VGetArrayPointer(sd->y);
-  for (int i = 0; i < md->n_per_cell_dep_var*md->nCellsCPU; i++){
+  for (int i = 0; i < md->n_per_cell_dep_var*nCellsCPU; i++){
     yAuxArray[i+md->n_per_cell_state_var*nCellsGPU]=youtArray[i];
   }
   if (istate !=CV_SUCCESS ){

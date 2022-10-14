@@ -8,7 +8,7 @@
 import matplotlib as mpl
 
 mpl.use('TkAgg')
-#import plot_functions #comment to save ~2s execution time
+import plot_functions #comment to save ~2s execution time
 import math_functions
 import sys, getopt
 import os
@@ -731,7 +731,7 @@ def plot_cases(conf):
     print(namey, ":", datay)
 
 
-    #plot_functions.plotsns(namex, namey, datax, datay, conf.stdColumns, conf.plotTitle, conf.legend)
+    plot_functions.plotsns(namex, namey, datax, datay, conf.stdColumns, conf.plotTitle, conf.legend)
 
 
 def all_timesteps():
@@ -762,15 +762,15 @@ def all_timesteps():
     conf.nGPUsCaseBase = 1
     #conf.nGPUsCaseBase = 2
 
-    conf.nGPUsCaseOptimList = [1,2]
+    conf.nGPUsCaseOptimList = [1]
     #conf.nGPUsCaseOptimList = [2]
     #conf.nGPUsCaseOptimList = [1,2]
 
     conf.mpi = "yes"
     # conf.mpi = "no"
 
-    #conf.mpiProcessesCaseBase = 1
-    conf.mpiProcessesCaseBase = 40
+    conf.mpiProcessesCaseBase = 1
+    #conf.mpiProcessesCaseBase = 40
 
     conf.mpiProcessesCaseOptimList.append(1)
     #conf.mpiProcessesCaseOptimList.append(40)
@@ -786,11 +786,11 @@ def all_timesteps():
     # conf.allocatedTasksPerNode = 320
     # conf.allocatedTasksPerNode = get_ntasksPerNode_sbatch() #todo
 
-    conf.cells = [1000]
+    conf.cells = [10,100]
     #conf.cells = [100, 500, 1000, 5000, 10000]
     # conf.cells = [50000,100000,500000,1000000]
 
-    conf.timeSteps = 1
+    conf.timeSteps = 10
     #conf.timeSteps = 720
 
     conf.timeStepsDt = 2
@@ -816,7 +816,7 @@ def all_timesteps():
     # conf.casesOptim.append("GPU Multi-cells")
     # conf.casesOptim.append("GPU Block-cellsNhalf")
     #conf.casesOptim.append("GPU Block-cellsN")
-    #conf.casesOptim.append("GPU Block-cells1")
+    conf.casesOptim.append("GPU Block-cells1")
     #conf.casesOptim.append("CPU EBI")
     conf.casesOptim.append("GPU BDF")
     #conf.casesOptim.append("GPU CPU")
