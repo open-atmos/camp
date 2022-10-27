@@ -838,14 +838,14 @@ def all_timesteps():
     # conf.casesOptim.append("GPU maxrregcount-24")
 
     #conf.plotYKey = "Speedup timeCVode"
-    conf.plotYKey = "Speedup normalized counterLS"
+    #conf.plotYKey = "Speedup normalized counterLS"
     #conf.plotYKey = "Speedup normalized timeLS"
     # conf.plotYKey = "Speedup normalized computational timeLS"
     # conf.plotYKey = "Speedup counterBCG"
     # conf.plotYKey = "Speedup normalized counterBCG"
     # conf.plotYKey = "Speedup total iterations - counterBCG"
     # conf.plotYKey = "Speedup BCG iteration (Comp.timeLS/counterBCG)"
-    #conf.plotYKey = "Speedup timecvStep"
+    conf.plotYKey = "Speedup timecvStep"
     # conf.plotYKey = "Speedup timecvStep normalized by countercvStep"
     #conf.plotYKey = "Speedup countercvStep"
     #conf.plotYKey = "Speedup device timecvStep"

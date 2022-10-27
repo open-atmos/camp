@@ -80,25 +80,20 @@ int jacobian_initialize_cuda_cvode(SolverData *sd) {
 #ifdef DEBUG_jacobian_initialize_gpu
   printf("jacobian_initialize_gpu start \n");
 #endif
-  int offset_nnz = 0;
-  for (int iDevice = sd->startDevice; iDevice < sd->endDevice; iDevice++) {
-    //cudaSetDevice(iDevice);
-    //sd->mGPU = &(sd->mGPUs[iDevice]);
-    mGPU = sd->mGPU;
+  mGPU = sd->mGPU;
+  JacobianGPU *jacgpu = &(mGPU->jac);
+  cudaMalloc((void **) &jacgpu->num_elem, 1 * sizeof(jacgpu->num_elem));
+  cudaMemcpy(jacgpu->num_elem, &jac->num_elem, 1 * sizeof(jacgpu->num_elem), cudaMemcpyHostToDevice);
+  int num_elem = jac->num_elem * mGPU->n_cells;
+  cudaMalloc((void **) &(jacgpu->production_partials), num_elem * sizeof(jacgpu->production_partials));
+  HANDLE_ERROR(cudaMalloc((void **) &(jacgpu->loss_partials), num_elem * sizeof(jacgpu->loss_partials)));
+  int iDevice=0;
+  cudaDeviceProp prop;
+  cudaGetDeviceProperties(&prop, iDevice);
+  int threads_block = prop.maxThreadsPerBlock;
+  int blocks = (num_elem +threads_block - 1) / threads_block;
+  init_jac_partials_cvode <<<blocks,threads_block>>>(jacgpu->production_partials,jacgpu->loss_partials);
 
-    JacobianGPU *jacgpu = &(mGPU->jac);
-    cudaMalloc((void **) &jacgpu->num_elem, 1 * sizeof(jacgpu->num_elem));
-    cudaMemcpy(jacgpu->num_elem, &jac->num_elem, 1 * sizeof(jacgpu->num_elem), cudaMemcpyHostToDevice);
-    int num_elem = jac->num_elem * mGPU->n_cells;
-    cudaMalloc((void **) &(jacgpu->production_partials), num_elem * sizeof(jacgpu->production_partials));
-    HANDLE_ERROR(cudaMalloc((void **) &(jacgpu->loss_partials), num_elem * sizeof(jacgpu->loss_partials)));
-    cudaDeviceProp prop;
-    cudaGetDeviceProperties(&prop, iDevice);
-    int threads_block = prop.maxThreadsPerBlock;
-    int blocks = (num_elem +threads_block - 1) / threads_block;
-    init_jac_partials_cvode <<<blocks,threads_block>>>(jacgpu->production_partials,jacgpu->loss_partials);
-    offset_nnz += num_elem;
-  }
 #ifdef DEBUG_jacobian_initialize_gpu
   printf("jacobian_initialize_gpu end \n");
 #endif
@@ -118,49 +113,42 @@ void init_jac_cuda_cvode(SolverData *sd){
 #ifdef DEBUG_init_jac_cuda
   printf("init_jac_cuda start \n");
 #endif
-  int offset_nnz_J_solver = 0;
-  int offset_nrows = 0;
-  for (int iDevice = sd->startDevice; iDevice < sd->endDevice; iDevice++) {
-    //cudaSetDevice(iDevice);
-    //sd->mGPU = &(sd->mGPUs[iDevice]);
-    mGPU = sd->mGPU;
-    mCPU->jac_size = md->n_per_cell_solver_jac_elem * mGPU->n_cells * sizeof(double);
-    mCPU->nnz_J_solver = SM_NNZ_S(md->J_solver)/md->n_cells*mGPU->n_cells;
-    cudaMalloc((void **) &mGPU->dA, mCPU->jac_size);
-    cudaMalloc((void **) &mGPU->J_solver, mCPU->jac_size);
-    cudaMalloc((void **) &mGPU->J_state, mCPU->deriv_size);
-    cudaMalloc((void **) &mGPU->J_deriv, mCPU->deriv_size);
-    cudaMalloc((void **) &mGPU->J_tmp, mCPU->deriv_size);
-    cudaMalloc((void **) &mGPU->J_tmp2, mCPU->deriv_size);
-    cudaMalloc((void **) &mGPU->jac_map, sizeof(JacMap) * md->n_mapped_values);
-    HANDLE_ERROR(cudaMalloc((void **) &mGPU->n_mapped_values, 1 * sizeof(int)));
+  mGPU = sd->mGPU;
+  mCPU->jac_size = md->n_per_cell_solver_jac_elem * mGPU->n_cells * sizeof(double);
+  mCPU->nnz_J_solver = SM_NNZ_S(md->J_solver)/md->n_cells*mGPU->n_cells;
+  cudaMalloc((void **) &mGPU->dA, mCPU->jac_size);
+  cudaMalloc((void **) &mGPU->J_solver, mCPU->jac_size);
+  cudaMalloc((void **) &mGPU->J_state, mCPU->deriv_size);
+  cudaMalloc((void **) &mGPU->J_deriv, mCPU->deriv_size);
+  cudaMalloc((void **) &mGPU->J_tmp, mCPU->deriv_size);
+  cudaMalloc((void **) &mGPU->J_tmp2, mCPU->deriv_size);
+  cudaMalloc((void **) &mGPU->jac_map, sizeof(JacMap) * md->n_mapped_values);
+  HANDLE_ERROR(cudaMalloc((void **) &mGPU->n_mapped_values, 1 * sizeof(int)));
 #ifdef DEBUG_init_jac_cuda
-    printf("md->n_per_cell_dep_var %d sd->jac.num_spec %d md->n_per_cell_solver_jac_elem %d "
-           "md->n_mapped_values %d jac->num_elem %d offset_nnz_J_solver %d  mCPU->nnz_J_solver %d "
-           "mCPU->jac_size/sizeof(double) %d SM_NNZ_S(sd->J) %d\n",
-           md->n_per_cell_dep_var,sd->jac.num_spec,md->n_per_cell_solver_jac_elem, md->n_mapped_values,
-           sd->jac.num_elem, offset_nnz_J_solver,mCPU->nnz_J_solver,mCPU->jac_size/sizeof(double),
-           SM_NNZ_S(sd->J));
+  printf("md->n_per_cell_dep_var %d sd->jac.num_spec %d md->n_per_cell_solver_jac_elem %d "
+         "md->n_mapped_values %d jac->num_elem %d  mCPU->nnz_J_solver %d "
+         "mCPU->jac_size/sizeof(double) %d SM_NNZ_S(sd->J) %d\n",
+         md->n_per_cell_dep_var,sd->jac.num_spec,md->n_per_cell_solver_jac_elem, md->n_mapped_values,
+         sd->jac.num_elem,mCPU->nnz_J_solver,mCPU->jac_size/sizeof(double),
+         SM_NNZ_S(sd->J));
 #endif
-    double *J = SM_DATA_S(sd->J)+offset_nnz_J_solver;
-    HANDLE_ERROR(cudaMemcpy(mGPU->dA, J, mCPU->jac_size, cudaMemcpyHostToDevice));
-    double *J_solver = SM_DATA_S(md->J_solver)+offset_nnz_J_solver;
-    cudaMemcpy(mGPU->J_solver, J_solver, mCPU->jac_size, cudaMemcpyHostToDevice);
-    double *J_state = N_VGetArrayPointer(md->J_state)+offset_nrows;
-    HANDLE_ERROR(cudaMemcpy(mGPU->J_state, J_state, mCPU->deriv_size, cudaMemcpyHostToDevice));
-    double *J_deriv = N_VGetArrayPointer(md->J_deriv)+offset_nrows;
-    double *J_tmp2 = N_VGetArrayPointer(md->J_tmp2)+offset_nrows;
-    HANDLE_ERROR(cudaMemcpy(mGPU->J_deriv, J_deriv, mCPU->deriv_size, cudaMemcpyHostToDevice));
-    cudaDeviceProp prop;
-    cudaGetDeviceProperties(&prop, iDevice);
-    int threads_block = prop.maxThreadsPerBlock;;
-    int blocks = (mCPU->deriv_size/sizeof(double)+threads_block - 1) / threads_block;
-    init_J_tmp2_cuda_cvode <<<blocks,threads_block>>>(mGPU->J_tmp2);
-    HANDLE_ERROR(cudaMemcpy(mGPU->jac_map, md->jac_map, sizeof(JacMap) * md->n_mapped_values, cudaMemcpyHostToDevice));
-    HANDLE_ERROR(cudaMemcpy(mGPU->n_mapped_values, &md->n_mapped_values, 1 * sizeof(int), cudaMemcpyHostToDevice));
-    offset_nnz_J_solver += mCPU->nnz_J_solver;
-    offset_nrows += md->n_per_cell_dep_var* mGPU->n_cells;
-  }
+  double *J = SM_DATA_S(sd->J);
+  HANDLE_ERROR(cudaMemcpy(mGPU->dA, J, mCPU->jac_size, cudaMemcpyHostToDevice));
+  double *J_solver = SM_DATA_S(md->J_solver);
+  cudaMemcpy(mGPU->J_solver, J_solver, mCPU->jac_size, cudaMemcpyHostToDevice);
+  double *J_state = N_VGetArrayPointer(md->J_state);
+  HANDLE_ERROR(cudaMemcpy(mGPU->J_state, J_state, mCPU->deriv_size, cudaMemcpyHostToDevice));
+  double *J_deriv = N_VGetArrayPointer(md->J_deriv);
+  double *J_tmp2 = N_VGetArrayPointer(md->J_tmp2);
+  HANDLE_ERROR(cudaMemcpy(mGPU->J_deriv, J_deriv, mCPU->deriv_size, cudaMemcpyHostToDevice));
+  int iDevice=0;
+  cudaDeviceProp prop;
+  cudaGetDeviceProperties(&prop, iDevice);
+  int threads_block = prop.maxThreadsPerBlock;;
+  int blocks = (mCPU->deriv_size/sizeof(double)+threads_block - 1) / threads_block;
+  init_J_tmp2_cuda_cvode <<<blocks,threads_block>>>(mGPU->J_tmp2);
+  HANDLE_ERROR(cudaMemcpy(mGPU->jac_map, md->jac_map, sizeof(JacMap) * md->n_mapped_values, cudaMemcpyHostToDevice));
+  HANDLE_ERROR(cudaMemcpy(mGPU->n_mapped_values, &md->n_mapped_values, 1 * sizeof(int), cudaMemcpyHostToDevice));
   jacobian_initialize_cuda_cvode(sd);
 #ifdef DEBUG_init_jac_cuda
   printf("init_jac_cuda end \n");
@@ -199,25 +187,21 @@ void solver_init_int_double_cuda_cvode(SolverData *sd) {
 #ifdef DEBUG_solver_init_int_double_gpu
   printf("solver_init_int_double_cuda_cvode start \n");
 #endif
-  for (int iDevice = sd->startDevice; iDevice < sd->endDevice; iDevice++) {
-    //cudaSetDevice(iDevice);
-    //sd->mGPU = &(sd->mGPUs[iDevice]);
 #ifdef REVERSE_INT_FLOAT_MATRIX
-    set_reverse_int_double_rxn(
-            md->n_rxn, mCPU->rxn_env_data_idx_size,
-            md->rxn_int_data, md->rxn_float_data,
-            md->rxn_int_indices, md->rxn_float_indices, md->rxn_env_idx,
-            sd
-    );
+  set_reverse_int_double_rxn(
+          md->n_rxn, mCPU->rxn_env_data_idx_size,
+          md->rxn_int_data, md->rxn_float_data,
+          md->rxn_int_indices, md->rxn_float_indices, md->rxn_env_idx,
+          sd
+  );
 #else
-    set_int_double_cuda_cvode(
-        md->n_rxn, mCPU->rxn_env_data_idx_size,
-        md->rxn_int_data, md->rxn_float_data,
-        md->rxn_int_indices, md->rxn_float_indices, md->rxn_env_idx,
-        sd
-    );
+  set_int_double_cuda_cvode(
+      md->n_rxn, mCPU->rxn_env_data_idx_size,
+      md->rxn_int_data, md->rxn_float_data,
+      md->rxn_int_indices, md->rxn_float_indices, md->rxn_env_idx,
+      sd
+  );
 #endif
-  }
 #ifdef DEBUG_solver_init_int_double_gpu
   printf("solver_init_int_double_cuda_cvode end \n");
 #endif
@@ -247,8 +231,6 @@ void solver_new_gpu_cu_cvode(SolverData *sd) {
     printf("ERROR: Not enough GPUs to launch, nDevices %d nDevicesMax %d\n", sd->nDevices, nDevicesMax);
     exit(0);
   }
-  sd->startDevice = 0;
-  sd->endDevice = 1;
   int coresPerNode = 40;
   int size;
   MPI_Comm_size(MPI_COMM_WORLD, &size);
@@ -269,12 +251,8 @@ void solver_new_gpu_cu_cvode(SolverData *sd) {
       //printf("rank %d, device %d", rank, i);
     }
   }
-  //mCPU->streams = (cudaStream_t *)malloc(sd->nDevices * sizeof(cudaStream_t));
-  for (int iDevice = sd->startDevice; iDevice < sd->endDevice; iDevice++) {
-  //cudaSetDevice(iDevice);
-  //sd->mGPU = &(sd->mGPUs[iDevice]);
+  int iDevice = 0;
   mGPU = sd->mGPU;
-  //HANDLE_ERROR(cudaStreamCreate(&mCPU->streams[iDevice]));
   int n_cells = int(n_cells_total / sd->nDevices);
   if (remainder!=0 && iDevice==0 && n_cells_total != 1){
     //printf("WARNING:  PENDING TO CHECK THAT WORKS CASE: sd->nDevicesMODn_cells!=0\n");
@@ -322,8 +300,6 @@ void solver_new_gpu_cu_cvode(SolverData *sd) {
   }
   HANDLE_ERROR(cudaMemcpy(mGPU->map_state_deriv, mCPU->map_state_derivCPU,
                           mCPU->map_state_deriv_size, cudaMemcpyHostToDevice));
-
-  }
   if(n_dep_var<32 && sd->use_cpu==0) {
     printf("CAMP ERROR: TOO FEW SPECIES FOR GPU (Species < 32),"
            " use CPU case instead (More info: https://earth.bsc.es/gitlab/ac/camp/-/issues/49 \n");
@@ -447,15 +423,11 @@ void swapCSC_CSR_ODE(SolverData *sd){
     md->jac_map[i].solver_id=jac_solver_id[i];
     //printf("md->jac_map[i].solver_id %d",md->jac_map[i].solver_id);
   }//printf("\n");
-  for (int iDevice = sd->startDevice; iDevice < sd->endDevice; iDevice++) {
-    //cudaSetDevice(iDevice);
-    //sd->mGPU = &(sd->mGPUs[iDevice]);
-    mGPU = sd->mGPU;
-    cudaMemcpy(mGPU->diA, Bp, (n_row + 1) * sizeof(int), cudaMemcpyHostToDevice);
-    cudaMemcpy(mGPU->djA, Bi, nnz * sizeof(int), cudaMemcpyHostToDevice);
-    cudaMemcpy(mGPU->dA, Bx, nnz * sizeof(double), cudaMemcpyHostToDevice);
-    HANDLE_ERROR(cudaMemcpy(mGPU->jac_map, md->jac_map, sizeof(JacMap) * md->n_mapped_values, cudaMemcpyHostToDevice));
-  }
+  mGPU = sd->mGPU;
+  cudaMemcpy(mGPU->diA, Bp, (n_row + 1) * sizeof(int), cudaMemcpyHostToDevice);
+  cudaMemcpy(mGPU->djA, Bi, nnz * sizeof(int), cudaMemcpyHostToDevice);
+  cudaMemcpy(mGPU->dA, Bx, nnz * sizeof(double), cudaMemcpyHostToDevice);
+  HANDLE_ERROR(cudaMemcpy(mGPU->jac_map, md->jac_map, sizeof(JacMap) * md->n_mapped_values, cudaMemcpyHostToDevice));
   free(Bp);
   free(Bi);
   free(Bx);
@@ -475,15 +447,11 @@ void constructor_cvode_gpu(CVodeMem cv_mem, SolverData *sd){
   printf("DEBUG_constructor_cvode_gpu start \n");
 #endif
   solver_new_gpu_cu_cvode(sd);
-  //cudaSetDevice(sd->startDevice);
-  //sd->mGPU = &(sd->mGPUs[sd->startDevice]);
   init_jac_cuda_cvode(sd);
   solver_init_int_double_cuda_cvode(sd);
 #ifdef DEV_CSR_REACTIONS
   getCSRReactions(sd);
 #endif
-  //cudaSetDevice(sd->startDevice);
-  //sd->mGPU = &(sd->mGPUs[sd->startDevice]);
   mGPU = sd->mGPU;
 #ifdef DEBUG_constructor_cvode_gpu
   printf("DEBUG_constructor_cvode_gpu start2 \n");
@@ -524,116 +492,110 @@ void constructor_cvode_gpu(CVodeMem cv_mem, SolverData *sd){
   cudaEventCreate(&mCPU->stopBCG);
   cudaEventCreate(&mCPU->stopBCGMemcpy);
 #endif
-  int offset_nnz = 0;
-  int offset_nrows = 0;
-  for (int iDevice = sd->startDevice; iDevice < sd->endDevice; iDevice++) {
-    //cudaSetDevice(iDevice);
-    //sd->mGPU = &(sd->mGPUs[iDevice]);
-    mGPU = sd->mGPU;
 
-    mGPU->nnz = SM_NNZ_S(J)/md->n_cells*mGPU->n_cells;
-    mGPU->nrows = SM_NP_S(J)/md->n_cells*mGPU->n_cells;
-    cudaDeviceProp prop;
-    cudaGetDeviceProperties(&prop, iDevice);
-    mCPU->threads = prop.maxThreadsPerBlock; //1024
-    mCPU->blocks = (mGPU->nrows + mCPU->threads - 1) / mCPU->threads;
-    if(sd->use_gpu_cvode==0){
-      createLinearSolver(sd);
-    }else{
-      createLinearSolver_cvode(sd);
-    }
-    mGPU->A = ((double *) SM_DATA_S(J))+offset_nnz;
-    //Using int per default as sundindextype give wrong results in CPU, so translate from int64 to int
-    if(sd->use_gpu_cvode==1){
-      mCPU->jA = (int *) malloc(sizeof(int) *mGPU->nnz/mGPU->n_cells);
-      mCPU->iA = (int *) malloc(sizeof(int) * (mGPU->nrows/mGPU->n_cells + 1));
-      for (int i = 0; i < mGPU->nnz/mGPU->n_cells; i++)
-        mCPU->jA[i] = SM_INDEXVALS_S(J)[i];
-      for (int i = 0; i <= mGPU->nrows/mGPU->n_cells; i++)
-        mCPU->iA[i] = SM_INDEXPTRS_S(J)[i];
-      cudaMalloc((void **) &mGPU->djA, mGPU->nnz/mGPU->n_cells * sizeof(int));
-      cudaMalloc((void **) &mGPU->diA, (mGPU->nrows/mGPU->n_cells + 1) * sizeof(int));
-      cudaMemcpy(mGPU->djA, mCPU->jA, mGPU->nnz/mGPU->n_cells * sizeof(int), cudaMemcpyHostToDevice);
-      cudaMemcpy(mGPU->diA, mCPU->iA, (mGPU->nrows/mGPU->n_cells + 1) * sizeof(int), cudaMemcpyHostToDevice);
-    }else{
-      mCPU->jA = (int *) malloc(sizeof(int) *mGPU->nnz);
-      mCPU->iA = (int *) malloc(sizeof(int) * (mGPU->nrows + 1));
-      for (int i = 0; i < mGPU->nnz; i++)
-        mCPU->jA[i] = SM_INDEXVALS_S(J)[i];
-      for (int i = 0; i <= mGPU->nrows; i++)
-        mCPU->iA[i] = SM_INDEXPTRS_S(J)[i];
-      cudaMalloc((void **) &mGPU->djA, mGPU->nnz * sizeof(int));
-      cudaMalloc((void **) &mGPU->diA, (mGPU->nrows + 1) * sizeof(int));
-      cudaMemcpy(mGPU->djA, mCPU->jA, mGPU->nnz * sizeof(int), cudaMemcpyHostToDevice);
-      cudaMemcpy(mGPU->diA, mCPU->iA, (mGPU->nrows + 1) * sizeof(int), cudaMemcpyHostToDevice);
-    }
-    mGPU->dftemp = mGPU->deriv_data;
-    double *ewt = N_VGetArrayPointer(cv_mem->cv_ewt)+offset_nrows;
-    double *tempv = N_VGetArrayPointer(cv_mem->cv_tempv)+offset_nrows;
-    double *cv_last_yn = N_VGetArrayPointer(cv_mem->cv_last_yn)+offset_nrows;
-    double *cv_acor_init = N_VGetArrayPointer(cv_mem->cv_acor_init)+offset_nrows;
-    cudaMalloc((void **) &mGPU->mdvo, sizeof(ModelDataVariable));
-    cudaMalloc((void **) &mGPU->sCells, sizeof(ModelDataVariable)*mGPU->n_cells);
-    cudaMalloc((void **) &mGPU->flag, 1 * sizeof(int));
-    cudaMalloc((void **) &mGPU->flagCells, mGPU->n_cells * sizeof(int));
-    cudaMalloc((void **) &mGPU->dsavedJ, mGPU->nnz * sizeof(double));
-    cudaMalloc((void **) &mGPU->dewt, mGPU->nrows * sizeof(double));
-    cudaMalloc((void **) &mGPU->cv_acor, mGPU->nrows * sizeof(double));
-    cudaMalloc((void **) &mGPU->dtempv, mGPU->nrows * sizeof(double));
-    cudaMalloc((void **) &mGPU->dtempv1, mGPU->nrows * sizeof(double));
-    cudaMalloc((void **) &mGPU->dtempv2, mGPU->nrows * sizeof(double));
-    cudaMalloc((void **) &mGPU->dzn, mGPU->nrows * (cv_mem->cv_qmax + 1) * sizeof(double));//L_MAX 6
-    cudaMalloc((void **) &mGPU->dcv_y, mGPU->nrows * sizeof(double));
-    cudaMalloc((void **) &mGPU->dx, mGPU->nrows * sizeof(double));
-    cudaMalloc((void **) &mGPU->cv_last_yn, mGPU->nrows * sizeof(double));
-    cudaMalloc((void **) &mGPU->cv_acor_init, mGPU->nrows * sizeof(double));
-    cudaMalloc((void **) &mGPU->cv_acor, mGPU->nrows * sizeof(double));
-    cudaMalloc((void **) &mGPU->yout, mGPU->nrows * sizeof(double));
-    cudaMalloc((void **) &mGPU->cv_l, L_MAX * mGPU->n_cells * sizeof(double));
-    cudaMalloc((void **) &mGPU->cv_tau, (L_MAX + 1) * mGPU->n_cells * sizeof(double));
-    cudaMalloc((void **) &mGPU->cv_tq, (NUM_TESTS + 1) * mGPU->n_cells * sizeof(double));
-    cudaMalloc((void **) &mGPU->cv_Vabstol, mGPU->nrows * sizeof(double));
-    HANDLE_ERROR(cudaMemset(mGPU->flagCells, CV_SUCCESS, mGPU->n_cells * sizeof(int)));
-    cudaMemcpy(mGPU->dsavedJ, mGPU->A, mGPU->nnz * sizeof(double), cudaMemcpyHostToDevice);
-    cudaMemcpy(mGPU->dewt, ewt, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice);
-    cudaMemcpy(mGPU->cv_acor, ewt, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice);
-    cudaMemcpy(mGPU->dftemp, ewt, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice);
-    cudaMemcpy(mGPU->dx, tempv, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice);
-    cudaMemcpy(mGPU->cv_last_yn, cv_last_yn, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice);
-    HANDLE_ERROR(cudaMemcpy(mGPU->cv_acor_init, cv_acor_init, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice));
-    mGPU->replacement_value = TINY;
-    mGPU->threshhold = -SMALL;
-    mGPU->state_size_cell = md->n_per_cell_state_var;
-    int flag = 999; //CAMP_SOLVER_SUCCESS
-    cudaMemcpy(mGPU->flag, &flag, 1 * sizeof(int), cudaMemcpyHostToDevice);
-    if(md->n_per_cell_dep_var > prop.maxThreadsPerBlock/2){
-      printf("ERROR: More species than threads per block availabless\n");
-      exit(0);
-    }
+  int iDevice=0;//todo delete
+  mGPU = sd->mGPU;
+
+  mGPU->nnz = SM_NNZ_S(J)/md->n_cells*mGPU->n_cells;
+  mGPU->nrows = SM_NP_S(J)/md->n_cells*mGPU->n_cells;
+  cudaDeviceProp prop;
+  cudaGetDeviceProperties(&prop, iDevice);
+  mCPU->threads = prop.maxThreadsPerBlock; //1024
+  mCPU->blocks = (mGPU->nrows + mCPU->threads - 1) / mCPU->threads;
+  if(sd->use_gpu_cvode==0){
+    createLinearSolver(sd);
+  }else{
+    createLinearSolver_cvode(sd);
+  }
+  mGPU->A = ((double *) SM_DATA_S(J));
+  //Using int per default as sundindextype give wrong results in CPU, so translate from int64 to int
+  if(sd->use_gpu_cvode==1){
+    mCPU->jA = (int *) malloc(sizeof(int) *mGPU->nnz/mGPU->n_cells);
+    mCPU->iA = (int *) malloc(sizeof(int) * (mGPU->nrows/mGPU->n_cells + 1));
+    for (int i = 0; i < mGPU->nnz/mGPU->n_cells; i++)
+      mCPU->jA[i] = SM_INDEXVALS_S(J)[i];
+    for (int i = 0; i <= mGPU->nrows/mGPU->n_cells; i++)
+      mCPU->iA[i] = SM_INDEXPTRS_S(J)[i];
+    cudaMalloc((void **) &mGPU->djA, mGPU->nnz/mGPU->n_cells * sizeof(int));
+    cudaMalloc((void **) &mGPU->diA, (mGPU->nrows/mGPU->n_cells + 1) * sizeof(int));
+    cudaMemcpy(mGPU->djA, mCPU->jA, mGPU->nnz/mGPU->n_cells * sizeof(int), cudaMemcpyHostToDevice);
+    cudaMemcpy(mGPU->diA, mCPU->iA, (mGPU->nrows/mGPU->n_cells + 1) * sizeof(int), cudaMemcpyHostToDevice);
+  }else{
+    mCPU->jA = (int *) malloc(sizeof(int) *mGPU->nnz);
+    mCPU->iA = (int *) malloc(sizeof(int) * (mGPU->nrows + 1));
+    for (int i = 0; i < mGPU->nnz; i++)
+      mCPU->jA[i] = SM_INDEXVALS_S(J)[i];
+    for (int i = 0; i <= mGPU->nrows; i++)
+      mCPU->iA[i] = SM_INDEXPTRS_S(J)[i];
+    cudaMalloc((void **) &mGPU->djA, mGPU->nnz * sizeof(int));
+    cudaMalloc((void **) &mGPU->diA, (mGPU->nrows + 1) * sizeof(int));
+    cudaMemcpy(mGPU->djA, mCPU->jA, mGPU->nnz * sizeof(int), cudaMemcpyHostToDevice);
+    cudaMemcpy(mGPU->diA, mCPU->iA, (mGPU->nrows + 1) * sizeof(int), cudaMemcpyHostToDevice);
+  }
+  mGPU->dftemp = mGPU->deriv_data;
+  double *ewt = N_VGetArrayPointer(cv_mem->cv_ewt);
+  double *tempv = N_VGetArrayPointer(cv_mem->cv_tempv);
+  double *cv_last_yn = N_VGetArrayPointer(cv_mem->cv_last_yn);
+  double *cv_acor_init = N_VGetArrayPointer(cv_mem->cv_acor_init);
+  cudaMalloc((void **) &mGPU->mdvo, sizeof(ModelDataVariable));
+  cudaMalloc((void **) &mGPU->sCells, sizeof(ModelDataVariable)*mGPU->n_cells);
+  cudaMalloc((void **) &mGPU->flag, 1 * sizeof(int));
+  cudaMalloc((void **) &mGPU->flagCells, mGPU->n_cells * sizeof(int));
+  cudaMalloc((void **) &mGPU->dsavedJ, mGPU->nnz * sizeof(double));
+  cudaMalloc((void **) &mGPU->dewt, mGPU->nrows * sizeof(double));
+  cudaMalloc((void **) &mGPU->cv_acor, mGPU->nrows * sizeof(double));
+  cudaMalloc((void **) &mGPU->dtempv, mGPU->nrows * sizeof(double));
+  cudaMalloc((void **) &mGPU->dtempv1, mGPU->nrows * sizeof(double));
+  cudaMalloc((void **) &mGPU->dtempv2, mGPU->nrows * sizeof(double));
+  cudaMalloc((void **) &mGPU->dzn, mGPU->nrows * (cv_mem->cv_qmax + 1) * sizeof(double));//L_MAX 6
+  cudaMalloc((void **) &mGPU->dcv_y, mGPU->nrows * sizeof(double));
+  cudaMalloc((void **) &mGPU->dx, mGPU->nrows * sizeof(double));
+  cudaMalloc((void **) &mGPU->cv_last_yn, mGPU->nrows * sizeof(double));
+  cudaMalloc((void **) &mGPU->cv_acor_init, mGPU->nrows * sizeof(double));
+  cudaMalloc((void **) &mGPU->cv_acor, mGPU->nrows * sizeof(double));
+  cudaMalloc((void **) &mGPU->yout, mGPU->nrows * sizeof(double));
+  cudaMalloc((void **) &mGPU->cv_l, L_MAX * mGPU->n_cells * sizeof(double));
+  cudaMalloc((void **) &mGPU->cv_tau, (L_MAX + 1) * mGPU->n_cells * sizeof(double));
+  cudaMalloc((void **) &mGPU->cv_tq, (NUM_TESTS + 1) * mGPU->n_cells * sizeof(double));
+  cudaMalloc((void **) &mGPU->cv_Vabstol, mGPU->nrows * sizeof(double));
+  HANDLE_ERROR(cudaMemset(mGPU->flagCells, CV_SUCCESS, mGPU->n_cells * sizeof(int)));
+  cudaMemcpy(mGPU->dsavedJ, mGPU->A, mGPU->nnz * sizeof(double), cudaMemcpyHostToDevice);
+  cudaMemcpy(mGPU->dewt, ewt, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice);
+  cudaMemcpy(mGPU->cv_acor, ewt, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice);
+  cudaMemcpy(mGPU->dftemp, ewt, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice);
+  cudaMemcpy(mGPU->dx, tempv, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice);
+  cudaMemcpy(mGPU->cv_last_yn, cv_last_yn, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice);
+  HANDLE_ERROR(cudaMemcpy(mGPU->cv_acor_init, cv_acor_init, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice));
+  mGPU->replacement_value = TINY;
+  mGPU->threshhold = -SMALL;
+  mGPU->state_size_cell = md->n_per_cell_state_var;
+  int flag = 999; //CAMP_SOLVER_SUCCESS
+  cudaMemcpy(mGPU->flag, &flag, 1 * sizeof(int), cudaMemcpyHostToDevice);
+  if(md->n_per_cell_dep_var > prop.maxThreadsPerBlock/2){
+    printf("ERROR: More species than threads per block availabless\n");
+    exit(0);
+  }
 #ifdef CAMP_DEBUG_GPU
 #ifndef CAMP_PROFILE_DEVICE_FUNCTIONS
-    cudaDeviceGetAttribute(&mGPU->clock_khz, cudaDevAttrClockRate, 0);
-    mCPU->mdvCPU.countercvStep=0;
-    mCPU->mdvCPU.counterBCGInternal=0;
-    mCPU->mdvCPU.counterBCG=0;
-    mCPU->mdvCPU.timeNewtonIteration=0.;
-    mCPU->mdvCPU.timeJac=0.;
-    mCPU->mdvCPU.timelinsolsetup=0.;
-    mCPU->mdvCPU.timecalc_Jac=0.;
-    mCPU->mdvCPU.timef=0.;
-    mCPU->mdvCPU.timeguess_helper=0.;
-    mCPU->mdvCPU.dtBCG=0.;
-    mCPU->mdvCPU.dtcudaDeviceCVode=0.;
-    mCPU->mdvCPU.dtPostBCG=0.;
+  cudaDeviceGetAttribute(&mGPU->clock_khz, cudaDevAttrClockRate, 0);
+  mCPU->mdvCPU.countercvStep=0;
+  mCPU->mdvCPU.counterBCGInternal=0;
+  mCPU->mdvCPU.counterBCG=0;
+  mCPU->mdvCPU.timeNewtonIteration=0.;
+  mCPU->mdvCPU.timeJac=0.;
+  mCPU->mdvCPU.timelinsolsetup=0.;
+  mCPU->mdvCPU.timecalc_Jac=0.;
+  mCPU->mdvCPU.timef=0.;
+  mCPU->mdvCPU.timeguess_helper=0.;
+  mCPU->mdvCPU.dtBCG=0.;
+  mCPU->mdvCPU.dtcudaDeviceCVode=0.;
+  mCPU->mdvCPU.dtPostBCG=0.;
 #endif
 #endif
-    for (int i = 0; i < mGPU->n_cells; i++){
-      cudaMemcpy(&mGPU->sCells[i], &mCPU->mdvCPU, sizeof(ModelDataVariable), cudaMemcpyHostToDevice);
-    }
-    HANDLE_ERROR(cudaMemcpy(mGPU->mdvo, &mCPU->mdvCPU, sizeof(ModelDataVariable), cudaMemcpyHostToDevice));
-    offset_nnz += mGPU->nnz;
-    offset_nrows += mGPU->nrows;
+  for (int i = 0; i < mGPU->n_cells; i++){
+    cudaMemcpy(&mGPU->sCells[i], &mCPU->mdvCPU, sizeof(ModelDataVariable), cudaMemcpyHostToDevice);
   }
+  HANDLE_ERROR(cudaMemcpy(mGPU->mdvo, &mCPU->mdvCPU, sizeof(ModelDataVariable), cudaMemcpyHostToDevice));
   mCPU->mdvCPU.nstlj = 0;
 #ifdef USE_CSR_ODE_GPU
   if(sd->use_gpu_cvode==1) {
@@ -865,7 +827,6 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     return(CV_BAD_DKY);
   }
 #ifdef CAMP_DEBUG_GPU
-  //cudaSetDevice(sd->startDevice);
   cudaEventRecord(mCPU->startcvStep);
 #endif
   for (int i = 0; i < md->n_cells; i++)//md->nCellsGPU
@@ -904,91 +865,64 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
   mCPU->mdvCPU.cv_etamax = cv_mem->cv_etamax;
   mCPU->mdvCPU.cv_maxncf = cv_mem->cv_maxncf;
   mCPU->mdvCPU.tret = *tret;
-  int offset_state = 0;
-  int offset_ncells = 0;
-  int offset_nrows = 0;
-  for (int iDevice = sd->startDevice; iDevice < sd->endDevice; iDevice++) {
-    //cudaSetDevice(iDevice);
-    //sd->mGPU = &(sd->mGPUs[iDevice]);
-    mGPU = sd->mGPU;
-    //cudaStream_t stream = mCPU->streams[iDevice]; //todo needed?
-    cudaStream_t stream = 0;
-    double *ewt = NV_DATA_S(cv_mem->cv_ewt) + offset_nrows;
-    double *acor = NV_DATA_S(cv_mem->cv_acor) + offset_nrows;
-    double *tempv = NV_DATA_S(cv_mem->cv_tempv) + offset_nrows;
-    double *ftemp = NV_DATA_S(cv_mem->cv_ftemp) + offset_nrows;
-    double *cv_last_yn = N_VGetArrayPointer(cv_mem->cv_last_yn) + offset_nrows;
-    double *cv_acor_init = N_VGetArrayPointer(cv_mem->cv_acor_init) + offset_nrows;
-    double *youtArray = N_VGetArrayPointer(yout) + offset_nrows;
-    double *cv_Vabstol = N_VGetArrayPointer(cv_mem->cv_Vabstol) + offset_nrows;
-    cudaMemcpyAsync(mGPU->dewt, ewt, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice, stream);
-    cudaMemcpyAsync(mGPU->cv_acor, acor, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice, stream);
-    cudaMemcpyAsync(mGPU->dtempv, tempv, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice, stream);
-    cudaMemcpyAsync(mGPU->dftemp, ftemp, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice, stream);
-    cudaMemcpyAsync(mGPU->cv_last_yn, cv_last_yn, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice, stream);
-    cudaMemcpyAsync(mGPU->cv_acor_init, cv_acor_init, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice, stream);
-    cudaMemcpyAsync(mGPU->yout, youtArray, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice, stream);
-    cudaMemcpyAsync(mGPU->cv_Vabstol, cv_Vabstol, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice, stream);
-    for (int i = 0; i <= cv_mem->cv_qmax; i++) {//cv_qmax+1 (6)?
-      double *zn = NV_DATA_S(cv_mem->cv_zn[i]) + offset_nrows;
-      cudaMemcpyAsync((i * mGPU->nrows + mGPU->dzn), zn, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice, stream);
-    }
-    cudaMemcpyAsync(mGPU->flagCells, sd->flagCells + offset_ncells, mGPU->n_cells * sizeof(int), cudaMemcpyHostToDevice,
-                    stream);
-    cudaMemcpyAsync(mGPU->state, md->total_state + offset_state, mCPU->state_size, cudaMemcpyHostToDevice, stream);
-    mGPU->cv_tstop = cv_mem->cv_tstop;
-    mGPU->cv_tstopset = cv_mem->cv_tstopset;
-    mGPU->cv_nlscoef = cv_mem->cv_nlscoef;
-    mGPU->init_time_step = sd->init_time_step;
-    mGPU->cv_mxstep = cv_mem->cv_mxstep;
-    mGPU->cv_uround = cv_mem->cv_uround;
-    mGPU->cv_hmax_inv = cv_mem->cv_hmax_inv;
-    mGPU->cv_reltol = cv_mem->cv_reltol;
-    mGPU->cv_maxcor = cv_mem->cv_maxcor;
-    mGPU->cv_qmax = cv_mem->cv_qmax;
-    mGPU->cv_maxnef = cv_mem->cv_maxnef;
-    mGPU->tout = tout;
-    for (int i = 0; i < mGPU->n_cells; i++) {
-      cudaMemcpyAsync(mGPU->cv_l + i * L_MAX, cv_mem->cv_l, L_MAX * sizeof(double), cudaMemcpyHostToDevice, stream);
-      cudaMemcpyAsync(mGPU->cv_tau + i * (L_MAX + 1), cv_mem->cv_tau, (L_MAX + 1) * sizeof(double),
-                      cudaMemcpyHostToDevice, stream);
-      cudaMemcpyAsync(mGPU->cv_tq + i * (NUM_TESTS + 1), cv_mem->cv_tq, (NUM_TESTS + 1) * sizeof(double),
-                      cudaMemcpyHostToDevice, stream);
-      cudaMemcpyAsync(&mGPU->sCells[i], &mCPU->mdvCPU, sizeof(ModelDataVariable), cudaMemcpyHostToDevice, stream);
-    }
-    int len_cell = mGPU->nrows / mGPU->n_cells;
-    int threads_block = len_cell;
-    int blocks = mGPU->n_cells;
-    int n_shr_memory = nextPowerOfTwoCVODE(len_cell);
-    int n_shr_empty = mGPU->n_shr_empty = n_shr_memory - threads_block;
-    cudaGlobalCVode <<<blocks, threads_block, n_shr_memory * sizeof(double), stream>>>(*mGPU);
-
-    offset_state += mGPU->state_size_cell * mGPU->n_cells;
-    offset_ncells += mGPU->n_cells;
-    offset_nrows += mGPU->nrows;
+  cudaStream_t stream = 0;
+  mGPU = sd->mGPU;
+  double *ewt = NV_DATA_S(cv_mem->cv_ewt);
+  double *acor = NV_DATA_S(cv_mem->cv_acor);
+  double *tempv = NV_DATA_S(cv_mem->cv_tempv);
+  double *ftemp = NV_DATA_S(cv_mem->cv_ftemp);
+  double *cv_last_yn = N_VGetArrayPointer(cv_mem->cv_last_yn);
+  double *cv_acor_init = N_VGetArrayPointer(cv_mem->cv_acor_init);
+  double *youtArray = N_VGetArrayPointer(yout);
+  double *cv_Vabstol = N_VGetArrayPointer(cv_mem->cv_Vabstol);
+  cudaMemcpyAsync(mGPU->dewt, ewt, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice, stream);
+  cudaMemcpyAsync(mGPU->cv_acor, acor, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice, stream);
+  cudaMemcpyAsync(mGPU->dtempv, tempv, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice, stream);
+  cudaMemcpyAsync(mGPU->dftemp, ftemp, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice, stream);
+  cudaMemcpyAsync(mGPU->cv_last_yn, cv_last_yn, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice, stream);
+  cudaMemcpyAsync(mGPU->cv_acor_init, cv_acor_init, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice, stream);
+  cudaMemcpyAsync(mGPU->yout, youtArray, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice, stream);
+  cudaMemcpyAsync(mGPU->cv_Vabstol, cv_Vabstol, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice, stream);
+  for (int i = 0; i <= cv_mem->cv_qmax; i++) {//cv_qmax+1 (6)?
+    double *zn = NV_DATA_S(cv_mem->cv_zn[i]);
+    cudaMemcpyAsync((i * mGPU->nrows + mGPU->dzn), zn, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice, stream);
   }
-  offset_state = 0;
-  offset_ncells = 0;
-  offset_nrows = 0;
-  for (int iDevice = sd->startDevice; iDevice < sd->endDevice; iDevice++) {
-    //cudaSetDevice(iDevice);
-    //sd->mGPU = &(sd->mGPUs[iDevice]);
-    mGPU = sd->mGPU;
-    //cudaStream_t stream = mCPU->streams[iDevice];
-    cudaStream_t stream = 0;
-    double *youtArray = N_VGetArrayPointer(yout) + offset_nrows;
-    double *cv_acor_init = N_VGetArrayPointer(cv_mem->cv_acor_init)+offset_nrows;
-    cudaMemcpyAsync(cv_acor_init, mGPU->cv_acor_init, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost, stream);
-    cudaMemcpyAsync(youtArray, mGPU->yout, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost, stream);
-    for (int i = 0; i <= cv_mem->cv_qmax; i++) {//cv_qmax+1 (6)?
-      double *zn = NV_DATA_S(cv_mem->cv_zn[i])+offset_nrows;
-      cudaMemcpyAsync(zn, (i * mGPU->nrows + mGPU->dzn), mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost, stream);
-    }
-    cudaMemcpyAsync(sd->flagCells+offset_ncells, mGPU->flagCells, mGPU->n_cells * sizeof(int), cudaMemcpyDeviceToHost, stream);
-    offset_state += mGPU->state_size_cell * mGPU->n_cells;
-    offset_ncells += mGPU->n_cells;
-    offset_nrows += mGPU->nrows;
+  cudaMemcpyAsync(mGPU->flagCells, sd->flagCells, mGPU->n_cells * sizeof(int), cudaMemcpyHostToDevice,
+                  stream);
+  cudaMemcpyAsync(mGPU->state, md->total_state, mCPU->state_size, cudaMemcpyHostToDevice, stream);
+  mGPU->cv_tstop = cv_mem->cv_tstop;
+  mGPU->cv_tstopset = cv_mem->cv_tstopset;
+  mGPU->cv_nlscoef = cv_mem->cv_nlscoef;
+  mGPU->init_time_step = sd->init_time_step;
+  mGPU->cv_mxstep = cv_mem->cv_mxstep;
+  mGPU->cv_uround = cv_mem->cv_uround;
+  mGPU->cv_hmax_inv = cv_mem->cv_hmax_inv;
+  mGPU->cv_reltol = cv_mem->cv_reltol;
+  mGPU->cv_maxcor = cv_mem->cv_maxcor;
+  mGPU->cv_qmax = cv_mem->cv_qmax;
+  mGPU->cv_maxnef = cv_mem->cv_maxnef;
+  mGPU->tout = tout;
+  for (int i = 0; i < mGPU->n_cells; i++) {
+    cudaMemcpyAsync(mGPU->cv_l + i * L_MAX, cv_mem->cv_l, L_MAX * sizeof(double), cudaMemcpyHostToDevice, stream);
+    cudaMemcpyAsync(mGPU->cv_tau + i * (L_MAX + 1), cv_mem->cv_tau, (L_MAX + 1) * sizeof(double),
+                    cudaMemcpyHostToDevice, stream);
+    cudaMemcpyAsync(mGPU->cv_tq + i * (NUM_TESTS + 1), cv_mem->cv_tq, (NUM_TESTS + 1) * sizeof(double),
+                    cudaMemcpyHostToDevice, stream);
+    cudaMemcpyAsync(&mGPU->sCells[i], &mCPU->mdvCPU, sizeof(ModelDataVariable), cudaMemcpyHostToDevice, stream);
   }
+  int len_cell = mGPU->nrows / mGPU->n_cells;
+  int threads_block = len_cell;
+  int blocks = mGPU->n_cells;
+  int n_shr_memory = nextPowerOfTwoCVODE(len_cell);
+  int n_shr_empty = mGPU->n_shr_empty = n_shr_memory - threads_block;
+  cudaGlobalCVode <<<blocks, threads_block, n_shr_memory * sizeof(double), stream>>>(*mGPU);
+  cudaMemcpyAsync(cv_acor_init, mGPU->cv_acor_init, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost, stream);
+  cudaMemcpyAsync(youtArray, mGPU->yout, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost, stream);
+  for (int i = 0; i <= cv_mem->cv_qmax; i++) {//cv_qmax+1 (6)?
+    double *zn = NV_DATA_S(cv_mem->cv_zn[i]);
+    cudaMemcpyAsync(zn, (i * mGPU->nrows + mGPU->dzn), mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost, stream);
+  }
+  cudaMemcpyAsync(sd->flagCells, mGPU->flagCells, mGPU->n_cells * sizeof(int), cudaMemcpyDeviceToHost, stream);
 #ifdef DEV_CPUGPU
   printf("todo DEV_CPUGPU: Too much execution time \n");
   int nCellsGPUPerc=sd->nCellsGPUPerc;
@@ -1000,7 +934,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
   //N_Vector sy = y;
   N_Vector yAux = N_VNew_Serial(md->n_per_cell_dep_var * nCellsCPU);
   double *yAuxArray = N_VGetArrayPointer(yout);
-  double *youtArray = N_VGetArrayPointer(yout) + offset_nrows;
+  double *youtArray = N_VGetArrayPointer(yout);
   for (int i = 0; i < md->n_per_cell_dep_var*nCellsCPU; i++){
     yAuxArray[i]=youtArray[i+md->n_per_cell_state_var*nCellsGPU];
   }
@@ -1017,12 +951,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     return(istate);
   }
 #endif
-  for (int iDevice = sd->startDevice+1; iDevice < sd->endDevice; iDevice++) {
-    //cudaSetDevice(iDevice);
-    cudaDeviceSynchronize();
-  }
-  //cudaSetDevice(sd->startDevice);
-  //sd->mGPU = &(sd->mGPUs[sd->startDevice]);
+  cudaDeviceSynchronize();
   mGPU = sd->mGPU;
 #ifdef CAMP_DEBUG_GPU
     cudaEventRecord(mCPU->stopcvStep);
@@ -1058,8 +987,6 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
 }
 
 void solver_get_statistics_gpu(SolverData *sd){
-  //cudaSetDevice(sd->startDevice);
-  //sd->mGPU = &(sd->mGPUs[sd->startDevice]);
   ModelDataGPU *mGPU = sd->mGPU;
   ModelDataCPU *mCPU = &(sd->mCPU);
   cudaMemcpy(&mCPU->mdvCPU,mGPU->mdvo,sizeof(ModelDataVariable),cudaMemcpyDeviceToHost);
@@ -1069,14 +996,10 @@ void solver_reset_statistics_gpu(SolverData *sd){
   ModelDataGPU *mGPU = sd->mGPU;
   ModelDataCPU *mCPU = &(sd->mCPU);
   //printf("solver_reset_statistics_gpu\n");
-  for (int iDevice = sd->startDevice; iDevice < sd->endDevice; iDevice++) {
-    //cudaSetDevice(iDevice);
-    //sd->mGPU = &(sd->mGPUs[iDevice]);
-    mGPU = sd->mGPU;
+  mGPU = sd->mGPU;
 #ifdef CAMP_DEBUG_GPU
-    for (int i = 0; i < mGPU->n_cells; i++){
-      cudaMemcpy(&mGPU->sCells[i], &mCPU->mdvCPU, sizeof(ModelDataVariable), cudaMemcpyHostToDevice);
-    }
-#endif
+  for (int i = 0; i < mGPU->n_cells; i++){
+    cudaMemcpy(&mGPU->sCells[i], &mCPU->mdvCPU, sizeof(ModelDataVariable), cudaMemcpyHostToDevice);
   }
+#endif
 }

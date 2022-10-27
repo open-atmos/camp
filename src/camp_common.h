@@ -298,8 +298,6 @@ typedef struct {
   ModelDataCPU mCPU;
   ModelDataGPU *mGPU;
   int *flagCells;
-  int endDevice;
-  int startDevice;
   int nDevices;
   int nCellsGPUPerc;
 #endif
