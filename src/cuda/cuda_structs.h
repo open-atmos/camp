@@ -74,7 +74,7 @@ typedef struct {
     //Counters (e.g. iterations of function cvnlsNewton)
     int nstlj;
 #ifdef CAMP_DEBUG_GPU
-#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
+#ifndef CAMP_PROFILE_DEVICE_FUNCTIONS
     int countercvStep;
     int counterBCGInternal;
     int counterBCG;
@@ -116,7 +116,7 @@ typedef struct{
   int counterLinSolSolve;
   int countercvStep;
   int counterDerivNewton;
-  int counterBiConjGrad;
+  int counterBCG;
   int counterDerivSolve;
   int countersolveCVODEGPU;
 
@@ -262,7 +262,7 @@ typedef struct {
     double cv_nlscoef;
 //ODE stats
 #ifdef CAMP_DEBUG_GPU
-#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
+#ifndef CAMP_PROFILE_DEVICE_FUNCTIONS
     int clock_khz;
 #endif
 #endif

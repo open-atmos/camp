@@ -714,7 +714,7 @@ void solveGPU_block_thr(int blocks, int threads_block, int n_shr_memory, int n_s
 #endif
 
 #ifdef DEBUG_SOLVEBCGCUDA
-  if(mCPU->counterBiConjGrad==0) {
+  if(mCPU->counterBCG==0) {
     printf("solveGPU_block_thr n_cells %d len_cell %d nrows %d nnz %d max_threads_block %d blocks %d threads_block %d n_shr_empty %d offset_cells %d\n",
            mGPU->n_cells,len_cell,mGPU->nrows,mGPU->nnz,n_shr_memory,blocks,threads_block,n_shr_empty,offset_cells);
 
@@ -750,7 +750,7 @@ void solveBCGBlocks(SolverData *sd, double *dA, int *djA, int *diA, double *dx, 
   ModelDataGPU *mGPU = sd->mGPU;
 
 #ifdef DEBUG_SOLVEBCGCUDA
-  if(mCPU->counterBiConjGrad==0) {
+  if(mCPU->counterBCG==0) {
     printf("solveGPUBlock\n");
   }
 #endif
@@ -785,7 +785,7 @@ void solveBCGBlocks(SolverData *sd, double *dA, int *djA, int *diA, double *dx, 
     }
 #ifdef DEBUG_SOLVEBCGCUDA
     else{
-      if(mCPU->counterBiConjGrad==0){
+      if(mCPU->counterBCG==0){
         printf("solveBCGBlocks blocks==0\n");
       }
     }
@@ -832,7 +832,7 @@ void solveBCG(SolverData *sd, double *dA, int *djA, int *diA, double *dx, double
   double *dtempv2 = mGPU->dtempv2;
 
 #ifdef DEBUG_SOLVEBCGCUDA
-  if(mCPU->counterBiConjGrad==0) {
+  if(mCPU->counterBCG==0) {
     printf("solveBCG\n");
   }
 #endif

@@ -8,7 +8,7 @@
 import matplotlib as mpl
 
 mpl.use('TkAgg')
-import plot_functions #comment to save ~2s execution time
+#import plot_functions #comment to save ~2s execution time
 import math_functions
 import sys, getopt
 import os
@@ -335,6 +335,18 @@ def export(conf, data_path):
         # raise
 
 def run(conf):
+    if conf.caseGpuCpu == "GPU":
+        if conf.nGPUs >2 and conf.mpiProcesses < 30:
+            print("ERROR: nGPUs is more than 2 but MPI processes is not enough, use 40 MPI processes or reduce GPUs to 1 or 2: conf.nGPUs conf.mpiProcesses", conf.nGPUs,conf.mpiProcesses)
+            raise
+        coresPerNode = 40 #CTE-POWER specs
+        if conf.mpiProcesses > coresPerNode and conf.mpiProcesses % coresPerNode != 0:
+            print("ERROR: MORE THAN 40 MPI PROCESSES AND NOT MULTIPLE OF 40, WHEN CTE-POWER ONLY HAS 40 CORES PER NODE\n");
+            raise
+        nDevicesMax = 4 #CTE-POWER specs
+        if conf.mpiProcesses > int(conf.nGPUs*(coresPerNode/nDevicesMax)):
+            print("ERROR: MORE MPI PROCESSES THAN DEVICES (FOLLOW PROPORTION, FOR CTE-POWER IS 10 PROCESSES FOR EACH GPU, SINCE IT HAS 4 GPUS AND 40 PROCESSES PER NODE): conf.mpiProcesses, conf.nGPUs*(coresPerNode/nDevicesMax)",conf.mpiProcesses, int(conf.nGPUs*(coresPerNode/nDevicesMax)))
+            raise
     exec_str = ""
     if conf.mpi == "yes":
         exec_str += "mpirun -v -np " + str(conf.mpiProcesses) + " --bind-to core "
@@ -465,7 +477,7 @@ def run_cases(conf):
     # Run base case
     conf.mpiProcesses = conf.mpiProcessesCaseBase
     if conf.nCellsProcesses % conf.mpiProcesses !=0:
-        print("ERROR: DIVISION OF CELLS/PROCESSES NOT INTEGER")
+        print("ERROR: DIVISION OF CELLS/PROCESSES NOT INTEGER, nCellsProcesses, mpiProcesses",conf.nCellsProcesses, conf.mpiProcesses)
         raise
     conf.nCells = int(conf.nCellsProcesses / conf.mpiProcesses)
     conf.nGPUs = conf.nGPUsCaseBase
@@ -486,7 +498,7 @@ def run_cases(conf):
         for mpiProcessesCaseOptim in conf.mpiProcessesCaseOptimList:
             conf.mpiProcesses = mpiProcessesCaseOptim
             if conf.nCellsProcesses % conf.mpiProcesses !=0:
-                print("ERROR: DIVISION OF CELLS/PROCESSES NOT INTEGER")
+                print("ERROR: DIVISION OF CELLS/PROCESSES NOT INTEGER, nCellsProcesses, mpiProcesses",conf.nCellsProcesses, conf.mpiProcesses)
                 raise
             conf.nCells = int(conf.nCellsProcesses / conf.mpiProcesses)
             for caseOptim in conf.casesOptim:
@@ -644,7 +656,7 @@ def plot_cases(conf):
     conf.plotTitle = ""
     if not is_same_diff_cells and len(conf.diffCellsL) == 1:
         conf.plotTitle += conf.diffCells + " test: "
-    if len(conf.mpiProcessesCaseOptimList) == 1 and conf.caseGpuCpu == "CPU":
+    if len(conf.mpiProcessesCaseOptimList) == 1:
         # if len(conf.mpiProcessesCaseOptimList) == 1:
         conf.plotTitle += str(mpiProcessesCaseOptim) + " MPI "
     if len(conf.nGPUsCaseOptimList) == 1 and conf.plotXKey == "GPUs":
@@ -731,7 +743,7 @@ def plot_cases(conf):
     print(namey, ":", datay)
 
 
-    plot_functions.plotsns(namex, namey, datax, datay, conf.stdColumns, conf.plotTitle, conf.legend)
+    #plot_functions.plotsns(namex, namey, datax, datay, conf.stdColumns, conf.plotTitle, conf.legend)
 
 
 def all_timesteps():
@@ -762,18 +774,18 @@ def all_timesteps():
     conf.nGPUsCaseBase = 1
     #conf.nGPUsCaseBase = 2
 
-    conf.nGPUsCaseOptimList = [1]
-    #conf.nGPUsCaseOptimList = [2]
+    #conf.nGPUsCaseOptimList = [1]
+    conf.nGPUsCaseOptimList = [4]
     #conf.nGPUsCaseOptimList = [1,2]
 
     conf.mpi = "yes"
     # conf.mpi = "no"
 
-    conf.mpiProcessesCaseBase = 1
-    #conf.mpiProcessesCaseBase = 40
+    #conf.mpiProcessesCaseBase = 1
+    conf.mpiProcessesCaseBase = 40
 
-    conf.mpiProcessesCaseOptimList.append(1)
-    #conf.mpiProcessesCaseOptimList.append(40)
+    #conf.mpiProcessesCaseOptimList.append(1)
+    conf.mpiProcessesCaseOptimList.append(40)
     # conf.mpiProcessesCaseOptimList = [10,20,40]
     # conf.mpiProcessesCaseOptSet Multi-GPusimList = [1,4,8,16,32,40]
 
@@ -786,11 +798,11 @@ def all_timesteps():
     # conf.allocatedTasksPerNode = 320
     # conf.allocatedTasksPerNode = get_ntasksPerNode_sbatch() #todo
 
-    conf.cells = [10,100]
+    conf.cells = [1000]
     #conf.cells = [100, 500, 1000, 5000, 10000]
     # conf.cells = [50000,100000,500000,1000000]
 
-    conf.timeSteps = 10
+    conf.timeSteps = 2
     #conf.timeSteps = 720
 
     conf.timeStepsDt = 2
@@ -816,7 +828,7 @@ def all_timesteps():
     # conf.casesOptim.append("GPU Multi-cells")
     # conf.casesOptim.append("GPU Block-cellsNhalf")
     #conf.casesOptim.append("GPU Block-cellsN")
-    conf.casesOptim.append("GPU Block-cells1")
+    #conf.casesOptim.append("GPU Block-cells1")
     #conf.casesOptim.append("CPU EBI")
     conf.casesOptim.append("GPU BDF")
     #conf.casesOptim.append("GPU CPU")
@@ -826,14 +838,14 @@ def all_timesteps():
     # conf.casesOptim.append("GPU maxrregcount-24")
 
     #conf.plotYKey = "Speedup timeCVode"
-    # conf.plotYKey = "Speedup counterLS"
+    conf.plotYKey = "Speedup normalized counterLS"
     #conf.plotYKey = "Speedup normalized timeLS"
     # conf.plotYKey = "Speedup normalized computational timeLS"
     # conf.plotYKey = "Speedup counterBCG"
     # conf.plotYKey = "Speedup normalized counterBCG"
     # conf.plotYKey = "Speedup total iterations - counterBCG"
     # conf.plotYKey = "Speedup BCG iteration (Comp.timeLS/counterBCG)"
-    conf.plotYKey = "Speedup timecvStep"
+    #conf.plotYKey = "Speedup timecvStep"
     # conf.plotYKey = "Speedup timecvStep normalized by countercvStep"
     #conf.plotYKey = "Speedup countercvStep"
     #conf.plotYKey = "Speedup device timecvStep"
@@ -856,13 +868,6 @@ def all_timesteps():
         conf.results_file = '_results_all_cells.csv'
         conf.is_export = False
         conf.is_import = False
-    if (conf.nGPUsCaseBase >2 and conf.mpiProcessesCaseBase < 30):
-        print("ERROR: nGPUsCaseBase is more than 2 but MPI processes is not enough, use 40 MPI processes or reduce GPUs to 1 or 2")
-        raise
-    for i in range(len(conf.nGPUsCaseOptimList)):
-        if (conf.nGPUsCaseOptimList[i] >2 and conf.nGPUsCaseOptimList[i] < 30):
-            print("ERROR: nGPUsCaseBase is more than 2 but MPI processes is not enough, use 40 MPI processes or reduce GPUs to 1 or 2")
-            raise
     jsonFile = open("monarch_box_binned/cb05_abs_tol.json")
     jsonData = json.load(jsonFile)
     conf.MAPETol = jsonData["camp-data"][0]["value"]  # Default: 1.0E-4

@@ -462,8 +462,8 @@ int CVode_gpu(void *cvode_mem, realtype tout, N_Vector yout,
    */
 
 #ifdef CAMP_DEBUG_GPU
-  cudaSetDevice(sd->startDevice);
-  sd->mGPU = &(sd->mGPUs[sd->startDevice]);
+  //cudaSetDevice(sd->startDevice);
+  //sd->mGPU = &(sd->mGPUs[sd->startDevice]);
   mGPU = sd->mGPU;
   cudaEventRecord(mCPU->startcvStep);
 #endif
@@ -472,11 +472,11 @@ int CVode_gpu(void *cvode_mem, realtype tout, N_Vector yout,
   for(;;) {
 
 #ifdef CAMP_DEBUG_GPU
-#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
+#ifndef CAMP_PROFILE_DEVICE_FUNCTIONS
 
     for (int iDevice = sd->startDevice; iDevice < sd->endDevice; iDevice++) {
-      cudaSetDevice(iDevice);
-      sd->mGPU = &(sd->mGPUs[iDevice]);
+      //cudaSetDevice(iDevice);
+      //sd->mGPU = &(sd->mGPUs[iDevice]);
       mGPU = sd->mGPU;
 
       mCPU->mdvCPU.countercvStep++;
@@ -641,10 +641,10 @@ int CVode_gpu(void *cvode_mem, realtype tout, N_Vector yout,
 #ifdef CAMP_DEBUG_GPU
 
   for (int iDevice = sd->startDevice+1; iDevice < sd->endDevice; iDevice++) {
-    cudaSetDevice(iDevice);
+    //cudaSetDevice(iDevice);
     cudaDeviceSynchronize();
   }
-  cudaSetDevice(sd->startDevice);
+  //cudaSetDevice(sd->startDevice);
   cudaEventRecord(mCPU->stopcvStep);
   cudaEventSynchronize(mCPU->stopcvStep);
   float mscvStep = 0.0;
@@ -654,8 +654,8 @@ int CVode_gpu(void *cvode_mem, realtype tout, N_Vector yout,
 #endif
 
   for (int iDevice = sd->startDevice; iDevice < sd->endDevice; iDevice++) {
-      cudaSetDevice(iDevice);
-      sd->mGPU = &(sd->mGPUs[iDevice]);
+      //cudaSetDevice(iDevice);
+      //sd->mGPU = &(sd->mGPUs[iDevice]);
       mGPU = sd->mGPU;
       cudaMemcpy(&mCPU->mdvCPU, mGPU->mdvo, sizeof(ModelDataVariable), cudaMemcpyDeviceToHost);
   }
@@ -1213,8 +1213,8 @@ int cvStep_gpu(SolverData *sd, CVodeMem cv_mem)
   double *ewt = NV_DATA_S(cv_mem->cv_ewt);
   int offset_nrows = 0;
   for (int iDevice = sd->startDevice; iDevice < sd->endDevice; iDevice++) {
-    cudaSetDevice(iDevice);
-    sd->mGPU = &(sd->mGPUs[iDevice]);
+    //cudaSetDevice(iDevice);
+    //sd->mGPU = &(sd->mGPUs[iDevice]);
     mGPU = sd->mGPU;
 
     cudaMemcpy(mGPU->dewt, ewt+offset_nrows, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice);
@@ -2331,8 +2331,8 @@ int cvNlsNewton_gpu(SolverData *sd, CVodeMem cv_mem, int nflag)
 
   int offset_nrows = 0;
   for (int iDevice = sd->startDevice; iDevice < sd->endDevice; iDevice++) {
-    cudaSetDevice(iDevice);
-    sd->mGPU = &(sd->mGPUs[iDevice]);
+    //cudaSetDevice(iDevice);
+    //sd->mGPU = &(sd->mGPUs[iDevice]);
     mGPU = sd->mGPU;
 
     cudaMemcpy(mGPU->cv_tq, cv_mem->cv_tq, 5 * sizeof(double), cudaMemcpyHostToDevice);
@@ -2377,8 +2377,8 @@ int cvNlsNewton_gpu(SolverData *sd, CVodeMem cv_mem, int nflag)
 
   offset_nrows = 0;
   for (int iDevice = sd->startDevice; iDevice < sd->endDevice; iDevice++) {
-    cudaSetDevice(iDevice);
-    sd->mGPU = &(sd->mGPUs[iDevice]);
+    //cudaSetDevice(iDevice);
+    //sd->mGPU = &(sd->mGPUs[iDevice]);
     mGPU = sd->mGPU;
 
     cudaMemcpy(mGPU->cv_acor, acor+offset_nrows, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice);
@@ -2400,8 +2400,8 @@ int cvNlsNewton_gpu(SolverData *sd, CVodeMem cv_mem, int nflag)
 
     offset_nrows = 0;
     for (int iDevice = sd->startDevice; iDevice < sd->endDevice; iDevice++) {
-      cudaSetDevice(iDevice);
-      sd->mGPU = &(sd->mGPUs[iDevice]);
+      //cudaSetDevice(iDevice);
+      //sd->mGPU = &(sd->mGPUs[iDevice]);
       mGPU = sd->mGPU;
       /* Load prediction into y vector */
       //N_VLinearSum(ONE, cv_mem->cv_zn[0], ONE, cv_mem->cv_acor_init, cv_mem->cv_y);
@@ -2475,15 +2475,15 @@ int cvNlsNewton_gpu(SolverData *sd, CVodeMem cv_mem, int nflag)
     //gpu_yequalsx(mGPU->cv_acor, mCPU->cv_acor_init, mGPU->nrows, mCPU->blocks, mCPU->threads);
 
     for (int iDevice = sd->startDevice; iDevice < sd->endDevice; iDevice++) {
-      cudaSetDevice(iDevice);
-      sd->mGPU = &(sd->mGPUs[iDevice]);
+      //cudaSetDevice(iDevice);
+      //sd->mGPU = &(sd->mGPUs[iDevice]);
       mGPU = sd->mGPU;
 
       cudaMemset(mGPU->cv_acor, 0.0, mGPU->nrows * sizeof(double));
     }
 
 #ifdef CAMP_DEBUG_GPU
-    cudaSetDevice(sd->startDevice);
+    //cudaSetDevice(sd->startDevice);
     cudaEventRecord(mCPU->startLinSolSolve);
 #endif
 
@@ -2492,7 +2492,7 @@ int cvNlsNewton_gpu(SolverData *sd, CVodeMem cv_mem, int nflag)
     ier = linsolsolve_gpu(sd, cv_mem);
 
 #ifdef CAMP_DEBUG_GPU
-    cudaSetDevice(sd->startDevice);
+    //cudaSetDevice(sd->startDevice);
     cudaEventRecord(mCPU->stopLinSolSolve);
 
     cudaEventSynchronize(mCPU->stopLinSolSolve);
@@ -2550,8 +2550,8 @@ int linsolsetup_gpu(SolverData *sd, CVodeMem cv_mem,int convfail,N_Vector vtemp1
     double *cv_y = NV_DATA_S(cv_mem->cv_y);
     offset_nrows = 0;
     for (int iDevice = sd->startDevice; iDevice < sd->endDevice; iDevice++) {
-      cudaSetDevice(iDevice);
-      sd->mGPU = &(sd->mGPUs[iDevice]);
+      //cudaSetDevice(iDevice);
+      //sd->mGPU = &(sd->mGPUs[iDevice]);
       mGPU = sd->mGPU;
 
       //Ensure cv_y is loaded
@@ -2605,13 +2605,13 @@ int linsolsetup_gpu(SolverData *sd, CVodeMem cv_mem,int convfail,N_Vector vtemp1
   }
 
 #ifndef LINSOLSOLVEGPU_INCLUDE_CUDAMEMCPY
-  cudaSetDevice(sd->startDevice);
+  //cudaSetDevice(sd->startDevice);
   cudaEventRecord(mCPU->startBCGMemcpy);
 #endif
 
   for (int iDevice = sd->startDevice; iDevice < sd->endDevice; iDevice++) {
-    cudaSetDevice(iDevice);
-    sd->mGPU = &(sd->mGPUs[iDevice]);
+    //cudaSetDevice(iDevice);
+    //sd->mGPU = &(sd->mGPUs[iDevice]);
     mGPU = sd->mGPU;
 
     cudaMemcpyAsync(mGPU->diA, mCPU->iA, (mGPU->nrows + 1) * sizeof(int), cudaMemcpyHostToDevice, 0);
@@ -2622,7 +2622,7 @@ int linsolsetup_gpu(SolverData *sd, CVodeMem cv_mem,int convfail,N_Vector vtemp1
   cudaDeviceSynchronize();
 
 #ifndef LINSOLSOLVEGPU_INCLUDE_CUDAMEMCPY
-  cudaSetDevice(sd->startDevice);
+  //cudaSetDevice(sd->startDevice);
   cudaEventRecord(mCPU->stopBCGMemcpy);
   cudaEventSynchronize(mCPU->stopBCGMemcpy);
   float msBiConjGradMemcpy = 0.0;
@@ -2632,8 +2632,8 @@ int linsolsetup_gpu(SolverData *sd, CVodeMem cv_mem,int convfail,N_Vector vtemp1
 #endif
 
   for (int iDevice = sd->startDevice; iDevice < sd->endDevice; iDevice++) {
-    cudaSetDevice(iDevice);
-    sd->mGPU = &(sd->mGPUs[iDevice]);
+    //cudaSetDevice(iDevice);
+    //sd->mGPU = &(sd->mGPUs[iDevice]);
     mGPU = sd->mGPU;
 
     gpu_matScaleAddI(mGPU->nrows,mGPU->dA,mGPU->djA,mGPU->diA,-cv_mem->cv_gamma,mCPU->blocks,mCPU->threads);
@@ -2685,8 +2685,8 @@ int linsolsolve_gpu(SolverData *sd, CVodeMem cv_mem)
 
     offset_nrows = 0;
     for (int iDevice = sd->startDevice; iDevice < sd->endDevice; iDevice++) {
-      cudaSetDevice(iDevice);
-      sd->mGPU = &(sd->mGPUs[iDevice]);
+      //cudaSetDevice(iDevice);
+      //sd->mGPU = &(sd->mGPUs[iDevice]);
       mGPU = sd->mGPU;
 
       // Evaluate the residual of the nonlinear system
@@ -2707,13 +2707,13 @@ int linsolsolve_gpu(SolverData *sd, CVodeMem cv_mem)
     }
 
 #ifndef LINSOLSOLVEGPU_INCLUDE_CUDAMEMCPY
-    cudaSetDevice(sd->startDevice);
+    //cudaSetDevice(sd->startDevice);
     cudaEventRecord(mCPU->startBCGMemcpy);
 
     offset_nrows = 0;
     for (int iDevice = sd->startDevice; iDevice < sd->endDevice; iDevice++) {
-      cudaSetDevice(iDevice);
-      sd->mGPU = &(sd->mGPUs[iDevice]);
+      //cudaSetDevice(iDevice);
+      //sd->mGPU = &(sd->mGPUs[iDevice]);
       mGPU = sd->mGPU;
 
       //Simulate data movement cost of copy of tempv to dtempv by copying to empty array (dtempv2)
@@ -2722,7 +2722,7 @@ int linsolsolve_gpu(SolverData *sd, CVodeMem cv_mem)
       offset_nrows += mGPU->nrows;
     }
     cudaDeviceSynchronize();
-    cudaSetDevice(sd->startDevice);
+    //cudaSetDevice(sd->startDevice);
     cudaEventRecord(mCPU->stopBCGMemcpy);
     cudaEventSynchronize(mCPU->stopBCGMemcpy);
     float msBiConjGradMemcpy = 0.0;
@@ -2732,14 +2732,14 @@ int linsolsolve_gpu(SolverData *sd, CVodeMem cv_mem)
 #endif
 
 #ifdef CAMP_DEBUG_GPU
-    cudaSetDevice(sd->startDevice);
+    //cudaSetDevice(sd->startDevice);
     cudaEventRecord(mCPU->startBCG);
 #endif
 
     offset_nrows = 0;
     for (int iDevice = sd->startDevice; iDevice < sd->endDevice; iDevice++) {
-      cudaSetDevice(iDevice);
-      sd->mGPU = &(sd->mGPUs[iDevice]);
+      //cudaSetDevice(iDevice);
+      //sd->mGPU = &(sd->mGPUs[iDevice]);
       mGPU = sd->mGPU;
 
       if (mCPU->cells_method == MULTICELLS) {//Sync with CPU
@@ -2751,25 +2751,25 @@ int linsolsolve_gpu(SolverData *sd, CVodeMem cv_mem)
     }
 #ifdef CAMP_DEBUG_GPU
     for (int iDevice = sd->startDevice+1; iDevice < sd->endDevice; iDevice++) {
-      cudaSetDevice(iDevice);
+      //cudaSetDevice(iDevice);
       cudaDeviceSynchronize();
     }
-    cudaSetDevice(sd->startDevice);
+    //cudaSetDevice(sd->startDevice);
     cudaEventRecord(mCPU->stopBCG);
     cudaEventSynchronize(mCPU->stopBCG);
     float msBiConjGrad = 0.0;
     cudaEventElapsedTime(&msBiConjGrad, mCPU->startBCG, mCPU->stopBCG);
     mCPU->timeBiConjGrad+= msBiConjGrad/1000;
-    mCPU->counterBiConjGrad++;
+    mCPU->counterBCG++;
 #endif
 #ifndef LINSOLSOLVEGPU_INCLUDE_CUDAMEMCPY
 
-    cudaSetDevice(sd->startDevice);
+    //cudaSetDevice(sd->startDevice);
     cudaEventRecord(mCPU->startBCGMemcpy);
     offset_nrows = 0;
     for (int iDevice = sd->startDevice; iDevice < sd->endDevice; iDevice++) {
-      cudaSetDevice(iDevice);
-      sd->mGPU = &(sd->mGPUs[iDevice]);
+      //cudaSetDevice(iDevice);
+      //sd->mGPU = &(sd->mGPUs[iDevice]);
       mGPU = sd->mGPU;
 
       //Simulate data movement cost of copy of tempv to dtempv by copying to empty array (aux)
@@ -2788,8 +2788,8 @@ int linsolsolve_gpu(SolverData *sd, CVodeMem cv_mem)
 
     offset_nrows = 0;
     for (int iDevice = sd->startDevice; iDevice < sd->endDevice; iDevice++) {
-      cudaSetDevice(iDevice);
-      sd->mGPU = &(sd->mGPUs[iDevice]);
+      //cudaSetDevice(iDevice);
+      //sd->mGPU = &(sd->mGPUs[iDevice]);
       mGPU = sd->mGPU;
 
 #ifndef CSR_SPMV_CPU
@@ -2828,8 +2828,8 @@ int linsolsolve_gpu(SolverData *sd, CVodeMem cv_mem)
 
     offset_nrows = 0;
     for (int iDevice = sd->startDevice; iDevice < sd->endDevice; iDevice++) {
-      cudaSetDevice(iDevice);
-      sd->mGPU = &(sd->mGPUs[iDevice]);
+      //cudaSetDevice(iDevice);
+      //sd->mGPU = &(sd->mGPUs[iDevice]);
       mGPU = sd->mGPU;
 
       cudaMemcpy(mGPU->dftemp, cv_ftemp+offset_nrows, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice);
@@ -2862,8 +2862,8 @@ int linsolsolve_gpu(SolverData *sd, CVodeMem cv_mem)
 
       offset_nrows = 0;
       for (int iDevice = sd->startDevice; iDevice < sd->endDevice; iDevice++) {
-        cudaSetDevice(iDevice);
-        sd->mGPU = &(sd->mGPUs[iDevice]);
+        //cudaSetDevice(iDevice);
+        //sd->mGPU = &(sd->mGPUs[iDevice]);
         mGPU = sd->mGPU;
 
         cudaMemcpy(acor+offset_nrows,mGPU->cv_acor,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
@@ -2872,8 +2872,8 @@ int linsolsolve_gpu(SolverData *sd, CVodeMem cv_mem)
         offset_nrows += mGPU->nrows;
       }
 
-      cudaSetDevice(sd->startDevice); //todo cv_acnrm of all GPUs
-      sd->mGPU = &(sd->mGPUs[sd->startDevice]);
+      //cudaSetDevice(sd->startDevice); //todo cv_acnrm of all GPUs
+      //sd->mGPU = &(sd->mGPUs[sd->startDevice]);
       mGPU = sd->mGPU;
       //cv_mem->cv_acnrm = N_VWrmsNorm(cv_mem->cv_acor, cv_mem->cv_ewt);
       cv_mem->cv_acnrm = gpu_VWRMS_Norm(mGPU->nrows, mGPU->cv_acor, mGPU->dewt, mCPU->aux,
@@ -2890,8 +2890,8 @@ int linsolsolve_gpu(SolverData *sd, CVodeMem cv_mem)
 
       offset_nrows = 0;
       for (int iDevice = sd->startDevice; iDevice < sd->endDevice; iDevice++) {
-        cudaSetDevice(iDevice);
-        sd->mGPU = &(sd->mGPUs[iDevice]);
+        //cudaSetDevice(iDevice);
+        //sd->mGPU = &(sd->mGPUs[iDevice]);
         mGPU = sd->mGPU;
 
         cudaMemcpy(acor+offset_nrows,mGPU->cv_acor,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
@@ -2912,8 +2912,8 @@ int linsolsolve_gpu(SolverData *sd, CVodeMem cv_mem)
 
     offset_nrows = 0;
     for (int iDevice = sd->startDevice; iDevice < sd->endDevice; iDevice++) {
-      cudaSetDevice(iDevice);
-      sd->mGPU = &(sd->mGPUs[iDevice]);
+      //cudaSetDevice(iDevice);
+      //sd->mGPU = &(sd->mGPUs[iDevice]);
       mGPU = sd->mGPU;
 
       //check if its needed (i think only for f_CPU case, for f_cuda not)
@@ -2949,8 +2949,8 @@ int linsolsolve_gpu(SolverData *sd, CVodeMem cv_mem)
     //cudaMemcpy(cv_ftemp_data,mGPU->dftemp,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
 
     for (int iDevice = sd->startDevice; iDevice < sd->endDevice; iDevice++) {
-      cudaSetDevice(iDevice);
-      sd->mGPU = &(sd->mGPUs[iDevice]);
+      //cudaSetDevice(iDevice);
+      //sd->mGPU = &(sd->mGPUs[iDevice]);
       mGPU = sd->mGPU;
 
       //N_VLinearSum(ONE, cv_mem->cv_y, -ONE, cv_mem->cv_zn[0], cv_mem->cv_acor);
@@ -2963,8 +2963,8 @@ int linsolsolve_gpu(SolverData *sd, CVodeMem cv_mem)
     if (retval < 0){
       offset_nrows = 0;
       for (int iDevice = sd->startDevice; iDevice < sd->endDevice; iDevice++) {
-        cudaSetDevice(iDevice);
-        sd->mGPU = &(sd->mGPUs[iDevice]);
+        //cudaSetDevice(iDevice);
+        //sd->mGPU = &(sd->mGPUs[iDevice]);
         mGPU = sd->mGPU;
 
         cudaMemcpy(acor+offset_nrows,mGPU->cv_acor,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
@@ -2977,8 +2977,8 @@ int linsolsolve_gpu(SolverData *sd, CVodeMem cv_mem)
     if (retval > 0) {
       offset_nrows = 0;
       for (int iDevice = sd->startDevice; iDevice < sd->endDevice; iDevice++) {
-        cudaSetDevice(iDevice);
-        sd->mGPU = &(sd->mGPUs[iDevice]);
+        //cudaSetDevice(iDevice);
+        //sd->mGPU = &(sd->mGPUs[iDevice]);
         mGPU = sd->mGPU;
 
         cudaMemcpy(acor+offset_nrows,mGPU->cv_acor,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);

@@ -82,8 +82,8 @@ int jacobian_initialize_cuda_cvode(SolverData *sd) {
 #endif
   int offset_nnz = 0;
   for (int iDevice = sd->startDevice; iDevice < sd->endDevice; iDevice++) {
-    cudaSetDevice(iDevice);
-    sd->mGPU = &(sd->mGPUs[iDevice]);
+    //cudaSetDevice(iDevice);
+    //sd->mGPU = &(sd->mGPUs[iDevice]);
     mGPU = sd->mGPU;
 
     JacobianGPU *jacgpu = &(mGPU->jac);
@@ -121,8 +121,8 @@ void init_jac_cuda_cvode(SolverData *sd){
   int offset_nnz_J_solver = 0;
   int offset_nrows = 0;
   for (int iDevice = sd->startDevice; iDevice < sd->endDevice; iDevice++) {
-    cudaSetDevice(iDevice);
-    sd->mGPU = &(sd->mGPUs[iDevice]);
+    //cudaSetDevice(iDevice);
+    //sd->mGPU = &(sd->mGPUs[iDevice]);
     mGPU = sd->mGPU;
     mCPU->jac_size = md->n_per_cell_solver_jac_elem * mGPU->n_cells * sizeof(double);
     mCPU->nnz_J_solver = SM_NNZ_S(md->J_solver)/md->n_cells*mGPU->n_cells;
@@ -200,8 +200,8 @@ void solver_init_int_double_cuda_cvode(SolverData *sd) {
   printf("solver_init_int_double_cuda_cvode start \n");
 #endif
   for (int iDevice = sd->startDevice; iDevice < sd->endDevice; iDevice++) {
-    cudaSetDevice(iDevice);
-    sd->mGPU = &(sd->mGPUs[iDevice]);
+    //cudaSetDevice(iDevice);
+    //sd->mGPU = &(sd->mGPUs[iDevice]);
 #ifdef REVERSE_INT_FLOAT_MATRIX
     set_reverse_int_double_rxn(
             md->n_rxn, mCPU->rxn_env_data_idx_size,
@@ -227,11 +227,11 @@ void solver_new_gpu_cu_cvode(SolverData *sd) {
   ModelData *md = &(sd->model_data);
   ModelDataGPU *mGPU;
   ModelDataCPU *mCPU = &(sd->mCPU);
-  int n_dep_var=md->n_per_cell_dep_var;
-  int n_state_var=md->n_per_cell_state_var;
-  int n_rxn=md->n_rxn;
-  int n_rxn_env_param=md->n_rxn_env_data;
-  int n_cells_total=md->n_cells;
+  int n_dep_var = md->n_per_cell_dep_var;
+  int n_state_var = md->n_per_cell_state_var;
+  int n_rxn = md->n_rxn;
+  int n_rxn_env_param = md->n_rxn_env_data;
+  int n_cells_total = md->n_cells;
 #ifdef DEBUG_solver_new_gpu_cu_cvode
   printf("solver_new_gpu_cu_cvode start \n");
 #endif
@@ -239,19 +239,40 @@ void solver_new_gpu_cu_cvode(SolverData *sd) {
   sd->nCellsGPUPerc=0.7;
   n_cells_total *= sd->nCellsGPUPerc;
 #endif
-  sd->mGPUs = (ModelDataGPU *)malloc(sd->nDevices * sizeof(ModelDataGPU));
+  sd->mGPU = (ModelDataGPU *)malloc(sizeof(ModelDataGPU));
   int remainder = n_cells_total % sd->nDevices;
   int nDevicesMax;
   cudaGetDeviceCount(&nDevicesMax);
-  if(sd->nDevices > nDevicesMax){
-     printf("ERROR: Not enough GPUs to launch, nDevices %d nDevicesMax %d\n"
-           , sd->nDevices, nDevicesMax);
+  if (sd->nDevices > nDevicesMax) {
+    printf("ERROR: Not enough GPUs to launch, nDevices %d nDevicesMax %d\n", sd->nDevices, nDevicesMax);
     exit(0);
+  }
+  sd->startDevice = 0;
+  sd->endDevice = 1;
+  int coresPerNode = 40;
+  int size;
+  MPI_Comm_size(MPI_COMM_WORLD, &size);
+  if (size > 40 && size % coresPerNode != 0) {
+    printf("ERROR: MORE THAN 40 MPI PROCESSES AND NOT MULTIPLE OF 40, WHEN CTE-POWER ONLY HAS 40 CORES PER NODE\n");
+    exit(0);
+  }
+  if (size > sd->nDevices*(coresPerNode/nDevicesMax)){
+    printf("ERROR: MORE MPI PROCESSES THAN DEVICES (FOLLOW PROPORTION, FOR CTE-POWER IS 10 PROCESSES FOR EACH GPU, SINCE IT HAS 4 GPUS AND 40 PROCESSES PER NODE)\n");
+    exit(0);
+  }
+  int rank;
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  cudaSetDevice(0);
+  for (int i = 0; i < coresPerNode; i++) {
+    if (rank < coresPerNode / nDevicesMax * (i + 1) && rank >= coresPerNode / nDevicesMax * i && i<sd->nDevices) {
+      cudaSetDevice(i);
+      //printf("rank %d, device %d", rank, i);
+    }
   }
   //mCPU->streams = (cudaStream_t *)malloc(sd->nDevices * sizeof(cudaStream_t));
   for (int iDevice = sd->startDevice; iDevice < sd->endDevice; iDevice++) {
-  cudaSetDevice(iDevice);
-  sd->mGPU = &(sd->mGPUs[iDevice]);
+  //cudaSetDevice(iDevice);
+  //sd->mGPU = &(sd->mGPUs[iDevice]);
   mGPU = sd->mGPU;
   //HANDLE_ERROR(cudaStreamCreate(&mCPU->streams[iDevice]));
   int n_cells = int(n_cells_total / sd->nDevices);
@@ -427,8 +448,8 @@ void swapCSC_CSR_ODE(SolverData *sd){
     //printf("md->jac_map[i].solver_id %d",md->jac_map[i].solver_id);
   }//printf("\n");
   for (int iDevice = sd->startDevice; iDevice < sd->endDevice; iDevice++) {
-    cudaSetDevice(iDevice);
-    sd->mGPU = &(sd->mGPUs[iDevice]);
+    //cudaSetDevice(iDevice);
+    //sd->mGPU = &(sd->mGPUs[iDevice]);
     mGPU = sd->mGPU;
     cudaMemcpy(mGPU->diA, Bp, (n_row + 1) * sizeof(int), cudaMemcpyHostToDevice);
     cudaMemcpy(mGPU->djA, Bi, nnz * sizeof(int), cudaMemcpyHostToDevice);
@@ -454,15 +475,15 @@ void constructor_cvode_gpu(CVodeMem cv_mem, SolverData *sd){
   printf("DEBUG_constructor_cvode_gpu start \n");
 #endif
   solver_new_gpu_cu_cvode(sd);
-  cudaSetDevice(sd->startDevice);
-  sd->mGPU = &(sd->mGPUs[sd->startDevice]);
+  //cudaSetDevice(sd->startDevice);
+  //sd->mGPU = &(sd->mGPUs[sd->startDevice]);
   init_jac_cuda_cvode(sd);
   solver_init_int_double_cuda_cvode(sd);
 #ifdef DEV_CSR_REACTIONS
   getCSRReactions(sd);
 #endif
-  cudaSetDevice(sd->startDevice);
-  sd->mGPU = &(sd->mGPUs[sd->startDevice]);
+  //cudaSetDevice(sd->startDevice);
+  //sd->mGPU = &(sd->mGPUs[sd->startDevice]);
   mGPU = sd->mGPU;
 #ifdef DEBUG_constructor_cvode_gpu
   printf("DEBUG_constructor_cvode_gpu start2 \n");
@@ -472,7 +493,7 @@ void constructor_cvode_gpu(CVodeMem cv_mem, SolverData *sd){
   mCPU->counterLinSolSetup=0;
   mCPU->counterLinSolSolve=0;
   mCPU->counterDerivNewton=0;
-  mCPU->counterBiConjGrad=0;
+  mCPU->counterBCG=0;
   mCPU->counterDerivSolve=0;
   mCPU->countersolveCVODEGPU=0;
 
@@ -506,8 +527,8 @@ void constructor_cvode_gpu(CVodeMem cv_mem, SolverData *sd){
   int offset_nnz = 0;
   int offset_nrows = 0;
   for (int iDevice = sd->startDevice; iDevice < sd->endDevice; iDevice++) {
-    cudaSetDevice(iDevice);
-    sd->mGPU = &(sd->mGPUs[iDevice]);
+    //cudaSetDevice(iDevice);
+    //sd->mGPU = &(sd->mGPUs[iDevice]);
     mGPU = sd->mGPU;
 
     mGPU->nnz = SM_NNZ_S(J)/md->n_cells*mGPU->n_cells;
@@ -590,7 +611,7 @@ void constructor_cvode_gpu(CVodeMem cv_mem, SolverData *sd){
       exit(0);
     }
 #ifdef CAMP_DEBUG_GPU
-#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
+#ifndef CAMP_PROFILE_DEVICE_FUNCTIONS
     cudaDeviceGetAttribute(&mGPU->clock_khz, cudaDevAttrClockRate, 0);
     mCPU->mdvCPU.countercvStep=0;
     mCPU->mdvCPU.counterBCGInternal=0;
@@ -640,7 +661,7 @@ void cudaGlobalCVode(ModelDataGPU md_object) {
   if(tid<active_threads){
     __syncthreads();
 #ifdef CAMP_DEBUG_GPU
-#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
+#ifndef CAMP_PROFILE_DEVICE_FUNCTIONS
     int clock_khz=md->clock_khz;
     clock_t start;
     start = clock();
@@ -650,7 +671,7 @@ void cudaGlobalCVode(ModelDataGPU md_object) {
     istate=cudaDeviceCVode(md,md->s);//dmdv as a function parameter seems faster than removing it
     __syncthreads();
 #ifdef CAMP_DEBUG_GPU
-#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
+#ifndef CAMP_PROFILE_DEVICE_FUNCTIONS
   if(threadIdx.x==0) md->s->dtcudaDeviceCVode += ((double)(int)(clock() - start))/(clock_khz*1000);
   __syncthreads();
   //if(tid==0) printf("dtcudaDeviceCVode %lf\n",md->s->dtcudaDeviceCVode);
@@ -659,7 +680,7 @@ void cudaGlobalCVode(ModelDataGPU md_object) {
   }
   __syncthreads();
   if(threadIdx.x==0) md->flagCells[blockIdx.x]=istate;
-#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
+#ifndef CAMP_PROFILE_DEVICE_FUNCTIONS
   ModelDataVariable *mdvo = md->mdvo;
   *mdvo = *md->s;
 #endif
@@ -844,7 +865,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     return(CV_BAD_DKY);
   }
 #ifdef CAMP_DEBUG_GPU
-  cudaSetDevice(sd->startDevice);
+  //cudaSetDevice(sd->startDevice);
   cudaEventRecord(mCPU->startcvStep);
 #endif
   for (int i = 0; i < md->n_cells; i++)//md->nCellsGPU
@@ -887,8 +908,9 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
   int offset_ncells = 0;
   int offset_nrows = 0;
   for (int iDevice = sd->startDevice; iDevice < sd->endDevice; iDevice++) {
-    cudaSetDevice(iDevice);
-    mGPU=&(sd->mGPUs[iDevice]);
+    //cudaSetDevice(iDevice);
+    //sd->mGPU = &(sd->mGPUs[iDevice]);
+    mGPU = sd->mGPU;
     //cudaStream_t stream = mCPU->streams[iDevice]; //todo needed?
     cudaStream_t stream = 0;
     double *ewt = NV_DATA_S(cv_mem->cv_ewt) + offset_nrows;
@@ -949,8 +971,9 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
   offset_ncells = 0;
   offset_nrows = 0;
   for (int iDevice = sd->startDevice; iDevice < sd->endDevice; iDevice++) {
-    cudaSetDevice(iDevice);
-    mGPU=&(sd->mGPUs[iDevice]);
+    //cudaSetDevice(iDevice);
+    //sd->mGPU = &(sd->mGPUs[iDevice]);
+    mGPU = sd->mGPU;
     //cudaStream_t stream = mCPU->streams[iDevice];
     cudaStream_t stream = 0;
     double *youtArray = N_VGetArrayPointer(yout) + offset_nrows;
@@ -995,11 +1018,11 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
   }
 #endif
   for (int iDevice = sd->startDevice+1; iDevice < sd->endDevice; iDevice++) {
-    cudaSetDevice(iDevice);
+    //cudaSetDevice(iDevice);
     cudaDeviceSynchronize();
   }
-  cudaSetDevice(sd->startDevice);
-  sd->mGPU = &(sd->mGPUs[sd->startDevice]);
+  //cudaSetDevice(sd->startDevice);
+  //sd->mGPU = &(sd->mGPUs[sd->startDevice]);
   mGPU = sd->mGPU;
 #ifdef CAMP_DEBUG_GPU
     cudaEventRecord(mCPU->stopcvStep);
@@ -1008,14 +1031,14 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     cudaEventElapsedTime(&mscvStep, mCPU->startcvStep, mCPU->stopcvStep);
     mCPU->timecvStep+= mscvStep/1000;
     //printf("mCPU->timecvStep %lf\n",mCPU->timecvStep);
-#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
+#ifndef CAMP_PROFILE_DEVICE_FUNCTIONS
     cudaMemcpy(&mCPU->mdvCPU, mGPU->mdvo, sizeof(ModelDataVariable), cudaMemcpyDeviceToHost);
     mCPU->timeBiConjGrad=mCPU->timecvStep*mCPU->mdvCPU.dtBCG/mCPU->mdvCPU.dtcudaDeviceCVode;
-    mCPU->counterBiConjGrad+= mCPU->mdvCPU.counterBCG;
-    printf("mCPU->mdvCPU.dtcudaDeviceCVode %lf\n",mCPU->mdvCPU.dtcudaDeviceCVode);
+    mCPU->counterBCG+= mCPU->mdvCPU.counterBCG;
+    //printf("mCPU->mdvCPU.dtcudaDeviceCVode %lf\n",mCPU->mdvCPU.dtcudaDeviceCVode);
 #else
     mCPU->timeBiConjGrad=0.;
-    mCPU->counterBiConjGrad+=0;
+    mCPU->counterBCG+=0;
 #endif
 #endif
   istate = CV_SUCCESS;
@@ -1035,8 +1058,8 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
 }
 
 void solver_get_statistics_gpu(SolverData *sd){
-  cudaSetDevice(sd->startDevice);
-  sd->mGPU = &(sd->mGPUs[sd->startDevice]);
+  //cudaSetDevice(sd->startDevice);
+  //sd->mGPU = &(sd->mGPUs[sd->startDevice]);
   ModelDataGPU *mGPU = sd->mGPU;
   ModelDataCPU *mCPU = &(sd->mCPU);
   cudaMemcpy(&mCPU->mdvCPU,mGPU->mdvo,sizeof(ModelDataVariable),cudaMemcpyDeviceToHost);
@@ -1047,8 +1070,8 @@ void solver_reset_statistics_gpu(SolverData *sd){
   ModelDataCPU *mCPU = &(sd->mCPU);
   //printf("solver_reset_statistics_gpu\n");
   for (int iDevice = sd->startDevice; iDevice < sd->endDevice; iDevice++) {
-    cudaSetDevice(iDevice);
-    sd->mGPU = &(sd->mGPUs[iDevice]);
+    //cudaSetDevice(iDevice);
+    //sd->mGPU = &(sd->mGPUs[iDevice]);
     mGPU = sd->mGPU;
 #ifdef CAMP_DEBUG_GPU
     for (int i = 0; i < mGPU->n_cells; i++){

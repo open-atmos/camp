@@ -58,8 +58,8 @@ void set_jac_data_gpu(SolverData *sd, double *J){
   int offset_nnz_J_solver = 0;
   int offset_nrows = 0;
   for (int iDevice = sd->startDevice; iDevice < sd->endDevice; iDevice++) {
-    cudaSetDevice(iDevice);
-    sd->mGPU = &(sd->mGPUs[iDevice]);
+    //cudaSetDevice(iDevice);
+    //sd->mGPU = &(sd->mGPUs[iDevice]);
     mGPU = sd->mGPU;
 
     double *J_ptr = J+offset_nnz_J_solver;
@@ -67,7 +67,7 @@ void set_jac_data_gpu(SolverData *sd, double *J){
     double *J_state = N_VGetArrayPointer(md->J_state)+offset_nrows;
     double *J_deriv = N_VGetArrayPointer(md->J_deriv)+offset_nrows;
     HANDLE_ERROR(cudaMemcpy(mGPU->dA, J_ptr, mCPU->jac_size, cudaMemcpyHostToDevice));
-    HANDLE_ERROR(cudaMemcpy(mGPU->J_solver, J_solver, mCPU->jac_size, cudaMemcpyHostToDevice));
+    HANDLE_ERROR(cudaMemcpy(mGPU->mpiProcessesCaseBaseJ_solver, J_solver, mCPU->jac_size, cudaMemcpyHostToDevice));
     HANDLE_ERROR(cudaMemcpy(mGPU->J_state, J_state, mCPU->deriv_size, cudaMemcpyHostToDevice));
     HANDLE_ERROR(cudaMemcpy(mGPU->J_deriv, J_deriv, mCPU->deriv_size, cudaMemcpyHostToDevice));
 
@@ -88,8 +88,8 @@ void rxn_update_env_state_gpu(SolverData *sd) {
   double *total_state = md->total_state;
 
   for (int iDevice = sd->startDevice; iDevice < sd->endDevice; iDevice++) {
-    cudaSetDevice(iDevice);
-    sd->mGPU = &(sd->mGPUs[iDevice]);
+    //cudaSetDevice(iDevice);
+    //sd->mGPU = &(sd->mGPUs[iDevice]);
     mGPU = sd->mGPU;
 
     HANDLE_ERROR(cudaMemcpy(mGPU->rxn_env_data, rxn_env_data, mCPU->rxn_env_data_size, cudaMemcpyHostToDevice));
@@ -112,8 +112,8 @@ void camp_solver_update_model_state_gpu(N_Vector solver_state, SolverData *sd,
   ModelDataCPU *mCPU = &(sd->mCPU);
   double *total_state = md->total_state;
   for (int iDevice = sd->startDevice; iDevice < sd->endDevice; iDevice++) {
-    cudaSetDevice(iDevice);
-    sd->mGPU = &(sd->mGPUs[iDevice]);
+    //cudaSetDevice(iDevice);
+    //sd->mGPU = &(sd->mGPUs[iDevice]);
     mGPU = sd->mGPU;
     HANDLE_ERROR(cudaMemcpy(mGPU->state, total_state, mCPU->state_size, cudaMemcpyHostToDevice));
     total_state += mGPU->state_size_cell * mGPU->n_cells;
@@ -131,8 +131,8 @@ int rxn_calc_deriv_gpu(SolverData *sd, N_Vector y, N_Vector deriv, double time_s
   double *deriv_data = N_VGetArrayPointer(deriv);
   if(sd->use_gpu_cvode==0){
     for (int iDevice = sd->startDevice; iDevice < sd->endDevice; iDevice++) {
-      cudaSetDevice(iDevice);
-      sd->mGPU = &(sd->mGPUs[iDevice]);
+      //cudaSetDevice(iDevice);
+      //sd->mGPU = &(sd->mGPUs[iDevice]);
       mGPU = sd->mGPU;
 
       HANDLE_ERROR(cudaMemcpy(mGPU->deriv_data, deriv_data, mCPU->deriv_size, cudaMemcpyHostToDevice));
@@ -151,8 +151,8 @@ void free_gpu_cu(SolverData *sd) {
   //printf("free_gpu_cu start\n");
   free(sd->flagCells);
   for (int iDevice = sd->startDevice; iDevice < sd->endDevice; iDevice++) {
-    cudaSetDevice(iDevice);
-    sd->mGPU = &(sd->mGPUs[iDevice]);
+    //cudaSetDevice(iDevice);
+    //sd->mGPU = &(sd->mGPUs[iDevice]);
     mGPU = sd->mGPU;
     //cudaStreamDestroy(mCPU->streams[iDevice]);
     //ModelDataGPU Start

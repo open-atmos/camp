@@ -9,7 +9,8 @@ module load netCDF-Fortran/4.4.4-foss-2018b
 module load ESMF/6.3.0rp1-foss-2018b
 module load CMake/3.15.3-GCCcore-7.3.0
 module load OpenBLAS/0.3.1-GCC-7.3.0-2.30
-module load CUDA/10.1.105-ES
+module load CUDA/10.1.105-EShttps://rediris.zoom.us/j/87861333712
+
 
 export NETCDF_FORTRAN_HOME=${EBROOTNETCDFMINFORTRAN}
 export NETCDF_HOME=${EBROOTNETCDF}
