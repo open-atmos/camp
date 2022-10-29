@@ -87,13 +87,10 @@ int jacobian_initialize_cuda_cvode(SolverData *sd) {
   int num_elem = jac->num_elem * mGPU->n_cells;
   cudaMalloc((void **) &(jacgpu->production_partials), num_elem * sizeof(jacgpu->production_partials));
   HANDLE_ERROR(cudaMalloc((void **) &(jacgpu->loss_partials), num_elem * sizeof(jacgpu->loss_partials)));
-  int iDevice=0;
-  cudaDeviceProp prop;
-  cudaGetDeviceProperties(&prop, iDevice);
-  int threads_block = prop.maxThreadsPerBlock;
-  int blocks = (num_elem +threads_block - 1) / threads_block;
+  ModelDataCPU *mCPU = &(sd->mCPU);
+  int threads_block = mCPU->threads;
+  int blocks = mCPU->blocks;
   init_jac_partials_cvode <<<blocks,threads_block>>>(jacgpu->production_partials,jacgpu->loss_partials);
-
 #ifdef DEBUG_jacobian_initialize_gpu
   printf("jacobian_initialize_gpu end \n");
 #endif
@@ -115,7 +112,7 @@ void init_jac_cuda_cvode(SolverData *sd){
 #endif
   mGPU = sd->mGPU;
   mCPU->jac_size = md->n_per_cell_solver_jac_elem * mGPU->n_cells * sizeof(double);
-  mCPU->nnz_J_solver = SM_NNZ_S(md->J_solver)/md->n_cells*mGPU->n_cells;
+  mCPU->nnz_J_solver = SM_NNZ_S(md->J_solver);
   cudaMalloc((void **) &mGPU->dA, mCPU->jac_size);
   cudaMalloc((void **) &mGPU->J_solver, mCPU->jac_size);
   cudaMalloc((void **) &mGPU->J_state, mCPU->deriv_size);
@@ -141,11 +138,8 @@ void init_jac_cuda_cvode(SolverData *sd){
   double *J_deriv = N_VGetArrayPointer(md->J_deriv);
   double *J_tmp2 = N_VGetArrayPointer(md->J_tmp2);
   HANDLE_ERROR(cudaMemcpy(mGPU->J_deriv, J_deriv, mCPU->deriv_size, cudaMemcpyHostToDevice));
-  int iDevice=0;
-  cudaDeviceProp prop;
-  cudaGetDeviceProperties(&prop, iDevice);
-  int threads_block = prop.maxThreadsPerBlock;;
-  int blocks = (mCPU->deriv_size/sizeof(double)+threads_block - 1) / threads_block;
+  int threads_block = mCPU->threads;
+  int blocks = mCPU->blocks;
   init_J_tmp2_cuda_cvode <<<blocks,threads_block>>>(mGPU->J_tmp2);
   HANDLE_ERROR(cudaMemcpy(mGPU->jac_map, md->jac_map, sizeof(JacMap) * md->n_mapped_values, cudaMemcpyHostToDevice));
   HANDLE_ERROR(cudaMemcpy(mGPU->n_mapped_values, &md->n_mapped_values, 1 * sizeof(int), cudaMemcpyHostToDevice));
@@ -223,6 +217,13 @@ void solver_new_gpu_cu_cvode(SolverData *sd) {
   sd->nCellsGPUPerc=0.7;
   n_cells_total *= sd->nCellsGPUPerc;
 #endif
+  int n_cells = n_cells_total;
+  mCPU->state_size = n_state_var * n_cells * sizeof(double);
+  mCPU->deriv_size = n_dep_var * n_cells * sizeof(double);
+  mCPU->env_size = CAMP_NUM_ENV_PARAM_ * n_cells * sizeof(double); //Temp and pressure
+  mCPU->rxn_env_data_size = n_rxn_env_param * n_cells * sizeof(double);
+  mCPU->rxn_env_data_idx_size = (n_rxn+1) * sizeof(int);
+  mCPU->map_state_deriv_size = n_dep_var * n_cells * sizeof(int);
   sd->mGPU = (ModelDataGPU *)malloc(sizeof(ModelDataGPU));
   int remainder = n_cells_total % sd->nDevices;
   int nDevicesMax;
@@ -249,27 +250,20 @@ void solver_new_gpu_cu_cvode(SolverData *sd) {
     if (rank < coresPerNode / nDevicesMax * (i + 1) && rank >= coresPerNode / nDevicesMax * i && i<sd->nDevices) {
       cudaSetDevice(i);
       //printf("rank %d, device %d\n", rank, i);
+      cudaDeviceProp prop;
+      cudaGetDeviceProperties(&prop, i);
+      mCPU->threads = prop.maxThreadsPerBlock; //1024
+      mCPU->blocks = (n_dep_var*n_cells + mCPU->threads - 1) / mCPU->threads;
+      mCPU->max_n_gpu_thread = prop.maxThreadsPerBlock;
+      mCPU->max_n_gpu_blocks = prop.maxGridSize[1];
+      if(md->n_per_cell_dep_var > prop.maxThreadsPerBlock/2){
+        printf("ERROR: More species than threads per block available\n");
+        exit(0);
+      }
     }
   }
-  int iDevice = 0;
   mGPU = sd->mGPU;
-  int n_cells = n_cells_total;
   mGPU->n_cells=n_cells;
-  mCPU->state_size = n_state_var * n_cells * sizeof(double);
-  mCPU->deriv_size = n_dep_var * n_cells * sizeof(double);
-  mCPU->env_size = CAMP_NUM_ENV_PARAM_ * n_cells * sizeof(double); //Temp and pressure
-  mCPU->rxn_env_data_size = n_rxn_env_param * n_cells * sizeof(double);
-  mCPU->rxn_env_data_idx_size = (n_rxn+1) * sizeof(int);
-  mCPU->map_state_deriv_size = n_dep_var * n_cells * sizeof(int);
-  cudaDeviceProp prop;
-  cudaGetDeviceProperties(&prop, iDevice);
-  mCPU->max_n_gpu_thread = prop.maxThreadsPerBlock;
-  mCPU->max_n_gpu_blocks = prop.maxGridSize[1];
-  int n_blocks = (mCPU->deriv_size + mCPU->max_n_gpu_thread - 1) / mCPU->max_n_gpu_thread;
-  if( n_blocks > mCPU->max_n_gpu_blocks){
-    printf("\nWarning: More blocks assigned: %d than maximum block numbers: %d",
-           n_blocks, mCPU->max_n_gpu_blocks);
-  }
   HANDLE_ERROR(cudaMalloc((void **) &mGPU->deriv_data, mCPU->deriv_size));
   mGPU->n_rxn=md->n_rxn;
   mGPU->n_rxn_env_data=md->n_rxn_env_data;
@@ -487,16 +481,9 @@ void constructor_cvode_gpu(CVodeMem cv_mem, SolverData *sd){
   cudaEventCreate(&mCPU->stopBCG);
   cudaEventCreate(&mCPU->stopBCGMemcpy);
 #endif
-
-  int iDevice=0;//todo delete
   mGPU = sd->mGPU;
-
-  mGPU->nnz = SM_NNZ_S(J)/md->n_cells*mGPU->n_cells;
-  mGPU->nrows = SM_NP_S(J)/md->n_cells*mGPU->n_cells;
-  cudaDeviceProp prop;
-  cudaGetDeviceProperties(&prop, iDevice);
-  mCPU->threads = prop.maxThreadsPerBlock; //1024
-  mCPU->blocks = (mGPU->nrows + mCPU->threads - 1) / mCPU->threads;
+  mGPU->nnz = SM_NNZ_S(J);
+  mGPU->nrows = SM_NP_S(J);
   if(sd->use_gpu_cvode==0){
     createLinearSolver(sd);
   }else{
@@ -566,10 +553,6 @@ void constructor_cvode_gpu(CVodeMem cv_mem, SolverData *sd){
   mGPU->state_size_cell = md->n_per_cell_state_var;
   int flag = 999; //CAMP_SOLVER_SUCCESS
   cudaMemcpy(mGPU->flag, &flag, 1 * sizeof(int), cudaMemcpyHostToDevice);
-  if(md->n_per_cell_dep_var > prop.maxThreadsPerBlock/2){
-    printf("ERROR: More species than threads per block availabless\n");
-    exit(0);
-  }
 #ifdef CAMP_DEBUG_GPU
 #ifndef CAMP_PROFILE_DEVICE_FUNCTIONS
   cudaDeviceGetAttribute(&mGPU->clock_khz, cudaDevAttrClockRate, 0);

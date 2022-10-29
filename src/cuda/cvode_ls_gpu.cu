@@ -2657,18 +2657,13 @@ int linsolsolve_gpu(SolverData *sd, CVodeMem cv_mem)
     cudaEventElapsedTime(&msBiConjGradMemcpy, mCPU->startBCGMemcpy, mCPU->stopBCGMemcpy);
     mCPU->timeBiConjGradMemcpy+= msBiConjGradMemcpy/1000;
     mCPU->timeBiConjGrad+= msBiConjGradMemcpy/1000;
-
 #endif
-    //cudaSetDevice(iDevice);
-    //sd->mGPU = &(sd->mGPUs[iDevice]);
     mGPU = sd->mGPU;
 #ifndef CSR_SPMV_CPU
     swapCSC_CSR_BCG(sd);
 #endif
-
     // Get WRMS norm of correction
     del = gpu_VWRMS_Norm(mGPU->nrows, mGPU->dx, mGPU->dewt, mCPU->aux, mGPU->dtempv2, (mCPU->blocks + 1) / 2, mCPU->threads);
-
     cudaMemcpy(cv_ftemp, mGPU->dftemp, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost);
     cudaMemcpy(cv_y, mGPU->dcv_y, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost);
     cudaMemcpy(b_ptr, mGPU->dx, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost);
