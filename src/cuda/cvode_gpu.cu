@@ -248,17 +248,12 @@ void solver_new_gpu_cu_cvode(SolverData *sd) {
   for (int i = 0; i < coresPerNode; i++) {
     if (rank < coresPerNode / nDevicesMax * (i + 1) && rank >= coresPerNode / nDevicesMax * i && i<sd->nDevices) {
       cudaSetDevice(i);
-      //printf("rank %d, device %d", rank, i);
+      //printf("rank %d, device %d\n", rank, i);
     }
   }
   int iDevice = 0;
   mGPU = sd->mGPU;
-  int n_cells = int(n_cells_total / sd->nDevices);
-  if (remainder!=0 && iDevice==0 && n_cells_total != 1){
-    //printf("WARNING:  PENDING TO CHECK THAT WORKS CASE: sd->nDevicesMODn_cells!=0\n");
-    //printf("remainder %d n_cells_total %d nDevices %d n_cells %d\n",remainder,n_cells_total,sd->nDevices,n_cells);
-    n_cells+=remainder;
-  }
+  int n_cells = n_cells_total;
   mGPU->n_cells=n_cells;
   mCPU->state_size = n_state_var * n_cells * sizeof(double);
   mCPU->deriv_size = n_dep_var * n_cells * sizeof(double);
