@@ -23,12 +23,10 @@ program mock_monarch_t
 #endif
 
 #ifdef SOLVE_EBI_IMPORT_CAMP_INPUT
-
   ! EBI Solver
   use module_bsc_chem_data
   use EXT_HRDATA
   use EXT_RXCM,                               only : NRXNS, RXLABEL
-
   ! KPP Solver
   use cb05cl_ae5_Initialize,                  only : KPP_Initialize => Initialize
   use cb05cl_ae5_Model,                       only : KPP_NSPEC => NSPEC, &
@@ -491,12 +489,13 @@ program mock_monarch_t
     allocate(species_conc_mpi(NUM_WE_CELLS,NUM_SN_CELLS,&
             NUM_VERT_CELLS,NUM_MONARCH_SPEC,camp_mpi_size()))
     call init_file_results_all_cells(camp_interface, output_file_prefix)
+  end if
+
 #ifdef CAMP_DISABLE_NETCDF
 #else
-    call init_results_netcdf(camp_interface, output_file_prefix)
-#endif
-  end if
   !call test_netcdf(camp_interface, output_file_prefix)
+  call init_results_netcdf(camp_interface, output_file_prefix)
+#endif
 
   if (camp_mpi_rank().eq.0) then
     do j=1, size(name_gas_species_to_print)
@@ -627,11 +626,12 @@ program mock_monarch_t
 
       if(export_results_all_cells.eq.1) then
         call export_file_results_all_cells(camp_interface)
+      end if
+
 #ifdef CAMP_DISABLE_NETCDF
 #else
-        !call export_results_netcdf(camp_interface)
+      call export_results_netcdf(camp_interface)
 #endif
-      end if
 
     end do
 
@@ -692,13 +692,7 @@ program mock_monarch_t
 
 #ifdef CAMP_DISABLE_NETCDF
 #else
-#ifdef CAMP_USE_MPI
-    if (camp_mpi_rank().eq.0) then
-#endif
     call check( nf90_close(ncid) )
-#ifdef CAMP_USE_MPI
-    end if
-#endif
 #endif
 
   ! Deallocation
@@ -964,183 +958,211 @@ contains
       print *, trim(nf90_strerror(status))
       stop "Stopped"
     end if
-  end subroutine check
+  end subroutine
 
   subroutine test_netcdf(camp_interface, file_prefix)
-
     character(len=:), allocatable, intent(in) :: file_prefix
     type(camp_monarch_interface_t), intent(inout) :: camp_interface
-    ! This is the name of the data file we will create.
-    character (len = *), parameter :: FILE_NAME = "pres_temp_4D.nc"
-    integer :: ncid
+    character(len=:), allocatable :: file_name
+    integer :: z,ncells, numprocs, start1, err, rank, varid, length
+    integer :: dimids(2)
+    integer :: ncells_dimid, time_dimid, rank_dimid,len, dimid, i
+    type(string_t), allocatable :: unique_names(:)
+    integer, dimension(:), allocatable :: data_arr
 
-    ! We are writing 4D data, a 2 x 6 x 12 lvl-lat-lon grid, with 2
-    ! timesteps of data.
-    integer, parameter :: NDIMS = 4, NRECS = 2
-    integer, parameter :: NLVLS = 2, NLATS = 6, NLONS = 12
-    character (len = *), parameter :: LVL_NAME = "level"
-    character (len = *), parameter :: LAT_NAME = "latitude"
-    character (len = *), parameter :: LON_NAME = "longitude"
-    character (len = *), parameter :: REC_NAME = "time"
-    integer :: lvl_dimid, lon_dimid, lat_dimid, rec_dimid
-
-    ! The start and count arrays will tell the netCDF library where to
-    ! write our data.
-    integer :: start(NDIMS), count(NDIMS)
-
-    ! These program variables hold the latitudes and longitudes.
-    real :: lats(NLATS), lons(NLONS)
-    integer :: lon_varid, lat_varid
-
-    ! We will create two netCDF variables, one each for temperature and
-    ! pressure fields.
-    character (len = *), parameter :: PRES_NAME="pressure"
-    character (len = *), parameter :: TEMP_NAME="temperature"
-    integer :: pres_varid, temp_varid
-    integer :: dimids(NDIMS)
-
-    ! We recommend that each variable carry a "units" attribute.
-    character (len = *), parameter :: UNITS = "units"
-    character (len = *), parameter :: PRES_UNITS = "hPa"
-    character (len = *), parameter :: TEMP_UNITS = "celsius"
-    character (len = *), parameter :: LAT_UNITS = "degrees_north"
-    character (len = *), parameter :: LON_UNITS = "degrees_east"
-
-    ! Program variables to hold the data we will write out. We will only
-    ! need enough space to hold one timestep of data; one record.
-    real :: pres_out(NLONS, NLATS, NLVLS)
-    real :: temp_out(NLONS, NLATS, NLVLS)
-    real, parameter :: SAMPLE_PRESSURE = 900.0
-    real, parameter :: SAMPLE_TEMP = 9.0
-
-    ! Use these to construct some latitude and longitude data for this
-    ! example.
-    real, parameter :: START_LAT = 25.0, START_LON = -125.0
-
-    ! Loop indices
-    integer :: lvl, lat, lon, rec, i
-
-#ifdef CAMP_USE_MPI
-    if (camp_mpi_rank().eq.0) then
-#endif
-
-    ! Create pretend data. If this wasn't an example program, we would
-    ! have some real data to write, for example, model output.
-    do lat = 1, NLATS
-      lats(lat) = START_LAT + (lat - 1) * 5.0
-    end do
-    do lon = 1, NLONS
-      lons(lon) = START_LON + (lon - 1) * 5.0
-    end do
-    i = 0
-    do lvl = 1, NLVLS
-      do lat = 1, NLATS
-        do lon = 1, NLONS
-          pres_out(lon, lat, lvl) = SAMPLE_PRESSURE + i
-          temp_out(lon, lat, lvl) = SAMPLE_TEMP + i
-          i = i + 1
-        end do
-      end do
-    end do
-
-    ! Create the file.
-    call check( nf90_create(FILE_NAME, nf90_clobber, ncid) )
-
-    ! Define the dimensions. The record dimension is defined to have
-    ! unlimited length - it can grow as needed. In this example it is
-    ! the time dimension.
-    call check( nf90_def_dim(ncid, LVL_NAME, NLVLS, lvl_dimid) )
-    call check( nf90_def_dim(ncid, LAT_NAME, NLATS, lat_dimid) )
-    call check( nf90_def_dim(ncid, LON_NAME, NLONS, lon_dimid) )
-    call check( nf90_def_dim(ncid, REC_NAME, NF90_UNLIMITED, rec_dimid) )
-
-    ! Define the coordinate variables. We will only define coordinate
-    ! variables for lat and lon.  Ordinarily we would need to provide
-    ! an array of dimension IDs for each variable's dimensions, but
-    ! since coordinate variables only have one dimension, we can
-    ! simply provide the address of that dimension ID (lat_dimid) and
-    ! similarly for (lon_dimid).
-    call check( nf90_def_var(ncid, LAT_NAME, NF90_REAL, lat_dimid, lat_varid) )
-    call check( nf90_def_var(ncid, LON_NAME, NF90_REAL, lon_dimid, lon_varid) )
-
-    ! Assign units attributes to coordinate variables.
-    call check( nf90_put_att(ncid, lat_varid, UNITS, LAT_UNITS) )
-    call check( nf90_put_att(ncid, lon_varid, UNITS, LON_UNITS) )
-
-    ! The dimids array is used to pass the dimids of the dimensions of
-    ! the netCDF variables. Both of the netCDF variables we are creating
-    ! share the same four dimensions. In Fortran, the unlimited
-    ! dimension must come last on the list of dimids.
-    dimids = (/ lon_dimid, lat_dimid, lvl_dimid, rec_dimid /)
-
-    ! Define the netCDF variables for the pressure and temperature data.
-    call check( nf90_def_var(ncid, PRES_NAME, NF90_REAL, dimids, pres_varid) )
-    call check( nf90_def_var(ncid, TEMP_NAME, NF90_REAL, dimids, temp_varid) )
-
-    ! Assign units attributes to the netCDF variables.
-    call check( nf90_put_att(ncid, pres_varid, UNITS, PRES_UNITS) )
-    call check( nf90_put_att(ncid, temp_varid, UNITS, TEMP_UNITS) )
-
-    ! End define mode.
+    print*,"test_netcdf_parallel tested and working fine"
+    print*,"test_netcdf_parallel start"
+    file_name = file_prefix//"_results_netcdf.nc"
+    call check(nf90_create_par(file_name, OR(OR(NF90_CLOBBER,NF90_NETCDF4),NF90_MPIIO), MPI_COMM_WORLD, MPI_INFO_NULL, ncid))
+    !call check(nf90_create_par("data.nc", OR(OR(NF90_CLOBBER,NF90_NETCDF4),NF90_MPIIO), MPI_COMM_WORLD, MPI_INFO_NULL, ncid))
+    print*,"Created netcdf file at", file_name
+    call MPI_Comm_size(MPI_COMM_WORLD,numprocs,err)
+    i=0
+    ncells=(I_E - I_W+1)*(I_N - I_S+1)*NUM_VERT_CELLS
+    length=ncells*numprocs
+    call check( nf90_def_dim(ncid,"length",length,dimid) )
+    call check(nf90_def_var(ncid, "state", NF90_INT, dimid, varids(i)))
+    i=i+1
+    !length=ncells*numprocs
+    !call check( nf90_def_dim(ncid,"length",length,dimid) )
+    !call check(nf90_def_var(ncid, "state", NF90_INT, dimid, varid2))
+    !i=i+1
     call check( nf90_enddef(ncid) )
-
-    ! Write the coordinate variable data. This will put the latitudes
-    ! and longitudes of our data grid into the netCDF file.
-    call check( nf90_put_var(ncid, lat_varid, lats) )
-    call check( nf90_put_var(ncid, lon_varid, lons) )
-
-    ! These settings tell netcdf to write one timestep of data. (The
-    ! setting of start(4) inside the loop below tells netCDF which
-    ! timestep to write.)
-    count = (/ NLONS, NLATS, NLVLS, 1 /)
-    start = (/ 1, 1, 1, 1 /)
-
-    ! Write the pretend data. This will write our surface pressure and
-    ! surface temperature data. The arrays only hold one timestep worth
-    ! of data. We will just rewrite the same data for each timestep. In
-    ! a real :: application, the data would change between timesteps.
-    do rec = 1, NRECS
-      start(4) = rec
-      call check( nf90_put_var(ncid, pres_varid, pres_out, start = start, &
-              count = count) )
-      call check( nf90_put_var(ncid, temp_varid, temp_out, start = start, &
-              count = count) )
-    end do
-
-    ! Close the file. This causes netCDF to flush all buffers and make
-    ! sure your data are really written to disk.
+    call camp_mpi_barrier()
+    print*,"nf90_enddef end"
+    allocate(data_arr(ncells))
+    call MPI_Comm_rank(MPI_COMM_WORLD,rank,err)
+    data_arr = rank
+    start1 = rank * ncells + 1
+    print*,data_arr
+    print*,"nf90_var_par_access start"
+    call check(nf90_var_par_access(ncid, varid1, NF90_COLLECTIVE))
+    print*,"nf90_var_par_access end"
+    call check(nf90_put_var(ncid, varid1, data_arr, start=(/start1/), count=(/ncells/)))
+    !call check( nf90_put_var(ncid, temp_varid,temperature_mpi,&
+    !       start=(/1,1,counter_export_netcdf/),&
+    !      count=(/ncells,camp_mpi_size(),1/)))
+    call check(nf90_close(ncid))
+    deallocate(data_arr)
+    call camp_mpi_barrier()
+    print*,"init_results_netcdf end"
+    print*,"start netcdf read"
+    call check( nf90_open(file_name, nf90_nowrite, ncid) )
+    call check( nf90_inq_varid(ncid, "state", varid1) )
+    allocate(data_arr(ncells))
+    call check( nf90_get_var(ncid, varid1, data_arr,  start=(/start1/), count=(/ncells/)) )
+    print*,"data_arr"
+    print*,data_arr
+    deallocate(data_arr)
     call check( nf90_close(ncid) )
-
-    print *,"*** SUCCESS writing example file ", FILE_NAME, "!"
-
-#ifdef CAMP_USE_MPI
-    end if
-#endif
-
+    stop
   end subroutine
 
   subroutine init_results_netcdf(camp_interface, file_prefix)
-
     character(len=:), allocatable, intent(in) :: file_prefix
     type(camp_monarch_interface_t), intent(inout) :: camp_interface
+    character(len=:), allocatable :: file_name
+    integer :: z,ncells, numprocs, start1, err, rank, length
+    integer :: dimids(2)
+    integer :: varid
+    integer :: ncid, len, dimid, i!XfDVfc3
+    type(string_t), allocatable :: unique_names(:)
+    integer, dimension(:), allocatable :: data_arr
+    integer :: varids(3)
 
+    print*,"init_results_netcdf start"
+
+    file_name = file_prefix//"_results_netcdf.nc"
+    call check(nf90_create_par(file_name, OR(OR(NF90_CLOBBER,NF90_NETCDF4),NF90_MPIIO), MPI_COMM_WORLD, MPI_INFO_NULL, ncid))
+    !call check(nf90_create_par("data.nc", OR(OR(NF90_CLOBBER,NF90_NETCDF4),NF90_MPIIO), MPI_COMM_WORLD, MPI_INFO_NULL, ncid))
+    print*,"Created netcdf file at", file_name
+    call MPI_Comm_size(MPI_COMM_WORLD,numprocs,err)
+    i=1
+    ncells=(I_E - I_W+1)*(I_N - I_S+1)*NUM_VERT_CELLS
+    length=ncells*numprocs
+    call check( nf90_def_dim(ncid,"length",length,dimid) )
+    call check(nf90_def_var(ncid, "state", NF90_INT, dimid, varids(i)))
+    i=i+1
+    !length=ncells*numprocs
+    !call check( nf90_def_dim(ncid,"length",length,dimid) )
+    !call check(nf90_def_var(ncid, "state", NF90_INT, dimid, varid2))
+    call check( nf90_enddef(ncid) )
+    call camp_mpi_barrier()
+    print*,"nf90_enddef end"
+    allocate(data_arr(ncells))
+    call MPI_Comm_rank(MPI_COMM_WORLD,rank,err)
+    data_arr = rank
+    start1 = rank * ncells + 1
+    i=1
+    print*,data_arr
+    print*,"nf90_var_par_access start"
+    call check(nf90_var_par_access(ncid, varids(i), NF90_COLLECTIVE))
+    print*,"nf90_var_par_access end"
+    call check(nf90_put_var(ncid, varids(i), data_arr, start=(/start1/), count=(/ncells/)))
+    i=i+1
+    !call check( nf90_put_var(ncid, temp_varid,temperature_mpi,&
+    !       start=(/1,1,counter_export_netcdf/),&
+    !      count=(/ncells,camp_mpi_size(),1/)))
+    call check(nf90_close(ncid))
+    deallocate(data_arr)
+    call camp_mpi_barrier()
+    print*,"init_results_netcdf end"
+    print*,"start netcdf read"
+    i=1
+    allocate(data_arr(ncells))
+    call check( nf90_open(file_name, nf90_nowrite, ncid) )
+    call check( nf90_inq_varid(ncid, "state", varids(i)) )
+    call check( nf90_get_var(ncid, varids(i), data_arr,  start=(/start1/), count=(/ncells/)) )
+    i=i+1
+    print*,"data_arr"
+    print*,data_arr
+    deallocate(data_arr)
+    call check( nf90_close(ncid) )
+    stop
+  end subroutine
+
+  subroutine export_results_netcdf(camp_interface)
+
+    use netcdf
+    type(camp_monarch_interface_t), intent(inout) :: camp_interface
+
+    character(len=:), allocatable :: aux_str
+    character(len=128) :: i_str
+    integer :: i,j,k,z,i_cell,i_spec,n,len,ncells, err
+    type(string_t), allocatable :: unique_names(:)
+    real, allocatable  :: temp_array(:),press_array(:)
+    real, allocatable  :: temperature_mpi(:,:,:), pressure_mpi(:,:,:)
+    integer, dimension(:), allocatable :: data_arr
+
+    print*,"export_results_netcdf start"
+
+    ncells=(I_E - I_W+1)*(I_N - I_S+1)*NUM_VERT_CELLS
+    allocate(temp_array(ncells))
+    allocate(press_array(ncells))
+    !print*,"ncells size(camp_interface%camp_state%env_state)", ncells, size(camp_interface%camp_state%env_states)
+    do z=1, ncells!size(camp_interface%camp_state%env_state)
+      temp_array(z) = camp_interface%camp_state%env_var(1+(z-1)*2)
+      press_array(z) = camp_interface%camp_state%env_var(2+(z-1)*2)
+    end do
+
+    allocate(temperature_mpi(ncells,camp_mpi_size(),1))
+    allocate(pressure_mpi(ncells,camp_mpi_size(),1))
+
+    len=size(temperature)
+    call MPI_GATHER(temp_array, len, MPI_REAL, temperature_mpi,&
+            len,MPI_REAL, 0, MPI_COMM_WORLD, ierr)
+    len=size(pressure)
+    call MPI_GATHER(press_array, len, MPI_REAL, pressure_mpi,&
+            len,MPI_REAL, 0, MPI_COMM_WORLD, ierr)
+    len=size(camp_interface%camp_state%state_var)
+    call MPI_GATHER(camp_interface%camp_state%state_var, len, MPI_REAL, species_conc_mpi,&
+            len,MPI_REAL, 0, MPI_COMM_WORLD, ierr)
+
+    if (camp_mpi_rank().eq.0) then
+      call check( nf90_put_var(ncid, temp_varid,temperature_mpi,&
+              start=(/1,1,counter_export_netcdf/),&
+              count=(/ncells,camp_mpi_size(),1/)))
+      call check( nf90_put_var(ncid, pres_varid,pressure_mpi,&
+              start=(/1,1,counter_export_netcdf/),&
+              count=(/ncells,camp_mpi_size(),1/)))
+      unique_names=camp_interface%camp_core%unique_names()
+      do z=1, size(unique_names)
+        call check( nf90_put_var(ncid, species_id_netcdf(z),species_conc_mpi,&
+                start=(/1,1,counter_export_netcdf/),&
+                count=(/ncells,camp_mpi_size(),1/)))
+      end do
+
+      counter_export_netcdf = counter_export_netcdf + 1
+      deallocate(temp_array)
+      deallocate(press_array)
+      deallocate(temperature_mpi)
+      deallocate(pressure_mpi)
+
+    end if
+
+    !https://docs.unidata.ucar.edu/netcdf-c/current/parallel_io.html
+
+    print*,"export_results_netcdf end"
+
+  end subroutine
+
+  subroutine init_results_netcdf_single(camp_interface, file_prefix)
+    character(len=:), allocatable, intent(in) :: file_prefix
+    type(camp_monarch_interface_t), intent(inout) :: camp_interface
     character(len=:), allocatable :: file_name
     integer :: z,ncells
     integer :: dimids(3)
     integer :: ncells_dimid, time_dimid, rank_dimid,len
     type(string_t), allocatable :: unique_names(:)
-
 #ifdef CAMP_USE_MPI
     if (camp_mpi_rank().eq.0) then
 #endif
-
+    print*,"init_results_netcdf start"
     counter_export_netcdf = 1
     unique_names=camp_interface%camp_core%unique_names()
-
-    print*,"WARNING: CHECK UNIQUE NAMES IS PRINTING ALL STATE VARIABLES, &
-            SO THIS TWO SHOULD HAVE SAME SIZE: size(unique_names)",size(unique_names),&
-            "size(camp_interface%monarch_species_names)",size(camp_interface%monarch_species_names)
-
+    !print*,"WARNING: CHECK UNIQUE NAMES IS PRINTING ALL STATE VARIABLES, &
+    !        SO THIS TWO SHOULD HAVE SAME SIZE: size(unique_names)",size(unique_names),&
+    !        "size(camp_interface%monarch_species_names)",size(camp_interface%monarch_species_names)
     allocate(species_id_netcdf(size(unique_names)))
 
     file_name = file_prefix//"_results_netcdf.nc"
@@ -1167,6 +1189,7 @@ contains
     !call check( nf90_put_att(ncid, pres_varid, UNITS, PRES_UNITS) )
     call check( nf90_enddef(ncid) )
 
+    print*,"init_results_netcdf end"
 
 #ifdef CAMP_USE_MPI
     end if
@@ -1174,7 +1197,7 @@ contains
 
   end subroutine
 
-  subroutine export_results_netcdf(camp_interface)
+  subroutine export_results_netcdf_single(camp_interface)
 
     use netcdf
     type(camp_monarch_interface_t), intent(inout) :: camp_interface
@@ -1186,11 +1209,11 @@ contains
     real, allocatable  :: temp_array(:),press_array(:)
     real, allocatable  :: temperature_mpi(:,:,:), pressure_mpi(:,:,:)
 
-    ncells=(I_E - I_W+1)*(I_N - I_S+1)*NUM_VERT_CELLS
+    print*,"export_results_netcdf start"
 
+    ncells=(I_E - I_W+1)*(I_N - I_S+1)*NUM_VERT_CELLS
     allocate(temp_array(ncells))
     allocate(press_array(ncells))
-
     !print*,"ncells size(camp_interface%camp_state%env_state)", ncells, size(camp_interface%camp_state%env_states)
     do z=1, ncells!size(camp_interface%camp_state%env_state)
       temp_array(z) = camp_interface%camp_state%env_var(1+(z-1)*2)
@@ -1201,29 +1224,21 @@ contains
     allocate(pressure_mpi(ncells,camp_mpi_size(),1))
 
 #ifdef CAMP_USE_MPI
-
     len=size(temperature)
     call MPI_GATHER(temp_array, len, MPI_REAL, temperature_mpi,&
             len,MPI_REAL, 0, MPI_COMM_WORLD, ierr)
-
     len=size(pressure)
     call MPI_GATHER(press_array, len, MPI_REAL, pressure_mpi,&
             len,MPI_REAL, 0, MPI_COMM_WORLD, ierr)
-
     len=size(camp_interface%camp_state%state_var)
     call MPI_GATHER(camp_interface%camp_state%state_var, len, MPI_REAL, species_conc_mpi,&
             len,MPI_REAL, 0, MPI_COMM_WORLD, ierr)
-
 #else
-
     temperature_mpi(:,1,1) = temp_array(:)
     pressure_mpi(:,1,1) = press_array(:)
     species_conc_mpi(:,1,1) = camp_interface%state_var(:)
-
 #endif
-
     if (camp_mpi_rank().eq.0) then
-
     call check( nf90_put_var(ncid, temp_varid,temperature_mpi,&
             start=(/1,1,counter_export_netcdf/),&
             count=(/ncells,camp_mpi_size(),1/)))
@@ -1244,6 +1259,10 @@ contains
     deallocate(pressure_mpi)
 
     end if
+
+    !https://docs.unidata.ucar.edu/netcdf-c/current/parallel_io.html
+
+    print*,"export_results_netcdf end"
 
   end subroutine
 
@@ -1667,13 +1686,10 @@ contains
         call export_file_results_all_cells(camp_interface)
 #ifdef CAMP_DISABLE_NETCDF
 #else
-        !call export_results_netcdf(camp_interface)
+        call export_results_netcdf(camp_interface)
 #endif
       end if
-
     end do
-
-
 #ifdef PRINT_EBI_INPUT
     print*,"EBI species"
     print*, "TIME_STEP", TIME_STEP
@@ -1684,7 +1700,6 @@ contains
     print*,"species_conc:", species_conc
     print*,"ebi_init:", ebi_init
 #endif
-
 #ifdef PRINT_EBI_SPEC_BY_EBI_ORDER
     print*,"EBI order:"
     print*,"Name, id, init, out, rel. error [(init-out)/(init+out)]"

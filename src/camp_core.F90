@@ -168,6 +168,10 @@ module camp_camp_core
     logical :: core_is_initialized = .false.
     !> Flag indicating the solver has been initialized
     logical :: solver_is_initialized = .false.
+#ifdef CAMP_DISABLE_NETCDF
+#else
+    integer :: dimid
+#endif
   contains
     !> Load a set of configuration files
     procedure :: load_files
