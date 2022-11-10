@@ -193,6 +193,7 @@ program mock_monarch_t
   integer :: ncid, pres_varid, temp_varid
   integer(kind=i_kind), allocatable :: species_id_netcdf(:)
   integer :: counter_export_netcdf
+  character(len=:), allocatable :: file_name
 
   ! initialize mpi (to take the place of a similar MONARCH call)
   call camp_mpi_init()
@@ -494,7 +495,10 @@ program mock_monarch_t
 #ifdef CAMP_DISABLE_NETCDF
 #else
   !call test_netcdf(camp_interface, output_file_prefix)
-  call init_results_netcdf(camp_interface, output_file_prefix)
+  file_name = output_file_prefix//"_input_netcdf.nc"
+  call init_results_netcdf(camp_interface,file_name,1)
+  file_name = output_file_prefix//"_output_netcdf.nc"
+  call init_results_netcdf(camp_interface,file_name,2)
 #endif
 
   if (camp_mpi_rank().eq.0) then
@@ -553,18 +557,15 @@ program mock_monarch_t
 
     ! Run the model
     do i_time=1, NUM_TIME_STEP
-
       !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       ! **** Add to MONARCH during runtime for each time step **** !
       !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
 #ifdef ENABLE_PRINT_STATE_GNUPLOT
       if (camp_mpi_rank().eq.0) then
         call print_state_gnuplot(curr_time,camp_interface, name_gas_species_to_print,id_gas_species_to_print&
                ,name_aerosol_species_to_print,id_aerosol_species_to_print,RESULTS_FILE_UNIT)
       end if
 #endif
-
 #ifdef DEBUG_MOCK_MONARCH
       do i=i_W, I_E
         do j=I_S, I_N
@@ -577,9 +578,11 @@ program mock_monarch_t
         end do
       end do
 #endif
-
+#ifdef CAMP_DISABLE_NETCDF
+#else
+      call export_netcdf(camp_interface, 1)
+#endif
     if(interface_input_file.eq."mod37/interface_monarch_mod37.json") then
-
       call camp_interface%integrate_mod37(curr_time,         & ! Starting time (min)
               TIME_STEP_MONARCH37,         & ! Time step (min)
               I_W,               & ! Starting W->E grid cell
@@ -596,9 +599,7 @@ program mock_monarch_t
               i_hour,&
               NUM_TIME_STEP,&
               solver_stats)
-
     else
-
       call camp_interface%integrate(curr_time,         & ! Starting time (min)
                                    TIME_STEP,         & ! Time step (min)
                                    I_W,               & ! Starting W->E grid cell
@@ -617,22 +618,18 @@ program mock_monarch_t
                                    solver_stats,DIFF_CELLS)
       end if
     curr_time = curr_time + TIME_STEP
-
 #ifdef CAMP_DEBUG_GPU
       call camp_interface%camp_core%get_solver_stats(solver_stats=solver_stats)
       call export_solver_stats(curr_time,camp_interface,solver_stats,ncounters,ntimers)
       call camp_interface%camp_core%reset_solver_stats(solver_stats=solver_stats)
 #endif
-
       if(export_results_all_cells.eq.1) then
         call export_file_results_all_cells(camp_interface)
       end if
-
 #ifdef CAMP_DISABLE_NETCDF
 #else
-      call export_results_netcdf(camp_interface)
+      call export_netcdf(camp_interface, 2)
 #endif
-
     end do
 
   end if
@@ -726,7 +723,6 @@ contains
   subroutine init_output_files(file_prefix)
 
     character(len=:), allocatable, intent(in) :: file_prefix
-
     character(len=:), allocatable :: file_name
     character(len=:), allocatable :: aux_str, aux_str_py, str_stats_names
     character(len=128) :: i_str !if len !=128 crashes (e.g len=100)
@@ -964,73 +960,18 @@ contains
     character(len=:), allocatable, intent(in) :: file_prefix
     type(camp_monarch_interface_t), intent(inout) :: camp_interface
     character(len=:), allocatable :: file_name
-    integer :: z,ncells, numprocs, start1, err, rank, varid, length
-    integer :: dimids(2)
-    integer :: ncells_dimid, time_dimid, rank_dimid,len, dimid, i
-    type(string_t), allocatable :: unique_names(:)
-    integer, dimension(:), allocatable :: data_arr
-
-    print*,"test_netcdf_parallel tested and working fine"
-    print*,"test_netcdf_parallel start"
-    file_name = file_prefix//"_results_netcdf.nc"
-    call check(nf90_create_par(file_name, OR(OR(NF90_CLOBBER,NF90_NETCDF4),NF90_MPIIO), MPI_COMM_WORLD, MPI_INFO_NULL, ncid))
-    !call check(nf90_create_par("data.nc", OR(OR(NF90_CLOBBER,NF90_NETCDF4),NF90_MPIIO), MPI_COMM_WORLD, MPI_INFO_NULL, ncid))
-    print*,"Created netcdf file at", file_name
-    call MPI_Comm_size(MPI_COMM_WORLD,numprocs,err)
-    i=0
-    ncells=(I_E - I_W+1)*(I_N - I_S+1)*NUM_VERT_CELLS
-    length=ncells*numprocs
-    call check( nf90_def_dim(ncid,"length",length,dimid) )
-    call check(nf90_def_var(ncid, "state", NF90_INT, dimid, varids(i)))
-    i=i+1
-    !length=ncells*numprocs
-    !call check( nf90_def_dim(ncid,"length",length,dimid) )
-    !call check(nf90_def_var(ncid, "state", NF90_INT, dimid, varid2))
-    !i=i+1
-    call check( nf90_enddef(ncid) )
-    call camp_mpi_barrier()
-    print*,"nf90_enddef end"
-    allocate(data_arr(ncells))
-    call MPI_Comm_rank(MPI_COMM_WORLD,rank,err)
-    data_arr = rank
-    start1 = rank * ncells + 1
-    print*,data_arr
-    print*,"nf90_var_par_access start"
-    call check(nf90_var_par_access(ncid, varid1, NF90_COLLECTIVE))
-    print*,"nf90_var_par_access end"
-    call check(nf90_put_var(ncid, varid1, data_arr, start=(/start1/), count=(/ncells/)))
-    !call check( nf90_put_var(ncid, temp_varid,temperature_mpi,&
-    !       start=(/1,1,counter_export_netcdf/),&
-    !      count=(/ncells,camp_mpi_size(),1/)))
-    call check(nf90_close(ncid))
-    deallocate(data_arr)
-    call camp_mpi_barrier()
-    print*,"init_results_netcdf end"
-    print*,"start netcdf read"
-    call check( nf90_open(file_name, nf90_nowrite, ncid) )
-    call check( nf90_inq_varid(ncid, "state", varid1) )
-    allocate(data_arr(ncells))
-    call check( nf90_get_var(ncid, varid1, data_arr,  start=(/start1/), count=(/ncells/)) )
-    print*,"data_arr"
-    print*,data_arr
-    deallocate(data_arr)
-    call check( nf90_close(ncid) )
-    stop
-  end subroutine
-
-  subroutine init_results_netcdf(camp_interface, file_prefix)
-    character(len=:), allocatable, intent(in) :: file_prefix
-    type(camp_monarch_interface_t), intent(inout) :: camp_interface
-    character(len=:), allocatable :: file_name
     integer :: z,ncells, numprocs, start1, err, rank, length
-    integer :: dimids(2)
     integer :: varid
-    integer :: ncid, len, dimid, i!XfDVfc3
+    integer :: ncid, len, dimid, i
     type(string_t), allocatable :: unique_names(:)
     integer, dimension(:), allocatable :: data_arr
     integer :: varids(3)
 
     print*,"init_results_netcdf start"
+
+    !associate (rxn => this%rxn_ptr(i_rxn)%val)
+    !  call rxn_factory%bin_pack(rxn, buffer, pos, comm)
+    !end associate
 
     file_name = file_prefix//"_results_netcdf.nc"
     call check(nf90_create_par(file_name, OR(OR(NF90_CLOBBER,NF90_NETCDF4),NF90_MPIIO), MPI_COMM_WORLD, MPI_INFO_NULL, ncid))
@@ -1081,69 +1022,77 @@ contains
     stop
   end subroutine
 
-  subroutine export_results_netcdf(camp_interface)
-
-    use netcdf
-    type(camp_monarch_interface_t), intent(inout) :: camp_interface
-
-    character(len=:), allocatable :: aux_str
-    character(len=128) :: i_str
-    integer :: i,j,k,z,i_cell,i_spec,n,len,ncells, err
-    type(string_t), allocatable :: unique_names(:)
-    real, allocatable  :: temp_array(:),press_array(:)
-    real, allocatable  :: temperature_mpi(:,:,:), pressure_mpi(:,:,:)
+  subroutine init_results_netcdf(c, file_name, idncids)
+    character(len=:), allocatable, intent(in) :: file_name
+    type(camp_monarch_interface_t), intent(inout) :: c
+    integer, intent(in) :: idncids
+    integer :: z,ncells, numprocs, start1, err, rank, length
+    integer :: varid
+    integer :: ncid, len, dimid, i
     integer, dimension(:), allocatable :: data_arr
+    integer :: varids(3)
 
-    print*,"export_results_netcdf start"
-
-    ncells=(I_E - I_W+1)*(I_N - I_S+1)*NUM_VERT_CELLS
-    allocate(temp_array(ncells))
-    allocate(press_array(ncells))
-    !print*,"ncells size(camp_interface%camp_state%env_state)", ncells, size(camp_interface%camp_state%env_states)
-    do z=1, ncells!size(camp_interface%camp_state%env_state)
-      temp_array(z) = camp_interface%camp_state%env_var(1+(z-1)*2)
-      press_array(z) = camp_interface%camp_state%env_var(2+(z-1)*2)
-    end do
-
-    allocate(temperature_mpi(ncells,camp_mpi_size(),1))
-    allocate(pressure_mpi(ncells,camp_mpi_size(),1))
-
-    len=size(temperature)
-    call MPI_GATHER(temp_array, len, MPI_REAL, temperature_mpi,&
-            len,MPI_REAL, 0, MPI_COMM_WORLD, ierr)
-    len=size(pressure)
-    call MPI_GATHER(press_array, len, MPI_REAL, pressure_mpi,&
-            len,MPI_REAL, 0, MPI_COMM_WORLD, ierr)
-    len=size(camp_interface%camp_state%state_var)
-    call MPI_GATHER(camp_interface%camp_state%state_var, len, MPI_REAL, species_conc_mpi,&
-            len,MPI_REAL, 0, MPI_COMM_WORLD, ierr)
-
+    print*,"init_results_netcdf start"
+    c%camp_core%ncid=c%camp_core%ncids(idncids)
+    call check(nf90_create_par(file_name, OR(OR(NF90_CLOBBER,NF90_NETCDF4),&
+            NF90_MPIIO), MPI_COMM_WORLD, MPI_INFO_NULL, c%camp_core%ncid))
     if (camp_mpi_rank().eq.0) then
-      call check( nf90_put_var(ncid, temp_varid,temperature_mpi,&
-              start=(/1,1,counter_export_netcdf/),&
-              count=(/ncells,camp_mpi_size(),1/)))
-      call check( nf90_put_var(ncid, pres_varid,pressure_mpi,&
-              start=(/1,1,counter_export_netcdf/),&
-              count=(/ncells,camp_mpi_size(),1/)))
-      unique_names=camp_interface%camp_core%unique_names()
-      do z=1, size(unique_names)
-        call check( nf90_put_var(ncid, species_id_netcdf(z),species_conc_mpi,&
-                start=(/1,1,counter_export_netcdf/),&
-                count=(/ncells,camp_mpi_size(),1/)))
-      end do
-
-      counter_export_netcdf = counter_export_netcdf + 1
-      deallocate(temp_array)
-      deallocate(press_array)
-      deallocate(temperature_mpi)
-      deallocate(pressure_mpi)
-
+      print*,"Created netcdf file at", file_name
     end if
+    call MPI_Comm_size(MPI_COMM_WORLD,numprocs,err)
+    i=1
+    ncells=(I_E - I_W+1)*(I_N - I_S+1)*NUM_VERT_CELLS
+    length=ncells*numprocs
+    call check( nf90_def_dim(c%camp_core%ncid,"length",length,dimid) )
+    call check(nf90_def_var(c%camp_core%ncid, "state", NF90_INT, dimid, c%camp_core%varids(i)))
+    i=i+1
+    !length=ncells*numprocs
+    !call check( nf90_def_dim(c%camp_core%ncid,"length",length,dimid) )
+    !call check(nf90_def_var(c%camp_core%ncid, "state", NF90_INT, dimid, varid2))
+    call check( nf90_enddef(c%camp_core%ncid) )
+    call camp_mpi_barrier()
+    print*,"nf90_enddef end"
+    allocate(data_arr(ncells))
+    call MPI_Comm_rank(MPI_COMM_WORLD,rank,err)
+    data_arr = rank
+    start1 = rank * ncells + 1
+    i=1
+    print*,data_arr
+    print*,"nf90_var_par_access start"
+    call check(nf90_var_par_access(c%camp_core%ncid, c%camp_core%varids(i), NF90_COLLECTIVE))
+    print*,"nf90_var_par_access end"
+    call check(nf90_put_var(c%camp_core%ncid, c%camp_core%varids(i), data_arr, start=(/start1/), count=(/ncells/)))
+    i=i+1
+    !call check( nf90_put_var(c%camp_core%ncid, temp_varid,temperature_mpi,&
+    !       start=(/1,1,counter_export_netcdf/),&
+    !      count=(/ncells,camp_mpi_size(),1/)))
+    call check(nf90_close(c%camp_core%ncid))
+    deallocate(data_arr)
+    call camp_mpi_barrier()
+    print*,"init_results_netcdf end"
+    print*,"start netcdf read"
+    i=1
+    allocate(data_arr(ncells))
+    call check( nf90_open(file_name, nf90_nowrite, c%camp_core%ncid) )
+    call check( nf90_inq_varid(c%camp_core%ncid, "state", c%camp_core%varids(i)) )
+    call check( nf90_get_var(c%camp_core%ncid, c%camp_core%varids(i), data_arr,  start=(/start1/), count=(/ncells/)) )
+    i=i+1
+    print*,"data_arr"
+    print*,data_arr
+    deallocate(data_arr)
+    call check( nf90_close(c%camp_core%ncid) )
+    stop
+  end subroutine
 
-    !https://docs.unidata.ucar.edu/netcdf-c/current/parallel_io.html
+  subroutine export_netcdf(camp_interface)
+    type(camp_monarch_interface_t), intent(inout) :: camp_interface
+    integer, intent(in) :: idncids
+
+
+
+
 
     print*,"export_results_netcdf end"
-
   end subroutine
 
   subroutine init_results_netcdf_single(camp_interface, file_prefix)
@@ -1269,11 +1218,9 @@ contains
 #endif
 
   subroutine import_camp_input(camp_interface)
-
     type(camp_monarch_interface_t), intent(inout) :: camp_interface
     integer :: z,i,j,k,r,o,i_cell,i_spec,i_photo_rxn
     integer :: state_size_per_cell
-
 #ifdef USE_MAPPING_EBI
     type(string_t), dimension(NUM_EBI_SPEC) :: ebi_spec_names
     type(string_t), dimension(NUM_EBI_SPEC) :: monarch_spec_names
@@ -1284,27 +1231,20 @@ contains
     real(kind=dp), dimension(NUM_CAMP_SPEC) :: aux_state_var
     real(kind=dp), dimension(NUM_CAMP_SPEC) :: aux_state_var2
 #endif
-
     state_size_per_cell = camp_interface%camp_core%state_size_per_cell()
-
     !open(IMPORT_FILE_UNIT, file="exports/camp_input.txt", status="old")!default test monarch input
     open(IMPORT_FILE_UNIT, file="exports/camp_input_18.txt", status="old") !monarch
     !open(IMPORT_FILE_UNIT, file="exports/camp_input_322.txt", status="old") !monarch
-
     if (camp_mpi_rank().eq.0) then
       write(*,*) "Importing camp input"
     end if
-
     !if(n_cells.gt.1) then
     !  print*, "ERROR: Import can only handle data from 1 cell, set n_cells to 1"
     !end if
-
     !read(IMPORT_FILE_UNIT,*) (camp_interface%camp_state%state_var(&
     !        i),i=1,size(camp_interface%camp_state%state_var)/n_cells)
-
     read(IMPORT_FILE_UNIT,*) (camp_interface%camp_state%state_var(&
             i),i=1,state_size_per_cell)
-
     do z=0,n_cells-1
       do i=1,state_size_per_cell
         camp_interface%camp_state%state_var(i+(z*state_size_per_cell))=&

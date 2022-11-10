@@ -170,7 +170,7 @@ module camp_camp_core
     logical :: solver_is_initialized = .false.
 #ifdef CAMP_DISABLE_NETCDF
 #else
-    integer :: dimid
+    integer :: ncid, ncids(2), varids(3)
 #endif
   contains
     !> Load a set of configuration files
