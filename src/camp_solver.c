@@ -670,9 +670,6 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
                 : TINY;
       }
 
-
-
-
   // Update model data pointers
   sd->model_data.total_state = state;
   sd->model_data.total_env = env;

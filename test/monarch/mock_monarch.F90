@@ -17,7 +17,7 @@ program mock_monarch_t
 #ifdef CAMP_USE_JSON
   use json_module
 #endif
-#ifndef CAMP_DISABLE_NETCDF
+#ifdef CAMP_DISABLE_NETCDF
 #else
   use netcdf
 #endif
@@ -541,13 +541,13 @@ program mock_monarch_t
   end if
 #endif
 
-#ifndef CAMP_DISABLE_NETCDF
+#ifdef CAMP_DISABLE_NETCDF
 #else
   !call test_netcdf(camp_interface, output_file_prefix)
-  file_name = output_file_prefix//"_input_netcdf.nc"
-  call init_results_netcdf(camp_interface,file_name,1)
-  file_name = output_file_prefix//"_output_netcdf.nc"
-  call init_results_netcdf(camp_interface,file_name,2)
+  !file_name = output_file_prefix//"_input_netcdf.nc"
+  !call init_results_netcdf(camp_interface,file_name,1)
+  !file_name = output_file_prefix//"_output_netcdf.nc"
+  !call init_results_netcdf(camp_interface,file_name,2)
 #endif
 
   if(.not.caseMulticellsOnecell.eq."EBI") then
@@ -578,9 +578,9 @@ program mock_monarch_t
         end do
       end do
 #endif
-#ifndef CAMP_DISABLE_NETCDF
+#ifdef CAMP_DISABLE_NETCDF
 #else
-      call export_netcdf(camp_interface, 1)
+      !call export_netcdf(camp_interface, 1)
 #endif
     if(interface_input_file.eq."mod37/interface_monarch_mod37.json") then
       call camp_interface%integrate_mod37(curr_time,         & ! Starting time (min)
@@ -626,9 +626,9 @@ program mock_monarch_t
       if(export_results_all_cells.eq.1) then
         call export_file_results_all_cells(camp_interface)
       end if
-#ifndef CAMP_DISABLE_NETCDF
+#ifdef CAMP_DISABLE_NETCDF
 #else
-      call export_netcdf(camp_interface, 2)
+      !call export_netcdf(camp_interface, 2)
 #endif
     end do
 
@@ -687,9 +687,9 @@ program mock_monarch_t
   end if
   close(FILE_SOLVER_STATS_CSV)
 
-#ifndef CAMP_DISABLE_NETCDF
+#ifdef CAMP_DISABLE_NETCDF
 #else
-    call check( nf90_close(ncid) )
+    !call check( nf90_close(ncid) )
 #endif
 
   ! Deallocation
@@ -944,7 +944,7 @@ contains
 
   end subroutine
 
-#ifndef CAMP_DISABLE_NETCDF
+#ifdef CAMP_DISABLE_NETCDF
 #else
 
   subroutine check(status)
@@ -1609,9 +1609,9 @@ contains
 
       if(export_results_all_cells.eq.1) then
         call export_file_results_all_cells(camp_interface)
-#ifndef CAMP_DISABLE_NETCDF
+#ifdef CAMP_DISABLE_NETCDF
 #else
-        call export_results_netcdf(camp_interface)
+        !call export_results_netcdf(camp_interface)
 #endif
       end if
     end do
