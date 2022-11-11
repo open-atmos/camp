@@ -569,46 +569,33 @@ contains
     else
       state_size_per_cell = this%camp_core%state_size_per_cell()
     end if
-
     NUM_VERT_CELLS = size(MONARCH_conc,3)
-
     if(this%ADD_EMISIONS.eq."monarch_binned") then
-
       call assert_msg(731700229, &
               this%camp_core%get_chem_spec_data(chem_spec_data), &
               "No chemical species data in camp_core.")
-
       !i_hour_max = int(NUM_TIME_STEP*TIME_STEP / 60)+1
       n_cells=(I_E - I_W+1)*(I_N - I_S+1)*NUM_VERT_CELLS
       i_hour_max=30
       allocate(rate_emi(i_hour_max,n_cells))
-
       DIFF_CELLS_EMI = "OFF"
       if(DIFF_CELLS.eq."ON") then
         DIFF_CELLS_EMI = "ON"
       end if
-
       rate_emi(:,:)=0.0
-
       if(DIFF_CELLS_EMI.eq."ON") then
-
         press_init = 100000.!Should be equal to mock_monarch
         press_end = 10000.!10000.  85000.
         press_range = press_end-press_init
-
         !print*,press_end,"-",press_init,"=",press_range,"rank:",camp_mpi_rank()
-
         do i=I_W, I_E
           do j=I_S, I_N
             do k=1, NUM_VERT_CELLS
               o = (j-1)*(I_E) + (i-1) !Index to 3D
               z = (k-1)*(I_E*I_N) + o !Index for 2D
-
               press_norm=&
                       (press_end-pressure(i,j,k))/(press_range)
-
               !print*,press_init,press_end,press_range,pressure(i,j,k),press_norm,camp_mpi_rank()
-
               if(press_norm.ge.0) then
                 do t=1,12 !12 first hours
                   rate_emi(t,z+1)=press_norm
@@ -622,19 +609,15 @@ contains
               do t=13,30
                 rate_emi(t,z+1)=0.0
               end do
-
             end do
           end do
         end do
-
         !if (camp_mpi_rank().eq.0) then
         !   print*,"pressure"
         !end if
         !write(*, "(ES13.6)", advance="no") pressure(:,:,:)
         !write(*, *) camp_mpi_rank()
-
       else
-
         !NUM_TIME_STEP
         do i=1,12
           rate_emi(i,:)=1.0

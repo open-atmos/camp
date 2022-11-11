@@ -413,7 +413,6 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
 }
 
 #ifdef CAMP_SOLVER_SPEC_NAMES
-
 void solver_set_spec_name(void *solver_data, char *spec_name,
                           int size_spec_name, int i) {
 #ifdef CAMP_USE_MPI
@@ -436,7 +435,6 @@ void solver_set_spec_name(void *solver_data, char *spec_name,
   }
 #endif
 }
-
 #endif
 
 /** \brief Solver initialization
@@ -672,6 +670,9 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
                 : TINY;
       }
 
+
+
+
   // Update model data pointers
   sd->model_data.total_state = state;
   sd->model_data.total_env = env;
@@ -718,10 +719,7 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
   CAMP_DEBUG_JAC_STRUCT(sd->model_data.J_init, "Begin solving");
 
 #ifdef RESET_JAC_SOLVING
-
   //printf("RESET_JAC_SOLVING start\n");
-
-  //Reset Jacobian tmp
   N_VConst(0.0, md->J_state);
   N_VConst(0.0, md->J_deriv);
   N_VConst(0.0, md->J_tmp);
