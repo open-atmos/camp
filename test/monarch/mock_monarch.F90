@@ -17,7 +17,7 @@ program mock_monarch_t
 #ifdef CAMP_USE_JSON
   use json_module
 #endif
-#ifdef CAMP_DISABLE_NETCDF
+#ifndef CAMP_DISABLE_NETCDF
 #else
   use netcdf
 #endif
@@ -492,15 +492,6 @@ program mock_monarch_t
     call init_file_results_all_cells(camp_interface, output_file_prefix)
   end if
 
-#ifdef CAMP_DISABLE_NETCDF
-#else
-  !call test_netcdf(camp_interface, output_file_prefix)
-  file_name = output_file_prefix//"_input_netcdf.nc"
-  call init_results_netcdf(camp_interface,file_name,1)
-  file_name = output_file_prefix//"_output_netcdf.nc"
-  call init_results_netcdf(camp_interface,file_name,2)
-#endif
-
   if (camp_mpi_rank().eq.0) then
     do j=1, size(name_gas_species_to_print)
       do z=1, size(camp_interface%monarch_species_names)
@@ -550,6 +541,15 @@ program mock_monarch_t
   end if
 #endif
 
+#ifndef CAMP_DISABLE_NETCDF
+#else
+  !call test_netcdf(camp_interface, output_file_prefix)
+  file_name = output_file_prefix//"_input_netcdf.nc"
+  call init_results_netcdf(camp_interface,file_name,1)
+  file_name = output_file_prefix//"_output_netcdf.nc"
+  call init_results_netcdf(camp_interface,file_name,2)
+#endif
+
   if(.not.caseMulticellsOnecell.eq."EBI") then
 
     !call camp_mpi_barrier(MPI_COMM_WORLD)
@@ -578,7 +578,7 @@ program mock_monarch_t
         end do
       end do
 #endif
-#ifdef CAMP_DISABLE_NETCDF
+#ifndef CAMP_DISABLE_NETCDF
 #else
       call export_netcdf(camp_interface, 1)
 #endif
@@ -626,7 +626,7 @@ program mock_monarch_t
       if(export_results_all_cells.eq.1) then
         call export_file_results_all_cells(camp_interface)
       end if
-#ifdef CAMP_DISABLE_NETCDF
+#ifndef CAMP_DISABLE_NETCDF
 #else
       call export_netcdf(camp_interface, 2)
 #endif
@@ -687,7 +687,7 @@ program mock_monarch_t
   end if
   close(FILE_SOLVER_STATS_CSV)
 
-#ifdef CAMP_DISABLE_NETCDF
+#ifndef CAMP_DISABLE_NETCDF
 #else
     call check( nf90_close(ncid) )
 #endif
@@ -944,7 +944,7 @@ contains
 
   end subroutine
 
-#ifdef CAMP_DISABLE_NETCDF
+#ifndef CAMP_DISABLE_NETCDF
 #else
 
   subroutine check(status)
@@ -967,12 +967,7 @@ contains
     integer, dimension(:), allocatable :: data_arr
     integer :: varids(3)
 
-    print*,"init_results_netcdf start"
-
-    !associate (rxn => this%rxn_ptr(i_rxn)%val)
-    !  call rxn_factory%bin_pack(rxn, buffer, pos, comm)
-    !end associate
-
+    print*,"test_netcdf start"
     file_name = file_prefix//"_results_netcdf.nc"
     call check(nf90_create_par(file_name, OR(OR(NF90_CLOBBER,NF90_NETCDF4),NF90_MPIIO), MPI_COMM_WORLD, MPI_INFO_NULL, ncid))
     !call check(nf90_create_par("data.nc", OR(OR(NF90_CLOBBER,NF90_NETCDF4),NF90_MPIIO), MPI_COMM_WORLD, MPI_INFO_NULL, ncid))
@@ -1007,7 +1002,7 @@ contains
     call check(nf90_close(ncid))
     deallocate(data_arr)
     call camp_mpi_barrier()
-    print*,"init_results_netcdf end"
+    print*,"test_netcdf end"
     print*,"start netcdf read"
     i=1
     allocate(data_arr(ncells))
@@ -1026,11 +1021,8 @@ contains
     character(len=:), allocatable, intent(in) :: file_name
     type(camp_monarch_interface_t), intent(inout) :: c
     integer, intent(in) :: idncids
-    integer :: z,ncells, numprocs, start1, err, rank, length
-    integer :: varid
+    integer :: z, numprocs, start1, err, rank, length
     integer :: ncid, len, dimid, i
-    integer, dimension(:), allocatable :: data_arr
-    integer :: varids(3)
 
     print*,"init_results_netcdf start"
     c%camp_core%ncid=c%camp_core%ncids(idncids)
@@ -1041,21 +1033,29 @@ contains
     end if
     call MPI_Comm_size(MPI_COMM_WORLD,numprocs,err)
     i=1
-    ncells=(I_E - I_W+1)*(I_N - I_S+1)*NUM_VERT_CELLS
-    length=ncells*numprocs
-    call check( nf90_def_dim(c%camp_core%ncid,"length",length,dimid) )
-    call check(nf90_def_var(c%camp_core%ncid, "state", NF90_INT, dimid, c%camp_core%varids(i)))
+    length=size(c%camp_state%state_var)*numprocs
+    call check(nf90_def_dim(c%camp_core%ncid,"length",length,dimid))
+    call check(nf90_def_var(c%camp_core%ncid, "state", NF90_REAL, dimid, c%camp_core%varids(i)))
     i=i+1
-    !length=ncells*numprocs
+    !length=size(c%camp_state%state_var)*numprocs
     !call check( nf90_def_dim(c%camp_core%ncid,"length",length,dimid) )
     !call check(nf90_def_var(c%camp_core%ncid, "state", NF90_INT, dimid, varid2))
-    call check( nf90_enddef(c%camp_core%ncid) )
+    call check(nf90_enddef(c%camp_core%ncid))
     call camp_mpi_barrier()
     print*,"nf90_enddef end"
-    allocate(data_arr(ncells))
+  end subroutine
+
+
+  subroutine export_netcdf(c, idncids)
+    type(camp_monarch_interface_t), intent(inout) :: c
+    integer, intent(in) :: idncids
+    integer :: z,ncells, numprocs, start1, err, rank, length
+    integer :: ncid, len, dimid, i
+    integer, dimension(:), allocatable :: data_arr
+
     call MPI_Comm_rank(MPI_COMM_WORLD,rank,err)
-    data_arr = rank
-    start1 = rank * ncells + 1
+    data_arr = c%camp_state%state_var
+    start1 = rank * size(c%camp_state%state_var) + 1
     i=1
     print*,data_arr
     print*,"nf90_var_par_access start"
@@ -1082,16 +1082,6 @@ contains
     deallocate(data_arr)
     call check( nf90_close(c%camp_core%ncid) )
     stop
-  end subroutine
-
-  subroutine export_netcdf(camp_interface)
-    type(camp_monarch_interface_t), intent(inout) :: camp_interface
-    integer, intent(in) :: idncids
-
-
-
-
-
     print*,"export_results_netcdf end"
   end subroutine
 
@@ -1251,19 +1241,14 @@ contains
                 camp_interface%camp_state%state_var(i)
       end do
     end do
-
     !write(*,*) "Importing temperatures and pressures"
-
     read(IMPORT_FILE_UNIT,*) ( ( (temperature(i,j,k), k=1,1 ), j=1,1),&
             i=1,1 )
     read(IMPORT_FILE_UNIT,*) ( ( (pressure(i,j,k), k=1,1 ), j=1,1),&
             i=1,1 )
-
     !write(*,*) "Importing photolysis rates"
-
     read(IMPORT_FILE_UNIT,*) (camp_interface%base_rates(&
             i),i=1,camp_interface%n_photo_rxn)
-
     do i=I_W,I_E
       do j=I_S,I_N
         do k=1,NUM_VERT_CELLS
@@ -1624,7 +1609,7 @@ contains
 
       if(export_results_all_cells.eq.1) then
         call export_file_results_all_cells(camp_interface)
-#ifdef CAMP_DISABLE_NETCDF
+#ifndef CAMP_DISABLE_NETCDF
 #else
         call export_results_netcdf(camp_interface)
 #endif

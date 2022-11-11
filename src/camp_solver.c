@@ -676,17 +676,6 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
   sd->model_data.total_state = state;
   sd->model_data.total_env = env;
 
-#ifdef EXPORT_CAMP_INPUT
-#ifdef CAMP_DEBUG_GPU
-  // Save initial state
-  double init_state[md->n_per_cell_state_var * n_cells];
-  if (sd->counterFail==0)
-    for (int i = 0; i < md->n_per_cell_state_var * n_cells; i++) {
-      init_state[i] = state[i];
-    }
-#endif
-#endif
-
 #ifdef CAMP_DEBUG
   // Update the debug output flag in CVODES and the linear solver
   flag = CVodeSetDebugOut(sd->cvode_mem, sd->debug_out);
@@ -847,10 +836,6 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
                  flag,sd->counterSolve,sd->counterDerivCPU,rank);
       }
       sd->counterFail++;
-#ifdef EXPORT_CAMP_INPUT
-      if (sd->counterFail == 1)
-        export_camp_input(sd, init_state, "");
-#endif
 #endif
 #endif
       return CAMP_SOLVER_FAIL;
@@ -2256,88 +2241,6 @@ void check_flag_fail(void *flag_value, char *func_name, int opt) {
     exit(EXIT_FAILURE);
   }
 }
-
-//Old routine for Monarch metrics
-void export_camp_input(void *solver_data, double *init_state, char *in_path) {
-  SolverData *sd = (SolverData *)solver_data;
-  ModelData *md = &(sd->model_data);
-  int n_cells = sd->model_data.n_cells;
-
-#ifdef CAMP_USE_MPI
-
-  // char rel_path[] = "../../../test/monarch/exports/camp_input"; //path for
-  // mock_monarch test
-  //char rel_path[] =
-  //    "/gpfs/scratch/bsc32/bsc32815/a2s8/nmmb-monarch/MODEL/SRC_LIBS/camp/"
-  //    "test/monarch/exports/camp_input";  // monarch
-
-  char rel_path[] = "exports/camp_input";
-
-  int rank;
-  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  int size;
-  MPI_Comm_size(MPI_COMM_WORLD, &size);
-  char mpi_path[1024];
-  char rank_str[64];
-
-#ifdef CAMP_DEBUG_GPU
-  printf("Exporting camp input rank %d counterFail %d counterSolve %d\n", rank,
-         sd->counterFail, sd->counterSolve);
-#else
-  printf("Exporting camp input rank %d\n", rank);
-#endif
-
-
-  sprintf(rank_str, "%d", rank);
-
-  // earch rank->different file name
-  strcpy(mpi_path, rel_path);
-  strcat(mpi_path, "_");
-  strcat(mpi_path, rank_str);
-  strcat(mpi_path, ".txt");
-
-  FILE *f = fopen(mpi_path, "w");
-  // printf("\nrank %d\n", rank);
-
-#else
-
-  FILE *f = fopen(in_path, "w");
-  // char path[] = "../../../test/monarch/exports/camp_input.txt";
-  char path[] = "exports/camp_input.txt";
-
-#endif
-
-  // reverse csv,first column is names and next columns are the values
-
-  // fprintf(f, "%s", "state_var");
-  for (int i = 0; i < md->n_per_cell_state_var * n_cells; i++) {
-    fprintf(f, " %-le", init_state[i]);
-  }
-  fprintf(f, "\n");
-
-  int size_env = 2;
-  // fprintf(f, "%s", "temperature");
-  for (int i = 0; i < n_cells; i++) {
-    fprintf(f, " %-le", sd->model_data.total_env[size_env * i]);
-  }
-  fprintf(f, "\n");
-
-  // fprintf(f, "%s", "pressure");
-  for (int i = 0; i < n_cells; i++) {
-    fprintf(f, " %-le", sd->model_data.total_env[1 + size_env * i]);
-  }
-  fprintf(f, "\n");
-
-  // photolysis
-  rxn_export_input(sd, f);
-
-  // printf("\nrank %d\n", rank);
-
-  fclose(f);
-
-  // optional: add extra info on a separate txt (counterfail, rank, test...)
-}
-
 
 /** \brief Print solver statistics
  *

@@ -168,9 +168,11 @@ module camp_camp_core
     logical :: core_is_initialized = .false.
     !> Flag indicating the solver has been initialized
     logical :: solver_is_initialized = .false.
-#ifdef CAMP_DISABLE_NETCDF
+#ifndef CAMP_DISABLE_NETCDF
 #else
     integer :: ncid, ncids(2), varids(3)
+    real(kind=dp), allocatable :: state_var(:)
+    real(kind=dp), allocatable :: env_var(:)
 #endif
   contains
     !> Load a set of configuration files

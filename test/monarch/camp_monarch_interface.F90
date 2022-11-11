@@ -729,11 +729,9 @@ contains
             comp_time = comp_time + (comp_end-comp_start)
 
             call camp_mpi_barrier(MPI_COMM_WORLD)
-
             !if (camp_mpi_rank().eq.0 .and. z==0) then
               !print*, "this%camp_core%solve end",this%camp_state%state_var(1),camp_mpi_rank()
             !end if
-
 #ifdef CAMP_DEBUG
             ! Check the Jacobian evaluations
             call assert_msg(611569150, solver_stats%Jac_eval_fails.eq.0,&
