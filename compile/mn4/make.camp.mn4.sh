@@ -3,6 +3,8 @@
 #include file functions
 #source FILENAME
 
+
+
 export SUNDIALS_HOME=$(pwd)/../../../cvode-3.4-alpha/install
 export SUITE_SPARSE_HOME=$(pwd)/../../../SuiteSparse
 export JSON_FORTRAN_HOME=$(pwd)/../../../json-fortran-6.1.0/install/jsonfortran-gnu-6.1.0

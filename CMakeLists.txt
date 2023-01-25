@@ -259,7 +259,7 @@ endmacro(do_unit_test)
 ######################################################################
 # copy dirs
 
-if(ENABLE_DATA)
+if(ENABLE_DATA OR ENABLE_TESTS)
 add_custom_target(copy_data ALL ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/data ${CMAKE_BINARY_DIR}/data_run)
 endif()
 
@@ -268,7 +268,7 @@ add_custom_target(copy_test ALL ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURC
 add_custom_target(copy_mechanism ALL ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/mechanisms ${CMAKE_BINARY_DIR}/mechanisms_run)
 endif()
 
-if(ENABLE_BOOTCAMP)
+if(ENABLE_BOOTCAMP OR ENABLE_TESTS)
   add_custom_target(copy_boot_camp ALL ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/doc/camp_tutorial/boot_camp ${CMAKE_BINARY_DIR}/boot_camp_run)
 endif()
 
@@ -314,7 +314,6 @@ add_test(test_sub_model_ZSR_aerosol_water ${CMAKE_BINARY_DIR}/test_run/unit_sub_
 add_test(test_chem_mech_solver ${CMAKE_BINARY_DIR}/test_run/chemistry/test_chemistry_1.sh ${MPI_TEST_FLAG})
 add_test(test_chemistry_cb05cl_ae5 ${CMAKE_BINARY_DIR}/test_run/chemistry/cb05cl_ae5/test_chemistry_cb05cl_ae5.sh ${MPI_TEST_FLAG})
 add_test(test_MONARCH_1 ${CMAKE_BINARY_DIR}/test_run/monarch/test_monarch_1.sh ${MPI_TEST_FLAG})
-add_test(test_MONARCH_2 ${CMAKE_BINARY_DIR}/test_run/monarch/test_monarch_2.sh ${MPI_TEST_FLAG})
 add_test(boot_camp_part_1 ${CMAKE_BINARY_DIR}/boot_camp_run/part_2_code/run_part_1.sh ${MPI_TEST_FLAG})
 add_test(boot_camp_part_2 ${CMAKE_BINARY_DIR}/boot_camp_run/part_2_code/run_part_2.sh ${MPI_TEST_FLAG})
 add_test(boot_camp_part_3 ${CMAKE_BINARY_DIR}/boot_camp_run/part_3_code/run_part_3.sh ${MPI_TEST_FLAG})

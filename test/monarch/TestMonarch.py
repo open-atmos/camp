@@ -802,7 +802,7 @@ def all_timesteps():
     #conf.cells = [100, 500, 1000, 5000, 10000]
     # conf.cells = [50000,100000,500000,1000000]
 
-    conf.timeSteps = 3
+    conf.timeSteps = 10
     #conf.timeSteps = 720
 
     conf.timeStepsDt = 2
@@ -823,12 +823,12 @@ def all_timesteps():
 
     conf.casesOptim = []
     #conf.casesOptim.append("CPU One-cell")
-    #conf.casesOptim.append("CPU Multi-cells")
+    conf.casesOptim.append("CPU Multi-cells")
     # conf.casesOptim.append("GPU One-cell")
     # conf.casesOptim.append("GPU Multi-cells")
     # conf.casesOptim.append("GPU Block-cellsNhalf")
     #conf.casesOptim.append("GPU Block-cellsN")
-    conf.casesOptim.append("GPU Block-cells1")
+    #conf.casesOptim.append("GPU Block-cells1")
     #conf.casesOptim.append("CPU EBI")
     #conf.casesOptim.append("GPU BDF")
     #conf.casesOptim.append("GPU CPU")

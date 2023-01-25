@@ -32,6 +32,11 @@
 #include <mpi.h>
 #endif
 
+#ifdef CAMP_DISABLE_NETCDF
+#else
+#include <netcdf.h>
+#endif
+
 // Default solver initial time step relative to total integration time
 #define DEFAULT_TIME_STEP 1.0
 // State advancement factor for Jacobian element evaluation
@@ -423,9 +428,7 @@ void solver_set_spec_name(void *solver_data, char *spec_name,
     SolverData *sd;
     sd = (SolverData *)solver_data;
     sd->spec_names[i] = malloc(sizeof(char) * (size_spec_name + 1));
-
     // printf("%d bbb", size_spec_name);
-
     // strncpy(sd->spec_names[i], spec_name, size_spec_name); //Copy size bytes
     for (int j = 0; j < size_spec_name; j++)
       sd->spec_names[i][j] = spec_name[j];
@@ -435,6 +438,33 @@ void solver_set_spec_name(void *solver_data, char *spec_name,
   }
 #endif
 }
+#endif
+
+#ifdef CAMP_DISABLE_NETCDF
+#else
+void init_netcdf(SolverData *sd){
+  NetcdfStruct *nc = &sd->nc;
+  char *pathIn="camp_out/nc_in.nc";
+  char *pathOut="camp_out/nc_out.nc";
+
+  //nc_create_par(pathIn,
+   //OR(OR(NC_CLOBBER,NC_NETCDF4),NC_MPIIO),
+  //MPI_COMM_WORLD, MPI_INFO_NULL, nc->ncidIn);
+  nc_create_par(pathIn,NC_MPIIO,
+                MPI_COMM_WORLD, MPI_INFO_NULL, nc->ncidIn);
+
+
+    //md->n_rxn_env_data //Photo_Rates size, Set after new() and before initialize()
+    //md->n_State_var
+    //CAMP_NUM_ENV_PARAM_
+
+}
+/*
+void export_netcdf(SolverData *sd){
+
+
+
+}*/
 #endif
 
 /** \brief Solver initialization
@@ -554,6 +584,11 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
   if(sd->use_cpu==0){
       constructor_cvode_gpu(sd->cvode_mem, sd);
   }
+#endif
+
+#ifdef CAMP_DISABLE_NETCDF
+#else
+  init_netcdf(sd);
 #endif
 
 #ifdef FAILURE_DETAIL

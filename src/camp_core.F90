@@ -170,7 +170,7 @@ module camp_camp_core
     logical :: solver_is_initialized = .false.
 #ifdef CAMP_DISABLE_NETCDF
 #else
-    integer :: ncid, ncids(2), varids(3)
+    integer :: ncid, ncids(2), varids(3) !todo delete
     real(kind=dp), allocatable :: state_var(:)
     real(kind=dp), allocatable :: env_var(:)
 #endif

@@ -97,6 +97,14 @@ typedef struct {
 } JacMap;
 #endif
 
+#ifdef CAMP_DISABLE_NETCDF
+#else
+typedef struct tNetcdfStruct{
+  int ncidIn;
+  int ncidOut;
+} NetcdfStruct;
+#endif
+
 /* Model data structure */
 typedef struct {
   int n_per_cell_state_var;        // number of state variables per grid cell
@@ -307,6 +315,10 @@ typedef struct {
                   // run. Set to true when no reactions are present.
   double init_time_step;  // Initial time step (s)
   char **spec_names;      // Species names
+#ifdef CAMP_DISABLE_NETCDF
+#else
+  NetcdfStruct nc;
+#endif
 } SolverData;
 
 #endif

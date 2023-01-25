@@ -1270,9 +1270,7 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-#ifdef DISABLE_NETCDF_INPUT
-#else
-
+#ifdef NETCDF_INPUT
   subroutine set_input_from_netcdf(camp_state, state_size_cell, spec_names&
           ,model_conc, temperatures, pressures, n_cells)
 
@@ -1409,7 +1407,7 @@ contains
 #endif
 
   end subroutine set_input_from_netcdf
-
+#else
 #endif
 
   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
