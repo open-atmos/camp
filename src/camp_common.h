@@ -272,8 +272,6 @@ typedef struct {
       max_loss_precision;  // Maximum loss of precision during last call to f()
 #endif
 
-  int use_cpu;
-  int use_gpu_cvode;
   int ncounters;
   int ntimers;
 
@@ -308,6 +306,8 @@ typedef struct {
   int *flagCells;
   int nDevices;
   int nCellsGPUPerc;
+  int use_cpu;
+  int use_gpu_cvode;
 #endif
   void *cvode_mem;       // CVodeMem object
   ModelData model_data;  // Model data (used during initialization and solving)

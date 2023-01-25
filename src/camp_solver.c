@@ -370,7 +370,6 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
   sd->model_data.sub_model_int_indices[0] = 0;
   sd->model_data.sub_model_float_indices[0] = 0;
   sd->model_data.sub_model_env_idx[0] = 0;
-  sd->use_cpu = 1;
 
 #ifdef CAMP_USE_GPU
   get_camp_config_variables(sd);

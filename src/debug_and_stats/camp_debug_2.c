@@ -170,15 +170,12 @@ void print_current_directory(){
 
 }
 
+#ifdef CAMP_USE_GPU
 void get_camp_config_variables(SolverData *sd){
-
   FILE *fp;
   char buff[255];
-
   char path[] = "config_variables_c_solver.txt";
-
   //printf("get_camp_config_variables\n");
-
   fp = fopen("config_variables_c_solver.txt", "r");
   if (fp == NULL){
     printf("Could not open file %s, setting use_cpu ON\n",path);
@@ -206,10 +203,9 @@ void get_camp_config_variables(SolverData *sd){
     fscanf(fp, "%d", &sd->nDevices);
     fclose(fp);
   }
-
   //printf("get_camp_config_variables\n");
-
 }
+#endif
 
 void export_counters_open(SolverData *sd)
 {
