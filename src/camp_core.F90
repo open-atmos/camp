@@ -462,6 +462,7 @@ contains
     character(len=:), allocatable :: str_val
     real(kind=json_rk) :: real_val
     logical :: file_exists, found
+    CHARACTER(len=255) :: cwd
 
     ! mechansim
     type(mechanism_data_t), pointer :: mech_ptr
@@ -500,6 +501,10 @@ contains
       call assert_msg(936390222, trim(input_file_path(i_file)%string).ne."", &
               "Received empty string for file path")
       inquire( file=input_file_path(i_file)%string, exist=file_exists )
+      if(.not.file_exists) then
+        call getcwd(cwd)
+        print*, "Current working directory:", trim(cwd)
+      end if
       call assert_msg(910660557, file_exists, "Cannot file file: "// &
               input_file_path(i_file)%string)
       call j_file%load_file(filename = input_file_path(i_file)%string)

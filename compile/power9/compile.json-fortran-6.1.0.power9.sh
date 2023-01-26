@@ -6,6 +6,7 @@ if [ "$1" == "from_camp_jobs" ]; then
 fi
 
 cd $library_path/json-fortran-6.1.0
+rm -r build
 mkdir build
 mkdir install
 cd build
@@ -17,4 +18,6 @@ if [ ! -z "$2" ]; then
   camp_folder=camp_jobs/camp$2
 fi
 
-cd ../../$camp_folder/build/compile
+if [ "$1" == "from_camp_jobs" ]; then
+  cd ../../$camp_folder/build/compile
+fi

@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-#include file functions
-#source FILENAME
-
 export SUNDIALS_HOME=$(pwd)/../../../cvode-3.4-alpha/install
 export SUITE_SPARSE_HOME=$(pwd)/../../../SuiteSparse
 if [ $BSC_MACHINE == "power" ]; then
@@ -70,20 +67,21 @@ else
 
   #echo "make end"
 
-  FILE=TestMonarch.py
-  if test -f "$FILE"; then
+  #FILE=TestMonarch.py
+  FILE=./unit_test_aero_rep_single_particle
+  if [ "$FILE" == TestMonarch.py ]; then
     #echo "python TestMonarch.py start"
     time python $FILE
-
+    cd ../../compile/power9
+  elif [ "$FILE" == test_monarch_1.py ]; then
+    echo "Running old commits with file test_monarch_1.py ."
+    python  $FILE
+    cd ../../camp/compile/power9
+  else
     #./test_monarch_1.sh MPI
     #./test_run/chemistry/cb05cl_ae5/test_chemistry_cb05cl_ae5.sh
     #./unit_test_aero_rep_single_particle
-
-    cd ../../compile/power9
-  else
-    echo "Running old commits with file test_monarch_1.py ."
-    python test_monarch_1.py
-    cd ../../camp/compile/power9
+    time $FILE
   fi
 
 fi

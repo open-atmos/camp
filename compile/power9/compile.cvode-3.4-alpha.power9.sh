@@ -11,7 +11,7 @@ fi
 
 #tar -zxvf camp/cvode-3.4-alpha.tar.gz
 cd $library_path/cvode-3.4-alpha
-#rm -r build
+rm -r build
 mkdir build
 mkdir install
 mkdir install/examples
@@ -41,7 +41,9 @@ fi
 
 #make -j 4 #not working
 make install
-cd ../../$camp_folder/build/compile
+if [ "$1" == "from_camp_jobs" ]; then
+  cd ../../$camp_folder/build/compile
+fi
 
 
 #./cvode-3.4-alpha/build/examples/cvode/serial/cvRoberts_klu
