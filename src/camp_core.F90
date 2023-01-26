@@ -90,9 +90,7 @@ module camp_camp_core
 #ifdef CAMP_USE_JSON
   use json_module
 #endif
-#ifdef CAMP_USE_MPI
-  use mpi
-#endif
+  use camp_mpi
   use camp_aero_phase_data
   use camp_aero_rep_data
   use camp_aero_rep_factory
@@ -100,7 +98,6 @@ module camp_camp_core
   use camp_constants,                  only : i_kind, dp
   use camp_env_state
   use camp_mechanism_data
-  use camp_mpi
   use camp_camp_solver_data
   use camp_camp_state
   use camp_rxn_data
@@ -278,6 +275,8 @@ contains
     character(len=*), intent(in), optional :: input_file_path
     !> Num cells to compute simulatenously
     integer(kind=i_kind), optional :: n_cells
+    logical :: flag
+    integer(kind=i_kind) :: err
 
     allocate(new_obj)
     allocate(new_obj%mechanism(0))
@@ -285,17 +284,19 @@ contains
     allocate(new_obj%aero_phase(0))
     allocate(new_obj%aero_rep(0))
     allocate(new_obj%sub_model(0))
-
     if (present(n_cells)) then
       new_obj%n_cells=n_cells
     end if
-
     if (present(input_file_path)) then
       call new_obj%load_files(trim(input_file_path))
     end if
-
+#ifdef CAMP_USE_MPI
+    call MPI_INITIALIZED(flag, err)
+    if (.not.flag) then
+      call camp_mpi_init( )
+    endif
+#endif
     new_obj%export_flag = .true.
-
   end function constructor
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -708,19 +709,16 @@ contains
     call assert_msg(157261665, .not.this%core_is_initialized, &
             "Attempting to initialize a camp_core_t object twice.")
 
-    ! Initialize the species database
     call this%chem_spec_data%initialize()
 
     ! Get the next index on the state array after the gas-phase species
     i_state_var = this%chem_spec_data%size(spec_phase=CHEM_SPEC_GAS_PHASE) + 1
 
-    ! Initialize the aerosol phases
     do i_phase = 1, size(this%aero_phase)
       call assert(254948966, associated(this%aero_phase(i_phase)%val))
       call this%aero_phase(i_phase)%val%initialize(this%chem_spec_data)
     end do
 
-    ! Initialize the aerosol representations
     do i_aero_rep = 1, size(this%aero_rep)
       call assert(251590193, associated(this%aero_rep(i_aero_rep)%val))
       call this%aero_rep(i_aero_rep)%val%initialize(this%aero_phase, &
@@ -728,7 +726,6 @@ contains
       i_state_var = i_state_var + this%aero_rep(i_aero_rep)%val%size()
     end do
 
-    ! Initialize the sub-models
     do i_sub_model = 1, size(this%sub_model)
       call assert(565644925, associated(this%sub_model(i_sub_model)%val))
       call this%sub_model(i_sub_model)%val%initialize(this%aero_rep, &
@@ -738,7 +735,6 @@ contains
     ! Set the size of the state array per grid cell
     this%size_state_per_cell = i_state_var - 1
 
-    ! Initialize the mechanisms
     do i_mech = 1, size(this%mechanism)
       call this%mechanism(i_mech)%val%initialize(this%chem_spec_data, &
               this%aero_rep, this%n_cells)

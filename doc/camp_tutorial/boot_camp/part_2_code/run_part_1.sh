@@ -15,7 +15,7 @@ else
   if [ -z ${SLURM_TASK_PID+x} ]; then
     exec_str="../../boot_camp_part_1"
   else
-    exec_str="mpirun -v -np 1 --bind-to none  ../../boot_camp_part_1"
+    exec_str="mpirun -np 1 --bind-to none  ../../boot_camp_part_1"
   fi
 fi
 
