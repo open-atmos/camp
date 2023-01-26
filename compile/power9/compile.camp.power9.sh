@@ -38,6 +38,12 @@ elif [ $BSC_MACHINE == "mn4" ]; then
   echo "mn4"
   export JSON_FORTRAN_HOME=$(pwd)/$relative_path/json-fortran-6.1.0/install/jsonfortran-intel-6.1.0
   mpifort=$(which mpiifort)
+  module load cmake
+  module load gsl
+  module load jasper/1.900.1
+  module load netcdf/4.4.1.1
+  module load hdf5/1.8.19
+  module load libpng/1.5.13
 else
   echo "Unknown architecture"
   exit
