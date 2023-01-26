@@ -68,6 +68,7 @@ else
   #echo "make end"
 
   #FILE=TestMonarch.py
+  #FILE=./test_run/chemistry/cb05cl_ae5/test_chemistry_cb05cl_ae5.sh
   FILE=./unit_test_aero_rep_single_particle
   if [ "$FILE" == TestMonarch.py ]; then
     #echo "python TestMonarch.py start"
@@ -78,9 +79,7 @@ else
     python  $FILE
     cd ../../camp/compile/power9
   else
-    #./test_monarch_1.sh MPI
-    #./test_run/chemistry/cb05cl_ae5/test_chemistry_cb05cl_ae5.sh
-    #./unit_test_aero_rep_single_particle
+    cd ../../build
     time $FILE
   fi
 
