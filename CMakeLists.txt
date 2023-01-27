@@ -579,19 +579,19 @@ set(CB5_EBI_SOLVER
 	)
 
 set(CB5_KPP_SOLVER
-	test/chemistry/cb05cl_ae5/cb05cl_ae5_Function.f90
-	test/chemistry/cb05cl_ae5/cb05cl_ae5_Global.f90
-	test/chemistry/cb05cl_ae5/cb05cl_ae5_Initialize.f90
-        test/chemistry/cb05cl_ae5/cb05cl_ae5_Integrator.F90
-	test/chemistry/cb05cl_ae5/cb05cl_ae5_Jacobian.f90
-	test/chemistry/cb05cl_ae5/cb05cl_ae5_JacobianSP.f90
-	test/chemistry/cb05cl_ae5/cb05cl_ae5_LinearAlgebra.f90
-	test/chemistry/cb05cl_ae5/cb05cl_ae5_Model.f90
-	test/chemistry/cb05cl_ae5/cb05cl_ae5_Monitor.f90
-	test/chemistry/cb05cl_ae5/cb05cl_ae5_Parameters.f90
-	test/chemistry/cb05cl_ae5/cb05cl_ae5_Precision.f90
-	test/chemistry/cb05cl_ae5/cb05cl_ae5_Rates.f90
-	test/chemistry/cb05cl_ae5/cb05cl_ae5_Util.f90
+  test/chemistry/cb05cl_ae5/cb05cl_ae5_Function.F90
+  test/chemistry/cb05cl_ae5/cb05cl_ae5_Global.F90
+  test/chemistry/cb05cl_ae5/cb05cl_ae5_Initialize.F90
+  test/chemistry/cb05cl_ae5/cb05cl_ae5_Integrator.F90
+  test/chemistry/cb05cl_ae5/cb05cl_ae5_Jacobian.F90
+  test/chemistry/cb05cl_ae5/cb05cl_ae5_JacobianSP.F90
+  test/chemistry/cb05cl_ae5/cb05cl_ae5_LinearAlgebra.F90
+  test/chemistry/cb05cl_ae5/cb05cl_ae5_Model.F90
+  test/chemistry/cb05cl_ae5/cb05cl_ae5_Monitor.F90
+  test/chemistry/cb05cl_ae5/cb05cl_ae5_Parameters.F90
+  test/chemistry/cb05cl_ae5/cb05cl_ae5_Precision.F90
+  test/chemistry/cb05cl_ae5/cb05cl_ae5_Rates.F90
+  test/chemistry/cb05cl_ae5/cb05cl_ae5_Util.F90
 	)
 
 if(${CMAKE_Fortran_COMPILER_ID} MATCHES "Intel")
