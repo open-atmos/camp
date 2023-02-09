@@ -11,6 +11,10 @@
 
 #include "../camp_common.h"
 
+#ifdef EXPORT_CELL_NETCDF
+void export_cell_netcdf(SolverData *sd);
+#endif
+
 #ifndef CSR_MATRIX
 void swapCSC_CSR2(int n_row, int n_col, int* Ap, int* Aj, double* Ax, int* Bp, int* Bi, double* Bx);
 #endif

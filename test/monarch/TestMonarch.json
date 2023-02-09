@@ -1,24 +1,24 @@
 {
-    "_chemFile": "monarch_cb05",
-    "diffCells": "Ideal",
+    "_chemFile": "monarch_binned",
+    "diffCells": "Realistic",
     "mpi": "yes",
     "timeSteps": 1,
-    "timeStepsDt": 3,
+    "timeStepsDt": 2,
     "MAPETol": 0.0001,
     "commit": "",
-    "case": "GPU BDF",
-    "nCells": 10000,
-    "caseGpuCpu": "GPU",
-    "caseMulticellsOnecell": "BDF",
-    "mpiProcesses": 1,
+    "case": "CPU One-cell",
+    "nCells": 1,
+    "caseGpuCpu": "CPU",
+    "caseMulticellsOnecell": "One-cell",
+    "mpiProcesses": 2,
     "allocatedNodes": 1,
     "allocatedTasksPerNode": 160,
     "nGPUs": 1,
     "is_start_cases_attributes": true,
     "diffCellsL": [
-        "Ideal"
+        "Realistic"
     ],
-    "mpiProcessesCaseBase": 40,
+    "mpiProcessesCaseBase": 2,
     "mpiProcessesCaseOptimList": [
         1
     ],
@@ -26,13 +26,11 @@
         1
     ],
     "cells": [
-        10000
+        2
     ],
     "caseBase": "CPU One-cell",
-    "casesOptim": [
-        "GPU BDF"
-    ],
-    "plotYKey": "Speedup timecvStep",
+    "casesOptim": [],
+    "plotYKey": "MAPE",
     "plotXKey": "",
     "is_export": false,
     "is_import": false,
@@ -43,9 +41,9 @@
     "stdColumns": [],
     "exportPath": "exports",
     "legend": [],
-    "results_file": "_solver_stats.csv",
+    "results_file": "_results_all_cells.csv",
     "plotTitle": "",
-    "nCellsProcesses": 10000,
+    "nCellsProcesses": 2,
     "itsolverConfigFile": "itsolver_options.txt",
     "campSolverConfigFile": "config_variables_c_solver.txt",
     "nGPUsCaseBase": 1

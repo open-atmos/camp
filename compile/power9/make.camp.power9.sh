@@ -67,9 +67,9 @@ else
 
   #echo "make end"
 
-  #FILE=TestMonarch.py
+  FILE=TestMonarch.py
   #FILE=./test_run/chemistry/cb05cl_ae5/test_chemistry_cb05cl_ae5.sh
-  FILE=./unit_test_aero_rep_single_particle
+  #FILE=./unit_test_aero_rep_single_particle
   if [ "$FILE" == TestMonarch.py ]; then
     #echo "python TestMonarch.py start"
     time python $FILE

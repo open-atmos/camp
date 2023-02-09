@@ -18,6 +18,49 @@
 #include <mpi.h>
 #endif
 
+#ifdef EXPORT_CELL_NETCDF
+#include <netcdf.h>
+
+void nc(int status) { //handle netcdf error
+  if (status != NC_NOERR) {
+    fprintf(stderr, "%s\n", nc_strerror(status));
+    exit(-1);
+  }
+}
+
+void export_cell_netcdf(SolverData *sd){
+  printf("export_cell_netcdf start\n");
+  int rank, size, ncid;
+  char file_name[]="cell_1_timestep_1.nc";
+  char file_path[1024];
+  getcwd(file_path, sizeof(file_path));
+  strcat(file_path,"/");
+  strcat(file_path,file_name);
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  MPI_Comm_size(MPI_COMM_WORLD, &size);
+  MPI_Info info = MPI_INFO_NULL;
+  MPI_Comm comm = MPI_COMM_WORLD;
+  nc(nc_create_par(file_name, NC_NETCDF4|NC_MPIIO, comm, info, &ncid));
+  printf("Created netcdf file at %s\n",file_path);
+  //nc_def_dim(ncid,"");
+
+  /*
+   * print*,"Created netcdf file at", file_name
+call MPI_Comm_size(MPI_COMM_WORLD,numprocs,err)
+i=1
+ncells=(I_E - I_W+1)*(I_N - I_S+1)*NUM_VERT_CELLS
+length=ncells*numprocs
+call check( nf90_def_dim(ncid,"length",length,dimid) )
+call check(nf90_def_var(ncid, "state", NF90_INT, dimid, varids(i)))
+i=i+1
+   */
+
+  //int_data, float_data, env, env_data, state
+  nc_close(ncid);
+  printf("export_cell_netcdf end\n");
+}
+#endif
+
 #ifndef CSR_MATRIX
 void swapCSC_CSR2(int n_row, int n_col, int* Ap, int* Aj, double* Ax, int* Bp, int* Bi, double* Bx){
 
@@ -160,14 +203,12 @@ int compare_doubles(double *x, double *y, int len, const char *s){
 }
 
 void print_current_directory(){
-
   char cwd[1024];
   if (getcwd(cwd, sizeof(cwd)) != NULL) {
     printf("Current working dir: %s\n", cwd);
   } else {
     printf("getcwd() error");
   }
-
 }
 
 #ifdef CAMP_USE_GPU
@@ -207,61 +248,41 @@ void get_camp_config_variables(SolverData *sd){
 }
 #endif
 
-void export_counters_open(SolverData *sd)
-{
-
+void export_counters_open(SolverData *sd){
   ModelData *md = &(sd->model_data);
-
 #ifdef CAMP_DEBUG_GPU
-
   //char rel_path[] = "../../../../../exported_counters_";
   //char rel_path[] =
   //        "/gpfs/scratch/bsc32/bsc32815/a2s8/nmmb-monarch/MODEL/SRC_LIBS/camp/"
   //        "test/monarch/exports/camp_input";  // monarch
   //char rel_path[]=
   //  "/gpfs/scratch/bsc32/bsc32815/gpucamp/exported_counters_";
-
   char rel_path[]=
           "out/exported_counters_";
-
   char rank_str[64];
   char path[1024];
-
 #ifdef CAMP_USE_MPI
-
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-
 #else
-
   int rank=0;
-
 #endif
-
   if (rank==999){
     printf("Exporting profiling counters rank %d counterFail %d counterSolve"
            " %d\n", rank, sd->counterFail, sd->counterSolve);
   }
-
   sprintf(rank_str, "%d", rank);
-
   strcpy(path, rel_path);
   strcat(path, rank_str);
   strcat(path, ".csv");
-
   FILE *file;
-
   file = fopen(path, "w");
-
   if (file == NULL) {
     printf("Can't create file in function export_counters_open \n");
     exit(1);
   }
-
   fprintf(file, "mpi_rank %d\n", rank);
-
 #endif
-
 }
 
 

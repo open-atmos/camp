@@ -68,30 +68,30 @@ include(CPack)
 if(ENABLE_NETCDF)
 
 find_path(NETCDF_INCLUDE_DIR netcdf.mod NETCDF.mod
-  DOC "NetCDF include directory (must contain netcdf.mod)"
-  PATHS
-  $ENV{NETCDF_FORTRAN_HOME}/include
-  $ENV{NETCDF_HOME}/include
-  /usr/lib/gfortran/modules
-  /usr/lib64/gfortran/modules
-  /opt/local/include)
-find_library(NETCDF_C_LIB netcdf
-  DOC "NetCDF C library"
-  PATHS $ENV{NETCDF_HOME}/lib $ENV{NETCDF_HOME}/lib64 /opt/local/lib)
-find_library(NETCDF_FORTRAN_LIB netcdff
-  DOC "NetCDF Fortran library"
-  PATHS
-  $ENV{NETCDF_HOME}/lib $ENV{NETCDF_HOME}/lib64
-  $ENV{NETCDF_FORTRAN_HOME}/lib $ENV{NETCDF_FORTRAN_HOME}/lib64
-  /opt/local/lib)
-set(NETCDF_LIBS ${NETCDF_C_LIB})
-if(NETCDF_FORTRAN_LIB)
-  set(NETCDF_LIBS ${NETCDF_LIBS} ${NETCDF_FORTRAN_LIB})
-endif()
-include_directories(${NETCDF_INCLUDE_DIR})
+    DOC "NetCDF include directory (must contain netcdf.mod)"
+    PATHS
+    $ENV{NETCDF_FORTRAN_HOME}/include
+    $ENV{NETCDF_HOME}/include
+    /usr/lib/gfortran/modules
+    /usr/lib64/gfortran/modules
+    /opt/local/include)
+  find_library(NETCDF_C_LIB netcdf
+    DOC "NetCDF C library"
+    PATHS $ENV{NETCDF_HOME}/lib $ENV{NETCDF_HOME}/lib64 /opt/local/lib)
+  find_library(NETCDF_FORTRAN_LIB netcdff
+    DOC "NetCDF Fortran library"
+    PATHS
+    $ENV{NETCDF_HOME}/lib $ENV{NETCDF_HOME}/lib64
+    $ENV{NETCDF_FORTRAN_HOME}/lib $ENV{NETCDF_FORTRAN_HOME}/lib64
+    /opt/local/lib)
+  set(NETCDF_LIBS ${NETCDF_C_LIB})
+  if(NETCDF_FORTRAN_LIB)
+    set(NETCDF_LIBS ${NETCDF_LIBS} ${NETCDF_FORTRAN_LIB})
+  endif()
+  include_directories(${NETCDF_INCLUDE_DIR})
+  add_definitions(-D EXPORT_CELL_NETCDF)
 else()
-    set(NETCDF_LIBS "")
-    add_definitions(-DCAMP_DISABLE_NETCDF)
+  set(NETCDF_LIBS "")
 endif()
 
 ######################################################################

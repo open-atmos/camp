@@ -5,6 +5,8 @@
 !> \file
 !> The mock_monarch_t program
 
+#define CAMP_DISABLE_NETCDF
+
 !> Mock version of the MONARCH model for testing integration with CAMP
 program mock_monarch_t
 
@@ -917,24 +919,17 @@ contains
 
               write(RESULTS_ALL_CELLS_FILE_UNIT, "(ES13.6)", advance="no") &
                       species_conc_mpi(i,j,k,camp_interface%map_monarch_id(1),n)
-
               !print*,"export_file_results_all_cells species_conc_mpi", species_conc_mpi(z,camp_interface%map_monarch_id(1))
-
               do r=2,size(camp_interface%map_monarch_id)
-
                 !print*,species_conc_mpi(i,j,k,camp_interface%map_monarch_id(r),n),&
                 !        camp_interface%camp_state%state_var(camp_interface%map_camp_id(r))
-
                 write(RESULTS_ALL_CELLS_FILE_UNIT, "(A)", advance="no") ","
                 write(RESULTS_ALL_CELLS_FILE_UNIT, "(ES13.6)", advance="no") &
                         species_conc_mpi(i,j,k,camp_interface%map_monarch_id(r),n)
-
                 !camp_interface%camp_state%state_var(r+z*state_size_per_cell) = &
                 !        camp_interface%camp_state%state_var(r)
               end do
-
               write(RESULTS_ALL_CELLS_FILE_UNIT, '(a)') ''
-
             end do
           end do
         end do
@@ -1044,7 +1039,6 @@ contains
     call camp_mpi_barrier()
     print*,"nf90_enddef end"
   end subroutine
-
 
   subroutine export_netcdf(c, idncids)
     type(camp_monarch_interface_t), intent(inout) :: c
