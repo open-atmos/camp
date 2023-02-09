@@ -30,7 +30,7 @@ void nc(int status) { //handle netcdf error
 
 void export_cell_netcdf(SolverData *sd){
   printf("export_cell_netcdf start\n");
-  int rank, size, ncid;
+  int rank, size, ncid, state_dimid, state_varid;
   char file_name[]="cell_1_timestep_1.nc";
   char file_path[1024];
   getcwd(file_path, sizeof(file_path));
@@ -42,7 +42,13 @@ void export_cell_netcdf(SolverData *sd){
   MPI_Comm comm = MPI_COMM_WORLD;
   nc(nc_create_par(file_name, NC_NETCDF4|NC_MPIIO, comm, info, &ncid));
   printf("Created netcdf file at %s\n",file_path);
-  //nc_def_dim(ncid,"");
+  nc(nc_def_dim(ncid,"nstate",sd->model_data.n_per_cell_state_var,&state_dimid));
+  nc(nc_def_var(ncid, "state", NC_DOUBLE, 1, &state_dimid, &state_varid));
+  nc(nc_enddef(ncid));
+
+  nc(nc_var_par_access(ncid, state_varid, 1, 0));
+  nc(nc_put_var_double(ncid, state_varid, sd->model_data.total_state));
+  nc(nc_close(ncid));
 
   /*
    * print*,"Created netcdf file at", file_name
@@ -56,9 +62,10 @@ i=i+1
    */
 
   //int_data, float_data, env, env_data, state
-  nc_close(ncid);
   printf("export_cell_netcdf end\n");
 }
+
+
 #endif
 
 #ifndef CSR_MATRIX
