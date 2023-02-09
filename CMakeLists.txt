@@ -41,6 +41,8 @@ option(ENABLE_GPU "Enable use of GPUs in chemistry solving" OFF)
 option(ENABLE_SWAP_DERIV_LOOP_CELLS "Optimization for sligth speedup in One-cell version, more info at https://earth.bsc.es/gitlab/ac/camp/-/issues/22" OFF)
 option(ENABLE_RESET_JAC_SOLVING "Precondition Jacobian matrix with default value (ON) or previous execution value (OFF), better speedup ON but easier to debug OFF, more info at https://earth.bsc.es/gitlab/ac/camp/-/issues/21" OFF)
 option(ENABLE_NETCDF "Include NETCDF package" OFF)
+option(ENABLE_EXPORT_NETCDF "" OFF)
+option(ENABLE_IMPORT_NETCDF "" OFF)
 option(ENABLE_BOOTCAMP "" ON)
 option(ENABLE_DATA "" ON)
 option(ENABLE_STATIC_LIB "" ON)
@@ -66,7 +68,6 @@ include(CPack)
 # NetCDF
 
 if(ENABLE_NETCDF)
-
 find_path(NETCDF_INCLUDE_DIR netcdf.mod NETCDF.mod
     DOC "NetCDF include directory (must contain netcdf.mod)"
     PATHS
@@ -89,7 +90,13 @@ find_path(NETCDF_INCLUDE_DIR netcdf.mod NETCDF.mod
     set(NETCDF_LIBS ${NETCDF_LIBS} ${NETCDF_FORTRAN_LIB})
   endif()
   include_directories(${NETCDF_INCLUDE_DIR})
-  add_definitions(-D EXPORT_CELL_NETCDF)
+  add_definitions(-D ENABLE_NETCDF)
+  if(ENABLE_EXPORT_NETCDF)
+    add_definitions(-D EXPORT_CELL_NETCDF)
+  endif()
+  if(ENABLE_IMPORT_NETCDF)
+    add_definitions(-D IMPORT_CELL_NETCDF)
+  endif()
 else()
   set(NETCDF_LIBS "")
 endif()

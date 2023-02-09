@@ -660,6 +660,7 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
             state[i_spec + i_cell * n_state_var] > TINY
                 ? (realtype)state[i_spec + i_cell * n_state_var]
                 : TINY;
+        //printf("a%d %-le\n",i_spec,state[i_spec]);
       } else if (md->var_type[i_spec] == CHEM_SPEC_CONSTANT) {
         state[i_spec + i_cell * n_state_var] =
             state[i_spec + i_cell * n_state_var] > TINY
@@ -682,8 +683,12 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
   // Reset the counter of Jacobian evaluation failures
   sd->Jac_eval_fails = 0;
 
-#ifdef EXPORT_CELL_NETCDF
+#ifndef EXPORT_CELL_NETCDF
   export_cell_netcdf(sd);
+#else
+#ifdef IMPORT_CELL_NETCDF
+  import_cell_netcdf(sd);
+#endif
 #endif
 
   // Update data for new environmental state

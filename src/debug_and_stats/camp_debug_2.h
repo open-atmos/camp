@@ -11,7 +11,7 @@
 
 #include "../camp_common.h"
 
-#ifdef EXPORT_CELL_NETCDF
+#ifdef ENABLE_NETCDF
 void export_cell_netcdf(SolverData *sd);
 #endif
 

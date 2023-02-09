@@ -18,7 +18,7 @@
 #include <mpi.h>
 #endif
 
-#ifdef EXPORT_CELL_NETCDF
+#ifdef ENABLE_NETCDF
 #include <netcdf.h>
 
 void nc(int status) { //handle netcdf error
@@ -28,48 +28,64 @@ void nc(int status) { //handle netcdf error
   }
 }
 
-void export_cell_txt(SolverData *sd){
-  MPI_File fh;
-  int rank;
-  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  MPI_File_open(MPI_COMM_WORLD, "cell_1_timestep_1.txt",
-                MPI_MODE_CREATE|MPI_MODE_WRONLY,
-                MPI_INFO_NULL, &fh);
-  MPI_File_write_ordered(fh, 1,
-                         1.0E-30, MPI_DOUBLE, MPI_STATUS_IGNORE);
-  MPI_File_close(&fh);
-}
-
 void export_cell_netcdf(SolverData *sd){
-  export_cell_txt(sd);
-
-/*
   printf("export_cell_netcdf start\n");
-  int rank, size, ncid, state_dimid, state_varid;
+  ModelData *md = &(sd->model_data);
+  int ncid, state_dimid, state_varid;
   char file_name[]="cell_1_timestep_1.nc";
   char file_path[1024];
   getcwd(file_path, sizeof(file_path));
   strcat(file_path,"/");
   strcat(file_path,file_name);
-  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  MPI_Comm_size(MPI_COMM_WORLD, &size);
-  MPI_Info info = MPI_INFO_NULL;
-  MPI_Comm comm = MPI_COMM_WORLD;
-  nc(nc_create_par(file_name, NC_NETCDF4|NC_MPIIO, comm, info, &ncid));
-  printf("Created netcdf file at %s\n",file_path);
-  nc(nc_def_dim(ncid,"nstate",sd->model_data.n_per_cell_state_var,&state_dimid));
+  printf("Creating netcdf file at %s\n",file_path);
+  nc(nc_create_par(file_path, NC_NETCDF4|NC_MPIIO, MPI_COMM_WORLD, MPI_INFO_NULL, &ncid));
+  nc(nc_def_dim(ncid,"nstate",md->n_per_cell_state_var,&state_dimid));
   nc(nc_def_var(ncid, "state", NC_DOUBLE, 1, &state_dimid, &state_varid));
+  //nc(nc_def_dim(ncid,"nstate",sd->model_data.n_per_cell_state_var,&state_dimid));
+  //nc(nc_def_var(ncid, "state", NC_DOUBLE, 1, &state_dimid, &state_varid));
   nc(nc_enddef(ncid));
-
   nc(nc_var_par_access(ncid, state_varid, 1, 0));
   nc(nc_put_var_double(ncid, state_varid, sd->model_data.total_state));
   nc(nc_close(ncid));
-*/
-
   //int_data, float_data, env, env_data, state
   printf("export_cell_netcdf end\n");
+  /*
+  int rank;
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  for (int i = 0; i < md->n_per_cell_state_var; i++) {
+    printf("b rank %d %d %-le\n",rank,i,md->total_state[i]);
+  }
+   */
 }
 
+void import_cell_netcdf(SolverData *sd){
+  printf("import_cell_netcdf start\n");
+  ModelData *md = &(sd->model_data);
+  int ncid, state_dimid, state_varid;
+  char file_name[]="cell_1_timestep_1.nc";
+  char file_path[1024];
+  getcwd(file_path, sizeof(file_path));
+  strcat(file_path,"/");
+  strcat(file_path,file_name);
+  printf("Opening netcdf file at %s\n",file_path);
+
+  nc(nc_open_par(file_path, NC_NOWRITE|NC_PNETCDF, MPI_COMM_WORLD, MPI_INFO_NULL, &ncid));
+
+
+  nc(nc_inq_varid(ncid, "state", &state_varid));
+  nc(nc_var_par_access(ncid, state_varid, 1, 0));
+  nc(nc_get_var_double(ncid, state_varid, md->total_state));
+
+
+  printf("import_cell_netcdf end\n");
+
+  int rank;
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  for (int i = 0; i < md->n_per_cell_state_var; i++) {
+    printf("b rank %d %d %-le\n",rank,i,md->total_state[i]);
+  }
+
+}
 
 #endif
 
