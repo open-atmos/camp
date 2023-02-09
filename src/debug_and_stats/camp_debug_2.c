@@ -28,7 +28,22 @@ void nc(int status) { //handle netcdf error
   }
 }
 
+void export_cell_txt(SolverData *sd){
+  MPI_File fh;
+  int rank;
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  MPI_File_open(MPI_COMM_WORLD, "cell_1_timestep_1.txt",
+                MPI_MODE_CREATE|MPI_MODE_WRONLY,
+                MPI_INFO_NULL, &fh);
+  MPI_File_write_ordered(fh, 1,
+                         1.0E-30, MPI_DOUBLE, MPI_STATUS_IGNORE);
+  MPI_File_close(&fh);
+}
+
 void export_cell_netcdf(SolverData *sd){
+  export_cell_txt(sd);
+
+/*
   printf("export_cell_netcdf start\n");
   int rank, size, ncid, state_dimid, state_varid;
   char file_name[]="cell_1_timestep_1.nc";
@@ -49,17 +64,7 @@ void export_cell_netcdf(SolverData *sd){
   nc(nc_var_par_access(ncid, state_varid, 1, 0));
   nc(nc_put_var_double(ncid, state_varid, sd->model_data.total_state));
   nc(nc_close(ncid));
-
-  /*
-   * print*,"Created netcdf file at", file_name
-call MPI_Comm_size(MPI_COMM_WORLD,numprocs,err)
-i=1
-ncells=(I_E - I_W+1)*(I_N - I_S+1)*NUM_VERT_CELLS
-length=ncells*numprocs
-call check( nf90_def_dim(ncid,"length",length,dimid) )
-call check(nf90_def_var(ncid, "state", NF90_INT, dimid, varids(i)))
-i=i+1
-   */
+*/
 
   //int_data, float_data, env, env_data, state
   printf("export_cell_netcdf end\n");
