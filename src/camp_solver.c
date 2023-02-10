@@ -683,7 +683,7 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
   // Reset the counter of Jacobian evaluation failures
   sd->Jac_eval_fails = 0;
 
-#ifndef EXPORT_CELL_NETCDF
+#ifdef EXPORT_CELL_NETCDF
   export_cell_netcdf(sd);
 #else
 #ifdef IMPORT_CELL_NETCDF

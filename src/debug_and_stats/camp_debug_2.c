@@ -39,19 +39,24 @@ void export_cell_netcdf(SolverData *sd){
   strcat(file_path,file_name);
   printf("Creating netcdf file at %s\n",file_path);
   nc(nc_create_par(file_path, NC_NETCDF4|NC_MPIIO, MPI_COMM_WORLD, MPI_INFO_NULL, &ncid));
-  nc(nc_def_dim(ncid,"nstate",md->n_per_cell_state_var,&state_dimid));
+  int size;
+  MPI_Comm_size(MPI_COMM_WORLD, &size);
+  nc(nc_def_dim(ncid,"nstate",md->n_per_cell_state_var*size,&state_dimid));
+  //printf("md->n_per_cell_state_var*size %d",md->n_per_cell_state_var*size);
   nc(nc_def_var(ncid, "state", NC_DOUBLE, 1, &state_dimid, &state_varid));
   //nc(nc_def_dim(ncid,"nstate",sd->model_data.n_per_cell_state_var,&state_dimid));
   //nc(nc_def_var(ncid, "state", NC_DOUBLE, 1, &state_dimid, &state_varid));
   nc(nc_enddef(ncid));
   nc(nc_var_par_access(ncid, state_varid, 1, 0));
-  nc(nc_put_var_double(ncid, state_varid, sd->model_data.total_state));
+  int rank;
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  size_t start=md->n_per_cell_state_var*rank;
+  size_t count=md->n_per_cell_state_var;
+  nc(nc_put_vara_double(ncid, state_varid, &start, &count, sd->model_data.total_state));
   nc(nc_close(ncid));
   //int_data, float_data, env, env_data, state
   printf("export_cell_netcdf end\n");
   /*
-  int rank;
-  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   for (int i = 0; i < md->n_per_cell_state_var; i++) {
     printf("b rank %d %d %-le\n",rank,i,md->total_state[i]);
   }
@@ -68,27 +73,22 @@ void import_cell_netcdf(SolverData *sd){
   strcat(file_path,"/");
   strcat(file_path,file_name);
   printf("Opening netcdf file at %s\n",file_path);
-
   nc(nc_open_par(file_path, NC_NOWRITE|NC_PNETCDF, MPI_COMM_WORLD, MPI_INFO_NULL, &ncid));
-
-
   nc(nc_inq_varid(ncid, "state", &state_varid));
   nc(nc_var_par_access(ncid, state_varid, 1, 0));
-  nc(nc_get_var_double(ncid, state_varid, md->total_state));
-
-
-  printf("import_cell_netcdf end\n");
-
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  size_t start=md->n_per_cell_state_var*rank;
+  size_t count=md->n_per_cell_state_var;
+  nc(nc_get_vara_double(ncid, state_varid, &start, &count, md->total_state));
+  printf("import_cell_netcdf end\n");
+  /*
   for (int i = 0; i < md->n_per_cell_state_var; i++) {
-    printf("b rank %d %d %-le\n",rank,i,md->total_state[i]);
+    printf("c rank %d %d %-le\n",rank,i,md->total_state[i]);
   }
-
+   */
 }
-
 #endif
-
 #ifndef CSR_MATRIX
 void swapCSC_CSR2(int n_row, int n_col, int* Ap, int* Aj, double* Ax, int* Bp, int* Bi, double* Bx){
 
