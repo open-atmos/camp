@@ -290,7 +290,11 @@ typedef struct {
 #ifdef FAILURE_DETAIL
   int counter_fail_solve_print;
 #endif
-
+#endif
+#ifdef ENABLE_NETCDF
+  int n_cells_tstep;
+  int icell;
+  int tstep;
 #endif
 #ifdef CAMP_USE_GPU
   ModelDataCPU mCPU;

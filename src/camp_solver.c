@@ -444,7 +444,7 @@ void solver_set_spec_name(void *solver_data, char *spec_name,
  * \return Pointer to an initialized SolverData object
  */
 void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
-                       int max_steps, int max_conv_fails) {
+                       int max_steps, int max_conv_fails, int n_cells_tstep) {
 #ifdef CAMP_USE_SUNDIALS
   SolverData *sd;   // SolverData object
   int flag;         // return code from SUNDIALS functions
@@ -550,7 +550,11 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
       constructor_cvode_gpu(sd->cvode_mem, sd);
   }
 #endif
-
+#ifdef ENABLE_NETCDF
+  sd->n_cells_tstep = n_cells_tstep;
+  sd->icell=0;
+  sd->tstep=0;
+#endif
 #ifdef FAILURE_DETAIL
   // Set a custom error handling function
   flag = CVodeSetErrHandlerFn(sd->cvode_mem, error_handler, (void *)sd);
@@ -681,7 +685,7 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
   // Reset the counter of Jacobian evaluation failures
   sd->Jac_eval_fails = 0;
 
-#ifndef EXPORT_CELL_NETCDF
+#ifdef EXPORT_CELL_NETCDF
   export_cell_netcdf(sd);
 #else
 #ifdef IMPORT_CELL_NETCDF

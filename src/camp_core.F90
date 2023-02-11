@@ -1157,12 +1157,13 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Initialize the solver
-  subroutine solver_initialize(this)
+  subroutine solver_initialize(this, n_cells_tstep)
 
     !> Chemical model
     class(camp_core_t), intent(inout) :: this
     type(string_t), allocatable :: spec_names(:)
     integer :: i_spec, n_gas_spec
+    integer, optional :: n_cells_tstep
 
     call assert_msg(662920365, .not.this%solver_is_initialized, &
             "Attempting to initialize the solver twice.")
@@ -1170,7 +1171,6 @@ contains
 #ifdef CAMP_SOLVER_SPEC_NAMES
     spec_names = this%unique_names()
 #endif
-
 
     !Get spec names
     !n_gas_spec = this%chem_spec_data%size(spec_phase=CHEM_SPEC_GAS_PHASE)
@@ -1207,6 +1207,7 @@ contains
                 this%sub_model,  & ! Pointer to the sub-models
                 GAS_RXN,         & ! Reaction phase
                 this%n_cells,    & ! # of cells computed simultaneosly
+                n_cells_tstep , &
                 spec_names,       & ! Species names
                 size(this%ncounters), & ! # of profiling variables (Times and counters)
                 size(this%ntimers) & ! # of profiling variables (Times and counters)
@@ -1220,6 +1221,7 @@ contains
                 this%sub_model,  & ! Pointer to the sub-models
                 AERO_RXN,        & ! Reaction phase
                 this%n_cells,    & ! # of cells computed simultaneosly
+                n_cells_tstep , &
                 spec_names,       & ! Species names
                 size(this%ncounters), & ! # of profiling variables (Times and counters)
                 size(this%ntimers) & ! # of profiling variables (Times and counters)
@@ -1244,6 +1246,7 @@ contains
                 this%sub_model,  & ! Pointer to the sub-models
                 GAS_AERO_RXN,    & ! Reaction phase
                 this%n_cells,    & ! # of cells computed simultaneosly
+                n_cells_tstep , &
                 spec_names,       & ! Species names
                 size(this%ncounters), & ! # of profiling variables (Times and counters)
                 size(this%ntimers) & ! # of profiling variables (Times and counters)

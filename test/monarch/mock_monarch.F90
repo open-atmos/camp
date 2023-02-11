@@ -183,7 +183,7 @@ program mock_monarch_t
   integer :: plot_case, new_v_cells, aux_int
   type(solver_stats_t), target :: solver_stats
 
-  integer :: ncounters, ntimers
+  integer :: ncounters, ntimers, n_cells_tstep
   integer :: export_results_all_cells
   integer :: plot_species = 0
   type(json_file) :: jfile
@@ -345,11 +345,12 @@ program mock_monarch_t
 
   NUM_WE_CELLS = I_E-I_W+1
   NUM_SN_CELLS = I_N-I_S+1
+  n_cells_tstep = NUM_WE_CELLS*NUM_SN_CELLS*NUM_VERT_CELLS
 
   call jfile%get('caseGpuCpu',caseGpuCpu)
   if (camp_mpi_rank().eq.0) then
     write(*,*) "Time-steps:", NUM_TIME_STEP, "Cells:",&
-            NUM_WE_CELLS*NUM_SN_CELLS*NUM_VERT_CELLS, &
+            n_cells_tstep, &
             diffCells,  caseMulticellsOnecell,caseGpuCpu, "MPI processes",camp_mpi_size()
 
   end if
@@ -481,7 +482,7 @@ program mock_monarch_t
   call init_output_files(output_file_prefix)
 
   camp_interface => camp_monarch_interface_t(camp_input_file, interface_input_file, &
-          START_CAMP_ID, END_CAMP_ID, n_cells, ADD_EMISIONS)!, n_cells
+          START_CAMP_ID, END_CAMP_ID, n_cells, n_cells_tstep, ADD_EMISIONS)!, n_cells
 
   ncounters = size(camp_interface%camp_core%ncounters)
   ntimers = size(camp_interface%camp_core%ntimers)

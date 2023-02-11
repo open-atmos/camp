@@ -28,13 +28,30 @@ void nc(int status) { //handle netcdf error
   }
 }
 
+void export
+
 void export_cell_netcdf(SolverData *sd){
+
+  /*
   printf("export_cell_netcdf start\n");
   ModelData *md = &(sd->model_data);
   int ncid;
   int nvars=5;
   int dimids[nvars], varids[nvars];
-  char file_name[]="cell_1_timestep_1.nc";
+  char file_name[]="cell_";
+  char s_icell[20];
+  sprintf(s_icell,"%d",sd->icell);
+  strcat(file_name,s_icell);
+  sd->icell++;
+  strcat(file_name,"timestep_");
+  char s_tstep[20];
+  sprintf(s_tstep,"%d",sd->tstep);
+  strcat(file_name,s_tstep);
+  if(sd->icell>=sd->n_cells_tstep){
+    sd->icell=0;
+    sd->tstep++;
+  }
+  strcat(file_name,".nc");
   char file_path[1024];
   getcwd(file_path, sizeof(file_path));
   strcat(file_path,"/");
@@ -76,6 +93,7 @@ void export_cell_netcdf(SolverData *sd){
   i=0;
   nc(nc_close(ncid));
   printf("export_cell_netcdf end\n");
+   */
   /*
   for (int i = 0; i < md->n_per_cell_state_var; i++) {
     printf("b rank %d %d %-le\n",rank,i,md->total_state[i]);
@@ -90,6 +108,7 @@ void import_cell_netcdf(SolverData *sd){
   int nvars=5;
   int varids[nvars];
   char file_name[]="cell_1_timestep_1.nc";
+  //char file_name[]="cell_";
   char file_path[1024];
   getcwd(file_path, sizeof(file_path));
   strcat(file_path,"/");

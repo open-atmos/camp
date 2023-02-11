@@ -127,7 +127,7 @@ contains
   !! configuration file and the starting and ending indices for chemical
   !! species in the tracer array.
   function constructor(camp_config_file, interface_config_file, &
-                       starting_id, ending_id, n_cells, &
+                       starting_id, ending_id, n_cells, n_cells_tstep, &
           ADD_EMISIONS, mpi_comm) result (this)
 
     !> A new MONARCH interface
@@ -144,6 +144,7 @@ contains
     integer, intent(in), optional :: mpi_comm
     !> Num cells to compute simulatenously
     integer, optional :: n_cells
+    integer, optional :: n_cells_tstep
     character(len=:), allocatable, optional :: ADD_EMISIONS
 
     type(camp_solver_data_t), pointer :: camp_solver_data
@@ -408,8 +409,7 @@ contains
 #endif
 
     ! Initialize the solver on all nodes
-
-    call this%camp_core%solver_initialize()
+    call this%camp_core%solver_initialize(n_cells_tstep)
     !call camp_mpi_barrier(MPI_COMM_WORLD)
 
     ! Create a state variable on each node
