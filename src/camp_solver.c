@@ -401,10 +401,8 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
 #endif
 
 #ifdef DEBUG_CAMP_SOLVER_NEW
-
   printf("camp solver_run new  n_state_var %d, n_cells %d n_dep_var %d\n",
          sd->model_data.n_per_cell_state_var, n_cells, sd->model_data.n_per_cell_dep_var);
-
 #endif
 
   // Return a pointer to the new SolverData object
@@ -683,7 +681,7 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
   // Reset the counter of Jacobian evaluation failures
   sd->Jac_eval_fails = 0;
 
-#ifdef EXPORT_CELL_NETCDF
+#ifndef EXPORT_CELL_NETCDF
   export_cell_netcdf(sd);
 #else
 #ifdef IMPORT_CELL_NETCDF

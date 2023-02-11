@@ -31,7 +31,9 @@ void nc(int status) { //handle netcdf error
 void export_cell_netcdf(SolverData *sd){
   printf("export_cell_netcdf start\n");
   ModelData *md = &(sd->model_data);
-  int ncid, state_dimid, state_varid;
+  int ncid;
+  int nvars=5;
+  int dimids[nvars], varids[nvars];
   char file_name[]="cell_1_timestep_1.nc";
   char file_path[1024];
   getcwd(file_path, sizeof(file_path));
@@ -41,20 +43,38 @@ void export_cell_netcdf(SolverData *sd){
   nc(nc_create_par(file_path, NC_NETCDF4|NC_MPIIO, MPI_COMM_WORLD, MPI_INFO_NULL, &ncid));
   int size;
   MPI_Comm_size(MPI_COMM_WORLD, &size);
-  nc(nc_def_dim(ncid,"nstate",md->n_per_cell_state_var*size,&state_dimid));
-  //printf("md->n_per_cell_state_var*size %d",md->n_per_cell_state_var*size);
-  nc(nc_def_var(ncid, "state", NC_DOUBLE, 1, &state_dimid, &state_varid));
-  //nc(nc_def_dim(ncid,"nstate",sd->model_data.n_per_cell_state_var,&state_dimid));
-  //nc(nc_def_var(ncid, "state", NC_DOUBLE, 1, &state_dimid, &state_varid));
+  int ncells=md->n_cells;
+  int i=0;
+  nc(nc_def_dim(ncid,"nstate",md->n_per_cell_state_var*ncells*size,&dimids[i]));
+  nc(nc_def_var(ncid, "state", NC_DOUBLE, 1, &dimids[i], &varids[i++]));
+  nc(nc_def_dim(ncid,"nrxn_int_data",md->n_rxn_int_param*ncells*size,&dimids[i]));
+  nc(nc_def_var(ncid, "rxn_int_data", NC_INT, 1, &dimids[i], &varids[i++]));
+  nc(nc_def_dim(ncid,"nrxn_float_data",md->n_rxn_float_param*ncells*size,&dimids[i]));
+  nc(nc_def_var(ncid, "rxn_float_data", NC_DOUBLE, 1, &dimids[i], &varids[i++]));
+  nc(nc_def_dim(ncid,"nrxn_env_data",md->n_rxn_env_data*ncells*size,&dimids[i]));
+  nc(nc_def_var(ncid, "rxn_env_data", NC_DOUBLE, 1, &dimids[i], &varids[i++]));
+  nc(nc_def_dim(ncid,"ntotal_env",CAMP_NUM_ENV_PARAM_*ncells*size,&dimids[i]));
+  nc(nc_def_var(ncid, "total_env", NC_DOUBLE, 1, &dimids[i], &varids[i++]));
+  i=0;
   nc(nc_enddef(ncid));
-  nc(nc_var_par_access(ncid, state_varid, 1, 0));
+  printf("export_cell_netcdf nc_enddef\n");
+  for (int i = 0; i < nvars; i++)
+    nc(nc_var_par_access(ncid, varids[i], 1, 0));
+  i=0;
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  size_t start=md->n_per_cell_state_var*rank;
-  size_t count=md->n_per_cell_state_var;
-  nc(nc_put_vara_double(ncid, state_varid, &start, &count, sd->model_data.total_state));
+  size_t start=md->n_per_cell_state_var*ncells*rank; size_t count=md->n_per_cell_state_var*ncells;
+  nc(nc_put_vara_double(ncid, varids[i++], &start, &count, md->total_state));
+  start=md->n_rxn_int_param*ncells*rank; count=md->n_rxn_int_param*ncells;
+  nc(nc_put_vara_int(ncid, varids[i++], &start, &count, md->rxn_int_data));
+  start=md->n_rxn_float_param*ncells*rank; count=md->n_rxn_float_param*ncells;
+  nc(nc_put_vara_double(ncid, varids[i++], &start, &count, md->rxn_float_data));
+  start=md->n_rxn_env_data*ncells*rank; count=md->n_rxn_env_data*ncells;
+  nc(nc_put_vara_double(ncid, varids[i++], &start, &count, md->rxn_env_data));
+  start=CAMP_NUM_ENV_PARAM_*ncells*rank; count=CAMP_NUM_ENV_PARAM_*ncells;
+  nc(nc_put_vara_double(ncid, varids[i++], &start, &count, md->total_env));
+  i=0;
   nc(nc_close(ncid));
-  //int_data, float_data, env, env_data, state
   printf("export_cell_netcdf end\n");
   /*
   for (int i = 0; i < md->n_per_cell_state_var; i++) {
@@ -66,7 +86,9 @@ void export_cell_netcdf(SolverData *sd){
 void import_cell_netcdf(SolverData *sd){
   printf("import_cell_netcdf start\n");
   ModelData *md = &(sd->model_data);
-  int ncid, state_dimid, state_varid;
+  int ncid;
+  int nvars=5;
+  int varids[nvars];
   char file_name[]="cell_1_timestep_1.nc";
   char file_path[1024];
   getcwd(file_path, sizeof(file_path));
@@ -74,14 +96,32 @@ void import_cell_netcdf(SolverData *sd){
   strcat(file_path,file_name);
   printf("Opening netcdf file at %s\n",file_path);
   nc(nc_open_par(file_path, NC_NOWRITE|NC_PNETCDF, MPI_COMM_WORLD, MPI_INFO_NULL, &ncid));
-  nc(nc_inq_varid(ncid, "state", &state_varid));
-  nc(nc_var_par_access(ncid, state_varid, 1, 0));
+  int i=0;
+  nc(nc_inq_varid(ncid, "state", &varids[i++]));
+  nc(nc_inq_varid(ncid, "rxn_int_data", &varids[i++]));
+  nc(nc_inq_varid(ncid, "rxn_float_data", &varids[i++]));
+  nc(nc_inq_varid(ncid, "rxn_env_data", &varids[i++]));
+  nc(nc_inq_varid(ncid, "total_env", &varids[i++]));
+  i=0;
+  for (int i = 0; i < nvars; i++)
+    nc(nc_var_par_access(ncid, varids[i], 1, 0));
+  i=0;
+  int ncells=md->n_cells;
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  size_t start=md->n_per_cell_state_var*rank;
-  size_t count=md->n_per_cell_state_var;
-  nc(nc_get_vara_double(ncid, state_varid, &start, &count, md->total_state));
+  size_t start=md->n_per_cell_state_var*ncells*rank; size_t count=md->n_per_cell_state_var*ncells;
+  nc(nc_get_vara_double(ncid, varids[i++], &start, &count, md->total_state));
+  start=md->n_rxn_int_param*ncells*rank; count=md->n_rxn_int_param*ncells;
+  nc(nc_get_vara_int(ncid, varids[i++], &start, &count, md->rxn_int_data));
+  start=md->n_rxn_float_param*ncells*rank; count=md->n_rxn_float_param*ncells;
+  nc(nc_get_vara_double(ncid, varids[i++], &start, &count, md->rxn_float_data));
+  start=md->n_rxn_env_data*ncells*rank; count=md->n_rxn_env_data*ncells;
+  nc(nc_get_vara_double(ncid, varids[i++], &start, &count, md->rxn_env_data));
+  start=CAMP_NUM_ENV_PARAM_*ncells*rank; count=CAMP_NUM_ENV_PARAM_*ncells;
+  nc(nc_get_vara_double(ncid, varids[i++], &start, &count, md->total_env));
+  i=0;
   printf("import_cell_netcdf end\n");
+  //md->rxn_int_data[n_rxn_int_param*ncells], md->rxn_float_data[n_rxn_float_param*ncells], md->rxn_env_data[md->n_rxn_env_data*ncells], md->total_env[CAMP_NUM_ENV_PARAM_*ncells]
   /*
   for (int i = 0; i < md->n_per_cell_state_var; i++) {
     printf("c rank %d %d %-le\n",rank,i,md->total_state[i]);
