@@ -28,86 +28,7 @@ void nc(int status) { //handle netcdf error
   }
 }
 
-void export_cell_csv(SolverData *sd){
-  printf("export_cell_csv start\n");
-  ModelData *md = &(sd->model_data);
-  int ncid;
-  int nvars=5;
-  int dimids[nvars], varids[nvars];
-  char file_name[]="rank_";
-  char s_rank[20];
-  int rank;
-  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  sprintf(s_rank,"%d",rank);
-  strcat(file_name,s_rank);
-  strcat(file_name,"cell_");
-  char s_icell[20];
-  sprintf(s_icell,"%d",sd->icell);
-  strcat(file_name,s_icell);
-  sd->icell++;
-  strcat(file_name,"timestep_");
-  char s_tstep[20];
-  sprintf(s_tstep,"%d",sd->tstep);
-  strcat(file_name,s_tstep);
-  if(sd->icell>=sd->n_cells_tstep){
-    sd->icell=0;
-    sd->tstep++;
-  }
-  strcat(file_name,".nc");
-  char file_path[1024];
-  getcwd(file_path, sizeof(file_path));
-  strcat(file_path,"/");
-  strcat(file_path,file_name);
-  printf("Creating csv file at %s\n",file_path);
-  FILE *fptr = fopen(file_path, "w+");
-  for (int i = 0; i < md->n_per_cell_state_var; i++){
-    fprintf(fptr,"%lf\n",md->total_state[i]);
-  }
-  fclose(fptr);
-
-  /*
-  nc(nc_create_par(file_path, NC_NETCDF4|NC_MPIIO, MPI_COMM_WORLD, MPI_INFO_NULL, &ncid));
-  int size;
-  MPI_Comm_size(MPI_COMM_WORLD, &size);
-  int ncells=md->n_cells;
-  int i=0;
-  nc(nc_def_dim(ncid,"nstate",md->n_per_cell_state_var*ncells*size,&dimids[i]));
-  nc(nc_def_var(ncid, "state", NC_DOUBLE, 1, &dimids[i], &varids[i++]));
-  nc(nc_def_dim(ncid,"nrxn_int_data",md->n_rxn_int_param*ncells*size,&dimids[i]));
-  nc(nc_def_var(ncid, "rxn_int_data", NC_INT, 1, &dimids[i], &varids[i++]));
-  nc(nc_def_dim(ncid,"nrxn_float_data",md->n_rxn_float_param*ncells*size,&dimids[i]));
-  nc(nc_def_var(ncid, "rxn_float_data", NC_DOUBLE, 1, &dimids[i], &varids[i++]));
-  nc(nc_def_dim(ncid,"nrxn_env_data",md->n_rxn_env_data*ncells*size,&dimids[i]));
-  nc(nc_def_var(ncid, "rxn_env_data", NC_DOUBLE, 1, &dimids[i], &varids[i++]));
-  nc(nc_def_dim(ncid,"ntotal_env",CAMP_NUM_ENV_PARAM_*ncells*size,&dimids[i]));
-  nc(nc_def_var(ncid, "total_env", NC_DOUBLE, 1, &dimids[i], &varids[i++]));
-  i=0;
-  nc(nc_enddef(ncid));
-  printf("export_cell_netcdf nc_enddef\n");
-  for (int i = 0; i < nvars; i++)
-    nc(nc_var_par_access(ncid, varids[i], 1, 0));
-  i=0;
-  size_t start=md->n_per_cell_state_var*ncells*rank; size_t count=md->n_per_cell_state_var*ncells;
-  nc(nc_put_vara_double(ncid, varids[i++], &start, &count, md->total_state));
-  start=md->n_rxn_int_param*ncells*rank; count=md->n_rxn_int_param*ncells;
-  nc(nc_put_vara_int(ncid, varids[i++], &start, &count, md->rxn_int_data));
-  start=md->n_rxn_float_param*ncells*rank; count=md->n_rxn_float_param*ncells;
-  nc(nc_put_vara_double(ncid, varids[i++], &start, &count, md->rxn_float_data));
-  start=md->n_rxn_env_data*ncells*rank; count=md->n_rxn_env_data*ncells;
-  nc(nc_put_vara_double(ncid, varids[i++], &start, &count, md->rxn_env_data));
-  start=CAMP_NUM_ENV_PARAM_*ncells*rank; count=CAMP_NUM_ENV_PARAM_*ncells;
-  nc(nc_put_vara_double(ncid, varids[i++], &start, &count, md->total_env));
-  i=0;
-  nc(nc_close(ncid));
-   */
-  printf("export_cell_csv end\n");
-}
-
 void export_cell_netcdf(SolverData *sd){
-
-  export_cell_csv(sd);
-
-/*
 
   printf("export_cell_netcdf start\n");
   ModelData *md = &(sd->model_data);
@@ -169,7 +90,6 @@ void export_cell_netcdf(SolverData *sd){
   i=0;
   nc(nc_close(ncid));
   printf("export_cell_netcdf end\n");
-   */
   /*
   for (int i = 0; i < md->n_per_cell_state_var; i++) {
     printf("b rank %d %d %-le\n",rank,i,md->total_state[i]);
@@ -183,8 +103,20 @@ void import_cell_netcdf(SolverData *sd){
   int ncid;
   int nvars=5;
   int varids[nvars];
-  char file_name[]="cell_1_timestep_1.nc";
-  //char file_name[]="cell_";
+  char file_name[]="cell_";
+  char s_icell[20];
+  sprintf(s_icell,"%d",sd->icell);
+  strcat(file_name,s_icell);
+  sd->icell++;
+  strcat(file_name,"timestep_");
+  char s_tstep[20];
+  sprintf(s_tstep,"%d",sd->tstep);
+  strcat(file_name,s_tstep);
+  if(sd->icell>=sd->n_cells_tstep){
+    sd->icell=0;
+    sd->tstep++;
+  }
+  strcat(file_name,".nc");
   char file_path[1024];
   getcwd(file_path, sizeof(file_path));
   strcat(file_path,"/");
