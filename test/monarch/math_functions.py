@@ -270,7 +270,7 @@ def calculate_MAPE(data, timesteps, max_tol):
     concs_above_tol = 0
     concs_below_tol = 0
     concs_are_zero = 0
-
+    concs_are_equal = 0
     for j in range(timesteps):
         MAPE = 0.0
         # MAPE=1.0E-60
@@ -288,6 +288,8 @@ def calculate_MAPE(data, timesteps, max_tol):
                 # Filter low concs
                 if abs(out1[k] - out2[k]) < max_tol:
                     concs_below_tol = concs_below_tol + 1
+                    if out1[k] == out2[k]:
+                        concs_are_equal = concs_are_equal +1
                 elif out1[k] == 0:
                     concs_are_zero = concs_are_zero + 1
                 else:
@@ -317,8 +319,8 @@ def calculate_MAPE(data, timesteps, max_tol):
         raise
 
     print("max_error:" + str(max_err * 100) + "%" + " at species and id: " + max_err_name + " " + str(max_err_k)
-          , "concs_above_tol", concs_above_tol,
-          "concs_below_tol", concs_below_tol, "concs_are_zero", concs_are_zero)
+          , "concs_above_tol", concs_above_tol, "concs_are_equal", concs_are_equal
+          , "concs_below_tol", concs_below_tol, "concs_are_zero", concs_are_zero)
     # print(NRMSEs)
 
     return MAPEs

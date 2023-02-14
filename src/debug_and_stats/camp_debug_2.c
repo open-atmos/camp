@@ -413,7 +413,6 @@ void import_cell_one_file_netcdf(SolverData *sd){ //Use to import files generate
 }
 
 void cell_netcdf(SolverData *sd){
-  printf("cell_netcdf start\n");
 #ifdef EXPORT_CELL_NETCDF
   export_cell_netcdf(sd);
 #else

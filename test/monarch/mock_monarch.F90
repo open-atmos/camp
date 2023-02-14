@@ -706,7 +706,7 @@ program mock_monarch_t
 
   !call MPI_COMM_SIZE(MPI_COMM_WORLD, mpi_threads)
   mpi_threads = camp_mpi_size()!1
-  if ((mpi_threads.gt.1)) then !One-cell case
+  if ((mpi_threads.gt.1)) then
     !bug deallocating with mpi processes > 1
     !deallocate(camp_interface)
   else

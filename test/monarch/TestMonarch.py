@@ -1,4 +1,3 @@
-
 #
 # Copyright (C) 2022 Barcelona Supercomputing Center and University of
 # Illinois at Urbana-Champaign
@@ -8,7 +7,7 @@
 import matplotlib as mpl
 
 mpl.use('TkAgg')
-#import plot_functions #comment to save ~2s execution time
+# import plot_functions #comment to save ~2s execution time
 import math_functions
 import sys, getopt
 import os
@@ -21,6 +20,7 @@ from os import walk
 import subprocess
 
 import time
+
 
 class TestMonarch:
     def __init__(self):
@@ -97,8 +97,8 @@ def getCaseName(conf):
     elif conf.caseMulticellsOnecell == "Block-cellsNhalf":
         case_multicells_onecell_name += "Block-cells (N/2)"
     elif conf.caseMulticellsOnecell.find("maxrregcount") != -1:
-        #case_multicells_onecell_name += ""
-        #print("WARNING: Changed name maxrregcount to", case_multicells_onecell_name)
+        # case_multicells_onecell_name += ""
+        # print("WARNING: Changed name maxrregcount to", case_multicells_onecell_name)
         case_multicells_onecell_name += conf.caseMulticellsOnecell
     elif conf.caseMulticellsOnecell.find("One") != -1:
         case_multicells_onecell_name += "Base version"
@@ -113,6 +113,21 @@ def write_itsolver_config_file(conf):
     file1.write(cells_method_str)
     # print("Saved", cells_method_str)
     file1.close()
+
+
+def set_import_netcdf(conf, bool_import_netcdf):
+    if conf.caseMulticellsOnecell == "IMPORT_NETCDF":
+        savePath = os.getcwd()
+        #print("savePath",savePath)
+        os.chdir("../../build")
+        os.system("pwd")
+        cmake_str = "cmake -D ENABLE_IMPORT_NETCDF="+str(bool_import_netcdf) + " .."
+        #print("str")
+        os.system(cmake_str)
+        os.system("make -j 4")
+        os.chdir(savePath)
+        os.system("pwd")
+        #os.system("cmake -L -N ../../build")
 
 
 def write_camp_config_file(conf):
@@ -142,19 +157,9 @@ def write_camp_config_file(conf):
         # conf.debug_path = new_path
         # file_exists = os.path.exists(conf.debug_path)
         # print(file_exists)
-
     except Exception as e:
         print("write_camp_config_file fails", e)
 
-    if conf.caseMulticellsOnecell == "IMPORT_NETCDF":
-        #conf.cmakecache=subprocess.check_output("cmake -L -N ../../build")
-        #print("cmakecache", conf.cmakecache)
-        # st = time.time()
-        #compare cmakecache with another cmakecache
-        #et = time.time()
-        #print("Execution time [s]:", st-et)
-        str="cmake -D"
-        #os.system("cmake -D")
 
 def get_commit_hash():
     try:
@@ -289,6 +294,7 @@ def import_data(conf, tmp_path):
             break
     return is_import, new_path
 
+
 def export(conf, data_path):
     data_path_abs = os.path.abspath(os.getcwd()) + "/" + data_path
     exportPath = conf.exportPath
@@ -325,18 +331,24 @@ def export(conf, data_path):
         print("WARNING: More than 1GB saved in ", os.path.abspath(os.getcwd()) + "/" + exportPath)
         # raise
 
+
 def run(conf):
     if conf.caseGpuCpu == "GPU":
-        if conf.nGPUs >2 and conf.mpiProcesses < 30:
-            print("ERROR: nGPUs is more than 2 but MPI processes is not enough, use 40 MPI processes or reduce GPUs to 1 or 2: conf.nGPUs conf.mpiProcesses", conf.nGPUs,conf.mpiProcesses)
+        if conf.nGPUs > 2 and conf.mpiProcesses < 30:
+            print(
+                "ERROR: nGPUs is more than 2 but MPI processes is not enough, use 40 MPI processes or reduce GPUs to 1 or 2: conf.nGPUs conf.mpiProcesses",
+                conf.nGPUs, conf.mpiProcesses)
             raise
-        coresPerNode = 40 #CTE-POWER specs
+        coresPerNode = 40  # CTE-POWER specs
         if conf.mpiProcesses > coresPerNode and conf.mpiProcesses % coresPerNode != 0:
-            print("ERROR: MORE THAN 40 MPI PROCESSES AND NOT MULTIPLE OF 40, WHEN CTE-POWER ONLY HAS 40 CORES PER NODE\n");
+            print(
+                "ERROR: MORE THAN 40 MPI PROCESSES AND NOT MULTIPLE OF 40, WHEN CTE-POWER ONLY HAS 40 CORES PER NODE\n");
             raise
-        nDevicesMax = 4 #CTE-POWER specs
-        if conf.mpiProcesses > int(conf.nGPUs*(coresPerNode/nDevicesMax)):
-            print("ERROR: MORE MPI PROCESSES THAN DEVICES (FOLLOW PROPORTION, FOR CTE-POWER IS 10 PROCESSES FOR EACH GPU, SINCE IT HAS 4 GPUS AND 40 PROCESSES PER NODE): conf.mpiProcesses, conf.nGPUs*(coresPerNode/nDevicesMax)",conf.mpiProcesses, int(conf.nGPUs*(coresPerNode/nDevicesMax)))
+        nDevicesMax = 4  # CTE-POWER specs
+        if conf.mpiProcesses > int(conf.nGPUs * (coresPerNode / nDevicesMax)):
+            print(
+                "ERROR: MORE MPI PROCESSES THAN DEVICES (FOLLOW PROPORTION, FOR CTE-POWER IS 10 PROCESSES FOR EACH GPU, SINCE IT HAS 4 GPUS AND 40 PROCESSES PER NODE): conf.mpiProcesses, conf.nGPUs*(coresPerNode/nDevicesMax)",
+                conf.mpiProcesses, int(conf.nGPUs * (coresPerNode / nDevicesMax)))
             raise
     exec_str = ""
     if conf.mpi == "yes":
@@ -344,29 +356,29 @@ def run(conf):
         # exec_str+="srun -n "+str(conf.mpiProcesses)+" "
 
     if conf.profileCuda == "nvprof" and conf.caseGpuCpu == "GPU":
-        pathNvprof = "../../compile/power9/"#"../../../nvprof/"
+        pathNvprof = "../../compile/power9/"  # "../../../nvprof/"
         Path(pathNvprof).mkdir(parents=True, exist_ok=True)
-        pathNvprof = pathNvprof+ conf.caseMulticellsOnecell \
-                     + str(conf.nCells) + "Cells" +  ".nvprof "
-        exec_str += "nvprof --analysis-metrics -f -o " + pathNvprof #all metrics
-        #exec_str += "nvprof --print-gpu-trace " #registers per thread
+        pathNvprof = pathNvprof + conf.caseMulticellsOnecell \
+                     + str(conf.nCells) + "Cells" + ".nvprof "
+        exec_str += "nvprof --analysis-metrics -f -o " + pathNvprof  # all metrics
+        # exec_str += "nvprof --print-gpu-trace " #registers per thread
         # --print-gpu-summary
         print("Saving profiling file in ", os.path.abspath(os.getcwd()) \
               + "/" + pathNvprof)
     elif conf.profileCuda == "nsight" and conf.caseGpuCpu == "GPU":
-        pathNvprof = "../../compile/power9/"#"../../../nvprof/nsight"
+        pathNvprof = "../../compile/power9/"  # "../../../nvprof/nsight"
         Path(pathNvprof).mkdir(parents=True, exist_ok=True)
         pathNvprof = pathNvprof + conf.caseMulticellsOnecell \
                      + str(conf.nCells) + "Cells "
-        #exec_str += "/apps/NVIDIA-HPC-SDK/20.9/Linux_ppc64le/2020/profilers/Nsight_Compute/ncu --set full -f -o" + pathNvprof #last working version
-        exec_str += "/apps/NVIDIA-HPC-SDK/20.9/Linux_ppc64le/2020/profilers/Nsight_Compute/ncu "#summary
+        # exec_str += "/apps/NVIDIA-HPC-SDK/20.9/Linux_ppc64le/2020/profilers/Nsight_Compute/ncu --set full -f -o" + pathNvprof #last working version
+        exec_str += "/apps/NVIDIA-HPC-SDK/20.9/Linux_ppc64le/2020/profilers/Nsight_Compute/ncu "  # summary
 
-        #wrong exec_str += "/apps/NVIDIA-HPC-SDK/21.3/Linux_ppc64le/21.3/profilers/Nsight_Compute/ncu --set full -f -o " + pathNvprof
-        #wrongexec_str += "/apps/NVIDIA-HPC-SDK/21.3/Linux_ppc64le/21.3/profilers/Nsight_Compute/ncu "
-        #wrong exec_str += "/apps/NVIDIA-HPC-SDK/21.9/Linux_ppc64le/21.9/profilers/Nsight_Compute/ncu "
-        #wrong exec_str += "/apps/NVIDIA-HPC-SDK/21.9/Linux_ppc64le/2021/profilers/Nsight_Compute/ncu "
-        #wrong exec_str += "/apps/NVIDIA-HPC-SDK/22.2/Linux_ppc64le/22.2/profilers/Nsight_Compute/ncu "
-        #wrong exec_str += "/apps/NVIDIA-HPC-SDK/22.3/Linux_ppc64le/22.3/profilers/Nsight_Compute/ncu "
+        # wrong exec_str += "/apps/NVIDIA-HPC-SDK/21.3/Linux_ppc64le/21.3/profilers/Nsight_Compute/ncu --set full -f -o " + pathNvprof
+        # wrongexec_str += "/apps/NVIDIA-HPC-SDK/21.3/Linux_ppc64le/21.3/profilers/Nsight_Compute/ncu "
+        # wrong exec_str += "/apps/NVIDIA-HPC-SDK/21.9/Linux_ppc64le/21.9/profilers/Nsight_Compute/ncu "
+        # wrong exec_str += "/apps/NVIDIA-HPC-SDK/21.9/Linux_ppc64le/2021/profilers/Nsight_Compute/ncu "
+        # wrong exec_str += "/apps/NVIDIA-HPC-SDK/22.2/Linux_ppc64le/22.2/profilers/Nsight_Compute/ncu "
+        # wrong exec_str += "/apps/NVIDIA-HPC-SDK/22.3/Linux_ppc64le/22.3/profilers/Nsight_Compute/ncu "
 
         print("Saving nsight file in ", os.path.abspath(os.getcwd()) \
               + "/" + pathNvprof)
@@ -374,6 +386,7 @@ def run(conf):
     path_exec = "../../build/mock_monarch"
     exec_str += path_exec
 
+    set_import_netcdf(conf,True)
     # CAMP solver option GPU-CPU
     write_camp_config_file(conf)
 
@@ -404,14 +417,15 @@ def run(conf):
         os.system(exec_str)
         if conf.is_export:
             export(conf, data_path)
+        set_import_netcdf(conf,False)
 
     # new_path = os.path.abspath(os.getcwd()) + "/" + data_path
     # print("data_path", new_path)
 
     data = math_functions.read_solver_stats(data_path, conf.timeSteps)
-    #y_key_words = conf.plotYKey.split()
-    #y_key = y_key_words[-1]
-    #print(data[y_key])
+    # y_key_words = conf.plotYKey.split()
+    # y_key = y_key_words[-1]
+    # print(data[y_key])
 
     # print("The size of the dictionary is {} bytes".format(sys.getsizeof(data)))
     # print("The size of the dictionary is {} bytes".format(sys.getsizeof(data["timeLS"])))
@@ -425,11 +439,11 @@ def run(conf):
 def run_case(conf):
     data = run(conf)
     if "timeLS" in conf.plotYKey and "computational" in conf.plotYKey \
-        and "GPU" in conf.case:
+            and "GPU" in conf.case:
         for i in range(len(data["timeLS"])):
             data["timeLS"][i] = data["timeLS"][i] - data["timeBiconjGradMemcpy"][i]
-    #if conf.plotYKey != "MAPE":
-    #print("data",data)
+    # if conf.plotYKey != "MAPE":
+    # print("data",data)
     y_key_words = conf.plotYKey.split()
     y_key = y_key_words[-1]
     if "normalized" in conf.plotYKey:
@@ -459,7 +473,7 @@ def run_case(conf):
 
     if conf.plotYKey != "MAPE":
         print("run_case", conf.case, y_key, ":", data[y_key])
-    #print("data",data)
+    # print("data",data)
 
     return data
 
@@ -467,8 +481,9 @@ def run_case(conf):
 def run_cases(conf):
     # Run base case
     conf.mpiProcesses = conf.mpiProcessesCaseBase
-    if conf.nCellsProcesses % conf.mpiProcesses !=0:
-        print("ERROR: DIVISION OF CELLS/PROCESSES NOT INTEGER, nCellsProcesses, mpiProcesses",conf.nCellsProcesses, conf.mpiProcesses)
+    if conf.nCellsProcesses % conf.mpiProcesses != 0:
+        print("ERROR: DIVISION OF CELLS/PROCESSES NOT INTEGER, nCellsProcesses, mpiProcesses", conf.nCellsProcesses,
+              conf.mpiProcesses)
         raise
     conf.nCells = int(conf.nCellsProcesses / conf.mpiProcesses)
     conf.nGPUs = conf.nGPUsCaseBase
@@ -488,14 +503,15 @@ def run_cases(conf):
         conf.nGPUs = nGPUs
         for mpiProcessesCaseOptim in conf.mpiProcessesCaseOptimList:
             conf.mpiProcesses = mpiProcessesCaseOptim
-            if conf.nCellsProcesses % conf.mpiProcesses !=0:
-                print("ERROR: DIVISION OF CELLS/PROCESSES NOT INTEGER, nCellsProcesses, mpiProcesses",conf.nCellsProcesses, conf.mpiProcesses)
+            if conf.nCellsProcesses % conf.mpiProcesses != 0:
+                print("ERROR: DIVISION OF CELLS/PROCESSES NOT INTEGER, nCellsProcesses, mpiProcesses",
+                      conf.nCellsProcesses, conf.mpiProcesses)
                 raise
             conf.nCells = int(conf.nCellsProcesses / conf.mpiProcesses)
             for caseOptim in conf.casesOptim:
                 if conf.plotXKey == "MPI processes":
                     if (caseOptim == conf.caseBase and mpiProcessesCaseOptim == conf.mpiProcessesCaseBase) \
-                        or (caseOptim != conf.caseBase and mpiProcessesCaseOptim != conf.mpiProcessesCaseBase):
+                            or (caseOptim != conf.caseBase and mpiProcessesCaseOptim != conf.mpiProcessesCaseBase):
                         continue
 
                 cases_words = caseOptim.split()
@@ -621,14 +637,14 @@ def plot_cases(conf):
                 for caseOptim in conf.casesOptim:
                     if conf.plotXKey == "MPI processes":
                         if (caseOptim == conf.caseBase and mpiProcessesCaseOptim == conf.mpiProcessesCaseBase) \
-                            or (caseOptim != conf.caseBase and mpiProcessesCaseOptim != conf.mpiProcessesCaseBase):
+                                or (caseOptim != conf.caseBase and mpiProcessesCaseOptim != conf.mpiProcessesCaseBase):
                             continue
                     cases_words = caseOptim.split()
                     conf.caseGpuCpu = cases_words[0]
                     conf.caseMulticellsOnecell = cases_words[1]
                     case_multicells_onecell_name = getCaseName(conf)
                     if conf.caseMulticellsOnecell.find("BDF") != -1 or conf.caseMulticellsOnecell.find(
-                        "maxrregcount") != -1:
+                            "maxrregcount") != -1:
                         is_same_diff_cells = True
                     legend_name = ""
                     if len(conf.diffCellsL) > 1:
@@ -660,7 +676,7 @@ def plot_cases(conf):
         elif conf.plotXKey == "GPUs":
             conf.plotTitle += ""
         else:
-            if conf.caseGpuCpu == "GPU" and len(conf.nGPUsCaseOptimList) == 1 and conf.nGPUsCaseOptimList[0] > 1 :
+            if conf.caseGpuCpu == "GPU" and len(conf.nGPUsCaseOptimList) == 1 and conf.nGPUsCaseOptimList[0] > 1:
                 conf.plotTitle += str(conf.nGPUsCaseOptimList[0]) + " GPUs "
             else:
                 conf.plotTitle += conf.caseGpuCpu + " "
@@ -702,9 +718,9 @@ def plot_cases(conf):
         namey += " [Mean and \u03C3]"
         # namey += " [Average]"
         print_timesteps_title = True
-        #print_timesteps_title = False
+        # print_timesteps_title = False
         if print_timesteps_title:
-            conf.plotTitle += ", " + str(conf.timeSteps)+" timesteps"
+            conf.plotTitle += ", " + str(conf.timeSteps) + " timesteps"
         datax = conf.cells
         plot_x_key = "Cells"
     elif conf.plotXKey == "MPI processes":
@@ -733,50 +749,49 @@ def plot_cases(conf):
     print("plotTitle: ", conf.plotTitle, " legend:", conf.legend)
     print(namey, ":", datay)
 
-
-    #plot_functions.plotsns(namex, namey, datax, datay, conf.stdColumns, conf.plotTitle, conf.legend)
+    # plot_functions.plotsns(namex, namey, datax, datay, conf.stdColumns, conf.plotTitle, conf.legend)
 
 
 def all_timesteps():
     conf = TestMonarch()
 
     # conf.chemFile = "simple"
-    #conf.chemFile = "monarch_cb05"
+    # conf.chemFile = "monarch_cb05"
     conf.chemFile = "monarch_binned"
 
     conf.diffCellsL = []
     conf.diffCellsL.append("Realistic")
-    #conf.diffCellsL.append("Ideal")
+    # conf.diffCellsL.append("Ideal")
 
     conf.profileCuda = ""
-    #conf.profileCuda = "nvprof"
-    #conf.profileCuda = "nsight"
+    # conf.profileCuda = "nvprof"
+    # conf.profileCuda = "nsight"
 
     conf.is_export = get_is_sbatch()
-    #conf.is_export = True
-    #conf.is_export = False
+    # conf.is_export = True
+    # conf.is_export = False
 
-    #conf.is_import = True
+    # conf.is_import = True
     conf.is_import = False
 
     # conf.commit = "MATCH_IMPORTED_CONF"
     conf.commit = ""
 
     conf.nGPUsCaseBase = 1
-    #conf.nGPUsCaseBase = 2
+    # conf.nGPUsCaseBase = 2
 
-    #conf.nGPUsCaseOptimList = [1]
+    # conf.nGPUsCaseOptimList = [1]
     conf.nGPUsCaseOptimList = [1]
-    #conf.nGPUsCaseOptimList = [1,2]
+    # conf.nGPUsCaseOptimList = [1,2]
 
     conf.mpi = "yes"
     # conf.mpi = "no"
 
-    #conf.mpiProcessesCaseBase = 1
+    # conf.mpiProcessesCaseBase = 1
     conf.mpiProcessesCaseBase = 2
 
-    #conf.mpiProcessesCaseOptimList.append(1)
-    conf.mpiProcessesCaseOptimList.append(1)
+    # conf.mpiProcessesCaseOptimList.append(1)
+    conf.mpiProcessesCaseOptimList.append(2)
     # conf.mpiProcessesCaseOptimList = [10,20,40]
     # conf.mpiProcessesCaseOptSet Multi-GPusimList = [1,4,8,16,32,40]
 
@@ -790,23 +805,23 @@ def all_timesteps():
     # conf.allocatedTasksPerNode = get_ntasksPerNode_sbatch() #todo
 
     conf.cells = [4]
-    #conf.cells = [100, 500, 1000, 5000, 10000]
+    # conf.cells = [100, 500, 1000, 5000, 10000]
     # conf.cells = [50000,100000,500000,1000000]
 
     conf.timeSteps = 1
-    #conf.timeSteps = 720
+    # conf.timeSteps = 720
 
     conf.timeStepsDt = 2
 
-    #conf.caseBase = "CPU EBI"
-    conf.caseBase = "CPU One-cell"
-    #conf.caseBase = "CPU Multi-cells"
+    # conf.caseBase = "CPU EBI"
+    #conf.caseBase = "CPU One-cell"
+    conf.caseBase = "CPU Multi-cells"
     # conf.caseBase="GPU Multi-cells"
     # conf.caseBase="GPU Block-cellsN"
-    #conf.caseBase="GPU Block-cells1"
-    #conf.caseBase = "GPU BDF"
-    #conf.caseBase = "GPU CPU"
-    #conf.caseBase = "GPU maxrregcount-64" #wrong 10,000 cells
+    # conf.caseBase="GPU Block-cells1"
+    # conf.caseBase = "GPU BDF"
+    # conf.caseBase = "GPU CPU"
+    # conf.caseBase = "GPU maxrregcount-64" #wrong 10,000 cells
     # conf.caseBase = "GPU maxrregcount-24" #Minimum
     # conf.caseBase = "GPU maxrregcount-62"
     # conf.caseBase = "GPU maxrregcount-68"
@@ -818,29 +833,29 @@ def all_timesteps():
     # conf.casesOptim.append("GPU One-cell")
     # conf.casesOptim.append("GPU Multi-cells")
     # conf.casesOptim.append("GPU Block-cellsNhalf")
-    #conf.casesOptim.append("GPU Block-cellsN")
-    #conf.casesOptim.append("GPU Block-cells1")
-    #conf.casesOptim.append("CPU EBI")
-    #conf.casesOptim.append("GPU BDF")
-    #conf.casesOptim.append("GPU CPU")
-    #conf.casesOptim.append("GPU maxrregcount-64") #wrong 10,000 cells
+    # conf.casesOptim.append("GPU Block-cellsN")
+    # conf.casesOptim.append("GPU Block-cells1")
+    # conf.casesOptim.append("CPU EBI")
+    # conf.casesOptim.append("GPU BDF")
+    # conf.casesOptim.append("GPU CPU")
+    # conf.casesOptim.append("GPU maxrregcount-64") #wrong 10,000 cells
     # conf.casesOptim.append("GPU maxrregcount-68")
     # conf.casesOptim.append("GPU maxrregcount-62")
     # conf.casesOptim.append("GPU maxrregcount-24")
     conf.casesOptim.append("CPU IMPORT_NETCDF")
 
-    #conf.plotYKey = "Speedup timeCVode"
-    #conf.plotYKey = "Speedup normalized counterLS"
-    #conf.plotYKey = "Speedup normalized timeLS"
+    # conf.plotYKey = "Speedup timeCVode"
+    # conf.plotYKey = "Speedup normalized counterLS"
+    # conf.plotYKey = "Speedup normalized timeLS"
     # conf.plotYKey = "Speedup normalized computational timeLS"
     # conf.plotYKey = "Speedup counterBCG"
     # conf.plotYKey = "Speedup normalized counterBCG"
     # conf.plotYKey = "Speedup total iterations - counterBCG"
     # conf.plotYKey = "Speedup BCG iteration (Comp.timeLS/counterBCG)"
-    #conf.plotYKey = "Speedup timecvStep"
+    # conf.plotYKey = "Speedup timecvStep"
     # conf.plotYKey = "Speedup timecvStep normalized by countercvStep"
-    #conf.plotYKey = "Speedup countercvStep"
-    #conf.plotYKey = "Speedup device timecvStep"
+    # conf.plotYKey = "Speedup countercvStep"
+    # conf.plotYKey = "Speedup device timecvStep"
     # conf.plotYKey = "Percentage data transfers CPU-GPU [%]"
     conf.plotYKey = "MAPE"
     # conf.plotYKey ="SMAPE"
@@ -848,12 +863,12 @@ def all_timesteps():
     # conf.MAPETol = 1.0E-6
 
     # conf.plotXKey = "MPI processes"
-    #conf.plotXKey = "GPUs"
+    # conf.plotXKey = "GPUs"
 
     """END OF CONFIGURATION VARIABLES"""
 
     # Utility functions
-    #remove_to_tmp(conf,"1661337164911019079")
+    # remove_to_tmp(conf,"1661337164911019079")
     conf.results_file = "_solver_stats.csv"
     if conf.plotYKey == "NRMSE" or conf.plotYKey == "MAPE" or conf.plotYKey == "SMAPE":
         conf.results_file = '_results_all_cells.csv'
@@ -881,7 +896,7 @@ def all_timesteps():
     if not conf.caseBase:
         print("ERROR: caseBase is empty")
         raise
-    if conf.caseBase  == "CPU EBI":
+    if conf.caseBase == "CPU EBI":
         print("Warning: Disable CAMP_PROFILING in CVODE to better profiling")
     if conf.caseBase == "CPU EBI" and conf.chemFile != "monarch_cb05":
         print("Error: Set conf.chemFile = monarch_cb05 to run CPU EBI")
@@ -906,5 +921,5 @@ def all_timesteps():
 
 
 if __name__ == "__main__":
-    #print("main start")
+    # print("main start")
     all_timesteps()
