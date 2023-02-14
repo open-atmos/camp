@@ -20,6 +20,8 @@ import zipfile
 from os import walk
 import subprocess
 
+import time
+
 class TestMonarch:
     def __init__(self):
         # Case configuration
@@ -102,7 +104,6 @@ def getCaseName(conf):
         case_multicells_onecell_name += "Base version"
     else:
         case_multicells_onecell_name += conf.caseMulticellsOnecell
-
     return case_multicells_onecell_name
 
 
@@ -117,12 +118,10 @@ def write_itsolver_config_file(conf):
 def write_camp_config_file(conf):
     try:
         file1 = open(conf.campSolverConfigFile, "w")
-
         if conf.caseGpuCpu == "CPU":
             file1.write("USE_CPU=ON\n")
         else:
             file1.write("USE_CPU=OFF\n")
-
         if conf.caseMulticellsOnecell == "BDF" or conf.caseMulticellsOnecell.find("maxrregcount") != -1:
             # print("FOUND MAXRREGCOUNT")
             if conf.chemFile == "monarch_binned":
@@ -135,7 +134,6 @@ def write_camp_config_file(conf):
             file1.write("USE_GPU_CVODE=2\n")
         else:
             file1.write("USE_GPU_CVODE=OFF\n")
-
         file1.write(str(conf.nGPUs))
 
         file1.close()
@@ -213,20 +211,15 @@ def import_data(conf, tmp_path):
     is_import = False
     exportPath = conf.exportPath
     new_path = tmp_path
-
     if not os.path.exists(exportPath):
         return False, new_path
-
     conf_path = exportPath + "/conf"
     if not os.path.exists(conf_path):
         return False, new_path
-
     filenames = next(walk(conf_path), (None, None, []))[2]
-
     if not filenames:
         print("WARNING: Import folder is empty. Path:", os.path.abspath(os.getcwd()) + "/" + conf_path)
         return False, new_path
-
     data_path = exportPath + "/data/"
     # print("filenames:",filenames)
     # print("conf_path",os.path.abspath(os.getcwd())+"/"+conf_path)
@@ -260,14 +253,12 @@ def import_data(conf, tmp_path):
             # print("confKey",confKey)
             if confKey not in conf_imported:
                 conf_imported[confKey] = conf_default[confKey]
-
             # if "allocatedTasksPerNode" not in conf_imported:
             # conf_imported["allocatedTasksPerNode"] = 160
             # if "allocatedNodes" not in conf_imported:
             # conf_imported["allocatedNodes"] = 1
             # if "nGPUs" not in conf_imported:
             # conf_imported["nGPUs"] = 1
-
             if conf_imported[confKey] != conf_dict[confKey]:
                 # print(conf_dict[confKey])
                 is_same_conf_case = False
@@ -278,7 +269,6 @@ def import_data(conf, tmp_path):
             is_import = True
             dir_to_extract = data_path
             path_to_zip_file = data_path + basename + ".zip"
-
             try:
                 with zipfile.ZipFile(path_to_zip_file, 'r') as zip_ref:
                     zip_ref.extractall(dir_to_extract)
@@ -289,8 +279,20 @@ def import_data(conf, tmp_path):
             new_path = os.path.abspath(os.getcwd()) + "/" + dir_to_extract + basename + ".csv"
             print("Imported data from", new_path)
             break
-
     return is_import, new_path
+
+
+def get_cmakecache(conf):
+    print("get_cmakecache start")
+    #os.system("cmake -L -N ../../build")
+    #if(text is empty ) then errror
+
+    conf.cmakecache=subprocess.check_output("cmake -L -N ../../build")
+    print("cmakecache", conf.cmakecache)
+    st = time.time()
+    #compare cmakecache with another cmakecache
+    et = time.time()
+    print("Execution time [s]:", st-et)
 
 
 def export(conf, data_path):
@@ -299,11 +301,9 @@ def export(conf, data_path):
     conf.commit = get_commit_hash()
     if len(sys.argv) > 1:
         conf.sbatch_job_id = sys.argv[1]
-
     print(os.path.abspath(os.getcwd()) + "/" + exportPath)
     if not os.path.exists(exportPath):
         os.makedirs(exportPath)
-
     conf_dir = exportPath + "/conf"
     if not os.path.exists(conf_dir):
         os.makedirs(conf_dir)
@@ -317,7 +317,6 @@ def export(conf, data_path):
     zipfile.ZipFile(path_to_zip_file, mode='w').write(conf_path, arcname=conf_name)
     os.remove(conf_path)
     print("Configuration saved to", os.path.abspath(os.getcwd()) + path_to_zip_file)
-
     path_to_zip_file = exportPath + "/data"
     if not os.path.exists(path_to_zip_file):
         os.makedirs(path_to_zip_file)
@@ -327,9 +326,7 @@ def export(conf, data_path):
     os.rename(data_path_abs, new_data_path)
     zipfile.ZipFile(path_to_zip_file, mode='w').write(new_data_path, arcname=new_data_name)
     os.rename(new_data_path, data_path_abs)
-
     print("Data saved to", os.path.abspath(os.getcwd()) + "/" + path_to_zip_file)
-
     if os.path.getsize(exportPath) > 1000000000:
         print("WARNING: More than 1GB saved in ", os.path.abspath(os.getcwd()) + "/" + exportPath)
         # raise
@@ -808,8 +805,8 @@ def all_timesteps():
     conf.timeStepsDt = 2
 
     #conf.caseBase = "CPU EBI"
-    conf.caseBase = "CPU One-cell"
-    #conf.caseBase = "CPU Multi-cells"
+    #conf.caseBase = "CPU One-cell"
+    conf.caseBase = "CPU Multi-cells"
     # conf.caseBase="GPU Multi-cells"
     # conf.caseBase="GPU Block-cellsN"
     #conf.caseBase="GPU Block-cells1"
@@ -862,7 +859,6 @@ def all_timesteps():
 
     # Utility functions
     #remove_to_tmp(conf,"1661337164911019079")
-
     conf.results_file = "_solver_stats.csv"
     if conf.plotYKey == "NRMSE" or conf.plotYKey == "MAPE" or conf.plotYKey == "SMAPE":
         conf.results_file = '_results_all_cells.csv'
@@ -872,13 +868,10 @@ def all_timesteps():
     jsonData = json.load(jsonFile)
     conf.MAPETol = jsonData["camp-data"][0]["value"]  # Default: 1.0E-4
     jsonData.clear()
-
     if not os.path.exists('out'):
         os.makedirs('out')
-
     if conf.plotYKey == "":
         print("conf.plotYKey is empty")
-
     if conf.chemFile == "monarch_binned":
         if conf.timeStepsDt != 2:
             print("Warning: Setting timeStepsDt to 2, since it is the usual value for monarch_binned")
@@ -890,11 +883,9 @@ def all_timesteps():
         if "Realistic" in conf.diffCellsL:
             print("Warning: Setting Ideal, chemFile == monarch_cb05 only has ideal case implemented")
             conf.diffCellsL = ["Ideal"]
-
     if not conf.caseBase:
         print("ERROR: caseBase is empty")
         raise
-
     if conf.caseBase  == "CPU EBI":
         print("Warning: Disable CAMP_PROFILING in CVODE to better profiling")
     if conf.caseBase == "CPU EBI" and conf.chemFile != "monarch_cb05":
@@ -906,7 +897,6 @@ def all_timesteps():
         if caseOptim == "CPU EBI" and conf.chemFile != "monarch_cb05":
             print("Error: Set conf.chemFile = monarch_cb05 to run CPU EBI")
             raise Exception
-
     for i, mpiProcesses in enumerate(conf.mpiProcessesCaseOptimList):
         for j, cellsProcesses in enumerate(conf.cells):
             nCells = int(cellsProcesses / mpiProcesses)

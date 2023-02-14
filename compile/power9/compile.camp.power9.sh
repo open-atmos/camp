@@ -52,7 +52,7 @@ export SUNDIALS_HOME=$(pwd)/$relative_path/cvode-3.4-alpha/install
 export SUITE_SPARSE_HOME=$(pwd)/$relative_path/SuiteSparse
 
 cd ../../
-rm -rf build
+#rm -rf build
 mkdir build
 cd build
 
@@ -77,8 +77,8 @@ cmake -D CMAKE_C_COMPILER=$(which mpicc) \
 -D ENABLE_DEBUG_GPU=ON \
 -D ENABLE_ODE_GPU=ON \
 -D ENABLE_NETCDF=ON \
--D ENABLE_EXPORT_NETCDF=ON \
--D ENABLE_IMPORT_NETCDF=ON \
+-D ENABLE_EXPORT_NETCDF=OFF \
+-D ENABLE_IMPORT_NETCDF=OFF \
 -D ENABLE_BOOTCAMP=OFF \
 -D ENABLE_DATA=OFF \
 -D ENABLE_STATIC_LIB=OFF \

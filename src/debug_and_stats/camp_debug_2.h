@@ -12,12 +12,9 @@
 #include "../camp_common.h"
 
 #ifdef ENABLE_NETCDF
-void export_cell_netcdf(SolverData *sd);
+void cell_netcdf(SolverData *sd);
 #endif
 
-#ifndef CSR_MATRIX
-void swapCSC_CSR2(int n_row, int n_col, int* Ap, int* Aj, double* Ax, int* Bp, int* Bi, double* Bx);
-#endif
 void check_isnand(double *x, int len, const char *s);
 void print_int(int *x, int len, const char *s);
 void print_double(double *x, int len, const char *s);

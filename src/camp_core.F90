@@ -1163,8 +1163,11 @@ contains
     class(camp_core_t), intent(inout) :: this
     type(string_t), allocatable :: spec_names(:)
     integer :: i_spec, n_gas_spec
+#ifdef ENABLE_NETCDF
+    integer :: n_cells_tstep
+#else
     integer, optional :: n_cells_tstep
-
+#endif
     call assert_msg(662920365, .not.this%solver_is_initialized, &
             "Attempting to initialize the solver twice.")
 
