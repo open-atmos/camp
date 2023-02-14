@@ -32,7 +32,7 @@ void export_cell_netcdf(SolverData *sd){
   printf("export_cell_netcdf start\n");
   ModelData *md = &(sd->model_data);
   if(md->n_cells>1){
-    printf("export_cell_netcdf TODO multicells \n");
+    printf("export_cell_netcdf TODO multicells\n");
     exit(0);
   }
   int ncid;
@@ -93,11 +93,13 @@ void export_cell_netcdf(SolverData *sd){
   i=0;
   nc(nc_close(ncid));
   printf("export_cell_netcdf end\n");
-
+/*
   for (int i = 0; i < md->n_per_cell_state_var; i++) {
     printf("b rank %d %d %-le\n",rank,i,md->total_state[i]);
   }
-
+*/
+  MPI_Barrier(MPI_COMM_WORLD);
+  exit(0);
 }
 
 void export_cells_netcdf(SolverData *sd){
@@ -280,11 +282,12 @@ void import_multi_cell_netcdf(SolverData *sd){ //Use to import files in one-cell
   nc(nc_get_vara_double(ncid, varids[i++], &start, &count, md->total_env));
   i = 0;
   printf("import_multi_cell_netcdf end\n");
-
+/*
   for (int i = 0; i < md->n_per_cell_state_var; i++) {
     printf("c rank %d %d %-le\n",rank,i,md->total_state[i]);
   }
   //MPI_Barrier(MPI_COMM_WORLD);
+  */
 }
 
 void import_one_cell_netcdf(SolverData *sd){ //Use to import files in one-cell and multicell
@@ -336,11 +339,12 @@ void import_one_cell_netcdf(SolverData *sd){ //Use to import files in one-cell a
     sd->icell=0;
     sd->tstep++;
   }
+  /*
   printf("import_one_cell_netcdf end\n");
   for (int i = 0; i < md->n_per_cell_state_var; i++) {
     printf("c rank %d %d %-le\n",rank,i,md->total_state[i]);
   }
-
+*/
 }
 
 void import_cell_netcdf(SolverData *sd){ //Use to import files in one-cell and multicell
@@ -409,20 +413,18 @@ void import_cell_one_file_netcdf(SolverData *sd){ //Use to import files generate
 }
 
 void cell_netcdf(SolverData *sd){
-  if(sd->tstep==0){
-    printf("cell_netcdf start\n");
+  printf("cell_netcdf start\n");
 #ifdef EXPORT_CELL_NETCDF
   export_cell_netcdf(sd);
 #else
 #ifdef JOIN_CELLS_NETCDF
   join_cells_netcdf(sd);
 #else
-#ifndef IMPORT_CELL_NETCDF
+#ifdef IMPORT_CELL_NETCDF
     import_cell_netcdf(sd);
 #endif
 #endif
 #endif
-  }
 }
 #endif
 

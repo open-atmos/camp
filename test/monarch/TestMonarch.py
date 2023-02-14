@@ -137,7 +137,6 @@ def write_camp_config_file(conf):
         file1.write(str(conf.nGPUs))
 
         file1.close()
-
         # new_path = os.path.abspath(os.getcwd()) + "/" + conf.campSolverConfigFile
         # print("write_camp_config_file in", new_path)
         # conf.debug_path = new_path
@@ -147,6 +146,15 @@ def write_camp_config_file(conf):
     except Exception as e:
         print("write_camp_config_file fails", e)
 
+    if conf.caseMulticellsOnecell == "IMPORT_NETCDF":
+        #conf.cmakecache=subprocess.check_output("cmake -L -N ../../build")
+        #print("cmakecache", conf.cmakecache)
+        # st = time.time()
+        #compare cmakecache with another cmakecache
+        #et = time.time()
+        #print("Execution time [s]:", st-et)
+        str="cmake -D"
+        #os.system("cmake -D")
 
 def get_commit_hash():
     try:
@@ -280,20 +288,6 @@ def import_data(conf, tmp_path):
             print("Imported data from", new_path)
             break
     return is_import, new_path
-
-
-def get_cmakecache(conf):
-    print("get_cmakecache start")
-    #os.system("cmake -L -N ../../build")
-    #if(text is empty ) then errror
-
-    conf.cmakecache=subprocess.check_output("cmake -L -N ../../build")
-    print("cmakecache", conf.cmakecache)
-    st = time.time()
-    #compare cmakecache with another cmakecache
-    et = time.time()
-    print("Execution time [s]:", st-et)
-
 
 def export(conf, data_path):
     data_path_abs = os.path.abspath(os.getcwd()) + "/" + data_path
@@ -799,7 +793,7 @@ def all_timesteps():
     #conf.cells = [100, 500, 1000, 5000, 10000]
     # conf.cells = [50000,100000,500000,1000000]
 
-    conf.timeSteps = 2
+    conf.timeSteps = 1
     #conf.timeSteps = 720
 
     conf.timeStepsDt = 2
@@ -833,6 +827,7 @@ def all_timesteps():
     # conf.casesOptim.append("GPU maxrregcount-68")
     # conf.casesOptim.append("GPU maxrregcount-62")
     # conf.casesOptim.append("GPU maxrregcount-24")
+    conf.casesOptim.append("CPU IMPORT_NETCDF")
 
     #conf.plotYKey = "Speedup timeCVode"
     #conf.plotYKey = "Speedup normalized counterLS"
