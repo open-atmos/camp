@@ -808,8 +808,6 @@ contains
     end do
     sub_model => null()
 
-
-
 #ifdef CAMP_SOLVER_SPEC_NAMES
     ! Set spec names
     !todo fix mpi==0 case

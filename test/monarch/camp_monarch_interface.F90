@@ -705,6 +705,9 @@ contains
 
             call camp_mpi_barrier(MPI_COMM_WORLD)
 
+              !call this%camp_core%export_camp_input_json(this%camp_state, &
+               !   real(time_step, kind=dp), solver_stats = solver_stats)
+
             ! Integrate the CAMP mechanism
             call cpu_time(comp_start)
             call this%camp_core%solve(this%camp_state, real(time_step*60., kind=dp),solver_stats=solver_stats)
