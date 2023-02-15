@@ -653,6 +653,14 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
 #endif
 #endif
 
+    // Update model data pointers
+    sd->model_data.total_state = state;
+    sd->model_data.total_env = env;
+
+#ifdef ENABLE_NETCDF
+    cell_netcdf(sd);
+#endif
+
   // Update the dependent variables
   int i_dep_var = 0;
   for (int i_cell = 0; i_cell < n_cells; i_cell++)
@@ -670,10 +678,6 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
                 : TINY;
       }
 
-  // Update model data pointers
-  sd->model_data.total_state = state;
-  sd->model_data.total_env = env;
-
 #ifdef CAMP_DEBUG
   // Update the debug output flag in CVODES and the linear solver
   flag = CVodeSetDebugOut(sd->cvode_mem, sd->debug_out);
@@ -684,10 +688,6 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
 
   // Reset the counter of Jacobian evaluation failures
   sd->Jac_eval_fails = 0;
-
-#ifdef ENABLE_NETCDF
-  cell_netcdf(sd);
-#endif
 
   // Update data for new environmental state
   // (This is set up to assume the environmental variables do not change during

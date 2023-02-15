@@ -844,7 +844,7 @@ def all_timesteps():
     # conf.casesOptim.append("GPU maxrregcount-68")
     # conf.casesOptim.append("GPU maxrregcount-62")
     # conf.casesOptim.append("GPU maxrregcount-24")
-    conf.casesOptim.append("CPU IMPORT_NETCDF")
+    #conf.casesOptim.append("CPU IMPORT_NETCDF")
 
     # conf.plotYKey = "Speedup timeCVode"
     # conf.plotYKey = "Speedup normalized counterLS"
