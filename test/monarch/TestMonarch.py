@@ -117,6 +117,8 @@ def write_itsolver_config_file(conf):
 
 def set_import_netcdf(conf, bool_import_netcdf):
     if conf.caseMulticellsOnecell == "IMPORT_NETCDF":
+        #conf.diffCellsL = ["Ideal"]
+        conf.diffCells = "Ideal"
         savePath = os.getcwd()
         #print("savePath",savePath)
         os.chdir("../../build")
