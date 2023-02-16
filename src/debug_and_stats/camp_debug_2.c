@@ -459,7 +459,9 @@ void import_cell_netcdf(SolverData *sd){ //Use to import files in one-cell and m
 }
 
 void cell_netcdf(SolverData *sd){
-  if(sd->tstep==0) {
+  int rank;
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  if(sd->tstep==0 && rank<40) {
 #ifdef EXPORT_CELL_NETCDF
     export_cell_netcdf(sd);
 #else
