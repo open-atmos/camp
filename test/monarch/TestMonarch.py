@@ -758,6 +758,7 @@ def all_timesteps():
     conf = TestMonarch()
 
     # conf.chemFile = "simple"
+    # conf.chemFile = "cb05_mechanism_yarwood2005"
     # conf.chemFile = "monarch_cb05"
     conf.chemFile = "monarch_binned"
 
@@ -895,6 +896,9 @@ def all_timesteps():
         if "Realistic" in conf.diffCellsL:
             print("Warning: Setting Ideal, chemFile == monarch_cb05 only has ideal case implemented")
             conf.diffCellsL = ["Ideal"]
+    elif conf.chemFile == "cb05_mechanism_yarwood2005":
+        print("ERROR: Not tested in testmonarch.py, configuration taken from monarch branch 209 and tested in monarch for the camp paper")
+        raise
     if not conf.caseBase:
         print("ERROR: caseBase is empty")
         raise
