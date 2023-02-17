@@ -14,10 +14,10 @@ The full CAMP documentation, including the BootCAMP tutorial is available [here]
 
 References:
 
-   * M. Dawson, C. Guzman, J. H. Curtis, M. Acosta, S. Zhu, D. Dabdub,
-     A. Conley, M. West, N. Riemer, and O. Jorba (2021),
+   * [M. Dawson, C. Guzman, J. H. Curtis, M. Acosta, S. Zhu, D. Dabdub,
+     A. Conley, M. West, N. Riemer, and O. Jorba (2022),
      Chemistry Across Multiple Phases (CAMP) version 1.0: An
-     Integrated multi-phase chemistry model, in preparation
+     Integrated multi-phase chemistry model, Geosci. Model Dev. 15](https://doi.org/10.5194/gmd-15-3663-2022)
 
 Copyright (C) 2017&ndash;2021 Barcelona Supercomputing Center and the
 University of Illinois at Urbana&ndash;Champaign
