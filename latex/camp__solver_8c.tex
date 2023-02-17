@@ -6,13 +6,7 @@ Interface to c solvers for chemistry.
 
 
 Include dependency graph for camp\+\_\+solver.\+c\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{camp__solver_8c__incl}
-\end{center}
-\end{figure}
+% FIG 0
 \doxysubsection*{Macros}
 \begin{DoxyCompactItemize}
 \item 
@@ -207,13 +201,7 @@ CAMP\+\_\+\+SOLVER\+\_\+\+SUCCESS for successful update or CAMP\+\_\+\+SOLVER\+\
 Definition at line \mbox{\hyperlink{camp__solver_8c_source_l00805}{805}} of file \mbox{\hyperlink{camp__solver_8c_source}{camp\+\_\+solver.\+c}}.
 
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{camp__solver_8c_a21373e1f8bad206f6437deeea571f51c_icgraph}
-\end{center}
-\end{figure}
+% FIG 1
 \mbox{\Hypertarget{camp__solver_8c_a08519bb4526ffd3db7f49b33ba7600aa}\label{camp__solver_8c_a08519bb4526ffd3db7f49b33ba7600aa}} 
 \index{camp\_solver.c@{camp\_solver.c}!check\_flag@{check\_flag}}
 \index{check\_flag@{check\_flag}!camp\_solver.c@{camp\_solver.c}}
@@ -241,13 +229,7 @@ Flag indicating CAMP\+\_\+\+SOLVER\+\_\+\+SUCCESS or CAMP\+\_\+\+SOLVER\+\_\+\+F
 Definition at line \mbox{\hyperlink{camp__solver_8c_source_l01723}{1723}} of file \mbox{\hyperlink{camp__solver_8c_source}{camp\+\_\+solver.\+c}}.
 
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{camp__solver_8c_a08519bb4526ffd3db7f49b33ba7600aa_icgraph}
-\end{center}
-\end{figure}
+% FIG 2
 \mbox{\Hypertarget{camp__solver_8c_a736da263e758eddff5578b8685edc459}\label{camp__solver_8c_a736da263e758eddff5578b8685edc459}} 
 \index{camp\_solver.c@{camp\_solver.c}!check\_flag\_fail@{check\_flag\_fail}}
 \index{check\_flag\_fail@{check\_flag\_fail}!camp\_solver.c@{camp\_solver.c}}
@@ -272,21 +254,9 @@ Check the return value of a SUNDIALS function and exit on failure.
 Definition at line \mbox{\hyperlink{camp__solver_8c_source_l01753}{1753}} of file \mbox{\hyperlink{camp__solver_8c_source}{camp\+\_\+solver.\+c}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=260pt]{camp__solver_8c_a736da263e758eddff5578b8685edc459_cgraph}
-\end{center}
-\end{figure}
+% FIG 3
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=280pt]{camp__solver_8c_a736da263e758eddff5578b8685edc459_icgraph}
-\end{center}
-\end{figure}
+% FIG 4
 \mbox{\Hypertarget{camp__solver_8c_ad45be595da1a1d6fd40179d9743a9a65}\label{camp__solver_8c_ad45be595da1a1d6fd40179d9743a9a65}} 
 \index{camp\_solver.c@{camp\_solver.c}!check\_Jac@{check\_Jac}}
 \index{check\_Jac@{check\_Jac}!camp\_solver.c@{camp\_solver.c}}
@@ -297,7 +267,7 @@ Here is the caller graph for this function\+:
 
 Check a \mbox{\hyperlink{struct_jacobian}{Jacobian}} for accuracy. 
 
-This function compares \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements against differences in derivative calculations for small changes to the state array\+: \[
+This function compares \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements against differences in derivative calculations for small changes to the state array\+:  \[
   J_{ij}(x) = \frac{f_i(x+\sum_j e_j) - f_i(x)}{\epsilon}
 \] where $\epsilon_j = 10^{-8} \left|x_j\right|$
 
@@ -326,21 +296,9 @@ True if \mbox{\hyperlink{struct_jacobian}{Jacobian}} values are accurate, false 
 Definition at line \mbox{\hyperlink{camp__solver_8c_source_l01146}{1146}} of file \mbox{\hyperlink{camp__solver_8c_source}{camp\+\_\+solver.\+c}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{camp__solver_8c_ad45be595da1a1d6fd40179d9743a9a65_cgraph}
-\end{center}
-\end{figure}
+% FIG 5
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=331pt]{camp__solver_8c_ad45be595da1a1d6fd40179d9743a9a65_icgraph}
-\end{center}
-\end{figure}
+% FIG 6
 \mbox{\Hypertarget{camp__solver_8c_ac1241091f152db7fd2aa734994c48b24}\label{camp__solver_8c_ac1241091f152db7fd2aa734994c48b24}} 
 \index{camp\_solver.c@{camp\_solver.c}!error\_handler@{error\_handler}}
 \index{error\_handler@{error\_handler}!camp\_solver.c@{camp\_solver.c}}
@@ -356,13 +314,7 @@ This is used for quiet operation. Solver failures are returned with a flag from 
 Definition at line \mbox{\hyperlink{camp__solver_8c_source_l01906}{1906}} of file \mbox{\hyperlink{camp__solver_8c_source}{camp\+\_\+solver.\+c}}.
 
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=272pt]{camp__solver_8c_ac1241091f152db7fd2aa734994c48b24_icgraph}
-\end{center}
-\end{figure}
+% FIG 7
 \mbox{\Hypertarget{camp__solver_8c_ac55302bc18db0d68d78f543aad6a16c4}\label{camp__solver_8c_ac55302bc18db0d68d78f543aad6a16c4}} 
 \index{camp\_solver.c@{camp\_solver.c}!f@{f}}
 \index{f@{f}!camp\_solver.c@{camp\_solver.c}}
@@ -392,21 +344,9 @@ Status code
 Definition at line \mbox{\hyperlink{camp__solver_8c_source_l00843}{843}} of file \mbox{\hyperlink{camp__solver_8c_source}{camp\+\_\+solver.\+c}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{camp__solver_8c_ac55302bc18db0d68d78f543aad6a16c4_cgraph}
-\end{center}
-\end{figure}
+% FIG 8
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{camp__solver_8c_ac55302bc18db0d68d78f543aad6a16c4_icgraph}
-\end{center}
-\end{figure}
+% FIG 9
 \mbox{\Hypertarget{camp__solver_8c_a5b485fa25356197023889f3795888e98}\label{camp__solver_8c_a5b485fa25356197023889f3795888e98}} 
 \index{camp\_solver.c@{camp\_solver.c}!get\_jac\_init@{get\_jac\_init}}
 \index{get\_jac\_init@{get\_jac\_init}!camp\_solver.c@{camp\_solver.c}}
@@ -417,11 +357,11 @@ Here is the caller graph for this function\+:
 
 Try to improve guesses of y sent to the linear solver. 
 
-This function checks if there are any negative guessed concentrations, and if there are it calculates a set of initial corrections to the guessed state using the state at time $t_{n-1}$ and the derivative $f_{n-1}$ and advancing the state according to\+: \[
+This function checks if there are any negative guessed concentrations, and if there are it calculates a set of initial corrections to the guessed state using the state at time $t_{n-1}$ and the derivative $f_{n-1}$ and advancing the state according to\+:  \[
   y_n = y_{n-1} + \sum_{j=1}^m h_j * f_j
-\] where $h_j$ is the largest timestep possible where \[
+\] where $h_j$ is the largest timestep possible where  \[
   y_{j-1} + h_j * f_j > 0
-\] and \[
+\] and  \[
   t_n = t_{n-1} + \sum_{j=1}^m h_j
 \]
 
@@ -464,21 +404,9 @@ Sparse \mbox{\hyperlink{struct_jacobian}{Jacobian}} matrix with all possible non
 Definition at line \mbox{\hyperlink{camp__solver_8c_source_l01417}{1417}} of file \mbox{\hyperlink{camp__solver_8c_source}{camp\+\_\+solver.\+c}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{camp__solver_8c_a5b485fa25356197023889f3795888e98_cgraph}
-\end{center}
-\end{figure}
+% FIG 10
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=265pt]{camp__solver_8c_a5b485fa25356197023889f3795888e98_icgraph}
-\end{center}
-\end{figure}
+% FIG 11
 \mbox{\Hypertarget{camp__solver_8c_a51bc2a16028d4c72dd39669c31f6fc17}\label{camp__solver_8c_a51bc2a16028d4c72dd39669c31f6fc17}} 
 \index{camp\_solver.c@{camp\_solver.c}!is\_anything\_going\_on\_here@{is\_anything\_going\_on\_here}}
 \index{is\_anything\_going\_on\_here@{is\_anything\_going\_on\_here}!camp\_solver.c@{camp\_solver.c}}
@@ -494,21 +422,9 @@ If the solver state concentrations and the derivative vector are very small, the
 Definition at line \mbox{\hyperlink{camp__solver_8c_source_l01875}{1875}} of file \mbox{\hyperlink{camp__solver_8c_source}{camp\+\_\+solver.\+c}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{camp__solver_8c_a51bc2a16028d4c72dd39669c31f6fc17_cgraph}
-\end{center}
-\end{figure}
+% FIG 12
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=312pt]{camp__solver_8c_a51bc2a16028d4c72dd39669c31f6fc17_icgraph}
-\end{center}
-\end{figure}
+% FIG 13
 \mbox{\Hypertarget{camp__solver_8c_a13451d507558a61a2353adfed58db468}\label{camp__solver_8c_a13451d507558a61a2353adfed58db468}} 
 \index{camp\_solver.c@{camp\_solver.c}!Jac@{Jac}}
 \index{Jac@{Jac}!camp\_solver.c@{camp\_solver.c}}
@@ -548,21 +464,9 @@ Status code
 Definition at line \mbox{\hyperlink{camp__solver_8c_source_l00972}{972}} of file \mbox{\hyperlink{camp__solver_8c_source}{camp\+\_\+solver.\+c}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{camp__solver_8c_a13451d507558a61a2353adfed58db468_cgraph}
-\end{center}
-\end{figure}
+% FIG 14
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=231pt]{camp__solver_8c_a13451d507558a61a2353adfed58db468_icgraph}
-\end{center}
-\end{figure}
+% FIG 15
 \mbox{\Hypertarget{camp__solver_8c_a01ab307718c5b5304fc16472d23d999f}\label{camp__solver_8c_a01ab307718c5b5304fc16472d23d999f}} 
 \index{camp\_solver.c@{camp\_solver.c}!model\_free@{model\_free}}
 \index{model\_free@{model\_free}!camp\_solver.c@{camp\_solver.c}}
@@ -583,13 +487,7 @@ Free a \mbox{\hyperlink{struct_model_data}{Model\+Data}} object.
 Definition at line \mbox{\hyperlink{camp__solver_8c_source_l01915}{1915}} of file \mbox{\hyperlink{camp__solver_8c_source}{camp\+\_\+solver.\+c}}.
 
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=246pt]{camp__solver_8c_a01ab307718c5b5304fc16472d23d999f_icgraph}
-\end{center}
-\end{figure}
+% FIG 16
 \mbox{\Hypertarget{camp__solver_8c_a946f57c971834de0c7cb185263cd3c78}\label{camp__solver_8c_a946f57c971834de0c7cb185263cd3c78}} 
 \index{camp\_solver.c@{camp\_solver.c}!solver\_free@{solver\_free}}
 \index{solver\_free@{solver\_free}!camp\_solver.c@{camp\_solver.c}}
@@ -610,13 +508,7 @@ Free a \mbox{\hyperlink{struct_solver_data}{Solver\+Data}} object.
 Definition at line \mbox{\hyperlink{camp__solver_8c_source_l01832}{1832}} of file \mbox{\hyperlink{camp__solver_8c_source}{camp\+\_\+solver.\+c}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{camp__solver_8c_a946f57c971834de0c7cb185263cd3c78_cgraph}
-\end{center}
-\end{figure}
+% FIG 17
 \mbox{\Hypertarget{camp__solver_8c_a97135700d97a42ab3c8c1429513ecb28}\label{camp__solver_8c_a97135700d97a42ab3c8c1429513ecb28}} 
 \index{camp\_solver.c@{camp\_solver.c}!solver\_free\_update\_data@{solver\_free\_update\_data}}
 \index{solver\_free\_update\_data@{solver\_free\_update\_data}!camp\_solver.c@{camp\_solver.c}}
@@ -690,13 +582,7 @@ Get solver statistics after an integration attempt.
 Definition at line \mbox{\hyperlink{camp__solver_8c_source_l00725}{725}} of file \mbox{\hyperlink{camp__solver_8c_source}{camp\+\_\+solver.\+c}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=286pt]{camp__solver_8c_a0de7bd46f75dd8496488b32c4983ec77_cgraph}
-\end{center}
-\end{figure}
+% FIG 18
 \mbox{\Hypertarget{camp__solver_8c_a599ffdef916b139a1690bfd41aa386b6}\label{camp__solver_8c_a599ffdef916b139a1690bfd41aa386b6}} 
 \index{camp\_solver.c@{camp\_solver.c}!solver\_initialize@{solver\_initialize}}
 \index{solver\_initialize@{solver\_initialize}!camp\_solver.c@{camp\_solver.c}}
@@ -727,13 +613,7 @@ Allocate and initialize solver objects
 Definition at line \mbox{\hyperlink{camp__solver_8c_source_l00374}{374}} of file \mbox{\hyperlink{camp__solver_8c_source}{camp\+\_\+solver.\+c}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[height=550pt]{camp__solver_8c_a599ffdef916b139a1690bfd41aa386b6_cgraph}
-\end{center}
-\end{figure}
+% FIG 19
 \mbox{\Hypertarget{camp__solver_8c_a68b93bb3ad0a17bb25dba4061bbf52d8}\label{camp__solver_8c_a68b93bb3ad0a17bb25dba4061bbf52d8}} 
 \index{camp\_solver.c@{camp\_solver.c}!solver\_new@{solver\_new}}
 \index{solver\_new@{solver\_new}!camp\_solver.c@{camp\_solver.c}}
@@ -793,13 +673,7 @@ Pointer to the new \mbox{\hyperlink{struct_solver_data}{Solver\+Data}} object
 Definition at line \mbox{\hyperlink{camp__solver_8c_source_l00083}{83}} of file \mbox{\hyperlink{camp__solver_8c_source}{camp\+\_\+solver.\+c}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=304pt]{camp__solver_8c_a68b93bb3ad0a17bb25dba4061bbf52d8_cgraph}
-\end{center}
-\end{figure}
+% FIG 20
 \mbox{\Hypertarget{camp__solver_8c_aa27659e81a1e22c9ab59889e8e7cd341}\label{camp__solver_8c_aa27659e81a1e22c9ab59889e8e7cd341}} 
 \index{camp\_solver.c@{camp\_solver.c}!solver\_print\_stats@{solver\_print\_stats}}
 \index{solver\_print\_stats@{solver\_print\_stats}!camp\_solver.c@{camp\_solver.c}}
@@ -820,21 +694,9 @@ Print solver statistics.
 Definition at line \mbox{\hyperlink{camp__solver_8c_source_l01780}{1780}} of file \mbox{\hyperlink{camp__solver_8c_source}{camp\+\_\+solver.\+c}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=273pt]{camp__solver_8c_aa27659e81a1e22c9ab59889e8e7cd341_cgraph}
-\end{center}
-\end{figure}
+% FIG 21
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=272pt]{camp__solver_8c_aa27659e81a1e22c9ab59889e8e7cd341_icgraph}
-\end{center}
-\end{figure}
+% FIG 22
 \mbox{\Hypertarget{camp__solver_8c_af081ac08d4a99b2ff2d02de98ecd01e0}\label{camp__solver_8c_af081ac08d4a99b2ff2d02de98ecd01e0}} 
 \index{camp\_solver.c@{camp\_solver.c}!solver\_reset\_timers@{solver\_reset\_timers}}
 \index{solver\_reset\_timers@{solver\_reset\_timers}!camp\_solver.c@{camp\_solver.c}}
@@ -885,10 +747,4 @@ Flag indicating CAMP\+\_\+\+SOLVER\+\_\+\+SUCCESS or CAMP\+\_\+\+SOLVER\+\_\+\+F
 Definition at line \mbox{\hyperlink{camp__solver_8c_source_l00544}{544}} of file \mbox{\hyperlink{camp__solver_8c_source}{camp\+\_\+solver.\+c}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{camp__solver_8c_afc5ec8680b419e7ab49530d53a76cee4_cgraph}
-\end{center}
-\end{figure}
+% FIG 23

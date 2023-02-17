@@ -1,12 +1,12 @@
 <map id="camp_mpi::camp_mpi_pack_string" name="camp_mpi::camp_mpi_pack_string">
-<area shape="rect" id="node1" title="Packs the given value into the buffer, advancing position." alt="" coords="5,131,153,173"/>
+<area shape="rect" id="node1" title="Packs the given value into the buffer, advancing position." alt="" coords="5,131,153,171"/>
 <area shape="rect" id="node2" href="$namespacecamp__util.html#a32cf43c1b618a3ecf93810383e960ef2" title="Errors unless condition_ok is true." alt="" coords="1135,43,1255,69"/>
-<area shape="rect" id="node5" href="$namespacecamp__mpi.html#adb95beaf933131229f017a03af8352ad" title="Dies if ierr is not ok." alt="" coords="593,169,741,210"/>
-<area shape="rect" id="node8" href="$namespacecamp__mpi.html#ab8a9c9d3285d44ca8d229efc25a436e0" title="Packs the given value into the buffer, advancing position." alt="" coords="201,86,349,127"/>
-<area shape="rect" id="node10" href="$namespacecamp__mpi.html#afcf498c3b6b28650f14b714e2a69adc3" title="Determines the number of bytes required to pack the given value." alt="" coords="201,175,349,217"/>
+<area shape="rect" id="node5" href="$namespacecamp__mpi.html#adb95beaf933131229f017a03af8352ad" title="Dies if ierr is not ok." alt="" coords="593,168,741,208"/>
+<area shape="rect" id="node8" href="$namespacecamp__mpi.html#ab8a9c9d3285d44ca8d229efc25a436e0" title="Packs the given value into the buffer, advancing position." alt="" coords="201,87,349,127"/>
+<area shape="rect" id="node10" href="$namespacecamp__mpi.html#afcf498c3b6b28650f14b714e2a69adc3" title="Determines the number of bytes required to pack the given value." alt="" coords="201,175,349,215"/>
 <area shape="rect" id="node3" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="1303,43,1455,69"/>
-<area shape="rect" id="node4" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="1503,35,1625,77"/>
-<area shape="rect" id="node6" href="$namespacecamp__mpi.html#a7c0deeecbf4c64fe7fcade1797e1aab8" title="Abort the program." alt="" coords="789,131,937,173"/>
-<area shape="rect" id="node7" href="$namespacecamp__util.html#aa942add404bf8b611e5b4b8c777ca7f6" title="Error immediately." alt="" coords="985,97,1087,124"/>
-<area shape="rect" id="node9" href="$namespacecamp__mpi.html#abfca35b6c1f158dcb853326861d7e558" title="Determines the number of bytes required to pack the given value." alt="" coords="397,169,545,210"/>
+<area shape="rect" id="node4" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="1503,36,1625,76"/>
+<area shape="rect" id="node6" href="$namespacecamp__mpi.html#a7c0deeecbf4c64fe7fcade1797e1aab8" title="Abort the program." alt="" coords="789,131,937,171"/>
+<area shape="rect" id="node7" href="$namespacecamp__util.html#aa942add404bf8b611e5b4b8c777ca7f6" title="Error immediately." alt="" coords="985,97,1087,122"/>
+<area shape="rect" id="node9" href="$namespacecamp__mpi.html#abfca35b6c1f158dcb853326861d7e558" title="Determines the number of bytes required to pack the given value." alt="" coords="397,168,545,208"/>
 </map>

@@ -1,6 +1,6 @@
 So far, we\textquotesingle{}ve \mbox{\hyperlink{camp_tutorial_part_1}{built a simple box model}} and \mbox{\hyperlink{camp_tutorial_part_2}{set up a simple chemical mechanism}} to run in that box model. Now, we\textquotesingle{}re going to make some final adjustments to make this a fully operational box model. In many cases, the host model needs to provide some information to CAMP that changes over the course of a model run. We\textquotesingle{}ve seen how to update environmental conditions like temperature and pressure, but other information requires some knowledge of the system being modeled. In the case of our simple mechanism, this is $\ce{NO2}$ photolysis. CAMP photolysis reactions need to know the photolysis rate at a given moment in the model run. Other reactions that need some external help include \mbox{\hyperlink{structcamp__rxn__emission_1_1rxn__emission__t}{emissions}}, \mbox{\hyperlink{structcamp__rxn__first__order__loss_1_1rxn__first__order__loss__t}{first order loss}}, and \mbox{\hyperlink{structcamp__rxn__wet__deposition_1_1rxn__wet__deposition__t}{wet deposition}}.
 
-Let\textquotesingle{}s update our box model to set the $\ce{NO2}$ photolysis rate. Before the call to \mbox{\hyperlink{namespacecamp__camp__core_afc097bb26f6704f9398d96eea873ba79}{solver\+\_\+initialize()}}, we\textquotesingle{}ll add the following code\+:
+Let\textquotesingle{}s update our box model to set the $\ce{NO2}$ photolysis rate. Before the call to solver\+\_\+initialize(), we\textquotesingle{}ll add the following code\+:
 
 
 \begin{DoxyCodeInclude}{0}

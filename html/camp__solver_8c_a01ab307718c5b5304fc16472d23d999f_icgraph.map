@@ -1,4 +1,4 @@
 <map id="model_free" name="model_free">
-<area shape="rect" id="node1" title="Free a ModelData object." alt="" coords="140,5,227,32"/>
-<area shape="rect" id="node2" href="$camp__solver_8c.html#a946f57c971834de0c7cb185263cd3c78" title="Free a SolverData object." alt="" coords="5,5,92,32"/>
+<area shape="rect" id="node1" title="Free a ModelData object." alt="" coords="140,5,227,31"/>
+<area shape="rect" id="node2" href="$camp__solver_8c.html#a946f57c971834de0c7cb185263cd3c78" title="Free a SolverData object." alt="" coords="5,5,92,31"/>
 </map>

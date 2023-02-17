@@ -6,13 +6,7 @@ Aerosol phase functions.
 
 
 Include dependency graph for aero\+\_\+phase\+\_\+solver.\+c\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{aero__phase__solver_8c__incl}
-\end{center}
-\end{figure}
+% FIG 0
 \doxysubsection*{Macros}
 \begin{DoxyCompactItemize}
 \item 
@@ -38,11 +32,11 @@ Include dependency graph for aero\+\_\+phase\+\_\+solver.\+c\+:
 \item 
 \#define \mbox{\hyperlink{aero__phase__solver_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}{NUM\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+}}~0
 \item 
-\#define \mbox{\hyperlink{aero__phase__solver_8c_a5abfc86c868793576be1eb6acec4d966}{SPEC\+\_\+\+TYPE\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + x\mbox{]})
+\#define \mbox{\hyperlink{aero__phase__solver_8c_a5abfc86c868793576be1eb6acec4d966}{SPEC\+\_\+\+TYPE\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + x\mbox{]})
 \item 
-\#define \mbox{\hyperlink{aero__phase__solver_8c_a533cad7ef28f4059577d632870ed98d7}{MW\+\_\+}}(x)~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}{NUM\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+}} + x\mbox{]})
+\#define \mbox{\hyperlink{aero__phase__solver_8c_a533cad7ef28f4059577d632870ed98d7}{MW\+\_\+}}(x)~(float\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__solver_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}{NUM\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+}} + x\mbox{]})
 \item 
-\#define \mbox{\hyperlink{aero__phase__solver_8c_a43a841814e566347ca15f79747286d39}{DENSITY\+\_\+}}(x)~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}{NUM\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{aero__phase__solver_8c_a5b96d96acf980c9d12118897b1cf8585}{NUM\+\_\+\+STATE\+\_\+\+VAR\+\_\+}} + x\mbox{]})
+\#define \mbox{\hyperlink{aero__phase__solver_8c_a43a841814e566347ca15f79747286d39}{DENSITY\+\_\+}}(x)~(float\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__solver_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}{NUM\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{aero__phase__data_8_f90_a5b96d96acf980c9d12118897b1cf8585}{NUM\+\_\+\+STATE\+\_\+\+VAR\+\_\+}} + x\mbox{]})
 \end{DoxyCompactItemize}
 \doxysubsection*{Functions}
 \begin{DoxyCompactItemize}
@@ -123,7 +117,7 @@ Definition at line \mbox{\hyperlink{aero__phase__solver_8c_source_l00024}{24}} o
 \index{aero\_phase\_solver.c@{aero\_phase\_solver.c}!DENSITY\_@{DENSITY\_}}
 \index{DENSITY\_@{DENSITY\_}!aero\_phase\_solver.c@{aero\_phase\_solver.c}}
 \doxysubsubsection{\texorpdfstring{DENSITY\_}{DENSITY\_}}
-{\footnotesize\ttfamily \#define DENSITY\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}{NUM\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{aero__phase__solver_8c_a5b96d96acf980c9d12118897b1cf8585}{NUM\+\_\+\+STATE\+\_\+\+VAR\+\_\+}} + x\mbox{]})}
+{\footnotesize\ttfamily \#define DENSITY\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(float\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__solver_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}{NUM\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{aero__phase__data_8_f90_a5b96d96acf980c9d12118897b1cf8585}{NUM\+\_\+\+STATE\+\_\+\+VAR\+\_\+}} + x\mbox{]})}
 
 
 
@@ -175,7 +169,7 @@ Definition at line \mbox{\hyperlink{aero__phase__solver_8c_source_l00018}{18}} o
 \index{aero\_phase\_solver.c@{aero\_phase\_solver.c}!MW\_@{MW\_}}
 \index{MW\_@{MW\_}!aero\_phase\_solver.c@{aero\_phase\_solver.c}}
 \doxysubsubsection{\texorpdfstring{MW\_}{MW\_}}
-{\footnotesize\ttfamily \#define MW\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}{NUM\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+}} + x\mbox{]})}
+{\footnotesize\ttfamily \#define MW\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(float\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__solver_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}{NUM\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+}} + x\mbox{]})}
 
 
 
@@ -215,7 +209,7 @@ Definition at line \mbox{\hyperlink{aero__phase__solver_8c_source_l00029}{29}} o
 \index{aero\_phase\_solver.c@{aero\_phase\_solver.c}!SPEC\_TYPE\_@{SPEC\_TYPE\_}}
 \index{SPEC\_TYPE\_@{SPEC\_TYPE\_}!aero\_phase\_solver.c@{aero\_phase\_solver.c}}
 \doxysubsubsection{\texorpdfstring{SPEC\_TYPE\_}{SPEC\_TYPE\_}}
-{\footnotesize\ttfamily \#define SPEC\+\_\+\+TYPE\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + x\mbox{]})}
+{\footnotesize\ttfamily \#define SPEC\+\_\+\+TYPE\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + x\mbox{]})}
 
 
 
@@ -283,13 +277,7 @@ Get the mass and average MW in an aerosol phase.
 Definition at line \mbox{\hyperlink{aero__phase__solver_8c_source_l00093}{93}} of file \mbox{\hyperlink{aero__phase__solver_8c_source}{aero\+\_\+phase\+\_\+solver.\+c}}.
 
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{aero__phase__solver_8c_a965e0b9fc79db694be201edd05377dd1_icgraph}
-\end{center}
-\end{figure}
+% FIG 1
 \mbox{\Hypertarget{aero__phase__solver_8c_a6e5ea770a313a6eebea53e86540dd510}\label{aero__phase__solver_8c_a6e5ea770a313a6eebea53e86540dd510}} 
 \index{aero\_phase\_solver.c@{aero\_phase\_solver.c}!aero\_phase\_get\_used\_jac\_elem@{aero\_phase\_get\_used\_jac\_elem}}
 \index{aero\_phase\_get\_used\_jac\_elem@{aero\_phase\_get\_used\_jac\_elem}!aero\_phase\_solver.c@{aero\_phase\_solver.c}}
@@ -319,13 +307,7 @@ Number of \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements flagged
 Definition at line \mbox{\hyperlink{aero__phase__solver_8c_source_l00046}{46}} of file \mbox{\hyperlink{aero__phase__solver_8c_source}{aero\+\_\+phase\+\_\+solver.\+c}}.
 
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{aero__phase__solver_8c_a6e5ea770a313a6eebea53e86540dd510_icgraph}
-\end{center}
-\end{figure}
+% FIG 2
 \mbox{\Hypertarget{aero__phase__solver_8c_a6e493e863924f29d6bd06598fa657f08}\label{aero__phase__solver_8c_a6e493e863924f29d6bd06598fa657f08}} 
 \index{aero\_phase\_solver.c@{aero\_phase\_solver.c}!aero\_phase\_get\_volume\_\_m3\_m3@{aero\_phase\_get\_volume\_\_m3\_m3}}
 \index{aero\_phase\_get\_volume\_\_m3\_m3@{aero\_phase\_get\_volume\_\_m3\_m3}!aero\_phase\_solver.c@{aero\_phase\_solver.c}}
@@ -354,13 +336,7 @@ Get the volume of an aerosol phase.
 Definition at line \mbox{\hyperlink{aero__phase__solver_8c_source_l00144}{144}} of file \mbox{\hyperlink{aero__phase__solver_8c_source}{aero\+\_\+phase\+\_\+solver.\+c}}.
 
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{aero__phase__solver_8c_a6e493e863924f29d6bd06598fa657f08_icgraph}
-\end{center}
-\end{figure}
+% FIG 3
 \mbox{\Hypertarget{aero__phase__solver_8c_a27c8defcce28585eb3ed62e62f877caa}\label{aero__phase__solver_8c_a27c8defcce28585eb3ed62e62f877caa}} 
 \index{aero\_phase\_solver.c@{aero\_phase\_solver.c}!aero\_phase\_print\_data@{aero\_phase\_print\_data}}
 \index{aero\_phase\_print\_data@{aero\_phase\_print\_data}!aero\_phase\_solver.c@{aero\_phase\_solver.c}}

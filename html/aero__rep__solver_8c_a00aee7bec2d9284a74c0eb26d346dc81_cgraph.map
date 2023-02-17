@@ -1,5 +1,5 @@
 <map id="aero_rep_get_aero_conc_type" name="aero_rep_get_aero_conc_type">
-<area shape="rect" id="node1" title="Check whether aerosol concentrations are per&#45;particle or total for each phase." alt="" coords="5,46,200,73"/>
-<area shape="rect" id="node2" href="$aero__rep__modal__binned__mass_8c.html#a5806fae1fe7d70369bfb7a0d9c54d12f" title="Get the type of aerosol concentration used." alt="" coords="248,5,432,47"/>
-<area shape="rect" id="node3" href="$aero__rep__single__particle_8c.html#a59114de73dd305d5825a8547155b8946" title="Get the type of aerosol concentration used." alt="" coords="259,71,421,112"/>
+<area shape="rect" id="node1" title="Check whether aerosol concentrations are per&#45;particle or total for each phase." alt="" coords="5,45,200,70"/>
+<area shape="rect" id="node2" href="$aero__rep__modal__binned__mass_8c.html#a5806fae1fe7d70369bfb7a0d9c54d12f" title="Get the type of aerosol concentration used." alt="" coords="248,5,432,45"/>
+<area shape="rect" id="node3" href="$aero__rep__single__particle_8c.html#a59114de73dd305d5825a8547155b8946" title="Get the type of aerosol concentration used." alt="" coords="259,69,421,109"/>
 </map>

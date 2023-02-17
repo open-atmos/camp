@@ -1,6 +1,6 @@
 <map id="camp_camp_core::initialize" name="camp_camp_core::initialize">
-<area shape="rect" id="node1" title="Initialize the model data." alt="" coords="5,31,183,57"/>
-<area shape="rect" id="node2" href="$namespacecamp__util.html#a32cf43c1b618a3ecf93810383e960ef2" title="Errors unless condition_ok is true." alt="" coords="231,5,351,32"/>
-<area shape="rect" id="node3" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="399,31,551,57"/>
-<area shape="rect" id="node4" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="599,23,721,65"/>
+<area shape="rect" id="node1" title="Initialize the model data." alt="" coords="5,31,183,56"/>
+<area shape="rect" id="node2" href="$namespacecamp__util.html#a32cf43c1b618a3ecf93810383e960ef2" title="Errors unless condition_ok is true." alt="" coords="231,5,351,31"/>
+<area shape="rect" id="node3" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="399,31,551,56"/>
+<area shape="rect" id="node4" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="599,23,721,63"/>
 </map>

@@ -1,10 +1,10 @@
 <map id="camp_mpi::camp_mpi_allgather_real_array" name="camp_mpi::camp_mpi_allgather_real_array">
-<area shape="rect" id="node1" title="Does an allgather of real arrays (must be the same size on all processes)." alt="" coords="5,35,153,77"/>
-<area shape="rect" id="node2" href="$namespacecamp__util.html#a32cf43c1b618a3ecf93810383e960ef2" title="Errors unless condition_ok is true." alt="" coords="969,21,1089,48"/>
-<area shape="rect" id="node5" href="$namespacecamp__mpi.html#adb95beaf933131229f017a03af8352ad" title="Dies if ierr is not ok." alt="" coords="428,43,576,85"/>
-<area shape="rect" id="node8" href="$namespacecamp__mpi.html#ac12772749475620730de7ac0fd2f88d7" title="Returns the total number of processes." alt="" coords="201,117,380,144"/>
-<area shape="rect" id="node3" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="1137,21,1289,48"/>
-<area shape="rect" id="node4" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="1337,14,1460,55"/>
-<area shape="rect" id="node6" href="$namespacecamp__mpi.html#a7c0deeecbf4c64fe7fcade1797e1aab8" title="Abort the program." alt="" coords="624,43,772,85"/>
-<area shape="rect" id="node7" href="$namespacecamp__util.html#aa942add404bf8b611e5b4b8c777ca7f6" title="Error immediately." alt="" coords="820,47,921,73"/>
+<area shape="rect" id="node1" title="Does an allgather of real arrays (must be the same size on all processes)." alt="" coords="5,36,153,76"/>
+<area shape="rect" id="node2" href="$namespacecamp__util.html#a32cf43c1b618a3ecf93810383e960ef2" title="Errors unless condition_ok is true." alt="" coords="969,21,1089,46"/>
+<area shape="rect" id="node5" href="$namespacecamp__mpi.html#adb95beaf933131229f017a03af8352ad" title="Dies if ierr is not ok." alt="" coords="428,43,576,83"/>
+<area shape="rect" id="node8" href="$namespacecamp__mpi.html#ac12772749475620730de7ac0fd2f88d7" title="Returns the total number of processes." alt="" coords="201,118,380,143"/>
+<area shape="rect" id="node3" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="1137,21,1289,46"/>
+<area shape="rect" id="node4" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="1337,13,1460,53"/>
+<area shape="rect" id="node6" href="$namespacecamp__mpi.html#a7c0deeecbf4c64fe7fcade1797e1aab8" title="Abort the program." alt="" coords="624,43,772,83"/>
+<area shape="rect" id="node7" href="$namespacecamp__util.html#aa942add404bf8b611e5b4b8c777ca7f6" title="Error immediately." alt="" coords="820,46,921,71"/>
 </map>

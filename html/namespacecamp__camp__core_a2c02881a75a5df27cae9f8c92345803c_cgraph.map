@@ -1,5 +1,5 @@
 <map id="camp_camp_core::state_size" name="camp_camp_core::state_size">
-<area shape="rect" id="node1" title="Get the size of the state array." alt="" coords="5,29,196,56"/>
-<area shape="rect" id="node2" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="244,29,396,56"/>
-<area shape="rect" id="node3" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="444,22,567,63"/>
+<area shape="rect" id="node1" title="Get the size of the state array." alt="" coords="5,29,196,55"/>
+<area shape="rect" id="node2" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="244,29,396,55"/>
+<area shape="rect" id="node3" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="444,22,567,62"/>
 </map>

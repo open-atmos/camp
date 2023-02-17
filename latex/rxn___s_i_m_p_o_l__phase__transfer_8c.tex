@@ -6,13 +6,7 @@ Phase Transfer reaction solver functions.
 
 
 Include dependency graph for rxn\+\_\+\+SIMPOL\+\_\+phase\+\_\+transfer.\+c\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{rxn___s_i_m_p_o_l__phase__transfer_8c__incl}
-\end{center}
-\end{figure}
+% FIG 0
 \doxysubsection*{Macros}
 \begin{DoxyCompactItemize}
 \item 
@@ -66,37 +60,37 @@ Include dependency graph for rxn\+\_\+\+SIMPOL\+\_\+phase\+\_\+transfer.\+c\+:
 \item 
 \#define \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_a1f68a3544ae39a7815cbb5c09dfdeff0}{NUM\+\_\+\+ENV\+\_\+\+PARAM\+\_\+}}~4
 \item 
-\#define \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_ae48ddb0f7413fdc02e903919be964576}{AERO\+\_\+\+SPEC\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + x\mbox{]} -\/ 1)
+\#define \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_ae48ddb0f7413fdc02e903919be964576}{AERO\+\_\+\+SPEC\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + x\mbox{]} -\/ 1)
 \item 
-\#define \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_a022b67269e49014c70d48cbdc62ab57c}{AERO\+\_\+\+ACT\+\_\+\+ID\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8_f90_adf4b84135880d5ac73ce37df877d91fb}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+}} + x\mbox{]} -\/ 1)
+\#define \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_a022b67269e49014c70d48cbdc62ab57c}{AERO\+\_\+\+ACT\+\_\+\+ID\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_adf4b84135880d5ac73ce37df877d91fb}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+}} + x\mbox{]} -\/ 1)
 \item 
-\#define \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_a491372e10f325a8f35f58fcd969f3f37}{AERO\+\_\+\+PHASE\+\_\+\+ID\+\_\+}}(x)~  (int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 2 $\ast$ (\mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8_f90_adf4b84135880d5ac73ce37df877d91fb}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+}}) + x\mbox{]} -\/ 1)
+\#define \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_a491372e10f325a8f35f58fcd969f3f37}{AERO\+\_\+\+PHASE\+\_\+\+ID\+\_\+}}(x)~  (int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 2 $\ast$ (\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_adf4b84135880d5ac73ce37df877d91fb}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+}}) + x\mbox{]} -\/ 1)
 \item 
-\#define \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_ae0d4c34a858d8d08096ddba79e3e394d}{AERO\+\_\+\+REP\+\_\+\+ID\+\_\+}}(x)~  (int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 3 $\ast$ (\mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8_f90_adf4b84135880d5ac73ce37df877d91fb}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+}}) + x\mbox{]} -\/ 1)
+\#define \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_ae0d4c34a858d8d08096ddba79e3e394d}{AERO\+\_\+\+REP\+\_\+\+ID\+\_\+}}(x)~  (int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 3 $\ast$ (\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_adf4b84135880d5ac73ce37df877d91fb}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+}}) + x\mbox{]} -\/ 1)
 \item 
-\#define \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_af9fc34858d09e71d3cffd88cf942bdf9}{DERIV\+\_\+\+ID\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 4 $\ast$ (\mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8_f90_adf4b84135880d5ac73ce37df877d91fb}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+}}) + x\mbox{]})
+\#define \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_af9fc34858d09e71d3cffd88cf942bdf9}{DERIV\+\_\+\+ID\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 4 $\ast$ (\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_adf4b84135880d5ac73ce37df877d91fb}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+}}) + x\mbox{]})
 \item 
-\#define \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_a95d4ca5af12c2b166f865b2a0b456d71}{GAS\+\_\+\+ACT\+\_\+\+JAC\+\_\+\+ID\+\_\+}}(x)~  int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 1 + 5 $\ast$ (\mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8_f90_adf4b84135880d5ac73ce37df877d91fb}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+}}) + x\mbox{]}
+\#define \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_a95d4ca5af12c2b166f865b2a0b456d71}{GAS\+\_\+\+ACT\+\_\+\+JAC\+\_\+\+ID\+\_\+}}(x)~  int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 1 + 5 $\ast$ (\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_adf4b84135880d5ac73ce37df877d91fb}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+}}) + x\mbox{]}
 \item 
-\#define \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_ac175c7d8387b27a7ae6be3a8773b4928}{AERO\+\_\+\+ACT\+\_\+\+JAC\+\_\+\+ID\+\_\+}}(x)~  int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 1 + 6 $\ast$ (\mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8_f90_adf4b84135880d5ac73ce37df877d91fb}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+}}) + x\mbox{]}
+\#define \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_ac175c7d8387b27a7ae6be3a8773b4928}{AERO\+\_\+\+ACT\+\_\+\+JAC\+\_\+\+ID\+\_\+}}(x)~  int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 1 + 6 $\ast$ (\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_adf4b84135880d5ac73ce37df877d91fb}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+}}) + x\mbox{]}
 \item 
-\#define \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\+\_\+\+ID\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 1 + 7 $\ast$ (\mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8_f90_adf4b84135880d5ac73ce37df877d91fb}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+}}) + x\mbox{]})
+\#define \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\+\_\+\+ID\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 1 + 7 $\ast$ (\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_adf4b84135880d5ac73ce37df877d91fb}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+}}) + x\mbox{]})
 \item 
-\#define \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_a04869ea36d5403968bd6f5e6fd4bf329}{PHASE\+\_\+\+INT\+\_\+\+LOC\+\_\+}}(x)~  (int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 2 + 10 $\ast$ (\mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8_f90_adf4b84135880d5ac73ce37df877d91fb}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+}}) + x\mbox{]} -\/ 1)
+\#define \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_a04869ea36d5403968bd6f5e6fd4bf329}{PHASE\+\_\+\+INT\+\_\+\+LOC\+\_\+}}(x)~  (int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 2 + 10 $\ast$ (\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_adf4b84135880d5ac73ce37df877d91fb}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+}}) + x\mbox{]} -\/ 1)
 \item 
-\#define \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_afafc66d3ae86f3d36a8b142d3eff1f6d}{PHASE\+\_\+\+FLOAT\+\_\+\+LOC\+\_\+}}(x)~  (int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 2 + 11 $\ast$ (\mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8_f90_adf4b84135880d5ac73ce37df877d91fb}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+}}) + x\mbox{]} -\/ 1)
+\#define \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_afafc66d3ae86f3d36a8b142d3eff1f6d}{PHASE\+\_\+\+FLOAT\+\_\+\+LOC\+\_\+}}(x)~  (int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 2 + 11 $\ast$ (\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_adf4b84135880d5ac73ce37df877d91fb}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+}}) + x\mbox{]} -\/ 1)
 \item 
-\#define \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_ace9066b2ec147811e0f1206738cc2adf}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+\+JAC\+\_\+\+ELEM\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ac0b5b9446b202d1ce286ecefe0108869}{PHASE\+\_\+\+INT\+\_\+\+LOC\+\_\+}}(x)\mbox{]})
+\#define \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_ace9066b2ec147811e0f1206738cc2adf}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+\+JAC\+\_\+\+ELEM\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{rxn___h_l__phase__transfer_8c_a04869ea36d5403968bd6f5e6fd4bf329}{PHASE\+\_\+\+INT\+\_\+\+LOC\+\_\+}}(x)\mbox{]})
 \item 
-\#define \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_abdf4e3795c943871823b78eaf5da21fc}{PHASE\+\_\+\+JAC\+\_\+\+ID\+\_\+}}(x,  s,  e)~  int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ac0b5b9446b202d1ce286ecefe0108869}{PHASE\+\_\+\+INT\+\_\+\+LOC\+\_\+}}(x) + 1 + s $\ast$ \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8_f90_ace9066b2ec147811e0f1206738cc2adf}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+\+JAC\+\_\+\+ELEM\+\_\+}}(x) + e\mbox{]}
+\#define \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_abdf4e3795c943871823b78eaf5da21fc}{PHASE\+\_\+\+JAC\+\_\+\+ID\+\_\+}}(x,  s,  e)~  int\+\_\+data\mbox{[}\mbox{\hyperlink{rxn___h_l__phase__transfer_8c_a04869ea36d5403968bd6f5e6fd4bf329}{PHASE\+\_\+\+INT\+\_\+\+LOC\+\_\+}}(x) + 1 + s $\ast$ \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_ace9066b2ec147811e0f1206738cc2adf}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+\+JAC\+\_\+\+ELEM\+\_\+}}(x) + e\mbox{]}
 \item 
-\#define \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_ae144b859674c9147443a7cf505ddac6a}{EFF\+\_\+\+RAD\+\_\+\+JAC\+\_\+\+ELEM\+\_\+}}(x,  e)~float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a1ad2cc048e99792784cf0798275e6ff0}{PHASE\+\_\+\+FLOAT\+\_\+\+LOC\+\_\+}}(x) + e\mbox{]}
+\#define \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_ae144b859674c9147443a7cf505ddac6a}{EFF\+\_\+\+RAD\+\_\+\+JAC\+\_\+\+ELEM\+\_\+}}(x,  e)~float\+\_\+data\mbox{[}\mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_afafc66d3ae86f3d36a8b142d3eff1f6d}{PHASE\+\_\+\+FLOAT\+\_\+\+LOC\+\_\+}}(x) + e\mbox{]}
 \item 
-\#define \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_af1b210da8b9553848904995262873236}{NUM\+\_\+\+CONC\+\_\+\+JAC\+\_\+\+ELEM\+\_\+}}(x,  e)~  float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a1ad2cc048e99792784cf0798275e6ff0}{PHASE\+\_\+\+FLOAT\+\_\+\+LOC\+\_\+}}(x) + \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8_f90_ace9066b2ec147811e0f1206738cc2adf}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+\+JAC\+\_\+\+ELEM\+\_\+}}(x) + e\mbox{]}
+\#define \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_af1b210da8b9553848904995262873236}{NUM\+\_\+\+CONC\+\_\+\+JAC\+\_\+\+ELEM\+\_\+}}(x,  e)~  float\+\_\+data\mbox{[}\mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_afafc66d3ae86f3d36a8b142d3eff1f6d}{PHASE\+\_\+\+FLOAT\+\_\+\+LOC\+\_\+}}(x) + \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_ace9066b2ec147811e0f1206738cc2adf}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+\+JAC\+\_\+\+ELEM\+\_\+}}(x) + e\mbox{]}
 \item 
-\#define \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_ac25b71a92785637fb4b3fe7896e0704f}{MASS\+\_\+\+JAC\+\_\+\+ELEM\+\_\+}}(x,  e)~  float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a1ad2cc048e99792784cf0798275e6ff0}{PHASE\+\_\+\+FLOAT\+\_\+\+LOC\+\_\+}}(x) + 2 $\ast$ \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8_f90_ace9066b2ec147811e0f1206738cc2adf}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+\+JAC\+\_\+\+ELEM\+\_\+}}(x) + e\mbox{]}
+\#define \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_ac25b71a92785637fb4b3fe7896e0704f}{MASS\+\_\+\+JAC\+\_\+\+ELEM\+\_\+}}(x,  e)~  float\+\_\+data\mbox{[}\mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_afafc66d3ae86f3d36a8b142d3eff1f6d}{PHASE\+\_\+\+FLOAT\+\_\+\+LOC\+\_\+}}(x) + 2 $\ast$ \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_ace9066b2ec147811e0f1206738cc2adf}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+\+JAC\+\_\+\+ELEM\+\_\+}}(x) + e\mbox{]}
 \item 
-\#define \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_a0655d6e5175162eb137fa6b1c580c987}{MW\+\_\+\+JAC\+\_\+\+ELEM\+\_\+}}(x,  e)~  float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a1ad2cc048e99792784cf0798275e6ff0}{PHASE\+\_\+\+FLOAT\+\_\+\+LOC\+\_\+}}(x) + 3 $\ast$ \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8_f90_ace9066b2ec147811e0f1206738cc2adf}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+\+JAC\+\_\+\+ELEM\+\_\+}}(x) + e\mbox{]}
+\#define \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_a0655d6e5175162eb137fa6b1c580c987}{MW\+\_\+\+JAC\+\_\+\+ELEM\+\_\+}}(x,  e)~  float\+\_\+data\mbox{[}\mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_afafc66d3ae86f3d36a8b142d3eff1f6d}{PHASE\+\_\+\+FLOAT\+\_\+\+LOC\+\_\+}}(x) + 3 $\ast$ \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_ace9066b2ec147811e0f1206738cc2adf}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+\+JAC\+\_\+\+ELEM\+\_\+}}(x) + e\mbox{]}
 \end{DoxyCompactItemize}
 \doxysubsection*{Functions}
 \begin{DoxyCompactItemize}
@@ -129,7 +123,7 @@ Definition in file \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_source
 \index{rxn\_SIMPOL\_phase\_transfer.c@{rxn\_SIMPOL\_phase\_transfer.c}!AERO\_ACT\_ID\_@{AERO\_ACT\_ID\_}}
 \index{AERO\_ACT\_ID\_@{AERO\_ACT\_ID\_}!rxn\_SIMPOL\_phase\_transfer.c@{rxn\_SIMPOL\_phase\_transfer.c}}
 \doxysubsubsection{\texorpdfstring{AERO\_ACT\_ID\_}{AERO\_ACT\_ID\_}}
-{\footnotesize\ttfamily \#define AERO\+\_\+\+ACT\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8_f90_adf4b84135880d5ac73ce37df877d91fb}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+}} + x\mbox{]} -\/ 1)}
+{\footnotesize\ttfamily \#define AERO\+\_\+\+ACT\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_adf4b84135880d5ac73ce37df877d91fb}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+}} + x\mbox{]} -\/ 1)}
 
 
 
@@ -139,7 +133,7 @@ Definition at line \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_source
 \index{rxn\_SIMPOL\_phase\_transfer.c@{rxn\_SIMPOL\_phase\_transfer.c}!AERO\_ACT\_JAC\_ID\_@{AERO\_ACT\_JAC\_ID\_}}
 \index{AERO\_ACT\_JAC\_ID\_@{AERO\_ACT\_JAC\_ID\_}!rxn\_SIMPOL\_phase\_transfer.c@{rxn\_SIMPOL\_phase\_transfer.c}}
 \doxysubsubsection{\texorpdfstring{AERO\_ACT\_JAC\_ID\_}{AERO\_ACT\_JAC\_ID\_}}
-{\footnotesize\ttfamily \#define AERO\+\_\+\+ACT\+\_\+\+JAC\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~  int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 1 + 6 $\ast$ (\mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8_f90_adf4b84135880d5ac73ce37df877d91fb}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+}}) + x\mbox{]}}
+{\footnotesize\ttfamily \#define AERO\+\_\+\+ACT\+\_\+\+JAC\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~  int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 1 + 6 $\ast$ (\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_adf4b84135880d5ac73ce37df877d91fb}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+}}) + x\mbox{]}}
 
 
 
@@ -149,7 +143,7 @@ Definition at line \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_source
 \index{rxn\_SIMPOL\_phase\_transfer.c@{rxn\_SIMPOL\_phase\_transfer.c}!AERO\_PHASE\_ID\_@{AERO\_PHASE\_ID\_}}
 \index{AERO\_PHASE\_ID\_@{AERO\_PHASE\_ID\_}!rxn\_SIMPOL\_phase\_transfer.c@{rxn\_SIMPOL\_phase\_transfer.c}}
 \doxysubsubsection{\texorpdfstring{AERO\_PHASE\_ID\_}{AERO\_PHASE\_ID\_}}
-{\footnotesize\ttfamily \#define AERO\+\_\+\+PHASE\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~  (int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 2 $\ast$ (\mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8_f90_adf4b84135880d5ac73ce37df877d91fb}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+}}) + x\mbox{]} -\/ 1)}
+{\footnotesize\ttfamily \#define AERO\+\_\+\+PHASE\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~  (int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 2 $\ast$ (\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_adf4b84135880d5ac73ce37df877d91fb}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+}}) + x\mbox{]} -\/ 1)}
 
 
 
@@ -159,7 +153,7 @@ Definition at line \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_source
 \index{rxn\_SIMPOL\_phase\_transfer.c@{rxn\_SIMPOL\_phase\_transfer.c}!AERO\_REP\_ID\_@{AERO\_REP\_ID\_}}
 \index{AERO\_REP\_ID\_@{AERO\_REP\_ID\_}!rxn\_SIMPOL\_phase\_transfer.c@{rxn\_SIMPOL\_phase\_transfer.c}}
 \doxysubsubsection{\texorpdfstring{AERO\_REP\_ID\_}{AERO\_REP\_ID\_}}
-{\footnotesize\ttfamily \#define AERO\+\_\+\+REP\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~  (int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 3 $\ast$ (\mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8_f90_adf4b84135880d5ac73ce37df877d91fb}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+}}) + x\mbox{]} -\/ 1)}
+{\footnotesize\ttfamily \#define AERO\+\_\+\+REP\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~  (int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 3 $\ast$ (\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_adf4b84135880d5ac73ce37df877d91fb}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+}}) + x\mbox{]} -\/ 1)}
 
 
 
@@ -169,7 +163,7 @@ Definition at line \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_source
 \index{rxn\_SIMPOL\_phase\_transfer.c@{rxn\_SIMPOL\_phase\_transfer.c}!AERO\_SPEC\_@{AERO\_SPEC\_}}
 \index{AERO\_SPEC\_@{AERO\_SPEC\_}!rxn\_SIMPOL\_phase\_transfer.c@{rxn\_SIMPOL\_phase\_transfer.c}}
 \doxysubsubsection{\texorpdfstring{AERO\_SPEC\_}{AERO\_SPEC\_}}
-{\footnotesize\ttfamily \#define AERO\+\_\+\+SPEC\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + x\mbox{]} -\/ 1)}
+{\footnotesize\ttfamily \#define AERO\+\_\+\+SPEC\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + x\mbox{]} -\/ 1)}
 
 
 
@@ -259,7 +253,7 @@ Definition at line \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_source
 \index{rxn\_SIMPOL\_phase\_transfer.c@{rxn\_SIMPOL\_phase\_transfer.c}!DERIV\_ID\_@{DERIV\_ID\_}}
 \index{DERIV\_ID\_@{DERIV\_ID\_}!rxn\_SIMPOL\_phase\_transfer.c@{rxn\_SIMPOL\_phase\_transfer.c}}
 \doxysubsubsection{\texorpdfstring{DERIV\_ID\_}{DERIV\_ID\_}}
-{\footnotesize\ttfamily \#define DERIV\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 4 $\ast$ (\mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8_f90_adf4b84135880d5ac73ce37df877d91fb}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+}}) + x\mbox{]})}
+{\footnotesize\ttfamily \#define DERIV\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 4 $\ast$ (\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_adf4b84135880d5ac73ce37df877d91fb}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+}}) + x\mbox{]})}
 
 
 
@@ -279,7 +273,7 @@ Definition at line \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_source
 \index{rxn\_SIMPOL\_phase\_transfer.c@{rxn\_SIMPOL\_phase\_transfer.c}!EFF\_RAD\_JAC\_ELEM\_@{EFF\_RAD\_JAC\_ELEM\_}}
 \index{EFF\_RAD\_JAC\_ELEM\_@{EFF\_RAD\_JAC\_ELEM\_}!rxn\_SIMPOL\_phase\_transfer.c@{rxn\_SIMPOL\_phase\_transfer.c}}
 \doxysubsubsection{\texorpdfstring{EFF\_RAD\_JAC\_ELEM\_}{EFF\_RAD\_JAC\_ELEM\_}}
-{\footnotesize\ttfamily \#define EFF\+\_\+\+RAD\+\_\+\+JAC\+\_\+\+ELEM\+\_\+(\begin{DoxyParamCaption}\item[{}]{x,  }\item[{}]{e }\end{DoxyParamCaption})~float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a1ad2cc048e99792784cf0798275e6ff0}{PHASE\+\_\+\+FLOAT\+\_\+\+LOC\+\_\+}}(x) + e\mbox{]}}
+{\footnotesize\ttfamily \#define EFF\+\_\+\+RAD\+\_\+\+JAC\+\_\+\+ELEM\+\_\+(\begin{DoxyParamCaption}\item[{}]{x,  }\item[{}]{e }\end{DoxyParamCaption})~float\+\_\+data\mbox{[}\mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_afafc66d3ae86f3d36a8b142d3eff1f6d}{PHASE\+\_\+\+FLOAT\+\_\+\+LOC\+\_\+}}(x) + e\mbox{]}}
 
 
 
@@ -299,7 +293,7 @@ Definition at line \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_source
 \index{rxn\_SIMPOL\_phase\_transfer.c@{rxn\_SIMPOL\_phase\_transfer.c}!GAS\_ACT\_JAC\_ID\_@{GAS\_ACT\_JAC\_ID\_}}
 \index{GAS\_ACT\_JAC\_ID\_@{GAS\_ACT\_JAC\_ID\_}!rxn\_SIMPOL\_phase\_transfer.c@{rxn\_SIMPOL\_phase\_transfer.c}}
 \doxysubsubsection{\texorpdfstring{GAS\_ACT\_JAC\_ID\_}{GAS\_ACT\_JAC\_ID\_}}
-{\footnotesize\ttfamily \#define GAS\+\_\+\+ACT\+\_\+\+JAC\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~  int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 1 + 5 $\ast$ (\mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8_f90_adf4b84135880d5ac73ce37df877d91fb}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+}}) + x\mbox{]}}
+{\footnotesize\ttfamily \#define GAS\+\_\+\+ACT\+\_\+\+JAC\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~  int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 1 + 5 $\ast$ (\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_adf4b84135880d5ac73ce37df877d91fb}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+}}) + x\mbox{]}}
 
 
 
@@ -339,7 +333,7 @@ Definition at line \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_source
 \index{rxn\_SIMPOL\_phase\_transfer.c@{rxn\_SIMPOL\_phase\_transfer.c}!JAC\_ID\_@{JAC\_ID\_}}
 \index{JAC\_ID\_@{JAC\_ID\_}!rxn\_SIMPOL\_phase\_transfer.c@{rxn\_SIMPOL\_phase\_transfer.c}}
 \doxysubsubsection{\texorpdfstring{JAC\_ID\_}{JAC\_ID\_}}
-{\footnotesize\ttfamily \#define JAC\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 1 + 7 $\ast$ (\mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8_f90_adf4b84135880d5ac73ce37df877d91fb}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+}}) + x\mbox{]})}
+{\footnotesize\ttfamily \#define JAC\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 1 + 7 $\ast$ (\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_adf4b84135880d5ac73ce37df877d91fb}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+}}) + x\mbox{]})}
 
 
 
@@ -359,7 +353,7 @@ Definition at line \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_source
 \index{rxn\_SIMPOL\_phase\_transfer.c@{rxn\_SIMPOL\_phase\_transfer.c}!MASS\_JAC\_ELEM\_@{MASS\_JAC\_ELEM\_}}
 \index{MASS\_JAC\_ELEM\_@{MASS\_JAC\_ELEM\_}!rxn\_SIMPOL\_phase\_transfer.c@{rxn\_SIMPOL\_phase\_transfer.c}}
 \doxysubsubsection{\texorpdfstring{MASS\_JAC\_ELEM\_}{MASS\_JAC\_ELEM\_}}
-{\footnotesize\ttfamily \#define MASS\+\_\+\+JAC\+\_\+\+ELEM\+\_\+(\begin{DoxyParamCaption}\item[{}]{x,  }\item[{}]{e }\end{DoxyParamCaption})~  float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a1ad2cc048e99792784cf0798275e6ff0}{PHASE\+\_\+\+FLOAT\+\_\+\+LOC\+\_\+}}(x) + 2 $\ast$ \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8_f90_ace9066b2ec147811e0f1206738cc2adf}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+\+JAC\+\_\+\+ELEM\+\_\+}}(x) + e\mbox{]}}
+{\footnotesize\ttfamily \#define MASS\+\_\+\+JAC\+\_\+\+ELEM\+\_\+(\begin{DoxyParamCaption}\item[{}]{x,  }\item[{}]{e }\end{DoxyParamCaption})~  float\+\_\+data\mbox{[}\mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_afafc66d3ae86f3d36a8b142d3eff1f6d}{PHASE\+\_\+\+FLOAT\+\_\+\+LOC\+\_\+}}(x) + 2 $\ast$ \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_ace9066b2ec147811e0f1206738cc2adf}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+\+JAC\+\_\+\+ELEM\+\_\+}}(x) + e\mbox{]}}
 
 
 
@@ -389,7 +383,7 @@ Definition at line \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_source
 \index{rxn\_SIMPOL\_phase\_transfer.c@{rxn\_SIMPOL\_phase\_transfer.c}!MW\_JAC\_ELEM\_@{MW\_JAC\_ELEM\_}}
 \index{MW\_JAC\_ELEM\_@{MW\_JAC\_ELEM\_}!rxn\_SIMPOL\_phase\_transfer.c@{rxn\_SIMPOL\_phase\_transfer.c}}
 \doxysubsubsection{\texorpdfstring{MW\_JAC\_ELEM\_}{MW\_JAC\_ELEM\_}}
-{\footnotesize\ttfamily \#define MW\+\_\+\+JAC\+\_\+\+ELEM\+\_\+(\begin{DoxyParamCaption}\item[{}]{x,  }\item[{}]{e }\end{DoxyParamCaption})~  float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a1ad2cc048e99792784cf0798275e6ff0}{PHASE\+\_\+\+FLOAT\+\_\+\+LOC\+\_\+}}(x) + 3 $\ast$ \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8_f90_ace9066b2ec147811e0f1206738cc2adf}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+\+JAC\+\_\+\+ELEM\+\_\+}}(x) + e\mbox{]}}
+{\footnotesize\ttfamily \#define MW\+\_\+\+JAC\+\_\+\+ELEM\+\_\+(\begin{DoxyParamCaption}\item[{}]{x,  }\item[{}]{e }\end{DoxyParamCaption})~  float\+\_\+data\mbox{[}\mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_afafc66d3ae86f3d36a8b142d3eff1f6d}{PHASE\+\_\+\+FLOAT\+\_\+\+LOC\+\_\+}}(x) + 3 $\ast$ \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_ace9066b2ec147811e0f1206738cc2adf}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+\+JAC\+\_\+\+ELEM\+\_\+}}(x) + e\mbox{]}}
 
 
 
@@ -409,7 +403,7 @@ Definition at line \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_source
 \index{rxn\_SIMPOL\_phase\_transfer.c@{rxn\_SIMPOL\_phase\_transfer.c}!NUM\_AERO\_PHASE\_JAC\_ELEM\_@{NUM\_AERO\_PHASE\_JAC\_ELEM\_}}
 \index{NUM\_AERO\_PHASE\_JAC\_ELEM\_@{NUM\_AERO\_PHASE\_JAC\_ELEM\_}!rxn\_SIMPOL\_phase\_transfer.c@{rxn\_SIMPOL\_phase\_transfer.c}}
 \doxysubsubsection{\texorpdfstring{NUM\_AERO\_PHASE\_JAC\_ELEM\_}{NUM\_AERO\_PHASE\_JAC\_ELEM\_}}
-{\footnotesize\ttfamily \#define NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+\+JAC\+\_\+\+ELEM\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ac0b5b9446b202d1ce286ecefe0108869}{PHASE\+\_\+\+INT\+\_\+\+LOC\+\_\+}}(x)\mbox{]})}
+{\footnotesize\ttfamily \#define NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+\+JAC\+\_\+\+ELEM\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{rxn___h_l__phase__transfer_8c_a04869ea36d5403968bd6f5e6fd4bf329}{PHASE\+\_\+\+INT\+\_\+\+LOC\+\_\+}}(x)\mbox{]})}
 
 
 
@@ -419,7 +413,7 @@ Definition at line \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_source
 \index{rxn\_SIMPOL\_phase\_transfer.c@{rxn\_SIMPOL\_phase\_transfer.c}!NUM\_CONC\_JAC\_ELEM\_@{NUM\_CONC\_JAC\_ELEM\_}}
 \index{NUM\_CONC\_JAC\_ELEM\_@{NUM\_CONC\_JAC\_ELEM\_}!rxn\_SIMPOL\_phase\_transfer.c@{rxn\_SIMPOL\_phase\_transfer.c}}
 \doxysubsubsection{\texorpdfstring{NUM\_CONC\_JAC\_ELEM\_}{NUM\_CONC\_JAC\_ELEM\_}}
-{\footnotesize\ttfamily \#define NUM\+\_\+\+CONC\+\_\+\+JAC\+\_\+\+ELEM\+\_\+(\begin{DoxyParamCaption}\item[{}]{x,  }\item[{}]{e }\end{DoxyParamCaption})~  float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a1ad2cc048e99792784cf0798275e6ff0}{PHASE\+\_\+\+FLOAT\+\_\+\+LOC\+\_\+}}(x) + \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8_f90_ace9066b2ec147811e0f1206738cc2adf}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+\+JAC\+\_\+\+ELEM\+\_\+}}(x) + e\mbox{]}}
+{\footnotesize\ttfamily \#define NUM\+\_\+\+CONC\+\_\+\+JAC\+\_\+\+ELEM\+\_\+(\begin{DoxyParamCaption}\item[{}]{x,  }\item[{}]{e }\end{DoxyParamCaption})~  float\+\_\+data\mbox{[}\mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_afafc66d3ae86f3d36a8b142d3eff1f6d}{PHASE\+\_\+\+FLOAT\+\_\+\+LOC\+\_\+}}(x) + \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_ace9066b2ec147811e0f1206738cc2adf}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+\+JAC\+\_\+\+ELEM\+\_\+}}(x) + e\mbox{]}}
 
 
 
@@ -469,7 +463,7 @@ Definition at line \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_source
 \index{rxn\_SIMPOL\_phase\_transfer.c@{rxn\_SIMPOL\_phase\_transfer.c}!PHASE\_FLOAT\_LOC\_@{PHASE\_FLOAT\_LOC\_}}
 \index{PHASE\_FLOAT\_LOC\_@{PHASE\_FLOAT\_LOC\_}!rxn\_SIMPOL\_phase\_transfer.c@{rxn\_SIMPOL\_phase\_transfer.c}}
 \doxysubsubsection{\texorpdfstring{PHASE\_FLOAT\_LOC\_}{PHASE\_FLOAT\_LOC\_}}
-{\footnotesize\ttfamily \#define PHASE\+\_\+\+FLOAT\+\_\+\+LOC\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~  (int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 2 + 11 $\ast$ (\mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8_f90_adf4b84135880d5ac73ce37df877d91fb}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+}}) + x\mbox{]} -\/ 1)}
+{\footnotesize\ttfamily \#define PHASE\+\_\+\+FLOAT\+\_\+\+LOC\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~  (int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 2 + 11 $\ast$ (\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_adf4b84135880d5ac73ce37df877d91fb}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+}}) + x\mbox{]} -\/ 1)}
 
 
 
@@ -479,7 +473,7 @@ Definition at line \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_source
 \index{rxn\_SIMPOL\_phase\_transfer.c@{rxn\_SIMPOL\_phase\_transfer.c}!PHASE\_INT\_LOC\_@{PHASE\_INT\_LOC\_}}
 \index{PHASE\_INT\_LOC\_@{PHASE\_INT\_LOC\_}!rxn\_SIMPOL\_phase\_transfer.c@{rxn\_SIMPOL\_phase\_transfer.c}}
 \doxysubsubsection{\texorpdfstring{PHASE\_INT\_LOC\_}{PHASE\_INT\_LOC\_}}
-{\footnotesize\ttfamily \#define PHASE\+\_\+\+INT\+\_\+\+LOC\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~  (int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 2 + 10 $\ast$ (\mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8_f90_adf4b84135880d5ac73ce37df877d91fb}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+}}) + x\mbox{]} -\/ 1)}
+{\footnotesize\ttfamily \#define PHASE\+\_\+\+INT\+\_\+\+LOC\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~  (int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 2 + 10 $\ast$ (\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_adf4b84135880d5ac73ce37df877d91fb}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+}}) + x\mbox{]} -\/ 1)}
 
 
 
@@ -489,7 +483,7 @@ Definition at line \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_source
 \index{rxn\_SIMPOL\_phase\_transfer.c@{rxn\_SIMPOL\_phase\_transfer.c}!PHASE\_JAC\_ID\_@{PHASE\_JAC\_ID\_}}
 \index{PHASE\_JAC\_ID\_@{PHASE\_JAC\_ID\_}!rxn\_SIMPOL\_phase\_transfer.c@{rxn\_SIMPOL\_phase\_transfer.c}}
 \doxysubsubsection{\texorpdfstring{PHASE\_JAC\_ID\_}{PHASE\_JAC\_ID\_}}
-{\footnotesize\ttfamily \#define PHASE\+\_\+\+JAC\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x,  }\item[{}]{s,  }\item[{}]{e }\end{DoxyParamCaption})~  int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ac0b5b9446b202d1ce286ecefe0108869}{PHASE\+\_\+\+INT\+\_\+\+LOC\+\_\+}}(x) + 1 + s $\ast$ \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8_f90_ace9066b2ec147811e0f1206738cc2adf}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+\+JAC\+\_\+\+ELEM\+\_\+}}(x) + e\mbox{]}}
+{\footnotesize\ttfamily \#define PHASE\+\_\+\+JAC\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x,  }\item[{}]{s,  }\item[{}]{e }\end{DoxyParamCaption})~  int\+\_\+data\mbox{[}\mbox{\hyperlink{rxn___h_l__phase__transfer_8c_a04869ea36d5403968bd6f5e6fd4bf329}{PHASE\+\_\+\+INT\+\_\+\+LOC\+\_\+}}(x) + 1 + s $\ast$ \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_ace9066b2ec147811e0f1206738cc2adf}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+\+JAC\+\_\+\+ELEM\+\_\+}}(x) + e\mbox{]}}
 
 
 
@@ -568,21 +562,9 @@ Calculate contributions to the time derivative $f(t,y)$ from this reaction.
 Definition at line \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_source_l00279}{279}} of file \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_source}{rxn\+\_\+\+SIMPOL\+\_\+phase\+\_\+transfer.\+c}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{rxn___s_i_m_p_o_l__phase__transfer_8c_a8387f10a0a5aa0b38cc545859542f3c4_cgraph}
-\end{center}
-\end{figure}
+% FIG 1
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{rxn___s_i_m_p_o_l__phase__transfer_8c_a8387f10a0a5aa0b38cc545859542f3c4_icgraph}
-\end{center}
-\end{figure}
+% FIG 2
 \mbox{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8c_a2c6b4163ab0a9e65eec7dd8286d67885}\label{rxn___s_i_m_p_o_l__phase__transfer_8c_a2c6b4163ab0a9e65eec7dd8286d67885}} 
 \index{rxn\_SIMPOL\_phase\_transfer.c@{rxn\_SIMPOL\_phase\_transfer.c}!rxn\_SIMPOL\_phase\_transfer\_calc\_jac\_contrib@{rxn\_SIMPOL\_phase\_transfer\_calc\_jac\_contrib}}
 \index{rxn\_SIMPOL\_phase\_transfer\_calc\_jac\_contrib@{rxn\_SIMPOL\_phase\_transfer\_calc\_jac\_contrib}!rxn\_SIMPOL\_phase\_transfer.c@{rxn\_SIMPOL\_phase\_transfer.c}}
@@ -613,21 +595,9 @@ Calculate contributions to the \mbox{\hyperlink{struct_jacobian}{Jacobian}} from
 Definition at line \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_source_l00415}{415}} of file \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_source}{rxn\+\_\+\+SIMPOL\+\_\+phase\+\_\+transfer.\+c}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{rxn___s_i_m_p_o_l__phase__transfer_8c_a2c6b4163ab0a9e65eec7dd8286d67885_cgraph}
-\end{center}
-\end{figure}
+% FIG 3
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{rxn___s_i_m_p_o_l__phase__transfer_8c_a2c6b4163ab0a9e65eec7dd8286d67885_icgraph}
-\end{center}
-\end{figure}
+% FIG 4
 \mbox{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8c_a1658944a83529b7d5e854920f235ed3b}\label{rxn___s_i_m_p_o_l__phase__transfer_8c_a1658944a83529b7d5e854920f235ed3b}} 
 \index{rxn\_SIMPOL\_phase\_transfer.c@{rxn\_SIMPOL\_phase\_transfer.c}!rxn\_SIMPOL\_phase\_transfer\_get\_used\_jac\_elem@{rxn\_SIMPOL\_phase\_transfer\_get\_used\_jac\_elem}}
 \index{rxn\_SIMPOL\_phase\_transfer\_get\_used\_jac\_elem@{rxn\_SIMPOL\_phase\_transfer\_get\_used\_jac\_elem}!rxn\_SIMPOL\_phase\_transfer.c@{rxn\_SIMPOL\_phase\_transfer.c}}
@@ -654,21 +624,9 @@ Flag \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used by this reaction
 Definition at line \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_source_l00084}{84}} of file \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_source}{rxn\+\_\+\+SIMPOL\+\_\+phase\+\_\+transfer.\+c}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{rxn___s_i_m_p_o_l__phase__transfer_8c_a1658944a83529b7d5e854920f235ed3b_cgraph}
-\end{center}
-\end{figure}
+% FIG 5
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{rxn___s_i_m_p_o_l__phase__transfer_8c_a1658944a83529b7d5e854920f235ed3b_icgraph}
-\end{center}
-\end{figure}
+% FIG 6
 \mbox{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8c_a63043b44a2874c8fb87ab85a2497d0c2}\label{rxn___s_i_m_p_o_l__phase__transfer_8c_a63043b44a2874c8fb87ab85a2497d0c2}} 
 \index{rxn\_SIMPOL\_phase\_transfer.c@{rxn\_SIMPOL\_phase\_transfer.c}!rxn\_SIMPOL\_phase\_transfer\_print@{rxn\_SIMPOL\_phase\_transfer\_print}}
 \index{rxn\_SIMPOL\_phase\_transfer\_print@{rxn\_SIMPOL\_phase\_transfer\_print}!rxn\_SIMPOL\_phase\_transfer.c@{rxn\_SIMPOL\_phase\_transfer.c}}
@@ -691,13 +649,7 @@ Print the Phase Transfer reaction parameters.
 Definition at line \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_source_l00751}{751}} of file \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_source}{rxn\+\_\+\+SIMPOL\+\_\+phase\+\_\+transfer.\+c}}.
 
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{rxn___s_i_m_p_o_l__phase__transfer_8c_a63043b44a2874c8fb87ab85a2497d0c2_icgraph}
-\end{center}
-\end{figure}
+% FIG 7
 \mbox{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8c_a16e926c16f84b0d8628f10553fc63ce6}\label{rxn___s_i_m_p_o_l__phase__transfer_8c_a16e926c16f84b0d8628f10553fc63ce6}} 
 \index{rxn\_SIMPOL\_phase\_transfer.c@{rxn\_SIMPOL\_phase\_transfer.c}!rxn\_SIMPOL\_phase\_transfer\_update\_env\_state@{rxn\_SIMPOL\_phase\_transfer\_update\_env\_state}}
 \index{rxn\_SIMPOL\_phase\_transfer\_update\_env\_state@{rxn\_SIMPOL\_phase\_transfer\_update\_env\_state}!rxn\_SIMPOL\_phase\_transfer.c@{rxn\_SIMPOL\_phase\_transfer.c}}
@@ -726,21 +678,9 @@ save the mean free path \mbox{[}m\mbox{]} for calculating condensation rates
 Definition at line \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_source_l00220}{220}} of file \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_source}{rxn\+\_\+\+SIMPOL\+\_\+phase\+\_\+transfer.\+c}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{rxn___s_i_m_p_o_l__phase__transfer_8c_a16e926c16f84b0d8628f10553fc63ce6_cgraph}
-\end{center}
-\end{figure}
+% FIG 8
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{rxn___s_i_m_p_o_l__phase__transfer_8c_a16e926c16f84b0d8628f10553fc63ce6_icgraph}
-\end{center}
-\end{figure}
+% FIG 9
 \mbox{\Hypertarget{rxn___s_i_m_p_o_l__phase__transfer_8c_abe640b69520d723afc79fdac91714f06}\label{rxn___s_i_m_p_o_l__phase__transfer_8c_abe640b69520d723afc79fdac91714f06}} 
 \index{rxn\_SIMPOL\_phase\_transfer.c@{rxn\_SIMPOL\_phase\_transfer.c}!rxn\_SIMPOL\_phase\_transfer\_update\_ids@{rxn\_SIMPOL\_phase\_transfer\_update\_ids}}
 \index{rxn\_SIMPOL\_phase\_transfer\_update\_ids@{rxn\_SIMPOL\_phase\_transfer\_update\_ids}!rxn\_SIMPOL\_phase\_transfer.c@{rxn\_SIMPOL\_phase\_transfer.c}}
@@ -769,18 +709,6 @@ Update the time derivative and Jacbobian array indices.
 Definition at line \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_source_l00163}{163}} of file \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_source}{rxn\+\_\+\+SIMPOL\+\_\+phase\+\_\+transfer.\+c}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{rxn___s_i_m_p_o_l__phase__transfer_8c_abe640b69520d723afc79fdac91714f06_cgraph}
-\end{center}
-\end{figure}
+% FIG 10
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{rxn___s_i_m_p_o_l__phase__transfer_8c_abe640b69520d723afc79fdac91714f06_icgraph}
-\end{center}
-\end{figure}
+% FIG 11

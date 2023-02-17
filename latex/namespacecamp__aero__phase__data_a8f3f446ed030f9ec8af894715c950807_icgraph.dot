@@ -1,0 +1,20 @@
+digraph "camp_aero_phase_data::pack_size"
+{
+ // LATEX_PDF_SIZE
+  bgcolor="transparent";
+  edge [fontname=Helvetica,fontsize=10,labelfontname=Helvetica,labelfontsize=10];
+  node [fontname=Helvetica,fontsize=10,shape=box,height=0.2,width=0.4];
+  rankdir="RL";
+  Node1 [label="camp_aero_phase_data\l::pack_size",height=0.2,width=0.4,color="gray40", fillcolor="grey60", style="filled", fontcolor="black",tooltip="Determine the size of a binary required to pack the aerosol representation data."];
+  Node1 -> Node2 [dir="back",color="steelblue1",style="solid"];
+  Node2 [label="camp_aero_rep_modal\l_binned_mass::internal\l_pack_size_gmd",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$namespacecamp__aero__rep__modal__binned__mass.html#a9920f00c282b728d22fdb6a31d513220",tooltip="Determine the size of a binary required to pack the reaction data."];
+  Node1 -> Node3 [dir="back",color="steelblue1",style="solid"];
+  Node3 [label="camp_aero_rep_modal\l_binned_mass::internal\l_pack_size_gsd",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$namespacecamp__aero__rep__modal__binned__mass.html#ab973efc29931da1013cbaf9d91502413",tooltip="Determine the size of a binary required to pack the reaction data."];
+  Node1 -> Node4 [dir="back",color="steelblue1",style="solid"];
+  Node4 [label="camp_aero_rep_single\l_particle::internal_pack\l_size_number",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$namespacecamp__aero__rep__single__particle.html#a0544cb13e3473655abef7c470fb1c1fc",tooltip="Determine the size of a binary required to pack the reaction data."];
+  Node1 -> Node1 [dir="back",color="steelblue1",style="solid"];
+  Node1 -> Node5 [dir="back",color="steelblue1",style="solid"];
+  Node5 [label="camp_camp_core::pack_size",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$namespacecamp__camp__core.html#acbb7425e5bdb0e8af60c1d7b1d372fd2",tooltip="Determine the size of a binary required to pack the mechanism."];
+  Node5 -> Node6 [dir="back",color="steelblue1",style="solid"];
+  Node6 [label="box_model",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$part__4__code_2box__model_8_f90.html#a3f8c0234515cc17b2f3e366868b8646b",tooltip=" "];
+}

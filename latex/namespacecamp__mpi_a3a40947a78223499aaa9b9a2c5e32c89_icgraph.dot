@@ -1,0 +1,13 @@
+digraph "camp_mpi::camp_mpi_test"
+{
+ // LATEX_PDF_SIZE
+  bgcolor="transparent";
+  edge [fontname=Helvetica,fontsize=10,labelfontname=Helvetica,labelfontsize=10];
+  node [fontname=Helvetica,fontsize=10,shape=box,height=0.2,width=0.4];
+  rankdir="RL";
+  Node1 [label="camp_mpi::camp_mpi_test",height=0.2,width=0.4,color="gray40", fillcolor="grey60", style="filled", fontcolor="black",tooltip="Perform basic sanity checks on send/receive."];
+  Node1 -> Node2 [dir="back",color="steelblue1",style="solid"];
+  Node2 [label="camp_mpi::camp_mpi_init",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$namespacecamp__mpi.html#a013fae7f812d8d9bd22dc73db714e115",tooltip="Initialize MPI."];
+  Node2 -> Node3 [dir="back",color="steelblue1",style="solid"];
+  Node3 [label="box_model",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$part__3__code_2box__model_8_f90.html#a3f8c0234515cc17b2f3e366868b8646b",tooltip=" "];
+}

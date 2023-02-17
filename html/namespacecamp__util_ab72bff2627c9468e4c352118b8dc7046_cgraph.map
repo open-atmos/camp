@@ -1,4 +1,4 @@
 <map id="camp_util::warn_msg" name="camp_util::warn_msg">
-<area shape="rect" id="node1" title="Prints a warning message." alt="" coords="5,13,149,39"/>
-<area shape="rect" id="node2" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="197,5,320,47"/>
+<area shape="rect" id="node1" title="Prints a warning message." alt="" coords="5,13,149,38"/>
+<area shape="rect" id="node2" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="197,5,320,45"/>
 </map>

@@ -1,0 +1,13 @@
+digraph "camp_aero_rep_data::ptr_finalize"
+{
+ // LATEX_PDF_SIZE
+  bgcolor="transparent";
+  edge [fontname=Helvetica,fontsize=10,labelfontname=Helvetica,labelfontsize=10];
+  node [fontname=Helvetica,fontsize=10,shape=box,height=0.2,width=0.4];
+  rankdir="RL";
+  Node1 [label="camp_aero_rep_data\l::ptr_finalize",height=0.2,width=0.4,color="gray40", fillcolor="grey60", style="filled", fontcolor="black",tooltip="Finalize a pointer to an aerosol representation."];
+  Node1 -> Node2 [dir="back",color="steelblue1",style="solid"];
+  Node2 [label="camp_mechanism_data\l::mechanism_data_ptr\l::ptr_finalize",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$structcamp__mechanism__data_1_1mechanism__data__ptr.html#a15908eba533de77c3bfd12f302ec72d2",tooltip="Finalize the pointer."];
+  Node1 -> Node3 [dir="back",color="steelblue1",style="solid"];
+  Node3 [label="camp_rxn_data::rxn\l_data_ptr::ptr_finalize",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$structcamp__rxn__data_1_1rxn__data__ptr.html#a65374383b1ee54d64e629f779bc1b615",tooltip="Finalize the pointer."];
+}

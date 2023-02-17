@@ -1,5 +1,5 @@
 <map id="camp_camp_core::initialize_sub_model_update_object" name="camp_camp_core::initialize_sub_model_update_object">
-<area shape="rect" id="node1" title="Initialize an update data object for a sub model." alt="" coords="5,5,185,47"/>
-<area shape="rect" id="node2" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="233,13,385,39"/>
-<area shape="rect" id="node3" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="433,5,556,47"/>
+<area shape="rect" id="node1" title="Initialize an update data object for a sub model." alt="" coords="5,5,185,45"/>
+<area shape="rect" id="node2" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="233,13,385,38"/>
+<area shape="rect" id="node3" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="433,5,556,45"/>
 </map>

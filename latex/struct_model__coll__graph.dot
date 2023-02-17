@@ -1,0 +1,14 @@
+digraph "Model"
+{
+ // LATEX_PDF_SIZE
+  bgcolor="transparent";
+  edge [fontname=Helvetica,fontsize=10,labelfontname=Helvetica,labelfontsize=10];
+  node [fontname=Helvetica,fontsize=10,shape=box,height=0.2,width=0.4];
+  Node1 [label="Model",height=0.2,width=0.4,color="gray40", fillcolor="grey60", style="filled", fontcolor="black",tooltip=" "];
+  Node2 -> Node1 [dir="back",color="darkorchid3",style="dashed",label=" aero_reps\nreactions\nsub_models" ];
+  Node2 [label="ModelElement",height=0.2,width=0.4,color="gray40", fillcolor="white", style="filled",URL="$struct_model_element.html",tooltip=" "];
+  Node3 -> Node2 [dir="back",color="darkorchid3",style="dashed",label=" ptrs" ];
+  Node3 [label="ModelElementDataPointers",height=0.2,width=0.4,color="gray40", fillcolor="white", style="filled",URL="$struct_model_element_data_pointers.html",tooltip=" "];
+  Node4 -> Node2 [dir="back",color="darkorchid3",style="dashed",label=" indices" ];
+  Node4 [label="ModelElementDataIndices",height=0.2,width=0.4,color="gray40", fillcolor="white", style="filled",URL="$struct_model_element_data_indices.html",tooltip=" "];
+}

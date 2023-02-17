@@ -6,13 +6,7 @@ Ternary Chemical Activation reaction solver functions.
 
 
 Include dependency graph for rxn\+\_\+ternary\+\_\+chemical\+\_\+activation.\+c\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{rxn__ternary__chemical__activation_8c__incl}
-\end{center}
-\end{figure}
+% FIG 0
 \doxysubsection*{Macros}
 \begin{DoxyCompactItemize}
 \item 
@@ -50,15 +44,15 @@ Include dependency graph for rxn\+\_\+ternary\+\_\+chemical\+\_\+activation.\+c\
 \item 
 \#define \mbox{\hyperlink{rxn__ternary__chemical__activation_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}{NUM\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+}}~10
 \item 
-\#define \mbox{\hyperlink{rxn__ternary__chemical__activation_8c_ae761e39657aac155d83eae9b338be571}{REACT\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + x\mbox{]} -\/ 1)
+\#define \mbox{\hyperlink{rxn__ternary__chemical__activation_8c_ae761e39657aac155d83eae9b338be571}{REACT\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + x\mbox{]} -\/ 1)
 \item 
-\#define \mbox{\hyperlink{rxn__ternary__chemical__activation_8c_a9fda90058c6a41b1dda6ded03321c4da}{PROD\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + x\mbox{]} -\/ 1)
+\#define \mbox{\hyperlink{rxn__ternary__chemical__activation_8c_a9fda90058c6a41b1dda6ded03321c4da}{PROD\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + x\mbox{]} -\/ 1)
 \item 
-\#define \mbox{\hyperlink{rxn__ternary__chemical__activation_8c_af9fc34858d09e71d3cffd88cf942bdf9}{DERIV\+\_\+\+ID\+\_\+}}(x)~int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + \mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}} + x\mbox{]}
+\#define \mbox{\hyperlink{rxn__ternary__chemical__activation_8c_af9fc34858d09e71d3cffd88cf942bdf9}{DERIV\+\_\+\+ID\+\_\+}}(x)~int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}} + x\mbox{]}
 \item 
-\#define \mbox{\hyperlink{rxn__ternary__chemical__activation_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\+\_\+\+ID\+\_\+}}(x)~int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 2 $\ast$ (\mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + \mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}}) + x\mbox{]}
+\#define \mbox{\hyperlink{rxn__ternary__chemical__activation_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\+\_\+\+ID\+\_\+}}(x)~int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 2 $\ast$ (\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}}) + x\mbox{]}
 \item 
-\#define \mbox{\hyperlink{rxn__ternary__chemical__activation_8c_a9ae244708fd9c438bf840ed319733651}{YIELD\+\_\+}}(x)~float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}{NUM\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+}} + x\mbox{]}
+\#define \mbox{\hyperlink{rxn__ternary__chemical__activation_8c_a9ae244708fd9c438bf840ed319733651}{YIELD\+\_\+}}(x)~float\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__solver_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}{NUM\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+}} + x\mbox{]}
 \end{DoxyCompactItemize}
 \doxysubsection*{Functions}
 \begin{DoxyCompactItemize}
@@ -101,7 +95,7 @@ Definition at line \mbox{\hyperlink{rxn__ternary__chemical__activation_8c_source
 \index{rxn\_ternary\_chemical\_activation.c@{rxn\_ternary\_chemical\_activation.c}!DERIV\_ID\_@{DERIV\_ID\_}}
 \index{DERIV\_ID\_@{DERIV\_ID\_}!rxn\_ternary\_chemical\_activation.c@{rxn\_ternary\_chemical\_activation.c}}
 \doxysubsubsection{\texorpdfstring{DERIV\_ID\_}{DERIV\_ID\_}}
-{\footnotesize\ttfamily \#define DERIV\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + \mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}} + x\mbox{]}}
+{\footnotesize\ttfamily \#define DERIV\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}} + x\mbox{]}}
 
 
 
@@ -121,7 +115,7 @@ Definition at line \mbox{\hyperlink{rxn__ternary__chemical__activation_8c_source
 \index{rxn\_ternary\_chemical\_activation.c@{rxn\_ternary\_chemical\_activation.c}!JAC\_ID\_@{JAC\_ID\_}}
 \index{JAC\_ID\_@{JAC\_ID\_}!rxn\_ternary\_chemical\_activation.c@{rxn\_ternary\_chemical\_activation.c}}
 \doxysubsubsection{\texorpdfstring{JAC\_ID\_}{JAC\_ID\_}}
-{\footnotesize\ttfamily \#define JAC\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 2 $\ast$ (\mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + \mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}}) + x\mbox{]}}
+{\footnotesize\ttfamily \#define JAC\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 2 $\ast$ (\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}}) + x\mbox{]}}
 
 
 
@@ -251,7 +245,7 @@ Definition at line \mbox{\hyperlink{rxn__ternary__chemical__activation_8c_source
 \index{rxn\_ternary\_chemical\_activation.c@{rxn\_ternary\_chemical\_activation.c}!PROD\_@{PROD\_}}
 \index{PROD\_@{PROD\_}!rxn\_ternary\_chemical\_activation.c@{rxn\_ternary\_chemical\_activation.c}}
 \doxysubsubsection{\texorpdfstring{PROD\_}{PROD\_}}
-{\footnotesize\ttfamily \#define PROD\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + x\mbox{]} -\/ 1)}
+{\footnotesize\ttfamily \#define PROD\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + x\mbox{]} -\/ 1)}
 
 
 
@@ -271,7 +265,7 @@ Definition at line \mbox{\hyperlink{rxn__ternary__chemical__activation_8c_source
 \index{rxn\_ternary\_chemical\_activation.c@{rxn\_ternary\_chemical\_activation.c}!REACT\_@{REACT\_}}
 \index{REACT\_@{REACT\_}!rxn\_ternary\_chemical\_activation.c@{rxn\_ternary\_chemical\_activation.c}}
 \doxysubsubsection{\texorpdfstring{REACT\_}{REACT\_}}
-{\footnotesize\ttfamily \#define REACT\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + x\mbox{]} -\/ 1)}
+{\footnotesize\ttfamily \#define REACT\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + x\mbox{]} -\/ 1)}
 
 
 
@@ -301,7 +295,7 @@ Definition at line \mbox{\hyperlink{rxn__ternary__chemical__activation_8c_source
 \index{rxn\_ternary\_chemical\_activation.c@{rxn\_ternary\_chemical\_activation.c}!YIELD\_@{YIELD\_}}
 \index{YIELD\_@{YIELD\_}!rxn\_ternary\_chemical\_activation.c@{rxn\_ternary\_chemical\_activation.c}}
 \doxysubsubsection{\texorpdfstring{YIELD\_}{YIELD\_}}
-{\footnotesize\ttfamily \#define YIELD\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}{NUM\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+}} + x\mbox{]}}
+{\footnotesize\ttfamily \#define YIELD\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~float\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__solver_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}{NUM\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+}} + x\mbox{]}}
 
 
 
@@ -340,21 +334,9 @@ Calculate contributions to the time derivative $f(t,y)$ from this reaction.
 Definition at line \mbox{\hyperlink{rxn__ternary__chemical__activation_8c_source_l00148}{148}} of file \mbox{\hyperlink{rxn__ternary__chemical__activation_8c_source}{rxn\+\_\+ternary\+\_\+chemical\+\_\+activation.\+c}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=333pt]{rxn__ternary__chemical__activation_8c_aab9c65ccd4b8614889c1462e2500e6b9_cgraph}
-\end{center}
-\end{figure}
+% FIG 1
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{rxn__ternary__chemical__activation_8c_aab9c65ccd4b8614889c1462e2500e6b9_icgraph}
-\end{center}
-\end{figure}
+% FIG 2
 \mbox{\Hypertarget{rxn__ternary__chemical__activation_8c_a0e03361890588fa6e5b8d43b5f63d208}\label{rxn__ternary__chemical__activation_8c_a0e03361890588fa6e5b8d43b5f63d208}} 
 \index{rxn\_ternary\_chemical\_activation.c@{rxn\_ternary\_chemical\_activation.c}!rxn\_ternary\_chemical\_activation\_calc\_jac\_contrib@{rxn\_ternary\_chemical\_activation\_calc\_jac\_contrib}}
 \index{rxn\_ternary\_chemical\_activation\_calc\_jac\_contrib@{rxn\_ternary\_chemical\_activation\_calc\_jac\_contrib}!rxn\_ternary\_chemical\_activation.c@{rxn\_ternary\_chemical\_activation.c}}
@@ -385,21 +367,9 @@ Calculate contributions to the \mbox{\hyperlink{struct_jacobian}{Jacobian}} from
 Definition at line \mbox{\hyperlink{rxn__ternary__chemical__activation_8c_source_l00193}{193}} of file \mbox{\hyperlink{rxn__ternary__chemical__activation_8c_source}{rxn\+\_\+ternary\+\_\+chemical\+\_\+activation.\+c}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=326pt]{rxn__ternary__chemical__activation_8c_a0e03361890588fa6e5b8d43b5f63d208_cgraph}
-\end{center}
-\end{figure}
+% FIG 3
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{rxn__ternary__chemical__activation_8c_a0e03361890588fa6e5b8d43b5f63d208_icgraph}
-\end{center}
-\end{figure}
+% FIG 4
 \mbox{\Hypertarget{rxn__ternary__chemical__activation_8c_a75c51d913c5d68b833f8fe7f0c078870}\label{rxn__ternary__chemical__activation_8c_a75c51d913c5d68b833f8fe7f0c078870}} 
 \index{rxn\_ternary\_chemical\_activation.c@{rxn\_ternary\_chemical\_activation.c}!rxn\_ternary\_chemical\_activation\_get\_used\_jac\_elem@{rxn\_ternary\_chemical\_activation\_get\_used\_jac\_elem}}
 \index{rxn\_ternary\_chemical\_activation\_get\_used\_jac\_elem@{rxn\_ternary\_chemical\_activation\_get\_used\_jac\_elem}!rxn\_ternary\_chemical\_activation.c@{rxn\_ternary\_chemical\_activation.c}}
@@ -424,21 +394,9 @@ Flag \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used by this reaction
 Definition at line \mbox{\hyperlink{rxn__ternary__chemical__activation_8c_source_l00048}{48}} of file \mbox{\hyperlink{rxn__ternary__chemical__activation_8c_source}{rxn\+\_\+ternary\+\_\+chemical\+\_\+activation.\+c}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{rxn__ternary__chemical__activation_8c_a75c51d913c5d68b833f8fe7f0c078870_cgraph}
-\end{center}
-\end{figure}
+% FIG 5
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{rxn__ternary__chemical__activation_8c_a75c51d913c5d68b833f8fe7f0c078870_icgraph}
-\end{center}
-\end{figure}
+% FIG 6
 \mbox{\Hypertarget{rxn__ternary__chemical__activation_8c_a0f9b43686938e15c04035c8b13f0de30}\label{rxn__ternary__chemical__activation_8c_a0f9b43686938e15c04035c8b13f0de30}} 
 \index{rxn\_ternary\_chemical\_activation.c@{rxn\_ternary\_chemical\_activation.c}!rxn\_ternary\_chemical\_activation\_print@{rxn\_ternary\_chemical\_activation\_print}}
 \index{rxn\_ternary\_chemical\_activation\_print@{rxn\_ternary\_chemical\_activation\_print}!rxn\_ternary\_chemical\_activation.c@{rxn\_ternary\_chemical\_activation.c}}
@@ -461,13 +419,7 @@ Print the Ternary Chemical Activation reaction parameters.
 Definition at line \mbox{\hyperlink{rxn__ternary__chemical__activation_8c_source_l00235}{235}} of file \mbox{\hyperlink{rxn__ternary__chemical__activation_8c_source}{rxn\+\_\+ternary\+\_\+chemical\+\_\+activation.\+c}}.
 
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=301pt]{rxn__ternary__chemical__activation_8c_a0f9b43686938e15c04035c8b13f0de30_icgraph}
-\end{center}
-\end{figure}
+% FIG 7
 \mbox{\Hypertarget{rxn__ternary__chemical__activation_8c_a1aa5967c48da08c40704695d30025ab5}\label{rxn__ternary__chemical__activation_8c_a1aa5967c48da08c40704695d30025ab5}} 
 \index{rxn\_ternary\_chemical\_activation.c@{rxn\_ternary\_chemical\_activation.c}!rxn\_ternary\_chemical\_activation\_update\_env\_state@{rxn\_ternary\_chemical\_activation\_update\_env\_state}}
 \index{rxn\_ternary\_chemical\_activation\_update\_env\_state@{rxn\_ternary\_chemical\_activation\_update\_env\_state}!rxn\_ternary\_chemical\_activation.c@{rxn\_ternary\_chemical\_activation.c}}
@@ -496,13 +448,7 @@ For Ternary Chemical Activation reaction this only involves recalculating the ra
 Definition at line \mbox{\hyperlink{rxn__ternary__chemical__activation_8c_source_l00111}{111}} of file \mbox{\hyperlink{rxn__ternary__chemical__activation_8c_source}{rxn\+\_\+ternary\+\_\+chemical\+\_\+activation.\+c}}.
 
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{rxn__ternary__chemical__activation_8c_a1aa5967c48da08c40704695d30025ab5_icgraph}
-\end{center}
-\end{figure}
+% FIG 8
 \mbox{\Hypertarget{rxn__ternary__chemical__activation_8c_a8f0167f1dcf9c3621f4f211b674b4698}\label{rxn__ternary__chemical__activation_8c_a8f0167f1dcf9c3621f4f211b674b4698}} 
 \index{rxn\_ternary\_chemical\_activation.c@{rxn\_ternary\_chemical\_activation.c}!rxn\_ternary\_chemical\_activation\_update\_ids@{rxn\_ternary\_chemical\_activation\_update\_ids}}
 \index{rxn\_ternary\_chemical\_activation\_update\_ids@{rxn\_ternary\_chemical\_activation\_update\_ids}!rxn\_ternary\_chemical\_activation.c@{rxn\_ternary\_chemical\_activation.c}}
@@ -531,18 +477,6 @@ Update the time derivative and Jacbobian array indices.
 Definition at line \mbox{\hyperlink{rxn__ternary__chemical__activation_8c_source_l00074}{74}} of file \mbox{\hyperlink{rxn__ternary__chemical__activation_8c_source}{rxn\+\_\+ternary\+\_\+chemical\+\_\+activation.\+c}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{rxn__ternary__chemical__activation_8c_a8f0167f1dcf9c3621f4f211b674b4698_cgraph}
-\end{center}
-\end{figure}
+% FIG 9
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{rxn__ternary__chemical__activation_8c_a8f0167f1dcf9c3621f4f211b674b4698_icgraph}
-\end{center}
-\end{figure}
+% FIG 10

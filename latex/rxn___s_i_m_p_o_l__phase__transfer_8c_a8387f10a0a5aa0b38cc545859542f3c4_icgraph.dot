@@ -1,0 +1,32 @@
+digraph "rxn_SIMPOL_phase_transfer_calc_deriv_contrib"
+{
+ // LATEX_PDF_SIZE
+  bgcolor="transparent";
+  edge [fontname=Helvetica,fontsize=10,labelfontname=Helvetica,labelfontsize=10];
+  node [fontname=Helvetica,fontsize=10,shape=box,height=0.2,width=0.4];
+  rankdir="RL";
+  Node1 [label="rxn_SIMPOL_phase_transfer\l_calc_deriv_contrib",height=0.2,width=0.4,color="gray40", fillcolor="grey60", style="filled", fontcolor="black",tooltip="Calculate contributions to the time derivative  from this reaction."];
+  Node1 -> Node2 [dir="back",color="steelblue1",style="solid"];
+  Node2 [label="rxn_calc_deriv",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$rxn__solver_8c.html#af014568140c63dfab9ea1c92b056e3b8",tooltip="Calculate the time derivative ."];
+  Node2 -> Node3 [dir="back",color="steelblue1",style="solid"];
+  Node3 [label="f",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$camp__solver_8c.html#ac55302bc18db0d68d78f543aad6a16c4",tooltip="Compute the time derivative f(t,y)"];
+  Node3 -> Node4 [dir="back",color="steelblue1",style="solid"];
+  Node4 [label="check_Jac",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$camp__solver_8c.html#ad45be595da1a1d6fd40179d9743a9a65",tooltip="Check a Jacobian for accuracy."];
+  Node4 -> Node5 [dir="back",color="steelblue1",style="solid"];
+  Node5 [label="Jac",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$camp__solver_8c.html#a13451d507558a61a2353adfed58db468",tooltip="Compute the Jacobian."];
+  Node5 -> Node6 [dir="back",color="steelblue1",style="solid"];
+  Node6 [label="solver_initialize",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$camp__solver_8c.html#a599ffdef916b139a1690bfd41aa386b6",tooltip="Solver initialization."];
+  Node3 -> Node7 [dir="back",color="steelblue1",style="solid"];
+  Node7 [label="is_anything_going_on_here",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$camp__solver_8c.html#a51bc2a16028d4c72dd39669c31f6fc17",tooltip="Determine if there is anything to solve."];
+  Node7 -> Node8 [dir="back",color="steelblue1",style="solid"];
+  Node8 [label="solver_run",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$camp__solver_8c.html#afc5ec8680b419e7ab49530d53a76cee4",tooltip="Solve for a given timestep."];
+  Node3 -> Node5 [dir="back",color="steelblue1",style="solid"];
+  Node3 -> Node9 [dir="back",color="steelblue1",style="solid"];
+  Node9 [label="output_deriv_local\l_state",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$camp__debug_8h.html#a0352ebf153678772ffbeb405834c141d",tooltip="Evaluate the derivative and Jacobian near a given state for a specified species."];
+  Node9 -> Node4 [dir="back",color="steelblue1",style="solid"];
+  Node3 -> Node6 [dir="back",color="steelblue1",style="solid"];
+  Node3 -> Node8 [dir="back",color="steelblue1",style="solid"];
+  Node1 -> Node10 [dir="back",color="steelblue1",style="solid"];
+  Node10 [label="rxn_calc_deriv_specific\l_types",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$rxn__solver_8c.html#a066fddd15835cba3a8b519fb734bd552",tooltip="Calculate the time derivative  for only some specific types."];
+  Node10 -> Node3 [dir="back",color="steelblue1",style="solid"];
+}

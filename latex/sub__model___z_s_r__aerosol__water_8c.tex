@@ -6,13 +6,7 @@ ZSR Aerosol Water sub model solver functions.
 
 
 Include dependency graph for sub\+\_\+model\+\_\+\+ZSR\+\_\+aerosol\+\_\+water.\+c\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{sub__model___z_s_r__aerosol__water_8c__incl}
-\end{center}
-\end{figure}
+% FIG 0
 \doxysubsection*{Macros}
 \begin{DoxyCompactItemize}
 \item 
@@ -46,53 +40,53 @@ Include dependency graph for sub\+\_\+model\+\_\+\+ZSR\+\_\+aerosol\+\_\+water.\
 \item 
 \#define \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a1f68a3544ae39a7815cbb5c09dfdeff0}{NUM\+\_\+\+ENV\+\_\+\+PARAM\+\_\+}}~1
 \item 
-\#define \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_aa9eec568725853e00e49c734726b1e88}{PHASE\+\_\+\+ID\+\_\+}}(p)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + p\mbox{]} -\/ 1)
+\#define \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_aa9eec568725853e00e49c734726b1e88}{PHASE\+\_\+\+ID\+\_\+}}(p)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + p\mbox{]} -\/ 1)
 \item 
-\#define \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_aff1191174604af4c86c622f98cd18c17}{NUM\+\_\+\+PHASE\+\_\+}} + x\mbox{]} -\/ 1)
+\#define \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\+\_\+\+PHASE\+\_\+}} + x\mbox{]} -\/ 1)
 \item 
-\#define \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a2c3304509ffdd8f8e2bd59c37a76af69}{PAIR\+\_\+\+FLOAT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x)~  (int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_aff1191174604af4c86c622f98cd18c17}{NUM\+\_\+\+PHASE\+\_\+}} + \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a29efe51ff25369b8646f3e0ddaabb0fe}{NUM\+\_\+\+ION\+\_\+\+PAIR\+\_\+}} + x\mbox{]} -\/ 1)
+\#define \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a2c3304509ffdd8f8e2bd59c37a76af69}{PAIR\+\_\+\+FLOAT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x)~  (int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\+\_\+\+PHASE\+\_\+}} + \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a29efe51ff25369b8646f3e0ddaabb0fe}{NUM\+\_\+\+ION\+\_\+\+PAIR\+\_\+}} + x\mbox{]} -\/ 1)
 \item 
-\#define \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_ad47401d55f323ba320acc7897ddc845d}{TYPE\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x)\mbox{]})
+\#define \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_ad47401d55f323ba320acc7897ddc845d}{TYPE\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x)\mbox{]})
 \item 
-\#define \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_af3967ad8f0628a2ef1e79ea80bdec8f2}{JACOB\+\_\+\+NUM\+\_\+\+CATION\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 1\mbox{]})
+\#define \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_af3967ad8f0628a2ef1e79ea80bdec8f2}{JACOB\+\_\+\+NUM\+\_\+\+CATION\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 1\mbox{]})
 \item 
-\#define \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_ad24b10c9341e9c3e1d66fb88a353bc69}{JACOB\+\_\+\+NUM\+\_\+\+ANION\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 2\mbox{]})
+\#define \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_ad24b10c9341e9c3e1d66fb88a353bc69}{JACOB\+\_\+\+NUM\+\_\+\+ANION\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 2\mbox{]})
 \item 
-\#define \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a47496ea098f950612394f9dd612c5dd9}{JACOB\+\_\+\+CATION\+\_\+\+ID\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 3\mbox{]})
+\#define \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a47496ea098f950612394f9dd612c5dd9}{JACOB\+\_\+\+CATION\+\_\+\+ID\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 3\mbox{]})
 \item 
-\#define \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_ae55ff9e8ec3e1146ec3286ecbdcee389}{JACOB\+\_\+\+ANION\+\_\+\+ID\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 4\mbox{]})
+\#define \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_ae55ff9e8ec3e1146ec3286ecbdcee389}{JACOB\+\_\+\+ANION\+\_\+\+ID\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 4\mbox{]})
 \item 
-\#define \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a888f9a166c1b81f17e8e500ce67c5f6a}{JACOB\+\_\+\+NUM\+\_\+\+Y\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 5\mbox{]})
+\#define \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a888f9a166c1b81f17e8e500ce67c5f6a}{JACOB\+\_\+\+NUM\+\_\+\+Y\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 5\mbox{]})
 \item 
-\#define \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_ae633c0b6278f12f0865f52a6c729f28c}{JACOB\+\_\+\+GAS\+\_\+\+WATER\+\_\+\+JAC\+\_\+\+ID\+\_\+}}(p,  x)~int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 6 + p\mbox{]}
+\#define \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_ae633c0b6278f12f0865f52a6c729f28c}{JACOB\+\_\+\+GAS\+\_\+\+WATER\+\_\+\+JAC\+\_\+\+ID\+\_\+}}(p,  x)~int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 6 + p\mbox{]}
 \item 
-\#define \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_afa642752c721ccad294bb29694243750}{JACOB\+\_\+\+CATION\+\_\+\+JAC\+\_\+\+ID\+\_\+}}(p,  x)~  int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 6 + \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_aff1191174604af4c86c622f98cd18c17}{NUM\+\_\+\+PHASE\+\_\+}} + p\mbox{]}
+\#define \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_afa642752c721ccad294bb29694243750}{JACOB\+\_\+\+CATION\+\_\+\+JAC\+\_\+\+ID\+\_\+}}(p,  x)~  int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 6 + \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\+\_\+\+PHASE\+\_\+}} + p\mbox{]}
 \item 
-\#define \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a90e1275ac90627c18b62fd59fb203fee}{JACOB\+\_\+\+ANION\+\_\+\+JAC\+\_\+\+ID\+\_\+}}(p,  x)~  int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 6 + 2 $\ast$ \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_aff1191174604af4c86c622f98cd18c17}{NUM\+\_\+\+PHASE\+\_\+}} + p\mbox{]}
+\#define \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a90e1275ac90627c18b62fd59fb203fee}{JACOB\+\_\+\+ANION\+\_\+\+JAC\+\_\+\+ID\+\_\+}}(p,  x)~  int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 6 + 2 $\ast$ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\+\_\+\+PHASE\+\_\+}} + p\mbox{]}
 \item 
-\#define \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a0651c7f7da2ed25d06ce93fa66a5e821}{EQSAM\+\_\+\+NUM\+\_\+\+ION\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 1\mbox{]})
+\#define \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a0651c7f7da2ed25d06ce93fa66a5e821}{EQSAM\+\_\+\+NUM\+\_\+\+ION\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 1\mbox{]})
 \item 
-\#define \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a453576077d4fe3ed7ad59ea7383b1912}{EQSAM\+\_\+\+GAS\+\_\+\+WATER\+\_\+\+JAC\+\_\+\+ID\+\_\+}}(p,  x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 2 + p\mbox{]})
+\#define \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a453576077d4fe3ed7ad59ea7383b1912}{EQSAM\+\_\+\+GAS\+\_\+\+WATER\+\_\+\+JAC\+\_\+\+ID\+\_\+}}(p,  x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 2 + p\mbox{]})
 \item 
-\#define \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a0b96ce90a58c644805a9a0d85e10e29a}{EQSAM\+\_\+\+ION\+\_\+\+ID\+\_\+}}(x,  y)~  (int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 2 + \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_aff1191174604af4c86c622f98cd18c17}{NUM\+\_\+\+PHASE\+\_\+}} + y\mbox{]})
+\#define \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a0b96ce90a58c644805a9a0d85e10e29a}{EQSAM\+\_\+\+ION\+\_\+\+ID\+\_\+}}(x,  y)~  (int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 2 + \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\+\_\+\+PHASE\+\_\+}} + y\mbox{]})
 \item 
 \#define \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a2d35b59452eaa767b223ab2ed5712607}{EQSAM\+\_\+\+ION\+\_\+\+JAC\+\_\+\+ID\+\_\+}}(p,  x,  y)
 \item 
-\#define \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_ad18d1c03feaae678a1b17f9a9febd0d9}{JACOB\+\_\+low\+\_\+\+RH\+\_\+}}(x)~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a2c3304509ffdd8f8e2bd59c37a76af69}{PAIR\+\_\+\+FLOAT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x)\mbox{]})
+\#define \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_ad18d1c03feaae678a1b17f9a9febd0d9}{JACOB\+\_\+low\+\_\+\+RH\+\_\+}}(x)~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a2c3304509ffdd8f8e2bd59c37a76af69}{PAIR\+\_\+\+FLOAT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x)\mbox{]})
 \item 
-\#define \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a4745e3e4ea0e6005ed3a38c939691779}{JACOB\+\_\+\+CATION\+\_\+\+MW\+\_\+}}(x)~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a2c3304509ffdd8f8e2bd59c37a76af69}{PAIR\+\_\+\+FLOAT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 1\mbox{]})
+\#define \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a4745e3e4ea0e6005ed3a38c939691779}{JACOB\+\_\+\+CATION\+\_\+\+MW\+\_\+}}(x)~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a2c3304509ffdd8f8e2bd59c37a76af69}{PAIR\+\_\+\+FLOAT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 1\mbox{]})
 \item 
-\#define \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a9a4eb5824a7d894ce8494152c63ebf9e}{JACOB\+\_\+\+ANION\+\_\+\+MW\+\_\+}}(x)~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a2c3304509ffdd8f8e2bd59c37a76af69}{PAIR\+\_\+\+FLOAT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 2\mbox{]})
+\#define \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a9a4eb5824a7d894ce8494152c63ebf9e}{JACOB\+\_\+\+ANION\+\_\+\+MW\+\_\+}}(x)~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a2c3304509ffdd8f8e2bd59c37a76af69}{PAIR\+\_\+\+FLOAT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 2\mbox{]})
 \item 
-\#define \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_ab05902282d909fc4e4ed395d47f320e2}{JACOB\+\_\+\+Y\+\_\+}}(x,  y)~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a2c3304509ffdd8f8e2bd59c37a76af69}{PAIR\+\_\+\+FLOAT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 3 + y\mbox{]})
+\#define \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_ab05902282d909fc4e4ed395d47f320e2}{JACOB\+\_\+\+Y\+\_\+}}(x,  y)~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a2c3304509ffdd8f8e2bd59c37a76af69}{PAIR\+\_\+\+FLOAT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 3 + y\mbox{]})
 \item 
-\#define \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a0b2f0f13c6d7a8011bc32750b2f5f13e}{EQSAM\+\_\+\+NW\+\_\+}}(x)~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a2c3304509ffdd8f8e2bd59c37a76af69}{PAIR\+\_\+\+FLOAT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x)\mbox{]})
+\#define \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a0b2f0f13c6d7a8011bc32750b2f5f13e}{EQSAM\+\_\+\+NW\+\_\+}}(x)~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a2c3304509ffdd8f8e2bd59c37a76af69}{PAIR\+\_\+\+FLOAT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x)\mbox{]})
 \item 
-\#define \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a429a6f2a9dd93343181d3737a3c69152}{EQSAM\+\_\+\+ZW\+\_\+}}(x)~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a2c3304509ffdd8f8e2bd59c37a76af69}{PAIR\+\_\+\+FLOAT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 1\mbox{]})
+\#define \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a429a6f2a9dd93343181d3737a3c69152}{EQSAM\+\_\+\+ZW\+\_\+}}(x)~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a2c3304509ffdd8f8e2bd59c37a76af69}{PAIR\+\_\+\+FLOAT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 1\mbox{]})
 \item 
-\#define \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a07c1642f1b5d79739b41102dca6d47b2}{EQSAM\+\_\+\+ION\+\_\+\+PAIR\+\_\+\+MW\+\_\+}}(x)~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a2c3304509ffdd8f8e2bd59c37a76af69}{PAIR\+\_\+\+FLOAT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 2\mbox{]})
+\#define \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a07c1642f1b5d79739b41102dca6d47b2}{EQSAM\+\_\+\+ION\+\_\+\+PAIR\+\_\+\+MW\+\_\+}}(x)~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a2c3304509ffdd8f8e2bd59c37a76af69}{PAIR\+\_\+\+FLOAT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 2\mbox{]})
 \item 
-\#define \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_ab022431cb5f72bfa171402b7558fd179}{EQSAM\+\_\+\+ION\+\_\+\+MW\+\_\+}}(x,  y)~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a2c3304509ffdd8f8e2bd59c37a76af69}{PAIR\+\_\+\+FLOAT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 3 + y\mbox{]})
+\#define \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_ab022431cb5f72bfa171402b7558fd179}{EQSAM\+\_\+\+ION\+\_\+\+MW\+\_\+}}(x,  y)~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a2c3304509ffdd8f8e2bd59c37a76af69}{PAIR\+\_\+\+FLOAT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 3 + y\mbox{]})
 \end{DoxyCompactItemize}
 \doxysubsection*{Functions}
 \begin{DoxyCompactItemize}
@@ -155,7 +149,7 @@ Definition at line \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_source
 \index{sub\_model\_ZSR\_aerosol\_water.c@{sub\_model\_ZSR\_aerosol\_water.c}!EQSAM\_GAS\_WATER\_JAC\_ID\_@{EQSAM\_GAS\_WATER\_JAC\_ID\_}}
 \index{EQSAM\_GAS\_WATER\_JAC\_ID\_@{EQSAM\_GAS\_WATER\_JAC\_ID\_}!sub\_model\_ZSR\_aerosol\_water.c@{sub\_model\_ZSR\_aerosol\_water.c}}
 \doxysubsubsection{\texorpdfstring{EQSAM\_GAS\_WATER\_JAC\_ID\_}{EQSAM\_GAS\_WATER\_JAC\_ID\_}}
-{\footnotesize\ttfamily \#define EQSAM\+\_\+\+GAS\+\_\+\+WATER\+\_\+\+JAC\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{p,  }\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 2 + p\mbox{]})}
+{\footnotesize\ttfamily \#define EQSAM\+\_\+\+GAS\+\_\+\+WATER\+\_\+\+JAC\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{p,  }\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 2 + p\mbox{]})}
 
 
 
@@ -165,7 +159,7 @@ Definition at line \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_source
 \index{sub\_model\_ZSR\_aerosol\_water.c@{sub\_model\_ZSR\_aerosol\_water.c}!EQSAM\_ION\_ID\_@{EQSAM\_ION\_ID\_}}
 \index{EQSAM\_ION\_ID\_@{EQSAM\_ION\_ID\_}!sub\_model\_ZSR\_aerosol\_water.c@{sub\_model\_ZSR\_aerosol\_water.c}}
 \doxysubsubsection{\texorpdfstring{EQSAM\_ION\_ID\_}{EQSAM\_ION\_ID\_}}
-{\footnotesize\ttfamily \#define EQSAM\+\_\+\+ION\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x,  }\item[{}]{y }\end{DoxyParamCaption})~  (int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 2 + \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_aff1191174604af4c86c622f98cd18c17}{NUM\+\_\+\+PHASE\+\_\+}} + y\mbox{]})}
+{\footnotesize\ttfamily \#define EQSAM\+\_\+\+ION\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x,  }\item[{}]{y }\end{DoxyParamCaption})~  (int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 2 + \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\+\_\+\+PHASE\+\_\+}} + y\mbox{]})}
 
 
 
@@ -191,7 +185,7 @@ Definition at line \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_source
 \index{sub\_model\_ZSR\_aerosol\_water.c@{sub\_model\_ZSR\_aerosol\_water.c}!EQSAM\_ION\_MW\_@{EQSAM\_ION\_MW\_}}
 \index{EQSAM\_ION\_MW\_@{EQSAM\_ION\_MW\_}!sub\_model\_ZSR\_aerosol\_water.c@{sub\_model\_ZSR\_aerosol\_water.c}}
 \doxysubsubsection{\texorpdfstring{EQSAM\_ION\_MW\_}{EQSAM\_ION\_MW\_}}
-{\footnotesize\ttfamily \#define EQSAM\+\_\+\+ION\+\_\+\+MW\+\_\+(\begin{DoxyParamCaption}\item[{}]{x,  }\item[{}]{y }\end{DoxyParamCaption})~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a2c3304509ffdd8f8e2bd59c37a76af69}{PAIR\+\_\+\+FLOAT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 3 + y\mbox{]})}
+{\footnotesize\ttfamily \#define EQSAM\+\_\+\+ION\+\_\+\+MW\+\_\+(\begin{DoxyParamCaption}\item[{}]{x,  }\item[{}]{y }\end{DoxyParamCaption})~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a2c3304509ffdd8f8e2bd59c37a76af69}{PAIR\+\_\+\+FLOAT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 3 + y\mbox{]})}
 
 
 
@@ -201,7 +195,7 @@ Definition at line \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_source
 \index{sub\_model\_ZSR\_aerosol\_water.c@{sub\_model\_ZSR\_aerosol\_water.c}!EQSAM\_ION\_PAIR\_MW\_@{EQSAM\_ION\_PAIR\_MW\_}}
 \index{EQSAM\_ION\_PAIR\_MW\_@{EQSAM\_ION\_PAIR\_MW\_}!sub\_model\_ZSR\_aerosol\_water.c@{sub\_model\_ZSR\_aerosol\_water.c}}
 \doxysubsubsection{\texorpdfstring{EQSAM\_ION\_PAIR\_MW\_}{EQSAM\_ION\_PAIR\_MW\_}}
-{\footnotesize\ttfamily \#define EQSAM\+\_\+\+ION\+\_\+\+PAIR\+\_\+\+MW\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a2c3304509ffdd8f8e2bd59c37a76af69}{PAIR\+\_\+\+FLOAT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 2\mbox{]})}
+{\footnotesize\ttfamily \#define EQSAM\+\_\+\+ION\+\_\+\+PAIR\+\_\+\+MW\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a2c3304509ffdd8f8e2bd59c37a76af69}{PAIR\+\_\+\+FLOAT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 2\mbox{]})}
 
 
 
@@ -211,7 +205,7 @@ Definition at line \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_source
 \index{sub\_model\_ZSR\_aerosol\_water.c@{sub\_model\_ZSR\_aerosol\_water.c}!EQSAM\_NUM\_ION\_@{EQSAM\_NUM\_ION\_}}
 \index{EQSAM\_NUM\_ION\_@{EQSAM\_NUM\_ION\_}!sub\_model\_ZSR\_aerosol\_water.c@{sub\_model\_ZSR\_aerosol\_water.c}}
 \doxysubsubsection{\texorpdfstring{EQSAM\_NUM\_ION\_}{EQSAM\_NUM\_ION\_}}
-{\footnotesize\ttfamily \#define EQSAM\+\_\+\+NUM\+\_\+\+ION\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 1\mbox{]})}
+{\footnotesize\ttfamily \#define EQSAM\+\_\+\+NUM\+\_\+\+ION\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 1\mbox{]})}
 
 
 
@@ -221,7 +215,7 @@ Definition at line \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_source
 \index{sub\_model\_ZSR\_aerosol\_water.c@{sub\_model\_ZSR\_aerosol\_water.c}!EQSAM\_NW\_@{EQSAM\_NW\_}}
 \index{EQSAM\_NW\_@{EQSAM\_NW\_}!sub\_model\_ZSR\_aerosol\_water.c@{sub\_model\_ZSR\_aerosol\_water.c}}
 \doxysubsubsection{\texorpdfstring{EQSAM\_NW\_}{EQSAM\_NW\_}}
-{\footnotesize\ttfamily \#define EQSAM\+\_\+\+NW\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a2c3304509ffdd8f8e2bd59c37a76af69}{PAIR\+\_\+\+FLOAT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x)\mbox{]})}
+{\footnotesize\ttfamily \#define EQSAM\+\_\+\+NW\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a2c3304509ffdd8f8e2bd59c37a76af69}{PAIR\+\_\+\+FLOAT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x)\mbox{]})}
 
 
 
@@ -231,7 +225,7 @@ Definition at line \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_source
 \index{sub\_model\_ZSR\_aerosol\_water.c@{sub\_model\_ZSR\_aerosol\_water.c}!EQSAM\_ZW\_@{EQSAM\_ZW\_}}
 \index{EQSAM\_ZW\_@{EQSAM\_ZW\_}!sub\_model\_ZSR\_aerosol\_water.c@{sub\_model\_ZSR\_aerosol\_water.c}}
 \doxysubsubsection{\texorpdfstring{EQSAM\_ZW\_}{EQSAM\_ZW\_}}
-{\footnotesize\ttfamily \#define EQSAM\+\_\+\+ZW\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a2c3304509ffdd8f8e2bd59c37a76af69}{PAIR\+\_\+\+FLOAT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 1\mbox{]})}
+{\footnotesize\ttfamily \#define EQSAM\+\_\+\+ZW\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a2c3304509ffdd8f8e2bd59c37a76af69}{PAIR\+\_\+\+FLOAT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 1\mbox{]})}
 
 
 
@@ -271,7 +265,7 @@ Definition at line \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_source
 \index{sub\_model\_ZSR\_aerosol\_water.c@{sub\_model\_ZSR\_aerosol\_water.c}!JACOB\_ANION\_ID\_@{JACOB\_ANION\_ID\_}}
 \index{JACOB\_ANION\_ID\_@{JACOB\_ANION\_ID\_}!sub\_model\_ZSR\_aerosol\_water.c@{sub\_model\_ZSR\_aerosol\_water.c}}
 \doxysubsubsection{\texorpdfstring{JACOB\_ANION\_ID\_}{JACOB\_ANION\_ID\_}}
-{\footnotesize\ttfamily \#define JACOB\+\_\+\+ANION\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 4\mbox{]})}
+{\footnotesize\ttfamily \#define JACOB\+\_\+\+ANION\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 4\mbox{]})}
 
 
 
@@ -281,7 +275,7 @@ Definition at line \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_source
 \index{sub\_model\_ZSR\_aerosol\_water.c@{sub\_model\_ZSR\_aerosol\_water.c}!JACOB\_ANION\_JAC\_ID\_@{JACOB\_ANION\_JAC\_ID\_}}
 \index{JACOB\_ANION\_JAC\_ID\_@{JACOB\_ANION\_JAC\_ID\_}!sub\_model\_ZSR\_aerosol\_water.c@{sub\_model\_ZSR\_aerosol\_water.c}}
 \doxysubsubsection{\texorpdfstring{JACOB\_ANION\_JAC\_ID\_}{JACOB\_ANION\_JAC\_ID\_}}
-{\footnotesize\ttfamily \#define JACOB\+\_\+\+ANION\+\_\+\+JAC\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{p,  }\item[{}]{x }\end{DoxyParamCaption})~  int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 6 + 2 $\ast$ \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_aff1191174604af4c86c622f98cd18c17}{NUM\+\_\+\+PHASE\+\_\+}} + p\mbox{]}}
+{\footnotesize\ttfamily \#define JACOB\+\_\+\+ANION\+\_\+\+JAC\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{p,  }\item[{}]{x }\end{DoxyParamCaption})~  int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 6 + 2 $\ast$ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\+\_\+\+PHASE\+\_\+}} + p\mbox{]}}
 
 
 
@@ -291,7 +285,7 @@ Definition at line \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_source
 \index{sub\_model\_ZSR\_aerosol\_water.c@{sub\_model\_ZSR\_aerosol\_water.c}!JACOB\_ANION\_MW\_@{JACOB\_ANION\_MW\_}}
 \index{JACOB\_ANION\_MW\_@{JACOB\_ANION\_MW\_}!sub\_model\_ZSR\_aerosol\_water.c@{sub\_model\_ZSR\_aerosol\_water.c}}
 \doxysubsubsection{\texorpdfstring{JACOB\_ANION\_MW\_}{JACOB\_ANION\_MW\_}}
-{\footnotesize\ttfamily \#define JACOB\+\_\+\+ANION\+\_\+\+MW\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a2c3304509ffdd8f8e2bd59c37a76af69}{PAIR\+\_\+\+FLOAT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 2\mbox{]})}
+{\footnotesize\ttfamily \#define JACOB\+\_\+\+ANION\+\_\+\+MW\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a2c3304509ffdd8f8e2bd59c37a76af69}{PAIR\+\_\+\+FLOAT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 2\mbox{]})}
 
 
 
@@ -301,7 +295,7 @@ Definition at line \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_source
 \index{sub\_model\_ZSR\_aerosol\_water.c@{sub\_model\_ZSR\_aerosol\_water.c}!JACOB\_CATION\_ID\_@{JACOB\_CATION\_ID\_}}
 \index{JACOB\_CATION\_ID\_@{JACOB\_CATION\_ID\_}!sub\_model\_ZSR\_aerosol\_water.c@{sub\_model\_ZSR\_aerosol\_water.c}}
 \doxysubsubsection{\texorpdfstring{JACOB\_CATION\_ID\_}{JACOB\_CATION\_ID\_}}
-{\footnotesize\ttfamily \#define JACOB\+\_\+\+CATION\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 3\mbox{]})}
+{\footnotesize\ttfamily \#define JACOB\+\_\+\+CATION\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 3\mbox{]})}
 
 
 
@@ -311,7 +305,7 @@ Definition at line \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_source
 \index{sub\_model\_ZSR\_aerosol\_water.c@{sub\_model\_ZSR\_aerosol\_water.c}!JACOB\_CATION\_JAC\_ID\_@{JACOB\_CATION\_JAC\_ID\_}}
 \index{JACOB\_CATION\_JAC\_ID\_@{JACOB\_CATION\_JAC\_ID\_}!sub\_model\_ZSR\_aerosol\_water.c@{sub\_model\_ZSR\_aerosol\_water.c}}
 \doxysubsubsection{\texorpdfstring{JACOB\_CATION\_JAC\_ID\_}{JACOB\_CATION\_JAC\_ID\_}}
-{\footnotesize\ttfamily \#define JACOB\+\_\+\+CATION\+\_\+\+JAC\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{p,  }\item[{}]{x }\end{DoxyParamCaption})~  int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 6 + \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_aff1191174604af4c86c622f98cd18c17}{NUM\+\_\+\+PHASE\+\_\+}} + p\mbox{]}}
+{\footnotesize\ttfamily \#define JACOB\+\_\+\+CATION\+\_\+\+JAC\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{p,  }\item[{}]{x }\end{DoxyParamCaption})~  int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 6 + \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\+\_\+\+PHASE\+\_\+}} + p\mbox{]}}
 
 
 
@@ -321,7 +315,7 @@ Definition at line \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_source
 \index{sub\_model\_ZSR\_aerosol\_water.c@{sub\_model\_ZSR\_aerosol\_water.c}!JACOB\_CATION\_MW\_@{JACOB\_CATION\_MW\_}}
 \index{JACOB\_CATION\_MW\_@{JACOB\_CATION\_MW\_}!sub\_model\_ZSR\_aerosol\_water.c@{sub\_model\_ZSR\_aerosol\_water.c}}
 \doxysubsubsection{\texorpdfstring{JACOB\_CATION\_MW\_}{JACOB\_CATION\_MW\_}}
-{\footnotesize\ttfamily \#define JACOB\+\_\+\+CATION\+\_\+\+MW\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a2c3304509ffdd8f8e2bd59c37a76af69}{PAIR\+\_\+\+FLOAT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 1\mbox{]})}
+{\footnotesize\ttfamily \#define JACOB\+\_\+\+CATION\+\_\+\+MW\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a2c3304509ffdd8f8e2bd59c37a76af69}{PAIR\+\_\+\+FLOAT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 1\mbox{]})}
 
 
 
@@ -331,7 +325,7 @@ Definition at line \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_source
 \index{sub\_model\_ZSR\_aerosol\_water.c@{sub\_model\_ZSR\_aerosol\_water.c}!JACOB\_GAS\_WATER\_JAC\_ID\_@{JACOB\_GAS\_WATER\_JAC\_ID\_}}
 \index{JACOB\_GAS\_WATER\_JAC\_ID\_@{JACOB\_GAS\_WATER\_JAC\_ID\_}!sub\_model\_ZSR\_aerosol\_water.c@{sub\_model\_ZSR\_aerosol\_water.c}}
 \doxysubsubsection{\texorpdfstring{JACOB\_GAS\_WATER\_JAC\_ID\_}{JACOB\_GAS\_WATER\_JAC\_ID\_}}
-{\footnotesize\ttfamily \#define JACOB\+\_\+\+GAS\+\_\+\+WATER\+\_\+\+JAC\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{p,  }\item[{}]{x }\end{DoxyParamCaption})~int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 6 + p\mbox{]}}
+{\footnotesize\ttfamily \#define JACOB\+\_\+\+GAS\+\_\+\+WATER\+\_\+\+JAC\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{p,  }\item[{}]{x }\end{DoxyParamCaption})~int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 6 + p\mbox{]}}
 
 
 
@@ -341,7 +335,7 @@ Definition at line \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_source
 \index{sub\_model\_ZSR\_aerosol\_water.c@{sub\_model\_ZSR\_aerosol\_water.c}!JACOB\_low\_RH\_@{JACOB\_low\_RH\_}}
 \index{JACOB\_low\_RH\_@{JACOB\_low\_RH\_}!sub\_model\_ZSR\_aerosol\_water.c@{sub\_model\_ZSR\_aerosol\_water.c}}
 \doxysubsubsection{\texorpdfstring{JACOB\_low\_RH\_}{JACOB\_low\_RH\_}}
-{\footnotesize\ttfamily \#define JACOB\+\_\+low\+\_\+\+RH\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a2c3304509ffdd8f8e2bd59c37a76af69}{PAIR\+\_\+\+FLOAT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x)\mbox{]})}
+{\footnotesize\ttfamily \#define JACOB\+\_\+low\+\_\+\+RH\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a2c3304509ffdd8f8e2bd59c37a76af69}{PAIR\+\_\+\+FLOAT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x)\mbox{]})}
 
 
 
@@ -351,7 +345,7 @@ Definition at line \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_source
 \index{sub\_model\_ZSR\_aerosol\_water.c@{sub\_model\_ZSR\_aerosol\_water.c}!JACOB\_NUM\_ANION\_@{JACOB\_NUM\_ANION\_}}
 \index{JACOB\_NUM\_ANION\_@{JACOB\_NUM\_ANION\_}!sub\_model\_ZSR\_aerosol\_water.c@{sub\_model\_ZSR\_aerosol\_water.c}}
 \doxysubsubsection{\texorpdfstring{JACOB\_NUM\_ANION\_}{JACOB\_NUM\_ANION\_}}
-{\footnotesize\ttfamily \#define JACOB\+\_\+\+NUM\+\_\+\+ANION\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 2\mbox{]})}
+{\footnotesize\ttfamily \#define JACOB\+\_\+\+NUM\+\_\+\+ANION\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 2\mbox{]})}
 
 
 
@@ -361,7 +355,7 @@ Definition at line \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_source
 \index{sub\_model\_ZSR\_aerosol\_water.c@{sub\_model\_ZSR\_aerosol\_water.c}!JACOB\_NUM\_CATION\_@{JACOB\_NUM\_CATION\_}}
 \index{JACOB\_NUM\_CATION\_@{JACOB\_NUM\_CATION\_}!sub\_model\_ZSR\_aerosol\_water.c@{sub\_model\_ZSR\_aerosol\_water.c}}
 \doxysubsubsection{\texorpdfstring{JACOB\_NUM\_CATION\_}{JACOB\_NUM\_CATION\_}}
-{\footnotesize\ttfamily \#define JACOB\+\_\+\+NUM\+\_\+\+CATION\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 1\mbox{]})}
+{\footnotesize\ttfamily \#define JACOB\+\_\+\+NUM\+\_\+\+CATION\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 1\mbox{]})}
 
 
 
@@ -371,7 +365,7 @@ Definition at line \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_source
 \index{sub\_model\_ZSR\_aerosol\_water.c@{sub\_model\_ZSR\_aerosol\_water.c}!JACOB\_NUM\_Y\_@{JACOB\_NUM\_Y\_}}
 \index{JACOB\_NUM\_Y\_@{JACOB\_NUM\_Y\_}!sub\_model\_ZSR\_aerosol\_water.c@{sub\_model\_ZSR\_aerosol\_water.c}}
 \doxysubsubsection{\texorpdfstring{JACOB\_NUM\_Y\_}{JACOB\_NUM\_Y\_}}
-{\footnotesize\ttfamily \#define JACOB\+\_\+\+NUM\+\_\+\+Y\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 5\mbox{]})}
+{\footnotesize\ttfamily \#define JACOB\+\_\+\+NUM\+\_\+\+Y\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 5\mbox{]})}
 
 
 
@@ -381,7 +375,7 @@ Definition at line \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_source
 \index{sub\_model\_ZSR\_aerosol\_water.c@{sub\_model\_ZSR\_aerosol\_water.c}!JACOB\_Y\_@{JACOB\_Y\_}}
 \index{JACOB\_Y\_@{JACOB\_Y\_}!sub\_model\_ZSR\_aerosol\_water.c@{sub\_model\_ZSR\_aerosol\_water.c}}
 \doxysubsubsection{\texorpdfstring{JACOB\_Y\_}{JACOB\_Y\_}}
-{\footnotesize\ttfamily \#define JACOB\+\_\+\+Y\+\_\+(\begin{DoxyParamCaption}\item[{}]{x,  }\item[{}]{y }\end{DoxyParamCaption})~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a2c3304509ffdd8f8e2bd59c37a76af69}{PAIR\+\_\+\+FLOAT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 3 + y\mbox{]})}
+{\footnotesize\ttfamily \#define JACOB\+\_\+\+Y\+\_\+(\begin{DoxyParamCaption}\item[{}]{x,  }\item[{}]{y }\end{DoxyParamCaption})~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a2c3304509ffdd8f8e2bd59c37a76af69}{PAIR\+\_\+\+FLOAT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 3 + y\mbox{]})}
 
 
 
@@ -451,7 +445,7 @@ Definition at line \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_source
 \index{sub\_model\_ZSR\_aerosol\_water.c@{sub\_model\_ZSR\_aerosol\_water.c}!PAIR\_FLOAT\_PARAM\_LOC\_@{PAIR\_FLOAT\_PARAM\_LOC\_}}
 \index{PAIR\_FLOAT\_PARAM\_LOC\_@{PAIR\_FLOAT\_PARAM\_LOC\_}!sub\_model\_ZSR\_aerosol\_water.c@{sub\_model\_ZSR\_aerosol\_water.c}}
 \doxysubsubsection{\texorpdfstring{PAIR\_FLOAT\_PARAM\_LOC\_}{PAIR\_FLOAT\_PARAM\_LOC\_}}
-{\footnotesize\ttfamily \#define PAIR\+\_\+\+FLOAT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~  (int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_aff1191174604af4c86c622f98cd18c17}{NUM\+\_\+\+PHASE\+\_\+}} + \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a29efe51ff25369b8646f3e0ddaabb0fe}{NUM\+\_\+\+ION\+\_\+\+PAIR\+\_\+}} + x\mbox{]} -\/ 1)}
+{\footnotesize\ttfamily \#define PAIR\+\_\+\+FLOAT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~  (int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\+\_\+\+PHASE\+\_\+}} + \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a29efe51ff25369b8646f3e0ddaabb0fe}{NUM\+\_\+\+ION\+\_\+\+PAIR\+\_\+}} + x\mbox{]} -\/ 1)}
 
 
 
@@ -461,7 +455,7 @@ Definition at line \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_source
 \index{sub\_model\_ZSR\_aerosol\_water.c@{sub\_model\_ZSR\_aerosol\_water.c}!PAIR\_INT\_PARAM\_LOC\_@{PAIR\_INT\_PARAM\_LOC\_}}
 \index{PAIR\_INT\_PARAM\_LOC\_@{PAIR\_INT\_PARAM\_LOC\_}!sub\_model\_ZSR\_aerosol\_water.c@{sub\_model\_ZSR\_aerosol\_water.c}}
 \doxysubsubsection{\texorpdfstring{PAIR\_INT\_PARAM\_LOC\_}{PAIR\_INT\_PARAM\_LOC\_}}
-{\footnotesize\ttfamily \#define PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_aff1191174604af4c86c622f98cd18c17}{NUM\+\_\+\+PHASE\+\_\+}} + x\mbox{]} -\/ 1)}
+{\footnotesize\ttfamily \#define PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\+\_\+\+PHASE\+\_\+}} + x\mbox{]} -\/ 1)}
 
 
 
@@ -471,7 +465,7 @@ Definition at line \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_source
 \index{sub\_model\_ZSR\_aerosol\_water.c@{sub\_model\_ZSR\_aerosol\_water.c}!PHASE\_ID\_@{PHASE\_ID\_}}
 \index{PHASE\_ID\_@{PHASE\_ID\_}!sub\_model\_ZSR\_aerosol\_water.c@{sub\_model\_ZSR\_aerosol\_water.c}}
 \doxysubsubsection{\texorpdfstring{PHASE\_ID\_}{PHASE\_ID\_}}
-{\footnotesize\ttfamily \#define PHASE\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{p }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + p\mbox{]} -\/ 1)}
+{\footnotesize\ttfamily \#define PHASE\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{p }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + p\mbox{]} -\/ 1)}
 
 
 
@@ -511,7 +505,7 @@ Definition at line \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_source
 \index{sub\_model\_ZSR\_aerosol\_water.c@{sub\_model\_ZSR\_aerosol\_water.c}!TYPE\_@{TYPE\_}}
 \index{TYPE\_@{TYPE\_}!sub\_model\_ZSR\_aerosol\_water.c@{sub\_model\_ZSR\_aerosol\_water.c}}
 \doxysubsubsection{\texorpdfstring{TYPE\_}{TYPE\_}}
-{\footnotesize\ttfamily \#define TYPE\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x)\mbox{]})}
+{\footnotesize\ttfamily \#define TYPE\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x)\mbox{]})}
 
 
 
@@ -546,13 +540,7 @@ Do pre-\/derivative calculations.
 Definition at line \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_source_l00216}{216}} of file \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_source}{sub\+\_\+model\+\_\+\+ZSR\+\_\+aerosol\+\_\+water.\+c}}.
 
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{sub__model___z_s_r__aerosol__water_8c_a6639a32646d84e02917b64167f36ea89_icgraph}
-\end{center}
-\end{figure}
+% FIG 1
 \mbox{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_aa6bf886e4a9fadb02913dab07e19018b}\label{sub__model___z_s_r__aerosol__water_8c_aa6bf886e4a9fadb02913dab07e19018b}} 
 \index{sub\_model\_ZSR\_aerosol\_water.c@{sub\_model\_ZSR\_aerosol\_water.c}!sub\_model\_ZSR\_aerosol\_water\_get\_jac\_contrib@{sub\_model\_ZSR\_aerosol\_water\_get\_jac\_contrib}}
 \index{sub\_model\_ZSR\_aerosol\_water\_get\_jac\_contrib@{sub\_model\_ZSR\_aerosol\_water\_get\_jac\_contrib}!sub\_model\_ZSR\_aerosol\_water.c@{sub\_model\_ZSR\_aerosol\_water.c}}
@@ -583,13 +571,7 @@ Add contributions to the \mbox{\hyperlink{struct_jacobian}{Jacobian}} from deriv
 Definition at line \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_source_l00314}{314}} of file \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_source}{sub\+\_\+model\+\_\+\+ZSR\+\_\+aerosol\+\_\+water.\+c}}.
 
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{sub__model___z_s_r__aerosol__water_8c_aa6bf886e4a9fadb02913dab07e19018b_icgraph}
-\end{center}
-\end{figure}
+% FIG 2
 \mbox{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_a0c47a7f4b91fa19f71a1a69237a6754e}\label{sub__model___z_s_r__aerosol__water_8c_a0c47a7f4b91fa19f71a1a69237a6754e}} 
 \index{sub\_model\_ZSR\_aerosol\_water.c@{sub\_model\_ZSR\_aerosol\_water.c}!sub\_model\_ZSR\_aerosol\_water\_get\_used\_jac\_elem@{sub\_model\_ZSR\_aerosol\_water\_get\_used\_jac\_elem}}
 \index{sub\_model\_ZSR\_aerosol\_water\_get\_used\_jac\_elem@{sub\_model\_ZSR\_aerosol\_water\_get\_used\_jac\_elem}!sub\_model\_ZSR\_aerosol\_water.c@{sub\_model\_ZSR\_aerosol\_water.c}}
@@ -616,21 +598,9 @@ ZSR aerosol water sub models are assumed to be at equilibrium
 Definition at line \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_source_l00081}{81}} of file \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_source}{sub\+\_\+model\+\_\+\+ZSR\+\_\+aerosol\+\_\+water.\+c}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{sub__model___z_s_r__aerosol__water_8c_a0c47a7f4b91fa19f71a1a69237a6754e_cgraph}
-\end{center}
-\end{figure}
+% FIG 3
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{sub__model___z_s_r__aerosol__water_8c_a0c47a7f4b91fa19f71a1a69237a6754e_icgraph}
-\end{center}
-\end{figure}
+% FIG 4
 \mbox{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_a74a95ee9cc01c0905493fcb19e00c8b0}\label{sub__model___z_s_r__aerosol__water_8c_a74a95ee9cc01c0905493fcb19e00c8b0}} 
 \index{sub\_model\_ZSR\_aerosol\_water.c@{sub\_model\_ZSR\_aerosol\_water.c}!sub\_model\_ZSR\_aerosol\_water\_print@{sub\_model\_ZSR\_aerosol\_water\_print}}
 \index{sub\_model\_ZSR\_aerosol\_water\_print@{sub\_model\_ZSR\_aerosol\_water\_print}!sub\_model\_ZSR\_aerosol\_water.c@{sub\_model\_ZSR\_aerosol\_water.c}}
@@ -653,13 +623,7 @@ Print the ZSR Aerosol Water sub model parameters.
 Definition at line \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_source_l00445}{445}} of file \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_source}{sub\+\_\+model\+\_\+\+ZSR\+\_\+aerosol\+\_\+water.\+c}}.
 
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{sub__model___z_s_r__aerosol__water_8c_a74a95ee9cc01c0905493fcb19e00c8b0_icgraph}
-\end{center}
-\end{figure}
+% FIG 5
 \mbox{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_a915b2885008bfb4bd6c9c37efd6e8d82}\label{sub__model___z_s_r__aerosol__water_8c_a915b2885008bfb4bd6c9c37efd6e8d82}} 
 \index{sub\_model\_ZSR\_aerosol\_water.c@{sub\_model\_ZSR\_aerosol\_water.c}!sub\_model\_ZSR\_aerosol\_water\_update\_env\_state@{sub\_model\_ZSR\_aerosol\_water\_update\_env\_state}}
 \index{sub\_model\_ZSR\_aerosol\_water\_update\_env\_state@{sub\_model\_ZSR\_aerosol\_water\_update\_env\_state}!sub\_model\_ZSR\_aerosol\_water.c@{sub\_model\_ZSR\_aerosol\_water.c}}
@@ -686,13 +650,7 @@ Update sub model data for new environmental conditions.
 Definition at line \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_source_l00189}{189}} of file \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_source}{sub\+\_\+model\+\_\+\+ZSR\+\_\+aerosol\+\_\+water.\+c}}.
 
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{sub__model___z_s_r__aerosol__water_8c_a915b2885008bfb4bd6c9c37efd6e8d82_icgraph}
-\end{center}
-\end{figure}
+% FIG 6
 \mbox{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_af42c83e6bae3321e17f4bf21620e36ed}\label{sub__model___z_s_r__aerosol__water_8c_af42c83e6bae3321e17f4bf21620e36ed}} 
 \index{sub\_model\_ZSR\_aerosol\_water.c@{sub\_model\_ZSR\_aerosol\_water.c}!sub\_model\_ZSR\_aerosol\_water\_update\_ids@{sub\_model\_ZSR\_aerosol\_water\_update\_ids}}
 \index{sub\_model\_ZSR\_aerosol\_water\_update\_ids@{sub\_model\_ZSR\_aerosol\_water\_update\_ids}!sub\_model\_ZSR\_aerosol\_water.c@{sub\_model\_ZSR\_aerosol\_water.c}}
@@ -721,18 +679,6 @@ ZSR aerosol water sub models are assumed to be at equilibrium
 Definition at line \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_source_l00133}{133}} of file \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_source}{sub\+\_\+model\+\_\+\+ZSR\+\_\+aerosol\+\_\+water.\+c}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{sub__model___z_s_r__aerosol__water_8c_af42c83e6bae3321e17f4bf21620e36ed_cgraph}
-\end{center}
-\end{figure}
+% FIG 7
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{sub__model___z_s_r__aerosol__water_8c_af42c83e6bae3321e17f4bf21620e36ed_icgraph}
-\end{center}
-\end{figure}
+% FIG 8

@@ -8,27 +8,8 @@ Abstract sub-\/model data type.
 
 
 Inheritance diagram for camp\+\_\+sub\+\_\+model\+\_\+data\+::sub\+\_\+model\+\_\+data\+\_\+t\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{structcamp__sub__model__data_1_1sub__model__data__t__inherit__graph}
-\end{center}
-\end{figure}
-\doxysubsection*{Public Attributes}
-\begin{DoxyCompactItemize}
-\item 
-character(len=\+:), allocatable, public \mbox{\hyperlink{structcamp__sub__model__data_1_1sub__model__data__t_a499a11de7dc7b42d2fb5e83e7bae8094}{model\+\_\+name}}
-\begin{DoxyCompactList}\small\item\em Name of the sub-\/model. \end{DoxyCompactList}\item 
-type(\mbox{\hyperlink{structcamp__property_1_1property__t}{property\+\_\+t}}), pointer, public \mbox{\hyperlink{structcamp__sub__model__data_1_1sub__model__data__t_a75ddb7997b5cba90a8b86212c4888142}{property\+\_\+set}} =$>$ null()
-\begin{DoxyCompactList}\small\item\em Sub model parameters. These will be available during initialization, but not during integration. All information required by the sub model during solving must be saved by the extending type to the condensed data arrays. \end{DoxyCompactList}\item 
-real(kind=dp), dimension(\+:), allocatable, public \mbox{\hyperlink{structcamp__sub__model__data_1_1sub__model__data__t_a6106b6e1f15339675b7ea6661b85385c}{condensed\+\_\+data\+\_\+real}}
-\begin{DoxyCompactList}\small\item\em Condensed sub-\/model data. These arrays will be available during integration, and should contain any information required by the sub-\/model that cannot be obtained from the \mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t}{camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t}} object. (floating point) \end{DoxyCompactList}\item 
-integer(kind=i\+\_\+kind), dimension(\+:), allocatable, public \mbox{\hyperlink{structcamp__sub__model__data_1_1sub__model__data__t_aa0da17561e069d075d8217ac90895343}{condensed\+\_\+data\+\_\+int}}
-\begin{DoxyCompactList}\small\item\em Condensed sub-\/model data. These arrays will be available during integration, and should contain any information required by the sub-\/model that cannot be obtained from the \mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t}{camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t}} object. (integer) \end{DoxyCompactList}\item 
-integer(kind=i\+\_\+kind), public \mbox{\hyperlink{structcamp__sub__model__data_1_1sub__model__data__t_a1a0f3eabd904527f59d102278c425484}{num\+\_\+env\+\_\+params}} = 0
-\begin{DoxyCompactList}\small\item\em Number of environment-\/dependent parameters These are parameters that need updated when environmental conditions change. \end{DoxyCompactList}\end{DoxyCompactItemize}
-\doxysubsection*{Private Member Functions}
+% FIG 0
+\doxysubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
 procedure(\mbox{\hyperlink{interfacecamp__sub__model__data_1_1initialize}{initialize}}), deferred \mbox{\hyperlink{structcamp__sub__model__data_1_1sub__model__data__t_aea5074bd24aa43f23879a80ad08b2fcd}{initialize}}
@@ -45,8 +26,21 @@ procedure \mbox{\hyperlink{structcamp__sub__model__data_1_1sub__model__data__t_a
 \begin{DoxyCompactList}\small\item\em Unpacks the sub-\/model from the buffer, advancing position. \end{DoxyCompactList}\item 
 procedure \mbox{\hyperlink{structcamp__sub__model__data_1_1sub__model__data__t_a1eea0d984209f7fb523992473ca629a8}{load}}
 \begin{DoxyCompactList}\small\item\em Load data from an input file. \end{DoxyCompactList}\item 
-procedure \mbox{\hyperlink{structcamp__sub__model__data_1_1sub__model__data__t_af60e81fcd2ae8896f71d802115323d3a}{print}} =$>$ \mbox{\hyperlink{namespacecamp__sub__model__data_abd83a6e9b4f2f32c7060654bfb84c73e}{do\+\_\+print}}
+procedure \mbox{\hyperlink{structcamp__sub__model__data_1_1sub__model__data__t_af60e81fcd2ae8896f71d802115323d3a}{print}} =$>$ \mbox{\hyperlink{namespacecamp__property_a1d1ce2cf998f2e6d318ef5877c4ab283}{do\+\_\+print}}
 \begin{DoxyCompactList}\small\item\em Print the sub-\/model data. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+character(len=\+:), allocatable, public \mbox{\hyperlink{structcamp__sub__model__data_1_1sub__model__data__t_a499a11de7dc7b42d2fb5e83e7bae8094}{model\+\_\+name}}
+\begin{DoxyCompactList}\small\item\em Name of the sub-\/model. \end{DoxyCompactList}\item 
+type(\mbox{\hyperlink{structcamp__property_1_1property__t}{property\+\_\+t}}), pointer, public \mbox{\hyperlink{structcamp__sub__model__data_1_1sub__model__data__t_a75ddb7997b5cba90a8b86212c4888142}{property\+\_\+set}} =$>$ null()
+\begin{DoxyCompactList}\small\item\em Sub model parameters. These will be available during initialization, but not during integration. All information required by the sub model during solving must be saved by the extending type to the condensed data arrays. \end{DoxyCompactList}\item 
+real(kind=dp), dimension(\+:), allocatable, public \mbox{\hyperlink{structcamp__sub__model__data_1_1sub__model__data__t_a6106b6e1f15339675b7ea6661b85385c}{condensed\+\_\+data\+\_\+real}}
+\begin{DoxyCompactList}\small\item\em Condensed sub-\/model data. These arrays will be available during integration, and should contain any information required by the sub-\/model that cannot be obtained from the \mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t}{camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t}} object. (floating point) \end{DoxyCompactList}\item 
+integer(kind=i\+\_\+kind), dimension(\+:), allocatable, public \mbox{\hyperlink{structcamp__sub__model__data_1_1sub__model__data__t_aa0da17561e069d075d8217ac90895343}{condensed\+\_\+data\+\_\+int}}
+\begin{DoxyCompactList}\small\item\em Condensed sub-\/model data. These arrays will be available during integration, and should contain any information required by the sub-\/model that cannot be obtained from the \mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t}{camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t}} object. (integer) \end{DoxyCompactList}\item 
+integer(kind=i\+\_\+kind), public \mbox{\hyperlink{structcamp__sub__model__data_1_1sub__model__data__t_a1a0f3eabd904527f59d102278c425484}{num\+\_\+env\+\_\+params}} = 0
+\begin{DoxyCompactList}\small\item\em Number of environment-\/dependent parameters These are parameters that need updated when environmental conditions change. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
@@ -65,7 +59,7 @@ Definition at line \mbox{\hyperlink{sub__model__data_8_f90_source_l00052}{52}} o
 \index{camp\_sub\_model\_data::sub\_model\_data\_t@{camp\_sub\_model\_data::sub\_model\_data\_t}!bin\_pack@{bin\_pack}}
 \index{bin\_pack@{bin\_pack}!camp\_sub\_model\_data::sub\_model\_data\_t@{camp\_sub\_model\_data::sub\_model\_data\_t}}
 \doxysubsubsection{\texorpdfstring{bin\_pack()}{bin\_pack()}}
-{\footnotesize\ttfamily procedure camp\+\_\+sub\+\_\+model\+\_\+data\+::sub\+\_\+model\+\_\+data\+\_\+t\+::bin\+\_\+pack\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily procedure camp\+\_\+sub\+\_\+model\+\_\+data\+::sub\+\_\+model\+\_\+data\+\_\+t\+::bin\+\_\+pack}
 
 
 
@@ -79,7 +73,7 @@ Definition at line \mbox{\hyperlink{sub__model__data_8_f90_source_l00092}{92}} o
 \index{camp\_sub\_model\_data::sub\_model\_data\_t@{camp\_sub\_model\_data::sub\_model\_data\_t}!bin\_unpack@{bin\_unpack}}
 \index{bin\_unpack@{bin\_unpack}!camp\_sub\_model\_data::sub\_model\_data\_t@{camp\_sub\_model\_data::sub\_model\_data\_t}}
 \doxysubsubsection{\texorpdfstring{bin\_unpack()}{bin\_unpack()}}
-{\footnotesize\ttfamily procedure camp\+\_\+sub\+\_\+model\+\_\+data\+::sub\+\_\+model\+\_\+data\+\_\+t\+::bin\+\_\+unpack\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily procedure camp\+\_\+sub\+\_\+model\+\_\+data\+::sub\+\_\+model\+\_\+data\+\_\+t\+::bin\+\_\+unpack}
 
 
 
@@ -93,7 +87,7 @@ Definition at line \mbox{\hyperlink{sub__model__data_8_f90_source_l00094}{94}} o
 \index{camp\_sub\_model\_data::sub\_model\_data\_t@{camp\_sub\_model\_data::sub\_model\_data\_t}!initialize@{initialize}}
 \index{initialize@{initialize}!camp\_sub\_model\_data::sub\_model\_data\_t@{camp\_sub\_model\_data::sub\_model\_data\_t}}
 \doxysubsubsection{\texorpdfstring{initialize()}{initialize()}}
-{\footnotesize\ttfamily procedure(\mbox{\hyperlink{interfacecamp__sub__model__data_1_1initialize}{initialize}}), deferred camp\+\_\+sub\+\_\+model\+\_\+data\+::sub\+\_\+model\+\_\+data\+\_\+t\+::initialize\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily procedure(\mbox{\hyperlink{interfacecamp__sub__model__data_1_1initialize}{initialize}}), deferred camp\+\_\+sub\+\_\+model\+\_\+data\+::sub\+\_\+model\+\_\+data\+\_\+t\+::initialize}
 
 
 
@@ -107,7 +101,7 @@ Definition at line \mbox{\hyperlink{sub__model__data_8_f90_source_l00082}{82}} o
 \index{camp\_sub\_model\_data::sub\_model\_data\_t@{camp\_sub\_model\_data::sub\_model\_data\_t}!load@{load}}
 \index{load@{load}!camp\_sub\_model\_data::sub\_model\_data\_t@{camp\_sub\_model\_data::sub\_model\_data\_t}}
 \doxysubsubsection{\texorpdfstring{load()}{load()}}
-{\footnotesize\ttfamily procedure camp\+\_\+sub\+\_\+model\+\_\+data\+::sub\+\_\+model\+\_\+data\+\_\+t\+::load\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily procedure camp\+\_\+sub\+\_\+model\+\_\+data\+::sub\+\_\+model\+\_\+data\+\_\+t\+::load}
 
 
 
@@ -121,7 +115,7 @@ Definition at line \mbox{\hyperlink{sub__model__data_8_f90_source_l00096}{96}} o
 \index{camp\_sub\_model\_data::sub\_model\_data\_t@{camp\_sub\_model\_data::sub\_model\_data\_t}!name@{name}}
 \index{name@{name}!camp\_sub\_model\_data::sub\_model\_data\_t@{camp\_sub\_model\_data::sub\_model\_data\_t}}
 \doxysubsubsection{\texorpdfstring{name()}{name()}}
-{\footnotesize\ttfamily procedure camp\+\_\+sub\+\_\+model\+\_\+data\+::sub\+\_\+model\+\_\+data\+\_\+t\+::name\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily procedure camp\+\_\+sub\+\_\+model\+\_\+data\+::sub\+\_\+model\+\_\+data\+\_\+t\+::name}
 
 
 
@@ -135,7 +129,7 @@ Definition at line \mbox{\hyperlink{sub__model__data_8_f90_source_l00088}{88}} o
 \index{camp\_sub\_model\_data::sub\_model\_data\_t@{camp\_sub\_model\_data::sub\_model\_data\_t}!pack\_size@{pack\_size}}
 \index{pack\_size@{pack\_size}!camp\_sub\_model\_data::sub\_model\_data\_t@{camp\_sub\_model\_data::sub\_model\_data\_t}}
 \doxysubsubsection{\texorpdfstring{pack\_size()}{pack\_size()}}
-{\footnotesize\ttfamily procedure camp\+\_\+sub\+\_\+model\+\_\+data\+::sub\+\_\+model\+\_\+data\+\_\+t\+::pack\+\_\+size\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily procedure camp\+\_\+sub\+\_\+model\+\_\+data\+::sub\+\_\+model\+\_\+data\+\_\+t\+::pack\+\_\+size}
 
 
 
@@ -149,7 +143,7 @@ Definition at line \mbox{\hyperlink{sub__model__data_8_f90_source_l00090}{90}} o
 \index{camp\_sub\_model\_data::sub\_model\_data\_t@{camp\_sub\_model\_data::sub\_model\_data\_t}!print@{print}}
 \index{print@{print}!camp\_sub\_model\_data::sub\_model\_data\_t@{camp\_sub\_model\_data::sub\_model\_data\_t}}
 \doxysubsubsection{\texorpdfstring{print()}{print()}}
-{\footnotesize\ttfamily procedure camp\+\_\+sub\+\_\+model\+\_\+data\+::sub\+\_\+model\+\_\+data\+\_\+t\+::print\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily procedure camp\+\_\+sub\+\_\+model\+\_\+data\+::sub\+\_\+model\+\_\+data\+\_\+t\+::print}
 
 
 
@@ -163,7 +157,7 @@ Definition at line \mbox{\hyperlink{sub__model__data_8_f90_source_l00098}{98}} o
 \index{camp\_sub\_model\_data::sub\_model\_data\_t@{camp\_sub\_model\_data::sub\_model\_data\_t}!priority@{priority}}
 \index{priority@{priority}!camp\_sub\_model\_data::sub\_model\_data\_t@{camp\_sub\_model\_data::sub\_model\_data\_t}}
 \doxysubsubsection{\texorpdfstring{priority()}{priority()}}
-{\footnotesize\ttfamily procedure(\mbox{\hyperlink{interfacecamp__sub__model__data_1_1priority}{priority}}), deferred camp\+\_\+sub\+\_\+model\+\_\+data\+::sub\+\_\+model\+\_\+data\+\_\+t\+::priority\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily procedure(\mbox{\hyperlink{interfacecamp__sub__model__data_1_1priority}{priority}}), deferred camp\+\_\+sub\+\_\+model\+\_\+data\+::sub\+\_\+model\+\_\+data\+\_\+t\+::priority}
 
 
 

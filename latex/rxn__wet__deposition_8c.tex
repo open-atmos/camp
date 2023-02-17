@@ -6,13 +6,7 @@ Wet deposition reaction solver functions.
 
 
 Include dependency graph for rxn\+\_\+wet\+\_\+deposition.\+c\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{rxn__wet__deposition_8c__incl}
-\end{center}
-\end{figure}
+% FIG 0
 \doxysubsection*{Macros}
 \begin{DoxyCompactItemize}
 \item 
@@ -36,11 +30,11 @@ Include dependency graph for rxn\+\_\+wet\+\_\+deposition.\+c\+:
 \item 
 \#define \mbox{\hyperlink{rxn__wet__deposition_8c_a1f68a3544ae39a7815cbb5c09dfdeff0}{NUM\+\_\+\+ENV\+\_\+\+PARAM\+\_\+}}~2
 \item 
-\#define \mbox{\hyperlink{rxn__wet__deposition_8c_a2ad682b58111b832427ffbe14ad0456b}{REACT\+\_\+}}(s)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + s\mbox{]} -\/ 1)
+\#define \mbox{\hyperlink{rxn__wet__deposition_8c_a2ad682b58111b832427ffbe14ad0456b}{REACT\+\_\+}}(s)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + s\mbox{]} -\/ 1)
 \item 
-\#define \mbox{\hyperlink{rxn__wet__deposition_8c_a9bddf5e7fb20588f83d13cfdc3a61e40}{DERIV\+\_\+\+ID\+\_\+}}(s)~int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a9a5c42fc20a0cc885faf74920b1f8281}{NUM\+\_\+\+SPEC\+\_\+}} + s\mbox{]}
+\#define \mbox{\hyperlink{rxn__wet__deposition_8c_a9bddf5e7fb20588f83d13cfdc3a61e40}{DERIV\+\_\+\+ID\+\_\+}}(s)~int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{rxn__wet__deposition_8c_a633b13446295bae13643bf30401199b4}{NUM\+\_\+\+SPEC\+\_\+}} + s\mbox{]}
 \item 
-\#define \mbox{\hyperlink{rxn__wet__deposition_8c_a0b740ccc4f77b017cbd76c8e3a040df6}{JAC\+\_\+\+ID\+\_\+}}(s)~int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 2 $\ast$ \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a9a5c42fc20a0cc885faf74920b1f8281}{NUM\+\_\+\+SPEC\+\_\+}} + s\mbox{]}
+\#define \mbox{\hyperlink{rxn__wet__deposition_8c_a0b740ccc4f77b017cbd76c8e3a040df6}{JAC\+\_\+\+ID\+\_\+}}(s)~int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 2 $\ast$ \mbox{\hyperlink{rxn__wet__deposition_8c_a633b13446295bae13643bf30401199b4}{NUM\+\_\+\+SPEC\+\_\+}} + s\mbox{]}
 \end{DoxyCompactItemize}
 \doxysubsection*{Functions}
 \begin{DoxyCompactItemize}
@@ -89,7 +83,7 @@ Definition at line \mbox{\hyperlink{rxn__wet__deposition_8c_source_l00024}{24}} 
 \index{rxn\_wet\_deposition.c@{rxn\_wet\_deposition.c}!DERIV\_ID\_@{DERIV\_ID\_}}
 \index{DERIV\_ID\_@{DERIV\_ID\_}!rxn\_wet\_deposition.c@{rxn\_wet\_deposition.c}}
 \doxysubsubsection{\texorpdfstring{DERIV\_ID\_}{DERIV\_ID\_}}
-{\footnotesize\ttfamily \#define DERIV\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{s }\end{DoxyParamCaption})~int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a9a5c42fc20a0cc885faf74920b1f8281}{NUM\+\_\+\+SPEC\+\_\+}} + s\mbox{]}}
+{\footnotesize\ttfamily \#define DERIV\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{s }\end{DoxyParamCaption})~int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{rxn__wet__deposition_8c_a633b13446295bae13643bf30401199b4}{NUM\+\_\+\+SPEC\+\_\+}} + s\mbox{]}}
 
 
 
@@ -99,7 +93,7 @@ Definition at line \mbox{\hyperlink{rxn__wet__deposition_8c_source_l00029}{29}} 
 \index{rxn\_wet\_deposition.c@{rxn\_wet\_deposition.c}!JAC\_ID\_@{JAC\_ID\_}}
 \index{JAC\_ID\_@{JAC\_ID\_}!rxn\_wet\_deposition.c@{rxn\_wet\_deposition.c}}
 \doxysubsubsection{\texorpdfstring{JAC\_ID\_}{JAC\_ID\_}}
-{\footnotesize\ttfamily \#define JAC\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{s }\end{DoxyParamCaption})~int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 2 $\ast$ \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a9a5c42fc20a0cc885faf74920b1f8281}{NUM\+\_\+\+SPEC\+\_\+}} + s\mbox{]}}
+{\footnotesize\ttfamily \#define JAC\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{s }\end{DoxyParamCaption})~int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 2 $\ast$ \mbox{\hyperlink{rxn__wet__deposition_8c_a633b13446295bae13643bf30401199b4}{NUM\+\_\+\+SPEC\+\_\+}} + s\mbox{]}}
 
 
 
@@ -169,7 +163,7 @@ Definition at line \mbox{\hyperlink{rxn__wet__deposition_8c_source_l00023}{23}} 
 \index{rxn\_wet\_deposition.c@{rxn\_wet\_deposition.c}!REACT\_@{REACT\_}}
 \index{REACT\_@{REACT\_}!rxn\_wet\_deposition.c@{rxn\_wet\_deposition.c}}
 \doxysubsubsection{\texorpdfstring{REACT\_}{REACT\_}}
-{\footnotesize\ttfamily \#define REACT\+\_\+(\begin{DoxyParamCaption}\item[{}]{s }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + s\mbox{]} -\/ 1)}
+{\footnotesize\ttfamily \#define REACT\+\_\+(\begin{DoxyParamCaption}\item[{}]{s }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + s\mbox{]} -\/ 1)}
 
 
 
@@ -238,21 +232,9 @@ Calculate contributions to the time derivative $f(t,y)$ from this reaction.
 Definition at line \mbox{\hyperlink{rxn__wet__deposition_8c_source_l00149}{149}} of file \mbox{\hyperlink{rxn__wet__deposition_8c_source}{rxn\+\_\+wet\+\_\+deposition.\+c}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=321pt]{rxn__wet__deposition_8c_a6aec5e3d4cbb3a9e0d993a1780c42ecd_cgraph}
-\end{center}
-\end{figure}
+% FIG 1
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{rxn__wet__deposition_8c_a6aec5e3d4cbb3a9e0d993a1780c42ecd_icgraph}
-\end{center}
-\end{figure}
+% FIG 2
 \mbox{\Hypertarget{rxn__wet__deposition_8c_ad84c0373895c3b2bfad55408c9066f16}\label{rxn__wet__deposition_8c_ad84c0373895c3b2bfad55408c9066f16}} 
 \index{rxn\_wet\_deposition.c@{rxn\_wet\_deposition.c}!rxn\_wet\_deposition\_calc\_jac\_contrib@{rxn\_wet\_deposition\_calc\_jac\_contrib}}
 \index{rxn\_wet\_deposition\_calc\_jac\_contrib@{rxn\_wet\_deposition\_calc\_jac\_contrib}!rxn\_wet\_deposition.c@{rxn\_wet\_deposition.c}}
@@ -283,21 +265,9 @@ Calculate contributions to the \mbox{\hyperlink{struct_jacobian}{Jacobian}} from
 Definition at line \mbox{\hyperlink{rxn__wet__deposition_8c_source_l00179}{179}} of file \mbox{\hyperlink{rxn__wet__deposition_8c_source}{rxn\+\_\+wet\+\_\+deposition.\+c}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=318pt]{rxn__wet__deposition_8c_ad84c0373895c3b2bfad55408c9066f16_cgraph}
-\end{center}
-\end{figure}
+% FIG 3
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{rxn__wet__deposition_8c_ad84c0373895c3b2bfad55408c9066f16_icgraph}
-\end{center}
-\end{figure}
+% FIG 4
 \mbox{\Hypertarget{rxn__wet__deposition_8c_a3a2d565e303d68e825fdea7fa7c884c3}\label{rxn__wet__deposition_8c_a3a2d565e303d68e825fdea7fa7c884c3}} 
 \index{rxn\_wet\_deposition.c@{rxn\_wet\_deposition.c}!rxn\_wet\_deposition\_create\_rate\_update\_data@{rxn\_wet\_deposition\_create\_rate\_update\_data}}
 \index{rxn\_wet\_deposition\_create\_rate\_update\_data@{rxn\_wet\_deposition\_create\_rate\_update\_data}!rxn\_wet\_deposition.c@{rxn\_wet\_deposition.c}}
@@ -339,21 +309,9 @@ Flag \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used by this reaction
 Definition at line \mbox{\hyperlink{rxn__wet__deposition_8c_source_l00038}{38}} of file \mbox{\hyperlink{rxn__wet__deposition_8c_source}{rxn\+\_\+wet\+\_\+deposition.\+c}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{rxn__wet__deposition_8c_a083ddf02453025334ced6c65d78d60e1_cgraph}
-\end{center}
-\end{figure}
+% FIG 5
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{rxn__wet__deposition_8c_a083ddf02453025334ced6c65d78d60e1_icgraph}
-\end{center}
-\end{figure}
+% FIG 6
 \mbox{\Hypertarget{rxn__wet__deposition_8c_a76a5bf8613ce3116db76b077f0c15382}\label{rxn__wet__deposition_8c_a76a5bf8613ce3116db76b077f0c15382}} 
 \index{rxn\_wet\_deposition.c@{rxn\_wet\_deposition.c}!rxn\_wet\_deposition\_print@{rxn\_wet\_deposition\_print}}
 \index{rxn\_wet\_deposition\_print@{rxn\_wet\_deposition\_print}!rxn\_wet\_deposition.c@{rxn\_wet\_deposition.c}}
@@ -376,13 +334,7 @@ Print the reaction parameters.
 Definition at line \mbox{\hyperlink{rxn__wet__deposition_8c_source_l00205}{205}} of file \mbox{\hyperlink{rxn__wet__deposition_8c_source}{rxn\+\_\+wet\+\_\+deposition.\+c}}.
 
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=293pt]{rxn__wet__deposition_8c_a76a5bf8613ce3116db76b077f0c15382_icgraph}
-\end{center}
-\end{figure}
+% FIG 7
 \mbox{\Hypertarget{rxn__wet__deposition_8c_ae689f16722acdff103f2b0570847b564}\label{rxn__wet__deposition_8c_ae689f16722acdff103f2b0570847b564}} 
 \index{rxn\_wet\_deposition.c@{rxn\_wet\_deposition.c}!rxn\_wet\_deposition\_set\_rate\_update\_data@{rxn\_wet\_deposition\_set\_rate\_update\_data}}
 \index{rxn\_wet\_deposition\_set\_rate\_update\_data@{rxn\_wet\_deposition\_set\_rate\_update\_data}!rxn\_wet\_deposition.c@{rxn\_wet\_deposition.c}}
@@ -443,13 +395,7 @@ Flag indicating whether this is the reaction to update
 Definition at line \mbox{\hyperlink{rxn__wet__deposition_8c_source_l00095}{95}} of file \mbox{\hyperlink{rxn__wet__deposition_8c_source}{rxn\+\_\+wet\+\_\+deposition.\+c}}.
 
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=304pt]{rxn__wet__deposition_8c_a8702d84bdb799c83a7f8b9feb1f72701_icgraph}
-\end{center}
-\end{figure}
+% FIG 8
 \mbox{\Hypertarget{rxn__wet__deposition_8c_a639ae40ecdc8940c3c36a240738092df}\label{rxn__wet__deposition_8c_a639ae40ecdc8940c3c36a240738092df}} 
 \index{rxn\_wet\_deposition.c@{rxn\_wet\_deposition.c}!rxn\_wet\_deposition\_update\_env\_state@{rxn\_wet\_deposition\_update\_env\_state}}
 \index{rxn\_wet\_deposition\_update\_env\_state@{rxn\_wet\_deposition\_update\_env\_state}!rxn\_wet\_deposition.c@{rxn\_wet\_deposition.c}}
@@ -478,13 +424,7 @@ For wet deposition reactions this only involves recalculating the rate constant.
 Definition at line \mbox{\hyperlink{rxn__wet__deposition_8c_source_l00124}{124}} of file \mbox{\hyperlink{rxn__wet__deposition_8c_source}{rxn\+\_\+wet\+\_\+deposition.\+c}}.
 
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{rxn__wet__deposition_8c_a639ae40ecdc8940c3c36a240738092df_icgraph}
-\end{center}
-\end{figure}
+% FIG 9
 \mbox{\Hypertarget{rxn__wet__deposition_8c_a544634ece257f580b822e9851e37b73d}\label{rxn__wet__deposition_8c_a544634ece257f580b822e9851e37b73d}} 
 \index{rxn\_wet\_deposition.c@{rxn\_wet\_deposition.c}!rxn\_wet\_deposition\_update\_ids@{rxn\_wet\_deposition\_update\_ids}}
 \index{rxn\_wet\_deposition\_update\_ids@{rxn\_wet\_deposition\_update\_ids}!rxn\_wet\_deposition.c@{rxn\_wet\_deposition.c}}
@@ -513,18 +453,6 @@ Update the time derivative and Jacbobian array indices.
 Definition at line \mbox{\hyperlink{rxn__wet__deposition_8c_source_l00059}{59}} of file \mbox{\hyperlink{rxn__wet__deposition_8c_source}{rxn\+\_\+wet\+\_\+deposition.\+c}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=340pt]{rxn__wet__deposition_8c_a544634ece257f580b822e9851e37b73d_cgraph}
-\end{center}
-\end{figure}
+% FIG 10
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{rxn__wet__deposition_8c_a544634ece257f580b822e9851e37b73d_icgraph}
-\end{center}
-\end{figure}
+% FIG 11

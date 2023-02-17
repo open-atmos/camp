@@ -8,29 +8,8 @@ Abstract aerosol representation data type.
 
 
 Inheritance diagram for camp\+\_\+aero\+\_\+rep\+\_\+data\+::aero\+\_\+rep\+\_\+data\+\_\+t\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=349pt]{structcamp__aero__rep__data_1_1aero__rep__data__t__inherit__graph}
-\end{center}
-\end{figure}
-\doxysubsection*{Public Attributes}
-\begin{DoxyCompactItemize}
-\item 
-character(len=\+:), allocatable, public \mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__t_a9c93f0217bc4512913baa29a4975c956}{rep\+\_\+name}}
-\begin{DoxyCompactList}\small\item\em Name of the aerosol representation. \end{DoxyCompactList}\item 
-type(\mbox{\hyperlink{structcamp__aero__phase__data_1_1aero__phase__data__ptr}{aero\+\_\+phase\+\_\+data\+\_\+ptr}}), dimension(\+:), allocatable, public \mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__t_ad15870e49931a7856b0588356036095a}{aero\+\_\+phase}}
-\begin{DoxyCompactList}\small\item\em Aerosol phases associated with this aerosol scheme. \end{DoxyCompactList}\item 
-type(\mbox{\hyperlink{structcamp__property_1_1property__t}{property\+\_\+t}}), pointer, public \mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__t_acf1f8af8cd9982684614af214f64759e}{property\+\_\+set}} =$>$ null()
-\begin{DoxyCompactList}\small\item\em Aerosol representation parameters. These will be available during initialization, but not during solving. All information required by functions of the aerosol representation must be saved by the exdending type in the condensed data arrays. \end{DoxyCompactList}\item 
-real(kind=dp), dimension(\+:), allocatable, public \mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__t_a50a5c5fab9e21cf8886bf65691d2b2ec}{condensed\+\_\+data\+\_\+real}}
-\begin{DoxyCompactList}\small\item\em Condensed representation data. Theses arrays will be available during solving, and should contain any information required by the functions of the aerosol representation that cannot be obtained from the \mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t}{camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t}} object. (floating-\/point) \end{DoxyCompactList}\item 
-integer(kind=i\+\_\+kind), dimension(\+:), allocatable, public \mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__t_a559b3264e3bfdf25844c791a56087e14}{condensed\+\_\+data\+\_\+int}}
-\begin{DoxyCompactList}\small\item\em Condensed representation data. Theses arrays will be available during solving, and should contain any information required by the functions of the aerosol representation that cannot be obtained from the \mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t}{camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t}} object. (integer) \end{DoxyCompactList}\item 
-integer(kind=i\+\_\+kind), public \mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__t_ac9e616e09db98ab138d344c4fd3c760e}{num\+\_\+env\+\_\+params}} = 0
-\begin{DoxyCompactList}\small\item\em Number of environment-\/dependent parameters These are parameters that need updated when environmental conditions change. \end{DoxyCompactList}\end{DoxyCompactItemize}
-\doxysubsection*{Private Member Functions}
+% FIG 0
+\doxysubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
 procedure(\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1initialize}{initialize}}), deferred \mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__t_aad971894072077009ee149dd03ca8b61}{initialize}}
@@ -49,7 +28,7 @@ procedure(\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1num__jac__elem}{num
 \begin{DoxyCompactList}\small\item\em Get the number of \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements for calculations of mass, volume, number, etc for a particular phase. \end{DoxyCompactList}\item 
 procedure \mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__t_aee9d87eafd6644e1acc08d48aa22c23e}{load}}
 \begin{DoxyCompactList}\small\item\em Load data from an input file. \end{DoxyCompactList}\item 
-procedure \mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__t_a7a1c7da699e0440496bad47f5265c3d8}{name}} =$>$ \mbox{\hyperlink{namespacecamp__aero__rep__data_abb54bde42dbbd4ca280370cbb874b968}{get\+\_\+name}}
+procedure \mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__t_a7a1c7da699e0440496bad47f5265c3d8}{name}} =$>$ \mbox{\hyperlink{namespacecamp__aero__phase__data_a50e3a12672f60404141d9f7d90ab049e}{get\+\_\+name}}
 \begin{DoxyCompactList}\small\item\em Get the name of the aerosol representation. \end{DoxyCompactList}\item 
 procedure \mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__t_ab99c7ade8752dba95ae3c06f70909c0d}{phase\+\_\+ids}}
 \begin{DoxyCompactList}\small\item\em Get ids for all instances of a phase in this aerosol representation for use during solving. \end{DoxyCompactList}\item 
@@ -59,8 +38,23 @@ procedure \mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__t_a3f
 \begin{DoxyCompactList}\small\item\em Packs the given value into the buffer, advancing position. \end{DoxyCompactList}\item 
 procedure \mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__t_a3f4451c9d6593372e6075103fbd0c2bb}{bin\+\_\+unpack}}
 \begin{DoxyCompactList}\small\item\em Unpacks the given value from the buffer, advancing position. \end{DoxyCompactList}\item 
-procedure \mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__t_ac84b91f8798d4f8c30bd6a9609a38035}{print}} =$>$ \mbox{\hyperlink{namespacecamp__aero__rep__data_a361ddb02ca802bce038d2b9471f4b923}{do\+\_\+print}}
+procedure \mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__t_ac84b91f8798d4f8c30bd6a9609a38035}{print}} =$>$ \mbox{\hyperlink{namespacecamp__aero__phase__data_ac5eaedf2265900988eaddb4872f1c0c2}{do\+\_\+print}}
 \begin{DoxyCompactList}\small\item\em Print the aerosol representation data. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+character(len=\+:), allocatable, public \mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__t_a9c93f0217bc4512913baa29a4975c956}{rep\+\_\+name}}
+\begin{DoxyCompactList}\small\item\em Name of the aerosol representation. \end{DoxyCompactList}\item 
+type(\mbox{\hyperlink{structcamp__aero__phase__data_1_1aero__phase__data__ptr}{aero\+\_\+phase\+\_\+data\+\_\+ptr}}), dimension(\+:), allocatable, public \mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__t_ad15870e49931a7856b0588356036095a}{aero\+\_\+phase}}
+\begin{DoxyCompactList}\small\item\em Aerosol phases associated with this aerosol scheme. \end{DoxyCompactList}\item 
+type(\mbox{\hyperlink{structcamp__property_1_1property__t}{property\+\_\+t}}), pointer, public \mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__t_acf1f8af8cd9982684614af214f64759e}{property\+\_\+set}} =$>$ null()
+\begin{DoxyCompactList}\small\item\em Aerosol representation parameters. These will be available during initialization, but not during solving. All information required by functions of the aerosol representation must be saved by the exdending type in the condensed data arrays. \end{DoxyCompactList}\item 
+real(kind=dp), dimension(\+:), allocatable, public \mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__t_a50a5c5fab9e21cf8886bf65691d2b2ec}{condensed\+\_\+data\+\_\+real}}
+\begin{DoxyCompactList}\small\item\em Condensed representation data. Theses arrays will be available during solving, and should contain any information required by the functions of the aerosol representation that cannot be obtained from the \mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t}{camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t}} object. (floating-\/point) \end{DoxyCompactList}\item 
+integer(kind=i\+\_\+kind), dimension(\+:), allocatable, public \mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__t_a559b3264e3bfdf25844c791a56087e14}{condensed\+\_\+data\+\_\+int}}
+\begin{DoxyCompactList}\small\item\em Condensed representation data. Theses arrays will be available during solving, and should contain any information required by the functions of the aerosol representation that cannot be obtained from the \mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t}{camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t}} object. (integer) \end{DoxyCompactList}\item 
+integer(kind=i\+\_\+kind), public \mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__t_ac9e616e09db98ab138d344c4fd3c760e}{num\+\_\+env\+\_\+params}} = 0
+\begin{DoxyCompactList}\small\item\em Number of environment-\/dependent parameters These are parameters that need updated when environmental conditions change. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
@@ -79,7 +73,7 @@ Definition at line \mbox{\hyperlink{aero__rep__data_8_f90_source_l00054}{54}} of
 \index{camp\_aero\_rep\_data::aero\_rep\_data\_t@{camp\_aero\_rep\_data::aero\_rep\_data\_t}!bin\_pack@{bin\_pack}}
 \index{bin\_pack@{bin\_pack}!camp\_aero\_rep\_data::aero\_rep\_data\_t@{camp\_aero\_rep\_data::aero\_rep\_data\_t}}
 \doxysubsubsection{\texorpdfstring{bin\_pack()}{bin\_pack()}}
-{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+rep\+\_\+data\+::aero\+\_\+rep\+\_\+data\+\_\+t\+::bin\+\_\+pack\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+rep\+\_\+data\+::aero\+\_\+rep\+\_\+data\+\_\+t\+::bin\+\_\+pack}
 
 
 
@@ -93,7 +87,7 @@ Definition at line \mbox{\hyperlink{aero__rep__data_8_f90_source_l00129}{129}} o
 \index{camp\_aero\_rep\_data::aero\_rep\_data\_t@{camp\_aero\_rep\_data::aero\_rep\_data\_t}!bin\_unpack@{bin\_unpack}}
 \index{bin\_unpack@{bin\_unpack}!camp\_aero\_rep\_data::aero\_rep\_data\_t@{camp\_aero\_rep\_data::aero\_rep\_data\_t}}
 \doxysubsubsection{\texorpdfstring{bin\_unpack()}{bin\_unpack()}}
-{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+rep\+\_\+data\+::aero\+\_\+rep\+\_\+data\+\_\+t\+::bin\+\_\+unpack\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+rep\+\_\+data\+::aero\+\_\+rep\+\_\+data\+\_\+t\+::bin\+\_\+unpack}
 
 
 
@@ -107,7 +101,7 @@ Definition at line \mbox{\hyperlink{aero__rep__data_8_f90_source_l00131}{131}} o
 \index{camp\_aero\_rep\_data::aero\_rep\_data\_t@{camp\_aero\_rep\_data::aero\_rep\_data\_t}!initialize@{initialize}}
 \index{initialize@{initialize}!camp\_aero\_rep\_data::aero\_rep\_data\_t@{camp\_aero\_rep\_data::aero\_rep\_data\_t}}
 \doxysubsubsection{\texorpdfstring{initialize()}{initialize()}}
-{\footnotesize\ttfamily procedure(\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1initialize}{initialize}}), deferred camp\+\_\+aero\+\_\+rep\+\_\+data\+::aero\+\_\+rep\+\_\+data\+\_\+t\+::initialize\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily procedure(\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1initialize}{initialize}}), deferred camp\+\_\+aero\+\_\+rep\+\_\+data\+::aero\+\_\+rep\+\_\+data\+\_\+t\+::initialize}
 
 
 
@@ -121,7 +115,7 @@ Definition at line \mbox{\hyperlink{aero__rep__data_8_f90_source_l00088}{88}} of
 \index{camp\_aero\_rep\_data::aero\_rep\_data\_t@{camp\_aero\_rep\_data::aero\_rep\_data\_t}!load@{load}}
 \index{load@{load}!camp\_aero\_rep\_data::aero\_rep\_data\_t@{camp\_aero\_rep\_data::aero\_rep\_data\_t}}
 \doxysubsubsection{\texorpdfstring{load()}{load()}}
-{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+rep\+\_\+data\+::aero\+\_\+rep\+\_\+data\+\_\+t\+::load\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+rep\+\_\+data\+::aero\+\_\+rep\+\_\+data\+\_\+t\+::load}
 
 
 
@@ -135,7 +129,7 @@ Definition at line \mbox{\hyperlink{aero__rep__data_8_f90_source_l00120}{120}} o
 \index{camp\_aero\_rep\_data::aero\_rep\_data\_t@{camp\_aero\_rep\_data::aero\_rep\_data\_t}!name@{name}}
 \index{name@{name}!camp\_aero\_rep\_data::aero\_rep\_data\_t@{camp\_aero\_rep\_data::aero\_rep\_data\_t}}
 \doxysubsubsection{\texorpdfstring{name()}{name()}}
-{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+rep\+\_\+data\+::aero\+\_\+rep\+\_\+data\+\_\+t\+::name\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+rep\+\_\+data\+::aero\+\_\+rep\+\_\+data\+\_\+t\+::name}
 
 
 
@@ -149,7 +143,7 @@ Definition at line \mbox{\hyperlink{aero__rep__data_8_f90_source_l00122}{122}} o
 \index{camp\_aero\_rep\_data::aero\_rep\_data\_t@{camp\_aero\_rep\_data::aero\_rep\_data\_t}!num\_jac\_elem@{num\_jac\_elem}}
 \index{num\_jac\_elem@{num\_jac\_elem}!camp\_aero\_rep\_data::aero\_rep\_data\_t@{camp\_aero\_rep\_data::aero\_rep\_data\_t}}
 \doxysubsubsection{\texorpdfstring{num\_jac\_elem()}{num\_jac\_elem()}}
-{\footnotesize\ttfamily procedure(\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1num__jac__elem}{num\+\_\+jac\+\_\+elem}}), deferred camp\+\_\+aero\+\_\+rep\+\_\+data\+::aero\+\_\+rep\+\_\+data\+\_\+t\+::num\+\_\+jac\+\_\+elem\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily procedure(\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1num__jac__elem}{num\+\_\+jac\+\_\+elem}}), deferred camp\+\_\+aero\+\_\+rep\+\_\+data\+::aero\+\_\+rep\+\_\+data\+\_\+t\+::num\+\_\+jac\+\_\+elem}
 
 
 
@@ -163,7 +157,7 @@ Definition at line \mbox{\hyperlink{aero__rep__data_8_f90_source_l00118}{118}} o
 \index{camp\_aero\_rep\_data::aero\_rep\_data\_t@{camp\_aero\_rep\_data::aero\_rep\_data\_t}!num\_phase\_instances@{num\_phase\_instances}}
 \index{num\_phase\_instances@{num\_phase\_instances}!camp\_aero\_rep\_data::aero\_rep\_data\_t@{camp\_aero\_rep\_data::aero\_rep\_data\_t}}
 \doxysubsubsection{\texorpdfstring{num\_phase\_instances()}{num\_phase\_instances()}}
-{\footnotesize\ttfamily procedure(\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1num__phase__instances}{num\+\_\+phase\+\_\+instances}}), deferred camp\+\_\+aero\+\_\+rep\+\_\+data\+::aero\+\_\+rep\+\_\+data\+\_\+t\+::num\+\_\+phase\+\_\+instances\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily procedure(\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1num__phase__instances}{num\+\_\+phase\+\_\+instances}}), deferred camp\+\_\+aero\+\_\+rep\+\_\+data\+::aero\+\_\+rep\+\_\+data\+\_\+t\+::num\+\_\+phase\+\_\+instances}
 
 
 
@@ -177,7 +171,7 @@ Definition at line \mbox{\hyperlink{aero__rep__data_8_f90_source_l00115}{115}} o
 \index{camp\_aero\_rep\_data::aero\_rep\_data\_t@{camp\_aero\_rep\_data::aero\_rep\_data\_t}!pack\_size@{pack\_size}}
 \index{pack\_size@{pack\_size}!camp\_aero\_rep\_data::aero\_rep\_data\_t@{camp\_aero\_rep\_data::aero\_rep\_data\_t}}
 \doxysubsubsection{\texorpdfstring{pack\_size()}{pack\_size()}}
-{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+rep\+\_\+data\+::aero\+\_\+rep\+\_\+data\+\_\+t\+::pack\+\_\+size\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+rep\+\_\+data\+::aero\+\_\+rep\+\_\+data\+\_\+t\+::pack\+\_\+size}
 
 
 
@@ -191,7 +185,7 @@ Definition at line \mbox{\hyperlink{aero__rep__data_8_f90_source_l00127}{127}} o
 \index{camp\_aero\_rep\_data::aero\_rep\_data\_t@{camp\_aero\_rep\_data::aero\_rep\_data\_t}!phase\_ids@{phase\_ids}}
 \index{phase\_ids@{phase\_ids}!camp\_aero\_rep\_data::aero\_rep\_data\_t@{camp\_aero\_rep\_data::aero\_rep\_data\_t}}
 \doxysubsubsection{\texorpdfstring{phase\_ids()}{phase\_ids()}}
-{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+rep\+\_\+data\+::aero\+\_\+rep\+\_\+data\+\_\+t\+::phase\+\_\+ids\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+rep\+\_\+data\+::aero\+\_\+rep\+\_\+data\+\_\+t\+::phase\+\_\+ids}
 
 
 
@@ -205,7 +199,7 @@ Definition at line \mbox{\hyperlink{aero__rep__data_8_f90_source_l00125}{125}} o
 \index{camp\_aero\_rep\_data::aero\_rep\_data\_t@{camp\_aero\_rep\_data::aero\_rep\_data\_t}!print@{print}}
 \index{print@{print}!camp\_aero\_rep\_data::aero\_rep\_data\_t@{camp\_aero\_rep\_data::aero\_rep\_data\_t}}
 \doxysubsubsection{\texorpdfstring{print()}{print()}}
-{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+rep\+\_\+data\+::aero\+\_\+rep\+\_\+data\+\_\+t\+::print\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+rep\+\_\+data\+::aero\+\_\+rep\+\_\+data\+\_\+t\+::print}
 
 
 
@@ -219,7 +213,7 @@ Definition at line \mbox{\hyperlink{aero__rep__data_8_f90_source_l00133}{133}} o
 \index{camp\_aero\_rep\_data::aero\_rep\_data\_t@{camp\_aero\_rep\_data::aero\_rep\_data\_t}!size@{size}}
 \index{size@{size}!camp\_aero\_rep\_data::aero\_rep\_data\_t@{camp\_aero\_rep\_data::aero\_rep\_data\_t}}
 \doxysubsubsection{\texorpdfstring{size()}{size()}}
-{\footnotesize\ttfamily procedure(\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1get__size}{get\+\_\+size}}), deferred camp\+\_\+aero\+\_\+rep\+\_\+data\+::aero\+\_\+rep\+\_\+data\+\_\+t\+::size\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily procedure(\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1get__size}{get\+\_\+size}}), deferred camp\+\_\+aero\+\_\+rep\+\_\+data\+::aero\+\_\+rep\+\_\+data\+\_\+t\+::size}
 
 
 
@@ -233,7 +227,7 @@ Definition at line \mbox{\hyperlink{aero__rep__data_8_f90_source_l00092}{92}} of
 \index{camp\_aero\_rep\_data::aero\_rep\_data\_t@{camp\_aero\_rep\_data::aero\_rep\_data\_t}!spec\_name@{spec\_name}}
 \index{spec\_name@{spec\_name}!camp\_aero\_rep\_data::aero\_rep\_data\_t@{camp\_aero\_rep\_data::aero\_rep\_data\_t}}
 \doxysubsubsection{\texorpdfstring{spec\_name()}{spec\_name()}}
-{\footnotesize\ttfamily procedure(\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\+\_\+name}}), deferred camp\+\_\+aero\+\_\+rep\+\_\+data\+::aero\+\_\+rep\+\_\+data\+\_\+t\+::spec\+\_\+name\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily procedure(\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\+\_\+name}}), deferred camp\+\_\+aero\+\_\+rep\+\_\+data\+::aero\+\_\+rep\+\_\+data\+\_\+t\+::spec\+\_\+name}
 
 
 
@@ -247,7 +241,7 @@ Definition at line \mbox{\hyperlink{aero__rep__data_8_f90_source_l00113}{113}} o
 \index{camp\_aero\_rep\_data::aero\_rep\_data\_t@{camp\_aero\_rep\_data::aero\_rep\_data\_t}!spec\_state\_id@{spec\_state\_id}}
 \index{spec\_state\_id@{spec\_state\_id}!camp\_aero\_rep\_data::aero\_rep\_data\_t@{camp\_aero\_rep\_data::aero\_rep\_data\_t}}
 \doxysubsubsection{\texorpdfstring{spec\_state\_id()}{spec\_state\_id()}}
-{\footnotesize\ttfamily procedure(\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__state__id}{spec\+\_\+state\+\_\+id}}), deferred camp\+\_\+aero\+\_\+rep\+\_\+data\+::aero\+\_\+rep\+\_\+data\+\_\+t\+::spec\+\_\+state\+\_\+id\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily procedure(\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__state__id}{spec\+\_\+state\+\_\+id}}), deferred camp\+\_\+aero\+\_\+rep\+\_\+data\+::aero\+\_\+rep\+\_\+data\+\_\+t\+::spec\+\_\+state\+\_\+id}
 
 
 
@@ -263,7 +257,7 @@ Definition at line \mbox{\hyperlink{aero__rep__data_8_f90_source_l00111}{111}} o
 \index{camp\_aero\_rep\_data::aero\_rep\_data\_t@{camp\_aero\_rep\_data::aero\_rep\_data\_t}!unique\_names@{unique\_names}}
 \index{unique\_names@{unique\_names}!camp\_aero\_rep\_data::aero\_rep\_data\_t@{camp\_aero\_rep\_data::aero\_rep\_data\_t}}
 \doxysubsubsection{\texorpdfstring{unique\_names()}{unique\_names()}}
-{\footnotesize\ttfamily procedure(\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1unique__names}{unique\+\_\+names}}), deferred camp\+\_\+aero\+\_\+rep\+\_\+data\+::aero\+\_\+rep\+\_\+data\+\_\+t\+::unique\+\_\+names\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily procedure(\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1unique__names}{unique\+\_\+names}}), deferred camp\+\_\+aero\+\_\+rep\+\_\+data\+::aero\+\_\+rep\+\_\+data\+\_\+t\+::unique\+\_\+names}
 
 
 

@@ -6,13 +6,7 @@ Utility functions and commonly used science property calculators.
 
 
 This graph shows which files directly or indirectly include this file\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{util_8h__dep__incl}
-\end{center}
-\end{figure}
+% FIG 0
 \doxysubsection*{Macros}
 \begin{DoxyCompactItemize}
 \item 
@@ -62,7 +56,7 @@ Definition at line \mbox{\hyperlink{util_8h_source_l00015}{15}} of file \mbox{\h
 \doxysubsubsection{\texorpdfstring{d\_gas\_aerosol\_rxn\_rate\_constant\_d\_radius()}{d\_gas\_aerosol\_rxn\_rate\_constant\_d\_radius()}}
 {\footnotesize\ttfamily static double d\+\_\+gas\+\_\+aerosol\+\_\+rxn\+\_\+rate\+\_\+constant\+\_\+d\+\_\+radius (\begin{DoxyParamCaption}\item[{double}]{diffusion\+\_\+coeff\+\_\+\+\_\+m2\+\_\+s,  }\item[{double}]{mean\+\_\+free\+\_\+path\+\_\+\+\_\+m,  }\item[{double}]{radius\+\_\+\+\_\+m,  }\item[{double}]{alpha }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
 
-Calculate the derivative of a gas-\/aerosol reaction rate by particle radius \[
+Calculate the derivative of a gas-\/aerosol reaction rate by particle radius  \[
   \frac{d k_c}{d r} = 4 \pi D_g ( f_{fs} + r \frac{d_{fs}}{d r} )
 \] where $r$ is the radius of the particle(s) \mbox{[}m\mbox{]}, $D_g$ is the diffusion coefficient of the gas-\/phase species \mbox{[} $\mbox{m}^2\,
 \mbox{s}^{-1}$\mbox{]} and $f_{fs}( K_n, \alpha )$ is the Fuchs Sutugin transition regime correction factor \mbox{[}unitless\mbox{]} ( $K_n$ is the Knudsen Number \mbox{[}unitess\mbox{]} and $\alpha$ is the mass accomodation coefficient.
@@ -83,28 +77,16 @@ Calculate the derivative of a gas-\/aerosol reaction rate by particle radius \[
 Definition at line \mbox{\hyperlink{util_8h_source_l00143}{143}} of file \mbox{\hyperlink{util_8h_source}{util.\+h}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{util_8h_ad31f0cb5f01c257931b6e82d91b6fb23_cgraph}
-\end{center}
-\end{figure}
+% FIG 1
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{util_8h_ad31f0cb5f01c257931b6e82d91b6fb23_icgraph}
-\end{center}
-\end{figure}
+% FIG 2
 \mbox{\Hypertarget{util_8h_af0918da54a73bf30e7079908caea2efd}\label{util_8h_af0918da54a73bf30e7079908caea2efd}} 
 \index{util.h@{util.h}!d\_transition\_regime\_correction\_factor\_d\_radius@{d\_transition\_regime\_correction\_factor\_d\_radius}}
 \index{d\_transition\_regime\_correction\_factor\_d\_radius@{d\_transition\_regime\_correction\_factor\_d\_radius}!util.h@{util.h}}
 \doxysubsubsection{\texorpdfstring{d\_transition\_regime\_correction\_factor\_d\_radius()}{d\_transition\_regime\_correction\_factor\_d\_radius()}}
 {\footnotesize\ttfamily static double d\+\_\+transition\+\_\+regime\+\_\+correction\+\_\+factor\+\_\+d\+\_\+radius (\begin{DoxyParamCaption}\item[{double}]{mean\+\_\+free\+\_\+path\+\_\+\+\_\+m,  }\item[{double}]{radius\+\_\+\+\_\+m,  }\item[{double}]{alpha }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
 
-Calculate the derivative of the transition regime correction factor by particle radius. \[
+Calculate the derivative of the transition regime correction factor by particle radius.  \[
    \frac{d f_{fs}}{d r} = \frac{0.75 \alpha \lambda (K_n^2 + 2K_n + 1 +
 (0.283-0.75)\alpha)}{r^2(K_n^2 + (1+0.283\alpha)K_n + 0.75\alpha)^2} \] \begin{DoxyRefDesc}{Todo}
 \item[\mbox{\hyperlink{todo__todo000003}{Todo}}]double check the correction factor derivative equation where the Knudsen Number $K_n = \lambda / r$ (where $\lambda$ is the mean free path \mbox{[}m\mbox{]} of the gas-\/phase species and $r$ is the effective radius of the particles \mbox{[}m\mbox{]}), and $ \alpha $ is the mass accomodation coefficient, which is typically assumed to equal 0.\+1 {\bfseries [Zaveri2008]}.\end{DoxyRefDesc}
@@ -124,21 +106,9 @@ Calculate the derivative of the transition regime correction factor by particle 
 Definition at line \mbox{\hyperlink{util_8h_source_l00080}{80}} of file \mbox{\hyperlink{util_8h_source}{util.\+h}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=326pt]{util_8h_af0918da54a73bf30e7079908caea2efd_cgraph}
-\end{center}
-\end{figure}
+% FIG 3
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{util_8h_af0918da54a73bf30e7079908caea2efd_icgraph}
-\end{center}
-\end{figure}
+% FIG 4
 \mbox{\Hypertarget{util_8h_ada92558814324f22e19743fbf25ceb0f}\label{util_8h_ada92558814324f22e19743fbf25ceb0f}} 
 \index{util.h@{util.h}!gas\_aerosol\_rxn\_rate\_constant@{gas\_aerosol\_rxn\_rate\_constant}}
 \index{gas\_aerosol\_rxn\_rate\_constant@{gas\_aerosol\_rxn\_rate\_constant}!util.h@{util.h}}
@@ -147,11 +117,11 @@ Here is the caller graph for this function\+:
 
 Calculate the gas-\/aerosol reaction rate constant for the transition regime \mbox{[} $\mbox{m}^3\, \mbox{particle}^{-1}\, \mbox{s}^{-1}$\mbox{]}
 
-The rate constant $k_c$ is calculated according to {\bfseries [Zaveri2008]} as\+: \[
+The rate constant $k_c$ is calculated according to {\bfseries [Zaveri2008]} as\+:  \[
    k_c = 4 \pi r D_g f_{fs}( K_n, \alpha )
  \] where $r$ is the radius of the particle(s) \mbox{[}m\mbox{]}, $D_g$ is the diffusion coefficient of the gas-\/phase species \mbox{[} $\mbox{m}^2\,\mbox{s}^{-1}$\mbox{]}, $f_{fs}( K_n, \alpha )$ is the Fuchs Sutugin transition regime correction factor \mbox{[}unitless\mbox{]}, $K_n$ is the Knudsen Number \mbox{[}unitess\mbox{]}, and $\alpha$ is the mass accomodation coefficient.
 
-Rates can be calculated as\+: \[
+Rates can be calculated as\+:  \[
    r_c = [G] N_a k_c
  \] where $[G]$ is the gas-\/phase species concentration \mbox{[}ppm\mbox{]}, $N_a$ is the number concentration of particles \mbox{[} $\mbox{particle}\,\mbox{m}^{-3}$\mbox{]} and the rate $r_c$ is in \mbox{[} $\mbox{ppm}\,\mbox{s}^{-1}$\mbox{]}.
 
@@ -171,30 +141,18 @@ Rates can be calculated as\+: \[
 Definition at line \mbox{\hyperlink{util_8h_source_l00118}{118}} of file \mbox{\hyperlink{util_8h_source}{util.\+h}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{util_8h_ada92558814324f22e19743fbf25ceb0f_cgraph}
-\end{center}
-\end{figure}
+% FIG 5
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{util_8h_ada92558814324f22e19743fbf25ceb0f_icgraph}
-\end{center}
-\end{figure}
+% FIG 6
 \mbox{\Hypertarget{util_8h_ae1c969544a10c17746622cf73186835c}\label{util_8h_ae1c969544a10c17746622cf73186835c}} 
 \index{util.h@{util.h}!mean\_free\_path\_\_m@{mean\_free\_path\_\_m}}
 \index{mean\_free\_path\_\_m@{mean\_free\_path\_\_m}!util.h@{util.h}}
 \doxysubsubsection{\texorpdfstring{mean\_free\_path\_\_m()}{mean\_free\_path\_\_m()}}
 {\footnotesize\ttfamily static double mean\+\_\+free\+\_\+path\+\_\+\+\_\+m (\begin{DoxyParamCaption}\item[{double}]{diffusion\+\_\+coeff\+\_\+\+\_\+m2\+\_\+s,  }\item[{double}]{temperature\+\_\+\+\_\+K,  }\item[{double}]{mw\+\_\+\+\_\+kg\+\_\+mol }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
 
-Calculate the mean free path of a gas-\/phase species \mbox{[}m\mbox{]} \[
+Calculate the mean free path of a gas-\/phase species \mbox{[}m\mbox{]}  \[
   \lambda = 3.0 D_g / v
-\] where $D_g$ is the gas-\/phase diffusion coefficient \mbox{[} $\mbox{m}^2\,\mbox{s}^{-1}$\mbox{]} and $v$ is the mean speed of the gas-\/phase molecules \mbox{[} $\mbox{m}\,\mbox{s}^{-1}$ \mbox{]} \+: \[
+\] where $D_g$ is the gas-\/phase diffusion coefficient \mbox{[} $\mbox{m}^2\,\mbox{s}^{-1}$\mbox{]} and $v$ is the mean speed of the gas-\/phase molecules \mbox{[} $\mbox{m}\,\mbox{s}^{-1}$ \mbox{]} \+:  \[
   v = \sqrt{\frac{8RT}{\pi MW}}
 \] where R is the ideal gas constant \mbox{[} $\mbox{J}\, \mbox{K}^{-1}\,
 \mbox{mol}^{-1}$\mbox{]}, T is temperature \mbox{[}K\mbox{]}, and MW is the molecular weight of the gas-\/phase species \mbox{[} $\mbox{kg}\, \mbox{mol}^{-1}$\mbox{]}
@@ -214,13 +172,7 @@ Calculate the mean free path of a gas-\/phase species \mbox{[}m\mbox{]} \[
 Definition at line \mbox{\hyperlink{util_8h_source_l00039}{39}} of file \mbox{\hyperlink{util_8h_source}{util.\+h}}.
 
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{util_8h_ae1c969544a10c17746622cf73186835c_icgraph}
-\end{center}
-\end{figure}
+% FIG 7
 \mbox{\Hypertarget{util_8h_a0ade6cf865e738fbd0629ca08500679d}\label{util_8h_a0ade6cf865e738fbd0629ca08500679d}} 
 \index{util.h@{util.h}!transition\_regime\_correction\_factor@{transition\_regime\_correction\_factor}}
 \index{transition\_regime\_correction\_factor@{transition\_regime\_correction\_factor}!util.h@{util.h}}
@@ -244,18 +196,6 @@ K_n + 0.75 \alpha} \] where the Knudsen Number $K_n = \lambda / r$ (where $\lamb
 Definition at line \mbox{\hyperlink{util_8h_source_l00058}{58}} of file \mbox{\hyperlink{util_8h_source}{util.\+h}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{util_8h_a0ade6cf865e738fbd0629ca08500679d_cgraph}
-\end{center}
-\end{figure}
+% FIG 8
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{util_8h_a0ade6cf865e738fbd0629ca08500679d_icgraph}
-\end{center}
-\end{figure}
+% FIG 9

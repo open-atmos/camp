@@ -1,7 +1,7 @@
 <map id="camp_util::open_file_write" name="camp_util::open_file_write">
-<area shape="rect" id="node1" title="Open a file for writing with an automatically assigned unit and test that it succeeds...." alt="" coords="5,73,140,114"/>
-<area shape="rect" id="node2" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="548,80,700,107"/>
-<area shape="rect" id="node3" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="748,98,871,139"/>
-<area shape="rect" id="node4" href="$namespacecamp__util.html#a43662260b71cb7e4b72fe49ccb8cee94" title="Returns an available unit number. This should be freed by free_unit()." alt="" coords="188,29,319,56"/>
-<area shape="rect" id="node5" href="$namespacecamp__util.html#a970b40b46d26e937fb3cdc0b9217b86c" title="Error immediately." alt="" coords="367,29,500,56"/>
+<area shape="rect" id="node1" title="Open a file for writing with an automatically assigned unit and test that it succeeds...." alt="" coords="5,73,140,113"/>
+<area shape="rect" id="node2" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="548,80,700,105"/>
+<area shape="rect" id="node3" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="748,98,871,138"/>
+<area shape="rect" id="node4" href="$namespacecamp__util.html#a43662260b71cb7e4b72fe49ccb8cee94" title="Returns an available unit number. This should be freed by free_unit()." alt="" coords="188,29,319,55"/>
+<area shape="rect" id="node5" href="$namespacecamp__util.html#a970b40b46d26e937fb3cdc0b9217b86c" title="Error immediately." alt="" coords="367,29,500,55"/>
 </map>

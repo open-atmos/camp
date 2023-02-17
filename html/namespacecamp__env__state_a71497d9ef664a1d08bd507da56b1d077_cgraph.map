@@ -1,4 +1,4 @@
 <map id="camp_env_state::env_state_conc_to_ppb" name="camp_env_state::env_state_conc_to_ppb">
-<area shape="rect" id="node1" title="Convert (molecules m^{&#45;3}) to (ppb)." alt="" coords="5,29,151,71"/>
-<area shape="rect" id="node2" href="$namespacecamp__env__state.html#a1f549c4ca4ea9f5209b75fec899cb0a9" title="Air molar density (mol m^{&#45;3})." alt="" coords="199,29,345,71"/>
+<area shape="rect" id="node1" title="Convert (molecules m^{&#45;3}) to (ppb)." alt="" coords="5,29,151,69"/>
+<area shape="rect" id="node2" href="$namespacecamp__env__state.html#a1f549c4ca4ea9f5209b75fec899cb0a9" title="Air molar density (mol m^{&#45;3})." alt="" coords="199,29,345,69"/>
 </map>

@@ -5,7 +5,7 @@
 Property link data.  
 
 
-\doxysubsection*{Private Member Functions}
+\doxysubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
 procedure \mbox{\hyperlink{structcamp__property_1_1property__link__t_a9f873c5a61de22c52a524896427cd379}{key}}
@@ -26,15 +26,18 @@ procedure \mbox{\hyperlink{structcamp__property_1_1property__link__t_a8cf962c37e
 \begin{DoxyCompactList}\small\item\em Print the contents of a property key-\/value pair. \end{DoxyCompactList}\item 
 final \mbox{\hyperlink{structcamp__property_1_1property__link__t_ae1047932449861f1ad24dcf7f740b229}{link\+\_\+finalize}}
 \begin{DoxyCompactList}\small\item\em Finalize. \end{DoxyCompactList}\end{DoxyCompactItemize}
-\doxysubsection*{Private Attributes}
+\doxysubsection*{Public Attributes}
 \begin{DoxyCompactItemize}
 \item 
-character(\+:), allocatable \mbox{\hyperlink{structcamp__property_1_1property__link__t_a508c33a2f7e4d7ae1d70815993613343}{key\+\_\+name}}
-\begin{DoxyCompactList}\small\item\em Key name. \end{DoxyCompactList}\item 
 class($\ast$), pointer \mbox{\hyperlink{structcamp__property_1_1property__link__t_a16fb32294f0e935a4325f6570775bf8a}{val}} =$>$ null()
 \begin{DoxyCompactList}\small\item\em Value. \end{DoxyCompactList}\item 
 type(\mbox{\hyperlink{structcamp__property_1_1property__link__t}{property\+\_\+link\+\_\+t}}), pointer \mbox{\hyperlink{structcamp__property_1_1property__link__t_a809e8c3d25e823d58bc3ab1a0510cfed}{next\+\_\+link}} =$>$ null()
 \begin{DoxyCompactList}\small\item\em Next link. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+character(\+:), allocatable \mbox{\hyperlink{structcamp__property_1_1property__link__t_a508c33a2f7e4d7ae1d70815993613343}{key\+\_\+name}}
+\begin{DoxyCompactList}\small\item\em Key name. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
@@ -51,7 +54,7 @@ Definition at line \mbox{\hyperlink{property_8_f90_source_l00088}{88}} of file \
 \index{camp\_property::property\_link\_t@{camp\_property::property\_link\_t}!key@{key}}
 \index{key@{key}!camp\_property::property\_link\_t@{camp\_property::property\_link\_t}}
 \doxysubsubsection{\texorpdfstring{key()}{key()}}
-{\footnotesize\ttfamily procedure camp\+\_\+property\+::property\+\_\+link\+\_\+t\+::key\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily procedure camp\+\_\+property\+::property\+\_\+link\+\_\+t\+::key}
 
 
 
@@ -65,7 +68,7 @@ Definition at line \mbox{\hyperlink{property_8_f90_source_l00098}{98}} of file \
 \index{camp\_property::property\_link\_t@{camp\_property::property\_link\_t}!link\_finalize@{link\_finalize}}
 \index{link\_finalize@{link\_finalize}!camp\_property::property\_link\_t@{camp\_property::property\_link\_t}}
 \doxysubsubsection{\texorpdfstring{link\_finalize()}{link\_finalize()}}
-{\footnotesize\ttfamily final camp\+\_\+property\+::property\+\_\+link\+\_\+t\+::link\+\_\+finalize\hspace{0.3cm}{\ttfamily [final]}, {\ttfamily [private]}}
+{\footnotesize\ttfamily final camp\+\_\+property\+::property\+\_\+link\+\_\+t\+::link\+\_\+finalize\hspace{0.3cm}{\ttfamily [final]}}
 
 
 
@@ -76,18 +79,12 @@ Finalize.
 Definition at line \mbox{\hyperlink{property_8_f90_source_l00114}{114}} of file \mbox{\hyperlink{property_8_f90_source}{property.\+F90}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=335pt]{structcamp__property_1_1property__link__t_ae1047932449861f1ad24dcf7f740b229_cgraph}
-\end{center}
-\end{figure}
+% FIG 0
 \mbox{\Hypertarget{structcamp__property_1_1property__link__t_a8cf962c37e00c78c6650cced3e3bfec8}\label{structcamp__property_1_1property__link__t_a8cf962c37e00c78c6650cced3e3bfec8}} 
 \index{camp\_property::property\_link\_t@{camp\_property::property\_link\_t}!print@{print}}
 \index{print@{print}!camp\_property::property\_link\_t@{camp\_property::property\_link\_t}}
 \doxysubsubsection{\texorpdfstring{print()}{print()}}
-{\footnotesize\ttfamily procedure camp\+\_\+property\+::property\+\_\+link\+\_\+t\+::print\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily procedure camp\+\_\+property\+::property\+\_\+link\+\_\+t\+::print}
 
 
 
@@ -101,7 +98,7 @@ Definition at line \mbox{\hyperlink{property_8_f90_source_l00112}{112}} of file 
 \index{camp\_property::property\_link\_t@{camp\_property::property\_link\_t}!set\_value@{set\_value}}
 \index{set\_value@{set\_value}!camp\_property::property\_link\_t@{camp\_property::property\_link\_t}}
 \doxysubsubsection{\texorpdfstring{set\_value()}{set\_value()}}
-{\footnotesize\ttfamily procedure camp\+\_\+property\+::property\+\_\+link\+\_\+t\+::set\+\_\+value\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily procedure camp\+\_\+property\+::property\+\_\+link\+\_\+t\+::set\+\_\+value}
 
 
 
@@ -115,7 +112,7 @@ Definition at line \mbox{\hyperlink{property_8_f90_source_l00100}{100}} of file 
 \index{camp\_property::property\_link\_t@{camp\_property::property\_link\_t}!value\_int@{value\_int}}
 \index{value\_int@{value\_int}!camp\_property::property\_link\_t@{camp\_property::property\_link\_t}}
 \doxysubsubsection{\texorpdfstring{value\_int()}{value\_int()}}
-{\footnotesize\ttfamily procedure camp\+\_\+property\+::property\+\_\+link\+\_\+t\+::value\+\_\+int\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily procedure camp\+\_\+property\+::property\+\_\+link\+\_\+t\+::value\+\_\+int}
 
 
 
@@ -129,7 +126,7 @@ Definition at line \mbox{\hyperlink{property_8_f90_source_l00102}{102}} of file 
 \index{camp\_property::property\_link\_t@{camp\_property::property\_link\_t}!value\_logical@{value\_logical}}
 \index{value\_logical@{value\_logical}!camp\_property::property\_link\_t@{camp\_property::property\_link\_t}}
 \doxysubsubsection{\texorpdfstring{value\_logical()}{value\_logical()}}
-{\footnotesize\ttfamily procedure camp\+\_\+property\+::property\+\_\+link\+\_\+t\+::value\+\_\+logical\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily procedure camp\+\_\+property\+::property\+\_\+link\+\_\+t\+::value\+\_\+logical}
 
 
 
@@ -143,7 +140,7 @@ Definition at line \mbox{\hyperlink{property_8_f90_source_l00106}{106}} of file 
 \index{camp\_property::property\_link\_t@{camp\_property::property\_link\_t}!value\_property\_t@{value\_property\_t}}
 \index{value\_property\_t@{value\_property\_t}!camp\_property::property\_link\_t@{camp\_property::property\_link\_t}}
 \doxysubsubsection{\texorpdfstring{value\_property\_t()}{value\_property\_t()}}
-{\footnotesize\ttfamily procedure camp\+\_\+property\+::property\+\_\+link\+\_\+t\+::value\+\_\+property\+\_\+t\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily procedure camp\+\_\+property\+::property\+\_\+link\+\_\+t\+::value\+\_\+property\+\_\+t}
 
 
 
@@ -157,7 +154,7 @@ Definition at line \mbox{\hyperlink{property_8_f90_source_l00110}{110}} of file 
 \index{camp\_property::property\_link\_t@{camp\_property::property\_link\_t}!value\_real@{value\_real}}
 \index{value\_real@{value\_real}!camp\_property::property\_link\_t@{camp\_property::property\_link\_t}}
 \doxysubsubsection{\texorpdfstring{value\_real()}{value\_real()}}
-{\footnotesize\ttfamily procedure camp\+\_\+property\+::property\+\_\+link\+\_\+t\+::value\+\_\+real\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily procedure camp\+\_\+property\+::property\+\_\+link\+\_\+t\+::value\+\_\+real}
 
 
 
@@ -171,7 +168,7 @@ Definition at line \mbox{\hyperlink{property_8_f90_source_l00104}{104}} of file 
 \index{camp\_property::property\_link\_t@{camp\_property::property\_link\_t}!value\_string@{value\_string}}
 \index{value\_string@{value\_string}!camp\_property::property\_link\_t@{camp\_property::property\_link\_t}}
 \doxysubsubsection{\texorpdfstring{value\_string()}{value\_string()}}
-{\footnotesize\ttfamily procedure camp\+\_\+property\+::property\+\_\+link\+\_\+t\+::value\+\_\+string\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily procedure camp\+\_\+property\+::property\+\_\+link\+\_\+t\+::value\+\_\+string}
 
 
 
@@ -202,7 +199,7 @@ Definition at line \mbox{\hyperlink{property_8_f90_source_l00091}{91}} of file \
 \index{camp\_property::property\_link\_t@{camp\_property::property\_link\_t}!next\_link@{next\_link}}
 \index{next\_link@{next\_link}!camp\_property::property\_link\_t@{camp\_property::property\_link\_t}}
 \doxysubsubsection{\texorpdfstring{next\_link}{next\_link}}
-{\footnotesize\ttfamily type(\mbox{\hyperlink{structcamp__property_1_1property__link__t}{property\+\_\+link\+\_\+t}}), pointer camp\+\_\+property\+::property\+\_\+link\+\_\+t\+::next\+\_\+link =$>$ null()\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily type(\mbox{\hyperlink{structcamp__property_1_1property__link__t}{property\+\_\+link\+\_\+t}}), pointer camp\+\_\+property\+::property\+\_\+link\+\_\+t\+::next\+\_\+link =$>$ null()}
 
 
 
@@ -216,7 +213,7 @@ Definition at line \mbox{\hyperlink{property_8_f90_source_l00095}{95}} of file \
 \index{camp\_property::property\_link\_t@{camp\_property::property\_link\_t}!val@{val}}
 \index{val@{val}!camp\_property::property\_link\_t@{camp\_property::property\_link\_t}}
 \doxysubsubsection{\texorpdfstring{val}{val}}
-{\footnotesize\ttfamily class($\ast$), pointer camp\+\_\+property\+::property\+\_\+link\+\_\+t\+::val =$>$ null()\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily class($\ast$), pointer camp\+\_\+property\+::property\+\_\+link\+\_\+t\+::val =$>$ null()}
 
 
 

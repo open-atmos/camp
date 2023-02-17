@@ -38,11 +38,11 @@ module \mbox{\hyperlink{namespacecamp__rxn__wet__deposition}{camp\+\_\+rxn\+\_\+
 \item 
 \#define \mbox{\hyperlink{rxn__wet__deposition_8_f90_a1f68a3544ae39a7815cbb5c09dfdeff0}{NUM\+\_\+\+ENV\+\_\+\+PARAM\+\_\+}}~2
 \item 
-\#define \mbox{\hyperlink{rxn__wet__deposition_8_f90_a2ad682b58111b832427ffbe14ad0456b}{REACT\+\_\+}}(s)~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}}+s)
+\#define \mbox{\hyperlink{rxn__wet__deposition_8_f90_a2ad682b58111b832427ffbe14ad0456b}{REACT\+\_\+}}(s)~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}}+s)
 \item 
-\#define \mbox{\hyperlink{rxn__wet__deposition_8_f90_a9bddf5e7fb20588f83d13cfdc3a61e40}{DERIV\+\_\+\+ID\+\_\+}}(s)~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}}+\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a9a5c42fc20a0cc885faf74920b1f8281}{NUM\+\_\+\+SPEC\+\_\+}}+s)
+\#define \mbox{\hyperlink{rxn__wet__deposition_8_f90_a9bddf5e7fb20588f83d13cfdc3a61e40}{DERIV\+\_\+\+ID\+\_\+}}(s)~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}}+\mbox{\hyperlink{rxn__wet__deposition_8c_a633b13446295bae13643bf30401199b4}{NUM\+\_\+\+SPEC\+\_\+}}+s)
 \item 
-\#define \mbox{\hyperlink{rxn__wet__deposition_8_f90_a0b740ccc4f77b017cbd76c8e3a040df6}{JAC\+\_\+\+ID\+\_\+}}(s)~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}}+2$\ast$\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a9a5c42fc20a0cc885faf74920b1f8281}{NUM\+\_\+\+SPEC\+\_\+}}+s))
+\#define \mbox{\hyperlink{rxn__wet__deposition_8_f90_a0b740ccc4f77b017cbd76c8e3a040df6}{JAC\+\_\+\+ID\+\_\+}}(s)~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}}+2$\ast$\mbox{\hyperlink{rxn__wet__deposition_8c_a633b13446295bae13643bf30401199b4}{NUM\+\_\+\+SPEC\+\_\+}}+s))
 \end{DoxyCompactItemize}
 \doxysubsection*{Functions/\+Subroutines}
 \begin{DoxyCompactItemize}
@@ -83,13 +83,13 @@ Definition in file \mbox{\hyperlink{rxn__wet__deposition_8_f90_source}{rxn\+\_\+
 \index{rxn\_wet\_deposition.F90@{rxn\_wet\_deposition.F90}!DERIV\_ID\_@{DERIV\_ID\_}}
 \index{DERIV\_ID\_@{DERIV\_ID\_}!rxn\_wet\_deposition.F90@{rxn\_wet\_deposition.F90}}
 \doxysubsubsection{\texorpdfstring{DERIV\_ID\_}{DERIV\_ID\_}}
-{\footnotesize\ttfamily \#define DERIV\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{s }\end{DoxyParamCaption})~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}}+\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a9a5c42fc20a0cc885faf74920b1f8281}{NUM\+\_\+\+SPEC\+\_\+}}+s)}
+{\footnotesize\ttfamily \#define DERIV\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{s }\end{DoxyParamCaption})~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}}+\mbox{\hyperlink{rxn__wet__deposition_8c_a633b13446295bae13643bf30401199b4}{NUM\+\_\+\+SPEC\+\_\+}}+s)}
 
 \mbox{\Hypertarget{rxn__wet__deposition_8_f90_a0b740ccc4f77b017cbd76c8e3a040df6}\label{rxn__wet__deposition_8_f90_a0b740ccc4f77b017cbd76c8e3a040df6}} 
 \index{rxn\_wet\_deposition.F90@{rxn\_wet\_deposition.F90}!JAC\_ID\_@{JAC\_ID\_}}
 \index{JAC\_ID\_@{JAC\_ID\_}!rxn\_wet\_deposition.F90@{rxn\_wet\_deposition.F90}}
 \doxysubsubsection{\texorpdfstring{JAC\_ID\_}{JAC\_ID\_}}
-{\footnotesize\ttfamily \#define JAC\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{s }\end{DoxyParamCaption})~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}}+2$\ast$\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a9a5c42fc20a0cc885faf74920b1f8281}{NUM\+\_\+\+SPEC\+\_\+}}+s))}
+{\footnotesize\ttfamily \#define JAC\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{s }\end{DoxyParamCaption})~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}}+2$\ast$\mbox{\hyperlink{rxn__wet__deposition_8c_a633b13446295bae13643bf30401199b4}{NUM\+\_\+\+SPEC\+\_\+}}+s))}
 
 \mbox{\Hypertarget{rxn__wet__deposition_8_f90_a1f68a3544ae39a7815cbb5c09dfdeff0}\label{rxn__wet__deposition_8_f90_a1f68a3544ae39a7815cbb5c09dfdeff0}} 
 \index{rxn\_wet\_deposition.F90@{rxn\_wet\_deposition.F90}!NUM\_ENV\_PARAM\_@{NUM\_ENV\_PARAM\_}}
@@ -119,7 +119,7 @@ Definition in file \mbox{\hyperlink{rxn__wet__deposition_8_f90_source}{rxn\+\_\+
 \index{rxn\_wet\_deposition.F90@{rxn\_wet\_deposition.F90}!REACT\_@{REACT\_}}
 \index{REACT\_@{REACT\_}!rxn\_wet\_deposition.F90@{rxn\_wet\_deposition.F90}}
 \doxysubsubsection{\texorpdfstring{REACT\_}{REACT\_}}
-{\footnotesize\ttfamily \#define REACT\+\_\+(\begin{DoxyParamCaption}\item[{}]{s }\end{DoxyParamCaption})~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}}+s)}
+{\footnotesize\ttfamily \#define REACT\+\_\+(\begin{DoxyParamCaption}\item[{}]{s }\end{DoxyParamCaption})~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}}+s)}
 
 \mbox{\Hypertarget{rxn__wet__deposition_8_f90_a90cc89c1a8af0668561f9fc8cdbb9dde}\label{rxn__wet__deposition_8_f90_a90cc89c1a8af0668561f9fc8cdbb9dde}} 
 \index{rxn\_wet\_deposition.F90@{rxn\_wet\_deposition.F90}!RXN\_ID\_@{RXN\_ID\_}}

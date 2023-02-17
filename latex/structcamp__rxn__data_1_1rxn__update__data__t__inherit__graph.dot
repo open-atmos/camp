@@ -1,0 +1,17 @@
+digraph "camp_rxn_data::rxn_update_data_t"
+{
+ // LATEX_PDF_SIZE
+  bgcolor="transparent";
+  edge [fontname=Helvetica,fontsize=10,labelfontname=Helvetica,labelfontsize=10];
+  node [fontname=Helvetica,fontsize=10,shape=box,height=0.2,width=0.4];
+  rankdir="LR";
+  Node1 [label="camp_rxn_data::rxn\l_update_data_t",height=0.2,width=0.4,color="gray40", fillcolor="grey60", style="filled", fontcolor="black",tooltip="Update cookie."];
+  Node1 -> Node2 [dir="back",color="steelblue1",style="solid"];
+  Node2 [label="camp_rxn_emission::\lrxn_update_data_emission_t",height=0.2,width=0.4,color="gray40", fillcolor="white", style="filled",URL="$structcamp__rxn__emission_1_1rxn__update__data__emission__t.html",tooltip="Emission rate update object."];
+  Node1 -> Node3 [dir="back",color="steelblue1",style="solid"];
+  Node3 [label="camp_rxn_first_order\l_loss::rxn_update_data\l_first_order_loss_t",height=0.2,width=0.4,color="gray40", fillcolor="white", style="filled",URL="$structcamp__rxn__first__order__loss_1_1rxn__update__data__first__order__loss__t.html",tooltip="First-Order Loss rate update object."];
+  Node1 -> Node4 [dir="back",color="steelblue1",style="solid"];
+  Node4 [label="camp_rxn_photolysis\l::rxn_update_data_photolysis_t",height=0.2,width=0.4,color="gray40", fillcolor="white", style="filled",URL="$structcamp__rxn__photolysis_1_1rxn__update__data__photolysis__t.html",tooltip="Photolysis rate update object."];
+  Node1 -> Node5 [dir="back",color="steelblue1",style="solid"];
+  Node5 [label="camp_rxn_wet_deposition\l::rxn_update_data_wet\l_deposition_t",height=0.2,width=0.4,color="gray40", fillcolor="white", style="filled",URL="$structcamp__rxn__wet__deposition_1_1rxn__update__data__wet__deposition__t.html",tooltip="Wet Deposition rate update object."];
+}

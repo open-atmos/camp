@@ -1,4 +1,4 @@
 <map id="camp_util::read_word_raw" name="camp_util::read_word_raw">
-<area shape="rect" id="node1" title="Read a white&#45;space delimited word from a file, signaling if we have EOL or EOF. If EOL or EOF are tru..." alt="" coords="5,5,177,32"/>
-<area shape="rect" id="node2" href="$namespacecamp__util.html#ae0c20285a75bd4e58f46602f71fb871c" title="Read a single character from a file, signaling if we have hit end&#45;of&#45;line (EOL) or end&#45;of&#45;file (EOF)...." alt="" coords="225,5,395,32"/>
+<area shape="rect" id="node1" title="Read a white&#45;space delimited word from a file, signaling if we have EOL or EOF. If EOL or EOF are tru..." alt="" coords="5,5,177,31"/>
+<area shape="rect" id="node2" href="$namespacecamp__util.html#ae0c20285a75bd4e58f46602f71fb871c" title="Read a single character from a file, signaling if we have hit end&#45;of&#45;line (EOL) or end&#45;of&#45;file (EOF)...." alt="" coords="225,5,395,31"/>
 </map>

@@ -1,0 +1,11 @@
+digraph "solver_get_statistics"
+{
+ // LATEX_PDF_SIZE
+  bgcolor="transparent";
+  edge [fontname=Helvetica,fontsize=10,labelfontname=Helvetica,labelfontsize=10];
+  node [fontname=Helvetica,fontsize=10,shape=box,height=0.2,width=0.4];
+  rankdir="LR";
+  Node1 [label="solver_get_statistics",height=0.2,width=0.4,color="gray40", fillcolor="grey60", style="filled", fontcolor="black",tooltip="Get solver statistics after an integration attempt."];
+  Node1 -> Node2 [color="steelblue1",style="solid"];
+  Node2 [label="check_flag",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$camp__solver_8c.html#a08519bb4526ffd3db7f49b33ba7600aa",tooltip="Check the return value of a SUNDIALS function."];
+}

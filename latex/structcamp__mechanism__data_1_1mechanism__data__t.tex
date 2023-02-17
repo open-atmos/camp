@@ -5,14 +5,14 @@
 A chemical mechanism.  
 
 
-\doxysubsection*{Private Member Functions}
+\doxysubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
 procedure \mbox{\hyperlink{structcamp__mechanism__data_1_1mechanism__data__t_ac251f25975fa4120e812ccdd275c4d66}{load}}
 \begin{DoxyCompactList}\small\item\em Load reactions from an input file. \end{DoxyCompactList}\item 
 procedure \mbox{\hyperlink{structcamp__mechanism__data_1_1mechanism__data__t_aa237cd23b8f0344c1e7e13bed5ca5f79}{initialize}}
 \begin{DoxyCompactList}\small\item\em Initialize the mechanism. \end{DoxyCompactList}\item 
-procedure \mbox{\hyperlink{structcamp__mechanism__data_1_1mechanism__data__t_abcd3f97dc8afdb168c60925f930339fb}{name}} =$>$ \mbox{\hyperlink{namespacecamp__mechanism__data_a79e4b0bbc6e45ff91d24792792e548df}{get\+\_\+name}}
+procedure \mbox{\hyperlink{structcamp__mechanism__data_1_1mechanism__data__t_abcd3f97dc8afdb168c60925f930339fb}{name}} =$>$ \mbox{\hyperlink{namespacecamp__aero__phase__data_a50e3a12672f60404141d9f7d90ab049e}{get\+\_\+name}}
 \begin{DoxyCompactList}\small\item\em Get the mechanism name. \end{DoxyCompactList}\item 
 procedure \mbox{\hyperlink{structcamp__mechanism__data_1_1mechanism__data__t_aa3aa2e0bcaf8439bb3b030df93eb666d}{size}} =$>$ \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1get__size}{get\+\_\+size}}
 \begin{DoxyCompactList}\small\item\em Get the size of the reaction database. \end{DoxyCompactList}\item 
@@ -24,23 +24,29 @@ procedure \mbox{\hyperlink{structcamp__mechanism__data_1_1mechanism__data__t_a93
 \begin{DoxyCompactList}\small\item\em Packs the given value into the buffer, advancing position. \end{DoxyCompactList}\item 
 procedure \mbox{\hyperlink{structcamp__mechanism__data_1_1mechanism__data__t_a6282e92499114599f86d38af6cac7d43}{bin\+\_\+unpack}}
 \begin{DoxyCompactList}\small\item\em Unpacks the given value from the buffer, advancing position. \end{DoxyCompactList}\item 
-procedure \mbox{\hyperlink{structcamp__mechanism__data_1_1mechanism__data__t_a143be2de5e51a0bf2495233e0763544d}{print}} =$>$ \mbox{\hyperlink{namespacecamp__mechanism__data_ada2febb1f2d7d65bb2e008f630122da8}{do\+\_\+print}}
+procedure \mbox{\hyperlink{structcamp__mechanism__data_1_1mechanism__data__t_a143be2de5e51a0bf2495233e0763544d}{print}} =$>$ \mbox{\hyperlink{namespacecamp__aero__phase__data_ac5eaedf2265900988eaddb4872f1c0c2}{do\+\_\+print}}
 \begin{DoxyCompactList}\small\item\em Print the mechanism data. \end{DoxyCompactList}\item 
 final \mbox{\hyperlink{structcamp__mechanism__data_1_1mechanism__data__t_a66e9e7ce8ddf926d25b1f2bc8c07c495}{finalize}}
-\begin{DoxyCompactList}\small\item\em Finalize the mechanism. \end{DoxyCompactList}\item 
-procedure, private \mbox{\hyperlink{structcamp__mechanism__data_1_1mechanism__data__t_a665d6326f2da0544177ec3cd333f3d48}{ensure\+\_\+size}}
-\begin{DoxyCompactList}\small\item\em Ensure there is enough room in the reaction dataset to add a specified number of reactions. \end{DoxyCompactList}\end{DoxyCompactItemize}
-\doxysubsection*{Private Attributes}
+\begin{DoxyCompactList}\small\item\em Finalize the mechanism. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
 \begin{DoxyCompactItemize}
 \item 
-integer(kind=i\+\_\+kind) \mbox{\hyperlink{structcamp__mechanism__data_1_1mechanism__data__t_a1e5fd432aa122d4ba0f85070bd64613e}{num\+\_\+rxn}} = 0
-\begin{DoxyCompactList}\small\item\em Number of reactions. \end{DoxyCompactList}\item 
 character(len=\+:), allocatable \mbox{\hyperlink{structcamp__mechanism__data_1_1mechanism__data__t_aa8d3f2179bf4c3e489425096095febf6}{mech\+\_\+name}}
 \begin{DoxyCompactList}\small\item\em Mechanism name. \end{DoxyCompactList}\item 
 character(len=\+:), allocatable \mbox{\hyperlink{structcamp__mechanism__data_1_1mechanism__data__t_a15577e589310f8594a0f3a54efceb59d}{fixed\+\_\+file\+\_\+prefix}}
 \begin{DoxyCompactList}\small\item\em Path and prefix for fixed module output. \end{DoxyCompactList}\item 
 type(\mbox{\hyperlink{structcamp__rxn__data_1_1rxn__data__ptr}{rxn\+\_\+data\+\_\+ptr}}), dimension(\+:), pointer \mbox{\hyperlink{structcamp__mechanism__data_1_1mechanism__data__t_a7f974dc603b5931c5c1ada307a295da8}{rxn\+\_\+ptr}} =$>$ null()
 \begin{DoxyCompactList}\small\item\em Reactions. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+procedure, private \mbox{\hyperlink{structcamp__mechanism__data_1_1mechanism__data__t_a665d6326f2da0544177ec3cd333f3d48}{ensure\+\_\+size}}
+\begin{DoxyCompactList}\small\item\em Ensure there is enough room in the reaction dataset to add a specified number of reactions. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+integer(kind=i\+\_\+kind) \mbox{\hyperlink{structcamp__mechanism__data_1_1mechanism__data__t_a1e5fd432aa122d4ba0f85070bd64613e}{num\+\_\+rxn}} = 0
+\begin{DoxyCompactList}\small\item\em Number of reactions. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
@@ -57,7 +63,7 @@ Definition at line \mbox{\hyperlink{mechanism__data_8_f90_source_l00060}{60}} of
 \index{camp\_mechanism\_data::mechanism\_data\_t@{camp\_mechanism\_data::mechanism\_data\_t}!bin\_pack@{bin\_pack}}
 \index{bin\_pack@{bin\_pack}!camp\_mechanism\_data::mechanism\_data\_t@{camp\_mechanism\_data::mechanism\_data\_t}}
 \doxysubsubsection{\texorpdfstring{bin\_pack()}{bin\_pack()}}
-{\footnotesize\ttfamily procedure camp\+\_\+mechanism\+\_\+data\+::mechanism\+\_\+data\+\_\+t\+::bin\+\_\+pack\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily procedure camp\+\_\+mechanism\+\_\+data\+::mechanism\+\_\+data\+\_\+t\+::bin\+\_\+pack}
 
 
 
@@ -71,7 +77,7 @@ Definition at line \mbox{\hyperlink{mechanism__data_8_f90_source_l00084}{84}} of
 \index{camp\_mechanism\_data::mechanism\_data\_t@{camp\_mechanism\_data::mechanism\_data\_t}!bin\_unpack@{bin\_unpack}}
 \index{bin\_unpack@{bin\_unpack}!camp\_mechanism\_data::mechanism\_data\_t@{camp\_mechanism\_data::mechanism\_data\_t}}
 \doxysubsubsection{\texorpdfstring{bin\_unpack()}{bin\_unpack()}}
-{\footnotesize\ttfamily procedure camp\+\_\+mechanism\+\_\+data\+::mechanism\+\_\+data\+\_\+t\+::bin\+\_\+unpack\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily procedure camp\+\_\+mechanism\+\_\+data\+::mechanism\+\_\+data\+\_\+t\+::bin\+\_\+unpack}
 
 
 
@@ -99,7 +105,7 @@ Definition at line \mbox{\hyperlink{mechanism__data_8_f90_source_l00095}{95}} of
 \index{camp\_mechanism\_data::mechanism\_data\_t@{camp\_mechanism\_data::mechanism\_data\_t}!finalize@{finalize}}
 \index{finalize@{finalize}!camp\_mechanism\_data::mechanism\_data\_t@{camp\_mechanism\_data::mechanism\_data\_t}}
 \doxysubsubsection{\texorpdfstring{finalize()}{finalize()}}
-{\footnotesize\ttfamily final camp\+\_\+mechanism\+\_\+data\+::mechanism\+\_\+data\+\_\+t\+::finalize\hspace{0.3cm}{\ttfamily [final]}, {\ttfamily [private]}}
+{\footnotesize\ttfamily final camp\+\_\+mechanism\+\_\+data\+::mechanism\+\_\+data\+\_\+t\+::finalize\hspace{0.3cm}{\ttfamily [final]}}
 
 
 
@@ -110,18 +116,12 @@ Finalize the mechanism.
 Definition at line \mbox{\hyperlink{mechanism__data_8_f90_source_l00090}{90}} of file \mbox{\hyperlink{mechanism__data_8_f90_source}{mechanism\+\_\+data.\+F90}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{structcamp__mechanism__data_1_1mechanism__data__t_a66e9e7ce8ddf926d25b1f2bc8c07c495_cgraph}
-\end{center}
-\end{figure}
+% FIG 0
 \mbox{\Hypertarget{structcamp__mechanism__data_1_1mechanism__data__t_abcf0d47b7c8730c92c5eaf33ed3918dd}\label{structcamp__mechanism__data_1_1mechanism__data__t_abcf0d47b7c8730c92c5eaf33ed3918dd}} 
 \index{camp\_mechanism\_data::mechanism\_data\_t@{camp\_mechanism\_data::mechanism\_data\_t}!get\_rxn@{get\_rxn}}
 \index{get\_rxn@{get\_rxn}!camp\_mechanism\_data::mechanism\_data\_t@{camp\_mechanism\_data::mechanism\_data\_t}}
 \doxysubsubsection{\texorpdfstring{get\_rxn()}{get\_rxn()}}
-{\footnotesize\ttfamily procedure camp\+\_\+mechanism\+\_\+data\+::mechanism\+\_\+data\+\_\+t\+::get\+\_\+rxn\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily procedure camp\+\_\+mechanism\+\_\+data\+::mechanism\+\_\+data\+\_\+t\+::get\+\_\+rxn}
 
 
 
@@ -135,7 +135,7 @@ Definition at line \mbox{\hyperlink{mechanism__data_8_f90_source_l00080}{80}} of
 \index{camp\_mechanism\_data::mechanism\_data\_t@{camp\_mechanism\_data::mechanism\_data\_t}!initialize@{initialize}}
 \index{initialize@{initialize}!camp\_mechanism\_data::mechanism\_data\_t@{camp\_mechanism\_data::mechanism\_data\_t}}
 \doxysubsubsection{\texorpdfstring{initialize()}{initialize()}}
-{\footnotesize\ttfamily procedure camp\+\_\+mechanism\+\_\+data\+::mechanism\+\_\+data\+\_\+t\+::initialize\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily procedure camp\+\_\+mechanism\+\_\+data\+::mechanism\+\_\+data\+\_\+t\+::initialize}
 
 
 
@@ -149,7 +149,7 @@ Definition at line \mbox{\hyperlink{mechanism__data_8_f90_source_l00074}{74}} of
 \index{camp\_mechanism\_data::mechanism\_data\_t@{camp\_mechanism\_data::mechanism\_data\_t}!load@{load}}
 \index{load@{load}!camp\_mechanism\_data::mechanism\_data\_t@{camp\_mechanism\_data::mechanism\_data\_t}}
 \doxysubsubsection{\texorpdfstring{load()}{load()}}
-{\footnotesize\ttfamily procedure camp\+\_\+mechanism\+\_\+data\+::mechanism\+\_\+data\+\_\+t\+::load\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily procedure camp\+\_\+mechanism\+\_\+data\+::mechanism\+\_\+data\+\_\+t\+::load}
 
 
 
@@ -163,7 +163,7 @@ Definition at line \mbox{\hyperlink{mechanism__data_8_f90_source_l00072}{72}} of
 \index{camp\_mechanism\_data::mechanism\_data\_t@{camp\_mechanism\_data::mechanism\_data\_t}!name@{name}}
 \index{name@{name}!camp\_mechanism\_data::mechanism\_data\_t@{camp\_mechanism\_data::mechanism\_data\_t}}
 \doxysubsubsection{\texorpdfstring{name()}{name()}}
-{\footnotesize\ttfamily procedure camp\+\_\+mechanism\+\_\+data\+::mechanism\+\_\+data\+\_\+t\+::name\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily procedure camp\+\_\+mechanism\+\_\+data\+::mechanism\+\_\+data\+\_\+t\+::name}
 
 
 
@@ -177,7 +177,7 @@ Definition at line \mbox{\hyperlink{mechanism__data_8_f90_source_l00076}{76}} of
 \index{camp\_mechanism\_data::mechanism\_data\_t@{camp\_mechanism\_data::mechanism\_data\_t}!pack\_size@{pack\_size}}
 \index{pack\_size@{pack\_size}!camp\_mechanism\_data::mechanism\_data\_t@{camp\_mechanism\_data::mechanism\_data\_t}}
 \doxysubsubsection{\texorpdfstring{pack\_size()}{pack\_size()}}
-{\footnotesize\ttfamily procedure camp\+\_\+mechanism\+\_\+data\+::mechanism\+\_\+data\+\_\+t\+::pack\+\_\+size\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily procedure camp\+\_\+mechanism\+\_\+data\+::mechanism\+\_\+data\+\_\+t\+::pack\+\_\+size}
 
 
 
@@ -191,7 +191,7 @@ Definition at line \mbox{\hyperlink{mechanism__data_8_f90_source_l00082}{82}} of
 \index{camp\_mechanism\_data::mechanism\_data\_t@{camp\_mechanism\_data::mechanism\_data\_t}!print@{print}}
 \index{print@{print}!camp\_mechanism\_data::mechanism\_data\_t@{camp\_mechanism\_data::mechanism\_data\_t}}
 \doxysubsubsection{\texorpdfstring{print()}{print()}}
-{\footnotesize\ttfamily procedure camp\+\_\+mechanism\+\_\+data\+::mechanism\+\_\+data\+\_\+t\+::print\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily procedure camp\+\_\+mechanism\+\_\+data\+::mechanism\+\_\+data\+\_\+t\+::print}
 
 
 
@@ -205,7 +205,7 @@ Definition at line \mbox{\hyperlink{mechanism__data_8_f90_source_l00088}{88}} of
 \index{camp\_mechanism\_data::mechanism\_data\_t@{camp\_mechanism\_data::mechanism\_data\_t}!size@{size}}
 \index{size@{size}!camp\_mechanism\_data::mechanism\_data\_t@{camp\_mechanism\_data::mechanism\_data\_t}}
 \doxysubsubsection{\texorpdfstring{size()}{size()}}
-{\footnotesize\ttfamily procedure camp\+\_\+mechanism\+\_\+data\+::mechanism\+\_\+data\+\_\+t\+::size\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily procedure camp\+\_\+mechanism\+\_\+data\+::mechanism\+\_\+data\+\_\+t\+::size}
 
 
 
@@ -222,7 +222,7 @@ Definition at line \mbox{\hyperlink{mechanism__data_8_f90_source_l00078}{78}} of
 \index{camp\_mechanism\_data::mechanism\_data\_t@{camp\_mechanism\_data::mechanism\_data\_t}!fixed\_file\_prefix@{fixed\_file\_prefix}}
 \index{fixed\_file\_prefix@{fixed\_file\_prefix}!camp\_mechanism\_data::mechanism\_data\_t@{camp\_mechanism\_data::mechanism\_data\_t}}
 \doxysubsubsection{\texorpdfstring{fixed\_file\_prefix}{fixed\_file\_prefix}}
-{\footnotesize\ttfamily character(len=\+:), allocatable camp\+\_\+mechanism\+\_\+data\+::mechanism\+\_\+data\+\_\+t\+::fixed\+\_\+file\+\_\+prefix\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily character(len=\+:), allocatable camp\+\_\+mechanism\+\_\+data\+::mechanism\+\_\+data\+\_\+t\+::fixed\+\_\+file\+\_\+prefix}
 
 
 
@@ -236,7 +236,7 @@ Definition at line \mbox{\hyperlink{mechanism__data_8_f90_source_l00067}{67}} of
 \index{camp\_mechanism\_data::mechanism\_data\_t@{camp\_mechanism\_data::mechanism\_data\_t}!mech\_name@{mech\_name}}
 \index{mech\_name@{mech\_name}!camp\_mechanism\_data::mechanism\_data\_t@{camp\_mechanism\_data::mechanism\_data\_t}}
 \doxysubsubsection{\texorpdfstring{mech\_name}{mech\_name}}
-{\footnotesize\ttfamily character(len=\+:), allocatable camp\+\_\+mechanism\+\_\+data\+::mechanism\+\_\+data\+\_\+t\+::mech\+\_\+name\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily character(len=\+:), allocatable camp\+\_\+mechanism\+\_\+data\+::mechanism\+\_\+data\+\_\+t\+::mech\+\_\+name}
 
 
 
@@ -264,7 +264,7 @@ Definition at line \mbox{\hyperlink{mechanism__data_8_f90_source_l00063}{63}} of
 \index{camp\_mechanism\_data::mechanism\_data\_t@{camp\_mechanism\_data::mechanism\_data\_t}!rxn\_ptr@{rxn\_ptr}}
 \index{rxn\_ptr@{rxn\_ptr}!camp\_mechanism\_data::mechanism\_data\_t@{camp\_mechanism\_data::mechanism\_data\_t}}
 \doxysubsubsection{\texorpdfstring{rxn\_ptr}{rxn\_ptr}}
-{\footnotesize\ttfamily type(\mbox{\hyperlink{structcamp__rxn__data_1_1rxn__data__ptr}{rxn\+\_\+data\+\_\+ptr}}), dimension(\+:), pointer camp\+\_\+mechanism\+\_\+data\+::mechanism\+\_\+data\+\_\+t\+::rxn\+\_\+ptr =$>$ null()\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily type(\mbox{\hyperlink{structcamp__rxn__data_1_1rxn__data__ptr}{rxn\+\_\+data\+\_\+ptr}}), dimension(\+:), pointer camp\+\_\+mechanism\+\_\+data\+::mechanism\+\_\+data\+\_\+t\+::rxn\+\_\+ptr =$>$ null()}
 
 
 

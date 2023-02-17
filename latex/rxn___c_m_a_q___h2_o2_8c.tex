@@ -6,13 +6,7 @@ CMAQ\+\_\+\+H2\+O2 reaction solver functions.
 
 
 Include dependency graph for rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+c\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{rxn___c_m_a_q___h2_o2_8c__incl}
-\end{center}
-\end{figure}
+% FIG 0
 \doxysubsection*{Macros}
 \begin{DoxyCompactItemize}
 \item 
@@ -46,15 +40,15 @@ Include dependency graph for rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+c\+:
 \item 
 \#define \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_a1f68a3544ae39a7815cbb5c09dfdeff0}{NUM\+\_\+\+ENV\+\_\+\+PARAM\+\_\+}}~1
 \item 
-\#define \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_ae761e39657aac155d83eae9b338be571}{REACT\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + x\mbox{]} -\/ 1)
+\#define \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_ae761e39657aac155d83eae9b338be571}{REACT\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + x\mbox{]} -\/ 1)
 \item 
-\#define \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_a9fda90058c6a41b1dda6ded03321c4da}{PROD\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + x\mbox{]} -\/ 1)
+\#define \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_a9fda90058c6a41b1dda6ded03321c4da}{PROD\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + x\mbox{]} -\/ 1)
 \item 
-\#define \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_af9fc34858d09e71d3cffd88cf942bdf9}{DERIV\+\_\+\+ID\+\_\+}}(x)~int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + \mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}} + x\mbox{]}
+\#define \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_af9fc34858d09e71d3cffd88cf942bdf9}{DERIV\+\_\+\+ID\+\_\+}}(x)~int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}} + x\mbox{]}
 \item 
-\#define \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\+\_\+\+ID\+\_\+}}(x)~int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 2 $\ast$ (\mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + \mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}}) + x\mbox{]}
+\#define \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\+\_\+\+ID\+\_\+}}(x)~int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 2 $\ast$ (\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}}) + x\mbox{]}
 \item 
-\#define \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_a9ae244708fd9c438bf840ed319733651}{YIELD\+\_\+}}(x)~float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}{NUM\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+}} + x\mbox{]}
+\#define \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_a9ae244708fd9c438bf840ed319733651}{YIELD\+\_\+}}(x)~float\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__solver_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}{NUM\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+}} + x\mbox{]}
 \end{DoxyCompactItemize}
 \doxysubsection*{Functions}
 \begin{DoxyCompactItemize}
@@ -97,7 +91,7 @@ Definition at line \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_source_l00028}{28}}
 \index{rxn\_CMAQ\_H2O2.c@{rxn\_CMAQ\_H2O2.c}!DERIV\_ID\_@{DERIV\_ID\_}}
 \index{DERIV\_ID\_@{DERIV\_ID\_}!rxn\_CMAQ\_H2O2.c@{rxn\_CMAQ\_H2O2.c}}
 \doxysubsubsection{\texorpdfstring{DERIV\_ID\_}{DERIV\_ID\_}}
-{\footnotesize\ttfamily \#define DERIV\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + \mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}} + x\mbox{]}}
+{\footnotesize\ttfamily \#define DERIV\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}} + x\mbox{]}}
 
 
 
@@ -107,7 +101,7 @@ Definition at line \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_source_l00035}{35}}
 \index{rxn\_CMAQ\_H2O2.c@{rxn\_CMAQ\_H2O2.c}!JAC\_ID\_@{JAC\_ID\_}}
 \index{JAC\_ID\_@{JAC\_ID\_}!rxn\_CMAQ\_H2O2.c@{rxn\_CMAQ\_H2O2.c}}
 \doxysubsubsection{\texorpdfstring{JAC\_ID\_}{JAC\_ID\_}}
-{\footnotesize\ttfamily \#define JAC\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 2 $\ast$ (\mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + \mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}}) + x\mbox{]}}
+{\footnotesize\ttfamily \#define JAC\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 2 $\ast$ (\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}}) + x\mbox{]}}
 
 
 
@@ -237,7 +231,7 @@ Definition at line \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_source_l00018}{18}}
 \index{rxn\_CMAQ\_H2O2.c@{rxn\_CMAQ\_H2O2.c}!PROD\_@{PROD\_}}
 \index{PROD\_@{PROD\_}!rxn\_CMAQ\_H2O2.c@{rxn\_CMAQ\_H2O2.c}}
 \doxysubsubsection{\texorpdfstring{PROD\_}{PROD\_}}
-{\footnotesize\ttfamily \#define PROD\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + x\mbox{]} -\/ 1)}
+{\footnotesize\ttfamily \#define PROD\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + x\mbox{]} -\/ 1)}
 
 
 
@@ -257,7 +251,7 @@ Definition at line \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_source_l00029}{29}}
 \index{rxn\_CMAQ\_H2O2.c@{rxn\_CMAQ\_H2O2.c}!REACT\_@{REACT\_}}
 \index{REACT\_@{REACT\_}!rxn\_CMAQ\_H2O2.c@{rxn\_CMAQ\_H2O2.c}}
 \doxysubsubsection{\texorpdfstring{REACT\_}{REACT\_}}
-{\footnotesize\ttfamily \#define REACT\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + x\mbox{]} -\/ 1)}
+{\footnotesize\ttfamily \#define REACT\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + x\mbox{]} -\/ 1)}
 
 
 
@@ -277,7 +271,7 @@ Definition at line \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_source_l00017}{17}}
 \index{rxn\_CMAQ\_H2O2.c@{rxn\_CMAQ\_H2O2.c}!YIELD\_@{YIELD\_}}
 \index{YIELD\_@{YIELD\_}!rxn\_CMAQ\_H2O2.c@{rxn\_CMAQ\_H2O2.c}}
 \doxysubsubsection{\texorpdfstring{YIELD\_}{YIELD\_}}
-{\footnotesize\ttfamily \#define YIELD\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}{NUM\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+}} + x\mbox{]}}
+{\footnotesize\ttfamily \#define YIELD\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~float\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__solver_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}{NUM\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+}} + x\mbox{]}}
 
 
 
@@ -316,13 +310,7 @@ Calculate contributions to the time derivative $f(t,y)$ from this reaction.
 Definition at line \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_source_l00139}{139}} of file \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_source}{rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+c}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=338pt]{rxn___c_m_a_q___h2_o2_8c_abd5c2b96cafc63baffd8934dd8b8f14f_cgraph}
-\end{center}
-\end{figure}
+% FIG 1
 \mbox{\Hypertarget{rxn___c_m_a_q___h2_o2_8c_acad0ab1be9adfd4d8ac11a772245434a}\label{rxn___c_m_a_q___h2_o2_8c_acad0ab1be9adfd4d8ac11a772245434a}} 
 \index{rxn\_CMAQ\_H2O2.c@{rxn\_CMAQ\_H2O2.c}!rxn\_CMAQ\_H2O2\_calc\_jac\_contrib@{rxn\_CMAQ\_H2O2\_calc\_jac\_contrib}}
 \index{rxn\_CMAQ\_H2O2\_calc\_jac\_contrib@{rxn\_CMAQ\_H2O2\_calc\_jac\_contrib}!rxn\_CMAQ\_H2O2.c@{rxn\_CMAQ\_H2O2.c}}
@@ -353,13 +341,7 @@ Calculate contributions to the \mbox{\hyperlink{struct_jacobian}{Jacobian}} from
 Definition at line \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_source_l00185}{185}} of file \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_source}{rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+c}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=336pt]{rxn___c_m_a_q___h2_o2_8c_acad0ab1be9adfd4d8ac11a772245434a_cgraph}
-\end{center}
-\end{figure}
+% FIG 2
 \mbox{\Hypertarget{rxn___c_m_a_q___h2_o2_8c_aaf19aa3c701ef961a31fa085f3a95b68}\label{rxn___c_m_a_q___h2_o2_8c_aaf19aa3c701ef961a31fa085f3a95b68}} 
 \index{rxn\_CMAQ\_H2O2.c@{rxn\_CMAQ\_H2O2.c}!rxn\_CMAQ\_H2O2\_get\_used\_jac\_elem@{rxn\_CMAQ\_H2O2\_get\_used\_jac\_elem}}
 \index{rxn\_CMAQ\_H2O2\_get\_used\_jac\_elem@{rxn\_CMAQ\_H2O2\_get\_used\_jac\_elem}!rxn\_CMAQ\_H2O2.c@{rxn\_CMAQ\_H2O2.c}}
@@ -384,21 +366,9 @@ Flag \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used by this reaction
 Definition at line \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_source_l00045}{45}} of file \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_source}{rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+c}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{rxn___c_m_a_q___h2_o2_8c_aaf19aa3c701ef961a31fa085f3a95b68_cgraph}
-\end{center}
-\end{figure}
+% FIG 3
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{rxn___c_m_a_q___h2_o2_8c_aaf19aa3c701ef961a31fa085f3a95b68_icgraph}
-\end{center}
-\end{figure}
+% FIG 4
 \mbox{\Hypertarget{rxn___c_m_a_q___h2_o2_8c_ab97c2bea4a61c174ee9b4688818f53c9}\label{rxn___c_m_a_q___h2_o2_8c_ab97c2bea4a61c174ee9b4688818f53c9}} 
 \index{rxn\_CMAQ\_H2O2.c@{rxn\_CMAQ\_H2O2.c}!rxn\_CMAQ\_H2O2\_print@{rxn\_CMAQ\_H2O2\_print}}
 \index{rxn\_CMAQ\_H2O2\_print@{rxn\_CMAQ\_H2O2\_print}!rxn\_CMAQ\_H2O2.c@{rxn\_CMAQ\_H2O2.c}}
@@ -421,13 +391,7 @@ Print the CMAQ\+\_\+\+H2\+O2 reaction parameters.
 Definition at line \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_source_l00227}{227}} of file \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_source}{rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+c}}.
 
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=312pt]{rxn___c_m_a_q___h2_o2_8c_ab97c2bea4a61c174ee9b4688818f53c9_icgraph}
-\end{center}
-\end{figure}
+% FIG 5
 \mbox{\Hypertarget{rxn___c_m_a_q___h2_o2_8c_a21dfd7c08cc181e0d64fe5df3f6459fd}\label{rxn___c_m_a_q___h2_o2_8c_a21dfd7c08cc181e0d64fe5df3f6459fd}} 
 \index{rxn\_CMAQ\_H2O2.c@{rxn\_CMAQ\_H2O2.c}!rxn\_CMAQ\_H2O2\_update\_env\_state@{rxn\_CMAQ\_H2O2\_update\_env\_state}}
 \index{rxn\_CMAQ\_H2O2\_update\_env\_state@{rxn\_CMAQ\_H2O2\_update\_env\_state}!rxn\_CMAQ\_H2O2.c@{rxn\_CMAQ\_H2O2.c}}
@@ -456,13 +420,7 @@ For CMAQ\+\_\+\+H2\+O2 reaction this only involves recalculating the rate consta
 Definition at line \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_source_l00106}{106}} of file \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_source}{rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+c}}.
 
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{rxn___c_m_a_q___h2_o2_8c_a21dfd7c08cc181e0d64fe5df3f6459fd_icgraph}
-\end{center}
-\end{figure}
+% FIG 6
 \mbox{\Hypertarget{rxn___c_m_a_q___h2_o2_8c_a0126b0de107f5aac11387864f2523387}\label{rxn___c_m_a_q___h2_o2_8c_a0126b0de107f5aac11387864f2523387}} 
 \index{rxn\_CMAQ\_H2O2.c@{rxn\_CMAQ\_H2O2.c}!rxn\_CMAQ\_H2O2\_update\_ids@{rxn\_CMAQ\_H2O2\_update\_ids}}
 \index{rxn\_CMAQ\_H2O2\_update\_ids@{rxn\_CMAQ\_H2O2\_update\_ids}!rxn\_CMAQ\_H2O2.c@{rxn\_CMAQ\_H2O2.c}}
@@ -491,18 +449,6 @@ Update the time derivative and Jacbobian array indices.
 Definition at line \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_source_l00070}{70}} of file \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8c_source}{rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+c}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{rxn___c_m_a_q___h2_o2_8c_a0126b0de107f5aac11387864f2523387_cgraph}
-\end{center}
-\end{figure}
+% FIG 7
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{rxn___c_m_a_q___h2_o2_8c_a0126b0de107f5aac11387864f2523387_icgraph}
-\end{center}
-\end{figure}
+% FIG 8

@@ -1,5 +1,5 @@
 <map id="aero_rep_update_data" name="aero_rep_update_data">
-<area shape="rect" id="node1" title="Update aerosol representation data." alt="" coords="5,46,156,73"/>
-<area shape="rect" id="node2" href="$aero__rep__modal__binned__mass_8c.html#a1af186a816b0a6be0f3ee39f126351f1" title="Update the aerosol representation data." alt="" coords="206,5,365,47"/>
-<area shape="rect" id="node3" href="$aero__rep__single__particle_8c.html#abe4da510bed46cee8a75f90917764311" title="Update aerosol representation data." alt="" coords="204,71,367,112"/>
+<area shape="rect" id="node1" title="Update aerosol representation data." alt="" coords="5,45,156,70"/>
+<area shape="rect" id="node2" href="$aero__rep__modal__binned__mass_8c.html#a1af186a816b0a6be0f3ee39f126351f1" title="Update the aerosol representation data." alt="" coords="206,5,365,45"/>
+<area shape="rect" id="node3" href="$aero__rep__single__particle_8c.html#abe4da510bed46cee8a75f90917764311" title="Update aerosol representation data." alt="" coords="204,69,367,109"/>
 </map>

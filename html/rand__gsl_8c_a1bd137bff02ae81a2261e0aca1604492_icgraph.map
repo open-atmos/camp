@@ -1,4 +1,4 @@
 <map id="camp_rand_finalize_gsl" name="camp_rand_finalize_gsl">
-<area shape="rect" id="node1" title="Cleanup and deallocate the random number generator." alt="" coords="209,13,365,39"/>
-<area shape="rect" id="node2" href="$namespacecamp__rand.html#a67fe9351306f38d3024e6aea4220e3c8" title="Cleanup the random number generator." alt="" coords="5,5,161,47"/>
+<area shape="rect" id="node1" title="Cleanup and deallocate the random number generator." alt="" coords="209,13,365,38"/>
+<area shape="rect" id="node2" href="$namespacecamp__rand.html#a67fe9351306f38d3024e6aea4220e3c8" title="Cleanup the random number generator." alt="" coords="5,5,161,45"/>
 </map>

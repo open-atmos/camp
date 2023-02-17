@@ -1,0 +1,15 @@
+digraph "rxn_troe_calc_jac_contrib"
+{
+ // LATEX_PDF_SIZE
+  bgcolor="transparent";
+  edge [fontname=Helvetica,fontsize=10,labelfontname=Helvetica,labelfontsize=10];
+  node [fontname=Helvetica,fontsize=10,shape=box,height=0.2,width=0.4];
+  rankdir="RL";
+  Node1 [label="rxn_troe_calc_jac_contrib",height=0.2,width=0.4,color="gray40", fillcolor="grey60", style="filled", fontcolor="black",tooltip="Calculate contributions to the Jacobian from this reaction."];
+  Node1 -> Node2 [dir="back",color="steelblue1",style="solid"];
+  Node2 [label="rxn_calc_jac",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$rxn__solver_8c.html#ad44deb65b9845d05c6bd148e3378b42a",tooltip="Calculate the Jacobian."];
+  Node2 -> Node3 [dir="back",color="steelblue1",style="solid"];
+  Node3 [label="Jac",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$camp__solver_8c.html#a13451d507558a61a2353adfed58db468",tooltip="Compute the Jacobian."];
+  Node3 -> Node4 [dir="back",color="steelblue1",style="solid"];
+  Node4 [label="solver_initialize",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$camp__solver_8c.html#a599ffdef916b139a1690bfd41aa386b6",tooltip="Solver initialization."];
+}

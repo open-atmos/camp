@@ -6,13 +6,7 @@ Single particle aerosol representation functions.
 
 
 Include dependency graph for aero\+\_\+rep\+\_\+single\+\_\+particle.\+c\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{aero__rep__single__particle_8c__incl}
-\end{center}
-\end{figure}
+% FIG 0
 \doxysubsection*{Macros}
 \begin{DoxyCompactItemize}
 \item 
@@ -36,13 +30,13 @@ Include dependency graph for aero\+\_\+rep\+\_\+single\+\_\+particle.\+c\+:
 \item 
 \#define \mbox{\hyperlink{aero__rep__single__particle_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}{NUM\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+}}~0
 \item 
-\#define \mbox{\hyperlink{aero__rep__single__particle_8c_a1f68a3544ae39a7815cbb5c09dfdeff0}{NUM\+\_\+\+ENV\+\_\+\+PARAM\+\_\+}}~\mbox{\hyperlink{aero__rep__single__particle_8_f90_a9a8f20dcd00b20eb44f20a23b8483562}{MAX\+\_\+\+PARTICLES\+\_\+}}
+\#define \mbox{\hyperlink{aero__rep__single__particle_8c_a1f68a3544ae39a7815cbb5c09dfdeff0}{NUM\+\_\+\+ENV\+\_\+\+PARAM\+\_\+}}~\mbox{\hyperlink{aero__rep__single__particle_8c_a9a8f20dcd00b20eb44f20a23b8483562}{MAX\+\_\+\+PARTICLES\+\_\+}}
 \item 
-\#define \mbox{\hyperlink{aero__rep__single__particle_8c_a07ea549f36f691ae067d983b25bd430a}{PHASE\+\_\+\+STATE\+\_\+\+ID\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + x\mbox{]} -\/ 1)
+\#define \mbox{\hyperlink{aero__rep__single__particle_8c_a07ea549f36f691ae067d983b25bd430a}{PHASE\+\_\+\+STATE\+\_\+\+ID\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + x\mbox{]} -\/ 1)
 \item 
-\#define \mbox{\hyperlink{aero__rep__single__particle_8c_a4a3d5932c356a11e4d570ffda6c16f61}{PHASE\+\_\+\+MODEL\+\_\+\+DATA\+\_\+\+ID\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_aff1191174604af4c86c622f98cd18c17}{NUM\+\_\+\+PHASE\+\_\+}} + x\mbox{]} -\/ 1)
+\#define \mbox{\hyperlink{aero__rep__single__particle_8c_a4a3d5932c356a11e4d570ffda6c16f61}{PHASE\+\_\+\+MODEL\+\_\+\+DATA\+\_\+\+ID\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\+\_\+\+PHASE\+\_\+}} + x\mbox{]} -\/ 1)
 \item 
-\#define \mbox{\hyperlink{aero__rep__single__particle_8c_a21029173eab3966c8f06fcb723c822a1}{PHASE\+\_\+\+NUM\+\_\+\+JAC\+\_\+\+ELEM\+\_\+}}(x)~int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 2 $\ast$ \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_aff1191174604af4c86c622f98cd18c17}{NUM\+\_\+\+PHASE\+\_\+}} + x\mbox{]}
+\#define \mbox{\hyperlink{aero__rep__single__particle_8c_a21029173eab3966c8f06fcb723c822a1}{PHASE\+\_\+\+NUM\+\_\+\+JAC\+\_\+\+ELEM\+\_\+}}(x)~int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 2 $\ast$ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\+\_\+\+PHASE\+\_\+}} + x\mbox{]}
 \end{DoxyCompactItemize}
 \doxysubsection*{Functions}
 \begin{DoxyCompactItemize}
@@ -109,7 +103,7 @@ Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00025
 \index{aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}!NUM\_ENV\_PARAM\_@{NUM\_ENV\_PARAM\_}}
 \index{NUM\_ENV\_PARAM\_@{NUM\_ENV\_PARAM\_}!aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}}
 \doxysubsubsection{\texorpdfstring{NUM\_ENV\_PARAM\_}{NUM\_ENV\_PARAM\_}}
-{\footnotesize\ttfamily \#define NUM\+\_\+\+ENV\+\_\+\+PARAM\+\_\+~\mbox{\hyperlink{aero__rep__single__particle_8_f90_a9a8f20dcd00b20eb44f20a23b8483562}{MAX\+\_\+\+PARTICLES\+\_\+}}}
+{\footnotesize\ttfamily \#define NUM\+\_\+\+ENV\+\_\+\+PARAM\+\_\+~\mbox{\hyperlink{aero__rep__single__particle_8c_a9a8f20dcd00b20eb44f20a23b8483562}{MAX\+\_\+\+PARTICLES\+\_\+}}}
 
 
 
@@ -169,7 +163,7 @@ Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00026
 \index{aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}!PHASE\_MODEL\_DATA\_ID\_@{PHASE\_MODEL\_DATA\_ID\_}}
 \index{PHASE\_MODEL\_DATA\_ID\_@{PHASE\_MODEL\_DATA\_ID\_}!aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}}
 \doxysubsubsection{\texorpdfstring{PHASE\_MODEL\_DATA\_ID\_}{PHASE\_MODEL\_DATA\_ID\_}}
-{\footnotesize\ttfamily \#define PHASE\+\_\+\+MODEL\+\_\+\+DATA\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_aff1191174604af4c86c622f98cd18c17}{NUM\+\_\+\+PHASE\+\_\+}} + x\mbox{]} -\/ 1)}
+{\footnotesize\ttfamily \#define PHASE\+\_\+\+MODEL\+\_\+\+DATA\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\+\_\+\+PHASE\+\_\+}} + x\mbox{]} -\/ 1)}
 
 
 
@@ -179,7 +173,7 @@ Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00032
 \index{aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}!PHASE\_NUM\_JAC\_ELEM\_@{PHASE\_NUM\_JAC\_ELEM\_}}
 \index{PHASE\_NUM\_JAC\_ELEM\_@{PHASE\_NUM\_JAC\_ELEM\_}!aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}}
 \doxysubsubsection{\texorpdfstring{PHASE\_NUM\_JAC\_ELEM\_}{PHASE\_NUM\_JAC\_ELEM\_}}
-{\footnotesize\ttfamily \#define PHASE\+\_\+\+NUM\+\_\+\+JAC\+\_\+\+ELEM\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 2 $\ast$ \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_aff1191174604af4c86c622f98cd18c17}{NUM\+\_\+\+PHASE\+\_\+}} + x\mbox{]}}
+{\footnotesize\ttfamily \#define PHASE\+\_\+\+NUM\+\_\+\+JAC\+\_\+\+ELEM\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 2 $\ast$ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\+\_\+\+PHASE\+\_\+}} + x\mbox{]}}
 
 
 
@@ -189,7 +183,7 @@ Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00033
 \index{aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}!PHASE\_STATE\_ID\_@{PHASE\_STATE\_ID\_}}
 \index{PHASE\_STATE\_ID\_@{PHASE\_STATE\_ID\_}!aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}}
 \doxysubsubsection{\texorpdfstring{PHASE\_STATE\_ID\_}{PHASE\_STATE\_ID\_}}
-{\footnotesize\ttfamily \#define PHASE\+\_\+\+STATE\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + x\mbox{]} -\/ 1)}
+{\footnotesize\ttfamily \#define PHASE\+\_\+\+STATE\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + x\mbox{]} -\/ 1)}
 
 
 
@@ -275,13 +269,7 @@ Single particle concentrations are per-\/particle.
 Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00229}{229}} of file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c}}.
 
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{aero__rep__single__particle_8c_a59114de73dd305d5825a8547155b8946_icgraph}
-\end{center}
-\end{figure}
+% FIG 1
 \mbox{\Hypertarget{aero__rep__single__particle_8c_a203b6931fd5a504b7cc1750eb582b60c}\label{aero__rep__single__particle_8c_a203b6931fd5a504b7cc1750eb582b60c}} 
 \index{aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}!aero\_rep\_single\_particle\_get\_aero\_phase\_avg\_MW\_\_kg\_mol@{aero\_rep\_single\_particle\_get\_aero\_phase\_avg\_MW\_\_kg\_mol}}
 \index{aero\_rep\_single\_particle\_get\_aero\_phase\_avg\_MW\_\_kg\_mol@{aero\_rep\_single\_particle\_get\_aero\_phase\_avg\_MW\_\_kg\_mol}!aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}}
@@ -316,21 +304,9 @@ The single particle mass is set for each new state as the sum of the masses of t
 Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00304}{304}} of file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{aero__rep__single__particle_8c_a203b6931fd5a504b7cc1750eb582b60c_cgraph}
-\end{center}
-\end{figure}
+% FIG 2
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{aero__rep__single__particle_8c_a203b6931fd5a504b7cc1750eb582b60c_icgraph}
-\end{center}
-\end{figure}
+% FIG 3
 \mbox{\Hypertarget{aero__rep__single__particle_8c_ad49c89b34b57e5b644d6506ead9dea34}\label{aero__rep__single__particle_8c_ad49c89b34b57e5b644d6506ead9dea34}} 
 \index{aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}!aero\_rep\_single\_particle\_get\_aero\_phase\_mass\_\_kg\_m3@{aero\_rep\_single\_particle\_get\_aero\_phase\_mass\_\_kg\_m3}}
 \index{aero\_rep\_single\_particle\_get\_aero\_phase\_mass\_\_kg\_m3@{aero\_rep\_single\_particle\_get\_aero\_phase\_mass\_\_kg\_m3}!aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}}
@@ -365,21 +341,9 @@ The single particle mass is set for each new state as the sum of the masses of t
 Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00260}{260}} of file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{aero__rep__single__particle_8c_ad49c89b34b57e5b644d6506ead9dea34_cgraph}
-\end{center}
-\end{figure}
+% FIG 4
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{aero__rep__single__particle_8c_ad49c89b34b57e5b644d6506ead9dea34_icgraph}
-\end{center}
-\end{figure}
+% FIG 5
 \mbox{\Hypertarget{aero__rep__single__particle_8c_ac118d92685e58dda51e1a4a7ac16ddda}\label{aero__rep__single__particle_8c_ac118d92685e58dda51e1a4a7ac16ddda}} 
 \index{aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}!aero\_rep\_single\_particle\_get\_dependencies@{aero\_rep\_single\_particle\_get\_dependencies}}
 \index{aero\_rep\_single\_particle\_get\_dependencies@{aero\_rep\_single\_particle\_get\_dependencies}!aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}}
@@ -406,13 +370,7 @@ The single particle aerosol representation functions do not use state array valu
 Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00079}{79}} of file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c}}.
 
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{aero__rep__single__particle_8c_ac118d92685e58dda51e1a4a7ac16ddda_icgraph}
-\end{center}
-\end{figure}
+% FIG 6
 \mbox{\Hypertarget{aero__rep__single__particle_8c_a48b11d345d89071d34e67b5063b1b891}\label{aero__rep__single__particle_8c_a48b11d345d89071d34e67b5063b1b891}} 
 \index{aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}!aero\_rep\_single\_particle\_get\_effective\_radius\_\_m@{aero\_rep\_single\_particle\_get\_effective\_radius\_\_m}}
 \index{aero\_rep\_single\_particle\_get\_effective\_radius\_\_m@{aero\_rep\_single\_particle\_get\_effective\_radius\_\_m}!aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}}
@@ -445,21 +403,9 @@ Get the effective particle radius $r_{eff}$ (m)
 Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00143}{143}} of file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{aero__rep__single__particle_8c_a48b11d345d89071d34e67b5063b1b891_cgraph}
-\end{center}
-\end{figure}
+% FIG 7
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{aero__rep__single__particle_8c_a48b11d345d89071d34e67b5063b1b891_icgraph}
-\end{center}
-\end{figure}
+% FIG 8
 \mbox{\Hypertarget{aero__rep__single__particle_8c_afa7d35b774d0ab4d7cad7fb30d75e897}\label{aero__rep__single__particle_8c_afa7d35b774d0ab4d7cad7fb30d75e897}} 
 \index{aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}!aero\_rep\_single\_particle\_get\_number\_conc\_\_n\_m3@{aero\_rep\_single\_particle\_get\_number\_conc\_\_n\_m3}}
 \index{aero\_rep\_single\_particle\_get\_number\_conc\_\_n\_m3@{aero\_rep\_single\_particle\_get\_number\_conc\_\_n\_m3}!aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}}
@@ -494,13 +440,7 @@ This single particle number concentration is set by the aerosol model prior to s
 Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00196}{196}} of file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c}}.
 
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{aero__rep__single__particle_8c_afa7d35b774d0ab4d7cad7fb30d75e897_icgraph}
-\end{center}
-\end{figure}
+% FIG 9
 \mbox{\Hypertarget{aero__rep__single__particle_8c_a076423c54855479ccee0af37f2d9840a}\label{aero__rep__single__particle_8c_a076423c54855479ccee0af37f2d9840a}} 
 \index{aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}!aero\_rep\_single\_particle\_get\_used\_jac\_elem@{aero\_rep\_single\_particle\_get\_used\_jac\_elem}}
 \index{aero\_rep\_single\_particle\_get\_used\_jac\_elem@{aero\_rep\_single\_particle\_get\_used\_jac\_elem}!aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}}
@@ -532,21 +472,9 @@ Number of \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements flagged
 Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00047}{47}} of file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{aero__rep__single__particle_8c_a076423c54855479ccee0af37f2d9840a_cgraph}
-\end{center}
-\end{figure}
+% FIG 10
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{aero__rep__single__particle_8c_a076423c54855479ccee0af37f2d9840a_icgraph}
-\end{center}
-\end{figure}
+% FIG 11
 \mbox{\Hypertarget{aero__rep__single__particle_8c_a93b022b244ab389f594b3c1ee8956d26}\label{aero__rep__single__particle_8c_a93b022b244ab389f594b3c1ee8956d26}} 
 \index{aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}!aero\_rep\_single\_particle\_print@{aero\_rep\_single\_particle\_print}}
 \index{aero\_rep\_single\_particle\_print@{aero\_rep\_single\_particle\_print}!aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}}
@@ -569,13 +497,7 @@ Print the Single Particle reaction parameters.
 Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00381}{381}} of file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c}}.
 
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=340pt]{aero__rep__single__particle_8c_a93b022b244ab389f594b3c1ee8956d26_icgraph}
-\end{center}
-\end{figure}
+% FIG 12
 \mbox{\Hypertarget{aero__rep__single__particle_8c_afc23dec55d2720c18e17a3cdbb6b6a7f}\label{aero__rep__single__particle_8c_afc23dec55d2720c18e17a3cdbb6b6a7f}} 
 \index{aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}!aero\_rep\_single\_particle\_set\_number\_update\_data\_\_n\_m3@{aero\_rep\_single\_particle\_set\_number\_update\_data\_\_n\_m3}}
 \index{aero\_rep\_single\_particle\_set\_number\_update\_data\_\_n\_m3@{aero\_rep\_single\_particle\_set\_number\_update\_data\_\_n\_m3}!aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}}
@@ -639,13 +561,7 @@ Flag indicating whether this is the aerosol representation to update
 Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00351}{351}} of file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c}}.
 
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{aero__rep__single__particle_8c_abe4da510bed46cee8a75f90917764311_icgraph}
-\end{center}
-\end{figure}
+% FIG 13
 \mbox{\Hypertarget{aero__rep__single__particle_8c_abb3778ac04df76a32ac3359b8cabe51b}\label{aero__rep__single__particle_8c_abb3778ac04df76a32ac3359b8cabe51b}} 
 \index{aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}!aero\_rep\_single\_particle\_update\_env\_state@{aero\_rep\_single\_particle\_update\_env\_state}}
 \index{aero\_rep\_single\_particle\_update\_env\_state@{aero\_rep\_single\_particle\_update\_env\_state}!aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}}
@@ -674,13 +590,7 @@ The single particle aerosol representation does not use environmental conditions
 Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00100}{100}} of file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c}}.
 
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{aero__rep__single__particle_8c_abb3778ac04df76a32ac3359b8cabe51b_icgraph}
-\end{center}
-\end{figure}
+% FIG 14
 \mbox{\Hypertarget{aero__rep__single__particle_8c_afc5e4c6a81bf52bf0c8ee88037a4954d}\label{aero__rep__single__particle_8c_afc5e4c6a81bf52bf0c8ee88037a4954d}} 
 \index{aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}!aero\_rep\_single\_particle\_update\_state@{aero\_rep\_single\_particle\_update\_state}}
 \index{aero\_rep\_single\_particle\_update\_state@{aero\_rep\_single\_particle\_update\_state}!aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}}
@@ -707,10 +617,4 @@ Update aerosol representation data for a new state.
 Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00120}{120}} of file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c}}.
 
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{aero__rep__single__particle_8c_afc5e4c6a81bf52bf0c8ee88037a4954d_icgraph}
-\end{center}
-\end{figure}
+% FIG 15

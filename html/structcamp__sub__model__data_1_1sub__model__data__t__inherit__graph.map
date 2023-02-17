@@ -1,6 +1,6 @@
 <map id="camp_sub_model_data::sub_model_data_t" name="camp_sub_model_data::sub_model_data_t">
-<area shape="rect" id="node1" title="Abstract sub&#45;model data type." alt="" coords="5,71,161,112"/>
-<area shape="rect" id="node2" href="$structcamp__sub__model__pdfite_1_1sub__model__pdfite__t.html" title="Generic test reaction data type." alt="" coords="221,5,384,47"/>
-<area shape="rect" id="node3" href="$structcamp__sub__model__unifac_1_1sub__model__unifac__t.html" title="UNIFAC activity coefficient calculation." alt="" coords="219,71,386,112"/>
-<area shape="rect" id="node4" href="$structcamp__sub__model__zsr__aerosol__water_1_1sub__model__zsr__aerosol__water__t.html" title="Generic test reaction data type." alt="" coords="209,135,396,191"/>
+<area shape="rect" id="node1" title="Abstract sub&#45;model data type." alt="" coords="5,69,161,109"/>
+<area shape="rect" id="node2" href="$structcamp__sub__model__pdfite_1_1sub__model__pdfite__t.html" title="Generic test reaction data type." alt="" coords="221,5,384,45"/>
+<area shape="rect" id="node3" href="$structcamp__sub__model__unifac_1_1sub__model__unifac__t.html" title="UNIFAC activity coefficient calculation." alt="" coords="219,69,386,109"/>
+<area shape="rect" id="node4" href="$structcamp__sub__model__zsr__aerosol__water_1_1sub__model__zsr__aerosol__water__t.html" title="Generic test reaction data type." alt="" coords="209,134,396,189"/>
 </map>

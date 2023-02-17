@@ -6,13 +6,7 @@ Arrhenius reaction solver functions.
 
 
 Include dependency graph for rxn\+\_\+arrhenius.\+c\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{rxn__arrhenius_8c__incl}
-\end{center}
-\end{figure}
+% FIG 0
 \doxysubsection*{Macros}
 \begin{DoxyCompactItemize}
 \item 
@@ -44,15 +38,15 @@ Include dependency graph for rxn\+\_\+arrhenius.\+c\+:
 \item 
 \#define \mbox{\hyperlink{rxn__arrhenius_8c_a1f68a3544ae39a7815cbb5c09dfdeff0}{NUM\+\_\+\+ENV\+\_\+\+PARAM\+\_\+}}~1
 \item 
-\#define \mbox{\hyperlink{rxn__arrhenius_8c_ae761e39657aac155d83eae9b338be571}{REACT\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + x\mbox{]} -\/ 1)
+\#define \mbox{\hyperlink{rxn__arrhenius_8c_ae761e39657aac155d83eae9b338be571}{REACT\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + x\mbox{]} -\/ 1)
 \item 
-\#define \mbox{\hyperlink{rxn__arrhenius_8c_a9fda90058c6a41b1dda6ded03321c4da}{PROD\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + x\mbox{]} -\/ 1)
+\#define \mbox{\hyperlink{rxn__arrhenius_8c_a9fda90058c6a41b1dda6ded03321c4da}{PROD\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + x\mbox{]} -\/ 1)
 \item 
-\#define \mbox{\hyperlink{rxn__arrhenius_8c_af9fc34858d09e71d3cffd88cf942bdf9}{DERIV\+\_\+\+ID\+\_\+}}(x)~int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + \mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}} + x\mbox{]}
+\#define \mbox{\hyperlink{rxn__arrhenius_8c_af9fc34858d09e71d3cffd88cf942bdf9}{DERIV\+\_\+\+ID\+\_\+}}(x)~int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}} + x\mbox{]}
 \item 
-\#define \mbox{\hyperlink{rxn__arrhenius_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\+\_\+\+ID\+\_\+}}(x)~int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 2 $\ast$ (\mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + \mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}}) + x\mbox{]}
+\#define \mbox{\hyperlink{rxn__arrhenius_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\+\_\+\+ID\+\_\+}}(x)~int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 2 $\ast$ (\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}}) + x\mbox{]}
 \item 
-\#define \mbox{\hyperlink{rxn__arrhenius_8c_a9ae244708fd9c438bf840ed319733651}{YIELD\+\_\+}}(x)~float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}{NUM\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+}} + x\mbox{]}
+\#define \mbox{\hyperlink{rxn__arrhenius_8c_a9ae244708fd9c438bf840ed319733651}{YIELD\+\_\+}}(x)~float\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__solver_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}{NUM\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+}} + x\mbox{]}
 \end{DoxyCompactItemize}
 \doxysubsection*{Functions}
 \begin{DoxyCompactItemize}
@@ -135,7 +129,7 @@ Definition at line \mbox{\hyperlink{rxn__arrhenius_8c_source_l00025}{25}} of fil
 \index{rxn\_arrhenius.c@{rxn\_arrhenius.c}!DERIV\_ID\_@{DERIV\_ID\_}}
 \index{DERIV\_ID\_@{DERIV\_ID\_}!rxn\_arrhenius.c@{rxn\_arrhenius.c}}
 \doxysubsubsection{\texorpdfstring{DERIV\_ID\_}{DERIV\_ID\_}}
-{\footnotesize\ttfamily \#define DERIV\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + \mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}} + x\mbox{]}}
+{\footnotesize\ttfamily \#define DERIV\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}} + x\mbox{]}}
 
 
 
@@ -155,7 +149,7 @@ Definition at line \mbox{\hyperlink{rxn__arrhenius_8c_source_l00026}{26}} of fil
 \index{rxn\_arrhenius.c@{rxn\_arrhenius.c}!JAC\_ID\_@{JAC\_ID\_}}
 \index{JAC\_ID\_@{JAC\_ID\_}!rxn\_arrhenius.c@{rxn\_arrhenius.c}}
 \doxysubsubsection{\texorpdfstring{JAC\_ID\_}{JAC\_ID\_}}
-{\footnotesize\ttfamily \#define JAC\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 2 $\ast$ (\mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + \mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}}) + x\mbox{]}}
+{\footnotesize\ttfamily \#define JAC\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 2 $\ast$ (\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}}) + x\mbox{]}}
 
 
 
@@ -225,7 +219,7 @@ Definition at line \mbox{\hyperlink{rxn__arrhenius_8c_source_l00018}{18}} of fil
 \index{rxn\_arrhenius.c@{rxn\_arrhenius.c}!PROD\_@{PROD\_}}
 \index{PROD\_@{PROD\_}!rxn\_arrhenius.c@{rxn\_arrhenius.c}}
 \doxysubsubsection{\texorpdfstring{PROD\_}{PROD\_}}
-{\footnotesize\ttfamily \#define PROD\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + x\mbox{]} -\/ 1)}
+{\footnotesize\ttfamily \#define PROD\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + x\mbox{]} -\/ 1)}
 
 
 
@@ -245,7 +239,7 @@ Definition at line \mbox{\hyperlink{rxn__arrhenius_8c_source_l00028}{28}} of fil
 \index{rxn\_arrhenius.c@{rxn\_arrhenius.c}!REACT\_@{REACT\_}}
 \index{REACT\_@{REACT\_}!rxn\_arrhenius.c@{rxn\_arrhenius.c}}
 \doxysubsubsection{\texorpdfstring{REACT\_}{REACT\_}}
-{\footnotesize\ttfamily \#define REACT\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + x\mbox{]} -\/ 1)}
+{\footnotesize\ttfamily \#define REACT\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + x\mbox{]} -\/ 1)}
 
 
 
@@ -265,7 +259,7 @@ Definition at line \mbox{\hyperlink{rxn__arrhenius_8c_source_l00017}{17}} of fil
 \index{rxn\_arrhenius.c@{rxn\_arrhenius.c}!YIELD\_@{YIELD\_}}
 \index{YIELD\_@{YIELD\_}!rxn\_arrhenius.c@{rxn\_arrhenius.c}}
 \doxysubsubsection{\texorpdfstring{YIELD\_}{YIELD\_}}
-{\footnotesize\ttfamily \#define YIELD\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}{NUM\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+}} + x\mbox{]}}
+{\footnotesize\ttfamily \#define YIELD\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~float\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__solver_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}{NUM\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+}} + x\mbox{]}}
 
 
 
@@ -304,13 +298,7 @@ Calculate contributions to the time derivative $f(t,y)$ from this reaction.
 Definition at line \mbox{\hyperlink{rxn__arrhenius_8c_source_l00131}{131}} of file \mbox{\hyperlink{rxn__arrhenius_8c_source}{rxn\+\_\+arrhenius.\+c}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=318pt]{rxn__arrhenius_8c_a8e9f2b1a4bf2d45c552e9e930e89277f_cgraph}
-\end{center}
-\end{figure}
+% FIG 1
 \mbox{\Hypertarget{rxn__arrhenius_8c_a94a77852fae3b39722aa865747915a95}\label{rxn__arrhenius_8c_a94a77852fae3b39722aa865747915a95}} 
 \index{rxn\_arrhenius.c@{rxn\_arrhenius.c}!rxn\_arrhenius\_calc\_jac\_contrib@{rxn\_arrhenius\_calc\_jac\_contrib}}
 \index{rxn\_arrhenius\_calc\_jac\_contrib@{rxn\_arrhenius\_calc\_jac\_contrib}!rxn\_arrhenius.c@{rxn\_arrhenius.c}}
@@ -341,13 +329,7 @@ Calculate contributions to the \mbox{\hyperlink{struct_jacobian}{Jacobian}} from
 Definition at line \mbox{\hyperlink{rxn__arrhenius_8c_source_l00178}{178}} of file \mbox{\hyperlink{rxn__arrhenius_8c_source}{rxn\+\_\+arrhenius.\+c}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=316pt]{rxn__arrhenius_8c_a94a77852fae3b39722aa865747915a95_cgraph}
-\end{center}
-\end{figure}
+% FIG 2
 \mbox{\Hypertarget{rxn__arrhenius_8c_a7f830056ddb14553c6c27e13895a27a1}\label{rxn__arrhenius_8c_a7f830056ddb14553c6c27e13895a27a1}} 
 \index{rxn\_arrhenius.c@{rxn\_arrhenius.c}!rxn\_arrhenius\_get\_used\_jac\_elem@{rxn\_arrhenius\_get\_used\_jac\_elem}}
 \index{rxn\_arrhenius\_get\_used\_jac\_elem@{rxn\_arrhenius\_get\_used\_jac\_elem}!rxn\_arrhenius.c@{rxn\_arrhenius.c}}
@@ -372,21 +354,9 @@ Flag \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used by this reaction
 Definition at line \mbox{\hyperlink{rxn__arrhenius_8c_source_l00044}{44}} of file \mbox{\hyperlink{rxn__arrhenius_8c_source}{rxn\+\_\+arrhenius.\+c}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{rxn__arrhenius_8c_a7f830056ddb14553c6c27e13895a27a1_cgraph}
-\end{center}
-\end{figure}
+% FIG 3
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{rxn__arrhenius_8c_a7f830056ddb14553c6c27e13895a27a1_icgraph}
-\end{center}
-\end{figure}
+% FIG 4
 \mbox{\Hypertarget{rxn__arrhenius_8c_afd23db0ecf7476d28a4d0076f486c15c}\label{rxn__arrhenius_8c_afd23db0ecf7476d28a4d0076f486c15c}} 
 \index{rxn\_arrhenius.c@{rxn\_arrhenius.c}!rxn\_arrhenius\_print@{rxn\_arrhenius\_print}}
 \index{rxn\_arrhenius\_print@{rxn\_arrhenius\_print}!rxn\_arrhenius.c@{rxn\_arrhenius.c}}
@@ -409,13 +379,7 @@ Print the Arrhenius reaction parameters.
 Definition at line \mbox{\hyperlink{rxn__arrhenius_8c_source_l00220}{220}} of file \mbox{\hyperlink{rxn__arrhenius_8c_source}{rxn\+\_\+arrhenius.\+c}}.
 
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=291pt]{rxn__arrhenius_8c_afd23db0ecf7476d28a4d0076f486c15c_icgraph}
-\end{center}
-\end{figure}
+% FIG 5
 \mbox{\Hypertarget{rxn__arrhenius_8c_aa80f17dc28b8494f62c9e8df1c9fa68e}\label{rxn__arrhenius_8c_aa80f17dc28b8494f62c9e8df1c9fa68e}} 
 \index{rxn\_arrhenius.c@{rxn\_arrhenius.c}!rxn\_arrhenius\_update\_env\_state@{rxn\_arrhenius\_update\_env\_state}}
 \index{rxn\_arrhenius\_update\_env\_state@{rxn\_arrhenius\_update\_env\_state}!rxn\_arrhenius.c@{rxn\_arrhenius.c}}
@@ -444,13 +408,7 @@ For Arrhenius reaction this only involves recalculating the rate constant.
 Definition at line \mbox{\hyperlink{rxn__arrhenius_8c_source_l00103}{103}} of file \mbox{\hyperlink{rxn__arrhenius_8c_source}{rxn\+\_\+arrhenius.\+c}}.
 
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{rxn__arrhenius_8c_aa80f17dc28b8494f62c9e8df1c9fa68e_icgraph}
-\end{center}
-\end{figure}
+% FIG 6
 \mbox{\Hypertarget{rxn__arrhenius_8c_a7fe41e1fef6917179eadba8adc9d1bae}\label{rxn__arrhenius_8c_a7fe41e1fef6917179eadba8adc9d1bae}} 
 \index{rxn\_arrhenius.c@{rxn\_arrhenius.c}!rxn\_arrhenius\_update\_ids@{rxn\_arrhenius\_update\_ids}}
 \index{rxn\_arrhenius\_update\_ids@{rxn\_arrhenius\_update\_ids}!rxn\_arrhenius.c@{rxn\_arrhenius.c}}
@@ -479,18 +437,6 @@ Update the time derivative and Jacbobian array indices.
 Definition at line \mbox{\hyperlink{rxn__arrhenius_8c_source_l00069}{69}} of file \mbox{\hyperlink{rxn__arrhenius_8c_source}{rxn\+\_\+arrhenius.\+c}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{rxn__arrhenius_8c_a7fe41e1fef6917179eadba8adc9d1bae_cgraph}
-\end{center}
-\end{figure}
+% FIG 7
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{rxn__arrhenius_8c_a7fe41e1fef6917179eadba8adc9d1bae_icgraph}
-\end{center}
-\end{figure}
+% FIG 8

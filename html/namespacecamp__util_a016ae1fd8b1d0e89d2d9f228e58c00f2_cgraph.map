@@ -1,5 +1,5 @@
 <map id="camp_util::string_to_real" name="camp_util::string_to_real">
-<area shape="rect" id="node1" title="Convert a string to a real." alt="" coords="5,31,168,57"/>
-<area shape="rect" id="node2" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="216,5,368,32"/>
-<area shape="rect" id="node3" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="416,23,539,65"/>
+<area shape="rect" id="node1" title="Convert a string to a real." alt="" coords="5,31,168,56"/>
+<area shape="rect" id="node2" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="216,5,368,31"/>
+<area shape="rect" id="node3" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="416,23,539,63"/>
 </map>

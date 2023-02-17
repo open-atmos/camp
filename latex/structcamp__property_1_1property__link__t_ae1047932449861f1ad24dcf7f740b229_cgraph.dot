@@ -1,0 +1,11 @@
+digraph "camp_property::property_link_t::link_finalize"
+{
+ // LATEX_PDF_SIZE
+  bgcolor="transparent";
+  edge [fontname=Helvetica,fontsize=10,labelfontname=Helvetica,labelfontsize=10];
+  node [fontname=Helvetica,fontsize=10,shape=box,height=0.2,width=0.4];
+  rankdir="LR";
+  Node1 [label="camp_property::property\l_link_t::link_finalize",height=0.2,width=0.4,color="gray40", fillcolor="grey60", style="filled", fontcolor="black",tooltip="Finalize."];
+  Node1 -> Node2 [color="steelblue1",style="solid"];
+  Node2 [label="camp_property::link\l_finalize",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$namespacecamp__property.html#a8fc09d2181501c08c436eb0995c641cd",tooltip="Finalize the property_link_t variable."];
+}

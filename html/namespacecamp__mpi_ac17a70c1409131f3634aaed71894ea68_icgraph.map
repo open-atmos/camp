@@ -1,4 +1,4 @@
 <map id="camp_mpi::camp_mpi_allreduce_average_real" name="camp_mpi::camp_mpi_allreduce_average_real">
-<area shape="rect" id="node1" title="Computes the average of val across all processes, storing the result in val_avg on all processes." alt="" coords="199,5,361,47"/>
-<area shape="rect" id="node2" href="$namespacecamp__env__state.html#acd71d6143a8e08e77473bf24f1752af6" title="Average val over all processes." alt="" coords="5,5,151,47"/>
+<area shape="rect" id="node1" title="Computes the average of val across all processes, storing the result in val_avg on all processes." alt="" coords="199,5,361,45"/>
+<area shape="rect" id="node2" href="$namespacecamp__env__state.html#acd71d6143a8e08e77473bf24f1752af6" title="Average val over all processes." alt="" coords="5,5,151,45"/>
 </map>

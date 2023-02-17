@@ -1,0 +1,33 @@
+digraph "jacobian_free"
+{
+ // LATEX_PDF_SIZE
+  bgcolor="transparent";
+  edge [fontname=Helvetica,fontsize=10,labelfontname=Helvetica,labelfontsize=10];
+  node [fontname=Helvetica,fontsize=10,shape=box,height=0.2,width=0.4];
+  rankdir="RL";
+  Node1 [label="jacobian_free",height=0.2,width=0.4,color="gray40", fillcolor="grey60", style="filled", fontcolor="black",tooltip="Free memory associated with a Jacobian."];
+  Node1 -> Node2 [dir="back",color="steelblue1",style="solid"];
+  Node2 [label="get_jac_init",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$camp__solver_8c.html#a5b485fa25356197023889f3795888e98",tooltip="Try to improve guesses of y sent to the linear solver."];
+  Node2 -> Node3 [dir="back",color="steelblue1",style="solid"];
+  Node3 [label="solver_initialize",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$camp__solver_8c.html#a599ffdef916b139a1690bfd41aa386b6",tooltip="Solver initialization."];
+  Node1 -> Node4 [dir="back",color="steelblue1",style="solid"];
+  Node4 [label="jacobian_build_matrix",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$_jacobian_8c.html#a2e954524b21f4e097996b2dc0d3cf999",tooltip="Builds the sparse matrix with the registered elements."];
+  Node4 -> Node2 [dir="back",color="steelblue1",style="solid"];
+  Node4 -> Node5 [dir="back",color="steelblue1",style="solid"];
+  Node5 [label="sub_model_get_used\l_jac_elem",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$sub__model__solver_8c.html#a4b1d9807c5fc6b0f2129eb420fa191ad",tooltip="Get the Jacobian elements used by a particular sub model."];
+  Node5 -> Node2 [dir="back",color="steelblue1",style="solid"];
+  Node4 -> Node6 [dir="back",color="steelblue1",style="solid"];
+  Node6 [label="sub_model_set_jac_map",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$sub__model__solver_8c.html#a61bf1cc1ad435b59182e1db138cc1b53",tooltip="Set the map for sub-model interdependence."];
+  Node6 -> Node7 [dir="back",color="steelblue1",style="solid"];
+  Node7 [label="sub_model_update_ids",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$sub__model__solver_8c.html#a38ebe393b32d9f9ac185b12801c69e17",tooltip="Update the time derivative and Jacobian array ids."];
+  Node7 -> Node2 [dir="back",color="steelblue1",style="solid"];
+  Node1 -> Node8 [dir="back",color="steelblue1",style="solid"];
+  Node8 [label="jacobian_initialize\l_empty",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$_jacobian_8c.html#a3ea16d25b8523ab15b3f505fe00e2ed2",tooltip="Initialize the Jacobian."];
+  Node8 -> Node2 [dir="back",color="steelblue1",style="solid"];
+  Node8 -> Node5 [dir="back",color="steelblue1",style="solid"];
+  Node8 -> Node6 [dir="back",color="steelblue1",style="solid"];
+  Node1 -> Node9 [dir="back",color="steelblue1",style="solid"];
+  Node9 [label="solver_free",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$camp__solver_8c.html#a946f57c971834de0c7cb185263cd3c78",tooltip="Free a SolverData object."];
+  Node1 -> Node5 [dir="back",color="steelblue1",style="solid"];
+  Node1 -> Node6 [dir="back",color="steelblue1",style="solid"];
+}

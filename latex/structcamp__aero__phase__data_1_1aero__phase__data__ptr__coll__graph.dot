@@ -1,0 +1,10 @@
+digraph "camp_aero_phase_data::aero_phase_data_ptr"
+{
+ // LATEX_PDF_SIZE
+  bgcolor="transparent";
+  edge [fontname=Helvetica,fontsize=10,labelfontname=Helvetica,labelfontsize=10];
+  node [fontname=Helvetica,fontsize=10,shape=box,height=0.2,width=0.4];
+  Node1 [label="camp_aero_phase_data\l::aero_phase_data_ptr",height=0.2,width=0.4,color="gray40", fillcolor="grey60", style="filled", fontcolor="black",tooltip="Pointer type for building arrays."];
+  Node2 -> Node1 [dir="back",color="darkorchid3",style="dashed",label=" val" ];
+  Node2 [label="camp_aero_phase_data\l::aero_phase_data_t",height=0.2,width=0.4,color="gray40", fillcolor="white", style="filled",URL="$structcamp__aero__phase__data_1_1aero__phase__data__t.html",tooltip="Aerosol phase data type."];
+}

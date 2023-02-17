@@ -41,15 +41,15 @@ subroutine \mbox{\hyperlink{namespacecamp__util_a2d260aa74996f977a1b83ad54ceaa76
 \begin{DoxyCompactList}\small\item\em Open a file for writing with an automatically assigned unit and test that it succeeds. The file should be closed with \mbox{\hyperlink{namespacecamp__util_a404c3cd8244ade45a4e57b2347d0f9a2}{close\+\_\+file()}}. \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__util_a404c3cd8244ade45a4e57b2347d0f9a2}{close\+\_\+file}} (unit)
 \begin{DoxyCompactList}\small\item\em Close a file and de-\/assign the unit. \end{DoxyCompactList}\item 
-real(kind=dp) elemental function \mbox{\hyperlink{namespacecamp__util_afd67b304a8ed1eea58c4995d573997ac}{sphere\+\_\+vol2rad}} (v)
+real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) elemental function \mbox{\hyperlink{namespacecamp__util_afd67b304a8ed1eea58c4995d573997ac}{sphere\+\_\+vol2rad}} (v)
 \begin{DoxyCompactList}\small\item\em Convert mass-\/equivalent volume $V$ (m$^\wedge$3) to geometric radius $R_{\rm geo}$ (m) for spherical particles. \end{DoxyCompactList}\item 
-real(kind=dp) elemental function \mbox{\hyperlink{namespacecamp__util_af13fde08a7e0d39f75913dcc94fb2411}{rad2diam}} (r)
+real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) elemental function \mbox{\hyperlink{namespacecamp__util_af13fde08a7e0d39f75913dcc94fb2411}{rad2diam}} (r)
 \begin{DoxyCompactList}\small\item\em Convert radius (m) to diameter (m). \end{DoxyCompactList}\item 
-real(kind=dp) elemental function \mbox{\hyperlink{namespacecamp__util_a5ac75c73cd92487d519e38c204dcd4d1}{sphere\+\_\+rad2vol}} (r)
+real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) elemental function \mbox{\hyperlink{namespacecamp__util_a5ac75c73cd92487d519e38c204dcd4d1}{sphere\+\_\+rad2vol}} (r)
 \begin{DoxyCompactList}\small\item\em Convert geometric radius $R_{\rm geo}$ (m) to mass-\/equivalent volume $V$ (m$^\wedge$3) for spherical particles. \end{DoxyCompactList}\item 
-real(kind=dp) elemental function \mbox{\hyperlink{namespacecamp__util_a30421895e7a73048b023ec24324f6df9}{diam2rad}} (d)
+real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) elemental function \mbox{\hyperlink{namespacecamp__util_a30421895e7a73048b023ec24324f6df9}{diam2rad}} (d)
 \begin{DoxyCompactList}\small\item\em Convert diameter (m) to radius (m). \end{DoxyCompactList}\item 
-real(kind=dp) function \mbox{\hyperlink{namespacecamp__util_a4d5dedcec09fafbdf7e0d9ba541c1442}{air\+\_\+mean\+\_\+free\+\_\+path}} (temp, pressure)
+real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) function \mbox{\hyperlink{namespacecamp__util_a4d5dedcec09fafbdf7e0d9ba541c1442}{air\+\_\+mean\+\_\+free\+\_\+path}} (temp, pressure)
 \begin{DoxyCompactList}\small\item\em Calculate air molecular mean free path $l$ (m). \end{DoxyCompactList}\item 
 logical function \mbox{\hyperlink{namespacecamp__util_a1edccf652ba0788ede6a9fb6117e2a16}{almost\+\_\+equal}} (d1, d2, rel\+\_\+tol, abs\+\_\+tol)
 \begin{DoxyCompactList}\small\item\em Tests whether two real numbers are almost equal using only a relative tolerance. \end{DoxyCompactList}\item 
@@ -59,9 +59,9 @@ subroutine \mbox{\hyperlink{namespacecamp__util_ad06843c31cfbcc9c7fe2eba8023ff09
 \begin{DoxyCompactList}\small\item\em Check that the first time interval is close to an integer multiple of the second, and warn if it is not. \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__util_a1598bdd5da982cc7cc6bbb3c126fa019}{check\+\_\+event}} (time, timestep, interval, last\+\_\+time, do\+\_\+event)
 \begin{DoxyCompactList}\small\item\em Computes whether an event is scheduled to take place. \end{DoxyCompactList}\item 
-real(kind=dp) function, dimension(\+:), allocatable \mbox{\hyperlink{namespacecamp__util_ae45b50c8c137ff5255cffcceef05b385}{linspace}} (min\+\_\+x, max\+\_\+x, n)
+real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) function, dimension(\+:), allocatable \mbox{\hyperlink{namespacecamp__util_ae45b50c8c137ff5255cffcceef05b385}{linspace}} (min\+\_\+x, max\+\_\+x, n)
 \begin{DoxyCompactList}\small\item\em Makes a linearly spaced array from min to max. \end{DoxyCompactList}\item 
-real(kind=dp) function, dimension(\+:), allocatable \mbox{\hyperlink{namespacecamp__util_a975cc8fef2da18c43de0c15022c92498}{logspace}} (min\+\_\+x, max\+\_\+x, n)
+real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) function, dimension(\+:), allocatable \mbox{\hyperlink{namespacecamp__util_a975cc8fef2da18c43de0c15022c92498}{logspace}} (min\+\_\+x, max\+\_\+x, n)
 \begin{DoxyCompactList}\small\item\em Makes a logarithmically spaced array of length n from min to max. \end{DoxyCompactList}\item 
 integer function \mbox{\hyperlink{namespacecamp__util_a47fee3e15eb877acff702cb7af2e0bc8}{linspace\+\_\+find}} (min\+\_\+x, max\+\_\+x, n, x)
 \begin{DoxyCompactList}\small\item\em Find the position of a real number in a 1D linear array. \end{DoxyCompactList}\item 
@@ -69,13 +69,13 @@ integer function \mbox{\hyperlink{namespacecamp__util_a93a495ba49b1eb41fa119ebdf
 \begin{DoxyCompactList}\small\item\em Find the position of a real number in a 1D logarithmic array. \end{DoxyCompactList}\item 
 integer function \mbox{\hyperlink{namespacecamp__util_a5f0d2175aaae4112637d13f1a1c123fe}{find\+\_\+1d}} (n, x\+\_\+vals, x)
 \begin{DoxyCompactList}\small\item\em Find the position of a real number in an arbitrary 1D array. \end{DoxyCompactList}\item 
-real(kind=dp) function \mbox{\hyperlink{namespacecamp__util_a489620eee18a7ea836aa645fbf6569a0}{interp\+\_\+1d}} (x\+\_\+vals, y\+\_\+vals, x)
+real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) function \mbox{\hyperlink{namespacecamp__util_a489620eee18a7ea836aa645fbf6569a0}{interp\+\_\+1d}} (x\+\_\+vals, y\+\_\+vals, x)
 \begin{DoxyCompactList}\small\item\em 1D linear interpolation. \end{DoxyCompactList}\item 
-real(kind=dp) function \mbox{\hyperlink{namespacecamp__util_a9d16033d179b151c30c3982c4da56def}{interp\+\_\+linear\+\_\+disc}} (x\+\_\+1, x\+\_\+n, n, i)
+real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) function \mbox{\hyperlink{namespacecamp__util_a9d16033d179b151c30c3982c4da56def}{interp\+\_\+linear\+\_\+disc}} (x\+\_\+1, x\+\_\+n, n, i)
 \begin{DoxyCompactList}\small\item\em Linear interpolation over discrete indices. \end{DoxyCompactList}\item 
 integer function \mbox{\hyperlink{namespacecamp__util_a80c772f0c9f8d6ebedc00719c319c88e}{string\+\_\+to\+\_\+integer}} (string)
 \begin{DoxyCompactList}\small\item\em Convert a string to an integer. \end{DoxyCompactList}\item 
-real(kind=dp) function \mbox{\hyperlink{namespacecamp__util_a016ae1fd8b1d0e89d2d9f228e58c00f2}{string\+\_\+to\+\_\+real}} (string)
+real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) function \mbox{\hyperlink{namespacecamp__util_a016ae1fd8b1d0e89d2d9f228e58c00f2}{string\+\_\+to\+\_\+real}} (string)
 \begin{DoxyCompactList}\small\item\em Convert a string to a real. \end{DoxyCompactList}\item 
 logical function \mbox{\hyperlink{namespacecamp__util_abc2afd0472a33bd2c397ebc139b0bb61}{string\+\_\+to\+\_\+logical}} (string)
 \begin{DoxyCompactList}\small\item\em Convert a string to a logical. \end{DoxyCompactList}\item 
@@ -121,9 +121,9 @@ subroutine \mbox{\hyperlink{namespacecamp__util_a18d8bb060a4817c16f434b4239329b1
 \begin{DoxyCompactList}\small\item\em Strip the extension to find the basename. \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__util_a2af9b1aad56cfc26cf362d47d65ce81f}{iso8601\+\_\+date\+\_\+and\+\_\+time}} (date\+\_\+time)
 \begin{DoxyCompactList}\small\item\em Current date and time in ISO 8601 format. \end{DoxyCompactList}\item 
-real(kind=dp) function \mbox{\hyperlink{namespacecamp__util_a1d64246a8b630c0b196be309f09b4382}{deg2rad}} (deg)
+real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) function \mbox{\hyperlink{namespacecamp__util_a1d64246a8b630c0b196be309f09b4382}{deg2rad}} (deg)
 \begin{DoxyCompactList}\small\item\em Convert degrees to radians. \end{DoxyCompactList}\item 
-real(kind=dp) function \mbox{\hyperlink{namespacecamp__util_a35a48fddc2fb3c1645f57f66b4aa76f6}{rad2deg}} (rad)
+real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) function \mbox{\hyperlink{namespacecamp__util_a35a48fddc2fb3c1645f57f66b4aa76f6}{rad2deg}} (rad)
 \begin{DoxyCompactList}\small\item\em Convert radians to degrees. \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__util_a24a16c8e84a4948acba40ee229229428}{integer\+\_\+sort}} (data, perm)
 \begin{DoxyCompactList}\small\item\em Sort the given data array and return the permutation defining the sort. \end{DoxyCompactList}\item 
@@ -141,11 +141,11 @@ subroutine \mbox{\hyperlink{namespacecamp__util_ac20f84d4e2c6c3f2beafb7c31df79c7
 \begin{DoxyCompactList}\small\item\em Read a white-\/space delimited word from a file, signaling if we have EOL or EOF. If EOL or EOF are true then the word will still be meaningful data. If there was no data to be read then len(word) will be 0. \end{DoxyCompactList}\item 
 logical function \mbox{\hyperlink{namespacecamp__util_a1f9b38953a4476e513e34cb8e8a50688}{starts\+\_\+with}} (string, start\+\_\+string)
 \begin{DoxyCompactList}\small\item\em Checks whether a string starts with a given other string. \end{DoxyCompactList}\item 
-elemental real(kind=dp) function \mbox{\hyperlink{namespacecamp__util_a74be1a109abfe8cc1e2bf3f911eb8082}{harmonic\+\_\+mean}} (x1, x2)
+elemental real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) function \mbox{\hyperlink{namespacecamp__util_a74be1a109abfe8cc1e2bf3f911eb8082}{harmonic\+\_\+mean}} (x1, x2)
 \begin{DoxyCompactList}\small\item\em Compute the harmonic mean of two numbers. \end{DoxyCompactList}\item 
-elemental real(kind=dp) function \mbox{\hyperlink{namespacecamp__util_ae006a4a997ed6d6872b9e318409b784e}{nplogp}} (p)
+elemental real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) function \mbox{\hyperlink{namespacecamp__util_ae006a4a997ed6d6872b9e318409b784e}{nplogp}} (p)
 \begin{DoxyCompactList}\small\item\em Compute $ - p \ln p$ for computing entropy. \end{DoxyCompactList}\item 
-real(kind=dp) function \mbox{\hyperlink{namespacecamp__util_ade73e84dfafa24044b9df56faa85069f}{entropy}} (p)
+real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) function \mbox{\hyperlink{namespacecamp__util_ade73e84dfafa24044b9df56faa85069f}{entropy}} (p)
 \begin{DoxyCompactList}\small\item\em Compute the entropy of a probability mass function (non necessarily normalized). \end{DoxyCompactList}\item 
 integer function \mbox{\hyperlink{namespacecamp__util_a9969887aa2f11ca1731c81384bf0580f}{pow2\+\_\+above}} (n)
 \begin{DoxyCompactList}\small\item\em Return the least power-\/of-\/2 that is at least equal to n. \end{DoxyCompactList}\end{DoxyCompactItemize}
@@ -172,7 +172,7 @@ Common utility subroutines.
 \index{camp\_util@{camp\_util}!air\_mean\_free\_path@{air\_mean\_free\_path}}
 \index{air\_mean\_free\_path@{air\_mean\_free\_path}!camp\_util@{camp\_util}}
 \doxysubsubsection{\texorpdfstring{air\_mean\_free\_path()}{air\_mean\_free\_path()}}
-{\footnotesize\ttfamily real(kind=dp) function camp\+\_\+util\+::air\+\_\+mean\+\_\+free\+\_\+path (\begin{DoxyParamCaption}\item[{real(kind=dp), intent(in)}]{temp,  }\item[{real(kind=dp), intent(in)}]{pressure }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) function camp\+\_\+util\+::air\+\_\+mean\+\_\+free\+\_\+path (\begin{DoxyParamCaption}\item[{real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}), intent(in)}]{temp,  }\item[{real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}), intent(in)}]{pressure }\end{DoxyParamCaption})}
 
 
 
@@ -190,26 +190,14 @@ Calculate air molecular mean free path $l$ (m).
 Definition at line \mbox{\hyperlink{util_8_f90_source_l00350}{350}} of file \mbox{\hyperlink{util_8_f90_source}{util.\+F90}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=183pt]{namespacecamp__util_a4d5dedcec09fafbdf7e0d9ba541c1442_cgraph}
-\end{center}
-\end{figure}
+% FIG 0
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=183pt]{namespacecamp__util_a4d5dedcec09fafbdf7e0d9ba541c1442_icgraph}
-\end{center}
-\end{figure}
+% FIG 1
 \mbox{\Hypertarget{namespacecamp__util_a1edccf652ba0788ede6a9fb6117e2a16}\label{namespacecamp__util_a1edccf652ba0788ede6a9fb6117e2a16}} 
 \index{camp\_util@{camp\_util}!almost\_equal@{almost\_equal}}
 \index{almost\_equal@{almost\_equal}!camp\_util@{camp\_util}}
 \doxysubsubsection{\texorpdfstring{almost\_equal()}{almost\_equal()}}
-{\footnotesize\ttfamily logical function camp\+\_\+util\+::almost\+\_\+equal (\begin{DoxyParamCaption}\item[{real(kind=dp), intent(in)}]{d1,  }\item[{real(kind=dp), intent(in)}]{d2,  }\item[{real(kind=dp), intent(in), optional}]{rel\+\_\+tol,  }\item[{real(kind=dp), intent(in), optional}]{abs\+\_\+tol }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily logical function camp\+\_\+util\+::almost\+\_\+equal (\begin{DoxyParamCaption}\item[{real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}), intent(in)}]{d1,  }\item[{real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}), intent(in)}]{d2,  }\item[{real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}), intent(in), optional}]{rel\+\_\+tol,  }\item[{real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}), intent(in), optional}]{abs\+\_\+tol }\end{DoxyParamCaption})}
 
 
 
@@ -233,26 +221,14 @@ Absolute tolerance.
 Definition at line \mbox{\hyperlink{util_8_f90_source_l00379}{379}} of file \mbox{\hyperlink{util_8_f90_source}{util.\+F90}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=201pt]{namespacecamp__util_a1edccf652ba0788ede6a9fb6117e2a16_cgraph}
-\end{center}
-\end{figure}
+% FIG 2
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=201pt]{namespacecamp__util_a1edccf652ba0788ede6a9fb6117e2a16_icgraph}
-\end{center}
-\end{figure}
+% FIG 3
 \mbox{\Hypertarget{namespacecamp__util_afc02eee0a91214d05a47a38abc500559}\label{namespacecamp__util_afc02eee0a91214d05a47a38abc500559}} 
 \index{camp\_util@{camp\_util}!almost\_equal\_abs@{almost\_equal\_abs}}
 \index{almost\_equal\_abs@{almost\_equal\_abs}!camp\_util@{camp\_util}}
 \doxysubsubsection{\texorpdfstring{almost\_equal\_abs()}{almost\_equal\_abs()}}
-{\footnotesize\ttfamily logical function camp\+\_\+util\+::almost\+\_\+equal\+\_\+abs (\begin{DoxyParamCaption}\item[{real(kind=dp), intent(in)}]{d1,  }\item[{real(kind=dp), intent(in)}]{d2,  }\item[{real(kind=dp), intent(in)}]{abs\+\_\+tol }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily logical function camp\+\_\+util\+::almost\+\_\+equal\+\_\+abs (\begin{DoxyParamCaption}\item[{real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}), intent(in)}]{d1,  }\item[{real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}), intent(in)}]{d2,  }\item[{real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}), intent(in)}]{abs\+\_\+tol }\end{DoxyParamCaption})}
 
 
 
@@ -272,21 +248,9 @@ Relative tolerance.
 Definition at line \mbox{\hyperlink{util_8_f90_source_l00421}{421}} of file \mbox{\hyperlink{util_8_f90_source}{util.\+F90}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=222pt]{namespacecamp__util_afc02eee0a91214d05a47a38abc500559_cgraph}
-\end{center}
-\end{figure}
+% FIG 4
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=222pt]{namespacecamp__util_afc02eee0a91214d05a47a38abc500559_icgraph}
-\end{center}
-\end{figure}
+% FIG 5
 \mbox{\Hypertarget{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}\label{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}} 
 \index{camp\_util@{camp\_util}!assert@{assert}}
 \index{assert@{assert}!camp\_util@{camp\_util}}
@@ -309,21 +273,9 @@ Errors unless condition\+\_\+ok is true.
 Definition at line \mbox{\hyperlink{util_8_f90_source_l00164}{164}} of file \mbox{\hyperlink{util_8_f90_source}{util.\+F90}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2_cgraph}
-\end{center}
-\end{figure}
+% FIG 6
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[height=550pt]{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2_icgraph}
-\end{center}
-\end{figure}
+% FIG 7
 \mbox{\Hypertarget{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}\label{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}} 
 \index{camp\_util@{camp\_util}!assert\_msg@{assert\_msg}}
 \index{assert\_msg@{assert\_msg}!camp\_util@{camp\_util}}
@@ -348,21 +300,9 @@ Errors unless condition\+\_\+ok is true.
 Definition at line \mbox{\hyperlink{util_8_f90_source_l00129}{129}} of file \mbox{\hyperlink{util_8_f90_source}{util.\+F90}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=322pt]{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f_cgraph}
-\end{center}
-\end{figure}
+% FIG 8
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[height=550pt]{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f_icgraph}
-\end{center}
-\end{figure}
+% FIG 9
 \mbox{\Hypertarget{namespacecamp__util_a2f2b338f2344065dccde12c91a924f7d}\label{namespacecamp__util_a2f2b338f2344065dccde12c91a924f7d}} 
 \index{camp\_util@{camp\_util}!average\_integer@{average\_integer}}
 \index{average\_integer@{average\_integer}!camp\_util@{camp\_util}}
@@ -388,7 +328,7 @@ Definition at line \mbox{\hyperlink{util_8_f90_source_l01226}{1226}} of file \mb
 \index{camp\_util@{camp\_util}!average\_real@{average\_real}}
 \index{average\_real@{average\_real}!camp\_util@{camp\_util}}
 \doxysubsubsection{\texorpdfstring{average\_real()}{average\_real()}}
-{\footnotesize\ttfamily subroutine camp\+\_\+util\+::average\+\_\+real (\begin{DoxyParamCaption}\item[{real(kind=dp), dimension(\+:), intent(in)}]{real\+\_\+vec,  }\item[{real(kind=dp), intent(out)}]{real\+\_\+avg }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily subroutine camp\+\_\+util\+::average\+\_\+real (\begin{DoxyParamCaption}\item[{real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}), dimension(\+:), intent(in)}]{real\+\_\+vec,  }\item[{real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}), intent(out)}]{real\+\_\+avg }\end{DoxyParamCaption})}
 
 
 
@@ -409,7 +349,7 @@ Definition at line \mbox{\hyperlink{util_8_f90_source_l01240}{1240}} of file \mb
 \index{camp\_util@{camp\_util}!check\_event@{check\_event}}
 \index{check\_event@{check\_event}!camp\_util@{camp\_util}}
 \doxysubsubsection{\texorpdfstring{check\_event()}{check\_event()}}
-{\footnotesize\ttfamily subroutine camp\+\_\+util\+::check\+\_\+event (\begin{DoxyParamCaption}\item[{real(kind=dp), intent(in)}]{time,  }\item[{real(kind=dp), intent(in)}]{timestep,  }\item[{real(kind=dp), intent(in)}]{interval,  }\item[{real(kind=dp), intent(inout)}]{last\+\_\+time,  }\item[{logical, intent(out)}]{do\+\_\+event }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily subroutine camp\+\_\+util\+::check\+\_\+event (\begin{DoxyParamCaption}\item[{real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}), intent(in)}]{time,  }\item[{real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}), intent(in)}]{timestep,  }\item[{real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}), intent(in)}]{interval,  }\item[{real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}), intent(inout)}]{last\+\_\+time,  }\item[{logical, intent(out)}]{do\+\_\+event }\end{DoxyParamCaption})}
 
 
 
@@ -436,7 +376,7 @@ Definition at line \mbox{\hyperlink{util_8_f90_source_l00482}{482}} of file \mbo
 \index{camp\_util@{camp\_util}!check\_time\_multiple@{check\_time\_multiple}}
 \index{check\_time\_multiple@{check\_time\_multiple}!camp\_util@{camp\_util}}
 \doxysubsubsection{\texorpdfstring{check\_time\_multiple()}{check\_time\_multiple()}}
-{\footnotesize\ttfamily subroutine camp\+\_\+util\+::check\+\_\+time\+\_\+multiple (\begin{DoxyParamCaption}\item[{character(len=$\ast$), intent(in)}]{first\+\_\+name,  }\item[{real(kind=dp), intent(in)}]{first\+\_\+time,  }\item[{character(len=$\ast$), intent(in)}]{second\+\_\+name,  }\item[{real(kind=dp), intent(in)}]{second\+\_\+time }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily subroutine camp\+\_\+util\+::check\+\_\+time\+\_\+multiple (\begin{DoxyParamCaption}\item[{character(len=$\ast$), intent(in)}]{first\+\_\+name,  }\item[{real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}), intent(in)}]{first\+\_\+time,  }\item[{character(len=$\ast$), intent(in)}]{second\+\_\+name,  }\item[{real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}), intent(in)}]{second\+\_\+time }\end{DoxyParamCaption})}
 
 
 
@@ -458,13 +398,7 @@ Check that the first time interval is close to an integer multiple of the second
 Definition at line \mbox{\hyperlink{util_8_f90_source_l00451}{451}} of file \mbox{\hyperlink{util_8_f90_source}{util.\+F90}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{namespacecamp__util_ad06843c31cfbcc9c7fe2eba8023ff091_cgraph}
-\end{center}
-\end{figure}
+% FIG 10
 \mbox{\Hypertarget{namespacecamp__util_a404c3cd8244ade45a4e57b2347d0f9a2}\label{namespacecamp__util_a404c3cd8244ade45a4e57b2347d0f9a2}} 
 \index{camp\_util@{camp\_util}!close\_file@{close\_file}}
 \index{close\_file@{close\_file}!camp\_util@{camp\_util}}
@@ -485,26 +419,14 @@ Close a file and de-\/assign the unit.
 Definition at line \mbox{\hyperlink{util_8_f90_source_l00287}{287}} of file \mbox{\hyperlink{util_8_f90_source}{util.\+F90}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=321pt]{namespacecamp__util_a404c3cd8244ade45a4e57b2347d0f9a2_cgraph}
-\end{center}
-\end{figure}
+% FIG 11
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=330pt]{namespacecamp__util_a404c3cd8244ade45a4e57b2347d0f9a2_icgraph}
-\end{center}
-\end{figure}
+% FIG 12
 \mbox{\Hypertarget{namespacecamp__util_ac4a720005853ad9a6aee2131cbb7a846}\label{namespacecamp__util_ac4a720005853ad9a6aee2131cbb7a846}} 
 \index{camp\_util@{camp\_util}!complex\_to\_string@{complex\_to\_string}}
 \index{complex\_to\_string@{complex\_to\_string}!camp\_util@{camp\_util}}
 \doxysubsubsection{\texorpdfstring{complex\_to\_string()}{complex\_to\_string()}}
-{\footnotesize\ttfamily character(len=\mbox{\hyperlink{namespacecamp__util_a77def4b411d48f628e7ac65eb8e1c555}{camp\+\_\+util\+\_\+convert\+\_\+string\+\_\+len}}) function camp\+\_\+util\+::complex\+\_\+to\+\_\+string (\begin{DoxyParamCaption}\item[{complex(kind=dc), intent(in)}]{val }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily character(len=\mbox{\hyperlink{namespacecamp__util_a77def4b411d48f628e7ac65eb8e1c555}{camp\+\_\+util\+\_\+convert\+\_\+string\+\_\+len}}) function camp\+\_\+util\+::complex\+\_\+to\+\_\+string (\begin{DoxyParamCaption}\item[{complex(kind=\mbox{\hyperlink{namespacecamp__constants_a39b2446a58e0cac3b0d157f0cf7249bf}{dc}}), intent(in)}]{val }\end{DoxyParamCaption})}
 
 
 
@@ -520,18 +442,12 @@ Convert a complex to a string format.
 Definition at line \mbox{\hyperlink{util_8_f90_source_l00906}{906}} of file \mbox{\hyperlink{util_8_f90_source}{util.\+F90}}.
 
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{namespacecamp__util_ac4a720005853ad9a6aee2131cbb7a846_icgraph}
-\end{center}
-\end{figure}
+% FIG 13
 \mbox{\Hypertarget{namespacecamp__util_a1d64246a8b630c0b196be309f09b4382}\label{namespacecamp__util_a1d64246a8b630c0b196be309f09b4382}} 
 \index{camp\_util@{camp\_util}!deg2rad@{deg2rad}}
 \index{deg2rad@{deg2rad}!camp\_util@{camp\_util}}
 \doxysubsubsection{\texorpdfstring{deg2rad()}{deg2rad()}}
-{\footnotesize\ttfamily real(kind=dp) function camp\+\_\+util\+::deg2rad (\begin{DoxyParamCaption}\item[{real(kind=dp), intent(in)}]{deg }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) function camp\+\_\+util\+::deg2rad (\begin{DoxyParamCaption}\item[{real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}), intent(in)}]{deg }\end{DoxyParamCaption})}
 
 
 
@@ -547,26 +463,14 @@ Convert degrees to radians.
 Definition at line \mbox{\hyperlink{util_8_f90_source_l01499}{1499}} of file \mbox{\hyperlink{util_8_f90_source}{util.\+F90}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=178pt]{namespacecamp__util_a1d64246a8b630c0b196be309f09b4382_cgraph}
-\end{center}
-\end{figure}
+% FIG 14
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=178pt]{namespacecamp__util_a1d64246a8b630c0b196be309f09b4382_icgraph}
-\end{center}
-\end{figure}
+% FIG 15
 \mbox{\Hypertarget{namespacecamp__util_a30421895e7a73048b023ec24324f6df9}\label{namespacecamp__util_a30421895e7a73048b023ec24324f6df9}} 
 \index{camp\_util@{camp\_util}!diam2rad@{diam2rad}}
 \index{diam2rad@{diam2rad}!camp\_util@{camp\_util}}
 \doxysubsubsection{\texorpdfstring{diam2rad()}{diam2rad()}}
-{\footnotesize\ttfamily real(kind=dp) elemental function camp\+\_\+util\+::diam2rad (\begin{DoxyParamCaption}\item[{real(kind=dp), intent(in)}]{d }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) elemental function camp\+\_\+util\+::diam2rad (\begin{DoxyParamCaption}\item[{real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}), intent(in)}]{d }\end{DoxyParamCaption})}
 
 
 
@@ -582,21 +486,9 @@ Convert diameter (m) to radius (m).
 Definition at line \mbox{\hyperlink{util_8_f90_source_l00338}{338}} of file \mbox{\hyperlink{util_8_f90_source}{util.\+F90}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=183pt]{namespacecamp__util_a30421895e7a73048b023ec24324f6df9_cgraph}
-\end{center}
-\end{figure}
+% FIG 16
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=183pt]{namespacecamp__util_a30421895e7a73048b023ec24324f6df9_icgraph}
-\end{center}
-\end{figure}
+% FIG 17
 \mbox{\Hypertarget{namespacecamp__util_aa942add404bf8b611e5b4b8c777ca7f6}\label{namespacecamp__util_aa942add404bf8b611e5b4b8c777ca7f6}} 
 \index{camp\_util@{camp\_util}!die@{die}}
 \index{die@{die}!camp\_util@{camp\_util}}
@@ -617,21 +509,9 @@ Error immediately.
 Definition at line \mbox{\hyperlink{util_8_f90_source_l00183}{183}} of file \mbox{\hyperlink{util_8_f90_source}{util.\+F90}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{namespacecamp__util_aa942add404bf8b611e5b4b8c777ca7f6_cgraph}
-\end{center}
-\end{figure}
+% FIG 18
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[height=550pt]{namespacecamp__util_aa942add404bf8b611e5b4b8c777ca7f6_icgraph}
-\end{center}
-\end{figure}
+% FIG 19
 \mbox{\Hypertarget{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}\label{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}} 
 \index{camp\_util@{camp\_util}!die\_msg@{die\_msg}}
 \index{die\_msg@{die\_msg}!camp\_util@{camp\_util}}
@@ -654,21 +534,9 @@ Error immediately.
 Definition at line \mbox{\hyperlink{util_8_f90_source_l00195}{195}} of file \mbox{\hyperlink{util_8_f90_source}{util.\+F90}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c_cgraph}
-\end{center}
-\end{figure}
+% FIG 20
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[height=550pt]{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c_icgraph}
-\end{center}
-\end{figure}
+% FIG 21
 \mbox{\Hypertarget{namespacecamp__util_a0202aad874a005f7f6507c2c3d827e85}\label{namespacecamp__util_a0202aad874a005f7f6507c2c3d827e85}} 
 \index{camp\_util@{camp\_util}!ensure\_integer\_array\_2d\_size@{ensure\_integer\_array\_2d\_size}}
 \index{ensure\_integer\_array\_2d\_size@{ensure\_integer\_array\_2d\_size}!camp\_util@{camp\_util}}
@@ -721,7 +589,7 @@ Definition at line \mbox{\hyperlink{util_8_f90_source_l01347}{1347}} of file \mb
 \index{camp\_util@{camp\_util}!ensure\_real\_array\_2d\_size@{ensure\_real\_array\_2d\_size}}
 \index{ensure\_real\_array\_2d\_size@{ensure\_real\_array\_2d\_size}!camp\_util@{camp\_util}}
 \doxysubsubsection{\texorpdfstring{ensure\_real\_array\_2d\_size()}{ensure\_real\_array\_2d\_size()}}
-{\footnotesize\ttfamily subroutine camp\+\_\+util\+::ensure\+\_\+real\+\_\+array\+\_\+2d\+\_\+size (\begin{DoxyParamCaption}\item[{real(kind=dp), dimension(\+:, \+:), intent(inout), allocatable}]{x,  }\item[{integer, intent(in)}]{n1,  }\item[{integer, intent(in)}]{n2,  }\item[{logical, intent(in), optional}]{only\+\_\+grow }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily subroutine camp\+\_\+util\+::ensure\+\_\+real\+\_\+array\+\_\+2d\+\_\+size (\begin{DoxyParamCaption}\item[{real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}), dimension(\+:, \+:), intent(inout), allocatable}]{x,  }\item[{integer, intent(in)}]{n1,  }\item[{integer, intent(in)}]{n2,  }\item[{logical, intent(in), optional}]{only\+\_\+grow }\end{DoxyParamCaption})}
 
 
 
@@ -746,7 +614,7 @@ Definition at line \mbox{\hyperlink{util_8_f90_source_l01307}{1307}} of file \mb
 \index{camp\_util@{camp\_util}!ensure\_real\_array\_size@{ensure\_real\_array\_size}}
 \index{ensure\_real\_array\_size@{ensure\_real\_array\_size}!camp\_util@{camp\_util}}
 \doxysubsubsection{\texorpdfstring{ensure\_real\_array\_size()}{ensure\_real\_array\_size()}}
-{\footnotesize\ttfamily subroutine camp\+\_\+util\+::ensure\+\_\+real\+\_\+array\+\_\+size (\begin{DoxyParamCaption}\item[{real(kind=dp), dimension(\+:), intent(inout), allocatable}]{x,  }\item[{integer, intent(in)}]{n,  }\item[{logical, intent(in), optional}]{only\+\_\+grow }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily subroutine camp\+\_\+util\+::ensure\+\_\+real\+\_\+array\+\_\+size (\begin{DoxyParamCaption}\item[{real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}), dimension(\+:), intent(inout), allocatable}]{x,  }\item[{integer, intent(in)}]{n,  }\item[{logical, intent(in), optional}]{only\+\_\+grow }\end{DoxyParamCaption})}
 
 
 
@@ -790,7 +658,7 @@ Definition at line \mbox{\hyperlink{util_8_f90_source_l01421}{1421}} of file \mb
 \index{camp\_util@{camp\_util}!entropy@{entropy}}
 \index{entropy@{entropy}!camp\_util@{camp\_util}}
 \doxysubsubsection{\texorpdfstring{entropy()}{entropy()}}
-{\footnotesize\ttfamily real(kind=dp) function camp\+\_\+util\+::entropy (\begin{DoxyParamCaption}\item[{real(kind=dp), dimension(\+:), intent(in)}]{p }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) function camp\+\_\+util\+::entropy (\begin{DoxyParamCaption}\item[{real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}), dimension(\+:), intent(in)}]{p }\end{DoxyParamCaption})}
 
 
 
@@ -806,26 +674,14 @@ Compute the entropy of a probability mass function (non necessarily normalized).
 Definition at line \mbox{\hyperlink{util_8_f90_source_l01864}{1864}} of file \mbox{\hyperlink{util_8_f90_source}{util.\+F90}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=303pt]{namespacecamp__util_ade73e84dfafa24044b9df56faa85069f_cgraph}
-\end{center}
-\end{figure}
+% FIG 22
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=175pt]{namespacecamp__util_ade73e84dfafa24044b9df56faa85069f_icgraph}
-\end{center}
-\end{figure}
+% FIG 23
 \mbox{\Hypertarget{namespacecamp__util_a5f0d2175aaae4112637d13f1a1c123fe}\label{namespacecamp__util_a5f0d2175aaae4112637d13f1a1c123fe}} 
 \index{camp\_util@{camp\_util}!find\_1d@{find\_1d}}
 \index{find\_1d@{find\_1d}!camp\_util@{camp\_util}}
 \doxysubsubsection{\texorpdfstring{find\_1d()}{find\_1d()}}
-{\footnotesize\ttfamily integer function camp\+\_\+util\+::find\+\_\+1d (\begin{DoxyParamCaption}\item[{integer, intent(in)}]{n,  }\item[{real(kind=dp), dimension(n), intent(in)}]{x\+\_\+vals,  }\item[{real(kind=dp), intent(in)}]{x }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily integer function camp\+\_\+util\+::find\+\_\+1d (\begin{DoxyParamCaption}\item[{integer, intent(in)}]{n,  }\item[{real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}), dimension(n), intent(in)}]{x\+\_\+vals,  }\item[{real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}), intent(in)}]{x }\end{DoxyParamCaption})}
 
 
 
@@ -847,21 +703,9 @@ If the array is known to be linearly or logarithmically spaced then \mbox{\hyper
 Definition at line \mbox{\hyperlink{util_8_f90_source_l00668}{668}} of file \mbox{\hyperlink{util_8_f90_source}{util.\+F90}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=174pt]{namespacecamp__util_a5f0d2175aaae4112637d13f1a1c123fe_cgraph}
-\end{center}
-\end{figure}
+% FIG 24
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=313pt]{namespacecamp__util_a5f0d2175aaae4112637d13f1a1c123fe_icgraph}
-\end{center}
-\end{figure}
+% FIG 25
 \mbox{\Hypertarget{namespacecamp__util_a3a68d4a7d1b28dd132909a12c83d3c21}\label{namespacecamp__util_a3a68d4a7d1b28dd132909a12c83d3c21}} 
 \index{camp\_util@{camp\_util}!free\_unit@{free\_unit}}
 \index{free\_unit@{free\_unit}!camp\_util@{camp\_util}}
@@ -877,13 +721,7 @@ Frees a unit number returned by \mbox{\hyperlink{namespacecamp__util_a43662260b7
 Definition at line \mbox{\hyperlink{util_8_f90_source_l00233}{233}} of file \mbox{\hyperlink{util_8_f90_source}{util.\+F90}}.
 
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{namespacecamp__util_a3a68d4a7d1b28dd132909a12c83d3c21_icgraph}
-\end{center}
-\end{figure}
+% FIG 26
 \mbox{\Hypertarget{namespacecamp__util_a18d8bb060a4817c16f434b4239329b19}\label{namespacecamp__util_a18d8bb060a4817c16f434b4239329b19}} 
 \index{camp\_util@{camp\_util}!get\_basename@{get\_basename}}
 \index{get\_basename@{get\_basename}!camp\_util@{camp\_util}}
@@ -920,26 +758,14 @@ Returns an available unit number. This should be freed by \mbox{\hyperlink{names
 Definition at line \mbox{\hyperlink{util_8_f90_source_l00209}{209}} of file \mbox{\hyperlink{util_8_f90_source}{util.\+F90}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{namespacecamp__util_a43662260b71cb7e4b72fe49ccb8cee94_cgraph}
-\end{center}
-\end{figure}
+% FIG 27
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{namespacecamp__util_a43662260b71cb7e4b72fe49ccb8cee94_icgraph}
-\end{center}
-\end{figure}
+% FIG 28
 \mbox{\Hypertarget{namespacecamp__util_a74be1a109abfe8cc1e2bf3f911eb8082}\label{namespacecamp__util_a74be1a109abfe8cc1e2bf3f911eb8082}} 
 \index{camp\_util@{camp\_util}!harmonic\_mean@{harmonic\_mean}}
 \index{harmonic\_mean@{harmonic\_mean}!camp\_util@{camp\_util}}
 \doxysubsubsection{\texorpdfstring{harmonic\_mean()}{harmonic\_mean()}}
-{\footnotesize\ttfamily elemental real(kind=dp) function camp\+\_\+util\+::harmonic\+\_\+mean (\begin{DoxyParamCaption}\item[{real(kind=dp), intent(in)}]{x1,  }\item[{real(kind=dp), intent(in)}]{x2 }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily elemental real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) function camp\+\_\+util\+::harmonic\+\_\+mean (\begin{DoxyParamCaption}\item[{real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}), intent(in)}]{x1,  }\item[{real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}), intent(in)}]{x2 }\end{DoxyParamCaption})}
 
 
 
@@ -957,21 +783,9 @@ Compute the harmonic mean of two numbers.
 Definition at line \mbox{\hyperlink{util_8_f90_source_l01833}{1833}} of file \mbox{\hyperlink{util_8_f90_source}{util.\+F90}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=212pt]{namespacecamp__util_a74be1a109abfe8cc1e2bf3f911eb8082_cgraph}
-\end{center}
-\end{figure}
+% FIG 29
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=212pt]{namespacecamp__util_a74be1a109abfe8cc1e2bf3f911eb8082_icgraph}
-\end{center}
-\end{figure}
+% FIG 30
 \mbox{\Hypertarget{namespacecamp__util_a24a16c8e84a4948acba40ee229229428}\label{namespacecamp__util_a24a16c8e84a4948acba40ee229229428}} 
 \index{camp\_util@{camp\_util}!integer\_sort@{integer\_sort}}
 \index{integer\_sort@{integer\_sort}!camp\_util@{camp\_util}}
@@ -1013,13 +827,7 @@ Convert an integer to a string format.
 Definition at line \mbox{\hyperlink{util_8_f90_source_l00838}{838}} of file \mbox{\hyperlink{util_8_f90_source}{util.\+F90}}.
 
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[height=550pt]{namespacecamp__util_acd72e4626dcfefffaa08c42cfa7949bc_icgraph}
-\end{center}
-\end{figure}
+% FIG 31
 \mbox{\Hypertarget{namespacecamp__util_af2eef6df9d8087453ddd88b19093cd4d}\label{namespacecamp__util_af2eef6df9d8087453ddd88b19093cd4d}} 
 \index{camp\_util@{camp\_util}!integer\_to\_string\_max\_len@{integer\_to\_string\_max\_len}}
 \index{integer\_to\_string\_max\_len@{integer\_to\_string\_max\_len}!camp\_util@{camp\_util}}
@@ -1042,26 +850,14 @@ Convert an integer to a string format of maximum length.
 Definition at line \mbox{\hyperlink{util_8_f90_source_l00923}{923}} of file \mbox{\hyperlink{util_8_f90_source}{util.\+F90}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{namespacecamp__util_af2eef6df9d8087453ddd88b19093cd4d_cgraph}
-\end{center}
-\end{figure}
+% FIG 32
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=181pt]{namespacecamp__util_af2eef6df9d8087453ddd88b19093cd4d_icgraph}
-\end{center}
-\end{figure}
+% FIG 33
 \mbox{\Hypertarget{namespacecamp__util_a489620eee18a7ea836aa645fbf6569a0}\label{namespacecamp__util_a489620eee18a7ea836aa645fbf6569a0}} 
 \index{camp\_util@{camp\_util}!interp\_1d@{interp\_1d}}
 \index{interp\_1d@{interp\_1d}!camp\_util@{camp\_util}}
 \doxysubsubsection{\texorpdfstring{interp\_1d()}{interp\_1d()}}
-{\footnotesize\ttfamily real(kind=dp) function camp\+\_\+util\+::interp\+\_\+1d (\begin{DoxyParamCaption}\item[{real(kind=dp), dimension(\+:), intent(in)}]{x\+\_\+vals,  }\item[{real(kind=dp), dimension(size(x\+\_\+vals)), intent(in)}]{y\+\_\+vals,  }\item[{real(kind=dp), intent(in)}]{x }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) function camp\+\_\+util\+::interp\+\_\+1d (\begin{DoxyParamCaption}\item[{real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}), dimension(\+:), intent(in)}]{x\+\_\+vals,  }\item[{real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}), dimension(size(x\+\_\+vals)), intent(in)}]{y\+\_\+vals,  }\item[{real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}), intent(in)}]{x }\end{DoxyParamCaption})}
 
 
 
@@ -1081,26 +877,14 @@ Takes an array of x and y, and a single x value, and returns the corresponding y
 Definition at line \mbox{\hyperlink{util_8_f90_source_l00702}{702}} of file \mbox{\hyperlink{util_8_f90_source}{util.\+F90}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=313pt]{namespacecamp__util_a489620eee18a7ea836aa645fbf6569a0_cgraph}
-\end{center}
-\end{figure}
+% FIG 34
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=183pt]{namespacecamp__util_a489620eee18a7ea836aa645fbf6569a0_icgraph}
-\end{center}
-\end{figure}
+% FIG 35
 \mbox{\Hypertarget{namespacecamp__util_a9d16033d179b151c30c3982c4da56def}\label{namespacecamp__util_a9d16033d179b151c30c3982c4da56def}} 
 \index{camp\_util@{camp\_util}!interp\_linear\_disc@{interp\_linear\_disc}}
 \index{interp\_linear\_disc@{interp\_linear\_disc}!camp\_util@{camp\_util}}
 \doxysubsubsection{\texorpdfstring{interp\_linear\_disc()}{interp\_linear\_disc()}}
-{\footnotesize\ttfamily real(kind=dp) function camp\+\_\+util\+::interp\+\_\+linear\+\_\+disc (\begin{DoxyParamCaption}\item[{real(kind=dp), intent(in)}]{x\+\_\+1,  }\item[{real(kind=dp), intent(in)}]{x\+\_\+n,  }\item[{integer, intent(in)}]{n,  }\item[{integer, intent(in)}]{i }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) function camp\+\_\+util\+::interp\+\_\+linear\+\_\+disc (\begin{DoxyParamCaption}\item[{real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}), intent(in)}]{x\+\_\+1,  }\item[{real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}), intent(in)}]{x\+\_\+n,  }\item[{integer, intent(in)}]{n,  }\item[{integer, intent(in)}]{i }\end{DoxyParamCaption})}
 
 
 
@@ -1122,21 +906,9 @@ Takes real values {\ttfamily x\+\_\+1} and {\ttfamily x\+\_\+n} and integers {\t
 Definition at line \mbox{\hyperlink{util_8_f90_source_l00739}{739}} of file \mbox{\hyperlink{util_8_f90_source}{util.\+F90}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=219pt]{namespacecamp__util_a9d16033d179b151c30c3982c4da56def_cgraph}
-\end{center}
-\end{figure}
+% FIG 36
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=219pt]{namespacecamp__util_a9d16033d179b151c30c3982c4da56def_icgraph}
-\end{center}
-\end{figure}
+% FIG 37
 \mbox{\Hypertarget{namespacecamp__util_a2af9b1aad56cfc26cf362d47d65ce81f}\label{namespacecamp__util_a2af9b1aad56cfc26cf362d47d65ce81f}} 
 \index{camp\_util@{camp\_util}!iso8601\_date\_and\_time@{iso8601\_date\_and\_time}}
 \index{iso8601\_date\_and\_time@{iso8601\_date\_and\_time}!camp\_util@{camp\_util}}
@@ -1157,18 +929,12 @@ Current date and time in ISO 8601 format.
 Definition at line \mbox{\hyperlink{util_8_f90_source_l01479}{1479}} of file \mbox{\hyperlink{util_8_f90_source}{util.\+F90}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{namespacecamp__util_a2af9b1aad56cfc26cf362d47d65ce81f_cgraph}
-\end{center}
-\end{figure}
+% FIG 38
 \mbox{\Hypertarget{namespacecamp__util_ae45b50c8c137ff5255cffcceef05b385}\label{namespacecamp__util_ae45b50c8c137ff5255cffcceef05b385}} 
 \index{camp\_util@{camp\_util}!linspace@{linspace}}
 \index{linspace@{linspace}!camp\_util@{camp\_util}}
 \doxysubsubsection{\texorpdfstring{linspace()}{linspace()}}
-{\footnotesize\ttfamily real(kind=dp) function, dimension(\+:), allocatable camp\+\_\+util\+::linspace (\begin{DoxyParamCaption}\item[{real(kind=dp), intent(in)}]{min\+\_\+x,  }\item[{real(kind=dp), intent(in)}]{max\+\_\+x,  }\item[{integer, intent(in)}]{n }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) function, dimension(\+:), allocatable camp\+\_\+util\+::linspace (\begin{DoxyParamCaption}\item[{real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}), intent(in)}]{min\+\_\+x,  }\item[{real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}), intent(in)}]{max\+\_\+x,  }\item[{integer, intent(in)}]{n }\end{DoxyParamCaption})}
 
 
 
@@ -1191,26 +957,14 @@ Return value.
 Definition at line \mbox{\hyperlink{util_8_f90_source_l00536}{536}} of file \mbox{\hyperlink{util_8_f90_source}{util.\+F90}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{namespacecamp__util_ae45b50c8c137ff5255cffcceef05b385_cgraph}
-\end{center}
-\end{figure}
+% FIG 39
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=317pt]{namespacecamp__util_ae45b50c8c137ff5255cffcceef05b385_icgraph}
-\end{center}
-\end{figure}
+% FIG 40
 \mbox{\Hypertarget{namespacecamp__util_a47fee3e15eb877acff702cb7af2e0bc8}\label{namespacecamp__util_a47fee3e15eb877acff702cb7af2e0bc8}} 
 \index{camp\_util@{camp\_util}!linspace\_find@{linspace\_find}}
 \index{linspace\_find@{linspace\_find}!camp\_util@{camp\_util}}
 \doxysubsubsection{\texorpdfstring{linspace\_find()}{linspace\_find()}}
-{\footnotesize\ttfamily integer function camp\+\_\+util\+::linspace\+\_\+find (\begin{DoxyParamCaption}\item[{real(kind=dp), intent(in)}]{min\+\_\+x,  }\item[{real(kind=dp), intent(in)}]{max\+\_\+x,  }\item[{integer, intent(in)}]{n,  }\item[{real(kind=dp), intent(in)}]{x }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily integer function camp\+\_\+util\+::linspace\+\_\+find (\begin{DoxyParamCaption}\item[{real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}), intent(in)}]{min\+\_\+x,  }\item[{real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}), intent(in)}]{max\+\_\+x,  }\item[{integer, intent(in)}]{n,  }\item[{real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}), intent(in)}]{x }\end{DoxyParamCaption})}
 
 
 
@@ -1234,26 +988,14 @@ This is equivalent to using \mbox{\hyperlink{namespacecamp__util_a5f0d2175aaae41
 Definition at line \mbox{\hyperlink{util_8_f90_source_l00608}{608}} of file \mbox{\hyperlink{util_8_f90_source}{util.\+F90}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=199pt]{namespacecamp__util_a47fee3e15eb877acff702cb7af2e0bc8_cgraph}
-\end{center}
-\end{figure}
+% FIG 41
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{namespacecamp__util_a47fee3e15eb877acff702cb7af2e0bc8_icgraph}
-\end{center}
-\end{figure}
+% FIG 42
 \mbox{\Hypertarget{namespacecamp__util_a8880473ee9de8b37a6612c3a110661df}\label{namespacecamp__util_a8880473ee9de8b37a6612c3a110661df}} 
 \index{camp\_util@{camp\_util}!loadtxt@{loadtxt}}
 \index{loadtxt@{loadtxt}!camp\_util@{camp\_util}}
 \doxysubsubsection{\texorpdfstring{loadtxt()}{loadtxt()}}
-{\footnotesize\ttfamily subroutine camp\+\_\+util\+::loadtxt (\begin{DoxyParamCaption}\item[{character(len=$\ast$), intent(in)}]{filename,  }\item[{real(kind=dp), dimension(\+:,\+:), intent(inout), allocatable}]{data }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily subroutine camp\+\_\+util\+::loadtxt (\begin{DoxyParamCaption}\item[{character(len=$\ast$), intent(in)}]{filename,  }\item[{real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}), dimension(\+:,\+:), intent(inout), allocatable}]{data }\end{DoxyParamCaption})}
 
 
 
@@ -1271,13 +1013,7 @@ Load a real array from a text file.
 Definition at line \mbox{\hyperlink{util_8_f90_source_l01567}{1567}} of file \mbox{\hyperlink{util_8_f90_source}{util.\+F90}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{namespacecamp__util_a8880473ee9de8b37a6612c3a110661df_cgraph}
-\end{center}
-\end{figure}
+% FIG 43
 \mbox{\Hypertarget{namespacecamp__util_a8e18cede79f49d055c0254ba41d60a2c}\label{namespacecamp__util_a8e18cede79f49d055c0254ba41d60a2c}} 
 \index{camp\_util@{camp\_util}!logical\_to\_string@{logical\_to\_string}}
 \index{logical\_to\_string@{logical\_to\_string}!camp\_util@{camp\_util}}
@@ -1298,18 +1034,12 @@ Convert a logical to a string format.
 Definition at line \mbox{\hyperlink{util_8_f90_source_l00886}{886}} of file \mbox{\hyperlink{util_8_f90_source}{util.\+F90}}.
 
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{namespacecamp__util_a8e18cede79f49d055c0254ba41d60a2c_icgraph}
-\end{center}
-\end{figure}
+% FIG 44
 \mbox{\Hypertarget{namespacecamp__util_a975cc8fef2da18c43de0c15022c92498}\label{namespacecamp__util_a975cc8fef2da18c43de0c15022c92498}} 
 \index{camp\_util@{camp\_util}!logspace@{logspace}}
 \index{logspace@{logspace}!camp\_util@{camp\_util}}
 \doxysubsubsection{\texorpdfstring{logspace()}{logspace()}}
-{\footnotesize\ttfamily real(kind=dp) function, dimension(\+:), allocatable camp\+\_\+util\+::logspace (\begin{DoxyParamCaption}\item[{real(kind=dp), intent(in)}]{min\+\_\+x,  }\item[{real(kind=dp), intent(in)}]{max\+\_\+x,  }\item[{integer, intent(in)}]{n }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) function, dimension(\+:), allocatable camp\+\_\+util\+::logspace (\begin{DoxyParamCaption}\item[{real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}), intent(in)}]{min\+\_\+x,  }\item[{real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}), intent(in)}]{max\+\_\+x,  }\item[{integer, intent(in)}]{n }\end{DoxyParamCaption})}
 
 
 
@@ -1332,26 +1062,14 @@ Return value.
 Definition at line \mbox{\hyperlink{util_8_f90_source_l00568}{568}} of file \mbox{\hyperlink{util_8_f90_source}{util.\+F90}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{namespacecamp__util_a975cc8fef2da18c43de0c15022c92498_cgraph}
-\end{center}
-\end{figure}
+% FIG 45
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=182pt]{namespacecamp__util_a975cc8fef2da18c43de0c15022c92498_icgraph}
-\end{center}
-\end{figure}
+% FIG 46
 \mbox{\Hypertarget{namespacecamp__util_a93a495ba49b1eb41fa119ebdfa684db3}\label{namespacecamp__util_a93a495ba49b1eb41fa119ebdfa684db3}} 
 \index{camp\_util@{camp\_util}!logspace\_find@{logspace\_find}}
 \index{logspace\_find@{logspace\_find}!camp\_util@{camp\_util}}
 \doxysubsubsection{\texorpdfstring{logspace\_find()}{logspace\_find()}}
-{\footnotesize\ttfamily integer function camp\+\_\+util\+::logspace\+\_\+find (\begin{DoxyParamCaption}\item[{real(kind=dp), intent(in)}]{min\+\_\+x,  }\item[{real(kind=dp), intent(in)}]{max\+\_\+x,  }\item[{integer, intent(in)}]{n,  }\item[{real(kind=dp), intent(in)}]{x }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily integer function camp\+\_\+util\+::logspace\+\_\+find (\begin{DoxyParamCaption}\item[{real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}), intent(in)}]{min\+\_\+x,  }\item[{real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}), intent(in)}]{max\+\_\+x,  }\item[{integer, intent(in)}]{n,  }\item[{real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}), intent(in)}]{x }\end{DoxyParamCaption})}
 
 
 
@@ -1375,26 +1093,14 @@ This is equivalent to using \mbox{\hyperlink{namespacecamp__util_a5f0d2175aaae41
 Definition at line \mbox{\hyperlink{util_8_f90_source_l00642}{642}} of file \mbox{\hyperlink{util_8_f90_source}{util.\+F90}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{namespacecamp__util_a93a495ba49b1eb41fa119ebdfa684db3_cgraph}
-\end{center}
-\end{figure}
+% FIG 47
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=202pt]{namespacecamp__util_a93a495ba49b1eb41fa119ebdfa684db3_icgraph}
-\end{center}
-\end{figure}
+% FIG 48
 \mbox{\Hypertarget{namespacecamp__util_ae006a4a997ed6d6872b9e318409b784e}\label{namespacecamp__util_ae006a4a997ed6d6872b9e318409b784e}} 
 \index{camp\_util@{camp\_util}!nplogp@{nplogp}}
 \index{nplogp@{nplogp}!camp\_util@{camp\_util}}
 \doxysubsubsection{\texorpdfstring{nplogp()}{nplogp()}}
-{\footnotesize\ttfamily elemental real(kind=dp) function camp\+\_\+util\+::nplogp (\begin{DoxyParamCaption}\item[{real(kind=dp), intent(in)}]{p }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily elemental real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) function camp\+\_\+util\+::nplogp (\begin{DoxyParamCaption}\item[{real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}), intent(in)}]{p }\end{DoxyParamCaption})}
 
 
 
@@ -1410,21 +1116,9 @@ Compute $ - p \ln p$ for computing entropy.
 Definition at line \mbox{\hyperlink{util_8_f90_source_l01847}{1847}} of file \mbox{\hyperlink{util_8_f90_source}{util.\+F90}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=172pt]{namespacecamp__util_ae006a4a997ed6d6872b9e318409b784e_cgraph}
-\end{center}
-\end{figure}
+% FIG 49
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=303pt]{namespacecamp__util_ae006a4a997ed6d6872b9e318409b784e_icgraph}
-\end{center}
-\end{figure}
+% FIG 50
 \mbox{\Hypertarget{namespacecamp__util_aa871934a2e528c6b844a9ba1a761a317}\label{namespacecamp__util_aa871934a2e528c6b844a9ba1a761a317}} 
 \index{camp\_util@{camp\_util}!open\_file\_read@{open\_file\_read}}
 \index{open\_file\_read@{open\_file\_read}!camp\_util@{camp\_util}}
@@ -1447,21 +1141,9 @@ Open a file for reading with an automatically assigned unit and test that it suc
 Definition at line \mbox{\hyperlink{util_8_f90_source_l00246}{246}} of file \mbox{\hyperlink{util_8_f90_source}{util.\+F90}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{namespacecamp__util_aa871934a2e528c6b844a9ba1a761a317_cgraph}
-\end{center}
-\end{figure}
+% FIG 51
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=333pt]{namespacecamp__util_aa871934a2e528c6b844a9ba1a761a317_icgraph}
-\end{center}
-\end{figure}
+% FIG 52
 \mbox{\Hypertarget{namespacecamp__util_a2d260aa74996f977a1b83ad54ceaa763}\label{namespacecamp__util_a2d260aa74996f977a1b83ad54ceaa763}} 
 \index{camp\_util@{camp\_util}!open\_file\_write@{open\_file\_write}}
 \index{open\_file\_write@{open\_file\_write}!camp\_util@{camp\_util}}
@@ -1484,21 +1166,9 @@ Open a file for writing with an automatically assigned unit and test that it suc
 Definition at line \mbox{\hyperlink{util_8_f90_source_l00267}{267}} of file \mbox{\hyperlink{util_8_f90_source}{util.\+F90}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{namespacecamp__util_a2d260aa74996f977a1b83ad54ceaa763_cgraph}
-\end{center}
-\end{figure}
+% FIG 53
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=327pt]{namespacecamp__util_a2d260aa74996f977a1b83ad54ceaa763_icgraph}
-\end{center}
-\end{figure}
+% FIG 54
 \mbox{\Hypertarget{namespacecamp__util_a9969887aa2f11ca1731c81384bf0580f}\label{namespacecamp__util_a9969887aa2f11ca1731c81384bf0580f}} 
 \index{camp\_util@{camp\_util}!pow2\_above@{pow2\_above}}
 \index{pow2\_above@{pow2\_above}!camp\_util@{camp\_util}}
@@ -1519,26 +1189,14 @@ Return the least power-\/of-\/2 that is at least equal to n.
 Definition at line \mbox{\hyperlink{util_8_f90_source_l01876}{1876}} of file \mbox{\hyperlink{util_8_f90_source}{util.\+F90}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=198pt]{namespacecamp__util_a9969887aa2f11ca1731c81384bf0580f_cgraph}
-\end{center}
-\end{figure}
+% FIG 55
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=198pt]{namespacecamp__util_a9969887aa2f11ca1731c81384bf0580f_icgraph}
-\end{center}
-\end{figure}
+% FIG 56
 \mbox{\Hypertarget{namespacecamp__util_a35a48fddc2fb3c1645f57f66b4aa76f6}\label{namespacecamp__util_a35a48fddc2fb3c1645f57f66b4aa76f6}} 
 \index{camp\_util@{camp\_util}!rad2deg@{rad2deg}}
 \index{rad2deg@{rad2deg}!camp\_util@{camp\_util}}
 \doxysubsubsection{\texorpdfstring{rad2deg()}{rad2deg()}}
-{\footnotesize\ttfamily real(kind=dp) function camp\+\_\+util\+::rad2deg (\begin{DoxyParamCaption}\item[{real(kind=dp), intent(in)}]{rad }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) function camp\+\_\+util\+::rad2deg (\begin{DoxyParamCaption}\item[{real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}), intent(in)}]{rad }\end{DoxyParamCaption})}
 
 
 
@@ -1554,26 +1212,14 @@ Convert radians to degrees.
 Definition at line \mbox{\hyperlink{util_8_f90_source_l01511}{1511}} of file \mbox{\hyperlink{util_8_f90_source}{util.\+F90}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=178pt]{namespacecamp__util_a35a48fddc2fb3c1645f57f66b4aa76f6_cgraph}
-\end{center}
-\end{figure}
+% FIG 57
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=178pt]{namespacecamp__util_a35a48fddc2fb3c1645f57f66b4aa76f6_icgraph}
-\end{center}
-\end{figure}
+% FIG 58
 \mbox{\Hypertarget{namespacecamp__util_af13fde08a7e0d39f75913dcc94fb2411}\label{namespacecamp__util_af13fde08a7e0d39f75913dcc94fb2411}} 
 \index{camp\_util@{camp\_util}!rad2diam@{rad2diam}}
 \index{rad2diam@{rad2diam}!camp\_util@{camp\_util}}
 \doxysubsubsection{\texorpdfstring{rad2diam()}{rad2diam()}}
-{\footnotesize\ttfamily real(kind=dp) elemental function camp\+\_\+util\+::rad2diam (\begin{DoxyParamCaption}\item[{real(kind=dp), intent(in)}]{r }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) elemental function camp\+\_\+util\+::rad2diam (\begin{DoxyParamCaption}\item[{real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}), intent(in)}]{r }\end{DoxyParamCaption})}
 
 
 
@@ -1589,21 +1235,9 @@ Convert radius (m) to diameter (m).
 Definition at line \mbox{\hyperlink{util_8_f90_source_l00313}{313}} of file \mbox{\hyperlink{util_8_f90_source}{util.\+F90}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=183pt]{namespacecamp__util_af13fde08a7e0d39f75913dcc94fb2411_cgraph}
-\end{center}
-\end{figure}
+% FIG 59
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=183pt]{namespacecamp__util_af13fde08a7e0d39f75913dcc94fb2411_icgraph}
-\end{center}
-\end{figure}
+% FIG 60
 \mbox{\Hypertarget{namespacecamp__util_ae0c20285a75bd4e58f46602f71fb871c}\label{namespacecamp__util_ae0c20285a75bd4e58f46602f71fb871c}} 
 \index{camp\_util@{camp\_util}!read\_char\_raw@{read\_char\_raw}}
 \index{read\_char\_raw@{read\_char\_raw}!camp\_util@{camp\_util}}
@@ -1660,13 +1294,7 @@ File containing a character and newline \textquotesingle{}A~\newline
 Definition at line \mbox{\hyperlink{util_8_f90_source_l01722}{1722}} of file \mbox{\hyperlink{util_8_f90_source}{util.\+F90}}.
 
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{namespacecamp__util_ae0c20285a75bd4e58f46602f71fb871c_icgraph}
-\end{center}
-\end{figure}
+% FIG 61
 \mbox{\Hypertarget{namespacecamp__util_ac20f84d4e2c6c3f2beafb7c31df79c7c}\label{namespacecamp__util_ac20f84d4e2c6c3f2beafb7c31df79c7c}} 
 \index{camp\_util@{camp\_util}!read\_word\_raw@{read\_word\_raw}}
 \index{read\_word\_raw@{read\_word\_raw}!camp\_util@{camp\_util}}
@@ -1693,26 +1321,14 @@ Read a white-\/space delimited word from a file, signaling if we have EOL or EOF
 Definition at line \mbox{\hyperlink{util_8_f90_source_l01766}{1766}} of file \mbox{\hyperlink{util_8_f90_source}{util.\+F90}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{namespacecamp__util_ac20f84d4e2c6c3f2beafb7c31df79c7c_cgraph}
-\end{center}
-\end{figure}
+% FIG 62
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=337pt]{namespacecamp__util_ac20f84d4e2c6c3f2beafb7c31df79c7c_icgraph}
-\end{center}
-\end{figure}
+% FIG 63
 \mbox{\Hypertarget{namespacecamp__util_a0271943f212c32e76561b36ea2412dd7}\label{namespacecamp__util_a0271943f212c32e76561b36ea2412dd7}} 
 \index{camp\_util@{camp\_util}!real\_dp\_to\_string@{real\_dp\_to\_string}}
 \index{real\_dp\_to\_string@{real\_dp\_to\_string}!camp\_util@{camp\_util}}
 \doxysubsubsection{\texorpdfstring{real\_dp\_to\_string()}{real\_dp\_to\_string()}}
-{\footnotesize\ttfamily character(len=\mbox{\hyperlink{namespacecamp__util_a77def4b411d48f628e7ac65eb8e1c555}{camp\+\_\+util\+\_\+convert\+\_\+string\+\_\+len}}) function camp\+\_\+util\+::real\+\_\+dp\+\_\+to\+\_\+string (\begin{DoxyParamCaption}\item[{real(kind=dp), intent(in)}]{val }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily character(len=\mbox{\hyperlink{namespacecamp__util_a77def4b411d48f628e7ac65eb8e1c555}{camp\+\_\+util\+\_\+convert\+\_\+string\+\_\+len}}) function camp\+\_\+util\+::real\+\_\+dp\+\_\+to\+\_\+string (\begin{DoxyParamCaption}\item[{real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}), intent(in)}]{val }\end{DoxyParamCaption})}
 
 
 
@@ -1728,18 +1344,12 @@ Convert a double precision real to a string format.
 Definition at line \mbox{\hyperlink{util_8_f90_source_l00854}{854}} of file \mbox{\hyperlink{util_8_f90_source}{util.\+F90}}.
 
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{namespacecamp__util_a0271943f212c32e76561b36ea2412dd7_icgraph}
-\end{center}
-\end{figure}
+% FIG 64
 \mbox{\Hypertarget{namespacecamp__util_a2b801462e46ce4e248f7e1fc830147d7}\label{namespacecamp__util_a2b801462e46ce4e248f7e1fc830147d7}} 
 \index{camp\_util@{camp\_util}!real\_sp\_to\_string@{real\_sp\_to\_string}}
 \index{real\_sp\_to\_string@{real\_sp\_to\_string}!camp\_util@{camp\_util}}
 \doxysubsubsection{\texorpdfstring{real\_sp\_to\_string()}{real\_sp\_to\_string()}}
-{\footnotesize\ttfamily character(len=\mbox{\hyperlink{namespacecamp__util_a77def4b411d48f628e7ac65eb8e1c555}{camp\+\_\+util\+\_\+convert\+\_\+string\+\_\+len}}) function camp\+\_\+util\+::real\+\_\+sp\+\_\+to\+\_\+string (\begin{DoxyParamCaption}\item[{real(kind=sp), intent(in)}]{val }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily character(len=\mbox{\hyperlink{namespacecamp__util_a77def4b411d48f628e7ac65eb8e1c555}{camp\+\_\+util\+\_\+convert\+\_\+string\+\_\+len}}) function camp\+\_\+util\+::real\+\_\+sp\+\_\+to\+\_\+string (\begin{DoxyParamCaption}\item[{real(kind=\mbox{\hyperlink{namespacecamp__constants_ae5a812d758a5e2742cb945e981dff38a}{sp}}), intent(in)}]{val }\end{DoxyParamCaption})}
 
 
 
@@ -1755,18 +1365,12 @@ Convert a single precision real to a string format.
 Definition at line \mbox{\hyperlink{util_8_f90_source_l00870}{870}} of file \mbox{\hyperlink{util_8_f90_source}{util.\+F90}}.
 
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=312pt]{namespacecamp__util_a2b801462e46ce4e248f7e1fc830147d7_icgraph}
-\end{center}
-\end{figure}
+% FIG 65
 \mbox{\Hypertarget{namespacecamp__util_a8e3fd8f1e59a4b7203d8fc1b18ca88a1}\label{namespacecamp__util_a8e3fd8f1e59a4b7203d8fc1b18ca88a1}} 
 \index{camp\_util@{camp\_util}!real\_to\_string\_max\_len@{real\_to\_string\_max\_len}}
 \index{real\_to\_string\_max\_len@{real\_to\_string\_max\_len}!camp\_util@{camp\_util}}
 \doxysubsubsection{\texorpdfstring{real\_to\_string\_max\_len()}{real\_to\_string\_max\_len()}}
-{\footnotesize\ttfamily character(len=\mbox{\hyperlink{namespacecamp__util_a77def4b411d48f628e7ac65eb8e1c555}{camp\+\_\+util\+\_\+convert\+\_\+string\+\_\+len}}) function camp\+\_\+util\+::real\+\_\+to\+\_\+string\+\_\+max\+\_\+len (\begin{DoxyParamCaption}\item[{real(kind=dp), intent(in)}]{val,  }\item[{integer, intent(in)}]{max\+\_\+len }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily character(len=\mbox{\hyperlink{namespacecamp__util_a77def4b411d48f628e7ac65eb8e1c555}{camp\+\_\+util\+\_\+convert\+\_\+string\+\_\+len}}) function camp\+\_\+util\+::real\+\_\+to\+\_\+string\+\_\+max\+\_\+len (\begin{DoxyParamCaption}\item[{real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}), intent(in)}]{val,  }\item[{integer, intent(in)}]{max\+\_\+len }\end{DoxyParamCaption})}
 
 
 
@@ -1784,26 +1388,14 @@ Convert a real to a string format of maximum length.
 Definition at line \mbox{\hyperlink{util_8_f90_source_l00944}{944}} of file \mbox{\hyperlink{util_8_f90_source}{util.\+F90}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=303pt]{namespacecamp__util_a8e3fd8f1e59a4b7203d8fc1b18ca88a1_cgraph}
-\end{center}
-\end{figure}
+% FIG 66
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=309pt]{namespacecamp__util_a8e3fd8f1e59a4b7203d8fc1b18ca88a1_icgraph}
-\end{center}
-\end{figure}
+% FIG 67
 \mbox{\Hypertarget{namespacecamp__util_ab3209391c46c5ff14ca492c74f37223f}\label{namespacecamp__util_ab3209391c46c5ff14ca492c74f37223f}} 
 \index{camp\_util@{camp\_util}!reallocate\_real\_array2d@{reallocate\_real\_array2d}}
 \index{reallocate\_real\_array2d@{reallocate\_real\_array2d}!camp\_util@{camp\_util}}
 \doxysubsubsection{\texorpdfstring{reallocate\_real\_array2d()}{reallocate\_real\_array2d()}}
-{\footnotesize\ttfamily subroutine camp\+\_\+util\+::reallocate\+\_\+real\+\_\+array2d (\begin{DoxyParamCaption}\item[{real(kind=dp), dimension(\+:,\+:), intent(inout), allocatable}]{data,  }\item[{integer, intent(in)}]{rows,  }\item[{integer, intent(in)}]{cols }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily subroutine camp\+\_\+util\+::reallocate\+\_\+real\+\_\+array2d (\begin{DoxyParamCaption}\item[{real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}), dimension(\+:,\+:), intent(inout), allocatable}]{data,  }\item[{integer, intent(in)}]{rows,  }\item[{integer, intent(in)}]{cols }\end{DoxyParamCaption})}
 
 
 
@@ -1823,18 +1415,12 @@ Reallocate a 2D real array to the given size, preserving the contents.
 Definition at line \mbox{\hyperlink{util_8_f90_source_l01674}{1674}} of file \mbox{\hyperlink{util_8_f90_source}{util.\+F90}}.
 
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=313pt]{namespacecamp__util_ab3209391c46c5ff14ca492c74f37223f_icgraph}
-\end{center}
-\end{figure}
+% FIG 68
 \mbox{\Hypertarget{namespacecamp__util_aa48c6ccfcafcc8c764fd1322587c1e97}\label{namespacecamp__util_aa48c6ccfcafcc8c764fd1322587c1e97}} 
 \index{camp\_util@{camp\_util}!savetxt\_1d@{savetxt\_1d}}
 \index{savetxt\_1d@{savetxt\_1d}!camp\_util@{camp\_util}}
 \doxysubsubsection{\texorpdfstring{savetxt\_1d()}{savetxt\_1d()}}
-{\footnotesize\ttfamily subroutine camp\+\_\+util\+::savetxt\+\_\+1d (\begin{DoxyParamCaption}\item[{character(len=$\ast$), intent(in)}]{filename,  }\item[{real(kind=dp), dimension(\+:), intent(in)}]{data }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily subroutine camp\+\_\+util\+::savetxt\+\_\+1d (\begin{DoxyParamCaption}\item[{character(len=$\ast$), intent(in)}]{filename,  }\item[{real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}), dimension(\+:), intent(in)}]{data }\end{DoxyParamCaption})}
 
 
 
@@ -1852,18 +1438,12 @@ Write a real 1D array to a text file.
 Definition at line \mbox{\hyperlink{util_8_f90_source_l01631}{1631}} of file \mbox{\hyperlink{util_8_f90_source}{util.\+F90}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{namespacecamp__util_aa48c6ccfcafcc8c764fd1322587c1e97_cgraph}
-\end{center}
-\end{figure}
+% FIG 69
 \mbox{\Hypertarget{namespacecamp__util_a758d52b5dd5f2dc2798f7e42afdcb2ea}\label{namespacecamp__util_a758d52b5dd5f2dc2798f7e42afdcb2ea}} 
 \index{camp\_util@{camp\_util}!savetxt\_2d@{savetxt\_2d}}
 \index{savetxt\_2d@{savetxt\_2d}!camp\_util@{camp\_util}}
 \doxysubsubsection{\texorpdfstring{savetxt\_2d()}{savetxt\_2d()}}
-{\footnotesize\ttfamily subroutine camp\+\_\+util\+::savetxt\+\_\+2d (\begin{DoxyParamCaption}\item[{character(len=$\ast$), intent(in)}]{filename,  }\item[{real(kind=dp), dimension(\+:,\+:), intent(in)}]{data }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily subroutine camp\+\_\+util\+::savetxt\+\_\+2d (\begin{DoxyParamCaption}\item[{character(len=$\ast$), intent(in)}]{filename,  }\item[{real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}), dimension(\+:,\+:), intent(in)}]{data }\end{DoxyParamCaption})}
 
 
 
@@ -1881,18 +1461,12 @@ Write a real 2D array to a text file.
 Definition at line \mbox{\hyperlink{util_8_f90_source_l01651}{1651}} of file \mbox{\hyperlink{util_8_f90_source}{util.\+F90}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{namespacecamp__util_a758d52b5dd5f2dc2798f7e42afdcb2ea_cgraph}
-\end{center}
-\end{figure}
+% FIG 70
 \mbox{\Hypertarget{namespacecamp__util_a5ac75c73cd92487d519e38c204dcd4d1}\label{namespacecamp__util_a5ac75c73cd92487d519e38c204dcd4d1}} 
 \index{camp\_util@{camp\_util}!sphere\_rad2vol@{sphere\_rad2vol}}
 \index{sphere\_rad2vol@{sphere\_rad2vol}!camp\_util@{camp\_util}}
 \doxysubsubsection{\texorpdfstring{sphere\_rad2vol()}{sphere\_rad2vol()}}
-{\footnotesize\ttfamily real(kind=dp) elemental function camp\+\_\+util\+::sphere\+\_\+rad2vol (\begin{DoxyParamCaption}\item[{real(kind=dp), intent(in)}]{r }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) elemental function camp\+\_\+util\+::sphere\+\_\+rad2vol (\begin{DoxyParamCaption}\item[{real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}), intent(in)}]{r }\end{DoxyParamCaption})}
 
 
 
@@ -1908,26 +1482,14 @@ Convert geometric radius $R_{\rm geo}$ (m) to mass-\/equivalent volume $V$ (m$^\
 Definition at line \mbox{\hyperlink{util_8_f90_source_l00326}{326}} of file \mbox{\hyperlink{util_8_f90_source}{util.\+F90}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=209pt]{namespacecamp__util_a5ac75c73cd92487d519e38c204dcd4d1_cgraph}
-\end{center}
-\end{figure}
+% FIG 71
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=209pt]{namespacecamp__util_a5ac75c73cd92487d519e38c204dcd4d1_icgraph}
-\end{center}
-\end{figure}
+% FIG 72
 \mbox{\Hypertarget{namespacecamp__util_afd67b304a8ed1eea58c4995d573997ac}\label{namespacecamp__util_afd67b304a8ed1eea58c4995d573997ac}} 
 \index{camp\_util@{camp\_util}!sphere\_vol2rad@{sphere\_vol2rad}}
 \index{sphere\_vol2rad@{sphere\_vol2rad}!camp\_util@{camp\_util}}
 \doxysubsubsection{\texorpdfstring{sphere\_vol2rad()}{sphere\_vol2rad()}}
-{\footnotesize\ttfamily real(kind=dp) elemental function camp\+\_\+util\+::sphere\+\_\+vol2rad (\begin{DoxyParamCaption}\item[{real(kind=dp), intent(in)}]{v }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) elemental function camp\+\_\+util\+::sphere\+\_\+vol2rad (\begin{DoxyParamCaption}\item[{real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}), intent(in)}]{v }\end{DoxyParamCaption})}
 
 
 
@@ -1943,21 +1505,9 @@ Convert mass-\/equivalent volume $V$ (m$^\wedge$3) to geometric radius $R_{\rm g
 Definition at line \mbox{\hyperlink{util_8_f90_source_l00301}{301}} of file \mbox{\hyperlink{util_8_f90_source}{util.\+F90}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=209pt]{namespacecamp__util_afd67b304a8ed1eea58c4995d573997ac_cgraph}
-\end{center}
-\end{figure}
+% FIG 73
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=209pt]{namespacecamp__util_afd67b304a8ed1eea58c4995d573997ac_icgraph}
-\end{center}
-\end{figure}
+% FIG 74
 \mbox{\Hypertarget{namespacecamp__util_aaa1aa26338c97d2b558f14bf9ff7a8ee}\label{namespacecamp__util_aaa1aa26338c97d2b558f14bf9ff7a8ee}} 
 \index{camp\_util@{camp\_util}!split\_char@{split\_char}}
 \index{split\_char@{split\_char}!camp\_util@{camp\_util}}
@@ -2016,13 +1566,7 @@ No 0-\/length substrings will be returned (adjacent tokens will be merged; token
 Definition at line \mbox{\hyperlink{util_8_f90_source_l01068}{1068}} of file \mbox{\hyperlink{util_8_f90_source}{util.\+F90}}.
 
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=316pt]{namespacecamp__util_aaa1aa26338c97d2b558f14bf9ff7a8ee_icgraph}
-\end{center}
-\end{figure}
+% FIG 75
 \mbox{\Hypertarget{namespacecamp__util_a272f407b29999a31d70a55b517a4e179}\label{namespacecamp__util_a272f407b29999a31d70a55b517a4e179}} 
 \index{camp\_util@{camp\_util}!split\_string@{split\_string}}
 \index{split\_string@{split\_string}!camp\_util@{camp\_util}}
@@ -2050,13 +1594,7 @@ No 0-\/length substrings will be returned (adjacent tokens will be merged; token
 Definition at line \mbox{\hyperlink{util_8_f90_source_l01160}{1160}} of file \mbox{\hyperlink{util_8_f90_source}{util.\+F90}}.
 
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=321pt]{namespacecamp__util_a272f407b29999a31d70a55b517a4e179_icgraph}
-\end{center}
-\end{figure}
+% FIG 76
 \mbox{\Hypertarget{namespacecamp__util_a1f9b38953a4476e513e34cb8e8a50688}\label{namespacecamp__util_a1f9b38953a4476e513e34cb8e8a50688}} 
 \index{camp\_util@{camp\_util}!starts\_with@{starts\_with}}
 \index{starts\_with@{starts\_with}!camp\_util@{camp\_util}}
@@ -2079,21 +1617,9 @@ Checks whether a string starts with a given other string.
 Definition at line \mbox{\hyperlink{util_8_f90_source_l01811}{1811}} of file \mbox{\hyperlink{util_8_f90_source}{util.\+F90}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=191pt]{namespacecamp__util_a1f9b38953a4476e513e34cb8e8a50688_cgraph}
-\end{center}
-\end{figure}
+% FIG 77
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=191pt]{namespacecamp__util_a1f9b38953a4476e513e34cb8e8a50688_icgraph}
-\end{center}
-\end{figure}
+% FIG 78
 \mbox{\Hypertarget{namespacecamp__util_a5be3c6c9ec6e0729ce16192b8402ae61}\label{namespacecamp__util_a5be3c6c9ec6e0729ce16192b8402ae61}} 
 \index{camp\_util@{camp\_util}!string\_array\_find@{string\_array\_find}}
 \index{string\_array\_find@{string\_array\_find}!camp\_util@{camp\_util}}
@@ -2116,21 +1642,9 @@ Return the index of the first occurance of the given value in the array, or 0 if
 Definition at line \mbox{\hyperlink{util_8_f90_source_l01255}{1255}} of file \mbox{\hyperlink{util_8_f90_source}{util.\+F90}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=214pt]{namespacecamp__util_a5be3c6c9ec6e0729ce16192b8402ae61_cgraph}
-\end{center}
-\end{figure}
+% FIG 79
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=214pt]{namespacecamp__util_a5be3c6c9ec6e0729ce16192b8402ae61_icgraph}
-\end{center}
-\end{figure}
+% FIG 80
 \mbox{\Hypertarget{namespacecamp__util_aaa15c5e966de0304a6c206af311c417a}\label{namespacecamp__util_aaa15c5e966de0304a6c206af311c417a}} 
 \index{camp\_util@{camp\_util}!string\_t\_constructor@{string\_t\_constructor}}
 \index{string\_t\_constructor@{string\_t\_constructor}!camp\_util@{camp\_util}}
@@ -2173,13 +1687,7 @@ Finalize a string.
 Definition at line \mbox{\hyperlink{util_8_f90_source_l00077}{77}} of file \mbox{\hyperlink{util_8_f90_source}{util.\+F90}}.
 
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=306pt]{namespacecamp__util_a072209b5179993259db1183af5d15a80_icgraph}
-\end{center}
-\end{figure}
+% FIG 81
 \mbox{\Hypertarget{namespacecamp__util_a80c772f0c9f8d6ebedc00719c319c88e}\label{namespacecamp__util_a80c772f0c9f8d6ebedc00719c319c88e}} 
 \index{camp\_util@{camp\_util}!string\_to\_integer@{string\_to\_integer}}
 \index{string\_to\_integer@{string\_to\_integer}!camp\_util@{camp\_util}}
@@ -2200,21 +1708,9 @@ Convert a string to an integer.
 Definition at line \mbox{\hyperlink{util_8_f90_source_l00764}{764}} of file \mbox{\hyperlink{util_8_f90_source}{util.\+F90}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{namespacecamp__util_a80c772f0c9f8d6ebedc00719c319c88e_cgraph}
-\end{center}
-\end{figure}
+% FIG 82
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=181pt]{namespacecamp__util_a80c772f0c9f8d6ebedc00719c319c88e_icgraph}
-\end{center}
-\end{figure}
+% FIG 83
 \mbox{\Hypertarget{namespacecamp__util_abc2afd0472a33bd2c397ebc139b0bb61}\label{namespacecamp__util_abc2afd0472a33bd2c397ebc139b0bb61}} 
 \index{camp\_util@{camp\_util}!string\_to\_logical@{string\_to\_logical}}
 \index{string\_to\_logical@{string\_to\_logical}!camp\_util@{camp\_util}}
@@ -2235,26 +1731,14 @@ Convert a string to a logical.
 Definition at line \mbox{\hyperlink{util_8_f90_source_l00807}{807}} of file \mbox{\hyperlink{util_8_f90_source}{util.\+F90}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{namespacecamp__util_abc2afd0472a33bd2c397ebc139b0bb61_cgraph}
-\end{center}
-\end{figure}
+% FIG 84
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=181pt]{namespacecamp__util_abc2afd0472a33bd2c397ebc139b0bb61_icgraph}
-\end{center}
-\end{figure}
+% FIG 85
 \mbox{\Hypertarget{namespacecamp__util_a016ae1fd8b1d0e89d2d9f228e58c00f2}\label{namespacecamp__util_a016ae1fd8b1d0e89d2d9f228e58c00f2}} 
 \index{camp\_util@{camp\_util}!string\_to\_real@{string\_to\_real}}
 \index{string\_to\_real@{string\_to\_real}!camp\_util@{camp\_util}}
 \doxysubsubsection{\texorpdfstring{string\_to\_real()}{string\_to\_real()}}
-{\footnotesize\ttfamily real(kind=dp) function camp\+\_\+util\+::string\+\_\+to\+\_\+real (\begin{DoxyParamCaption}\item[{character(len=$\ast$), intent(in)}]{string }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) function camp\+\_\+util\+::string\+\_\+to\+\_\+real (\begin{DoxyParamCaption}\item[{character(len=$\ast$), intent(in)}]{string }\end{DoxyParamCaption})}
 
 
 
@@ -2270,26 +1754,14 @@ Convert a string to a real.
 Definition at line \mbox{\hyperlink{util_8_f90_source_l00786}{786}} of file \mbox{\hyperlink{util_8_f90_source}{util.\+F90}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{namespacecamp__util_a016ae1fd8b1d0e89d2d9f228e58c00f2_cgraph}
-\end{center}
-\end{figure}
+% FIG 86
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=330pt]{namespacecamp__util_a016ae1fd8b1d0e89d2d9f228e58c00f2_icgraph}
-\end{center}
-\end{figure}
+% FIG 87
 \mbox{\Hypertarget{namespacecamp__util_a5a70a8f92ccf14743e768e1a7c0fa7ae}\label{namespacecamp__util_a5a70a8f92ccf14743e768e1a7c0fa7ae}} 
 \index{camp\_util@{camp\_util}!time\_to\_string\_max\_len@{time\_to\_string\_max\_len}}
 \index{time\_to\_string\_max\_len@{time\_to\_string\_max\_len}!camp\_util@{camp\_util}}
 \doxysubsubsection{\texorpdfstring{time\_to\_string\_max\_len()}{time\_to\_string\_max\_len()}}
-{\footnotesize\ttfamily character(len=\mbox{\hyperlink{namespacecamp__util_a77def4b411d48f628e7ac65eb8e1c555}{camp\+\_\+util\+\_\+convert\+\_\+string\+\_\+len}}) function camp\+\_\+util\+::time\+\_\+to\+\_\+string\+\_\+max\+\_\+len (\begin{DoxyParamCaption}\item[{real(kind=dp), intent(in)}]{time,  }\item[{integer, intent(in)}]{max\+\_\+len }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily character(len=\mbox{\hyperlink{namespacecamp__util_a77def4b411d48f628e7ac65eb8e1c555}{camp\+\_\+util\+\_\+convert\+\_\+string\+\_\+len}}) function camp\+\_\+util\+::time\+\_\+to\+\_\+string\+\_\+max\+\_\+len (\begin{DoxyParamCaption}\item[{real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}), intent(in)}]{time,  }\item[{integer, intent(in)}]{max\+\_\+len }\end{DoxyParamCaption})}
 
 
 
@@ -2307,26 +1779,14 @@ Convert a time to a string format of maximum length.
 Definition at line \mbox{\hyperlink{util_8_f90_source_l00999}{999}} of file \mbox{\hyperlink{util_8_f90_source}{util.\+F90}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=303pt]{namespacecamp__util_a5a70a8f92ccf14743e768e1a7c0fa7ae_cgraph}
-\end{center}
-\end{figure}
+% FIG 88
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=175pt]{namespacecamp__util_a5a70a8f92ccf14743e768e1a7c0fa7ae_icgraph}
-\end{center}
-\end{figure}
+% FIG 89
 \mbox{\Hypertarget{namespacecamp__util_a7ce8fdfc7ade6434dc60fea1f7abe818}\label{namespacecamp__util_a7ce8fdfc7ade6434dc60fea1f7abe818}} 
 \index{camp\_util@{camp\_util}!vec\_cts\_to\_disc@{vec\_cts\_to\_disc}}
 \index{vec\_cts\_to\_disc@{vec\_cts\_to\_disc}!camp\_util@{camp\_util}}
 \doxysubsubsection{\texorpdfstring{vec\_cts\_to\_disc()}{vec\_cts\_to\_disc()}}
-{\footnotesize\ttfamily subroutine camp\+\_\+util\+::vec\+\_\+cts\+\_\+to\+\_\+disc (\begin{DoxyParamCaption}\item[{integer, intent(in)}]{n,  }\item[{real(kind=dp), dimension(n), intent(in)}]{vec\+\_\+cts,  }\item[{integer, intent(in)}]{n\+\_\+samp,  }\item[{integer, dimension(n), intent(out)}]{vec\+\_\+disc }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily subroutine camp\+\_\+util\+::vec\+\_\+cts\+\_\+to\+\_\+disc (\begin{DoxyParamCaption}\item[{integer, intent(in)}]{n,  }\item[{real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}), dimension(n), intent(in)}]{vec\+\_\+cts,  }\item[{integer, intent(in)}]{n\+\_\+samp,  }\item[{integer, dimension(n), intent(out)}]{vec\+\_\+disc }\end{DoxyParamCaption})}
 
 
 
@@ -2348,13 +1808,7 @@ Use n\+\_\+samp samples. Returns discrete vector whose relative entry sizes are 
 Definition at line \mbox{\hyperlink{util_8_f90_source_l01185}{1185}} of file \mbox{\hyperlink{util_8_f90_source}{util.\+F90}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{namespacecamp__util_a7ce8fdfc7ade6434dc60fea1f7abe818_cgraph}
-\end{center}
-\end{figure}
+% FIG 90
 \mbox{\Hypertarget{namespacecamp__util_afbc01957ee97134229c7d4a779138f9f}\label{namespacecamp__util_afbc01957ee97134229c7d4a779138f9f}} 
 \index{camp\_util@{camp\_util}!warn\_assert\_msg@{warn\_assert\_msg}}
 \index{warn\_assert\_msg@{warn\_assert\_msg}!camp\_util@{camp\_util}}
@@ -2379,21 +1833,9 @@ Prints a warning message if condition\+\_\+ok is false.
 Definition at line \mbox{\hyperlink{util_8_f90_source_l00111}{111}} of file \mbox{\hyperlink{util_8_f90_source}{util.\+F90}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{namespacecamp__util_afbc01957ee97134229c7d4a779138f9f_cgraph}
-\end{center}
-\end{figure}
+% FIG 91
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{namespacecamp__util_afbc01957ee97134229c7d4a779138f9f_icgraph}
-\end{center}
-\end{figure}
+% FIG 92
 \mbox{\Hypertarget{namespacecamp__util_ab72bff2627c9468e4c352118b8dc7046}\label{namespacecamp__util_ab72bff2627c9468e4c352118b8dc7046}} 
 \index{camp\_util@{camp\_util}!warn\_msg@{warn\_msg}}
 \index{warn\_msg@{warn\_msg}!camp\_util@{camp\_util}}
@@ -2418,21 +1860,9 @@ Prints a warning message.
 Definition at line \mbox{\hyperlink{util_8_f90_source_l00089}{89}} of file \mbox{\hyperlink{util_8_f90_source}{util.\+F90}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=316pt]{namespacecamp__util_ab72bff2627c9468e4c352118b8dc7046_cgraph}
-\end{center}
-\end{figure}
+% FIG 93
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{namespacecamp__util_ab72bff2627c9468e4c352118b8dc7046_icgraph}
-\end{center}
-\end{figure}
+% FIG 94
 
 
 \doxysubsection{Variable Documentation}

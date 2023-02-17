@@ -1,4 +1,4 @@
 <map id="solver_print_stats" name="solver_print_stats">
-<area shape="rect" id="node1" title="Print solver statistics." alt="" coords="5,5,131,32"/>
-<area shape="rect" id="node2" href="$camp__solver_8c.html#a08519bb4526ffd3db7f49b33ba7600aa" title="Check the return value of a SUNDIALS function." alt="" coords="179,5,263,32"/>
+<area shape="rect" id="node1" title="Print solver statistics." alt="" coords="5,5,131,31"/>
+<area shape="rect" id="node2" href="$camp__solver_8c.html#a08519bb4526ffd3db7f49b33ba7600aa" title="Check the return value of a SUNDIALS function." alt="" coords="179,5,263,31"/>
 </map>

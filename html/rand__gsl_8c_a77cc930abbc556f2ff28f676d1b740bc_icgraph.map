@@ -1,7 +1,7 @@
 <map id="camp_rand_normal_gsl" name="camp_rand_normal_gsl">
-<area shape="rect" id="node1" title="Generate a normally&#45;distributed random number." alt="" coords="436,88,592,115"/>
-<area shape="rect" id="node2" href="$namespacecamp__rand.html#ac20e458bc43a3e432568ea44c054778e" title="Generates a normally distributed random number with the given mean and standard deviation." alt="" coords="225,88,388,115"/>
-<area shape="rect" id="node3" href="$namespacecamp__rand.html#a613b0c64aa5bdface8e6d5aa30cec7c4" title="Generate a Binomial&#45;distributed random number with the given parameters." alt="" coords="5,29,177,56"/>
-<area shape="rect" id="node4" href="$namespacecamp__rand.html#ad3032643d586f9de792d5f6858223704" title="Generates a vector of normally distributed random numbers with the given means and standard deviation..." alt="" coords="10,81,173,122"/>
-<area shape="rect" id="node5" href="$namespacecamp__rand.html#afeef7ff3370b9d984897647d64070725" title="Generate a Poisson&#45;distributed random number with the given mean." alt="" coords="7,171,176,197"/>
+<area shape="rect" id="node1" title="Generate a normally&#45;distributed random number." alt="" coords="436,87,592,112"/>
+<area shape="rect" id="node2" href="$namespacecamp__rand.html#ac20e458bc43a3e432568ea44c054778e" title="Generates a normally distributed random number with the given mean and standard deviation." alt="" coords="225,87,388,112"/>
+<area shape="rect" id="node3" href="$namespacecamp__rand.html#a613b0c64aa5bdface8e6d5aa30cec7c4" title="Generate a Binomial&#45;distributed random number with the given parameters." alt="" coords="5,29,177,55"/>
+<area shape="rect" id="node4" href="$namespacecamp__rand.html#ad3032643d586f9de792d5f6858223704" title="Generates a vector of normally distributed random numbers with the given means and standard deviation..." alt="" coords="10,79,173,119"/>
+<area shape="rect" id="node5" href="$namespacecamp__rand.html#afeef7ff3370b9d984897647d64070725" title="Generate a Poisson&#45;distributed random number with the given mean." alt="" coords="7,168,176,193"/>
 </map>

@@ -1,4 +1,4 @@
 <map id="camp_util::linspace" name="camp_util::linspace">
-<area shape="rect" id="node1" title="Makes a linearly spaced array from min to max." alt="" coords="189,29,321,56"/>
-<area shape="rect" id="node2" href="$namespacecamp__util.html#a975cc8fef2da18c43de0c15022c92498" title="Makes a logarithmically spaced array of length n from min to max." alt="" coords="5,29,141,56"/>
+<area shape="rect" id="node1" title="Makes a linearly spaced array from min to max." alt="" coords="189,29,321,55"/>
+<area shape="rect" id="node2" href="$namespacecamp__util.html#a975cc8fef2da18c43de0c15022c92498" title="Makes a logarithmically spaced array of length n from min to max." alt="" coords="5,29,141,55"/>
 </map>

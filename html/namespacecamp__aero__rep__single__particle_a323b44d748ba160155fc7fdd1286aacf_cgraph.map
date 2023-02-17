@@ -1,4 +1,4 @@
 <map id="camp_aero_rep_single_particle::unique_names" name="camp_aero_rep_single_particle::unique_names">
-<area shape="rect" id="node1" title="Get a list of unique names for each element on the camp_camp_state::camp_state_t::state_var array for..." alt="" coords="5,5,167,47"/>
-<area shape="rect" id="node2" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="215,5,337,47"/>
+<area shape="rect" id="node1" title="Get a list of unique names for each element on the camp_camp_state::camp_state_t::state_var array for..." alt="" coords="5,5,167,45"/>
+<area shape="rect" id="node2" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="215,5,337,45"/>
 </map>

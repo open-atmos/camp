@@ -1,9 +1,9 @@
 <map id="camp_mpi::camp_mpi_pack_size_integer" name="camp_mpi::camp_mpi_pack_size_integer">
-<area shape="rect" id="node1" title="Determines the number of bytes required to pack the given value." alt="" coords="5,29,153,71"/>
-<area shape="rect" id="node2" href="$namespacecamp__mpi.html#adb95beaf933131229f017a03af8352ad" title="Dies if ierr is not ok." alt="" coords="201,29,349,71"/>
-<area shape="rect" id="node3" href="$namespacecamp__mpi.html#a7c0deeecbf4c64fe7fcade1797e1aab8" title="Abort the program." alt="" coords="397,29,545,71"/>
-<area shape="rect" id="node4" href="$namespacecamp__util.html#aa942add404bf8b611e5b4b8c777ca7f6" title="Error immediately." alt="" coords="593,37,695,63"/>
-<area shape="rect" id="node5" href="$namespacecamp__util.html#a32cf43c1b618a3ecf93810383e960ef2" title="Errors unless condition_ok is true." alt="" coords="743,37,863,63"/>
-<area shape="rect" id="node6" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="911,37,1063,63"/>
-<area shape="rect" id="node7" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="1111,29,1233,71"/>
+<area shape="rect" id="node1" title="Determines the number of bytes required to pack the given value." alt="" coords="5,29,153,69"/>
+<area shape="rect" id="node2" href="$namespacecamp__mpi.html#adb95beaf933131229f017a03af8352ad" title="Dies if ierr is not ok." alt="" coords="201,29,349,69"/>
+<area shape="rect" id="node3" href="$namespacecamp__mpi.html#a7c0deeecbf4c64fe7fcade1797e1aab8" title="Abort the program." alt="" coords="397,29,545,69"/>
+<area shape="rect" id="node4" href="$namespacecamp__util.html#aa942add404bf8b611e5b4b8c777ca7f6" title="Error immediately." alt="" coords="593,37,695,62"/>
+<area shape="rect" id="node5" href="$namespacecamp__util.html#a32cf43c1b618a3ecf93810383e960ef2" title="Errors unless condition_ok is true." alt="" coords="743,37,863,62"/>
+<area shape="rect" id="node6" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="911,37,1063,62"/>
+<area shape="rect" id="node7" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="1111,29,1233,69"/>
 </map>

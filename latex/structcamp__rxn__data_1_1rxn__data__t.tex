@@ -8,27 +8,8 @@ Abstract reaction data type.
 
 
 Inheritance diagram for camp\+\_\+rxn\+\_\+data\+::rxn\+\_\+data\+\_\+t\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[height=550pt]{structcamp__rxn__data_1_1rxn__data__t__inherit__graph}
-\end{center}
-\end{figure}
-\doxysubsection*{Public Attributes}
-\begin{DoxyCompactItemize}
-\item 
-integer(kind=i\+\_\+kind), public \mbox{\hyperlink{structcamp__rxn__data_1_1rxn__data__t_ac8908982f3c9248a95aa5e5df1505f69}{rxn\+\_\+phase}}
-\begin{DoxyCompactList}\small\item\em Reaction phase. \end{DoxyCompactList}\item 
-type(\mbox{\hyperlink{structcamp__property_1_1property__t}{property\+\_\+t}}), pointer, public \mbox{\hyperlink{structcamp__rxn__data_1_1rxn__data__t_adeab6a80bd18af573d65b3789311a99b}{property\+\_\+set}} =$>$ null()
-\begin{DoxyCompactList}\small\item\em Reaction parameters. These will be available during initialization, but not during integration. All information required to calculate the time derivatives and \mbox{\hyperlink{struct_jacobian}{Jacobian}} matrix constributions must be saved by the exdending type. \end{DoxyCompactList}\item 
-real(kind=dp), dimension(\+:), allocatable, public \mbox{\hyperlink{structcamp__rxn__data_1_1rxn__data__t_a26f9b453eadabbc59f7741e53116401d}{condensed\+\_\+data\+\_\+real}}
-\begin{DoxyCompactList}\small\item\em Condensed reaction data. Theses arrays will be available during integration, and should contain any information required by the rate and \mbox{\hyperlink{struct_jacobian}{Jacobian}} constribution functions that cannot be obtained from the {\ttfamily \mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t}{camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t}}} object. (floating-\/point) \end{DoxyCompactList}\item 
-integer(kind=i\+\_\+kind), dimension(\+:), allocatable, public \mbox{\hyperlink{structcamp__rxn__data_1_1rxn__data__t_ae6f3aac1eaf79e6ddf6df9d1671947df}{condensed\+\_\+data\+\_\+int}}
-\begin{DoxyCompactList}\small\item\em Condensed reaction data. Theses arrays will be available during integration, and should contain any information required by the rate and \mbox{\hyperlink{struct_jacobian}{Jacobian}} constribution functions that cannot be obtained from the {\ttfamily \mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t}{camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t}}} object. (integer) \end{DoxyCompactList}\item 
-integer(kind=i\+\_\+kind), public \mbox{\hyperlink{structcamp__rxn__data_1_1rxn__data__t_ad03f4b1a68b22ab8a25aaa0c31bb1fd1}{num\+\_\+env\+\_\+params}} = 0
-\begin{DoxyCompactList}\small\item\em Number of environment-\/dependent parameters These are parameters that need updated when environmental conditions change. \end{DoxyCompactList}\end{DoxyCompactItemize}
-\doxysubsection*{Private Member Functions}
+% FIG 0
+\doxysubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
 procedure(\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1initialize}{initialize}}), deferred \mbox{\hyperlink{structcamp__rxn__data_1_1rxn__data__t_a54db794cd2f5be1ed79603cbc5698a51}{initialize}}
@@ -43,8 +24,21 @@ procedure \mbox{\hyperlink{structcamp__rxn__data_1_1rxn__data__t_ab54997286fdeca
 \begin{DoxyCompactList}\small\item\em Packs the given value into the buffer, advancing position. \end{DoxyCompactList}\item 
 procedure \mbox{\hyperlink{structcamp__rxn__data_1_1rxn__data__t_ac6b30de54245160463d8a4fa8a33e72b}{bin\+\_\+unpack}}
 \begin{DoxyCompactList}\small\item\em Unpacks the given value from the buffer, advancing position. \end{DoxyCompactList}\item 
-procedure \mbox{\hyperlink{structcamp__rxn__data_1_1rxn__data__t_ab398fdc3df66a11eee8eaa998fe98f9d}{print}} =$>$ \mbox{\hyperlink{namespacecamp__rxn__data_a0a8239fb07b298cde1d02b6397cb79c3}{do\+\_\+print}}
+procedure \mbox{\hyperlink{structcamp__rxn__data_1_1rxn__data__t_ab398fdc3df66a11eee8eaa998fe98f9d}{print}} =$>$ \mbox{\hyperlink{namespacecamp__aero__phase__data_ac5eaedf2265900988eaddb4872f1c0c2}{do\+\_\+print}}
 \begin{DoxyCompactList}\small\item\em Print the reaction data. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+integer(kind=i\+\_\+kind), public \mbox{\hyperlink{structcamp__rxn__data_1_1rxn__data__t_ac8908982f3c9248a95aa5e5df1505f69}{rxn\+\_\+phase}}
+\begin{DoxyCompactList}\small\item\em Reaction phase. \end{DoxyCompactList}\item 
+type(\mbox{\hyperlink{structcamp__property_1_1property__t}{property\+\_\+t}}), pointer, public \mbox{\hyperlink{structcamp__rxn__data_1_1rxn__data__t_adeab6a80bd18af573d65b3789311a99b}{property\+\_\+set}} =$>$ null()
+\begin{DoxyCompactList}\small\item\em Reaction parameters. These will be available during initialization, but not during integration. All information required to calculate the time derivatives and \mbox{\hyperlink{struct_jacobian}{Jacobian}} matrix constributions must be saved by the exdending type. \end{DoxyCompactList}\item 
+real(kind=dp), dimension(\+:), allocatable, public \mbox{\hyperlink{structcamp__rxn__data_1_1rxn__data__t_a26f9b453eadabbc59f7741e53116401d}{condensed\+\_\+data\+\_\+real}}
+\begin{DoxyCompactList}\small\item\em Condensed reaction data. Theses arrays will be available during integration, and should contain any information required by the rate and \mbox{\hyperlink{struct_jacobian}{Jacobian}} constribution functions that cannot be obtained from the {\ttfamily \mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t}{camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t}}} object. (floating-\/point) \end{DoxyCompactList}\item 
+integer(kind=i\+\_\+kind), dimension(\+:), allocatable, public \mbox{\hyperlink{structcamp__rxn__data_1_1rxn__data__t_ae6f3aac1eaf79e6ddf6df9d1671947df}{condensed\+\_\+data\+\_\+int}}
+\begin{DoxyCompactList}\small\item\em Condensed reaction data. Theses arrays will be available during integration, and should contain any information required by the rate and \mbox{\hyperlink{struct_jacobian}{Jacobian}} constribution functions that cannot be obtained from the {\ttfamily \mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t}{camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t}}} object. (integer) \end{DoxyCompactList}\item 
+integer(kind=i\+\_\+kind), public \mbox{\hyperlink{structcamp__rxn__data_1_1rxn__data__t_ad03f4b1a68b22ab8a25aaa0c31bb1fd1}{num\+\_\+env\+\_\+params}} = 0
+\begin{DoxyCompactList}\small\item\em Number of environment-\/dependent parameters These are parameters that need updated when environmental conditions change. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
@@ -61,7 +55,7 @@ Definition at line \mbox{\hyperlink{rxn__data_8_f90_source_l00096}{96}} of file 
 \index{camp\_rxn\_data::rxn\_data\_t@{camp\_rxn\_data::rxn\_data\_t}!bin\_pack@{bin\_pack}}
 \index{bin\_pack@{bin\_pack}!camp\_rxn\_data::rxn\_data\_t@{camp\_rxn\_data::rxn\_data\_t}}
 \doxysubsubsection{\texorpdfstring{bin\_pack()}{bin\_pack()}}
-{\footnotesize\ttfamily procedure camp\+\_\+rxn\+\_\+data\+::rxn\+\_\+data\+\_\+t\+::bin\+\_\+pack\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily procedure camp\+\_\+rxn\+\_\+data\+::rxn\+\_\+data\+\_\+t\+::bin\+\_\+pack}
 
 
 
@@ -75,7 +69,7 @@ Definition at line \mbox{\hyperlink{rxn__data_8_f90_source_l00139}{139}} of file
 \index{camp\_rxn\_data::rxn\_data\_t@{camp\_rxn\_data::rxn\_data\_t}!bin\_unpack@{bin\_unpack}}
 \index{bin\_unpack@{bin\_unpack}!camp\_rxn\_data::rxn\_data\_t@{camp\_rxn\_data::rxn\_data\_t}}
 \doxysubsubsection{\texorpdfstring{bin\_unpack()}{bin\_unpack()}}
-{\footnotesize\ttfamily procedure camp\+\_\+rxn\+\_\+data\+::rxn\+\_\+data\+\_\+t\+::bin\+\_\+unpack\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily procedure camp\+\_\+rxn\+\_\+data\+::rxn\+\_\+data\+\_\+t\+::bin\+\_\+unpack}
 
 
 
@@ -89,7 +83,7 @@ Definition at line \mbox{\hyperlink{rxn__data_8_f90_source_l00141}{141}} of file
 \index{camp\_rxn\_data::rxn\_data\_t@{camp\_rxn\_data::rxn\_data\_t}!check\_phase@{check\_phase}}
 \index{check\_phase@{check\_phase}!camp\_rxn\_data::rxn\_data\_t@{camp\_rxn\_data::rxn\_data\_t}}
 \doxysubsubsection{\texorpdfstring{check\_phase()}{check\_phase()}}
-{\footnotesize\ttfamily procedure camp\+\_\+rxn\+\_\+data\+::rxn\+\_\+data\+\_\+t\+::check\+\_\+phase\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily procedure camp\+\_\+rxn\+\_\+data\+::rxn\+\_\+data\+\_\+t\+::check\+\_\+phase}
 
 
 
@@ -103,7 +97,7 @@ Definition at line \mbox{\hyperlink{rxn__data_8_f90_source_l00135}{135}} of file
 \index{camp\_rxn\_data::rxn\_data\_t@{camp\_rxn\_data::rxn\_data\_t}!initialize@{initialize}}
 \index{initialize@{initialize}!camp\_rxn\_data::rxn\_data\_t@{camp\_rxn\_data::rxn\_data\_t}}
 \doxysubsubsection{\texorpdfstring{initialize()}{initialize()}}
-{\footnotesize\ttfamily procedure(\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1initialize}{initialize}}), deferred camp\+\_\+rxn\+\_\+data\+::rxn\+\_\+data\+\_\+t\+::initialize\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily procedure(\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1initialize}{initialize}}), deferred camp\+\_\+rxn\+\_\+data\+::rxn\+\_\+data\+\_\+t\+::initialize}
 
 
 
@@ -117,7 +111,7 @@ Definition at line \mbox{\hyperlink{rxn__data_8_f90_source_l00127}{127}} of file
 \index{camp\_rxn\_data::rxn\_data\_t@{camp\_rxn\_data::rxn\_data\_t}!load@{load}}
 \index{load@{load}!camp\_rxn\_data::rxn\_data\_t@{camp\_rxn\_data::rxn\_data\_t}}
 \doxysubsubsection{\texorpdfstring{load()}{load()}}
-{\footnotesize\ttfamily procedure camp\+\_\+rxn\+\_\+data\+::rxn\+\_\+data\+\_\+t\+::load\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily procedure camp\+\_\+rxn\+\_\+data\+::rxn\+\_\+data\+\_\+t\+::load}
 
 
 
@@ -131,7 +125,7 @@ Definition at line \mbox{\hyperlink{rxn__data_8_f90_source_l00129}{129}} of file
 \index{camp\_rxn\_data::rxn\_data\_t@{camp\_rxn\_data::rxn\_data\_t}!pack\_size@{pack\_size}}
 \index{pack\_size@{pack\_size}!camp\_rxn\_data::rxn\_data\_t@{camp\_rxn\_data::rxn\_data\_t}}
 \doxysubsubsection{\texorpdfstring{pack\_size()}{pack\_size()}}
-{\footnotesize\ttfamily procedure camp\+\_\+rxn\+\_\+data\+::rxn\+\_\+data\+\_\+t\+::pack\+\_\+size\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily procedure camp\+\_\+rxn\+\_\+data\+::rxn\+\_\+data\+\_\+t\+::pack\+\_\+size}
 
 
 
@@ -145,7 +139,7 @@ Definition at line \mbox{\hyperlink{rxn__data_8_f90_source_l00137}{137}} of file
 \index{camp\_rxn\_data::rxn\_data\_t@{camp\_rxn\_data::rxn\_data\_t}!print@{print}}
 \index{print@{print}!camp\_rxn\_data::rxn\_data\_t@{camp\_rxn\_data::rxn\_data\_t}}
 \doxysubsubsection{\texorpdfstring{print()}{print()}}
-{\footnotesize\ttfamily procedure camp\+\_\+rxn\+\_\+data\+::rxn\+\_\+data\+\_\+t\+::print\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily procedure camp\+\_\+rxn\+\_\+data\+::rxn\+\_\+data\+\_\+t\+::print}
 
 
 

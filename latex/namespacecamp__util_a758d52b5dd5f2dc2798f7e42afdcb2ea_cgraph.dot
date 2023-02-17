@@ -1,0 +1,26 @@
+digraph "camp_util::savetxt_2d"
+{
+ // LATEX_PDF_SIZE
+  bgcolor="transparent";
+  edge [fontname=Helvetica,fontsize=10,labelfontname=Helvetica,labelfontsize=10];
+  node [fontname=Helvetica,fontsize=10,shape=box,height=0.2,width=0.4];
+  rankdir="LR";
+  Node1 [label="camp_util::savetxt_2d",height=0.2,width=0.4,color="gray40", fillcolor="grey60", style="filled", fontcolor="black",tooltip="Write a real 2D array to a text file."];
+  Node1 -> Node2 [color="steelblue1",style="solid"];
+  Node2 [label="camp_util::close_file",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$namespacecamp__util.html#a404c3cd8244ade45a4e57b2347d0f9a2",tooltip="Close a file and de-assign the unit."];
+  Node2 -> Node3 [color="steelblue1",style="solid"];
+  Node3 [label="camp_util::free_unit",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$namespacecamp__util.html#a3a68d4a7d1b28dd132909a12c83d3c21",tooltip="Frees a unit number returned by get_unit()."];
+  Node1 -> Node4 [color="steelblue1",style="solid"];
+  Node4 [label="camp_util::open_file\l_write",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$namespacecamp__util.html#a2d260aa74996f977a1b83ad54ceaa763",tooltip="Open a file for writing with an automatically assigned unit and test that it succeeds...."];
+  Node4 -> Node5 [color="steelblue1",style="solid"];
+  Node5 [label="camp_util::assert_msg",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f",tooltip="Errors unless condition_ok is true."];
+  Node5 -> Node6 [color="steelblue1",style="solid"];
+  Node6 [label="camp_util::integer\l_to_string",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc",tooltip="Convert an integer to a string format."];
+  Node4 -> Node7 [color="steelblue1",style="solid"];
+  Node7 [label="camp_util::get_unit",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$namespacecamp__util.html#a43662260b71cb7e4b72fe49ccb8cee94",tooltip="Returns an available unit number. This should be freed by free_unit()."];
+  Node7 -> Node8 [color="steelblue1",style="solid"];
+  Node8 [label="camp_util::die_msg",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$namespacecamp__util.html#a970b40b46d26e937fb3cdc0b9217b86c",tooltip="Error immediately."];
+  Node8 -> Node5 [color="steelblue1",style="solid"];
+  Node7 -> Node7 [color="steelblue1",style="solid"];
+  Node4 -> Node6 [color="steelblue1",style="solid"];
+}

@@ -1,0 +1,15 @@
+digraph "sub_model_PDFiTE_get_jac_contrib"
+{
+ // LATEX_PDF_SIZE
+  bgcolor="transparent";
+  edge [fontname=Helvetica,fontsize=10,labelfontname=Helvetica,labelfontsize=10];
+  node [fontname=Helvetica,fontsize=10,shape=box,height=0.2,width=0.4];
+  rankdir="RL";
+  Node1 [label="sub_model_PDFiTE_get\l_jac_contrib",height=0.2,width=0.4,color="gray40", fillcolor="grey60", style="filled", fontcolor="black",tooltip="Add contributions to the Jacobian from derivates calculated using the output of this sub model."];
+  Node1 -> Node2 [dir="back",color="steelblue1",style="solid"];
+  Node2 [label="sub_model_get_jac_contrib",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$sub__model__solver_8c.html#a9575eb8104f46d396268c361164e88fb",tooltip="Calculate the Jacobian constributions from sub model calculations."];
+  Node2 -> Node3 [dir="back",color="steelblue1",style="solid"];
+  Node3 [label="Jac",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$camp__solver_8c.html#a13451d507558a61a2353adfed58db468",tooltip="Compute the Jacobian."];
+  Node3 -> Node4 [dir="back",color="steelblue1",style="solid"];
+  Node4 [label="solver_initialize",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$camp__solver_8c.html#a599ffdef916b139a1690bfd41aa386b6",tooltip="Solver initialization."];
+}

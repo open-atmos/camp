@@ -8,24 +8,12 @@ Photolysis rate update object.
 
 
 Inheritance diagram for camp\+\_\+rxn\+\_\+photolysis\+::rxn\+\_\+update\+\_\+data\+\_\+photolysis\+\_\+t\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=229pt]{structcamp__rxn__photolysis_1_1rxn__update__data__photolysis__t__inherit__graph}
-\end{center}
-\end{figure}
+% FIG 0
 
 
 Collaboration diagram for camp\+\_\+rxn\+\_\+photolysis\+::rxn\+\_\+update\+\_\+data\+\_\+photolysis\+\_\+t\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=229pt]{structcamp__rxn__photolysis_1_1rxn__update__data__photolysis__t__coll__graph}
-\end{center}
-\end{figure}
-\doxysubsection*{Private Member Functions}
+% FIG 1
+\doxysubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
 procedure \mbox{\hyperlink{structcamp__rxn__photolysis_1_1rxn__update__data__photolysis__t_a33209f507c6a20280a334279757cacb4}{set\+\_\+rate}} =$>$ \mbox{\hyperlink{namespacecamp__rxn__photolysis_a032c51b0378b15160d2ed75df33c9b39}{update\+\_\+data\+\_\+rate\+\_\+set}}
@@ -38,13 +26,16 @@ procedure \mbox{\hyperlink{structcamp__rxn__photolysis_1_1rxn__update__data__pho
 \begin{DoxyCompactList}\small\item\em Unpack the local update data from a binary. \end{DoxyCompactList}\item 
 final \mbox{\hyperlink{structcamp__rxn__photolysis_1_1rxn__update__data__photolysis__t_a8ca0aed1680abc28017e694040771776}{update\+\_\+data\+\_\+finalize}}
 \begin{DoxyCompactList}\small\item\em Finalize the rate update data. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+integer(kind=i\+\_\+kind) \mbox{\hyperlink{structcamp__rxn__photolysis_1_1rxn__update__data__photolysis__t_a77d47e889d232e23efcd44ef8b0c309c}{rxn\+\_\+unique\+\_\+id}} = 0
+\begin{DoxyCompactList}\small\item\em Unique id for finding reactions during model initialization. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Private Attributes}
 \begin{DoxyCompactItemize}
 \item 
 logical \mbox{\hyperlink{structcamp__rxn__photolysis_1_1rxn__update__data__photolysis__t_a6f3bf860606975998ca2bbd4df0d3f43}{is\+\_\+malloced}} = .false.
-\begin{DoxyCompactList}\small\item\em Flag indicating whether the update data as been allocated. \end{DoxyCompactList}\item 
-integer(kind=i\+\_\+kind) \mbox{\hyperlink{structcamp__rxn__photolysis_1_1rxn__update__data__photolysis__t_a77d47e889d232e23efcd44ef8b0c309c}{rxn\+\_\+unique\+\_\+id}} = 0
-\begin{DoxyCompactList}\small\item\em Unique id for finding reactions during model initialization. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Flag indicating whether the update data as been allocated. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
@@ -59,7 +50,7 @@ Definition at line \mbox{\hyperlink{rxn__photolysis_8_f90_source_l00112}{112}} o
 \index{camp\_rxn\_photolysis::rxn\_update\_data\_photolysis\_t@{camp\_rxn\_photolysis::rxn\_update\_data\_photolysis\_t}!internal\_bin\_pack@{internal\_bin\_pack}}
 \index{internal\_bin\_pack@{internal\_bin\_pack}!camp\_rxn\_photolysis::rxn\_update\_data\_photolysis\_t@{camp\_rxn\_photolysis::rxn\_update\_data\_photolysis\_t}}
 \doxysubsubsection{\texorpdfstring{internal\_bin\_pack()}{internal\_bin\_pack()}}
-{\footnotesize\ttfamily procedure camp\+\_\+rxn\+\_\+photolysis\+::rxn\+\_\+update\+\_\+data\+\_\+photolysis\+\_\+t\+::internal\+\_\+bin\+\_\+pack\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily procedure camp\+\_\+rxn\+\_\+photolysis\+::rxn\+\_\+update\+\_\+data\+\_\+photolysis\+\_\+t\+::internal\+\_\+bin\+\_\+pack}
 
 
 
@@ -73,7 +64,7 @@ Definition at line \mbox{\hyperlink{rxn__photolysis_8_f90_source_l00124}{124}} o
 \index{camp\_rxn\_photolysis::rxn\_update\_data\_photolysis\_t@{camp\_rxn\_photolysis::rxn\_update\_data\_photolysis\_t}!internal\_bin\_unpack@{internal\_bin\_unpack}}
 \index{internal\_bin\_unpack@{internal\_bin\_unpack}!camp\_rxn\_photolysis::rxn\_update\_data\_photolysis\_t@{camp\_rxn\_photolysis::rxn\_update\_data\_photolysis\_t}}
 \doxysubsubsection{\texorpdfstring{internal\_bin\_unpack()}{internal\_bin\_unpack()}}
-{\footnotesize\ttfamily procedure camp\+\_\+rxn\+\_\+photolysis\+::rxn\+\_\+update\+\_\+data\+\_\+photolysis\+\_\+t\+::internal\+\_\+bin\+\_\+unpack\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily procedure camp\+\_\+rxn\+\_\+photolysis\+::rxn\+\_\+update\+\_\+data\+\_\+photolysis\+\_\+t\+::internal\+\_\+bin\+\_\+unpack}
 
 
 
@@ -87,7 +78,7 @@ Definition at line \mbox{\hyperlink{rxn__photolysis_8_f90_source_l00126}{126}} o
 \index{camp\_rxn\_photolysis::rxn\_update\_data\_photolysis\_t@{camp\_rxn\_photolysis::rxn\_update\_data\_photolysis\_t}!internal\_pack\_size@{internal\_pack\_size}}
 \index{internal\_pack\_size@{internal\_pack\_size}!camp\_rxn\_photolysis::rxn\_update\_data\_photolysis\_t@{camp\_rxn\_photolysis::rxn\_update\_data\_photolysis\_t}}
 \doxysubsubsection{\texorpdfstring{internal\_pack\_size()}{internal\_pack\_size()}}
-{\footnotesize\ttfamily procedure camp\+\_\+rxn\+\_\+photolysis\+::rxn\+\_\+update\+\_\+data\+\_\+photolysis\+\_\+t\+::internal\+\_\+pack\+\_\+size\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily procedure camp\+\_\+rxn\+\_\+photolysis\+::rxn\+\_\+update\+\_\+data\+\_\+photolysis\+\_\+t\+::internal\+\_\+pack\+\_\+size}
 
 
 
@@ -101,7 +92,7 @@ Definition at line \mbox{\hyperlink{rxn__photolysis_8_f90_source_l00122}{122}} o
 \index{camp\_rxn\_photolysis::rxn\_update\_data\_photolysis\_t@{camp\_rxn\_photolysis::rxn\_update\_data\_photolysis\_t}!set\_rate@{set\_rate}}
 \index{set\_rate@{set\_rate}!camp\_rxn\_photolysis::rxn\_update\_data\_photolysis\_t@{camp\_rxn\_photolysis::rxn\_update\_data\_photolysis\_t}}
 \doxysubsubsection{\texorpdfstring{set\_rate()}{set\_rate()}}
-{\footnotesize\ttfamily procedure camp\+\_\+rxn\+\_\+photolysis\+::rxn\+\_\+update\+\_\+data\+\_\+photolysis\+\_\+t\+::set\+\_\+rate\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily procedure camp\+\_\+rxn\+\_\+photolysis\+::rxn\+\_\+update\+\_\+data\+\_\+photolysis\+\_\+t\+::set\+\_\+rate}
 
 
 
@@ -115,7 +106,7 @@ Definition at line \mbox{\hyperlink{rxn__photolysis_8_f90_source_l00120}{120}} o
 \index{camp\_rxn\_photolysis::rxn\_update\_data\_photolysis\_t@{camp\_rxn\_photolysis::rxn\_update\_data\_photolysis\_t}!update\_data\_finalize@{update\_data\_finalize}}
 \index{update\_data\_finalize@{update\_data\_finalize}!camp\_rxn\_photolysis::rxn\_update\_data\_photolysis\_t@{camp\_rxn\_photolysis::rxn\_update\_data\_photolysis\_t}}
 \doxysubsubsection{\texorpdfstring{update\_data\_finalize()}{update\_data\_finalize()}}
-{\footnotesize\ttfamily final camp\+\_\+rxn\+\_\+photolysis\+::rxn\+\_\+update\+\_\+data\+\_\+photolysis\+\_\+t\+::update\+\_\+data\+\_\+finalize\hspace{0.3cm}{\ttfamily [final]}, {\ttfamily [private]}}
+{\footnotesize\ttfamily final camp\+\_\+rxn\+\_\+photolysis\+::rxn\+\_\+update\+\_\+data\+\_\+photolysis\+\_\+t\+::update\+\_\+data\+\_\+finalize\hspace{0.3cm}{\ttfamily [final]}}
 
 
 
@@ -126,13 +117,7 @@ Finalize the rate update data.
 Definition at line \mbox{\hyperlink{rxn__photolysis_8_f90_source_l00128}{128}} of file \mbox{\hyperlink{rxn__photolysis_8_f90_source}{rxn\+\_\+photolysis.\+F90}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{structcamp__rxn__photolysis_1_1rxn__update__data__photolysis__t_a8ca0aed1680abc28017e694040771776_cgraph}
-\end{center}
-\end{figure}
+% FIG 2
 
 
 \doxysubsection{Member Data Documentation}
@@ -154,7 +139,7 @@ Definition at line \mbox{\hyperlink{rxn__photolysis_8_f90_source_l00115}{115}} o
 \index{camp\_rxn\_photolysis::rxn\_update\_data\_photolysis\_t@{camp\_rxn\_photolysis::rxn\_update\_data\_photolysis\_t}!rxn\_unique\_id@{rxn\_unique\_id}}
 \index{rxn\_unique\_id@{rxn\_unique\_id}!camp\_rxn\_photolysis::rxn\_update\_data\_photolysis\_t@{camp\_rxn\_photolysis::rxn\_update\_data\_photolysis\_t}}
 \doxysubsubsection{\texorpdfstring{rxn\_unique\_id}{rxn\_unique\_id}}
-{\footnotesize\ttfamily integer(kind=i\+\_\+kind) camp\+\_\+rxn\+\_\+photolysis\+::rxn\+\_\+update\+\_\+data\+\_\+photolysis\+\_\+t\+::rxn\+\_\+unique\+\_\+id = 0\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily integer(kind=i\+\_\+kind) camp\+\_\+rxn\+\_\+photolysis\+::rxn\+\_\+update\+\_\+data\+\_\+photolysis\+\_\+t\+::rxn\+\_\+unique\+\_\+id = 0}
 
 
 

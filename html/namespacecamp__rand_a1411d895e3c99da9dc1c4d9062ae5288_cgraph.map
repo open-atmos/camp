@@ -1,10 +1,10 @@
 <map id="camp_rand::rand_hex_char" name="camp_rand::rand_hex_char">
-<area shape="rect" id="node1" title="Generate a random hexadecimal character." alt="" coords="5,63,181,90"/>
-<area shape="rect" id="node2" href="$namespacecamp__rand.html#a6e5ae3dc848f4f5cf5a1e4bf674ed0ce" title="Returns a random integer between 1 and n." alt="" coords="229,63,407,90"/>
-<area shape="rect" id="node3" href="$namespacecamp__util.html#a32cf43c1b618a3ecf93810383e960ef2" title="Errors unless condition_ok is true." alt="" coords="482,13,602,39"/>
-<area shape="rect" id="node6" href="$rand__gsl_8c.html#a0ebca9079073ff12ca49babd5f49edb9" title="Generate a uniform random integer in ." alt="" coords="477,63,607,90"/>
-<area shape="rect" id="node7" href="$namespacecamp__rand.html#aff7aed70c1739a48a1a771e6fd9f97bc" title="Returns a random number between 0 and 1." alt="" coords="455,138,629,165"/>
-<area shape="rect" id="node4" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="677,13,829,39"/>
-<area shape="rect" id="node5" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="877,5,1000,47"/>
-<area shape="rect" id="node8" href="$rand__gsl_8c.html#abd204acb91a0adebb638deae62396379" title="Generate a uniform random number in ." alt="" coords="698,138,809,165"/>
+<area shape="rect" id="node1" title="Generate a random hexadecimal character." alt="" coords="5,62,181,87"/>
+<area shape="rect" id="node2" href="$namespacecamp__rand.html#a6e5ae3dc848f4f5cf5a1e4bf674ed0ce" title="Returns a random integer between 1 and n." alt="" coords="229,62,407,87"/>
+<area shape="rect" id="node3" href="$namespacecamp__util.html#a32cf43c1b618a3ecf93810383e960ef2" title="Errors unless condition_ok is true." alt="" coords="482,13,602,38"/>
+<area shape="rect" id="node6" href="$rand__gsl_8c.html#a0ebca9079073ff12ca49babd5f49edb9" title="Generate a uniform random integer in ." alt="" coords="477,62,607,87"/>
+<area shape="rect" id="node7" href="$namespacecamp__rand.html#aff7aed70c1739a48a1a771e6fd9f97bc" title="Returns a random number between 0 and 1." alt="" coords="455,135,629,161"/>
+<area shape="rect" id="node4" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="677,13,829,38"/>
+<area shape="rect" id="node5" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="877,5,1000,45"/>
+<area shape="rect" id="node8" href="$rand__gsl_8c.html#abd204acb91a0adebb638deae62396379" title="Generate a uniform random number in ." alt="" coords="698,135,809,161"/>
 </map>

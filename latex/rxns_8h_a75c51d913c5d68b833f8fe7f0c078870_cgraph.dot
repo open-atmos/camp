@@ -1,0 +1,13 @@
+digraph "rxn_ternary_chemical_activation_get_used_jac_elem"
+{
+ // LATEX_PDF_SIZE
+  bgcolor="transparent";
+  edge [fontname=Helvetica,fontsize=10,labelfontname=Helvetica,labelfontsize=10];
+  node [fontname=Helvetica,fontsize=10,shape=box,height=0.2,width=0.4];
+  rankdir="LR";
+  Node1 [label="rxn_ternary_chemical\l_activation_get_used\l_jac_elem",height=0.2,width=0.4,color="gray40", fillcolor="grey60", style="filled", fontcolor="black",tooltip="Flag Jacobian elements used by this reaction."];
+  Node1 -> Node2 [color="steelblue1",style="solid"];
+  Node2 [label="jacobian_register_element",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$_jacobian_8c.html#aac51ac6b1cf239a84899308dab229441",tooltip="Adds an element to the sparse matrix."];
+  Node2 -> Node3 [color="steelblue1",style="solid"];
+  Node3 [label="jacobian_column_elements\l_add_space",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$_jacobian_8c.html#ad9cda15d66705739c9d7bdf63c4636a3",tooltip=" "];
+}

@@ -1,9 +1,9 @@
 <map id="camp_mpi::camp_mpi_size" name="camp_mpi::camp_mpi_size">
-<area shape="rect" id="node1" title="Returns the total number of processes." alt="" coords="5,29,184,56"/>
-<area shape="rect" id="node2" href="$namespacecamp__mpi.html#adb95beaf933131229f017a03af8352ad" title="Dies if ierr is not ok." alt="" coords="232,22,380,63"/>
-<area shape="rect" id="node3" href="$namespacecamp__mpi.html#a7c0deeecbf4c64fe7fcade1797e1aab8" title="Abort the program." alt="" coords="428,22,576,63"/>
-<area shape="rect" id="node4" href="$namespacecamp__util.html#aa942add404bf8b611e5b4b8c777ca7f6" title="Error immediately." alt="" coords="624,29,725,56"/>
-<area shape="rect" id="node5" href="$namespacecamp__util.html#a32cf43c1b618a3ecf93810383e960ef2" title="Errors unless condition_ok is true." alt="" coords="773,29,893,56"/>
-<area shape="rect" id="node6" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="941,29,1093,56"/>
-<area shape="rect" id="node7" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="1141,22,1264,63"/>
+<area shape="rect" id="node1" title="Returns the total number of processes." alt="" coords="5,29,184,55"/>
+<area shape="rect" id="node2" href="$namespacecamp__mpi.html#adb95beaf933131229f017a03af8352ad" title="Dies if ierr is not ok." alt="" coords="232,22,380,62"/>
+<area shape="rect" id="node3" href="$namespacecamp__mpi.html#a7c0deeecbf4c64fe7fcade1797e1aab8" title="Abort the program." alt="" coords="428,22,576,62"/>
+<area shape="rect" id="node4" href="$namespacecamp__util.html#aa942add404bf8b611e5b4b8c777ca7f6" title="Error immediately." alt="" coords="624,29,725,55"/>
+<area shape="rect" id="node5" href="$namespacecamp__util.html#a32cf43c1b618a3ecf93810383e960ef2" title="Errors unless condition_ok is true." alt="" coords="773,29,893,55"/>
+<area shape="rect" id="node6" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="941,29,1093,55"/>
+<area shape="rect" id="node7" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="1141,22,1264,62"/>
 </map>

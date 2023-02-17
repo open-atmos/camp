@@ -1,5 +1,5 @@
 <map id="camp_util::vec_cts_to_disc" name="camp_util::vec_cts_to_disc">
-<area shape="rect" id="node1" title="Convert a real&#45;valued vector into an integer&#45;valued vector." alt="" coords="5,5,136,47"/>
-<area shape="rect" id="node2" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="184,13,336,39"/>
-<area shape="rect" id="node3" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="384,5,507,47"/>
+<area shape="rect" id="node1" title="Convert a real&#45;valued vector into an integer&#45;valued vector." alt="" coords="5,5,136,45"/>
+<area shape="rect" id="node2" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="184,13,336,38"/>
+<area shape="rect" id="node3" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="384,5,507,45"/>
 </map>

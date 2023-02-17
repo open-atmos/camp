@@ -1,4 +1,4 @@
 <map id="camp_util::read_word_raw" name="camp_util::read_word_raw">
-<area shape="rect" id="node1" title="Read a white&#45;space delimited word from a file, signaling if we have EOL or EOF. If EOL or EOF are tru..." alt="" coords="176,5,348,32"/>
-<area shape="rect" id="node2" href="$namespacecamp__util.html#a8880473ee9de8b37a6612c3a110661df" title="Load a real array from a text file." alt="" coords="5,5,128,32"/>
+<area shape="rect" id="node1" title="Read a white&#45;space delimited word from a file, signaling if we have EOL or EOF. If EOL or EOF are tru..." alt="" coords="176,5,348,31"/>
+<area shape="rect" id="node2" href="$namespacecamp__util.html#a8880473ee9de8b37a6612c3a110661df" title="Load a real array from a text file." alt="" coords="5,5,128,31"/>
 </map>

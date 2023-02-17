@@ -1,0 +1,45 @@
+digraph "camp_rand::camp_random"
+{
+ // LATEX_PDF_SIZE
+  bgcolor="transparent";
+  edge [fontname=Helvetica,fontsize=10,labelfontname=Helvetica,labelfontsize=10];
+  node [fontname=Helvetica,fontsize=10,shape=box,height=0.2,width=0.4];
+  rankdir="RL";
+  Node1 [label="camp_rand::camp_random",height=0.2,width=0.4,color="gray40", fillcolor="grey60", style="filled", fontcolor="black",tooltip="Returns a random number between 0 and 1."];
+  Node1 -> Node2 [dir="back",color="steelblue1",style="solid"];
+  Node2 [label="camp_rand::camp_rand_int",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$namespacecamp__rand.html#a6e5ae3dc848f4f5cf5a1e4bf674ed0ce",tooltip="Returns a random integer between 1 and n."];
+  Node2 -> Node2 [dir="back",color="steelblue1",style="solid"];
+  Node2 -> Node3 [dir="back",color="steelblue1",style="solid"];
+  Node3 [label="camp_rand::rand_hex_char",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$namespacecamp__rand.html#a1411d895e3c99da9dc1c4d9062ae5288",tooltip="Generate a random hexadecimal character."];
+  Node3 -> Node3 [dir="back",color="steelblue1",style="solid"];
+  Node3 -> Node4 [dir="back",color="steelblue1",style="solid"];
+  Node4 [label="camp_rand::uuid4_str",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$namespacecamp__rand.html#ae36190e0e83c7a16138ed38ec071521c",tooltip="Generate a version 4 UUID as a string."];
+  Node2 -> Node5 [dir="back",color="steelblue1",style="solid"];
+  Node5 [label="camp_rand::sample_cts_pdf",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$namespacecamp__rand.html#a1f91bce93606a8f03711ca24653ea3a4",tooltip="Sample the given continuous probability density function."];
+  Node5 -> Node5 [dir="back",color="steelblue1",style="solid"];
+  Node5 -> Node6 [dir="back",color="steelblue1",style="solid"];
+  Node6 [label="camp_rand::sample_vec\l_cts_to_disc",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$namespacecamp__rand.html#a24c8c27808b19383b261d200b91b69de",tooltip="Convert a real-valued vector into an integer-valued vector by sampling."];
+  Node2 -> Node7 [dir="back",color="steelblue1",style="solid"];
+  Node7 [label="camp_rand::sample_disc_pdf",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$namespacecamp__rand.html#a8317841f695b0c19583c216170857572",tooltip="Sample the given discrete probability density function."];
+  Node7 -> Node7 [dir="back",color="steelblue1",style="solid"];
+  Node2 -> Node4 [dir="back",color="steelblue1",style="solid"];
+  Node1 -> Node1 [dir="back",color="steelblue1",style="solid"];
+  Node1 -> Node8 [dir="back",color="steelblue1",style="solid"];
+  Node8 [label="camp_rand::prob_round",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$namespacecamp__rand.html#a4ff2053765052f38c615a8bce9ff7365",tooltip="Round val to floor(val) or ceiling(val) with probability proportional to the relative distance from v..."];
+  Node8 -> Node8 [dir="back",color="steelblue1",style="solid"];
+  Node1 -> Node9 [dir="back",color="steelblue1",style="solid"];
+  Node9 [label="camp_rand::rand_binomial",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$namespacecamp__rand.html#a613b0c64aa5bdface8e6d5aa30cec7c4",tooltip="Generate a Binomial-distributed random number with the given parameters."];
+  Node9 -> Node9 [dir="back",color="steelblue1",style="solid"];
+  Node1 -> Node10 [dir="back",color="steelblue1",style="solid"];
+  Node10 [label="camp_rand::rand_normal",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$namespacecamp__rand.html#ac20e458bc43a3e432568ea44c054778e",tooltip="Generates a normally distributed random number with the given mean and standard deviation."];
+  Node10 -> Node9 [dir="back",color="steelblue1",style="solid"];
+  Node10 -> Node10 [dir="back",color="steelblue1",style="solid"];
+  Node10 -> Node11 [dir="back",color="steelblue1",style="solid"];
+  Node11 [label="camp_rand::rand_normal\l_array_1d",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$namespacecamp__rand.html#ad3032643d586f9de792d5f6858223704",tooltip="Generates a vector of normally distributed random numbers with the given means and standard deviation..."];
+  Node10 -> Node12 [dir="back",color="steelblue1",style="solid"];
+  Node12 [label="camp_rand::rand_poisson",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$namespacecamp__rand.html#afeef7ff3370b9d984897647d64070725",tooltip="Generate a Poisson-distributed random number with the given mean."];
+  Node12 -> Node12 [dir="back",color="steelblue1",style="solid"];
+  Node1 -> Node12 [dir="back",color="steelblue1",style="solid"];
+  Node1 -> Node5 [dir="back",color="steelblue1",style="solid"];
+  Node1 -> Node7 [dir="back",color="steelblue1",style="solid"];
+}

@@ -1,11 +1,11 @@
 <map id="camp_rand::rand_poisson" name="camp_rand::rand_poisson">
-<area shape="rect" id="node1" title="Generate a Poisson&#45;distributed random number with the given mean." alt="" coords="5,75,175,102"/>
-<area shape="rect" id="node2" href="$namespacecamp__util.html#a32cf43c1b618a3ecf93810383e960ef2" title="Errors unless condition_ok is true." alt="" coords="461,13,581,39"/>
-<area shape="rect" id="node5" href="$rand__gsl_8c.html#a40555ee4862b906fb1a2ace9b76114a1" title="Generate a Poisson&#45;distributed random integer." alt="" coords="223,38,385,65"/>
-<area shape="rect" id="node6" href="$namespacecamp__rand.html#aff7aed70c1739a48a1a771e6fd9f97bc" title="Returns a random number between 0 and 1." alt="" coords="433,163,608,190"/>
-<area shape="rect" id="node8" href="$namespacecamp__rand.html#ac20e458bc43a3e432568ea44c054778e" title="Generates a normally distributed random number with the given mean and standard deviation." alt="" coords="223,113,385,139"/>
-<area shape="rect" id="node3" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="656,13,808,39"/>
-<area shape="rect" id="node4" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="856,5,979,47"/>
-<area shape="rect" id="node7" href="$rand__gsl_8c.html#abd204acb91a0adebb638deae62396379" title="Generate a uniform random number in ." alt="" coords="677,163,787,190"/>
-<area shape="rect" id="node9" href="$rand__gsl_8c.html#a77cc930abbc556f2ff28f676d1b740bc" title="Generate a normally&#45;distributed random number." alt="" coords="443,89,599,115"/>
+<area shape="rect" id="node1" title="Generate a Poisson&#45;distributed random number with the given mean." alt="" coords="5,74,175,99"/>
+<area shape="rect" id="node2" href="$namespacecamp__util.html#a32cf43c1b618a3ecf93810383e960ef2" title="Errors unless condition_ok is true." alt="" coords="461,13,581,38"/>
+<area shape="rect" id="node5" href="$rand__gsl_8c.html#a40555ee4862b906fb1a2ace9b76114a1" title="Generate a Poisson&#45;distributed random integer." alt="" coords="223,37,385,62"/>
+<area shape="rect" id="node6" href="$namespacecamp__rand.html#aff7aed70c1739a48a1a771e6fd9f97bc" title="Returns a random number between 0 and 1." alt="" coords="433,161,608,186"/>
+<area shape="rect" id="node8" href="$namespacecamp__rand.html#ac20e458bc43a3e432568ea44c054778e" title="Generates a normally distributed random number with the given mean and standard deviation." alt="" coords="223,110,385,135"/>
+<area shape="rect" id="node3" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="656,13,808,38"/>
+<area shape="rect" id="node4" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="856,5,979,45"/>
+<area shape="rect" id="node7" href="$rand__gsl_8c.html#abd204acb91a0adebb638deae62396379" title="Generate a uniform random number in ." alt="" coords="677,161,787,186"/>
+<area shape="rect" id="node9" href="$rand__gsl_8c.html#a77cc930abbc556f2ff28f676d1b740bc" title="Generate a normally&#45;distributed random number." alt="" coords="443,87,599,113"/>
 </map>

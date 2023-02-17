@@ -1,5 +1,5 @@
 <map id="camp_env_state::camp_mpi_pack_size_env_state" name="camp_env_state::camp_mpi_pack_size_env_state">
-<area shape="rect" id="node1" title="Determines the number of bytes required to pack the given value." alt="" coords="216,39,395,80"/>
-<area shape="rect" id="node2" href="$namespacecamp__env__state.html#a151aed99a15531066bb5ef8b25d4b94e" title="Packs the given value into the buffer, advancing position." alt="" coords="9,5,165,47"/>
-<area shape="rect" id="node3" href="$namespacecamp__env__state.html#a80c14bca3257629238c18686269a4084" title="Unpacks the given value from the buffer, advancing position." alt="" coords="5,71,168,112"/>
+<area shape="rect" id="node1" title="Determines the number of bytes required to pack the given value." alt="" coords="216,37,395,77"/>
+<area shape="rect" id="node2" href="$namespacecamp__env__state.html#a151aed99a15531066bb5ef8b25d4b94e" title="Packs the given value into the buffer, advancing position." alt="" coords="9,5,165,45"/>
+<area shape="rect" id="node3" href="$namespacecamp__env__state.html#a80c14bca3257629238c18686269a4084" title="Unpacks the given value from the buffer, advancing position." alt="" coords="5,69,168,109"/>
 </map>

@@ -1,0 +1,24 @@
+digraph "camp_rand::camp_rand_int"
+{
+ // LATEX_PDF_SIZE
+  bgcolor="transparent";
+  edge [fontname=Helvetica,fontsize=10,labelfontname=Helvetica,labelfontsize=10];
+  node [fontname=Helvetica,fontsize=10,shape=box,height=0.2,width=0.4];
+  rankdir="RL";
+  Node1 [label="camp_rand::camp_rand_int",height=0.2,width=0.4,color="gray40", fillcolor="grey60", style="filled", fontcolor="black",tooltip="Returns a random integer between 1 and n."];
+  Node1 -> Node1 [dir="back",color="steelblue1",style="solid"];
+  Node1 -> Node2 [dir="back",color="steelblue1",style="solid"];
+  Node2 [label="camp_rand::rand_hex_char",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$namespacecamp__rand.html#a1411d895e3c99da9dc1c4d9062ae5288",tooltip="Generate a random hexadecimal character."];
+  Node2 -> Node2 [dir="back",color="steelblue1",style="solid"];
+  Node2 -> Node3 [dir="back",color="steelblue1",style="solid"];
+  Node3 [label="camp_rand::uuid4_str",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$namespacecamp__rand.html#ae36190e0e83c7a16138ed38ec071521c",tooltip="Generate a version 4 UUID as a string."];
+  Node1 -> Node4 [dir="back",color="steelblue1",style="solid"];
+  Node4 [label="camp_rand::sample_cts_pdf",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$namespacecamp__rand.html#a1f91bce93606a8f03711ca24653ea3a4",tooltip="Sample the given continuous probability density function."];
+  Node4 -> Node4 [dir="back",color="steelblue1",style="solid"];
+  Node4 -> Node5 [dir="back",color="steelblue1",style="solid"];
+  Node5 [label="camp_rand::sample_vec\l_cts_to_disc",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$namespacecamp__rand.html#a24c8c27808b19383b261d200b91b69de",tooltip="Convert a real-valued vector into an integer-valued vector by sampling."];
+  Node1 -> Node6 [dir="back",color="steelblue1",style="solid"];
+  Node6 [label="camp_rand::sample_disc_pdf",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$namespacecamp__rand.html#a8317841f695b0c19583c216170857572",tooltip="Sample the given discrete probability density function."];
+  Node6 -> Node6 [dir="back",color="steelblue1",style="solid"];
+  Node1 -> Node3 [dir="back",color="steelblue1",style="solid"];
+}

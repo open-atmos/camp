@@ -1,3 +1,3 @@
 <map id="camp_chem_spec_data::gas_state_id" name="camp_chem_spec_data::gas_state_id">
-<area shape="rect" id="node1" title="Get a gas&#45;phase species index in the camp_camp_state::camp_state_t::state_var array...." alt="" coords="5,29,165,71"/>
+<area shape="rect" id="node1" title="Get a gas&#45;phase species index in the camp_camp_state::camp_state_t::state_var array...." alt="" coords="5,29,165,69"/>
 </map>

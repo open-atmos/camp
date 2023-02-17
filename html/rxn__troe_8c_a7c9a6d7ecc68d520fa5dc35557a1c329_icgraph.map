@@ -1,4 +1,4 @@
 <map id="rxn_troe_print" name="rxn_troe_print">
-<area shape="rect" id="node1" title="Print the Troe reaction parameters." alt="" coords="156,5,256,32"/>
-<area shape="rect" id="node2" href="$rxn__solver_8c.html#a607b803e7a4b427940312560ae0e5ba3" title="Print the reaction data." alt="" coords="5,5,108,32"/>
+<area shape="rect" id="node1" title="Print the Troe reaction parameters." alt="" coords="156,5,256,31"/>
+<area shape="rect" id="node2" href="$rxn__solver_8c.html#a607b803e7a4b427940312560ae0e5ba3" title="Print the reaction data." alt="" coords="5,5,108,31"/>
 </map>

@@ -102,7 +102,7 @@ For the reactions\+:
 
 \[\ce{
    HO2 + HO2 ->[k] H2O2
- }\] \[\ce{
+ }\]  \[\ce{
    HO2 + HO2 + H2O ->[k] H2O2
  }\]
 
@@ -286,17 +286,17 @@ Mass accomodation coefficients and condensation rate constants are calculated us
 
 \[
    \Delta H_{obs} = -10 \times (N^*-1) + 7.53 \times (N^{*2/3}-1) - 0.1 \times 10 \quad (\mbox{kcal}\,\mbox{M}^{-1})
- \] \[
+ \]  \[
    \Delta S_{obs} = -13 \times (N^*-1) - 19 \times (N^*-1) + 9.21 \times (N^{*2/3}-1) - 0.1 \times 13 \quad (\mbox{cal}\,\mbox{M}^{-1}\,\mbox{K}^{-1})
- \] \[
+ \]  \[
    \frac{\alpha}{1-\alpha} = e^{\frac{-\Delta G^{*}}{RT}}
  \] If $\Delta H$ and $\Delta S$ are not provided, $\alpha$ is set to 0.\+1 {\bfseries [Zaveri2008]}.
 
-Condensation rate constants are calculated following {\bfseries [Zaveri2008]} as\+: \[
+Condensation rate constants are calculated following {\bfseries [Zaveri2008]} as\+:  \[
     k_c = 4 \pi r D_g f_{fs}( K_n, \alpha )
   \] where $r$ is the radius of the particle(s) \mbox{[}m\mbox{]}, $D_g$ is the diffusion coefficient of the gas-\/phase species \mbox{[} $\mbox{m}^2\,\mbox{s}^{-1}$\mbox{]}, $f_{fs}( K_n, \alpha )$ is the Fuchs Sutugin transition regime correction factor \mbox{[}unitless\mbox{]}, $K_n$ is the Knudsen Number \mbox{[}unitess\mbox{]}, and $\alpha$ is the mass accomodation coefficient.
 
-Rates can be calculated as\+: \[
+Rates can be calculated as\+:  \[
     r_c = [G] N_a k_c
   \] where $[G]$ is the gas-\/phase species concentration \mbox{[}ppm\mbox{]}, $N_a$ is the number concentration of particles \mbox{[} $\mbox{particle}\,\mbox{m}^{-3}$\mbox{]} and the rate $r_c$ is in \mbox{[} $\mbox{ppm}\,\mbox{s}^{-1}$\mbox{]}. The particle radius used to calculate $k_{f}$ is the effective radius \mbox{[} $r_{eff}$\mbox{]}, which is taken as the \char`\"{}least-\/wrong\char`\"{} choice for condensation rates, as it is weighted to surface area {\bfseries [Zender2002]} .
 
@@ -347,17 +347,17 @@ Mass accomodation coefficients and condensation rate constants are calculated us
 
 \[
    \Delta H_{obs} = -10 \times (N^*-1) + 7.53 \times (N^{*2/3}-1) - 0.1 \times 10 \quad (\mbox{kcal}\,\mbox{M}^{-1})
- \] \[
+ \]  \[
    \Delta S_{obs} = -13 \times (N^*-1) - 19 \times (N^*-1) + 9.21 \times (N^{*2/3}-1) - 0.1 \times 13 \quad (\mbox{cal}\,\mbox{M}^{-1}\,\mbox{K}^{-1})
- \] \[
+ \]  \[
    \frac{\alpha}{1-\alpha} = e^{\frac{-\Delta G^{*}}{RT}}
  \] If $\Delta H$ and $\Delta S$ are not provided, the mass accomodation coefficient is assumed to be 0.\+1 ({\bfseries [Zaveri2008]}).
 
-Condensation rate constants are calculated following {\bfseries [Zaveri2008]} as\+: \[
+Condensation rate constants are calculated following {\bfseries [Zaveri2008]} as\+:  \[
     k_c = 4 \pi r D_g f_{fs}( K_n, \alpha )
   \] where $r$ is the radius of the particle(s) \mbox{[}m\mbox{]}, $D_g$ is the diffusion coefficient of the gas-\/phase species \mbox{[} $\mbox{m}^2\,\mbox{s}^{-1}$\mbox{]}, $f_{fs}( K_n, \alpha )$ is the Fuchs Sutugin transition regime correction factor \mbox{[}unitless\mbox{]}, $K_n$ is the Knudsen Number \mbox{[}unitess\mbox{]}, and $\alpha$ is the mass accomodation coefficient.
 
-Rates can be calculated as\+: \[
+Rates can be calculated as\+:  \[
     r_c = [G] N_a k_c
   \] where $[G]$ is the gas-\/phase species concentration \mbox{[}ppm\mbox{]}, $N_a$ is the number concentration of particles \mbox{[} $\mbox{particle}\,\mbox{m}^{-3}$\mbox{]} and the rate $r_c$ is in \mbox{[} $\mbox{ppm}\,\mbox{s}^{-1}$\mbox{]}. The particle radius used to calculate $k_{f}$ is the effective radius \mbox{[} $r_{eff}$\mbox{]}, which is taken as the \char`\"{}least-\/wrong\char`\"{} choice for condensation rates, as it is weighted to surface area {\bfseries [Zender2002]} .
 
@@ -378,7 +378,7 @@ Input data for SIMPOL phase transfer reactions have the following format \+:
 
 Gas-\/phase species must include parameters named {\bfseries{diffusion}} {\bfseries{coeff}} {\bfseries{}}\mbox{[}{\bfseries{m2}} {\bfseries{s-\/1}}\mbox{]}, which specifies the diffusion coefficient in $\mbox{m}^2\,\mbox{s}^{-1}$, and {\bfseries{molecular}} {\bfseries{weight}} {\bfseries{}}\mbox{[}{\bfseries{kg}} {\bfseries{mol-\/1}}\mbox{]}, which specifies the molecular weight of the species in $\mbox{kg}\,\mbox{mol}^{-1}$. They may optionally include the parameter {\bfseries{N}} {\bfseries{star}}, which will be used to calculate th mass accomodation coefficient. When this parameter is not included, the mass accomodation coefficient is assumed to be 1.\+0.
 
-The key-\/value pair {\bfseries{B}} is also required and must have a value of an array of exactly four members that specifies the SIMPOL parameters for the partitioning species. The {\bfseries{B}} parameters can be obtained by summing the contributions of each functional group present in the partitioning species to the overall $B_{n,i}$ for species $i$, such that\+: \[
+The key-\/value pair {\bfseries{B}} is also required and must have a value of an array of exactly four members that specifies the SIMPOL parameters for the partitioning species. The {\bfseries{B}} parameters can be obtained by summing the contributions of each functional group present in the partitioning species to the overall $B_{n,i}$ for species $i$, such that\+:  \[
    B_{n,i} = \sum_{k} \nu_{k,i} B_{n,k} \forall n \in [1...4]
  \] where $\nu_{k,i}$ is the number of functional groups $k$ in species $i$ and the parameters $B_{n,k}$ for each functional group $k$ can be found in table 5 of Pankow and Asher (2008) {\bfseries [Pankow2008]}. \hypertarget{camp_rxn_ternary_chemical_activation}{}\doxysection{CAMP\+: Ternary Chemical Activation Reaction}\label{camp_rxn_ternary_chemical_activation}
 Ternary Chemical Activation reaction rate constant equations take the form\+:
@@ -691,7 +691,7 @@ For the reactions\+:
 
 \[\ce{
    HO2 + HO2 ->[k] H2O2
- }\] \[\ce{
+ }\]  \[\ce{
    HO2 + HO2 + H2O ->[k] H2O2
  }\]
 
@@ -833,17 +833,17 @@ Mass accomodation coefficients and condensation rate constants are calculated us
 
 \[
    \Delta H_{obs} = -10 \times (N^*-1) + 7.53 \times (N^{*2/3}-1) - 0.1 \times 10 \quad (\mbox{kcal}\,\mbox{M}^{-1})
- \] \[
+ \]  \[
    \Delta S_{obs} = -13 \times (N^*-1) - 19 \times (N^*-1) + 9.21 \times (N^{*2/3}-1) - 0.1 \times 13 \quad (\mbox{cal}\,\mbox{M}^{-1}\,\mbox{K}^{-1})
- \] \[
+ \]  \[
    \frac{\alpha}{1-\alpha} = e^{\frac{-\Delta G^{*}}{RT}}
  \] If $\Delta H$ and $\Delta S$ are not provided, $\alpha$ is set to 0.\+1 {\bfseries [Zaveri2008]}.
 
-Condensation rate constants are calculated following {\bfseries [Zaveri2008]} as\+: \[
+Condensation rate constants are calculated following {\bfseries [Zaveri2008]} as\+:  \[
     k_c = 4 \pi r D_g f_{fs}( K_n, \alpha )
   \] where $r$ is the radius of the particle(s) \mbox{[}m\mbox{]}, $D_g$ is the diffusion coefficient of the gas-\/phase species \mbox{[} $\mbox{m}^2\,\mbox{s}^{-1}$\mbox{]}, $f_{fs}( K_n, \alpha )$ is the Fuchs Sutugin transition regime correction factor \mbox{[}unitless\mbox{]}, $K_n$ is the Knudsen Number \mbox{[}unitess\mbox{]}, and $\alpha$ is the mass accomodation coefficient.
 
-Rates can be calculated as\+: \[
+Rates can be calculated as\+:  \[
     r_c = [G] N_a k_c
   \] where $[G]$ is the gas-\/phase species concentration \mbox{[}ppm\mbox{]}, $N_a$ is the number concentration of particles \mbox{[} $\mbox{particle}\,\mbox{m}^{-3}$\mbox{]} and the rate $r_c$ is in \mbox{[} $\mbox{ppm}\,\mbox{s}^{-1}$\mbox{]}. The particle radius used to calculate $k_{f}$ is the effective radius \mbox{[} $r_{eff}$\mbox{]}, which is taken as the \char`\"{}least-\/wrong\char`\"{} choice for condensation rates, as it is weighted to surface area {\bfseries [Zender2002]} .
 
@@ -866,17 +866,17 @@ Mass accomodation coefficients and condensation rate constants are calculated us
 
 \[
    \Delta H_{obs} = -10 \times (N^*-1) + 7.53 \times (N^{*2/3}-1) - 0.1 \times 10 \quad (\mbox{kcal}\,\mbox{M}^{-1})
- \] \[
+ \]  \[
    \Delta S_{obs} = -13 \times (N^*-1) - 19 \times (N^*-1) + 9.21 \times (N^{*2/3}-1) - 0.1 \times 13 \quad (\mbox{cal}\,\mbox{M}^{-1}\,\mbox{K}^{-1})
- \] \[
+ \]  \[
    \frac{\alpha}{1-\alpha} = e^{\frac{-\Delta G^{*}}{RT}}
  \] If $\Delta H$ and $\Delta S$ are not provided, the mass accomodation coefficient is assumed to be 0.\+1 ({\bfseries [Zaveri2008]}).
 
-Condensation rate constants are calculated following {\bfseries [Zaveri2008]} as\+: \[
+Condensation rate constants are calculated following {\bfseries [Zaveri2008]} as\+:  \[
     k_c = 4 \pi r D_g f_{fs}( K_n, \alpha )
   \] where $r$ is the radius of the particle(s) \mbox{[}m\mbox{]}, $D_g$ is the diffusion coefficient of the gas-\/phase species \mbox{[} $\mbox{m}^2\,\mbox{s}^{-1}$\mbox{]}, $f_{fs}( K_n, \alpha )$ is the Fuchs Sutugin transition regime correction factor \mbox{[}unitless\mbox{]}, $K_n$ is the Knudsen Number \mbox{[}unitess\mbox{]}, and $\alpha$ is the mass accomodation coefficient.
 
-Rates can be calculated as\+: \[
+Rates can be calculated as\+:  \[
     r_c = [G] N_a k_c
   \] where $[G]$ is the gas-\/phase species concentration \mbox{[}ppm\mbox{]}, $N_a$ is the number concentration of particles \mbox{[} $\mbox{particle}\,\mbox{m}^{-3}$\mbox{]} and the rate $r_c$ is in \mbox{[} $\mbox{ppm}\,\mbox{s}^{-1}$\mbox{]}. The particle radius used to calculate $k_{f}$ is the effective radius \mbox{[} $r_{eff}$\mbox{]}, which is taken as the \char`\"{}least-\/wrong\char`\"{} choice for condensation rates, as it is weighted to surface area {\bfseries [Zender2002]} .
 
@@ -897,7 +897,7 @@ Input data for SIMPOL phase transfer reactions have the following format \+:
 
 Gas-\/phase species must include parameters named {\bfseries{diffusion}} {\bfseries{coeff}} {\bfseries{}}\mbox{[}{\bfseries{m2}} {\bfseries{s-\/1}}\mbox{]}, which specifies the diffusion coefficient in $\mbox{m}^2\,\mbox{s}^{-1}$, and {\bfseries{molecular}} {\bfseries{weight}} {\bfseries{}}\mbox{[}{\bfseries{kg}} {\bfseries{mol-\/1}}\mbox{]}, which specifies the molecular weight of the species in $\mbox{kg}\,\mbox{mol}^{-1}$. They may optionally include the parameter {\bfseries{N}} {\bfseries{star}}, which will be used to calculate th mass accomodation coefficient. When this parameter is not included, the mass accomodation coefficient is assumed to be 1.\+0.
 
-The key-\/value pair {\bfseries{B}} is also required and must have a value of an array of exactly four members that specifies the SIMPOL parameters for the partitioning species. The {\bfseries{B}} parameters can be obtained by summing the contributions of each functional group present in the partitioning species to the overall $B_{n,i}$ for species $i$, such that\+: \[
+The key-\/value pair {\bfseries{B}} is also required and must have a value of an array of exactly four members that specifies the SIMPOL parameters for the partitioning species. The {\bfseries{B}} parameters can be obtained by summing the contributions of each functional group present in the partitioning species to the overall $B_{n,i}$ for species $i$, such that\+:  \[
    B_{n,i} = \sum_{k} \nu_{k,i} B_{n,k} \forall n \in [1...4]
  \] where $\nu_{k,i}$ is the number of functional groups $k$ in species $i$ and the parameters $B_{n,k}$ for each functional group $k$ can be found in table 5 of Pankow and Asher (2008) {\bfseries [Pankow2008]}. \hypertarget{camp_rxn_photolysis}{}\doxysubsection{CAMP\+: Photolysis}\label{camp_rxn_photolysis}
 Photolysis reactions take the form\+:

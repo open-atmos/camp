@@ -26,11 +26,11 @@ module \mbox{\hyperlink{namespacecamp__aero__phase__data}{camp\+\_\+aero\+\_\+ph
 \item 
 \#define \mbox{\hyperlink{aero__phase__data_8_f90_aa9808eb54fa06bcf890dd1aa1fc6ca5b}{NUM\+\_\+\+REAL\+\_\+\+PROP\+\_\+}}~0
 \item 
-\#define \mbox{\hyperlink{aero__phase__data_8_f90_a5abfc86c868793576be1eb6acec4d966}{SPEC\+\_\+\+TYPE\+\_\+}}(x)~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}}+x)
+\#define \mbox{\hyperlink{aero__phase__data_8_f90_a5abfc86c868793576be1eb6acec4d966}{SPEC\+\_\+\+TYPE\+\_\+}}(x)~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}}+x)
 \item 
-\#define \mbox{\hyperlink{aero__phase__data_8_f90_a533cad7ef28f4059577d632870ed98d7}{MW\+\_\+}}(x)~this\%condensed\+\_\+data\+\_\+real(\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_aa9808eb54fa06bcf890dd1aa1fc6ca5b}{NUM\+\_\+\+REAL\+\_\+\+PROP\+\_\+}}+x)
+\#define \mbox{\hyperlink{aero__phase__data_8_f90_a533cad7ef28f4059577d632870ed98d7}{MW\+\_\+}}(x)~this\%condensed\+\_\+data\+\_\+real(\mbox{\hyperlink{aero__phase__data_8_f90_aa9808eb54fa06bcf890dd1aa1fc6ca5b}{NUM\+\_\+\+REAL\+\_\+\+PROP\+\_\+}}+x)
 \item 
-\#define \mbox{\hyperlink{aero__phase__data_8_f90_a43a841814e566347ca15f79747286d39}{DENSITY\+\_\+}}(x)~this\%condensed\+\_\+data\+\_\+real(\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_aa9808eb54fa06bcf890dd1aa1fc6ca5b}{NUM\+\_\+\+REAL\+\_\+\+PROP\+\_\+}}+\mbox{\hyperlink{aero__phase__solver_8c_a5b96d96acf980c9d12118897b1cf8585}{NUM\+\_\+\+STATE\+\_\+\+VAR\+\_\+}}+x)
+\#define \mbox{\hyperlink{aero__phase__data_8_f90_a43a841814e566347ca15f79747286d39}{DENSITY\+\_\+}}(x)~this\%condensed\+\_\+data\+\_\+real(\mbox{\hyperlink{aero__phase__data_8_f90_aa9808eb54fa06bcf890dd1aa1fc6ca5b}{NUM\+\_\+\+REAL\+\_\+\+PROP\+\_\+}}+\mbox{\hyperlink{aero__phase__data_8_f90_a5b96d96acf980c9d12118897b1cf8585}{NUM\+\_\+\+STATE\+\_\+\+VAR\+\_\+}}+x)
 \end{DoxyCompactItemize}
 \doxysubsection*{Functions/\+Subroutines}
 \begin{DoxyCompactItemize}
@@ -94,13 +94,13 @@ Definition in file \mbox{\hyperlink{aero__phase__data_8_f90_source}{aero\+\_\+ph
 \index{aero\_phase\_data.F90@{aero\_phase\_data.F90}!DENSITY\_@{DENSITY\_}}
 \index{DENSITY\_@{DENSITY\_}!aero\_phase\_data.F90@{aero\_phase\_data.F90}}
 \doxysubsubsection{\texorpdfstring{DENSITY\_}{DENSITY\_}}
-{\footnotesize\ttfamily \#define DENSITY\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~this\%condensed\+\_\+data\+\_\+real(\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_aa9808eb54fa06bcf890dd1aa1fc6ca5b}{NUM\+\_\+\+REAL\+\_\+\+PROP\+\_\+}}+\mbox{\hyperlink{aero__phase__solver_8c_a5b96d96acf980c9d12118897b1cf8585}{NUM\+\_\+\+STATE\+\_\+\+VAR\+\_\+}}+x)}
+{\footnotesize\ttfamily \#define DENSITY\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~this\%condensed\+\_\+data\+\_\+real(\mbox{\hyperlink{aero__phase__data_8_f90_aa9808eb54fa06bcf890dd1aa1fc6ca5b}{NUM\+\_\+\+REAL\+\_\+\+PROP\+\_\+}}+\mbox{\hyperlink{aero__phase__data_8_f90_a5b96d96acf980c9d12118897b1cf8585}{NUM\+\_\+\+STATE\+\_\+\+VAR\+\_\+}}+x)}
 
 \mbox{\Hypertarget{aero__phase__data_8_f90_a533cad7ef28f4059577d632870ed98d7}\label{aero__phase__data_8_f90_a533cad7ef28f4059577d632870ed98d7}} 
 \index{aero\_phase\_data.F90@{aero\_phase\_data.F90}!MW\_@{MW\_}}
 \index{MW\_@{MW\_}!aero\_phase\_data.F90@{aero\_phase\_data.F90}}
 \doxysubsubsection{\texorpdfstring{MW\_}{MW\_}}
-{\footnotesize\ttfamily \#define MW\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~this\%condensed\+\_\+data\+\_\+real(\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_aa9808eb54fa06bcf890dd1aa1fc6ca5b}{NUM\+\_\+\+REAL\+\_\+\+PROP\+\_\+}}+x)}
+{\footnotesize\ttfamily \#define MW\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~this\%condensed\+\_\+data\+\_\+real(\mbox{\hyperlink{aero__phase__data_8_f90_aa9808eb54fa06bcf890dd1aa1fc6ca5b}{NUM\+\_\+\+REAL\+\_\+\+PROP\+\_\+}}+x)}
 
 \mbox{\Hypertarget{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}\label{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}} 
 \index{aero\_phase\_data.F90@{aero\_phase\_data.F90}!NUM\_INT\_PROP\_@{NUM\_INT\_PROP\_}}
@@ -124,5 +124,5 @@ Definition in file \mbox{\hyperlink{aero__phase__data_8_f90_source}{aero\+\_\+ph
 \index{aero\_phase\_data.F90@{aero\_phase\_data.F90}!SPEC\_TYPE\_@{SPEC\_TYPE\_}}
 \index{SPEC\_TYPE\_@{SPEC\_TYPE\_}!aero\_phase\_data.F90@{aero\_phase\_data.F90}}
 \doxysubsubsection{\texorpdfstring{SPEC\_TYPE\_}{SPEC\_TYPE\_}}
-{\footnotesize\ttfamily \#define SPEC\+\_\+\+TYPE\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}}+x)}
+{\footnotesize\ttfamily \#define SPEC\+\_\+\+TYPE\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}}+x)}
 

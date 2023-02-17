@@ -6,13 +6,7 @@ PDFi\+TE Activity sub model solver functions.
 
 
 Include dependency graph for sub\+\_\+model\+\_\+\+PDFi\+TE.\+c\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{sub__model___p_d_fi_t_e_8c__incl}
-\end{center}
-\end{figure}
+% FIG 0
 \doxysubsection*{Macros}
 \begin{DoxyCompactItemize}
 \item 
@@ -38,27 +32,27 @@ Include dependency graph for sub\+\_\+model\+\_\+\+PDFi\+TE.\+c\+:
 \item 
 \#define \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a1f68a3544ae39a7815cbb5c09dfdeff0}{NUM\+\_\+\+ENV\+\_\+\+PARAM\+\_\+}}~1
 \item 
-\#define \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a6516861a7e3bae5147d70f6411e11117}{PHASE\+\_\+\+ID\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + x\mbox{]} -\/ 1)
+\#define \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a6516861a7e3bae5147d70f6411e11117}{PHASE\+\_\+\+ID\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + x\mbox{]} -\/ 1)
 \item 
-\#define \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_aff1191174604af4c86c622f98cd18c17}{NUM\+\_\+\+PHASE\+\_\+}} + x\mbox{]} -\/ 1)
+\#define \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\+\_\+\+PHASE\+\_\+}} + x\mbox{]} -\/ 1)
 \item 
-\#define \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a2c3304509ffdd8f8e2bd59c37a76af69}{PAIR\+\_\+\+FLOAT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x)~  (int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_aff1191174604af4c86c622f98cd18c17}{NUM\+\_\+\+PHASE\+\_\+}} + \mbox{\hyperlink{sub__model___p_d_fi_t_e_8_f90_a4008250ee798e933af3839ff7df66da6}{NUM\+\_\+\+ION\+\_\+\+PAIRS\+\_\+}} + x\mbox{]} -\/ 1)
+\#define \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a2c3304509ffdd8f8e2bd59c37a76af69}{PAIR\+\_\+\+FLOAT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x)~  (int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\+\_\+\+PHASE\+\_\+}} + \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a4008250ee798e933af3839ff7df66da6}{NUM\+\_\+\+ION\+\_\+\+PAIRS\+\_\+}} + x\mbox{]} -\/ 1)
 \item 
-\#define \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a38a422887b1248140b51d6beff1930c5}{ION\+\_\+\+PAIR\+\_\+\+ACT\+\_\+\+ID\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x)\mbox{]})
+\#define \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a38a422887b1248140b51d6beff1930c5}{ION\+\_\+\+PAIR\+\_\+\+ACT\+\_\+\+ID\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x)\mbox{]})
 \item 
-\#define \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_aca730dbac706a2b1066bb0e1a561cf70}{NUM\+\_\+\+CATION\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 1\mbox{]})
+\#define \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_aca730dbac706a2b1066bb0e1a561cf70}{NUM\+\_\+\+CATION\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 1\mbox{]})
 \item 
-\#define \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a3e0d89d3515492d7377285a57644d72e}{NUM\+\_\+\+ANION\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 2\mbox{]})
+\#define \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a3e0d89d3515492d7377285a57644d72e}{NUM\+\_\+\+ANION\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 2\mbox{]})
 \item 
-\#define \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_ac16e157f1f96e0ef91e6f08036b12c7a}{CATION\+\_\+\+ID\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 3\mbox{]})
+\#define \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_ac16e157f1f96e0ef91e6f08036b12c7a}{CATION\+\_\+\+ID\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 3\mbox{]})
 \item 
-\#define \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a908d4e051ac9bb3450f9201194f086bf}{ANION\+\_\+\+ID\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 4\mbox{]})
+\#define \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a908d4e051ac9bb3450f9201194f086bf}{ANION\+\_\+\+ID\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 4\mbox{]})
 \item 
-\#define \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_af4d34c316b8f0219e9d8c106176efe52}{NUM\+\_\+\+INTER\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 5\mbox{]})
+\#define \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_af4d34c316b8f0219e9d8c106176efe52}{NUM\+\_\+\+INTER\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 5\mbox{]})
 \item 
-\#define \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_af1e6ab11ed64bb87c61797efead6017a}{JAC\+\_\+\+WATER\+\_\+\+ID\+\_\+}}(p,  x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 6 + p\mbox{]})
+\#define \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_af1e6ab11ed64bb87c61797efead6017a}{JAC\+\_\+\+WATER\+\_\+\+ID\+\_\+}}(p,  x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 6 + p\mbox{]})
 \item 
-\#define \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_afe801e26fe0d88c30f8a592ff0c24cfd}{JAC\+\_\+\+CATION\+\_\+\+ID\+\_\+}}(p,  x,  y)~  (int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 6 + \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_aff1191174604af4c86c622f98cd18c17}{NUM\+\_\+\+PHASE\+\_\+}} + p $\ast$ \mbox{\hyperlink{sub__model___p_d_fi_t_e_8_f90_a4008250ee798e933af3839ff7df66da6}{NUM\+\_\+\+ION\+\_\+\+PAIRS\+\_\+}} + y\mbox{]})
+\#define \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_afe801e26fe0d88c30f8a592ff0c24cfd}{JAC\+\_\+\+CATION\+\_\+\+ID\+\_\+}}(p,  x,  y)~  (int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 6 + \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\+\_\+\+PHASE\+\_\+}} + p $\ast$ \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a4008250ee798e933af3839ff7df66da6}{NUM\+\_\+\+ION\+\_\+\+PAIRS\+\_\+}} + y\mbox{]})
 \item 
 \#define \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_adfad50e5953c49bc824f6b610f673dcd}{JAC\+\_\+\+ANION\+\_\+\+ID\+\_\+}}(p,  x,  y)
 \item 
@@ -68,19 +62,19 @@ Include dependency graph for sub\+\_\+model\+\_\+\+PDFi\+TE.\+c\+:
 \item 
 \#define \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a4b9df621f386bc252902863d5b4f1d61}{INTER\+\_\+\+SPEC\+\_\+\+LOC\+\_\+}}(x,  y)
 \item 
-\#define \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_af30992074351d1fc62267e7a0d234b79}{CATION\+\_\+\+MW\+\_\+}}(x)~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a2c3304509ffdd8f8e2bd59c37a76af69}{PAIR\+\_\+\+FLOAT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x)\mbox{]})
+\#define \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_af30992074351d1fc62267e7a0d234b79}{CATION\+\_\+\+MW\+\_\+}}(x)~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a2c3304509ffdd8f8e2bd59c37a76af69}{PAIR\+\_\+\+FLOAT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x)\mbox{]})
 \item 
-\#define \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_ab651fcbff092007a94f147602f065e01}{ANION\+\_\+\+MW\+\_\+}}(x)~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a2c3304509ffdd8f8e2bd59c37a76af69}{PAIR\+\_\+\+FLOAT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 1\mbox{]})
+\#define \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_ab651fcbff092007a94f147602f065e01}{ANION\+\_\+\+MW\+\_\+}}(x)~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a2c3304509ffdd8f8e2bd59c37a76af69}{PAIR\+\_\+\+FLOAT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 1\mbox{]})
 \item 
-\#define \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a52fdc833ce625c5207869764adeb6e33}{CATION\+\_\+\+N\+\_\+}}(x)~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a2c3304509ffdd8f8e2bd59c37a76af69}{PAIR\+\_\+\+FLOAT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 2\mbox{]})
+\#define \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a52fdc833ce625c5207869764adeb6e33}{CATION\+\_\+\+N\+\_\+}}(x)~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a2c3304509ffdd8f8e2bd59c37a76af69}{PAIR\+\_\+\+FLOAT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 2\mbox{]})
 \item 
-\#define \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_aabe6c6c9920f5749027caab37713fd56}{ANION\+\_\+\+N\+\_\+}}(x)~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a2c3304509ffdd8f8e2bd59c37a76af69}{PAIR\+\_\+\+FLOAT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 3\mbox{]})
+\#define \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_aabe6c6c9920f5749027caab37713fd56}{ANION\+\_\+\+N\+\_\+}}(x)~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a2c3304509ffdd8f8e2bd59c37a76af69}{PAIR\+\_\+\+FLOAT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 3\mbox{]})
 \item 
-\#define \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a1756e6d53076042962889be52e07d522}{MIN\+\_\+\+RH\+\_\+}}(x,  y)~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8_f90_a4b9df621f386bc252902863d5b4f1d61}{INTER\+\_\+\+SPEC\+\_\+\+LOC\+\_\+}}(x, y)\mbox{]})
+\#define \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a1756e6d53076042962889be52e07d522}{MIN\+\_\+\+RH\+\_\+}}(x,  y)~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a4b9df621f386bc252902863d5b4f1d61}{INTER\+\_\+\+SPEC\+\_\+\+LOC\+\_\+}}(x, y)\mbox{]})
 \item 
-\#define \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a998afd242a326331e35792946f9b8e72}{MAX\+\_\+\+RH\+\_\+}}(x,  y)~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8_f90_a4b9df621f386bc252902863d5b4f1d61}{INTER\+\_\+\+SPEC\+\_\+\+LOC\+\_\+}}(x, y) + 1\mbox{]})
+\#define \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a998afd242a326331e35792946f9b8e72}{MAX\+\_\+\+RH\+\_\+}}(x,  y)~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a4b9df621f386bc252902863d5b4f1d61}{INTER\+\_\+\+SPEC\+\_\+\+LOC\+\_\+}}(x, y) + 1\mbox{]})
 \item 
-\#define \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a808e07e512299609f2225ad16af879cb}{B\+\_\+\+Z\+\_\+}}(x,  y,  z)~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8_f90_a4b9df621f386bc252902863d5b4f1d61}{INTER\+\_\+\+SPEC\+\_\+\+LOC\+\_\+}}(x, y) + 2 + z\mbox{]})
+\#define \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a808e07e512299609f2225ad16af879cb}{B\+\_\+\+Z\+\_\+}}(x,  y,  z)~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a4b9df621f386bc252902863d5b4f1d61}{INTER\+\_\+\+SPEC\+\_\+\+LOC\+\_\+}}(x, y) + 2 + z\mbox{]})
 \end{DoxyCompactItemize}
 \doxysubsection*{Functions}
 \begin{DoxyCompactItemize}
@@ -113,7 +107,7 @@ Definition in file \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_source}{sub\+\_\+
 \index{sub\_model\_PDFiTE.c@{sub\_model\_PDFiTE.c}!ANION\_ID\_@{ANION\_ID\_}}
 \index{ANION\_ID\_@{ANION\_ID\_}!sub\_model\_PDFiTE.c@{sub\_model\_PDFiTE.c}}
 \doxysubsubsection{\texorpdfstring{ANION\_ID\_}{ANION\_ID\_}}
-{\footnotesize\ttfamily \#define ANION\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 4\mbox{]})}
+{\footnotesize\ttfamily \#define ANION\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 4\mbox{]})}
 
 
 
@@ -123,7 +117,7 @@ Definition at line \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_source_l00038}{38
 \index{sub\_model\_PDFiTE.c@{sub\_model\_PDFiTE.c}!ANION\_MW\_@{ANION\_MW\_}}
 \index{ANION\_MW\_@{ANION\_MW\_}!sub\_model\_PDFiTE.c@{sub\_model\_PDFiTE.c}}
 \doxysubsubsection{\texorpdfstring{ANION\_MW\_}{ANION\_MW\_}}
-{\footnotesize\ttfamily \#define ANION\+\_\+\+MW\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a2c3304509ffdd8f8e2bd59c37a76af69}{PAIR\+\_\+\+FLOAT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 1\mbox{]})}
+{\footnotesize\ttfamily \#define ANION\+\_\+\+MW\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a2c3304509ffdd8f8e2bd59c37a76af69}{PAIR\+\_\+\+FLOAT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 1\mbox{]})}
 
 
 
@@ -133,7 +127,7 @@ Definition at line \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_source_l00058}{58
 \index{sub\_model\_PDFiTE.c@{sub\_model\_PDFiTE.c}!ANION\_N\_@{ANION\_N\_}}
 \index{ANION\_N\_@{ANION\_N\_}!sub\_model\_PDFiTE.c@{sub\_model\_PDFiTE.c}}
 \doxysubsubsection{\texorpdfstring{ANION\_N\_}{ANION\_N\_}}
-{\footnotesize\ttfamily \#define ANION\+\_\+\+N\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a2c3304509ffdd8f8e2bd59c37a76af69}{PAIR\+\_\+\+FLOAT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 3\mbox{]})}
+{\footnotesize\ttfamily \#define ANION\+\_\+\+N\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a2c3304509ffdd8f8e2bd59c37a76af69}{PAIR\+\_\+\+FLOAT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 3\mbox{]})}
 
 
 
@@ -143,7 +137,7 @@ Definition at line \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_source_l00060}{60
 \index{sub\_model\_PDFiTE.c@{sub\_model\_PDFiTE.c}!B\_Z\_@{B\_Z\_}}
 \index{B\_Z\_@{B\_Z\_}!sub\_model\_PDFiTE.c@{sub\_model\_PDFiTE.c}}
 \doxysubsubsection{\texorpdfstring{B\_Z\_}{B\_Z\_}}
-{\footnotesize\ttfamily \#define B\+\_\+\+Z\+\_\+(\begin{DoxyParamCaption}\item[{}]{x,  }\item[{}]{y,  }\item[{}]{z }\end{DoxyParamCaption})~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8_f90_a4b9df621f386bc252902863d5b4f1d61}{INTER\+\_\+\+SPEC\+\_\+\+LOC\+\_\+}}(x, y) + 2 + z\mbox{]})}
+{\footnotesize\ttfamily \#define B\+\_\+\+Z\+\_\+(\begin{DoxyParamCaption}\item[{}]{x,  }\item[{}]{y,  }\item[{}]{z }\end{DoxyParamCaption})~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a4b9df621f386bc252902863d5b4f1d61}{INTER\+\_\+\+SPEC\+\_\+\+LOC\+\_\+}}(x, y) + 2 + z\mbox{]})}
 
 
 
@@ -153,7 +147,7 @@ Definition at line \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_source_l00063}{63
 \index{sub\_model\_PDFiTE.c@{sub\_model\_PDFiTE.c}!CATION\_ID\_@{CATION\_ID\_}}
 \index{CATION\_ID\_@{CATION\_ID\_}!sub\_model\_PDFiTE.c@{sub\_model\_PDFiTE.c}}
 \doxysubsubsection{\texorpdfstring{CATION\_ID\_}{CATION\_ID\_}}
-{\footnotesize\ttfamily \#define CATION\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 3\mbox{]})}
+{\footnotesize\ttfamily \#define CATION\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 3\mbox{]})}
 
 
 
@@ -163,7 +157,7 @@ Definition at line \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_source_l00037}{37
 \index{sub\_model\_PDFiTE.c@{sub\_model\_PDFiTE.c}!CATION\_MW\_@{CATION\_MW\_}}
 \index{CATION\_MW\_@{CATION\_MW\_}!sub\_model\_PDFiTE.c@{sub\_model\_PDFiTE.c}}
 \doxysubsubsection{\texorpdfstring{CATION\_MW\_}{CATION\_MW\_}}
-{\footnotesize\ttfamily \#define CATION\+\_\+\+MW\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a2c3304509ffdd8f8e2bd59c37a76af69}{PAIR\+\_\+\+FLOAT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x)\mbox{]})}
+{\footnotesize\ttfamily \#define CATION\+\_\+\+MW\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a2c3304509ffdd8f8e2bd59c37a76af69}{PAIR\+\_\+\+FLOAT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x)\mbox{]})}
 
 
 
@@ -173,7 +167,7 @@ Definition at line \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_source_l00057}{57
 \index{sub\_model\_PDFiTE.c@{sub\_model\_PDFiTE.c}!CATION\_N\_@{CATION\_N\_}}
 \index{CATION\_N\_@{CATION\_N\_}!sub\_model\_PDFiTE.c@{sub\_model\_PDFiTE.c}}
 \doxysubsubsection{\texorpdfstring{CATION\_N\_}{CATION\_N\_}}
-{\footnotesize\ttfamily \#define CATION\+\_\+\+N\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a2c3304509ffdd8f8e2bd59c37a76af69}{PAIR\+\_\+\+FLOAT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 2\mbox{]})}
+{\footnotesize\ttfamily \#define CATION\+\_\+\+N\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a2c3304509ffdd8f8e2bd59c37a76af69}{PAIR\+\_\+\+FLOAT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 2\mbox{]})}
 
 
 
@@ -247,7 +241,7 @@ Definition at line \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_source_l00053}{53
 \index{sub\_model\_PDFiTE.c@{sub\_model\_PDFiTE.c}!ION\_PAIR\_ACT\_ID\_@{ION\_PAIR\_ACT\_ID\_}}
 \index{ION\_PAIR\_ACT\_ID\_@{ION\_PAIR\_ACT\_ID\_}!sub\_model\_PDFiTE.c@{sub\_model\_PDFiTE.c}}
 \doxysubsubsection{\texorpdfstring{ION\_PAIR\_ACT\_ID\_}{ION\_PAIR\_ACT\_ID\_}}
-{\footnotesize\ttfamily \#define ION\+\_\+\+PAIR\+\_\+\+ACT\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x)\mbox{]})}
+{\footnotesize\ttfamily \#define ION\+\_\+\+PAIR\+\_\+\+ACT\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x)\mbox{]})}
 
 
 
@@ -273,7 +267,7 @@ Definition at line \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_source_l00043}{43
 \index{sub\_model\_PDFiTE.c@{sub\_model\_PDFiTE.c}!JAC\_CATION\_ID\_@{JAC\_CATION\_ID\_}}
 \index{JAC\_CATION\_ID\_@{JAC\_CATION\_ID\_}!sub\_model\_PDFiTE.c@{sub\_model\_PDFiTE.c}}
 \doxysubsubsection{\texorpdfstring{JAC\_CATION\_ID\_}{JAC\_CATION\_ID\_}}
-{\footnotesize\ttfamily \#define JAC\+\_\+\+CATION\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{p,  }\item[{}]{x,  }\item[{}]{y }\end{DoxyParamCaption})~  (int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 6 + \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_aff1191174604af4c86c622f98cd18c17}{NUM\+\_\+\+PHASE\+\_\+}} + p $\ast$ \mbox{\hyperlink{sub__model___p_d_fi_t_e_8_f90_a4008250ee798e933af3839ff7df66da6}{NUM\+\_\+\+ION\+\_\+\+PAIRS\+\_\+}} + y\mbox{]})}
+{\footnotesize\ttfamily \#define JAC\+\_\+\+CATION\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{p,  }\item[{}]{x,  }\item[{}]{y }\end{DoxyParamCaption})~  (int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 6 + \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\+\_\+\+PHASE\+\_\+}} + p $\ast$ \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a4008250ee798e933af3839ff7df66da6}{NUM\+\_\+\+ION\+\_\+\+PAIRS\+\_\+}} + y\mbox{]})}
 
 
 
@@ -283,7 +277,7 @@ Definition at line \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_source_l00041}{41
 \index{sub\_model\_PDFiTE.c@{sub\_model\_PDFiTE.c}!JAC\_WATER\_ID\_@{JAC\_WATER\_ID\_}}
 \index{JAC\_WATER\_ID\_@{JAC\_WATER\_ID\_}!sub\_model\_PDFiTE.c@{sub\_model\_PDFiTE.c}}
 \doxysubsubsection{\texorpdfstring{JAC\_WATER\_ID\_}{JAC\_WATER\_ID\_}}
-{\footnotesize\ttfamily \#define JAC\+\_\+\+WATER\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{p,  }\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 6 + p\mbox{]})}
+{\footnotesize\ttfamily \#define JAC\+\_\+\+WATER\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{p,  }\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 6 + p\mbox{]})}
 
 
 
@@ -293,7 +287,7 @@ Definition at line \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_source_l00040}{40
 \index{sub\_model\_PDFiTE.c@{sub\_model\_PDFiTE.c}!MAX\_RH\_@{MAX\_RH\_}}
 \index{MAX\_RH\_@{MAX\_RH\_}!sub\_model\_PDFiTE.c@{sub\_model\_PDFiTE.c}}
 \doxysubsubsection{\texorpdfstring{MAX\_RH\_}{MAX\_RH\_}}
-{\footnotesize\ttfamily \#define MAX\+\_\+\+RH\+\_\+(\begin{DoxyParamCaption}\item[{}]{x,  }\item[{}]{y }\end{DoxyParamCaption})~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8_f90_a4b9df621f386bc252902863d5b4f1d61}{INTER\+\_\+\+SPEC\+\_\+\+LOC\+\_\+}}(x, y) + 1\mbox{]})}
+{\footnotesize\ttfamily \#define MAX\+\_\+\+RH\+\_\+(\begin{DoxyParamCaption}\item[{}]{x,  }\item[{}]{y }\end{DoxyParamCaption})~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a4b9df621f386bc252902863d5b4f1d61}{INTER\+\_\+\+SPEC\+\_\+\+LOC\+\_\+}}(x, y) + 1\mbox{]})}
 
 
 
@@ -303,7 +297,7 @@ Definition at line \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_source_l00062}{62
 \index{sub\_model\_PDFiTE.c@{sub\_model\_PDFiTE.c}!MIN\_RH\_@{MIN\_RH\_}}
 \index{MIN\_RH\_@{MIN\_RH\_}!sub\_model\_PDFiTE.c@{sub\_model\_PDFiTE.c}}
 \doxysubsubsection{\texorpdfstring{MIN\_RH\_}{MIN\_RH\_}}
-{\footnotesize\ttfamily \#define MIN\+\_\+\+RH\+\_\+(\begin{DoxyParamCaption}\item[{}]{x,  }\item[{}]{y }\end{DoxyParamCaption})~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8_f90_a4b9df621f386bc252902863d5b4f1d61}{INTER\+\_\+\+SPEC\+\_\+\+LOC\+\_\+}}(x, y)\mbox{]})}
+{\footnotesize\ttfamily \#define MIN\+\_\+\+RH\+\_\+(\begin{DoxyParamCaption}\item[{}]{x,  }\item[{}]{y }\end{DoxyParamCaption})~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a4b9df621f386bc252902863d5b4f1d61}{INTER\+\_\+\+SPEC\+\_\+\+LOC\+\_\+}}(x, y)\mbox{]})}
 
 
 
@@ -313,7 +307,7 @@ Definition at line \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_source_l00061}{61
 \index{sub\_model\_PDFiTE.c@{sub\_model\_PDFiTE.c}!NUM\_ANION\_@{NUM\_ANION\_}}
 \index{NUM\_ANION\_@{NUM\_ANION\_}!sub\_model\_PDFiTE.c@{sub\_model\_PDFiTE.c}}
 \doxysubsubsection{\texorpdfstring{NUM\_ANION\_}{NUM\_ANION\_}}
-{\footnotesize\ttfamily \#define NUM\+\_\+\+ANION\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 2\mbox{]})}
+{\footnotesize\ttfamily \#define NUM\+\_\+\+ANION\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 2\mbox{]})}
 
 
 
@@ -339,7 +333,7 @@ Definition at line \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_source_l00046}{46
 \index{sub\_model\_PDFiTE.c@{sub\_model\_PDFiTE.c}!NUM\_CATION\_@{NUM\_CATION\_}}
 \index{NUM\_CATION\_@{NUM\_CATION\_}!sub\_model\_PDFiTE.c@{sub\_model\_PDFiTE.c}}
 \doxysubsubsection{\texorpdfstring{NUM\_CATION\_}{NUM\_CATION\_}}
-{\footnotesize\ttfamily \#define NUM\+\_\+\+CATION\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 1\mbox{]})}
+{\footnotesize\ttfamily \#define NUM\+\_\+\+CATION\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 1\mbox{]})}
 
 
 
@@ -369,7 +363,7 @@ Definition at line \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_source_l00027}{27
 \index{sub\_model\_PDFiTE.c@{sub\_model\_PDFiTE.c}!NUM\_INTER\_@{NUM\_INTER\_}}
 \index{NUM\_INTER\_@{NUM\_INTER\_}!sub\_model\_PDFiTE.c@{sub\_model\_PDFiTE.c}}
 \doxysubsubsection{\texorpdfstring{NUM\_INTER\_}{NUM\_INTER\_}}
-{\footnotesize\ttfamily \#define NUM\+\_\+\+INTER\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 5\mbox{]})}
+{\footnotesize\ttfamily \#define NUM\+\_\+\+INTER\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x) + 5\mbox{]})}
 
 
 
@@ -409,7 +403,7 @@ Definition at line \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_source_l00028}{28
 \index{sub\_model\_PDFiTE.c@{sub\_model\_PDFiTE.c}!PAIR\_FLOAT\_PARAM\_LOC\_@{PAIR\_FLOAT\_PARAM\_LOC\_}}
 \index{PAIR\_FLOAT\_PARAM\_LOC\_@{PAIR\_FLOAT\_PARAM\_LOC\_}!sub\_model\_PDFiTE.c@{sub\_model\_PDFiTE.c}}
 \doxysubsubsection{\texorpdfstring{PAIR\_FLOAT\_PARAM\_LOC\_}{PAIR\_FLOAT\_PARAM\_LOC\_}}
-{\footnotesize\ttfamily \#define PAIR\+\_\+\+FLOAT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~  (int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_aff1191174604af4c86c622f98cd18c17}{NUM\+\_\+\+PHASE\+\_\+}} + \mbox{\hyperlink{sub__model___p_d_fi_t_e_8_f90_a4008250ee798e933af3839ff7df66da6}{NUM\+\_\+\+ION\+\_\+\+PAIRS\+\_\+}} + x\mbox{]} -\/ 1)}
+{\footnotesize\ttfamily \#define PAIR\+\_\+\+FLOAT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~  (int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\+\_\+\+PHASE\+\_\+}} + \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a4008250ee798e933af3839ff7df66da6}{NUM\+\_\+\+ION\+\_\+\+PAIRS\+\_\+}} + x\mbox{]} -\/ 1)}
 
 
 
@@ -419,7 +413,7 @@ Definition at line \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_source_l00032}{32
 \index{sub\_model\_PDFiTE.c@{sub\_model\_PDFiTE.c}!PAIR\_INT\_PARAM\_LOC\_@{PAIR\_INT\_PARAM\_LOC\_}}
 \index{PAIR\_INT\_PARAM\_LOC\_@{PAIR\_INT\_PARAM\_LOC\_}!sub\_model\_PDFiTE.c@{sub\_model\_PDFiTE.c}}
 \doxysubsubsection{\texorpdfstring{PAIR\_INT\_PARAM\_LOC\_}{PAIR\_INT\_PARAM\_LOC\_}}
-{\footnotesize\ttfamily \#define PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_aff1191174604af4c86c622f98cd18c17}{NUM\+\_\+\+PHASE\+\_\+}} + x\mbox{]} -\/ 1)}
+{\footnotesize\ttfamily \#define PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\+\_\+\+PHASE\+\_\+}} + x\mbox{]} -\/ 1)}
 
 
 
@@ -429,7 +423,7 @@ Definition at line \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_source_l00031}{31
 \index{sub\_model\_PDFiTE.c@{sub\_model\_PDFiTE.c}!PHASE\_ID\_@{PHASE\_ID\_}}
 \index{PHASE\_ID\_@{PHASE\_ID\_}!sub\_model\_PDFiTE.c@{sub\_model\_PDFiTE.c}}
 \doxysubsubsection{\texorpdfstring{PHASE\_ID\_}{PHASE\_ID\_}}
-{\footnotesize\ttfamily \#define PHASE\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + x\mbox{]} -\/ 1)}
+{\footnotesize\ttfamily \#define PHASE\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + x\mbox{]} -\/ 1)}
 
 
 
@@ -494,13 +488,7 @@ Perform the sub-\/model calculations for the current model state.
 Definition at line \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_source_l00167}{167}} of file \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_source}{sub\+\_\+model\+\_\+\+PDFi\+TE.\+c}}.
 
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{sub__model___p_d_fi_t_e_8c_a2f46f791a4a74c77e283b5afb91911aa_icgraph}
-\end{center}
-\end{figure}
+% FIG 1
 \mbox{\Hypertarget{sub__model___p_d_fi_t_e_8c_a50d2ccc5a5c4b40019447f6b7dd5feab}\label{sub__model___p_d_fi_t_e_8c_a50d2ccc5a5c4b40019447f6b7dd5feab}} 
 \index{sub\_model\_PDFiTE.c@{sub\_model\_PDFiTE.c}!sub\_model\_PDFiTE\_get\_jac\_contrib@{sub\_model\_PDFiTE\_get\_jac\_contrib}}
 \index{sub\_model\_PDFiTE\_get\_jac\_contrib@{sub\_model\_PDFiTE\_get\_jac\_contrib}!sub\_model\_PDFiTE.c@{sub\_model\_PDFiTE.c}}
@@ -531,13 +519,7 @@ Add contributions to the \mbox{\hyperlink{struct_jacobian}{Jacobian}} from deriv
 Definition at line \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_source_l00277}{277}} of file \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_source}{sub\+\_\+model\+\_\+\+PDFi\+TE.\+c}}.
 
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{sub__model___p_d_fi_t_e_8c_a50d2ccc5a5c4b40019447f6b7dd5feab_icgraph}
-\end{center}
-\end{figure}
+% FIG 2
 \mbox{\Hypertarget{sub__model___p_d_fi_t_e_8c_a1c3598c177755e3ca9d3bde1ace7c0e0}\label{sub__model___p_d_fi_t_e_8c_a1c3598c177755e3ca9d3bde1ace7c0e0}} 
 \index{sub\_model\_PDFiTE.c@{sub\_model\_PDFiTE.c}!sub\_model\_PDFiTE\_get\_used\_jac\_elem@{sub\_model\_PDFiTE\_get\_used\_jac\_elem}}
 \index{sub\_model\_PDFiTE\_get\_used\_jac\_elem@{sub\_model\_PDFiTE\_get\_used\_jac\_elem}!sub\_model\_PDFiTE.c@{sub\_model\_PDFiTE.c}}
@@ -564,21 +546,9 @@ activity sub models are assumed to be at equilibrium
 Definition at line \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_source_l00073}{73}} of file \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_source}{sub\+\_\+model\+\_\+\+PDFi\+TE.\+c}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{sub__model___p_d_fi_t_e_8c_a1c3598c177755e3ca9d3bde1ace7c0e0_cgraph}
-\end{center}
-\end{figure}
+% FIG 3
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{sub__model___p_d_fi_t_e_8c_a1c3598c177755e3ca9d3bde1ace7c0e0_icgraph}
-\end{center}
-\end{figure}
+% FIG 4
 \mbox{\Hypertarget{sub__model___p_d_fi_t_e_8c_a57f2820ce385881014fed09a82ae5364}\label{sub__model___p_d_fi_t_e_8c_a57f2820ce385881014fed09a82ae5364}} 
 \index{sub\_model\_PDFiTE.c@{sub\_model\_PDFiTE.c}!sub\_model\_PDFiTE\_print@{sub\_model\_PDFiTE\_print}}
 \index{sub\_model\_PDFiTE\_print@{sub\_model\_PDFiTE\_print}!sub\_model\_PDFiTE.c@{sub\_model\_PDFiTE.c}}
@@ -601,13 +571,7 @@ Print the PDFi\+TE Activity sub model parameters.
 Definition at line \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_source_l00462}{462}} of file \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_source}{sub\+\_\+model\+\_\+\+PDFi\+TE.\+c}}.
 
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{sub__model___p_d_fi_t_e_8c_a57f2820ce385881014fed09a82ae5364_icgraph}
-\end{center}
-\end{figure}
+% FIG 5
 \mbox{\Hypertarget{sub__model___p_d_fi_t_e_8c_ae2d20ec59ac4397714d038f51324809d}\label{sub__model___p_d_fi_t_e_8c_ae2d20ec59ac4397714d038f51324809d}} 
 \index{sub\_model\_PDFiTE.c@{sub\_model\_PDFiTE.c}!sub\_model\_PDFiTE\_update\_env\_state@{sub\_model\_PDFiTE\_update\_env\_state}}
 \index{sub\_model\_PDFiTE\_update\_env\_state@{sub\_model\_PDFiTE\_update\_env\_state}!sub\_model\_PDFiTE.c@{sub\_model\_PDFiTE.c}}
@@ -634,13 +598,7 @@ Update sub model data for new environmental conditions.
 Definition at line \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_source_l00137}{137}} of file \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_source}{sub\+\_\+model\+\_\+\+PDFi\+TE.\+c}}.
 
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{sub__model___p_d_fi_t_e_8c_ae2d20ec59ac4397714d038f51324809d_icgraph}
-\end{center}
-\end{figure}
+% FIG 6
 \mbox{\Hypertarget{sub__model___p_d_fi_t_e_8c_ad0578f51652ce992842c2e65c8d84e55}\label{sub__model___p_d_fi_t_e_8c_ad0578f51652ce992842c2e65c8d84e55}} 
 \index{sub\_model\_PDFiTE.c@{sub\_model\_PDFiTE.c}!sub\_model\_PDFiTE\_update\_ids@{sub\_model\_PDFiTE\_update\_ids}}
 \index{sub\_model\_PDFiTE\_update\_ids@{sub\_model\_PDFiTE\_update\_ids}!sub\_model\_PDFiTE.c@{sub\_model\_PDFiTE.c}}
@@ -669,18 +627,6 @@ activity sub models are assumed to be at equilibrium
 Definition at line \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_source_l00105}{105}} of file \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_source}{sub\+\_\+model\+\_\+\+PDFi\+TE.\+c}}.
 
 Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{sub__model___p_d_fi_t_e_8c_ad0578f51652ce992842c2e65c8d84e55_cgraph}
-\end{center}
-\end{figure}
+% FIG 7
 Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{sub__model___p_d_fi_t_e_8c_ad0578f51652ce992842c2e65c8d84e55_icgraph}
-\end{center}
-\end{figure}
+% FIG 8

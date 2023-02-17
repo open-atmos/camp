@@ -1,4 +1,4 @@
 <map id="camp_mpi::camp_mpi_allreduce_min_integer" name="camp_mpi::camp_mpi_allreduce_min_integer">
-<area shape="rect" id="node1" title="Computes the minimum of val across all processes, storing the result in val_min on all processes." alt="" coords="201,29,356,71"/>
-<area shape="rect" id="node2" href="$namespacecamp__mpi.html#a674d1494035941591fecccc3210bb5e3" title="Returns whether all processors have the same value." alt="" coords="5,29,153,71"/>
+<area shape="rect" id="node1" title="Computes the minimum of val across all processes, storing the result in val_min on all processes." alt="" coords="201,29,356,69"/>
+<area shape="rect" id="node2" href="$namespacecamp__mpi.html#a674d1494035941591fecccc3210bb5e3" title="Returns whether all processors have the same value." alt="" coords="5,29,153,69"/>
 </map>

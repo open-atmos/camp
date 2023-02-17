@@ -1,0 +1,13 @@
+digraph "solver_new"
+{
+ // LATEX_PDF_SIZE
+  bgcolor="transparent";
+  edge [fontname=Helvetica,fontsize=10,labelfontname=Helvetica,labelfontsize=10];
+  node [fontname=Helvetica,fontsize=10,shape=box,height=0.2,width=0.4];
+  rankdir="LR";
+  Node1 [label="solver_new",height=0.2,width=0.4,color="gray40", fillcolor="grey60", style="filled", fontcolor="black",tooltip="Get a new solver object."];
+  Node1 -> Node2 [color="steelblue1",style="solid"];
+  Node2 [label="print_data_sizes",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$camp__debug_8h.html#adfee57a3797c09d1fb585d9f49477c32",tooltip="Print some camp-chem data sizes."];
+  Node1 -> Node3 [color="steelblue1",style="solid"];
+  Node3 [label="time_derivative_initialize",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$time__derivative_8c.html#a5580eaa480804f34c307349e33d3b100",tooltip="Initialize the derivative."];
+}

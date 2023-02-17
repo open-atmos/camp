@@ -1,4 +1,4 @@
 <map id="aero_rep_modal_binned_mass_get_used_jac_elem" name="aero_rep_modal_binned_mass_get_used_jac_elem">
-<area shape="rect" id="node1" title="Flag Jacobian elements used in calcualtions of mass and volume." alt="" coords="5,5,185,47"/>
-<area shape="rect" id="node2" href="$aero__phase__solver_8c.html#a6e5ea770a313a6eebea53e86540dd510" title="Flag Jacobian elements used in calculations of mass and volume." alt="" coords="233,5,383,47"/>
+<area shape="rect" id="node1" title="Flag Jacobian elements used in calcualtions of mass and volume." alt="" coords="5,5,185,45"/>
+<area shape="rect" id="node2" href="$aero__phase__solver_8c.html#a6e5ea770a313a6eebea53e86540dd510" title="Flag Jacobian elements used in calculations of mass and volume." alt="" coords="233,5,383,45"/>
 </map>

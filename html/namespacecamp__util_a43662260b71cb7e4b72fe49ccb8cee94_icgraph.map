@@ -1,8 +1,8 @@
 <map id="camp_util::get_unit" name="camp_util::get_unit">
-<area shape="rect" id="node1" title="Returns an available unit number. This should be freed by free_unit()." alt="" coords="415,35,545,61"/>
-<area shape="rect" id="node2" href="$namespacecamp__util.html#aa871934a2e528c6b844a9ba1a761a317" title="Open a file for reading with an automatically assigned unit and test that it succeeds...." alt="" coords="200,5,367,32"/>
-<area shape="rect" id="node4" href="$namespacecamp__util.html#a2d260aa74996f977a1b83ad54ceaa763" title="Open a file for writing with an automatically assigned unit and test that it succeeds...." alt="" coords="216,57,351,98"/>
-<area shape="rect" id="node3" href="$namespacecamp__util.html#a8880473ee9de8b37a6612c3a110661df" title="Load a real array from a text file." alt="" coords="17,5,140,32"/>
-<area shape="rect" id="node5" href="$namespacecamp__util.html#aa48c6ccfcafcc8c764fd1322587c1e97" title="Write a real 1D array to a text file." alt="" coords="5,60,152,87"/>
-<area shape="rect" id="node6" href="$namespacecamp__util.html#a758d52b5dd5f2dc2798f7e42afdcb2ea" title="Write a real 2D array to a text file." alt="" coords="5,111,152,137"/>
+<area shape="rect" id="node1" title="Returns an available unit number. This should be freed by free_unit()." alt="" coords="415,35,545,60"/>
+<area shape="rect" id="node2" href="$namespacecamp__util.html#aa871934a2e528c6b844a9ba1a761a317" title="Open a file for reading with an automatically assigned unit and test that it succeeds...." alt="" coords="200,5,367,31"/>
+<area shape="rect" id="node4" href="$namespacecamp__util.html#a2d260aa74996f977a1b83ad54ceaa763" title="Open a file for writing with an automatically assigned unit and test that it succeeds...." alt="" coords="216,55,351,95"/>
+<area shape="rect" id="node3" href="$namespacecamp__util.html#a8880473ee9de8b37a6612c3a110661df" title="Load a real array from a text file." alt="" coords="17,5,140,31"/>
+<area shape="rect" id="node5" href="$namespacecamp__util.html#aa48c6ccfcafcc8c764fd1322587c1e97" title="Write a real 1D array to a text file." alt="" coords="5,59,152,84"/>
+<area shape="rect" id="node6" href="$namespacecamp__util.html#a758d52b5dd5f2dc2798f7e42afdcb2ea" title="Write a real 2D array to a text file." alt="" coords="5,108,152,133"/>
 </map>
