@@ -1164,7 +1164,7 @@ contains
     type(string_t), allocatable :: spec_names(:)
     integer :: i_spec, n_gas_spec
 #ifdef ENABLE_NETCDF
-    integer :: n_cells_tstep
+    integer :: n_cells_tstep ! Used to know when exit export_netcdf
 #else
     integer, optional :: n_cells_tstep
 #endif

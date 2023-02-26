@@ -354,7 +354,13 @@ def run(conf):
             raise
     exec_str = ""
     if conf.mpi == "yes":
-        exec_str += "mpirun -v -np " + str(conf.mpiProcesses) + " --bind-to core "
+        if os.getenv("BSC_MACHINE") == "power9":
+            exec_str += "mpirun -v -np " + str(conf.mpiProcesses) + " --bind-to core "
+        elif os.getenv("BSC_MACHINE") == "mn4":
+            exec_str += "mpirun -np " + str(conf.mpiProcesses) + " --bind-to core "
+        else:
+            print("Error python run - Unknown BSC_MACHINE")
+            raise
         # exec_str+="srun -n "+str(conf.mpiProcesses)+" "
 
     if conf.profileCuda == "nvprof" and conf.caseGpuCpu == "GPU":
