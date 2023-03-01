@@ -452,12 +452,13 @@ void import_one_cell_netcdf(SolverData *sd){ //Use to import files in one-cell a
     sd->icell=0;
     sd->tstep++;
   }
-  /*
+
   printf("import_one_cell_netcdf end\n");
   for (int i = 0; i < md->n_per_cell_state_var; i++) {
     printf("c rank %d %d %-le\n",rank,i,md->total_state[i]);
   }
-*/
+  printf("rank %d env %-le %-le",rank, md->total_env[i],md->total_env[i+1]);
+
 }
 
 void import_netcdf(SolverData *sd){ //Use to import files in one-cell and multicell

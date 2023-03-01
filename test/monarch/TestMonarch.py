@@ -759,9 +759,9 @@ def all_timesteps():
     conf = TestMonarch()
 
     # conf.chemFile = "simple"
-    #conf.chemFile = "cb05_yarwood2005"
+    conf.chemFile = "cb05_yarwood2005"
     # conf.chemFile = "monarch_cb05"
-    conf.chemFile = "monarch_binned"
+    #conf.chemFile = "monarch_binned"
 
     conf.diffCellsL = []
     conf.diffCellsL.append("Realistic")
@@ -808,7 +808,7 @@ def all_timesteps():
     # conf.allocatedTasksPerNode = 320
     # conf.allocatedTasksPerNode = get_ntasksPerNode_sbatch() #todo
 
-    conf.cells = [2]
+    conf.cells = [1]
     # conf.cells = [100, 500, 1000, 5000, 10000]
     # conf.cells = [50000,100000,500000,1000000]
 

@@ -226,9 +226,9 @@ contains
 
       !print*,"camp_monarch_interface_t"
 
+      !print*,"camp_monarch_interface constructor this%interface_input_file",this%interface_input_file
       ! Set the aerosol representation id
       if (this%camp_core%get_aero_rep("MONARCH mass-based", aero_rep)) then
-
         select type (aero_rep)
           type is (aero_rep_modal_binned_mass_t)
             call this%camp_core%initialize_update_object( aero_rep, &
@@ -245,22 +245,18 @@ contains
                       aero_rep%get_section_id("sulfate", i_sect_sulf))
               call assert(307728742, &
                       aero_rep%get_section_id("other PM", i_sect_opm))
-            else
-            !if(this%interface_input_file.eq."mod37/interface_monarch_cb05.json")  then
-            call assert(889473105, &
+            else if(.not. this%interface_input_file.eq."interface_cb05_yarwood2005.json")  then
+              call assert(889473105, &
                         aero_rep%get_section_id("organic_matter", i_sect_om))
-            call assert(648042550, &
-                        aero_rep%get_section_id("black_carbon", i_sect_bc))
-            !call assert(760360895, &
-            !            aero_rep%get_section_id("sulfate", i_sect_sulf))
-            i_sect_sulf=-1
-            call assert(307728742, &
-                        aero_rep%get_section_id("other_PM", i_sect_opm))
-            !else
-              print*,"camp_monarch_interface constructor this%interface_input_file",&
-                  this%interface_input_file
-            end if
-          class default
+              call assert(648042550, &
+                          aero_rep%get_section_id("black_carbon", i_sect_bc))
+              !call assert(760360895, &
+              !            aero_rep%get_section_id("sulfate", i_sect_sulf))
+              i_sect_sulf=-1
+              call assert(307728742, &
+                          aero_rep%get_section_id("other_PM", i_sect_opm))
+              end if
+            class default
             call die_msg(351392791, &
                          "Wrong type for aerosol representation "// &
                          "'MONARCH mass-based'")
@@ -410,29 +406,25 @@ contains
     deallocate(buffer)
 #endif
 
-    print*,"camp_monarch_interface constructor"
+    !print*,"camp_monarch_interface constructor"
 
     ! Initialize the solver on all nodes
     call this%camp_core%solver_initialize(n_cells_tstep)
     !call camp_mpi_barrier(MPI_COMM_WORLD)
 
-    print*,"camp_monarch_interface constructor solver_initialize end"
+    !print*,"camp_monarch_interface constructor solver_initialize end"
 
     ! Create a state variable on each node
     this%camp_state => this%camp_core%new_state()
 
-    print*,"camp_monarch_interface constructor new_state end"
+    !print*,"camp_monarch_interface constructor new_state end"
 
     !call camp_mpi_barrier(MPI_COMM_WORLD)
-
     if(this%ADD_EMISIONS.eq."monarch_binned" &
     .or. this%interface_input_file.eq."interface_monarch_cb05.json") then
-
-      !Options
       this%nrates_cells = this%n_cells
       allocate(this%offset_photo_rates_cells(this%nrates_cells))
       this%offset_photo_rates_cells(:) = 0. !0 0.1
-
       do z =1, this%nrates_cells
         do i = 1, this%n_photo_rxn
           base_rate = this%base_rates(i)!
@@ -451,17 +443,10 @@ contains
           !print*,"2id photo_rate", base_rate
         end do
       end do
-
       deallocate(this%offset_photo_rates_cells)
-
     end if
-
-    print*,"camp_monarch_interface constructor offset_photo_rates_cells end"
-
+    !print*,"camp_monarch_interface constructor offset_photo_rates_cells end"
     call camp_mpi_barrier(MPI_COMM_WORLD)
-
-    ! Set the aerosol mode dimensions
-
     ! organic matter
     if (i_sect_om.gt.0) then
       if(this%interface_input_file.eq."mod37/interface_monarch_mod37.json") then
@@ -472,7 +457,7 @@ contains
       end if
     end if
     !if(.not. this%interface_input_file.eq."mod37/interface_monarch_mod37.json") then
-     ! prin
+    if(.not. this%interface_input_file.eq."interface_cb05_yarwood2005.json")  then
         if (i_sect_bc.gt.0) then
       ! black carbon
         call update_data_GMD%set_GMD(i_sect_bc, 1.18d-8)
@@ -494,7 +479,9 @@ contains
         call this%camp_core%update_data(update_data_GMD)
         call this%camp_core%update_data(update_data_GSD)
       end if
-    !end if
+    end if
+
+    !print*,"camp_monarch_interface constructor update_data_GMD end"
 
     ! Calculate the intialization time
     if (MONARCH_PROCESS.eq.0) then
@@ -1320,7 +1307,7 @@ end if
     integer(kind=i_kind) :: i_spec, water_id,i,j,k,r,NUM_VERT_CELLS,state_size_per_cell, last_cell
     real :: conc_deviation_perc
 
-    !print*,"get_init_conc start"
+    print*,"monarch_interface get_init_conc start"
 
     if(this%interface_input_file.eq."mod37/interface_monarch_mod37.json") then
 
@@ -1411,7 +1398,6 @@ end if
         end do
       end do
     end do
-
     end if
 
     !print*,"get_init_conc end"
