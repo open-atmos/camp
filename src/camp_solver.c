@@ -400,7 +400,7 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
   sd->spec_names = (char **)malloc(sizeof(char *) * n_state_var);
 #endif
 
-#ifdef DEBUG_CAMP_SOLVER_NEW
+#ifndef DEBUG_CAMP_SOLVER_NEW
   printf("camp solver_run new  n_state_var %d, n_cells %d n_dep_var %d\n",
          sd->model_data.n_per_cell_state_var, n_cells, sd->model_data.n_per_cell_dep_var);
 #endif
@@ -1018,49 +1018,78 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
     if(sd->ncounters>0){
       i=0;
 #ifndef CAMP_PROFILE_DEVICE_FUNCTIONS
-      counters[i++]=mCPU->mdvCPU.counterBCGInternal;
+      counters[i]=mCPU->mdvCPU.counterBCGInternal;
+      i++;
 #else
-      counters[i++]=0;
+      counters[i]=0;
+      i++;
 #endif
-      counters[i++]=mCPU->counterBCG;
-      counters[i++]=mCPU->countersolveCVODEGPU;
+      counters[i]=mCPU->counterBCG;
+      i++;
+      counters[i]=mCPU->countersolveCVODEGPU;
+      i++;
 #ifndef CAMP_PROFILE_DEVICE_FUNCTIONS
-      counters[i++]=mCPU->mdvCPU.countercvStep;
+      counters[i]=mCPU->mdvCPU.countercvStep;
+      i++;
 #else
-      counters[i++]=0;
+      counters[i]=0;
+      i++;
 #endif
     }
     if(sd->ntimers>0){
       i=0;
-      times[i++]=mCPU->timeBiConjGrad;
-      times[i++]=mCPU->timeBiConjGradMemcpy;
-      times[i++]=sd->timeCVode;
+      times[i]=mCPU->timeBiConjGrad;
+      i++;
+      times[i]=mCPU->timeBiConjGradMemcpy;
+      i++;
+      times[i]=sd->timeCVode;
+      i++;
 #ifndef CAMP_PROFILE_DEVICE_FUNCTIONS
-      times[i++]=mdvCPU.dtcudaDeviceCVode;
-      times[i++]=mdvCPU.dtPostBCG;
+      times[i]=mdvCPU.dtcudaDeviceCVode;
+      i++;
+      times[i]=mdvCPU.dtPostBCG;
+      i++;
 #else
-      times[i++]=0.;
-      times[i++]=0.;
+      times[i]=0.;
+      i++;
+      times[i]=0.;
+      i++;
 #endif
-      times[i++]=0.;
+      times[i]=0.;
+      i++;
 #ifndef CAMP_PROFILE_DEVICE_FUNCTIONS
-      times[i++]=mdvCPU.timeNewtonIteration;
-      times[i++]=mdvCPU.timeJac;
-      times[i++]=mdvCPU.timelinsolsetup;
-      times[i++]=mdvCPU.timecalc_Jac;
-      times[i++]=0.;//mdvCPU.timeRXNJac;
-      times[i++]=mdvCPU.timef;
-      times[i++]=mdvCPU.timeguess_helper;
+      times[i]=mdvCPU.timeNewtonIteration;
+      i++;
+      times[i]=mdvCPU.timeJac;
+      i++;
+      times[i]=mdvCPU.timelinsolsetup;
+      i++;
+      times[i]=mdvCPU.timecalc_Jac;
+      i++;
+      times[i]=0.;//mdvCPU.timeRXNJac;
+      i++;
+      times[i]=mdvCPU.timef;
+      i++;
+      times[i]=mdvCPU.timeguess_helper;
+      i++;
 #else
-      times[i++]=0.;
-      times[i++]=0.;
-      times[i++]=0.;
-      times[i++]=0.;
-      times[i++]=0.;
-      times[i++]=0.;
-      times[i++]=0.;
+      times[i]=0.;
+      i++;
+      times[i]=0.;
+      i++;
+      times[i]=0.;
+      i++;
+      times[i]=0.;
+      i++;
+      times[i]=0.;
+      i++;
+      times[i]=0.;
+      i++;
+      times[i]=0.;
+      i++;
 #endif
-      times[i++]=mCPU->timecvStep;
+      times[i]=mCPU->timecvStep;
+      i++;
       //for(int i=0;i<sd->ntimers;i++)
         //printf("times[%d]=%le\n",i,times[i]);
     }
@@ -1072,7 +1101,6 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
   }
 #endif
 #endif
-
 }
 
 void solver_reset_statistics(void *solver_data, int *counters, double *times)

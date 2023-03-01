@@ -823,8 +823,8 @@ def all_timesteps():
     conf.timeStepsDt = 2
 
     # conf.caseBase = "CPU EBI"
-    conf.caseBase = "CPU One-cell"
-    #conf.caseBase = "CPU Multi-cells"
+    #conf.caseBase = "CPU One-cell"
+    conf.caseBase = "CPU Multi-cells"
     # conf.caseBase="GPU Multi-cells"
     # conf.caseBase="GPU Block-cellsN"
     # conf.caseBase="GPU Block-cells1"

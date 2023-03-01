@@ -28,18 +28,16 @@ void nc(int status) { //handle netcdf error
   }
 }
 
-void export_cell_netcdf(SolverData *sd){
-  printf("export_cell_netcdf start\n");
+void export_netcdf(SolverData *sd){
+  printf("export_netcdf start\n");
   ModelData *md = &(sd->model_data);
   if(md->n_cells>1){
-    printf("export_cell_netcdf TODO multicells\n");
+    printf("export_netcdf ERROR: Use One-cell mode, multicells do not work for this function\n");
     exit(0);
   }
   int z=0;
-  int rank;
-  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   int ncid;
-  int nvars=5;
+  int nvars=3;
   if(md->n_aero_rep_env_data!=0) nvars++;
   if(md->n_sub_model_env_data!=0) nvars++;
   int dimids[nvars], varids[nvars];
@@ -52,97 +50,56 @@ void export_cell_netcdf(SolverData *sd){
   char s_tstep[20];
   sprintf(s_tstep,"%d",sd->tstep);
   strcat(file_name,s_tstep);
+  int rank;
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  strcat(file_name,"mpirank_");
+  char s_mpirank[20];
+  sprintf(s_mpirank,"%d",rank);
+  strcat(file_name,s_mpirank);
   strcat(file_name,".nc");
   char file_path[1024];
   getcwd(file_path, sizeof(file_path));
   strcat(file_path,"/");
   strcat(file_path,file_name);
   printf("Creating netcdf file at %s rank %d\n",file_path, rank);
-  nc(nc_create_par(file_path, NC_NETCDF4|NC_MPIIO, MPI_COMM_WORLD, MPI_INFO_NULL, &ncid));
-  int size;
-  MPI_Comm_size(MPI_COMM_WORLD, &size);
-  int ncells=md->n_cells;
+  nc(nc_create(file_path, NC_CLOBBER, &ncid));
+  printf("Created netcdf file at %s rank %d\n",file_path, rank);
   int i=0;
-  nc(nc_def_dim(ncid,"nstate",md->n_per_cell_state_var*ncells*size,&dimids[i]));
-  if(rank==0) printf("export_cell_netcdf z %d\n",z++);MPI_Barrier(MPI_COMM_WORLD);
+  nc(nc_def_dim(ncid,"nstate",md->n_per_cell_state_var,&dimids[i]));
   nc(nc_def_var(ncid, "state", NC_DOUBLE, 1, &dimids[i], &varids[i]));
   i++;
-  if(rank==0) printf("export_cell_netcdf z %d\n",z++);MPI_Barrier(MPI_COMM_WORLD);
-  int n_rxn=md->n_rxn;
-  nc(nc_def_dim(ncid,"nrxn_int_data",(md->n_rxn_int_param+n_rxn)*size,&dimids[i]));
-  if(rank==0) printf("export_cell_netcdf z %d\n",z++);MPI_Barrier(MPI_COMM_WORLD);
-  nc(nc_def_var(ncid, "rxn_int_data", NC_INT, 1, &dimids[i], &varids[i]));
-  i++;
-  if(rank==0) printf("export_cell_netcdf z %d\n",z++);MPI_Barrier(MPI_COMM_WORLD);
-  nc(nc_def_dim(ncid,"nrxn_float_data",md->n_rxn_float_param*size,&dimids[i]));
-  if(rank==0) printf("export_cell_netcdf z %d\n",z++);
-  nc(nc_def_var(ncid, "rxn_float_data", NC_DOUBLE, 1, &dimids[i], &varids[i]));
-  i++;
-  if(rank==0) printf("export_cell_netcdf z %d\n",z++);
-  nc(nc_def_dim(ncid,"nrxn_env_data",md->n_rxn_env_data*ncells*size,&dimids[i]));
-  if(rank==0) printf("export_cell_netcdf z %d\n",z++);
+  nc(nc_def_dim(ncid,"nrxn_env_data",md->n_rxn_env_data,&dimids[i]));
   nc(nc_def_var(ncid, "rxn_env_data", NC_DOUBLE, 1, &dimids[i], &varids[i]));
   i++;
-  if(rank==0) printf("export_cell_netcdf z %d\n",z++);
   if(md->n_aero_rep_env_data!=0) {
     nc(nc_def_dim(ncid, "naero_rep_env_data",
-                  md->n_aero_rep_env_data * ncells * size, &dimids[i]));
+                  md->n_aero_rep_env_data, &dimids[i]));
     nc(nc_def_var(ncid, "aero_rep_env_data", NC_DOUBLE, 1, &dimids[i],
                   &varids[i]));
     i++;
   }
   if(md->n_sub_model_env_data!=0){
-    nc(nc_def_dim(ncid,"nsub_model_env_data",md->n_sub_model_env_data*ncells*size,&dimids[i]));
+    nc(nc_def_dim(ncid,"nsub_model_env_data",md->n_sub_model_env_data,&dimids[i]));
     nc(nc_def_var(ncid, "sub_model_env_data", NC_DOUBLE, 1, &dimids[i], &varids[i]));
     i++;
   }
-  nc(nc_def_dim(ncid,"ntotal_env",CAMP_NUM_ENV_PARAM_*ncells*size,&dimids[i]));
+  nc(nc_def_dim(ncid,"ntotal_env",CAMP_NUM_ENV_PARAM_,&dimids[i]));
   nc(nc_def_var(ncid, "total_env", NC_DOUBLE, 1, &dimids[i], &varids[i]));
-  if(rank==0) printf("export_cell_netcdf z %d\n",z++);
   i=0;
   nc(nc_enddef(ncid));
-  for (int i = 0; i < nvars; i++)
-    nc(nc_var_par_access(ncid, varids[i], 1, 0));
-  i=0;
-  if(rank==0) printf("export_cell_netcdf z %d\n",z++);
-  size_t start=md->n_per_cell_state_var*ncells*rank;
-  size_t count=md->n_per_cell_state_var*ncells;
-  nc(nc_put_vara_double(ncid, varids[i], &start, &count, md->total_state));
+  nc(nc_put_var_double(ncid, varids[i], md->total_state));
   i++;
-  if(rank==0) printf("export_cell_netcdf z %d\n",z++);
-  start=(md->n_rxn_int_param+n_rxn)*rank;
-  count=(md->n_rxn_int_param+n_rxn);
-  nc(nc_put_vara_int(ncid, varids[i], &start, &count, md->rxn_int_data));
+  nc(nc_put_var_double(ncid, varids[i], md->rxn_env_data));
   i++;
-  if(rank==0) printf("export_cell_netcdf z %d\n",z++);
-  start=md->n_rxn_float_param*rank;
-  count=md->n_rxn_float_param;
-  nc(nc_put_vara_double(ncid, varids[i], &start, &count, md->rxn_float_data));
-  i++;
-  if(rank==0) printf("export_cell_netcdf z %d\n",z++);
-  start=md->n_rxn_env_data*ncells*rank;
-  count=md->n_rxn_env_data*ncells;
-  nc(nc_put_vara_double(ncid, varids[i], &start, &count, md->rxn_env_data));
-  i++;
-  if(rank==0) printf("export_cell_netcdf z %d\n",z++);
   if(md->n_aero_rep_env_data!=0) {
-    start = md->n_aero_rep_env_data * ncells * rank;
-    count = md->n_aero_rep_env_data * ncells;
-    nc(nc_put_vara_double(ncid, varids[i], &start, &count,
-                          md->aero_rep_env_data));
+    nc(nc_put_var_double(ncid, varids[i], md->aero_rep_env_data));
     i++;
   }
   if(md->n_sub_model_env_data!=0) {
-    start = md->n_sub_model_env_data * ncells * rank;
-    count = md->n_sub_model_env_data * ncells;
-    nc(nc_put_vara_double(ncid, varids[i], &start, &count,
-                          md->sub_model_env_data));
+    nc(nc_put_var_double(ncid, varids[i], md->sub_model_env_data));
     i++;
   }
-  if(rank==0) printf("export_cell_netcdf z %d\n",z++);
-  start=CAMP_NUM_ENV_PARAM_*ncells*rank;
-  count=CAMP_NUM_ENV_PARAM_*ncells;
-  nc(nc_put_vara_double(ncid, varids[i], &start, &count, md->total_env));
+  nc(nc_put_var_double(ncid, varids[i], md->total_env));
   i++;
   i=0;
   nc(nc_close(ncid));
@@ -153,8 +110,8 @@ void export_cell_netcdf(SolverData *sd){
   }
 */
   if(sd->icell>=sd->n_cells_tstep){
-    printf("export_cell_netcdf exit sd->icell %d", sd->icell);
-    //MPI_Barrier(MPI_COMM_WORLD);
+    printf("export_netcdf exit sd->icell %d\n", sd->icell);
+    MPI_Barrier(MPI_COMM_WORLD);
     exit(0);
   }
 }
@@ -255,12 +212,12 @@ void export_cells_netcdf(SolverData *sd) {
    */
 }
 
-void join_cells_netcdf(SolverData *sd){
-  printf("join_cells_netcdf start\n");
+void join_cells_netcdfs(SolverData *sd){
+  printf("join_cells_netcdfs start\n");
   ModelData *md = &(sd->model_data);
   int ncells=md->n_cells;
   if(ncells<=1){
-    printf("ERROR: join_cells_netcdf ncells<=1, when it needs multi-cells enabled\n");
+    printf("ERROR: join_cells_netcdfs ncells<=1, when it needs multi-cells enabled\n");
     exit(0);
   }
   char s_tstep[20];
@@ -311,20 +268,6 @@ void join_cells_netcdf(SolverData *sd){
     nc(nc_get_vara_double(ncid, varids[i], &start, &count, &md->total_state[icell*count]));
     i++;
     int n_rxn=md->n_rxn;
-    /*
-    int *imported_rxn_int_data = (int *) malloc((md->n_rxn_int_param + md->n_rxn) * sizeof(int));
-    start = (md->n_rxn_int_param+n_rxn) * rank;
-    count = (md->n_rxn_int_param+n_rxn);
-    nc(nc_get_vara_int(ncid, varids[i], &start, &count, &imported_rxn_int_data));
-     i++;
-    for (int j = 0; j < (md->n_rxn_int_param+n_rxn); j++){
-      printf("imported_rxn_int_data[j] %d", imported_rxn_int_data[j]);
-      if(imported_rxn_int_data[j]!=md->rxn_int_data[j]){
-        printf("join_cells_netcdf imported_rxn_int_data[j]!=md->rxn_int_data[j]\n");
-        exit(0);
-      }
-    }  free(imported_rxn_int_data);
-*/
     start = md->n_rxn_env_data * rank;
     count = md->n_rxn_env_data;
     nc(nc_get_vara_double(ncid, varids[i], &start, &count, &md->rxn_env_data[icell*count]));
@@ -350,10 +293,174 @@ void join_cells_netcdf(SolverData *sd){
     i = 0;
   }
   export_cells_netcdf(sd);
-  sd->tstep++;
-  printf("join_cells_netcdf end, exiting... \n");
-  //MPI_Barrier(MPI_COMM_WORLD);
+  MPI_Barrier(MPI_COMM_WORLD);
+  printf("join_cells_netcdfs end, exiting... \n");
   exit(0);
+}
+
+void export_cell_netcdf(SolverData *sd){
+  printf("export_cell_netcdf start\n");
+  ModelData *md = &(sd->model_data);
+  int rank;
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  int ncid;
+  int nvars=3;
+  if(md->n_aero_rep_env_data!=0) nvars++;
+  if(md->n_sub_model_env_data!=0) nvars++;
+  int dimids[nvars], varids[nvars];
+  char file_name[]="cell_";
+  char s_icell[20];
+  sprintf(s_icell,"%d",sd->icell);
+  strcat(file_name,s_icell);
+  strcat(file_name,"timestep_");
+  char s_tstep[20];
+  sprintf(s_tstep,"%d",sd->tstep);
+  strcat(file_name,s_tstep);
+  strcat(file_name,".nc");
+  char file_path[1024];
+  getcwd(file_path, sizeof(file_path));
+  strcat(file_path,"/");
+  strcat(file_path,file_name);
+  printf("Creating netcdf file at %s rank %d\n",file_path, rank);
+  nc(nc_create_par(file_path, NC_NETCDF4|NC_MPIIO, MPI_COMM_WORLD, MPI_INFO_NULL, &ncid));
+  int size;
+  MPI_Comm_size(MPI_COMM_WORLD, &size);
+  int ncells=md->n_cells;
+  int i=0;
+  nc(nc_def_dim(ncid,"nstate",md->n_per_cell_state_var*ncells*size,&dimids[i]));
+  nc(nc_def_var(ncid, "state", NC_DOUBLE, 1, &dimids[i], &varids[i]));
+  i++;
+  int n_rxn=md->n_rxn;
+  nc(nc_def_dim(ncid,"nrxn_env_data",md->n_rxn_env_data*ncells*size,&dimids[i]));
+  nc(nc_def_var(ncid, "rxn_env_data", NC_DOUBLE, 1, &dimids[i], &varids[i]));
+  i++;
+  if(md->n_aero_rep_env_data!=0) {
+    nc(nc_def_dim(ncid, "naero_rep_env_data",
+                  md->n_aero_rep_env_data * ncells * size, &dimids[i]));
+    nc(nc_def_var(ncid, "aero_rep_env_data", NC_DOUBLE, 1, &dimids[i],
+                  &varids[i]));
+    i++;
+  }
+  if(md->n_sub_model_env_data!=0){
+    nc(nc_def_dim(ncid,"nsub_model_env_data",md->n_sub_model_env_data*ncells*size,&dimids[i]));
+    nc(nc_def_var(ncid, "sub_model_env_data", NC_DOUBLE, 1, &dimids[i], &varids[i]));
+    i++;
+  }
+  nc(nc_def_dim(ncid,"ntotal_env",CAMP_NUM_ENV_PARAM_*ncells*size,&dimids[i]));
+  nc(nc_def_var(ncid, "total_env", NC_DOUBLE, 1, &dimids[i], &varids[i]));
+  i=0;
+  nc(nc_enddef(ncid));
+  for (int i = 0; i < nvars; i++)
+    nc(nc_var_par_access(ncid, varids[i], 1, 0));
+  i=0;
+  size_t start=md->n_per_cell_state_var*ncells*rank;
+  size_t count=md->n_per_cell_state_var*ncells;
+  nc(nc_put_vara_double(ncid, varids[i], &start, &count, md->total_state));
+  i++;
+  start=md->n_rxn_env_data*ncells*rank;
+  count=md->n_rxn_env_data*ncells;
+  nc(nc_put_vara_double(ncid, varids[i], &start, &count, md->rxn_env_data));
+  i++;
+  if(md->n_aero_rep_env_data!=0) {
+    start = md->n_aero_rep_env_data * ncells * rank;
+    count = md->n_aero_rep_env_data * ncells;
+    nc(nc_put_vara_double(ncid, varids[i], &start, &count,
+                          md->aero_rep_env_data));
+    i++;
+  }
+  if(md->n_sub_model_env_data!=0) {
+    start = md->n_sub_model_env_data * ncells * rank;
+    count = md->n_sub_model_env_data * ncells;
+    nc(nc_put_vara_double(ncid, varids[i], &start, &count,
+                          md->sub_model_env_data));
+    i++;
+  }
+  start=CAMP_NUM_ENV_PARAM_*ncells*rank;
+  count=CAMP_NUM_ENV_PARAM_*ncells;
+  nc(nc_put_vara_double(ncid, varids[i], &start, &count, md->total_env));
+  i++;
+  i=0;
+  nc(nc_close(ncid));
+  printf("export_cell_netcdf end\n");
+/*
+  for (int i = 0; i < md->n_per_cell_state_var; i++) {
+    printf("b rank %d %d %-le\n",rank,i,md->total_state[i]);
+  }
+*/
+  sd->icell++;
+  if(sd->icell>=sd->n_cells_tstep){
+    printf("export_cell_netcdf exit sd->icell %d", sd->icell);
+    //MPI_Barrier(MPI_COMM_WORLD);
+    exit(0);
+  }
+}
+
+void join_mpiranks_netcdfs(SolverData *sd){
+  printf("join_mpiranks_netcdfs start\n");
+  ModelData *md = &(sd->model_data);
+  int ncid;
+  int nvars=3;
+  if(md->n_aero_rep_env_data!=0) nvars++;
+  if(md->n_sub_model_env_data!=0) nvars++;
+  int varids[nvars];
+  char file_name[]="cell_";
+  char s_icell[20];
+  sprintf(s_icell,"%d",sd->icell);
+  strcat(file_name,s_icell);
+  strcat(file_name,"timestep_");
+  char s_tstep[20];
+  sprintf(s_tstep,"%d",sd->tstep);
+  strcat(file_name,s_tstep);
+  int rank;
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  strcat(file_name,"mpirank_");
+  char s_mpirank[20];
+  sprintf(s_mpirank,"%d",rank);
+  strcat(file_name,s_mpirank);
+  strcat(file_name,".nc");
+  char file_path[1024];
+  getcwd(file_path, sizeof(file_path));
+  strcat(file_path,"/");
+  strcat(file_path,file_name);
+  printf("Opening netcdf file at %s\n",file_path);
+  nc(nc_open(file_path, NC_NOWRITE, &ncid));
+  int i=0;
+  nc(nc_inq_varid(ncid, "state", &varids[i]));
+  i++;
+  nc(nc_inq_varid(ncid, "rxn_env_data", &varids[i]));
+  i++;
+  if(md->n_aero_rep_env_data!=0){
+  nc(nc_inq_varid(ncid, "aero_rep_env_data", &varids[i]));
+  i++;
+  }
+  if(md->n_sub_model_env_data!=0){
+  nc(nc_inq_varid(ncid, "sub_model_env_data", &varids[i]));
+  i++;
+  }
+  nc(nc_inq_varid(ncid, "total_env", &varids[i]));
+  i=0;
+  nc(nc_get_var_double(ncid, varids[i], md->total_state));
+  i++;
+  nc(nc_get_var_double(ncid, varids[i], md->rxn_env_data));
+  i++;
+  if(md->n_aero_rep_env_data!=0) {
+    nc(nc_get_var_double(ncid, varids[i], md->aero_rep_env_data));
+    i++;
+  }
+  if(md->n_sub_model_env_data!=0) {
+    nc(nc_get_var_double(ncid, varids[i], md->sub_model_env_data));
+    i++;
+  }
+  nc(nc_get_var_double(ncid, varids[i], md->total_env));
+  i++;
+  i = 0;
+  export_cell_netcdf(sd);
+  printf("join_mpiranks_netcdfs end \n");
+}
+
+void join_netcdfs(SolverData *sd){
+  join_mpiranks_netcdfs(sd);
+  join_cells_netcdfs(sd);
 }
 
 void import_multi_cell_netcdf(SolverData *sd){ //Use to import files in one-cell and multicell
@@ -525,7 +632,7 @@ void import_one_cell_netcdf(SolverData *sd){ //Use to import files in one-cell a
 */
 }
 
-void import_cell_netcdf(SolverData *sd){ //Use to import files in one-cell and multicell
+void import_netcdf(SolverData *sd){ //Use to import files in one-cell and multicell
   ModelData *md = &(sd->model_data);
   if(md->n_cells > 1) import_multi_cell_netcdf(sd);
   else import_one_cell_netcdf(sd);
@@ -535,14 +642,14 @@ void cell_netcdf(SolverData *sd){
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   if(sd->tstep==0) {
-#ifndef EXPORT_CELL_NETCDF
-    export_cell_netcdf(sd);
+#ifdef EXPORT_NETCDF
+    export_netcdf(sd);
 #else
-#ifdef JOIN_CELLS_NETCDF
-    join_cells_netcdf(sd);
+#ifndef JOIN_NETCDFS
+    join_netcdfs(sd);
 #else
-#ifdef IMPORT_CELL_NETCDF
-    import_cell_netcdf(sd);
+#ifdef IMPORT_NETCDF
+    import_netcdf(sd);
 #endif
 #endif
 #endif
@@ -590,40 +697,9 @@ void check_isnand(double *x, int len, const char *s){
 
 }
 
-/*
-void check_isnand(double *x, int len, int var_id){
-
-  int n_zeros=0;
-  for (int i=0; i<len; i++){
-    if(isnan(x[i]))
-      printf("NAN %d[%d]",var_id,i);
-  }
-
-}*/
-
-/*
-void print_int(int *x, int len, char *s){
-
-  for (int i=0; i<len; i++){
-    printf("%s %d[%d]",s,i);
-  }
-
-}
-
-void print_double(double *x, int len, char *s){
-
-  for (int i=0; i<len; i++){
-    printf("%s %d[%d]",s,i);
-  }
-
-}
- */
-
 int compare_doubles(double *x, double *y, int len, const char *s){
-
   int flag=1;
   double tol=0.01;
-  //float tol=0.0001;
   double rel_error;
   int n_fails=0;
   for (int i=0; i<len; i++){
@@ -641,9 +717,7 @@ int compare_doubles(double *x, double *y, int len, const char *s){
         return flag;
     }
   }
-
   return flag;
-
 }
 
 void print_current_directory(){
@@ -728,6 +802,3 @@ void export_counters_open(SolverData *sd){
   fprintf(file, "mpi_rank %d\n", rank);
 #endif
 }
-
-
-
