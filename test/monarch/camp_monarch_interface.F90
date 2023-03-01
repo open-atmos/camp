@@ -175,6 +175,8 @@ contains
     endif
 #endif
 
+    print*,"camp_monarch_interface constructor start"
+
     MONARCH_PROCESS = camp_mpi_rank()
 
     ! Create a new interface object
@@ -200,8 +202,6 @@ contains
 
     allocate(this%specs_emi_id(15))
     allocate(this%specs_emi(size(this%specs_emi_id)))
-
-    !print*,"camp_monarch_interface_t"
 
     ! Initialize the time-invariant model data on each node
     if (MONARCH_PROCESS.eq.0) then
@@ -237,7 +237,6 @@ contains
                                                              update_data_GSD)
 
             if(this%interface_input_file.eq."mod37/interface_monarch_mod37.json") then
-
               call assert(889473105, &
                       aero_rep%get_section_id("organic matter", i_sect_om))
               call assert(648042550, &
@@ -247,6 +246,7 @@ contains
               call assert(307728742, &
                       aero_rep%get_section_id("other PM", i_sect_opm))
             else
+            !if(this%interface_input_file.eq."mod37/interface_monarch_cb05.json")  then
             call assert(889473105, &
                         aero_rep%get_section_id("organic_matter", i_sect_om))
             call assert(648042550, &
@@ -256,7 +256,9 @@ contains
             i_sect_sulf=-1
             call assert(307728742, &
                         aero_rep%get_section_id("other_PM", i_sect_opm))
-
+            !else
+              print*,"camp_monarch_interface constructor this%interface_input_file",&
+                  this%interface_input_file
             end if
           class default
             call die_msg(351392791, &
@@ -408,12 +410,18 @@ contains
     deallocate(buffer)
 #endif
 
+    print*,"camp_monarch_interface constructor"
+
     ! Initialize the solver on all nodes
     call this%camp_core%solver_initialize(n_cells_tstep)
     !call camp_mpi_barrier(MPI_COMM_WORLD)
 
+    print*,"camp_monarch_interface constructor solver_initialize end"
+
     ! Create a state variable on each node
     this%camp_state => this%camp_core%new_state()
+
+    print*,"camp_monarch_interface constructor new_state end"
 
     !call camp_mpi_barrier(MPI_COMM_WORLD)
 
@@ -448,6 +456,8 @@ contains
 
     end if
 
+    print*,"camp_monarch_interface constructor offset_photo_rates_cells end"
+
     call camp_mpi_barrier(MPI_COMM_WORLD)
 
     ! Set the aerosol mode dimensions
@@ -461,27 +471,30 @@ contains
       call this%camp_core%update_data(update_data_GSD)
       end if
     end if
-    if (i_sect_bc.gt.0) then
-    ! black carbon
-      call update_data_GMD%set_GMD(i_sect_bc, 1.18d-8)
-      call update_data_GSD%set_GSD(i_sect_bc, 2.00d0)
-      call this%camp_core%update_data(update_data_GMD)
-      call this%camp_core%update_data(update_data_GSD)
-    end if
-    if (i_sect_sulf.gt.0) then
-    ! sulfate
-      call update_data_GMD%set_GMD(i_sect_sulf, 6.95d-8)
-      call update_data_GSD%set_GSD(i_sect_sulf, 2.12d0)
-      call this%camp_core%update_data(update_data_GMD)
-      call this%camp_core%update_data(update_data_GSD)
-    end if
-    if (i_sect_opm.gt.0) then
-    ! other PM
-      call update_data_GMD%set_GMD(i_sect_opm, 2.12d-8)
-      call update_data_GSD%set_GSD(i_sect_opm, 2.24d0)
-      call this%camp_core%update_data(update_data_GMD)
-      call this%camp_core%update_data(update_data_GSD)
-    end if
+    !if(.not. this%interface_input_file.eq."mod37/interface_monarch_mod37.json") then
+     ! prin
+        if (i_sect_bc.gt.0) then
+      ! black carbon
+        call update_data_GMD%set_GMD(i_sect_bc, 1.18d-8)
+        call update_data_GSD%set_GSD(i_sect_bc, 2.00d0)
+        call this%camp_core%update_data(update_data_GMD)
+        call this%camp_core%update_data(update_data_GSD)
+      end if
+      if (i_sect_sulf.gt.0) then
+      ! sulfate
+        call update_data_GMD%set_GMD(i_sect_sulf, 6.95d-8)
+        call update_data_GSD%set_GSD(i_sect_sulf, 2.12d0)
+        call this%camp_core%update_data(update_data_GMD)
+        call this%camp_core%update_data(update_data_GSD)
+      end if
+      if (i_sect_opm.gt.0) then
+      ! other PM
+        call update_data_GMD%set_GMD(i_sect_opm, 2.12d-8)
+        call update_data_GSD%set_GSD(i_sect_opm, 2.24d0)
+        call this%camp_core%update_data(update_data_GMD)
+        call this%camp_core%update_data(update_data_GSD)
+      end if
+    !end if
 
     ! Calculate the intialization time
     if (MONARCH_PROCESS.eq.0) then
@@ -489,6 +502,8 @@ contains
       write(*,*) "Initialization time: ", comp_end-comp_start, " s"
       !call this%camp_core%print()
     end if
+
+    print*,"camp_monarch_interface constructor end"
 
   end function constructor
 
@@ -563,6 +578,8 @@ contains
     integer :: counterLS = 0
     real :: timeLS = 0.0
     real :: timeCvode = 0.0
+
+    print*,"camp_monarch_interface integrate start"
 
     if(this%n_cells.eq.1) then
       state_size_per_cell = 0
@@ -828,6 +845,8 @@ if (camp_mpi_rank().eq.0) then
 end if
 
 #endif
+
+    print*,"camp_monarch_interface integrate end"
 
   end subroutine integrate
 

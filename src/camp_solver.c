@@ -400,7 +400,7 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
   sd->spec_names = (char **)malloc(sizeof(char *) * n_state_var);
 #endif
 
-#ifndef DEBUG_CAMP_SOLVER_NEW
+#ifdef DEBUG_CAMP_SOLVER_NEW
   printf("camp solver_run new  n_state_var %d, n_cells %d n_dep_var %d\n",
          sd->model_data.n_per_cell_state_var, n_cells, sd->model_data.n_per_cell_dep_var);
 #endif
@@ -626,10 +626,10 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
   int flag;
   int rank = 0;
 
-#ifdef CAMP_DEBUG_solver_run
+#ifndef CAMP_DEBUG_solver_run
 #ifdef CAMP_USE_MPI
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    if (rank == 3 ||  sd->counterSolve == 3)
+    if (rank == 0)
     //if (sd->counterSolve==0 && sd->counterFail==0)
     //if (sd->counterFail==0)
     {
@@ -637,11 +637,11 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
       printf("camp solver_run start [(id),conc], n_state_var %d, n_cells %d n_dep_var %d\n",
               md->n_per_cell_state_var, n_cells, md->n_per_cell_dep_var);
       printf("sd->counterSolve %d t_initial %-le t_final %-le\n",sd->counterSolve,t_initial,t_final);
-      for (int i = 0; i < n_cells; i++) {
-        for (int j = 0; j < md->n_per_cell_state_var; j++) {
-        printf("Rank %d cell %d %-le",rank,i,state[i+j*md->n_per_cell_state_var]);
-        }
-      }
+      //for (int i = 0; i < n_cells; i++) {
+        //for (int j = 0; j < md->n_per_cell_state_var; j++) {
+        //printf("Rank %d cell %d %-le",rank,i,state[i+j*md->n_per_cell_state_var]);
+        //}
+      //}
       //for (int i = 0; i < md->n_per_cell_state_var*n_cell; i++) {
       //  printf("(%d) %-le ",i+1, state[i]);
       //}

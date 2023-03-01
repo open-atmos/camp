@@ -136,10 +136,9 @@ def write_camp_config_file(conf):
         else:
             file1.write("USE_CPU=OFF\n")
         if conf.caseMulticellsOnecell == "BDF" or conf.caseMulticellsOnecell.find("maxrregcount") != -1:
-            # print("FOUND MAXRREGCOUNT")
-            if conf.chemFile == "monarch_binned":
+            if conf.chemFile == "monarch_binned" or conf.chemFile == "cb05_mechanism_yarwood2005":
                 print(
-                    "Error: monarch_binned can not run GPU BDF, disable GPU BDF or use a valid chemFile like monarch_cb05")
+                    "Error:", conf.chemFile, "can not run GPU BDF, disable GPU BDF or use a valid chemFile like monarch_cb05")
                 raise
             else:
                 file1.write("USE_GPU_CVODE=ON\n")
@@ -760,7 +759,7 @@ def all_timesteps():
     conf = TestMonarch()
 
     # conf.chemFile = "simple"
-    # conf.chemFile = "cb05_mechanism_yarwood2005"
+    #conf.chemFile = "cb05_yarwood2005"
     # conf.chemFile = "monarch_cb05"
     conf.chemFile = "monarch_binned"
 
@@ -792,11 +791,11 @@ def all_timesteps():
     conf.mpi = "yes"
     # conf.mpi = "no"
 
-    # conf.mpiProcessesCaseBase = 1
-    conf.mpiProcessesCaseBase = 2
+    conf.mpiProcessesCaseBase = 1
+    #conf.mpiProcessesCaseBase = 2
 
-    # conf.mpiProcessesCaseOptimList.append(1)
-    conf.mpiProcessesCaseOptimList.append(2)
+    conf.mpiProcessesCaseOptimList.append(1)
+    #conf.mpiProcessesCaseOptimList.append(2)
     # conf.mpiProcessesCaseOptimList = [10,20,40]
     # conf.mpiProcessesCaseOptSet Multi-GPusimList = [1,4,8,16,32,40]
 
@@ -809,7 +808,7 @@ def all_timesteps():
     # conf.allocatedTasksPerNode = 320
     # conf.allocatedTasksPerNode = get_ntasksPerNode_sbatch() #todo
 
-    conf.cells = [4]
+    conf.cells = [2]
     # conf.cells = [100, 500, 1000, 5000, 10000]
     # conf.cells = [50000,100000,500000,1000000]
 
@@ -819,8 +818,8 @@ def all_timesteps():
     conf.timeStepsDt = 2
 
     # conf.caseBase = "CPU EBI"
-    #conf.caseBase = "CPU One-cell"
-    conf.caseBase = "CPU Multi-cells"
+    conf.caseBase = "CPU One-cell"
+    #conf.caseBase = "CPU Multi-cells"
     # conf.caseBase="GPU Multi-cells"
     # conf.caseBase="GPU Block-cellsN"
     # conf.caseBase="GPU Block-cells1"
@@ -847,7 +846,7 @@ def all_timesteps():
     # conf.casesOptim.append("GPU maxrregcount-68")
     # conf.casesOptim.append("GPU maxrregcount-62")
     # conf.casesOptim.append("GPU maxrregcount-24")
-    conf.casesOptim.append("CPU IMPORT_NETCDF")
+    #conf.casesOptim.append("CPU IMPORT_NETCDF")
 
     # conf.plotYKey = "Speedup timeCVode"
     # conf.plotYKey = "Speedup normalized counterLS"
@@ -891,12 +890,12 @@ def all_timesteps():
         if conf.timeStepsDt != 2:
             print("Warning: Setting timeStepsDt to 2, since it is the usual value for monarch_binned")
         conf.timeStepsDt = 2
-    elif conf.chemFile == "monarch_cb05":
+    elif conf.chemFile == "monarch_cb05" or conf.chemFile == "cb05_mechanism_yarwood2005":
         if conf.timeStepsDt != 3:
-            print("Warning: Setting timeStepsDt to 3, since it is the usual value for monarch_cb05")
+            print("Warning: Setting timeStepsDt to 3, since it is the usual value for", conf.chemFile)
         conf.timeStepsDt = 3
         if "Realistic" in conf.diffCellsL:
-            print("Warning: Setting Ideal, chemFile == monarch_cb05 only has ideal case implemented")
+            print("Warning: Setting Ideal, chemFile == ", conf.chemFile," only has one case implemented")
             conf.diffCellsL = ["Ideal"]
     elif conf.chemFile == "cb05_mechanism_yarwood2005":
         print("ERROR: Not tested in testmonarch.py, configuration taken from monarch branch 209 and tested in monarch for the camp paper")
