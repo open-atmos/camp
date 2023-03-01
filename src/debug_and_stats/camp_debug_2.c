@@ -212,12 +212,12 @@ void export_cells_netcdf(SolverData *sd) {
    */
 }
 
-void join_cells_netcdfs(SolverData *sd){
-  printf("join_cells_netcdfs start\n");
+void join_netcdfs(SolverData *sd){
+  printf("join_netcdfs start\n");
   ModelData *md = &(sd->model_data);
   int ncells=md->n_cells;
   if(ncells<=1){
-    printf("ERROR: join_cells_netcdfs ncells<=1, when it needs multi-cells enabled\n");
+    printf("ERROR: join_netcdfs ncells<=1, when it needs multi-cells enabled\n");
     exit(0);
   }
   char s_tstep[20];
@@ -234,14 +234,19 @@ void join_cells_netcdfs(SolverData *sd){
     strcat(file_name, s_icell);
     strcat(file_name, "timestep_");
     strcat(file_name, s_tstep);
+    int rank;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    strcat(file_name,"mpirank_");
+    char s_mpirank[20];
+    sprintf(s_mpirank,"%d",rank);
+    strcat(file_name,s_mpirank);
     strcat(file_name, ".nc");
     char file_path[1024];
     getcwd(file_path, sizeof(file_path));
     strcat(file_path, "/");
     strcat(file_path, file_name);
     printf("Opening netcdf file at %s\n", file_path);
-    nc(nc_open_par(file_path, NC_NOWRITE | NC_PNETCDF, MPI_COMM_WORLD,
-                   MPI_INFO_NULL, &ncid));
+    nc(nc_open(file_path, NC_NOWRITE, &ncid));
     int i = 0;
     nc(nc_inq_varid(ncid, "state", &varids[i]));
     i++;
@@ -258,43 +263,31 @@ void join_cells_netcdfs(SolverData *sd){
     nc(nc_inq_varid(ncid, "total_env", &varids[i]));
     i++;
     i = 0;
-    for (int i = 0; i < nvars; i++)
-      nc(nc_var_par_access(ncid, varids[i], 1, 0));
-    i = 0;
-    int rank;
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    size_t start = md->n_per_cell_state_var * rank;
     size_t count = md->n_per_cell_state_var;
-    nc(nc_get_vara_double(ncid, varids[i], &start, &count, &md->total_state[icell*count]));
+    nc(nc_get_var_double(ncid, varids[i], &md->total_state[icell*count]));
     i++;
     int n_rxn=md->n_rxn;
-    start = md->n_rxn_env_data * rank;
     count = md->n_rxn_env_data;
-    nc(nc_get_vara_double(ncid, varids[i], &start, &count, &md->rxn_env_data[icell*count]));
+    nc(nc_get_var_double(ncid, varids[i], &md->rxn_env_data[icell*count]));
     i++;
     if(md->n_aero_rep_env_data!=0) {
-      start = md->n_aero_rep_env_data * rank;
       count = md->n_aero_rep_env_data;
-      nc(nc_get_vara_double(ncid, varids[i], &start, &count,
-                            &md->aero_rep_env_data[icell * count]));
+      nc(nc_get_var_double(ncid, varids[i], &md->aero_rep_env_data[icell * count]));
       i++;
     }
     if(md->n_sub_model_env_data!=0) {
-      start = md->n_sub_model_env_data * rank;
       count = md->n_sub_model_env_data;
-      nc(nc_get_vara_double(ncid, varids[i], &start, &count,
-                            &md->sub_model_env_data[icell * count]));
+      nc(nc_get_var_double(ncid, varids[i], &md->sub_model_env_data[icell * count]));
       i++;
     }
-    start = CAMP_NUM_ENV_PARAM_ * rank;
     count = CAMP_NUM_ENV_PARAM_;
-    nc(nc_get_vara_double(ncid, varids[i], &start, &count, &md->total_env[icell*count]));
+    nc(nc_get_var_double(ncid, varids[i], &md->total_env[icell*count]));
     i++;
     i = 0;
   }
   export_cells_netcdf(sd);
   MPI_Barrier(MPI_COMM_WORLD);
-  printf("join_cells_netcdfs end, exiting... \n");
+  printf("join_netcdfs end, exiting... \n");
   exit(0);
 }
 
@@ -453,14 +446,8 @@ void join_mpiranks_netcdfs(SolverData *sd){
   }
   nc(nc_get_var_double(ncid, varids[i], md->total_env));
   i++;
-  i = 0;
   export_cell_netcdf(sd);
   printf("join_mpiranks_netcdfs end \n");
-}
-
-void join_netcdfs(SolverData *sd){
-  join_mpiranks_netcdfs(sd);
-  join_cells_netcdfs(sd);
 }
 
 void import_multi_cell_netcdf(SolverData *sd){ //Use to import files in one-cell and multicell
@@ -645,7 +632,7 @@ void cell_netcdf(SolverData *sd){
 #ifdef EXPORT_NETCDF
     export_netcdf(sd);
 #else
-#ifndef JOIN_NETCDFS
+#ifdef JOIN_NETCDFS
     join_netcdfs(sd);
 #else
 #ifdef IMPORT_NETCDF

@@ -117,19 +117,15 @@ def write_itsolver_config_file(conf):
 
 def set_import_netcdf(conf, bool_import_netcdf):
     if conf.caseMulticellsOnecell == "IMPORT_NETCDF":
-        #conf.diffCellsL = ["Ideal"]
         conf.diffCells = "Ideal"
         savePath = os.getcwd()
         #print("savePath",savePath)
         os.chdir("../../build")
-        os.system("pwd")
         cmake_str = "cmake -D ENABLE_IMPORT_NETCDF="+str(bool_import_netcdf) + " .."
         #print("str")
         os.system(cmake_str)
         os.system("make -j 4")
         os.chdir(savePath)
-        os.system("pwd")
-        #os.system("cmake -L -N ../../build")
 
 
 def write_camp_config_file(conf):
@@ -354,7 +350,7 @@ def run(conf):
             raise
     exec_str = ""
     if conf.mpi == "yes":
-        if os.getenv("BSC_MACHINE") == "power9":
+        if os.getenv("BSC_MACHINE") == "power":
             exec_str += "mpirun -v -np " + str(conf.mpiProcesses) + " --bind-to core "
         elif os.getenv("BSC_MACHINE") == "mn4":
             exec_str += "mpirun -np " + str(conf.mpiProcesses) + " --bind-to core "
@@ -851,7 +847,7 @@ def all_timesteps():
     # conf.casesOptim.append("GPU maxrregcount-68")
     # conf.casesOptim.append("GPU maxrregcount-62")
     # conf.casesOptim.append("GPU maxrregcount-24")
-    #conf.casesOptim.append("CPU IMPORT_NETCDF")
+    conf.casesOptim.append("CPU IMPORT_NETCDF")
 
     # conf.plotYKey = "Speedup timeCVode"
     # conf.plotYKey = "Speedup normalized counterLS"
