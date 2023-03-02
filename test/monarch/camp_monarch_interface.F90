@@ -175,7 +175,7 @@ contains
     endif
 #endif
 
-    print*,"camp_monarch_interface constructor start"
+    !print*,"camp_monarch_interface constructor start"
 
     MONARCH_PROCESS = camp_mpi_rank()
 
@@ -490,7 +490,7 @@ contains
       !call this%camp_core%print()
     end if
 
-    print*,"camp_monarch_interface constructor end"
+    !print*,"camp_monarch_interface constructor end"
 
   end function constructor
 

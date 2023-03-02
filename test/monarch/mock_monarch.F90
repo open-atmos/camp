@@ -297,7 +297,7 @@ program mock_monarch_t
 #endif
 
 #ifdef CAMP_USE_MAXRREGCOUNT64
-  print*,"mock_monarch CAMP_USE_MAXRREGCOUNT64"
+  print*,"CAMP_USE_MAXRREGCOUNT64 mock_monarch"
 #else
     if(caseMulticellsOnecell.eq."maxrregcount-64") then
       print*,"ENABLE maxrregcount-64 in CMakeLists.txt"
@@ -507,7 +507,7 @@ program mock_monarch_t
     end do
   end if
 
-  print*,"mock_monarch export_results_all_cells end"
+  !print*,"mock_monarch export_results_all_cells end"
 
   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   ! **** end initialization modification **** !
@@ -523,14 +523,14 @@ program mock_monarch_t
     water_conc(:,:,:,WATER_VAPOR_ID) = 0.01
   end if
 
-  print*,"mock_monarch water_conc end"
+  !print*,"mock_monarch water_conc end"
 
   if(.not. camp_interface%interface_input_file.eq."interface_cb05_yarwood2005.json")  then
     call camp_interface%get_init_conc(species_conc, water_conc, WATER_VAPOR_ID, &
             i_W,I_E,I_S,I_N,output_file_title)
   end if
 
-  print*,"mock_monarch get_init_conc end"
+  !print*,"mock_monarch get_init_conc end"
 
   if(interface_input_file.eq."interface_monarch_cb05.json") then
     !call import_camp_input(camp_interface)
@@ -539,7 +539,7 @@ program mock_monarch_t
 
   call set_env(camp_interface,output_file_prefix)
 
-  print*,"mock_monarch set_env end"
+  !print*,"mock_monarch set_env end"
 
 #ifdef SOLVE_EBI_IMPORT_CAMP_INPUT
   if(caseMulticellsOnecell.eq."EBI") then
