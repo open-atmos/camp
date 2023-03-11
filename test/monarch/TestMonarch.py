@@ -354,8 +354,8 @@ def run(conf):
             raise
     exec_str = ""
     if conf.mpi == "yes":
-        if os.getenv("BSC_MACHINE") == "power9":
-            exec_str += "mpirun -v -np " + str(conf.mpiProcesses) + " --bind-to core "
+        if os.getenv("BSC_MACHINE") == "power":
+            exec_str += "ddt --connect mpirun -np " + str(conf.mpiProcesses) + " --bind-to core "
         elif os.getenv("BSC_MACHINE") == "mn4":
             exec_str += "mpirun -np " + str(conf.mpiProcesses) + " --bind-to core "
         else:
@@ -823,8 +823,8 @@ def all_timesteps():
     conf.timeStepsDt = 2
 
     # conf.caseBase = "CPU EBI"
-    conf.caseBase = "CPU One-cell"
-    #conf.caseBase = "CPU Multi-cells"
+    #conf.caseBase = "CPU One-cell"
+    conf.caseBase = "CPU Multi-cells"
     # conf.caseBase="GPU Multi-cells"
     # conf.caseBase="GPU Block-cellsN"
     # conf.caseBase="GPU Block-cells1"
