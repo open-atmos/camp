@@ -1,0 +1,15 @@
+{
+  "camp-files" : [
+    "camp/mod37_cb05_yarwood2005/aerosol_phases.json",
+    "camp/mod37_cb05_yarwood2005/aerosol_representation.json",
+    "camp/mod37_cb05_yarwood2005/cb05_mechanism_yarwood2005.json",
+    "camp/mod37_cb05_yarwood2005/cb05_species.json",
+    "camp/mod37_cb05_yarwood2005/cb05_abs_tol.json",
+    "camp/mod37_cb05_yarwood2005/cloud_and_rain_species.json",
+    "camp/mod37_cb05_yarwood2005/custom_species.json",
+    "camp/mod37_cb05_yarwood2005/dry_deposition.json",
+    "camp/mod37_cb05_yarwood2005/inorganic_species.json",
+    "camp/mod37_cb05_yarwood2005/tsigaridis_2_product_SOA_scheme/species.json"
+  ]
+}
+

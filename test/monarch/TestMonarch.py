@@ -117,19 +117,15 @@ def write_itsolver_config_file(conf):
 
 def set_import_netcdf(conf, bool_import_netcdf):
     if conf.caseMulticellsOnecell == "IMPORT_NETCDF":
-        #conf.diffCellsL = ["Ideal"]
         conf.diffCells = "Ideal"
         savePath = os.getcwd()
         #print("savePath",savePath)
         os.chdir("../../build")
-        os.system("pwd")
         cmake_str = "cmake -D ENABLE_IMPORT_NETCDF="+str(bool_import_netcdf) + " .."
         #print("str")
         os.system(cmake_str)
         os.system("make -j 4")
         os.chdir(savePath)
-        os.system("pwd")
-        #os.system("cmake -L -N ../../build")
 
 
 def write_camp_config_file(conf):
@@ -140,10 +136,9 @@ def write_camp_config_file(conf):
         else:
             file1.write("USE_CPU=OFF\n")
         if conf.caseMulticellsOnecell == "BDF" or conf.caseMulticellsOnecell.find("maxrregcount") != -1:
-            # print("FOUND MAXRREGCOUNT")
-            if conf.chemFile == "monarch_binned":
+            if conf.chemFile == "monarch_binned" or conf.chemFile == "cb05_mechanism_yarwood2005":
                 print(
-                    "Error: monarch_binned can not run GPU BDF, disable GPU BDF or use a valid chemFile like monarch_cb05")
+                    "Error:", conf.chemFile, "can not run GPU BDF, disable GPU BDF or use a valid chemFile like monarch_cb05")
                 raise
             else:
                 file1.write("USE_GPU_CVODE=ON\n")
@@ -355,7 +350,7 @@ def run(conf):
     exec_str = ""
     if conf.mpi == "yes":
         if os.getenv("BSC_MACHINE") == "power":
-            exec_str += "ddt --connect mpirun -np " + str(conf.mpiProcesses) + " --bind-to core "
+            exec_str += "mpirun -v -np " + str(conf.mpiProcesses) + " --bind-to core "
         elif os.getenv("BSC_MACHINE") == "mn4":
             exec_str += "mpirun -np " + str(conf.mpiProcesses) + " --bind-to core "
         else:
@@ -764,9 +759,9 @@ def all_timesteps():
     conf = TestMonarch()
 
     # conf.chemFile = "simple"
-    # conf.chemFile = "cb05_mechanism_yarwood2005"
+    conf.chemFile = "cb05_yarwood2005"
     # conf.chemFile = "monarch_cb05"
-    conf.chemFile = "monarch_binned"
+    #conf.chemFile = "monarch_binned"
 
     conf.diffCellsL = []
     conf.diffCellsL.append("Realistic")
@@ -796,11 +791,11 @@ def all_timesteps():
     conf.mpi = "yes"
     # conf.mpi = "no"
 
-    # conf.mpiProcessesCaseBase = 1
-    conf.mpiProcessesCaseBase = 2
+    conf.mpiProcessesCaseBase = 1
+    #conf.mpiProcessesCaseBase = 2
 
-    # conf.mpiProcessesCaseOptimList.append(1)
-    conf.mpiProcessesCaseOptimList.append(2)
+    conf.mpiProcessesCaseOptimList.append(1)
+    #conf.mpiProcessesCaseOptimList.append(2)
     # conf.mpiProcessesCaseOptimList = [10,20,40]
     # conf.mpiProcessesCaseOptSet Multi-GPusimList = [1,4,8,16,32,40]
 
@@ -813,7 +808,7 @@ def all_timesteps():
     # conf.allocatedTasksPerNode = 320
     # conf.allocatedTasksPerNode = get_ntasksPerNode_sbatch() #todo
 
-    conf.cells = [4]
+    conf.cells = [2]
     # conf.cells = [100, 500, 1000, 5000, 10000]
     # conf.cells = [50000,100000,500000,1000000]
 
@@ -895,12 +890,12 @@ def all_timesteps():
         if conf.timeStepsDt != 2:
             print("Warning: Setting timeStepsDt to 2, since it is the usual value for monarch_binned")
         conf.timeStepsDt = 2
-    elif conf.chemFile == "monarch_cb05":
+    elif conf.chemFile == "monarch_cb05" or conf.chemFile == "cb05_mechanism_yarwood2005":
         if conf.timeStepsDt != 3:
-            print("Warning: Setting timeStepsDt to 3, since it is the usual value for monarch_cb05")
+            print("Warning: Setting timeStepsDt to 3, since it is the usual value for", conf.chemFile)
         conf.timeStepsDt = 3
         if "Realistic" in conf.diffCellsL:
-            print("Warning: Setting Ideal, chemFile == monarch_cb05 only has ideal case implemented")
+            print("Warning: Setting Ideal, chemFile == ", conf.chemFile," only has one case implemented")
             conf.diffCellsL = ["Ideal"]
     elif conf.chemFile == "cb05_mechanism_yarwood2005":
         print("ERROR: Not tested in testmonarch.py, configuration taken from monarch branch 209 and tested in monarch for the camp paper")

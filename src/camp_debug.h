@@ -101,7 +101,8 @@ void camp_debug_print_jac(void *solver_data, SUNMatrix J, const char *message) {
     next_col = SM_INDEXPTRS_S(J)[i_ind + 1];
     for (int i_dep = 0; i_dep < n_state_var; i_dep++) {
       if (i_dep == SM_INDEXVALS_S(J)[i_elem] && i_elem < next_col) {
-        printf(" % -1.2le ", SM_DATA_S(J)[i_elem++]);
+        printf(" % -1.2le ", SM_DATA_S(J)[i_elem]);
+        i_elem++;
       } else {
         printf("     -     ");
       }
@@ -159,7 +160,8 @@ void camp_debug_print_jac_struct2(void *solver_data, SUNMatrix J,
       for (int i_dep = 0; i_dep < n_state_var; i_dep++) {
         if (i_dep == SM_INDEXVALS_S(J)[i_elem] && i_elem < next_col) {
           // printf(" %3d   ", i_elem++);
-          // printf(" % -1.2le ", SM_DATA_S(J)[i_elem++]);
+          // printf(" % -1.2le ", SM_DATA_S(J)[i_elem);
+          // i_elem++;
           printf(" %3d   ", 1);
           i_elem++;
         } else {
@@ -186,7 +188,8 @@ void camp_debug_print_jac_struct2(void *solver_data, SUNMatrix J, const char
     next_col = SM_INDEXPTRS_S(J)[i_ind + 1];
     for (int i_dep = 0; i_dep < n_state_var; i_dep++) {
       if (i_dep == SM_INDEXVALS_S(J)[i_elem] && i_elem < next_col) {
-        printf(" % -1.2le ", SM_DATA_S(J)[i_elem++]);
+        printf(" % -1.2le ", SM_DATA_S(J)[i_elem]);
+        i_elem++;
       } else {
         printf("     -     ");
       }
