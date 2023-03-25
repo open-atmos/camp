@@ -14,7 +14,6 @@ extern "C"{
 #include <stdlib.h>
 #include "../rxns_gpu.h"
 
-  /*
 #define TEMPERATURE_K_ env_data[0]
 #define PRESSURE_PA_ env_data[1]
 
@@ -34,7 +33,7 @@ extern "C"{
 #ifdef __CUDA_ARCH__
 __host__ __device__
 #endif
-void rxn_gpu_first_order_loss_calc_deriv_contrib(ModelDataGPU *model_data, realtype *deriv, int *rxn_int_data,
+void rxn_gpu_first_order_loss_calc_deriv_contrib(ModelDataGPU *model_data, TimeDerivativeGPU time_deriv, int *rxn_int_data,
           double *rxn_float_data, double *rxn_env_data, double time_step)
 {
 #ifdef __CUDA_ARCH__
@@ -47,18 +46,8 @@ void rxn_gpu_first_order_loss_calc_deriv_contrib(ModelDataGPU *model_data, realt
   double *state = model_data->grid_cell_state;
   double *env_data = model_data->grid_cell_env;
 
-  // Calculate the reaction rate
   realtype rate = RATE_CONSTANT_ * state[REACT_];
-
-  // Add contributions to the time derivative
-  //if (DERIV_ID_ >= 0) deriv[DERIV_ID_] -= rate;
-  if (DERIV_ID_ >= 0)
-#ifdef __CUDA_ARCH__
-    atomicAdd((double*)&(deriv[DERIV_ID_]),-rate);
-#else
-    deriv[DERIV_ID_] -= rate;
-#endif
-
+  if (DERIV_ID_ >= 0) time_derivative_add_value_gpu(time_deriv, DERIV_ID_, -rate);
 }
 
 #ifdef __CUDA_ARCH__
@@ -77,27 +66,9 @@ void rxn_gpu_first_order_loss_calc_jac_contrib(ModelDataGPU *model_data, Jacobia
   double *state = model_data->grid_cell_state;
   double *env_data = model_data->grid_cell_env;
 
-  // Add contributions to the Jacobian
   if (JAC_ID_ >= 0)
     jacobian_add_value_gpu(jac, (unsigned int)JAC_ID_, JACOBIAN_LOSS,
                        RATE_CONSTANT_);
-
 }
 #endif
-
-#undef TEMPERATURE_K_
-#undef PRESSURE_PA_
-
-#undef RXN_ID_
-#undef REACT_
-#undef DERIV_ID_
-#undef JAC_ID_
-#undef BASE_RATE_
-#undef SCALING_
-#undef RATE_CONSTANT_
-#undef NUM_INT_PROP_
-#undef NUM_FLOAT_PROP_
-#undef INT_DATA_SIZE_
-#undef FLOAT_DATA_SIZE_
-*/
 }

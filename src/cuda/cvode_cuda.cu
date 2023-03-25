@@ -104,6 +104,10 @@ __device__ void solveRXN(
       rxn_gpu_CMAQ_OH_HNO3_calc_deriv_contrib(md, deriv_data, rxn_int_data,
                                               rxn_float_data, rxn_env_data,time_step);
       break;
+    case RXN_FIRST_ORDER_LOSS:
+    rxn_gpu_first_order_loss_calc_deriv_contrib(md, deriv_data, rxn_int_data,
+                                    rxn_float_data, rxn_env_data,time_step);
+      break;
     case RXN_PHOTOLYSIS :
       rxn_gpu_photolysis_calc_deriv_contrib(md, deriv_data, rxn_int_data,
                                             rxn_float_data, rxn_env_data,time_step);
@@ -417,13 +421,10 @@ __device__ void solveRXNJac(
   }
 #endif
   switch (rxn_type) {
-#ifdef DEV_CSR_REACTIONS
-#else
     case RXN_ARRHENIUS :
       rxn_gpu_arrhenius_calc_jac_contrib(md, jac, rxn_int_data,
                                          rxn_float_data, rxn_env_data,cv_next_h);
       break;
-#endif
     case RXN_CMAQ_H2O2 :
       rxn_gpu_CMAQ_H2O2_calc_jac_contrib(md, jac, rxn_int_data,
                                          rxn_float_data, rxn_env_data,cv_next_h);
@@ -432,6 +433,10 @@ __device__ void solveRXNJac(
       rxn_gpu_CMAQ_OH_HNO3_calc_jac_contrib(md, jac, rxn_int_data,
                                             rxn_float_data, rxn_env_data,cv_next_h);
       break;
+  case RXN_FIRST_ORDER_LOSS :
+    rxn_gpu_first_order_loss_calc_jac_contrib(md, jac, rxn_int_data,
+                                        rxn_float_data, rxn_env_data,cv_next_h);
+    break;
     case RXN_PHOTOLYSIS :
       rxn_gpu_photolysis_calc_jac_contrib(md, jac, rxn_int_data,
                                           rxn_float_data, rxn_env_data,cv_next_h);

@@ -238,11 +238,6 @@ typedef struct {
     double* dewt;
     //Auxiliar variables
     double* dsavedJ;
-#ifdef DEV_CSR_REACTIONS
-    int *colARXN;
-    int *jARXN;
-    int *iARXN;
-#endif
     ModelDataVariable *mdv; //device
     ModelDataVariable *mdvo; //out device
     ModelDataVariable *s;

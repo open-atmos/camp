@@ -298,66 +298,6 @@ void solver_new_gpu_cu_cvode(SolverData *sd) {
   printf("solver_new_gpu_cu_cvode end \n");
 #endif
 }
-#ifdef DEV_CSR_REACTIONS
-void getCSRReactions(SolverData *sd) {
-  ModelDataGPU *mGPU = sd->mGPU;
-  ModelData *md = &(sd->model_data);
-  int nnz=md->n_mapped_values;
-  int *colA= (int *)malloc(nnz * sizeof(int));
-  int *jA= (int *)malloc(nnz * sizeof(int));
-  int i_cell=0;
-  int n_state_var = md->n_per_cell_state_var;
-  int n_dep_var = md->n_per_cell_dep_var;
-  md->grid_cell_id = i_cell;
-  md->grid_cell_state = &(md->total_state[i_cell * n_state_var]);
-  md->grid_cell_env = &(md->total_env[i_cell * CAMP_NUM_ENV_PARAM_]);
-  md->grid_cell_rxn_env_data =
-    &(md->rxn_env_data[i_cell * md->n_rxn_env_data]);
-  int n_rxn = md->n_rxn;
-  for (int i_rxn = 0; i_rxn < n_rxn; i_rxn++) {
-    int *rxn_int_data =
-        &(md->rxn_int_data[md->rxn_int_indices[i_rxn]]);
-    double *rxn_float_data =
-        &(md->rxn_float_data[md->rxn_float_indices[i_rxn]]);
-    double *rxn_env_data =
-        &(md->grid_cell_rxn_env_data[md->rxn_env_idx[i_rxn]]);
-    int rxn_type = *(rxn_int_data++);
-    switch (rxn_type) {
-      case RXN_ARRHENIUS:
-        rxn_arrhenius_get_jac_indices(md, sd->jac, rxn_int_data, rxn_float_data,
-                                       rxn_env_data,colA,jA);
-        break;/*
-      case RXN_CMAQ_H2O2:
-        rxn_CMAQ_H2O2_update_env_state(md, sd->jac, rxn_int_data, rxn_float_data,
-                                       rxn_env_data,colA,jA);
-        break;
-      case RXN_CMAQ_OH_HNO3:
-        rxn_CMAQ_OH_HNO3_update_env_state(md, sd->jac, rxn_int_data,
-                                          rxn_float_data, rxn_env_data,colA,jA);
-        break;
-      case RXN_EMISSION:
-        rxn_emission_update_env_state(md, sd->jac, rxn_int_data, rxn_float_data,
-                                      rxn_env_data,colA,jA);
-        break;
-      case RXN_PHOTOLYSIS:
-        rxn_photolysis_update_env_state(md, sd->jac, rxn_int_data,
-                                        rxn_float_data, rxn_env_data,colA,jA);
-        break;
-      case RXN_TROE:
-        rxn_troe_update_env_state(md, sd->jac, rxn_int_data, rxn_float_data,
-                                  rxn_env_data,colA,jA);
-        break;*/
-    }
-  }
-  cudaMemset(mGPU->colARXN, -1, md->n_mapped_values * sizeof(int));
-  cudaMemset(mGPU->jARXN, -1, md->n_mapped_values * sizeof(int));
-  cudaMemcpy(mGPU->colARXN, colA, md->n_mapped_values * sizeof(int), cudaMemcpyHostToDevice);
-  cudaMemcpy(mGPU->jARXN, jA, md->n_mapped_values * sizeof(int), cudaMemcpyHostToDevice);
-
-  free(colA);
-  free(jA);
-}
-#endif
 
 #ifdef USE_CSR_ODE_GPU
 void swapCSC_CSR_ODE(SolverData *sd){
@@ -438,9 +378,6 @@ void constructor_cvode_gpu(CVodeMem cv_mem, SolverData *sd){
   solver_new_gpu_cu_cvode(sd);
   init_jac_cuda_cvode(sd);
   solver_init_int_double_cuda_cvode(sd);
-#ifdef DEV_CSR_REACTIONS
-  getCSRReactions(sd);
-#endif
   mGPU = sd->mGPU;
 #ifdef DEBUG_constructor_cvode_gpu
   printf("DEBUG_constructor_cvode_gpu start2 \n");

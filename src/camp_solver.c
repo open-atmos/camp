@@ -626,7 +626,7 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
   int flag;
   int rank = 0;
 
-#ifndef CAMP_DEBUG_solver_run
+#ifdef CAMP_DEBUG_solver_run
 #ifdef CAMP_USE_MPI
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     if (rank == 0)
