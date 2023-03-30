@@ -1,15 +1,4 @@
 #!/usr/bin/env bash
-#MONARCH P9 compilation
-
-#If GCC=8.3.0 (NOT COMPILING)
-#module load CUDA/10.1.243-GCC-8.3.0
-#module load CMake/3.15.3-GCCcore-8.3.0
-#module load Python/3.7.4-GCCcore-8.3.0
-#module load matplotlib/3.1.1-fosscuda-2019b-Python-3.7.4
-#module load OpenMPI/3.1.4-GCC-8.3.0
-
-#else
-#module load bsc/commands
 
 relative_path="../../../"
 if [ "$1" == "from_camp_jobs" ]; then
@@ -52,13 +41,13 @@ export SUNDIALS_HOME=$(pwd)/$relative_path/cvode-3.4-alpha/install
 export SUITE_SPARSE_HOME=$(pwd)/$relative_path/SuiteSparse
 
 cd ../../
-#rm -rf build
+rm -rf build
 mkdir build
 cd build
 
 cmake -D CMAKE_C_COMPILER=$(which mpicc) \
--D CMAKE_BUILD_TYPE=release \
--D CMAKE_C_FLAGS_DEBUG="" \
+-D CMAKE_BUILD_TYPE=debug \
+-D CMAKE_C_FLAGS_DEBUG="-g" \
 -D CMAKE_Fortran_FLAGS_DEBUG="-g" \
 -D CMAKE_C_FLAGS_RELEASE="-std=c99" \
 -D CMAKE_Fortran_FLAGS_RELEASE="" \
@@ -71,7 +60,7 @@ cmake -D CMAKE_C_COMPILER=$(which mpicc) \
 -D ENABLE_CXX=OFF \
 -D ENABLE_MPI=ON \
 -D ENABLE_MPI_TEST=OFF \
--D ENABLE_GPU=ON \
+-D ENABLE_GPU=OFF \
 -D ENABLE_GSL:BOOL=FALSE \
 -D ENABLE_RESET_JAC_SOLVING=ON \
 -D ENABLE_DEBUG_GPU=ON \

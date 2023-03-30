@@ -566,8 +566,7 @@ contains
     real :: timeLS = 0.0
     real :: timeCvode = 0.0
 
-    print*,"camp_monarch_interface integrate start"
-
+    !print*,"camp_monarch_interface integrate start"
     if(this%n_cells.eq.1) then
       state_size_per_cell = 0
     else
@@ -816,25 +815,18 @@ contains
           end do
         end do
       end do
-
     end if
 
 if(this%ADD_EMISIONS.eq."monarch_binned") then
   deallocate(rate_emi)
 end if
-
 #ifdef CAMP_USE_MPI
-
   !call camp_mpi_barrier(MPI_COMM_WORLD)
-
 if (camp_mpi_rank().eq.0) then
   !call solver_stats%print( )
 end if
-
 #endif
-
-    print*,"camp_monarch_interface integrate end"
-
+    !print*,"camp_monarch_interface integrate end"
   end subroutine integrate
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

@@ -477,7 +477,7 @@ void cell_netcdf(SolverData *sd){
 #ifdef JOIN_NETCDFS
     join_netcdfs(sd);
 #else
-#ifndef IMPORT_NETCDF
+#ifdef IMPORT_NETCDF
     import_netcdf(sd);
 #endif
 #endif

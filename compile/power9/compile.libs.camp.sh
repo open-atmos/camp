@@ -39,5 +39,5 @@ fi
 ./compile.json-fortran-6.1.0.power9.sh $1 $2
 ./compile.suiteSparse.power9.sh $1 $2
 ./compile.cvode-3.4-alpha.power9.sh $1 $2
-./compile.camp.power9.sh $1 $2
+./compile.camp.sh $1 $2
 

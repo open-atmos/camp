@@ -36,7 +36,7 @@ compile_run(){
   #echo "SBATCH_GPUS_PER_NODE " "$SBATCH_GPUS_PER_NODE"
 
   cd ../../../camp_jobs/camp$id/compile/power9
-  ./compile.camp.power9.sh "from_camp_jobs" $id
+  ./compile.camp.sh "from_camp_jobs" $id
   mkdir_if_not_exists "../../build/test_run"
   mkdir_if_not_exists "../../build/test_run/monarch"
   mkdir_if_not_exists "../../build/test_run/monarch/out"

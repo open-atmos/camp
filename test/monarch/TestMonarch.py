@@ -759,8 +759,8 @@ def all_timesteps():
     conf = TestMonarch()
 
     # conf.chemFile = "simple"
-    conf.chemFile = "cb05_yarwood2005"
-    # conf.chemFile = "monarch_cb05"
+    #conf.chemFile = "cb05_yarwood2005"
+    conf.chemFile = "monarch_cb05"
     #conf.chemFile = "monarch_binned"
 
     conf.diffCellsL = []
