@@ -727,12 +727,10 @@ contains
                           trim( to_string( solver_stats%Jac_eval_fails ) )// &
                           " Jacobian evaluation failures at time "// &
                           trim( to_string( curr_time ) ) )
-
             ! Only evaluate the Jacobian for the first cell because it is
             ! time consuming
             solver_stats%eval_Jac = .false.
 #endif
-
             ! Update the MONARCH tracer array with new species concentrations
             MONARCH_conc(i,j,k,this%map_monarch_id(:)) = &
                     this%camp_state%state_var(this%map_camp_id(:))
@@ -740,9 +738,7 @@ contains
           end do
         end do
       end do
-
     else
-
       do i=I_W, I_E
         do j=I_S, I_N
           do k=1, NUM_VERT_CELLS
@@ -839,8 +835,6 @@ end if
     !> Interface configuration file path
     character(len=:), allocatable :: config_file
 
-#ifdef CAMP_USE_JSON
-
     type(json_core), pointer :: json
     type(json_file) :: j_file
     type(json_value), pointer :: j_obj, j_next, j_child
@@ -927,11 +921,6 @@ end if
     call j_file%destroy()
     call json%destroy()
     deallocate(json)
-
-#else
-    call die_msg(635417227, "CAMP-camp <-> MONARCH interface requires "// &
-                  "JSON file support.")
-#endif
 
   end subroutine load
 
@@ -1295,12 +1284,9 @@ end if
     integer, intent(in) :: WATER_VAPOR_ID
     integer, intent(in) :: i_W,I_E,I_S,I_N
     character(len=:), allocatable, intent(in) :: output_file_title
-
     integer(kind=i_kind) :: i_spec, water_id,i,j,k,r,NUM_VERT_CELLS,state_size_per_cell, last_cell
     real :: conc_deviation_perc
-
-    print*,"monarch_interface get_init_conc start"
-
+    !print*,"monarch_interface get_init_conc start"
     if(this%interface_input_file.eq."mod37/interface_monarch_mod37.json") then
 
       ! Set initial concentrations in CAMP

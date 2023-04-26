@@ -66,19 +66,6 @@ void set_jac_data_gpu(SolverData *sd, double *J){
   cudaMemcpy(mGPU->diA, mCPU->iA, (mGPU->nrows/mGPU->n_cells + 1) * sizeof(int), cudaMemcpyHostToDevice);
 }
 
-void rxn_update_env_state_gpu(SolverData *sd) {
-  ModelData *md = &(sd->model_data);
-  ModelDataGPU *mGPU;
-  ModelDataCPU *mCPU = &(sd->mCPU);
-  double *rxn_env_data = md->rxn_env_data;
-  double *env = md->total_env;
-  double *total_state = md->total_state;
-  mGPU = sd->mGPU;
-  HANDLE_ERROR(cudaMemcpy(mGPU->rxn_env_data, rxn_env_data, mCPU->rxn_env_data_size, cudaMemcpyHostToDevice));
-  HANDLE_ERROR(cudaMemcpy(mGPU->env, env, mCPU->env_size, cudaMemcpyHostToDevice));
-  HANDLE_ERROR(cudaMemcpy(mGPU->state, total_state, mCPU->state_size, cudaMemcpyHostToDevice));
-}
-
 void camp_solver_update_model_state_gpu(N_Vector solver_state, SolverData *sd,
                                        double threshhold, double replacement_value)
 {

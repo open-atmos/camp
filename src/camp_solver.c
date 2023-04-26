@@ -619,7 +619,6 @@ int solver_set_eval_jac(void *solver_data, bool eval_Jac) {
  */
 int solver_run(void *solver_data, double *state, double *env, double t_initial,
                double t_final, int n_cells) {
-#ifdef CAMP_USE_SUNDIALS
   SolverData *sd = (SolverData *)solver_data;
   ModelData *md = &(sd->model_data);
   int n_state_var = sd->model_data.n_per_cell_state_var;
@@ -709,16 +708,7 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
     sub_model_update_env_state(md);
     rxn_update_env_state(md);
   }
-
-// Update data for new environmental state on GPU
-#ifdef CAMP_USE_GPU
-  if(sd->use_cpu==0){
-      rxn_update_env_state_gpu(sd);
-  }
-#endif
-
   CAMP_DEBUG_JAC_STRUCT(sd->model_data.J_init, "Begin solving");
-
 #ifdef RESET_JAC_SOLVING
   //printf("RESET_JAC_SOLVING start\n");
   N_VConst(0.0, md->J_state);
@@ -878,9 +868,6 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
   sub_model_calculate(md);
 
   return CAMP_SOLVER_SUCCESS;
-#else
-  return CAMP_SOLVER_FAIL;
-#endif
 }
 
 /** \brief Get solver statistics after an integration attempt

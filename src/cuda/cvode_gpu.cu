@@ -209,15 +209,15 @@ void solver_new_gpu_cu_cvode(SolverData *sd) {
   int n_state_var = md->n_per_cell_state_var;
   int n_rxn = md->n_rxn;
   int n_rxn_env_param = md->n_rxn_env_data;
-  int n_cells_total = md->n_cells;
+  int n_cells = md->n_cells;
 #ifdef DEBUG_solver_new_gpu_cu_cvode
   printf("solver_new_gpu_cu_cvode start \n");
 #endif
 #ifdef DEV_CPUGPU
-  sd->nCellsGPUPerc=0.7;
-  n_cells_total *= sd->nCellsGPUPerc;
+  //todo previous to continue test gpu one-cell, since multicells not work in monarch, so cpugpu should use one-cell for cpu
+  sd->nCellsGPUPerc=0.1;
+  n_cells *= sd->nCellsGPUPerc;
 #endif
-  int n_cells = n_cells_total;
   mCPU->state_size = n_state_var * n_cells * sizeof(double);
   mCPU->deriv_size = n_dep_var * n_cells * sizeof(double);
   mCPU->env_size = CAMP_NUM_ENV_PARAM_ * n_cells * sizeof(double); //Temp and pressure
@@ -225,7 +225,6 @@ void solver_new_gpu_cu_cvode(SolverData *sd) {
   mCPU->rxn_env_data_idx_size = (n_rxn+1) * sizeof(int);
   mCPU->map_state_deriv_size = n_dep_var * n_cells * sizeof(int);
   sd->mGPU = (ModelDataGPU *)malloc(sizeof(ModelDataGPU));
-  int remainder = n_cells_total % sd->nDevices;
   int nDevicesMax;
   cudaGetDeviceCount(&nDevicesMax);
   if (sd->nDevices > nDevicesMax) {
@@ -566,14 +565,43 @@ void cudaGlobalCVode(ModelDataGPU md_object) {
 
 int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
                realtype *tret, int itask, SolverData *sd){
+  //printf("cudaCVode start \n");
   CVodeMem cv_mem;
   int retval, hflag, istate, ier, irfndp;
   realtype troundoff, tout_hin, rh;
   ModelDataCPU *mCPU = &(sd->mCPU);
   ModelDataGPU *mGPU;
   ModelData *md = &(sd->model_data);
-  //printf("cudaCVode start \n");
-   // 1. Check and process inputs
+  double *rxn_env_data = md->rxn_env_data;
+  double *env = md->total_env;
+  double *total_state = md->total_state;
+  cudaStream_t stream = 0;
+  mGPU = sd->mGPU;
+
+#ifdef DEV_CPUGPU
+  printf("todo DEV_CPUGPU: Too much execution time \n");
+  int nCellsGPU = md->n_cells*sd->nCellsGPUPerc;
+  int nCellsCPU = md->n_cells - nCellsGPU;
+  double* total_state0=md->total_state;
+  double *total_env0 = md->total_env;
+  double *rxn_env_data0 = md->rxn_env_data;
+  double *aero_rep_env_data0 = md->aero_rep_env_data;
+  double *sub_model_env_data0 = md->sub_model_env_data;
+  md->total_state+=nCellsGPU*md->n_per_cell_state_var;
+  md->total_env+=nCellsGPU*CAMP_NUM_ENV_PARAM_;
+  md->rxn_env_data+=nCellsGPU*md->n_rxn_env_data;
+  md->aero_rep_env_data+=nCellsGPU*md->n_aero_rep_env_data;
+  md->sub_model_env_data+=nCellsGPU*md->n_sub_model_env_data;
+
+
+
+  istate = CVode(sd->cvode_mem, tout, yout, tret, itask);
+
+#endif
+
+  HANDLE_ERROR(cudaMemcpyAsync(mGPU->rxn_env_data,md->rxn_env_data,mCPU->rxn_env_data_size,cudaMemcpyHostToDevice,stream));
+  HANDLE_ERROR(cudaMemcpyAsync(mGPU->env,md->total_env,mCPU->env_size,cudaMemcpyHostToDevice,stream));
+  HANDLE_ERROR(cudaMemcpyAsync(mGPU->state,md->total_state,mCPU->state_size,cudaMemcpyHostToDevice,stream));
   if (cvode_mem == NULL) {
     cvProcessError(NULL, CV_MEM_NULL, "CVODE", "CVode", MSGCV_NO_MEM);
     return(CV_MEM_NULL);
@@ -780,8 +808,6 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
   mCPU->mdvCPU.cv_etamax = cv_mem->cv_etamax;
   mCPU->mdvCPU.cv_maxncf = cv_mem->cv_maxncf;
   mCPU->mdvCPU.tret = *tret;
-  cudaStream_t stream = 0;
-  mGPU = sd->mGPU;
   double *ewt = NV_DATA_S(cv_mem->cv_ewt);
   double *acor = NV_DATA_S(cv_mem->cv_acor);
   double *tempv = NV_DATA_S(cv_mem->cv_tempv);
@@ -839,24 +865,37 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
   }
   cudaMemcpyAsync(sd->flagCells, mGPU->flagCells, mGPU->n_cells * sizeof(int), cudaMemcpyDeviceToHost, stream);
 #ifdef DEV_CPUGPU
-  printf("todo DEV_CPUGPU: Too much execution time \n");
-  int nCellsGPUPerc=sd->nCellsGPUPerc;
-  int nCellsGPU = md->n_cells*nCellsGPUPerc;
-  int nCellsCPU= md->n_cells - nCellsGPU;
-  double* stotal_state=md->total_state;
-  md->total_state+=md->n_per_cell_state_var*nCellsGPU;
-  N_Vector sy = N_VClone(sd->y); //todo nvclone(y) or just y=sy?
-  //N_Vector sy = y;
-  N_Vector yAux = N_VNew_Serial(md->n_per_cell_dep_var * nCellsCPU);
+  printf("DEV_CPUGPU: Restart indices to 0 and set n_cells to CPUPercNcells \n");
+  int nCellsGPU = md->n_cells*sd->nCellsGPUPerc;
+  int nCellsCPU = md->n_cells - nCellsGPU;
+  double* total_state0=md->total_state;
+  double *total_env0 = md->total_env;
+  double *rxn_env_data0 = md->rxn_env_data;
+  double *aero_rep_env_data0 = md->aero_rep_env_data;
+  double *sub_model_env_data0 = md->sub_model_env_data;
+  md->total_state+=nCellsGPU*md->n_per_cell_state_var;
+  md->total_env+=nCellsGPU*CAMP_NUM_ENV_PARAM_;
+  md->rxn_env_data+=nCellsGPU*md->n_rxn_env_data;
+  md->aero_rep_env_data+=nCellsGPU*md->n_aero_rep_env_data;
+  md->sub_model_env_data+=nCellsGPU*md->n_sub_model_env_data;
+
+
+
+  istate = CVode(sd->cvode_mem, tout, yout, tret, itask);
+
+  md->n_cells = n_cells0;
+
+  N_Vector y0 = N_VClone(sd->y); //todo nvclone(y) or just y=sy?
+  N_Vector yAux0 = N_VNew_Serial(md->n_per_cell_dep_var * nCellsCPU);
   double *yAuxArray = N_VGetArrayPointer(yout);
   double *youtArray = N_VGetArrayPointer(yout);
   for (int i = 0; i < md->n_per_cell_dep_var*nCellsCPU; i++){
     yAuxArray[i]=youtArray[i+md->n_per_cell_state_var*nCellsGPU];
   }
-  sd->y=N_VClone(yAux);
+  sd->y=N_VClone(Aux0);
   istate = CVode(cvode_mem, tout, yout, tret, itask);
-  md->total_state=stotal_state;
-  sd->y=N_VClone(sy);
+  md->total_state=total_state0;
+  sd->y=N_VClone(y0);
   yAuxArray= N_VGetArrayPointer(sd->y);
   for (int i = 0; i < md->n_per_cell_dep_var*nCellsCPU; i++){
     yAuxArray[i+md->n_per_cell_state_var*nCellsGPU]=youtArray[i];

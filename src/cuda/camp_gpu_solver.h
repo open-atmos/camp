@@ -24,7 +24,6 @@
 #define HANDLE_ERROR( err ) (HandleError( err, __FILE__, __LINE__ ))
 
 void set_jac_data_gpu(SolverData *sd, double *J);
-void rxn_update_env_state_gpu(SolverData *sd);
 void camp_solver_update_model_state_gpu(N_Vector solver_state, SolverData *sd,
                                        double threshold, double replacement_value);
 int rxn_calc_deriv_gpu(SolverData *sd, N_Vector y, N_Vector deriv, double time_step);
