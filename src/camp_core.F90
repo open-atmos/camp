@@ -235,8 +235,6 @@ module camp_camp_core
     !> Print the core data
     procedure :: print => do_print
     procedure :: print_state_gnuplot
-    !> Export camp input concentrations
-    procedure :: export_camp_input_json
     !> Finalize the core
     final :: finalize
 
@@ -1360,19 +1358,19 @@ contains
 
     n_cells_update = 1
     if (present(cell_id)) then
-      n_cells_update = 1
       update_data%cell_id=cell_id;
     else
-      n_cells_update = this%n_cells
+      call assert_msg(593348365, .not. this%n_cells.eq.1,&
+              "update_data with more than 1 cell needs to specify cell_id" )
       update_data%cell_id=1;
     end if
 
     if (associated(this%solver_data_gas)) &
-            call this%solver_data_gas%update_aero_rep_data(update_data, n_cells_update)
+            call this%solver_data_gas%update_aero_rep_data(update_data)
     if (associated(this%solver_data_aero)) &
-            call this%solver_data_aero%update_aero_rep_data(update_data, n_cells_update)
+            call this%solver_data_aero%update_aero_rep_data(update_data)
     if (associated(this%solver_data_gas_aero)) &
-            call this%solver_data_gas_aero%update_aero_rep_data(update_data, n_cells_update)
+            call this%solver_data_gas_aero%update_aero_rep_data(update_data)
 
   end subroutine aero_rep_update_data
 
@@ -1394,19 +1392,19 @@ contains
 
     n_cells_update = 1
     if (present(cell_id)) then
-      n_cells_update = 1
       update_data%cell_id=cell_id;
     else
-      n_cells_update = this%n_cells
+      call assert_msg(593348365, .not. this%n_cells.eq.1,&
+              "update_data with more than 1 cell needs to specify cell_id" )
       update_data%cell_id=1;
     end if
 
     if (associated(this%solver_data_gas)) &
-            call this%solver_data_gas%update_rxn_data(update_data, n_cells_update)
+            call this%solver_data_gas%update_rxn_data(update_data)
     if (associated(this%solver_data_aero)) &
-            call this%solver_data_aero%update_rxn_data(update_data, n_cells_update)
+            call this%solver_data_aero%update_rxn_data(update_data)
     if (associated(this%solver_data_gas_aero)) &
-            call this%solver_data_gas_aero%update_rxn_data(update_data, n_cells_update)
+            call this%solver_data_gas_aero%update_rxn_data(update_data)
 
   end subroutine rxn_update_data
 
@@ -1426,19 +1424,19 @@ contains
 
     n_cells_update = 1
     if (present(cell_id)) then
-      n_cells_update = 1
       update_data%cell_id=cell_id;
     else
-      n_cells_update = this%n_cells
+      call assert_msg(593348365, .not. this%n_cells.eq.1,&
+              "update_data with more than 1 cell needs to specify cell_id" )
       update_data%cell_id=1;
     end if
 
     if (associated(this%solver_data_gas)) &
-            call this%solver_data_gas%update_sub_model_data(update_data, n_cells_update)
+            call this%solver_data_gas%update_sub_model_data(update_data)
     if (associated(this%solver_data_aero)) &
-            call this%solver_data_aero%update_sub_model_data(update_data, n_cells_update)
+            call this%solver_data_aero%update_sub_model_data(update_data)
     if (associated(this%solver_data_gas_aero)) &
-            call this%solver_data_gas_aero%update_sub_model_data(update_data, n_cells_update)
+            call this%solver_data_gas_aero%update_sub_model_data(update_data)
 
   end subroutine sub_model_update_data
 
@@ -2109,326 +2107,6 @@ contains
     this%sub_model => new_sub_model
 
   end subroutine add_sub_model
-
-  subroutine export_camp_input_json(this, camp_state, time_step, rxn_phase,&
-          solver_status_in, solver_stats, n_cells)
-
-  use camp_rxn_data
-  use camp_solver_stats
-  use iso_c_binding
-
-  !> Chemical model
-  class(camp_core_t), intent(inout) :: this
-  !> Current model state
-  type(camp_state_t), intent(inout), target :: camp_state
-  !> Time step over which to integrate (s)
-  real(kind=dp), intent(in) :: time_step
-  integer(kind=c_int), intent(in), optional:: solver_status_in
-  !> Phase to solve - gas, aerosol, or both (default)
-  !! Use parameters in camp_rxn_data to specify phase:
-  !! GAS_RXN, AERO_RXN, GAS_AERO_RXN
-  integer(kind=i_kind), intent(in), optional :: rxn_phase
-  !> Return solver statistics to the host model
-  type(solver_stats_t), intent(inout), optional, target :: solver_stats
-  integer, intent(in), optional :: n_cells
-  !class(rxn_update_data_t), intent(inout), optional :: update_data
-  integer :: n_cells_aux, solver_status
-  real(kind=dp) :: t_initial
-  real(kind=dp) :: t_final
-  type(json_core) :: json
-  type(json_value),pointer :: p, input, output, species_in,&
-          species_out, photo_rates
-  character(len=:), allocatable :: export_path, spec_name
-  integer :: mpi_rank, i, i_cell, z, mpi_err
-  integer(kind=i_kind) :: pos, pack_size
-  character(len=128) :: mpi_rank_str, i_str
-  type(string_t), allocatable :: spec_names(:)
-  character, allocatable :: buffer(:)
-  integer :: max_spec_name_size=512
-
-  real(kind=dp), allocatable :: base_rate(:)
-
-  ! Phase to solve
-  integer(kind=i_kind) :: phase
-  ! Pointer to solver data
-  type(camp_solver_data_t), pointer :: solver
-
-  if(this%export_flag .and. camp_mpi_rank().eq.0) then
-
-  ! Update the solver array of environmental states
-  call camp_state%update_env_state( )
-
-  if (present(solver_status_in)) then
-    solver_status = solver_status_in
-  else
-    solver_status = 1
-  end if
-
-  ! Get the phase(s) to solve for
-  if (present(rxn_phase)) then
-    phase = rxn_phase
-  else
-    phase = GAS_AERO_RXN
-  end if
-
-  ! Determine the solver to use
-  if (phase.eq.GAS_RXN) then
-    solver => this%solver_data_gas
-  else if (phase.eq.AERO_RXN) then
-    solver => this%solver_data_aero
-  else if (phase.eq.GAS_AERO_RXN) then
-    solver => this%solver_data_gas_aero
-  else
-    call die_msg(704896254, "Invalid rxn phase specified for chemistry "// &
-            "solver: "//to_string(phase))
-  end if
-
-  t_initial = real(0.0, kind=dp)
-  t_final = time_step
-
-  allocate(this%init_state_var(size(camp_state%state_var)))
-  this%init_state_var(:)=camp_state%state_var(:)
-
-  if(solver_status.eq.CAMP_SOLVER_FAIL) then!1
-    this%counterFail=this%counterFail+1
-  end if
-  this%counterSolve=this%counterSolve+1
-
-  mpi_rank = camp_mpi_rank()
-
-  this%spec_names = this%unique_names()
-  call json%initialize()
-  call json%create_object(p,'')
-  call json%create_object(input,'input')
-  call json%add(p, input)
-  call json%add(input, "dt", t_final-t_initial)
-  call json%add(input, "temperature", camp_state%env_var(1))
-  call json%add(input, "pressure", camp_state%env_var(2))
-  call json%create_object(species_in,'species')
-  call json%add(input, species_in)
-
-  do i=1, size(this%spec_names)
-    call json%add(species_in, this%spec_names(i)%string, this%init_state_var(i))
-  end do
-
-  if(.not.allocated(base_rate)) then
-    allocate(base_rate(25))
-  end if
-  call solver%get_base_rate(base_rate)
-  call json%create_object(photo_rates,'photo_rates')
-  call json%add(input, photo_rates)
-  do i=1, size(base_rate)
-    write(i_str,*) i
-    i_str=adjustl(i_str)
-    call json%add(photo_rates, trim(i_str), base_rate(i))
-  end do
-  nullify(photo_rates)
-  write(mpi_rank_str,*) mpi_rank
-  mpi_rank_str=adjustl(mpi_rank_str)
-  export_path = "exports/camp_in_out.json"
-  call json%print(p,export_path)
-  call json%destroy(p)
-  if (json%failed()) stop 1
-  deallocate(this%init_state_var)
-  this%export_flag = .false.
-  print*,"export_camp_input_json end"
-  end if
-
-  call camp_mpi_barrier(MPI_COMM_WORLD)
-  stop
-
-  end subroutine
-
-  subroutine export_camp_input_mpis_json(this, camp_state, time_step, rxn_phase,&
-          solver_status_in, solver_stats, n_cells)
-
-    use camp_rxn_data
-    use camp_solver_stats
-    use iso_c_binding
-
-    !> Chemical model
-    class(camp_core_t), intent(inout) :: this
-    !> Current model state
-    type(camp_state_t), intent(inout), target :: camp_state
-    !> Time step over which to integrate (s)
-    real(kind=dp), intent(in) :: time_step
-    integer(kind=c_int), intent(in), optional:: solver_status_in
-    !> Phase to solve - gas, aerosol, or both (default)
-    !! Use parameters in camp_rxn_data to specify phase:
-    !! GAS_RXN, AERO_RXN, GAS_AERO_RXN
-    integer(kind=i_kind), intent(in), optional :: rxn_phase
-    !> Return solver statistics to the host model
-    type(solver_stats_t), intent(inout), optional, target :: solver_stats
-    integer, intent(in), optional :: n_cells
-    !class(rxn_update_data_t), intent(inout), optional :: update_data
-    integer :: n_cells_aux, solver_status
-    real(kind=dp) :: t_initial
-    real(kind=dp) :: t_final
-    type(json_core) :: json
-    type(json_value),pointer :: p, input, output, species_in,&
-            species_out, photo_rates
-    character(len=:), allocatable :: export_path, spec_name
-    integer :: mpi_rank, i, i_cell, z
-    integer(kind=i_kind) :: pos, pack_size
-    character(len=128) :: mpi_rank_str, i_str
-    type(string_t), allocatable :: spec_names(:)
-    character, allocatable :: buffer(:)
-    integer :: max_spec_name_size=512
-
-    real(kind=dp), allocatable :: base_rate(:)
-
-    ! Phase to solve
-    integer(kind=i_kind) :: phase
-    ! Pointer to solver data
-    type(camp_solver_data_t), pointer :: solver
-
-    ! Update the solver array of environmental states
-    call camp_state%update_env_state( )
-
-    if (present(solver_status_in)) then
-      solver_status = solver_status_in
-    else
-      solver_status = 1
-    end if
-
-    ! Get the phase(s) to solve for
-    if (present(rxn_phase)) then
-      phase = rxn_phase
-    else
-      phase = GAS_AERO_RXN
-    end if
-
-    ! Determine the solver to use
-    if (phase.eq.GAS_RXN) then
-      solver => this%solver_data_gas
-    else if (phase.eq.AERO_RXN) then
-      solver => this%solver_data_aero
-    else if (phase.eq.GAS_AERO_RXN) then
-      solver => this%solver_data_gas_aero
-    else
-      call die_msg(704896254, "Invalid rxn phase specified for chemistry "// &
-              "solver: "//to_string(phase))
-    end if
-
-    t_initial = real(0.0, kind=dp)
-    t_final = time_step
-
-    allocate(this%init_state_var(size(camp_state%state_var)))
-    this%init_state_var(:)=camp_state%state_var(:)
-
-    if(solver_status.eq.CAMP_SOLVER_FAIL) then!1
-      this%counterFail=this%counterFail+1
-    end if
-    this%counterSolve=this%counterSolve+1
-
-  mpi_rank = camp_mpi_rank()
-
-  !if(.not.c_associated(c_loc(this%spec_names))) then
-  !if(.not.associated(c_loc(this%spec_names(1)%string))) then
-  !if(.not.associated(this%spec_names(1)%string)) then
-  if(this%export_flag) then
-
-    if (mpi_rank.eq.0) then
-
-    this%spec_names = this%unique_names()
-    pack_size = 0
-    do z=1, this%size_state_per_cell
-      pack_size = pack_size +  camp_mpi_pack_size_string(trim(this%spec_names(z)%string))
-      !print*,pack_size
-    end do
-
-    allocate(buffer(pack_size))
-    pos = 0
-
-    do z=1, this%size_state_per_cell
-      call camp_mpi_pack_string(buffer, pos, trim(this%spec_names(z)%string))
-    end do
-
-    end if
-
-    ! broadcast the buffer size
-    call camp_mpi_bcast_integer(pack_size, MPI_COMM_WORLD)
-
-    if (mpi_rank.ne.0) then
-      ! allocate the buffer to receive data
-      allocate(buffer(pack_size))
-    end if
-
-    call camp_mpi_bcast_packed(buffer, MPI_COMM_WORLD)
-
-    if (mpi_rank.ne.0) then
-      pos = 0
-
-      allocate(this%spec_names(this%size_state_per_cell))
-      spec_name=""
-      do z=1,max_spec_name_size
-        spec_name=spec_name//" "
-      end do
-      do z=1, this%size_state_per_cell
-        call camp_mpi_unpack_string(buffer, pos, spec_name)
-        this%spec_names(z)%string= trim(spec_name)
-        !print*,this%spec_names(z)%string
-      end do
-
-    end if
-
-    deallocate(buffer)
-
-    this%export_flag = .false.
-
-  end if
-
-    call camp_mpi_barrier(MPI_COMM_WORLD)
-
-    !if (this%counterSolve.eq.1) then
-    !if (this%counterFail.eq.1) then
-    if (this%counterFail.le.1 .or. this%counterSolve.le.1) then
-      !if (camp_mpi_rank().eq.0 .and. this%counterSolve.eq.1) then
-
-      call json%initialize()
-      call json%create_object(p,'')
-      call json%create_object(input,'input')
-      call json%add(p, input)
-      call json%add(input, "dt", t_final-t_initial)
-      call json%add(input, "temperature", camp_state%env_var(1))
-      call json%add(input, "pressure", camp_state%env_var(2))
-      call json%create_object(species_in,'species')
-      call json%add(input, species_in)
-
-      do i=1, size(this%spec_names)
-        call json%add(species_in, this%spec_names(i)%string, this%init_state_var(i))
-      end do
-
-      if(.not.allocated(base_rate)) then
-        allocate(base_rate(25))
-      end if
-      call solver%get_base_rate(base_rate)
-      call json%create_object(photo_rates,'photo_rates')
-      call json%add(input, photo_rates)
-      do i=1, size(base_rate)
-        write(i_str,*) i
-        i_str=adjustl(i_str)
-        call json%add(photo_rates, trim(i_str), base_rate(i))
-      end do
-      nullify(photo_rates)
-
-    write(mpi_rank_str,*) mpi_rank
-    mpi_rank_str=adjustl(mpi_rank_str)
-
-    !export_path = "/gpfs/scratch/bsc32/bsc32815/a2s8/nmmb-monarch/MODEL/"&
-    !        //"SRC_LIBS/camp/test/monarch/exports/camp_in_out_"&
-    !        //trim(mpi_rank_str)//".json"
-    export_path = "exports/camp_in_out_"//trim(mpi_rank_str)//".json"
-    !export_path = "./../../test/monarch/exports/camp_in_out_"//trim(mpi_rank_str)//".json" !wrong
-
-      call json%print(p,export_path)
-
-      call json%destroy(p)
-      if (json%failed()) stop 1
-
-    end if
-    deallocate(this%init_state_var)
-  end subroutine
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 

@@ -85,7 +85,6 @@ module camp_monarch_interface_2
   contains
     !> Integrate CAMP for the current MONARCH state over a specified time step
     procedure :: integrate
-    procedure :: integrate_mod37
     !> Get initial concentrations (for testing only)
     procedure :: get_init_conc
     !> Get monarch species names and ids (for testing only)
@@ -236,16 +235,7 @@ contains
             call this%camp_core%initialize_update_object( aero_rep, &
                                                              update_data_GSD)
 
-            if(this%interface_input_file.eq."mod37/interface_monarch_mod37.json") then
-              call assert(889473105, &
-                      aero_rep%get_section_id("organic matter", i_sect_om))
-              call assert(648042550, &
-                      aero_rep%get_section_id("black carbon", i_sect_bc))
-              call assert(760360895, &
-                      aero_rep%get_section_id("sulfate", i_sect_sulf))
-              call assert(307728742, &
-                      aero_rep%get_section_id("other PM", i_sect_opm))
-            else if(.not. this%interface_input_file.eq."interface_cb05_yarwood2005.json")  then
+            if(.not. this%interface_input_file.eq."interface_cb05_yarwood2005.json")  then
               call assert(889473105, &
                         aero_rep%get_section_id("organic_matter", i_sect_om))
               call assert(648042550, &
@@ -422,10 +412,9 @@ contains
     !call camp_mpi_barrier(MPI_COMM_WORLD)
     if(this%ADD_EMISIONS.eq."monarch_binned" &
     .or. this%interface_input_file.eq."interface_monarch_cb05.json") then
-      this%nrates_cells = this%n_cells
-      allocate(this%offset_photo_rates_cells(this%nrates_cells))
+      allocate(this%offset_photo_rates_cells(this%n_cells))
       this%offset_photo_rates_cells(:) = 0. !0 0.1
-      do z =1, this%nrates_cells
+      do z =1, this%n_cells
         do i = 1, this%n_photo_rxn
           base_rate = this%base_rates(i)!
           if(this%interface_input_file.eq."interface_monarch_cb05.json") then
@@ -448,6 +437,8 @@ contains
     !print*,"camp_monarch_interface constructor offset_photo_rates_cells end"
     call camp_mpi_barrier(MPI_COMM_WORLD)
     ! organic matter
+
+    do z =1, this%n_cells
     if (i_sect_om.gt.0) then
       if(this%interface_input_file.eq."mod37/interface_monarch_mod37.json") then
       call update_data_GMD%set_GMD(i_sect_om, 2.12d-8)
@@ -480,6 +471,7 @@ contains
         call this%camp_core%update_data(update_data_GSD)
       end if
     end if
+    end do
 
     !print*,"camp_monarch_interface constructor update_data_GMD end"
 
@@ -615,11 +607,6 @@ contains
             end do
           end do
         end do
-        !if (camp_mpi_rank().eq.0) then
-        !   print*,"pressure"
-        !end if
-        !write(*, "(ES13.6)", advance="no") pressure(:,:,:)
-        !write(*, *) camp_mpi_rank()
       else
         !NUM_TIME_STEP
         do i=1,12
@@ -1287,24 +1274,6 @@ end if
     integer(kind=i_kind) :: i_spec, water_id,i,j,k,r,NUM_VERT_CELLS,state_size_per_cell, last_cell
     real :: conc_deviation_perc
     !print*,"monarch_interface get_init_conc start"
-    if(this%interface_input_file.eq."mod37/interface_monarch_mod37.json") then
-
-      ! Set initial concentrations in CAMP
-      this%camp_state%state_var(this%init_conc_camp_id(:)) = &
-              this%init_conc(:)
-
-      ! Copy species concentrations to MONARCH array
-      forall (i_spec = 1:size(this%map_monarch_id))
-        MONARCH_conc(:,:,:,this%map_monarch_id(i_spec)) = &
-                this%camp_state%state_var(this%map_camp_id(i_spec))
-      end forall
-
-      ! Set the relative humidity
-      water_conc(:,:,:,WATER_VAPOR_ID) = &
-              this%camp_state%state_var(this%gas_phase_water_id) * &
-                      1.0d-9 / 1.225d0
-
-  else
 
     conc_deviation_perc=0.!0.2
     NUM_VERT_CELLS=size(MONARCH_conc,3)
@@ -1376,7 +1345,6 @@ end if
         end do
       end do
     end do
-    end if
 
     !print*,"get_init_conc end"
 
@@ -1396,197 +1364,6 @@ end if
     MONARCH_ids = this%map_monarch_id
 
   end subroutine get_MONARCH_species
-
-  !> Integrate the CAMP mechanism for a particular set of cells and timestep
-  subroutine integrate_mod37(this, start_time, time_step, i_start, i_end, j_start, &
-          j_end, temperature, MONARCH_conc, water_conc, &
-          water_vapor_index, air_density, pressure,conv, i_hour,&
-          NUM_TIME_STEP,solver_stats)
-
-    !> CAMP-camp <-> MONARCH interface
-    class(camp_monarch_interface_t) :: this
-    !> Integration start time (min since midnight)
-    real, intent(in) :: start_time
-    !> Integration time step
-    real, intent(in) :: time_step
-    !> Grid-cell W->E starting index
-    integer, intent(in) :: i_start
-    !> Grid-cell W->E ending index
-    integer, intent(in) :: i_end
-    !> Grid-cell S->N starting index
-    integer, intent(in) :: j_start
-    !> Grid-cell S->N ending index
-    integer, intent(in) :: j_end
-
-    !> NMMB style arrays (W->E, S->N, top->bottom, ...)
-    !> Temperature (K)
-    real, intent(in) :: temperature(:,:,:)
-    !> MONARCH species concentration (ppm or ug/m^3)
-    real, intent(inout) :: MONARCH_conc(:,:,:,:)
-    !> Atmospheric water concentrations (kg_H2O/kg_air)
-    real, intent(in) :: water_conc(:,:,:,:)
-    !> Index in water_conc corresponding to water vapor
-    integer, intent(in) :: water_vapor_index
-
-    !> WRF-style arrays (W->E, bottom->top, N->S)
-    !> Air density (kg_air/m^3)
-    real, intent(in) :: air_density(:,:,:)
-    !> Pressure (Pa)
-    real, intent(in) :: pressure(:,:,:)
-    real, intent(in) :: conv(:,:,:)
-    integer, intent(inout) :: i_hour
-    integer, intent(in) :: NUM_TIME_STEP
-
-    type(chem_spec_data_t), pointer :: chem_spec_data
-
-    integer, parameter :: emi_len=1
-    real, allocatable :: rate_emi(:,:)
-
-    ! MPI
-    character, allocatable :: buffer(:)
-    integer(kind=i_kind) :: pos, pack_size
-    integer :: local_comm
-    real(kind=dp), allocatable :: mpi_conc(:)
-
-    integer :: i, j, k, i_spec, z, o, t, r, i_cell, i_photo_rxn, k_end, k_flip
-    integer :: NUM_VERT_CELLS, i_hour_max
-
-    character(len=:), allocatable :: DIFF_CELLS_EMI
-    real :: press_init, press_end, press_range,&
-            emi_slide, press_norm
-    integer :: n_cells
-
-    ! Computation time variables
-    real(kind=dp) :: comp_start, comp_end
-
-    !type(solver_stats_t), target :: solver_stats
-    type(solver_stats_t), intent(inout) :: solver_stats
-    integer :: state_size_per_cell, n_cell_check
-    integer :: counterLS = 0
-    real :: timeLS = 0.0
-    real :: timeCvode = 0.0
-
-    if(this%n_cells.eq.1) then
-      state_size_per_cell = 0
-    else
-      state_size_per_cell = this%camp_core%state_size_per_cell()
-    end if
-
-
-    k_end = size(MONARCH_conc,3)
-
-    call cpu_time(comp_start)
-
-    if(.not.this%solve_multiple_cells) then
-      do i=i_start, i_end
-        do j=j_start, j_end
-          do k=1, k_end
-
-            ! Calculate the vertical index for NMMB-style arrays
-            k_flip = size(MONARCH_conc,3) - k + 1
-
-            ! Update the environmental state
-            call this%camp_state%env_states(1)%set_temperature_K( &
-                    real( temperature(i,j,k_flip), kind=dp ) )
-            call this%camp_state%env_states(1)%set_pressure_Pa(   &
-                    real( pressure(i,k,j), kind=dp ) )
-
-            this%camp_state%state_var(:) = 0.0
-
-            this%camp_state%state_var(this%map_camp_id(:)) = &
-                    this%camp_state%state_var(this%map_camp_id(:)) + &
-                            MONARCH_conc(i,j,k_flip,this%map_monarch_id(:))
-            this%camp_state%state_var(this%gas_phase_water_id) = &
-                    water_conc(i,j,k_flip,water_vapor_index) * &
-                            air_density(i,k,j) * 1.0d9
-
-            ! Start the computation timer
-            if (MONARCH_PROCESS.eq.0 .and. i.eq.i_start .and. j.eq.j_start &
-                    .and. k.eq.1) then
-              !solver_stats%debug_out = .false.
-            else
-              !solver_stats%debug_out = .false.
-            end if
-
-            ! Integrate the CAMP mechanism
-            call this%camp_core%solve(this%camp_state, &
-                    real(time_step, kind=dp), solver_stats = solver_stats)
-
-            call assert_msg(376450931, solver_stats%status_code.eq.0, &
-                    "Solver failed with code "// &
-                            to_string(solver_stats%solver_flag))
-
-            ! Update the MONARCH tracer array with new species concentrations
-            MONARCH_conc(i,j,k_flip,this%map_monarch_id(:)) = &
-                    this%camp_state%state_var(this%map_camp_id(:))
-
-          end do
-        end do
-      end do
-    else
-      ! Set initial conditions and environmental parameters for each grid cell
-      do i=i_start, i_end
-        do j=j_start, j_end
-          do k=1, k_end
-            !Remember fortran read matrix in inverse order for optimization!
-            ! TODO add descriptions for o and z, or preferably use descriptive
-            !      variable names
-            o = (j-1)*(i_end) + (i-1) !Index to 3D
-            z = (k-1)*(i_end*j_end) + o !Index for 2D
-
-            ! Calculate the vertical index for NMMB-style arrays
-            k_flip = size(MONARCH_conc,3) - k + 1
-
-            ! Update the environmental state
-            call this%camp_state%env_states(1)%set_temperature_K( &
-                    real( temperature(i,j,k_flip), kind=dp ) )
-            call this%camp_state%env_states(1)%set_pressure_Pa(   &
-                    real( pressure(i,k,j), kind=dp ) )
-
-            !Reset state conc
-            this%camp_state%state_var(this%map_camp_id(:) + &
-                    (z*state_size_per_cell)) = 0.0
-
-            this%camp_state%state_var(this%map_camp_id(:) + &
-                    (z*state_size_per_cell)) = &
-                    this%camp_state%state_var(this%map_camp_id(:) + &
-                            (z*state_size_per_cell)) + &
-                            MONARCH_conc(i,j,k_flip,this%map_monarch_id(:))
-            this%camp_state%state_var(this%gas_phase_water_id + &
-                    (z*state_size_per_cell)) = &
-                    water_conc(i,j,k_flip,water_vapor_index) * &
-                            air_density(i,k,j) * 1.0d9
-
-          end do
-        end do
-      end do
-
-      ! Integrate the CAMP mechanism
-      call this%camp_core%solve(this%camp_state, &
-              real(time_step, kind=dp), solver_stats = solver_stats)
-
-      do i=i_start, i_end
-        do j=j_start, j_end
-          do k=1, k_end
-            o = (j-1)*(i_end) + (i-1) !Index to 3D
-            z = (k-1)*(i_end*j_end) + o !Index for 2D
-
-            k_flip = size(MONARCH_conc,3) - k + 1
-            MONARCH_conc(i,j,k_flip,this%map_monarch_id(:)) = &
-                    this%camp_state%state_var(this%map_camp_id(:) + &
-                            (z*state_size_per_cell))
-          end do
-        end do
-      end do
-
-    end if
-
-    call cpu_time(comp_end)
-    comp_time = comp_time + (comp_end-comp_start)
-
-    ! call solver_stats%print( )
-
-  end subroutine
 
   !> Print the CAMP-camp data
   subroutine do_print(this)

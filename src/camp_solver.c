@@ -544,6 +544,7 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
   flag = CVodeSetDlsGuessHelper(sd->cvode_mem, guess_helper);
   check_flag_fail(&flag, "CVodeSetDlsGuessHelper", 1);
 
+  sd->icell=0;
 // Set gpu rxn values
 #ifdef CAMP_USE_GPU
   if(sd->use_cpu==0){
@@ -552,7 +553,6 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
 #endif
 #ifdef ENABLE_NETCDF
   sd->n_cells_tstep = n_cells_tstep;
-  sd->icell=0;
   sd->tstep=0;
 #endif
 #ifdef FAILURE_DETAIL
@@ -624,90 +624,81 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
   int n_state_var = sd->model_data.n_per_cell_state_var;
   int flag;
   int rank = 0;
-
+  int i_cell = sd->icell;
 #ifdef CAMP_DEBUG_solver_run
 #ifdef CAMP_USE_MPI
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    if (rank == 0)
-    //if (sd->counterSolve==0 && sd->counterFail==0)
-    //if (sd->counterFail==0)
-    {
-      int n_cell=1;
-      printf("camp solver_run start [(id),conc], n_state_var %d, n_cells %d n_dep_var %d\n",
-              md->n_per_cell_state_var, n_cells, md->n_per_cell_dep_var);
-      printf("sd->counterSolve %d t_initial %-le t_final %-le\n",sd->counterSolve,t_initial,t_final);
-      //for (int i = 0; i < n_cells; i++) {
-        //for (int j = 0; j < md->n_per_cell_state_var; j++) {
-        //printf("Rank %d cell %d %-le",rank,i,state[i+j*md->n_per_cell_state_var]);
-        //}
-      //}
-      //for (int i = 0; i < md->n_per_cell_state_var*n_cell; i++) {
-      //  printf("(%d) %-le ",i+1, state[i]);
-      //}
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  if (rank == 0) {
+      // if (sd->counterSolve==0 && sd->counterFail==0)
+      // if (sd->counterFail==0)
+      int n_cell = 1;
+      printf(
+          "camp solver_run start [(id),conc], n_state_var %d, n_cells %d n_dep_var %d\n",
+          md->n_per_cell_state_var, n_cells, md->n_per_cell_dep_var);
+      printf("sd->counterSolve %d t_initial %-le t_final %-le\n",
+             sd->counterSolve, t_initial, t_final);
       printf("\n");
       printf("env [temp, press]\n");
-      for (int i=0; i<1;i++)
-        printf("%-le, %-le\n", env[0+2*i], env[1+2*i]);
-    }
+      for (int i = 0; i < 1; i++)
+      printf("%-le, %-le\n", env[0 + 2 * i], env[1 + 2 * i]);
+  }
 #endif
 #endif
 
-    // Update model data pointers
-    sd->model_data.total_state = state;
-    sd->model_data.total_env = env;
+  // Update model data pointers
+  sd->model_data.total_state = state;
+  sd->model_data.total_env = env;
 
 #ifdef ENABLE_NETCDF
-    cell_netcdf(sd);
+  cell_netcdf(sd);
 #endif
 
   // Update the dependent variables
   int i_dep_var = 0;
   for (int i_cell = 0; i_cell < n_cells; i_cell++)
-    for (int i_spec = 0; i_spec < n_state_var; i_spec++)
+      for (int i_spec = 0; i_spec < n_state_var; i_spec++) {
       if (sd->model_data.var_type[i_spec] == CHEM_SPEC_VARIABLE) {
         NV_Ith_S(sd->y, i_dep_var++) =
             state[i_spec + i_cell * n_state_var] > TINY
                 ? (realtype)state[i_spec + i_cell * n_state_var]
                 : TINY;
-        //printf("a%d %-le\n",i_spec,state[i_spec]);
+        // printf("a%d %-le\n",i_spec,state[i_spec]);
       } else if (md->var_type[i_spec] == CHEM_SPEC_CONSTANT) {
         state[i_spec + i_cell * n_state_var] =
             state[i_spec + i_cell * n_state_var] > TINY
                 ? state[i_spec + i_cell * n_state_var]
                 : TINY;
       }
-
-#ifdef CAMP_DEBUG
-  // Update the debug output flag in CVODES and the linear solver
-  flag = CVodeSetDebugOut(sd->cvode_mem, sd->debug_out);
-  check_flag_fail(&flag, "CVodeSetDebugOut", 1);
-  flag = SUNKLUSetDebugOut(sd->ls, sd->debug_out);
-  check_flag_fail(&flag, "SUNKLUSetDebugOut", 1);
-#endif
-
-  // Reset the counter of Jacobian evaluation failures
-  sd->Jac_eval_fails = 0;
-
+      }
   // Update data for new environmental state
   // (This is set up to assume the environmental variables do not change during
   //  solving. This can be changed in the future if necessary.)
-  for (int i_cell = 0; i_cell < md->n_cells; ++i_cell) {
-    // Set the grid cell state pointers
-    md->grid_cell_id = i_cell;
-    md->grid_cell_state = &(md->total_state[i_cell * md->n_per_cell_state_var]);
-    md->grid_cell_env = &(md->total_env[i_cell * CAMP_NUM_ENV_PARAM_]);
-    md->grid_cell_rxn_env_data =
-        &(md->rxn_env_data[i_cell * md->n_rxn_env_data]);
-    md->grid_cell_aero_rep_env_data =
-        &(md->aero_rep_env_data[i_cell * md->n_aero_rep_env_data]);
-    md->grid_cell_sub_model_env_data =
-        &(md->sub_model_env_data[i_cell * md->n_sub_model_env_data]);
+  // Set the grid cell state pointers
+  for (int i_cell = 0; i_cell < n_cells; i_cell++) {
+  md->grid_cell_id = i_cell;
+  md->grid_cell_state = &(md->total_state[i_cell * md->n_per_cell_state_var]);
+  md->grid_cell_env = &(md->total_env[i_cell * CAMP_NUM_ENV_PARAM_]);
+  md->grid_cell_rxn_env_data = &(md->rxn_env_data[i_cell * md->n_rxn_env_data]);
+  md->grid_cell_aero_rep_env_data =
+      &(md->aero_rep_env_data[i_cell * md->n_aero_rep_env_data]);
+  md->grid_cell_sub_model_env_data =
+      &(md->sub_model_env_data[i_cell * md->n_sub_model_env_data]);
+  // Update the model for the current environmental state
+  aero_rep_update_env_state(md);
+  sub_model_update_env_state(md);
+  rxn_update_env_state(md);
+}
 
-    // Update the model for the current environmental state
-    aero_rep_update_env_state(md);
-    sub_model_update_env_state(md);
-    rxn_update_env_state(md);
+#ifdef DEV_MULTICELLS
+  sd->icell++;
+  if(sd->icell>=n_cells) {
+    sd->icell = 0;
+  } else {
+    return CAMP_SOLVER_FAIL;
   }
+#endif
+
+  sd->Jac_eval_fails = 0
   CAMP_DEBUG_JAC_STRUCT(sd->model_data.J_init, "Begin solving");
 #ifdef RESET_JAC_SOLVING
   //printf("RESET_JAC_SOLVING start\n");
@@ -798,23 +789,6 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
       if (flag != 0)
       printf("\nCall to f() at failed state failed with flag %d, rank %d \n",
     flag, rank);
-    /*for (int i_cell = 0; i_cell < md->n_cells; ++i_cell) {
-      printf("\n Cell: %d ", i_cell);
-      printf("temp = %le pressure = %le\n", env[i_cell * CAMP_NUM_ENV_PARAM_],
-             env[i_cell * CAMP_NUM_ENV_PARAM_ + 1]);
-      for (int i_spec = 0, i_dep_var = 0; i_spec < md->n_per_cell_state_var;
-           i_spec++)
-        if (md->var_type[i_spec] == CHEM_SPEC_VARIABLE) {
-          printf(
-              "spec %d = %le deriv = %le\n", i_spec,
-              NV_Ith_S(sd->y, i_cell * md->n_per_cell_dep_var + i_dep_var),
-              NV_Ith_S(deriv, i_cell * md->n_per_cell_dep_var + i_dep_var));
-          i_dep_var++;
-        } else {
-          printf("spec %d = %le\n", i_spec,
-                 state[i_cell * md->n_per_cell_state_var + i_spec]);
-        }
-    }*/
     solver_print_stats(sd->cvode_mem);
 #endif
 #ifdef CAMP_DEBUG_GPU

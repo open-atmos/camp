@@ -249,12 +249,7 @@ program mock_monarch_t
     if(caseMulticellsOnecell.eq."One-cell") then
       n_cells = 1
     else
-
-#ifdef DEV_BDFONECELL
-      n_cells = 1
-#else
       n_cells = (I_E - I_W+1)*(I_N - I_S+1)*NUM_VERT_CELLS
-#endif
     end if
 
 #ifdef CAMP_USE_MAXRREGCOUNT48
@@ -580,41 +575,22 @@ program mock_monarch_t
         end do
       end do
 #endif
-    if(interface_input_file.eq."mod37/interface_monarch_mod37.json") then
-      call camp_interface%integrate_mod37(curr_time,         & ! Starting time (min)
-              TIME_STEP_MONARCH37,         & ! Time step (min)
-              I_W,               & ! Starting W->E grid cell
-              I_E,               & ! Ending W->E grid cell
-              I_S,               & ! Starting S->N grid cell
-              I_N,               & ! Ending S->N grid cell
-              temperature,       & ! Temperature (K)
-              species_conc,      & ! Tracer array
-              water_conc,        & ! Water concentrations (kg_H2O/kg_air)
-              WATER_VAPOR_ID,    & ! Index in water_conc() corresponding to water vapor
-              air_density,       & ! Air density (kg_air/m^3)
-              pressure,          & ! Air pressure (Pa)
-              conv,              &
-              i_hour,&
-              NUM_TIME_STEP,&
-              solver_stats)
-    else
       call camp_interface%integrate(curr_time,         & ! Starting time (min)
-                                   TIME_STEP,         & ! Time step (min)
-                                   I_W,               & ! Starting W->E grid cell
-                                   I_E,               & ! Ending W->E grid cell
-                                   I_S,               & ! Starting S->N grid cell
-                                   I_N,               & ! Ending S->N grid cell
-                                   temperature,       & ! Temperature (K)
-                                   species_conc,      & ! Tracer array
-                                   water_conc,        & ! Water concentrations (kg_H2O/kg_air)
-                                   WATER_VAPOR_ID,    & ! Index in water_conc() corresponding to water vapor
-                                   air_density,       & ! Air density (kg_air/m^3)
-                                   pressure,          & ! Air pressure (Pa)
-                                   conv,              &
-                                   i_hour,&
-                                   NUM_TIME_STEP,&
-                                   solver_stats,DIFF_CELLS)
-      end if
+         TIME_STEP,         & ! Time step (min)
+         I_W,               & ! Starting W->E grid cell
+         I_E,               & ! Ending W->E grid cell
+         I_S,               & ! Starting S->N grid cell
+         I_N,               & ! Ending S->N grid cell
+         temperature,       & ! Temperature (K)
+         species_conc,      & ! Tracer array
+         water_conc,        & ! Water concentrations (kg_H2O/kg_air)
+         WATER_VAPOR_ID,    & ! Index in water_conc() corresponding to water vapor
+         air_density,       & ! Air density (kg_air/m^3)
+         pressure,          & ! Air pressure (Pa)
+         conv,              &
+         i_hour,&
+         NUM_TIME_STEP,&
+         solver_stats,DIFF_CELLS)
     curr_time = curr_time + TIME_STEP
 #ifdef CAMP_DEBUG_GPU
       call camp_interface%camp_core%get_solver_stats(solver_stats=solver_stats)

@@ -164,15 +164,6 @@ module camp_camp_solver_data
       integer, value :: n_cells
     end function solver_run
 
-    subroutine rxn_get_base_rate(solver_data, rate_constants) bind (c)
-      use iso_c_binding
-      !> Pointer to the initialized solver data
-      type(c_ptr), value :: solver_data
-      real(kind=c_double) :: rate_constants
-      !type(c_ptr), value :: rate_constants
-      !integer(kind=c_int) :: rxn_id
-    end subroutine rxn_get_base_rate
-
     !> Get the solver statistics
     subroutine solver_get_statistics( solver_data, solver_flag, num_steps, &
                     RHS_evals, LS_setups, error_test_fails, NLS_iters, &
@@ -423,7 +414,6 @@ module camp_camp_solver_data
     procedure :: update_aero_rep_data
     !> Integrate over a given time step
     procedure :: solve
-    procedure :: get_base_rate
     !> Get the solver statistics from the last run
     procedure:: get_solver_stats
     !> Reset the solver statistics from the last run
@@ -848,48 +838,42 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Update sub-model data
-  subroutine update_sub_model_data(this, update_data, n_cells)
+  subroutine update_sub_model_data(this, update_data)
 
     !> Solver data
     class(camp_solver_data_t), intent(inout) :: this
     !> Update data
     class(sub_model_update_data_t), intent(inout) :: update_data
-    integer, intent(in) :: n_cells
     integer :: i
 
-    do i=1, n_cells
-      call sub_model_update_data( &
-              update_data%get_cell_id()+i-2,      & ! Grid cell to update
-              update_data%sub_model_solver_id, & ! Solver's sub model id
-              update_data%get_type(),          & ! Sub-model type to update
-              update_data%get_data(),          & ! Data needed to perform update
-              this%solver_c_ptr                & ! Pointer to solver data
-              )
-    end do
+    call sub_model_update_data( &
+            update_data%get_cell_id()-1,      & ! Grid cell to update
+            update_data%sub_model_solver_id, & ! Solver's sub model id
+            update_data%get_type(),          & ! Sub-model type to update
+            update_data%get_data(),          & ! Data needed to perform update
+            this%solver_c_ptr                & ! Pointer to solver data
+            )
 
   end subroutine update_sub_model_data
 
   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Update reaction data
-  subroutine update_rxn_data(this, update_data, n_cells)
+  subroutine update_rxn_data(this, update_data)
 
     !> Solver data
     class(camp_solver_data_t), intent(inout) :: this
     !> Update data
     class(rxn_update_data_t), intent(inout) :: update_data
-    integer, intent(in) :: n_cells
     integer :: i
 
-    do i=1, n_cells
-      call rxn_update_data( &
-              update_data%get_cell_id()+i-2,      & ! Grid cell to update
-              update_data%rxn_solver_id,       & ! Solver's reaction id
-              update_data%get_type(),          & ! Reaction type to update
-              update_data%get_data(),          & ! Data needed to perform update
-              this%solver_c_ptr                & ! Pointer to solver data
-              )
-    end do
+    call rxn_update_data( &
+            update_data%get_cell_id()-1,      & ! Grid cell to update
+            update_data%rxn_solver_id,       & ! Solver's reaction id
+            update_data%get_type(),          & ! Reaction type to update
+            update_data%get_data(),          & ! Data needed to perform update
+            this%solver_c_ptr                & ! Pointer to solver data
+            )
 
   end subroutine update_rxn_data
 
@@ -897,24 +881,21 @@ contains
 
   !> Update aerosol representation data based on data passed from the host
   !! model related to aerosol properties
-  subroutine update_aero_rep_data(this, update_data, n_cells)
+  subroutine update_aero_rep_data(this, update_data)
 
     !> Solver data
     class(camp_solver_data_t), intent(inout) :: this
     !> Update data
     class(aero_rep_update_data_t), intent(inout) :: update_data
-    integer, intent(in) :: n_cells
     integer :: i
 
-    do i=1, n_cells
-      call aero_rep_update_data( &
-              update_data%get_cell_id()+i-2,      & ! Grid cell to update
-              update_data%aero_rep_solver_id,  & ! Solver's aero rep id
-              update_data%get_type(),          & ! Aerosol representation type
-              update_data%get_data(),          & ! Data needed to perform update
-              this%solver_c_ptr                & ! Pointer to solver data
-              )
-    end do
+    call aero_rep_update_data( &
+            update_data%get_cell_id()-1,      & ! Grid cell to update
+            update_data%aero_rep_solver_id,  & ! Solver's aero rep id
+            update_data%get_type(),          & ! Aerosol representation type
+            update_data%get_data(),          & ! Data needed to perform update
+            this%solver_c_ptr                & ! Pointer to solver data
+      )
 
   end subroutine update_aero_rep_data
 
@@ -978,19 +959,6 @@ contains
             )
 
   end function solve
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-  subroutine get_base_rate(this, rate_constants)
-
-    !> Solver data
-    class(camp_solver_data_t), intent(inout) :: this
-    real(kind=dp), allocatable, intent(inout) :: rate_constants(:)
-    real(kind=c_double), pointer :: rate_constants_c(:)
-
-    call rxn_get_base_rate(this%solver_c_ptr,rate_constants(1))
-
-  end subroutine get_base_rate
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 

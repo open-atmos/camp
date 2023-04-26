@@ -579,7 +579,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
   mGPU = sd->mGPU;
 
 #ifdef DEV_CPUGPU
-  printf("todo DEV_CPUGPU: Too much execution time \n");
+  printf("todo DEV_CPUGPU: CPU part with Multi-cells and after with one-cell \n");
   int nCellsGPU = md->n_cells*sd->nCellsGPUPerc;
   int nCellsCPU = md->n_cells - nCellsGPU;
   double* total_state0=md->total_state;
@@ -901,46 +901,6 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     return(istate);
   }
 #endif
-
-#ifdef DEV_BDFONECELL
-  istate = CV_SUCCESS;
-  sd->icell++;
-  if(sd->icell>=sd->n_cells_tstep){
-    printf("DEV_BDFONECELL end\n");
-    sd->icell=0;
-    cudaDeviceSynchronize();
-#ifdef CAMP_DEBUG_GPU
-    cudaEventRecord(mCPU->stopcvStep);
-    cudaEventSynchronize(mCPU->stopcvStep);
-    float mscvStep = 0.0;
-    cudaEventElapsedTime(&mscvStep, mCPU->startcvStep, mCPU->stopcvStep);
-    mCPU->timecvStep+= mscvStep/1000;
-    //printf("mCPU->timecvStep %lf\n",mCPU->timecvStep);
-#ifndef CAMP_PROFILE_DEVICE_FUNCTIONS
-    cudaMemcpy(&mCPU->mdvCPU, mGPU->mdvo, sizeof(ModelDataVariable), cudaMemcpyDeviceToHost);
-    mCPU->timeBiConjGrad=mCPU->timecvStep*mCPU->mdvCPU.dtBCG/mCPU->mdvCPU.dtcudaDeviceCVode;
-    mCPU->counterBCG+= mCPU->mdvCPU.counterBCG;
-    //printf("mCPU->mdvCPU.dtcudaDeviceCVode %lf\n",mCPU->mdvCPU.dtcudaDeviceCVode);
-#else
-    mCPU->timeBiConjGrad=0.;
-    mCPU->counterBCG+=0;
-#endif
-#endif
-    istate = CV_SUCCESS;
-    for (int i = 0; i < mGPU->n_cells; i++) {
-      if (sd->flagCells[i] != istate) {
-        istate = sd->flagCells[i];
-        break;
-      }
-    }
-    if(istate!=CV_SUCCESS ) {
-      int rank;
-      MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-      printf("cudaCVode2 kflag %d rank %d\n",istate,rank);
-      istate = cvHandleFailure_gpu(cv_mem, istate);
-    }
-  }
-#else
   cudaDeviceSynchronize();
 #ifdef CAMP_DEBUG_GPU
     cudaEventRecord(mCPU->stopcvStep);
@@ -972,19 +932,16 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     printf("cudaCVode2 kflag %d rank %d\n",istate,rank);
     istate = cvHandleFailure_gpu(cv_mem, istate);
   }
-#endif
   return(istate);
 }
 
 void solver_get_statistics_gpu(SolverData *sd){
-  printf("solver_get_statistics_gpu\n");
   ModelDataGPU *mGPU = sd->mGPU;
   ModelDataCPU *mCPU = &(sd->mCPU);
   cudaMemcpy(&mCPU->mdvCPU,mGPU->mdvo,sizeof(ModelDataVariable),cudaMemcpyDeviceToHost);
 }
 
 void solver_reset_statistics_gpu(SolverData *sd){
-  printf("solver_reset_statistics_gpu\n");
   ModelDataGPU *mGPU = sd->mGPU;
   ModelDataCPU *mCPU = &(sd->mCPU);
   //printf("solver_reset_statistics_gpu\n");

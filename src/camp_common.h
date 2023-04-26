@@ -291,9 +291,9 @@ typedef struct {
   int counter_fail_solve_print;
 #endif
 #endif
+  int icell;
 #ifdef ENABLE_NETCDF
   int n_cells_tstep;
-  int icell;
   int tstep;
 #endif
 #ifdef CAMP_USE_GPU
