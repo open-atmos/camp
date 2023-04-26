@@ -61,7 +61,7 @@ if [ $is_sbatch == "true" ]; then
 else
 
   cd  ../../build
-  time make -j 4
+  make -j 4
   cd ../test/monarch
 
   #echo "make end"

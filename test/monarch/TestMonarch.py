@@ -344,8 +344,8 @@ def run(conf):
                 "ERROR: not minCores <= conf.mpiProcesses <= maxCores (FOLLOW PROPORTION, FOR CTE-POWER IS MAX 10 CORES FOR EACH GPU, SINCE IT HAS 4 GPUS AND 40 CORES PER NODE): maxCoresPerDevice,coresPerDevice",
                 minCores, conf.mpiProcesses, maxCores)
             raise
-    #exec_str = ""
-    exec_str = "ddt --connect"
+    exec_str = ""
+    #exec_str = "ddt --connect"
     if conf.mpi == "yes":
         if os.getenv("BSC_MACHINE") == "power":
             exec_str += "mpirun -v -np " + str(conf.mpiProcesses) + " --bind-to core "
@@ -809,11 +809,11 @@ def all_timesteps():
     # conf.allocatedTasksPerNode = 320
     # conf.allocatedTasksPerNode = get_ntasksPerNode_sbatch() #todo
 
-    conf.cells = [1000]
+    conf.cells = [10000]
     # conf.cells = [100, 500, 1000, 5000, 10000]
     # conf.cells = [50000,100000,500000,1000000]
 
-    conf.timeSteps = 20
+    conf.timeSteps = 1
     # conf.timeSteps = 720
 
     conf.timeStepsDt = 2
@@ -849,7 +849,7 @@ def all_timesteps():
     # conf.casesOptim.append("GPU maxrregcount-24")
     #conf.casesOptim.append("CPU IMPORT_NETCDF")
 
-    # conf.plotYKey = "Speedup timeCVode"
+    conf.plotYKey = "Speedup timeCVode"
     # conf.plotYKey = "Speedup normalized counterLS"
     # conf.plotYKey = "Speedup normalized timeLS"
     # conf.plotYKey = "Speedup normalized computational timeLS"
@@ -862,7 +862,7 @@ def all_timesteps():
     # conf.plotYKey = "Speedup countercvStep"
     # conf.plotYKey = "Speedup device timecvStep"
     # conf.plotYKey = "Percentage data transfers CPU-GPU [%]"
-    conf.plotYKey = "MAPE"
+    #conf.plotYKey = "MAPE"
     # conf.plotYKey ="SMAPE"
     # conf.plotYKey ="NRMSE"
     # conf.MAPETol = 1.0E-6

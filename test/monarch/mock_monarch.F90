@@ -249,6 +249,7 @@ program mock_monarch_t
     if(caseMulticellsOnecell.eq."One-cell") then
       n_cells = 1
     else
+
 #ifdef DEV_BDFONECELL
       n_cells = 1
 #else

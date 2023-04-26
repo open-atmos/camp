@@ -592,11 +592,6 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
   md->rxn_env_data+=nCellsGPU*md->n_rxn_env_data;
   md->aero_rep_env_data+=nCellsGPU*md->n_aero_rep_env_data;
   md->sub_model_env_data+=nCellsGPU*md->n_sub_model_env_data;
-
-
-
-  istate = CVode(sd->cvode_mem, tout, yout, tret, itask);
-
 #endif
 
   HANDLE_ERROR(cudaMemcpyAsync(mGPU->rxn_env_data,md->rxn_env_data,mCPU->rxn_env_data_size,cudaMemcpyHostToDevice,stream));
@@ -864,6 +859,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     cudaMemcpyAsync(zn, (i * mGPU->nrows + mGPU->dzn), mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost, stream);
   }
   cudaMemcpyAsync(sd->flagCells, mGPU->flagCells, mGPU->n_cells * sizeof(int), cudaMemcpyDeviceToHost, stream);
+  mGPU = sd->mGPU;
 #ifdef DEV_CPUGPU
   printf("DEV_CPUGPU: Restart indices to 0 and set n_cells to CPUPercNcells \n");
   int nCellsGPU = md->n_cells*sd->nCellsGPUPerc;
@@ -905,8 +901,47 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     return(istate);
   }
 #endif
+
+#ifdef DEV_BDFONECELL
+  istate = CV_SUCCESS;
+  sd->icell++;
+  if(sd->icell>=sd->n_cells_tstep){
+    printf("DEV_BDFONECELL end\n");
+    sd->icell=0;
+    cudaDeviceSynchronize();
+#ifdef CAMP_DEBUG_GPU
+    cudaEventRecord(mCPU->stopcvStep);
+    cudaEventSynchronize(mCPU->stopcvStep);
+    float mscvStep = 0.0;
+    cudaEventElapsedTime(&mscvStep, mCPU->startcvStep, mCPU->stopcvStep);
+    mCPU->timecvStep+= mscvStep/1000;
+    //printf("mCPU->timecvStep %lf\n",mCPU->timecvStep);
+#ifndef CAMP_PROFILE_DEVICE_FUNCTIONS
+    cudaMemcpy(&mCPU->mdvCPU, mGPU->mdvo, sizeof(ModelDataVariable), cudaMemcpyDeviceToHost);
+    mCPU->timeBiConjGrad=mCPU->timecvStep*mCPU->mdvCPU.dtBCG/mCPU->mdvCPU.dtcudaDeviceCVode;
+    mCPU->counterBCG+= mCPU->mdvCPU.counterBCG;
+    //printf("mCPU->mdvCPU.dtcudaDeviceCVode %lf\n",mCPU->mdvCPU.dtcudaDeviceCVode);
+#else
+    mCPU->timeBiConjGrad=0.;
+    mCPU->counterBCG+=0;
+#endif
+#endif
+    istate = CV_SUCCESS;
+    for (int i = 0; i < mGPU->n_cells; i++) {
+      if (sd->flagCells[i] != istate) {
+        istate = sd->flagCells[i];
+        break;
+      }
+    }
+    if(istate!=CV_SUCCESS ) {
+      int rank;
+      MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+      printf("cudaCVode2 kflag %d rank %d\n",istate,rank);
+      istate = cvHandleFailure_gpu(cv_mem, istate);
+    }
+  }
+#else
   cudaDeviceSynchronize();
-  mGPU = sd->mGPU;
 #ifdef CAMP_DEBUG_GPU
     cudaEventRecord(mCPU->stopcvStep);
     cudaEventSynchronize(mCPU->stopcvStep);
@@ -937,16 +972,19 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     printf("cudaCVode2 kflag %d rank %d\n",istate,rank);
     istate = cvHandleFailure_gpu(cv_mem, istate);
   }
+#endif
   return(istate);
 }
 
 void solver_get_statistics_gpu(SolverData *sd){
+  printf("solver_get_statistics_gpu\n");
   ModelDataGPU *mGPU = sd->mGPU;
   ModelDataCPU *mCPU = &(sd->mCPU);
   cudaMemcpy(&mCPU->mdvCPU,mGPU->mdvo,sizeof(ModelDataVariable),cudaMemcpyDeviceToHost);
 }
 
 void solver_reset_statistics_gpu(SolverData *sd){
+  printf("solver_reset_statistics_gpu\n");
   ModelDataGPU *mGPU = sd->mGPU;
   ModelDataCPU *mCPU = &(sd->mCPU);
   //printf("solver_reset_statistics_gpu\n");
