@@ -221,10 +221,6 @@ typedef struct {
   int counterPhoto;
 #endif
 
-#ifdef DEBUG_ARRHENIUS_CALC_DERIV
-  int counterArrhenius;
-#endif
-
 #ifdef CAMP_USE_GPU
 #ifdef CAMP_DEBUG_GPU
   double timeDerivKernel;
@@ -264,6 +260,8 @@ typedef struct {
       max_loss_precision;  // Maximum loss of precision during last call to f()
 #endif
 
+  double t_initial;
+  double t_final;
   int ncounters;
   int ntimers;
 

@@ -345,7 +345,7 @@ def run(conf):
                 minCores, conf.mpiProcesses, maxCores)
             raise
     exec_str = ""
-    #exec_str = "ddt --connect"
+    #exec_str = 'ddt --connect '
     if conf.mpi == "yes":
         if os.getenv("BSC_MACHINE") == "power":
             exec_str += "mpirun -v -np " + str(conf.mpiProcesses) + " --bind-to core "
@@ -355,7 +355,7 @@ def run(conf):
             print("Error python run - Unknown BSC_MACHINE")
             raise
         # exec_str+="srun -n "+str(conf.mpiProcesses)+" "
-
+    #exec_str += "gprof " #to see cpu most time consuming functions
     if conf.profileCuda == "nvprof" and conf.caseGpuCpu == "GPU":
         pathNvprof = "../../compile/power9/"  # "../../../nvprof/"
         Path(pathNvprof).mkdir(parents=True, exist_ok=True)
@@ -367,19 +367,15 @@ def run(conf):
         print("Saving profiling file in ", os.path.abspath(os.getcwd()) \
               + "/" + pathNvprof)
     elif conf.profileCuda == "nsight" and conf.caseGpuCpu == "GPU":
+        exec_str += "/apps/NVIDIA-HPC-SDK/20.9/Linux_ppc64le/2020/profilers/Nsight_Compute/ncu "
         pathNvprof = "../../compile/power9/"  # "../../../nvprof/nsight"
         Path(pathNvprof).mkdir(parents=True, exist_ok=True)
         pathNvprof = pathNvprof + conf.caseMulticellsOnecell \
                      + str(conf.nCells) + "Cells "
-        # exec_str += "/apps/NVIDIA-HPC-SDK/20.9/Linux_ppc64le/2020/profilers/Nsight_Compute/ncu --set full -f -o" + pathNvprof #last working version
-        exec_str += "/apps/NVIDIA-HPC-SDK/20.9/Linux_ppc64le/2020/profilers/Nsight_Compute/ncu "  # summary
 
-        # wrong exec_str += "/apps/NVIDIA-HPC-SDK/21.3/Linux_ppc64le/21.3/profilers/Nsight_Compute/ncu --set full -f -o " + pathNvprof
-        # wrongexec_str += "/apps/NVIDIA-HPC-SDK/21.3/Linux_ppc64le/21.3/profilers/Nsight_Compute/ncu "
-        # wrong exec_str += "/apps/NVIDIA-HPC-SDK/21.9/Linux_ppc64le/21.9/profilers/Nsight_Compute/ncu "
-        # wrong exec_str += "/apps/NVIDIA-HPC-SDK/21.9/Linux_ppc64le/2021/profilers/Nsight_Compute/ncu "
-        # wrong exec_str += "/apps/NVIDIA-HPC-SDK/22.2/Linux_ppc64le/22.2/profilers/Nsight_Compute/ncu "
-        # wrong exec_str += "/apps/NVIDIA-HPC-SDK/22.3/Linux_ppc64le/22.3/profilers/Nsight_Compute/ncu "
+        #exec_str += "--set full -f -o " + pathNvprof #last working version
+        exec_str += " "  # summary
+        #exec_str += "--mode=launch " #fail #gui attach
 
         print("Saving nsight file in ", os.path.abspath(os.getcwd()) \
               + "/" + pathNvprof)
@@ -770,7 +766,7 @@ def all_timesteps():
 
     conf.profileCuda = ""
     # conf.profileCuda = "nvprof"
-    # conf.profileCuda = "nsight"
+    #conf.profileCuda = "nsight"
 
     conf.is_export = get_is_sbatch()
     # conf.is_export = True
@@ -813,7 +809,7 @@ def all_timesteps():
     # conf.cells = [100, 500, 1000, 5000, 10000]
     # conf.cells = [50000,100000,500000,1000000]
 
-    conf.timeSteps = 10
+    conf.timeSteps = 1
     # conf.timeSteps = 720
 
     conf.timeStepsDt = 2
@@ -823,8 +819,8 @@ def all_timesteps():
     #conf.caseBase = "CPU Multi-cells"
     # conf.caseBase="GPU Multi-cells"
     # conf.caseBase="GPU Block-cellsN"
-    # conf.caseBase="GPU Block-cells1"
-    # conf.caseBase = "GPU BDF"
+    # conf.caseBase="GPU Block-cells1n"
+    #conf.caseBase = "GPU BDF"
     #conf.caseBase = "GPU CPU"
     # conf.caseBase = "GPU maxrregcount-64" #wrong 10,000 cells
     # conf.caseBase = "GPU maxrregcount-24" #Minimum

@@ -621,7 +621,7 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
                double t_final, int n_cells) {
   SolverData *sd = (SolverData *)solver_data;
   ModelData *md = &(sd->model_data);
-  int n_state_var = sd->model_data.n_per_cell_state_var;
+  int n_state_var = md->n_per_cell_state_var;
   int flag;
   int rank = 0;
   int i_cell = sd->icell;
@@ -653,10 +653,14 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
   cell_netcdf(sd);
 #endif
 
+  if (n_cells!=md->n_cells){
+      printf("ERROR n_cells!=md->n_cells\n");
+      exit(0);
+  }
   // Update the dependent variables
   int i_dep_var = 0;
-  for (int i_cell = 0; i_cell < n_cells; i_cell++)
-      for (int i_spec = 0; i_spec < n_state_var; i_spec++) {
+  for (int i_cell = 0; i_cell < n_cells; i_cell++){
+    for (int i_spec = 0; i_spec < n_state_var; i_spec++) {
       if (sd->model_data.var_type[i_spec] == CHEM_SPEC_VARIABLE) {
         NV_Ith_S(sd->y, i_dep_var++) =
             state[i_spec + i_cell * n_state_var] > TINY
@@ -669,25 +673,20 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
                 ? state[i_spec + i_cell * n_state_var]
                 : TINY;
       }
-      }
-  // Update data for new environmental state
-  // (This is set up to assume the environmental variables do not change during
-  //  solving. This can be changed in the future if necessary.)
-  // Set the grid cell state pointers
-  for (int i_cell = 0; i_cell < n_cells; i_cell++) {
-  md->grid_cell_id = i_cell;
-  md->grid_cell_state = &(md->total_state[i_cell * md->n_per_cell_state_var]);
-  md->grid_cell_env = &(md->total_env[i_cell * CAMP_NUM_ENV_PARAM_]);
-  md->grid_cell_rxn_env_data = &(md->rxn_env_data[i_cell * md->n_rxn_env_data]);
-  md->grid_cell_aero_rep_env_data =
-      &(md->aero_rep_env_data[i_cell * md->n_aero_rep_env_data]);
-  md->grid_cell_sub_model_env_data =
-      &(md->sub_model_env_data[i_cell * md->n_sub_model_env_data]);
-  // Update the model for the current environmental state
-  aero_rep_update_env_state(md);
-  sub_model_update_env_state(md);
-  rxn_update_env_state(md);
-}
+    }
+    md->grid_cell_id = i_cell;
+    md->grid_cell_state = &(md->total_state[i_cell * md->n_per_cell_state_var]);
+    md->grid_cell_env = &(md->total_env[i_cell * CAMP_NUM_ENV_PARAM_]);
+    md->grid_cell_rxn_env_data = &(md->rxn_env_data[i_cell * md->n_rxn_env_data]);
+    md->grid_cell_aero_rep_env_data =
+        &(md->aero_rep_env_data[i_cell * md->n_aero_rep_env_data]);
+    md->grid_cell_sub_model_env_data =
+        &(md->sub_model_env_data[i_cell * md->n_sub_model_env_data]);
+    // Update the model for the current environmental state
+    aero_rep_update_env_state(md);
+    sub_model_update_env_state(md);
+    rxn_update_env_state(md);
+  }
 
 #ifdef DEV_MULTICELLS
   sd->icell++;
@@ -698,7 +697,6 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
   }
 #endif
 
-  sd->Jac_eval_fails = 0
   CAMP_DEBUG_JAC_STRUCT(sd->model_data.J_init, "Begin solving");
 #ifdef RESET_JAC_SOLVING
   //printf("RESET_JAC_SOLVING start\n");
@@ -717,9 +715,12 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
   }
 #endif
 
+  sd->Jac_eval_fails = 0;
   // Reset the flag indicating a current J_guess
   sd->curr_J_guess = false;
 
+  sd->t_initial = t_initial;
+  sd->t_final = t_final;
   // Set the initial time step
   sd->init_time_step = (t_final - t_initial) * DEFAULT_TIME_STEP;
 
@@ -743,12 +744,6 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
   // Run the solver
   realtype t_rt = (realtype)t_initial;
 
-#ifdef DEBUG_ARRHENIUS_CALC_DERIV
-  sd->model_data.counterArrhenius = 0;
-#endif
-
-  //printf("Pre-Cvode %-le %-le\n",t_final, t_rt);
-  //print_derivative(sd, sd->y);
   if (!sd->no_solve) {
 #ifdef CAMP_DEBUG_GPU
   double starttimeCvode = MPI_Wtime();
@@ -2338,7 +2333,6 @@ void solver_free(void *solver_data) {
 bool is_anything_going_on_here(SolverData *sd, realtype t_initial,
                                realtype t_final) {
   ModelData *md = &(sd->model_data);
-
   if (f(t_initial, sd->y, sd->deriv, sd)) {
     int i_dep_var = 0;
     for (int i_cell = 0; i_cell < md->n_cells; ++i_cell) {
@@ -2354,9 +2348,9 @@ bool is_anything_going_on_here(SolverData *sd, realtype t_initial,
         }
       }
     }
+    printf("DEBUG: is_anything_going_on_here is false, returning success without cvode computing\n");
     return false;
   }
-
   return true;
 }
 #endif

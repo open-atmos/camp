@@ -539,8 +539,6 @@ program mock_monarch_t
 
   call set_env(camp_interface,output_file_prefix)
 
-  !print*,"mock_monarch set_env end"
-
 #ifdef SOLVE_EBI_IMPORT_CAMP_INPUT
   if(caseMulticellsOnecell.eq."EBI") then
     call solve_ebi(camp_interface)
