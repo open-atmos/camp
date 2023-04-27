@@ -5,6 +5,11 @@
 
 #include "itsolver_gpu.h"
 #include "cvode_cuda.h"
+#ifndef DEV_CPUGPU
+#include "../aero_rep_solver.h"
+#include "../rxn_solver.h"
+#include "../sub_model_solver.h"
+#endif
 
 extern "C" {
 #include "cvode_gpu.h"
@@ -213,9 +218,9 @@ void solver_new_gpu_cu_cvode(SolverData *sd) {
 #ifdef DEBUG_solver_new_gpu_cu_cvode
   printf("solver_new_gpu_cu_cvode start \n");
 #endif
-#ifdef DEV_CPUGPU
+#ifndef DEV_CPUGPU
   //todo previous to continue test gpu one-cell, since multicells not work in monarch, so cpugpu should use one-cell for cpu
-  sd->nCellsGPUPerc=1;
+  sd->nCellsGPUPerc=0.;
   n_cells *= sd->nCellsGPUPerc;
 #endif
   mCPU->state_size = n_state_var * n_cells * sizeof(double);
@@ -573,12 +578,10 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
   ModelDataGPU *mGPU;
   ModelData *md = &(sd->model_data);
   double *rxn_env_data = md->rxn_env_data;
-  double *env = md->total_env;
   double *total_state = md->total_state;
   cudaStream_t stream = 0;
   mGPU = sd->mGPU;
-#ifdef DEV_CPUGPU
-  printf("todo DEV_CPUGPU: CPU part with Multi-cells and after with one-cell \n");
+#ifndef DEV_CPUGPU
   int nCellsGPU = md->n_cells*sd->nCellsGPUPerc;
   int nCellsCPU = md->n_cells - nCellsGPU;
   nCellsGPU = md->n_cells - nCellsCPU;
@@ -594,6 +597,9 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
   md->aero_rep_env_data+=nCellsCPU*md->n_aero_rep_env_data;
   md->sub_model_env_data+=nCellsCPU*md->n_sub_model_env_data;
 #endif
+//todo remove this ifndef
+#ifndef DEV_CPUGPU
+#else
   HANDLE_ERROR(cudaMemcpyAsync(mGPU->rxn_env_data,md->rxn_env_data,mCPU->rxn_env_data_size,cudaMemcpyHostToDevice,stream));
   HANDLE_ERROR(cudaMemcpyAsync(mGPU->env,md->total_env,mCPU->env_size,cudaMemcpyHostToDevice,stream));
   HANDLE_ERROR(cudaMemcpyAsync(mGPU->state,md->total_state,mCPU->state_size,cudaMemcpyHostToDevice,stream));
@@ -859,9 +865,9 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
   }
   cudaMemcpyAsync(sd->flagCells, mGPU->flagCells, mGPU->n_cells * sizeof(int), cudaMemcpyDeviceToHost, stream);
   mGPU = sd->mGPU;
-#ifdef DEV_CPUGPU
-  printf("DEV_CPUGPU: Restart indices to 0 and set n_cells to CPUPercNcells \n");
-  md->n_cells=mGPU->n_cells=nCellsCPU;
+#endif
+#ifndef DEV_CPUGPU
+  md->n_cells=1;
   md->total_state=total_state0;
   md->total_env=total_env0;
   md->rxn_env_data=rxn_env_data0;
@@ -870,16 +876,59 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
   int flag = istate;
   double t_initial = sd->t_initial;
   double t_final = sd->t_final;
+  double *state=sd->model_data.total_state;
+  double *env=sd->model_data.total_env;
   int i_dep_var = 0;
-  for (int i_cell = 0; i_cell < md->n_cells; i_cell++) {
-    md->total_state+=i_cell*md->n_per_cell_state_var;
-    md->total_env+=i_cell*CAMP_NUM_ENV_PARAM_;
-    md->rxn_env_data+=i_cell*md->n_rxn_env_data;
-    md->aero_rep_env_data+=i_cell*md->n_aero_rep_env_data;
-    md->sub_model_env_data+=i_cell*md->n_sub_model_env_data;
-    double *state = sd->model_data.total_state;
-    double *env = sd->model_data.total_env;
-    int n_state_var = md->n_per_cell_state_var;
+  for (int i_cell = 0; i_cell < nCellsCPU; i_cell++) {
+    md->total_state+=md->n_per_cell_state_var;
+    md->total_env+=CAMP_NUM_ENV_PARAM_;
+    md->rxn_env_data+=md->n_rxn_env_data;
+    md->aero_rep_env_data+=md->n_aero_rep_env_data;
+    md->sub_model_env_data+=md->n_sub_model_env_data;
+    double *state = md->total_state;
+    for (int i_spec = 0; i_spec < md->n_per_cell_state_var; i_spec++) {
+      if (sd->model_data.var_type[i_spec] == CHEM_SPEC_VARIABLE) {
+        NV_Ith_S(sd->y, i_dep_var++) = state[i_spec];
+      }
+    }
+    sd->Jac_eval_fails = 0;
+    sd->curr_J_guess = false;
+    sd->init_time_step = (t_final - t_initial) * 1.0;
+    flag = CVodeReInit(sd->cvode_mem, t_initial, sd->y);
+    check_flag_fail(&flag, "CVodeReInit", 1);
+    flag = SUNKLUReInit(sd->ls, sd->J, SM_NNZ_S(sd->J), SUNKLU_REINIT_PARTIAL);
+    check_flag_fail(&flag, "SUNKLUReInit", 1);
+    flag = CVodeSetInitStep(sd->cvode_mem, sd->init_time_step);
+    check_flag_fail(&flag, "CVodeSetInitStep", 1);
+    istate = CVode(sd->cvode_mem, tout, sd->y, tret, itask);
+    if(istate!=CV_SUCCESS ){
+      int rank;
+      MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+      printf("cudaCVode2 CPU kflag %d rank %d i_cell %d\n",istate,rank,i_cell);
+      return istate;
+    }
+  }
+  md->n_cells=n_cells0;
+  md->total_state=total_state0;
+  md->total_env=total_env0;
+  md->rxn_env_data=rxn_env_data0;
+  md->aero_rep_env_data=aero_rep_env_data0;
+  md->sub_model_env_data=sub_model_env_data0;
+/*
+  for (int i_cellCPU = 0; i_cellCPU < nCellsCPU; i_cellCPU++){
+
+  int n_state_var = md->n_per_cell_state_var;
+  int flag;
+  int rank = 0;
+  int i_cell = sd->icell;
+
+  // Update model data pointers
+  sd->model_data.total_state = state;
+  sd->model_data.total_env = env;
+
+  // Update the dependent variables
+  int i_dep_var = 0;
+  for (int i_cell = 0; i_cell < md->n_cells; i_cell++){
     for (int i_spec = 0; i_spec < n_state_var; i_spec++) {
       if (sd->model_data.var_type[i_spec] == CHEM_SPEC_VARIABLE) {
         NV_Ith_S(sd->y, i_dep_var++) =
@@ -894,29 +943,69 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
                 : TINY;
       }
     }
-    sd->Jac_eval_fails = 0;
-    sd->curr_J_guess = false;
-    sd->init_time_step = (t_final - t_initial) * 1.0;
-    flag = CVodeReInit(sd->cvode_mem, t_initial, sd->y);
-    check_flag_fail(&flag, "CVodeReInit", 1);
-    flag = SUNKLUReInit(sd->ls, sd->J, SM_NNZ_S(sd->J), SUNKLU_REINIT_PARTIAL);
-    check_flag_fail(&flag, "SUNKLUReInit", 1);
-    flag = CVodeSetInitStep(sd->cvode_mem, sd->init_time_step);
-    check_flag_fail(&flag, "CVodeSetInitStep", 1);
-    istate = CVode(sd->cvode_mem, tout, yout, tret, itask);
-    if(istate!=CV_SUCCESS ){
-      int rank;
-      MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-      printf("cudaCVode2 CPU kflag %d rank %d\n",istate,rank);
-      return istate;
-    }
+    md->grid_cell_id = i_cell;
+    md->grid_cell_state = &(md->total_state[i_cell * md->n_per_cell_state_var]);
+    md->grid_cell_env = &(md->total_env[i_cell * CAMP_NUM_ENV_PARAM_]);
+    md->grid_cell_rxn_env_data = &(md->rxn_env_data[i_cell * md->n_rxn_env_data]);
+    md->grid_cell_aero_rep_env_data =
+        &(md->aero_rep_env_data[i_cell * md->n_aero_rep_env_data]);
+    md->grid_cell_sub_model_env_data =
+        &(md->sub_model_env_data[i_cell * md->n_sub_model_env_data]);
+    // Update the model for the current environmental state
+    aero_rep_update_env_state(md);
+    sub_model_update_env_state(md);
+    rxn_update_env_state(md);
   }
-  md->n_cells=n_cells0;
-  md->total_state=total_state0;
-  md->total_env=total_env0;
-  md->rxn_env_data=rxn_env_data0;
-  md->aero_rep_env_data=aero_rep_env_data0;
-  md->sub_model_env_data=sub_model_env_data0;
+
+#ifdef RESET_JAC_SOLVING
+  //printf("RESET_JAC_SOLVING start\n");
+  N_VConst(0.0, md->J_state);
+  N_VConst(0.0, md->J_deriv);
+  N_VConst(0.0, md->J_tmp);
+  N_VConst(0.0, md->J_tmp2);
+
+  SM_NNZ_S(md->J_solver) = SM_NNZ_S(md->J_init);
+  for (int i = 0; i <= SM_NP_S(md->J_solver); i++) {
+    (SM_INDEXPTRS_S(md->J_solver))[i] = (SM_INDEXPTRS_S(md->J_init))[i];
+  }
+  for (int i = 0; i < SM_NNZ_S(md->J_solver); i++) {
+    (SM_INDEXVALS_S(md->J_solver))[i] = (SM_INDEXVALS_S(md->J_init))[i];
+    (SM_DATA_S(md->J_solver))[i] = 0.0;//(SM_DATA_S(md->J_init))[i]; //0.0
+  }
+#endif
+
+  sd->Jac_eval_fails = 0;
+  // Reset the flag indicating a current J_guess
+  sd->curr_J_guess = false;
+
+  sd->t_initial = t_initial;
+  sd->t_final = t_final;
+  // Set the initial time step
+  sd->init_time_step = (t_final - t_initial);
+
+  // Check whether there is anything to solve (filters empty air masses with no
+  // emissions)
+  if (is_anything_going_on_here(sd, t_initial, t_final) == false)
+    return CAMP_SOLVER_SUCCESS;
+
+  // Reinitialize the solver
+  flag = CVodeReInit(sd->cvode_mem, t_initial, sd->y);
+  check_flag_fail(&flag, "CVodeReInit", 1);
+
+  // Reinitialize the linear solver
+  flag = SUNKLUReInit(sd->ls, sd->J, SM_NNZ_S(sd->J), SUNKLU_REINIT_PARTIAL);
+  check_flag_fail(&flag, "SUNKLUReInit", 1);
+
+  // Set the inital time step
+  flag = CVodeSetInitStep(sd->cvode_mem, sd->init_time_step);
+  check_flag_fail(&flag, "CVodeSetInitStep", 1);
+
+  // Run the solver
+  realtype t_rt = (realtype)t_initial;
+
+  }
+  */
+
 #endif
   cudaDeviceSynchronize();
 #ifdef CAMP_DEBUG_GPU

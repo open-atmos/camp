@@ -625,25 +625,6 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
   int flag;
   int rank = 0;
   int i_cell = sd->icell;
-#ifdef CAMP_DEBUG_solver_run
-#ifdef CAMP_USE_MPI
-  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  if (rank == 0) {
-      // if (sd->counterSolve==0 && sd->counterFail==0)
-      // if (sd->counterFail==0)
-      int n_cell = 1;
-      printf(
-          "camp solver_run start [(id),conc], n_state_var %d, n_cells %d n_dep_var %d\n",
-          md->n_per_cell_state_var, n_cells, md->n_per_cell_dep_var);
-      printf("sd->counterSolve %d t_initial %-le t_final %-le\n",
-             sd->counterSolve, t_initial, t_final);
-      printf("\n");
-      printf("env [temp, press]\n");
-      for (int i = 0; i < 1; i++)
-      printf("%-le, %-le\n", env[0 + 2 * i], env[1 + 2 * i]);
-  }
-#endif
-#endif
 
   // Update model data pointers
   sd->model_data.total_state = state;
@@ -659,7 +640,7 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
   }
   // Update the dependent variables
   int i_dep_var = 0;
-  for (int i_cell = 0; i_cell < n_cells; i_cell++){
+  for (int i_cell = 0; i_cell < md->n_cells; i_cell++){
     for (int i_spec = 0; i_spec < n_state_var; i_spec++) {
       if (sd->model_data.var_type[i_spec] == CHEM_SPEC_VARIABLE) {
         NV_Ith_S(sd->y, i_dep_var++) =
@@ -688,16 +669,6 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
     rxn_update_env_state(md);
   }
 
-#ifdef DEV_MULTICELLS
-  sd->icell++;
-  if(sd->icell>=n_cells) {
-    sd->icell = 0;
-  } else {
-    return CAMP_SOLVER_FAIL;
-  }
-#endif
-
-  CAMP_DEBUG_JAC_STRUCT(sd->model_data.J_init, "Begin solving");
 #ifdef RESET_JAC_SOLVING
   //printf("RESET_JAC_SOLVING start\n");
   N_VConst(0.0, md->J_state);
@@ -802,7 +773,7 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
   // Update the species concentrations on the state array
   i_dep_var = 0;
   //printf("NV_Ith_S(sd->y, i_dep_var)\n");
-  for (int i_cell = 0; i_cell < n_cells; i_cell++) {
+  for (int i_cell = 0; i_cell < md->n_cells; i_cell++) {
     for (int i_spec = 0; i_spec < n_state_var; i_spec++) {
       if (md->var_type[i_spec] == CHEM_SPEC_VARIABLE) {
         //printf("%lf ",NV_Ith_S(sd->y, i_dep_var));
