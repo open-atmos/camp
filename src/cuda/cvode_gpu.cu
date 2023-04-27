@@ -5,11 +5,6 @@
 
 #include "itsolver_gpu.h"
 #include "cvode_cuda.h"
-#ifndef DEV_CPUGPU
-#include "../aero_rep_solver.h"
-#include "../rxn_solver.h"
-#include "../sub_model_solver.h"
-#endif
 
 extern "C" {
 #include "cvode_gpu.h"
@@ -586,6 +581,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
   int nCellsCPU = md->n_cells - nCellsGPU;
   nCellsGPU = md->n_cells - nCellsCPU;
   int n_cells0=md->n_cells;
+  md->n_cells=nCellsGPU;
   double* total_state0 = md->total_state;
   double *total_env0 = md->total_env;
   double *rxn_env_data0 = md->rxn_env_data;
@@ -879,12 +875,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
   double *state=sd->model_data.total_state;
   double *env=sd->model_data.total_env;
   int i_dep_var = 0;
-  for (int i_cell = 0; i_cell < nCellsCPU; i_cell++) {
-    md->total_state+=md->n_per_cell_state_var;
-    md->total_env+=CAMP_NUM_ENV_PARAM_;
-    md->rxn_env_data+=md->n_rxn_env_data;
-    md->aero_rep_env_data+=md->n_aero_rep_env_data;
-    md->sub_model_env_data+=md->n_sub_model_env_data;
+  for (int i_cellCPU = 0; i_cellCPU < nCellsCPU; i_cellCPU++) {
     double *state = md->total_state;
     for (int i_spec = 0; i_spec < md->n_per_cell_state_var; i_spec++) {
       if (sd->model_data.var_type[i_spec] == CHEM_SPEC_VARIABLE) {
@@ -893,20 +884,32 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     }
     sd->Jac_eval_fails = 0;
     sd->curr_J_guess = false;
-    sd->init_time_step = (t_final - t_initial) * 1.0;
+    sd->init_time_step = (t_final - t_initial);
     flag = CVodeReInit(sd->cvode_mem, t_initial, sd->y);
     check_flag_fail(&flag, "CVodeReInit", 1);
     flag = SUNKLUReInit(sd->ls, sd->J, SM_NNZ_S(sd->J), SUNKLU_REINIT_PARTIAL);
     check_flag_fail(&flag, "SUNKLUReInit", 1);
     flag = CVodeSetInitStep(sd->cvode_mem, sd->init_time_step);
     check_flag_fail(&flag, "CVodeSetInitStep", 1);
+    double t_rt = t_initial;
     istate = CVode(sd->cvode_mem, tout, sd->y, tret, itask);
     if(istate!=CV_SUCCESS ){
       int rank;
       MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-      printf("cudaCVode2 CPU kflag %d rank %d i_cell %d\n",istate,rank,i_cell);
+      printf("cudaCVode2 CPU kflag %d rank %d i_cellCPU %d\n",istate,rank,i_cellCPU);
+      md->n_cells=n_cells0;
+      md->total_state=total_state0;
+      md->total_env=total_env0;
+      md->rxn_env_data=rxn_env_data0;
+      md->aero_rep_env_data=aero_rep_env_data0;
+      md->sub_model_env_data=sub_model_env_data0;
       return istate;
     }
+    md->total_state+=md->n_per_cell_state_var;
+    md->total_env+=CAMP_NUM_ENV_PARAM_;
+    md->rxn_env_data+=md->n_rxn_env_data;
+    md->aero_rep_env_data+=md->n_aero_rep_env_data;
+    md->sub_model_env_data+=md->n_sub_model_env_data;
   }
   md->n_cells=n_cells0;
   md->total_state=total_state0;

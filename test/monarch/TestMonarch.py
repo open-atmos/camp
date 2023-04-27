@@ -819,7 +819,7 @@ def all_timesteps():
     #conf.caseBase = "CPU Multi-cells"
     # conf.caseBase="GPU Multi-cells"
     # conf.caseBase="GPU Block-cellsN"
-    # conf.caseBase="GPU Block-cells1n"
+    # conf.caseBase="GPU Block-cells1"
     #conf.caseBase = "GPU BDF"
     #conf.caseBase = "GPU CPU"
     # conf.caseBase = "GPU maxrregcount-64" #wrong 10,000 cells
