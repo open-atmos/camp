@@ -7,7 +7,7 @@
 import matplotlib as mpl
 
 mpl.use('TkAgg')
-# import plot_functions #comment to save ~2s execution time
+import plot_functions #comment to save ~2s execution time
 import math_functions
 import sys, getopt
 import os
@@ -588,13 +588,12 @@ def plot_cases(conf):
     cases_words = conf.caseBase.split()
     conf.caseGpuCpu = cases_words[0]
     conf.caseMulticellsOnecell = cases_words[1]
-    case_multicells_onecell_name = getCaseName(conf)
-    # if conf.caseMulticellsOnecell.find("One-cell") != -1:
-    #    case_multicells_onecell_name = "Base version"
+    #case_multicells_onecell_name = getCaseName(conf)
+    case_multicells_onecell_name = ""
 
     case_gpu_cpu_name = ""
     if conf.caseGpuCpu == "CPU":
-        case_gpu_cpu_name = str(conf.mpiProcessesCaseBase) + " MPI" + " CPU"
+        case_gpu_cpu_name = str(conf.mpiProcessesCaseBase) + " MPI CPU Cores"
     elif conf.caseGpuCpu == "GPU":
         if conf.mpiProcessesCaseBase > 1:
             case_gpu_cpu_name += str(conf.mpiProcessesCaseBase) + " MPI "
@@ -639,7 +638,8 @@ def plot_cases(conf):
                     cases_words = caseOptim.split()
                     conf.caseGpuCpu = cases_words[0]
                     conf.caseMulticellsOnecell = cases_words[1]
-                    case_multicells_onecell_name = getCaseName(conf)
+                    #case_multicells_onecell_name = getCaseName(conf)
+                    case_multicells_onecell_name = ""
                     if conf.caseMulticellsOnecell.find("BDF") != -1 or conf.caseMulticellsOnecell.find(
                             "maxrregcount") != -1:
                         is_same_diff_cells = True
@@ -660,9 +660,9 @@ def plot_cases(conf):
     conf.plotTitle = ""
     if not is_same_diff_cells and len(conf.diffCellsL) == 1:
         conf.plotTitle += conf.diffCells + " test: "
-    if len(conf.mpiProcessesCaseOptimList) == 1:
-        # if len(conf.mpiProcessesCaseOptimList) == 1:
-        conf.plotTitle += str(mpiProcessesCaseOptim) + " MPI "
+    #if len(conf.mpiProcessesCaseOptimList) == 1:
+    #    if len(conf.mpiProcessesCaseOptimList) == 1:
+    #        conf.plotTitle += str(mpiProcessesCaseOptim) + " MPI "
     if len(conf.nGPUsCaseOptimList) == 1 and conf.plotXKey == "GPUs":
         # conf.plotTitle += str(nGPUs) + " GPUs "
         conf.plotTitle += " GPUs "
@@ -676,11 +676,11 @@ def plot_cases(conf):
             if conf.caseGpuCpu == "GPU" and len(conf.nGPUsCaseOptimList) == 1 and conf.nGPUsCaseOptimList[0] > 1:
                 conf.plotTitle += str(conf.nGPUsCaseOptimList[0]) + " GPUs "
             else:
-                conf.plotTitle += conf.caseGpuCpu + " "
+                conf.plotTitle += str(nGPUs) + " " + conf.caseGpuCpu + " "
     if len(conf.legend) == 1 or not conf.legend or len(conf.diffCellsL) > 1:
         if len(conf.mpiProcessesCaseOptimList) > 1:
             legend_name += str(mpiProcessesCaseOptim) + " MPI "
-        conf.plotTitle += case_multicells_onecell_name + " "
+        #conf.plotTitle += case_multicells_onecell_name + " "
         if len(conf.diffCellsL) > 1:
             conf.plotTitle += "Implementations "
     else:
@@ -713,11 +713,8 @@ def plot_cases(conf):
 
     if len(conf.cells) > 1:
         namey += " [Mean and \u03C3]"
-        # namey += " [Average]"
-        print_timesteps_title = True
-        # print_timesteps_title = False
-        if print_timesteps_title:
-            conf.plotTitle += ", " + str(conf.timeSteps) + " timesteps"
+        conf.plotTitle+=""
+        #conf.plotTitle += ", " + str(conf.timeSteps) + " timesteps"
         datax = conf.cells
         plot_x_key = "Cells"
     elif conf.plotXKey == "MPI processes":
@@ -749,14 +746,13 @@ def plot_cases(conf):
         print("plotTitle: ", conf.plotTitle)
     print(namey, ":", datay)
 
-    # plot_functions.plotsns(namex, namey, datax, datay, conf.stdColumns, conf.plotTitle, conf.legend)
+    plot_functions.plotsns(namex, namey, datax, datay, conf.stdColumns, conf.plotTitle, conf.legend)
 
 
 def all_timesteps():
     conf = TestMonarch()
 
     # conf.chemFile = "simple"
-    #conf.chemFile = "cb05_yarwood2005"
     conf.chemFile = "monarch_cb05"
     #conf.chemFile = "monarch_binned"
 
@@ -788,10 +784,10 @@ def all_timesteps():
     conf.mpi = "yes"
     # conf.mpi = "no"
 
-    conf.mpiProcessesCaseBase = 1
+    conf.mpiProcessesCaseBase = 10
     #conf.mpiProcessesCaseBase = 2
 
-    conf.mpiProcessesCaseOptimList.append(1)
+    conf.mpiProcessesCaseOptimList.append(10)
     #conf.mpiProcessesCaseOptimList.append(2)
     # conf.mpiProcessesCaseOptimList = [10,20,40]
     # conf.mpiProcessesCaseOptSet Multi-GPusimList = [1,4,8,16,32,40]
@@ -805,7 +801,7 @@ def all_timesteps():
     # conf.allocatedTasksPerNode = 320
     # conf.allocatedTasksPerNode = get_ntasksPerNode_sbatch() #todo
 
-    conf.cells = [100]
+    conf.cells = [100,1000]
     # conf.cells = [100, 500, 1000, 5000, 10000]
     # conf.cells = [50000,100000,500000,1000000]
 
