@@ -1015,7 +1015,12 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
       times[i]=0.;
       i++;
 #endif
+#ifndef DEV_CPUGPU
+      CVodeGettimesCounters(sd->cvode_mem, &times[0], &counters[1]);
+      times[i]+=mCPU->timecvStep;
+#else
       times[i]=mCPU->timecvStep;
+#endif
       i++;
       //for(int i=0;i<sd->ntimers;i++)
         //printf("times[%d]=%le\n",i,times[i]);

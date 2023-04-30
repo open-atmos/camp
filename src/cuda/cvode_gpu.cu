@@ -927,20 +927,8 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
   md->aero_rep_env_data=aero_rep_env_data0;
   md->sub_model_env_data=sub_model_env_data0;
   int flag = istate;
-  double t_initial = sd->t_initial;
-  double t_final = sd->t_final;
   double *state=sd->model_data.total_state;
   double *env=sd->model_data.total_env;
-  /*sd->Jac_eval_fails = 0;
-  sd->curr_J_guess = false;
-  sd->init_time_step = (t_final - t_initial);
-  flag = CVodeReInit(sd->cvode_mem, t_initial, sd->y);
-  check_flag_fail(&flag, "CVodeReInit", 1);
-  flag = SUNKLUReInit(sd->ls, sd->J, SM_NNZ_S(sd->J), SUNKLU_REINIT_PARTIAL);
-  check_flag_fail(&flag, "SUNKLUReInit", 1);
-  flag = CVodeSetInitStep(sd->cvode_mem, sd->init_time_step);
-  check_flag_fail(&flag, "CVodeSetInitStep", 1);
-  double t_rt = t_initial;*/
   istate = CVode(sd->cvode_mem, tout, sd->y, tret, itask);
   if(istate!=CV_SUCCESS ){
     int rank;
