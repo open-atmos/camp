@@ -213,7 +213,7 @@ void solver_new_gpu_cu_cvode(SolverData *sd) {
 #ifdef DEBUG_solver_new_gpu_cu_cvode
   printf("solver_new_gpu_cu_cvode start \n");
 #endif
-#ifdef DEV_CPUGPU
+#ifndef DEV_CPUGPU
   //todo previous to continue test gpu one-cell, since multicells not work in monarch, so cpugpu should use one-cell for cpu
   sd->nCellsGPUPerc=0.;
   n_cells *= sd->nCellsGPUPerc;
@@ -576,7 +576,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
   double *total_state = md->total_state;
   cudaStream_t stream = 0;
   mGPU = sd->mGPU;
-#ifdef DEV_CPUGPU
+#ifndef DEV_CPUGPU
   int nCellsGPU = md->n_cells*sd->nCellsGPUPerc;
   int nCellsCPU = md->n_cells - nCellsGPU;
   nCellsGPU = md->n_cells - nCellsCPU;
@@ -594,7 +594,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
   md->sub_model_env_data+=nCellsCPU*md->n_sub_model_env_data;
 #endif
 //todo remove this ifndef
-#ifdef DEV_CPUGPU
+#ifndef DEV_CPUGPU
 #else
   HANDLE_ERROR(cudaMemcpyAsync(mGPU->rxn_env_data,md->rxn_env_data,mCPU->rxn_env_data_size,cudaMemcpyHostToDevice,stream));
   HANDLE_ERROR(cudaMemcpyAsync(mGPU->env,md->total_env,mCPU->env_size,cudaMemcpyHostToDevice,stream));
@@ -862,7 +862,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
   cudaMemcpyAsync(sd->flagCells, mGPU->flagCells, mGPU->n_cells * sizeof(int), cudaMemcpyDeviceToHost, stream);
   mGPU = sd->mGPU;
 #endif
-#ifdef DEV_CPUGPU
+#ifndef DEV_CPUGPU
 #ifdef CPUGPU_ONECELL
   md->n_cells=1;
   md->total_state=total_state0;
@@ -931,7 +931,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
   double t_final = sd->t_final;
   double *state=sd->model_data.total_state;
   double *env=sd->model_data.total_env;
-  sd->Jac_eval_fails = 0;
+  /*sd->Jac_eval_fails = 0;
   sd->curr_J_guess = false;
   sd->init_time_step = (t_final - t_initial);
   flag = CVodeReInit(sd->cvode_mem, t_initial, sd->y);
@@ -940,12 +940,12 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
   check_flag_fail(&flag, "SUNKLUReInit", 1);
   flag = CVodeSetInitStep(sd->cvode_mem, sd->init_time_step);
   check_flag_fail(&flag, "CVodeSetInitStep", 1);
-  double t_rt = t_initial;
+  double t_rt = t_initial;*/
   istate = CVode(sd->cvode_mem, tout, sd->y, tret, itask);
   if(istate!=CV_SUCCESS ){
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    printf("cudaCVode CPU kflag %d rank %d i_cellCPU %d\n",istate,rank,i_cellCPU);
+    printf("cudaCVode CPU kflag %d rank %d\n",istate,rank);
     md->n_cells=n_cells0;
     return istate;
   }

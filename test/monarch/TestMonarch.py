@@ -7,7 +7,7 @@
 import matplotlib as mpl
 
 mpl.use('TkAgg')
-import plot_functions #comment to save ~2s execution time
+#import plot_functions #comment to save ~2s execution time
 import math_functions
 import sys, getopt
 import os
@@ -749,7 +749,7 @@ def plot_cases(conf):
         print("plotTitle: ", conf.plotTitle)
     print(namey, ":", datay)
 
-    plot_functions.plotsns(namex, namey, datax, datay, conf.stdColumns, conf.plotTitle, conf.legend)
+    #plot_functions.plotsns(namex, namey, datax, datay, conf.stdColumns, conf.plotTitle, conf.legend)
 
 
 def all_timesteps():
@@ -787,10 +787,10 @@ def all_timesteps():
     conf.mpi = "yes"
     # conf.mpi = "no"
 
-    conf.mpiProcessesCaseBase = 20
+    conf.mpiProcessesCaseBase = 1
     #conf.mpiProcessesCaseBase = 2
 
-    conf.mpiProcessesCaseOptimList.append(10)
+    conf.mpiProcessesCaseOptimList.append(1)
     #conf.mpiProcessesCaseOptimList.append(2)
     # conf.mpiProcessesCaseOptimList = [10,20,40]
     # conf.mpiProcessesCaseOptSet Multi-GPusimList = [1,4,8,16,32,40]
@@ -804,12 +804,12 @@ def all_timesteps():
     # conf.allocatedTasksPerNode = 320
     # conf.allocatedTasksPerNode = get_ntasksPerNode_sbatch() #todo
 
-    conf.cells = [100,1000,5000,10000]
+    conf.cells = [1000]
     # conf.cells = [100, 500, 1000, 5000, 10000]
     # conf.cells = [50000,100000,500000,1000000]
 
-    #conf.timeSteps = 3
-    conf.timeSteps = 720
+    conf.timeSteps = 10
+    #conf.timeSteps = 720
 
     conf.timeStepsDt = 2
 
@@ -852,12 +852,12 @@ def all_timesteps():
     # conf.plotYKey = "Speedup normalized counterBCG"
     # conf.plotYKey = "Speedup total iterations - counterBCG"
     # conf.plotYKey = "Speedup BCG iteration (Comp.timeLS/counterBCG)"
-    conf.plotYKey = "Speedup timecvStep"
+    #conf.plotYKey = "Speedup timecvStep"
     # conf.plotYKey = "Speedup timecvStep normalized by countercvStep"
     # conf.plotYKey = "Speedup countercvStep"
     # conf.plotYKey = "Speedup device timecvStep"
     # conf.plotYKey = "Percentage data transfers CPU-GPU [%]"
-    #conf.plotYKey = "MAPE"
+    conf.plotYKey = "MAPE"
     # conf.plotYKey ="SMAPE"
     # conf.plotYKey ="NRMSE"
     # conf.MAPETol = 1.0E-6
