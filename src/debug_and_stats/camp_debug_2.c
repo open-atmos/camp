@@ -581,6 +581,7 @@ void get_camp_config_variables(SolverData *sd){
     }
     sd->nDevices = 1;
     fscanf(fp, "%d", &sd->nDevices);
+    fscanf (fp, "%d", &sd->nCellsGPUPerc);
     fclose(fp);
   }
   //printf("get_camp_config_variables\n");

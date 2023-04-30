@@ -561,7 +561,7 @@ __device__ void cudaDeviceSpmvCSC_block(double* dx, double* db, double* dA, int*
 }
 
 __device__ void cudaDeviceSpmv(double* dx, double* db, double* dA, int* djA, int* diA){
-#ifdef USE_CSR_ODE_GPU
+#ifndef USE_CSR_ODE_GPU
   cudaDeviceSpmvCSR(dx,db,dA,djA,diA);
 #else
   cudaDeviceSpmvCSC_block(dx,db,dA,djA,diA);
