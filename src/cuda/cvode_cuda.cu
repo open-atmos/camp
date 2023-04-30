@@ -198,7 +198,7 @@ int cudaDevicef(
 )
 {
 #ifdef CAMP_DEBUG_GPU
-#ifndef CAMP_PROFILE_DEVICE_FUNCTIONS
+#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
   int clock_khz=md->clock_khz;
   clock_t start;
   start = clock();
@@ -220,7 +220,7 @@ int cudaDevicef(
 #endif
     __syncthreads();
 #ifdef CAMP_DEBUG_GPU
-#ifndef CAMP_PROFILE_DEVICE_FUNCTIONS
+#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     int i = blockIdx.x * blockDim.x + threadIdx.x;
     if(threadIdx.x==0) md->s->timef += ((double)(int)(clock() - start))/(clock_khz*1000);
 #endif
@@ -239,7 +239,7 @@ int cudaDevicef(
   //printmin(md,yout,"cudaDevicef End yout");
   //printmin(md,y,"cudaDevicef End y");
 #ifdef CAMP_DEBUG_GPU
-#ifndef CAMP_PROFILE_DEVICE_FUNCTIONS
+#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     int i = blockIdx.x * blockDim.x + threadIdx.x;
     if(threadIdx.x==0) md->s->timef += ((double)(int)(clock() - start))/(clock_khz*1000);
 #endif
@@ -277,7 +277,7 @@ int CudaDeviceguess_helper(double cv_tn, double cv_h, double* y_n,
   }
   __syncthreads();
 #ifdef CAMP_DEBUG_GPU
-#ifndef CAMP_PROFILE_DEVICE_FUNCTIONS
+#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
   int clock_khz=md->clock_khz;
   clock_t start;
   start = clock();
@@ -327,7 +327,7 @@ int CudaDeviceguess_helper(double cv_tn, double cv_h, double* y_n,
 #endif
       __syncthreads();
 #ifdef CAMP_DEBUG_GPU
-#ifndef CAMP_PROFILE_DEVICE_FUNCTIONS
+#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     if(threadIdx.x==0) md->s->timeguess_helper += ((double)(clock() - start))/(clock_khz*1000);
 #endif
 #endif
@@ -361,7 +361,7 @@ int CudaDeviceguess_helper(double cv_tn, double cv_h, double* y_n,
 #endif
       __syncthreads();
 #ifdef CAMP_DEBUG_GPU
-#ifndef CAMP_PROFILE_DEVICE_FUNCTIONS
+#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     if(threadIdx.x==0) md->s->timeguess_helper += ((double)(clock() - start))/(clock_khz*1000);
 #endif
 #endif
@@ -371,7 +371,7 @@ int CudaDeviceguess_helper(double cv_tn, double cv_h, double* y_n,
       if (cv_h == 0.){
         __syncthreads();
 #ifdef CAMP_DEBUG_GPU
-#ifndef CAMP_PROFILE_DEVICE_FUNCTIONS
+#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     if(threadIdx.x==0) md->s->timeguess_helper += ((double)(clock() - start))/(clock_khz*1000);
 #endif
 #endif
@@ -389,7 +389,7 @@ int CudaDeviceguess_helper(double cv_tn, double cv_h, double* y_n,
   cudaDevicezaxpby(1., dtempv1, -1., y_n1, hf, md->nrows);
   __syncthreads();
 #ifdef CAMP_DEBUG_GPU
-#ifndef CAMP_PROFILE_DEVICE_FUNCTIONS
+#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     if(threadIdx.x==0)  md->s->timeguess_helper += ((double)(clock() - start))/(clock_khz*1000);
 #endif
 #endif
@@ -457,7 +457,7 @@ __device__ void cudaDevicecalc_Jac(double *y,ModelDataGPU *md, ModelDataVariable
   int active_threads = md->nrows;
   __syncthreads();
 #ifdef CAMP_DEBUG_GPU
-#ifndef CAMP_PROFILE_DEVICE_FUNCTIONS
+#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
   int clock_khz=md->clock_khz;
   clock_t start;
   start = clock();
@@ -518,7 +518,7 @@ __device__ void cudaDevicecalc_Jac(double *y,ModelDataGPU *md, ModelDataVariable
   }
     __syncthreads();
 #ifdef CAMP_DEBUG_GPU
-#ifndef CAMP_PROFILE_DEVICE_FUNCTIONS
+#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     if(threadIdx.x==0) md->s->timecalc_Jac += ((double)(clock() - start))/(clock_khz*1000);
 #endif
 #endif
@@ -534,7 +534,7 @@ int cudaDeviceJac(int *flag, ModelDataGPU *md, ModelDataVariable *dmdv
   double* dcv_y = md->dcv_y;
   __syncthreads();
 #ifdef CAMP_DEBUG_GPU
-#ifndef CAMP_PROFILE_DEVICE_FUNCTIONS
+#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
   int clock_khz=md->clock_khz;
   clock_t start;
   start = clock();
@@ -593,7 +593,7 @@ int cudaDeviceJac(int *flag, ModelDataGPU *md, ModelDataVariable *dmdv
     md->J_deriv[tid]=dftemp[tid];
   __syncthreads();
 #ifdef CAMP_DEBUG_GPU
-#ifndef CAMP_PROFILE_DEVICE_FUNCTIONS
+#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     //if(tid==0)printf("md->s->timeJac %lf\n",md->s->timeJac);
     if(threadIdx.x==0)  md->s->timeJac += ((double)(clock() - start))/(clock_khz*1000);
 #endif
@@ -708,7 +708,7 @@ void solveBcgCudaDeviceCVODE(ModelDataGPU *md, ModelDataVariable *dmdv)
   } while(it<maxIt && temp1>tolmax);//while(it<maxIt && temp1>tolmax);//while(0);
   __syncthreads();
 #ifdef CAMP_DEBUG_GPU
-#ifndef CAMP_PROFILE_DEVICE_FUNCTIONS
+#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
   if(threadIdx.x==0) md->s->counterBCGInternal += it;
   if(threadIdx.x==0) md->s->counterBCG++;
 #endif
@@ -737,7 +737,7 @@ int cudaDevicecvNewtonIteration(ModelDataGPU *md, ModelDataVariable *dmdv){
   del = delp = 0.0;
   __syncthreads();
 #ifdef CAMP_DEBUG_GPU
-#ifndef CAMP_PROFILE_DEVICE_FUNCTIONS
+#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
   int clock_khz=md->clock_khz;
   clock_t start;
 #endif
@@ -751,7 +751,7 @@ int cudaDevicecvNewtonIteration(ModelDataGPU *md, ModelDataVariable *dmdv){
 #endif
     __syncthreads();
 #ifdef CAMP_DEBUG_GPU
-#ifndef CAMP_PROFILE_DEVICE_FUNCTIONS
+#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     start = clock();
 #endif
 #endif
@@ -760,7 +760,7 @@ int cudaDevicecvNewtonIteration(ModelDataGPU *md, ModelDataVariable *dmdv){
     solveBcgCudaDeviceCVODE(md, dmdv);
     __syncthreads();
 #ifdef CAMP_DEBUG_GPU
-#ifndef CAMP_PROFILE_DEVICE_FUNCTIONS
+#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     if(threadIdx.x==0) md->s->dtBCG += ((double)(int)(clock() - start))/(clock_khz*1000);
 #endif
 #endif
@@ -845,7 +845,7 @@ int cudaDevicecvNewtonIteration(ModelDataGPU *md, ModelDataVariable *dmdv){
     }
     __syncthreads();
 #ifdef CAMP_DEBUG_GPU
-#ifndef CAMP_PROFILE_DEVICE_FUNCTIONS
+#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     if(threadIdx.x==0) md->s->dtPostBCG += ((double)(clock() - start))/(clock_khz*1000);
 #endif
 #endif
@@ -875,7 +875,7 @@ int cudaDevicecvNlsNewton(int nflag,
 #endif
   __syncthreads();
 #ifdef CAMP_DEBUG_GPU
-#ifndef CAMP_PROFILE_DEVICE_FUNCTIONS
+#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
   int clock_khz=md->clock_khz;
   clock_t start;
 #endif
@@ -920,7 +920,7 @@ int cudaDevicecvNlsNewton(int nflag,
     if (callSetup==1) {
       __syncthreads();
 #ifdef CAMP_DEBUG_GPU
-#ifndef CAMP_PROFILE_DEVICE_FUNCTIONS
+#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
       start = clock();
 #endif
 #endif
@@ -928,7 +928,7 @@ int cudaDevicecvNlsNewton(int nflag,
       int linflag=cudaDevicelinsolsetup(md, dmdv,convfail);
       __syncthreads();
 #ifdef CAMP_DEBUG_GPU
-#ifndef CAMP_PROFILE_DEVICE_FUNCTIONS
+#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
       if(threadIdx.x==0) md->s->timelinsolsetup += ((double)(clock() - start))/(clock_khz*1000);
 #endif
 #endif
@@ -951,7 +951,7 @@ int cudaDevicecvNlsNewton(int nflag,
     cv_acor[i] = 0.0;
     __syncthreads();
 #ifdef CAMP_DEBUG_GPU
-#ifndef CAMP_PROFILE_DEVICE_FUNCTIONS
+#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     start = clock();
 #endif
 #endif
@@ -959,7 +959,7 @@ int cudaDevicecvNlsNewton(int nflag,
     int nItflag=cudaDevicecvNewtonIteration(md, dmdv);
     __syncthreads();
 #ifdef CAMP_DEBUG_GPU
-#ifndef CAMP_PROFILE_DEVICE_FUNCTIONS
+#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     if(threadIdx.x==0)  md->s->timeNewtonIteration += ((double)(clock() - start))/(clock_khz*1000);
 #endif
 #endif
@@ -1570,7 +1570,7 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
   for(;;) {
     __syncthreads();
 #ifdef CAMP_DEBUG_GPU
-#ifndef CAMP_PROFILE_DEVICE_FUNCTIONS
+#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     if(threadIdx.x==0) md->s->countercvStep++;
 #endif
 #endif

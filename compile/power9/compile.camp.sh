@@ -46,9 +46,9 @@ mkdir build
 cd build
 
 cmake -D CMAKE_C_COMPILER=$(which mpicc) \
--D CMAKE_BUILD_TYPE=release \
--D CMAKE_C_FLAGS_DEBUG="" \
--D CMAKE_Fortran_FLAGS_DEBUG="" \
+-D CMAKE_BUILD_TYPE=debug \
+-D CMAKE_C_FLAGS_DEBUG="-g" \
+-D CMAKE_Fortran_FLAGS_DEBUG="-g" \
 -D CMAKE_C_FLAGS_RELEASE="-std=c99" \
 -D CMAKE_Fortran_FLAGS_RELEASE="" \
 -D CMAKE_Fortran_COMPILER=$mpifort \

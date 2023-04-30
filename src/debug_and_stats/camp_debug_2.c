@@ -499,9 +499,6 @@ void check_iszerod(long double *x, int len, const char *s){
 }
 
 void check_isnanld(long double *x, int len, const char *s){
-
-#ifndef DEBUG_CHECK_ISNANLD
-
   int n_zeros=0;
   for (int i=0; i<len; i++){
     if(isnan(x[i])){
@@ -509,13 +506,9 @@ void check_isnanld(long double *x, int len, const char *s){
       exit(0);
     }
   }
-
-#endif
-
 }
 
 void check_isnand(double *x, int len, const char *s){
-
   int n_zeros=0;
   for (int i=0; i<len; i++){
     if(isnan(x[i])){
@@ -523,7 +516,6 @@ void check_isnand(double *x, int len, const char *s){
       exit(0);
     }
   }
-
 }
 
 int compare_doubles(double *x, double *y, int len, const char *s){

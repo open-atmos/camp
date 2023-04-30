@@ -470,7 +470,7 @@ int CVode_gpu(void *cvode_mem, realtype tout, N_Vector yout,
   for(;;) {
 
 #ifdef CAMP_DEBUG_GPU
-#ifndef CAMP_PROFILE_DEVICE_FUNCTIONS
+#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     mGPU = sd->mGPU;
     mCPU->mdvCPU.countercvStep++;
  #endif

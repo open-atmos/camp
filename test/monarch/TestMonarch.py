@@ -593,7 +593,9 @@ def plot_cases(conf):
 
     case_gpu_cpu_name = ""
     if conf.caseGpuCpu == "CPU":
-        case_gpu_cpu_name = str(conf.mpiProcessesCaseBase) + " MPI CPU Cores"
+        #case_gpu_cpu_name = str(conf.mpiProcessesCaseBase) + " MPI CPU Cores"
+        #case_gpu_cpu_name = "1 CPU ("+str(conf.mpiProcessesCaseBase)+" MPI cores)"
+        case_gpu_cpu_name = "CPU"
     elif conf.caseGpuCpu == "GPU":
         if conf.mpiProcessesCaseBase > 1:
             case_gpu_cpu_name += str(conf.mpiProcessesCaseBase) + " MPI "
@@ -676,7 +678,8 @@ def plot_cases(conf):
             if conf.caseGpuCpu == "GPU" and len(conf.nGPUsCaseOptimList) == 1 and conf.nGPUsCaseOptimList[0] > 1:
                 conf.plotTitle += str(conf.nGPUsCaseOptimList[0]) + " GPUs "
             else:
-                conf.plotTitle += str(nGPUs) + " " + conf.caseGpuCpu + " "
+                #conf.plotTitle += str(nGPUs) + " " + conf.caseGpuCpu + " "
+                conf.plotTitle += conf.caseGpuCpu + " "
     if len(conf.legend) == 1 or not conf.legend or len(conf.diffCellsL) > 1:
         if len(conf.mpiProcessesCaseOptimList) > 1:
             legend_name += str(mpiProcessesCaseOptim) + " MPI "
@@ -784,7 +787,7 @@ def all_timesteps():
     conf.mpi = "yes"
     # conf.mpi = "no"
 
-    conf.mpiProcessesCaseBase = 10
+    conf.mpiProcessesCaseBase = 20
     #conf.mpiProcessesCaseBase = 2
 
     conf.mpiProcessesCaseOptimList.append(10)
@@ -801,12 +804,12 @@ def all_timesteps():
     # conf.allocatedTasksPerNode = 320
     # conf.allocatedTasksPerNode = get_ntasksPerNode_sbatch() #todo
 
-    conf.cells = [100,1000]
+    conf.cells = [100,1000,5000,10000]
     # conf.cells = [100, 500, 1000, 5000, 10000]
     # conf.cells = [50000,100000,500000,1000000]
 
-    conf.timeSteps = 10
-    # conf.timeSteps = 720
+    #conf.timeSteps = 3
+    conf.timeSteps = 720
 
     conf.timeStepsDt = 2
 
@@ -849,12 +852,12 @@ def all_timesteps():
     # conf.plotYKey = "Speedup normalized counterBCG"
     # conf.plotYKey = "Speedup total iterations - counterBCG"
     # conf.plotYKey = "Speedup BCG iteration (Comp.timeLS/counterBCG)"
-    #conf.plotYKey = "Speedup timecvStep"
+    conf.plotYKey = "Speedup timecvStep"
     # conf.plotYKey = "Speedup timecvStep normalized by countercvStep"
     # conf.plotYKey = "Speedup countercvStep"
     # conf.plotYKey = "Speedup device timecvStep"
     # conf.plotYKey = "Percentage data transfers CPU-GPU [%]"
-    conf.plotYKey = "MAPE"
+    #conf.plotYKey = "MAPE"
     # conf.plotYKey ="SMAPE"
     # conf.plotYKey ="NRMSE"
     # conf.MAPETol = 1.0E-6

@@ -944,7 +944,7 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
     int i;
     if(sd->ncounters>0){
       i=0;
-#ifndef CAMP_PROFILE_DEVICE_FUNCTIONS
+#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
       counters[i]=mCPU->mdvCPU.counterBCGInternal;
       i++;
 #else
@@ -955,7 +955,7 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
       i++;
       counters[i]=mCPU->countersolveCVODEGPU;
       i++;
-#ifndef CAMP_PROFILE_DEVICE_FUNCTIONS
+#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
       counters[i]=mCPU->mdvCPU.countercvStep;
       i++;
 #else
@@ -971,7 +971,7 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
       i++;
       times[i]=sd->timeCVode;
       i++;
-#ifndef CAMP_PROFILE_DEVICE_FUNCTIONS
+#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
       times[i]=mdvCPU.dtcudaDeviceCVode;
       i++;
       times[i]=mdvCPU.dtPostBCG;
@@ -984,7 +984,7 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
 #endif
       times[i]=0.;
       i++;
-#ifndef CAMP_PROFILE_DEVICE_FUNCTIONS
+#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
       times[i]=mdvCPU.timeNewtonIteration;
       i++;
       times[i]=mdvCPU.timeJac;
@@ -1063,12 +1063,12 @@ void solver_reset_statistics(void *solver_data, int *counters, double *times)
 
       ModelDataVariable mdvCPU=mCPU->mdvCPU;
       if(sd->ncounters>0){
-#ifndef CAMP_PROFILE_DEVICE_FUNCTIONS
+#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
         mCPU->mdvCPU.counterBCGInternal=0;
 #endif
         mCPU->counterBCG=0;
         mCPU->countersolveCVODEGPU=0;
-#ifndef CAMP_PROFILE_DEVICE_FUNCTIONS
+#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
         mCPU->mdvCPU.countercvStep=0;
 #endif
       }
@@ -1076,7 +1076,7 @@ void solver_reset_statistics(void *solver_data, int *counters, double *times)
         mCPU->timeBiConjGrad=0;
         mCPU->timeBiConjGradMemcpy=0;
         sd->timeCVode=0;
-#ifndef CAMP_PROFILE_DEVICE_FUNCTIONS
+#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
         mdvCPU.dtcudaDeviceCVode=0;
         mdvCPU.dtPostBCG=0;
         mdvCPU.timeNewtonIteration=0;

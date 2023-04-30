@@ -490,7 +490,7 @@ void constructor_cvode_gpu(CVodeMem cv_mem, SolverData *sd){
   int flag = 999; //CAMP_SOLVER_SUCCESS
   cudaMemcpy(mGPU->flag, &flag, 1 * sizeof(int), cudaMemcpyHostToDevice);
 #ifdef CAMP_DEBUG_GPU
-#ifndef CAMP_PROFILE_DEVICE_FUNCTIONS
+#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
   cudaDeviceGetAttribute(&mGPU->clock_khz, cudaDevAttrClockRate, 0);
   mCPU->mdvCPU.countercvStep=0;
   mCPU->mdvCPU.counterBCGInternal=0;
@@ -537,7 +537,7 @@ void cudaGlobalCVode(ModelDataGPU md_object) {
   if(tid<active_threads){
     __syncthreads();
 #ifdef CAMP_DEBUG_GPU
-#ifndef CAMP_PROFILE_DEVICE_FUNCTIONS
+#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     int clock_khz=md->clock_khz;
     clock_t start;
     start = clock();
@@ -547,7 +547,7 @@ void cudaGlobalCVode(ModelDataGPU md_object) {
     istate=cudaDeviceCVode(md,md->s);//dmdv as a function parameter seems faster than removing it
     __syncthreads();
 #ifdef CAMP_DEBUG_GPU
-#ifndef CAMP_PROFILE_DEVICE_FUNCTIONS
+#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
   if(threadIdx.x==0) md->s->dtcudaDeviceCVode += ((double)(int)(clock() - start))/(clock_khz*1000);
   __syncthreads();
   //if(tid==0) printf("dtcudaDeviceCVode %lf\n",md->s->dtcudaDeviceCVode);
@@ -556,7 +556,7 @@ void cudaGlobalCVode(ModelDataGPU md_object) {
   }
   __syncthreads();
   if(threadIdx.x==0) md->flagCells[blockIdx.x]=istate;
-#ifndef CAMP_PROFILE_DEVICE_FUNCTIONS
+#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
   ModelDataVariable *mdvo = md->mdvo;
   *mdvo = *md->s;
 #endif
@@ -863,7 +863,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
   mGPU = sd->mGPU;
 #endif
 #ifdef DEV_CPUGPU
-#ifndef CPUGPU_ONECELL
+#ifdef CPUGPU_ONECELL
   md->n_cells=1;
   md->total_state=total_state0;
   md->total_env=total_env0;
@@ -919,7 +919,37 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
   md->aero_rep_env_data=aero_rep_env_data0;
   md->sub_model_env_data=sub_model_env_data0;
 #else
-todo multicells
+// multicells
+  md->n_cells=nCellsCPU;
+  md->total_state=total_state0;
+  md->total_env=total_env0;
+  md->rxn_env_data=rxn_env_data0;
+  md->aero_rep_env_data=aero_rep_env_data0;
+  md->sub_model_env_data=sub_model_env_data0;
+  int flag = istate;
+  double t_initial = sd->t_initial;
+  double t_final = sd->t_final;
+  double *state=sd->model_data.total_state;
+  double *env=sd->model_data.total_env;
+  sd->Jac_eval_fails = 0;
+  sd->curr_J_guess = false;
+  sd->init_time_step = (t_final - t_initial);
+  flag = CVodeReInit(sd->cvode_mem, t_initial, sd->y);
+  check_flag_fail(&flag, "CVodeReInit", 1);
+  flag = SUNKLUReInit(sd->ls, sd->J, SM_NNZ_S(sd->J), SUNKLU_REINIT_PARTIAL);
+  check_flag_fail(&flag, "SUNKLUReInit", 1);
+  flag = CVodeSetInitStep(sd->cvode_mem, sd->init_time_step);
+  check_flag_fail(&flag, "CVodeSetInitStep", 1);
+  double t_rt = t_initial;
+  istate = CVode(sd->cvode_mem, tout, sd->y, tret, itask);
+  if(istate!=CV_SUCCESS ){
+    int rank;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    printf("cudaCVode CPU kflag %d rank %d i_cellCPU %d\n",istate,rank,i_cellCPU);
+    md->n_cells=n_cells0;
+    return istate;
+  }
+  md->n_cells=n_cells0;
 #endif
 #endif
   cudaDeviceSynchronize();
@@ -930,7 +960,7 @@ todo multicells
     cudaEventElapsedTime(&mscvStep, mCPU->startcvStep, mCPU->stopcvStep);
     mCPU->timecvStep+= mscvStep/1000;
     //printf("mCPU->timecvStep %lf\n",mCPU->timecvStep);
-#ifndef CAMP_PROFILE_DEVICE_FUNCTIONS
+#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     cudaMemcpy(&mCPU->mdvCPU, mGPU->mdvo, sizeof(ModelDataVariable), cudaMemcpyDeviceToHost);
     mCPU->timeBiConjGrad=mCPU->timecvStep*mCPU->mdvCPU.dtBCG/mCPU->mdvCPU.dtcudaDeviceCVode;
     mCPU->counterBCG+= mCPU->mdvCPU.counterBCG;
