@@ -213,8 +213,10 @@ void solver_new_gpu_cu_cvode(SolverData *sd) {
 #ifdef DEBUG_solver_new_gpu_cu_cvode
   printf("solver_new_gpu_cu_cvode start \n");
 #endif
-#ifndef DEV_CPUGPU
+#ifdef DEV_CPUGPU
+  sd->n_cells_total = md->n_cells;
   n_cells *= sd->nCellsGPUPerc/10.;
+  md->n_cells=n_cells;
 #endif
   mCPU->state_size = n_state_var * n_cells * sizeof(double);
   mCPU->deriv_size = n_dep_var * n_cells * sizeof(double);
@@ -574,12 +576,9 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
   double *total_state = md->total_state;
   cudaStream_t stream = 0;
   mGPU = sd->mGPU;
-#ifndef DEV_CPUGPU
-  int nCellsGPU = md->n_cells*sd->nCellsGPUPerc/10.;
-  int nCellsCPU = md->n_cells - nCellsGPU;
-  nCellsGPU = md->n_cells - nCellsCPU;
-  int n_cells0=md->n_cells;
-  md->n_cells=nCellsGPU;
+#ifdef DEV_CPUGPU
+  int nCellsCPU = sd->n_cells_total - md->n_cells;
+  printf("nCellsCPU %d %d\n",nCellsCPU,sd->n_cells_total);
   double* total_state0 = md->total_state;
   double *total_env0 = md->total_env;
   double *rxn_env_data0 = md->rxn_env_data;
@@ -764,7 +763,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
 #ifdef CAMP_DEBUG_GPU
   cudaEventRecord(mCPU->startcvStep);
 #endif
-  for (int i = 0; i < md->n_cells; i++)//md->nCellsGPU
+  for (int i = 0; i < md->n_cells; i++)
     sd->flagCells[i] = 99;
 #ifdef ODE_WARNING
   mCPU->mdvCPU.cv_nhnil = cv_mem->cv_nhnil;
@@ -856,7 +855,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
   }
   cudaMemcpyAsync(sd->flagCells, mGPU->flagCells, mGPU->n_cells * sizeof(int), cudaMemcpyDeviceToHost, stream);
   mGPU = sd->mGPU;
-#ifndef DEV_CPUGPU
+#ifdef DEV_CPUGPU
 #ifdef CPUGPU_ONECELL
   md->n_cells=1;
   md->total_state=total_state0;
@@ -892,7 +891,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
       int rank;
       MPI_Comm_rank(MPI_COMM_WORLD, &rank);
       printf("cudaCVode2 CPU kflag %d rank %d i_cellCPU %d\n",istate,rank,i_cellCPU);
-      md->n_cells=n_cells0;
+      md->n_cells=sd->n_cells_total;
       md->total_state=total_state0;
       md->total_env=total_env0;
       md->rxn_env_data=rxn_env_data0;
@@ -906,7 +905,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     md->aero_rep_env_data+=md->n_aero_rep_env_data;
     md->sub_model_env_data+=md->n_sub_model_env_data;
   }
-  md->n_cells=n_cells0;
+  md->n_cells=sd->n_cells_total;
   md->total_state=total_state0;
   md->total_env=total_env0;
   md->rxn_env_data=rxn_env_data0;
@@ -916,6 +915,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
 // multicells
   if(nCellsCPU!=0){
     sd->use_cpu=1;
+    int nCellsGPU=md->n_cells;
     md->n_cells=nCellsCPU;
     md->total_state=total_state0;
     md->total_env=total_env0;
@@ -923,10 +923,8 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     md->aero_rep_env_data=aero_rep_env_data0;
     md->sub_model_env_data=sub_model_env_data0;
     int flag = istate;
-    double *state=sd->model_data.total_state;
-    double *env=sd->model_data.total_env;
-    sd->Jac_eval_fails = 0;
-/*sd->curr_J_guess = false;
+  /*  sd->Jac_eval_fails = 0;
+sd->curr_J_guess = false;
 sd->init_time_step = (t_final - t_initial);
 flag = CVodeReInit(sd->cvode_mem, t_initial, sd->y);
 check_flag_fail(&flag, "CVodeReInit", 1);
@@ -938,17 +936,15 @@ double t_rt = t_initial;*/
     printf("cvode multi\n");
     istate = CVode(sd->cvode_mem, tout, sd->y, tret, itask);
     printf("end\n");
+    md->n_cells=nCellsGPU;
+    sd->use_cpu=0;
     if(istate!=CV_SUCCESS ){
       int rank;
       MPI_Comm_rank(MPI_COMM_WORLD, &rank);
       printf("cudaCVode CPU kflag %d rank %d\n",istate,rank);
-      md->n_cells=n_cells0;
-      sd->use_cpu=0;
       return istate;
     }
   }
-  sd->use_cpu=0;
-  md->n_cells=n_cells0;
 #endif
 #endif
   cudaDeviceSynchronize();

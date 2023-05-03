@@ -15,7 +15,6 @@ extern "C" {
 #include "Jacobian_gpu.h"
 }
 
-
 // Reaction types (Must match parameters defined in camp_rxn_factory)
 #define RXN_ARRHENIUS 1
 #define RXN_TROE 2
@@ -76,7 +75,6 @@ void camp_solver_update_model_state_gpu(N_Vector solver_state, SolverData *sd,
   mGPU = sd->mGPU;
   HANDLE_ERROR(cudaMemcpy(mGPU->state, total_state, mCPU->state_size, cudaMemcpyHostToDevice));
 }
-
 
 int rxn_calc_deriv_gpu(SolverData *sd, N_Vector y, N_Vector deriv, double time_step) {
 

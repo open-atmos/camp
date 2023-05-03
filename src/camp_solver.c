@@ -634,13 +634,9 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
   cell_netcdf(sd);
 #endif
 
-  if (n_cells!=md->n_cells){
-      printf("ERROR n_cells!=md->n_cells\n");
-      exit(0);
-  }
   // Update the dependent variables
   int i_dep_var = 0;
-  for (int i_cell = 0; i_cell < md->n_cells; i_cell++){
+  for (int i_cell = 0; i_cell < n_cells; i_cell++){
     for (int i_spec = 0; i_spec < n_state_var; i_spec++) {
       if (sd->model_data.var_type[i_spec] == CHEM_SPEC_VARIABLE) {
         NV_Ith_S(sd->y, i_dep_var++) =
@@ -773,7 +769,7 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
   // Update the species concentrations on the state array
   i_dep_var = 0;
   //printf("NV_Ith_S(sd->y, i_dep_var)\n");
-  for (int i_cell = 0; i_cell < md->n_cells; i_cell++) {
+  for (int i_cell = 0; i_cell < n_cells; i_cell++) {
     for (int i_spec = 0; i_spec < n_state_var; i_spec++) {
       if (md->var_type[i_spec] == CHEM_SPEC_VARIABLE) {
         //printf("%lf ",NV_Ith_S(sd->y, i_dep_var));
@@ -1015,7 +1011,7 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
       times[i]=0.;
       i++;
 #endif
-#ifndef DEV_CPUGPU
+#ifdef DEV_CPUGPU
       CVodeGettimesCounters(sd->cvode_mem, &times[0], &counters[1]);
       times[i]+=mCPU->timecvStep;
 #else
@@ -2291,11 +2287,9 @@ void solver_free(void *solver_data) {
 #endif
 
 #ifdef CAMP_USE_GPU
-
   if(sd->use_cpu==0){
       free_gpu_cu(sd);
   }
-
 #endif
 
 }

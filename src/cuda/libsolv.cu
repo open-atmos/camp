@@ -15,58 +15,6 @@
 
 using namespace std;
 
-//
-//dAthreads
-//
-// Para reservar memoria Double e Int
-extern "C++" void cudaMallocDouble(double* &vector,int size)
-{
-	cudaMalloc((void**)&vector,size*sizeof(double));
-}
-
-extern "C++" void cudaMallocInt(int* &vector,int size)
-{
-	cudaMalloc((void**)&vector,size*sizeof(int));
-}
-
-// Para copiar a CPU->GPU Double e Int
-extern "C++" void cudaMemcpyDToGpu(double* h_vect,double* d_vect,int size )
-{
-  cudaMemcpy(d_vect,h_vect,size*sizeof(double),cudaMemcpyHostToDevice);
-}
-
-extern "C++" void cudaMemcpyIToGpu(int* h_vect,int* d_vect,int size )
-{
-		cudaMemcpy(d_vect,h_vect,size*sizeof(int),cudaMemcpyHostToDevice);
-}
-
-// Para copiar a GPU->CPU Double e Int
-extern "C++" void cudaMemcpyIToCpu(int* h_vect, int* d_vect,int size )
-{
-		cudaMemcpy(h_vect,d_vect,size*sizeof(int),cudaMemcpyDeviceToHost);
-}
-
-extern "C++" void cudaMemcpyDToCpu(double* h_vect, double* d_vect,int size )
-{
-  cudaMemcpy(h_vect,d_vect,size*sizeof(double),cudaMemcpyDeviceToHost);
-}
-
-// Para liberar memoria
-extern "C++" void cudaFreeMem(void* vector)
-{
-	cudaFree(vector);
-}
-
-extern "C++" void cudaGetLastErrorC(){
-     cudaError_t error;
-     error=cudaGetLastError();
-     if(error!= cudaSuccess)
-     {
-       cout<<" ERROR INSIDE A CUDA FUNCTION: "<<error<<" "<<cudaGetErrorString(error)<<endl;
-       exit(0);
-     }
-}
-
 __global__ void cudamatScaleAddI(int nrows, double* dA, int* djA, int* diA, double alpha)
 {
 	int row= threadIdx.x + blockDim.x*blockIdx.x;

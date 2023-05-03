@@ -9,14 +9,6 @@
 #include<iostream>
 #include<cuda.h>
 
-extern "C++" void cudaMallocDouble(double* &vector,int size);
-extern "C++" void cudaMallocInt(int* &vector,int size);
-extern "C++" void cudaMemcpyDToGpu(double* h_vect,double* d_vect,int size );
-extern "C++" void cudaMemcpyIToGpu(int* h_vect,int* d_vect,int size );
-extern "C++" void cudaMemcpyIToCpu(int* h_vect, int* d_vect,int size );
-extern "C++" void cudaMemcpyDToCpu(double* h_vect, double* d_vect,int size );
-extern "C++" void cudaFreeMem(void* vector);
-extern "C++" void cudaGetLastErrorC();
 extern "C++" void gpu_matScaleAddI(int nrows, double* dA, int* djA, int* diA, double alpha, int blocks, int threads);
 extern "C++" void gpu_diagprecond(int nrows, double* dA, int* djA, int* diA, double* ddiag, int blocks, int threads);
 extern "C++" void gpu_yequalsconst(double *dy, double constant, int nrows, int blocks, int threads);

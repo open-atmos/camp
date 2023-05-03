@@ -40,7 +40,7 @@ class TestMonarch:
         self.allocatedNodes = 1
         self.allocatedTasksPerNode = 160
         self.nGPUs = 1
-        self.nCellsGPUPerc = 5
+        self.nCellsGPUPerc = 4 #between 0 and 10 (represents 0%-100%)
         # Cases configuration
         self.is_start_cases_attributes = True
         self.diffCellsL = ""
