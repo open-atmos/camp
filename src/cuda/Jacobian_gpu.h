@@ -15,7 +15,7 @@
 #define JACOBIAN_LOSS 1
 
 #ifdef __CUDA_ARCH__
-__host__ __device__
+__device__
 #endif
 void jacobian_add_value_gpu(JacobianGPU jac, unsigned int elem_id,
                         unsigned int prod_or_loss,

@@ -37,7 +37,7 @@
  * \mbox{mol}^{-1}\f$]
  */
 #ifdef __CUDA_ARCH__
-__host__ __device__
+__device__
 #endif
 static inline double mean_free_path__m(double diffusion_coeff__m2_s,
                                        double temperature__K,
@@ -59,7 +59,7 @@ static inline double mean_free_path__m(double diffusion_coeff__m2_s,
  *  @param alpha Mass accomodation coefficient [unitless]
  */
 #ifdef __CUDA_ARCH__
-__host__ __device__
+__device__
 #endif
 static inline double transition_regime_correction_factor(
     double mean_free_path__m, double radius__m, double alpha) {
@@ -84,7 +84,7 @@ static inline double transition_regime_correction_factor(
  *  @param alpha Mass accomodation coefficient [unitless]
  */
 #ifdef __CUDA_ARCH__
-__host__ __device__
+__device__
 #endif
 static inline double d_transition_regime_correction_factor_d_radius(
     double mean_free_path__m, double radius__m, double alpha) {
@@ -125,7 +125,7 @@ static inline double d_transition_regime_correction_factor_d_radius(
  *  @param alpha Mass accomodation coefficient [unitless]
  */
 #ifdef __CUDA_ARCH__
-__host__ __device__
+__device__
 #endif
 static inline double gas_aerosol_rxn_rate_constant(double diffusion_coeff__m2_s,
                                                    double mean_free_path__m,
@@ -153,7 +153,7 @@ static inline double gas_aerosol_rxn_rate_constant(double diffusion_coeff__m2_s,
  *  @param alpha Mass accomodation coefficient [unitless]
  */
 #ifdef __CUDA_ARCH__
-__host__ __device__
+__device__
 #endif
 static inline double d_gas_aerosol_rxn_rate_constant_d_radius(
     double diffusion_coeff__m2_s, double mean_free_path__m, double radius__m,

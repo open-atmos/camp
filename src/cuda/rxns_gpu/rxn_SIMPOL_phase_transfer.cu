@@ -66,7 +66,7 @@ extern "C"{
 #define MW_JAC_ELEM_(x,e) float_data[(PHASE_FLOAT_LOC_(x)+3*NUM_AERO_PHASE_JAC_ELEM_(x)+e)]
 
 #ifdef __CUDA_ARCH__
-__host__ __device__
+__device__
 #endif
 void rxn_gpu_SIMPOL_phase_transfer_calc_deriv_contrib(ModelDataGPU *model_data, TimeDerivativeGPU time_deriv,
                                           int *rxn_int_data, double *rxn_float_data,

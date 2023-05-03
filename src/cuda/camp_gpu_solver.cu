@@ -3,49 +3,8 @@
  * SPDX-License-Identifier: MIT
  */
 
-#include "itsolver_gpu.h"
-
 extern "C" {
 #include "camp_gpu_solver.h"
-#include "rxns_gpu.h"
-#ifdef DEV_AERO_REACTIONS
-#include "aeros/aero_rep_gpu_solver.h"
-#endif
-#include "time_derivative_gpu.h"
-#include "Jacobian_gpu.h"
-}
-
-// Reaction types (Must match parameters defined in camp_rxn_factory)
-#define RXN_ARRHENIUS 1
-#define RXN_TROE 2
-#define RXN_CMAQ_H2O2 3
-#define RXN_CMAQ_OH_HNO3 4
-#define RXN_PHOTOLYSIS 5
-#define RXN_HL_PHASE_TRANSFER 6
-#define RXN_AQUEOUS_EQUILIBRIUM 7
-#define RXN_SIMPOL_PHASE_TRANSFER 10
-#define RXN_CONDENSED_PHASE_ARRHENIUS 11
-#define RXN_FIRST_ORDER_LOSS 12
-#define RXN_EMISSION 13
-#define RXN_WET_DEPOSITION 14
-
-// Status codes for calls to camp_solver functions
-#define CAMP_SOLVER_SUCCESS 0
-#define CAMP_SOLVER_FAIL 1
-
-//GPU async stream related variables to ensure robustness
-//int n_solver_objects=0; //Number of solver_new_gpu calls
-//cudaStream_t *stream_gpu; //GPU streams to async computation/data movement
-//int n_streams = 16;
-
-static void HandleError(cudaError_t err,
-                        const char *file,
-                        int line) {
-  if (err != cudaSuccess) {
-    printf("%s in %s at line %d\n", cudaGetErrorString(err),
-           file, line);
-    exit(EXIT_FAILURE);
-  }
 }
 
 void set_jac_data_gpu(SolverData *sd, double *J){
@@ -57,37 +16,34 @@ void set_jac_data_gpu(SolverData *sd, double *J){
   double *J_solver = SM_DATA_S(md->J_solver);
   double *J_state = N_VGetArrayPointer(md->J_state);
   double *J_deriv = N_VGetArrayPointer(md->J_deriv);
-  HANDLE_ERROR(cudaMemcpy(mGPU->dA, J_ptr, mCPU->jac_size, cudaMemcpyHostToDevice));
-  HANDLE_ERROR(cudaMemcpy(mGPU->J_solver, J_solver, mCPU->jac_size, cudaMemcpyHostToDevice));
-  HANDLE_ERROR(cudaMemcpy(mGPU->J_state, J_state, mCPU->deriv_size, cudaMemcpyHostToDevice));
-  HANDLE_ERROR(cudaMemcpy(mGPU->J_deriv, J_deriv, mCPU->deriv_size, cudaMemcpyHostToDevice));
+  cudaMemcpy(mGPU->dA, J_ptr, mCPU->jac_size, cudaMemcpyHostToDevice);
+  cudaMemcpy(mGPU->J_solver, J_solver, mCPU->jac_size, cudaMemcpyHostToDevice);
+  cudaMemcpy(mGPU->J_state, J_state, mCPU->deriv_size, cudaMemcpyHostToDevice);
+  cudaMemcpy(mGPU->J_deriv, J_deriv, mCPU->deriv_size, cudaMemcpyHostToDevice);
   cudaMemcpy(mGPU->djA, mCPU->jA, mGPU->nnz/mGPU->n_cells * sizeof(int), cudaMemcpyHostToDevice);
   cudaMemcpy(mGPU->diA, mCPU->iA, (mGPU->nrows/mGPU->n_cells + 1) * sizeof(int), cudaMemcpyHostToDevice);
 }
 
 void camp_solver_update_model_state_gpu(N_Vector solver_state, SolverData *sd,
-                                       double threshhold, double replacement_value)
-{
+                                       double threshhold, double replacement_value){
   ModelData *md = &(sd->model_data);
   ModelDataGPU *mGPU;
   ModelDataCPU *mCPU = &(sd->mCPU);
   double *total_state = md->total_state;
   mGPU = sd->mGPU;
-  HANDLE_ERROR(cudaMemcpy(mGPU->state, total_state, mCPU->state_size, cudaMemcpyHostToDevice));
+  cudaMemcpy(mGPU->state, total_state, mCPU->state_size, cudaMemcpyHostToDevice);
 }
 
 int rxn_calc_deriv_gpu(SolverData *sd, N_Vector y, N_Vector deriv, double time_step) {
-
   ModelData *md = &(sd->model_data);
   ModelDataGPU *mGPU;
   ModelDataCPU *mCPU = &(sd->mCPU);
-
   double *total_state = md->total_state;
   double *deriv_data = N_VGetArrayPointer(deriv);
   if(sd->use_gpu_cvode==0){
     mGPU = sd->mGPU;
-    HANDLE_ERROR(cudaMemcpy(mGPU->deriv_data, deriv_data, mCPU->deriv_size, cudaMemcpyHostToDevice));
-    HANDLE_ERROR(cudaMemcpy(mGPU->state, total_state, mCPU->state_size, cudaMemcpyHostToDevice));
+    cudaMemcpy(mGPU->deriv_data, deriv_data, mCPU->deriv_size, cudaMemcpyHostToDevice);
+    cudaMemcpy(mGPU->state, total_state, mCPU->state_size, cudaMemcpyHostToDevice);
   }
   return 0;
 }
@@ -170,9 +126,7 @@ void free_gpu_cu(SolverData *sd) {
 }
 
 void print_gpu_specs() {
-
   printf("GPU specifications \n");
-
   int nDevicesMax;
   cudaGetDeviceCount(&nDevicesMax);
   for (int i = 0; i < nDevicesMax; i++) {
@@ -191,8 +145,4 @@ void print_gpu_specs() {
     printf("  sharedMemPerBlock: %zu\n", prop.sharedMemPerBlock); //bytes
     printf("  multiProcessorCount: %d\n", prop.multiProcessorCount);
   }
-
-
-
 }
-

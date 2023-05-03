@@ -11,18 +11,18 @@
 
 /* Solver functions */
 #ifdef __CUDA_ARCH__
-__host__ __device__
+__device__
 #endif
 int aero_phase_gpu_get_used_jac_elem(ModelDataGPU *model_data, int aero_phase_idx,
                                  int state_var_id, bool *jac_struct);
 #ifdef __CUDA_ARCH__
-__host__ __device__
+__device__
 #endif
 void aero_phase_gpu_get_mass__kg_m3(ModelDataGPU *model_data, int aero_phase_idx,
                                 double *state_var, double *mass, double *MW,
                                 double *jac_elem_mass, double *jac_elem_MW);
 #ifdef __CUDA_ARCH__
-__host__ __device__
+__device__
 #endif
 void aero_phase_gpu_get_volume__m3_m3(ModelDataGPU *model_data, int aero_phase_idx,
                                   double *state_var, double *volume,
@@ -32,7 +32,7 @@ void aero_phase_gpu_print_data(void *solver_data);
 
 /* Setup functions */
 #ifdef __CUDA_ARCH__
-__host__ __device__
+__device__
 #endif
 void aero_phase_gpu_add_condensed_data(int n_int_param, int n_float_param,
                                    int *int_param, double *float_param,

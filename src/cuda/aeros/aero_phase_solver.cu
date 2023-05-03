@@ -42,7 +42,7 @@ extern "C" {
  * \return Number of Jacobian elements flagged
  */
 #ifdef __CUDA_ARCH__
-__host__ __device__
+__device__
 #endif
 int aero_phase_gpu_get_used_jac_elem(ModelDataGPU *model_data, int aero_phase_idx,
                                      int state_var_id, bool *jac_struct) {
@@ -92,7 +92,7 @@ int aero_phase_gpu_get_used_jac_elem(ModelDataGPU *model_data, int aero_phase_id
  *                 species \f$y_i\f$.
  */
 #ifdef __CUDA_ARCH__
-__host__ __device__
+__device__
 #endif
 void aero_phase_gpu_get_mass__kg_m3(ModelDataGPU *model_data, int aero_phase_idx,
                                     double *state_var, double *mass, double *MW,
@@ -146,7 +146,7 @@ void aero_phase_gpu_get_mass__kg_m3(ModelDataGPU *model_data, int aero_phase_idx
  *                 species \f$y_i\f$.
  */
 #ifdef __CUDA_ARCH__
-__host__ __device__
+__device__
 #endif
 void aero_phase_gpu_get_volume__m3_m3(ModelDataGPU *model_data, int aero_phase_idx,
                                       double *state_var, double *volume,
@@ -183,7 +183,7 @@ void aero_phase_gpu_get_volume__m3_m3(ModelDataGPU *model_data, int aero_phase_i
  * \param solver_data Pointer to the solver data
  */
 #ifdef __CUDA_ARCH__
-__host__ __device__
+__device__
 #endif
 void aero_phase_gpu_add_condensed_data(int n_int_param, int n_float_param,
                                        int *int_param, double *float_param,

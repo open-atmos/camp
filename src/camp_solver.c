@@ -1555,23 +1555,16 @@ int f_cuda(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
   ModelData *md = &(sd->model_data);
   realtype time_step;
   int flag=0;
-
   if(sd->use_gpu_cvode==0){
-
     flag = f(t, y, deriv, solver_data);
-
     rxn_calc_deriv_gpu(sd, y, deriv, (double)time_step);
-
   }else{
     printf("ERROR f_cuda\n");
     exit(0);
   }
-
   // Return 0 if success
   return flag;
 }
-
-
 #endif
 
 /** \brief Check a Jacobian for accuracy

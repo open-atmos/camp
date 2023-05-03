@@ -18,7 +18,7 @@
  * \param time_deriv TimeDerivativeGPU object
  */
 #ifdef __CUDA_ARCH__
-__host__ __device__
+__device__
 #endif
 void time_derivative_reset_gpu(TimeDerivativeGPU time_deriv);
 
@@ -31,7 +31,7 @@ void time_derivative_reset_gpu(TimeDerivativeGPU time_deriv);
  * species if output_precision == 1
  */
 #ifdef __CUDA_ARCH__
-__host__ __device__
+__device__
 #endif
 void time_derivative_output_gpu(TimeDerivativeGPU time_deriv, double *dest_array,
                             double *deriv_est, unsigned int output_precision);
@@ -44,7 +44,7 @@ void time_derivative_output_gpu(TimeDerivativeGPU time_deriv, double *dest_array
  * spec_id
  */
 #ifdef __CUDA_ARCH__
-__host__ __device__
+__device__
 #endif
 void time_derivative_add_value_gpu(TimeDerivativeGPU time_deriv, unsigned int spec_id,
                                double rate_contribution);

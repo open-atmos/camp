@@ -88,7 +88,7 @@ extern "C" {
  * \return Number of Jacobian elements flagged
  */
 #ifdef __CUDA_ARCH__
-__host__ __device__
+__device__
 #endif
 int aero_rep_gpu_modal_binned_mass_get_used_jac_elem(ModelDataGPU *model_data,
                                                  int aero_phase_idx,
@@ -135,7 +135,7 @@ int aero_rep_gpu_modal_binned_mass_get_used_jac_elem(ModelDataGPU *model_data,
  * \param state_flags Array of flags indicating state array elements used
  */
 #ifdef __CUDA_ARCH__
-__host__ __device__
+__device__
 #endif
 void aero_rep_gpu_modal_binned_mass_get_dependencies(int *aero_rep_int_data,
                                                  double *aero_rep_float_data,
@@ -159,7 +159,7 @@ void aero_rep_gpu_modal_binned_mass_get_dependencies(int *aero_rep_int_data,
  *                          environment-dependent parameters
  */
 #ifdef __CUDA_ARCH__
-__host__ __device__
+__device__
 #endif
 void aero_rep_gpu_modal_binned_mass_update_env_state(ModelDataGPU *model_data,
                                                  int *aero_rep_int_data,
@@ -185,7 +185,7 @@ void aero_rep_gpu_modal_binned_mass_update_env_state(ModelDataGPU *model_data,
  *                          environment-dependent parameters
  */
 #ifdef __CUDA_ARCH__
-__host__ __device__
+__device__
 #endif
 void aero_rep_gpu_modal_binned_mass_update_state(ModelDataGPU *model_data,
                                              int *aero_rep_int_data,
@@ -302,7 +302,7 @@ void aero_rep_gpu_modal_binned_mass_update_state(ModelDataGPU *model_data,
  *                          environment-dependent parameters
  */
 #ifdef __CUDA_ARCH__
-__host__ __device__
+__device__
 #endif
 void aero_rep_gpu_modal_binned_mass_get_effective_radius__m(
         ModelDataGPU *model_data, int aero_phase_idx, double *radius,
@@ -373,7 +373,7 @@ void aero_rep_gpu_modal_binned_mass_get_effective_radius__m(
  *                          environment-dependent parameters
  */
 #ifdef __CUDA_ARCH__
-__host__ __device__
+__device__
 #endif
 void aero_rep_gpu_modal_binned_mass_get_number_conc__n_m3(
         ModelDataGPU *model_data, int aero_phase_idx, double *number_conc,
@@ -442,7 +442,7 @@ void aero_rep_gpu_modal_binned_mass_get_number_conc__n_m3(
  *                          environment-dependent parameters
  */
 #ifdef __CUDA_ARCH__
-__host__ __device__
+__device__
 #endif
 void aero_rep_gpu_modal_binned_mass_get_aero_conc_type(int aero_phase_idx,
                                                    int *aero_conc_type,
@@ -473,7 +473,7 @@ void aero_rep_gpu_modal_binned_mass_get_aero_conc_type(int aero_phase_idx,
  *                          environment-dependent parameters
  */
 #ifdef __CUDA_ARCH__
-__host__ __device__
+__device__
 #endif
 void aero_rep_gpu_modal_binned_mass_get_aero_phase_gpu_mass__kg_m3(
         ModelDataGPU *model_data, int aero_phase_idx, double *aero_phase_gpu_mass,
@@ -539,7 +539,7 @@ void aero_rep_gpu_modal_binned_mass_get_aero_phase_gpu_mass__kg_m3(
  *                          environment-dependent parameters
  */
 #ifdef __CUDA_ARCH__
-__host__ __device__
+__device__
 #endif
 void aero_rep_gpu_modal_binned_mass_get_aero_phase_gpu_avg_MW__kg_mol(
         ModelDataGPU *model_data, int aero_phase_idx, double *aero_phase_gpu_avg_MW,
@@ -611,7 +611,7 @@ void aero_rep_gpu_modal_binned_mass_get_aero_phase_gpu_avg_MW__kg_mol(
  * \return Flag indicating whether this is the aerosol representation to update
  */
 #ifdef __CUDA_ARCH__
-__host__ __device__
+__device__
 #endif
 bool aero_rep_gpu_modal_binned_mass_update_data(void *update_data,
                                             int *aero_rep_int_data,
@@ -686,7 +686,7 @@ bool aero_rep_gpu_modal_binned_mass_update_data(void *update_data,
  */
 
 #ifdef __CUDA_ARCH__
-__host__ __device__
+__device__
 #endif
 void aero_rep_gpu_modal_binned_mass_print(int *aero_rep_int_data,
                                       double *aero_rep_float_data) {
@@ -712,7 +712,7 @@ void aero_rep_gpu_modal_binned_mass_print(int *aero_rep_int_data,
  * \param gmd New mode GMD (m)
  */
 #ifdef __CUDA_ARCH__
-__host__ __device__
+__device__
 #endif
 void aero_rep_gpu_modal_binned_mass_set_gmd_update_data(void *update_data,
                                                     int aero_rep_id,
@@ -738,7 +738,7 @@ void aero_rep_gpu_modal_binned_mass_set_gmd_update_data(void *update_data,
  * \param gsd New mode GSD (unitless)
  */
 #ifdef __CUDA_ARCH__
-__host__ __device__
+__device__
 #endif
 void aero_rep_gpu_modal_binned_mass_set_gsd_update_data(void *update_data,
                                                     int aero_rep_id,

@@ -31,7 +31,7 @@ extern "C"{
 
 #ifdef CAMP_USE_SUNDIALS
 #ifdef __CUDA_ARCH__
-__host__ __device__
+__device__
 #endif
 void rxn_gpu_first_order_loss_calc_deriv_contrib(ModelDataGPU *model_data, TimeDerivativeGPU time_deriv, int *rxn_int_data,
           double *rxn_float_data, double *rxn_env_data, double time_step)
@@ -51,7 +51,7 @@ void rxn_gpu_first_order_loss_calc_deriv_contrib(ModelDataGPU *model_data, TimeD
 }
 
 #ifdef __CUDA_ARCH__
-__host__ __device__
+__device__
 #endif
 void rxn_gpu_first_order_loss_calc_jac_contrib(ModelDataGPU *model_data, JacobianGPU jac, int *rxn_int_data,
           double *rxn_float_data, double *rxn_env_data, double time_step)

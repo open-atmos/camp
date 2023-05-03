@@ -45,7 +45,7 @@ extern "C"{
 
 #ifdef CAMP_USE_SUNDIALS
 #ifdef __CUDA_ARCH__
-__host__ __device__
+__device__
 #endif
 void rxn_gpu_condensed_phase_arrhenius_calc_deriv_contrib(ModelDataGPU *model_data, realtype *deriv, int *rxn_int_data,
           double *rxn_float_data, double *rxn_env_data, double time_step)
@@ -115,7 +115,7 @@ void rxn_gpu_condensed_phase_arrhenius_calc_deriv_contrib(ModelDataGPU *model_da
 }
 
 #ifdef __CUDA_ARCH__
-__host__ __device__
+__device__
 #endif
 void rxn_gpu_condensed_phase_arrhenius_calc_jac_contrib(ModelDataGPU *model_data, JacobianGPU jac, int *rxn_int_data,
           double *rxn_float_data, double *rxn_env_data, double time_step)

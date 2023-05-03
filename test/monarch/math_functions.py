@@ -319,8 +319,8 @@ def calculate_MAPE(data, timesteps, max_tol):
         raise
 
     print("max_error:" + str(max_err * 100) + "%" + " at species and id: " + max_err_name + " " + str(max_err_k)
-          , "concs_above_tol", concs_above_tol, "concs_are_equal", concs_are_equal
-          , "concs_below_tol", concs_below_tol, "concs_are_zero", concs_are_zero)
+          , "concs_above_tol", concs_above_tol, "concs_below_tol", concs_below_tol
+          , "concs_are_equal", concs_are_equal,  "concs_are_zero", concs_are_zero)
     # print(NRMSEs)
 
     return MAPEs

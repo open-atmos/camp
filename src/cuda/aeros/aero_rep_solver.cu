@@ -27,7 +27,7 @@ extern "C" {
  * \return Number of Jacobian elements flagged
  */
 #ifdef __CUDA_ARCH__
-__host__ __device__
+__device__
 #endif
 int aero_rep_gpu_get_used_jac_elem(ModelDataGPU *model_data, int aero_rep_idx,
                                int aero_phase_idx, bool *jac_struct) {
@@ -67,7 +67,7 @@ int aero_rep_gpu_get_used_jac_elem(ModelDataGPU *model_data, int aero_rep_idx,
  *                    indicating species used
  */
 #ifdef __CUDA_ARCH__
-__host__ __device__
+__device__
 #endif
 void aero_rep_gpu_get_dependencies(ModelDataGPU *model_data, bool *state_flags) {
   // Get the number of aerosol representations
@@ -106,7 +106,7 @@ void aero_rep_gpu_get_dependencies(ModelDataGPU *model_data, bool *state_flags) 
  * \param model_data Pointer to the model data
  */
 #ifdef __CUDA_ARCH__
-__host__ __device__
+__device__
 #endif
 void aero_rep_gpu_update_env_state(ModelDataGPU *model_data) {
   // Get the number of aerosol representations
@@ -151,7 +151,7 @@ void aero_rep_gpu_update_env_state(ModelDataGPU *model_data) {
  */
  /*
 #ifdef __CUDA_ARCH__
-__host__ __device__
+__device__
 #endif
 void aero_rep_gpu_update_state(ModelDataGPU *md) {
 
@@ -251,7 +251,7 @@ void aero_rep_gpu_update_state(ModelDataGPU *md) {
  *                      or a NULL pointer if no partial derivatives are needed
  */
 #ifdef __CUDA_ARCH__
-__host__ __device__
+__device__
 #endif
 void aero_rep_gpu_get_effective_radius__m(ModelDataGPU *model_data, int aero_rep_idx,
                                       int aero_phase_idx, double *radius,
@@ -313,7 +313,7 @@ void aero_rep_gpu_get_effective_radius__m(ModelDataGPU *model_data, int aero_rep
  *                      NULL pointer if no partial derivatives are required
  */
 #ifdef __CUDA_ARCH__
-__host__ __device__
+__device__
 #endif
 void aero_rep_gpu_get_number_conc__n_m3(ModelDataGPU *model_data, int aero_rep_idx,
                                     int aero_phase_idx, double *number_conc,
@@ -358,7 +358,7 @@ void aero_rep_gpu_get_number_conc__n_m3(ModelDataGPU *model_data, int aero_rep_i
  * \return 0 for per-particle; 1 for total for each phase
  */
 #ifdef __CUDA_ARCH__
-__host__ __device__
+__device__
 #endif
 int aero_rep_gpu_get_aero_conc_type(ModelDataGPU *model_data, int aero_rep_idx,
                                 int aero_phase_idx) {
@@ -415,7 +415,7 @@ int aero_rep_gpu_get_aero_conc_type(ModelDataGPU *model_data, int aero_rep_idx,
  *                      NULL pointer if no partial derivatives are needed
  */
 #ifdef __CUDA_ARCH__
-__host__ __device__
+__device__
 #endif
 void aero_rep_gpu_get_aero_phase_gpu_mass__kg_m3(ModelDataGPU *model_data,
                                          int aero_rep_idx, int aero_phase_idx,
@@ -470,7 +470,7 @@ void aero_rep_gpu_get_aero_phase_gpu_mass__kg_m3(ModelDataGPU *model_data,
  *                      NULL pointer if no partial derivatives are needed
  */
 #ifdef __CUDA_ARCH__
-__host__ __device__
+__device__
 #endif
 void aero_rep_gpu_get_aero_phase_gpu_avg_MW__kg_mol(ModelDataGPU *model_data,
                                             int aero_rep_idx,
@@ -518,7 +518,7 @@ void aero_rep_gpu_get_aero_phase_gpu_avg_MW__kg_mol(ModelDataGPU *model_data,
  * \param solver_data Pointer to solver data
  */
 #ifdef __CUDA_ARCH__
-__host__ __device__
+__device__
 #endif
 void aero_rep_gpu_add_condensed_data(int aero_rep_type, int n_int_param,
                                  int n_float_param, int n_env_param,
@@ -570,7 +570,7 @@ void aero_rep_gpu_add_condensed_data(int aero_rep_type, int n_int_param,
  * \param solver_data Pointer to solver data
  */
 #ifdef __CUDA_ARCH__
-__host__ __device__
+__device__
 #endif
 void aero_rep_gpu_update_data(int cell_id, int *aero_rep_id,
                           int update_aero_rep_type, void *update_data,
@@ -622,59 +622,10 @@ void aero_rep_gpu_update_data(int cell_id, int *aero_rep_id,
   }
 }
 
-/** \brief Print the aerosol representation data
- *
- * \param solver_data Pointer to the solver data
- */
-#ifdef __CUDA_ARCH__
-__host__
-#endif
-void aero_rep_gpu_print_data(void *solver_data) {
-  ModelDataGPU *model_data =
-      (ModelDataGPU *)&(((SolverData *)solver_data)->model_data);
-
-  // Get the number of aerosol representations
-  int n_aero_rep = model_data->n_aero_rep;
-
-  printf(
-      "\n\nAerosol representation data\n\nnumber of aerosol "
-      "representations: %d\n\n",
-      n_aero_rep);
-
-  // Loop through the aerosol representations advancing the pointer each time
-  for (int i_aero_rep = 0; i_aero_rep < n_aero_rep; i_aero_rep++) {
-    // Get pointers to the aerosol data
-    int *aero_rep_int_data = &(
-        model_data
-            ->aero_rep_int_data[model_data->aero_rep_int_indices[i_aero_rep]]);
-    double *aero_rep_float_data =
-        &(model_data->aero_rep_float_data
-              [model_data->aero_rep_float_indices[i_aero_rep]]);
-
-    // Get the aerosol representation type
-    int aero_rep_type = *(aero_rep_int_data++);
-
-    // Call the appropriate printing function
-    switch (aero_rep_type) {
-      case AERO_REP_MODAL_BINNED_MASS:
-        aero_rep_gpu_modal_binned_mass_print(aero_rep_int_data,
-                                         aero_rep_float_data);
-        break;
-      case AERO_REP_SINGLE_PARTICLE:
-        aero_rep_gpu_single_particle_print(aero_rep_int_data, aero_rep_float_data);
-        break;
-    }
-  }
-
-  fflush(stdout);
-
-}
-
 /** \brief Free an update data object
  *
  * \param update_data Object to free
  */
-
 void aero_rep_gpu_free_update_data(void *update_data) { free(update_data); }
 
 }
