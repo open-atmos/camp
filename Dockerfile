@@ -1,4 +1,4 @@
-FROM fedora:27
+FROM fedora:37
 
 RUN dnf -y update \
     && dnf -y install \
@@ -63,3 +63,5 @@ ENV PATH="${PATH}:/usr/local/jsonfortran-gnu-6.1.0/lib"
              -D ENABLE_GSL:BOOL=TRUE \
              /camp \
     && make install
+
+WORKDIR /build
