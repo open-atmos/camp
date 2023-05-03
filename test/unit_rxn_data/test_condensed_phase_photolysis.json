@@ -89,9 +89,9 @@
           "aerosol phase": "aqueous aerosol",
           "aerosol-phase water": "H2O_aq",
           "units": "M",
+          "rate": 1.0,
           "reactants": {
-            "A": {},
-            "D": {}
+            "A": {}
           },
           "products": {
             "B": {}
@@ -108,10 +108,7 @@
           "products": {
             "B": {}
           },
-          "A": 1476.0,
-          "Ea": 5.5e-21,
-          "B": 150.0,
-          "E": 0.15,
+          "rate": 5.0,
           "time unit": "MIN"
         },
         {
@@ -126,19 +123,14 @@
             "C": {},
             "D": {}
           },
-          "A": 21.0,
-          "C": -4000.0,
-          "B": 11.0,
-          "D": 315.0,
-          "E": 0.05
+          "rate": 21.0
         },
         {
           "type": "CONDENSED_PHASE_PHOTOLYSIS",
           "aerosol phase": "organic aerosol",
           "units": "mol m-3",
           "reactants": {
-            "A": {},
-            "D": {}
+            "A": {}
           },
           "products": {
             "B": {}
@@ -154,10 +146,7 @@
           "products": {
             "B": {}
           },
-          "A": 1476.0,
-          "Ea": 5.5e-21,
-          "B": 150.0,
-          "E": 0.15,
+          "rate": 2.0,
           "time unit": "MIN"
         },
         {
@@ -171,11 +160,7 @@
             "C": {},
             "D": {}
           },
-          "A": 21.0,
-          "C": -4000.0,
-          "B": 11.0,
-          "D": 315.0,
-          "E": 0.05
+          "rate": 0.05
         }
       ]
     }

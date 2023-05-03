@@ -20,15 +20,10 @@
 #define NUM_REACT_ (int_data[0])
 #define NUM_PROD_ (int_data[1])
 #define NUM_AERO_PHASE_ (int_data[2])
-#define A_ (float_data[0])
-#define B_ (float_data[1])
-#define C_ (float_data[2])
-#define D_ (float_data[3])
-#define E_ (float_data[4])
-#define RATE_CONSTANT_ (rxn_env_data[0])
-#define NUM_INT_PROP_ 3
-#define NUM_FLOAT_PROP_ 5
-#define NUM_ENV_PARAM_ 1
+#define RATE_CONSTANT_ (float_data[0])
+#define NUM_INT_PROP_ 1
+#define NUM_FLOAT_PROP_ 1
+#define NUM_ENV_PARAM_ 0
 #define REACT_(x) (int_data[NUM_INT_PROP_ + x] - 1)
 #define PROD_(x) \
   (int_data[NUM_INT_PROP_ + NUM_REACT_ * NUM_AERO_PHASE_ + x] - 1)
@@ -157,16 +152,7 @@ void rxn_condensed_phase_photolysis_update_env_state(ModelData *model_data,
                                                     int *rxn_int_data,
                                                     double *rxn_float_data,
                                                     double *rxn_env_data) {
-  int *int_data = rxn_int_data;
-  double *float_data = rxn_float_data;
-  double *env_data = model_data->grid_cell_env;
-
-  // Calculate the rate constant in (M or mol/m3)
-  // k = A*exp(C/T) * (T/D)^B * (1+E*P)
-  RATE_CONSTANT_ = A_ * exp(C_ / TEMPERATURE_K_) *
-                   (B_ == 0.0 ? 1.0 : pow(TEMPERATURE_K_ / D_, B_)) *
-                   (E_ == 0.0 ? 1.0 : (1.0 + E_ * PRESSURE_PA_));
-
+  // TODO: set the rate from a host model
   return;
 }
 
@@ -368,7 +354,7 @@ void rxn_condensed_phase_photolysis_print(int *rxn_int_data,
   printf("\n number of reactants:      %d", NUM_REACT_);
   printf("\n number of products:       %d", NUM_PROD_);
   printf("\n number of aerosol phases: %d", NUM_AERO_PHASE_);
-  printf("\n A: %le, B: %le, C: %le, D: %le, E: %le", A_, B_, C_, D_, E_);
+  printf("\n Rate constant: %le", RATE_CONSTANT_);
   printf("\n water state ids (by phase):");
   for (int i_phase = 0; i_phase < NUM_AERO_PHASE_; ++i_phase)
     printf(" %d", WATER_(i_phase));

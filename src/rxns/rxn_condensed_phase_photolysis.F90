@@ -7,42 +7,32 @@
 
 !> \page camp_rxn_condensed_phase_photolysis CAMP: Condensed-Phase Photolysis Reaction
 !!
-!! Condensed-phase Photolysis reactions are calculated using an photolysis-like
-!! rate constant that takes the form:
+!! Condensed-Phase Photolysis reactions take the form:
 !!
-!! \f[
-!!   Ae^{(\frac{-E_a}{k_bT})}(\frac{T}{D})^B(1.0+E*P)
-!! \f]
+!! \f[\ce{
+!!   X + h $\nu$ -> Y_1 ( + Y_2 \dots )
+!! }\f]
 !!
-!! where \f$A\f$ is the pre-exponential factor
-!! (\f$[\mbox{U}]^{-(n-1)} s^{-1}\f$), \f$U\f$ is the unit of the reactants
-!! and products, which can be \f$M\f$ for aqueous-phase reactions or
-!! mol \f$\mbox{m}^{-3}\f$ for all other condensed-phase
-!! reactions, \f$n\f$ is the number of reactants, \f$E_a\f$ is the activation
-!! energy (J), \f$k_b\f$ is the Boltzmann constant (J/K), \f$D\f$ (K), \f$B\f$
-!! (unitless) and \f$E\f$ (\f$Pa^{-1}\f$) are reaction parameters, \f$T\f$ is
-!! the temperature (K), and \f$P\f$ is the pressure (Pa). The first two terms
-!! are described in Finlayson-Pitts and Pitts (2000) \cite Finlayson-Pitts2000
-!! . The final term is included to accomodate CMAQ EBI solver type 7 rate
-!! constants \cite Gipson.
+!! where \f$\ce{X}\f$ is the species being photolyzed, and
+!! \f$\ce{Y_n}\f$ are the photolysis products.
+!!
+!! The only needed parameter is the rate which determines how quickly the reaction proceeds.
+!! This class differs from the photolysis reaction in that it represents all reactions not in the gas phase.
+!! Which phase and mode these reactions to be calculated in are identified by the aerosol configuration.
+!! 
 !!
 !! Input data for condensed-phase Photolysis reactions have the following
 !! format:
 !! \code{.json}
 !!   {
-!!     "type" : "CONDENSED_PHASE_photolysis",
-!!     "A" : 123.45,
-!!     "Ea" : 123.45,
-!!     "B"  : 1.3,
-!!     "D"  : 300.0,
-!!     "E"  : 0.6E-5,
+!!     "type" : "CONDENSED_PHASE_PHOTOLYSIS",
+!!     "rate" : 123.45,
 !!     "units" : "M",
 !!     "time unit" : "MIN",
 !!     "aerosol phase" : "my aqueous phase",
 !!     "aerosol-phase water" : "H2O_aq",
 !!     "reactants" : {
 !!       "spec1" : {},
-!!       "spec2" : { "qty" : 2 },
 !!       ...
 !!     },
 !!     "products" : {
@@ -68,13 +58,6 @@
 !!
 !! The key-value pair \b aerosol \b phase is required and must specify the name
 !! of the aerosol-phase in which the reaction occurs.
-!!
-!! Optionally, a parameter \b C may be included, and is taken to equal
-!! \f$\frac{-E_a}{k_b}\f$. Note that either \b Ea or \b C may be included, but
-!! not both. When neither \b Ea or \b C are included, they are assumed to be
-!! 0.0. When \b A is not included, it is assumed to be 1.0, when \b D is not
-!! included, it is assumed to be 300.0 K, when \b B is not included, it is
-!! assumed to be 0.0, and when \b E is not included, it is assumed to be 0.0.
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -84,13 +67,11 @@ module camp_rxn_condensed_phase_photolysis
   use camp_aero_phase_data
   use camp_aero_rep_data
   use camp_chem_spec_data
-  use camp_constants,                        only: const
+  use camp_constants, only: const
   use camp_camp_state
   use camp_property
   use camp_rxn_data
-  use camp_util,                             only: i_kind, dp, to_string, &
-                                                  assert, assert_msg, &
-                                                  die_msg, string_t
+  use camp_util,      only: i_kind, dp, to_string, assert, assert_msg, die_msg, string_t
 
   implicit none
   private
@@ -98,14 +79,10 @@ module camp_rxn_condensed_phase_photolysis
 #define NUM_REACT_ this%condensed_data_int(1)
 #define NUM_PROD_ this%condensed_data_int(2)
 #define NUM_AERO_PHASE_ this%condensed_data_int(3)
-#define A_ this%condensed_data_real(1)
-#define B_ this%condensed_data_real(2)
-#define C_ this%condensed_data_real(3)
-#define D_ this%condensed_data_real(4)
-#define E_ this%condensed_data_real(5)
-#define NUM_INT_PROP_ 3
-#define NUM_REAL_PROP_ 5
-#define NUM_ENV_PARAM_ 1
+#define RATE_CONSTANT_ this%condensed_data_real(1)
+#define NUM_REAL_PROP_ 1
+#define NUM_INT_PROP_ 1
+#define NUM_ENV_PARAM_ 0
 #define REACT_(x) this%condensed_data_int(NUM_INT_PROP_+x)
 #define PROD_(x) this%condensed_data_int(NUM_INT_PROP_+NUM_REACT_*NUM_AERO_PHASE_+x)
 #define WATER_(x) this%condensed_data_int(NUM_INT_PROP_+(NUM_REACT_+NUM_PROD_)*NUM_AERO_PHASE_+x)
@@ -245,47 +222,22 @@ contains
     NUM_AERO_PHASE_ = num_phase
 
     ! Get the rate constant parameters
-    key_name = "A"
-    if (.not. this%property_set%get_real(key_name, A_)) then
-      A_ = 1.0
+    key_name = "rate"
+    if (.not. this%property_set%get_real(key_name, RATE_CONSTANT_)) then
+      RATE_CONSTANT_ = 1.0
     end if
     key_name = "time unit"
     if (this%property_set%get_string(key_name, temp_string)) then
       if (trim(temp_string).eq."MIN") then
-        A_ = A_ / 60.0
+        RATE_CONSTANT_ = RATE_CONSTANT_ / 60.0
       else
         call assert_msg(390870843, trim(temp_string).eq."s", &
                 "Received invalid time unit: '"//temp_string//"' in "// &
-                "condnesed-phase Photolysis reaction. Valid units are "// &
+                "condnesed-phase photolysis reaction. Valid units are "// &
                 "'MIN' and 's'.")
       end if
     end if
-    key_name = "Ea"
-    if (this%property_set%get_real(key_name, temp_real)) then
-      C_ = -temp_real/const%boltzmann
-      key_name = "C"
-      call assert_msg(827485736, &
-              .not.this%property_set%get_real(key_name, temp_real), &
-              "Received both Ea and C parameter for condensed-phase "// &
-              "Photolysis equation.")
-    else
-      key_name = "C"
-      if (.not. this%property_set%get_real(key_name, C_)) then
-        C_ = 0.0
-      end if
-    end if
-    key_name = "D"
-    if (.not. this%property_set%get_real(key_name, D_)) then
-      D_ = 300.0
-    end if
-    key_name = "B"
-    if (.not. this%property_set%get_real(key_name, B_)) then
-      B_ = 0.0
-    end if
-    key_name = "E"
-    if (.not. this%property_set%get_real(key_name, E_)) then
-      E_ = 0.0
-    end if
+
 
     ! Set up an array to the reactant and product names
     allocate(react_names(NUM_REACT_))
