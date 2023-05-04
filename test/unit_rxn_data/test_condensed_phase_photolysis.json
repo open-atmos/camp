@@ -30,14 +30,6 @@
       "absolute tolerance": 1.0e-20
     },
     {
-      "name": "D",
-      "type": "CHEM_SPEC",
-      "phase": "AEROSOL",
-      "molecular weight [kg mol-1]": 0.0345,
-      "density [kg m-3]": 1.0,
-      "tracer type": "CONSTANT"
-    },
-    {
       "name": "H2O_aq",
       "type": "CHEM_SPEC",
       "phase": "AEROSOL",
@@ -51,7 +43,6 @@
         "A",
         "B",
         "C",
-        "D",
         "H2O_aq"
       ]
     },
@@ -61,8 +52,7 @@
       "species": [
         "A",
         "B",
-        "C",
-        "D"
+        "C"
       ]
     },
     {
@@ -89,78 +79,14 @@
           "aerosol phase": "aqueous aerosol",
           "aerosol-phase water": "H2O_aq",
           "units": "M",
-          "rate": 1.0,
+          "rate": 2.2,
           "reactants": {
             "A": {}
           },
           "products": {
-            "B": {}
+            "B": {},
+            "C": {"yield": 2}
           }
-        },
-        {
-          "type": "CONDENSED_PHASE_PHOTOLYSIS",
-          "aerosol phase": "aqueous aerosol",
-          "aerosol-phase water": "H2O_aq",
-          "units": "M",
-          "reactants": {
-            "A": {}
-          },
-          "products": {
-            "B": {}
-          },
-          "rate": 5.0,
-          "time unit": "MIN"
-        },
-        {
-          "type": "CONDENSED_PHASE_PHOTOLYSIS",
-          "aerosol phase": "aqueous aerosol",
-          "aerosol-phase water": "H2O_aq",
-          "units": "M",
-          "reactants": {
-            "B": {}
-          },
-          "products": {
-            "C": {},
-            "D": {}
-          },
-          "rate": 21.0
-        },
-        {
-          "type": "CONDENSED_PHASE_PHOTOLYSIS",
-          "aerosol phase": "organic aerosol",
-          "units": "mol m-3",
-          "reactants": {
-            "A": {}
-          },
-          "products": {
-            "B": {}
-          }
-        },
-        {
-          "type": "CONDENSED_PHASE_PHOTOLYSIS",
-          "aerosol phase": "organic aerosol",
-          "units": "mol m-3",
-          "reactants": {
-            "A": {}
-          },
-          "products": {
-            "B": {}
-          },
-          "rate": 2.0,
-          "time unit": "MIN"
-        },
-        {
-          "type": "CONDENSED_PHASE_PHOTOLYSIS",
-          "aerosol phase": "organic aerosol",
-          "units": "mol m-3",
-          "reactants": {
-            "B": {}
-          },
-          "products": {
-            "C": {},
-            "D": {}
-          },
-          "rate": 0.05
         }
       ]
     }

@@ -21,7 +21,7 @@
 #define NUM_PROD_ (int_data[1])
 #define NUM_AERO_PHASE_ (int_data[2])
 #define RATE_CONSTANT_ (float_data[0])
-#define NUM_INT_PROP_ 1
+#define NUM_INT_PROP_ 3
 #define NUM_FLOAT_PROP_ 1
 #define NUM_ENV_PARAM_ 0
 #define REACT_(x) (int_data[NUM_INT_PROP_ + x] - 1)

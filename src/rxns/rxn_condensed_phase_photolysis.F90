@@ -81,7 +81,7 @@ module camp_rxn_condensed_phase_photolysis
 #define NUM_AERO_PHASE_ this%condensed_data_int(3)
 #define RATE_CONSTANT_ this%condensed_data_real(1)
 #define NUM_REAL_PROP_ 1
-#define NUM_INT_PROP_ 1
+#define NUM_INT_PROP_ 3
 #define NUM_ENV_PARAM_ 0
 #define REACT_(x) this%condensed_data_int(NUM_INT_PROP_+x)
 #define PROD_(x) this%condensed_data_int(NUM_INT_PROP_+NUM_REACT_*NUM_AERO_PHASE_+x)
@@ -187,6 +187,11 @@ contains
       call reactants%iter_next()
       num_react = num_react + 1
     end do
+
+    ! Photolysis reactions only have 1 reactant, enforce that here
+    call assert_msg(890212987, num_react .eq. 1, &
+            "Too many species in condensed-phase Photolysis reaction. Only one reactant is expected.")
+
     num_prod = products%size()
     num_spec_per_phase = num_prod + num_react
 
