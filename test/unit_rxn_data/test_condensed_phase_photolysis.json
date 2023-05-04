@@ -47,15 +47,6 @@
       ]
     },
     {
-      "name": "organic aerosol",
-      "type": "AERO_PHASE",
-      "species": [
-        "A",
-        "B",
-        "C"
-      ]
-    },
-    {
       "type": "AERO_REP_SINGLE_PARTICLE",
       "name": "my aero rep 1",
       "maximum computational particles": 3
@@ -79,7 +70,7 @@
           "aerosol phase": "aqueous aerosol",
           "aerosol-phase water": "H2O_aq",
           "units": "M",
-          "rate": 2.2,
+          "rate": 0.05,
           "reactants": {
             "A": {}
           },

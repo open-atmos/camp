@@ -229,7 +229,7 @@ contains
     ! Get the rate constant parameters
     key_name = "rate"
     if (.not. this%property_set%get_real(key_name, RATE_CONSTANT_)) then
-      RATE_CONSTANT_ = 1.0
+      call assert_msg(888213891, .false., "The rate for a condensed phase photolysis reaction is required.")
     end if
     key_name = "time unit"
     if (this%property_set%get_string(key_name, temp_string)) then
