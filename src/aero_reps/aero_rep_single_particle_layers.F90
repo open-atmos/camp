@@ -225,12 +225,14 @@ contains
     class(aero_rep_single_particle_t), intent(inout) :: this
     !> The set of aerosol phases
     type(aero_phase_data_ptr), pointer, intent(in) :: aero_phase_set(:)
+    !> The set of aerosol layers
+    type(aero_layer_data_ptr), pointer, intent(in) :: aero_layer_set(:)
     !> Beginning state id for this aerosol representationin the model species
     !! state array
     integer(kind=i_kind), intent(in) :: spec_state_id
 
     character(len=:), allocatable :: key_name
-    integer(kind=i_kind) :: i_particle, i_phase, curr_id
+    integer(kind=i_kind) :: i_particle, i_phase, i_layer, curr_id
     integer(kind=i_kind) :: num_int_param, num_float_param, num_particles
 
     ! Start off the counters
@@ -275,7 +277,6 @@ contains
     do i_phase = 1, NUM_PHASE_
       PHASE_STATE_ID_(i_phase) = curr_id
       PHASE_MODEL_DATA_ID_(i_phase) = i_phase
-!! QUETSION: add layer to curr_id
       curr_id = curr_id + aero_phase_set(i_phase)%val%size()
     end do
     PARTICLE_STATE_SIZE_ = curr_id - spec_state_id
@@ -532,7 +533,7 @@ contains
     integer(kind=i_kind) ::  i_phase
 
     num_phase_instances = 0
-!! QUESTION: Are layers considered here?
+!! QUESTION: Are layers considered here? maybe loop through layers
     do i_phase = 1, NUM_PHASE_
       if (this%aero_phase(i_phase)%val%name().eq.phase_name) then
         num_phase_instances = MAX_PARTICLES_
