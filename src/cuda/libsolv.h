@@ -6,9 +6,9 @@
 #ifndef LIBSOLV_H
 #define LIBSOLV_H
 
-#include<iostream>
 #include<cuda.h>
 
+#ifdef ONLY_BCG
 extern "C++" void gpu_matScaleAddI(int nrows, double* dA, int* djA, int* diA, double alpha, int blocks, int threads);
 extern "C++" void gpu_diagprecond(int nrows, double* dA, int* djA, int* diA, double* ddiag, int blocks, int threads);
 extern "C++" void gpu_yequalsconst(double *dy, double constant, int nrows, int blocks, int threads);
@@ -22,7 +22,8 @@ extern "C++" void gpu_multxy(double* dz, double* dx ,double* dy, int nrows, int 
 extern "C++" void gpu_zaxpby(double a, double* dx ,double b, double* dy, double* dz, int nrows, int blocks, int threads);
 extern "C++" void gpu_axpy(double* dy, double* dx ,double a, int nrows, int blocks, int threads);
 extern "C++" double gpu_VWRMS_Norm(int n, double* vec1,double* vec2,double* h_temp,double* d_temp, int blocks,int threads);
-extern "C++" void gpu_scaley(double* dy, double a, int nrows, int blocks, int threads);
+#endif
+
 
 // Device functions (equivalent to global functions but in device to allow calls from gpu)
 __device__ void cudaDeviceBCGprecond(double* dA, int* djA, int* diA, double* ddiag, double alpha);

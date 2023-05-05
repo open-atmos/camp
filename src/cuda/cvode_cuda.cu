@@ -9,6 +9,7 @@ extern "C" {
 #include "time_derivative_gpu.h"
 #include "Jacobian_gpu.h"
 }
+#include "cuda_math.h"
 
 #ifdef DEBUG_CVODE_GPU
 __device__
@@ -1550,11 +1551,15 @@ int cudaDevicecvEwtSetSV(ModelDataGPU *md, ModelDataVariable *dmdv,
   extern __shared__ double flag_shr2[];
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   md->dtempv[i]=fabs(dzn[i]);
+  double min;
+
  cudaDevicezaxpby(md->cv_reltol, md->dtempv, 1.,
         md->cv_Vabstol, md->dtempv, md->nrows);
-  double min;
+  md->dtempv=md->cv_reltol*md->dtempv[i]+md->cv_Vabstol[i];
+#ifdef DEV_DC
   cudaDevicemin(&min, md->dtempv[i], flag_shr2, md->n_shr_empty);
-  __syncthreads();
+#endif
+__syncthreads();
   if (min <= 0.) return(-1);
   weight[i]= 1./md->dtempv[i];
   return(0);
@@ -1564,6 +1569,7 @@ __device__
 int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
   extern __shared__ int flag_shr[];
   int i = blockIdx.x * blockDim.x + threadIdx.x;
+  int kflag2;
 #ifdef DEBUG_printmin
   printmin(md,md->state,"cudaDeviceCVode start state");
 #endif
@@ -1588,12 +1594,14 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
         return CV_ILL_INPUT;
       }
     }
+#ifdef DEV_DC
     if ((md->cv_mxstep > 0) && (md->s->nstloc >= md->cv_mxstep)) {
       md->s->cv_tretlast = md->s->tret = md->s->cv_tn;
       md->yout[i] = md->dzn[i];
       if(i==0) printf("ERROR: cv_mxstep\n");
       return CV_TOO_MUCH_WORK;
     }
+
     double nrm;
     cudaDeviceVWRMS_Norm(md->dzn,
                          md->dewt, &nrm, md->nrows, md->n_shr_empty);
@@ -1616,7 +1624,9 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
         if(i==0)printf("WARNING: h below roundoff level in tn");
     }
 #endif
-    int kflag2 = cudaDevicecvStep(md, dmdv);
+
+    kflag2 = cudaDevicecvStep(md, dmdv);
+
     __syncthreads();
 #ifdef DEBUG_cudaDeviceCVode
     if(i==0){
@@ -1653,5 +1663,62 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
         md->s->cv_eta = md->s->cv_hprime / md->s->cv_h;
       }
     }
+#endif
   }
+}
+
+__global__
+void cudaGlobalCVode2(ModelDataGPU md_object) {
+  extern __shared__ int flag_shr[];
+  int tid = blockIdx.x * blockDim.x + threadIdx.x;
+  ModelDataGPU *md = &md_object;
+  md->s=&md->sCells[blockIdx.x];
+  int active_threads = md->nrows;
+  int istate;
+  __syncthreads();
+  if(tid<active_threads){
+    __syncthreads();
+#ifdef CAMP_DEBUG_GPU
+#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
+    int clock_khz=md->clock_khz;
+    clock_t start;
+    start = clock();
+    __syncthreads();
+#endif
+#endif
+    istate=cudaDeviceCVode(md,md->s);//dmdv as a function parameter seems faster than removing it
+    __syncthreads();
+#ifdef CAMP_DEBUG_GPU
+#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
+  if(threadIdx.x==0) md->s->dtcudaDeviceCVode += ((double)(int)(clock() - start))/(clock_khz*1000);
+  __syncthreads();
+#endif
+#endif
+  }
+  __syncthreads();
+  if(threadIdx.x==0) md->flagCells[blockIdx.x]=istate;
+#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
+  ModelDataVariable *mdvo = md->mdvo;
+  *mdvo = *md->s;
+#endif
+}
+
+int nextPowerOfTwoCVODE2(int v){
+  v--;
+  v |= v >> 1;
+  v |= v >> 2;
+  v |= v >> 4;
+  v |= v >> 8;
+  v |= v >> 16;
+  v++;
+  return v;
+}
+
+void cvodeRun(ModelDataGPU *mGPU, cudaStream_t stream){
+  int len_cell = mGPU->nrows / mGPU->n_cells;
+  int threads_block = len_cell;
+  int blocks = mGPU->n_cells;
+  int n_shr_memory = nextPowerOfTwoCVODE2(len_cell);
+  int n_shr_empty = mGPU->n_shr_empty = n_shr_memory - threads_block;
+  cudaGlobalCVode2 <<<blocks, threads_block, n_shr_memory * sizeof(double), stream>>>(*mGPU);
 }

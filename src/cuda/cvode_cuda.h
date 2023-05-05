@@ -19,7 +19,10 @@ extern "C" {
 #include "../camp_solver.h"
 }
 
+#ifdef DEV_DC
 __device__ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv);
+#endif
+void cvodeRun(ModelDataGPU *mGPU,cudaStream_t stream);
 
 #define CV_SUCCESS               0
 #define DO_ERROR_TEST    +2

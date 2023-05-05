@@ -71,7 +71,7 @@ else
   #FILE=./unit_test_aero_rep_single_particle
   if [ "$FILE" == TestMonarch.py ]; then
     #echo "python TestMonarch.py start"
-    time python $FILE
+    #python $FILE
     cd ../../compile/power9
   elif [ "$FILE" == test_monarch_1.py ]; then
     echo "Running old commits with file test_monarch_1.py ."

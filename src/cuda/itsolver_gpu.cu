@@ -452,6 +452,8 @@ void dvcheck_input_gpud(double *x, int len, const char* s)
   }
 }
 
+#ifdef ONLY_BCG
+
 __global__
 void solveBcgCuda(
         double *dA, int *djA, int *diA, double *dx, double *dtempv //Input data
@@ -852,25 +854,18 @@ void solveBCG(SolverData *sd, double *dA, int *djA, int *diA, double *dx, double
   alpha  = 1.0;
   rho0   = 1.0;
   omega0 = 1.0;
-
 #ifdef DEBUG_SOLVEBCGCUDA_DEEP
-
   double *aux_x1;
   aux_x1=(double*)malloc(mGPU->nrows*sizeof(double));
-
 #endif
-
   //for(int it=0;it<maxIt;it++){
   int it=0;
   do {
-
     rho1=gpu_dotxy(dr0, dr0h, aux, dtempv2, nrows,(blocks + 1) / 2, threads);//rho1 =<r0,r0h>
-
 #ifdef DEBUG_SOLVEBCGCUDA_DEEP
     //good here first iter
     printf("%d rho1 %-le\n",it,rho1);
 #endif
-
     beta=(rho1/rho0)*(alpha/omega0);
 
     gpu_zaxpbypc(dp0,dr0,dn0,beta,-1.0*omega0*beta,nrows,blocks,threads);   //z = ax + by + c
@@ -943,3 +938,4 @@ void solveBCG(SolverData *sd, double *dA, int *djA, int *diA, double *dx, double
 #endif
 
 }
+#endif

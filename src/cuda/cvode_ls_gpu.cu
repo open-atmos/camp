@@ -167,497 +167,15 @@ int cvHandleFailure_gpu(CVodeMem cv_mem, int flag)
   return(flag);
 }
 
-int CVode_gpu(void *cvode_mem, realtype tout, N_Vector yout,
-          realtype *tret, int itask, SolverData *sd)
-{
-  CVodeMem cv_mem;
-  long int nstloc;
-  int retval, hflag, kflag, istate, ir, ier, irfndp;
-  int ewtsetOK;
-  realtype troundoff, tout_hin, rh, nrm;
-  booleantype inactive_roots;
 
-  ModelDataCPU *mCPU = &(sd->mCPU);
-  ModelDataGPU *mGPU;
-
-  /*
-   * -------------------------------------
-   * 1. Check and process inputs
-   * -------------------------------------
-   */
-
-  /* Check if cvode_mem exists */
-  if (cvode_mem == NULL) {
-    cvProcessError(NULL, CV_MEM_NULL, "CVODE", "CVode", MSGCV_NO_MEM);
-    return(CV_MEM_NULL);
-  }
-  cv_mem = (CVodeMem) cvode_mem;
-
-  /* Check if cvode_mem was allocated */
-  if (cv_mem->cv_MallocDone == SUNFALSE) {
-    cvProcessError(cv_mem, CV_NO_MALLOC, "CVODE", "CVode", MSGCV_NO_MALLOC);
-    return(CV_NO_MALLOC);
-  }
-
-  /* Check for yout != NULL */
-  if ((cv_mem->cv_y = yout) == NULL) {
-    cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "CVode", MSGCV_YOUT_NULL);
-    return(CV_ILL_INPUT);
-  }
-
-  /* Check for tret != NULL */
-  if (tret == NULL) {
-    cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "CVode", MSGCV_TRET_NULL);
-    return(CV_ILL_INPUT);
-  }
-
-  /* Check for valid itask */
-  if ( (itask != CV_NORMAL) && (itask != CV_ONE_STEP) ) {
-    cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "CVode", MSGCV_BAD_ITASK);
-    return(CV_ILL_INPUT);
-  }
-
-  if (itask == CV_NORMAL) cv_mem->cv_toutc = tout;
-  cv_mem->cv_taskc = itask;
-
-  /*
-   * ----------------------------------------
-   * 2. Initializations performed only at
-   *    the first step (nst=0):
-   *    - initial setup
-   *    - initialize Nordsieck history array
-   *    - compute initial step size
-   *    - check for approach to tstop
-   *    - check for approach to a root
-   * ----------------------------------------
-   */
-
-  if (cv_mem->cv_nst == 0) {
-
-    cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
-
-    ier = cvInitialSetup_gpu(cv_mem);
-    if (ier!= CV_SUCCESS) return(ier);
-
-    /* Call f at (t0,y0), set zn[1] = y'(t0),
-       set initial h (from H0 or cvHin), and scale zn[1] by h.
-       Also check for zeros of root function g at and near t0.    */
-    //retval = cv_mem->cv_f(cv_mem->cv_tn, cv_mem->cv_zn[0],
-    //                      cv_mem->cv_zn[1], cv_mem->cv_user_data);
-    retval = f(cv_mem->cv_tn, cv_mem->cv_zn[0], cv_mem->cv_zn[1], cv_mem->cv_user_data);
-
-    N_VScale(ONE, cv_mem->cv_zn[0], yout);
-
-    cv_mem->cv_nfe++;
-    if (retval < 0) {
-      cvProcessError(cv_mem, CV_RHSFUNC_FAIL, "CVODE", "CVode",
-                     MSGCV_RHSFUNC_FAILED, cv_mem->cv_tn);
-      return(CV_RHSFUNC_FAIL);
-    }
-    if (retval > 0) {
-      cvProcessError(cv_mem, CV_FIRST_RHSFUNC_ERR, "CVODE", "CVode",
-                     MSGCV_RHSFUNC_FIRST);
-      return(CV_FIRST_RHSFUNC_ERR);
-    }
-
-
-
-    /* Test input tstop for legality. */
-
-    if (cv_mem->cv_tstopset) {
-      if ( (cv_mem->cv_tstop - cv_mem->cv_tn)*(tout - cv_mem->cv_tn) <= ZERO ) {
-        cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "CVode",
-                       MSGCV_BAD_TSTOP, cv_mem->cv_tstop, cv_mem->cv_tn);
-        return(CV_ILL_INPUT);
-      }
-    }
-
-    /* Set initial h (from H0 or cvHin). */
-
-    cv_mem->cv_h = cv_mem->cv_hin;
-    if ( (cv_mem->cv_h != ZERO) && ((tout-cv_mem->cv_tn)*cv_mem->cv_h < ZERO) ) {
-      cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "CVode", MSGCV_BAD_H0);
-      return(CV_ILL_INPUT);
-    }
-    if (cv_mem->cv_h == ZERO) {
-      tout_hin = tout;
-      if ( cv_mem->cv_tstopset && (tout-cv_mem->cv_tn)*(tout-cv_mem->cv_tstop) > ZERO )
-        tout_hin = cv_mem->cv_tstop;
-      hflag = cvHin_gpu(cv_mem, tout_hin); //set cv_y
-      if (hflag != CV_SUCCESS) {
-        istate = cvHandleFailure_gpu(cv_mem, hflag);
-        return(istate);
-      }
-    }
-    rh = SUNRabs(cv_mem->cv_h)*cv_mem->cv_hmax_inv;
-    if (rh > ONE) cv_mem->cv_h /= rh;
-    if (SUNRabs(cv_mem->cv_h) < cv_mem->cv_hmin)
-      cv_mem->cv_h *= cv_mem->cv_hmin/SUNRabs(cv_mem->cv_h);
-
-    /* Check for approach to tstop */
-
-    if (cv_mem->cv_tstopset) {
-      if ( (cv_mem->cv_tn + cv_mem->cv_h - cv_mem->cv_tstop)*cv_mem->cv_h > ZERO )
-        cv_mem->cv_h = (cv_mem->cv_tstop - cv_mem->cv_tn)*(ONE-FOUR*cv_mem->cv_uround);
-    }
-
-    /* Scale zn[1] by h.*/
-
-    cv_mem->cv_hscale = cv_mem->cv_h;
-    cv_mem->cv_h0u    = cv_mem->cv_h;
-    cv_mem->cv_hprime = cv_mem->cv_h;
-
-    N_VScale(cv_mem->cv_h, cv_mem->cv_zn[1], cv_mem->cv_zn[1]);
-    /* Try to improve initial guess of zn[1] */
-    if (cv_mem->cv_ghfun) {
-
-      N_VLinearSum(ONE, cv_mem->cv_zn[0], ONE, cv_mem->cv_zn[1], cv_mem->cv_tempv1);
-      cv_mem->cv_ghfun(cv_mem->cv_tn + cv_mem->cv_h, cv_mem->cv_h, cv_mem->cv_tempv1,
-                       cv_mem->cv_zn[0], cv_mem->cv_zn[1], cv_mem->cv_user_data,
-                       cv_mem->cv_tempv2, cv_mem->cv_acor_init);
-    }
-    /* Check for zeros of root function g at and near t0. */
-
-    if (cv_mem->cv_nrtfn > 0) {
-
-      retval = cvRcheck1_gpu(cv_mem);
-
-      if (retval == CV_RTFUNC_FAIL) {
-        cvProcessError(cv_mem, CV_RTFUNC_FAIL, "CVODE", "cvRcheck1",
-                       MSGCV_RTFUNC_FAILED, cv_mem->cv_tn);
-        return(CV_RTFUNC_FAIL);
-      }
-
-    }
-
-  } /* end of first call block */
-
-  /*
-   * ------------------------------------------------------
-   * 3. At following steps, perform stop tests:
-   *    - check for root in last step
-   *    - check if we passed tstop
-   *    - check if we passed tout (NORMAL mode)
-   *    - check if current tn was returned (ONE_STEP mode)
-   *    - check if we are close to tstop
-   *      (adjust step size if needed)
-   * -------------------------------------------------------
-   */
-
-  if (cv_mem->cv_nst > 0) {
-
-    /* Estimate an infinitesimal time interval to be used as
-       a roundoff for time quantities (based on current time
-       and step size) */
-    troundoff = FUZZ_FACTOR*cv_mem->cv_uround*(SUNRabs(cv_mem->cv_tn) + SUNRabs(cv_mem->cv_h));
-
-    /* First, check for a root in the last step taken, other than the
-       last root found, if any.  If itask = CV_ONE_STEP and y(tn) was not
-       returned because of an intervening root, return y(tn) now.     */
-    if (cv_mem->cv_nrtfn > 0) {
-
-      irfndp = cv_mem->cv_irfnd;
-
-      retval = cvRcheck2_gpu(cv_mem);
-
-      if (retval == CLOSERT) {
-        cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "cvRcheck2",
-                       MSGCV_CLOSE_ROOTS, cv_mem->cv_tlo);
-        return(CV_ILL_INPUT);
-      } else if (retval == CV_RTFUNC_FAIL) {
-        cvProcessError(cv_mem, CV_RTFUNC_FAIL, "CVODE", "cvRcheck2",
-                       MSGCV_RTFUNC_FAILED, cv_mem->cv_tlo);
-        return(CV_RTFUNC_FAIL);
-      } else if (retval == RTFOUND) {
-        cv_mem->cv_tretlast = *tret = cv_mem->cv_tlo;
-        return(CV_ROOT_RETURN);
-      }
-
-      /* If tn is distinct from tretlast (within roundoff),
-         check remaining interval for roots */
-      if ( SUNRabs(cv_mem->cv_tn - cv_mem->cv_tretlast) > troundoff ) {
-
-        retval = cvRcheck3_gpu(cv_mem);
-
-        if (retval == CV_SUCCESS) {     /* no root found */
-          cv_mem->cv_irfnd = 0;
-          if ((irfndp == 1) && (itask == CV_ONE_STEP)) {
-            cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
-            N_VScale(ONE, cv_mem->cv_zn[0], yout);
-            return(CV_SUCCESS);
-          }
-        } else if (retval == RTFOUND) {  /* a new root was found */
-          cv_mem->cv_irfnd = 1;
-          cv_mem->cv_tretlast = *tret = cv_mem->cv_tlo;
-          return(CV_ROOT_RETURN);
-        } else if (retval == CV_RTFUNC_FAIL) {  /* g failed */
-          cvProcessError(cv_mem, CV_RTFUNC_FAIL, "CVODE", "cvRcheck3",
-                         MSGCV_RTFUNC_FAILED, cv_mem->cv_tlo);
-          return(CV_RTFUNC_FAIL);
-        }
-
-      }
-
-    } /* end of root stop check */
-
-    /* In CV_NORMAL mode, test if tout was reached */
-    if ( (itask == CV_NORMAL) && ((cv_mem->cv_tn-tout)*cv_mem->cv_h >= ZERO) ) {
-      cv_mem->cv_tretlast = *tret = tout;
-      ier =  CVodeGetDky(cv_mem, tout, 0, yout);
-      if (ier != CV_SUCCESS) {
-        cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "CVode",
-                       MSGCV_BAD_TOUT, tout);
-        return(CV_ILL_INPUT);
-      }
-      return(CV_SUCCESS);
-    }
-
-    /* In CV_ONE_STEP mode, test if tn was returned */
-    if ( itask == CV_ONE_STEP &&
-         SUNRabs(cv_mem->cv_tn - cv_mem->cv_tretlast) > troundoff ) {
-      cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
-      N_VScale(ONE, cv_mem->cv_zn[0], yout);
-      return(CV_SUCCESS);
-    }
-
-    /* Test for tn at tstop or near tstop */
-    if ( cv_mem->cv_tstopset ) {
-
-      if ( SUNRabs(cv_mem->cv_tn - cv_mem->cv_tstop) <= troundoff) {
-        ier =  CVodeGetDky(cv_mem, cv_mem->cv_tstop, 0, yout);
-        if (ier != CV_SUCCESS) {
-          cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "CVode",
-                         MSGCV_BAD_TSTOP, cv_mem->cv_tstop, cv_mem->cv_tn);
-          return(CV_ILL_INPUT);
-        }
-        cv_mem->cv_tretlast = *tret = cv_mem->cv_tstop;
-        cv_mem->cv_tstopset = SUNFALSE;
-        return(CV_TSTOP_RETURN);
-      }
-
-      /* If next step would overtake tstop, adjust stepsize */
-      if ( (cv_mem->cv_tn + cv_mem->cv_hprime - cv_mem->cv_tstop)*cv_mem->cv_h > ZERO ) {
-        cv_mem->cv_hprime = (cv_mem->cv_tstop - cv_mem->cv_tn)*(ONE-FOUR*cv_mem->cv_uround);
-        cv_mem->cv_eta = cv_mem->cv_hprime/cv_mem->cv_h;
-      }
-
-    }
-
-  } /* end stopping tests block */
-
-  /*
-   * --------------------------------------------------
-   * 4. Looping point for internal steps
-   *
-   *    4.1. check for errors (too many steps, too much
-   *         accuracy requested, step size too small)
-   *    4.2. take a new step (call cvStep)
-   *    4.3. stop on error
-   *    4.4. perform stop tests:
-   *         - check for root in last step
-   *         - check if tout was passed
-   *         - check if close to tstop
-   *         - check if in ONE_STEP mode (must return)
-   * --------------------------------------------------
-   */
-
-#ifdef CAMP_DEBUG_GPU
-  mGPU = sd->mGPU;
-  cudaEventRecord(mCPU->startcvStep);
-#endif
-
-  nstloc = 0;
-  for(;;) {
-
-#ifdef CAMP_DEBUG_GPU
-#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
-    mGPU = sd->mGPU;
-    mCPU->mdvCPU.countercvStep++;
- #endif
-#endif
-
-    cv_mem->cv_next_h = cv_mem->cv_h;
-    cv_mem->cv_next_q = cv_mem->cv_q;
-
-    /* Reset and check ewt */
-    if (cv_mem->cv_nst > 0) {
-
-      ewtsetOK = cv_mem->cv_efun(cv_mem->cv_zn[0], cv_mem->cv_ewt, cv_mem->cv_e_data);
-      //set here copy of ewt to gpu
-
-      if (ewtsetOK != 0) {
-
-        if (cv_mem->cv_itol == CV_WF)
-          cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "CVode",
-                         MSGCV_EWT_NOW_FAIL, cv_mem->cv_tn);
-        else
-          cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "CVode",
-                         MSGCV_EWT_NOW_BAD, cv_mem->cv_tn);
-
-        istate = CV_ILL_INPUT;
-        cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
-        N_VScale(ONE, cv_mem->cv_zn[0], yout);
-        break;
-
-      }
-    }
-
-    /* Check for too many steps */
-    if ( (cv_mem->cv_mxstep>0) && (nstloc >= cv_mem->cv_mxstep) ) {
-      cvProcessError(cv_mem, CV_TOO_MUCH_WORK, "CVODE", "CVode",
-                     MSGCV_MAX_STEPS, cv_mem->cv_tn);
-      istate = CV_TOO_MUCH_WORK;
-      cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
-      N_VScale(ONE, cv_mem->cv_zn[0], yout);
-      break;
-    }
-
-    /* Check for too much accuracy requested */
-    nrm = N_VWrmsNorm(cv_mem->cv_zn[0], cv_mem->cv_ewt);
-    cv_mem->cv_tolsf = cv_mem->cv_uround * nrm;
-    if (cv_mem->cv_tolsf > ONE) {
-      cvProcessError(cv_mem, CV_TOO_MUCH_ACC, "CVODE", "CVode",
-                     MSGCV_TOO_MUCH_ACC, cv_mem->cv_tn);
-      istate = CV_TOO_MUCH_ACC;
-      cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
-      N_VScale(ONE, cv_mem->cv_zn[0], yout);
-      cv_mem->cv_tolsf *= TWO;
-      break;
-    } else {
-      cv_mem->cv_tolsf = ONE;
-    }
-
-    /* Check for h below roundoff level in tn */
-    if (cv_mem->cv_tn + cv_mem->cv_h == cv_mem->cv_tn) {
-      cv_mem->cv_nhnil++;
-      if (cv_mem->cv_nhnil <= cv_mem->cv_mxhnil)
-        cvProcessError(cv_mem, CV_WARNING, "CVODE", "CVode",
-                       MSGCV_HNIL, cv_mem->cv_tn, cv_mem->cv_h);
-      if (cv_mem->cv_nhnil == cv_mem->cv_mxhnil)
-        cvProcessError(cv_mem, CV_WARNING, "CVODE", "CVode", MSGCV_HNIL_DONE);
-    }
-
-    /* Call cvStep to take a step */
-    //kflag = cvStep(cv_mem);
-    kflag = cvStep_gpu(sd, cv_mem);
-
-    /* Process failed step cases, and exit loop */
-    if (kflag != CV_SUCCESS) {
-      istate = cvHandleFailure_gpu(cv_mem, kflag);
-      cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
-      N_VScale(ONE, cv_mem->cv_zn[0], yout);
-      break;
-    }
-
-    nstloc++;
-
-    /* Check for root in last step taken. */
-    if (cv_mem->cv_nrtfn > 0) {
-
-      retval = cvRcheck3_gpu(cv_mem);
-
-      if (retval == RTFOUND) {  /* A new root was found */
-        cv_mem->cv_irfnd = 1;
-        istate = CV_ROOT_RETURN;
-        cv_mem->cv_tretlast = *tret = cv_mem->cv_tlo;
-        break;
-      } else if (retval == CV_RTFUNC_FAIL) { /* g failed */
-        cvProcessError(cv_mem, CV_RTFUNC_FAIL, "CVODE", "cvRcheck3",
-                       MSGCV_RTFUNC_FAILED, cv_mem->cv_tlo);
-        istate = CV_RTFUNC_FAIL;
-        break;
-      }
-
-      /* If we are at the end of the first step and we still have
-       * some event functions that are inactive, issue a warning
-       * as this may indicate a user error in the implementation
-       * of the root function. */
-
-      if (cv_mem->cv_nst==1) {
-        inactive_roots = SUNFALSE;
-        for (ir=0; ir<cv_mem->cv_nrtfn; ir++) {
-          if (!cv_mem->cv_gactive[ir]) {
-            inactive_roots = SUNTRUE;
-            break;
-          }
-        }
-        if ((cv_mem->cv_mxgnull > 0) && inactive_roots) {
-          cvProcessError(cv_mem, CV_WARNING, "CVODES", "CVode",
-                         MSGCV_INACTIVE_ROOTS);
-        }
-      }
-
-    }
-
-    /* In NORMAL mode, check if tout reached */
-    if ( (itask == CV_NORMAL) &&  (cv_mem->cv_tn-tout)*cv_mem->cv_h >= ZERO ) {
-      istate = CV_SUCCESS;
-      cv_mem->cv_tretlast = *tret = tout;
-      (void) CVodeGetDky(cv_mem, tout, 0, yout);
-      cv_mem->cv_next_q = cv_mem->cv_qprime;
-      cv_mem->cv_next_h = cv_mem->cv_hprime;
-      break;
-    }
-
-    /* Check if tn is at tstop or near tstop */
-    if ( cv_mem->cv_tstopset ) {
-
-      troundoff = FUZZ_FACTOR*cv_mem->cv_uround*(SUNRabs(cv_mem->cv_tn) + SUNRabs(cv_mem->cv_h));
-      if ( SUNRabs(cv_mem->cv_tn - cv_mem->cv_tstop) <= troundoff) {
-        (void) CVodeGetDky(cv_mem, cv_mem->cv_tstop, 0, yout);
-        cv_mem->cv_tretlast = *tret = cv_mem->cv_tstop;
-        cv_mem->cv_tstopset = SUNFALSE;
-        istate = CV_TSTOP_RETURN;
-        break;
-      }
-
-      if ( (cv_mem->cv_tn + cv_mem->cv_hprime - cv_mem->cv_tstop)*cv_mem->cv_h > ZERO ) {
-        cv_mem->cv_hprime = (cv_mem->cv_tstop - cv_mem->cv_tn)*(ONE-FOUR*cv_mem->cv_uround);
-        cv_mem->cv_eta = cv_mem->cv_hprime/cv_mem->cv_h;
-      }
-
-    }
-
-    /* In ONE_STEP mode, copy y and exit loop */
-    if (itask == CV_ONE_STEP) {
-      istate = CV_SUCCESS;
-      cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
-      N_VScale(ONE, cv_mem->cv_zn[0], yout);
-      cv_mem->cv_next_q = cv_mem->cv_qprime;
-      cv_mem->cv_next_h = cv_mem->cv_hprime;
-      break;
-    }
-
-  } /* end looping for internal steps */
-
-#ifdef CAMP_DEBUG_GPU
-  cudaDeviceSynchronize();
-  cudaEventRecord(mCPU->stopcvStep);
-  cudaEventSynchronize(mCPU->stopcvStep);
-  float mscvStep = 0.0;
-  cudaEventElapsedTime(&mscvStep, mCPU->startcvStep, mCPU->stopcvStep);
-  mCPU->timecvStep+= mscvStep/1000;
-#endif
-    mGPU = sd->mGPU;
-    cudaMemcpy(&mCPU->mdvCPU, mGPU->mdvo, sizeof(ModelDataVariable), cudaMemcpyDeviceToHost);
-  return(istate);
-}
-
-int cvInitialSetup_gpu(CVodeMem cv_mem)
-{
+int cvInitialSetup_gpu(CVodeMem cv_mem){
   int ier;
-
-  /* Did the user specify tolerances? */
   if (cv_mem->cv_itol == CV_NN) {
     cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "cvInitialSetup", MSGCV_NO_TOLS);
     return(CV_ILL_INPUT);
   }
-
-  /* Set data for efun */
   if (cv_mem->cv_user_efun) cv_mem->cv_e_data = cv_mem->cv_user_data;
   else                      cv_mem->cv_e_data = cv_mem;
-
-  /* Load initial error weights */
   ier = cv_mem->cv_efun(cv_mem->cv_zn[0], cv_mem->cv_ewt, cv_mem->cv_e_data);
   if (ier != 0) {
     if (cv_mem->cv_itol == CV_WF)
@@ -666,8 +184,6 @@ int cvInitialSetup_gpu(CVodeMem cv_mem)
       cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "cvInitialSetup", MSGCV_BAD_EWT);
     return(CV_ILL_INPUT);
   }
-
-  /* Check if lsolve function exists (if needed) and call linit function (if it exists) */
   if (cv_mem->cv_iter == CV_NEWTON) {
     if (cv_mem->cv_lsolve == NULL) {
       cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "cvInitialSetup", MSGCV_LSOLVE_NULL);
@@ -681,7 +197,6 @@ int cvInitialSetup_gpu(CVodeMem cv_mem)
       }
     }
   }
-
   return(CV_SUCCESS);
 }
 
@@ -1161,6 +676,484 @@ int cvRootfind_gpu(CVodeMem cv_mem)
       cv_mem->cv_iroots[i] = cv_mem->cv_glo[i] > 0 ? -1 : 1;
   }
   return(RTFOUND);
+}
+
+#ifdef ONLY_BCG
+
+int CVode_gpu(void *cvode_mem, realtype tout, N_Vector yout,
+          realtype *tret, int itask, SolverData *sd)
+{
+  CVodeMem cv_mem;
+  long int nstloc;
+  int retval, hflag, kflag, istate, ir, ier, irfndp;
+  int ewtsetOK;
+  realtype troundoff, tout_hin, rh, nrm;
+  booleantype inactive_roots;
+
+  ModelDataCPU *mCPU = &(sd->mCPU);
+  ModelDataGPU *mGPU;
+
+  /*
+   * -------------------------------------
+   * 1. Check and process inputs
+   * -------------------------------------
+   */
+
+  /* Check if cvode_mem exists */
+  if (cvode_mem == NULL) {
+    cvProcessError(NULL, CV_MEM_NULL, "CVODE", "CVode", MSGCV_NO_MEM);
+    return(CV_MEM_NULL);
+  }
+  cv_mem = (CVodeMem) cvode_mem;
+
+  /* Check if cvode_mem was allocated */
+  if (cv_mem->cv_MallocDone == SUNFALSE) {
+    cvProcessError(cv_mem, CV_NO_MALLOC, "CVODE", "CVode", MSGCV_NO_MALLOC);
+    return(CV_NO_MALLOC);
+  }
+
+  /* Check for yout != NULL */
+  if ((cv_mem->cv_y = yout) == NULL) {
+    cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "CVode", MSGCV_YOUT_NULL);
+    return(CV_ILL_INPUT);
+  }
+
+  /* Check for tret != NULL */
+  if (tret == NULL) {
+    cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "CVode", MSGCV_TRET_NULL);
+    return(CV_ILL_INPUT);
+  }
+
+  /* Check for valid itask */
+  if ( (itask != CV_NORMAL) && (itask != CV_ONE_STEP) ) {
+    cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "CVode", MSGCV_BAD_ITASK);
+    return(CV_ILL_INPUT);
+  }
+
+  if (itask == CV_NORMAL) cv_mem->cv_toutc = tout;
+  cv_mem->cv_taskc = itask;
+
+  /*
+   * ----------------------------------------
+   * 2. Initializations performed only at
+   *    the first step (nst=0):
+   *    - initial setup
+   *    - initialize Nordsieck history array
+   *    - compute initial step size
+   *    - check for approach to tstop
+   *    - check for approach to a root
+   * ----------------------------------------
+   */
+
+  if (cv_mem->cv_nst == 0) {
+
+    cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
+
+    ier = cvInitialSetup_gpu(cv_mem);
+    if (ier!= CV_SUCCESS) return(ier);
+
+    /* Call f at (t0,y0), set zn[1] = y'(t0),
+       set initial h (from H0 or cvHin), and scale zn[1] by h.
+       Also check for zeros of root function g at and near t0.    */
+    //retval = cv_mem->cv_f(cv_mem->cv_tn, cv_mem->cv_zn[0],
+    //                      cv_mem->cv_zn[1], cv_mem->cv_user_data);
+    retval = f(cv_mem->cv_tn, cv_mem->cv_zn[0], cv_mem->cv_zn[1], cv_mem->cv_user_data);
+
+    N_VScale(ONE, cv_mem->cv_zn[0], yout);
+
+    cv_mem->cv_nfe++;
+    if (retval < 0) {
+      cvProcessError(cv_mem, CV_RHSFUNC_FAIL, "CVODE", "CVode",
+                     MSGCV_RHSFUNC_FAILED, cv_mem->cv_tn);
+      return(CV_RHSFUNC_FAIL);
+    }
+    if (retval > 0) {
+      cvProcessError(cv_mem, CV_FIRST_RHSFUNC_ERR, "CVODE", "CVode",
+                     MSGCV_RHSFUNC_FIRST);
+      return(CV_FIRST_RHSFUNC_ERR);
+    }
+
+
+
+    /* Test input tstop for legality. */
+
+    if (cv_mem->cv_tstopset) {
+      if ( (cv_mem->cv_tstop - cv_mem->cv_tn)*(tout - cv_mem->cv_tn) <= ZERO ) {
+        cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "CVode",
+                       MSGCV_BAD_TSTOP, cv_mem->cv_tstop, cv_mem->cv_tn);
+        return(CV_ILL_INPUT);
+      }
+    }
+
+    /* Set initial h (from H0 or cvHin). */
+
+    cv_mem->cv_h = cv_mem->cv_hin;
+    if ( (cv_mem->cv_h != ZERO) && ((tout-cv_mem->cv_tn)*cv_mem->cv_h < ZERO) ) {
+      cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "CVode", MSGCV_BAD_H0);
+      return(CV_ILL_INPUT);
+    }
+    if (cv_mem->cv_h == ZERO) {
+      tout_hin = tout;
+      if ( cv_mem->cv_tstopset && (tout-cv_mem->cv_tn)*(tout-cv_mem->cv_tstop) > ZERO )
+        tout_hin = cv_mem->cv_tstop;
+      hflag = cvHin_gpu(cv_mem, tout_hin); //set cv_y
+      if (hflag != CV_SUCCESS) {
+        istate = cvHandleFailure_gpu(cv_mem, hflag);
+        return(istate);
+      }
+    }
+    rh = SUNRabs(cv_mem->cv_h)*cv_mem->cv_hmax_inv;
+    if (rh > ONE) cv_mem->cv_h /= rh;
+    if (SUNRabs(cv_mem->cv_h) < cv_mem->cv_hmin)
+      cv_mem->cv_h *= cv_mem->cv_hmin/SUNRabs(cv_mem->cv_h);
+
+    /* Check for approach to tstop */
+
+    if (cv_mem->cv_tstopset) {
+      if ( (cv_mem->cv_tn + cv_mem->cv_h - cv_mem->cv_tstop)*cv_mem->cv_h > ZERO )
+        cv_mem->cv_h = (cv_mem->cv_tstop - cv_mem->cv_tn)*(ONE-FOUR*cv_mem->cv_uround);
+    }
+
+    /* Scale zn[1] by h.*/
+
+    cv_mem->cv_hscale = cv_mem->cv_h;
+    cv_mem->cv_h0u    = cv_mem->cv_h;
+    cv_mem->cv_hprime = cv_mem->cv_h;
+
+    N_VScale(cv_mem->cv_h, cv_mem->cv_zn[1], cv_mem->cv_zn[1]);
+    /* Try to improve initial guess of zn[1] */
+    if (cv_mem->cv_ghfun) {
+
+      N_VLinearSum(ONE, cv_mem->cv_zn[0], ONE, cv_mem->cv_zn[1], cv_mem->cv_tempv1);
+      cv_mem->cv_ghfun(cv_mem->cv_tn + cv_mem->cv_h, cv_mem->cv_h, cv_mem->cv_tempv1,
+                       cv_mem->cv_zn[0], cv_mem->cv_zn[1], cv_mem->cv_user_data,
+                       cv_mem->cv_tempv2, cv_mem->cv_acor_init);
+    }
+    /* Check for zeros of root function g at and near t0. */
+
+    if (cv_mem->cv_nrtfn > 0) {
+
+      retval = cvRcheck1_gpu(cv_mem);
+
+      if (retval == CV_RTFUNC_FAIL) {
+        cvProcessError(cv_mem, CV_RTFUNC_FAIL, "CVODE", "cvRcheck1",
+                       MSGCV_RTFUNC_FAILED, cv_mem->cv_tn);
+        return(CV_RTFUNC_FAIL);
+      }
+
+    }
+
+  } /* end of first call block */
+
+  /*
+   * ------------------------------------------------------
+   * 3. At following steps, perform stop tests:
+   *    - check for root in last step
+   *    - check if we passed tstop
+   *    - check if we passed tout (NORMAL mode)
+   *    - check if current tn was returned (ONE_STEP mode)
+   *    - check if we are close to tstop
+   *      (adjust step size if needed)
+   * -------------------------------------------------------
+   */
+
+  if (cv_mem->cv_nst > 0) {
+
+    /* Estimate an infinitesimal time interval to be used as
+       a roundoff for time quantities (based on current time
+       and step size) */
+    troundoff = FUZZ_FACTOR*cv_mem->cv_uround*(SUNRabs(cv_mem->cv_tn) + SUNRabs(cv_mem->cv_h));
+
+    /* First, check for a root in the last step taken, other than the
+       last root found, if any.  If itask = CV_ONE_STEP and y(tn) was not
+       returned because of an intervening root, return y(tn) now.     */
+    if (cv_mem->cv_nrtfn > 0) {
+
+      irfndp = cv_mem->cv_irfnd;
+
+      retval = cvRcheck2_gpu(cv_mem);
+
+      if (retval == CLOSERT) {
+        cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "cvRcheck2",
+                       MSGCV_CLOSE_ROOTS, cv_mem->cv_tlo);
+        return(CV_ILL_INPUT);
+      } else if (retval == CV_RTFUNC_FAIL) {
+        cvProcessError(cv_mem, CV_RTFUNC_FAIL, "CVODE", "cvRcheck2",
+                       MSGCV_RTFUNC_FAILED, cv_mem->cv_tlo);
+        return(CV_RTFUNC_FAIL);
+      } else if (retval == RTFOUND) {
+        cv_mem->cv_tretlast = *tret = cv_mem->cv_tlo;
+        return(CV_ROOT_RETURN);
+      }
+
+      /* If tn is distinct from tretlast (within roundoff),
+         check remaining interval for roots */
+      if ( SUNRabs(cv_mem->cv_tn - cv_mem->cv_tretlast) > troundoff ) {
+
+        retval = cvRcheck3_gpu(cv_mem);
+
+        if (retval == CV_SUCCESS) {     /* no root found */
+          cv_mem->cv_irfnd = 0;
+          if ((irfndp == 1) && (itask == CV_ONE_STEP)) {
+            cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
+            N_VScale(ONE, cv_mem->cv_zn[0], yout);
+            return(CV_SUCCESS);
+          }
+        } else if (retval == RTFOUND) {  /* a new root was found */
+          cv_mem->cv_irfnd = 1;
+          cv_mem->cv_tretlast = *tret = cv_mem->cv_tlo;
+          return(CV_ROOT_RETURN);
+        } else if (retval == CV_RTFUNC_FAIL) {  /* g failed */
+          cvProcessError(cv_mem, CV_RTFUNC_FAIL, "CVODE", "cvRcheck3",
+                         MSGCV_RTFUNC_FAILED, cv_mem->cv_tlo);
+          return(CV_RTFUNC_FAIL);
+        }
+
+      }
+
+    } /* end of root stop check */
+
+    /* In CV_NORMAL mode, test if tout was reached */
+    if ( (itask == CV_NORMAL) && ((cv_mem->cv_tn-tout)*cv_mem->cv_h >= ZERO) ) {
+      cv_mem->cv_tretlast = *tret = tout;
+      ier =  CVodeGetDky(cv_mem, tout, 0, yout);
+      if (ier != CV_SUCCESS) {
+        cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "CVode",
+                       MSGCV_BAD_TOUT, tout);
+        return(CV_ILL_INPUT);
+      }
+      return(CV_SUCCESS);
+    }
+
+    /* In CV_ONE_STEP mode, test if tn was returned */
+    if ( itask == CV_ONE_STEP &&
+         SUNRabs(cv_mem->cv_tn - cv_mem->cv_tretlast) > troundoff ) {
+      cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
+      N_VScale(ONE, cv_mem->cv_zn[0], yout);
+      return(CV_SUCCESS);
+    }
+
+    /* Test for tn at tstop or near tstop */
+    if ( cv_mem->cv_tstopset ) {
+
+      if ( SUNRabs(cv_mem->cv_tn - cv_mem->cv_tstop) <= troundoff) {
+        ier =  CVodeGetDky(cv_mem, cv_mem->cv_tstop, 0, yout);
+        if (ier != CV_SUCCESS) {
+          cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "CVode",
+                         MSGCV_BAD_TSTOP, cv_mem->cv_tstop, cv_mem->cv_tn);
+          return(CV_ILL_INPUT);
+        }
+        cv_mem->cv_tretlast = *tret = cv_mem->cv_tstop;
+        cv_mem->cv_tstopset = SUNFALSE;
+        return(CV_TSTOP_RETURN);
+      }
+
+      /* If next step would overtake tstop, adjust stepsize */
+      if ( (cv_mem->cv_tn + cv_mem->cv_hprime - cv_mem->cv_tstop)*cv_mem->cv_h > ZERO ) {
+        cv_mem->cv_hprime = (cv_mem->cv_tstop - cv_mem->cv_tn)*(ONE-FOUR*cv_mem->cv_uround);
+        cv_mem->cv_eta = cv_mem->cv_hprime/cv_mem->cv_h;
+      }
+
+    }
+
+  } /* end stopping tests block */
+
+  /*
+   * --------------------------------------------------
+   * 4. Looping point for internal steps
+   *
+   *    4.1. check for errors (too many steps, too much
+   *         accuracy requested, step size too small)
+   *    4.2. take a new step (call cvStep)
+   *    4.3. stop on error
+   *    4.4. perform stop tests:
+   *         - check for root in last step
+   *         - check if tout was passed
+   *         - check if close to tstop
+   *         - check if in ONE_STEP mode (must return)
+   * --------------------------------------------------
+   */
+
+#ifdef CAMP_DEBUG_GPU
+  mGPU = sd->mGPU;
+  cudaEventRecord(mCPU->startcvStep);
+#endif
+
+  nstloc = 0;
+  for(;;) {
+
+#ifdef CAMP_DEBUG_GPU
+#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
+    mGPU = sd->mGPU;
+    mCPU->mdvCPU.countercvStep++;
+ #endif
+#endif
+
+    cv_mem->cv_next_h = cv_mem->cv_h;
+    cv_mem->cv_next_q = cv_mem->cv_q;
+
+    /* Reset and check ewt */
+    if (cv_mem->cv_nst > 0) {
+
+      ewtsetOK = cv_mem->cv_efun(cv_mem->cv_zn[0], cv_mem->cv_ewt, cv_mem->cv_e_data);
+      //set here copy of ewt to gpu
+
+      if (ewtsetOK != 0) {
+
+        if (cv_mem->cv_itol == CV_WF)
+          cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "CVode",
+                         MSGCV_EWT_NOW_FAIL, cv_mem->cv_tn);
+        else
+          cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "CVode",
+                         MSGCV_EWT_NOW_BAD, cv_mem->cv_tn);
+
+        istate = CV_ILL_INPUT;
+        cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
+        N_VScale(ONE, cv_mem->cv_zn[0], yout);
+        break;
+
+      }
+    }
+
+    /* Check for too many steps */
+    if ( (cv_mem->cv_mxstep>0) && (nstloc >= cv_mem->cv_mxstep) ) {
+      cvProcessError(cv_mem, CV_TOO_MUCH_WORK, "CVODE", "CVode",
+                     MSGCV_MAX_STEPS, cv_mem->cv_tn);
+      istate = CV_TOO_MUCH_WORK;
+      cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
+      N_VScale(ONE, cv_mem->cv_zn[0], yout);
+      break;
+    }
+
+    /* Check for too much accuracy requested */
+    nrm = N_VWrmsNorm(cv_mem->cv_zn[0], cv_mem->cv_ewt);
+    cv_mem->cv_tolsf = cv_mem->cv_uround * nrm;
+    if (cv_mem->cv_tolsf > ONE) {
+      cvProcessError(cv_mem, CV_TOO_MUCH_ACC, "CVODE", "CVode",
+                     MSGCV_TOO_MUCH_ACC, cv_mem->cv_tn);
+      istate = CV_TOO_MUCH_ACC;
+      cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
+      N_VScale(ONE, cv_mem->cv_zn[0], yout);
+      cv_mem->cv_tolsf *= TWO;
+      break;
+    } else {
+      cv_mem->cv_tolsf = ONE;
+    }
+
+    /* Check for h below roundoff level in tn */
+    if (cv_mem->cv_tn + cv_mem->cv_h == cv_mem->cv_tn) {
+      cv_mem->cv_nhnil++;
+      if (cv_mem->cv_nhnil <= cv_mem->cv_mxhnil)
+        cvProcessError(cv_mem, CV_WARNING, "CVODE", "CVode",
+                       MSGCV_HNIL, cv_mem->cv_tn, cv_mem->cv_h);
+      if (cv_mem->cv_nhnil == cv_mem->cv_mxhnil)
+        cvProcessError(cv_mem, CV_WARNING, "CVODE", "CVode", MSGCV_HNIL_DONE);
+    }
+
+    /* Call cvStep to take a step */
+    //kflag = cvStep(cv_mem);
+    kflag = cvStep_gpu(sd, cv_mem);
+
+    /* Process failed step cases, and exit loop */
+    if (kflag != CV_SUCCESS) {
+      istate = cvHandleFailure_gpu(cv_mem, kflag);
+      cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
+      N_VScale(ONE, cv_mem->cv_zn[0], yout);
+      break;
+    }
+
+    nstloc++;
+
+    /* Check for root in last step taken. */
+    if (cv_mem->cv_nrtfn > 0) {
+
+      retval = cvRcheck3_gpu(cv_mem);
+
+      if (retval == RTFOUND) {  /* A new root was found */
+        cv_mem->cv_irfnd = 1;
+        istate = CV_ROOT_RETURN;
+        cv_mem->cv_tretlast = *tret = cv_mem->cv_tlo;
+        break;
+      } else if (retval == CV_RTFUNC_FAIL) { /* g failed */
+        cvProcessError(cv_mem, CV_RTFUNC_FAIL, "CVODE", "cvRcheck3",
+                       MSGCV_RTFUNC_FAILED, cv_mem->cv_tlo);
+        istate = CV_RTFUNC_FAIL;
+        break;
+      }
+
+      /* If we are at the end of the first step and we still have
+       * some event functions that are inactive, issue a warning
+       * as this may indicate a user error in the implementation
+       * of the root function. */
+
+      if (cv_mem->cv_nst==1) {
+        inactive_roots = SUNFALSE;
+        for (ir=0; ir<cv_mem->cv_nrtfn; ir++) {
+          if (!cv_mem->cv_gactive[ir]) {
+            inactive_roots = SUNTRUE;
+            break;
+          }
+        }
+        if ((cv_mem->cv_mxgnull > 0) && inactive_roots) {
+          cvProcessError(cv_mem, CV_WARNING, "CVODES", "CVode",
+                         MSGCV_INACTIVE_ROOTS);
+        }
+      }
+
+    }
+
+    /* In NORMAL mode, check if tout reached */
+    if ( (itask == CV_NORMAL) &&  (cv_mem->cv_tn-tout)*cv_mem->cv_h >= ZERO ) {
+      istate = CV_SUCCESS;
+      cv_mem->cv_tretlast = *tret = tout;
+      (void) CVodeGetDky(cv_mem, tout, 0, yout);
+      cv_mem->cv_next_q = cv_mem->cv_qprime;
+      cv_mem->cv_next_h = cv_mem->cv_hprime;
+      break;
+    }
+
+    /* Check if tn is at tstop or near tstop */
+    if ( cv_mem->cv_tstopset ) {
+
+      troundoff = FUZZ_FACTOR*cv_mem->cv_uround*(SUNRabs(cv_mem->cv_tn) + SUNRabs(cv_mem->cv_h));
+      if ( SUNRabs(cv_mem->cv_tn - cv_mem->cv_tstop) <= troundoff) {
+        (void) CVodeGetDky(cv_mem, cv_mem->cv_tstop, 0, yout);
+        cv_mem->cv_tretlast = *tret = cv_mem->cv_tstop;
+        cv_mem->cv_tstopset = SUNFALSE;
+        istate = CV_TSTOP_RETURN;
+        break;
+      }
+
+      if ( (cv_mem->cv_tn + cv_mem->cv_hprime - cv_mem->cv_tstop)*cv_mem->cv_h > ZERO ) {
+        cv_mem->cv_hprime = (cv_mem->cv_tstop - cv_mem->cv_tn)*(ONE-FOUR*cv_mem->cv_uround);
+        cv_mem->cv_eta = cv_mem->cv_hprime/cv_mem->cv_h;
+      }
+
+    }
+
+    /* In ONE_STEP mode, copy y and exit loop */
+    if (itask == CV_ONE_STEP) {
+      istate = CV_SUCCESS;
+      cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
+      N_VScale(ONE, cv_mem->cv_zn[0], yout);
+      cv_mem->cv_next_q = cv_mem->cv_qprime;
+      cv_mem->cv_next_h = cv_mem->cv_hprime;
+      break;
+    }
+
+  } /* end looping for internal steps */
+
+#ifdef CAMP_DEBUG_GPU
+  cudaDeviceSynchronize();
+  cudaEventRecord(mCPU->stopcvStep);
+  cudaEventSynchronize(mCPU->stopcvStep);
+  float mscvStep = 0.0;
+  cudaEventElapsedTime(&mscvStep, mCPU->startcvStep, mCPU->stopcvStep);
+  mCPU->timecvStep+= mscvStep/1000;
+#endif
+    mGPU = sd->mGPU;
+    cudaMemcpy(&mCPU->mdvCPU, mGPU->mdvo, sizeof(ModelDataVariable), cudaMemcpyDeviceToHost);
+  return(istate);
 }
 
 /*
@@ -2790,3 +2783,4 @@ int linsolsolve_gpu(SolverData *sd, CVodeMem cv_mem)
 
   }
 }
+#endif

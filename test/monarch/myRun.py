@@ -371,7 +371,7 @@ def run(conf):
         exec_str += " "  # summary
         #exec_str += "--mode=launch " #fail #gui attach
 
-        print("Saving nsight file in ", os.path.abspath(os.getcwd()) \
+        print("CUDASaving nsight file in ", os.path.abspath(os.getcwd()) \
               + "/" + pathNvprof)
 
     path_exec = "../../build/mock_monarch"

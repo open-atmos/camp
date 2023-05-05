@@ -13,8 +13,7 @@
 //#include<cublas.h>
 //#include<cublas_v2.h>
 
-using namespace std;
-
+#ifdef ONLY_BCG
 __global__ void cudamatScaleAddI(int nrows, double* dA, int* djA, int* diA, double alpha)
 {
 	int row= threadIdx.x + blockDim.x*blockIdx.x;
@@ -274,39 +273,7 @@ extern "C++" double gpu_dotxy(double* vec1, double* vec2, double* h_temp, double
   cudaMemcpy(&sum, d_temp, sizeof(double), cudaMemcpyDeviceToHost);
 
   return sum;
-
-/*
-  cudaMemcpy(h_temp, d_temp, blocks * sizeof(double), cudaMemcpyDeviceToHost);
-  double sum=0;
-  for(int i=0;i<blocks;i++)
-  {
-    sum+=h_temp[i];
-  }
-  return sum;
-*/
-  /*dim3 dimGrid2(1,1,1);
-  dim3 dimBlock2(blocks,1,1);
-
-  //Cuda only sum kernel call
-  //cudareducey<<<dimGrid2,dimBlock2,blocks*sizeof(double)>>>(d_temp,blocks); //Takes quasi WAY MORE than cpu calc
-
-  cudaMemcpy(h_temp, d_temp, sizeof(double), cudaMemcpyDeviceToHost);
-  return h_temp[0];*/
 }
-
-/*
-extern "C++" double gpu_dotxy(double *dy, double* dx, int nrows)
-{
-   double dot=0.0;
-   cublasHandle_t hl;
-   cublasCreate(&hl);
-
-   cublasDdot(hl,nrows,dy,1,dx,1,&dot);
-
-   cublasDestroy(hl);
-   return dot;
-}
-*/
 
 // z= a*z + x + b*y
 __global__ void cudazaxpbypc(double* dz, double* dx,double* dy, double a, double b, int nrows)
@@ -455,6 +422,10 @@ extern "C++" void gpu_scaley(double* dy, double a, int nrows, int blocks, int th
 
   cudascaley<<<dimGrid,dimBlock>>>(dy,a,nrows);
 }
+#endif
+
+
+
 
 // Device functions (equivalent to global functions but in device to allow calls from gpu)
 __device__ void cudaDeviceBCGprecond(double* dA, int* djA, int* diA, double* ddiag, double alpha){
