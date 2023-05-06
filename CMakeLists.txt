@@ -45,7 +45,8 @@ option(ENABLE_EXPORT_NETCDF "" OFF)
 option(ENABLE_IMPORT_NETCDF "" OFF)
 option(ENABLE_BOOTCAMP "" ON)
 option(ENABLE_DATA "" ON)
-option(ENABLE_STATIC_LIB "" OFF) #todo change static to shared because better performance
+option(ENABLE_STATIC_LIB "" OFF)
+option(BUILD_SHARED_LIBRARIES "" ON)
 option(use_maxrregcount127 "Compiling with maxxregcount127" OFF)
 option(use_maxrregcount64 "Compiling with maxxregcount64" OFF)
 option(use_maxrregcount24 "Compiling with maxxregcount24" OFF)
@@ -502,12 +503,11 @@ set(CAMP_LIB_SRC
   ${CAMP_C_SRC} ${AEROSOL_REPS_SRC} ${SUB_MODELS_SRC} ${REACTIONS_SRC}
   ${CAMP_CUDA_SRC} ${GSL_SRC} ${CAMP_CXX_SRC} )
 
-add_library(camplib SHARED ${CAMP_LIB_SRC}) #nvlink warning (issue 9 github)
-#add_library(camplib ${CAMP_LIB_SRC})
+  add_library(camplib ${CAMP_LIB_SRC})
 
 #WARNING: Shared memory are better (faster in execution, no recompilation, smaller)
 if(ENABLE_STATIC_LIB)
-add_library(camplib-static STATIC ${CAMP_LIB_SRC})
+  add_library(camplib-static STATIC ${CAMP_LIB_SRC})
 endif()
 
 if (CUDA_FOUND)
