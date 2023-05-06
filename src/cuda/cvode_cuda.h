@@ -21,8 +21,6 @@ extern "C" {
 
 #include "cvode_cuda/cvode_cuda_functions.h"
 
-void cvodeRun(ModelDataGPU *mGPU,cudaStream_t stream);
-
 #define CV_SUCCESS               0
 #define DO_ERROR_TEST    +2
 #define PREDICT_AGAIN    +3

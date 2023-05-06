@@ -1743,7 +1743,7 @@ void cudaGlobalCVode(ModelDataGPU md_object) {
 #endif
 }
 
-int nextPowerOfTwoCVODE2(int v){
+int nextPowerOfTwoCVODE3(int v){
   v--;
   v |= v >> 1;
   v |= v >> 2;
@@ -1756,7 +1756,7 @@ int nextPowerOfTwoCVODE2(int v){
 
 /*
 
- void cvodeRun(ModelDataGPU *mGPU, cudaStream_t stream){
+void cvodeRun(ModelDataGPU *mGPU, cudaStream_t stream){
   int len_cell = mGPU->nrows / mGPU->n_cells;
   int threads_block = len_cell;
   int blocks = mGPU->n_cells;
