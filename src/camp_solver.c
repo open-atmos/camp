@@ -720,17 +720,18 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
     if(sd->use_cpu==1){
       flag = CVode(sd->cvode_mem, (realtype)t_final, sd->y, &t_rt, CV_NORMAL);
     }
-#ifdef DEV_DC
     else{
       if(sd->use_gpu_cvode==1){
         flag = cudaCVode(sd->cvode_mem, (realtype)t_final, sd->y,
           &t_rt, CV_NORMAL, sd);
-      }else{
+      }
+#ifdef ONLY_BCG
+      else{
         flag = CVode_gpu(sd->cvode_mem, (realtype)t_final, sd->y,
              &t_rt, CV_NORMAL, sd);
       }
-    }
 #endif
+    }
 #else
     flag = CVode(sd->cvode_mem, (realtype)t_final, sd->y, &t_rt, CV_NORMAL);
 #endif

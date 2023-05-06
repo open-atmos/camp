@@ -665,7 +665,7 @@ __device__ void cudaDevicezaxpby(double a, double* dx, double b, double* dy, dou
 __device__ void cudaDeviceaxpy(double* dy,double* dx, double a, int nrows)
 {
   int row= threadIdx.x + blockDim.x*blockIdx.x;
-  dy[row]=a*dx[row] + dy[row];
+  dy[row]+=a*dx[row];
 }
 
 // sqrt(sum ( (x_i*y_i)^2)/n)
