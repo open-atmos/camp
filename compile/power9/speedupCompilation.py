@@ -18,11 +18,10 @@ def enable_dc():
     with open("../../CMakeLists.txt", "w") as file:
         file.write(new_contents)
 
+import os
+import re
+
 def add_header():
-
-    import os
-    import re
-
     # Define the header file name
     header_file = 'cvode_cuda_functions.h'
 
@@ -33,6 +32,8 @@ def add_header():
 
     # Open the header file for writing
     with open(os.path.join(output_dir, header_file), 'w') as header:
+        # Write the header guard at the top of the file
+        header.write('#ifndef CVODE_CUDA_FUNCTIONS_H\n#define CVODE_CUDA_FUNCTIONS_H\n\n')
         # Include the main header file at the top of the new header file
         header.write('#include "../cvode_cuda.h"\n\n')
 
@@ -54,17 +55,21 @@ def add_header():
                 # Write the function signature to the header file
                 header.write(f'{func_qualifier}{func_type} {func_name}({func_params});\n')
 
-            # Include the header file in all source files and write it only once
-            for filename in os.listdir(output_dir):
-                if filename.endswith('.cu'):
-                    filepath = os.path.join(output_dir, filename)
-                    with open(filepath, 'r+') as source:
-                        source_contents = source.read()
-                        # Check if the #include statement for the header file is already in the source file
-                        if not re.search(r'#include\s+"%s"\s*\n?' % header_file, source_contents):
-                            # If not, add the #include statement at the top of the file
-                            source.seek(0)
-                            source.write('#include "%s"\n\n%s' % (header_file, source_contents))
+        # Write the header guard at the bottom of the file
+        header.write('\n#endif // CVODE_CUDA_FUNCTIONS_H\n')
+
+        # Include the header file in all source files and write it only once
+        for filename in os.listdir(output_dir):
+            if filename.endswith('.cu'):
+                filepath = os.path.join(output_dir, filename)
+                with open(filepath, 'r+') as source:
+                    source_contents = source.read()
+                    # Check if the #include statement for the header file is already in the source file
+                    if not re.search(r'#include\s+"%s"\s*\n?' % header_file, source_contents):
+                        # If not, add the #include statement at the top of the file
+                        source.seek(0)
+                        source.write('#include "%s"\n\n%s' % (header_file, source_contents))
+
 
 def split_functions_into_files():
     import os
