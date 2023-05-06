@@ -9,7 +9,6 @@ extern "C" {
 #include "time_derivative_gpu.h"
 #include "Jacobian_gpu.h"
 }
-#include "cuda_math.h"
 
 #ifdef DEBUG_CVODE_GPU
 __device__
@@ -28,7 +27,69 @@ void printmin(ModelDataGPU *md,double* y, const char *s) {
 
 }
 #endif
+/*
+__device__ void cudaDevicedotxy(double *g_idata1, double *g_idata2,
+                                 double *g_odata, int n_shr_empty){
+  extern __shared__ double sdata[];
+  unsigned int tid = threadIdx.x;
+  unsigned int i = blockIdx.x*blockDim.x + threadIdx.x;
+  __syncthreads();
+  if(tid<n_shr_empty)
+    sdata[tid+blockDim.x]=0.;
+  __syncthreads();
+  sdata[tid] = g_idata1[i]*g_idata2[i];
+  __syncthreads();
+  unsigned int blockSize = blockDim.x+n_shr_empty;
+  if ((blockSize >= 1024) && (tid < 512)) {
+    sdata[tid] += sdata[tid + 512];
+  }
+  __syncthreads();
+  if ((blockSize >= 512) && (tid < 256)) {
+    sdata[tid] += sdata[tid + 256];
+  }
+  __syncthreads();
+  if ((blockSize >= 256) && (tid < 128)) {
+    sdata[tid] += sdata[tid + 128];
+  }
+  __syncthreads();
+  if ((blockSize >= 128) && (tid < 64)) {
+    sdata[tid] += sdata[tid + 64];
+  }
+  __syncthreads();
+  if (tid < 32){
+    if (blockSize >= 64) sdata[tid] += sdata[tid + 32];
+    if (blockSize >= 32) sdata[tid] += sdata[tid + 16];
+    if (blockSize >= 16) sdata[tid] += sdata[tid + 8];
+    if (blockSize >= 8) sdata[tid] += sdata[tid + 4];
+    if (blockSize >= 4) sdata[tid] += sdata[tid + 2];
+    if (blockSize >= 2) sdata[tid] += sdata[tid + 1];
+  }
+  __syncthreads();
+  *g_odata = sdata[0];
+  __syncthreads();
+}
 
+__device__ void cudaDeviceVWRMS_Norm(double *g_idata1, double *g_idata2, double *g_odata, int n, int n_shr_empty){
+  extern __shared__ double sdata[];
+  unsigned int tid = threadIdx.x;
+  unsigned int i = blockIdx.x*blockDim.x + threadIdx.x;
+  __syncthreads();
+  if(tid<n_shr_empty)
+    sdata[tid+blockDim.x]=0.;
+  __syncthreads();
+  sdata[tid] = g_idata1[i]*g_idata1[i]*g_idata2[i]*g_idata2[i];
+  __syncthreads();
+  for (unsigned int s=(blockDim.x+n_shr_empty)/2; s>0; s>>=1)
+  {
+    if (tid < s)
+      sdata[tid] += sdata[tid + s];
+
+    __syncthreads();
+  }
+  g_odata[0] = sqrt(sdata[0]/n);
+  __syncthreads();
+}
+*/
 __device__
 void cudaDeviceJacCopy(int* Ap, double* Ax, double* Bx) {
   __syncthreads();
@@ -687,7 +748,7 @@ void solveBcgCudaDeviceCVODE(ModelDataGPU *md, ModelDataVariable *dmdv)
   do{
     cudaDevicedotxy(dr0, dr0h, &rho1, n_shr_empty);
     beta = (rho1 / rho0) * (alpha / omega0);
-    cudaDevicezaxpbypc(dp0, dr0, dn0, beta, -1.0 * omega0 * beta, nrows);   //z = ax + by + c
+    dp0[i]=beta*dp0[i]+dr0[i]-dn0[i]*omega0*beta;
     dy[i]=ddiag[i]*dp0[i];
     cudaDeviceSpmv(dn0, dy, dA, djA, diA);
     cudaDevicedotxy(dr0h, dn0, &temp1, n_shr_empty);
@@ -981,11 +1042,12 @@ int cudaDevicecvNlsNewton(int nflag,
 __device__
 void cudaDevicecvRescale(ModelDataGPU *md, ModelDataVariable *dmdv) {
   extern __shared__ double dzn[];
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
   double factor;
   __syncthreads();
   factor = md->s->cv_eta;
   for (int j=1; j <= md->s->cv_q; j++) {
-    cudaDevicescaley(&md->dzn[md->nrows*j],factor,md->nrows);
+    md->dzn[i+md->nrows*j]*=factor;
     __syncthreads();
     factor *= md->s->cv_eta;
     __syncthreads();

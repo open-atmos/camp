@@ -558,41 +558,6 @@ __device__ void cudaDevicemaxI(int *g_odata, int in, volatile double *sdata, int
 
 }
 
-__device__ void cudaDeviceaddI(int *g_odata, int in, volatile double *sdata, int n_shr_empty)
-{
-  //extern __shared__ double sdata[];
-  unsigned int tid = threadIdx.x;
-  unsigned int i = blockIdx.x*blockDim.x + threadIdx.x;
-
-  __syncthreads();
-
-  sdata[tid] = in;
-
-  __syncthreads();
-
-  //first threads update empty positions
-  if(tid<n_shr_empty)
-    sdata[tid+blockDim.x]=sdata[tid];
-
-  __syncthreads(); //Not needed (should)
-
-  //if(blockIdx.x==0)printf("i %d in %le sdata[tid] %le\n",i,in,sdata[tid]);
-
-  for (unsigned int s=(blockDim.x+n_shr_empty)/2; s>0; s>>=1)
-  {
-    if (tid < s){//&& sdata[tid + s]!=0.
-      //if(sdata[tid + s] < sdata[tid] ) sdata[tid]=sdata[tid + s];
-      sdata[tid] += sdata[tid + s];
-    }
-    __syncthreads();
-  }
-
-  __syncthreads();
-  *g_odata = sdata[0];
-  __syncthreads();
-
-}
-
 __device__ void warpReduce(volatile double *sdata, unsigned int tid) {
   unsigned int blockSize = blockDim.x;
   if (blockSize >= 64) sdata[tid] += sdata[tid + 32];
@@ -604,12 +569,10 @@ __device__ void warpReduce(volatile double *sdata, unsigned int tid) {
 }
 
 __device__ void cudaDevicedotxy(double *g_idata1, double *g_idata2,
-                                 double *g_odata, int n_shr_empty)
-{
+                                 double *g_odata, int n_shr_empty){
   extern __shared__ double sdata[];
   unsigned int tid = threadIdx.x;
   unsigned int i = blockIdx.x*blockDim.x + threadIdx.x;
-
   __syncthreads();
   if(tid<n_shr_empty)
     sdata[tid+blockDim.x]=0.;
@@ -617,7 +580,6 @@ __device__ void cudaDevicedotxy(double *g_idata1, double *g_idata2,
   sdata[tid] = g_idata1[i]*g_idata2[i];
   __syncthreads();
   unsigned int blockSize = blockDim.x+n_shr_empty;
-  // do reduction in shared mem
   if ((blockSize >= 1024) && (tid < 512)) {
     sdata[tid] += sdata[tid + 512];
   }
@@ -635,7 +597,7 @@ __device__ void cudaDevicedotxy(double *g_idata1, double *g_idata2,
   }
   __syncthreads();
   if (tid < 32) warpReduce(sdata, tid);
-  __syncthreads();//not needed?
+  __syncthreads();
   *g_odata = sdata[0];
   __syncthreads();
 }
@@ -669,31 +631,16 @@ __device__ void cudaDeviceaxpy(double* dy,double* dx, double a, int nrows)
 }
 
 // sqrt(sum ( (x_i*y_i)^2)/n)
-__device__ void cudaDeviceVWRMS_Norm(double *g_idata1, double *g_idata2, double *g_odata, int n, int n_shr_empty)
-{
+__device__ void cudaDeviceVWRMS_Norm(double *g_idata1, double *g_idata2, double *g_odata, int n, int n_shr_empty){
   extern __shared__ double sdata[];
   unsigned int tid = threadIdx.x;
-  //unsigned int i = blockIdx.x*(blockDim.x*2) + threadIdx.x;
   unsigned int i = blockIdx.x*blockDim.x + threadIdx.x;
-
   __syncthreads();
-
-  //first threads update empty positions
   if(tid<n_shr_empty)
     sdata[tid+blockDim.x]=0.;
-
-  __syncthreads(); //Not needed (should)
-
-/*
-  double mySum = (i < n) ? g_idata1[i]*g_idata1[i]*g_idata2[i]*g_idata2[i] : 0;
-  if (i + blockDim.x < n)
-    mySum += g_idata1[i+blockDim.x]*g_idata1[i+blockDim.x]*g_idata2[i+blockDim.x]*g_idata2[i+blockDim.x];
-*/
-
   __syncthreads();
   sdata[tid] = g_idata1[i]*g_idata1[i]*g_idata2[i]*g_idata2[i];
   __syncthreads();
-
   for (unsigned int s=(blockDim.x+n_shr_empty)/2; s>0; s>>=1)
   {
     if (tid < s)
@@ -701,10 +648,7 @@ __device__ void cudaDeviceVWRMS_Norm(double *g_idata1, double *g_idata2, double 
 
     __syncthreads();
   }
-
-  //if (tid == 0) g_odata[blockIdx.x] = sdata[0];
   g_odata[0] = sqrt(sdata[0]/n);
-  //*g_odata = sqrt(sdata[0]/n);
   __syncthreads();
 }
 
