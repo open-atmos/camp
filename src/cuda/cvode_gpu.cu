@@ -2,7 +2,9 @@
  * Illinois at Urbana-Champaign
  * SPDX-License-Identifier: MIT
  */
+#ifdef ONLY_BCG
 #include "itsolver_gpu.h"
+#endif
 #include "cvode_cuda.h"
 
 extern "C" {
@@ -10,14 +12,11 @@ extern "C" {
 #include "rxns_gpu.h"
 }
 
-
 #ifdef CAMP_USE_MPI
 #include <mpi.h>
 #endif
 
 #define HANDLE_ERROR( err ) (HandleError( err, __FILE__, __LINE__ ))
-
-#include <unistd.h>
 
 static void HandleError(cudaError_t err,
                         const char *file,
@@ -418,11 +417,15 @@ void constructor_cvode_gpu(CVodeMem cv_mem, SolverData *sd){
   mGPU = sd->mGPU;
   mGPU->nnz = SM_NNZ_S(J);
   mGPU->nrows = SM_NP_S(J);
+#ifdef ONLY_BCG
   if(sd->use_gpu_cvode==0){
     createLinearSolver(sd);
   }else{
     createLinearSolver_cvode(sd);
   }
+#else
+  createLinearSolver_cvode(sd);
+#endif
   mGPU->A = ((double *) SM_DATA_S(J));
   //Using int per default as sundindextype give wrong results in CPU, so translate from int64 to int
   if(sd->use_gpu_cvode==1){

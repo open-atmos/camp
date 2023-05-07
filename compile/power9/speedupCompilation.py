@@ -114,5 +114,6 @@ if __name__ == "__main__":
     # with open("../../src/cuda/cvode_cuda.cu")
     #remove_dc()
      #enable_dc()
-    split_functions_into_files()
+    #split_functions_into_files()
+    os.chdir("../../src/cuda")
     add_header()

@@ -7,24 +7,16 @@
 #include<cuda.h>
 #include<cuda_runtime.h>
 #include<cuda_runtime_api.h>
-
 #include "libsolv.h"
 
-//#include<cublas.h>
-//#include<cublas_v2.h>
-
 #ifdef ONLY_BCG
-__global__ void cudamatScaleAddI(int nrows, double* dA, int* djA, int* diA, double alpha)
-{
+__global__ void cudamatScaleAddI(int nrows, double* dA, int* djA, int* diA, double alpha){
 	int row= threadIdx.x + blockDim.x*blockIdx.x;
-  if(row < nrows)
-  {
+  if(row < nrows){
     int jstart = diA[row];
     int jend   = diA[row+1];
-    for(int j=jstart; j<jend; j++)
-    {
-      if(djA[j]==row)
-      {
+    for(int j=jstart; j<jend; j++){
+      if(djA[j]==row){
         dA[j] = 1.0 + alpha*dA[j];
       }
       else{
@@ -39,8 +31,7 @@ __global__ void cudamatScaleAddI(int nrows, double* dA, int* djA, int* diA, doub
 // djA : Matrix columns (nnz size)
 // diA : Matrix rows (nrows+1 size)
 // alpha : Scale factor
-extern "C++" void gpu_matScaleAddI(int nrows, double* dA, int* djA, int* diA, double alpha, int blocks, int threads)
-{
+extern "C++" void gpu_matScaleAddI(int nrows, double* dA, int* djA, int* diA, double alpha, int blocks, int threads){
 
    blocks = (nrows+threads-1)/threads;
 
@@ -51,8 +42,7 @@ extern "C++" void gpu_matScaleAddI(int nrows, double* dA, int* djA, int* diA, do
 }
 
 __global__
-void check_input_gpud(double *x, int len, int var_id)
-{
+void check_input_gpud(double *x, int len, int var_id){
   int i = blockIdx.x * blockDim.x + threadIdx.x;
 
   printf("%d[%d]=%-le\n",var_id,i,x[i]);
@@ -60,15 +50,8 @@ void check_input_gpud(double *x, int len, int var_id)
 }
 
 // Diagonal precond
-__global__ void cudadiagprecond(int nrows, double* dA, int* djA, int* diA, double* ddiag)
-{
+__global__ void cudadiagprecond(int nrows, double* dA, int* djA, int* diA, double* ddiag){
   int row= threadIdx.x + blockDim.x*blockIdx.x;
-
-#ifdef DEBUG_cudadiagprecond
-
-
-#endif
-
   if(row < nrows){
     int jstart=diA[row];
     int jend  =diA[row+1];
@@ -429,8 +412,8 @@ extern "C++" void gpu_scaley(double* dy, double a, int nrows, int blocks, int th
 
 // Device functions (equivalent to global functions but in device to allow calls from gpu)
 __device__ void cudaDeviceBCGprecond(double* dA, int* djA, int* diA, double* ddiag, double alpha){
-int row= threadIdx.x + blockDim.x*blockIdx.x;
-int nnz=diA[blockDim.x];
+  int row= threadIdx.x + blockDim.x*blockIdx.x;
+  int nnz=diA[blockDim.x];
   for(int j=diA[threadIdx.x];j<diA[threadIdx.x+1];j++){
     if(djA[j]==threadIdx.x){
       dA[j+nnz*blockIdx.x] = 1.0 + alpha*dA[j+nnz*blockIdx.x];
@@ -445,13 +428,11 @@ int nnz=diA[blockDim.x];
   }
 }
 
-// y = constant
 __device__ void cudaDevicesetconst(double* dy,double constant){
   int row= threadIdx.x + blockDim.x*blockIdx.x;
   dy[row]=constant;
 }
 
-// x=A*b
 __device__ void cudaDeviceSpmvCSR(double* dx, double* db, double* dA, int* djA, int* diA){
   __syncthreads();
   int row= threadIdx.x + blockDim.x*blockIdx.x;
@@ -468,13 +449,11 @@ __device__ void cudaDeviceSpmvCSC_block(double* dx, double* db, double* dA, int*
   int row = threadIdx.x + blockDim.x*blockIdx.x;
   __syncthreads();
   dx[row]=0.0;
-  __syncthreads(); //Multiple threads can save to the same row
-
+  __syncthreads();
   int nnz=diA[blockDim.x];
   for(int j=diA[threadIdx.x]; j<diA[threadIdx.x+1]; j++){
     double mult = db[row]*dA[j+nnz*blockIdx.x];
     atomicAdd_block(&(dx[djA[j]+blockDim.x*blockIdx.x]),mult);
-  //		dx[djA[j]]+= db[row]*dA[j];
   }
   __syncthreads();
 }
@@ -501,20 +480,14 @@ __device__ void cudaDeviceyequalsx(double* dy,double* dx,int nrows)
     dy[row]=dx[row];
 }
 
-__device__ void cudaDevicemin(double *g_odata, double in, volatile double *sdata, int n_shr_empty)
-{
+__device__ void cudaDevicemin(double *g_odata, double in, volatile double *sdata, int n_shr_empty){
   unsigned int tid = threadIdx.x;
-
   __syncthreads();
-
   sdata[tid] = in;
-
   __syncthreads();
-  //first threads update empty positions
   if(tid<n_shr_empty)
     sdata[tid+blockDim.x]=sdata[tid];
-  __syncthreads(); //Not needed (should)
-
+  __syncthreads();
   for (unsigned int s=(blockDim.x+n_shr_empty)/2; s>0; s>>=1)
   {
     if (tid < s){
@@ -522,40 +495,8 @@ __device__ void cudaDevicemin(double *g_odata, double in, volatile double *sdata
     }
     __syncthreads();
   }
-
-  __syncthreads();
   *g_odata = sdata[0];
   __syncthreads();
-
-}
-
-__device__ void cudaDevicemaxI(int *g_odata, int in, volatile double *sdata, int n_shr_empty)
-{
-  unsigned int tid = threadIdx.x;
-  unsigned int i = blockIdx.x*blockDim.x + threadIdx.x;
-
-  __syncthreads();
-
-  sdata[tid] = in;
-
-  __syncthreads();
-  //first threads update empty positions
-  if(tid<n_shr_empty)
-    sdata[tid+blockDim.x]=sdata[tid];
-  __syncthreads(); //Not needed (should)
-
-  for (unsigned int s=(blockDim.x+n_shr_empty)/2; s>0; s>>=1)
-  {
-    if (tid < s){
-      if(sdata[tid + s] > sdata[tid] ) sdata[tid]=sdata[tid + s];
-    }
-    __syncthreads();
-  }
-
-  __syncthreads();
-  *g_odata = sdata[0];
-  __syncthreads();
-
 }
 
 __device__ void warpReduce(volatile double *sdata, unsigned int tid) {

@@ -13,13 +13,12 @@
 #include<cuda.h>
 #include<cuda_runtime.h>
 #include<cuda_runtime_api.h>
-#include "libsolv.h"
 
 extern "C" {
 #include "../camp_solver.h"
 }
 
-#include "cvode_cuda/cvode_cuda_functions.h"
+void cvodeRun(ModelDataGPU *mGPU,cudaStream_t stream);
 
 #define CV_SUCCESS               0
 #define DO_ERROR_TEST    +2

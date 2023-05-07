@@ -45,8 +45,8 @@ option(ENABLE_EXPORT_NETCDF "" OFF)
 option(ENABLE_IMPORT_NETCDF "" OFF)
 option(ENABLE_BOOTCAMP "" ON)
 option(ENABLE_DATA "" ON)
-option(ENABLE_STATIC_LIB "" OFF)
-option(BUILD_SHARED_LIBRARIES "" ON)
+option(BUILD_SHARED_LIBRARIES "" ON) # Shared library are better than static (faster in execution, no recompilation, smaller)
+option(ENABLE_INSTALL_OPTIONS "" OFF)
 option(use_maxrregcount127 "Compiling with maxxregcount127" OFF)
 option(use_maxrregcount64 "Compiling with maxxregcount64" OFF)
 option(use_maxrregcount24 "Compiling with maxxregcount24" OFF)
@@ -476,7 +476,6 @@ if (CUDA_FOUND AND ENABLE_GPU)
           src/cuda/itsolver_gpu.cu
           src/cuda/time_derivative_gpu.cu
           src/cuda/Jacobian_gpu.cu
-          src/cuda/cvode_cuda/cvodeRun.cu
           )
 
   set_source_files_properties(${CAMP_CUDA_SRC} PROPERTIES COMPILE_FLAGS
@@ -506,27 +505,11 @@ set(CAMP_LIB_SRC
 
   add_library(camplib ${CAMP_LIB_SRC})
 
-#WARNING: Shared memory are better (faster in execution, no recompilation, smaller)
-if(ENABLE_STATIC_LIB)
-  add_library(camplib-static STATIC ${CAMP_LIB_SRC})
-endif()
-
 if (CUDA_FOUND)
   target_link_libraries(camplib  ${NETCDF_LIBS} ${SUNDIALS_LIBS} ${GSL_LIBS} ${JSON_LIB} ${CUDA_LIBRARIES})
   set_target_properties(camplib PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
-if(ENABLE_STATIC_LIB)
-  target_link_libraries(camplib-static  ${NETCDF_LIBS} ${SUNDIALS_LIBS} ${GSL_LIBS} ${JSON_LIB} ${CUDA_LIBRARIES})
-  #set_target_properties(camplib-static  PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
-endif()
-
 else()
-  #target_link_libraries(camplib ${NETCDF_LIBS} ${SUNDIALS_LIBS}
-   #  ${MOSAIC_LIB} ${GSL_LIBS} ${JSON_LIB})
   target_link_libraries(camplib  ${NETCDF_LIBS} ${SUNDIALS_LIBS} ${GSL_LIBS} ${JSON_LIB})
-if(ENABLE_STATIC_LIB)
-  target_link_libraries(camplib-static  ${NETCDF_LIBS} ${SUNDIALS_LIBS} ${GSL_LIBS} ${JSON_LIB})
-endif()
-
 endif()
 
 set(MODULE_DIR "${CMAKE_BINARY_DIR}/include")
@@ -538,21 +521,13 @@ set_target_properties(camplib PROPERTIES
                          SOVERSION ${PACKAGE_VERSION}
                          LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
                          Fortran_MODULE_DIRECTORY ${CMAKE_BINARY_DIR})
-if(ENABLE_STATIC_LIB)
-set_target_properties(camplib-static PROPERTIES
-                         OUTPUT_NAME camp
-                         PREFIX lib
-                         VERSION ${PACKAGE_VERSION}
-                         ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
-                         Fortran_MODULE_DIRECTORY ${MODULE_DIR})
-endif()
 
 ######################################################################
 # Install options
 
-if(ENABLE_STATIC_LIB)
+if(ENABLE_INSTALL_OPTIONS)
 include(GNUInstallDirs)
-install(TARGETS camplib camplib-static
+install(TARGETS camplib
         EXPORT camplib-targets
         LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
         ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
