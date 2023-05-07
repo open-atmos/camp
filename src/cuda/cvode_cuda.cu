@@ -10,11 +10,80 @@ extern "C" {
 #include "Jacobian_gpu.h"
 }
 
+/*
+__device__
+void rxn_gpu_CMAQ_H2O2_calc_deriv_contrib(ModelDataGPU *model_data, TimeDerivativeGPU time_deriv, int *rxn_int_data,
+          double *rxn_float_data, double *rxn_env_data, double time_step)
+{
+  int n_rxn=model_data->n_rxn;
+  int *int_data = rxn_int_data;
+  double *float_data = rxn_float_data;
+  double *state = model_data->grid_cell_state;
+  double *env_data = model_data->grid_cell_env;;
+
+  // Calculate the reaction rate
+  double rate = RATE_CONSTANT_;
+  //realtype rate = RATE_CONSTANT_;
+  for (int i_spec=0; i_spec<NUM_REACT_; i_spec++) rate *= state[REACT_(i_spec)];
+
+  // Add contributions to the time derivative
+  if (rate!=ZERO) {
+    int i_dep_var = 0;
+    for (int i_spec=0; i_spec<NUM_REACT_; i_spec++, i_dep_var++) {
+      if (DERIV_ID_(i_dep_var) < 0) continue;
+      time_derivative_add_value_gpu(time_deriv, DERIV_ID_(i_dep_var), -rate);
+    }
+    for (int i_spec=0; i_spec<NUM_PROD_; i_spec++, i_dep_var++) {
+      if (DERIV_ID_(i_dep_var) < 0) continue;
+      // Negative yields are allowed, but prevented from causing negative
+      // concentrations that lead to solver failures
+      if (-rate*YIELD_(i_spec)*time_step <= state[PROD_(i_spec)]) {
+        time_derivative_add_value_gpu(time_deriv, DERIV_ID_(i_dep_var),rate*YIELD_(i_spec));
+      }
+    }
+  }
+}
+
+__device__
+void rxn_gpu_CMAQ_H2O2_calc_jac_contrib(ModelDataGPU *model_data, JacobianGPU jac, int *rxn_int_data,
+          double *rxn_float_data, double *rxn_env_data, double time_step){
+  int n_rxn=model_data->n_rxn;
+  int *int_data = rxn_int_data;
+  double *float_data = rxn_float_data;
+  double *state = model_data->grid_cell_state;
+  double *env_data = model_data->grid_cell_env;
+
+  // Add contributions to the Jacobian
+  int i_elem = 0;
+  for (int i_ind = 0; i_ind < NUM_REACT_; i_ind++) {
+    // Calculate d_rate / d_i_ind
+    double rate = RATE_CONSTANT_;
+    for (int i_spec = 0; i_spec < NUM_REACT_; i_spec++)
+      if (i_ind != i_spec) rate *= state[REACT_(i_spec)];
+
+    for (int i_dep = 0; i_dep < NUM_REACT_; i_dep++, i_elem++) {
+      if (JAC_ID_(i_elem) < 0) continue;
+      jacobian_add_value_gpu(jac, (unsigned int)JAC_ID_(i_elem), JACOBIAN_LOSS,
+                         rate);
+    }
+    for (int i_dep = 0; i_dep < NUM_PROD_; i_dep++, i_elem++) {
+      if (JAC_ID_(i_elem) < 0) continue;
+      // Negative yields are allowed, but prevented from causing negative
+      // concentrations that lead to solver failures
+      if (-rate * state[REACT_(i_ind)] * YIELD_(i_dep) * time_step <=
+          state[PROD_(i_dep)]) {
+        jacobian_add_value_gpu(jac, (unsigned int)JAC_ID_(i_elem),
+                           JACOBIAN_PRODUCTION, YIELD_(i_dep) * rate);
+      }
+    }
+  }
+}
+*/
+
 __device__
 void rxn_gpu_arrhenius_calc_deriv_contrib_2(ModelDataGPU *model_data, TimeDerivativeGPU time_deriv,
                                 int *rxn_int_data, double *rxn_float_data,
                                 double *rxn_env_data, double time_step){
-  int n_rxn=1;
   int *int_data = rxn_int_data;
   double *float_data = rxn_float_data;
   double *state = model_data->grid_cell_state;
@@ -42,7 +111,6 @@ void rxn_gpu_arrhenius_calc_deriv_contrib_2(ModelDataGPU *model_data, TimeDeriva
 __device__
 void rxn_gpu_arrhenius_calc_jac_contrib_2(ModelDataGPU *model_data, JacobianGPU jac, int *rxn_int_data,
           double *rxn_float_data, double *rxn_env_data, double time_step){
-  int n_rxn=model_data->n_rxn;
   int *int_data = rxn_int_data;
   double *float_data = rxn_float_data;
   double *state = model_data->grid_cell_state;

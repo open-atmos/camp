@@ -29,46 +29,27 @@ extern "C"{
 #define INT_DATA_SIZE_ (NUM_INT_PROP_)
 #define FLOAT_DATA_SIZE_ (NUM_FLOAT_PROP_)
 
-#ifdef CAMP_USE_SUNDIALS
-#ifdef __CUDA_ARCH__
 __device__
-#endif
 void rxn_gpu_first_order_loss_calc_deriv_contrib(ModelDataGPU *model_data, TimeDerivativeGPU time_deriv, int *rxn_int_data,
-          double *rxn_float_data, double *rxn_env_data, double time_step)
-{
-#ifdef __CUDA_ARCH__
-  int n_rxn=model_data->n_rxn;
-#else
-  int n_rxn=1;
-#endif
+          double *rxn_float_data, double *rxn_env_data, double time_step){
   int *int_data = rxn_int_data;
   double *float_data = rxn_float_data;
   double *state = model_data->grid_cell_state;
   double *env_data = model_data->grid_cell_env;
-
   realtype rate = RATE_CONSTANT_ * state[REACT_];
   if (DERIV_ID_ >= 0) time_derivative_add_value_gpu(time_deriv, DERIV_ID_, -rate);
 }
 
-#ifdef __CUDA_ARCH__
 __device__
-#endif
 void rxn_gpu_first_order_loss_calc_jac_contrib(ModelDataGPU *model_data, JacobianGPU jac, int *rxn_int_data,
-          double *rxn_float_data, double *rxn_env_data, double time_step)
-{
-#ifdef __CUDA_ARCH__
-  int n_rxn=model_data->n_rxn;
-#else
-  int n_rxn=1;;
-#endif
+          double *rxn_float_data, double *rxn_env_data, double time_step){
   int *int_data = rxn_int_data;
   double *float_data = rxn_float_data;
   double *state = model_data->grid_cell_state;
   double *env_data = model_data->grid_cell_env;
-
   if (JAC_ID_ >= 0)
     jacobian_add_value_gpu(jac, (unsigned int)JAC_ID_, JACOBIAN_LOSS,
                        RATE_CONSTANT_);
 }
-#endif
+
 }
