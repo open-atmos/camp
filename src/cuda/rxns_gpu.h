@@ -18,18 +18,6 @@ __device__
 #endif
 void rxn_gpu_aqueous_equilibrium_calc_jac_contrib(ModelDataGPU *model_data, JacobianGPU jac, int *rxn_int_data,
           double *rxn_float_data, double *rxn_env_data, double time_step);
-
-#ifdef __CUDA_ARCH__
-__device__
-#endif
-void rxn_gpu_arrhenius_calc_deriv_contrib(ModelDataGPU *model_data, TimeDerivativeGPU time_deriv,
-                                      int *rxn_int_data, double *rxn_float_data,
-                                      double *rxn_env_data, double time_step);
-#ifdef __CUDA_ARCH__
-__device__
-#endif
-void rxn_gpu_arrhenius_calc_jac_contrib(ModelDataGPU *model_data, JacobianGPU jac, int *rxn_int_data,
-          double *rxn_float_data, double *rxn_env_data, double time_step);
 #ifdef __CUDA_ARCH__
 __device__
 #endif
