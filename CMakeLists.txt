@@ -498,7 +498,7 @@ set(CAMP_LIB_SRC
 
 if (CUDA_FOUND)
   target_link_libraries(camplib  ${NETCDF_LIBS} ${SUNDIALS_LIBS} ${GSL_LIBS} ${JSON_LIB} ${CUDA_LIBRARIES})
-  set_target_properties(camplib PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
+  #set_target_properties(camplib PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
 else()
   target_link_libraries(camplib  ${NETCDF_LIBS} ${SUNDIALS_LIBS} ${GSL_LIBS} ${JSON_LIB})
 endif()

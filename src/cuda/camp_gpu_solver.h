@@ -13,11 +13,8 @@
 #include "../camp_common.h"
 //}
 #include "new.h"
-//#include "itsolver_gpu.h"
-//#include "../debug_and_stats/camp_debug_2.h"
 
 //Value to consider data size too big -> Memory optimization will change below and under the limit
-#define DATA_SIZE_LIMIT_OPT 2000
 
 //Functions to debug cuda errors
 #define HANDLE_ERROR( err ) (HandleError( err, __FILE__, __LINE__ ))
