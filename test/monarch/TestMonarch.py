@@ -141,11 +141,8 @@ def all_timesteps():
             print("Warning: Setting timeStepsDt to 2, since it is the usual value for monarch_binned")
         conf.timeStepsDt = 2
     elif conf.chemFile == "monarch_cb05" or conf.chemFile == "cb05_mechanism_yarwood2005":
-        if conf.timeStepsDt != 3:
-            print("Warning: Setting timeStepsDt to 3, since it is the usual value for", conf.chemFile)
         conf.timeStepsDt = 3
         if "Realistic" in conf.diffCellsL:
-            print("Warning: Setting Ideal, chemFile == ", conf.chemFile," only has one case implemented")
             conf.diffCellsL = ["Ideal"]
     elif conf.chemFile == "cb05_mechanism_yarwood2005":
         print("ERROR: Not tested in testmonarch.py, configuration taken from monarch branch 209 and tested in monarch for the camp paper")

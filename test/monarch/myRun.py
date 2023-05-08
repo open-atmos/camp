@@ -730,10 +730,10 @@ def plot_cases(conf):
     namex = plot_x_key
     datay = conf.datacolumns
 
-    print("Nodes:", conf.allocatedNodes)
+    if conf.allocatedNodes!=1:
+        print("Nodes:", conf.allocatedNodes)
     if namex == "Timesteps":
-        print("Mean:", round(np.mean(datay), 2))
-        print("Std", round(np.std(datay), 2))
+        print("Mean:", round(np.mean(datay), 2), "Std",round(np.std(datay), 2))
     else:
         print("Std", conf.stdColumns)
     print(namex, ":", datax)

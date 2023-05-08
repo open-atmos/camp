@@ -467,6 +467,7 @@ if (CUDA_FOUND AND ENABLE_GPU)
           src/cuda/libsolv.cu
           src/cuda/itsolver_gpu.cu
           src/cuda/Jacobian_gpu.cu
+          src/cuda/new.cu
           )
 
   set_source_files_properties(${CAMP_CUDA_SRC} PROPERTIES COMPILE_FLAGS

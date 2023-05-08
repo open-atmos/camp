@@ -918,9 +918,6 @@ contains
     !open(IMPORT_FILE_UNIT, file="exports/camp_input.txt", status="old")!default test monarch input
     open(IMPORT_FILE_UNIT, file="exports/camp_input_18.txt", status="old") !monarch
     !open(IMPORT_FILE_UNIT, file="exports/camp_input_322.txt", status="old") !monarch
-    if (camp_mpi_rank().eq.0) then
-      write(*,*) "Importing camp input"
-    end if
     !if(n_cells.gt.1) then
     !  print*, "ERROR: Import can only handle data from 1 cell, set n_cells to 1"
     !end if
@@ -1023,13 +1020,6 @@ contains
 
     call jfile%load_file(export_path); if (jfile%failed()) print*,&
             "JSON not found at ",export_path
-
-    if (camp_mpi_rank().eq.0) then
-      write(*,*) "Importing camp input json from ", export_path
-      if(n_cells.gt.1) then
-        print*, "Importing data from a cell to the rest"
-      end if
-    end if
 
     size_state_per_cell = camp_interface%camp_core%size_state_per_cell
     mpi_rank = camp_mpi_rank()
