@@ -99,5 +99,4 @@ void cvodeRun(ModelDataGPU *mGPU,cudaStream_t stream);
 #define CAMP_SOLVER_FAIL 1
 
 
-
 #endif

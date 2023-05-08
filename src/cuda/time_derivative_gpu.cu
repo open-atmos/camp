@@ -30,91 +30,50 @@ void time_derivative_reset_gpu(TimeDerivativeGPU time_deriv) {
 
 }
 
-#ifdef __CUDA_ARCH__
 __device__
-#endif
 void time_derivative_output_gpu(TimeDerivativeGPU time_deriv, double *dest_array,
                             double *deriv_est, unsigned int output_precision) {
-
-#ifdef CAMP_DEBUG
-  time_deriv.last_max_loss_precision = 1.0;
-#endif
-
-#ifdef __CUDA_ARCH__
-
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   if(i<time_deriv.num_spec){
-
     double *r_p = time_deriv.production_rates;
     double *r_l = time_deriv.loss_rates;
-
-    //dest_array[i] = 0.1;
-    //dest_array[i] = r_p[i];
     if (r_p[i] + r_l[i] != 0.0) {
       if (deriv_est) {
         double scale_fact;
         scale_fact =
             1.0 / (r_p[i] + r_l[i]) /
             (1.0 / (r_p[i] + r_l[i]) + MAX_PRECISION_LOSS / fabs(r_p[i]- r_l[i]));
-          dest_array[i] =
-          scale_fact * (r_p[i] - r_l[i]) + (1.0 - scale_fact) * (deriv_est[i]);
-        //dest_array[i] = 0.1;
+          dest_array[i] = scale_fact * (r_p[i] - r_l[i]) + (1.0 - scale_fact) * (deriv_est[i]);
       } else {
         dest_array[i] = r_p[i] - r_l[i];
-        //dest_array[i] = 0.2;
       }
     } else {
       dest_array[i] = 0.0;
-      //dest_array[i] = 0.000000003;
-      //dest_array[i] = r_l[i];
-      //dest_array[i] = r_p[i];
     }
-    //dest_array[i] = r_p[i];
-    //dest_array[i] = r_l[i];
   }
-
-#else
-
-  double *r_p = time_deriv.production_rates;
-  double *r_l = time_deriv.loss_rates;
-
-  for (unsigned int i_spec = 0; i_spec < time_deriv.num_spec; ++i_spec) {
-    double prec_loss = 1.0;
-    if (*r_p + *r_l != 0.0) {
-      if (deriv_est) {
-        double scale_fact;
-        scale_fact =
-            1.0 / (*r_p + *r_l) /
-            (1.0 / (*r_p + *r_l) + MAX_PRECISION_LOSS / fabsl(*r_p - *r_l));
-        *dest_array =
-            scale_fact * (*r_p - *r_l) + (1.0 - scale_fact) * (*deriv_est);
-      } else {
-        *dest_array = *r_p - *r_l;
-      }
-#ifdef CAMP_DEBUG
-      if (*r_p != 0.0 && *r_l != 0.0) {
-        prec_loss = *r_p > *r_l ? 1.0 - *r_l / *r_p : 1.0 - *r_p / *r_l;
-        if (prec_loss < time_deriv.last_max_loss_precision)
-          time_deriv.last_max_loss_precision = prec_loss;
-      }
-#endif
-    } else {
-      *dest_array = 0.0;
-    }
-    ++r_p;
-    ++r_l;
-    ++dest_array;
-    if (deriv_est) ++deriv_est;
-#ifdef CAMP_DEBUG
-    if (output_precision == 1) {
-      printf("\nspec %d prec_loss %le", i_spec, -log(prec_loss) / log(2.0));
-    }
-#endif
-  }
-
-#endif
-
 }
+
+/*
+  // Threshhold for precisition loss in rate calculations
+  #define MAX_PRECISION_LOSS 1.0e-14
+  if(i<deriv_data.num_spec){
+    double *r_p = deriv_data.production_rates;
+    double *r_l = deriv_data.loss_rates;
+    if (r_p[i] + r_l[i] != 0.0) {
+      if (md->J_tmp) {
+        double scale_fact;
+        scale_fact = 1.0 / (r_p[i] + r_l[i]) /
+            (1.0 / (r_p[i] + r_l[i]) + MAX_PRECISION_LOSS / fabs(r_p[i]- r_l[i]));
+        yout[i] =
+        scale_fact * (r_p[i] - r_l[i]) + (1.0 - scale_fact) * (md->J_tmp[i]);
+      } else {
+        yout[i] = r_p[i] - r_l[i];
+      }
+    } else {
+      yout[i] = 0.0;
+    }
+  }
+  */
 
 #ifdef __CUDA_ARCH__
 __device__

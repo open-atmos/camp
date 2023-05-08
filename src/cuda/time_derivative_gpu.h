@@ -9,6 +9,7 @@
 #include <math.h>
 #include <stdlib.h>
 #include "camp_gpu_solver.h"
+#include <cuda.h>
 
 // Threshhold for precisition loss in rate calculations
 #define MAX_PRECISION_LOSS 1.0e-14
@@ -33,8 +34,8 @@ void time_derivative_reset_gpu(TimeDerivativeGPU time_deriv);
 #ifdef __CUDA_ARCH__
 __device__
 #endif
-void time_derivative_output_gpu(TimeDerivativeGPU time_deriv, double *dest_array,
-                            double *deriv_est, unsigned int output_precision);
+void time_derivative_output_gpu(TimeDerivativeGPU deriv_data, double *yout,
+                            double *J_tmp, unsigned int output_precision);
 
 /** \brief Add a contribution to the time derivative
  *

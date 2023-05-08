@@ -7,7 +7,6 @@
 
 extern "C" {
 #include "cvode_ls_gpu.h"
-#include "time_derivative_gpu.h"
 #include "Jacobian_gpu.h"
 }
 
