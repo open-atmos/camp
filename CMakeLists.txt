@@ -461,11 +461,6 @@ endif()
 if (CUDA_FOUND AND ENABLE_GPU)
   set(CAMP_CUDA_SRC
           src/cuda/camp_gpu_solver.cu
-          src/cuda/rxns_gpu/rxn_CMAQ_H2O2.cu
-          src/cuda/rxns_gpu/rxn_CMAQ_OH_HNO3.cu
-          src/cuda/rxns_gpu/rxn_first_order_loss.cu
-          src/cuda/rxns_gpu/rxn_photolysis.cu
-          src/cuda/rxns_gpu/rxn_troe.cu
           src/cuda/cvode_cuda.cu
           src/cuda/cvode_gpu.cu
           src/cuda/cvode_ls_gpu.cu

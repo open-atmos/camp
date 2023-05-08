@@ -9,7 +9,6 @@
 
 extern "C" {
 #include "cvode_gpu.h"
-#include "rxns_gpu.h"
 }
 
 #ifdef CAMP_USE_MPI

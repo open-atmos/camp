@@ -7,11 +7,8 @@
 
 extern "C" {
 #include "cvode_ls_gpu.h"
-#include "rxns_gpu.h"
-#include "aeros/aero_rep_gpu_solver.h"
 #include "time_derivative_gpu.h"
 #include "Jacobian_gpu.h"
-
 }
 
 #ifdef CAMP_USE_MPI
