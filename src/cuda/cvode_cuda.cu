@@ -79,9 +79,9 @@ void rxn_gpu_troe_calc_jac_contrib(ModelDataGPU *model_data, JacobianGPU jac, in
     for (int i_dep = 0; i_dep < int_data[1]; i_dep++, i_elem++) {
       if (int_data[(2 + 2*(int_data[0]+int_data[1])+i_elem)] < 0) continue;
       if (-rate * state[int_data[(2 + i_ind)]-1] * float_data[(10 + i_dep)] * time_step <=
-          state[int_data[(2 + int_data[0]+ i_dep)]-1]) {
-        jacobian_add_value_gpu(jac, (unsigned int)int_data[(2 + 2*(int_data[0]+int_data[1])+i_elem)],
-                           JACOBIAN_PRODUCTION, float_data[(10 + i_dep)] * rate);
+        state[int_data[(2 + int_data[0]+ i_dep)]-1]) {
+        int elem_id = int_data[(2 + 2*(int_data[0]+int_data[1])+i_elem)];
+        atomicAdd_block(&(jac.production_partials[elem_id]), float_data[(10 + i_dep)] * rate);
       }
     }
   }
@@ -183,6 +183,8 @@ void rxn_gpu_CMAQ_H2O2_calc_jac_contrib(ModelDataGPU *model_data, JacobianGPU ja
           state[int_data[(2 + int_data[0]+ i_dep)]-1]) {
         jacobian_add_value_gpu(jac, (unsigned int)int_data[(2 + 2*(int_data[0]+int_data[1])+i_elem)],
                            JACOBIAN_PRODUCTION, float_data[(7 + i_dep)] * rate);
+        int elem_id=int_data[(2 + 2*(int_data[0]+int_data[1])+i_elem)];
+        atomicAdd_block(&(jac.production_partials[elem_id]),float_data[(7 + i_dep)] * rate);
       }
     }
   }
@@ -231,8 +233,8 @@ void rxn_gpu_CMAQ_OH_HNO3_calc_jac_contrib(ModelDataGPU *model_data, JacobianGPU
       if (int_data[(2 + 2*(int_data[0]+int_data[1]) + i_elem)] < 0) continue;
       if (-rate * state[int_data[(2 + i_ind)]-1] * float_data[(11 + i_dep)] * time_step <=
           state[int_data[(2 + int_data[0] + i_dep)]-1]) {
-        jacobian_add_value_gpu(jac, (unsigned int)int_data[(2 + 2*(int_data[0]+int_data[1]) + i_elem)],
-                           JACOBIAN_PRODUCTION, float_data[(11 + i_dep)] * rate);
+        int elem_id=int_data[(2 + 2*(int_data[0]+int_data[1]) + i_elem)];
+        atomicAdd_block(&(jac.production_partials[elem_id]), float_data[(11 + i_dep)] * rate);
       }
     }
   }
@@ -286,9 +288,9 @@ void rxn_gpu_arrhenius_calc_jac_contrib(ModelDataGPU *model_data, JacobianGPU ja
       // Negative yields are allowed, but prevented from causing negative
       // concentrations that lead to solver failures
       if (-rate * state[int_data[(2 + i_ind)]-1] * float_data[6+i_dep] * time_step <=
-          state[int_data[(2 + int_data[0] + i_dep)]-1]) {
-        jacobian_add_value_gpu(jac, (unsigned int)int_data[2 + 2*(int_data[0]+int_data[1]) + i_elem],
-                           JACOBIAN_PRODUCTION, float_data[6+i_dep] * rate);
+        state[int_data[(2 + int_data[0] + i_dep)]-1]) {
+        int elem_id=int_data[2 + 2*(int_data[0]+int_data[1]) + i_elem];
+        atomicAdd_block(&(jac.production_partials[elem_id]), float_data[6+i_dep] * rate);
       }
     }
   }

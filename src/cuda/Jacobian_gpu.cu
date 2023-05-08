@@ -9,6 +9,7 @@ extern "C" {
 #include <stdlib.h>
 #include "Jacobian_gpu.h"
 
+__device__
 void jacobian_add_value_gpu(JacobianGPU jac, unsigned int elem_id,
                             unsigned int prod_or_loss,
                             double jac_contribution) {
