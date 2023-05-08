@@ -12,7 +12,7 @@
 //extern "C" {
 #include "../camp_common.h"
 //}
-#include "Jacobian_gpu.h"
+#include "new.h"
 //#include "itsolver_gpu.h"
 //#include "../debug_and_stats/camp_debug_2.h"
 

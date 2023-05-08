@@ -97,6 +97,8 @@ void cvodeRun(ModelDataGPU *mGPU,cudaStream_t stream);
 #define RXN_WET_DEPOSITION 14
 #define CAMP_SOLVER_SUCCESS 0
 #define CAMP_SOLVER_FAIL 1
+// Threshhold for precisition loss in rate calculations
+#define MAX_PRECISION_LOSS 1.0e-14
 
 
 #endif

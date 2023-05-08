@@ -7,7 +7,7 @@
 
 extern "C" {
 #include "cvode_ls_gpu.h"
-#include "Jacobian_gpu.h"
+#include "new.h"
 }
 
 #ifdef CAMP_USE_MPI
