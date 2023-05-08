@@ -466,7 +466,6 @@ if (CUDA_FOUND AND ENABLE_GPU)
           src/cuda/cvode_ls_gpu.cu
           src/cuda/libsolv.cu
           src/cuda/itsolver_gpu.cu
-          src/cuda/time_derivative_gpu.cu
           src/cuda/Jacobian_gpu.cu
           )
 

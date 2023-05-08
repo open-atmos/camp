@@ -5,10 +5,18 @@
 
 #include "cvode_cuda.h"
 extern "C" {
-#include "time_derivative_gpu.h"
 #include "Jacobian_gpu.h"
 }
 
+__device__
+void time_derivative_add_value_gpu(TimeDerivativeGPU time_deriv, unsigned int spec_id,
+                               double rate_contribution) {
+  if (rate_contribution < 0.0) {
+    atomicAdd_block(&(time_deriv.production_rates[spec_id]),rate_contribution);
+  } else {
+    atomicAdd_block(&(time_deriv.loss_rates[spec_id]),-rate_contribution);
+  }
+}
 
 __device__
 void rxn_gpu_first_order_loss_calc_deriv_contrib(ModelDataGPU *model_data, TimeDerivativeGPU time_deriv, int *rxn_int_data,
@@ -530,8 +538,7 @@ __device__ void solveRXN(
 }
 
 __device__ void cudaDevicecalc_deriv(double time_step, double *y,
-        double *yout, ModelDataGPU *md, ModelDataVariable *dmdv
-) //Interface CPU/GPU
+        double *yout, ModelDataGPU *md, ModelDataVariable *dmdv)
 {
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   int deriv_length_cell = md->nrows / md->n_cells;
@@ -564,7 +571,6 @@ __device__ void cudaDevicecalc_deriv(double time_step, double *y,
 #else
     deriv_data.production_rates = md->production_rates;
     deriv_data.loss_rates = md->loss_rates;
-    time_derivative_reset_gpu(deriv_data);
     if(i<deriv_data.num_spec){
       deriv_data.production_rates[i] = 0.0;
       deriv_data.loss_rates[i] = 0.0;
@@ -579,8 +585,8 @@ __device__ void cudaDevicecalc_deriv(double time_step, double *y,
     int n_rxn = md->n_rxn;
     if( tid_cell < n_rxn) {
       int n_iters = n_rxn / deriv_length_cell;
-      for (int i = 0; i < n_iters; i++) {
-        int i_rxn = tid_cell + i*deriv_length_cell;
+      for (int j = 0; j < n_iters; j++) {
+        int i_rxn = tid_cell + j*deriv_length_cell;
         solveRXN(i_rxn, i_cell,deriv_data, time_step, md, dmdv);
       }
       int residual=n_rxn-(deriv_length_cell*n_iters);
@@ -596,27 +602,19 @@ __device__ void cudaDevicecalc_deriv(double time_step, double *y,
     printmin(md,yout,"cudaDevicecalc_deriv start end yout");
 #endif
     __syncthreads();
-    time_derivative_output_gpu(deriv_data, yout, md->J_tmp,0);
-
-/*
-  if(i<deriv_data.num_spec){
-    double *r_p = deriv_data.production_rates;
-    double *r_l = deriv_data.loss_rates;
-    if (r_p[i] + r_l[i] != 0.0) {
-      if (md->J_tmp) {
-        double scale_fact;
-        scale_fact = 1.0 / (r_p[i] + r_l[i]) /
-            (1.0 / (r_p[i] + r_l[i]) + 1.0e-14 / fabs(r_p[i]- r_l[i]));
-        yout[i] = scale_fact * (r_p[i] - r_l[i]) + (1.0 - scale_fact) * (md->J_tmp[i]);
-      } else {
-        yout[i] = r_p[i] - r_l[i];
-      }
-    } else {
-      yout[i] = 0.0;
+    double *J_tmp = md->J_tmp;
+    if(i<deriv_data.num_spec){
+        double *r_p = deriv_data.production_rates;
+        double *r_l = deriv_data.loss_rates;
+        if (r_p[i] + r_l[i] != 0.0) {
+            double scale_fact;
+            scale_fact = 1.0 / (r_p[i] + r_l[i]) /
+                (1.0 / (r_p[i] + r_l[i]) + MAX_PRECISION_LOSS / fabs(r_p[i]- r_l[i]));
+            yout[i] = scale_fact * (r_p[i] - r_l[i]) + (1.0 - scale_fact) * (J_tmp[i]);
+        } else {
+          yout[i] = 0.0;
+        }
     }
-  }
-*/
-
 #ifdef DEBUG_printmin
     printmin(md,yout,"cudaDevicecalc_deriv start end yout");
 #endif
@@ -919,8 +917,8 @@ __device__ void cudaDevicecalc_Jac(double *y,ModelDataGPU *md, ModelDataVariable
     int n_rxn = md->n_rxn;
     if( tid_cell < n_rxn) {
       int n_iters = n_rxn / deriv_length_cell;
-      for (int i = 0; i < n_iters; i++) {
-        int i_rxn = tid_cell + i*deriv_length_cell;
+      for (int j = 0; j < n_iters; j++) {
+        int i_rxn = tid_cell + j*deriv_length_cell;
         solveRXNJac(i_rxn,i_cell,jacBlock, md, dmdv);
       }
       int residual=n_rxn-(deriv_length_cell*n_iters);
@@ -933,10 +931,10 @@ __device__ void cudaDevicecalc_Jac(double *y,ModelDataGPU *md, ModelDataVariable
   JacMap *jac_map = md->jac_map;
   int nnz = md->n_mapped_values[0];
   int n_iters = nnz / blockDim.x;
-  for (int i = 0; i < n_iters; i++) {
-    int j = threadIdx.x + i*blockDim.x;
-  md->dA[jac_map[j].solver_id + nnz * blockIdx.x] =
-      jacBlock.production_partials[jac_map[j].rxn_id] - jacBlock.loss_partials[jac_map[j].rxn_id];
+  for (int z = 0; z < n_iters; z++) {
+    int j = threadIdx.x + z*blockDim.x;
+    md->dA[jac_map[j].solver_id + nnz * blockIdx.x] =
+    jacBlock.production_partials[jac_map[j].rxn_id] - jacBlock.loss_partials[jac_map[j].rxn_id];
     jacBlock.production_partials[jac_map[j].rxn_id] = 0.0;
     jacBlock.loss_partials[jac_map[j].rxn_id] = 0.0;
   }
@@ -1011,8 +1009,8 @@ int cudaDeviceJac(int *flag, ModelDataGPU *md, ModelDataVariable *dmdv
     __syncthreads();
   int nnz = md->n_mapped_values[0];
   int n_iters = nnz / blockDim.x;
-  for (int i = 0; i < n_iters; i++) {
-    int j = threadIdx.x + i*blockDim.x;
+  for (int z = 0; z < n_iters; z++) {
+    int j = threadIdx.x + z*blockDim.x;
     md->J_solver[j]=md->dA[j];
   }
   int residual=nnz-(blockDim.x*n_iters);
