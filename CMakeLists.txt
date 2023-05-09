@@ -45,7 +45,6 @@ option(ENABLE_EXPORT_NETCDF "" OFF)
 option(ENABLE_IMPORT_NETCDF "" OFF)
 option(ENABLE_BOOTCAMP "" ON)
 option(ENABLE_DATA "" ON)
-option(BUILD_SHARED_LIBRARIES "" ON) # Shared library are better than static (faster in execution, no recompilation, smaller)
 option(ENABLE_INSTALL_OPTIONS "" OFF)
 option(use_maxrregcount127 "Compiling with maxxregcount127" OFF)
 option(use_maxrregcount64 "Compiling with maxxregcount64" OFF)
@@ -354,7 +353,7 @@ elseif(use_maxrregcount64)
   set(STD_CUDA_FLAGS "--maxrregcount 64 --default-stream per-thread -lineinfo -arch=compute_70 -code=sm_70 --compiler-options '-fPIC' -lcudart -lcublas -lcusolver -lcudadevrt -lcusparse_static -lculibos -lpthread -ldl")
 else()
   #set(STD_CUDA_FLAGS "-arch=compute_70 -code=sm_70 --compiler-options '-fPIC' -lcudart -lcudadevrt -lcublas -lcusparse_static -lculibos -lpthread -ldl")
-  set(STD_CUDA_FLAGS "-g -lineinfo -arch=compute_70 -code=sm_70")
+  set(STD_CUDA_FLAGS "-g -G -arch=compute_70 -code=sm_70")
 endif()
 
 if(ENABLE_CXX)
@@ -491,16 +490,19 @@ set(CAMP_LIB_SRC
   src/rxn_factory.F90 src/sub_model_data.F90 src/sub_model_factory.F90
   src/solver_stats.F90
   src/debug_diff_check.F90
-  ${CAMP_C_SRC} ${AEROSOL_REPS_SRC} ${SUB_MODELS_SRC} ${REACTIONS_SRC}
-  ${CAMP_CUDA_SRC} ${GSL_SRC} ${CAMP_CXX_SRC} )
+  ${CAMP_C_SRC} ${AEROSOL_REPS_SRC} ${SUB_MODELS_SRC} ${REACTIONS_SRC} ${GSL_SRC} )
 
   add_library(camplib ${CAMP_LIB_SRC})
+  add_library(camplibshared SHARED
+          ${CAMP_CUDA_SRC} ${CAMP_CXX_SRC}) #todo Shared library are better than static (faster in execution, no recompilation, smaller)
 
 if (CUDA_FOUND)
   target_link_libraries(camplib  ${NETCDF_LIBS} ${SUNDIALS_LIBS} ${GSL_LIBS} ${JSON_LIB} ${CUDA_LIBRARIES})
   #set_target_properties(camplib PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
+  target_link_libraries(camplibshared ${NETCDF_LIBS} ${SUNDIALS_LIBS} ${GSL_LIBS} ${JSON_LIB} ${CUDA_LIBRARIES})
 else()
   target_link_libraries(camplib  ${NETCDF_LIBS} ${SUNDIALS_LIBS} ${GSL_LIBS} ${JSON_LIB})
+  target_link_libraries(camplibshared  ${NETCDF_LIBS} ${SUNDIALS_LIBS} ${GSL_LIBS} ${JSON_LIB})
 endif()
 
 set(MODULE_DIR "${CMAKE_BINARY_DIR}/include")
@@ -582,7 +584,7 @@ add_executable(mock_monarch test/monarch/mock_monarch.F90
         test/monarch/camp_monarch_interface.F90
         ${CB5_EBI_SOLVER} ${CB5_KPP_SOLVER}
         test/chemistry/cb05cl_ae5/module_BSC_CHEM_DATA.F90)
-target_link_libraries(mock_monarch camplib)
+target_link_libraries(mock_monarch camplib camplibshared)
 
 if (ENABLE_TESTS)
 
@@ -592,7 +594,7 @@ if (ENABLE_TESTS)
   add_executable(camp_box_model test/camp_box_model_data.F90
           test/camp_box_model.F90)
 
-  target_link_libraries(camp_box_model camplib)
+  target_link_libraries(camp_box_model camplib camplibshared)
 
 ######################################################################
   # test_chemistry_cb05cl_ae5_big
@@ -601,7 +603,7 @@ add_executable(test_chemistry_cb05cl_ae5_big
         test/chemistry/cb05cl_ae5/test_cb05cl_ae5_big.F90
         ${CB5_EBI_SOLVER} ${CB5_KPP_SOLVER}
         test/chemistry/cb05cl_ae5/module_BSC_CHEM_DATA.F90)
-target_link_libraries(test_chemistry_cb05cl_ae5_big camplib)
+target_link_libraries(test_chemistry_cb05cl_ae5_big camplib camplibshared)
 
   ######################################################################
   # test_chemistry_cb05cl_ae5
@@ -610,66 +612,66 @@ target_link_libraries(test_chemistry_cb05cl_ae5_big camplib)
           test/chemistry/cb05cl_ae5/test_cb05cl_ae5.F90
           ${CB5_EBI_SOLVER} ${CB5_KPP_SOLVER}
           test/chemistry/cb05cl_ae5/module_BSC_CHEM_DATA.F90)
-  target_link_libraries(test_chemistry_cb05cl_ae5 camplib)
+  target_link_libraries(test_chemistry_cb05cl_ae5 camplib camplibshared)
 
 ######################################################################
 # test_property
 
 add_executable(unit_test_property test/unit_property/test_property.F90)
 
-target_link_libraries(unit_test_property camplib)
+target_link_libraries(unit_test_property camplib camplibshared)
 
 ######################################################################
 # test_jacobian
 
 add_executable(unit_test_jacobian test/unit_jacobian/test_jacobian.c)
 
-target_link_libraries(unit_test_jacobian camplib)
+target_link_libraries(unit_test_jacobian camplib camplibshared)
 
 ######################################################################
 # test_chem_spec_data
 
 add_executable(unit_test_chem_spec_data test/unit_chem_spec_data/test_chem_spec_data.F90)
 
-target_link_libraries(unit_test_chem_spec_data camplib)
+target_link_libraries(unit_test_chem_spec_data camplib camplibshared)
 
 ######################################################################
 # test_rxn_data
 
 add_executable(test_rxn_aqueous_equilibrium test/unit_rxn_data/test_rxn_aqueous_equilibrium.F90)
-target_link_libraries(test_rxn_aqueous_equilibrium camplib)
+target_link_libraries(test_rxn_aqueous_equilibrium camplib camplibshared)
 add_executable(test_rxn_CMAQ_H2O2 test/unit_rxn_data/test_rxn_CMAQ_H2O2.F90)
-target_link_libraries(test_rxn_CMAQ_H2O2 camplib)
+target_link_libraries(test_rxn_CMAQ_H2O2 camplib camplibshared)
 add_executable(test_rxn_CMAQ_OH_HNO3 test/unit_rxn_data/test_rxn_CMAQ_OH_HNO3.F90)
-target_link_libraries(test_rxn_CMAQ_OH_HNO3 camplib)
+target_link_libraries(test_rxn_CMAQ_OH_HNO3 camplib camplibshared)
 add_executable(test_rxn_condensed_phase_arrhenius test/unit_rxn_data/test_rxn_condensed_phase_arrhenius.F90)
-target_link_libraries(test_rxn_condensed_phase_arrhenius camplib)
+target_link_libraries(test_rxn_condensed_phase_arrhenius camplib camplibshared)
 add_executable(test_rxn_emission test/unit_rxn_data/test_rxn_emission.F90)
-target_link_libraries(test_rxn_emission camplib)
+target_link_libraries(test_rxn_emission camplib camplibshared)
 add_executable(test_rxn_first_order_loss test/unit_rxn_data/test_rxn_first_order_loss.F90)
-target_link_libraries(test_rxn_first_order_loss camplib)
+target_link_libraries(test_rxn_first_order_loss camplib camplibshared)
 add_executable(test_rxn_HL_phase_transfer test/unit_rxn_data/test_rxn_HL_phase_transfer.F90)
-target_link_libraries(test_rxn_HL_phase_transfer camplib)
+target_link_libraries(test_rxn_HL_phase_transfer camplib camplibshared)
 add_executable(test_rxn_photolysis test/unit_rxn_data/test_rxn_photolysis.F90)
-target_link_libraries(test_rxn_photolysis camplib)
+target_link_libraries(test_rxn_photolysis camplib camplibshared)
 add_executable(test_rxn_SIMPOL_phase_transfer test/unit_rxn_data/test_rxn_SIMPOL_phase_transfer.F90)
-target_link_libraries(test_rxn_SIMPOL_phase_transfer camplib)
+target_link_libraries(test_rxn_SIMPOL_phase_transfer camplib camplibshared)
 add_executable(test_rxn_troe test/unit_rxn_data/test_rxn_troe.F90)
-target_link_libraries(test_rxn_troe camplib)
+target_link_libraries(test_rxn_troe camplib camplibshared)
 add_executable(test_rxn_wet_deposition test/unit_rxn_data/test_rxn_wet_deposition.F90)
-target_link_libraries(test_rxn_wet_deposition camplib)
+target_link_libraries(test_rxn_wet_deposition camplib camplibshared)
 
 ######################################################################
 # test_sub_model_data
 
 add_executable(test_sub_model_PDFiTE test/unit_sub_model_data/test_sub_model_PDFiTE.F90)
-target_link_libraries(test_sub_model_PDFiTE camplib)
+target_link_libraries(test_sub_model_PDFiTE camplib camplibshared)
 add_executable(test_sub_model_UNIFAC test/unit_sub_model_data/test_sub_model_UNIFAC.F90)
-target_link_libraries(test_sub_model_UNIFAC camplib)
+target_link_libraries(test_sub_model_UNIFAC camplib camplibshared)
 add_executable(test_sub_model_ZSR_aerosol_water
                test/unit_sub_model_data/test_sub_model_ZSR_aerosol_water.c
                test/unit_sub_model_data/test_sub_model_ZSR_aerosol_water.F90)
-target_link_libraries(test_sub_model_ZSR_aerosol_water camplib)
+target_link_libraries(test_sub_model_ZSR_aerosol_water camplib camplibshared)
 
 ######################################################################
 # New unit tests (UNDER DEVELOPMENT)
@@ -692,21 +694,21 @@ endif()
 set_source_files_properties(${UNIT_TEST_RXN_ARRHENIUS_SRC} PROPERTIES COMPILE_FLAGS
                             ${STD_F_FLAGS})
 add_executable(unit_test_rxn_arrhenius ${UNIT_TEST_RXN_ARRHENIUS_SRC})
-target_link_libraries(unit_test_rxn_arrhenius camplib)
+target_link_libraries(unit_test_rxn_arrhenius camplib camplibshared)
 
 ######################################################################
 # test_camp_core
 
 add_executable(unit_test_camp_core test/unit_camp_core/test_camp_core.F90)
 
-target_link_libraries(unit_test_camp_core camplib)
+target_link_libraries(unit_test_camp_core camplib camplibshared)
 
 ######################################################################
 # test_aero_phase_data
 
 add_executable(unit_test_aero_phase_data test/unit_aero_phase_data/test_aero_phase_data.F90)
 
-target_link_libraries(unit_test_aero_phase_data camplib)
+target_link_libraries(unit_test_aero_phase_data camplib camplibshared)
 
 ######################################################################
 # test_aero_rep_single_particle
@@ -715,7 +717,7 @@ add_executable(unit_test_aero_rep_single_particle
 	test/unit_aero_rep_data/test_aero_rep_single_particle.c
 	test/unit_aero_rep_data/test_aero_rep_single_particle.F90)
 
-target_link_libraries(unit_test_aero_rep_single_particle camplib)
+target_link_libraries(unit_test_aero_rep_single_particle camplib camplibshared)
 
 ######################################################################
 # test_aero_rep_modal_binned_mass
@@ -724,14 +726,14 @@ add_executable(unit_test_aero_rep_modal_binned_mass
         test/unit_aero_rep_data/test_aero_rep_modal_binned_mass.c
 	test/unit_aero_rep_data/test_aero_rep_modal_binned_mass.F90)
 
-target_link_libraries(unit_test_aero_rep_modal_binned_mass camplib)
+target_link_libraries(unit_test_aero_rep_modal_binned_mass camplib camplibshared)
 
 ######################################################################
 # test_chem_mech_solver
 
 add_executable(test_chem_mech_solver test/chemistry/test_chem_mech_solver.F90)
 
-target_link_libraries(test_chem_mech_solver camplib)
+target_link_libraries(test_chem_mech_solver camplib camplibshared)
 
 ######################################################################
 # BootCAMP Tutorial Exercises
@@ -742,21 +744,21 @@ target_link_libraries(test_chem_mech_solver camplib)
 
 add_executable(boot_camp_part_1 doc/camp_tutorial/boot_camp/part_1_code/box_model.F90)
 
-target_link_libraries(boot_camp_part_1 camplib)
+target_link_libraries(boot_camp_part_1 camplib camplibshared)
 
 ######################################################################
 # Part 3
 
 add_executable(boot_camp_part_3 doc/camp_tutorial/boot_camp/part_3_code/box_model.F90)
 
-target_link_libraries(boot_camp_part_3 camplib)
+target_link_libraries(boot_camp_part_3 camplib camplibshared)
 
 ######################################################################
 # Part 4
 
 add_executable(boot_camp_part_4 doc/camp_tutorial/boot_camp/part_4_code/box_model.F90)
 
-target_link_libraries(boot_camp_part_4 camplib)
+target_link_libraries(boot_camp_part_4 camplib camplibshared)
 
 ######################################################################
 # CAMP v1.0.0 paper configurations
@@ -765,14 +767,14 @@ target_link_libraries(boot_camp_part_4 camplib)
 add_executable(camp_v1_paper_binned data/CAMP_v1_paper/binned/camp_monarch_interface.F90
                                     data/CAMP_v1_paper/binned/mock_monarch.F90)
 
-target_link_libraries(camp_v1_paper_binned camplib)
+target_link_libraries(camp_v1_paper_binned camplib camplibshared)
 
 ######################################################################
 
 add_executable(camp_v1_paper_modal data/CAMP_v1_paper/modal/camp_monarch_interface.F90
                                    data/CAMP_v1_paper/modal/mock_monarch.F90)
 
-target_link_libraries(camp_v1_paper_modal camplib)
+target_link_libraries(camp_v1_paper_modal camplib camplibshared)
 
 ######################################################################
 endif()

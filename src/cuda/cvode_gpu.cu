@@ -234,6 +234,9 @@ void solver_new_gpu_cu_cvode(SolverData *sd) {
     printf("ERROR: MORE THAN 40 MPI PROCESSES AND NOT MULTIPLE OF 40, WHEN CTE-POWER ONLY HAS 40 CORES PER NODE\n");
     exit(0);
   }
+  //int maxnDevices = 4  # CTE-POWER specs
+  //int maxCoresPerDevice = maxCoresPerNode / maxnDevices
+  //sd->nDevices= (int((size-1)/maxCoresPerDevice)+1) % maxnDevices
   if (size > sd->nDevices*(coresPerNode/nDevicesMax)){
     printf("ERROR: MORE MPI PROCESSES THAN DEVICES (FOLLOW PROPORTION, FOR CTE-POWER IS 10 PROCESSES FOR EACH GPU, SINCE IT HAS 4 GPUS AND 40 PROCESSES PER NODE)\n");
     exit(0);

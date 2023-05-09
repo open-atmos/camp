@@ -8,7 +8,6 @@ extern "C" {
 #include "new.h"
 }
 
-
 __device__
 void time_derivative_add_value_gpu(TimeDerivativeGPU time_deriv, unsigned int spec_id,
                                double rate_contribution) {
@@ -34,7 +33,6 @@ void rxn_gpu_first_order_loss_calc_jac_contrib(ModelDataGPU *model_data, Jacobia
   int *int_data = rxn_int_data;
   if (int_data[3] >= 0) atomicAdd_block(&(jac.loss_partials[int_data[3]]),rxn_env_data[0]);
 }
-
 
 __device__
 void rxn_gpu_CMAQ_H2O2_calc_deriv_contrib(ModelDataGPU *model_data, TimeDerivativeGPU time_deriv, int *rxn_int_data,
@@ -154,8 +152,6 @@ void rxn_gpu_arrhenius_calc_deriv_contrib(ModelDataGPU *model_data, TimeDerivati
     }
     for (int i_spec=0; i_spec<int_data[1]; i_spec++, i_dep_var++) {
       if (int_data[2 + int_data[0] + int_data[1] + i_dep_var] < 0) continue;
-      // Negative yields are allowed, but prevented from causing negative
-      // concentrations that lead to solver failures
       if (-rate*float_data[6+i_spec]*time_step <= state[int_data[(2 + int_data[0] + i_spec)]-1]) {
         time_derivative_add_value_gpu(time_deriv, int_data[2 + int_data[0] + int_data[1] + i_dep_var],rate*float_data[6+i_spec]);
       }
@@ -315,7 +311,6 @@ __device__ void cudaDevicemin_2(double *g_odata, double in, volatile double *sda
 #ifdef DEBUG_CVODE_GPU
 __device__
 void printmin(ModelDataGPU *md,double* y, const char *s) {
-
   __syncthreads();
   extern __shared__ double flag_shr2[];
   int tid= threadIdx.x + blockDim.x*blockIdx.x;

@@ -555,7 +555,6 @@ void get_camp_config_variables(SolverData *sd){
   FILE *fp;
   char buff[255];
   char path[] = "config_variables_c_solver.txt";
-  //printf("get_camp_config_variables\n");
   fp = fopen("config_variables_c_solver.txt", "r");
   if (fp == NULL){
     printf("Could not open file %s, setting use_cpu ON\n",path);
@@ -579,7 +578,6 @@ void get_camp_config_variables(SolverData *sd){
     else{
       sd->use_gpu_cvode=0;
     }
-    sd->nDevices = 1;
     fscanf(fp, "%d", &sd->nDevices);
     fscanf (fp, "%d", &sd->nCellsGPUPerc);
     fclose(fp);

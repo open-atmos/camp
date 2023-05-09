@@ -137,7 +137,6 @@ def write_camp_config_file(conf):
             file1.write("USE_GPU_CVODE=2\n")
         else:
             file1.write("USE_GPU_CVODE=OFF\n")
-        file1.write(str(conf.nGPUs)+"\n")
         file1.write(str(conf.nCellsGPUPerc)+"\n")
 
         file1.close()
@@ -330,7 +329,9 @@ def run(conf):
             raise
         maxnDevices = 4  # CTE-POWER specs
         maxCoresPerDevice = maxCoresPerNode / maxnDevices
-        #coresPerDevice = conf.mpiProcesses / conf.nGPUs
+        #pending set nGPUs automatically
+        # conf.nGPUs = (int((conf.mpiProcesses-1)/maxCoresPerDevice)+1) % maxnDevices
+        #print("conf.nGPus start",conf.nGPUs)
         maxCores = maxCoresPerDevice * conf.nGPUs
         minCores = maxCoresPerDevice * (conf.nGPUs-1)
         if not minCores <= conf.mpiProcesses <= maxCores:
@@ -340,6 +341,7 @@ def run(conf):
             raise
     exec_str = ""
     #exec_str = 'ddt --connect '
+    #os.popen('cat /etc/services').read()
     if conf.mpi == "yes":
         if os.getenv("BSC_MACHINE") == "power":
             exec_str += "mpirun -v -np " + str(conf.mpiProcesses) + " --bind-to core "
@@ -367,8 +369,8 @@ def run(conf):
         pathNvprof = pathNvprof + conf.caseMulticellsOnecell \
                      + str(conf.nCells) + "Cells "
 
-        #exec_str += "--set full -f -o " + pathNvprof #last working version
-        exec_str += " "  # summary
+        exec_str += "--set full -f -o " + pathNvprof #last working version
+        #exec_str += " "  # summary
         #exec_str += "--mode=launch " #fail #gui attach
 
         print("CUDASaving nsight file in ", os.path.abspath(os.getcwd()) \

@@ -47,7 +47,6 @@ def all_timesteps():
     conf.mpiProcessesCaseOptimList.append(1)
     #conf.mpiProcessesCaseOptimList.append(2)
     # conf.mpiProcessesCaseOptimList = [10,20,40]
-    # conf.mpiProcessesCaseOptSet Multi-GPusimList = [1,4,8,16,32,40]
 
     conf.allocatedNodes = 1
     # conf.allocatedNodes = 4
@@ -58,11 +57,11 @@ def all_timesteps():
     # conf.allocatedTasksPerNode = 320
     # conf.allocatedTasksPerNode = get_ntasksPerNode_sbatch() #todo
 
-    conf.cells = [100]
+    conf.cells = [1000]
     # conf.cells = [100, 500, 1000, 5000, 10000]
     # conf.cells = [50000,100000,500000,1000000]
 
-    conf.timeSteps = 10
+    conf.timeSteps = 1
     #conf.timeSteps = 720
 
     conf.timeStepsDt = 2
