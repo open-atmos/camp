@@ -220,7 +220,6 @@ void solver_new_gpu_cu_cvode(SolverData *sd) {
   mCPU->rxn_env_data_size = n_rxn_env_param * n_cells * sizeof(double);
   mCPU->rxn_env_data_idx_size = (n_rxn+1) * sizeof(int);
   mCPU->map_state_deriv_size = n_dep_var * n_cells * sizeof(int);
-  sd->mGPU = (ModelDataGPU *)malloc(sizeof(ModelDataGPU));
   int nDevicesMax;
   cudaGetDeviceCount(&nDevicesMax);
   if (sd->nDevices > nDevicesMax) {
@@ -260,16 +259,20 @@ void solver_new_gpu_cu_cvode(SolverData *sd) {
       }
     }
   }
+  sd->mGPU = (ModelDataGPU *)malloc(sizeof(ModelDataGPU));
   mGPU = sd->mGPU;
   mGPU->n_cells=n_cells;
-  HANDLE_ERROR(cudaMalloc((void **) &mGPU->deriv_data, mCPU->deriv_size));
+#ifdef DEV_DMGPU
+  cudaMalloc((void **) &sd->dmGPU, sizeof(ModelDataGPU));
+#endif
+  cudaMalloc((void **) &mGPU->deriv_data, mCPU->deriv_size);
   mGPU->n_rxn=md->n_rxn;
   mGPU->n_rxn_env_data=md->n_rxn_env_data;
   cudaMalloc((void **) &mGPU->state, mCPU->state_size);
   cudaMalloc((void **) &mGPU->env, mCPU->env_size);
   cudaMalloc((void **) &mGPU->rxn_env_data, mCPU->rxn_env_data_size);
   cudaMalloc((void **) &mGPU->rxn_env_data_idx, mCPU->rxn_env_data_idx_size);
-  HANDLE_ERROR(cudaMalloc((void **) &mGPU->map_state_deriv, mCPU->map_state_deriv_size));
+  cudaMalloc((void **) &mGPU->map_state_deriv, mCPU->map_state_deriv_size);
   int num_spec = md->n_per_cell_dep_var*mGPU->n_cells;
   cudaMalloc((void **) &(mGPU->production_rates),num_spec*sizeof(mGPU->production_rates));
   cudaMalloc((void **) &(mGPU->loss_rates),num_spec*sizeof(mGPU->loss_rates));
@@ -804,7 +807,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
                     cudaMemcpyHostToDevice, stream);
     cudaMemcpyAsync(&mGPU->sCells[i], &mCPU->mdvCPU, sizeof(ModelDataVariable), cudaMemcpyHostToDevice, stream);
   }
-  cvodeRun(mGPU,stream);
+  cvodeRun(mGPU,sd->dmGPU,stream);
   cudaMemcpyAsync(cv_acor_init, mGPU->cv_acor_init, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost, stream);
   cudaMemcpyAsync(youtArray, mGPU->yout, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost, stream);
   for (int i = 0; i <= cv_mem->cv_qmax; i++) {//cv_qmax+1 (6)?

@@ -55,7 +55,7 @@ if [ $is_sbatch == "true" ]; then
 
 else
 
-  cd  ../../
+  cd  ../../build
   time make -j 4
   cd ../test/monarch
 

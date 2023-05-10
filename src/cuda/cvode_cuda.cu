@@ -602,7 +602,6 @@ __device__ void cudaDevicecalc_deriv(double time_step, double *y,
         double *r_l = deriv_data.loss_rates;
         if (r_p[i] + r_l[i] != 0.0) {
             double scale_fact;
-            #define MAX_PRECISION_LOSS 1.0e-14
             scale_fact = 1.0 / (r_p[i] + r_l[i]) /
                 (1.0 / (r_p[i] + r_l[i]) + MAX_PRECISION_LOSS / fabs(r_p[i]- r_l[i]));
             yout[i] = scale_fact * (r_p[i] - r_l[i]) + (1.0 - scale_fact) * (J_tmp[i]);
@@ -2076,22 +2075,17 @@ void cudaGlobalCVode(ModelDataGPU md_object) {
   int istate;
   __syncthreads();
   if(tid<active_threads){
-    __syncthreads();
-#ifdef CAMP_DEBUG_GPU
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     int clock_khz=md->clock_khz;
     clock_t start;
     start = clock();
     __syncthreads();
 #endif
-#endif
     istate=cudaDeviceCVode(md,md->s);//dmdv as a function parameter seems faster than removing it
     __syncthreads();
-#ifdef CAMP_DEBUG_GPU
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
   if(threadIdx.x==0) md->s->dtcudaDeviceCVode += ((double)(int)(clock() - start))/(clock_khz*1000);
   __syncthreads();
-#endif
 #endif
   }
   __syncthreads();
@@ -2114,11 +2108,17 @@ int nextPowerOfTwoCVODE2(int v){
 }
 
 //TODO alloc dmGPU y cudamemcpy dmGPU y pasar parametro el puntero
-void cvodeRun(ModelDataGPU *mGPU, cudaStream_t stream){
+void cvodeRun(ModelDataGPU *mGPU, ModelDataGPU *dmGPU, cudaStream_t stream){
   int len_cell = mGPU->nrows / mGPU->n_cells;
   int threads_block = len_cell;
   int blocks = mGPU->n_cells;
   int n_shr_memory = nextPowerOfTwoCVODE2(len_cell);
   int n_shr_empty = mGPU->n_shr_empty = n_shr_memory - threads_block;
+#ifdef DEV_DMGPU
+  cudaMemcpy(dmGPU, mGPU, sizeof(ModelDataGPU), cudaMemcpyHostToDevice);
+  cudaGlobalCVode <<<blocks, threads_block, n_shr_memory * sizeof(double), stream>>>(*dmGPU);
+  cudaMemcpy(mGPU, dmGPU, sizeof(ModelDataGPU), cudaMemcpyDeviceToHost);
+#else
   cudaGlobalCVode <<<blocks, threads_block, n_shr_memory * sizeof(double), stream>>>(*mGPU);
+#endif
 }
