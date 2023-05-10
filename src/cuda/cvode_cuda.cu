@@ -2113,7 +2113,7 @@ int nextPowerOfTwoCVODE2(int v){
   return v;
 }
 
-
+//TODO alloc dmGPU y cudamemcpy dmGPU y pasar parametro el puntero
 void cvodeRun(ModelDataGPU *mGPU, cudaStream_t stream){
   int len_cell = mGPU->nrows / mGPU->n_cells;
   int threads_block = len_cell;

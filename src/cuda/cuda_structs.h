@@ -152,10 +152,8 @@ typedef struct{
 } ModelDataCPU;
 
 typedef struct {
-
     //CPU (Needed because each GPU points a different CPU pointer
     double* A;
-
     //Allocated from CPU (used during CPU / need some cudamemcpy)
     int *map_state_deriv;
     double *deriv_data;

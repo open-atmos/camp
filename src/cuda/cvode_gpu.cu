@@ -198,7 +198,6 @@ void solver_init_int_double_cuda_cvode(SolverData *sd) {
 }
 
 void solver_new_gpu_cu_cvode(SolverData *sd) {
-
   ModelData *md = &(sd->model_data);
   ModelDataGPU *mGPU;
   ModelDataCPU *mCPU = &(sd->mCPU);
