@@ -300,7 +300,6 @@ typedef struct {
 #ifdef CAMP_USE_GPU
   ModelDataCPU mCPU;
   ModelDataGPU *mGPU;
-  ModelDataGPU *dmGPU;
   int *flagCells;
   int nDevices;
   int nCellsGPUPerc;

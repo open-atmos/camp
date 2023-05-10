@@ -18,8 +18,8 @@ def all_timesteps():
     # conf.diffCellsL.append("Ideal")
 
     conf.profileCuda = ""
-    # conf.profileCuda = "nvprof"
-    conf.profileCuda = "nsight"
+    #conf.profileCuda = "nvprof"
+    #conf.profileCuda = "nsight"
 
     conf.is_export = get_is_sbatch()
     # conf.is_export = True
@@ -57,22 +57,22 @@ def all_timesteps():
     # conf.allocatedTasksPerNode = 320
     # conf.allocatedTasksPerNode = get_ntasksPerNode_sbatch() #todo
 
-    conf.cells = [1000]
+    conf.cells = [100]
     # conf.cells = [100, 500, 1000, 5000, 10000]
     # conf.cells = [50000,100000,500000,1000000]
 
-    conf.timeSteps = 1
+    conf.timeSteps = 2
     #conf.timeSteps = 720
 
     conf.timeStepsDt = 2
 
     # conf.caseBase = "CPU EBI"
-    #conf.caseBase = "CPU One-cell"
+    conf.caseBase = "CPU One-cell"
     #conf.caseBase = "CPU Multi-cells"
     # conf.caseBase="GPU Multi-cells"
     # conf.caseBase="GPU Block-cellsN"
     # conf.caseBase="GPU Block-cells1"
-    conf.caseBase = "GPU BDF"
+    #conf.caseBase = "GPU BDF"
     #conf.caseBase = "GPU CPU"
     # conf.caseBase = "GPU maxrregcount-64" #wrong 10,000 cells
     # conf.caseBase = "GPU maxrregcount-24" #Minimum
@@ -89,7 +89,7 @@ def all_timesteps():
     # conf.casesOptim.append("GPU Block-cellsN")
     # conf.casesOptim.append("GPU Block-cells1")
     # conf.casesOptim.append("CPU EBI")
-    #conf.casesOptim.append("GPU BDF")
+    conf.casesOptim.append("GPU BDF")
     #conf.casesOptim.append("GPU CPU")
     # conf.casesOptim.append("GPU maxrregcount-64") #wrong 10,000 cells
     # conf.casesOptim.append("GPU maxrregcount-68")

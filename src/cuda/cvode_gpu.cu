@@ -262,9 +262,6 @@ void solver_new_gpu_cu_cvode(SolverData *sd) {
   sd->mGPU = (ModelDataGPU *)malloc(sizeof(ModelDataGPU));
   mGPU = sd->mGPU;
   mGPU->n_cells=n_cells;
-#ifdef DEV_DMGPU
-  cudaMalloc((void **) &sd->dmGPU, sizeof(ModelDataGPU));
-#endif
   cudaMalloc((void **) &mGPU->deriv_data, mCPU->deriv_size);
   mGPU->n_rxn=md->n_rxn;
   mGPU->n_rxn_env_data=md->n_rxn_env_data;
@@ -807,7 +804,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
                     cudaMemcpyHostToDevice, stream);
     cudaMemcpyAsync(&mGPU->sCells[i], &mCPU->mdvCPU, sizeof(ModelDataVariable), cudaMemcpyHostToDevice, stream);
   }
-  cvodeRun(mGPU,sd->dmGPU,stream);
+  cvodeRun(mGPU,stream);
   cudaMemcpyAsync(cv_acor_init, mGPU->cv_acor_init, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost, stream);
   cudaMemcpyAsync(youtArray, mGPU->yout, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost, stream);
   for (int i = 0; i <= cv_mem->cv_qmax; i++) {//cv_qmax+1 (6)?
