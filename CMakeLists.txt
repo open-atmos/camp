@@ -27,26 +27,27 @@ endif ()
 ######################################################################
 # options
 
+#Set all options to OFF by default due to bug on CMake 3.15
 option(ENABLE_GSL "Enable GSL library for Jacobian evaluation" OFF)
 option(ENABLE_MPI "Enable MPI parallel support" OFF)
-option(ENABLE_MPI_TEST "Enable MPI parallel support" ON)
+option(ENABLE_MPI_TEST "Enable MPI parallel support" OFF)
 option(ENABLE_SUNDIALS "Enable SUNDIALS solver for condensation support" OFF)
 option(ENABLE_C_SORT "Enable C sorting routines" OFF)
-option(ENABLE_JSON "Enable json-fortran support" ON)
-option(ENABLE_TESTS "Enable tests" ON)
+option(ENABLE_JSON "Enable json-fortran support" OFF)
+option(ENABLE_TESTS "Enable tests" OFF)
 option(ENABLE_DEBUG "Compile debugging functions" OFF)
 option(FAILURE_DETAIL "Output conditions before and after solver failures" OFF)
 option(ENABLE_CXX "Enable C++" OFF)
 option(ENABLE_GPU "Enable use of GPUs in chemistry solving" OFF)
-option(ENABLE_SWAP_DERIV_LOOP_CELLS "Optimization for sligth speedup in One-cell version, more info at https://earth.bsc.es/gitlab/ac/camp/-/issues/22" OFF)
-option(ENABLE_RESET_JAC_SOLVING "Precondition Jacobian matrix with default value (ON) or previous execution value (OFF), better speedup ON but easier to debug OFF, more info at https://earth.bsc.es/gitlab/ac/camp/-/issues/21" OFF)
+option(ENABLE_SWAP_DERIV_LOOP_CELLS "" OFF)
+option(ENABLE_RESET_JAC_SOLVING "" OFF)
 option(ENABLE_NETCDF "Include NETCDF package" OFF)
 option(ENABLE_EXPORT_NETCDF "" OFF)
 option(ENABLE_IMPORT_NETCDF "" OFF)
-option(ENABLE_BOOTCAMP "" ON)
-option(ENABLE_DATA "" ON)
-option(ENABLE_INSTALL_OPTIONS "" ON)
-option(ENABLE_STATIC_LIB "" OFF) #todo learn how to link this shared lib in Monarch
+option(ENABLE_BOOTCAMP "" OFF)
+option(ENABLE_DATA "" OFF)
+option(ENABLE_INSTALL_OPTIONS "" OFF)
+option(ENABLE_SHARED_LIB "" OFF) #todo learn how to link this shared lib in Monarch
 option(use_maxrregcount127 "Compiling with maxxregcount127" OFF)
 option(use_maxrregcount64 "Compiling with maxxregcount64" OFF)
 option(use_maxrregcount24 "Compiling with maxxregcount24" OFF)
@@ -494,10 +495,11 @@ set(CAMP_LIB_SRC
         ${CAMP_C_SRC} ${AEROSOL_REPS_SRC} ${SUB_MODELS_SRC}
         ${REACTIONS_SRC} ${GSL_SRC} ${CAMP_CUDA_SRC} ${CAMP_CXX_SRC} )
 
-if(ENABLE_STATIC_LIB)
-  add_library(camplib  ${CAMP_LIB_SRC})
-else()
+if(ENABLE_SHARED_LIB)
   add_library(camplib SHARED ${CAMP_LIB_SRC}) #todo Shared library are better than static (faster in execution, no recompilation, smaller)
+else()
+  add_library(camplib ${CAMP_LIB_SRC})
+  #add_library(camplib SHARED ${CAMP_LIB_SRC})
 endif()
 
 if (CUDA_FOUND)
@@ -524,7 +526,6 @@ install(TARGETS camplib
         LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
         ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
        )
-
 set(MOD_DIR_TO_INSTALL "${MODULE_DIR}")
 set(MOD_DESTINATION_DIR "${CMAKE_INSTALL_INCLUDEDIR}/camp")
 install(

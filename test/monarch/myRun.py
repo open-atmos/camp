@@ -137,6 +137,7 @@ def write_camp_config_file(conf):
             file1.write("USE_GPU_CVODE=2\n")
         else:
             file1.write("USE_GPU_CVODE=OFF\n")
+        file1.write(str(conf.nGPUs)+"\n")
         file1.write(str(conf.nCellsGPUPerc)+"\n")
 
         file1.close()
@@ -339,9 +340,14 @@ def run(conf):
                 "ERROR: not minCores <= conf.mpiProcesses <= maxCores (FOLLOW PROPORTION, FOR CTE-POWER IS MAX 10 CORES FOR EACH GPU, SINCE IT HAS 4 GPUS AND 40 CORES PER NODE): maxCoresPerDevice,coresPerDevice",
                 minCores, conf.mpiProcesses, maxCores)
             raise
-    exec_str = ""
-    #exec_str = 'ddt --connect '
-    #os.popen('cat /etc/services').read()
+    exec_str=""
+    try:
+        ddt_pid=subprocess.check_output('pidof -x $(ps cax | grep ddt)', shell=True)
+        print("ddt_pid",ddt_pid)
+        if ddt_pid:
+            exec_str += 'ddt --connect '
+    except Exception:
+        pass
     if conf.mpi == "yes":
         if os.getenv("BSC_MACHINE") == "power":
             exec_str += "mpirun -v -np " + str(conf.mpiProcesses) + " --bind-to core "

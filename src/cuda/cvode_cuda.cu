@@ -2066,10 +2066,21 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
 }
 
 __global__
+#ifdef DEV_DMGPU
+void cudaGlobalCVode(ModelDataGPU* md) {
+#else
 void cudaGlobalCVode(ModelDataGPU md_object) {
+  ModelDataGPU *md = &md_object;
+#endif
   extern __shared__ int flag_shr[];
   int tid = blockIdx.x * blockDim.x + threadIdx.x;
-  ModelDataGPU *md = &md_object;
+#ifdef DEV_DMGPU
+//todo fix 2n iter not working
+if(tid==0){
+  printf("md->n_cells %d", md->n_cells);
+  printf("state[0] %le", md->state[0]);
+}
+#endif
   md->s=&md->sCells[blockIdx.x];
   int active_threads = md->nrows;
   int istate;
@@ -2116,7 +2127,7 @@ void cvodeRun(ModelDataGPU *mGPU, ModelDataGPU *dmGPU, cudaStream_t stream){
   int n_shr_empty = mGPU->n_shr_empty = n_shr_memory - threads_block;
 #ifdef DEV_DMGPU
   cudaMemcpy(dmGPU, mGPU, sizeof(ModelDataGPU), cudaMemcpyHostToDevice);
-  cudaGlobalCVode <<<blocks, threads_block, n_shr_memory * sizeof(double), stream>>>(*dmGPU);
+  cudaGlobalCVode <<<blocks, threads_block, n_shr_memory * sizeof(double), stream>>>(dmGPU);
   cudaMemcpy(mGPU, dmGPU, sizeof(ModelDataGPU), cudaMemcpyDeviceToHost);
 #else
   cudaGlobalCVode <<<blocks, threads_block, n_shr_memory * sizeof(double), stream>>>(*mGPU);
