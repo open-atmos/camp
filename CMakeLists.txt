@@ -216,6 +216,7 @@ add_test(test_rxn_first_order_loss ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/te
 add_test(test_rxn_HL_phase_transfer ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_HL_phase_transfer.sh ${MPI_TEST_FLAG})
 add_test(test_rxn_photolysis ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_photolysis.sh ${MPI_TEST_FLAG})
 add_test(test_rxn_SIMPOL_phase_transfer ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_SIMPOL_phase_transfer.sh ${MPI_TEST_FLAG})
+add_test(test_rxn_surface ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_surface.sh ${MPI_TEST_FLAG})
 add_test(test_rxn_ternary_chemical_activation ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_ternary_chemical_activation.sh ${MPI_TEST_FLAG})
 add_test(test_rxn_troe ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_troe.sh ${MPI_TEST_FLAG})
 add_test(test_rxn_wennberg_no_ro2 ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_wennberg_no_ro2.sh ${MPI_TEST_FLAG})
@@ -258,6 +259,7 @@ set(REACTIONS_F_SRC
 	src/rxns/rxn_HL_phase_transfer.F90
 	src/rxns/rxn_photolysis.F90
   src/rxns/rxn_SIMPOL_phase_transfer.F90
+  src/rxns/rxn_surface.F90
   src/rxns/rxn_ternary_chemical_activation.F90
   src/rxns/rxn_troe.F90
   src/rxns/rxn_wennberg_no_ro2.F90
@@ -275,6 +277,7 @@ set(REACTIONS_C_SRC
 	src/rxns/rxn_HL_phase_transfer.c
 	src/rxns/rxn_photolysis.c
   src/rxns/rxn_SIMPOL_phase_transfer.c
+  src/rxns/rxn_surface.c
   src/rxns/rxn_ternary_chemical_activation.c
 	src/rxns/rxn_troe.c
   src/rxns/rxn_wennberg_no_ro2.c
@@ -535,6 +538,8 @@ add_executable(test_rxn_photolysis test/unit_rxn_data/test_rxn_photolysis.F90)
 target_link_libraries(test_rxn_photolysis camplib)
 add_executable(test_rxn_SIMPOL_phase_transfer test/unit_rxn_data/test_rxn_SIMPOL_phase_transfer.F90)
 target_link_libraries(test_rxn_SIMPOL_phase_transfer camplib)
+add_executable(test_rxn_surface test/unit_rxn_data/test_rxn_surface.F90)
+target_link_libraries(test_rxn_surface camplib)
 add_executable(test_rxn_ternary_chemical_activation test/unit_rxn_data/test_rxn_ternary_chemical_activation.F90)
 target_link_libraries(test_rxn_ternary_chemical_activation camplib)
 add_executable(test_rxn_troe test/unit_rxn_data/test_rxn_troe.F90)
