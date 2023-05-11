@@ -83,7 +83,7 @@ module camp_rxn_condensed_phase_photolysis
 #define NUM_PROD_ this%condensed_data_int(2)
 #define NUM_AERO_PHASE_ this%condensed_data_int(3)
 #define RXN_ID_ this%condensed_data_int(4)
-#define RATE_CONSTANT_ this%condensed_data_real(1)
+#define SCALING_ this%condensed_data_real(1)
 #define NUM_REAL_PROP_ 1
 #define NUM_INT_PROP_ 4
 #define NUM_ENV_PARAM_ 0
@@ -283,24 +283,6 @@ contains
     NUM_REACT_ = num_react
     NUM_PROD_ = num_prod
     NUM_AERO_PHASE_ = num_phase
-
-    ! Get the rate constant parameters
-    key_name = "rate"
-    if (.not. this%property_set%get_real(key_name, RATE_CONSTANT_)) then
-      call assert_msg(888213891, .false., "The rate for a condensed phase photolysis reaction is required.")
-    end if
-    key_name = "time unit"
-    if (this%property_set%get_string(key_name, temp_string)) then
-      if (trim(temp_string).eq."MIN") then
-        RATE_CONSTANT_ = RATE_CONSTANT_ / 60.0
-      else
-        call assert_msg(390870843, trim(temp_string).eq."s", &
-                "Received invalid time unit: '"//temp_string//"' in "// &
-                "condnesed-phase photolysis reaction. Valid units are "// &
-                "'MIN' and 's'.")
-      end if
-    end if
-
 
     ! Set up an array to the reactant and product names
     allocate(react_names(NUM_REACT_))

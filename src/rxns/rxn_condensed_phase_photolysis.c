@@ -17,13 +17,16 @@
 #define TEMPERATURE_K_ env_data[0]
 #define PRESSURE_PA_ env_data[1]
 
-#define NUM_REACT_ (int_data[0])
-#define NUM_PROD_ (int_data[1])
-#define NUM_AERO_PHASE_ (int_data[2])
-#define RATE_CONSTANT_ (float_data[0])
-#define NUM_INT_PROP_ 3
+#define NUM_REACT_ int_data[0]
+#define NUM_PROD_ int_data[1]
+#define NUM_AERO_PHASE_ int_data[2]
+#define RXN_ID_ int_data[3]
+#define SCALING_ float_data[0]
+#define RATE_CONSTANT_ rxn_env_data[0]
+#define BASE_RATE_ rxn_env_data[1]
+#define NUM_INT_PROP_ 4
 #define NUM_FLOAT_PROP_ 1
-#define NUM_ENV_PARAM_ 0
+#define NUM_ENV_PARAM_ 2
 #define REACT_(x) (int_data[NUM_INT_PROP_ + x] - 1)
 #define PROD_(x) \
   (int_data[NUM_INT_PROP_ + NUM_REACT_ * NUM_AERO_PHASE_ + x] - 1)
@@ -136,6 +139,41 @@ void rxn_condensed_phase_photolysis_update_ids(ModelData *model_data,
   }
 
   return;
+}
+
+/** \brief Update reaction data
+ *
+ * Photolysis reactions can have their base (pre-scaling) rate constants updated
+ * from the host model based on the calculations of an external photolysis
+ * module. The structure of the update data is:
+ *
+ *  - \b int photo_id (Id of one or more photolysis reactions set by the host
+ *       model using the camp_rxn_photolysis::rxn_photolysis_t::set_photo_id
+ *       function prior to initializing the solver.)
+ *  - \b double rate_const (New pre-scaling rate constant.)
+ *
+ * \param update_data Pointer to the updated reaction data
+ * \param rxn_int_data Pointer to the reaction integer data
+ * \param rxn_float_data Pointer to the reaction floating-point data
+ * \param rxn_env_data Pointer to the environment-dependent data
+ * \return Flag indicating whether this is the reaction to update
+ */
+bool rxn_condensed_phase_photolysis_update_data(void *update_data, int *rxn_int_data,
+                                double *rxn_float_data, double *rxn_env_data) {
+  int *int_data = rxn_int_data;
+  double *float_data = rxn_float_data;
+
+  int *photo_id = (int *)update_data;
+  double *base_rate = (double *)&(photo_id[1]);
+
+  // Set the base photolysis rate constants for matching reactions
+  if (*photo_id == RXN_ID_ && RXN_ID_ > 0) {
+    BASE_RATE_ = (double)*base_rate;
+    RATE_CONSTANT_ = SCALING_ * BASE_RATE_;
+    return true;
+  }
+
+  return false;
 }
 
 /** \brief Update reaction data for new environmental conditions
@@ -354,7 +392,6 @@ void rxn_condensed_phase_photolysis_print(int *rxn_int_data,
   printf("\n number of reactants:      %d", NUM_REACT_);
   printf("\n number of products:       %d", NUM_PROD_);
   printf("\n number of aerosol phases: %d", NUM_AERO_PHASE_);
-  printf("\n Rate constant: %le", RATE_CONSTANT_);
   printf("\n water state ids (by phase):");
   for (int i_phase = 0; i_phase < NUM_AERO_PHASE_; ++i_phase)
     printf(" %d", WATER_(i_phase));

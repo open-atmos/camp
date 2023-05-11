@@ -725,6 +725,10 @@ void rxn_update_data(int cell_id, int *rxn_id, int update_rxn_type,
           found = rxn_photolysis_update_data((void *)update_data, rxn_int_data,
                                              rxn_float_data, rxn_env_data);
           break;
+        case RXN_CONDENSED_PHASE_PHOTOLYSIS:
+          found = rxn_condensed_phase_photolysis_update_data((void *)update_data, rxn_int_data,
+                                             rxn_float_data, rxn_env_data);
+          break;
         case RXN_WET_DEPOSITION:
           found = rxn_wet_deposition_update_data(
               (void *)update_data, rxn_int_data, rxn_float_data, rxn_env_data);

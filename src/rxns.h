@@ -137,6 +137,8 @@ void rxn_condensed_phase_photolysis_update_env_state(ModelData *model_data,
                                                     double *rxn_env_data);
 void rxn_condensed_phase_photolysis_print(int *rxn_int_data,
                                          double *rxn_float_data);
+bool rxn_condensed_phase_photolysis_update_data(void *update_data, int *rxn_int_data,
+                                double *rxn_float_data, double *rxn_env_data);
 #ifdef CAMP_USE_SUNDIALS
 void rxn_condensed_phase_photolysis_calc_deriv_contrib(
     ModelData *model_data, TimeDerivative time_deriv, int *rxn_int_data,
