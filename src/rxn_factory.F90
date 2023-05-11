@@ -441,6 +441,13 @@ contains
           class default
             call die_msg(284703230, "Update data <-> rxn mismatch")
         end select
+      type is (rxn_update_data_condensed_phase_photolysis_t)
+        select type (rxn)
+          type is (rxn_condensed_phase_photolysis_t)
+            call rxn%update_data_initialize(update_data, RXN_CONDENSED_PHASE_PHOTOLYSIS)
+          class default
+            call die_msg(284703230, "Update data <-> rxn mismatch")
+        end select
       class default
         call die_msg(239438576, "Internal error - update data type missing.")
     end select

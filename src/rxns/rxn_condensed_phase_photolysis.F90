@@ -69,9 +69,12 @@ module camp_rxn_condensed_phase_photolysis
   use camp_chem_spec_data
   use camp_constants, only: const
   use camp_camp_state
+  use camp_mpi
   use camp_property
   use camp_rxn_data
   use camp_util,      only: i_kind, dp, to_string, assert, assert_msg, die_msg, string_t
+
+  use iso_c_binding
 
   implicit none
   private
@@ -79,9 +82,10 @@ module camp_rxn_condensed_phase_photolysis
 #define NUM_REACT_ this%condensed_data_int(1)
 #define NUM_PROD_ this%condensed_data_int(2)
 #define NUM_AERO_PHASE_ this%condensed_data_int(3)
+#define RXN_ID_ this%condensed_data_int(4)
 #define RATE_CONSTANT_ this%condensed_data_real(1)
 #define NUM_REAL_PROP_ 1
-#define NUM_INT_PROP_ 3
+#define NUM_INT_PROP_ 4
 #define NUM_ENV_PARAM_ 0
 #define REACT_(x) this%condensed_data_int(NUM_INT_PROP_+x)
 #define PROD_(x) this%condensed_data_int(NUM_INT_PROP_+NUM_REACT_*NUM_AERO_PHASE_+x)
@@ -91,13 +95,15 @@ module camp_rxn_condensed_phase_photolysis
 #define YIELD_(x) this%condensed_data_real(NUM_REAL_PROP_+x)
 #define KGM3_TO_MOLM3_(x) this%condensed_data_real(NUM_REAL_PROP_+NUM_PROD_+x)
 
-  public :: rxn_condensed_phase_photolysis_t
+  public :: rxn_condensed_phase_photolysis_t, rxn_update_data_condensed_phase_photolysis_t
 
   !> Generic test reaction data type
   type, extends(rxn_data_t) :: rxn_condensed_phase_photolysis_t
   contains
     !> Reaction initialization
     procedure :: initialize
+    !> Initialize update data
+    procedure :: update_data_initialize
     !> Finalize the reaction
     final :: finalize
   end type rxn_condensed_phase_photolysis_t
@@ -106,6 +112,58 @@ module camp_rxn_condensed_phase_photolysis
   interface rxn_condensed_phase_photolysis_t
     procedure :: constructor
   end interface rxn_condensed_phase_photolysis_t
+
+  !> Condensed-phase Photolysis rate update object
+  type, extends(rxn_update_data_t) :: rxn_update_data_condensed_phase_photolysis_t
+  private
+    !> Flag indicating whether the update data as been allocated
+    logical :: is_malloced = .false.
+    !> Unique id for finding reactions during model initialization
+    integer(kind=i_kind) :: rxn_unique_id = 0
+  contains
+    !> Update the rate data
+    procedure :: set_rate => update_data_rate_set
+    !> Determine the pack size of the local update data
+    procedure :: internal_pack_size
+    !> Pack the local update data to a binary
+    procedure :: internal_bin_pack
+    !> Unpack the local update data from a binary
+    procedure :: internal_bin_unpack
+    !> Finalize the rate update data
+    final :: update_data_finalize
+  end type rxn_update_data_condensed_phase_photolysis_t
+
+    !> Interface to c reaction functions
+  interface
+
+    !> Allocate space for a rate update
+    function rxn_condensed_phase_photolysis_create_rate_update_data() result (update_data) &
+              bind (c)
+      use iso_c_binding
+      !> Allocated update_data object
+      type(c_ptr) :: update_data
+    end function rxn_condensed_phase_photolysis_create_rate_update_data
+
+    !> Set a new photolysis rate
+    subroutine rxn_condensed_phase_photolysis_set_rate_update_data(update_data, photo_id, &
+              base_rate) bind (c)
+      use iso_c_binding
+      !> Update data
+      type(c_ptr), value :: update_data
+      !> Photo id
+      integer(kind=c_int), value :: photo_id
+      !> New pre-scaling base photolysis rate
+      real(kind=c_double), value :: base_rate
+    end subroutine rxn_condensed_phase_photolysis_set_rate_update_data
+
+    !> Free an update rate data object
+    pure subroutine rxn_free_update_data(update_data) bind (c)
+      use iso_c_binding
+      !> Update data
+      type(c_ptr), value, intent(in) :: update_data
+    end subroutine rxn_free_update_data
+
+  end interface
 
 contains
 
@@ -449,6 +507,9 @@ contains
 
     end do
 
+    ! Initialize the reaction id
+    RXN_ID_ = -1
+
   end subroutine initialize
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -467,6 +528,129 @@ contains
             deallocate(this%condensed_data_int)
 
   end subroutine finalize
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  !> Set packed update data for photolysis rate constants
+  subroutine update_data_rate_set(this, base_rate)
+
+    !> Update data
+    class(rxn_update_data_condensed_phase_photolysis_t), intent(inout) :: this
+    !> Updated pre-scaling photolysis rate
+    real(kind=dp), intent(in) :: base_rate
+
+    call rxn_condensed_phase_photolysis_set_rate_update_data(this%get_data(), &
+            this%rxn_unique_id, base_rate)
+
+  end subroutine update_data_rate_set
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  !> Initialize update data
+  subroutine update_data_initialize(this, update_data, rxn_type)
+
+    use camp_rand,                                only : generate_int_id
+
+    !> The reaction to update
+    class(rxn_condensed_phase_photolysis_t), intent(inout) :: this
+    !> Update data object
+    class(rxn_update_data_condensed_phase_photolysis_t), intent(out) :: update_data
+    !> Reaction type id
+    integer(kind=i_kind), intent(in) :: rxn_type
+
+    ! If a reaction id has not yet been generated, do it now
+    if (RXN_ID_.eq.-1) then
+      RXN_ID_ = generate_int_id()
+    endif
+
+    update_data%rxn_unique_id = RXN_ID_
+    update_data%rxn_type = int(rxn_type, kind=c_int)
+    update_data%update_data = rxn_condensed_phase_photolysis_create_rate_update_data()
+    update_data%is_malloced = .true.
+
+  end subroutine update_data_initialize
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  !> Determine the size of a binary required to pack the reaction data
+  integer(kind=i_kind) function internal_pack_size(this, comm) &
+      result(pack_size)
+
+    !> Reaction update data
+    class(rxn_update_data_condensed_phase_photolysis_t), intent(in) :: this
+    !> MPI communicator
+    integer, intent(in) :: comm
+
+    pack_size = &
+      camp_mpi_pack_size_logical(this%is_malloced, comm) + &
+      camp_mpi_pack_size_integer(this%rxn_unique_id, comm)
+
+  end function internal_pack_size
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  !> Pack the given value to the buffer, advancing position
+  subroutine internal_bin_pack(this, buffer, pos, comm)
+
+    !> Reaction update data
+    class(rxn_update_data_condensed_phase_photolysis_t), intent(in) :: this
+    !> Memory buffer
+    character, intent(inout) :: buffer(:)
+    !> Current buffer position
+    integer, intent(inout) :: pos
+    !> MPI communicator
+    integer, intent(in) :: comm
+
+#ifdef CAMP_USE_MPI
+    integer :: prev_position
+
+    prev_position = pos
+    call camp_mpi_pack_logical(buffer, pos, this%is_malloced, comm)
+    call camp_mpi_pack_integer(buffer, pos, this%rxn_unique_id, comm)
+    call assert(649543400, &
+         pos - prev_position <= this%pack_size(comm))
+#endif
+
+  end subroutine internal_bin_pack
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  !> Unpack the given value from the buffer, advancing position
+  subroutine internal_bin_unpack(this, buffer, pos, comm)
+
+    !> Reaction update data
+    class(rxn_update_data_condensed_phase_photolysis_t), intent(inout) :: this
+    !> Memory buffer
+    character, intent(inout) :: buffer(:)
+    !> Current buffer position
+    integer, intent(inout) :: pos
+    !> MPI communicator
+    integer, intent(in) :: comm
+
+#ifdef CAMP_USE_MPI
+    integer :: prev_position
+
+    prev_position = pos
+    call camp_mpi_unpack_logical(buffer, pos, this%is_malloced, comm)
+    call camp_mpi_unpack_integer(buffer, pos, this%rxn_unique_id, comm)
+    call assert(254749806, &
+         pos - prev_position <= this%pack_size(comm))
+    this%update_data = rxn_condensed_phase_photolysis_create_rate_update_data()
+#endif
+
+  end subroutine internal_bin_unpack
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  !> Finalize an update data object
+  elemental subroutine update_data_finalize(this)
+
+    !> Update data object to free
+    type(rxn_update_data_condensed_phase_photolysis_t), intent(inout) :: this
+
+    if (this%is_malloced) call rxn_free_update_data(this%update_data)
+
+  end subroutine update_data_finalize
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 

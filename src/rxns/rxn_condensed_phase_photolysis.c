@@ -424,3 +424,30 @@ void rxn_condensed_phase_photolysis_print(int *rxn_int_data,
   }
   return;
 }
+
+/** \brief Create update data for new photolysis rates
+ *
+ * \return Pointer to a new rate update data object
+ */
+void *rxn_condensed_phase_photolysis_create_rate_update_data() {
+  int *update_data = (int *)malloc(sizeof(int) + sizeof(double));
+  if (update_data == NULL) {
+    printf("\n\nERROR allocating space for condensded phase photolysis update data\n\n");
+    exit(1);
+  }
+  return (void *)update_data;
+}
+
+/** \brief Set rate update data
+ *
+ * \param update_data Pointer to an allocated rate update data object
+ * \param photo_id Id of photolysis reactions to update
+ * \param base_rate New pre-scaling photolysis rate
+ */
+void rxn_condensed_phase_photolysis_set_rate_update_data(void *update_data, int photo_id,
+                                         double base_rate) {
+  int *new_photo_id = (int *)update_data;
+  double *new_base_rate = (double *)&(new_photo_id[1]);
+  *new_photo_id = photo_id;
+  *new_base_rate = base_rate;
+}

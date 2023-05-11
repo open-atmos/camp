@@ -1,4 +1,4 @@
-FROM fedora:27
+FROM fedora:37
 
 RUN dnf -y update \
     && dnf install -y sudo \
@@ -75,3 +75,5 @@ ENV PATH="${PATH}:/usr/local/jsonfortran-gnu-6.1.0/lib"
              ../camp \
     && make \
     && sudo make install
+
+WORKDIR /home/test_user/build
