@@ -230,7 +230,7 @@ void rxn_HL_phase_transfer_update_env_state(ModelData *model_data,
 #endif
 
   // save the mean free path [m] for calculating condensation rates
-  MFP_M_ = mean_free_path__m(DIFF_COEFF_, TEMPERATURE_K_, ALPHA_);
+  MFP_M_ = mean_free_path__m(DIFF_COEFF_, TEMPERATURE_K_, MW_);
 
   // Calculate the Henry's Law equilibrium rate constant in units of
   // (kg_x/kg_H2O/ppm) where x is the aerosol-phase species. (A is in
@@ -311,7 +311,7 @@ void rxn_HL_phase_transfer_calc_deriv_contrib(
     // Calculate the rate constant for diffusion limited mass transfer to the
     // aerosol phase (1/s)
     long double cond_rate =
-        gas_aerosol_rxn_rate_constant(DIFF_COEFF_, MFP_M_, radius, ALPHA_);
+        gas_aerosol_transition_rxn_rate_constant(DIFF_COEFF_, MFP_M_, radius, ALPHA_);
 
     // Calculate the evaporation rate constant (1/s)
     long double evap_rate = cond_rate / (EQUIL_CONST_);
@@ -404,7 +404,7 @@ void rxn_HL_phase_transfer_calc_jac_contrib(ModelData *model_data, Jacobian jac,
     // Calculate the rate constant for diffusion limited mass transfer to the
     // aerosol phase (1/s)
     long double cond_rate =
-        gas_aerosol_rxn_rate_constant(DIFF_COEFF_, MFP_M_, radius, ALPHA_);
+        gas_aerosol_transition_rxn_rate_constant(DIFF_COEFF_, MFP_M_, radius, ALPHA_);
 
     // Calculate the evaporation rate constant (1/s)
     long double evap_rate = cond_rate / (EQUIL_CONST_);
@@ -451,9 +451,9 @@ void rxn_HL_phase_transfer_calc_jac_contrib(ModelData *model_data, Jacobian jac,
         -rate * cond_rate *
         (2.0 * radius / (3.0 * DIFF_COEFF_) + 4.0 / (3.0 * MFP_M_));
 #endif
-    long double d_cond_d_radius = d_gas_aerosol_rxn_rate_constant_d_radius(
-                                      DIFF_COEFF_, MFP_M_, radius, ALPHA_) *
-                                  state[GAS_SPEC_];
+    long double d_cond_d_radius =
+        d_gas_aerosol_transition_rxn_rate_constant_d_radius(
+            DIFF_COEFF_, MFP_M_, radius, ALPHA_) * state[GAS_SPEC_];
     long double d_evap_d_radius = d_cond_d_radius / state[GAS_SPEC_] /
                                   (EQUIL_CONST_)*state[AERO_SPEC_(i_phase)] /
                                   state[AERO_WATER_(i_phase)];

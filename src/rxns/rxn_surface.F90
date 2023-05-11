@@ -88,15 +88,16 @@ module camp_rxn_surface
 #define GAMMA_ this%condensed_data_real(3)
 #define MW_ this%condensed_data_real(4)
 #define NUM_AERO_PHASE_ this%condensed_data_int(1)
-#define GAS_SPEC_ this%condensed_data_int(2)
+#define REACT_ID_ this%condensed_data_int(2)
 #define NUM_PROD_ this%condensed_data_int(3)
 #define NUM_INT_PROP_ 3
 #define NUM_REAL_PROP_ 4
 #define NUM_ENV_PARAM_ 1
-#define DERIV_ID_(x) this%condensed_data_int(NUM_INT_PROP_+x)
-#define JAC_ID_(x) this%condensed_data_int(NUM_INT_PROP_+1+NUM_PROD_+x)
-#define PHASE_INT_LOC_(x) this%condensed_data_int(NUM_INT_PROP_+2+2*NUM_PROD_+x)
-#define PHASE_REAL_LOC_(x) this%condensed_data_int(NUM_INT_PROP_+2+2*NUM_PROD_+NUM_AERO_PHASE_+x)
+#define PROD_ID_(x) this%condensed_data_int(NUM_INT_PROP_+x)
+#define DERIV_ID_(x) this%condensed_data_int(NUM_INT_PROP_+NUM_PROD_+x)
+#define JAC_ID_(x) this%condensed_data_int(NUM_INT_PROP_+1+2*NUM_PROD_+x)
+#define PHASE_INT_LOC_(x) this%condensed_data_int(NUM_INT_PROP_+2+3*NUM_PROD_+x)
+#define PHASE_REAL_LOC_(x) this%condensed_data_int(NUM_INT_PROP_+2+3*NUM_PROD_+NUM_AERO_PHASE_+x)
 #define AERO_PHASE_ID_(x) this%condensed_data_int(PHASE_INT_LOC_(x))
 #define AERO_REP_ID_(x) this%condensed_data_int(PHASE_INT_LOC_(x)+1)
 #define NUM_AERO_PHASE_JAC_ELEM_(x) this%condensed_data_int(PHASE_INT_LOC_(x)+2)
@@ -152,12 +153,95 @@ contains
     !> Number of grid cells to solve simultaneously
     integer(kind=i_kind), intent(in) :: n_cells
 
-    ! Allocate space in the condensed data arrays
-    allocate(this%condensed_data_int(0))
-    allocate(this%condensed_data_real(0))
+    type(property_t), pointer :: products, spec_props
+    character(len=:), allocatable :: key_name, reactant_name, product_name, &
+                                     phase_name, error_msg
+    integer :: i_spec, n_aero_jac_elem, n_aero_phase, i_phase, i_aero_rep
+    integer, allocatable :: phase_ids(:)
+    real(kind=dp) :: temp_real
+
+    if (.not. associated(this%property_set)) call die_msg(244070915, &
+            "Missing property set needed to initialize surface reaction.")
+
+    key_name = "gas-phase reactant"
+    call assert_msg(807568174, &
+            this%property_set%get_string(key_name, reactant_name), &
+            "Missing gas-phase reactant name in surface reaction.")
+
+    key_name = "gas-phase products"
+    call assert_msg(285567904, &
+            this%property_set%get_property_t(key_name, products), &
+            "Missing gas-phase products for surface reaction.")
+    NUM_PROD_ = products%size()
+
+    key_name = "aerosol phase"
+    call assert_msg(939211358, &
+            this%property_set%get_string(key_name, phase_name), &
+            "Missing aerosol phase in surface reaction.")
+
+    error_msg = " for surface reaction of gas-phase species '"// &
+                reactant_name//"' on aerosol phase '"//phase_name//"'"
+
+    key_name = "reaction probability"
+    call assert_msg(388486564, &
+            this%property_set%get_real(key_name, GAMMA_), &
+            "Missing reaction probability for"//error_msg)
+
+    call assert(362731302, associated(aero_rep))
+    call assert_msg(187310091, size(aero_rep) .gt. 0, &
+            "Missing aerosol representation"//error_msg)
+
+    ! Count the number of Jacobian elements needed in calculations of mass,
+    ! volume, etc. and the number of instances of the aerosol phase
+    n_aero_jac_elem = 0
+    n_aero_phase = 0
+    do i_aero_rep = 1, size(aero_rep)
+      phase_ids = aero_rep(i_aero_rep)%val%phase_ids(phase_name)
+      n_aero_phase = n_aero_phase + size(phase_ids)
+      do i_phase = 1, size(phase_ids)
+        n_aero_jac_elem = n_aero_jac_elem + &
+            aero_rep(i_aero_rep)%val%num_jac_elem(phase_ids(i_phase))
+      end do
+    end do
+
+    allocate(this%condensed_data_int(NUM_INT_PROP_ + 2 + 3 * NUM_PROD_ + &
+                                     5 * n_aero_phase + &
+                                     (1 + NUM_PROD_) * n_aero_jac_elem))
+    allocate(this%condensed_data_real(NUM_REAL_PROP_ + NUM_PROD_ + &
+                                      2 * n_aero_jac_elem))
+    this%condensed_data_int(:) = 0_i_kind
+    this%condensed_data_real(:) = 0.0_dp
 
     ! Save space for the environment-dependent parameters
     this%num_env_params = NUM_ENV_PARAM_
+
+    NUM_AERO_PHASE_ = n_aero_phase
+
+    ! Save the reactant information
+    REACT_ID_ = chem_spec_data%gas_state_id(reactant_name)
+    call assert_msg(908581300, REACT_ID_ .gt. 0, &
+                    "Missing gas-phase species"//error_msg)
+    call assert_msg(792904182, &
+                    chem_spec_data%get_property_set(reactant_name, spec_props), &
+                    "Missing gas-phase species properties"//error_msg)
+    key_name = "molecular weight [kg mol-1]"
+    call assert_msg(110823327, spec_props%get_real(key_name, MW_), &
+                    "Missing molecular weight for gas-phase species"//error_msg)
+
+    ! Save the product information
+    call products%iter_reset()
+    i_spec = 1
+    do while (products%get_key(product_name))
+      PROD_ID_(i_spec) = chem_spec_data%gas_state_id(product_name)
+      call assert_msg(863839516, PROD_ID_(i_spec) .gt. 0, &
+              "Missing surface reaction product: "//product_name)
+      call assert(237691686, products%get_property_t(val=spec_props))
+      YIELD_(i_spec) = 1.0_dp
+      key_name = "yield"
+      if (spec_props%get_real(key_name, temp_real)) YIELD_(i_spec) = temp_real
+      call products%iter_next()
+      i_spec = i_spec + 1
+    end do
 
   end subroutine initialize
 

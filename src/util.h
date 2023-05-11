@@ -115,16 +115,16 @@ static inline double d_transition_regime_correction_factor_d_radius(
  *  @param radius__m Particle radius [m]
  *  @param alpha Mass accomodation coefficient [unitless]
  */
-static inline double gas_aerosol_rxn_rate_constant(double diffusion_coeff__m2_s,
-                                                   double mean_free_path__m,
-                                                   double radius__m,
-                                                   double alpha) {
+static inline double gas_aerosol_transition_rxn_rate_constant(
+    double diffusion_coeff__m2_s, double mean_free_path__m,
+    double radius__m, double alpha) {
   return 4.0 * M_PI * radius__m * diffusion_coeff__m2_s *
          transition_regime_correction_factor(mean_free_path__m, radius__m,
                                              alpha);
 }
 
-/** Calculate the derivative of a gas-aerosol reaction rate by particle radius
+/** Calculate the derivative of a transition-regime gas-aerosol reaction
+ * rate by particle radius
  * \f[
  *   \frac{d k_c}{d r} = 4 \pi D_g ( f_{fs} + r \frac{d_{fs}}{d r} )
  * \f]
@@ -140,7 +140,7 @@ static inline double gas_aerosol_rxn_rate_constant(double diffusion_coeff__m2_s,
  *  @param radius__m Particle radius [m]
  *  @param alpha Mass accomodation coefficient [unitless]
  */
-static inline double d_gas_aerosol_rxn_rate_constant_d_radius(
+static inline double d_gas_aerosol_transition_rxn_rate_constant_d_radius(
     double diffusion_coeff__m2_s, double mean_free_path__m, double radius__m,
     double alpha) {
   return 4.0 * M_PI * diffusion_coeff__m2_s *
@@ -150,4 +150,58 @@ static inline double d_gas_aerosol_rxn_rate_constant_d_radius(
                           mean_free_path__m, radius__m, alpha));
 }
 
+/** Calculate the gas-aerosol reaction rate for the continuum regime
+ * [\f$\mbox{m}^3\, \mbox{particle}^{-1}\, \mbox{s}^{-1}\f$]
+ *
+ * The rate constant \f$k_c\f$ is calculated as:
+ * \f[
+ *   k_c = \frac{4 \pi r^2_e}{\left(\frac{r}{D_g} + \frac{4}{v(T)\gamma}\right)}
+ * \f]
+ *
+ * where \f$r\f$ is the particle radius [m],
+ * \f$D_g\f$ is the gas-phase diffusion coefficient of the reactant
+ * [\f$\mbox{m}^2\mbox{s}^{-1}\f$], \f$\gamma\f$ is the reaction probability [unitless],
+ * and v is the mean free speed of the gas-phase reactant.
+ *
+ * @param diffusion_coeff__m2_s Diffusion coefficient of the gas species
+ *  [\f$\mbox{m}^2\, \mbox{s}^{-1}\f$]
+ *  @param mean_free_path__m Mean free path of gas molecules [m]
+ *  @param radius__m Particle radius [m]
+ *  @param alpha Mass accomodation coefficient [unitless]
+ */
+static inline double gas_aerosol_continuum_rxn_rate_constant(
+    double diffusion_coeff__m2_s, double mean_free_path__m,
+    double radius__m, double alpha) {
+  return 4.0 * M_PI * radius__m * radius__m /
+         ( radius__m / diffusion_coeff__m2_s +
+           4.0 / ( mean_free_path__m * alpha ) );
+}
+
+/** Calculate the derivative of the continuum-regime gas-aerosol reaction rate
+ * constant by particle radius
+ * \f[
+ *   \frac{dk_c}{dr} = 4 \pi \frac{\frac{r^2}{D_g} +
+ *      \frac{8r}{v(T) \gamma}}{\left(\frac{r}{D_g} + \frac{4}{v(T) \gamma}\right)^2}
+ * \f]
+ *
+ * where \f$r\f$ is the particle radius [m],
+ * \f$D_g\f$ is the gas-phase diffusion coefficient of the reactant
+ * [\f$\mbox{m}^2\mbox{s}^{-1}\f$], \f$\gamma\f$ is the reaction probability [unitless],
+ * and v is the mean free speed of the gas-phase reactant.
+ *
+ * @param diffusion_coeff__m2_s Diffusion coefficient of the gas species
+ *  [\f$\mbox{m}^2\, \mbox{s}^{-1}\f$]
+ *  @param mean_free_path__m Mean free path of gas molecules [m]
+ *  @param radius__m Particle radius [m]
+ *  @param alpha Mass accomodation coefficient [unitless]
+ */
+static inline double d_gas_aerosol_continuum_rxn_rate_constant_d_radius(
+    double diffusion_coeff__m2_s, double mean_free_path__m,
+    double radius__m, double alpha) {
+  double nom = radius__m * radius__m / diffusion_coeff__m2_s +
+               8.0 * radius__m / ( mean_free_path__m * alpha );
+  double denom = radius__m / diffusion_coeff__m2_s +
+                 4.0 / ( mean_free_path__m * alpha );
+  return 4.0 * M_PI * nom / ( denom * denom );
+}
 #endif  // UTIL_H
