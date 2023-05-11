@@ -938,7 +938,9 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
   }
   else{
     ModelDataCPU *mCPU = &(sd->mCPU);
+#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     solver_get_statistics_gpu(sd);
+#endif
     ModelDataGPU *mGPU;
     mGPU = sd->mGPU;
     ModelDataVariable mdvCPU=mCPU->mdvCPU;

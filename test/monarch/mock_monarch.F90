@@ -5,6 +5,7 @@
 !> \file
 !> The mock_monarch_t program
 
+
 !> Mock version of the MONARCH model for testing integration with CAMP
 program mock_monarch_t
 
@@ -14,9 +15,7 @@ program mock_monarch_t
   use camp_monarch_interface_2
   use camp_mpi
   use camp_solver_stats
-#ifdef CAMP_USE_JSON
   use json_module
-#endif
 
 #ifdef SOLVE_EBI_IMPORT_CAMP_INPUT
   ! EBI Solver
@@ -165,11 +164,9 @@ program mock_monarch_t
   integer(kind=i_kind) ::  size_gas_species_to_print, size_aerosol_species_to_print
 
   ! MPI
-#ifdef CAMP_USE_MPI
   character, allocatable :: buffer(:)
   integer(kind=i_kind) :: pos, pack_size, mpi_threads, ierr
   real, allocatable  :: species_conc_mpi(:,:,:,:,:)
-#endif
 
   character(len=500) :: arg
   integer :: status_code, i_time, i_spec, i_case, i, j, k, z,r,n_cells_plot,cell_to_print
@@ -256,9 +253,7 @@ program mock_monarch_t
 #else
     if(caseMulticellsOnecell.eq."maxrregcount-48") then
       print*,"ENABLE maxrregcount-48 in CMakeLists.txt"
-#ifdef CAMP_USE_MPI
        call mpi_abort(MPI_COMM_WORLD, status_code, ierr)
-#endif
       stop 3
     end if
 #endif
@@ -267,9 +262,7 @@ program mock_monarch_t
 #else
     if(caseMulticellsOnecell.eq."maxrregcount-68") then
       print*,"ENABLE maxrregcount-68 in CMakeLists.txt"
-#ifdef CAMP_USE_MPI
        call mpi_abort(MPI_COMM_WORLD, status_code, ierr)
-#endif
       stop 3
     end if
 #endif
@@ -278,9 +271,7 @@ program mock_monarch_t
 #else
     if(caseMulticellsOnecell.eq."maxrregcount-62") then
       print*,"ENABLE maxrregcount-62 in CMakeLists.txt"
-#ifdef CAMP_USE_MPI
        call mpi_abort(MPI_COMM_WORLD, status_code, ierr)
-#endif
       stop 3
     end if
 #endif
@@ -289,9 +280,7 @@ program mock_monarch_t
 #else
     if(caseMulticellsOnecell.eq."maxrregcount-24") then
       print*,"ENABLE maxrregcount-24 in CMakeLists.txt"
-#ifdef CAMP_USE_MPI
        call mpi_abort(MPI_COMM_WORLD, status_code, ierr)
-#endif
       stop 3
     end if
 #endif
@@ -301,9 +290,7 @@ program mock_monarch_t
 #else
     if(caseMulticellsOnecell.eq."maxrregcount-64") then
       print*,"ENABLE maxrregcount-64 in CMakeLists.txt"
-#ifdef CAMP_USE_MPI
        call mpi_abort(MPI_COMM_WORLD, status_code, ierr)
-#endif
       stop 3
     end if
 #endif
@@ -311,9 +298,7 @@ program mock_monarch_t
 #ifdef CAMP_USE_MAXRREGCOUNT127
 #else
     if(caseMulticellsOnecell.eq."maxrregcount-127") then
-#ifdef CAMP_USE_MPI
        call mpi_abort(MPI_COMM_WORLD, status_code, ierr)
-#endif
       print*,"ENABLE maxrregcount-127 in CMakeLists.txt"
       stop 3
     end if
@@ -602,13 +587,9 @@ program mock_monarch_t
 
   end if
 
-#ifdef CAMP_USE_MPI
   if (camp_mpi_rank().eq.0) then
     write(*,*) "Model run time: ", comp_time, " s"
   end if
-#else
-  write(*,*) "Model run time: ", comp_time, " s"
-#endif
 
 #ifdef MOCK_MONARCH_PRINT_SPECIES
   if (camp_mpi_rank().eq.0) then
@@ -662,8 +643,6 @@ program mock_monarch_t
   deallocate(output_file_prefix)
   deallocate(output_file_title)
 
-#ifdef CAMP_USE_MPI
-
   !call MPI_COMM_SIZE(MPI_COMM_WORLD, mpi_threads)
   mpi_threads = camp_mpi_size()!1
   if ((mpi_threads.gt.1)) then
@@ -672,12 +651,8 @@ program mock_monarch_t
   else
     deallocate(camp_interface)
   end if
-
   !print*,"deallocate end", camp_mpi_rank()
-
   call camp_mpi_finalize()
-
-#endif
 
 contains
 
@@ -727,17 +702,9 @@ contains
     if(DIFF_CELLS.eq."ON") then
 
       ncells=(I_E - I_W+1)*(I_N - I_S+1)*NUM_VERT_CELLS
-
-#ifdef CAMP_USE_MPI
       mpi_size=camp_mpi_size()
       tid=camp_mpi_rank()
       ncells_mpi=ncells*mpi_size
-#else
-      mpi_size=1
-      tid=0
-      ncells_mpi=ncells
-#endif
-
       press_end = 10000.
       press_range = press_end-press_init
       if((ncells_mpi).eq.1) then
@@ -811,10 +778,7 @@ contains
     integer :: z
     integer :: n_cells_print
 
-#ifdef CAMP_USE_MPI
     if (camp_mpi_rank().eq.0) then
-#endif
-
       file_name = file_prefix//"_results_all_cells.csv"
       open(RESULTS_ALL_CELLS_FILE_UNIT, file=file_name, status="replace", action="write")
 
@@ -827,12 +791,8 @@ contains
 
       write(RESULTS_ALL_CELLS_FILE_UNIT, "(A)", advance="no") aux_str
       write(RESULTS_ALL_CELLS_FILE_UNIT, '(a)') ''
-
       deallocate(aux_str)
-
-#ifdef CAMP_USE_MPI
     end if
-#endif
 
   end subroutine
 
@@ -852,15 +812,8 @@ contains
     !  print*,"export_file_results_all_cells start"
     !end if
 
-#ifdef CAMP_USE_MPI
-
     call MPI_GATHER(species_conc, len, MPI_REAL, species_conc_mpi,&
             len,MPI_REAL, 0, MPI_COMM_WORLD, ierr)
-#else
-
-    species_conc_mpi(:,:,:,:,1) = species_conc(:,:,:,:)
-
-#endif
 
     !if (camp_mpi_rank().eq.0) then
     !   print*,"export_file_results_all_cells species_conc"
@@ -1912,8 +1865,6 @@ contains
     allocate(counters_max(ncounters))
     allocate(times_max(ntimers))
 
-#ifdef CAMP_USE_MPI
-
     l_comm = MPI_COMM_WORLD
 
     call mpi_reduce(camp_interface%camp_core%ncounters, counters_max, ncounters, MPI_INTEGER, MPI_MAX, 0, &
@@ -1922,13 +1873,6 @@ contains
     call mpi_reduce(camp_interface%camp_core%ntimers, times_max, ntimers, MPI_DOUBLE, MPI_MAX, 0, &
             l_comm, ierr)
     call camp_mpi_check_ierr(ierr)
-
-#else
-
-    counters_max(:)=camp_interface%camp_core%ncounters(:)
-    times_max(:)=camp_interface%camp_core%ntimers(:)
-
-#endif
 
     if (camp_mpi_rank().eq.0) then
 

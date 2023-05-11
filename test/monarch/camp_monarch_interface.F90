@@ -24,12 +24,8 @@ module camp_monarch_interface_2
   use camp_rxn_data,                  only : rxn_data_t
   use camp_rxn_photolysis
   use camp_solver_stats
-#ifdef CAMP_USE_MPI
   use mpi
-#endif
-#ifdef CAMP_USE_JSON
   use json_module
-#endif
 
   implicit none
   private
@@ -160,11 +156,8 @@ contains
     type(aero_rep_factory_t) :: aero_rep_factory
     type(aero_rep_update_data_modal_binned_mass_GMD_t) :: update_data_GMD
     type(aero_rep_update_data_modal_binned_mass_GSD_t) :: update_data_GSD
-
     ! Computation time variable
     real(kind=dp) :: comp_start, comp_end
-
-#ifdef CAMP_USE_MPI
     integer :: local_comm
 
     if (present(mpi_comm)) then
@@ -172,7 +165,6 @@ contains
     else
       local_comm = MPI_COMM_WORLD
     endif
-#endif
 
     !print*,"camp_monarch_interface constructor start"
 
@@ -271,8 +263,6 @@ contains
       call this%load_init_conc()
 
       !print*,"camp_monarch_interface_t"
-
-#ifdef CAMP_USE_MPI
 
       pack_size = this%camp_core%pack_size() + &
               update_data_GMD%pack_size() + &
@@ -388,14 +378,9 @@ contains
         call camp_mpi_unpack_integer_array(buffer, pos, this%specs_emi_id)
         call camp_mpi_unpack_real_array(buffer, pos, this%specs_emi)
       end if
-
-#endif
     end if
 
-#ifdef CAMP_USE_MPI
     deallocate(buffer)
-#endif
-
     !print*,"camp_monarch_interface constructor"
 
     ! Initialize the solver on all nodes
@@ -803,12 +788,10 @@ contains
 if(this%ADD_EMISIONS.eq."monarch_binned") then
   deallocate(rate_emi)
 end if
-#ifdef CAMP_USE_MPI
   !call camp_mpi_barrier(MPI_COMM_WORLD)
 if (camp_mpi_rank().eq.0) then
   !call solver_stats%print( )
 end if
-#endif
     !print*,"camp_monarch_interface integrate end"
   end subroutine integrate
 

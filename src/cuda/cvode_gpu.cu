@@ -458,7 +458,9 @@ void constructor_cvode_gpu(CVodeMem cv_mem, SolverData *sd){
   double *tempv = N_VGetArrayPointer(cv_mem->cv_tempv);
   double *cv_last_yn = N_VGetArrayPointer(cv_mem->cv_last_yn);
   double *cv_acor_init = N_VGetArrayPointer(cv_mem->cv_acor_init);
+#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
   cudaMalloc((void **) &mGPU->mdvo, sizeof(ModelDataVariable));
+#endif
   cudaMalloc((void **) &mGPU->sCells, sizeof(ModelDataVariable)*mGPU->n_cells);
   cudaMalloc((void **) &mGPU->flag, 1 * sizeof(int));
   cudaMalloc((void **) &mGPU->flagCells, mGPU->n_cells * sizeof(int));
@@ -512,7 +514,9 @@ void constructor_cvode_gpu(CVodeMem cv_mem, SolverData *sd){
   for (int i = 0; i < mGPU->n_cells; i++){
     cudaMemcpy(&mGPU->sCells[i], &mCPU->mdvCPU, sizeof(ModelDataVariable), cudaMemcpyHostToDevice);
   }
+#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
   HANDLE_ERROR(cudaMemcpy(mGPU->mdvo, &mCPU->mdvCPU, sizeof(ModelDataVariable), cudaMemcpyHostToDevice));
+#endif
   mCPU->mdvCPU.nstlj = 0;
 #ifndef USE_CSR_ODE_GPU
   if(sd->use_gpu_cvode==1) {
