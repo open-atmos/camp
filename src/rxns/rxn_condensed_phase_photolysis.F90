@@ -16,9 +16,7 @@
 !! where \f$\ce{X}\f$ is the species being photolyzed, and
 !! \f$\ce{Y_n}\f$ are the photolysis products.
 !!
-!! The only needed parameter is the rate which determines how quickly the reaction proceeds.
-!! This class differs from the photolysis reaction in that it represents all reactions not in the gas phase.
-!! Which phase and mode these reactions to be calculated in are identified by the aerosol configuration.
+!! The reaction rate can be scaled by providing the "scaling factor" keyword in the json configuration.
 !! 
 !!
 !! Input data for condensed-phase Photolysis reactions have the following
@@ -28,7 +26,6 @@
 !!     "type" : "CONDENSED_PHASE_PHOTOLYSIS",
 !!     "rate" : 123.45,
 !!     "units" : "M",
-!!     "time unit" : "MIN",
 !!     "aerosol phase" : "my aqueous phase",
 !!     "aerosol-phase water" : "H2O_aq",
 !!     "reactants" : {
@@ -39,7 +36,8 @@
 !!       "spec3" : {},
 !!       "spec4" : { "yield" : 0.65 },
 !!       ...
-!!     }
+!!     },
+!!     "scaling factor": 11.20
 !!   }
 !! \endcode
 !! The key-value pairs \b reactants, and \b products are required. Reactants
