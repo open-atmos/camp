@@ -102,6 +102,8 @@ module camp_rxn_condensed_phase_photolysis
   contains
     !> Reaction initialization
     procedure :: initialize
+    !> Get the reaction property set
+    procedure :: get_property_set
     !> Initialize update data
     procedure :: update_data_initialize
     !> Finalize the reaction
@@ -283,6 +285,14 @@ contains
     NUM_REACT_ = num_react
     NUM_PROD_ = num_prod
     NUM_AERO_PHASE_ = num_phase
+
+    ! Get reaction parameters (it might be easiest to keep these at the
+    ! beginning of the condensed data array, so they can be accessed using
+    ! compliler flags)
+    key_name = "scaling factor"
+    if (.not. this%property_set%get_real(key_name, SCALING_)) then
+      SCALING_ = real(1.0, kind=dp)
+    end if
 
     ! Set up an array to the reactant and product names
     allocate(react_names(NUM_REACT_))
@@ -493,6 +503,20 @@ contains
     RXN_ID_ = -1
 
   end subroutine initialize
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  !> Get the reaction properties. (For use by external photolysis modules.)
+  function get_property_set(this) result(prop_set)
+
+    !> Reaction properties
+    type(property_t), pointer :: prop_set
+    !> Reaction data
+    class(rxn_condensed_phase_photolysis_t), intent(in) :: this
+
+    prop_set => this%property_set
+
+  end function get_property_set
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 

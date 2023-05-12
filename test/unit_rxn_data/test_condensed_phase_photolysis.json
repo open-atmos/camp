@@ -70,14 +70,27 @@
           "aerosol phase": "aqueous aerosol",
           "aerosol-phase water": "H2O_aq",
           "units": "M",
-          "rate": 0.05,
           "reactants": {
             "A": {}
           },
           "products": {
-            "B": {},
-            "C": {"yield": 2}
-          }
+            "B": {}
+          },
+          "photo id": "photo A"
+        },
+        {
+          "type": "CONDENSED_PHASE_PHOTOLYSIS",
+          "aerosol phase": "aqueous aerosol",
+          "aerosol-phase water": "H2O_aq",
+          "units": "M",
+          "reactants": {
+            "B": {}
+          },
+          "products": {
+            "C": {}
+          },
+          "scaling factor": 12.3,
+          "photo id": "photo B"
         }
       ]
     }
