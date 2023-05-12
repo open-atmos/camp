@@ -147,6 +147,9 @@ void rxn_condensed_phase_photolysis_calc_jac_contrib(
     ModelData *model_data, Jacobian jac, int *rxn_int_data,
     double *rxn_float_data, double *rxn_env_data, realtype time_step);
 #endif
+void *rxn_condensed_phase_photolysis_create_rate_update_data();
+void rxn_condensed_phase_photolysis_set_rate_update_data(void *update_data, int photo_id,
+                                         double base_rate);
 
 // emission
 void rxn_emission_get_used_jac_elem(int *rxn_int_data, double *rxn_float_data,

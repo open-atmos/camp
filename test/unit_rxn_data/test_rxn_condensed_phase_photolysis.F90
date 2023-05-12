@@ -136,7 +136,7 @@ contains
     MW_B = 0.0219
     MW_C = 0.2049
     j1 = 0.05
-    j2 = 0.15
+    j2 = 0.15 * 12.3
 
     ! Set output time step (s)
     time_step = 1.0d0
@@ -165,7 +165,7 @@ contains
       key = "condensed phase photolysis"
       call assert(214488774, camp_core%get_mechanism(key, mechanism))
 
-      ! Find the photo A reaction
+      ! Find the reaction indices
       key = "photo id"
       i_rxn_photo_A = 0
       i_rxn_photo_B = 0

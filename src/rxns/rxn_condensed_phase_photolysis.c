@@ -487,4 +487,5 @@ void rxn_condensed_phase_photolysis_set_rate_update_data(void *update_data, int 
   double *new_base_rate = (double *)&(new_photo_id[1]);
   *new_photo_id = photo_id;
   *new_base_rate = base_rate;
+  printf("new rate: %f", *new_base_rate);
 }
