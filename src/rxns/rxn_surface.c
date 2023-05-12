@@ -20,17 +20,16 @@
 #define PRESSURE_PA_ env_data[1]
 
 #define DIFF_COEFF_ float_data[0]
-#define PRE_C_AVG_ float_data[1]
-#define GAMMA_ float_data[2]
-#define MW_ float_data[3]
+#define GAMMA_ float_data[1]
+#define MW_ float_data[2]
 #define NUM_AERO_PHASE_ int_data[0]
 #define REACT_ID_ (int_data[1] - 1)
 #define NUM_PROD_ int_data[2]
 #define MFP_M_ rxn_env_data[0]
 #define NUM_INT_PROP_ 3
-#define NUM_FLOAT_PROP_ 4
+#define NUM_FLOAT_PROP_ 3
 #define NUM_ENV_PARAM_ 1
-#define PROD_ID_(x) int_data[NUM_INT_PROP_ + x]
+#define PROD_ID_(x) (int_data[NUM_INT_PROP_ + x] - 1)
 #define DERIV_ID_(x) int_data[NUM_INT_PROP_ + NUM_PROD_ + x]
 #define JAC_ID_(x) int_data[NUM_INT_PROP_ + 1 + 2 * NUM_PROD_ + x]
 #define PHASE_INT_LOC_(x) \
@@ -41,7 +40,7 @@
 #define AERO_REP_ID_(x) (int_data[PHASE_INT_LOC_(x) + 1] - 1)
 #define NUM_AERO_PHASE_JAC_ELEM_(x) (int_data[PHASE_INT_LOC_(x) + 2])
 #define PHASE_JAC_ID_(x, s, e) \
-  int_data[PHASE_INT_LOC_(x) + 2 + s * NUM_AERO_PHASE_JAC_ELEM_(x) + e]
+  int_data[PHASE_INT_LOC_(x) + 3 + (s) * NUM_AERO_PHASE_JAC_ELEM_(x) + e]
 #define YIELD_(x) float_data[NUM_FLOAT_PROP_ + x]
 #define EFF_RAD_JAC_ELEM_(x, e) float_data[PHASE_FLOAT_LOC_(x) + e]
 #define NUM_CONC_JAC_ELEM_(x, e) \
@@ -386,7 +385,42 @@ void rxn_surface_print(int *rxn_int_data, double *rxn_float_data) {
   int *int_data = rxn_int_data;
   double *float_data = rxn_float_data;
 
-  printf("\n\nsurface reaction\n");
-
+  printf("\n\nSurface reaction\n");
+  printf("\ndiffusion coefficient: %lg gamma: %lg, MW: %lg", DIFF_COEFF_,
+         GAMMA_, MW_);
+  printf("\nnumber of aerosol phases: %d", NUM_AERO_PHASE_);
+  printf("\nreactant state id: %d", REACT_ID_);
+  printf("\nnumber of products: %d", NUM_PROD_);
+  for (int i_prod = 0; i_prod < NUM_PROD_; ++i_prod) {
+    printf("\n  product %d id: %d", i_prod, PROD_ID_(i_prod));
+  }
+  printf("\nreactant derivative id: %d", DERIV_ID_(0));
+  printf("\nd_reactant/d_reactant Jacobian id %d", JAC_ID_(0));
+  for (int i_prod = 0; i_prod < NUM_PROD_; ++i_prod) {
+    printf("\n  product %d derivative id: %d", i_prod, DERIV_ID_(i_prod+1));
+    printf("\n  d_product_%d/d_reactant Jacobian id: %d", i_prod,
+           JAC_ID_(i_prod+1));
+  }
+  for (int i_phase = 0; i_phase < NUM_AERO_PHASE_; ++i_phase) {
+    printf("\nPhase %d start indices int: %d float: %d", i_phase,
+           PHASE_INT_LOC_(i_phase), PHASE_FLOAT_LOC_(i_phase));
+    printf("\n  phase id %d; aerosol representation id %d",
+           AERO_PHASE_ID_(i_phase), AERO_REP_ID_(i_phase));
+    printf("\n  number of Jacobian elements: %d",
+           NUM_AERO_PHASE_JAC_ELEM_(i_phase));
+    for (int i_elem = 0; i_elem < NUM_AERO_PHASE_JAC_ELEM_(i_phase); ++i_elem) {
+      printf("\n  - d_reactant/d_phase_species_%d Jacobian id %d",
+             i_elem, PHASE_JAC_ID_(i_phase,0,i_elem));
+      for (int i_prod = 0; i_prod < NUM_PROD_; ++i_prod) {
+        printf("\n  - d_product_%s/d_phase_species_%d Jacobian id %d",
+               i_prod, i_elem, PHASE_JAC_ID_(i_phase,i_prod+1,i_elem));
+      }
+      printf("\n  - d_radius/d_phase_species_%d = %le", i_elem,
+             i_elem, EFF_RAD_JAC_ELEM_(i_phase,i_elem));
+      printf("\n  - d_number/d_phase_species_%d = %le", i_elem,
+             i_elem, EFF_RAD_JAC_ELEM_(i_phase,i_elem));
+    }
+  }
+  printf("\n *** end surface reaction ***\n\n");
   return;
 }

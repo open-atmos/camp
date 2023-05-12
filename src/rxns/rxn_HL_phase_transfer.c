@@ -56,7 +56,7 @@
 #define AERO_REP_ID_(x) (int_data[PHASE_INT_LOC_(x) + 3] - 1)
 #define NUM_AERO_PHASE_JAC_ELEM_(x) (int_data[PHASE_INT_LOC_(x) + 4])
 #define PHASE_JAC_ID_(x, s, e) \
-  int_data[PHASE_INT_LOC_(x) + 5 + s * NUM_AERO_PHASE_JAC_ELEM_(x) + e]
+  int_data[PHASE_INT_LOC_(x) + 5 + (s) * NUM_AERO_PHASE_JAC_ELEM_(x) + e]
 #define SMALL_WATER_CONC_(x) (float_data[PHASE_REAL_LOC_(x)])
 #define EFF_RAD_JAC_ELEM_(x, e) float_data[PHASE_REAL_LOC_(x) + 1 + e]
 #define NUM_CONC_JAC_ELEM_(x, e) \
