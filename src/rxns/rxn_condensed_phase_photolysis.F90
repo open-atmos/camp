@@ -86,7 +86,7 @@ module camp_rxn_condensed_phase_photolysis
 #define SCALING_ this%condensed_data_real(1)
 #define NUM_REAL_PROP_ 1
 #define NUM_INT_PROP_ 4
-#define NUM_ENV_PARAM_ 0
+#define NUM_ENV_PARAM_ 2
 #define REACT_(x) this%condensed_data_int(NUM_INT_PROP_+x)
 #define PROD_(x) this%condensed_data_int(NUM_INT_PROP_+NUM_REACT_*NUM_AERO_PHASE_+x)
 #define WATER_(x) this%condensed_data_int(NUM_INT_PROP_+(NUM_REACT_+NUM_PROD_)*NUM_AERO_PHASE_+x)

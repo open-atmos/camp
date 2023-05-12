@@ -29,11 +29,11 @@ RUN curl -LO https://github.com/jacobwilliams/json-fortran/archive/6.1.0.tar.gz 
     && cmake -D SKIP_DOC_GEN:BOOL=TRUE .. \
     && make install
 
-# copy CAMP source code and data
-COPY . /camp/
+# copy CVODE source
+COPY cvode-3.4-alpha.tar.gz /cvode-3.4-alpha.tar.gz
 
 # Install a modified version of CVODE
-RUN tar -zxvf /camp/cvode-3.4-alpha.tar.gz \
+RUN tar -zxvf /cvode-3.4-alpha.tar.gz \
     && cd cvode-3.4-alpha \
     && mkdir build \
     && cd build \
@@ -47,6 +47,9 @@ RUN tar -zxvf /camp/cvode-3.4-alpha.tar.gz \
              -D KLU_INCLUDE_DIR=/usr/local/include \
              .. \
     && make install
+
+# copy CAMP source code and data
+COPY . /camp
 
 # Update environment variables
 ENV LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:/usr/local/lib:/usr/local/lib64:/usr/local/jsonfortran-gnu-6.1.0/lib"

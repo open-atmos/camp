@@ -101,7 +101,7 @@ contains
             idx_aq_phase, i_time, i_spec, i_rxn
     integer(kind=i_kind) :: i_rxn_photo_A, i_rxn_photo_B
     real(kind=dp) :: time_step, time, conc_water, MW_A, MW_B, MW_C, &
-            j1, j2, temp, pressure
+            j1, j2, temp, pressure, j2_scaling
     class(rxn_data_t), pointer :: rxn
 #ifdef CAMP_USE_MPI
     character, allocatable :: buffer(:), buffer_copy(:)
@@ -136,7 +136,8 @@ contains
     MW_B = 0.0219
     MW_C = 0.2049
     j1 = 0.05
-    j2 = 0.15 * 12.3
+    j2_scaling = 12.3
+    j2 = 0.15
 
     ! Set output time step (s)
     time_step = 1.0d0
@@ -301,6 +302,8 @@ contains
       solver_stats%eval_Jac = .true.
 #endif
 
+      ! scale j2 appropriately here
+      j2 = j2 * j2_scaling
       ! Integrate the mechanism
       do i_time = 1, NUM_TIME_STEP
 
