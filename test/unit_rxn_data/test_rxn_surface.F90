@@ -94,10 +94,10 @@ contains
     class(aero_rep_data_t), pointer :: aero_rep_ptr
     real(kind=dp), allocatable, dimension(:,:) :: model_conc, true_conc
     real(kind=dp) :: time_step
-    integer :: i_time
+    integer :: i_time, idx_foo, idx_bar, idx_baz, idx_stuff, idx_more_stuff
 #ifdef CAMP_USE_MPI
     character, allocatable :: buffer(:), buffer_copy(:)
-    integer(kind=i_kind) :: pack_size, pos
+    integer(kind=i_kind) :: i_elem, results, pack_size, pos
 #endif
 
     ! Parameters for calculating true concentrations
@@ -113,6 +113,13 @@ contains
     type(aero_rep_update_data_modal_binned_mass_GMD_t) :: update_data_GMD
     type(aero_rep_update_data_modal_binned_mass_GSD_t) :: update_data_GSD
 
+    real(kind=dp), parameter :: DENSITY_stuff      = 1000.0_dp  ! [kg m-3]
+    real(kind=dp), parameter :: DENSITY_more_stuff = 1000.0_dp  ! [kg m-3]
+    real(kind=dp), parameter :: MW_stuff           = 0.5_dp     ! [kg mol-1]
+    real(kind=dp), parameter :: MW_more_stuff      = 0.2_dp     ! [kg mol-1]
+    real(kind=dp), parameter :: MW_foo             = 0.4607_dp  ! [kg mol-1]
+    real(kind=dp), parameter :: Dg_foo             = 0.95e-5_dp ! diffusion coeff [m2 s-1]
+
     type(solver_stats_t), target :: solver_stats
 
     call assert_msg(318154673, scenario.ge.1 .and. scenario.le.2, &
@@ -123,11 +130,11 @@ contains
     ! Allocate space for the results
     ! TODO fix sizes
     if (scenario.eq.1) then
-      allocate(model_conc(0:NUM_TIME_STEP, 50))
-      allocate(true_conc(0:NUM_TIME_STEP, 50))
+      allocate(model_conc(0:NUM_TIME_STEP, 12))
+      allocate(true_conc( 0:NUM_TIME_STEP, 12))
     else if (scenario.eq.2) then
-      allocate(model_conc(0:NUM_TIME_STEP, 50))
-      allocate(true_conc(0:NUM_TIME_STEP, 50))
+      allocate(model_conc(0:NUM_TIME_STEP, 7))
+      allocate(true_conc( 0:NUM_TIME_STEP, 7))
     endif
 
     ! Set the environmental conditions
@@ -190,8 +197,28 @@ contains
       call assert(978177356, camp_core%get_chem_spec_data(chem_spec_data))
 
       ! Get species indices
-      call camp_mpi_bcast_integer(i_sect_unused)
-      call camp_mpi_bcast_integer(i_sect_the_mode)
+      if (scenario.eq.1) then
+        idx_prefix = "P1."
+      else if (scenario.eq.2) then
+        idx_prefix = "the mode."
+      end if
+      key = "foo"
+      idx_foo = chem_spec_data%gas_state_id(key)
+      key = "bar"
+      idx_bar = chem_spec_data%gas_state_id(key)
+      key = "baz"
+      idx_baz = chem_spec_data%gas_state_id(key)
+      key = idx_prefix//"surface reacting phase.aerosol stuff"
+      idx_stuff = aero_rep_ptr%spec_state_id(key)
+      key = idx_prefix//"surface reacting phase.more aerosol stuff"
+      idx_more_stuff = aero_rep_ptr%spec_state_id(key)
+
+      ! Make sure the expected species are in the model
+      call assert(989817309, idx_foo.gt.0)
+      call assert(531920849, idx_bar.gt.0)
+      call assert(191607041, idx_baz.gt.0)
+      call assert(816301632, idx_stuff.gt.0)
+      call assert(193512575, idx_more_stuff.gt.0)
 
 #ifdef CAMP_USE_MPI
       ! pack the camp core
@@ -217,6 +244,13 @@ contains
     end if
 
     ! broadcast the species ids
+    call camp_mpi_bcast_integer(idx_foo)
+    call camp_mpi_bcast_integer(idx_bar)
+    call camp_mpi_bcast_integer(idx_baz)
+    call camp_mpi_bcast_integer(idx_stuff)
+    call camp_mpi_bcast_integer(idx_more_stuff)
+    call camp_mpi_bcast_integer(i_sect_unused)
+    call camp_mpi_bcast_integer(i_sect_the_mode)
 
     ! broadcast the buffer size
     call camp_mpi_bcast_integer(pack_size)
@@ -271,8 +305,12 @@ contains
 
       ! Save the initial concentrations
       true_conc(:,:) = 0.0
+      true_conc(0,idx_foo) = 1.0
+      true_conc(0,idx_stuff) = 2.0
+      true_conc(0,idx_more_stuff) = 3.0
 
       ! Calculate the radius and number concentration to use
+      ! TODO
 
       model_conc(0,:) = true_conc(0,:)
 
@@ -297,7 +335,9 @@ contains
       end if
 
       ! Set the initial state in the model
-      camp_state%state_var(:) = model_conc(0,:size(camp_state%state_var))
+      call assert(453929652, size(camp_state%state_var) &
+                             .eq. size(model_conc, dim=2))
+      camp_state%state_var(:) = model_conc(0,:)
 
 #ifdef CAMP_DEBUG
       ! Evaluate the Jacobian during solving
@@ -332,6 +372,19 @@ contains
         open(unit=7, file="out/surface_results_2.txt", &
                 status="replace", action="write")
       endif
+      do i_time = 0, NUM_TIME_STEP
+        write(7,*) i_time*time_step, &
+          ' ', true_conc(i_time, idx_foo), &
+          ' ', model_conc(i_time, idx_foo), &
+          ' ', true_conc(i_time, idx_bar), &
+          ' ', model_conc(i_time, idx_bar), &
+          ' ', true_conc(i_time, idx_baz), &
+          ' ', model_conc(i_time, idx_baz), &
+          ' ', true_conc(i_time, idx_stuff), &
+          ' ', model_conc(i_time, idx_stuff), &
+          ' ', true_conc(i_time, idx_more_stuff), &
+          ' ', model_conc(i_time, idx_more_stuff)
+      end do
       close(7)
 
       ! Analyze the results

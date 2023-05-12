@@ -23,7 +23,7 @@
       "name" : "aerosol stuff",
       "type" : "CHEM_SPEC",
       "phase" : "AEROSOL",
-      "molecular weight [kg mol-1]" : 0.05,
+      "molecular weight [kg mol-1]" : 0.5,
       "density [kg m-3]" : 1000.0,
       "absolute tolerance" : 1.0e-20
     },
@@ -31,7 +31,7 @@
       "name" : "more aerosol stuff",
       "type" : "CHEM_SPEC",
       "phase" : "AEROSOL",
-      "molecular weight [kg mol-1]" : 0.02,
+      "molecular weight [kg mol-1]" : 0.2,
       "density [kg m-3]" : 1000.0,
       "absolute tolerance" : 1.0e-20
     },
@@ -67,7 +67,7 @@
         {
   	      "type" : "SURFACE",
   	      "gas-phase reactant" : "foo",
-          "reaction probability" : 0.2,
+          "reaction probability" : 2.0e-3,
           "gas-phase products" : {
             "bar" : { },
             "baz" : { "yield" : 0.4 }
