@@ -1155,35 +1155,28 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Initialize the solver
-  subroutine solver_initialize(this, n_cells_tstep)
+  subroutine solver_initialize(this, n_cells_tstep_0)
 
     !> Chemical model
     class(camp_core_t), intent(inout) :: this
     type(string_t), allocatable :: spec_names(:)
     integer :: i_spec, n_gas_spec
 #ifdef ENABLE_NETCDF
-    integer :: n_cells_tstep ! Used to know when to exit export_netcdf
+    integer :: n_cells_tstep_0 ! Used to know when to exit export_netcdf
 #else
-    integer, optional :: n_cells_tstep
+    integer, optional :: n_cells_tstep_0
 #endif
+    integer :: n_cells_tstep
     call assert_msg(662920365, .not.this%solver_is_initialized, &
             "Attempting to initialize the solver twice.")
 
 #ifdef CAMP_SOLVER_SPEC_NAMES
     spec_names = this%unique_names()
 #endif
-
-    !Get spec names
-    !n_gas_spec = this%chem_spec_data%size(spec_phase=CHEM_SPEC_GAS_PHASE)
-    !allocate(spec_names(n_gas_spec))
-    !do i_spec = 1, n_gas_spec
-    !  spec_names(i_spec)%string = this%chem_spec_data%gas_state_name(i_spec)
-    !end do
-
-    !call assert_msg( 731700229,                                              &
-    !        this%get_chem_spec_data(chem_spec_data),                  &
-    !        "No chemical species data in camp_core." )
-    !spec_names = this%chem_spec_data%get_spec_names()
+    n_cells_tstep = 1
+    if (present(n_cells_tstep_0)) then
+      n_cells_tstep=n_cells_tstep_0
+    end if
 
     ! Set up either two solvers (gas and aerosol) or one solver (combined)
     if (this%split_gas_aero) then
@@ -1360,8 +1353,10 @@ contains
     if (present(cell_id)) then
       update_data%cell_id=cell_id;
     else
-      call assert_msg(593348365, .not. this%n_cells.eq.1,&
-              "update_data with more than 1 cell needs to specify cell_id" )
+      if(.not.this%n_cells.eq.1) then
+        print*,"update_data with more than 1 cell needs to specify cell_id this%n_cells",this%n_cells
+        stop
+      end if
       update_data%cell_id=1;
     end if
 
@@ -1394,8 +1389,10 @@ contains
     if (present(cell_id)) then
       update_data%cell_id=cell_id;
     else
-      call assert_msg(593348365, .not. this%n_cells.eq.1,&
-              "update_data with more than 1 cell needs to specify cell_id" )
+      if(.not.this%n_cells.eq.1) then
+        print*,"update_data with more than 1 cell needs to specify cell_id this%n_cells",this%n_cells
+        stop
+      end if
       update_data%cell_id=1;
     end if
 
@@ -1426,8 +1423,10 @@ contains
     if (present(cell_id)) then
       update_data%cell_id=cell_id;
     else
-      call assert_msg(593348365, .not. this%n_cells.eq.1,&
-              "update_data with more than 1 cell needs to specify cell_id" )
+      if(.not.this%n_cells.eq.1) then
+        print*,"update_data with more than 1 cell needs to specify cell_id this%n_cells",this%n_cells
+        stop
+      end if
       update_data%cell_id=1;
     end if
 

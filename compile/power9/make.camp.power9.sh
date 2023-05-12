@@ -56,14 +56,17 @@ if [ $is_sbatch == "true" ]; then
 else
 
   cd  ../../build
-  time make -j 4
+  if ! make -j ${NUMPROC}; then
+    exit
+  fi
   cd ../test/monarch
 
   #echo "make end"
 
-  FILE=TestMonarch.py
+  #FILE=TestMonarch.py
   #FILE=./test_run/chemistry/cb05cl_ae5/test_chemistry_cb05cl_ae5.sh
   #FILE=./unit_test_aero_rep_single_particle
+  FILE=./new_make.sh
   if [ "$FILE" == TestMonarch.py ]; then
     #echo "python TestMonarch.py start"
     python $FILE
@@ -73,7 +76,8 @@ else
     python  $FILE
     cd ../../camp/compile/power9
   else
-    cd ../../build
+    #cd ../../build
+    cd ../../compile/power9
     time $FILE
   fi
 
