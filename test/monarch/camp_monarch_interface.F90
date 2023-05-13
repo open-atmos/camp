@@ -779,7 +779,6 @@ contains
 
             MONARCH_conc(i,j,k,this%map_monarch_id(:)) = &
                     this%camp_state%state_var(this%map_camp_id(:)+(z*state_size_per_cell))
-            !print*, "camp_state", this%camp_state%state_var(this%map_camp_id(:)+(z*state_size_per_cell))
           end do
         end do
       end do

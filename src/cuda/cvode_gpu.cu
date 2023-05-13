@@ -233,11 +233,12 @@ void solver_new_gpu_cu_cvode(SolverData *sd) {
     printf("ERROR: MORE THAN 40 MPI PROCESSES AND NOT MULTIPLE OF 40, WHEN CTE-POWER ONLY HAS 40 CORES PER NODE\n");
     exit(0);
   }
-  //int maxnDevices = 4  # CTE-POWER specs
-  //int maxCoresPerDevice = maxCoresPerNode / maxnDevices
-  //sd->nDevices= (int((size-1)/maxCoresPerDevice)+1) % maxnDevices
+  //int maxCoresPerDevice = maxCoresPerNode / nDevicesMax
+  //sd->nDevices= (int((size-1)/maxCoresPerDevice)+1) % nDevicesMax
   if (size > sd->nDevices*(coresPerNode/nDevicesMax)){
-    printf("ERROR: MORE MPI PROCESSES THAN DEVICES (FOLLOW PROPORTION, FOR CTE-POWER IS 10 PROCESSES FOR EACH GPU, SINCE IT HAS 4 GPUS AND 40 PROCESSES PER NODE)\n");
+    printf("ERROR: size,sd->nDevices,coresPerNode,nDevicesMax %d %d %d %d "
+           "MORE MPI PROCESSES THAN DEVICES (FOLLOW PROPORTION, "
+           "FOR CTE-POWER IS 10 PROCESSES FOR EACH GPU)\n",size,sd->nDevices,coresPerNode,nDevicesMax);
     exit(0);
   }
   int rank;
@@ -254,7 +255,7 @@ void solver_new_gpu_cu_cvode(SolverData *sd) {
       mCPU->max_n_gpu_thread = prop.maxThreadsPerBlock;
       mCPU->max_n_gpu_blocks = prop.maxGridSize[1];
       if(md->n_per_cell_dep_var > prop.maxThreadsPerBlock/2){
-        printf("ERROR: More species than threads per block available\n");
+        printf("ERROR: md->n_per_cell_dep_var, prop.maxThreadsPerBlock/2, %d %d More species than threads per block available\n",md->n_per_cell_dep_var, prop.maxThreadsPerBlock/2);
         exit(0);
       }
     }
