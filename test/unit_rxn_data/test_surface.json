@@ -67,7 +67,7 @@
         {
   	      "type" : "SURFACE",
   	      "gas-phase reactant" : "foo",
-          "reaction probability" : 2.0e-6,
+          "reaction probability" : 2.0e-2,
           "gas-phase products" : {
             "bar" : { },
             "baz" : { "yield" : 0.4 }

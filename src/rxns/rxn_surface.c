@@ -219,25 +219,15 @@ void rxn_surface_calc_deriv_contrib(
         &radius,                  // particle effective radius (m)
         NULL);                    // partial derivative
 
-    // Check the aerosol concentration type (per-particle or total per-phase
-    // mass)
-    int aero_conc_type = aero_rep_get_aero_conc_type(
-        model_data,                // model data
-        AERO_REP_ID_(i_phase),     // aerosol representation index
-        AERO_PHASE_ID_(i_phase));  // aerosol phase index
-
-    // Get the particle number concentration (#/m3) for per-particle mass
-    // concentrations; otherwise set to 1
-    realtype number_conc = ONE;
-    if (aero_conc_type == 0) {
-      aero_rep_get_number_conc__n_m3(
-          model_data,               // model data
-          AERO_REP_ID_(i_phase),    // aerosol representation index
-          AERO_PHASE_ID_(i_phase),  // aerosol phase index
-          &number_conc,             // particle number concentration
-                                    // (#/m3)
-          NULL);                    // partial derivative
-    }
+    // Get the particle number concentration (#/m3)
+    realtype number_conc;
+    aero_rep_get_number_conc__n_m3(
+        model_data,               // model data
+        AERO_REP_ID_(i_phase),    // aerosol representation index
+        AERO_PHASE_ID_(i_phase),  // aerosol phase index
+        &number_conc,             // particle number concentration
+                                  // (#/m3)
+        NULL);                    // partial derivative
 
     // Calculate the rate constant for diffusion limited mass transfer to the
     // aerosol phase (1/s)
@@ -292,28 +282,15 @@ void rxn_surface_calc_jac_contrib(ModelData *model_data, Jacobian jac,
         &radius,                            // particle effective radius (m)
         &(EFF_RAD_JAC_ELEM_(i_phase, 0)));  // partial derivative
 
-    // Check the aerosol concentration type (per-particle or total per-phase
-    // mass)
-    int aero_conc_type = aero_rep_get_aero_conc_type(
-        model_data,                // model data
-        AERO_REP_ID_(i_phase),     // aerosol representation index
-        AERO_PHASE_ID_(i_phase));  // aerosol phase index
-
-    // Get the particle number concentration (#/m3) for per-particle
-    // concentrations
-    realtype number_conc = ONE;
-    if (aero_conc_type == 0) {
-      aero_rep_get_number_conc__n_m3(
-          model_data,                          // model data
-          AERO_REP_ID_(i_phase),               // aerosol representation index
-          AERO_PHASE_ID_(i_phase),             // aerosol phase index
-          &number_conc,                        // particle number concentration
-                                               // (#/m3)
-          &(NUM_CONC_JAC_ELEM_(i_phase, 0)));  // partial derivative
-    } else {
-      for (int i_elem = 0; i_elem < NUM_AERO_PHASE_JAC_ELEM_(i_phase); ++i_elem)
-        NUM_CONC_JAC_ELEM_(i_phase, i_elem) = ZERO;
-    }
+    // Get the particle number concentration (#/m3)
+    realtype number_conc;
+    aero_rep_get_number_conc__n_m3(
+        model_data,                          // model data
+        AERO_REP_ID_(i_phase),               // aerosol representation index
+        AERO_PHASE_ID_(i_phase),             // aerosol phase index
+        &number_conc,                        // particle number concentration
+                                             // (#/m3)
+        &(NUM_CONC_JAC_ELEM_(i_phase, 0)));  // partial derivative
 
     // Calculate the rate constant for diffusion limited mass transfer to the
     // aerosol phase (1/s)
