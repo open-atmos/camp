@@ -14,13 +14,7 @@
 // Universal gas constant (J mol-1 K-1)
 #define UNIV_GAS_CONST_ 8.314472
 
-/** Calculate the mean free path of a gas-phase species [m]
- * \f[
- *   \lambda = 3.0 D_g / v
- * \f]
- * where \f$D_g\f$ is the gas-phase diffusion coefficient
- * [\f$\mbox{m}^2\,\mbox{s}^{-1}\f$] and
- * \f$v\f$ is the mean speed of the gas-phase molecules
+/** Calculate the mean speed of a gas-phase species
  * [ \f$\mbox{m}\,\mbox{s}^{-1}\f$ ] :
  * \f[
  *   v = \sqrt{\frac{8RT}{\pi MW}}
@@ -29,6 +23,23 @@
  * \mbox{mol}^{-1}\f$], T is temperature [K], and MW is the molecular weight of
  * the gas-phase species
  * [\f$\mbox{kg}\, \mbox{mol}^{-1}\f$]
+ * @param temperature__K Temperature [K]
+ * @param mw__kg_mol Molecular weight of the gas-phase species [\f$\mbox{kg}\,
+ * \mbox{mol}^{-1}\f$]
+ */
+static inline double mean_speed__m_s(double temperature__K,
+                                     double mw__kg_mol) {
+  return sqrt(8.0 * UNIV_GAS_CONST_ * temperature__K / (M_PI * mw__kg_mol));
+}
+
+/** Calculate the mean free path of a gas-phase species [m]
+ * \f[
+ *   \lambda = 3.0 D_g / v
+ * \f]
+ * where \f$D_g\f$ is the gas-phase diffusion coefficient
+ * [\f$\mbox{m}^2\,\mbox{s}^{-1}\f$] and
+ * \f$v\f$ is the mean speed of the gas-phase molecules
+ * [ \f$\mbox{m}\,\mbox{s}^{-1}\f$ ].
  *
  * @param diffusion_coeff__m2_s Diffusion coefficient of the gas species
  * [\f$\mbox{m}^2\, \mbox{s}^{-1}\f$]
@@ -40,7 +51,7 @@ static inline double mean_free_path__m(double diffusion_coeff__m2_s,
                                        double temperature__K,
                                        double mw__kg_mol) {
   return 3.0 * diffusion_coeff__m2_s /
-         (sqrt(8.0 * UNIV_GAS_CONST_ * temperature__K / (M_PI * mw__kg_mol)));
+         mean_speed__m_s(temperature__K, mw__kg_mol);
 }
 
 /** Calculate the transition regime correction factor [unitless] \cite Fuchs1971
@@ -165,16 +176,16 @@ static inline double d_gas_aerosol_transition_rxn_rate_constant_d_radius(
  *
  * @param diffusion_coeff__m2_s Diffusion coefficient of the gas species
  *  [\f$\mbox{m}^2\, \mbox{s}^{-1}\f$]
- *  @param mean_free_path__m Mean free path of gas molecules [m]
+ *  @param mean_speed__m_s Mean speed of the gas molecule [m s-1]
  *  @param radius__m Particle radius [m]
  *  @param alpha Mass accomodation coefficient [unitless]
  */
 static inline double gas_aerosol_continuum_rxn_rate_constant(
-    double diffusion_coeff__m2_s, double mean_free_path__m,
+    double diffusion_coeff__m2_s, double mean_speed__m_s,
     double radius__m, double alpha) {
   return 4.0 * M_PI * radius__m * radius__m /
          ( radius__m / diffusion_coeff__m2_s +
-           4.0 / ( mean_free_path__m * alpha ) );
+           4.0 / ( mean_speed__m_s * alpha ) );
 }
 
 /** Calculate the derivative of the continuum-regime gas-aerosol reaction rate
@@ -191,17 +202,17 @@ static inline double gas_aerosol_continuum_rxn_rate_constant(
  *
  * @param diffusion_coeff__m2_s Diffusion coefficient of the gas species
  *  [\f$\mbox{m}^2\, \mbox{s}^{-1}\f$]
- *  @param mean_free_path__m Mean free path of gas molecules [m]
+ *  @param mean_speed__m_s Mean speed of the gas molecule [m s-1]
  *  @param radius__m Particle radius [m]
  *  @param alpha Mass accomodation coefficient [unitless]
  */
 static inline double d_gas_aerosol_continuum_rxn_rate_constant_d_radius(
-    double diffusion_coeff__m2_s, double mean_free_path__m,
+    double diffusion_coeff__m2_s, double mean_speed__m_s,
     double radius__m, double alpha) {
   double nom = radius__m * radius__m / diffusion_coeff__m2_s +
-               8.0 * radius__m / ( mean_free_path__m * alpha );
+               8.0 * radius__m / ( mean_speed__m_s * alpha );
   double denom = radius__m / diffusion_coeff__m2_s +
-                 4.0 / ( mean_free_path__m * alpha );
+                 4.0 / ( mean_speed__m_s * alpha );
   return 4.0 * M_PI * nom / ( denom * denom );
 }
 #endif  // UTIL_H

@@ -25,7 +25,7 @@
 #define NUM_AERO_PHASE_ int_data[0]
 #define REACT_ID_ (int_data[1] - 1)
 #define NUM_PROD_ int_data[2]
-#define MFP_M_ rxn_env_data[0]
+#define MEAN_SPEED_MS_ rxn_env_data[0]
 #define NUM_INT_PROP_ 3
 #define NUM_FLOAT_PROP_ 3
 #define NUM_ENV_PARAM_ 1
@@ -184,7 +184,7 @@ void rxn_surface_update_env_state(ModelData *model_data,
   double *env_data = model_data->grid_cell_env;
 
   // save the mean free path [m] for calculating condensation rates
-  MFP_M_ = mean_free_path__m(DIFF_COEFF_, TEMPERATURE_K_, MW_);
+  MEAN_SPEED_MS_ = mean_speed__m_s(TEMPERATURE_K_, MW_);
 
   return;
 }
@@ -242,7 +242,7 @@ void rxn_surface_calc_deriv_contrib(
     // Calculate the rate constant for diffusion limited mass transfer to the
     // aerosol phase (1/s)
     double cond_rate = state[REACT_ID_] * number_conc *
-        gas_aerosol_continuum_rxn_rate_constant(DIFF_COEFF_, MFP_M_,
+        gas_aerosol_continuum_rxn_rate_constant(DIFF_COEFF_, MEAN_SPEED_MS_,
                                                 radius, GAMMA_);
 
     // Loss of the reactant
@@ -318,7 +318,7 @@ void rxn_surface_calc_jac_contrib(ModelData *model_data, Jacobian jac,
     // Calculate the rate constant for diffusion limited mass transfer to the
     // aerosol phase (1/s)
     double rate_const =
-        gas_aerosol_continuum_rxn_rate_constant(DIFF_COEFF_, MFP_M_,
+        gas_aerosol_continuum_rxn_rate_constant(DIFF_COEFF_, MEAN_SPEED_MS_,
                                                 radius, GAMMA_);
     double cond_rate = state[REACT_ID_] * number_conc * rate_const;
 
@@ -330,13 +330,13 @@ void rxn_surface_calc_jac_contrib(ModelData *model_data, Jacobian jac,
     for (int i_prod = 0; i_prod < NUM_PROD_; ++i_prod) {
       if (JAC_ID_(i_prod + 1) >= 0) {
         jacobian_add_value(jac, (unsigned int)JAC_ID_(i_prod + 1), JACOBIAN_PRODUCTION,
-                           number_conc * rate_const);
+                           YIELD_(i_prod) * number_conc * rate_const);
       }
     }
 
     // Calculate d_rate/d_effective_radius and d_rate/d_number_concentration
     double d_rate_d_radius = state[REACT_ID_] * number_conc *
-        d_gas_aerosol_continuum_rxn_rate_constant_d_radius(DIFF_COEFF_, MFP_M_,
+        d_gas_aerosol_continuum_rxn_rate_constant_d_radius(DIFF_COEFF_, MEAN_SPEED_MS_,
                                                            radius, GAMMA_);
     double d_rate_d_number = state[REACT_ID_] * rate_const;
 
