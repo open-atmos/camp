@@ -93,8 +93,9 @@ contains
     type(chem_spec_data_t), pointer :: chem_spec_data
     class(aero_rep_data_t), pointer :: aero_rep_ptr
     real(kind=dp), allocatable, dimension(:,:) :: model_conc, true_conc
-    real(kind=dp) :: time_step
-    integer :: i_time, idx_foo, idx_bar, idx_baz, idx_stuff, idx_more_stuff
+    real(kind=dp) :: time, time_step, mean_speed, k_surf
+    integer :: i_time, idx_foo, idx_bar, idx_baz, idx_stuff, idx_more_stuff, &
+               i_spec
 #ifdef CAMP_USE_MPI
     character, allocatable :: buffer(:), buffer_copy(:)
     integer(kind=i_kind) :: i_elem, results, pack_size, pos
@@ -113,11 +114,14 @@ contains
     type(aero_rep_update_data_modal_binned_mass_GMD_t) :: update_data_GMD
     type(aero_rep_update_data_modal_binned_mass_GSD_t) :: update_data_GSD
 
+    real(kind=dp), parameter :: rxn_gamma          = 2.0e-6_dp  ! [unitless]
+    real(kind=dp), parameter :: bar_yield          = 1.0_dp     ! [unitless]
+    real(kind=dp), parameter :: baz_yield          = 0.4_dp     ! [unitless]
     real(kind=dp), parameter :: DENSITY_stuff      = 1000.0_dp  ! [kg m-3]
     real(kind=dp), parameter :: DENSITY_more_stuff = 1000.0_dp  ! [kg m-3]
     real(kind=dp), parameter :: MW_stuff           = 0.5_dp     ! [kg mol-1]
     real(kind=dp), parameter :: MW_more_stuff      = 0.2_dp     ! [kg mol-1]
-    real(kind=dp), parameter :: MW_foo             = 0.4607_dp  ! [kg mol-1]
+    real(kind=dp), parameter :: MW_foo             = 0. 4607_dp ! [kg mol-1]
     real(kind=dp), parameter :: Dg_foo             = 0.95e-5_dp ! diffusion coeff [m2 s-1]
 
     type(solver_stats_t), target :: solver_stats
@@ -128,7 +132,6 @@ contains
     run_surface_test = .true.
 
     ! Allocate space for the results
-    ! TODO fix sizes
     if (scenario.eq.1) then
       allocate(model_conc(0:NUM_TIME_STEP, 12))
       allocate(true_conc( 0:NUM_TIME_STEP, 12))
@@ -310,13 +313,33 @@ contains
       true_conc(0,idx_more_stuff) = 3.0
 
       ! Calculate the radius and number concentration to use
-      ! TODO
+      !
+      ! The modal scenario is only used for Jacobian checking
+      if (scenario.eq.1) then
+        number_conc = 1.3e6 ! particle number concetration (#/m3)
+        ! single particle aerosol mass concentrations are per particle
+        true_conc(0,idx_stuff)      = true_conc(0,idx_stuff)      / number_conc
+        true_conc(0,idx_more_stuff) = true_conc(0,idx_more_stuff) / number_conc
+        ! radius (m) calculated based on particle mass
+        radius = ( ( true_conc(0,idx_stuff)      / DENSITY_stuff      + &
+                     true_conc(0,idx_more_stuff) / DENSITY_more_stuff ) &
+                   * 3.0 / 4.0 / const%pi )**(1.0/3.0)
+      else if (scenario.eq.2) then
+        ! radius (m)
+        radius = 9.37e-7 / 2.0 * exp(5.0 * log(2.1d0) * log(2.1d0) / 2.0)
+        ! number conc
+        number_conc = 6.0 / (const%pi * (9.37e-7)**3.0 * &
+                             exp(9.0/2.0 * log(2.1d0) * log(2.1d0) ))
+        number_conc = number_conc * &
+                        ( true_conc(0,idx_stuff)      / DENSITY_stuff      + &
+                          true_conc(0,idx_more_stuff) / DENSITY_more_stuff )
+      end if
 
       model_conc(0,:) = true_conc(0,:)
 
       ! Update the aerosol representation (single partile only)
       if (scenario.eq.1) then
-        call number_update%set_number__n_m3(1, 0.0d0)
+        call number_update%set_number__n_m3(1, number_conc)
         call camp_core%update_data(number_update)
       end if
 
@@ -333,6 +356,12 @@ contains
         call camp_core%update_data(update_data_GMD)
         call camp_core%update_data(update_data_GSD)
       end if
+
+      ! Calculate the surface reaction rate
+      mean_speed = sqrt( 8.0_dp * const%univ_gas_const * temperature / &
+                         ( const%pi * MW_foo ) )
+      k_surf = number_conc * 4.0_dp * const%pi * radius * radius / &
+               ( radius / Dg_foo + 4.0_dp / ( mean_speed * rxn_gamma ) )
 
       ! Set the initial state in the model
       call assert(453929652, size(camp_state%state_var) &
@@ -361,7 +390,14 @@ contains
 #endif
 
         ! Get the analytic conc
-        !
+        time = i_time * time_step
+        true_conc(i_time,idx_foo) = true_conc(0,idx_foo) * exp(-k_surf*time)
+        true_conc(i_time,idx_bar) = (true_conc(0,idx_foo) &
+                                    - true_conc(i_time,idx_foo)) * bar_yield
+        true_conc(i_time,idx_baz) = (true_conc(0,idx_foo) &
+                                    - true_conc(i_time,idx_foo)) * baz_yield
+        true_conc(i_time,idx_stuff)      = true_conc(0,idx_stuff)
+        true_conc(i_time,idx_more_stuff) = true_conc(0,idx_more_stuff)
       end do
 
       ! Save the results
@@ -392,6 +428,20 @@ contains
       ! The particle radius changes as ethanol condenses/evaporates, so an
       ! an exact solution is not calculated. The tolerances on the comparison
       ! with "true" values are higher to account for this.
+      do i_time = 1, NUM_TIME_STEP
+        do i_spec = 1, size(model_conc, 2)
+          call assert_msg(311433544, &
+            almost_equal(model_conc(i_time, i_spec), &
+            true_conc(i_time, i_spec), real(1.0e-6, kind=dp)).or. &
+            (model_conc(i_time, i_spec).lt.1e-5*model_conc(1, i_spec).and. &
+            true_conc(i_time, i_spec).lt.1e-5*true_conc(1, i_spec)), &
+            "time: "//trim(to_string(i_time))//"; species: "// &
+            trim(to_string(i_spec))//"; mod: "// &
+            trim(to_string(model_conc(i_time, i_spec)))//"; true: "// &
+            trim(to_string(true_conc(i_time, i_spec))))
+        end do
+      end do
+
       deallocate(camp_state)
 
 #ifdef CAMP_USE_MPI
