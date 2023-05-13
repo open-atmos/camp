@@ -361,13 +361,15 @@ void rxn_surface_calc_jac_contrib(ModelData *model_data, Jacobian jac,
           // Dependence on effective radius
           jacobian_add_value(
               jac, (unsigned int)PHASE_JAC_ID_(i_phase, i_prod + 1, i_elem),
-              JACOBIAN_LOSS,
-              d_rate_d_radius * EFF_RAD_JAC_ELEM_(i_phase, i_elem));
+              JACOBIAN_PRODUCTION,
+              YIELD_(i_prod) * d_rate_d_radius *
+                  EFF_RAD_JAC_ELEM_(i_phase, i_elem));
           // Dependence on number concentration
           jacobian_add_value(
               jac, (unsigned int)PHASE_JAC_ID_(i_phase, i_prod + 1, i_elem),
-              JACOBIAN_LOSS,
-              d_rate_d_number * NUM_CONC_JAC_ELEM_(i_phase, i_elem));
+              JACOBIAN_PRODUCTION,
+              YIELD_(i_prod) * d_rate_d_number *
+                  NUM_CONC_JAC_ELEM_(i_phase, i_elem));
         }
       }
     }
