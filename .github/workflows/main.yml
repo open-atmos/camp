@@ -16,4 +16,4 @@ jobs:
     - name: Build the MPI testing docker image
       run: docker build -t camp-test-mpi . -f Dockerfile.mpi
     - name: Run the MPI tests in the docker container
-      run: docker run -t camp-test-mpi bash -c 'cd /home/test_user/build; make test'
+      run: docker run -t camp-test-mpi bash -c 'make test'
