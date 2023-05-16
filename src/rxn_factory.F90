@@ -223,7 +223,7 @@ module camp_rxn_factory
   integer(kind=i_kind), parameter, public :: RXN_TERNARY_CHEMICAL_ACTIVATION = 15
   integer(kind=i_kind), parameter, public :: RXN_WENNBERG_TUNNELING = 16
   integer(kind=i_kind), parameter, public :: RXN_WENNBERG_NO_RO2 = 17
-  integer(kind=i_kind), parameter, public :: RXN_SURFACE = 18
+  integer(kind=i_kind), parameter, public :: RXN_SURFACE = 19
 
   !> Factory type for chemical reactions
   !!

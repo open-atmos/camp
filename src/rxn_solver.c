@@ -31,7 +31,7 @@
 #define RXN_TERNARY_CHEMICAL_ACTIVATION 15
 #define RXN_WENNBERG_TUNNELING 16
 #define RXN_WENNBERG_NO_RO2 17
-#define RXN_SURFACE 18
+#define RXN_SURFACE 19
 
 /** \brief Get the Jacobian elements used by a particular reaction
  *
