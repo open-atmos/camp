@@ -429,10 +429,6 @@ contains
       close(7)
 
       ! Analyze the results
-      !
-      ! The particle radius changes as ethanol condenses/evaporates, so an
-      ! an exact solution is not calculated. The tolerances on the comparison
-      ! with "true" values are higher to account for this.
       do i_time = 1, NUM_TIME_STEP
         do i_spec = 1, size(model_conc, 2)
           call assert_msg(311433544, &
