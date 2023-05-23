@@ -186,7 +186,6 @@ void rxn_condensed_phase_photolysis_update_env_state(ModelData *model_data,
                                                     int *rxn_int_data,
                                                     double *rxn_float_data,
                                                     double *rxn_env_data) {
-  // TODO: set the rate from a host model
   return;
 }
 
