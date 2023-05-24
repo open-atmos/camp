@@ -930,16 +930,14 @@ double t_rt = t_initial;*/
 #endif
   istate = CV_SUCCESS;
   for (int i = 0; i < mGPU->n_cells; i++) {
-    if (sd->flagCells[i] != istate) {
+    if (sd->flagCells[i] != CV_SUCCESS) {
       istate = sd->flagCells[i];
-      break;
+      int rank;
+      MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+      printf("cudaCVode2 kflag %d cell %d rank %d\n",istate,i,rank);
+      istate = cvHandleFailure_gpu(cv_mem, istate);
+      //TODO CALL EXPORT_NETCDF
     }
-  }
-  if(istate!=CV_SUCCESS ) {
-    int rank;
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    printf("cudaCVode2 kflag %d rank %d\n",istate,rank);
-    istate = cvHandleFailure_gpu(cv_mem, istate);
   }
   return(istate);
 }

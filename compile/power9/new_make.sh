@@ -27,7 +27,7 @@ if make -j 4; then
   if pidof -x $(ps cax | grep ddt) >/dev/null; then
       ddt --connect mpirun -v -np 1 mock_monarch
   else
-    ./mock_monarch
+    mpirun -v -np 1 mock_monarch
   fi
 
 fi

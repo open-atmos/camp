@@ -1156,20 +1156,13 @@ contains
 
   !> Initialize the solver
   subroutine solver_initialize(this, n_cells_tstep_0)
-
-    !> Chemical model
     class(camp_core_t), intent(inout) :: this
     type(string_t), allocatable :: spec_names(:)
     integer :: i_spec, n_gas_spec
-#ifdef ENABLE_NETCDF
-    integer :: n_cells_tstep_0 ! Used to know when to exit export_netcdf
-#else
     integer, optional :: n_cells_tstep_0
-#endif
     integer :: n_cells_tstep
     call assert_msg(662920365, .not.this%solver_is_initialized, &
             "Attempting to initialize the solver twice.")
-
 #ifdef CAMP_SOLVER_SPEC_NAMES
     spec_names = this%unique_names()
 #endif

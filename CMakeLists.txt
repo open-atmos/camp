@@ -47,7 +47,7 @@ option(ENABLE_IMPORT_NETCDF "" OFF)
 option(ENABLE_BOOTCAMP "" OFF)
 option(ENABLE_DATA "" OFF)
 option(ENABLE_INSTALL_OPTIONS "" OFF)
-option(ENABLE_SHARED_LIB "" OFF) #todo learn how to link this shared lib in Monarch
+option(ENABLE_SHARED_LIB "" OFF) #todo fix and shared lib in Monarch
 option(use_maxrregcount127 "Compiling with maxxregcount127" OFF)
 option(use_maxrregcount64 "Compiling with maxxregcount64" OFF)
 option(use_maxrregcount24 "Compiling with maxxregcount24" OFF)
@@ -496,7 +496,7 @@ set(CAMP_LIB_SRC
         ${REACTIONS_SRC} ${GSL_SRC} ${CAMP_CUDA_SRC} ${CAMP_CXX_SRC} )
 
 if(ENABLE_SHARED_LIB)
-  add_library(camplib SHARED ${CAMP_LIB_SRC}) #todo Shared library are better than static (faster in execution, no recompilation, smaller)
+  add_library(camplib SHARED ${CAMP_LIB_SRC}) #todo fix, Shared library are better than static (faster in execution, no recompilation, smaller)
 else()
   add_library(camplib ${CAMP_LIB_SRC})
   #add_library(camplib SHARED ${CAMP_LIB_SRC})
