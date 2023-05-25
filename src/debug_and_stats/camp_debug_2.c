@@ -491,7 +491,7 @@ void check_iszerod(long double *x, int len, const char *s){
   int n_zeros=0;
   for (int i=0; i<len; i++){
     if(x[i]==0.0){
-      printf("ZERO %s %d[%d]",s,i);
+      printf("ZERO %s x[%d]",s,i);
       exit(0);
     }
   }
@@ -502,7 +502,7 @@ void check_isnanld(long double *x, int len, const char *s){
   int n_zeros=0;
   for (int i=0; i<len; i++){
     if(isnan(x[i])){
-      printf("NAN %s %d[%d]",s,i);
+      printf("NAN %s x[%d]",s,i);
       exit(0);
     }
   }
@@ -512,7 +512,7 @@ void check_isnand(double *x, int len, const char *s){
   int n_zeros=0;
   for (int i=0; i<len; i++){
     if(isnan(x[i])){
-      printf("NAN %s %d[%d]",s,i);
+      printf("NAN %s x[%d]",s,i);
       exit(0);
     }
   }

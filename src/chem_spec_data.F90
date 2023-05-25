@@ -310,7 +310,7 @@ contains
     !> Species dataset
     class(chem_spec_data_t), intent(inout) :: this
 
-    call warn_msg(627397948, "No support for input files")
+    print*,"627397948, No support for input files")
 #endif
   end subroutine load
 

@@ -228,15 +228,15 @@ void camp_debug_print_jac_rel(void *solver_data, SUNMatrix J,
  * \param M Jacobian matrix
  */
 static void print_jacobian(SUNMatrix M) {
-  printf("\n NNZ JAC: %lld \n", SM_NNZ_S(M));
+  printf("\n NNZ JAC: %ld \n", SM_NNZ_S(M));
   printf("DATA | INDEXVALS:\n");
   for (int i = 0; i < SM_NNZ_S(M); i++) {
     printf("% -le \n", (SM_DATA_S(M))[i]);
-    printf("%lld \n", (SM_INDEXVALS_S(M))[i]);
+    printf("%ld \n", (SM_INDEXVALS_S(M))[i]);
   }
   printf("PTRS:\n");
   for (int i = 0; i <= SM_NP_S(M); i++) {
-    printf("%lld \n", (SM_INDEXPTRS_S(M))[i]);
+    printf("%ld \n", (SM_INDEXPTRS_S(M))[i]);
   }
 }
 
@@ -251,17 +251,17 @@ static void print_jacobian_file(SUNMatrix J, char *filepath) {
   FILE *fp;
   fp = fopen("/gpfs/scratch/bsc32/bsc32815/gpucamp/matrix_basic_1.csr", "w");
 
-  fprintf(fp, " %d", SM_NNZ_S(J));
-  fprintf(fp, " %d", SM_NP_S(J));
+  fprintf(fp, " %ld", SM_NNZ_S(J));
+  fprintf(fp, " %ld", SM_NP_S(J));
   fprintf(fp, " \n");
 
   for (int i = 0; i < SM_NNZ_S(J); i++) fprintf(fp, " %lf", SM_DATA_S(J)[i]);
   fprintf(fp, " \n");
   for (int i = 0; i < SM_NNZ_S(J); i++)
-    fprintf(fp, " %d", SM_INDEXVALS_S(J)[i]);
+    fprintf(fp, " %ld", SM_INDEXVALS_S(J)[i]);
   fprintf(fp, " \n");
   for (int i = 0; i <= SM_NP_S(J); i++)
-    fprintf(fp, " %d", SM_INDEXPTRS_S(J)[i]);
+    fprintf(fp, " %ld", SM_INDEXPTRS_S(J)[i]);
   fprintf(fp, " \n");
 
   fclose(fp);
@@ -273,8 +273,7 @@ static void print_jacobian_file(SUNMatrix J, char *filepath) {
  */
 static void print_derivative(SolverData *sd, N_Vector deriv) {
   ModelData *md = &(sd->model_data);
-
-  printf("[(id) deriv], deriv length: %d\n", NV_LENGTH_S(deriv));
+  printf("[(id) deriv], deriv length: %ld\n", NV_LENGTH_S(deriv));
   int n_cells = 2;
   int print_all_cells = 0;
   //if (NV_LENGTH_S(deriv) < 72 * n_cells) {

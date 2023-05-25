@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.6.4)
+cmake_minimum_required(VERSION 3.0)
 # Require 2.6.4 due to -I/usr/include behavior:
 # http://www.cmake.org/Bug/view.php?id=8598
 # http://gcc.gnu.org/bugzilla/show_bug.cgi?id=35707
@@ -31,9 +31,7 @@ endif ()
 option(ENABLE_GSL "Enable GSL library for Jacobian evaluation" OFF)
 option(ENABLE_MPI "Enable MPI parallel support" OFF)
 option(ENABLE_MPI_TEST "Enable MPI parallel support" OFF)
-option(ENABLE_SUNDIALS "Enable SUNDIALS solver for condensation support" OFF)
 option(ENABLE_C_SORT "Enable C sorting routines" OFF)
-option(ENABLE_JSON "Enable json-fortran support" OFF)
 option(ENABLE_TESTS "Enable tests" OFF)
 option(ENABLE_DEBUG "Compile debugging functions" OFF)
 option(FAILURE_DETAIL "Output conditions before and after solver failures" OFF)
@@ -56,7 +54,6 @@ option(use_maxrregcount68 "Compiling with maxxregcount68" OFF)
 option(use_maxrregcount48 "Compiling with maxxregcount48" OFF)
 
 mark_as_advanced(FORCE ENABLE_DEBUG FAILURE_DETAIL)
-
 ######################################################################
 # CPack
 
@@ -127,73 +124,101 @@ endif()
 ######################################################################
 # MPI
 
+if(NOT ENABLE_MPI)
+  find_package(MPI)
+  if(MPI_FOUND)
+    set(ENABLE_MPI ON)
+    set(CMAKE_Fortran_COMPILER mpifort)
+  endif()
+endif()
+
 if(ENABLE_MPI)
-    if(NOT MPI_FOUND)
-        message( WARNING "Not MPI found")
-    endif()
+  include_directories(${MPI_INCLUDE_PATH})
+  include_directories(${MPI_Fortran_INCLUDE_DIRS})
+  if(NOT MPI_FOUND)
+      message( WARNING "Not MPI found")
+  endif()
   add_definitions(-DCAMP_USE_MPI)
 endif()
 
 ######################################################################
-# SUNDIALS
+
+set(SUITE_SPARSE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../SuiteSparse)
+set(SUITE_SPARSE_INCLUDE ${SUITE_SPARSE_PATH}/include)
+set(SUITE_SPARSE_LIB ${SUITE_SPARSE_PATH}/lib)
+set(SUNDIALS_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../cvode-3.4-alpha/install)
+set(SUNDIALS_PATH_INCLUDE ${SUNDIALS_PATH}/include)
+set(SUNDIALS_PATH_LIB ${SUNDIALS_PATH}/lib)
 
 find_path(SUITE_SPARSE_INCLUDE_DIR klu.h
   DOC "SuiteSparse include directory (must have klu.h)"
-  PATHS $ENV{SUITE_SPARSE_HOME}/include $ENV{SUNDIALS_HOME}/include
+  PATHS ${SUITE_SPARSE_INCLUDE} $ENV{SUITE_SPARSE_HOME}/include ${SUNDIALS_PATH_INCLUDE} $ENV{SUNDIALS_HOME}/include
         /opt/local/include /usr/local/include)
 find_library(SUITE_SPARSE_KLU_LIB klu
   DOC "SuiteSparse klu library"
-  PATHS $ENV{SUITE_SPARSE_HOME}/lib $ENV{SUNDIALS_HOME}/lib
+  PATHS ${SUITE_SPARSE_LIB} $ENV{SUITE_SPARSE_HOME}/lib ${SUNDIALS_PATH_LIB} $ENV{SUNDIALS_HOME}/lib
         /opt/local/lib /usr/local/lib)
 find_library(SUITE_SPARSE_AMD_LIB amd
   DOC "SuiteSparse amd library"
-  PATHS $ENV{SUITE_SPARSE_HOME}/lib $ENV{SUNDIALS_HOME}/lib
+  PATHS ${SUITE_SPARSE_LIB} $ENV{SUITE_SPARSE_HOME}/lib ${SUNDIALS_PATH_LIB} $ENV{SUNDIALS_HOME}/lib
         /opt/local/lib /usr/local/lib)
 find_library(SUITE_SPARSE_BTF_LIB btf
   DOC "SuiteSparse btf library"
-  PATHS $ENV{SUITE_SPARSE_HOME}/lib $ENV{SUNDIALS_HOME}/lib
+  PATHS ${SUITE_SPARSE_LIB} $ENV{SUITE_SPARSE_HOME}/lib ${SUNDIALS_PATH_LIB} $ENV{SUNDIALS_HOME}/lib
         /opt/local/lib /usr/local/lib)
 find_library(SUITE_SPARSE_COLAMD_LIB colamd
   DOC "SuiteSparse colamd library"
-  PATHS $ENV{SUITE_SPARSE_HOME}/lib $ENV{SUNDIALS_HOME}/lib
+  PATHS ${SUITE_SPARSE_LIB} $ENV{SUITE_SPARSE_HOME}/lib ${SUNDIALS_PATH_LIB} $ENV{SUNDIALS_HOME}/lib
         /opt/local/lib /usr/local/lib)
 find_library(SUITE_SPARSE_CONFIG_LIB suitesparseconfig
   DOC "SuiteSparse config library"
-  PATHS $ENV{SUITE_SPARSE_HOME}/lib $ENV{SUNDIALS_HOME}/lib
+  PATHS ${SUITE_SPARSE_LIB} $ENV{SUITE_SPARSE_HOME}/lib ${SUNDIALS_PATH_LIB} $ENV{SUNDIALS_HOME}/lib
         /opt/local/lib /usr/local/lib)
 find_path(SUNDIALS_INCLUDE_DIR cvode/cvode.h
   DOC "SUNDIALS include directory (must have cvode/, sundials/, nvector/ subdirs)"
-  PATHS $ENV{SUNDIALS_HOME}/include /opt/local/include /usr/local/include)
+  PATHS ${SUNDIALS_PATH_INCLUDE} $ENV{SUNDIALS_HOME}/include /opt/local/include /usr/local/include)
 find_library(SUNDIALS_NVECSERIAL_LIB sundials_nvecserial
   DOC "SUNDIALS serial vector library"
-  PATHS $ENV{SUNDIALS_HOME}/lib /opt/local/lib /usr/local/lib)
+  PATHS ${SUNDIALS_PATH_LIB} $ENV{SUNDIALS_HOME}/lib /opt/local/lib /usr/local/lib)
 find_library(SUNDIALS_CVODE_LIB sundials_cvode
   DOC "SUNDIALS CVODE library"
-  PATHS $ENV{SUNDIALS_HOME}/lib /opt/local/lib /usr/local/lib)
+  PATHS ${SUNDIALS_PATH_LIB} $ENV{SUNDIALS_HOME}/lib /opt/local/lib /usr/local/lib)
 find_library(SUNDIALS_KLU_LIB sundials_sunlinsolklu
   DOC "SUNDIALS KLU library"
-  PATHS $ENV{SUITE_SPARSE_HOME}/lib $ENV{SUNDIALS_HOME}/lib
+  PATHS ${SUITE_SPARSE_LIB} $ENV{SUITE_SPARSE_HOME}/lib ${SUNDIALS_PATH_LIB} $ENV{SUNDIALS_HOME}/lib
         /opt/local/lib /usr/local/lib)
 find_library(SUNDIALS_SUNMATRIX_SPARSE_LIB sundials_sunmatrixsparse
   DOC "SUNDIALS SUNMatrixSparse library"
-  PATHS $ENV{SUITE_SPARSE_HOME}/lib $ENV{SUNDIALS_HOME}/lib
+  PATHS ${SUITE_SPARSE_LIB} $ENV{SUITE_SPARSE_HOME}/lib ${SUNDIALS_PATH_LIB} $ENV{SUNDIALS_HOME}/lib
         /opt/local/lib /usr/local/lib)
-set(SUNDIALS_LIBS ${SUNDIALS_NVECSERIAL_LIB} ${SUNDIALS_CVODE_LIB}
-  ${SUNDIALS_KLU_LIB} ${SUNDIALS_SUNMATRIX_SPARSE_LIB} ${SUITE_SPARSE_KLU_LIB}
+set(SUNDIALS_LIBS ${SUNDIALS_SUNMATRIX_SPARSE_LIB} ${SUNDIALS_NVECSERIAL_LIB} ${SUNDIALS_CVODE_LIB}
+  ${SUNDIALS_KLU_LIB} ${SUITE_SPARSE_KLU_LIB}
   ${SUITE_SPARSE_COLAMD_LIB} ${SUITE_SPARSE_AMD_LIB} ${SUITE_SPARSE_BTF_LIB}
   ${SUITE_SPARSE_CONFIG_LIB})
+#message (${SUNDIALS_LIBS}) #not working fine, only set half of the variables
+
 include_directories(${SUNDIALS_INCLUDE_DIR} ${SUITE_SPARSE_INCLUDE_DIR})
 add_definitions(-DCAMP_USE_SUNDIALS)
+
+#set(CMAKE_INSTALL_RPATH "/home/cguzman/CLionProjects/gpupartmc/cvode-3.4-alpha/install/lib/libsundials_sunmatrixsparse.so.1")
+#set(CMAKE_INSTALL_RPATH "/home/cguzman/CLionProjects/gpupartmc/cvode-3.4-alpha/install/lib/")
 
 ######################################################################
 # json-fortran
 
+if(CMAKE_C_COMPILER_ID STREQUAL "GNU")
+  SET(JSON_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../json-fortran-6.1.0/install/jsonfortran-gnu-6.1.0/lib)
+elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
+  SET(JSON_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../json-fortran-6.1.0/install/jsonfortran-intel-6.1.0/lib)
+else ()
+  message(FATAL_ERROR "CMAKE_C_COMPILER_ID UNKNOWN")
+endif()
 find_path(JSON_INCLUDE_DIR json_module.mod
-  DOC "json-fortran include directory (must include json_*.mod files)"
-  PATHS $ENV{JSON_FORTRAN_HOME}/lib /opt/local/lib /usr/local/lib)
+        DOC "json-fortran include directory (must include json_*.mod files)"
+        PATHS ${JSON_PATH} $ENV{JSON_FORTRAN_HOME}/lib /opt/local/lib /usr/local/lib)
 find_library(JSON_LIB jsonfortran
-  DOC "json-fortran library"
-  PATHS $ENV{JSON_FORTRAN_HOME}/lib /opt/local/lib /usr/local/lib)
+        DOC "json-fortran library"
+        PATHS ${JSON_PATH} $ENV{JSON_FORTRAN_HOME}/lib /opt/local/lib /usr/local/lib)
 include_directories(${JSON_INCLUDE_DIR})
 add_definitions(-DCAMP_USE_JSON)
 
@@ -238,15 +263,8 @@ else()
     message( ERROR "ENABLE_DEBUG_GPU NEEDS ENABLE_MPI")
 endif()
 
-######################################################################
-# Optimization options
-
 if (ENABLE_SWAP_DERIV_LOOP_CELLS)
   add_definitions(-DSWAP_DERIV_LOOP_CELLS)
-endif()
-
-if (ENABLE_RESET_JAC_SOLVING)
-  add_definitions(-DRESET_JAC_SOLVING)
 endif()
 
 ######################################################################
@@ -332,31 +350,7 @@ endif()
 # camp library
 
 set(STD_C_FLAGS "-std=c99")
-
-
-if(use_maxrregcount127)
-    message( WARNING "use_maxrregcount127")
-    add_definitions(-DCAMP_USE_MAXRREGCOUNT127)
-  set(STD_CUDA_FLAGS "--maxrregcount 127 -lineinfo -arch=compute_70 -code=sm_70 --compiler-options '-fPIC' -lcudart -lcublas -lcusolver -lcudadevrt -lcusparse_static -lculibos -lpthread -ldl")
-elseif(use_maxrregcount48)
-    add_definitions(-DCAMP_USE_MAXRREGCOUNT48)
-    set(STD_CUDA_FLAGS "--maxrregcount 48 -lineinfo -arch=compute_70 -code=sm_70 --compiler-options '-fPIC' -lcudart -lcublas -lcusolver -lcudadevrt -lcusparse_static -lculibos -lpthread -ldl")
-elseif(use_maxrregcount68)
-    add_definitions(-DCAMP_USE_MAXRREGCOUNT68)
-    set(STD_CUDA_FLAGS "--maxrregcount 68 -lineinfo -arch=compute_70 -code=sm_70 --compiler-options '-fPIC' -lcudart -lcublas -lcusolver -lcudadevrt -lcusparse_static -lculibos -lpthread -ldl")
-elseif(use_maxrregcount62)
-    add_definitions(-DCAMP_USE_MAXRREGCOUNT62)
-    set(STD_CUDA_FLAGS "--maxrregcount 62 -lineinfo -arch=compute_70 -code=sm_70 --compiler-options '-fPIC' -lcudart -lcublas -lcusolver -lcudadevrt -lcusparse_static -lculibos -lpthread -ldl")
-elseif(use_maxrregcount24)
-  add_definitions(-DCAMP_USE_MAXRREGCOUNT24)
-  set(STD_CUDA_FLAGS "--maxrregcount 24 -lineinfo -arch=compute_70 -code=sm_70 --compiler-options '-fPIC' -lcudart -lcublas -lcusolver -lcudadevrt -lcusparse_static -lculibos -lpthread -ldl")
-elseif(use_maxrregcount64)
-  add_definitions(-DCAMP_USE_MAXRREGCOUNT64)
-  set(STD_CUDA_FLAGS "--maxrregcount 64 --default-stream per-thread -lineinfo -arch=compute_70 -code=sm_70 --compiler-options '-fPIC' -lcudart -lcublas -lcusolver -lcudadevrt -lcusparse_static -lculibos -lpthread -ldl")
-else()
-  #set(STD_CUDA_FLAGS "-arch=compute_70 -code=sm_70 --compiler-options '-fPIC' -lcudart -lcudadevrt -lcublas -lcusparse_static -lculibos -lpthread -ldl")
-  set(STD_CUDA_FLAGS "-g -G -arch=compute_70 -code=sm_70")
-endif()
+set(STD_CUDA_FLAGS "-O0 -g -G -arch=compute_70 -code=sm_70")
 
 if(ENABLE_CXX)
   set(STD_CXX_FLAGS "-fpermissive")
@@ -499,18 +493,15 @@ if(ENABLE_SHARED_LIB)
   add_library(camplib SHARED ${CAMP_LIB_SRC}) #todo fix, Shared library are better than static (faster in execution, no recompilation, smaller)
 else()
   add_library(camplib ${CAMP_LIB_SRC})
-  #add_library(camplib SHARED ${CAMP_LIB_SRC})
 endif()
 
+target_link_libraries(camplib ${MPI_C_LIBRARIES} ${MPI_FORTRAN_LIBRARIES})
+target_link_libraries(camplib ${NETCDF_LIBS} ${SUNDIALS_LIBS} ${GSL_LIBS} ${JSON_LIB})
 if (CUDA_FOUND)
-  target_link_libraries(camplib  ${NETCDF_LIBS} ${SUNDIALS_LIBS} ${GSL_LIBS} ${JSON_LIB} ${CUDA_LIBRARIES})
-  #set_target_properties(camplib PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
-else()
-  target_link_libraries(camplib  ${NETCDF_LIBS} ${SUNDIALS_LIBS} ${GSL_LIBS} ${JSON_LIB})
+  target_link_libraries(camplib ${CUDA_LIBRARIES})
 endif()
 
 set(MODULE_DIR "${CMAKE_BINARY_DIR}/include")
-
 set_target_properties(camplib PROPERTIES
                          OUTPUT_NAME camp
                          PREFIX lib
@@ -586,6 +577,12 @@ add_executable(mock_monarch test/monarch/mock_monarch.F90
         test/chemistry/cb05cl_ae5/module_BSC_CHEM_DATA.F90)
 target_link_libraries(mock_monarch camplib)
 
+add_executable(test_chemistry_cb05cl_ae5_big
+        test/chemistry/cb05cl_ae5/test_cb05cl_ae5_big.F90
+        ${CB5_EBI_SOLVER} ${CB5_KPP_SOLVER}
+        test/chemistry/cb05cl_ae5/module_BSC_CHEM_DATA.F90)
+target_link_libraries(test_chemistry_cb05cl_ae5_big camplib)
+
 if (ENABLE_TESTS)
 
 ######################################################################
@@ -593,20 +590,10 @@ if (ENABLE_TESTS)
 
   add_executable(camp_box_model test/camp_box_model_data.F90
           test/camp_box_model.F90)
-
   target_link_libraries(camp_box_model camplib)
 
 ######################################################################
-  # test_chemistry_cb05cl_ae5_big
-
-add_executable(test_chemistry_cb05cl_ae5_big
-        test/chemistry/cb05cl_ae5/test_cb05cl_ae5_big.F90
-        ${CB5_EBI_SOLVER} ${CB5_KPP_SOLVER}
-        test/chemistry/cb05cl_ae5/module_BSC_CHEM_DATA.F90)
-target_link_libraries(test_chemistry_cb05cl_ae5_big camplib)
-
-  ######################################################################
-  # test_chemistry_cb05cl_ae5
+# test_chemistry_cb05cl_ae5
 
   add_executable(test_chemistry_cb05cl_ae5
           test/chemistry/cb05cl_ae5/test_cb05cl_ae5.F90
