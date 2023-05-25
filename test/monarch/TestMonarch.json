@@ -1,24 +1,24 @@
 {
-    "_chemFile": "monarch_binned",
-    "diffCells": "Realistic",
+    "_chemFile": "monarch_cb05",
+    "diffCells": "Ideal",
     "mpi": "yes",
     "timeSteps": 1,
-    "timeStepsDt": 2,
+    "timeStepsDt": 3,
     "MAPETol": 0.0001,
     "commit": "",
-    "case": "CPU One-cell",
-    "nCells": 1,
+    "case": "CPU Multi-cells",
+    "nCells": 2,
     "caseGpuCpu": "CPU",
-    "caseMulticellsOnecell": "One-cell",
-    "mpiProcesses": 2,
+    "caseMulticellsOnecell": "Multi-cells",
+    "mpiProcesses": 1,
     "allocatedNodes": 1,
     "allocatedTasksPerNode": 160,
     "nGPUs": 1,
     "is_start_cases_attributes": true,
     "diffCellsL": [
-        "Realistic"
+        "Ideal"
     ],
-    "mpiProcessesCaseBase": 2,
+    "mpiProcessesCaseBase": 1,
     "mpiProcessesCaseOptimList": [
         1
     ],
@@ -28,7 +28,7 @@
     "cells": [
         2
     ],
-    "caseBase": "CPU One-cell",
+    "caseBase": "CPU Multi-cells",
     "casesOptim": [],
     "plotYKey": "MAPE",
     "plotXKey": "",

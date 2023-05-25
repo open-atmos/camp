@@ -32,7 +32,7 @@ void export_netcdf(SolverData *sd){
   printf("export_netcdf start\n");
   ModelData *md = &(sd->model_data);
   if(md->n_cells>1){
-    printf("export_netcdf ERROR: Use One-cell mode, multicells do not work for this function\n");
+    printf("export_netcdf ERROR: Use One-cell mode, multicells do not work for this function md->n_cells %d\n",md->n_cells);
     exit(0);
   }
   int z=0;
@@ -216,8 +216,8 @@ void join_netcdfs(SolverData *sd){
   printf("join_netcdfs start\n");
   ModelData *md = &(sd->model_data);
   int ncells=md->n_cells;
-  if(ncells<=1){
-    printf("ERROR: join_netcdfs ncells<=1, when it needs multi-cells enabled\n");
+  if(ncells<1){
+    printf("ERROR: join_netcdfs ncells<2 ncells %d, when it needs multi-cells enabled\n", ncells);
     exit(0);
   }
   char s_tstep[20];
@@ -248,6 +248,14 @@ void join_netcdfs(SolverData *sd){
     printf("Opening netcdf file at %s\n", file_path);
     nc(nc_open(file_path, NC_NOWRITE, &ncid));
     int i = 0;
+    size_t nstate;
+    int dimid;
+    nc(nc_inq_dimid(ncid, "nstate", &dimid));
+    nc(nc_inq_dimlen(ncid, dimid, &nstate));
+    if(nstate!=md->n_per_cell_state_var){
+      printf("nstate!=md->n_per_cell_state_var %d %d",nstate,md->n_per_cell_state_var);
+      exit(0);
+    }
     nc(nc_inq_varid(ncid, "state", &varids[i]));
     i++;
     nc(nc_inq_varid(ncid, "rxn_env_data", &varids[i]));

@@ -378,9 +378,6 @@ void constructor_cvode_gpu(CVodeMem cv_mem, SolverData *sd){
   init_jac_cuda_cvode(sd);
   solver_init_int_double_cuda_cvode(sd);
   mGPU = sd->mGPU;
-#ifdef DEBUG_constructor_cvode_gpu
-  printf("DEBUG_constructor_cvode_gpu start2 \n");
-#endif
 #ifdef CAMP_DEBUG_GPU
   mCPU->counterNewtonIt=0;
   mCPU->counterLinSolSetup=0;
@@ -430,7 +427,7 @@ void constructor_cvode_gpu(CVodeMem cv_mem, SolverData *sd){
   createLinearSolver_cvode(sd);
 #endif
   mGPU->A = ((double *) SM_DATA_S(J));
-  //Using int per default as sundindextype give wrong results in CPU, so translate from int64 to int
+  //Translate from int64 (sunindextype) to int
   if(sd->use_gpu_cvode==1){
     mCPU->jA = (int *) malloc(sizeof(int) *mGPU->nnz/mGPU->n_cells);
     mCPU->iA = (int *) malloc(sizeof(int) * (mGPU->nrows/mGPU->n_cells + 1));
@@ -528,9 +525,6 @@ void constructor_cvode_gpu(CVodeMem cv_mem, SolverData *sd){
     printf("ERROR: cudaDevicecvBDFStab is pending to implement "
            "(disabled by default on CAMP)\n");
     exit(0); }
-#ifdef DEBUG_constructor_cvode_gpu
-  printf("DEBUG_constructor_cvode_gpu end \n");
-#endif
 }
 
 int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
@@ -812,7 +806,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
   cvodeRun(mGPU,stream);
   cudaMemcpyAsync(cv_acor_init, mGPU->cv_acor_init, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost, stream);
   cudaMemcpyAsync(youtArray, mGPU->yout, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost, stream);
-  for (int i = 0; i <= cv_mem->cv_qmax; i++) {//cv_qmax+1 (6)?
+  for (int i = 0; i <= cv_mem->cv_qmax; i++) {
     double *zn = NV_DATA_S(cv_mem->cv_zn[i]);
     cudaMemcpyAsync(zn, (i * mGPU->nrows + mGPU->dzn), mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost, stream);
   }
