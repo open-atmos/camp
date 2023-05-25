@@ -577,15 +577,15 @@ add_executable(mock_monarch test/monarch/mock_monarch.F90
         test/chemistry/cb05cl_ae5/module_BSC_CHEM_DATA.F90)
 target_link_libraries(mock_monarch camplib)
 
+if (ENABLE_TESTS)
+
 add_executable(test_chemistry_cb05cl_ae5_big
         test/chemistry/cb05cl_ae5/test_cb05cl_ae5_big.F90
         ${CB5_EBI_SOLVER} ${CB5_KPP_SOLVER}
         test/chemistry/cb05cl_ae5/module_BSC_CHEM_DATA.F90)
 target_link_libraries(test_chemistry_cb05cl_ae5_big camplib)
 
-if (ENABLE_TESTS)
-
-######################################################################
+  ######################################################################
   # camp-chem box model
 
   add_executable(camp_box_model test/camp_box_model_data.F90
