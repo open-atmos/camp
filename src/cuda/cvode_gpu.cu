@@ -222,6 +222,7 @@ void solver_new_gpu_cu_cvode(SolverData *sd) {
   mCPU->map_state_deriv_size = n_dep_var * n_cells * sizeof(int);
   int nDevicesMax;
   cudaGetDeviceCount(&nDevicesMax);
+  printf("sd->nDevices %d\n",sd->nDevices);
   if (sd->nDevices > nDevicesMax) {
     printf("ERROR: Not enough GPUs to launch, nDevices %d nDevicesMax %d\n", sd->nDevices, nDevicesMax);
     exit(0);

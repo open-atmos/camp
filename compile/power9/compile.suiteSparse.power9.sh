@@ -1,3 +1,4 @@
+#module purge
 #BSC modules
 #module load gcc/6.4.0
 #module load openmpi/3.0.0
@@ -14,18 +15,10 @@ fi
 
 cd $library_path/SuiteSparse
 make purge
-LOCAL_MACHINE=CGUZMAN
 if [ $BSC_MACHINE == "power" ]; then
   make BLAS="-L${EBROOTOPENBLAS}/lib -lopenblas" LAPACK=""
 elif [ $BSC_MACHINE == "mn4" ]; then
   make BLAS="-L${INTEL_HOME}/mkl/lib/intel64 -lmkl_intel_lp64 -lmkl_core -lmkl_intel_thread -lpthread -lm" LAPACK=""
-elif [ LOCAL_MACHINE==CGUZMAN ]; then
-  echo "WARNING: LOCAL_MACHINE==CGUZMAN"
-  if ! dpkg-query -W -f='${Status}' libopenblas-dev 2>/dev/null | grep -q "installed"; then
-    echo "Installing OPENBLAS"
-    sudo apt install libopenblas-dev
-  fi
-  make BLAS="-L/lib64 -lopenblas"
 else
   echo "Unknown architecture"
   exit
