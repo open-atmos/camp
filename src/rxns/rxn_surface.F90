@@ -198,12 +198,14 @@ contains
       end do
     end do
 
-    allocate(this%condensed_data_int(NUM_INT_PROP_ + 2 + 3 * products%size() + &
-                                     2 * n_aero_phase + &
-                                     n_aero_phase * 3 + &
-                                     (1 + products%size()) * n_aero_jac_elem))
-    allocate(this%condensed_data_real(NUM_REAL_PROP_ + products%size() + &
-                                      2 * n_aero_jac_elem))
+    allocate(this%condensed_data_int(NUM_INT_PROP_             & ! NUM_AERO_PHASE, REACT_ID, NUM_PROD
+                                     + 2 + 3 * products%size() & ! PROD_ID, DERIV_ID, JAC_ID
+                                     + 2 * n_aero_phase        & ! PHASE_INT_LOC, PHASE_REAL_LOC
+                                     + n_aero_phase * 3        & ! AERO_PHASE_ID, AERO_REP_ID, NUM_AERO_PHASE_JAC_ELEM
+                                     + (1 + products%size()) * n_aero_jac_elem)) ! PHASE_JAC_ID
+    allocate(this%condensed_data_real(NUM_REAL_PROP_           & ! DIFF_COEFF, GAMMA, MW
+                                     + products%size()         & ! YIELD
+                                     + 2 * n_aero_jac_elem))     ! EFF_RAD_JAC_ELEM, NUM_CONC_JAC_ELEM
     this%condensed_data_int(:) = 0_i_kind
     this%condensed_data_real(:) = 0.0_dp
 

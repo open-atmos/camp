@@ -161,7 +161,7 @@ static inline double d_gas_aerosol_transition_rxn_rate_constant_d_radius(
                           mean_free_path__m, radius__m, alpha));
 }
 
-/** Calculate the gas-aerosol reaction rate for the continuum regime
+/** Calculate the gas-aerosol reaction rate for the continuum regime \cite Tie2003
  * [\f$\mbox{m}^3\, \mbox{particle}^{-1}\, \mbox{s}^{-1}\f$]
  *
  * The rate constant \f$k_c\f$ is calculated as:
@@ -189,7 +189,7 @@ static inline double gas_aerosol_continuum_rxn_rate_constant(
 }
 
 /** Calculate the derivative of the continuum-regime gas-aerosol reaction rate
- * constant by particle radius
+ * constant by particle radius \cite Tie2003
  * \f[
  *   \frac{dk_c}{dr} = 4 \pi \frac{\frac{r^2}{D_g} +
  *      \frac{8r}{v(T) \gamma}}{\left(\frac{r}{D_g} + \frac{4}{v(T) \gamma}\right)^2}

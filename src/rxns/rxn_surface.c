@@ -167,8 +167,8 @@ void rxn_surface_update_ids(ModelData *model_data, int *deriv_ids,
 
 /** \brief Update reaction data for new environmental conditions
  *
- * For surface reactions this only involves recalculating the rate
- * constant.
+ * For surface reactions this only involves calculating the mean
+ * speed of the reacting species
  *
  * \param model_data Pointer to the model data
  * \param rxn_int_data Pointer to the reaction integer data
@@ -183,7 +183,7 @@ void rxn_surface_update_env_state(ModelData *model_data,
   double *float_data = rxn_float_data;
   double *env_data = model_data->grid_cell_env;
 
-  // save the mean free path [m] for calculating condensation rates
+  // save the mean speed [m s-1] for calculating condensation rates
   MEAN_SPEED_MS_ = mean_speed__m_s(TEMPERATURE_K_, MW_);
 
   return;
