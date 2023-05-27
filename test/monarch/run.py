@@ -374,11 +374,19 @@ def run(conf):
         Path(pathNvprof).mkdir(parents=True, exist_ok=True)
         pathNvprof = pathNvprof + conf.caseMulticellsOnecell \
                      + str(conf.nCells) + "Cells "
-
         exec_str += "--set full -f -o " + pathNvprof #last working version
         #exec_str += " "  # summary
         #exec_str += "--mode=launch " #fail #gui attach
-
+        print("CUDASaving nsight file in ", os.path.abspath(os.getcwd()) \
+              + "/" + pathNvprof)
+    elif conf.profileCuda == "nsightSummary" and conf.caseGpuCpu == "GPU":
+        exec_str += "/apps/NVIDIA-HPC-SDK/20.9/Linux_ppc64le/2020/profilers/Nsight_Compute/ncu "
+        pathNvprof = "../../compile/power9/"  # "../../../nvprof/nsight"
+        Path(pathNvprof).mkdir(parents=True, exist_ok=True)
+        pathNvprof = pathNvprof + conf.caseMulticellsOnecell \
+                     + str(conf.nCells) + "Cells "
+        exec_str += ""  # summary
+        #exec_str += "--mode=launch " #fail #gui attach
         print("CUDASaving nsight file in ", os.path.abspath(os.getcwd()) \
               + "/" + pathNvprof)
 
