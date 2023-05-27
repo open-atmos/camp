@@ -187,6 +187,7 @@ module camp_rxn_factory
   use camp_rxn_CMAQ_H2O2
   use camp_rxn_CMAQ_OH_HNO3
   use camp_rxn_condensed_phase_arrhenius
+  use camp_rxn_condensed_phase_photolysis
   use camp_rxn_emission
   use camp_rxn_first_order_loss
   use camp_rxn_HL_phase_transfer
@@ -223,6 +224,7 @@ module camp_rxn_factory
   integer(kind=i_kind), parameter, public :: RXN_TERNARY_CHEMICAL_ACTIVATION = 15
   integer(kind=i_kind), parameter, public :: RXN_WENNBERG_TUNNELING = 16
   integer(kind=i_kind), parameter, public :: RXN_WENNBERG_NO_RO2 = 17
+  integer(kind=i_kind), parameter, public :: RXN_CONDENSED_PHASE_PHOTOLYSIS = 18
   integer(kind=i_kind), parameter, public :: RXN_SURFACE = 19
 
   !> Factory type for chemical reactions
@@ -283,6 +285,8 @@ contains
         new_obj => rxn_SIMPOL_phase_transfer_t()
       case ("CONDENSED_PHASE_ARRHENIUS")
         new_obj => rxn_condensed_phase_arrhenius_t()
+      case ("CONDENSED_PHASE_PHOTOLYSIS")
+        new_obj => rxn_condensed_phase_photolysis_t()
       case ("FIRST_ORDER_LOSS")
         new_obj => rxn_first_order_loss_t()
       case ("EMISSION")
@@ -380,6 +384,8 @@ contains
         rxn_type = RXN_SIMPOL_PHASE_TRANSFER
       type is (rxn_condensed_phase_arrhenius_t)
         rxn_type = RXN_CONDENSED_PHASE_ARRHENIUS
+      type is (rxn_condensed_phase_photolysis_t)
+        rxn_type = RXN_CONDENSED_PHASE_PHOTOLYSIS
       type is (rxn_first_order_loss_t)
         rxn_type = RXN_FIRST_ORDER_LOSS
       type is (rxn_emission_t)
@@ -438,6 +444,13 @@ contains
         select type (rxn)
           type is (rxn_photolysis_t)
             call rxn%update_data_initialize(update_data, RXN_PHOTOLYSIS)
+          class default
+            call die_msg(284703230, "Update data <-> rxn mismatch")
+        end select
+      type is (rxn_update_data_condensed_phase_photolysis_t)
+        select type (rxn)
+          type is (rxn_condensed_phase_photolysis_t)
+            call rxn%update_data_initialize(update_data, RXN_CONDENSED_PHASE_PHOTOLYSIS)
           class default
             call die_msg(284703230, "Update data <-> rxn mismatch")
         end select
@@ -503,6 +516,8 @@ contains
         rxn_type = RXN_SIMPOL_PHASE_TRANSFER
       type is (rxn_condensed_phase_arrhenius_t)
         rxn_type = RXN_CONDENSED_PHASE_ARRHENIUS
+      type is (rxn_condensed_phase_photolysis_t)
+        rxn_type = RXN_CONDENSED_PHASE_PHOTOLYSIS
       type is (rxn_first_order_loss_t)
         rxn_type = RXN_FIRST_ORDER_LOSS
       type is (rxn_emission_t)
@@ -568,6 +583,8 @@ contains
         rxn => rxn_SIMPOL_phase_transfer_t()
       case (RXN_CONDENSED_PHASE_ARRHENIUS)
         rxn => rxn_condensed_phase_arrhenius_t()
+      case (RXN_CONDENSED_PHASE_PHOTOLYSIS)
+        rxn => rxn_condensed_phase_photolysis_t()
       case (RXN_FIRST_ORDER_LOSS)
         rxn => rxn_first_order_loss_t()
       case (RXN_EMISSION)
