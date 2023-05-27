@@ -94,6 +94,7 @@ typedef struct{
   double* aux;
   int cells_method;
   int threads,blocks;
+  int nnz;
   int nnz_J_solver;
   size_t deriv_size;
   size_t jac_size;
@@ -107,7 +108,6 @@ typedef struct{
   int *map_state_derivCPU;
   ModelDataVariable mdvCPU; //cpu equivalent to gpu
   cudaStream_t *streams;
-
 #ifdef CAMP_DEBUG_GPU
   int counterNewtonIt;
   int counterLinSolSetup;
@@ -117,7 +117,6 @@ typedef struct{
   int counterBCG;
   int counterDerivSolve;
   int countersolveCVODEGPU;
-
   double timeNewtonIt;
   double timeLinSolSetup;
   double timeLinSolSolve;
@@ -126,7 +125,6 @@ typedef struct{
   double timeBiConjGradMemcpy;
   double timeDerivSolve;
   double timeJac;
-
   cudaEvent_t startDerivNewton;
   cudaEvent_t startDerivSolve;
   cudaEvent_t startLinSolSetup;
@@ -134,7 +132,6 @@ typedef struct{
   cudaEvent_t startNewtonIt;
   cudaEvent_t startBCG;
   cudaEvent_t startBCGMemcpy;
-
   cudaEvent_t stopDerivNewton;
   cudaEvent_t stopDerivSolve;
   cudaEvent_t stopLinSolSetup;
@@ -142,17 +139,13 @@ typedef struct{
   cudaEvent_t stopNewtonIt;
   cudaEvent_t stopBCGMemcpy;
   cudaEvent_t stopBCG;
-
   double timecvStep;
   cudaEvent_t startcvStep;
   cudaEvent_t stopcvStep;
 #endif
 } ModelDataCPU;
 
-typedef struct {
-    //todo move to only CPU struct md, since not used in gpu
-    int nnz;
-    //Allocated from CPU (used during CPU / need some cudamemcpy)
+typedef struct { //Allocated from CPU (used during CPU / need some cudamemcpy)
     int *map_state_deriv;
     double *deriv_data;
     double *J_solver;
@@ -185,7 +178,7 @@ typedef struct {
     double *cv_l;
     double *cv_tau;
     double *cv_tq;//NUM_TESTS+1
-    double *cv_last_yn;     //CVODE variables only GPU
+    double *cv_last_yn;//CVODE variables only GPU
     double *cv_acor_init;
     double *dA;//LS (BCG)
     int *djA;

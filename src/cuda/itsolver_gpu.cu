@@ -116,7 +116,7 @@ void exportConfBCG(SolverData *sd, const char *filepath){
 
   fprintf(fp, "%d\n",  mGPU->n_cells);
   fprintf(fp, "%d\n",  mGPU->nrows);
-  fprintf(fp, "%d\n",  mGPU->nnz);
+  fprintf(fp, "%d\n",  mCPU->nnz);
   fprintf(fp, "%d\n",  mGPU->maxIt);
 #ifndef CSR_SPMV_CPU
   int mattype=0;
@@ -126,21 +126,21 @@ void exportConfBCG(SolverData *sd, const char *filepath){
   fprintf(fp, "%d\n",  mattype);
   fprintf(fp, "%le\n",  mGPU->tolmax);
 
-  int *jA=(int*)malloc(mGPU->nnz*sizeof(int));
+  int *jA=(int*)malloc(mCPU->nnz*sizeof(int));
   int *iA=(int*)malloc((mGPU->nrows+1)*sizeof(int));
-  double *A=(double*)malloc(mGPU->nnz*sizeof(double));
+  double *A=(double*)malloc(mCPU->nnz*sizeof(double));
   double *diag=(double*)malloc(mGPU->nrows*sizeof(double));
   double *x=(double*)malloc(mGPU->nrows*sizeof(double));
   double *tempv=(double*)malloc(mGPU->nrows*sizeof(double));
 
-  cudaMemcpy(jA, mGPU->djA,mGPU->nnz*sizeof(int),cudaMemcpyDeviceToHost);
+  cudaMemcpy(jA, mGPU->djA,mCPU->nnz*sizeof(int),cudaMemcpyDeviceToHost);
   cudaMemcpy(iA, mGPU->diA,(mGPU->nrows+1)*sizeof(int),cudaMemcpyDeviceToHost);
-  cudaMemcpy(A, mGPU->dA,mGPU->nnz*sizeof(double),cudaMemcpyDeviceToHost);
+  cudaMemcpy(A, mGPU->dA,mCPU->nnz*sizeof(double),cudaMemcpyDeviceToHost);
   cudaMemcpy(diag,mGPU->ddiag,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
   cudaMemcpy(x,mGPU->dx,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
   cudaMemcpy(tempv,mGPU->dtempv,mGPU->nrows*sizeof(double),cudaMemcpyDeviceToHost);
 
-  for(int i=0; i<mGPU->nnz; i++){
+  for(int i=0; i<mCPU->nnz; i++){
     //printf("%d\n",mGPU->djA[i]);
     fprintf(fp, "%d ",  jA[i]);
   }
@@ -148,7 +148,7 @@ void exportConfBCG(SolverData *sd, const char *filepath){
   for(int i=0; i<mGPU->nrows+1; i++)
     fprintf(fp, "%d ",  iA[i]);
   fprintf(fp, "\n");
-  for(int i=0; i<mGPU->nnz; i++)
+  for(int i=0; i<mCPU->nnz; i++)
     fprintf(fp, "%le ",  A[i]);
   fprintf(fp, "\n");
   for(int i=0; i<mGPU->nrows; i++)
@@ -172,12 +172,12 @@ void exportConfBCG(SolverData *sd, const char *filepath){
 
   fscanf(fp, "%d", &mGPU->n_cells);
   fscanf(fp, "%d", &mGPU->nrows);
-  fscanf(fp, "%d", &mGPU->nnz);
+  fscanf(fp, "%d", &mCPU->nnz);
   fscanf(fp, "%d", &mGPU->maxIt);
   fscanf(fp, "%d", &mattype);
   fscanf(fp, "%le", &mGPU->tolmax);
 
-  for(int i=0; i<mGPU->nnz; i++){
+  for(int i=0; i<mCPU->nnz; i++){
     fscanf(fp, "%d", &jA[i]);
     //printf("%d %d\n",i, jA[i]);
   }
@@ -187,7 +187,7 @@ void exportConfBCG(SolverData *sd, const char *filepath){
     //printf("%d %d\n",i, iA[i]);
   }
 
-  for(int i=0; i<mGPU->nnz; i++){
+  for(int i=0; i<mCPU->nnz; i++){
     fscanf(fp, "%le", &A[i]);
     //printf("%d %lf\n",i, A[i]);
   }
@@ -209,10 +209,10 @@ void exportConfBCG(SolverData *sd, const char *filepath){
 
   fclose(fp);
 
-  cudaMemcpy(mGPU->djA,jA,mGPU->nnz*sizeof(int),cudaMemcpyHostToDevice);
+  cudaMemcpy(mGPU->djA,jA,mCPU->nnz*sizeof(int),cudaMemcpyHostToDevice);
   cudaMemcpy(mGPU->diA,iA,(mGPU->nrows+1)*sizeof(int),cudaMemcpyHostToDevice);
 
-  cudaMemcpy(mGPU->dA,A,mGPU->nnz*sizeof(double),cudaMemcpyHostToDevice);
+  cudaMemcpy(mGPU->dA,A,mCPU->nnz*sizeof(double),cudaMemcpyHostToDevice);
 
   cudaMemcpy(mGPU->ddiag,diag,mGPU->nrows*sizeof(double),cudaMemcpyHostToDevice);
   cudaMemcpy(mGPU->dx,x,mGPU->nrows*sizeof(double),cudaMemcpyHostToDevice);
@@ -311,12 +311,12 @@ void swapCSC_CSR_BCG(SolverData *sd){
 #else
   int n_row=mGPU->nrows;
   int n_col=mGPU->nrows;
-  int nnz=mGPU->nnz;
+  int nnz=mCPU->nnz;
   int* Ap=mCPU->iA;
   int* Aj=mCPU->jA;
   double* Ax=mCPU->A;
   int* Bp=(int*)malloc((mGPU->nrows+1)*sizeof(int));
-  int* Bi=(int*)malloc(mGPU->nnz*sizeof(int));
+  int* Bi=(int*)malloc(mCPU->nnz*sizeof(int));
   double* Bx=(double*)malloc(nnz*sizeof(double));
 #endif
     swapCSC_CSR(n_row,n_col,Ap,Aj,Ax,Bp,Bi,Bx);
@@ -359,8 +359,8 @@ void swapCSC_CSR_BCG(SolverData *sd){
   exit(0);Swap
 #else
   cudaMemcpyAsync(mGPU->diA,Bp,(mGPU->nrows+1)*sizeof(int),cudaMemcpyHostToDevice, 0);
-  cudaMemcpyAsync(mGPU->djA,Bi,mGPU->nnz*sizeof(int),cudaMemcpyHostToDevice, 0);
-  cudaMemcpyAsync(mGPU->dA,Bx,mGPU->nnz*sizeof(double),cudaMemcpyHostToDevice, 0);
+  cudaMemcpyAsync(mGPU->djA,Bi,mCPU->nnz*sizeof(int),cudaMemcpyHostToDevice, 0);
+  cudaMemcpyAsync(mGPU->dA,Bx,mCPU->nnz*sizeof(double),cudaMemcpyHostToDevice, 0);
 #endif
   free(Bp);
   free(Bi);
@@ -667,7 +667,7 @@ void solveGPU_block_thr(int blocks, int threads_block, int n_shr_memory, int n_s
 
   //Init variables ("public")
   int nrows = mGPU->nrows;
-  int nnz = mGPU->nnz;
+  int nnz = mCPU->nnz;
   int n_cells = mGPU->n_cells;
   int maxIt = mGPU->maxIt;
   double tolmax = mGPU->tolmax;
@@ -700,16 +700,16 @@ void solveGPU_block_thr(int blocks, int threads_block, int n_shr_memory, int n_s
 #ifdef IS_EXPORTBCG
 #ifdef IS_EXPORTBCG_1CELL
   int nrows2 = mGPU->nrows;
-  int nnz2 = mGPU->nnz;
+  int nnz2 = mCPU->nnz;
   int n_cells2 = mGPU->n_cells;
   mGPU->nrows/=mGPU->n_cells;
-  mGPU->nnz/=mGPU->n_cells;
+  mCPU->nnz/=mGPU->n_cells;
   mGPU->n_cells=1;
 #endif
   exportConfBCG(sd,"confBCG.txt");
 #ifdef IS_EXPORTBCG_1CELL
   mGPU->nrows=nrows2;
-  mGPU->nnz=nnz2;
+  mCPU->nnz=nnz2;
   mGPU->n_cells=n_cells2;
 #endif
 
@@ -718,7 +718,7 @@ void solveGPU_block_thr(int blocks, int threads_block, int n_shr_memory, int n_s
 #ifdef DEBUG_SOLVEBCGCUDA
   if(mCPU->counterBCG==0) {
     printf("solveGPU_block_thr n_cells %d len_cell %d nrows %d nnz %d max_threads_block %d blocks %d threads_block %d n_shr_empty %d offset_cells %d\n",
-           mGPU->n_cells,len_cell,mGPU->nrows,mGPU->nnz,n_shr_memory,blocks,threads_block,n_shr_empty,offset_cells);
+           mGPU->n_cells,len_cell,mGPU->nrows,mCPU->nnz,n_shr_memory,blocks,threads_block,n_shr_empty,offset_cells);
   }
 #endif
 
@@ -731,7 +731,7 @@ void solveGPU_block_thr(int blocks, int threads_block, int n_shr_memory, int n_s
 #ifdef IS_EXPORTBCG
 #ifdef IS_EXPORTBCG_1CELL
   mGPU->nrows/=mGPU->n_cells;
-  mGPU->nnz/=mGPU->n_cells;
+  mCPU->nnz/=mGPU->n_cells;
   mGPU->n_cells=1;
 #endif
   exportOutBCG(sd,"outBCG.txt");
