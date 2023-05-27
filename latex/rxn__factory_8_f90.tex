@@ -21,7 +21,7 @@ module \mbox{\hyperlink{namespacecamp__rxn__factory}{camp\+\_\+rxn\+\_\+factory}
 class(rxn\+\_\+data\+\_\+t) function, pointer \mbox{\hyperlink{namespacecamp__rxn__factory_a3975ec0b65f653a90ffc1e44d7b7353c}{camp\+\_\+rxn\+\_\+factory\+::create}} (this, type\+\_\+name)
 \begin{DoxyCompactList}\small\item\em Create a new chemical reaction by type name. \end{DoxyCompactList}\item 
 class(rxn\+\_\+data\+\_\+t) function, pointer \mbox{\hyperlink{namespacecamp__rxn__factory_a9c918055bf16f3e4db2f2ecd3d310b69}{camp\+\_\+rxn\+\_\+factory\+::load}} (this, json, j\+\_\+obj)
-\begin{DoxyCompactList}\small\item\em Load an aerosol represenation from input data. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Load a reaction from input data. \end{DoxyCompactList}\item 
 integer(kind=i\+\_\+kind) function \mbox{\hyperlink{namespacecamp__rxn__factory_a458659feabba75328651b709a3b5f8cd}{camp\+\_\+rxn\+\_\+factory\+::get\+\_\+type}} (this, rxn)
 \begin{DoxyCompactList}\small\item\em Get the reaction type as a Rxn\+Type. \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__rxn__factory_afaf56d1165c3d63e2e3dadab513a41c5}{camp\+\_\+rxn\+\_\+factory\+::initialize\+\_\+update\+\_\+data}} (this, rxn, update\+\_\+data)
@@ -64,6 +64,8 @@ integer(kind=i\+\_\+kind), parameter, public \mbox{\hyperlink{namespacecamp__rxn
 integer(kind=i\+\_\+kind), parameter, public \mbox{\hyperlink{namespacecamp__rxn__factory_aae61ccd51b5504f7669d516bf3f64040}{camp\+\_\+rxn\+\_\+factory\+::rxn\+\_\+wennberg\+\_\+tunneling}} = 16
 \item 
 integer(kind=i\+\_\+kind), parameter, public \mbox{\hyperlink{namespacecamp__rxn__factory_afb5c56704ffa7553d5e3e77989f71418}{camp\+\_\+rxn\+\_\+factory\+::rxn\+\_\+wennberg\+\_\+no\+\_\+ro2}} = 17
+\item 
+integer(kind=i\+\_\+kind), parameter, public \mbox{\hyperlink{namespacecamp__rxn__factory_a333a316d4af1ef634cd4e6c438a058ff}{camp\+\_\+rxn\+\_\+factory\+::rxn\+\_\+surface}} = 19
 \end{DoxyCompactItemize}
 
 

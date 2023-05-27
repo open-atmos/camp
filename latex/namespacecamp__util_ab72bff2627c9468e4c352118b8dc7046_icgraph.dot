@@ -25,7 +25,7 @@ digraph "camp_util::warn_msg"
   Node1 -> Node10 [dir="back",color="steelblue1",style="solid"];
   Node10 [label="camp_mechanism_data\l::load",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$namespacecamp__mechanism__data.html#a7e606aeae7ea067149b1c4301d251536",tooltip="Load a chemical mechanism from an input file."];
   Node1 -> Node11 [dir="back",color="steelblue1",style="solid"];
-  Node11 [label="camp_rxn_factory::load",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$namespacecamp__rxn__factory.html#a9c918055bf16f3e4db2f2ecd3d310b69",tooltip="Load an aerosol represenation from input data."];
+  Node11 [label="camp_rxn_factory::load",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$namespacecamp__rxn__factory.html#a9c918055bf16f3e4db2f2ecd3d310b69",tooltip="Load a reaction from input data."];
   Node1 -> Node12 [dir="back",color="steelblue1",style="solid"];
   Node12 [label="camp_sub_model_factory\l::load",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$namespacecamp__sub__model__factory.html#a80dee2f5639b9b365210aab59c767a4e",tooltip="Load a sub-model based on its type."];
   Node1 -> Node13 [dir="back",color="steelblue1",style="solid"];

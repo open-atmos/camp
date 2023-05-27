@@ -7,7 +7,7 @@ digraph "mean_free_path__m"
   rankdir="RL";
   Node1 [label="mean_free_path__m",height=0.2,width=0.4,color="gray40", fillcolor="grey60", style="filled", fontcolor="black",tooltip=" "];
   Node1 -> Node2 [dir="back",color="steelblue1",style="solid"];
-  Node2 [label="d_gas_aerosol_rxn_rate\l_constant_d_radius",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$util_8h.html#ad31f0cb5f01c257931b6e82d91b6fb23",tooltip=" "];
+  Node2 [label="d_gas_aerosol_transition\l_rxn_rate_constant_d_radius",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$util_8h.html#a6960902fe575d06ebd32350a076ba968",tooltip=" "];
   Node2 -> Node3 [dir="back",color="steelblue1",style="solid"];
   Node3 [label="rxn_HL_phase_transfer\l_calc_jac_contrib",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$rxn___h_l__phase__transfer_8c.html#a4e04c50da5215b9886991e6f0c98cccc",tooltip="Calculate contributions to the Jacobian from this reaction."];
   Node3 -> Node4 [dir="back",color="steelblue1",style="solid"];
@@ -27,7 +27,7 @@ digraph "mean_free_path__m"
   Node9 [label="d_transition_regime\l_correction_factor_d\l_radius",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$util_8h.html#af0918da54a73bf30e7079908caea2efd",tooltip=" "];
   Node9 -> Node2 [dir="back",color="steelblue1",style="solid"];
   Node1 -> Node10 [dir="back",color="steelblue1",style="solid"];
-  Node10 [label="gas_aerosol_rxn_rate\l_constant",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$util_8h.html#ada92558814324f22e19743fbf25ceb0f",tooltip=" "];
+  Node10 [label="gas_aerosol_transition\l_rxn_rate_constant",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$util_8h.html#adfe7ce1a7c219664c7a382f24068b1a1",tooltip=" "];
   Node10 -> Node11 [dir="back",color="steelblue1",style="solid"];
   Node11 [label="rxn_HL_phase_transfer\l_calc_deriv_contrib",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$rxn___h_l__phase__transfer_8c.html#aa82a07e921e3d22fda1d52073b16219d",tooltip="Calculate contributions to the time derivative  from this reaction."];
   Node11 -> Node12 [dir="back",color="steelblue1",style="solid"];

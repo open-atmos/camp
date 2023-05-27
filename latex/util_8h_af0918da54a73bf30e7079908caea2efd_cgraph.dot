@@ -8,4 +8,6 @@ digraph "d_transition_regime_correction_factor_d_radius"
   Node1 [label="d_transition_regime\l_correction_factor_d\l_radius",height=0.2,width=0.4,color="gray40", fillcolor="grey60", style="filled", fontcolor="black",tooltip=" "];
   Node1 -> Node2 [color="steelblue1",style="solid"];
   Node2 [label="mean_free_path__m",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$util_8h.html#ae1c969544a10c17746622cf73186835c",tooltip=" "];
+  Node2 -> Node3 [color="steelblue1",style="solid"];
+  Node3 [label="mean_speed__m_s",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$util_8h.html#a77fbb355dc943308c5632fe698e81363",tooltip=" "];
 }

@@ -71,7 +71,7 @@ Functions/Subroutines</h2></td></tr>
 <tr class="memdesc:a3975ec0b65f653a90ffc1e44d7b7353c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a new chemical reaction by type name.  <a href="namespacecamp__rxn__factory.html#a3975ec0b65f653a90ffc1e44d7b7353c">More...</a><br /></td></tr>
 <tr class="separator:a3975ec0b65f653a90ffc1e44d7b7353c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9c918055bf16f3e4db2f2ecd3d310b69"><td class="memItemLeft" align="right" valign="top">class(<a class="el" href="structcamp__rxn__data_1_1rxn__data__t.html">rxn_data_t</a>) function, pointer&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecamp__rxn__factory.html#a9c918055bf16f3e4db2f2ecd3d310b69">load</a> (this, json, j_obj)</td></tr>
-<tr class="memdesc:a9c918055bf16f3e4db2f2ecd3d310b69"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load an aerosol represenation from input data.  <a href="namespacecamp__rxn__factory.html#a9c918055bf16f3e4db2f2ecd3d310b69">More...</a><br /></td></tr>
+<tr class="memdesc:a9c918055bf16f3e4db2f2ecd3d310b69"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load a reaction from input data.  <a href="namespacecamp__rxn__factory.html#a9c918055bf16f3e4db2f2ecd3d310b69">More...</a><br /></td></tr>
 <tr class="separator:a9c918055bf16f3e4db2f2ecd3d310b69"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a458659feabba75328651b709a3b5f8cd"><td class="memItemLeft" align="right" valign="top">integer(kind=i_kind) function&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecamp__rxn__factory.html#a458659feabba75328651b709a3b5f8cd">get_type</a> (this, rxn)</td></tr>
 <tr class="memdesc:a458659feabba75328651b709a3b5f8cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the reaction type as a RxnType.  <a href="namespacecamp__rxn__factory.html#a458659feabba75328651b709a3b5f8cd">More...</a><br /></td></tr>
@@ -122,6 +122,8 @@ Variables</h2></td></tr>
 <tr class="separator:aae61ccd51b5504f7669d516bf3f64040"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afb5c56704ffa7553d5e3e77989f71418"><td class="memItemLeft" align="right" valign="top">integer(kind=i_kind), parameter, public&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecamp__rxn__factory.html#afb5c56704ffa7553d5e3e77989f71418">rxn_wennberg_no_ro2</a> = 17</td></tr>
 <tr class="separator:afb5c56704ffa7553d5e3e77989f71418"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a333a316d4af1ef634cd4e6c438a058ff"><td class="memItemLeft" align="right" valign="top">integer(kind=i_kind), parameter, public&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecamp__rxn__factory.html#a333a316d4af1ef634cd4e6c438a058ff">rxn_surface</a> = 19</td></tr>
+<tr class="separator:a333a316d4af1ef634cd4e6c438a058ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >The abstract <a class="el" href="structcamp__rxn__factory_1_1rxn__factory__t.html" title="Factory type for chemical reactions.">rxn_factory_t</a> structure and associated subroutines. </p>
@@ -190,7 +192,7 @@ Variables</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="rxn__factory_8_f90_source.html#l00464">464</a> of file <a class="el" href="rxn__factory_8_f90_source.html">rxn_factory.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="rxn__factory_8_f90_source.html#l00470">470</a> of file <a class="el" href="rxn__factory_8_f90_source.html">rxn_factory.F90</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -269,7 +271,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="rxn__factory_8_f90_source.html#l00526">526</a> of file <a class="el" href="rxn__factory_8_f90_source.html">rxn_factory.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="rxn__factory_8_f90_source.html#l00534">534</a> of file <a class="el" href="rxn__factory_8_f90_source.html">rxn_factory.F90</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -326,7 +328,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="rxn__factory_8_f90_source.html#l00253">253</a> of file <a class="el" href="rxn__factory_8_f90_source.html">rxn_factory.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="rxn__factory_8_f90_source.html#l00255">255</a> of file <a class="el" href="rxn__factory_8_f90_source.html">rxn_factory.F90</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -384,7 +386,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="rxn__factory_8_f90_source.html#l00353">353</a> of file <a class="el" href="rxn__factory_8_f90_source.html">rxn_factory.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="rxn__factory_8_f90_source.html#l00357">357</a> of file <a class="el" href="rxn__factory_8_f90_source.html">rxn_factory.F90</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -449,7 +451,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="rxn__factory_8_f90_source.html#l00400">400</a> of file <a class="el" href="rxn__factory_8_f90_source.html">rxn_factory.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="rxn__factory_8_f90_source.html#l00406">406</a> of file <a class="el" href="rxn__factory_8_f90_source.html">rxn_factory.F90</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -504,7 +506,7 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p>Load an aerosol represenation from input data. </p>
+<p>Load a reaction from input data. </p>
 <dl class="section return"><dt>Returns</dt><dd>A chemical reaction </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -515,13 +517,13 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="rxn__factory_8_f90_source.html#l00307">307</a> of file <a class="el" href="rxn__factory_8_f90_source.html">rxn_factory.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="rxn__factory_8_f90_source.html#l00311">311</a> of file <a class="el" href="rxn__factory_8_f90_source.html">rxn_factory.F90</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="namespacecamp__rxn__factory_a9c918055bf16f3e4db2f2ecd3d310b69_cgraph.png" border="0" usemap="#anamespacecamp__rxn__factory_a9c918055bf16f3e4db2f2ecd3d310b69_cgraph" alt=""/></div>
 <map name="anamespacecamp__rxn__factory_a9c918055bf16f3e4db2f2ecd3d310b69_cgraph" id="anamespacecamp__rxn__factory_a9c918055bf16f3e4db2f2ecd3d310b69_cgraph">
-<area shape="rect" title="Load an aerosol represenation from input data." alt="" coords="5,31,160,56"/>
+<area shape="rect" title="Load a reaction from input data." alt="" coords="5,31,160,56"/>
 <area shape="rect" href="namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="208,5,360,31"/>
 <area shape="rect" href="namespacecamp__util.html#ab72bff2627c9468e4c352118b8dc7046" title="Prints a warning message." alt="" coords="212,55,356,80"/>
 <area shape="rect" href="namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="408,23,531,63"/>
@@ -580,7 +582,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="rxn__factory_8_f90_source.html#l00447">447</a> of file <a class="el" href="rxn__factory_8_f90_source.html">rxn_factory.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="rxn__factory_8_f90_source.html#l00453">453</a> of file <a class="el" href="rxn__factory_8_f90_source.html">rxn_factory.F90</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -617,7 +619,7 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="rxn__factory_8_f90_source.html#l00216">216</a> of file <a class="el" href="rxn__factory_8_f90_source.html">rxn_factory.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="rxn__factory_8_f90_source.html#l00217">217</a> of file <a class="el" href="rxn__factory_8_f90_source.html">rxn_factory.F90</a>.</p>
 
 </div>
 </div>
@@ -635,7 +637,7 @@ Here is the call graph for this function:</div>
 
 <p>Identifiers for reaction types - used by binary packing/unpacking functions. </p>
 
-<p class="definition">Definition at line <a class="el" href="rxn__factory_8_f90_source.html#l00210">210</a> of file <a class="el" href="rxn__factory_8_f90_source.html">rxn_factory.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="rxn__factory_8_f90_source.html#l00211">211</a> of file <a class="el" href="rxn__factory_8_f90_source.html">rxn_factory.F90</a>.</p>
 
 </div>
 </div>
@@ -651,7 +653,7 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="rxn__factory_8_f90_source.html#l00212">212</a> of file <a class="el" href="rxn__factory_8_f90_source.html">rxn_factory.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="rxn__factory_8_f90_source.html#l00213">213</a> of file <a class="el" href="rxn__factory_8_f90_source.html">rxn_factory.F90</a>.</p>
 
 </div>
 </div>
@@ -667,7 +669,7 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="rxn__factory_8_f90_source.html#l00213">213</a> of file <a class="el" href="rxn__factory_8_f90_source.html">rxn_factory.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="rxn__factory_8_f90_source.html#l00214">214</a> of file <a class="el" href="rxn__factory_8_f90_source.html">rxn_factory.F90</a>.</p>
 
 </div>
 </div>
@@ -683,7 +685,7 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="rxn__factory_8_f90_source.html#l00218">218</a> of file <a class="el" href="rxn__factory_8_f90_source.html">rxn_factory.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="rxn__factory_8_f90_source.html#l00219">219</a> of file <a class="el" href="rxn__factory_8_f90_source.html">rxn_factory.F90</a>.</p>
 
 </div>
 </div>
@@ -699,7 +701,7 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="rxn__factory_8_f90_source.html#l00220">220</a> of file <a class="el" href="rxn__factory_8_f90_source.html">rxn_factory.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="rxn__factory_8_f90_source.html#l00221">221</a> of file <a class="el" href="rxn__factory_8_f90_source.html">rxn_factory.F90</a>.</p>
 
 </div>
 </div>
@@ -715,7 +717,7 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="rxn__factory_8_f90_source.html#l00219">219</a> of file <a class="el" href="rxn__factory_8_f90_source.html">rxn_factory.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="rxn__factory_8_f90_source.html#l00220">220</a> of file <a class="el" href="rxn__factory_8_f90_source.html">rxn_factory.F90</a>.</p>
 
 </div>
 </div>
@@ -731,7 +733,7 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="rxn__factory_8_f90_source.html#l00215">215</a> of file <a class="el" href="rxn__factory_8_f90_source.html">rxn_factory.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="rxn__factory_8_f90_source.html#l00216">216</a> of file <a class="el" href="rxn__factory_8_f90_source.html">rxn_factory.F90</a>.</p>
 
 </div>
 </div>
@@ -747,7 +749,7 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="rxn__factory_8_f90_source.html#l00214">214</a> of file <a class="el" href="rxn__factory_8_f90_source.html">rxn_factory.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="rxn__factory_8_f90_source.html#l00215">215</a> of file <a class="el" href="rxn__factory_8_f90_source.html">rxn_factory.F90</a>.</p>
 
 </div>
 </div>
@@ -763,7 +765,23 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="rxn__factory_8_f90_source.html#l00217">217</a> of file <a class="el" href="rxn__factory_8_f90_source.html">rxn_factory.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="rxn__factory_8_f90_source.html#l00218">218</a> of file <a class="el" href="rxn__factory_8_f90_source.html">rxn_factory.F90</a>.</p>
+
+</div>
+</div>
+<a id="a333a316d4af1ef634cd4e6c438a058ff" name="a333a316d4af1ef634cd4e6c438a058ff"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a333a316d4af1ef634cd4e6c438a058ff">&#9670;&#160;</a></span>rxn_surface</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">integer(kind=i_kind), parameter, public camp_rxn_factory::rxn_surface = 19</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="rxn__factory_8_f90_source.html#l00226">226</a> of file <a class="el" href="rxn__factory_8_f90_source.html">rxn_factory.F90</a>.</p>
 
 </div>
 </div>
@@ -779,7 +797,7 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="rxn__factory_8_f90_source.html#l00222">222</a> of file <a class="el" href="rxn__factory_8_f90_source.html">rxn_factory.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="rxn__factory_8_f90_source.html#l00223">223</a> of file <a class="el" href="rxn__factory_8_f90_source.html">rxn_factory.F90</a>.</p>
 
 </div>
 </div>
@@ -795,7 +813,7 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="rxn__factory_8_f90_source.html#l00211">211</a> of file <a class="el" href="rxn__factory_8_f90_source.html">rxn_factory.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="rxn__factory_8_f90_source.html#l00212">212</a> of file <a class="el" href="rxn__factory_8_f90_source.html">rxn_factory.F90</a>.</p>
 
 </div>
 </div>
@@ -811,7 +829,7 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="rxn__factory_8_f90_source.html#l00224">224</a> of file <a class="el" href="rxn__factory_8_f90_source.html">rxn_factory.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="rxn__factory_8_f90_source.html#l00225">225</a> of file <a class="el" href="rxn__factory_8_f90_source.html">rxn_factory.F90</a>.</p>
 
 </div>
 </div>
@@ -827,7 +845,7 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="rxn__factory_8_f90_source.html#l00223">223</a> of file <a class="el" href="rxn__factory_8_f90_source.html">rxn_factory.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="rxn__factory_8_f90_source.html#l00224">224</a> of file <a class="el" href="rxn__factory_8_f90_source.html">rxn_factory.F90</a>.</p>
 
 </div>
 </div>
@@ -843,7 +861,7 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="rxn__factory_8_f90_source.html#l00221">221</a> of file <a class="el" href="rxn__factory_8_f90_source.html">rxn_factory.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="rxn__factory_8_f90_source.html#l00222">222</a> of file <a class="el" href="rxn__factory_8_f90_source.html">rxn_factory.F90</a>.</p>
 
 </div>
 </div>

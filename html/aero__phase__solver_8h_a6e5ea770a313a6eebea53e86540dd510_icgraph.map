@@ -1,11 +1,12 @@
 <map id="aero_phase_get_used_jac_elem" name="aero_phase_get_used_jac_elem">
-<area shape="rect" id="node1" title="Flag Jacobian elements used in calculations of mass and volume." alt="" coords="1212,37,1361,77"/>
-<area shape="rect" id="node2" href="$aero__rep__modal__binned__mass_8c.html#ac5a65892343b17ff334e280f4d6ae5f9" title="Flag Jacobian elements used in calcualtions of mass and volume." alt="" coords="984,5,1164,45"/>
-<area shape="rect" id="node9" href="$aero__rep__single__particle_8c.html#a076423c54855479ccee0af37f2d9840a" title="Flag Jacobian elements used in calcualtions of mass and volume." alt="" coords="993,69,1155,109"/>
-<area shape="rect" id="node3" href="$aero__rep__solver_8c.html#a020684f657e2d323f672bd5500ceae22" title="Flag Jacobian elements used to calculated mass, volume, etc." alt="" coords="745,45,936,70"/>
+<area shape="rect" id="node1" title="Flag Jacobian elements used in calculations of mass and volume." alt="" coords="1212,69,1361,109"/>
+<area shape="rect" id="node2" href="$aero__rep__modal__binned__mass_8c.html#ac5a65892343b17ff334e280f4d6ae5f9" title="Flag Jacobian elements used in calcualtions of mass and volume." alt="" coords="984,37,1164,77"/>
+<area shape="rect" id="node10" href="$aero__rep__single__particle_8c.html#a076423c54855479ccee0af37f2d9840a" title="Flag Jacobian elements used in calcualtions of mass and volume." alt="" coords="993,101,1155,141"/>
+<area shape="rect" id="node3" href="$aero__rep__solver_8c.html#a020684f657e2d323f672bd5500ceae22" title="Flag Jacobian elements used to calculated mass, volume, etc." alt="" coords="745,77,936,102"/>
 <area shape="rect" id="node4" href="$rxn___h_l__phase__transfer_8c.html#a6397153ebdffc297c0c43cb7dfb0e9ba" title="Flag Jacobian elements used by this reaction." alt="" coords="523,5,681,45"/>
 <area shape="rect" id="node8" href="$rxn___s_i_m_p_o_l__phase__transfer_8c.html#a1658944a83529b7d5e854920f235ed3b" title="Flag Jacobian elements used by this reaction." alt="" coords="507,69,697,109"/>
-<area shape="rect" id="node5" href="$rxn__solver_8c.html#a6816597d1e59964f558cfc82b004549e" title="Get the Jacobian elements used by a particular reaction." alt="" coords="300,45,459,70"/>
-<area shape="rect" id="node6" href="$camp__solver_8c.html#a5b485fa25356197023889f3795888e98" title="Try to improve guesses of y sent to the linear solver." alt="" coords="164,45,252,70"/>
-<area shape="rect" id="node7" href="$camp__solver_8c.html#a599ffdef916b139a1690bfd41aa386b6" title="Solver initialization." alt="" coords="5,45,116,70"/>
+<area shape="rect" id="node9" href="$rxn__surface_8c.html#a172e0e483115d10f868a1a68f7a664da" title="Flag Jacobian elements used by this reaction." alt="" coords="527,133,677,173"/>
+<area shape="rect" id="node5" href="$rxn__solver_8c.html#a6816597d1e59964f558cfc82b004549e" title="Get the Jacobian elements used by a particular reaction." alt="" coords="300,77,459,102"/>
+<area shape="rect" id="node6" href="$camp__solver_8c.html#a5b485fa25356197023889f3795888e98" title="Try to improve guesses of y sent to the linear solver." alt="" coords="164,77,252,102"/>
+<area shape="rect" id="node7" href="$camp__solver_8c.html#a599ffdef916b139a1690bfd41aa386b6" title="Solver initialization." alt="" coords="5,77,116,102"/>
 </map>

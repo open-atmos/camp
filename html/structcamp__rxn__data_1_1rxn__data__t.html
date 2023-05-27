@@ -67,7 +67,7 @@ Inheritance diagram for camp_rxn_data::rxn_data_t:</div>
 <div class="dyncontent">
 <div class="center"><img src="structcamp__rxn__data_1_1rxn__data__t__inherit__graph.png" border="0" usemap="#acamp__rxn__data_1_1rxn__data__t_inherit__map" alt="Inheritance graph"/></div>
 <map name="acamp__rxn__data_1_1rxn__data__t_inherit__map" id="acamp__rxn__data_1_1rxn__data__t_inherit__map">
-<area shape="rect" title="Abstract reaction data type." alt="" coords="5,485,139,525"/>
+<area shape="rect" title="Abstract reaction data type." alt="" coords="5,517,139,557"/>
 <area shape="rect" href="structcamp__rxn__aqueous__equilibrium_1_1rxn__aqueous__equilibrium__t.html" title="Generic test reaction data type." alt="" coords="188,5,391,45"/>
 <area shape="rect" href="structcamp__rxn__arrhenius_1_1rxn__arrhenius__t.html" title="Generic test reaction data type." alt="" coords="220,69,359,109"/>
 <area shape="rect" href="structcamp__rxn__cmaq__h2o2_1_1rxn__cmaq__h2o2__t.html" title="Generic test reaction data type." alt="" coords="213,133,365,173"/>
@@ -78,11 +78,12 @@ Inheritance diagram for camp_rxn_data::rxn_data_t:</div>
 <area shape="rect" href="structcamp__rxn__hl__phase__transfer_1_1rxn__hl__phase__transfer__t.html" title="Generic test reaction data type." alt="" coords="195,485,383,525"/>
 <area shape="rect" href="structcamp__rxn__photolysis_1_1rxn__photolysis__t.html" title="Generic test reaction data type." alt="" coords="218,549,361,589"/>
 <area shape="rect" href="structcamp__rxn__simpol__phase__transfer_1_1rxn__simpol__phase__transfer__t.html" title="Generic test reaction data type." alt="" coords="207,614,372,669"/>
-<area shape="rect" href="structcamp__rxn__ternary__chemical__activation_1_1rxn__ternary__chemical__activation__t.html" title="Generic test reaction data type." alt="" coords="198,693,381,747"/>
-<area shape="rect" href="structcamp__rxn__troe_1_1rxn__troe__t.html" title="Generic test reaction data type." alt="" coords="224,772,355,812"/>
-<area shape="rect" href="structcamp__rxn__wennberg__no__ro2_1_1rxn__wennberg__no__ro2__t.html" title="Generic test reaction data type." alt="" coords="194,836,385,876"/>
-<area shape="rect" href="structcamp__rxn__wennberg__tunneling_1_1rxn__wennberg__tunneling__t.html" title="Generic test reaction data type." alt="" coords="189,900,389,940"/>
-<area shape="rect" href="structcamp__rxn__wet__deposition_1_1rxn__wet__deposition__t.html" title="Generic test reaction data type." alt="" coords="203,964,375,1004"/>
+<area shape="rect" href="structcamp__rxn__surface_1_1rxn__surface__t.html" title="Generic test reaction data type." alt="" coords="214,693,365,733"/>
+<area shape="rect" href="structcamp__rxn__ternary__chemical__activation_1_1rxn__ternary__chemical__activation__t.html" title="Generic test reaction data type." alt="" coords="198,758,381,813"/>
+<area shape="rect" href="structcamp__rxn__troe_1_1rxn__troe__t.html" title="Generic test reaction data type." alt="" coords="224,837,355,877"/>
+<area shape="rect" href="structcamp__rxn__wennberg__no__ro2_1_1rxn__wennberg__no__ro2__t.html" title="Generic test reaction data type." alt="" coords="194,901,385,941"/>
+<area shape="rect" href="structcamp__rxn__wennberg__tunneling_1_1rxn__wennberg__tunneling__t.html" title="Generic test reaction data type." alt="" coords="189,965,389,1005"/>
+<area shape="rect" href="structcamp__rxn__wet__deposition_1_1rxn__wet__deposition__t.html" title="Generic test reaction data type." alt="" coords="203,1029,375,1069"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
@@ -132,7 +133,7 @@ Public Attributes</h2></td></tr>
 <div class="textblock"><p >Abstract reaction data type. </p>
 <p >Time-invariant data related to a <a class="el" href="camp_rxn.html">reaction</a>. Types extending <code><a class="el" href="structcamp__rxn__data_1_1rxn__data__t.html" title="Abstract reaction data type.">rxn_data_t</a></code> should represent specific reaction types, with unique rate equations. Extending types should not have data members, as these will not be passed to the child nodes after initialization. Instead all data required by an extending type during a model run should be packed into the condensed_data arrays during initialization. </p>
 
-<p class="definition">Definition at line <a class="el" href="rxn__data_8_f90_source.html#l00096">96</a> of file <a class="el" href="rxn__data_8_f90_source.html">rxn_data.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="rxn__data_8_f90_source.html#l00097">97</a> of file <a class="el" href="rxn__data_8_f90_source.html">rxn_data.F90</a>.</p>
 </div><h2 class="groupheader">Member Function/Subroutine Documentation</h2>
 <a id="ab54997286fdecacdcf6141dca1acd697" name="ab54997286fdecacdcf6141dca1acd697"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab54997286fdecacdcf6141dca1acd697">&#9670;&#160;</a></span>bin_pack()</h2>
@@ -148,7 +149,7 @@ Public Attributes</h2></td></tr>
 
 <p>Packs the given value into the buffer, advancing position. </p>
 
-<p class="definition">Definition at line <a class="el" href="rxn__data_8_f90_source.html#l00139">139</a> of file <a class="el" href="rxn__data_8_f90_source.html">rxn_data.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="rxn__data_8_f90_source.html#l00140">140</a> of file <a class="el" href="rxn__data_8_f90_source.html">rxn_data.F90</a>.</p>
 
 </div>
 </div>
@@ -166,7 +167,7 @@ Public Attributes</h2></td></tr>
 
 <p>Unpacks the given value from the buffer, advancing position. </p>
 
-<p class="definition">Definition at line <a class="el" href="rxn__data_8_f90_source.html#l00141">141</a> of file <a class="el" href="rxn__data_8_f90_source.html">rxn_data.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="rxn__data_8_f90_source.html#l00142">142</a> of file <a class="el" href="rxn__data_8_f90_source.html">rxn_data.F90</a>.</p>
 
 </div>
 </div>
@@ -184,7 +185,7 @@ Public Attributes</h2></td></tr>
 
 <p>Check the phase of the reaction against the phase being solved for. During GAS_RXN integrations, only GAS_RXN reactions are solved. During AERO_RXN integrations, only AERO_RXN and GAS_AERO_RXN reactions are solved. During GAS_AERO_RXN integrations, all reactions are solved. </p>
 
-<p class="definition">Definition at line <a class="el" href="rxn__data_8_f90_source.html#l00135">135</a> of file <a class="el" href="rxn__data_8_f90_source.html">rxn_data.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="rxn__data_8_f90_source.html#l00136">136</a> of file <a class="el" href="rxn__data_8_f90_source.html">rxn_data.F90</a>.</p>
 
 </div>
 </div>
@@ -203,7 +204,7 @@ Public Attributes</h2></td></tr>
 <p>Reaction initialization. Takes species, phase and reaction parameters and packs required information into the condensed data arrays for use during the model run. </p>
 <p >This routine should be called once for each reaction at the beginning of a model run after all the input files have been read in. </p>
 
-<p class="definition">Definition at line <a class="el" href="rxn__data_8_f90_source.html#l00127">127</a> of file <a class="el" href="rxn__data_8_f90_source.html">rxn_data.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="rxn__data_8_f90_source.html#l00128">128</a> of file <a class="el" href="rxn__data_8_f90_source.html">rxn_data.F90</a>.</p>
 
 </div>
 </div>
@@ -221,7 +222,7 @@ Public Attributes</h2></td></tr>
 
 <p>Load data from an input file. </p>
 
-<p class="definition">Definition at line <a class="el" href="rxn__data_8_f90_source.html#l00129">129</a> of file <a class="el" href="rxn__data_8_f90_source.html">rxn_data.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="rxn__data_8_f90_source.html#l00130">130</a> of file <a class="el" href="rxn__data_8_f90_source.html">rxn_data.F90</a>.</p>
 
 </div>
 </div>
@@ -239,7 +240,7 @@ Public Attributes</h2></td></tr>
 
 <p>Determine the number of bytes required to pack the given value. </p>
 
-<p class="definition">Definition at line <a class="el" href="rxn__data_8_f90_source.html#l00137">137</a> of file <a class="el" href="rxn__data_8_f90_source.html">rxn_data.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="rxn__data_8_f90_source.html#l00138">138</a> of file <a class="el" href="rxn__data_8_f90_source.html">rxn_data.F90</a>.</p>
 
 </div>
 </div>
@@ -257,7 +258,7 @@ Public Attributes</h2></td></tr>
 
 <p>Print the reaction data. </p>
 
-<p class="definition">Definition at line <a class="el" href="rxn__data_8_f90_source.html#l00143">143</a> of file <a class="el" href="rxn__data_8_f90_source.html">rxn_data.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="rxn__data_8_f90_source.html#l00144">144</a> of file <a class="el" href="rxn__data_8_f90_source.html">rxn_data.F90</a>.</p>
 
 </div>
 </div>
@@ -276,7 +277,7 @@ Public Attributes</h2></td></tr>
 
 <p>Condensed reaction data. Theses arrays will be available during integration, and should contain any information required by the rate and <a class="el" href="struct_jacobian.html">Jacobian</a> constribution functions that cannot be obtained from the <code><a class="el" href="structcamp__camp__state_1_1camp__state__t.html" title="Model state.">camp_camp_state::camp_state_t</a></code> object. (integer) </p>
 
-<p class="definition">Definition at line <a class="el" href="rxn__data_8_f90_source.html#l00114">114</a> of file <a class="el" href="rxn__data_8_f90_source.html">rxn_data.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="rxn__data_8_f90_source.html#l00115">115</a> of file <a class="el" href="rxn__data_8_f90_source.html">rxn_data.F90</a>.</p>
 
 </div>
 </div>
@@ -294,7 +295,7 @@ Public Attributes</h2></td></tr>
 
 <p>Condensed reaction data. Theses arrays will be available during integration, and should contain any information required by the rate and <a class="el" href="struct_jacobian.html">Jacobian</a> constribution functions that cannot be obtained from the <code><a class="el" href="structcamp__camp__state_1_1camp__state__t.html" title="Model state.">camp_camp_state::camp_state_t</a></code> object. (floating-point) </p>
 
-<p class="definition">Definition at line <a class="el" href="rxn__data_8_f90_source.html#l00109">109</a> of file <a class="el" href="rxn__data_8_f90_source.html">rxn_data.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="rxn__data_8_f90_source.html#l00110">110</a> of file <a class="el" href="rxn__data_8_f90_source.html">rxn_data.F90</a>.</p>
 
 </div>
 </div>
@@ -312,7 +313,7 @@ Public Attributes</h2></td></tr>
 
 <p>Number of environment-dependent parameters These are parameters that need updated when environmental conditions change. </p>
 
-<p class="definition">Definition at line <a class="el" href="rxn__data_8_f90_source.html#l00118">118</a> of file <a class="el" href="rxn__data_8_f90_source.html">rxn_data.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="rxn__data_8_f90_source.html#l00119">119</a> of file <a class="el" href="rxn__data_8_f90_source.html">rxn_data.F90</a>.</p>
 
 </div>
 </div>
@@ -330,7 +331,7 @@ Public Attributes</h2></td></tr>
 
 <p>Reaction parameters. These will be available during initialization, but not during integration. All information required to calculate the time derivatives and <a class="el" href="struct_jacobian.html">Jacobian</a> matrix constributions must be saved by the exdending type. </p>
 
-<p class="definition">Definition at line <a class="el" href="rxn__data_8_f90_source.html#l00104">104</a> of file <a class="el" href="rxn__data_8_f90_source.html">rxn_data.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="rxn__data_8_f90_source.html#l00105">105</a> of file <a class="el" href="rxn__data_8_f90_source.html">rxn_data.F90</a>.</p>
 
 </div>
 </div>
@@ -348,7 +349,7 @@ Public Attributes</h2></td></tr>
 
 <p>Reaction phase. </p>
 
-<p class="definition">Definition at line <a class="el" href="rxn__data_8_f90_source.html#l00099">99</a> of file <a class="el" href="rxn__data_8_f90_source.html">rxn_data.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="rxn__data_8_f90_source.html#l00100">100</a> of file <a class="el" href="rxn__data_8_f90_source.html">rxn_data.F90</a>.</p>
 
 </div>
 </div>

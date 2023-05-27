@@ -28,13 +28,15 @@ digraph "rxns.h"
   Node1 -> Node12 [dir="back",color="steelblue1",style="solid"];
   Node12 [label="rxn_solver.c",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$rxn__solver_8c.html",tooltip="Reaction solver functions."];
   Node1 -> Node13 [dir="back",color="steelblue1",style="solid"];
-  Node13 [label="rxn_ternary_chemical\l_activation.c",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$rxn__ternary__chemical__activation_8c.html",tooltip="Ternary Chemical Activation reaction solver functions."];
+  Node13 [label="rxn_surface.c",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$rxn__surface_8c.html",tooltip="Surface reaction solver functions."];
   Node1 -> Node14 [dir="back",color="steelblue1",style="solid"];
-  Node14 [label="rxn_troe.c",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$rxn__troe_8c.html",tooltip="Troe reaction solver functions."];
+  Node14 [label="rxn_ternary_chemical\l_activation.c",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$rxn__ternary__chemical__activation_8c.html",tooltip="Ternary Chemical Activation reaction solver functions."];
   Node1 -> Node15 [dir="back",color="steelblue1",style="solid"];
-  Node15 [label="rxn_wennberg_no_ro2.c",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$rxn__wennberg__no__ro2_8c.html",tooltip="Wennberg NO + RO2 reaction solver functions."];
+  Node15 [label="rxn_troe.c",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$rxn__troe_8c.html",tooltip="Troe reaction solver functions."];
   Node1 -> Node16 [dir="back",color="steelblue1",style="solid"];
-  Node16 [label="rxn_wennberg_tunneling.c",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$rxn__wennberg__tunneling_8c.html",tooltip="Wennberg tunneling reaction solver functions."];
+  Node16 [label="rxn_wennberg_no_ro2.c",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$rxn__wennberg__no__ro2_8c.html",tooltip="Wennberg NO + RO2 reaction solver functions."];
   Node1 -> Node17 [dir="back",color="steelblue1",style="solid"];
-  Node17 [label="rxn_wet_deposition.c",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$rxn__wet__deposition_8c.html",tooltip="Wet deposition reaction solver functions."];
+  Node17 [label="rxn_wennberg_tunneling.c",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$rxn__wennberg__tunneling_8c.html",tooltip="Wennberg tunneling reaction solver functions."];
+  Node1 -> Node18 [dir="back",color="steelblue1",style="solid"];
+  Node18 [label="rxn_wet_deposition.c",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$rxn__wet__deposition_8c.html",tooltip="Wet deposition reaction solver functions."];
 }

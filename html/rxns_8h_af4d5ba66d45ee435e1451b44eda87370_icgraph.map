@@ -1,0 +1,8 @@
+<map id="rxn_surface_print" name="rxn_surface_print">
+<area shape="rect" id="node1" title="Print the surface reaction parameters." alt="" coords="704,35,825,60"/>
+<area shape="rect" id="node2" href="$rxn__solver_8c.html#a607b803e7a4b427940312560ae0e5ba3" title="Print the reaction data." alt="" coords="530,5,633,31"/>
+<area shape="rect" id="node3" href="$rxn__surface_8c.html#a172e0e483115d10f868a1a68f7a664da" title="Flag Jacobian elements used by this reaction." alt="" coords="507,55,656,95"/>
+<area shape="rect" id="node4" href="$rxn__solver_8c.html#a6816597d1e59964f558cfc82b004549e" title="Get the Jacobian elements used by a particular reaction." alt="" coords="300,63,459,88"/>
+<area shape="rect" id="node5" href="$camp__solver_8c.html#a5b485fa25356197023889f3795888e98" title="Try to improve guesses of y sent to the linear solver." alt="" coords="164,63,252,88"/>
+<area shape="rect" id="node6" href="$camp__solver_8c.html#a599ffdef916b139a1690bfd41aa386b6" title="Solver initialization." alt="" coords="5,63,116,88"/>
+</map>

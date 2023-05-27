@@ -38,16 +38,19 @@ digraph "jacobian_add_value"
   Node14 -> Node8 [dir="back",color="steelblue1",style="solid"];
   Node14 -> Node12 [dir="back",color="steelblue1",style="solid"];
   Node1 -> Node15 [dir="back",color="steelblue1",style="solid"];
-  Node15 [label="rxn_ternary_chemical\l_activation_calc_jac\l_contrib",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$rxn__ternary__chemical__activation_8c.html#a0e03361890588fa6e5b8d43b5f63d208",tooltip="Calculate contributions to the Jacobian from this reaction."];
+  Node15 [label="rxn_surface_calc_jac\l_contrib",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$rxn__surface_8c.html#a8de73dc2a00c1bc5b91747cbb50086ad",tooltip="Calculate contributions to the Jacobian from this reaction."];
   Node15 -> Node8 [dir="back",color="steelblue1",style="solid"];
   Node1 -> Node16 [dir="back",color="steelblue1",style="solid"];
-  Node16 [label="rxn_troe_calc_jac_contrib",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$rxn__troe_8c.html#a4f34c34a0b24bbbb11a127246e3fd35e",tooltip="Calculate contributions to the Jacobian from this reaction."];
+  Node16 [label="rxn_ternary_chemical\l_activation_calc_jac\l_contrib",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$rxn__ternary__chemical__activation_8c.html#a0e03361890588fa6e5b8d43b5f63d208",tooltip="Calculate contributions to the Jacobian from this reaction."];
   Node16 -> Node8 [dir="back",color="steelblue1",style="solid"];
   Node1 -> Node17 [dir="back",color="steelblue1",style="solid"];
-  Node17 [label="rxn_wennberg_no_ro2\l_calc_jac_contrib",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$rxn__wennberg__no__ro2_8c.html#a548df130894fc55ab07d65f276e642e2",tooltip="Calculate contributions to the Jacobian from this reaction."];
+  Node17 [label="rxn_troe_calc_jac_contrib",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$rxn__troe_8c.html#a4f34c34a0b24bbbb11a127246e3fd35e",tooltip="Calculate contributions to the Jacobian from this reaction."];
+  Node17 -> Node8 [dir="back",color="steelblue1",style="solid"];
   Node1 -> Node18 [dir="back",color="steelblue1",style="solid"];
-  Node18 [label="rxn_wennberg_tunneling\l_calc_jac_contrib",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$rxn__wennberg__tunneling_8c.html#a685940f20236736828f6afb7416ea655",tooltip="Calculate contributions to the Jacobian from this reaction."];
+  Node18 [label="rxn_wennberg_no_ro2\l_calc_jac_contrib",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$rxn__wennberg__no__ro2_8c.html#a548df130894fc55ab07d65f276e642e2",tooltip="Calculate contributions to the Jacobian from this reaction."];
   Node1 -> Node19 [dir="back",color="steelblue1",style="solid"];
-  Node19 [label="rxn_wet_deposition\l_calc_jac_contrib",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$rxn__wet__deposition_8c.html#ad84c0373895c3b2bfad55408c9066f16",tooltip="Calculate contributions to the Jacobian from this reaction."];
-  Node19 -> Node8 [dir="back",color="steelblue1",style="solid"];
+  Node19 [label="rxn_wennberg_tunneling\l_calc_jac_contrib",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$rxn__wennberg__tunneling_8c.html#a685940f20236736828f6afb7416ea655",tooltip="Calculate contributions to the Jacobian from this reaction."];
+  Node1 -> Node20 [dir="back",color="steelblue1",style="solid"];
+  Node20 [label="rxn_wet_deposition\l_calc_jac_contrib",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$rxn__wet__deposition_8c.html#ad84c0373895c3b2bfad55408c9066f16",tooltip="Calculate contributions to the Jacobian from this reaction."];
+  Node20 -> Node8 [dir="back",color="steelblue1",style="solid"];
 }

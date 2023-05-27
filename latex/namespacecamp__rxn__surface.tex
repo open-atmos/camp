@@ -1,0 +1,90 @@
+\hypertarget{namespacecamp__rxn__surface}{}\doxysection{camp\+\_\+rxn\+\_\+surface Module Reference}
+\label{namespacecamp__rxn__surface}\index{camp\_rxn\_surface@{camp\_rxn\_surface}}
+
+
+The \mbox{\hyperlink{structcamp__rxn__surface_1_1rxn__surface__t}{rxn\+\_\+surface\+\_\+t}} type and associated functions.  
+
+
+\doxysubsection*{Data Types}
+\begin{DoxyCompactItemize}
+\item 
+interface \mbox{\hyperlink{structcamp__rxn__surface_1_1rxn__surface__t}{rxn\+\_\+surface\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em Generic test reaction data type. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Functions/\+Subroutines}
+\begin{DoxyCompactItemize}
+\item 
+type(\mbox{\hyperlink{structcamp__rxn__surface_1_1rxn__surface__t}{rxn\+\_\+surface\+\_\+t}}) function, pointer \mbox{\hyperlink{namespacecamp__rxn__surface_a62155c1bc1cca817f7fce0f3dedb50e8}{constructor}} ()
+\begin{DoxyCompactList}\small\item\em Constructor for surface reaction. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__rxn__surface_a25af23484c87395619d93dd31b5ed529}{initialize}} (this, chem\+\_\+spec\+\_\+data, aero\+\_\+rep, n\+\_\+cells)
+\begin{DoxyCompactList}\small\item\em Initialize the reaction data, validating component data and loading any required information into the condensed data arrays for use during solving. \end{DoxyCompactList}\item 
+elemental subroutine \mbox{\hyperlink{namespacecamp__rxn__surface_ab3b5e4fadaa198cb962a28e3c0b2eace}{finalize}} (this)
+\begin{DoxyCompactList}\small\item\em Finalize the reaction. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+The \mbox{\hyperlink{structcamp__rxn__surface_1_1rxn__surface__t}{rxn\+\_\+surface\+\_\+t}} type and associated functions. 
+
+\doxysubsection{Function/\+Subroutine Documentation}
+\mbox{\Hypertarget{namespacecamp__rxn__surface_a62155c1bc1cca817f7fce0f3dedb50e8}\label{namespacecamp__rxn__surface_a62155c1bc1cca817f7fce0f3dedb50e8}} 
+\index{camp\_rxn\_surface@{camp\_rxn\_surface}!constructor@{constructor}}
+\index{constructor@{constructor}!camp\_rxn\_surface@{camp\_rxn\_surface}}
+\doxysubsubsection{\texorpdfstring{constructor()}{constructor()}}
+{\footnotesize\ttfamily type(\mbox{\hyperlink{structcamp__rxn__surface_1_1rxn__surface__t}{rxn\+\_\+surface\+\_\+t}}) function, pointer camp\+\_\+rxn\+\_\+surface\+::constructor\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Constructor for surface reaction. 
+
+\begin{DoxyReturn}{Returns}
+A new reaction instance 
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{rxn__surface_8_f90_source_l00129}{129}} of file \mbox{\hyperlink{rxn__surface_8_f90_source}{rxn\+\_\+surface.\+F90}}.
+
+\mbox{\Hypertarget{namespacecamp__rxn__surface_ab3b5e4fadaa198cb962a28e3c0b2eace}\label{namespacecamp__rxn__surface_ab3b5e4fadaa198cb962a28e3c0b2eace}} 
+\index{camp\_rxn\_surface@{camp\_rxn\_surface}!finalize@{finalize}}
+\index{finalize@{finalize}!camp\_rxn\_surface@{camp\_rxn\_surface}}
+\doxysubsubsection{\texorpdfstring{finalize()}{finalize()}}
+{\footnotesize\ttfamily elemental subroutine camp\+\_\+rxn\+\_\+surface\+::finalize (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__rxn__surface_1_1rxn__surface__t}{rxn\+\_\+surface\+\_\+t}}), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Finalize the reaction. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & Reaction data \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{rxn__surface_8_f90_source_l00281}{281}} of file \mbox{\hyperlink{rxn__surface_8_f90_source}{rxn\+\_\+surface.\+F90}}.
+
+\mbox{\Hypertarget{namespacecamp__rxn__surface_a25af23484c87395619d93dd31b5ed529}\label{namespacecamp__rxn__surface_a25af23484c87395619d93dd31b5ed529}} 
+\index{camp\_rxn\_surface@{camp\_rxn\_surface}!initialize@{initialize}}
+\index{initialize@{initialize}!camp\_rxn\_surface@{camp\_rxn\_surface}}
+\doxysubsubsection{\texorpdfstring{initialize()}{initialize()}}
+{\footnotesize\ttfamily subroutine \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1initialize}{camp\+\_\+rxn\+\_\+surface\+::initialize}} (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__rxn__surface_1_1rxn__surface__t}{rxn\+\_\+surface\+\_\+t}}), intent(inout)}]{this,  }\item[{type(\mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t}{chem\+\_\+spec\+\_\+data\+\_\+t}}), intent(in)}]{chem\+\_\+spec\+\_\+data,  }\item[{type(\mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__ptr}{aero\+\_\+rep\+\_\+data\+\_\+ptr}}), dimension(\+:), intent(in), pointer}]{aero\+\_\+rep,  }\item[{integer(kind=i\+\_\+kind), intent(in)}]{n\+\_\+cells }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Initialize the reaction data, validating component data and loading any required information into the condensed data arrays for use during solving. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & Reaction data \\
+\hline
+\mbox{\texttt{ in}}  & {\em chem\+\_\+spec\+\_\+data} & Chemical species data \\
+\hline
+\mbox{\texttt{ in}}  & {\em aero\+\_\+rep} & Aerosol representations \\
+\hline
+\mbox{\texttt{ in}}  & {\em n\+\_\+cells} & Number of grid cells to solve simultaneously \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{rxn__surface_8_f90_source_l00144}{144}} of file \mbox{\hyperlink{rxn__surface_8_f90_source}{rxn\+\_\+surface.\+F90}}.
+
+Here is the call graph for this function\+:
+% FIG 0

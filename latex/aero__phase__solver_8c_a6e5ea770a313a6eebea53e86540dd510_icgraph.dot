@@ -21,7 +21,10 @@ digraph "aero_phase_get_used_jac_elem"
   Node3 -> Node8 [dir="back",color="steelblue1",style="solid"];
   Node8 [label="rxn_SIMPOL_phase_transfer\l_get_used_jac_elem",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$rxn___s_i_m_p_o_l__phase__transfer_8c.html#a1658944a83529b7d5e854920f235ed3b",tooltip="Flag Jacobian elements used by this reaction."];
   Node8 -> Node5 [dir="back",color="steelblue1",style="solid"];
-  Node1 -> Node9 [dir="back",color="steelblue1",style="solid"];
-  Node9 [label="aero_rep_single_particle\l_get_used_jac_elem",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$aero__rep__single__particle_8c.html#a076423c54855479ccee0af37f2d9840a",tooltip="Flag Jacobian elements used in calcualtions of mass and volume."];
-  Node9 -> Node3 [dir="back",color="steelblue1",style="solid"];
+  Node3 -> Node9 [dir="back",color="steelblue1",style="solid"];
+  Node9 [label="rxn_surface_get_used\l_jac_elem",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$rxn__surface_8c.html#a172e0e483115d10f868a1a68f7a664da",tooltip="Flag Jacobian elements used by this reaction."];
+  Node9 -> Node5 [dir="back",color="steelblue1",style="solid"];
+  Node1 -> Node10 [dir="back",color="steelblue1",style="solid"];
+  Node10 [label="aero_rep_single_particle\l_get_used_jac_elem",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$aero__rep__single__particle_8c.html#a076423c54855479ccee0af37f2d9840a",tooltip="Flag Jacobian elements used in calcualtions of mass and volume."];
+  Node10 -> Node3 [dir="back",color="steelblue1",style="solid"];
 }

@@ -153,7 +153,7 @@ Macros</h2></td></tr>
 <tr class="separator:ae0d4c34a858d8d08096ddba79e3e394d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ace9066b2ec147811e0f1206738cc2adf"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rxn___h_l__phase__transfer_8c.html#ace9066b2ec147811e0f1206738cc2adf">NUM_AERO_PHASE_JAC_ELEM_</a>(x)&#160;&#160;&#160;(int_data[<a class="el" href="rxn___h_l__phase__transfer_8c.html#a04869ea36d5403968bd6f5e6fd4bf329">PHASE_INT_LOC_</a>(x) + 4])</td></tr>
 <tr class="separator:ace9066b2ec147811e0f1206738cc2adf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abdf4e3795c943871823b78eaf5da21fc"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rxn___h_l__phase__transfer_8c.html#abdf4e3795c943871823b78eaf5da21fc">PHASE_JAC_ID_</a>(x,  s,  e)&#160;&#160;&#160;  int_data[<a class="el" href="rxn___h_l__phase__transfer_8c.html#a04869ea36d5403968bd6f5e6fd4bf329">PHASE_INT_LOC_</a>(x) + 5 + s * <a class="el" href="rxn___h_l__phase__transfer_8c.html#ace9066b2ec147811e0f1206738cc2adf">NUM_AERO_PHASE_JAC_ELEM_</a>(x) + e]</td></tr>
+<tr class="memitem:abdf4e3795c943871823b78eaf5da21fc"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rxn___h_l__phase__transfer_8c.html#abdf4e3795c943871823b78eaf5da21fc">PHASE_JAC_ID_</a>(x,  s,  e)&#160;&#160;&#160;  int_data[<a class="el" href="rxn___h_l__phase__transfer_8c.html#a04869ea36d5403968bd6f5e6fd4bf329">PHASE_INT_LOC_</a>(x) + 5 + (s) * <a class="el" href="rxn___h_l__phase__transfer_8c.html#ace9066b2ec147811e0f1206738cc2adf">NUM_AERO_PHASE_JAC_ELEM_</a>(x) + e]</td></tr>
 <tr class="separator:abdf4e3795c943871823b78eaf5da21fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a21721f706408d9a4a6e1b02c537c5c8b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rxn___h_l__phase__transfer_8c.html#a21721f706408d9a4a6e1b02c537c5c8b">SMALL_WATER_CONC_</a>(x)&#160;&#160;&#160;(float_data[<a class="el" href="rxn___h_l__phase__transfer_8c.html#a1b01f1bcaa27c6a585133a578d29b09c">PHASE_REAL_LOC_</a>(x)])</td></tr>
 <tr class="separator:a21721f706408d9a4a6e1b02c537c5c8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -739,7 +739,7 @@ Functions</h2></td></tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td>&#160;&#160;&#160;  int_data[<a class="el" href="rxn___h_l__phase__transfer_8c.html#a04869ea36d5403968bd6f5e6fd4bf329">PHASE_INT_LOC_</a>(x) + 5 + s * <a class="el" href="rxn___h_l__phase__transfer_8c.html#ace9066b2ec147811e0f1206738cc2adf">NUM_AERO_PHASE_JAC_ELEM_</a>(x) + e]</td>
+          <td></td><td>&#160;&#160;&#160;  int_data[<a class="el" href="rxn___h_l__phase__transfer_8c.html#a04869ea36d5403968bd6f5e6fd4bf329">PHASE_INT_LOC_</a>(x) + 5 + (s) * <a class="el" href="rxn___h_l__phase__transfer_8c.html#ace9066b2ec147811e0f1206738cc2adf">NUM_AERO_PHASE_JAC_ELEM_</a>(x) + e]</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -911,7 +911,7 @@ Here is the call graph for this function:</div>
 <area shape="rect" href="aero__rep__solver_8c.html#a00aee7bec2d9284a74c0eb26d346dc81" title="Check whether aerosol concentrations are per&#45;particle or total for each phase." alt="" coords="211,77,405,102"/>
 <area shape="rect" href="aero__rep__solver_8c.html#aab8fc9de2c9bfe5d012e80322a5b653b" title="Get the effective particle radius, &#160;(m)" alt="" coords="231,197,385,237"/>
 <area shape="rect" href="aero__rep__solver_8c.html#aa56870eb4fe20532461b1634d7688210" title="Get the particle number concentration &#160;( )" alt="" coords="235,276,381,316"/>
-<area shape="rect" href="util_8h.html#ada92558814324f22e19743fbf25ceb0f" title=" " alt="" coords="235,368,381,408"/>
+<area shape="rect" href="util_8h.html#adfe7ce1a7c219664c7a382f24068b1a1" title=" " alt="" coords="232,368,384,408"/>
 <area shape="rect" href="time__derivative_8c.html#af4c9ab5040b544a8ec4b63a1c75922e2" title="Add a contribution to the time derivative." alt="" coords="239,432,377,472"/>
 <area shape="rect" href="aero__rep__modal__binned__mass_8c.html#a5806fae1fe7d70369bfb7a0d9c54d12f" title="Get the type of aerosol concentration used." alt="" coords="470,5,654,45"/>
 <area shape="rect" href="aero__rep__single__particle_8c.html#a59114de73dd305d5825a8547155b8946" title="Get the type of aerosol concentration used." alt="" coords="481,69,643,109"/>
@@ -922,6 +922,7 @@ Here is the call graph for this function:</div>
 <area shape="rect" href="aero__rep__single__particle_8c.html#afa7d35b774d0ab4d7cad7fb30d75e897" title="Get the particle number concentration &#160;( )" alt="" coords="473,325,651,365"/>
 <area shape="rect" href="util_8h.html#ae1c969544a10c17746622cf73186835c" title=" " alt="" coords="730,418,870,443"/>
 <area shape="rect" href="util_8h.html#a0ade6cf865e738fbd0629ca08500679d" title=" " alt="" coords="469,440,655,480"/>
+<area shape="rect" href="util_8h.html#a77fbb355dc943308c5632fe698e81363" title=" " alt="" coords="929,418,1064,443"/>
 </map>
 </div>
 <div class="dynheader">
@@ -1017,8 +1018,8 @@ Here is the call graph for this function:</div>
 <area shape="rect" href="aero__rep__solver_8c.html#a00aee7bec2d9284a74c0eb26d346dc81" title="Check whether aerosol concentrations are per&#45;particle or total for each phase." alt="" coords="211,77,405,102"/>
 <area shape="rect" href="aero__rep__solver_8c.html#aab8fc9de2c9bfe5d012e80322a5b653b" title="Get the effective particle radius, &#160;(m)" alt="" coords="231,197,385,237"/>
 <area shape="rect" href="aero__rep__solver_8c.html#aa56870eb4fe20532461b1634d7688210" title="Get the particle number concentration &#160;( )" alt="" coords="235,325,381,365"/>
-<area shape="rect" href="util_8h.html#ad31f0cb5f01c257931b6e82d91b6fb23" title=" " alt="" coords="229,412,387,452"/>
-<area shape="rect" href="util_8h.html#ada92558814324f22e19743fbf25ceb0f" title=" " alt="" coords="235,505,381,545"/>
+<area shape="rect" href="util_8h.html#a6960902fe575d06ebd32350a076ba968" title=" " alt="" coords="214,412,402,452"/>
+<area shape="rect" href="util_8h.html#adfe7ce1a7c219664c7a382f24068b1a1" title=" " alt="" coords="232,505,384,545"/>
 <area shape="rect" href="_jacobian_8c.html#a844d8b2784c48a794ada38d053b1d1b3" title="Add a contribution to the Jacobian." alt="" coords="240,570,376,595"/>
 <area shape="rect" href="aero__rep__modal__binned__mass_8c.html#a5806fae1fe7d70369bfb7a0d9c54d12f" title="Get the type of aerosol concentration used." alt="" coords="470,5,654,45"/>
 <area shape="rect" href="aero__rep__single__particle_8c.html#a59114de73dd305d5825a8547155b8946" title="Get the type of aerosol concentration used." alt="" coords="481,69,643,109"/>
@@ -1030,6 +1031,7 @@ Here is the call graph for this function:</div>
 <area shape="rect" href="util_8h.html#af0918da54a73bf30e7079908caea2efd" title=" " alt="" coords="492,390,632,445"/>
 <area shape="rect" href="util_8h.html#ae1c969544a10c17746622cf73186835c" title=" " alt="" coords="730,498,870,523"/>
 <area shape="rect" href="util_8h.html#a0ade6cf865e738fbd0629ca08500679d" title=" " alt="" coords="469,520,655,560"/>
+<area shape="rect" href="util_8h.html#a77fbb355dc943308c5632fe698e81363" title=" " alt="" coords="929,498,1064,523"/>
 </map>
 </div>
 <div class="dynheader">
@@ -1236,6 +1238,7 @@ Here is the call graph for this function:</div>
 <map name="arxn___h_l__phase__transfer_8c_a53a6e2e8532852ea1b23266b2ff3db12_cgraph" id="arxn___h_l__phase__transfer_8c_a53a6e2e8532852ea1b23266b2ff3db12_cgraph">
 <area shape="rect" title="Update reaction data for new environmental conditions." alt="" coords="5,5,163,45"/>
 <area shape="rect" href="util_8h.html#ae1c969544a10c17746622cf73186835c" title=" " alt="" coords="211,13,351,38"/>
+<area shape="rect" href="util_8h.html#a77fbb355dc943308c5632fe698e81363" title=" " alt="" coords="399,13,533,38"/>
 </map>
 </div>
 <div class="dynheader">

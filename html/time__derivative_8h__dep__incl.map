@@ -1,41 +1,42 @@
 <map id="time_derivative.h" name="time_derivative.h">
-<area shape="rect" id="node1" title="Header for the time derivative structure and related functions." alt="" coords="869,5,989,31"/>
-<area shape="rect" id="node2" href="$_jacobian_8c.html" title="Jacobian functions." alt="" coords="761,79,845,104"/>
-<area shape="rect" id="node3" href="$camp__common_8h.html" title="Header file for common constants and structures." alt="" coords="869,79,990,104"/>
-<area shape="rect" id="node39" href="$time__derivative_8c.html" title="Functions of the time derivative structure." alt="" coords="1015,79,1135,104"/>
-<area shape="rect" id="node4" href="$aero__phase__solver_8h.html" title="Header file for aerosol phase functions." alt="" coords="196,152,337,177"/>
-<area shape="rect" id="node8" href="$aero__rep__solver_8h.html" title="Header file for abstract aerosol representation functions." alt="" coords="713,152,837,177"/>
-<area shape="rect" id="node13" href="$aero__reps_8h.html" title="Header file for aerosol representations functions." alt="" coords="422,152,511,177"/>
-<area shape="rect" id="node14" href="$camp__solver_8h.html" title="Header file for solver functions." alt="" coords="567,152,673,177"/>
-<area shape="rect" id="node15" href="$debug__diff__check_8h.html" title="model element data difference checker &#45; NOT THREAD SAFE!" alt="" coords="3524,152,3657,177"/>
-<area shape="rect" id="node17" href="$rxn__solver_8h.html" title="Header file for abstract reaction functions." alt="" coords="1023,152,1113,177"/>
-<area shape="rect" id="node19" href="$rxns_8h.html" title="Header file for reaction solver functions." alt="" coords="2792,152,2848,177"/>
-<area shape="rect" id="node33" href="$sub__model__solver_8h.html" title="Header file for abstract sub model functions." alt="" coords="861,152,998,177"/>
-<area shape="rect" id="node35" href="$sub__models_8h.html" title="Header file for sub model functions." alt="" coords="1429,152,1531,177"/>
+<area shape="rect" id="node1" title="Header for the time derivative structure and related functions." alt="" coords="1032,5,1152,31"/>
+<area shape="rect" id="node2" href="$_jacobian_8c.html" title="Jacobian functions." alt="" coords="923,79,1007,104"/>
+<area shape="rect" id="node3" href="$camp__common_8h.html" title="Header file for common constants and structures." alt="" coords="1031,79,1153,104"/>
+<area shape="rect" id="node40" href="$time__derivative_8c.html" title="Functions of the time derivative structure." alt="" coords="1177,79,1297,104"/>
+<area shape="rect" id="node4" href="$aero__phase__solver_8h.html" title="Header file for aerosol phase functions." alt="" coords="292,152,433,177"/>
+<area shape="rect" id="node8" href="$aero__rep__solver_8h.html" title="Header file for abstract aerosol representation functions." alt="" coords="1030,152,1154,177"/>
+<area shape="rect" id="node14" href="$aero__reps_8h.html" title="Header file for aerosol representations functions." alt="" coords="474,152,563,177"/>
+<area shape="rect" id="node15" href="$camp__solver_8h.html" title="Header file for solver functions." alt="" coords="691,152,797,177"/>
+<area shape="rect" id="node16" href="$debug__diff__check_8h.html" title="model element data difference checker &#45; NOT THREAD SAFE!" alt="" coords="3600,152,3733,177"/>
+<area shape="rect" id="node18" href="$rxn__solver_8h.html" title="Header file for abstract reaction functions." alt="" coords="1403,152,1493,177"/>
+<area shape="rect" id="node20" href="$rxns_8h.html" title="Header file for reaction solver functions." alt="" coords="2745,152,2801,177"/>
+<area shape="rect" id="node34" href="$sub__model__solver_8h.html" title="Header file for abstract sub model functions." alt="" coords="838,152,975,177"/>
+<area shape="rect" id="node36" href="$sub__models_8h.html" title="Header file for sub model functions." alt="" coords="1275,152,1378,177"/>
 <area shape="rect" id="node5" href="$aero__phase__solver_8c.html" title="Aerosol phase functions." alt="" coords="5,233,147,258"/>
 <area shape="rect" id="node6" href="$aero__rep__modal__binned__mass_8c.html" title="Modal mass aerosol representation functions." alt="" coords="171,225,330,265"/>
 <area shape="rect" id="node7" href="$aero__rep__single__particle_8c.html" title="Single particle aerosol representation functions." alt="" coords="354,233,526,258"/>
 <area shape="rect" id="node9" href="$aero__rep__solver_8c.html" title="Aerosol representation functions." alt="" coords="550,233,674,258"/>
 <area shape="rect" id="node10" href="$camp__solver_8c.html" title="Interface to c solvers for chemistry." alt="" coords="699,233,805,258"/>
-<area shape="rect" id="node11" href="$rxn___h_l__phase__transfer_8c.html" title="Phase Transfer reaction solver functions." alt="" coords="1215,233,1382,258"/>
-<area shape="rect" id="node12" href="$rxn___s_i_m_p_o_l__phase__transfer_8c.html" title="Phase Transfer reaction solver functions." alt="" coords="829,233,1029,258"/>
-<area shape="rect" id="node16" href="$debug__diff__check_8c.html" title="model element data difference checker &#45; NOT THREAD SAFE!" alt="" coords="4176,233,4309,258"/>
-<area shape="rect" id="node18" href="$rxn__solver_8c.html" title="Reaction solver functions." alt="" coords="1945,233,2036,258"/>
-<area shape="rect" id="node20" href="$rxn___c_m_a_q___h2_o2_8c.html" title="CMAQ_H2O2 reaction solver functions." alt="" coords="2060,233,2196,258"/>
-<area shape="rect" id="node21" href="$rxn___c_m_a_q___o_h___h_n_o3_8c.html" title="CMAQ_OH_HNO3 reaction solver functions." alt="" coords="2221,233,2387,258"/>
-<area shape="rect" id="node22" href="$rxn__aqueous__equilibrium_8c.html" title="Aqueous Equilibrium reaction solver functions." alt="" coords="2411,233,2586,258"/>
-<area shape="rect" id="node23" href="$rxn__arrhenius_8c.html" title="Arrhenius reaction solver functions." alt="" coords="2611,233,2720,258"/>
-<area shape="rect" id="node24" href="$rxn__condensed__phase__arrhenius_8c.html" title="Condensed Phase Arrhenius reaction solver functions." alt="" coords="2745,225,2895,265"/>
-<area shape="rect" id="node25" href="$rxn__emission_8c.html" title="Emission reaction solver functions." alt="" coords="2919,233,3027,258"/>
-<area shape="rect" id="node26" href="$rxn__first__order__loss_8c.html" title="First&#45;Order loss reaction solver functions." alt="" coords="3052,233,3196,258"/>
-<area shape="rect" id="node27" href="$rxn__photolysis_8c.html" title="Photolysis reaction solver functions." alt="" coords="3220,233,3335,258"/>
-<area shape="rect" id="node28" href="$rxn__ternary__chemical__activation_8c.html" title="Ternary Chemical Activation reaction solver functions." alt="" coords="3359,225,3503,265"/>
-<area shape="rect" id="node29" href="$rxn__troe_8c.html" title="Troe reaction solver functions." alt="" coords="3527,233,3606,258"/>
-<area shape="rect" id="node30" href="$rxn__wennberg__no__ro2_8c.html" title="Wennberg NO + RO2 reaction solver functions." alt="" coords="3630,233,3789,258"/>
-<area shape="rect" id="node31" href="$rxn__wennberg__tunneling_8c.html" title="Wennberg tunneling reaction solver functions." alt="" coords="3813,233,3984,258"/>
-<area shape="rect" id="node32" href="$rxn__wet__deposition_8c.html" title="Wet deposition reaction solver functions." alt="" coords="4009,233,4151,258"/>
-<area shape="rect" id="node34" href="$sub__model__solver_8c.html" title="Sub model solver functions." alt="" coords="1054,233,1191,258"/>
-<area shape="rect" id="node36" href="$sub__model___p_d_fi_t_e_8c.html" title="PDFiTE Activity sub model solver functions." alt="" coords="1407,233,1553,258"/>
-<area shape="rect" id="node37" href="$sub__model___u_n_i_f_a_c_8c.html" title="UNIFAC activity coefficient calculation." alt="" coords="1577,233,1729,258"/>
-<area shape="rect" id="node38" href="$sub__model___z_s_r__aerosol__water_8c.html" title="ZSR Aerosol Water sub model solver functions." alt="" coords="1754,225,1921,265"/>
+<area shape="rect" id="node11" href="$rxn___h_l__phase__transfer_8c.html" title="Phase Transfer reaction solver functions." alt="" coords="1702,233,1869,258"/>
+<area shape="rect" id="node12" href="$rxn___s_i_m_p_o_l__phase__transfer_8c.html" title="Phase Transfer reaction solver functions." alt="" coords="992,233,1192,258"/>
+<area shape="rect" id="node13" href="$rxn__surface_8c.html" title="Surface reaction solver functions." alt="" coords="1216,233,1315,258"/>
+<area shape="rect" id="node17" href="$debug__diff__check_8c.html" title="model element data difference checker &#45; NOT THREAD SAFE!" alt="" coords="4300,233,4433,258"/>
+<area shape="rect" id="node19" href="$rxn__solver_8c.html" title="Reaction solver functions." alt="" coords="2069,233,2160,258"/>
+<area shape="rect" id="node21" href="$rxn___c_m_a_q___h2_o2_8c.html" title="CMAQ_H2O2 reaction solver functions." alt="" coords="3749,233,3885,258"/>
+<area shape="rect" id="node22" href="$rxn___c_m_a_q___o_h___h_n_o3_8c.html" title="CMAQ_OH_HNO3 reaction solver functions." alt="" coords="3910,233,4077,258"/>
+<area shape="rect" id="node23" href="$rxn__aqueous__equilibrium_8c.html" title="Aqueous Equilibrium reaction solver functions." alt="" coords="4101,233,4275,258"/>
+<area shape="rect" id="node24" href="$rxn__arrhenius_8c.html" title="Arrhenius reaction solver functions." alt="" coords="2184,233,2293,258"/>
+<area shape="rect" id="node25" href="$rxn__condensed__phase__arrhenius_8c.html" title="Condensed Phase Arrhenius reaction solver functions." alt="" coords="2318,225,2469,265"/>
+<area shape="rect" id="node26" href="$rxn__emission_8c.html" title="Emission reaction solver functions." alt="" coords="2493,233,2601,258"/>
+<area shape="rect" id="node27" href="$rxn__first__order__loss_8c.html" title="First&#45;Order loss reaction solver functions." alt="" coords="2625,233,2769,258"/>
+<area shape="rect" id="node28" href="$rxn__photolysis_8c.html" title="Photolysis reaction solver functions." alt="" coords="2793,233,2908,258"/>
+<area shape="rect" id="node29" href="$rxn__ternary__chemical__activation_8c.html" title="Ternary Chemical Activation reaction solver functions." alt="" coords="2932,225,3076,265"/>
+<area shape="rect" id="node30" href="$rxn__troe_8c.html" title="Troe reaction solver functions." alt="" coords="3101,233,3179,258"/>
+<area shape="rect" id="node31" href="$rxn__wennberg__no__ro2_8c.html" title="Wennberg NO + RO2 reaction solver functions." alt="" coords="3203,233,3362,258"/>
+<area shape="rect" id="node32" href="$rxn__wennberg__tunneling_8c.html" title="Wennberg tunneling reaction solver functions." alt="" coords="3387,233,3557,258"/>
+<area shape="rect" id="node33" href="$rxn__wet__deposition_8c.html" title="Wet deposition reaction solver functions." alt="" coords="3582,233,3725,258"/>
+<area shape="rect" id="node35" href="$sub__model__solver_8c.html" title="Sub model solver functions." alt="" coords="830,233,967,258"/>
+<area shape="rect" id="node37" href="$sub__model___p_d_fi_t_e_8c.html" title="PDFiTE Activity sub model solver functions." alt="" coords="1531,233,1677,258"/>
+<area shape="rect" id="node38" href="$sub__model___u_n_i_f_a_c_8c.html" title="UNIFAC activity coefficient calculation." alt="" coords="1893,233,2045,258"/>
+<area shape="rect" id="node39" href="$sub__model___z_s_r__aerosol__water_8c.html" title="ZSR Aerosol Water sub model solver functions." alt="" coords="1339,225,1506,265"/>
 </map>

@@ -13,4 +13,6 @@ digraph "aero_rep_solver.h"
   Node4 [label="rxn_HL_phase_transfer.c",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$rxn___h_l__phase__transfer_8c.html",tooltip="Phase Transfer reaction solver functions."];
   Node1 -> Node5 [dir="back",color="steelblue1",style="solid"];
   Node5 [label="rxn_SIMPOL_phase_transfer.c",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$rxn___s_i_m_p_o_l__phase__transfer_8c.html",tooltip="Phase Transfer reaction solver functions."];
+  Node1 -> Node6 [dir="back",color="steelblue1",style="solid"];
+  Node6 [label="rxn_surface.c",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$rxn__surface_8c.html",tooltip="Surface reaction solver functions."];
 }

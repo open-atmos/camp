@@ -16,7 +16,7 @@ type \mbox{\hyperlink{structcamp__rxn__factory_1_1rxn__factory__t}{rxn\+\_\+fact
 class(\mbox{\hyperlink{structcamp__rxn__data_1_1rxn__data__t}{rxn\+\_\+data\+\_\+t}}) function, pointer \mbox{\hyperlink{namespacecamp__rxn__factory_a3975ec0b65f653a90ffc1e44d7b7353c}{create}} (this, type\+\_\+name)
 \begin{DoxyCompactList}\small\item\em Create a new chemical reaction by type name. \end{DoxyCompactList}\item 
 class(\mbox{\hyperlink{structcamp__rxn__data_1_1rxn__data__t}{rxn\+\_\+data\+\_\+t}}) function, pointer \mbox{\hyperlink{namespacecamp__rxn__factory_a9c918055bf16f3e4db2f2ecd3d310b69}{load}} (this, json, j\+\_\+obj)
-\begin{DoxyCompactList}\small\item\em Load an aerosol represenation from input data. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Load a reaction from input data. \end{DoxyCompactList}\item 
 integer(kind=i\+\_\+kind) function \mbox{\hyperlink{namespacecamp__rxn__factory_a458659feabba75328651b709a3b5f8cd}{get\+\_\+type}} (this, rxn)
 \begin{DoxyCompactList}\small\item\em Get the reaction type as a Rxn\+Type. \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__rxn__factory_afaf56d1165c3d63e2e3dadab513a41c5}{initialize\+\_\+update\+\_\+data}} (this, rxn, update\+\_\+data)
@@ -59,6 +59,8 @@ integer(kind=i\+\_\+kind), parameter, public \mbox{\hyperlink{namespacecamp__rxn
 integer(kind=i\+\_\+kind), parameter, public \mbox{\hyperlink{namespacecamp__rxn__factory_aae61ccd51b5504f7669d516bf3f64040}{rxn\+\_\+wennberg\+\_\+tunneling}} = 16
 \item 
 integer(kind=i\+\_\+kind), parameter, public \mbox{\hyperlink{namespacecamp__rxn__factory_afb5c56704ffa7553d5e3e77989f71418}{rxn\+\_\+wennberg\+\_\+no\+\_\+ro2}} = 17
+\item 
+integer(kind=i\+\_\+kind), parameter, public \mbox{\hyperlink{namespacecamp__rxn__factory_a333a316d4af1ef634cd4e6c438a058ff}{rxn\+\_\+surface}} = 19
 \end{DoxyCompactItemize}
 
 
@@ -91,7 +93,7 @@ Pack the given value to the buffer, advancing position.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rxn__factory_8_f90_source_l00464}{464}} of file \mbox{\hyperlink{rxn__factory_8_f90_source}{rxn\+\_\+factory.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__factory_8_f90_source_l00470}{470}} of file \mbox{\hyperlink{rxn__factory_8_f90_source}{rxn\+\_\+factory.\+F90}}.
 
 Here is the call graph for this function\+:
 % FIG 0
@@ -121,7 +123,7 @@ Unpacked reaction
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rxn__factory_8_f90_source_l00526}{526}} of file \mbox{\hyperlink{rxn__factory_8_f90_source}{rxn\+\_\+factory.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__factory_8_f90_source_l00534}{534}} of file \mbox{\hyperlink{rxn__factory_8_f90_source}{rxn\+\_\+factory.\+F90}}.
 
 Here is the call graph for this function\+:
 % FIG 1
@@ -147,7 +149,7 @@ A chemical reaction
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rxn__factory_8_f90_source_l00253}{253}} of file \mbox{\hyperlink{rxn__factory_8_f90_source}{rxn\+\_\+factory.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__factory_8_f90_source_l00255}{255}} of file \mbox{\hyperlink{rxn__factory_8_f90_source}{rxn\+\_\+factory.\+F90}}.
 
 Here is the call graph for this function\+:
 % FIG 2
@@ -170,7 +172,7 @@ Get the reaction type as a Rxn\+Type.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rxn__factory_8_f90_source_l00353}{353}} of file \mbox{\hyperlink{rxn__factory_8_f90_source}{rxn\+\_\+factory.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__factory_8_f90_source_l00357}{357}} of file \mbox{\hyperlink{rxn__factory_8_f90_source}{rxn\+\_\+factory.\+F90}}.
 
 Here is the call graph for this function\+:
 % FIG 3
@@ -195,7 +197,7 @@ Initialize an update data object.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rxn__factory_8_f90_source_l00400}{400}} of file \mbox{\hyperlink{rxn__factory_8_f90_source}{rxn\+\_\+factory.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__factory_8_f90_source_l00406}{406}} of file \mbox{\hyperlink{rxn__factory_8_f90_source}{rxn\+\_\+factory.\+F90}}.
 
 Here is the call graph for this function\+:
 % FIG 4
@@ -207,7 +209,7 @@ Here is the call graph for this function\+:
 
 
 
-Load an aerosol represenation from input data. 
+Load a reaction from input data. 
 
 \begin{DoxyReturn}{Returns}
 A chemical reaction 
@@ -223,7 +225,7 @@ A chemical reaction
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rxn__factory_8_f90_source_l00307}{307}} of file \mbox{\hyperlink{rxn__factory_8_f90_source}{rxn\+\_\+factory.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__factory_8_f90_source_l00311}{311}} of file \mbox{\hyperlink{rxn__factory_8_f90_source}{rxn\+\_\+factory.\+F90}}.
 
 Here is the call graph for this function\+:
 % FIG 5
@@ -248,7 +250,7 @@ Determine the size of a binary required to pack a reaction.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rxn__factory_8_f90_source_l00447}{447}} of file \mbox{\hyperlink{rxn__factory_8_f90_source}{rxn\+\_\+factory.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__factory_8_f90_source_l00453}{453}} of file \mbox{\hyperlink{rxn__factory_8_f90_source}{rxn\+\_\+factory.\+F90}}.
 
 Here is the call graph for this function\+:
 % FIG 6
@@ -263,7 +265,7 @@ Here is the call graph for this function\+:
 
 
 
-Definition at line \mbox{\hyperlink{rxn__factory_8_f90_source_l00216}{216}} of file \mbox{\hyperlink{rxn__factory_8_f90_source}{rxn\+\_\+factory.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__factory_8_f90_source_l00217}{217}} of file \mbox{\hyperlink{rxn__factory_8_f90_source}{rxn\+\_\+factory.\+F90}}.
 
 \mbox{\Hypertarget{namespacecamp__rxn__factory_adea8b1c9df8c84b68c20a1604df3ea01}\label{namespacecamp__rxn__factory_adea8b1c9df8c84b68c20a1604df3ea01}} 
 \index{camp\_rxn\_factory@{camp\_rxn\_factory}!rxn\_arrhenius@{rxn\_arrhenius}}
@@ -277,7 +279,7 @@ Identifiers for reaction types -\/ used by binary packing/unpacking functions.
 
 
 
-Definition at line \mbox{\hyperlink{rxn__factory_8_f90_source_l00210}{210}} of file \mbox{\hyperlink{rxn__factory_8_f90_source}{rxn\+\_\+factory.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__factory_8_f90_source_l00211}{211}} of file \mbox{\hyperlink{rxn__factory_8_f90_source}{rxn\+\_\+factory.\+F90}}.
 
 \mbox{\Hypertarget{namespacecamp__rxn__factory_a55385943a00d7dd37dddd564df2d7f6e}\label{namespacecamp__rxn__factory_a55385943a00d7dd37dddd564df2d7f6e}} 
 \index{camp\_rxn\_factory@{camp\_rxn\_factory}!rxn\_cmaq\_h2o2@{rxn\_cmaq\_h2o2}}
@@ -287,7 +289,7 @@ Definition at line \mbox{\hyperlink{rxn__factory_8_f90_source_l00210}{210}} of f
 
 
 
-Definition at line \mbox{\hyperlink{rxn__factory_8_f90_source_l00212}{212}} of file \mbox{\hyperlink{rxn__factory_8_f90_source}{rxn\+\_\+factory.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__factory_8_f90_source_l00213}{213}} of file \mbox{\hyperlink{rxn__factory_8_f90_source}{rxn\+\_\+factory.\+F90}}.
 
 \mbox{\Hypertarget{namespacecamp__rxn__factory_a38248fd96417e93b2bb812c321dd9566}\label{namespacecamp__rxn__factory_a38248fd96417e93b2bb812c321dd9566}} 
 \index{camp\_rxn\_factory@{camp\_rxn\_factory}!rxn\_cmaq\_oh\_hno3@{rxn\_cmaq\_oh\_hno3}}
@@ -297,7 +299,7 @@ Definition at line \mbox{\hyperlink{rxn__factory_8_f90_source_l00212}{212}} of f
 
 
 
-Definition at line \mbox{\hyperlink{rxn__factory_8_f90_source_l00213}{213}} of file \mbox{\hyperlink{rxn__factory_8_f90_source}{rxn\+\_\+factory.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__factory_8_f90_source_l00214}{214}} of file \mbox{\hyperlink{rxn__factory_8_f90_source}{rxn\+\_\+factory.\+F90}}.
 
 \mbox{\Hypertarget{namespacecamp__rxn__factory_a212ba90aa51d54b938b5099651d28e50}\label{namespacecamp__rxn__factory_a212ba90aa51d54b938b5099651d28e50}} 
 \index{camp\_rxn\_factory@{camp\_rxn\_factory}!rxn\_condensed\_phase\_arrhenius@{rxn\_condensed\_phase\_arrhenius}}
@@ -307,7 +309,7 @@ Definition at line \mbox{\hyperlink{rxn__factory_8_f90_source_l00213}{213}} of f
 
 
 
-Definition at line \mbox{\hyperlink{rxn__factory_8_f90_source_l00218}{218}} of file \mbox{\hyperlink{rxn__factory_8_f90_source}{rxn\+\_\+factory.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__factory_8_f90_source_l00219}{219}} of file \mbox{\hyperlink{rxn__factory_8_f90_source}{rxn\+\_\+factory.\+F90}}.
 
 \mbox{\Hypertarget{namespacecamp__rxn__factory_a573a7910ec5ee0a98b119d5b3dba834a}\label{namespacecamp__rxn__factory_a573a7910ec5ee0a98b119d5b3dba834a}} 
 \index{camp\_rxn\_factory@{camp\_rxn\_factory}!rxn\_emission@{rxn\_emission}}
@@ -317,7 +319,7 @@ Definition at line \mbox{\hyperlink{rxn__factory_8_f90_source_l00218}{218}} of f
 
 
 
-Definition at line \mbox{\hyperlink{rxn__factory_8_f90_source_l00220}{220}} of file \mbox{\hyperlink{rxn__factory_8_f90_source}{rxn\+\_\+factory.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__factory_8_f90_source_l00221}{221}} of file \mbox{\hyperlink{rxn__factory_8_f90_source}{rxn\+\_\+factory.\+F90}}.
 
 \mbox{\Hypertarget{namespacecamp__rxn__factory_a3fbd5fe4ba8d23bb0db58bfd1d0e7d09}\label{namespacecamp__rxn__factory_a3fbd5fe4ba8d23bb0db58bfd1d0e7d09}} 
 \index{camp\_rxn\_factory@{camp\_rxn\_factory}!rxn\_first\_order\_loss@{rxn\_first\_order\_loss}}
@@ -327,7 +329,7 @@ Definition at line \mbox{\hyperlink{rxn__factory_8_f90_source_l00220}{220}} of f
 
 
 
-Definition at line \mbox{\hyperlink{rxn__factory_8_f90_source_l00219}{219}} of file \mbox{\hyperlink{rxn__factory_8_f90_source}{rxn\+\_\+factory.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__factory_8_f90_source_l00220}{220}} of file \mbox{\hyperlink{rxn__factory_8_f90_source}{rxn\+\_\+factory.\+F90}}.
 
 \mbox{\Hypertarget{namespacecamp__rxn__factory_a735a051920caf39c6bdbf244bf4d902b}\label{namespacecamp__rxn__factory_a735a051920caf39c6bdbf244bf4d902b}} 
 \index{camp\_rxn\_factory@{camp\_rxn\_factory}!rxn\_hl\_phase\_transfer@{rxn\_hl\_phase\_transfer}}
@@ -337,7 +339,7 @@ Definition at line \mbox{\hyperlink{rxn__factory_8_f90_source_l00219}{219}} of f
 
 
 
-Definition at line \mbox{\hyperlink{rxn__factory_8_f90_source_l00215}{215}} of file \mbox{\hyperlink{rxn__factory_8_f90_source}{rxn\+\_\+factory.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__factory_8_f90_source_l00216}{216}} of file \mbox{\hyperlink{rxn__factory_8_f90_source}{rxn\+\_\+factory.\+F90}}.
 
 \mbox{\Hypertarget{namespacecamp__rxn__factory_a0c99fd79e88f1bd2aa01fe395b26eca7}\label{namespacecamp__rxn__factory_a0c99fd79e88f1bd2aa01fe395b26eca7}} 
 \index{camp\_rxn\_factory@{camp\_rxn\_factory}!rxn\_photolysis@{rxn\_photolysis}}
@@ -347,7 +349,7 @@ Definition at line \mbox{\hyperlink{rxn__factory_8_f90_source_l00215}{215}} of f
 
 
 
-Definition at line \mbox{\hyperlink{rxn__factory_8_f90_source_l00214}{214}} of file \mbox{\hyperlink{rxn__factory_8_f90_source}{rxn\+\_\+factory.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__factory_8_f90_source_l00215}{215}} of file \mbox{\hyperlink{rxn__factory_8_f90_source}{rxn\+\_\+factory.\+F90}}.
 
 \mbox{\Hypertarget{namespacecamp__rxn__factory_a5419d01fc70970f1337777760ea9a70b}\label{namespacecamp__rxn__factory_a5419d01fc70970f1337777760ea9a70b}} 
 \index{camp\_rxn\_factory@{camp\_rxn\_factory}!rxn\_simpol\_phase\_transfer@{rxn\_simpol\_phase\_transfer}}
@@ -357,7 +359,17 @@ Definition at line \mbox{\hyperlink{rxn__factory_8_f90_source_l00214}{214}} of f
 
 
 
-Definition at line \mbox{\hyperlink{rxn__factory_8_f90_source_l00217}{217}} of file \mbox{\hyperlink{rxn__factory_8_f90_source}{rxn\+\_\+factory.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__factory_8_f90_source_l00218}{218}} of file \mbox{\hyperlink{rxn__factory_8_f90_source}{rxn\+\_\+factory.\+F90}}.
+
+\mbox{\Hypertarget{namespacecamp__rxn__factory_a333a316d4af1ef634cd4e6c438a058ff}\label{namespacecamp__rxn__factory_a333a316d4af1ef634cd4e6c438a058ff}} 
+\index{camp\_rxn\_factory@{camp\_rxn\_factory}!rxn\_surface@{rxn\_surface}}
+\index{rxn\_surface@{rxn\_surface}!camp\_rxn\_factory@{camp\_rxn\_factory}}
+\doxysubsubsection{\texorpdfstring{rxn\_surface}{rxn\_surface}}
+{\footnotesize\ttfamily integer(kind=i\+\_\+kind), parameter, public camp\+\_\+rxn\+\_\+factory\+::rxn\+\_\+surface = 19}
+
+
+
+Definition at line \mbox{\hyperlink{rxn__factory_8_f90_source_l00226}{226}} of file \mbox{\hyperlink{rxn__factory_8_f90_source}{rxn\+\_\+factory.\+F90}}.
 
 \mbox{\Hypertarget{namespacecamp__rxn__factory_a3f897e9d91f7a47066b650d9ea38c9c1}\label{namespacecamp__rxn__factory_a3f897e9d91f7a47066b650d9ea38c9c1}} 
 \index{camp\_rxn\_factory@{camp\_rxn\_factory}!rxn\_ternary\_chemical\_activation@{rxn\_ternary\_chemical\_activation}}
@@ -367,7 +379,7 @@ Definition at line \mbox{\hyperlink{rxn__factory_8_f90_source_l00217}{217}} of f
 
 
 
-Definition at line \mbox{\hyperlink{rxn__factory_8_f90_source_l00222}{222}} of file \mbox{\hyperlink{rxn__factory_8_f90_source}{rxn\+\_\+factory.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__factory_8_f90_source_l00223}{223}} of file \mbox{\hyperlink{rxn__factory_8_f90_source}{rxn\+\_\+factory.\+F90}}.
 
 \mbox{\Hypertarget{namespacecamp__rxn__factory_a4f84856fabadc46013a830a7b1f0d4c5}\label{namespacecamp__rxn__factory_a4f84856fabadc46013a830a7b1f0d4c5}} 
 \index{camp\_rxn\_factory@{camp\_rxn\_factory}!rxn\_troe@{rxn\_troe}}
@@ -377,7 +389,7 @@ Definition at line \mbox{\hyperlink{rxn__factory_8_f90_source_l00222}{222}} of f
 
 
 
-Definition at line \mbox{\hyperlink{rxn__factory_8_f90_source_l00211}{211}} of file \mbox{\hyperlink{rxn__factory_8_f90_source}{rxn\+\_\+factory.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__factory_8_f90_source_l00212}{212}} of file \mbox{\hyperlink{rxn__factory_8_f90_source}{rxn\+\_\+factory.\+F90}}.
 
 \mbox{\Hypertarget{namespacecamp__rxn__factory_afb5c56704ffa7553d5e3e77989f71418}\label{namespacecamp__rxn__factory_afb5c56704ffa7553d5e3e77989f71418}} 
 \index{camp\_rxn\_factory@{camp\_rxn\_factory}!rxn\_wennberg\_no\_ro2@{rxn\_wennberg\_no\_ro2}}
@@ -387,7 +399,7 @@ Definition at line \mbox{\hyperlink{rxn__factory_8_f90_source_l00211}{211}} of f
 
 
 
-Definition at line \mbox{\hyperlink{rxn__factory_8_f90_source_l00224}{224}} of file \mbox{\hyperlink{rxn__factory_8_f90_source}{rxn\+\_\+factory.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__factory_8_f90_source_l00225}{225}} of file \mbox{\hyperlink{rxn__factory_8_f90_source}{rxn\+\_\+factory.\+F90}}.
 
 \mbox{\Hypertarget{namespacecamp__rxn__factory_aae61ccd51b5504f7669d516bf3f64040}\label{namespacecamp__rxn__factory_aae61ccd51b5504f7669d516bf3f64040}} 
 \index{camp\_rxn\_factory@{camp\_rxn\_factory}!rxn\_wennberg\_tunneling@{rxn\_wennberg\_tunneling}}
@@ -397,7 +409,7 @@ Definition at line \mbox{\hyperlink{rxn__factory_8_f90_source_l00224}{224}} of f
 
 
 
-Definition at line \mbox{\hyperlink{rxn__factory_8_f90_source_l00223}{223}} of file \mbox{\hyperlink{rxn__factory_8_f90_source}{rxn\+\_\+factory.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__factory_8_f90_source_l00224}{224}} of file \mbox{\hyperlink{rxn__factory_8_f90_source}{rxn\+\_\+factory.\+F90}}.
 
 \mbox{\Hypertarget{namespacecamp__rxn__factory_ae1203033b528924293a192f21c7f2d39}\label{namespacecamp__rxn__factory_ae1203033b528924293a192f21c7f2d39}} 
 \index{camp\_rxn\_factory@{camp\_rxn\_factory}!rxn\_wet\_deposition@{rxn\_wet\_deposition}}
@@ -407,5 +419,5 @@ Definition at line \mbox{\hyperlink{rxn__factory_8_f90_source_l00223}{223}} of f
 
 
 
-Definition at line \mbox{\hyperlink{rxn__factory_8_f90_source_l00221}{221}} of file \mbox{\hyperlink{rxn__factory_8_f90_source}{rxn\+\_\+factory.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__factory_8_f90_source_l00222}{222}} of file \mbox{\hyperlink{rxn__factory_8_f90_source}{rxn\+\_\+factory.\+F90}}.
 

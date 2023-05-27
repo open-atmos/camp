@@ -15,15 +15,21 @@ This graph shows which files directly or indirectly include this file\+:
 \doxysubsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
+static double \mbox{\hyperlink{util_8h_a77fbb355dc943308c5632fe698e81363}{mean\+\_\+speed\+\_\+\+\_\+m\+\_\+s}} (double temperature\+\_\+\+\_\+K, double mw\+\_\+\+\_\+kg\+\_\+mol)
+\item 
 static double \mbox{\hyperlink{util_8h_ae1c969544a10c17746622cf73186835c}{mean\+\_\+free\+\_\+path\+\_\+\+\_\+m}} (double diffusion\+\_\+coeff\+\_\+\+\_\+m2\+\_\+s, double temperature\+\_\+\+\_\+K, double mw\+\_\+\+\_\+kg\+\_\+mol)
 \item 
 static double \mbox{\hyperlink{util_8h_a0ade6cf865e738fbd0629ca08500679d}{transition\+\_\+regime\+\_\+correction\+\_\+factor}} (double \mbox{\hyperlink{util_8h_ae1c969544a10c17746622cf73186835c}{mean\+\_\+free\+\_\+path\+\_\+\+\_\+m}}, double radius\+\_\+\+\_\+m, double alpha)
 \item 
 static double \mbox{\hyperlink{util_8h_af0918da54a73bf30e7079908caea2efd}{d\+\_\+transition\+\_\+regime\+\_\+correction\+\_\+factor\+\_\+d\+\_\+radius}} (double \mbox{\hyperlink{util_8h_ae1c969544a10c17746622cf73186835c}{mean\+\_\+free\+\_\+path\+\_\+\+\_\+m}}, double radius\+\_\+\+\_\+m, double alpha)
 \item 
-static double \mbox{\hyperlink{util_8h_ada92558814324f22e19743fbf25ceb0f}{gas\+\_\+aerosol\+\_\+rxn\+\_\+rate\+\_\+constant}} (double diffusion\+\_\+coeff\+\_\+\+\_\+m2\+\_\+s, double \mbox{\hyperlink{util_8h_ae1c969544a10c17746622cf73186835c}{mean\+\_\+free\+\_\+path\+\_\+\+\_\+m}}, double radius\+\_\+\+\_\+m, double alpha)
+static double \mbox{\hyperlink{util_8h_adfe7ce1a7c219664c7a382f24068b1a1}{gas\+\_\+aerosol\+\_\+transition\+\_\+rxn\+\_\+rate\+\_\+constant}} (double diffusion\+\_\+coeff\+\_\+\+\_\+m2\+\_\+s, double \mbox{\hyperlink{util_8h_ae1c969544a10c17746622cf73186835c}{mean\+\_\+free\+\_\+path\+\_\+\+\_\+m}}, double radius\+\_\+\+\_\+m, double alpha)
 \item 
-static double \mbox{\hyperlink{util_8h_ad31f0cb5f01c257931b6e82d91b6fb23}{d\+\_\+gas\+\_\+aerosol\+\_\+rxn\+\_\+rate\+\_\+constant\+\_\+d\+\_\+radius}} (double diffusion\+\_\+coeff\+\_\+\+\_\+m2\+\_\+s, double \mbox{\hyperlink{util_8h_ae1c969544a10c17746622cf73186835c}{mean\+\_\+free\+\_\+path\+\_\+\+\_\+m}}, double radius\+\_\+\+\_\+m, double alpha)
+static double \mbox{\hyperlink{util_8h_a6960902fe575d06ebd32350a076ba968}{d\+\_\+gas\+\_\+aerosol\+\_\+transition\+\_\+rxn\+\_\+rate\+\_\+constant\+\_\+d\+\_\+radius}} (double diffusion\+\_\+coeff\+\_\+\+\_\+m2\+\_\+s, double \mbox{\hyperlink{util_8h_ae1c969544a10c17746622cf73186835c}{mean\+\_\+free\+\_\+path\+\_\+\+\_\+m}}, double radius\+\_\+\+\_\+m, double alpha)
+\item 
+static double \mbox{\hyperlink{util_8h_afde219af97ef99e021d59c7ca18b9277}{gas\+\_\+aerosol\+\_\+continuum\+\_\+rxn\+\_\+rate\+\_\+constant}} (double diffusion\+\_\+coeff\+\_\+\+\_\+m2\+\_\+s, double \mbox{\hyperlink{util_8h_a77fbb355dc943308c5632fe698e81363}{mean\+\_\+speed\+\_\+\+\_\+m\+\_\+s}}, double radius\+\_\+\+\_\+m, double alpha)
+\item 
+static double \mbox{\hyperlink{util_8h_aa2190a3abb8648804ae74bb1c2d09b36}{d\+\_\+gas\+\_\+aerosol\+\_\+continuum\+\_\+rxn\+\_\+rate\+\_\+constant\+\_\+d\+\_\+radius}} (double diffusion\+\_\+coeff\+\_\+\+\_\+m2\+\_\+s, double \mbox{\hyperlink{util_8h_a77fbb355dc943308c5632fe698e81363}{mean\+\_\+speed\+\_\+\+\_\+m\+\_\+s}}, double radius\+\_\+\+\_\+m, double alpha)
 \end{DoxyCompactItemize}
 
 
@@ -50,13 +56,45 @@ Definition at line \mbox{\hyperlink{util_8h_source_l00015}{15}} of file \mbox{\h
 
 
 \doxysubsection{Function Documentation}
-\mbox{\Hypertarget{util_8h_ad31f0cb5f01c257931b6e82d91b6fb23}\label{util_8h_ad31f0cb5f01c257931b6e82d91b6fb23}} 
-\index{util.h@{util.h}!d\_gas\_aerosol\_rxn\_rate\_constant\_d\_radius@{d\_gas\_aerosol\_rxn\_rate\_constant\_d\_radius}}
-\index{d\_gas\_aerosol\_rxn\_rate\_constant\_d\_radius@{d\_gas\_aerosol\_rxn\_rate\_constant\_d\_radius}!util.h@{util.h}}
-\doxysubsubsection{\texorpdfstring{d\_gas\_aerosol\_rxn\_rate\_constant\_d\_radius()}{d\_gas\_aerosol\_rxn\_rate\_constant\_d\_radius()}}
-{\footnotesize\ttfamily static double d\+\_\+gas\+\_\+aerosol\+\_\+rxn\+\_\+rate\+\_\+constant\+\_\+d\+\_\+radius (\begin{DoxyParamCaption}\item[{double}]{diffusion\+\_\+coeff\+\_\+\+\_\+m2\+\_\+s,  }\item[{double}]{mean\+\_\+free\+\_\+path\+\_\+\+\_\+m,  }\item[{double}]{radius\+\_\+\+\_\+m,  }\item[{double}]{alpha }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+\mbox{\Hypertarget{util_8h_aa2190a3abb8648804ae74bb1c2d09b36}\label{util_8h_aa2190a3abb8648804ae74bb1c2d09b36}} 
+\index{util.h@{util.h}!d\_gas\_aerosol\_continuum\_rxn\_rate\_constant\_d\_radius@{d\_gas\_aerosol\_continuum\_rxn\_rate\_constant\_d\_radius}}
+\index{d\_gas\_aerosol\_continuum\_rxn\_rate\_constant\_d\_radius@{d\_gas\_aerosol\_continuum\_rxn\_rate\_constant\_d\_radius}!util.h@{util.h}}
+\doxysubsubsection{\texorpdfstring{d\_gas\_aerosol\_continuum\_rxn\_rate\_constant\_d\_radius()}{d\_gas\_aerosol\_continuum\_rxn\_rate\_constant\_d\_radius()}}
+{\footnotesize\ttfamily static double d\+\_\+gas\+\_\+aerosol\+\_\+continuum\+\_\+rxn\+\_\+rate\+\_\+constant\+\_\+d\+\_\+radius (\begin{DoxyParamCaption}\item[{double}]{diffusion\+\_\+coeff\+\_\+\+\_\+m2\+\_\+s,  }\item[{double}]{mean\+\_\+speed\+\_\+\+\_\+m\+\_\+s,  }\item[{double}]{radius\+\_\+\+\_\+m,  }\item[{double}]{alpha }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
 
-Calculate the derivative of a gas-\/aerosol reaction rate by particle radius  \[
+Calculate the derivative of the continuum-\/regime gas-\/aerosol reaction rate constant by particle radius {\bfseries [Tie2003]}  \[
+  \frac{dk_c}{dr} = 4 \pi \frac{\frac{r^2}{D_g} +
+     \frac{8r}{v(T) \gamma}}{\left(\frac{r}{D_g} + \frac{4}{v(T) \gamma}\right)^2}
+\]
+
+where $r$ is the particle radius \mbox{[}m\mbox{]}, $D_g$ is the gas-\/phase diffusion coefficient of the reactant \mbox{[} $\mbox{m}^2\mbox{s}^{-1}$\mbox{]}, $\gamma$ is the reaction probability \mbox{[}unitless\mbox{]}, and v is the mean free speed of the gas-\/phase reactant.
+
+
+\begin{DoxyParams}{Parameters}
+{\em diffusion\+\_\+coeff\+\_\+\+\_\+m2\+\_\+s} & Diffusion coefficient of the gas species \mbox{[} $\mbox{m}^2\, \mbox{s}^{-1}$\mbox{]} \\
+\hline
+{\em mean\+\_\+speed\+\_\+\+\_\+m\+\_\+s} & Mean speed of the gas molecule \mbox{[}m s-\/1\mbox{]} \\
+\hline
+{\em radius\+\_\+\+\_\+m} & Particle radius \mbox{[}m\mbox{]} \\
+\hline
+{\em alpha} & Mass accomodation coefficient \mbox{[}unitless\mbox{]} \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{util_8h_source_l00209}{209}} of file \mbox{\hyperlink{util_8h_source}{util.\+h}}.
+
+Here is the call graph for this function\+:
+% FIG 1
+Here is the caller graph for this function\+:
+% FIG 2
+\mbox{\Hypertarget{util_8h_a6960902fe575d06ebd32350a076ba968}\label{util_8h_a6960902fe575d06ebd32350a076ba968}} 
+\index{util.h@{util.h}!d\_gas\_aerosol\_transition\_rxn\_rate\_constant\_d\_radius@{d\_gas\_aerosol\_transition\_rxn\_rate\_constant\_d\_radius}}
+\index{d\_gas\_aerosol\_transition\_rxn\_rate\_constant\_d\_radius@{d\_gas\_aerosol\_transition\_rxn\_rate\_constant\_d\_radius}!util.h@{util.h}}
+\doxysubsubsection{\texorpdfstring{d\_gas\_aerosol\_transition\_rxn\_rate\_constant\_d\_radius()}{d\_gas\_aerosol\_transition\_rxn\_rate\_constant\_d\_radius()}}
+{\footnotesize\ttfamily static double d\+\_\+gas\+\_\+aerosol\+\_\+transition\+\_\+rxn\+\_\+rate\+\_\+constant\+\_\+d\+\_\+radius (\begin{DoxyParamCaption}\item[{double}]{diffusion\+\_\+coeff\+\_\+\+\_\+m2\+\_\+s,  }\item[{double}]{mean\+\_\+free\+\_\+path\+\_\+\+\_\+m,  }\item[{double}]{radius\+\_\+\+\_\+m,  }\item[{double}]{alpha }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+Calculate the derivative of a transition-\/regime gas-\/aerosol reaction rate by particle radius  \[
   \frac{d k_c}{d r} = 4 \pi D_g ( f_{fs} + r \frac{d_{fs}}{d r} )
 \] where $r$ is the radius of the particle(s) \mbox{[}m\mbox{]}, $D_g$ is the diffusion coefficient of the gas-\/phase species \mbox{[} $\mbox{m}^2\,
 \mbox{s}^{-1}$\mbox{]} and $f_{fs}( K_n, \alpha )$ is the Fuchs Sutugin transition regime correction factor \mbox{[}unitless\mbox{]} ( $K_n$ is the Knudsen Number \mbox{[}unitess\mbox{]} and $\alpha$ is the mass accomodation coefficient.
@@ -74,12 +112,12 @@ Calculate the derivative of a gas-\/aerosol reaction rate by particle radius  \[
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{util_8h_source_l00143}{143}} of file \mbox{\hyperlink{util_8h_source}{util.\+h}}.
+Definition at line \mbox{\hyperlink{util_8h_source_l00154}{154}} of file \mbox{\hyperlink{util_8h_source}{util.\+h}}.
 
 Here is the call graph for this function\+:
-% FIG 1
+% FIG 3
 Here is the caller graph for this function\+:
-% FIG 2
+% FIG 4
 \mbox{\Hypertarget{util_8h_af0918da54a73bf30e7079908caea2efd}\label{util_8h_af0918da54a73bf30e7079908caea2efd}} 
 \index{util.h@{util.h}!d\_transition\_regime\_correction\_factor\_d\_radius@{d\_transition\_regime\_correction\_factor\_d\_radius}}
 \index{d\_transition\_regime\_correction\_factor\_d\_radius@{d\_transition\_regime\_correction\_factor\_d\_radius}!util.h@{util.h}}
@@ -103,17 +141,50 @@ Calculate the derivative of the transition regime correction factor by particle 
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{util_8h_source_l00080}{80}} of file \mbox{\hyperlink{util_8h_source}{util.\+h}}.
+Definition at line \mbox{\hyperlink{util_8h_source_l00091}{91}} of file \mbox{\hyperlink{util_8h_source}{util.\+h}}.
 
 Here is the call graph for this function\+:
-% FIG 3
+% FIG 5
 Here is the caller graph for this function\+:
-% FIG 4
-\mbox{\Hypertarget{util_8h_ada92558814324f22e19743fbf25ceb0f}\label{util_8h_ada92558814324f22e19743fbf25ceb0f}} 
-\index{util.h@{util.h}!gas\_aerosol\_rxn\_rate\_constant@{gas\_aerosol\_rxn\_rate\_constant}}
-\index{gas\_aerosol\_rxn\_rate\_constant@{gas\_aerosol\_rxn\_rate\_constant}!util.h@{util.h}}
-\doxysubsubsection{\texorpdfstring{gas\_aerosol\_rxn\_rate\_constant()}{gas\_aerosol\_rxn\_rate\_constant()}}
-{\footnotesize\ttfamily static double gas\+\_\+aerosol\+\_\+rxn\+\_\+rate\+\_\+constant (\begin{DoxyParamCaption}\item[{double}]{diffusion\+\_\+coeff\+\_\+\+\_\+m2\+\_\+s,  }\item[{double}]{mean\+\_\+free\+\_\+path\+\_\+\+\_\+m,  }\item[{double}]{radius\+\_\+\+\_\+m,  }\item[{double}]{alpha }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+% FIG 6
+\mbox{\Hypertarget{util_8h_afde219af97ef99e021d59c7ca18b9277}\label{util_8h_afde219af97ef99e021d59c7ca18b9277}} 
+\index{util.h@{util.h}!gas\_aerosol\_continuum\_rxn\_rate\_constant@{gas\_aerosol\_continuum\_rxn\_rate\_constant}}
+\index{gas\_aerosol\_continuum\_rxn\_rate\_constant@{gas\_aerosol\_continuum\_rxn\_rate\_constant}!util.h@{util.h}}
+\doxysubsubsection{\texorpdfstring{gas\_aerosol\_continuum\_rxn\_rate\_constant()}{gas\_aerosol\_continuum\_rxn\_rate\_constant()}}
+{\footnotesize\ttfamily static double gas\+\_\+aerosol\+\_\+continuum\+\_\+rxn\+\_\+rate\+\_\+constant (\begin{DoxyParamCaption}\item[{double}]{diffusion\+\_\+coeff\+\_\+\+\_\+m2\+\_\+s,  }\item[{double}]{mean\+\_\+speed\+\_\+\+\_\+m\+\_\+s,  }\item[{double}]{radius\+\_\+\+\_\+m,  }\item[{double}]{alpha }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+Calculate the gas-\/aerosol reaction rate for the continuum regime {\bfseries [Tie2003]} \mbox{[} $\mbox{m}^3\, \mbox{particle}^{-1}\, \mbox{s}^{-1}$\mbox{]}
+
+The rate constant $k_c$ is calculated as\+:  \[
+  k_c = \frac{4 \pi r^2_e}{\left(\frac{r}{D_g} + \frac{4}{v(T)\gamma}\right)}
+\]
+
+where $r$ is the particle radius \mbox{[}m\mbox{]}, $D_g$ is the gas-\/phase diffusion coefficient of the reactant \mbox{[} $\mbox{m}^2\mbox{s}^{-1}$\mbox{]}, $\gamma$ is the reaction probability \mbox{[}unitless\mbox{]}, and v is the mean free speed of the gas-\/phase reactant.
+
+
+\begin{DoxyParams}{Parameters}
+{\em diffusion\+\_\+coeff\+\_\+\+\_\+m2\+\_\+s} & Diffusion coefficient of the gas species \mbox{[} $\mbox{m}^2\, \mbox{s}^{-1}$\mbox{]} \\
+\hline
+{\em mean\+\_\+speed\+\_\+\+\_\+m\+\_\+s} & Mean speed of the gas molecule \mbox{[}m s-\/1\mbox{]} \\
+\hline
+{\em radius\+\_\+\+\_\+m} & Particle radius \mbox{[}m\mbox{]} \\
+\hline
+{\em alpha} & Mass accomodation coefficient \mbox{[}unitless\mbox{]} \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{util_8h_source_l00183}{183}} of file \mbox{\hyperlink{util_8h_source}{util.\+h}}.
+
+Here is the call graph for this function\+:
+% FIG 7
+Here is the caller graph for this function\+:
+% FIG 8
+\mbox{\Hypertarget{util_8h_adfe7ce1a7c219664c7a382f24068b1a1}\label{util_8h_adfe7ce1a7c219664c7a382f24068b1a1}} 
+\index{util.h@{util.h}!gas\_aerosol\_transition\_rxn\_rate\_constant@{gas\_aerosol\_transition\_rxn\_rate\_constant}}
+\index{gas\_aerosol\_transition\_rxn\_rate\_constant@{gas\_aerosol\_transition\_rxn\_rate\_constant}!util.h@{util.h}}
+\doxysubsubsection{\texorpdfstring{gas\_aerosol\_transition\_rxn\_rate\_constant()}{gas\_aerosol\_transition\_rxn\_rate\_constant()}}
+{\footnotesize\ttfamily static double gas\+\_\+aerosol\+\_\+transition\+\_\+rxn\+\_\+rate\+\_\+constant (\begin{DoxyParamCaption}\item[{double}]{diffusion\+\_\+coeff\+\_\+\+\_\+m2\+\_\+s,  }\item[{double}]{mean\+\_\+free\+\_\+path\+\_\+\+\_\+m,  }\item[{double}]{radius\+\_\+\+\_\+m,  }\item[{double}]{alpha }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
 
 Calculate the gas-\/aerosol reaction rate constant for the transition regime \mbox{[} $\mbox{m}^3\, \mbox{particle}^{-1}\, \mbox{s}^{-1}$\mbox{]}
 
@@ -138,12 +209,12 @@ Rates can be calculated as\+:  \[
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{util_8h_source_l00118}{118}} of file \mbox{\hyperlink{util_8h_source}{util.\+h}}.
+Definition at line \mbox{\hyperlink{util_8h_source_l00129}{129}} of file \mbox{\hyperlink{util_8h_source}{util.\+h}}.
 
 Here is the call graph for this function\+:
-% FIG 5
+% FIG 9
 Here is the caller graph for this function\+:
-% FIG 6
+% FIG 10
 \mbox{\Hypertarget{util_8h_ae1c969544a10c17746622cf73186835c}\label{util_8h_ae1c969544a10c17746622cf73186835c}} 
 \index{util.h@{util.h}!mean\_free\_path\_\_m@{mean\_free\_path\_\_m}}
 \index{mean\_free\_path\_\_m@{mean\_free\_path\_\_m}!util.h@{util.h}}
@@ -152,10 +223,7 @@ Here is the caller graph for this function\+:
 
 Calculate the mean free path of a gas-\/phase species \mbox{[}m\mbox{]}  \[
   \lambda = 3.0 D_g / v
-\] where $D_g$ is the gas-\/phase diffusion coefficient \mbox{[} $\mbox{m}^2\,\mbox{s}^{-1}$\mbox{]} and $v$ is the mean speed of the gas-\/phase molecules \mbox{[} $\mbox{m}\,\mbox{s}^{-1}$ \mbox{]} \+:  \[
-  v = \sqrt{\frac{8RT}{\pi MW}}
-\] where R is the ideal gas constant \mbox{[} $\mbox{J}\, \mbox{K}^{-1}\,
-\mbox{mol}^{-1}$\mbox{]}, T is temperature \mbox{[}K\mbox{]}, and MW is the molecular weight of the gas-\/phase species \mbox{[} $\mbox{kg}\, \mbox{mol}^{-1}$\mbox{]}
+\] where $D_g$ is the gas-\/phase diffusion coefficient \mbox{[} $\mbox{m}^2\,\mbox{s}^{-1}$\mbox{]} and $v$ is the mean speed of the gas-\/phase molecules \mbox{[} $\mbox{m}\,\mbox{s}^{-1}$ \mbox{]}.
 
 
 \begin{DoxyParams}{Parameters}
@@ -169,10 +237,35 @@ Calculate the mean free path of a gas-\/phase species \mbox{[}m\mbox{]}  \[
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{util_8h_source_l00039}{39}} of file \mbox{\hyperlink{util_8h_source}{util.\+h}}.
+Definition at line \mbox{\hyperlink{util_8h_source_l00050}{50}} of file \mbox{\hyperlink{util_8h_source}{util.\+h}}.
+
+Here is the call graph for this function\+:
+% FIG 11
+Here is the caller graph for this function\+:
+% FIG 12
+\mbox{\Hypertarget{util_8h_a77fbb355dc943308c5632fe698e81363}\label{util_8h_a77fbb355dc943308c5632fe698e81363}} 
+\index{util.h@{util.h}!mean\_speed\_\_m\_s@{mean\_speed\_\_m\_s}}
+\index{mean\_speed\_\_m\_s@{mean\_speed\_\_m\_s}!util.h@{util.h}}
+\doxysubsubsection{\texorpdfstring{mean\_speed\_\_m\_s()}{mean\_speed\_\_m\_s()}}
+{\footnotesize\ttfamily static double mean\+\_\+speed\+\_\+\+\_\+m\+\_\+s (\begin{DoxyParamCaption}\item[{double}]{temperature\+\_\+\+\_\+K,  }\item[{double}]{mw\+\_\+\+\_\+kg\+\_\+mol }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+Calculate the mean speed of a gas-\/phase species \mbox{[} $\mbox{m}\,\mbox{s}^{-1}$ \mbox{]} \+:  \[
+  v = \sqrt{\frac{8RT}{\pi MW}}
+\] where R is the ideal gas constant \mbox{[} $\mbox{J}\, \mbox{K}^{-1}\,
+\mbox{mol}^{-1}$\mbox{]}, T is temperature \mbox{[}K\mbox{]}, and MW is the molecular weight of the gas-\/phase species \mbox{[} $\mbox{kg}\, \mbox{mol}^{-1}$\mbox{]} 
+\begin{DoxyParams}{Parameters}
+{\em temperature\+\_\+\+\_\+K} & Temperature \mbox{[}K\mbox{]} \\
+\hline
+{\em mw\+\_\+\+\_\+kg\+\_\+mol} & Molecular weight of the gas-\/phase species \mbox{[} $\mbox{kg}\,
+\mbox{mol}^{-1}$\mbox{]} \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{util_8h_source_l00030}{30}} of file \mbox{\hyperlink{util_8h_source}{util.\+h}}.
 
 Here is the caller graph for this function\+:
-% FIG 7
+% FIG 13
 \mbox{\Hypertarget{util_8h_a0ade6cf865e738fbd0629ca08500679d}\label{util_8h_a0ade6cf865e738fbd0629ca08500679d}} 
 \index{util.h@{util.h}!transition\_regime\_correction\_factor@{transition\_regime\_correction\_factor}}
 \index{transition\_regime\_correction\_factor@{transition\_regime\_correction\_factor}!util.h@{util.h}}
@@ -193,9 +286,9 @@ K_n + 0.75 \alpha} \] where the Knudsen Number $K_n = \lambda / r$ (where $\lamb
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{util_8h_source_l00058}{58}} of file \mbox{\hyperlink{util_8h_source}{util.\+h}}.
+Definition at line \mbox{\hyperlink{util_8h_source_l00069}{69}} of file \mbox{\hyperlink{util_8h_source}{util.\+h}}.
 
 Here is the call graph for this function\+:
-% FIG 8
+% FIG 14
 Here is the caller graph for this function\+:
-% FIG 9
+% FIG 15

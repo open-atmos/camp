@@ -19,6 +19,7 @@ Valid reaction types include\+:
 \item \mbox{\hyperlink{camp_rxn_photolysis}{photolysis}}
 \item \mbox{\hyperlink{camp_rxn_SIMPOL_phase_transfer}{SIMPOL.1 phase transfer}}
 \item \mbox{\hyperlink{camp_rxn_ternary_chemical_activation}{ternary chemical activation}}
+\item \mbox{\hyperlink{camp_rxn_surface}{surface (heterogeneous)}}
 \item \mbox{\hyperlink{camp_rxn_troe}{Troe (fall-\/off)}}
 \item \mbox{\hyperlink{camp_rxn_wennberg_no_ro2}{Wennberg NO + RO2}}
 \item \mbox{\hyperlink{camp_rxn_wennberg_tunneling}{Wennberg tunneling}}
@@ -419,7 +420,47 @@ Input data for Ternary Chemical Activation reactions have the following format \
 
 The two sets of parameters beginning with {\bfseries{k0\+\_\+}} and {\bfseries{kinf\+\_\+}} are the \mbox{\hyperlink{camp_rxn_arrhenius}{Arrhenius}} parameters for the $k_0$ and $k_{\inf}$ rate constants, respectively. When not present, {\bfseries{\+\_\+A}} parameters are assumed to be 1.\+0, {\bfseries{\+\_\+B}} to be 0.\+0, {\bfseries{\+\_\+C}} to be 0.\+0, {\bfseries{Fc}} to be 0.\+6 and {\bfseries{N}} to be 1.\+0.
 
-The unit for time is assumed to be s, but inclusion of the optional key-\/value pair {\bfseries{time}} {\bfseries{unit}} = {\bfseries{MIN}} can be used to indicate a rate with min as the time unit. \hypertarget{camp_rxn_troe}{}\doxysection{CAMP\+: Troe Reaction}\label{camp_rxn_troe}
+The unit for time is assumed to be s, but inclusion of the optional key-\/value pair {\bfseries{time}} {\bfseries{unit}} = {\bfseries{MIN}} can be used to indicate a rate with min as the time unit. \hypertarget{camp_rxn_surface}{}\doxysection{CAMP\+: Surface (Hetergeneous) Reaction}\label{camp_rxn_surface}
+Surface reactions transform gas-\/phase species into gas-\/phase products according to a rate that is calculated based on the total exposed surface area of a condensed phase.
+
+For surface reactions of the gas phase species X, the reaction rate is calculated assuming large particles (continuum regime) as\+:
+
+\[
+   r_{surface} = k_{surface}\mbox{[X]}
+ \]
+
+where $[\mbox{X}]$ is the gas-\/phase concentration of species X \mbox{[}ppm\mbox{]} and the rate constant $k_{surface}$ \mbox{[}1/s\mbox{]} is calculated as\+:
+
+\[
+ k_{surface} = \frac{4N_a \pi r^2_e}{\left(\frac{r_e}{D_g} + \frac{4}{v(T)\gamma}\right)}
+ \]
+
+where $N_a$ is the number concentration of particles \mbox{[}particles $\mbox{m}^{-3}$\mbox{]}, $r_e$ is the effective particle radius \mbox{[}m\mbox{]}, $D_g$ is the gas-\/phase diffusion coefficient of the reactant \mbox{[} $\mbox{m}^2\mbox{s}^{-1}$\mbox{]}, $\gamma$ is the reaction probability \mbox{[}unitless\mbox{]}, and v is the mean free speed of the gas-\/phase reactant\+:
+
+\[
+   v = \sqrt{\frac{8RT}{\pi MW}}
+ \]
+
+where R is the ideal gas constant \mbox{[} $\mbox{J}\, \mbox{K}^{-1}\,
+ \mbox{mol}^{-1}$\mbox{]}, T is temperature \mbox{[}K\mbox{]}, and MW is the molecular weight of the gas-\/phase reactant \mbox{[} $\mbox{kg}\, \mbox{mol}^{-1}$\mbox{]}
+
+Input data for surface reactions have the following format \+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{  "{}type"{} : "{}SURFACE"{},}
+\DoxyCodeLine{  "{}gas-\/phase reactant"{} : "{}my gas species"{},}
+\DoxyCodeLine{  "{}reaction probability"{} : 0.2,}
+\DoxyCodeLine{  "{}gas-\/phase products"{} : \{}
+\DoxyCodeLine{     "{}my other gas species"{} : \{ \},}
+\DoxyCodeLine{     "{}another gas species"{} : \{ "{}yield"{} : 0.3 \}}
+\DoxyCodeLine{  \},}
+\DoxyCodeLine{  "{}areosol phase"{} : "{}my aqueous phase"{}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+ The key-\/value pairs {\bfseries{gas-\/phase}} {\bfseries{reactant}}, {\bfseries{reaction}} {\bfseries{probability}}, and {\bfseries{aerosol-\/phase}} are required. Only one gas-\/phase reactant is allowed, but multiple products can be present. The key-\/value pair {\bfseries{yield}} for product species is optional and defaults to 1.\+0.
+
+The gas-\/phase reactant species must include properties {\bfseries{diffusion}} {\bfseries{coeff}} {\bfseries{}}\mbox{[}{\bfseries{m2}} {\bfseries{s-\/1}}\mbox{]}, which specifies the diffusion coefficient in $\mbox{m}^2\,\mbox{s}^{-1}$, and {\bfseries{molecular}} {\bfseries{weight}} {\bfseries{}}\mbox{[}{\bfseries{kg}} {\bfseries{mol-\/1}}\mbox{]}, which specifies the molecular weight of the species in $\mbox{kg}\,\mbox{mol}^{-1}$. \hypertarget{camp_rxn_troe}{}\doxysection{CAMP\+: Troe Reaction}\label{camp_rxn_troe}
 Troe (fall-\/off) reaction rate constant equations take the form\+:
 
 \[

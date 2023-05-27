@@ -19,4 +19,7 @@ digraph "aero_rep_single_particle_get_used_jac_elem"
   Node2 -> Node7 [dir="back",color="steelblue1",style="solid"];
   Node7 [label="rxn_SIMPOL_phase_transfer\l_get_used_jac_elem",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$rxn___s_i_m_p_o_l__phase__transfer_8c.html#a1658944a83529b7d5e854920f235ed3b",tooltip="Flag Jacobian elements used by this reaction."];
   Node7 -> Node4 [dir="back",color="steelblue1",style="solid"];
+  Node2 -> Node8 [dir="back",color="steelblue1",style="solid"];
+  Node8 [label="rxn_surface_get_used\l_jac_elem",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$rxn__surface_8c.html#a172e0e483115d10f868a1a68f7a664da",tooltip="Flag Jacobian elements used by this reaction."];
+  Node8 -> Node4 [dir="back",color="steelblue1",style="solid"];
 }

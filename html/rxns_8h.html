@@ -86,7 +86,7 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><img src="rxns_8h__dep__incl.png" border="0" usemap="#arxns_8hdep" alt=""/></div>
 <map name="arxns_8hdep" id="arxns_8hdep">
-<area shape="rect" title="Header file for reaction solver functions." alt="" coords="1381,5,1437,31"/>
+<area shape="rect" title="Header file for reaction solver functions." alt="" coords="1457,5,1513,31"/>
 <area shape="rect" href="rxn___c_m_a_q___h2_o2_8c.html" title="CMAQ_H2O2 reaction solver functions." alt="" coords="5,86,141,111"/>
 <area shape="rect" href="rxn___c_m_a_q___o_h___h_n_o3_8c.html" title="CMAQ_OH_HNO3 reaction solver functions." alt="" coords="166,86,333,111"/>
 <area shape="rect" href="rxn___h_l__phase__transfer_8c.html" title="Phase Transfer reaction solver functions." alt="" coords="357,86,523,111"/>
@@ -98,11 +98,12 @@ This graph shows which files directly or indirectly include this file:</div>
 <area shape="rect" href="rxn__first__order__loss_8c.html" title="First&#45;Order loss reaction solver functions." alt="" coords="1413,86,1557,111"/>
 <area shape="rect" href="rxn__photolysis_8c.html" title="Photolysis reaction solver functions." alt="" coords="1581,86,1696,111"/>
 <area shape="rect" href="rxn__solver_8c.html" title="Reaction solver functions." alt="" coords="1720,86,1811,111"/>
-<area shape="rect" href="rxn__ternary__chemical__activation_8c.html" title="Ternary Chemical Activation reaction solver functions." alt="" coords="1835,79,1979,119"/>
-<area shape="rect" href="rxn__troe_8c.html" title="Troe reaction solver functions." alt="" coords="2003,86,2082,111"/>
-<area shape="rect" href="rxn__wennberg__no__ro2_8c.html" title="Wennberg NO + RO2 reaction solver functions." alt="" coords="2106,86,2265,111"/>
-<area shape="rect" href="rxn__wennberg__tunneling_8c.html" title="Wennberg tunneling reaction solver functions." alt="" coords="2289,86,2460,111"/>
-<area shape="rect" href="rxn__wet__deposition_8c.html" title="Wet deposition reaction solver functions." alt="" coords="2485,86,2627,111"/>
+<area shape="rect" href="rxn__surface_8c.html" title="Surface reaction solver functions." alt="" coords="1835,86,1933,111"/>
+<area shape="rect" href="rxn__ternary__chemical__activation_8c.html" title="Ternary Chemical Activation reaction solver functions." alt="" coords="1957,79,2101,119"/>
+<area shape="rect" href="rxn__troe_8c.html" title="Troe reaction solver functions." alt="" coords="2126,86,2205,111"/>
+<area shape="rect" href="rxn__wennberg__no__ro2_8c.html" title="Wennberg NO + RO2 reaction solver functions." alt="" coords="2229,86,2387,111"/>
+<area shape="rect" href="rxn__wennberg__tunneling_8c.html" title="Wennberg tunneling reaction solver functions." alt="" coords="2412,86,2583,111"/>
+<area shape="rect" href="rxn__wet__deposition_8c.html" title="Wet deposition reaction solver functions." alt="" coords="2607,86,2750,111"/>
 </map>
 </div>
 </div>
@@ -307,6 +308,24 @@ Functions</h2></td></tr>
 <tr class="memitem:a2c6b4163ab0a9e65eec7dd8286d67885"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rxns_8h.html#a2c6b4163ab0a9e65eec7dd8286d67885">rxn_SIMPOL_phase_transfer_calc_jac_contrib</a> (<a class="el" href="struct_model_data.html">ModelData</a> *model_data, <a class="el" href="struct_jacobian.html">Jacobian</a> jac, int *rxn_int_data, double *rxn_float_data, double *rxn_env_data, realtype time_step)</td></tr>
 <tr class="memdesc:a2c6b4163ab0a9e65eec7dd8286d67885"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate contributions to the <a class="el" href="struct_jacobian.html">Jacobian</a> from this reaction.  <a href="rxns_8h.html#a2c6b4163ab0a9e65eec7dd8286d67885">More...</a><br /></td></tr>
 <tr class="separator:a2c6b4163ab0a9e65eec7dd8286d67885"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a172e0e483115d10f868a1a68f7a664da"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rxns_8h.html#a172e0e483115d10f868a1a68f7a664da">rxn_surface_get_used_jac_elem</a> (<a class="el" href="struct_model_data.html">ModelData</a> *model_data, int *rxn_int_data, double *rxn_float_data, <a class="el" href="struct_jacobian.html">Jacobian</a> *jac)</td></tr>
+<tr class="memdesc:a172e0e483115d10f868a1a68f7a664da"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flag <a class="el" href="struct_jacobian.html">Jacobian</a> elements used by this reaction.  <a href="rxns_8h.html#a172e0e483115d10f868a1a68f7a664da">More...</a><br /></td></tr>
+<tr class="separator:a172e0e483115d10f868a1a68f7a664da"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a61c79d96744201b051a10a6b891a7ea9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rxns_8h.html#a61c79d96744201b051a10a6b891a7ea9">rxn_surface_update_ids</a> (<a class="el" href="struct_model_data.html">ModelData</a> *model_data, int *deriv_ids, <a class="el" href="struct_jacobian.html">Jacobian</a> jac, int *rxn_int_data, double *rxn_float_data)</td></tr>
+<tr class="memdesc:a61c79d96744201b051a10a6b891a7ea9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the time derivative and Jacbobian array indices.  <a href="rxns_8h.html#a61c79d96744201b051a10a6b891a7ea9">More...</a><br /></td></tr>
+<tr class="separator:a61c79d96744201b051a10a6b891a7ea9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1f0c4bf256b37b3b7b054514a997deae"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rxns_8h.html#a1f0c4bf256b37b3b7b054514a997deae">rxn_surface_update_env_state</a> (<a class="el" href="struct_model_data.html">ModelData</a> *model_data, int *rxn_int_data, double *rxn_float_data, double *rxn_env_data)</td></tr>
+<tr class="memdesc:a1f0c4bf256b37b3b7b054514a997deae"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update reaction data for new environmental conditions.  <a href="rxns_8h.html#a1f0c4bf256b37b3b7b054514a997deae">More...</a><br /></td></tr>
+<tr class="separator:a1f0c4bf256b37b3b7b054514a997deae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af4d5ba66d45ee435e1451b44eda87370"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rxns_8h.html#af4d5ba66d45ee435e1451b44eda87370">rxn_surface_print</a> (int *rxn_int_data, double *rxn_float_data)</td></tr>
+<tr class="memdesc:af4d5ba66d45ee435e1451b44eda87370"><td class="mdescLeft">&#160;</td><td class="mdescRight">Print the surface reaction parameters.  <a href="rxns_8h.html#af4d5ba66d45ee435e1451b44eda87370">More...</a><br /></td></tr>
+<tr class="separator:af4d5ba66d45ee435e1451b44eda87370"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5bb30760087399bd04a9f9e16f0fab1f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rxns_8h.html#a5bb30760087399bd04a9f9e16f0fab1f">rxn_surface_calc_deriv_contrib</a> (<a class="el" href="struct_model_data.html">ModelData</a> *model_data, <a class="el" href="struct_time_derivative.html">TimeDerivative</a> time_deriv, int *rxn_int_data, double *rxn_float_data, double *rxn_env_data, realtype time_step)</td></tr>
+<tr class="memdesc:a5bb30760087399bd04a9f9e16f0fab1f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate contributions to the time derivative \(f(t,y)\) from this reaction.  <a href="rxns_8h.html#a5bb30760087399bd04a9f9e16f0fab1f">More...</a><br /></td></tr>
+<tr class="separator:a5bb30760087399bd04a9f9e16f0fab1f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8de73dc2a00c1bc5b91747cbb50086ad"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rxns_8h.html#a8de73dc2a00c1bc5b91747cbb50086ad">rxn_surface_calc_jac_contrib</a> (<a class="el" href="struct_model_data.html">ModelData</a> *model_data, <a class="el" href="struct_jacobian.html">Jacobian</a> jac, int *rxn_int_data, double *rxn_float_data, double *rxn_env_data, realtype time_step)</td></tr>
+<tr class="memdesc:a8de73dc2a00c1bc5b91747cbb50086ad"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate contributions to the <a class="el" href="struct_jacobian.html">Jacobian</a> from this reaction.  <a href="rxns_8h.html#a8de73dc2a00c1bc5b91747cbb50086ad">More...</a><br /></td></tr>
+<tr class="separator:a8de73dc2a00c1bc5b91747cbb50086ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a75c51d913c5d68b833f8fe7f0c078870"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rxns_8h.html#a75c51d913c5d68b833f8fe7f0c078870">rxn_ternary_chemical_activation_get_used_jac_elem</a> (int *rxn_int_data, double *rxn_float_data, <a class="el" href="struct_jacobian.html">Jacobian</a> *jac)</td></tr>
 <tr class="memdesc:a75c51d913c5d68b833f8fe7f0c078870"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flag <a class="el" href="struct_jacobian.html">Jacobian</a> elements used by this reaction.  <a href="rxns_8h.html#a75c51d913c5d68b833f8fe7f0c078870">More...</a><br /></td></tr>
 <tr class="separator:a75c51d913c5d68b833f8fe7f0c078870"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -3566,7 +3585,7 @@ Here is the call graph for this function:</div>
 <area shape="rect" href="aero__rep__solver_8c.html#a00aee7bec2d9284a74c0eb26d346dc81" title="Check whether aerosol concentrations are per&#45;particle or total for each phase." alt="" coords="211,77,405,102"/>
 <area shape="rect" href="aero__rep__solver_8c.html#aab8fc9de2c9bfe5d012e80322a5b653b" title="Get the effective particle radius, &#160;(m)" alt="" coords="231,197,385,237"/>
 <area shape="rect" href="aero__rep__solver_8c.html#aa56870eb4fe20532461b1634d7688210" title="Get the particle number concentration &#160;( )" alt="" coords="235,276,381,316"/>
-<area shape="rect" href="util_8h.html#ada92558814324f22e19743fbf25ceb0f" title=" " alt="" coords="235,368,381,408"/>
+<area shape="rect" href="util_8h.html#adfe7ce1a7c219664c7a382f24068b1a1" title=" " alt="" coords="232,368,384,408"/>
 <area shape="rect" href="time__derivative_8c.html#af4c9ab5040b544a8ec4b63a1c75922e2" title="Add a contribution to the time derivative." alt="" coords="239,432,377,472"/>
 <area shape="rect" href="aero__rep__modal__binned__mass_8c.html#a5806fae1fe7d70369bfb7a0d9c54d12f" title="Get the type of aerosol concentration used." alt="" coords="470,5,654,45"/>
 <area shape="rect" href="aero__rep__single__particle_8c.html#a59114de73dd305d5825a8547155b8946" title="Get the type of aerosol concentration used." alt="" coords="481,69,643,109"/>
@@ -3577,6 +3596,7 @@ Here is the call graph for this function:</div>
 <area shape="rect" href="aero__rep__single__particle_8c.html#afa7d35b774d0ab4d7cad7fb30d75e897" title="Get the particle number concentration &#160;( )" alt="" coords="473,325,651,365"/>
 <area shape="rect" href="util_8h.html#ae1c969544a10c17746622cf73186835c" title=" " alt="" coords="730,418,870,443"/>
 <area shape="rect" href="util_8h.html#a0ade6cf865e738fbd0629ca08500679d" title=" " alt="" coords="469,440,655,480"/>
+<area shape="rect" href="util_8h.html#a77fbb355dc943308c5632fe698e81363" title=" " alt="" coords="929,418,1064,443"/>
 </map>
 </div>
 <div class="dynheader">
@@ -3672,8 +3692,8 @@ Here is the call graph for this function:</div>
 <area shape="rect" href="aero__rep__solver_8c.html#a00aee7bec2d9284a74c0eb26d346dc81" title="Check whether aerosol concentrations are per&#45;particle or total for each phase." alt="" coords="211,77,405,102"/>
 <area shape="rect" href="aero__rep__solver_8c.html#aab8fc9de2c9bfe5d012e80322a5b653b" title="Get the effective particle radius, &#160;(m)" alt="" coords="231,197,385,237"/>
 <area shape="rect" href="aero__rep__solver_8c.html#aa56870eb4fe20532461b1634d7688210" title="Get the particle number concentration &#160;( )" alt="" coords="235,325,381,365"/>
-<area shape="rect" href="util_8h.html#ad31f0cb5f01c257931b6e82d91b6fb23" title=" " alt="" coords="229,412,387,452"/>
-<area shape="rect" href="util_8h.html#ada92558814324f22e19743fbf25ceb0f" title=" " alt="" coords="235,505,381,545"/>
+<area shape="rect" href="util_8h.html#a6960902fe575d06ebd32350a076ba968" title=" " alt="" coords="214,412,402,452"/>
+<area shape="rect" href="util_8h.html#adfe7ce1a7c219664c7a382f24068b1a1" title=" " alt="" coords="232,505,384,545"/>
 <area shape="rect" href="_jacobian_8c.html#a844d8b2784c48a794ada38d053b1d1b3" title="Add a contribution to the Jacobian." alt="" coords="240,570,376,595"/>
 <area shape="rect" href="aero__rep__modal__binned__mass_8c.html#a5806fae1fe7d70369bfb7a0d9c54d12f" title="Get the type of aerosol concentration used." alt="" coords="470,5,654,45"/>
 <area shape="rect" href="aero__rep__single__particle_8c.html#a59114de73dd305d5825a8547155b8946" title="Get the type of aerosol concentration used." alt="" coords="481,69,643,109"/>
@@ -3685,6 +3705,7 @@ Here is the call graph for this function:</div>
 <area shape="rect" href="util_8h.html#af0918da54a73bf30e7079908caea2efd" title=" " alt="" coords="492,390,632,445"/>
 <area shape="rect" href="util_8h.html#ae1c969544a10c17746622cf73186835c" title=" " alt="" coords="730,498,870,523"/>
 <area shape="rect" href="util_8h.html#a0ade6cf865e738fbd0629ca08500679d" title=" " alt="" coords="469,520,655,560"/>
+<area shape="rect" href="util_8h.html#a77fbb355dc943308c5632fe698e81363" title=" " alt="" coords="929,498,1064,523"/>
 </map>
 </div>
 <div class="dynheader">
@@ -3891,6 +3912,7 @@ Here is the call graph for this function:</div>
 <map name="arxns_8h_a53a6e2e8532852ea1b23266b2ff3db12_cgraph" id="arxns_8h_a53a6e2e8532852ea1b23266b2ff3db12_cgraph">
 <area shape="rect" title="Update reaction data for new environmental conditions." alt="" coords="5,5,163,45"/>
 <area shape="rect" href="util_8h.html#ae1c969544a10c17746622cf73186835c" title=" " alt="" coords="211,13,351,38"/>
+<area shape="rect" href="util_8h.html#a77fbb355dc943308c5632fe698e81363" title=" " alt="" coords="399,13,533,38"/>
 </map>
 </div>
 <div class="dynheader">
@@ -4635,7 +4657,7 @@ Here is the call graph for this function:</div>
 <area shape="rect" href="aero__rep__solver_8c.html#a0d5fc5c14f5fc182d80811b27c644e86" title="Get the total mass of an aerosol phase in this representation &#160;( )" alt="" coords="256,371,427,411"/>
 <area shape="rect" href="aero__rep__solver_8c.html#aab8fc9de2c9bfe5d012e80322a5b653b" title="Get the effective particle radius, &#160;(m)" alt="" coords="265,467,418,507"/>
 <area shape="rect" href="aero__rep__solver_8c.html#aa56870eb4fe20532461b1634d7688210" title="Get the particle number concentration &#160;( )" alt="" coords="268,563,415,603"/>
-<area shape="rect" href="util_8h.html#ada92558814324f22e19743fbf25ceb0f" title=" " alt="" coords="269,655,414,695"/>
+<area shape="rect" href="util_8h.html#adfe7ce1a7c219664c7a382f24068b1a1" title=" " alt="" coords="265,655,417,695"/>
 <area shape="rect" href="time__derivative_8c.html#af4c9ab5040b544a8ec4b63a1c75922e2" title="Add a contribution to the time derivative." alt="" coords="272,719,411,759"/>
 <area shape="rect" href="aero__rep__modal__binned__mass_8c.html#a5806fae1fe7d70369bfb7a0d9c54d12f" title="Get the type of aerosol concentration used." alt="" coords="503,5,687,45"/>
 <area shape="rect" href="aero__rep__single__particle_8c.html#a59114de73dd305d5825a8547155b8946" title="Get the type of aerosol concentration used." alt="" coords="514,69,677,109"/>
@@ -4651,6 +4673,7 @@ Here is the call graph for this function:</div>
 <area shape="rect" href="aero__rep__single__particle_8c.html#afa7d35b774d0ab4d7cad7fb30d75e897" title="Get the particle number concentration &#160;( )" alt="" coords="506,627,685,667"/>
 <area shape="rect" href="util_8h.html#ae1c969544a10c17746622cf73186835c" title=" " alt="" coords="763,719,903,745"/>
 <area shape="rect" href="util_8h.html#a0ade6cf865e738fbd0629ca08500679d" title=" " alt="" coords="503,741,688,781"/>
+<area shape="rect" href="util_8h.html#a77fbb355dc943308c5632fe698e81363" title=" " alt="" coords="963,719,1097,745"/>
 </map>
 </div>
 <div class="dynheader">
@@ -4748,8 +4771,8 @@ Here is the call graph for this function:</div>
 <area shape="rect" href="aero__rep__solver_8c.html#a0d5fc5c14f5fc182d80811b27c644e86" title="Get the total mass of an aerosol phase in this representation &#160;( )" alt="" coords="256,371,427,411"/>
 <area shape="rect" href="aero__rep__solver_8c.html#aab8fc9de2c9bfe5d012e80322a5b653b" title="Get the effective particle radius, &#160;(m)" alt="" coords="265,499,418,539"/>
 <area shape="rect" href="aero__rep__solver_8c.html#aa56870eb4fe20532461b1634d7688210" title="Get the particle number concentration &#160;( )" alt="" coords="268,563,415,603"/>
-<area shape="rect" href="util_8h.html#ad31f0cb5f01c257931b6e82d91b6fb23" title=" " alt="" coords="262,713,421,753"/>
-<area shape="rect" href="util_8h.html#ada92558814324f22e19743fbf25ceb0f" title=" " alt="" coords="269,807,414,847"/>
+<area shape="rect" href="util_8h.html#a6960902fe575d06ebd32350a076ba968" title=" " alt="" coords="247,713,435,753"/>
+<area shape="rect" href="util_8h.html#adfe7ce1a7c219664c7a382f24068b1a1" title=" " alt="" coords="265,807,417,847"/>
 <area shape="rect" href="_jacobian_8c.html#a844d8b2784c48a794ada38d053b1d1b3" title="Add a contribution to the Jacobian." alt="" coords="273,871,409,897"/>
 <area shape="rect" href="aero__rep__modal__binned__mass_8c.html#a5806fae1fe7d70369bfb7a0d9c54d12f" title="Get the type of aerosol concentration used." alt="" coords="503,5,687,45"/>
 <area shape="rect" href="aero__rep__single__particle_8c.html#a59114de73dd305d5825a8547155b8946" title="Get the type of aerosol concentration used." alt="" coords="514,69,677,109"/>
@@ -4766,6 +4789,7 @@ Here is the call graph for this function:</div>
 <area shape="rect" href="util_8h.html#af0918da54a73bf30e7079908caea2efd" title=" " alt="" coords="525,691,665,746"/>
 <area shape="rect" href="util_8h.html#ae1c969544a10c17746622cf73186835c" title=" " alt="" coords="763,799,903,825"/>
 <area shape="rect" href="util_8h.html#a0ade6cf865e738fbd0629ca08500679d" title=" " alt="" coords="503,821,688,861"/>
+<area shape="rect" href="util_8h.html#a77fbb355dc943308c5632fe698e81363" title=" " alt="" coords="963,799,1097,825"/>
 </map>
 </div>
 <div class="dynheader">
@@ -4973,6 +4997,7 @@ Here is the call graph for this function:</div>
 <map name="arxns_8h_a16e926c16f84b0d8628f10553fc63ce6_cgraph" id="arxns_8h_a16e926c16f84b0d8628f10553fc63ce6_cgraph">
 <area shape="rect" title="Update reaction data for new environmental conditions." alt="" coords="5,5,196,45"/>
 <area shape="rect" href="util_8h.html#ae1c969544a10c17746622cf73186835c" title=" " alt="" coords="244,13,384,38"/>
+<area shape="rect" href="util_8h.html#a77fbb355dc943308c5632fe698e81363" title=" " alt="" coords="432,13,567,38"/>
 </map>
 </div>
 <div class="dynheader">
@@ -5063,6 +5088,488 @@ Here is the caller graph for this function:</div>
 <area shape="rect" href="rxn__solver_8c.html#a04e1414725ffbbb0b16fca416d826c1d" title="Update the time derivative and Jacobian array ids." alt="" coords="300,13,409,38"/>
 <area shape="rect" href="camp__solver_8c.html#a5b485fa25356197023889f3795888e98" title="Try to improve guesses of y sent to the linear solver." alt="" coords="164,13,252,38"/>
 <area shape="rect" href="camp__solver_8c.html#a599ffdef916b139a1690bfd41aa386b6" title="Solver initialization." alt="" coords="5,13,116,38"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a5bb30760087399bd04a9f9e16f0fab1f" name="a5bb30760087399bd04a9f9e16f0fab1f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5bb30760087399bd04a9f9e16f0fab1f">&#9670;&#160;</a></span>rxn_surface_calc_deriv_contrib()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void rxn_surface_calc_deriv_contrib </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_model_data.html">ModelData</a> *&#160;</td>
+          <td class="paramname"><em>model_data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="struct_time_derivative.html">TimeDerivative</a>&#160;</td>
+          <td class="paramname"><em>time_deriv</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int *&#160;</td>
+          <td class="paramname"><em>rxn_int_data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double *&#160;</td>
+          <td class="paramname"><em>rxn_float_data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double *&#160;</td>
+          <td class="paramname"><em>rxn_env_data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">realtype&#160;</td>
+          <td class="paramname"><em>time_step</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Calculate contributions to the time derivative \(f(t,y)\) from this reaction. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">model_data</td><td>Pointer to the model data, including the state array </td></tr>
+    <tr><td class="paramname">time_deriv</td><td><a class="el" href="struct_time_derivative.html">TimeDerivative</a> object </td></tr>
+    <tr><td class="paramname">rxn_int_data</td><td>Pointer to the reaction integer data </td></tr>
+    <tr><td class="paramname">rxn_float_data</td><td>Pointer to the reaction floating-point data </td></tr>
+    <tr><td class="paramname">rxn_env_data</td><td>Pointer to the environment-dependent parameters </td></tr>
+    <tr><td class="paramname">time_step</td><td>Current time step being computed (s) </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="rxn__surface_8c_source.html#l00203">203</a> of file <a class="el" href="rxn__surface_8c_source.html">rxn_surface.c</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="rxns_8h_a5bb30760087399bd04a9f9e16f0fab1f_cgraph.png" border="0" usemap="#arxns_8h_a5bb30760087399bd04a9f9e16f0fab1f_cgraph" alt=""/></div>
+<map name="arxns_8h_a5bb30760087399bd04a9f9e16f0fab1f_cgraph" id="arxns_8h_a5bb30760087399bd04a9f9e16f0fab1f_cgraph">
+<area shape="rect" title="Calculate contributions to the time derivative &#160;from this reaction." alt="" coords="5,195,160,235"/>
+<area shape="rect" href="aero__rep__solver_8c.html#aab8fc9de2c9bfe5d012e80322a5b653b" title="Get the effective particle radius, &#160;(m)" alt="" coords="211,69,364,109"/>
+<area shape="rect" href="aero__rep__solver_8c.html#aa56870eb4fe20532461b1634d7688210" title="Get the particle number concentration &#160;( )" alt="" coords="214,163,361,203"/>
+<area shape="rect" href="util_8h.html#afde219af97ef99e021d59c7ca18b9277" title=" " alt="" coords="208,227,367,267"/>
+<area shape="rect" href="time__derivative_8c.html#af4c9ab5040b544a8ec4b63a1c75922e2" title="Add a contribution to the time derivative." alt="" coords="218,291,357,331"/>
+<area shape="rect" href="aero__rep__modal__binned__mass_8c.html#a8d5bf734337581d90c2280ab858ccf96" title="Get the effective particle radius &#160;(m)" alt="" coords="419,5,628,45"/>
+<area shape="rect" href="aero__rep__single__particle_8c.html#a48b11d345d89071d34e67b5063b1b891" title="Get the effective particle radius &#160;(m)" alt="" coords="438,69,609,109"/>
+<area shape="rect" href="aero__phase__solver_8c.html#a6e493e863924f29d6bd06598fa657f08" title="Get the volume of an aerosol phase." alt="" coords="680,101,843,141"/>
+<area shape="rect" href="aero__rep__modal__binned__mass_8c.html#a2e585253c19aa48dec8c55b963999e9d" title="Get the particle number concentration &#160;( )" alt="" coords="415,133,632,173"/>
+<area shape="rect" href="aero__rep__single__particle_8c.html#afa7d35b774d0ab4d7cad7fb30d75e897" title="Get the particle number concentration &#160;( )" alt="" coords="434,197,613,237"/>
+<area shape="rect" href="util_8h.html#a77fbb355dc943308c5632fe698e81363" title=" " alt="" coords="456,262,591,287"/>
+</map>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="rxns_8h_a5bb30760087399bd04a9f9e16f0fab1f_icgraph.png" border="0" usemap="#arxns_8h_a5bb30760087399bd04a9f9e16f0fab1f_icgraph" alt=""/></div>
+<map name="arxns_8h_a5bb30760087399bd04a9f9e16f0fab1f_icgraph" id="arxns_8h_a5bb30760087399bd04a9f9e16f0fab1f_icgraph">
+<area shape="rect" title="Calculate contributions to the time derivative &#160;from this reaction." alt="" coords="855,121,1009,161"/>
+<area shape="rect" href="rxn__solver_8c.html#af014568140c63dfab9ea1c92b056e3b8" title="Calculate the time derivative ." alt="" coords="701,128,807,153"/>
+<area shape="rect" href="camp__solver_8c.html#ac55302bc18db0d68d78f543aad6a16c4" title="Compute the time derivative f(t,y)" alt="" coords="615,128,653,153"/>
+<area shape="rect" href="camp__solver_8c.html#ad45be595da1a1d6fd40179d9743a9a65" title="Check a Jacobian for accuracy." alt="" coords="255,45,340,71"/>
+<area shape="rect" href="camp__solver_8c.html#a13451d507558a61a2353adfed58db468" title="Compute the Jacobian." alt="" coords="164,103,207,128"/>
+<area shape="rect" href="camp__solver_8c.html#a599ffdef916b139a1690bfd41aa386b6" title="Solver initialization." alt="" coords="5,128,116,153"/>
+<area shape="rect" href="camp__solver_8c.html#a51bc2a16028d4c72dd39669c31f6fc17" title="Determine if there is anything to solve." alt="" coords="388,204,567,229"/>
+<area shape="rect" href="camp__solver_8c.html#afc5ec8680b419e7ab49530d53a76cee4" title="Solve for a given timestep." alt="" coords="256,229,339,255"/>
+<area shape="rect" href="camp__debug_8h.html#a0352ebf153678772ffbeb405834c141d" title="Evaluate the derivative and Jacobian near a given state for a specified species." alt="" coords="414,38,541,78"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a8de73dc2a00c1bc5b91747cbb50086ad" name="a8de73dc2a00c1bc5b91747cbb50086ad"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8de73dc2a00c1bc5b91747cbb50086ad">&#9670;&#160;</a></span>rxn_surface_calc_jac_contrib()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void rxn_surface_calc_jac_contrib </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_model_data.html">ModelData</a> *&#160;</td>
+          <td class="paramname"><em>model_data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="struct_jacobian.html">Jacobian</a>&#160;</td>
+          <td class="paramname"><em>jac</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int *&#160;</td>
+          <td class="paramname"><em>rxn_int_data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double *&#160;</td>
+          <td class="paramname"><em>rxn_float_data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double *&#160;</td>
+          <td class="paramname"><em>rxn_env_data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">realtype&#160;</td>
+          <td class="paramname"><em>time_step</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Calculate contributions to the <a class="el" href="struct_jacobian.html">Jacobian</a> from this reaction. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">model_data</td><td>Pointer to the model data </td></tr>
+    <tr><td class="paramname">jac</td><td>Reaction <a class="el" href="struct_jacobian.html">Jacobian</a> </td></tr>
+    <tr><td class="paramname">rxn_int_data</td><td>Pointer to the reaction integer data </td></tr>
+    <tr><td class="paramname">rxn_float_data</td><td>Pointer to the reaction floating-point data </td></tr>
+    <tr><td class="paramname">rxn_env_data</td><td>Pointer to the environment-dependent parameters </td></tr>
+    <tr><td class="paramname">time_step</td><td>Current time step being calculated (s) </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="rxn__surface_8c_source.html#l00264">264</a> of file <a class="el" href="rxn__surface_8c_source.html">rxn_surface.c</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="rxns_8h_a8de73dc2a00c1bc5b91747cbb50086ad_cgraph.png" border="0" usemap="#arxns_8h_a8de73dc2a00c1bc5b91747cbb50086ad_cgraph" alt=""/></div>
+<map name="arxns_8h_a8de73dc2a00c1bc5b91747cbb50086ad_cgraph" id="arxns_8h_a8de73dc2a00c1bc5b91747cbb50086ad_cgraph">
+<area shape="rect" title="Calculate contributions to the Jacobian from this reaction." alt="" coords="5,197,149,237"/>
+<area shape="rect" href="aero__rep__solver_8c.html#aab8fc9de2c9bfe5d012e80322a5b653b" title="Get the effective particle radius, &#160;(m)" alt="" coords="215,69,368,109"/>
+<area shape="rect" href="aero__rep__solver_8c.html#aa56870eb4fe20532461b1634d7688210" title="Get the particle number concentration &#160;( )" alt="" coords="218,133,365,173"/>
+<area shape="rect" href="util_8h.html#aa2190a3abb8648804ae74bb1c2d09b36" title=" " alt="" coords="197,197,385,237"/>
+<area shape="rect" href="util_8h.html#afde219af97ef99e021d59c7ca18b9277" title=" " alt="" coords="212,261,371,301"/>
+<area shape="rect" href="_jacobian_8c.html#a844d8b2784c48a794ada38d053b1d1b3" title="Add a contribution to the Jacobian." alt="" coords="223,326,359,351"/>
+<area shape="rect" href="aero__rep__modal__binned__mass_8c.html#a8d5bf734337581d90c2280ab858ccf96" title="Get the effective particle radius &#160;(m)" alt="" coords="437,5,647,45"/>
+<area shape="rect" href="aero__rep__single__particle_8c.html#a48b11d345d89071d34e67b5063b1b891" title="Get the effective particle radius &#160;(m)" alt="" coords="457,69,627,109"/>
+<area shape="rect" href="aero__phase__solver_8c.html#a6e493e863924f29d6bd06598fa657f08" title="Get the volume of an aerosol phase." alt="" coords="699,101,861,141"/>
+<area shape="rect" href="aero__rep__modal__binned__mass_8c.html#a2e585253c19aa48dec8c55b963999e9d" title="Get the particle number concentration &#160;( )" alt="" coords="433,133,651,173"/>
+<area shape="rect" href="aero__rep__single__particle_8c.html#afa7d35b774d0ab4d7cad7fb30d75e897" title="Get the particle number concentration &#160;( )" alt="" coords="453,197,631,237"/>
+<area shape="rect" href="util_8h.html#a77fbb355dc943308c5632fe698e81363" title=" " alt="" coords="475,265,609,290"/>
+</map>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="rxns_8h_a8de73dc2a00c1bc5b91747cbb50086ad_icgraph.png" border="0" usemap="#arxns_8h_a8de73dc2a00c1bc5b91747cbb50086ad_icgraph" alt=""/></div>
+<map name="arxns_8h_a8de73dc2a00c1bc5b91747cbb50086ad_icgraph" id="arxns_8h_a8de73dc2a00c1bc5b91747cbb50086ad_icgraph">
+<area shape="rect" title="Calculate contributions to the Jacobian from this reaction." alt="" coords="397,5,541,45"/>
+<area shape="rect" href="rxn__solver_8c.html#ad44deb65b9845d05c6bd148e3378b42a" title="Calculate the Jacobian." alt="" coords="255,13,349,38"/>
+<area shape="rect" href="camp__solver_8c.html#a13451d507558a61a2353adfed58db468" title="Compute the Jacobian." alt="" coords="164,13,207,38"/>
+<area shape="rect" href="camp__solver_8c.html#a599ffdef916b139a1690bfd41aa386b6" title="Solver initialization." alt="" coords="5,13,116,38"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a172e0e483115d10f868a1a68f7a664da" name="a172e0e483115d10f868a1a68f7a664da"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a172e0e483115d10f868a1a68f7a664da">&#9670;&#160;</a></span>rxn_surface_get_used_jac_elem()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void rxn_surface_get_used_jac_elem </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_model_data.html">ModelData</a> *&#160;</td>
+          <td class="paramname"><em>model_data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int *&#160;</td>
+          <td class="paramname"><em>rxn_int_data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double *&#160;</td>
+          <td class="paramname"><em>rxn_float_data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="struct_jacobian.html">Jacobian</a> *&#160;</td>
+          <td class="paramname"><em>jac</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Flag <a class="el" href="struct_jacobian.html">Jacobian</a> elements used by this reaction. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">model_data</td><td>Pointer to the model data </td></tr>
+    <tr><td class="paramname">rxn_int_data</td><td>Pointer to the reaction integer data </td></tr>
+    <tr><td class="paramname">rxn_float_data</td><td>Pointer to the reaction floating-point data </td></tr>
+    <tr><td class="paramname">jac</td><td><a class="el" href="struct_jacobian.html">Jacobian</a> </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="rxn__surface_8c_source.html#l00056">56</a> of file <a class="el" href="rxn__surface_8c_source.html">rxn_surface.c</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="rxns_8h_a172e0e483115d10f868a1a68f7a664da_cgraph.png" border="0" usemap="#arxns_8h_a172e0e483115d10f868a1a68f7a664da_cgraph" alt=""/></div>
+<map name="arxns_8h_a172e0e483115d10f868a1a68f7a664da_cgraph" id="arxns_8h_a172e0e483115d10f868a1a68f7a664da_cgraph">
+<area shape="rect" title="Flag Jacobian elements used by this reaction." alt="" coords="5,125,155,165"/>
+<area shape="rect" href="aero__rep__solver_8c.html#a020684f657e2d323f672bd5500ceae22" title="Flag Jacobian elements used to calculated mass, volume, etc." alt="" coords="203,77,393,102"/>
+<area shape="rect" href="_jacobian_8c.html#aac51ac6b1cf239a84899308dab229441" title="Adds an element to the sparse matrix." alt="" coords="211,133,385,158"/>
+<area shape="rect" href="rxn__surface_8c.html#af4d5ba66d45ee435e1451b44eda87370" title="Print the surface reaction parameters." alt="" coords="237,182,359,207"/>
+<area shape="rect" href="aero__rep__modal__binned__mass_8c.html#ac5a65892343b17ff334e280f4d6ae5f9" title="Flag Jacobian elements used in calcualtions of mass and volume." alt="" coords="441,5,621,45"/>
+<area shape="rect" href="aero__rep__single__particle_8c.html#a076423c54855479ccee0af37f2d9840a" title="Flag Jacobian elements used in calcualtions of mass and volume." alt="" coords="450,69,613,109"/>
+<area shape="rect" href="aero__phase__solver_8c.html#a6e5ea770a313a6eebea53e86540dd510" title="Flag Jacobian elements used in calculations of mass and volume." alt="" coords="669,37,819,77"/>
+<area shape="rect" href="_jacobian_8c.html#ad9cda15d66705739c9d7bdf63c4636a3" title=" " alt="" coords="442,133,621,173"/>
+</map>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="rxns_8h_a172e0e483115d10f868a1a68f7a664da_icgraph.png" border="0" usemap="#arxns_8h_a172e0e483115d10f868a1a68f7a664da_icgraph" alt=""/></div>
+<map name="arxns_8h_a172e0e483115d10f868a1a68f7a664da_icgraph" id="arxns_8h_a172e0e483115d10f868a1a68f7a664da_icgraph">
+<area shape="rect" title="Flag Jacobian elements used by this reaction." alt="" coords="507,5,656,45"/>
+<area shape="rect" href="rxn__solver_8c.html#a6816597d1e59964f558cfc82b004549e" title="Get the Jacobian elements used by a particular reaction." alt="" coords="300,13,459,38"/>
+<area shape="rect" href="camp__solver_8c.html#a5b485fa25356197023889f3795888e98" title="Try to improve guesses of y sent to the linear solver." alt="" coords="164,13,252,38"/>
+<area shape="rect" href="camp__solver_8c.html#a599ffdef916b139a1690bfd41aa386b6" title="Solver initialization." alt="" coords="5,13,116,38"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="af4d5ba66d45ee435e1451b44eda87370" name="af4d5ba66d45ee435e1451b44eda87370"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af4d5ba66d45ee435e1451b44eda87370">&#9670;&#160;</a></span>rxn_surface_print()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void rxn_surface_print </td>
+          <td>(</td>
+          <td class="paramtype">int *&#160;</td>
+          <td class="paramname"><em>rxn_int_data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double *&#160;</td>
+          <td class="paramname"><em>rxn_float_data</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Print the surface reaction parameters. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">rxn_int_data</td><td>Pointer to the reaction integer data </td></tr>
+    <tr><td class="paramname">rxn_float_data</td><td>Pointer to the reaction floating-point data </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="rxn__surface_8c_source.html#l00363">363</a> of file <a class="el" href="rxn__surface_8c_source.html">rxn_surface.c</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="rxns_8h_af4d5ba66d45ee435e1451b44eda87370_icgraph.png" border="0" usemap="#arxns_8h_af4d5ba66d45ee435e1451b44eda87370_icgraph" alt=""/></div>
+<map name="arxns_8h_af4d5ba66d45ee435e1451b44eda87370_icgraph" id="arxns_8h_af4d5ba66d45ee435e1451b44eda87370_icgraph">
+<area shape="rect" title="Print the surface reaction parameters." alt="" coords="704,35,825,60"/>
+<area shape="rect" href="rxn__solver_8c.html#a607b803e7a4b427940312560ae0e5ba3" title="Print the reaction data." alt="" coords="530,5,633,31"/>
+<area shape="rect" href="rxn__surface_8c.html#a172e0e483115d10f868a1a68f7a664da" title="Flag Jacobian elements used by this reaction." alt="" coords="507,55,656,95"/>
+<area shape="rect" href="rxn__solver_8c.html#a6816597d1e59964f558cfc82b004549e" title="Get the Jacobian elements used by a particular reaction." alt="" coords="300,63,459,88"/>
+<area shape="rect" href="camp__solver_8c.html#a5b485fa25356197023889f3795888e98" title="Try to improve guesses of y sent to the linear solver." alt="" coords="164,63,252,88"/>
+<area shape="rect" href="camp__solver_8c.html#a599ffdef916b139a1690bfd41aa386b6" title="Solver initialization." alt="" coords="5,63,116,88"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a1f0c4bf256b37b3b7b054514a997deae" name="a1f0c4bf256b37b3b7b054514a997deae"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1f0c4bf256b37b3b7b054514a997deae">&#9670;&#160;</a></span>rxn_surface_update_env_state()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void rxn_surface_update_env_state </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_model_data.html">ModelData</a> *&#160;</td>
+          <td class="paramname"><em>model_data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int *&#160;</td>
+          <td class="paramname"><em>rxn_int_data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double *&#160;</td>
+          <td class="paramname"><em>rxn_float_data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double *&#160;</td>
+          <td class="paramname"><em>rxn_env_data</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Update reaction data for new environmental conditions. </p>
+<p >For surface reactions this only involves calculating the mean speed of the reacting species</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">model_data</td><td>Pointer to the model data </td></tr>
+    <tr><td class="paramname">rxn_int_data</td><td>Pointer to the reaction integer data </td></tr>
+    <tr><td class="paramname">rxn_float_data</td><td>Pointer to the reaction floating-point data </td></tr>
+    <tr><td class="paramname">rxn_env_data</td><td>Pointer to the environment-dependent parameters </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="rxn__surface_8c_source.html#l00178">178</a> of file <a class="el" href="rxn__surface_8c_source.html">rxn_surface.c</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="rxns_8h_a1f0c4bf256b37b3b7b054514a997deae_cgraph.png" border="0" usemap="#arxns_8h_a1f0c4bf256b37b3b7b054514a997deae_cgraph" alt=""/></div>
+<map name="arxns_8h_a1f0c4bf256b37b3b7b054514a997deae_cgraph" id="arxns_8h_a1f0c4bf256b37b3b7b054514a997deae_cgraph">
+<area shape="rect" title="Update reaction data for new environmental conditions." alt="" coords="5,5,140,45"/>
+<area shape="rect" href="util_8h.html#a77fbb355dc943308c5632fe698e81363" title=" " alt="" coords="188,13,323,38"/>
+</map>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="rxns_8h_a1f0c4bf256b37b3b7b054514a997deae_icgraph.png" border="0" usemap="#arxns_8h_a1f0c4bf256b37b3b7b054514a997deae_icgraph" alt=""/></div>
+<map name="arxns_8h_a1f0c4bf256b37b3b7b054514a997deae_icgraph" id="arxns_8h_a1f0c4bf256b37b3b7b054514a997deae_icgraph">
+<area shape="rect" title="Update reaction data for new environmental conditions." alt="" coords="333,5,468,45"/>
+<area shape="rect" href="rxn__solver_8c.html#ab3d4bbab05647b5931a81ead002a5805" title="Update reaction data for new environmental state." alt="" coords="136,13,285,38"/>
+<area shape="rect" href="camp__solver_8c.html#afc5ec8680b419e7ab49530d53a76cee4" title="Solve for a given timestep." alt="" coords="5,13,88,38"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a61c79d96744201b051a10a6b891a7ea9" name="a61c79d96744201b051a10a6b891a7ea9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a61c79d96744201b051a10a6b891a7ea9">&#9670;&#160;</a></span>rxn_surface_update_ids()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void rxn_surface_update_ids </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_model_data.html">ModelData</a> *&#160;</td>
+          <td class="paramname"><em>model_data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int *&#160;</td>
+          <td class="paramname"><em>deriv_ids</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="struct_jacobian.html">Jacobian</a>&#160;</td>
+          <td class="paramname"><em>jac</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int *&#160;</td>
+          <td class="paramname"><em>rxn_int_data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double *&#160;</td>
+          <td class="paramname"><em>rxn_float_data</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Update the time derivative and Jacbobian array indices. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">model_data</td><td>Pointer to the model data </td></tr>
+    <tr><td class="paramname">deriv_ids</td><td>Id of each state variable in the derivative array </td></tr>
+    <tr><td class="paramname">jac</td><td><a class="el" href="struct_jacobian.html">Jacobian</a> </td></tr>
+    <tr><td class="paramname">rxn_int_data</td><td>Pointer to the reaction integer data </td></tr>
+    <tr><td class="paramname">rxn_float_data</td><td>Pointer to the reaction floating-point data </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="rxn__surface_8c_source.html#l00132">132</a> of file <a class="el" href="rxn__surface_8c_source.html">rxn_surface.c</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="rxns_8h_a61c79d96744201b051a10a6b891a7ea9_cgraph.png" border="0" usemap="#arxns_8h_a61c79d96744201b051a10a6b891a7ea9_cgraph" alt=""/></div>
+<map name="arxns_8h_a61c79d96744201b051a10a6b891a7ea9_cgraph" id="arxns_8h_a61c79d96744201b051a10a6b891a7ea9_cgraph">
+<area shape="rect" title="Update the time derivative and Jacbobian array indices." alt="" coords="5,5,164,31"/>
+<area shape="rect" href="_jacobian_8c.html#a7b43d5884ec62826389d6d739b7f25eb" title="Get an element id in the Jacobian data arrays." alt="" coords="212,5,377,31"/>
+</map>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="rxns_8h_a61c79d96744201b051a10a6b891a7ea9_icgraph.png" border="0" usemap="#arxns_8h_a61c79d96744201b051a10a6b891a7ea9_icgraph" alt=""/></div>
+<map name="arxns_8h_a61c79d96744201b051a10a6b891a7ea9_icgraph" id="arxns_8h_a61c79d96744201b051a10a6b891a7ea9_icgraph">
+<area shape="rect" title="Update the time derivative and Jacbobian array indices." alt="" coords="457,5,616,31"/>
+<area shape="rect" href="rxn__solver_8c.html#a04e1414725ffbbb0b16fca416d826c1d" title="Update the time derivative and Jacobian array ids." alt="" coords="300,5,409,31"/>
+<area shape="rect" href="camp__solver_8c.html#a5b485fa25356197023889f3795888e98" title="Try to improve guesses of y sent to the linear solver." alt="" coords="164,5,252,31"/>
+<area shape="rect" href="camp__solver_8c.html#a599ffdef916b139a1690bfd41aa386b6" title="Solver initialization." alt="" coords="5,5,116,31"/>
 </map>
 </div>
 

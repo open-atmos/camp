@@ -1,7 +1,8 @@
 <map id="aero_rep_solver.h" name="aero_rep_solver.h">
-<area shape="rect" id="node1" title="Header file for abstract aerosol representation functions." alt="" coords="225,5,349,31"/>
+<area shape="rect" id="node1" title="Header file for abstract aerosol representation functions." alt="" coords="307,5,431,31"/>
 <area shape="rect" id="node2" href="$aero__rep__solver_8c.html" title="Aerosol representation functions." alt="" coords="5,79,129,104"/>
 <area shape="rect" id="node3" href="$camp__solver_8c.html" title="Interface to c solvers for chemistry." alt="" coords="154,79,261,104"/>
 <area shape="rect" id="node4" href="$rxn___h_l__phase__transfer_8c.html" title="Phase Transfer reaction solver functions." alt="" coords="285,79,452,104"/>
 <area shape="rect" id="node5" href="$rxn___s_i_m_p_o_l__phase__transfer_8c.html" title="Phase Transfer reaction solver functions." alt="" coords="477,79,677,104"/>
+<area shape="rect" id="node6" href="$rxn__surface_8c.html" title="Surface reaction solver functions." alt="" coords="701,79,799,104"/>
 </map>
