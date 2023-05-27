@@ -392,7 +392,7 @@ def run(conf):
     # Onecell-Multicells ModelDataCPU
     write_itsolver_config_file(conf)
 
-    print("exec_str:", exec_str, conf.diffCells, conf.caseGpuCpu, conf.caseMulticellsOnecell, "ncells:",conf.nCells,
+    print("exec_str:", exec_str, conf.diffCells, conf.caseGpuCpu, conf.caseMulticellsOnecell, "ncellsPerMPIProcess:",conf.nCells,
           "nGPUs:",conf.nGPUs)
 
     conf_name = "TestMonarch.json"

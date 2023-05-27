@@ -2037,7 +2037,7 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
     if (kflag2 != CV_SUCCESS) {
       md->s->cv_tretlast = md->s->tret = md->s->cv_tn;
       md->yout[i] = md->dzn[i];
-      if(i==0) printf("ERROR: dmdv->kflag != CV_SUCCESS\n");
+      if(i==0) printf("ERROR: kflag != CV_SUCCESS\n");
       return kflag2;
     }
     md->s->nstloc++;
@@ -2058,7 +2058,7 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *dmdv) {
       }
       if ((md->s->cv_tn + md->s->cv_hprime - md->cv_tstop) * md->s->cv_h > 0.) {
         md->s->cv_hprime = (md->cv_tstop - md->s->cv_tn) * (1.0 - 4.0 * md->cv_uround);
-        if(i==0) printf("ERROR: dmdv->cv_tn + dmdv->cv_hprime - dmdv->cv_tstop\n");
+        if(i==0) printf("ERROR: md->s->cv_tn + md->s->cv_hprime - md->s->cv_tstop\n");
         md->s->cv_eta = md->s->cv_hprime / md->s->cv_h;
       }
     }
@@ -2071,6 +2071,7 @@ void cudaGlobalCVode(ModelDataGPU md_object) {
   extern __shared__ int flag_shr[];
   int tid = blockIdx.x * blockDim.x + threadIdx.x;
   md->s=&md->sCells[blockIdx.x];
+  //todo check different pointer md->s for each block, so use like a array of pointers, check MAPE and registers per thread
   int active_threads = md->nrows;
   int istate;
   __syncthreads();
