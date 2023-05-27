@@ -487,8 +487,6 @@ void constructor_cvode_gpu(CVodeMem cv_mem, SolverData *sd){
   cudaMemcpy(mGPU->dx, tempv, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice);
   cudaMemcpy(mGPU->cv_last_yn, cv_last_yn, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice);
   HANDLE_ERROR(cudaMemcpy(mGPU->cv_acor_init, cv_acor_init, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice));
-  mGPU->replacement_value = TINY;
-  mGPU->threshhold = -SMALL;
   mGPU->state_size_cell = md->n_per_cell_state_var;
   int flag = 999; //CAMP_SOLVER_SUCCESS
   cudaMemcpy(mGPU->flag, &flag, 1 * sizeof(int), cudaMemcpyHostToDevice);

@@ -350,7 +350,7 @@ endif()
 # camp library
 
 set(STD_C_FLAGS "-std=c99")
-set(STD_CUDA_FLAGS "-O0 -g -G -arch=compute_70 -code=sm_70")
+set(STD_CUDA_FLAGS "-g -G -arch=compute_70 -code=sm_70")
 
 if(ENABLE_CXX)
   set(STD_CXX_FLAGS "-fpermissive")
@@ -487,7 +487,7 @@ set(CAMP_LIB_SRC
         src/solver_stats.F90
         src/debug_diff_check.F90
         ${CAMP_C_SRC} ${AEROSOL_REPS_SRC} ${SUB_MODELS_SRC}
-        ${REACTIONS_SRC} ${GSL_SRC} ${CAMP_CUDA_SRC} ${CAMP_CXX_SRC} )
+        ${REACTIONS_SRC} ${GSL_SRC} ${CAMP_CUDA_SRC} ${CAMP_CXX_SRC} src/cuda/cvode_cuda.cu src/cuda/cuda_structs.h)
 
 if(ENABLE_SHARED_LIB)
   add_library(camplib SHARED ${CAMP_LIB_SRC}) #todo fix, Shared library are better than static (faster in execution, no recompilation, smaller)

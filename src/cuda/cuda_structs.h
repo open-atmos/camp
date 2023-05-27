@@ -110,6 +110,7 @@ typedef struct{
   int *map_state_derivCPU;
   ModelDataVariable mdvCPU; //cpu equivalent to gpu
   cudaStream_t *streams;
+
 #ifdef CAMP_DEBUG_GPU
   int counterNewtonIt;
   int counterLinSolSetup;
@@ -201,7 +202,7 @@ typedef struct {
     double *dx;
     double* dtempv;
     int nrows;
-    int nnz;
+    int nnz; //todo move nnz to only CPU struct md, since not used in gpu
     int n_shr_empty;
     int maxIt;
     int n_cells;
@@ -224,8 +225,6 @@ typedef struct {
     double* dtempv2;
 
     //update_state
-    double threshhold;
-    double replacement_value;
     int *flag;
     int *flagCells;
     //f_cuda
@@ -238,7 +237,6 @@ typedef struct {
     double* dsavedJ;
     ModelDataVariable *mdv; //device
     ModelDataVariable *mdvo; //out device
-    ModelDataVariable *s;
     ModelDataVariable *sCells;
     //Constant during solving
     double init_time_step;

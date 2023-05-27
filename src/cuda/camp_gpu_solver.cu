@@ -24,8 +24,7 @@ void set_jac_data_gpu(SolverData *sd, double *J){
   cudaMemcpy(mGPU->diA, mCPU->iA, (mGPU->nrows/mGPU->n_cells + 1) * sizeof(int), cudaMemcpyHostToDevice);
 }
 
-void camp_solver_update_model_state_gpu(N_Vector solver_state, SolverData *sd,
-                                       double threshhold, double replacement_value){
+void camp_solver_update_model_state_gpu(N_Vector solver_state, SolverData *sd){
   ModelData *md = &(sd->model_data);
   ModelDataGPU *mGPU;
   ModelDataCPU *mCPU = &(sd->mCPU);
