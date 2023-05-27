@@ -314,7 +314,7 @@ void swapCSC_CSR_BCG(SolverData *sd){
   int nnz=mGPU->nnz;
   int* Ap=mCPU->iA;
   int* Aj=mCPU->jA;
-  double* Ax=mGPU->A;
+  double* Ax=mCPU->A;
   int* Bp=(int*)malloc((mGPU->nrows+1)*sizeof(int));
   int* Bi=(int*)malloc(mGPU->nnz*sizeof(int));
   double* Bx=(double*)malloc(nnz*sizeof(double));
@@ -719,11 +719,6 @@ void solveGPU_block_thr(int blocks, int threads_block, int n_shr_memory, int n_s
   if(mCPU->counterBCG==0) {
     printf("solveGPU_block_thr n_cells %d len_cell %d nrows %d nnz %d max_threads_block %d blocks %d threads_block %d n_shr_empty %d offset_cells %d\n",
            mGPU->n_cells,len_cell,mGPU->nrows,mGPU->nnz,n_shr_memory,blocks,threads_block,n_shr_empty,offset_cells);
-
-    //print_double(mGPU->A,nnz,"A");
-    //print_int(mCPU->jA,nnz,"jA");
-    //print_int(mCPU->iA,nrows+1,"iA");
-
   }
 #endif
 

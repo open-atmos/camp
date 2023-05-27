@@ -26,9 +26,6 @@ typedef struct {
 #endif
 
 typedef struct {
-#ifdef __CUDA_ARCH__
-#else
-#endif
     int *num_elem;   // Number of potentially non-zero Jacobian elements
     double *production_partials;    // Data array for productions rate partial derivs
     double *loss_partials;  // Data array for loss rate partial derivs
@@ -39,9 +36,6 @@ typedef struct {
     int nstloc;
     double tret;
     double cv_tretlast;
-#ifdef ODE_WARNING
-    int cv_nhnil;            /* number of messages issued to the user that t + h == t for the next iternal step            */
-#endif
     double cv_etaqm1;      /* ratio of new to old h for order q-1             */
     double cv_etaq;        /* ratio of new to old h for order q               */
     double cv_etaqp1;      /* ratio of new to old h for order q+1             */
@@ -71,8 +65,10 @@ typedef struct {
     double cv_tn;
     double cv_etamax;
     int cv_maxncf;
-    //Counters (e.g. iterations of function cvnlsNewton)
-    int nstlj;
+    int nstlj;  //Counters (e.g. iterations of function cvnlsNewton)
+#ifdef ODE_WARNING
+    int cv_nhnil;            /* number of messages issued to the user that t + h == t for the next iternal step            */
+#endif
 #ifdef CAMP_DEBUG_GPU
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     int countercvStep;
@@ -92,6 +88,7 @@ typedef struct {
 }ModelDataVariable; //variables to pass between gpu and cpu (different data between cells)
 
 typedef struct{
+  double* A;
   int*    jA;
   int*    iA;
   double* aux;
@@ -153,8 +150,8 @@ typedef struct{
 } ModelDataCPU;
 
 typedef struct {
-    //CPU (Needed because each GPU points a different CPU pointer
-    double* A;
+    //todo move to only CPU struct md, since not used in gpu
+    int nnz;
     //Allocated from CPU (used during CPU / need some cudamemcpy)
     int *map_state_deriv;
     double *deriv_data;
@@ -171,7 +168,6 @@ typedef struct {
     double *env;
     double *rxn_env_data;
     int *rxn_env_data_idx;
-
     double *production_rates;
     double *loss_rates;
     int *rxn_int_indices;
@@ -181,7 +177,6 @@ typedef struct {
     int *n_mapped_values;
     JacMap *jac_map;
     JacobianGPU jac;
-
     double *yout;
     double *cv_Vabstol;
     double *grid_cell_state;
@@ -190,19 +185,14 @@ typedef struct {
     double *cv_l;
     double *cv_tau;
     double *cv_tq;//NUM_TESTS+1
-
-    //CVODE variables only GPU
-    double *cv_last_yn;
+    double *cv_last_yn;     //CVODE variables only GPU
     double *cv_acor_init;
-
-    //LS (BCG)
-    double *dA;
+    double *dA;//LS (BCG)
     int *djA;
     int *diA;
     double *dx;
     double* dtempv;
     int nrows;
-    int nnz; //todo move nnz to only CPU struct md, since not used in gpu
     int n_shr_empty;
     int maxIt;
     int n_cells;
@@ -217,29 +207,21 @@ typedef struct {
     double *dAx2;
     double *dy;
     double *dz;
-
-    //Guess_helper
-    double* dftemp;
+    double* dftemp;     //Guess_helper
     double* dcv_y;
     double* dtempv1;
     double* dtempv2;
-
-    //update_state
-    int *flag;
+    int *flag;     //update_state
     int *flagCells;
-    //f_cuda
-    int state_size_cell;
-    //cudacvNewtonIteration
-    double* cv_acor;
+    int state_size_cell;     //f_cuda
+    double* cv_acor;     //cudacvNewtonIteration
     double* dzn;
     double* dewt;
-    //Auxiliar variables
-    double* dsavedJ;
+    double* dsavedJ;    //Auxiliar variables
     ModelDataVariable *mdv; //device
     ModelDataVariable *mdvo; //out device
     ModelDataVariable *sCells;
-    //Constant during solving
-    double init_time_step;
+    double init_time_step;     //Constant during solving
     int cv_mxstep;
     double tout;
     double cv_uround;
