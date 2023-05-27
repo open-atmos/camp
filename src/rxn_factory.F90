@@ -193,6 +193,7 @@ module camp_rxn_factory
   use camp_rxn_HL_phase_transfer
   use camp_rxn_photolysis
   use camp_rxn_SIMPOL_phase_transfer
+  use camp_rxn_surface
   use camp_rxn_ternary_chemical_activation
   use camp_rxn_troe
   use camp_rxn_wennberg_no_ro2
@@ -224,6 +225,7 @@ module camp_rxn_factory
   integer(kind=i_kind), parameter, public :: RXN_WENNBERG_TUNNELING = 16
   integer(kind=i_kind), parameter, public :: RXN_WENNBERG_NO_RO2 = 17
   integer(kind=i_kind), parameter, public :: RXN_CONDENSED_PHASE_PHOTOLYSIS = 18
+  integer(kind=i_kind), parameter, public :: RXN_SURFACE = 19
 
   !> Factory type for chemical reactions
   !!
@@ -297,6 +299,8 @@ contains
         new_obj => rxn_wennberg_tunneling_t()
       case ("WENNBERG_NO_RO2")
         new_obj => rxn_wennberg_no_ro2_t()
+      case ("SURFACE")
+        new_obj => rxn_surface_t()
       case default
         call die_msg(367114278, "Unknown chemical reaction type: " &
                 //type_name)
@@ -306,7 +310,7 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  !> Load an aerosol represenation from input data
+  !> Load a reaction from input data
 #ifdef CAMP_USE_JSON
   function load(this, json, j_obj) result (new_obj)
 
@@ -394,6 +398,8 @@ contains
         rxn_type = RXN_WENNBERG_TUNNELING
       type is (rxn_wennberg_no_ro2_t)
         rxn_type = RXN_WENNBERG_NO_RO2
+      type is (rxn_surface_t)
+        rxn_type = RXN_SURFACE
       class default
         call die_msg(343941184, "Unknown reaction type.")
     end select
@@ -524,6 +530,8 @@ contains
         rxn_type = RXN_WENNBERG_TUNNELING
       type is (rxn_wennberg_no_ro2_t)
         rxn_type = RXN_WENNBERG_NO_RO2
+      type is (rxn_surface_t)
+        rxn_type = RXN_SURFACE
       class default
         call die_msg(343941184, "Trying to pack reaction of unknown type.")
     end select
@@ -589,6 +597,8 @@ contains
         rxn => rxn_wennberg_tunneling_t()
       case (RXN_WENNBERG_NO_RO2)
         rxn => rxn_wennberg_no_ro2_t()
+      case (RXN_SURFACE)
+        rxn => rxn_surface_t()
       case default
         call die_msg(659290342, &
                 "Trying to unpack reaction of unknown type:"// &
