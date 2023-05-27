@@ -41,11 +41,11 @@
 \DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00038}00038     \&\& cmake -\/D SKIP\_DOC\_GEN:BOOL=TRUE .. \(\backslash\)}
 \DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00039}00039     \&\& sudo make install}
 \DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00040}00040 }
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00041}00041 \# NOTE: Modify .dockerignore to whitelist files/directories to copy.}
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00042}00042 COPY . /home/test\_user/camp/}
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00041}00041 \# copy CVODE source}
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00042}00042 COPY cvode-\/3.4-\/alpha.tar.gz cvode-\/3.4-\/alpha.tar.gz}
 \DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00043}00043 }
 \DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00044}00044 \# Install a modified version of CVODE}
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00045}00045 RUN tar -\/zxvf /home/test\_user/camp/cvode-\/3.4-\/alpha.tar.gz \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00045}00045 RUN tar -\/zxvf cvode-\/3.4-\/alpha.tar.gz \(\backslash\)}
 \DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00046}00046     \&\& cd cvode-\/3.4-\/alpha \(\backslash\)}
 \DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00047}00047     \&\& mkdir build \(\backslash\)}
 \DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00048}00048     \&\& cd build \(\backslash\)}
@@ -64,19 +64,24 @@
 \DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00061}00061 ENV LD\_LIBRARY\_PATH="{}\$\{LD\_LIBRARY\_PATH\}:/usr/local/lib:/usr/local/lib64:/usr/local/jsonfortran-\/gnu-\/6.1.0/lib"{}}
 \DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00062}00062 ENV PATH="{}\$\{PATH\}:/usr/local/jsonfortran-\/gnu-\/6.1.0/lib"{}}
 \DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00063}00063 }
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00064}00064 \# Build CAMP}
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00065}00065  RUN mkdir build \(\backslash\)}
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00066}00066     \&\& cd build \(\backslash\)}
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00067}00067     \&\& export JSON\_FORTRAN\_HOME="{}/usr/local/jsonfortran-\/gnu-\/6.1.0"{} \(\backslash\)}
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00068}00068     \&\& cmake -\/D CMAKE\_BUILD\_TYPE=release \(\backslash\)}
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00069}00069              -\/D CMAKE\_C\_FLAGS\_DEBUG="{}-\/g -\/pg"{} \(\backslash\)}
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00070}00070              -\/D CMAKE\_Fortran\_FLAGS\_DEBUG="{}-\/g -\/pg"{} \(\backslash\)}
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00071}00071              -\/D CMAKE\_MODULE\_LINKER\_FLAGS="{}-\/pg"{} \(\backslash\)}
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00072}00072              -\/D ENABLE\_DEBUG:BOOL=TRUE \(\backslash\)}
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00073}00073              -\/D ENABLE\_MPI:BOOL=TRUE \(\backslash\)}
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00074}00074              -\/D CMAKE\_Fortran\_COMPILER=/usr/lib64/openmpi/bin/mpif90 \(\backslash\)}
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00075}00075              ../camp \(\backslash\)}
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00076}00076     \&\& make \(\backslash\)}
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00077}00077     \&\& sudo make install}
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00064}00064 \# NOTE: Modify .dockerignore to whitelist files/directories to copy.}
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00065}00065 COPY . /home/test\_user/camp/}
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00066}00066 }
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00067}00067 \# Build CAMP}
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00068}00068  RUN mkdir build \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00069}00069     \&\& cd build \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00070}00070     \&\& export JSON\_FORTRAN\_HOME="{}/usr/local/jsonfortran-\/gnu-\/6.1.0"{} \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00071}00071     \&\& cmake -\/D CMAKE\_BUILD\_TYPE=release \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00072}00072              -\/D CMAKE\_C\_FLAGS\_DEBUG="{}-\/g -\/pg"{} \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00073}00073              -\/D CMAKE\_Fortran\_FLAGS\_DEBUG="{}-\/g -\/pg"{} \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00074}00074              -\/D CMAKE\_MODULE\_LINKER\_FLAGS="{}-\/pg"{} \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00075}00075              -\/D ENABLE\_DEBUG:BOOL=TRUE \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00076}00076              -\/D ENABLE\_MPI:BOOL=TRUE \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00077}00077              -\/D CMAKE\_Fortran\_COMPILER=/usr/lib64/openmpi/bin/mpif90 \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00078}00078              ../camp \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00079}00079     \&\& make \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00080}00080     \&\& sudo make install}
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00081}00081 }
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00082}00082 WORKDIR /home/test\_user/build}
 
 \end{DoxyCode}

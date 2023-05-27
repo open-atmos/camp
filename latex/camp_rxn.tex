@@ -13,6 +13,7 @@ Valid reaction types include\+:
 \item \mbox{\hyperlink{camp_rxn_CMAQ_H2O2}{CMAQ special reaction type for 2\+HO2 (+ H2O) -\/\texorpdfstring{$>$}{>} H2\+O2}}
 \item \mbox{\hyperlink{camp_rxn_CMAQ_OH_HNO3}{CMAQ special reaction type for OH + HNO3 -\/\texorpdfstring{$>$}{>} NO3 + H2O}}
 \item \mbox{\hyperlink{camp_rxn_condensed_phase_arrhenius}{condensed-\/chase Arrhenius}}
+\item \mbox{\hyperlink{camp_rxn_condensed_phase_photolysis}{condensed-\/chase photolysis}}
 \item \mbox{\hyperlink{camp_rxn_emission}{emission}}
 \item \mbox{\hyperlink{camp_rxn_first_order_loss}{first-\/order loss}}
 \item \mbox{\hyperlink{camp_rxn_HL_phase_transfer}{Henry\textquotesingle{}s Law phase transfer}}
@@ -232,7 +233,45 @@ The unit for time is assumed to be s, but inclusion of the optional key-\/value 
 
 The key-\/value pair {\bfseries{aerosol}} {\bfseries{phase}} is required and must specify the name of the aerosol-\/phase in which the reaction occurs.
 
-Optionally, a parameter {\bfseries{C}} may be included, and is taken to equal $\frac{-E_a}{k_b}$. Note that either {\bfseries{Ea}} or {\bfseries{C}} may be included, but not both. When neither {\bfseries{Ea}} or {\bfseries{C}} are included, they are assumed to be 0.\+0. When {\bfseries{A}} is not included, it is assumed to be 1.\+0, when {\bfseries{D}} is not included, it is assumed to be 300.\+0 K, when {\bfseries{B}} is not included, it is assumed to be 0.\+0, and when {\bfseries{E}} is not included, it is assumed to be 0.\+0. \hypertarget{camp_rxn_emission}{}\doxysection{CAMP\+: Emission}\label{camp_rxn_emission}
+Optionally, a parameter {\bfseries{C}} may be included, and is taken to equal $\frac{-E_a}{k_b}$. Note that either {\bfseries{Ea}} or {\bfseries{C}} may be included, but not both. When neither {\bfseries{Ea}} or {\bfseries{C}} are included, they are assumed to be 0.\+0. When {\bfseries{A}} is not included, it is assumed to be 1.\+0, when {\bfseries{D}} is not included, it is assumed to be 300.\+0 K, when {\bfseries{B}} is not included, it is assumed to be 0.\+0, and when {\bfseries{E}} is not included, it is assumed to be 0.\+0. \hypertarget{camp_rxn_condensed_phase_photolysis}{}\doxysection{CAMP\+: Condensed-\/\+Phase Photolysis Reaction}\label{camp_rxn_condensed_phase_photolysis}
+Condensed-\/\+Phase Photolysis reactions take the form\+:
+
+\[\ce{
+   X + h $\nu$ -> Y_1 ( + Y_2 \dots )
+ }\]
+
+where $\ce{X}$ is the species being photolyzed, and $\ce{Y_n}$ are the photolysis products.
+
+The reaction rate can be scaled by providing the \char`\"{}scaling factor\char`\"{} keyword in the json configuration.
+
+Input data for condensed-\/phase Photolysis reactions have the following format\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{  "{}type"{} : "{}CONDENSED\_PHASE\_PHOTOLYSIS"{},}
+\DoxyCodeLine{  "{}rate"{} : 123.45,}
+\DoxyCodeLine{  "{}units"{} : "{}M"{},}
+\DoxyCodeLine{  "{}aerosol phase"{} : "{}my aqueous phase"{},}
+\DoxyCodeLine{  "{}aerosol-\/phase water"{} : "{}H2O\_aq"{},}
+\DoxyCodeLine{  "{}reactants"{} : \{}
+\DoxyCodeLine{    "{}spec1"{} : \{\},}
+\DoxyCodeLine{    ...}
+\DoxyCodeLine{  \},}
+\DoxyCodeLine{  "{}products"{} : \{}
+\DoxyCodeLine{    "{}spec3"{} : \{\},}
+\DoxyCodeLine{    "{}spec4"{} : \{ "{}yield"{} : 0.65 \},}
+\DoxyCodeLine{    ...}
+\DoxyCodeLine{  \},}
+\DoxyCodeLine{  "{}scaling factor"{}: 11.20}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+ The key-\/value pairs {\bfseries{reactants}}, and {\bfseries{products}} are required. Reactants without a {\bfseries{qty}} value are assumed to appear once in the reaction equation. Products without a specified {\bfseries{yield}} are assumed to have a {\bfseries{yield}} of 1.\+0.
+
+Units for the reactants and products must be specified using the key {\bfseries{units}} and can be either {\bfseries{M}} or {\bfseries{mol}} {\bfseries{m-\/3}}. If units of {\bfseries{M}} are specified, a key-\/value pair {\bfseries{aerosol-\/phase}} {\bfseries{water}} must also be included whose value is a string specifying the name for water in the aerosol phase.
+
+The unit for time is assumed to be s, but inclusion of the optional key-\/value pair {\bfseries{time}} {\bfseries{unit}} = {\bfseries{MIN}} can be used to indicate a rate with min as the time unit.
+
+The key-\/value pair {\bfseries{aerosol}} {\bfseries{phase}} is required and must specify the name of the aerosol-\/phase in which the reaction occurs. \hypertarget{camp_rxn_emission}{}\doxysection{CAMP\+: Emission}\label{camp_rxn_emission}
 Emission reactions take the form\+:
 
 \[

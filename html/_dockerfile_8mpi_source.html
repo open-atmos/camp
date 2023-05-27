@@ -91,11 +91,11 @@ $(function() {
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    &amp;&amp; cmake -D SKIP_DOC_GEN:BOOL=TRUE .. \</div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    &amp;&amp; sudo make install</div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span># NOTE: Modify .dockerignore to whitelist files/directories to copy.</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>COPY . /home/test_user/camp/</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span># copy CVODE source</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>COPY cvode-3.4-alpha.tar.gz cvode-3.4-alpha.tar.gz</div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span># Install a modified version of CVODE</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>RUN tar -zxvf /home/test_user/camp/cvode-3.4-alpha.tar.gz \</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>RUN tar -zxvf cvode-3.4-alpha.tar.gz \</div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    &amp;&amp; cd cvode-3.4-alpha \</div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    &amp;&amp; mkdir build \</div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    &amp;&amp; cd build \</div>
@@ -114,20 +114,25 @@ $(function() {
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>ENV LD_LIBRARY_PATH=&quot;${LD_LIBRARY_PATH}:/usr/local/lib:/usr/local/lib64:/usr/local/jsonfortran-gnu-6.1.0/lib&quot;</div>
 <div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>ENV PATH=&quot;${PATH}:/usr/local/jsonfortran-gnu-6.1.0/lib&quot;</div>
 <div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span># Build CAMP</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> RUN mkdir build \</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    &amp;&amp; cd build \</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    &amp;&amp; export JSON_FORTRAN_HOME=&quot;/usr/local/jsonfortran-gnu-6.1.0&quot; \</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    &amp;&amp; cmake -D CMAKE_BUILD_TYPE=release \</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>             -D CMAKE_C_FLAGS_DEBUG=&quot;-g -pg&quot; \</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>             -D CMAKE_Fortran_FLAGS_DEBUG=&quot;-g -pg&quot; \</div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>             -D CMAKE_MODULE_LINKER_FLAGS=&quot;-pg&quot; \</div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>             -D ENABLE_DEBUG:BOOL=TRUE \</div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>             -D ENABLE_MPI:BOOL=TRUE \</div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>             -D CMAKE_Fortran_COMPILER=/usr/lib64/openmpi/bin/mpif90 \</div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>             ../camp \</div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    &amp;&amp; make \</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    &amp;&amp; sudo make install</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span># NOTE: Modify .dockerignore to whitelist files/directories to copy.</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>COPY . /home/test_user/camp/</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span># Build CAMP</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span> RUN mkdir build \</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    &amp;&amp; cd build \</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    &amp;&amp; export JSON_FORTRAN_HOME=&quot;/usr/local/jsonfortran-gnu-6.1.0&quot; \</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    &amp;&amp; cmake -D CMAKE_BUILD_TYPE=release \</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>             -D CMAKE_C_FLAGS_DEBUG=&quot;-g -pg&quot; \</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>             -D CMAKE_Fortran_FLAGS_DEBUG=&quot;-g -pg&quot; \</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>             -D CMAKE_MODULE_LINKER_FLAGS=&quot;-pg&quot; \</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>             -D ENABLE_DEBUG:BOOL=TRUE \</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>             -D ENABLE_MPI:BOOL=TRUE \</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>             -D CMAKE_Fortran_COMPILER=/usr/lib64/openmpi/bin/mpif90 \</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>             ../camp \</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    &amp;&amp; make \</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    &amp;&amp; sudo make install</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span> </div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>WORKDIR /home/test_user/build</div>
 </div><!-- fragment --></div><!-- contents -->
 <hr class="footer"/><address class="footer"><small>
 CAMP 1.0.0 documentation generated by <a href="http://www.doxygen.org/index.html">doxygen</a> 1.9.5</small></address>

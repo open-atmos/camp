@@ -72,6 +72,24 @@ void \mbox{\hyperlink{rxns_8h_a838b8326dbcfa12692ecf289685897a2}{rxn\+\_\+conden
 \item 
 void \mbox{\hyperlink{rxns_8h_a213c32e23ab79e40722d07eb9d3a43d0}{rxn\+\_\+condensed\+\_\+phase\+\_\+arrhenius\+\_\+calc\+\_\+jac\+\_\+contrib}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, \mbox{\hyperlink{struct_jacobian}{Jacobian}} jac, int $\ast$rxn\+\_\+int\+\_\+data, double $\ast$rxn\+\_\+float\+\_\+data, double $\ast$rxn\+\_\+env\+\_\+data, realtype time\+\_\+step)
 \item 
+void \mbox{\hyperlink{rxns_8h_a84c0567001266ea44726aba908ef7ad8}{rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem}} (int $\ast$rxn\+\_\+int\+\_\+data, double $\ast$rxn\+\_\+float\+\_\+data, \mbox{\hyperlink{struct_jacobian}{Jacobian}} $\ast$jac)
+\begin{DoxyCompactList}\small\item\em Flag \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used by this reaction. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{rxns_8h_aa418e878e03cc2a119b01b2e6d9f0556}{rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+\_\+update\+\_\+ids}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, int $\ast$deriv\+\_\+ids, \mbox{\hyperlink{struct_jacobian}{Jacobian}} jac, int $\ast$rxn\+\_\+int\+\_\+data, double $\ast$rxn\+\_\+float\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Update the time derivative and Jacbobian array indices. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{rxns_8h_a78cd0a76091e335b5a34b63caae7eec0}{rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+\_\+update\+\_\+env\+\_\+state}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, int $\ast$rxn\+\_\+int\+\_\+data, double $\ast$rxn\+\_\+float\+\_\+data, double $\ast$rxn\+\_\+env\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Update reaction data for new environmental conditions. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{rxns_8h_a40bd1e295c7eb3d8d84e84bda99497d3}{rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+\_\+print}} (int $\ast$rxn\+\_\+int\+\_\+data, double $\ast$rxn\+\_\+float\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Print the Condensed Phase photolysis reaction parameters. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1}{bool}} \mbox{\hyperlink{rxns_8h_ae0f542358a2ae57790d3cc2e9ca4c689}{rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+\_\+update\+\_\+data}} (void $\ast$update\+\_\+data, int $\ast$rxn\+\_\+int\+\_\+data, double $\ast$rxn\+\_\+float\+\_\+data, double $\ast$rxn\+\_\+env\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Update reaction data. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{rxns_8h_aa66217f07fe9eae01f2d6d376e421141}{rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+\_\+calc\+\_\+deriv\+\_\+contrib}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, \mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}} time\+\_\+deriv, int $\ast$rxn\+\_\+int\+\_\+data, double $\ast$rxn\+\_\+float\+\_\+data, double $\ast$rxn\+\_\+env\+\_\+data, realtype time\+\_\+step)
+\item 
+void \mbox{\hyperlink{rxns_8h_aac51fc4f01975aa347cead0eb5dc1db3}{rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+\_\+calc\+\_\+jac\+\_\+contrib}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, \mbox{\hyperlink{struct_jacobian}{Jacobian}} jac, int $\ast$rxn\+\_\+int\+\_\+data, double $\ast$rxn\+\_\+float\+\_\+data, double $\ast$rxn\+\_\+env\+\_\+data, realtype time\+\_\+step)
+\item 
+void $\ast$ \mbox{\hyperlink{rxns_8h_a014ce6da4626f4ecf16d79f420a46788}{rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+\_\+create\+\_\+rate\+\_\+update\+\_\+data}} ()
+\begin{DoxyCompactList}\small\item\em Create update data for new photolysis rates. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{rxns_8h_a7969c154436042094f993ac174043d91}{rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+\_\+set\+\_\+rate\+\_\+update\+\_\+data}} (void $\ast$update\+\_\+data, int photo\+\_\+id, double base\+\_\+rate)
+\begin{DoxyCompactList}\small\item\em Set rate update data. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{rxns_8h_a0ef69ae99efa726d72f8502eb7d18406}{rxn\+\_\+emission\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem}} (int $\ast$rxn\+\_\+int\+\_\+data, double $\ast$rxn\+\_\+float\+\_\+data, \mbox{\hyperlink{struct_jacobian}{Jacobian}} $\ast$jac)
 \begin{DoxyCompactList}\small\item\em Flag \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used by this reaction. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{rxns_8h_a1409402244e73476c40d3027defb9b21}{rxn\+\_\+emission\+\_\+update\+\_\+ids}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, int $\ast$deriv\+\_\+ids, \mbox{\hyperlink{struct_jacobian}{Jacobian}} jac, int $\ast$rxn\+\_\+int\+\_\+data, double $\ast$rxn\+\_\+float\+\_\+data)
@@ -882,6 +900,210 @@ Here is the call graph for this function\+:
 % FIG 40
 Here is the caller graph for this function\+:
 % FIG 41
+\mbox{\Hypertarget{rxns_8h_aa66217f07fe9eae01f2d6d376e421141}\label{rxns_8h_aa66217f07fe9eae01f2d6d376e421141}} 
+\index{rxns.h@{rxns.h}!rxn\_condensed\_phase\_photolysis\_calc\_deriv\_contrib@{rxn\_condensed\_phase\_photolysis\_calc\_deriv\_contrib}}
+\index{rxn\_condensed\_phase\_photolysis\_calc\_deriv\_contrib@{rxn\_condensed\_phase\_photolysis\_calc\_deriv\_contrib}!rxns.h@{rxns.h}}
+\doxysubsubsection{\texorpdfstring{rxn\_condensed\_phase\_photolysis\_calc\_deriv\_contrib()}{rxn\_condensed\_phase\_photolysis\_calc\_deriv\_contrib()}}
+{\footnotesize\ttfamily void rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+\_\+calc\+\_\+deriv\+\_\+contrib (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{\mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}}}]{time\+\_\+deriv,  }\item[{int $\ast$}]{rxn\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+env\+\_\+data,  }\item[{realtype}]{time\+\_\+step }\end{DoxyParamCaption})}
+
+Here is the caller graph for this function\+:
+% FIG 42
+\mbox{\Hypertarget{rxns_8h_aac51fc4f01975aa347cead0eb5dc1db3}\label{rxns_8h_aac51fc4f01975aa347cead0eb5dc1db3}} 
+\index{rxns.h@{rxns.h}!rxn\_condensed\_phase\_photolysis\_calc\_jac\_contrib@{rxn\_condensed\_phase\_photolysis\_calc\_jac\_contrib}}
+\index{rxn\_condensed\_phase\_photolysis\_calc\_jac\_contrib@{rxn\_condensed\_phase\_photolysis\_calc\_jac\_contrib}!rxns.h@{rxns.h}}
+\doxysubsubsection{\texorpdfstring{rxn\_condensed\_phase\_photolysis\_calc\_jac\_contrib()}{rxn\_condensed\_phase\_photolysis\_calc\_jac\_contrib()}}
+{\footnotesize\ttfamily void rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+\_\+calc\+\_\+jac\+\_\+contrib (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}}}]{jac,  }\item[{int $\ast$}]{rxn\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+env\+\_\+data,  }\item[{realtype}]{time\+\_\+step }\end{DoxyParamCaption})}
+
+Here is the caller graph for this function\+:
+% FIG 43
+\mbox{\Hypertarget{rxns_8h_a014ce6da4626f4ecf16d79f420a46788}\label{rxns_8h_a014ce6da4626f4ecf16d79f420a46788}} 
+\index{rxns.h@{rxns.h}!rxn\_condensed\_phase\_photolysis\_create\_rate\_update\_data@{rxn\_condensed\_phase\_photolysis\_create\_rate\_update\_data}}
+\index{rxn\_condensed\_phase\_photolysis\_create\_rate\_update\_data@{rxn\_condensed\_phase\_photolysis\_create\_rate\_update\_data}!rxns.h@{rxns.h}}
+\doxysubsubsection{\texorpdfstring{rxn\_condensed\_phase\_photolysis\_create\_rate\_update\_data()}{rxn\_condensed\_phase\_photolysis\_create\_rate\_update\_data()}}
+{\footnotesize\ttfamily void $\ast$ rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+\_\+create\+\_\+rate\+\_\+update\+\_\+data (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Create update data for new photolysis rates. 
+
+\begin{DoxyReturn}{Returns}
+Pointer to a new rate update data object 
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{rxn__condensed__phase__photolysis_8c_source_l00464}{464}} of file \mbox{\hyperlink{rxn__condensed__phase__photolysis_8c_source}{rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis.\+c}}.
+
+\mbox{\Hypertarget{rxns_8h_a84c0567001266ea44726aba908ef7ad8}\label{rxns_8h_a84c0567001266ea44726aba908ef7ad8}} 
+\index{rxns.h@{rxns.h}!rxn\_condensed\_phase\_photolysis\_get\_used\_jac\_elem@{rxn\_condensed\_phase\_photolysis\_get\_used\_jac\_elem}}
+\index{rxn\_condensed\_phase\_photolysis\_get\_used\_jac\_elem@{rxn\_condensed\_phase\_photolysis\_get\_used\_jac\_elem}!rxns.h@{rxns.h}}
+\doxysubsubsection{\texorpdfstring{rxn\_condensed\_phase\_photolysis\_get\_used\_jac\_elem()}{rxn\_condensed\_phase\_photolysis\_get\_used\_jac\_elem()}}
+{\footnotesize\ttfamily void rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem (\begin{DoxyParamCaption}\item[{int $\ast$}]{rxn\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+float\+\_\+data,  }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}} $\ast$}]{jac }\end{DoxyParamCaption})}
+
+
+
+Flag \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used by this reaction. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em rxn\+\_\+int\+\_\+data} & Pointer to the reaction integer data \\
+\hline
+{\em rxn\+\_\+float\+\_\+data} & Pointer to the reaction floating-\/point data \\
+\hline
+{\em jac} & \mbox{\hyperlink{struct_jacobian}{Jacobian}} \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{rxn__condensed__phase__photolysis_8c_source_l00045}{45}} of file \mbox{\hyperlink{rxn__condensed__phase__photolysis_8c_source}{rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis.\+c}}.
+
+Here is the call graph for this function\+:
+% FIG 44
+Here is the caller graph for this function\+:
+% FIG 45
+\mbox{\Hypertarget{rxns_8h_a40bd1e295c7eb3d8d84e84bda99497d3}\label{rxns_8h_a40bd1e295c7eb3d8d84e84bda99497d3}} 
+\index{rxns.h@{rxns.h}!rxn\_condensed\_phase\_photolysis\_print@{rxn\_condensed\_phase\_photolysis\_print}}
+\index{rxn\_condensed\_phase\_photolysis\_print@{rxn\_condensed\_phase\_photolysis\_print}!rxns.h@{rxns.h}}
+\doxysubsubsection{\texorpdfstring{rxn\_condensed\_phase\_photolysis\_print()}{rxn\_condensed\_phase\_photolysis\_print()}}
+{\footnotesize\ttfamily void rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+\_\+print (\begin{DoxyParamCaption}\item[{int $\ast$}]{rxn\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+float\+\_\+data }\end{DoxyParamCaption})}
+
+
+
+Print the Condensed Phase photolysis reaction parameters. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em rxn\+\_\+int\+\_\+data} & Pointer to the reaction integer data \\
+\hline
+{\em rxn\+\_\+float\+\_\+data} & Pointer to the reaction floating-\/point data \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{rxn__condensed__phase__photolysis_8c_source_l00378}{378}} of file \mbox{\hyperlink{rxn__condensed__phase__photolysis_8c_source}{rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis.\+c}}.
+
+Here is the caller graph for this function\+:
+% FIG 46
+\mbox{\Hypertarget{rxns_8h_a7969c154436042094f993ac174043d91}\label{rxns_8h_a7969c154436042094f993ac174043d91}} 
+\index{rxns.h@{rxns.h}!rxn\_condensed\_phase\_photolysis\_set\_rate\_update\_data@{rxn\_condensed\_phase\_photolysis\_set\_rate\_update\_data}}
+\index{rxn\_condensed\_phase\_photolysis\_set\_rate\_update\_data@{rxn\_condensed\_phase\_photolysis\_set\_rate\_update\_data}!rxns.h@{rxns.h}}
+\doxysubsubsection{\texorpdfstring{rxn\_condensed\_phase\_photolysis\_set\_rate\_update\_data()}{rxn\_condensed\_phase\_photolysis\_set\_rate\_update\_data()}}
+{\footnotesize\ttfamily void rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+\_\+set\+\_\+rate\+\_\+update\+\_\+data (\begin{DoxyParamCaption}\item[{void $\ast$}]{update\+\_\+data,  }\item[{int}]{photo\+\_\+id,  }\item[{double}]{base\+\_\+rate }\end{DoxyParamCaption})}
+
+
+
+Set rate update data. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em update\+\_\+data} & Pointer to an allocated rate update data object \\
+\hline
+{\em photo\+\_\+id} & Id of photolysis reactions to update \\
+\hline
+{\em base\+\_\+rate} & New pre-\/scaling photolysis rate \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{rxn__condensed__phase__photolysis_8c_source_l00479}{479}} of file \mbox{\hyperlink{rxn__condensed__phase__photolysis_8c_source}{rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis.\+c}}.
+
+\mbox{\Hypertarget{rxns_8h_ae0f542358a2ae57790d3cc2e9ca4c689}\label{rxns_8h_ae0f542358a2ae57790d3cc2e9ca4c689}} 
+\index{rxns.h@{rxns.h}!rxn\_condensed\_phase\_photolysis\_update\_data@{rxn\_condensed\_phase\_photolysis\_update\_data}}
+\index{rxn\_condensed\_phase\_photolysis\_update\_data@{rxn\_condensed\_phase\_photolysis\_update\_data}!rxns.h@{rxns.h}}
+\doxysubsubsection{\texorpdfstring{rxn\_condensed\_phase\_photolysis\_update\_data()}{rxn\_condensed\_phase\_photolysis\_update\_data()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1}{bool}} rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+\_\+update\+\_\+data (\begin{DoxyParamCaption}\item[{void $\ast$}]{update\+\_\+data,  }\item[{int $\ast$}]{rxn\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+env\+\_\+data }\end{DoxyParamCaption})}
+
+
+
+Update reaction data. 
+
+Photolysis reactions can have their base (pre-\/scaling) rate constants updated from the host model based on the calculations of an external photolysis module. The structure of the update data is\+:
+
+
+\begin{DoxyItemize}
+\item {\bfseries{int}} photo\+\_\+id (Id of one or more photolysis reactions set by the host model using the camp\+\_\+rxn\+\_\+photolysis\+::rxn\+\_\+photolysis\+\_\+t\+::set\+\_\+photo\+\_\+id function prior to initializing the solver.)
+\item {\bfseries{double}} rate\+\_\+const (New pre-\/scaling rate constant.)
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}{Parameters}
+{\em update\+\_\+data} & Pointer to the updated reaction data \\
+\hline
+{\em rxn\+\_\+int\+\_\+data} & Pointer to the reaction integer data \\
+\hline
+{\em rxn\+\_\+float\+\_\+data} & Pointer to the reaction floating-\/point data \\
+\hline
+{\em rxn\+\_\+env\+\_\+data} & Pointer to the environment-\/dependent data \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Flag indicating whether this is the reaction to update 
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{rxn__condensed__phase__photolysis_8c_source_l00157}{157}} of file \mbox{\hyperlink{rxn__condensed__phase__photolysis_8c_source}{rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis.\+c}}.
+
+Here is the caller graph for this function\+:
+% FIG 47
+\mbox{\Hypertarget{rxns_8h_a78cd0a76091e335b5a34b63caae7eec0}\label{rxns_8h_a78cd0a76091e335b5a34b63caae7eec0}} 
+\index{rxns.h@{rxns.h}!rxn\_condensed\_phase\_photolysis\_update\_env\_state@{rxn\_condensed\_phase\_photolysis\_update\_env\_state}}
+\index{rxn\_condensed\_phase\_photolysis\_update\_env\_state@{rxn\_condensed\_phase\_photolysis\_update\_env\_state}!rxns.h@{rxns.h}}
+\doxysubsubsection{\texorpdfstring{rxn\_condensed\_phase\_photolysis\_update\_env\_state()}{rxn\_condensed\_phase\_photolysis\_update\_env\_state()}}
+{\footnotesize\ttfamily void rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+\_\+update\+\_\+env\+\_\+state (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{int $\ast$}]{rxn\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+env\+\_\+data }\end{DoxyParamCaption})}
+
+
+
+Update reaction data for new environmental conditions. 
+
+For Condensed Phase photolysis reaction this only involves recalculating the forward rate constant.
+
+
+\begin{DoxyParams}{Parameters}
+{\em model\+\_\+data} & Pointer to the model data \\
+\hline
+{\em rxn\+\_\+int\+\_\+data} & Pointer to the reaction integer data \\
+\hline
+{\em rxn\+\_\+float\+\_\+data} & Pointer to the reaction floating-\/point data \\
+\hline
+{\em rxn\+\_\+env\+\_\+data} & Pointer to the environment-\/dependent parameters \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{rxn__condensed__phase__photolysis_8c_source_l00185}{185}} of file \mbox{\hyperlink{rxn__condensed__phase__photolysis_8c_source}{rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis.\+c}}.
+
+Here is the caller graph for this function\+:
+% FIG 48
+\mbox{\Hypertarget{rxns_8h_aa418e878e03cc2a119b01b2e6d9f0556}\label{rxns_8h_aa418e878e03cc2a119b01b2e6d9f0556}} 
+\index{rxns.h@{rxns.h}!rxn\_condensed\_phase\_photolysis\_update\_ids@{rxn\_condensed\_phase\_photolysis\_update\_ids}}
+\index{rxn\_condensed\_phase\_photolysis\_update\_ids@{rxn\_condensed\_phase\_photolysis\_update\_ids}!rxns.h@{rxns.h}}
+\doxysubsubsection{\texorpdfstring{rxn\_condensed\_phase\_photolysis\_update\_ids()}{rxn\_condensed\_phase\_photolysis\_update\_ids()}}
+{\footnotesize\ttfamily void rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+\_\+update\+\_\+ids (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{int $\ast$}]{deriv\+\_\+ids,  }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}}}]{jac,  }\item[{int $\ast$}]{rxn\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+float\+\_\+data }\end{DoxyParamCaption})}
+
+
+
+Update the time derivative and Jacbobian array indices. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em model\+\_\+data} & Pointer to the model data \\
+\hline
+{\em deriv\+\_\+ids} & Id of each state variable in the derivative array \\
+\hline
+{\em jac} & \mbox{\hyperlink{struct_jacobian}{Jacobian}} \\
+\hline
+{\em rxn\+\_\+int\+\_\+data} & Pointer to the reaction integer data \\
+\hline
+{\em rxn\+\_\+float\+\_\+data} & Pointer to the reaction floating-\/point data \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{rxn__condensed__phase__photolysis_8c_source_l00088}{88}} of file \mbox{\hyperlink{rxn__condensed__phase__photolysis_8c_source}{rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis.\+c}}.
+
+Here is the call graph for this function\+:
+% FIG 49
+Here is the caller graph for this function\+:
+% FIG 50
 \mbox{\Hypertarget{rxns_8h_a0fc4250b628dae19ab3c2081a283e2b8}\label{rxns_8h_a0fc4250b628dae19ab3c2081a283e2b8}} 
 \index{rxns.h@{rxns.h}!rxn\_emission\_calc\_deriv\_contrib@{rxn\_emission\_calc\_deriv\_contrib}}
 \index{rxn\_emission\_calc\_deriv\_contrib@{rxn\_emission\_calc\_deriv\_contrib}!rxns.h@{rxns.h}}
@@ -912,9 +1134,9 @@ Calculate contributions to the time derivative $f(t,y)$ from this reaction.
 Definition at line \mbox{\hyperlink{rxn__emission_8c_source_l00133}{133}} of file \mbox{\hyperlink{rxn__emission_8c_source}{rxn\+\_\+emission.\+c}}.
 
 Here is the call graph for this function\+:
-% FIG 42
+% FIG 51
 Here is the caller graph for this function\+:
-% FIG 43
+% FIG 52
 \mbox{\Hypertarget{rxns_8h_ab50d43d95dad6b99d9d3fa5c8c887884}\label{rxns_8h_ab50d43d95dad6b99d9d3fa5c8c887884}} 
 \index{rxns.h@{rxns.h}!rxn\_emission\_calc\_jac\_contrib@{rxn\_emission\_calc\_jac\_contrib}}
 \index{rxn\_emission\_calc\_jac\_contrib@{rxn\_emission\_calc\_jac\_contrib}!rxns.h@{rxns.h}}
@@ -945,7 +1167,7 @@ Calculate contributions to the \mbox{\hyperlink{struct_jacobian}{Jacobian}} from
 Definition at line \mbox{\hyperlink{rxn__emission_8c_source_l00160}{160}} of file \mbox{\hyperlink{rxn__emission_8c_source}{rxn\+\_\+emission.\+c}}.
 
 Here is the caller graph for this function\+:
-% FIG 44
+% FIG 53
 \mbox{\Hypertarget{rxns_8h_adc7b9f9e9c65fce5907c9b5f8fc72d14}\label{rxns_8h_adc7b9f9e9c65fce5907c9b5f8fc72d14}} 
 \index{rxns.h@{rxns.h}!rxn\_emission\_create\_rate\_update\_data@{rxn\_emission\_create\_rate\_update\_data}}
 \index{rxn\_emission\_create\_rate\_update\_data@{rxn\_emission\_create\_rate\_update\_data}!rxns.h@{rxns.h}}
@@ -987,7 +1209,7 @@ Flag \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used by this reaction
 Definition at line \mbox{\hyperlink{rxn__emission_8c_source_l00036}{36}} of file \mbox{\hyperlink{rxn__emission_8c_source}{rxn\+\_\+emission.\+c}}.
 
 Here is the caller graph for this function\+:
-% FIG 45
+% FIG 54
 \mbox{\Hypertarget{rxns_8h_a1b928b4840db0494325aa89390a1b845}\label{rxns_8h_a1b928b4840db0494325aa89390a1b845}} 
 \index{rxns.h@{rxns.h}!rxn\_emission\_print@{rxn\_emission\_print}}
 \index{rxn\_emission\_print@{rxn\_emission\_print}!rxns.h@{rxns.h}}
@@ -1010,7 +1232,7 @@ Print the reaction parameters.
 Definition at line \mbox{\hyperlink{rxn__emission_8c_source_l00179}{179}} of file \mbox{\hyperlink{rxn__emission_8c_source}{rxn\+\_\+emission.\+c}}.
 
 Here is the caller graph for this function\+:
-% FIG 46
+% FIG 55
 \mbox{\Hypertarget{rxns_8h_a19a65b8e846f6b3173ec1c1ed48257a7}\label{rxns_8h_a19a65b8e846f6b3173ec1c1ed48257a7}} 
 \index{rxns.h@{rxns.h}!rxn\_emission\_set\_rate\_update\_data@{rxn\_emission\_set\_rate\_update\_data}}
 \index{rxn\_emission\_set\_rate\_update\_data@{rxn\_emission\_set\_rate\_update\_data}!rxns.h@{rxns.h}}
@@ -1071,7 +1293,7 @@ Flag indicating whether this is the reaction to update
 Definition at line \mbox{\hyperlink{rxn__emission_8c_source_l00082}{82}} of file \mbox{\hyperlink{rxn__emission_8c_source}{rxn\+\_\+emission.\+c}}.
 
 Here is the caller graph for this function\+:
-% FIG 47
+% FIG 56
 \mbox{\Hypertarget{rxns_8h_adccb35681c5b5a230fbb64376c84e6d8}\label{rxns_8h_adccb35681c5b5a230fbb64376c84e6d8}} 
 \index{rxns.h@{rxns.h}!rxn\_emission\_update\_env\_state@{rxn\_emission\_update\_env\_state}}
 \index{rxn\_emission\_update\_env\_state@{rxn\_emission\_update\_env\_state}!rxns.h@{rxns.h}}
@@ -1100,7 +1322,7 @@ For emission reactions this only involves recalculating the rate.
 Definition at line \mbox{\hyperlink{rxn__emission_8c_source_l00109}{109}} of file \mbox{\hyperlink{rxn__emission_8c_source}{rxn\+\_\+emission.\+c}}.
 
 Here is the caller graph for this function\+:
-% FIG 48
+% FIG 57
 \mbox{\Hypertarget{rxns_8h_a1409402244e73476c40d3027defb9b21}\label{rxns_8h_a1409402244e73476c40d3027defb9b21}} 
 \index{rxns.h@{rxns.h}!rxn\_emission\_update\_ids@{rxn\_emission\_update\_ids}}
 \index{rxn\_emission\_update\_ids@{rxn\_emission\_update\_ids}!rxns.h@{rxns.h}}
@@ -1129,7 +1351,7 @@ Update the time derivative and Jacbobian array indices.
 Definition at line \mbox{\hyperlink{rxn__emission_8c_source_l00052}{52}} of file \mbox{\hyperlink{rxn__emission_8c_source}{rxn\+\_\+emission.\+c}}.
 
 Here is the caller graph for this function\+:
-% FIG 49
+% FIG 58
 \mbox{\Hypertarget{rxns_8h_ac1d2c5d3bf68d6adcdc4183ba340175d}\label{rxns_8h_ac1d2c5d3bf68d6adcdc4183ba340175d}} 
 \index{rxns.h@{rxns.h}!rxn\_first\_order\_loss\_calc\_deriv\_contrib@{rxn\_first\_order\_loss\_calc\_deriv\_contrib}}
 \index{rxn\_first\_order\_loss\_calc\_deriv\_contrib@{rxn\_first\_order\_loss\_calc\_deriv\_contrib}!rxns.h@{rxns.h}}
@@ -1160,9 +1382,9 @@ Calculate contributions to the time derivative $f(t,y)$ from this reaction.
 Definition at line \mbox{\hyperlink{rxn__first__order__loss_8c_source_l00143}{143}} of file \mbox{\hyperlink{rxn__first__order__loss_8c_source}{rxn\+\_\+first\+\_\+order\+\_\+loss.\+c}}.
 
 Here is the call graph for this function\+:
-% FIG 50
+% FIG 59
 Here is the caller graph for this function\+:
-% FIG 51
+% FIG 60
 \mbox{\Hypertarget{rxns_8h_a07413cad7e1d96989ea035941a53e915}\label{rxns_8h_a07413cad7e1d96989ea035941a53e915}} 
 \index{rxns.h@{rxns.h}!rxn\_first\_order\_loss\_calc\_jac\_contrib@{rxn\_first\_order\_loss\_calc\_jac\_contrib}}
 \index{rxn\_first\_order\_loss\_calc\_jac\_contrib@{rxn\_first\_order\_loss\_calc\_jac\_contrib}!rxns.h@{rxns.h}}
@@ -1193,9 +1415,9 @@ Calculate contributions to the \mbox{\hyperlink{struct_jacobian}{Jacobian}} from
 Definition at line \mbox{\hyperlink{rxn__first__order__loss_8c_source_l00171}{171}} of file \mbox{\hyperlink{rxn__first__order__loss_8c_source}{rxn\+\_\+first\+\_\+order\+\_\+loss.\+c}}.
 
 Here is the call graph for this function\+:
-% FIG 52
+% FIG 61
 Here is the caller graph for this function\+:
-% FIG 53
+% FIG 62
 \mbox{\Hypertarget{rxns_8h_aaecb66d7db7eb472bb74b796e17d1ed9}\label{rxns_8h_aaecb66d7db7eb472bb74b796e17d1ed9}} 
 \index{rxns.h@{rxns.h}!rxn\_first\_order\_loss\_create\_rate\_update\_data@{rxn\_first\_order\_loss\_create\_rate\_update\_data}}
 \index{rxn\_first\_order\_loss\_create\_rate\_update\_data@{rxn\_first\_order\_loss\_create\_rate\_update\_data}!rxns.h@{rxns.h}}
@@ -1237,9 +1459,9 @@ Flag \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used by this reaction
 Definition at line \mbox{\hyperlink{rxn__first__order__loss_8c_source_l00037}{37}} of file \mbox{\hyperlink{rxn__first__order__loss_8c_source}{rxn\+\_\+first\+\_\+order\+\_\+loss.\+c}}.
 
 Here is the call graph for this function\+:
-% FIG 54
+% FIG 63
 Here is the caller graph for this function\+:
-% FIG 55
+% FIG 64
 \mbox{\Hypertarget{rxns_8h_a5ee9277b28f90b141ec018e086fc5fa3}\label{rxns_8h_a5ee9277b28f90b141ec018e086fc5fa3}} 
 \index{rxns.h@{rxns.h}!rxn\_first\_order\_loss\_print@{rxn\_first\_order\_loss\_print}}
 \index{rxn\_first\_order\_loss\_print@{rxn\_first\_order\_loss\_print}!rxns.h@{rxns.h}}
@@ -1262,7 +1484,7 @@ Print the reaction parameters.
 Definition at line \mbox{\hyperlink{rxn__first__order__loss_8c_source_l00195}{195}} of file \mbox{\hyperlink{rxn__first__order__loss_8c_source}{rxn\+\_\+first\+\_\+order\+\_\+loss.\+c}}.
 
 Here is the caller graph for this function\+:
-% FIG 56
+% FIG 65
 \mbox{\Hypertarget{rxns_8h_a79a93a61f1f6b1d428bd2e6babc58216}\label{rxns_8h_a79a93a61f1f6b1d428bd2e6babc58216}} 
 \index{rxns.h@{rxns.h}!rxn\_first\_order\_loss\_set\_rate\_update\_data@{rxn\_first\_order\_loss\_set\_rate\_update\_data}}
 \index{rxn\_first\_order\_loss\_set\_rate\_update\_data@{rxn\_first\_order\_loss\_set\_rate\_update\_data}!rxns.h@{rxns.h}}
@@ -1323,7 +1545,7 @@ Flag indicating whether this is the reaction to update
 Definition at line \mbox{\hyperlink{rxn__first__order__loss_8c_source_l00089}{89}} of file \mbox{\hyperlink{rxn__first__order__loss_8c_source}{rxn\+\_\+first\+\_\+order\+\_\+loss.\+c}}.
 
 Here is the caller graph for this function\+:
-% FIG 57
+% FIG 66
 \mbox{\Hypertarget{rxns_8h_ac31fd29a881698e3bb9f30b4b91ffddb}\label{rxns_8h_ac31fd29a881698e3bb9f30b4b91ffddb}} 
 \index{rxns.h@{rxns.h}!rxn\_first\_order\_loss\_update\_env\_state@{rxn\_first\_order\_loss\_update\_env\_state}}
 \index{rxn\_first\_order\_loss\_update\_env\_state@{rxn\_first\_order\_loss\_update\_env\_state}!rxns.h@{rxns.h}}
@@ -1352,7 +1574,7 @@ For first-\/order loss reactions this only involves recalculating the rate const
 Definition at line \mbox{\hyperlink{rxn__first__order__loss_8c_source_l00118}{118}} of file \mbox{\hyperlink{rxn__first__order__loss_8c_source}{rxn\+\_\+first\+\_\+order\+\_\+loss.\+c}}.
 
 Here is the caller graph for this function\+:
-% FIG 58
+% FIG 67
 \mbox{\Hypertarget{rxns_8h_ae3eced0147f7ef45e55762930c86bf56}\label{rxns_8h_ae3eced0147f7ef45e55762930c86bf56}} 
 \index{rxns.h@{rxns.h}!rxn\_first\_order\_loss\_update\_ids@{rxn\_first\_order\_loss\_update\_ids}}
 \index{rxn\_first\_order\_loss\_update\_ids@{rxn\_first\_order\_loss\_update\_ids}!rxns.h@{rxns.h}}
@@ -1381,9 +1603,9 @@ Update the time derivative and Jacbobian array indices.
 Definition at line \mbox{\hyperlink{rxn__first__order__loss_8c_source_l00056}{56}} of file \mbox{\hyperlink{rxn__first__order__loss_8c_source}{rxn\+\_\+first\+\_\+order\+\_\+loss.\+c}}.
 
 Here is the call graph for this function\+:
-% FIG 59
+% FIG 68
 Here is the caller graph for this function\+:
-% FIG 60
+% FIG 69
 \mbox{\Hypertarget{rxns_8h_aa82a07e921e3d22fda1d52073b16219d}\label{rxns_8h_aa82a07e921e3d22fda1d52073b16219d}} 
 \index{rxns.h@{rxns.h}!rxn\_HL\_phase\_transfer\_calc\_deriv\_contrib@{rxn\_HL\_phase\_transfer\_calc\_deriv\_contrib}}
 \index{rxn\_HL\_phase\_transfer\_calc\_deriv\_contrib@{rxn\_HL\_phase\_transfer\_calc\_deriv\_contrib}!rxns.h@{rxns.h}}
@@ -1418,9 +1640,9 @@ Calculate contributions to the time derivative $f(t,y)$ from this reaction.
 Definition at line \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source_l00265}{265}} of file \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source}{rxn\+\_\+\+HL\+\_\+phase\+\_\+transfer.\+c}}.
 
 Here is the call graph for this function\+:
-% FIG 61
+% FIG 70
 Here is the caller graph for this function\+:
-% FIG 62
+% FIG 71
 \mbox{\Hypertarget{rxns_8h_a4e04c50da5215b9886991e6f0c98cccc}\label{rxns_8h_a4e04c50da5215b9886991e6f0c98cccc}} 
 \index{rxns.h@{rxns.h}!rxn\_HL\_phase\_transfer\_calc\_jac\_contrib@{rxn\_HL\_phase\_transfer\_calc\_jac\_contrib}}
 \index{rxn\_HL\_phase\_transfer\_calc\_jac\_contrib@{rxn\_HL\_phase\_transfer\_calc\_jac\_contrib}!rxns.h@{rxns.h}}
@@ -1451,9 +1673,9 @@ Calculate contributions to the \mbox{\hyperlink{struct_jacobian}{Jacobian}} from
 Definition at line \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source_l00354}{354}} of file \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source}{rxn\+\_\+\+HL\+\_\+phase\+\_\+transfer.\+c}}.
 
 Here is the call graph for this function\+:
-% FIG 63
+% FIG 72
 Here is the caller graph for this function\+:
-% FIG 64
+% FIG 73
 \mbox{\Hypertarget{rxns_8h_a6397153ebdffc297c0c43cb7dfb0e9ba}\label{rxns_8h_a6397153ebdffc297c0c43cb7dfb0e9ba}} 
 \index{rxns.h@{rxns.h}!rxn\_HL\_phase\_transfer\_get\_used\_jac\_elem@{rxn\_HL\_phase\_transfer\_get\_used\_jac\_elem}}
 \index{rxn\_HL\_phase\_transfer\_get\_used\_jac\_elem@{rxn\_HL\_phase\_transfer\_get\_used\_jac\_elem}!rxns.h@{rxns.h}}
@@ -1480,9 +1702,9 @@ Flag \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used by this reaction
 Definition at line \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source_l00072}{72}} of file \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source}{rxn\+\_\+\+HL\+\_\+phase\+\_\+transfer.\+c}}.
 
 Here is the call graph for this function\+:
-% FIG 65
+% FIG 74
 Here is the caller graph for this function\+:
-% FIG 66
+% FIG 75
 \mbox{\Hypertarget{rxns_8h_a23271841c897d7d4047b73e4fbc0e748}\label{rxns_8h_a23271841c897d7d4047b73e4fbc0e748}} 
 \index{rxns.h@{rxns.h}!rxn\_HL\_phase\_transfer\_print@{rxn\_HL\_phase\_transfer\_print}}
 \index{rxn\_HL\_phase\_transfer\_print@{rxn\_HL\_phase\_transfer\_print}!rxns.h@{rxns.h}}
@@ -1505,7 +1727,7 @@ Print the Phase Transfer reaction parameters.
 Definition at line \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source_l00510}{510}} of file \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source}{rxn\+\_\+\+HL\+\_\+phase\+\_\+transfer.\+c}}.
 
 Here is the caller graph for this function\+:
-% FIG 67
+% FIG 76
 \mbox{\Hypertarget{rxns_8h_a53a6e2e8532852ea1b23266b2ff3db12}\label{rxns_8h_a53a6e2e8532852ea1b23266b2ff3db12}} 
 \index{rxns.h@{rxns.h}!rxn\_HL\_phase\_transfer\_update\_env\_state@{rxn\_HL\_phase\_transfer\_update\_env\_state}}
 \index{rxn\_HL\_phase\_transfer\_update\_env\_state@{rxn\_HL\_phase\_transfer\_update\_env\_state}!rxns.h@{rxns.h}}
@@ -1534,9 +1756,9 @@ For Phase Transfer reaction this only involves recalculating the rate constant.
 Definition at line \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source_l00209}{209}} of file \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source}{rxn\+\_\+\+HL\+\_\+phase\+\_\+transfer.\+c}}.
 
 Here is the call graph for this function\+:
-% FIG 68
+% FIG 77
 Here is the caller graph for this function\+:
-% FIG 69
+% FIG 78
 \mbox{\Hypertarget{rxns_8h_a87cbf996d29d4ab5cf38c3cc0cea6427}\label{rxns_8h_a87cbf996d29d4ab5cf38c3cc0cea6427}} 
 \index{rxns.h@{rxns.h}!rxn\_HL\_phase\_transfer\_update\_ids@{rxn\_HL\_phase\_transfer\_update\_ids}}
 \index{rxn\_HL\_phase\_transfer\_update\_ids@{rxn\_HL\_phase\_transfer\_update\_ids}!rxns.h@{rxns.h}}
@@ -1565,9 +1787,9 @@ Update the time derivative and Jacbobian array indices.
 Definition at line \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source_l00149}{149}} of file \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source}{rxn\+\_\+\+HL\+\_\+phase\+\_\+transfer.\+c}}.
 
 Here is the call graph for this function\+:
-% FIG 70
+% FIG 79
 Here is the caller graph for this function\+:
-% FIG 71
+% FIG 80
 \mbox{\Hypertarget{rxns_8h_a821ebabf2abba0aa6b465747178f33d6}\label{rxns_8h_a821ebabf2abba0aa6b465747178f33d6}} 
 \index{rxns.h@{rxns.h}!rxn\_photolysis\_calc\_deriv\_contrib@{rxn\_photolysis\_calc\_deriv\_contrib}}
 \index{rxn\_photolysis\_calc\_deriv\_contrib@{rxn\_photolysis\_calc\_deriv\_contrib}!rxns.h@{rxns.h}}
@@ -1598,9 +1820,9 @@ Calculate contributions to the time derivative $f(t,y)$ from this reaction.
 Definition at line \mbox{\hyperlink{rxn__photolysis_8c_source_l00161}{161}} of file \mbox{\hyperlink{rxn__photolysis_8c_source}{rxn\+\_\+photolysis.\+c}}.
 
 Here is the call graph for this function\+:
-% FIG 72
+% FIG 81
 Here is the caller graph for this function\+:
-% FIG 73
+% FIG 82
 \mbox{\Hypertarget{rxns_8h_a12201d188bd114013b835e74912fdf53}\label{rxns_8h_a12201d188bd114013b835e74912fdf53}} 
 \index{rxns.h@{rxns.h}!rxn\_photolysis\_calc\_jac\_contrib@{rxn\_photolysis\_calc\_jac\_contrib}}
 \index{rxn\_photolysis\_calc\_jac\_contrib@{rxn\_photolysis\_calc\_jac\_contrib}!rxns.h@{rxns.h}}
@@ -1631,9 +1853,9 @@ Calculate contributions to the \mbox{\hyperlink{struct_jacobian}{Jacobian}} from
 Definition at line \mbox{\hyperlink{rxn__photolysis_8c_source_l00207}{207}} of file \mbox{\hyperlink{rxn__photolysis_8c_source}{rxn\+\_\+photolysis.\+c}}.
 
 Here is the call graph for this function\+:
-% FIG 74
+% FIG 83
 Here is the caller graph for this function\+:
-% FIG 75
+% FIG 84
 \mbox{\Hypertarget{rxns_8h_a7e9d33d9fa28139e1c87566f0179fd51}\label{rxns_8h_a7e9d33d9fa28139e1c87566f0179fd51}} 
 \index{rxns.h@{rxns.h}!rxn\_photolysis\_create\_rate\_update\_data@{rxn\_photolysis\_create\_rate\_update\_data}}
 \index{rxn\_photolysis\_create\_rate\_update\_data@{rxn\_photolysis\_create\_rate\_update\_data}!rxns.h@{rxns.h}}
@@ -1675,9 +1897,9 @@ Flag \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used by this reaction
 Definition at line \mbox{\hyperlink{rxn__photolysis_8c_source_l00041}{41}} of file \mbox{\hyperlink{rxn__photolysis_8c_source}{rxn\+\_\+photolysis.\+c}}.
 
 Here is the call graph for this function\+:
-% FIG 76
+% FIG 85
 Here is the caller graph for this function\+:
-% FIG 77
+% FIG 86
 \mbox{\Hypertarget{rxns_8h_aebf6ecbc65d08e278100b817110e7018}\label{rxns_8h_aebf6ecbc65d08e278100b817110e7018}} 
 \index{rxns.h@{rxns.h}!rxn\_photolysis\_print@{rxn\_photolysis\_print}}
 \index{rxn\_photolysis\_print@{rxn\_photolysis\_print}!rxns.h@{rxns.h}}
@@ -1700,7 +1922,7 @@ Print the Photolysis reaction parameters.
 Definition at line \mbox{\hyperlink{rxn__photolysis_8c_source_l00249}{249}} of file \mbox{\hyperlink{rxn__photolysis_8c_source}{rxn\+\_\+photolysis.\+c}}.
 
 Here is the caller graph for this function\+:
-% FIG 78
+% FIG 87
 \mbox{\Hypertarget{rxns_8h_aff89be509538350520f38c29bce5e5f0}\label{rxns_8h_aff89be509538350520f38c29bce5e5f0}} 
 \index{rxns.h@{rxns.h}!rxn\_photolysis\_set\_rate\_update\_data@{rxn\_photolysis\_set\_rate\_update\_data}}
 \index{rxn\_photolysis\_set\_rate\_update\_data@{rxn\_photolysis\_set\_rate\_update\_data}!rxns.h@{rxns.h}}
@@ -1761,7 +1983,7 @@ Flag indicating whether this is the reaction to update
 Definition at line \mbox{\hyperlink{rxn__photolysis_8c_source_l00109}{109}} of file \mbox{\hyperlink{rxn__photolysis_8c_source}{rxn\+\_\+photolysis.\+c}}.
 
 Here is the caller graph for this function\+:
-% FIG 79
+% FIG 88
 \mbox{\Hypertarget{rxns_8h_a7050f9c7df2b337474e90b49cd563d1d}\label{rxns_8h_a7050f9c7df2b337474e90b49cd563d1d}} 
 \index{rxns.h@{rxns.h}!rxn\_photolysis\_update\_env\_state@{rxn\_photolysis\_update\_env\_state}}
 \index{rxn\_photolysis\_update\_env\_state@{rxn\_photolysis\_update\_env\_state}!rxns.h@{rxns.h}}
@@ -1790,7 +2012,7 @@ For Photolysis reaction this only involves recalculating the rate constant.
 Definition at line \mbox{\hyperlink{rxn__photolysis_8c_source_l00137}{137}} of file \mbox{\hyperlink{rxn__photolysis_8c_source}{rxn\+\_\+photolysis.\+c}}.
 
 Here is the caller graph for this function\+:
-% FIG 80
+% FIG 89
 \mbox{\Hypertarget{rxns_8h_af81c275e7f6f9ebe2a244235d0f6fd77}\label{rxns_8h_af81c275e7f6f9ebe2a244235d0f6fd77}} 
 \index{rxns.h@{rxns.h}!rxn\_photolysis\_update\_ids@{rxn\_photolysis\_update\_ids}}
 \index{rxn\_photolysis\_update\_ids@{rxn\_photolysis\_update\_ids}!rxns.h@{rxns.h}}
@@ -1819,9 +2041,9 @@ Update the time derivative and Jacbobian array indices.
 Definition at line \mbox{\hyperlink{rxn__photolysis_8c_source_l00066}{66}} of file \mbox{\hyperlink{rxn__photolysis_8c_source}{rxn\+\_\+photolysis.\+c}}.
 
 Here is the call graph for this function\+:
-% FIG 81
+% FIG 90
 Here is the caller graph for this function\+:
-% FIG 82
+% FIG 91
 \mbox{\Hypertarget{rxns_8h_a8387f10a0a5aa0b38cc545859542f3c4}\label{rxns_8h_a8387f10a0a5aa0b38cc545859542f3c4}} 
 \index{rxns.h@{rxns.h}!rxn\_SIMPOL\_phase\_transfer\_calc\_deriv\_contrib@{rxn\_SIMPOL\_phase\_transfer\_calc\_deriv\_contrib}}
 \index{rxn\_SIMPOL\_phase\_transfer\_calc\_deriv\_contrib@{rxn\_SIMPOL\_phase\_transfer\_calc\_deriv\_contrib}!rxns.h@{rxns.h}}
@@ -1852,9 +2074,9 @@ Calculate contributions to the time derivative $f(t,y)$ from this reaction.
 Definition at line \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_source_l00279}{279}} of file \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_source}{rxn\+\_\+\+SIMPOL\+\_\+phase\+\_\+transfer.\+c}}.
 
 Here is the call graph for this function\+:
-% FIG 83
+% FIG 92
 Here is the caller graph for this function\+:
-% FIG 84
+% FIG 93
 \mbox{\Hypertarget{rxns_8h_a2c6b4163ab0a9e65eec7dd8286d67885}\label{rxns_8h_a2c6b4163ab0a9e65eec7dd8286d67885}} 
 \index{rxns.h@{rxns.h}!rxn\_SIMPOL\_phase\_transfer\_calc\_jac\_contrib@{rxn\_SIMPOL\_phase\_transfer\_calc\_jac\_contrib}}
 \index{rxn\_SIMPOL\_phase\_transfer\_calc\_jac\_contrib@{rxn\_SIMPOL\_phase\_transfer\_calc\_jac\_contrib}!rxns.h@{rxns.h}}
@@ -1885,9 +2107,9 @@ Calculate contributions to the \mbox{\hyperlink{struct_jacobian}{Jacobian}} from
 Definition at line \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_source_l00415}{415}} of file \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_source}{rxn\+\_\+\+SIMPOL\+\_\+phase\+\_\+transfer.\+c}}.
 
 Here is the call graph for this function\+:
-% FIG 85
+% FIG 94
 Here is the caller graph for this function\+:
-% FIG 86
+% FIG 95
 \mbox{\Hypertarget{rxns_8h_a1658944a83529b7d5e854920f235ed3b}\label{rxns_8h_a1658944a83529b7d5e854920f235ed3b}} 
 \index{rxns.h@{rxns.h}!rxn\_SIMPOL\_phase\_transfer\_get\_used\_jac\_elem@{rxn\_SIMPOL\_phase\_transfer\_get\_used\_jac\_elem}}
 \index{rxn\_SIMPOL\_phase\_transfer\_get\_used\_jac\_elem@{rxn\_SIMPOL\_phase\_transfer\_get\_used\_jac\_elem}!rxns.h@{rxns.h}}
@@ -1914,9 +2136,9 @@ Flag \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used by this reaction
 Definition at line \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_source_l00084}{84}} of file \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_source}{rxn\+\_\+\+SIMPOL\+\_\+phase\+\_\+transfer.\+c}}.
 
 Here is the call graph for this function\+:
-% FIG 87
+% FIG 96
 Here is the caller graph for this function\+:
-% FIG 88
+% FIG 97
 \mbox{\Hypertarget{rxns_8h_a63043b44a2874c8fb87ab85a2497d0c2}\label{rxns_8h_a63043b44a2874c8fb87ab85a2497d0c2}} 
 \index{rxns.h@{rxns.h}!rxn\_SIMPOL\_phase\_transfer\_print@{rxn\_SIMPOL\_phase\_transfer\_print}}
 \index{rxn\_SIMPOL\_phase\_transfer\_print@{rxn\_SIMPOL\_phase\_transfer\_print}!rxns.h@{rxns.h}}
@@ -1939,7 +2161,7 @@ Print the Phase Transfer reaction parameters.
 Definition at line \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_source_l00751}{751}} of file \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_source}{rxn\+\_\+\+SIMPOL\+\_\+phase\+\_\+transfer.\+c}}.
 
 Here is the caller graph for this function\+:
-% FIG 89
+% FIG 98
 \mbox{\Hypertarget{rxns_8h_a16e926c16f84b0d8628f10553fc63ce6}\label{rxns_8h_a16e926c16f84b0d8628f10553fc63ce6}} 
 \index{rxns.h@{rxns.h}!rxn\_SIMPOL\_phase\_transfer\_update\_env\_state@{rxn\_SIMPOL\_phase\_transfer\_update\_env\_state}}
 \index{rxn\_SIMPOL\_phase\_transfer\_update\_env\_state@{rxn\_SIMPOL\_phase\_transfer\_update\_env\_state}!rxns.h@{rxns.h}}
@@ -1968,9 +2190,9 @@ save the mean free path \mbox{[}m\mbox{]} for calculating condensation rates
 Definition at line \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_source_l00220}{220}} of file \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_source}{rxn\+\_\+\+SIMPOL\+\_\+phase\+\_\+transfer.\+c}}.
 
 Here is the call graph for this function\+:
-% FIG 90
+% FIG 99
 Here is the caller graph for this function\+:
-% FIG 91
+% FIG 100
 \mbox{\Hypertarget{rxns_8h_abe640b69520d723afc79fdac91714f06}\label{rxns_8h_abe640b69520d723afc79fdac91714f06}} 
 \index{rxns.h@{rxns.h}!rxn\_SIMPOL\_phase\_transfer\_update\_ids@{rxn\_SIMPOL\_phase\_transfer\_update\_ids}}
 \index{rxn\_SIMPOL\_phase\_transfer\_update\_ids@{rxn\_SIMPOL\_phase\_transfer\_update\_ids}!rxns.h@{rxns.h}}
@@ -1999,9 +2221,9 @@ Update the time derivative and Jacbobian array indices.
 Definition at line \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_source_l00163}{163}} of file \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_source}{rxn\+\_\+\+SIMPOL\+\_\+phase\+\_\+transfer.\+c}}.
 
 Here is the call graph for this function\+:
-% FIG 92
+% FIG 101
 Here is the caller graph for this function\+:
-% FIG 93
+% FIG 102
 \mbox{\Hypertarget{rxns_8h_a5bb30760087399bd04a9f9e16f0fab1f}\label{rxns_8h_a5bb30760087399bd04a9f9e16f0fab1f}} 
 \index{rxns.h@{rxns.h}!rxn\_surface\_calc\_deriv\_contrib@{rxn\_surface\_calc\_deriv\_contrib}}
 \index{rxn\_surface\_calc\_deriv\_contrib@{rxn\_surface\_calc\_deriv\_contrib}!rxns.h@{rxns.h}}
@@ -2032,9 +2254,9 @@ Calculate contributions to the time derivative $f(t,y)$ from this reaction.
 Definition at line \mbox{\hyperlink{rxn__surface_8c_source_l00203}{203}} of file \mbox{\hyperlink{rxn__surface_8c_source}{rxn\+\_\+surface.\+c}}.
 
 Here is the call graph for this function\+:
-% FIG 94
+% FIG 103
 Here is the caller graph for this function\+:
-% FIG 95
+% FIG 104
 \mbox{\Hypertarget{rxns_8h_a8de73dc2a00c1bc5b91747cbb50086ad}\label{rxns_8h_a8de73dc2a00c1bc5b91747cbb50086ad}} 
 \index{rxns.h@{rxns.h}!rxn\_surface\_calc\_jac\_contrib@{rxn\_surface\_calc\_jac\_contrib}}
 \index{rxn\_surface\_calc\_jac\_contrib@{rxn\_surface\_calc\_jac\_contrib}!rxns.h@{rxns.h}}
@@ -2065,9 +2287,9 @@ Calculate contributions to the \mbox{\hyperlink{struct_jacobian}{Jacobian}} from
 Definition at line \mbox{\hyperlink{rxn__surface_8c_source_l00264}{264}} of file \mbox{\hyperlink{rxn__surface_8c_source}{rxn\+\_\+surface.\+c}}.
 
 Here is the call graph for this function\+:
-% FIG 96
+% FIG 105
 Here is the caller graph for this function\+:
-% FIG 97
+% FIG 106
 \mbox{\Hypertarget{rxns_8h_a172e0e483115d10f868a1a68f7a664da}\label{rxns_8h_a172e0e483115d10f868a1a68f7a664da}} 
 \index{rxns.h@{rxns.h}!rxn\_surface\_get\_used\_jac\_elem@{rxn\_surface\_get\_used\_jac\_elem}}
 \index{rxn\_surface\_get\_used\_jac\_elem@{rxn\_surface\_get\_used\_jac\_elem}!rxns.h@{rxns.h}}
@@ -2094,9 +2316,9 @@ Flag \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used by this reaction
 Definition at line \mbox{\hyperlink{rxn__surface_8c_source_l00056}{56}} of file \mbox{\hyperlink{rxn__surface_8c_source}{rxn\+\_\+surface.\+c}}.
 
 Here is the call graph for this function\+:
-% FIG 98
+% FIG 107
 Here is the caller graph for this function\+:
-% FIG 99
+% FIG 108
 \mbox{\Hypertarget{rxns_8h_af4d5ba66d45ee435e1451b44eda87370}\label{rxns_8h_af4d5ba66d45ee435e1451b44eda87370}} 
 \index{rxns.h@{rxns.h}!rxn\_surface\_print@{rxn\_surface\_print}}
 \index{rxn\_surface\_print@{rxn\_surface\_print}!rxns.h@{rxns.h}}
@@ -2119,7 +2341,7 @@ Print the surface reaction parameters.
 Definition at line \mbox{\hyperlink{rxn__surface_8c_source_l00363}{363}} of file \mbox{\hyperlink{rxn__surface_8c_source}{rxn\+\_\+surface.\+c}}.
 
 Here is the caller graph for this function\+:
-% FIG 100
+% FIG 109
 \mbox{\Hypertarget{rxns_8h_a1f0c4bf256b37b3b7b054514a997deae}\label{rxns_8h_a1f0c4bf256b37b3b7b054514a997deae}} 
 \index{rxns.h@{rxns.h}!rxn\_surface\_update\_env\_state@{rxn\_surface\_update\_env\_state}}
 \index{rxn\_surface\_update\_env\_state@{rxn\_surface\_update\_env\_state}!rxns.h@{rxns.h}}
@@ -2148,9 +2370,9 @@ For surface reactions this only involves calculating the mean speed of the react
 Definition at line \mbox{\hyperlink{rxn__surface_8c_source_l00178}{178}} of file \mbox{\hyperlink{rxn__surface_8c_source}{rxn\+\_\+surface.\+c}}.
 
 Here is the call graph for this function\+:
-% FIG 101
+% FIG 110
 Here is the caller graph for this function\+:
-% FIG 102
+% FIG 111
 \mbox{\Hypertarget{rxns_8h_a61c79d96744201b051a10a6b891a7ea9}\label{rxns_8h_a61c79d96744201b051a10a6b891a7ea9}} 
 \index{rxns.h@{rxns.h}!rxn\_surface\_update\_ids@{rxn\_surface\_update\_ids}}
 \index{rxn\_surface\_update\_ids@{rxn\_surface\_update\_ids}!rxns.h@{rxns.h}}
@@ -2179,9 +2401,9 @@ Update the time derivative and Jacbobian array indices.
 Definition at line \mbox{\hyperlink{rxn__surface_8c_source_l00132}{132}} of file \mbox{\hyperlink{rxn__surface_8c_source}{rxn\+\_\+surface.\+c}}.
 
 Here is the call graph for this function\+:
-% FIG 103
+% FIG 112
 Here is the caller graph for this function\+:
-% FIG 104
+% FIG 113
 \mbox{\Hypertarget{rxns_8h_aab9c65ccd4b8614889c1462e2500e6b9}\label{rxns_8h_aab9c65ccd4b8614889c1462e2500e6b9}} 
 \index{rxns.h@{rxns.h}!rxn\_ternary\_chemical\_activation\_calc\_deriv\_contrib@{rxn\_ternary\_chemical\_activation\_calc\_deriv\_contrib}}
 \index{rxn\_ternary\_chemical\_activation\_calc\_deriv\_contrib@{rxn\_ternary\_chemical\_activation\_calc\_deriv\_contrib}!rxns.h@{rxns.h}}
@@ -2212,9 +2434,9 @@ Calculate contributions to the time derivative $f(t,y)$ from this reaction.
 Definition at line \mbox{\hyperlink{rxn__ternary__chemical__activation_8c_source_l00148}{148}} of file \mbox{\hyperlink{rxn__ternary__chemical__activation_8c_source}{rxn\+\_\+ternary\+\_\+chemical\+\_\+activation.\+c}}.
 
 Here is the call graph for this function\+:
-% FIG 105
+% FIG 114
 Here is the caller graph for this function\+:
-% FIG 106
+% FIG 115
 \mbox{\Hypertarget{rxns_8h_a0e03361890588fa6e5b8d43b5f63d208}\label{rxns_8h_a0e03361890588fa6e5b8d43b5f63d208}} 
 \index{rxns.h@{rxns.h}!rxn\_ternary\_chemical\_activation\_calc\_jac\_contrib@{rxn\_ternary\_chemical\_activation\_calc\_jac\_contrib}}
 \index{rxn\_ternary\_chemical\_activation\_calc\_jac\_contrib@{rxn\_ternary\_chemical\_activation\_calc\_jac\_contrib}!rxns.h@{rxns.h}}
@@ -2245,9 +2467,9 @@ Calculate contributions to the \mbox{\hyperlink{struct_jacobian}{Jacobian}} from
 Definition at line \mbox{\hyperlink{rxn__ternary__chemical__activation_8c_source_l00193}{193}} of file \mbox{\hyperlink{rxn__ternary__chemical__activation_8c_source}{rxn\+\_\+ternary\+\_\+chemical\+\_\+activation.\+c}}.
 
 Here is the call graph for this function\+:
-% FIG 107
+% FIG 116
 Here is the caller graph for this function\+:
-% FIG 108
+% FIG 117
 \mbox{\Hypertarget{rxns_8h_a75c51d913c5d68b833f8fe7f0c078870}\label{rxns_8h_a75c51d913c5d68b833f8fe7f0c078870}} 
 \index{rxns.h@{rxns.h}!rxn\_ternary\_chemical\_activation\_get\_used\_jac\_elem@{rxn\_ternary\_chemical\_activation\_get\_used\_jac\_elem}}
 \index{rxn\_ternary\_chemical\_activation\_get\_used\_jac\_elem@{rxn\_ternary\_chemical\_activation\_get\_used\_jac\_elem}!rxns.h@{rxns.h}}
@@ -2272,9 +2494,9 @@ Flag \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used by this reaction
 Definition at line \mbox{\hyperlink{rxn__ternary__chemical__activation_8c_source_l00048}{48}} of file \mbox{\hyperlink{rxn__ternary__chemical__activation_8c_source}{rxn\+\_\+ternary\+\_\+chemical\+\_\+activation.\+c}}.
 
 Here is the call graph for this function\+:
-% FIG 109
+% FIG 118
 Here is the caller graph for this function\+:
-% FIG 110
+% FIG 119
 \mbox{\Hypertarget{rxns_8h_a0f9b43686938e15c04035c8b13f0de30}\label{rxns_8h_a0f9b43686938e15c04035c8b13f0de30}} 
 \index{rxns.h@{rxns.h}!rxn\_ternary\_chemical\_activation\_print@{rxn\_ternary\_chemical\_activation\_print}}
 \index{rxn\_ternary\_chemical\_activation\_print@{rxn\_ternary\_chemical\_activation\_print}!rxns.h@{rxns.h}}
@@ -2297,7 +2519,7 @@ Print the Ternary Chemical Activation reaction parameters.
 Definition at line \mbox{\hyperlink{rxn__ternary__chemical__activation_8c_source_l00235}{235}} of file \mbox{\hyperlink{rxn__ternary__chemical__activation_8c_source}{rxn\+\_\+ternary\+\_\+chemical\+\_\+activation.\+c}}.
 
 Here is the caller graph for this function\+:
-% FIG 111
+% FIG 120
 \mbox{\Hypertarget{rxns_8h_a1aa5967c48da08c40704695d30025ab5}\label{rxns_8h_a1aa5967c48da08c40704695d30025ab5}} 
 \index{rxns.h@{rxns.h}!rxn\_ternary\_chemical\_activation\_update\_env\_state@{rxn\_ternary\_chemical\_activation\_update\_env\_state}}
 \index{rxn\_ternary\_chemical\_activation\_update\_env\_state@{rxn\_ternary\_chemical\_activation\_update\_env\_state}!rxns.h@{rxns.h}}
@@ -2326,7 +2548,7 @@ For Ternary Chemical Activation reaction this only involves recalculating the ra
 Definition at line \mbox{\hyperlink{rxn__ternary__chemical__activation_8c_source_l00111}{111}} of file \mbox{\hyperlink{rxn__ternary__chemical__activation_8c_source}{rxn\+\_\+ternary\+\_\+chemical\+\_\+activation.\+c}}.
 
 Here is the caller graph for this function\+:
-% FIG 112
+% FIG 121
 \mbox{\Hypertarget{rxns_8h_a8f0167f1dcf9c3621f4f211b674b4698}\label{rxns_8h_a8f0167f1dcf9c3621f4f211b674b4698}} 
 \index{rxns.h@{rxns.h}!rxn\_ternary\_chemical\_activation\_update\_ids@{rxn\_ternary\_chemical\_activation\_update\_ids}}
 \index{rxn\_ternary\_chemical\_activation\_update\_ids@{rxn\_ternary\_chemical\_activation\_update\_ids}!rxns.h@{rxns.h}}
@@ -2355,9 +2577,9 @@ Update the time derivative and Jacbobian array indices.
 Definition at line \mbox{\hyperlink{rxn__ternary__chemical__activation_8c_source_l00074}{74}} of file \mbox{\hyperlink{rxn__ternary__chemical__activation_8c_source}{rxn\+\_\+ternary\+\_\+chemical\+\_\+activation.\+c}}.
 
 Here is the call graph for this function\+:
-% FIG 113
+% FIG 122
 Here is the caller graph for this function\+:
-% FIG 114
+% FIG 123
 \mbox{\Hypertarget{rxns_8h_ae2174a745239e629f1c5480a52c3f6f2}\label{rxns_8h_ae2174a745239e629f1c5480a52c3f6f2}} 
 \index{rxns.h@{rxns.h}!rxn\_troe\_calc\_deriv\_contrib@{rxn\_troe\_calc\_deriv\_contrib}}
 \index{rxn\_troe\_calc\_deriv\_contrib@{rxn\_troe\_calc\_deriv\_contrib}!rxns.h@{rxns.h}}
@@ -2388,9 +2610,9 @@ Calculate contributions to the time derivative $f(t,y)$ from this reaction.
 Definition at line \mbox{\hyperlink{rxn__troe_8c_source_l00143}{143}} of file \mbox{\hyperlink{rxn__troe_8c_source}{rxn\+\_\+troe.\+c}}.
 
 Here is the call graph for this function\+:
-% FIG 115
+% FIG 124
 Here is the caller graph for this function\+:
-% FIG 116
+% FIG 125
 \mbox{\Hypertarget{rxns_8h_a4f34c34a0b24bbbb11a127246e3fd35e}\label{rxns_8h_a4f34c34a0b24bbbb11a127246e3fd35e}} 
 \index{rxns.h@{rxns.h}!rxn\_troe\_calc\_jac\_contrib@{rxn\_troe\_calc\_jac\_contrib}}
 \index{rxn\_troe\_calc\_jac\_contrib@{rxn\_troe\_calc\_jac\_contrib}!rxns.h@{rxns.h}}
@@ -2421,9 +2643,9 @@ Calculate contributions to the \mbox{\hyperlink{struct_jacobian}{Jacobian}} from
 Definition at line \mbox{\hyperlink{rxn__troe_8c_source_l00189}{189}} of file \mbox{\hyperlink{rxn__troe_8c_source}{rxn\+\_\+troe.\+c}}.
 
 Here is the call graph for this function\+:
-% FIG 117
+% FIG 126
 Here is the caller graph for this function\+:
-% FIG 118
+% FIG 127
 \mbox{\Hypertarget{rxns_8h_a8d762626ae8950f250d052a06e996db3}\label{rxns_8h_a8d762626ae8950f250d052a06e996db3}} 
 \index{rxns.h@{rxns.h}!rxn\_troe\_get\_used\_jac\_elem@{rxn\_troe\_get\_used\_jac\_elem}}
 \index{rxn\_troe\_get\_used\_jac\_elem@{rxn\_troe\_get\_used\_jac\_elem}!rxns.h@{rxns.h}}
@@ -2448,9 +2670,9 @@ Flag \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used by this reaction
 Definition at line \mbox{\hyperlink{rxn__troe_8c_source_l00047}{47}} of file \mbox{\hyperlink{rxn__troe_8c_source}{rxn\+\_\+troe.\+c}}.
 
 Here is the call graph for this function\+:
-% FIG 119
+% FIG 128
 Here is the caller graph for this function\+:
-% FIG 120
+% FIG 129
 \mbox{\Hypertarget{rxns_8h_a7c9a6d7ecc68d520fa5dc35557a1c329}\label{rxns_8h_a7c9a6d7ecc68d520fa5dc35557a1c329}} 
 \index{rxns.h@{rxns.h}!rxn\_troe\_print@{rxn\_troe\_print}}
 \index{rxn\_troe\_print@{rxn\_troe\_print}!rxns.h@{rxns.h}}
@@ -2473,7 +2695,7 @@ Print the Troe reaction parameters.
 Definition at line \mbox{\hyperlink{rxn__troe_8c_source_l00231}{231}} of file \mbox{\hyperlink{rxn__troe_8c_source}{rxn\+\_\+troe.\+c}}.
 
 Here is the caller graph for this function\+:
-% FIG 121
+% FIG 130
 \mbox{\Hypertarget{rxns_8h_ad2f31b90abffa527604e554295d3a40f}\label{rxns_8h_ad2f31b90abffa527604e554295d3a40f}} 
 \index{rxns.h@{rxns.h}!rxn\_troe\_update\_env\_state@{rxn\_troe\_update\_env\_state}}
 \index{rxn\_troe\_update\_env\_state@{rxn\_troe\_update\_env\_state}!rxns.h@{rxns.h}}
@@ -2502,7 +2724,7 @@ For Troe reaction this only involves recalculating the rate constant.
 Definition at line \mbox{\hyperlink{rxn__troe_8c_source_l00107}{107}} of file \mbox{\hyperlink{rxn__troe_8c_source}{rxn\+\_\+troe.\+c}}.
 
 Here is the caller graph for this function\+:
-% FIG 122
+% FIG 131
 \mbox{\Hypertarget{rxns_8h_ab035a7b5e3990e133d055b13cbd74a08}\label{rxns_8h_ab035a7b5e3990e133d055b13cbd74a08}} 
 \index{rxns.h@{rxns.h}!rxn\_troe\_update\_ids@{rxn\_troe\_update\_ids}}
 \index{rxn\_troe\_update\_ids@{rxn\_troe\_update\_ids}!rxns.h@{rxns.h}}
@@ -2531,9 +2753,9 @@ Update the time derivative and Jacbobian array indices.
 Definition at line \mbox{\hyperlink{rxn__troe_8c_source_l00072}{72}} of file \mbox{\hyperlink{rxn__troe_8c_source}{rxn\+\_\+troe.\+c}}.
 
 Here is the call graph for this function\+:
-% FIG 123
+% FIG 132
 Here is the caller graph for this function\+:
-% FIG 124
+% FIG 133
 \mbox{\Hypertarget{rxns_8h_affb30a43f6e32c34d3c4fba241d57b3e}\label{rxns_8h_affb30a43f6e32c34d3c4fba241d57b3e}} 
 \index{rxns.h@{rxns.h}!rxn\_wennberg\_no\_ro2\_calc\_deriv\_contrib@{rxn\_wennberg\_no\_ro2\_calc\_deriv\_contrib}}
 \index{rxn\_wennberg\_no\_ro2\_calc\_deriv\_contrib@{rxn\_wennberg\_no\_ro2\_calc\_deriv\_contrib}!rxns.h@{rxns.h}}
@@ -2541,7 +2763,7 @@ Here is the caller graph for this function\+:
 {\footnotesize\ttfamily void rxn\+\_\+wennberg\+\_\+no\+\_\+ro2\+\_\+calc\+\_\+deriv\+\_\+contrib (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{\mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}}}]{time\+\_\+deriv,  }\item[{int $\ast$}]{rxn\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+env\+\_\+data,  }\item[{realtype}]{time\+\_\+step }\end{DoxyParamCaption})}
 
 Here is the caller graph for this function\+:
-% FIG 125
+% FIG 134
 \mbox{\Hypertarget{rxns_8h_ae08ec58e30aea84e496cc2d253b34802}\label{rxns_8h_ae08ec58e30aea84e496cc2d253b34802}} 
 \index{rxns.h@{rxns.h}!rxn\_wennberg\_no\_ro2\_calc\_jac\_contrib@{rxn\_wennberg\_no\_ro2\_calc\_jac\_contrib}}
 \index{rxn\_wennberg\_no\_ro2\_calc\_jac\_contrib@{rxn\_wennberg\_no\_ro2\_calc\_jac\_contrib}!rxns.h@{rxns.h}}
@@ -2549,7 +2771,7 @@ Here is the caller graph for this function\+:
 {\footnotesize\ttfamily void rxn\+\_\+wennberg\+\_\+no\+\_\+ro2\+\_\+calc\+\_\+jac\+\_\+contrib (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}}}]{jac,  }\item[{int $\ast$}]{rxn\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+env\+\_\+data,  }\item[{realtype}]{time\+\_\+step }\end{DoxyParamCaption})}
 
 Here is the caller graph for this function\+:
-% FIG 126
+% FIG 135
 \mbox{\Hypertarget{rxns_8h_abcd0c7ff03eeff405075624f34a77d4b}\label{rxns_8h_abcd0c7ff03eeff405075624f34a77d4b}} 
 \index{rxns.h@{rxns.h}!rxn\_wennberg\_no\_ro2\_create\_rate\_update\_data@{rxn\_wennberg\_no\_ro2\_create\_rate\_update\_data}}
 \index{rxn\_wennberg\_no\_ro2\_create\_rate\_update\_data@{rxn\_wennberg\_no\_ro2\_create\_rate\_update\_data}!rxns.h@{rxns.h}}
@@ -2580,9 +2802,9 @@ Flag \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used by this reaction
 Definition at line \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_source_l00050}{50}} of file \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_source}{rxn\+\_\+wennberg\+\_\+no\+\_\+ro2.\+c}}.
 
 Here is the call graph for this function\+:
-% FIG 127
+% FIG 136
 Here is the caller graph for this function\+:
-% FIG 128
+% FIG 137
 \mbox{\Hypertarget{rxns_8h_af1a2cd28e8838e7123ad9ecac5e13c7c}\label{rxns_8h_af1a2cd28e8838e7123ad9ecac5e13c7c}} 
 \index{rxns.h@{rxns.h}!rxn\_wennberg\_no\_ro2\_print@{rxn\_wennberg\_no\_ro2\_print}}
 \index{rxn\_wennberg\_no\_ro2\_print@{rxn\_wennberg\_no\_ro2\_print}!rxns.h@{rxns.h}}
@@ -2605,7 +2827,7 @@ Print the Wennberg NO + RO2 reaction parameters.
 Definition at line \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_source_l00278}{278}} of file \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_source}{rxn\+\_\+wennberg\+\_\+no\+\_\+ro2.\+c}}.
 
 Here is the caller graph for this function\+:
-% FIG 129
+% FIG 138
 \mbox{\Hypertarget{rxns_8h_a359e9571cf50558416783ffb3e46b2b5}\label{rxns_8h_a359e9571cf50558416783ffb3e46b2b5}} 
 \index{rxns.h@{rxns.h}!rxn\_wennberg\_no\_ro2\_set\_rate\_update\_data@{rxn\_wennberg\_no\_ro2\_set\_rate\_update\_data}}
 \index{rxn\_wennberg\_no\_ro2\_set\_rate\_update\_data@{rxn\_wennberg\_no\_ro2\_set\_rate\_update\_data}!rxns.h@{rxns.h}}
@@ -2646,9 +2868,9 @@ For Wennberg NO + RO2 reaction this only involves recalculating the rate constan
 Definition at line \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_source_l00129}{129}} of file \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_source}{rxn\+\_\+wennberg\+\_\+no\+\_\+ro2.\+c}}.
 
 Here is the call graph for this function\+:
-% FIG 130
+% FIG 139
 Here is the caller graph for this function\+:
-% FIG 131
+% FIG 140
 \mbox{\Hypertarget{rxns_8h_ac00a498c0e68bb445a5ca2cba0c17d32}\label{rxns_8h_ac00a498c0e68bb445a5ca2cba0c17d32}} 
 \index{rxns.h@{rxns.h}!rxn\_wennberg\_no\_ro2\_update\_ids@{rxn\_wennberg\_no\_ro2\_update\_ids}}
 \index{rxn\_wennberg\_no\_ro2\_update\_ids@{rxn\_wennberg\_no\_ro2\_update\_ids}!rxns.h@{rxns.h}}
@@ -2677,9 +2899,9 @@ Update the time derivative and Jacbobian array indices.
 Definition at line \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_source_l00076}{76}} of file \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_source}{rxn\+\_\+wennberg\+\_\+no\+\_\+ro2.\+c}}.
 
 Here is the call graph for this function\+:
-% FIG 132
+% FIG 141
 Here is the caller graph for this function\+:
-% FIG 133
+% FIG 142
 \mbox{\Hypertarget{rxns_8h_aaf3a4bd00b50344e978728d2bf6af6d0}\label{rxns_8h_aaf3a4bd00b50344e978728d2bf6af6d0}} 
 \index{rxns.h@{rxns.h}!rxn\_wennberg\_tunneling\_calc\_deriv\_contrib@{rxn\_wennberg\_tunneling\_calc\_deriv\_contrib}}
 \index{rxn\_wennberg\_tunneling\_calc\_deriv\_contrib@{rxn\_wennberg\_tunneling\_calc\_deriv\_contrib}!rxns.h@{rxns.h}}
@@ -2687,7 +2909,7 @@ Here is the caller graph for this function\+:
 {\footnotesize\ttfamily void rxn\+\_\+wennberg\+\_\+tunneling\+\_\+calc\+\_\+deriv\+\_\+contrib (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{\mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}}}]{time\+\_\+deriv,  }\item[{int $\ast$}]{rxn\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+env\+\_\+data,  }\item[{realtype}]{time\+\_\+step }\end{DoxyParamCaption})}
 
 Here is the caller graph for this function\+:
-% FIG 134
+% FIG 143
 \mbox{\Hypertarget{rxns_8h_ac1f9c72aea45cd152bdcc765fd486868}\label{rxns_8h_ac1f9c72aea45cd152bdcc765fd486868}} 
 \index{rxns.h@{rxns.h}!rxn\_wennberg\_tunneling\_calc\_jac\_contrib@{rxn\_wennberg\_tunneling\_calc\_jac\_contrib}}
 \index{rxn\_wennberg\_tunneling\_calc\_jac\_contrib@{rxn\_wennberg\_tunneling\_calc\_jac\_contrib}!rxns.h@{rxns.h}}
@@ -2695,7 +2917,7 @@ Here is the caller graph for this function\+:
 {\footnotesize\ttfamily void rxn\+\_\+wennberg\+\_\+tunneling\+\_\+calc\+\_\+jac\+\_\+contrib (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}}}]{jac,  }\item[{int $\ast$}]{rxn\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+env\+\_\+data,  }\item[{realtype}]{time\+\_\+step }\end{DoxyParamCaption})}
 
 Here is the caller graph for this function\+:
-% FIG 135
+% FIG 144
 \mbox{\Hypertarget{rxns_8h_a5f9603da2ef28b44e2831e85bdd53d14}\label{rxns_8h_a5f9603da2ef28b44e2831e85bdd53d14}} 
 \index{rxns.h@{rxns.h}!rxn\_wennberg\_tunneling\_create\_rate\_update\_data@{rxn\_wennberg\_tunneling\_create\_rate\_update\_data}}
 \index{rxn\_wennberg\_tunneling\_create\_rate\_update\_data@{rxn\_wennberg\_tunneling\_create\_rate\_update\_data}!rxns.h@{rxns.h}}
@@ -2726,9 +2948,9 @@ Flag \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used by this reaction
 Definition at line \mbox{\hyperlink{rxn__wennberg__tunneling_8c_source_l00043}{43}} of file \mbox{\hyperlink{rxn__wennberg__tunneling_8c_source}{rxn\+\_\+wennberg\+\_\+tunneling.\+c}}.
 
 Here is the call graph for this function\+:
-% FIG 136
+% FIG 145
 Here is the caller graph for this function\+:
-% FIG 137
+% FIG 146
 \mbox{\Hypertarget{rxns_8h_a5dc7a10331318cd9f6d0d52381a4fb3c}\label{rxns_8h_a5dc7a10331318cd9f6d0d52381a4fb3c}} 
 \index{rxns.h@{rxns.h}!rxn\_wennberg\_tunneling\_print@{rxn\_wennberg\_tunneling\_print}}
 \index{rxn\_wennberg\_tunneling\_print@{rxn\_wennberg\_tunneling\_print}!rxns.h@{rxns.h}}
@@ -2751,7 +2973,7 @@ Print the Wennberg tunneling reaction parameters.
 Definition at line \mbox{\hyperlink{rxn__wennberg__tunneling_8c_source_l00221}{221}} of file \mbox{\hyperlink{rxn__wennberg__tunneling_8c_source}{rxn\+\_\+wennberg\+\_\+tunneling.\+c}}.
 
 Here is the caller graph for this function\+:
-% FIG 138
+% FIG 147
 \mbox{\Hypertarget{rxns_8h_a3e4076f4efa015b88cd724f5eb84e35c}\label{rxns_8h_a3e4076f4efa015b88cd724f5eb84e35c}} 
 \index{rxns.h@{rxns.h}!rxn\_wennberg\_tunneling\_set\_rate\_update\_data@{rxn\_wennberg\_tunneling\_set\_rate\_update\_data}}
 \index{rxn\_wennberg\_tunneling\_set\_rate\_update\_data@{rxn\_wennberg\_tunneling\_set\_rate\_update\_data}!rxns.h@{rxns.h}}
@@ -2792,7 +3014,7 @@ For Wennberg tunneling reaction this only involves recalculating the rate consta
 Definition at line \mbox{\hyperlink{rxn__wennberg__tunneling_8c_source_l00103}{103}} of file \mbox{\hyperlink{rxn__wennberg__tunneling_8c_source}{rxn\+\_\+wennberg\+\_\+tunneling.\+c}}.
 
 Here is the caller graph for this function\+:
-% FIG 139
+% FIG 148
 \mbox{\Hypertarget{rxns_8h_a5ba7b78cf14b1666503736ae442912a9}\label{rxns_8h_a5ba7b78cf14b1666503736ae442912a9}} 
 \index{rxns.h@{rxns.h}!rxn\_wennberg\_tunneling\_update\_ids@{rxn\_wennberg\_tunneling\_update\_ids}}
 \index{rxn\_wennberg\_tunneling\_update\_ids@{rxn\_wennberg\_tunneling\_update\_ids}!rxns.h@{rxns.h}}
@@ -2821,9 +3043,9 @@ Update the time derivative and Jacbobian array indices.
 Definition at line \mbox{\hyperlink{rxn__wennberg__tunneling_8c_source_l00069}{69}} of file \mbox{\hyperlink{rxn__wennberg__tunneling_8c_source}{rxn\+\_\+wennberg\+\_\+tunneling.\+c}}.
 
 Here is the call graph for this function\+:
-% FIG 140
+% FIG 149
 Here is the caller graph for this function\+:
-% FIG 141
+% FIG 150
 \mbox{\Hypertarget{rxns_8h_a6aec5e3d4cbb3a9e0d993a1780c42ecd}\label{rxns_8h_a6aec5e3d4cbb3a9e0d993a1780c42ecd}} 
 \index{rxns.h@{rxns.h}!rxn\_wet\_deposition\_calc\_deriv\_contrib@{rxn\_wet\_deposition\_calc\_deriv\_contrib}}
 \index{rxn\_wet\_deposition\_calc\_deriv\_contrib@{rxn\_wet\_deposition\_calc\_deriv\_contrib}!rxns.h@{rxns.h}}
@@ -2854,9 +3076,9 @@ Calculate contributions to the time derivative $f(t,y)$ from this reaction.
 Definition at line \mbox{\hyperlink{rxn__wet__deposition_8c_source_l00149}{149}} of file \mbox{\hyperlink{rxn__wet__deposition_8c_source}{rxn\+\_\+wet\+\_\+deposition.\+c}}.
 
 Here is the call graph for this function\+:
-% FIG 142
+% FIG 151
 Here is the caller graph for this function\+:
-% FIG 143
+% FIG 152
 \mbox{\Hypertarget{rxns_8h_ad84c0373895c3b2bfad55408c9066f16}\label{rxns_8h_ad84c0373895c3b2bfad55408c9066f16}} 
 \index{rxns.h@{rxns.h}!rxn\_wet\_deposition\_calc\_jac\_contrib@{rxn\_wet\_deposition\_calc\_jac\_contrib}}
 \index{rxn\_wet\_deposition\_calc\_jac\_contrib@{rxn\_wet\_deposition\_calc\_jac\_contrib}!rxns.h@{rxns.h}}
@@ -2887,9 +3109,9 @@ Calculate contributions to the \mbox{\hyperlink{struct_jacobian}{Jacobian}} from
 Definition at line \mbox{\hyperlink{rxn__wet__deposition_8c_source_l00179}{179}} of file \mbox{\hyperlink{rxn__wet__deposition_8c_source}{rxn\+\_\+wet\+\_\+deposition.\+c}}.
 
 Here is the call graph for this function\+:
-% FIG 144
+% FIG 153
 Here is the caller graph for this function\+:
-% FIG 145
+% FIG 154
 \mbox{\Hypertarget{rxns_8h_a3a2d565e303d68e825fdea7fa7c884c3}\label{rxns_8h_a3a2d565e303d68e825fdea7fa7c884c3}} 
 \index{rxns.h@{rxns.h}!rxn\_wet\_deposition\_create\_rate\_update\_data@{rxn\_wet\_deposition\_create\_rate\_update\_data}}
 \index{rxn\_wet\_deposition\_create\_rate\_update\_data@{rxn\_wet\_deposition\_create\_rate\_update\_data}!rxns.h@{rxns.h}}
@@ -2931,9 +3153,9 @@ Flag \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used by this reaction
 Definition at line \mbox{\hyperlink{rxn__wet__deposition_8c_source_l00038}{38}} of file \mbox{\hyperlink{rxn__wet__deposition_8c_source}{rxn\+\_\+wet\+\_\+deposition.\+c}}.
 
 Here is the call graph for this function\+:
-% FIG 146
+% FIG 155
 Here is the caller graph for this function\+:
-% FIG 147
+% FIG 156
 \mbox{\Hypertarget{rxns_8h_a76a5bf8613ce3116db76b077f0c15382}\label{rxns_8h_a76a5bf8613ce3116db76b077f0c15382}} 
 \index{rxns.h@{rxns.h}!rxn\_wet\_deposition\_print@{rxn\_wet\_deposition\_print}}
 \index{rxn\_wet\_deposition\_print@{rxn\_wet\_deposition\_print}!rxns.h@{rxns.h}}
@@ -2956,7 +3178,7 @@ Print the reaction parameters.
 Definition at line \mbox{\hyperlink{rxn__wet__deposition_8c_source_l00205}{205}} of file \mbox{\hyperlink{rxn__wet__deposition_8c_source}{rxn\+\_\+wet\+\_\+deposition.\+c}}.
 
 Here is the caller graph for this function\+:
-% FIG 148
+% FIG 157
 \mbox{\Hypertarget{rxns_8h_ae689f16722acdff103f2b0570847b564}\label{rxns_8h_ae689f16722acdff103f2b0570847b564}} 
 \index{rxns.h@{rxns.h}!rxn\_wet\_deposition\_set\_rate\_update\_data@{rxn\_wet\_deposition\_set\_rate\_update\_data}}
 \index{rxn\_wet\_deposition\_set\_rate\_update\_data@{rxn\_wet\_deposition\_set\_rate\_update\_data}!rxns.h@{rxns.h}}
@@ -3017,7 +3239,7 @@ Flag indicating whether this is the reaction to update
 Definition at line \mbox{\hyperlink{rxn__wet__deposition_8c_source_l00095}{95}} of file \mbox{\hyperlink{rxn__wet__deposition_8c_source}{rxn\+\_\+wet\+\_\+deposition.\+c}}.
 
 Here is the caller graph for this function\+:
-% FIG 149
+% FIG 158
 \mbox{\Hypertarget{rxns_8h_a639ae40ecdc8940c3c36a240738092df}\label{rxns_8h_a639ae40ecdc8940c3c36a240738092df}} 
 \index{rxns.h@{rxns.h}!rxn\_wet\_deposition\_update\_env\_state@{rxn\_wet\_deposition\_update\_env\_state}}
 \index{rxn\_wet\_deposition\_update\_env\_state@{rxn\_wet\_deposition\_update\_env\_state}!rxns.h@{rxns.h}}
@@ -3046,7 +3268,7 @@ For wet deposition reactions this only involves recalculating the rate constant.
 Definition at line \mbox{\hyperlink{rxn__wet__deposition_8c_source_l00124}{124}} of file \mbox{\hyperlink{rxn__wet__deposition_8c_source}{rxn\+\_\+wet\+\_\+deposition.\+c}}.
 
 Here is the caller graph for this function\+:
-% FIG 150
+% FIG 159
 \mbox{\Hypertarget{rxns_8h_a544634ece257f580b822e9851e37b73d}\label{rxns_8h_a544634ece257f580b822e9851e37b73d}} 
 \index{rxns.h@{rxns.h}!rxn\_wet\_deposition\_update\_ids@{rxn\_wet\_deposition\_update\_ids}}
 \index{rxn\_wet\_deposition\_update\_ids@{rxn\_wet\_deposition\_update\_ids}!rxns.h@{rxns.h}}
@@ -3075,6 +3297,6 @@ Update the time derivative and Jacbobian array indices.
 Definition at line \mbox{\hyperlink{rxn__wet__deposition_8c_source_l00059}{59}} of file \mbox{\hyperlink{rxn__wet__deposition_8c_source}{rxn\+\_\+wet\+\_\+deposition.\+c}}.
 
 Here is the call graph for this function\+:
-% FIG 151
+% FIG 160
 Here is the caller graph for this function\+:
-% FIG 152
+% FIG 161

@@ -1,0 +1,156 @@
+\hypertarget{structcamp__rxn__condensed__phase__photolysis_1_1rxn__update__data__condensed__phase__photolysis__t}{}\doxysection{camp\+\_\+rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+::rxn\+\_\+update\+\_\+data\+\_\+condensed\+\_\+phase\+\_\+photolysis\+\_\+t Type Reference}
+\label{structcamp__rxn__condensed__phase__photolysis_1_1rxn__update__data__condensed__phase__photolysis__t}\index{camp\_rxn\_condensed\_phase\_photolysis::rxn\_update\_data\_condensed\_phase\_photolysis\_t@{camp\_rxn\_condensed\_phase\_photolysis::rxn\_update\_data\_condensed\_phase\_photolysis\_t}}
+
+
+Condensed-\/phase Photolysis rate update object.  
+
+
+
+
+Inheritance diagram for camp\+\_\+rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+::rxn\+\_\+update\+\_\+data\+\_\+condensed\+\_\+phase\+\_\+photolysis\+\_\+t\+:
+% FIG 0
+
+
+Collaboration diagram for camp\+\_\+rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+::rxn\+\_\+update\+\_\+data\+\_\+condensed\+\_\+phase\+\_\+photolysis\+\_\+t\+:
+% FIG 1
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+procedure \mbox{\hyperlink{structcamp__rxn__condensed__phase__photolysis_1_1rxn__update__data__condensed__phase__photolysis__t_a2250827526cb054ab32f9058d98087a1}{set\+\_\+rate}} =$>$ \mbox{\hyperlink{namespacecamp__rxn__condensed__phase__photolysis_ae70f9b706dc52f1be044d2aedd2dad22}{update\+\_\+data\+\_\+rate\+\_\+set}}
+\begin{DoxyCompactList}\small\item\em Update the rate data. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__rxn__condensed__phase__photolysis_1_1rxn__update__data__condensed__phase__photolysis__t_aec366ea3bef7b4f8a70588ed1fd87234}{internal\+\_\+pack\+\_\+size}}
+\begin{DoxyCompactList}\small\item\em Determine the pack size of the local update data. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__rxn__condensed__phase__photolysis_1_1rxn__update__data__condensed__phase__photolysis__t_a98be2580764873e7f1cc6800ace72c80}{internal\+\_\+bin\+\_\+pack}}
+\begin{DoxyCompactList}\small\item\em Pack the local update data to a binary. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__rxn__condensed__phase__photolysis_1_1rxn__update__data__condensed__phase__photolysis__t_a433ef0d7ff7170f047c8bfe9e37e7d4d}{internal\+\_\+bin\+\_\+unpack}}
+\begin{DoxyCompactList}\small\item\em Unpack the local update data from a binary. \end{DoxyCompactList}\item 
+final \mbox{\hyperlink{structcamp__rxn__condensed__phase__photolysis_1_1rxn__update__data__condensed__phase__photolysis__t_ad01a56d0993dd7997253e220af851975}{update\+\_\+data\+\_\+finalize}}
+\begin{DoxyCompactList}\small\item\em Finalize the rate update data. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+integer(kind=i\+\_\+kind) \mbox{\hyperlink{structcamp__rxn__condensed__phase__photolysis_1_1rxn__update__data__condensed__phase__photolysis__t_a3db50b7a62ec93d83fff08cfe59bf92d}{rxn\+\_\+unique\+\_\+id}} = 0
+\begin{DoxyCompactList}\small\item\em Unique id for finding reactions during model initialization. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+logical \mbox{\hyperlink{structcamp__rxn__condensed__phase__photolysis_1_1rxn__update__data__condensed__phase__photolysis__t_a7647b08100ff4a84852624281ff3c2b0}{is\+\_\+malloced}} = .false.
+\begin{DoxyCompactList}\small\item\em Flag indicating whether the update data as been allocated. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Condensed-\/phase Photolysis rate update object. 
+
+Definition at line \mbox{\hyperlink{rxn__condensed__phase__photolysis_8_f90_source_l00117}{117}} of file \mbox{\hyperlink{rxn__condensed__phase__photolysis_8_f90_source}{rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis.\+F90}}.
+
+
+
+\doxysubsection{Member Function/\+Subroutine Documentation}
+\mbox{\Hypertarget{structcamp__rxn__condensed__phase__photolysis_1_1rxn__update__data__condensed__phase__photolysis__t_a98be2580764873e7f1cc6800ace72c80}\label{structcamp__rxn__condensed__phase__photolysis_1_1rxn__update__data__condensed__phase__photolysis__t_a98be2580764873e7f1cc6800ace72c80}} 
+\index{camp\_rxn\_condensed\_phase\_photolysis::rxn\_update\_data\_condensed\_phase\_photolysis\_t@{camp\_rxn\_condensed\_phase\_photolysis::rxn\_update\_data\_condensed\_phase\_photolysis\_t}!internal\_bin\_pack@{internal\_bin\_pack}}
+\index{internal\_bin\_pack@{internal\_bin\_pack}!camp\_rxn\_condensed\_phase\_photolysis::rxn\_update\_data\_condensed\_phase\_photolysis\_t@{camp\_rxn\_condensed\_phase\_photolysis::rxn\_update\_data\_condensed\_phase\_photolysis\_t}}
+\doxysubsubsection{\texorpdfstring{internal\_bin\_pack()}{internal\_bin\_pack()}}
+{\footnotesize\ttfamily procedure camp\+\_\+rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+::rxn\+\_\+update\+\_\+data\+\_\+condensed\+\_\+phase\+\_\+photolysis\+\_\+t\+::internal\+\_\+bin\+\_\+pack}
+
+
+
+Pack the local update data to a binary. 
+
+
+
+Definition at line \mbox{\hyperlink{rxn__condensed__phase__photolysis_8_f90_source_l00129}{129}} of file \mbox{\hyperlink{rxn__condensed__phase__photolysis_8_f90_source}{rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis.\+F90}}.
+
+\mbox{\Hypertarget{structcamp__rxn__condensed__phase__photolysis_1_1rxn__update__data__condensed__phase__photolysis__t_a433ef0d7ff7170f047c8bfe9e37e7d4d}\label{structcamp__rxn__condensed__phase__photolysis_1_1rxn__update__data__condensed__phase__photolysis__t_a433ef0d7ff7170f047c8bfe9e37e7d4d}} 
+\index{camp\_rxn\_condensed\_phase\_photolysis::rxn\_update\_data\_condensed\_phase\_photolysis\_t@{camp\_rxn\_condensed\_phase\_photolysis::rxn\_update\_data\_condensed\_phase\_photolysis\_t}!internal\_bin\_unpack@{internal\_bin\_unpack}}
+\index{internal\_bin\_unpack@{internal\_bin\_unpack}!camp\_rxn\_condensed\_phase\_photolysis::rxn\_update\_data\_condensed\_phase\_photolysis\_t@{camp\_rxn\_condensed\_phase\_photolysis::rxn\_update\_data\_condensed\_phase\_photolysis\_t}}
+\doxysubsubsection{\texorpdfstring{internal\_bin\_unpack()}{internal\_bin\_unpack()}}
+{\footnotesize\ttfamily procedure camp\+\_\+rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+::rxn\+\_\+update\+\_\+data\+\_\+condensed\+\_\+phase\+\_\+photolysis\+\_\+t\+::internal\+\_\+bin\+\_\+unpack}
+
+
+
+Unpack the local update data from a binary. 
+
+
+
+Definition at line \mbox{\hyperlink{rxn__condensed__phase__photolysis_8_f90_source_l00131}{131}} of file \mbox{\hyperlink{rxn__condensed__phase__photolysis_8_f90_source}{rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis.\+F90}}.
+
+\mbox{\Hypertarget{structcamp__rxn__condensed__phase__photolysis_1_1rxn__update__data__condensed__phase__photolysis__t_aec366ea3bef7b4f8a70588ed1fd87234}\label{structcamp__rxn__condensed__phase__photolysis_1_1rxn__update__data__condensed__phase__photolysis__t_aec366ea3bef7b4f8a70588ed1fd87234}} 
+\index{camp\_rxn\_condensed\_phase\_photolysis::rxn\_update\_data\_condensed\_phase\_photolysis\_t@{camp\_rxn\_condensed\_phase\_photolysis::rxn\_update\_data\_condensed\_phase\_photolysis\_t}!internal\_pack\_size@{internal\_pack\_size}}
+\index{internal\_pack\_size@{internal\_pack\_size}!camp\_rxn\_condensed\_phase\_photolysis::rxn\_update\_data\_condensed\_phase\_photolysis\_t@{camp\_rxn\_condensed\_phase\_photolysis::rxn\_update\_data\_condensed\_phase\_photolysis\_t}}
+\doxysubsubsection{\texorpdfstring{internal\_pack\_size()}{internal\_pack\_size()}}
+{\footnotesize\ttfamily procedure camp\+\_\+rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+::rxn\+\_\+update\+\_\+data\+\_\+condensed\+\_\+phase\+\_\+photolysis\+\_\+t\+::internal\+\_\+pack\+\_\+size}
+
+
+
+Determine the pack size of the local update data. 
+
+
+
+Definition at line \mbox{\hyperlink{rxn__condensed__phase__photolysis_8_f90_source_l00127}{127}} of file \mbox{\hyperlink{rxn__condensed__phase__photolysis_8_f90_source}{rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis.\+F90}}.
+
+\mbox{\Hypertarget{structcamp__rxn__condensed__phase__photolysis_1_1rxn__update__data__condensed__phase__photolysis__t_a2250827526cb054ab32f9058d98087a1}\label{structcamp__rxn__condensed__phase__photolysis_1_1rxn__update__data__condensed__phase__photolysis__t_a2250827526cb054ab32f9058d98087a1}} 
+\index{camp\_rxn\_condensed\_phase\_photolysis::rxn\_update\_data\_condensed\_phase\_photolysis\_t@{camp\_rxn\_condensed\_phase\_photolysis::rxn\_update\_data\_condensed\_phase\_photolysis\_t}!set\_rate@{set\_rate}}
+\index{set\_rate@{set\_rate}!camp\_rxn\_condensed\_phase\_photolysis::rxn\_update\_data\_condensed\_phase\_photolysis\_t@{camp\_rxn\_condensed\_phase\_photolysis::rxn\_update\_data\_condensed\_phase\_photolysis\_t}}
+\doxysubsubsection{\texorpdfstring{set\_rate()}{set\_rate()}}
+{\footnotesize\ttfamily procedure camp\+\_\+rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+::rxn\+\_\+update\+\_\+data\+\_\+condensed\+\_\+phase\+\_\+photolysis\+\_\+t\+::set\+\_\+rate}
+
+
+
+Update the rate data. 
+
+
+
+Definition at line \mbox{\hyperlink{rxn__condensed__phase__photolysis_8_f90_source_l00125}{125}} of file \mbox{\hyperlink{rxn__condensed__phase__photolysis_8_f90_source}{rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis.\+F90}}.
+
+\mbox{\Hypertarget{structcamp__rxn__condensed__phase__photolysis_1_1rxn__update__data__condensed__phase__photolysis__t_ad01a56d0993dd7997253e220af851975}\label{structcamp__rxn__condensed__phase__photolysis_1_1rxn__update__data__condensed__phase__photolysis__t_ad01a56d0993dd7997253e220af851975}} 
+\index{camp\_rxn\_condensed\_phase\_photolysis::rxn\_update\_data\_condensed\_phase\_photolysis\_t@{camp\_rxn\_condensed\_phase\_photolysis::rxn\_update\_data\_condensed\_phase\_photolysis\_t}!update\_data\_finalize@{update\_data\_finalize}}
+\index{update\_data\_finalize@{update\_data\_finalize}!camp\_rxn\_condensed\_phase\_photolysis::rxn\_update\_data\_condensed\_phase\_photolysis\_t@{camp\_rxn\_condensed\_phase\_photolysis::rxn\_update\_data\_condensed\_phase\_photolysis\_t}}
+\doxysubsubsection{\texorpdfstring{update\_data\_finalize()}{update\_data\_finalize()}}
+{\footnotesize\ttfamily final camp\+\_\+rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+::rxn\+\_\+update\+\_\+data\+\_\+condensed\+\_\+phase\+\_\+photolysis\+\_\+t\+::update\+\_\+data\+\_\+finalize\hspace{0.3cm}{\ttfamily [final]}}
+
+
+
+Finalize the rate update data. 
+
+
+
+Definition at line \mbox{\hyperlink{rxn__condensed__phase__photolysis_8_f90_source_l00133}{133}} of file \mbox{\hyperlink{rxn__condensed__phase__photolysis_8_f90_source}{rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis.\+F90}}.
+
+Here is the call graph for this function\+:
+% FIG 2
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{structcamp__rxn__condensed__phase__photolysis_1_1rxn__update__data__condensed__phase__photolysis__t_a7647b08100ff4a84852624281ff3c2b0}\label{structcamp__rxn__condensed__phase__photolysis_1_1rxn__update__data__condensed__phase__photolysis__t_a7647b08100ff4a84852624281ff3c2b0}} 
+\index{camp\_rxn\_condensed\_phase\_photolysis::rxn\_update\_data\_condensed\_phase\_photolysis\_t@{camp\_rxn\_condensed\_phase\_photolysis::rxn\_update\_data\_condensed\_phase\_photolysis\_t}!is\_malloced@{is\_malloced}}
+\index{is\_malloced@{is\_malloced}!camp\_rxn\_condensed\_phase\_photolysis::rxn\_update\_data\_condensed\_phase\_photolysis\_t@{camp\_rxn\_condensed\_phase\_photolysis::rxn\_update\_data\_condensed\_phase\_photolysis\_t}}
+\doxysubsubsection{\texorpdfstring{is\_malloced}{is\_malloced}}
+{\footnotesize\ttfamily logical camp\+\_\+rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+::rxn\+\_\+update\+\_\+data\+\_\+condensed\+\_\+phase\+\_\+photolysis\+\_\+t\+::is\+\_\+malloced = .false.\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Flag indicating whether the update data as been allocated. 
+
+
+
+Definition at line \mbox{\hyperlink{rxn__condensed__phase__photolysis_8_f90_source_l00120}{120}} of file \mbox{\hyperlink{rxn__condensed__phase__photolysis_8_f90_source}{rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis.\+F90}}.
+
+\mbox{\Hypertarget{structcamp__rxn__condensed__phase__photolysis_1_1rxn__update__data__condensed__phase__photolysis__t_a3db50b7a62ec93d83fff08cfe59bf92d}\label{structcamp__rxn__condensed__phase__photolysis_1_1rxn__update__data__condensed__phase__photolysis__t_a3db50b7a62ec93d83fff08cfe59bf92d}} 
+\index{camp\_rxn\_condensed\_phase\_photolysis::rxn\_update\_data\_condensed\_phase\_photolysis\_t@{camp\_rxn\_condensed\_phase\_photolysis::rxn\_update\_data\_condensed\_phase\_photolysis\_t}!rxn\_unique\_id@{rxn\_unique\_id}}
+\index{rxn\_unique\_id@{rxn\_unique\_id}!camp\_rxn\_condensed\_phase\_photolysis::rxn\_update\_data\_condensed\_phase\_photolysis\_t@{camp\_rxn\_condensed\_phase\_photolysis::rxn\_update\_data\_condensed\_phase\_photolysis\_t}}
+\doxysubsubsection{\texorpdfstring{rxn\_unique\_id}{rxn\_unique\_id}}
+{\footnotesize\ttfamily integer(kind=i\+\_\+kind) camp\+\_\+rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+::rxn\+\_\+update\+\_\+data\+\_\+condensed\+\_\+phase\+\_\+photolysis\+\_\+t\+::rxn\+\_\+unique\+\_\+id = 0}
+
+
+
+Unique id for finding reactions during model initialization. 
+
+
+
+Definition at line \mbox{\hyperlink{rxn__condensed__phase__photolysis_8_f90_source_l00122}{122}} of file \mbox{\hyperlink{rxn__condensed__phase__photolysis_8_f90_source}{rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis.\+F90}}.
+
+
+
+The documentation for this type was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{rxn__condensed__phase__photolysis_8_f90}{rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis.\+F90}}\end{DoxyCompactItemize}

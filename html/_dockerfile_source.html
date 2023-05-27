@@ -51,7 +51,7 @@ $(function() {
   <div class="headertitle"><div class="title">Dockerfile</div></div>
 </div><!--header-->
 <div class="contents">
-<a href="_dockerfile.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span>FROM fedora:27</div>
+<a href="_dockerfile.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span>FROM fedora:37</div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span> </div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span>RUN dnf -y update \</div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span>    &amp;&amp; dnf -y install \</div>
@@ -82,11 +82,11 @@ $(function() {
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    &amp;&amp; cmake -D SKIP_DOC_GEN:BOOL=TRUE .. \</div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>    &amp;&amp; make install</div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span># copy CAMP source code and data</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>COPY . /camp/</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span># copy CVODE source</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>COPY cvode-3.4-alpha.tar.gz /cvode-3.4-alpha.tar.gz</div>
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span> </div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span># Install a modified version of CVODE</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>RUN tar -zxvf /camp/cvode-3.4-alpha.tar.gz \</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>RUN tar -zxvf /cvode-3.4-alpha.tar.gz \</div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    &amp;&amp; cd cvode-3.4-alpha \</div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    &amp;&amp; mkdir build \</div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    &amp;&amp; cd build \</div>
@@ -101,21 +101,26 @@ $(function() {
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>             .. \</div>
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    &amp;&amp; make install</div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span># Update environment variables</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>ENV LD_LIBRARY_PATH=&quot;${LD_LIBRARY_PATH}:/usr/local/lib:/usr/local/lib64:/usr/local/jsonfortran-gnu-6.1.0/lib&quot;</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>ENV PATH=&quot;${PATH}:/usr/local/jsonfortran-gnu-6.1.0/lib&quot;</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span># Build CAMP</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span> RUN mkdir build \</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    &amp;&amp; cd build \</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    &amp;&amp; export JSON_FORTRAN_HOME=&quot;/usr/local/jsonfortran-gnu-6.1.0&quot; \</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    &amp;&amp; cmake -D CMAKE_BUILD_TYPE=release \</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>             -D CMAKE_C_FLAGS_DEBUG=&quot;-pg&quot; \</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>             -D CMAKE_Fortran_FLAGS_DEBUG=&quot;-pg&quot; \</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>             -D CMAKE_MODULE_LINKER_FLAGS=&quot;-pg&quot; \</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>             -D ENABLE_GSL:BOOL=TRUE \</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>             /camp \</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    &amp;&amp; make install</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span># copy CAMP source code and data</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>COPY . /camp</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span># Update environment variables</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>ENV LD_LIBRARY_PATH=&quot;${LD_LIBRARY_PATH}:/usr/local/lib:/usr/local/lib64:/usr/local/jsonfortran-gnu-6.1.0/lib&quot;</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>ENV PATH=&quot;${PATH}:/usr/local/jsonfortran-gnu-6.1.0/lib&quot;</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span># Build CAMP</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span> RUN mkdir build \</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    &amp;&amp; cd build \</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    &amp;&amp; export JSON_FORTRAN_HOME=&quot;/usr/local/jsonfortran-gnu-6.1.0&quot; \</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    &amp;&amp; cmake -D CMAKE_BUILD_TYPE=release \</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>             -D CMAKE_C_FLAGS_DEBUG=&quot;-pg&quot; \</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>             -D CMAKE_Fortran_FLAGS_DEBUG=&quot;-pg&quot; \</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>             -D CMAKE_MODULE_LINKER_FLAGS=&quot;-pg&quot; \</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>             -D ENABLE_GSL:BOOL=TRUE \</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>             /camp \</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    &amp;&amp; make install</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span> </div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>WORKDIR /build</div>
 </div><!-- fragment --></div><!-- contents -->
 <hr class="footer"/><address class="footer"><small>
 CAMP 1.0.0 documentation generated by <a href="http://www.doxygen.org/index.html">doxygen</a> 1.9.5</small></address>

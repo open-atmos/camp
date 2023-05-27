@@ -86,7 +86,7 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><img src="rxns_8h__dep__incl.png" border="0" usemap="#arxns_8hdep" alt=""/></div>
 <map name="arxns_8hdep" id="arxns_8hdep">
-<area shape="rect" title="Header file for reaction solver functions." alt="" coords="1457,5,1513,31"/>
+<area shape="rect" title="Header file for reaction solver functions." alt="" coords="1556,5,1612,31"/>
 <area shape="rect" href="rxn___c_m_a_q___h2_o2_8c.html" title="CMAQ_H2O2 reaction solver functions." alt="" coords="5,86,141,111"/>
 <area shape="rect" href="rxn___c_m_a_q___o_h___h_n_o3_8c.html" title="CMAQ_OH_HNO3 reaction solver functions." alt="" coords="166,86,333,111"/>
 <area shape="rect" href="rxn___h_l__phase__transfer_8c.html" title="Phase Transfer reaction solver functions." alt="" coords="357,86,523,111"/>
@@ -94,16 +94,17 @@ This graph shows which files directly or indirectly include this file:</div>
 <area shape="rect" href="rxn__aqueous__equilibrium_8c.html" title="Aqueous Equilibrium reaction solver functions." alt="" coords="773,86,947,111"/>
 <area shape="rect" href="rxn__arrhenius_8c.html" title="Arrhenius reaction solver functions." alt="" coords="972,86,1081,111"/>
 <area shape="rect" href="rxn__condensed__phase__arrhenius_8c.html" title="Condensed Phase Arrhenius reaction solver functions." alt="" coords="1106,79,1257,119"/>
-<area shape="rect" href="rxn__emission_8c.html" title="Emission reaction solver functions." alt="" coords="1281,86,1389,111"/>
-<area shape="rect" href="rxn__first__order__loss_8c.html" title="First&#45;Order loss reaction solver functions." alt="" coords="1413,86,1557,111"/>
-<area shape="rect" href="rxn__photolysis_8c.html" title="Photolysis reaction solver functions." alt="" coords="1581,86,1696,111"/>
-<area shape="rect" href="rxn__solver_8c.html" title="Reaction solver functions." alt="" coords="1720,86,1811,111"/>
-<area shape="rect" href="rxn__surface_8c.html" title="Surface reaction solver functions." alt="" coords="1835,86,1933,111"/>
-<area shape="rect" href="rxn__ternary__chemical__activation_8c.html" title="Ternary Chemical Activation reaction solver functions." alt="" coords="1957,79,2101,119"/>
-<area shape="rect" href="rxn__troe_8c.html" title="Troe reaction solver functions." alt="" coords="2126,86,2205,111"/>
-<area shape="rect" href="rxn__wennberg__no__ro2_8c.html" title="Wennberg NO + RO2 reaction solver functions." alt="" coords="2229,86,2387,111"/>
-<area shape="rect" href="rxn__wennberg__tunneling_8c.html" title="Wennberg tunneling reaction solver functions." alt="" coords="2412,86,2583,111"/>
-<area shape="rect" href="rxn__wet__deposition_8c.html" title="Wet deposition reaction solver functions." alt="" coords="2607,86,2750,111"/>
+<area shape="rect" href="rxn__condensed__phase__photolysis_8c.html" title="Condensed Phase photolysis reaction solver functions." alt="" coords="1281,79,1431,119"/>
+<area shape="rect" href="rxn__emission_8c.html" title="Emission reaction solver functions." alt="" coords="1455,86,1563,111"/>
+<area shape="rect" href="rxn__first__order__loss_8c.html" title="First&#45;Order loss reaction solver functions." alt="" coords="1588,86,1732,111"/>
+<area shape="rect" href="rxn__photolysis_8c.html" title="Photolysis reaction solver functions." alt="" coords="1756,86,1871,111"/>
+<area shape="rect" href="rxn__solver_8c.html" title="Reaction solver functions." alt="" coords="1895,86,1985,111"/>
+<area shape="rect" href="rxn__surface_8c.html" title="Surface reaction solver functions." alt="" coords="2009,86,2108,111"/>
+<area shape="rect" href="rxn__ternary__chemical__activation_8c.html" title="Ternary Chemical Activation reaction solver functions." alt="" coords="2132,79,2276,119"/>
+<area shape="rect" href="rxn__troe_8c.html" title="Troe reaction solver functions." alt="" coords="2301,86,2379,111"/>
+<area shape="rect" href="rxn__wennberg__no__ro2_8c.html" title="Wennberg NO + RO2 reaction solver functions." alt="" coords="2403,86,2562,111"/>
+<area shape="rect" href="rxn__wennberg__tunneling_8c.html" title="Wennberg tunneling reaction solver functions." alt="" coords="2587,86,2757,111"/>
+<area shape="rect" href="rxn__wet__deposition_8c.html" title="Wet deposition reaction solver functions." alt="" coords="2782,86,2925,111"/>
 </map>
 </div>
 </div>
@@ -191,6 +192,31 @@ Functions</h2></td></tr>
 <tr class="separator:a838b8326dbcfa12692ecf289685897a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a213c32e23ab79e40722d07eb9d3a43d0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rxns_8h.html#a213c32e23ab79e40722d07eb9d3a43d0">rxn_condensed_phase_arrhenius_calc_jac_contrib</a> (<a class="el" href="struct_model_data.html">ModelData</a> *model_data, <a class="el" href="struct_jacobian.html">Jacobian</a> jac, int *rxn_int_data, double *rxn_float_data, double *rxn_env_data, realtype time_step)</td></tr>
 <tr class="separator:a213c32e23ab79e40722d07eb9d3a43d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a84c0567001266ea44726aba908ef7ad8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rxns_8h.html#a84c0567001266ea44726aba908ef7ad8">rxn_condensed_phase_photolysis_get_used_jac_elem</a> (int *rxn_int_data, double *rxn_float_data, <a class="el" href="struct_jacobian.html">Jacobian</a> *jac)</td></tr>
+<tr class="memdesc:a84c0567001266ea44726aba908ef7ad8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flag <a class="el" href="struct_jacobian.html">Jacobian</a> elements used by this reaction.  <a href="rxns_8h.html#a84c0567001266ea44726aba908ef7ad8">More...</a><br /></td></tr>
+<tr class="separator:a84c0567001266ea44726aba908ef7ad8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa418e878e03cc2a119b01b2e6d9f0556"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rxns_8h.html#aa418e878e03cc2a119b01b2e6d9f0556">rxn_condensed_phase_photolysis_update_ids</a> (<a class="el" href="struct_model_data.html">ModelData</a> *model_data, int *deriv_ids, <a class="el" href="struct_jacobian.html">Jacobian</a> jac, int *rxn_int_data, double *rxn_float_data)</td></tr>
+<tr class="memdesc:aa418e878e03cc2a119b01b2e6d9f0556"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the time derivative and Jacbobian array indices.  <a href="rxns_8h.html#aa418e878e03cc2a119b01b2e6d9f0556">More...</a><br /></td></tr>
+<tr class="separator:aa418e878e03cc2a119b01b2e6d9f0556"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a78cd0a76091e335b5a34b63caae7eec0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rxns_8h.html#a78cd0a76091e335b5a34b63caae7eec0">rxn_condensed_phase_photolysis_update_env_state</a> (<a class="el" href="struct_model_data.html">ModelData</a> *model_data, int *rxn_int_data, double *rxn_float_data, double *rxn_env_data)</td></tr>
+<tr class="memdesc:a78cd0a76091e335b5a34b63caae7eec0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update reaction data for new environmental conditions.  <a href="rxns_8h.html#a78cd0a76091e335b5a34b63caae7eec0">More...</a><br /></td></tr>
+<tr class="separator:a78cd0a76091e335b5a34b63caae7eec0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a40bd1e295c7eb3d8d84e84bda99497d3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rxns_8h.html#a40bd1e295c7eb3d8d84e84bda99497d3">rxn_condensed_phase_photolysis_print</a> (int *rxn_int_data, double *rxn_float_data)</td></tr>
+<tr class="memdesc:a40bd1e295c7eb3d8d84e84bda99497d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Print the Condensed Phase photolysis reaction parameters.  <a href="rxns_8h.html#a40bd1e295c7eb3d8d84e84bda99497d3">More...</a><br /></td></tr>
+<tr class="separator:a40bd1e295c7eb3d8d84e84bda99497d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae0f542358a2ae57790d3cc2e9ca4c689"><td class="memItemLeft" align="right" valign="top"><a class="el" href="camp__common_8h.html#af6a258d8f3ee5206d682d799316314b1">bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rxns_8h.html#ae0f542358a2ae57790d3cc2e9ca4c689">rxn_condensed_phase_photolysis_update_data</a> (void *update_data, int *rxn_int_data, double *rxn_float_data, double *rxn_env_data)</td></tr>
+<tr class="memdesc:ae0f542358a2ae57790d3cc2e9ca4c689"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update reaction data.  <a href="rxns_8h.html#ae0f542358a2ae57790d3cc2e9ca4c689">More...</a><br /></td></tr>
+<tr class="separator:ae0f542358a2ae57790d3cc2e9ca4c689"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa66217f07fe9eae01f2d6d376e421141"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rxns_8h.html#aa66217f07fe9eae01f2d6d376e421141">rxn_condensed_phase_photolysis_calc_deriv_contrib</a> (<a class="el" href="struct_model_data.html">ModelData</a> *model_data, <a class="el" href="struct_time_derivative.html">TimeDerivative</a> time_deriv, int *rxn_int_data, double *rxn_float_data, double *rxn_env_data, realtype time_step)</td></tr>
+<tr class="separator:aa66217f07fe9eae01f2d6d376e421141"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aac51fc4f01975aa347cead0eb5dc1db3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rxns_8h.html#aac51fc4f01975aa347cead0eb5dc1db3">rxn_condensed_phase_photolysis_calc_jac_contrib</a> (<a class="el" href="struct_model_data.html">ModelData</a> *model_data, <a class="el" href="struct_jacobian.html">Jacobian</a> jac, int *rxn_int_data, double *rxn_float_data, double *rxn_env_data, realtype time_step)</td></tr>
+<tr class="separator:aac51fc4f01975aa347cead0eb5dc1db3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a014ce6da4626f4ecf16d79f420a46788"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rxns_8h.html#a014ce6da4626f4ecf16d79f420a46788">rxn_condensed_phase_photolysis_create_rate_update_data</a> ()</td></tr>
+<tr class="memdesc:a014ce6da4626f4ecf16d79f420a46788"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create update data for new photolysis rates.  <a href="rxns_8h.html#a014ce6da4626f4ecf16d79f420a46788">More...</a><br /></td></tr>
+<tr class="separator:a014ce6da4626f4ecf16d79f420a46788"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7969c154436042094f993ac174043d91"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rxns_8h.html#a7969c154436042094f993ac174043d91">rxn_condensed_phase_photolysis_set_rate_update_data</a> (void *update_data, int photo_id, double base_rate)</td></tr>
+<tr class="memdesc:a7969c154436042094f993ac174043d91"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set rate update data.  <a href="rxns_8h.html#a7969c154436042094f993ac174043d91">More...</a><br /></td></tr>
+<tr class="separator:a7969c154436042094f993ac174043d91"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0ef69ae99efa726d72f8502eb7d18406"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rxns_8h.html#a0ef69ae99efa726d72f8502eb7d18406">rxn_emission_get_used_jac_elem</a> (int *rxn_int_data, double *rxn_float_data, <a class="el" href="struct_jacobian.html">Jacobian</a> *jac)</td></tr>
 <tr class="memdesc:a0ef69ae99efa726d72f8502eb7d18406"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flag <a class="el" href="struct_jacobian.html">Jacobian</a> elements used by this reaction.  <a href="rxns_8h.html#a0ef69ae99efa726d72f8502eb7d18406">More...</a><br /></td></tr>
 <tr class="separator:a0ef69ae99efa726d72f8502eb7d18406"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -2383,6 +2409,533 @@ Here is the caller graph for this function:</div>
 <div class="center"><img src="rxns_8h_ab83f8527d3603f1aab12d721d33eb214_icgraph.png" border="0" usemap="#arxns_8h_ab83f8527d3603f1aab12d721d33eb214_icgraph" alt=""/></div>
 <map name="arxns_8h_ab83f8527d3603f1aab12d721d33eb214_icgraph" id="arxns_8h_ab83f8527d3603f1aab12d721d33eb214_icgraph">
 <area shape="rect" title="Update the time derivative and Jacbobian array indices." alt="" coords="457,5,609,45"/>
+<area shape="rect" href="rxn__solver_8c.html#a04e1414725ffbbb0b16fca416d826c1d" title="Update the time derivative and Jacobian array ids." alt="" coords="300,13,409,38"/>
+<area shape="rect" href="camp__solver_8c.html#a5b485fa25356197023889f3795888e98" title="Try to improve guesses of y sent to the linear solver." alt="" coords="164,13,252,38"/>
+<area shape="rect" href="camp__solver_8c.html#a599ffdef916b139a1690bfd41aa386b6" title="Solver initialization." alt="" coords="5,13,116,38"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="aa66217f07fe9eae01f2d6d376e421141" name="aa66217f07fe9eae01f2d6d376e421141"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa66217f07fe9eae01f2d6d376e421141">&#9670;&#160;</a></span>rxn_condensed_phase_photolysis_calc_deriv_contrib()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void rxn_condensed_phase_photolysis_calc_deriv_contrib </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_model_data.html">ModelData</a> *&#160;</td>
+          <td class="paramname"><em>model_data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="struct_time_derivative.html">TimeDerivative</a>&#160;</td>
+          <td class="paramname"><em>time_deriv</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int *&#160;</td>
+          <td class="paramname"><em>rxn_int_data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double *&#160;</td>
+          <td class="paramname"><em>rxn_float_data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double *&#160;</td>
+          <td class="paramname"><em>rxn_env_data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">realtype&#160;</td>
+          <td class="paramname"><em>time_step</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="rxns_8h_aa66217f07fe9eae01f2d6d376e421141_icgraph.png" border="0" usemap="#arxns_8h_aa66217f07fe9eae01f2d6d376e421141_icgraph" alt=""/></div>
+<map name="arxns_8h_aa66217f07fe9eae01f2d6d376e421141_icgraph" id="arxns_8h_aa66217f07fe9eae01f2d6d376e421141_icgraph">
+<area shape="rect" title=" " alt="" coords="855,113,1008,168"/>
+<area shape="rect" href="rxn__solver_8c.html#af014568140c63dfab9ea1c92b056e3b8" title="Calculate the time derivative ." alt="" coords="701,128,807,153"/>
+<area shape="rect" href="camp__solver_8c.html#ac55302bc18db0d68d78f543aad6a16c4" title="Compute the time derivative f(t,y)" alt="" coords="615,128,653,153"/>
+<area shape="rect" href="camp__solver_8c.html#ad45be595da1a1d6fd40179d9743a9a65" title="Check a Jacobian for accuracy." alt="" coords="255,45,340,71"/>
+<area shape="rect" href="camp__solver_8c.html#a13451d507558a61a2353adfed58db468" title="Compute the Jacobian." alt="" coords="164,103,207,128"/>
+<area shape="rect" href="camp__solver_8c.html#a599ffdef916b139a1690bfd41aa386b6" title="Solver initialization." alt="" coords="5,128,116,153"/>
+<area shape="rect" href="camp__solver_8c.html#a51bc2a16028d4c72dd39669c31f6fc17" title="Determine if there is anything to solve." alt="" coords="388,204,567,229"/>
+<area shape="rect" href="camp__solver_8c.html#afc5ec8680b419e7ab49530d53a76cee4" title="Solve for a given timestep." alt="" coords="256,229,339,255"/>
+<area shape="rect" href="camp__debug_8h.html#a0352ebf153678772ffbeb405834c141d" title="Evaluate the derivative and Jacobian near a given state for a specified species." alt="" coords="414,38,541,78"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="aac51fc4f01975aa347cead0eb5dc1db3" name="aac51fc4f01975aa347cead0eb5dc1db3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aac51fc4f01975aa347cead0eb5dc1db3">&#9670;&#160;</a></span>rxn_condensed_phase_photolysis_calc_jac_contrib()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void rxn_condensed_phase_photolysis_calc_jac_contrib </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_model_data.html">ModelData</a> *&#160;</td>
+          <td class="paramname"><em>model_data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="struct_jacobian.html">Jacobian</a>&#160;</td>
+          <td class="paramname"><em>jac</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int *&#160;</td>
+          <td class="paramname"><em>rxn_int_data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double *&#160;</td>
+          <td class="paramname"><em>rxn_float_data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double *&#160;</td>
+          <td class="paramname"><em>rxn_env_data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">realtype&#160;</td>
+          <td class="paramname"><em>time_step</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="rxns_8h_aac51fc4f01975aa347cead0eb5dc1db3_icgraph.png" border="0" usemap="#arxns_8h_aac51fc4f01975aa347cead0eb5dc1db3_icgraph" alt=""/></div>
+<map name="arxns_8h_aac51fc4f01975aa347cead0eb5dc1db3_icgraph" id="arxns_8h_aac51fc4f01975aa347cead0eb5dc1db3_icgraph">
+<area shape="rect" title=" " alt="" coords="448,20,599,75"/>
+<area shape="rect" href="rxn__solver_8c.html#ad44deb65b9845d05c6bd148e3378b42a" title="Calculate the Jacobian." alt="" coords="280,5,375,31"/>
+<area shape="rect" href="rxn__solver_8c.html#a40f9caeb40a6630edd3d61544ee29922" title="Calculate the Jacobian for only some specific types." alt="" coords="255,55,400,95"/>
+<area shape="rect" href="camp__solver_8c.html#a13451d507558a61a2353adfed58db468" title="Compute the Jacobian." alt="" coords="164,35,207,60"/>
+<area shape="rect" href="camp__solver_8c.html#a599ffdef916b139a1690bfd41aa386b6" title="Solver initialization." alt="" coords="5,35,116,60"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a014ce6da4626f4ecf16d79f420a46788" name="a014ce6da4626f4ecf16d79f420a46788"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a014ce6da4626f4ecf16d79f420a46788">&#9670;&#160;</a></span>rxn_condensed_phase_photolysis_create_rate_update_data()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void * rxn_condensed_phase_photolysis_create_rate_update_data </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Create update data for new photolysis rates. </p>
+<dl class="section return"><dt>Returns</dt><dd>Pointer to a new rate update data object </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="rxn__condensed__phase__photolysis_8c_source.html#l00464">464</a> of file <a class="el" href="rxn__condensed__phase__photolysis_8c_source.html">rxn_condensed_phase_photolysis.c</a>.</p>
+
+</div>
+</div>
+<a id="a84c0567001266ea44726aba908ef7ad8" name="a84c0567001266ea44726aba908ef7ad8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a84c0567001266ea44726aba908ef7ad8">&#9670;&#160;</a></span>rxn_condensed_phase_photolysis_get_used_jac_elem()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void rxn_condensed_phase_photolysis_get_used_jac_elem </td>
+          <td>(</td>
+          <td class="paramtype">int *&#160;</td>
+          <td class="paramname"><em>rxn_int_data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double *&#160;</td>
+          <td class="paramname"><em>rxn_float_data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="struct_jacobian.html">Jacobian</a> *&#160;</td>
+          <td class="paramname"><em>jac</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Flag <a class="el" href="struct_jacobian.html">Jacobian</a> elements used by this reaction. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">rxn_int_data</td><td>Pointer to the reaction integer data </td></tr>
+    <tr><td class="paramname">rxn_float_data</td><td>Pointer to the reaction floating-point data </td></tr>
+    <tr><td class="paramname">jac</td><td><a class="el" href="struct_jacobian.html">Jacobian</a> </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="rxn__condensed__phase__photolysis_8c_source.html#l00045">45</a> of file <a class="el" href="rxn__condensed__phase__photolysis_8c_source.html">rxn_condensed_phase_photolysis.c</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="rxns_8h_a84c0567001266ea44726aba908ef7ad8_cgraph.png" border="0" usemap="#arxns_8h_a84c0567001266ea44726aba908ef7ad8_cgraph" alt=""/></div>
+<map name="arxns_8h_a84c0567001266ea44726aba908ef7ad8_cgraph" id="arxns_8h_a84c0567001266ea44726aba908ef7ad8_cgraph">
+<area shape="rect" title="Flag Jacobian elements used by this reaction." alt="" coords="5,5,156,60"/>
+<area shape="rect" href="_jacobian_8c.html#aac51ac6b1cf239a84899308dab229441" title="Adds an element to the sparse matrix." alt="" coords="204,20,377,45"/>
+<area shape="rect" href="_jacobian_8c.html#ad9cda15d66705739c9d7bdf63c4636a3" title=" " alt="" coords="425,13,604,53"/>
+</map>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="rxns_8h_a84c0567001266ea44726aba908ef7ad8_icgraph.png" border="0" usemap="#arxns_8h_a84c0567001266ea44726aba908ef7ad8_icgraph" alt=""/></div>
+<map name="arxns_8h_a84c0567001266ea44726aba908ef7ad8_icgraph" id="arxns_8h_a84c0567001266ea44726aba908ef7ad8_icgraph">
+<area shape="rect" title="Flag Jacobian elements used by this reaction." alt="" coords="507,5,657,60"/>
+<area shape="rect" href="rxn__solver_8c.html#a6816597d1e59964f558cfc82b004549e" title="Get the Jacobian elements used by a particular reaction." alt="" coords="300,20,459,45"/>
+<area shape="rect" href="camp__solver_8c.html#a5b485fa25356197023889f3795888e98" title="Try to improve guesses of y sent to the linear solver." alt="" coords="164,20,252,45"/>
+<area shape="rect" href="camp__solver_8c.html#a599ffdef916b139a1690bfd41aa386b6" title="Solver initialization." alt="" coords="5,20,116,45"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a40bd1e295c7eb3d8d84e84bda99497d3" name="a40bd1e295c7eb3d8d84e84bda99497d3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a40bd1e295c7eb3d8d84e84bda99497d3">&#9670;&#160;</a></span>rxn_condensed_phase_photolysis_print()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void rxn_condensed_phase_photolysis_print </td>
+          <td>(</td>
+          <td class="paramtype">int *&#160;</td>
+          <td class="paramname"><em>rxn_int_data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double *&#160;</td>
+          <td class="paramname"><em>rxn_float_data</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Print the Condensed Phase photolysis reaction parameters. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">rxn_int_data</td><td>Pointer to the reaction integer data </td></tr>
+    <tr><td class="paramname">rxn_float_data</td><td>Pointer to the reaction floating-point data </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="rxn__condensed__phase__photolysis_8c_source.html#l00378">378</a> of file <a class="el" href="rxn__condensed__phase__photolysis_8c_source.html">rxn_condensed_phase_photolysis.c</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="rxns_8h_a40bd1e295c7eb3d8d84e84bda99497d3_icgraph.png" border="0" usemap="#arxns_8h_a40bd1e295c7eb3d8d84e84bda99497d3_icgraph" alt=""/></div>
+<map name="arxns_8h_a40bd1e295c7eb3d8d84e84bda99497d3_icgraph" id="arxns_8h_a40bd1e295c7eb3d8d84e84bda99497d3_icgraph">
+<area shape="rect" title="Print the Condensed Phase photolysis reaction parameters." alt="" coords="156,5,307,45"/>
+<area shape="rect" href="rxn__solver_8c.html#a607b803e7a4b427940312560ae0e5ba3" title="Print the reaction data." alt="" coords="5,13,108,38"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a7969c154436042094f993ac174043d91" name="a7969c154436042094f993ac174043d91"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7969c154436042094f993ac174043d91">&#9670;&#160;</a></span>rxn_condensed_phase_photolysis_set_rate_update_data()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void rxn_condensed_phase_photolysis_set_rate_update_data </td>
+          <td>(</td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>update_data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>photo_id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>base_rate</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set rate update data. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">update_data</td><td>Pointer to an allocated rate update data object </td></tr>
+    <tr><td class="paramname">photo_id</td><td>Id of photolysis reactions to update </td></tr>
+    <tr><td class="paramname">base_rate</td><td>New pre-scaling photolysis rate </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="rxn__condensed__phase__photolysis_8c_source.html#l00479">479</a> of file <a class="el" href="rxn__condensed__phase__photolysis_8c_source.html">rxn_condensed_phase_photolysis.c</a>.</p>
+
+</div>
+</div>
+<a id="ae0f542358a2ae57790d3cc2e9ca4c689" name="ae0f542358a2ae57790d3cc2e9ca4c689"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae0f542358a2ae57790d3cc2e9ca4c689">&#9670;&#160;</a></span>rxn_condensed_phase_photolysis_update_data()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="camp__common_8h.html#af6a258d8f3ee5206d682d799316314b1">bool</a> rxn_condensed_phase_photolysis_update_data </td>
+          <td>(</td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>update_data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int *&#160;</td>
+          <td class="paramname"><em>rxn_int_data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double *&#160;</td>
+          <td class="paramname"><em>rxn_float_data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double *&#160;</td>
+          <td class="paramname"><em>rxn_env_data</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Update reaction data. </p>
+<p >Photolysis reactions can have their base (pre-scaling) rate constants updated from the host model based on the calculations of an external photolysis module. The structure of the update data is:</p>
+<ul>
+<li><b>int</b> photo_id (Id of one or more photolysis reactions set by the host model using the camp_rxn_photolysis::rxn_photolysis_t::set_photo_id function prior to initializing the solver.)</li>
+<li><b>double</b> rate_const (New pre-scaling rate constant.)</li>
+</ul>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">update_data</td><td>Pointer to the updated reaction data </td></tr>
+    <tr><td class="paramname">rxn_int_data</td><td>Pointer to the reaction integer data </td></tr>
+    <tr><td class="paramname">rxn_float_data</td><td>Pointer to the reaction floating-point data </td></tr>
+    <tr><td class="paramname">rxn_env_data</td><td>Pointer to the environment-dependent data </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Flag indicating whether this is the reaction to update </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="rxn__condensed__phase__photolysis_8c_source.html#l00157">157</a> of file <a class="el" href="rxn__condensed__phase__photolysis_8c_source.html">rxn_condensed_phase_photolysis.c</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="rxns_8h_ae0f542358a2ae57790d3cc2e9ca4c689_icgraph.png" border="0" usemap="#arxns_8h_ae0f542358a2ae57790d3cc2e9ca4c689_icgraph" alt=""/></div>
+<map name="arxns_8h_ae0f542358a2ae57790d3cc2e9ca4c689_icgraph" id="arxns_8h_ae0f542358a2ae57790d3cc2e9ca4c689_icgraph">
+<area shape="rect" title="Update reaction data." alt="" coords="171,5,336,45"/>
+<area shape="rect" href="rxn__solver_8c.html#ae35bddd1d3cc8d012789600176c7595b" title="Update reaction data." alt="" coords="5,13,123,38"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a78cd0a76091e335b5a34b63caae7eec0" name="a78cd0a76091e335b5a34b63caae7eec0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a78cd0a76091e335b5a34b63caae7eec0">&#9670;&#160;</a></span>rxn_condensed_phase_photolysis_update_env_state()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void rxn_condensed_phase_photolysis_update_env_state </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_model_data.html">ModelData</a> *&#160;</td>
+          <td class="paramname"><em>model_data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int *&#160;</td>
+          <td class="paramname"><em>rxn_int_data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double *&#160;</td>
+          <td class="paramname"><em>rxn_float_data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double *&#160;</td>
+          <td class="paramname"><em>rxn_env_data</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Update reaction data for new environmental conditions. </p>
+<p >For Condensed Phase photolysis reaction this only involves recalculating the forward rate constant.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">model_data</td><td>Pointer to the model data </td></tr>
+    <tr><td class="paramname">rxn_int_data</td><td>Pointer to the reaction integer data </td></tr>
+    <tr><td class="paramname">rxn_float_data</td><td>Pointer to the reaction floating-point data </td></tr>
+    <tr><td class="paramname">rxn_env_data</td><td>Pointer to the environment-dependent parameters </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="rxn__condensed__phase__photolysis_8c_source.html#l00185">185</a> of file <a class="el" href="rxn__condensed__phase__photolysis_8c_source.html">rxn_condensed_phase_photolysis.c</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="rxns_8h_a78cd0a76091e335b5a34b63caae7eec0_icgraph.png" border="0" usemap="#arxns_8h_a78cd0a76091e335b5a34b63caae7eec0_icgraph" alt=""/></div>
+<map name="arxns_8h_a78cd0a76091e335b5a34b63caae7eec0_icgraph" id="arxns_8h_a78cd0a76091e335b5a34b63caae7eec0_icgraph">
+<area shape="rect" title="Update reaction data for new environmental conditions." alt="" coords="333,5,531,45"/>
+<area shape="rect" href="rxn__solver_8c.html#ab3d4bbab05647b5931a81ead002a5805" title="Update reaction data for new environmental state." alt="" coords="136,13,285,38"/>
+<area shape="rect" href="camp__solver_8c.html#afc5ec8680b419e7ab49530d53a76cee4" title="Solve for a given timestep." alt="" coords="5,13,88,38"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="aa418e878e03cc2a119b01b2e6d9f0556" name="aa418e878e03cc2a119b01b2e6d9f0556"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa418e878e03cc2a119b01b2e6d9f0556">&#9670;&#160;</a></span>rxn_condensed_phase_photolysis_update_ids()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void rxn_condensed_phase_photolysis_update_ids </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_model_data.html">ModelData</a> *&#160;</td>
+          <td class="paramname"><em>model_data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int *&#160;</td>
+          <td class="paramname"><em>deriv_ids</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="struct_jacobian.html">Jacobian</a>&#160;</td>
+          <td class="paramname"><em>jac</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int *&#160;</td>
+          <td class="paramname"><em>rxn_int_data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double *&#160;</td>
+          <td class="paramname"><em>rxn_float_data</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Update the time derivative and Jacbobian array indices. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">model_data</td><td>Pointer to the model data </td></tr>
+    <tr><td class="paramname">deriv_ids</td><td>Id of each state variable in the derivative array </td></tr>
+    <tr><td class="paramname">jac</td><td><a class="el" href="struct_jacobian.html">Jacobian</a> </td></tr>
+    <tr><td class="paramname">rxn_int_data</td><td>Pointer to the reaction integer data </td></tr>
+    <tr><td class="paramname">rxn_float_data</td><td>Pointer to the reaction floating-point data </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="rxn__condensed__phase__photolysis_8c_source.html#l00088">88</a> of file <a class="el" href="rxn__condensed__phase__photolysis_8c_source.html">rxn_condensed_phase_photolysis.c</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="rxns_8h_aa418e878e03cc2a119b01b2e6d9f0556_cgraph.png" border="0" usemap="#arxns_8h_aa418e878e03cc2a119b01b2e6d9f0556_cgraph" alt=""/></div>
+<map name="arxns_8h_aa418e878e03cc2a119b01b2e6d9f0556_cgraph" id="arxns_8h_aa418e878e03cc2a119b01b2e6d9f0556_cgraph">
+<area shape="rect" title="Update the time derivative and Jacbobian array indices." alt="" coords="5,5,163,45"/>
+<area shape="rect" href="_jacobian_8c.html#a7b43d5884ec62826389d6d739b7f25eb" title="Get an element id in the Jacobian data arrays." alt="" coords="211,13,376,38"/>
+</map>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="rxns_8h_aa418e878e03cc2a119b01b2e6d9f0556_icgraph.png" border="0" usemap="#arxns_8h_aa418e878e03cc2a119b01b2e6d9f0556_icgraph" alt=""/></div>
+<map name="arxns_8h_aa418e878e03cc2a119b01b2e6d9f0556_icgraph" id="arxns_8h_aa418e878e03cc2a119b01b2e6d9f0556_icgraph">
+<area shape="rect" title="Update the time derivative and Jacbobian array indices." alt="" coords="457,5,615,45"/>
 <area shape="rect" href="rxn__solver_8c.html#a04e1414725ffbbb0b16fca416d826c1d" title="Update the time derivative and Jacobian array ids." alt="" coords="300,13,409,38"/>
 <area shape="rect" href="camp__solver_8c.html#a5b485fa25356197023889f3795888e98" title="Try to improve guesses of y sent to the linear solver." alt="" coords="164,13,252,38"/>
 <area shape="rect" href="camp__solver_8c.html#a599ffdef916b139a1690bfd41aa386b6" title="Solver initialization." alt="" coords="5,13,116,38"/>
