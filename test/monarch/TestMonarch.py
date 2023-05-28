@@ -20,6 +20,7 @@ def all_timesteps():
     conf.profileCuda = ""
     #conf.profileCuda = "nvprof"
     #conf.profileCuda = "nsight"
+    #conf.profileCuda = "nsightSummary"
 
     conf.is_export = get_is_sbatch()
     # conf.is_export = True
