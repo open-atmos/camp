@@ -40,8 +40,6 @@ int nextPowerOfTwoCVODE(int v){
 
 void createLinearSolver_cvode(SolverData *sd){
   ModelDataGPU *mGPU = sd->mGPU;
-  mGPU->maxIt=1000;
-  mGPU->tolmax=1.0e-30;
   int nrows = mGPU->nrows;
   double ** dr0 = &mGPU->dr0;
   double ** dr0h = &mGPU->dr0h;

@@ -953,7 +953,7 @@ void solveBcgCudaDeviceCVODE(ModelDataGPU *md, ModelDataVariable *sc)
     temp1 = sqrtf(temp1);
     rho0 = rho1;
     it++;
-  } while(it<md->maxIt && temp1>md->tolmax); //todo use #define variables for tolmax and maxit
+  } while(it<BCG_MAXIT && temp1>BCG_TOLMAX);
   __syncthreads();
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
   if(threadIdx.x==0) sc->counterBCGInternal += it;

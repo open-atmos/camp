@@ -62,8 +62,6 @@ void createLinearSolver(SolverData *sd)
 
   //Init variables ("public")
   if(sd->use_gpu_cvode==0) read_options_bcg(mCPU);
-  mGPU->maxIt=1000;
-  mGPU->tolmax=1.0e-30;
 
   int nrows = mGPU->nrows;
   int len_cell = mGPU->nrows/mGPU->n_cells;
@@ -117,14 +115,14 @@ void exportConfBCG(SolverData *sd, const char *filepath){
   fprintf(fp, "%d\n",  mGPU->n_cells);
   fprintf(fp, "%d\n",  mGPU->nrows);
   fprintf(fp, "%d\n",  mCPU->nnz);
-  fprintf(fp, "%d\n",  mGPU->maxIt);
+  fprintf(fp, "%d\n",  BCG_MAXIT);
 #ifndef CSR_SPMV_CPU
   int mattype=0;
 #else
   int mattype=1; //CSC
 #endif
   fprintf(fp, "%d\n",  mattype);
-  fprintf(fp, "%le\n",  mGPU->tolmax);
+  fprintf(fp, "%le\n",  BCG_TOLMAX);
 
   int *jA=(int*)malloc(mCPU->nnz*sizeof(int));
   int *iA=(int*)malloc((mGPU->nrows+1)*sizeof(int));
@@ -173,9 +171,7 @@ void exportConfBCG(SolverData *sd, const char *filepath){
   fscanf(fp, "%d", &mGPU->n_cells);
   fscanf(fp, "%d", &mGPU->nrows);
   fscanf(fp, "%d", &mCPU->nnz);
-  fscanf(fp, "%d", &mGPU->maxIt);
   fscanf(fp, "%d", &mattype);
-  fscanf(fp, "%le", &mGPU->tolmax);
 
   for(int i=0; i<mCPU->nnz; i++){
     fscanf(fp, "%d", &jA[i]);
@@ -457,8 +453,8 @@ void dvcheck_input_gpud(double *x, int len, const char* s)
 __global__
 void solveBcgCuda(
         double *dA, int *djA, int *diA, double *dx, double *dtempv //Input data
-        ,int nrows, int blocks, int n_shr_empty, int maxIt
-        ,int n_cells, double tolmax, double *ddiag //Init variables
+        ,int nrows, int blocks, int n_shr_empty
+        ,int n_cells, double *ddiag //Init variables
         ,double *dr0, double *dr0h, double *dn0, double *dp0
         ,double *dt, double *ds, double *dAx2, double *dy, double *dz// Auxiliary vectors
 )
@@ -647,13 +643,7 @@ void solveBcgCuda(
       __syncthreads();
       //if (tid==0) it++;
       it++;
-    } while(it<maxIt && temp1>tolmax);//while(it<maxIt && temp1>tolmax);//while(0);
-
-#ifdef DEBUG_SOLVEBCGCUDA_DEEP
-    if(tid==0)
-      printf("%d %d %-le %-le\n",tid,it,temp1,tolmax);
-#endif
-    //if(it>=maxIt-1)
+    } while(it<BCG_MAXIT && temp1>BCG_TOLMAX);
     //  dvcheck_input_gpud(dr0,nrows,999);
     //dvcheck_input_gpud(dr0,nrows,k++);
     //if(tid==0) printf("solveBcgCuda end %d\n",it);
@@ -669,8 +659,6 @@ void solveGPU_block_thr(int blocks, int threads_block, int n_shr_memory, int n_s
   int nrows = mGPU->nrows;
   int nnz = mCPU->nnz;
   int n_cells = mGPU->n_cells;
-  int maxIt = mGPU->maxIt;
-  double tolmax = mGPU->tolmax;
 
   // Auxiliary vectors ("private")
   double *dr0 = mGPU->dr0;
@@ -724,8 +712,8 @@ void solveGPU_block_thr(int blocks, int threads_block, int n_shr_memory, int n_s
 
   solveBcgCuda << < blocks, threads_block, n_shr_memory * sizeof(double) >> >
                                            //solveBcgCuda << < blocks, threads_block, threads_block * sizeof(double) >> >
-                                           (dA, djA, diA, dx, dtempv, nrows, blocks, n_shr_empty, maxIt, n_cells,
-                                                   tolmax, ddiag, dr0, dr0h, dn0, dp0, dt, ds, dAx2, dy, dz
+                                           (dA, djA, diA, dx, dtempv, nrows, blocks, n_shr_empty, n_cells,
+                                                   ddiag, dr0, dr0h, dn0, dp0, dt, ds, dAx2, dy, dz
                                            );
 
 #ifdef IS_EXPORTBCG
@@ -811,8 +799,6 @@ void solveBCG(SolverData *sd, double *dA, int *djA, int *diA, double *dx, double
   int nrows = mGPU->nrows;
   int blocks = mCPU->blocks;
   int threads = mCPU->threads;
-  int maxIt = mGPU->maxIt;
-  double tolmax = mGPU->tolmax;
   double *ddiag = mGPU->ddiag;
 
   // Auxiliary vectors ("private")
@@ -853,7 +839,6 @@ void solveBCG(SolverData *sd, double *dA, int *djA, int *diA, double *dx, double
   double *aux_x1;
   aux_x1=(double*)malloc(mGPU->nrows*sizeof(double));
 #endif
-  //for(int it=0;it<maxIt;it++){
   int it=0;
   do {
     rho1=gpu_dotxy(dr0, dr0h, aux, dtempv2, nrows,(blocks + 1) / 2, threads);//rho1 =<r0,r0h>
@@ -926,7 +911,7 @@ void solveBCG(SolverData *sd, double *dA, int *djA, int *diA, double *dx, double
 
     rho0=rho1;
     it++;
-  }while(it<maxIt && temp1>tolmax);
+  }while(it<BCG_MAXIT && temp1>BCG_TOLMAX);
 
 #ifdef DEBUG_SOLVEBCGCUDA_DEEP
   free(aux_x1);

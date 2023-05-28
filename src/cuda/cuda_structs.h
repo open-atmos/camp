@@ -187,9 +187,7 @@ typedef struct { //Allocated from CPU (used during CPU / need some cudamemcpy)
     double* dtempv;
     int nrows;
     int n_shr_empty;
-    int maxIt;
     int n_cells;
-    double tolmax;
     double *ddiag;
     double *dr0;
     double *dr0h;

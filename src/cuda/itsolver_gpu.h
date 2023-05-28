@@ -24,6 +24,8 @@ extern "C" {
 #define  BLOCKCELLSN 3
 #define BLOCKCELLS1 4
 #define BLOCKCELLSNHALF 5
+#define BCG_MAXIT 1000
+#define BCG_TOLMAX 1.0E-30
 
 void read_options_bcg(ModelDataGPU *mGPU);
 void createLinearSolver(SolverData *sd);

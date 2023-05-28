@@ -487,7 +487,7 @@ set(CAMP_LIB_SRC
         src/solver_stats.F90
         src/debug_diff_check.F90
         ${CAMP_C_SRC} ${AEROSOL_REPS_SRC} ${SUB_MODELS_SRC}
-        ${REACTIONS_SRC} ${GSL_SRC} ${CAMP_CUDA_SRC} ${CAMP_CXX_SRC} src/cuda/cvode_cuda.cu src/cuda/cuda_structs.h)
+        ${REACTIONS_SRC} ${GSL_SRC} ${CAMP_CUDA_SRC} ${CAMP_CXX_SRC} src/cuda/cvode_cuda.cu src/cuda/cuda_structs.h src/cuda/cvode_gpu.h)
 
 if(ENABLE_SHARED_LIB)
   add_library(camplib SHARED ${CAMP_LIB_SRC}) #todo fix, Shared library are better than static (faster in execution, no recompilation, smaller)
