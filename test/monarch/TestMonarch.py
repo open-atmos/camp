@@ -31,7 +31,7 @@ def all_timesteps():
     # conf.commit = "MATCH_IMPORTED_CONF"
     conf.commit = ""
 
-    conf.nGPUsCaseBase = 1
+    conf.nGPUsCaseBase = 2
     # conf.nGPUsCaseBase = 2
 
     # conf.nGPUsCaseOptimList = [1]
@@ -41,7 +41,7 @@ def all_timesteps():
     conf.mpi = "yes"
     # conf.mpi = "no"
 
-    conf.mpiProcessesCaseBase = 10
+    conf.mpiProcessesCaseBase = 20
     #conf.mpiProcessesCaseBase = 2
 
     conf.mpiProcessesCaseOptimList.append(1)

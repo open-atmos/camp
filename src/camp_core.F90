@@ -1347,7 +1347,7 @@ contains
       update_data%cell_id=cell_id;
     else
       if(.not.this%n_cells.eq.1) then
-        print*,"update_data with more than 1 cell needs to specify cell_id this%n_cells",this%n_cells
+        print*,"aero_rep_update_data with more than 1 cell needs to specify cell_id this%n_cells",this%n_cells
         stop
       end if
       update_data%cell_id=1;
@@ -1383,7 +1383,7 @@ contains
       update_data%cell_id=cell_id;
     else
       if(.not.this%n_cells.eq.1) then
-        print*,"update_data with more than 1 cell needs to specify cell_id this%n_cells",this%n_cells
+        print*,"rxn_update_data with more than 1 cell needs to specify cell_id this%n_cells",this%n_cells
         stop
       end if
       update_data%cell_id=1;
@@ -1417,7 +1417,7 @@ contains
       update_data%cell_id=cell_id;
     else
       if(.not.this%n_cells.eq.1) then
-        print*,"update_data with more than 1 cell needs to specify cell_id this%n_cells",this%n_cells
+        print*,"sub_model_update_data with more than 1 cell needs to specify cell_id this%n_cells",this%n_cells
         stop
       end if
       update_data%cell_id=1;
