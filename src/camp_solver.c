@@ -1165,8 +1165,7 @@ int camp_solver_update_model_state(N_Vector solver_state, SolverData *sd,
 
 #ifdef CAMP_USE_GPU
   if(sd->use_cpu==0){
-      camp_solver_update_model_state_gpu(solver_state, sd, threshhold,
-                                         replacement_value);
+      camp_solver_update_model_state_gpu(solver_state, sd);
   }
 #endif
 
