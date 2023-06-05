@@ -162,7 +162,7 @@ void aero_rep_single_particle_get_effective_radius__m(
     if (partial_deriv) curr_partial += PHASE_NUM_JAC_ELEM_(i_phase);
     *radius += volume;
   }
-  // need to subtract sortption monolayer
+  // QUESTION: need to subtract sortption monolayer?
   *radius = pow(((*radius) * 3.0 / 4.0 / 3.14159265359), 1.0 / 3.0);
   if (!partial_deriv) return;
   for (int i_phase = 0; i_phase < NUM_PHASE_; ++i_phase) {
@@ -285,6 +285,7 @@ void aero_rep_single_particle_get_aero_phase_mass__kg_m3(
   int i_part = aero_phase_idx / NUM_PHASE_;
   aero_phase_idx -= i_part * NUM_PHASE_;
 
+// QUESTION: how to add layers here
   for (int i_phase = 0; i_phase < NUM_PHASE_; ++i_phase) {
     if (i_phase == aero_phase_idx) {
       double *state = (double *)(model_data->grid_cell_state);

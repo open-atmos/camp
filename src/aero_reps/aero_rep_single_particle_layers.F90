@@ -49,15 +49,18 @@ module camp_aero_rep_single_particle
   private
 
 #define NUM_PHASE_ this%condensed_data_int(1)
-#define AERO_REP_ID_ this%condensed_data_int(2)
-#define MAX_PARTICLES_ this%condensed_data_int(3)
-#define PARTICLE_STATE_SIZE_ this%condensed_data_int(4)
-#define NUM_INT_PROP_ 4
+#define NUM_LAYERS_ this%condensed_data_int(2)
+#define AERO_REP_ID_ this%condensed_data_int(3)
+#define MAX_PARTICLES_ this%condensed_data_int(4)
+#define PARTICLE_STATE_SIZE_ this%condensed_data_int(5)
+#define NUM_INT_PROP_ 5
 #define NUM_REAL_PROP_ 0
 #define NUM_ENV_PARAM_PER_PARTICLE_ 1
 #define PHASE_STATE_ID_(x) this%condensed_data_int(NUM_INT_PROP_+x)
 #define PHASE_MODEL_DATA_ID_(x) this%condensed_data_int(NUM_INT_PROP_+NUM_PHASE_+x)
 #define PHASE_NUM_JAC_ELEM_(x) this%condensed_data_int(NUM_INT_PROP_+2*NUM_PHASE_+x)
+#define LAYER_MODEL_DATA_ID_(x) this%condensed_data_int(NUM_INT_PROP_+NUM_LAYERS_+x)
+#define LAYER_NUM_JAC_ELEM_(x) this%condensed_data_int(NUM_INT_PROP_+2*NUM_LAYERS_+x)
 
   ! Update types (These must match values in aero_rep_single_particle.c)
   integer(kind=i_kind), parameter, public :: UPDATE_NUMBER_CONC = 0
@@ -226,7 +229,7 @@ contains
     !> The set of aerosol phases
     type(aero_phase_data_ptr), pointer, intent(in) :: aero_phase_set(:)
     !> The set of aerosol layers
-    type(aero_layer_data_ptr), pointer, intent(in) :: aero_layer_set(:)
+    type(aero_layer_data_ptr), pointer, intent(in) :: aero_layers_set(:)
     !> Beginning state id for this aerosol representationin the model species
     !! state array
     integer(kind=i_kind), intent(in) :: spec_state_id
@@ -236,7 +239,9 @@ contains
     integer(kind=i_kind) :: num_int_param, num_float_param, num_particles
 
     ! Start off the counters
-    num_int_param = NUM_INT_PROP_ + 3*size(aero_phase_set)
+    ! QUESTION: why do you multiply by 3?
+    num_int_param = NUM_INT_PROP_ + 3*size(aero_phase_set) + &
+                       size(aero_layers_set)
     num_float_param = NUM_REAL_PROP_
 
     ! Get the maximum number of computational particles
@@ -247,10 +252,10 @@ contains
 
     ! Assume all phases will be applied once to each particle in each layer
     allocate(this%aero_phase(size(aero_phase_set)*num_particles))
-    allocate(this%aero_layer(size(aero_layer_set)*num_particles))
+    allocate(this%aero_layer(size(aero_layers_set)*num_particles))
     do i_particle = 1, num_particles
       do i_phase = 1, size(aero_phase_set)
-        do i_layer = 1, size(aero_layer_set)
+        do i_layer = 1, size(aero_layers_set)
 !! QUESTION: how to alter to add layers
           this%aero_phase((i_particle-1)*size(aero_phase_set)+i_phase) = &
               aero_phase_set(i_phase)
@@ -272,12 +277,18 @@ contains
 
     ! Set phase state and model data ids
     NUM_PHASE_ = size(aero_phase_set)
+    NUM_LAYERS_ = size(aero_layers_set)
     this%state_id_start = spec_state_id
     curr_id = spec_state_id
+! QUESTION: is this correct?
     do i_phase = 1, NUM_PHASE_
-      PHASE_STATE_ID_(i_phase) = curr_id
-      PHASE_MODEL_DATA_ID_(i_phase) = i_phase
-      curr_id = curr_id + aero_phase_set(i_phase)%val%size()
+      do i_layer = 1, NUM_LAYERS_
+        PHASE_STATE_ID_(i_phase) = curr_id
+        PHASE_MODEL_DATA_ID_(i_phase) = i_phase
+        LAYER_MODEL_DATA_ID_(i_layer) = i_layer
+        curr_id = curr_id + aero_phase_set(i_phase)%val%size() + &
+                      aero_layers_set(i_layer)%val%size()
+      end do
     end do
     PARTICLE_STATE_SIZE_ = curr_id - spec_state_id
 
@@ -347,8 +358,8 @@ contains
   !! aerosol species by including the phase_name and spec_name arguments.
   !!
   !! For a single particle representation, the unique names will be a 'P'
-  !! followed by the computational particle number, a '.', the phase name,
-  !! another '.', and the species name.
+  !! followed by the computational particle number, a '.', the layer name,
+  !! another '.', the phase name, another '.', and the species name.
   function unique_names(this, layer_number, phase_name, tracer_type, spec_name)
 
     use camp_util,                      only : integer_to_string
@@ -383,6 +394,7 @@ contains
       return
     end if
 
+! QUESTION: phase code was copied and replaced by layer, is this correct?
     ! Count the number of unique names
     num_layer = 0
     num_spec = 0
@@ -397,6 +409,7 @@ contains
           if (phase_name.ne.curr_phase_name) cycle
         end if
         if (present(spec_name).or.present(tracer_type)) then
+! QUESTION: does layer need to be added here?
           spec_names = this%aero_phase(i_phase)%val%get_species_names()
           do j_spec = 1, size(spec_names)
             curr_tracer_type = &
@@ -413,10 +426,12 @@ contains
         end do
         deallocate(spec_names)
       else
+! QUESTION: 1 phase per layer so I don't think layers needs to be here
         num_spec = num_spec + this%aero_phase(i_phase)%val%size()
       end if
     end do
 
+!QUESTION: is this correct?  unsure about curr_tracer_type
     ! Allocate space for the unique names and assign them
     allocate(unique_names(num_spec*MAX_PARTICLES_))
     i_layer = 1
@@ -533,14 +548,15 @@ contains
     integer(kind=i_kind) ::  i_phase
 
     num_phase_instances = 0
-!! QUESTION: Are layers considered here? maybe loop through layers
-    do i_phase = 1, NUM_PHASE_
-      if (this%aero_phase(i_phase)%val%name().eq.phase_name) then
-        num_phase_instances = MAX_PARTICLES_
-        return
-      end if
+!! QUESTION: is this correct?
+    do i_layer = 1, NUM_LAYERS_
+      do i_phase = 1, NUM_PHASE_
+        if (this%aero_phase(i_phase)%val%name().eq.phase_name) then
+          num_phase_instances = MAX_PARTICLES_
+          return
+        end if
+      end do
     end do
-
   end function num_phase_instances
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -558,16 +574,18 @@ contains
 
     integer(kind=i_kind) :: i_phase
 
-!! QUESTION: layers here
+!! QUESTION: layers here?
     call assert_msg( 401502046, phase_id .ge. 1 .and. &
                                 phase_id .le. size( this%aero_phase ), &
                      "Aerosol phase index out of range. Got "// &
                      trim( integer_to_string( phase_id ) )//", expected 1:"// &
                      trim( integer_to_string( size( this%aero_phase ) ) ) )
     num_jac_elem = 0
-    do i_phase = 1, NUM_PHASE_
-      num_jac_elem = num_jac_elem + &
-                     this%aero_phase(i_phase)%val%num_jac_elem()
+    do i_layer = 1, NUM_LAYERS_
+      do i_phase = 1, NUM_PHASE_
+        num_jac_elem = num_jac_elem + &
+                       this%aero_phase(i_phase)%val%num_jac_elem()
+      end do
     end do
 
   end function num_jac_elem
@@ -585,6 +603,11 @@ contains
       ! The core will deallocate the aerosol phases
       call this%aero_phase(:)%dereference()
       deallocate(this%aero_phase)
+    end if
+    if (allocated(this%aero_layer)) then
+      ! The core will deallocate the aerosol layers
+      call this%aero_layer(:)%dereference()
+      deallocate(this%aero_layer)
     end if
     if (associated(this%property_set)) deallocate(this%property_set)
     if (allocated(this%condensed_data_real)) deallocate(this%condensed_data_real)
