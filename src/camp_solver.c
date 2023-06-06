@@ -717,7 +717,6 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
   double starttimeCvode = MPI_Wtime();
 #endif
 #ifdef CAMP_USE_GPU
-
     if(sd->use_cpu==1){
       flag = CVode(sd->cvode_mem, (realtype)t_final, sd->y, &t_rt, CV_NORMAL);
     }
@@ -743,7 +742,7 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
 #ifdef FAILURE_DETAIL
     if (flag < 0) {
 #else
-    if (check_flag(&flag, "CVode", 1) == CAMP_SOLVER_FAIL) {
+    if (check_flag(&flag, "CVode", 1) != CAMP_SOLVER_SUCCESS) {
       if (flag == -6) {
         long int lsflag;
         int lastflag = CVDlsGetLastFlag(sd->cvode_mem, &lsflag);
@@ -802,7 +801,6 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
   sd->counterDerivCPU = 0;
   sd->counterJac = 0;
   sd->counterSolve++;
-
 #endif
 
   // Re-run the pre-derivative calculations to update equilibrium species
