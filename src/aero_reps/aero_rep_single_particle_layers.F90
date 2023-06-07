@@ -239,7 +239,6 @@ contains
     integer(kind=i_kind) :: num_int_param, num_float_param, num_particles
 
     ! Start off the counters
-    ! QUESTION: why do you multiply by 3?
     num_int_param = NUM_INT_PROP_ + 3*size(aero_phase_set) + &
                        size(aero_layers_set)
     num_float_param = NUM_REAL_PROP_
@@ -256,7 +255,6 @@ contains
     do i_particle = 1, num_particles
       do i_phase = 1, size(aero_phase_set)
         do i_layer = 1, size(aero_layers_set)
-!! QUESTION: how to alter to add layers
           this%aero_phase((i_particle-1)*size(aero_phase_set)+i_phase) = &
               aero_phase_set(i_phase)
         end do
@@ -280,7 +278,6 @@ contains
     NUM_LAYERS_ = size(aero_layers_set)
     this%state_id_start = spec_state_id
     curr_id = spec_state_id
-! QUESTION: is this correct?
     do i_phase = 1, NUM_PHASE_
       do i_layer = 1, NUM_LAYERS_
         PHASE_STATE_ID_(i_phase) = curr_id
@@ -394,7 +391,6 @@ contains
       return
     end if
 
-! QUESTION: phase code was copied and replaced by layer, is this correct?
     ! Count the number of unique names
     num_layer = 0
     num_spec = 0
@@ -409,7 +405,6 @@ contains
           if (phase_name.ne.curr_phase_name) cycle
         end if
         if (present(spec_name).or.present(tracer_type)) then
-! QUESTION: does layer need to be added here?
           spec_names = this%aero_phase(i_phase)%val%get_species_names()
           do j_spec = 1, size(spec_names)
             curr_tracer_type = &
@@ -426,12 +421,10 @@ contains
         end do
         deallocate(spec_names)
       else
-! QUESTION: 1 phase per layer so I don't think layers needs to be here
         num_spec = num_spec + this%aero_phase(i_phase)%val%size()
       end if
     end do
 
-!QUESTION: is this correct?  unsure about curr_tracer_type
     ! Allocate space for the unique names and assign them
     allocate(unique_names(num_spec*MAX_PARTICLES_))
     i_layer = 1
@@ -548,7 +541,6 @@ contains
     integer(kind=i_kind) ::  i_phase
 
     num_phase_instances = 0
-!! QUESTION: is this correct?
     do i_layer = 1, NUM_LAYERS_
       do i_phase = 1, NUM_PHASE_
         if (this%aero_phase(i_phase)%val%name().eq.phase_name) then
@@ -574,7 +566,6 @@ contains
 
     integer(kind=i_kind) :: i_phase
 
-!! QUESTION: layers here?
     call assert_msg( 401502046, phase_id .ge. 1 .and. &
                                 phase_id .le. size( this%aero_phase ), &
                      "Aerosol phase index out of range. Got "// &
