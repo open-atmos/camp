@@ -226,7 +226,7 @@ void solver_new_gpu_cu_cvode(SolverData *sd) {
     exit(0);
   }
 
-  int nDevicesMax;
+  int nDevicesMax=4;
 #ifdef ENABLE_GPU_CHECK
   cudaGetDeviceCount(&nDevicesMax);
   if (sd->nDevices > nDevicesMax) {
