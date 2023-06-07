@@ -103,8 +103,6 @@ typedef struct{
   size_t rxn_env_data_size;
   size_t rxn_env_data_idx_size;
   size_t map_state_deriv_size;
-  int max_n_gpu_thread;
-  int max_n_gpu_blocks;
   int *map_state_derivCPU;
   ModelDataVariable mdvCPU; //cpu equivalent to gpu
   cudaStream_t *streams;

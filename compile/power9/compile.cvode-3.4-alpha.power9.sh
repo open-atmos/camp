@@ -16,7 +16,7 @@ mkdir build
 mkdir install
 mkdir install/examples
 cd build
-cmake -D CMAKE_BUILD_TYPE=debug \
+cmake -D CMAKE_BUILD_TYPE=release \
 -D MPI_ENABLE:BOOL=TRUE \
 -D KLU_ENABLE:BOOL=TRUE \
 -D CUDA_ENABLE:BOOL=FALSE \

@@ -218,17 +218,19 @@ void solver_new_gpu_cu_cvode(SolverData *sd) {
   mCPU->rxn_env_data_size = n_rxn_env_param * n_cells * sizeof(double);
   mCPU->rxn_env_data_idx_size = (n_rxn+1) * sizeof(int);
   mCPU->map_state_deriv_size = n_dep_var * n_cells * sizeof(int);
-  int nDevicesMax;
-  cudaGetDeviceCount(&nDevicesMax);
-  if (sd->nDevices > nDevicesMax) {
-    printf("ERROR: Not enough GPUs to launch, nDevices %d nDevicesMax %d\n", sd->nDevices, nDevicesMax);
-    exit(0);
-  }
   int coresPerNode = 40;
   int size;
   MPI_Comm_size(MPI_COMM_WORLD, &size);
   if (size > 40 && size % coresPerNode != 0) {
     printf("ERROR: MORE THAN 40 MPI PROCESSES AND NOT MULTIPLE OF 40, WHEN CTE-POWER ONLY HAS 40 CORES PER NODE\n");
+    exit(0);
+  }
+
+  int nDevicesMax;
+#ifdef ENABLE_GPU_CHECK
+  cudaGetDeviceCount(&nDevicesMax);
+  if (sd->nDevices > nDevicesMax) {
+    printf("ERROR: Not enough GPUs to launch, nDevices %d nDevicesMax %d\n", sd->nDevices, nDevicesMax);
     exit(0);
   }
   //int maxCoresPerDevice = maxCoresPerNode / nDevicesMax
@@ -239,6 +241,7 @@ void solver_new_gpu_cu_cvode(SolverData *sd) {
            "FOR CTE-POWER IS 10 PROCESSES FOR EACH GPU)\n",size,sd->nDevices,coresPerNode,nDevicesMax);
     exit(0);
   }
+#endif
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   cudaSetDevice(0);
@@ -246,16 +249,19 @@ void solver_new_gpu_cu_cvode(SolverData *sd) {
     if (rank < coresPerNode / nDevicesMax * (i + 1) && rank >= coresPerNode / nDevicesMax * i && i<sd->nDevices) {
       cudaSetDevice(i);
       //printf("rank %d, device %d\n", rank, i);
+#ifdef ENABLE_GPU_CHECK
       cudaDeviceProp prop;
       cudaGetDeviceProperties(&prop, i);
       mCPU->threads = prop.maxThreadsPerBlock; //1024
       mCPU->blocks = (n_dep_var*n_cells + mCPU->threads - 1) / mCPU->threads;
-      mCPU->max_n_gpu_thread = prop.maxThreadsPerBlock;
-      mCPU->max_n_gpu_blocks = prop.maxGridSize[1];
       if(md->n_per_cell_dep_var > prop.maxThreadsPerBlock/2){
         printf("ERROR: md->n_per_cell_dep_var, prop.maxThreadsPerBlock/2, %d %d More species than threads per block available\n",md->n_per_cell_dep_var, prop.maxThreadsPerBlock/2);
         exit(0);
       }
+#else
+        mCPU->threads = 1024;
+        mCPU->blocks = (n_dep_var*n_cells + mCPU->threads - 1) / mCPU->threads;
+#endif
     }
   }
   sd->mGPU = (ModelDataGPU *)malloc(sizeof(ModelDataGPU));
