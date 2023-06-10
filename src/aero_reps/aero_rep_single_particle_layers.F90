@@ -222,7 +222,7 @@ contains
   !! each aerosol representation at the beginning of a model run after all
   !! the input files have been read in. It ensures all data required during
   !! the model run are included in the condensed data arrays.
-  subroutine initialize(this, aero_phase_set, spec_state_id)
+  subroutine initialize(this, aero_layers_set, aero_phase_set, spec_state_id)
 
     !> Aerosol representation data
     class(aero_rep_single_particle_t), intent(inout) :: this
@@ -250,8 +250,8 @@ contains
                     "Missing maximum number of computational particles")
 
     ! Assume all phases will be applied once to each particle in each layer
-    allocate(this%aero_phase(size(aero_phase_set)*num_particles))
-    allocate(this%aero_layer(size(aero_layers_set)*num_particles))
+    allocate(this%aero_phase((size(aero_phase_set)+size(aero_layers_set)) &
+                                 *num_particles))
     do i_particle = 1, num_particles
       do i_phase = 1, size(aero_phase_set)
         do i_layer = 1, size(aero_layers_set)
@@ -357,7 +357,7 @@ contains
   !! For a single particle representation, the unique names will be a 'P'
   !! followed by the computational particle number, a '.', the layer name,
   !! another '.', the phase name, another '.', and the species name.
-  function unique_names(this, layer_number, phase_name, tracer_type, spec_name)
+  function unique_names(this, layer_name, phase_name, tracer_type, spec_name)
 
     use camp_util,                      only : integer_to_string
 
