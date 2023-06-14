@@ -48,19 +48,18 @@ module camp_aero_rep_single_particle
   implicit none
   private
 
-#define NUM_PHASE_ this%condensed_data_int(1)
-#define NUM_LAYERS_ this%condensed_data_int(2)
+#define NUM_LAYERS_ this%condensed_data_int(1)
+#define TOTAL_NUM_PHASES_ this%condensed_data_int(2)
 #define AERO_REP_ID_ this%condensed_data_int(3)
 #define MAX_PARTICLES_ this%condensed_data_int(4)
 #define PARTICLE_STATE_SIZE_ this%condensed_data_int(5)
 #define NUM_INT_PROP_ 5
 #define NUM_REAL_PROP_ 0
 #define NUM_ENV_PARAM_PER_PARTICLE_ 1
-#define PHASE_STATE_ID_(x) this%condensed_data_int(NUM_INT_PROP_+x)
-#define PHASE_MODEL_DATA_ID_(x) this%condensed_data_int(NUM_INT_PROP_+NUM_PHASE_+x)
-#define PHASE_NUM_JAC_ELEM_(x) this%condensed_data_int(NUM_INT_PROP_+2*NUM_PHASE_+x)
-#define LAYER_MODEL_DATA_ID_(x) this%condensed_data_int(NUM_INT_PROP_+NUM_LAYERS_+x)
-#define LAYER_NUM_JAC_ELEM_(x) this%condensed_data_int(NUM_INT_PROP_+2*NUM_LAYERS_+x)
+#define NUM_PHASE_(p) this%condensed_data_int(NUM_INT_PROP_+p)
+#define PHASE_STATE_ID_(p) this%condensed_data_int(NUM_INT_PROP_+NUM_LAYERS_+p)
+#define PHASE_MODEL_DATA_ID_(p) this%condensed_data_int(NUM_INT_PROP_+NUM_LAYERS_+TOTAL_NUM_PHASES_+p)
+#define PHASE_NUM_JAC_ELEM_(p) this%condensed_data_int(NUM_INT_PROP_+NUM_LAYERS_+2*TOTAL_NUM_PHASES_+p)
 
   ! Update types (These must match values in aero_rep_single_particle.c)
   integer(kind=i_kind), parameter, public :: UPDATE_NUMBER_CONC = 0
