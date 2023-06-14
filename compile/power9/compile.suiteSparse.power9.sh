@@ -12,7 +12,7 @@ if [ $BSC_MACHINE == "power" ]; then
   make BLAS="-L${EBROOTOPENBLAS}/lib -lopenblas" LAPACK=""
 elif [ $BSC_MACHINE == "mn4" ]; then
   make BLAS="-L${INTEL_HOME}/mkl/lib/intel64 -lmkl_intel_lp64 -lmkl_core -lmkl_intel_thread -lpthread -lm" LAPACK=""
-elif [ $LOCAL_MACHINE == "CGUZMAN" ]; then
+elif [ $LOCAL_MACHINE==CGUZMAN ]; then
   make BLAS="-L/usr/lib/x86_64-linux-gnu -lopenblas" LAPACK=""
 else
   echo "Unknown architecture"

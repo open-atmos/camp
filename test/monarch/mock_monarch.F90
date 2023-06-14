@@ -154,11 +154,12 @@ program mock_monarch_t
   !> CAMP-camp <-> MONARCH interface configuration file
   character(len=:), allocatable :: interface_input_file
   !> Results file prefix
-  character(len=:), allocatable :: output_file_prefix, output_file_title, str_to_int_aux
+  character(len=:), allocatable :: output_path, output_file_title, str_to_int_aux
   !> CAMP-chem input file file
   type(string_t), allocatable :: name_gas_species_to_print(:), name_aerosol_species_to_print(:)
   integer(kind=i_kind), allocatable :: id_gas_species_to_print(:), id_aerosol_species_to_print(:)
   integer(kind=i_kind) ::  size_gas_species_to_print, size_aerosol_species_to_print
+  character(len=:), allocatable :: str
 
   ! MPI
   character, allocatable :: buffer(:)
@@ -188,24 +189,22 @@ program mock_monarch_t
   ! initialize mpi (to take the place of a similar MONARCH call)
   call camp_mpi_init()
 
-  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  ! **** Add to MONARCH during initialization **** !
-  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
   !Options
   I_W=1
   I_E=1
   I_S=1
   I_N=1
 
-  !Read configuration from TestMonarch.json
+  !print*,"start"
+#ifndef DEV_TEST
 
+  !camp_input_file =
   call get_command_argument(1, arg, status=status_code)
   camp_input_file = trim(arg)
   call get_command_argument(2, arg, status=status_code)
   interface_input_file = trim(arg)
   call get_command_argument(3, arg, status=status_code)
-  output_file_prefix = trim(arg)
+  output_path = trim(arg)
 
   ADD_EMISIONS = "OFF"
   DIFF_CELLS = "OFF"
@@ -232,74 +231,19 @@ program mock_monarch_t
     call jfile%get('_chemFile',output_file_title)
     camp_input_file = "config_"//output_file_title//".json"
     interface_input_file = "interface_"//output_file_title//".json"
-    output_file_prefix = "../../build/test_run/monarch/out/"//output_file_title
+    output_path = "../../build/test_run/monarch/out/"//output_file_title
     if(output_file_title.eq."monarch_binned") then
       ADD_EMISIONS = "monarch_binned"
     end if
 
     call jfile%get('nCells',NUM_VERT_CELLS)
     call jfile%get('caseMulticellsOnecell',caseMulticellsOnecell)
-    output_file_prefix = output_file_prefix//"_"//caseMulticellsOnecell
+    output_path = output_path//"_"//caseMulticellsOnecell
     if(caseMulticellsOnecell.eq."One-cell") then
       n_cells = 1
     else
       n_cells = (I_E - I_W+1)*(I_N - I_S+1)*NUM_VERT_CELLS
     end if
-
-#ifdef CAMP_USE_MAXRREGCOUNT48
-#else
-    if(caseMulticellsOnecell.eq."maxrregcount-48") then
-      print*,"ENABLE maxrregcount-48 in CMakeLists.txt"
-       call mpi_abort(MPI_COMM_WORLD, status_code, ierr)
-      stop 3
-    end if
-#endif
-
-#ifdef CAMP_USE_MAXRREGCOUNT68
-#else
-    if(caseMulticellsOnecell.eq."maxrregcount-68") then
-      print*,"ENABLE maxrregcount-68 in CMakeLists.txt"
-       call mpi_abort(MPI_COMM_WORLD, status_code, ierr)
-      stop 3
-    end if
-#endif
-
-#ifdef CAMP_USE_MAXRREGCOUNT62
-#else
-    if(caseMulticellsOnecell.eq."maxrregcount-62") then
-      print*,"ENABLE maxrregcount-62 in CMakeLists.txt"
-       call mpi_abort(MPI_COMM_WORLD, status_code, ierr)
-      stop 3
-    end if
-#endif
-
-#ifdef CAMP_USE_MAXRREGCOUNT24
-#else
-    if(caseMulticellsOnecell.eq."maxrregcount-24") then
-      print*,"ENABLE maxrregcount-24 in CMakeLists.txt"
-       call mpi_abort(MPI_COMM_WORLD, status_code, ierr)
-      stop 3
-    end if
-#endif
-
-#ifdef CAMP_USE_MAXRREGCOUNT64
-  print*,"CAMP_USE_MAXRREGCOUNT64 mock_monarch"
-#else
-    if(caseMulticellsOnecell.eq."maxrregcount-64") then
-      print*,"ENABLE maxrregcount-64 in CMakeLists.txt"
-       call mpi_abort(MPI_COMM_WORLD, status_code, ierr)
-      stop 3
-    end if
-#endif
-
-#ifdef CAMP_USE_MAXRREGCOUNT127
-#else
-    if(caseMulticellsOnecell.eq."maxrregcount-127") then
-       call mpi_abort(MPI_COMM_WORLD, status_code, ierr)
-      print*,"ENABLE maxrregcount-127 in CMakeLists.txt"
-      stop 3
-    end if
-#endif
 
     call jfile%get('timeSteps',NUM_TIME_STEP)
     call jfile%get('timeStepsDt',TIME_STEP)
@@ -335,7 +279,7 @@ program mock_monarch_t
   allocate(species_conc(NUM_WE_CELLS,NUM_SN_CELLS,NUM_VERT_CELLS,NUM_MONARCH_SPEC))
   allocate(water_conc(NUM_WE_CELLS,NUM_SN_CELLS,NUM_VERT_CELLS,WATER_VAPOR_ID))
 
-  if(output_file_prefix.eq."out/monarch_mod37") then
+  if(output_path.eq."out/monarch_mod37") then
     allocate(air_density(NUM_WE_CELLS, NUM_VERT_CELLS, NUM_SN_CELLS))
     allocate(pressure(NUM_WE_CELLS, NUM_VERT_CELLS, NUM_SN_CELLS))
     allocate(conv(NUM_WE_CELLS, NUM_VERT_CELLS, NUM_SN_CELLS))
@@ -455,7 +399,18 @@ program mock_monarch_t
     endif
   end if
 
-  call init_output_files(output_file_prefix)
+  file_name = output_path//"_solver_stats.csv"
+  open(FILE_SOLVER_STATS_CSV, file=file_name, status="replace", action="write")
+  !todo move this to python interface and automatic size
+  str = "timestep,counterBCG,counterLS,countersolveCVODEGPU,countercvStep,&
+          timeLS,timeBiconjGradMemcpy,timeCVode,&
+          dtcudaDeviceCVode,dtPostBCG,timeAux,timeNewtonIteration,timeJac,timelinsolsetup,timecalc_Jac,&
+          timeRXNJac,timef,timeguess_helper,timecvStep"
+  write(FILE_SOLVER_STATS_CSV, "(A)", advance="no") str
+  write(FILE_SOLVER_STATS_CSV, '(a)') ''
+  call camp_mpi_barrier()
+  deallocate(str)
+  deallocate(file_name)
 
   camp_interface => camp_monarch_interface_t(camp_input_file, interface_input_file, &
           START_CAMP_ID, END_CAMP_ID, n_cells, n_cells_tstep, ADD_EMISIONS)!, n_cells
@@ -468,7 +423,7 @@ program mock_monarch_t
   if(export_results_all_cells.eq.1) then
     allocate(species_conc_mpi(NUM_WE_CELLS,NUM_SN_CELLS,&
             NUM_VERT_CELLS,NUM_MONARCH_SPEC,camp_mpi_size()))
-    call init_file_results_all_cells(camp_interface, output_file_prefix)
+    call init_file_results_all_cells(camp_interface, output_path)
   end if
 
   if (camp_mpi_rank().eq.0) then
@@ -519,7 +474,7 @@ program mock_monarch_t
     call import_camp_input_json(camp_interface)
   end if
 
-  call set_env(camp_interface,output_file_prefix)
+  call set_env(camp_interface,output_path)
 
 #ifdef SOLVE_EBI_IMPORT_CAMP_INPUT
   if(caseMulticellsOnecell.eq."EBI") then
@@ -542,18 +497,6 @@ program mock_monarch_t
         call print_state_gnuplot(curr_time,camp_interface, name_gas_species_to_print,id_gas_species_to_print&
                ,name_aerosol_species_to_print,id_aerosol_species_to_print,RESULTS_FILE_UNIT)
       end if
-#endif
-#ifdef DEBUG_MOCK_MONARCH
-      do i=i_W, I_E
-        do j=I_S, I_N
-          do k=1, NUM_VERT_CELLS
-            do r=2,size(camp_interface%map_monarch_id)
-              print*,species_conc(i,j,k,camp_interface%map_monarch_id(r)),&
-                      camp_interface%camp_state%state_var(camp_interface%map_camp_id(r)), camp_mpi_rank()
-            end do
-          end do
-        end do
-      end do
 #endif
       call camp_interface%integrate(curr_time,         & ! Starting time (min)
          TIME_STEP,         & ! Time step (min)
@@ -588,30 +531,6 @@ program mock_monarch_t
     write(*,*) "Model run time: ", comp_time, " s"
   end if
 
-#ifdef MOCK_MONARCH_PRINT_SPECIES
-  if (camp_mpi_rank().eq.0) then
-  !if (camp_mpi_rank().eq.999) then
-    do i = I_E,I_E!I_W, I_E
-      do j = I_N,I_N!I_S, I_N
-        do k = NUM_VERT_CELLS, NUM_VERT_CELLS!1,NUM_VERT_CELLS!1, NUM_VERT_CELLS
-          do z=1, size(name_gas_species_to_print)
-            print*,id_gas_species_to_print(z),name_gas_species_to_print(z)%string,&
-            species_conc(i,j,k,id_gas_species_to_print(z))
-          end do
-          if (plot_case.gt.0) then
-            do z=1, size(name_aerosol_species_to_print)
-              print*,id_aerosol_species_to_print(z),name_aerosol_species_to_print(z)%string,&
-                      species_conc(i,j,k,id_aerosol_species_to_print(z))
-            end do
-          end if
-        end do
-      end do
-    end do
-  end if
-  !print*,"Rank",camp_mpi_rank(), "conc",&
-  !        species_conc(1,1,1,camp_interface%map_monarch_id(:))
-#endif
-
 #ifdef ENABLE_PRINT_STATE_GNUPLOT
   ! Output results and scripts
   if (camp_mpi_rank().eq.0) then
@@ -619,10 +538,10 @@ program mock_monarch_t
     call print_state_gnuplot(curr_time,camp_interface, name_gas_species_to_print,id_gas_species_to_print&
             ,name_aerosol_species_to_print,id_aerosol_species_to_print,RESULTS_FILE_UNIT)
     print*,"WARNING PRINT_STATE_GNUPLOT"
-    call create_gnuplot_script(camp_interface, output_file_prefix, &
+    call create_gnuplot_script(camp_interface, output_path, &
           plot_start_time, curr_time)
 
-    call create_gnuplot_persist_paper_camp(camp_interface, output_file_prefix, &
+    call create_gnuplot_persist_paper_camp(camp_interface, output_path, &
           plot_start_time, curr_time)
     end if
 #endif
@@ -637,7 +556,7 @@ program mock_monarch_t
   !print*,"deallocate start", camp_mpi_rank()
   deallocate(camp_input_file)
   deallocate(interface_input_file)
-  deallocate(output_file_prefix)
+  deallocate(output_path)
   deallocate(output_file_title)
 
   !call MPI_COMM_SIZE(MPI_COMM_WORLD, mpi_threads)
@@ -651,37 +570,9 @@ program mock_monarch_t
   !print*,"deallocate end", camp_mpi_rank()
   call camp_mpi_finalize()
 
+#endif
+
 contains
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-  subroutine init_output_files(file_prefix)
-
-    character(len=:), allocatable, intent(in) :: file_prefix
-    character(len=:), allocatable :: file_name
-    character(len=:), allocatable :: aux_str, aux_str_py, str_stats_names
-    character(len=128) :: i_str !if len !=128 crashes (e.g len=100)
-    integer :: z,o,i,j,k,r,i_cell,i_spec,mpi_size,ncells,tid,ncells_mpi
-    integer :: n_cells_print
-    real :: temp_init,press,press_init,press_end,press_range,press_slide
-
-    file_name = file_prefix//"_solver_stats.csv"
-    open(FILE_SOLVER_STATS_CSV, file=file_name, status="replace", action="write")
-
-    !todo move this to python interface and automatic size
-    str_stats_names = "timestep,counterBCG,counterLS,countersolveCVODEGPU,countercvStep,&
-            timeLS,timeBiconjGradMemcpy,timeCVode,&
-            dtcudaDeviceCVode,dtPostBCG,timeAux,timeNewtonIteration,timeJac,timelinsolsetup,timecalc_Jac,&
-            timeRXNJac,timef,timeguess_helper,timecvStep"
-
-    write(FILE_SOLVER_STATS_CSV, "(A)", advance="no") str_stats_names
-    write(FILE_SOLVER_STATS_CSV, '(a)') ''
-
-    call camp_mpi_barrier()
-
-    deallocate(file_name)
-
-  end subroutine
 
   subroutine set_env(camp_interface,file_prefix)
 

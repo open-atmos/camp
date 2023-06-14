@@ -266,19 +266,6 @@ if (ENABLE_SWAP_DERIV_LOOP_CELLS)
 endif()
 
 ######################################################################
-# Unit test macro
-
-macro(do_unit_test test_name result)
-  if(ENABLE_MPI)
-    add_test(unit_test_${test_name} mpirun -v -np 1 ${CMAKE_BINARY_DIR}/unit_test_${test_name})
-  else()
-    add_test(unit_test_${test_name} ${CMAKE_BINARY_DIR}/unit_test_${test_name})
-  endif()
-  set_tests_properties(unit_test_${test_name}
-	  PROPERTIES PASS_REGULAR_EXPRESSION ${result})
-endmacro(do_unit_test)
-
-######################################################################
 # copy dirs
 
 if(ENABLE_DATA OR ENABLE_TESTS)
@@ -297,9 +284,25 @@ endif()
 set_property(DIRECTORY PROPERTY ADDITIONAL_MAKE_CLEAN_FILES test_run mechanisms_run scenarios_run boot_camp_run)
 
 ######################################################################
+# Unit test macro
+
+#if (ENABLE_TESTS)
+  macro(do_unit_test test_name result)
+    if(ENABLE_MPI)
+      add_test(unit_test_${test_name} mpirun -v -np 1 ${CMAKE_BINARY_DIR}/unit_test_${test_name})
+    else()
+      add_test(unit_test_${test_name} ${CMAKE_BINARY_DIR}/unit_test_${test_name})
+    endif()
+    set_tests_properties(unit_test_${test_name}
+            PROPERTIES PASS_REGULAR_EXPRESSION ${result})
+  endmacro(do_unit_test)
+#endif()
+
+######################################################################
 # tests
 
 enable_testing()
+#if (ENABLE_TESTS)
 do_unit_test(property "PASS")
 do_unit_test(chem_spec_data "PASS")
 do_unit_test(aero_phase_data "PASS")
@@ -307,6 +310,7 @@ do_unit_test(jacobian "PASS")
 do_unit_test(aero_rep_single_particle "PASS")
 do_unit_test(aero_rep_modal_binned_mass "PASS")
 do_unit_test(camp_core "PASS")
+#endif()
 
 if (ENABLE_MPI AND ENABLE_MPI_TEST)
   set(MPI_TEST_FLAG MPI)
@@ -341,7 +345,6 @@ if (ENABLE_TESTS)
   add_test(boot_camp_part_4 ${CMAKE_BINARY_DIR}/boot_camp_run/part_4_code/run_part_4.sh ${MPI_TEST_FLAG})
   add_test(camp_v1_paper_binned ${CMAKE_BINARY_DIR}/data_run/CAMP_v1_paper/binned/test_monarch_binned.sh ${MPI_TEST_FLAG})
   add_test(camp_v1_paper_modal ${CMAKE_BINARY_DIR}/data_run/CAMP_v1_paper/modal/test_monarch_modal.sh ${MPI_TEST_FLAG})
-
 endif()
 
 ######################################################################
@@ -567,22 +570,22 @@ set_source_files_properties(${CB5_EBI_SOLVER} PROPERTIES COMPILE_FLAGS
 ######################################################################
 # MONARCH interface
 
-add_executable(test_chemistry_cb05cl_ae5_big
-        test/chemistry/cb05cl_ae5/test_cb05cl_ae5_big.F90
+add_executable(mock_monarch test/monarch/mock_monarch.F90
+        test/monarch/camp_monarch_interface.F90
         ${CB5_EBI_SOLVER} ${CB5_KPP_SOLVER}
         test/chemistry/cb05cl_ae5/module_BSC_CHEM_DATA.F90)
-target_link_libraries(test_chemistry_cb05cl_ae5_big camplib)
+target_link_libraries(mock_monarch camplib)
 
 if (ENABLE_TESTS)
 
-  add_executable(mock_monarch test/monarch/mock_monarch.F90
-          test/monarch/camp_monarch_interface.F90
+  add_executable(test_chemistry_cb05cl_ae5_big
+          test/chemistry/cb05cl_ae5/test_cb05cl_ae5_big.F90
           ${CB5_EBI_SOLVER} ${CB5_KPP_SOLVER}
           test/chemistry/cb05cl_ae5/module_BSC_CHEM_DATA.F90)
-  target_link_libraries(mock_monarch camplib)
+  target_link_libraries(test_chemistry_cb05cl_ae5_big camplib)
 
-  ######################################################################
-  # camp-chem box model
+######################################################################
+# camp-chem box model
 
   add_executable(camp_box_model test/camp_box_model_data.F90
           test/camp_box_model.F90)

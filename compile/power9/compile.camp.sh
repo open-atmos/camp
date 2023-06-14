@@ -25,7 +25,6 @@ if [ $BSC_MACHINE == "power" ]; then
   export JSON_FORTRAN_HOME=$(pwd)/$relative_path/json-fortran-6.1.0/install/jsonfortran-gnu-6.1.0
   mpifort=$(which mpifort)
 elif [ $BSC_MACHINE == "mn4" ]; then
-  echo "mn4"
   export JSON_FORTRAN_HOME=$(pwd)/$relative_path/json-fortran-6.1.0/install/jsonfortran-intel-6.1.0
   mpifort=$(which mpiifort)
   module load cmake
@@ -34,11 +33,13 @@ elif [ $BSC_MACHINE == "mn4" ]; then
   module load netcdf/4.4.1.1
   module load hdf5/1.8.19
   module load libpng/1.5.13
-elif [ LOCAL_MACHINE == CGUZMAN ]; then
+elif [ LOCAL_MACHINE==CGUZMAN ]; then
+  mpifort=$(which mpifort)
   if ! command -v mpicc &> /dev/null; then
       echo "MPI is not installed. Installing..."
       sudo apt update
       sudo apt install -y mpi-default-dev
+      #if run | Invalid MIT-MAGIC-COOKIE-1 key THEN sudo apt-remove openmpi-bin AND sudo apt-get install libcr-dev mpich2 mpich2-doc
   fi
 else
   echo "Unknown architecture"
@@ -65,7 +66,7 @@ cmake -D CMAKE_C_COMPILER=$(which mpicc) \
 -D ENABLE_CXX=OFF \
 -D ENABLE_MPI=ON \
 -D ENABLE_MPI_TEST=OFF \
--D ENABLE_GPU=ON \
+-D ENABLE_GPU=OFF \
 -D ENABLE_GSL:BOOL=FALSE \
 -D ENABLE_NETCDF=OFF \
 -D ENABLE_EXPORT_NETCDF=OFF \
