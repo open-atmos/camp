@@ -191,12 +191,10 @@ find_library(SUNDIALS_SUNMATRIX_SPARSE_LIB sundials_sunmatrixsparse
   DOC "SUNDIALS SUNMatrixSparse library"
   PATHS ${SUITE_SPARSE_LIB} $ENV{SUITE_SPARSE_HOME}/lib ${SUNDIALS_PATH_LIB} $ENV{SUNDIALS_HOME}/lib
         /opt/local/lib /usr/local/lib)
-set(SUNDIALS_LIBS ${SUNDIALS_SUNMATRIX_SPARSE_LIB} ${SUNDIALS_NVECSERIAL_LIB} ${SUNDIALS_CVODE_LIB}
-  ${SUNDIALS_KLU_LIB} ${SUITE_SPARSE_KLU_LIB}
-  ${SUITE_SPARSE_COLAMD_LIB} ${SUITE_SPARSE_AMD_LIB} ${SUITE_SPARSE_BTF_LIB}
-  ${SUITE_SPARSE_CONFIG_LIB})
-#message (${SUNDIALS_LIBS}) #not working fine, only set half of the variables
-
+set(SUNDIALS_LIBS ${SUITE_SPARSE_KLU_LIB} ${SUNDIALS_KLU_LIB}
+  ${SUNDIALS_SUNMATRIX_SPARSE_LIB} ${SUNDIALS_NVECSERIAL_LIB}
+  ${SUNDIALS_CVODE_LIB} ${SUITE_SPARSE_COLAMD_LIB} ${SUITE_SPARSE_AMD_LIB}
+  ${SUITE_SPARSE_BTF_LIB} ${SUITE_SPARSE_CONFIG_LIB})
 include_directories(${SUNDIALS_INCLUDE_DIR} ${SUITE_SPARSE_INCLUDE_DIR})
 add_definitions(-DCAMP_USE_SUNDIALS)
 
@@ -445,10 +443,8 @@ set_source_files_properties(${CAMP_C_SRC} PROPERTIES COMPILE_FLAGS
         ${STD_C_FLAGS})
 
 if(ENABLE_CXX)
-
     set_source_files_properties(${CAMP_CXX_SRC} PROPERTIES COMPILE_FLAGS
             ${STD_CXX_FLAGS})
-
 else()
     set(CAMP_CXX_SRC "")
 endif()
@@ -487,7 +483,7 @@ set(CAMP_LIB_SRC
         src/solver_stats.F90
         src/debug_diff_check.F90
         ${CAMP_C_SRC} ${AEROSOL_REPS_SRC} ${SUB_MODELS_SRC}
-        ${REACTIONS_SRC} ${GSL_SRC} ${CAMP_CUDA_SRC} ${CAMP_CXX_SRC} src/cuda/cvode_cuda.cu src/cuda/cuda_structs.h src/cuda/cvode_gpu.h)
+        ${REACTIONS_SRC} ${GSL_SRC} ${CAMP_CUDA_SRC} ${CAMP_CXX_SRC} )
 
 if(ENABLE_SHARED_LIB)
   add_library(camplib SHARED ${CAMP_LIB_SRC}) #todo fix, Shared library are better than static (faster in execution, no recompilation, smaller)
@@ -571,19 +567,19 @@ set_source_files_properties(${CB5_EBI_SOLVER} PROPERTIES COMPILE_FLAGS
 ######################################################################
 # MONARCH interface
 
-add_executable(mock_monarch test/monarch/mock_monarch.F90
-        test/monarch/camp_monarch_interface.F90
-        ${CB5_EBI_SOLVER} ${CB5_KPP_SOLVER}
-        test/chemistry/cb05cl_ae5/module_BSC_CHEM_DATA.F90)
-target_link_libraries(mock_monarch camplib)
-
-if (ENABLE_TESTS)
-
 add_executable(test_chemistry_cb05cl_ae5_big
         test/chemistry/cb05cl_ae5/test_cb05cl_ae5_big.F90
         ${CB5_EBI_SOLVER} ${CB5_KPP_SOLVER}
         test/chemistry/cb05cl_ae5/module_BSC_CHEM_DATA.F90)
 target_link_libraries(test_chemistry_cb05cl_ae5_big camplib)
+
+if (ENABLE_TESTS)
+
+  add_executable(mock_monarch test/monarch/mock_monarch.F90
+          test/monarch/camp_monarch_interface.F90
+          ${CB5_EBI_SOLVER} ${CB5_KPP_SOLVER}
+          test/chemistry/cb05cl_ae5/module_BSC_CHEM_DATA.F90)
+  target_link_libraries(mock_monarch camplib)
 
   ######################################################################
   # camp-chem box model

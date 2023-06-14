@@ -34,7 +34,7 @@ elif [ $BSC_MACHINE == "mn4" ]; then
   module load netcdf/4.4.1.1
   module load hdf5/1.8.19
   module load libpng/1.5.13
-elif [ LOCAL_MACHINE==CGUZMAN ]; then
+elif [ LOCAL_MACHINE == CGUZMAN ]; then
   if ! command -v mpicc &> /dev/null; then
       echo "MPI is not installed. Installing..."
       sudo apt update
@@ -54,8 +54,8 @@ cd build
 
 cmake -D CMAKE_C_COMPILER=$(which mpicc) \
 -D CMAKE_BUILD_TYPE=debug \
--D CMAKE_C_FLAGS_DEBUG="-g" \
--D CMAKE_Fortran_FLAGS_DEBUG="-g" \
+-D CMAKE_C_FLAGS_DEBUG="-O0 -g" \
+-D CMAKE_Fortran_FLAGS_DEBUG="-O0 -g" \
 -D CMAKE_C_FLAGS_RELEASE="-std=c99" \
 -D CMAKE_Fortran_FLAGS_RELEASE="" \
 -D CMAKE_Fortran_COMPILER=$mpifort \

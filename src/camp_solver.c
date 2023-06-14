@@ -718,7 +718,12 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
 #endif
 #ifdef CAMP_USE_GPU
     if(sd->use_cpu==1){
-      flag = CVode(sd->cvode_mem, (realtype)t_final, sd->y, &t_rt, CV_NORMAL);
+      if(sd->use_gpu_cvode==1) {
+        printf("CVODE_DEBUG\n");
+        //flag = CVode_debug(sd->cvode_mem, (realtype)t_final, sd->y, &t_rt, CV_NORMAL);
+      }else{
+        flag = CVode(sd->cvode_mem, (realtype)t_final, sd->y, &t_rt, CV_NORMAL);
+      }
     }
     else{
       if(sd->use_gpu_cvode==1){
