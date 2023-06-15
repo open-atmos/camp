@@ -55,6 +55,7 @@ option(use_maxrregcount48 "Compiling with maxxregcount48" OFF)
 
 mark_as_advanced(FORCE ENABLE_DEBUG FAILURE_DETAIL)
 file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/out)
+file(CREATE_LINK ${CMAKE_BINARY_DIR}/out ${CMAKE_CURRENT_SOURCE_DIR}/test/monarch/out SYMBOLIC)
 file(CREATE_LINK ${CMAKE_CURRENT_SOURCE_DIR}/test/monarch/settings ${CMAKE_BINARY_DIR}/settings SYMBOLIC)
 
 ######################################################################

@@ -133,8 +133,6 @@ def all_timesteps():
   jsonData = json.load(jsonFile)
   conf.MAPETol = jsonData["camp-data"][0]["value"]  # Default: 1.0E-4
   jsonData.clear()
-  if not os.path.exists('out'):
-    os.makedirs('out')
   if conf.plotYKey == "":
     print("conf.plotYKey is empty")
   if conf.chemFile == "monarch_binned":

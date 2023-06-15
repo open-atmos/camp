@@ -404,7 +404,7 @@ def run(conf):
     json.dump(conf.__dict__, jsonFile, indent=4, sort_keys=False)
 
   data_name = conf.chemFile + '_' + conf.caseMulticellsOnecell + conf.results_file
-  tmp_path = '../../build/out/' + data_name
+  tmp_path = 'out/' + data_name
 
   if conf.is_import and conf.plotYKey != "MAPE":
     is_import, data_path = import_data(conf, tmp_path)
