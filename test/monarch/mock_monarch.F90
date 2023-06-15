@@ -228,7 +228,7 @@ program mock_monarch_t
     call jfile%load_file(export_path); if (jfile%failed()) print*,&
             "JSON not found at ",export_path
     call jfile%get('_chemFile',output_file_title)
-    camp_input_file = "config_"//output_file_title//".json"
+    camp_input_file = "settings/config_"//output_file_title//".json"
     interface_input_file = "interface_"//output_file_title//".json"
     output_path = "out/"//output_file_title
     if(output_file_title.eq."monarch_binned") then
@@ -838,7 +838,7 @@ contains
 
     call jfile%initialize()
 
-    export_path = "exports/camp_in_out_"//trim(mpi_rank_str)//".json"
+    export_path = "settings/exports/camp_in_out_"//trim(mpi_rank_str)//".json"
 
     call jfile%load_file(export_path); if (jfile%failed()) print*,&
             "JSON not found at ",export_path
