@@ -2,7 +2,7 @@
 
 export SUNDIALS_HOME=$(pwd)/../../../cvode-3.4-alpha/install
 export SUITE_SPARSE_HOME=$(pwd)/../../../SuiteSparse
-  export JSON_FORTRAN_HOME=$(pwd)/../../../json-fortran-6.1.0/install/jsonfortran-gnu-6.1.0
+export JSON_FORTRAN_HOME=$(pwd)/../../../json-fortran-6.1.0/install/jsonfortran-gnu-6.1.0
 elif [ $BSC_MACHINE == "mn4" ]; then
   export JSON_FORTRAN_HOME=$(pwd)/../../../json-fortran-6.1.0/install/jsonfortran-intel-6.1.0
 elif
@@ -25,8 +25,7 @@ mkdir_if_not_exists(){
 
 rm_old_logs(){
 find $1 -type f -mtime +15 -exec rm -rf {} \;
-#echo "rm_old_logs finish"
-} #echo $(rm_old_logs)
+}
 rm_old_dirs_jobs(){
 find $1 -type d -ctime +30 -exec rm -rf {} +
 }
@@ -60,14 +59,11 @@ else
   fi
   cd ../test/monarch
 
-  #echo "make end"
-
   FILE=TestMonarch.py
   #FILE=./test_run/chemistry/cb05cl_ae5/test_chemistry_cb05cl_ae5.sh
   #FILE=./unit_test_aero_rep_single_particle
   #FILE=./new_make.sh
   if [ "$FILE" == TestMonarch.py ]; then
-    #echo "python TestMonarch.py start"
     python $FILE
     cd ../../compile/power9
   elif [ "$FILE" == test_monarch_1.py ]; then
@@ -75,7 +71,6 @@ else
     python  $FILE
     cd ../../camp/compile/power9
   else
-    #cd ../../build
     cd ../../compile/power9
     time $FILE
   fi

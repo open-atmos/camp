@@ -83,7 +83,7 @@ def all_timesteps():
 
   conf.casesOptim = []
   #conf.casesOptim.append("CPU One-cell")
-  #conf.casesOptim.append("CPU Multi-cells")
+  conf.casesOptim.append("CPU Multi-cells")
   #conf.casesOptim.append("GPU One-cell")
   # conf.casesOptim.append("GPU Multi-cells")
   # conf.casesOptim.append("GPU Block-cellsNhalf")

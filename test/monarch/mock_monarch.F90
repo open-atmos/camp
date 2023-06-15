@@ -166,7 +166,7 @@ program mock_monarch_t
   integer(kind=i_kind) :: pos, pack_size, mpi_threads, ierr
   real, allocatable  :: species_conc_mpi(:,:,:,:,:)
 
-  character(len=500) :: arg
+  character(len=512) :: arg
   integer :: status_code, i_time, i_spec, i_case, i, j, k, z,r,n_cells_plot,cell_to_print
   !> Partmc nº of cases to test
   integer :: plot_case, new_v_cells, aux_int
@@ -180,6 +180,7 @@ program mock_monarch_t
   character(len=:), allocatable :: export_path
   character(len=128) :: i_str
   integer :: id
+
   !netcdf
   integer :: ncid, pres_varid, temp_varid
   integer(kind=i_kind), allocatable :: species_id_netcdf(:)
@@ -187,6 +188,7 @@ program mock_monarch_t
   character(len=:), allocatable :: file_name
 
   ! initialize mpi (to take the place of a similar MONARCH call)
+  !todo put MPI as an option to reduce time execution when developing, testing, and debugging
   call camp_mpi_init()
 
   !Options
@@ -196,9 +198,7 @@ program mock_monarch_t
   I_N=1
 
   !print*,"start"
-#ifndef DEV_TEST
 
-  !camp_input_file =
   call get_command_argument(1, arg, status=status_code)
   camp_input_file = trim(arg)
   call get_command_argument(2, arg, status=status_code)
@@ -224,14 +224,13 @@ program mock_monarch_t
   else
 
     call jfile%initialize()
-    export_path = "TestMonarch"//".json"
+    export_path = "settings/TestMonarch"//".json"
     call jfile%load_file(export_path); if (jfile%failed()) print*,&
             "JSON not found at ",export_path
-
     call jfile%get('_chemFile',output_file_title)
     camp_input_file = "config_"//output_file_title//".json"
     interface_input_file = "interface_"//output_file_title//".json"
-    output_path = "../../build/test_run/monarch/out/"//output_file_title
+    output_path = "../../build/out/"//output_file_title
     if(output_file_title.eq."monarch_binned") then
       ADD_EMISIONS = "monarch_binned"
     end if
@@ -414,11 +413,10 @@ program mock_monarch_t
 
   camp_interface => camp_monarch_interface_t(camp_input_file, interface_input_file, &
           START_CAMP_ID, END_CAMP_ID, n_cells, n_cells_tstep, ADD_EMISIONS)!, n_cells
+  deallocate(camp_input_file)
 
   ncounters = size(camp_interface%camp_core%ncounters)
   ntimers = size(camp_interface%camp_core%ntimers)
-
-  !call camp_mpi_barrier(MPI_COMM_WORLD)
 
   if(export_results_all_cells.eq.1) then
     allocate(species_conc_mpi(NUM_WE_CELLS,NUM_SN_CELLS,&
@@ -444,14 +442,6 @@ program mock_monarch_t
     end do
   end if
 
-  !print*,"mock_monarch export_results_all_cells end"
-
-  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  ! **** end initialization modification **** !
-  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-  ! Set conc from mock_model
-
   camp_interface%camp_state%state_var(:) = 0.0
   species_conc(:,:,:,:) = 0.0
   air_density(:,:,:) = 1.225
@@ -473,6 +463,7 @@ program mock_monarch_t
     !call import_camp_input(camp_interface)
     call import_camp_input_json(camp_interface)
   end if
+  deallocate(interface_input_file)
 
   call set_env(camp_interface,output_path)
 
@@ -483,15 +474,7 @@ program mock_monarch_t
 #endif
 
   if(.not.caseMulticellsOnecell.eq."EBI") then
-
-    !call camp_mpi_barrier(MPI_COMM_WORLD)
-    !print*,"MPI RANK",camp_mpi_rank()
-
-    ! Run the model
     do i_time=1, NUM_TIME_STEP
-      !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-      ! **** Add to MONARCH during runtime for each time step **** !
-      !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 #ifdef ENABLE_PRINT_STATE_GNUPLOT
       if (camp_mpi_rank().eq.0) then
         call print_state_gnuplot(curr_time,camp_interface, name_gas_species_to_print,id_gas_species_to_print&
@@ -554,8 +537,6 @@ program mock_monarch_t
 
   ! Deallocation
   !print*,"deallocate start", camp_mpi_rank()
-  deallocate(camp_input_file)
-  deallocate(interface_input_file)
   deallocate(output_path)
   deallocate(output_file_title)
 
@@ -569,8 +550,6 @@ program mock_monarch_t
   end if
   !print*,"deallocate end", camp_mpi_rank()
   call camp_mpi_finalize()
-
-#endif
 
 contains
 
@@ -1708,15 +1687,15 @@ contains
     !write(SCRIPTS_FILE_UNIT,*) "set output '"//file_prefix//"_plot.png'"
     write(SCRIPTS_FILE_UNIT,"(A)",advance="no") "set output '&
             /gpfs/scratch/bsc32/bsc32815/papercamp/camp/build/&
-        test_run/monarch/out/monarch_plot.jpg'"
+        monarch/out/monarch_plot.jpg'"
     write(SCRIPTS_FILE_UNIT,*)
     write(SCRIPTS_FILE_UNIT,"(A)",advance="no") "plot for [col=2:"&
     //trim(n_gas_species_plot_str)//"] &
-    'camp/build/test_run/monarch/"//file_prefix//"_results.txt' &
+    'camp/build/monarch/"//file_prefix//"_results.txt' &
     using 1:col axis x1y1 title columnheader, for [col2=" &
     //trim(n_aerosol_species_start_plot_str)//":" &
     //trim(n_aerosol_species_plot_str)//"] &
-    'camp/build/test_run/monarch/"//file_prefix//"_results.txt' &
+    'camp/build/monarch/"//file_prefix//"_results.txt' &
     using " &
     //trim(n_aerosol_species_time_plot_str)// &
     ":col2 axis x1y2 title columnheader"

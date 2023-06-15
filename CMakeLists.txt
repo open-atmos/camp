@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.14)
 # Require 2.6.4 due to -I/usr/include behavior:
 # http://www.cmake.org/Bug/view.php?id=8598
 # http://gcc.gnu.org/bugzilla/show_bug.cgi?id=35707
@@ -54,6 +54,9 @@ option(use_maxrregcount68 "Compiling with maxxregcount68" OFF)
 option(use_maxrregcount48 "Compiling with maxxregcount48" OFF)
 
 mark_as_advanced(FORCE ENABLE_DEBUG FAILURE_DETAIL)
+file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/out)
+file(CREATE_LINK ${CMAKE_CURRENT_SOURCE_DIR}/test/monarch/settings ${CMAKE_BINARY_DIR}/settings SYMBOLIC)
+
 ######################################################################
 # CPack
 

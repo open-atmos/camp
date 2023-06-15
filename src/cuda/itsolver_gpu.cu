@@ -24,7 +24,7 @@ void read_options_bcg(ModelDataCPU *mCPU){
 
   char path[] = "itsolver_options.txt";
 
-  fp = fopen("itsolver_options.txt", "r");
+  fp = fopen("settings/itsolver_options.txt", "r");
   if (fp == NULL){
     printf("Could not open file %s, setting ModelDataCPU to One-cell\n",path);
     mCPU->cells_method=0;

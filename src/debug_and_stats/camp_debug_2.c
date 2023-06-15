@@ -562,7 +562,7 @@ void print_current_directory(){
 void get_camp_config_variables(SolverData *sd){
   FILE *fp;
   char buff[255];
-  char path[] = "config_variables_c_solver.txt";
+  char path[] = "settings/config_variables_c_solver.txt";
   fp = fopen("config_variables_c_solver.txt", "r");
   if (fp == NULL){
     printf("Could not open file %s, setting use_cpu ON\n",path);
