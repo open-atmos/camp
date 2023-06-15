@@ -129,7 +129,7 @@ def all_timesteps():
     conf.results_file = '_results_all_cells.csv'
     conf.is_export = False
     conf.is_import = False
-  jsonFile = open("monarch_box_binned/cb05_abs_tol.json")
+  jsonFile = open("settings/monarch_box_binned/cb05_abs_tol.json")
   jsonData = json.load(jsonFile)
   conf.MAPETol = jsonData["camp-data"][0]["value"]  # Default: 1.0E-4
   jsonData.clear()
