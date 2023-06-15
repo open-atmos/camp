@@ -411,9 +411,11 @@ program mock_monarch_t
   deallocate(str)
   deallocate(file_name)
 
-  camp_interface => camp_monarch_interface_t(camp_input_file, interface_input_file, &
+  str="settings/"//interface_input_file
+  camp_interface => camp_monarch_interface_t(camp_input_file, str, &
           START_CAMP_ID, END_CAMP_ID, n_cells, n_cells_tstep, ADD_EMISIONS)!, n_cells
   deallocate(camp_input_file)
+  deallocate(str)
 
   ncounters = size(camp_interface%camp_core%ncounters)
   ntimers = size(camp_interface%camp_core%ntimers)
