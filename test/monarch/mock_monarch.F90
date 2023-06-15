@@ -230,7 +230,7 @@ program mock_monarch_t
     call jfile%get('_chemFile',output_file_title)
     camp_input_file = "config_"//output_file_title//".json"
     interface_input_file = "interface_"//output_file_title//".json"
-    output_path = "../../build/out/"//output_file_title
+    output_path = "out/"//output_file_title
     if(output_file_title.eq."monarch_binned") then
       ADD_EMISIONS = "monarch_binned"
     end if
