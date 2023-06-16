@@ -221,25 +221,22 @@ contains
   !! each aerosol representation at the beginning of a model run after all
   !! the input files have been read in. It ensures all data required during
   !! the model run are included in the condensed data arrays.
-  subroutine initialize(this, aero_layers_set, aero_phase_set, spec_state_id)
+  subroutine initialize(this, aero_layer_phase_set, spec_state_id)
 
     !> Aerosol representation data
     class(aero_rep_single_particle_t), intent(inout) :: this
-    !> The set of aerosol phases
-    type(aero_phase_data_ptr), pointer, intent(in) :: aero_phase_set(:)
-    !> The set of aerosol layers
-    type(aero_layer_data_ptr), pointer, intent(in) :: aero_layers_set(:)
+    !> The set of aerosol phases in each layer
+    type(aero_phase_data_ptr), pointer, intent(in) :: aero_layer_phase_set(:)
     !> Beginning state id for this aerosol representationin the model species
     !! state array
     integer(kind=i_kind), intent(in) :: spec_state_id
 
     character(len=:), allocatable :: key_name
-    integer(kind=i_kind) :: i_particle, i_phase, i_layer, curr_id
+    integer(kind=i_kind) :: i_particle, i_phase, curr_id
     integer(kind=i_kind) :: num_int_param, num_float_param, num_particles
 
     ! Start off the counters
-    num_int_param = NUM_INT_PROP_ + 3*size(aero_phase_set) + &
-                       size(aero_layers_set)
+    num_int_param = NUM_INT_PROP_ + 4*size(aero_layer_phase_set) 
     num_float_param = NUM_REAL_PROP_
 
     ! Get the maximum number of computational particles
@@ -249,14 +246,11 @@ contains
                     "Missing maximum number of computational particles")
 
     ! Assume all phases will be applied once to each particle in each layer
-    allocate(this%aero_phase((size(aero_phase_set)+size(aero_layers_set)) &
-                                 *num_particles))
+    allocate(this%aero_phase(size(aero_layer_phase_set) * num_particles))
     do i_particle = 1, num_particles
-      do i_phase = 1, size(aero_phase_set)
-        do i_layer = 1, size(aero_layers_set)
-          this%aero_phase((i_particle-1)*size(aero_phase_set)+i_phase) = &
-              aero_phase_set(i_phase)
-        end do
+      do i_phase = 1, size(aero_layer_phase_set)
+        this%aero_phase((i_particle-1)*size(aero_layer_phase_set)+i_phase) = &
+            aero_layer_phase_set(i_phase)
       end do
     end do
 
@@ -273,17 +267,14 @@ contains
     this%num_env_params = NUM_ENV_PARAM_PER_PARTICLE_ * num_particles
 
     ! Set phase state and model data ids
-    NUM_PHASE_ = size(aero_phase_set)
+    TOTAL_NUM_PHASES_ = size(aero_layer_phase_set)
     NUM_LAYERS_ = size(aero_layers_set)
     this%state_id_start = spec_state_id
     curr_id = spec_state_id
-    do i_phase = 1, NUM_PHASE_
-      do i_layer = 1, NUM_LAYERS_
-        PHASE_STATE_ID_(i_phase) = curr_id
-        PHASE_MODEL_DATA_ID_(i_phase) = i_phase
-        LAYER_MODEL_DATA_ID_(i_layer) = i_layer
-        curr_id = curr_id + aero_phase_set(i_phase)%val%size() + &
-                      aero_layers_set(i_layer)%val%size()
+    do i_phase = 1, TOTAL_NUM_PHASES_
+      PHASE_STATE_ID_(i_phase) = curr_id
+      PHASE_MODEL_DATA_ID_(i_phase) = i_phase
+      curr_id = curr_id + aero_layer_phase_set(i_phase)%val%size()
       end do
     end do
     PARTICLE_STATE_SIZE_ = curr_id - spec_state_id
@@ -540,13 +531,11 @@ contains
     integer(kind=i_kind) ::  i_phase
 
     num_phase_instances = 0
-    do i_layer = 1, NUM_LAYERS_
-      do i_phase = 1, NUM_PHASE_
-        if (this%aero_phase(i_phase)%val%name().eq.phase_name) then
-          num_phase_instances = MAX_PARTICLES_
-          return
-        end if
-      end do
+    do i_phase = 1, TOTAL_NUM_PHASES_
+      if (this%aero_phase(i_phase)%val%name().eq.phase_name) then
+        num_phase_instances = MAX_PARTICLES_
+        return
+      end if
     end do
   end function num_phase_instances
 
