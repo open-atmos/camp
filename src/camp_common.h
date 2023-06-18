@@ -269,23 +269,10 @@ typedef struct {
 #endif
 
 #ifdef CAMP_DEBUG_GPU
-  int counterDerivTotal;
-  int counterDerivCPU;
-  int counterJac;
-  int counterSolve;
-  int counterFail;
   int counterBCG;
   int counterLS;
   double timeCVode;
-  double timeCVodeTotal;
   double timeLS;
-  double timeDerivCPU;
-#endif
-
-#ifdef CAMP_DEBUG_DERIV_CPU
-  N_Vector y_first;
-  int max_deriv_print;
-  int counter_deriv_print;
 #endif
 
 #ifdef FAILURE_DETAIL

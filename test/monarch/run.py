@@ -134,8 +134,6 @@ def write_camp_config_file(conf):
         raise
       else:
         file1.write("USE_GPU_CVODE=ON\n")
-    elif conf.caseMulticellsOnecell == "CPU":
-      file1.write("USE_GPU_CVODE=2\n")
     else:
       file1.write("USE_GPU_CVODE=OFF\n")
     file1.write(str(conf.nGPUs) + "\n")

@@ -379,18 +379,9 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
 #endif
 
 #ifdef CAMP_DEBUG_GPU
-
-  sd->counterDerivTotal = 0;
-  sd->counterDerivCPU = 0;
-  sd->counterJac=0;
-  sd->counterSolve = 0;
-  sd->counterFail = 0;
   sd->counterBCG = 0;
   sd->counterLS = 0;
   sd->timeCVode = 0.0;
-  sd->timeCVodeTotal = 0.0;
-  sd->timeDerivCPU = 0.0;
-
 #endif
 
   sd->ncounters = ncounters;
@@ -763,16 +754,6 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
     flag, rank);
     solver_print_stats(sd->cvode_mem);
 #endif
-#ifdef CAMP_DEBUG_GPU
-#ifdef CAMP_USE_MPI
-      MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-      if (rank == 0) {
-         printf("CAMP_SOLVER_FAIL %d counterSolve:%d counterDerivCPU:%d rank:%d\n",
-                 flag,sd->counterSolve,sd->counterDerivCPU,rank);
-      }
-      sd->counterFail++;
-#endif
-#endif
       return CAMP_SOLVER_FAIL;
     }
   }
@@ -792,20 +773,8 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
     }
   }
 
-#ifdef CAMP_DEBUG_GPU
-#ifdef CAMP_USE_MPI
-  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  if (rank >= 0) {
-    sd->counterDerivTotal += sd->counterDerivCPU;
-    sd->timeCVodeTotal += sd->timeCVode;
-  }
-#endif
 #ifdef FAILURE_DETAIL
   sd->counter_fail_solve_print=0;
-#endif
-  sd->counterDerivCPU = 0;
-  sd->counterJac = 0;
-  sd->counterSolve++;
 #endif
 
   // Re-run the pre-derivative calculations to update equilibrium species
@@ -1202,21 +1171,6 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
   clock_t start10 = clock();
 #endif
 
-#ifdef CAMP_DEBUG_DERIV_CPU
-  int counterPrintDeriv=13;
-  if(sd->counterDerivCPU<=counterPrintDeriv){
-    sd->y_first = N_VClone(y);
-    for (int i = 0; i < NV_LENGTH_S(deriv); i++) {
-      NV_DATA_S(sd->y_first)[i]=NV_DATA_S(y)[i];
-    }
-    sd->max_deriv_print = 1;
-
-    //printf("y_first \n");
-    //printf("Deriv iter: %d\n",sd->counterDerivCPU);
-    //print_derivative_in_out(sd, y, deriv);
-  }
-#endif
-
   // Get a pointer to the derivative data
   double *deriv_data = N_VGetArrayPointer(deriv);
 
@@ -1343,42 +1297,6 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
 // DERIV_LOOP_CELLS_RXN
 #endif
 
-#ifdef CAMP_DEBUG_DERIV_CPU
-  if(
-  //sd->counter_deriv_print<sd->max_deriv_print &&
-  //NV_DATA_S(sd->y_first)[0] != NV_DATA_S(y)[0]){
-  sd->counterDerivCPU<=counterPrintDeriv
-  ){
-    printf("y_first[0] %-le y[0] %-le\n", NV_DATA_S(sd->y_first)[0], NV_DATA_S(y)[0]);
-    printf("Deriv iter: %d\n",sd->counterDerivCPU);
-    print_derivative_in_out(sd, y, deriv);
-    //print_time_derivative(sd);
-    sd->counter_deriv_print++;
-  }
-#endif
-
-#ifdef CAMP_DEBUG_GPU
-
-  // sd->timeDerivCPU += (clock() - start3);
-  sd->timeDerivCPU += (clock() - start10);
-  sd->counterDerivCPU++;
-  // printf("%d",sd->counterDerivCPU);
-
-#ifdef CAMP_USE_MPI
-  int rank;
-  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  // if (rank>=0)
-  if (rank == 999 || rank == 999) {
-    if (sd->counterDerivCPU > 100 && sd->counterDerivCPU < 103) {
-      // printf("Rank %d deriv iter %d jac iter %d counterSolve %d", rank,
-      // sd->counterDerivCPU, sd->counterJac, sd->counterSolve);
-      // print_derivative(sd, deriv);
-    }
-  }
-#endif
-
-#endif
-
   // Return 0 if success
   return (0);
 }
@@ -1412,16 +1330,6 @@ int Jac(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_data,
   double *J_param_data = SM_DATA_S(md->J_params);
 
   // !!!! Do not use tmp2 - it is the same as y !!!! //
-
-#ifdef CAMP_DEBUG_JAC_CPU
-  int counterPrintJac=1;
-  if(sd->counterJac<=counterPrintJac){
-    printf("Jac iter %d\n",sd->counterJac);
-    //print_derivative(sd, y);
-  }
-  int k=0;
-#endif
-
   // Calculate the the derivative for the current state y without
   // the estimated derivative from the last Jacobian calculation
   sd->use_deriv_est = 0;
@@ -1532,29 +1440,6 @@ int Jac(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_data,
       ++(sd->Jac_eval_fails);
     }
   }
-#endif
-
-#ifdef CAMP_DEBUG_GPU
-  sd->counterJac += (clock() - start4);
-  sd->counterJac++;
-#ifdef CAMP_USE_MPI
-  int rank;
-  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  // if (rank>=0)
-  if (rank == 999 || rank == 999) {
-    if (sd->counterJac < 0) {
-      printf("Rank %d deriv iter %d jac iter %d counterSolve %d", rank,
-             sd->counterDerivCPU, sd->counterJac, sd->counterSolve);
-      print_jacobian(J);
-      // printf("Rank %d deriv iter %d jac iter %d counterSolve %d", rank,
-      // sd->counterDerivCPU, sd->counterJac, sd->counterSolve);
-      // camp_debug_print_jac_struct2(sd, J, "RXN struct");
-    }
-    if (sd->counterDerivCPU > 100 && sd->counterDerivCPU < 103) {
-      // print_derivative(deriv);
-    }
-  }
-#endif
 #endif
   return (0);
 }

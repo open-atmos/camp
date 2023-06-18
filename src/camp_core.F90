@@ -156,8 +156,6 @@ module camp_camp_core
     type(camp_solver_data_t), pointer, public :: solver_data_gas_aero => null()
     integer :: ncounters(4)
     real(kind=dp) :: ntimers(14)
-    integer(kind=i_kind) :: counterSolve
-    integer(kind=i_kind) :: counterFail
     real(kind=dp), allocatable :: init_state_var(:)
     type(string_t), allocatable :: spec_names(:)
     logical :: export_flag
@@ -693,9 +691,6 @@ contains
     type(string_t), allocatable :: gas_spec_names(:)
     ! Aerosol species
     type(string_t), allocatable :: unique_names(:)
-
-    this%counterSolve=0
-    this%counterFail=0
 
     ! make sure the core has not already been initialized
     call assert_msg(157261665, .not.this%core_is_initialized, &
