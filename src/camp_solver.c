@@ -140,7 +140,6 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
   sd->model_data.n_per_cell_dep_var = n_dep_var;
 
 #ifdef CAMP_USE_SUNDIALS
-
 #ifdef SWAP_DERIV_LOOP_CELLS
   int n_time_deriv_specs=n_dep_var*n_cells;
 #else
@@ -366,7 +365,7 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
   sd->model_data.sub_model_float_indices[0] = 0;
   sd->model_data.sub_model_env_idx[0] = 0;
 
-#ifdef CAMP_USE_GPU
+#ifdef CAMP_DEBUG_MOCKMONARCH
   get_camp_config_variables(sd);
 #endif
 
@@ -709,12 +708,7 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
 #endif
 #ifdef CAMP_USE_GPU
     if(sd->use_cpu==1){
-      if(sd->use_gpu_cvode==1) {
-        printf("CVODE_DEBUG\n");
-        //flag = CVode_debug(sd->cvode_mem, (realtype)t_final, sd->y, &t_rt, CV_NORMAL);
-      }else{
-        flag = CVode(sd->cvode_mem, (realtype)t_final, sd->y, &t_rt, CV_NORMAL);
-      }
+      flag = CVode(sd->cvode_mem, (realtype)t_final, sd->y, &t_rt, CV_NORMAL);
     }
     else{
       if(sd->use_gpu_cvode==1){
@@ -891,23 +885,16 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
 
 #ifdef CAMP_USE_GPU
 #ifdef CAMP_DEBUG_GPU
-
   if(sd->use_cpu==1){
-
     if(sd->ntimers>0 && sd->ncounters>0){
       //counters[0]=counterBCG;
       CVodeGettimesCounters(sd->cvode_mem, &times[0], &counters[1]);
-      times[2]=sd->timeCVode;
-      //for(int i=0;i<sd->ntimers;i++)
-        //printf("i %d times %le counters %d\n",i,times[i],counters[i]);
-      //for(int i=0;i<sd->ncounters;i++)
-      //  printf("i %d counters %d\n",i,counters[i]);
+      times[2]=sd->timeCVode;;
     }
     else{
       printf("WARNING: In function solver_get_statistics trying to assign times "
              "and counters profilign variables with ncounters || ntimers < 1");
     }
-
   }
   else{
     ModelDataCPU *mCPU = &(sd->mCPU);
@@ -1023,11 +1010,8 @@ void solver_reset_statistics(void *solver_data, int *counters, double *times)
   //printf("sd->ntimers ncounters %d %d\n",sd->ntimers,sd->ncounters);
 #ifdef CAMP_USE_GPU
 #ifdef CAMP_DEBUG_GPU
-
   if(sd->use_cpu==1){
-
     if(sd->ntimers>0 && sd->ncounters>0){
-
       CVodeResettimesCounters(sd->cvode_mem, &times[0], &counters[1]);
       sd->timeCVode=0;
     }
@@ -1035,13 +1019,11 @@ void solver_reset_statistics(void *solver_data, int *counters, double *times)
       printf("WARNING: In function solver_get_statistics trying to assign times "
              "and counters profilign variables with ncounters || ntimers < 1");
     }
-
   }
   else{
     ModelDataCPU *mCPU = &(sd->mCPU);
     ModelDataGPU *mGPU;
     mGPU = sd->mGPU;
-
       ModelDataVariable mdvCPU=mCPU->mdvCPU;
       if(sd->ncounters>0){
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
@@ -1075,7 +1057,6 @@ void solver_reset_statistics(void *solver_data, int *counters, double *times)
       }
     }
   //printf("times[0] %le counters[1] %d\n",times[0],counters[1]);
-
 #endif
 #endif
 }
@@ -1162,13 +1143,9 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
   clock_t start3 = clock();
 #endif
 
-  #ifdef CAMP_DEBUG
+#ifdef CAMP_DEBUG
   // Measure calc_deriv time execution
   clock_t start = clock();
-#endif
-
-#ifdef CAMP_DEBUG_GPU
-  clock_t start10 = clock();
 #endif
 
   // Get a pointer to the derivative data

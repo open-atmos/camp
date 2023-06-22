@@ -46,12 +46,7 @@ option(ENABLE_BOOTCAMP "" OFF)
 option(ENABLE_DATA "" OFF)
 option(ENABLE_INSTALL_OPTIONS "" OFF)
 option(ENABLE_SHARED_LIB "" OFF) #todo fix and shared lib in Monarch
-option(use_maxrregcount127 "Compiling with maxxregcount127" OFF)
-option(use_maxrregcount64 "Compiling with maxxregcount64" OFF)
-option(use_maxrregcount24 "Compiling with maxxregcount24" OFF)
-option(use_maxrregcount62 "Compiling with maxxregcount62" OFF)
-option(use_maxrregcount68 "Compiling with maxxregcount68" OFF)
-option(use_maxrregcount48 "Compiling with maxxregcount48" OFF)
+add_definitions(-DCAMP_DEBUG_MOCKMONARCH)
 
 mark_as_advanced(FORCE ENABLE_DEBUG FAILURE_DETAIL)
 file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/out)
@@ -242,7 +237,6 @@ if (ENABLE_GPU)
     enable_language(CUDA)
     #Define global variable of use gpu no matter what test to include user main test
     add_definitions(-DCAMP_USE_GPU)
-
   else()
     message( WARNING "Not CUDA module found, can't support GPU computation")
   endif()
@@ -443,6 +437,7 @@ set(CAMP_C_SRC
         src/camp_solver.c src/rxn_solver.c src/aero_phase_solver.c
         src/aero_rep_solver.c src/sub_model_solver.c
         src/debug_and_stats/camp_debug_2.c
+        src/debug_and_stats/cvode_debug.c
         src/time_derivative.c
         src/Jacobian.c src/debug_diff_check.c)
 

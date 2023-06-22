@@ -6,28 +6,27 @@
 
 from run import *
 
+
 def all_timesteps():
   conf = TestMonarch()
 
   # conf.chemFile = "simple"
   conf.chemFile = "monarch_cb05"
-  #conf.chemFile = "monarch_binned"
+  # conf.chemFile = "monarch_binned"
 
   conf.diffCellsL = []
   conf.diffCellsL.append("Realistic")
   # conf.diffCellsL.append("Ideal")
 
   conf.profileCuda = ""
-  #conf.profileCuda = "nvprof"
-  #conf.profileCuda = "nsight"
-  #conf.profileCuda = "nsightSummary"
+  # conf.profileCuda = "nvprof"
+  # conf.profileCuda = "nsight"
+  # conf.profileCuda = "nsightSummary"
 
-  conf.is_export = get_is_sbatch()
-  # conf.is_export = True
-  # conf.is_export = False
+  #conf.is_export = get_is_sbatch()
+  conf.is_export = True
 
-  # conf.is_import = True
-  conf.is_import = False
+  conf.is_import = True
 
   # conf.commit = "MATCH_IMPORTED_CONF"
   conf.commit = ""
@@ -37,17 +36,14 @@ def all_timesteps():
 
   # conf.nGPUsCaseOptimList = [1]
   conf.nGPUsCaseOptimList = [1]
-  # conf.nGPUsCaseOptimList = [1,2]
 
   conf.mpi = "yes"
   # conf.mpi = "no"
 
-  conf.mpiProcessesCaseBase = 1
-  #conf.mpiProcessesCaseBase = 2
+  conf.mpiProcessesCaseBase = 20
+  # conf.mpiProcessesCaseBase = 2
 
-  conf.mpiProcessesCaseOptimList.append(1)
-  #conf.mpiProcessesCaseOptimList.append(2)
-  # conf.mpiProcessesCaseOptimList = [10,20,40]
+  conf.mpiProcessesCaseOptimList = [10]
 
   conf.allocatedNodes = 1
   # conf.allocatedNodes = 4
@@ -58,23 +54,22 @@ def all_timesteps():
   # conf.allocatedTasksPerNode = 320
   # conf.allocatedTasksPerNode = get_ntasksPerNode_sbatch() #todo
 
-  conf.cells = [10]
+  conf.cells = [100000]
   # conf.cells = [100, 500, 1000, 5000, 10000]
   # conf.cells = [50000,100000,500000,1000000]
 
-  conf.timeSteps = 10
-  #conf.timeSteps = 720
+  conf.timeSteps = 5
+  # conf.timeSteps = 720
 
   conf.timeStepsDt = 2
 
   # conf.caseBase = "CPU EBI"
-  #conf.caseBase = "CPU One-cell"
-  #conf.caseBase = "CPU Multi-cells"
+  conf.caseBase = "CPU One-cell"
+  # conf.caseBase = "CPU Multi-cells"
   # conf.caseBase="GPU Multi-cells"
   # conf.caseBase="GPU Block-cellsN"
   # conf.caseBase="GPU Block-cells1"
-  #conf.caseBase = "GPU BDF"
-  conf.caseBase = "CPU BDF"
+  # conf.caseBase = "GPU BDF"
   # conf.caseBase = "GPU maxrregcount-64" #wrong 10,000 cells
   # conf.caseBase = "GPU maxrregcount-24" #Minimum
   # conf.caseBase = "GPU maxrregcount-62"
@@ -82,24 +77,23 @@ def all_timesteps():
   # conf.caseBase = "GPU maxrregcount-48"
 
   conf.casesOptim = []
-  #conf.casesOptim.append("CPU One-cell")
-  #conf.casesOptim.append("CPU Multi-cells")
-  #conf.casesOptim.append("GPU One-cell")
+  # conf.casesOptim.append("CPU One-cell")
+  # conf.casesOptim.append("CPU Multi-cells")
+  # conf.casesOptim.append("GPU One-cell")
   # conf.casesOptim.append("GPU Multi-cells")
   # conf.casesOptim.append("GPU Block-cellsNhalf")
   # conf.casesOptim.append("GPU Block-cellsN")
   # conf.casesOptim.append("GPU Block-cells1")
   # conf.casesOptim.append("CPU EBI")
-  #conf.casesOptim.append("GPU BDF")
-  #conf.casesOptim.append("CPU BDF")
-  #conf.casesOptim.append("GPU CPU")
+  conf.casesOptim.append("GPU BDF")
+  # conf.casesOptim.append("GPU CPU")
   # conf.casesOptim.append("GPU maxrregcount-64") #wrong 10,000 cells
   # conf.casesOptim.append("GPU maxrregcount-68")
   # conf.casesOptim.append("GPU maxrregcount-62")
   # conf.casesOptim.append("GPU maxrregcount-24")
-  #conf.casesOptim.append("CPU IMPORT_NETCDF")
+  # conf.casesOptim.append("CPU IMPORT_NETCDF")
 
-  #conf.plotYKey = "Speedup timeCVode"
+  # conf.plotYKey = "Speedup timeCVode"
   # conf.plotYKey = "Speedup normalized counterLS"
   # conf.plotYKey = "Speedup normalized timeLS"
   # conf.plotYKey = "Speedup normalized computational timeLS"
@@ -107,18 +101,18 @@ def all_timesteps():
   # conf.plotYKey = "Speedup normalized counterBCG"
   # conf.plotYKey = "Speedup total iterations - counterBCG"
   # conf.plotYKey = "Speedup BCG iteration (Comp.timeLS/counterBCG)"
-  #conf.plotYKey = "Speedup timecvStep"
+  conf.plotYKey = "Speedup timecvStep"
   # conf.plotYKey = "Speedup timecvStep normalized by countercvStep"
   # conf.plotYKey = "Speedup countercvStep"
   # conf.plotYKey = "Speedup device timecvStep"
   # conf.plotYKey = "Percentage data transfers CPU-GPU [%]"
-  conf.plotYKey = "MAPE"
+  # conf.plotYKey = "MAPE"
   # conf.plotYKey ="SMAPE"
   # conf.plotYKey ="NRMSE"
   # conf.MAPETol = 1.0E-6
 
   # conf.plotXKey = "MPI processes"
-  # conf.plotXKey = "GPUs"
+  conf.plotXKey = "GPUs"
 
   """END OF CONFIGURATION VARIABLES"""
 
@@ -144,7 +138,8 @@ def all_timesteps():
     if "Realistic" in conf.diffCellsL:
       conf.diffCellsL = ["Ideal"]
   elif conf.chemFile == "cb05_mechanism_yarwood2005":
-    print("ERROR: Not tested in testmonarch.py, configuration taken from monarch branch 209 and tested in monarch for the camp paper")
+    print(
+      "ERROR: Not tested in testmonarch.py, configuration taken from monarch branch 209 and tested in monarch for the camp paper")
     raise
   if not conf.caseBase:
     print("ERROR: caseBase is empty")
@@ -167,6 +162,7 @@ def all_timesteps():
         print("WARNING: Configured less cells than MPI processes, setting 1 cell per process")
         conf.mpiProcessesCaseOptimList[i] = cellsProcesses
 
+
   run_diffCells(conf)
 
   if get_is_sbatch() is False:
@@ -174,5 +170,20 @@ def all_timesteps():
 
 
 if __name__ == "__main__":
-  # print("main start")
   all_timesteps()
+
+"""
+  maxnDevices = 4
+  maxCoresPerNode = 40
+  maxCoresPerDevice = maxCoresPerNode / maxnDevices
+  for i, nGPUs in enumerate(conf.nGPUsCaseOptimList):
+    maxCores = int(maxCoresPerDevice * nGPUs)
+    if conf.mpiProcessesCaseOptimList[i] != maxCores:
+      print("WARNING: conf.mpiProcessesCaseOptimList[i] != maxCores, ",
+            conf.mpiProcessesCaseOptimList[i], "!=", maxCores,
+            "conf.mpiProcessesCaseOptimList[i] changed from ",
+            conf.mpiProcessesCaseOptimList[i], "to ", maxCores)
+      conf.mpiProcessesCaseOptimList[i] = maxCores
+
+
+"""

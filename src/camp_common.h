@@ -288,11 +288,14 @@ typedef struct {
   ModelDataCPU mCPU;
   ModelDataGPU *mGPU;
   int *flagCells;
-  int nDevices;
-  int nCellsGPUPerc;
+#endif
+#ifdef CAMP_DEBUG_MOCKMONARCH
   int use_cpu;
   int use_gpu_cvode;
+  int nDevices;
+  int nCellsGPUPerc;
 #endif
+
   void *cvode_mem;       // CVodeMem object
   ModelData model_data;  // Model data (used during initialization and solving)
   bool no_solve;  // Flag to indicate whether to run the solver needs to be

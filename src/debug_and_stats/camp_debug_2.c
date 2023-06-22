@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 #include "../camp_solver.h"
 
 #include <unistd.h>
@@ -558,14 +559,21 @@ void print_current_directory(){
   }
 }
 
-#ifdef CAMP_USE_GPU
+#ifdef CAMP_DEBUG_MOCKMONARCH
 void get_camp_config_variables(SolverData *sd){
   FILE *fp;
   char buff[255];
   char path[] = "settings/config_variables_c_solver.txt";
-  fp = fopen("config_variables_c_solver.txt", "r");
+  fp = fopen(path, "r");
   if (fp == NULL){
-    printf("Could not open file %s, setting use_cpu ON\n",path);
+    char cwd[1024];
+    if (getcwd(cwd, sizeof(cwd)) != NULL) {
+      printf("Current working dir: %s\n", cwd);
+    } else {
+      printf("getcwd() error");
+      exit(0);
+    }
+    printf("Could not open file %s, setting use_cpu ON and use_gpu_cvode OFF\n",path);
     sd->use_cpu=1;
     sd->use_gpu_cvode=0;
   }else{
@@ -587,6 +595,5 @@ void get_camp_config_variables(SolverData *sd){
     fscanf (fp, "%d", &sd->nCellsGPUPerc);
     fclose(fp);
   }
-  //printf("get_camp_config_variables\n");
 }
 #endif

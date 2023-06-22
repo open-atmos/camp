@@ -1,7 +1,7 @@
 import matplotlib as mpl
 
 mpl.use('TkAgg')
-# import plot_functions #comment to save ~2s execution time
+#import plot_functions #comment to save ~2s execution time
 import math_functions
 import sys, getopt
 import os
@@ -88,10 +88,6 @@ def getCaseName(conf):
     case_multicells_onecell_name += "Block-cells (1)"
   elif conf.caseMulticellsOnecell == "Block-cellsNhalf":
     case_multicells_onecell_name += "Block-cells (N/2)"
-  elif conf.caseMulticellsOnecell.find("maxrregcount") != -1:
-    # case_multicells_onecell_name += ""
-    # print("WARNING: Changed name maxrregcount to", case_multicells_onecell_name)
-    case_multicells_onecell_name += conf.caseMulticellsOnecell
   elif conf.caseMulticellsOnecell.find("One") != -1:
     case_multicells_onecell_name += "Base version"
   else:
@@ -114,7 +110,6 @@ def set_import_netcdf(conf, bool_import_netcdf):
     # print("savePath",savePath)
     os.chdir("../../build")
     cmake_str = "cmake -D ENABLE_IMPORT_NETCDF=" + str(bool_import_netcdf) + " .."
-    # print("str")
     os.system(cmake_str)
     os.system("make -j 4")
     os.chdir(savePath)
@@ -321,16 +316,20 @@ def run(conf):
       raise
     maxnDevices = 4  # CTE-POWER specs
     maxCoresPerDevice = maxCoresPerNode / maxnDevices
-    # pending set nGPUs automatically
-    # conf.nGPUs = (int((conf.mpiProcesses-1)/maxCoresPerDevice)+1) % maxnDevices
-    # print("conf.nGPus start",conf.nGPUs)
-    maxCores = maxCoresPerDevice * conf.nGPUs
-    minCores = maxCoresPerDevice * (conf.nGPUs - 1)
-    if not minCores <= conf.mpiProcesses <= maxCores:
-      print(
-        "ERROR: not minCores <= conf.mpiProcesses <= maxCores (FOLLOW PROPORTION, FOR CTE-POWER IS MAX 10 CORES FOR EACH GPU, SINCE IT HAS 4 GPUS AND 40 CORES PER NODE): maxCoresPerDevice,coresPerDevice",
-        minCores, conf.mpiProcesses, maxCores)
-      raise
+    maxCores = int(maxCoresPerDevice * conf.nGPUs)
+    if conf.mpiProcesses != maxCores:
+      print("WARNING: conf.mpiProcesses != maxCores, ",
+            conf.mpiProcesses, "!=", maxCores,
+            "conf.mpiProcesses changed from ", conf.mpiProcesses, "to ", maxCores)
+      conf.mpiProcesses = maxCores
+      conf.mpiProcessesCaseOptimList[0] = maxCores
+      print("TODO: Fix wrong speedup")
+      # raise
+
+     # if conf.mpiProcesses != maxCores:
+    #print("ERROR: conf.mpiProcesses != maxCores, ",
+    #      conf.mpiProcesses, "!=", maxCores)
+    #raise
   exec_str = ""
   try:
     ddt_pid = subprocess.check_output('pidof -x $(ps cax | grep ddt)', shell=True)
@@ -393,9 +392,9 @@ def run(conf):
   # Onecell-Multicells ModelDataCPU
   write_itsolver_config_file(conf)
 
-  print("exec_str:", exec_str, conf.diffCells, conf.caseGpuCpu, conf.caseMulticellsOnecell, "ncellsPerMPIProcess:",
-        conf.nCells,
-        "nGPUs:", conf.nGPUs)
+  print("exec_str:", exec_str, conf.diffCells, conf.caseGpuCpu,
+        conf.caseMulticellsOnecell, "ncellsPerMPIProcess:",
+        conf.nCells, "nGPUs:", conf.nGPUs)
 
   conf_name = "settings/TestMonarch.json"
   with open(conf_name, 'w', encoding='utf-8') as jsonFile:
@@ -517,7 +516,6 @@ def run_cases(conf):
         elif "Speedup" in conf.plotYKey:
           y_key_words = conf.plotYKey.split()
           y_key = y_key_words[-1]
-          # print("WARNING: Check y_key is correct:",y_key)
           datay = math_functions.calculate_speedup(data, y_key)
         elif conf.plotYKey == "Percentage data transfers CPU-GPU [%]":
           y_key = "timeBiconjGradMemcpy"
@@ -526,7 +524,8 @@ def run_cases(conf):
         else:
           raise Exception("Not found plot function for conf.plotYKey")
 
-        if len(conf.cells) > 1 or conf.plotXKey == "MPI processes":
+        if len(conf.cells) > 1 or conf.plotXKey == "MPI processes" \
+            or conf.plotXKey == "GPUs":
           datacases.append(round(np.mean(datay), 2))
           stdCases.append(round(np.std(datay), 2))
         else:
@@ -543,12 +542,12 @@ def run_cells(conf):
     conf.nCellsProcesses = conf.cells[i]
     datacases, stdCases = run_cases(conf)
 
-    if len(conf.cells) == 1:
-      datacells = datacases
-      stdCells = stdCases
-    else:
+    if len(conf.cells) > 1 or conf.plotXKey == "GPUs":
       datacells.append(datacases)
       stdCells.append(stdCases)
+    else:
+      datacells = datacases
+      stdCells = stdCases
 
   # print("datacells",datacells)
 
@@ -639,8 +638,9 @@ def plot_cases(conf):
             legend_name += conf.diffCells + " "
           if len(conf.mpiProcessesCaseOptimList) > 1 and conf.plotXKey == "MPI processes":
             legend_name += str(mpiProcessesCaseOptim) + " MPI "
-          if len(conf.nGPUsCaseOptimList) > 1 and conf.caseGpuCpu == "GPU":
-            legend_name += str(nGPUs) + "GPU "
+          if len(conf.nGPUsCaseOptimList) > 1 and conf.caseGpuCpu == "GPU" \
+              and len(conf.cells) > 1:
+            legend_name += str(nGPUs) + " GPU "
           elif not is_same_arch_optim:
             legend_name += conf.caseGpuCpu + " "
           if not is_same_case_optim:
@@ -669,6 +669,10 @@ def plot_cases(conf):
       else:
         # conf.plotTitle += str(nGPUs) + " " + conf.caseGpuCpu + " "
         conf.plotTitle += conf.caseGpuCpu + " "
+  if conf.plotXKey == "GPUs":
+      conf.plotTitle += "GPU "
+  if conf.plotXKey == "MPI processes":
+      conf.plotTitle += "Speedup against 1 MPI CPU-based version"
   if len(conf.legend) == 1 or not conf.legend or len(conf.diffCellsL) > 1:
     if len(conf.mpiProcessesCaseOptimList) > 1:
       legend_name += str(mpiProcessesCaseOptim) + " MPI "
@@ -676,11 +680,6 @@ def plot_cases(conf):
     if len(conf.diffCellsL) > 1:
       conf.plotTitle += "Implementations "
   else:
-    if conf.plotXKey == "GPUs":
-      conf.plotTitle += "GPU "
-    if conf.plotXKey == "MPI processes":
-      conf.plotTitle += "Speedup against 1 MPI CPU-based version"
-    else:
       conf.plotTitle += "Implementations "
   if not conf.plotXKey == "MPI processes":
     conf.plotTitle += baseCaseName
@@ -714,9 +713,13 @@ def plot_cases(conf):
     datax = conf.mpiProcessesCaseOptimList
     plot_x_key = conf.plotXKey
   elif conf.plotXKey == "GPUs":
-    conf.plotTitle += ", Cells: " + str(conf.cells[0])
-    datax = conf.nGPUsCaseOptimList
-    plot_x_key = conf.plotXKey
+    if len(conf.cells) > 1:
+      conf.plotTitle += ", Cells: " + str(conf.cells[0])
+      datax = conf.nGPUsCaseOptimList
+      plot_x_key = conf.plotXKey
+    else:
+      datax = conf.nGPUsCaseOptimList
+      plot_x_key = "GPUs"
   else:
     conf.plotTitle += ", Cells: " + str(conf.cells[0])
     datax = list(range(1, conf.timeSteps + 1, 1))
@@ -738,4 +741,4 @@ def plot_cases(conf):
     print("plotTitle: ", conf.plotTitle)
   print(namey, ":", datay)
 
-  # plot_functions.plotsns(namex, namey, datax, datay, conf.stdColumns, conf.plotTitle, conf.legend)
+  #plot_functions.plotsns(namex, namey, datax, datay, conf.stdColumns, conf.plotTitle, conf.legend)

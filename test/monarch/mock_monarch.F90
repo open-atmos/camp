@@ -1105,11 +1105,9 @@ contains
       end do
 
 #ifdef CAMP_DEBUG_GPU
-
-      !print*,"ebi_time",ebi_time
+      print*,"ebi_time",ebi_time
       camp_interface%camp_core%ntimers(3) = ebi_time ! timeCVODE place
       call export_solver_stats(curr_time,camp_interface,solver_stats,ncounters,ntimers)
-
 #endif
       if(export_results_all_cells.eq.1) then
         call export_file_results_all_cells(camp_interface)

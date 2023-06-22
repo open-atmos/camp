@@ -227,7 +227,6 @@ void solver_new_gpu_cu_cvode(SolverData *sd) {
   }
 
   int nDevicesMax=4;
-#ifdef ENABLE_GPU_CHECK
   cudaGetDeviceCount(&nDevicesMax);
   if (sd->nDevices > nDevicesMax) {
     printf("ERROR: Not enough GPUs to launch, nDevices %d nDevicesMax %d\n", sd->nDevices, nDevicesMax);
@@ -241,7 +240,6 @@ void solver_new_gpu_cu_cvode(SolverData *sd) {
            "FOR CTE-POWER IS 10 PROCESSES FOR EACH GPU)\n",size,sd->nDevices,coresPerNode,nDevicesMax);
     exit(0);
   }
-#endif
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   cudaSetDevice(0);
@@ -408,7 +406,6 @@ void constructor_cvode_gpu(CVodeMem cv_mem, SolverData *sd){
   cudaEventCreate(&mCPU->startcvStep);
   cudaEventCreate(&mCPU->startBCG);
   cudaEventCreate(&mCPU->startBCGMemcpy);
-
   cudaEventCreate(&mCPU->stopDerivNewton);
   cudaEventCreate(&mCPU->stopDerivSolve);
   cudaEventCreate(&mCPU->stopLinSolSetup);
@@ -947,7 +944,6 @@ void solver_get_statistics_gpu(SolverData *sd){
 void solver_reset_statistics_gpu(SolverData *sd){
   ModelDataGPU *mGPU = sd->mGPU;
   ModelDataCPU *mCPU = &(sd->mCPU);
-  //printf("solver_reset_statistics_gpu\n");
   mGPU = sd->mGPU;
 #ifdef CAMP_DEBUG_GPU
   for (int i = 0; i < mGPU->n_cells; i++){

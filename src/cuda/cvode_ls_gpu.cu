@@ -675,7 +675,6 @@ int cvRootfind_gpu(CVodeMem cv_mem)
 }
 
 #ifdef ONLY_BCG
-
 int CVode_gpu(void *cvode_mem, realtype tout, N_Vector yout,
           realtype *tret, int itask, SolverData *sd)
 {
@@ -2353,7 +2352,6 @@ int cvNlsNewton_gpu(SolverData *sd, CVodeMem cv_mem, int nflag)
       cudaMemcpy(cv_y, mGPU->dcv_y, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost);
 
 #ifdef CAMP_DEBUG_GPU
-    //start=clock();
     cudaEventRecord(mCPU->startDerivNewton);
 #endif
 
@@ -2379,7 +2377,6 @@ int cvNlsNewton_gpu(SolverData *sd, CVodeMem cv_mem, int nflag)
     {
 
 #ifdef CAMP_DEBUG_GPU
-      //start=clock();
       cudaEventRecord(mCPU->startLinSolSetup);
 #endif
 
@@ -2504,18 +2501,7 @@ int linsolsetup_gpu(SolverData *sd, CVodeMem cv_mem,int convfail,N_Vector vtemp1
       cvdls_mem->last_flag = CVDLS_JACFUNC_RECVR;
       return(1);
     }
-
-#ifdef CAMP_DEBUG_GPU
-    //clock_t start = clock();
-#endif
-
     retval = SUNMatCopy(cvdls_mem->A, cvdls_mem->savedJ);
-
-#ifdef CAMP_DEBUG_GPU
-    //mCPU->timeMatCopy+= clock() - start;
-    //mCPU->counterMatCopy++;
-#endif
-
     if (retval) {
       cvProcessError(cv_mem, CVDLS_SUNMAT_FAIL, "CVDLS",
                      "cvDlsSetup",  MSGD_MATCOPY_FAILED);
@@ -2730,7 +2716,6 @@ int linsolsolve_gpu(SolverData *sd, CVodeMem cv_mem)
     //int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data)
 
 #ifdef CAMP_DEBUG_GPU
-    //start=clock();
     cudaEventRecord(mCPU->startDerivSolve);
 #endif
 

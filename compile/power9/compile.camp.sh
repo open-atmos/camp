@@ -55,8 +55,8 @@ cd build
 
 cmake -D CMAKE_C_COMPILER=$(which mpicc) \
 -D CMAKE_BUILD_TYPE=debug \
--D CMAKE_C_FLAGS_DEBUG="-O0 -g" \
--D CMAKE_Fortran_FLAGS_DEBUG="-O0 -g" \
+-D CMAKE_C_FLAGS_DEBUG="-g" \
+-D CMAKE_Fortran_FLAGS_DEBUG="-g" \
 -D CMAKE_C_FLAGS_RELEASE="-std=c99" \
 -D CMAKE_Fortran_FLAGS_RELEASE="" \
 -D CMAKE_Fortran_COMPILER=$mpifort \
@@ -66,7 +66,7 @@ cmake -D CMAKE_C_COMPILER=$(which mpicc) \
 -D ENABLE_CXX=OFF \
 -D ENABLE_MPI=ON \
 -D ENABLE_MPI_TEST=OFF \
--D ENABLE_GPU=OFF \
+-D ENABLE_GPU=ON \
 -D ENABLE_GSL:BOOL=FALSE \
 -D ENABLE_NETCDF=OFF \
 -D ENABLE_EXPORT_NETCDF=OFF \
@@ -74,7 +74,6 @@ cmake -D CMAKE_C_COMPILER=$(which mpicc) \
 -D ENABLE_BOOTCAMP=OFF \
 -D ENABLE_DATA=OFF \
 -D ENABLE_STATIC_LIB=OFF \
--D use_maxrregcount64=OFF \
 ..
 
 make -j 4 VERBOSE=1
