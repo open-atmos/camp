@@ -35,7 +35,7 @@ def all_timesteps():
   # conf.nGPUsCaseBase = 2
 
   # conf.nGPUsCaseOptimList = [1]
-  conf.nGPUsCaseOptimList = [1]
+  conf.nGPUsCaseOptimList = [2]
 
   conf.mpi = "yes"
   # conf.mpi = "no"
@@ -43,7 +43,7 @@ def all_timesteps():
   conf.mpiProcessesCaseBase = 20
   # conf.mpiProcessesCaseBase = 2
 
-  conf.mpiProcessesCaseOptimList = [10]
+  conf.mpiProcessesCaseOptimList = [20]
 
   conf.allocatedNodes = 1
   # conf.allocatedNodes = 4

@@ -323,8 +323,8 @@ def run(conf):
             "conf.mpiProcesses changed from ", conf.mpiProcesses, "to ", maxCores)
       conf.mpiProcesses = maxCores
       conf.mpiProcessesCaseOptimList[0] = maxCores
-      print("TODO: Fix wrong speedup")
-      # raise
+      print("TODO: Fix wrong speedup when using conf.nGPUs=[1,4]")
+      raise
 
      # if conf.mpiProcesses != maxCores:
     #print("ERROR: conf.mpiProcesses != maxCores, ",
@@ -467,7 +467,7 @@ def run_cases(conf):
   # Run base case
   conf.mpiProcesses = conf.mpiProcessesCaseBase
   if conf.nCellsProcesses % conf.mpiProcesses != 0:
-    print("ERROR: DIVISION OF CELLS/PROCESSES NOT INTEGER, nCellsProcesses, mpiProcesses", conf.nCellsProcesses,
+    print("WARNING: On base case conf.nCellsProcesses % conf.mpiProcesses != 0, nCellsProcesses, mpiProcesses", conf.nCellsProcesses,
           conf.mpiProcesses)
     raise
   conf.nCells = int(conf.nCellsProcesses / conf.mpiProcesses)
@@ -489,9 +489,9 @@ def run_cases(conf):
     for mpiProcessesCaseOptim in conf.mpiProcessesCaseOptimList:
       conf.mpiProcesses = mpiProcessesCaseOptim
       if conf.nCellsProcesses % conf.mpiProcesses != 0:
-        print("ERROR: DIVISION OF CELLS/PROCESSES NOT INTEGER, nCellsProcesses, mpiProcesses",
+        print("WARNING: On optim case conf.nCellsProcesses % conf.mpiProcesses != 0,nCellsProcesses, mpiProcesses",
               conf.nCellsProcesses, conf.mpiProcesses)
-        raise
+        #raise
       conf.nCells = int(conf.nCellsProcesses / conf.mpiProcesses)
       for caseOptim in conf.casesOptim:
         if conf.plotXKey == "MPI processes":
@@ -651,13 +651,6 @@ def plot_cases(conf):
   conf.plotTitle = ""
   if not is_same_diff_cells and len(conf.diffCellsL) == 1:
     conf.plotTitle += conf.diffCells + " test: "
-  # if len(conf.mpiProcessesCaseOptimList) == 1:
-  #    if len(conf.mpiProcessesCaseOptimList) == 1:
-  #        conf.plotTitle += str(mpiProcessesCaseOptim) + " MPI "
-  if len(conf.nGPUsCaseOptimList) == 1 and conf.plotXKey == "GPUs":
-    # conf.plotTitle += str(nGPUs) + " GPUs "
-    conf.plotTitle += " GPUs "
-  # print("is_same_arch_optim",is_same_arch_optim)
   if is_same_arch_optim:
     if conf.plotXKey == "MPI processes":
       conf.plotTitle += "CPU "
