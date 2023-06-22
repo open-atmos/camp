@@ -275,7 +275,6 @@ contains
       PHASE_STATE_ID_(i_phase) = curr_id
       PHASE_MODEL_DATA_ID_(i_phase) = i_phase
       curr_id = curr_id + aero_layer_phase_set(i_phase)%val%size()
-      end do
     end do
     PARTICLE_STATE_SIZE_ = curr_id - spec_state_id
 
@@ -382,32 +381,29 @@ contains
     end if
 
     ! Count the number of unique names
-    num_layer = 0
     num_spec = 0
-    do i_layer = 1, NUM_LAYER_
-      do i_phase = 1, NUM_PHASE_
-        curr_layer_name = this%aero_layer(i_layer)%val%name()
-        if (present(layer_name)) then
-          if (layer_name.ne.curr_layer_name) cycle
-        end if
-        curr_phase_name = this%aero_phase(i_phase)%val%name()
-        if (present(phase_name)) then
-          if (phase_name.ne.curr_phase_name) cycle
-        end if
-        if (present(spec_name).or.present(tracer_type)) then
-          spec_names = this%aero_phase(i_phase)%val%get_species_names()
-          do j_spec = 1, size(spec_names)
-            curr_tracer_type = &
-                    this%aero_phase(i_phase)%val%get_species_type( &
-                    spec_names(j_spec)%string)
-            if (present(spec_name)) then
-              if (spec_name.ne.spec_names(j_spec)%string) cycle
-            end if
-            if (present(tracer_type)) then
-              if (tracer_type.ne.curr_tracer_type) cycle
-            end if
-            num_spec = num_spec + 1
-          end do
+    do i_phase = 1, TOTAL_NUM_PHASES_
+      curr_layer_name = this%aero_layer(i_phase)%val%name()
+      if (present(layer_name)) then
+        if (layer_name.ne.curr_layer_name) cycle
+      end if
+      curr_phase_name = this%aero_phase(i_phase)%val%name()
+      if (present(phase_name)) then
+        if (phase_name.ne.curr_phase_name) cycle
+      end if
+      if (present(spec_name).or.present(tracer_type)) then
+        spec_names = this%aero_phase(i_phase)%val%get_species_names()
+        do j_spec = 1, size(spec_names)
+          curr_tracer_type = &
+                  this%aero_phase(i_phase)%val%get_species_type( &
+                  spec_names(j_spec)%string)
+          if (present(spec_name)) then
+            if (spec_name.ne.spec_names(j_spec)%string) cycle
+          end if
+          if (present(tracer_type)) then
+            if (tracer_type.ne.curr_tracer_type) cycle
+          end if
+          num_spec = num_spec + 1
         end do
         deallocate(spec_names)
       else
@@ -417,36 +413,33 @@ contains
 
     ! Allocate space for the unique names and assign them
     allocate(unique_names(num_spec*MAX_PARTICLES_))
-    i_layer = 1
     i_spec = 1
     do i_part = 1, MAX_PARTICLES_
-      do i_layer = 1, NUM_LAYER_
-        do i_phase = 1, NUM_PHASE_
-          curr_layer_name = this%aero_layer(i_layer)%val%name()
-          if (present(layer_name)) then
-            if (layer_name.ne.curr_layer_name) cycle
+      do i_phase = 1, TOTAL_NUM_PHASES_
+        curr_layer_name = this%aero_layer(i_phase)%val%name()
+        if (present(layer_name)) then
+          if (layer_name.ne.curr_layer_name) cycle
+        end if
+        curr_phase_name = this%aero_phase(i_phase)%val%name()
+        if (present(phase_name)) then
+          if (phase_name.ne.curr_phase_name) cycle
+        end if
+        spec_names = this%aero_phase(i_phase)%val%get_species_names()
+        num_spec = this%aero_phase(i_phase)%val%size()
+        do j_spec = 1, num_spec
+          curr_tracer_type = &
+                  this%aero_phase(i_phase)%val%get_species_type( &
+                  spec_names(j_spec)%string)
+          if (present(spec_name)) then
+            if (spec_name.ne.spec_names(j_spec)%string) cycle
           end if
-          curr_phase_name = this%aero_phase(i_phase)%val%name()
-          if (present(phase_name)) then
-            if (phase_name.ne.curr_phase_name) cycle
+          if (present(tracer_type)) then
+            if (tracer_type.ne.curr_tracer_type) cycle
           end if
-          spec_names = this%aero_phase(i_phase)%val%get_species_names()
-          num_spec = this%aero_phase(i_phase)%val%size()
-          do j_spec = 1, num_spec
-            curr_tracer_type = &
-                    this%aero_phase(i_phase)%val%get_species_type( &
-                    spec_names(j_spec)%string)
-            if (present(spec_name)) then
-              if (spec_name.ne.spec_names(j_spec)%string) cycle
-            end if
-            if (present(tracer_type)) then
-              if (tracer_type.ne.curr_tracer_type) cycle
-            end if
-            unique_names(i_spec)%string = 'P'//trim(integer_to_string(i_part))//&
-                    "."//curr_layer_name//"."//curr_phase_name//&
-                    "."//spec_names(j_spec)%string
-            i_spec = i_spec + 1
-          end do
+          unique_names(i_spec)%string = 'P'//trim(integer_to_string(i_part))//&
+                  '.'//curr_layer_name//'.'//curr_phase_name//'.'//&
+                  spec_names(j_spec)%string
+          i_spec = i_spec + 1
         end do
       end do
       deallocate(spec_names)
@@ -560,11 +553,9 @@ contains
                      trim( integer_to_string( phase_id ) )//", expected 1:"// &
                      trim( integer_to_string( size( this%aero_phase ) ) ) )
     num_jac_elem = 0
-    do i_layer = 1, NUM_LAYERS_
-      do i_phase = 1, NUM_PHASE_
-        num_jac_elem = num_jac_elem + &
-                       this%aero_phase(i_phase)%val%num_jac_elem()
-      end do
+    do i_phase = 1, TOTAL_NUM_PHASES_
+      num_jac_elem = num_jac_elem + &
+                   this%aero_phase(i_phase)%val%num_jac_elem()
     end do
 
   end function num_jac_elem
