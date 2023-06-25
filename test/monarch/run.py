@@ -317,13 +317,12 @@ def run(conf):
     maxnDevices = 4  # CTE-POWER specs
     maxCoresPerDevice = maxCoresPerNode / maxnDevices
     maxCores = int(maxCoresPerDevice * conf.nGPUs)
-    if conf.mpiProcesses != maxCores:
+    if conf.mpiProcesses != maxCores and (conf.mpiProcesses != 1 and maxCores == 10):
       print("WARNING: conf.mpiProcesses != maxCores, ",
             conf.mpiProcesses, "!=", maxCores,
             "conf.mpiProcesses changed from ", conf.mpiProcesses, "to ", maxCores)
       conf.mpiProcesses = maxCores
       conf.mpiProcessesCaseOptimList[0] = maxCores
-      print("TODO: Fix wrong speedup when using conf.nGPUs=[1,4]")
       raise
 
      # if conf.mpiProcesses != maxCores:
@@ -335,6 +334,7 @@ def run(conf):
     ddt_pid = subprocess.check_output('pidof -x $(ps cax | grep ddt)', shell=True)
     if ddt_pid:
       exec_str += 'ddt --connect '
+      #exec_str +=""
   except Exception:
     pass
   if conf.mpi == "yes":
