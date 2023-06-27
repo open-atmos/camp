@@ -101,6 +101,7 @@ void cvodeRun(ModelDataGPU *mGPU, cudaStream_t stream);
 #define BCG_TOLMAX 1.0E-30
 // Threshhold for precisition loss in rate calculations
 #define MAX_PRECISION_LOSS 1.0e-14
+#define GUESS_MAX_ITER 5
 
 
 #endif
