@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.14)
 # Require 2.6.4 due to -I/usr/include behavior:
 # http://www.cmake.org/Bug/view.php?id=8598
 # http://gcc.gnu.org/bugzilla/show_bug.cgi?id=35707
@@ -46,14 +46,13 @@ option(ENABLE_BOOTCAMP "" OFF)
 option(ENABLE_DATA "" OFF)
 option(ENABLE_INSTALL_OPTIONS "" OFF)
 option(ENABLE_SHARED_LIB "" OFF) #todo fix and shared lib in Monarch
-option(use_maxrregcount127 "Compiling with maxxregcount127" OFF)
-option(use_maxrregcount64 "Compiling with maxxregcount64" OFF)
-option(use_maxrregcount24 "Compiling with maxxregcount24" OFF)
-option(use_maxrregcount62 "Compiling with maxxregcount62" OFF)
-option(use_maxrregcount68 "Compiling with maxxregcount68" OFF)
-option(use_maxrregcount48 "Compiling with maxxregcount48" OFF)
+add_definitions(-DCAMP_DEBUG_MOCKMONARCH)
 
 mark_as_advanced(FORCE ENABLE_DEBUG FAILURE_DETAIL)
+file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/out)
+file(CREATE_LINK ${CMAKE_BINARY_DIR}/out ${CMAKE_CURRENT_SOURCE_DIR}/test/monarch/out SYMBOLIC)
+file(CREATE_LINK ${CMAKE_CURRENT_SOURCE_DIR}/test/monarch/settings ${CMAKE_BINARY_DIR}/settings SYMBOLIC)
+
 ######################################################################
 # CPack
 
@@ -191,12 +190,10 @@ find_library(SUNDIALS_SUNMATRIX_SPARSE_LIB sundials_sunmatrixsparse
   DOC "SUNDIALS SUNMatrixSparse library"
   PATHS ${SUITE_SPARSE_LIB} $ENV{SUITE_SPARSE_HOME}/lib ${SUNDIALS_PATH_LIB} $ENV{SUNDIALS_HOME}/lib
         /opt/local/lib /usr/local/lib)
-set(SUNDIALS_LIBS ${SUNDIALS_SUNMATRIX_SPARSE_LIB} ${SUNDIALS_NVECSERIAL_LIB} ${SUNDIALS_CVODE_LIB}
-  ${SUNDIALS_KLU_LIB} ${SUITE_SPARSE_KLU_LIB}
-  ${SUITE_SPARSE_COLAMD_LIB} ${SUITE_SPARSE_AMD_LIB} ${SUITE_SPARSE_BTF_LIB}
-  ${SUITE_SPARSE_CONFIG_LIB})
-#message (${SUNDIALS_LIBS}) #not working fine, only set half of the variables
-
+set(SUNDIALS_LIBS ${SUITE_SPARSE_KLU_LIB} ${SUNDIALS_KLU_LIB}
+  ${SUNDIALS_SUNMATRIX_SPARSE_LIB} ${SUNDIALS_NVECSERIAL_LIB}
+  ${SUNDIALS_CVODE_LIB} ${SUITE_SPARSE_COLAMD_LIB} ${SUITE_SPARSE_AMD_LIB}
+  ${SUITE_SPARSE_BTF_LIB} ${SUITE_SPARSE_CONFIG_LIB})
 include_directories(${SUNDIALS_INCLUDE_DIR} ${SUITE_SPARSE_INCLUDE_DIR})
 add_definitions(-DCAMP_USE_SUNDIALS)
 
@@ -240,7 +237,6 @@ if (ENABLE_GPU)
     enable_language(CUDA)
     #Define global variable of use gpu no matter what test to include user main test
     add_definitions(-DCAMP_USE_GPU)
-
   else()
     message( WARNING "Not CUDA module found, can't support GPU computation")
   endif()
@@ -268,19 +264,6 @@ if (ENABLE_SWAP_DERIV_LOOP_CELLS)
 endif()
 
 ######################################################################
-# Unit test macro
-
-macro(do_unit_test test_name result)
-  if(ENABLE_MPI)
-    add_test(unit_test_${test_name} mpirun -v -np 1 ${CMAKE_BINARY_DIR}/unit_test_${test_name})
-  else()
-    add_test(unit_test_${test_name} ${CMAKE_BINARY_DIR}/unit_test_${test_name})
-  endif()
-  set_tests_properties(unit_test_${test_name}
-	  PROPERTIES PASS_REGULAR_EXPRESSION ${result})
-endmacro(do_unit_test)
-
-######################################################################
 # copy dirs
 
 if(ENABLE_DATA OR ENABLE_TESTS)
@@ -299,9 +282,25 @@ endif()
 set_property(DIRECTORY PROPERTY ADDITIONAL_MAKE_CLEAN_FILES test_run mechanisms_run scenarios_run boot_camp_run)
 
 ######################################################################
+# Unit test macro
+
+#if (ENABLE_TESTS)
+  macro(do_unit_test test_name result)
+    if(ENABLE_MPI)
+      add_test(unit_test_${test_name} mpirun -v -np 1 ${CMAKE_BINARY_DIR}/unit_test_${test_name})
+    else()
+      add_test(unit_test_${test_name} ${CMAKE_BINARY_DIR}/unit_test_${test_name})
+    endif()
+    set_tests_properties(unit_test_${test_name}
+            PROPERTIES PASS_REGULAR_EXPRESSION ${result})
+  endmacro(do_unit_test)
+#endif()
+
+######################################################################
 # tests
 
 enable_testing()
+#if (ENABLE_TESTS)
 do_unit_test(property "PASS")
 do_unit_test(chem_spec_data "PASS")
 do_unit_test(aero_phase_data "PASS")
@@ -309,6 +308,7 @@ do_unit_test(jacobian "PASS")
 do_unit_test(aero_rep_single_particle "PASS")
 do_unit_test(aero_rep_modal_binned_mass "PASS")
 do_unit_test(camp_core "PASS")
+#endif()
 
 if (ENABLE_MPI AND ENABLE_MPI_TEST)
   set(MPI_TEST_FLAG MPI)
@@ -343,7 +343,6 @@ if (ENABLE_TESTS)
   add_test(boot_camp_part_4 ${CMAKE_BINARY_DIR}/boot_camp_run/part_4_code/run_part_4.sh ${MPI_TEST_FLAG})
   add_test(camp_v1_paper_binned ${CMAKE_BINARY_DIR}/data_run/CAMP_v1_paper/binned/test_monarch_binned.sh ${MPI_TEST_FLAG})
   add_test(camp_v1_paper_modal ${CMAKE_BINARY_DIR}/data_run/CAMP_v1_paper/modal/test_monarch_modal.sh ${MPI_TEST_FLAG})
-
 endif()
 
 ######################################################################
@@ -438,6 +437,7 @@ set(CAMP_C_SRC
         src/camp_solver.c src/rxn_solver.c src/aero_phase_solver.c
         src/aero_rep_solver.c src/sub_model_solver.c
         src/debug_and_stats/camp_debug_2.c
+        src/debug_and_stats/cvode_debug.c
         src/time_derivative.c
         src/Jacobian.c src/debug_diff_check.c)
 
@@ -445,10 +445,8 @@ set_source_files_properties(${CAMP_C_SRC} PROPERTIES COMPILE_FLAGS
         ${STD_C_FLAGS})
 
 if(ENABLE_CXX)
-
     set_source_files_properties(${CAMP_CXX_SRC} PROPERTIES COMPILE_FLAGS
             ${STD_CXX_FLAGS})
-
 else()
     set(CAMP_CXX_SRC "")
 endif()
@@ -487,7 +485,7 @@ set(CAMP_LIB_SRC
         src/solver_stats.F90
         src/debug_diff_check.F90
         ${CAMP_C_SRC} ${AEROSOL_REPS_SRC} ${SUB_MODELS_SRC}
-        ${REACTIONS_SRC} ${GSL_SRC} ${CAMP_CUDA_SRC} ${CAMP_CXX_SRC} src/cuda/cvode_cuda.cu src/cuda/cuda_structs.h src/cuda/cvode_gpu.h)
+        ${REACTIONS_SRC} ${GSL_SRC} ${CAMP_CUDA_SRC} ${CAMP_CXX_SRC} )
 
 if(ENABLE_SHARED_LIB)
   add_library(camplib SHARED ${CAMP_LIB_SRC}) #todo fix, Shared library are better than static (faster in execution, no recompilation, smaller)
@@ -579,14 +577,14 @@ target_link_libraries(mock_monarch camplib)
 
 if (ENABLE_TESTS)
 
-add_executable(test_chemistry_cb05cl_ae5_big
-        test/chemistry/cb05cl_ae5/test_cb05cl_ae5_big.F90
-        ${CB5_EBI_SOLVER} ${CB5_KPP_SOLVER}
-        test/chemistry/cb05cl_ae5/module_BSC_CHEM_DATA.F90)
-target_link_libraries(test_chemistry_cb05cl_ae5_big camplib)
+  add_executable(test_chemistry_cb05cl_ae5_big
+          test/chemistry/cb05cl_ae5/test_cb05cl_ae5_big.F90
+          ${CB5_EBI_SOLVER} ${CB5_KPP_SOLVER}
+          test/chemistry/cb05cl_ae5/module_BSC_CHEM_DATA.F90)
+  target_link_libraries(test_chemistry_cb05cl_ae5_big camplib)
 
-  ######################################################################
-  # camp-chem box model
+######################################################################
+# camp-chem box model
 
   add_executable(camp_box_model test/camp_box_model_data.F90
           test/camp_box_model.F90)

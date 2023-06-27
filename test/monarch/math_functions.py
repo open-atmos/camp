@@ -1,7 +1,6 @@
 import numpy as np
 from sklearn.metrics import mean_squared_error
 from math import sqrt
-import time
 import pandas as pd
 
 def get_values_same_timestep(timestep_to_plot, mpiProcessesList, \

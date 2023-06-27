@@ -24,7 +24,7 @@ void read_options_bcg(ModelDataCPU *mCPU){
 
   char path[] = "itsolver_options.txt";
 
-  fp = fopen("itsolver_options.txt", "r");
+  fp = fopen("settings/itsolver_options.txt", "r");
   if (fp == NULL){
     printf("Could not open file %s, setting ModelDataCPU to One-cell\n",path);
     mCPU->cells_method=0;
@@ -449,7 +449,6 @@ void dvcheck_input_gpud(double *x, int len, const char* s)
 }
 
 #ifdef ONLY_BCG
-
 __global__
 void solveBcgCuda(
         double *dA, int *djA, int *diA, double *dx, double *dtempv //Input data
@@ -457,8 +456,7 @@ void solveBcgCuda(
         ,int n_cells, double *ddiag //Init variables
         ,double *dr0, double *dr0h, double *dn0, double *dp0
         ,double *dt, double *ds, double *dAx2, double *dy, double *dz// Auxiliary vectors
-)
-{
+){
   int tid = blockIdx.x * blockDim.x + threadIdx.x;
   int active_threads = nrows;
 

@@ -269,23 +269,10 @@ typedef struct {
 #endif
 
 #ifdef CAMP_DEBUG_GPU
-  int counterDerivTotal;
-  int counterDerivCPU;
-  int counterJac;
-  int counterSolve;
-  int counterFail;
   int counterBCG;
   int counterLS;
   double timeCVode;
-  double timeCVodeTotal;
   double timeLS;
-  double timeDerivCPU;
-#endif
-
-#ifdef CAMP_DEBUG_DERIV_CPU
-  N_Vector y_first;
-  int max_deriv_print;
-  int counter_deriv_print;
 #endif
 
 #ifdef FAILURE_DETAIL
@@ -301,11 +288,14 @@ typedef struct {
   ModelDataCPU mCPU;
   ModelDataGPU *mGPU;
   int *flagCells;
-  int nDevices;
-  int nCellsGPUPerc;
+#endif
+#ifdef CAMP_DEBUG_MOCKMONARCH
   int use_cpu;
   int use_gpu_cvode;
+  int nDevices;
+  int nCellsGPUPerc;
 #endif
+
   void *cvode_mem;       // CVodeMem object
   ModelData model_data;  // Model data (used during initialization and solving)
   bool no_solve;  // Flag to indicate whether to run the solver needs to be

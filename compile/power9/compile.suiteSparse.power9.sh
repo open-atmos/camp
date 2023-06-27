@@ -1,12 +1,4 @@
-#module purge
-#BSC modules
-#module load gcc/6.4.0
-#module load openmpi/3.0.0
-#module load hdf4/4.2.13
-#module load hdf5/1.8.20
-#module load pnetcdf/1.9.0
-#module load netcdf/4.4.1.1
-#module load lapack/3.8.0
+#!/usr/bin/env bash
 
 library_path="../../../"
 if [ "$1" == "from_camp_jobs" ]; then
@@ -15,10 +7,13 @@ fi
 
 cd $library_path/SuiteSparse
 make purge
+LOCAL_MACHINE=CGUZMAN
 if [ $BSC_MACHINE == "power" ]; then
   make BLAS="-L${EBROOTOPENBLAS}/lib -lopenblas" LAPACK=""
 elif [ $BSC_MACHINE == "mn4" ]; then
   make BLAS="-L${INTEL_HOME}/mkl/lib/intel64 -lmkl_intel_lp64 -lmkl_core -lmkl_intel_thread -lpthread -lm" LAPACK=""
+elif [ $LOCAL_MACHINE==CGUZMAN ]; then
+  make BLAS="-L/usr/lib/x86_64-linux-gnu -lopenblas" LAPACK=""
 else
   echo "Unknown architecture"
   exit

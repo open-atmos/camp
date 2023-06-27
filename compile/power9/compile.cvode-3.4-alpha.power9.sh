@@ -13,10 +13,11 @@ fi
 cd $library_path/cvode-3.4-alpha
 rm -r build
 mkdir build
+#rm -rf install
 mkdir install
 mkdir install/examples
 cd build
-cmake -D CMAKE_BUILD_TYPE=release \
+cmake -D CMAKE_BUILD_TYPE=debug \
 -D MPI_ENABLE:BOOL=TRUE \
 -D KLU_ENABLE:BOOL=TRUE \
 -D CUDA_ENABLE:BOOL=FALSE \
@@ -43,6 +44,8 @@ fi
 make install
 if [ "$1" == "from_camp_jobs" ]; then
   cd ../../$camp_folder/build/compile
+#else
+ # ./compile.camp.sh
 fi
 
 
