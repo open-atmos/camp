@@ -117,6 +117,8 @@ void rxn_gpu_CMAQ_OH_HNO3_calc_jac_contrib(ModelDataGPU *md, JacobianGPU jac, in
       if (int_data[(2 + 2*(int_data[0]+int_data[1]) + i_elem)] < 0) continue;
       int elem_id = int_data[(2 + 2*(int_data[0]+int_data[1]) + i_elem)];
       atomicAdd_block(&(jac.loss_partials[elem_id]),rate);
+      //jacobian_add_value(jac, (unsigned int)JAC_ID_(i_elem), JACOBIAN_LOSS,
+        //                 rate);
     }
     for (int i_dep = 0; i_dep < int_data[1]; i_dep++, i_elem++) {
       if (int_data[(2 + 2*(int_data[0]+int_data[1]) + i_elem)] < 0) continue;
@@ -800,6 +802,7 @@ int cudaDeviceJac(int *flag, ModelDataGPU *md, ModelDataVariable *sc)
   start = clock();
 #endif
   int aux_flag=0;
+  __syncthreads();
   retval=cudaDevicef(sc->cv_next_h, md->dcv_y, md->dftemp,md,sc,&aux_flag);
   __syncthreads();
   if(retval==CAMP_SOLVER_FAIL)
@@ -850,11 +853,12 @@ int cudaDevicelinsolsetup(
     cudaDeviceJacCopy(md->diA, md->dsavedJ, md->dA);
     __syncthreads();
   } else {
-  __syncthreads();
+    __syncthreads();
     sc->nstlj = sc->cv_nst;
     sc->cv_jcur = 1;
-  __syncthreads();
+    __syncthreads();
     int aux_flag=0;
+    __syncthreads();
     int guess_flag=cudaDeviceJac(&aux_flag,md,sc);
     __syncthreads();
     if (guess_flag < 0) {
