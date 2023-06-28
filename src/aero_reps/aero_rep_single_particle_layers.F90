@@ -58,6 +58,7 @@ module camp_aero_rep_single_particle
 #define NUM_ENV_PARAM_PER_PARTICLE_ 1
 #define NUM_PHASE_(p) this%condensed_data_int(NUM_INT_PROP_+p)
 #define PHASE_STATE_ID_(p) this%condensed_data_int(NUM_INT_PROP_+NUM_LAYERS_+p)
+#define LAYER_STATE_ID_(p) this%condensed_data_init(NUM_INT_PROP_+NUM_PHASE_+p)
 #define PHASE_MODEL_DATA_ID_(p) this%condensed_data_int(NUM_INT_PROP_+NUM_LAYERS_+TOTAL_NUM_PHASES_+p)
 #define PHASE_NUM_JAC_ELEM_(p) this%condensed_data_int(NUM_INT_PROP_+NUM_LAYERS_+2*TOTAL_NUM_PHASES_+p)
 
