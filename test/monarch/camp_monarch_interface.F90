@@ -147,7 +147,7 @@ contains
     integer(kind=i_kind) :: pos, pack_size
     integer(kind=i_kind) :: i_spec, i_photo_rxn
     type(string_t), allocatable :: unique_names(:)
-    character(len=:), allocatable :: spec_name
+    character(len=:), allocatable :: spec_name, settings_interface_file
     integer :: max_spec_name_size=512
     real(kind=dp) :: base_rate
 
@@ -210,7 +210,8 @@ contains
               "Missing ending tracer index for chemical species")
 
       ! Load the interface data
-      call this%load(interface_config_file)
+      settings_interface_file="settings/"//interface_config_file
+      call this%load(settings_interface_file)
 
       this%camp_core => camp_core_t(camp_config_file, this%n_cells)
       call this%camp_core%initialize()

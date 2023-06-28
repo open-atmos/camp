@@ -398,24 +398,9 @@ program mock_monarch_t
     endif
   end if
 
-  file_name = output_path//"_solver_stats.csv"
-  open(FILE_SOLVER_STATS_CSV, file=file_name, status="replace", action="write")
-  !todo move this to python interface and automatic size
-  str = "timestep,counterBCG,counterLS,countersolveCVODEGPU,countercvStep,&
-          timeLS,timeBiconjGradMemcpy,timeCVode,&
-          dtcudaDeviceCVode,dtPostBCG,timeAux,timeNewtonIteration,timeJac,timelinsolsetup,timecalc_Jac,&
-          timeRXNJac,timef,timeguess_helper,timecvStep"
-  write(FILE_SOLVER_STATS_CSV, "(A)", advance="no") str
-  write(FILE_SOLVER_STATS_CSV, '(a)') ''
-  call camp_mpi_barrier()
-  deallocate(str)
-  deallocate(file_name)
-
-  str="settings/"//interface_input_file
-  camp_interface => camp_monarch_interface_t(camp_input_file, str, &
+  call init_output_files(output_path)
+  camp_interface => camp_monarch_interface_t(camp_input_file, interface_input_file, &
           START_CAMP_ID, END_CAMP_ID, n_cells, n_cells_tstep, ADD_EMISIONS)!, n_cells
-  deallocate(camp_input_file)
-  deallocate(str)
 
   ncounters = size(camp_interface%camp_core%ncounters)
   ntimers = size(camp_interface%camp_core%ntimers)
@@ -465,7 +450,6 @@ program mock_monarch_t
     !call import_camp_input(camp_interface)
     call import_camp_input_json(camp_interface)
   end if
-  deallocate(interface_input_file)
 
   call set_env(camp_interface,output_path)
 
@@ -537,8 +521,11 @@ program mock_monarch_t
   end if
   close(FILE_SOLVER_STATS_CSV)
 
+  call camp_mpi_barrier()
   ! Deallocation
   !print*,"deallocate start", camp_mpi_rank()
+  deallocate(camp_input_file)
+  deallocate(interface_input_file)
   deallocate(output_path)
   deallocate(output_file_title)
 
@@ -554,6 +541,36 @@ program mock_monarch_t
   call camp_mpi_finalize()
 
 contains
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  subroutine init_output_files(file_prefix)
+
+    character(len=:), allocatable, intent(in) :: file_prefix
+    character(len=:), allocatable :: file_name
+    character(len=:), allocatable :: aux_str, aux_str_py, str_stats_names
+    character(len=128) :: i_str !if len !=128 crashes (e.g len=100)
+    integer :: z,o,i,j,k,r,i_cell,i_spec,mpi_size,ncells,tid,ncells_mpi
+    integer :: n_cells_print
+    real :: temp_init,press,press_init,press_end,press_range,press_slide
+
+    file_name = file_prefix//"_solver_stats.csv"
+    open(FILE_SOLVER_STATS_CSV, file=file_name, status="replace", action="write")
+
+    !todo move this to python interface and automatic size
+    str_stats_names = "timestep,counterBCG,counterLS,countersolveCVODEGPU,countercvStep,&
+            timeLS,timeBiconjGradMemcpy,timeCVode,&
+            dtcudaDeviceCVode,dtPostBCG,timeAux,timeNewtonIteration,timeJac,timelinsolsetup,timecalc_Jac,&
+            timeRXNJac,timef,timeguess_helper,timecvStep"
+
+    write(FILE_SOLVER_STATS_CSV, "(A)", advance="no") str_stats_names
+    write(FILE_SOLVER_STATS_CSV, '(a)') ''
+
+    call camp_mpi_barrier()
+
+    deallocate(file_name)
+
+  end subroutine
 
   subroutine set_env(camp_interface,file_prefix)
 
