@@ -102,7 +102,6 @@ void cvodeRun(ModelDataGPU *mGPU, cudaStream_t stream);
 // Threshhold for precisition loss in rate calculations
 #define MAX_PRECISION_LOSS 1.0e-14
 #define GUESS_MAX_ITER 5
-#define JACOBIAN_PRODUCTION 0
-#define JACOBIAN_LOSS 1
+
 
 #endif
