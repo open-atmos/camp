@@ -133,6 +133,7 @@ def write_camp_config_file(conf):
       file1.write("USE_GPU_CVODE=OFF\n")
     file1.write(str(conf.nGPUs) + "\n")
     file1.write(str(conf.nCellsGPUPerc) + "\n")
+    file1.write(str(conf.caseMulticellsOnecell) + "\n")
     file1.close()
   except Exception as e:
     print("write_camp_config_file fails", e)

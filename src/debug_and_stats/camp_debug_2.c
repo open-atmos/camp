@@ -529,7 +529,7 @@ void check_isnand(double *x, int len, const char *s){
 
 int compare_doubles(double *x, double *y, int len, const char *s){
   int flag=1;
-  double tol=0.01;
+  double tol=0.;
   double rel_error;
   int n_fails=0;
   for (int i=0; i<len; i++){
@@ -550,6 +550,29 @@ int compare_doubles(double *x, double *y, int len, const char *s){
   return flag;
 }
 
+int compare_long_doubles(long double *x, long double *y, int len, const char *s){
+  int flag=1;
+  double tol=0.;
+  double rel_error;
+  int n_fails=0;
+  for (int i=0; i<len; i++){
+    if(x[i]==0)
+      rel_error=0.;
+    else
+      rel_error=abs((x[i]-y[i])/x[i]);
+    //rel_error=(x[i]-y[i]/(x[i]+1.0E-60));
+    if(rel_error>tol){
+      printf("compare_long_doubles %s rel_error %le for tol %le at [%d]: %le vs %le\n",
+             s,rel_error,tol,i,x[i],y[i]);
+      flag=0;
+      n_fails++;
+      if(n_fails==4)
+        return flag;
+    }
+  }
+  return flag;
+}
+
 void print_current_directory(){
   char cwd[1024];
   if (getcwd(cwd, sizeof(cwd)) != NULL) {
@@ -561,6 +584,9 @@ void print_current_directory(){
 
 #ifdef CAMP_DEBUG_MOCKMONARCH
 void get_camp_config_variables(SolverData *sd){
+  sd->use_cpu=1;
+  sd->use_gpu_cvode=0;
+  sd->new=0;
   FILE *fp;
   char buff[255];
   char path[] = "settings/config_variables_c_solver.txt";
@@ -574,25 +600,21 @@ void get_camp_config_variables(SolverData *sd){
       exit(0);
     }
     printf("Could not open file %s, setting use_cpu ON and use_gpu_cvode OFF\n",path);
-    sd->use_cpu=1;
-    sd->use_gpu_cvode=0;
   }else{
     fscanf(fp, "%s", buff);
-    if(strstr(buff,"USE_CPU=ON")!=NULL){
-      sd->use_cpu=1;
-    }
-    else{
+    if(!strstr(buff,"USE_CPU=ON")!=NULL){
       sd->use_cpu=0;
     }
     fscanf(fp, "%s", buff);
     if(strstr(buff,"USE_GPU_CVODE=ON")!=NULL){
       sd->use_gpu_cvode=1;
     }
-    else{
-      sd->use_gpu_cvode=0;
-    }
     fscanf(fp, "%d", &sd->nDevices);
     fscanf (fp, "%d", &sd->nCellsGPUPerc);
+    fscanf(fp, "%s", buff);
+    if(strstr(buff,"New")!=NULL){
+      sd->new=1;
+    }
     fclose(fp);
   }
 }

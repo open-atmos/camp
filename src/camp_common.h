@@ -264,7 +264,7 @@ typedef struct {
   double t_final;
   int ncounters;
   int ntimers;
-#ifdef DEV_CPUGPU
+#ifdef OLD_DEV_CPUGPU
   int n_cells_total;
 #endif
 
@@ -294,6 +294,13 @@ typedef struct {
   int use_gpu_cvode;
   int nDevices;
   int nCellsGPUPerc;
+  int new;
+#endif
+#ifndef NEW
+#define N_new 1000
+  long double loss_rates_new[N_new];
+  double *deriv_data;
+  double *jac_deriv_data;
 #endif
 
   void *cvode_mem;       // CVodeMem object

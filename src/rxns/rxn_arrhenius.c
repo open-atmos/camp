@@ -87,6 +87,7 @@ void rxn_arrhenius_update_ids(ModelData *model_data, int *deriv_ids,
       JAC_ID_(i_jac++) =
           jacobian_get_element_id(jac, PROD_(i_dep), REACT_(i_ind));
   }
+
   return;
 }
 

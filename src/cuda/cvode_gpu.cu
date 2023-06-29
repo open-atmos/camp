@@ -207,7 +207,7 @@ void solver_new_gpu_cu_cvode(SolverData *sd) {
 #ifdef DEBUG_solver_new_gpu_cu_cvode
   printf("solver_new_gpu_cu_cvode start \n");
 #endif
-#ifdef DEV_CPUGPU
+#ifdef OLD_DEV_CPUGPU
   sd->n_cells_total = md->n_cells;
   n_cells *= sd->nCellsGPUPerc/10.;
   md->n_cells=n_cells;
@@ -537,7 +537,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
   ModelData *md = &(sd->model_data);
   cudaStream_t stream = 0;
   mGPU = sd->mGPU;
-#ifdef DEV_CPUGPU
+#ifdef OLD_DEV_CPUGPU
   int nCellsCPU = sd->n_cells_total - md->n_cells;
   printf("nCellsCPU %d %d\n",nCellsCPU,sd->n_cells_total);
   double* total_state0 = md->total_state;
@@ -822,7 +822,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
   cudaMemcpyAsync(sd->flagCells, mGPU->flagCells, mGPU->n_cells * sizeof(int), cudaMemcpyDeviceToHost, stream);
 #endif
   mGPU = sd->mGPU;
-#ifdef DEV_CPUGPU
+#ifdef OLD_DEV_CPUGPU
 #ifdef CPUGPU_ONECELL
   md->n_cells=1;
   md->total_state=total_state0;
@@ -940,7 +940,7 @@ double t_rt = t_initial;*/
       MPI_Comm_rank(MPI_COMM_WORLD, &rank);
       printf("cudaCVode2 kflag %d cell %d rank %d\n",istate,i,rank);
       istate = cvHandleFailure_gpu(cv_mem, istate);
-      //TODO CALL EXPORT_NETCDF
+      //Optional: call EXPORT_NETCDF after this fail
     }
   }
   return(istate);

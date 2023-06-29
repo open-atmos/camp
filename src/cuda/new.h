@@ -3,8 +3,9 @@
  * SPDX-License-Identifier: MIT
  */
 
-#ifndef JACOBIAN_H__GPU
-#define JACOBIAN_H__GPU
+#ifndef NEW_H
+#define NEW_H
+
 
 
 #endif

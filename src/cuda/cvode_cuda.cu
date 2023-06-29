@@ -542,16 +542,16 @@ __device__ void cudaDevicecalc_deriv(double time_step, double *y,
   __syncthreads();
   double *J_tmp = md->J_tmp;
   if(i<deriv_data.num_spec){
-      double *r_p = deriv_data.production_rates;
-      double *r_l = deriv_data.loss_rates;
-      if (r_p[i] + r_l[i] != 0.0) {
-          double scale_fact;
-          scale_fact = 1.0 / (r_p[i] + r_l[i]) /
-              (1.0 / (r_p[i] + r_l[i]) + MAX_PRECISION_LOSS / fabs(r_p[i]- r_l[i]));
-          yout[i] = scale_fact * (r_p[i] - r_l[i]) + (1.0 - scale_fact) * (J_tmp[i]);
-      } else {
-        yout[i] = 0.0;
-      }
+    double *r_p = deriv_data.production_rates;
+    double *r_l = deriv_data.loss_rates;
+    if (r_p[i] + r_l[i] != 0.0) {
+        double scale_fact;
+        scale_fact = 1.0 / (r_p[i] + r_l[i]) /
+            (1.0 / (r_p[i] + r_l[i]) + MAX_PRECISION_LOSS / fabs(r_p[i]- r_l[i]));
+        yout[i] = scale_fact * (r_p[i] - r_l[i]) + (1.0 - scale_fact) * (J_tmp[i]);
+    } else {
+      yout[i] = 0.0;
+    }
   }
   __syncthreads();
 }

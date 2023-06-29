@@ -438,6 +438,7 @@ set(CAMP_C_SRC
         src/aero_rep_solver.c src/sub_model_solver.c
         src/debug_and_stats/camp_debug_2.c
         src/debug_and_stats/cvode_debug.c
+        src/debug_and_stats/new.c
         src/time_derivative.c
         src/Jacobian.c src/debug_diff_check.c)
 

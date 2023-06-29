@@ -27,6 +27,7 @@
 #endif
 #include "camp_debug.h"
 #include "debug_and_stats/camp_debug_2.h"
+#include "debug_and_stats/new.h"
 
 #ifdef CAMP_USE_MPI
 #include <mpi.h>
@@ -535,7 +536,9 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
   check_flag_fail(&flag, "CVodeSetDlsGuessHelper", 1);
 
   sd->icell=0;
-// Set gpu rxn values
+  //if(sd->new){
+  //  rxn_get_indices
+  //}
 #ifdef CAMP_USE_GPU
   if(sd->use_cpu==0){
       constructor_cvode_gpu(sd->cvode_mem, sd);
@@ -551,7 +554,6 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
   check_flag_fail(&flag, "CVodeSetErrHandlerFn", 0);
   sd->counter_fail_solve_print=0;
 #endif
-
 #ifdef DEBUG_solver_initialize
   printf("solver_initialize end\n");
 #endif
@@ -726,7 +728,7 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
     flag = CVode(sd->cvode_mem, (realtype)t_final, sd->y, &t_rt, CV_NORMAL);
 #endif
 #ifdef CAMP_DEBUG_GPU
-  sd->timeCVode += (MPI_Wtime() - starttimeCvode);
+    sd->timeCVode += (MPI_Wtime() - starttimeCvode);
 #endif
     sd->solver_flag = flag;
 #ifdef FAILURE_DETAIL
@@ -978,7 +980,7 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
       times[i]=0.;
       i++;
 #endif
-#ifdef DEV_CPUGPU
+#ifdef OLD_DEV_CPUGPU
       CVodeGettimesCounters(sd->cvode_mem, &times[0], &counters[1]);
       times[i]+=mCPU->timecvStep;
 #else
@@ -1249,6 +1251,12 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
 
     // Calculate the time derivative f(t,y)
     rxn_calc_deriv(md, sd->time_deriv, (double)time_step);
+
+#ifndef NEW
+    sd->deriv_data=deriv_data;
+    sd->jac_deriv_data=jac_deriv_data;
+    rxn_calc_deriv_new(sd, (double)time_step);
+#endif
 
     // Update the deriv array
     if (sd->use_deriv_est == 1) {

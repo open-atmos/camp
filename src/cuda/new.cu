@@ -3,11 +3,8 @@
  * SPDX-License-Identifier: MIT
  */
 
-extern "C" {
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include "new.h"
 
-
-}

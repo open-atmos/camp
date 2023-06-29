@@ -73,14 +73,6 @@ void free_gpu_cu(SolverData *sd) {
   cudaFree(mGPU->loss_rates);
   cudaFree(mGPU->rxn_int_indices);
   cudaFree(mGPU->rxn_float_indices);
-#ifdef DEV_AERO_REACTIONS
-  cudaFree(mGPU->aero_rep_int_indices);
-  cudaFree(mGPU->aero_rep_float_indices);
-  cudaFree(mGPU->aero_rep_env_idx);
-  cudaFree(mGPU->aero_rep_int_data);
-  cudaFree(mGPU->aero_rep_float_data);
-  cudaFree(mGPU->aero_rep_env_data);
-#endif
   cudaFree(mGPU->n_mapped_values);
   cudaFree(mGPU->jac_map);
   cudaFree(mGPU->yout);
