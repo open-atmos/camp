@@ -7,9 +7,9 @@ project(CAMP Fortran C)
 
 set(PACKAGE_BUGREPORT "mattldawson@gmail.com")
 set(PACKAGE_NAME "CAMP")
-set(PACKAGE_STRING "CAMP 1.0.0")
+set(PACKAGE_STRING "CAMP 1.1.0")
 set(PACKAGE_TARNAME "camp")
-set(PACKAGE_VERSION "1.0.0")
+set(PACKAGE_VERSION "1.1.0")
 
 if ( "${CMAKE_SYSTEM_NAME}" MATCHES "Darwin" )
   set ( ENABLE_DYLIBS_USE_RPATH TRUE CACHE BOOL
