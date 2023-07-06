@@ -14,9 +14,9 @@ __device__
 void time_derivative_add_value_gpu(TimeDerivativeGPU time_deriv, unsigned int spec_id,
                                double rate_contribution) {
   if (rate_contribution > 0.0) {
-    time_deriv.production_rates[spec_id]) = rate_contribution;
+    time_deriv.production_rates[spec_id] = rate_contribution;
   } else {
-    time_deriv.loss_rates[spec_id]) = loss_rates;
+    time_deriv.loss_rates[spec_id] = -rate_contribution;
   }
 }
 
@@ -696,7 +696,13 @@ __device__ void cudaDevicecalc_deriv(double time_step, double *y,
   md->grid_cell_state = &( md->state[md->state_size_cell*i_cell]);
   md->grid_cell_env = &( md->env[CAMP_NUM_ENV_PARAM_*i_cell]);
   int n_rxn = md->n_rxn;
-  //TODO change this due to bug, using atomicaddblocl on residual where only some threads enter
+#ifdef DEV_removeAtomic
+  if(threadIdx.x==0){
+    for (int j = 0; j < n_rxn; j++){
+      solveRXN(j, i_cell,deriv_data, time_step, md, sc);
+    }
+  }
+#else
   if( tid_cell < n_rxn) {
     int n_iters = n_rxn / deriv_length_cell;
     for (int j = 0; j < n_iters; j++) {
@@ -709,6 +715,7 @@ __device__ void cudaDevicecalc_deriv(double time_step, double *y,
       solveRXN(i_rxn, i_cell, deriv_data, time_step, md, sc);
     }
   }
+#endif
   __syncthreads();
   deriv_data.production_rates = md->production_rates;
   deriv_data.loss_rates = md->loss_rates;
@@ -926,6 +933,13 @@ __device__ void cudaDevicecalc_Jac(double *y,ModelDataGPU *md, ModelDataVariable
 #endif
   __syncthreads();
   int n_rxn = md->n_rxn;
+#ifdef DEV_removeAtomic
+  if(threadIdx.x==0){
+    for (int j = 0; j < n_rxn; j++){
+      solveRXNJac(j, i_cell,jacBlock, md, sc);
+    }
+  }
+#else
   if( tid_cell < n_rxn) {
     int n_iters = n_rxn / deriv_length_cell;
     for (int j = 0; j < n_iters; j++) {
@@ -939,6 +953,7 @@ __device__ void cudaDevicecalc_Jac(double *y,ModelDataGPU *md, ModelDataVariable
       solveRXNJac(i_rxn,i_cell,jacBlock, md, sc);
     }
   }
+#endif
   __syncthreads();
   JacMap *jac_map = md->jac_map;
   int nnz = md->n_mapped_values[0];
