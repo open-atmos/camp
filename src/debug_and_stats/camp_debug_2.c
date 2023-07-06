@@ -586,7 +586,7 @@ void print_current_directory(){
 void get_camp_config_variables(SolverData *sd){
   sd->use_cpu=1;
   sd->use_gpu_cvode=0;
-  sd->new=0;
+  sd->use_new=0;
   FILE *fp;
   char buff[255];
   char path[] = "settings/config_variables_c_solver.txt";
@@ -613,7 +613,7 @@ void get_camp_config_variables(SolverData *sd){
     fscanf (fp, "%d", &sd->nCellsGPUPerc);
     fscanf(fp, "%s", buff);
     if(strstr(buff,"New")!=NULL){
-      sd->new=1;
+      sd->use_new=1;
     }
     fclose(fp);
   }

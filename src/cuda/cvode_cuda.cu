@@ -8,6 +8,20 @@ extern "C" {
 #include "new.h"
 }
 
+#ifdef DEV_removeAtomic
+
+__device__
+void time_derivative_add_value_gpu(TimeDerivativeGPU time_deriv, unsigned int spec_id,
+                               double rate_contribution) {
+  if (rate_contribution > 0.0) {
+    time_deriv.production_rates[spec_id]) = rate_contribution;
+  } else {
+    time_deriv.loss_rates[spec_id]) = loss_rates;
+  }
+}
+
+#else
+
 __device__
 void time_derivative_add_value_gpu(TimeDerivativeGPU time_deriv, unsigned int spec_id,
                                double rate_contribution) {
@@ -18,19 +32,14 @@ void time_derivative_add_value_gpu(TimeDerivativeGPU time_deriv, unsigned int sp
   }
 }
 
+#endif
+
 __device__
 void rxn_gpu_first_order_loss_calc_deriv_contrib(ModelDataGPU *md, TimeDerivativeGPU time_deriv, int *rxn_int_data,
           double *rxn_float_data, double *rxn_env_data, double time_step){
   int *int_data = rxn_int_data;
   double rate = rxn_env_data[0] * md->grid_cell_state[int_data[1]-1];
   if (int_data[2] >= 0) time_derivative_add_value_gpu(time_deriv, int_data[2], -rate);
-}
-
-__device__
-void rxn_gpu_first_order_loss_calc_jac_contrib(ModelDataGPU *md, JacobianGPU jac, int *rxn_int_data,
-          double *rxn_float_data, double *rxn_env_data, double time_step){
-  int *int_data = rxn_int_data;
-  if (int_data[3] >= 0) atomicAdd_block(&(jac.loss_partials[int_data[3]]),rxn_env_data[0]);
 }
 
 __device__
@@ -50,32 +59,6 @@ void rxn_gpu_CMAQ_H2O2_calc_deriv_contrib(ModelDataGPU *md, TimeDerivativeGPU ti
       if (int_data[(2 + int_data[0]+int_data[1]+i_dep_var)] < 0) continue;
       if (-rate*float_data[(7 + i_spec)]*time_step <= md->grid_cell_state[int_data[(2 + int_data[0]+ i_spec)]-1]) {
         time_derivative_add_value_gpu(time_deriv, int_data[(2 + int_data[0]+int_data[1]+i_dep_var)],rate*float_data[(7 + i_spec)]);
-      }
-    }
-  }
-}
-
-__device__
-void rxn_gpu_CMAQ_H2O2_calc_jac_contrib(ModelDataGPU *md, JacobianGPU jac, int *rxn_int_data,
-          double *rxn_float_data, double *rxn_env_data, double time_step){
-  int *int_data = rxn_int_data;
-  double *float_data = rxn_float_data;
-  int i_elem = 0;
-  for (int i_ind = 0; i_ind < int_data[0]; i_ind++) {
-    double rate = rxn_env_data[0];
-    for (int i_spec = 0; i_spec < int_data[0]; i_spec++)
-      if (i_ind != i_spec) rate *= md->grid_cell_state[int_data[(2 + i_spec)]-1];
-    for (int i_dep = 0; i_dep < int_data[0]; i_dep++, i_elem++) {
-      if (int_data[(2 + 2*(int_data[0]+int_data[1])+i_elem)] < 0) continue;
-      int elem_id = int_data[(2 + 2*(int_data[0]+int_data[1])+i_elem)];
-      atomicAdd_block(&(jac.loss_partials[elem_id]),rate);
-    }
-    for (int i_dep = 0; i_dep < int_data[1]; i_dep++, i_elem++) {
-      if (int_data[(2 + 2*(int_data[0]+int_data[1])+i_elem)] < 0) continue;
-      if (-rate * md->grid_cell_state[int_data[(2 + i_ind)]-1] * float_data[(7 + i_dep)] * time_step <=
-          md->grid_cell_state[int_data[(2 + int_data[0]+ i_dep)]-1]) {
-        int elem_id=int_data[(2 + 2*(int_data[0]+int_data[1])+i_elem)];
-        atomicAdd_block(&(jac.production_partials[elem_id]),float_data[(7 + i_dep)] * rate);
       }
     }
   }
@@ -104,34 +87,6 @@ void rxn_gpu_CMAQ_OH_HNO3_calc_deriv_contrib(ModelDataGPU *md, TimeDerivativeGPU
 }
 
 __device__
-void rxn_gpu_CMAQ_OH_HNO3_calc_jac_contrib(ModelDataGPU *md, JacobianGPU jac, int *rxn_int_data,
-          double *rxn_float_data, double *rxn_env_data, double time_step){
-  int *int_data = rxn_int_data;
-  double *float_data = rxn_float_data;
-  int i_elem = 0;
-  for (int i_ind = 0; i_ind < int_data[0]; i_ind++) {
-    double rate = rxn_env_data[0];
-    for (int i_spec = 0; i_spec < int_data[0]; i_spec++)
-      if (i_ind != i_spec) rate *= md->grid_cell_state[int_data[(2 + i_spec)]-1];
-    for (int i_dep = 0; i_dep < int_data[0]; i_dep++, i_elem++) {
-      if (int_data[(2 + 2*(int_data[0]+int_data[1]) + i_elem)] < 0) continue;
-      int elem_id = int_data[(2 + 2*(int_data[0]+int_data[1]) + i_elem)];
-      atomicAdd_block(&(jac.loss_partials[elem_id]),rate);
-      //jacobian_add_value(jac, (unsigned int)JAC_ID_(i_elem), JACOBIAN_LOSS,
-        //                 rate);
-    }
-    for (int i_dep = 0; i_dep < int_data[1]; i_dep++, i_elem++) {
-      if (int_data[(2 + 2*(int_data[0]+int_data[1]) + i_elem)] < 0) continue;
-      if (-rate * md->grid_cell_state[int_data[(2 + i_ind)]-1] * float_data[(11 + i_dep)] * time_step <=
-          md->grid_cell_state[int_data[(2 + int_data[0] + i_dep)]-1]) {
-        int elem_id=int_data[(2 + 2*(int_data[0]+int_data[1]) + i_elem)];
-        atomicAdd_block(&(jac.production_partials[elem_id]), float_data[(11 + i_dep)] * rate);
-      }
-    }
-  }
-}
-
-__device__
 void rxn_gpu_arrhenius_calc_deriv_contrib(ModelDataGPU *md, TimeDerivativeGPU time_deriv,
                                 int *rxn_int_data, double *rxn_float_data,
                                 double *rxn_env_data, double time_step){
@@ -150,32 +105,6 @@ void rxn_gpu_arrhenius_calc_deriv_contrib(ModelDataGPU *md, TimeDerivativeGPU ti
       if (int_data[2 + int_data[0] + int_data[1] + i_dep_var] < 0) continue;
       if (-rate*float_data[6+i_spec]*time_step <= md->grid_cell_state[int_data[(2 + int_data[0] + i_spec)]-1]) {
         time_derivative_add_value_gpu(time_deriv, int_data[2 + int_data[0] + int_data[1] + i_dep_var],rate*float_data[6+i_spec]);
-      }
-    }
-  }
-}
-
-__device__
-void rxn_gpu_arrhenius_calc_jac_contrib(ModelDataGPU *md, JacobianGPU jac, int *rxn_int_data,
-          double *rxn_float_data, double *rxn_env_data, double time_step){
-  int *int_data = rxn_int_data;
-  double *float_data = rxn_float_data;
-  int i_elem = 0;
-  for (int i_ind = 0; i_ind < int_data[0]; i_ind++) {
-    double rate = rxn_env_data[0];
-    for (int i_spec = 0; i_spec < int_data[0]; i_spec++)
-      if (i_spec != i_ind) rate *= md->grid_cell_state[int_data[(2 + i_spec)]-1];
-    for (int i_dep = 0; i_dep < int_data[0]; i_dep++, i_elem++) {
-      if (int_data[2 + 2*(int_data[0]+int_data[1]) + i_elem] < 0) continue;
-      int elem_id = int_data[2 + 2*(int_data[0]+int_data[1]) + i_elem];
-      atomicAdd_block(&(jac.loss_partials[elem_id]),rate);
-    }
-    for (int i_dep = 0; i_dep < int_data[1]; i_dep++, i_elem++) {
-      if (int_data[2 + 2*(int_data[0]+int_data[1]) + i_elem] < 0) continue;
-      if (-rate * md->grid_cell_state[int_data[(2 + i_ind)]-1] * float_data[6+i_dep] * time_step <=
-        md->grid_cell_state[int_data[(2 + int_data[0] + i_dep)]-1]) {
-        int elem_id=int_data[2 + 2*(int_data[0]+int_data[1]) + i_elem];
-        atomicAdd_block(&(jac.production_partials[elem_id]), float_data[6+i_dep] * rate);
       }
     }
   }
@@ -222,6 +151,248 @@ void rxn_gpu_photolysis_calc_deriv_contrib(ModelDataGPU *md, TimeDerivativeGPU t
       if (int_data[(3 + int_data[0]+int_data[1]+i_dep_var)] < 0) continue;
         if (-rate * float_data[(1 + i_spec)] * time_step <= md->grid_cell_state[int_data[(3 + int_data[0]+ i_spec)]-1]){
         time_derivative_add_value_gpu(time_deriv, int_data[(3 + int_data[0]+int_data[1]+i_dep_var)],rate*float_data[(1 + i_spec)]);
+      }
+    }
+  }
+}
+
+#ifdef DEV_removeAtomic
+
+__device__
+void jacobian_add_value_gpu(JacobianGPU jac, unsigned int elem_id,
+                                   unsigned int prod_or_loss,
+                                   double jac_contribution) {
+  if (prod_or_loss == JACOBIAN_PRODUCTION)
+    atomicAdd_block(&(jac.production_partials[elem_id]),jac_contribution);
+  if (prod_or_loss == JACOBIAN_LOSS)
+    atomicAdd_block(&(jac.loss_partials[elem_id]),jac_contribution);
+}
+
+__device__
+void rxn_gpu_first_order_loss_calc_jac_contrib(ModelDataGPU *md, JacobianGPU jac, int *rxn_int_data,
+          double *rxn_float_data, double *rxn_env_data, double time_step){
+  int *int_data = rxn_int_data;
+if (int_data[3] >= 0) jacobian_add_value_gpu(jac, (unsigned int)int_data[3], JACOBIAN_LOSS,
+                                         rxn_env_data[0]);
+}
+
+__device__
+void rxn_gpu_CMAQ_H2O2_calc_jac_contrib(ModelDataGPU *md, JacobianGPU jac, int *rxn_int_data,
+          double *rxn_float_data, double *rxn_env_data, double time_step){
+  int *int_data = rxn_int_data;
+  double *float_data = rxn_float_data;
+  int i_elem = 0;
+  for (int i_ind = 0; i_ind < int_data[0]; i_ind++) {
+    double rate = rxn_env_data[0];
+    for (int i_spec = 0; i_spec < int_data[0]; i_spec++)
+      if (i_ind != i_spec) rate *= md->grid_cell_state[int_data[(2 + i_spec)]-1];
+    for (int i_dep = 0; i_dep < int_data[0]; i_dep++, i_elem++) {
+      if (int_data[(2 + 2*(int_data[0]+int_data[1])+i_elem)] < 0) continue;
+      jacobian_add_value_gpu(jac, (unsigned int)int_data[(2 + 2*(int_data[0]+int_data[1])+i_elem)], JACOBIAN_LOSS,
+             rate);
+    }
+    for (int i_dep = 0; i_dep < int_data[1]; i_dep++, i_elem++) {
+      if (int_data[(2 + 2*(int_data[0]+int_data[1])+i_elem)] < 0) continue;
+      if (-rate * md->grid_cell_state[int_data[(2 + i_ind)]-1] * float_data[(7 + i_dep)] * time_step <=
+          md->grid_cell_state[int_data[(2 + int_data[0]+ i_dep)]-1]) {
+        int elem_id=int_data[(2 + 2*(int_data[0]+int_data[1])+i_elem)];
+        jacobian_add_value_gpu(jac, (unsigned int)int_data[(2 + 2*(int_data[0]+int_data[1])+i_elem)],
+                   JACOBIAN_PRODUCTION, float_data[(7 + i_dep)] * rate);
+      }
+    }
+  }
+}
+
+
+__device__
+void rxn_gpu_CMAQ_OH_HNO3_calc_jac_contrib(ModelDataGPU *md, JacobianGPU jac, int *rxn_int_data,
+          double *rxn_float_data, double *rxn_env_data, double time_step){
+  int *int_data = rxn_int_data;
+  double *float_data = rxn_float_data;
+  int i_elem = 0;
+  for (int i_ind = 0; i_ind < int_data[0]; i_ind++) {
+    double rate = rxn_env_data[0];
+    for (int i_spec = 0; i_spec < int_data[0]; i_spec++)
+      if (i_ind != i_spec) rate *= md->grid_cell_state[int_data[(2 + i_spec)]-1];
+    for (int i_dep = 0; i_dep < int_data[0]; i_dep++, i_elem++) {
+      if (int_data[(2 + 2*(int_data[0]+int_data[1]) + i_elem)] < 0) continue;
+      jacobian_add_value_gpu(jac, (unsigned int)int_data[(2 + 2*(int_data[0]+int_data[1]) + i_elem)], JACOBIAN_LOSS,
+                   rate);
+    }
+    for (int i_dep = 0; i_dep < int_data[1]; i_dep++, i_elem++) {
+      if (int_data[(2 + 2*(int_data[0]+int_data[1]) + i_elem)] < 0) continue;
+      if (-rate * md->grid_cell_state[int_data[(2 + i_ind)]-1] * float_data[(11 + i_dep)] * time_step <=
+          md->grid_cell_state[int_data[(2 + int_data[0] + i_dep)]-1]) {
+        jacobian_add_value_gpu(jac, (unsigned int)int_data[(2 + 2*(int_data[0]+int_data[1]) + i_elem)],
+         JACOBIAN_PRODUCTION, float_data[(11 + i_dep)] * rate);
+      }
+    }
+  }
+}
+
+
+__device__
+void rxn_gpu_arrhenius_calc_jac_contrib(ModelDataGPU *md, JacobianGPU jac, int *rxn_int_data,
+          double *rxn_float_data, double *rxn_env_data, double time_step){
+  int *int_data = rxn_int_data;
+  double *float_data = rxn_float_data;
+  int i_elem = 0;
+  for (int i_ind = 0; i_ind < int_data[0]; i_ind++) {
+    double rate = rxn_env_data[0];
+    for (int i_spec = 0; i_spec < int_data[0]; i_spec++)
+      if (i_spec != i_ind) rate *= md->grid_cell_state[int_data[(2 + i_spec)]-1];
+    for (int i_dep = 0; i_dep < int_data[0]; i_dep++, i_elem++) {
+      if (int_data[2 + 2*(int_data[0]+int_data[1]) + i_elem] < 0) continue;
+      jacobian_add_value_gpu(jac, (unsigned int)int_data[2 + 2*(int_data[0]+int_data[1]) + i_elem], JACOBIAN_LOSS,
+                    rate);
+    }
+    for (int i_dep = 0; i_dep < int_data[1]; i_dep++, i_elem++) {
+      if (int_data[2 + 2*(int_data[0]+int_data[1]) + i_elem] < 0) continue;
+      if (-rate * md->grid_cell_state[int_data[(2 + i_ind)]-1] * float_data[6+i_dep] * time_step <=
+        md->grid_cell_state[int_data[(2 + int_data[0] + i_dep)]-1]) {
+        jacobian_add_value_gpu(jac, (unsigned int)int_data[2 + 2*(int_data[0]+int_data[1]) + i_elem],
+                           JACOBIAN_PRODUCTION, float_data[6+i_dep] * rate);
+      }
+    }
+  }
+}
+
+__device__
+void rxn_gpu_troe_calc_jac_contrib(ModelDataGPU *md, JacobianGPU jac, int *rxn_int_data,
+          double *rxn_float_data, double *rxn_env_data, double time_step){
+  int *int_data = rxn_int_data;
+  double *float_data = rxn_float_data;
+  int i_elem = 0;
+  for (int i_ind = 0; i_ind < int_data[0]; i_ind++) {
+    double rate = rxn_env_data[0];
+    for (int i_spec = 0; i_spec < int_data[0]; i_spec++)
+      if (i_ind != i_spec) rate *= md->grid_cell_state[int_data[(2 + i_spec)]-1];
+    for (int i_dep = 0; i_dep < int_data[0]; i_dep++, i_elem++) {
+      if (int_data[(2 + 2*(int_data[0]+int_data[1])+i_elem)] < 0) continue;
+        jacobian_add_value_gpu(jac, (unsigned int)int_data[(2 + 2*(int_data[0]+int_data[1])+i_elem)], JACOBIAN_LOSS,
+                   rate);
+        }
+    for (int i_dep = 0; i_dep < int_data[1]; i_dep++, i_elem++) {
+      if (int_data[(2 + 2*(int_data[0]+int_data[1])+i_elem)] < 0) continue;
+      if (-rate * md->grid_cell_state[int_data[(2 + i_ind)]-1] * float_data[(10 + i_dep)] * time_step <=
+        md->grid_cell_state[int_data[(2 + int_data[0]+ i_dep)]-1]) {
+        jacobian_add_value_gpu(jac, (unsigned int)int_data[(2 + 2*(int_data[0]+int_data[1])+i_elem)], JACOBIAN_LOSS,
+                   rate);
+      }
+    }
+  }
+}
+
+__device__
+void rxn_gpu_photolysis_calc_jac_contrib(ModelDataGPU *md, JacobianGPU jac, int *rxn_int_data,
+          double *rxn_float_data, double *rxn_env_data, double time_step){
+  int *int_data = rxn_int_data;
+  double *float_data = rxn_float_data;
+  int i_elem = 0;
+  for (int i_ind = 0; i_ind < int_data[0]; i_ind++) {
+    double rate = rxn_env_data[0];
+    for (int i_spec = 0; i_spec < int_data[0]; i_spec++)
+      if (i_spec != i_ind) rate *= md->grid_cell_state[int_data[(3 + i_spec)]-1];
+    for (int i_dep = 0; i_dep < int_data[0]; i_dep++, i_elem++) {
+      if (int_data[(3 + 2*(int_data[0]+int_data[1])+i_elem)] < 0) continue;
+      jacobian_add_value_gpu(jac, (unsigned int)int_data[(3 + 2*(int_data[0]+int_data[1])+i_elem)], JACOBIAN_LOSS,
+                   rate);
+    }
+    for (int i_dep = 0; i_dep < int_data[1]; i_dep++, i_elem++) {
+      if (int_data[(3 + 2*(int_data[0]+int_data[1])+i_elem)] < 0) continue;
+      if (-rate * md->grid_cell_state[int_data[(3 + i_ind)]-1] * float_data[(1 + i_dep)] * time_step <=
+          md->grid_cell_state[int_data[(3 + int_data[0]+ i_dep)]-1]) {
+      jacobian_add_value_gpu(jac, (unsigned int)int_data[(3 + 2*(int_data[0]+int_data[1])+i_elem)],
+              JACOBIAN_PRODUCTION, float_data[(1 + i_dep)] * rate);
+      }
+    }
+  }
+}
+
+#else
+
+__device__
+void rxn_gpu_first_order_loss_calc_jac_contrib(ModelDataGPU *md, JacobianGPU jac, int *rxn_int_data,
+          double *rxn_float_data, double *rxn_env_data, double time_step){
+  int *int_data = rxn_int_data;
+  if (int_data[3] >= 0) atomicAdd_block(&(jac.loss_partials[int_data[3]]),rxn_env_data[0]);
+}
+
+__device__
+void rxn_gpu_CMAQ_H2O2_calc_jac_contrib(ModelDataGPU *md, JacobianGPU jac, int *rxn_int_data,
+          double *rxn_float_data, double *rxn_env_data, double time_step){
+  int *int_data = rxn_int_data;
+  double *float_data = rxn_float_data;
+  int i_elem = 0;
+  for (int i_ind = 0; i_ind < int_data[0]; i_ind++) {
+    double rate = rxn_env_data[0];
+    for (int i_spec = 0; i_spec < int_data[0]; i_spec++)
+      if (i_ind != i_spec) rate *= md->grid_cell_state[int_data[(2 + i_spec)]-1];
+    for (int i_dep = 0; i_dep < int_data[0]; i_dep++, i_elem++) {
+      if (int_data[(2 + 2*(int_data[0]+int_data[1])+i_elem)] < 0) continue;
+      int elem_id = int_data[(2 + 2*(int_data[0]+int_data[1])+i_elem)];
+      atomicAdd_block(&(jac.loss_partials[elem_id]),rate);
+    }
+    for (int i_dep = 0; i_dep < int_data[1]; i_dep++, i_elem++) {
+      if (int_data[(2 + 2*(int_data[0]+int_data[1])+i_elem)] < 0) continue;
+      if (-rate * md->grid_cell_state[int_data[(2 + i_ind)]-1] * float_data[(7 + i_dep)] * time_step <=
+          md->grid_cell_state[int_data[(2 + int_data[0]+ i_dep)]-1]) {
+        int elem_id=int_data[(2 + 2*(int_data[0]+int_data[1])+i_elem)];
+        atomicAdd_block(&(jac.production_partials[elem_id]),float_data[(7 + i_dep)] * rate);
+      }
+    }
+  }
+}
+
+
+__device__
+void rxn_gpu_CMAQ_OH_HNO3_calc_jac_contrib(ModelDataGPU *md, JacobianGPU jac, int *rxn_int_data,
+          double *rxn_float_data, double *rxn_env_data, double time_step){
+  int *int_data = rxn_int_data;
+  double *float_data = rxn_float_data;
+  int i_elem = 0;
+  for (int i_ind = 0; i_ind < int_data[0]; i_ind++) {
+    double rate = rxn_env_data[0];
+    for (int i_spec = 0; i_spec < int_data[0]; i_spec++)
+      if (i_ind != i_spec) rate *= md->grid_cell_state[int_data[(2 + i_spec)]-1];
+    for (int i_dep = 0; i_dep < int_data[0]; i_dep++, i_elem++) {
+      if (int_data[(2 + 2*(int_data[0]+int_data[1]) + i_elem)] < 0) continue;
+      int elem_id = int_data[(2 + 2*(int_data[0]+int_data[1]) + i_elem)];
+      atomicAdd_block(&(jac.loss_partials[elem_id]),rate);
+    }
+    for (int i_dep = 0; i_dep < int_data[1]; i_dep++, i_elem++) {
+      if (int_data[(2 + 2*(int_data[0]+int_data[1]) + i_elem)] < 0) continue;
+      if (-rate * md->grid_cell_state[int_data[(2 + i_ind)]-1] * float_data[(11 + i_dep)] * time_step <=
+          md->grid_cell_state[int_data[(2 + int_data[0] + i_dep)]-1]) {
+        int elem_id=int_data[(2 + 2*(int_data[0]+int_data[1]) + i_elem)];
+        atomicAdd_block(&(jac.production_partials[elem_id]), float_data[(11 + i_dep)] * rate);
+      }
+    }
+  }
+}
+
+
+__device__
+void rxn_gpu_arrhenius_calc_jac_contrib(ModelDataGPU *md, JacobianGPU jac, int *rxn_int_data,
+          double *rxn_float_data, double *rxn_env_data, double time_step){
+  int *int_data = rxn_int_data;
+  double *float_data = rxn_float_data;
+  int i_elem = 0;
+  for (int i_ind = 0; i_ind < int_data[0]; i_ind++) {
+    double rate = rxn_env_data[0];
+    for (int i_spec = 0; i_spec < int_data[0]; i_spec++)
+      if (i_spec != i_ind) rate *= md->grid_cell_state[int_data[(2 + i_spec)]-1];
+    for (int i_dep = 0; i_dep < int_data[0]; i_dep++, i_elem++) {
+      if (int_data[2 + 2*(int_data[0]+int_data[1]) + i_elem] < 0) continue;
+      int elem_id = int_data[2 + 2*(int_data[0]+int_data[1]) + i_elem];
+      atomicAdd_block(&(jac.loss_partials[elem_id]),rate);
+    }
+    for (int i_dep = 0; i_dep < int_data[1]; i_dep++, i_elem++) {
+      if (int_data[2 + 2*(int_data[0]+int_data[1]) + i_elem] < 0) continue;
+      if (-rate * md->grid_cell_state[int_data[(2 + i_ind)]-1] * float_data[6+i_dep] * time_step <=
+        md->grid_cell_state[int_data[(2 + int_data[0] + i_dep)]-1]) {
+        int elem_id=int_data[2 + 2*(int_data[0]+int_data[1]) + i_elem];
+        atomicAdd_block(&(jac.production_partials[elem_id]), float_data[6+i_dep] * rate);
       }
     }
   }
@@ -278,6 +449,8 @@ void rxn_gpu_photolysis_calc_jac_contrib(ModelDataGPU *md, JacobianGPU jac, int 
     }
   }
 }
+
+#endif
 
 __device__ void cudaDevicemin_2(double *g_odata, double in, volatile double *sdata, int n_shr_empty){
   unsigned int tid = threadIdx.x;
@@ -596,7 +769,6 @@ int CudaDeviceguess_helper(double h_n, double* y_n,
 ) {
   extern __shared__ double flag_shr2[];
   int i = blockIdx.x * blockDim.x + threadIdx.x;
-  int tid = threadIdx.x;
   __syncthreads();
   double min;
   cudaDevicemin_2(&min, y_n[i], flag_shr2, md->n_shr_empty);
@@ -761,6 +933,7 @@ __device__ void cudaDevicecalc_Jac(double *y,ModelDataGPU *md, ModelDataVariable
       solveRXNJac(i_rxn,i_cell,jacBlock, md, sc);
     }
     int residual=n_rxn-(deriv_length_cell*n_iters);
+    //int residual=n_rxn%deriv_length_cell;//todo check
     if(tid_cell < residual){
       int i_rxn = tid_cell + deriv_length_cell*n_iters;
       solveRXNJac(i_rxn,i_cell,jacBlock, md, sc);

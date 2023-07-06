@@ -228,8 +228,15 @@ typedef struct {
   cudaEvent_t stopDerivKernel;
 #endif
 #endif
+#ifdef NEW
+  long double loss_rates_new[1000];
+#endif
 
 } ModelData;
+
+#ifdef NEW
+long double *rate_contrib_l;
+#endif
 
 /* Solver data structure */
 typedef struct {
@@ -294,13 +301,7 @@ typedef struct {
   int use_gpu_cvode;
   int nDevices;
   int nCellsGPUPerc;
-  int new;
-#endif
-#ifndef NEW
-#define N_new 1000
-  long double loss_rates_new[N_new];
-  double *deriv_data;
-  double *jac_deriv_data;
+  int use_new;
 #endif
 
   void *cvode_mem;       // CVodeMem object

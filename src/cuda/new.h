@@ -3,8 +3,8 @@
  * SPDX-License-Identifier: MIT
  */
 
-#ifndef NEW_H
-#define NEW_H
+#ifndef FILE_NEW_H
+#define FILE_NEW_H
 
 
 
