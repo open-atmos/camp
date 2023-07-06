@@ -65,6 +65,8 @@ typedef struct {
     double cv_tn;
     double cv_etamax;
     int cv_maxncf;
+    double *grid_cell_state;
+    double *grid_cell_env;
     int nstlj;  //Counters (e.g. iterations of function cvnlsNewton)
 #ifdef ODE_WARNING
     int cv_nhnil;            /* number of messages issued to the user that t + h == t for the next iternal step            */
@@ -172,7 +174,6 @@ typedef struct { //Allocated from CPU (used during CPU / need some cudamemcpy)
     double *cv_Vabstol;
     double *grid_cell_state;
     double *grid_cell_env;
-    double *grid_cell_aero_rep_env_data;
     double *cv_l;
     double *cv_tau;
     double *cv_tq;//NUM_TESTS+1

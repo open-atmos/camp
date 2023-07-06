@@ -632,14 +632,14 @@ int cudaDevicecamp_solver_check_model_state(ModelDataGPU *md, ModelDataVariable 
 }
 
 __device__ void solveRXN(
-  int i_rxn, int i_cell,TimeDerivativeGPU deriv_data,
+  int i_rxn,TimeDerivativeGPU deriv_data,
   double time_step,ModelDataGPU *md, ModelDataVariable *sc
 ){
   double *rxn_float_data = (double *)&( md->rxn_double[md->rxn_float_indices[i_rxn]]);
   int *int_data = (int *)&(md->rxn_int[md->rxn_int_indices[i_rxn]]);
   int *rxn_int_data = (int *) &(int_data[1]);
   double *rxn_env_data = &(md->rxn_env_data
-  [md->n_rxn_env_data*i_cell+md->rxn_env_data_idx[i_rxn]]);
+  [md->n_rxn_env_data*blockIdx.x+md->rxn_env_data_idx[i_rxn]]);
   switch (int_data[0]) {
     case RXN_ARRHENIUS :
       rxn_gpu_arrhenius_calc_deriv_contrib(md, deriv_data, rxn_int_data,
@@ -673,15 +673,13 @@ __device__ void cudaDevicecalc_deriv(double time_step, double *y,
 {
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   int deriv_length_cell = md->nrows / md->n_cells;
-  int tid_cell=i%deriv_length_cell;
+  int tid=threadIdx.x;
   md->J_tmp[i]=y[i]-md->J_state[i];
   cudaDeviceSpmv_2(md->J_tmp2, md->J_tmp, md->J_solver, md->djA, md->diA);
   md->J_tmp[i]=md->J_deriv[i]+md->J_tmp2[i];
   md->J_tmp2[i]=0.0;
   TimeDerivativeGPU deriv_data;
   deriv_data.num_spec = deriv_length_cell*gridDim.x;
-#ifdef AEROS_CPU
-#else
   deriv_data.production_rates = md->production_rates;
   deriv_data.loss_rates = md->loss_rates;
   if(i<deriv_data.num_spec){
@@ -689,30 +687,29 @@ __device__ void cudaDevicecalc_deriv(double time_step, double *y,
     deriv_data.loss_rates[i] = 0.0;
   }
   __syncthreads();
-#endif
-  int i_cell = i/deriv_length_cell;
-  deriv_data.production_rates = &( md->production_rates[deriv_length_cell*i_cell]);
-  deriv_data.loss_rates = &( md->loss_rates[deriv_length_cell*i_cell]);
-  md->grid_cell_state = &( md->state[md->state_size_cell*i_cell]);
-  md->grid_cell_env = &( md->env[CAMP_NUM_ENV_PARAM_*i_cell]);
+  deriv_data.production_rates = &( md->production_rates[deriv_length_cell*blockIdx.x]);
+  deriv_data.loss_rates = &( md->loss_rates[deriv_length_cell*blockIdx.x]);
+  md->grid_cell_state = &( md->state[md->state_size_cell*blockIdx.x]); //todo change to sc->
+  md->grid_cell_env = &( md->env[CAMP_NUM_ENV_PARAM_*blockIdx.x]);
   int n_rxn = md->n_rxn;
+  __syncthreads();
 #ifdef DEV_removeAtomic
   if(threadIdx.x==0){
     for (int j = 0; j < n_rxn; j++){
-      solveRXN(j, i_cell,deriv_data, time_step, md, sc);
+      solveRXN(j,deriv_data, time_step, md, sc);
     }
   }
 #else
-  if( tid_cell < n_rxn) {
+  if( threadIdx.x < n_rxn) {
     int n_iters = n_rxn / deriv_length_cell;
     for (int j = 0; j < n_iters; j++) {
-      int i_rxn = tid_cell + j*deriv_length_cell;
-      solveRXN(i_rxn, i_cell,deriv_data, time_step, md, sc);
+      int i_rxn = threadIdx.x + j*deriv_length_cell;
+      solveRXN(i_rxn,deriv_data, time_step, md, sc);
     }
-    int residual=n_rxn-(deriv_length_cell*n_iters);
-    if(tid_cell < residual){
-      int i_rxn = tid_cell + deriv_length_cell*n_iters;
-      solveRXN(i_rxn, i_cell, deriv_data, time_step, md, sc);
+    int residual=n_rxn%deriv_length_cell;
+    if(threadIdx.x < residual){
+      int i_rxn = threadIdx.x + deriv_length_cell*n_iters;
+      solveRXN(i_rxn, deriv_data, time_step, md, sc);
     }
   }
 #endif
@@ -813,7 +810,6 @@ int CudaDeviceguess_helper(double h_n, double* y_n,
       t_star=h_j;
     }
     __syncthreads();
-    //todo 2 cores die ddt monarch after adding i_fast
     int i_fast = flag_shr2[0];
     cudaDevicemin_2(&h_j, t_star, flag_shr2, md->n_shr_empty);
     if (i_fast == 1 && h_n > 0.)
@@ -865,14 +861,14 @@ int CudaDeviceguess_helper(double h_n, double* y_n,
 }
 
 __device__ void solveRXNJac(
-        int i_rxn, int i_cell, JacobianGPU jac,
+        int i_rxn, JacobianGPU jac,
         ModelDataGPU *md, ModelDataVariable *sc
 ){
   double *rxn_float_data = (double *)&( md->rxn_double[md->rxn_float_indices[i_rxn]]);
   int *int_data = (int *)&(md->rxn_int[md->rxn_int_indices[i_rxn]]);
   int *rxn_int_data = (int *) &(int_data[1]);
   double *rxn_env_data = &(md->rxn_env_data
-  [md->n_rxn_env_data*i_cell+md->rxn_env_data_idx[i_rxn]]);
+  [md->n_rxn_env_data*blockIdx.x+md->rxn_env_data_idx[i_rxn]]);
 #ifdef DEBUG_solveRXNJac
   if(tid==0){
     printf("[DEBUG] GPU solveRXN tid %d, \n", tid);
@@ -910,7 +906,6 @@ __device__ void cudaDevicecalc_Jac(double *y,ModelDataGPU *md, ModelDataVariable
 ){
   int tid = blockIdx.x * blockDim.x + threadIdx.x;
   int deriv_length_cell = md->nrows / md->n_cells;
-  int tid_cell=tid%deriv_length_cell;
   __syncthreads();
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
   int clock_khz=md->clock_khz;
@@ -921,13 +916,12 @@ __device__ void cudaDevicecalc_Jac(double *y,ModelDataGPU *md, ModelDataVariable
   JacobianGPU *jac = &md->jac;
   JacobianGPU jacBlock;
   __syncthreads();
-  int i_cell = tid/deriv_length_cell;
   jacBlock.num_elem = jac->num_elem;
   jacBlock.production_partials = &( jac->production_partials[jacBlock.num_elem[0]*blockIdx.x]);
   jacBlock.loss_partials = &( jac->loss_partials[jacBlock.num_elem[0]*blockIdx.x]);
   __syncthreads();
-  md->grid_cell_state = &( md->state[md->state_size_cell*i_cell]);
-  md->grid_cell_env = &( md->env[CAMP_NUM_ENV_PARAM_*i_cell]);
+  md->grid_cell_state = &( md->state[md->state_size_cell*blockIdx.x]);
+  md->grid_cell_env = &( md->env[CAMP_NUM_ENV_PARAM_*blockIdx.x]);
 #ifdef DEBUG_cudaDevicecalc_Jac
     if(tid==0)printf("cudaDevicecalc_Jac01\n");
 #endif
@@ -936,21 +930,20 @@ __device__ void cudaDevicecalc_Jac(double *y,ModelDataGPU *md, ModelDataVariable
 #ifdef DEV_removeAtomic
   if(threadIdx.x==0){
     for (int j = 0; j < n_rxn; j++){
-      solveRXNJac(j, i_cell,jacBlock, md, sc);
+      solveRXNJac(j,jacBlock, md, sc);
     }
   }
 #else
-  if( tid_cell < n_rxn) {
+  if( threadIdx.x < n_rxn) {
     int n_iters = n_rxn / deriv_length_cell;
     for (int j = 0; j < n_iters; j++) {
-      int i_rxn = tid_cell + j*deriv_length_cell;
-      solveRXNJac(i_rxn,i_cell,jacBlock, md, sc);
+      int i_rxn = threadIdx.x + j*deriv_length_cell;
+      solveRXNJac(i_rxn,jacBlock, md, sc);
     }
-    int residual=n_rxn-(deriv_length_cell*n_iters);
-    //int residual=n_rxn%deriv_length_cell;//todo check
-    if(tid_cell < residual){
-      int i_rxn = tid_cell + deriv_length_cell*n_iters;
-      solveRXNJac(i_rxn,i_cell,jacBlock, md, sc);
+    int residual=n_rxn%deriv_length_cell;
+    if(threadIdx.x < residual){
+      int i_rxn = threadIdx.x + deriv_length_cell*n_iters;
+      solveRXNJac(i_rxn,jacBlock, md, sc);
     }
   }
 #endif
@@ -965,7 +958,7 @@ __device__ void cudaDevicecalc_Jac(double *y,ModelDataGPU *md, ModelDataVariable
     jacBlock.production_partials[jac_map[j].rxn_id] = 0.0;
     jacBlock.loss_partials[jac_map[j].rxn_id] = 0.0;
   }
-  int residual=nnz-(blockDim.x*n_iters);
+  int residual=nnz%blockDim.x;
   if(threadIdx.x < residual){
     int j = threadIdx.x + n_iters*blockDim.x;
   md->dA[jac_map[j].solver_id + nnz * blockIdx.x] =
@@ -1004,7 +997,7 @@ int cudaDeviceJac(int *flag, ModelDataGPU *md, ModelDataVariable *sc)
     int j = threadIdx.x + z*blockDim.x;
     md->J_solver[j]=md->dA[j];
   }
-  int residual=nnz-(blockDim.x*n_iters);
+  int residual=nnz%blockDim.x;
   if(threadIdx.x < residual){
     int j = threadIdx.x + n_iters*blockDim.x;
     md->J_solver[j]=md->dA[j];
