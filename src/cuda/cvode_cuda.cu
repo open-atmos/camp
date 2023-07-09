@@ -1730,7 +1730,7 @@ int cudaDevicecvStep(ModelDataGPU *md, ModelDataVariable *sc) {
   int ncf = 0;
   int nef = 0;
   int nflag=FIRST_CALL;
-  double saved_t=cv_mem->cv_tn;
+  double saved_t=sc->cv_tn;
   double dsm;
   __syncthreads();
   if ((sc->cv_nst > 0) && (sc->cv_hprime != sc->cv_h)){
