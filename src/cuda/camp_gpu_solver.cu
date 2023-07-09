@@ -78,7 +78,6 @@ void free_gpu_cu(SolverData *sd) {
   cudaFree(mGPU->yout);
   cudaFree(mGPU->cv_Vabstol);
   cudaFree(mGPU->grid_cell_state);
-  cudaFree(mGPU->grid_cell_env);
   cudaFree(mGPU->cv_l);
   cudaFree(mGPU->cv_tau);
   cudaFree(mGPU->cv_tq);

@@ -334,8 +334,8 @@ def run(conf):
   try:
     ddt_pid = subprocess.check_output('pidof -x $(ps cax | grep ddt)', shell=True)
     if ddt_pid:
-      exec_str += 'ddt --connect '
-      #exec_str +=""
+      #exec_str += 'ddt --connect '
+      exec_str +=""
   except Exception:
     pass
   if conf.mpi == "yes":

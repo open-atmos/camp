@@ -349,7 +349,7 @@ endif()
 # camp library
 
 set(STD_C_FLAGS "-std=c99")
-set(STD_CUDA_FLAGS "-g -G -arch=compute_70 -code=sm_70")
+set(STD_CUDA_FLAGS "-O0 -g -G -arch=compute_70 -code=sm_70")
 
 if(ENABLE_CXX)
   set(STD_CXX_FLAGS "-fpermissive")
