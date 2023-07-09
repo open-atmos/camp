@@ -1730,6 +1730,7 @@ int cudaDevicecvStep(ModelDataGPU *md, ModelDataVariable *sc) {
   int ncf = 0;
   int nef = 0;
   int nflag=FIRST_CALL;
+  double saved_t=cv_mem->cv_tn;
   double dsm;
   __syncthreads();
   if ((sc->cv_nst > 0) && (sc->cv_hprime != sc->cv_h)){
@@ -1747,7 +1748,7 @@ int cudaDevicecvStep(ModelDataGPU *md, ModelDataVariable *sc) {
 #ifdef DEBUG_cudaDevicecvStep
     if(threadIdx.x==0)printf("DEBUG_cudaDevicecvStep nflag %d block %d\n",nflag, blockIdx.x);
 #endif
-    int kflag = cudaDevicecvHandleNFlag(md, sc, &nflag, sc->cv_tn, &ncf);
+    int kflag = cudaDevicecvHandleNFlag(md, sc, &nflag, saved_t, &ncf);
     __syncthreads();
 #ifdef DEBUG_cudaDevicecvStep
     if(threadIdx.x==0)printf("DEBUG_cudaDevicecvStep kflag %d block %d\n",kflag, blockIdx.x);
@@ -1759,7 +1760,7 @@ int cudaDevicecvStep(ModelDataGPU *md, ModelDataVariable *sc) {
       return (kflag);
     }
     __syncthreads();
-    int eflag=cudaDevicecvDoErrorTest(md,sc,&nflag,sc->cv_tn,&nef,&dsm);
+    int eflag=cudaDevicecvDoErrorTest(md,sc,&nflag,saved_t,&nef,&dsm);
     __syncthreads();
 #ifdef DEBUG_cudaDevicecvStep
     if(threadIdx.x==0)printf("DEBUG_cudaDevicecvStep nflag %d eflag %d block %d\n",nflag, eflag, blockIdx.x);    //if(i==0)printf("eflag %d\n", eflag);
