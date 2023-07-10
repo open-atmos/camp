@@ -939,9 +939,6 @@ __device__ void cudaDevicecalc_Jac(double *y,ModelDataGPU *md, ModelDataVariable
   jacBlock.loss_partials = &( jac->loss_partials[jacBlock.num_elem[0]*blockIdx.x]);
   __syncthreads();
   sc->grid_cell_state = &( md->state[md->state_size_cell*blockIdx.x]);
-#ifdef DEBUG_cudaDevicecalc_Jac
-    if(tid==0)printf("cudaDevicecalc_Jac01\n");
-#endif
   __syncthreads();
   int n_rxn = md->n_rxn;
 #ifndef DEV_removeAtomic
@@ -1024,7 +1021,6 @@ int cudaDeviceJac(int *flag, ModelDataGPU *md, ModelDataVariable *sc)
   md->J_deriv[tid]=md->dftemp[tid];
   __syncthreads();
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
-    //if(tid==0)printf("sc->timeJac %lf\n",sc->timeJac);
     if(threadIdx.x==0)  sc->timeJac += ((double)(clock() - start))/(clock_khz*1000);
 #endif
   __syncthreads();
@@ -1554,7 +1550,7 @@ void cudaDevicecvCompleteStep(ModelDataGPU *md, ModelDataVariable *sc) {
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   int z, j;
   __syncthreads();
-  if(threadIdx.x==0) sc->cv_nst++;
+  sc->cv_nst++;
   __syncthreads();
   sc->cv_hu = sc->cv_h;
   for (z=sc->cv_q; z >= 2; z--)  md->cv_tau[z+blockIdx.x*(L_MAX + 1)] = md->cv_tau[z-1+blockIdx.x*(L_MAX + 1)];
@@ -1745,14 +1741,8 @@ int cudaDevicecvStep(ModelDataGPU *md, ModelDataVariable *sc) {
     __syncthreads();
     nflag = cudaDevicecvNlsNewton(nflag,md, sc);
     __syncthreads();
-#ifdef DEBUG_cudaDevicecvStep
-    if(threadIdx.x==0)printf("DEBUG_cudaDevicecvStep nflag %d block %d\n",nflag, blockIdx.x);
-#endif
     int kflag = cudaDevicecvHandleNFlag(md, sc, &nflag, saved_t, &ncf);
     __syncthreads();
-#ifdef DEBUG_cudaDevicecvStep
-    if(threadIdx.x==0)printf("DEBUG_cudaDevicecvStep kflag %d block %d\n",kflag, blockIdx.x);
-#endif
     if (kflag == PREDICT_AGAIN) {
       continue;
     }
@@ -1762,9 +1752,6 @@ int cudaDevicecvStep(ModelDataGPU *md, ModelDataVariable *sc) {
     __syncthreads();
     int eflag=cudaDevicecvDoErrorTest(md,sc,&nflag,saved_t,&nef,&dsm);
     __syncthreads();
-#ifdef DEBUG_cudaDevicecvStep
-    if(threadIdx.x==0)printf("DEBUG_cudaDevicecvStep nflag %d eflag %d block %d\n",nflag, eflag, blockIdx.x);    //if(i==0)printf("eflag %d\n", eflag);
-#endif
     if (eflag == TRY_AGAIN){
       continue;
     }
