@@ -254,10 +254,7 @@ def calculate_MAPE(data, timesteps, max_tol):
     species1 = data[cases_one_multi_cells[0]]
     species2 = data[cases_one_multi_cells[1]]
 
-    # print(data)
-
     # Reorganize data
-
     # species_keys=list(species1.keys())
     MAPEs = [0.] * timesteps
     species_names = list(species1.keys())
@@ -265,7 +262,6 @@ def calculate_MAPE(data, timesteps, max_tol):
     max_err = 0.0
     max_err_name = ""
     max_err_k = 0
-    # max_tol=1.0E-60
     concs_above_tol = 0
     concs_below_tol = 0
     concs_are_zero = 0
@@ -281,19 +277,20 @@ def calculate_MAPE(data, timesteps, max_tol):
             r = len_timestep * (1 + j)
             out1 = data1_values[l:r]
             out2 = data2_values[l:r]
-
             for k in range(len(out1)):
                 err = 0.
-                # Filter low concs
                 if abs(out1[k] - out2[k]) < max_tol:
                     concs_below_tol = concs_below_tol + 1
                     if out1[k] == out2[k]:
                         concs_are_equal = concs_are_equal +1
+                    else:
+                        err = abs((out1[k] - out2[k]) / out1[k])
                 elif out1[k] == 0:
                     concs_are_zero = concs_are_zero + 1
                 else:
                     concs_above_tol = concs_above_tol + 1
                     err = abs((out1[k] - out2[k]) / out1[k])
+                    MAPE += err
 
                 # if(out1[k]==0.0):
                 #  out1[k]+=1.0E-60
@@ -303,25 +300,20 @@ def calculate_MAPE(data, timesteps, max_tol):
                 # print(out1[k],out2[k])
                 # else:
                 # err=abs((out1[k]-out2[k])/out1[k])
-                MAPE += err
                 n += 1
                 if err > max_err:
                     max_err = err
                     max_err_name = name
                     max_err_k = k
-                # if(err>1):
-                # print(name,out1[k],out2[k])
         MAPEs[j] = MAPE / n * 100
 
     if concs_are_zero > concs_below_tol + concs_above_tol:
         print("Error: More concs are zero than real values, check for errors")
         raise
-
-    print("max_error:" + str(max_err * 100) + "%" + " at species and id: " + max_err_name + " " + str(max_err_k)
+    max_err=format(max_err*100, '.2e')
+    print("max_error:" + str(max_err) + "%" + " at species with name: " + max_err_name + " and id: " + str(max_err_k)
           , "concs_above_tol", concs_above_tol, "concs_below_tol", concs_below_tol
           , "concs_are_equal", concs_are_equal,  "concs_are_zero", concs_are_zero)
-    # print(NRMSEs)
-
     return MAPEs
 
 
