@@ -1116,7 +1116,8 @@ int cudaDevicecvNewtonIteration(ModelDataGPU *md, ModelDataVariable *sc){
   extern __shared__ double flag_shr2[];
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   int aux_flag=0;
-  double del, delp, dcon, m;
+  double del, delp, dcon;
+  int m = 0;
   del = delp = 0.0;
   int retval;
   __syncthreads();
@@ -1175,6 +1176,7 @@ int cudaDevicecvNewtonIteration(ModelDataGPU *md, ModelDataVariable *sc){
       __syncthreads();
       return CV_SUCCESS;
     }
+    m++;
     if ((m == md->cv_maxcor) || ((m >= 2) && (del > RDIV * delp))) {
       if (!(sc->cv_jcur)) {
         return TRY_AGAIN;
