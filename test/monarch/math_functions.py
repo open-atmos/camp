@@ -303,9 +303,10 @@ def calculate_MAPE(data, timesteps, max_tol):
         print("Error: More concs are zero than real values, check for errors")
         raise
     max_err=format(max_err*100, '.2e')
+    max_err_abs=format(max_err_abs, '.2e')
     print("relative max_error:" + str(max_err) + "% at: "
           + max_err_name + " with id: " + str(max_err_i_name) +
-          " absolute max_error:" + str(max_err_abs) + "% at: "
+          " absolute max_error:" + str(max_err_abs) + " at: "
           + max_err_name_abs + " with id: " + str(max_err_i_name_abs)
           , "concs_above_tol", concs_above_tol, "concs_below_tol", concs_below_tol
           , "concs_are_equal", concs_are_equal,  "concs_are_zero", concs_are_zero)
