@@ -252,10 +252,10 @@ def calculate_MAPE(data, timesteps, max_tol):
     #print("len_timestep",len_timestep,"timesteps",timesteps)
     max_err = 0.0
     max_err_name = ""
-    max_err_k = 0
+    max_err_i_name = 0
     max_err_abs = 0.0
     max_err_name_abs = ""
-    max_err_k_abs = 0
+    max_err_i_name_abs = 0
     concs_above_tol = 0
     concs_below_tol = 0
     concs_are_zero = 0
@@ -264,7 +264,7 @@ def calculate_MAPE(data, timesteps, max_tol):
         MAPE = 0.0
         # MAPE=1.0E-60
         n = 0
-        for name in species1:
+        for i_name, name in enumerate(species1):
             data1_values = species1[name]
             data2_values = species2[name]
             l = j * len_timestep
@@ -292,11 +292,11 @@ def calculate_MAPE(data, timesteps, max_tol):
                 if err > max_err:
                     max_err = err
                     max_err_name = name
-                    max_err_k = k
+                    max_err_i_name = i_name
                 if err_abs > max_err_abs:
                     max_err_abs = err_abs
                     max_err_name_abs = name
-                    max_err_k_abs = k
+                    max_err_i_name_abs = i_name
         MAPEs[j] = MAPE / n * 100
 
     if concs_are_zero > concs_below_tol + concs_above_tol:
@@ -304,9 +304,9 @@ def calculate_MAPE(data, timesteps, max_tol):
         raise
     max_err=format(max_err*100, '.2e')
     print("relative max_error:" + str(max_err) + "% at: "
-          + max_err_name + " with id: " + str(max_err_k) +
+          + max_err_name + " with id: " + str(max_err_i_name) +
           " absolute max_error:" + str(max_err_abs) + "% at: "
-          + max_err_name_abs + " with id: " + str(max_err_k_abs)
+          + max_err_name_abs + " with id: " + str(max_err_i_name_abs)
           , "concs_above_tol", concs_above_tol, "concs_below_tol", concs_below_tol
           , "concs_are_equal", concs_are_equal,  "concs_are_zero", concs_are_zero)
     return MAPEs
