@@ -415,7 +415,10 @@ def run(conf):
       export(conf, data_path)
     set_import_netcdf(conf, False)
 
-  data = math_functions.read_solver_stats(data_path, conf.timeSteps)
+  nrows_csv=conf.timeSteps
+  if conf.plotYKey == "MAPE":
+    nrows_csv=conf.timeSteps*conf.nCells
+  data = math_functions.read_solver_stats(data_path, nrows_csv)
   if is_import:
     os.remove(data_path)
 
@@ -428,8 +431,6 @@ def run_case(conf):
       and "GPU" in conf.case:
     for i in range(len(data["timeLS"])):
       data["timeLS"][i] = data["timeLS"][i] - data["timeBiconjGradMemcpy"][i]
-  # if conf.plotYKey != "MAPE":
-  # print("data",data)
   y_key_words = conf.plotYKey.split()
   y_key = y_key_words[-1]
   if "normalized" in conf.plotYKey:
