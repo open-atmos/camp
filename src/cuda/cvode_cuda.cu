@@ -946,12 +946,12 @@ int cudaDevicecvNewtonIteration(ModelDataGPU *md, ModelDataVariable *sc){
 #endif
     md->dtempv[i]=sc->cv_rl1*(md->dzn[i+md->nrows])+md->cv_acor[i];
     md->dtempv[i]=sc->cv_gamma*md->dftemp[i]-md->dtempv[i];
+    //md->dx[i] = md->dtempv[i]; //less accuracy 1-2 time-steps
     solveBcgCudaDeviceCVODE(md, sc);
     __syncthreads();
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     if(threadIdx.x==0) sc->dtBCG += ((double)(int)(clock() - start))/(clock_khz*1000);
 #endif
-    __syncthreads();
     md->dtempv[i] = md->dx[i];
     __syncthreads();
     md->dftemp[i]=md->dcv_y[i]+md->dtempv[i];
