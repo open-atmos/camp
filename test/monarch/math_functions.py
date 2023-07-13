@@ -279,7 +279,8 @@ def calculate_MAPE(data, timesteps, max_tol):
                     if out1[k] == out2[k]:
                         concs_are_equal = concs_are_equal +1
                     else:
-                        err = abs((out1[k] - out2[k]) / out1[k])
+                        if out1[k]!=0:
+                            err = abs((out1[k] - out2[k]) / out1[k])
                         #print("out1[k]",out1[k],"out2[k]",out1[k],"abs",abs(out1[k] - out2[k]),
                         #      "k",k,"out1",out1,"out2",out2)
                 elif out1[k] == 0:
