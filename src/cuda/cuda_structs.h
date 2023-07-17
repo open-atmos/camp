@@ -65,6 +65,7 @@ typedef struct {
     double cv_tn;
     double cv_etamax;
     int cv_maxncf;
+    double *grid_cell_state;
     int nstlj;  //Counters (e.g. iterations of function cvnlsNewton)
 #ifdef ODE_WARNING
     int cv_nhnil;            /* number of messages issued to the user that t + h == t for the next iternal step            */
@@ -162,7 +163,8 @@ typedef struct { //Allocated from CPU (used during CPU / need some cudamemcpy)
     double *production_rates;
     double *loss_rates;
     int *rxn_int_indices;
-    int *rxn_float_indices;
+    int *rxn_float_indices;    double *grid_cell_state;
+
     int n_rxn;
     int n_rxn_env_data;
     int *n_mapped_values;
@@ -170,9 +172,6 @@ typedef struct { //Allocated from CPU (used during CPU / need some cudamemcpy)
     JacobianGPU jac;
     double *yout;
     double *cv_Vabstol;
-    double *grid_cell_state;
-    double *grid_cell_env;
-    double *grid_cell_aero_rep_env_data;
     double *cv_l;
     double *cv_tau;
     double *cv_tq;//NUM_TESTS+1

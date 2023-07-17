@@ -66,10 +66,8 @@ def calculate_percentages_solveCVODEGPU(din):
             data["timef"].append(din["timef"][i] / din["timecvStep"][i] * percNum)
             data["timeguess_helper"].append(din["timeguess_helper"][i] / din["timecvStep"][i] * percNum)
 
-    # print(data["timeNewtonIteration"])
 
     print("calculate_percentages_solveCVODEGPU")
-    print(data)
 
     return data
 
@@ -116,8 +114,6 @@ def normalized_timeLS(new_plot_y_key, cases_multicells_onecell, data, cells):
     # data["timestep"]=data.get("timestep",[]) \
     #                 + data[cases_multicells_onecell[0]]["timestep"]
 
-    # print(data)
-
     return data, new_plot_y_key
 
 
@@ -129,12 +125,9 @@ def calculate_mean_cell(cell, data, \
 
     data[new_plot_y_key] = data.get(new_plot_y_key, []) \
                            + [np.mean(data[cell][plot_y_key])]
-
-    # print(data)
     # print(plot_y_key)
     # print(data[cell][plot_y_key])
     # print(np.std(data[cell][plot_y_key]))
-
     plot_y_key = new_plot_y_key
     # print(plot_y_key)
     return data, plot_y_key
@@ -170,8 +163,6 @@ def check_tolerances(data, timesteps, rel_tol, abs_tol):
     data1 = data[cases_one_multi_cells[0]]
     data2 = data[cases_one_multi_cells[1]]
 
-    # print(data)
-
     # Reorganize data
 
     # species_keys=list(data1.keys())
@@ -203,8 +194,6 @@ def calculate_NMRSE(data, timesteps):
     cases_one_multi_cells = list(data.keys())
     data1 = data[cases_one_multi_cells[0]]
     data2 = data[cases_one_multi_cells[1]]
-
-    # print(data)
 
     # Reorganize data
 
@@ -254,18 +243,19 @@ def calculate_MAPE(data, timesteps, max_tol):
     species1 = data[cases_one_multi_cells[0]]
     species2 = data[cases_one_multi_cells[1]]
 
-    # print(data)
-
     # Reorganize data
-
     # species_keys=list(species1.keys())
     MAPEs = [0.] * timesteps
     species_names = list(species1.keys())
     len_timestep = int(len(species1[species_names[0]]) / timesteps)
+    #print("species1[species_names[0]]",species1[species_names[0]])
+    #print("len_timestep",len_timestep,"timesteps",timesteps)
     max_err = 0.0
     max_err_name = ""
-    max_err_k = 0
-    # max_tol=1.0E-60
+    max_err_i_name = 0
+    max_err_abs = 0.0
+    max_err_name_abs = ""
+    max_err_i_name_abs = 0
     concs_above_tol = 0
     concs_below_tol = 0
     concs_are_zero = 0
@@ -274,54 +264,53 @@ def calculate_MAPE(data, timesteps, max_tol):
         MAPE = 0.0
         # MAPE=1.0E-60
         n = 0
-        for name in species1:
+        for i_name, name in enumerate(species1):
             data1_values = species1[name]
             data2_values = species2[name]
             l = j * len_timestep
             r = len_timestep * (1 + j)
             out1 = data1_values[l:r]
             out2 = data2_values[l:r]
-
             for k in range(len(out1)):
                 err = 0.
-                # Filter low concs
-                if abs(out1[k] - out2[k]) < max_tol:
+                err_abs = abs(out1[k] - out2[k])
+                if err_abs < max_tol:
                     concs_below_tol = concs_below_tol + 1
                     if out1[k] == out2[k]:
                         concs_are_equal = concs_are_equal +1
+                    else:
+                        if out1[k]!=0:
+                            err = abs((out1[k] - out2[k]) / out1[k])
+                        #print("out1[k]",out1[k],"out2[k]",out1[k],"abs",abs(out1[k] - out2[k]),
+                        #      "k",k,"out1",out1,"out2",out2)
                 elif out1[k] == 0:
                     concs_are_zero = concs_are_zero + 1
                 else:
                     concs_above_tol = concs_above_tol + 1
                     err = abs((out1[k] - out2[k]) / out1[k])
-
-                # if(out1[k]==0.0):
-                #  out1[k]+=1.0E-60
-                #  out2[k]+=1.0E-60
-                #  err=abs((out1[k]-out2[k])/out1[k])
-                # err=1
-                # print(out1[k],out2[k])
-                # else:
-                # err=abs((out1[k]-out2[k])/out1[k])
-                MAPE += err
+                    MAPE += err
                 n += 1
                 if err > max_err:
                     max_err = err
                     max_err_name = name
-                    max_err_k = k
-                # if(err>1):
-                # print(name,out1[k],out2[k])
+                    max_err_i_name = i_name
+                if err_abs > max_err_abs:
+                    max_err_abs = err_abs
+                    max_err_name_abs = name
+                    max_err_i_name_abs = i_name
         MAPEs[j] = MAPE / n * 100
 
     if concs_are_zero > concs_below_tol + concs_above_tol:
         print("Error: More concs are zero than real values, check for errors")
         raise
-
-    print("max_error:" + str(max_err * 100) + "%" + " at species and id: " + max_err_name + " " + str(max_err_k)
+    max_err=format(max_err*100, '.2e')
+    max_err_abs=format(max_err_abs, '.2e')
+    print("relative max_error:" + str(max_err) + "% at: "
+          + max_err_name + " with id: " + str(max_err_i_name) +
+          " absolute max_error:" + str(max_err_abs) + " at: "
+          + max_err_name_abs + " with id: " + str(max_err_i_name_abs)
           , "concs_above_tol", concs_above_tol, "concs_below_tol", concs_below_tol
           , "concs_are_equal", concs_are_equal,  "concs_are_zero", concs_are_zero)
-    # print(NRMSEs)
-
     return MAPEs
 
 

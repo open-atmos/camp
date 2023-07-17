@@ -38,7 +38,6 @@ option(FAILURE_DETAIL "Output conditions before and after solver failures" OFF)
 option(ENABLE_CXX "Enable C++" OFF)
 option(ENABLE_GPU "Enable use of GPUs in chemistry solving" OFF)
 option(ENABLE_SWAP_DERIV_LOOP_CELLS "" OFF)
-option(ENABLE_RESET_JAC_SOLVING "" OFF)
 option(ENABLE_NETCDF "Include NETCDF package" OFF)
 option(ENABLE_EXPORT_NETCDF "" OFF)
 option(ENABLE_IMPORT_NETCDF "" OFF)
@@ -349,7 +348,7 @@ endif()
 # camp library
 
 set(STD_C_FLAGS "-std=c99")
-set(STD_CUDA_FLAGS "-g -G -arch=compute_70 -code=sm_70")
+set(STD_CUDA_FLAGS "-O0 -g -G -arch=compute_70 -code=sm_70")
 
 if(ENABLE_CXX)
   set(STD_CXX_FLAGS "-fpermissive")
