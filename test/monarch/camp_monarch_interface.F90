@@ -130,7 +130,7 @@ contains
     !> Path to the CAMP-camp configuration file list
     character(len=:), allocatable, optional :: camp_config_file
     !> Path to the CAMP-camp <-> MONARCH interface input file
-    character(len=:), allocatable, optional :: interface_config_file
+    character(len=*), intent(in), optional :: interface_config_file
     !> Starting index for chemical species in the MONARCH tracer array
     integer, optional :: starting_id
     !> Ending index for chemical species in the MONARCH tracer array
@@ -218,7 +218,6 @@ contains
 
       !print*,"camp_monarch_interface_t"
 
-      !print*,"camp_monarch_interface constructor this%interface_input_file",this%interface_input_file
       ! Set the aerosol representation id
       if (this%camp_core%get_aero_rep("MONARCH mass-based", aero_rep)) then
         select type (aero_rep)
@@ -404,7 +403,11 @@ contains
         do i = 1, this%n_photo_rxn
           base_rate = this%base_rates(i)!
           if(this%interface_input_file.eq."interface_monarch_cb05.json") then
+#ifdef DISABLE_PHOTO_RXN
             base_rate = 0.
+#else
+            base_rate = this%base_rates(i)
+#endif
           else
             base_rate = this%base_rates(i) !+ this%base_rates(i)*(this%offset_photo_rates_cells(z)/z)
           end if
@@ -680,10 +683,10 @@ contains
             !end if
 
             call camp_mpi_barrier(MPI_COMM_WORLD)
-
-              !call this%camp_core%export_camp_input_json(this%camp_state, &
-               !   real(time_step, kind=dp), solver_stats = solver_stats)
-
+#ifdef EXPORT_JSON
+            call this%camp_core%export_camp_input_json(this%camp_state, &
+                  real(time_step, kind=dp), solver_stats = solver_stats)
+#endif
             ! Integrate the CAMP mechanism
             call cpu_time(comp_start)
             call this%camp_core%solve(this%camp_state, real(time_step*60., kind=dp),solver_stats=solver_stats)

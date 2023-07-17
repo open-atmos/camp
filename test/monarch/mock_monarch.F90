@@ -439,7 +439,7 @@ program mock_monarch_t
 
   !print*,"mock_monarch water_conc end"
 
-  if(.not. camp_interface%interface_input_file.eq."interface_cb05_yarwood2005.json")  then
+  if(.not.interface_input_file.eq."interface_cb05_yarwood2005.json")  then
     call camp_interface%get_init_conc(species_conc, water_conc, WATER_VAPOR_ID, &
             i_W,I_E,I_S,I_N,output_file_title)
   end if
@@ -922,8 +922,6 @@ contains
 
     end do
 
-    !print*, "import_camp_input_json b"
-
     do z=0,n_cells-1
       do i=1,state_size_per_cell
         camp_interface%camp_state%state_var(i+(z*state_size_per_cell))=&
@@ -974,8 +972,6 @@ contains
     call jfile%destroy()
 
     close(IMPORT_FILE_UNIT)
-
-    !print*, "import_camp_input_json end"
 
   end subroutine import_camp_input_json
 
