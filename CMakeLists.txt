@@ -204,7 +204,7 @@ add_definitions(-DCAMP_USE_SUNDIALS)
 
 if(CMAKE_C_COMPILER_ID STREQUAL "GNU")
   SET(JSON_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../json-fortran-6.1.0/install/jsonfortran-gnu-6.1.0/lib)
-elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
+elseif(CMAKE_C_COMPILER_ID STREQUAL "Intel")
   SET(JSON_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../json-fortran-6.1.0/install/jsonfortran-intel-6.1.0/lib)
 else ()
   message(FATAL_ERROR "CMAKE_C_COMPILER_ID UNKNOWN")
@@ -348,7 +348,7 @@ endif()
 # camp library
 
 set(STD_C_FLAGS "-std=c99")
-set(STD_CUDA_FLAGS "-O0 -g -G -arch=compute_70 -code=sm_70")
+set(STD_CUDA_FLAGS "-g -G -arch=compute_70 -code=sm_70")
 
 if(ENABLE_CXX)
   set(STD_CXX_FLAGS "-fpermissive")

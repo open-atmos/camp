@@ -8,7 +8,7 @@ extern "C" {
 #include "new.h"
 }
 
-#ifdef DEV_removeAtomic
+#ifndef DEV_removeAtomic
 
 __device__
 void time_derivative_add_value_gpu(TimeDerivativeGPU time_deriv, unsigned int spec_id,
@@ -547,7 +547,7 @@ __device__ void cudaDevicecalc_deriv(double time_step, double *y,
   sc->grid_cell_state = &( md->state[md->state_size_cell*blockIdx.x]);
   int n_rxn = md->n_rxn;
   __syncthreads();
-#ifdef DEV_removeAtomic
+#ifndef DEV_removeAtomic
   if(threadIdx.x==0){
     for (int j = 0; j < n_rxn; j++){
       //printf("n_rxn %d i %d j %d \n",n_rxn,i,j);

@@ -845,6 +845,7 @@ contains
     integer :: max_spec_name_size=512
     integer(kind=i_kind) :: pos, pack_size, size_state_per_cell
     character(len=:), allocatable :: spec_name
+    real(kind=dp) :: base_rate
 
     state_size_per_cell = camp_interface%camp_core%state_size_per_cell()
 
@@ -967,6 +968,15 @@ contains
       call jfile%get('input.photo_rates.'//trim(i_str),&
               camp_interface%base_rates(i))
       !print*, trim(i_str), camp_interface%base_rates(i)
+    end do
+
+    do z =1, n_cells
+      do i = 1, camp_interface%n_photo_rxn
+        base_rate = camp_interface%base_rates(i)
+        !print*,"base rate,i,rank",base_rate,i, camp_mpi_rank()
+        call camp_interface%photo_rxns(i)%set_rate(base_rate) !not used if exported cb05
+        call camp_interface%camp_core%update_data(camp_interface%photo_rxns(i),z)
+      end do
     end do
 
     call jfile%destroy()

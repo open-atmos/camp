@@ -395,25 +395,14 @@ contains
     !print*,"camp_monarch_interface constructor new_state end"
 
     !call camp_mpi_barrier(MPI_COMM_WORLD)
-    if(this%ADD_EMISIONS.eq."monarch_binned" &
-    .or. this%interface_input_file.eq."interface_monarch_cb05.json") then
+    if(this%ADD_EMISIONS.eq."monarch_binned") then
       allocate(this%offset_photo_rates_cells(this%n_cells))
       this%offset_photo_rates_cells(:) = 0. !0 0.1
       do z =1, this%n_cells
         do i = 1, this%n_photo_rxn
-          base_rate = this%base_rates(i)!
-          if(this%interface_input_file.eq."interface_monarch_cb05.json") then
-#ifdef DISABLE_PHOTO_RXN
-            base_rate = 0.
-#else
-            base_rate = this%base_rates(i)
-#endif
-          else
-            base_rate = this%base_rates(i) !+ this%base_rates(i)*(this%offset_photo_rates_cells(z)/z)
-          end if
+          base_rate = this%base_rates(i)
           !print*,"offset",(this%offset_photo_rates_cells(z)/z)!"z",z,"n_cells",n_cells,this%n_cells
-          !print*,"this%base_rates(i), base rate",this%base_rates(i),&
-          !        base_rate, camp_mpi_rank()
+          !print*,"this%base_rates(i), base rate",this%base_rates(i),base_rate, camp_mpi_rank()
           call this%photo_rxns(i)%set_rate(base_rate) !not used if exported cb05
           !call this%photo_rxns(i)%set_rate(real(0.0, kind=dp))
           call this%camp_core%update_data(this%photo_rxns(i),z) !todo needed? mock_monarch also has that
