@@ -595,6 +595,7 @@ int cudaDevicef(double time_step, double *y,
   clock_t start;
   start = clock();
 #endif
+  time_step = sc->cv_next_h;
   time_step = time_step > 0. ? time_step : md->init_time_step;
   int checkflag=cudaDevicecamp_solver_check_model_state(md, sc, y, flag);
   __syncthreads();
@@ -1043,7 +1044,7 @@ int cudaDevicecvNlsNewton(int nflag,
   md->dftemp[i]=md->dzn[i]-md->cv_last_yn[i];
   __syncthreads();
   int guessflag=CudaDeviceguess_helper(sc->cv_h, md->dzn,
-       md->cv_last_yn, md->dftemp, md->dtempv,
+       md->cv_last_yn, md->dftemp, md->dtempv1,
        md->cv_acor_init,  &flagDevice,md, sc
   );
   __syncthreads();
