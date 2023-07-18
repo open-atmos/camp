@@ -221,6 +221,7 @@ typedef struct { //Allocated from CPU (used during CPU / need some cudamemcpy)
     double cv_tstop;
     int cv_tstopset; //Used as bool
     double cv_nlscoef;
+    int use_deriv_est; //Used as bool
 //ODE stats
 #ifdef CAMP_DEBUG_GPU
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS

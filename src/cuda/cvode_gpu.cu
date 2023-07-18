@@ -785,6 +785,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
                   stream);
   mGPU->cv_tstop = cv_mem->cv_tstop;
   mGPU->cv_tstopset = cv_mem->cv_tstopset;
+  mGPU->use_deriv_est = sd->use_deriv_est;
   mGPU->cv_nlscoef = cv_mem->cv_nlscoef;
   mGPU->init_time_step = sd->init_time_step;
   mGPU->cv_mxstep = cv_mem->cv_mxstep;

@@ -529,7 +529,6 @@ __device__ void cudaDevicecalc_deriv(double time_step, double *y,
 {
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   int deriv_length_cell = md->nrows / md->n_cells;
-  int tid=threadIdx.x;
   md->J_tmp[i]=y[i]-md->J_state[i];
   cudaDeviceSpmv_2(md->J_tmp2, md->J_tmp, md->J_solver, md->djA, md->diA);
   md->J_tmp[i]=md->J_deriv[i]+md->J_tmp2[i];
@@ -572,13 +571,16 @@ __device__ void cudaDevicecalc_deriv(double time_step, double *y,
   deriv_data.production_rates = md->production_rates;
   deriv_data.loss_rates = md->loss_rates;
   __syncthreads();
-  double *J_tmp = md->J_tmp;
   double *r_p = deriv_data.production_rates;
   double *r_l = deriv_data.loss_rates;
   if (r_p[i] + r_l[i] != 0.0) {
-    double scale_fact = 1.0 / (r_p[i] + r_l[i]) /
-        (1.0 / (r_p[i] + r_l[i]) + MAX_PRECISION_LOSS / fabs(r_p[i]- r_l[i]));
-    yout[i] = scale_fact * (r_p[i] - r_l[i]) + (1.0 - scale_fact) * (J_tmp[i]);
+    if (md->use_deriv_est==1) {
+      double scale_fact = 1.0 / (r_p[i] + r_l[i]) /
+          (1.0 / (r_p[i] + r_l[i]) + MAX_PRECISION_LOSS / fabs(r_p[i]- r_l[i]));
+      yout[i] = scale_fact * (r_p[i] - r_l[i]) + (1.0 - scale_fact) * (md->J_tmp[i]);
+    }else {
+      yout[i] = r_p[i] - r_l[i];
+    }
   } else {
     yout[i] = 0.0;
   }
@@ -752,8 +754,6 @@ __device__ void solveRXNJac(
 
 __device__ void cudaDevicecalc_Jac(double *y,ModelDataGPU *md, ModelDataVariable *sc
 ){
-  int tid = blockIdx.x * blockDim.x + threadIdx.x;
-  int deriv_length_cell = md->nrows / md->n_cells;
   __syncthreads();
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
   int clock_khz=md->clock_khz;
@@ -812,12 +812,27 @@ int cudaDeviceJac(int *flag, ModelDataGPU *md, ModelDataVariable *sc)
   clock_t start;
   start = clock();
 #endif
+  md->use_deriv_est=0;
   int aux_flag=0;
   __syncthreads();
   retval=cudaDevicef(sc->cv_next_h, md->dcv_y, md->dftemp,md,sc,&aux_flag);
+  md->use_deriv_est=1;
   __syncthreads();
   if(retval==CAMP_SOLVER_FAIL)
     return CAMP_SOLVER_FAIL;
+#ifndef DEBUG_check_model_state
+  //Pending: check with debug if needed, since it is already updated in deviceF
+  int checkflag=cudaDevicecamp_solver_check_model_state(md, sc, md->dcv_y, &aux_flag);
+  __syncthreads();
+  if(checkflag==CAMP_SOLVER_FAIL){
+    *flag=CAMP_SOLVER_FAIL;
+#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
+    if(threadIdx.x==0)  sc->timeJac += ((double)(clock() - start))/(clock_khz*1000);
+#endif
+    __syncthreads();
+    return CAMP_SOLVER_FAIL;
+  }
+#endif
   cudaDevicecalc_Jac(md->dcv_y,md, sc);
   __syncthreads();
   int nnz = md->n_mapped_values[0];
