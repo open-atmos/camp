@@ -385,7 +385,7 @@ __device__ void cudaDeviceSpmv_2CSC_block(double* dx, double* db, double* dA, in
 }
 
 __device__ void cudaDeviceSpmv_2(double* dx, double* db, double* dA, int* djA, int* diA){
-#ifndef USE_CSR_ODE_GPU
+#ifdef USE_CSR_ODE_GPU
   cudaDeviceSpmv_2CSR(dx,db,dA,djA,diA);
 #else
   cudaDeviceSpmv_2CSC_block(dx,db,dA,djA,diA);
@@ -962,7 +962,7 @@ int cudaDevicecvNewtonIteration(ModelDataGPU *md, ModelDataVariable *sc){
 #endif
     md->dtempv[i]=sc->cv_rl1*(md->dzn[i+md->nrows])+md->cv_acor[i];
     md->dtempv[i]=sc->cv_gamma*md->dftemp[i]-md->dtempv[i];
-    //md->dx[i] = md->dtempv[i]; //less accuracy 1-2 time-steps
+    //md->dx[i] = md->dtempv[i]; //wrong, less accuracy
     solveBcgCudaDeviceCVODE(md, sc);
     __syncthreads();
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
@@ -970,6 +970,7 @@ int cudaDevicecvNewtonIteration(ModelDataGPU *md, ModelDataVariable *sc){
 #endif
     md->dtempv[i] = md->dx[i];
     __syncthreads();
+    //if(i==0)printf("md->dtempv[0] %.16le\n",md->dtempv[0]);
     md->dftemp[i]=md->dcv_y[i]+md->dtempv[i];
     __syncthreads();
     int guessflag=CudaDeviceguess_helper(0., md->dftemp,
