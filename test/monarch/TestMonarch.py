@@ -83,7 +83,7 @@ def all_timesteps():
     # conf.caseBase = "GPU maxrregcount-48"
 
     conf.casesOptim = []
-    conf.casesOptim.append("CPU One-cell")
+    #conf.casesOptim.append("CPU One-cell")
     #conf.casesOptim.append("CPU Multi-cells")
     #conf.casesOptim.append("CPU New")
     #conf.casesOptim.append("GPU One-cell")
@@ -92,7 +92,7 @@ def all_timesteps():
     # conf.casesOptim.append("GPU Block-cellsN")
     # conf.casesOptim.append("GPU Block-cells1")
     # conf.casesOptim.append("CPU EBI")
-    #conf.casesOptim.append("GPU BDF")
+    conf.casesOptim.append("GPU BDF")
     #conf.casesOptim.append("GPU CPU")
     # conf.casesOptim.append("GPU maxrregcount-64") #wrong 10,000 cells
     # conf.casesOptim.append("GPU maxrregcount-68")
