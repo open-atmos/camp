@@ -11,9 +11,9 @@ fi
 
 #tar -zxvf camp/cvode-3.4-alpha.tar.gz
 cd $library_path/cvode-3.4-alpha
-rm -r build
+#rm -r build
 mkdir build
-rm -rf install
+#rm -rf install
 mkdir install
 mkdir install/examples
 cd build
