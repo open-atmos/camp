@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+cd /gpfs/scratch/bsc32/bsc32815/a591/nmmb-monarch/MODEL/SRC_LIBS/camp/compile/power9
+./make.camp.power9.sh
+cd /gpfs/scratch/bsc32/bsc32815/gpupartmc/camp/compile/power9
+
 export SUNDIALS_HOME=$(pwd)/../../../cvode-3.4-alpha/install
 export SUITE_SPARSE_HOME=$(pwd)/../../../SuiteSparse
 export JSON_FORTRAN_HOME=$(pwd)/../../../json-fortran-6.1.0/install/jsonfortran-gnu-6.1.0
@@ -67,7 +71,10 @@ else
   #FILE=./unit_test_aero_rep_single_particle
   #FILE=./new_make.sh
   if [ "$FILE" == TestMonarch.py ]; then
-    python $FILE
+    log_path="/gpfs/scratch/bsc32/bsc32815/gpupartmc/camp/compile/power9/log.txt"
+    echo "Generating log file at " $log_path
+    python $FILE 2>&1 | tee $log_path
+    #python $FILE
     cd ../../compile/power9
   elif [ "$FILE" == test_monarch_1.py ]; then
     echo "Running old commits with file test_monarch_1.py ."
@@ -77,5 +84,6 @@ else
     cd ../../compile/power9
     time $FILE
   fi
+./diff.sh
 
 fi

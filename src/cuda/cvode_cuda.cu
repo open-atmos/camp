@@ -8,6 +8,21 @@ extern "C" {
 #include "new.h"
 }
 
+__device__
+void print_double(double *x, int len, const char *s){
+#ifndef USE_PRINT_ARRAYS
+  __syncthreads();
+  int i_thread = blockIdx.x * blockDim.x + threadIdx.x;
+  if(i_thread==0){
+    for (int i=0; i<len; i++){
+      printf("%s[%d]=%le\n",s,i,x[i]);
+    }
+  }
+//printf("%s[%d]=%.16le\n",s,i,x[i]);
+  __syncthreads();
+#endif
+}
+
 #ifndef DEV_removeAtomic
 
 __device__
@@ -963,7 +978,10 @@ int cudaDevicecvNewtonIteration(ModelDataGPU *md, ModelDataVariable *sc){
     md->dtempv[i]=sc->cv_rl1*(md->dzn[i+md->nrows])+md->cv_acor[i];
     md->dtempv[i]=sc->cv_gamma*md->dftemp[i]-md->dtempv[i];
     //md->dx[i] = md->dtempv[i]; //wrong, less accuracy
+    print_double(md->dA,670,"dA");
+    //print_double(md->dtempv,73,"dtempv");
     solveBcgCudaDeviceCVODE(md, sc);
+    print_double(md->dx,73,"md->dx");
     __syncthreads();
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     if(threadIdx.x==0) sc->dtBCG += ((double)(int)(clock() - start))/(clock_khz*1000);
