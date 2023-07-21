@@ -15,7 +15,7 @@ void print_double(double *x, int len, const char *s){
   int i_thread = blockIdx.x * blockDim.x + threadIdx.x;
   if(i_thread==0){
     for (int i=0; i<len; i++){
-      printf("%s[%d]=%le\n",s,i,x[i]);
+      printf("%s[%d]=%.17le\n",s,i,x[i]);
     }
   }
 //printf("%s[%d]=%.16le\n",s,i,x[i]);
@@ -400,7 +400,7 @@ __device__ void cudaDeviceSpmv_2CSC_block(double* dx, double* db, double* dA, in
 }
 
 __device__ void cudaDeviceSpmv_2(double* dx, double* db, double* dA, int* djA, int* diA){
-#ifdef USE_CSR_ODE_GPU
+#ifndef USE_CSR_ODE_GPU
   cudaDeviceSpmv_2CSR(dx,db,dA,djA,diA);
 #else
   cudaDeviceSpmv_2CSC_block(dx,db,dA,djA,diA);
@@ -945,10 +945,13 @@ void solveBcgCudaDeviceCVODE(ModelDataGPU *md, ModelDataVariable *sc)
     md->dr0[i]=md->ds[i]-omega0*md->dt[i];
     md->dt[i]=0.0;
     cudaDevicedotxy_2(md->dr0, md->dr0, &temp1, md->n_shr_empty);
-    temp1 = sqrtf(temp1);
+    print_double(&temp1,1,"temp1");
+    temp1 = sqrt(temp1);
+    print_double(&temp1,1,"sqrt(temp1)");
     rho0 = rho1;
     it++;
   } while(it<BCG_MAXIT && temp1>BCG_TOLMAX);
+  if(i==0)printf("end BCG GPU\n");
   __syncthreads();
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
   if(threadIdx.x==0) sc->counterBCGInternal += it;
@@ -978,10 +981,10 @@ int cudaDevicecvNewtonIteration(ModelDataGPU *md, ModelDataVariable *sc){
     md->dtempv[i]=sc->cv_rl1*(md->dzn[i+md->nrows])+md->cv_acor[i];
     md->dtempv[i]=sc->cv_gamma*md->dftemp[i]-md->dtempv[i];
     //md->dx[i] = md->dtempv[i]; //wrong, less accuracy
-    print_double(md->dA,670,"dA");
+    //print_double(md->dA,md->diA[blockDim.x],"dA");
     //print_double(md->dtempv,73,"dtempv");
     solveBcgCudaDeviceCVODE(md, sc);
-    print_double(md->dx,73,"md->dx");
+    //print_double(md->dx,73,"dx");
     __syncthreads();
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     if(threadIdx.x==0) sc->dtBCG += ((double)(int)(clock() - start))/(clock_khz*1000);
