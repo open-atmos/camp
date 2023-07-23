@@ -10,7 +10,7 @@ extern "C" {
 
 __device__
 void print_double(double *x, int len, const char *s){
-#ifndef USE_PRINT_ARRAYS
+#ifdef USE_PRINT_ARRAYS
   __syncthreads();
   int i_thread = blockIdx.x * blockDim.x + threadIdx.x;
   if(i_thread==0){
@@ -423,7 +423,10 @@ __device__ void cudaDevicedotxy_2(double *g_idata1, double *g_idata2,
   extern __shared__ double sdata[];
   unsigned int tid = threadIdx.x;
   __syncthreads();
-  //print_double(sdata,73,"sdata");
+  if(tid<n_shr_empty)
+  sdata[tid+blockDim.x]=0.;
+  __syncthreads();
+    //print_double(sdata,73,"sdata");
 #ifndef DEBUG_cudaDevicedotxy_2
   //used for compare with cpu
   sdata[0]=0.;
@@ -436,7 +439,7 @@ __device__ void cudaDevicedotxy_2(double *g_idata1, double *g_idata2,
 #else
   unsigned int i = blockIdx.x*blockDim.x + threadIdx.x;
   if(tid<n_shr_empty)
-  sdata[tid+blockDim.x]=0.;
+    sdata[tid+blockDim.x]=0.;
   __syncthreads();
   sdata[tid] = g_idata1[i]*g_idata2[i];
   __syncthreads();
