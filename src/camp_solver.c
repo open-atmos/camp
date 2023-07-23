@@ -1237,6 +1237,9 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
       rxn_calc_deriv_new(sd);
 #endif
 
+    //print_double(sd->time_deriv.loss_rates,sd->time_deriv.num_spec,"loss_rates");
+    //print_double(sd->time_deriv.production_rates,sd->time_deriv.num_spec,"production_rates");
+
     // Update the deriv array
     if (sd->use_deriv_est == 1) {
       //printf("jac_deriv_data %-le\n",jac_deriv_data[0]);

@@ -1,4 +1,6 @@
+#!/usr/bin/env bash
 
+if [ ! -z ${BSC_MACHINE+x} ]; then
 if [ $BSC_MACHINE == "power" ]; then
 #MONARCH P9 compilation
 module load GCC/7.3.0-2.30
@@ -25,6 +27,7 @@ elif [ $BSC_MACHINE == "mn4" ]; then
 else
   echo "Unknown architecture"
   exit
+fi
 fi
 
 if [ "$1" == "from_camp_jobs" ]; then
