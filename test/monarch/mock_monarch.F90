@@ -459,6 +459,11 @@ program mock_monarch_t
   end if
 #endif
 
+  if(3*NUM_TIME_STEP.gt.(60*24)) then !24h limit time-step
+    print*,"ERROR 3*NUM_TIME_STEP.gt.(60*24): Reduce number of time-step or time-step size"
+    STOP
+  end if
+
   if(.not.caseMulticellsOnecell.eq."EBI") then
     do i_time=1, NUM_TIME_STEP
 #ifdef ENABLE_PRINT_STATE_GNUPLOT
