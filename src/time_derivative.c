@@ -83,12 +83,15 @@ void time_derivative_output(TimeDerivative time_deriv, double *dest_array,
       if (deriv_est) {
 #ifdef TIME_DERIVATIVE_LONG_DOUBLE
         long double scale_fact;
-#else
-        double scale_fact;
-#endif
         scale_fact =
             1.0 / (*r_p + *r_l) /
             (1.0 / (*r_p + *r_l) + MAX_PRECISION_LOSS / fabsl(*r_p - *r_l));
+#else
+        double scale_fact;
+        scale_fact =
+            1.0 / (*r_p + *r_l) /
+            (1.0 / (*r_p + *r_l) + MAX_PRECISION_LOSS / fabs(*r_p - *r_l));
+#endif
         *dest_array =
             scale_fact * (*r_p - *r_l) + (1.0 - scale_fact) * (*deriv_est);
 #ifdef CAMP_DEBUG_TIME_DERIV

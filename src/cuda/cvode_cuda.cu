@@ -1017,7 +1017,7 @@ int cudaDevicecvNewtonIteration(ModelDataGPU *md, ModelDataVariable *sc){
     md->dtempv[i]=sc->cv_rl1*(md->dzn[i+md->nrows])+md->cv_acor[i];
     md->dtempv[i]=sc->cv_gamma*md->dftemp[i]-md->dtempv[i];
     //print_double(md->dA,md->diA[blockDim.x],"dA");
-    print_double(md->dtempv,73,"dtempv");
+    //print_double(md->dtempv,73,"dtempv");
     solveBcgCudaDeviceCVODE(md, sc);
     //print_double(md->dx,73,"dx");
     __syncthreads();
@@ -1764,7 +1764,7 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *sc) {
 #endif
     kflag2 = cudaDevicecvStep(md, sc);
     __syncthreads();
-    print_double(md->dzn,73,"dzn");
+    //print_double(md->dzn,73,"dzn");
     if (kflag2 != CV_SUCCESS) {
       sc->cv_tretlast = sc->tret = sc->cv_tn;
       md->yout[i] = md->dzn[i];
