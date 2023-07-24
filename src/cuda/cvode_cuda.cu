@@ -171,6 +171,7 @@ void rxn_gpu_photolysis_calc_deriv_contrib(ModelDataVariable *sc, TimeDerivative
   }
 }
 
+#ifndef DEV_removeAtomic
 __device__
 void jacobian_add_value_gpu(JacobianGPU jac, unsigned int elem_id,
                             int prod_or_loss,
@@ -182,6 +183,19 @@ void jacobian_add_value_gpu(JacobianGPU jac, unsigned int elem_id,
     jac.loss_partials[elem_id] += jac_contribution;
   }
 }
+#else
+__device__
+void jacobian_add_value_gpu(JacobianGPU jac, unsigned int elem_id,
+                                   int prod_or_loss,
+                                   double jac_contribution) {
+  if (prod_or_loss == JACOBIAN_PRODUCTION) {
+    atomicAdd_block(&(jac.production_partials[elem_id]), jac_contribution);
+  }
+  else{ //(prod_or_loss == JACOBIAN_LOSS){
+    atomicAdd_block(&(jac.loss_partials[elem_id]),jac_contribution);
+  }
+}
+#endif
 
 __device__
 void rxn_gpu_first_order_loss_calc_jac_contrib(ModelDataVariable *sc, JacobianGPU jac, int *rxn_int_data,
@@ -427,13 +441,13 @@ __device__ void cudaDevicedotxy_2(double *g_idata1, double *g_idata2,
   sdata[tid+blockDim.x]=0.;
   __syncthreads();
     //print_double(sdata,73,"sdata");
-#ifndef DEBUG_cudaDevicedotxy_2
+#ifndef DEV_cudaDevicedotxy_2
   //used for compare with cpu
   sdata[0]=0.;
   __syncthreads();
   if(tid==0){
     for(int j=0;j<blockDim.x;j++){
-      sdata[0]+=g_idata1[j]*g_idata2[j];
+      sdata[0]+=g_idata1[j+blockIdx.x*blockDim.x]*g_idata2[j+blockIdx.x*blockDim.x];
     }
   }
 #else
@@ -700,15 +714,15 @@ int CudaDeviceguess_helper(double h_n, double* y_n,
   for (int iter = 0; iter < GUESS_MAX_ITER && t_0 + t_j < sc->cv_tn; iter++) {
     __syncthreads();
     double h_j = sc->cv_tn - (t_0 + t_j);
-#ifndef FIX_CudaDeviceguess_helper
+#ifndef DEV_CudaDeviceguess_helper
     if(threadIdx.x==0){
     int i_fast = -1;
-    for (int i = 0; i < blockDim.x; i++) {
-      double t_star = -atmp1[i] / acorr[i];
-      if ((t_star > 0. || (t_star == 0. && acorr[i] < 0.)) &&
+    for (int j = 0; j < blockDim.x; j++) {
+      double t_star = -atmp1[j+blockIdx.x*blockDim.x] / acorr[j+blockIdx.x*blockDim.x];
+      if ((t_star > 0. || (t_star == 0. && acorr[j+blockIdx.x*blockDim.x] < 0.)) &&
           t_star < h_j) {
         h_j = t_star;
-        i_fast = i;
+        i_fast = j;
       }
     }
     if (i_fast >= 0 && h_n > 0.)
@@ -838,11 +852,26 @@ __device__ void cudaDevicecalc_Jac(double *y,ModelDataGPU *md, ModelDataVariable
   sc->grid_cell_state = &( md->state[md->state_size_cell*blockIdx.x]);
   __syncthreads();
   int n_rxn = md->n_rxn;
+#ifndef DEV_removeAtomic
   if(threadIdx.x==0){
     for (int j = 0; j < n_rxn; j++){
       solveRXNJac(j,jacBlock, md, sc);
     }
   }
+#else
+  if( threadIdx.x < n_rxn) {
+    int n_iters = n_rxn / blockDim.x;
+    for (int j = 0; j < n_iters; j++) {
+      int i_rxn = threadIdx.x + j*blockDim.x;
+      solveRXNJac(i_rxn,jacBlock, md, sc);
+    }
+    int residual=n_rxn%blockDim.x;
+    if(threadIdx.x < residual){
+      int i_rxn = threadIdx.x + blockDim.x*n_iters;
+      solveRXNJac(i_rxn,jacBlock, md, sc);
+    }
+  }
+#endif
   __syncthreads();
   JacMap *jac_map = md->jac_map;
   int nnz = md->n_mapped_values[0];
@@ -887,7 +916,7 @@ int cudaDeviceJac(int *flag, ModelDataGPU *md, ModelDataVariable *sc)
   __syncthreads();
   if(retval==CAMP_SOLVER_FAIL)
     return CAMP_SOLVER_FAIL;
-#ifndef DEBUG_check_model_state
+#ifdef DEV_check_model_state
   //Pending: check with debug if needed, since it is already updated in deviceF
   int checkflag=cudaDevicecamp_solver_check_model_state(md, sc, md->dcv_y, &aux_flag);
   __syncthreads();
@@ -1014,7 +1043,6 @@ void solveBcgCudaDeviceCVODE(ModelDataGPU *md, ModelDataVariable *sc)
   //print_double(&temp1,1,"temp1");
   //if(i==0)printf("end BCG GPU\n");
   __syncthreads();
-  //asm("exit;"); //now work
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
   if(threadIdx.x==0) sc->counterBCGInternal += it;
   if(threadIdx.x==0) sc->counterBCG++;
