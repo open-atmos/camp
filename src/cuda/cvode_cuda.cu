@@ -10,7 +10,7 @@ extern "C" {
 
 __device__
 void print_double(double *x, int len, const char *s){
-#ifdef USE_PRINT_ARRAYS
+#ifndef USE_PRINT_ARRAYS
   __syncthreads();
   int i_thread = blockIdx.x * blockDim.x + threadIdx.x;
   if(i_thread==0){
@@ -18,12 +18,11 @@ void print_double(double *x, int len, const char *s){
       printf("%s[%d]=%.17le\n",s,i,x[i]);
     }
   }
-//printf("%s[%d]=%.16le\n",s,i,x[i]);
   __syncthreads();
 #endif
 }
 
-#ifndef DEV_removeAtomic
+#ifdef DEV_removeAtomic
 
 __device__
 void time_derivative_add_value_gpu(TimeDerivativeGPU time_deriv, unsigned int spec_id,
@@ -171,7 +170,7 @@ void rxn_gpu_photolysis_calc_deriv_contrib(ModelDataVariable *sc, TimeDerivative
   }
 }
 
-#ifndef DEV_removeAtomic
+#ifdef DEV_removeAtomic
 __device__
 void jacobian_add_value_gpu(JacobianGPU jac, unsigned int elem_id,
                             int prod_or_loss,
@@ -604,7 +603,7 @@ __device__ void cudaDevicecalc_deriv(double time_step, double *y,
   sc->grid_cell_state = &( md->state[md->state_size_cell*blockIdx.x]);
   int n_rxn = md->n_rxn;
   __syncthreads();
-#ifndef DEV_removeAtomic
+#ifdef DEV_removeAtomic
   if(threadIdx.x==0){
     for (int j = 0; j < n_rxn; j++){
       //printf("n_rxn %d i %d j %d \n",n_rxn,i,j);
@@ -852,7 +851,7 @@ __device__ void cudaDevicecalc_Jac(double *y,ModelDataGPU *md, ModelDataVariable
   sc->grid_cell_state = &( md->state[md->state_size_cell*blockIdx.x]);
   __syncthreads();
   int n_rxn = md->n_rxn;
-#ifndef DEV_removeAtomic
+#ifdef DEV_removeAtomic
   if(threadIdx.x==0){
     for (int j = 0; j < n_rxn; j++){
       solveRXNJac(j,jacBlock, md, sc);
@@ -1072,7 +1071,6 @@ int cudaDevicecvNewtonIteration(ModelDataGPU *md, ModelDataVariable *sc){
     md->dtempv[i]=sc->cv_rl1*(md->dzn[i+md->nrows])+md->cv_acor[i];
     print_double(md->dtempv,73,"dtempvN_VLinearSum2");
     md->dtempv[i]=sc->cv_gamma*md->dftemp[i]-md->dtempv[i];
-    //print_double(md->dA,md->diA[blockDim.x],"dA");
     print_double(md->dtempv,73,"dtempvcv_lsolve1");
     solveBcgCudaDeviceCVODE(md, sc);
     __syncthreads();
