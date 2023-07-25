@@ -526,20 +526,20 @@ void cudaDeviceJacCopy(int* Ap, double* Ax, double* Bx) {
 __device__
 int cudaDevicecamp_solver_check_model_state(ModelDataGPU *md, ModelDataVariable *sc, double *y, int *flag)
 {
-  int tid = blockIdx.x * blockDim.x + threadIdx.x;
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
   __syncthreads();
   extern __shared__ int flag_shr[];
   flag_shr[0] = 0;
   __syncthreads();
-  if (y[tid] < -SMALL) {
+  if (y[i] < -SMALL) {
     flag_shr[0] = CAMP_SOLVER_FAIL;
   } else {
-    md->state[md->map_state_deriv[tid]] =
-            y[tid] <= -SMALL ?
-            TINY : y[tid];
+    md->state[md->map_state_deriv[i]] =
+            y[i] <= -SMALL ?
+            TINY : y[i];
   }
   __syncthreads();
-  *flag = (int)flag_shr[0];
+  *flag = flag_shr[0];
   __syncthreads();
   return *flag;
 }
@@ -585,21 +585,18 @@ __device__ void cudaDevicecalc_deriv(double time_step, double *y,
         double *yout, ModelDataGPU *md, ModelDataVariable *sc)
 {
   int i = blockIdx.x * blockDim.x + threadIdx.x;
-  int deriv_length_cell = md->nrows / md->n_cells;
   md->J_tmp[i]=y[i]-md->J_state[i];
   cudaDeviceSpmv_2(md->J_tmp2, md->J_tmp, md->J_solver, md->djA, md->diA);
   md->J_tmp[i]=md->J_deriv[i]+md->J_tmp2[i];
-  md->J_tmp2[i]=0.0;
   TimeDerivativeGPU deriv_data;
-  deriv_data.num_spec = deriv_length_cell*gridDim.x;
   deriv_data.production_rates = md->production_rates;
   deriv_data.loss_rates = md->loss_rates;
   __syncthreads();
   deriv_data.production_rates[i] = 0.0;
   deriv_data.loss_rates[i] = 0.0;
   __syncthreads();
-  deriv_data.production_rates = &( md->production_rates[deriv_length_cell*blockIdx.x]);
-  deriv_data.loss_rates = &( md->loss_rates[deriv_length_cell*blockIdx.x]);
+  deriv_data.production_rates = &( md->production_rates[blockDim.x*blockIdx.x]);
+  deriv_data.loss_rates = &( md->loss_rates[blockDim.x*blockIdx.x]);
   sc->grid_cell_state = &( md->state[md->state_size_cell*blockIdx.x]);
   int n_rxn = md->n_rxn;
   __syncthreads();
@@ -612,14 +609,14 @@ __device__ void cudaDevicecalc_deriv(double time_step, double *y,
   }
 #else
   if( threadIdx.x < n_rxn) {
-    int n_iters = n_rxn / deriv_length_cell;
+    int n_iters = n_rxn / blockDim.x;
     for (int j = 0; j < n_iters; j++) {
-      int i_rxn = threadIdx.x + j*deriv_length_cell;
+      int i_rxn = threadIdx.x + j*blockDim.x;
       solveRXN(i_rxn,deriv_data, time_step, md, sc);
     }
-    int residual=n_rxn%deriv_length_cell;
+    int residual=n_rxn%blockDim.x;
     if(threadIdx.x < residual){
-      int i_rxn = threadIdx.x + deriv_length_cell*n_iters;
+      int i_rxn = threadIdx.x + blockDim.x*n_iters;
       solveRXN(i_rxn, deriv_data, time_step, md, sc);
     }
   }
@@ -628,9 +625,6 @@ __device__ void cudaDevicecalc_deriv(double time_step, double *y,
   deriv_data.production_rates = md->production_rates;
   deriv_data.loss_rates = md->loss_rates;
   __syncthreads();
-  //print_double(deriv_data.loss_rates,deriv_data.num_spec,"loss_rates");
-  //print_double(deriv_data.production_rates,deriv_data.num_spec,"production_rates");
-
   double *r_p = deriv_data.production_rates;
   double *r_l = deriv_data.loss_rates;
   if (r_p[i] + r_l[i] != 0.0) {
@@ -644,6 +638,14 @@ __device__ void cudaDevicecalc_deriv(double time_step, double *y,
   } else {
     yout[i] = 0.0;
   }
+  //print_double(deriv_data.loss_rates,73,"loss_rates");
+  //print_double(deriv_data.production_rates,73,"production_rates");
+  //print_double(md->J_state,73,"J_state644");
+  //print_double(md->J_deriv,73,"J_deriv644");
+  //print_double(y,73,"y646");
+  print_double(md->J_tmp2,73,"J_tmp2");
+  print_double(md->J_tmp,73,"J_tmp643");
+  //print_double(yout,73,"deriv_data645");
   __syncthreads();
 }
 
@@ -659,7 +661,10 @@ int cudaDevicef(double time_step, double *y,
 #endif
   time_step = sc->cv_next_h;
   time_step = time_step > 0. ? time_step : md->init_time_step;
+  print_double(&time_step,1,"time_step661");
+  //print_double(md->state,md->state_size_cell,"state661");
   int checkflag=cudaDevicecamp_solver_check_model_state(md, sc, y, flag);
+  //print_double(md->state,md->state_size_cell,"state663");
   __syncthreads();
   if(checkflag==CAMP_SOLVER_FAIL){
     *flag=CAMP_SOLVER_FAIL;
@@ -707,12 +712,16 @@ int CudaDeviceguess_helper(double h_n, double* y_n,
   } else {
     acorr[i]=hf[i];
   }
+  print_double(&h_n,1,"h_n711");
+  //print_double(hf,73,"hf711");
+  //print_double(acorr,73,"acorr711");
   double t_0 = h_n > 0. ? sc->cv_tn - h_n : sc->cv_tn - 1.;
   double t_j = 0.;
   __syncthreads();
   for (int iter = 0; iter < GUESS_MAX_ITER && t_0 + t_j < sc->cv_tn; iter++) {
     __syncthreads();
     double h_j = sc->cv_tn - (t_0 + t_j);
+    //print_double(atmp1,73,"atmp720");
 #ifndef DEV_CudaDeviceguess_helper
     if(threadIdx.x==0){
     int i_fast = -1;
@@ -749,7 +758,9 @@ int CudaDeviceguess_helper(double h_n, double* y_n,
     if (i_fast == 1 && h_n > 0.)
       h_j *= 0.95 + 0.1 * iter / (double)GUESS_MAX_ITER;
 #endif
+    print_double(&h_j,1,"h_j756");
     h_j = sc->cv_tn < t_0 + t_j + h_j ? sc->cv_tn - (t_0 + t_j) : h_j;
+    //print_double(&h_j,1,"h_j758");
     __syncthreads();
     if (h_n == 0. && sc->cv_tn - (h_j + t_j + t_0) > md->cv_reltol) {
       __syncthreads();
@@ -762,7 +773,9 @@ int CudaDeviceguess_helper(double h_n, double* y_n,
     __syncthreads();
     t_j += h_j;
     int aux_flag=0;
+    print_double(atmp1,73,"atmp1766");
     int fflag=cudaDevicef(t_0 + t_j, atmp1, acorr,md,sc,&aux_flag);
+    print_double(acorr,73,"acorr721");
     __syncthreads();
     if (fflag == CAMP_SOLVER_FAIL) {
       acorr[i] = 0.;
@@ -910,14 +923,17 @@ int cudaDeviceJac(int *flag, ModelDataGPU *md, ModelDataVariable *sc)
   md->use_deriv_est=0;
   int aux_flag=0;
   __syncthreads();
+  print_double(md->dcv_y,73,"dcv_y914");
   retval=cudaDevicef(sc->cv_next_h, md->dcv_y, md->dftemp,md,sc,&aux_flag);
   md->use_deriv_est=1;
   __syncthreads();
   if(retval==CAMP_SOLVER_FAIL)
     return CAMP_SOLVER_FAIL;
 #ifdef DEV_check_model_state
-  //Pending: check with debug if needed, since it is already updated in deviceF
+  //Pending: remove in cpu, since it is the same result in gpu
+  //print_double(md->state,md->state_size_cell,"state920");
   int checkflag=cudaDevicecamp_solver_check_model_state(md, sc, md->dcv_y, &aux_flag);
+  //print_double(md->state,md->state_size_cell,"state923");
   __syncthreads();
   if(checkflag==CAMP_SOLVER_FAIL){
     *flag=CAMP_SOLVER_FAIL;
@@ -933,12 +949,12 @@ int cudaDeviceJac(int *flag, ModelDataGPU *md, ModelDataVariable *sc)
   int nnz = md->n_mapped_values[0];
   int n_iters = nnz / blockDim.x;
   for (int z = 0; z < n_iters; z++) {
-    int j = threadIdx.x + z*blockDim.x;
+    int j = threadIdx.x + z*blockDim.x + nnz * blockIdx.x;
     md->J_solver[j]=md->dA[j];
   }
   int residual=nnz%blockDim.x;
   if(threadIdx.x < residual){
-    int j = threadIdx.x + n_iters*blockDim.x;
+    int j = threadIdx.x + n_iters*blockDim.x + nnz * blockIdx.x;
     md->J_solver[j]=md->dA[j];
   }
   __syncthreads();
@@ -1131,6 +1147,7 @@ int cudaDevicecvNewtonIteration(ModelDataGPU *md, ModelDataVariable *sc){
     }
     delp = del;
     __syncthreads();
+    print_double(md->dcv_y,73,"dcv_y1137");
     retval=cudaDevicef(sc->cv_next_h, md->dcv_y, md->dftemp, md, sc, &aux_flag);
     __syncthreads();
     md->cv_acor[i]=md->dcv_y[i]+md->dzn[i];
@@ -1171,9 +1188,12 @@ int cudaDevicecvNlsNewton(int nflag,
                   (sc->cv_nst == 0) ||
                   (sc->cv_nst >= sc->cv_nstlp + MSBP) ||
                   (dgamrat > DGMAX);
-  md->cv_acor_init[i]=0.;
+  __syncthreads();
+  //print_double(md->dzn,73,"dzn1174");
+  //print_double(md->cv_last_yn,73,"cv_last_yn1175");
   md->dftemp[i]=md->dzn[i]-md->cv_last_yn[i];
   print_double(md->dftemp,73,"cv_ftemppN_VLinearSum2");
+  md->cv_acor_init[i]=0.;
   __syncthreads();
   int guessflag=CudaDeviceguess_helper(sc->cv_h, md->dzn,
        md->cv_last_yn, md->dftemp, md->dtempv1,
@@ -1494,6 +1514,7 @@ int cudaDevicecvDoErrorTest(ModelDataGPU *md, ModelDataVariable *sc,
   __syncthreads();
   sc->cv_qwait = 10;
   int aux_flag=0;
+  print_double(md->dzn,73,"dzn1505");
   retval=cudaDevicef(sc->cv_tn, md->dzn, md->dtempv,md,sc, &aux_flag);
   if (retval < 0)  return(CV_RHSFUNC_FAIL);
   if (retval > 0)  return(CV_UNREC_RHSFUNC_ERR);

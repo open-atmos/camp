@@ -1152,8 +1152,13 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
   // Update the state array with the current dependent variable values.
   // Signal a recoverable error (positive return value) for negative
   // concentrations.
-  if (camp_solver_update_model_state(y, sd, -SMALL, TINY) != CAMP_SOLVER_SUCCESS)
+  print_double(&time_step,1,"time_step661");
+  //print_double(md->total_state,n_state_var,"state661");
+  if (camp_solver_update_model_state(y, sd, -SMALL, TINY) != CAMP_SOLVER_SUCCESS){
+    //print_double(md->total_state,n_state_var,"state663");
     return 1;
+  }
+  //print_double(md->total_state,n_state_var,"state663");
 
   // Get the Jacobian-estimated derivative
   N_VLinearSum(1.0, y, -1.0, md->J_state, md->J_tmp);
@@ -1208,6 +1213,7 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
   // Not SWAP_DERIV_LOOP_CELLS
 #else
 
+  //print_double(md->total_state,n_state_var,"state602");
   // Loop through the grid cells and update the derivative array
   for (int i_cell = 0; i_cell < n_cells; ++i_cell) {
     // Set the grid cell state pointers
@@ -1237,8 +1243,6 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
       rxn_calc_deriv_new(sd);
 #endif
 
-    //print_double(sd->time_deriv.loss_rates,sd->time_deriv.num_spec,"loss_rates");
-    //print_double(sd->time_deriv.production_rates,sd->time_deriv.num_spec,"production_rates");
 
     // Update the deriv array
     if (sd->use_deriv_est == 1) {
@@ -1251,7 +1255,20 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
       time_derivative_output(sd->time_deriv, deriv_data, NULL,
                              sd->output_precision);
     }
-
+    if(i_cell==0) {
+      //print_double(sd->time_deriv.loss_rates,sd->time_deriv.num_spec,"loss_rates");
+      //print_double(sd->time_deriv.production_rates,sd->time_deriv.num_spec,"production_rates");
+      //double *J_state = N_VGetArrayPointer(md->J_state);
+      //double *J_deriv = N_VGetArrayPointer(md->J_deriv);
+      //print_double(J_state,73,"J_state644");
+      //print_double(J_deriv,73,"J_deriv644");
+      //double *yp = N_VGetArrayPointer(y);
+      //print_double(yp,73,"y646");
+      double *J_tmp2 = N_VGetArrayPointer(md->J_tmp2);
+      print_double(J_tmp2,73,"J_tmp2");
+      print_double(jac_deriv_data,73,"J_tmp643");
+      //print_double(deriv_data,73,"deriv_data645");
+    }
 #ifdef CAMP_DEBUG
     sd->max_loss_precision = time_derivative_max_loss_precision(sd->time_deriv);
 #endif
@@ -1310,9 +1327,12 @@ int Jac(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_data,
   // Update the state array with the current dependent variable values
   // Signal a recoverable error (positive return value) for negative
   // concentrations.
-  if (camp_solver_update_model_state(y, sd, -SMALL, TINY) != CAMP_SOLVER_SUCCESS)
+  //print_double(md->total_state,n_state_var,"state920");
+  if (camp_solver_update_model_state(y, sd, -SMALL, TINY) != CAMP_SOLVER_SUCCESS){
+    //print_double(md->total_state,n_state_var,"state923");
     return 1;
-
+  }
+  //print_double(md->total_state,n_state_var,"state923");
   // Get the current integrator time step (s)
   CVodeGetCurrentStep(sd->cvode_mem, &time_step);
 
@@ -1646,6 +1666,9 @@ int guess_helper(const realtype t_n, const realtype h_n, N_Vector y_n,
   } else {
     N_VScale(ONE, hf, corr);
   }
+  print_double(&h_n,1,"h_n711");
+  //print_double(ahf,73,"hf711");
+  //print_double(acorr,73,"acorr711");
   CAMP_DEBUG_PRINT("Got f0");
 
   // Advance state interatively
@@ -1655,6 +1678,7 @@ int guess_helper(const realtype t_n, const realtype h_n, N_Vector y_n,
   for (; iter < GUESS_MAX_ITER && t_0 + t_j < t_n; iter++) {
     // Calculate \f$h_j\f$
     realtype h_j = t_n - (t_0 + t_j);
+    //print_double(atmp1,73,"atmp720");
     int i_fast = -1;
     for (int i = 0; i < n_elem; i++) {
       realtype t_star = -atmp1[i] / acorr[i];
@@ -1668,7 +1692,9 @@ int guess_helper(const realtype t_n, const realtype h_n, N_Vector y_n,
     // Scale incomplete jumps
     if (i_fast >= 0 && h_n > ZERO)
       h_j *= 0.95 + 0.1 * iter / (double)GUESS_MAX_ITER;
+    print_double(&h_j,1,"h_j756");
     h_j = t_n < t_0 + t_j + h_j ? t_n - (t_0 + t_j) : h_j;
+    //print_double(&h_j,1,"h_j758");
 
     // Only make small changes to adjustment vectors used in Newton iteration
     if (h_n == ZERO &&
@@ -1683,11 +1709,14 @@ int guess_helper(const realtype t_n, const realtype h_n, N_Vector y_n,
     t_j += h_j;
 
     // Recalculate the time derivative \f$f(t_j)\f$
+    print_double(atmp1,73,"atmp1766");
     if (f(t_0 + t_j, tmp1, corr, solver_data) != 0) {
       CAMP_DEBUG_PRINT("Unexpected failure in guess helper!");
+      print_double(acorr,73,"acorr721");
       N_VConst(ZERO, corr);
       return -1;
     }
+    print_double(acorr,73,"acorr721");
     ((CVodeMem)sd->cvode_mem)->cv_nfe++;
 
     if (iter == GUESS_MAX_ITER - 1 && t_0 + t_j < t_n) {
