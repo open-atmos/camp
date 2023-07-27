@@ -535,6 +535,24 @@ void print_double(double *x, int len, const char *s){
 #endif
 }
 
+void print_double_mpi(double *x, int len, const char *s){
+#ifndef USE_PRINT_ARRAYS
+  int size;
+  MPI_Comm_size(MPI_COMM_WORLD, &size);
+  for (int j=0; j<size; j++){
+    int rank;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    if(rank==j){
+      printf("MPI rank=%d\n",rank);
+      for (int i=0; i<len; i++){
+        printf("%s[%d]=%.17le\n",s,i,x[i]);
+      }
+    }
+    MPI_Barrier(MPI_COMM_WORLD);
+  }
+#endif
+}
+
 int compare_doubles(double *x, double *y, int len, const char *s){
   int flag=1;
   double tol=0.;
