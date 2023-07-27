@@ -10,7 +10,7 @@ extern "C" {
 
 __device__
 void print_double(double *x, int len, const char *s){
-#ifndef USE_PRINT_ARRAYS
+#ifdef USE_PRINT_ARRAYS
   __syncthreads();
   int i_thread = blockIdx.x * blockDim.x + threadIdx.x;
   if(i_thread==0){

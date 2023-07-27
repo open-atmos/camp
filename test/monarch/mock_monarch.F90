@@ -703,6 +703,8 @@ contains
     !  print*,"export_file_results_all_cells start"
     !end if
 
+    !print*,"species_conc706",species_conc(1,1,1,:)
+
     call MPI_GATHER(species_conc, len, MPI_REAL, species_conc_mpi,&
             len,MPI_REAL, 0, MPI_COMM_WORLD, ierr)
 
