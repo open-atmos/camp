@@ -417,7 +417,7 @@ def run(conf):
 
   nrows_csv=conf.timeSteps
   if conf.plotYKey == "MAPE":
-    nrows_csv=conf.timeSteps*conf.nCells
+    nrows_csv=conf.timeSteps*conf.nCells*conf.mpiProcesses
     #nrows_csv=conf.nCells #optional: save only last time-step
 
   data = math_functions.read_solver_stats(data_path, nrows_csv)

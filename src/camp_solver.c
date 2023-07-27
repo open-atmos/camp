@@ -779,7 +779,10 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
     }
   }
   //print_double(state,n_state_var,"state768");
-  print_double_mpi(state,n_state_var,"state768");
+  for (int i_cell = 0; i_cell < n_cells; i_cell++) {
+    print_double_mpi(state+i_cell*md->n_per_cell_state_var,
+                     md->n_per_cell_state_var, "state768");
+  }
 #ifdef FAILURE_DETAIL
   sd->counter_fail_solve_print=0;
 #endif
