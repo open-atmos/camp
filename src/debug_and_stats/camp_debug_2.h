@@ -11,10 +11,7 @@
 
 #include "../camp_common.h"
 
-#ifdef ENABLE_NETCDF
 void cell_netcdf(SolverData *sd);
-#endif
-
 void check_isnand(double *x, int len, const char *s);
 void print_int(int *x, int len, const char *s);
 void print_double(double *x, int len, const char *s);

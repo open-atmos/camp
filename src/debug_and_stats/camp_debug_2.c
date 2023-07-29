@@ -539,16 +539,16 @@ void print_double_mpi(double *x, int len, const char *s){
 #ifndef USE_PRINT_ARRAYS
   int size;
   MPI_Comm_size(MPI_COMM_WORLD, &size);
-  for (int j=0; j<size; j++){
-    int rank;
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    if(rank==j){
-      printf("MPI rank=%d\n",rank);
-      for (int i=0; i<len; i++){
-        printf("%s[%d]=%.17le\n",s,i,x[i]);
-      }
+  int rank;
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  double *x_mpis = NULL;
+  if(rank==0) x_mpis = (double *)malloc(sizeof(double) * len * size);
+  MPI_Gather(x,len, MPI_DOUBLE,x_mpis, len, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+  if(rank==0){
+    for (int i=0; i<len*size; i++){
+      printf("%s[%d]=%.17le\n",s,i,x_mpis[i]);
     }
-    MPI_Barrier(MPI_COMM_WORLD);
+    free(x_mpis);
   }
 #endif
 }

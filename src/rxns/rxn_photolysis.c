@@ -144,59 +144,6 @@ void rxn_photolysis_update_env_state(ModelData *model_data, int *rxn_int_data,
   // Calculate the rate constant in (1/s)
   RATE_CONSTANT_ = SCALING_ * BASE_RATE_;
 
-#ifdef DEBUG_RXN
-#ifdef CAMP_USE_MPI
-
-  int n_photo_rates_cell=25;
-  int rank;
-  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  if (rank==0 || rank==999) {
-    if(model_data->counterPhoto<n_photo_rates_cell*1) {
-
-      printf("Counter: %d BASE_RATE_:%-le\n",model_data->counterPhoto+1,BASE_RATE_);
-      //printf("RATE_CONSTANT: %-le\n", RATE_CONSTANT_);
-
-      printf("RXN_ID_: %d\n", RXN_ID_);
-      printf("RATE_CONSTANT: %-le\n", RATE_CONSTANT_);
-      printf("SCALING_: %-le\n", SCALING_);
-      printf("BASE_RATE_: %-le\n", BASE_RATE_);
-      printf("NUM_REACT_: %d\n", NUM_REACT_);
-      for(int i=0; i<NUM_REACT_; i++)
-        printf("%d,",REACT_(i));
-      printf("\n");
-      printf("NUM_PROD_: %d\n", NUM_PROD_);
-      for(int i=0; i<NUM_PROD_; i++){
-        printf("%d,",PROD_(i));
-        printf("YIELD_: %-le\n", YIELD_(i));
-      }
-
-      model_data->counterPhoto++;
-
-    }
-  }
-
-#else
-  /*
-    printf("RATE_CONSTANT: %-le\n", RATE_CONSTANT_);
-    printf("SCALING_: %-le\n", SCALING_);
-    printf("BASE_RATE_: %-le\n", BASE_RATE_);
-    printf("NUM_REACT_: %d\n", NUM_REACT_);
-    for(int i=0; i<NUM_REACT_; i++)
-      printf("%d,",REACT_(i));
-    printf("\n");
-    printf("NUM_PROD_: %d\n", NUM_PROD_);
-    for(int i=0; i<NUM_PROD_; i++) {
-      printf("%d,", PROD_(i));
-      printf("YIELD_: %-le\n", YIELD_(i));
-    }
-  */
-  // printf("SCALING_: %-le\n", SCALING_);
-  // printf("BASE_RATE_: %-le\n", BASE_RATE_);
-  /// printf("RATE_CONSTANT: %-le\n", RATE_CONSTANT_);
-
-#endif
-#endif
-
   return;
 }
 

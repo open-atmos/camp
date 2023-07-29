@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
 make_base(){
-cd /gpfs/scratch/bsc32/bsc32815/gpupartmc/camp/compile/power9
+cd /gpfs/scratch/bsc32/bsc32815/a591/nmmb-monarch/MODEL/SRC_LIBS/camp/compile/power9
 if ! ./make.camp.power9.sh; then
   exit
 fi
-cd /gpfs/scratch/bsc32/bsc32815/a591/nmmb-monarch/MODEL/SRC_LIBS/camp/compile/power9
+cd /gpfs/scratch/bsc32/bsc32815/gpupartmc/camp/compile/power9
 }
-make_base
+#make_base
 #./compile.cvode-3.4-alpha.power9.sh
 
 export SUNDIALS_HOME=$(pwd)/../../../cvode-3.4-alpha/install
@@ -77,10 +77,10 @@ else
   #FILE=./unit_test_aero_rep_single_particle
   #FILE=./new_make.sh
   if [ "$FILE" == TestMonarch.py ]; then
-    log_path="/gpfs/scratch/bsc32/bsc32815/a591/nmmb-monarch/MODEL/SRC_LIBS/camp/compile/power9/log.txt"
+    log_path="/gpfs/scratch/bsc32/bsc32815/a591/nmmb-monarch/MODEL/SRC_LIBS/camp/compile/power9/log_cpu.txt"
     echo "Generating log file at " $log_path
-    #python $FILE 2>&1 | tee $log_path
-    python $FILE > $log_path
+    #python $FILE > $log_path
+    python $FILE 2>&1 | tee $log_path
     #python $FILE
     cd ../../compile/power9
   elif [ "$FILE" == test_monarch_1.py ]; then
@@ -91,6 +91,5 @@ else
     cd ../../compile/power9
     time $FILE
   fi
-./diff.sh
 
 fi
