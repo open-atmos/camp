@@ -1,11 +1,6 @@
 #!/usr/bin/env bash
 
-mkdir_if_not_exists(){
-  if [ ! -d $1 ]; then
-      mkdir $1
-  fi
-}
-mkdir_if_not_exists "out/export_double_mpi"
+mkdir -p "out/export_double_mpi"
 cd out/export_double_mpi
 n_files=$(ls -1 | wc -l)
 echo "n_files $n_files"

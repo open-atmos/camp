@@ -557,49 +557,11 @@ void export_double_mpi(double *x, int len, const char *s){
   if(fptr == NULL)
   {
     //printf("fopen write at %s\n", file_path);
-    printf("Error fopen at export_double_mpi path %%s",file_path);
+    printf("Error fopen at export_double_mpi path %s",file_path);
     exit(1);
   }
   for (int i=0; i<len; i++){
     fprintf(fptr,"%s[%d]=%.17le\n",s,i,x[i]);
-  }
-  fclose(fptr);
-#endif
-}
-
-void old_export_double_mpi(double *x, int len, const char *s){
-#ifndef USE_PRINT_ARRAYS
-  int size;
-  MPI_Comm_size(MPI_COMM_WORLD, &size);
-  int rank;
-  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  FILE *fptr;
-  printf("start export_double_mpi\n");
-  char file_base_name[]="export_data.txt";
-  char srank[]="";
-  sprintf(srank,"%d",rank);
-  printf("srank=%s\n",srank);
-  //strcat(rank_name, file_base_name);
-  char rank_name[]="";
-  sprintf(rank_name, "%s%s", srank, file_base_name);
-  printf("rank_name=%s\n",rank_name);
-  char dir_name[]="export_double_mpi/";
-  //strcat(file_name, rank_name);
-  char file_name[]="";
-  sprintf(file_name, "%s%s", dir_name, rank_name);
-  printf("file_name=%s\n",file_name);
-  char file_path[]="";
-  getcwd(file_path, sizeof(file_path));
-  strcat(file_path, "/");
-  if(rank==0)printf("fopen at %s %s\n", file_path,file_name);
-  fptr = fopen(file_name,"w");
-  if(fptr == NULL)
-  {
-    printf("Error fopen at export_double_mpi");
-    exit(1);
-  }
-  for (int i=0; i<len*size; i++){
-    fprintf(fptr,"%s[%d]=%.17le\n",s,i,x);
   }
   fclose(fptr);
 #endif
