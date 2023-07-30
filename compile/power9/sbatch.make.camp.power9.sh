@@ -18,12 +18,6 @@ export SUITE_SPARSE_HOME=$(pwd)/$relative_path/SuiteSparse
 export JSON_FORTRAN_HOME=$(pwd)/$relative_path/json-fortran-6.1.0/install/jsonfortran-gnu-6.1.0
 #export GSL_HOME=${GSL_DIR}
 
-mkdir_if_not_exists(){
-  if [ ! -d $1 ]; then
-      mkdir $1
-  fi
-}
-
 compile_run(){
 
   id=$1
@@ -37,9 +31,9 @@ compile_run(){
 
   cd ../../../camp_jobs/camp$id/compile/power9
   ./compile.camp.sh "from_camp_jobs" $id
-  mkdir_if_not_exists "../../build/test_run"
-  mkdir_if_not_exists "../../build/test_run/monarch"
-  mkdir_if_not_exists "../../build/test_run/monarch/out"
+  mkdir -p "../../build/test_run"
+  mkdir -p "../../build/test_run/monarch"
+  mkdir -p "../../build/test_run/monarch/out"
   cd ../../test/monarch
 
   #cd ../../build

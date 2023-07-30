@@ -537,7 +537,7 @@ void export_double_mpi(double *x, int len, const char *s){
   if(fptr == NULL)
   {
     //printf("fopen write at %s\n", file_path);
-    printf("Error fopen at export_double_mpi path %%s",file_path);
+    printf("Error fopen at export_double_mpi path %s",file_path);
     exit(1);
   }
   for (int i=0; i<len; i++){

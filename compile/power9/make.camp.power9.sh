@@ -30,12 +30,6 @@ else
   is_sbatch="false"
 fi
 
-mkdir_if_not_exists(){
-  if [ ! -d $1 ]; then
-      mkdir $1
-  fi
-}
-
 rm_old_logs(){
 find $1 -type f -mtime +15 -exec rm -rf {} \;
 }
@@ -43,9 +37,9 @@ rm_old_dirs_jobs(){
 find $1 -type d -ctime +30 -exec rm -rf {} +
 }
 
-mkdir_if_not_exists "../../build/test_run"
-mkdir_if_not_exists "../../build/test_run/monarch"
-mkdir_if_not_exists "../../build/test_run/monarch/out"
+mkdir -p "../../build/test_run"
+mkdir -p "../../build/test_run/monarch"
+mkdir -p "../../build/test_run/monarch/out"
 
 if [ $is_sbatch == "true" ]; then
 
@@ -54,7 +48,7 @@ if [ $is_sbatch == "true" ]; then
 
   id=$(date +%s%N)
   cd ../../..
-  mkdir_if_not_exists camp_jobs
+  mkdir -p camp_jobs
   rm_old_dirs_jobs camp_jobs/
   echo "Copying camp folder to" camp_jobs/camp$id
   cp -r camp camp_jobs/camp$id
