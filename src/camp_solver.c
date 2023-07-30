@@ -628,7 +628,11 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
   sd->model_data.total_env = env;
 
 #ifdef ENABLE_NETCDF
-  cell_netcdf(sd);
+  /*
+  for (int i_cell = 0; i_cell < n_cells; i_cell++) {
+    cell_netcdf(sd);
+  }
+   */
 #endif
 
   // Update the dependent variables
@@ -778,12 +782,11 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
       }
     }
   }
-  //print_double(state,n_state_var,"state768");
+#ifdef ENABLE_NETCDF
   for (int i_cell = 0; i_cell < n_cells; i_cell++) {
-    //printf("i_cell %d n_cells %d\n",i_cell,n_cells);
-    export_double_mpi(state+i_cell*md->n_per_cell_state_var,
-                     md->n_per_cell_state_var, "state768");
+    cell_netcdf(sd);
   }
+#endif
 #ifdef FAILURE_DETAIL
   sd->counter_fail_solve_print=0;
 #endif
