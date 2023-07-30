@@ -50,15 +50,16 @@ module camp_aero_rep_single_particle
 
 #define NUM_LAYERS_ this%condensed_data_int(1)
 #define TOTAL_NUM_PHASES_ this%condensed_data_int(2)
-#define AERO_REP_ID_ this%condensed_data_int(3)
-#define MAX_PARTICLES_ this%condensed_data_int(4)
-#define PARTICLE_STATE_SIZE_ this%condensed_data_int(5)
-#define NUM_INT_PROP_ 5
+#define TOTAL_NUM_LAYERS_ this%condensed_data_int(3)
+#define AERO_REP_ID_ this%condensed_data_int(4)
+#define MAX_PARTICLES_ this%condensed_data_int(5)
+#define PARTICLE_STATE_SIZE_ this%condensed_data_int(6)
+#define NUM_INT_PROP_ 6
 #define NUM_REAL_PROP_ 0
 #define NUM_ENV_PARAM_PER_PARTICLE_ 1
-#define NUM_PHASE_(p) this%condensed_data_int(NUM_INT_PROP_+p)
+#define NUM_PHASE_(l) this%condensed_data_int(NUM_INT_PROP_+l)
 #define PHASE_STATE_ID_(p) this%condensed_data_int(NUM_INT_PROP_+NUM_LAYERS_+p)
-#define LAYER_STATE_ID_(p) this%condensed_data_init(NUM_INT_PROP_+NUM_PHASE_+p)
+#define LAYER_STATE_ID_(l) this%condensed_data_init(NUM_INT_PROP_+NUM_PHASE_+l)
 #define PHASE_MODEL_DATA_ID_(p) this%condensed_data_int(NUM_INT_PROP_+NUM_LAYERS_+TOTAL_NUM_PHASES_+p)
 #define PHASE_NUM_JAC_ELEM_(p) this%condensed_data_int(NUM_INT_PROP_+NUM_LAYERS_+2*TOTAL_NUM_PHASES_+p)
 
@@ -222,22 +223,24 @@ contains
   !! each aerosol representation at the beginning of a model run after all
   !! the input files have been read in. It ensures all data required during
   !! the model run are included in the condensed data arrays.
-  subroutine initialize(this, aero_layer_phase_set, spec_state_id)
+  subroutine initialize(this, aero_phase_set, aero_layer_phase_set, spec_state_id)
 
     !> Aerosol representation data
     class(aero_rep_single_particle_t), intent(inout) :: this
-    !> The set of aerosol phases in each layer
-    type(aero_phase_data_ptr), pointer, intent(in) :: aero_layer_phase_set(:)
+    !> The set of aerosol phases
+    type(aero_phase_data_ptr), pointer, intent(in) :: aero_phase_set(:)
+    !> The set of layers
+    real :: aero_layer_phase_set(:,:)
     !> Beginning state id for this aerosol representationin the model species
     !! state array
     integer(kind=i_kind), intent(in) :: spec_state_id
 
     character(len=:), allocatable :: key_name
-    integer(kind=i_kind) :: i_particle, i_phase, curr_id
+    integer(kind=i_kind) :: i_particle, i_phase, i_layer, i_aero, curr_id
     integer(kind=i_kind) :: num_int_param, num_float_param, num_particles
 
     ! Start off the counters
-    num_int_param = NUM_INT_PROP_ + 4*size(aero_layer_phase_set) 
+    num_int_param = NUM_INT_PROP_ + 5*size(aero_phase_set) + size(aero_layer_set)
     num_float_param = NUM_REAL_PROP_
 
     ! Get the maximum number of computational particles
@@ -246,15 +249,34 @@ contains
                     this%property_set%get_int(key_name, num_particles), &
                     "Missing maximum number of computational particles")
 
-    ! Assume all phases will be applied once to each particle in each layer
-    allocate(this%aero_phase(size(aero_layer_phase_set) * num_particles))
+    ! Initialize NUM_PHASE_ array
+    do i_layer = 1, TOTAL_NUM_LAYERS_
+      NUM_PHASE_(i_layer) = size(aero_layer_phase_set(i_layer, :))
+    end do
+    allocate(aero_phase(size(NUM_PHASE_)))
+
+    do i_aero = 1, size(aero_phase)
+      do i_layer = 1, TOTAL_NUM_LAYERS_
+        do i_phase = 1, TOTAL_NUM_PHASES_
+          if (aero_layer_phase_set(i_layer,i_phase) == &
+              aero_phase_set(i_phase)) then 
+                aero_phase(i_aero) = aero_phase_set(i_phase)
+              else
+                continue 
+              end if
+          end do
+        end do
+      end do 
+
+    ! Assume all phases will be applied once to each particle
+    allocate(this%aero_phase(size(aero_phase_set)*num_particles))
     do i_particle = 1, num_particles
-      do i_phase = 1, size(aero_layer_phase_set)
-        this%aero_phase((i_particle-1)*size(aero_layer_phase_set)+i_phase) = &
-            aero_layer_phase_set(i_phase)
+      do i_phase = 1, size(aero_phase_set)
+        this%aero_phase((i_particle-1)*size(aero_phase_set)+i_phase) = &
+            aero_phase_set(i_phase)
       end do
     end do
-
+    
     ! Allocate condensed data arrays
     allocate(this%condensed_data_int(num_int_param))
     allocate(this%condensed_data_real(num_float_param))
@@ -268,8 +290,8 @@ contains
     this%num_env_params = NUM_ENV_PARAM_PER_PARTICLE_ * num_particles
 
     ! Set phase state and model data ids
-    TOTAL_NUM_PHASES_ = size(aero_layer_phase_set)
-    NUM_LAYERS_ = size(aero_layers_set)
+    TOTAL_NUM_PHASES_ = size(aero_phase_set)
+    TOTAL_NUM_LAYERS_ = size(aero_layer_set)
     this%state_id_start = spec_state_id
     curr_id = spec_state_id
     do i_phase = 1, TOTAL_NUM_PHASES_
@@ -413,36 +435,37 @@ contains
     end do
 
     ! Allocate space for the unique names and assign them
-    allocate(unique_names(num_spec*MAX_PARTICLES_))
+    allocate(unique_names(num_spec*num_layer*MAX_PARTICLES_))
     i_spec = 1
     do i_part = 1, MAX_PARTICLES_
       do i_phase = 1, TOTAL_NUM_PHASES_
-        curr_layer_name = this%aero_layer(i_phase)%val%name()
-        if (present(layer_name)) then
-          if (layer_name.ne.curr_layer_name) cycle
-        end if
-        curr_phase_name = this%aero_phase(i_phase)%val%name()
-        if (present(phase_name)) then
-          if (phase_name.ne.curr_phase_name) cycle
-        end if
-        spec_names = this%aero_phase(i_phase)%val%get_species_names()
-        num_spec = this%aero_phase(i_phase)%val%size()
-        do j_spec = 1, num_spec
-          curr_tracer_type = &
-                  this%aero_phase(i_phase)%val%get_species_type( &
-                  spec_names(j_spec)%string)
-          if (present(spec_name)) then
-            if (spec_name.ne.spec_names(j_spec)%string) cycle
+        do i_layer = 1, TOTAL_NUM_LAYERS_
+          curr_layer_name = this%aero_layer(i_phase)%val%name()
+          if (present(layer_name)) then
+           if (layer_name.ne.curr_layer_name) cycle
           end if
-          if (present(tracer_type)) then
-            if (tracer_type.ne.curr_tracer_type) cycle
+          curr_phase_name = this%aero_phase(i_phase)%val%name()
+          if (present(phase_name)) then
+            if (phase_name.ne.curr_phase_name) cycle
           end if
-          unique_names(i_spec)%string = 'P'//trim(integer_to_string(i_part))//&
-                  '.'//curr_layer_name//'.'//curr_phase_name//'.'//&
-                  spec_names(j_spec)%string
-          i_spec = i_spec + 1
+          spec_names = this%aero_phase(i_phase)%val%get_species_names()
+          num_spec = this%aero_phase(i_phase)%val%size()
+          do j_spec = 1, num_spec
+            curr_tracer_type = &
+                    this%aero_phase(i_phase)%val%get_species_type( &
+                    spec_names(j_spec)%string)
+            if (present(spec_name)) then
+              if (spec_name.ne.spec_names(j_spec)%string) cycle
+            end if
+            if (present(tracer_type)) then
+              if (tracer_type.ne.curr_tracer_type) cycle
+            end if
+            unique_names(i_spec)%string = 'P'//trim(integer_to_string(i_part))//&
+                    '.'//curr_layer_name//'.'//curr_phase_name//'.'//&
+                    spec_names(j_spec)%string
+            i_spec = i_spec + 1
+          end do
         end do
-      end do
       deallocate(spec_names)
     end do
 
