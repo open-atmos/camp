@@ -7,7 +7,7 @@ echo "n_files $n_files"
 file_base_name="export_data.txt"
 for (( i=0; i<$n_files; i++ ))
 do
-  echo "Welcome $i times"
+  #echo "Welcome $i times"
   file_name="$i$file_base_name"
   cat $file_name >> "../$file_base_name"
   rm $file_name
