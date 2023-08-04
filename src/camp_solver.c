@@ -541,14 +541,12 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
   check_flag_fail(&flag, "CVodeSetDlsGuessHelper", 1);
 
   sd->icell=0;
-  printf("debug\n");
 
 #ifdef CAMP_USE_GPU
   if(sd->use_cpu==0){
       constructor_cvode_gpu(sd->cvode_mem, sd);
   }
 #endif
-  printf("debug\n");
 #ifdef ENABLE_NETCDF
   sd->n_cells_tstep = n_cells_tstep;
   sd->tstep=0;
@@ -566,7 +564,6 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
   rxn_get_ids(sd);
 #endif
 #endif
-  printf("debug\n");
 }
 
 #ifdef CAMP_DEBUG

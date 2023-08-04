@@ -86,6 +86,6 @@ else
     cd ../../compile/power9
     time $FILE
   fi
-  #./diff.sh #if(used_print_double)
+  #diff log_cpu.txt log.txt > diff.txt #if(used_print_double)
   #scripts/merge_mpi_out.sh #if (export_double_mpi)
 fi
