@@ -516,6 +516,39 @@ void print_double(double *x, int len, const char *s){
 
 void export_double_mpi(double *x, int len, const char *s){
 #ifndef USE_PRINT_ARRAYS
+  //printf("WARNING: In MONARCH fails at 74mb of exported file! Use netcdf for greater files\n");
+  int size;
+  MPI_Comm_size(MPI_COMM_WORLD, &size);
+  int rank;
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  FILE *fptr;
+  char file_path[2048];
+  getcwd(file_path, sizeof(file_path));
+  strcat(file_path, "/");
+  char dir_name[]="out/export_double_mpi/";
+  strcat(file_path, dir_name);
+  char srank[20];
+  sprintf(srank,"%d",rank);
+  strcat(file_path, srank);
+  char file_base_name[]="export_data.txt";
+  strcat(file_path, file_base_name);
+  //printf("fopen append at %s\n", file_path);
+  fptr = fopen(file_path,"a");
+  if(fptr == NULL)
+  {
+    //printf("fopen write at %s\n", file_path);
+    printf("Error fopen at export_double_mpi path %s",file_path);
+    exit(1);
+  }
+  for (int i=0; i<len; i++){
+    fprintf(fptr,"%s[%d]=%.17le\n",s,i,x[i]);
+  }
+  fclose(fptr);
+#endif
+}
+
+void old_export_double_mpi(double *x, int len, const char *s){
+#ifndef USE_PRINT_ARRAYS
   printf("WARNING: Only 74mb maximum of exported file! Use netcdf for greater files\n");
   int size;
   MPI_Comm_size(MPI_COMM_WORLD, &size);

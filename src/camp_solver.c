@@ -627,13 +627,14 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
   sd->model_data.total_state = state;
   sd->model_data.total_env = env;
 
-#ifdef ENABLE_NETCDF
   /*
+//Use for export and import input data
+#ifdef ENABLE_NETCDF
   for (int i_cell = 0; i_cell < n_cells; i_cell++) {
     cell_netcdf(sd);
   }
-   */
 #endif
+*/
 
   // Update the dependent variables
   int i_dep_var = 0;

@@ -46,6 +46,7 @@ option(ENABLE_DATA "" OFF)
 option(ENABLE_INSTALL_OPTIONS "" OFF)
 option(ENABLE_SHARED_LIB "" OFF) #todo fix and shared lib in Monarch
 add_definitions(-DCAMP_DEBUG_MOCKMONARCH)
+#add_definitions(-DENABLE_NETCDF)
 
 mark_as_advanced(FORCE ENABLE_DEBUG FAILURE_DETAIL)
 file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/out)
@@ -75,13 +76,14 @@ find_path(NETCDF_INCLUDE_DIR netcdf.mod NETCDF.mod
     /opt/local/include)
   find_library(NETCDF_C_LIB netcdf
     DOC "NetCDF C library"
-    PATHS $ENV{NETCDF_HOME}/lib $ENV{NETCDF_HOME}/lib64 /opt/local/lib)
+    PATHS $ENV{NETCDF_HOME}/lib $ENV{NETCDF_HOME}/lib64 /opt/local/lib
+          /usr/bin)
   find_library(NETCDF_FORTRAN_LIB netcdff
     DOC "NetCDF Fortran library"
     PATHS
     $ENV{NETCDF_HOME}/lib $ENV{NETCDF_HOME}/lib64
     $ENV{NETCDF_FORTRAN_HOME}/lib $ENV{NETCDF_FORTRAN_HOME}/lib64
-    /opt/local/lib)
+    /opt/local/lib /usr/bin)
   set(NETCDF_LIBS ${NETCDF_C_LIB})
   if(NETCDF_FORTRAN_LIB)
     set(NETCDF_LIBS ${NETCDF_LIBS} ${NETCDF_FORTRAN_LIB})

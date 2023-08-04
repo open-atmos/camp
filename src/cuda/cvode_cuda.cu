@@ -22,7 +22,7 @@ void print_double(double *x, int len, const char *s){
 #endif
 }
 
-#ifndef DEV_removeAtomic
+#ifdef DEV_removeAtomic
 
 __device__
 void time_derivative_add_value_gpu(TimeDerivativeGPU time_deriv, unsigned int spec_id,
@@ -170,7 +170,7 @@ void rxn_gpu_photolysis_calc_deriv_contrib(ModelDataVariable *sc, TimeDerivative
   }
 }
 
-#ifndef DEV_removeAtomic
+#ifdef DEV_removeAtomic
 __device__
 void jacobian_add_value_gpu(JacobianGPU jac, unsigned int elem_id,
                             int prod_or_loss,
@@ -600,7 +600,7 @@ __device__ void cudaDevicecalc_deriv(double time_step, double *y,
   sc->grid_cell_state = &( md->state[md->state_size_cell*blockIdx.x]);
   int n_rxn = md->n_rxn;
   __syncthreads();
-#ifndef DEV_removeAtomic
+#ifdef DEV_removeAtomic
   if(threadIdx.x==0){
     for (int j = 0; j < n_rxn; j++){
       //printf("n_rxn %d i %d j %d \n",n_rxn,i,j);
@@ -864,7 +864,7 @@ __device__ void cudaDevicecalc_Jac(double *y,ModelDataGPU *md, ModelDataVariable
   sc->grid_cell_state = &( md->state[md->state_size_cell*blockIdx.x]);
   __syncthreads();
   int n_rxn = md->n_rxn;
-#ifndef DEV_removeAtomic
+#ifdef DEV_removeAtomic
   if(threadIdx.x==0){
     for (int j = 0; j < n_rxn; j++){
       solveRXNJac(j,jacBlock, md, sc);

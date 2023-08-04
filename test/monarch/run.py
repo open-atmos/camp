@@ -14,7 +14,6 @@ from os import walk
 import subprocess
 import time
 
-
 class TestMonarch:
   def __init__(self):
     # Case configuration
@@ -138,18 +137,6 @@ def write_camp_config_file(conf):
   except Exception as e:
     print("write_camp_config_file fails", e)
 
-
-def get_commit_hash():
-  try:
-    commit = subprocess.check_output(
-      ['git', 'rev-parse', '--short', 'HEAD']).decode().strip()
-  # Not copying .git folder into docker container
-  except subprocess.CalledProcessError:
-    commit = ""
-  # print(' > Git Hash: {}'.format(commit))
-  return str(commit)
-
-
 def remove_to_tmp(conf, sbatch_job_id):
   exportPath = conf.exportPath
 
@@ -235,10 +222,7 @@ def import_data(conf, tmp_path):
         break
       if conf_imported["timeSteps"] >= conf_dict["timeSteps"]:
         conf_imported["timeSteps"] = conf_dict["timeSteps"]
-      if conf_dict["commit"] == "MATCH_IMPORTED_CONF":
-        conf.commit = get_commit_hash()
-      else:
-        conf_imported["commit"] = conf_dict["commit"]
+      conf_imported["commit"] = conf_dict["commit"]
       # print("confKey",confKey)
       if confKey not in conf_imported:
         conf_imported[confKey] = conf_default[confKey]
@@ -274,7 +258,6 @@ def import_data(conf, tmp_path):
 def export(conf, data_path):
   data_path_abs = os.path.abspath(os.getcwd()) + "/" + data_path
   exportPath = conf.exportPath
-  conf.commit = get_commit_hash()
   if len(sys.argv) > 1:
     conf.sbatch_job_id = sys.argv[1]
   print(os.path.abspath(os.getcwd()) + "/" + exportPath)
@@ -404,7 +387,7 @@ def run(conf):
   data_name = conf.chemFile + '_' + conf.caseMulticellsOnecell + conf.results_file
   tmp_path = 'out/' + data_name
 
-  if conf.is_import and conf.plotYKey != "MAPE":
+  if conf.is_import and (conf.plotYKey != "MAPE" or conf.plotYKey != "NMRSE"):
     is_import, data_path = import_data(conf, tmp_path)
   else:
     is_import, data_path = False, tmp_path
@@ -414,13 +397,18 @@ def run(conf):
     if conf.is_export:
       export(conf, data_path)
     set_import_netcdf(conf, False)
-
-  nrows_csv=conf.timeSteps
-  if conf.plotYKey == "MAPE":
-    nrows_csv=conf.timeSteps*conf.nCells*conf.mpiProcesses
-    #nrows_csv=conf.nCells #optional: save only last time-step
-
-  data = math_functions.read_solver_stats(data_path, nrows_csv)
+  subprocess.run(["python", "netcdf.py"])
+  if conf.use_netcdf:
+    start = time.time()
+    math_functions.read_netcdf(conf.nCells,conf.mpiProcesses,conf.timeSteps)
+    end = time.time()
+    print("Time read_netcdf = %s" % (end - start))
+  else:
+    nrows_csv=conf.timeSteps
+    if conf.plotYKey == "MAPE" or conf.plotYKey == "NMRSE":
+      nrows_csv=conf.timeSteps*conf.nCells*conf.mpiProcesses
+      #nrows_csv=conf.nCells #optional: save only last time-step
+    data = math_functions.read_solver_stats(data_path, nrows_csv)
   if is_import:
     os.remove(data_path)
 
@@ -460,7 +448,7 @@ def run_case(conf):
       data["timeLS"][j] = data["timeLS"][j] \
                           / data["counterBCG"][j]
 
-  if conf.plotYKey != "MAPE":
+  if conf.plotYKey != "MAPE" and conf.plotYKey != "NRMSE":
     print("run_case", conf.case, y_key, ":", data[y_key])
   # print("data",data)
 
@@ -512,11 +500,10 @@ def run_cases(conf):
 
         # calculate measures between caseBase and caseOptim
         if conf.plotYKey == "NRMSE":
-          datay = math_functions.calculate_NMRSE(data, conf.timeSteps)
+          math_functions.calculate_MAPE(data, conf.timeSteps, conf.MAPETol)
+          datay = math_functions.calculate_NMRSE(data, conf.timeSteps, conf.MAPETol)
         elif conf.plotYKey == "MAPE":
           datay = math_functions.calculate_MAPE(data, conf.timeSteps, conf.MAPETol)
-        elif conf.plotYKey == "SMAPE":
-          datay = math_functions.calculate_SMAPE(data, conf.timeSteps)
         elif "Speedup" in conf.plotYKey:
           y_key_words = conf.plotYKey.split()
           y_key = y_key_words[-1]
@@ -530,11 +517,10 @@ def run_cases(conf):
 
         if len(conf.cells) > 1 or conf.plotXKey == "MPI processes" \
             or conf.plotXKey == "GPUs":
-          datacases.append(round(np.mean(datay), 2))
-          stdCases.append(round(np.std(datay), 2))
+          datacases.append(np.mean(datay))
+          stdCases.append(np.std(datay))
         else:
-          # datacases.append([round(elem, 2) for elem in datay])
-          datacases.append([round(elem, 2) for elem in datay])
+          datacases.append([elem for elem in datay])
 
   return datacases, stdCases
 
@@ -696,6 +682,8 @@ def plot_cases(conf):
     namey = "Speedup CAMP solving"
   if conf.plotYKey == "MAPE":
     namey = "MAPE [%]"
+  if conf.plotYKey == "NMRSE":
+    namey = "NMRSE [%]"
   if conf.plotYKey == "Speedup counterBCG":
     namey = "Speedup solving iterations BCG"
 
@@ -728,7 +716,7 @@ def plot_cases(conf):
   if conf.allocatedNodes != 1:
     print("Nodes:", conf.allocatedNodes)
   if namex == "Timesteps":
-    print("Mean:", round(np.mean(datay), 2), "Std", round(np.std(datay), 2))
+    print("Mean:", format(np.mean(datay), '.2e'), "Std", format(np.std(datay), '.2e'))
   else:
     print("Std", conf.stdColumns)
   print(namex, ":", datax)
@@ -736,6 +724,8 @@ def plot_cases(conf):
     print("plotTitle: ", conf.plotTitle, " legend:", conf.legend)
   else:
     print("plotTitle: ", conf.plotTitle)
-  print(namey, ":", datay)
-
   #plot_functions.plotsns(namex, namey, datax, datay, conf.stdColumns, conf.plotTitle, conf.legend)
+  for i in range(len(datay)):
+    for j in range(len(datay)):
+      datay[i][j] = format(datay[i][j], '.2e')
+  print(namey, ":", datay)
