@@ -1,6 +1,0 @@
-{
-  "dry-dep-data" : {
-    "calculate" : true,
-    "output rates" : true
-  }
-}
