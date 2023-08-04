@@ -16,6 +16,7 @@ if [ "$FILE" == TestMonarch.py ]; then
   #python $FILE > $log_path
   #python $FILE 2>&1 | tee $log_path
   python $FILE
+  #python translate_netcdf.py
   cd ../../compile/power9
 elif [ "$FILE" == test_monarch_1.py ]; then
   echo "Running old commits with file test_monarch_1.py ."

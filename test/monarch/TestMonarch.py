@@ -6,21 +6,22 @@
 
 from run import *
 
+
 def all_timesteps():
   conf = TestMonarch()
 
   # conf.chemFile = "simple"
   conf.chemFile = "monarch_cb05"
-  #conf.chemFile = "monarch_binned"
+  # conf.chemFile = "monarch_binned"
 
   conf.diffCellsL = []
-  #conf.diffCellsL.append("Realistic")
+  # conf.diffCellsL.append("Realistic")
   conf.diffCellsL.append("Ideal")
 
   conf.profileCuda = ""
-  #conf.profileCuda = "nvprof"
-  #conf.profileCuda = "nsight"
-  #conf.profileCuda = "nsightSummary"
+  # conf.profileCuda = "nvprof"
+  # conf.profileCuda = "nsight"
+  # conf.profileCuda = "nsightSummary"
 
   conf.is_export = get_is_sbatch()
   # conf.is_export = True
@@ -42,11 +43,11 @@ def all_timesteps():
   conf.mpi = "yes"
   # conf.mpi = "no"
 
-  conf.mpiProcessesCaseBase = 1
-  #conf.mpiProcessesCaseBase = 2
+  conf.mpiProcessesCaseBase = 2
+  # conf.mpiProcessesCaseBase = 2
 
   conf.mpiProcessesCaseOptimList.append(1)
-  #conf.mpiProcessesCaseOptimList.append(2)
+  # conf.mpiProcessesCaseOptimList.append(2)
   # conf.mpiProcessesCaseOptimList = [10,20,40]
 
   conf.allocatedNodes = 1
@@ -58,24 +59,24 @@ def all_timesteps():
   # conf.allocatedTasksPerNode = 320
   # conf.allocatedTasksPerNode = get_ntasksPerNode_sbatch() #todo
 
-  conf.cells = [1]
+  conf.cells = [4]
   # conf.cells = [100, 500, 1000, 5000, 10000]
   # conf.cells = [50000,100000,500000,1000000]
 
-  conf.timeSteps = 1
-  #conf.timeSteps = 720
+  conf.timeSteps = 3
+  # conf.timeSteps = 720
 
   conf.timeStepsDt = 2
 
   # conf.caseBase = "CPU EBI"
   conf.caseBase = "CPU One-cell"
-  #conf.caseBase = "CPU Multi-cells"
-  #conf.caseBase = "CPU New"
+  # conf.caseBase = "CPU Multi-cells"
+  # conf.caseBase = "CPU New"
   # conf.caseBase="GPU Multi-cells"
   # conf.caseBase="GPU Block-cellsN"
   # conf.caseBase="GPU Block-cells1"
-  #conf.caseBase = "GPU BDF"
-  #conf.caseBase = "GPU CPU"
+  # conf.caseBase = "GPU BDF"
+  # conf.caseBase = "GPU CPU"
   # conf.caseBase = "GPU maxrregcount-64" #wrong 10,000 cells
   # conf.caseBase = "GPU maxrregcount-24" #Minimum
   # conf.caseBase = "GPU maxrregcount-62"
@@ -83,24 +84,24 @@ def all_timesteps():
   # conf.caseBase = "GPU maxrregcount-48"
 
   conf.casesOptim = []
-  #conf.casesOptim.append("CPU One-cell")
-  #conf.casesOptim.append("CPU Multi-cells")
-  #conf.casesOptim.append("CPU New")
-  #conf.casesOptim.append("GPU One-cell")
+  # conf.casesOptim.append("CPU One-cell")
+  # conf.casesOptim.append("CPU Multi-cells")
+  # conf.casesOptim.append("CPU New")
+  # conf.casesOptim.append("GPU One-cell")
   # conf.casesOptim.append("GPU Multi-cells")
   # conf.casesOptim.append("GPU Block-cellsNhalf")
   # conf.casesOptim.append("GPU Block-cellsN")
   # conf.casesOptim.append("GPU Block-cells1")
   # conf.casesOptim.append("CPU EBI")
-  conf.casesOptim.append("GPU BDF")
-  #conf.casesOptim.append("GPU CPU")
+  # conf.casesOptim.append("GPU BDF")
+  # conf.casesOptim.append("GPU CPU")
   # conf.casesOptim.append("GPU maxrregcount-64") #wrong 10,000 cells
   # conf.casesOptim.append("GPU maxrregcount-68")
   # conf.casesOptim.append("GPU maxrregcount-62")
   # conf.casesOptim.append("GPU maxrregcount-24")
-  #conf.casesOptim.append("CPU IMPORT_NETCDF")
+  # conf.casesOptim.append("CPU IMPORT_NETCDF")
 
-  #conf.plotYKey = "Speedup timeCVode"
+  # conf.plotYKey = "Speedup timeCVode"
   # conf.plotYKey = "Speedup normalized counterLS"
   # conf.plotYKey = "Speedup normalized timeLS"
   # conf.plotYKey = "Speedup normalized computational timeLS"
@@ -108,17 +109,17 @@ def all_timesteps():
   # conf.plotYKey = "Speedup normalized counterBCG"
   # conf.plotYKey = "Speedup total iterations - counterBCG"
   # conf.plotYKey = "Speedup BCG iteration (Comp.timeLS/counterBCG)"
-  #conf.plotYKey = "Speedup timecvStep"
+  # conf.plotYKey = "Speedup timecvStep"
   # conf.plotYKey = "Speedup timecvStep normalized by countercvStep"
   # conf.plotYKey = "Speedup countercvStep"
   # conf.plotYKey = "Speedup device timecvStep"
   # conf.plotYKey = "Percentage data transfers CPU-GPU [%]"
-  #conf.plotYKey = "MAPE"
-  conf.plotYKey ="NRMSE"
+  # conf.plotYKey = "MAPE"
+  conf.plotYKey = "NRMSE"
   # conf.MAPETol = 1.0E-6
 
-  conf.use_netcdf=False #old (fail on MONARCH)
-  #conf.use_netcdf=True
+  conf.use_netcdf = False #Old
+  #conf.use_netcdf = True #Developing
 
   # conf.plotXKey = "MPI processes"
   # conf.plotXKey = "GPUs"
@@ -136,7 +137,8 @@ def all_timesteps():
     conf.is_export = False
     conf.is_import = False
   jsonFile = open("settings/monarch_box_binned/cb05_abs_tol.json")
-  jsonData = json.load(jsonFile)
+  with open("settings/monarch_box_binned/cb05_abs_tol.json", 'r', encoding='utf-8') as jsonFile:
+    jsonData = json.load(jsonFile)
   conf.MAPETol = jsonData["camp-data"][0]["value"]  # Default: 1.0E-4
   jsonData.clear()
   if conf.plotYKey == "":
@@ -150,7 +152,8 @@ def all_timesteps():
     if "Realistic" in conf.diffCellsL:
       conf.diffCellsL = ["Ideal"]
   elif conf.chemFile == "cb05_mechanism_yarwood2005":
-    print("ERROR: Not tested in testmonarch.py, configuration taken from monarch branch 209 and tested in monarch for the camp paper")
+    print(
+      "ERROR: Not tested in testmonarch.py, configuration taken from monarch branch 209 and tested in monarch for the camp paper")
     raise
   if not conf.caseBase:
     print("ERROR: caseBase is empty")

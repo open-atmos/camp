@@ -514,6 +514,37 @@ void print_double(double *x, int len, const char *s){
 #endif
 }
 
+/*
+void init_export_state_mpi(SolverData *sd){
+  malloc(sd->ex_len)
+}
+
+void export_state_mpi(SolverData *sd){
+  printf("STOPPED: failing on MONARCH\n");
+  int rank;
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  FILE *fptr;
+  char file_path[]="/out/exported_state.txt";
+  fptr = fopen(file_path,"w");
+  if(sd->ex_counter)
+    accumulate
+  else
+        mpi_gather
+
+
+  if(fptr == NULL)
+  {
+    //printf("fopen write at %s\n", file_path);
+    printf("Error fopen at export_double_mpi path %s",file_path);
+    exit(1);
+  }
+  for (int i=0; i<len; i++){
+    fprintf(fptr,"%s[%d]=%.17le\n",s,i,x[i]);
+  }
+  fclose(fptr);
+}
+*/
+
 void export_double_mpi(double *x, int len, const char *s){
 #ifndef USE_PRINT_ARRAYS
   //printf("WARNING: In MONARCH fails at 74mb of exported file! Use netcdf for greater files\n");

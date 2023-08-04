@@ -3,16 +3,16 @@ import matplotlib as mpl
 mpl.use('TkAgg')
 #import plot_functions #comment to save ~2s execution time
 import math_functions
-import sys, getopt
+import sys
 import os
 import numpy as np
 import datetime
 import json
 from pathlib import Path
 import zipfile
-from os import walk
 import subprocess
 import time
+
 
 class TestMonarch:
   def __init__(self):
@@ -148,7 +148,7 @@ def remove_to_tmp(conf, sbatch_job_id):
     os.makedirs(tmp_dir + "/data")
 
   conf_path = exportPath + "/conf"
-  filenames = next(walk(conf_path), (None, None, []))[2]
+  filenames = next(os.walk(conf_path), (None, None, []))[2]
 
   if not filenames:
     print("WARNING: Import folder is empty. Path:", os.path.abspath(os.getcwd()) + "/" + conf_path)
@@ -162,8 +162,8 @@ def remove_to_tmp(conf, sbatch_job_id):
     with zipfile.ZipFile(path_to_zip_file, 'r') as zip_ref:
       zip_ref.extractall(dir_to_extract)
     conf_name = conf_path + "/" + basename + ".json"
-    jsonFile = open(conf_name)
-    conf_imported = json.load(jsonFile)
+    with open(conf_name, 'r', encoding='utf-8') as jsonFile:
+      conf_imported = json.load(jsonFile)
     os.remove(conf_name)
     conf_dict = vars(conf)
     # print("conf_dict",conf_dict)
@@ -192,7 +192,7 @@ def import_data(conf, tmp_path):
   conf_path = exportPath + "/conf"
   if not os.path.exists(conf_path):
     return False, new_path
-  filenames = next(walk(conf_path), (None, None, []))[2]
+  filenames = next(os.walk(conf_path), (None, None, []))[2]
   if not filenames:
     print("WARNING: Import folder is empty. Path:", os.path.abspath(os.getcwd()) + "/" + conf_path)
     return False, new_path
@@ -209,8 +209,8 @@ def import_data(conf, tmp_path):
     with zipfile.ZipFile(path_to_zip_file, 'r') as zip_ref:
       zip_ref.extractall(dir_to_extract)
     conf_name = conf_path + "/" + basename + ".json"
-    jsonFile = open(conf_name)
-    conf_imported = json.load(jsonFile)
+    with open(conf_name, 'r', encoding='utf-8') as jsonFile:
+      conf_imported = json.load(jsonFile)
     os.remove(conf_name)
     conf_dict = vars(conf)
     # print("conf_dict",conf_dict)
@@ -316,9 +316,9 @@ def run(conf):
   exec_str = ""
   try:
     ddt_pid = subprocess.check_output('pidof -x $(ps cax | grep ddt)', shell=True)
+    #ddt_pid = False
     if ddt_pid:
       exec_str += 'ddt --connect '
-      #exec_str +=""
   except Exception:
     pass
   if conf.mpi == "yes":
@@ -397,10 +397,16 @@ def run(conf):
     if conf.is_export:
       export(conf, data_path)
     set_import_netcdf(conf, False)
-  subprocess.run(["python", "netcdf.py"])
+
   if conf.use_netcdf:
     start = time.time()
-    math_functions.read_netcdf(conf.nCells,conf.mpiProcesses,conf.timeSteps)
+    # If (arch=CTE-POWER) and (python is Python/3.7.0-foss-2018b)
+    #remove if mpi_gather works
+    subprocess.run(["python", "translate_netcdf.py"])
+    #else #run in the same script instead of calling another
+    #math_functions.read_netcdf()
+    #math_functions.read_netcdf(
+    # ) #conf.nCells,conf.mpiProcesses,conf.timeSteps
     end = time.time()
     print("Time read_netcdf = %s" % (end - start))
   else:
