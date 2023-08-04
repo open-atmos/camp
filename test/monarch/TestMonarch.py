@@ -43,7 +43,7 @@ def all_timesteps():
   conf.mpi = "yes"
   # conf.mpi = "no"
 
-  conf.mpiProcessesCaseBase = 2
+  conf.mpiProcessesCaseBase = 1
   # conf.mpiProcessesCaseBase = 2
 
   conf.mpiProcessesCaseOptimList.append(1)
@@ -59,11 +59,11 @@ def all_timesteps():
   # conf.allocatedTasksPerNode = 320
   # conf.allocatedTasksPerNode = get_ntasksPerNode_sbatch() #todo
 
-  conf.cells = [4]
+  conf.cells = [1]
   # conf.cells = [100, 500, 1000, 5000, 10000]
   # conf.cells = [50000,100000,500000,1000000]
 
-  conf.timeSteps = 3
+  conf.timeSteps = 1
   # conf.timeSteps = 720
 
   conf.timeStepsDt = 2
@@ -93,7 +93,7 @@ def all_timesteps():
   # conf.casesOptim.append("GPU Block-cellsN")
   # conf.casesOptim.append("GPU Block-cells1")
   # conf.casesOptim.append("CPU EBI")
-  # conf.casesOptim.append("GPU BDF")
+  #conf.casesOptim.append("GPU BDF")
   # conf.casesOptim.append("GPU CPU")
   # conf.casesOptim.append("GPU maxrregcount-64") #wrong 10,000 cells
   # conf.casesOptim.append("GPU maxrregcount-68")
@@ -131,7 +131,7 @@ def all_timesteps():
   conf.results_file = "_solver_stats.csv"
   if conf.plotYKey == "NRMSE" or conf.plotYKey == "MAPE":
     if conf.use_netcdf:
-      conf.results_file = ''
+      conf.results_file = 'out/state.csv'
     else:
       conf.results_file = '_results_all_cells.csv'
     conf.is_export = False

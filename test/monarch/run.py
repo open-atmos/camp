@@ -384,13 +384,15 @@ def run(conf):
   with open(conf_name, 'w', encoding='utf-8') as jsonFile:
     json.dump(conf.__dict__, jsonFile, indent=4, sort_keys=False)
 
-  data_name = conf.chemFile + '_' + conf.caseMulticellsOnecell + conf.results_file
-  tmp_path = 'out/' + data_name
-
-  if conf.is_import and (conf.plotYKey != "MAPE" or conf.plotYKey != "NMRSE"):
-    is_import, data_path = import_data(conf, tmp_path)
-  else:
-    is_import, data_path = False, tmp_path
+  is_import = False
+  data_path = conf.results_file
+  if not conf.use_netcdf:
+    data_name = conf.chemFile + '_' + conf.caseMulticellsOnecell + conf.results_file
+    tmp_path = 'out/' + data_name
+    if conf.is_import and (conf.plotYKey != "MAPE" or conf.plotYKey != "NMRSE"):
+      is_import, data_path = import_data(conf, tmp_path)
+    else:
+      is_import, data_path = False, tmp_path
 
   if not is_import:
     os.system(exec_str)
@@ -401,20 +403,20 @@ def run(conf):
   if conf.use_netcdf:
     start = time.time()
     # If (arch=CTE-POWER) and (python is Python/3.7.0-foss-2018b)
-    #remove if mpi_gather works
     subprocess.run(["python", "translate_netcdf.py"])
     #else #run in the same script instead of calling another
     #math_functions.read_netcdf()
     #math_functions.read_netcdf(
     # ) #conf.nCells,conf.mpiProcesses,conf.timeSteps
+    #file = open(conf.results_file, 'r')
+    #data = file.read().splitlines()
     end = time.time()
     print("Time read_netcdf = %s" % (end - start))
-  else:
-    nrows_csv=conf.timeSteps
-    if conf.plotYKey == "MAPE" or conf.plotYKey == "NMRSE":
-      nrows_csv=conf.timeSteps*conf.nCells*conf.mpiProcesses
-      #nrows_csv=conf.nCells #optional: save only last time-step
-    data = math_functions.read_solver_stats(data_path, nrows_csv)
+
+  nrows_csv=conf.timeSteps
+  if conf.plotYKey == "MAPE" or conf.plotYKey == "NMRSE":
+    nrows_csv=conf.timeSteps*conf.nCells*conf.mpiProcesses
+  data = math_functions.read_solver_stats(data_path, nrows_csv)
   if is_import:
     os.remove(data_path)
 
@@ -506,7 +508,6 @@ def run_cases(conf):
 
         # calculate measures between caseBase and caseOptim
         if conf.plotYKey == "NRMSE":
-          math_functions.calculate_MAPE(data, conf.timeSteps, conf.MAPETol)
           datay = math_functions.calculate_NMRSE(data, conf.timeSteps, conf.MAPETol)
         elif conf.plotYKey == "MAPE":
           datay = math_functions.calculate_MAPE(data, conf.timeSteps, conf.MAPETol)

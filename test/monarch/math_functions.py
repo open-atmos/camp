@@ -1,6 +1,6 @@
 import numpy as np
 from math import sqrt
-import pandas as pd
+from pandas import read_csv as pd_read_csv
 #import netCDF4 as nc
 
 
@@ -257,7 +257,7 @@ def calculate_NMRSE(data, n_time_steps, max_tol):
     max_NRMSEs_species = 0.
   max_err_rel = format(max_err_rel * 100, '.2e')
   max_err_abs = format(max_err_abs, '.2e')
-  print("relative max_error:", max_err_rel, "at:", max_err_rel_name,
+  print("relative max_error:", max_err_rel, "% at:", max_err_rel_name,
         "timestep:", max_err_rel_timestep,
         "absolute max_error:", max_err_abs, "at:", max_err_abs_name,
         "timestep:", max_err_abs_timestep,
@@ -382,10 +382,8 @@ def calculate_speedup(data, plot_y_key):
 
 
 def read_solver_stats(file, nrows):
-  # start = time.time()
-  df = pd.read_csv(file, nrows=nrows)
+  df = pd_read_csv(file, nrows=nrows)
   data = df.to_dict('list')
-  # print("time", time.time() - start)
   return data
 
 """

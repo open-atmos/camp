@@ -56,7 +56,7 @@ void export_netcdf(SolverData *sd){
   strcat(file_name,".nc");
   char file_path[1024];
   getcwd(file_path, sizeof(file_path));
-  strcat(file_path,"/");
+  strcat(file_path,"/out/");
   strcat(file_path,file_name);
   nc(nc_create(file_path, NC_CLOBBER, &ncid));
   printf("Created netcdf file at %s rank %d\n",file_path, rank);
@@ -99,12 +99,16 @@ void export_netcdf(SolverData *sd){
   i++;
   i=0;
   nc(nc_close(ncid));
-  if(rank==0)printf("export_netcdf end\n");
+/*
   if(sd->icell>=sd->n_cells_tstep){
+    MPI_Barrier(MPI_COMM_WORLD);
     if(rank==0) printf("export_netcdf exit sd->icell %d\n", sd->icell);
     MPI_Barrier(MPI_COMM_WORLD);
+    int err=0;
+    MPI_Abort(1,err);
     exit(0);
   }
+  */
 }
 
 void export_cells_netcdf(SolverData *sd) {
