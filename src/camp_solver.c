@@ -455,7 +455,6 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
 #ifdef DEBUG_solver_initialize
   printf("camp solver_initialize start \n");
 #endif
-
   // Seed the random number generator
   srand((unsigned int)100);
 
@@ -542,11 +541,14 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
   check_flag_fail(&flag, "CVodeSetDlsGuessHelper", 1);
 
   sd->icell=0;
+  printf("debug\n");
+
 #ifdef CAMP_USE_GPU
   if(sd->use_cpu==0){
       constructor_cvode_gpu(sd->cvode_mem, sd);
   }
 #endif
+  printf("debug\n");
 #ifdef ENABLE_NETCDF
   sd->n_cells_tstep = n_cells_tstep;
   sd->tstep=0;
@@ -564,6 +566,7 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
   rxn_get_ids(sd);
 #endif
 #endif
+  printf("debug\n");
 }
 
 #ifdef CAMP_DEBUG
@@ -783,8 +786,14 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
       }
     }
   }
+
+  for (int i = 0; i < n_cells; i++) {
+    print_double(state+i*md->n_per_cell_state_var,
+                     md->n_per_cell_state_var, "state768");
+  }
+
 #ifdef ENABLE_NETCDF
-  for (int i_cell = 0; i_cell < n_cells; i_cell++) {
+  for (int i = 0; i < n_cells; i++) {
     cell_netcdf(sd);
   }
 #endif
@@ -1190,7 +1199,7 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
   // Update the state array with the current dependent variable values.
   // Signal a recoverable error (positive return value) for negative
   // concentrations.
-  print_double(&time_step,1,"time_step661");
+  //print_double(&time_step,1,"time_step661");
   //print_double(md->total_state,n_state_var,"state661");
   if (camp_solver_update_model_state(y, sd, -SMALL, TINY) != CAMP_SOLVER_SUCCESS){
     //print_double(md->total_state,n_state_var,"state663");
@@ -1705,7 +1714,7 @@ int guess_helper(const realtype t_n, const realtype h_n, N_Vector y_n,
   } else {
     N_VScale(ONE, hf, corr);
   }
-  print_double(&h_n,1,"h_n711");
+  //print_double(&h_n,1,"h_n711");
   //print_double(ahf,73,"hf711");
   //print_double(acorr,73,"acorr711");
   CAMP_DEBUG_PRINT("Got f0");
@@ -1731,7 +1740,7 @@ int guess_helper(const realtype t_n, const realtype h_n, N_Vector y_n,
     // Scale incomplete jumps
     if (i_fast >= 0 && h_n > ZERO)
       h_j *= 0.95 + 0.1 * iter / (double)GUESS_MAX_ITER;
-    print_double(&h_j,1,"h_j756");
+    //print_double(&h_j,1,"h_j756");
     h_j = t_n < t_0 + t_j + h_j ? t_n - (t_0 + t_j) : h_j;
     //print_double(&h_j,1,"h_j758");
 

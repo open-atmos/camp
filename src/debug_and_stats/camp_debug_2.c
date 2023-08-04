@@ -511,7 +511,7 @@ void check_isnand(double *x, int len, const char *s){
 }
 
 void print_double(double *x, int len, const char *s){
-#ifdef USE_PRINT_ARRAYS
+#ifndef USE_PRINT_ARRAYS
   for (int i=0; i<len; i++){
     printf("%s[%d]=%.17le\n",s,i,x[i]);
   }

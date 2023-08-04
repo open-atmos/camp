@@ -69,13 +69,13 @@ def all_timesteps():
   conf.timeStepsDt = 2
 
   # conf.caseBase = "CPU EBI"
-  conf.caseBase = "CPU One-cell"
+  #conf.caseBase = "CPU One-cell"
   # conf.caseBase = "CPU Multi-cells"
   # conf.caseBase = "CPU New"
   # conf.caseBase="GPU Multi-cells"
   # conf.caseBase="GPU Block-cellsN"
   # conf.caseBase="GPU Block-cells1"
-  # conf.caseBase = "GPU BDF"
+  conf.caseBase = "GPU BDF"
   # conf.caseBase = "GPU CPU"
   # conf.caseBase = "GPU maxrregcount-64" #wrong 10,000 cells
   # conf.caseBase = "GPU maxrregcount-24" #Minimum
@@ -136,7 +136,6 @@ def all_timesteps():
       conf.results_file = '_results_all_cells.csv'
     conf.is_export = False
     conf.is_import = False
-  jsonFile = open("settings/monarch_box_binned/cb05_abs_tol.json")
   with open("settings/monarch_box_binned/cb05_abs_tol.json", 'r', encoding='utf-8') as jsonFile:
     jsonData = json.load(jsonFile)
   conf.MAPETol = jsonData["camp-data"][0]["value"]  # Default: 1.0E-4
@@ -152,8 +151,7 @@ def all_timesteps():
     if "Realistic" in conf.diffCellsL:
       conf.diffCellsL = ["Ideal"]
   elif conf.chemFile == "cb05_mechanism_yarwood2005":
-    print(
-      "ERROR: Not tested in testmonarch.py, configuration taken from monarch branch 209 and tested in monarch for the camp paper")
+    print("ERROR: Not tested in testmonarch.py, configuration taken from monarch branch 209 and tested in monarch for the camp paper")
     raise
   if not conf.caseBase:
     print("ERROR: caseBase is empty")
