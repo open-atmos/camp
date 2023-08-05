@@ -188,13 +188,14 @@ def check_tolerances(data, timesteps, rel_tol, abs_tol):
           #  print(out1[k],out2[k])
 
 
-def calculate_NMRSE(data, n_time_steps, max_tol):
+def calculate_NRMSE(data, n_time_steps, max_tol):
   cases_one_multi_cells = list(data.keys())
   species1 = data[cases_one_multi_cells[0]]
   species2 = data[cases_one_multi_cells[1]]
   species_names = list(species1.keys())
   n_cells = int(len(species1[species_names[0]]) / n_time_steps)
-  n_species = int(len(species1) / n_cells)
+  n_species = int(len(species_names))
+  print("n_species",n_species)
   NRMSEs_species = [0.] * n_species
   NRMSEs = [0.] * n_time_steps
   max_y = [0.] * n_species
@@ -213,8 +214,8 @@ def calculate_NMRSE(data, n_time_steps, max_tol):
   for i in range(n_time_steps):
     for j in range(n_cells):
       for k in range(n_species):
-        y1 = species1[species_names[k + j * n_species]][0]
-        y2 = species2[species_names[k + j * n_species]][0]
+        y1 = species1[species_names[k]][j]
+        y2 = species2[species_names[k]][j]
         NRMSEs_species[k] += (y1 - y2) ** 2
         if y1 > max_y[k]:
           max_y[k] = y1

@@ -389,7 +389,7 @@ def run(conf):
   if not conf.use_netcdf:
     data_name = conf.chemFile + '_' + conf.caseMulticellsOnecell + conf.results_file
     tmp_path = 'out/' + data_name
-    if conf.is_import and (conf.plotYKey != "MAPE" or conf.plotYKey != "NMRSE"):
+    if conf.is_import and (conf.plotYKey != "MAPE" or conf.plotYKey != "NRMSE"):
       is_import, data_path = import_data(conf, tmp_path)
     else:
       is_import, data_path = False, tmp_path
@@ -405,17 +405,12 @@ def run(conf):
     # If (arch=CTE-POWER) and (python is Python/3.7.0-foss-2018b)
     subprocess.run(["python", "translate_netcdf.py"])
     #else #run in the same script instead of calling another
-    #math_functions.read_netcdf()
-    #math_functions.read_netcdf(
-    # ) #conf.nCells,conf.mpiProcesses,conf.timeSteps
-    #file = open(conf.results_file, 'r')
-    #data = file.read().splitlines()
     end = time.time()
     print("Time read_netcdf = %s" % (end - start))
 
-  nrows_csv=conf.timeSteps
-  if conf.plotYKey == "MAPE" or conf.plotYKey == "NMRSE":
-    nrows_csv=conf.timeSteps*conf.nCells*conf.mpiProcesses
+  nrows_csv = conf.timeSteps
+  if conf.plotYKey == "MAPE" or conf.plotYKey == "NRMSE":
+    nrows_csv = conf.timeSteps*conf.nCells*conf.mpiProcesses
   data = math_functions.read_solver_stats(data_path, nrows_csv)
   if is_import:
     os.remove(data_path)
@@ -508,7 +503,7 @@ def run_cases(conf):
 
         # calculate measures between caseBase and caseOptim
         if conf.plotYKey == "NRMSE":
-          datay = math_functions.calculate_NMRSE(data, conf.timeSteps, conf.MAPETol)
+          datay = math_functions.calculate_NRMSE(data, conf.timeSteps, conf.MAPETol)
         elif conf.plotYKey == "MAPE":
           datay = math_functions.calculate_MAPE(data, conf.timeSteps, conf.MAPETol)
         elif "Speedup" in conf.plotYKey:
@@ -689,8 +684,8 @@ def plot_cases(conf):
     namey = "Speedup CAMP solving"
   if conf.plotYKey == "MAPE":
     namey = "MAPE [%]"
-  if conf.plotYKey == "NMRSE":
-    namey = "NMRSE [%]"
+  if conf.plotYKey == "NRMSE":
+    namey = "NRMSE [%]"
   if conf.plotYKey == "Speedup counterBCG":
     namey = "Speedup solving iterations BCG"
 
