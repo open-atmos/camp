@@ -923,7 +923,7 @@ int cudaDeviceJac(int *flag, ModelDataGPU *md, ModelDataVariable *sc)
   md->use_deriv_est=0;
   int aux_flag=0;
   __syncthreads();
-  print_double(md->dcv_y,73,"dcv_y914");
+  //print_double(md->dcv_y,73,"dcv_y914");
   retval=cudaDevicef(sc->cv_next_h, md->dcv_y, md->dftemp,md,sc,&aux_flag);
   md->use_deriv_est=1;
   __syncthreads();

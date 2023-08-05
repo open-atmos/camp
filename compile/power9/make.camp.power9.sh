@@ -7,7 +7,7 @@ if ! ./make.camp.power9.sh; then
 fi
 cd /gpfs/scratch/bsc32/bsc32815/a591/nmmb-monarch/MODEL/SRC_LIBS/camp/compile/power9
 }
-make_base
+#make_base
 #./compile.cvode-3.4-alpha.power9.sh
 
 export SUNDIALS_HOME=$(pwd)/../../../cvode-3.4-alpha/install
@@ -77,12 +77,19 @@ else
   #FILE=./unit_test_aero_rep_single_particle
   #FILE=./new_make.sh
   if [ "$FILE" == TestMonarch.py ]; then
-    log_path="/gpfs/scratch/bsc32/bsc32815/a591/nmmb-monarch/MODEL/SRC_LIBS/camp/compile/power9/log.txt"
-    echo "Generating log file at " $log_path
-    #python $FILE 2>&1 | tee $log_path
-    python $FILE > $log_path
+    #log_path="/gpfs/scratch/bsc32/bsc32815/a591/nmmb-monarch/MODEL/SRC_LIBS/camp/compile/power9/log_gpu.txt"
+    log_path="../../compile/power9/log_gpu.txt"
+    #echo "Generating log file at " $log_path
+    #python $FILE > $log_path
+    python $FILE 2>&1 | tee $log_path
     #python $FILE
+    sed -i 's/conf.caseBase = "GPU BDF"/conf.caseBase = "CPU One-cell"/g' $FILE
+    log_path="../../compile/power9/log_cpu.txt"
+    python $FILE 2>&1 | tee $log_path
+    sed -i 's/conf.caseBase = "CPU One-cell"/conf.caseBase = "GPU BDF"/g' $FILE
+    #python translate_netcdf.py
     cd ../../compile/power9
+    diff log_cpu.txt log_gpu.txt 2>&1 | tee diff.txt
   elif [ "$FILE" == test_monarch_1.py ]; then
     echo "Running old commits with file test_monarch_1.py ."
     python  $FILE
@@ -91,6 +98,4 @@ else
     cd ../../compile/power9
     time $FILE
   fi
-./diff.sh
-
 fi
