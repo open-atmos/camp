@@ -455,7 +455,6 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
 #ifdef DEBUG_solver_initialize
   printf("camp solver_initialize start \n");
 #endif
-
   // Seed the random number generator
   srand((unsigned int)100);
 
@@ -542,6 +541,7 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
   check_flag_fail(&flag, "CVodeSetDlsGuessHelper", 1);
 
   sd->icell=0;
+
 #ifdef CAMP_USE_GPU
   if(sd->use_cpu==0){
       constructor_cvode_gpu(sd->cvode_mem, sd);
@@ -627,9 +627,14 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
   sd->model_data.total_state = state;
   sd->model_data.total_env = env;
 
+  /*
+//Use for export and import input data
 #ifdef ENABLE_NETCDF
-  cell_netcdf(sd);
+  for (int i_cell = 0; i_cell < n_cells; i_cell++) {
+    cell_netcdf(sd);
+  }
 #endif
+*/
 
   // Update the dependent variables
   int i_dep_var = 0;
@@ -1292,9 +1297,9 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
       //print_double(J_deriv,73,"J_deriv644");
       //double *yp = N_VGetArrayPointer(y);
       //print_double(yp,73,"y646");
-      double *J_tmp2 = N_VGetArrayPointer(md->J_tmp2);
-      print_double(J_tmp2,73,"J_tmp2");
-      print_double(jac_deriv_data,73,"J_tmp643");
+      //double *J_tmp2 = N_VGetArrayPointer(md->J_tmp2);
+      //print_double(J_tmp2,73,"J_tmp2645");
+      //print_double(jac_deriv_data,73,"J_tmp643");
       //print_double(deriv_data,73,"deriv_data645");
     }
 #ifdef CAMP_DEBUG
@@ -1345,6 +1350,8 @@ int Jac(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_data,
   // Calculate the the derivative for the current state y without
   // the estimated derivative from the last Jacobian calculation
   sd->use_deriv_est = 0;
+  //double *yp = N_VGetArrayPointer(y);
+  //print_double(yp,73,"dcv_y914");
   if (f(t, y, deriv, solver_data) != 0) {
     printf("\n Derivative calculation failed on Jac.\n");
     sd->use_deriv_est = 1;
