@@ -118,8 +118,8 @@ def all_timesteps():
   conf.plotYKey = "NRMSE"
   # conf.MAPETol = 1.0E-6
 
-  conf.use_netcdf = False #Old
-  #conf.use_netcdf = True #Developing
+  #conf.use_netcdf = False #Old
+  conf.use_netcdf = True #Developing
 
   # conf.plotXKey = "MPI processes"
   # conf.plotXKey = "GPUs"

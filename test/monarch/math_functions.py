@@ -195,7 +195,6 @@ def calculate_NRMSE(data, n_time_steps, max_tol):
   species_names = list(species1.keys())
   n_cells = int(len(species1[species_names[0]]) / n_time_steps)
   n_species = int(len(species_names))
-  print("n_species",n_species)
   NRMSEs_species = [0.] * n_species
   NRMSEs = [0.] * n_time_steps
   max_y = [0.] * n_species
