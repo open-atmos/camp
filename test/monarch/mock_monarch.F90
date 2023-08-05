@@ -499,6 +499,7 @@ program mock_monarch_t
       end if
     end do
 
+
   end if
 
   if (camp_mpi_rank().eq.0) then
@@ -711,7 +712,7 @@ contains
     !if (camp_mpi_rank().eq.0) then
     !   print*,"export_file_results_all_cells species_conc"
     !end if
-    !write(*, "(ES13.6)", advance="no") species_conc(:,:,:,1)
+    write(*, "(ES13.6)", advance="no") species_conc(:,:,:,:)
     !write(*, *) camp_mpi_rank()
 
     !write(*, "(ES13.6)") species_conc(:,:,:,:)
