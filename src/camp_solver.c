@@ -1186,7 +1186,7 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
   // Update the state array with the current dependent variable values.
   // Signal a recoverable error (positive return value) for negative
   // concentrations.
-  print_double(&time_step,1,"time_step661");
+  //print_double(&time_step,1,"time_step661");
   //print_double(md->total_state,n_state_var,"state661");
   if (camp_solver_update_model_state(y, sd, -SMALL, TINY) != CAMP_SOLVER_SUCCESS){
     //print_double(md->total_state,n_state_var,"state663");
@@ -1701,7 +1701,7 @@ int guess_helper(const realtype t_n, const realtype h_n, N_Vector y_n,
   } else {
     N_VScale(ONE, hf, corr);
   }
-  print_double(&h_n,1,"h_n711");
+  //print_double(&h_n,1,"h_n711");
   //print_double(ahf,73,"hf711");
   //print_double(acorr,73,"acorr711");
   CAMP_DEBUG_PRINT("Got f0");
@@ -1727,7 +1727,7 @@ int guess_helper(const realtype t_n, const realtype h_n, N_Vector y_n,
     // Scale incomplete jumps
     if (i_fast >= 0 && h_n > ZERO)
       h_j *= 0.95 + 0.1 * iter / (double)GUESS_MAX_ITER;
-    print_double(&h_j,1,"h_j756");
+    //print_double(&h_j,1,"h_j756");
     h_j = t_n < t_0 + t_j + h_j ? t_n - (t_0 + t_j) : h_j;
     //print_double(&h_j,1,"h_j758");
 
