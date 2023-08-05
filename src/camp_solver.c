@@ -788,12 +788,13 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
     print_double(state+i*md->n_per_cell_state_var,
                      md->n_per_cell_state_var, "state768");
   }
-
+/*
 #ifdef ENABLE_NETCDF
   for (int i = 0; i < n_cells; i++) {
     cell_netcdf(sd);
   }
 #endif
+ */
 #ifdef FAILURE_DETAIL
   sd->counter_fail_solve_print=0;
 #endif
