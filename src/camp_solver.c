@@ -749,7 +749,7 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
       }
     }
   }
-
+  print_double(state,n_state_var,"state768");
 #ifdef FAILURE_DETAIL
   sd->counter_fail_solve_print=0;
 #endif
