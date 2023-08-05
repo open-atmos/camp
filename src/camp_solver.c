@@ -156,6 +156,12 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
   // Set up the solver variable array and helper derivative array
   sd->y = N_VNew_Serial(n_dep_var * n_cells);
   sd->deriv = N_VNew_Serial(n_dep_var * n_cells);
+  double *yp = N_VGetArrayPointer(sd->y);
+  double *derivp = N_VGetArrayPointer(sd->deriv);
+  for(int i=0;i<n_dep_var * n_cells;i++){
+    yp[i]=0.;
+    derivp[i]=0.;
+  }
 #endif
 
   // Allocate space for the reaction data and set the number
@@ -654,6 +660,26 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
     aero_rep_update_env_state(md);
     sub_model_update_env_state(md);
     rxn_update_env_state(md);
+    if(i_cell==0){
+      //print_double(md->grid_cell_state,n_state_var,"state688");
+      //print_double(md->grid_cell_env,CAMP_NUM_ENV_PARAM_,"env689");
+      //double *yp = N_VGetArrayPointer(sd->y);
+      //print_double(yp,73,"y660");
+    }
+  }
+
+  //Reset jac solving, otherwise values from previous iteration would be carried to current iteration
+  N_VConst(0.0, md->J_state);
+  N_VConst(0.0, md->J_deriv);
+  N_VConst(0.0, md->J_tmp);
+  N_VConst(0.0, md->J_tmp2);
+  SM_NNZ_S(md->J_solver) = SM_NNZ_S(md->J_init);
+  for (int i = 0; i <= SM_NP_S(md->J_solver); i++) {
+    (SM_INDEXPTRS_S(md->J_solver))[i] = (SM_INDEXPTRS_S(md->J_init))[i];
+  }
+  for (int i = 0; i < SM_NNZ_S(md->J_solver); i++) {
+    (SM_INDEXVALS_S(md->J_solver))[i] = (SM_INDEXVALS_S(md->J_init))[i];
+    (SM_DATA_S(md->J_solver))[i] = 0.0;
   }
 
   sd->Jac_eval_fails = 0;
@@ -669,6 +695,9 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
   // emissions)
   if (is_anything_going_on_here(sd, t_initial, t_final) == false)
     return CAMP_SOLVER_SUCCESS;
+
+  //double *yp = N_VGetArrayPointer(sd->y);
+  //print_double(yp,73,"y686");
 
   // Reinitialize the solver
   flag = CVodeReInit(sd->cvode_mem, t_initial, sd->y);
@@ -727,9 +756,9 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
       MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 #endif
       if (flag != 0)
-      printf("\nCall to f() at failed state failed with flag %d, rank %d \n",
-    flag, rank);
-    solver_print_stats(sd->cvode_mem);
+        printf("\nCall to f() at failed state failed with flag %d, rank %d \n",
+          flag, rank);
+      solver_print_stats(sd->cvode_mem);
 #endif
       return CAMP_SOLVER_FAIL;
     }
@@ -1243,7 +1272,6 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
       rxn_calc_deriv_new(sd);
 #endif
 
-
     // Update the deriv array
     if (sd->use_deriv_est == 1) {
       //printf("jac_deriv_data %-le\n",jac_deriv_data[0]);
@@ -1709,14 +1737,14 @@ int guess_helper(const realtype t_n, const realtype h_n, N_Vector y_n,
     t_j += h_j;
 
     // Recalculate the time derivative \f$f(t_j)\f$
-    print_double(atmp1,73,"atmp1766");
+    //print_double(atmp1,73,"atmp1766");
     if (f(t_0 + t_j, tmp1, corr, solver_data) != 0) {
       CAMP_DEBUG_PRINT("Unexpected failure in guess helper!");
-      print_double(acorr,73,"acorr721");
+      //print_double(acorr,73,"acorr721");
       N_VConst(ZERO, corr);
       return -1;
     }
-    print_double(acorr,73,"acorr721");
+    //print_double(acorr,73,"acorr721");
     ((CVodeMem)sd->cvode_mem)->cv_nfe++;
 
     if (iter == GUESS_MAX_ITER - 1 && t_0 + t_j < t_n) {

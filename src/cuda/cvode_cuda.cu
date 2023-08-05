@@ -773,9 +773,9 @@ int CudaDeviceguess_helper(double h_n, double* y_n,
     __syncthreads();
     t_j += h_j;
     int aux_flag=0;
-    print_double(atmp1,73,"atmp1766");
+    //print_double(atmp1,73,"atmp1766");
     int fflag=cudaDevicef(t_0 + t_j, atmp1, acorr,md,sc,&aux_flag);
-    print_double(acorr,73,"acorr721");
+    //print_double(acorr,73,"acorr721");
     __syncthreads();
     if (fflag == CAMP_SOLVER_FAIL) {
       acorr[i] = 0.;
