@@ -27,6 +27,14 @@ static void HandleError(cudaError_t err,
   }
 }
 
+void print_double_cv_gpu(double *x, int len, const char *s){
+#ifndef USE_PRINT_ARRAYS
+  for (int i=0; i<len; i++){
+    printf("%s[%d]=%.17le\n",s,i,x[i]);
+  }
+#endif
+}
+
 int nextPowerOfTwoCVODE(int v){
   v--;
   v |= v >> 1;
@@ -804,6 +812,8 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
                     cudaMemcpyHostToDevice, stream);
     cudaMemcpyAsync(&mGPU->sCells[i], &mCPU->mdvCPU, sizeof(ModelDataVariable), cudaMemcpyHostToDevice, stream);
   }
+  double *zn0 = NV_DATA_S(cv_mem->cv_zn[0]);
+  print_double_cv_gpu(zn0+73,73,"dzn807");
   cvodeRun(mGPU,stream);
   cudaMemcpyAsync(cv_acor_init, mGPU->cv_acor_init, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost, stream);
   cudaMemcpyAsync(youtArray, mGPU->yout, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost, stream);

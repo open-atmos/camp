@@ -455,6 +455,7 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
 #ifdef DEBUG_solver_initialize
   printf("camp solver_initialize start \n");
 #endif
+
   // Seed the random number generator
   srand((unsigned int)100);
 
@@ -541,7 +542,6 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
   check_flag_fail(&flag, "CVodeSetDlsGuessHelper", 1);
 
   sd->icell=0;
-
 #ifdef CAMP_USE_GPU
   if(sd->use_cpu==0){
       constructor_cvode_gpu(sd->cvode_mem, sd);
@@ -701,8 +701,9 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
   if (is_anything_going_on_here(sd, t_initial, t_final) == false)
     return CAMP_SOLVER_SUCCESS;
 
-  //double *yp = N_VGetArrayPointer(sd->y);
-  //print_double(yp,73,"y686");
+  double *yp = N_VGetArrayPointer(sd->y);
+  if(sd->use_cpu==0) yp+= 73;
+  print_double(yp,73,"y686");
 
   // Reinitialize the solver
   flag = CVodeReInit(sd->cvode_mem, t_initial, sd->y);
