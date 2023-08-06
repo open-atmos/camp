@@ -290,6 +290,7 @@ typedef struct {
 #ifdef ENABLE_NETCDF
   int n_cells_tstep;
   int tstep;
+  double* state_nc;
 #endif
 #ifdef CAMP_USE_GPU
   ModelDataCPU mCPU;

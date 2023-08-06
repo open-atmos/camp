@@ -1,7 +1,7 @@
 import matplotlib as mpl
 
 mpl.use('TkAgg')
-#import plot_functions #comment to save ~2s execution time
+# import plot_functions #comment to save ~2s execution time
 import math_functions
 import sys
 import os
@@ -102,17 +102,6 @@ def write_itsolver_config_file(conf):
   file1.close()
 
 
-def set_import_netcdf(conf, bool_import_netcdf):
-  if conf.caseMulticellsOnecell == "IMPORT_NETCDF":
-    conf.diffCells = "Ideal"
-    savePath = os.getcwd()
-    # print("savePath",savePath)
-    os.chdir("../../build")
-    cmake_str = "cmake -D ENABLE_IMPORT_NETCDF=" + str(bool_import_netcdf) + " .."
-    os.system(cmake_str)
-    os.system("make -j 4")
-    os.chdir(savePath)
-
 
 def write_camp_config_file(conf):
   try:
@@ -136,6 +125,7 @@ def write_camp_config_file(conf):
     file1.close()
   except Exception as e:
     print("write_camp_config_file fails", e)
+
 
 def remove_to_tmp(conf, sbatch_job_id):
   exportPath = conf.exportPath
@@ -275,7 +265,7 @@ def export(conf, data_path):
   path_to_zip_file = conf_dir + "/" + basename + ".zip"
   zipfile.ZipFile(path_to_zip_file, mode='w').write(conf_path, arcname=conf_name)
   os.remove(conf_path)
-  print("Configuration saved to", os.path.abspath(os.getcwd()) + path_to_zip_file)
+  print("Configuration saved to", os.path.abspath(os.getcwd()) + conf_name)
   path_to_zip_file = exportPath + "/data"
   if not os.path.exists(path_to_zip_file):
     os.makedirs(path_to_zip_file)
@@ -309,14 +299,14 @@ def run(conf):
       conf.mpiProcessesCaseOptimList[0] = maxCores
       raise
 
-     # if conf.mpiProcesses != maxCores:
-    #print("ERROR: conf.mpiProcesses != maxCores, ",
+    # if conf.mpiProcesses != maxCores:
+    # print("ERROR: conf.mpiProcesses != maxCores, ",
     #      conf.mpiProcesses, "!=", maxCores)
-    #raise
+    # raise
   exec_str = ""
   try:
     ddt_pid = subprocess.check_output('pidof -x $(ps cax | grep ddt)', shell=True)
-    #ddt_pid = False
+    # ddt_pid = False
     if ddt_pid:
       exec_str += 'ddt --connect '
   except Exception:
@@ -369,7 +359,6 @@ def run(conf):
   path_exec = "../../build/mock_monarch"
   exec_str += path_exec
 
-  set_import_netcdf(conf, True)
   # CAMP solver option GPU-CPU
   write_camp_config_file(conf)
 
@@ -393,27 +382,43 @@ def run(conf):
       is_import, data_path = import_data(conf, tmp_path)
     else:
       is_import, data_path = False, tmp_path
+  elif conf.plotYKey is "NRMSE":
+    if conf.is_import:
+      if conf.case is conf.caseBase:
+        data_path = "out/state0.csv"
+      else:
+        data_path = "out/state1.csv"
+      if not os.path.exists(data_path):
+        print(data_path, "not exist")
+        raise
+
+    is_import = True
 
   if not is_import:
     os.system(exec_str)
-    if conf.is_export:
+    if conf.use_netcdf:
+      start = time.time()
+      # If (arch=CTE-POWER) and (python is Python/3.7.0-foss-2018b)
+      subprocess.run(["python", "translate_netcdf.py"])
+      # else #run in the same script instead of calling another
+      end = time.time()
+      print("Time read_netcdf = %s" % (end - start))
+    elif conf.is_export:
       export(conf, data_path)
-    set_import_netcdf(conf, False)
 
   if conf.use_netcdf:
-    start = time.time()
-    # If (arch=CTE-POWER) and (python is Python/3.7.0-foss-2018b)
-    subprocess.run(["python", "translate_netcdf.py"])
-    #else #run in the same script instead of calling another
-    end = time.time()
-    print("Time read_netcdf = %s" % (end - start))
-
-  nrows_csv = conf.timeSteps
-  if conf.plotYKey == "MAPE" or conf.plotYKey == "NRMSE":
-    nrows_csv = conf.timeSteps*conf.nCells*conf.mpiProcesses
-  data = math_functions.read_solver_stats(data_path, nrows_csv)
-  if is_import:
-    os.remove(data_path)
+    with open(data_path) as f:
+      data = [line.rstrip('\n') for line in f]
+    if conf.is_export and conf.plotYKey == "NRMSE":
+      if conf.case is conf.caseBase:
+        os.rename("out/state.csv", "out/state0.csv")
+      else:
+        os.rename("out/state.csv", "out/state1.csv")
+  else:
+    nrows_csv = conf.timeSteps
+    if conf.plotYKey == "MAPE" or conf.plotYKey == "NRMSE":
+      nrows_csv = conf.timeSteps * conf.nCells * conf.mpiProcesses
+    data = math_functions.read_solver_stats(data_path, nrows_csv)
 
   return data
 
@@ -462,7 +467,8 @@ def run_cases(conf):
   # Run base case
   conf.mpiProcesses = conf.mpiProcessesCaseBase
   if conf.nCellsProcesses % conf.mpiProcesses != 0:
-    print("WARNING: On base case conf.nCellsProcesses % conf.mpiProcesses != 0, nCellsProcesses, mpiProcesses", conf.nCellsProcesses,
+    print("WARNING: On base case conf.nCellsProcesses % conf.mpiProcesses != 0, nCellsProcesses, mpiProcesses",
+          conf.nCellsProcesses,
           conf.mpiProcesses)
     raise
   conf.nCells = int(conf.nCellsProcesses / conf.mpiProcesses)
@@ -486,7 +492,7 @@ def run_cases(conf):
       if conf.nCellsProcesses % conf.mpiProcesses != 0:
         print("WARNING: On optim case conf.nCellsProcesses % conf.mpiProcesses != 0,nCellsProcesses, mpiProcesses",
               conf.nCellsProcesses, conf.mpiProcesses)
-        #raise
+        # raise
       conf.nCells = int(conf.nCellsProcesses / conf.mpiProcesses)
       for caseOptim in conf.casesOptim:
         if conf.plotXKey == "MPI processes":
@@ -503,9 +509,16 @@ def run_cases(conf):
 
         # calculate measures between caseBase and caseOptim
         if conf.plotYKey == "NRMSE":
-          datay = math_functions.calculate_NRMSE(data, conf.timeSteps, conf.MAPETol)
+          if conf.use_netcdf:
+            datay = math_functions.calculate_NRMSE(
+              data, conf.timeSteps,conf.nCells, conf.MAPETol)
+          else:
+            datay = math_functions.calculate_NRMSE_csv(data, conf.timeSteps, conf.MAPETol)
         elif conf.plotYKey == "MAPE":
-          datay = math_functions.calculate_MAPE(data, conf.timeSteps, conf.MAPETol)
+          if conf.use_netcdf:
+            raise
+          else:
+            datay = math_functions.calculate_MAPE_csv(data, conf.timeSteps, conf.MAPETol)
         elif "Speedup" in conf.plotYKey:
           y_key_words = conf.plotYKey.split()
           y_key = y_key_words[-1]
@@ -655,9 +668,9 @@ def plot_cases(conf):
         # conf.plotTitle += str(nGPUs) + " " + conf.caseGpuCpu + " "
         conf.plotTitle += conf.caseGpuCpu + " "
   if conf.plotXKey == "GPUs":
-      conf.plotTitle += "GPU "
+    conf.plotTitle += "GPU "
   if conf.plotXKey == "MPI processes":
-      conf.plotTitle += "Speedup against 1 MPI CPU-based version"
+    conf.plotTitle += "Speedup against 1 MPI CPU-based version"
   if len(conf.legend) == 1 or not conf.legend or len(conf.diffCellsL) > 1:
     if len(conf.mpiProcessesCaseOptimList) > 1:
       legend_name += str(mpiProcessesCaseOptim) + " MPI "
@@ -665,7 +678,7 @@ def plot_cases(conf):
     if len(conf.diffCellsL) > 1:
       conf.plotTitle += "Implementations "
   else:
-      conf.plotTitle += "Implementations "
+    conf.plotTitle += "Implementations "
   if not conf.plotXKey == "MPI processes":
     conf.plotTitle += baseCaseName
 
@@ -726,7 +739,7 @@ def plot_cases(conf):
     print("plotTitle: ", conf.plotTitle, " legend:", conf.legend)
   else:
     print("plotTitle: ", conf.plotTitle)
-  #plot_functions.plotsns(namex, namey, datax, datay, conf.stdColumns, conf.plotTitle, conf.legend)
+  # plot_functions.plotsns(namex, namey, datax, datay, conf.stdColumns, conf.plotTitle, conf.legend)
   for i in range(len(datay)):
     for j in range(len(datay)):
       datay[i][j] = format(datay[i][j], '.2e')

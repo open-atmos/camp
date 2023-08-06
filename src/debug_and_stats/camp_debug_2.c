@@ -29,12 +29,75 @@ void nc(int status) { //handle netcdf error
   }
 }
 
+void init_export_state_netcdf(SolverData *sd){
+  ModelData *md = &(sd->model_data);
+  if(md->n_cells==1){
+    int size,rank;
+    MPI_Comm_size(MPI_COMM_WORLD, &size);
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    int n_state_nc=sd->n_cells_tstep*md->n_per_cell_state_var;
+    sd->state_nc = (double *)malloc(sizeof(double) * n_state_nc);
+  }else{
+    //printf("init_export_state_netcdf\n");
+    sd->icell=sd->n_cells_tstep;
+  }
+}
+
+void export_state_netcdf(SolverData *sd){
+  ModelData *md = &(sd->model_data);
+  int rank;
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  int n_state_nc=sd->n_cells_tstep*md->n_per_cell_state_var;
+  if(md->n_cells==1 && sd->icell<sd->n_cells_tstep){ //gather
+    //if(rank==0)printf("export_state_netcdf gather\n");
+    for (int i = 0; i < md->n_per_cell_state_var; i++) {
+      sd->state_nc[i+sd->icell*md->n_per_cell_state_var]=md->total_state[i];
+    }
+    sd->icell++;
+  }
+  //printf("%d %d %d\n",n_state_nc,md->n_cells,sd->n_cells_tstep);
+  if(sd->icell>=sd->n_cells_tstep){ //export all cells
+    if(rank==0)printf("export_state_netcdf start\n");
+    int ncid;
+    int nvars=1;
+    int dimids[nvars], varids[nvars];
+    char file_path[]="out/state.nc";
+    nc(nc_create_par(file_path, NC_NETCDF4 | NC_MPIIO,
+       MPI_COMM_WORLD,MPI_INFO_NULL, &ncid));
+    printf("Created netcdf file at %s rank %d\n",file_path, rank);
+    int i=0;
+    int size;
+    MPI_Comm_size(MPI_COMM_WORLD, &size);
+    nc(nc_def_dim(ncid,"nstate",n_state_nc*size,&dimids[i]));
+    nc(nc_def_var(ncid, "state", NC_DOUBLE, 1, &dimids[i], &varids[i]));
+    nc(nc_enddef(ncid));
+    size_t start = n_state_nc * rank;
+    size_t count = n_state_nc;
+    if(md->n_cells==1)
+      nc(nc_put_vara_double(ncid, varids[i],&start, &count, sd->state_nc));
+    else
+      nc(nc_put_vara_double(ncid, varids[i],&start, &count, md->total_state));
+    nc(nc_close(ncid));
+    if(rank==0)printf("export_state_netcdf end\n");
+    /*
+      if(sd->icell>=sd->n_cells_tstep){
+        MPI_Barrier(MPI_COMM_WORLD);
+        if(rank==0) printf("export_netcdf exit sd->icell %d\n", sd->icell);
+        MPI_Barrier(MPI_COMM_WORLD);
+        int err=0;
+        MPI_Abort(1,err);
+        exit(0);
+      }
+    */
+  }
+}
+
+
 void export_netcdf(SolverData *sd){
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   if(rank==0)printf("export_netcdf start\n");
   ModelData *md = &(sd->model_data);
-  int z=0;
   int ncid;
   int nvars=3;
   if(md->n_aero_rep_env_data!=0) nvars++;
@@ -552,39 +615,6 @@ void export_state_mpi(SolverData *sd){
 void export_double_mpi(double *x, int len, const char *s){
 #ifndef USE_PRINT_ARRAYS
   //printf("WARNING: In MONARCH fails at 74mb of exported file! Use netcdf for greater files\n");
-  int size;
-  MPI_Comm_size(MPI_COMM_WORLD, &size);
-  int rank;
-  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  FILE *fptr;
-  char file_path[2048];
-  getcwd(file_path, sizeof(file_path));
-  strcat(file_path, "/");
-  char dir_name[]="out/export_double_mpi/";
-  strcat(file_path, dir_name);
-  char srank[20];
-  sprintf(srank,"%d",rank);
-  strcat(file_path, srank);
-  char file_base_name[]="export_data.txt";
-  strcat(file_path, file_base_name);
-  //printf("fopen append at %s\n", file_path);
-  fptr = fopen(file_path,"a");
-  if(fptr == NULL)
-  {
-    //printf("fopen write at %s\n", file_path);
-    printf("Error fopen at export_double_mpi path %s",file_path);
-    exit(1);
-  }
-  for (int i=0; i<len; i++){
-    fprintf(fptr,"%s[%d]=%.17le\n",s,i,x[i]);
-  }
-  fclose(fptr);
-#endif
-}
-
-void old_export_double_mpi(double *x, int len, const char *s){
-#ifndef USE_PRINT_ARRAYS
-  printf("WARNING: Only 74mb maximum of exported file! Use netcdf for greater files\n");
   int size;
   MPI_Comm_size(MPI_COMM_WORLD, &size);
   int rank;

@@ -1,7 +1,9 @@
 import numpy as np
 from math import sqrt
 from pandas import read_csv as pd_read_csv
-#import netCDF4 as nc
+
+
+# import netCDF4 as nc
 
 
 def get_values_same_timestep(timestep_to_plot, mpiProcessesList, \
@@ -188,7 +190,90 @@ def check_tolerances(data, timesteps, rel_tol, abs_tol):
           #  print(out1[k],out2[k])
 
 
-def calculate_NRMSE(data, n_time_steps, max_tol):
+def calculate_NRMSE(data, n_time_steps, n_cells, max_tol):
+  cases_one_multi_cells = list(data.keys())
+  species1 = data[cases_one_multi_cells[0]]
+  species2 = data[cases_one_multi_cells[1]]
+  n_state = int(len(species1))
+  n_species = (n_state / n_time_steps) / n_cells
+  NRMSEs_species = [0.] * n_species
+  NRMSEs = [0.] * n_time_steps
+  max_y = [0.] * n_species
+  min_y = [0.] * n_species
+  max_NRMSEs_species = 0.
+  max_err_rel = 0.0
+  max_err_rel_name = ""
+  max_err_rel_timestep = 0
+  max_err_abs = 0.0
+  max_err_abs_specie = 0
+  max_err_abs_cell = 0
+  max_err_abs_timestep = 0
+  concs_above_tol = 0
+  concs_below_tol = 0
+  concs_are_zero = 0
+  concs_are_equal = 0
+  for i in range(n_time_steps):
+    for j in range(n_cells):
+      j2 = j + i * n_cells
+      for k in range(n_species):
+        k2 = k+j2*n_species
+        y1 = species1[k2]
+        y2 = species2[k2]
+        NRMSEs_species[k] += (y1 - y2) ** 2
+        if y1 > max_y[k]:
+          max_y[k] = y1
+        if y2 > max_y[k]:
+          max_y[k] = y2
+        if y1 < min_y[k]:
+          min_y[k] = y1
+        if y2 < min_y[k]:
+          min_y[k] = y2
+        err_abs = abs(y1 - y2)
+        if err_abs > max_tol:
+          concs_above_tol = concs_above_tol + 1
+        elif y1 == 0:
+          concs_are_zero = concs_are_zero + 1
+        else:
+          concs_below_tol = concs_below_tol + 1
+          if y1 == y2:
+            concs_are_equal = concs_are_equal + 1
+        if err_abs > max_err_abs:
+          max_err_abs = err_abs
+          max_err_abs_specie = k
+          max_err_abs_cell = j
+          max_err_abs_timestep = i
+        if y1 != 0:
+          err_rel = abs((y1 - y2) / y1)
+        else:
+          err_rel = 0.
+        if err_rel > max_err_rel:
+          max_err_rel = err_rel
+          max_err_abs_specie = k
+          max_err_abs_cell = j
+          max_err_rel_timestep = i
+    for k in range(n_species):
+      if max_y[k] - min_y[k] != 0.:
+        NRMSEs_species[k] = (sqrt(NRMSEs_species[k] / n_cells)) / (max_y[k] - min_y[k])
+      if NRMSEs_species[k] > max_NRMSEs_species:
+        max_NRMSEs_species = NRMSEs_species[k]
+      NRMSEs_species[k] = 0.
+      max_y[k] = 0.
+      min_y[k] = 0.
+    NRMSEs[i] = max_NRMSEs_species
+    max_NRMSEs_species = 0.
+  max_err_rel = format(max_err_rel * 100, '.2e')
+  max_err_abs = format(max_err_abs, '.2e')
+  print("relative max_error:", max_err_rel, "% at:", max_err_rel_name,
+        "timestep:", max_err_rel_timestep,
+        "absolute max_error:", max_err_abs, "at specie:", max_err_abs_specie,
+        "cell:", max_err_abs_cell, "rank: TODO",
+        "timestep:", max_err_abs_timestep,
+        "concs_above_tol", concs_above_tol, "concs_below_tol", concs_below_tol,
+        "concs_are_equal", concs_are_equal, "concs_are_zero", concs_are_zero)
+  return NRMSEs
+
+
+def calculate_NRMSE_csv(data, n_time_steps, max_tol):
   cases_one_multi_cells = list(data.keys())
   species1 = data[cases_one_multi_cells[0]]
   species2 = data[cases_one_multi_cells[1]]
@@ -266,7 +351,7 @@ def calculate_NRMSE(data, n_time_steps, max_tol):
   return NRMSEs
 
 
-def calculate_MAPE(data, timesteps, max_tol):
+def calculate_MAPE_csv(data, timesteps, max_tol):
   cases_one_multi_cells = list(data.keys())
   species1 = data[cases_one_multi_cells[0]]
   species2 = data[cases_one_multi_cells[1]]
@@ -385,6 +470,7 @@ def read_solver_stats(file, nrows):
   df = pd_read_csv(file, nrows=nrows)
   data = df.to_dict('list')
   return data
+
 
 """
 def read_netcdf(n_cells, n_ranks, n_time_steps):

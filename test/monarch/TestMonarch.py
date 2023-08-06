@@ -23,12 +23,12 @@ def all_timesteps():
   # conf.profileCuda = "nsight"
   # conf.profileCuda = "nsightSummary"
 
-  conf.is_export = get_is_sbatch()
-  # conf.is_export = True
-  # conf.is_export = False
+  #conf.is_export = get_is_sbatch()
+  #conf.is_export = True
+  #conf.is_export = False
 
-  # conf.is_import = True
-  conf.is_import = False
+  conf.is_import = True
+  #conf.is_import = False
 
   # conf.commit = "MATCH_IMPORTED_CONF"
   conf.commit = ""
@@ -134,8 +134,8 @@ def all_timesteps():
       conf.results_file = 'out/state.csv'
     else:
       conf.results_file = '_results_all_cells.csv'
-    conf.is_export = False
-    conf.is_import = False
+      conf.is_export = False
+      conf.is_import = False
   with open("settings/monarch_box_binned/cb05_abs_tol.json", 'r', encoding='utf-8') as jsonFile:
     jsonData = json.load(jsonFile)
   conf.MAPETol = jsonData["camp-data"][0]["value"]  # Default: 1.0E-4

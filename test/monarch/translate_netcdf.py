@@ -9,8 +9,20 @@ class Conf:
     self.n_cells = 1
     self.n_ranks = 1
 
+def read_netcdf():
+  file_name = "out/state.nc"
+  ncfile = nc.Dataset(file_name)
+  state = ncfile.variables["state"][:].tolist()
+  #print("ncfile.variables",ncfile.variables)
+  print("state",state)
+  with open("out/state.csv", 'w') as f:
+    for z in range(len(state)):
+      f.write(str(state[z])+"\n")
+      #print(state[z])
+      #print(str(state[z]))
 
-def read_netcdf(n_cells, n_ranks, n_time_steps):
+
+def old_read_netcdf(n_cells, n_ranks, n_time_steps):
   file_name = "out/cell_0timestep_0mpirank_0.nc"
   ncfile = nc.Dataset(file_name)
   n_species = len(ncfile.variables["state"][:])
@@ -51,4 +63,4 @@ def get_config(conf):
 if __name__ == "__main__":
   conf = Conf()
   #get_config(conf)
-  read_netcdf(conf.n_cells, conf.n_ranks, conf.n_time_steps)
+  read_netcdf()

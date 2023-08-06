@@ -541,7 +541,6 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
   flag = CVodeSetDlsGuessHelper(sd->cvode_mem, guess_helper);
   check_flag_fail(&flag, "CVodeSetDlsGuessHelper", 1);
 
-  sd->icell=0;
 #ifdef CAMP_USE_GPU
   if(sd->use_cpu==0){
       constructor_cvode_gpu(sd->cvode_mem, sd);
@@ -550,6 +549,8 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
 #ifdef ENABLE_NETCDF
   sd->n_cells_tstep = n_cells_tstep;
   sd->tstep=0;
+  sd->icell=0;
+  init_export_state_netcdf(sd);
 #endif
 #ifdef FAILURE_DETAIL
   // Set a custom error handling function
@@ -621,7 +622,6 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
   int n_state_var = md->n_per_cell_state_var;
   int flag;
   int rank = 0;
-  int i_cell = sd->icell;
 
   // Update model data pointers
   sd->model_data.total_state = state;
@@ -786,8 +786,8 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
   }
   print_double(state,n_state_var,"state768");
 #ifdef ENABLE_NETCDF
-  for (int i_cell = 0; i_cell < n_cells; i_cell++) {
-    cell_netcdf(sd);
+  for (int i = 0; i < n_cells; i++) {
+    export_state_netcdf(sd);
   }
 #endif
 #ifdef FAILURE_DETAIL
