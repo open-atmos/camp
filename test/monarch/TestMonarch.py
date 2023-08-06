@@ -28,7 +28,7 @@ def all_timesteps():
   #conf.is_export = False
 
   #conf.is_import = True
-  #conf.is_import = False
+  conf.is_import = False
 
   # conf.commit = "MATCH_IMPORTED_CONF"
   conf.commit = ""
@@ -119,7 +119,7 @@ def all_timesteps():
   # conf.MAPETol = 1.0E-6
 
   conf.use_netcdf = False #Old
-  #conf.use_netcdf = True #New but slow
+  #conf.use_netcdf = True #New but slow, use for MONARCH output
 
   # conf.plotXKey = "MPI processes"
   # conf.plotXKey = "GPUs"

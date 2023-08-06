@@ -14,7 +14,7 @@ def read_netcdf():
   ncfile = nc.Dataset(file_name)
   state = ncfile.variables["state"][:].tolist()
   #print("ncfile.variables",ncfile.variables)
-  print("state",state)
+  #print("read_netcdf state",state)
   with open("out/state.csv", 'w') as f:
     for z in range(len(state)):
       f.write(str(state[z])+"\n")

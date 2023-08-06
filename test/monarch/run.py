@@ -373,15 +373,14 @@ def run(conf):
   with open(conf_name, 'w', encoding='utf-8') as jsonFile:
     json.dump(conf.__dict__, jsonFile, indent=4, sort_keys=False)
 
-  is_import = False
   data_path = conf.results_file
   if not conf.use_netcdf:
     data_name = conf.chemFile + '_' + conf.caseMulticellsOnecell + conf.results_file
     tmp_path = 'out/' + data_name
     if conf.is_import and (conf.plotYKey != "MAPE" or conf.plotYKey != "NRMSE"):
-      is_import, data_path = import_data(conf, tmp_path)
+      conf.is_import, data_path = import_data(conf, tmp_path)
     else:
-      is_import, data_path = False, tmp_path
+      conf.is_import, data_path = False, tmp_path
   elif conf.plotYKey is "NRMSE":
     if conf.is_import:
       if conf.case is conf.caseBase:
@@ -392,9 +391,7 @@ def run(conf):
         print(data_path, "not exist")
         raise
 
-    is_import = True
-
-  if not is_import:
+  if not conf.is_import:
     os.system(exec_str)
     if conf.use_netcdf:
       start = time.time()

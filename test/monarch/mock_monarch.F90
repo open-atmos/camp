@@ -494,6 +494,7 @@ program mock_monarch_t
       call export_solver_stats(curr_time,camp_interface,solver_stats,ncounters,ntimers)
       call camp_interface%camp_core%reset_solver_stats(solver_stats=solver_stats)
 #endif
+    !write(*, "(ES13.6)", advance="no") species_conc(:,:,:,:)
       if(export_results_all_cells.eq.1) then
         call export_file_results_all_cells(camp_interface)
       end if
@@ -712,7 +713,7 @@ contains
     !if (camp_mpi_rank().eq.0) then
     !   print*,"export_file_results_all_cells species_conc"
     !end if
-    write(*, "(ES13.6)", advance="no") species_conc(:,:,:,:)
+    !write(*, "(ES13.6)", advance="no") species_conc(:,:,:,:)
     !write(*, *) camp_mpi_rank()
 
     !write(*, "(ES13.6)") species_conc(:,:,:,:)

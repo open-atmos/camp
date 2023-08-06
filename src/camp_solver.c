@@ -701,9 +701,9 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
   if (is_anything_going_on_here(sd, t_initial, t_final) == false)
     return CAMP_SOLVER_SUCCESS;
 
-  double *yp = N_VGetArrayPointer(sd->y);
-  if(sd->use_cpu==0) yp+= 73;
-  print_double(yp,73,"y686");
+  //double *yp = N_VGetArrayPointer(sd->y);
+  //if(sd->use_cpu==0) yp+= 73;
+  //print_double(yp,73,"y686");
 
   // Reinitialize the solver
   flag = CVodeReInit(sd->cvode_mem, t_initial, sd->y);
@@ -784,11 +784,12 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
       }
     }
   }
-  print_double(state,n_state_var,"state768");
-#ifdef ENABLE_NETCDF
   for (int i = 0; i < n_cells; i++) {
-    export_state_netcdf(sd);
+    print_double(state, n_state_var, "state768");
+    printf("end cell\nline\n");
   }
+#ifdef ENABLE_NETCDF
+  export_state_netcdf(sd);
 #endif
 #ifdef FAILURE_DETAIL
   sd->counter_fail_solve_print=0;
