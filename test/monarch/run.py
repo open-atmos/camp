@@ -408,7 +408,7 @@ def run(conf):
 
   if conf.use_netcdf:
     with open(data_path) as f:
-      data = [line.rstrip('\n') for line in f]
+      data = [float(line.rstrip('\n')) for line in f]
     if conf.is_export and conf.plotYKey == "NRMSE":
       if conf.case is conf.caseBase:
         os.rename("out/state.csv", "out/state0.csv")

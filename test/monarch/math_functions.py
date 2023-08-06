@@ -195,7 +195,7 @@ def calculate_NRMSE(data, n_time_steps, n_cells, max_tol):
   species1 = data[cases_one_multi_cells[0]]
   species2 = data[cases_one_multi_cells[1]]
   n_state = int(len(species1))
-  n_species = (n_state / n_time_steps) / n_cells
+  n_species = int((n_state / n_time_steps) / n_cells)
   NRMSEs_species = [0.] * n_species
   NRMSEs = [0.] * n_time_steps
   max_y = [0.] * n_species
