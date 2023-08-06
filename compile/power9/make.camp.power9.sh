@@ -45,8 +45,8 @@ compare_runs(){
 }
 
 if [ "$FILE" == TestMonarch.py ]; then
-  #compare_runs
-  python $FILE
+  compare_runs
+  #python $FILE
 elif [ "$FILE" == test_monarch_1.py ]; then
   echo "Running old commits with file test_monarch_1.py ."
   python  $FILE

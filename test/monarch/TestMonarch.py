@@ -27,7 +27,7 @@ def all_timesteps():
   #conf.is_export = True
   #conf.is_export = False
 
-  conf.is_import = True
+  #conf.is_import = True
   #conf.is_import = False
 
   # conf.commit = "MATCH_IMPORTED_CONF"
@@ -93,7 +93,7 @@ def all_timesteps():
   # conf.casesOptim.append("GPU Block-cellsN")
   # conf.casesOptim.append("GPU Block-cells1")
   # conf.casesOptim.append("CPU EBI")
-  conf.casesOptim.append("GPU BDF")
+  #conf.casesOptim.append("GPU BDF")
   # conf.casesOptim.append("GPU CPU")
   # conf.casesOptim.append("GPU maxrregcount-64") #wrong 10,000 cells
   # conf.casesOptim.append("GPU maxrregcount-68")
@@ -118,8 +118,8 @@ def all_timesteps():
   conf.plotYKey = "NRMSE"
   # conf.MAPETol = 1.0E-6
 
-  #conf.use_netcdf = False #Old
-  conf.use_netcdf = True #Developing
+  conf.use_netcdf = False #Old
+  #conf.use_netcdf = True #New but slow
 
   # conf.plotXKey = "MPI processes"
   # conf.plotXKey = "GPUs"
