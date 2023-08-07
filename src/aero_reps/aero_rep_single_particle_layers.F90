@@ -76,6 +76,8 @@ module camp_aero_rep_single_particle
     !> Unique names for each instance of every chemical species in the
     !! aerosol representaiton
     type(string_t), allocatable, private :: unique_names_(:)
+    !> Layer names in order (only used during initialization)
+    type(string_t), allocatable :: ordered_layer_name(:)
     !> First state id for the representation (only used during initialization)
     integer(kind=i_kind) :: state_id_start = -99999
   contains
@@ -229,14 +231,20 @@ contains
     class(aero_rep_single_particle_t), intent(inout) :: this
     !> The set of aerosol phases
     type(aero_phase_data_ptr), pointer, intent(in) :: aero_phase_set(:)
+    !> Layer names (only used during initialization)
+    type(string_t), allocatable :: layer_name(:)
+    !> Cover names (only used during initialization)
+    type(string_t), allocatable :: cover_name(:)
     !> The set of layers
-    real :: aero_layer_phase_set(:,:)
+     :: aero_layer_phase_set(:,:)
     !> Beginning state id for this aerosol representationin the model species
     !! state array
     integer(kind=i_kind), intent(in) :: spec_state_id
 
-    character(len=:), allocatable :: key_name
+    character(len=:), allocatable :: key_name, layer_covers
+    type(property_t), pointer :: layers, phases
     integer(kind=i_kind) :: i_particle, i_phase, i_layer, i_aero, curr_id
+    integer(kind=i_kind) :: i_cover, j_phase
     integer(kind=i_kind) :: num_int_param, num_float_param, num_particles
 
     ! Start off the counters
@@ -249,18 +257,123 @@ contains
                     this%property_set%get_int(key_name, num_particles), &
                     "Missing maximum number of computational particles")
 
+    ! Get the set of layers
+    key_name = "layers"
+    ! QUESTION: do i need to change unique assert_msg number
+    call assert_msg(877855909, &
+                    this%property_set%get_property_t(key_name, layers), &
+                    "Missing layers for single-particle aerosol "// &
+                    "representation '"//this%rep_name//"'")
+                    call assert_msg(894962494, layers%size().gt.0, "No layers "// &
+                    "specified for single-particle layer aerosol representation '"// &
+                    this%rep_name//"'")
+
+    ! Allocate space for the layer and cover names
+    allocate(this%layer_name(layers%size()))
+    allocate(this%cover_name(layers%size()))
+
+    ! Loop through the layers, adding names and counting the spaces needed
+    ! on the condensed data arrays, and counting the total phases instances
+    num_phase = 0
+    call layers%iter_reset()
+    do i_layer = 1, layers%size()
+
+      ! Get the layer name
+      call assert(867378489, layers%get_key(key_name))
+      call assert_msg(234513113, len(key_name).gt.0, "Missing layer "// &
+              "name in single-particle layer aerosol representation '"// &
+              this%rep_name//"'")
+      this%layer_name(i_layer)%string = key_name
+
+      ! Get the layer properties
+      call assert_msg(517138327, layers%get_property_t(val=layers), &
+              "Invalid structure for layer '"// &
+              this%layer_name(i_layer)%string// &
+              "' in single-particle layer representation '"// &
+              this%rep_name//"'")
+
+      ! Get the cover name
+      key_name = "covers"
+      call assert_msg(742404898, section%get_string(key_name, layer_covers), &
+                "Missing cover name in layer'"// &
+                this%layer_name(i_layer)%string// &
+                "' in single-particle layer aerosol representation '"// &
+                this%rep_name//"'")
+      this%cover_name(i_layer)%string = layer_covers
+           
+      ! Get the set of phases
+      key_name = "phases"
+      call assert_msg(815518058, section%get_property_t(key_name, phases), &
+              "Missing phases for layer '"// &
+              this%section_name(i_section)%string// &
+              "' in single-particle layer aerosol representation '"// &
+              this%rep_name//"'")
+
+      ! Add the phases to the counter
+      call assert_msg(772593427, phases%size().gt.0, &
+              "No phases specified for layer '"// &
+              this%layer_name(i_layer)%string// &
+              "' in single-particle layer aerosol representation '"// &
+              this%rep_name//"'")
+      num_phase = num_phase + phases%size() 
+
+      ! Loop through the phases and make sure they exist
+      call phases%iter_reset()
+      do i_phase = 1, phases%size()
+
+        ! Get the phase name
+        call assert_msg(393427582, phases%get_string(val=phase_name), &
+                "Non-string phase name for layer '"// &
+                this%layer_name(i_layer)%string// &
+                "' in single-particle layer aerosol representation '"// &
+                this%rep_name//"'")
+
+        call phases%iter_next()
+      end do
+
+      call sections%iter_next()
+    end do
+
+    ! Allocate space for the layer names in order (bulk - surface)
+    allocate(this%ordered_layer_name(layers%size()))
+
+    ! Order layer array from inner to outer most layer
+    do i_cover = 1, layers%size()
+      do i_layer = 1, layers%size()
+        if (cover_name(i_layer).eq."none") then
+          ordered_layer_name(1) = layer_name(i_layer)
+        else
+          continue
+        end if
+      end do
+    end do
+
+    do i_cover = 2, layers%size()
+      do i_layer = 1, layers%size()
+        if (ordered_layer_name(i_cover-1).eq.cover_name(i_layer)) then
+          ordered_layer_name(i_cover) = layer_name(i_layer)
+        else 
+          continue
+        end if
+      end do
+    end do
+        
+
+
     ! Initialize NUM_PHASE_ array
     do i_layer = 1, TOTAL_NUM_LAYERS_
       NUM_PHASE_(i_layer) = size(aero_layer_phase_set(i_layer, :))
     end do
-    allocate(aero_phase(size(NUM_PHASE_)))
 
+    ! Construct aero_phase array for layers
+    allocate(aero_phase(size(NUM_PHASE_)))
     do i_aero = 1, size(aero_phase)
       do i_layer = 1, TOTAL_NUM_LAYERS_
         do i_phase = 1, TOTAL_NUM_PHASES_
-          if (aero_layer_phase_set(i_layer,i_phase) == &
+          ! Need to reference pointer variable
+          if (aero_layer_phase_set(i_layer,i_phase).eq.&
               aero_phase_set(i_phase)) then 
-                aero_phase(i_aero) = aero_phase_set(i_phase)
+                aero_phase(i_aero) => aero_phase_set(i_phase)
               else
                 continue 
               end if
@@ -273,7 +386,7 @@ contains
     do i_particle = 1, num_particles
       do i_phase = 1, size(aero_phase_set)
         this%aero_phase((i_particle-1)*size(aero_phase_set)+i_phase) = &
-            aero_phase_set(i_phase)
+            aero_layer_phase_set(i_phase)
       end do
     end do
     
