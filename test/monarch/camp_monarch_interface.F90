@@ -714,6 +714,11 @@ contains
         end do
       end do
     else
+      !Reset species present in CAMP but not in MONARCH,
+      !like DUMMY from CB05-gas mechanism
+      do z=1, size(this%camp_state%state_var)
+        this%camp_state%state_var(z) = 0.
+      end do
       do i=I_W, I_E
         do j=I_S, I_N
           do k=1, NUM_VERT_CELLS
@@ -724,12 +729,6 @@ contains
             ! Update the environmental state
             call this%camp_state%env_states(z+1)%set_temperature_K(real(temperature(i,j,k),kind=dp))
             call this%camp_state%env_states(z+1)%set_pressure_Pa(real(pressure(i,j,k),kind=dp))
-
-            !Reset species present in CAMP but not in MONARCH,
-            !like DUMMY from CB05-gas mechanism
-            do z=1, size(this%camp_state%state_var)
-              this%camp_state%state_var(z) = 0.
-            end do
 
             this%camp_state%state_var(this%map_camp_id(:) + &
             (z*state_size_per_cell)) = MONARCH_conc(i,j,k,this%map_monarch_id(:))

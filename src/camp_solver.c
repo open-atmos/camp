@@ -666,7 +666,7 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
     sub_model_update_env_state(md);
     rxn_update_env_state(md);
     if(i_cell==0){
-      print_double(md->grid_cell_state,n_state_var,"state688");
+      //print_double(md->grid_cell_state,n_state_var,"state688");
       //print_double(md->grid_cell_env,CAMP_NUM_ENV_PARAM_,"env689");
       //double *yp = N_VGetArrayPointer(sd->y);
       //print_double(yp,73,"y660");
@@ -788,7 +788,7 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
     //double *yp2 = N_VGetArrayPointer(sd->y);
     //print_double(yp2,73,"y789");
     print_double(state, n_state_var, "state768");
-    printf("end cell\nline\n");
+    //printf("end cell\nline\n");
   }
 #ifdef ENABLE_NETCDF
   //export_state_netcdf(sd);

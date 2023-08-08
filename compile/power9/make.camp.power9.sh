@@ -31,7 +31,7 @@ compare_runs(){
     #python $FILE > $log_path
     python $FILE 2>&1 | tee $log_path
     #python $FILE
-    cells=1
+    cells=2
     sed -i 's/conf.caseBase = "CPU One-cell"/conf.caseBase = "GPU BDF"/g' $FILE
     sed -i 's/conf.cells = \[1\]/conf.cells = \['"$cells"'\]/g' $FILE
     log_path="../../compile/power9/log_gpu.txt"
@@ -56,8 +56,8 @@ compare_cell(){
 }
 
 if [ "$FILE" == TestMonarch.py ]; then
-  #compare_runs
-  compare_cell
+  compare_runs
+  #compare_cell
   #python $FILE
   #log_path="../../compile/power9/log_cpu.txt"
   #python $FILE 2>&1 | tee "../../compile/power9/log_cpu.txt"
