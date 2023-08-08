@@ -508,6 +508,7 @@ contains
     character(len=*),intent(in) :: DIFF_CELLS
 
     type(chem_spec_data_t), pointer :: chem_spec_data
+    type(string_t), allocatable :: camp_spec_names(:)
 
     integer, parameter :: emi_len=1
     real, allocatable :: rate_emi(:,:)
@@ -622,11 +623,25 @@ contains
 
             !print*, "pre-monarch_conc this%camp_core%solve start",this%camp_state%state_var(1), camp_mpi_rank()
 
-            !this%camp_state%state_var(this%map_camp_id(:)) = &
-            !        this%camp_state%state_var(this%map_camp_id(:)) + &
-            !                MONARCH_conc(i,j,k,this%map_monarch_id(:))
+            !Reset species present in CAMP but not in MONARCH,
+            !like DUMMY from CB05-gas mechanism
+            do z=1, size(this%camp_state%state_var)
+              this%camp_state%state_var(z) = 0.
+            end do
+
+            !print*,"this%camp_state%state_var",this%camp_state%state_var
             this%camp_state%state_var(this%map_camp_id(:)) = &
                             MONARCH_conc(i,j,k,this%map_monarch_id(:))
+            !print*,"this%camp_state%state_var",this%camp_state%state_var
+
+            !camp_spec_names=this%camp_core%unique_names()
+            !print*,"this%map_monarch_id(:)",this%map_monarch_id(:)
+            !print*,"this%map_camp_id(:)",this%map_camp_id(:)
+            !do z=1, size(this%camp_state%state_var)
+              !print*,z,this%monarch_species_names(z)%string
+            !  print*,z,camp_spec_names(z)%string,this%camp_state%state_var(z)
+              !print*,z,this%monarch_species_names(this%map_camp_id(this%map_monarch_id(z)))%string,this%camp_state%state_var(z)
+            !end do
 
             !if (camp_mpi_rank().eq.0) then
             !   print*,"integrate camp_state"
@@ -649,17 +664,12 @@ contains
 
             if(this%ADD_EMISIONS.eq."monarch_binned") then
               !Add emissions
-
               !print*,"integrate camp_state ADD_EMISIONS"
-
               do r=1,size(this%specs_emi_id)
-
                 this%camp_state%state_var(this%specs_emi_id(r))=&
                         this%camp_state%state_var(this%specs_emi_id(r))&
                                 +this%specs_emi(r)*rate_emi(i_hour,z+1)*conv(i,j,k)
-
               end do
-
             end if
 
             !do r=2,size(this%map_monarch_id)
@@ -714,6 +724,12 @@ contains
             ! Update the environmental state
             call this%camp_state%env_states(z+1)%set_temperature_K(real(temperature(i,j,k),kind=dp))
             call this%camp_state%env_states(z+1)%set_pressure_Pa(real(pressure(i,j,k),kind=dp))
+
+            !Reset species present in CAMP but not in MONARCH,
+            !like DUMMY from CB05-gas mechanism
+            do z=1, size(this%camp_state%state_var)
+              this%camp_state%state_var(z) = 0.
+            end do
 
             this%camp_state%state_var(this%map_camp_id(:) + &
             (z*state_size_per_cell)) = MONARCH_conc(i,j,k,this%map_monarch_id(:))
@@ -1258,10 +1274,6 @@ end if
     this%camp_state%state_var(this%init_conc_camp_id(:)) = this%init_conc(:)
 
     !print*,"get_init_conc this%camp_state%state_var",this%camp_state%state_var(1), camp_mpi_rank()
-
-    !do r=2,size(this%map_monarch_id)
-    !  print*, this%camp_state%state_var(this%map_camp_id(r)), camp_mpi_rank()
-    !end do
 
     call camp_mpi_barrier(MPI_COMM_WORLD)
 

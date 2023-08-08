@@ -645,7 +645,7 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
             state[i_spec + i_cell * n_state_var] > TINY
                 ? (realtype)state[i_spec + i_cell * n_state_var]
                 : TINY;
-        // printf("a%d %-le\n",i_spec,state[i_spec]);
+        printf("state648[%d]=%.17le\n",i_spec,state[i_spec]);
       } else if (md->var_type[i_spec] == CHEM_SPEC_CONSTANT) {
         state[i_spec + i_cell * n_state_var] =
             state[i_spec + i_cell * n_state_var] > TINY
@@ -666,7 +666,7 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
     sub_model_update_env_state(md);
     rxn_update_env_state(md);
     if(i_cell==0){
-      //print_double(md->grid_cell_state,n_state_var,"state688");
+      print_double(md->grid_cell_state,n_state_var,"state688");
       //print_double(md->grid_cell_env,CAMP_NUM_ENV_PARAM_,"env689");
       //double *yp = N_VGetArrayPointer(sd->y);
       //print_double(yp,73,"y660");
@@ -775,21 +775,23 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
   for (int i_cell = 0; i_cell < n_cells; i_cell++) {
     for (int i_spec = 0; i_spec < n_state_var; i_spec++) {
       if (md->var_type[i_spec] == CHEM_SPEC_VARIABLE) {
-        //printf("%lf ",NV_Ith_S(sd->y, i_dep_var));
         state[i_spec + i_cell * n_state_var] =
             (double)(NV_Ith_S(sd->y, i_dep_var) > 0.0
                          ? NV_Ith_S(sd->y, i_dep_var)
                          : 0.0);
+        printf("state778[%d]=%.17le\n",i_spec,state[i_spec]);
         i_dep_var++;
       }
     }
   }
   for (int i = 0; i < n_cells; i++) {
+    //double *yp2 = N_VGetArrayPointer(sd->y);
+    //print_double(yp2,73,"y789");
     print_double(state, n_state_var, "state768");
     printf("end cell\nline\n");
   }
 #ifdef ENABLE_NETCDF
-  export_state_netcdf(sd);
+  //export_state_netcdf(sd);
 #endif
 #ifdef FAILURE_DETAIL
   sd->counter_fail_solve_print=0;

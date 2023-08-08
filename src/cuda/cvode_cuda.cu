@@ -1097,11 +1097,11 @@ int cudaDevicecvNewtonIteration(ModelDataGPU *md, ModelDataVariable *sc){
 #endif
     md->dtempv[i] = md->dx[i];
     __syncthreads();
-    print_double(md->dtempv+73,73,"dtempvcv_lsolve2");
+    //print_double(md->dtempv+73,73,"dtempvcv_lsolve2");
     //if(i==0)printf("md->dtempv[0] %.16le\n",md->dtempv[0]);
     md->dftemp[i]=md->dcv_y[i]+md->dtempv[i];
     __syncthreads();
-    print_double(md->dcv_y+73,73,"dcv_y2994");
+    //print_double(md->dcv_y+73,73,"dcv_y2994");
     print_double(md->dftemp+73,73,"cv_ftemplsolve");
     int guessflag=CudaDeviceguess_helper(0., md->dftemp,
        md->dcv_y, md->dtempv, md->dtempv1,md->dtempv2, &aux_flag, md, sc

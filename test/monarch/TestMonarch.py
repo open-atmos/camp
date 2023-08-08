@@ -59,7 +59,7 @@ def all_timesteps():
   # conf.allocatedTasksPerNode = 320
   # conf.allocatedTasksPerNode = get_ntasksPerNode_sbatch() #todo
 
-  conf.cells = [2]
+  conf.cells = [20]
   # conf.cells = [100, 500, 1000, 5000, 10000]
   # conf.cells = [50000,100000,500000,1000000]
 
@@ -118,8 +118,8 @@ def all_timesteps():
   conf.plotYKey = "NRMSE"
   # conf.MAPETol = 1.0E-6
 
-  conf.use_netcdf = False #Old
-  #conf.use_netcdf = True #New but slow, use for MONARCH output
+  #conf.use_netcdf = False #Old
+  conf.use_netcdf = True #New but slow, use for MONARCH output
 
   # conf.plotXKey = "MPI processes"
   # conf.plotXKey = "GPUs"
