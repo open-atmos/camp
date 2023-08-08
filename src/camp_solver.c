@@ -783,12 +783,12 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
       }
     }
   }
-  for (int i = 0; i < n_cells; i++) {
+  //for (int i = 0; i < n_cells; i++) {
     //double *yp2 = N_VGetArrayPointer(sd->y);
     //print_double(yp2,73,"y789");
     print_double(state, n_state_var, "state768");
     //printf("end cell\nline\n");
-  }
+  //}
 #ifdef ENABLE_NETCDF
   //export_state_netcdf(sd);
 #endif

@@ -30,7 +30,7 @@ compare_runs(){
     #echo "Generating log file at " $log_path
     python $FILE > $log_path
     #python $FILE 2>&1 | tee $log_path
-    cells=1
+    cells=2
     sed -i 's/conf.caseBase = "CPU One-cell"/conf.caseBase = "GPU BDF"/g' $FILE
     sed -i 's/conf.cells = \[1\]/conf.cells = \['"$cells"'\]/g' $FILE
     log_path="../../compile/power9/log_gpu.txt"
