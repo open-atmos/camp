@@ -10,7 +10,7 @@ extern "C" {
 
 __device__
 void print_double(double *x, int len, const char *s){
-#ifndef USE_PRINT_ARRAYS
+#ifdef USE_PRINT_ARRAYS
   __syncthreads();
   if(threadIdx.x==0 && blockIdx.x==0){
     for (int i=0; i<len; i++){
@@ -638,8 +638,8 @@ __device__ void cudaDevicecalc_deriv(double time_step, double *y,
     yout[i] = 0.0;
   }
   //print_double(y,73,"y646");
-  print_double(md->J_state,73,"J_state644");
-  print_double(md->J_tmp,73,"J_tmp643");
+  //print_double(md->J_state,73,"J_state644");
+  //print_double(md->J_tmp,73,"J_tmp643");
   //print_double(md->J_deriv,73,"J_deriv644");
   //print_double(md->J_tmp2,73,"J_tmp2645");
   //print_double(deriv_data.loss_rates,73,"loss_rates");
