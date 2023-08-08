@@ -138,10 +138,10 @@ void init_jac_cuda_cvode(SolverData *sd){
   double *J_state = N_VGetArrayPointer(md->J_state);
   HANDLE_ERROR(cudaMemcpy(mGPU->J_state, J_state, mCPU->deriv_size, cudaMemcpyHostToDevice));
   double *J_deriv = N_VGetArrayPointer(md->J_deriv);
-  double *J_tmp2 = N_VGetArrayPointer(md->J_tmp2);
   HANDLE_ERROR(cudaMemcpy(mGPU->J_deriv, J_deriv, mCPU->deriv_size, cudaMemcpyHostToDevice));
   int threads_block = mCPU->threads;
   int blocks = mCPU->blocks;
+  double *J_tmp2 = N_VGetArrayPointer(md->J_tmp2);
   init_J_tmp2_cuda_cvode <<<blocks,threads_block>>>(mGPU->J_tmp2);
   HANDLE_ERROR(cudaMemcpy(mGPU->jac_map, md->jac_map, sizeof(JacMap) * md->n_mapped_values, cudaMemcpyHostToDevice));
   HANDLE_ERROR(cudaMemcpy(mGPU->n_mapped_values, &md->n_mapped_values, 1 * sizeof(int), cudaMemcpyHostToDevice));
@@ -561,6 +561,13 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
 #endif
   HANDLE_ERROR(cudaMemcpyAsync(mGPU->rxn_env_data,md->rxn_env_data,mCPU->rxn_env_data_size,cudaMemcpyHostToDevice,stream));
   HANDLE_ERROR(cudaMemcpyAsync(mGPU->env,md->total_env,mCPU->env_size,cudaMemcpyHostToDevice,stream));
+  double *J_state = N_VGetArrayPointer(md->J_state);
+  cudaMemcpyAsync(mGPU->J_state,J_state,mCPU->deriv_size,cudaMemcpyHostToDevice,stream);
+  double *J_deriv = N_VGetArrayPointer(md->J_deriv);
+  cudaMemcpyAsync(mGPU->J_deriv,J_deriv,mCPU->deriv_size,cudaMemcpyHostToDevice,stream);
+  double *J_solver = SM_DATA_S(md->J_solver);
+  cudaMemcpy(mGPU->J_solver, J_solver, mCPU->jac_size, cudaMemcpyHostToDevice);
+
   if (cvode_mem == NULL) {
     cvProcessError(NULL, CV_MEM_NULL, "CVODE", "CVode", MSGCV_NO_MEM);
     return(CV_MEM_NULL);

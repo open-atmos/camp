@@ -677,7 +677,6 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
   N_VConst(0.0, md->J_state);
   N_VConst(0.0, md->J_deriv);
   N_VConst(0.0, md->J_tmp);
-  N_VConst(0.0, md->J_tmp2);
   SM_NNZ_S(md->J_solver) = SM_NNZ_S(md->J_init);
   for (int i = 0; i <= SM_NP_S(md->J_solver); i++) {
     (SM_INDEXPTRS_S(md->J_solver))[i] = (SM_INDEXPTRS_S(md->J_init))[i];
@@ -1298,17 +1297,17 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
                              sd->output_precision);
     }
     if(i_cell==0) {
-      //print_double(sd->time_deriv.loss_rates,sd->time_deriv.num_spec,"loss_rates");
-      //print_double(sd->time_deriv.production_rates,sd->time_deriv.num_spec,"production_rates");
-      //double *J_state = N_VGetArrayPointer(md->J_state);
-      //double *J_deriv = N_VGetArrayPointer(md->J_deriv);
-      //print_double(J_state,73,"J_state644");
-      //print_double(J_deriv,73,"J_deriv644");
       //double *yp = N_VGetArrayPointer(y);
       //print_double(yp,73,"y646");
+      double *J_state = N_VGetArrayPointer(md->J_state);
+      print_double(J_state,73,"J_state644");
+      print_double(jac_deriv_data,73,"J_tmp643");
+      //double *J_deriv = N_VGetArrayPointer(md->J_deriv);
+      //print_double(J_deriv,73,"J_deriv644");
       //double *J_tmp2 = N_VGetArrayPointer(md->J_tmp2);
       //print_double(J_tmp2,73,"J_tmp2645");
-      //print_double(jac_deriv_data,73,"J_tmp643");
+      //print_double(sd->time_deriv.loss_rates,sd->time_deriv.num_spec,"loss_rates");
+      //print_double(sd->time_deriv.production_rates,sd->time_deriv.num_spec,"production_rates");
       //print_double(deriv_data,73,"deriv_data645");
     }
 #ifdef CAMP_DEBUG

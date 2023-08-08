@@ -637,13 +637,13 @@ __device__ void cudaDevicecalc_deriv(double time_step, double *y,
   } else {
     yout[i] = 0.0;
   }
+  //print_double(y,73,"y646");
+  print_double(md->J_state,73,"J_state644");
+  print_double(md->J_tmp,73,"J_tmp643");
+  //print_double(md->J_deriv,73,"J_deriv644");
+  //print_double(md->J_tmp2,73,"J_tmp2645");
   //print_double(deriv_data.loss_rates,73,"loss_rates");
   //print_double(deriv_data.production_rates,73,"production_rates");
-  //print_double(md->J_state,73,"J_state644");
-  //print_double(md->J_deriv,73,"J_deriv644");
-  //print_double(y,73,"y646");
-  //print_double(md->J_tmp2,73,"J_tmp2");
-  //print_double(md->J_tmp,73,"J_tmp643");
   //print_double(yout,73,"deriv_data645");
   __syncthreads();
 }
@@ -911,7 +911,7 @@ __device__ void cudaDevicecalc_Jac(double *y,ModelDataGPU *md, ModelDataVariable
 __device__
 int cudaDeviceJac(int *flag, ModelDataGPU *md, ModelDataVariable *sc)
 {
-  int tid = blockIdx.x * blockDim.x + threadIdx.x;
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
   int retval;
   __syncthreads();
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
@@ -957,8 +957,8 @@ int cudaDeviceJac(int *flag, ModelDataGPU *md, ModelDataVariable *sc)
     md->J_solver[j]=md->dA[j];
   }
   __syncthreads();
-  md->J_state[tid]=md->dcv_y[tid];
-  md->J_deriv[tid]=md->dftemp[tid];
+  md->J_state[i]=md->dcv_y[i];
+  md->J_deriv[i]=md->dftemp[i];
   __syncthreads();
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     if(threadIdx.x==0)  sc->timeJac += ((double)(clock() - start))/(clock_khz*1000);
@@ -1213,7 +1213,7 @@ int cudaDevicecvNlsNewton(int nflag,
     print_double(md->dcv_y,73,"dcv_y1139");
     int aux_flag=0;
     //print_double(md->dftemp,73,"cv_ftemppcv_f1");
-    print_double(&sc->cv_tn,1,"cv_tn1216");
+    //print_double(&sc->cv_tn,1,"cv_tn1216");
     retval=cudaDevicef(sc->cv_tn, md->dcv_y,md->dftemp,md,sc,&aux_flag);
     print_double(md->dftemp,73,"cv_ftemppcv_f2");
     //print_double(md->dcv_y,73,"dcv_y1144");
