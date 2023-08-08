@@ -645,7 +645,7 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
             state[i_spec + i_cell * n_state_var] > TINY
                 ? (realtype)state[i_spec + i_cell * n_state_var]
                 : TINY;
-        printf("state648[%d]=%.17le\n",i_spec,state[i_spec]);
+        //printf("state648[%d]=%.17le\n",i_spec,state[i_spec]);
       } else if (md->var_type[i_spec] == CHEM_SPEC_CONSTANT) {
         state[i_spec + i_cell * n_state_var] =
             state[i_spec + i_cell * n_state_var] > TINY
@@ -779,7 +779,7 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
             (double)(NV_Ith_S(sd->y, i_dep_var) > 0.0
                          ? NV_Ith_S(sd->y, i_dep_var)
                          : 0.0);
-        printf("state778[%d]=%.17le\n",i_spec,state[i_spec]);
+        //printf("state778[%d]=%.17le\n",i_spec,state[i_spec]);
         i_dep_var++;
       }
     }
