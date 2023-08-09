@@ -37,7 +37,14 @@ void print_int(int *x, int len, const char *s){
 __device__
 double dSUNRpowerR(double base, double exponent){
   if (base <= ZERO) return(ZERO);
-  if(exponent==0.5) return sqrt(base);
+  if(exponent==(1./2)) return sqrt(base);
+  if(exponent==(1./3)){
+  double sqrt1=sqrt(base);
+  double sqrt2=sqrt(sqrt1);
+  __syncthreads();
+  return sqrt2;
+  }
+  if(exponent==(1./4)) return sqrt(sqrt(sqrt(base)));
   return(pow(base, exponent));
 }
 
@@ -1125,7 +1132,7 @@ int cudaDevicecvNewtonIteration(ModelDataGPU *md, ModelDataVariable *sc){
     md->dftemp[i]=md->dcv_y[i]+md->dtempv[i];
     __syncthreads();
     //print_double(md->dcv_y,73,"dcv_y2994");
-    print_double(md->dftemp,73,"cv_ftemplsolve");
+    //print_double(md->dftemp,73,"cv_ftemplsolve");
     int guessflag=CudaDeviceguess_helper(0., md->dftemp,
        md->dcv_y, md->dtempv, md->dtempv1,md->dtempv2, &aux_flag, md, sc
     );
@@ -1471,7 +1478,7 @@ void cudaDevicecvPredict(ModelDataGPU *md, ModelDataVariable *sc) {
       __syncthreads();
     }
   }
-  print_double(md->dzn,73,"dzn1439");
+  //print_double(md->dzn,73,"dzn1439");
 }
 
 __device__
@@ -1601,7 +1608,7 @@ __device__
 void cudaDevicecvChooseEta(ModelDataGPU *md, ModelDataVariable *sc) {
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   double etam;
-  print_double(&sc->cv_etaqm1,1,"cv_etaqm11605");
+  print_double(&sc->cv_etaqm1,1,"cv_etaqm1605");
   print_double(&sc->cv_etaq,1,"cv_etaq1605");
   print_double(&sc->cv_etaqp1,1,"cv_etaqp1605");
   etam = SUNMAX(sc->cv_etaqm1, SUNMAX(sc->cv_etaq, sc->cv_etaqp1));
@@ -1677,17 +1684,18 @@ int cudaDevicecvPrepareNextStep(ModelDataGPU *md, ModelDataVariable *sc, double 
   //double cv_etaq_sqrt=sqrt(BIAS2dsm);
   //print_double(&cv_etaq_sqrt,1,"cv_etaq_sqrt");
   sc->cv_etaq=1./(dSUNRpowerR(BIAS2*dsm,1./sc->cv_L) + ADDON);
+  print_double(&sc->cv_etaq,1,"cv_etaq1639");
+  /*
   if(sc->cv_L!=2){
     //print_int(&sc->cv_L,1,"cv_L1674");
-    /*
+
     if(i==0)printf("WARNING: pow is innacurate from CPU"
     " result for CUDA/10.1.105 "
     " (which is used during development at CTE-POWER) "
     " (debug by compare pow(x,0.5) and"
     " sqrt(x.0.5), double x=3.28586921557249207e-12)\n");
-     */
   }
-  //print_double(&sc->cv_etaq,1,"cv_etaq1639");
+   */
   __syncthreads();
   if (sc->cv_qwait != 0) {
     sc->cv_eta = sc->cv_etaq;
@@ -1721,7 +1729,24 @@ int cudaDevicecvPrepareNextStep(ModelDataGPU *md, ModelDataVariable *sc, double 
     __syncthreads();
     dup *= md->cv_tq[3+blockIdx.x*(NUM_TESTS + 1)];
     __syncthreads();
-    sc->cv_etaqp1 = 1. / (dSUNRpowerR(BIAS3*dup, 1./(sc->cv_L+1)) + ADDON);
+    print_double(&dup,1,"dup1728");
+    print_int(&sc->cv_L,1,"cv_L1728");
+    double BIAS3dup=BIAS3*dup;
+    print_double(&BIAS3dup,1,"BIAS3dup");
+    double cv_L1=1./(sc->cv_L+1);
+    print_double(&cv_L1,1,"1cv_L1732");
+    double cv_etaq_power=dSUNRpowerR(BIAS3dup,cv_L1);
+    print_double(&cv_etaq_power,1,"cv_etaq_power1734");
+    if(sc->cv_L==2){
+      double cv_etaq_sqrt=sqrt(BIAS3dup);
+      print_double(&cv_etaq_sqrt,1,"cv_etaq_sqrt");
+      double cv_etaq_sqrt2=sqrt(cv_etaq_sqrt);
+      print_double(&cv_etaq_sqrt2,1,"cv_etaq_sqrt2");
+      sc->cv_etaqp1 = 1. / (sqrt(sqrt(BIAS3*dup)) + ADDON);
+    }
+    else
+      sc->cv_etaqp1 = 1. / (dSUNRpowerR(BIAS3*dup, 1./(sc->cv_L+1)) + ADDON);
+    print_double(&sc->cv_etaqp1,1,"cv_etaqp1728");
   }
   __syncthreads();
   cudaDevicecvChooseEta(md, sc);

@@ -581,6 +581,14 @@ void print_double(double *x, int len, const char *s){
 #endif
 }
 
+void print_int(int *x, int len, const char *s){
+#ifndef USE_PRINT_ARRAYS
+  for (int i=0; i<len; i++){
+    printf("%s[%d]=%d\n",s,i,x[i]);
+  }
+#endif
+}
+
 /*
 void init_export_state_mpi(SolverData *sd){
   malloc(sd->ex_len)
