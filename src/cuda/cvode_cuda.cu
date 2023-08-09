@@ -10,7 +10,7 @@ extern "C" {
 
 __device__
 void print_double(double *x, int len, const char *s){
-#ifdef USE_PRINT_ARRAYS
+#ifndef USE_PRINT_ARRAYS
   __syncthreads();
   if(threadIdx.x==0 && blockIdx.x==0){
     for (int i=0; i<len; i++){
@@ -19,6 +19,25 @@ void print_double(double *x, int len, const char *s){
   }
   __syncthreads();
 #endif
+}
+
+__device__
+void print_int(int *x, int len, const char *s){
+#ifndef USE_PRINT_ARRAYS
+  __syncthreads();
+  if(threadIdx.x==0 && blockIdx.x==0){
+    for (int i=0; i<len; i++){
+      printf("%s[%d]=%d\n",s,i,x[i]);
+    }
+  }
+  __syncthreads();
+#endif
+}
+
+__device__
+double dSUNRpowerR(double base, double exponent){
+  if (base <= ZERO) return(ZERO);
+  return(pow(base, exponent));
 }
 
 #ifndef DEV_removeAtomic
@@ -480,7 +499,7 @@ __device__ void cudaDevicedotxy_2(double *g_idata1, double *g_idata2,
   __syncthreads();
 }
 
-__device__ void cudaDeviceVWRMS_Norm_2(double *g_idata1, double *g_idata2, double *g_odata, int n, int n_shr_empty){
+__device__ void cudaDeviceVWRMS_Norm_2(double *g_idata1, double *g_idata2, double *g_odata, int n_shr_empty){
   extern __shared__ double sdata[];
   unsigned int tid = threadIdx.x;
   unsigned int i = blockIdx.x*blockDim.x + threadIdx.x;
@@ -508,7 +527,7 @@ __device__ void cudaDeviceVWRMS_Norm_2(double *g_idata1, double *g_idata2, doubl
     __syncthreads();
   }
 #endif
-  g_odata[0] = sqrt(sdata[0]/n);
+  g_odata[0] = sqrt(sdata[0]/blockDim.x);
   __syncthreads();
 }
 
@@ -1086,7 +1105,8 @@ int cudaDevicecvNewtonIteration(ModelDataGPU *md, ModelDataVariable *sc){
     start = clock();
 #endif
     //print_double(md->dtempv,73,"dtempvN_VLinearSum1");
-    md->dtempv[i]=sc->cv_rl1*(md->dzn[i+md->nrows])+md->cv_acor[i];
+    //print_double(md->dzn+md->nrows,73,"dzn1_1089");
+    md->dtempv[i]=sc->cv_rl1*md->dzn[i+md->nrows]+md->cv_acor[i];
     //print_double(md->dtempv,73,"dtempvN_VLinearSum2");
     md->dtempv[i]=sc->cv_gamma*md->dftemp[i]-md->dtempv[i];
     print_double(md->dtempv,73,"dtempvcv_lsolve1");
@@ -1096,8 +1116,10 @@ int cudaDevicecvNewtonIteration(ModelDataGPU *md, ModelDataVariable *sc){
     if(threadIdx.x==0) sc->dtBCG += ((double)(int)(clock() - start))/(clock_khz*1000);
 #endif
     md->dtempv[i] = md->dx[i];
-    __syncthreads();
     //print_double(md->dtempv,73,"dtempvcv_lsolve2");
+    __syncthreads();
+    cudaDeviceVWRMS_Norm_2(md->dx, md->dewt, &del, md->n_shr_empty);
+    print_double(&del,1,"del1171");
     //if(i==0)printf("md->dtempv[0] %.16le\n",md->dtempv[0]);
     md->dftemp[i]=md->dcv_y[i]+md->dtempv[i];
     __syncthreads();
@@ -1125,15 +1147,17 @@ int cudaDevicecvNewtonIteration(ModelDataGPU *md, ModelDataVariable *sc){
     md->dcv_y[i]=md->dzn[i]+md->cv_acor[i];
     //print_double(md->cv_acor,73,"cv_acor1060");
     //print_double(md->dcv_y,73,"dcv_y1060");
-    cudaDeviceVWRMS_Norm_2(md->dx, md->dewt, &del, md->nrows, md->n_shr_empty);
     if (m > 0) {
       sc->cv_crate = SUNMAX(0.3 * sc->cv_crate, del / delp);
     }
     dcon = del * SUNMIN(1.0, sc->cv_crate) / md->cv_tq[4+blockIdx.x*(NUM_TESTS + 1)];
     flag_shr2[0]=0;
     __syncthreads();
-    if (dcon <= 1.0) {
-      cudaDeviceVWRMS_Norm_2(md->cv_acor, md->dewt, &sc->cv_acnrm, md->nrows, md->n_shr_empty);
+    if (dcon <= 1.) {
+      print_double(md->cv_acor,73,"cv_acor1505");
+      print_double(md->dewt,73,"dewt1505");
+      cudaDeviceVWRMS_Norm_2(md->cv_acor, md->dewt, &sc->cv_acnrm, md->n_shr_empty);
+      print_double(&sc->cv_acnrm,1,"cv_acnrm1151");
       __syncthreads();
       sc->cv_jcur = 0;
       __syncthreads();
@@ -1210,7 +1234,7 @@ int cudaDevicecvNlsNewton(int nflag,
     //print_double(md->dzn,73,"dzn1139");
     //print_double(md->cv_acor_init,73,"cv_acor_init1140");
     md->dcv_y[i] = md->dzn[i]+md->cv_acor_init[i];
-    print_double(md->dcv_y,73,"dcv_y1139");
+    //print_double(md->dcv_y,73,"dcv_y1139");
     int aux_flag=0;
     //print_double(md->dftemp,73,"cv_ftemppcv_f1");
     //print_double(&sc->cv_tn,1,"cv_tn1216");
@@ -1286,6 +1310,8 @@ void cudaDevicecvRescale(ModelDataGPU *md, ModelDataVariable *sc) {
     factor *= sc->cv_eta;
     __syncthreads();
   }
+  print_double(&sc->cv_eta,1,"cv_eta_1290");
+  //print_double(md->dzn+md->nrows,73,"dzn1_1290");
   sc->cv_h = sc->cv_hscale * sc->cv_eta;
   sc->cv_next_h = sc->cv_h;
   sc->cv_hscale = sc->cv_h;
@@ -1331,6 +1357,7 @@ int cudaDevicecvHandleNFlag(ModelDataGPU *md, ModelDataVariable *sc, int *nflagP
   __syncthreads();
   sc->cv_eta = SUNMAX(ETACF,
           sc->cv_hmin / fabs(sc->cv_h));
+  print_double(&sc->cv_eta,1,"cv_eta_1337");
   __syncthreads();
   *nflagPtr = PREV_CONV_FAIL;
   cudaDevicecvRescale(md, sc);
@@ -1434,6 +1461,9 @@ void cudaDevicecvPredict(ModelDataGPU *md, ModelDataVariable *sc) {
   md->cv_last_yn[i]=md->dzn[i];
   __syncthreads();
   print_double(md->dzn,73,"dzn1432");
+  //print_double(md->dzn+md->nrows,73,"dzn1_1432");
+  //if(i==0)printf("md->nrows %d\n",md->nrows);
+  //if(i==0)printf("cv_q %d\n",sc->cv_q);
   for (k = 1; k <= sc->cv_q; k++){
     for (j = sc->cv_q; j >= k; j--){
       md->dzn[i+md->nrows*(j-1)]+=md->dzn[i+md->nrows*j];
@@ -1445,6 +1475,7 @@ void cudaDevicecvPredict(ModelDataGPU *md, ModelDataVariable *sc) {
 
 __device__
 void cudaDevicecvDecreaseBDF(ModelDataGPU *md, ModelDataVariable *sc) {
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
   double hsum, xi;
   int z, j;
   for (z=0; z <= md->cv_qmax; z++) md->cv_l[z+blockIdx.x*L_MAX] = 0.;
@@ -1457,8 +1488,10 @@ void cudaDevicecvDecreaseBDF(ModelDataGPU *md, ModelDataVariable *sc) {
       md->cv_l[z+blockIdx.x*L_MAX] = md->cv_l[z+blockIdx.x*L_MAX]*xi + md->cv_l[z-1+blockIdx.x*L_MAX];
   }
   for (j=2; j < sc->cv_q; j++){
-    md->dzn[md->nrows*j]-=md->cv_l[j+blockIdx.x*L_MAX]*md->dzn[md->nrows*(sc->cv_q)];
+    md->dzn[i+md->nrows*j]=-md->cv_l[j+blockIdx.x*L_MAX]*
+      md->dzn[i+md->nrows*sc->cv_q]+md->dzn[i+md->nrows*j];
   }
+  print_double(md->dzn+md->nrows*2,73,"dzn2_1469");
   print_double(md->dzn,73,"dzn1460");
 }
 
@@ -1477,7 +1510,10 @@ int cudaDevicecvDoErrorTest(ModelDataGPU *md, ModelDataVariable *sc,
     md->dzn[i]=md->dftemp[i]-md->cv_l[0+blockIdx.x*L_MAX]*md->cv_acor[i];
     min_val = 0.;
   }
+  //print_double(&md->cv_tq[2+blockIdx.x*(NUM_TESTS + 1)],1,"cv_tq_21504");
+  //print_double(&sc->cv_acnrm,1,"cv_acnrm1504");
   dsm = sc->cv_acnrm * md->cv_tq[2+blockIdx.x*(NUM_TESTS + 1)];
+  print_double(&dsm,1,"dsm1504");
   *dsmPtr = dsm;
   if (dsm <= 1. && min_val >= 0.) return(CV_SUCCESS);
   (*nefPtr)++;
@@ -1497,14 +1533,14 @@ int cudaDevicecvDoErrorTest(ModelDataGPU *md, ModelDataVariable *sc,
     if (*nefPtr >= SMALL_NEF)
       sc->cv_eta = SUNMIN(sc->cv_eta, ETAMXF);
     __syncthreads();
-
+    print_double(&sc->cv_eta,1,"cv_eta_1510");
     cudaDevicecvRescale(md, sc);
     return(TRY_AGAIN);
   }
   __syncthreads();
   if (sc->cv_q > 1) {
-    sc->cv_eta = SUNMAX(ETAMIN,
-    sc->cv_hmin / fabs(sc->cv_h));
+    sc->cv_eta = SUNMAX(ETAMIN,sc->cv_hmin / fabs(sc->cv_h));
+    print_double(&sc->cv_eta,1,"cv_eta_1517");
     cudaDevicecvDecreaseBDF(md, sc);
     sc->cv_L = sc->cv_q;
     sc->cv_q--;
@@ -1515,6 +1551,7 @@ int cudaDevicecvDoErrorTest(ModelDataGPU *md, ModelDataVariable *sc,
   }
   __syncthreads();
   sc->cv_eta = SUNMAX(ETAMIN, sc->cv_hmin / fabs(sc->cv_h));
+  print_double(&sc->cv_eta,1,"cv_eta_1529");
   __syncthreads();
   sc->cv_h *= sc->cv_eta;
   sc->cv_next_h = sc->cv_h;
@@ -1526,7 +1563,8 @@ int cudaDevicecvDoErrorTest(ModelDataGPU *md, ModelDataVariable *sc,
   retval=cudaDevicef(sc->cv_tn, md->dzn, md->dtempv,md,sc, &aux_flag);
   if (retval < 0)  return(CV_RHSFUNC_FAIL);
   if (retval > 0)  return(CV_UNREC_RHSFUNC_ERR);
-  md->dzn[1*md->nrows+i]=sc->cv_h*md->dtempv[i];
+  md->dzn[i+md->nrows]=sc->cv_h*md->dtempv[i];
+  print_double(md->dzn+md->nrows,73,"dzn1_1536");
   return(TRY_AGAIN);
 }
 
@@ -1547,9 +1585,10 @@ void cudaDevicecvCompleteStep(ModelDataGPU *md, ModelDataVariable *sc) {
     md->dzn[i+md->nrows*j]+=md->cv_l[j+blockIdx.x*L_MAX]*md->cv_acor[i];
     __syncthreads();
   }
+  //print_double(md->dzn+md->nrows,73,"dzn1_1559");
   sc->cv_qwait--;
   if ((sc->cv_qwait == 1) && (sc->cv_q != md->cv_qmax)) {
-    md->dzn[i+md->nrows*(md->cv_qmax)]=md->cv_acor[i];
+    md->dzn[i+md->nrows*md->cv_qmax]=md->cv_acor[i];
     sc->cv_saved_tq5 = md->cv_tq[5+blockIdx.x*(NUM_TESTS + 1)];
     sc->cv_indx_acor = md->cv_qmax;
   }
@@ -1578,15 +1617,15 @@ void cudaDevicecvChooseEta(ModelDataGPU *md, ModelDataVariable *sc) {
     sc->cv_eta = sc->cv_etaqp1;
     sc->cv_qprime = sc->cv_q + 1;
     __syncthreads();
-    md->dzn[md->nrows*(md->cv_qmax)+i]=md->cv_acor[i];
+    md->dzn[i+md->nrows*md->cv_qmax]=md->cv_acor[i];
   }
+  print_double(&sc->cv_eta,1,"cv_eta_1597");
   __syncthreads();
   print_double(md->dzn,73,"dzn1581");
 }
 
 __device__
 void cudaDevicecvSetEta(ModelDataGPU *md, ModelDataVariable *sc) {
-  extern __shared__ int flag_shr[];
   __syncthreads();
   if (sc->cv_eta < THRESH) {
     sc->cv_eta = 1.;
@@ -1601,6 +1640,7 @@ void cudaDevicecvSetEta(ModelDataGPU *md, ModelDataVariable *sc) {
     sc->cv_hprime = sc->cv_h * sc->cv_eta;
     __syncthreads();
   }
+  print_double(&sc->cv_eta,1,"cv_eta_1618");
   __syncthreads();
 }
 
@@ -1613,13 +1653,26 @@ int cudaDevicecvPrepareNextStep(ModelDataGPU *md, ModelDataVariable *sc, double 
     sc->cv_qprime = sc->cv_q;
     sc->cv_hprime = sc->cv_h;
     sc->cv_eta = 1.;
+    print_double(&sc->cv_eta,1,"cv_eta_1631");
     return 0;
   }
   __syncthreads();
-  sc->cv_etaq = 1. /(pow(BIAS2*dsm,1./sc->cv_L) + ADDON);
+  print_double(&dsm,1,"dsm1639");
+  print_int(&sc->cv_L,1,"cv_L1639");
+  double BIAS2dsm=BIAS2*dsm;
+  print_double(&BIAS2dsm,1,"BIAS2dsm");
+  double cv_L1=1./sc->cv_L;
+  print_double(&cv_L1,1,"1cv_L");
+  double cv_etaq_power=dSUNRpowerR(BIAS2dsm,cv_L1);
+  print_double(&cv_etaq_power,1,"cv_etaq_power");
+  double cv_etaq_sqrt=sqrt(BIAS2dsm);
+  print_double(&cv_etaq_sqrt,1,"cv_etaq_sqrt");
+  sc->cv_etaq=1./(dSUNRpowerR(BIAS2*dsm,1./sc->cv_L) + ADDON);
+  print_double(&sc->cv_etaq,1,"cv_etaq1639");
   __syncthreads();
   if (sc->cv_qwait != 0) {
     sc->cv_eta = sc->cv_etaq;
+    //print_double(&sc->cv_eta,1,"cv_eta1639");
     sc->cv_qprime = sc->cv_q;
     cudaDevicecvSetEta(md, sc);
     return 0;
@@ -1630,8 +1683,8 @@ int cudaDevicecvPrepareNextStep(ModelDataGPU *md, ModelDataVariable *sc, double 
   sc->cv_etaqm1 = 0.;
   __syncthreads();
   if (sc->cv_q > 1) {
-    cudaDeviceVWRMS_Norm_2(&md->dzn[md->nrows*(sc->cv_q)],
-                         md->dewt, &ddn, md->nrows, md->n_shr_empty);
+    cudaDeviceVWRMS_Norm_2(&md->dzn[md->nrows*sc->cv_q],
+                         md->dewt, &ddn, md->n_shr_empty);
     __syncthreads();
     ddn *= md->cv_tq[1+blockIdx.x*(NUM_TESTS + 1)];
     __syncthreads();
@@ -1644,7 +1697,8 @@ int cudaDevicecvPrepareNextStep(ModelDataGPU *md, ModelDataVariable *sc, double 
     cquot = (md->cv_tq[5+blockIdx.x*(NUM_TESTS + 1)] / sc->cv_saved_tq5) *
             pow(double(sc->cv_h/md->cv_tau[2+blockIdx.x*(L_MAX + 1)]), double(sc->cv_L));
     md->dtempv[i]=md->cv_acor[i]-cquot*md->dzn[i+md->nrows*md->cv_qmax];
-    cudaDeviceVWRMS_Norm_2(md->dtempv, md->dewt, &dup, md->nrows, md->n_shr_empty);
+    print_double(md->dtempv,73,"dtempv1658");
+    cudaDeviceVWRMS_Norm_2(md->dtempv, md->dewt, &dup, md->n_shr_empty);
     __syncthreads();
     dup *= md->cv_tq[3+blockIdx.x*(NUM_TESTS + 1)];
     __syncthreads();
@@ -1680,7 +1734,7 @@ void cudaDevicecvIncreaseBDF(ModelDataGPU *md, ModelDataVariable *sc) {
     }
   }
   A1 = (-alpha0 - alpha1) / prod;
-  md->dzn[md->nrows*(sc->cv_L)+i]=A1*md->dzn[md->nrows*sc->cv_indx_acor+i];
+  md->dzn[i+md->nrows*sc->cv_L]=A1*md->dzn[i+md->nrows*sc->cv_indx_acor];
   __syncthreads();
   for (j=2; j <= sc->cv_q; j++){
     md->dzn[i+md->nrows*j]+=md->cv_l[j+blockIdx.x*L_MAX]*md->dzn[i+md->nrows*(sc->cv_L)];
@@ -1842,7 +1896,7 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *sc) {
     }
     double nrm;
     cudaDeviceVWRMS_Norm_2(md->dzn,
-                         md->dewt, &nrm, md->nrows, md->n_shr_empty);
+     md->dewt, &nrm, md->n_shr_empty);
     sc->cv_tolsf = md->cv_uround * nrm;
     if (sc->cv_tolsf > 1.) {
       sc->cv_tretlast = sc->tret = sc->cv_tn;

@@ -794,7 +794,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
   cudaMemcpyAsync(mGPU->cv_Vabstol, cv_Vabstol, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice, stream);
   for (int i = 0; i <= cv_mem->cv_qmax; i++) {
     double *zn = NV_DATA_S(cv_mem->cv_zn[i]);
-    cudaMemcpyAsync((i * mGPU->nrows + mGPU->dzn), zn, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice, stream);
+    cudaMemcpyAsync((mGPU->dzn + i * mGPU->nrows), zn, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice, stream);
   }
   cudaMemcpyAsync(mGPU->flagCells, sd->flagCells, mGPU->n_cells * sizeof(int), cudaMemcpyHostToDevice,
                   stream);
@@ -821,6 +821,8 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
   }
   //double *zn0 = NV_DATA_S(cv_mem->cv_zn[0]);
   //print_double_cv_gpu(zn0,73,"dzn807");
+  double *zn1 = NV_DATA_S(cv_mem->cv_zn[1]);
+  print_double_cv_gpu(zn1,73,"dzn825");
   cvodeRun(mGPU,stream);
   cudaMemcpyAsync(cv_acor_init, mGPU->cv_acor_init, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost, stream);
   cudaMemcpyAsync(youtArray, mGPU->yout, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost, stream);
