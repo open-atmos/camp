@@ -35,17 +35,29 @@ void print_int(int *x, int len, const char *s){
 }
 
 __device__
-double dSUNRpowerR(double base, double exponent){
+double dSUNRpowerR(double base, double exponentR){
   if (base <= ZERO) return(ZERO);
-  if(exponent==(1./2)) return sqrt(base);
-  if(exponent==(1./3)){
+  if(exponentR==(2)) return sqrt(base);
+  if(exponentR==(3)){
   double sqrt1=sqrt(base);
   double sqrt2=sqrt(sqrt1);
   __syncthreads();
   return sqrt2;
   }
-  if(exponent==(1./4)) return sqrt(sqrt(sqrt(base)));
-  return(pow(base, exponent));
+  if(exponentR==(4)) return sqrt(sqrt(sqrt(base)));
+  return(pow(base, (double)(1./exponentR)));
+}
+
+__device__
+double dSUNRpowerI(double base, int exponent)
+{
+  int i, expt;
+  double prod;
+  prod = ONE;
+  expt = abs(exponent);
+  for(i = 1; i <= expt; i++) prod *= base;
+  if (exponent < 0) prod = ONE/prod;
+  return(prod);
 }
 
 #ifndef DEV_removeAtomic
@@ -1533,7 +1545,7 @@ int cudaDevicecvDoErrorTest(ModelDataGPU *md, ModelDataVariable *sc,
   sc->cv_etamax = 1.;
   __syncthreads();
   if (*nefPtr <= MXNEF1) {
-    sc->cv_eta = 1. / (dSUNRpowerR(BIAS2*dsm,1./sc->cv_L) + ADDON);
+    sc->cv_eta = 1. / (dSUNRpowerR(BIAS2*dsm,sc->cv_L) + ADDON);
     __syncthreads();
     sc->cv_eta = SUNMAX(ETAMIN, SUNMAX(sc->cv_eta,
                            sc->cv_hmin / fabs(sc->cv_h)));
@@ -1608,9 +1620,9 @@ __device__
 void cudaDevicecvChooseEta(ModelDataGPU *md, ModelDataVariable *sc) {
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   double etam;
-  print_double(&sc->cv_etaqm1,1,"cv_etaqm1605");
-  print_double(&sc->cv_etaq,1,"cv_etaq1605");
-  print_double(&sc->cv_etaqp1,1,"cv_etaqp1605");
+  //print_double(&sc->cv_etaqm1,1,"cv_etaqm1605");
+  //print_double(&sc->cv_etaq,1,"cv_etaq1605");
+  //print_double(&sc->cv_etaqp1,1,"cv_etaqp1605");
   etam = SUNMAX(sc->cv_etaqm1, SUNMAX(sc->cv_etaq, sc->cv_etaqp1));
   print_double(&etam,1,"etam1605");
   __syncthreads();
@@ -1677,13 +1689,13 @@ int cudaDevicecvPrepareNextStep(ModelDataGPU *md, ModelDataVariable *sc, double 
   //print_int(&sc->cv_L,1,"cv_L1639");
   //double BIAS2dsm=BIAS2*dsm;
   //print_double(&BIAS2dsm,1,"BIAS2dsm");
-  //double cv_L1=1./sc->cv_L;
+  //double cv_L1=sc->cv_L;
   //print_double(&cv_L1,1,"1cv_L");
   //double cv_etaq_power=dSUNRpowerR(BIAS2dsm,cv_L1);
   //print_double(&cv_etaq_power,1,"cv_etaq_power");
   //double cv_etaq_sqrt=sqrt(BIAS2dsm);
   //print_double(&cv_etaq_sqrt,1,"cv_etaq_sqrt");
-  sc->cv_etaq=1./(dSUNRpowerR(BIAS2*dsm,1./sc->cv_L) + ADDON);
+  sc->cv_etaq=1./(dSUNRpowerR(BIAS2*dsm,sc->cv_L) + ADDON);
   print_double(&sc->cv_etaq,1,"cv_etaq1639");
   /*
   if(sc->cv_L!=2){
@@ -1715,14 +1727,14 @@ int cudaDevicecvPrepareNextStep(ModelDataGPU *md, ModelDataVariable *sc, double 
     __syncthreads();
     ddn *= md->cv_tq[1+blockIdx.x*(NUM_TESTS + 1)];
     __syncthreads();
-    sc->cv_etaqm1 = 1./(dSUNRpowerR(BIAS1*ddn, 1./sc->cv_q) + ADDON);
+    sc->cv_etaqm1 = 1./(dSUNRpowerR(BIAS1*ddn, sc->cv_q) + ADDON);
   }
   double dup, cquot;
   sc->cv_etaqp1 = 0.;
   __syncthreads();
   if (sc->cv_q != md->cv_qmax && sc->cv_saved_tq5 != 0.) {
     cquot = (md->cv_tq[5+blockIdx.x*(NUM_TESTS + 1)] / sc->cv_saved_tq5) *
-            dSUNRpowerR(sc->cv_h/md->cv_tau[2+blockIdx.x*(L_MAX + 1)],sc->cv_L);
+            dSUNRpowerI(sc->cv_h/md->cv_tau[2+blockIdx.x*(L_MAX + 1)],(double)sc->cv_L);
     md->dtempv[i]=md->cv_acor[i]-cquot*md->dzn[i+md->nrows*md->cv_qmax];
     print_double(md->dtempv,73,"dtempv1658");
     cudaDeviceVWRMS_Norm_2(md->dtempv, md->dewt, &dup, md->n_shr_empty);
@@ -1734,18 +1746,33 @@ int cudaDevicecvPrepareNextStep(ModelDataGPU *md, ModelDataVariable *sc, double 
     double BIAS3dup=BIAS3*dup;
     print_double(&BIAS3dup,1,"BIAS3dup");
     double cv_L1=1./(sc->cv_L+1);
-    print_double(&cv_L1,1,"1cv_L1732");
-    double cv_etaq_power=dSUNRpowerR(BIAS3dup,cv_L1);
-    print_double(&cv_etaq_power,1,"cv_etaq_power1734");
+    //print_double(&cv_L1,1,"1cv_L1732");
+    //double cv_etaq_power=dSUNRpowerR(BIAS3dup,cv_L1);
+    //double cv_etaq_power=(double)pow((double)BIAS3dup,(double)cv_L1);
+    //print_double(&cv_etaq_power,1,"cv_etaq_power1734");
     if(sc->cv_L==2){
-      double cv_etaq_sqrt=sqrt(BIAS3dup);
-      print_double(&cv_etaq_sqrt,1,"cv_etaq_sqrt");
-      double cv_etaq_sqrt2=sqrt(cv_etaq_sqrt);
-      print_double(&cv_etaq_sqrt2,1,"cv_etaq_sqrt2");
-      sc->cv_etaqp1 = 1. / (sqrt(sqrt(BIAS3*dup)) + ADDON);
+      //double sqrt1=sqrt(BIAS3dup);
+      //double sqrt2=sqrt(sqrt1);
+      double cv_etaq_power=cbrt(BIAS3dup);
+      print_double(&cv_etaq_power,1,"cv_etaq_power1757");
+      sc->cv_etaqp1 = 1. / (cbrt(BIAS3*dup) + ADDON);
+      //double cv_etaq_sqrt=sqrt(BIAS3dup);
+      //print_double(&cv_etaq_sqrt,1,"cv_etaq_sqrt");
+      //double cv_etaq_sqrt2=sqrt(cv_etaq_sqrt);
+      //print_double(&cv_etaq_sqrt2,1,"cv_etaq_sqrt2");
+      //sc->cv_etaqp1 = 1. / (sqrt(sqrt(BIAS3*dup)) + ADDON);
+      //sc->cv_etaqp1 = 1. / (dSUNRpowerR(BIAS3*dup, (sc->cv_L+1)) + ADDON);
+      //double ADDONetaq=cv_etaq_sqrt2 + ADDON;
+      //print_double(&ADDONetaq,1,"ADDONetaq");
+      //sc->cv_etaqp1 = 1. / (ADDONetaq);
+      //double cv_etaqp1_2 = 1. / (ADDONetaq);
+      //print_double(&cv_etaqp1_2,1,"cv_etaqp1_2");
+      //printf("cv_etaqp1_1767[%d]=%.17le\n",i,sc->cv_etaqp1);
     }
-    else
-      sc->cv_etaqp1 = 1. / (dSUNRpowerR(BIAS3*dup, 1./(sc->cv_L+1)) + ADDON);
+    else{
+      //if(i==0)printf("else\n");
+      sc->cv_etaqp1 = 1. / (dSUNRpowerR(BIAS3*dup, (sc->cv_L+1)) + ADDON);
+      }
     print_double(&sc->cv_etaqp1,1,"cv_etaqp1728");
   }
   __syncthreads();
@@ -1887,7 +1914,7 @@ int cudaDeviceCVodeGetDky(ModelDataGPU *md, ModelDataVariable *sc,
   __syncthreads();
    if (k == 0) return(CV_SUCCESS);
   __syncthreads();
-   r = dSUNRpowerR(double(sc->cv_h),double(-k));
+   r = dSUNRpowerI(double(sc->cv_h),double(-k));
   __syncthreads();
    dky[i]=dky[i]*r;
    return(CV_SUCCESS);
@@ -2005,7 +2032,6 @@ void cudaGlobalCVode(ModelDataGPU md_object) {
   //IF WANT TO USE SC 1 PER BLOCK, THEN CHECK ALL SC->SOMETHING = SOMETHING AND BLOCKIDX.X CALLS AND ADD IF(THREADIDX.X==0)...SYNCTHREADS() TO AVOID OVERLAPPING
   //ModelDataVariable *sc = &md->sCells[blockIdx.x];
   ModelDataVariable sc_object = md->sCells[blockIdx.x];
-  __syncthreads();
   ModelDataVariable *sc = &sc_object;
   __syncthreads();
   int istate;
