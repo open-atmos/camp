@@ -422,11 +422,9 @@ __device__ void cudaCVODESwapCSC_CSRBCG(ModelDataGPU *md, ModelDataVariable *dmd
 #endif
 
 void print_int(int *x, int len, const char *s){
-
   for (int i=0; i<len; i++){
     printf("%s[%d]=%d\n",s,i,x[i]);
   }
-
 }
 
 void print_double(double *x, int len, const char *s){
