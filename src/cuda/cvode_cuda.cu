@@ -1174,7 +1174,7 @@ int cudaDevicecvNewtonIteration(ModelDataGPU *md, ModelDataVariable *sc){
     }
     delp = del;
     __syncthreads();
-    print_double(md->dcv_y,73,"dcv_y1137");
+    //print_double(md->dcv_y,73,"dcv_y1137");
     retval=cudaDevicef(sc->cv_next_h, md->dcv_y, md->dftemp, md, sc, &aux_flag);
     __syncthreads();
     md->cv_acor[i]=md->dcv_y[i]+md->dzn[i];
@@ -1216,7 +1216,7 @@ int cudaDevicecvNlsNewton(int nflag,
                   (sc->cv_nst >= sc->cv_nstlp + MSBP) ||
                   (dgamrat > DGMAX);
   __syncthreads();
-  print_double(md->dzn,73,"dzn1174");
+  //print_double(md->dzn,73,"dzn1174");
   //print_double(md->cv_last_yn,73,"cv_last_yn1175");
   md->dftemp[i]=md->dzn[i]-md->cv_last_yn[i];
   //print_double(md->dftemp,73,"cv_ftemppN_VLinearSum2");
@@ -1492,7 +1492,7 @@ void cudaDevicecvDecreaseBDF(ModelDataGPU *md, ModelDataVariable *sc) {
     md->dzn[i+md->nrows*j]=-md->cv_l[j+blockIdx.x*L_MAX]*
       md->dzn[i+md->nrows*sc->cv_q]+md->dzn[i+md->nrows*j];
   }
-  print_double(md->dzn+md->nrows*2,73,"dzn2_1469");
+  //print_double(md->dzn+md->nrows*2,73,"dzn2_1469");
   print_double(md->dzn,73,"dzn1460");
 }
 
@@ -1594,34 +1594,41 @@ void cudaDevicecvCompleteStep(ModelDataGPU *md, ModelDataVariable *sc) {
     sc->cv_saved_tq5 = md->cv_tq[5+blockIdx.x*(NUM_TESTS + 1)];
     sc->cv_indx_acor = md->cv_qmax;
   }
-  print_double(md->dzn,73,"dzn1554");
+  //print_double(md->dzn,73,"dzn1554");
 }
 
 __device__
 void cudaDevicecvChooseEta(ModelDataGPU *md, ModelDataVariable *sc) {
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   double etam;
+  print_double(&sc->cv_etaqm1,1,"cv_etaqm11605");
+  print_double(&sc->cv_etaq,1,"cv_etaq1605");
+  print_double(&sc->cv_etaqp1,1,"cv_etaqp1605");
   etam = SUNMAX(sc->cv_etaqm1, SUNMAX(sc->cv_etaq, sc->cv_etaqp1));
+  print_double(&etam,1,"etam1605");
   __syncthreads();
   if (etam < THRESH) {
     sc->cv_eta = 1.;
+    print_double(&sc->cv_eta,1,"cv_eta1609");
     sc->cv_qprime = sc->cv_q;
     return;
   }
   __syncthreads();
   if (etam == sc->cv_etaq) {
     sc->cv_eta = sc->cv_etaq;
+    print_double(&sc->cv_eta,1,"cv_eta1616");
     sc->cv_qprime = sc->cv_q;
   } else if (etam == sc->cv_etaqm1) {
     sc->cv_eta = sc->cv_etaqm1;
+    print_double(&sc->cv_eta,1,"cv_eta1620");
     sc->cv_qprime = sc->cv_q - 1;
   } else {
     sc->cv_eta = sc->cv_etaqp1;
+    print_double(&sc->cv_eta,1,"cv_eta1624");
     sc->cv_qprime = sc->cv_q + 1;
     __syncthreads();
     md->dzn[i+md->nrows*md->cv_qmax]=md->cv_acor[i];
   }
-  print_double(&sc->cv_eta,1,"cv_eta_1597");
   __syncthreads();
   print_double(md->dzn,73,"dzn1581");
 }
@@ -1673,7 +1680,7 @@ int cudaDevicecvPrepareNextStep(ModelDataGPU *md, ModelDataVariable *sc, double 
   if(sc->cv_L!=2){
     //print_int(&sc->cv_L,1,"cv_L1674");
     /*
-    if(i==0)printf("WARNING: dSUNRpowerR is innacurate from CPU"
+    if(i==0)printf("WARNING: pow is innacurate from CPU"
     " result for CUDA/10.1.105 "
     " (which is used during development at CTE-POWER) "
     " (debug by compare pow(x,0.5) and"
