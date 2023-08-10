@@ -63,7 +63,7 @@ def all_timesteps():
   # conf.cells = [100, 500, 1000, 5000, 10000]
   # conf.cells = [50000,100000,500000,1000000]
 
-  conf.timeSteps = 60
+  conf.timeSteps = 2
   # conf.timeSteps = 720
 
   conf.timeStepsDt = 2
@@ -118,8 +118,8 @@ def all_timesteps():
   conf.plotYKey = "NRMSE"
   # conf.MAPETol = 1.0E-6
 
-  conf.use_netcdf = False #Old, float (4bytes)
-  #conf.use_netcdf = True #New, double, but slow, use for MONARCH output
+  #conf.use_netcdf = False #Old, float (4bytes)
+  conf.use_netcdf = True #New, double, but slow, use for MONARCH output
 
   # conf.plotXKey = "MPI processes"
   # conf.plotXKey = "GPUs"

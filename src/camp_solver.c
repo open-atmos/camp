@@ -790,7 +790,7 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
     //printf("end cell\nline\n");
   //}
 #ifdef ENABLE_NETCDF
-  //export_state_netcdf(sd);
+  export_state_netcdf(sd);
 #endif
 #ifdef FAILURE_DETAIL
   sd->counter_fail_solve_print=0;
