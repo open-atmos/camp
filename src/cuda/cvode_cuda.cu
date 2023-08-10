@@ -35,17 +35,14 @@ void print_int(int *x, int len, const char *s){
 }
 
 __device__
-double dSUNRpowerR(double base, double exponentR){
+double dSUNRpowerR(double base, double exponent){
   if (base <= ZERO) return(ZERO);
-  if(exponentR==(2)) return sqrt(base);
-  if(exponentR==(3)){
-  double sqrt1=sqrt(base);
-  double sqrt2=sqrt(sqrt1);
-  __syncthreads();
-  return sqrt2;
-  }
-  if(exponentR==(4)) return sqrt(sqrt(sqrt(base)));
-  return(pow(base, (double)(1./exponentR)));
+#ifndef EQUALLIZE_CPU_CUDA_POW
+  if(exponent==(1./2)) return sqrt(base);
+  if(exponent==(1./3)) return sqrt(sqrt(sqrt(base)));
+  if(exponent==(1./4)) return sqrt(sqrt(sqrt(base)));
+#endif
+  return(pow(base, (double)(1./exponent)));
 }
 
 __device__
@@ -1545,7 +1542,7 @@ int cudaDevicecvDoErrorTest(ModelDataGPU *md, ModelDataVariable *sc,
   sc->cv_etamax = 1.;
   __syncthreads();
   if (*nefPtr <= MXNEF1) {
-    sc->cv_eta = 1. / (dSUNRpowerR(BIAS2*dsm,sc->cv_L) + ADDON);
+    sc->cv_eta = 1. / (dSUNRpowerR(BIAS2*dsm,1./sc->cv_L) + ADDON);
     __syncthreads();
     sc->cv_eta = SUNMAX(ETAMIN, SUNMAX(sc->cv_eta,
                            sc->cv_hmin / fabs(sc->cv_h)));
@@ -1695,7 +1692,7 @@ int cudaDevicecvPrepareNextStep(ModelDataGPU *md, ModelDataVariable *sc, double 
   //print_double(&cv_etaq_power,1,"cv_etaq_power");
   //double cv_etaq_sqrt=sqrt(BIAS2dsm);
   //print_double(&cv_etaq_sqrt,1,"cv_etaq_sqrt");
-  sc->cv_etaq=1./(dSUNRpowerR(BIAS2*dsm,sc->cv_L) + ADDON);
+  sc->cv_etaq=1./(dSUNRpowerR(BIAS2*dsm,1./sc->cv_L) + ADDON);
   print_double(&sc->cv_etaq,1,"cv_etaq1639");
   /*
   if(sc->cv_L!=2){
@@ -1727,7 +1724,7 @@ int cudaDevicecvPrepareNextStep(ModelDataGPU *md, ModelDataVariable *sc, double 
     __syncthreads();
     ddn *= md->cv_tq[1+blockIdx.x*(NUM_TESTS + 1)];
     __syncthreads();
-    sc->cv_etaqm1 = 1./(dSUNRpowerR(BIAS1*ddn, sc->cv_q) + ADDON);
+    sc->cv_etaqm1 = 1./(dSUNRpowerR(BIAS1*ddn, 1./sc->cv_q) + ADDON);
   }
   double dup, cquot;
   sc->cv_etaqp1 = 0.;
@@ -1747,32 +1744,10 @@ int cudaDevicecvPrepareNextStep(ModelDataGPU *md, ModelDataVariable *sc, double 
     print_double(&BIAS3dup,1,"BIAS3dup");
     double cv_L1=1./(sc->cv_L+1);
     //print_double(&cv_L1,1,"1cv_L1732");
-    //double cv_etaq_power=dSUNRpowerR(BIAS3dup,cv_L1);
+    //double cv_etaq_power=dSUNRpowerR(BIAS3dup,1./cv_L1);
     //double cv_etaq_power=(double)pow((double)BIAS3dup,(double)cv_L1);
     //print_double(&cv_etaq_power,1,"cv_etaq_power1734");
-    if(sc->cv_L==2){
-      //double sqrt1=sqrt(BIAS3dup);
-      //double sqrt2=sqrt(sqrt1);
-      double cv_etaq_power=cbrt(BIAS3dup);
-      print_double(&cv_etaq_power,1,"cv_etaq_power1757");
-      sc->cv_etaqp1 = 1. / (cbrt(BIAS3*dup) + ADDON);
-      //double cv_etaq_sqrt=sqrt(BIAS3dup);
-      //print_double(&cv_etaq_sqrt,1,"cv_etaq_sqrt");
-      //double cv_etaq_sqrt2=sqrt(cv_etaq_sqrt);
-      //print_double(&cv_etaq_sqrt2,1,"cv_etaq_sqrt2");
-      //sc->cv_etaqp1 = 1. / (sqrt(sqrt(BIAS3*dup)) + ADDON);
-      //sc->cv_etaqp1 = 1. / (dSUNRpowerR(BIAS3*dup, (sc->cv_L+1)) + ADDON);
-      //double ADDONetaq=cv_etaq_sqrt2 + ADDON;
-      //print_double(&ADDONetaq,1,"ADDONetaq");
-      //sc->cv_etaqp1 = 1. / (ADDONetaq);
-      //double cv_etaqp1_2 = 1. / (ADDONetaq);
-      //print_double(&cv_etaqp1_2,1,"cv_etaqp1_2");
-      //printf("cv_etaqp1_1767[%d]=%.17le\n",i,sc->cv_etaqp1);
-    }
-    else{
-      //if(i==0)printf("else\n");
-      sc->cv_etaqp1 = 1. / (dSUNRpowerR(BIAS3*dup, (sc->cv_L+1)) + ADDON);
-      }
+    sc->cv_etaqp1 = 1. / (dSUNRpowerR(BIAS3*dup, 1./(sc->cv_L+1)) + ADDON);
     print_double(&sc->cv_etaqp1,1,"cv_etaqp1728");
   }
   __syncthreads();
