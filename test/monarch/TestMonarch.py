@@ -155,6 +155,12 @@ def all_timesteps():
   elif conf.chemFile == "cb05_mechanism_yarwood2005":
     print("ERROR: Not tested in testmonarch.py, configuration taken from monarch branch 209 and tested in monarch for the camp paper")
     raise
+  if "Realistic" in conf.diffCells and \
+      conf.is_new_export and \
+      conf.mpiProcessesCaseBase not in \
+      conf.mpiProcessesCaseOptimList:
+    print("ERROR: Wrong conf, MPI and cells are exported in different order, set same MPIs for both cases")
+    raise
   if not conf.caseBase:
     print("ERROR: caseBase is empty")
     raise

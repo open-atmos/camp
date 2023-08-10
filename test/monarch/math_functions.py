@@ -203,7 +203,7 @@ def calculate_NRMSE(data, n_time_steps, n_cells, max_tol):
   max_NRMSEs_species = 0.
   max_err_rel = 0.
   err_rel_at_max_abs = 0.
-  max_err_rel_name = ""
+  max_err_rel_specie = 0
   max_err_rel_timestep = 0
   max_err_abs = 0.
   err_abs_at_max_rel = 0.
@@ -250,7 +250,7 @@ def calculate_NRMSE(data, n_time_steps, n_cells, max_tol):
         if err_rel > max_err_rel:
           max_err_rel = err_rel
           err_abs_at_max_rel = err_abs
-          max_err_abs_specie = k
+          max_err_rel_specie = k
           max_err_abs_cell = j
           max_err_rel_timestep = i
     for k in range(n_species):
@@ -276,7 +276,7 @@ def calculate_NRMSE(data, n_time_steps, n_cells, max_tol):
   err_abs_at_max_rel = format(err_abs_at_max_rel, '.2e')
   print("relative max_error:", max_err_rel,
         "% with absolute error",err_abs_at_max_rel,
-        "at specie id:", max_err_rel_name,
+        "at specie id:", max_err_rel_specie,
         "timestep:", max_err_rel_timestep,
         "absolute max_error:", max_err_abs,
         "with relative error:", err_rel_at_max_abs,
