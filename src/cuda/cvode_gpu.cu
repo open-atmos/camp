@@ -28,7 +28,7 @@ static void HandleError(cudaError_t err,
 }
 
 void print_double_cv_gpu(double *x, int len, const char *s){
-#ifdef USE_PRINT_ARRAYS
+#ifndef USE_PRINT_ARRAYS
   for (int i=0; i<len; i++){
     printf("%s[%d]=%.17le\n",s,i,x[i]);
   }
@@ -821,8 +821,8 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
   }
   //double *zn0 = NV_DATA_S(cv_mem->cv_zn[0]);
   //print_double_cv_gpu(zn0,73,"dzn807");
-  double *zn1 = NV_DATA_S(cv_mem->cv_zn[1]);
-  print_double_cv_gpu(zn1,73,"dzn825");
+  //double *zn1 = NV_DATA_S(cv_mem->cv_zn[1]);
+  //print_double_cv_gpu(zn1,73,"dzn825");
   cvodeRun(mGPU,stream);
   cudaMemcpyAsync(cv_acor_init, mGPU->cv_acor_init, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost, stream);
   cudaMemcpyAsync(youtArray, mGPU->yout, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost, stream);

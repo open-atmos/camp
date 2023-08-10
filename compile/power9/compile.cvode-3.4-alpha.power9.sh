@@ -9,12 +9,12 @@ if [ -z "$SUITE_SPARSE_CAMP_ROOT" ]; then
 	SUITE_SPARSE_CAMP_ROOT=$(pwd)/$library_path/SuiteSparse
 fi
 
-#tar -zxvf camp/cvode-3.4-alpha.tar.gz
+#tar -zxvf camp/cvoddzn1432e-3.4-alpha.tar.gz
 cd $library_path/cvode-3.4-alpha
-#rm -r build
+#rm -r builddzn825
 mkdir build
 #rm -rf install
-mkdir install
+mkdir installdzn1432
 mkdir install/examples
 cd build
 cmake -D CMAKE_BUILD_TYPE=debug \

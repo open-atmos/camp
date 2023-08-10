@@ -10,7 +10,7 @@ extern "C" {
 
 __device__
 void print_double(double *x, int len, const char *s){
-#ifdef USE_PRINT_ARRAYS
+#ifndef USE_PRINT_ARRAYS
   __syncthreads();
   if(threadIdx.x==0 && blockIdx.x==0){
     for (int i=0; i<len; i++){
@@ -23,7 +23,7 @@ void print_double(double *x, int len, const char *s){
 
 __device__
 void print_int(int *x, int len, const char *s){
-#ifdef USE_PRINT_ARRAYS
+#ifndef USE_PRINT_ARRAYS
   __syncthreads();
   if(threadIdx.x==0 && blockIdx.x==0){
     for (int i=0; i<len; i++){
@@ -37,7 +37,7 @@ void print_int(int *x, int len, const char *s){
 __device__
 double dSUNRpowerR(double base, double exponent){
   if (base <= ZERO) return(ZERO);
-#ifdef EQUALLIZE_CPU_CUDA_POW
+#ifndef EQUALLIZE_CPU_CUDA_POW
   if(exponent==(1./2)) return sqrt(base);
   if(exponent==(1./3)) return sqrt(sqrt(sqrt(base)));
   if(exponent==(1./4)) return sqrt(sqrt(sqrt(base)));
