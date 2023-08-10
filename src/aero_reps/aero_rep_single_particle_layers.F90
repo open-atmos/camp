@@ -76,8 +76,6 @@ module camp_aero_rep_single_particle
     !> Unique names for each instance of every chemical species in the
     !! aerosol representaiton
     type(string_t), allocatable, private :: unique_names_(:)
-    !> Layer names in order (only used during initialization)
-    type(string_t), allocatable :: ordered_layer_name(:)
     !> First state id for the representation (only used during initialization)
     integer(kind=i_kind) :: state_id_start = -99999
   contains
@@ -248,6 +246,7 @@ contains
     integer(kind=i_kind) :: num_int_param, num_float_param, num_particles
 
     ! Start off the counters
+    ! TODO: how do I initialize these variables
     num_int_param = NUM_INT_PROP_ + 5*size(aero_phase_set) + size(aero_layer_set)
     num_float_param = NUM_REAL_PROP_
 
@@ -315,7 +314,7 @@ contains
               this%layer_name(i_layer)%string// &
               "' in single-particle layer aerosol representation '"// &
               this%rep_name//"'")
-      num_phase = num_phase + phases%size() 
+      NUM_PHASE(i_layer) = phases%size() 
 
       ! Loop through the phases and make sure they exist
       call phases%iter_reset()
@@ -327,38 +326,14 @@ contains
                 this%layer_name(i_layer)%string// &
                 "' in single-particle layer aerosol representation '"// &
                 this%rep_name//"'")
-
+  
         call phases%iter_next()
       end do
 
-      call sections%iter_next()
+      call layers%iter_next()
     end do
-
-    ! Allocate space for the layer names in order (bulk - surface)
-    allocate(this%ordered_layer_name(layers%size()))
-
-    ! Order layer array from inner to outer most layer
-    do i_cover = 1, layers%size()
-      do i_layer = 1, layers%size()
-        if (cover_name(i_layer).eq."none") then
-          ordered_layer_name(1) = layer_name(i_layer)
-        else
-          continue
-        end if
-      end do
-    end do
-
-    do i_cover = 2, layers%size()
-      do i_layer = 1, layers%size()
-        if (ordered_layer_name(i_cover-1).eq.cover_name(i_layer)) then
-          ordered_layer_name(i_cover) = layer_name(i_layer)
-        else 
-          continue
-        end if
-      end do
-    end do
-        
-
+      
+    aero_layer_phase_set = call order_layer_array(this,layers,cover_name,layer_name)
 
     ! Initialize NUM_PHASE_ array
     do i_layer = 1, TOTAL_NUM_LAYERS_
@@ -751,6 +726,49 @@ contains
     update_data%is_malloced = .true.
 
   end subroutine update_data_init_number
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  !> Order layer array from inner most layer to outermost 
+  subroutine order_layer_array(this,layers,cover_name_array,layer_name_array)
+
+    !> Aerosol representation to update
+    class(aero_rep_single_particle_t), intent(inout) :: this
+
+    !> Layer names in order (only used during initialization)
+    type(string_t), allocatable :: ordered_layer_name(:)
+    !> Layer names 
+    type(string_t), allocatable :: layer_name_array(:)
+    !> Cover names 
+    type(string_t), allocatable :: cover_name_array(:)
+
+    type(property_t), pointer :: layers
+    integer(kind=i_kind) :: i_layer, i_cover
+   
+    allocate(this%ordered_layer_name(layers%size()))
+   
+    do i_cover = 1, layers%size()
+      do i_layer = 1, layers%size()
+        if (cover_name_array(i_layer) == "none") then
+          ordered_layer_name(1) = layer_name_array(i_layer)
+        else
+          continue
+        end if
+      end do
+    end do
+
+    do i_cover = 2, layers%size()
+      do i_layer = 1, layers%size()
+        if (ordered_layer_name(i_cover-1).eq.cover_name_array(i_layer)) then
+          ordered_layer_name(i_cover) = layer_name_array(i_layer)
+        else 
+          continue
+        end if
+      end do
+    end do
+
+  end subroutine order_layer_array
+
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
