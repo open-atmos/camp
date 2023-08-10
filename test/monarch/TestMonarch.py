@@ -27,8 +27,8 @@ def all_timesteps():
   #conf.is_export = True
   #conf.is_export = False
 
-  conf.is_import = True
-  #conf.is_import = False
+  #conf.is_import = True
+  conf.is_import = False
 
   # conf.commit = "MATCH_IMPORTED_CONF"
   conf.commit = ""
@@ -63,7 +63,7 @@ def all_timesteps():
   # conf.cells = [100, 500, 1000, 5000, 10000]
   # conf.cells = [50000,100000,500000,1000000]
 
-  conf.timeSteps = 20
+  conf.timeSteps = 2
   # conf.timeSteps = 720
 
   conf.timeStepsDt = 2
