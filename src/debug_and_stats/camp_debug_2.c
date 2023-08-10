@@ -29,7 +29,7 @@ void nc(int status) { //handle netcdf error
   }
 }
 
-void init_export_state_netcdf(SolverData *sd){
+void old_init_export_state_netcdf(SolverData *sd){
   ModelData *md = &(sd->model_data);
   if(md->n_cells==1){
     int size,rank;
@@ -38,18 +38,18 @@ void init_export_state_netcdf(SolverData *sd){
     int n_state_nc=sd->n_cells_tstep*md->n_per_cell_state_var;
     sd->state_nc = (double *)malloc(sizeof(double) * n_state_nc);
   }else{
-    //printf("init_export_state_netcdf\n");
+    //printf("init_export_state\n");
     sd->icell=sd->n_cells_tstep;
   }
 }
 
-void export_state_netcdf(SolverData *sd){
+void old_export_state_netcdf(SolverData *sd){
   ModelData *md = &(sd->model_data);
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   int n_state_nc=sd->n_cells_tstep*md->n_per_cell_state_var;
   if(md->n_cells==1 && sd->icell<sd->n_cells_tstep){ //gather
-    //if(rank==0)printf("export_state_netcdf gather\n");
+    //if(rank==0)printf("export_state gather\n");
     for (int i = 0; i < md->n_per_cell_state_var; i++) {
       sd->state_nc[i+sd->icell*md->n_per_cell_state_var]=md->total_state[i];
     }
@@ -57,7 +57,7 @@ void export_state_netcdf(SolverData *sd){
   }
   //printf("%d %d %d\n",n_state_nc,md->n_cells,sd->n_cells_tstep);
   if(sd->icell>=sd->n_cells_tstep){ //export all cells
-    if(rank==0)printf("export_state_netcdf start\n");
+    if(rank==0)printf("export_state start\n");
     int ncid;
     int nvars=1;
     int dimids[nvars], varids[nvars];
@@ -78,7 +78,7 @@ void export_state_netcdf(SolverData *sd){
     else
       nc(nc_put_vara_double(ncid, varids[i],&start, &count, md->total_state));
     nc(nc_close(ncid));
-    if(rank==0)printf("export_state_netcdf end\n");
+    if(rank==0)printf("export_state end\n");
     /*
       if(sd->icell>=sd->n_cells_tstep){
         MPI_Barrier(MPI_COMM_WORLD);
@@ -540,6 +540,72 @@ void cell_netcdf(SolverData *sd){
 }
 
 #endif
+
+void init_export_state(SolverData *sd){
+  ModelData *md = &(sd->model_data);
+  if(md->n_cells==1){
+    int size,rank;
+    MPI_Comm_size(MPI_COMM_WORLD, &size);
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    int n_state_nc=sd->n_cells_tstep*md->n_per_cell_state_var;
+    sd->state_nc = (double *)malloc(sizeof(double) * n_state_nc);
+    //int n_state_nc_str=n_state_nc*22;
+    //sd->state_nc = (char *)malloc(sizeof(double) * n_state_nc);
+
+  }else{
+    //printf("init_export_state\n");
+    sd->icell=sd->n_cells_tstep;
+  }
+}
+
+void export_state(SolverData *sd){
+  ModelData *md = &(sd->model_data);
+  int rank;
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  int n_state_nc=sd->n_cells_tstep*md->n_per_cell_state_var;
+  if(md->n_cells==1 && sd->icell<sd->n_cells_tstep){ //gather
+    //if(rank==0)printf("export_state gather\n");
+    for (int i = 0; i < md->n_per_cell_state_var; i++) {
+      sd->state_nc[i+sd->icell*md->n_per_cell_state_var]=md->total_state[i];
+    }
+    sd->icell++;
+  }
+  //printf("%d %d %d\n",n_state_nc,md->n_cells,sd->n_cells_tstep);
+  if(sd->icell>=sd->n_cells_tstep){ //export all cells
+    if(rank==0)printf("export_state start\n");
+    char file_path[]="out/state.csv";
+    MPI_Comm comm = MPI_COMM_WORLD;
+    MPI_File fh;
+    MPI_File_open( comm, file_path, MPI_MODE_WRONLY |
+       MPI_MODE_CREATE, MPI_INFO_NULL, &fh );
+
+    printf("Created csv file at %s rank %d\n",file_path, rank);
+    int size;
+    MPI_Comm_size(MPI_COMM_WORLD, &size);
+    MPI_Status status;
+    char *x = "1111abc\n";
+    printf("strlen %d",strlen(x));
+    if(md->n_cells==1){
+      //MPI_File_write_ordered( fh, sd->state_nc, 1, MPI_DOUBLE, &status );
+      if (rank == 0)MPI_File_write( fh, x, strlen(x), MPI_CHAR, &status );
+    }
+    //else
+      //MPI_File_write_ordered( fh, md->total_state, 1, MPI_DOUBLE, &status );
+    MPI_File_close( &fh );
+    if(rank==0)printf("export_state end\n");
+    /*
+      if(sd->icell>=sd->n_cells_tstep){
+        MPI_Barrier(MPI_COMM_WORLD);
+        if(rank==0) printf("export_netcdf exit sd->icell %d\n", sd->icell);
+        MPI_Barrier(MPI_COMM_WORLD);
+        int err=0;
+        MPI_Abort(1,err);
+        exit(0);
+      }
+    */
+  }
+}
+
 
 void check_iszerod(long double *x, int len, const char *s){
 #ifndef DEBUG_CHECK_ISZEROD

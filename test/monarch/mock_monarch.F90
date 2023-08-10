@@ -189,9 +189,6 @@ program mock_monarch_t
 
   real :: test_float
 
-  print*,"sizeof(test_float)",sizeof(test_float)
-
-
   ! initialize mpi (to take the place of a similar MONARCH call)
   !todo put MPI as an option to reduce time execution when developing, testing, and debugging
   call camp_mpi_init()

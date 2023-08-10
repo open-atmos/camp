@@ -63,7 +63,7 @@ def all_timesteps():
   # conf.cells = [100, 500, 1000, 5000, 10000]
   # conf.cells = [50000,100000,500000,1000000]
 
-  conf.timeSteps = 2
+  conf.timeSteps = 1
   # conf.timeSteps = 720
 
   conf.timeStepsDt = 2
@@ -118,8 +118,8 @@ def all_timesteps():
   conf.plotYKey = "NRMSE"
   # conf.MAPETol = 1.0E-6
 
-  #conf.use_netcdf = False #Old, float (4bytes)
-  conf.use_netcdf = True #New, double, but slow, use for MONARCH output
+  #conf.is_new_export = False #Old, float (4bytes)
+  conf.is_new_export = True #New, double, but slow, use for MONARCH output
 
   # conf.plotXKey = "MPI processes"
   # conf.plotXKey = "GPUs"
@@ -130,7 +130,7 @@ def all_timesteps():
   # remove_to_tmp(conf,"1661337164911019079")
   conf.results_file = "_solver_stats.csv"
   if conf.plotYKey == "NRMSE" or conf.plotYKey == "MAPE":
-    if conf.use_netcdf:
+    if conf.is_new_export:
       conf.results_file = 'out/state.csv'
     else:
       conf.results_file = '_results_all_cells.csv'
