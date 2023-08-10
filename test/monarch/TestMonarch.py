@@ -27,8 +27,8 @@ def all_timesteps():
   #conf.is_export = True
   #conf.is_export = False
 
-  #conf.is_import = True
-  conf.is_import = False
+  conf.is_import = True
+  #conf.is_import = False
 
   # conf.commit = "MATCH_IMPORTED_CONF"
   conf.commit = ""
@@ -43,7 +43,7 @@ def all_timesteps():
   conf.mpi = "yes"
   # conf.mpi = "no"
 
-  conf.mpiProcessesCaseBase = 10
+  conf.mpiProcessesCaseBase = 1
   # conf.mpiProcessesCaseBase = 2
 
   conf.mpiProcessesCaseOptimList.append(1)
@@ -59,11 +59,11 @@ def all_timesteps():
   # conf.allocatedTasksPerNode = 320
   # conf.allocatedTasksPerNode = get_ntasksPerNode_sbatch() #todo
 
-  conf.cells = [30]
+  conf.cells = [1]
   # conf.cells = [100, 500, 1000, 5000, 10000]
   # conf.cells = [50000,100000,500000,1000000]
 
-  conf.timeSteps = 1
+  conf.timeSteps = 20
   # conf.timeSteps = 720
 
   conf.timeStepsDt = 2
@@ -93,7 +93,7 @@ def all_timesteps():
   # conf.casesOptim.append("GPU Block-cellsN")
   # conf.casesOptim.append("GPU Block-cells1")
   # conf.casesOptim.append("CPU EBI")
-  #conf.casesOptim.append("GPU BDF")
+  conf.casesOptim.append("GPU BDF")
   # conf.casesOptim.append("GPU CPU")
   # conf.casesOptim.append("GPU maxrregcount-64") #wrong 10,000 cells
   # conf.casesOptim.append("GPU maxrregcount-68")
@@ -118,8 +118,8 @@ def all_timesteps():
   conf.plotYKey = "NRMSE"
   # conf.MAPETol = 1.0E-6
 
-  conf.is_new_export = False #Old, float (4bytes)
-  #conf.is_new_export = True #New, double, but slow, use for MONARCH output
+  #conf.is_new_export = False #Old, float (4bytes)
+  conf.is_new_export = True #New, double, but slow, use for MONARCH output
 
   # conf.plotXKey = "MPI processes"
   # conf.plotXKey = "GPUs"
@@ -132,6 +132,8 @@ def all_timesteps():
   if conf.plotYKey == "NRMSE" or conf.plotYKey == "MAPE":
     if conf.is_new_export:
       conf.results_file = 'out/state.csv'
+      if conf.is_import:
+        conf.is_export = False
     else:
       conf.results_file = '_results_all_cells.csv'
       conf.is_export = False

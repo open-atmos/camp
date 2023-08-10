@@ -551,26 +551,12 @@ void init_export_state(SolverData *sd){
     fptr = fopen(file_path,"w");//overwrite file
     fclose(fptr);
   }
-#ifndef DEV_EXPORT_STATE
-#else
-  if(md->n_cells==1){
-    int size,rank;
-    MPI_Comm_size(MPI_COMM_WORLD, &size);
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    int n_state_nc=sd->n_cells_tstep*md->n_per_cell_state_var;
-    sd->state_nc = (double *)malloc(sizeof(double) * n_state_nc);
-  }else{
-    //printf("init_export_state\n");
-    sd->icell=sd->n_cells_tstep;
-  }
-#endif
 }
 
 void export_state(SolverData *sd){
   ModelData *md = &(sd->model_data);
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-#ifndef DEV_EXPORT_STATE
   if(rank==0)printf("export_state start\n");
   char file_path[]="out/state.csv";
   int size;
@@ -585,10 +571,10 @@ void export_state(SolverData *sd){
         fptr = fopen(file_path, "a");
         // maybe compare time with print cell-by-cell instead of gather all
         // maybe move to print_double
-        int len = md->n_per_cell_state_var * md->n_cells;
+        int len = md->n_per_cell_state_var;
         double *x = md->total_state + k * md->n_per_cell_state_var;
         for (int i = 0; i < len; i++) {
-          fprintf(fptr, "%d,%.17le\n",j,x[i]);
+          fprintf(fptr, "%.17le\n",x[i]);
         }
         fclose(fptr);
         //MPI_Send(&access, 1, MPI_INT, access, 123, MPI_COMM_WORLD);
@@ -596,56 +582,7 @@ void export_state(SolverData *sd){
       MPI_Barrier(MPI_COMM_WORLD);
     }
   }
-#else
-  int n_state_nc=sd->n_cells_tstep*md->n_per_cell_state_var;
-  if(md->n_cells==1 && sd->icell<sd->n_cells_tstep){ //gather
-    //if(rank==0)printf("export_state gather\n");
-    for (int i = 0; i < md->n_per_cell_state_var; i++) {
-      sd->state_nc[i+sd->icell*md->n_per_cell_state_var]=md->total_state[i];
-    }
-    sd->icell++;
-  }
-  //printf("%d %d %d\n",n_state_nc,md->n_cells,sd->n_cells_tstep);
-  if(sd->icell>=sd->n_cells_tstep){ //export all cells
-    if(rank==0)printf("export_state start\n");
-    char file_path[]="out/state.csv";
-    double *state_out;
-    if(md->n_cells==1)state_out=sd->state_nc;
-    else state_out = md->total_state;
-    int size;
-    MPI_Comm_size(MPI_COMM_WORLD, &size);
-    //int access=0;
-    //if(rank==0)access=1;
-    for (int j=0; j<size; j++){
-      if(rank==j){
-        FILE *fptr;
-        fptr = fopen(file_path,"a");
-        //maybe compare time with print cell-by-cell instead of gather all
-        //maybe move to print_double
-        int len=n_state_nc;
-        double *x=state_out;
-        for (int i=0; i<len; i++){
-          fprintf(fptr,"%d,%.17le\n",rank,x[i]);
-        }
-        fclose(fptr);
-        //MPI_Send(&access,1,MPI_INT,access,123,MPI_COMM_WORLD);
-      }
-      MPI_Barrier(MPI_COMM_WORLD);
-    }
-  }
-#endif
-    if(rank==0)printf("export_state end\n");
-    /*
-      if(sd->icell>=sd->n_cells_tstep){
-        MPI_Barrier(MPI_COMM_WORLD);
-        if(rank==0) printf("export_netcdf exit sd->icell %d\n", sd->icell);
-        MPI_Barrier(MPI_COMM_WORLD);
-        int err=0;
-        MPI_Abort(1,err);
-        exit(0);
-      }
-    */
-
+  if(rank==0)printf("export_state end\n");
 }
 
 

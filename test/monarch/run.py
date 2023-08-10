@@ -381,7 +381,7 @@ def run(conf):
       conf.is_import, data_path = import_data(conf, tmp_path)
     else:
       conf.is_import, data_path = False, tmp_path
-  elif conf.plotYKey is "NRMSE":
+  elif conf.plotYKey == "NRMSE":
     if conf.is_import:
       if conf.case is conf.caseBase:
         data_path = "out/state0.csv"
@@ -399,9 +399,6 @@ def run(conf):
   if conf.is_new_export:
     with open(data_path) as f:
       data = [float(line.rstrip('\n')) for line in f]
-    with open(data_path) as f:
-      data = [float(line) for line in f]
-    print("data",data)
     if conf.is_export and conf.plotYKey == "NRMSE":
       if conf.case is conf.caseBase:
         os.rename("out/state.csv", "out/state0.csv")
@@ -504,9 +501,9 @@ def run_cases(conf):
         if conf.plotYKey == "NRMSE":
           if conf.is_new_export:
             datay = math_functions.calculate_NRMSE(
-              data, conf.timeSteps,conf.nCells, conf.MAPETol)
+              data, conf.timeSteps,conf.nCellsProcesses, conf.MAPETol)
           else:
-            datay = math_functions.calculate_NRMSE_csv(data, conf.timeSteps, conf.MAPETol)
+            datay = math_functions.old_calculate_NRMSE(data, conf.timeSteps, conf.MAPETol)
         elif conf.plotYKey == "MAPE":
           if conf.is_new_export:
             raise
