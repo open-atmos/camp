@@ -11,8 +11,8 @@
 
 #include "../camp_common.h"
 
-void init_export_state_netcdf(SolverData *sd);
-void export_state_netcdf(SolverData *sd);
+void init_export_state(SolverData *sd);
+void export_state(SolverData *sd);
 void cell_netcdf(SolverData *sd);
 void check_isnand(double *x, int len, const char *s);
 void print_double(double *x, int len, const char *s);

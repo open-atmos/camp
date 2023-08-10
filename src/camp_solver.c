@@ -550,7 +550,14 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
   sd->n_cells_tstep = n_cells_tstep;
   sd->tstep=0;
   sd->icell=0;
-  init_export_state_netcdf(sd);
+#endif
+#ifndef EXPORT_STATE
+#ifndef ENABLE_NETCDF
+  sd->n_cells_tstep = n_cells_tstep;
+  sd->tstep=0;
+  sd->icell=0;
+#endif
+  init_export_state(sd);
 #endif
 #ifdef FAILURE_DETAIL
   // Set a custom error handling function
@@ -666,10 +673,10 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
     sub_model_update_env_state(md);
     rxn_update_env_state(md);
     if(i_cell==0){
-      print_double(md->grid_cell_state,n_state_var,"state688");
-      print_double(md->grid_cell_env,CAMP_NUM_ENV_PARAM_,"env689");
-      double *yp = N_VGetArrayPointer(sd->y);
-      print_double(yp,73,"y660");
+     // print_double(md->grid_cell_state,n_state_var,"state688");
+      //print_double(md->grid_cell_env,CAMP_NUM_ENV_PARAM_,"env689");
+      //double *yp = N_VGetArrayPointer(sd->y);
+      //print_double(yp,73,"y660");
     }
   }
 
@@ -786,11 +793,11 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
   //for (int i = 0; i < n_cells; i++) {
     //double *yp2 = N_VGetArrayPointer(sd->y);
     //print_double(yp2,73,"y789");
-    print_double(state, n_state_var, "state768");
+    //print_double(state, n_state_var, "state768");
     //printf("end cell\nline\n");
   //}
-#ifdef ENABLE_NETCDF
-  //export_state_netcdf(sd);
+#ifndef EXPORT_STATE
+  export_state(sd);
 #endif
 #ifdef FAILURE_DETAIL
   sd->counter_fail_solve_print=0;

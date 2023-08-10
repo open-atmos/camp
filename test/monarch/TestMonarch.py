@@ -63,7 +63,7 @@ def all_timesteps():
   # conf.cells = [100, 500, 1000, 5000, 10000]
   # conf.cells = [50000,100000,500000,1000000]
 
-  conf.timeSteps = 1
+  conf.timeSteps = 2
   # conf.timeSteps = 720
 
   conf.timeStepsDt = 2
@@ -93,7 +93,7 @@ def all_timesteps():
   # conf.casesOptim.append("GPU Block-cellsN")
   # conf.casesOptim.append("GPU Block-cells1")
   # conf.casesOptim.append("CPU EBI")
-  #conf.casesOptim.append("GPU BDF")
+  conf.casesOptim.append("GPU BDF")
   # conf.casesOptim.append("GPU CPU")
   # conf.casesOptim.append("GPU maxrregcount-64") #wrong 10,000 cells
   # conf.casesOptim.append("GPU maxrregcount-68")
@@ -118,8 +118,8 @@ def all_timesteps():
   conf.plotYKey = "NRMSE"
   # conf.MAPETol = 1.0E-6
 
-  conf.use_netcdf = False #Old
-  #conf.use_netcdf = True #New but slow, use for MONARCH output
+  #conf.is_new_export = False #Old, float (4bytes)
+  conf.is_new_export = True #New, double, but slow, use for MONARCH output
 
   # conf.plotXKey = "MPI processes"
   # conf.plotXKey = "GPUs"
@@ -130,8 +130,10 @@ def all_timesteps():
   # remove_to_tmp(conf,"1661337164911019079")
   conf.results_file = "_solver_stats.csv"
   if conf.plotYKey == "NRMSE" or conf.plotYKey == "MAPE":
-    if conf.use_netcdf:
+    if conf.is_new_export:
       conf.results_file = 'out/state.csv'
+      if conf.is_import:
+        conf.is_export = False
     else:
       conf.results_file = '_results_all_cells.csv'
       conf.is_export = False
@@ -152,6 +154,12 @@ def all_timesteps():
       conf.diffCellsL = ["Ideal"]
   elif conf.chemFile == "cb05_mechanism_yarwood2005":
     print("ERROR: Not tested in testmonarch.py, configuration taken from monarch branch 209 and tested in monarch for the camp paper")
+    raise
+  if "Realistic" in conf.diffCells and \
+      conf.is_new_export and \
+      conf.mpiProcessesCaseBase not in \
+      conf.mpiProcessesCaseOptimList:
+    print("ERROR: Wrong conf, MPI and cells are exported in different order, set same MPIs for both cases")
     raise
   if not conf.caseBase:
     print("ERROR: caseBase is empty")

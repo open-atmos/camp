@@ -29,7 +29,7 @@ void nc(int status) { //handle netcdf error
   }
 }
 
-void init_export_state_netcdf(SolverData *sd){
+void old_init_export_state_netcdf(SolverData *sd){
   ModelData *md = &(sd->model_data);
   if(md->n_cells==1){
     int size,rank;
@@ -38,18 +38,18 @@ void init_export_state_netcdf(SolverData *sd){
     int n_state_nc=sd->n_cells_tstep*md->n_per_cell_state_var;
     sd->state_nc = (double *)malloc(sizeof(double) * n_state_nc);
   }else{
-    //printf("init_export_state_netcdf\n");
+    //printf("init_export_state\n");
     sd->icell=sd->n_cells_tstep;
   }
 }
 
-void export_state_netcdf(SolverData *sd){
+void old_export_state_netcdf(SolverData *sd){
   ModelData *md = &(sd->model_data);
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   int n_state_nc=sd->n_cells_tstep*md->n_per_cell_state_var;
   if(md->n_cells==1 && sd->icell<sd->n_cells_tstep){ //gather
-    //if(rank==0)printf("export_state_netcdf gather\n");
+    //if(rank==0)printf("export_state gather\n");
     for (int i = 0; i < md->n_per_cell_state_var; i++) {
       sd->state_nc[i+sd->icell*md->n_per_cell_state_var]=md->total_state[i];
     }
@@ -57,7 +57,7 @@ void export_state_netcdf(SolverData *sd){
   }
   //printf("%d %d %d\n",n_state_nc,md->n_cells,sd->n_cells_tstep);
   if(sd->icell>=sd->n_cells_tstep){ //export all cells
-    if(rank==0)printf("export_state_netcdf start\n");
+    if(rank==0)printf("export_state start\n");
     int ncid;
     int nvars=1;
     int dimids[nvars], varids[nvars];
@@ -78,7 +78,7 @@ void export_state_netcdf(SolverData *sd){
     else
       nc(nc_put_vara_double(ncid, varids[i],&start, &count, md->total_state));
     nc(nc_close(ncid));
-    if(rank==0)printf("export_state_netcdf end\n");
+    if(rank==0)printf("export_state end\n");
     /*
       if(sd->icell>=sd->n_cells_tstep){
         MPI_Barrier(MPI_COMM_WORLD);
@@ -540,6 +540,51 @@ void cell_netcdf(SolverData *sd){
 }
 
 #endif
+
+void init_export_state(SolverData *sd){
+  ModelData *md = &(sd->model_data);
+  int rank;
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  char file_path[]="out/state.csv";
+  if(rank==0){
+    FILE *fptr;
+    fptr = fopen(file_path,"w");//overwrite file
+    fclose(fptr);
+  }
+}
+
+void export_state(SolverData *sd){
+  ModelData *md = &(sd->model_data);
+  int rank;
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  if(rank==0)printf("export_state start\n");
+  char file_path[]="out/state.csv";
+  int size;
+  MPI_Comm_size(MPI_COMM_WORLD, &size);
+  //int access=0;
+  //if(rank==0)access=1;
+  for (int k=0; k<md->n_cells; k++) {
+    for (int j = 0; j < size; j++) {
+      //if (access && rank == j) {
+      if (rank == j) {
+        FILE *fptr;
+        fptr = fopen(file_path, "a");
+        // maybe compare time with print cell-by-cell instead of gather all
+        // maybe move to print_double
+        int len = md->n_per_cell_state_var;
+        double *x = md->total_state + k * md->n_per_cell_state_var;
+        for (int i = 0; i < len; i++) {
+          fprintf(fptr, "%.17le\n",x[i]);
+        }
+        fclose(fptr);
+        //MPI_Send(&access, 1, MPI_INT, access, 123, MPI_COMM_WORLD);
+      }
+      MPI_Barrier(MPI_COMM_WORLD);
+    }
+  }
+  if(rank==0)printf("export_state end\n");
+}
+
 
 void check_iszerod(long double *x, int len, const char *s){
 #ifndef DEBUG_CHECK_ISZEROD

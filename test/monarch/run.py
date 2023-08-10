@@ -374,14 +374,14 @@ def run(conf):
     json.dump(conf.__dict__, jsonFile, indent=4, sort_keys=False)
 
   data_path = conf.results_file
-  if not conf.use_netcdf:
+  if not conf.is_new_export:
     data_name = conf.chemFile + '_' + conf.caseMulticellsOnecell + conf.results_file
     tmp_path = 'out/' + data_name
     if conf.is_import and (conf.plotYKey != "MAPE" or conf.plotYKey != "NRMSE"):
       conf.is_import, data_path = import_data(conf, tmp_path)
     else:
       conf.is_import, data_path = False, tmp_path
-  elif conf.plotYKey is "NRMSE":
+  elif conf.plotYKey == "NRMSE":
     if conf.is_import:
       if conf.case is conf.caseBase:
         data_path = "out/state0.csv"
@@ -393,17 +393,10 @@ def run(conf):
 
   if not conf.is_import:
     os.system(exec_str)
-    if conf.use_netcdf:
-      start = time.time()
-      # If (arch=CTE-POWER) and (python is Python/3.7.0-foss-2018b)
-      subprocess.run(["python", "translate_netcdf.py"])
-      # else #run in the same script instead of calling another
-      end = time.time()
-      print("Time read_netcdf = %s" % (end - start))
-    elif conf.is_export:
+    if conf.is_export and not conf.is_new_export:
       export(conf, data_path)
 
-  if conf.use_netcdf:
+  if conf.is_new_export:
     with open(data_path) as f:
       data = [float(line.rstrip('\n')) for line in f]
     if conf.is_export and conf.plotYKey == "NRMSE":
@@ -506,13 +499,13 @@ def run_cases(conf):
 
         # calculate measures between caseBase and caseOptim
         if conf.plotYKey == "NRMSE":
-          if conf.use_netcdf:
+          if conf.is_new_export:
             datay = math_functions.calculate_NRMSE(
-              data, conf.timeSteps,conf.nCells, conf.MAPETol)
+              data, conf.timeSteps,conf.nCellsProcesses, conf.MAPETol)
           else:
-            datay = math_functions.calculate_NRMSE_csv(data, conf.timeSteps, conf.MAPETol)
+            datay = math_functions.old_calculate_NRMSE(data, conf.timeSteps, conf.MAPETol)
         elif conf.plotYKey == "MAPE":
-          if conf.use_netcdf:
+          if conf.is_new_export:
             raise
           else:
             datay = math_functions.calculate_MAPE_csv(data, conf.timeSteps, conf.MAPETol)

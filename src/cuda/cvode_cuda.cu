@@ -10,7 +10,7 @@ extern "C" {
 
 __device__
 void print_double(double *x, int len, const char *s){
-#ifndef USE_PRINT_ARRAYS
+#ifdef USE_PRINT_ARRAYS
   __syncthreads();
   if(threadIdx.x==0 && blockIdx.x==0){
     for (int i=0; i<len; i++){
@@ -23,7 +23,7 @@ void print_double(double *x, int len, const char *s){
 
 __device__
 void print_int(int *x, int len, const char *s){
-#ifndef USE_PRINT_ARRAYS
+#ifdef USE_PRINT_ARRAYS
   __syncthreads();
   if(threadIdx.x==0 && blockIdx.x==0){
     for (int i=0; i<len; i++){
@@ -37,10 +37,12 @@ void print_int(int *x, int len, const char *s){
 __device__
 double dSUNRpowerR(double base, double exponent){
   if (base <= ZERO) return(ZERO);
+#ifdef EQUALLIZE_CPU_CUDA_POW
   if(exponent==(1./2)) return sqrt(base);
-  if(exponent==(1./3)) return cbrt(base);
-  if(exponent==(1./4)) return sqrt(sqrt(base));
-  return(pow(base, (double)(1./exponent)));
+  if(exponent==(1./3)) return sqrt(sqrt(sqrt(base)));
+  if(exponent==(1./4)) return sqrt(sqrt(sqrt(base)));
+#endif
+  return(pow(base, (double)(exponent)));
 }
 
 __device__
@@ -1731,16 +1733,16 @@ int cudaDevicecvPrepareNextStep(ModelDataGPU *md, ModelDataVariable *sc, double 
     cquot = (md->cv_tq[5+blockIdx.x*(NUM_TESTS + 1)] / sc->cv_saved_tq5) *
             dSUNRpowerI(sc->cv_h/md->cv_tau[2+blockIdx.x*(L_MAX + 1)],(double)sc->cv_L);
     md->dtempv[i]=md->cv_acor[i]-cquot*md->dzn[i+md->nrows*md->cv_qmax];
-    print_double(md->dtempv,73,"dtempv1658");
+    //print_double(md->dtempv,73,"dtempv1658");
     cudaDeviceVWRMS_Norm_2(md->dtempv, md->dewt, &dup, md->n_shr_empty);
     __syncthreads();
     dup *= md->cv_tq[3+blockIdx.x*(NUM_TESTS + 1)];
     __syncthreads();
     print_double(&dup,1,"dup1728");
     print_int(&sc->cv_L,1,"cv_L1728");
-    double BIAS3dup=BIAS3*dup;
-    print_double(&BIAS3dup,1,"BIAS3dup");
-    double cv_L1=1./(sc->cv_L+1);
+    //double BIAS3dup=BIAS3*dup;
+    //print_double(&BIAS3dup,1,"BIAS3dup");
+    //double cv_L1=1./(sc->cv_L+1);
     //print_double(&cv_L1,1,"1cv_L1732");
     //double cv_etaq_power=dSUNRpowerR(BIAS3dup,1./cv_L1);
     //double cv_etaq_power=(double)pow((double)BIAS3dup,(double)cv_L1);

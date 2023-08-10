@@ -187,6 +187,8 @@ program mock_monarch_t
   integer :: counter_export_netcdf
   character(len=:), allocatable :: file_name
 
+  real :: test_float
+
   ! initialize mpi (to take the place of a similar MONARCH call)
   !todo put MPI as an option to reduce time execution when developing, testing, and debugging
   call camp_mpi_init()
