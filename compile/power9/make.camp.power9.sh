@@ -55,9 +55,9 @@ compare_cell(){
 }
 
 if [ "$FILE" == TestMonarch.py ]; then
-  compare_runs
+  #compare_runs
   #compare_cell
-  #python $FILE
+  python $FILE
   #log_path="../../compile/power9/log_cpu.txt"
   #python $FILE 2>&1 | tee "../../compile/power9/log_cpu.txt"
 elif [ "$FILE" == test_monarch_1.py ]; then

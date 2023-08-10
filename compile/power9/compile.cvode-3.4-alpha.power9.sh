@@ -11,7 +11,7 @@ fi
 
 #tar -zxvf camp/cvoddzn1432e-3.4-alpha.tar.gz
 cd $library_path/cvode-3.4-alpha
-#rm -r builddzn825
+#rm -r build
 mkdir build
 #rm -rf install
 mkdir installdzn1432
