@@ -579,13 +579,7 @@ void export_state(SolverData *sd){
       fclose(fptr);
     }
     MPI_Comm comm = MPI_COMM_WORLD;
-    MPI_File fh0;
-    MPI_File *fh_ptr;
-    MPI_Scatter(&fh0,sizeof(fh0),MPI_CHAR,fh_ptr,sizeof(fh0),MPI_CHAR,0,comm);
     MPI_File fh;
-    if(rank==0) fh = fh0;
-    else fh=&fh_ptr;
-
     MPI_File_open( comm, file_path, MPI_MODE_WRONLY |
        MPI_MODE_CREATE, MPI_INFO_NULL, &fh );
     printf("Created csv file at %s rank %d\n",file_path, rank);
@@ -597,11 +591,11 @@ void export_state(SolverData *sd){
     else state_out = md->total_state;
     char buf0[24];
     sprintf(buf0,"%.17le",state_out[0]);
-    MPI_File_write( fh, buf0, (int)strlen(buf0), MPI_CHAR, &status );
+    MPI_File_write_ordered( fh, buf0, (int)strlen(buf0), MPI_CHAR, &status );
     for (int i=1; i < n_state_nc; i++){
       char buf[24];
       sprintf(buf,"\n%.17le",state_out[i]);
-      MPI_File_write( fh, buf, (int)strlen(buf), MPI_CHAR, &status );
+      MPI_File_write_ordered( fh, buf, (int)strlen(buf), MPI_CHAR, &status );
     }
     MPI_File_close( &fh );
     if(rank==0)printf("export_state end\n");
