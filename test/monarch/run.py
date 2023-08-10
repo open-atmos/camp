@@ -397,8 +397,8 @@ def run(conf):
       export(conf, data_path)
 
   if conf.is_new_export:
-    #with open(data_path) as f:
-      #data = [float(line.rstrip('\n')) for line in f]
+    with open(data_path) as f:
+      data = [float(line.rstrip('\n')) for line in f]
     with open(data_path) as f:
       data = [float(line) for line in f]
     print("data",data)

@@ -573,6 +573,36 @@ void export_state(SolverData *sd){
   if(sd->icell>=sd->n_cells_tstep){ //export all cells
     if(rank==0)printf("export_state start\n");
     char file_path[]="out/state.csv";
+    double *state_out;
+    if(md->n_cells==1)state_out=sd->state_nc;
+    else state_out = md->total_state;
+    int size;
+    MPI_Comm_size(MPI_COMM_WORLD, &size);
+    int access=0;
+    if(rank==0){
+      FILE *fptr;
+      fptr = fopen(file_path,"w");//overwrite file
+      fclose(fptr);
+    }
+    access=1;
+    for (int j=0; j<size; j++){
+      if(access && rank==j){
+        FILE *fptr;
+        fptr = fopen(file_path,"a");//overwrite file
+        //maybe move to print_double
+        int len=n_state_nc;
+        double *x=state_out;
+        for (int i=0; i<len; i++){
+          fprintf(fptr,"%d,%.17le\n",rank,x[i]);
+        }
+        fclose(fptr);
+        MPI_Send(&access,1,MPI_INT,
+                 access,123,MPI_COMM_WORLD);
+      }
+      MPI_Barrier(MPI_COMM_WORLD);
+    }
+
+    /*
     if (rank==0){
       FILE *fptr;
       fptr = fopen(file_path,"w");//overwrite file
@@ -598,6 +628,7 @@ void export_state(SolverData *sd){
       MPI_File_write_ordered( fh, buf, (int)strlen(buf), MPI_CHAR, &status );
     }
     MPI_File_close( &fh );
+     */
     if(rank==0)printf("export_state end\n");
     /*
       if(sd->icell>=sd->n_cells_tstep){
