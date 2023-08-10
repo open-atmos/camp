@@ -549,9 +549,8 @@ void init_export_state(SolverData *sd){
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     int n_state_nc=sd->n_cells_tstep*md->n_per_cell_state_var;
     sd->state_nc = (double *)malloc(sizeof(double) * n_state_nc);
-    //int n_state_nc_str=n_state_nc*22;
+    //int n_state_nc_str=n_state_nc*23;
     //sd->state_nc = (char *)malloc(sizeof(double) * n_state_nc);
-
   }else{
     //printf("init_export_state\n");
     sd->icell=sd->n_cells_tstep;
@@ -574,23 +573,36 @@ void export_state(SolverData *sd){
   if(sd->icell>=sd->n_cells_tstep){ //export all cells
     if(rank==0)printf("export_state start\n");
     char file_path[]="out/state.csv";
+    if (rank==0){
+      FILE *fptr;
+      fptr = fopen(file_path,"w");//overwrite file
+      fclose(fptr);
+    }
     MPI_Comm comm = MPI_COMM_WORLD;
+    MPI_File fh0;
+    MPI_File *fh_ptr;
+    MPI_Scatter(&fh0,sizeof(fh0),MPI_CHAR,fh_ptr,sizeof(fh0),MPI_CHAR,0,comm);
     MPI_File fh;
+    if(rank==0) fh = fh0;
+    else fh=&fh_ptr;
+
     MPI_File_open( comm, file_path, MPI_MODE_WRONLY |
        MPI_MODE_CREATE, MPI_INFO_NULL, &fh );
-
     printf("Created csv file at %s rank %d\n",file_path, rank);
     int size;
     MPI_Comm_size(MPI_COMM_WORLD, &size);
     MPI_Status status;
-    char *x = "1111abc\n";
-    printf("strlen %d",strlen(x));
-    if(md->n_cells==1){
-      //MPI_File_write_ordered( fh, sd->state_nc, 1, MPI_DOUBLE, &status );
-      if (rank == 0)MPI_File_write( fh, x, strlen(x), MPI_CHAR, &status );
+    double *state_out;
+    if(md->n_cells==1)state_out=sd->state_nc;
+    else state_out = md->total_state;
+    char buf0[24];
+    sprintf(buf0,"%.17le",state_out[0]);
+    MPI_File_write( fh, buf0, (int)strlen(buf0), MPI_CHAR, &status );
+    for (int i=1; i < n_state_nc; i++){
+      char buf[24];
+      sprintf(buf,"\n%.17le",state_out[i]);
+      MPI_File_write( fh, buf, (int)strlen(buf), MPI_CHAR, &status );
     }
-    //else
-      //MPI_File_write_ordered( fh, md->total_state, 1, MPI_DOUBLE, &status );
     MPI_File_close( &fh );
     if(rank==0)printf("export_state end\n");
     /*
