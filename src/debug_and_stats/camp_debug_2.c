@@ -543,24 +543,60 @@ void cell_netcdf(SolverData *sd){
 
 void init_export_state(SolverData *sd){
   ModelData *md = &(sd->model_data);
+  int rank;
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  char file_path[]="out/state.csv";
+  if(rank==0){
+    FILE *fptr;
+    fptr = fopen(file_path,"w");//overwrite file
+    fclose(fptr);
+  }
+#ifndef DEV_EXPORT_STATE
+#else
   if(md->n_cells==1){
     int size,rank;
     MPI_Comm_size(MPI_COMM_WORLD, &size);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     int n_state_nc=sd->n_cells_tstep*md->n_per_cell_state_var;
     sd->state_nc = (double *)malloc(sizeof(double) * n_state_nc);
-    //int n_state_nc_str=n_state_nc*23;
-    //sd->state_nc = (char *)malloc(sizeof(double) * n_state_nc);
   }else{
     //printf("init_export_state\n");
     sd->icell=sd->n_cells_tstep;
   }
+#endif
 }
 
 void export_state(SolverData *sd){
   ModelData *md = &(sd->model_data);
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+#ifndef DEV_EXPORT_STATE
+  if(rank==0)printf("export_state start\n");
+  char file_path[]="out/state.csv";
+  int size;
+  MPI_Comm_size(MPI_COMM_WORLD, &size);
+  //int access=0;
+  //if(rank==0)access=1;
+  for (int k=0; k<md->n_cells; k++) {
+    for (int j = 0; j < size; j++) {
+      //if (access && rank == j) {
+      if (rank == j) {
+        FILE *fptr;
+        fptr = fopen(file_path, "a");
+        // maybe compare time with print cell-by-cell instead of gather all
+        // maybe move to print_double
+        int len = md->n_per_cell_state_var * md->n_cells;
+        double *x = md->total_state + k * md->n_per_cell_state_var;
+        for (int i = 0; i < len; i++) {
+          fprintf(fptr, "%d,%.17le\n",j,x[i]);
+        }
+        fclose(fptr);
+        //MPI_Send(&access, 1, MPI_INT, access, 123, MPI_COMM_WORLD);
+      }
+      MPI_Barrier(MPI_COMM_WORLD);
+    }
+  }
+#else
   int n_state_nc=sd->n_cells_tstep*md->n_per_cell_state_var;
   if(md->n_cells==1 && sd->icell<sd->n_cells_tstep){ //gather
     //if(rank==0)printf("export_state gather\n");
@@ -578,17 +614,13 @@ void export_state(SolverData *sd){
     else state_out = md->total_state;
     int size;
     MPI_Comm_size(MPI_COMM_WORLD, &size);
-    int access=0;
-    if(rank==0){
-      FILE *fptr;
-      fptr = fopen(file_path,"w");//overwrite file
-      fclose(fptr);
-    }
-    access=1;
+    //int access=0;
+    //if(rank==0)access=1;
     for (int j=0; j<size; j++){
-      if(access && rank==j){
+      if(rank==j){
         FILE *fptr;
-        fptr = fopen(file_path,"a");//overwrite file
+        fptr = fopen(file_path,"a");
+        //maybe compare time with print cell-by-cell instead of gather all
         //maybe move to print_double
         int len=n_state_nc;
         double *x=state_out;
@@ -596,39 +628,12 @@ void export_state(SolverData *sd){
           fprintf(fptr,"%d,%.17le\n",rank,x[i]);
         }
         fclose(fptr);
-        MPI_Send(&access,1,MPI_INT,
-                 access,123,MPI_COMM_WORLD);
+        //MPI_Send(&access,1,MPI_INT,access,123,MPI_COMM_WORLD);
       }
       MPI_Barrier(MPI_COMM_WORLD);
     }
-
-    /*
-    if (rank==0){
-      FILE *fptr;
-      fptr = fopen(file_path,"w");//overwrite file
-      fclose(fptr);
-    }
-    MPI_Comm comm = MPI_COMM_WORLD;
-    MPI_File fh;
-    MPI_File_open( comm, file_path, MPI_MODE_WRONLY |
-       MPI_MODE_CREATE, MPI_INFO_NULL, &fh );
-    printf("Created csv file at %s rank %d\n",file_path, rank);
-    int size;
-    MPI_Comm_size(MPI_COMM_WORLD, &size);
-    MPI_Status status;
-    double *state_out;
-    if(md->n_cells==1)state_out=sd->state_nc;
-    else state_out = md->total_state;
-    char buf0[24];
-    sprintf(buf0,"%.17le",state_out[0]);
-    MPI_File_write_ordered( fh, buf0, (int)strlen(buf0), MPI_CHAR, &status );
-    for (int i=1; i < n_state_nc; i++){
-      char buf[24];
-      sprintf(buf,"\n%.17le",state_out[i]);
-      MPI_File_write_ordered( fh, buf, (int)strlen(buf), MPI_CHAR, &status );
-    }
-    MPI_File_close( &fh );
-     */
+  }
+#endif
     if(rank==0)printf("export_state end\n");
     /*
       if(sd->icell>=sd->n_cells_tstep){
@@ -640,7 +645,7 @@ void export_state(SolverData *sd){
         exit(0);
       }
     */
-  }
+
 }
 
 
