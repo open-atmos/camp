@@ -31,12 +31,13 @@ void init_export_state_netcdf(SolverData *sd){
   ModelData *md = &(sd->model_data);
   if(md->n_cells==1){
     int size,rank;
-    MPI_Comm_size(MPI_COMM_WORLD, &size);
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    int comm=sd->comm;
+    MPI_Comm_size(comm, &size);
+    MPI_Comm_rank(comm, &rank);
     int n_state_nc=sd->n_cells_tstep*md->n_per_cell_state_var;
     sd->state_nc = (double *)malloc(sizeof(double) * n_state_nc);
   }else{
-    //printf("init_export_state\n");
+    //printf("init_export_state_netcdf\n");
     sd->icell=sd->n_cells_tstep;
   }
 }
@@ -44,7 +45,8 @@ void init_export_state_netcdf(SolverData *sd){
 void export_state_netcdf(SolverData *sd){
   ModelData *md = &(sd->model_data);
   int rank;
-  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  int comm=sd->comm;
+  MPI_Comm_rank(comm, &rank);
   int n_state_nc=sd->n_cells_tstep*md->n_per_cell_state_var;
   if(md->n_cells==1 && sd->icell<sd->n_cells_tstep){ //gather
     //if(rank==0)printf("export_state gather\n");
@@ -61,11 +63,11 @@ void export_state_netcdf(SolverData *sd){
     int dimids[nvars], varids[nvars];
     char file_path[]="out/state.nc";
     nc(nc_create_par(file_path, NC_NETCDF4 | NC_MPIIO,
-       MPI_COMM_WORLD,MPI_INFO_NULL, &ncid));
+                     comm,MPI_INFO_NULL, &ncid));
     printf("Created netcdf file at %s rank %d\n",file_path, rank);
     int i=0;
     int size;
-    MPI_Comm_size(MPI_COMM_WORLD, &size);
+    MPI_Comm_size(comm, &size);
     nc(nc_def_dim(ncid,"nstate",n_state_nc*size,&dimids[i]));
     nc(nc_def_var(ncid, "state", NC_DOUBLE, 1, &dimids[i], &varids[i]));
     nc(nc_enddef(ncid));
@@ -79,9 +81,9 @@ void export_state_netcdf(SolverData *sd){
     if(rank==0)printf("export_state end\n");
     /*
       if(sd->icell>=sd->n_cells_tstep){
-        MPI_Barrier(MPI_COMM_WORLD);
+        MPI_Barrier(comm);
         if(rank==0) printf("export_netcdf exit sd->icell %d\n", sd->icell);
-        MPI_Barrier(MPI_COMM_WORLD);
+        MPI_Barrier(comm);
         int err=0;
         MPI_Abort(1,err);
         exit(0);
@@ -92,8 +94,9 @@ void export_state_netcdf(SolverData *sd){
 
 
 void export_netcdf(SolverData *sd){
+  int comm=sd->comm;
   int rank;
-  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  MPI_Comm_rank(comm, &rank);
   if(rank==0)printf("export_netcdf start\n");
   ModelData *md = &(sd->model_data);
   int ncid;
@@ -162,9 +165,9 @@ void export_netcdf(SolverData *sd){
   nc(nc_close(ncid));
 /*
   if(sd->icell>=sd->n_cells_tstep){
-    MPI_Barrier(MPI_COMM_WORLD);
+    MPI_Barrier(comm);
     if(rank==0) printf("export_netcdf exit sd->icell %d\n", sd->icell);
-    MPI_Barrier(MPI_COMM_WORLD);
+    MPI_Barrier(comm);
     int err=0;
     MPI_Abort(1,err);
     exit(0);
@@ -173,6 +176,7 @@ void export_netcdf(SolverData *sd){
 }
 
 void export_cells_netcdf(SolverData *sd) {
+  int comm=sd->comm;
   printf("export_cells_netcdf start\n");
   ModelData *md = &(sd->model_data);
   int ncid;
@@ -195,10 +199,10 @@ void export_cells_netcdf(SolverData *sd) {
   strcat(file_path, "/");
   strcat(file_path, file_name);
   printf("Creating netcdf file at %s\n", file_path);
-  nc(nc_create_par(file_path, NC_NETCDF4 | NC_MPIIO, MPI_COMM_WORLD,
+  nc(nc_create_par(file_path, NC_NETCDF4 | NC_MPIIO, comm,
                    MPI_INFO_NULL, &ncid));
   int size;
-  MPI_Comm_size(MPI_COMM_WORLD, &size);
+  MPI_Comm_size(comm, &size);
   int i = 0;
   nc(nc_def_dim(ncid, "nstate", md->n_per_cell_state_var * ncells * size,
                 &dimids[i]));
@@ -231,7 +235,7 @@ void export_cells_netcdf(SolverData *sd) {
   for (int i = 0; i < nvars; i++) nc(nc_var_par_access(ncid, varids[i], 1, 0));
   i = 0;
   int rank;
-  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  MPI_Comm_rank(comm, &rank);
   size_t start = md->n_per_cell_state_var * ncells * rank;
   size_t count = md->n_per_cell_state_var * ncells;
   nc(nc_put_vara_double(ncid, varids[i], &start, &count, md->total_state));
@@ -269,6 +273,7 @@ void export_cells_netcdf(SolverData *sd) {
 }
 
 void join_netcdfs(SolverData *sd){
+  int comm=sd->comm;
   printf("join_netcdfs start\n");
   ModelData *md = &(sd->model_data);
   int ncells=md->n_cells;
@@ -291,7 +296,7 @@ void join_netcdfs(SolverData *sd){
     strcat(file_name, "timestep_");
     strcat(file_name, s_tstep);
     int rank;
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    MPI_Comm_rank(comm, &rank);
     strcat(file_name,"mpirank_");
     char s_mpirank[20];
     sprintf(s_mpirank,"%d",rank);
@@ -350,12 +355,13 @@ void join_netcdfs(SolverData *sd){
     i = 0;
   }
   export_cells_netcdf(sd);
-  MPI_Barrier(MPI_COMM_WORLD);
+  MPI_Barrier(comm);
   printf("join_netcdfs end, exiting... \n");
   exit(0);
 }
 
 void import_multi_cell_netcdf(SolverData *sd){
+  int comm=sd->comm;
   printf("import_multi_cell_netcdf start\n");
   ModelData *md = &(sd->model_data);
   int ncid;
@@ -379,7 +385,7 @@ void import_multi_cell_netcdf(SolverData *sd){
   strcat(file_path,"/");
   strcat(file_path,file_name);
   printf("Opening netcdf file at %s\n",file_path);
-  nc(nc_open_par(file_path, NC_NOWRITE|NC_PNETCDF, MPI_COMM_WORLD, MPI_INFO_NULL, &ncid));
+  nc(nc_open_par(file_path, NC_NOWRITE|NC_PNETCDF, comm, MPI_INFO_NULL, &ncid));
   int i=0;
   nc(nc_inq_varid(ncid, "state", &varids[i]));
   i++;
@@ -399,7 +405,7 @@ void import_multi_cell_netcdf(SolverData *sd){
     nc(nc_var_par_access(ncid, varids[i], 1, 0));
   i=0;
   int rank;
-  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  MPI_Comm_rank(comm, &rank);
   int icell;
   size_t start = md->n_per_cell_state_var * ncells * rank;
   size_t count = md->n_per_cell_state_var * ncells;
@@ -432,6 +438,7 @@ void import_multi_cell_netcdf(SolverData *sd){
 }
 
 void import_one_cell_netcdf(SolverData *sd){
+  int comm=sd->comm;
   printf("import_one_cell_netcdf start\n");
   ModelData *md = &(sd->model_data);
   int ncid;
@@ -453,7 +460,7 @@ void import_one_cell_netcdf(SolverData *sd){
   strcat(file_path,"/");
   strcat(file_path,file_name);
   printf("Opening netcdf file at %s\n",file_path);
-  nc(nc_open_par(file_path, NC_NOWRITE|NC_PNETCDF, MPI_COMM_WORLD, MPI_INFO_NULL, &ncid));
+  nc(nc_open_par(file_path, NC_NOWRITE|NC_PNETCDF, comm, MPI_INFO_NULL, &ncid));
   int i=0;
   nc(nc_inq_varid(ncid, "state", &varids[i]));
   i++;
@@ -474,8 +481,8 @@ void import_one_cell_netcdf(SolverData *sd){
     nc(nc_var_par_access(ncid, varids[i], 1, 0));
   i=0;
   int rank, size;
-  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  MPI_Comm_size(MPI_COMM_WORLD, &size);
+  MPI_Comm_rank(comm, &rank);
+  MPI_Comm_size(comm, &size);
   int ncells=sd->n_cells_tstep;
   size_t start = md->n_per_cell_state_var  * sd->icell + rank*(md->n_per_cell_state_var*ncells);
   size_t count = md->n_per_cell_state_var ;
@@ -520,8 +527,9 @@ void import_netcdf(SolverData *sd){
 }
 
 void cell_netcdf(SolverData *sd){
+  int comm=sd->comm;
   int rank;
-  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  MPI_Comm_rank(comm, &rank);
   if(sd->tstep==0) {
 #ifndef EXPORT_NETCDF
     export_netcdf(sd);
@@ -540,9 +548,12 @@ void cell_netcdf(SolverData *sd){
 #endif
 
 void init_export_state(SolverData *sd){
+  int comm=sd->comm;
   ModelData *md = &(sd->model_data);
+  printf("MPI_COMM_WORLD %d COMM %d \n",MPI_COMM_WORLD,comm);
   int rank;
-  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  MPI_Comm_rank(comm, &rank);
+  printf("COMM %d \n",comm);
   char file_path[]="out/state.csv";
   if(rank==0){
     FILE *fptr;
@@ -552,13 +563,14 @@ void init_export_state(SolverData *sd){
 }
 
 void export_state(SolverData *sd){
+  int comm=sd->comm;
   ModelData *md = &(sd->model_data);
   int rank;
-  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  MPI_Comm_rank(comm, &rank);
   if(rank==0)printf("export_state start\n");
   char file_path[]="out/state.csv";
   int size;
-  MPI_Comm_size(MPI_COMM_WORLD, &size);
+  MPI_Comm_size(comm, &size);
   //int access=0;
   //if(rank==0)access=1;
   for (int k=0; k<md->n_cells; k++) {
@@ -575,9 +587,9 @@ void export_state(SolverData *sd){
           fprintf(fptr, "%.17le\n",x[i]);
         }
         fclose(fptr);
-        //MPI_Send(&access, 1, MPI_INT, access, 123, MPI_COMM_WORLD);
+        //MPI_Send(&access, 1, MPI_INT, access, 123, comm);
       }
-      MPI_Barrier(MPI_COMM_WORLD);
+      MPI_Barrier(comm);
     }
   }
   if(rank==0)printf("export_state end\n");

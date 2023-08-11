@@ -271,6 +271,7 @@ typedef struct {
   double t_final;
   int ncounters;
   int ntimers;
+  int comm;
 #ifdef OLD_DEV_CPUGPU
   int n_cells_total;
 #endif
@@ -292,7 +293,7 @@ typedef struct {
   int tstep;
   double* state_nc;
 #endif
-#ifdef EXPORT_STATE
+#ifndef EXPORT_STATE
 #ifndef ENABLE_NETCDF
   int n_cells_tstep;
   int tstep;

@@ -46,7 +46,7 @@ option(ENABLE_DATA "" OFF)
 option(ENABLE_INSTALL_OPTIONS "" OFF)
 option(ENABLE_SHARED_LIB "" OFF) #todo fix and shared lib in Monarch
 add_definitions(-DCAMP_DEBUG_MOCKMONARCH)
-add_definitions(-DENABLE_NETCDF)
+#add_definitions(-DENABLE_NETCDF)
 
 mark_as_advanced(FORCE ENABLE_DEBUG FAILURE_DETAIL)
 file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/out)

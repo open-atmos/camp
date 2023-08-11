@@ -441,7 +441,8 @@ void solver_set_spec_name(void *solver_data, char *spec_name,
  * \return Pointer to an initialized SolverData object
  */
 void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
-                       int max_steps, int max_conv_fails, int n_cells_tstep) {
+                       int max_steps, int max_conv_fails, int n_cells_tstep,
+                       int comm) {
 #ifdef CAMP_USE_SUNDIALS
   SolverData *sd;   // SolverData object
   int flag;         // return code from SUNDIALS functions
@@ -541,6 +542,7 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
   flag = CVodeSetDlsGuessHelper(sd->cvode_mem, guess_helper);
   check_flag_fail(&flag, "CVodeSetDlsGuessHelper", 1);
 
+  sd->comm=comm;
 #ifdef CAMP_USE_GPU
   if(sd->use_cpu==0){
       constructor_cvode_gpu(sd->cvode_mem, sd);
@@ -552,7 +554,7 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
   sd->icell=0;
   init_export_state_netcdf(sd);
 #endif
-#ifdef EXPORT_STATE
+#ifndef EXPORT_STATE
 #ifndef ENABLE_NETCDF
   sd->n_cells_tstep = n_cells_tstep;
   sd->tstep=0;
@@ -800,7 +802,7 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
 #ifdef ENABLE_NETCDF
   export_state_netcdf(sd);
 #endif
-#ifdef EXPORT_STATE
+#ifndef EXPORT_STATE
   export_state(sd);
 #endif
 #ifdef FAILURE_DETAIL

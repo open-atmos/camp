@@ -160,10 +160,9 @@ contains
     real(kind=dp) :: comp_start, comp_end
     integer :: local_comm
 
+    local_comm = MPI_COMM_WORLD
     if (present(mpi_comm)) then
       local_comm = mpi_comm
-    else
-      local_comm = MPI_COMM_WORLD
     endif
 
     !print*,"camp_monarch_interface constructor start"
@@ -383,8 +382,9 @@ contains
     deallocate(buffer)
     !print*,"camp_monarch_interface constructor"
 
+    print*,"MPI_COMM_WORLD",MPI_COMM_WORLD
     ! Initialize the solver on all nodes
-    call this%camp_core%solver_initialize(n_cells_tstep)
+    call this%camp_core%solver_initialize(n_cells_tstep,local_comm)
     !call camp_mpi_barrier(MPI_COMM_WORLD)
 
     !print*,"camp_monarch_interface constructor solver_initialize end"
