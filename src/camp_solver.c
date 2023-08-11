@@ -550,8 +550,9 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
   sd->n_cells_tstep = n_cells_tstep;
   sd->tstep=0;
   sd->icell=0;
+  init_export_state_netcdf(sd);
 #endif
-#ifndef EXPORT_STATE
+#ifdef EXPORT_STATE
 #ifndef ENABLE_NETCDF
   sd->n_cells_tstep = n_cells_tstep;
   sd->tstep=0;
@@ -796,7 +797,10 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
     print_double(state, n_state_var, "state768");
     //printf("end cell\nline\n");
   //}
-#ifndef EXPORT_STATE
+#ifdef ENABLE_NETCDF
+  export_state_netcdf(sd);
+#endif
+#ifdef EXPORT_STATE
   export_state(sd);
 #endif
 #ifdef FAILURE_DETAIL

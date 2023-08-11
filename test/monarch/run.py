@@ -46,6 +46,8 @@ class TestMonarch:
     self.plotXKey = ""
     self.is_export = False
     self.is_import = False
+    self.is_new_export = False
+    self.is_export_netcdf = False
     self.profileCuda = ""
     # Auxiliary
     self.is_start_auxiliary_attributes = True
@@ -393,6 +395,13 @@ def run(conf):
 
   if not conf.is_import:
     os.system(exec_str)
+    if conf.is_export_netcdf and conf.is_new_export:
+      start = time.time()
+      # If (arch=CTE-POWER) and (python is Python/3.7.0-foss-2018b)
+      subprocess.run(["python", "translate_netcdf.py"])
+      # else #run in the same script instead of calling another
+      end = time.time()
+      print("Time read_netcdf = %s" % (end - start))
     if conf.is_export and not conf.is_new_export:
       export(conf, data_path)
 

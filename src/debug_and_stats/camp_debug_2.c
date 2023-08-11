@@ -27,7 +27,7 @@ void nc(int status) { //handle netcdf error
   }
 }
 
-void old_init_export_state_netcdf(SolverData *sd){
+void init_export_state_netcdf(SolverData *sd){
   ModelData *md = &(sd->model_data);
   if(md->n_cells==1){
     int size,rank;
@@ -41,7 +41,7 @@ void old_init_export_state_netcdf(SolverData *sd){
   }
 }
 
-void old_export_state_netcdf(SolverData *sd){
+void export_state_netcdf(SolverData *sd){
   ModelData *md = &(sd->model_data);
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
