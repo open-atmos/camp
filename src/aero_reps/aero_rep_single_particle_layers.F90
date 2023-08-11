@@ -333,7 +333,7 @@ contains
       call layers%iter_next()
     end do
       
-    aero_layer_phase_set = call order_layer_array(this,layers,cover_name,layer_name)
+    aero_layer_phase_set = call order_phase_array(this,layers,cover_name,layer_name)
 
     ! Initialize NUM_PHASE_ array
     do i_layer = 1, TOTAL_NUM_LAYERS_
@@ -747,14 +747,11 @@ contains
    
     allocate(this%ordered_layer_name(layers%size()))
    
-    do i_cover = 1, layers%size()
-      do i_layer = 1, layers%size()
-        if (cover_name_array(i_layer) == "none") then
-          ordered_layer_name(1) = layer_name_array(i_layer)
-        else
-          continue
-        end if
-      end do
+    ! Search for innermost layer
+    do i_layer = 1, layers%size()
+      if (cover_name_array(i_layer) == "none") then
+        ordered_layer_name(1) = layer_name_array(i_layer)
+      end if
     end do
 
     do i_cover = 2, layers%size()
