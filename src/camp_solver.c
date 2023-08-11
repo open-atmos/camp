@@ -441,8 +441,7 @@ void solver_set_spec_name(void *solver_data, char *spec_name,
  * \return Pointer to an initialized SolverData object
  */
 void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
-                       int max_steps, int max_conv_fails, int n_cells_tstep,
-                       int comm) {
+                       int max_steps, int max_conv_fails, int n_cells_tstep) {
 #ifdef CAMP_USE_SUNDIALS
   SolverData *sd;   // SolverData object
   int flag;         // return code from SUNDIALS functions
@@ -542,7 +541,6 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
   flag = CVodeSetDlsGuessHelper(sd->cvode_mem, guess_helper);
   check_flag_fail(&flag, "CVodeSetDlsGuessHelper", 1);
 
-  sd->comm=comm;
 #ifdef CAMP_USE_GPU
   if(sd->use_cpu==0){
       constructor_cvode_gpu(sd->cvode_mem, sd);

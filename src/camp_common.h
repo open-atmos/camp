@@ -271,7 +271,6 @@ typedef struct {
   double t_final;
   int ncounters;
   int ntimers;
-  int comm;
 #ifdef OLD_DEV_CPUGPU
   int n_cells_total;
 #endif

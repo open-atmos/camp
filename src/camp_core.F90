@@ -1152,14 +1152,12 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Initialize the solver
-  subroutine solver_initialize(this, n_cells_tstep_0,comm_0)
+  subroutine solver_initialize(this, n_cells_tstep_0)
     class(camp_core_t), intent(inout) :: this
     type(string_t), allocatable :: spec_names(:)
     integer :: i_spec, n_gas_spec
     integer, optional :: n_cells_tstep_0
-    integer, optional :: comm_0
     integer :: n_cells_tstep
-    integer :: comm
     call assert_msg(662920365, .not.this%solver_is_initialized, &
             "Attempting to initialize the solver twice.")
 #ifdef CAMP_SOLVER_SPEC_NAMES
@@ -1168,10 +1166,6 @@ contains
     n_cells_tstep = 1
     if (present(n_cells_tstep_0)) then
       n_cells_tstep=n_cells_tstep_0
-    end if
-    comm = MPI_COMM_WORLD
-    if (present(comm_0)) then
-      comm=comm_0
     end if
 
     ! Set up either two solvers (gas and aerosol) or one solver (combined)
@@ -1198,7 +1192,6 @@ contains
                 GAS_RXN,         & ! Reaction phase
                 this%n_cells,    & ! # of cells computed simultaneosly
                 n_cells_tstep , &
-                comm, &
                 spec_names,       & ! Species names
                 size(this%ncounters), & ! # of profiling variables (Times and counters)
                 size(this%ntimers) & ! # of profiling variables (Times and counters)
@@ -1213,7 +1206,6 @@ contains
                 AERO_RXN,        & ! Reaction phase
                 this%n_cells,    & ! # of cells computed simultaneosly
                 n_cells_tstep , &
-                comm, &
                 spec_names,       & ! Species names
                 size(this%ncounters), & ! # of profiling variables (Times and counters)
                 size(this%ntimers) & ! # of profiling variables (Times and counters)
@@ -1239,7 +1231,6 @@ contains
                 GAS_AERO_RXN,    & ! Reaction phase
                 this%n_cells,    & ! # of cells computed simultaneosly
                 n_cells_tstep , &
-                comm, &
                 spec_names,       & ! Species names
                 size(this%ncounters), & ! # of profiling variables (Times and counters)
                 size(this%ntimers) & ! # of profiling variables (Times and counters)
