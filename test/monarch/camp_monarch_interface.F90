@@ -28,7 +28,6 @@ module camp_monarch_interface_2
   use json_module
 
   implicit none
-  integer, parameter :: EXPORT_F_STATE_FILE_UNIT = 50
 
   private
 
@@ -453,14 +452,6 @@ contains
     end if
     end do
 
-#ifndef EXPORT_F_STATE
-    call mpi_comm_rank(MPI_COMM_WORLD, rank, ierr)
-    call mpi_comm_size(MPI_COMM_WORLD, n_ranks, ierr)
-    if(rank.eq.0) then
-      open(EXPORT_F_STATE_FILE_UNIT, file="out/state.csv", status="replace", action="write")
-      close(EXPORT_F_STATE_FILE_UNIT)
-    end if
-#endif
     if (MONARCH_PROCESS.eq.0) then
       call cpu_time(comp_end)
       write(*,*) "Initialization time: ", comp_end-comp_start, " s"
@@ -498,7 +489,6 @@ contains
     integer :: rank, ierr, n_ranks
     real(kind=dp), allocatable :: mpi_conc(:)
     character(len=:), allocatable :: file_name
-    integer :: j2,i2
     integer :: i, j, k, i_spec, z, o, t, r, i_cell, i_photo_rxn
     integer :: NUM_VERT_CELLS, i_hour_max
     character(len=:), allocatable :: DIFF_CELLS_EMI
@@ -659,23 +649,6 @@ contains
             call this%camp_core%solve(this%camp_state, real(time_step*60., kind=dp),solver_stats=solver_stats)
             call cpu_time(comp_end)
             comp_time = comp_time + (comp_end-comp_start)
-
-#ifndef EXPORT_F_STATE
-            print*,"EXPORT_F_STATE run"
-            call mpi_comm_rank(MPI_COMM_WORLD, rank, ierr)
-            call mpi_comm_size(MPI_COMM_WORLD, n_ranks, ierr)
-            do j2=0, n_ranks-1
-              if(rank.eq.j2) then
-                open(EXPORT_F_STATE_FILE_UNIT, file="out/state.csv", status="old", position="append", action="write")
-                do i2=1, this%camp_core%size_state_per_cell
-                  write(EXPORT_F_STATE_FILE_UNIT, "(ES23.15)") &
-                          this%camp_state%state_var(i2)
-                end do
-                close(EXPORT_F_STATE_FILE_UNIT)
-              end if
-              call mpi_barrier(MPI_COMM_WORLD, ierr)
-            end do
-#endif
 
             !call camp_mpi_barrier(MPI_COMM_WORLD)
             ! Update the MONARCH tracer array with new species concentrations

@@ -565,7 +565,7 @@ void export_state(SolverData *sd){
         fptr = fopen("out/state.csv", "a");
         // maybe move to print_double
         int len = md->n_per_cell_state_var;
-        double *x = md->total_state + k * md->n_per_cell_state_var;
+        double *x = md->total_state + k * len;
         for (int i = 0; i < len; i++) {
           fprintf(fptr, "%.17le\n",x[i]);
         }

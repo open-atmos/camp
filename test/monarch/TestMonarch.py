@@ -59,7 +59,7 @@ def all_timesteps():
   # conf.allocatedTasksPerNode = 320
   # conf.allocatedTasksPerNode = get_ntasksPerNode_sbatch() #todo
 
-  conf.cells = [1]
+  conf.cells = [2]
   # conf.cells = [100, 500, 1000, 5000, 10000]
   # conf.cells = [50000,100000,500000,1000000]
 
@@ -93,7 +93,7 @@ def all_timesteps():
   # conf.casesOptim.append("GPU Block-cellsN")
   # conf.casesOptim.append("GPU Block-cells1")
   # conf.casesOptim.append("CPU EBI")
-  #conf.casesOptim.append("GPU BDF")
+  conf.casesOptim.append("GPU BDF")
   # conf.casesOptim.append("GPU CPU")
   # conf.casesOptim.append("GPU maxrregcount-64") #wrong 10,000 cells
   # conf.casesOptim.append("GPU maxrregcount-68")

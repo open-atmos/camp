@@ -107,6 +107,7 @@ module camp_camp_core
   use camp_sub_model_factory
   use camp_sub_model_factory
   use camp_util,                       only : die_msg, string_t
+  use camp_debug_2
 
   implicit none
   private
@@ -1237,7 +1238,9 @@ contains
               )
 
     end if
-
+#ifndef EXPORT_F_STATE
+    call init_export_f_state()
+#endif
     this%solver_is_initialized = .true.
 
   end subroutine solver_initialize
@@ -1518,6 +1521,11 @@ contains
     if (.not.present(solver_stats)) then
       call warn_assert_msg(997420005, solver_status.eq.0, "Solver failed")
     end if
+
+#ifndef EXPORT_F_STATE
+    call export_f_state(camp_state%state_var,&
+    this%size_state_per_cell,this%n_cells)
+#endif
 
   end subroutine solve
 
