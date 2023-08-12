@@ -16,7 +16,6 @@ contains
     end if
     print*,comm
     call mpi_comm_rank(comm, rank, ierr)
-    call mpi_comm_size(comm, n_ranks, ierr)
     if(rank==0) then
       open(50, file="out/state.csv", status="replace", action="write")
       close(50)
@@ -29,7 +28,6 @@ contains
     integer :: k,j,i
     print*,comm
     call mpi_comm_rank(comm, rank, ierr)
-    call mpi_comm_size(comm, n_ranks, ierr)
     print*,"mpi_comm_rank",mpi_comm_rank
     !todo pending gather
     do k=0,len2-1!camp_core%n_cells
