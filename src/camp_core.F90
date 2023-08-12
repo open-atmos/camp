@@ -1153,12 +1153,13 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Initialize the solver
-  subroutine solver_initialize(this, n_cells_tstep_0)
+  subroutine solver_initialize(this, n_cells_tstep_0,comm_0)
     class(camp_core_t), intent(inout) :: this
+    integer, intent(in), optional :: comm_0
     type(string_t), allocatable :: spec_names(:)
     integer :: i_spec, n_gas_spec
     integer, optional :: n_cells_tstep_0
-    integer :: n_cells_tstep
+    integer :: n_cells_tstep, comm
     call assert_msg(662920365, .not.this%solver_is_initialized, &
             "Attempting to initialize the solver twice.")
 #ifdef CAMP_SOLVER_SPEC_NAMES
@@ -1167,6 +1168,10 @@ contains
     n_cells_tstep = 1
     if (present(n_cells_tstep_0)) then
       n_cells_tstep=n_cells_tstep_0
+    end if
+    comm=MPI_COMM_WORLD
+    if(present(comm_0)) then
+      comm=comm_0
     end if
 
     ! Set up either two solvers (gas and aerosol) or one solver (combined)
@@ -1239,7 +1244,7 @@ contains
 
     end if
 #ifndef EXPORT_F_STATE
-    call init_export_f_state()
+    call init_export_f_state(comm)
 #endif
     this%solver_is_initialized = .true.
 

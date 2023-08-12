@@ -485,7 +485,7 @@ set(CAMP_LIB_SRC
         src/rxn_factory.F90 src/sub_model_data.F90 src/sub_model_factory.F90
         src/solver_stats.F90
         src/debug_diff_check.F90
-        src/debug_and_stats/camp_debug_2.f90
+        src/debug_and_stats/camp_debug_2.F90
         ${CAMP_C_SRC} ${AEROSOL_REPS_SRC} ${SUB_MODELS_SRC}
         ${REACTIONS_SRC} ${GSL_SRC} ${CAMP_CUDA_SRC} ${CAMP_CXX_SRC} )
 

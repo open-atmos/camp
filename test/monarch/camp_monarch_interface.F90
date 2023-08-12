@@ -385,7 +385,7 @@ contains
     !print*,"camp_monarch_interface constructor"
 
     ! Initialize the solver on all nodes
-    call this%camp_core%solver_initialize(n_cells_tstep)
+    call this%camp_core%solver_initialize(n_cells_tstep,MPI_COMM_WORLD)
     !call camp_mpi_barrier(MPI_COMM_WORLD)
 
     !print*,"camp_monarch_interface constructor solver_initialize end"
