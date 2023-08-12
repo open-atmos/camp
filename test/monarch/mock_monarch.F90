@@ -764,7 +764,7 @@ contains
     real(kind=dp), dimension(NUM_CAMP_SPEC) :: aux_state_var
     real(kind=dp), dimension(NUM_CAMP_SPEC) :: aux_state_var2
 #endif
-    state_size_per_cell = camp_interface%camp_core%state_size_per_cell()
+    state_size_per_cell = camp_interface%camp_core%size_state_per_cell
     !open(IMPORT_FILE_UNIT, file="exports/camp_input.txt", status="old")!default test monarch input
     open(IMPORT_FILE_UNIT, file="exports/camp_input_18.txt", status="old") !monarch
     !open(IMPORT_FILE_UNIT, file="exports/camp_input_322.txt", status="old") !monarch
@@ -858,7 +858,7 @@ contains
     character(len=:), allocatable :: spec_name
     real(kind=dp) :: base_rate
 
-    state_size_per_cell = camp_interface%camp_core%state_size_per_cell()
+    state_size_per_cell = camp_interface%camp_core%size_state_per_cell
 
     !mpi_rank = 18
     mpi_rank = 0

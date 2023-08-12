@@ -28,6 +28,8 @@ module camp_monarch_interface_2
   use json_module
 
   implicit none
+  integer, parameter :: EXPORT_F_STATE_FILE_UNIT = 50
+
   private
 
   public :: camp_monarch_interface_t
@@ -145,7 +147,7 @@ contains
     type(camp_solver_data_t), pointer :: camp_solver_data
     character, allocatable :: buffer(:)
     integer(kind=i_kind) :: pos, pack_size
-    integer(kind=i_kind) :: i_spec, i_photo_rxn
+    integer(kind=i_kind) :: i_spec, i_photo_rxn, rank, n_ranks, ierr
     type(string_t), allocatable :: unique_names(:)
     character(len=:), allocatable :: spec_name, settings_interface_file
     integer :: max_spec_name_size=512
@@ -451,86 +453,59 @@ contains
     end if
     end do
 
-    !print*,"camp_monarch_interface constructor update_data_GMD end"
-
-    ! Calculate the intialization time
+#ifndef EXPORT_F_STATE
+    call mpi_comm_rank(MPI_COMM_WORLD, rank, ierr)
+    call mpi_comm_size(MPI_COMM_WORLD, n_ranks, ierr)
+    if(rank.eq.0) then
+      open(EXPORT_F_STATE_FILE_UNIT, file="out/state.csv", status="replace", action="write")
+      close(EXPORT_F_STATE_FILE_UNIT)
+    end if
+#endif
     if (MONARCH_PROCESS.eq.0) then
       call cpu_time(comp_end)
       write(*,*) "Initialization time: ", comp_end-comp_start, " s"
-      !call this%camp_core%print()
     end if
-
-    !print*,"camp_monarch_interface constructor end"
-
   end function constructor
 
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-  !> Integrate the CAMP mechanism for a particular set of cells and timestep
   subroutine integrate(this, curr_time, time_step, I_W, I_E, I_S, &
                   I_N, temperature, MONARCH_conc, water_conc, &
                   water_vapor_index, air_density, pressure, conv, i_hour,&
           NUM_TIME_STEP,solver_stats, DIFF_CELLS)
 
-    !> CAMP-camp <-> MONARCH interface
     class(camp_monarch_interface_t) :: this
-    !> Integration start time (min since midnight)
     real, intent(in) :: curr_time
-    !> Integration time step
     real(kind=dp), intent(in) :: time_step
-    !> Grid-cell W->E starting index
     integer, intent(in) :: I_W
-    !> Grid-cell W->E ending index
     integer, intent(in) :: I_E
-    !> Grid-cell S->N starting index
     integer, intent(in) :: I_S
-    !> Grid-cell S->N ending index
     integer, intent(in) :: I_N
-
-    !> NMMB style arrays (W->E, S->N, top->bottom, ...)
-    !> Temperature (K)
     real, intent(in) :: temperature(:,:,:)
-    !> MONARCH species concentration (ppm or ug/m^3)
     real, intent(inout) :: MONARCH_conc(:,:,:,:)
-    !> Atmospheric water concentrations (kg_H2O/kg_air)
     real, intent(in) :: water_conc(:,:,:,:)
-    !> Index in water_conc corresponding to water vapor
     integer, intent(in) :: water_vapor_index
-
-    !> WRF-style arrays (W->E, bottom->top, N->S)
-    !> Air density (kg_air/m^3)
     real, intent(in) :: air_density(:,:,:)
-    !> Pressure (Pa)
     real, intent(in) :: pressure(:,:,:)
     real, intent(in) :: conv(:,:,:)
     integer, intent(inout) :: i_hour
     integer, intent(in) :: NUM_TIME_STEP
     character(len=*),intent(in) :: DIFF_CELLS
-
     type(chem_spec_data_t), pointer :: chem_spec_data
     type(string_t), allocatable :: camp_spec_names(:)
-
     integer, parameter :: emi_len=1
     real, allocatable :: rate_emi(:,:)
-
-    ! MPI
     character, allocatable :: buffer(:)
     integer(kind=i_kind) :: pos, pack_size
-    integer :: local_comm
+    integer :: rank, ierr, n_ranks
     real(kind=dp), allocatable :: mpi_conc(:)
-
+    character(len=:), allocatable :: file_name
+    integer :: j2,i2
     integer :: i, j, k, i_spec, z, o, t, r, i_cell, i_photo_rxn
     integer :: NUM_VERT_CELLS, i_hour_max
-
     character(len=:), allocatable :: DIFF_CELLS_EMI
     real :: press_init, press_end, press_range,&
             emi_slide, press_norm
     integer :: n_cells
-
-    ! Computation time variables
     real(kind=dp) :: comp_start, comp_end
-
-    !type(solver_stats_t), target :: solver_stats
     type(solver_stats_t), intent(inout) :: solver_stats
     integer :: state_size_per_cell, n_cell_check
     integer :: counterLS = 0
@@ -541,7 +516,7 @@ contains
     if(this%n_cells.eq.1) then
       state_size_per_cell = 0
     else
-      state_size_per_cell = this%camp_core%state_size_per_cell()
+      state_size_per_cell = this%camp_core%size_state_per_cell
     end if
     NUM_VERT_CELLS = size(MONARCH_conc,3)
     if(this%ADD_EMISIONS.eq."monarch_binned") then
@@ -659,9 +634,7 @@ contains
                       water_conc(1,1,1,water_vapor_index) * &
                               mwair / mwwat * 1.e6
             end if
-
             !print*, "water_conc: id, value", this%gas_phase_water_id, water_conc(i,j,k,water_vapor_index)
-
             if(this%ADD_EMISIONS.eq."monarch_binned") then
               !Add emissions
               !print*,"integrate camp_state ADD_EMISIONS"
@@ -671,41 +644,40 @@ contains
                                 +this%specs_emi(r)*rate_emi(i_hour,z+1)*conv(i,j,k)
               end do
             end if
-
             !do r=2,size(this%map_monarch_id)
             !  print*,MONARCH_conc(i,j,k,this%map_monarch_id(r)),&
             !          this%camp_state%state_var(this%map_camp_id(r)), camp_mpi_rank()
             !end do
-
             !if (camp_mpi_rank().eq.0 .and. z==0) then
               !print*, "this%camp_core%solve start",this%camp_state%state_var(1), camp_mpi_rank()
             !end if
-
-            call camp_mpi_barrier(MPI_COMM_WORLD)
 #ifdef EXPORT_JSON
             call this%camp_core%export_camp_input_json(this%camp_state, &
                   real(time_step, kind=dp), solver_stats = solver_stats)
 #endif
-            ! Integrate the CAMP mechanism
             call cpu_time(comp_start)
             call this%camp_core%solve(this%camp_state, real(time_step*60., kind=dp),solver_stats=solver_stats)
             call cpu_time(comp_end)
             comp_time = comp_time + (comp_end-comp_start)
 
-            call camp_mpi_barrier(MPI_COMM_WORLD)
-            !if (camp_mpi_rank().eq.0 .and. z==0) then
-              !print*, "this%camp_core%solve end",this%camp_state%state_var(1),camp_mpi_rank()
-            !end if
-#ifdef CAMP_DEBUG
-            ! Check the Jacobian evaluations
-            call assert_msg(611569150, solver_stats%Jac_eval_fails.eq.0,&
-                          trim( to_string( solver_stats%Jac_eval_fails ) )// &
-                          " Jacobian evaluation failures at time "// &
-                          trim( to_string( curr_time ) ) )
-            ! Only evaluate the Jacobian for the first cell because it is
-            ! time consuming
-            solver_stats%eval_Jac = .false.
+#ifndef EXPORT_F_STATE
+            print*,"EXPORT_F_STATE run"
+            call mpi_comm_rank(MPI_COMM_WORLD, rank, ierr)
+            call mpi_comm_size(MPI_COMM_WORLD, n_ranks, ierr)
+            do j2=0, n_ranks-1
+              if(rank.eq.j2) then
+                open(EXPORT_F_STATE_FILE_UNIT, file="out/state.csv", status="old", position="append", action="write")
+                do i2=1, this%camp_core%size_state_per_cell
+                  write(EXPORT_F_STATE_FILE_UNIT, "(ES23.15)") &
+                          this%camp_state%state_var(i2)
+                end do
+                close(EXPORT_F_STATE_FILE_UNIT)
+              end if
+              call mpi_barrier(MPI_COMM_WORLD, ierr)
+            end do
 #endif
+
+            !call camp_mpi_barrier(MPI_COMM_WORLD)
             ! Update the MONARCH tracer array with new species concentrations
             MONARCH_conc(i,j,k,this%map_monarch_id(:)) = &
                     this%camp_state%state_var(this%map_camp_id(:))
@@ -1270,7 +1242,7 @@ end if
 
     call camp_mpi_barrier(MPI_COMM_WORLD)
 
-    state_size_per_cell = this%camp_core%state_size_per_cell()
+    state_size_per_cell = this%camp_core%size_state_per_cell
 
     do i=i_W, I_E
       do j=I_S, I_N
