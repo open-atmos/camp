@@ -190,16 +190,16 @@ def check_tolerances(data, timesteps, rel_tol, abs_tol):
           #  print(out1[k],out2[k])
 
 
-def calculate_NRMSE(data, n_time_steps, cellsList, max_tol):
+def calculate_NRMSE(data, n_time_steps, nCellsProcesses,use_monarch, max_tol):
   cases_one_multi_cells = list(data.keys())
   species1 = data[cases_one_multi_cells[0]]
   species2 = data[cases_one_multi_cells[1]]
   n_state = int(len(species1))
-  n_cells=sum(cellsList)
+  n_cells=sum(nCellsProcesses)
   n_species = int((n_state / n_time_steps) / n_cells)
-  n_species_monarch=140
-  if n_species_monarch != n_species:
-    print("n_species_monarch ! = n_species calculated by cellsList")
+  n_species_monarch = 140
+  if use_monarch and n_species_monarch != n_species:
+    print("n_species_monarch ! = n_species calculated by nCellsProcesses")
     print("n_species_monarch",n_species_monarch,
           "n_species",n_species,"n_cells",n_cells)
     raise
@@ -211,23 +211,25 @@ def calculate_NRMSE(data, n_time_steps, cellsList, max_tol):
   max_err_rel = 0.
   err_rel_at_max_abs = 0.
   max_err_rel_specie = 0
+  max_err_rel_cell = 0
+  max_err_abs_process = 0
   max_err_rel_timestep = 0
   max_err_abs = 0.
   err_abs_at_max_rel = 0.
   max_err_abs_specie = 0
   max_err_abs_cell = 0
+  max_err_rel_process = 0
   max_err_abs_timestep = 0
   concs_above_tol = 0
   concs_below_tol = 0
   concs_are_zero = 0
   concs_are_equal = 0
   for i in range(n_time_steps):
-    for i3 in range(len(cellsList)):
-      i2 = i3 + i * len(cellsList)
-      n_cells=cellsList[i3]
-      #print("n_cells",n_cells)
-      for j in range(n_cells):
-        j2 = j + i2 * n_cells
+    for i3 in range(len(nCellsProcesses)):
+      i2 = i3 + i * len(nCellsProcesses)
+      n_cellsProcess=nCellsProcesses[i3]
+      for j in range(n_cellsProcess):
+        j2 = j + i2 * n_cellsProcess
         for k in range(n_species):
           k2 = k+j2*n_species
           y1 = species1[k2]
@@ -257,28 +259,30 @@ def calculate_NRMSE(data, n_time_steps, cellsList, max_tol):
             err_rel_at_max_abs = err_rel
             max_err_abs_specie = k
             max_err_abs_cell = j
+            max_err_abs_process = i3
             max_err_abs_timestep = i
           if err_rel > max_err_rel:
             max_err_rel = err_rel
             err_abs_at_max_rel = err_abs
             max_err_rel_specie = k
-            max_err_abs_cell = j
+            max_err_rel_cell = j
+            max_err_rel_process = i3
             max_err_rel_timestep = i
-      for k in range(n_species):
-        if max_y[k] != min_y[k]:
-          #if max_y[k] == 9.739288159150639e-06:
-            #print(sqrt(NRMSEs_species[k]))
-            #num=sqrt(NRMSEs_species[k])
-            #den=max_y[k] - min_y[k]
-             #print("num,den",num,den)
-          NRMSEs_species[k] = (sqrt(NRMSEs_species[k] / n_cells)) / (max_y[k] - min_y[k])
-        if NRMSEs_species[k] > max_NRMSEs_species:
-          max_NRMSEs_species = NRMSEs_species[k]
-          #if max_NRMSEs_species > 0.99:
-            #print(max_NRMSEs_species,max_y[k] - min_y[k],max_y[k],min_y[k])
-        NRMSEs_species[k] = 0.
-        max_y[k] = 0.
-        min_y[k] = float("inf")
+    for k in range(n_species):
+      if max_y[k] != min_y[k]:
+        #if max_y[k] == 9.739288159150639e-06:
+          #print(sqrt(NRMSEs_species[k]))
+          #num=sqrt(NRMSEs_species[k])
+          #den=max_y[k] - min_y[k]
+           #print("num,den",num,den)
+        NRMSEs_species[k] = (sqrt(NRMSEs_species[k] / n_cells)) / (max_y[k] - min_y[k])
+      if NRMSEs_species[k] > max_NRMSEs_species:
+        max_NRMSEs_species = NRMSEs_species[k]
+        #if max_NRMSEs_species > 0.99:
+          #print(max_NRMSEs_species,max_y[k] - min_y[k],max_y[k],min_y[k])
+      NRMSEs_species[k] = 0.
+      max_y[k] = 0.
+      min_y[k] = float("inf")
     NRMSEs[i] = max_NRMSEs_species
     max_NRMSEs_species = 0.
   max_err_rel = format(max_err_rel * 100, '.2e')
@@ -288,11 +292,14 @@ def calculate_NRMSE(data, n_time_steps, cellsList, max_tol):
   print("relative max_error:", max_err_rel,
         "% with absolute error",err_abs_at_max_rel,
         "at specie id:", max_err_rel_specie,
+        "cell:", max_err_rel_cell,
+        "process:", max_err_rel_process,
         "timestep:", max_err_rel_timestep,
         "absolute max_error:", max_err_abs,
         "with relative error:", err_rel_at_max_abs,
         "% at specie id:", max_err_abs_specie,
         "cell:", max_err_abs_cell,
+        "process:", max_err_abs_process,
         "timestep:", max_err_abs_timestep,
         "concs_above_tol", concs_above_tol, "concs_below_tol", concs_below_tol,
         "concs_are_equal", concs_are_equal, "concs_are_zero", concs_are_zero)

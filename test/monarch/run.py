@@ -516,14 +516,15 @@ def run_cases(conf):
         # calculate measures between caseBase and caseOptim
         if conf.plotYKey == "NRMSE":
           if conf.is_new_export:
-            cellsList = []
+            nCellsProcesses = []
             if conf.use_monarch:
               with open("exports/monarch_cells.csv") as f:
-                cellsList = [int(line.rstrip('\n')) for line in f]
+                nCellsProcesses = [int(line.rstrip('\n')) for line in f]
             else:
-              cellsList=[conf.nCellsProcesses]
+              nCellsProcesses=[conf.nCellsProcesses]
             datay = math_functions.calculate_NRMSE(
-              data, conf.timeSteps,cellsList,conf.MAPETol)
+              data, conf.timeSteps,nCellsProcesses,
+              conf.use_monarch,conf.MAPETol)
           else:
             datay = math_functions.old_calculate_NRMSE(data, conf.timeSteps, conf.MAPETol)
         elif conf.plotYKey == "MAPE":
