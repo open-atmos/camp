@@ -556,6 +556,26 @@ void export_state(SolverData *sd){
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   if(rank==0)printf("export_state start\n");
+  for (int k=0; k<md->n_cells; k++) {
+    if (rank == 0) {
+      FILE *fptr;
+      fptr = fopen("out/state.csv", "a");
+      int len = md->n_per_cell_state_var;
+      double *x = md->total_state + k * len;
+      for (int i = 0; i < len; i++) {
+        fprintf(fptr, "%.17le\n",x[i]);
+      }
+      fclose(fptr);
+    }
+  }
+  if(rank==0)printf("export_state end\n");
+}
+
+void no_monarch_export_state(SolverData *sd){
+  ModelData *md = &(sd->model_data);
+  int rank;
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  if(rank==0)printf("export_state start\n");
   int size;
   MPI_Comm_size(MPI_COMM_WORLD, &size);
   for (int k=0; k<md->n_cells; k++) {
@@ -563,7 +583,6 @@ void export_state(SolverData *sd){
       if (rank == j) {
         FILE *fptr;
         fptr = fopen("out/state.csv", "a");
-        // maybe move to print_double
         int len = md->n_per_cell_state_var;
         double *x = md->total_state + k * len;
         for (int i = 0; i < len; i++) {

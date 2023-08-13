@@ -26,10 +26,7 @@ contains
     real(kind=dp), dimension(:), intent(in) :: x
     integer, intent(in) :: len, len2
     integer :: k,j,i
-    print*,comm
     call mpi_comm_rank(comm, rank, ierr)
-    print*,"mpi_comm_rank",mpi_comm_rank
-    !todo pending gather
     do k=0,len2-1!camp_core%n_cells
       if(rank==0) then
         open(50, file="out/state.csv", status="old", position="append", action="write")
@@ -39,7 +36,6 @@ contains
         close(50)
       end if
     end do
-    print*,"export_f_state",export_f_state
   end subroutine
 
   subroutine old_export_f_state(x, len, len2) ! fails in MONARCH

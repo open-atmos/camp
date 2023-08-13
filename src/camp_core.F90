@@ -1243,7 +1243,13 @@ contains
               )
 
     end if
-#ifndef EXPORT_F_STATE
+#ifdef EXPORT_F_STATE
+    rank = camp_mpi_rank(comm)
+    if(rank==0) then
+      print*,"init_export_f_state start, rank",rank
+      print*,"n_cells",this%n_cells,"this%size_state_per_cell",this%size_state_per_cell
+      print*,"init_export_f_state end"
+    end if
     call init_export_f_state(comm)
 #endif
     this%solver_is_initialized = .true.
@@ -1527,7 +1533,7 @@ contains
       call warn_assert_msg(997420005, solver_status.eq.0, "Solver failed")
     end if
 
-#ifndef EXPORT_F_STATE
+#ifdef EXPORT_F_STATE
     call export_f_state(camp_state%state_var,&
     this%size_state_per_cell,this%n_cells)
 #endif

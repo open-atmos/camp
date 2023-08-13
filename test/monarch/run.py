@@ -385,10 +385,17 @@ def run(conf):
       conf.is_import, data_path = False, tmp_path
   elif conf.plotYKey == "NRMSE":
     if conf.is_import:
+      conf.use_monarch = True
       if conf.case is conf.caseBase:
-        data_path = "out/state0.csv"
+        if conf.use_monarch:
+          data_path = "exports/cpu_rank0_monarch_out_state.csv"
+        else:
+          data_path = "out/state0.csv"
       else:
-        data_path = "out/state1.csv"
+        if conf.use_monarch:
+          data_path = "exports/gpu_rank0_monarch_out_state.csv"
+        else:
+          data_path = "out/state1.csv"
       if not os.path.exists(data_path):
         print(data_path, "not exist")
         raise
@@ -509,8 +516,14 @@ def run_cases(conf):
         # calculate measures between caseBase and caseOptim
         if conf.plotYKey == "NRMSE":
           if conf.is_new_export:
+            cellsList = []
+            if conf.use_monarch:
+              with open("exports/monarch_cells.csv") as f:
+                cellsList = [int(line.rstrip('\n')) for line in f]
+            else:
+              cellsList=[conf.nCellsProcesses]
             datay = math_functions.calculate_NRMSE(
-              data, conf.timeSteps,conf.nCellsProcesses, conf.MAPETol)
+              data, conf.timeSteps,cellsList,conf.MAPETol)
           else:
             datay = math_functions.old_calculate_NRMSE(data, conf.timeSteps, conf.MAPETol)
         elif conf.plotYKey == "MAPE":
