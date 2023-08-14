@@ -596,6 +596,45 @@ void no_monarch_export_state(SolverData *sd){
   if(rank==0)printf("export_state end\n");
 }
 
+void init_export_stats(){
+  int rank;
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  char file_path[]="out/stats.csv";
+  if(rank==0){
+    FILE *fptr;
+    fptr = fopen(file_path,"w");//overwrite file
+    fprintf(fptr, "counterBCG,counterLS,"
+      "countersolveCVODEGPU,countercvStep,"
+      "timeLS,timeBiconjGradMemcpy,timeCVode,"
+      "dtcudaDeviceCVode,dtPostBCG,timeAux,"
+      "timeNewtonIteration,timeJac,"
+      "timelinsolsetup,timecalc_Jac,"
+      "timeRXNJac,timef,timeguess_helper,"
+      "timecvStep\n");
+    fclose(fptr);
+  }
+}
+
+void export_stats(int ntimers,int ncounters, int *counters, double *times){
+  int rank;
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  if(rank==0)printf("export_stats start\n");
+  if (rank == 0) {
+    FILE *fptr;
+    fptr = fopen("out/stats.csv", "a");
+    fprintf(fptr, "%d",counters[0]);
+    for (int i = 1; i < ncounters; i++) {
+      fprintf(fptr, ",%d",counters[i]);
+    }
+    printf("\n");
+    for (int i = 0; i < ntimers; i++) {
+      fprintf(fptr, ",%.17le",times[i]);
+    }
+    fprintf(fptr, "\n");
+    fclose(fptr);
+  }
+  if(rank==0)printf("export_stats end\n");
+}
 
 void check_iszerod(long double *x, int len, const char *s){
 #ifndef DEBUG_CHECK_ISZEROD

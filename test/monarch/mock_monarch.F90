@@ -551,8 +551,6 @@ program mock_monarch_t
 
 contains
 
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
   subroutine init_output_files(file_prefix)
 
     character(len=:), allocatable, intent(in) :: file_prefix
@@ -567,7 +565,7 @@ contains
     open(FILE_SOLVER_STATS_CSV, file=file_name, status="replace", action="write")
 
     !todo move this to python interface and automatic size
-    str_stats_names = "timestep,counterBCG,counterLS,countersolveCVODEGPU,countercvStep,&
+    str_stats_names = "counterBCG,counterLS,countersolveCVODEGPU,countercvStep,&
             timeLS,timeBiconjGradMemcpy,timeCVode,&
             dtcudaDeviceCVode,dtPostBCG,timeAux,timeNewtonIteration,timeJac,timelinsolsetup,timecalc_Jac,&
             timeRXNJac,timef,timeguess_helper,timecvStep"
@@ -1780,9 +1778,9 @@ contains
       write(time_str,*) curr_time
       time_str=adjustl(time_str)
 
-      write(FILE_SOLVER_STATS_CSV, "(A)", advance="no") trim(time_str)
+      write(FILE_SOLVER_STATS_CSV, "(I10)", advance="no") counters_max(1)
 
-      do i=1, ncounters
+      do i=2, ncounters
         !print*,"counters_max(i)", counters_max(i)
         write(FILE_SOLVER_STATS_CSV, "(A)", advance="no") ","
         write(FILE_SOLVER_STATS_CSV, "(I10)", advance="no") &

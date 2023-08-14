@@ -376,16 +376,11 @@ def run(conf):
     json.dump(conf.__dict__, jsonFile, indent=4, sort_keys=False)
 
   data_path = conf.results_file
-  if not conf.is_new_export:
-    data_name = conf.chemFile + '_' + conf.caseMulticellsOnecell + conf.results_file
-    tmp_path = 'out/' + data_name
-    if conf.is_import and (conf.plotYKey != "MAPE" or conf.plotYKey != "NRMSE"):
-      conf.is_import, data_path = import_data(conf, tmp_path)
-    else:
-      conf.is_import, data_path = False, tmp_path
-  elif conf.plotYKey == "NRMSE":
-    if conf.is_import:
-      conf.use_monarch = True
+  if data_path == "_solver_stats.csv":
+    data_path = 'out/' + conf.chemFile + '_' + conf.caseMulticellsOnecell + conf.results_file
+  print("conf.results_file",conf.results_file)
+  if conf.is_import:
+    if conf.plotYKey == "NRMSE" or conf.plotYKey == "MAPE":
       if conf.case is conf.caseBase:
         if conf.use_monarch:
           data_path = "exports/cpu_rank0_monarch_out_state.csv"
@@ -396,10 +391,11 @@ def run(conf):
           data_path = "exports/gpu_rank0_monarch_out_state.csv"
         else:
           data_path = "out/state1.csv"
-      if not os.path.exists(data_path):
-        print(data_path, "not exist")
-        raise
-
+    else:
+      if conf.case is conf.caseBase:
+        data_path = "out/stats0.csv"
+      else:
+        data_path = "out/stats1.csv"
   if not conf.is_import:
     os.system(exec_str)
     if conf.is_export_netcdf and conf.is_new_export:
@@ -409,17 +405,21 @@ def run(conf):
       # else #run in the same script instead of calling another
       end = time.time()
       print("Time read_netcdf = %s" % (end - start))
-    if conf.is_export and not conf.is_new_export:
-      export(conf, data_path)
 
   if conf.is_new_export:
     with open(data_path) as f:
       data = [float(line.rstrip('\n')) for line in f]
-    if conf.is_export and conf.plotYKey == "NRMSE":
-      if conf.case is conf.caseBase:
-        os.rename("out/state.csv", "out/state0.csv")
+    if conf.is_export:
+      if conf.plotYKey == "NRMSE" or conf.plotYKey == "MAPE":
+        if conf.case is conf.caseBase:
+          os.rename("out/state.csv", "out/state0.csv")
+        else:
+          os.rename("out/state.csv", "out/state1.csv")
       else:
-        os.rename("out/state.csv", "out/state1.csv")
+        if conf.case is conf.caseBase:
+          os.rename("out/stats.csv", "out/stats0.csv")
+        else:
+          os.rename("out/stats.csv", "out/stats1.csv")
   else:
     nrows_csv = conf.timeSteps
     if conf.plotYKey == "MAPE" or conf.plotYKey == "NRMSE":
@@ -559,22 +559,17 @@ def run_cells(conf):
   for i in range(len(conf.cells)):
     conf.nCellsProcesses = conf.cells[i]
     datacases, stdCases = run_cases(conf)
-
     if len(conf.cells) > 1 or conf.plotXKey == "GPUs":
       datacells.append(datacases)
       stdCells.append(stdCases)
     else:
       datacells = datacases
       stdCells = stdCases
-
-  # print("datacells",datacells)
-
   if len(conf.cells) > 1:
     datacellsTranspose = np.transpose(datacells)
     datacells = datacellsTranspose.tolist()
     stdCellsTranspose = np.transpose(stdCells)
     stdCells = stdCellsTranspose.tolist()
-
   return datacells, stdCells
 
 

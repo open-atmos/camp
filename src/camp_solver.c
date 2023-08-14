@@ -388,6 +388,7 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
   sd->counterBCG = 0;
   sd->counterLS = 0;
   sd->timeCVode = 0.0;
+  init_export_stats();
 #endif
 
   sd->ncounters = ncounters;
@@ -1031,6 +1032,7 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
       solver_reset_statistics_gpu(sd);
   }
 #endif
+  export_stats(sd->ntimers,sd->ncounters,counters,times);
 #endif
 }
 
@@ -1041,7 +1043,7 @@ void solver_reset_statistics(void *solver_data, int *counters, double *times)
     counters[i]=0;
   }
   for(int i=0; i<sd->ntimers; i++){
-    times[i]=0.0;
+    times[i]=0.;
   }
   //printf("sd->ntimers ncounters %d %d\n",sd->ntimers,sd->ncounters);
 #ifdef CAMP_USE_GPU
@@ -1072,20 +1074,20 @@ void solver_reset_statistics(void *solver_data, int *counters, double *times)
 #endif
       }
       if(sd->ntimers>0){
-        mCPU->timeBiConjGrad=0;
-        mCPU->timeBiConjGradMemcpy=0;
-        sd->timeCVode=0;
+        mCPU->timeBiConjGrad=0.;
+        mCPU->timeBiConjGradMemcpy=0.;
+        sd->timeCVode=0.;
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
-        mdvCPU.dtcudaDeviceCVode=0;
-        mdvCPU.dtPostBCG=0;
-        mdvCPU.timeNewtonIteration=0;
-        mdvCPU.timeJac=0;
-        mdvCPU.timelinsolsetup=0;
-        mdvCPU.timecalc_Jac=0;
-        mdvCPU.timef=0;
-        mdvCPU.timeguess_helper=0;
+        mdvCPU.dtcudaDeviceCVode=0.;
+        mdvCPU.dtPostBCG=0.;
+        mdvCPU.timeNewtonIteration=0.;
+        mdvCPU.timeJac=0.;
+        mdvCPU.timelinsolsetup=0.;
+        mdvCPU.timecalc_Jac=0.;
+        mdvCPU.timef=0.;
+        mdvCPU.timeguess_helper=0.;
 #endif
-        mCPU->timecvStep=0;
+        mCPU->timecvStep=0.;
       }
       else{
         printf("WARNING: In function solver_get_statistics trying to assign times "
