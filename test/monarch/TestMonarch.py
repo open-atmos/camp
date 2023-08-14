@@ -64,7 +64,7 @@ def all_timesteps():
   # conf.cells = [100, 500, 1000, 5000, 10000]
   # conf.cells = [50000,100000,500000,1000000]
 
-  conf.timeSteps = 1
+  conf.timeSteps = 2
   # conf.timeSteps = 720
 
   conf.timeStepsDt = 2
@@ -133,7 +133,6 @@ def all_timesteps():
 
   # Utility functions
   # remove_to_tmp(conf,"1661337164911019079")
-  #conf.results_file = "_solver_stats.csv"
   conf.results_file = "out/stats.csv"
   if conf.plotYKey == "NRMSE" or conf.plotYKey == "MAPE":
     if conf.is_new_export:

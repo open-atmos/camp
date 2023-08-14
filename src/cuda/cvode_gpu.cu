@@ -397,14 +397,14 @@ void constructor_cvode_gpu(CVodeMem cv_mem, SolverData *sd){
   mCPU->counterDerivSolve=0;
   mCPU->countersolveCVODEGPU=0;
 
-  mCPU->timeNewtonIt=CAMP_TINY;
-  mCPU->timeLinSolSetup=CAMP_TINY;
-  mCPU->timeLinSolSolve=CAMP_TINY;
-  mCPU->timecvStep=CAMP_TINY;
-  mCPU->timeDerivNewton=CAMP_TINY;
-  mCPU->timeBiConjGrad=CAMP_TINY;
-  mCPU->timeBiConjGradMemcpy=CAMP_TINY;
-  mCPU->timeDerivSolve=CAMP_TINY;
+  mCPU->timeNewtonIt=0.;
+  mCPU->timeLinSolSetup=0.;
+  mCPU->timeLinSolSolve=0.;
+  mCPU->timecvStep=0.;
+  mCPU->timeDerivNewton=0.;
+  mCPU->timeBiConjGrad=0.;
+  mCPU->timeBiConjGradMemcpy=0.;
+  mCPU->timeDerivSolve=0.;
 
   cudaEventCreate(&mCPU->startDerivNewton);
   cudaEventCreate(&mCPU->startDerivSolve);

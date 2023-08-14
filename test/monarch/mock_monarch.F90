@@ -493,7 +493,6 @@ program mock_monarch_t
     curr_time = curr_time + TIME_STEP
 #ifdef CAMP_DEBUG_GPU
       call camp_interface%camp_core%get_solver_stats(solver_stats=solver_stats)
-      call export_solver_stats(curr_time,camp_interface,solver_stats,ncounters,ntimers)
       call camp_interface%camp_core%reset_solver_stats(solver_stats=solver_stats)
 #endif
     !write(*, "(ES13.6)", advance="no") species_conc(:,:,:,:)
@@ -1136,11 +1135,6 @@ contains
       end do
       end do
 
-#ifdef CAMP_DEBUG_GPU
-      print*,"ebi_time",ebi_time
-      camp_interface%camp_core%ntimers(3) = ebi_time ! timeCVODE place
-      call export_solver_stats(curr_time,camp_interface,solver_stats,ncounters,ntimers)
-#endif
       if(export_results_all_cells.eq.1) then
         call export_file_results_all_cells(camp_interface)
       end if
@@ -1745,61 +1739,6 @@ contains
     deallocate(tracer_ids)
     deallocate(file_name)
     deallocate(spec_name)
-
-  end subroutine
-
-  subroutine export_solver_stats(curr_time, camp_interface, solver_stats, ncounters, ntimers)
-
-    real, intent(in) :: curr_time
-    type(camp_monarch_interface_t), intent(in) :: camp_interface
-    type(solver_stats_t), intent(inout) :: solver_stats
-    integer, intent(inout) :: ncounters
-    integer, intent(inout) :: ntimers
-
-    character(len=128) :: i_cell_str, time_str
-    integer :: l_comm, ierr, i
-    integer, allocatable :: counters_max(:)
-    real(kind=dp), allocatable :: times_max(:)
-
-    allocate(counters_max(ncounters))
-    allocate(times_max(ntimers))
-
-    l_comm = MPI_COMM_WORLD
-
-    call mpi_reduce(camp_interface%camp_core%ncounters, counters_max, ncounters, MPI_INTEGER, MPI_MAX, 0, &
-            l_comm, ierr)
-    call camp_mpi_check_ierr(ierr)
-    call mpi_reduce(camp_interface%camp_core%ntimers, times_max, ntimers, MPI_DOUBLE, MPI_MAX, 0, &
-            l_comm, ierr)
-    call camp_mpi_check_ierr(ierr)
-
-    if (camp_mpi_rank().eq.0) then
-
-      write(time_str,*) curr_time
-      time_str=adjustl(time_str)
-
-      write(FILE_SOLVER_STATS_CSV, "(I10)", advance="no") counters_max(1)
-
-      do i=2, ncounters
-        !print*,"counters_max(i)", counters_max(i)
-        write(FILE_SOLVER_STATS_CSV, "(A)", advance="no") ","
-        write(FILE_SOLVER_STATS_CSV, "(I10)", advance="no") &
-                counters_max(i)
-      end do
-
-      do i=1, ntimers
-        !print*,"times_max,i",times_max(i),i!,solver_stats%ntimers(i)
-        write(FILE_SOLVER_STATS_CSV, "(A)", advance="no") ","
-        write(FILE_SOLVER_STATS_CSV, "(ES13.6)", advance="no") &
-                times_max(i)
-      end do
-
-      write(FILE_SOLVER_STATS_CSV, '(a)') ''
-
-    end if
-
-    deallocate(counters_max)
-    deallocate(times_max)
 
   end subroutine
 

@@ -376,8 +376,6 @@ def run(conf):
     json.dump(conf.__dict__, jsonFile, indent=4, sort_keys=False)
 
   data_path = conf.results_file
-  if data_path == "_solver_stats.csv":
-    data_path = 'out/' + conf.chemFile + '_' + conf.caseMulticellsOnecell + conf.results_file
   print("conf.results_file",conf.results_file)
   if conf.is_import:
     if conf.plotYKey == "NRMSE" or conf.plotYKey == "MAPE":

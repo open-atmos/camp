@@ -546,7 +546,7 @@ void init_export_state(SolverData *sd){
   char file_path[]="out/state.csv";
   if(rank==0){
     FILE *fptr;
-    fptr = fopen(file_path,"w");//overwrite file
+    fptr = fopen(file_path,"w");
     fclose(fptr);
   }
 }
@@ -602,7 +602,7 @@ void init_export_stats(){
   char file_path[]="out/stats.csv";
   if(rank==0){
     FILE *fptr;
-    fptr = fopen(file_path,"w");//overwrite file
+    fptr = fopen(file_path,"w");
     fprintf(fptr, "counterBCG,counterLS,"
       "countersolveCVODEGPU,countercvStep,"
       "timeLS,timeBiconjGradMemcpy,timeCVode,"
