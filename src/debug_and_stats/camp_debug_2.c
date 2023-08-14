@@ -626,7 +626,6 @@ void export_stats(int ntimers,int ncounters, int *counters, double *times){
     for (int i = 1; i < ncounters; i++) {
       fprintf(fptr, ",%d",counters[i]);
     }
-    printf("\n");
     for (int i = 0; i < ntimers; i++) {
       fprintf(fptr, ",%.17le",times[i]);
     }

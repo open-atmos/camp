@@ -64,7 +64,6 @@ program mock_monarch_t
   integer, parameter :: RESULTS_FILE_UNIT_TABLE = 10
   integer, parameter :: RESULTS_FILE_UNIT_GNUPLOT = 11
   integer, parameter :: IMPORT_FILE_UNIT = 12
-  integer, parameter :: FILE_SOLVER_STATS_CSV = 13
   integer, parameter :: STATSIN_FILE_UNIT = 14
   integer, parameter :: RESULTS_ALL_CELLS_FILE_UNIT = 15
 
@@ -400,7 +399,6 @@ program mock_monarch_t
     endif
   end if
 
-  call init_output_files(output_path)
   camp_interface => camp_monarch_interface_t(camp_input_file, interface_input_file, &
           START_CAMP_ID, END_CAMP_ID, n_cells, n_cells_tstep, ADD_EMISIONS)!, n_cells
 
@@ -527,7 +525,6 @@ program mock_monarch_t
   if(export_results_all_cells.eq.1) then
     close(RESULTS_ALL_CELLS_FILE_UNIT)
   end if
-  close(FILE_SOLVER_STATS_CSV)
 
   call camp_mpi_barrier()
   ! Deallocation
@@ -549,34 +546,6 @@ program mock_monarch_t
   call camp_mpi_finalize()
 
 contains
-
-  subroutine init_output_files(file_prefix)
-
-    character(len=:), allocatable, intent(in) :: file_prefix
-    character(len=:), allocatable :: file_name
-    character(len=:), allocatable :: aux_str, aux_str_py, str_stats_names
-    character(len=128) :: i_str !if len !=128 crashes (e.g len=100)
-    integer :: z,o,i,j,k,r,i_cell,i_spec,mpi_size,ncells,tid,ncells_mpi
-    integer :: n_cells_print
-    real :: temp_init,press,press_init,press_end,press_range,press_slide
-
-    file_name = file_prefix//"_solver_stats.csv"
-    open(FILE_SOLVER_STATS_CSV, file=file_name, status="replace", action="write")
-
-    !todo move this to python interface and automatic size
-    str_stats_names = "counterBCG,counterLS,countersolveCVODEGPU,countercvStep,&
-            timeLS,timeBiconjGradMemcpy,timeCVode,&
-            dtcudaDeviceCVode,dtPostBCG,timeAux,timeNewtonIteration,timeJac,timelinsolsetup,timecalc_Jac,&
-            timeRXNJac,timef,timeguess_helper,timecvStep"
-
-    write(FILE_SOLVER_STATS_CSV, "(A)", advance="no") str_stats_names
-    write(FILE_SOLVER_STATS_CSV, '(a)') ''
-
-    call camp_mpi_barrier()
-
-    deallocate(file_name)
-
-  end subroutine
 
   subroutine set_env(camp_interface,file_prefix)
 

@@ -49,7 +49,8 @@ add_definitions(-DCAMP_DEBUG_MOCKMONARCH)
 #add_definitions(-DENABLE_NETCDF)
 
 mark_as_advanced(FORCE ENABLE_DEBUG FAILURE_DETAIL)
-file(CREATE_LINK ${CMAKE_CURRENT_SOURCE_DIR}/test/monarch/out ${CMAKE_BINARY_DIR}/out SYMBOLIC)
+file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/out)
+file(CREATE_LINK ${CMAKE_BINARY_DIR}/out ${CMAKE_CURRENT_SOURCE_DIR}/test/monarch/out SYMBOLIC)
 file(CREATE_LINK ${CMAKE_CURRENT_SOURCE_DIR}/test/monarch/settings ${CMAKE_BINARY_DIR}/settings SYMBOLIC)
 
 ######################################################################
