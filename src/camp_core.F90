@@ -107,7 +107,6 @@ module camp_camp_core
   use camp_sub_model_factory
   use camp_sub_model_factory
   use camp_util,                       only : die_msg, string_t
-  use camp_debug_2
 
   implicit none
   private
@@ -1153,13 +1152,12 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Initialize the solver
-  subroutine solver_initialize(this, n_cells_tstep_0,comm_0)
+  subroutine solver_initialize(this, n_cells_tstep_0)
     class(camp_core_t), intent(inout) :: this
-    integer, intent(in), optional :: comm_0
     type(string_t), allocatable :: spec_names(:)
     integer :: i_spec, n_gas_spec
     integer, optional :: n_cells_tstep_0
-    integer :: n_cells_tstep, comm
+    integer :: n_cells_tstep
     call assert_msg(662920365, .not.this%solver_is_initialized, &
             "Attempting to initialize the solver twice.")
 #ifdef CAMP_SOLVER_SPEC_NAMES
@@ -1168,10 +1166,6 @@ contains
     n_cells_tstep = 1
     if (present(n_cells_tstep_0)) then
       n_cells_tstep=n_cells_tstep_0
-    end if
-    comm=MPI_COMM_WORLD
-    if(present(comm_0)) then
-      comm=comm_0
     end if
 
     ! Set up either two solvers (gas and aerosol) or one solver (combined)
@@ -1243,15 +1237,7 @@ contains
               )
 
     end if
-#ifdef EXPORT_F_STATE
-    rank = camp_mpi_rank(comm)
-    if(rank==0) then
-      print*,"init_export_f_state start, rank",rank
-      print*,"n_cells",this%n_cells,"this%size_state_per_cell",this%size_state_per_cell
-      print*,"init_export_f_state end"
-    end if
-    call init_export_f_state(comm)
-#endif
+
     this%solver_is_initialized = .true.
 
   end subroutine solver_initialize
@@ -1532,11 +1518,6 @@ contains
     if (.not.present(solver_stats)) then
       call warn_assert_msg(997420005, solver_status.eq.0, "Solver failed")
     end if
-
-#ifdef EXPORT_F_STATE
-    call export_f_state(camp_state%state_var,&
-    this%size_state_per_cell,this%n_cells)
-#endif
 
   end subroutine solve
 
