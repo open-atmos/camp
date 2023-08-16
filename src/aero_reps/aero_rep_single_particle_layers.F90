@@ -314,7 +314,7 @@ contains
               this%layer_name(i_layer)%string// &
               "' in single-particle layer aerosol representation '"// &
               this%rep_name//"'")
-      NUM_PHASE(i_layer) = phases%size() 
+      NUM_PHASE_UNORDERED(i_layer) = phases%size() 
 
       ! Loop through the phases and make sure they exist
       call phases%iter_reset()
@@ -331,6 +331,19 @@ contains
       end do
 
       call layers%iter_next()
+    end do
+
+    ! Construct NUM_PHASE_UNORDERED_
+    allocate(LAYER_STATE_ID_UNORDERED_(size(SUM(NUM_PHASE_UNORDERED))))
+    LAYER_STATE_ID_UNORDERED(1) = 1
+    do i_layer = 1, TOTAL_NUM_LAYERS_
+      if (i_layer.eq.TOTAL_NUM_LAYERS_) then
+        LAYER_STATE_ID_UNORDERED_(i_layer) = LAYER_STATE_ID_UNORDERED_(i_layer) + &
+          NUM_PHASE_UNORDERED(i_phase) - 1
+      else 
+        LAYER_STATE_ID_UNORDERED_(i_layer) = LAYER_STATE_ID_UNORDERED_(i_layer) + &
+          NUM_PHASE_UNORDERED(i_phase)
+      end if
     end do
       
     aero_layer_phase_set = call order_phase_array(this,layers,cover_name,layer_name)
