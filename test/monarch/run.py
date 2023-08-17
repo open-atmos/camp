@@ -389,8 +389,9 @@ def run(conf):
         if conf.use_monarch:
           #data_path = "exports/gpu_rank0_monarch_out_state.csv"
           #data_path = "exports/gpu_tstep0_monarch_out_state.csv"
-          #data_path = "exports/gpu_tstep7_monarch_out_state.csv"
-          data_path = "exports/gpu_mxstep_tstep7_monarch_out_state.csv"
+          #data_path = "exports/gpu_old_tstep7_monarch_out_state.csv"
+          data_path = "exports/gpu_tstep7_monarch_out_state.csv"
+          #data_path = "exports/gpu_mxstep_tstep7_monarch_out_state.csv"
         else:
           data_path = "out/state1.csv"
     else:
@@ -398,7 +399,7 @@ def run(conf):
         data_path = "out/stats0.csv"
       else:
         data_path = "out/stats1.csv"
-  print("conf.results_file",conf.results_file)
+  print("conf.results_file",data_path)
   if not conf.is_import:
     os.system(exec_str)
     if conf.is_export_netcdf and conf.is_new_export:

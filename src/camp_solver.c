@@ -388,7 +388,7 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
   sd->counterBCG = 0;
   sd->counterLS = 0;
   sd->timeCVode = 0.0;
-  init_export_stats();
+  //init_export_stats();
 #endif
 
   sd->ncounters = ncounters;
