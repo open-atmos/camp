@@ -1938,7 +1938,7 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *sc) {
     if ((md->cv_mxstep > 0) && (sc->nstloc >= md->cv_mxstep)) {
       sc->cv_tretlast = sc->tret = sc->cv_tn;
       md->yout[i] = md->dzn[i];
-      if(i==0) printf("ERROR: cv_mxstep\n");
+      if(i==0) printf("ERROR: cv_mxstep reached %d\n",md->cv_mxstep);
       return CV_TOO_MUCH_WORK;
     }
     double nrm;

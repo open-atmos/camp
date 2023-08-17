@@ -46,7 +46,7 @@ option(ENABLE_DATA "" OFF)
 option(ENABLE_INSTALL_OPTIONS "" OFF)
 option(ENABLE_SHARED_LIB "" OFF) #todo fix and shared lib in Monarch
 add_definitions(-DCAMP_DEBUG_MOCKMONARCH)
-#add_definitions(-DENABLE_NETCDF)
+#add_definitions(-DENABLE_NETCDF) #needed for monarch, otherwise seg.fault (on one-cell)
 
 mark_as_advanced(FORCE ENABLE_DEBUG FAILURE_DETAIL)
 file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/out)
@@ -485,7 +485,6 @@ set(CAMP_LIB_SRC
         src/rxn_factory.F90 src/sub_model_data.F90 src/sub_model_factory.F90
         src/solver_stats.F90
         src/debug_diff_check.F90
-        src/debug_and_stats/camp_debug_2.F90
         ${CAMP_C_SRC} ${AEROSOL_REPS_SRC} ${SUB_MODELS_SRC}
         ${REACTIONS_SRC} ${GSL_SRC} ${CAMP_CUDA_SRC} ${CAMP_CXX_SRC} )
 

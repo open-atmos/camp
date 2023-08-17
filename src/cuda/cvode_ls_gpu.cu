@@ -119,6 +119,8 @@ int cvHandleFailure_gpu(CVodeMem cv_mem, int flag)
   N_VAbs(tempv, tempv);
   */
 
+  //printf("cvHandleFailure_gpu start\n");
+
   /* Depending on flag, print error message and return error flag */
   switch (flag) {
     case CV_ERR_FAILURE:

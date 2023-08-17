@@ -43,6 +43,7 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
                            double *max_loss_precision,
                            int *counters, double *times);
 void solver_reset_statistics(void *solver_data, int *counters, double *times);
+void solver_export_statistics(void *solver_data, int *counters, double *times);
 void solver_free(void *solver_data);
 void model_free(ModelData model_data);
 

@@ -553,11 +553,9 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
   sd->icell=0;
 #endif
 #ifdef EXPORT_STATE
-#ifndef ENABLE_NETCDF
   sd->n_cells_tstep = n_cells_tstep;
   sd->tstep=0;
   sd->icell=0;
-#endif
   init_export_state(sd);
 #endif
 #ifdef FAILURE_DETAIL
@@ -634,15 +632,6 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
   // Update model data pointers
   sd->model_data.total_state = state;
   sd->model_data.total_env = env;
-
-  /*
-//Use for export and import input data
-#ifdef ENABLE_NETCDF
-  for (int i_cell = 0; i_cell < n_cells; i_cell++) {
-    cell_netcdf(sd);
-  }
-#endif
-*/
 
   // Update the dependent variables
   int i_dep_var = 0;
@@ -1023,12 +1012,11 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
     }
     else{
       printf("WARNING: In function solver_get_statistics trying to assign times "
-             "and counters profilign variables with ncounters || ntimers < 1");
+             "and counters profiling variables with ncounters || ntimers < 1");
     }
       solver_reset_statistics_gpu(sd);
   }
 #endif
-  export_stats(sd->ntimers,sd->ncounters,counters,times);
 #endif
 }
 
@@ -1093,6 +1081,12 @@ void solver_reset_statistics(void *solver_data, int *counters, double *times)
   //printf("times[0] %le counters[1] %d\n",times[0],counters[1]);
 #endif
 #endif
+}
+
+void solver_export_statistics(void *solver_data, int *counters, double *times)
+{
+    SolverData *sd = (SolverData *)solver_data;
+    export_stats(sd->ntimers,sd->ncounters,counters,times);
 }
 
 #ifdef CAMP_USE_SUNDIALS
