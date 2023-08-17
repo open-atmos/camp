@@ -46,7 +46,7 @@ class TestMonarch:
     self.plotXKey = ""
     self.is_export = False
     self.is_import = False
-    self.is_new_export = False
+    self.is_new_export = True
     self.is_export_netcdf = False
     self.profileCuda = ""
     # Auxiliary
@@ -376,17 +376,21 @@ def run(conf):
     json.dump(conf.__dict__, jsonFile, indent=4, sort_keys=False)
 
   data_path = conf.results_file
-  print("conf.results_file",conf.results_file)
   if conf.is_import:
     if conf.plotYKey == "NRMSE" or conf.plotYKey == "MAPE":
       if conf.case is conf.caseBase:
         if conf.use_monarch:
-          data_path = "exports/cpu_rank0_monarch_out_state.csv"
+          #data_path = "exports/cpu_rank0_monarch_out_state.csv"
+          #data_path = "exports/cpu_tstep0_monarch_out_state.csv"
+          data_path = "exports/cpu_tstep7_monarch_out_state.csv"
         else:
           data_path = "out/state0.csv"
       else:
         if conf.use_monarch:
-          data_path = "exports/gpu_rank0_monarch_out_state.csv"
+          #data_path = "exports/gpu_rank0_monarch_out_state.csv"
+          #data_path = "exports/gpu_tstep0_monarch_out_state.csv"
+          #data_path = "exports/gpu_tstep7_monarch_out_state.csv"
+          data_path = "exports/gpu_mxstep_tstep7_monarch_out_state.csv"
         else:
           data_path = "out/state1.csv"
     else:
@@ -394,6 +398,7 @@ def run(conf):
         data_path = "out/stats0.csv"
       else:
         data_path = "out/stats1.csv"
+  print("conf.results_file",conf.results_file)
   if not conf.is_import:
     os.system(exec_str)
     if conf.is_export_netcdf and conf.is_new_export:

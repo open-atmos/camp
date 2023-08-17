@@ -28,6 +28,8 @@ void nc(int status) { //handle netcdf error
 }
 
 void init_export_state_netcdf(SolverData *sd){
+  printf("NOT USE, FAILING ON MONARCH WITH SEGMENTATION FAULT\n");
+  exit(0);
   ModelData *md = &(sd->model_data);
   if(md->n_cells==1){
     int size,rank;
