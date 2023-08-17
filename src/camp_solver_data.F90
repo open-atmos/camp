@@ -223,7 +223,13 @@ module camp_camp_solver_data
 
     subroutine solver_reset_statistics( solver_data, counters, times) bind (c)
       use iso_c_binding
-      !> Pointer to the solver data
+      type(c_ptr), value :: solver_data
+      type(c_ptr), value :: counters
+      type(c_ptr), value :: times
+    end subroutine
+
+    subroutine solver_export_statistics( solver_data, counters, times) bind (c)
+      use iso_c_binding
       type(c_ptr), value :: solver_data
       type(c_ptr), value :: counters
       type(c_ptr), value :: times
@@ -426,6 +432,7 @@ module camp_camp_solver_data
     procedure :: get_base_rate
     !> Get the solver statistics from the last run
     procedure:: get_solver_stats
+    procedure:: export_solver_stats
     !> Reset the solver statistics from the last run
     procedure:: reset_solver_stats
     !> Checks whether a solver is available
@@ -1018,7 +1025,7 @@ contains
             c_loc( times)& !Profiling
     )
 
-  end subroutine get_solver_stats
+  end subroutine
 
   !> Get solver statistics
   subroutine reset_solver_stats( this, solver_stats,counters,times)
@@ -1036,7 +1043,21 @@ contains
             c_loc( times)& !Profiling
             )
 
-  end subroutine reset_solver_stats
+  end subroutine
+
+  subroutine export_solver_stats( this, solver_stats,counters,times)
+    class(camp_solver_data_t), intent(inout) :: this
+    type(solver_stats_t), intent(inout), target :: solver_stats
+    integer,  target, intent(inout) :: counters(:)
+    real(kind=dp),target, intent(inout) :: times(:)
+
+    call solver_export_statistics( &
+        this%solver_c_ptr,&
+        c_loc( counters),&
+        c_loc( times)&
+        )
+
+  end subroutine
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 

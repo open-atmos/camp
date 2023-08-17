@@ -490,7 +490,7 @@ program mock_monarch_t
          solver_stats,DIFF_CELLS)
     curr_time = curr_time + TIME_STEP
 #ifdef CAMP_DEBUG_GPU
-      call camp_interface%camp_core%get_solver_stats(solver_stats=solver_stats)
+      call camp_interface%camp_core%export_solver_stats(solver_stats=solver_stats)
       call camp_interface%camp_core%reset_solver_stats(solver_stats=solver_stats)
 #endif
     !write(*, "(ES13.6)", advance="no") species_conc(:,:,:,:)
