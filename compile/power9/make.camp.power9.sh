@@ -66,7 +66,7 @@ if [ "$FILE" == TestMonarch.py ]; then
   #compare_runs
   #compare_cell
   #python $FILE
-  python a.py #read_monarch_netcdf
+  python stats_monarch_netcdf.py
   #log_path="../../compile/power9/log_cpu.txt"
   #python $FILE 2>&1 | tee "../../compile/power9/log_cpu.txt"
 elif [ "$FILE" == test_monarch_1.py ]; then
