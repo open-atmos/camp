@@ -231,6 +231,10 @@ contains
     type(aero_phase_data_ptr), pointer, intent(in) :: aero_phase_set(:)
     !> Layer names (only used during initialization)
     type(string_t), allocatable :: layer_name(:)
+    !> Unordered layer names (only used during initialization)
+    type(string_t), allocatable :: layer_name_unordered(:)
+    !> Unordered phase names (only used during initialization)
+    type(string_t), allocatable :: phase_name_unordered(:)
     !> Cover names (only used during initialization)
     type(string_t), allocatable :: cover_name(:)
     !> The set of layers
@@ -270,6 +274,7 @@ contains
     ! Allocate space for the layer and cover names
     allocate(this%layer_name(layers%size()))
     allocate(this%cover_name(layers%size()))
+    allocate(this%layer_name_unordered(layers%size()))
 
     ! Loop through the layers, adding names and counting the spaces needed
     ! on the condensed data arrays, and counting the total phases instances
@@ -282,12 +287,12 @@ contains
       call assert_msg(234513113, len(key_name).gt.0, "Missing layer "// &
               "name in single-particle layer aerosol representation '"// &
               this%rep_name//"'")
-      this%layer_name(i_layer)%string = key_name
+      this%layer_name_unordered(i_layer)%string = key_name
 
       ! Get the layer properties
       call assert_msg(517138327, layers%get_property_t(val=layers), &
               "Invalid structure for layer '"// &
-              this%layer_name(i_layer)%string// &
+              this%layer_name_unordered(i_layer)%string// &
               "' in single-particle layer representation '"// &
               this%rep_name//"'")
 
@@ -295,7 +300,7 @@ contains
       key_name = "covers"
       call assert_msg(742404898, section%get_string(key_name, layer_covers), &
                 "Missing cover name in layer'"// &
-                this%layer_name(i_layer)%string// &
+                this%layer_name_unordered(i_layer)%string// &
                 "' in single-particle layer aerosol representation '"// &
                 this%rep_name//"'")
       this%cover_name(i_layer)%string = layer_covers
@@ -323,7 +328,7 @@ contains
         ! Get the phase name
         call assert_msg(393427582, phases%get_string(val=phase_name), &
                 "Non-string phase name for layer '"// &
-                this%layer_name(i_layer)%string// &
+                this%layer_name_unordered(i_layer)%string// &
                 "' in single-particle layer aerosol representation '"// &
                 this%rep_name//"'")
   
@@ -335,18 +340,50 @@ contains
 
     ! Construct NUM_PHASE_UNORDERED_
     allocate(LAYER_STATE_ID_UNORDERED_(size(SUM(NUM_PHASE_UNORDERED))))
+    allocate(phase_name_unordered(size(SUM(NUM_PHASE_UNORDERED))))
     LAYER_STATE_ID_UNORDERED(1) = 1
     do i_layer = 1, TOTAL_NUM_LAYERS_
-      if (i_layer.eq.TOTAL_NUM_LAYERS_) then
-        LAYER_STATE_ID_UNORDERED_(i_layer) = LAYER_STATE_ID_UNORDERED_(i_layer) + &
-          NUM_PHASE_UNORDERED(i_phase) - 1
-      else 
-        LAYER_STATE_ID_UNORDERED_(i_layer) = LAYER_STATE_ID_UNORDERED_(i_layer) + &
-          NUM_PHASE_UNORDERED(i_phase)
-      end if
+      LAYER_STATE_ID_UNORDERED_(i_layer) = LAYER_STATE_ID_UNORDERED_(i_layer) + &
+        NUM_PHASE_UNORDERED(i_phase)
     end do
+
+    ! Loop through the layers again, adding phase names to array
+    call layers%iter_reset()
+    call phases%iter_reset()
+    do i_layer = 1, layers%size()
+      do i_phases = 1, size(phase_name_unordered)
+
+      ! Get the layer name
+      call assert(867378489, layers%get_key(key_name))
+      call assert_msg(234513113, len(key_name).gt.0, "Missing layer "// &
+              "name in single-particle layer aerosol representation '"// &
+              this%rep_name//"'")
+      this%layer_name_unordered(i_layer)%string = key_name
+
+      ! Get the layer properties
+      call assert_msg(517138327, layers%get_property_t(val=layers), &
+              "Invalid structure for layer '"// &
+              this%layer_name_unordered(i_layer)%string// &
+              "' in single-particle layer representation '"// &
+              this%rep_name//"'")
+           
+      ! Get the set of phases
+      key_name = "phases"
+      call assert_msg(815518058, section%get_property_t(key_name, phases), &
+              "Missing phases for layer '"// &
+              this%section_name(i_section)%string// &
+              "' in single-particle layer aerosol representation '"// &
+              this%rep_name//"'")
+      this%phase_name_unordered(i_phase)%string = key_name
       
-    aero_layer_phase_set = call order_phase_array(this,layers,cover_name,layer_name)
+      call phases%iter_next()
+    end do
+
+    call layers%iter_next()
+  end do
+    
+
+    aero_layer_phase_set = call order_phase_array(this,layers,cover_name,layer_name_unordered)
 
     ! Initialize NUM_PHASE_ array
     do i_layer = 1, TOTAL_NUM_LAYERS_
