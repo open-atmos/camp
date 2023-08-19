@@ -341,54 +341,62 @@ contains
     ! Construct LAYER_STATE_ID_UNORDERED_
     allocate(LAYER_STATE_ID_UNORDERED_(size(SUM(NUM_PHASE_UNORDERED))))
     allocate(phase_name_unordered(size(SUM(NUM_PHASE_UNORDERED))))
-    LAYER_STATE_ID_UNORDERED(1) = 1
+    LAYER_STATE_ID_UNORDERED_(1) = 1
     do i_layer = 1, TOTAL_NUM_LAYERS_
       LAYER_STATE_ID_UNORDERED_(i_layer) = LAYER_STATE_ID_UNORDERED_(i_layer) + &
         NUM_PHASE_UNORDERED(i_phase)
     end do
 
     ! Loop through the layers again, adding phase names to array
+    ! TODO: is this the best way to save phase array?
     call layers%iter_reset()
     call phases%iter_reset()
     do i_layer = 1, layers%size()
       do i_phases = 1, size(phase_name_unordered)
 
-      ! Get the layer name
-      call assert(867378489, layers%get_key(key_name))
-      call assert_msg(234513113, len(key_name).gt.0, "Missing layer "// &
-              "name in single-particle layer aerosol representation '"// &
-              this%rep_name//"'")
-      this%layer_name_unordered(i_layer)%string = key_name
+        ! Get the layer name
+        call assert(867378489, layers%get_key(key_name))
+        call assert_msg(234513113, len(key_name).gt.0, "Missing layer "// &
+                "name in single-particle layer aerosol representation '"// &
+               this%rep_name//"'")
+        this%layer_name_unordered(i_layer)%string = key_name
 
-      ! Get the layer properties
-      call assert_msg(517138327, layers%get_property_t(val=layers), &
-              "Invalid structure for layer '"// &
+        ! Get the layer properties
+        call assert_msg(517138327, layers%get_property_t(val=layers), &
+               "Invalid structure for layer '"// &
               this%layer_name_unordered(i_layer)%string// &
               "' in single-particle layer representation '"// &
               this%rep_name//"'")
            
-      ! Get the set of phases
-      key_name = "phases"
-      call assert_msg(815518058, section%get_property_t(key_name, phases), &
-              "Missing phases for layer '"// &
-              this%section_name(i_section)%string// &
-              "' in single-particle layer aerosol representation '"// &
+        ! Get the set of phases
+        key_name = "phases"
+        call assert_msg(815518058, section%get_property_t(key_name, phases), &
+                "Missing phases for layer '"// &
+                this%section_name(i_section)%string// &
+                "' in single-particle layer aerosol representation '"// &
               this%rep_name//"'")
-      this%phase_name_unordered(i_phase)%string = key_name
+        this%phase_name_unordered(i_phase)%string = key_name
       
-      call phases%iter_next()
+        call phases%iter_next()
+      end do
+
+      call layers%iter_next()
     end do
 
-    call layers%iter_next()
-  end do
+    NUM_PHASE_ = call order_num_phase_array(this,layers,NUM_PHASE_UNORDERED,cover_name,layer_name_unordered)
     
-
-    aero_layer_phase_set = call order_phase_array(this,layers,cover_name,layer_name_unordered)
-
-    ! Initialize NUM_PHASE_ array
+    ! Construct LAYER_STATE_ID_ (ordered)
+    allocate(LAYER_STATE_ID_(size(SUM(NUM_PHASE_))))
+    LAYER_STATE_ID_(1) = 1
     do i_layer = 1, TOTAL_NUM_LAYERS_
-      NUM_PHASE_(i_layer) = size(aero_layer_phase_set(i_layer, :))
+      LAYER_STATE_ID_(i_layer) = LAYER_STATE_ID_(i_layer) + &
+        NUM_PHASE_(i_phase)
     end do
+
+    aero_layer_set_names = call order_layer_array(this,layers,cover_name,layer_name_unordered)
+    aero_layer_phase_set_names = call order_phase_array(this,layers,phases,phase_name_unordered, &
+                              LAYER_STATE_ID_, LAYER_STATE_ID_UNORDERED_, &
+                              cover_name,layer_name_unordered)
 
     ! Construct aero_phase array for layers
     allocate(aero_phase(size(NUM_PHASE_)))
@@ -396,15 +404,13 @@ contains
       do i_layer = 1, TOTAL_NUM_LAYERS_
         do i_phase = 1, TOTAL_NUM_PHASES_
           ! Need to reference pointer variable
-          if (aero_layer_phase_set(i_layer,i_phase).eq.&
+          if (aero_layer_phase_set_names(i_phase).eq.&
               aero_phase_set(i_phase)) then 
                 aero_phase(i_aero) => aero_phase_set(i_phase)
-              else
-                continue 
-              end if
-          end do
+          end if
         end do
-      end do 
+      end do
+    end do 
 
     ! Assume all phases will be applied once to each particle
     allocate(this%aero_phase(size(aero_phase_set)*num_particles))
