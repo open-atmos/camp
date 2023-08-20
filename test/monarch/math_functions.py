@@ -283,7 +283,7 @@ def calculate_NRMSE(data, n_time_steps, nCellsProcesses,use_monarch, max_tol):
       NRMSEs_species[k] = 0.
       max_y[k] = 0.
       min_y[k] = float("inf")
-    NRMSEs[i] = max_NRMSEs_species
+    NRMSEs[i] = max_NRMSEs_species*100
     max_NRMSEs_species = 0.
   max_err_rel = format(max_err_rel * 100, '.2e')
   err_rel_at_max_abs = format(err_rel_at_max_abs * 100, '.2e')

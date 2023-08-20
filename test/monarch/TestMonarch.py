@@ -122,7 +122,7 @@ def all_timesteps():
   #conf.is_new_export = False #Old, float (4bytes), faster
   #conf.is_new_export = True #New, double, slow, use for NMRSE
 
-  #conf.use_monarch = True #better run stats_monarch_netcdf.py
+  conf.use_monarch = True #better run stats_monarch_netcdf.py
 
   #conf.is_export_netcdf = True
 
@@ -136,6 +136,7 @@ def all_timesteps():
   conf.results_file = "out/stats.csv"
   if conf.use_monarch:
     conf.plotYKey = "NRMSE"
+    conf.is_import = True
   if conf.plotYKey == "NRMSE" or conf.plotYKey == "MAPE":
     if conf.is_new_export:
       conf.results_file = 'out/state.csv'
