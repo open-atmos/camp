@@ -27,20 +27,21 @@ def process_variable(dataset1, dataset2, var_name):
     array2 = np.ma.getdata(dataset2.variables[var_name][:])
 
     abs_diff = np.abs(array1 - array2)
-    relative_error = abs_diff / np.maximum(np.abs(array1), np.abs(array2))
+    max_array = np.maximum(np.abs(array1), np.abs(array2))
+    relative_error = np.where(max_array == 0, 0, abs_diff / max_array)
 
-    # Calculate statistics
     mean = np.mean(relative_error)
     if np.isnan(mean) or mean == 0.:
         return False
     else:
         nrmse = calculate_nrmse(array1, array2)
-        rmsdiqr = calculate_rmsdiqr(array1, array2)
+        #rmsdiqr = calculate_rmsdiqr(array1, array2)
         quantiles = np.percentile(relative_error, [25, 50, 75, 95])
         quantiles = [f'{q:.2e}' for q in quantiles]  # Format quantiles with exponential notation
         median = np.median(relative_error)
         std_dev = np.std(relative_error)
-    return var_name, quantiles, median, mean, std_dev, nrmse, rmsdiqr
+    return var_name, quantiles, median, mean, std_dev, nrmse
+    #return var_name, quantiles, median, mean, std_dev, nrmse, rmsdiqr
 
 
 def main():
@@ -73,7 +74,7 @@ def main():
     dataset2.close()
     summary_table = pd.DataFrame(summary_data, columns=['Variable', \
                                                         'Quantiles[25,50,75,95]', 'Median', 'Mean', 'Std Dev', \
-                                                        'NRMSE[%]', 'RMSDIQR[%]'])
+                                                        'NRMSE[%]'])
     pd.set_option('display.max_rows', 100)
     pd.set_option('display.max_columns', 100)
     pd.set_option('display.width', 100)
