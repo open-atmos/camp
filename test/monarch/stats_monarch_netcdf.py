@@ -12,14 +12,29 @@ def process_variable(dataset1, dataset2, var_name):
     print(f"Processing variable: {var_name}")
     array1 = dataset1.variables[var_name][:]
     array2 = dataset2.variables[var_name][:]
-    abs_diff = abs(array1 - array2)
+    # Convert masked arrays to regular NumPy arrays
+    array1 = np.ma.getdata(array1)
+    array2 = np.ma.getdata(array2)
+    #valid_indices = np.logical_and(~np.isnan(array1), ~np.isnan(array2))
+    #array1 = array1[valid_indices]
+    #array2 = array2[valid_indices]
+    abs_diff = abs(abs(array1) - abs(array2))
     relative_error = abs_diff / np.maximum(np.abs(array1), np.abs(array2))  # Calculate relative error
+    # Calculate relative error, replacing NaN values with zeros
+    relative_error = np.where(np.logical_or(np.isnan(array1), np.isnan(array2)), 0.0,
+                              abs_diff / np.maximum(np.abs(array1), np.abs(array2)))
 
     # Calculate statistics
-    quantiles = np.percentile(relative_error, [25, 50, 75, 95])
-    median = np.median(relative_error)
     mean = np.mean(relative_error)
-    std_dev = np.std(relative_error)
+    if np.isnan(mean):
+        quantiles = np.zeros(4)
+        median = 0
+        mean = 0
+        std_dev = 0
+    else:
+        quantiles = np.percentile(relative_error, [25, 50, 75, 95])
+        median = np.median(relative_error)
+        std_dev = np.std(relative_error)
     return [var_name, quantiles, median, mean, std_dev]
 
 def main():
