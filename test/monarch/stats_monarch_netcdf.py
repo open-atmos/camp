@@ -35,7 +35,7 @@ def main():
     processed_count = 0
     for var_name in variable_names:
         variable = dataset1.variables[var_name]
-        if len(variable.dimensions) == 4 and processed_count < 4:
+        if len(variable.dimensions) == 4 and processed_count < 11:
             result = process_variable(dataset1, dataset2, var_name)
             summary_data.append(result)
             processed_count += 1
@@ -49,12 +49,6 @@ def main():
     # Convert statistics columns to numeric data types
     numeric_cols = ['Quantiles[25,50,75,95]', 'Median', 'Mean', 'Std Dev']
     summary_table[numeric_cols] = summary_table[numeric_cols].apply(pd.to_numeric, errors='coerce')
-
-    # Convert non-numeric values to NaN in the 'Mean' column
-    summary_table['Mean'] = pd.to_numeric(summary_table['Mean'], errors='coerce')
-
-    # Remove rows with NaN in the 'Mean' column
-    summary_table = summary_table.dropna(subset=['Mean'])
 
     # Find the worst variables based on median relative error
     worst_variables = summary_table.nlargest(5, 'Mean')  # Modify the number as needed
