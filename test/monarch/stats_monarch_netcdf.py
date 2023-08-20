@@ -58,6 +58,10 @@ def main():
     dataset1.close()
     dataset2.close()
     summary_table = pd.DataFrame(summary_data, columns=['Variable', 'Quantiles[25,50,75,95]', 'Median', 'Mean', 'Std Dev'])
+    pd.set_option('display.max_rows', None)
+    pd.set_option('display.max_columns', None)
+    pd.set_option('display.width', None)
+    pd.set_option('display.max_colwidth', None)
     print("Summary Table:",summary_table)
     numeric_cols = ['Quantiles[25,50,75,95]', 'Median', 'Mean', 'Std Dev']
     #summary_table[numeric_cols] = summary_table[numeric_cols].apply(pd.to_numeric, errors='coerce')
