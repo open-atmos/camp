@@ -23,10 +23,6 @@ def process_variable(dataset1, dataset2, var_name):
     mean = np.mean(relative_error)
     if np.isnan(mean) or mean == 0.:
         return False
-        quantiles = np.zeros(4)
-        median = 0
-        mean = 0
-        std_dev = 0
     else:
         quantiles = np.percentile(relative_error, [25, 50, 75, 95])
         median = np.median(relative_error)
@@ -42,7 +38,7 @@ def main():
     variable_names = dataset1.variables.keys()  # Get all variable names
 
     summary_data = []
-    start_time = time.time()
+    #start_time = time.time()
 
     processed_count = 0
     start_processing = False # DEBUG
@@ -58,19 +54,13 @@ def main():
                 if result:
                     summary_data.append(result)
 
-
-    end_time = time.time()
-    execution_time = end_time - start_time
-    print(f"Total execution time: {execution_time:.2f} seconds")
-    # Close the NetCDF datasets
+    #print(f"Total execution time: {time.time()-start_time:.2f} seconds")
     dataset1.close()
     dataset2.close()
-    # Create a summary table
     summary_table = pd.DataFrame(summary_data, columns=['Variable', 'Quantiles[25,50,75,95]', 'Median', 'Mean', 'Std Dev'])
     print("Summary Table:",summary_table)
-    # Convert statistics columns to numeric data types
     numeric_cols = ['Quantiles[25,50,75,95]', 'Median', 'Mean', 'Std Dev']
-    summary_table[numeric_cols] = summary_table[numeric_cols].apply(pd.to_numeric, errors='coerce')
+    #summary_table[numeric_cols] = summary_table[numeric_cols].apply(pd.to_numeric, errors='coerce')
     summary_table.to_csv("summary_table.csv", index=False)
 
     # Find the worst variables based on Mean relative error
