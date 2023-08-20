@@ -26,7 +26,8 @@ def process_variable(dataset1, dataset2, var_name):
 
     # Calculate statistics
     mean = np.mean(relative_error)
-    if np.isnan(mean):
+    if np.isnan(mean): # or mean == 0.
+        #return False
         quantiles = np.zeros(4)
         median = 0
         mean = 0
@@ -50,8 +51,9 @@ def main():
     processed_count = 0
     for var_name in variable_names:
         variable = dataset1.variables[var_name]
-        if len(variable.dimensions) == 4 and processed_count < 11:
+        if len(variable.dimensions) == 4 and processed_count < 50:
             result = process_variable(dataset1, dataset2, var_name)
+            #if result:
             summary_data.append(result)
             processed_count += 1
 
