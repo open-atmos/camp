@@ -1607,7 +1607,7 @@ contains
     else
       phase = GAS_AERO_RXN
     end if
-    call solver%get_solver_stats( solver_stats,this%ncounters,this%ntimers)
+    call this%get_solver_stats( solver_stats=solver_stats)
     if (phase.eq.GAS_RXN) then
       solver => this%solver_data_gas
     else if (phase.eq.AERO_RXN) then
