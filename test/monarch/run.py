@@ -130,52 +130,6 @@ def write_camp_config_file(conf):
     print("write_camp_config_file fails", e)
 
 
-def remove_to_tmp(conf, sbatch_job_id):
-  exportPath = conf.exportPath
-
-  now = datetime.datetime.now()
-  tmp_dir = exportPath + "/tmp/" + now.strftime("%d-%m-%Y")  # + extra_str_name
-  if not os.path.exists(tmp_dir):
-    os.makedirs(tmp_dir)
-    os.makedirs(tmp_dir + "/conf")
-    os.makedirs(tmp_dir + "/data")
-
-  conf_path = exportPath + "/conf"
-  filenames = next(os.walk(conf_path), (None, None, []))[2]
-
-  if not filenames:
-    print("WARNING: Import folder is empty. Path:", os.path.abspath(os.getcwd()) + "/" + conf_path)
-    raise
-
-  data_path = exportPath + "/data/"
-  for filename in filenames:
-    dir_to_extract = conf_path + "/"
-    basename = os.path.splitext(filename)[0]
-    path_to_zip_file = dir_to_extract + basename + ".zip"
-    with zipfile.ZipFile(path_to_zip_file, 'r') as zip_ref:
-      zip_ref.extractall(dir_to_extract)
-    conf_name = conf_path + "/" + basename + ".json"
-    with open(conf_name, 'r', encoding='utf-8') as jsonFile:
-      conf_imported = json.load(jsonFile)
-    os.remove(conf_name)
-    conf_dict = vars(conf)
-    # print("conf_dict",conf_dict)
-    is_same_conf_case = True
-    if conf_imported["sbatch_job_id"] == sbatch_job_id or conf_imported["sbatch_job_id"] == "-" + sbatch_job_id:
-      tmp_dir_conf = tmp_dir + "/conf/" + basename + ".zip"
-      # os.remove(path_to_zip_file)
-      os.rename(path_to_zip_file, tmp_dir_conf)
-      # print("Moved conf from",os.path.abspath(os.getcwd()) + "/" + path_to_zip_file, "to", tmp_dir)
-      path_to_zip_file = data_path + basename + ".zip"
-      # os.remove(path_to_zip_file)
-      tmp_dir_data = tmp_dir + "/data/" + basename + ".zip"
-      os.rename(path_to_zip_file, tmp_dir_data)
-      print("Moved data from", os.path.abspath(os.getcwd()) + "/" + path_to_zip_file, "to",
-            os.path.abspath(os.getcwd()) + "/" + tmp_dir)
-  raise
-  return True
-
-
 def import_data(conf, tmp_path):
   is_import = False
   exportPath = conf.exportPath
@@ -411,25 +365,23 @@ def run(conf):
       end = time.time()
       print("Time read_netcdf = %s" % (end - start))
 
-  if conf.is_new_export:
-    with open(data_path) as f:
-      data = [float(line.rstrip('\n')) for line in f]
+  if conf.plotYKey == "NRMSE" or conf.plotYKey == "MAPE":
+    if conf.is_new_export:
+      with open(data_path) as f:
+        data = [float(line.rstrip('\n')) for line in f]
     if conf.is_export:
-      if conf.plotYKey == "NRMSE" or conf.plotYKey == "MAPE":
-        if conf.case is conf.caseBase:
-          os.rename("out/state.csv", "out/state0.csv")
-        else:
-          os.rename("out/state.csv", "out/state1.csv")
+      if conf.case is conf.caseBase:
+        os.rename("out/state.csv", "out/state0.csv")
       else:
-        if conf.case is conf.caseBase:
-          os.rename("out/stats.csv", "out/stats0.csv")
-        else:
-          os.rename("out/stats.csv", "out/stats1.csv")
+        os.rename("out/state.csv", "out/state1.csv")
   else:
-    nrows_csv = conf.timeSteps
-    if conf.plotYKey == "MAPE" or conf.plotYKey == "NRMSE":
-      nrows_csv = conf.timeSteps * conf.nCells * conf.mpiProcesses
+    nrows_csv = conf.timeSteps * conf.nCells * conf.mpiProcesses
     data = math_functions.read_solver_stats(data_path, nrows_csv)
+    if conf.is_export:
+      if conf.case is conf.caseBase:
+        os.rename("out/stats.csv", "out/stats0.csv")
+      else:
+        os.rename("out/stats.csv", "out/stats1.csv")
 
   return data
 
