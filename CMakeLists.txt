@@ -589,7 +589,7 @@ if (ENABLE_TESTS)
 
   add_executable(camp_box_model test/camp_box_model_data.F90
           test/camp_box_model.F90)
-  target_linkW_libraries(camp_box_model camplib)
+  target_link_libraries(camp_box_model camplib)
 
 ######################################################################
 # test_chemistry_cb05cl_ae5

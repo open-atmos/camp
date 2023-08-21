@@ -308,7 +308,7 @@ void solver_new_gpu_cu_cvode(SolverData *sd) {
 #endif
 }
 
-#ifndef USE_CSR_ODE_GPU
+#ifdef USE_CSR_ODE_GPU
 void swapCSC_CSR_ODE(SolverData *sd){
   ModelDataGPU *mGPU = sd->mGPU;
   int n_row=mGPU->nrows/mGPU->n_cells;
@@ -523,7 +523,7 @@ void constructor_cvode_gpu(CVodeMem cv_mem, SolverData *sd){
   HANDLE_ERROR(cudaMemcpy(mGPU->mdvo, &mCPU->mdvCPU, sizeof(ModelDataVariable), cudaMemcpyHostToDevice));
 #endif
   mCPU->mdvCPU.nstlj = 0;
-#ifndef USE_CSR_ODE_GPU
+#ifdef USE_CSR_ODE_GPU
   if(sd->use_gpu_cvode==1) {
     swapCSC_CSR_ODE(sd);
   }

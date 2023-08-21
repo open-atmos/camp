@@ -449,7 +449,7 @@ __device__ void cudaDeviceSpmv_2CSC_block(double* dx, double* db, double* dA, in
 }
 
 __device__ void cudaDeviceSpmv_2(double* dx, double* db, double* dA, int* djA, int* diA){
-#ifndef USE_CSR_ODE_GPU
+#ifdef USE_CSR_ODE_GPU
   cudaDeviceSpmv_2CSR(dx,db,dA,djA,diA);
 #else
   cudaDeviceSpmv_2CSC_block(dx,db,dA,djA,diA);
@@ -964,21 +964,6 @@ int cudaDeviceJac(int *flag, ModelDataGPU *md, ModelDataVariable *sc)
   __syncthreads();
   if(retval==CAMP_SOLVER_FAIL)
     return CAMP_SOLVER_FAIL;
-#ifdef DEV_check_model_state
-  //Pending: remove in cpu, since it is the same result in gpu
-  //print_double(md->state,md->state_size_cell,"state920");
-  int checkflag=cudaDevicecamp_solver_check_model_state(md, sc, md->dcv_y, &aux_flag);
-  //print_double(md->state,md->state_size_cell,"state923");
-  __syncthreads();
-  if(checkflag==CAMP_SOLVER_FAIL){
-    *flag=CAMP_SOLVER_FAIL;
-#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
-    if(threadIdx.x==0)  sc->timeJac += ((double)(clock() - start))/(clock_khz*1000);
-#endif
-    __syncthreads();
-    return CAMP_SOLVER_FAIL;
-  }
-#endif
   cudaDevicecalc_Jac(md->dcv_y,md, sc);
   __syncthreads();
   int nnz = md->n_mapped_values[0];
@@ -1938,7 +1923,7 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *sc) {
     if ((md->cv_mxstep > 0) && (sc->nstloc >= md->cv_mxstep)) {
       sc->cv_tretlast = sc->tret = sc->cv_tn;
       md->yout[i] = md->dzn[i];
-      if(i==0) printf("ERROR: cv_mxstep reached %d\n",md->cv_mxstep);
+      if(i==0) printf("ERROR: cv_mxstep reached\n");
       return CV_TOO_MUCH_WORK;
     }
     double nrm;
