@@ -1,9 +1,6 @@
 #!/usr/bin/env bash
 
 relative_path="../../../"
-if [ "$1" == "from_camp_jobs" ]; then
-  relative_path="../../../../"
-fi
 
 LOCAL_MACHINE=CGUZMAN
 if [ $BSC_MACHINE == "power" ]; then
@@ -55,8 +52,8 @@ cd build
 
 cmake -D CMAKE_C_COMPILER=$(which mpicc) \
 -D CMAKE_BUILD_TYPE=debug \
--D CMAKE_C_FLAGS_DEBUG="-g" \
--D CMAKE_Fortran_FLAGS_DEBUG="-g" \
+-D CMAKE_C_FLAGS_DEBUG="-g -O3" \
+-D CMAKE_Fortran_FLAGS_DEBUG="-g -O3" \
 -D CMAKE_C_FLAGS_RELEASE="-std=c99" \
 -D CMAKE_Fortran_FLAGS_RELEASE="" \
 -D CMAKE_Fortran_COMPILER=$mpifort \

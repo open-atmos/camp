@@ -1,9 +1,6 @@
 #!/usr/bin/env bash
 
 library_path="../../../"
-if [ "$1" == "from_camp_jobs" ]; then
-  library_path="../../../../"
-fi
 
 cd $library_path/json-fortran-6.1.0
 rm -r build

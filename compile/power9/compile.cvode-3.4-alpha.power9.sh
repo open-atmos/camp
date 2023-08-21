@@ -1,9 +1,6 @@
 #!/usr/bin/env bash
 
 library_path="../../../"
-if [ "$1" == "from_camp_jobs" ]; then
-  library_path="../../../../"
-fi
 
 if [ -z "$SUITE_SPARSE_CAMP_ROOT" ]; then
 	SUITE_SPARSE_CAMP_ROOT=$(pwd)/$library_path/SuiteSparse
@@ -18,7 +15,7 @@ mkdir install
 mkdir install/examples
 cd build
 cmake -D CMAKE_BUILD_TYPE=debug \
--D CMAKE_C_FLAGS_DEBUG="" \
+-D CMAKE_C_FLAGS_DEBUG="-O3" \
 -D MPI_ENABLE:BOOL=TRUE \
 -D KLU_ENABLE:BOOL=TRUE \
 -D CUDA_ENABLE:BOOL=FALSE \
