@@ -11,13 +11,14 @@ fi
 
 #tar -zxvf camp/cvode-3.4-alpha.tar.gz
 cd $library_path/cvode-3.4-alpha
-#rm -r build
+rm -r build
 mkdir build
-#rm -rf install
+rm -rf install
 mkdir install
 mkdir install/examples
 cd build
 cmake -D CMAKE_BUILD_TYPE=debug \
+-D CMAKE_C_FLAGS_DEBUG="-O0" \
 -D MPI_ENABLE:BOOL=TRUE \
 -D KLU_ENABLE:BOOL=TRUE \
 -D CUDA_ENABLE:BOOL=FALSE \

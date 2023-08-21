@@ -24,10 +24,11 @@ compile(){
 
 main(){
 
-#compile
+compile
 
 cd ../../test/monarch
-FILE=TestMonarch.py
+#FILE=TestMonarch.py
+FILE=stats_monarch_netcdf.py
 #FILE=./test_run/chemistry/cb05cl_ae5/test_chemistry_cb05cl_ae5.sh
 #FILE=./unit_test_aero_rep_single_particle
 #FILE=./new_make.sh
@@ -65,8 +66,7 @@ compare_cell(){
 if [ "$FILE" == TestMonarch.py ]; then
   #compare_runs
   #compare_cell
-  #python $FILE
-  python stats_monarch_netcdf.py
+  python $FILE
   #log_path="../../compile/power9/log_cpu.txt"
   #python $FILE 2>&1 | tee "../../compile/power9/log_cpu.txt"
 elif [ "$FILE" == test_monarch_1.py ]; then
