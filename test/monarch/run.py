@@ -48,6 +48,7 @@ class TestMonarch:
     self.is_import = False
     self.is_new_export = True
     self.is_export_netcdf = False
+    self.use_monarch = False
     self.profileCuda = ""
     # Auxiliary
     self.is_start_auxiliary_attributes = True
