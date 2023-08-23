@@ -6,6 +6,7 @@ import netCDF4 as nc
 import numpy as np
 import pandas as pd
 import time
+from stats_monarch_csv import calculate_speedup
 
 
 def calculate_nrmse(data1, data2):
@@ -23,8 +24,8 @@ def calculate_rmsdiqr(data1, data2):
 
 def process_variable(dataset1, dataset2, var_name):
     print(f"Processing variable: {var_name}")
-    array1 = np.ma.getdata(dataset1.variables[var_name][:])
-    array2 = np.ma.getdata(dataset2.variables[var_name][:])
+    array1 = np.ma.getdata(dataset1.variables[var_name][-1, ...])
+    array2 = np.ma.getdata(dataset2.variables[var_name][-1, ...])
 
     abs_diff = np.abs(array1 - array2)
     max_array = np.maximum(np.abs(array1), np.abs(array2))
@@ -45,8 +46,20 @@ def process_variable(dataset1, dataset2, var_name):
 
 
 def main():
-    file1 = "../../../../8_cpu_tstep6_O0_tol3_monarch_out_state/nmmb_hst_01_nc4_0000h_00m_00.00s.nc"
-    file2 = "../../../../7_cpu_tstep6_O3_monarch_out_state/nmmb_hst_01_nc4_0000h_00m_00.00s.nc"
+    file1_path_header = "../../../../11_cpu_tstep6_O2_monarch_out/"
+    file2_path_header = "../../../../gpu_tstep6_O2_monarch_out/"
+
+    # Paths to the CSV files
+    file1 = file1_path_header + "out/stats.csv"
+    file2 = file2_path_header + "out/stats.csv"
+
+    # Calculate the speedup
+    speedup = calculate_speedup(file1, file2)
+    print("Speedup:", speedup)
+
+    file1 = file1_path_header + "nmmb_hst_01_nc4_0000h_00m_00.00s.nc"
+    file2 = file2_path_header + "nmmb_hst_01_nc4_0000h_00m_00.00s.nc"
+
     dataset1 = nc.Dataset(file1)
     dataset2 = nc.Dataset(file2)
 
@@ -83,12 +96,13 @@ def main():
     pd.set_option('display.max_columns', 100)
     pd.set_option('display.width', 100)
     pd.set_option('display.max_colwidth', 100)
-    print("Summary Table:", summary_table)
+    #print("Summary Table:", summary_table)
     summary_table.to_csv("summary_table_.csv", index=False)
 
     worst_variables = summary_table.nlargest(999, 'NRMSE[%]')
-    print("worst_variables:\n", worst_variables)
+    #print("worst_variables:\n", worst_variables)
     worst_variables.to_csv("exports/summary_table.csv", index=False)
+    print("Speedup:", speedup)
 
 
 if __name__ == "__main__":
