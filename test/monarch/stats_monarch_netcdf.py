@@ -32,21 +32,21 @@ def process_variable(dataset1, dataset2, var_name):
 
     mean = np.mean(relative_error)
     if np.isnan(mean) or mean == 0.:
+        if mean == 0:
+            print(f"Variable difference mean: {var_name} is 0")
         return False
     else:
         nrmse = calculate_nrmse(array1, array2)
-        #rmsdiqr = calculate_rmsdiqr(array1, array2)
         quantiles = np.percentile(relative_error, [25, 50, 75, 95])
-        quantiles = [f'{q:.2e}' for q in quantiles]  # Format quantiles with exponential notation
+        quantiles = [f'{q:.2e}' for q in quantiles]
         median = np.median(relative_error)
         std_dev = np.std(relative_error)
     return var_name, quantiles, median, mean, std_dev, nrmse
-    #return var_name, quantiles, median, mean, std_dev, nrmse, rmsdiqr
 
 
 def main():
-    file1 = "exports/nmmb_cpu_hist005_tstep7.nc"
-    file2 = "exports/nmmb_gpu_hist005_tstep7.nc"
+    file1 = "../../../../8_cpu_tstep6_O0_tol3_monarch_out_state/nmmb_hst_01_nc4_0000h_00m_00.00s.nc"
+    file2 = "../../../../7_cpu_tstep6_O3_monarch_out_state/nmmb_hst_01_nc4_0000h_00m_00.00s.nc"
     dataset1 = nc.Dataset(file1)
     dataset2 = nc.Dataset(file2)
 
@@ -55,13 +55,13 @@ def main():
     summary_data = []
     start_time = time.time()
 
-    processed_count = 0
     start_processing = False  # DEBUG
-    # start_processing = True # DISABLE DEBUG
+    processed_count = 0
+    start_processing = True # DISABLE DEBUG
     for var_name in variable_names:
         if var_name == "NO2":  # DEBUG
             start_processing = True
-        if start_processing and processed_count < 9:
+        if start_processing and processed_count < 999:
             variable = dataset1.variables[var_name]
             if len(variable.dimensions) == 4:
                 processed_count += 1
@@ -72,6 +72,10 @@ def main():
     print(f"Total execution time: {time.time()-start_time:.2f} seconds")
     dataset1.close()
     dataset2.close()
+    if not summary_data:
+        print("summary_data is empty")
+        exit(1)
+
     summary_table = pd.DataFrame(summary_data, columns=['Variable', \
                                                         'Quantiles[25,50,75,95]', 'Median', 'Mean', 'Std Dev', \
                                                         'NRMSE[%]'])
@@ -80,12 +84,11 @@ def main():
     pd.set_option('display.width', 100)
     pd.set_option('display.max_colwidth', 100)
     print("Summary Table:", summary_table)
-    # numeric_cols = ['Quantiles[25,50,75,95]', 'Median', 'Mean', 'Std Dev', 'NRMSE']
-    # summary_table[numeric_cols] = summary_table[numeric_cols].apply(pd.to_numeric, errors='coerce')
-    summary_table.to_csv("summary_table.csv", index=False)
+    summary_table.to_csv("summary_table_.csv", index=False)
 
-    worst_variables = summary_table.nlargest(3, 'NRMSE[%]')  # Modify the number as needed
+    worst_variables = summary_table.nlargest(999, 'NRMSE[%]')
     print("worst_variables:\n", worst_variables)
+    worst_variables.to_csv("exports/summary_table.csv", index=False)
 
 
 if __name__ == "__main__":
