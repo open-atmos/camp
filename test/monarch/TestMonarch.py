@@ -27,7 +27,7 @@ def all_timesteps():
   #conf.is_export = True
   #conf.is_export = False
 
-  #conf.is_import = True
+  conf.is_import = True
   #conf.is_import = False
 
   # conf.commit = "MATCH_IMPORTED_CONF"
@@ -59,12 +59,12 @@ def all_timesteps():
   # conf.allocatedTasksPerNode = 320
   # conf.allocatedTasksPerNode = get_ntasksPerNode_sbatch() #todo
 
-  conf.cells = [1]
+  conf.cells = [30]
   #conf.cells = [14872] #monarch rank 0
   # conf.cells = [100, 500, 1000, 5000, 10000]
   # conf.cells = [50000,100000,500000,1000000]
 
-  conf.timeSteps = 1
+  conf.timeSteps = 2
   # conf.timeSteps = 720
 
   conf.timeStepsDt = 2
@@ -116,9 +116,6 @@ def all_timesteps():
   # conf.plotYKey = "Speedup device timecvStep"
   # conf.plotYKey = "Percentage data transfers CPU-GPU [%]"
   conf.plotYKey = "NRMSE"
-
-  #conf.is_new_export = False #Old, float (4bytes), faster
-  #conf.is_new_export = True #Default, double, slow, use for NMRSE
 
   #conf.use_monarch = True #better run stats_monarch_netcdf.py
 

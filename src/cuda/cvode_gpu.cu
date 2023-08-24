@@ -457,11 +457,9 @@ void constructor_cvode_gpu(CVodeMem cv_mem, SolverData *sd){
   HANDLE_ERROR(cudaMemcpy(mGPU->mdvo, &mCPU->mdvCPU, sizeof(ModelDataVariable), cudaMemcpyHostToDevice));
 #endif
   mCPU->mdvCPU.nstlj = 0;
-#ifdef USE_CSR_ODE_GPU
   if(sd->use_gpu_cvode==1) {
     swapCSC_CSR_ODE_if_enabled(sd);
   }
-#endif
   if(cv_mem->cv_sldeton){
     printf("ERROR: cudaDevicecvBDFStab is pending to implement "
            "(disabled by default on CAMP)\n");

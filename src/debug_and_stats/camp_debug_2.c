@@ -57,7 +57,7 @@ void export_state_netcdf(SolverData *sd){
   }
   //printf("%d %d %d\n",n_state_nc,md->n_cells,sd->n_cells_tstep);
   if(sd->icell>=sd->n_cells_tstep){ //export all cells
-    if(rank==0)printf("export_state start\n");
+    if(rank==0)printf("export_state_netcdf start\n");
     int ncid;
     int nvars=1;
     int dimids[nvars], varids[nvars];
@@ -547,6 +547,7 @@ void init_export_state(SolverData *sd){
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   char file_path[]="out/state.csv";
   if(rank==0){
+    printf("export_state enabled\n");
     FILE *fptr;
     fptr = fopen(file_path,"w");
     fclose(fptr);
@@ -557,7 +558,6 @@ void export_state(SolverData *sd){
   ModelData *md = &(sd->model_data);
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  if(rank==0)printf("export_state start\n");
   for (int k=0; k<md->n_cells; k++) {
     if (rank == 0) {
       FILE *fptr;
@@ -570,14 +570,13 @@ void export_state(SolverData *sd){
       fclose(fptr);
     }
   }
-  if(rank==0)printf("export_state end\n");
 }
 
 void no_monarch_export_state(SolverData *sd){
   ModelData *md = &(sd->model_data);
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  if(rank==0)printf("export_state start\n");
+  if(rank==0)printf("no_monarch_export_state start\n");
   int size;
   MPI_Comm_size(MPI_COMM_WORLD, &size);
   for (int k=0; k<md->n_cells; k++) {
@@ -603,6 +602,7 @@ void init_export_stats(){
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   char file_path[]="out/stats.csv";
   if(rank==0){
+    printf("export_stats enabled\n");
     FILE *fptr;
     fptr = fopen(file_path,"w");
     fprintf(fptr, "counterBCG,counterLS,"
@@ -620,7 +620,6 @@ void init_export_stats(){
 void export_stats(int ntimers,int ncounters, int *counters, double *times){
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  if(rank==0)printf("export_stats start\n");
   if (rank == 0) {
     FILE *fptr;
     fptr = fopen("out/stats.csv", "a");
@@ -634,7 +633,6 @@ void export_stats(int ntimers,int ncounters, int *counters, double *times){
     fprintf(fptr, "\n");
     fclose(fptr);
   }
-  if(rank==0)printf("export_stats end\n");
 }
 
 void check_iszerod(long double *x, int len, const char *s){

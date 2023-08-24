@@ -189,6 +189,79 @@ def check_tolerances(data, timesteps, rel_tol, abs_tol):
           #  print("Exceeding rel_tol",rel_tol,"at",k)
           #  print(out1[k],out2[k])
 
+def acalculate_NRMSE(data, n_time_steps, nCellsProcesses,use_monarch, max_abs_tol):
+  cases_one_multi_cells = list(data.keys())
+  species1 = data[cases_one_multi_cells[0]]
+  species2 = data[cases_one_multi_cells[1]]
+  n_state = len(species1)
+  n_cells = sum(nCellsProcesses)
+  n_species = n_state // (n_time_steps * n_cells)
+  n_species_monarch = 140
+
+  if use_monarch and n_species_monarch != n_species:
+      print("n_species_monarch != n_species calculated by nCellsProcesses")
+      print("n_species_monarch", n_species_monarch,
+            "n_species", n_species, "n_cells", n_cells)
+      raise ValueError("n_species_monarch mismatch")
+
+  NRMSEs = []
+
+  for i in range(n_time_steps):
+      NRMSEs_species = [0.0] * n_species
+      max_y = [0.0] * n_species
+      min_y = [float("inf")] * n_species
+
+      for i3, n_cellsProcess in enumerate(nCellsProcesses):
+          i2_base = i3 + i * len(nCellsProcesses)
+          i2_range = range(i2_base * n_cellsProcess, (i2_base + 1) * n_cellsProcess)
+
+          for j2 in i2_range:
+              for k2 in range(j2 * n_species, (j2 + 1) * n_species):
+                  y1 = species1[k2]
+                  y2 = species2[k2]
+                  NRMSEs_species[k2 % n_species] += (y1 - y2) ** 2
+
+                  max_y[k2 % n_species] = max(max_y[k2 % n_species], y1)
+                  min_y[k2 % n_species] = min(min_y[k2 % n_species], y1)
+
+      for k in range(n_species):
+          if max_y[k] != min_y[k]:
+              NRMSEs_species[k] = (sqrt(NRMSEs_species[k] / n_cells)) / (max_y[k] - min_y[k])
+
+      NRMSEs.append(max(NRMSEs_species) * 100)
+
+  max_err_rel = max_err_rel_process = max_err_rel_timestep = 0.0
+  err_rel_at_max_abs = max_err_abs = err_abs_at_max_rel = 0.0
+  max_err_rel_specie = max_err_rel_cell = max_err_abs_specie = 0
+  max_err_abs_cell = max_err_abs_process = max_err_abs_timestep = 0
+  concs_above_tol = concs_below_tol = concs_are_zero = concs_are_equal = 0
+
+  for i, nrmse in enumerate(NRMSEs):
+      if nrmse > max_err_rel:
+          max_err_rel = nrmse
+          err_rel_at_max_abs = NRMSEs[i] / 100
+          max_err_rel_timestep = i
+
+      if nrmse > max_err_abs:
+          max_err_abs = nrmse
+          err_abs_at_max_rel = NRMSEs[i] / 100
+          max_err_abs_timestep = i
+
+  print("relative max_error:", format(max_err_rel, ".2e"),
+        "% with absolute error",format(err_abs_at_max_rel, ".2e"),
+        "at specie id:", max_err_rel_specie,
+        "cell:", max_err_rel_cell,
+        "process:", max_err_rel_process,
+        "timestep:", max_err_rel_timestep,
+        "absolute max_error:", format(max_err_abs, ".2e"),
+        "with relative error:", format(err_rel_at_max_abs, ".2e"),
+        "% at specie id:", max_err_abs_specie,
+        "cell:", max_err_abs_cell,
+        "process:", max_err_abs_process,
+        "timestep:", max_err_abs_timestep,
+        "concs_above_tol", concs_above_tol, "concs_below_tol", concs_below_tol,
+        "concs_are_equal", concs_are_equal, "concs_are_zero", concs_are_zero)
+  return NRMSEs
 
 def calculate_NRMSE(data, n_time_steps, nCellsProcesses,use_monarch, max_abs_tol):
   cases_one_multi_cells = list(data.keys())
@@ -355,22 +428,3 @@ def read_solver_stats(file, nrows):
   data = df.to_dict('list')
   return data
 
-
-"""
-def read_netcdf(n_cells, n_ranks, n_time_steps):
-  data = [0.] * n_cells * n_ranks
-  for i in range(len(n_time_steps)):
-    for j in range(len(n_cells)):
-      j2 = j + i * n_cells
-      for k in range(len(n_ranks)):
-        k2 = k + j2 * n_ranks
-        file_name = "cell_" + str(j) + "timestep_" + str(i) + "mpirank_" + str(k) + ".nc"
-        ncfile = nc.Dataset(file_name)
-        state = ncfile.variables["state"][:]
-        for z in range(len(state)):
-          z2 = z + k2*state
-          data[z2] = state[z]
-        #ncfile.close()
-  print("data", data)
-  return data
-"""

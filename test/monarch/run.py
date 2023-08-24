@@ -360,8 +360,7 @@ def run(conf):
     if conf.is_export_netcdf:
       start = time.time()
       subprocess.run(["python", "translate_netcdf.py"]) #subprocess needed for (arch=CTE-POWER) and (Python/3.7.0-foss-2018b)
-      end = time.time()
-      print("Time read_netcdf = %s" % (end - start))
+      print("Time read_netcdf = %s" % (time.time() - start))
 
   if conf.plotYKey == "NRMSE":
     try:
@@ -478,9 +477,11 @@ def run_cases(conf):
               nCellsProcesses = [int(line.rstrip('\n')) for line in f]
           else:
             nCellsProcesses=[conf.nCellsProcesses]
+          start = time.time()
           datay = math_functions.calculate_NRMSE(
             data, conf.timeSteps,nCellsProcesses,
             conf.use_monarch,conf.absoluteTolerance)
+          print("Time calculate_NRMSE = %s" % (time.time() - start))
         elif "Speedup" in conf.plotYKey:
           y_key_words = conf.plotYKey.split()
           y_key = y_key_words[-1]
