@@ -22,7 +22,7 @@ class TestMonarch:
     self.mpi = "yes"
     self.timeSteps = 1
     self.timeStepsDt = 2
-    self.MAPETol = 1.0E-4
+    self.absoluteTolerance = 1.0E-4
     self.commit = ""
     self.case = []
     self.nCells = 1
@@ -332,7 +332,7 @@ def run(conf):
 
   data_path = conf.results_file
   if conf.is_import:
-    if conf.plotYKey == "NRMSE" or conf.plotYKey == "MAPE":
+    if conf.plotYKey == "NRMSE":
       if conf.case is conf.caseBase:
         if conf.use_monarch:
           #data_path = "exports/cpu_rank0_monarch_out_state.csv"
@@ -357,18 +357,18 @@ def run(conf):
   print("conf.results_file",data_path)
   if not conf.is_import:
     os.system(exec_str)
-    if conf.is_export_netcdf and conf.is_new_export:
+    if conf.is_export_netcdf:
       start = time.time()
-      # If (arch=CTE-POWER) and (python is Python/3.7.0-foss-2018b)
-      subprocess.run(["python", "translate_netcdf.py"])
-      # else #run in the same script instead of calling another
+      subprocess.run(["python", "translate_netcdf.py"]) #subprocess needed for (arch=CTE-POWER) and (Python/3.7.0-foss-2018b)
       end = time.time()
       print("Time read_netcdf = %s" % (end - start))
 
-  if conf.plotYKey == "NRMSE" or conf.plotYKey == "MAPE":
-    if conf.is_new_export:
+  if conf.plotYKey == "NRMSE":
+    try:
       with open(data_path) as f:
         data = [float(line.rstrip('\n')) for line in f]
+    except FileNotFoundError as e:
+      raise FileNotFoundError("Check enable #ifndef EXPORT_STATE in the CAMP code") from e
     if conf.is_export:
       if conf.case is conf.caseBase:
         os.rename("out/state.csv", "out/state0.csv")
@@ -419,7 +419,7 @@ def run_case(conf):
       data["timeLS"][j] = data["timeLS"][j] \
                           / data["counterBCG"][j]
 
-  if conf.plotYKey != "MAPE" and conf.plotYKey != "NRMSE":
+  if conf.plotYKey != "NRMSE":
     print("run_case", conf.case, y_key, ":", data[y_key])
   # print("data",data)
 
@@ -472,23 +472,15 @@ def run_cases(conf):
 
         # calculate measures between caseBase and caseOptim
         if conf.plotYKey == "NRMSE":
-          if conf.is_new_export:
-            nCellsProcesses = []
-            if conf.use_monarch:
-              with open("exports/monarch_cells.csv") as f:
-                nCellsProcesses = [int(line.rstrip('\n')) for line in f]
-            else:
-              nCellsProcesses=[conf.nCellsProcesses]
-            datay = math_functions.calculate_NRMSE(
-              data, conf.timeSteps,nCellsProcesses,
-              conf.use_monarch,conf.MAPETol)
+          nCellsProcesses = []
+          if conf.use_monarch:
+            with open("exports/monarch_cells.csv") as f:
+              nCellsProcesses = [int(line.rstrip('\n')) for line in f]
           else:
-            datay = math_functions.old_calculate_NRMSE(data, conf.timeSteps, conf.MAPETol)
-        elif conf.plotYKey == "MAPE":
-          if conf.is_new_export:
-            raise
-          else:
-            datay = math_functions.calculate_MAPE_csv(data, conf.timeSteps, conf.MAPETol)
+            nCellsProcesses=[conf.nCellsProcesses]
+          datay = math_functions.calculate_NRMSE(
+            data, conf.timeSteps,nCellsProcesses,
+            conf.use_monarch,conf.absoluteTolerance)
         elif "Speedup" in conf.plotYKey:
           y_key_words = conf.plotYKey.split()
           y_key = y_key_words[-1]
@@ -660,8 +652,6 @@ def plot_cases(conf):
     namey = "Speedup iterations BDF loop"
   if conf.plotYKey == "Speedup timeCVode":
     namey = "Speedup CAMP solving"
-  if conf.plotYKey == "MAPE":
-    namey = "MAPE [%]"
   if conf.plotYKey == "NRMSE":
     namey = "NRMSE [%]"
   if conf.plotYKey == "Speedup counterBCG":

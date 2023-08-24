@@ -19,6 +19,7 @@ extern "C" {
 }
 
 void cvodeRun(ModelDataGPU *mGPU, cudaStream_t stream);
+void swapCSC_CSR_ODE_if_enabled(SolverData *sd);
 
 #define CV_SUCCESS               0
 #define DO_ERROR_TEST    +2

@@ -110,17 +110,15 @@ def all_timesteps():
   # conf.plotYKey = "Speedup normalized counterBCG"
   # conf.plotYKey = "Speedup total iterations - counterBCG"
   # conf.plotYKey = "Speedup BCG iteration (Comp.timeLS/counterBCG)"
-  conf.plotYKey = "Speedup timecvStep"
+  #conf.plotYKey = "Speedup timecvStep"
   # conf.plotYKey = "Speedup timecvStep normalized by countercvStep"
   # conf.plotYKey = "Speedup countercvStep"
   # conf.plotYKey = "Speedup device timecvStep"
   # conf.plotYKey = "Percentage data transfers CPU-GPU [%]"
-  # conf.plotYKey = "MAPE"
-  #conf.plotYKey = "NRMSE"
-  # conf.MAPETol = 1.0E-6
+  conf.plotYKey = "NRMSE"
 
   #conf.is_new_export = False #Old, float (4bytes), faster
-  #conf.is_new_export = True #New, double, slow, use for NMRSE
+  #conf.is_new_export = True #Default, double, slow, use for NMRSE
 
   #conf.use_monarch = True #better run stats_monarch_netcdf.py
 
@@ -147,7 +145,7 @@ def all_timesteps():
       conf.is_import = False
   with open("settings/monarch_box_binned/cb05_abs_tol.json", 'r', encoding='utf-8') as jsonFile:
     jsonData = json.load(jsonFile)
-  conf.MAPETol = jsonData["camp-data"][0]["value"]  # Default: 1.0E-4
+  conf.absoluteTolerance = jsonData["camp-data"][0]["value"]  # Default: 1.0E-4
   jsonData.clear()
   if conf.plotYKey == "":
     print("conf.plotYKey is empty")

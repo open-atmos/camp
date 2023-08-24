@@ -24,7 +24,7 @@ compile(){
 
 main(){
 
-compile
+time compile
 
 cd ../../test/monarch
 FILE=TestMonarch.py
