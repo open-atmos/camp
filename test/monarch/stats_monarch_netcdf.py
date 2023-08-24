@@ -6,7 +6,7 @@ import netCDF4 as nc
 import numpy as np
 import pandas as pd
 import time
-from stats_monarch_csv import calculate_speedup
+from runtime_stats_monarch import calculate_speedup
 
 
 def calculate_nrmse(data1, data2):
@@ -38,16 +38,17 @@ def process_variable(dataset1, dataset2, var_name):
         return False
     else:
         nrmse = calculate_nrmse(array1, array2)
+        max_error = np.max(relative_error)
         quantiles = np.percentile(relative_error, [25, 50, 75, 95])
         quantiles = [f'{q:.2e}' for q in quantiles]
         median = np.median(relative_error)
         std_dev = np.std(relative_error)
-    return var_name, quantiles, median, mean, std_dev, nrmse
+    return var_name, max_error, quantiles, median, mean, std_dev, nrmse
 
 
 def main():
-    file1_path_header = "../../../../11_cpu_tstep6_O2_monarch_out/"
-    file2_path_header = "../../../../gpu_tstep6_O2_monarch_out/"
+    file1_path_header = "../../../../cpu_tstep20_O2_monarch_out/"
+    file2_path_header = "../../../../gpu_tstep20_O2_monarch_out/"
 
     # Paths to the CSV files
     file1 = file1_path_header + "out/stats.csv"
@@ -89,7 +90,7 @@ def main():
         print("summary_data is empty")
         exit(1)
 
-    summary_table = pd.DataFrame(summary_data, columns=['Variable', \
+    summary_table = pd.DataFrame(summary_data, columns=['Variable','Max', \
                                                         'Quantiles[25,50,75,95]', 'Median', 'Mean', 'Std Dev', \
                                                         'NRMSE[%]'])
     pd.set_option('display.max_rows', 100)

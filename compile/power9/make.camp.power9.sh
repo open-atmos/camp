@@ -24,7 +24,7 @@ compile(){
 
 main(){
 
-#compile
+compile
 
 cd ../../test/monarch
 #FILE=TestMonarch.py
@@ -73,8 +73,6 @@ elif [ "$FILE" == test_monarch_1.py ]; then
   echo "Running old commits with file test_monarch_1.py ."
   python  $FILE
   cd ../../camp/compile/power9
-elif [ "$FILE" == stats_monarch_netcdf.py ]; then
-  python $FILE
 else
   cd ../../compile/power9
   time $FILE
