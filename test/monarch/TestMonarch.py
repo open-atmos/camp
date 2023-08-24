@@ -110,19 +110,19 @@ def all_timesteps():
   # conf.plotYKey = "Speedup normalized counterBCG"
   # conf.plotYKey = "Speedup total iterations - counterBCG"
   # conf.plotYKey = "Speedup BCG iteration (Comp.timeLS/counterBCG)"
-  #conf.plotYKey = "Speedup timecvStep"
+  conf.plotYKey = "Speedup timecvStep"
   # conf.plotYKey = "Speedup timecvStep normalized by countercvStep"
   # conf.plotYKey = "Speedup countercvStep"
   # conf.plotYKey = "Speedup device timecvStep"
   # conf.plotYKey = "Percentage data transfers CPU-GPU [%]"
   # conf.plotYKey = "MAPE"
-  conf.plotYKey = "NRMSE"
+  #conf.plotYKey = "NRMSE"
   # conf.MAPETol = 1.0E-6
 
   #conf.is_new_export = False #Old, float (4bytes), faster
   #conf.is_new_export = True #New, double, slow, use for NMRSE
 
-  conf.use_monarch = True #better run stats_monarch_netcdf.py
+  #conf.use_monarch = True #better run stats_monarch_netcdf.py
 
   #conf.is_export_netcdf = True
 
@@ -132,7 +132,6 @@ def all_timesteps():
   """END OF CONFIGURATION VARIABLES"""
 
   # Utility functions
-  # remove_to_tmp(conf,"1661337164911019079")
   conf.results_file = "out/stats.csv"
   if conf.use_monarch:
     conf.plotYKey = "NRMSE"

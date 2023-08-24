@@ -19,7 +19,7 @@ compile(){
   if ! make -j ${NUMPROC}; then
     exit
   fi
-  cd curr_path=$(pwd)
+  cd $curr_path
 }
 
 main(){
@@ -27,8 +27,8 @@ main(){
 compile
 
 cd ../../test/monarch
-#FILE=TestMonarch.py
-FILE=stats_monarch_netcdf.py
+FILE=TestMonarch.py
+#FILE=stats_monarch_netcdf.py
 #FILE=./test_run/chemistry/cb05cl_ae5/test_chemistry_cb05cl_ae5.sh
 #FILE=./unit_test_aero_rep_single_particle
 #FILE=./new_make.sh
