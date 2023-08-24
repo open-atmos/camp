@@ -338,14 +338,9 @@ contains
       call layers%iter_next()
     end do
 
-    ! Construct LAYER_STATE_ID_UNORDERED_
-    allocate(LAYER_STATE_ID_UNORDERED_(size(SUM(NUM_PHASE_UNORDERED))))
+    ! Construct layer state id unordered
+    LAYER_STATE_ID_UNORDERED_ = construct_layer_state_id(NUM_PHASE_UNORDERED)
     allocate(phase_name_unordered(size(SUM(NUM_PHASE_UNORDERED))))
-    LAYER_STATE_ID_UNORDERED_(1) = 1
-    do i_layer = 1, TOTAL_NUM_LAYERS_
-      LAYER_STATE_ID_UNORDERED_(i_layer) = LAYER_STATE_ID_UNORDERED_(i_layer) + &
-        NUM_PHASE_UNORDERED(i_phase)
-    end do
 
     ! Loop through the layers again, adding phase names to array
     ! TODO: is this the best way to save phase array?
@@ -383,18 +378,12 @@ contains
       call layers%iter_next()
     end do
 
-    NUM_PHASE_ = call order_num_phase_array(this,layers,NUM_PHASE_UNORDERED,cover_name,layer_name_unordered)
-    
-    ! Construct LAYER_STATE_ID_ (ordered)
-    allocate(LAYER_STATE_ID_(size(SUM(NUM_PHASE_))))
-    LAYER_STATE_ID_(1) = 1
-    do i_layer = 1, TOTAL_NUM_LAYERS_
-      LAYER_STATE_ID_(i_layer) = LAYER_STATE_ID_(i_layer) + &
-        NUM_PHASE_(i_phase)
-    end do
+    ! Construct NUM_PHASE_ and LAYER_STATE_ID in inner to outer layer order
+    NUM_PHASE_ = order_num_phase_array(this,layers,NUM_PHASE_UNORDERED,cover_name,layer_name_unordered)
+    LAYER_STATE_ID_ = construct_layer_state_id(NUM_PHASE_)
 
-    aero_layer_set_names = call order_layer_array(this,layers,cover_name,layer_name_unordered)
-    aero_layer_phase_set_names = call order_phase_array(this,layers,phases,phase_name_unordered, &
+    aero_layer_set_names = order_layer_array(this,layers,cover_name,layer_name_unordered)
+    aero_layer_phase_set_names = order_phase_array(this,layers,phases,phase_name_unordered, &
                               LAYER_STATE_ID_, LAYER_STATE_ID_UNORDERED_, &
                               cover_name,layer_name_unordered)
 
@@ -909,6 +898,29 @@ contains
 
   end subroutine order_phase_array
 
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+!> Order layer array from inner most layer to outermost 
+subroutine construct_layer_state_id(num_phase_array)
+
+  !> Number of phases in each layer
+  type(integer), allocatable :: num_phase_array(:)
+  !> Layer_state_id variable
+  type(integer), allocatable :: layer_state_id_array(:)
+
+  integer(kind=i_kind) :: i_layer
+
+    ! Allocate space in layer_state_id
+    allocate(layer_state_id_array(size(SUM(num_phase_array))))
+
+    layer_state_id_array(1) = 1
+    do i_layer = 1, size(layer_state_id_array)
+      layer_state_id_array(i_layer) = layer_state_id_array(i_layer) + &
+        num_phase_array(i_phase)
+    end do
+
+end subroutine construct_layer_state_id
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
