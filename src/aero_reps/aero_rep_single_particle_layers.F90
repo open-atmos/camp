@@ -238,7 +238,7 @@ contains
     !> Cover names (only used during initialization)
     type(string_t), allocatable :: cover_name(:)
     !> The set of layers
-     :: aero_layer_phase_set(:)
+    type(integer), allocatable :: aero_layer_phase_set(:)
     !> Beginning state id for this aerosol representationin the model species
     !! state array
     integer(kind=i_kind), intent(in) :: spec_state_id
@@ -319,7 +319,7 @@ contains
               this%layer_name(i_layer)%string// &
               "' in single-particle layer aerosol representation '"// &
               this%rep_name//"'")
-      NUM_PHASE_UNORDERED(i_layer) = phases%size() 
+      num_phase_unordered(i_layer) = phases%size() 
 
       ! Loop through the phases and make sure they exist
       call phases%iter_reset()
@@ -339,8 +339,9 @@ contains
     end do
 
     ! Construct layer state id unordered
-    LAYER_STATE_ID_UNORDERED_ = construct_layer_state_id(NUM_PHASE_UNORDERED)
-    allocate(phase_name_unordered(size(SUM(NUM_PHASE_UNORDERED))))
+    layer_state_id_unordered = construct_layer_state_id(num_phase_unordered)
+
+    allocate(phase_name_unordered(size(SUM(num_phase_unordered))))
 
     ! Loop through the layers again, adding phase names to array
     ! TODO: is this the best way to save phase array?
@@ -365,11 +366,12 @@ contains
            
         ! Get the set of phases
         key_name = "phases"
-        call assert_msg(815518058, section%get_property_t(key_name, phases), &
+        call assert_msg(815518058, layers%get_property_t(key_name, phases), &
                 "Missing phases for layer '"// &
                 this%section_name(i_section)%string// &
                 "' in single-particle layer aerosol representation '"// &
               this%rep_name//"'")
+        ! TODO: this needs to be saved in a different way
         this%phase_name_unordered(i_phase)%string = key_name
       
         call phases%iter_next()
@@ -379,12 +381,12 @@ contains
     end do
 
     ! Construct NUM_PHASE_ and LAYER_STATE_ID in inner to outer layer order
-    NUM_PHASE_ = order_num_phase_array(this,layers,NUM_PHASE_UNORDERED,cover_name,layer_name_unordered)
+    NUM_PHASE_ = order_num_phase_array(this,num_phase_unordered,cover_name,layer_name_unordered)
     LAYER_STATE_ID_ = construct_layer_state_id(NUM_PHASE_)
 
-    aero_layer_set_names = order_layer_array(this,layers,cover_name,layer_name_unordered)
-    aero_layer_phase_set_names = order_phase_array(this,layers,phases,phase_name_unordered, &
-                              LAYER_STATE_ID_, LAYER_STATE_ID_UNORDERED_, &
+    aero_layer_set_names = ordered_layer_array(this,cover_name,layer_name_unordered)
+    aero_layer_phase_set_names = ordered_phase_array(this,phase_name_unordered, &
+                              LAYER_STATE_ID_, layer_state_id_unordered, &
                               cover_name,layer_name_unordered)
 
     ! Construct aero_phase array for layers
@@ -775,7 +777,8 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Order layer array from inner most layer to outermost 
-  subroutine order_layer_array(this,layers,cover_name_array,layer_name_array)
+  function ordered_layer_array(this,cover_name_array,layer_name_array) &
+    result(ordered_layer_name)
 
     !> Aerosol representation to update
     class(aero_rep_single_particle_t), intent(inout) :: this
@@ -787,12 +790,11 @@ contains
     !> Cover names 
     type(string_t), allocatable :: cover_name_array(:)
 
-    type(property_t), pointer :: layers
     integer(kind=i_kind) :: i_layer, i_cover
    
-    allocate(this%ordered_layer_name(layers%size()))
+    allocate(ordered_layer_name(this%layers%size()))
    
-    ! Search for innermost layer
+    ! Search for innermost layer with cover set to 'none'
     do i_layer = 1, layers%size()
       if (cover_name_array(i_layer) == "none") then
         ordered_layer_name(1) = layer_name_array(i_layer)
@@ -807,13 +809,14 @@ contains
       end do
     end do
 
-  end subroutine order_layer_array
+  end function ordered_layer_array
 
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-    !> Order num_phase array from inner most layer to outermost 
-  subroutine order_num_phase_array(this,layers,num_phase_array,cover_name_array,layer_name_array)
+  !> Order num_phase array from inner most layer to outermost 
+  function ordered_num_phase_array(this,num_phase_array,cover_name_array, &
+    layer_name_array) result(ordered_num_phase)
 
     !> Aerosol representation to update
     class(aero_rep_single_particle_t), intent(inout) :: this
@@ -821,13 +824,14 @@ contains
     type(string_t), allocatable :: layer_name_array(:)
     !> Cover names 
     type(string_t), allocatable :: cover_name_array(:)
-
+    !> Num phase array input
     type(integer), allocatable :: num_phase_array(:)
+    !> Ordered num phase array output
+    type(integer), allocatable :: ordered_num_phase(:)
 
-    type(property_t), pointer :: layers
     integer(kind=i_kind) :: i_layer, i_cover
    
-    allocate(this%ordered_num_phase(layers%size()))
+    allocate(ordered_num_phase(this%layers%size()))
    
     ! Search for innermost layer
     do i_layer = 1, layers%size()
@@ -844,15 +848,15 @@ contains
       end do
     end do
 
-  end subroutine order_num_phase_array
+  end function ordered_num_phase_array
 
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Order layer array from inner most layer to outermost 
-  subroutine order_phase_array(this,layers,phases,phase_name_array, &
-                              ordered_layer_state_id_array, unordered_layer_state_id_array, &
-                              cover_name_array,layer_name_array)
+  function ordered_phase_array(this,phase_name_array,ordered_layer_state_id_array, &
+                             unordered_layer_state_id_array,cover_name_array, &
+                             layer_name_array) result(ordered_phase_name)
 
     !> Aerosol representation to update
     class(aero_rep_single_particle_t), intent(inout) :: this
@@ -865,22 +869,23 @@ contains
     type(string_t), allocatable :: cover_name_array(:)
     !> Phase names 
     type(string_t), allocatable :: phase_name_array(:)
+    !> Phase names in order from inner to outer most layer
+    type(string_t), allocatable :: ordered_phase_name(:)
     !> Layer_state_id unordered and ordered
     type(integer), allocatable :: ordered_layer_state_id_array(:)
     type(integer), allocatable :: unordered_layer_state_id_array(:)
 
-
-    type(property_t), pointer :: layers
     integer(kind=i_kind) :: i_layer, i_cover
    
-    allocate(this%ordered_phase_name(phase_name_array%size()))
+    allocate(ordered_phase_name(phase_name_array%size()))
    
     ! Search for innermost layer
     do i_layer = 1, layers%size()
+      i_cover = 1
       if (cover_name_array(i_layer) == "none") then
-        ordered_phase_name(ordered_layer_state_id_array(i_cover): &
+        ordered_phase_name(ordered_layer_state_id_array(i_cover):&
         ordered_layer_state_id_array(i_cover+1)-1) = &
-        phase_name_array(unordered_layer_state_id_array(i_layer): &
+        phase_name_array(unordered_layer_state_id_array(i_layer):&
         unordered_layer_state_id_array(i_layer+1)-1)
       end if
     end do
@@ -888,28 +893,28 @@ contains
     do i_cover = 2, layers%size()
       do i_layer = 1, layers%size()
         if (ordered_layer_name(i_cover-1).eq.cover_name_array(i_layer)) then
-          ordered_phase_name(ordered_layer_state_id_array(i_cover): &
+          ordered_phase_name(ordered_layer_state_id_array(i_cover):&
           ordered_layer_state_id_array(i_cover+1)-1) = &
-          phase_name_array(unordered_layer_state_id_array(i_layer): &
+          phase_name_array(unordered_layer_state_id_array(i_layer):&
           unordered_layer_state_id_array(i_layer+1)-1)
         end if
       end do
     end do
 
-  end subroutine order_phase_array
+  end function ordered_phase_array
 
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-!> Order layer array from inner most layer to outermost 
-subroutine construct_layer_state_id(num_phase_array)
+  !> Order layer state id array from inner most layer to outermost 
+  function construct_layer_state_id(num_phase_array) result(layer_state_id_array)
 
-  !> Number of phases in each layer
-  type(integer), allocatable :: num_phase_array(:)
-  !> Layer_state_id variable
-  type(integer), allocatable :: layer_state_id_array(:)
+    !> Number of phases in each layer
+    type(integer), allocatable :: num_phase_array(:)
+    !> Layer_state_id variable
+    type(integer), allocatable :: layer_state_id_array(:)
 
-  integer(kind=i_kind) :: i_layer
+    integer(kind=i_kind) :: i_layer
 
     ! Allocate space in layer_state_id
     allocate(layer_state_id_array(size(SUM(num_phase_array))))
@@ -920,7 +925,7 @@ subroutine construct_layer_state_id(num_phase_array)
         num_phase_array(i_phase)
     end do
 
-end subroutine construct_layer_state_id
+  end function construct_layer_state_id
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
