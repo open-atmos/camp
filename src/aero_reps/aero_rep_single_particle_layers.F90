@@ -59,7 +59,7 @@ module camp_aero_rep_single_particle
 #define NUM_ENV_PARAM_PER_PARTICLE_ 1
 #define NUM_PHASE_(l) this%condensed_data_int(NUM_INT_PROP_+l)
 #define PHASE_STATE_ID_(p) this%condensed_data_int(NUM_INT_PROP_+NUM_LAYERS_+p)
-#define LAYER_STATE_ID_(l) this%condensed_data_init(NUM_INT_PROP_+NUM_PHASE_+l)
+#define LAYER_STATE_ID_(l+1) this%condensed_data_init(NUM_INT_PROP_+NUM_PHASE_+l+1)
 #define PHASE_MODEL_DATA_ID_(p) this%condensed_data_int(NUM_INT_PROP_+NUM_LAYERS_+TOTAL_NUM_PHASES_+p)
 #define PHASE_NUM_JAC_ELEM_(p) this%condensed_data_int(NUM_INT_PROP_+NUM_LAYERS_+2*TOTAL_NUM_PHASES_+p)
 
@@ -133,6 +133,15 @@ module camp_aero_rep_single_particle
     !> Get the number of Jacobian elements used in calculations of aerosol
     !! mass, volume, number, etc. for a particular phase
     procedure :: num_jac_elem
+    !> Organize layers names in order from innermost to outtermost layer
+    procedure :: ordered_layer_array
+    !> Organize num phase array in order or layers
+    procedure :: ordered_num_phase_array
+    !> Organize phase names in order from innermost layer to outermost layer
+    !! phase names for each layer remain in order or phase input
+    procedure :: ordered_phase_array 
+    !> Layer state id array calculated from num_phase
+    procedure :: construct_layer_state_id
     !> Finalize the aerosol representation
     final :: finalize
 
@@ -235,8 +244,16 @@ contains
     type(string_t), allocatable :: layer_name_unordered(:)
     !> Unordered phase names (only used during initialization)
     type(string_t), allocatable :: phase_name_unordered(:)
+    !> Unordered num phase array (only used during initialization)
+    type(integer), allocatable :: num_phase_unordered(:)
+    !> Unordered layer state id array (only used during initialization)
+    type(integer), allocatable :: layer_state_id_unordered(:)
     !> Cover names (only used during initialization)
     type(string_t), allocatable :: cover_name(:)
+    !> Ordered set of aerosol layer names 
+    type(string_t), allocatable :: aero_layer_set_names(:)
+    !> Ordered set of aerosol phase names from inner to outermost layer 
+    type(string_t), allocatable :: aero_layer_phase_set_names(:)
     !> The set of layers
     type(integer), allocatable :: aero_layer_phase_set(:)
     !> Beginning state id for this aerosol representationin the model species
@@ -275,6 +292,7 @@ contains
     allocate(this%layer_name(layers%size()))
     allocate(this%cover_name(layers%size()))
     allocate(this%layer_name_unordered(layers%size()))
+    allocate(this%num_phase_unordered(layers%size()))
 
     ! Loop through the layers, adding names and counting the spaces needed
     ! on the condensed data arrays, and counting the total phases instances
