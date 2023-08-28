@@ -41,7 +41,7 @@ int rxn_calc_deriv_gpu(SolverData *sd, N_Vector y, N_Vector deriv, double time_s
   double *deriv_data = N_VGetArrayPointer(deriv);
   if(sd->use_gpu_cvode==0){
     mGPU = sd->mGPU;
-    cudaMemcpy(mGPU->deriv_data, deriv_data, mCPU->deriv_size, cudaMemcpyHostToDevice);
+    cudaMemcpy(mGPU->dftemp, deriv_data, mCPU->deriv_size, cudaMemcpyHostToDevice);
     cudaMemcpy(mGPU->state, total_state, mCPU->state_size, cudaMemcpyHostToDevice);
   }
   return 0;
@@ -53,7 +53,6 @@ void free_gpu_cu(SolverData *sd) {
   free(sd->flagCells);
   mGPU = sd->mGPU;
   cudaFree(mGPU->map_state_deriv);
-  cudaFree(mGPU->deriv_data);
   cudaFree(mGPU->J_solver);
   cudaFree(mGPU->J_state);
   cudaFree(mGPU->J_deriv);
@@ -75,7 +74,6 @@ void free_gpu_cu(SolverData *sd) {
   cudaFree(mGPU->jac_map);
   cudaFree(mGPU->yout);
   cudaFree(mGPU->cv_Vabstol);
-  cudaFree(mGPU->grid_cell_state);
   cudaFree(mGPU->cv_l);
   cudaFree(mGPU->cv_tau);
   cudaFree(mGPU->cv_tq);
@@ -96,16 +94,10 @@ void free_gpu_cu(SolverData *sd) {
   cudaFree(mGPU->dAx2);
   cudaFree(mGPU->dy);
   cudaFree(mGPU->dz);
-
-
   cudaFree(mGPU->dftemp);
-
   cudaFree(mGPU->dcv_y);
   cudaFree(mGPU->dtempv1);
   cudaFree(mGPU->dtempv2);
-
-
-
   cudaFree(mGPU->flag);
   cudaFree(mGPU->flagCells);
   cudaFree(mGPU->cv_acor);

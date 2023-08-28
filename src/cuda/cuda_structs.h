@@ -146,7 +146,6 @@ typedef struct{
 
 typedef struct { //Allocated from CPU (used during CPU / need some cudamemcpy)
     int *map_state_deriv;
-    double *deriv_data;
     double *J_solver;
     double *J_state;
     double *J_deriv;
