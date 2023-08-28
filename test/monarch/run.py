@@ -289,9 +289,7 @@ def run(conf):
           + "/" + pathNvprof)
   elif conf.profileCuda == "nsight" and conf.caseGpuCpu == "GPU":
     exec_str += "/apps/NVIDIA-HPC-SDK/20.9/Linux_ppc64le/2020/profilers/Nsight_Compute/ncu "
-    pathNvprof = "../../compile/power9/"  # "../../../nvprof/nsight"
-    Path(pathNvprof).mkdir(parents=True, exist_ok=True)
-    pathNvprof = pathNvprof + conf.caseMulticellsOnecell \
+    pathNvprof = "../../compile/power9/" + conf.caseMulticellsOnecell \
                  + str(conf.nCells) + "Cells "
     exec_str += "--set full -f -o " + pathNvprof  # last working version
     # exec_str += " "  # summary

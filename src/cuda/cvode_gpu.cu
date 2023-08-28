@@ -69,13 +69,6 @@ void createLinearSolver_cvode(SolverData *sd){
   mCPU->aux=(double*)malloc(sizeof(double)*mCPU->blocks);
 }
 
-__global__
-void init_jac_partials_cvode(double* production_partials, double* loss_partials) {
-  int tid = blockIdx.x * blockDim.x + threadIdx.x;
-  production_partials[tid]=0.0;
-  loss_partials[tid]=0.0;
-}
-
 int jacobian_initialize_cuda_cvode(SolverData *sd) {
   ModelDataGPU *mGPU = sd->mGPU;
   Jacobian *jac = &sd->jac;
@@ -87,12 +80,14 @@ int jacobian_initialize_cuda_cvode(SolverData *sd) {
   cudaMalloc((void **) &jacgpu->num_elem, 1 * sizeof(jacgpu->num_elem));
   cudaMemcpy(jacgpu->num_elem, &jac->num_elem, 1 * sizeof(jacgpu->num_elem), cudaMemcpyHostToDevice);
   int num_elem = jac->num_elem * mGPU->n_cells;
-  cudaMalloc((void **) &(jacgpu->production_partials), num_elem * sizeof(jacgpu->production_partials));
-  HANDLE_ERROR(cudaMalloc((void **) &(jacgpu->loss_partials), num_elem * sizeof(jacgpu->loss_partials)));
-  ModelDataCPU *mCPU = &(sd->mCPU);
-  int threads_block = mCPU->threads;
-  int blocks = mCPU->blocks;
-  init_jac_partials_cvode <<<blocks,threads_block>>>(jacgpu->production_partials,jacgpu->loss_partials);
+  cudaMalloc((void **) &(jacgpu->production_partials), num_elem * sizeof(double));
+  HANDLE_ERROR(cudaMalloc((void **) &(jacgpu->loss_partials), num_elem * sizeof(double)));
+  double *aux=(double*)malloc(sizeof(double)*num_elem);
+  for (int i = 0; i < num_elem; i++) {
+    aux[i]=0.;
+  }
+  HANDLE_ERROR(cudaMemcpy(jacgpu->production_partials, aux, num_elem * sizeof(double), cudaMemcpyHostToDevice));
+  HANDLE_ERROR(cudaMemcpy(jacgpu->loss_partials, aux, num_elem * sizeof(double), cudaMemcpyHostToDevice));
 #ifdef DEBUG_jacobian_initialize_gpu
   printf("jacobian_initialize_gpu end \n");
 #endif
