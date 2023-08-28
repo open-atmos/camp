@@ -23,12 +23,7 @@ def all_timesteps():
   # conf.profileCuda = "nsight"
   # conf.profileCuda = "nsightSummary"
 
-  #conf.is_export = get_is_sbatch()
-  #conf.is_export = True
-  #conf.is_export = False
-
-  #conf.is_import = True
-  #conf.is_import = False
+  conf.is_import = True
 
   # conf.commit = "MATCH_IMPORTED_CONF"
   conf.commit = ""
@@ -59,13 +54,13 @@ def all_timesteps():
   # conf.allocatedTasksPerNode = 320
   # conf.allocatedTasksPerNode = get_ntasksPerNode_sbatch() #todo
 
-  conf.cells = [2]
+  conf.cells = [1]
   #conf.cells = [14872] #monarch rank 0
   # conf.cells = [100, 500, 1000, 5000, 10000]
   # conf.cells = [50000,100000,500000,1000000]
 
-  conf.timeSteps = 2
-  # conf.timeSteps = 720
+  conf.timeSteps = 480
+  #conf.timeSteps = 480 #24h
 
   conf.timeStepsDt = 2
 
@@ -127,17 +122,13 @@ def all_timesteps():
   """END OF CONFIGURATION VARIABLES"""
 
   # Utility functions
-  conf.results_file = "out/stats.csv"
   if conf.use_monarch:
     conf.plotYKey = "NRMSE"
     conf.is_import = True
   if conf.plotYKey == "NRMSE" or conf.plotYKey == "MAPE":
-    if conf.is_new_export:
-      conf.results_file = 'out/state.csv'
-      if conf.is_import:
-        conf.is_export = False
+    if conf.is_import:
+      conf.is_export = False
     else:
-      conf.results_file = '_results_all_cells.csv'
       conf.is_export = False
       conf.is_import = False
   with open("settings/monarch_box_binned/cb05_abs_tol.json", 'r', encoding='utf-8') as jsonFile:
@@ -158,7 +149,6 @@ def all_timesteps():
     print("ERROR: Not tested in testmonarch.py, configuration taken from monarch branch 209 and tested in monarch for the camp paper")
     raise
   if "Realistic" in conf.diffCells and \
-      conf.is_new_export and \
       conf.mpiProcessesCaseBase not in \
       conf.mpiProcessesCaseOptimList:
     print("ERROR: Wrong conf, MPI and cells are exported in different order, set same MPIs for both cases")

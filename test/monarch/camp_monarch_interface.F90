@@ -580,7 +580,6 @@ contains
             o = (j-1)*(I_E) + (i-1) !Index to 3D
             z = (k-1)*(I_E*I_N) + o !Index for 2D
 
-            ! Update the environmental state
             call this%camp_state%env_states(1)%set_temperature_K( &
               real( temperature(i,j,k), kind=dp ) )
             call this%camp_state%env_states(1)%set_pressure_Pa(   &

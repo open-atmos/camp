@@ -44,9 +44,7 @@ class TestMonarch:
     self.casesOptim = [""]
     self.plotYKey = ""
     self.plotXKey = ""
-    self.is_export = False
     self.is_import = False
-    self.is_new_export = True
     self.is_export_netcdf = False
     self.use_monarch = False
     self.profileCuda = ""
@@ -330,58 +328,50 @@ def run(conf):
   with open(conf_name, 'w', encoding='utf-8') as jsonFile:
     json.dump(conf.__dict__, jsonFile, indent=4, sort_keys=False)
 
-  data_path = conf.results_file
-  if conf.is_import:
-    if conf.plotYKey == "NRMSE":
-      if conf.case is conf.caseBase:
-        if conf.use_monarch:
-          #data_path = "exports/cpu_rank0_monarch_out_state.csv"
-          #data_path = "exports/cpu_tstep0_monarch_out_state.csv"
-          data_path = "exports/cpu_tstep7_monarch_out_state.csv"
-        else:
-          data_path = "out/state0.csv"
-      else:
-        if conf.use_monarch:
-          #data_path = "exports/gpu_rank0_monarch_out_state.csv"
-          #data_path = "exports/gpu_tstep0_monarch_out_state.csv"
-          #data_path = "exports/gpu_old_tstep7_monarch_out_state.csv"
-          data_path = "exports/gpu_tstep7_monarch_out_state.csv"
-          #data_path = "exports/gpu_mxstep_tstep7_monarch_out_state.csv"
-        else:
-          data_path = "out/state1.csv"
-    else:
-      if conf.case is conf.caseBase:
-        data_path = "out/stats0.csv"
-      else:
-        data_path = "out/stats1.csv"
-  print("conf.results_file",data_path)
+  data_path = ""
   if not conf.is_import:
     os.system(exec_str)
     if conf.is_export_netcdf:
       start = time.time()
       subprocess.run(["python", "translate_netcdf.py"]) #subprocess needed for (arch=CTE-POWER) and (Python/3.7.0-foss-2018b)
       print("Time read_netcdf = %s" % (time.time() - start))
-
+    if conf.case is conf.caseBase:
+      os.rename("out/state.csv", "out/state0.csv")
+      os.rename("out/stats.csv", "out/stats0.csv")
+    else:
+      os.rename("out/state.csv", "out/state1.csv")
+      os.rename("out/stats.csv", "out/stats1.csv")
   if conf.plotYKey == "NRMSE":
+    if conf.case is conf.caseBase:
+      if conf.use_monarch:
+        #data_path = "exports/cpu_rank0_monarch_out_state.csv"
+        #data_path = "exports/cpu_tstep0_monarch_out_state.csv"
+        data_path = "exports/cpu_tstep7_monarch_out_state.csv"
+      else:
+        data_path = "out/state0.csv"
+    else:
+      if conf.use_monarch:
+        #data_path = "exports/gpu_rank0_monarch_out_state.csv"
+        #data_path = "exports/gpu_tstep0_monarch_out_state.csv"
+        #data_path = "exports/gpu_old_tstep7_monarch_out_state.csv"
+        data_path = "exports/gpu_tstep7_monarch_out_state.csv"
+        #data_path = "exports/gpu_mxstep_tstep7_monarch_out_state.csv"
+      else:
+        data_path = "out/state1.csv"
     try:
       with open(data_path) as f:
         data = [float(line.rstrip('\n')) for line in f]
     except FileNotFoundError as e:
       raise FileNotFoundError("Check enable #ifndef EXPORT_STATE in the CAMP code") from e
-    if conf.is_export:
-      if conf.case is conf.caseBase:
-        os.rename("out/state.csv", "out/state0.csv")
-      else:
-        os.rename("out/state.csv", "out/state1.csv")
   else:
+    if conf.case is conf.caseBase:
+      data_path = "out/stats0.csv"
+    else:
+      data_path = "out/stats1.csv"
     nrows_csv = conf.timeSteps * conf.nCells * conf.mpiProcesses
     data = math_functions.read_solver_stats(data_path, nrows_csv)
-    if conf.is_export:
-      if conf.case is conf.caseBase:
-        os.rename("out/stats.csv", "out/stats0.csv")
-      else:
-        os.rename("out/stats.csv", "out/stats1.csv")
 
+  print("conf.results_file",data_path)
   return data
 
 
