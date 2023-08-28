@@ -11,9 +11,6 @@ def calculate_speedup(file1_path, file2_path):
     timecvStep_values1 = df1["timecvStep"].values
     timecvStep_values2 = df2["timecvStep"].values
 
-    print(timecvStep_values1)
-    print(timecvStep_values2)
-
     # Calculate the mean using numpy
     mean_time1 = np.mean(timecvStep_values1)
     mean_time2 = np.mean(timecvStep_values2)

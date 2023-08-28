@@ -50,10 +50,8 @@ int rxn_calc_deriv_gpu(SolverData *sd, N_Vector y, N_Vector deriv, double time_s
 void free_gpu_cu(SolverData *sd) {
   ModelDataGPU *mGPU = sd->mGPU;
   ModelDataCPU *mCPU = &(sd->mCPU);
-  //printf("free_gpu_cu start\n");
   free(sd->flagCells);
   mGPU = sd->mGPU;
-  //ModelDataGPU Start
   cudaFree(mGPU->map_state_deriv);
   cudaFree(mGPU->deriv_data);
   cudaFree(mGPU->J_solver);
@@ -98,20 +96,24 @@ void free_gpu_cu(SolverData *sd) {
   cudaFree(mGPU->dAx2);
   cudaFree(mGPU->dy);
   cudaFree(mGPU->dz);
+
+
   cudaFree(mGPU->dftemp);
+
   cudaFree(mGPU->dcv_y);
   cudaFree(mGPU->dtempv1);
   cudaFree(mGPU->dtempv2);
+
+
+
   cudaFree(mGPU->flag);
   cudaFree(mGPU->flagCells);
   cudaFree(mGPU->cv_acor);
   cudaFree(mGPU->dzn);
   cudaFree(mGPU->dewt);
   cudaFree(mGPU->dsavedJ);
-  cudaFree(mCPU->map_state_derivCPU);
   cudaFree(mGPU->mdv);
   cudaFree(mGPU->mdvo);
-  cudaFree(mGPU);
 }
 
 void print_gpu_specs() {

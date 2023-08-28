@@ -99,12 +99,6 @@ int jacobian_initialize_cuda_cvode(SolverData *sd) {
   return 1;
 }
 
-__global__
-void init_J_tmp2_cuda_cvode(double* J_tmp2) {
-  int tid = blockIdx.x * blockDim.x + threadIdx.x;
-  J_tmp2[tid]=0.0;
-}
-
 void init_jac_cuda_cvode(SolverData *sd){
   ModelData *md = &(sd->model_data);
   ModelDataGPU *mGPU;
@@ -142,7 +136,7 @@ void init_jac_cuda_cvode(SolverData *sd){
   int threads_block = mCPU->threads;
   int blocks = mCPU->blocks;
   double *J_tmp2 = N_VGetArrayPointer(md->J_tmp2);
-  init_J_tmp2_cuda_cvode <<<blocks,threads_block>>>(mGPU->J_tmp2);
+  HANDLE_ERROR(cudaMemcpy(mGPU->J_tmp2, J_tmp2, mCPU->deriv_size, cudaMemcpyHostToDevice));
   HANDLE_ERROR(cudaMemcpy(mGPU->jac_map, md->jac_map, sizeof(JacMap) * md->n_mapped_values, cudaMemcpyHostToDevice));
   HANDLE_ERROR(cudaMemcpy(mGPU->n_mapped_values, &md->n_mapped_values, 1 * sizeof(int), cudaMemcpyHostToDevice));
   jacobian_initialize_cuda_cvode(sd);
