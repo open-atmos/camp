@@ -19,7 +19,6 @@ class TestMonarch:
     # Case configuration
     self._chemFile = "monarch_binned"
     self.diffCells = ""
-    self.mpi = "yes"
     self.timeSteps = 1
     self.timeStepsDt = 2
     self.absoluteTolerance = 1.0E-4
@@ -266,11 +265,10 @@ def run(conf):
       exec_str += 'ddt --connect '
   except Exception:
     pass
-  if conf.mpi == "yes":
-    if os.getenv("BSC_MACHINE") == "power":
-      exec_str += "mpirun -v -np " + str(conf.mpiProcesses) + " --bind-to core "  # fails on monarch cte-power
-      # exec_str += "srun --cpu-bind=core -n " + str(conf.mpiProcesses) +" " #fine only with salloc or sbatch (no login nodes) and no ddt
-      # exec_str += "srun --cpu-bind=core -n " + str(conf.mpiProcesses) +" --gres=gpu:1 " #fail because it needs 40 tasks allocated, despite I only use 1
+  if os.getenv("BSC_MACHINE") == "power":
+    exec_str += "mpirun -v -np " + str(conf.mpiProcesses) + " --bind-to core "  # fails on monarch cte-power
+    # exec_str += "srun --cpu-bind=core -n " + str(conf.mpiProcesses) +" " #fine only with salloc or sbatch (no login nodes) and no ddt
+    # exec_str += "srun --cpu-bind=core -n " + str(conf.mpiProcesses) +" --gres=gpu:1 " #fail because it needs 40 tasks allocated, despite I only use 1
   # salloc --x11 --qos=debug --tasks-per-node=160 --nodes=1 --gres=gpu:4
   elif os.getenv("BSC_MACHINE") == "mn4":
     exec_str += "mpirun -np " + str(conf.mpiProcesses) + " --bind-to core "

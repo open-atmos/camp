@@ -23,7 +23,7 @@ def all_timesteps():
   # conf.profileCuda = "nsight"
   # conf.profileCuda = "nsightSummary"
 
-  conf.is_import = True
+  #conf.is_import = True
 
   # conf.commit = "MATCH_IMPORTED_CONF"
   conf.commit = ""
@@ -34,9 +34,6 @@ def all_timesteps():
   # conf.nGPUsCaseOptimList = [1]
   conf.nGPUsCaseOptimList = [1]
   # conf.nGPUsCaseOptimList = [1,2]
-
-  conf.mpi = "yes"
-  # conf.mpi = "no"
 
   conf.mpiProcessesCaseBase = 1
   # conf.mpiProcessesCaseBase = 2
@@ -54,12 +51,12 @@ def all_timesteps():
   # conf.allocatedTasksPerNode = 320
   # conf.allocatedTasksPerNode = get_ntasksPerNode_sbatch() #todo
 
-  conf.cells = [1]
+  conf.cells = [2]
   #conf.cells = [14872] #monarch rank 0
   # conf.cells = [100, 500, 1000, 5000, 10000]
   # conf.cells = [50000,100000,500000,1000000]
 
-  conf.timeSteps = 480
+  conf.timeSteps = 1
   #conf.timeSteps = 480 #24h
 
   conf.timeStepsDt = 2

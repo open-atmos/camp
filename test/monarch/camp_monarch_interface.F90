@@ -564,13 +564,13 @@ contains
 
       call camp_mpi_barrier(MPI_COMM_WORLD)
 
-      i_hour = int(curr_time/60)+1
-      if(mod(int(curr_time),60).eq.0) then
-        if (camp_mpi_rank().eq.0) then
-          write(*,*) "i_hour loop", i_hour
-        end if
-      end if
+    end if
 
+    i_hour = int(curr_time/60)+1
+    if(mod(int(curr_time),60).eq.0) then
+      if (camp_mpi_rank().eq.0) then
+        write(*,*) "i_hour loop", i_hour
+      end if
     end if
 
     if(.not.this%solve_multiple_cells) then
