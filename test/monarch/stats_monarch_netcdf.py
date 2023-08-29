@@ -47,24 +47,23 @@ def process_variable(dataset1, dataset2, var_name):
 
 
 def main():
-    file1_path_header = "../../../../cpu_tstep20_O2_monarch_out/"
-    file2_path_header = "../../../../gpu_tstep20_O2_monarch_out/"
-
-    # Paths to the CSV files
-    file1 = file1_path_header + "out/stats.csv"
-    file2 = file2_path_header + "out/stats.csv"
+    file1_path_header = "../../../../cpu_tstep20_O3_monarch_out/"
+    file2_path_header = "../../../../gpu_tstep20_O3_monarch_out/"
 
     # Calculate the speedup
+    file1 = file1_path_header + "out/stats.csv"
+    file2 = file2_path_header + "out/stats.csv"
     speedup = calculate_speedup(file1, file2)
     print("Speedup:", speedup)
 
+    #Path to netCDF
     file1 = file1_path_header + "nmmb_hst_01_nc4_0000h_00m_00.00s.nc"
     file2 = file2_path_header + "nmmb_hst_01_nc4_0000h_00m_00.00s.nc"
 
     dataset1 = nc.Dataset(file1)
     dataset2 = nc.Dataset(file2)
 
-    variable_names = dataset1.variables.keys()  # Get all variable names
+    variable_names = dataset1.variables.keys()
 
     summary_data = []
     start_time = time.time()
@@ -98,7 +97,6 @@ def main():
     pd.set_option('display.width', 100)
     pd.set_option('display.max_colwidth', 100)
     #print("Summary Table:", summary_table)
-    summary_table.to_csv("summary_table_.csv", index=False)
 
     worst_variables = summary_table.nlargest(999, 'NRMSE[%]')
     #print("worst_variables:\n", worst_variables)
