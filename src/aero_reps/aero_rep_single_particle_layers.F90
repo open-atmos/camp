@@ -232,12 +232,14 @@ contains
   !! each aerosol representation at the beginning of a model run after all
   !! the input files have been read in. It ensures all data required during
   !! the model run are included in the condensed data arrays.
-  subroutine initialize(this, aero_phase_set, aero_layer_phase_set, spec_state_id)
+  subroutine initialize(this, aero_phase_set, spec_state_id)
 
     !> Aerosol representation data
     class(aero_rep_single_particle_t), intent(inout) :: this
     !> The set of aerosol phases
     type(aero_phase_data_ptr), pointer, intent(in) :: aero_phase_set(:)
+    !> The set of aerosol phases in layer order
+    type(aero_phase_data_ptr), pointer:: aero_layer_phase_set(:)
     !> Layer names (only used during initialization)
     type(string_t), allocatable :: layer_name(:)
     !> Unordered layer names (only used during initialization)
@@ -254,8 +256,6 @@ contains
     type(string_t), allocatable :: aero_layer_set_names(:)
     !> Ordered set of aerosol phase names from inner to outermost layer 
     type(string_t), allocatable :: aero_layer_phase_set_names(:)
-    !> The set of layers
-    type(integer), allocatable :: aero_layer_phase_set(:)
     !> Beginning state id for this aerosol representationin the model species
     !! state array
     integer(kind=i_kind), intent(in) :: spec_state_id
@@ -398,25 +398,24 @@ contains
     aero_layer_set_names = ordered_layer_array(this)
     aero_layer_phase_set_names = ordered_phase_array(this)
 
-    ! Construct aero_phase array for layers
-    allocate(aero_phase(size(NUM_PHASE_)))
+    ! Construct aero_phase pointer array for layers
+    allocate(aero_layer_phase_set(size(aero_layer_phase_set_names)))
     do i_aero = 1, size(aero_phase)
       do i_layer = 1, TOTAL_NUM_LAYERS_
         do i_phase = 1, TOTAL_NUM_PHASES_
-          ! Need to reference pointer variable
-          if (aero_layer_phase_set_names(i_phase).eq.&
+           if (aero_layer_phase_set_names(i_aero).eq.&
               aero_phase_set(i_phase)) then 
-                aero_phase(i_aero) => aero_phase_set(i_phase)
+              aero_layer_phase_set(i_aero) = aero_phase_set(i_phase)
           end if
         end do
       end do
-    end do 
+    end do
 
     ! Assume all phases will be applied once to each particle
     allocate(this%aero_phase(size(aero_phase_set)*num_particles))
     do i_particle = 1, num_particles
       do i_phase = 1, size(aero_phase_set)
-        this%aero_phase((i_particle-1)*size(aero_phase_set)+i_phase) = &
+        this%aero_phase((i_particle-1)*TOTAL_NUM_PHASES_*TOTAL_NUM_LAYERS_+i_phase) = &
             aero_layer_phase_set(i_phase)
       end do
     end do
