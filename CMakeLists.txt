@@ -35,7 +35,6 @@ option(ENABLE_C_SORT "Enable C sorting routines" OFF)
 option(ENABLE_TESTS "Enable tests" OFF)
 option(ENABLE_DEBUG "Compile debugging functions" OFF)
 option(FAILURE_DETAIL "Output conditions before and after solver failures" OFF)
-option(ENABLE_CXX "Enable C++" OFF)
 option(ENABLE_GPU "Enable use of GPUs in chemistry solving" OFF)
 option(ENABLE_SWAP_DERIV_LOOP_CELLS "" OFF)
 option(ENABLE_NETCDF "Include NETCDF package" OFF)
@@ -221,14 +220,6 @@ include_directories(${JSON_INCLUDE_DIR})
 add_definitions(-DCAMP_USE_JSON)
 
 ######################################################################
-##CXX
-
-if(ENABLE_CXX)
-  add_definitions(-DCAMP_USE_CXX)
-  enable_language(CXX)
-endif()
-
-######################################################################
 # GPU support
 
 if (ENABLE_GPU)
@@ -352,12 +343,6 @@ endif()
 set(STD_C_FLAGS "-std=c99")
 set(STD_CUDA_FLAGS "-g -O3 -arch=compute_70 -code=sm_70") #-G for assembly code nsight
 
-if(ENABLE_CXX)
-  set(STD_CXX_FLAGS "-fpermissive")
-  message( Treating .cpp files as .cu ...)
-  set(STD_CUDA_FLAGS "-x cu")
-endif()
-
 if(${CMAKE_Fortran_COMPILER_ID} MATCHES "Intel")
   set(STD_F_FLAGS "-extend_source -warn truncated_source")
 elseif(${CMAKE_Fortran_COMPILER_ID} MATCHES "GNU")
@@ -445,13 +430,6 @@ set(CAMP_C_SRC
 set_source_files_properties(${CAMP_C_SRC} PROPERTIES COMPILE_FLAGS
         ${STD_C_FLAGS})
 
-if(ENABLE_CXX)
-    set_source_files_properties(${CAMP_CXX_SRC} PROPERTIES COMPILE_FLAGS
-            ${STD_CXX_FLAGS})
-else()
-    set(CAMP_CXX_SRC "")
-endif()
-
 if (CUDA_FOUND AND ENABLE_GPU)
   set(CAMP_CUDA_SRC
           src/cuda/camp_gpu_solver.cu
@@ -486,7 +464,7 @@ set(CAMP_LIB_SRC
         src/solver_stats.F90
         src/debug_diff_check.F90
         ${CAMP_C_SRC} ${AEROSOL_REPS_SRC} ${SUB_MODELS_SRC}
-        ${REACTIONS_SRC} ${GSL_SRC} ${CAMP_CUDA_SRC} ${CAMP_CXX_SRC} )
+        ${REACTIONS_SRC} ${GSL_SRC} ${CAMP_CUDA_SRC})
 
 if(ENABLE_SHARED_LIB)
   add_library(camplib SHARED ${CAMP_LIB_SRC}) #todo fix, Shared library are better than static (faster in execution, no recompilation, smaller)
