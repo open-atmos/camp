@@ -902,12 +902,12 @@ contains
     integer(kind=i_kind) :: i_layer
 
     ! Allocate space in layer_state_id
-    allocate(layer_state_id_array(size(SUM(num_phase_array))))
+    allocate(layer_state_id_array(size(num_phase_array)+1))
 
     layer_state_id_array(1) = 1
-    do i_layer = 1, size(layer_state_id_array)
-      layer_state_id_array(i_layer) = layer_state_id_array(i_layer) + &
-        num_phase_array(i_phase)
+    do i_layer = 1, size(num_phase_array)
+      layer_state_id_array(i_layer+1) = layer_state_id_array(i_layer) + &
+        num_phase_array(i_layer)
     end do
 
   end function construct_layer_state_id
