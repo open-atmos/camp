@@ -47,8 +47,8 @@ def process_variable(dataset1, dataset2, var_name):
 
 
 def main():
-    file1_path_header = "../../../../cpu_tstep20_O3_monarch_out/"
-    file2_path_header = "../../../../gpu_tstep20_O3_monarch_out/"
+    file1_path_header = "../../../../cpu_tstep480_O3_monarch_out/"
+    file2_path_header = "../../../../gpu_tstep480_O3_monarch_out/"
 
     # Calculate the speedup
     file1 = file1_path_header + "out/stats.csv"
@@ -82,7 +82,7 @@ def main():
                 if result:
                     summary_data.append(result)
 
-    print(f"Total execution time: {time.time()-start_time:.2f} seconds")
+    print(f"Execution time: {time.time()-start_time:.2f} seconds")
     dataset1.close()
     dataset2.close()
     if not summary_data:
@@ -99,9 +99,12 @@ def main():
     #print("Summary Table:", summary_table)
 
     worst_variables = summary_table.nlargest(999, 'NRMSE[%]')
-    #print("worst_variables:\n", worst_variables)
     worst_variables.to_csv("exports/summary_table.csv", index=False)
-    print("Speedup:", speedup)
+    highest_nrmse_row = worst_variables.iloc[0]
+    highest_nrmse_variable = highest_nrmse_row['Variable']
+    highest_nrmse = highest_nrmse_row['NRMSE[%]']
+    print(f"Highest NRMSE[%]: {highest_nrmse:.2f} for variable: {highest_nrmse_variable}")
+    print(f"Speedup: {speedup:.1f}")
 
 
 if __name__ == "__main__":
