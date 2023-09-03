@@ -263,7 +263,7 @@ contains
     character(len=:), allocatable :: key_name, layer_covers
     type(property_t), pointer :: layers, phases
     integer(kind=i_kind) :: i_particle, i_phase, i_layer, i_aero, curr_id
-    integer(kind=i_kind) :: i_cover, j_phase
+    integer(kind=i_kind) :: i_cover, j_phase, j_layer
     integer(kind=i_kind) :: num_int_param, num_float_param, num_particles
 
     ! Start off the counters
@@ -273,18 +273,18 @@ contains
 
     ! Get the maximum number of computational particles
     key_name = "maximum computational particles"
-    call assert_msg(857908074, &
+    call assert_msg(331697425, &
                     this%property_set%get_int(key_name, num_particles), &
                     "Missing maximum number of computational particles")
 
     ! Get the set of layers
     key_name = "layers"
     ! QUESTION: do i need to change unique assert_msg number
-    call assert_msg(877855909, &
+    call assert_msg(314392954, &
                     this%property_set%get_property_t(key_name, layers), &
                     "Missing layers for single-particle aerosol "// &
                     "representation '"//this%rep_name//"'")
-                    call assert_msg(894962494, layers%size().gt.0, "No layers "// &
+                    call assert_msg(168669831, layers%size().gt.0, "No layers "// &
                     "specified for single-particle layer aerosol representation '"// &
                     this%rep_name//"'")
 
@@ -301,14 +301,14 @@ contains
     do i_layer = 1, layers%size()
 
       ! Get the layer name
-      call assert(867378489, layers%get_key(key_name))
-      call assert_msg(234513113, len(key_name).gt.0, "Missing layer "// &
+      call assert(364496472, layers%get_key(key_name))
+      call assert_msg(784799080, len(key_name).gt.0, "Missing layer "// &
               "name in single-particle layer aerosol representation '"// &
               this%rep_name//"'")
       this%layer_name_unordered(i_layer)%string = key_name
 
       ! Get the layer properties
-      call assert_msg(517138327, layers%get_property_t(val=layers), &
+      call assert_msg(303808978, layers%get_property_t(val=layers), &
               "Invalid structure for layer '"// &
               this%layer_name_unordered(i_layer)%string// &
               "' in single-particle layer representation '"// &
@@ -316,7 +316,7 @@ contains
 
       ! Get the cover name
       key_name = "covers"
-      call assert_msg(742404898, section%get_string(key_name, layer_covers), &
+      call assert_msg(350939595, section%get_string(key_name, layer_covers), &
                 "Missing cover name in layer'"// &
                 this%layer_name_unordered(i_layer)%string// &
                 "' in single-particle layer aerosol representation '"// &
@@ -325,14 +325,14 @@ contains
            
       ! Get the set of phases
       key_name = "phases"
-      call assert_msg(815518058, section%get_property_t(key_name, phases), &
+      call assert_msg(647756433, section%get_property_t(key_name, phases), &
               "Missing phases for layer '"// &
               this%section_name(i_section)%string// &
               "' in single-particle layer aerosol representation '"// &
               this%rep_name//"'")
 
       ! Add the phases to the counter
-      call assert_msg(772593427, phases%size().gt.0, &
+      call assert_msg(002679882, phases%size().gt.0, &
               "No phases specified for layer '"// &
               this%layer_name(i_layer)%string// &
               "' in single-particle layer aerosol representation '"// &
@@ -344,7 +344,7 @@ contains
       do i_phase = 1, phases%size()
 
         ! Get the phase name
-        call assert_msg(393427582, phases%get_string(val=phase_name), &
+        call assert_msg(566480284, phases%get_string(val=phase_name), &
                 "Non-string phase name for layer '"// &
                 this%layer_name_unordered(i_layer)%string// &
                 "' in single-particle layer aerosol representation '"// &
@@ -356,6 +356,14 @@ contains
       call layers%iter_next()
     end do
 
+    ! Ensure layer names do not repeat 
+    do i_layer = 1,layers%size()
+      do j_layer = 1,layer%size()
+        call assert_msg(781626922,layer_name_unordered(i_layer).eq.&
+                        layer_name_unordered(j_layer))
+      end do
+    end do
+
     ! Construct layer state id unordered
     this%layer_state_id_unordered = construct_layer_state_id(num_phase_unordered)
 
@@ -365,14 +373,14 @@ contains
     call layers%iter_reset()
     do i_layer = 1, layers%size()
       ! Get the layer name
-      call assert(867378489, layers%get_key(key_name))
-      call assert_msg(234513113, len(key_name).gt.0, "Missing layer "// &
+      call assert(887258456, layers%get_key(key_name))
+      call assert_msg(449241732, len(key_name).gt.0, "Missing layer "// &
               "name in single-particle layer aerosol representation '"// &
              this%rep_name//"'")
       this%layer_name_unordered(i_layer)%string = key_name
 
       ! Get the layer properties
-      call assert_msg(517138327, layers%get_property_t(val=layers), &
+      call assert_msg(839897881, layers%get_property_t(val=layers), &
              "Invalid structure for layer '"// &
             this%layer_name_unordered(i_layer)%string// &
             "' in single-particle layer representation '"// &
@@ -380,7 +388,7 @@ contains
            
       ! Get the set of phases
       key_name = "phases"
-      call assert_msg(815518058, layers%get_property_t(key_name, phases), &
+      call assert_msg(977307148, layers%get_property_t(key_name, phases), &
               "Missing phases for layer '"// &
               this%section_name(i_section)%string// &
               "' in single-particle layer aerosol representation '"// &
@@ -395,8 +403,8 @@ contains
     NUM_PHASE_ = ordered_num_phase_array(this,num_phase_unordered)
     LAYER_STATE_ID_ = construct_layer_state_id(NUM_PHASE_)
 
-    aero_layer_set_names = ordered_layer_array(this)
-    aero_layer_phase_set_names = ordered_phase_array(this)
+    this%aero_layer_set_names = ordered_layer_array(this)
+    this%aero_layer_phase_set_names = ordered_phase_array(this)
 
     ! Construct aero_phase pointer array for layers
     allocate(aero_layer_phase_set(size(aero_layer_phase_set_names)))
@@ -669,7 +677,7 @@ contains
 
     l_unique_name%string = unique_name
     substrs = l_unique_name%split(".")
-    call assert( 893354574, size( substrs ) .eq. 3 )
+    call assert(407537518, size( substrs ) .eq. 3 )
     spec_name = substrs(3)%string
 
   end function spec_name
@@ -714,7 +722,7 @@ contains
 
     integer(kind=i_kind) :: i_phase
 
-    call assert_msg( 401502046, phase_id .ge. 1 .and. &
+    call assert_msg(927040495, phase_id .ge. 1 .and. &
                                 phase_id .le. size( this%aero_phase ), &
                      "Aerosol phase index out of range. Got "// &
                      trim( integer_to_string( phase_id ) )//", expected 1:"// &
@@ -926,9 +934,9 @@ contains
     !> Updated number
     real(kind=dp), intent(in) :: number_conc
 
-    call assert_msg(897092373, this%is_malloced, &
+    call assert_msg(611967802, this%is_malloced, &
             "Trying to set number of uninitialized update object.")
-    call assert_msg(357138177, particle_id .ge. 1 .and. &
+    call assert_msg(689085496, particle_id .ge. 1 .and. &
                     particle_id .le. this%maximum_computational_particles, &
                     "Invalid computational particle index: "// &
                     trim(integer_to_string(particle_id)))
@@ -978,7 +986,7 @@ contains
     call camp_mpi_pack_integer(buffer, pos, &
                               this%maximum_computational_particles, comm)
     call camp_mpi_pack_integer(buffer, pos, this%aero_rep_unique_id, comm)
-    call assert(964639022, &
+    call assert(411585487, &
          pos - prev_position <= this%pack_size(comm))
 #endif
 
@@ -1006,7 +1014,7 @@ contains
     call camp_mpi_unpack_integer(buffer, pos, &
                                 this%maximum_computational_particles, comm)
     call camp_mpi_unpack_integer(buffer, pos, this%aero_rep_unique_id, comm)
-    call assert(459432617, &
+    call assert(351557153, &
          pos - prev_position <= this%pack_size(comm))
     this%update_data = aero_rep_single_particle_create_number_update_data()
 #endif
