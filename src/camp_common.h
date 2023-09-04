@@ -292,7 +292,7 @@ typedef struct {
   int tstep;
   double* state_nc;
 #endif
-#ifndef EXPORT_STATE
+#ifdef EXPORT_STATE
 #ifndef ENABLE_NETCDF
   int n_cells_tstep;
   int tstep;
