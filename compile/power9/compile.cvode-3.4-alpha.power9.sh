@@ -6,7 +6,6 @@ if [ -z "$SUITE_SPARSE_CAMP_ROOT" ]; then
 	SUITE_SPARSE_CAMP_ROOT=$(pwd)/$library_path/SuiteSparse
 fi
 
-#tar -zxvf camp/cvode-3.4-alpha.tar.gz
 cd $library_path/cvode-3.4-alpha
 rm -r build
 mkdir build
@@ -27,13 +26,5 @@ cmake -D CMAKE_BUILD_TYPE=debug \
 -D CMAKE_INSTALL_PREFIX=$(pwd)/../install \
 -D EXAMPLES_ENABLE_C=OFF \
 ..
-#-D EXAMPLES_INSTALL_PATH=$(pwd)/../install/examples .. \
-#-D CMAKE_CXX_FLAGS="-O3 -lcudart -lcublas" \
-#-D CMAKE_C_FLAGS ="-O3 -lcudart -lcublas" \
-#-D CMAKE_CUDA_FLAGS="-Xcompiler="-fpermissive" -lcudart -lcublas" \
-#-D EXAMPLES_ENABLE_C=OFF \
 
-#make -j 4 #not working
 make install
-
-#./cvode-3.4-alpha/build/examples/cvode/serial/cvRoberts_klu

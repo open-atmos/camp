@@ -12,6 +12,6 @@ elif [ $LOCAL_MACHINE==CGUZMAN ]; then
   make BLAS="-L/usr/lib/x86_64-linux-gnu -lopenblas" LAPACK=""
 else
   echo "Unknown architecture"
-  exit
+  make BLAS="-L${INTEL_HOME}/mkl/lib/intel64 -lmkl_intel_lp64 -lmkl_core -lmkl_intel_thread -lpthread -lm" LAPACK=""
 fi
 export SUITE_SPARSE_CAMP_ROOT=$(pwd)/$library_path/
