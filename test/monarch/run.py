@@ -21,7 +21,6 @@ class TestMonarch:
     self.diffCells = ""
     self.timeSteps = 1
     self.timeStepsDt = 2
-    self.absoluteTolerance = 1.0E-4
     self.commit = ""
     self.case = []
     self.nCells = 1
@@ -443,7 +442,7 @@ def run_cases(conf):
             nCellsProcesses=[conf.nCellsProcesses]
           datay = math_functions.calculate_NRMSE(
             data, conf.timeSteps,nCellsProcesses,
-            conf.use_monarch,conf.absoluteTolerance)
+            conf.use_monarch)
         elif "Speedup" in conf.plotYKey:
           y_key_words = conf.plotYKey.split()
           y_key = y_key_words[-1]

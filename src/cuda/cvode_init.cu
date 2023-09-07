@@ -144,15 +144,12 @@ void solver_new_gpu_cu_cvode(SolverData *sd) {
     printf("ERROR: MORE THAN 40 MPI PROCESSES AND NOT MULTIPLE OF 40, WHEN CTE-POWER ONLY HAS 40 CORES PER NODE\n");
     exit(0);
   }
-
   int nDevicesMax=4;
   cudaGetDeviceCount(&nDevicesMax);
   if (sd->nDevices > nDevicesMax) {
     printf("ERROR: Not enough GPUs to launch, nDevices %d nDevicesMax %d\n", sd->nDevices, nDevicesMax);
     exit(0);
   }
-  //int maxCoresPerDevice = maxCoresPerNode / nDevicesMax
-  //sd->nDevices= (int((size-1)/maxCoresPerDevice)+1) % nDevicesMax
   if (size > sd->nDevices*(coresPerNode/nDevicesMax)){
     printf("ERROR: size,sd->nDevices,coresPerNode,nDevicesMax %d %d %d %d "
            "MORE MPI PROCESSES THAN DEVICES (FOLLOW PROPORTION, "

@@ -10,7 +10,8 @@ from run import *
 def all_timesteps():
   conf = TestMonarch()
 
-  conf.chemFile = "monarch_cb05"
+  conf.chemFile = "cb05_paperV2"
+  #conf.chemFile = "monarch_cb05"
   # conf.chemFile = "monarch_binned"
 
   conf.diffCellsL = []
@@ -126,10 +127,6 @@ def all_timesteps():
     else:
       conf.is_export = False
       conf.is_import = False
-  with open("settings/monarch_box_binned/cb05_abs_tol.json", 'r', encoding='utf-8') as jsonFile:
-    jsonData = json.load(jsonFile)
-  conf.absoluteTolerance = jsonData["camp-data"][0]["value"]  # Default: 1.0E-4
-  jsonData.clear()
   if conf.plotYKey == "":
     print("conf.plotYKey is empty")
   if conf.chemFile == "monarch_binned":
