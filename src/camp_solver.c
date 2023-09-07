@@ -18,7 +18,6 @@
 #include "sub_model_solver.h"
 #ifdef CAMP_USE_GPU
 #include "cuda/cvode_gpu.h"
-#include "cuda/cvode_ls_gpu.h"
 #endif
 #ifdef CAMP_USE_GSL
 #include <gsl/gsl_deriv.h>

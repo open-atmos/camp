@@ -8,7 +8,6 @@
 
 #include <cuda.h>
 #include "../camp_common.h"
-#include "cvode_ls_gpu.h"
 
 void constructor_cvode_gpu(CVodeMem cv_mem, SolverData *sd);
 int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
