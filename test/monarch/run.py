@@ -57,7 +57,6 @@ class TestMonarch:
     self.results_file = "_solver_stats.csv"
     self.plotTitle = ""
     self.nCellsProcesses = 1
-    self.itsolverConfigFile = "settings/itsolver_options.txt"
     self.campSolverConfigFile = "settings/config_variables_c_solver.txt"
 
   @property
@@ -92,15 +91,6 @@ def getCaseName(conf):
   else:
     case_multicells_onecell_name += conf.caseMulticellsOnecell
   return case_multicells_onecell_name
-
-
-def write_itsolver_config_file(conf):
-  file1 = open(conf.itsolverConfigFile, "w")
-  cells_method_str = "CELLS_METHOD=" + conf.caseMulticellsOnecell
-  file1.write(cells_method_str)
-  # print("Saved", cells_method_str)
-  file1.close()
-
 
 
 def write_camp_config_file(conf):
@@ -303,9 +293,6 @@ def run(conf):
 
   # CAMP solver option GPU-CPU
   write_camp_config_file(conf)
-
-  # Onecell-Multicells ModelDataCPU
-  write_itsolver_config_file(conf)
 
   print("exec_str:", exec_str, conf.diffCells, conf.caseGpuCpu,
         conf.caseMulticellsOnecell, "ncellsPerMPIProcess:",

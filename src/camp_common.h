@@ -228,15 +228,8 @@ typedef struct {
   cudaEvent_t stopDerivKernel;
 #endif
 #endif
-#ifdef NEW
-  long double loss_rates_new[1000];
-#endif
 
 } ModelData;
-
-#ifdef NEW
-long double *rate_contrib_l;
-#endif
 
 /* Solver data structure */
 typedef struct {

@@ -27,7 +27,6 @@
 #endif
 #include "camp_debug.h"
 #include "debug_and_stats/camp_debug_2.h"
-#include "debug_and_stats/new.h"
 
 #ifdef CAMP_USE_MPI
 #include <mpi.h>
@@ -566,9 +565,6 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
 #endif
 #ifdef DEBUG_solver_initialize
   printf("solver_initialize end\n");
-#endif
-#ifdef NEW
-  rxn_get_ids(sd);
 #endif
 #endif
 }
@@ -1277,10 +1273,6 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
 
     // Calculate the time derivative f(t,y)
     rxn_calc_deriv(md, sd->time_deriv, (double)time_step);
-
-#ifdef NEW
-      rxn_calc_deriv_new(sd);
-#endif
 
     // Update the deriv array
     if (sd->use_deriv_est == 1) {
@@ -2215,11 +2207,6 @@ void solver_free(void *solver_data) {
       free_gpu_cu(sd);
   }
 #endif
-
-#ifdef NEW
-  rxn_free();
-#endif
-
 }
 
 #ifdef CAMP_USE_SUNDIALS

@@ -12,7 +12,6 @@
 //extern "C" {
 #include "../camp_common.h"
 //}
-#include "new.h"
 
 //Value to consider data size too big -> Memory optimization will change below and under the limit
 
