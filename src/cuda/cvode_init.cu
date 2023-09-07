@@ -390,7 +390,6 @@ void constructor_cvode_gpu(CVodeMem cv_mem, SolverData *sd){
 
 void free_gpu_cu(SolverData *sd) {
   ModelDataGPU *mGPU = sd->mGPU;
-  ModelDataCPU *mCPU = &(sd->mCPU);
   free(sd->flagCells);
   mGPU = sd->mGPU;
   cudaFree(mGPU->map_state_deriv);

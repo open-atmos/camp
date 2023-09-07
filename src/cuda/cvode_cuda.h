@@ -6,10 +6,6 @@
 #ifndef CVODE_CUDA_H_
 #define CVODE_CUDA_H_
 
-#include<stdio.h>
-#include<stdlib.h>
-#include<math.h>
-#include<iostream>
 #include<cuda.h>
 #include<cuda_runtime.h>
 #include<cuda_runtime_api.h>
@@ -100,6 +96,5 @@ void swapCSC_CSR_ODE_if_enabled(SolverData *sd);
 #define CAMP_SOLVER_FAIL 1
 #define MAX_PRECISION_LOSS 1.0e-14
 #define GUESS_MAX_ITER 5
-
 
 #endif
