@@ -95,4 +95,15 @@ void solver_reset_statistics_gpu(SolverData *sd);
 #define CAMP_SOLVER_SUCCESS 0
 #define CAMP_SOLVER_FAIL 1
 
+#define HANDLE_ERROR( err ) (HandleError( err, __FILE__, __LINE__ ))
+static void HandleError(cudaError_t err,
+                        const char *file,
+                        int line) {
+  if (err != cudaSuccess) {
+    printf("%s in %s at line %d\n", cudaGetErrorString(err),
+           file, line);
+    exit(EXIT_FAILURE);
+  }
+}
+
 #endif
