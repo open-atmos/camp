@@ -8,10 +8,9 @@
 !> Interface for the MONACH model and CAMP-camp
 module camp_monarch_interface_2
 
-  use camp_constants,                  only : i_kind
+  use camp_constants, only : i_kind
   use camp_mpi
-  use camp_util,                       only : assert_msg, string_t, &
-                                             warn_assert_msg
+  use camp_util, only : assert_msg, string_t,warn_assert_msg
   use camp_camp_core
   use camp_camp_state
   use camp_aero_rep_data
@@ -20,129 +19,72 @@ module camp_monarch_interface_2
   use camp_chem_spec_data
   use camp_property
   use camp_camp_solver_data
-  use camp_mechanism_data,            only : mechanism_data_t
-  use camp_rxn_data,                  only : rxn_data_t
+  use camp_mechanism_data, only : mechanism_data_t
+  use camp_rxn_data, only : rxn_data_t
   use camp_rxn_photolysis
   use camp_solver_stats
   use mpi
   use json_module
 
   implicit none
-
   private
-
   public :: camp_monarch_interface_t
-
-  !> CAMP <-> MONARCH interface
-  !!
-  !! Contains all data required to intialize and run CAMP from MONARCH data
-  !! and map state variables between CAMP and MONARCH
   type :: camp_monarch_interface_t
-    !private
-    !> CAMP-chem core
     type(camp_core_t), pointer :: camp_core
-    !> CAMP-chem state
     type(camp_state_t), pointer :: camp_state
-    !> MONARCH species names
     type(string_t), allocatable :: monarch_species_names(:)
-    character(len=:), allocatable :: interface_input_file
-    !> MONARCH <-> CAMP species map
+    character(len=:), allocatable :: output_file_title
     integer(kind=i_kind), allocatable :: map_monarch_id(:), map_camp_id(:)
-    !> CAMP-camp ids for initial concentrations
     integer(kind=i_kind), allocatable :: init_conc_camp_id(:),specs_emi_id(:)
-    !> Initial species concentrations
     real(kind=dp), allocatable :: init_conc(:)
-    !> Number of cells to compute simultaneously
     integer(kind=i_kind) :: n_cells = 1
-    !> Starting index for CAMP species on the MONARCH tracer array
     integer(kind=i_kind) :: tracer_starting_id
-    !> Ending index for CAMP species on the MONARCH tracer array
     integer(kind=i_kind) :: tracer_ending_id
-    !> CAMP-camp <-> MONARCH species map input data
     type(property_t), pointer :: species_map_data
-    !> Gas-phase water id in CAMP-camp
     integer(kind=i_kind) :: gas_phase_water_id
-    !> Initial concentration data
     type(property_t), pointer :: init_conc_data
-    !> Interface input data
     type(property_t), pointer :: property_set
     type(rxn_update_data_photolysis_t), allocatable :: photo_rxns(:)
     real(kind=dp), allocatable :: base_rates(:),specs_emi(:),offset_photo_rates_cells(:)
     integer :: n_photo_rxn
     integer :: nrates_cells
-    !> Solve multiple grid cells at once?
     logical :: solve_multiple_cells = .false.
-    ! KPP reaction labels
     type(string_t), allocatable :: kpp_rxn_labels(:)
-    ! KPP rstate
     real(kind=dp) :: KPP_RSTATE(20)
-    ! KPP control variables
     integer :: KPP_ICNTRL(20)
     character(len=:), allocatable :: ADD_EMISIONS
   contains
-    !> Integrate CAMP for the current MONARCH state over a specified time step
     procedure :: integrate
-    !> Get initial concentrations (for testing only)
     procedure :: get_init_conc
-    !> Get monarch species names and ids (for testing only)
-    procedure :: get_MONARCH_species
-    !> Print the CAMP-camp data
-    procedure :: print => do_print
-    !> Load interface data from a set of input files
     procedure, private :: load
-    !> Create the CAMP <-> MONARCH species map
     procedure, private :: create_map
-    !> Load the initial concentrations
     procedure, private :: load_init_conc
-    !> Finalize the interface
     final :: finalize
   end type camp_monarch_interface_t
 
-  !> CAMP <-> MONARCH interface constructor
   interface camp_monarch_interface_t
     procedure :: constructor
   end interface camp_monarch_interface_t
 
-  !> MPI node id from MONARCH
   integer(kind=i_kind) :: MONARCH_PROCESS ! TODO replace with MONARCH param
-  ! TEMPORARY
   real(kind=dp), public, save :: comp_time = 0.0d0
-  ! Parameters
   real(kind=dp), parameter :: mwair = 28.9628 !mean molecular weight for dry air [ g/mol ]
   real(kind=dp), parameter :: mwwat = 18.0153 ! mean molecular weight for water vapor [ g/mol ]
 contains
 
 
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-  !> Create and initialize a new camp_monarch_interface_t object
-  !!
-  !! Create a camp_monarch_interface_t object at the beginning of the  model run
-  !! for each node. The master node should pass a string containing the path
-  !! to the CAMP confirguration file list, the path to the interface
-  !! configuration file and the starting and ending indices for chemical
-  !! species in the tracer array.
-  function constructor(camp_config_file, interface_config_file, &
+  function constructor(camp_config_file, output_file_title, &
                        starting_id, ending_id, n_cells, n_cells_tstep, &
           ADD_EMISIONS, mpi_comm) result (this)
-
-    !> A new MONARCH interface
     type(camp_monarch_interface_t), pointer :: this
-    !> Path to the CAMP-camp configuration file list
     character(len=:), allocatable, optional :: camp_config_file
-    !> Path to the CAMP-camp <-> MONARCH interface input file
-    character(len=*), intent(in), optional :: interface_config_file
-    !> Starting index for chemical species in the MONARCH tracer array
+    character(len=*), intent(in):: output_file_title
     integer, optional :: starting_id
-    !> Ending index for chemical species in the MONARCH tracer array
     integer, optional :: ending_id
-    !> MPI communicator
     integer, intent(in), optional :: mpi_comm
-    !> Num cells to compute simulatenously
     integer, optional :: n_cells
     integer, optional :: n_cells_tstep
     character(len=:), allocatable, optional :: ADD_EMISIONS
-
     type(camp_solver_data_t), pointer :: camp_solver_data
     character, allocatable :: buffer(:)
     integer(kind=i_kind) :: pos, pack_size
@@ -151,13 +93,11 @@ contains
     character(len=:), allocatable :: spec_name, settings_interface_file
     integer :: max_spec_name_size=512
     real(kind=dp) :: base_rate
-
     class(aero_rep_data_t), pointer :: aero_rep
     integer(kind=i_kind) :: i_sect_om, i_sect_bc, i_sect_sulf, i_sect_opm, i, z
     type(aero_rep_factory_t) :: aero_rep_factory
     type(aero_rep_update_data_modal_binned_mass_GMD_t) :: update_data_GMD
     type(aero_rep_update_data_modal_binned_mass_GSD_t) :: update_data_GSD
-    ! Computation time variable
     real(kind=dp) :: comp_start, comp_end
     integer :: local_comm
 
@@ -166,60 +106,28 @@ contains
     else
       local_comm = MPI_COMM_WORLD
     endif
-
-    !print*,"camp_monarch_interface constructor start"
-
     MONARCH_PROCESS = camp_mpi_rank()
-
-    ! Create a new interface object
     allocate(this)
-
     if (.not.present(n_cells).or.n_cells.eq.1) then
       this%solve_multiple_cells = .false.
     else
       this%solve_multiple_cells = .true.
       this%n_cells=n_cells
     end if
-
-    !print*,"camp_monarch_interface_t start"
-    this%interface_input_file=interface_config_file
+    this%output_file_title=output_file_title
     this%ADD_EMISIONS=ADD_EMISIONS
-
-    ! Check for an available solver
     camp_solver_data => camp_solver_data_t()
-
     call assert_msg(332298164, camp_solver_data%is_solver_available(), &
             "No solver available")
     deallocate(camp_solver_data)
-
     allocate(this%specs_emi_id(15))
     allocate(this%specs_emi(size(this%specs_emi_id)))
-
-    ! Initialize the time-invariant model data on each node
     if (MONARCH_PROCESS.eq.0) then
-
-      ! Start the computation timer on the primary node
       call cpu_time(comp_start)
-
-      call assert_msg(304676624, present(camp_config_file), &
-              "Missing CAMP-camp configuration file list")
-      call assert_msg(194027509, present(interface_config_file), &
-              "Missing MartMC-camp <-> MONARCH interface configuration file")
-      call assert_msg(937567597, present(starting_id), &
-              "Missing starting tracer index for chemical species")
-      call assert_msg(593895016, present(ending_id), &
-              "Missing ending tracer index for chemical species")
-
-      ! Load the interface data
-      settings_interface_file="settings/"//interface_config_file
+      settings_interface_file="settings/"//output_file_title
       call this%load(settings_interface_file)
-
       this%camp_core => camp_core_t(camp_config_file, this%n_cells)
       call this%camp_core%initialize()
-
-      !print*,"camp_monarch_interface_t"
-
-      ! Set the aerosol representation id
       if (this%camp_core%get_aero_rep("MONARCH mass-based", aero_rep)) then
         select type (aero_rep)
           type is (aero_rep_modal_binned_mass_t)
@@ -227,14 +135,11 @@ contains
                                                              update_data_GMD)
             call this%camp_core%initialize_update_object( aero_rep, &
                                                              update_data_GSD)
-
-            if(.not. this%interface_input_file.eq."interface_cb05_yarwood2005.json")  then
+            if(.not. this%output_file_title.eq."cb05_yarwood2005")  then
               call assert(889473105, &
                         aero_rep%get_section_id("organic_matter", i_sect_om))
               call assert(648042550, &
                           aero_rep%get_section_id("black_carbon", i_sect_bc))
-              !call assert(760360895, &
-              !            aero_rep%get_section_id("sulfate", i_sect_sulf))
               i_sect_sulf=-1
               call assert(307728742, &
                           aero_rep%get_section_id("other_PM", i_sect_opm))
@@ -284,7 +189,7 @@ contains
       end do
 
       if(this%ADD_EMISIONS.eq."monarch_binned" &
-              .or. this%interface_input_file.eq."interface_monarch_cb05.json") then
+              .or. this%output_file_title.eq."monarch_cb05") then
         pack_size = pack_size + camp_mpi_pack_size_integer(this%n_photo_rxn)
         do i = 1, this%n_photo_rxn
           pack_size = pack_size + this%photo_rxns(i)%pack_size( local_comm )
@@ -314,7 +219,7 @@ contains
       end do
 
       if(this%ADD_EMISIONS.eq."monarch_binned" &
-        .or. this%interface_input_file.eq."interface_monarch_cb05.json") then
+        .or. this%output_file_title.eq."monarch_cb05") then
         call camp_mpi_pack_integer(buffer, pos, this%n_photo_rxn)
         do i = 1, this%n_photo_rxn
           call this%photo_rxns(i)%bin_pack( buffer, pos, local_comm )
@@ -367,7 +272,7 @@ contains
       end do
 
       if(this%ADD_EMISIONS.eq."monarch_binned" &
-          .or. this%interface_input_file.eq."interface_monarch_cb05.json") then
+          .or. this%output_file_title.eq."monarch_cb05") then
         call camp_mpi_unpack_integer(buffer, pos, this%n_photo_rxn)
         if( allocated( this%photo_rxns  ) ) deallocate( this%photo_rxns  )
         allocate(this%photo_rxns(this%n_photo_rxn))
@@ -418,32 +323,20 @@ contains
     ! organic matter
 
     do z =1, this%n_cells
-    if (i_sect_om.gt.0) then
-      if(this%interface_input_file.eq."mod37/interface_monarch_mod37.json") then
-      call update_data_GMD%set_GMD(i_sect_om, 2.12d-8)
-      call update_data_GSD%set_GSD(i_sect_om, 2.24d0)
-      call this%camp_core%update_data(update_data_GMD)
-      call this%camp_core%update_data(update_data_GSD)
-      end if
-    end if
-    !if(.not. this%interface_input_file.eq."mod37/interface_monarch_mod37.json") then
-    if(.not. this%interface_input_file.eq."interface_cb05_yarwood2005.json")  then
+    if(.not. this%output_file_title.eq."cb05_yarwood2005")  then
         if (i_sect_bc.gt.0) then
-      ! black carbon
         call update_data_GMD%set_GMD(i_sect_bc, 1.18d-8)
         call update_data_GSD%set_GSD(i_sect_bc, 2.00d0)
         call this%camp_core%update_data(update_data_GMD)
         call this%camp_core%update_data(update_data_GSD)
       end if
       if (i_sect_sulf.gt.0) then
-      ! sulfate
         call update_data_GMD%set_GMD(i_sect_sulf, 6.95d-8)
         call update_data_GSD%set_GSD(i_sect_sulf, 2.12d0)
         call this%camp_core%update_data(update_data_GMD)
         call this%camp_core%update_data(update_data_GSD)
       end if
       if (i_sect_opm.gt.0) then
-      ! other PM
         call update_data_GMD%set_GMD(i_sect_opm, 2.12d-8)
         call update_data_GSD%set_GSD(i_sect_opm, 2.24d0)
         call this%camp_core%update_data(update_data_GMD)
@@ -613,8 +506,7 @@ contains
             !print*, this%camp_state%state_var(:), camp_mpi_rank()
             !print*,"i_cell",z,"camp_state", this%camp_state%state_var(this%map_camp_id(:))
 
-            if(this%interface_input_file.eq."interface_simple.json" .or.&
-                this%interface_input_file.eq."interface_monarch_cb05.json") then
+            if(this%output_file_title.eq."monarch_cb05") then
               this%camp_state%state_var(this%gas_phase_water_id) = &
               water_conc(1,1,1,water_vapor_index)! * &
               !        air_density(i,j,k) * 1.0d9
@@ -681,8 +573,7 @@ contains
 
             !print*,"i_cell",z,"camp_state", this%camp_state%state_var(this%map_camp_id(:))
 
-            if(this%interface_input_file.eq."interface_simple.json" .or.&
-                    this%interface_input_file.eq."interface_monarch_cb05.json") then
+            if(this%output_file_title.eq."monarch_cb05") then
               this%camp_state%state_var(this%gas_phase_water_id+(z*state_size_per_cell)) = &
                       water_conc(i,j,k,water_vapor_index) !*air_density(i,j,k) * 1.0d9
             else
@@ -862,7 +753,7 @@ end if
     type(string_t), allocatable :: spec_names(:)
 
     if(this%ADD_EMISIONS.eq."monarch_binned" &
-      .or. this%interface_input_file.eq."interface_monarch_cb05.json") then
+      .or. this%output_file_title.eq."monarch_cb05") then
 
       key = "MONARCH mod37"
 
@@ -1183,39 +1074,20 @@ end if
 
   end subroutine load_init_conc
 
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-  !> Get initial concentrations for the mock MONARCH model (for testing only)
   subroutine get_init_conc(this, MONARCH_conc, water_conc, &
-      WATER_VAPOR_ID,i_W,I_E,I_S,I_N,&
-          output_file_title)
-
-    !> CAMP-camp <-> MONARCH interface
+      WATER_VAPOR_ID,i_W,I_E,I_S,I_N)
     class(camp_monarch_interface_t) :: this
-    !> MONARCH species concentrations to update
     real, intent(inout) :: MONARCH_conc(:,:,:,:)
-    !> Atmospheric water concentrations (kg_H2O/kg_air)
     real, intent(inout) :: water_conc(:,:,:,:)
-    !> Index in water_conc corresponding to water vapor
     integer, intent(in) :: WATER_VAPOR_ID
     integer, intent(in) :: i_W,I_E,I_S,I_N
-    character(len=:), allocatable, intent(in) :: output_file_title
     integer(kind=i_kind) :: i_spec, water_id,i,j,k,r,NUM_VERT_CELLS,state_size_per_cell, last_cell
     real :: conc_deviation_perc
-    !print*,"monarch_interface get_init_conc start"
 
     conc_deviation_perc=0.!0.2
     NUM_VERT_CELLS=size(MONARCH_conc,3)
-
-    ! Set initial concentrations in CAMP
     this%camp_state%state_var(this%init_conc_camp_id(:)) = this%init_conc(:)
-
-    !print*,"get_init_conc this%camp_state%state_var",this%camp_state%state_var(1), camp_mpi_rank()
-
-    call camp_mpi_barrier(MPI_COMM_WORLD)
-
     state_size_per_cell = this%camp_core%size_state_per_cell
-
     do i=i_W, I_E
       do j=I_S, I_N
         do k=1, NUM_VERT_CELLS
@@ -1247,72 +1119,18 @@ end if
                 +r*conc_deviation_perc*this%camp_state%state_var(this%map_camp_id(i_spec))
             end do
           end if
-
-          !MONARCH_conc(i,j,k,:) = MONARCH_conc(1,1,1,:)
-
-          if(this%interface_input_file.eq."interface_simple.json") then
-            water_conc(:,:,:,WATER_VAPOR_ID) = &
-                    this%camp_state%state_var(this%gas_phase_water_id +(r*state_size_per_cell)) !* &
-            !                1.0d-9 / 1.225d0
-          else
-            this%camp_state%state_var(this%gas_phase_water_id +(r*state_size_per_cell)) = &
-                    water_conc(i,j,k,WATER_VAPOR_ID) * &
-                            mwair / mwwat * 1.e6
-          end if
-
-          !print*,"MONARCH_conc", MONARCH_conc(i,j,k,this%map_monarch_id(:))
-
-          !do r=2,size(this%map_monarch_id)
-          !  print*,MONARCH_conc(i,j,k,this%map_monarch_id(r)),&
-          !          this%camp_state%state_var(this%map_camp_id(r)), camp_mpi_rank()
-          !end do
-
+          this%camp_state%state_var(this%gas_phase_water_id +(r*state_size_per_cell)) = &
+                  water_conc(i,j,k,WATER_VAPOR_ID) * &
+                          mwair / mwwat * 1.e6
         end do
       end do
     end do
-
-    !print*,"get_init_conc end"
-
   end subroutine get_init_conc
 
-  !> Get the MONARCH species names and indices (for testing only)
-  subroutine get_MONARCH_species(this, species_names, MONARCH_ids)
-
-    !> CAMP-camp <-> MONARCH interface
-    class(camp_monarch_interface_t) :: this
-    !> Set of MONARCH species names
-    type(string_t), allocatable, intent(out) :: species_names(:)
-    !> MONARCH tracer ids
-    integer(kind=i_kind), allocatable, intent(out) :: MONARCH_ids(:)
-
-    species_names = this%monarch_species_names
-    MONARCH_ids = this%map_monarch_id
-
-  end subroutine get_MONARCH_species
-
-  !> Print the CAMP-camp data
-  subroutine do_print(this)
-
-    !> CAMP-camp <-> MONARCH interface
-    class(camp_monarch_interface_t) :: this
-
-    call this%camp_core%print()
-
-  end subroutine do_print
-
-  !> Finalize the interface
   elemental subroutine finalize(this)
-
-    !> CAMP-camp <-> MONARCH interface
     type(camp_monarch_interface_t), intent(inout) :: this
-
     if (associated(this%camp_core)) &
             deallocate(this%camp_core)
-
-    !bug deallocating camp_state with MPI process > 1
-    !if (associated(this%camp_state)) &
-    !      deallocate(this%camp_state)
-
     if (allocated(this%monarch_species_names)) &
             deallocate(this%monarch_species_names)
     if (allocated(this%map_monarch_id)) &
@@ -1323,9 +1141,6 @@ end if
             deallocate(this%init_conc_camp_id)
     if (allocated(this%init_conc)) &
             deallocate(this%init_conc)
-
   end subroutine finalize
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 end module

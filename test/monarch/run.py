@@ -288,7 +288,7 @@ def run(conf):
     pathNvprof = "../../compile/power9/" + conf.caseMulticellsOnecell \
                  + str(conf.nCells) + "Cells "
     exec_str += "--set full -f -o " + pathNvprof  # last working version
-    print("CUDASaving nsight file in ", os.path.abspath(os.getcwd()) \
+    print("Saving nsight file in ", os.path.abspath(os.getcwd()) \
           + "/" + pathNvprof + ".ncu-rep")
   elif conf.profileCuda == "nsightSummary" and conf.caseGpuCpu == "GPU":
     exec_str += "/apps/NVIDIA-HPC-SDK/20.9/Linux_ppc64le/2020/profilers/Nsight_Compute/ncu "
@@ -454,11 +454,9 @@ def run_cases(conf):
               nCellsProcesses = [int(line.rstrip('\n')) for line in f]
           else:
             nCellsProcesses=[conf.nCellsProcesses]
-          start = time.time()
           datay = math_functions.calculate_NRMSE(
             data, conf.timeSteps,nCellsProcesses,
             conf.use_monarch,conf.absoluteTolerance)
-          print("Time calculate_NRMSE = %s" % (time.time() - start))
         elif "Speedup" in conf.plotYKey:
           y_key_words = conf.plotYKey.split()
           y_key = y_key_words[-1]
