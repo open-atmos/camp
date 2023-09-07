@@ -27,15 +27,5 @@ extern "C" {
 #define BCG_MAXIT 1000
 #define BCG_TOLMAX 1.0E-30
 
-void read_options_bcg(ModelDataGPU *mGPU);
-__device__
-void cudaDeviceswapCSC_CSR1ThreadBlock(int n_row, int n_col, int* Ap, int* Aj, double* Ax, int* BpGlobal, int* Bi, double* Bx);
-__device__
-void cudaDeviceswapCSC_CSR(int n_row, int n_col, int* Ap, int* Aj, double* Ax, int* BpGlobal, int* Bi, double* Bx);
-__global__
-void cudaGlobalswapCSC_CSR(int n_row, int n_col, int* Ap, int* Aj, double* Ax, int* Cp, int* Ci, double* Cx);
-void swapCSC_CSR_Indices(SolverData *sd);
-void solveBCG(SolverData *sd, double *dA, int *djA, int *diA, double *dx, double *dtempv);
-void solveBCGBlocks(SolverData *sd, double *dA, int *djA, int *diA, double *dx, double *dtempv);
 
 #endif

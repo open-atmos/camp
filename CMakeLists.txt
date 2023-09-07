@@ -433,7 +433,7 @@ if (CUDA_FOUND AND ENABLE_GPU)
           src/cuda/camp_gpu_solver.cu
           src/cuda/cvode_cuda.cu
           src/cuda/cvode_gpu.cu
-          src/cuda/cvode_ls_gpu.cu
+          src/cuda/cvode_init.cu
           src/cuda/libsolv.cu
           )
 
