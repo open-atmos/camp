@@ -2,7 +2,6 @@
 
 if [ ! -z ${BSC_MACHINE+x} ]; then
 if [ $BSC_MACHINE == "power" ]; then
-#MONARCH P9 compilation
 module load GCC/7.3.0-2.30
 module load OpenMPI/3.1.0-GCC-7.3.0-2.30
 module load bsc/commands
@@ -26,14 +25,13 @@ elif [ $BSC_MACHINE == "mn4" ]; then
   module load libpng/1.5.13
 else
   echo "Unknown architecture"
-  exit
+  module load gsl
+  module load jasper/1.900.1
+  module load netcdf/4.4.1.1
+  module load hdf5/1.8.19
+  module load libpng/1.5.13
 fi
 fi
-
-if [ "$1" == "from_camp_jobs" ]; then
-  echo "Running from_camp_jobs folder"
-fi
-
 
 ./compile.json-fortran-6.1.0.power9.sh
 ./compile.suiteSparse.power9.sh

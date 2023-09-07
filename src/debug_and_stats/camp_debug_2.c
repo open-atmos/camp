@@ -594,7 +594,7 @@ void no_monarch_export_state(SolverData *sd){
       MPI_Barrier(MPI_COMM_WORLD);
     }
   }
-  if(rank==0)printf("export_state end\n");
+  if(rank==0)printf("no_monarch_export_state end\n");
 }
 
 void init_export_stats(){
