@@ -52,11 +52,6 @@ void model_free(ModelData model_data);
 int f(realtype t, N_Vector y, N_Vector deriv, void *model_data);
 int Jac(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *model_data,
         N_Vector tmp1, N_Vector tmp2, N_Vector tmp3);
-#ifdef CAMP_USE_GPU
-int f_cuda(realtype t, N_Vector y, N_Vector deriv, void *model_data);
-int jac_cuda(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *model_data,
-        N_Vector tmp1, N_Vector tmp2, N_Vector tmp3);
-#endif
 int guess_helper(const realtype t_n, const realtype h_n, N_Vector y_n,
                  N_Vector y_n1, N_Vector hf, void *solver_data, N_Vector tmp1,
                  N_Vector corr);

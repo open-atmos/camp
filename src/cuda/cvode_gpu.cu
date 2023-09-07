@@ -675,7 +675,6 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
   cudaMemcpyAsync(mGPU->dewt, ewt, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice, stream);
   cudaMemcpyAsync(mGPU->cv_acor, acor, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice, stream);
   cudaMemcpyAsync(mGPU->dtempv, tempv, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice, stream);
-  //cudaMemcpyAsync(mGPU->dx, tempv, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice, stream); //less accuracy 1 and 2 time-step
   cudaMemcpyAsync(mGPU->dftemp, ftemp, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice, stream);
   cudaMemcpyAsync(mGPU->cv_last_yn, cv_last_yn, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice, stream);
   cudaMemcpyAsync(mGPU->cv_acor_init, cv_acor_init, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice, stream);

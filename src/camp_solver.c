@@ -1096,17 +1096,8 @@ int camp_solver_update_model_state(N_Vector solver_state, SolverData *sd,
   int n_state_var = model_data->n_per_cell_state_var;
   int n_dep_var = model_data->n_per_cell_dep_var;
   int n_cells = model_data->n_cells;
-
   double replacement_value = TINY;
   double threshhold = -SMALL;
-
-#ifdef DEBUG_CAMP_SOLVER_UPDATE_MODEL_STATE
-  if(replacement_value==0.0){
-    printf("ERROR camp_solver_update_model_state replacement_value"
-           " can't be zero to avoid divisions by zero\n")
-     exit(0);
-  }
-#endif
 
   int i_dep_var = 0;
   for (int i_cell = 0; i_cell < n_cells; i_cell++) {
@@ -1132,13 +1123,6 @@ int camp_solver_update_model_state(N_Vector solver_state, SolverData *sd,
       }
     }
   }
-
-#ifdef CAMP_USE_GPU
-  if(sd->use_cpu==0){
-      camp_solver_update_model_state_gpu(solver_state, sd);
-  }
-#endif
-
   return CAMP_SOLVER_SUCCESS;
 }
 
@@ -1445,12 +1429,6 @@ int Jac(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_data,
   N_VScale(1.0, y, md->J_state);
   N_VScale(1.0, deriv, md->J_deriv);
 
-#ifdef CAMP_USE_GPU
-  if(sd->use_cpu==0){
-      set_jac_data_gpu(sd, SM_DATA_S(J));
-  }
-#endif
-
 #ifdef CAMP_DEBUG
   // Evaluate the Jacobian if flagged to do so
   if (sd->eval_Jac == SUNTRUE) {
@@ -1461,24 +1439,6 @@ int Jac(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_data,
 #endif
   return (0);
 }
-
-#ifdef CAMP_USE_GPU
-int f_cuda(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
-  SolverData *sd = (SolverData *)solver_data;
-  ModelData *md = &(sd->model_data);
-  realtype time_step;
-  int flag=0;
-  if(sd->use_gpu_cvode==0){
-    flag = f(t, y, deriv, solver_data);
-    rxn_calc_deriv_gpu(sd, y, deriv, (double)time_step);
-  }else{
-    printf("ERROR f_cuda\n");
-    exit(0);
-  }
-  // Return 0 if success
-  return flag;
-}
-#endif
 
 /** \brief Check a Jacobian for accuracy
  *

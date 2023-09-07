@@ -198,9 +198,9 @@ typedef struct { //Allocated from CPU (used during CPU / need some cudamemcpy)
     double* dcv_y;
     double* dtempv1;
     double* dtempv2;
-    int *flag;     //update_state
+    int *flag;
     int *flagCells;
-    int state_size_cell;     //f_cuda
+    int state_size_cell;
     double* cv_acor;     //cudacvNewtonIteration
     double* dzn;
     double* dewt;

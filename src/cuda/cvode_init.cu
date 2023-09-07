@@ -388,3 +388,63 @@ void constructor_cvode_gpu(CVodeMem cv_mem, SolverData *sd){
     exit(0); }
 }
 
+void free_gpu_cu(SolverData *sd) {
+  ModelDataGPU *mGPU = sd->mGPU;
+  ModelDataCPU *mCPU = &(sd->mCPU);
+  free(sd->flagCells);
+  mGPU = sd->mGPU;
+  cudaFree(mGPU->map_state_deriv);
+  cudaFree(mGPU->J_solver);
+  cudaFree(mGPU->J_state);
+  cudaFree(mGPU->J_deriv);
+  cudaFree(mGPU->J_tmp);
+  cudaFree(mGPU->J_tmp2);
+  cudaFree(mGPU->indexvals);
+  cudaFree(mGPU->indexptrs);
+  cudaFree(mGPU->rxn_int);
+  cudaFree(mGPU->rxn_double);
+  cudaFree(mGPU->state);
+  cudaFree(mGPU->env);
+  cudaFree(mGPU->rxn_env_data);
+  cudaFree(mGPU->rxn_env_data_idx);
+  cudaFree(mGPU->production_rates);
+  cudaFree(mGPU->loss_rates);
+  cudaFree(mGPU->rxn_int_indices);
+  cudaFree(mGPU->rxn_float_indices);
+  cudaFree(mGPU->n_mapped_values);
+  cudaFree(mGPU->jac_map);
+  cudaFree(mGPU->yout);
+  cudaFree(mGPU->cv_Vabstol);
+  cudaFree(mGPU->cv_l);
+  cudaFree(mGPU->cv_tau);
+  cudaFree(mGPU->cv_tq);
+  cudaFree(mGPU->cv_last_yn);
+  cudaFree(mGPU->cv_acor_init);
+  cudaFree(mGPU->dA);
+  cudaFree(mGPU->djA);
+  cudaFree(mGPU->diA);
+  cudaFree(mGPU->dx);
+  cudaFree(mGPU->dtempv);
+  cudaFree(mGPU->ddiag);
+  cudaFree(mGPU->dr0);
+  cudaFree(mGPU->dr0h);
+  cudaFree(mGPU->dn0);
+  cudaFree(mGPU->dp0);
+  cudaFree(mGPU->dt);
+  cudaFree(mGPU->ds);
+  cudaFree(mGPU->dAx2);
+  cudaFree(mGPU->dy);
+  cudaFree(mGPU->dz);
+  cudaFree(mGPU->dftemp);
+  cudaFree(mGPU->dcv_y);
+  cudaFree(mGPU->dtempv1);
+  cudaFree(mGPU->dtempv2);
+  cudaFree(mGPU->flag);
+  cudaFree(mGPU->flagCells);
+  cudaFree(mGPU->cv_acor);
+  cudaFree(mGPU->dzn);
+  cudaFree(mGPU->dewt);
+  cudaFree(mGPU->dsavedJ);
+  cudaFree(mGPU->mdv);
+  cudaFree(mGPU->mdvo);
+}
