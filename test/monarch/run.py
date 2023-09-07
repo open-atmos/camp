@@ -349,7 +349,7 @@ def run(conf):
       with open(data_path) as f:
         data = [float(line.rstrip('\n')) for line in f]
     except FileNotFoundError as e:
-      raise FileNotFoundError("Check enable #ifdef EXPORT_STATE in the CAMP code") from e
+      raise FileNotFoundError("Check enable #ifndef EXPORT_STATE in the CAMP code") from e
   else:
     if conf.case is conf.caseBase:
       data_path = "out/stats0.csv"

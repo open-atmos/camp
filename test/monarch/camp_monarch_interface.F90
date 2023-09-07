@@ -124,7 +124,7 @@ contains
     allocate(this%specs_emi(size(this%specs_emi_id)))
     if (MONARCH_PROCESS.eq.0) then
       call cpu_time(comp_start)
-      settings_interface_file="settings/"//output_file_title
+      settings_interface_file="settings/"//output_file_title//"/interface.json"
       call this%load(settings_interface_file)
       this%camp_core => camp_core_t(camp_config_file, this%n_cells)
       call this%camp_core%initialize()

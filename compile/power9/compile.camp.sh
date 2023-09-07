@@ -30,16 +30,6 @@ elif [ $BSC_MACHINE == "mn4" ]; then
   module load netcdf/4.4.1.1
   module load hdf5/1.8.19
   module load libpng/1.5.13
-elif [ $BSC_MACHINE == "nord3" ]; then
-    export JSON_FORTRAN_HOME=$(pwd)/$relative_path/json-fortran-6.1.0/install/jsonfortran-intel-6.1.0
-    mpifort=$(which mpiifort)
-    module load cmake
-    module load gsl
-    module load jasper/1.900.1
-    module load netcdf/4.4.1.1
-    module load hdf5/1.8.19
-    module load libpng/1.5.13
-    export GSL_HOME="/apps/GSL/2.4/INTEL"
 elif [ LOCAL_MACHINE==CGUZMAN ]; then
   mpifort=$(which mpifort)
   if ! command -v mpicc &> /dev/null; then
@@ -50,15 +40,7 @@ elif [ LOCAL_MACHINE==CGUZMAN ]; then
   fi
 else
   echo "Unknown architecture"
-      export JSON_FORTRAN_HOME=$(pwd)/$relative_path/json-fortran-6.1.0/install/jsonfortran-intel-6.1.0
-      mpifort=$(which mpiifort)
-      module load cmake
-      module load gsl
-      module load jasper/1.900.1
-      module load netcdf/4.4.1.1
-      module load hdf5/1.8.19
-      module load libpng/1.5.13
-      export GSL_HOME="/apps/GSL/2.4/INTEL"
+  exit
 fi
 export SUNDIALS_HOME=$(pwd)/$relative_path/cvode-3.4-alpha/install
 export SUITE_SPARSE_HOME=$(pwd)/$relative_path/SuiteSparse
