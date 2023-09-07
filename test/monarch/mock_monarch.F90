@@ -183,14 +183,8 @@ program mock_monarch_t
   air_density(:,:,:) = 1.225
   water_conc(:,:,:,WATER_VAPOR_ID) = 0.
 
-  !print*,"mock_monarch water_conc end"
-
-  if(.not.output_file_title.eq."cb05_yarwood2005")  then
-    call camp_interface%get_init_conc(species_conc, water_conc, WATER_VAPOR_ID, &
-            i_W,I_E,I_S,I_N)
-  end if
-
-  !print*,"mock_monarch get_init_conc end"
+  call camp_interface%get_init_conc(species_conc, water_conc, WATER_VAPOR_ID, &
+          i_W,I_E,I_S,I_N)
 
   if(output_file_title.eq."monarch_cb05") then
     call import_camp_input_json(camp_interface)
@@ -301,11 +295,9 @@ contains
   end subroutine
 
   subroutine import_camp_input_json(camp_interface)
-
     type(camp_monarch_interface_t), intent(inout) :: camp_interface
     integer :: z,i,j,k,r,o,i_cell,i_spec,i_photo_rxn
     integer :: state_size_per_cell
-
     type(json_file) :: jfile
     type(json_core) :: json
     character(len=:), allocatable :: export_path, spec_name_json
@@ -742,9 +734,9 @@ contains
     photo_id_camp(18) = 19
     photo_id_camp(19) = 22
     photo_id_camp(20) = 23
-    photo_id_camp(21) = 25 !0.0
-    photo_id_camp(22) = 25 !0.0
-    photo_id_camp(23) = 25 !0.0s
+    photo_id_camp(21) = 25
+    photo_id_camp(22) = 25
+    photo_id_camp(23) = 25
 
   end subroutine set_ebi_photo_ids_with_camp
 

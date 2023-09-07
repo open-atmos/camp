@@ -66,7 +66,7 @@ module camp_monarch_interface_2
     procedure :: constructor
   end interface camp_monarch_interface_t
 
-  integer(kind=i_kind) :: MONARCH_PROCESS ! TODO replace with MONARCH param
+  integer(kind=i_kind) :: MONARCH_PROCESS
   real(kind=dp), public, save :: comp_time = 0.0d0
   real(kind=dp), parameter :: mwair = 28.9628 !mean molecular weight for dry air [ g/mol ]
   real(kind=dp), parameter :: mwwat = 18.0153 ! mean molecular weight for water vapor [ g/mol ]
@@ -155,21 +155,10 @@ contains
         i_sect_sulf = -1
         i_sect_opm = -1
       end if
-
-      ! Set the MONARCH tracer array bounds
       this%tracer_starting_id = starting_id
       this%tracer_ending_id = ending_id
-
-      ! Generate the CAMP-camp <-> MONARCH species map
       call this%create_map()
-
-      !print*,"camp_monarch_interface_t"
-
-      ! Load the initial concentrations
       call this%load_init_conc()
-
-      !print*,"camp_monarch_interface_t"
-
       pack_size = this%camp_core%pack_size() + &
               update_data_GMD%pack_size() + &
               update_data_GSD%pack_size() + &
@@ -182,12 +171,10 @@ contains
               camp_mpi_pack_size_integer(i_sect_bc) + &
               camp_mpi_pack_size_integer(i_sect_sulf) + &
               camp_mpi_pack_size_integer(i_sect_opm)
-
       do z=1, size(this%monarch_species_names)
         call assert(307722742,len_trim(this%monarch_species_names(z)%string).lt.max_spec_name_size)
         pack_size = pack_size +  camp_mpi_pack_size_string(trim(this%monarch_species_names(z)%string))
       end do
-
       if(this%ADD_EMISIONS.eq."monarch_binned" &
               .or. this%output_file_title.eq."monarch_cb05") then
         pack_size = pack_size + camp_mpi_pack_size_integer(this%n_photo_rxn)
@@ -198,7 +185,6 @@ contains
         pack_size = pack_size + camp_mpi_pack_size_integer_array(this%specs_emi_id)
         pack_size = pack_size + camp_mpi_pack_size_real_array(this%specs_emi)
       endif
-
       allocate(buffer(pack_size))
       pos = 0
       call this%camp_core%bin_pack(buffer, pos)
@@ -213,11 +199,9 @@ contains
       call camp_mpi_pack_integer(buffer, pos, i_sect_bc)
       call camp_mpi_pack_integer(buffer, pos, i_sect_sulf)
       call camp_mpi_pack_integer(buffer, pos, i_sect_opm)
-
       do z=1, size(this%monarch_species_names)
         call camp_mpi_pack_string(buffer, pos, trim(this%monarch_species_names(z)%string))
       end do
-
       if(this%ADD_EMISIONS.eq."monarch_binned" &
         .or. this%output_file_title.eq."monarch_cb05") then
         call camp_mpi_pack_integer(buffer, pos, this%n_photo_rxn)
@@ -228,24 +212,13 @@ contains
         call camp_mpi_pack_integer_array(buffer, pos, this%specs_emi_id)
         call camp_mpi_pack_real_array(buffer, pos, this%specs_emi)
       endif
-
-    !print*,"camp_monarch_interface_t"
     endif
-
-    ! broadcast the buffer size
     call camp_mpi_bcast_integer(pack_size, local_comm)
-
     if (MONARCH_PROCESS.ne.0) then
-      ! allocate the buffer to receive data
       allocate(buffer(pack_size))
     end if
-
-    ! boradcast the buffer
     call camp_mpi_bcast_packed(buffer, local_comm)
-
     if (MONARCH_PROCESS.ne.0) then
-      ! unpack the data
-      !this%camp_core => camp_core_t()
       this%camp_core => camp_core_t(n_cells=this%n_cells)
       pos = 0
       call this%camp_core%bin_unpack(buffer, pos)
@@ -260,7 +233,6 @@ contains
       call camp_mpi_unpack_integer(buffer, pos, i_sect_bc)
       call camp_mpi_unpack_integer(buffer, pos, i_sect_sulf)
       call camp_mpi_unpack_integer(buffer, pos, i_sect_opm)
-
       allocate(this%monarch_species_names(size(this%map_monarch_id)))
       spec_name=""
       do z=1,max_spec_name_size
@@ -270,7 +242,6 @@ contains
         call camp_mpi_unpack_string(buffer, pos, spec_name)
         this%monarch_species_names(z)%string= trim(spec_name)
       end do
-
       if(this%ADD_EMISIONS.eq."monarch_binned" &
           .or. this%output_file_title.eq."monarch_cb05") then
         call camp_mpi_unpack_integer(buffer, pos, this%n_photo_rxn)
@@ -285,46 +256,24 @@ contains
         call camp_mpi_unpack_real_array(buffer, pos, this%specs_emi)
       end if
     end if
-
     deallocate(buffer)
-    !print*,"camp_monarch_interface constructor"
-
-    ! Initialize the solver on all nodes
     call this%camp_core%solver_initialize(n_cells_tstep)
-    !call camp_mpi_barrier(MPI_COMM_WORLD)
-
-    !print*,"camp_monarch_interface constructor solver_initialize end"
-
-    ! Create a state variable on each node
     this%camp_state => this%camp_core%new_state()
-
-    !print*,"camp_monarch_interface constructor new_state end"
-
-    !call camp_mpi_barrier(MPI_COMM_WORLD)
     if(this%ADD_EMISIONS.eq."monarch_binned") then
       allocate(this%offset_photo_rates_cells(this%n_cells))
-      this%offset_photo_rates_cells(:) = 0. !0 0.1
+      this%offset_photo_rates_cells(:) = 0.
       do z =1, this%n_cells
         do i = 1, this%n_photo_rxn
           base_rate = this%base_rates(i)
-          !print*,"offset",(this%offset_photo_rates_cells(z)/z)!"z",z,"n_cells",n_cells,this%n_cells
-          !print*,"this%base_rates(i), base rate",this%base_rates(i),base_rate, camp_mpi_rank()
           call this%photo_rxns(i)%set_rate(base_rate) !not used if exported cb05
-          !call this%photo_rxns(i)%set_rate(real(0.0, kind=dp))
           call this%camp_core%update_data(this%photo_rxns(i),z) !todo needed? mock_monarch also has that
-          !call this%camp_core%update_data(this%photo_rxns(i))
-          !print*,"2id photo_rate", base_rate
         end do
       end do
       deallocate(this%offset_photo_rates_cells)
     end if
-    !print*,"camp_monarch_interface constructor offset_photo_rates_cells end"
     call camp_mpi_barrier(MPI_COMM_WORLD)
-    ! organic matter
-
     do z =1, this%n_cells
-    if(.not. this%output_file_title.eq."cb05_yarwood2005")  then
-        if (i_sect_bc.gt.0) then
+      if (i_sect_bc.gt.0) then
         call update_data_GMD%set_GMD(i_sect_bc, 1.18d-8)
         call update_data_GSD%set_GSD(i_sect_bc, 2.00d0)
         call this%camp_core%update_data(update_data_GMD)
@@ -342,9 +291,7 @@ contains
         call this%camp_core%update_data(update_data_GMD)
         call this%camp_core%update_data(update_data_GSD)
       end if
-    end if
     end do
-
     if (MONARCH_PROCESS.eq.0) then
       call cpu_time(comp_end)
       write(*,*) "Initialization time: ", comp_end-comp_start, " s"
@@ -355,7 +302,6 @@ contains
                   I_N, temperature, MONARCH_conc, water_conc, &
                   water_vapor_index, air_density, pressure, conv, i_hour,&
           NUM_TIME_STEP,solver_stats, DIFF_CELLS)
-
     class(camp_monarch_interface_t) :: this
     real, intent(in) :: curr_time
     real(kind=dp), intent(in) :: time_step
@@ -395,7 +341,6 @@ contains
     real :: timeLS = 0.0
     real :: timeCvode = 0.0
 
-    !print*,"camp_monarch_interface integrate start"
     if(this%n_cells.eq.1) then
       state_size_per_cell = 0
     else
@@ -406,7 +351,6 @@ contains
       call assert_msg(731700229, &
               this%camp_core%get_chem_spec_data(chem_spec_data), &
               "No chemical species data in camp_core.")
-      !i_hour_max = int(NUM_TIME_STEP*TIME_STEP / 60)+1
       n_cells=(I_E - I_W+1)*(I_N - I_S+1)*NUM_VERT_CELLS
       i_hour_max=30
       allocate(rate_emi(i_hour_max,n_cells))
@@ -417,17 +361,15 @@ contains
       rate_emi(:,:)=0.0
       if(DIFF_CELLS_EMI.eq."ON") then
         press_init = 100000.!Should be equal to mock_monarch
-        press_end = 10000.!10000.  85000.
+        press_end = 10000.
         press_range = press_end-press_init
-        !print*,press_end,"-",press_init,"=",press_range,"rank:",camp_mpi_rank()
         do i=I_W, I_E
           do j=I_S, I_N
             do k=1, NUM_VERT_CELLS
-              o = (j-1)*(I_E) + (i-1) !Index to 3D
-              z = (k-1)*(I_E*I_N) + o !Index for 2D
+              o = (j-1)*(I_E) + (i-1)
+              z = (k-1)*(I_E*I_N) + o
               press_norm=&
                       (press_end-pressure(i,j,k))/(press_range)
-              !print*,press_init,press_end,press_range,pressure(i,j,k),press_norm,camp_mpi_rank()
               if(press_norm.ge.0) then
                 do t=1,12 !12 first hours
                   rate_emi(t,z+1)=press_norm
@@ -437,7 +379,6 @@ contains
                   rate_emi(t,z+1)=0.0
                 end do
               end if
-
               do t=13,30
                 rate_emi(t,z+1)=0.0
               end do
@@ -445,134 +386,73 @@ contains
           end do
         end do
       else
-        !NUM_TIME_STEP
         do i=1,12
           rate_emi(i,:)=1.0
         end do
         do i=13,30
           rate_emi(i,:)=0.0
         end do
-
       end if
-
       call camp_mpi_barrier(MPI_COMM_WORLD)
-
     end if
-
     i_hour = int(curr_time/60)+1
     if(mod(int(curr_time),60).eq.0) then
       if (camp_mpi_rank().eq.0) then
         write(*,*) "i_hour loop", i_hour
       end if
     end if
-
     if(.not.this%solve_multiple_cells) then
       do i=I_W, I_E
         do j=I_S, I_N
           do k=1, NUM_VERT_CELLS
-            o = (j-1)*(I_E) + (i-1) !Index to 3D
-            z = (k-1)*(I_E*I_N) + o !Index for 2D
-
+            o = (j-1)*(I_E) + (i-1)
+            z = (k-1)*(I_E*I_N) + o
             call this%camp_state%env_states(1)%set_temperature_K( &
               real( temperature(i,j,k), kind=dp ) )
             call this%camp_state%env_states(1)%set_pressure_Pa(   &
               real( pressure(i,j,k), kind=dp ) )
-
-            !print*, "pre-monarch_conc this%camp_core%solve start",this%camp_state%state_var(1), camp_mpi_rank()
-
-            !Reset species present in CAMP but not in MONARCH,
-            !like DUMMY from CB05-gas mechanism
             do z=1, size(this%camp_state%state_var)
               this%camp_state%state_var(z) = 0.
             end do
-
-            !print*,"this%camp_state%state_var",this%camp_state%state_var
             this%camp_state%state_var(this%map_camp_id(:)) = &
                             MONARCH_conc(i,j,k,this%map_monarch_id(:))
-            !print*,"this%camp_state%state_var",this%camp_state%state_var
-
-            !camp_spec_names=this%camp_core%unique_names()
-            !print*,"this%map_monarch_id(:)",this%map_monarch_id(:)
-            !print*,"this%map_camp_id(:)",this%map_camp_id(:)
-            !do z=1, size(this%camp_state%state_var)
-              !print*,z,this%monarch_species_names(z)%string
-            !  print*,z,camp_spec_names(z)%string,this%camp_state%state_var(z)
-              !print*,z,this%monarch_species_names(this%map_camp_id(this%map_monarch_id(z)))%string,this%camp_state%state_var(z)
-            !end do
-
-            !if (camp_mpi_rank().eq.0) then
-            !   print*,"integrate camp_state"
-            !end if
-            !print*, this%camp_state%state_var(:), camp_mpi_rank()
-            !print*,"i_cell",z,"camp_state", this%camp_state%state_var(this%map_camp_id(:))
-
             if(this%output_file_title.eq."monarch_cb05") then
               this%camp_state%state_var(this%gas_phase_water_id) = &
-              water_conc(1,1,1,water_vapor_index)! * &
-              !        air_density(i,j,k) * 1.0d9
+              water_conc(1,1,1,water_vapor_index)!
             else
               this%camp_state%state_var(this%gas_phase_water_id) = &
                       water_conc(1,1,1,water_vapor_index) * &
                               mwair / mwwat * 1.e6
             end if
-            !print*, "water_conc: id, value", this%gas_phase_water_id, water_conc(i,j,k,water_vapor_index)
             if(this%ADD_EMISIONS.eq."monarch_binned") then
-              !Add emissions
-              !print*,"integrate camp_state ADD_EMISIONS"
               do r=1,size(this%specs_emi_id)
                 this%camp_state%state_var(this%specs_emi_id(r))=&
                         this%camp_state%state_var(this%specs_emi_id(r))&
                                 +this%specs_emi(r)*rate_emi(i_hour,z+1)*conv(i,j,k)
               end do
             end if
-            !do r=2,size(this%map_monarch_id)
-            !  print*,MONARCH_conc(i,j,k,this%map_monarch_id(r)),&
-            !          this%camp_state%state_var(this%map_camp_id(r)), camp_mpi_rank()
-            !end do
-            !if (camp_mpi_rank().eq.0 .and. z==0) then
-              !print*, "this%camp_core%solve start",this%camp_state%state_var(1), camp_mpi_rank()
-            !end if
-#ifdef EXPORT_JSON
-            call this%camp_core%export_camp_input_json(this%camp_state, &
-                  real(time_step, kind=dp), solver_stats = solver_stats)
-#endif
             call cpu_time(comp_start)
             call this%camp_core%solve(this%camp_state, real(time_step*60., kind=dp),solver_stats=solver_stats)
             call cpu_time(comp_end)
             comp_time = comp_time + (comp_end-comp_start)
-
-            !call camp_mpi_barrier(MPI_COMM_WORLD)
-            ! Update the MONARCH tracer array with new species concentrations
             MONARCH_conc(i,j,k,this%map_monarch_id(:)) = &
                     this%camp_state%state_var(this%map_camp_id(:))
-
           end do
         end do
       end do
     else
-      !Reset species present in CAMP but not in MONARCH,
-      !like DUMMY from CB05-gas mechanism
       do z=1, size(this%camp_state%state_var)
         this%camp_state%state_var(z) = 0.
       end do
       do i=I_W, I_E
         do j=I_S, I_N
           do k=1, NUM_VERT_CELLS
-            !Remember fortran read matrix in inverse order for optimization!
-            o = (j-1)*(I_E) + (i-1) !Index to 3D
-            z = (k-1)*(I_E*I_N) + o !Index for 2D
-
-            ! Update the environmental state
+            o = (j-1)*(I_E) + (i-1)
+            z = (k-1)*(I_E*I_N) + o
             call this%camp_state%env_states(z+1)%set_temperature_K(real(temperature(i,j,k),kind=dp))
             call this%camp_state%env_states(z+1)%set_pressure_Pa(real(pressure(i,j,k),kind=dp))
-
             this%camp_state%state_var(this%map_camp_id(:) + &
             (z*state_size_per_cell)) = MONARCH_conc(i,j,k,this%map_monarch_id(:))
-            !this%camp_state%state_var(this%map_camp_id(:) + &
-            !(z*state_size_per_cell)) = MONARCH_conc(1,1,1,this%map_monarch_id(:))
-
-            !print*,"i_cell",z,"camp_state", this%camp_state%state_var(this%map_camp_id(:))
-
             if(this%output_file_title.eq."monarch_cb05") then
               this%camp_state%state_var(this%gas_phase_water_id+(z*state_size_per_cell)) = &
                       water_conc(i,j,k,water_vapor_index) !*air_density(i,j,k) * 1.0d9
@@ -580,9 +460,7 @@ contains
               this%camp_state%state_var(this%gas_phase_water_id+(z*state_size_per_cell)) = &
                       water_conc(1,1,1,water_vapor_index) * mwair / mwwat * 1.e6
             end if
-
             if(this%ADD_EMISIONS.eq."monarch_binned") then
-              !Add emissions
               do r=1,size(this%specs_emi_id)
                 this%camp_state%state_var(this%specs_emi_id(r)+z*state_size_per_cell)=&
                         this%camp_state%state_var(this%specs_emi_id(r)+z*state_size_per_cell)&
@@ -592,78 +470,45 @@ contains
           end do
         end do
       end do
-
-      !call this%camp_core%export_camp_input_json(this%camp_state, &
-       !       real(time_step, kind=dp), solver_stats = solver_stats)
-
-      ! Integrate the CAMP mechanism
       call cpu_time(comp_start)
       call this%camp_core%solve(this%camp_state, &
               real(time_step*60., kind=dp), solver_stats = solver_stats)
       call cpu_time(comp_end)
       comp_time = comp_time + (comp_end-comp_start)
-
-      !if (camp_mpi_rank().eq.0) then
-        !print*, "this%camp_core%solve end",this%camp_state%state_var(1),camp_mpi_rank()
-      !end if
-
-      !print*,this%camp_state%state_var(1)
       do i=I_W, I_E
         do j=I_S, I_N
           do k=1, NUM_VERT_CELLS
-            o = (j-1)*(I_E) + (i-1) !Index to 3D
-            z = (k-1)*(I_E*I_N) + o !Index for 2D
-
+            o = (j-1)*(I_E) + (i-1)
+            z = (k-1)*(I_E*I_N) + o
             MONARCH_conc(i,j,k,this%map_monarch_id(:)) = &
                     this%camp_state%state_var(this%map_camp_id(:)+(z*state_size_per_cell))
-            !print*, "camp_state", this%camp_state%state_var(this%map_camp_id(:)+(z*state_size_per_cell))
           end do
         end do
       end do
     end if
 
-if(this%ADD_EMISIONS.eq."monarch_binned") then
-  deallocate(rate_emi)
-end if
-  !call camp_mpi_barrier(MPI_COMM_WORLD)
-if (camp_mpi_rank().eq.0) then
-  !call solver_stats%print( )
-end if
-    !print*,"camp_monarch_interface integrate end"
+  if(this%ADD_EMISIONS.eq."monarch_binned") then
+    deallocate(rate_emi)
+  end if
   end subroutine integrate
 
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-  !> Load the MONARCH <-> CAMP-camp interface input data
   subroutine load(this, config_file)
-
-    !> CAMP-camp <-> MONARCH interface
     class(camp_monarch_interface_t) :: this
-    !> Interface configuration file path
     character(len=:), allocatable :: config_file
-
     type(json_core), pointer :: json
     type(json_file) :: j_file
     type(json_value), pointer :: j_obj, j_next, j_child
     character(kind=json_ck, len=:), allocatable :: key, unicode_str_val
-
     character(len=:), allocatable :: str_val
     integer(kind=i_kind) :: var_type
     logical :: found
 
-    ! Initialize the property sets
     this%species_map_data => property_t()
     this%init_conc_data => property_t()
     this%property_set => property_t()
-
-    ! Get a new json core
     allocate(json)
-
-    ! Initialize the json objects
     j_obj => null()
     j_next => null()
-
-    ! Initialize the json file
     call j_file%initialize()
     call j_file%get_core(json)
     call assert_msg(207035903, allocated(config_file), &
@@ -674,24 +519,12 @@ end if
     call assert_msg(134309013, found, "Cannot find file: "// &
               config_file)
     call j_file%load_file(filename = config_file)
-
-    ! Find the interface data
     call j_file%get('monarch-data(1)', j_obj)
-
-    ! Load the data to the property_set
     do while (associated(j_obj))
-
-      ! Find the object type
       call json%get(j_obj, 'type', unicode_str_val, found)
       call assert_msg(236838162, found, "Missing type in json input file "// &
               config_file)
       str_val = unicode_str_val
-
-      !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-      !!! Load property sets according to type !!!
-      !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-      ! Species Map data
       if (str_val.eq."SPECIES_MAP") then
         call json%get_child(j_obj, j_child)
         do while (associated(j_child))
@@ -702,8 +535,6 @@ end if
           j_next => j_child
           call json%get_next(j_next, j_child)
         end do
-
-      ! Initial concentration data
       else if (str_val.eq."INIT_CONC") then
         call json%get_child(j_obj, j_child)
         do while (associated(j_child))
@@ -714,37 +545,24 @@ end if
           j_next => j_child
           call json%get_next(j_next, j_child)
         end do
-
-      ! Data of unknown type
       else
         call this%property_set%load(json, j_obj, .false., str_val)
       end if
-
       j_next => j_obj
       call json%get_next(j_next, j_obj)
     end do
-
-    ! Clean up the json objects
     call j_file%destroy()
     call json%destroy()
     deallocate(json)
-
   end subroutine load
 
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-  !> Create the CAMP-camp <-> MONARCH species map
   subroutine create_map(this)
-
-    !> CAMP-camp <-> MONARCH interface
     class(camp_monarch_interface_t) :: this
-
     type(chem_spec_data_t), pointer :: chem_spec_data
     class(aero_rep_data_t), pointer :: aero_rep_ptr
     type(property_t), pointer :: gas_species_list, aero_species_list, species_data
     character(len=:), allocatable :: key_name, spec_name, rep_name
     integer(kind=i_kind) :: i_spec, num_spec
-
     integer :: i_rxn, i_photo_rxn, i_base_rate, i_mech, i
     type(mechanism_data_t), pointer :: mechanism
     class(rxn_data_t), pointer :: rxn
@@ -754,17 +572,11 @@ end if
 
     if(this%ADD_EMISIONS.eq."monarch_binned" &
       .or. this%output_file_title.eq."monarch_cb05") then
-
       key = "MONARCH mod37"
-
-      !mechanism => this%camp_core%mechanism( 1 ) %val
       call assert(418262750, this%camp_core%get_mechanism(key, mechanism))
-
-      !key="base rate"
       rxn_key = "type"
       rxn_val = "PHOTOLYSIS"
       rate_key = "base rate"
-
       this%n_photo_rxn = 0
       do i_mech = 1, size(this%camp_core%mechanism)
         do i_rxn = 1, this%camp_core%mechanism(i_mech)%val%size()
@@ -773,28 +585,20 @@ end if
           if (trim(str_val).eq.rxn_val) this%n_photo_rxn = this%n_photo_rxn + 1
         end do
       end do
-
       allocate(this%photo_rxns(this%n_photo_rxn))
       allocate(this%base_rates(this%n_photo_rxn))
-
       i_photo_rxn = 0
       do i_mech = 1, size(this%camp_core%mechanism)
         do i_rxn = 1, this%camp_core%mechanism(i_mech)%val%size()
           rxn => this%camp_core%mechanism(i_mech)%val%get_rxn(i_rxn)
           call assert(799145523, rxn%property_set%get_string(rxn_key, str_val))
-
-          ! Is this a photolysis reaction?
           if (trim(str_val).ne.rxn_val) cycle
           i_photo_rxn = i_photo_rxn + 1
-
-          ! Get the base photolysis rate
           call assert_msg(501329648, &
                   rxn%property_set%get_real(rate_key, rate_val), &
                   "Missing 'base rate' for photolysis reaction "// &
                           trim(to_string(i_photo_rxn)))
           this%base_rates(i_photo_rxn) = rate_val
-
-          ! Create an update rate object for this photolysis reaction
           select type (rxn_photo => rxn)
           class is (rxn_photolysis_t)
             call this%camp_core%initialize_update_object(rxn_photo, &
@@ -804,34 +608,23 @@ end if
           end select
         end do
       end do
-
     end if
-
-    ! Get the gas-phase species ids
     key_name = "gas-phase species"
     call assert_msg(939097252, &
             this%species_map_data%get_property_t(key_name, gas_species_list), &
             "Missing set of gas-phase species MONARCH ids")
     num_spec = gas_species_list%size()
-
-    ! Get the aerosol-phase species ids
     key_name = "aerosol-phase species"
     if (this%species_map_data%get_property_t(key_name, &
             aero_species_list)) then
       num_spec = num_spec + aero_species_list%size()
     end if
-
-    ! Set up the species map and MONARCH names array
     allocate(this%monarch_species_names(num_spec))
     allocate(this%map_monarch_id(num_spec))
     allocate(this%map_camp_id(num_spec))
-
-    ! Get the chemical species data
     call assert_msg(731700229, &
             this%camp_core%get_chem_spec_data(chem_spec_data), &
             "No chemical species data in camp_core.")
-
-    ! Set the gas-phase water id
     key_name = "gas-phase water"
     call assert_msg(413656652, &
             this%species_map_data%get_string(key_name, spec_name), &
@@ -839,19 +632,14 @@ end if
     this%gas_phase_water_id = chem_spec_data%gas_state_id(spec_name)
     call assert_msg(910692272, this%gas_phase_water_id.gt.0, &
             "Could not find gas-phase water species '"//spec_name//"'.")
-
-    ! Loop through the gas-phase species and set up the map
     call gas_species_list%iter_reset()
     i_spec = 1
     do while (gas_species_list%get_key(spec_name))
-
       this%monarch_species_names(i_spec)%string = spec_name
-
       call assert_msg(599522862, &
               gas_species_list%get_property_t(val=species_data), &
               "Missing species data for '"//spec_name//"' in CAMP-camp "// &
               "<-> MONARCH species map.")
-
       key_name = "monarch id"
       call assert_msg(643926329, &
               species_data%get_int(key_name, this%map_monarch_id(i_spec)), &
@@ -863,28 +651,21 @@ end if
               this%map_monarch_id(i_spec).le.this%tracer_ending_id, &
               "Monarch id for species '"//spec_name//"' out of specified "// &
               "tracer array bounds.")
-
       this%map_camp_id(i_spec) = chem_spec_data%gas_state_id(spec_name)
       call assert_msg(916977002, this%map_camp_id(i_spec).gt.0, &
                 "Could not find species '"//spec_name//"' in CAMP-camp.")
-
       call gas_species_list%iter_next()
       i_spec = i_spec + 1
     end do
 
-    ! Loop through the aerosol-phase species and add them to the map
     if (associated(aero_species_list)) then
-
       call aero_species_list%iter_reset()
       do while(aero_species_list%get_key(spec_name))
-
         this%monarch_species_names(i_spec)%string = spec_name
-
         call assert_msg(567689501, &
                 aero_species_list%get_property_t(val=species_data), &
                 "Missing species data for '"//spec_name//"' in " //&
                 "CAMP-camp <-> MONARCH species map.")
-
         key_name = "monarch id"
         call assert_msg(615451741, &
                 species_data%get_int(key_name, this%map_monarch_id(i_spec)), &
@@ -896,14 +677,11 @@ end if
                 this%map_monarch_id(i_spec).le.this%tracer_ending_id, &
                 "Monarch id for species '"//spec_name//"' out of "// &
                 "specified tracer array bounds.")
-
         key_name = "aerosol representation name"
         call assert_msg(963222513, &
                 species_data%get_string(key_name, rep_name), &
                 "Missing aerosol representation name for species '"// &
                 spec_name//"' in CAMP-camp <-> MONARCH species map.")
-
-        ! Find the species CAMP id
         this%map_camp_id(i_spec) = 0
         call assert_msg(377850668, &
                 this%camp_core%get_aero_rep(rep_name, aero_rep_ptr), &
@@ -912,7 +690,6 @@ end if
         call assert_msg(887136850, this%map_camp_id(i_spec) .gt. 0, &
                 "Could not find aerosol species '"//spec_name//"' in "// &
                 "aerosol representation '"//rep_name//"'.")
-
         call aero_species_list%iter_next()
         i_spec = i_spec + 1
       end do
@@ -920,14 +697,8 @@ end if
 
   end subroutine create_map
 
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-  !> Load initial concentrations
   subroutine load_init_conc(this)
-
-    !> CAMP-camp <-> MONARCH interface
     class(camp_monarch_interface_t) :: this
-
     type(chem_spec_data_t), pointer :: chem_spec_data
     class(aero_rep_data_t), pointer :: aero_rep_ptr
     type(property_t), pointer :: gas_species_list, aero_species_list, species_data
@@ -941,73 +712,50 @@ end if
     else
       factor_ppb_to_ppm=1.0
     end if
-
     num_spec = 0
-
-    ! Get the gas-phase species
     key_name = "gas-phase species"
     if (this%init_conc_data%get_property_t(key_name, gas_species_list)) then
       num_spec = num_spec + gas_species_list%size()
     end if
-
-    ! Get the aerosol-phase species
     key_name = "aerosol-phase species"
     if (this%init_conc_data%get_property_t(key_name, aero_species_list)) then
       num_spec = num_spec + aero_species_list%size()
     end if
-
-    ! Get the chemical species data
     call assert_msg(885063268, &
             this%camp_core%get_chem_spec_data(chem_spec_data), &
             "No chemical species data in camp_core.")
-
-    ! Allocate space for the initial concentrations and indices
     allocate(this%init_conc_camp_id(num_spec))
     allocate(this%init_conc(num_spec))
-
-    ! Add the gas-phase initial concentrations
     if (associated(gas_species_list)) then
-
-      ! Loop through the gas-phase species and load the initial concentrations
       call gas_species_list%iter_reset()
       i_spec = 1
       do while (gas_species_list%get_key(spec_name))
-
         call assert_msg(325582312, &
                 gas_species_list%get_property_t(val=species_data), &
                 "Missing species data for '"//spec_name//"' for "// &
                 "CAMP-camp initial concentrations.")
-
         key_name = "init conc"
         call assert_msg(445070498, &
                 species_data%get_real(key_name, this%init_conc(i_spec)), &
                 "Missing 'init conc' for species '"//spec_name//" for "// &
                 "CAMP-camp initial concentrations.")
-        ! Unit change json gases in ppb - camp works with ppm
         this%init_conc(i_spec) = this%init_conc(i_spec) * factor_ppb_to_ppm
-
         this%init_conc_camp_id(i_spec) = &
                 chem_spec_data%gas_state_id(spec_name)
         call assert_msg(940200584, this%init_conc_camp_id(i_spec).gt.0, &
                 "Could not find species '"//spec_name//"' in CAMP-camp.")
-
         call gas_species_list%iter_next()
         i_spec = i_spec + 1
       end do
-
     end if
 
-    ! Add the aerosol-phase species initial concentrations
     if (associated(aero_species_list)) then
-
       call aero_species_list%iter_reset()
       do while(aero_species_list%get_key(spec_name))
-
         call assert_msg(331096555, &
                 aero_species_list%get_property_t(val=species_data), &
                 "Missing species data for '"//spec_name//"' for " //&
                 "CAMP-camp initial concentrations.")
-
         key_name = "init conc"
         call assert_msg(782275469, &
                 species_data%get_real(key_name, this%init_conc(i_spec)), &
@@ -1019,8 +767,6 @@ end if
                 species_data%get_string(key_name, rep_name), &
                 "Missing aerosol representation name for species '"// &
                 spec_name//"' for CAMP-camp initial concentrations.")
-
-        ! Find the species CAMP id
         this%init_conc_camp_id(i_spec) = 0
         call assert_msg(258814777, &
                 this%camp_core%get_aero_rep(rep_name, aero_rep_ptr), &
@@ -1030,16 +776,12 @@ end if
         call assert_msg(437149649, this%init_conc_camp_id(i_spec) .gt. 0, &
                 "Could not find aerosol species '"//spec_name//"' in "// &
                 "aerosol representation '"//rep_name//"'.")
-
         call aero_species_list%iter_next()
         i_spec = i_spec + 1
       end do
     end if
 
     spec_names = this%camp_core%unique_names();
-
-    !Set specs_emi and specs_emi_id
-
     this%specs_emi_id(1)=chem_spec_data%gas_state_id("SO2")
     this%specs_emi_id(2)=chem_spec_data%gas_state_id("NO2")
     this%specs_emi_id(3)=chem_spec_data%gas_state_id("NO")
@@ -1083,8 +825,7 @@ end if
     integer, intent(in) :: i_W,I_E,I_S,I_N
     integer(kind=i_kind) :: i_spec, water_id,i,j,k,r,NUM_VERT_CELLS,state_size_per_cell, last_cell
     real :: conc_deviation_perc
-
-    conc_deviation_perc=0.!0.2
+    conc_deviation_perc=0.
     NUM_VERT_CELLS=size(MONARCH_conc,3)
     this%camp_state%state_var(this%init_conc_camp_id(:)) = this%init_conc(:)
     state_size_per_cell = this%camp_core%size_state_per_cell
@@ -1098,13 +839,10 @@ end if
             r=(k-1)*(I_E*I_N) + (j-1)*(I_E) + i-1
             last_cell=((I_E - I_W+1)*(I_N - I_S+1)*NUM_VERT_CELLS)-1
           end if
-
           forall (i_spec = 1:size(this%map_monarch_id))
             this%camp_state%state_var(this%init_conc_camp_id(i_spec)&
             +r*state_size_per_cell) = this%init_conc(i_spec)
           end forall
-
-          !Last cell = First cell
           if(r.ne.last_cell) then
             do i_spec=1, size(this%map_monarch_id)
               MONARCH_conc(i,j,k,this%map_monarch_id(i_spec)) = &
@@ -1113,7 +851,6 @@ end if
             end do
           else
             do i_spec=1, size(this%map_monarch_id)
-
               MONARCH_conc(i,j,k,this%map_monarch_id(i_spec)) = &
                 this%camp_state%state_var(this%map_camp_id(i_spec))&
                 +r*conc_deviation_perc*this%camp_state%state_var(this%map_camp_id(i_spec))
