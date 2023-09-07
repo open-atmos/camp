@@ -162,8 +162,8 @@ typedef struct { //Allocated from CPU (used during CPU / need some cudamemcpy)
     double *production_rates;
     double *loss_rates;
     int *rxn_int_indices;
-    int *rxn_float_indices;    double *grid_cell_state;
-
+    int *rxn_float_indices;
+    double *grid_cell_state;
     int n_rxn;
     int n_rxn_env_data;
     int *n_mapped_values;

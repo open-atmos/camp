@@ -1041,7 +1041,7 @@ void solveBcgCudaDeviceCVODE(ModelDataGPU *md, ModelDataVariable *sc)
   md->dr0[i]=md->dtempv[i]-md->dr0[i];
   md->dr0h[i]=md->dr0[i];
   int it=0;
-  while(it<BCG_MAXIT && temp1>BCG_TOLMAX){
+  while(it<1000 && temp1>1.0E-30){
     //print_double(md->dr0,73,"dr0");
     //print_double(md->dr0h,73,"dr0h");
     cudaDevicedotxy_2(md->dr0, md->dr0h, &rho1, md->n_shr_empty);

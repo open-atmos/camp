@@ -433,7 +433,6 @@ if (CUDA_FOUND AND ENABLE_GPU)
           src/cuda/cvode_cuda.cu
           src/cuda/cvode_gpu.cu
           src/cuda/cvode_init.cu
-          src/cuda/libsolv.cu
           )
 
   set_source_files_properties(${CAMP_CUDA_SRC} PROPERTIES COMPILE_FLAGS
