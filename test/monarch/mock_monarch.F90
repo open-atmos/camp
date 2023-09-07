@@ -2,13 +2,11 @@
 ! Illinois at Urbana-Champaign
 ! SPDX-License-Identifier: MIT
 
-
 !> Mock version of the MONARCH model for testing integration with CAMP
 program mock_monarch_t
 
-  use camp_constants,                    only: const
-  use camp_util,                          only : assert_msg, almost_equal, &
-                                                to_string
+  use camp_constants, only: const
+  use camp_util, only : assert_msg, almost_equal, to_string
   use camp_monarch_interface_2
   use camp_mpi
   use camp_solver_stats
@@ -48,7 +46,6 @@ program mock_monarch_t
           KPP_DT => DT
   use cb05cl_ae5_Parameters,                  only : KPP_IND_O2 => IND_O2
   use cb05cl_ae5_Initialize, ONLY: Initialize
-
 #endif
 
   implicit none
