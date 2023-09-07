@@ -8,24 +8,6 @@
 
 #include<cuda.h>
 
-#ifdef ONLY_BCG
-extern "C++" void gpu_matScaleAddI(int nrows, double* dA, int* djA, int* diA, double alpha, int blocks, int threads);
-extern "C++" void gpu_diagprecond(int nrows, double* dA, int* djA, int* diA, double* ddiag, int blocks, int threads);
-extern "C++" void gpu_yequalsconst(double *dy, double constant, int nrows, int blocks, int threads);
-extern "C++" void gpu_spmv(double* dx ,double* b, int nrows, double* dA, int *djA,int *diA,int blocks, int threads);
-extern "C++" void gpu_axpby(double* dy ,double* dx, double a, double b, int nrows, int blocks, int threads);
-extern "C++" void gpu_yequalsx(double *dy, double* dx, int nrows, int blocks, int threads);
-extern "C++" double gpu_VWRMS_Norm(int n, double* vec1,double* vec2,double* h_temp,double* d_temp, int blocks,int threads);
-extern "C++" double gpu_dotxy(double* vec1, double* vec2, double* h_temp, double* d_temp, int nrows, int blocks,int threads);
-extern "C++" void gpu_zaxpbypc(double* dz, double* dx ,double* dy, double a, double b, int nrows, int blocks, int threads);
-extern "C++" void gpu_multxy(double* dz, double* dx ,double* dy, int nrows, int blocks, int threads);
-extern "C++" void gpu_zaxpby(double a, double* dx ,double b, double* dy, double* dz, int nrows, int blocks, int threads);
-extern "C++" void gpu_axpy(double* dy, double* dx ,double a, int nrows, int blocks, int threads);
-extern "C++" double gpu_VWRMS_Norm(int n, double* vec1,double* vec2,double* h_temp,double* d_temp, int blocks,int threads);
-#endif
-
-
-// Device functions (equivalent to global functions but in device to allow calls from gpu)
 __device__ void cudaDeviceBCGprecond(double* dA, int* djA, int* diA, double* ddiag, double alpha);
 __device__ void cudaDevicesetconst(double* dy,double constant);
 __device__ void cudaDeviceSpmvCSR(double* dx, double* db, double* dA, int* djA, int* diA);
@@ -39,8 +21,6 @@ __device__ void cudaDevicezaxpbypc(double* dz, double* dx,double* dy, double a, 
 __device__ void cudaDevicemultxy(double* dz, double* dx,double* dy, int nrows);
 __device__ void cudaDevicezaxpby(double a, double* dx, double b, double* dy, double* dz, int nrows);
 __device__ void cudaDeviceaxpy(double* dy,double* dx, double a, int nrows);
-__device__ void cudaDeviceVWRMS_Norm(double *g_idata1, double *g_idata2, double *odata, int n, int n_shr_empty);
-__device__ void cudaDevicescaley(double* dy, double a, int nrows);
 
 
 

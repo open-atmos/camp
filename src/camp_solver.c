@@ -729,12 +729,6 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
         flag = cudaCVode(sd->cvode_mem, (realtype)t_final, sd->y,
           &t_rt, CV_NORMAL, sd);
       }
-#ifdef ONLY_BCG
-      else{
-        flag = CVode_gpu(sd->cvode_mem, (realtype)t_final, sd->y,
-             &t_rt, CV_NORMAL, sd);
-      }
-#endif
     }
 #else
     flag = CVode(sd->cvode_mem, (realtype)t_final, sd->y, &t_rt, CV_NORMAL);

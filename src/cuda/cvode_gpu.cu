@@ -2,9 +2,6 @@
  * Illinois at Urbana-Champaign
  * SPDX-License-Identifier: MIT
  */
-#ifdef ONLY_BCG
-#include "itsolver_gpu.h"
-#endif
 #include "cvode_cuda.h"
 
 extern "C" {
@@ -348,15 +345,7 @@ void constructor_cvode_gpu(CVodeMem cv_mem, SolverData *sd){
   mGPU = sd->mGPU;
   mCPU->nnz = SM_NNZ_S(J);
   mGPU->nrows = SM_NP_S(J);
-#ifdef ONLY_BCG
-  if(sd->use_gpu_cvode==0){
-    createLinearSolver(sd);
-  }else{
-    createLinearSolver_cvode(sd);
-  }
-#else
   createLinearSolver_cvode(sd);
-#endif
   mCPU->A = ((double *) SM_DATA_S(J));
   //Translate from int64 (sunindextype) to int
   if(sd->use_gpu_cvode==1){
