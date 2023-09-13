@@ -13,7 +13,7 @@ extern "C" {
 #endif
 
 void print_double_cv_gpu(double *x, int len, const char *s){
-#ifndef USE_PRINT_ARRAYS
+#ifdef USE_PRINT_ARRAYS
   for (int i=0; i<len; i++){
     printf("%s[%d]=%.17le\n",s,i,x[i]);
   }
@@ -641,14 +641,13 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
   mCPU->mdvCPU.cv_indx_acor = cv_mem->cv_indx_acor;
   mCPU->mdvCPU.cv_hu = cv_mem->cv_hu;
   mCPU->mdvCPU.cv_jcur = cv_mem->cv_jcur;
-  mCPU->mdvCPU.cv_nstlp = (int) cv_mem->cv_nstlp;
+  mCPU->mdvCPU.cv_nstlp = cv_mem->cv_nstlp;
   mCPU->mdvCPU.cv_L = cv_mem->cv_L;
   mCPU->mdvCPU.cv_acnrm = cv_mem->cv_acnrm;
   mCPU->mdvCPU.cv_qwait = cv_mem->cv_qwait;
   mCPU->mdvCPU.cv_crate = cv_mem->cv_crate;
   mCPU->mdvCPU.cv_gamrat = cv_mem->cv_gamrat;
   mCPU->mdvCPU.cv_gammap = cv_mem->cv_gammap;
-  mCPU->mdvCPU.cv_nst = cv_mem->cv_nst;
   mCPU->mdvCPU.cv_gamma = cv_mem->cv_gamma;
   mCPU->mdvCPU.cv_rl1 = cv_mem->cv_rl1;
   mCPU->mdvCPU.cv_eta = cv_mem->cv_eta;

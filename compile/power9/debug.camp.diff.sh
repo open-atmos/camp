@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
-
+#todo: enable "USE_PRINT_ARRAYS"
+#todo: enable "USE_BCG"
+#todo: enable "CAMP_DEBUG_NVECTOR"
 source remake.cvode.camp.sh
 compile_camp_cvode
 FILE=TestMonarch_diff.py

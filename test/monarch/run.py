@@ -17,7 +17,7 @@ import time
 class TestMonarch:
   def __init__(self):
     # Case configuration
-    self._chemFile = "monarch_binned"
+    self._chemFile = "cb05_paperV2"
     self.diffCells = ""
     self.timeSteps = 1
     self.timeStepsDt = 2
@@ -100,12 +100,7 @@ def write_camp_config_file(conf):
     else:
       file1.write("USE_CPU=OFF\n")
     if conf.caseMulticellsOnecell == "BDF" or conf.caseMulticellsOnecell.find("maxrregcount") != -1:
-      if conf.chemFile == "monarch_binned" or conf.chemFile == "cb05_mechanism_yarwood2005":
-        print(
-          "Error:", conf.chemFile, "can not run GPU BDF, disable GPU BDF or use a valid chemFile like monarch_cb05")
-        raise
-      else:
-        file1.write("USE_GPU_CVODE=ON\n")
+      file1.write("USE_GPU_CVODE=ON\n")
     else:
       file1.write("USE_GPU_CVODE=OFF\n")
     file1.write(str(conf.nGPUs) + "\n")
@@ -661,3 +656,55 @@ def plot_cases(conf):
     for j in range(len(datay)):
       datay[i][j] = format(datay[i][j], '.2e')
   print(namey, ":", datay)
+
+def check_run(conf):
+
+  if conf.use_monarch:
+    conf.plotYKey = "NRMSE"
+    conf.is_import = True
+  if conf.plotYKey == "NRMSE" or conf.plotYKey == "MAPE":
+    if conf.is_import:
+      conf.is_export = False
+    else:
+      conf.is_export = False
+      conf.is_import = False
+  if conf.plotYKey == "":
+    print("conf.plotYKey is empty")
+  if conf.chemFile == "cb05_paperV2":
+    if conf.timeStepsDt != 2:
+      print("Warning: Setting timeStepsDt to 2, since it is the usual value for", conf.chemFile)
+    conf.timeStepsDt = 2
+  elif conf.chemFile == "monarch_cb05":
+    conf.timeStepsDt = 3
+    if "Realistic" in conf.diffCellsL:
+      conf.diffCellsL = ["Ideal"]
+  if "Realistic" in conf.diffCells and \
+      conf.mpiProcessesCaseBase not in \
+      conf.mpiProcessesCaseOptimList:
+    print("ERROR: Wrong conf, MPI and cells are exported in different order, set same MPIs for both cases")
+    raise
+  if not conf.caseBase:
+    print("ERROR: caseBase is empty")
+    raise
+  if conf.caseBase == "CPU EBI":
+    print("Warning: Disable CAMP_PROFILING in CVODE to better profiling")
+  if conf.caseBase == "CPU EBI" and conf.chemFile != "monarch_cb05":
+    print("Error: Set conf.chemFile = monarch_cb05 to run CPU EBI")
+    raise Exception
+  for caseOptim in conf.casesOptim:
+    if caseOptim == "CPU EBI":
+      print("Warning: Disable CAMP_PROFILING in CVODE to better profiling")
+    if caseOptim == "CPU EBI" and conf.chemFile != "monarch_cb05":
+      print("Error: Set conf.chemFile = monarch_cb05 to run CPU EBI")
+      raise Exception
+  for i, mpiProcesses in enumerate(conf.mpiProcessesCaseOptimList):
+    for j, cellsProcesses in enumerate(conf.cells):
+      nCells = int(cellsProcesses / mpiProcesses)
+      if nCells == 0:
+        print("WARNING: Configured less cells than MPI processes, setting 1 cell per process")
+        conf.mpiProcessesCaseOptimList[i] = cellsProcesses
+
+  run_diffCells(conf)
+
+  if get_is_sbatch() is False:
+    plot_cases(conf)
