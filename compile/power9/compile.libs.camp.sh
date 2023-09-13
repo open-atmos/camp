@@ -30,11 +30,6 @@ else
 fi
 fi
 
-if [ "$1" == "from_camp_jobs" ]; then
-  echo "Running from_camp_jobs folder"
-fi
-
-
 ./compile.json-fortran-6.1.0.power9.sh
 ./compile.suiteSparse.power9.sh
 ./compile.cvode-3.4-alpha.power9.sh

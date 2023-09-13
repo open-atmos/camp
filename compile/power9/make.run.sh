@@ -3,7 +3,7 @@ source remake.camp.sh
 
 main(){
 
-compile
+compile_camp
 
 FILE=TestMonarch.py
 #FILE=./camp_v1_paper_binned

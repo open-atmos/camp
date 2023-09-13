@@ -78,7 +78,8 @@
         "BENZRO2" : { "monarch id" : 69 },
         "BNZNRXN" : { "monarch id" : 70 },
         "BNZHRXN" : { "monarch id" : 71 },
-        "SESQRXN" : { "monarch id" : 72 }
+        "SESQRXN" : { "monarch id" : 72 },
+        "NH3"     : { "monarch id" : 73 }
       }
     },
     {

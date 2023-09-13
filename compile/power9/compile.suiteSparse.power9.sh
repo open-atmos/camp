@@ -1,10 +1,7 @@
 #!/usr/bin/env bash
 
 library_path="../../../"
-if [ "$1" == "from_camp_jobs" ]; then
-  library_path="../../../../"
-fi
-
+curr_path=$(pwd)
 cd $library_path/SuiteSparse
 make purge
 LOCAL_MACHINE=CGUZMAN
@@ -18,14 +15,5 @@ else
   echo "Unknown architecture"
   exit
 fi
-
 export SUITE_SPARSE_CAMP_ROOT=$(pwd)/$library_path/
-
-camp_folder=camp
-if [ ! -z "$2" ]; then
-  camp_folder=camp_jobs/camp$2
-fi
-
-if [ "$1" == "from_camp_jobs" ]; then
-  cd ../$camp_folder/build/compile
-fi
+cd $curr_path

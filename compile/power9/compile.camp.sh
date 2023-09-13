@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 relative_path="../../../"
+curr_path=$(pwd)
 
 LOCAL_MACHINE=CGUZMAN
 if [ $BSC_MACHINE == "power" ]; then
@@ -74,6 +75,4 @@ cmake -D CMAKE_C_COMPILER=$(which mpicc) \
 ..
 
 make -j 4 VERBOSE=1
-if [ "$1" == "from_camp_jobs" ]; then
-  cd ../compile/power9
-fi
+cd $curr_path
