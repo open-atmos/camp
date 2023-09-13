@@ -15,7 +15,7 @@ mkdir install
 mkdir install/examples
 cd build
 cmake -D CMAKE_BUILD_TYPE=debug \
--D CMAKE_C_FLAGS_DEBUG="-O0" \
+-D CMAKE_C_FLAGS_DEBUG="-O2" \
 -D MPI_ENABLE:BOOL=TRUE \
 -D KLU_ENABLE:BOOL=TRUE \
 -D CUDA_ENABLE:BOOL=FALSE \
