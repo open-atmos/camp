@@ -10,9 +10,9 @@ from run import *
 def all_timesteps():
   conf = TestMonarch()
 
-  conf.chemFile = "cb05_paperV2"
-  #conf.chemFile = "monarch_cb05"
-  # conf.chemFile = "monarch_binned"
+  #conf.chemFile = "cb05_paperV2"
+  conf.chemFile = "monarch_cb05"
+  #conf.chemFile = "monarch_binned"
 
   conf.diffCellsL = []
   # conf.diffCellsL.append("Realistic")

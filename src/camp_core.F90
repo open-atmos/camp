@@ -1504,8 +1504,6 @@ contains
     if (present(solver_stats)) then
       solver_status = solver%solve(camp_state, t_initial, t_final,    &
               n_cells_aux, solver_stats)
-
-      !call solver%get_solver_stats( solver_stats,this%ncounters,this%ntimers) ! needed for monarch?
       solver_stats%status_code   = solver_status
       solver_stats%start_time__s = t_initial
       solver_stats%end_time__s   = t_final

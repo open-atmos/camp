@@ -52,7 +52,6 @@ module camp_monarch_interface_2
     type(string_t), allocatable :: kpp_rxn_labels(:)
     real(kind=dp) :: KPP_RSTATE(20)
     integer :: KPP_ICNTRL(20)
-    character(len=:), allocatable :: ADD_EMISIONS
   contains
     procedure :: integrate
     procedure :: get_init_conc
@@ -74,8 +73,7 @@ contains
 
 
   function constructor(camp_config_file, output_file_title, &
-                       starting_id, ending_id, n_cells, n_cells_tstep, &
-          ADD_EMISIONS, mpi_comm) result (this)
+   starting_id, ending_id, n_cells, n_cells_tstep, mpi_comm) result (this)
     type(camp_monarch_interface_t), pointer :: this
     character(len=:), allocatable, optional :: camp_config_file
     character(len=*), intent(in):: output_file_title
@@ -84,7 +82,6 @@ contains
     integer, intent(in), optional :: mpi_comm
     integer, optional :: n_cells
     integer, optional :: n_cells_tstep
-    character(len=:), allocatable, optional :: ADD_EMISIONS
     type(camp_solver_data_t), pointer :: camp_solver_data
     character, allocatable :: buffer(:)
     integer(kind=i_kind) :: pos, pack_size
@@ -115,7 +112,6 @@ contains
       this%n_cells=n_cells
     end if
     this%output_file_title=output_file_title
-    this%ADD_EMISIONS=ADD_EMISIONS
     camp_solver_data => camp_solver_data_t()
     call assert_msg(332298164, camp_solver_data%is_solver_available(), &
             "No solver available")
@@ -175,16 +171,13 @@ contains
         call assert(307722742,len_trim(this%monarch_species_names(z)%string).lt.max_spec_name_size)
         pack_size = pack_size +  camp_mpi_pack_size_string(trim(this%monarch_species_names(z)%string))
       end do
-      if(this%ADD_EMISIONS.eq."monarch_binned" &
-              .or. this%output_file_title.eq."monarch_cb05") then
-        pack_size = pack_size + camp_mpi_pack_size_integer(this%n_photo_rxn)
-        do i = 1, this%n_photo_rxn
-          pack_size = pack_size + this%photo_rxns(i)%pack_size( local_comm )
-        end do
-        pack_size = pack_size + camp_mpi_pack_size_real_array(this%base_rates)
-        pack_size = pack_size + camp_mpi_pack_size_integer_array(this%specs_emi_id)
-        pack_size = pack_size + camp_mpi_pack_size_real_array(this%specs_emi)
-      endif
+      pack_size = pack_size + camp_mpi_pack_size_integer(this%n_photo_rxn)
+      do i = 1, this%n_photo_rxn
+        pack_size = pack_size + this%photo_rxns(i)%pack_size( local_comm )
+      end do
+      pack_size = pack_size + camp_mpi_pack_size_real_array(this%base_rates)
+      pack_size = pack_size + camp_mpi_pack_size_integer_array(this%specs_emi_id)
+      pack_size = pack_size + camp_mpi_pack_size_real_array(this%specs_emi)
       allocate(buffer(pack_size))
       pos = 0
       call this%camp_core%bin_pack(buffer, pos)
@@ -202,16 +195,13 @@ contains
       do z=1, size(this%monarch_species_names)
         call camp_mpi_pack_string(buffer, pos, trim(this%monarch_species_names(z)%string))
       end do
-      if(this%ADD_EMISIONS.eq."monarch_binned" &
-        .or. this%output_file_title.eq."monarch_cb05") then
-        call camp_mpi_pack_integer(buffer, pos, this%n_photo_rxn)
-        do i = 1, this%n_photo_rxn
-          call this%photo_rxns(i)%bin_pack( buffer, pos, local_comm )
-        end do
-        call camp_mpi_pack_real_array(buffer, pos, this%base_rates)
-        call camp_mpi_pack_integer_array(buffer, pos, this%specs_emi_id)
-        call camp_mpi_pack_real_array(buffer, pos, this%specs_emi)
-      endif
+      call camp_mpi_pack_integer(buffer, pos, this%n_photo_rxn)
+      do i = 1, this%n_photo_rxn
+        call this%photo_rxns(i)%bin_pack( buffer, pos, local_comm )
+      end do
+      call camp_mpi_pack_real_array(buffer, pos, this%base_rates)
+      call camp_mpi_pack_integer_array(buffer, pos, this%specs_emi_id)
+      call camp_mpi_pack_real_array(buffer, pos, this%specs_emi)
     endif
     call camp_mpi_bcast_integer(pack_size, local_comm)
     if (MONARCH_PROCESS.ne.0) then
@@ -242,24 +232,21 @@ contains
         call camp_mpi_unpack_string(buffer, pos, spec_name)
         this%monarch_species_names(z)%string= trim(spec_name)
       end do
-      if(this%ADD_EMISIONS.eq."monarch_binned" &
-          .or. this%output_file_title.eq."monarch_cb05") then
-        call camp_mpi_unpack_integer(buffer, pos, this%n_photo_rxn)
-        if( allocated( this%photo_rxns  ) ) deallocate( this%photo_rxns  )
-        allocate(this%photo_rxns(this%n_photo_rxn))
-        allocate(this%base_rates(this%n_photo_rxn))
-        do i = 1, this%n_photo_rxn
-          call this%photo_rxns(i)%bin_unpack( buffer, pos, local_comm )
-        end do
-        call camp_mpi_unpack_real_array(buffer, pos, this%base_rates)
-        call camp_mpi_unpack_integer_array(buffer, pos, this%specs_emi_id)
-        call camp_mpi_unpack_real_array(buffer, pos, this%specs_emi)
-      end if
+      call camp_mpi_unpack_integer(buffer, pos, this%n_photo_rxn)
+      if( allocated( this%photo_rxns  ) ) deallocate( this%photo_rxns  )
+      allocate(this%photo_rxns(this%n_photo_rxn))
+      allocate(this%base_rates(this%n_photo_rxn))
+      do i = 1, this%n_photo_rxn
+        call this%photo_rxns(i)%bin_unpack( buffer, pos, local_comm )
+      end do
+      call camp_mpi_unpack_real_array(buffer, pos, this%base_rates)
+      call camp_mpi_unpack_integer_array(buffer, pos, this%specs_emi_id)
+      call camp_mpi_unpack_real_array(buffer, pos, this%specs_emi)
     end if
     deallocate(buffer)
     call this%camp_core%solver_initialize(n_cells_tstep)
     this%camp_state => this%camp_core%new_state()
-    if(this%ADD_EMISIONS.eq."monarch_binned") then
+    if(this%output_file_title.eq."monarch_binned") then
       allocate(this%offset_photo_rates_cells(this%n_cells))
       this%offset_photo_rates_cells(:) = 0.
       do z =1, this%n_cells
@@ -347,7 +334,7 @@ contains
       state_size_per_cell = this%camp_core%size_state_per_cell
     end if
     NUM_VERT_CELLS = size(MONARCH_conc,3)
-    if(this%ADD_EMISIONS.eq."monarch_binned") then
+    if(this%output_file_title.eq."monarch_binned") then
       call assert_msg(731700229, &
               this%camp_core%get_chem_spec_data(chem_spec_data), &
               "No chemical species data in camp_core.")
@@ -424,7 +411,7 @@ contains
                       water_conc(1,1,1,water_vapor_index) * &
                               mwair / mwwat * 1.e6
             end if
-            if(this%ADD_EMISIONS.eq."monarch_binned") then
+            if(this%output_file_title.eq."monarch_binned") then
               do r=1,size(this%specs_emi_id)
                 this%camp_state%state_var(this%specs_emi_id(r))=&
                         this%camp_state%state_var(this%specs_emi_id(r))&
@@ -460,7 +447,7 @@ contains
               this%camp_state%state_var(this%gas_phase_water_id+(z*state_size_per_cell)) = &
                       water_conc(1,1,1,water_vapor_index) * mwair / mwwat * 1.e6
             end if
-            if(this%ADD_EMISIONS.eq."monarch_binned") then
+            if(this%output_file_title.eq."monarch_binned") then
               do r=1,size(this%specs_emi_id)
                 this%camp_state%state_var(this%specs_emi_id(r)+z*state_size_per_cell)=&
                         this%camp_state%state_var(this%specs_emi_id(r)+z*state_size_per_cell)&
@@ -487,7 +474,7 @@ contains
       end do
     end if
 
-  if(this%ADD_EMISIONS.eq."monarch_binned") then
+  if(this%output_file_title.eq."monarch_binned") then
     deallocate(rate_emi)
   end if
   end subroutine integrate
@@ -570,45 +557,42 @@ contains
     real(kind=dp) :: rate_val
     type(string_t), allocatable :: spec_names(:)
 
-    if(this%ADD_EMISIONS.eq."monarch_binned" &
-      .or. this%output_file_title.eq."monarch_cb05") then
-      key = "MONARCH mod37"
-      call assert(418262750, this%camp_core%get_mechanism(key, mechanism))
-      rxn_key = "type"
-      rxn_val = "PHOTOLYSIS"
-      rate_key = "base rate"
-      this%n_photo_rxn = 0
-      do i_mech = 1, size(this%camp_core%mechanism)
-        do i_rxn = 1, this%camp_core%mechanism(i_mech)%val%size()
-          rxn => this%camp_core%mechanism(i_mech)%val%get_rxn(i_rxn)
-          call assert(106297725, rxn%property_set%get_string(rxn_key, str_val))
-          if (trim(str_val).eq.rxn_val) this%n_photo_rxn = this%n_photo_rxn + 1
-        end do
+    key = "MONARCH mod37"
+    call assert(418262750, this%camp_core%get_mechanism(key, mechanism))
+    rxn_key = "type"
+    rxn_val = "PHOTOLYSIS"
+    rate_key = "base rate"
+    this%n_photo_rxn = 0
+    do i_mech = 1, size(this%camp_core%mechanism)
+      do i_rxn = 1, this%camp_core%mechanism(i_mech)%val%size()
+        rxn => this%camp_core%mechanism(i_mech)%val%get_rxn(i_rxn)
+        call assert(106297725, rxn%property_set%get_string(rxn_key, str_val))
+        if (trim(str_val).eq.rxn_val) this%n_photo_rxn = this%n_photo_rxn + 1
       end do
-      allocate(this%photo_rxns(this%n_photo_rxn))
-      allocate(this%base_rates(this%n_photo_rxn))
-      i_photo_rxn = 0
-      do i_mech = 1, size(this%camp_core%mechanism)
-        do i_rxn = 1, this%camp_core%mechanism(i_mech)%val%size()
-          rxn => this%camp_core%mechanism(i_mech)%val%get_rxn(i_rxn)
-          call assert(799145523, rxn%property_set%get_string(rxn_key, str_val))
-          if (trim(str_val).ne.rxn_val) cycle
-          i_photo_rxn = i_photo_rxn + 1
-          call assert_msg(501329648, &
-                  rxn%property_set%get_real(rate_key, rate_val), &
-                  "Missing 'base rate' for photolysis reaction "// &
-                          trim(to_string(i_photo_rxn)))
-          this%base_rates(i_photo_rxn) = rate_val
-          select type (rxn_photo => rxn)
-          class is (rxn_photolysis_t)
-            call this%camp_core%initialize_update_object(rxn_photo, &
-                    this%photo_rxns(i_photo_rxn))
-          class default
-            call die(722633162)
-          end select
-        end do
+    end do
+    allocate(this%photo_rxns(this%n_photo_rxn))
+    allocate(this%base_rates(this%n_photo_rxn))
+    i_photo_rxn = 0
+    do i_mech = 1, size(this%camp_core%mechanism)
+      do i_rxn = 1, this%camp_core%mechanism(i_mech)%val%size()
+        rxn => this%camp_core%mechanism(i_mech)%val%get_rxn(i_rxn)
+        call assert(799145523, rxn%property_set%get_string(rxn_key, str_val))
+        if (trim(str_val).ne.rxn_val) cycle
+        i_photo_rxn = i_photo_rxn + 1
+        call assert_msg(501329648, &
+                rxn%property_set%get_real(rate_key, rate_val), &
+                "Missing 'base rate' for photolysis reaction "// &
+                        trim(to_string(i_photo_rxn)))
+        this%base_rates(i_photo_rxn) = rate_val
+        select type (rxn_photo => rxn)
+        class is (rxn_photolysis_t)
+          call this%camp_core%initialize_update_object(rxn_photo, &
+                  this%photo_rxns(i_photo_rxn))
+        class default
+          call die(722633162)
+        end select
       end do
-    end if
+    end do
     key_name = "gas-phase species"
     call assert_msg(939097252, &
             this%species_map_data%get_property_t(key_name, gas_species_list), &
@@ -707,7 +691,7 @@ contains
     type(string_t), allocatable :: spec_names(:)
     real :: factor_ppb_to_ppm
 
-    if(this%ADD_EMISIONS.eq."monarch_binned") then
+    if(this%output_file_title.eq."monarch_binned") then
       factor_ppb_to_ppm=1.0E-3
     else
       factor_ppb_to_ppm=1.0

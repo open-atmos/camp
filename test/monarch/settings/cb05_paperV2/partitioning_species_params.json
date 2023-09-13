@@ -360,51 +360,6 @@
       "dry dep reactivity factor [unitless]" :0.000E+00,
       "diffusion coeff [m2 s-1]" :2.270E-05,
       "special dry deposition species" : "NH3"
-    },
-    {
-      "name" : "ISOP-P1",
-      "type" : "CHEM_SPEC",
-      "HLC(298K) [M Pa-1]" :9.721E+01,
-      "HLC exp factor [K]" :5.716E+03,
-      "dry dep reactivity factor [unitless]" :0.000E+00,
-      "diffusion coeff [m2 s-1]" :1.530E-05
-    },
-    {
-      "name" : "ISOP-P2",
-      "type" : "CHEM_SPEC",
-      "HLC(298K) [M Pa-1]" :9.721E+01,
-      "HLC exp factor [K]" :5.716E+03,
-      "dry dep reactivity factor [unitless]" :0.000E+00,
-      "diffusion coeff [m2 s-1]" :1.530E-05,
-      "dry dep notes" : "changed diff coeff from 0.0 to match ISOP-P1"
-    },
-    {
-      "name" : "TERP-P1",
-      "type" : "CHEM_SPEC",
-      "HLC(298K) [M Pa-1]" :9.721E+01,
-      "HLC exp factor [K]" :5.716E+03,
-      "dry dep reactivity factor [unitless]" :0.000E+00,
-      "diffusion coeff [m2 s-1]" :1.530E-05
-    },
-    {
-      "name" : "TERP-P2",
-      "type" : "CHEM_SPEC",
-      "HLC(298K) [M Pa-1]" :9.721E+01,
-      "HLC exp factor [K]" :5.716E+03,
-      "dry dep reactivity factor [unitless]" :0.000E+00,
-      "diffusion coeff [m2 s-1]" :1.530E-05,
-      "dry dep notes" : "changed diff coeff from 0.0 to match ISOP-P2"
-    },
-    {
-      "name" : "DMS",
-      "type" : "CHEM_SPEC",
-      "HLC(298K) [M Pa-1]" : 5.59585E-06,
-      "HLC exp factor [K]" : 3500.0,
-      "dry dep reactivity factor [unitless]" :0.000E+00,
-      "diffusion coeff [m2 s-1]" :9.900E-03,
-      "dry dep notes" : [
-        "got HLC params from nist webbook https://webbook.nist.gov/cgi/cbook.cgi?ID=C75183&Mask=10#Solubility"
-      ]
     }
   ]
 }

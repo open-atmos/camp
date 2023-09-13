@@ -73,7 +73,6 @@ program mock_monarch_t
   integer, parameter :: WATER_VAPOR_ID = 5
   real, parameter :: START_TIME = 0
   integer :: n_cells = 1
-  character(len=:), allocatable :: ADD_EMISIONS
   character(len=:), allocatable :: DIFF_CELLS
 
   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -127,7 +126,6 @@ program mock_monarch_t
   I_E=1
   I_S=1
   I_N=1
-  ADD_EMISIONS = "OFF"
   DIFF_CELLS = "OFF"
   call jfile%initialize()
   export_path = "settings/TestMonarch"//".json"
@@ -136,9 +134,6 @@ program mock_monarch_t
   call jfile%get('_chemFile',output_file_title)
   camp_input_file = "settings/"//output_file_title//"/config.json"
   output_path = "out/"//output_file_title
-  if(output_file_title.eq."monarch_binned") then
-    ADD_EMISIONS = "monarch_binned"
-  end if
   call jfile%get('nCells',NUM_VERT_CELLS)
   call jfile%get('caseMulticellsOnecell',caseMulticellsOnecell)
   output_path = output_path//"_"//caseMulticellsOnecell
@@ -173,7 +168,7 @@ program mock_monarch_t
   allocate(conv(NUM_WE_CELLS, NUM_SN_CELLS, NUM_VERT_CELLS))
 
   camp_interface => camp_monarch_interface_t(camp_input_file, output_file_title, &
-          START_CAMP_ID, END_CAMP_ID, n_cells, n_cells_tstep, ADD_EMISIONS)
+          START_CAMP_ID, END_CAMP_ID, n_cells, n_cells_tstep)
 
   camp_interface%camp_state%state_var(:) = 0.0
   species_conc(:,:,:,:) = 0.0
@@ -277,12 +272,12 @@ contains
         end do
       end do
     else
-      if(ADD_EMISIONS.eq."monarch_binned") then
+      if(output_file_title.eq."monarch_binned") then
         temperature(:,:,:) = temp_init
         pressure(:,:,:) = press_init
       end if
     end if
-    if(ADD_EMISIONS.eq."monarch_binned") then
+    if(output_file_title.eq."monarch_binned") then
       air_density(:,:,:) = pressure(:,:,:)/(287.04*temperature(:,:,:)* &
               (1.+0.60813824*water_conc(:,:,:,WATER_VAPOR_ID))) !kg m-3
       conv(:,:,:)=0.02897/air_density(:,:,:)*(TIME_STEP*60.)*1e6 !units of time_step to seconds
