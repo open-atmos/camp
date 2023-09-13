@@ -272,12 +272,12 @@ contains
         end do
       end do
     else
-      if(output_file_title.eq."monarch_binned") then
+      if(output_file_title.eq."cb05_paperV2") then
         temperature(:,:,:) = temp_init
         pressure(:,:,:) = press_init
       end if
     end if
-    if(output_file_title.eq."monarch_binned") then
+    if(output_file_title.eq."cb05_paperV2") then
       air_density(:,:,:) = pressure(:,:,:)/(287.04*temperature(:,:,:)* &
               (1.+0.60813824*water_conc(:,:,:,WATER_VAPOR_ID))) !kg m-3
       conv(:,:,:)=0.02897/air_density(:,:,:)*(TIME_STEP*60.)*1e6 !units of time_step to seconds
@@ -381,7 +381,7 @@ contains
     do z =1, n_cells
       do i = 1, camp_interface%n_photo_rxn
         base_rate = camp_interface%base_rates(i)
-        call camp_interface%photo_rxns(i)%set_rate(base_rate) !not used if exported cb05
+        call camp_interface%photo_rxns(i)%set_rate(base_rate)
         call camp_interface%camp_core%update_data(camp_interface%photo_rxns(i),z)
       end do
     end do

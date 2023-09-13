@@ -26,8 +26,8 @@ main(){
 
 time compile
 
-cd ../../test/monarch
-FILE=TestMonarch.py
+#FILE=TestMonarch.py
+FILE=./camp_v1_paper_binned
 #FILE=stats_monarch_netcdf.py
 #FILE=./test_run/chemistry/cb05cl_ae5/test_chemistry_cb05cl_ae5.sh
 #FILE=./unit_test_aero_rep_single_particle
@@ -64,19 +64,18 @@ compare_cell(){
 }
 
 if [ "$FILE" == TestMonarch.py ]; then
+  cd ../../test/monarch
   #compare_runs
   #compare_cell
   python $FILE
   #log_path="../../compile/power9/log_cpu.txt"
   #python $FILE 2>&1 | tee "../../compile/power9/log_cpu.txt"
-elif [ "$FILE" == test_monarch_1.py ]; then
-  echo "Running old commits with file test_monarch_1.py ."
-  python  $FILE
-  cd ../../camp/compile/power9
+elif [ "$FILE" == ./camp_v1_paper_binned ]; then
+  cd ../../build/data_run/CAMP_v1_paper/binned/
+  time ./test_monarch_binned.sh
 else
   cd ../../compile/power9
   time $FILE
-
 fi
 }
 main

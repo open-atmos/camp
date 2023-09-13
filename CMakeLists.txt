@@ -45,7 +45,6 @@ option(ENABLE_DATA "" OFF)
 option(ENABLE_INSTALL_OPTIONS "" OFF)
 option(ENABLE_SHARED_LIB "" OFF) #todo fix and shared lib in Monarch
 add_definitions(-DCAMP_DEBUG_MOCKMONARCH)
-#add_definitions(-DENABLE_NETCDF) #needed for monarch, otherwise seg.fault (on one-cell)
 
 mark_as_advanced(FORCE ENABLE_DEBUG FAILURE_DETAIL)
 file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/out)
@@ -539,16 +538,18 @@ endif()
 set_source_files_properties(${CB5_EBI_SOLVER} PROPERTIES COMPILE_FLAGS
 	${CB5_EBI_FLAGS})
 
-######################################################################
-# MONARCH interface
+add_executable(camp_v1_paper_binned data/CAMP_v1_paper/binned/camp_monarch_interface.F90
+        data/CAMP_v1_paper/binned/mock_monarch.F90)
 
-add_executable(mock_monarch test/monarch/mock_monarch.F90
-        test/monarch/camp_monarch_interface.F90
-        ${CB5_EBI_SOLVER} ${CB5_KPP_SOLVER}
-        test/chemistry/cb05cl_ae5/module_BSC_CHEM_DATA.F90)
-target_link_libraries(mock_monarch camplib)
+target_link_libraries(camp_v1_paper_binned camplib)
 
 if (ENABLE_TESTS)
+
+  add_executable(mock_monarch test/monarch/mock_monarch.F90
+          test/monarch/camp_monarch_interface.F90
+          ${CB5_EBI_SOLVER} ${CB5_KPP_SOLVER}
+          test/chemistry/cb05cl_ae5/module_BSC_CHEM_DATA.F90)
+  target_link_libraries(mock_monarch camplib)
 
   add_executable(test_chemistry_cb05cl_ae5_big
           test/chemistry/cb05cl_ae5/test_cb05cl_ae5_big.F90

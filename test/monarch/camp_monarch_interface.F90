@@ -246,14 +246,14 @@ contains
     deallocate(buffer)
     call this%camp_core%solver_initialize(n_cells_tstep)
     this%camp_state => this%camp_core%new_state()
-    if(this%output_file_title.eq."monarch_binned") then
+    if(this%output_file_title.eq."cb05_paperV2") then
       allocate(this%offset_photo_rates_cells(this%n_cells))
       this%offset_photo_rates_cells(:) = 0.
       do z =1, this%n_cells
         do i = 1, this%n_photo_rxn
           base_rate = this%base_rates(i)
-          call this%photo_rxns(i)%set_rate(base_rate) !not used if exported cb05
-          call this%camp_core%update_data(this%photo_rxns(i),z) !todo needed? mock_monarch also has that
+          call this%photo_rxns(i)%set_rate(base_rate)
+          call this%camp_core%update_data(this%photo_rxns(i),z)
         end do
       end do
       deallocate(this%offset_photo_rates_cells)
@@ -334,7 +334,7 @@ contains
       state_size_per_cell = this%camp_core%size_state_per_cell
     end if
     NUM_VERT_CELLS = size(MONARCH_conc,3)
-    if(this%output_file_title.eq."monarch_binned") then
+    if(this%output_file_title.eq."cb05_paperV2") then
       call assert_msg(731700229, &
               this%camp_core%get_chem_spec_data(chem_spec_data), &
               "No chemical species data in camp_core.")
@@ -411,7 +411,7 @@ contains
                       water_conc(1,1,1,water_vapor_index) * &
                               mwair / mwwat * 1.e6
             end if
-            if(this%output_file_title.eq."monarch_binned") then
+            if(this%output_file_title.eq."cb05_paperV2") then
               do r=1,size(this%specs_emi_id)
                 this%camp_state%state_var(this%specs_emi_id(r))=&
                         this%camp_state%state_var(this%specs_emi_id(r))&
@@ -447,7 +447,7 @@ contains
               this%camp_state%state_var(this%gas_phase_water_id+(z*state_size_per_cell)) = &
                       water_conc(1,1,1,water_vapor_index) * mwair / mwwat * 1.e6
             end if
-            if(this%output_file_title.eq."monarch_binned") then
+            if(this%output_file_title.eq."cb05_paperV2") then
               do r=1,size(this%specs_emi_id)
                 this%camp_state%state_var(this%specs_emi_id(r)+z*state_size_per_cell)=&
                         this%camp_state%state_var(this%specs_emi_id(r)+z*state_size_per_cell)&
@@ -474,7 +474,7 @@ contains
       end do
     end if
 
-  if(this%output_file_title.eq."monarch_binned") then
+  if(this%output_file_title.eq."cb05_paperV2") then
     deallocate(rate_emi)
   end if
   end subroutine integrate
@@ -691,7 +691,7 @@ contains
     type(string_t), allocatable :: spec_names(:)
     real :: factor_ppb_to_ppm
 
-    if(this%output_file_title.eq."monarch_binned") then
+    if(this%output_file_title.eq."cb05_paperV2") then
       factor_ppb_to_ppm=1.0E-3
     else
       factor_ppb_to_ppm=1.0
