@@ -10,8 +10,8 @@ from run import *
 def all_timesteps():
   conf = TestMonarch()
 
-  conf.chemFile = "cb05_paperV2"
-  #conf.chemFile = "monarch_cb05"
+  #conf.chemFile = "cb05_paperV2"
+  conf.chemFile = "monarch_cb05"
   #conf.chemFile = "monarch_binned"
 
   conf.diffCellsL = []
@@ -85,7 +85,7 @@ def all_timesteps():
   # conf.casesOptim.append("GPU Block-cellsN")
   # conf.casesOptim.append("GPU Block-cells1")
   # conf.casesOptim.append("CPU EBI")
-  conf.casesOptim.append("GPU BDF")
+  #conf.casesOptim.append("GPU BDF")
   # conf.casesOptim.append("GPU CPU")
   # conf.casesOptim.append("GPU maxrregcount-64") #wrong 10,000 cells
   # conf.casesOptim.append("GPU maxrregcount-68")

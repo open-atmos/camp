@@ -657,12 +657,6 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
     aero_rep_update_env_state(md);
     sub_model_update_env_state(md);
     rxn_update_env_state(md);
-    if(i_cell==0){
-     // print_double(md->grid_cell_state,n_state_var,"state688");
-      //print_double(md->grid_cell_env,CAMP_NUM_ENV_PARAM_,"env689");
-      //double *yp = N_VGetArrayPointer(sd->y);
-      //print_double(yp,73,"y660");
-    }
   }
 
   //Reset jac solving, otherwise values from previous iteration would be carried to current iteration
@@ -691,10 +685,6 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
   // emissions)
   if (is_anything_going_on_here(sd, t_initial, t_final) == false)
     return CAMP_SOLVER_SUCCESS;
-
-  //double *yp = N_VGetArrayPointer(sd->y);
-  //if(sd->use_cpu==0) yp+= 73;
-  //print_double(yp,73,"y686");
 
   // Reinitialize the solver
   flag = CVodeReInit(sd->cvode_mem, t_initial, sd->y);

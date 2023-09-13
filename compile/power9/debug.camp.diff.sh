@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 source remake.camp.sh
-
-FILE=TestMonarch.py
+compile
+FILE=TestMonarch_diff.py
 cd ../../test/monarch
 #log_path="/gpfs/scratch/bsc32/bsc32815/a591/nmmb-monarch/MODEL/SRC_LIBS/camp/compile/power9/log_gpu.txt"
 log_path="../../compile/power9/log_cpu.txt"

@@ -543,6 +543,13 @@ void cell_netcdf(SolverData *sd){
 
 void init_export_state(SolverData *sd){
   ModelData *md = &(sd->model_data);
+  int size;
+  MPI_Comm_size(MPI_COMM_WORLD, &size);
+  if(size!=1){
+    printf("export_state is only for"
+        " 1 process, use 1 process, disable or update export_state\n");
+    exit(0);
+  }
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   char file_path[]="out/state.csv";
@@ -668,7 +675,7 @@ void check_isnand(double *x, int len, const char *s){
 }
 
 void print_double(double *x, int len, const char *s){
-#ifdef USE_PRINT_ARRAYS
+#ifndef USE_PRINT_ARRAYS
   for (int i=0; i<len; i++){
     printf("%s[%d]=%.17le\n",s,i,x[i]);
   }
@@ -676,7 +683,7 @@ void print_double(double *x, int len, const char *s){
 }
 
 void print_int(int *x, int len, const char *s){
-#ifdef USE_PRINT_ARRAYS
+#ifndef USE_PRINT_ARRAYS
   for (int i=0; i<len; i++){
     printf("%s[%d]=%d\n",s,i,x[i]);
   }

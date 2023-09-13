@@ -7,7 +7,7 @@
 
 __device__
 void print_double(double *x, int len, const char *s){
-#ifdef USE_PRINT_ARRAYS
+#ifndef USE_PRINT_ARRAYS
   __syncthreads();
   if(threadIdx.x==0 && blockIdx.x==0){
     for (int i=0; i<len; i++){
@@ -20,7 +20,7 @@ void print_double(double *x, int len, const char *s){
 
 __device__
 void print_int(int *x, int len, const char *s){
-#ifdef USE_PRINT_ARRAYS
+#ifndef USE_PRINT_ARRAYS
   __syncthreads();
   if(threadIdx.x==0 && blockIdx.x==0){
     for (int i=0; i<len; i++){
@@ -54,7 +54,7 @@ double dSUNRpowerI(double base, int exponent)
   return(prod);
 }
 
-#ifdef DEV_removeAtomic
+#ifndef DEV_removeAtomic
 
 __device__
 void time_derivative_add_value_gpu(TimeDerivativeGPU time_deriv, unsigned int spec_id,
@@ -202,7 +202,7 @@ void rxn_gpu_photolysis_calc_deriv_contrib(ModelDataVariable *sc, TimeDerivative
   }
 }
 
-#ifdef DEV_removeAtomic
+#ifndef DEV_removeAtomic
 __device__
 void jacobian_add_value_gpu(JacobianGPU jac, unsigned int elem_id,
                             int prod_or_loss,
@@ -446,7 +446,7 @@ __device__ void cudaDeviceSpmv_2CSC_block(double* dx, double* db, double* dA, in
 }
 
 __device__ void cudaDeviceSpmv_2(double* dx, double* db, double* dA, int* djA, int* diA){
-#ifdef DEV_CSR_ODE_GPU
+#ifndef DEV_CSR_ODE_GPU
   cudaDeviceSpmv_2CSR(dx,db,dA,djA,diA);
 #else
   cudaDeviceSpmv_2CSC_block(dx,db,dA,djA,diA);
@@ -471,8 +471,7 @@ __device__ void cudaDevicedotxy_2(double *g_idata1, double *g_idata2,
   if(tid<n_shr_empty)
   sdata[tid+blockDim.x]=0.;
   __syncthreads();
-    //print_double(sdata,73,"sdata");
-#ifdef DEV_cudaDevicedotxy_2
+#ifndef DEV_cudaDevicedotxy_2
   //used for compare with cpu
   sdata[0]=0.;
   __syncthreads();
@@ -506,7 +505,6 @@ __device__ void cudaDevicedotxy_2(double *g_idata1, double *g_idata2,
   }
   __syncthreads();
   if (tid < 32) warpReduce_2(sdata, tid);
-  //print_double(sdata,1,"sdata");
 #endif
   __syncthreads();
   *g_odata = sdata[0];
@@ -632,7 +630,7 @@ __device__ void cudaDevicecalc_deriv(double time_step, double *y,
   sc->grid_cell_state = &( md->state[md->state_size_cell*blockIdx.x]);
   int n_rxn = md->n_rxn;
   __syncthreads();
-#ifdef DEV_removeAtomic
+#ifndef DEV_removeAtomic
   if(threadIdx.x==0){
     for (int j = 0; j < n_rxn; j++){
       //printf("n_rxn %d i %d j %d \n",n_rxn,i,j);
@@ -693,7 +691,6 @@ int cudaDevicef(double time_step, double *y,
 #endif
   time_step = sc->cv_next_h;
   time_step = time_step > 0. ? time_step : md->init_time_step;
-  //print_double(&time_step,1,"time_step661");
   //print_double(md->state,md->state_size_cell,"state661");
   int checkflag=cudaDevicecamp_solver_check_model_state(md, sc, y, flag);
   //print_double(md->state,md->state_size_cell,"state663");
@@ -744,8 +741,6 @@ int CudaDeviceguess_helper(double h_n, double* y_n,
   } else {
     acorr[i]=hf[i];
   }
-  //print_double(&h_n,1,"h_n711");
-  //print_double(hf,73,"hf711");
   //print_double(acorr,73,"acorr711");
   double t_0 = h_n > 0. ? sc->cv_tn - h_n : sc->cv_tn - 1.;
   double t_j = 0.;
@@ -754,7 +749,7 @@ int CudaDeviceguess_helper(double h_n, double* y_n,
     __syncthreads();
     double h_j = sc->cv_tn - (t_0 + t_j);
     //print_double(atmp1,73,"atmp720");
-#ifdef DEV_CudaDeviceguess_helper
+#ifndef DEV_CudaDeviceguess_helper
     if(threadIdx.x==0){
     int i_fast = -1;
     for (int j = 0; j < blockDim.x; j++) {
@@ -790,9 +785,7 @@ int CudaDeviceguess_helper(double h_n, double* y_n,
     if (i_fast == 1 && h_n > 0.)
       h_j *= 0.95 + 0.1 * iter / (double)GUESS_MAX_ITER;
 #endif
-    //print_double(&h_j,1,"h_j756");
     h_j = sc->cv_tn < t_0 + t_j + h_j ? sc->cv_tn - (t_0 + t_j) : h_j;
-    //print_double(&h_j,1,"h_j758");
     __syncthreads();
     if (h_n == 0. && sc->cv_tn - (h_j + t_j + t_0) > md->cv_reltol) {
       __syncthreads();
@@ -896,7 +889,7 @@ __device__ void cudaDevicecalc_Jac(double *y,ModelDataGPU *md, ModelDataVariable
   sc->grid_cell_state = &( md->state[md->state_size_cell*blockIdx.x]);
   __syncthreads();
   int n_rxn = md->n_rxn;
-#ifdef DEV_removeAtomic
+#ifndef DEV_removeAtomic
   if(threadIdx.x==0){
     for (int j = 0; j < n_rxn; j++){
       solveRXNJac(j,jacBlock, md, sc);
@@ -1042,12 +1035,8 @@ void solveBcgCudaDeviceCVODE(ModelDataGPU *md, ModelDataVariable *sc)
   md->dr0h[i]=md->dr0[i];
   int it=0;
   while(it<1000 && temp1>1.0E-30){
-    //print_double(md->dr0,73,"dr0");
-    //print_double(md->dr0h,73,"dr0h");
     cudaDevicedotxy_2(md->dr0, md->dr0h, &rho1, md->n_shr_empty);
-    //print_double(&rho1,1,"rho1");
     beta = (rho1 / rho0) * (alpha / omega0);
-    //print_double(&beta,1,"beta");
     md->dp0[i]=beta*md->dp0[i]+md->dr0[i]-md->dn0[i]*omega0*beta;
     md->dy[i]=md->ddiag[i]*md->dp0[i];
     cudaDeviceSpmv_2(md->dn0, md->dy, md->dA, md->djA, md->diA);
@@ -1058,7 +1047,6 @@ void solveBcgCudaDeviceCVODE(ModelDataGPU *md, ModelDataVariable *sc)
     md->dy[i]=md->ddiag[i]*md->ds[i];
     cudaDeviceSpmv_2(md->dt, md->dy, md->dA, md->djA, md->diA);
     md->dr0[i]=md->ddiag[i]*md->dt[i];
-    //print_double(md->ddiag,73,"ddiag");
     cudaDevicedotxy_2(md->dy, md->dr0, &temp1, md->n_shr_empty);
     cudaDevicedotxy_2(md->dr0, md->dr0, &temp2, md->n_shr_empty);
     omega0 = temp1 / temp2;
@@ -1066,17 +1054,12 @@ void solveBcgCudaDeviceCVODE(ModelDataGPU *md, ModelDataVariable *sc)
     md->dr0[i]=md->ds[i]-omega0*md->dt[i];
     md->dt[i]=0.0;
     cudaDevicedotxy_2(md->dr0, md->dr0, &temp1, md->n_shr_empty);
-    //print_double(md->dx,73,"dx");
-    //print_double(&temp1,1,"temp1");
     temp1 = sqrt(temp1);
-    //print_double(&temp1,1,"sqrt(temp1)");
     rho0 = rho1;
     it++;
   __syncthreads();
   //if(i==0)printf("end iter %d BCG GPU\n",it);
   }
-  //print_double(&temp1,1,"temp1");
-  //if(i==0)printf("end BCG GPU\n");
   __syncthreads();
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
   if(threadIdx.x==0) sc->counterBCGInternal += it;
@@ -1118,8 +1101,6 @@ int cudaDevicecvNewtonIteration(ModelDataGPU *md, ModelDataVariable *sc){
     //print_double(md->dtempv,73,"dtempvcv_lsolve2");
     __syncthreads();
     cudaDeviceVWRMS_Norm_2(md->dx, md->dewt, &del, md->n_shr_empty);
-    //print_double(&del,1,"del1171");
-    //if(i==0)printf("md->dtempv[0] %.16le\n",md->dtempv[0]);
     md->dftemp[i]=md->dcv_y[i]+md->dtempv[i];
     __syncthreads();
     //print_double(md->dcv_y,73,"dcv_y2994");
@@ -1460,9 +1441,6 @@ void cudaDevicecvPredict(ModelDataGPU *md, ModelDataVariable *sc) {
   md->cv_last_yn[i]=md->dzn[i];
   __syncthreads();
   //print_double(md->dzn,73,"dzn1432");
-  //print_double(md->dzn+md->nrows,73,"dzn1_1432");
-  //if(i==0)printf("md->nrows %d\n",md->nrows);
-  //if(i==0)printf("cv_q %d\n",sc->cv_q);
   for (k = 1; k <= sc->cv_q; k++){
     for (j = sc->cv_q; j >= k; j--){
       md->dzn[i+md->nrows*(j-1)]+=md->dzn[i+md->nrows*j];
@@ -2035,7 +2013,7 @@ void cvodeRun(ModelDataGPU *mGPU, cudaStream_t stream){
 
 
 void swapCSC_CSR_ODE_if_enabled(SolverData *sd){
-#ifdef DEV_CSR_ODE_GPU
+#ifndef DEV_CSR_ODE_GPU
   ModelDataGPU *mGPU = sd->mGPU;
   int n_row=mGPU->nrows/mGPU->n_cells;
   ModelDataCPU *mCPU = &(sd->mCPU);
