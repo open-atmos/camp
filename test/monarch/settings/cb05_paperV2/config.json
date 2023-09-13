@@ -1,5 +1,6 @@
 {
   "camp-files" : [
+    "settings/monarch_box_binned/cb05_abs_tol.json",
     "settings/monarch_box_binned/cb05_mechanism.json",
     "settings/monarch_box_binned/cb05_species.json",
     "settings/monarch_box_binned/custom_species.json",

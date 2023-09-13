@@ -131,15 +131,13 @@ contains
                                                              update_data_GMD)
             call this%camp_core%initialize_update_object( aero_rep, &
                                                              update_data_GSD)
-            if(.not. this%output_file_title.eq."cb05_yarwood2005")  then
-              call assert(889473105, &
-                        aero_rep%get_section_id("organic_matter", i_sect_om))
-              call assert(648042550, &
-                          aero_rep%get_section_id("black_carbon", i_sect_bc))
-              i_sect_sulf=-1
-              call assert(307728742, &
-                          aero_rep%get_section_id("other_PM", i_sect_opm))
-              end if
+            call assert(889473105, &
+                      aero_rep%get_section_id("organic_matter", i_sect_om))
+            call assert(648042550, &
+                        aero_rep%get_section_id("black_carbon", i_sect_bc))
+            i_sect_sulf=-1
+            call assert(307728742, &
+                        aero_rep%get_section_id("other_PM", i_sect_opm))
             class default
             call die_msg(351392791, &
                          "Wrong type for aerosol representation "// &

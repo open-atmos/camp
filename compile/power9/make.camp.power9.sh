@@ -26,8 +26,8 @@ main(){
 
 time compile
 
-#FILE=TestMonarch.py
-FILE=./camp_v1_paper_binned
+FILE=TestMonarch.py
+#FILE=./camp_v1_paper_binned
 #FILE=stats_monarch_netcdf.py
 #FILE=./test_run/chemistry/cb05cl_ae5/test_chemistry_cb05cl_ae5.sh
 #FILE=./unit_test_aero_rep_single_particle
