@@ -88,7 +88,6 @@ contains
     integer(kind=i_kind) :: i_spec, i_photo_rxn, rank, n_ranks, ierr
     type(string_t), allocatable :: unique_names(:)
     character(len=:), allocatable :: spec_name, settings_interface_file
-    integer :: max_spec_name_size=512
     real(kind=dp) :: base_rate
     class(aero_rep_data_t), pointer :: aero_rep
     integer(kind=i_kind) :: i_sect_om, i_sect_bc, i_sect_sulf, i_sect_opm, i, z
@@ -165,10 +164,6 @@ contains
               camp_mpi_pack_size_integer(i_sect_bc) + &
               camp_mpi_pack_size_integer(i_sect_sulf) + &
               camp_mpi_pack_size_integer(i_sect_opm)
-      do z=1, size(this%monarch_species_names)
-        call assert(307722742,len_trim(this%monarch_species_names(z)%string).lt.max_spec_name_size)
-        pack_size = pack_size +  camp_mpi_pack_size_string(trim(this%monarch_species_names(z)%string))
-      end do
       pack_size = pack_size + camp_mpi_pack_size_integer(this%n_photo_rxn)
       do i = 1, this%n_photo_rxn
         pack_size = pack_size + this%photo_rxns(i)%pack_size( local_comm )
@@ -190,9 +185,6 @@ contains
       call camp_mpi_pack_integer(buffer, pos, i_sect_bc)
       call camp_mpi_pack_integer(buffer, pos, i_sect_sulf)
       call camp_mpi_pack_integer(buffer, pos, i_sect_opm)
-      do z=1, size(this%monarch_species_names)
-        call camp_mpi_pack_string(buffer, pos, trim(this%monarch_species_names(z)%string))
-      end do
       call camp_mpi_pack_integer(buffer, pos, this%n_photo_rxn)
       do i = 1, this%n_photo_rxn
         call this%photo_rxns(i)%bin_pack( buffer, pos, local_comm )
@@ -221,15 +213,6 @@ contains
       call camp_mpi_unpack_integer(buffer, pos, i_sect_bc)
       call camp_mpi_unpack_integer(buffer, pos, i_sect_sulf)
       call camp_mpi_unpack_integer(buffer, pos, i_sect_opm)
-      allocate(this%monarch_species_names(size(this%map_monarch_id)))
-      spec_name=""
-      do z=1,max_spec_name_size
-        spec_name=spec_name//" "
-      end do
-      do z=1, size(this%map_monarch_id)
-        call camp_mpi_unpack_string(buffer, pos, spec_name)
-        this%monarch_species_names(z)%string= trim(spec_name)
-      end do
       call camp_mpi_unpack_integer(buffer, pos, this%n_photo_rxn)
       if( allocated( this%photo_rxns  ) ) deallocate( this%photo_rxns  )
       allocate(this%photo_rxns(this%n_photo_rxn))
