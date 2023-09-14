@@ -305,7 +305,6 @@ contains
     integer, intent(in) :: NUM_TIME_STEP
     character(len=*),intent(in) :: DIFF_CELLS
     type(chem_spec_data_t), pointer :: chem_spec_data
-    type(string_t), allocatable :: camp_spec_names(:)
     integer, parameter :: emi_len=1
     real, allocatable :: rate_emi(:,:)
     character, allocatable :: buffer(:)
@@ -315,7 +314,6 @@ contains
     character(len=:), allocatable :: file_name
     integer :: i, j, k, i_spec, z, o, t, r, i_cell, i_photo_rxn
     integer :: NUM_VERT_CELLS, i_hour_max
-    character(len=:), allocatable :: DIFF_CELLS_EMI
     real :: press_init, press_end, press_range,&
             emi_slide, press_norm
     integer :: n_cells
@@ -339,12 +337,8 @@ contains
       n_cells=(I_E - I_W+1)*(I_N - I_S+1)*NUM_VERT_CELLS
       i_hour_max=30
       allocate(rate_emi(i_hour_max,n_cells))
-      DIFF_CELLS_EMI = "OFF"
-      if(DIFF_CELLS.eq."ON") then
-        DIFF_CELLS_EMI = "ON"
-      end if
       rate_emi(:,:)=0.0
-      if(DIFF_CELLS_EMI.eq."ON") then
+      if(DIFF_CELLS.eq."ON") then
         press_init = 100000.!Should be equal to mock_monarch
         press_end = 10000.
         press_range = press_end-press_init
@@ -417,6 +411,7 @@ contains
               end do
             end if
             call cpu_time(comp_start)
+            !print*,this%camp_state%state_var(:)
             call this%camp_core%solve(this%camp_state, real(time_step*60., kind=dp),solver_stats=solver_stats)
             call cpu_time(comp_end)
             comp_time = comp_time + (comp_end-comp_start)
@@ -456,6 +451,7 @@ contains
         end do
       end do
       call cpu_time(comp_start)
+      !print*,this%camp_state%state_var(:)
       call this%camp_core%solve(this%camp_state, &
               real(time_step*60., kind=dp), solver_stats = solver_stats)
       call cpu_time(comp_end)
@@ -553,7 +549,6 @@ contains
     class(rxn_data_t), pointer :: rxn
     character(len=:), allocatable :: key, str_val, rxn_key, rate_key, rxn_val
     real(kind=dp) :: rate_val
-    type(string_t), allocatable :: spec_names(:)
 
     key = "MONARCH mod37"
     call assert(418262750, this%camp_core%get_mechanism(key, mechanism))
@@ -637,6 +632,7 @@ contains
       call assert_msg(916977002, this%map_camp_id(i_spec).gt.0, &
                 "Could not find species '"//spec_name//"' in CAMP-camp.")
       call gas_species_list%iter_next()
+      !print*,spec_name,i_spec
       i_spec = i_spec + 1
     end do
 
@@ -686,7 +682,6 @@ contains
     type(property_t), pointer :: gas_species_list, aero_species_list, species_data
     character(len=:), allocatable :: key_name, spec_name, rep_name
     integer(kind=i_kind) :: i_spec, num_spec, i
-    type(string_t), allocatable :: spec_names(:)
     real :: factor_ppb_to_ppm
 
     if(this%output_file_title.eq."cb05_paperV2") then
@@ -763,7 +758,6 @@ contains
       end do
     end if
 
-    spec_names = this%camp_core%unique_names();
     this%specs_emi_id(1)=chem_spec_data%gas_state_id("SO2")
     this%specs_emi_id(2)=chem_spec_data%gas_state_id("NO2")
     this%specs_emi_id(3)=chem_spec_data%gas_state_id("NO")

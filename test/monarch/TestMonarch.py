@@ -10,8 +10,8 @@ from run import *
 def all_timesteps():
   conf = TestMonarch()
 
-  conf.chemFile = "cb05_paperV2"
-  #conf.chemFile = "monarch_cb05"
+  #conf.chemFile = "cb05_paperV2"
+  conf.chemFile = "monarch_cb05"
 
   conf.diffCellsL = []
   #conf.diffCellsL.append("Realistic")
@@ -54,7 +54,7 @@ def all_timesteps():
   # conf.cells = [100, 500, 1000, 5000, 10000]
   # conf.cells = [50000,100000,500000,1000000]
 
-  conf.timeSteps = 10
+  conf.timeSteps = 100
   #conf.timeSteps = 480 #24h
 
   conf.timeStepsDt = 2

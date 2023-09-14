@@ -637,7 +637,6 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
             state[i_spec + i_cell * n_state_var] > TINY
                 ? (realtype)state[i_spec + i_cell * n_state_var]
                 : TINY;
-        //printf("state648[%d]=%.17le\n",i_spec,state[i_spec]);
       } else if (md->var_type[i_spec] == CHEM_SPEC_CONSTANT) {
         state[i_spec + i_cell * n_state_var] =
             state[i_spec + i_cell * n_state_var] > TINY
@@ -657,6 +656,12 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
     aero_rep_update_env_state(md);
     sub_model_update_env_state(md);
     rxn_update_env_state(md);
+    if(i_cell==0){
+      print_double(md->grid_cell_env,CAMP_NUM_ENV_PARAM_,"env689");
+      print_double(md->grid_cell_state,n_state_var,"state688");
+      //double *yp = N_VGetArrayPointer(sd->y);
+      //print_double(yp,73,"y660");
+    }
   }
 
   //Reset jac solving, otherwise values from previous iteration would be carried to current iteration
@@ -754,7 +759,6 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
             (double)(NV_Ith_S(sd->y, i_dep_var) > 0.0
                          ? NV_Ith_S(sd->y, i_dep_var)
                          : 0.0);
-        //printf("state778[%d]=%.17le\n",i_spec,state[i_spec]);
         i_dep_var++;
       }
     }

@@ -632,6 +632,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
 #ifdef ODE_WARNING
   mCPU->mdvCPU.cv_nhnil = cv_mem->cv_nhnil;
 #endif
+  mCPU->mdvCPU.tret = *tret;
   mCPU->mdvCPU.cv_tretlast = cv_mem->cv_tretlast;
   mCPU->mdvCPU.cv_etaqm1 = cv_mem->cv_etaqm1;
   mCPU->mdvCPU.cv_etaq = cv_mem->cv_etaq;
@@ -661,7 +662,6 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
   mCPU->mdvCPU.cv_tn = cv_mem->cv_tn;
   mCPU->mdvCPU.cv_etamax = cv_mem->cv_etamax;
   mCPU->mdvCPU.cv_maxncf = cv_mem->cv_maxncf;
-  mCPU->mdvCPU.tret = *tret;
   double *ewt = NV_DATA_S(cv_mem->cv_ewt);
   double *acor = NV_DATA_S(cv_mem->cv_acor);
   double *tempv = NV_DATA_S(cv_mem->cv_tempv);

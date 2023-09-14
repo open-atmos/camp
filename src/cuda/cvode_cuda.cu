@@ -1194,7 +1194,6 @@ int cudaDevicecvNlsNewton(int nflag,
                   (sc->cv_nst >= sc->cv_nstlp + MSBP) ||
                   (dgamrat > DGMAX);
   __syncthreads();
-  print_double(md->dzn,73,"dzn1174");
   //print_double(md->cv_last_yn,73,"cv_last_yn1175");
   md->dftemp[i]=md->dzn[i]-md->cv_last_yn[i];
   //print_double(md->dftemp,73,"cv_ftemppN_VLinearSum2");
@@ -1210,7 +1209,6 @@ int cudaDevicecvNlsNewton(int nflag,
   }
   for(;;) {
     __syncthreads();
-    print_double(md->dzn,73,"dzn1139");
     //print_double(md->cv_acor_init,73,"cv_acor_init1140");
     md->dcv_y[i] = md->dzn[i]+md->cv_acor_init[i];
     //print_double(md->dcv_y,73,"dcv_y1139");
@@ -1484,6 +1482,7 @@ int cudaDevicecvDoErrorTest(ModelDataGPU *md, ModelDataVariable *sc,
     md->dzn[i]=md->dftemp[i]-md->cv_l[0+blockIdx.x*L_MAX]*md->cv_acor[i];
     min_val = 0.;
   }
+  print_double(md->dzn,73,"dzn1487");
   //print_double(&md->cv_tq[2+blockIdx.x*(NUM_TESTS + 1)],1,"cv_tq_21504");
   //print_double(&sc->cv_acnrm,1,"cv_acnrm1504");
   dsm = sc->cv_acnrm * md->cv_tq[2+blockIdx.x*(NUM_TESTS + 1)];
@@ -1534,7 +1533,6 @@ int cudaDevicecvDoErrorTest(ModelDataGPU *md, ModelDataVariable *sc,
   __syncthreads();
   sc->cv_qwait = 10;
   int aux_flag=0;
-  print_double(md->dzn,73,"dzn1505");
   retval=cudaDevicef(sc->cv_tn, md->dzn, md->dtempv,md,sc, &aux_flag);
   if (retval < 0)  return(CV_RHSFUNC_FAIL);
   if (retval > 0)  return(CV_UNREC_RHSFUNC_ERR);
@@ -1559,13 +1557,13 @@ void cudaDevicecvCompleteStep(ModelDataGPU *md, ModelDataVariable *sc) {
     md->dzn[i+md->nrows*j]+=md->cv_l[j+blockIdx.x*L_MAX]*md->cv_acor[i];
     __syncthreads();
   }
+  print_double(md->dzn,73,"dzn1554");
   sc->cv_qwait--;
   if ((sc->cv_qwait == 1) && (sc->cv_q != md->cv_qmax)) {
     md->dzn[i+md->nrows*md->cv_qmax]=md->cv_acor[i];
     sc->cv_saved_tq5 = md->cv_tq[5+blockIdx.x*(NUM_TESTS + 1)];
     sc->cv_indx_acor = md->cv_qmax;
   }
-  print_double(md->dzn,73,"dzn1554");
 }
 
 __device__
@@ -1880,7 +1878,6 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *sc) {
     flag_shr[0] = 0;
     __syncthreads();
     sc->cv_next_h = sc->cv_h;
-    sc->cv_next_q = sc->cv_q;
     int ewtsetOK = 0;
     if (sc->cv_nst > 0) {
       //print_double(md->dtempv,73,"dtempvcv_efun0");

@@ -32,4 +32,5 @@ cmake -D CMAKE_BUILD_TYPE=debug \
 #-D CMAKE_C_FLAGS ="-O3 -lcudart -lcublas" \
 #-D CMAKE_CUDA_FLAGS="-Xcompiler="-fpermissive" -lcudart -lcublas" \
 #-D EXAMPLES_ENABLE_C=OFF \
+make install
 cd $curr_path

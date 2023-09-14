@@ -32,7 +32,6 @@ typedef struct {
 } JacobianGPU;
 
 typedef struct {
-    int cv_next_q;
     int nstloc;
     double tret;
     double cv_tretlast;
@@ -51,7 +50,6 @@ typedef struct {
     double cv_crate;
     double cv_gamrat;
     double cv_gammap;
-    int cv_nst;
     double cv_gamma;
     double cv_rl1;
     double cv_eta;
@@ -66,7 +64,8 @@ typedef struct {
     double cv_etamax;
     int cv_maxncf;
     double *grid_cell_state;
-    int nstlj;  //Counters (e.g. iterations of function cvnlsNewton)
+    int nstlj;
+    int cv_nst;
 #ifdef ODE_WARNING
     int cv_nhnil;            /* number of messages issued to the user that t + h == t for the next iternal step            */
 #endif

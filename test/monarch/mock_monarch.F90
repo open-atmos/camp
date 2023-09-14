@@ -147,8 +147,6 @@ program mock_monarch_t
   call jfile%get('diffCells',diffCells)
   if(diffCells.eq."Realistic") then
     DIFF_CELLS = "ON"
-  else
-    DIFF_CELLS = "OFF"
   end if
   NUM_WE_CELLS = I_E-I_W+1
   NUM_SN_CELLS = I_N-I_S+1
