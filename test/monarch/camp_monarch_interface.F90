@@ -799,45 +799,26 @@ contains
     real, intent(inout) :: water_conc(:,:,:,:)
     integer, intent(in) :: WATER_VAPOR_ID
     integer, intent(in) :: i_W,I_E,I_S,I_N
-    integer(kind=i_kind) :: i_spec, water_id,i,j,k,r,NUM_VERT_CELLS,state_size_per_cell, last_cell
-    real :: conc_deviation_perc
-    conc_deviation_perc=0.
+    integer(kind=i_kind) :: i_spec, water_id,i,j,k,r,NUM_VERT_CELLS,state_size_per_cell
     NUM_VERT_CELLS=size(MONARCH_conc,3)
     this%camp_state%state_var(this%init_conc_camp_id(:)) = this%init_conc(:)
-    state_size_per_cell = this%camp_core%size_state_per_cell
-    do i=i_W, I_E
-      do j=I_S, I_N
-        do k=1, NUM_VERT_CELLS
-          if(this%n_cells.eq.1) then
-            r=0
-            last_cell=0
-          else
+    if(this%n_cells.ne.1) then
+      state_size_per_cell = this%camp_core%size_state_per_cell
+      do i=i_W, I_E
+        do j=I_S, I_N
+          do k=1, NUM_VERT_CELLS
             r=(k-1)*(I_E*I_N) + (j-1)*(I_E) + i-1
-            last_cell=((I_E - I_W+1)*(I_N - I_S+1)*NUM_VERT_CELLS)-1
-          end if
-          forall (i_spec = 1:size(this%map_monarch_id))
-            this%camp_state%state_var(this%init_conc_camp_id(i_spec)&
-            +r*state_size_per_cell) = this%init_conc(i_spec)
-          end forall
-          if(r.ne.last_cell) then
-            do i_spec=1, size(this%map_monarch_id)
-              MONARCH_conc(i,j,k,this%map_monarch_id(i_spec)) = &
-                this%camp_state%state_var(this%map_camp_id(i_spec))&
-                +r*conc_deviation_perc*this%camp_state%state_var(this%map_camp_id(i_spec))
-            end do
-          else
-            do i_spec=1, size(this%map_monarch_id)
-              MONARCH_conc(i,j,k,this%map_monarch_id(i_spec)) = &
-                this%camp_state%state_var(this%map_camp_id(i_spec))&
-                +r*conc_deviation_perc*this%camp_state%state_var(this%map_camp_id(i_spec))
-            end do
-          end if
-          this%camp_state%state_var(this%gas_phase_water_id +(r*state_size_per_cell)) = &
-                  water_conc(i,j,k,WATER_VAPOR_ID) * &
-                          mwair / mwwat * 1.e6
+            forall (i_spec = 1:size(this%map_monarch_id))
+              this%camp_state%state_var(this%init_conc_camp_id(i_spec)&
+              +r*state_size_per_cell) = this%init_conc(i_spec)
+            end forall
+            this%camp_state%state_var(this%gas_phase_water_id +(r*state_size_per_cell)) = &
+                    water_conc(i,j,k,WATER_VAPOR_ID) * &
+                            mwair / mwwat * 1.e6
+          end do
         end do
       end do
-    end do
+    end if
   end subroutine get_init_conc
 
   elemental subroutine finalize(this)
