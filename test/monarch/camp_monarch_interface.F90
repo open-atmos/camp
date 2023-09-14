@@ -394,7 +394,7 @@ contains
               end do
             end if
             call cpu_time(comp_start)
-            !print*,this%camp_state%state_var(:)
+            print*,this%camp_state%state_var(:)
             call this%camp_core%solve(this%camp_state, real(time_step*60., kind=dp),solver_stats=solver_stats)
             call cpu_time(comp_end)
             comp_time = comp_time + (comp_end-comp_start)
@@ -434,7 +434,7 @@ contains
         end do
       end do
       call cpu_time(comp_start)
-      !print*,this%camp_state%state_var(:)
+      print*,this%camp_state%state_var(:)
       call this%camp_core%solve(this%camp_state, &
               real(time_step*60., kind=dp), solver_stats = solver_stats)
       call cpu_time(comp_end)
@@ -705,6 +705,7 @@ contains
         call assert_msg(940200584, this%init_conc_camp_id(i_spec).gt.0, &
                 "Could not find species '"//spec_name//"' in CAMP-camp.")
         call gas_species_list%iter_next()
+        print*,this%init_conc(i_spec)
         i_spec = i_spec + 1
       end do
     end if

@@ -2,8 +2,8 @@
 #todo: enable "USE_PRINT_ARRAYS"
 #todo: enable "USE_BCG"
 #todo: enable "CAMP_DEBUG_NVECTOR"
-source remake.cvode.camp.sh
-compile_camp_cvode
+source remake.camp.sh
+compile_camp
 FILE=diff_TestMonarch.py
 cd ../../test/monarch
 #log_path="/gpfs/scratch/bsc32/bsc32815/a591/nmmb-monarch/MODEL/SRC_LIBS/camp/compile/power9/log_gpu.txt"
