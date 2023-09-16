@@ -48,20 +48,19 @@ module camp_aero_rep_single_particle
   implicit none
   private
 
-#define NUM_LAYERS_ this%condensed_data_int(1)
-#define TOTAL_NUM_PHASES_ this%condensed_data_int(2)
-#define TOTAL_NUM_LAYERS_ this%condensed_data_int(3)
-#define AERO_REP_ID_ this%condensed_data_int(4)
-#define MAX_PARTICLES_ this%condensed_data_int(5)
-#define PARTICLE_STATE_SIZE_ this%condensed_data_int(6)
+#define TOTAL_NUM_PHASES_ this%condensed_data_int(1)
+#define TOTAL_NUM_LAYERS_ this%condensed_data_int(2)
+#define AERO_REP_ID_ this%condensed_data_int(3)
+#define MAX_PARTICLES_ this%condensed_data_int(4)
+#define PARTICLE_STATE_SIZE_ this%condensed_data_int(5)
 #define NUM_INT_PROP_ 6
 #define NUM_REAL_PROP_ 0
 #define NUM_ENV_PARAM_PER_PARTICLE_ 1
 #define NUM_PHASE_(l) this%condensed_data_int(NUM_INT_PROP_+l)
-#define PHASE_STATE_ID_(p) this%condensed_data_int(NUM_INT_PROP_+NUM_LAYERS_+p)
-#define LAYER_STATE_ID_(l+1) this%condensed_data_init(NUM_INT_PROP_+NUM_PHASE_+l+1)
-#define PHASE_MODEL_DATA_ID_(p) this%condensed_data_int(NUM_INT_PROP_+NUM_LAYERS_+TOTAL_NUM_PHASES_+p)
-#define PHASE_NUM_JAC_ELEM_(p) this%condensed_data_int(NUM_INT_PROP_+NUM_LAYERS_+2*TOTAL_NUM_PHASES_+p)
+#define PHASE_STATE_ID_(p) this%condensed_data_int(NUM_INT_PROP_+TOTAL_NUM_PHASES_+p)
+#define LAYER_STATE_ID_(l+1) this%condensed_data_init(NUM_INT_PROP_+TOTAL_NUM_LAYERS_+l+1)
+#define PHASE_MODEL_DATA_ID_(p) this%condensed_data_int(NUM_INT_PROP_+TOTAL_NUM_PHASES_+p)
+#define PHASE_NUM_JAC_ELEM_(p) this%condensed_data_int(NUM_INT_PROP_+2*TOTAL_NUM_PHASES_+p)
 
   ! Update types (These must match values in aero_rep_single_particle.c)
   integer(kind=i_kind), parameter, public :: UPDATE_NUMBER_CONC = 0
@@ -405,6 +404,10 @@ contains
 
     this%aero_layer_set_names = ordered_layer_array(this)
     this%aero_layer_phase_set_names = ordered_phase_array(this)
+ 
+    ! Set total phase and total number layers state
+    TOTAL_NUM_PHASES_ = SUM(NUM_PHASE)
+    TOTAL_NUM_LAYERS_ = size(NUM_PHASE)
 
     ! Construct aero_phase pointer array for layers
     allocate(aero_layer_phase_set(size(aero_layer_phase_set_names)))
@@ -441,8 +444,6 @@ contains
     this%num_env_params = NUM_ENV_PARAM_PER_PARTICLE_ * num_particles
 
     ! Set phase state and model data ids
-    TOTAL_NUM_PHASES_ = size(aero_phase_set)
-    TOTAL_NUM_LAYERS_ = size(aero_layer_set)
     this%state_id_start = spec_state_id
     curr_id = spec_state_id
     do i_phase = 1, TOTAL_NUM_PHASES_

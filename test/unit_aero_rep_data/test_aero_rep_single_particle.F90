@@ -118,10 +118,12 @@ contains
 
 #ifdef CAMP_USE_JSON
 
-    integer(kind=i_kind) :: i_spec, j_spec, i_rep, i_phase
+    integer(kind=i_kind) :: i_spec, j_spec, i_rep, i_phase, i_layer, j_layer
     type(string_t), allocatable :: rep_names(:)
     character(len=:), allocatable :: rep_name, spec_name, phase_name
     type(string_t), allocatable :: file_list(:), unique_names(:)
+    type(string_t), allocatable :: ordered_layer_set_names(:)
+    type(string_t), allocatable :: ordered_layer_phase_set_names(:)
 #ifdef CAMP_USE_MPI
     type(aero_rep_factory_t) :: aero_rep_factory
     type(aero_rep_data_ptr), allocatable :: aero_rep_passed_data_set(:)
@@ -174,7 +176,7 @@ contains
                   unique_names(j_spec)%string), rep_name)
         end do
       end do
-
+      
       ! Set the species concentrations
       phase_name = "my test phase one"
       spec_name = "species a"

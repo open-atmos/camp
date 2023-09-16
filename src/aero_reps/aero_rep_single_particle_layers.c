@@ -20,18 +20,20 @@
 
 #define UPDATE_NUMBER 0
 
-#define NUM_PHASE_ int_data[0]
-#define AERO_REP_ID_ int_data[1]
-#define MAX_PARTICLES_ int_data[2]
-#define PARTICLE_STATE_SIZE_ int_data[3]
-#define NUM_LAYERS_ int_data[4]
+#define TOTAL_NUM_PHASES_ int_data[0]
+#define TOTAL_NUM_LAYERS_ int_data[1]
+#define AERO_REP_ID_ int_data[2]
+#define MAX_PARTICLES_ int_data[3]
+#define PARTICLE_STATE_SIZE_ int_data[4]
 #define NUMBER_CONC_(x) aero_rep_env_data[x]
-#define NUM_INT_PROP_ 4
+#define NUM_INT_PROP_ 5 
 #define NUM_FLOAT_PROP_ 0
 #define NUM_ENV_PARAM_ MAX_PARTICLES_
-#define PHASE_STATE_ID_(x) (int_data[NUM_INT_PROP_ + x] - 1)
-#define PHASE_MODEL_DATA_ID_(x) (int_data[NUM_INT_PROP_ + NUM_PHASE_ + x] - 1)
-#define PHASE_NUM_JAC_ELEM_(x) int_data[NUM_INT_PROP_ + 2 * NUM_PHASE_ + x]
+#define NUM_PHASE_(l) (int_data[NUM_INT_PROP_ + l] - 1)
+#define PHASE_STATE_ID_(p) (int_data[NUM_INT_PROP_ + TOTAL_NUM_PHASES_ + p] - 1)
+#define LAYER_STATE_ID_(l+1) (int_data[NUM_INT_PROP_ + TOTAL_NUM_LAYERS_ + l + 1] - 1)
+#define PHASE_MODEL_DATA_ID_(p) (int_data[NUM_INT_PROP_ + TOTAL_NUM_PHASES_ + p] - 1)
+#define PHASE_NUM_JAC_ELEM_(p) (int_data[NUM_INT_PROP_ + 2*TOTAL_NUM_PHASES_ + p] - 1)
 
 /** \brief Flag Jacobian elements used in calcualtions of mass and volume
  *
