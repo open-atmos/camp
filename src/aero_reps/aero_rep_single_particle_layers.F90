@@ -316,7 +316,7 @@ contains
 
       ! Get the cover name
       key_name = "covers"
-      call assert_msg(350939595, section%get_string(key_name, layer_covers), &
+      call assert_msg(350939595, layers%get_string(key_name, layer_covers), &
                 "Missing cover name in layer'"// &
                 this%layer_name_unordered(i_layer)%string// &
                 "' in single-particle layer aerosol representation '"// &
@@ -325,9 +325,9 @@ contains
            
       ! Get the set of phases
       key_name = "phases"
-      call assert_msg(647756433, section%get_property_t(key_name, phases), &
+      call assert_msg(647756433, layers%get_property_t(key_name, phases), &
               "Missing phases for layer '"// &
-              this%section_name(i_section)%string// &
+              this%layer_name_unordered(i_layer)%string// &
               "' in single-particle layer aerosol representation '"// &
               this%rep_name//"'")
 
@@ -390,7 +390,7 @@ contains
       key_name = "phases"
       call assert_msg(977307148, layers%get_property_t(key_name, phases), &
               "Missing phases for layer '"// &
-              this%section_name(i_section)%string// &
+              this%layer_name_unorderd(i_layer)%string// &
               "' in single-particle layer aerosol representation '"// &
             this%rep_name//"'")
       this%phase_name_unordered(layer_state_id_unordered(i_layer):&
