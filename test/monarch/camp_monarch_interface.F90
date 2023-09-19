@@ -373,28 +373,32 @@ contains
               real( temperature(i,j,k), kind=dp ) )
             call this%camp_state%env_states(1)%set_pressure_Pa(   &
               real( pressure(i,j,k), kind=dp ) )
-            do z=1, size(this%camp_state%state_var)
-              this%camp_state%state_var(z) = 0.
+            do r=1, size(this%camp_state%state_var)
+              this%camp_state%state_var(r) = 0.
             end do
             this%camp_state%state_var(this%map_camp_id(:)) = &
                             MONARCH_conc(i,j,k,this%map_monarch_id(:))
+            print*,"MONARCH_conc381",MONARCH_conc(i,j,k,this%map_monarch_id(:))
+            print*,"state_var421",this%camp_state%state_var(:)
             if(this%output_file_title.eq."monarch_cb05") then
               this%camp_state%state_var(this%gas_phase_water_id) = &
-              water_conc(1,1,1,water_vapor_index)!
+              water_conc(1,1,1,water_vapor_index)
             else
               this%camp_state%state_var(this%gas_phase_water_id) = &
                       water_conc(1,1,1,water_vapor_index) * &
                               mwair / mwwat * 1.e6
             end if
+            print*,"state_var430",this%camp_state%state_var(:)
             if(this%output_file_title.eq."cb05_paperV2") then
+              print*,rate_emi(i_hour,z+1), i_hour, z+1
               do r=1,size(this%specs_emi_id)
                 this%camp_state%state_var(this%specs_emi_id(r))=&
                         this%camp_state%state_var(this%specs_emi_id(r))&
                                 +this%specs_emi(r)*rate_emi(i_hour,z+1)*conv(i,j,k)
               end do
+            print*,"state_var436",this%camp_state%state_var(:)
             end if
             call cpu_time(comp_start)
-            print*,this%camp_state%state_var(:)
             call this%camp_core%solve(this%camp_state, real(time_step*60., kind=dp),solver_stats=solver_stats)
             call cpu_time(comp_end)
             comp_time = comp_time + (comp_end-comp_start)
@@ -404,8 +408,8 @@ contains
         end do
       end do
     else
-      do z=1, size(this%camp_state%state_var)
-        this%camp_state%state_var(z) = 0.
+      do r=1, size(this%camp_state%state_var)
+        this%camp_state%state_var(r) = 0.
       end do
       do i=I_W, I_E
         do j=I_S, I_N
@@ -414,27 +418,31 @@ contains
             z = (k-1)*(I_E*I_N) + o
             call this%camp_state%env_states(z+1)%set_temperature_K(real(temperature(i,j,k),kind=dp))
             call this%camp_state%env_states(z+1)%set_pressure_Pa(real(pressure(i,j,k),kind=dp))
-            this%camp_state%state_var(this%map_camp_id(:) + &
-            (z*state_size_per_cell)) = MONARCH_conc(i,j,k,this%map_monarch_id(:))
+            this%camp_state%state_var(this%map_camp_id(:) + (z*state_size_per_cell))&
+             = MONARCH_conc(i,j,k,this%map_monarch_id(:))
+            print*,"MONARCH_conc381",MONARCH_conc(i,j,k,this%map_monarch_id(:))
+            print*,"state_var421",this%camp_state%state_var(:)
             if(this%output_file_title.eq."monarch_cb05") then
               this%camp_state%state_var(this%gas_phase_water_id+(z*state_size_per_cell)) = &
-                      water_conc(i,j,k,water_vapor_index) !*air_density(i,j,k) * 1.0d9
+                      water_conc(1,1,1,water_vapor_index)
             else
               this%camp_state%state_var(this%gas_phase_water_id+(z*state_size_per_cell)) = &
                       water_conc(1,1,1,water_vapor_index) * mwair / mwwat * 1.e6
             end if
+            print*,"state_var430",this%camp_state%state_var(:)
             if(this%output_file_title.eq."cb05_paperV2") then
+              print*,rate_emi(i_hour,z+1), i_hour, z+1
               do r=1,size(this%specs_emi_id)
                 this%camp_state%state_var(this%specs_emi_id(r)+z*state_size_per_cell)=&
                         this%camp_state%state_var(this%specs_emi_id(r)+z*state_size_per_cell)&
                                 +this%specs_emi(r)*rate_emi(i_hour,z+1)*conv(i,j,k)
               end do
             endif
+            print*,"state_var436",this%camp_state%state_var(:)
           end do
         end do
       end do
       call cpu_time(comp_start)
-      print*,this%camp_state%state_var(:)
       call this%camp_core%solve(this%camp_state, &
               real(time_step*60., kind=dp), solver_stats = solver_stats)
       call cpu_time(comp_end)
@@ -705,7 +713,7 @@ contains
         call assert_msg(940200584, this%init_conc_camp_id(i_spec).gt.0, &
                 "Could not find species '"//spec_name//"' in CAMP-camp.")
         call gas_species_list%iter_next()
-        print*,this%init_conc(i_spec)
+        !print*,"init,conc",this%init_conc(i_spec)
         i_spec = i_spec + 1
       end do
     end if
@@ -786,8 +794,15 @@ contains
     integer(kind=i_kind) :: i_spec, water_id,i,j,k,r,NUM_VERT_CELLS,state_size_per_cell
     NUM_VERT_CELLS=size(MONARCH_conc,3)
     this%camp_state%state_var(this%init_conc_camp_id(:)) = this%init_conc(:)
-    if(this%n_cells.ne.1) then
-      state_size_per_cell = this%camp_core%size_state_per_cell
+    if(this%n_cells.eq.1) then
+      forall (i_spec = 1:size(this%map_monarch_id))
+        MONARCH_conc(:,:,:,this%map_monarch_id(i_spec)) = &
+            this%camp_state%state_var(this%map_camp_id(i_spec))
+      end forall
+      this%camp_state%state_var(this%gas_phase_water_id +(r*state_size_per_cell)) = &
+          water_conc(i,j,k,WATER_VAPOR_ID) * &
+              mwair / mwwat * 1.e6
+    else
       do i=i_W, I_E
         do j=I_S, I_N
           do k=1, NUM_VERT_CELLS
@@ -796,6 +811,10 @@ contains
               this%camp_state%state_var(this%init_conc_camp_id(i_spec)&
               +r*state_size_per_cell) = this%init_conc(i_spec)
             end forall
+            do i_spec=1, size(this%map_monarch_id)
+              MONARCH_conc(i,j,k,this%map_monarch_id(i_spec)) = &
+                this%camp_state%state_var(this%map_camp_id(i_spec))
+            end do
             this%camp_state%state_var(this%gas_phase_water_id +(r*state_size_per_cell)) = &
                     water_conc(i,j,k,WATER_VAPOR_ID) * &
                             mwair / mwwat * 1.e6
