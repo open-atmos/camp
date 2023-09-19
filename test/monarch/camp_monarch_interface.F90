@@ -104,7 +104,7 @@ contains
     endif
     MONARCH_PROCESS = camp_mpi_rank()
     allocate(this)
-    if (.not.present(n_cells).or.n_cells.eq.1) then
+    if (.not.present(n_cells).or.n_cells==1) then
       this%solve_multiple_cells = .false.
     else
       this%solve_multiple_cells = .true.
@@ -117,7 +117,7 @@ contains
     deallocate(camp_solver_data)
     allocate(this%specs_emi_id(15))
     allocate(this%specs_emi(size(this%specs_emi_id)))
-    if (MONARCH_PROCESS.eq.0) then
+    if (MONARCH_PROCESS==0) then
       call cpu_time(comp_start)
       settings_interface_file="settings/"//output_file_title//"/interface.json"
       call this%load(settings_interface_file)
@@ -194,11 +194,11 @@ contains
       call camp_mpi_pack_real_array(buffer, pos, this%specs_emi)
     endif
     call camp_mpi_bcast_integer(pack_size, local_comm)
-    if (MONARCH_PROCESS.ne.0) then
+    if (MONARCH_PROCESS/=0) then
       allocate(buffer(pack_size))
     end if
     call camp_mpi_bcast_packed(buffer, local_comm)
-    if (MONARCH_PROCESS.ne.0) then
+    if (MONARCH_PROCESS/=0) then
       this%camp_core => camp_core_t(n_cells=this%n_cells)
       pos = 0
       call this%camp_core%bin_unpack(buffer, pos)
@@ -227,7 +227,7 @@ contains
     deallocate(buffer)
     call this%camp_core%solver_initialize(n_cells_tstep)
     this%camp_state => this%camp_core%new_state()
-    if(this%output_file_title.eq."cb05_paperV2") then
+    if(this%output_file_title=="cb05_paperV2") then
       allocate(this%offset_photo_rates_cells(this%n_cells))
       this%offset_photo_rates_cells(:) = 0.
       do z =1, this%n_cells
@@ -241,26 +241,26 @@ contains
     end if
     call camp_mpi_barrier(MPI_COMM_WORLD)
     do z =1, this%n_cells
-      if (i_sect_bc.gt.0) then
+      if (i_sect_bc>0) then
         call update_data_GMD%set_GMD(i_sect_bc, 1.18d-8)
         call update_data_GSD%set_GSD(i_sect_bc, 2.00d0)
         call this%camp_core%update_data(update_data_GMD)
         call this%camp_core%update_data(update_data_GSD)
       end if
-      if (i_sect_sulf.gt.0) then
+      if (i_sect_sulf>0) then
         call update_data_GMD%set_GMD(i_sect_sulf, 6.95d-8)
         call update_data_GSD%set_GSD(i_sect_sulf, 2.12d0)
         call this%camp_core%update_data(update_data_GMD)
         call this%camp_core%update_data(update_data_GSD)
       end if
-      if (i_sect_opm.gt.0) then
+      if (i_sect_opm>0) then
         call update_data_GMD%set_GMD(i_sect_opm, 2.12d-8)
         call update_data_GSD%set_GSD(i_sect_opm, 2.24d0)
         call this%camp_core%update_data(update_data_GMD)
         call this%camp_core%update_data(update_data_GSD)
       end if
     end do
-    if (MONARCH_PROCESS.eq.0) then
+    if (MONARCH_PROCESS==0) then
       call cpu_time(comp_end)
       write(*,*) "Initialization time: ", comp_end-comp_start, " s"
     end if
@@ -307,13 +307,13 @@ contains
     real :: timeLS = 0.0
     real :: timeCvode = 0.0
 
-    if(this%n_cells.eq.1) then
+    if(this%n_cells==1) then
       state_size_per_cell = 0
     else
       state_size_per_cell = this%camp_core%size_state_per_cell
     end if
     NUM_VERT_CELLS = size(MONARCH_conc,3)
-    if(this%output_file_title.eq."cb05_paperV2") then
+    if(this%output_file_title=="cb05_paperV2") then
       call assert_msg(731700229, &
               this%camp_core%get_chem_spec_data(chem_spec_data), &
               "No chemical species data in camp_core.")
@@ -321,7 +321,7 @@ contains
       i_hour_max=30
       allocate(rate_emi(i_hour_max,n_cells))
       rate_emi(:,:)=0.0
-      if(DIFF_CELLS.eq."ON") then
+      if(DIFF_CELLS=="ON") then
         press_init = 100000.!Should be equal to mock_monarch
         press_end = 10000.
         press_range = press_end-press_init
@@ -330,9 +330,8 @@ contains
             do k=1, NUM_VERT_CELLS
               o = (j-1)*(I_E) + (i-1)
               z = (k-1)*(I_E*I_N) + o
-              press_norm=&
-                      (press_end-pressure(i,j,k))/(press_range)
-              if(press_norm.ge.0) then
+              press_norm=(press_end-pressure(i,j,k))/(press_range)
+              if(press_norm>=0) then
                 do t=1,12 !12 first hours
                   rate_emi(t,z+1)=press_norm
                 end do
@@ -358,8 +357,8 @@ contains
       call camp_mpi_barrier(MPI_COMM_WORLD)
     end if
     i_hour = int(curr_time/60)+1
-    if(mod(int(curr_time),60).eq.0) then
-      if (camp_mpi_rank().eq.0) then
+    if(mod(int(curr_time),60)==0) then
+      if (camp_mpi_rank()==0) then
         write(*,*) "i_hour loop", i_hour
       end if
     end if
@@ -380,7 +379,7 @@ contains
                             MONARCH_conc(i,j,k,this%map_monarch_id(:))
             !print*,"MONARCH_conc381",MONARCH_conc(i,j,k,this%map_monarch_id(:))
             !print*,"state_var421",this%camp_state%state_var(:)
-            if(this%output_file_title.eq."monarch_cb05") then
+            if(this%output_file_title=="monarch_cb05") then
               this%camp_state%state_var(this%gas_phase_water_id) = &
               water_conc(1,1,1,water_vapor_index)
             else
@@ -389,7 +388,7 @@ contains
                               mwair / mwwat * 1.e6
             end if
             !print*,"state_var430",this%camp_state%state_var(:)
-            if(this%output_file_title.eq."cb05_paperV2") then
+            if(this%output_file_title=="cb05_paperV2") then
               do r=1,size(this%specs_emi_id)
                 this%camp_state%state_var(this%specs_emi_id(r))=&
                         this%camp_state%state_var(this%specs_emi_id(r))&
@@ -421,7 +420,7 @@ contains
              = MONARCH_conc(i,j,k,this%map_monarch_id(:))
             !print*,"MONARCH_conc381",MONARCH_conc(i,j,k,this%map_monarch_id(:))
             !print*,"state_var421",this%camp_state%state_var(:)
-            if(this%output_file_title.eq."monarch_cb05") then
+            if(this%output_file_title=="monarch_cb05") then
               this%camp_state%state_var(this%gas_phase_water_id+(z*state_size_per_cell)) = &
                       water_conc(1,1,1,water_vapor_index)
             else
@@ -429,7 +428,7 @@ contains
                       water_conc(1,1,1,water_vapor_index) * mwair / mwwat * 1.e6
             end if
             !print*,"state_var430",this%camp_state%state_var(:)
-            if(this%output_file_title.eq."cb05_paperV2") then
+            if(this%output_file_title=="cb05_paperV2") then
               do r=1,size(this%specs_emi_id)
                 this%camp_state%state_var(this%specs_emi_id(r)+z*state_size_per_cell)=&
                         this%camp_state%state_var(this%specs_emi_id(r)+z*state_size_per_cell)&
@@ -457,7 +456,7 @@ contains
       end do
     end if
 
-  if(this%output_file_title.eq."cb05_paperV2") then
+  if(this%output_file_title=="cb05_paperV2") then
     deallocate(rate_emi)
   end if
   end subroutine integrate
@@ -483,7 +482,7 @@ contains
     call j_file%get_core(json)
     call assert_msg(207035903, allocated(config_file), &
               "Received non-allocated string for file path")
-    call assert_msg(368569727, trim(config_file).ne."", &
+    call assert_msg(368569727, trim(config_file)/="", &
               "Received empty string for file path")
     inquire( file=config_file, exist=found )
     call assert_msg(134309013, found, "Cannot find file: "// &
@@ -495,21 +494,21 @@ contains
       call assert_msg(236838162, found, "Missing type in json input file "// &
               config_file)
       str_val = unicode_str_val
-      if (str_val.eq."SPECIES_MAP") then
+      if (str_val=="SPECIES_MAP") then
         call json%get_child(j_obj, j_child)
         do while (associated(j_child))
           call json%info(j_child, name=key, var_type=var_type)
-          if (key.ne."type".and.key.ne."name") then
+          if (key/="type".and.key/="name") then
             call this%species_map_data%load(json, j_child, .false., key)
           end if
           j_next => j_child
           call json%get_next(j_next, j_child)
         end do
-      else if (str_val.eq."INIT_CONC") then
+      else if (str_val=="INIT_CONC") then
         call json%get_child(j_obj, j_child)
         do while (associated(j_child))
           call json%info(j_child, name=key, var_type=var_type)
-          if (key.ne."type".and.key.ne."name") then
+          if (key/="type".and.key/="name") then
             call this%init_conc_data%load(json, j_child, .false., key)
           end if
           j_next => j_child
@@ -549,7 +548,7 @@ contains
       do i_rxn = 1, this%camp_core%mechanism(i_mech)%val%size()
         rxn => this%camp_core%mechanism(i_mech)%val%get_rxn(i_rxn)
         call assert(106297725, rxn%property_set%get_string(rxn_key, str_val))
-        if (trim(str_val).eq.rxn_val) this%n_photo_rxn = this%n_photo_rxn + 1
+        if (trim(str_val)==rxn_val) this%n_photo_rxn = this%n_photo_rxn + 1
       end do
     end do
     allocate(this%photo_rxns(this%n_photo_rxn))
@@ -559,7 +558,7 @@ contains
       do i_rxn = 1, this%camp_core%mechanism(i_mech)%val%size()
         rxn => this%camp_core%mechanism(i_mech)%val%get_rxn(i_rxn)
         call assert(799145523, rxn%property_set%get_string(rxn_key, str_val))
-        if (trim(str_val).ne.rxn_val) cycle
+        if (trim(str_val)/=rxn_val) cycle
         i_photo_rxn = i_photo_rxn + 1
         call assert_msg(501329648, &
                 rxn%property_set%get_real(rate_key, rate_val), &
@@ -596,7 +595,7 @@ contains
             this%species_map_data%get_string(key_name, spec_name), &
             "Missing gas-phase water species for MONARCH interface.")
     this%gas_phase_water_id = chem_spec_data%gas_state_id(spec_name)
-    call assert_msg(910692272, this%gas_phase_water_id.gt.0, &
+    call assert_msg(910692272, this%gas_phase_water_id>0, &
             "Could not find gas-phase water species '"//spec_name//"'.")
     call gas_species_list%iter_reset()
     i_spec = 1
@@ -614,11 +613,11 @@ contains
       this%map_monarch_id(i_spec) = this%map_monarch_id(i_spec) + &
               this%tracer_starting_id - 1
       call assert_msg(450258014, &
-              this%map_monarch_id(i_spec).le.this%tracer_ending_id, &
+              this%map_monarch_id(i_spec)<=this%tracer_ending_id, &
               "Monarch id for species '"//spec_name//"' out of specified "// &
               "tracer array bounds.")
       this%map_camp_id(i_spec) = chem_spec_data%gas_state_id(spec_name)
-      call assert_msg(916977002, this%map_camp_id(i_spec).gt.0, &
+      call assert_msg(916977002, this%map_camp_id(i_spec)>0, &
                 "Could not find species '"//spec_name//"' in CAMP-camp.")
       call gas_species_list%iter_next()
       !print*,spec_name,i_spec
@@ -641,7 +640,7 @@ contains
         this%map_monarch_id(i_spec) = this%map_monarch_id(i_spec) + &
                 this%tracer_starting_id - 1
         call assert_msg(382644266, &
-                this%map_monarch_id(i_spec).le.this%tracer_ending_id, &
+                this%map_monarch_id(i_spec)<=this%tracer_ending_id, &
                 "Monarch id for species '"//spec_name//"' out of "// &
                 "specified tracer array bounds.")
         key_name = "aerosol representation name"
@@ -654,7 +653,7 @@ contains
                 this%camp_core%get_aero_rep(rep_name, aero_rep_ptr), &
                 "Could not find aerosol representation '"//rep_name//"'")
         this%map_camp_id(i_spec) = aero_rep_ptr%spec_state_id(spec_name)
-        call assert_msg(887136850, this%map_camp_id(i_spec) .gt. 0, &
+        call assert_msg(887136850, this%map_camp_id(i_spec) > 0, &
                 "Could not find aerosol species '"//spec_name//"' in "// &
                 "aerosol representation '"//rep_name//"'.")
         call aero_species_list%iter_next()
@@ -673,7 +672,7 @@ contains
     integer(kind=i_kind) :: i_spec, num_spec, i
     real :: factor_ppb_to_ppm
 
-    if(this%output_file_title.eq."cb05_paperV2") then
+    if(this%output_file_title=="cb05_paperV2") then
       factor_ppb_to_ppm=1.0E-3
     else
       factor_ppb_to_ppm=1.0
@@ -708,7 +707,7 @@ contains
         this%init_conc(i_spec) = this%init_conc(i_spec) * factor_ppb_to_ppm
         this%init_conc_camp_id(i_spec) = &
                 chem_spec_data%gas_state_id(spec_name)
-        call assert_msg(940200584, this%init_conc_camp_id(i_spec).gt.0, &
+        call assert_msg(940200584, this%init_conc_camp_id(i_spec)>0, &
                 "Could not find species '"//spec_name//"' in CAMP-camp.")
         call gas_species_list%iter_next()
         !print*,"init,conc",this%init_conc(i_spec)
@@ -740,7 +739,7 @@ contains
                 "Could not find aerosol representation '"//rep_name//"'")
         this%init_conc_camp_id(i_spec) = &
                 aero_rep_ptr%spec_state_id(spec_name)
-        call assert_msg(437149649, this%init_conc_camp_id(i_spec) .gt. 0, &
+        call assert_msg(437149649, this%init_conc_camp_id(i_spec) > 0, &
                 "Could not find aerosol species '"//spec_name//"' in "// &
                 "aerosol representation '"//rep_name//"'.")
         call aero_species_list%iter_next()
@@ -792,7 +791,7 @@ contains
     integer(kind=i_kind) :: i_spec, water_id,i,j,k,r,NUM_VERT_CELLS,state_size_per_cell
     NUM_VERT_CELLS=size(MONARCH_conc,3)
     this%camp_state%state_var(this%init_conc_camp_id(:)) = this%init_conc(:)
-    if(this%n_cells.eq.1) then
+    if(this%n_cells==1) then
       forall (i_spec = 1:size(this%map_monarch_id))
         MONARCH_conc(:,:,:,this%map_monarch_id(i_spec)) = &
             this%camp_state%state_var(this%map_camp_id(i_spec))
