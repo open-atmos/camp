@@ -10,12 +10,12 @@ from run import *
 def all_timesteps():
   conf = TestMonarch()
 
-  #conf.chemFile = "cb05_paperV2"
-  conf.chemFile = "monarch_cb05"
+  conf.chemFile = "cb05_paperV2"
+  #conf.chemFile = "monarch_cb05"
 
   conf.diffCellsL = []
-  #conf.diffCellsL.append("Realistic")
-  conf.diffCellsL.append("Ideal")
+  conf.diffCellsL.append("Realistic")
+  #conf.diffCellsL.append("Ideal")
 
   conf.profileCuda = ""
   # conf.profileCuda = "nvprof"
@@ -50,7 +50,7 @@ def all_timesteps():
   # conf.allocatedTasksPerNode = 320
   # conf.allocatedTasksPerNode = get_ntasksPerNode_sbatch() #todo
 
-  conf.cells = [2]
+  conf.cells = [20]
   # conf.cells = [100, 500, 1000, 5000, 10000]
   # conf.cells = [50000,100000,500000,1000000]
 
