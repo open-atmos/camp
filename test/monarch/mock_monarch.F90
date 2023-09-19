@@ -188,8 +188,8 @@ program mock_monarch_t
   end if
 #endif
 
-  if(3*NUM_TIME_STEP.gt.(60*24)) then !24h limit time-step
-    print*,"ERROR 3*NUM_TIME_STEP.gt.(60*24): Reduce number of time-step or time-step size"
+  if(TIME_STEP*NUM_TIME_STEP.gt.(60*24)) then !24h limit time-step
+    print*,"ERROR TIME_STEP*NUM_TIME_STEP.gt.(60*24): Reduce number of time-step or time-step size"
     STOP
   end if
 

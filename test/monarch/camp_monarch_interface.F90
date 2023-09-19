@@ -390,7 +390,6 @@ contains
             end if
             !print*,"state_var430",this%camp_state%state_var(:)
             if(this%output_file_title.eq."cb05_paperV2") then
-              print*,rate_emi(i_hour,z+1), i_hour, z+1
               do r=1,size(this%specs_emi_id)
                 this%camp_state%state_var(this%specs_emi_id(r))=&
                         this%camp_state%state_var(this%specs_emi_id(r))&
@@ -431,7 +430,6 @@ contains
             end if
             !print*,"state_var430",this%camp_state%state_var(:)
             if(this%output_file_title.eq."cb05_paperV2") then
-              print*,rate_emi(i_hour,z+1), i_hour, z+1
               do r=1,size(this%specs_emi_id)
                 this%camp_state%state_var(this%specs_emi_id(r)+z*state_size_per_cell)=&
                         this%camp_state%state_var(this%specs_emi_id(r)+z*state_size_per_cell)&
