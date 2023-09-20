@@ -336,7 +336,7 @@ contains
               o = (j-1)*(I_E) + (i-1)
               z = (k-1)*(I_E*I_N) + o
               press_norm=(press_end-pressure(i,j,k))/(press_range)
-              do t=1,1 !12 first hours
+              do t=1,12 !12 first hours
                 rate_emi(t,z+1)=press_norm
               end do
             end do
@@ -753,7 +753,6 @@ contains
     this%specs_emi_id(13)=chem_spec_data%gas_state_id("PAR")
     this%specs_emi_id(14)=chem_spec_data%gas_state_id("ISOP")
     this%specs_emi_id(15)=chem_spec_data%gas_state_id("MEOH")
-
     this%specs_emi(1)=1.06E-09
     this%specs_emi(2)=7.56E-12
     this%specs_emi(3)=1.44E-10
