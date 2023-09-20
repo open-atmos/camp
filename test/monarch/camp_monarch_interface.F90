@@ -318,7 +318,7 @@ contains
               this%camp_core%get_chem_spec_data(chem_spec_data), &
               "No chemical species data in camp_core.")
       n_cells=(I_E - I_W+1)*(I_N - I_S+1)*NUM_VERT_CELLS
-      i_hour_max=30
+      i_hour_max=24
       allocate(rate_emi(i_hour_max,n_cells))
       rate_emi(:,:)=0.0
       if(DIFF_CELLS=="ON") then
@@ -331,27 +331,16 @@ contains
               o = (j-1)*(I_E) + (i-1)
               z = (k-1)*(I_E*I_N) + o
               press_norm=(press_end-pressure(i,j,k))/(press_range)
-              if(press_norm>=0) then
-                do t=1,12 !12 first hours
-                  rate_emi(t,z+1)=press_norm
-                end do
-              else
-                do t=1,12
-                  rate_emi(t,z+1)=0.0
-                end do
-              end if
-              do t=13,30
-                rate_emi(t,z+1)=0.0
+              do t=1,12 !12 first hours
+                !rate_emi(t,z+1)=0.0
+                rate_emi(t,z+1)=press_norm
               end do
             end do
           end do
         end do
       else
-        do i=1,12
-          rate_emi(i,:)=1.0
-        end do
-        do i=13,30
-          rate_emi(i,:)=0.0
+        do t=1,12
+          rate_emi(t,:)=1.0
         end do
       end if
       call camp_mpi_barrier(MPI_COMM_WORLD)

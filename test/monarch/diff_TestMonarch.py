@@ -14,8 +14,8 @@ def all_timesteps():
   #conf.chemFile = "monarch_cb05"
 
   conf.diffCellsL = []
-  #conf.diffCellsL.append("Realistic")
-  conf.diffCellsL.append("Ideal")
+  conf.diffCellsL.append("Realistic")
+  #conf.diffCellsL.append("Ideal")
 
   conf.profileCuda = ""
   # conf.profileCuda = "nvprof"
@@ -34,12 +34,14 @@ def all_timesteps():
   conf.nGPUsCaseOptimList = [1]
   # conf.nGPUsCaseOptimList = [1,2]
 
+
   conf.mpiProcessesCaseBase = 1
   # conf.mpiProcessesCaseBase = 2
 
   conf.mpiProcessesCaseOptimList.append(1)
   # conf.mpiProcessesCaseOptimList.append(2)
   # conf.mpiProcessesCaseOptimList = [10,20,40]
+
 
   conf.allocatedNodes = 1
   # conf.allocatedNodes = 4

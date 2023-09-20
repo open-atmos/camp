@@ -54,7 +54,7 @@ def all_timesteps():
   # conf.cells = [100, 500, 1000, 5000, 10000]
   # conf.cells = [50000,100000,500000,1000000]
 
-  conf.timeSteps = 720
+  conf.timeSteps = 1
 
   conf.timeStepsDt = 2
 
