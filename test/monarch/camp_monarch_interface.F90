@@ -269,7 +269,7 @@ contains
   subroutine integrate(this, curr_time, time_step, I_W, I_E, I_S, &
                   I_N, temperature, MONARCH_conc, water_conc, &
                   water_vapor_index, air_density, pressure, conv, i_hour,&
-          NUM_TIME_STEP,solver_stats, DIFF_CELLS)
+          NUM_TIME_STEP,solver_stats, DIFF_CELLS, i_time)
     class(camp_monarch_interface_t) :: this
     real, intent(in) :: curr_time
     real(kind=dp), intent(in) :: time_step
@@ -287,6 +287,7 @@ contains
     integer, intent(inout) :: i_hour
     integer, intent(in) :: NUM_TIME_STEP
     character(len=*),intent(in) :: DIFF_CELLS
+    integer, intent(in) :: i_time
     type(chem_spec_data_t), pointer :: chem_spec_data
     integer, parameter :: emi_len=1
     real, allocatable :: rate_emi(:,:)
@@ -348,7 +349,7 @@ contains
     i_hour = int(curr_time/60)+1
     if(mod(int(curr_time),60)==0) then
       if (camp_mpi_rank()==0) then
-        write(*,*) "i_hour loop", i_hour
+        write(*,*) "i_hour", i_hour,"i_time", i_time
       end if
     end if
     if(.not.this%solve_multiple_cells) then
@@ -383,7 +384,7 @@ contains
                         this%camp_state%state_var(this%specs_emi_id(r))&
                                 +this%specs_emi(r)*rate_emi(i_hour,z+1)*conv(i,j,k)
               end do
-            !print*,"state_var436",this%camp_state%state_var(:)
+            !print*,"state_var436",this%camp_state%state_var(1)
             end if
             call cpu_time(comp_start)
             call this%camp_core%solve(this%camp_state, real(time_step*60., kind=dp),solver_stats=solver_stats)
@@ -424,7 +425,7 @@ contains
                                 +this%specs_emi(r)*rate_emi(i_hour,z+1)*conv(i,j,k)
               end do
             endif
-            !print*,"state_var436",this%camp_state%state_var(:)
+            !print*,"state_var436",this%camp_state%state_var(1+z*state_size_per_cell)
           end do
         end do
       end do
@@ -609,7 +610,6 @@ contains
       call assert_msg(916977002, this%map_camp_id(i_spec)>0, &
                 "Could not find species '"//spec_name//"' in CAMP-camp.")
       call gas_species_list%iter_next()
-      !print*,spec_name,i_spec
       i_spec = i_spec + 1
     end do
 
@@ -699,7 +699,6 @@ contains
         call assert_msg(940200584, this%init_conc_camp_id(i_spec)>0, &
                 "Could not find species '"//spec_name//"' in CAMP-camp.")
         call gas_species_list%iter_next()
-        !print*,"init,conc",this%init_conc(i_spec)
         i_spec = i_spec + 1
       end do
     end if

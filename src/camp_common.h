@@ -264,9 +264,6 @@ typedef struct {
   double t_final;
   int ncounters;
   int ntimers;
-#ifdef OLD_DEV_CPUGPU
-  int n_cells_total;
-#endif
 
 #ifdef CAMP_DEBUG_GPU
   int counterBCG;

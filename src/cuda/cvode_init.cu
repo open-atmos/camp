@@ -126,11 +126,6 @@ void solver_new_gpu_cu_cvode(SolverData *sd) {
   int n_rxn = md->n_rxn;
   int n_rxn_env_param = md->n_rxn_env_data;
   int n_cells = md->n_cells;
-#ifdef OLD_DEV_CPUGPU
-  sd->n_cells_total = md->n_cells;
-  n_cells *= sd->nCellsGPUPerc/10.;
-  md->n_cells=n_cells;
-#endif
   mCPU->state_size = n_state_var * n_cells * sizeof(double);
   mCPU->deriv_size = n_dep_var * n_cells * sizeof(double);
   mCPU->env_size = CAMP_NUM_ENV_PARAM_ * n_cells * sizeof(double); //Temp and pressure

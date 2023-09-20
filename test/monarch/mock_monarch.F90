@@ -137,7 +137,7 @@ program mock_monarch_t
   call jfile%get('nCells',NUM_VERT_CELLS)
   call jfile%get('caseMulticellsOnecell',caseMulticellsOnecell)
   output_path = output_path//"_"//caseMulticellsOnecell
-  if(caseMulticellsOnecell.eq."One-cell") then
+  if(caseMulticellsOnecell=="One-cell") then
     n_cells = 1
   else
     n_cells = (I_E - I_W+1)*(I_N - I_S+1)*NUM_VERT_CELLS
@@ -145,14 +145,14 @@ program mock_monarch_t
   call jfile%get('timeSteps',NUM_TIME_STEP)
   call jfile%get('timeStepsDt',TIME_STEP)
   call jfile%get('diffCells',diffCells)
-  if(diffCells.eq."Realistic") then
+  if(diffCells=="Realistic") then
     DIFF_CELLS = "ON"
   end if
   NUM_WE_CELLS = I_E-I_W+1
   NUM_SN_CELLS = I_N-I_S+1
   n_cells_tstep = NUM_WE_CELLS*NUM_SN_CELLS*NUM_VERT_CELLS
   call jfile%get('caseGpuCpu',caseGpuCpu)
-  if (camp_mpi_rank().eq.0) then
+  if (camp_mpi_rank()==0) then
     write(*,*) "Time-steps:", NUM_TIME_STEP, "Cells:",&
             n_cells_tstep, &
             diffCells,  caseMulticellsOnecell,caseGpuCpu, "MPI processes",camp_mpi_size()
@@ -176,7 +176,7 @@ program mock_monarch_t
   call camp_interface%get_init_conc(species_conc, water_conc, WATER_VAPOR_ID, &
           i_W,I_E,I_S,I_N)
 
-  if(output_file_title.eq."monarch_cb05") then
+  if(output_file_title=="monarch_cb05") then
     call import_camp_input_json(camp_interface)
   end if
 
@@ -188,12 +188,12 @@ program mock_monarch_t
   end if
 #endif
 
-  if(TIME_STEP*NUM_TIME_STEP.gt.(60*24)) then !24h limit time-step
+  if(TIME_STEP*NUM_TIME_STEP>(60*24)) then !24h limit time-step
     print*,"ERROR TIME_STEP*NUM_TIME_STEP.gt.(60*24): Reduce number of time-step or time-step size"
     STOP
   end if
 
-  if(.not.caseMulticellsOnecell.eq."EBI") then
+  if(.not.caseMulticellsOnecell=="EBI") then
     do i_time=1, NUM_TIME_STEP
       call camp_interface%integrate(curr_time,         & ! Starting time (min)
          TIME_STEP,         & ! Time step (min)
@@ -210,7 +210,7 @@ program mock_monarch_t
          conv,              &
          i_hour,&
          NUM_TIME_STEP,&
-         solver_stats,DIFF_CELLS)
+         solver_stats,DIFF_CELLS,i_time)
     curr_time = curr_time + TIME_STEP
 #ifdef CAMP_DEBUG_GPU
       call camp_interface%camp_core%export_solver_stats(solver_stats=solver_stats)
@@ -219,7 +219,7 @@ program mock_monarch_t
     end do
   end if
 
-  if (camp_mpi_rank().eq.0) then
+  if (camp_mpi_rank()==0) then
     write(*,*) "Model run time: ", comp_time, " s"
   end if
 
@@ -228,7 +228,7 @@ program mock_monarch_t
   deallocate(output_path)
   deallocate(output_file_title)
   mpi_threads = camp_mpi_size()
-  if ((mpi_threads.gt.1)) then
+  if ((mpi_threads>1)) then
   else
     deallocate(camp_interface)
   end if
@@ -246,14 +246,14 @@ contains
 
     temp_init = 290.016
     press_init = 100000. !Should be equal to camp_monarch_interface
-    if(DIFF_CELLS.eq."ON") then
+    if(DIFF_CELLS=="ON") then
       ncells=(I_E - I_W+1)*(I_N - I_S+1)*NUM_VERT_CELLS
       mpi_size=camp_mpi_size()
       tid=camp_mpi_rank()
       ncells_mpi=ncells*mpi_size
       press_end = 10000.
       press_range = press_end-press_init
-      if((ncells_mpi).eq.1) then
+      if((ncells_mpi)==1) then
         press_slide = 0.
       else
         press_slide = press_range/(ncells_mpi-1)
@@ -270,12 +270,12 @@ contains
         end do
       end do
     else
-      if(output_file_title.eq."cb05_paperV2") then
+      if(output_file_title=="cb05_paperV2") then
         temperature(:,:,:) = temp_init
         pressure(:,:,:) = press_init
       end if
     end if
-    if(output_file_title.eq."cb05_paperV2") then
+    if(output_file_title=="cb05_paperV2") then
       air_density(:,:,:) = pressure(:,:,:)/(287.04*temperature(:,:,:)* &
               (1.+0.60813824*water_conc(:,:,:,WATER_VAPOR_ID))) !kg m-3
       conv(:,:,:)=0.02897/air_density(:,:,:)*(TIME_STEP*60.)*1e6 !units of time_step to seconds
@@ -310,7 +310,7 @@ contains
             "JSON not found at ",export_path
     size_state_per_cell = camp_interface%camp_core%size_state_per_cell
     mpi_rank = camp_mpi_rank()
-    if (mpi_rank.eq.0) then
+    if (mpi_rank==0) then
     unique_names=camp_interface%camp_core%unique_names()
     pack_size = 0
     do z=1, size_state_per_cell
@@ -323,11 +323,11 @@ contains
     end do
     end if
     call camp_mpi_bcast_integer(pack_size, MPI_COMM_WORLD)
-    if (mpi_rank.ne.0) then
+    if (mpi_rank/=0) then
       allocate(buffer(pack_size))
     end if
     call camp_mpi_bcast_packed(buffer, MPI_COMM_WORLD)
-    if (mpi_rank.ne.0) then
+    if (mpi_rank/=0) then
       pos = 0
       allocate(unique_names(size_state_per_cell))
       spec_name=""
@@ -366,7 +366,7 @@ contains
       end do
     end do
     do i = 1, state_size_per_cell
-      if (trim(camp_spec_names(i)%string).eq."H2O") then
+      if (trim(camp_spec_names(i)%string)=="H2O") then
         water_conc(:,:,:,WATER_VAPOR_ID) = camp_interface%camp_state%state_var(i)
       end if
     end do

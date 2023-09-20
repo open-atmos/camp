@@ -656,12 +656,16 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
     aero_rep_update_env_state(md);
     sub_model_update_env_state(md);
     rxn_update_env_state(md);
-    if(i_cell==0){
-      print_double(md->grid_cell_env,CAMP_NUM_ENV_PARAM_,"env689");
-      print_double(md->grid_cell_state,n_state_var,"state688");
+    //if(i_cell==0){
+      //print_double(md->grid_cell_env,CAMP_NUM_ENV_PARAM_,"env689");
+      //print_double(md->grid_cell_state,n_state_var,"state688");
       //double *yp = N_VGetArrayPointer(sd->y);
-      //print_double(yp,73,"y660");
-    }
+      //print_double(yp,md->n_per_cell_dep_var,"y660");
+    //}
+    //print_double(md->grid_cell_env,CAMP_NUM_ENV_PARAM_,"env689");
+    //double *yp = N_VGetArrayPointer(sd->y)+i_cell*md->n_per_cell_dep_var;
+    //print_double(yp,md->n_per_cell_dep_var,"y660");
+    //print_double(md->grid_cell_state,md->n_per_cell_state_var,"state688");
   }
 
   //Reset jac solving, otherwise values from previous iteration would be carried to current iteration
@@ -764,9 +768,9 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
     }
   }
   //for (int i = 0; i < n_cells; i++) {
-    //double *yp2 = N_VGetArrayPointer(sd->y);
-    //print_double(yp2,73,"y789");
-    //print_double(state, n_state_var, "state768");
+    //double *yp2 = N_VGetArrayPointer(sd->y)+i*md->n_per_cell_dep_var;
+    //print_double(yp2,md->n_per_cell_dep_var,"y789");
+    //print_double(state+md->n_per_cell_state_var*i, n_state_var, "state768");
     //printf("end cell\nline\n");
   //}
 #ifndef EXPORT_STATE
@@ -982,12 +986,6 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
       i++;
       times[i]=0.;
       i++;
-#endif
-#ifdef OLD_DEV_CPUGPU
-      CVodeGettimesCounters(sd->cvode_mem, &times[0], &counters[1]);
-      times[i]+=mCPU->timecvStep;
-#else
-      times[i]=mCPU->timecvStep;
 #endif
       i++;
       //for(int i=0;i<sd->ntimers;i++)
@@ -1264,17 +1262,17 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
     }
     if(i_cell==0) {
       //double *yp = N_VGetArrayPointer(y);
-      //print_double(yp,73,"y646");
+      //print_double(yp,86,"y646");
       //double *J_state = N_VGetArrayPointer(md->J_state);
-      //print_double(J_state,73,"J_state644");
-      //print_double(jac_deriv_data,73,"J_tmp643");
+      //print_double(J_state,86,"J_state644");
+      //print_double(jac_deriv_data,86,"J_tmp643");
       //double *J_deriv = N_VGetArrayPointer(md->J_deriv);
-      //print_double(J_deriv,73,"J_deriv644");
+      //print_double(J_deriv,86,"J_deriv644");
       //double *J_tmp2 = N_VGetArrayPointer(md->J_tmp2);
-      //print_double(J_tmp2,73,"J_tmp2645");
+      //print_double(J_tmp2,86,"J_tmp2645");
       //print_double(sd->time_deriv.loss_rates,sd->time_deriv.num_spec,"loss_rates");
       //print_double(sd->time_deriv.production_rates,sd->time_deriv.num_spec,"production_rates");
-      //print_double(deriv_data,73,"deriv_data645");
+      //print_double(deriv_data,86,"deriv_data645");
     }
 #ifdef CAMP_DEBUG
     sd->max_loss_precision = time_derivative_max_loss_precision(sd->time_deriv);
@@ -1325,7 +1323,7 @@ int Jac(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_data,
   // the estimated derivative from the last Jacobian calculation
   sd->use_deriv_est = 0;
   //double *yp = N_VGetArrayPointer(y);
-  //print_double(yp,73,"dcv_y914");
+  //print_double(yp,86,"dcv_y914");
   if (f(t, y, deriv, solver_data) != 0) {
     printf("\n Derivative calculation failed on Jac.\n");
     sd->use_deriv_est = 1;
@@ -1652,8 +1650,8 @@ int guess_helper(const realtype t_n, const realtype h_n, N_Vector y_n,
     N_VScale(ONE, hf, corr);
   }
   //print_double(&h_n,1,"h_n711");
-  //print_double(ahf,73,"hf711");
-  //print_double(acorr,73,"acorr711");
+  //print_double(ahf,86,"hf711");
+  //print_double(acorr,86,"acorr711");
   CAMP_DEBUG_PRINT("Got f0");
 
   // Advance state interatively
@@ -1663,7 +1661,7 @@ int guess_helper(const realtype t_n, const realtype h_n, N_Vector y_n,
   for (; iter < GUESS_MAX_ITER && t_0 + t_j < t_n; iter++) {
     // Calculate \f$h_j\f$
     realtype h_j = t_n - (t_0 + t_j);
-    //print_double(atmp1,73,"atmp720");
+    //print_double(atmp1,86,"atmp720");
     int i_fast = -1;
     for (int i = 0; i < n_elem; i++) {
       realtype t_star = -atmp1[i] / acorr[i];
@@ -1694,14 +1692,14 @@ int guess_helper(const realtype t_n, const realtype h_n, N_Vector y_n,
     t_j += h_j;
 
     // Recalculate the time derivative \f$f(t_j)\f$
-    //print_double(atmp1,73,"atmp1766");
+    //print_double(atmp1,86,"atmp1766");
     if (f(t_0 + t_j, tmp1, corr, solver_data) != 0) {
       CAMP_DEBUG_PRINT("Unexpected failure in guess helper!");
-      //print_double(acorr,73,"acorr721");
+      //print_double(acorr,86,"acorr721");
       N_VConst(ZERO, corr);
       return -1;
     }
-    //print_double(acorr,73,"acorr721");
+    //print_double(acorr,86,"acorr721");
     ((CVodeMem)sd->cvode_mem)->cv_nfe++;
 
     if (iter == GUESS_MAX_ITER - 1 && t_0 + t_j < t_n) {
