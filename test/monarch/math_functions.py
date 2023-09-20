@@ -64,22 +64,23 @@ def calculate_NRMSE(data, n_time_steps, nCellsProcesses,use_monarch):
             concs_below_tol = concs_below_tol + 1
             if y1 == y2:
               concs_are_equal = concs_are_equal + 1
-          if err_abs > max_err_abs:
-            max_err_abs = err_abs
-            err_rel_at_max_abs = err_rel
-            max_err_abs_specie = k
-            max_err_abs_cell = j
-            max_err_abs_process = i3
-            max_err_abs_timestep = i
-          if err_rel > max_err_rel:
-            max_err_rel = err_rel
-            err_abs_at_max_rel = err_abs
-            max_err_rel_specie = k
-            max_err_rel_cell = j
-            max_err_rel_process = i3
-            max_err_rel_timestep = i
+          if i == n_time_steps-1:
+            if err_abs > max_err_abs:
+              max_err_abs = err_abs
+              err_rel_at_max_abs = err_rel
+              max_err_abs_specie = k
+              max_err_abs_cell = j
+              max_err_abs_process = i3
+              max_err_abs_timestep = i
+            if err_rel > max_err_rel:
+              max_err_rel = err_rel
+              err_abs_at_max_rel = err_abs
+              max_err_rel_specie = k
+              max_err_rel_cell = j
+              max_err_rel_process = i3
+              max_err_rel_timestep = i
     for k in range(n_species):
-      if max_y[k] != min_y[k]:
+      if max_y[k] - min_y[k] > 1.0e-30:
         NRMSEs_species[k] = (sqrt(NRMSEs_species[k] / n_cells)) / (max_y[k] - min_y[k])
       if NRMSEs_species[k] > max_NRMSEs_species:
         max_NRMSEs_species = NRMSEs_species[k]

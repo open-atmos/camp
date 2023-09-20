@@ -260,6 +260,10 @@ contains
         call this%camp_core%update_data(update_data_GSD)
       end if
     end do
+    !unique_names=this%camp_core%unique_names()
+    !do i=1, size(unique_names)
+    !  print*,i,trim(unique_names(i)%string)
+    !end do
     if (MONARCH_PROCESS==0) then
       call cpu_time(comp_end)
       write(*,*) "Initialization time: ", comp_end-comp_start, " s"
@@ -332,8 +336,7 @@ contains
               o = (j-1)*(I_E) + (i-1)
               z = (k-1)*(I_E*I_N) + o
               press_norm=(press_end-pressure(i,j,k))/(press_range)
-              do t=1,12 !12 first hours
-                !rate_emi(t,z+1)=0.0
+              do t=1,1 !12 first hours
                 rate_emi(t,z+1)=press_norm
               end do
             end do
