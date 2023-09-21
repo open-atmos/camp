@@ -1156,9 +1156,6 @@ contains
     integer :: i_spec, n_gas_spec
     call assert_msg(662920365, .not.this%solver_is_initialized, &
             "Attempting to initialize the solver twice.")
-#ifdef CAMP_SOLVER_SPEC_NAMES
-    spec_names = this%unique_names()
-#endif
 
     ! Set up either two solvers (gas and aerosol) or one solver (combined)
     if (this%split_gas_aero) then

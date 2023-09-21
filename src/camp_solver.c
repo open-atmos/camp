@@ -392,10 +392,6 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
   sd->ncounters = ncounters;
   sd->ntimers = ntimers;
 
-#ifdef CAMP_SOLVER_SPEC_NAMES
-  sd->spec_names = (char **)malloc(sizeof(char *) * n_state_var);
-#endif
-
 #ifdef DEBUG_CAMP_SOLVER_NEW
   printf("camp solver_run new  n_state_var %d, n_cells %d n_dep_var %d\n",
          sd->model_data.n_per_cell_state_var, n_cells, sd->model_data.n_per_cell_dep_var);
@@ -404,29 +400,6 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
   // Return a pointer to the new SolverData object
   return (void *)sd;
 }
-
-#ifdef CAMP_SOLVER_SPEC_NAMES
-void solver_set_spec_name(void *solver_data, char *spec_name,
-                          int size_spec_name, int i) {
-#ifdef CAMP_USE_MPI
-  int rank;
-  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  if (rank == MPI_RANK_DEBUG) {
-    // printf("%d aaa", size_spec_name);
-    SolverData *sd;
-    sd = (SolverData *)solver_data;
-    sd->spec_names[i] = malloc(sizeof(char) * (size_spec_name + 1));
-    // printf("%d bbb", size_spec_name);
-    // strncpy(sd->spec_names[i], spec_name, size_spec_name); //Copy size bytes
-    for (int j = 0; j < size_spec_name; j++)
-      sd->spec_names[i][j] = spec_name[j];
-
-    sd->spec_names[i][size_spec_name] = '\0';  // Add null terminator
-    // printf("%d ccc", size_spec_name);
-  }
-#endif
-}
-#endif
 
 /** \brief Solver initialization
  *
