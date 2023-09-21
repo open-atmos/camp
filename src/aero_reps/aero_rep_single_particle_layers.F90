@@ -75,6 +75,22 @@ module camp_aero_rep_single_particle
     !> Unique names for each instance of every chemical species in the
     !! aerosol representaiton
     type(string_t), allocatable, private :: unique_names_(:)
+    !> Layer names that exist in the aerosol population 
+    type(string_t), allocatable, private :: layer_names(:)
+    !> Name layer covered (used to order layers)
+    type(string_t), allocatable, private :: cover_names(:)
+    !> Layer names in order of user input 
+    type(string_t), allocatable, private :: layer_name_unordered(:)
+    !> Number of phases in each layer 
+    type(integer), allocatable, private :: num_phase_unordered(:)
+    !> Index where each layer starts for unordered layer name array
+    type(integer), allocatable, private :: layer_state_id_unordered(:)
+    !> Phase names in order of user input
+    type(string_t), allocatable, private :: phase_name_unordered(:)
+    !> Set of aero layer names in order (innermost to outermost layer)
+    type(string_t), allocatable, private :: aero_layer_set_names(:)  
+    !> Set of aero phase names in order (innermost to outermost layer)
+    type(string_t), allocatable, private :: aero_layer_phase_set_names(:)
     !> First state id for the representation (only used during initialization)
     integer(kind=i_kind) :: state_id_start = -99999
   contains
@@ -357,7 +373,7 @@ contains
 
     ! Ensure layer names do not repeat 
     do i_layer = 1,layers%size()
-      do j_layer = 1,layer%size()
+      do j_layer = 1,layers%size()
         call assert_msg(781626922,layer_name_unordered(i_layer).eq.&
                         layer_name_unordered(j_layer))
       end do
@@ -366,7 +382,7 @@ contains
     ! Construct layer state id unordered
     this%layer_state_id_unordered = construct_layer_state_id(num_phase_unordered)
 
-    allocate(phase_name_unordered(size(SUM(num_phase_unordered))))
+    allocate(this%phase_name_unordered(size(SUM(num_phase_unordered))))
 
     ! Loop through the layers again, adding phase names to array
     call layers%iter_reset()
