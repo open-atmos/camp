@@ -2,19 +2,13 @@ from math import sqrt
 from pandas import read_csv as pd_read_csv
 
 
-def calculate_NRMSE(data, n_time_steps, nCellsProcesses,use_monarch):
+def calculate_NRMSE(data, n_time_steps, nCellsProcesses):
   cases_one_multi_cells = list(data.keys())
   species1 = data[cases_one_multi_cells[0]]
   species2 = data[cases_one_multi_cells[1]]
   n_state = int(len(species1))
   n_cells=sum(nCellsProcesses)
   n_species = int((n_state / n_time_steps) / n_cells)
-  n_species_monarch = 140
-  if use_monarch and n_species_monarch != n_species:
-    print("n_species_monarch ! = n_species calculated by nCellsProcesses")
-    print("n_species_monarch",n_species_monarch,
-          "n_species",n_species,"n_cells",n_cells)
-    raise
   NRMSEs_species = [0.] * n_species
   NRMSEs = [0.] * n_time_steps
   max_y = [0.] * n_species

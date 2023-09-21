@@ -21,7 +21,6 @@ class TestMonarch:
     self.diffCells = ""
     self.timeSteps = 1
     self.timeStepsDt = 2
-    self.commit = ""
     self.case = []
     self.nCells = 1
     self.caseGpuCpu = ""
@@ -42,8 +41,6 @@ class TestMonarch:
     self.plotYKey = ""
     self.plotXKey = ""
     self.is_import = False
-    self.is_export_netcdf = False
-    self.use_monarch = False
     self.profileCuda = ""
     # Auxiliary
     self.is_start_auxiliary_attributes = True
@@ -64,16 +61,6 @@ class TestMonarch:
   @chemFile.setter
   def chemFile(self, new_chemFile):
     self._chemFile = new_chemFile
-
-
-def get_is_sbatch():
-  try:
-    if sys.argv[1]:
-      return True
-    else:
-      return False
-  except Exception:
-    return False
 
 
 def getCaseName(conf):
@@ -99,83 +86,13 @@ def write_camp_config_file(conf):
     else:
       file1.write("USE_CPU=OFF\n")
     file1.write(str(conf.nGPUs) + "\n")
-    file1.write("IS_EXPORT_STATE=ON\n")
+    if(conf.plotYKey == "NRMSE"):
+      file1.write("IS_EXPORT_STATE=ON\n")
+    else:
+      file1.write("IS_EXPORT_STATE=OFF\n")
     file1.close()
   except Exception as e:
     print("write_camp_config_file fails", e)
-
-
-def import_data(conf, tmp_path):
-  is_import = False
-  exportPath = conf.exportPath
-  new_path = tmp_path
-  if not os.path.exists(exportPath):
-    return False, new_path
-  conf_path = exportPath + "/conf"
-  if not os.path.exists(conf_path):
-    return False, new_path
-  filenames = next(os.walk(conf_path), (None, None, []))[2]
-  if not filenames:
-    print("WARNING: Import folder is empty. Path:", os.path.abspath(os.getcwd()) + "/" + conf_path)
-    return False, new_path
-  data_path = exportPath + "/data/"
-  # print("filenames:",filenames)
-  # print("conf_path",os.path.abspath(os.getcwd())+"/"+conf_path)
-  conf_defaultClass = TestMonarch()
-  conf_default = vars(conf_defaultClass)
-  for filename in filenames:
-    dir_to_extract = conf_path + "/"
-    basename = os.path.splitext(filename)[0]
-    path_to_zip_file = dir_to_extract + basename + ".zip"
-    # print("import_data path_to_zip_file",path_to_zip_file)
-    with zipfile.ZipFile(path_to_zip_file, 'r') as zip_ref:
-      zip_ref.extractall(dir_to_extract)
-    conf_name = conf_path + "/" + basename + ".json"
-    with open(conf_name, 'r', encoding='utf-8') as jsonFile:
-      conf_imported = json.load(jsonFile)
-    os.remove(conf_name)
-    conf_dict = vars(conf)
-    # print("conf_dict",conf_dict)
-    is_same_conf_case = True
-    for confKey in conf_dict:
-      # print("confKey",confKey)
-      if confKey == "is_start_cases_attributes":
-        # print("BREAK")
-        break
-      if conf_imported["timeSteps"] >= conf_dict["timeSteps"]:
-        conf_imported["timeSteps"] = conf_dict["timeSteps"]
-      conf_imported["commit"] = conf_dict["commit"]
-      # print("confKey",confKey)
-      if confKey not in conf_imported:
-        conf_imported[confKey] = conf_default[confKey]
-      # if "allocatedTasksPerNode" not in conf_imported:
-      # conf_imported["allocatedTasksPerNode"] = 160
-      # if "allocatedNodes" not in conf_imported:
-      # conf_imported["allocatedNodes"] = 1
-      # if "nGPUs" not in conf_imported:
-      # conf_imported["nGPUs"] = 1
-      if conf_imported[confKey] != conf_dict[confKey]:
-        # print(conf_dict[confKey])
-        is_same_conf_case = False
-    # print("basename",basename)
-    # if basename == "16-04-2022-02.30.57-1649810070774628350":
-    # print("conf_imported",conf_imported,"conf_dict",conf_dict)
-    if is_same_conf_case:
-      is_import = True
-      dir_to_extract = data_path
-      path_to_zip_file = data_path + basename + ".zip"
-      try:
-        with zipfile.ZipFile(path_to_zip_file, 'r') as zip_ref:
-          zip_ref.extractall(dir_to_extract)
-      except BaseException as err:
-        print("path_to_zip_file", path_to_zip_file)
-        print(err)
-        raise
-      new_path = os.path.abspath(os.getcwd()) + "/" + dir_to_extract + basename + ".csv"
-      print("Imported data from", new_path)
-      break
-  return is_import, new_path
-
 
 def export(conf, data_path):
   data_path_abs = os.path.abspath(os.getcwd()) + "/" + data_path
@@ -293,10 +210,6 @@ def run(conf):
   data_path = ""
   if not conf.is_import:
     os.system(exec_str)
-    if conf.is_export_netcdf:
-      start = time.time()
-      subprocess.run(["python", "translate_netcdf.py"]) #subprocess needed for (arch=CTE-POWER) and (Python/3.7.0-foss-2018b)
-      print("Time read_netcdf = %s" % (time.time() - start))
     if conf.case is conf.caseBase:
       os.rename("out/state.csv", "out/state0.csv")
       os.rename("out/stats.csv", "out/stats0.csv")
@@ -305,21 +218,9 @@ def run(conf):
       os.rename("out/stats.csv", "out/stats1.csv")
   if conf.plotYKey == "NRMSE":
     if conf.case is conf.caseBase:
-      if conf.use_monarch:
-        #data_path = "exports/cpu_rank0_monarch_out_state.csv"
-        #data_path = "exports/cpu_tstep0_monarch_out_state.csv"
-        data_path = "exports/cpu_tstep7_monarch_out_state.csv"
-      else:
-        data_path = "out/state0.csv"
+      data_path = "out/state0.csv"
     else:
-      if conf.use_monarch:
-        #data_path = "exports/gpu_rank0_monarch_out_state.csv"
-        #data_path = "exports/gpu_tstep0_monarch_out_state.csv"
-        #data_path = "exports/gpu_old_tstep7_monarch_out_state.csv"
-        data_path = "exports/gpu_tstep7_monarch_out_state.csv"
-        #data_path = "exports/gpu_mxstep_tstep7_monarch_out_state.csv"
-      else:
-        data_path = "out/state1.csv"
+      data_path = "out/state1.csv"
     try:
       with open(data_path) as f:
         data = [float(line.rstrip('\n')) for line in f]
@@ -423,15 +324,9 @@ def run_cases(conf):
 
         # calculate measures between caseBase and caseOptim
         if conf.plotYKey == "NRMSE":
-          nCellsProcesses = []
-          if conf.use_monarch:
-            with open("exports/monarch_cells.csv") as f:
-              nCellsProcesses = [int(line.rstrip('\n')) for line in f]
-          else:
-            nCellsProcesses=[conf.nCellsProcesses]
+          nCellsProcesses=[conf.nCellsProcesses]
           datay = math_functions.calculate_NRMSE(
-            data, conf.timeSteps,nCellsProcesses,
-            conf.use_monarch)
+            data, conf.timeSteps,nCellsProcesses)
         elif "Speedup" in conf.plotYKey:
           y_key_words = conf.plotYKey.split()
           y_key = y_key_words[-1]
@@ -652,10 +547,6 @@ def plot_cases(conf):
   print(namey, ":", datay)
 
 def check_run(conf):
-
-  if conf.use_monarch:
-    conf.plotYKey = "NRMSE"
-    conf.is_import = True
   if conf.plotYKey == "NRMSE":
     if len(conf.mpiProcessesCaseOptimList)>1 or conf.mpiProcessesCaseBase!=conf.mpiProcessesCaseOptimList[0]:
       raise Exception("Number of processes should be the same for NMRSE, only speedup can use different number")
@@ -701,6 +592,4 @@ def check_run(conf):
         conf.mpiProcessesCaseOptimList[i] = cellsProcesses
 
   run_diffCells(conf)
-
-  if get_is_sbatch() is False:
-    plot_cases(conf)
+  plot_cases(conf)

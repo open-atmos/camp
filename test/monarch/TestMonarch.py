@@ -24,9 +24,6 @@ def all_timesteps():
 
   #conf.is_import = True
 
-  # conf.commit = "MATCH_IMPORTED_CONF"
-  conf.commit = ""
-
   conf.nGPUsCaseBase = 1
   # conf.nGPUsCaseBase = 2
 
@@ -105,10 +102,6 @@ def all_timesteps():
   # conf.plotYKey = "Speedup device timecvStep"
   # conf.plotYKey = "Percentage data transfers CPU-GPU [%]"
   conf.plotYKey = "NRMSE"
-
-  #conf.use_monarch = True #better run stats_monarch_netcdf.py
-
-  #conf.is_export_netcdf = True
 
   # conf.plotXKey = "MPI processes"
   # conf.plotXKey = "GPUs"
