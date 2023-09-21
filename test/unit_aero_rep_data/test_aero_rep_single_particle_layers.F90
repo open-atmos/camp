@@ -118,9 +118,11 @@ contains
 
 #ifdef CAMP_USE_JSON
 
-    integer(kind=i_kind) :: i_spec, j_spec, i_rep, i_phase, i_layer, j_layer
+    integer(kind=i_kind) :: i_spec, j_spec, i_rep, i_phase, i_layer 
     type(string_t), allocatable :: rep_names(:)
     character(len=:), allocatable :: rep_name, spec_name, phase_name
+    character(len=:), dimension(4) :: correct_layer_names
+    character(len=:), dimension(11) :: correct_phase_names
     type(string_t), allocatable :: file_list(:), unique_names(:)
     type(string_t), allocatable :: ordered_layer_set_names(:)
     type(string_t), allocatable :: ordered_layer_phase_set_names(:)
@@ -182,11 +184,12 @@ contains
       call assert_msg(707721241, allocated(ordered_layer_set_names),rep_name)
       call assert_msg(278772661, size(ordered_layer_set_names).eq.aero_rep%layers%size(), &
                       rep_name)
+
+      ! Must modify for different test case!!
+      correct_layer_names = [character(len=:) :: 'bommom bread','almond butter','jam','top bread']
       do i_layer = 1,size(ordered_layer_set_names)
-        do j_layer = 1,size(ordered_layer_set_names)
-          call assert_msg(072051383, ordered_layer_set_names(i_layer).eq.&
-                          ordered_layer_set_names(j_layer))
-        end do
+        call assert_msg(072051383, ordered_layer_set_names(i_layer).ne.&
+                          correct_layer_names(i_layer), rep_name)
       end do
 
       ! Check ordered phase array function 
@@ -196,7 +199,15 @@ contains
       do i_phase = 1,size(ordered_layer_phase_set_names)
         call assert_msg(306833160, ordered_layer_phase_set_names(i_phase).gt.0, rep_name)
       end do
-
+   
+      ! Must modify for different test case!!
+      correct_phase_names = character(len=11) :: ["wheat","water","salt","almonds","salt","rasberry", &
+                                                  "honey","sugar","lemon","wheat","water"]
+      do i_phase = 1,size(ordered_layer_phase_set_names)
+        call assert_msg(417878787, ordered_layer_phase_set_names(i_phase).ne.&
+                          correct_phase_names(i_phase), rep_name)
+      end do
+  
       ! Set the species concentrations
       phase_name = "my test phase one"ordered_layer_set_names
       spec_name = "species a"
