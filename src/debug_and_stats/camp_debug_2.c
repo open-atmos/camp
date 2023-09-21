@@ -152,6 +152,7 @@ void print_int(int *x, int len, const char *s){
 
 void get_camp_config_variables(SolverData *sd){
   sd->use_cpu=1;
+  sd->is_export_state=0;
   FILE *fp;
   char buff[255];
   char path[] = "settings/config_variables_c_solver.txt";
@@ -164,15 +165,17 @@ void get_camp_config_variables(SolverData *sd){
       printf("getcwd() error");
       exit(0);
     }
-    printf("Could not open file %s, setting use_cpu ON and use_gpu_cvode OFF\n",path);
+    printf("Could not open file %s, setting default values: is_cpu=ON is_export_state=OFF\n",path);
   }else{
     fscanf(fp, "%s", buff);
-    if(!strstr(buff,"USE_CPU=ON")!=NULL){
+    if(strstr(buff,"USE_CPU=OFF")!=NULL){
       sd->use_cpu=0;
     }
     fscanf(fp, "%d", &sd->nDevices);
-    fscanf(fp, "%d", &sd->is_export_state);
-    printf("sd->is_export_state %d\n",sd->is_export_state);
+    fscanf(fp, "%s", buff);
+    if(strstr(buff,"IS_EXPORT_STATE=ON")!=NULL){
+      sd->is_export_state=1;
+    }
     fclose(fp);
   }
 }

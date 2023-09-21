@@ -99,8 +99,7 @@ def write_camp_config_file(conf):
     else:
       file1.write("USE_CPU=OFF\n")
     file1.write(str(conf.nGPUs) + "\n")
-    is_export_state="1\n"
-    file1.write(is_export_state)
+    file1.write("IS_EXPORT_STATE=ON\n")
     file1.close()
   except Exception as e:
     print("write_camp_config_file fails", e)
