@@ -15,5 +15,5 @@ compile_cvode(){
 
 compile_camp_cvode(){
 compile_cvode
-compile_camp
+make_camp
 }

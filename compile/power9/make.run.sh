@@ -3,7 +3,7 @@ source remake.camp.sh
 
 main(){
 
-compile_camp
+make_camp
 
 FILE=TestMonarch.py
 #FILE=./camp_v1_paper_binned
@@ -15,7 +15,6 @@ FILE=TestMonarch.py
 if [ "$FILE" == TestMonarch.py ]; then
   cd ../../test/monarch
   python $FILE
-  #log_path="../../compile/power9/log_cpu.txt"
   #python $FILE 2>&1 | tee "../../compile/power9/log_cpu.txt"
 elif [ "$FILE" == ./camp_v1_paper_binned ]; then
   cd ../../build/data_run/CAMP_v1_paper/binned/

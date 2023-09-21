@@ -110,7 +110,7 @@ module camp_camp_solver_data
 
     !> Solver initialization
     subroutine solver_initialize(solver_data, abs_tol, rel_tol, max_steps, &
-                    max_conv_fails,n_cells_tstep) bind (c)
+                    max_conv_fails) bind (c)
       use iso_c_binding
       !> Pointer to a SolverData object
       type(c_ptr), value :: solver_data
@@ -122,7 +122,6 @@ module camp_camp_solver_data
       integer(kind=c_int), value :: max_steps
       !> Maximum number of convergence failures
       integer(kind=c_int), value :: max_conv_fails
-      integer(kind=c_int), value :: n_cells_tstep
     end subroutine solver_initialize
 
 #ifdef CAMP_DEBUG
@@ -467,7 +466,7 @@ contains
 
   !> Initialize the solver
   subroutine initialize(this, var_type, abs_tol, mechanisms, aero_phases, &
-          aero_reps, sub_models, rxn_phase, n_cells, n_cells_tstep,&
+          aero_reps, sub_models, rxn_phase, n_cells,&
           spec_names, ncounters, ntimers)
 
     !> Solver data
@@ -500,7 +499,6 @@ contains
     real(kind=c_double), pointer :: abs_tol_c(:)
     !> Number of cells to compute
     integer(kind=i_kind), optional :: n_cells
-    integer(kind=i_kind), optional :: n_cells_tstep
     type(string_t), allocatable, intent(in) :: spec_names(:)
     character(len=:), allocatable :: spec_name
     ! Indices for iteration
@@ -839,8 +837,7 @@ contains
             c_loc(abs_tol_c),                   & ! Absolute tolerances
             real(this%rel_tol, kind=c_double),  & ! Relative tolerance
             int(this%max_steps, kind=c_int),    & ! Max # of integration steps
-            int(this%max_conv_fails, kind=c_int),& ! Max # of convergence fails
-            int(n_cells_tstep, kind=c_int) &
+            int(this%max_conv_fails, kind=c_int)& ! Max # of convergence fails
             )
 
     ! Flag the solver as initialized

@@ -66,7 +66,6 @@ void join_export_state(){
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   if(rank==0){
-  printf("join_export_state\n");
   const char *outputFileName = "out/state.csv";
   FILE *outputFile = fopen(outputFileName, "w");
   for (int i = 0; i<size; i++) {
@@ -82,7 +81,6 @@ void join_export_state(){
     remove(inputFileName);
   }
   fclose(outputFile);
-  printf("Files merged successfully into %s\n", outputFileName);
   }
 }
 

@@ -276,19 +276,6 @@ typedef struct {
   int counter_fail_solve_print;
 #endif
 #endif
-  int icell;
-#ifdef ENABLE_NETCDF
-  int n_cells_tstep;
-  int tstep;
-  double* state_nc;
-#endif
-#ifndef EXPORT_STATE
-#ifndef ENABLE_NETCDF
-  int n_cells_tstep;
-  int tstep;
-  double* state_nc;
-#endif
-#endif
 #ifdef CAMP_USE_GPU
   ModelDataCPU mCPU;
   ModelDataGPU *mGPU;

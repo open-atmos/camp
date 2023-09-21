@@ -73,7 +73,7 @@ contains
 
 
   function constructor(camp_config_file, output_file_title, &
-   starting_id, ending_id, n_cells, n_cells_tstep, mpi_comm) result (this)
+   starting_id, ending_id, n_cells, mpi_comm) result (this)
     type(camp_monarch_interface_t), pointer :: this
     character(len=:), allocatable, optional :: camp_config_file
     character(len=*), intent(in):: output_file_title
@@ -81,7 +81,6 @@ contains
     integer, optional :: ending_id
     integer, intent(in), optional :: mpi_comm
     integer, optional :: n_cells
-    integer, optional :: n_cells_tstep
     type(camp_solver_data_t), pointer :: camp_solver_data
     character, allocatable :: buffer(:)
     integer(kind=i_kind) :: pos, pack_size
@@ -225,7 +224,7 @@ contains
       call camp_mpi_unpack_real_array(buffer, pos, this%specs_emi)
     end if
     deallocate(buffer)
-    call this%camp_core%solver_initialize(n_cells_tstep)
+    call this%camp_core%solver_initialize()
     this%camp_state => this%camp_core%new_state()
     if(this%output_file_title=="cb05_paperV2") then
       allocate(this%offset_photo_rates_cells(this%n_cells))

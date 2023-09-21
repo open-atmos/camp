@@ -440,7 +440,7 @@ void solver_set_spec_name(void *solver_data, char *spec_name,
  * \return Pointer to an initialized SolverData object
  */
 void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
-                       int max_steps, int max_conv_fails, int n_cells_tstep) {
+                       int max_steps, int max_conv_fails) {
 #ifdef CAMP_USE_SUNDIALS
   SolverData *sd;   // SolverData object
   int flag;         // return code from SUNDIALS functions
@@ -544,17 +544,6 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
   if(sd->use_cpu==0){
       constructor_cvode_gpu(sd->cvode_mem, sd);
   }
-#endif
-#ifdef ENABLE_NETCDF
-  sd->n_cells_tstep = n_cells_tstep;
-  sd->tstep=0;
-  sd->icell=0;
-#endif
-#ifndef EXPORT_STATE
-  sd->n_cells_tstep = n_cells_tstep;
-  sd->tstep=0;
-  sd->icell=0;
-  init_export_state(sd);
 #endif
 #ifdef FAILURE_DETAIL
   // Set a custom error handling function

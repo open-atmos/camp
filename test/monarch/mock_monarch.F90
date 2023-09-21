@@ -88,7 +88,6 @@ program mock_monarch_t
   integer :: i_time, i_spec, i_case, i, j, k, z,r
   integer :: plot_case, new_v_cells, aux_int
   type(solver_stats_t), target :: solver_stats
-  integer :: n_cells_tstep
   type(json_file) :: jfile
   type(json_core) :: json
   character(len=:), allocatable :: export_path
@@ -124,11 +123,10 @@ program mock_monarch_t
   end if
   NUM_WE_CELLS = I_E-I_W+1
   NUM_SN_CELLS = I_N-I_S+1
-  n_cells_tstep = NUM_WE_CELLS*NUM_SN_CELLS*NUM_VERT_CELLS
   call jfile%get('caseGpuCpu',caseGpuCpu)
   if (camp_mpi_rank()==0) then
     write(*,*) "Time-steps:", NUM_TIME_STEP, "Cells:",&
-            n_cells_tstep, &
+        NUM_WE_CELLS*NUM_SN_CELLS*NUM_VERT_CELLS, &
             diffCells,  caseMulticellsOnecell,caseGpuCpu, "MPI processes",camp_mpi_size()
 
   end if
@@ -140,7 +138,7 @@ program mock_monarch_t
   allocate(conv(NUM_WE_CELLS, NUM_SN_CELLS, NUM_VERT_CELLS))
 
   camp_interface => camp_monarch_interface_t(camp_input_file, output_file_title, &
-          START_CAMP_ID, END_CAMP_ID, n_cells, n_cells_tstep)
+          START_CAMP_ID, END_CAMP_ID, n_cells)
 
   camp_interface%camp_state%state_var(:) = 0.0
   species_conc(:,:,:,:) = 0.0
