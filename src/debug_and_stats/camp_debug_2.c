@@ -122,20 +122,8 @@ void export_stats(int ntimers,int ncounters, int *counters, double *times){
   }
 }
 
-void check_iszerod(long double *x, int len, const char *s){
-#ifndef DEBUG_CHECK_ISZEROD
-  int n_zeros=0;
-  for (int i=0; i<len; i++){
-    if(x[i]==0.0){
-      printf("ZERO %s x[%d]",s,i);
-      exit(0);
-    }
-  }
-#endif
-}
-
 void print_double(double *x, int len, const char *s){
-#ifndef USE_PRINT_ARRAYS
+#ifdef USE_PRINT_ARRAYS
   for (int i=0; i<len; i++){
     printf("%s[%d]=%.17le\n",s,i,x[i]);
   }
@@ -143,7 +131,7 @@ void print_double(double *x, int len, const char *s){
 }
 
 void print_int(int *x, int len, const char *s){
-#ifndef USE_PRINT_ARRAYS
+#ifdef USE_PRINT_ARRAYS
   for (int i=0; i<len; i++){
     printf("%s[%d]=%d\n",s,i,x[i]);
   }
