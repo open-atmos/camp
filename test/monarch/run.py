@@ -662,7 +662,9 @@ def check_run(conf):
   if conf.use_monarch:
     conf.plotYKey = "NRMSE"
     conf.is_import = True
-  if conf.plotYKey == "NRMSE" or conf.plotYKey == "MAPE":
+  if conf.plotYKey == "NRMSE":
+    if len(conf.mpiProcessesCaseOptimList)>1 or conf.mpiProcessesCaseBase!=conf.mpiProcessesCaseOptimList[0]:
+      raise Exception("Number of processes should be the same for NMRSE, only speedup can use different number")
     if conf.is_import:
       conf.is_export = False
     else:

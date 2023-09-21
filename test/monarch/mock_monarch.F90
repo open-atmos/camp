@@ -83,7 +83,7 @@ program mock_monarch_t
   character(len=:), allocatable :: output_path, output_file_title, str_to_int_aux
   character(len=:), allocatable :: str
   character, allocatable :: buffer(:)
-  integer(kind=i_kind) :: pos, pack_size, mpi_threads, ierr
+  integer(kind=i_kind) :: pos, pack_size, ierr
   character(len=512) :: arg
   integer :: i_time, i_spec, i_case, i, j, k, z,r
   integer :: plot_case, new_v_cells, aux_int
@@ -201,11 +201,7 @@ program mock_monarch_t
   deallocate(camp_input_file)
   deallocate(output_path)
   deallocate(output_file_title)
-  mpi_threads = camp_mpi_size()
-  if ((mpi_threads>1)) then
-  else
-    deallocate(camp_interface)
-  end if
+  deallocate(camp_interface)
   call camp_mpi_finalize()
 
 contains

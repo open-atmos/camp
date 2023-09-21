@@ -17,41 +17,72 @@
 #include <mpi.h>
 #endif
 
-void init_export_state(SolverData *sd){
-  ModelData *md = &(sd->model_data);
-  int size;
-  MPI_Comm_size(MPI_COMM_WORLD, &size);
-  if(size!=1){
-    printf("export_state is only for"
-        " 1 process, use 1 process, disable or update export_state\n");
-    exit(0);
-  }
+void get_export_state_name(char filename[]){
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  char file_path[]="out/state.csv";
-  if(rank==0){
+  char s_mpirank[64];
+  strcpy(filename, "out/");
+  sprintf(s_mpirank,"%d",rank);
+  strcat(filename,s_mpirank);
+  strcat(filename,"state.csv");
+}
+
+void init_export_state(SolverData *sd){
+  char filename[64];
+  get_export_state_name(filename);
+  int rank;
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  if(rank==0)
     printf("export_state enabled\n");
-    FILE *fptr;
-    fptr = fopen(file_path,"w");
-    fclose(fptr);
-  }
+  FILE *fptr;
+  fptr = fopen(filename,"w");
+  fclose(fptr);
 }
 
 void export_state(SolverData *sd){
   ModelData *md = &(sd->model_data);
+  char filename[64];
+  get_export_state_name(filename);
+  for (int k=0; k<md->n_cells; k++) {
+    FILE *fptr;
+    fptr = fopen(filename, "a");
+    int len = md->n_per_cell_state_var;
+    double *x = md->total_state + k * len;
+    for (int i = 0; i < len; i++) {
+      fprintf(fptr, "%.17le\n",x[i]);
+    }
+    fclose(fptr);
+  }
+
+}
+
+void join_export_state(){
+  int size;
+  MPI_Comm_size(MPI_COMM_WORLD, &size);
+  if(size==1){
+    rename("out/state0.csv","out/state.csv");
+    return;
+  }
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  for (int k=0; k<md->n_cells; k++) {
-    if (rank == 0) {
-      FILE *fptr;
-      fptr = fopen("out/state.csv", "a");
-      int len = md->n_per_cell_state_var;
-      double *x = md->total_state + k * len;
-      for (int i = 0; i < len; i++) {
-        fprintf(fptr, "%.17le\n",x[i]);
-      }
-      fclose(fptr);
+  if(rank==0){
+  printf("join_export_state\n");
+  const char *outputFileName = "out/state.csv";
+  FILE *outputFile = fopen(outputFileName, "w");
+  for (int i = 0; i<size; i++) {
+    char inputFileName[50];
+    sprintf(inputFileName, "out/%dstate.csv", i);
+    FILE *inputFile = fopen(inputFileName, "r");
+    char buffer[1024];
+    size_t bytesRead;
+    while ((bytesRead = fread(buffer, 1, sizeof(buffer), inputFile)) > 0) {
+      fwrite(buffer, 1, bytesRead, outputFile);
     }
+    fclose(inputFile);
+    remove(inputFileName);
+  }
+  fclose(outputFile);
+  printf("Files merged successfully into %s\n", outputFileName);
   }
 }
 
@@ -105,26 +136,6 @@ void check_iszerod(long double *x, int len, const char *s){
 #endif
 }
 
-void check_isnanld(long double *x, int len, const char *s){
-  int n_zeros=0;
-  for (int i=0; i<len; i++){
-    if(isnan(x[i])){
-      printf("NAN %s x[%d]",s,i);
-      exit(0);
-    }
-  }
-}
-
-void check_isnand(double *x, int len, const char *s){
-  int n_zeros=0;
-  for (int i=0; i<len; i++){
-    if(isnan(x[i])){
-      printf("NAN %s x[%d]",s,i);
-      exit(0);
-    }
-  }
-}
-
 void print_double(double *x, int len, const char *s){
 #ifndef USE_PRINT_ARRAYS
   for (int i=0; i<len; i++){
@@ -139,61 +150,6 @@ void print_int(int *x, int len, const char *s){
     printf("%s[%d]=%d\n",s,i,x[i]);
   }
 #endif
-}
-
-int compare_doubles(double *x, double *y, int len, const char *s){
-  int flag=1;
-  double tol=0.;
-  double rel_error;
-  int n_fails=0;
-  for (int i=0; i<len; i++){
-    if(x[i]==0)
-      rel_error=0.;
-    else
-      rel_error=abs((x[i]-y[i])/x[i]);
-      //rel_error=(x[i]-y[i]/(x[i]+1.0E-60));
-    if(rel_error>tol){
-      printf("compare_doubles %s rel_error %le for tol %le at [%d]: %le vs %le\n",
-              s,rel_error,tol,i,x[i],y[i]);
-      flag=0;
-      n_fails++;
-      if(n_fails==4)
-        return flag;
-    }
-  }
-  return flag;
-}
-
-int compare_long_doubles(long double *x, long double *y, int len, const char *s){
-  int flag=1;
-  double tol=0.;
-  double rel_error;
-  int n_fails=0;
-  for (int i=0; i<len; i++){
-    if(x[i]==0)
-      rel_error=0.;
-    else
-      rel_error=abs((x[i]-y[i])/x[i]);
-    //rel_error=(x[i]-y[i]/(x[i]+1.0E-60));
-    if(rel_error>tol){
-      printf("compare_long_doubles %s rel_error %le for tol %le at [%d]: %le vs %le\n",
-             s,rel_error,tol,i,x[i],y[i]);
-      flag=0;
-      n_fails++;
-      if(n_fails==4)
-        return flag;
-    }
-  }
-  return flag;
-}
-
-void print_current_directory(){
-  char cwd[1024];
-  if (getcwd(cwd, sizeof(cwd)) != NULL) {
-    printf("Current working dir: %s\n", cwd);
-  } else {
-    printf("getcwd() error");
-  }
 }
 
 #ifdef CAMP_DEBUG_MOCKMONARCH

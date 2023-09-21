@@ -1388,11 +1388,6 @@ int Jac(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_data,
 
 //#endif
 
-#ifdef CAMP_DEBUG_JAC_CPU
-  check_isnand(sd->jac.production_partials,sd->jac.num_elem,"post rxn_calc_jac");
-  check_isnand(sd->jac.loss_partials,sd->jac.num_elem,"post rxn_calc_jac");
-#endif
-
     // Set the solver Jacobian using the reaction and sub-model Jacobians
     JacMap *jac_map = md->jac_map;
     SM_DATA_S(md->J_params)[0] = 1.0;  // dummy value for non-sub model calcs
@@ -1407,13 +1402,6 @@ int Jac(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_data,
     }
     CAMP_DEBUG_JAC(J, "solver Jacobian");
   }
-
-  //check_isnand(J_param_data,SM_NNZ_S(md->J_params),k++);
-  //check_isnand(SM_DATA_S(J),SM_NNZ_S(J),k++);
-
-#ifdef CAMP_DEBUG_JAC_CPU
-  check_isnand(SM_DATA_S(md->J_params),SM_NNZ_S(md->J_params),"post J_params");
-#endif
 
   // Save the Jacobian for use with derivative calculations
   for (int i_elem = 0; i_elem < SM_NNZ_S(J); ++i_elem)
@@ -2124,7 +2112,9 @@ void solver_free(void *solver_data) {
   SolverData *sd = (SolverData *)solver_data;
   ModelData *md = &(sd->model_data);
 
-  //printf("solver_free start\n");
+#ifndef EXPORT_STATE
+  join_export_state();
+#endif
 
 #ifdef CAMP_USE_SUNDIALS
   // free the SUNDIALS solver

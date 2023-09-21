@@ -12,20 +12,8 @@ FILE=TestMonarch.py
 #FILE=./unit_test_aero_rep_single_particle
 #FILE=./new_make.sh
 
-compare_cell(){
-    #log_path="/gpfs/scratch/bsc32/bsc32815/a591/nmmb-monarch/MODEL/SRC_LIBS/camp/compile/power9/log_gpu.txt"
-    log_path="../../compile/power9/log_cpu.txt"
-    #echo "Generating log file at " $log_path
-    #python $FILE > $log_path
-    python $FILE 2>&1 | tee $log_path
-    cd ../../compile/power9
-    csplit -z "log_cpu.txt" '/end cell/' '{*}'
-    diff xx00 xx01 2>&1 | tee diff.txt
-}
-
 if [ "$FILE" == TestMonarch.py ]; then
   cd ../../test/monarch
-  #compare_cell
   python $FILE
   #log_path="../../compile/power9/log_cpu.txt"
   #python $FILE 2>&1 | tee "../../compile/power9/log_cpu.txt"

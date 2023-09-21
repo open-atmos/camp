@@ -89,6 +89,9 @@ def calculate_NRMSE(data, n_time_steps, nCellsProcesses,use_monarch):
       min_y[k] = float("inf")
     NRMSEs[i] = max_NRMSEs_species*100
     max_NRMSEs_species = 0.
+    tolerance = 1.0 #1% error
+    if NRMSEs[i] > tolerance:
+      raise Exception("ERROR: NMRSE > tolerance; NMRSE:", NRMSEs[i], "tolerance:",tolerance)
   max_err_rel = format(max_err_rel * 100, '.2e')
   err_rel_at_max_abs = format(err_rel_at_max_abs * 100, '.2e')
   max_err_abs = format(max_err_abs, '.2e')
