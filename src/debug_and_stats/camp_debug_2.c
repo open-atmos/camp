@@ -150,11 +150,8 @@ void print_int(int *x, int len, const char *s){
 #endif
 }
 
-#ifdef CAMP_DEBUG_MOCKMONARCH
 void get_camp_config_variables(SolverData *sd){
   sd->use_cpu=1;
-  sd->use_gpu_cvode=0;
-  sd->use_new=0;
   FILE *fp;
   char buff[255];
   char path[] = "settings/config_variables_c_solver.txt";
@@ -173,17 +170,9 @@ void get_camp_config_variables(SolverData *sd){
     if(!strstr(buff,"USE_CPU=ON")!=NULL){
       sd->use_cpu=0;
     }
-    fscanf(fp, "%s", buff);
-    if(strstr(buff,"USE_GPU_CVODE=ON")!=NULL){
-      sd->use_gpu_cvode=1;
-    }
     fscanf(fp, "%d", &sd->nDevices);
-    fscanf (fp, "%d", &sd->nCellsGPUPerc);
-    fscanf(fp, "%s", buff);
-    if(strstr(buff,"New")!=NULL){
-      sd->use_new=1;
-    }
+    fscanf(fp, "%d", &sd->is_export_state);
+    printf("sd->is_export_state %d\n",sd->is_export_state);
     fclose(fp);
   }
 }
-#endif

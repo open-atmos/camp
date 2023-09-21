@@ -281,13 +281,10 @@ typedef struct {
   ModelDataGPU *mGPU;
   int *flagCells;
 #endif
-#ifdef CAMP_DEBUG_MOCKMONARCH
+  //get_camp_config_variables
   int use_cpu;
-  int use_gpu_cvode;
   int nDevices;
-  int nCellsGPUPerc;
-  int use_new;
-#endif
+  bool is_export_state;
 
   void *cvode_mem;       // CVodeMem object
   ModelData model_data;  // Model data (used during initialization and solving)

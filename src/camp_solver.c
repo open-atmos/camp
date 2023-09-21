@@ -370,9 +370,7 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
   sd->model_data.sub_model_float_indices[0] = 0;
   sd->model_data.sub_model_env_idx[0] = 0;
 
-#ifdef CAMP_DEBUG_MOCKMONARCH
   get_camp_config_variables(sd);
-#endif
 
 #ifdef CAMP_DEBUG
   if (sd->debug_out) print_data_sizes(&(sd->model_data));
@@ -518,6 +516,7 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
       constructor_cvode_gpu(sd->cvode_mem, sd);
   }
 #endif
+  if(sd->is_export_state)init_export_state(sd);
 #ifdef FAILURE_DETAIL
   // Set a custom error handling function
   flag = CVodeSetErrHandlerFn(sd->cvode_mem, error_handler, (void *)sd);
@@ -681,10 +680,8 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
       flag = CVode(sd->cvode_mem, (realtype)t_final, sd->y, &t_rt, CV_NORMAL);
     }
     else{
-      if(sd->use_gpu_cvode==1){
-        flag = cudaCVode(sd->cvode_mem, (realtype)t_final, sd->y,
-          &t_rt, CV_NORMAL, sd);
-      }
+      flag = cudaCVode(sd->cvode_mem, (realtype)t_final, sd->y,
+        &t_rt, CV_NORMAL, sd);
     }
 #else
     flag = CVode(sd->cvode_mem, (realtype)t_final, sd->y, &t_rt, CV_NORMAL);
@@ -735,9 +732,7 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
     //print_double(state+md->n_per_cell_state_var*i, n_state_var, "state768");
     //printf("end cell\nline\n");
   //}
-#ifndef EXPORT_STATE
-  export_state(sd);
-#endif
+  if(sd->is_export_state)export_state(sd);
 #ifdef FAILURE_DETAIL
   sd->counter_fail_solve_print=0;
 #endif
@@ -2074,9 +2069,7 @@ void solver_free(void *solver_data) {
   SolverData *sd = (SolverData *)solver_data;
   ModelData *md = &(sd->model_data);
 
-#ifndef EXPORT_STATE
-  join_export_state();
-#endif
+  if(sd->is_export_state)join_export_state();
 
 #ifdef CAMP_USE_SUNDIALS
   // free the SUNDIALS solver

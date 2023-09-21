@@ -285,29 +285,16 @@ void constructor_cvode_gpu(CVodeMem cv_mem, SolverData *sd){
   initLinearSolver_cvode(sd);
   mCPU->A = ((double *) SM_DATA_S(J));
   //Translate from int64 (sunindextype) to int
-  if(sd->use_gpu_cvode==1){
-    mCPU->jA = (int *) malloc(sizeof(int) *mCPU->nnz/mGPU->n_cells);
-    mCPU->iA = (int *) malloc(sizeof(int) * (mGPU->nrows/mGPU->n_cells + 1));
-    for (int i = 0; i < mCPU->nnz/mGPU->n_cells; i++)
-      mCPU->jA[i] = SM_INDEXVALS_S(J)[i];
-    for (int i = 0; i <= mGPU->nrows/mGPU->n_cells; i++)
-      mCPU->iA[i] = SM_INDEXPTRS_S(J)[i];
-    cudaMalloc((void **) &mGPU->djA, mCPU->nnz/mGPU->n_cells * sizeof(int));
-    cudaMalloc((void **) &mGPU->diA, (mGPU->nrows/mGPU->n_cells + 1) * sizeof(int));
-    cudaMemcpy(mGPU->djA, mCPU->jA, mCPU->nnz/mGPU->n_cells * sizeof(int), cudaMemcpyHostToDevice);
-    cudaMemcpy(mGPU->diA, mCPU->iA, (mGPU->nrows/mGPU->n_cells + 1) * sizeof(int), cudaMemcpyHostToDevice);
-  }else{
-    mCPU->jA = (int *) malloc(sizeof(int) *mCPU->nnz);
-    mCPU->iA = (int *) malloc(sizeof(int) * (mGPU->nrows + 1));
-    for (int i = 0; i < mCPU->nnz; i++)
-      mCPU->jA[i] = SM_INDEXVALS_S(J)[i];
-    for (int i = 0; i <= mGPU->nrows; i++)
-      mCPU->iA[i] = SM_INDEXPTRS_S(J)[i];
-    cudaMalloc((void **) &mGPU->djA, mCPU->nnz * sizeof(int));
-    cudaMalloc((void **) &mGPU->diA, (mGPU->nrows + 1) * sizeof(int));
-    cudaMemcpy(mGPU->djA, mCPU->jA, mCPU->nnz * sizeof(int), cudaMemcpyHostToDevice);
-    cudaMemcpy(mGPU->diA, mCPU->iA, (mGPU->nrows + 1) * sizeof(int), cudaMemcpyHostToDevice);
-  }
+  mCPU->jA = (int *) malloc(sizeof(int) *mCPU->nnz/mGPU->n_cells);
+  mCPU->iA = (int *) malloc(sizeof(int) * (mGPU->nrows/mGPU->n_cells + 1));
+  for (int i = 0; i < mCPU->nnz/mGPU->n_cells; i++)
+    mCPU->jA[i] = SM_INDEXVALS_S(J)[i];
+  for (int i = 0; i <= mGPU->nrows/mGPU->n_cells; i++)
+    mCPU->iA[i] = SM_INDEXPTRS_S(J)[i];
+  cudaMalloc((void **) &mGPU->djA, mCPU->nnz/mGPU->n_cells * sizeof(int));
+  cudaMalloc((void **) &mGPU->diA, (mGPU->nrows/mGPU->n_cells + 1) * sizeof(int));
+  cudaMemcpy(mGPU->djA, mCPU->jA, mCPU->nnz/mGPU->n_cells * sizeof(int), cudaMemcpyHostToDevice);
+  cudaMemcpy(mGPU->diA, mCPU->iA, (mGPU->nrows/mGPU->n_cells + 1) * sizeof(int), cudaMemcpyHostToDevice);
   double *ewt = N_VGetArrayPointer(cv_mem->cv_ewt);
   double *tempv = N_VGetArrayPointer(cv_mem->cv_tempv);
   double *cv_last_yn = N_VGetArrayPointer(cv_mem->cv_last_yn);
@@ -371,9 +358,7 @@ void constructor_cvode_gpu(CVodeMem cv_mem, SolverData *sd){
   HANDLE_ERROR(cudaMemcpy(mGPU->mdvo, &mCPU->mdvCPU, sizeof(ModelDataVariable), cudaMemcpyHostToDevice));
 #endif
   mCPU->mdvCPU.nstlj = 0;
-  if(sd->use_gpu_cvode==1) {
-    swapCSC_CSR_ODE_if_enabled(sd);
-  }
+  swapCSC_CSR_ODE_if_enabled(sd);
   if(cv_mem->cv_sldeton){
     printf("ERROR: cudaDevicecvBDFStab is pending to implement "
            "(disabled by default on CAMP)\n");

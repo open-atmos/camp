@@ -30,7 +30,6 @@ class TestMonarch:
     self.allocatedNodes = 1
     self.allocatedTasksPerNode = 160
     self.nGPUs = 1
-    self.nCellsGPUPerc = 4  # between 0 and 10 (represents 0%-100%)
     # Cases configuration
     self.is_start_cases_attributes = True
     self.diffCellsL = ""
@@ -99,13 +98,9 @@ def write_camp_config_file(conf):
       file1.write("USE_CPU=ON\n")
     else:
       file1.write("USE_CPU=OFF\n")
-    if conf.caseMulticellsOnecell == "BDF" or conf.caseMulticellsOnecell.find("maxrregcount") != -1:
-      file1.write("USE_GPU_CVODE=ON\n")
-    else:
-      file1.write("USE_GPU_CVODE=OFF\n")
     file1.write(str(conf.nGPUs) + "\n")
-    file1.write(str(conf.nCellsGPUPerc) + "\n")
-    file1.write(str(conf.caseMulticellsOnecell) + "\n")
+    is_export_state="1\n"
+    file1.write(is_export_state)
     file1.close()
   except Exception as e:
     print("write_camp_config_file fails", e)
