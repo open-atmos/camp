@@ -469,7 +469,7 @@ __device__ void cudaDevicedotxy_2(double *g_idata1, double *g_idata2,
   unsigned int tid = threadIdx.x;
   __syncthreads();
   if(tid<n_shr_empty)
-  sdata[tid+blockDim.x]=0.;
+    sdata[tid+blockDim.x]=0.;
   __syncthreads();
 #ifdef IS_DEBUG_MODE_cudaDevicedotxy_2
   //used for compare with cpu
@@ -482,9 +482,6 @@ __device__ void cudaDevicedotxy_2(double *g_idata1, double *g_idata2,
   }
 #else
   unsigned int i = blockIdx.x*blockDim.x + threadIdx.x;
-  if(tid<n_shr_empty)
-    sdata[tid+blockDim.x]=0.;
-  __syncthreads();
   sdata[tid] = g_idata1[i]*g_idata2[i];
   __syncthreads();
   unsigned int blockSize = blockDim.x+n_shr_empty;
@@ -720,11 +717,11 @@ int CudaDeviceguess_helper(double h_n, double* y_n,
    double* y_n1, double* hf, double* atmp1,
    double* acorr, int *flag, ModelDataGPU *md, ModelDataVariable *sc
 ) {
-  extern __shared__ double flag_shr2[];
+  extern __shared__ double sdata[];
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   __syncthreads();
   double min;
-  cudaDevicemin_2(&min, y_n[i], flag_shr2, md->n_shr_empty);
+  cudaDevicemin_2(&min, y_n[i], sdata, md->n_shr_empty);
   if(min>-SMALL){
     return 0;
   }
@@ -749,41 +746,34 @@ int CudaDeviceguess_helper(double h_n, double* y_n,
     __syncthreads();
     double h_j = sc->cv_tn - (t_0 + t_j);
     //print_double(atmp1,86,"atmp720");
-#ifndef IS_DEBUG_MODE_CudaDeviceguess_helper
+#ifdef IS_DEBUG_MODE_CudaDeviceguess_helper
     if(threadIdx.x==0){
-    int i_fast = -1;
-    for (int j = 0; j < blockDim.x; j++) {
-      double t_star = -atmp1[j+blockIdx.x*blockDim.x] / acorr[j+blockIdx.x*blockDim.x];
-      if ((t_star > 0. || (t_star == 0. && acorr[j+blockIdx.x*blockDim.x] < 0.)) &&
-          t_star < h_j) {
-        h_j = t_star;
-        i_fast = j;
+      int i_fast = -1;
+      for (int j = 0; j < blockDim.x; j++) {
+        double t_star = -atmp1[j+blockIdx.x*blockDim.x] / acorr[j+blockIdx.x*blockDim.x];
+        if ((t_star > 0. || (t_star == 0. && acorr[j+blockIdx.x*blockDim.x] < 0.)) &&
+            t_star < h_j) {
+          h_j = t_star;
+          i_fast = 1;
+        }
       }
-    }
-    if (i_fast >= 0 && h_n > 0.)
-      h_j *= 0.95 + 0.1 * iter / (double)GUESS_MAX_ITER;
-    flag_shr2[0]=h_j;
+      if (i_fast >= 0 && h_n > 0.)
+        h_j *= 0.95 + 0.1 * iter / (double)GUESS_MAX_ITER;
+      sdata[0]=h_j;
     }
     __syncthreads();
-    h_j=flag_shr2[0];
+    h_j=sdata[0];
     __syncthreads();
 #else
-    double t_star = h_j;
-    if(acorr[i]!=0.){
-      t_star=-atmp1[i] / acorr[i];
-    }
-    flag_shr2[0] = 0;
-    __syncthreads();
-    if( (t_star > 0. || (t_star == 0. && acorr[i] < 0.)) ){
-      flag_shr2[0] = 1;
-    }else{
+    double t_star = -atmp1[i] / acorr[i];
+    if (t_star < 0. || (t_star == 0. && acorr[i] >= 0.)){
       t_star=h_j;
     }
-    __syncthreads();
-    int i_fast = flag_shr2[0];
-    cudaDevicemin_2(&h_j, t_star, flag_shr2, md->n_shr_empty);
-    if (i_fast == 1 && h_n > 0.)
+    cudaDevicemin_2(&min, t_star, sdata, md->n_shr_empty);
+    if(min<h_j){
+      h_j = min;
       h_j *= 0.95 + 0.1 * iter / (double)GUESS_MAX_ITER;
+    }
 #endif
     h_j = sc->cv_tn < t_0 + t_j + h_j ? sc->cv_tn - (t_0 + t_j) : h_j;
     __syncthreads();
