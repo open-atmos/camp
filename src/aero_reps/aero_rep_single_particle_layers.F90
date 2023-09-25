@@ -58,7 +58,7 @@ module camp_aero_rep_single_particle
 #define NUM_ENV_PARAM_PER_PARTICLE_ 1
 #define NUM_PHASE_(l) this%condensed_data_int(NUM_INT_PROP_+l)
 #define PHASE_STATE_ID_(p) this%condensed_data_int(NUM_INT_PROP_+TOTAL_NUM_PHASES_+p)
-#define LAYER_STATE_ID_(l+1) this%condensed_data_init(NUM_INT_PROP_+TOTAL_NUM_LAYERS_+l+1)
+#define LAYER_STATE_ID_(l+1) this%condensed_data_int(NUM_INT_PROP_+TOTAL_NUM_LAYERS_+l+1)
 #define PHASE_MODEL_DATA_ID_(p) this%condensed_data_int(NUM_INT_PROP_+TOTAL_NUM_PHASES_+p)
 #define PHASE_NUM_JAC_ELEM_(p) this%condensed_data_int(NUM_INT_PROP_+2*TOTAL_NUM_PHASES_+p)
 
@@ -425,7 +425,8 @@ contains
     TOTAL_NUM_PHASES_ = SUM(NUM_PHASE)
     TOTAL_NUM_LAYERS_ = size(NUM_PHASE)
 
-    ! Construct aero_phase pointer array for layers
+    ! Construct aero_phase pointer array for layers, phases only exist
+    ! in the user specified layers
     allocate(aero_layer_phase_set(size(aero_layer_phase_set_names)))
     do i_aero = 1, size(aero_phase)
       do i_layer = 1, TOTAL_NUM_LAYERS_
@@ -438,7 +439,7 @@ contains
       end do
     end do
 
-    ! Assume all phases will be applied once to each particle
+    ! Ordered phases are applied once to each particle
     allocate(this%aero_phase(size(aero_phase_set)*num_particles))
     do i_particle = 1, num_particles
       do i_phase = 1, size(aero_phase_set)
@@ -535,9 +536,9 @@ contains
   !! aerosol species by including the phase_name and spec_name arguments.
   !!
   !! For a single particle representation, the unique names will be a 'P'
-  !! followed by the computational particle number, a '.', the layer name,
-  !! another '.', the phase name, another '.', and the species name.
-  function unique_names(this, layer_name, phase_name, tracer_type, spec_name)
+  !! followed by the computational particle number, a '.', the phase name,
+  !! another '.', and the species name.
+  function unique_names(this, phase_name, tracer_type, spec_name)
 
     use camp_util,                      only : integer_to_string
 
@@ -554,11 +555,11 @@ contains
     !> Aerosol-phase species name
     character(len=*), optional, intent(in) :: spec_name
 
-    integer(kind=i_kind) :: num_spec, i_part, i_spec, j_spec, i_phase
-    integer(kind=i_kind) :: num_layer, i_layer
+    integer(kind=i_kind) :: num_spec, i_part, i_spec, j_spec
+    integer(kind=i_kind) :: i_layer, i_phase
     integer(kind=i_kind) :: curr_tracer_type
-    character(len=:), allocatable :: curr_phase_name
     character(len=:), allocatable :: curr_layer_name
+    character(len=:), allocatable :: curr_phase_name
     type(string_t), allocatable :: spec_names(:)
 
     ! Copy saved unique names when no filters are included
@@ -573,48 +574,46 @@ contains
 
     ! Count the number of unique names
     num_spec = 0
-    do i_phase = 1, TOTAL_NUM_PHASES_
-      curr_layer_name = this%aero_layer(i_phase)%val%name()
-      if (present(layer_name)) then
-        if (layer_name.ne.curr_layer_name) cycle
-      end if
-      curr_phase_name = this%aero_phase(i_phase)%val%name()
-      if (present(phase_name)) then
-        if (phase_name.ne.curr_phase_name) cycle
-      end if
-      if (present(spec_name).or.present(tracer_type)) then
-        spec_names = this%aero_phase(i_phase)%val%get_species_names()
-        do j_spec = 1, size(spec_names)
-          curr_tracer_type = &
-                  this%aero_phase(i_phase)%val%get_species_type( &
-                  spec_names(j_spec)%string)
-          if (present(spec_name)) then
-            if (spec_name.ne.spec_names(j_spec)%string) cycle
-          end if
-          if (present(tracer_type)) then
-            if (tracer_type.ne.curr_tracer_type) cycle
-          end if
-          num_spec = num_spec + 1
-        end do
+    do i_layer = 1, TOTAL_NUM_LAYERS_
+      do i_phase = 1, TOTAL_NUM_PHASE_
+        curr_layer_name = this%aero_layer_set_names(i_layer)
+        curr_phase_name = this%aero_phase(i_phase)%val%name()
+        if (present(phase_name).and.present(layer_name)) then
+          if (phase_name.ne.curr_phase_name).or. &
+             (layer_name.ne.curr_layer_name) cycle
+        end if
+        if (present(spec_name).or.present(tracer_type)) then
+          spec_names = this%aero_phase(i_phase)%val%get_species_names()
+          do j_spec = 1, size(spec_names)
+            curr_tracer_type = &
+                    this%aero_phase(i_phase)%val%get_species_type( &
+                    spec_names(j_spec)%string)
+            if (present(spec_name)) then
+              if (spec_name.ne.spec_names(j_spec)%string) cycle
+            end if
+            if (present(tracer_type)) then
+              if (tracer_type.ne.curr_tracer_type) cycle
+            end if
+            num_spec = num_spec + 1
+          end do
         deallocate(spec_names)
-      else
-        num_spec = num_spec + this%aero_phase(i_phase)%val%size()
-      end if
+        else
+          num_spec = num_spec + this%aero_phase(i_phase)%val%size()
+        end if
+      end do
     end do
 
     ! Allocate space for the unique names and assign them
-    allocate(unique_names(num_spec*num_layer*MAX_PARTICLES_))
+    allocate(unique_names(num_spec*MAX_PARTICLES_))
     i_spec = 1
     do i_part = 1, MAX_PARTICLES_
-      do i_phase = 1, TOTAL_NUM_PHASES_
-        do i_layer = 1, TOTAL_NUM_LAYERS_
-          curr_layer_name = this%aero_layer(i_phase)%val%name()
-          if (present(layer_name)) then
-           if (layer_name.ne.curr_layer_name) cycle
-          end if
+      do i_layer = 1, TOTAL_NUM_LAYERS_
+        do i_phase = 1, TOTAL_NUM_PHASE_
+          curr_layer_name = this%aero_layer_set_names(i_layer)
           curr_phase_name = this%aero_phase(i_phase)%val%name()
-          if (present(phase_name)) then
-            if (phase_name.ne.curr_phase_name) cycle
+          if (present(phase_name).and.present(layer_name)) then
+            if (phase_name.ne.curr_phase_name).or. &
+               (layer_name.ne.curr_layer_name) cycle
           end if
           spec_names = this%aero_phase(i_phase)%val%get_species_names()
           num_spec = this%aero_phase(i_phase)%val%size()
@@ -634,6 +633,7 @@ contains
             i_spec = i_spec + 1
           end do
         end do
+      end do
       deallocate(spec_names)
     end do
 
