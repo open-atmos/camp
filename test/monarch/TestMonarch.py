@@ -4,7 +4,6 @@
 # SPDX-License-Identifier: MIT
 #
 
-from mainMonarch import *
 from checkGPU import *
 
 def all_timesteps():
@@ -109,7 +108,7 @@ def all_timesteps():
 
   """END OF CONFIGURATION VARIABLES"""
 
-  check_run(conf)
+  run_main(conf)
 
 if __name__ == "__main__":
   all_timesteps()

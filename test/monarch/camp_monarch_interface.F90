@@ -808,7 +808,7 @@ contains
         end do
       end do
     end if
-  end subroutdine get_init_conc
+  end subroutine get_init_conc
 
   elemental subroutine finalize(this)
     type(camp_monarch_interface_t), intent(inout) :: this

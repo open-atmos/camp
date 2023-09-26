@@ -8,7 +8,6 @@ from mainMonarch import *
 
 
 def checkGPU():
-  print("check")
   conf = TestMonarch()
   conf.chemFile = "cb05_paperV2"
   conf.diffCellsL = []
@@ -27,4 +26,7 @@ def checkGPU():
   conf.casesOptim.append("GPU BDF")
   conf.plotYKey = "NRMSE"
   """END OF CONFIGURATION VARIABLES"""
-  check_run(conf)
+  run_main(conf)
+
+if __name__ == "__main__":
+  checkGPU()

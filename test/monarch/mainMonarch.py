@@ -546,7 +546,7 @@ def plot_cases(conf):
       datay[i][j] = format(datay[i][j], '.2e')
   print(namey, ":", datay)
 
-def check_run(conf):
+def run_main(conf):
   if conf.plotYKey == "NRMSE":
     if len(conf.mpiProcessesCaseOptimList)>1 or conf.mpiProcessesCaseBase!=conf.mpiProcessesCaseOptimList[0]:
       raise Exception("Number of processes should be the same for NMRSE, only speedup can use different number")
