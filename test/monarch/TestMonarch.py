@@ -4,10 +4,11 @@
 # SPDX-License-Identifier: MIT
 #
 
-from run import *
-
+from mainMonarch import *
+from checkGPU import *
 
 def all_timesteps():
+  checkGPU() #Ensure GPU version output similar results than CPU
   conf = TestMonarch()
 
   conf.chemFile = "cb05_paperV2"
