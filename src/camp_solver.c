@@ -944,6 +944,7 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
       times[i]=0.;
       i++;
 #endif
+      times[i]=mCPU->timecvStep;
       i++;
       //for(int i=0;i<sd->ntimers;i++)
         //printf("times[%d]=%le\n",i,times[i]);

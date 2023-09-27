@@ -204,10 +204,12 @@ def run(conf):
   if not conf.is_import:
     os.system(exec_str)
     if conf.case is conf.caseBase:
-      os.rename("out/state.csv", "out/state0.csv")
+      if conf.plotYKey == "NRMSE":
+        os.rename("out/state.csv", "out/state0.csv")
       os.rename("out/stats.csv", "out/stats0.csv")
     else:
-      os.rename("out/state.csv", "out/state1.csv")
+      if conf.plotYKey == "NRMSE":
+        os.rename("out/state.csv", "out/state1.csv")
       os.rename("out/stats.csv", "out/stats1.csv")
   #OUT
   if False:
