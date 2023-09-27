@@ -107,30 +107,6 @@ def calculate_NRMSE(data, n_time_steps, nCellsProcesses):
   return NRMSEs
 
 
-def calculate_BCGPercTimeDataTransfers(data, plot_y_key):
-  cases = list(data.keys())
-
-  gpu_exist = False
-
-  for case in cases:
-    print("WARNING: Deprecated checking in calculate_BCGPercTimeDataTransfers")
-    if ("GPU" in case):
-      data_timeBiconjGradMemcpy = data[case][plot_y_key]
-      data_timeLS = data[case]["timeLS"]
-      gpu_exist = True
-
-  if (gpu_exist == False):
-    raise Exception("Not GPU case for BCGPercTimeDataTransfers metric")
-
-  datay = [0.] * len(data_timeLS)
-  for i in range(len(data_timeLS)):
-    datay[i] = data_timeBiconjGradMemcpy[i] / data_timeLS[i] * 100
-
-  # print(datay)
-
-  return datay
-
-
 def calculate_speedup(data, plot_y_key):
   cases = list(data.keys())
 

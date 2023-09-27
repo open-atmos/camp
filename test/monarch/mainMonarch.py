@@ -86,13 +86,14 @@ def write_camp_config_file(conf):
     else:
       file1.write("USE_CPU=OFF\n")
     file1.write(str(conf.nGPUs) + "\n")
-    if(conf.plotYKey == "NRMSE"):
+    if (conf.plotYKey == "NRMSE"):
       file1.write("IS_EXPORT_STATE=ON\n")
     else:
       file1.write("IS_EXPORT_STATE=OFF\n")
     file1.close()
   except Exception as e:
     print("write_camp_config_file fails", e)
+
 
 def export(conf, data_path):
   data_path_abs = os.path.abspath(os.getcwd()) + "/" + data_path
@@ -160,16 +161,8 @@ def run(conf):
       exec_str += 'ddt --connect '
   except Exception:
     pass
-  if os.getenv("BSC_MACHINE") == "power":
-    exec_str += "mpirun -v -np " + str(conf.mpiProcesses) + " --bind-to core "  # fails on monarch cte-power
-    # exec_str += "srun --cpu-bind=core -n " + str(conf.mpiProcesses) +" " #fine only with salloc or sbatch (no login nodes) and no ddt
-    # exec_str += "srun --cpu-bind=core -n " + str(conf.mpiProcesses) +" --gres=gpu:1 " #fail because it needs 40 tasks allocated, despite I only use 1
-  # salloc --x11 --qos=debug --tasks-per-node=160 --nodes=1 --gres=gpu:4
-  elif os.getenv("BSC_MACHINE") == "mn4":
-    exec_str += "mpirun -np " + str(conf.mpiProcesses) + " --bind-to core "
-  else:
-    print("Error python run - Unknown BSC_MACHINE")
-    raise
+  exec_str += "mpirun -v -np " + str(conf.mpiProcesses) + " --bind-to core "  # fails on monarch cte-power
+
   if conf.profileCuda == "nvprof" and conf.caseGpuCpu == "GPU":
     pathNvprof = "../../compile/power9/" + conf.caseMulticellsOnecell \
                  + str(conf.nCells) + "Cells" + ".nvprof "
@@ -177,7 +170,7 @@ def run(conf):
     # exec_str += "nvprof --print-gpu-trace " #registers per thread
     # --print-gpu-summary
     print("Saving profiling file in ", os.path.abspath(os.getcwd()) \
-          + "/" + pathNvprof  + ".nvprof")
+          + "/" + pathNvprof + ".nvprof")
   elif conf.profileCuda == "nsight" and conf.caseGpuCpu == "GPU":
     print("TODO TRY TO USE /apps/NVIDIA-HPC-SDK/21.3/Linux_ppc64le/21.3/profilers/Nsight_Compute/ncu")
     exec_str += "/apps/NVIDIA-HPC-SDK/20.9/Linux_ppc64le/2020/profilers/Nsight_Compute/ncu "
@@ -235,7 +228,7 @@ def run(conf):
     nrows_csv = conf.timeSteps * conf.nCells * conf.mpiProcesses
     data = math_functions.read_solver_stats(data_path, nrows_csv)
 
-  print("conf.results_file",data_path)
+  print("conf.results_file", data_path)
   return data
 
 
@@ -325,17 +318,13 @@ def run_cases(conf):
 
         # calculate measures between caseBase and caseOptim
         if conf.plotYKey == "NRMSE":
-          nCellsProcesses=[conf.nCellsProcesses]
+          nCellsProcesses = [conf.nCellsProcesses]
           datay = math_functions.calculate_NRMSE(
-            data, conf.timeSteps,nCellsProcesses)
+            data, conf.timeSteps, nCellsProcesses)
         elif "Speedup" in conf.plotYKey:
           y_key_words = conf.plotYKey.split()
           y_key = y_key_words[-1]
           datay = math_functions.calculate_speedup(data, y_key)
-        elif conf.plotYKey == "Percentage data transfers CPU-GPU [%]":
-          y_key = "timeBiconjGradMemcpy"
-          print("elif conf.plotYKey==Time data transfers")
-          datay = math_functions.calculate_BCGPercTimeDataTransfers(data, y_key)
         else:
           raise Exception("Not found plot function for conf.plotYKey")
 
@@ -381,17 +370,13 @@ def run_diffCells(conf):
 
 
 def plot_cases(conf):
-  # Set plot info
   cases_words = conf.caseBase.split()
   conf.caseGpuCpu = cases_words[0]
   conf.caseMulticellsOnecell = cases_words[1]
-  # case_multicells_onecell_name = getCaseName(conf)
   case_multicells_onecell_name = ""
 
   case_gpu_cpu_name = ""
   if conf.caseGpuCpu == "CPU":
-    # case_gpu_cpu_name = str(conf.mpiProcessesCaseBase) + " MPI CPU Cores"
-    # case_gpu_cpu_name = "1 CPU ("+str(conf.mpiProcessesCaseBase)+" MPI cores)"
     case_gpu_cpu_name = "CPU"
   elif conf.caseGpuCpu == "GPU":
     if conf.mpiProcessesCaseBase > 1:
@@ -437,7 +422,6 @@ def plot_cases(conf):
           cases_words = caseOptim.split()
           conf.caseGpuCpu = cases_words[0]
           conf.caseMulticellsOnecell = cases_words[1]
-          # case_multicells_onecell_name = getCaseName(conf)
           case_multicells_onecell_name = ""
           if conf.caseMulticellsOnecell.find("BDF") != -1 or conf.caseMulticellsOnecell.find(
               "maxrregcount") != -1:
@@ -469,7 +453,6 @@ def plot_cases(conf):
       if conf.caseGpuCpu == "GPU" and len(conf.nGPUsCaseOptimList) == 1 and conf.nGPUsCaseOptimList[0] > 1:
         conf.plotTitle += str(conf.nGPUsCaseOptimList[0]) + " GPUs "
       else:
-        # conf.plotTitle += str(nGPUs) + " " + conf.caseGpuCpu + " "
         conf.plotTitle += conf.caseGpuCpu + " "
   if conf.plotXKey == "GPUs":
     conf.plotTitle += "GPU "
@@ -507,7 +490,6 @@ def plot_cases(conf):
   if len(conf.cells) > 1:
     namey += " [Mean and \u03C3]"
     conf.plotTitle += ""
-    # conf.plotTitle += ", " + str(conf.timeSteps) + " timesteps"
     datax = conf.cells
     plot_x_key = "Cells"
   elif conf.plotXKey == "MPI processes":
@@ -541,15 +523,14 @@ def plot_cases(conf):
     print("plotTitle: ", conf.plotTitle, " legend:", conf.legend)
   else:
     print("plotTitle: ", conf.plotTitle)
-  # plot_functions.plotsns(namex, namey, datax, datay, conf.stdColumns, conf.plotTitle, conf.legend)
-  for i in range(len(datay)):
-    for j in range(len(datay)):
-      datay[i][j] = format(datay[i][j], '.2e')
   print(namey, ":", datay)
+  if conf.plotYKey == "NRMSE":
+    print("SUCCESS")
+
 
 def run_main(conf):
   if conf.plotYKey == "NRMSE":
-    if len(conf.mpiProcessesCaseOptimList)>1 or conf.mpiProcessesCaseBase!=conf.mpiProcessesCaseOptimList[0]:
+    if len(conf.mpiProcessesCaseOptimList) > 1 or conf.mpiProcessesCaseBase != conf.mpiProcessesCaseOptimList[0]:
       raise Exception("Number of processes should be the same for NMRSE, only speedup can use different number")
     if conf.is_import:
       conf.is_export = False

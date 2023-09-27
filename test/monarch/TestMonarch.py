@@ -7,7 +7,6 @@
 from checkGPU import *
 
 def all_timesteps():
-  checkGPU() #Ensure GPU version output similar results than CPU
   conf = TestMonarch()
 
   conf.chemFile = "cb05_paperV2"
@@ -96,12 +95,11 @@ def all_timesteps():
   # conf.plotYKey = "Speedup normalized counterBCG"
   # conf.plotYKey = "Speedup total iterations - counterBCG"
   # conf.plotYKey = "Speedup BCG iteration (Comp.timeLS/counterBCG)"
-  #conf.plotYKey = "Speedup timecvStep"
+  conf.plotYKey = "Speedup timecvStep"
   # conf.plotYKey = "Speedup timecvStep normalized by countercvStep"
   # conf.plotYKey = "Speedup countercvStep"
   # conf.plotYKey = "Speedup device timecvStep"
-  # conf.plotYKey = "Percentage data transfers CPU-GPU [%]"
-  conf.plotYKey = "NRMSE"
+  #conf.plotYKey = "NRMSE"
 
   # conf.plotXKey = "MPI processes"
   # conf.plotXKey = "GPUs"
