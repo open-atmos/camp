@@ -211,8 +211,7 @@ def run(conf):
       if conf.plotYKey == "NRMSE":
         os.rename("out/state.csv", "out/state1.csv")
       os.rename("out/stats.csv", "out/stats1.csv")
-  #OUT
-  if False:
+  if conf.is_out:
     if conf.case is conf.caseBase:
       data_path = "out/state0.csv"
     else:
@@ -222,7 +221,6 @@ def run(conf):
         conf.out = [float(line.rstrip('\n')) for line in f]
     except FileNotFoundError as e:
       raise FileNotFoundError("Check enable EXPORT_STATE in CAMP code") from e
-  #SPEEDUP
   if conf.case is conf.caseBase:
     data_path = "out/stats0.csv"
   else:
