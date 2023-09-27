@@ -109,21 +109,11 @@ def calculate_NRMSE(data, n_time_steps, nCellsProcesses):
 
 def calculate_speedup(data, plot_y_key):
   cases = list(data.keys())
-
   base_data = data[cases[0]][plot_y_key]
   new_data = data[cases[1]][plot_y_key]
-
-  # print("calculate_speedup start",data)
-  # print(plot_y_key)
-
-  # data[new_plot_y_key] = data.get(new_plot_y_key,[])
   datay = [0.] * len(base_data)
   for i in range(len(base_data)):
-    # print(base_data[i],new_data[i], base_data[i]/new_data[i])
     datay[i] = base_data[i] / new_data[i]
-
-  # print(datay)
-
   return datay
 
 

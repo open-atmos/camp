@@ -12,7 +12,6 @@ make_and_check(){
     python checkGPU.py
   fi
 }
-make_and_check
 
 make_run(){
   curr_path=$(pwd)

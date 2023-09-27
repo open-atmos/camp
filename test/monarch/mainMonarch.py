@@ -42,9 +42,11 @@ class TestMonarch:
     self.plotXKey = ""
     self.is_import = False
     self.profileCuda = ""
+    self.is_out = True
     # Auxiliary
     self.is_start_auxiliary_attributes = True
     self.sbatch_job_id = ""
+    self.out = []
     self.datacolumns = []
     self.stdColumns = []
     self.exportPath = "exports"
@@ -86,10 +88,7 @@ def write_camp_config_file(conf):
     else:
       file1.write("USE_CPU=OFF\n")
     file1.write(str(conf.nGPUs) + "\n")
-    if (conf.plotYKey == "NRMSE"):
-      file1.write("IS_EXPORT_STATE=ON\n")
-    else:
-      file1.write("IS_EXPORT_STATE=OFF\n")
+    file1.write("IS_EXPORT_STATE=ON\n")
     file1.close()
   except Exception as e:
     print("write_camp_config_file fails", e)
@@ -210,23 +209,24 @@ def run(conf):
     else:
       os.rename("out/state.csv", "out/state1.csv")
       os.rename("out/stats.csv", "out/stats1.csv")
-  if conf.plotYKey == "NRMSE":
+  #OUT
+  if False:
     if conf.case is conf.caseBase:
       data_path = "out/state0.csv"
     else:
       data_path = "out/state1.csv"
     try:
       with open(data_path) as f:
-        data = [float(line.rstrip('\n')) for line in f]
+        conf.out = [float(line.rstrip('\n')) for line in f]
     except FileNotFoundError as e:
-      raise FileNotFoundError("Check enable EXPORT_STATE in the CAMP code") from e
+      raise FileNotFoundError("Check enable EXPORT_STATE in CAMP code") from e
+  #SPEEDUP
+  if conf.case is conf.caseBase:
+    data_path = "out/stats0.csv"
   else:
-    if conf.case is conf.caseBase:
-      data_path = "out/stats0.csv"
-    else:
-      data_path = "out/stats1.csv"
-    nrows_csv = conf.timeSteps * conf.nCells * conf.mpiProcesses
-    data = math_functions.read_solver_stats(data_path, nrows_csv)
+    data_path = "out/stats1.csv"
+  nrows_csv = conf.timeSteps * conf.nCells * conf.mpiProcesses
+  data = math_functions.read_solver_stats(data_path, nrows_csv)
 
   print("conf.results_file", data_path)
   return data
@@ -250,30 +250,16 @@ def run_case(conf):
     elif y_key == "timecvStep":
       for i in range(len(data[y_key])):
         data[y_key][i] = data[y_key][i] / (data["countercvStep"][i] * nSystemsOfCells)
-    else:  # counterBCG and other counters
+    else:
       for i in range(len(data[y_key])):
         data[y_key][i] = data[y_key][i] / nSystemsOfCells
-
-  if "(Comp.timeLS/counterBCG)" in conf.plotYKey and "GPU" in conf.case:
-    for i in range(len(data["timeLS"])):
-      data["timeLS"][i] = data["timeLS"][i] - data["timeBiconjGradMemcpy"][i]
-    for i in range(len(data["timeLS"])):
-      data["timeLS"][i] = data["timeLS"][i] \
-                          / data["counterBCG"][i]
-
-    for j in range(len(data["timeLS"])):
-      data["timeLS"][j] = data["timeLS"][j] \
-                          / data["counterBCG"][j]
-
-  if conf.plotYKey != "NRMSE":
-    print("run_case", conf.case, y_key, ":", data[y_key])
-  # print("data",data)
+  print("run_case", conf.case, y_key, ":", data[y_key])
 
   return data
 
 
 def run_cases(conf):
-  # Run base case
+  # Base case
   conf.mpiProcesses = conf.mpiProcessesCaseBase
   if conf.nCellsProcesses % conf.mpiProcesses != 0:
     print("WARNING: On base case conf.nCellsProcesses % conf.mpiProcesses != 0, nCellsProcesses, mpiProcesses",
@@ -291,7 +277,7 @@ def run_cases(conf):
   dataCaseBase = run_case(conf)
   data = {"caseBase": dataCaseBase}
 
-  # Run OptimCases
+  # OptimCases
   datacases = []
   stdCases = []
   for nGPUs in conf.nGPUsCaseOptimList:
@@ -308,7 +294,6 @@ def run_cases(conf):
           if (caseOptim == conf.caseBase and mpiProcessesCaseOptim == conf.mpiProcessesCaseBase) \
               or (caseOptim != conf.caseBase and mpiProcessesCaseOptim != conf.mpiProcessesCaseBase):
             continue
-
         cases_words = caseOptim.split()
         conf.caseGpuCpu = cases_words[0]
         conf.caseMulticellsOnecell = cases_words[1]
@@ -316,7 +301,6 @@ def run_cases(conf):
         conf.case = caseOptim
         data["caseOptim"] = run_case(conf)
 
-        # calculate measures between caseBase and caseOptim
         if conf.plotYKey == "NRMSE":
           nCellsProcesses = [conf.nCellsProcesses]
           datay = math_functions.calculate_NRMSE(
@@ -404,7 +388,6 @@ def plot_cases(conf):
     if last_arch_optim != conf.caseGpuCpu:
       is_same_arch_optim = False
     last_arch_optim = conf.caseGpuCpu
-    # print(last_case_optim,conf.caseMulticellsOnecell)
     if last_case_optim != conf.caseMulticellsOnecell:
       is_same_case_optim = False
     last_case_optim = conf.caseMulticellsOnecell
@@ -529,14 +512,10 @@ def plot_cases(conf):
 
 
 def run_main(conf):
-  if conf.plotYKey == "NRMSE":
+  if conf.is_out:
     if len(conf.mpiProcessesCaseOptimList) > 1 or conf.mpiProcessesCaseBase != conf.mpiProcessesCaseOptimList[0]:
-      raise Exception("Number of processes should be the same for NMRSE, only speedup can use different number")
-    if conf.is_import:
-      conf.is_export = False
-    else:
-      conf.is_export = False
-      conf.is_import = False
+      print("Disabled out error check because number of processes should be the same for NRMSE, only speedup can use different number")
+      conf.is_out=False
   if conf.plotYKey == "":
     print("conf.plotYKey is empty")
   if conf.chemFile == "cb05_paperV2":
@@ -555,17 +534,6 @@ def run_main(conf):
   if not conf.caseBase:
     print("ERROR: caseBase is empty")
     raise
-  if conf.caseBase == "CPU EBI":
-    print("Warning: Disable CAMP_PROFILING in CVODE to better profiling")
-  if conf.caseBase == "CPU EBI" and conf.chemFile != "monarch_cb05":
-    print("Error: Set conf.chemFile = monarch_cb05 to run CPU EBI")
-    raise Exception
-  for caseOptim in conf.casesOptim:
-    if caseOptim == "CPU EBI":
-      print("Warning: Disable CAMP_PROFILING in CVODE to better profiling")
-    if caseOptim == "CPU EBI" and conf.chemFile != "monarch_cb05":
-      print("Error: Set conf.chemFile = monarch_cb05 to run CPU EBI")
-      raise Exception
   for i, mpiProcesses in enumerate(conf.mpiProcessesCaseOptimList):
     for j, cellsProcesses in enumerate(conf.cells):
       nCells = int(cellsProcesses / mpiProcesses)
