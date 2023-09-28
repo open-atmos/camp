@@ -1,6 +1,6 @@
 /*
  * -----------------------------------------------------------------
- * Programmer(s): Christian G. Ruiz and Mario Acosta
+ * Programmer(s): Christian G. Ruiz
  * -----------------------------------------------------------------
  * Copyright (C) 2022 Barcelona Supercomputing Center
  * SPDX-License-Identifier: MIT
@@ -53,14 +53,13 @@ void export_state(SolverData *sd){
     }
     fclose(fptr);
   }
-
 }
 
 void join_export_state(){
   int size;
   MPI_Comm_size(MPI_COMM_WORLD, &size);
   if(size==1){
-    rename("out/state0.csv","out/state.csv");
+    rename("out/0state.csv","out/state.csv");
     return;
   }
   int rank;

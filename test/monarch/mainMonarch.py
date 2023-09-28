@@ -204,11 +204,11 @@ def run(conf):
   if not conf.is_import:
     os.system(exec_str)
     if conf.case is conf.caseBase:
-      if conf.plotYKey == "NRMSE":
+      if conf.is_out:
         os.rename("out/state.csv", "out/state0.csv")
       os.rename("out/stats.csv", "out/stats0.csv")
     else:
-      if conf.plotYKey == "NRMSE":
+      if conf.is_out:
         os.rename("out/state.csv", "out/state1.csv")
       os.rename("out/stats.csv", "out/stats1.csv")
   if conf.is_out:
@@ -234,10 +234,6 @@ def run(conf):
 
 def run_case(conf):
   data = run(conf)
-  if "timeLS" in conf.plotYKey and "computational" in conf.plotYKey \
-      and "GPU" in conf.case:
-    for i in range(len(data["timeLS"])):
-      data["timeLS"][i] = data["timeLS"][i] - data["timeBiconjGradMemcpy"][i]
   y_key_words = conf.plotYKey.split()
   y_key = y_key_words[-1]
   if "normalized" in conf.plotYKey:
@@ -301,16 +297,14 @@ def run_cases(conf):
         conf.case = caseOptim
         data["caseOptim"] = run_case(conf)
 
-        if conf.plotYKey == "NRMSE":
+        if conf.is_out:
           nCellsProcesses = [conf.nCellsProcesses]
-          datay = math_functions.calculate_NRMSE(
-            data, conf.timeSteps, nCellsProcesses)
-        elif "Speedup" in conf.plotYKey:
-          y_key_words = conf.plotYKey.split()
-          y_key = y_key_words[-1]
-          datay = math_functions.calculate_speedup(data, y_key)
-        else:
-          raise Exception("Not found plot function for conf.plotYKey")
+          TODO CONF.OUT SHOULD HAVE BOTH CASEBASE AND BASEOPTIM DATA, OR MAYBE JUST CREATE TWO VARIABLES IS MORE CLEAR
+          math_functions.check_NRMSE(conf.out, conf.timeSteps, nCellsProcesses)
+
+        y_key_words = conf.plotYKey.split()
+        y_key = y_key_words[-1]
+        datay = math_functions.calculate_speedup(data, y_key)
 
         if len(conf.cells) > 1 or conf.plotXKey == "MPI processes" \
             or conf.plotXKey == "GPUs":
@@ -342,7 +336,6 @@ def run_cells(conf):
   return datacells, stdCells
 
 
-# Anything regarding different initial conditions is applied to both cases (Base and Optims/s)
 def run_diffCells(conf):
   conf.datacolumns = []
   conf.stdColumns = []
@@ -465,8 +458,6 @@ def plot_cases(conf):
     namey = "Speedup iterations BDF loop"
   if conf.plotYKey == "Speedup timeCVode":
     namey = "Speedup CAMP solving"
-  if conf.plotYKey == "NRMSE":
-    namey = "NRMSE [%]"
   if conf.plotYKey == "Speedup counterBCG":
     namey = "Speedup solving iterations BCG"
 
@@ -507,14 +498,12 @@ def plot_cases(conf):
   else:
     print("plotTitle: ", conf.plotTitle)
   print(namey, ":", datay)
-  if conf.plotYKey == "NRMSE":
-    print("SUCCESS")
 
 
 def run_main(conf):
   if conf.is_out:
     if len(conf.mpiProcessesCaseOptimList) > 1 or conf.mpiProcessesCaseBase != conf.mpiProcessesCaseOptimList[0]:
-      print("Disabled out error check because number of processes should be the same for NRMSE, only speedup can use different number")
+      print("Disabled out error check because number of processes should be the same for accuracy calculation, only speedup can use different number")
       conf.is_out=False
   if conf.plotYKey == "":
     print("conf.plotYKey is empty")

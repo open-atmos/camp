@@ -6,8 +6,16 @@ import netCDF4 as nc
 import numpy as np
 import pandas as pd
 import time
-from runtime_stats_monarch import calculate_speedup
 
+def calculate_speedup(file1_path, file2_path):
+    df1 = pd.read_csv(file1_path)
+    df2 = pd.read_csv(file2_path)
+    timecvStep_values1 = df1["timecvStep"].values
+    timecvStep_values2 = df2["timecvStep"].values
+    mean_time1 = np.mean(timecvStep_values1)
+    mean_time2 = np.mean(timecvStep_values2)
+    speedup = mean_time1 / mean_time2
+    return speedup
 
 def calculate_nrmse(data1, data2):
     rmsd = np.sqrt(np.mean((data1 - data2) ** 2))

@@ -2,12 +2,12 @@ from math import sqrt
 from pandas import read_csv as pd_read_csv
 
 
-def calculate_NRMSE(data, n_time_steps, nCellsProcesses):
+def check_NRMSE(data, n_time_steps, nCellsProcesses):
   cases_one_multi_cells = list(data.keys())
   species1 = data[cases_one_multi_cells[0]]
   species2 = data[cases_one_multi_cells[1]]
   n_state = int(len(species1))
-  n_cells=sum(nCellsProcesses)
+  n_cells = sum(nCellsProcesses)
   n_species = int((n_state / n_time_steps) / n_cells)
   NRMSEs_species = [0.] * n_species
   NRMSEs = [0.] * n_time_steps
@@ -33,11 +33,11 @@ def calculate_NRMSE(data, n_time_steps, nCellsProcesses):
   for i in range(n_time_steps):
     for i3 in range(len(nCellsProcesses)):
       i2 = i3 + i * len(nCellsProcesses)
-      n_cellsProcess=nCellsProcesses[i3]
+      n_cellsProcess = nCellsProcesses[i3]
       for j in range(n_cellsProcess):
         j2 = j + i2 * n_cellsProcess
         for k in range(n_species):
-          k2 = k+j2*n_species
+          k2 = k + j2 * n_species
           y1 = species1[k2]
           y2 = species2[k2]
           NRMSEs_species[k] += (y1 - y2) ** 2
@@ -58,7 +58,7 @@ def calculate_NRMSE(data, n_time_steps, nCellsProcesses):
             concs_below_tol = concs_below_tol + 1
             if y1 == y2:
               concs_are_equal = concs_are_equal + 1
-          if i == n_time_steps-1:
+          if i == n_time_steps - 1:
             if err_abs > max_err_abs:
               max_err_abs = err_abs
               err_rel_at_max_abs = err_rel
@@ -81,30 +81,32 @@ def calculate_NRMSE(data, n_time_steps, nCellsProcesses):
       NRMSEs_species[k] = 0.
       max_y[k] = 0.
       min_y[k] = float("inf")
-    NRMSEs[i] = max_NRMSEs_species*100
+    NRMSEs[i] = max_NRMSEs_species * 100
     max_NRMSEs_species = 0.
-    tolerance = 1.0 #1% error
+    tolerance = 1.0  # 1% error
     if NRMSEs[i] > tolerance:
-      raise Exception("ERROR: NMRSE > tolerance; NMRSE:", NRMSEs[i], "tolerance:",tolerance)
-  max_err_rel = format(max_err_rel * 100, '.2e')
-  err_rel_at_max_abs = format(err_rel_at_max_abs * 100, '.2e')
-  max_err_abs = format(max_err_abs, '.2e')
-  err_abs_at_max_rel = format(err_abs_at_max_rel, '.2e')
-  print("relative max_error:", max_err_rel,
-        "% with absolute error",err_abs_at_max_rel,
-        "at specie id:", max_err_rel_specie,
-        "cell:", max_err_rel_cell,
-        "process:", max_err_rel_process,
-        "timestep:", max_err_rel_timestep,
-        "absolute max_error:", max_err_abs,
-        "with relative error:", err_rel_at_max_abs,
-        "% at specie id:", max_err_abs_specie,
-        "cell:", max_err_abs_cell,
-        "process:", max_err_abs_process,
-        "timestep:", max_err_abs_timestep,
-        "concs_above_tol", concs_above_tol, "concs_below_tol", concs_below_tol,
-        "concs_are_equal", concs_are_equal, "concs_are_zero", concs_are_zero)
-  return NRMSEs
+      raise Exception("ERROR: NMRSE > tolerance; NMRSE:", NRMSEs[i], "tolerance:", tolerance)
+  print("NRMSE:",NRMSEs)
+  is_debug = False
+  if is_debug:
+    max_err_rel = format(max_err_rel * 100, '.2e')
+    err_rel_at_max_abs = format(err_rel_at_max_abs * 100, '.2e')
+    max_err_abs = format(max_err_abs, '.2e')
+    err_abs_at_max_rel = format(err_abs_at_max_rel, '.2e')
+    print("relative max_error:", max_err_rel,
+          "% with absolute error", err_abs_at_max_rel,
+          "at specie id:", max_err_rel_specie,
+          "cell:", max_err_rel_cell,
+          "process:", max_err_rel_process,
+          "timestep:", max_err_rel_timestep,
+          "absolute max_error:", max_err_abs,
+          "with relative error:", err_rel_at_max_abs,
+          "% at specie id:", max_err_abs_specie,
+          "cell:", max_err_abs_cell,
+          "process:", max_err_abs_process,
+          "timestep:", max_err_abs_timestep,
+          "concs_above_tol", concs_above_tol, "concs_below_tol", concs_below_tol,
+          "concs_are_equal", concs_are_equal, "concs_are_zero", concs_are_zero)
 
 
 def calculate_speedup(data, plot_y_key):
@@ -121,4 +123,3 @@ def read_solver_stats(file, nrows):
   df = pd_read_csv(file, nrows=nrows)
   data = df.to_dict('list')
   return data
-

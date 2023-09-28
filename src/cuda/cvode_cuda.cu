@@ -1016,7 +1016,6 @@ void solveBcgCudaDeviceCVODE(ModelDataGPU *md, ModelDataVariable *sc)
 {
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   double alpha,rho0,omega0,beta,rho1,temp1,temp2;
-  //print_double(md->dx,86,"dx1017");
   alpha=rho0=omega0=beta=rho1=temp1=temp2=1.0;
   md->dn0[i]=0.0;
   md->dp0[i]=0.0;

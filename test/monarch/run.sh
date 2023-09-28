@@ -23,6 +23,6 @@ make_run(){
   python TestMonarch.py
 }
 
-#make_and_check
 make_run
+#make_and_check
 
