@@ -46,7 +46,8 @@ class TestMonarch:
     # Auxiliary
     self.is_start_auxiliary_attributes = True
     self.sbatch_job_id = ""
-    self.out = []
+    self.outBase = []
+    self.outOptim = []
     self.datacolumns = []
     self.stdColumns = []
     self.exportPath = "exports"
@@ -218,7 +219,10 @@ def run(conf):
       data_path = "out/state1.csv"
     try:
       with open(data_path) as f:
-        conf.out = [float(line.rstrip('\n')) for line in f]
+        if conf.case is conf.caseBase:
+          conf.outBase = [float(line.rstrip('\n')) for line in f]
+        else:
+          conf.outOptim = [float(line.rstrip('\n')) for line in f]
     except FileNotFoundError as e:
       raise FileNotFoundError("Check enable EXPORT_STATE in CAMP code") from e
   if conf.case is conf.caseBase:
@@ -228,7 +232,6 @@ def run(conf):
   nrows_csv = conf.timeSteps * conf.nCells * conf.mpiProcesses
   data = math_functions.read_solver_stats(data_path, nrows_csv)
 
-  print("conf.results_file", data_path)
   return data
 
 
@@ -299,8 +302,8 @@ def run_cases(conf):
 
         if conf.is_out:
           nCellsProcesses = [conf.nCellsProcesses]
-          TODO CONF.OUT SHOULD HAVE BOTH CASEBASE AND BASEOPTIM DATA, OR MAYBE JUST CREATE TWO VARIABLES IS MORE CLEAR
-          math_functions.check_NRMSE(conf.out, conf.timeSteps, nCellsProcesses)
+          #TODO CONF.OUT SHOULD HAVE BOTH CASEBASE AND BASEOPTIM DATA, OR MAYBE JUST CREATE TWO VARIABLES IS MORE CLEAR
+          math_functions.check_NRMSE(conf.outBase, conf.outOptim, conf.timeSteps, nCellsProcesses)
 
         y_key_words = conf.plotYKey.split()
         y_key = y_key_words[-1]

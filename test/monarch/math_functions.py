@@ -2,10 +2,7 @@ from math import sqrt
 from pandas import read_csv as pd_read_csv
 
 
-def check_NRMSE(data, n_time_steps, nCellsProcesses):
-  cases_one_multi_cells = list(data.keys())
-  species1 = data[cases_one_multi_cells[0]]
-  species2 = data[cases_one_multi_cells[1]]
+def check_NRMSE(species1, species2, n_time_steps, nCellsProcesses):
   n_state = int(len(species1))
   n_cells = sum(nCellsProcesses)
   n_species = int((n_state / n_time_steps) / n_cells)
