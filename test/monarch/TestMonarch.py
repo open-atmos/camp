@@ -46,11 +46,11 @@ def all_timesteps():
   # conf.allocatedTasksPerNode = 320
   # conf.allocatedTasksPerNode = get_ntasksPerNode_sbatch() #todo
 
-  conf.cells = [10,20]
+  conf.cells = [10]
   # conf.cells = [100, 500, 1000, 5000, 10000]
   # conf.cells = [50000,100000,500000,1000000]
 
-  conf.timeSteps = 5
+  conf.timeSteps = 2
 
   conf.caseBase = "CPU One-cell"
   # conf.caseBase = "CPU Multi-cells"
@@ -85,19 +85,12 @@ def all_timesteps():
   # conf.casesOptim.append("CPU IMPORT_NETCDF")
 
   # conf.plotYKey = "Speedup timeCVode"
-  # conf.plotYKey = "Speedup normalized counterLS"
-  # conf.plotYKey = "Speedup normalized timeLS"
-  # conf.plotYKey = "Speedup normalized computational timeLS"
   # conf.plotYKey = "Speedup counterBCG"
-  # conf.plotYKey = "Speedup normalized counterBCG"
   # conf.plotYKey = "Speedup total iterations - counterBCG"
   conf.plotYKey = "Speedup timecvStep"
-  # conf.plotYKey = "Speedup timecvStep normalized by countercvStep"
   # conf.plotYKey = "Speedup countercvStep"
   # conf.plotYKey = "Speedup device timecvStep"
-  #conf.plotYKey = "NRMSE"
 
-  # conf.plotXKey = "MPI processes"
   # conf.plotXKey = "GPUs"
 
   """END OF CONFIGURATION VARIABLES"""

@@ -104,7 +104,7 @@ program mock_monarch_t
   export_path = "settings/TestMonarch"//".json"
   call jfile%load_file(export_path); if (jfile%failed()) print*,&
           "JSON not found at ",export_path
-  call jfile%get('_chemFile',output_file_title)
+  call jfile%get('chemFile',output_file_title)
   camp_input_file = "settings/"//output_file_title//"/config.json"
   output_path = "out/"//output_file_title
   call jfile%get('nCells',NUM_VERT_CELLS)

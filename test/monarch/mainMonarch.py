@@ -3,13 +3,9 @@ import matplotlib as mpl
 mpl.use('TkAgg')
 # import plot_functions #comment to save ~2s execution time
 import math_functions
-import sys
 import os
 import numpy as np
-import datetime
 import json
-from pathlib import Path
-import zipfile
 import subprocess
 import time
 
@@ -17,7 +13,7 @@ import time
 class TestMonarch:
   def __init__(self):
     # Case configuration
-    self._chemFile = "cb05_paperV2"
+    self.chemFile = "cb05_paperV2"
     self.diffCells = ""
     self.timeSteps = 1
     self.timeStepsDt = 2
@@ -57,14 +53,6 @@ class TestMonarch:
     self.nCellsProcesses = 1
     self.campSolverConfigFile = "settings/config_variables_c_solver.txt"
 
-  @property
-  def chemFile(self):
-    return self._chemFile
-
-  @chemFile.setter
-  def chemFile(self, new_chemFile):
-    self._chemFile = new_chemFile
-
 
 def getCaseName(conf):
   case_multicells_onecell_name = ""
@@ -95,42 +83,6 @@ def write_camp_config_file(conf):
     print("write_camp_config_file fails", e)
 
 
-def export(conf, data_path):
-  data_path_abs = os.path.abspath(os.getcwd()) + "/" + data_path
-  exportPath = conf.exportPath
-  if len(sys.argv) > 1:
-    conf.sbatch_job_id = sys.argv[1]
-  print(os.path.abspath(os.getcwd()) + "/" + exportPath)
-  if not os.path.exists(exportPath):
-    os.makedirs(exportPath)
-  conf_dir = exportPath + "/conf"
-  if not os.path.exists(conf_dir):
-    os.makedirs(conf_dir)
-  now = datetime.datetime.now()
-  basename = now.strftime("%d-%m-%Y-%H.%M.%S") + "-" + conf.sbatch_job_id
-  conf_path = conf_dir + "/" + basename + ".json"
-  with open(conf_path, 'w', encoding='utf-8') as jsonFile:
-    json.dump(conf.__dict__, jsonFile, indent=4, sort_keys=False)
-  conf_name = basename + ".json"
-  path_to_zip_file = conf_dir + "/" + basename + ".zip"
-  zipfile.ZipFile(path_to_zip_file, mode='w').write(conf_path, arcname=conf_name)
-  os.remove(conf_path)
-  print("Configuration saved to", os.path.abspath(os.getcwd()) + conf_name)
-  path_to_zip_file = exportPath + "/data"
-  if not os.path.exists(path_to_zip_file):
-    os.makedirs(path_to_zip_file)
-  path_to_zip_file = exportPath + "/data/" + basename + ".zip"
-  new_data_name = basename + ".csv"
-  new_data_path = exportPath + "/data/" + new_data_name
-  os.rename(data_path_abs, new_data_path)
-  zipfile.ZipFile(path_to_zip_file, mode='w').write(new_data_path, arcname=new_data_name)
-  os.rename(new_data_path, data_path_abs)
-  print("Data saved to", os.path.abspath(os.getcwd()) + "/" + path_to_zip_file)
-  if os.path.getsize(exportPath) > 1000000000:
-    print("WARNING: More than 1GB saved in ", os.path.abspath(os.getcwd()) + "/" + exportPath)
-    # raise
-
-
 def run(conf):
   if conf.caseGpuCpu == "GPU":
     maxCoresPerNode = 40
@@ -155,7 +107,7 @@ def run(conf):
       exec_str += 'ddt --connect '
   except Exception:
     pass
-  exec_str += "mpirun -v -np " + str(conf.mpiProcesses) + " --bind-to core "  # fails on monarch cte-power
+  exec_str += "mpirun -v -np " + str(conf.mpiProcesses) + " --bind-to core "
 
   if conf.profileCuda == "nvprof" and conf.caseGpuCpu == "GPU":
     pathNvprof = "../../compile/power9/" + conf.caseMulticellsOnecell \
@@ -164,8 +116,7 @@ def run(conf):
     print("Saving profiling file in ", os.path.abspath(os.getcwd()) \
           + "/" + pathNvprof + ".nvprof")
   elif conf.profileCuda == "nsight" and conf.caseGpuCpu == "GPU":
-    print("TODO TRY TO USE /apps/NVIDIA-HPC-SDK/21.3/Linux_ppc64le/21.3/profilers/Nsight_Compute/ncu")
-    exec_str += "/apps/NVIDIA-HPC-SDK/20.9/Linux_ppc64le/2020/profilers/Nsight_Compute/ncu "
+    exec_str += "/apps/NVIDIA-HPC-SDK/21.3/Linux_ppc64le/21.3/profilers/Nsight_Compute/ncu "
     pathNvprof = "../../compile/power9/" + conf.caseMulticellsOnecell \
                  + str(conf.nCells) + "Cells "
     exec_str += "--set full -f -o " + pathNvprof  # last working version
@@ -223,28 +174,6 @@ def run(conf):
   return data
 
 
-def run_case(conf):
-  data = run(conf)
-  y_key_words = conf.plotYKey.split()
-  y_key = y_key_words[-1]
-  if "normalized" in conf.plotYKey:
-    nSystemsOfCells = 1
-    if "One-cell" in conf.case:
-      nSystemsOfCells = conf.nCells
-    if y_key == "timeLS":
-      for i in range(len(data[y_key])):
-        data[y_key][i] = data[y_key][i] / (data["counterLS"][i] / nSystemsOfCells)
-    elif y_key == "timecvStep":
-      for i in range(len(data[y_key])):
-        data[y_key][i] = data[y_key][i] / (data["countercvStep"][i] * nSystemsOfCells)
-    else:
-      for i in range(len(data[y_key])):
-        data[y_key][i] = data[y_key][i] / nSystemsOfCells
-  print("run_case", conf.case, y_key, ":", data[y_key])
-
-  return data
-
-
 def run_cases(conf):
   # Base case
   conf.mpiProcesses = conf.mpiProcessesCaseBase
@@ -261,7 +190,7 @@ def run_cases(conf):
   conf.caseMulticellsOnecell = cases_words[1]
 
   conf.case = conf.caseBase
-  dataCaseBase = run_case(conf)
+  dataCaseBase = run(conf)
   data = {"caseBase": dataCaseBase}
 
   # OptimCases
@@ -274,19 +203,14 @@ def run_cases(conf):
       if conf.nCellsProcesses % conf.mpiProcesses != 0:
         print("WARNING: On optim case conf.nCellsProcesses % conf.mpiProcesses != 0,nCellsProcesses, mpiProcesses",
               conf.nCellsProcesses, conf.mpiProcesses)
-        # raise
       conf.nCells = int(conf.nCellsProcesses / conf.mpiProcesses)
       for caseOptim in conf.casesOptim:
-        if conf.plotXKey == "MPI processes":
-          if (caseOptim == conf.caseBase and mpiProcessesCaseOptim == conf.mpiProcessesCaseBase) \
-              or (caseOptim != conf.caseBase and mpiProcessesCaseOptim != conf.mpiProcessesCaseBase):
-            continue
         cases_words = caseOptim.split()
         conf.caseGpuCpu = cases_words[0]
         conf.caseMulticellsOnecell = cases_words[1]
 
         conf.case = caseOptim
-        data["caseOptim"] = run_case(conf)
+        data["caseOptim"] = run(conf)
 
         if conf.is_out:
           nCellsProcesses = [conf.nCellsProcesses]
@@ -422,8 +346,6 @@ def plot_cases(conf):
   namey = conf.plotYKey
   if conf.plotYKey == "Speedup normalized computational timeLS":
     namey = "Speedup linear solver kernel"
-  if conf.plotYKey == "Speedup counterLS":
-    namey = "Speedup iterations CAMP solving"
   if conf.plotYKey == "Speedup normalized timeLS":
     namey = "Speedup linear solver"
   if conf.plotYKey == "Speedup timecvStep":
