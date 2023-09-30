@@ -853,7 +853,6 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
 #ifdef CAMP_DEBUG_GPU
   if(sd->use_cpu==1){
     if(sd->ntimers>0 && sd->ncounters>0){
-      //counters[0]=counterBCG;
       CVodeGettimesCounters(sd->cvode_mem, &times[0], &counters[1]);
       times[2]=sd->timeCVode;;
     }

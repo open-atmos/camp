@@ -122,13 +122,6 @@ def run(conf):
     exec_str += "--set full -f -o " + pathNvprof  # last working version
     print("Saving nsight file in ", os.path.abspath(os.getcwd()) \
           + "/" + pathNvprof + ".ncu-rep")
-  elif conf.profileCuda == "nsightSummary" and conf.caseGpuCpu == "GPU":
-    exec_str += "/apps/NVIDIA-HPC-SDK/20.9/Linux_ppc64le/2020/profilers/Nsight_Compute/ncu "
-    pathNvprof = "../../compile/power9/" + conf.caseMulticellsOnecell \
-                 + str(conf.nCells) + "Cells "
-    exec_str += ""
-    print("CUDASaving nsight file in ", os.path.abspath(os.getcwd()) \
-          + "/" + pathNvprof)
 
   path_exec = "../../build/mock_monarch"
   exec_str += path_exec
@@ -342,21 +335,7 @@ def plot_cases(conf):
       conf.plotTitle += "Implementations "
   else:
     conf.plotTitle += "Implementations "
-
   namey = conf.plotYKey
-  if conf.plotYKey == "Speedup normalized computational timeLS":
-    namey = "Speedup linear solver kernel"
-  if conf.plotYKey == "Speedup normalized timeLS":
-    namey = "Speedup linear solver"
-  if conf.plotYKey == "Speedup timecvStep":
-    namey = "Speedup"
-  if conf.plotYKey == "Speedup countercvStep":
-    namey = "Speedup iterations BDF loop"
-  if conf.plotYKey == "Speedup timeCVode":
-    namey = "Speedup CAMP solving"
-  if conf.plotYKey == "Speedup counterBCG":
-    namey = "Speedup solving iterations BCG"
-
   if len(conf.cells) > 1:
     namey += " [Mean and \u03C3]"
     conf.plotTitle += ""
