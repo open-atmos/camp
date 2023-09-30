@@ -133,12 +133,12 @@ def export(conf, data_path):
 
 def run(conf):
   if conf.caseGpuCpu == "GPU":
-    maxCoresPerNode = 40  # CTE-POWER specs
+    maxCoresPerNode = 40
     if conf.mpiProcesses > maxCoresPerNode and conf.mpiProcesses % maxCoresPerNode != 0:
       print(
         "ERROR: MORE THAN 40 MPI PROCESSES AND NOT MULTIPLE OF 40, WHEN CTE-POWER ONLY HAS 40 CORES PER NODE\n");
       raise
-    maxnDevices = 4  # CTE-POWER specs
+    maxnDevices = 4
     maxCoresPerDevice = maxCoresPerNode / maxnDevices
     maxCores = int(maxCoresPerDevice * conf.nGPUs)
     if conf.mpiProcesses != maxCores and (conf.mpiProcesses != 1 and maxCores == 10):
@@ -148,15 +148,9 @@ def run(conf):
       conf.mpiProcesses = maxCores
       conf.mpiProcessesCaseOptimList[0] = maxCores
       raise
-
-    # if conf.mpiProcesses != maxCores:
-    # print("ERROR: conf.mpiProcesses != maxCores, ",
-    #      conf.mpiProcesses, "!=", maxCores)
-    # raise
   exec_str = ""
   try:
     ddt_pid = subprocess.check_output('pidof -x $(ps cax | grep ddt)', shell=True)
-    # ddt_pid = False
     if ddt_pid:
       exec_str += 'ddt --connect '
   except Exception:
@@ -166,9 +160,7 @@ def run(conf):
   if conf.profileCuda == "nvprof" and conf.caseGpuCpu == "GPU":
     pathNvprof = "../../compile/power9/" + conf.caseMulticellsOnecell \
                  + str(conf.nCells) + "Cells" + ".nvprof "
-    exec_str += "nvprof --analysis-metrics -f -o " + pathNvprof  # all metrics
-    # exec_str += "nvprof --print-gpu-trace " #registers per thread
-    # --print-gpu-summary
+    exec_str += "nvprof --analysis-metrics -f -o " + pathNvprof
     print("Saving profiling file in ", os.path.abspath(os.getcwd()) \
           + "/" + pathNvprof + ".nvprof")
   elif conf.profileCuda == "nsight" and conf.caseGpuCpu == "GPU":
@@ -189,8 +181,6 @@ def run(conf):
 
   path_exec = "../../build/mock_monarch"
   exec_str += path_exec
-
-  # CAMP solver option GPU-CPU
   write_camp_config_file(conf)
 
   print("exec_str:", exec_str, conf.diffCells, conf.caseGpuCpu,
@@ -307,8 +297,7 @@ def run_cases(conf):
         y_key = y_key_words[-1]
         datay = math_functions.calculate_speedup(data, y_key)
 
-        if len(conf.cells) > 1 or conf.plotXKey == "MPI processes" \
-            or conf.plotXKey == "GPUs":
+        if len(conf.cells) > 1 or conf.plotXKey == "GPUs":
           datacases.append(np.mean(datay))
           stdCases.append(np.std(datay))
         else:
@@ -363,10 +352,6 @@ def plot_cases(conf):
   else:
     case_gpu_cpu_name = conf.caseGpuCpu
 
-  baseCaseName = ""
-  if conf.plotYKey != "Percentage data transfers CPU-GPU [%]":  # Speedup
-    baseCaseName = "vs " + case_gpu_cpu_name + " " + case_multicells_onecell_name
-
   conf.legend = []
   cases_words = conf.casesOptim[0].split()
   conf.caseGpuCpu = cases_words[0]
@@ -392,10 +377,6 @@ def plot_cases(conf):
     for nGPUs in conf.nGPUsCaseOptimList:
       for mpiProcessesCaseOptim in conf.mpiProcessesCaseOptimList:
         for caseOptim in conf.casesOptim:
-          if conf.plotXKey == "MPI processes":
-            if (caseOptim == conf.caseBase and mpiProcessesCaseOptim == conf.mpiProcessesCaseBase) \
-                or (caseOptim != conf.caseBase and mpiProcessesCaseOptim != conf.mpiProcessesCaseBase):
-              continue
           cases_words = caseOptim.split()
           conf.caseGpuCpu = cases_words[0]
           conf.caseMulticellsOnecell = cases_words[1]
@@ -406,8 +387,6 @@ def plot_cases(conf):
           legend_name = ""
           if len(conf.diffCellsL) > 1:
             legend_name += conf.diffCells + " "
-          if len(conf.mpiProcessesCaseOptimList) > 1 and conf.plotXKey == "MPI processes":
-            legend_name += str(mpiProcessesCaseOptim) + " MPI "
           if len(conf.nGPUsCaseOptimList) > 1 and conf.caseGpuCpu == "GPU" \
               and len(conf.cells) > 1:
             legend_name += str(nGPUs) + " GPU "
@@ -422,9 +401,7 @@ def plot_cases(conf):
   if not is_same_diff_cells and len(conf.diffCellsL) == 1:
     conf.plotTitle += conf.diffCells + " test: "
   if is_same_arch_optim:
-    if conf.plotXKey == "MPI processes":
-      conf.plotTitle += "CPU "
-    elif conf.plotXKey == "GPUs":
+    if conf.plotXKey == "GPUs":
       conf.plotTitle += ""
     else:
       if conf.caseGpuCpu == "GPU" and len(conf.nGPUsCaseOptimList) == 1 and conf.nGPUsCaseOptimList[0] > 1:
@@ -433,8 +410,6 @@ def plot_cases(conf):
         conf.plotTitle += conf.caseGpuCpu + " "
   if conf.plotXKey == "GPUs":
     conf.plotTitle += "GPU "
-  if conf.plotXKey == "MPI processes":
-    conf.plotTitle += "Speedup against 1 MPI CPU-based version"
   if len(conf.legend) == 1 or not conf.legend or len(conf.diffCellsL) > 1:
     if len(conf.mpiProcessesCaseOptimList) > 1:
       legend_name += str(mpiProcessesCaseOptim) + " MPI "
@@ -443,8 +418,6 @@ def plot_cases(conf):
       conf.plotTitle += "Implementations "
   else:
     conf.plotTitle += "Implementations "
-  if not conf.plotXKey == "MPI processes":
-    conf.plotTitle += baseCaseName
 
   namey = conf.plotYKey
   if conf.plotYKey == "Speedup normalized computational timeLS":
@@ -467,10 +440,6 @@ def plot_cases(conf):
     conf.plotTitle += ""
     datax = conf.cells
     plot_x_key = "Cells"
-  elif conf.plotXKey == "MPI processes":
-    conf.plotTitle += ", Cells: " + str(conf.cells[0])
-    datax = conf.mpiProcessesCaseOptimList
-    plot_x_key = conf.plotXKey
   elif conf.plotXKey == "GPUs":
     if len(conf.cells) > 1:
       conf.plotTitle += ", Cells: " + str(conf.cells[0])
