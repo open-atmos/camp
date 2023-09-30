@@ -11,22 +11,6 @@ def check_NRMSE(species1, species2, n_time_steps, nCellsProcesses):
   max_y = [0.] * n_species
   min_y = [float("inf")] * n_species
   max_NRMSEs_species = 0.
-  max_err_rel = 0.
-  err_rel_at_max_abs = 0.
-  max_err_rel_specie = 0
-  max_err_rel_cell = 0
-  max_err_abs_process = 0
-  max_err_rel_timestep = 0
-  max_err_abs = 0.
-  err_abs_at_max_rel = 0.
-  max_err_abs_specie = 0
-  max_err_abs_cell = 0
-  max_err_rel_process = 0
-  max_err_abs_timestep = 0
-  concs_above_tol = 0
-  concs_below_tol = 0
-  concs_are_zero = 0
-  concs_are_equal = 0
   for i in range(n_time_steps):
     for i3 in range(len(nCellsProcesses)):
       i2 = i3 + i * len(nCellsProcesses)
@@ -42,34 +26,6 @@ def check_NRMSE(species1, species2, n_time_steps, nCellsProcesses):
             max_y[k] = y1
           if y1 < min_y[k]:
             min_y[k] = y1
-          err_abs = abs(y1 - y2)
-          if y1 != 0:
-            err_rel = abs((y1 - y2) / y1)
-          else:
-            err_rel = 0.
-          if err_abs > 1.0E-4:
-            concs_above_tol = concs_above_tol + 1
-          elif y1 == 0:
-            concs_are_zero = concs_are_zero + 1
-          else:
-            concs_below_tol = concs_below_tol + 1
-            if y1 == y2:
-              concs_are_equal = concs_are_equal + 1
-          if i == n_time_steps - 1:
-            if err_abs > max_err_abs:
-              max_err_abs = err_abs
-              err_rel_at_max_abs = err_rel
-              max_err_abs_specie = k
-              max_err_abs_cell = j
-              max_err_abs_process = i3
-              max_err_abs_timestep = i
-            if err_rel > max_err_rel:
-              max_err_rel = err_rel
-              err_abs_at_max_rel = err_abs
-              max_err_rel_specie = k
-              max_err_rel_cell = j
-              max_err_rel_process = i3
-              max_err_rel_timestep = i
     for k in range(n_species):
       if max_y[k] - min_y[k] > 1.0e-30:
         NRMSEs_species[k] = (sqrt(NRMSEs_species[k] / n_cells)) / (max_y[k] - min_y[k])
@@ -82,28 +38,9 @@ def check_NRMSE(species1, species2, n_time_steps, nCellsProcesses):
     max_NRMSEs_species = 0.
     tolerance = 1.0  # 1% error
     if NRMSEs[i] > tolerance:
-      raise Exception("ERROR: NMRSE > tolerance; NMRSE:", NRMSEs[i], "tolerance:", tolerance)
+      raise Exception("ERROR: NMRSE > tolerance; NMRSE:", NRMSEs[i], "tolerance:", tolerance
+                      ,"check debug utilities like debug.camp.diff.sh")
   print("NRMSE:",NRMSEs)
-  is_debug = False
-  if is_debug:
-    max_err_rel = format(max_err_rel * 100, '.2e')
-    err_rel_at_max_abs = format(err_rel_at_max_abs * 100, '.2e')
-    max_err_abs = format(max_err_abs, '.2e')
-    err_abs_at_max_rel = format(err_abs_at_max_rel, '.2e')
-    print("relative max_error:", max_err_rel,
-          "% with absolute error", err_abs_at_max_rel,
-          "at specie id:", max_err_rel_specie,
-          "cell:", max_err_rel_cell,
-          "process:", max_err_rel_process,
-          "timestep:", max_err_rel_timestep,
-          "absolute max_error:", max_err_abs,
-          "with relative error:", err_rel_at_max_abs,
-          "% at specie id:", max_err_abs_specie,
-          "cell:", max_err_abs_cell,
-          "process:", max_err_abs_process,
-          "timestep:", max_err_abs_timestep,
-          "concs_above_tol", concs_above_tol, "concs_below_tol", concs_below_tol,
-          "concs_are_equal", concs_are_equal, "concs_are_zero", concs_are_zero)
 
 
 def calculate_speedup(data, plot_y_key):

@@ -54,21 +54,6 @@ class TestMonarch:
     self.campSolverConfigFile = "settings/config_variables_c_solver.txt"
 
 
-def getCaseName(conf):
-  case_multicells_onecell_name = ""
-  if conf.caseMulticellsOnecell == "Block-cellsN":
-    case_multicells_onecell_name += "Block-cells (N)"
-  elif conf.caseMulticellsOnecell == "Block-cells1":
-    case_multicells_onecell_name += "Block-cells (1)"
-  elif conf.caseMulticellsOnecell == "Block-cellsNhalf":
-    case_multicells_onecell_name += "Block-cells (N/2)"
-  elif conf.caseMulticellsOnecell.find("One") != -1:
-    case_multicells_onecell_name += "Base version"
-  else:
-    case_multicells_onecell_name += conf.caseMulticellsOnecell
-  return case_multicells_onecell_name
-
-
 def write_camp_config_file(conf):
   try:
     file1 = open(conf.campSolverConfigFile, "w")
@@ -108,7 +93,6 @@ def run(conf):
   except Exception:
     pass
   exec_str += "mpirun -v -np " + str(conf.mpiProcesses) + " --bind-to core "
-
   if conf.profileCuda == "nvprof" and conf.caseGpuCpu == "GPU":
     pathNvprof = "../../compile/power9/" + conf.caseMulticellsOnecell \
                  + str(conf.nCells) + "Cells" + ".nvprof "
@@ -122,19 +106,15 @@ def run(conf):
     exec_str += "--set full -f -o " + pathNvprof  # last working version
     print("Saving nsight file in ", os.path.abspath(os.getcwd()) \
           + "/" + pathNvprof + ".ncu-rep")
-
   path_exec = "../../build/mock_monarch"
   exec_str += path_exec
   write_camp_config_file(conf)
-
   print("exec_str:", exec_str, conf.diffCells, conf.caseGpuCpu,
         conf.caseMulticellsOnecell, "ncellsPerMPIProcess:",
         conf.nCells, "nGPUs:", conf.nGPUs)
-
   conf_name = "settings/TestMonarch.json"
   with open(conf_name, 'w', encoding='utf-8') as jsonFile:
     json.dump(conf.__dict__, jsonFile, indent=4, sort_keys=False)
-
   nCellsStr = str(conf.nCells)
   if conf.nCells >= 1000:
     nCellsStr += "k"
@@ -163,7 +143,6 @@ def run(conf):
     os.rename("out/stats.csv", data_path)
   nRows_csv = conf.timeSteps * conf.nCells * conf.mpiProcesses
   data = math_functions.read_solver_stats(data_path, nRows_csv)
-
   return data
 
 
@@ -171,7 +150,7 @@ def run_cases(conf):
   # Base case
   conf.mpiProcesses = conf.mpiProcessesCaseBase
   if conf.nCellsProcesses % conf.mpiProcesses != 0:
-    print("WARNING: On base case conf.nCellsProcesses % conf.mpiProcesses != 0, nCellsProcesses, mpiProcesses",
+    print("ERROR: On base case conf.nCellsProcesses % conf.mpiProcesses != 0, nCellsProcesses, mpiProcesses",
           conf.nCellsProcesses,
           conf.mpiProcesses)
     raise
@@ -201,25 +180,19 @@ def run_cases(conf):
         cases_words = caseOptim.split()
         conf.caseGpuCpu = cases_words[0]
         conf.caseMulticellsOnecell = cases_words[1]
-
         conf.case = caseOptim
         data["caseOptim"] = run(conf)
-
         if conf.is_out:
           nCellsProcesses = [conf.nCellsProcesses]
-          # TODO CONF.OUT SHOULD HAVE BOTH CASEBASE AND BASEOPTIM DATA, OR MAYBE JUST CREATE TWO VARIABLES IS MORE CLEAR
           math_functions.check_NRMSE(conf.outBase, conf.outOptim, conf.timeSteps, nCellsProcesses)
-
         y_key_words = conf.plotYKey.split()
         y_key = y_key_words[-1]
         datay = math_functions.calculate_speedup(data, y_key)
-
         if len(conf.cells) > 1 or conf.plotXKey == "GPUs":
           datacases.append(np.mean(datay))
           stdCases.append(np.std(datay))
         else:
           datacases.append([elem for elem in datay])
-
   return datacases, stdCases
 
 
@@ -257,18 +230,6 @@ def plot_cases(conf):
   cases_words = conf.caseBase.split()
   conf.caseGpuCpu = cases_words[0]
   conf.caseMulticellsOnecell = cases_words[1]
-  case_multicells_onecell_name = ""
-
-  case_gpu_cpu_name = ""
-  if conf.caseGpuCpu == "CPU":
-    case_gpu_cpu_name = "CPU"
-  elif conf.caseGpuCpu == "GPU":
-    if conf.mpiProcessesCaseBase > 1:
-      case_gpu_cpu_name += str(conf.mpiProcessesCaseBase) + " MPI "
-    case_gpu_cpu_name += str(conf.nGPUsCaseBase) + " GPU"
-  else:
-    case_gpu_cpu_name = conf.caseGpuCpu
-
   conf.legend = []
   cases_words = conf.casesOptim[0].split()
   conf.caseGpuCpu = cases_words[0]
@@ -287,7 +248,6 @@ def plot_cases(conf):
     if last_case_optim != conf.caseMulticellsOnecell:
       is_same_case_optim = False
     last_case_optim = conf.caseMulticellsOnecell
-
   is_same_diff_cells = False
   for diff_cells in conf.diffCellsL:
     conf.diffCells = diff_cells
@@ -313,7 +273,6 @@ def plot_cases(conf):
             legend_name += case_multicells_onecell_name
           if not legend_name == "":
             conf.legend.append(legend_name)
-
   conf.plotTitle = ""
   if not is_same_diff_cells and len(conf.diffCellsL) == 1:
     conf.plotTitle += conf.diffCells + " test: "
@@ -330,7 +289,6 @@ def plot_cases(conf):
   if len(conf.legend) == 1 or not conf.legend or len(conf.diffCellsL) > 1:
     if len(conf.mpiProcessesCaseOptimList) > 1:
       legend_name += str(mpiProcessesCaseOptim) + " MPI "
-    # conf.plotTitle += case_multicells_onecell_name + " "
     if len(conf.diffCellsL) > 1:
       conf.plotTitle += "Implementations "
   else:
@@ -353,10 +311,8 @@ def plot_cases(conf):
     conf.plotTitle += ", Cells: " + str(conf.cells[0])
     datax = list(range(1, conf.timeSteps + 1, 1))
     plot_x_key = "Timesteps"
-
   namex = plot_x_key
   datay = conf.datacolumns
-
   if conf.allocatedNodes != 1:
     print("Nodes:", conf.allocatedNodes)
   if namex == "Timesteps":
