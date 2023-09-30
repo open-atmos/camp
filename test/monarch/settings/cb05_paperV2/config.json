@@ -1,10 +1,10 @@
 {
   "camp-files" : [
-    "settings/monarch_box_binned/cb05_abs_tol.json",
-    "settings/monarch_box_binned/cb05_mechanism.json",
-    "settings/monarch_box_binned/cb05_species.json",
-    "settings/monarch_box_binned/custom_species.json",
-    "settings/monarch_box_binned/partitioning_species_params.json"
+    "settings/cb05_paperV2/cb05_abs_tol.json",
+    "settings/cb05_paperV2/cb05_mechanism.json",
+    "settings/cb05_paperV2/cb05_species.json",
+    "settings/cb05_paperV2/custom_species.json",
+    "settings/cb05_paperV2/partitioning_species_params.json"
   ]
 }
 
