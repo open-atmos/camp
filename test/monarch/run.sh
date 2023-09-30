@@ -20,8 +20,8 @@ make_run(){
     exit
   fi
   cd $curr_path
-  #python TestMonarch.py
-  python checkGPU.py
+  python TestMonarch.py
+  #python checkGPU.py
 }
 
 make_run

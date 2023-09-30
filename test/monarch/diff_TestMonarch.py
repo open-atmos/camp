@@ -41,8 +41,6 @@ def all_timesteps():
 
   conf.timeSteps = 3
 
-  conf.timeStepsDt = 2
-
   conf.caseBase = "CPU One-cell"
   conf.casesOptim = []
   conf.plotYKey = "NRMSE"

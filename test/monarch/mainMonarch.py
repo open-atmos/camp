@@ -201,23 +201,21 @@ def run(conf):
   with open(conf_name, 'w', encoding='utf-8') as jsonFile:
     json.dump(conf.__dict__, jsonFile, indent=4, sort_keys=False)
 
-  data_path = ""
+  nCellsStr = str(conf.nCells)
+  if conf.nCells >= 1000:
+    nCellsStr += "k"
+  if conf.caseGpuCpu == "GPU":
+    caseGpuCpuName = str(conf.nGPUs) + conf.caseGpuCpu
+  else:
+    caseGpuCpuName = str(conf.mpiProcesses) + "CPUcores"
   if not conf.is_import:
     os.system(exec_str)
-    if conf.case is conf.caseBase:
-      if conf.is_out:
-        os.rename("out/state.csv", "out/state0.csv")
-      os.rename("out/stats.csv", "out/stats0.csv")
-    else:
-      if conf.is_out:
-        os.rename("out/state.csv", "out/state1.csv")
-      os.rename("out/stats.csv", "out/stats1.csv")
   if conf.is_out:
-    if conf.case is conf.caseBase:
-      data_path = "out/state0.csv"
-    else:
-      data_path = "out/state1.csv"
+    data_path = "out/state" + caseGpuCpuName + nCellsStr + "cells" \
+                + str(conf.timeSteps) + "tsteps.csv"
     try:
+      if not conf.is_import:
+        os.rename("out/state.csv", data_path)
       with open(data_path) as f:
         if conf.case is conf.caseBase:
           conf.outBase = [float(line.rstrip('\n')) for line in f]
@@ -225,12 +223,12 @@ def run(conf):
           conf.outOptim = [float(line.rstrip('\n')) for line in f]
     except FileNotFoundError as e:
       raise FileNotFoundError("Check enable EXPORT_STATE in CAMP code") from e
-  if conf.case is conf.caseBase:
-    data_path = "out/stats0.csv"
-  else:
-    data_path = "out/stats1.csv"
-  nrows_csv = conf.timeSteps * conf.nCells * conf.mpiProcesses
-  data = math_functions.read_solver_stats(data_path, nrows_csv)
+  data_path = "out/state" + caseGpuCpuName + nCellsStr + "cells" \
+              + str(conf.timeSteps) + "tsteps.csv"
+  if not conf.is_import:
+    os.rename("out/stats.csv", data_path)
+  nRows_csv = conf.timeSteps * conf.nCells * conf.mpiProcesses
+  data = math_functions.read_solver_stats(data_path, nRows_csv)
 
   return data
 
@@ -302,7 +300,7 @@ def run_cases(conf):
 
         if conf.is_out:
           nCellsProcesses = [conf.nCellsProcesses]
-          #TODO CONF.OUT SHOULD HAVE BOTH CASEBASE AND BASEOPTIM DATA, OR MAYBE JUST CREATE TWO VARIABLES IS MORE CLEAR
+          # TODO CONF.OUT SHOULD HAVE BOTH CASEBASE AND BASEOPTIM DATA, OR MAYBE JUST CREATE TWO VARIABLES IS MORE CLEAR
           math_functions.check_NRMSE(conf.outBase, conf.outOptim, conf.timeSteps, nCellsProcesses)
 
         y_key_words = conf.plotYKey.split()
@@ -495,7 +493,7 @@ def plot_cases(conf):
     print("Mean:", format(np.mean(datay), '.2e'), "Std", format(np.std(datay), '.2e'))
   else:
     print("Std", conf.stdColumns)
-  print(namex, ":", datax)
+  print(namex, ":", datax[-1])
   if conf.legend:
     print("plotTitle: ", conf.plotTitle, " legend:", conf.legend)
   else:
@@ -506,16 +504,9 @@ def plot_cases(conf):
 def run_main(conf):
   if conf.is_out:
     if len(conf.mpiProcessesCaseOptimList) > 1 or conf.mpiProcessesCaseBase != conf.mpiProcessesCaseOptimList[0]:
-      print("Disabled out error check because number of processes should be the same for accuracy calculation, only speedup can use different number")
-      conf.is_out=False
-  if conf.plotYKey == "":
-    print("conf.plotYKey is empty")
-  if conf.chemFile == "cb05_paperV2":
-    if conf.timeStepsDt != 2:
-      print("Warning: Setting timeStepsDt to 2, since it is the usual value for", conf.chemFile)
-    conf.timeStepsDt = 2
-  elif conf.chemFile == "monarch_cb05":
-    conf.timeStepsDt = 3
+      print(
+        "Disabled out error check because number of processes should be the same for accuracy calculation, only speedup can use different number")
+      conf.is_out = False
     if "Realistic" in conf.diffCellsL:
       conf.diffCellsL = ["Ideal"]
   if "Realistic" in conf.diffCells and \

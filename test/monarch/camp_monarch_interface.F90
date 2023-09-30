@@ -815,16 +815,18 @@ contains
     type(camp_monarch_interface_t), intent(inout) :: this
     if (associated(this%camp_core)) &
             deallocate(this%camp_core)
-    if (allocated(this%monarch_species_names)) &
-            deallocate(this%monarch_species_names)
-    if (allocated(this%map_monarch_id)) &
-            deallocate(this%map_monarch_id)
-    if (allocated(this%map_camp_id)) &
-            deallocate(this%map_camp_id)
-    if (allocated(this%init_conc_camp_id)) &
-            deallocate(this%init_conc_camp_id)
-    if (allocated(this%init_conc)) &
-            deallocate(this%init_conc)
+
+    !todo check if fixed bug error too much allocated 10000 cells state 720tsteps
+    !if (allocated(this%monarch_species_names)) &
+    !        deallocate(this%monarch_species_names)
+    !if (allocated(this%map_monarch_id)) &
+    !        deallocate(this%map_monarch_id)
+    !if (allocated(this%map_camp_id)) &
+    !        deallocate(this%map_camp_id)
+    !if (allocated(this%init_conc_camp_id)) &
+    !        deallocate(this%init_conc_camp_id)
+    !if (allocated(this%init_conc)) &
+    !        deallocate(this%init_conc)
   end subroutine finalize
 
 end module
