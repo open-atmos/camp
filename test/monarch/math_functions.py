@@ -43,16 +43,6 @@ def check_NRMSE(species1, species2, n_time_steps, nCellsProcesses):
   print("NRMSE:",NRMSEs)
 
 
-def calculate_speedup(data, plot_y_key):
-  cases = list(data.keys())
-  base_data = data[cases[0]][plot_y_key]
-  new_data = data[cases[1]][plot_y_key]
-  datay = [0.] * len(base_data)
-  for i in range(len(base_data)):
-    datay[i] = base_data[i] / new_data[i]
-  return datay
-
-
 def read_solver_stats(file, nrows):
   df = pd_read_csv(file, nrows=nrows)
   data = df.to_dict('list')

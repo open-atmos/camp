@@ -120,8 +120,10 @@ def run(conf):
     nCellsStr += "k"
   if conf.caseGpuCpu == "GPU":
     caseGpuCpuName = str(conf.nGPUs) + conf.caseGpuCpu
+    #conf.is_import=False #debug
   else:
     caseGpuCpuName = str(conf.mpiProcesses) + "CPUcores"
+    #conf.is_import=True #debug
   if not conf.is_import:
     os.system(exec_str)
   if conf.is_out:
@@ -137,12 +139,15 @@ def run(conf):
           conf.outOptim = [float(line.rstrip('\n')) for line in f]
     except FileNotFoundError as e:
       raise FileNotFoundError("Check enable EXPORT_STATE in CAMP code") from e
-  data_path = "out/state" + caseGpuCpuName + nCellsStr + "cells" \
+  data_path = "out/stats" + caseGpuCpuName + nCellsStr + "cells" \
               + str(conf.timeSteps) + "tsteps.csv"
   if not conf.is_import:
     os.rename("out/stats.csv", data_path)
   nRows_csv = conf.timeSteps * conf.nCells * conf.mpiProcesses
   data = math_functions.read_solver_stats(data_path, nRows_csv)
+  y_key_words = conf.plotYKey.split()
+  y_key = y_key_words[-1]
+  data = data[y_key]
   return data
 
 
@@ -162,8 +167,7 @@ def run_cases(conf):
   conf.caseMulticellsOnecell = cases_words[1]
 
   conf.case = conf.caseBase
-  dataCaseBase = run(conf)
-  data = {"caseBase": dataCaseBase}
+  baseData = run(conf)
 
   # OptimCases
   datacases = []
@@ -181,13 +185,14 @@ def run_cases(conf):
         conf.caseGpuCpu = cases_words[0]
         conf.caseMulticellsOnecell = cases_words[1]
         conf.case = caseOptim
-        data["caseOptim"] = run(conf)
+        optimData = run(conf)
         if conf.is_out:
           nCellsProcesses = [conf.nCellsProcesses]
           math_functions.check_NRMSE(conf.outBase, conf.outOptim, conf.timeSteps, nCellsProcesses)
-        y_key_words = conf.plotYKey.split()
-        y_key = y_key_words[-1]
-        datay = math_functions.calculate_speedup(data, y_key)
+        datay = [0.] * len(optimData)
+        print(baseData,optimData)
+        for i in range(len(optimData)):
+          datay[i] = baseData[i] / optimData[i]
         if len(conf.cells) > 1 or conf.plotXKey == "GPUs":
           datacases.append(np.mean(datay))
           stdCases.append(np.std(datay))
