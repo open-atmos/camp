@@ -42,8 +42,3 @@ def check_NRMSE(species1, species2, n_time_steps, nCellsProcesses):
                       ,"check debug utilities like debug.camp.diff.sh")
   print("NRMSE:",NRMSEs)
 
-
-def read_solver_stats(file, nrows):
-  df = pd_read_csv(file, nrows=nrows)
-  data = df.to_dict('list')
-  return data

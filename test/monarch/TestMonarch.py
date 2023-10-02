@@ -24,9 +24,9 @@ def all_timesteps():
   conf.mpiProcessesCaseOptimList = [1]
   conf.allocatedNodes = 1
   conf.allocatedTasksPerNode = 160
-  conf.cells = [10]
+  conf.cells = [10000]
   # conf.cells = [100, 500, 1000, 5000, 10000]
-  conf.timeSteps = 2
+  conf.timeSteps = 720
   conf.caseBase = "CPU One-cell"
   # conf.caseBase = "GPU BDF"
   conf.casesOptim = []

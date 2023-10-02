@@ -8,6 +8,7 @@ import numpy as np
 import json
 import subprocess
 import time
+from pandas import read_csv as pd_read_csv
 
 
 class TestMonarch:
@@ -52,6 +53,13 @@ class TestMonarch:
     self.plotTitle = ""
     self.nCellsProcesses = 1
     self.campSolverConfigFile = "settings/config_variables_c_solver.txt"
+
+def read_csv(conf,data_path):
+  with open(data_path) as f:
+    if conf.case is conf.caseBase:
+      conf.outBase = [float(line.rstrip('\n')) for line in f]
+    else:
+      conf.outOptim = [float(line.rstrip('\n')) for line in f]
 
 
 def write_camp_config_file(conf):
@@ -117,13 +125,13 @@ def run(conf):
     json.dump(conf.__dict__, jsonFile, indent=4, sort_keys=False)
   nCellsStr = str(conf.nCells)
   if conf.nCells >= 1000:
-    nCellsStr += "k"
+    nCellsStr = str(int(conf.nCells/1000))+"k"
   if conf.caseGpuCpu == "GPU":
     caseGpuCpuName = str(conf.nGPUs) + conf.caseGpuCpu
-    #conf.is_import=False #debug
+    conf.is_import=False #debug
   else:
     caseGpuCpuName = str(conf.mpiProcesses) + "CPUcores"
-    #conf.is_import=True #debug
+    conf.is_import=True #debug
   if not conf.is_import:
     os.system(exec_str)
   if conf.is_out:
@@ -132,11 +140,13 @@ def run(conf):
     try:
       if not conf.is_import:
         os.rename("out/state.csv", data_path)
-      with open(data_path) as f:
-        if conf.case is conf.caseBase:
-          conf.outBase = [float(line.rstrip('\n')) for line in f]
-        else:
-          conf.outOptim = [float(line.rstrip('\n')) for line in f]
+      start = time.time()
+      print("read state start")
+      df = pd_read_csv(data_path)
+      print("read state", time.time() - start)
+      conf.outBase = df.to_dict('list')
+      print("read state + to_dict", time.time() - start)
+      raise
     except FileNotFoundError as e:
       raise FileNotFoundError("Check enable EXPORT_STATE in CAMP code") from e
   data_path = "out/stats" + caseGpuCpuName + nCellsStr + "cells" \
@@ -144,7 +154,8 @@ def run(conf):
   if not conf.is_import:
     os.rename("out/stats.csv", data_path)
   nRows_csv = conf.timeSteps * conf.nCells * conf.mpiProcesses
-  data = math_functions.read_solver_stats(data_path, nRows_csv)
+  df = pd_read_csv(data_path, nrows=nRows_csv)
+  data = df.to_dict('list')
   y_key_words = conf.plotYKey.split()
   y_key = y_key_words[-1]
   data = data[y_key]
