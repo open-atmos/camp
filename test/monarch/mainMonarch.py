@@ -139,13 +139,11 @@ def run(conf):
       if not conf.is_import:
         os.rename("out/state.csv", data_path)
       start = time.time()
-      #df = pd_read_csv(data_path)
-      #conf.outBase = df.to_dict('list')
-      with open(data_path) as f:
-        if conf.case is conf.caseBase:
-          conf.outBase = [float(line.rstrip('\n')) for line in f]
-        else:
-          conf.outOptim = [float(line.rstrip('\n')) for line in f]
+      df = pd_read_csv(data_path, header=None, names=["Column1"])
+      if conf.case is conf.caseBase:
+        conf.outBase = df["Column1"].tolist()
+      else:
+        conf.outOptim = df["Column1"].tolist()
       print("read state + to_dict", time.time() - start)
     except FileNotFoundError as e:
       raise FileNotFoundError("Check enable EXPORT_STATE in CAMP code") from e
