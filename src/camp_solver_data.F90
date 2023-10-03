@@ -234,6 +234,11 @@ module camp_camp_solver_data
       type(c_ptr), value :: times
     end subroutine
 
+    subroutine solver_export_state( solver_data) bind (c)
+      use iso_c_binding
+      type(c_ptr), value :: solver_data
+    end subroutine
+
     !> Add condensed reaction data to the solver data block
     subroutine rxn_add_condensed_data(rxn_type, n_int_param, &
                     n_float_param, n_env_param, int_param, float_param, &
@@ -429,10 +434,9 @@ module camp_camp_solver_data
     !> Integrate over a given time step
     procedure :: solve
     procedure :: get_base_rate
-    !> Get the solver statistics from the last run
     procedure:: get_solver_stats
     procedure:: export_solver_stats
-    !> Reset the solver statistics from the last run
+    procedure:: export_solver_state
     procedure:: reset_solver_stats
     !> Checks whether a solver is available
     procedure :: is_solver_available
@@ -1036,6 +1040,11 @@ contains
         c_loc( times)&
         )
 
+  end subroutine
+
+  subroutine export_solver_state( this)
+    class(camp_solver_data_t), intent(inout) :: this
+    call solver_export_state(this%solver_c_ptr)
   end subroutine
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

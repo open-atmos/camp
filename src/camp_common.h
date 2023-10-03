@@ -240,7 +240,7 @@ typedef struct {
   TimeDerivative time_deriv;  // CAMP derivative structure for use in
                               // calculating deriv
   Jacobian jac;               // CAMP Jacobian structure for use in
-                              // calculating the Jacobian
+                       // calculating the Jacobian
   N_Vector deriv;      // used to calculate the derivative outside the solver
   SUNMatrix J;         // Jacobian matrix
   SUNMatrix J_guess;   // Jacobian matrix for improving guesses sent to linear

@@ -392,6 +392,9 @@ contains
             call this%camp_core%solve(this%camp_state, real(time_step*60., kind=dp),solver_stats=solver_stats)
             call cpu_time(comp_end)
             comp_time = comp_time + (comp_end-comp_start)
+            if(i_time==NUM_TIME_STEP) then
+              call this%camp_core%export_solver_state()
+            end if
             MONARCH_conc(i,j,k,this%map_monarch_id(:)) = &
                     this%camp_state%state_var(this%map_camp_id(:))
           end do
@@ -436,6 +439,9 @@ contains
               real(time_step*60., kind=dp), solver_stats = solver_stats)
       call cpu_time(comp_end)
       comp_time = comp_time + (comp_end-comp_start)
+      if(i_time==NUM_TIME_STEP) then
+        call this%camp_core%export_solver_state()
+      end if
       do i=I_W, I_E
         do j=I_S, I_N
           do k=1, NUM_VERT_CELLS

@@ -128,10 +128,8 @@ def run(conf):
     nCellsStr = str(int(conf.nCells/1000))+"k"
   if conf.caseGpuCpu == "GPU":
     caseGpuCpuName = str(conf.nGPUs) + conf.caseGpuCpu
-    conf.is_import=False #debug
   else:
     caseGpuCpuName = str(conf.mpiProcesses) + "CPUcores"
-    conf.is_import=True #debug
   if not conf.is_import:
     os.system(exec_str)
   if conf.is_out:
@@ -141,12 +139,14 @@ def run(conf):
       if not conf.is_import:
         os.rename("out/state.csv", data_path)
       start = time.time()
-      print("read state start")
-      df = pd_read_csv(data_path)
-      print("read state", time.time() - start)
-      conf.outBase = df.to_dict('list')
+      #df = pd_read_csv(data_path)
+      #conf.outBase = df.to_dict('list')
+      with open(data_path) as f:
+        if conf.case is conf.caseBase:
+          conf.outBase = [float(line.rstrip('\n')) for line in f]
+        else:
+          conf.outOptim = [float(line.rstrip('\n')) for line in f]
       print("read state + to_dict", time.time() - start)
-      raise
     except FileNotFoundError as e:
       raise FileNotFoundError("Check enable EXPORT_STATE in CAMP code") from e
   data_path = "out/stats" + caseGpuCpuName + nCellsStr + "cells" \
@@ -198,10 +198,8 @@ def run_cases(conf):
         conf.case = caseOptim
         optimData = run(conf)
         if conf.is_out:
-          nCellsProcesses = [conf.nCellsProcesses]
-          math_functions.check_NRMSE(conf.outBase, conf.outOptim, conf.timeSteps, nCellsProcesses)
+          math_functions.check_NRMSE(conf.outBase, conf.outOptim, conf.nCellsProcesses)
         datay = [0.] * len(optimData)
-        print(baseData,optimData)
         for i in range(len(optimData)):
           datay[i] = baseData[i] / optimData[i]
         if len(conf.cells) > 1 or conf.plotXKey == "GPUs":

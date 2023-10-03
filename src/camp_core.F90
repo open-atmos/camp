@@ -191,6 +191,7 @@ module camp_camp_core
     procedure :: get_solver_stats
     procedure :: export_solver_stats
     procedure :: reset_solver_stats
+    procedure :: export_solver_state
     !> Get a new model state variable
     procedure :: new_state_one_cell
     procedure :: new_state_multi_cell
@@ -1603,6 +1604,25 @@ contains
     end if
 
     call solver%export_solver_stats( solver_stats,this%ncounters,this%ntimers)
+
+  end subroutine
+
+  subroutine export_solver_state(this)
+    use camp_rxn_data
+    use iso_c_binding
+    class(camp_core_t), intent(inout) :: this
+    integer(kind=i_kind) :: phase
+    type(camp_solver_data_t), pointer :: solver
+
+    phase = GAS_AERO_RXN
+    if (phase.eq.GAS_RXN) then
+      solver => this%solver_data_gas
+    else if (phase.eq.AERO_RXN) then
+      solver => this%solver_data_aero
+    else if (phase.eq.GAS_AERO_RXN) then
+      solver => this%solver_data_gas_aero
+    end if
+    call solver%export_solver_state()
 
   end subroutine
 

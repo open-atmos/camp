@@ -732,7 +732,6 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
     //print_double(state+md->n_per_cell_state_var*i, n_state_var, "state768");
     //printf("end cell\nline\n");
   //}
-  if(sd->is_export_state)export_state(sd);
 #ifdef FAILURE_DETAIL
   sd->counter_fail_solve_print=0;
 #endif
@@ -1025,6 +1024,12 @@ void solver_export_statistics(void *solver_data, int *counters, double *times)
 {
     SolverData *sd = (SolverData *)solver_data;
     export_stats(sd->ntimers,sd->ncounters,counters,times);
+}
+
+void solver_export_state(void *solver_data)
+{
+    SolverData *sd = (SolverData *)solver_data;
+    if(sd->is_export_state)export_state(sd);
 }
 
 #ifdef CAMP_USE_SUNDIALS
