@@ -22,7 +22,6 @@ module camp_monarch_interface_2
   use camp_mechanism_data, only : mechanism_data_t
   use camp_rxn_data, only : rxn_data_t
   use camp_rxn_photolysis
-  use camp_solver_stats
   use mpi
   use json_module
 
@@ -272,7 +271,7 @@ contains
   subroutine integrate(this, curr_time, time_step, I_W, I_E, I_S, &
                   I_N, temperature, MONARCH_conc, water_conc, &
                   water_vapor_index, air_density, pressure, conv, i_hour,&
-          NUM_TIME_STEP,solver_stats, DIFF_CELLS, i_time)
+          NUM_TIME_STEP, DIFF_CELLS, i_time)
     class(camp_monarch_interface_t) :: this
     real, intent(in) :: curr_time
     real(kind=dp), intent(in) :: time_step
@@ -305,7 +304,6 @@ contains
             emi_slide, press_norm
     integer :: n_cells
     real(kind=dp) :: comp_start, comp_end
-    type(solver_stats_t), intent(inout) :: solver_stats
     integer :: state_size_per_cell, n_cell_check
 
     if(this%n_cells==1) then
@@ -386,7 +384,7 @@ contains
             !print*,"state_var436",this%camp_state%state_var(1)
             end if
             call cpu_time(comp_start)
-            call this%camp_core%solve(this%camp_state, real(time_step*60., kind=dp),solver_stats=solver_stats)
+            call this%camp_core%solve(this%camp_state, real(time_step*60., kind=dp))
             call cpu_time(comp_end)
             comp_time = comp_time + (comp_end-comp_start)
             if(i_time==NUM_TIME_STEP) then
@@ -433,7 +431,7 @@ contains
       end do
       call cpu_time(comp_start)
       call this%camp_core%solve(this%camp_state, &
-              real(time_step*60., kind=dp), solver_stats = solver_stats)
+              real(time_step*60., kind=dp))
       call cpu_time(comp_end)
       comp_time = comp_time + (comp_end-comp_start)
       if(i_time==NUM_TIME_STEP) then

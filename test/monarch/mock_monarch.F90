@@ -9,7 +9,6 @@ program mock_monarch_t
   use camp_util, only : assert_msg, almost_equal, to_string
   use camp_monarch_interface_2
   use camp_mpi
-  use camp_solver_stats
   use json_module
 
 #ifdef SOLVE_EBI_IMPORT_CAMP_INPUT
@@ -87,7 +86,6 @@ program mock_monarch_t
   character(len=512) :: arg
   integer :: i_time, i_spec, i_case, i, j, k, z,r
   integer :: plot_case, new_v_cells, aux_int
-  type(solver_stats_t), target :: solver_stats
   type(json_file) :: jfile
   type(json_core) :: json
   character(len=:), allocatable :: export_path
@@ -182,11 +180,11 @@ program mock_monarch_t
          conv,              &
          i_hour,&
          NUM_TIME_STEP,&
-         solver_stats,DIFF_CELLS,i_time)
+          DIFF_CELLS,i_time)
     curr_time = curr_time + TIME_STEP
 #ifdef CAMP_DEBUG_GPU
-      call camp_interface%camp_core%export_solver_stats(solver_stats=solver_stats)
-      call camp_interface%camp_core%reset_solver_stats(solver_stats=solver_stats)
+      call camp_interface%camp_core%export_solver_stats()
+      call camp_interface%camp_core%reset_solver_stats()
 #endif
     end do
   end if

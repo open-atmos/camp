@@ -990,24 +990,14 @@ contains
 
   end subroutine
 
-  !> Get solver statistics
-  subroutine reset_solver_stats( this, solver_stats)
-
-    !> Solver data
+  subroutine reset_solver_stats( this)
     class(camp_solver_data_t), intent(inout) :: this
-    !> Solver statistics
-    type(solver_stats_t), intent(inout), target :: solver_stats
-
     call solver_reset_statistics(this%solver_c_ptr )
-
   end subroutine
 
-  subroutine export_solver_stats( this, solver_stats)
+  subroutine export_solver_stats( this)
     class(camp_solver_data_t), intent(inout) :: this
-    type(solver_stats_t), intent(inout), target :: solver_stats
-
     call solver_export_statistics(this%solver_c_ptr)
-
   end subroutine
 
   subroutine export_solver_state( this)
