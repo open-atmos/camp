@@ -711,11 +711,11 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     cudaEventSynchronize(mCPU->stopcvStep);
     float mscvStep = 0.0;
     cudaEventElapsedTime(&mscvStep, mCPU->startcvStep, mCPU->stopcvStep);
-    mCPU->timecvStep+= mscvStep/1000;
-    //printf("mCPU->timecvStep %lf\n",mCPU->timecvStep);
+    sd->timecvStep+= mscvStep/1000;
+    //printf("sd->timecvStep %lf\n",sd->timecvStep);
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     cudaMemcpy(&mCPU->mdvCPU, mGPU->mdvo, sizeof(ModelDataVariable), cudaMemcpyDeviceToHost);
-    mCPU->timeBiConjGrad=mCPU->timecvStep*mCPU->mdvCPU.dtBCG/mCPU->mdvCPU.dtcudaDeviceCVode;
+    mCPU->timeBiConjGrad=sd->timecvStep*mCPU->mdvCPU.dtBCG/mCPU->mdvCPU.dtcudaDeviceCVode;
     mCPU->counterBCG+= mCPU->mdvCPU.counterBCG;
     //printf("mCPU->mdvCPU.dtcudaDeviceCVode %lf\n",mCPU->mdvCPU.dtcudaDeviceCVode);
 #else

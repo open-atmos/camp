@@ -850,19 +850,14 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
 
 #ifdef CAMP_USE_GPU
 #ifdef CAMP_DEBUG_GPU
+  ModelDataCPU *mCPU = &(sd->mCPU);
   CVodeMem cv_mem = (CVodeMem) sd->cvode_mem;
   if(sd->use_cpu==1){
-    if(sd->ntimers>0 && sd->ncounters>0){
-      times[2]=sd->timeCVode;
-      times[13]=cv_mem->timecvStep;
-    }
-    else{
-      printf("WARNING: In function solver_get_statistics trying to assign times "
-             "and counters profilign variables with ncounters || ntimers < 1");
-    }
+    times[2]=sd->timeCVode;
+    times[13]=cv_mem->timecvStep;
+    sd->timecvStep=cv_mem->timecvStep;
   }
   else{
-    ModelDataCPU *mCPU = &(sd->mCPU);
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     solver_get_statistics_gpu(sd);
 #endif
@@ -943,7 +938,7 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
       times[i]=0.;
       i++;
 #endif
-      times[i]=mCPU->timecvStep;
+      times[i]=sd->timecvStep;
       i++;
       //for(int i=0;i<sd->ntimers;i++)
         //printf("times[%d]=%le\n",i,times[i]);
@@ -1011,7 +1006,7 @@ void solver_reset_statistics(void *solver_data, int *counters, double *times)
         mdvCPU.timef=0.;
         mdvCPU.timeguess_helper=0.;
 #endif
-        mCPU->timecvStep=0.;
+        sd->timecvStep=0.;
       }
       else{
         printf("WARNING: In function solver_get_statistics trying to assign times "
@@ -1026,7 +1021,7 @@ void solver_reset_statistics(void *solver_data, int *counters, double *times)
 void solver_export_statistics(void *solver_data, int *counters, double *times)
 {
     SolverData *sd = (SolverData *)solver_data;
-    export_stats(sd->ntimers,sd->ncounters,counters,times);
+    export_stats(sd);
 }
 
 void solver_export_state(void *solver_data)

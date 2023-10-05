@@ -158,19 +158,8 @@ void solver_new_gpu_cu_cvode(SolverData *sd) {
     if (rank < coresPerNode / nDevicesMax * (i + 1) && rank >= coresPerNode / nDevicesMax * i && i<sd->nDevices) {
       cudaSetDevice(i);
       //printf("rank %d, device %d\n", rank, i);
-#ifdef ENABLE_GPU_CHECK
-      cudaDeviceProp prop;
-      cudaGetDeviceProperties(&prop, i);
-      mCPU->threads = prop.maxThreadsPerBlock; //1024
+      mCPU->threads = 1024;
       mCPU->blocks = (n_dep_var*n_cells + mCPU->threads - 1) / mCPU->threads;
-      if(md->n_per_cell_dep_var > prop.maxThreadsPerBlock/2){
-        printf("ERROR: md->n_per_cell_dep_var, prop.maxThreadsPerBlock/2, %d %d More species than threads per block available\n",md->n_per_cell_dep_var, prop.maxThreadsPerBlock/2);
-        exit(0);
-      }
-#else
-        mCPU->threads = 1024;
-        mCPU->blocks = (n_dep_var*n_cells + mCPU->threads - 1) / mCPU->threads;
-#endif
     }
   }
   sd->mGPU = (ModelDataGPU *)malloc(sizeof(ModelDataGPU));
@@ -256,7 +245,7 @@ void constructor_cvode_gpu(CVodeMem cv_mem, SolverData *sd){
   mCPU->timeNewtonIt=0.;
   mCPU->timeLinSolSetup=0.;
   mCPU->timeLinSolSolve=0.;
-  mCPU->timecvStep=0.;
+  sd->timecvStep=0.;
   mCPU->timeDerivNewton=0.;
   mCPU->timeBiConjGrad=0.;
   mCPU->timeBiConjGradMemcpy=0.;

@@ -92,31 +92,19 @@ void init_export_stats(){
     printf("export_stats enabled\n");
     FILE *fptr;
     fptr = fopen(file_path,"w");
-    fprintf(fptr, "counterBCG,counterLS,"
-      "countersolveCVODEGPU,countercvStep,"
-      "timeLS,timeBiconjGradMemcpy,timeCVode,"
-      "dtcudaDeviceCVode,dtPostBCG,timeAux,"
-      "timeNewtonIteration,timeJac,"
-      "timelinsolsetup,timecalc_Jac,"
-      "timeRXNJac,timef,timeguess_helper,"
-      "timecvStep\n");
+    fprintf(fptr, "timecvStep,timeCVode\n");
     fclose(fptr);
   }
 }
 
-void export_stats(int ntimers,int ncounters, int *counters, double *times){
+void export_stats(SolverData *sd){
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   if (rank == 0) {
     FILE *fptr;
     fptr = fopen("out/stats.csv", "a");
-    fprintf(fptr, "%d",counters[0]);
-    for (int i = 1; i < ncounters; i++) {
-      fprintf(fptr, ",%d",counters[i]);
-    }
-    for (int i = 0; i < ntimers; i++) {
-      fprintf(fptr, ",%.17le",times[i]);
-    }
+    fprintf(fptr, "%.17le,",sd->timecvStep);
+    fprintf(fptr, "%.17le",sd->timeCVode);
     fprintf(fptr, "\n");
     fclose(fptr);
   }

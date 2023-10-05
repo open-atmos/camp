@@ -269,6 +269,7 @@ typedef struct {
   int counterBCG;
   int counterLS;
   double timeCVode;
+  double timecvStep;
   double timeLS;
 #endif
 

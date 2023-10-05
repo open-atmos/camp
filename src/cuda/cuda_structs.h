@@ -137,7 +137,6 @@ typedef struct{
   cudaEvent_t stopNewtonIt;
   cudaEvent_t stopBCGMemcpy;
   cudaEvent_t stopBCG;
-  double timecvStep;
   cudaEvent_t startcvStep;
   cudaEvent_t stopcvStep;
 #endif
