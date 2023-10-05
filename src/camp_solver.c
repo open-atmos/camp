@@ -845,8 +845,8 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
   else{
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     solver_get_statistics_gpu(sd);
-#endif
     solver_reset_statistics_gpu(sd);
+#endif
   }
 #endif
 #endif
@@ -866,27 +866,23 @@ void solver_reset_statistics(void *solver_data)
     ModelDataCPU *mCPU = &(sd->mCPU);
     ModelDataGPU *mGPU;
     mGPU = sd->mGPU;
-      ModelDataVariable mdvCPU=mCPU->mdvCPU;
+    ModelDataVariable mdvCPU=mCPU->mdvCPU;
+    sd->timecvStep=0.;
+    sd->timeCVode=0.;
+    mCPU->counterBCG=0;
+    mCPU->timeBiConjGrad=0.;
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
-        mCPU->mdvCPU.counterBCGInternal=0;
+    mCPU->mdvCPU.counterBCGInternal=0;
+    mCPU->mdvCPU.countercvStep=0;
+    mdvCPU.dtcudaDeviceCVode=0.;
+    mdvCPU.dtPostBCG=0.;
+    mdvCPU.timeNewtonIteration=0.;
+    mdvCPU.timeJac=0.;
+    mdvCPU.timelinsolsetup=0.;
+    mdvCPU.timecalc_Jac=0.;
+    mdvCPU.timef=0.;
+    mdvCPU.timeguess_helper=0.;
 #endif
-        mCPU->counterBCG=0;
-#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
-        mCPU->mdvCPU.countercvStep=0;
-#endif
-        mCPU->timeBiConjGrad=0.;
-        sd->timeCVode=0.;
-#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
-        mdvCPU.dtcudaDeviceCVode=0.;
-        mdvCPU.dtPostBCG=0.;
-        mdvCPU.timeNewtonIteration=0.;
-        mdvCPU.timeJac=0.;
-        mdvCPU.timelinsolsetup=0.;
-        mdvCPU.timecalc_Jac=0.;
-        mdvCPU.timef=0.;
-        mdvCPU.timeguess_helper=0.;
-#endif
-        sd->timecvStep=0.;
     }
 #endif
 #endif

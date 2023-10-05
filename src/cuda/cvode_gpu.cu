@@ -749,7 +749,7 @@ void solver_reset_statistics_gpu(SolverData *sd){
   mGPU = sd->mGPU;
 #ifdef CAMP_DEBUG_GPU
   for (int i = 0; i < mGPU->n_cells; i++){
-    cudaMemcpy(&mGPU->sCells[i], &mCPU->mdvCPU, sizeof(ModelDataVariable), cudaMemcpyHostToDevice);
+    cudaMemcpyAsync(&mGPU->sCells[i], &mCPU->mdvCPU, sizeof(ModelDataVariable), cudaMemcpyHostToDevice,0);
   }
 #endif
 }
