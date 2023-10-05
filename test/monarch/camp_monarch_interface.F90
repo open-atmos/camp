@@ -307,9 +307,6 @@ contains
     real(kind=dp) :: comp_start, comp_end
     type(solver_stats_t), intent(inout) :: solver_stats
     integer :: state_size_per_cell, n_cell_check
-    integer :: counterLS = 0
-    real :: timeLS = 0.0
-    real :: timeCvode = 0.0
 
     if(this%n_cells==1) then
       state_size_per_cell = 0

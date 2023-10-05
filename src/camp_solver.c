@@ -835,21 +835,6 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
   *max_loss_precision = 0.0;
 #endif
 
-#ifdef CAMP_USE_GPU
-#ifdef CAMP_DEBUG_GPU
-  ModelDataCPU *mCPU = &(sd->mCPU);
-  CVodeMem cv_mem = (CVodeMem) sd->cvode_mem;
-  if(sd->use_cpu==1){
-    sd->timecvStep=cv_mem->timecvStep;
-  }
-  else{
-#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
-    solver_get_statistics_gpu(sd);
-    solver_reset_statistics_gpu(sd);
-#endif
-  }
-#endif
-#endif
 }
 
 void solver_reset_statistics(void *solver_data)
@@ -883,6 +868,9 @@ void solver_reset_statistics(void *solver_data)
     mdvCPU.timef=0.;
     mdvCPU.timeguess_helper=0.;
 #endif
+#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
+    solver_reset_statistics_gpu(sd);
+#endif
     }
 #endif
 #endif
@@ -891,6 +879,13 @@ void solver_reset_statistics(void *solver_data)
 void solver_export_statistics(void *solver_data)
 {
     SolverData *sd = (SolverData *)solver_data;
+    CVodeMem cv_mem = (CVodeMem) sd->cvode_mem;
+#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
+    solver_get_statistics_gpu(sd);
+#endif
+    if(sd->use_cpu==1){
+      sd->timecvStep=cv_mem->timecvStep;
+    }
     export_stats(sd);
 }
 

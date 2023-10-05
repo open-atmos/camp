@@ -268,7 +268,6 @@ typedef struct {
   int counterLS;
   double timeCVode;
   double timecvStep;
-  double timeLS;
 #endif
 
 #ifdef FAILURE_DETAIL
