@@ -154,8 +154,6 @@ module camp_camp_core
     type(camp_solver_data_t), pointer, public :: solver_data_aero => null()
     !> Solver data (mixed gas- and aerosol-phase reactions)
     type(camp_solver_data_t), pointer, public :: solver_data_gas_aero => null()
-    integer :: ncounters(4)
-    real(kind=dp) :: ntimers(14)
     real(kind=dp), allocatable :: init_state_var(:)
     type(string_t), allocatable :: spec_names(:)
     logical :: export_flag
@@ -1181,9 +1179,7 @@ contains
                 this%sub_model,  & ! Pointer to the sub-models
                 GAS_RXN,         & ! Reaction phase
                 this%n_cells,    & ! # of cells computed simultaneosly
-                spec_names,       & ! Species names
-                size(this%ncounters), & ! # of profiling variables (Times and counters)
-                size(this%ntimers) & ! # of profiling variables (Times and counters)
+                spec_names       & ! Species names
       )
       call this%solver_data_aero%initialize( &
                 this%var_type,   & ! State array variable types
@@ -1194,9 +1190,7 @@ contains
                 this%sub_model,  & ! Pointer to the sub-models
                 AERO_RXN,        & ! Reaction phase
                 this%n_cells,    & ! # of cells computed simultaneosly
-                spec_names,       & ! Species names
-                size(this%ncounters), & ! # of profiling variables (Times and counters)
-                size(this%ntimers) & ! # of profiling variables (Times and counters)
+                spec_names       & ! Species names
       )
     else
 
@@ -1218,9 +1212,7 @@ contains
                 this%sub_model,  & ! Pointer to the sub-models
                 GAS_AERO_RXN,    & ! Reaction phase
                 this%n_cells,    & ! # of cells computed simultaneosly
-                spec_names,       & ! Species names
-                size(this%ncounters), & ! # of profiling variables (Times and counters)
-                size(this%ntimers) & ! # of profiling variables (Times and counters)
+                spec_names       & ! Species names
               )
 
     end if
@@ -1536,7 +1528,7 @@ contains
               "solver: "//to_string(phase))
     end if
 
-    call solver%get_solver_stats( solver_stats,this%ncounters,this%ntimers)
+    call solver%get_solver_stats( solver_stats)
 
   end subroutine
 
@@ -1570,7 +1562,7 @@ contains
               "solver: "//to_string(phase))
     end if
 
-    call solver%reset_solver_stats( solver_stats,this%ncounters,this%ntimers)
+    call solver%reset_solver_stats( solver_stats)
 
   end subroutine
 
@@ -1603,7 +1595,7 @@ contains
           "solver: "//to_string(phase))
     end if
 
-    call solver%export_solver_stats( solver_stats,this%ncounters,this%ntimers)
+    call solver%export_solver_stats( solver_stats)
 
   end subroutine
 

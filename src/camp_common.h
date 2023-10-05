@@ -262,8 +262,6 @@ typedef struct {
 
   double t_initial;
   double t_final;
-  int ncounters;
-  int ntimers;
 
 #ifdef CAMP_DEBUG_GPU
   int counterBCG;

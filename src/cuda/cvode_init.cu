@@ -240,7 +240,6 @@ void constructor_cvode_gpu(CVodeMem cv_mem, SolverData *sd){
   mCPU->counterDerivNewton=0;
   mCPU->counterBCG=0;
   mCPU->counterDerivSolve=0;
-  mCPU->countersolveCVODEGPU=0;
 
   mCPU->timeNewtonIt=0.;
   mCPU->timeLinSolSetup=0.;
@@ -248,7 +247,6 @@ void constructor_cvode_gpu(CVodeMem cv_mem, SolverData *sd){
   sd->timecvStep=0.;
   mCPU->timeDerivNewton=0.;
   mCPU->timeBiConjGrad=0.;
-  mCPU->timeBiConjGradMemcpy=0.;
   mCPU->timeDerivSolve=0.;
 
   cudaEventCreate(&mCPU->startDerivNewton);

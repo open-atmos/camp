@@ -114,13 +114,11 @@ typedef struct{
   int counterDerivNewton;
   int counterBCG;
   int counterDerivSolve;
-  int countersolveCVODEGPU;
   double timeNewtonIt;
   double timeLinSolSetup;
   double timeLinSolSolve;
   double timeDerivNewton;
   double timeBiConjGrad;
-  double timeBiConjGradMemcpy;
   double timeDerivSolve;
   double timeJac;
   cudaEvent_t startDerivNewton;

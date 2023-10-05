@@ -90,8 +90,7 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
                  int n_aero_rep, int n_aero_rep_int_param,
                  int n_aero_rep_float_param, int n_aero_rep_env_param,
                  int n_sub_model, int n_sub_model_int_param,
-                 int n_sub_model_float_param, int n_sub_model_env_param,
-                 int ncounters, int ntimers) {
+                 int n_sub_model_float_param, int n_sub_model_env_param) {
   // Create the SolverData object
   SolverData *sd = (SolverData *) malloc(sizeof(SolverData));
   if (sd == NULL) {
@@ -386,9 +385,6 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
   sd->timeCVode = 0.0;
   init_export_stats();
 #endif
-
-  sd->ncounters = ncounters;
-  sd->ntimers = ntimers;
 
 #ifdef DEBUG_CAMP_SOLVER_NEW
   printf("camp solver_run new  n_state_var %d, n_cells %d n_dep_var %d\n",
@@ -781,8 +777,7 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
                            double *next_time_step__s, int *Jac_eval_fails,
                            int *RHS_evals_total, int *Jac_evals_total,
                            double *RHS_time__s, double *Jac_time__s,
-                           double *max_loss_precision,
-                           int *counters, double *times
+                           double *max_loss_precision
                            ) {
   SolverData *sd = (SolverData *)solver_data;
   long int nst, nfe, nsetups, nje, nfeLS, nni, ncfn, netf, nge;
@@ -840,161 +835,46 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
   *max_loss_precision = 0.0;
 #endif
 
-  for(int i=0; i<sd->ncounters; i++){
-    counters[i]=0;
-  }
-  for(int i=0; i<sd->ntimers; i++){
-    times[i]=0.0;
-  }
-  //printf("sd->ntimers ncounters %d %d\n",sd->ntimers,sd->ncounters);
-
 #ifdef CAMP_USE_GPU
 #ifdef CAMP_DEBUG_GPU
   ModelDataCPU *mCPU = &(sd->mCPU);
   CVodeMem cv_mem = (CVodeMem) sd->cvode_mem;
   if(sd->use_cpu==1){
-    times[2]=sd->timeCVode;
-    times[13]=cv_mem->timecvStep;
     sd->timecvStep=cv_mem->timecvStep;
   }
   else{
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     solver_get_statistics_gpu(sd);
 #endif
-    ModelDataGPU *mGPU;
-    mGPU = sd->mGPU;
-    ModelDataVariable mdvCPU=mCPU->mdvCPU;
-    int i;
-    if(sd->ncounters>0){
-      i=0;
-#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
-      counters[i]=mCPU->mdvCPU.counterBCGInternal;
-      i++;
-#else
-      counters[i]=0;
-      i++;
-#endif
-      counters[i]=mCPU->counterBCG;
-      i++;
-      counters[i]=mCPU->countersolveCVODEGPU;
-      i++;
-#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
-      counters[i]=mCPU->mdvCPU.countercvStep;
-      i++;
-#else
-      counters[i]=0;
-      i++;
-#endif
-    }
-    if(sd->ntimers>0){
-      i=0;
-      times[i]=mCPU->timeBiConjGrad;
-      i++;
-      times[i]=mCPU->timeBiConjGradMemcpy;
-      i++;
-      times[i]=sd->timeCVode;
-      i++;
-#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
-      times[i]=mdvCPU.dtcudaDeviceCVode;
-      i++;
-      times[i]=mdvCPU.dtPostBCG;
-      i++;
-#else
-      times[i]=0.;
-      i++;
-      times[i]=0.;
-      i++;
-#endif
-      times[i]=0.;
-      i++;
-#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
-      times[i]=mdvCPU.timeNewtonIteration;
-      i++;
-      times[i]=mdvCPU.timeJac;
-      i++;
-      times[i]=mdvCPU.timelinsolsetup;
-      i++;
-      times[i]=mdvCPU.timecalc_Jac;
-      i++;
-      times[i]=0.;//mdvCPU.timeRXNJac;
-      i++;
-      times[i]=mdvCPU.timef;
-      i++;
-      times[i]=mdvCPU.timeguess_helper;
-      i++;
-#else
-      times[i]=0.;
-      i++;
-      times[i]=0.;
-      i++;
-      times[i]=0.;
-      i++;
-      times[i]=0.;
-      i++;
-      times[i]=0.;
-      i++;
-      times[i]=0.;
-      i++;
-      times[i]=0.;
-      i++;
-#endif
-      times[i]=sd->timecvStep;
-      i++;
-      //for(int i=0;i<sd->ntimers;i++)
-        //printf("times[%d]=%le\n",i,times[i]);
-    }
-    else{
-      printf("WARNING: In function solver_get_statistics trying to assign times "
-             "and counters profiling variables with ncounters || ntimers < 1");
-    }
-      solver_reset_statistics_gpu(sd);
+    solver_reset_statistics_gpu(sd);
   }
 #endif
 #endif
 }
 
-void solver_reset_statistics(void *solver_data, int *counters, double *times)
+void solver_reset_statistics(void *solver_data)
 {
   SolverData *sd = (SolverData *)solver_data;
   CVodeMem cv_mem = (CVodeMem) sd->cvode_mem;
-
-  for(int i=0; i<sd->ncounters; i++){
-    counters[i]=0;
-  }
-  for(int i=0; i<sd->ntimers; i++){
-    times[i]=0.;
-  }
-  //printf("sd->ntimers ncounters %d %d\n",sd->ntimers,sd->ncounters);
 #ifdef CAMP_USE_GPU
 #ifdef CAMP_DEBUG_GPU
   if(sd->use_cpu==1){
-    if(sd->ntimers>0 && sd->ncounters>0){
-      cv_mem->timecvStep=0.;
-      sd->timeCVode=0;
-    }
-    else{
-      printf("WARNING: In function solver_get_statistics trying to assign times "
-             "and counters profilign variables with ncounters || ntimers < 1");
-    }
+    cv_mem->timecvStep=0.;
+    sd->timeCVode=0;
   }
   else{
     ModelDataCPU *mCPU = &(sd->mCPU);
     ModelDataGPU *mGPU;
     mGPU = sd->mGPU;
       ModelDataVariable mdvCPU=mCPU->mdvCPU;
-      if(sd->ncounters>0){
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
         mCPU->mdvCPU.counterBCGInternal=0;
 #endif
         mCPU->counterBCG=0;
-        mCPU->countersolveCVODEGPU=0;
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
         mCPU->mdvCPU.countercvStep=0;
 #endif
-      }
-      if(sd->ntimers>0){
         mCPU->timeBiConjGrad=0.;
-        mCPU->timeBiConjGradMemcpy=0.;
         sd->timeCVode=0.;
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
         mdvCPU.dtcudaDeviceCVode=0.;
@@ -1007,18 +887,12 @@ void solver_reset_statistics(void *solver_data, int *counters, double *times)
         mdvCPU.timeguess_helper=0.;
 #endif
         sd->timecvStep=0.;
-      }
-      else{
-        printf("WARNING: In function solver_get_statistics trying to assign times "
-               "and counters profilign variables with ncounters || ntimers < 1");
-      }
     }
-  //printf("times[0] %le counters[1] %d\n",times[0],counters[1]);
 #endif
 #endif
 }
 
-void solver_export_statistics(void *solver_data, int *counters, double *times)
+void solver_export_statistics(void *solver_data)
 {
     SolverData *sd = (SolverData *)solver_data;
     export_stats(sd);

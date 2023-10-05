@@ -49,7 +49,7 @@ module camp_camp_solver_data
                     n_aero_phase_float_param, n_aero_rep, &
                     n_aero_rep_int_param, n_aero_rep_float_param, &
                     n_aero_rep_env_param, n_sub_model, n_sub_model_int_param,&
-                    n_sub_model_float_param, n_sub_model_env_param, ncounters, ntimers) bind (c)
+                    n_sub_model_float_param, n_sub_model_env_param) bind (c)
       use iso_c_binding
       !> Number of variables on the state array per grid cell
       !! (including const, PSSA, etc.)
@@ -90,9 +90,6 @@ module camp_camp_solver_data
       integer(kind=c_int), value :: n_sub_model_float_param
       !> Total number of environment-dependent parameters for all sub models
       integer(kind=c_int), value :: n_sub_model_env_param
-      !> Number of counter variables for profiling (Also equal to times variable)
-      integer(kind=c_int), value :: ncounters
-      integer(kind=c_int), value :: ntimers
     end function solver_new
 
     !> Set specie name
@@ -178,7 +175,7 @@ module camp_camp_solver_data
                     NLS_convergence_fails, DLS_Jac_evals, DLS_RHS_evals, &
                     last_time_step__s, next_time_step__s, Jac_eval_fails, &
                     RHS_evals_total, Jac_evals_total, RHS_time__s, &
-                    Jac_time__s, max_loss_precision, counters, times) bind (c)
+                    Jac_time__s, max_loss_precision) bind (c)
       use iso_c_binding
       !> Pointer to the solver data
       type(c_ptr), value :: solver_data
@@ -216,22 +213,16 @@ module camp_camp_solver_data
       type(c_ptr), value :: Jac_time__s
       !> Maximum loss of precision on last call the f()
       type(c_ptr), value :: max_loss_precision
-      type(c_ptr), value :: counters
-      type(c_ptr), value :: times
     end subroutine solver_get_statistics
 
-    subroutine solver_reset_statistics( solver_data, counters, times) bind (c)
+    subroutine solver_reset_statistics( solver_data) bind (c)
       use iso_c_binding
       type(c_ptr), value :: solver_data
-      type(c_ptr), value :: counters
-      type(c_ptr), value :: times
     end subroutine
 
-    subroutine solver_export_statistics( solver_data, counters, times) bind (c)
+    subroutine solver_export_statistics( solver_data) bind (c)
       use iso_c_binding
       type(c_ptr), value :: solver_data
-      type(c_ptr), value :: counters
-      type(c_ptr), value :: times
     end subroutine
 
     subroutine solver_export_state( solver_data) bind (c)
@@ -471,7 +462,7 @@ contains
   !> Initialize the solver
   subroutine initialize(this, var_type, abs_tol, mechanisms, aero_phases, &
           aero_reps, sub_models, rxn_phase, n_cells,&
-          spec_names, ncounters, ntimers)
+          spec_names)
 
     !> Solver data
     class(camp_solver_data_t), intent(inout) :: this
@@ -494,8 +485,6 @@ contains
     !! Use parameters in camp_rxn_data to specify phase:
     !! GAS_RXN, AERO_RXN, GAS_AERO_RXN
     integer(kind=i_kind), intent(in) :: rxn_phase
-    integer(kind=i_kind), intent(in) :: ncounters
-    integer(kind=i_kind), intent(in) :: ntimers
 
     ! Variable types
     integer(kind=c_int), pointer :: var_type_c(:)
@@ -674,9 +663,7 @@ contains
             n_sub_model,                       & ! # of sub models
             n_sub_model_int_param,             & ! # of sub model int params
             n_sub_model_float_param,           & ! # of sub model real params
-            n_sub_model_env_param,              & ! # of sub model env params
-            ncounters,              & ! # of profiling variables (Times and counters)
-            ntimers             & ! # of profiling variables (Times and counters)
+            n_sub_model_env_param              & ! # of sub model env params
             )
 
     ! Add all the condensed reaction data to the solver data block for
@@ -963,8 +950,6 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   subroutine get_base_rate(this, rate_constants)
-
-    !> Solver data
     class(camp_solver_data_t), intent(inout) :: this
     real(kind=dp), allocatable, intent(inout) :: rate_constants(:)
     real(kind=c_double), pointer :: rate_constants_c(:)
@@ -975,15 +960,12 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  !> Get solver statistics
-  subroutine get_solver_stats( this, solver_stats,counters,times)
+  subroutine get_solver_stats( this, solver_stats)
 
     !> Solver data
     class(camp_solver_data_t), intent(inout) :: this
     !> Solver statistics
     type(solver_stats_t), intent(inout), target :: solver_stats
-    integer,  target, intent(inout) :: counters(:)
-    real(kind=dp),target, intent(inout) :: times(:)
 
     call solver_get_statistics( &
             this%solver_c_ptr,                             & ! Solver data
@@ -1003,42 +985,28 @@ contains
             c_loc( solver_stats%Jac_evals_total       ),   & ! total Jac() calls
             c_loc( solver_stats%RHS_time__s           ),   & ! Compute time f() [s]
             c_loc( solver_stats%Jac_time__s           ),   & ! Compute time Jac() [s]
-            c_loc( solver_stats%max_loss_precision),& ! Maximum loss of precision
-            c_loc( counters),& !Profiling
-            c_loc( times)& !Profiling
+            c_loc( solver_stats%max_loss_precision) & ! Maximum loss of precision
     )
 
   end subroutine
 
   !> Get solver statistics
-  subroutine reset_solver_stats( this, solver_stats,counters,times)
+  subroutine reset_solver_stats( this, solver_stats)
 
     !> Solver data
     class(camp_solver_data_t), intent(inout) :: this
     !> Solver statistics
     type(solver_stats_t), intent(inout), target :: solver_stats
-    integer,  target, intent(inout) :: counters(:)
-    real(kind=dp),target, intent(inout) :: times(:)
 
-    call solver_reset_statistics( &
-            this%solver_c_ptr,                             & ! Solver data
-            c_loc( counters),& !Profiling
-            c_loc( times)& !Profiling
-            )
+    call solver_reset_statistics(this%solver_c_ptr )
 
   end subroutine
 
-  subroutine export_solver_stats( this, solver_stats,counters,times)
+  subroutine export_solver_stats( this, solver_stats)
     class(camp_solver_data_t), intent(inout) :: this
     type(solver_stats_t), intent(inout), target :: solver_stats
-    integer,  target, intent(inout) :: counters(:)
-    real(kind=dp),target, intent(inout) :: times(:)
 
-    call solver_export_statistics( &
-        this%solver_c_ptr,&
-        c_loc( counters),&
-        c_loc( times)&
-        )
+    call solver_export_statistics(this%solver_c_ptr)
 
   end subroutine
 
