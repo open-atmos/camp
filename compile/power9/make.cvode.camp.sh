@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-source remake.camp.sh
+source make.camp.sh
 compile_cvode(){
   curr_path=$(pwd)
   library_path="../../../"

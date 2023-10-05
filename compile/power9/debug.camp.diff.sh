@@ -2,7 +2,7 @@
 #todo: enable "USE_PRINT_ARRAYS"
 #todo: enable "USE_BCG"
 #todo: enable "CAMP_DEBUG_NVECTOR"
-source remake.camp.sh
+source make.camp.sh
 make_camp
 FILE=diff_TestMonarch.py
 cd ../../test/monarch

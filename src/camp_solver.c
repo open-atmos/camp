@@ -850,10 +850,11 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
 
 #ifdef CAMP_USE_GPU
 #ifdef CAMP_DEBUG_GPU
+  CVodeMem cv_mem = (CVodeMem) sd->cvode_mem;
   if(sd->use_cpu==1){
     if(sd->ntimers>0 && sd->ncounters>0){
-      CVodeGettimesCounters(sd->cvode_mem, &times[0], &counters[1]);
-      times[2]=sd->timeCVode;;
+      times[2]=sd->timeCVode;
+      times[13]=cv_mem->timecvStep;
     }
     else{
       printf("WARNING: In function solver_get_statistics trying to assign times "
@@ -960,6 +961,8 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
 void solver_reset_statistics(void *solver_data, int *counters, double *times)
 {
   SolverData *sd = (SolverData *)solver_data;
+  CVodeMem cv_mem = (CVodeMem) sd->cvode_mem;
+
   for(int i=0; i<sd->ncounters; i++){
     counters[i]=0;
   }
@@ -971,7 +974,7 @@ void solver_reset_statistics(void *solver_data, int *counters, double *times)
 #ifdef CAMP_DEBUG_GPU
   if(sd->use_cpu==1){
     if(sd->ntimers>0 && sd->ncounters>0){
-      CVodeResettimesCounters(sd->cvode_mem, &times[0], &counters[1]);
+      cv_mem->timecvStep=0.;
       sd->timeCVode=0;
     }
     else{
@@ -1138,7 +1141,6 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
   N_VLinearSum(1.0, md->J_deriv, 1.0, md->J_tmp2, md->J_tmp);
 
 #ifdef SWAP_DERIV_LOOP_CELLS
-
 #ifdef CAMP_DEBUG
   // Measure calc_deriv time execution
   clock_t start2 = clock();
