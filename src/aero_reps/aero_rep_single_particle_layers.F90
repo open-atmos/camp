@@ -294,8 +294,7 @@ contains
 
     ! Get the set of layers
     key_name = "layers"
-    ! QUESTION: do i need to change unique assert_msg number
-    call assert_msg(314392954, &
+    call assert_msg(314292954, &
                     this%property_set%get_property_t(key_name, layers), &
                     "Missing layers for single-particle aerosol "// &
                     "representation '"//this%rep_name//"'")
@@ -422,8 +421,8 @@ contains
     this%aero_layer_phase_set_names = ordered_phase_array(this)
  
     ! Set total phase and total number layers state
-    TOTAL_NUM_PHASES_ = SUM(NUM_PHASE)
-    TOTAL_NUM_LAYERS_ = size(NUM_PHASE)
+    TOTAL_NUM_PHASES_ = SUM(NUM_PHASE_)
+    TOTAL_NUM_LAYERS_ = size(NUM_PHASE_)
 
     ! Construct aero_phase pointer array for layers, phases only exist
     ! in the user specified layers
@@ -431,6 +430,7 @@ contains
     do i_aero = 1, size(aero_phase)
       do i_layer = 1, TOTAL_NUM_LAYERS_
         do i_phase = 1, TOTAL_NUM_PHASES_
+          ! must add and statement for layer = layer 
            if (aero_layer_phase_set_names(i_aero).eq.&
               aero_phase_set(i_phase)) then 
               aero_layer_phase_set(i_aero) = aero_phase_set(i_phase)
@@ -555,14 +555,17 @@ contains
     !> Aerosol-phase species name
     character(len=*), optional, intent(in) :: spec_name
 
-    integer(kind=i_kind) :: num_spec, i_part, i_spec, j_spec
-    integer(kind=i_kind) :: i_layer, i_phase
+    integer(kind=i_kind) :: num_spec 
+    integer(kind=i_kind) :: i_part, i_spec, j_spec
+    integer(kind=i_kind) :: i_layer, i_phase, i_phase_layer
     integer(kind=i_kind) :: curr_tracer_type
     character(len=:), allocatable :: curr_layer_name
     character(len=:), allocatable :: curr_phase_name
+    type(string_t), allocatable :: curr_phase_name_array(:)
     type(string_t), allocatable :: spec_names(:)
 
     ! Copy saved unique names when no filters are included
+    ! TODO: find out if needed - not in modal/binned
     if (.not. present(layer_name) .and. &
         .not. present(phase_name) .and. &
         .not. present(tracer_type) .and. &
@@ -572,6 +575,9 @@ contains
       return
     end if
 
+    ! Loop through layers and count number of unique names 
+    ! for one particle
+    ! Need to know how many spec in each layer
     ! Count the number of unique names
     num_spec = 0
     do i_layer = 1, TOTAL_NUM_LAYERS_
@@ -610,27 +616,32 @@ contains
       do i_layer = 1, TOTAL_NUM_LAYERS_
         do i_phase = 1, TOTAL_NUM_PHASE_
           curr_layer_name = this%aero_layer_set_names(i_layer)
-          curr_phase_name = this%aero_phase(i_phase)%val%name()
-          if (present(phase_name).and.present(layer_name)) then
-            if (phase_name.ne.curr_phase_name).or. &
-               (layer_name.ne.curr_layer_name) cycle
-          end if
-          spec_names = this%aero_phase(i_phase)%val%get_species_names()
-          num_spec = this%aero_phase(i_phase)%val%size()
-          do j_spec = 1, num_spec
-            curr_tracer_type = &
-                    this%aero_phase(i_phase)%val%get_species_type( &
-                    spec_names(j_spec)%string)
-            if (present(spec_name)) then
-              if (spec_name.ne.spec_names(j_spec)%string) cycle
+          curr_phase_name_array = &
+               (this%aero_phase(LAYER_STATE_ID_(i_layer))%val%name(): &
+               this%aero_phase(LAYER_STATE_ID_(i_layer+1))%val%name())
+          do i_phase_layer = 1, size(curr_phase_name_array)
+            curr_phase_name = curr_phase_name_array(i_phase_layer)
+            if (present(phase_name).and.present(layer_name)) then
+              if (phase_name.ne.curr_phase_name).or. &
+                 (layer_name.ne.curr_layer_name) cycle
             end if
-            if (present(tracer_type)) then
-              if (tracer_type.ne.curr_tracer_type) cycle
-            end if
-            unique_names(i_spec)%string = 'P'//trim(integer_to_string(i_part))//&
-                    '.'//curr_layer_name//'.'//curr_phase_name//'.'//&
-                    spec_names(j_spec)%string
-            i_spec = i_spec + 1
+            spec_names = this%aero_phase(i_phase)%val%get_species_names()
+            num_spec = this%aero_phase(i_phase)%val%size()
+            do j_spec = 1, num_spec
+              curr_tracer_type = &
+                      this%aero_phase(i_phase)%val%get_species_type( &
+                      spec_names(j_spec)%string)
+              if (present(spec_name)) then
+                if (spec_name.ne.spec_names(j_spec)%string) cycle
+              end if
+              if (present(tracer_type)) then
+                if (tracer_type.ne.curr_tracer_type) cycle
+              end if
+              unique_names(i_spec)%string = 'P'//trim(integer_to_string(i_part))//&
+                      '.'//curr_layer_name//'.'//curr_phase_name//'.'//&
+                      spec_names(j_spec)%string
+              i_spec = i_spec + 1
+            end do
           end do
         end do
       end do
