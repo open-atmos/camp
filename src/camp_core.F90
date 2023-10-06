@@ -188,7 +188,6 @@ module camp_camp_core
     procedure :: get_abs_tol
     procedure :: get_solver_stats
     procedure :: export_solver_stats
-    procedure :: reset_solver_stats
     procedure :: export_solver_state
     !> Get a new model state variable
     procedure :: new_state_one_cell
@@ -1529,36 +1528,6 @@ contains
     end if
 
     call solver%get_solver_stats( solver_stats)
-
-  end subroutine
-
-  subroutine reset_solver_stats(this, rxn_phase)
-    use camp_rxn_data
-    use iso_c_binding
-
-    class(camp_core_t), intent(inout) :: this
-    integer(kind=i_kind), intent(in), optional :: rxn_phase
-    integer(kind=i_kind) :: phase
-    type(camp_solver_data_t), pointer :: solver
-
-    if (present(rxn_phase)) then
-      phase = rxn_phase
-    else
-      phase = GAS_AERO_RXN
-    end if
-
-    if (phase.eq.GAS_RXN) then
-      solver => this%solver_data_gas
-    else if (phase.eq.AERO_RXN) then
-      solver => this%solver_data_aero
-    else if (phase.eq.GAS_AERO_RXN) then
-      solver => this%solver_data_gas_aero
-    else
-      call die_msg(704896254, "Invalid rxn phase specified for chemistry "// &
-              "solver: "//to_string(phase))
-    end if
-
-    call solver%reset_solver_stats()
 
   end subroutine
 

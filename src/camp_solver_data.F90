@@ -215,11 +215,6 @@ module camp_camp_solver_data
       type(c_ptr), value :: max_loss_precision
     end subroutine solver_get_statistics
 
-    subroutine solver_reset_statistics( solver_data) bind (c)
-      use iso_c_binding
-      type(c_ptr), value :: solver_data
-    end subroutine
-
     subroutine solver_export_statistics( solver_data) bind (c)
       use iso_c_binding
       type(c_ptr), value :: solver_data
@@ -428,7 +423,6 @@ module camp_camp_solver_data
     procedure:: get_solver_stats
     procedure:: export_solver_stats
     procedure:: export_solver_state
-    procedure:: reset_solver_stats
     !> Checks whether a solver is available
     procedure :: is_solver_available
     !> Print the solver data
@@ -988,11 +982,6 @@ contains
             c_loc( solver_stats%max_loss_precision) & ! Maximum loss of precision
     )
 
-  end subroutine
-
-  subroutine reset_solver_stats( this)
-    class(camp_solver_data_t), intent(inout) :: this
-    call solver_reset_statistics(this%solver_c_ptr )
   end subroutine
 
   subroutine export_solver_stats( this)

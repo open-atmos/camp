@@ -180,12 +180,10 @@ program mock_monarch_t
          conv,              &
          i_hour,&
          NUM_TIME_STEP,&
-          DIFF_CELLS,i_time)
+         DIFF_CELLS,i_time)
     curr_time = curr_time + TIME_STEP
-#ifdef CAMP_DEBUG_GPU
-      call camp_interface%camp_core%export_solver_stats()
-      call camp_interface%camp_core%reset_solver_stats()
-#endif
+    !TODO REMOVE AFTER CHECK STD INCREMENTALLY WORKS FINE:
+    call camp_interface%camp_core%export_solver_stats() !used for calculate std
     end do
   end if
 

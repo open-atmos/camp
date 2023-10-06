@@ -887,6 +887,7 @@ void solver_export_statistics(void *solver_data)
       sd->timecvStep=cv_mem->timecvStep;
     }
     export_stats(sd);
+    solver_reset_statistics(sd);
 }
 
 void solver_export_state(void *solver_data)

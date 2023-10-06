@@ -40,7 +40,6 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
                            int *RHS_evals_total, int *Jac_evals_total,
                            double *RHS_time__s, double *Jac_time__s,
                            double *max_loss_precision);
-void solver_reset_statistics(void *solver_data);
 void solver_export_statistics(void *solver_data);
 void solver_export_state(void *solver_data);
 void solver_free(void *solver_data);

@@ -40,6 +40,7 @@ class TestMonarch:
     self.is_import = False
     self.profileCuda = ""
     self.is_out = True
+    self.is_std = True
     # Auxiliary
     self.is_start_auxiliary_attributes = True
     self.sbatch_job_id = ""
