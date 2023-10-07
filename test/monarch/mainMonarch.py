@@ -71,7 +71,7 @@ def write_camp_config_file(conf):
     else:
       file1.write("USE_CPU=OFF\n")
     file1.write(str(conf.nGPUs) + "\n")
-    file1.write("IS_EXPORT_STATE=ON\n")
+    file1.write("IS_EXPORT_STATS=ON\n")
     file1.close()
   except Exception as e:
     print("write_camp_config_file fails", e)
@@ -154,10 +154,10 @@ def run(conf):
     os.rename("out/stats.csv", data_path)
   nRows_csv = conf.timeSteps * conf.nCells * conf.mpiProcesses
   df = pd_read_csv(data_path, nrows=nRows_csv)
-  data = df.to_dict('list')
-  y_key_words = conf.plotYKey.split()
-  y_key = y_key_words[-1]
-  data = data[y_key]
+  #data = df.to_dict('list')
+  print("df",df)
+  data = df.values
+  print("df.values",data)
   return data
 
 
@@ -198,14 +198,11 @@ def run_cases(conf):
         optimData = run(conf)
         if conf.is_out:
           math_functions.check_NRMSE(conf.outBase, conf.outOptim, conf.nCellsProcesses)
-        datay = [0.] * len(optimData)
-        for i in range(len(optimData)):
-          datay[i] = baseData[i] / optimData[i]
-        if len(conf.cells) > 1 or conf.plotXKey == "GPUs":
-          datacases.append(np.mean(datay))
-          stdCases.append(np.std(datay))
-        else:
-          datacases.append([elem for elem in datay])
+        print("baseData",baseData)
+        mean = baseData[0,0]/optimData[0,0]
+        std = baseData[0,1]/optimData[0,1]
+        datacases.append(mean)
+        stdCases.append(std)
   return datacases, stdCases
 
 
@@ -215,12 +212,8 @@ def run_cells(conf):
   for i in range(len(conf.cells)):
     conf.nCellsProcesses = conf.cells[i]
     datacases, stdCases = run_cases(conf)
-    if len(conf.cells) > 1 or conf.plotXKey == "GPUs":
-      datacells.append(datacases)
-      stdCells.append(stdCases)
-    else:
-      datacells = datacases
-      stdCells = stdCases
+    datacells.append(datacases)
+    stdCells.append(stdCases)
   if len(conf.cells) > 1:
     datacellsTranspose = np.transpose(datacells)
     datacells = datacellsTranspose.tolist()
@@ -326,12 +319,7 @@ def plot_cases(conf):
     plot_x_key = "Timesteps"
   namex = plot_x_key
   datay = conf.datacolumns
-  if conf.allocatedNodes != 1:
-    print("Nodes:", conf.allocatedNodes)
-  if namex == "Timesteps":
-    print("Mean:", format(np.mean(datay), '.2e'), "Std", format(np.std(datay), '.2e'))
-  else:
-    print("Std", conf.stdColumns)
+  print("Std", conf.stdColumns)
   print(namex, ":", datax[-1])
   if conf.legend:
     print("plotTitle: ", conf.plotTitle, " legend:", conf.legend)
@@ -344,7 +332,7 @@ def run_main(conf):
   if conf.is_out:
     if len(conf.mpiProcessesCaseOptimList) > 1 or conf.mpiProcessesCaseBase != conf.mpiProcessesCaseOptimList[0]:
       print(
-        "Disabled out error check because number of processes should be the same for accuracy calculation, only speedup can use different number")
+        "Disabled out error check because number of processes should be the same for calculate accuracy, only speedup can use different number")
       conf.is_out = False
     if "Realistic" in conf.diffCellsL:
       conf.diffCellsL = ["Ideal"]

@@ -33,10 +33,7 @@ def all_timesteps():
   # conf.casesOptim.append("CPU One-cell")
   # conf.casesOptim.append("CPU EBI")
   conf.casesOptim.append("GPU BDF")
-  # conf.plotYKey = "Speedup timeCVode"
-  conf.plotYKey = "Speedup timecvStep"
-  # conf.plotYKey = "Speedup countercvStep"
-  # conf.plotYKey = "Speedup device timecvStep"
+  conf.plotYKey = "Speedup"
   # conf.plotXKey = "GPUs"
 
   run_main(conf)

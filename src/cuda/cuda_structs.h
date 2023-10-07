@@ -69,7 +69,6 @@ typedef struct {
 #ifdef ODE_WARNING
     int cv_nhnil;            /* number of messages issued to the user that t + h == t for the next iternal step            */
 #endif
-#ifdef CAMP_DEBUG_GPU
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     int countercvStep;
     int counterBCGInternal;
@@ -83,7 +82,6 @@ typedef struct {
     double dtBCG;
     double dtcudaDeviceCVode;
     double dtPostBCG;
-#endif
 #endif
 }ModelDataVariable; //variables to pass between gpu and cpu (different data between cells)
 
@@ -107,34 +105,6 @@ typedef struct{
   ModelDataVariable mdvCPU; //cpu equivalent to gpu
   cudaStream_t *streams;
 #ifdef CAMP_DEBUG_GPU
-  int counterNewtonIt;
-  int counterLinSolSetup;
-  int counterLinSolSolve;
-  int countercvStep;
-  int counterDerivNewton;
-  int counterBCG;
-  int counterDerivSolve;
-  double timeNewtonIt;
-  double timeLinSolSetup;
-  double timeLinSolSolve;
-  double timeDerivNewton;
-  double timeBiConjGrad;
-  double timeDerivSolve;
-  double timeJac;
-  cudaEvent_t startDerivNewton;
-  cudaEvent_t startDerivSolve;
-  cudaEvent_t startLinSolSetup;
-  cudaEvent_t startLinSolSolve;
-  cudaEvent_t startNewtonIt;
-  cudaEvent_t startBCG;
-  cudaEvent_t startBCGMemcpy;
-  cudaEvent_t stopDerivNewton;
-  cudaEvent_t stopDerivSolve;
-  cudaEvent_t stopLinSolSetup;
-  cudaEvent_t stopLinSolSolve;
-  cudaEvent_t stopNewtonIt;
-  cudaEvent_t stopBCGMemcpy;
-  cudaEvent_t stopBCG;
   cudaEvent_t startcvStep;
   cudaEvent_t stopcvStep;
 #endif

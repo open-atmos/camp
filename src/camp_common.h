@@ -264,10 +264,10 @@ typedef struct {
   double t_final;
 
 #ifdef CAMP_DEBUG_GPU
-  int counterBCG;
-  int counterLS;
+  unsigned int iTimeCVode;
+  double meanTimeCVode;
+  double varianceTimeCVode;
   double timeCVode;
-  double timecvStep;
 #endif
 
 #ifdef FAILURE_DETAIL
@@ -282,7 +282,7 @@ typedef struct {
   //get_camp_config_variables
   int use_cpu;
   int nDevices;
-  bool is_export_state;
+  bool is_export_stats;
 
   void *cvode_mem;       // CVodeMem object
   ModelData model_data;  // Model data (used during initialization and solving)

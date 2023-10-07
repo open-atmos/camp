@@ -92,7 +92,7 @@ void init_export_stats(){
     printf("export_stats enabled\n");
     FILE *fptr;
     fptr = fopen(file_path,"w");
-    fprintf(fptr, "timecvStep,timeCVode\n");
+    fprintf(fptr, "Mean time cvStep,STD time cvStep,Mean TimeCVode,STD time CVode\n");
     fclose(fptr);
   }
 }
@@ -103,8 +103,11 @@ void export_stats(SolverData *sd){
   if (rank == 0) {
     FILE *fptr;
     fptr = fopen("out/stats.csv", "a");
-    fprintf(fptr, "%.17le,",sd->timecvStep);
-    fprintf(fptr, "%.17le",sd->timeCVode);
+    CVodeMem cv_mem = (CVodeMem) sd->cvode_mem;
+    fprintf(fptr, "%.17le,",cv_mem->meanTimecvStep);
+    fprintf(fptr, "%.17le,",sqrt(cv_mem->varianceTimecvStep/cv_mem->iTimecvStep));
+    fprintf(fptr, "%.17le,",sd->meanTimeCVode);
+    fprintf(fptr, "%.17le",sqrt(sd->varianceTimeCVode/sd->iTimeCVode));
     fprintf(fptr, "\n");
     fclose(fptr);
   }
@@ -128,7 +131,7 @@ void print_int(int *x, int len, const char *s){
 
 void get_camp_config_variables(SolverData *sd){
   sd->use_cpu=1;
-  sd->is_export_state=0;
+  sd->is_export_stats=0;
   FILE *fp;
   char buff[255];
   char path[] = "settings/config_variables_c_solver.txt";
@@ -141,7 +144,7 @@ void get_camp_config_variables(SolverData *sd){
       printf("getcwd() error");
       exit(0);
     }
-    printf("Could not open file %s, setting default values: is_cpu=ON is_export_state=OFF\n",path);
+    printf("Could not open file %s, setting default values: is_cpu=ON is_export_stats=OFF\n",path);
   }else{
     fscanf(fp, "%s", buff);
     if(strstr(buff,"USE_CPU=OFF")!=NULL){
@@ -149,8 +152,8 @@ void get_camp_config_variables(SolverData *sd){
     }
     fscanf(fp, "%d", &sd->nDevices);
     fscanf(fp, "%s", buff);
-    if(strstr(buff,"IS_EXPORT_STATE=ON")!=NULL){
-      sd->is_export_state=1;
+    if(strstr(buff,"IS_EXPORT_STATS=ON")!=NULL){
+      sd->is_export_stats=1;
     }
     fclose(fp);
   }

@@ -711,16 +711,10 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     cudaEventSynchronize(mCPU->stopcvStep);
     float mscvStep = 0.0;
     cudaEventElapsedTime(&mscvStep, mCPU->startcvStep, mCPU->stopcvStep);
-    sd->timecvStep+= mscvStep/1000;
-    //printf("sd->timecvStep %lf\n",sd->timecvStep);
+    cv_mem->timecvStep+= mscvStep/1000;
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     cudaMemcpy(&mCPU->mdvCPU, mGPU->mdvo, sizeof(ModelDataVariable), cudaMemcpyDeviceToHost);
-    mCPU->timeBiConjGrad=sd->timecvStep*mCPU->mdvCPU.dtBCG/mCPU->mdvCPU.dtcudaDeviceCVode;
-    mCPU->counterBCG+= mCPU->mdvCPU.counterBCG;
     //printf("mCPU->mdvCPU.dtcudaDeviceCVode %lf\n",mCPU->mdvCPU.dtcudaDeviceCVode);
-#else
-    mCPU->timeBiConjGrad=0.;
-    mCPU->counterBCG+=0;
 #endif
 #endif
   istate = CV_SUCCESS;
@@ -741,15 +735,4 @@ void solver_get_statistics_gpu(SolverData *sd){
   ModelDataGPU *mGPU = sd->mGPU;
   ModelDataCPU *mCPU = &(sd->mCPU);
   cudaMemcpy(&mCPU->mdvCPU,mGPU->mdvo,sizeof(ModelDataVariable),cudaMemcpyDeviceToHost);
-}
-
-void solver_reset_statistics_gpu(SolverData *sd){
-  ModelDataGPU *mGPU = sd->mGPU;
-  ModelDataCPU *mCPU = &(sd->mCPU);
-  mGPU = sd->mGPU;
-#ifdef CAMP_DEBUG_GPU
-  for (int i = 0; i < mGPU->n_cells; i++){
-    cudaMemcpyAsync(&mGPU->sCells[i], &mCPU->mdvCPU, sizeof(ModelDataVariable), cudaMemcpyHostToDevice,0);
-  }
-#endif
 }

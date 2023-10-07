@@ -234,37 +234,8 @@ void constructor_cvode_gpu(CVodeMem cv_mem, SolverData *sd){
   solver_init_int_double_cuda_cvode(sd);
   mGPU = sd->mGPU;
 #ifdef CAMP_DEBUG_GPU
-  mCPU->counterNewtonIt=0;
-  mCPU->counterLinSolSetup=0;
-  mCPU->counterLinSolSolve=0;
-  mCPU->counterDerivNewton=0;
-  mCPU->counterBCG=0;
-  mCPU->counterDerivSolve=0;
-
-  mCPU->timeNewtonIt=0.;
-  mCPU->timeLinSolSetup=0.;
-  mCPU->timeLinSolSolve=0.;
-  sd->timecvStep=0.;
-  mCPU->timeDerivNewton=0.;
-  mCPU->timeBiConjGrad=0.;
-  mCPU->timeDerivSolve=0.;
-
-  cudaEventCreate(&mCPU->startDerivNewton);
-  cudaEventCreate(&mCPU->startDerivSolve);
-  cudaEventCreate(&mCPU->startLinSolSetup);
-  cudaEventCreate(&mCPU->startLinSolSolve);
-  cudaEventCreate(&mCPU->startNewtonIt);
   cudaEventCreate(&mCPU->startcvStep);
-  cudaEventCreate(&mCPU->startBCG);
-  cudaEventCreate(&mCPU->startBCGMemcpy);
-  cudaEventCreate(&mCPU->stopDerivNewton);
-  cudaEventCreate(&mCPU->stopDerivSolve);
-  cudaEventCreate(&mCPU->stopLinSolSetup);
-  cudaEventCreate(&mCPU->stopLinSolSolve);
-  cudaEventCreate(&mCPU->stopNewtonIt);
   cudaEventCreate(&mCPU->stopcvStep);
-  cudaEventCreate(&mCPU->stopBCG);
-  cudaEventCreate(&mCPU->stopBCGMemcpy);
 #endif
   mGPU = sd->mGPU;
   mCPU->nnz = SM_NNZ_S(J);
@@ -346,10 +317,6 @@ void constructor_cvode_gpu(CVodeMem cv_mem, SolverData *sd){
 #endif
   mCPU->mdvCPU.nstlj = 0;
   swapCSC_CSR_ODE_if_enabled(sd);
-  if(cv_mem->cv_sldeton){
-    printf("ERROR: cudaDevicecvBDFStab is pending to implement "
-           "(disabled by default on CAMP)\n");
-    exit(0); }
 }
 
 void free_gpu_cu(SolverData *sd) {

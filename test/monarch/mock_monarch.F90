@@ -182,9 +182,8 @@ program mock_monarch_t
          NUM_TIME_STEP,&
          DIFF_CELLS,i_time)
     curr_time = curr_time + TIME_STEP
-    !TODO REMOVE AFTER CHECK STD INCREMENTALLY WORKS FINE:
-    call camp_interface%camp_core%export_solver_stats() !used for calculate std
     end do
+    call camp_interface%camp_core%export_solver_stats()
   end if
 
   if (camp_mpi_rank()==0) then

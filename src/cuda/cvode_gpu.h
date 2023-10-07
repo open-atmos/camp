@@ -13,7 +13,6 @@ void constructor_cvode_gpu(CVodeMem cv_mem, SolverData *sd);
 int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
                realtype *tret, int itask, SolverData *sd);
 void solver_get_statistics_gpu(SolverData *sd);
-void solver_reset_statistics_gpu(SolverData *sd);
 void free_gpu_cu(SolverData *sd);
 
 #define HANDLE_ERROR( err ) (HandleError( err, __FILE__, __LINE__ ))

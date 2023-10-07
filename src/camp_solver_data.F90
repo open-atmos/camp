@@ -215,12 +215,17 @@ module camp_camp_solver_data
       type(c_ptr), value :: max_loss_precision
     end subroutine solver_get_statistics
 
-    subroutine solver_export_statistics( solver_data) bind (c)
+    subroutine export_solver_state( solver_data) bind (c)
       use iso_c_binding
       type(c_ptr), value :: solver_data
     end subroutine
 
-    subroutine solver_export_state( solver_data) bind (c)
+    subroutine mean_solver_stats( solver_data) bind (c)
+      use iso_c_binding
+      type(c_ptr), value :: solver_data
+    end subroutine
+
+    subroutine export_solver_stats( solver_data) bind (c)
       use iso_c_binding
       type(c_ptr), value :: solver_data
     end subroutine
@@ -421,8 +426,9 @@ module camp_camp_solver_data
     procedure :: solve
     procedure :: get_base_rate
     procedure:: get_solver_stats
-    procedure:: export_solver_stats
-    procedure:: export_solver_state
+    procedure:: export_solver_data_state
+    procedure:: mean_solver_data_stats
+    procedure:: export_solver_data_stats
     !> Checks whether a solver is available
     procedure :: is_solver_available
     !> Print the solver data
@@ -984,14 +990,19 @@ contains
 
   end subroutine
 
-  subroutine export_solver_stats( this)
+  subroutine export_solver_data_state( this)
     class(camp_solver_data_t), intent(inout) :: this
-    call solver_export_statistics(this%solver_c_ptr)
+    call export_solver_state(this%solver_c_ptr)
   end subroutine
 
-  subroutine export_solver_state( this)
+  subroutine mean_solver_data_stats( this)
     class(camp_solver_data_t), intent(inout) :: this
-    call solver_export_state(this%solver_c_ptr)
+    call mean_solver_stats(this%solver_c_ptr)
+  end subroutine
+
+  subroutine export_solver_data_stats( this)
+    class(camp_solver_data_t), intent(inout) :: this
+    call export_solver_stats(this%solver_c_ptr)
   end subroutine
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

@@ -380,9 +380,10 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
 #endif
 
 #ifdef CAMP_DEBUG_GPU
-  sd->counterBCG = 0;
-  sd->counterLS = 0;
-  sd->timeCVode = 0.0;
+  sd->iTimeCVode = 1;
+  sd->meanTimeCVode = 0.;
+  sd->varianceTimeCVode = 0.;
+  sd->timeCVode = 0.;
   init_export_stats();
 #endif
 
@@ -512,7 +513,7 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
       constructor_cvode_gpu(sd->cvode_mem, sd);
   }
 #endif
-  if(sd->is_export_state)init_export_state(sd);
+  if(sd->is_export_stats)init_export_state(sd);
 #ifdef FAILURE_DETAIL
   // Set a custom error handling function
   flag = CVodeSetErrHandlerFn(sd->cvode_mem, error_handler, (void *)sd);
@@ -834,66 +835,43 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
   *Jac_time__s = 0.0;
   *max_loss_precision = 0.0;
 #endif
-
 }
 
-void solver_reset_statistics(void *solver_data)
-{
+void export_solver_state(void *solver_data){
   SolverData *sd = (SolverData *)solver_data;
-  CVodeMem cv_mem = (CVodeMem) sd->cvode_mem;
-#ifdef CAMP_USE_GPU
-#ifdef CAMP_DEBUG_GPU
-  if(sd->use_cpu==1){
-    cv_mem->timecvStep=0.;
-    sd->timeCVode=0;
+  if(sd->is_export_stats) {
+    export_state(sd);
   }
-  else{
-    ModelDataCPU *mCPU = &(sd->mCPU);
-    ModelDataGPU *mGPU;
-    mGPU = sd->mGPU;
-    ModelDataVariable mdvCPU=mCPU->mdvCPU;
-    sd->timecvStep=0.;
-    sd->timeCVode=0.;
-    mCPU->counterBCG=0;
-    mCPU->timeBiConjGrad=0.;
-#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
-    mCPU->mdvCPU.counterBCGInternal=0;
-    mCPU->mdvCPU.countercvStep=0;
-    mdvCPU.dtcudaDeviceCVode=0.;
-    mdvCPU.dtPostBCG=0.;
-    mdvCPU.timeNewtonIteration=0.;
-    mdvCPU.timeJac=0.;
-    mdvCPU.timelinsolsetup=0.;
-    mdvCPU.timecalc_Jac=0.;
-    mdvCPU.timef=0.;
-    mdvCPU.timeguess_helper=0.;
-#endif
-#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
-    solver_reset_statistics_gpu(sd);
-#endif
-    }
-#endif
-#endif
 }
 
-void solver_export_statistics(void *solver_data)
-{
-    SolverData *sd = (SolverData *)solver_data;
+void mean_solver_stats(void *solver_data){
+  SolverData *sd = (SolverData *)solver_data;
+  if(sd->is_export_stats) {
+#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
+    solver_mean_statistics_gpu(sd);
+#endif
     CVodeMem cv_mem = (CVodeMem) sd->cvode_mem;
+    double delta = cv_mem->timecvStep - cv_mem->meanTimecvStep;
+    cv_mem->meanTimecvStep+=delta/(cv_mem->iTimecvStep);
+    cv_mem->iTimecvStep++;
+    cv_mem->varianceTimecvStep+=delta * (cv_mem->timecvStep - cv_mem->meanTimecvStep);
+    cv_mem->timecvStep=0.;
+    delta = sd->timeCVode - sd->meanTimeCVode;
+    sd->meanTimeCVode+=delta/(sd->iTimeCVode);
+    sd->iTimeCVode++;
+    sd->varianceTimeCVode+=delta * (sd->timeCVode - sd->meanTimeCVode);
+    sd->timeCVode=0.;
+  }
+}
+
+void export_solver_stats(void *solver_data){
+  SolverData *sd = (SolverData *)solver_data;
+  if(sd->is_export_stats) {
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     solver_get_statistics_gpu(sd);
 #endif
-    if(sd->use_cpu==1){
-      sd->timecvStep=cv_mem->timecvStep;
-    }
     export_stats(sd);
-    solver_reset_statistics(sd);
-}
-
-void solver_export_state(void *solver_data)
-{
-    SolverData *sd = (SolverData *)solver_data;
-    if(sd->is_export_state)export_state(sd);
+  }
 }
 
 #ifdef CAMP_USE_SUNDIALS
@@ -1937,7 +1915,7 @@ void solver_free(void *solver_data) {
   SolverData *sd = (SolverData *)solver_data;
   ModelData *md = &(sd->model_data);
 
-  if(sd->is_export_state)join_export_state();
+  if(sd->is_export_stats)join_export_state();
 
 #ifdef CAMP_USE_SUNDIALS
   // free the SUNDIALS solver
