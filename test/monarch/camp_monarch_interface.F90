@@ -395,7 +395,6 @@ contains
           end do
         end do
       end do
-      call this%camp_core%mean_solver_stats()
     else
       do r=1, size(this%camp_state%state_var)
         this%camp_state%state_var(r) = 0.
@@ -448,7 +447,6 @@ contains
           end do
         end do
       end do
-      call this%camp_core%mean_solver_stats()
     end if
 
   if(this%output_file_title=="cb05_paperV2") then

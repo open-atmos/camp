@@ -220,11 +220,6 @@ module camp_camp_solver_data
       type(c_ptr), value :: solver_data
     end subroutine
 
-    subroutine mean_solver_stats( solver_data) bind (c)
-      use iso_c_binding
-      type(c_ptr), value :: solver_data
-    end subroutine
-
     subroutine export_solver_stats( solver_data) bind (c)
       use iso_c_binding
       type(c_ptr), value :: solver_data
@@ -427,7 +422,6 @@ module camp_camp_solver_data
     procedure :: get_base_rate
     procedure:: get_solver_stats
     procedure:: export_solver_data_state
-    procedure:: mean_solver_data_stats
     procedure:: export_solver_data_stats
     !> Checks whether a solver is available
     procedure :: is_solver_available
@@ -993,11 +987,6 @@ contains
   subroutine export_solver_data_state( this)
     class(camp_solver_data_t), intent(inout) :: this
     call export_solver_state(this%solver_c_ptr)
-  end subroutine
-
-  subroutine mean_solver_data_stats( this)
-    class(camp_solver_data_t), intent(inout) :: this
-    call mean_solver_stats(this%solver_c_ptr)
   end subroutine
 
   subroutine export_solver_data_stats( this)

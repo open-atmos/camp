@@ -40,14 +40,12 @@ class TestMonarch:
     self.is_import = False
     self.profileCuda = ""
     self.is_out = True
-    self.is_std = True
     # Auxiliary
     self.is_start_auxiliary_attributes = True
     self.sbatch_job_id = ""
     self.outBase = []
     self.outOptim = []
     self.datacolumns = []
-    self.stdColumns = []
     self.exportPath = "exports"
     self.legend = []
     self.results_file = "_solver_stats.csv"
@@ -154,10 +152,10 @@ def run(conf):
     os.rename("out/stats.csv", data_path)
   nRows_csv = conf.timeSteps * conf.nCells * conf.mpiProcesses
   df = pd_read_csv(data_path, nrows=nRows_csv)
-  #data = df.to_dict('list')
-  print("df",df)
-  data = df.values
-  print("df.values",data)
+  data = df.to_dict('list')
+  y_key_words = conf.plotYKey.split()
+  y_key = y_key_words[-1]
+  data = data[y_key][0]
   return data
 
 
@@ -181,7 +179,6 @@ def run_cases(conf):
 
   # OptimCases
   datacases = []
-  stdCases = []
   for nGPUs in conf.nGPUsCaseOptimList:
     conf.nGPUs = nGPUs
     for mpiProcessesCaseOptim in conf.mpiProcessesCaseOptimList:
@@ -198,38 +195,29 @@ def run_cases(conf):
         optimData = run(conf)
         if conf.is_out:
           math_functions.check_NRMSE(conf.outBase, conf.outOptim, conf.nCellsProcesses)
-        print("baseData",baseData)
-        mean = baseData[0,0]/optimData[0,0]
-        std = baseData[0,1]/optimData[0,1]
-        datacases.append(mean)
-        stdCases.append(std)
-  return datacases, stdCases
+        datay = baseData / optimData
+        datacases.append(datay)
+  return datacases
 
 
 def run_cells(conf):
   datacells = []
-  stdCells = []
   for i in range(len(conf.cells)):
     conf.nCellsProcesses = conf.cells[i]
-    datacases, stdCases = run_cases(conf)
+    datacases = run_cases(conf)
     datacells.append(datacases)
-    stdCells.append(stdCases)
   if len(conf.cells) > 1:
     datacellsTranspose = np.transpose(datacells)
     datacells = datacellsTranspose.tolist()
-    stdCellsTranspose = np.transpose(stdCells)
-    stdCells = stdCellsTranspose.tolist()
-  return datacells, stdCells
+  return datacells
 
 
 def run_diffCells(conf):
   conf.datacolumns = []
-  conf.stdColumns = []
   for i, diff_cells in enumerate(conf.diffCellsL):
     conf.diffCells = diff_cells
-    datacells, stdcells = run_cells(conf)
+    datacells = run_cells(conf)
     conf.datacolumns += datacells
-    conf.stdColumns += stdcells
 
 
 def plot_cases(conf):
@@ -319,7 +307,6 @@ def plot_cases(conf):
     plot_x_key = "Timesteps"
   namex = plot_x_key
   datay = conf.datacolumns
-  print("Std", conf.stdColumns)
   print(namex, ":", datax[-1])
   if conf.legend:
     print("plotTitle: ", conf.plotTitle, " legend:", conf.legend)

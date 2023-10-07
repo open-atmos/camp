@@ -92,7 +92,7 @@ void init_export_stats(){
     printf("export_stats enabled\n");
     FILE *fptr;
     fptr = fopen(file_path,"w");
-    fprintf(fptr, "Mean time cvStep,STD time cvStep,Mean TimeCVode,STD time CVode\n");
+    fprintf(fptr, "timecvStep,timeCVode\n");
     fclose(fptr);
   }
 }
@@ -104,10 +104,8 @@ void export_stats(SolverData *sd){
     FILE *fptr;
     fptr = fopen("out/stats.csv", "a");
     CVodeMem cv_mem = (CVodeMem) sd->cvode_mem;
-    fprintf(fptr, "%.17le,",cv_mem->meanTimecvStep);
-    fprintf(fptr, "%.17le,",sqrt(cv_mem->varianceTimecvStep/cv_mem->iTimecvStep));
-    fprintf(fptr, "%.17le,",sd->meanTimeCVode);
-    fprintf(fptr, "%.17le",sqrt(sd->varianceTimeCVode/sd->iTimeCVode));
+    fprintf(fptr, "%.17le,",cv_mem->timecvStep);
+    fprintf(fptr, "%.17le,",sd->timeCVode);
     fprintf(fptr, "\n");
     fclose(fptr);
   }

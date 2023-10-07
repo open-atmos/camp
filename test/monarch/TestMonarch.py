@@ -17,7 +17,7 @@ def all_timesteps():
   conf.profileCuda = ""
   # conf.profileCuda = "nvprof"
   # conf.profileCuda = "nsight"
-  #conf.is_import = True
+  conf.is_import = True
   conf.nGPUsCaseBase = 1
   conf.nGPUsCaseOptimList = [1]
   conf.mpiProcessesCaseBase = 1
@@ -33,7 +33,7 @@ def all_timesteps():
   # conf.casesOptim.append("CPU One-cell")
   # conf.casesOptim.append("CPU EBI")
   conf.casesOptim.append("GPU BDF")
-  conf.plotYKey = "Speedup"
+  conf.plotYKey = "Speedup timecvStep"
   # conf.plotXKey = "GPUs"
 
   run_main(conf)

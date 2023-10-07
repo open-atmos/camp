@@ -264,9 +264,6 @@ typedef struct {
   double t_final;
 
 #ifdef CAMP_DEBUG_GPU
-  unsigned int iTimeCVode;
-  double meanTimeCVode;
-  double varianceTimeCVode;
   double timeCVode;
 #endif
 

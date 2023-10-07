@@ -380,9 +380,6 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
 #endif
 
 #ifdef CAMP_DEBUG_GPU
-  sd->iTimeCVode = 1;
-  sd->meanTimeCVode = 0.;
-  sd->varianceTimeCVode = 0.;
   sd->timeCVode = 0.;
   init_export_stats();
 #endif
@@ -841,26 +838,6 @@ void export_solver_state(void *solver_data){
   SolverData *sd = (SolverData *)solver_data;
   if(sd->is_export_stats) {
     export_state(sd);
-  }
-}
-
-void mean_solver_stats(void *solver_data){
-  SolverData *sd = (SolverData *)solver_data;
-  if(sd->is_export_stats) {
-#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
-    solver_mean_statistics_gpu(sd);
-#endif
-    CVodeMem cv_mem = (CVodeMem) sd->cvode_mem;
-    double delta = cv_mem->timecvStep - cv_mem->meanTimecvStep;
-    cv_mem->meanTimecvStep+=delta/(cv_mem->iTimecvStep);
-    cv_mem->iTimecvStep++;
-    cv_mem->varianceTimecvStep+=delta * (cv_mem->timecvStep - cv_mem->meanTimecvStep);
-    cv_mem->timecvStep=0.;
-    delta = sd->timeCVode - sd->meanTimeCVode;
-    sd->meanTimeCVode+=delta/(sd->iTimeCVode);
-    sd->iTimeCVode++;
-    sd->varianceTimeCVode+=delta * (sd->timeCVode - sd->meanTimeCVode);
-    sd->timeCVode=0.;
   }
 }
 
