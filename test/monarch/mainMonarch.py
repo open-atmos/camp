@@ -137,13 +137,11 @@ def run(conf):
     try:
       if not conf.is_import:
         os.rename("out/state.csv", data_path)
-      start = time.time()
       df = pd_read_csv(data_path, header=None, names=["Column1"])
       if conf.case is conf.caseBase:
         conf.outBase = df["Column1"].tolist()
       else:
         conf.outOptim = df["Column1"].tolist()
-      print("read state + to_dict", time.time() - start)
     except FileNotFoundError as e:
       raise FileNotFoundError("Check enable EXPORT_STATE in CAMP code") from e
   data_path = "out/stats" + caseGpuCpuName + nCellsStr + "cells" \

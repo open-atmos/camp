@@ -21,6 +21,8 @@ make_run(){
   fi
   cd $curr_path
   python TestMonarch.py
+  python TestMonarch2.py
+  python TestMonarch3.py
   #python checkGPU.py
 }
 

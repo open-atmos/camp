@@ -195,9 +195,6 @@ program mock_monarch_t
   deallocate(output_path)
   deallocate(output_file_title)
   deallocate(camp_interface)
-  if (camp_mpi_rank()==0) then
-    write(*,*) "Deallocated end"
-  end if
   call camp_mpi_finalize()
 
 contains

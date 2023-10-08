@@ -19,9 +19,9 @@ def all_timesteps():
   # conf.profileCuda = "nsight"
   #conf.is_import = True
   conf.nGPUsCaseBase = 1
-  conf.nGPUsCaseOptimList = [1]
-  conf.mpiProcessesCaseBase = 1
-  conf.mpiProcessesCaseOptimList = [1]
+  conf.nGPUsCaseOptimList = [2]
+  conf.mpiProcessesCaseBase = 20
+  conf.mpiProcessesCaseOptimList = [20]
   conf.allocatedNodes = 1
   conf.allocatedTasksPerNode = 160
   conf.cells = [10000]
