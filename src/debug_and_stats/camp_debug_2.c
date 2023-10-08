@@ -56,7 +56,6 @@ void export_state(SolverData *sd){
 }
 
 void join_export_state(){
-  printf("join_export_state start\n");
   int size;
   MPI_Comm_size(MPI_COMM_WORLD, &size);
   if(size==1){
