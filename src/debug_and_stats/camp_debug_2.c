@@ -104,7 +104,7 @@ void export_stats(SolverData *sd){
     fptr = fopen("out/stats.csv", "a");
     CVodeMem cv_mem = (CVodeMem) sd->cvode_mem;
     fprintf(fptr, "%.17le,",cv_mem->timecvStep);
-    fprintf(fptr, "%.17le,",sd->timeCVode);
+    fprintf(fptr, "%.17le",sd->timeCVode);
     fprintf(fptr, "\n");
     fclose(fptr);
   }
