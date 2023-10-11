@@ -3,8 +3,6 @@
 make_camp(){
   curr_path=$(pwd)
   cd  ../../build
-  if ! make; then
-    exit
-  fi
+  make || exit 1
   cd $curr_path
 }

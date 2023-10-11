@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-
+set -e
 source make.camp.sh
 compile_cvode(){
   curr_path=$(pwd)
