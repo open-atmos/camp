@@ -8,4 +8,14 @@
 #SBATCH --gres=gpu:4
 #SBATCH --exclusive
 
-time ./run.sh
+set -e
+make_run(){
+  curr_path=$(pwd)
+  cd ../../build
+  make
+  cd $curr_path
+  python TestMonarch2.py
+  python TestMonarch3.py
+  python TestMonarch4.py
+}
+time make_run

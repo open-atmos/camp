@@ -1,3 +1,4 @@
+set -e
 make_and_check(){
   curr_path=$(pwd)
   cd ../../build
@@ -16,13 +17,9 @@ make_and_check(){
 make_run(){
   curr_path=$(pwd)
   cd ../../build
-  if ! make; then
-    exit
-  fi
+  make
   cd $curr_path
   python TestMonarch.py
-  #python TestMonarch2.py
-  #python TestMonarch3.py
   #python checkGPU.py
 }
 

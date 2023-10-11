@@ -318,13 +318,6 @@ def run_main(conf):
       print(
         "Disabled out error check because number of processes should be the same for calculate accuracy, only speedup can use different number")
       conf.is_out = False
-    if "Realistic" in conf.diffCellsL:
-      conf.diffCellsL = ["Ideal"]
-  if "Realistic" in conf.diffCells and \
-      conf.mpiProcessesCaseBase not in \
-      conf.mpiProcessesCaseOptimList:
-    print("ERROR: Wrong conf, MPI and cells are exported in different order, set same MPIs for both cases")
-    raise
   if not conf.caseBase:
     print("ERROR: caseBase is empty")
     raise
