@@ -217,10 +217,6 @@ typedef struct {
   int n_rxn_int_param;
   int n_rxn_float_param;
 
-#ifdef DEBUG_RXN
-  int counterPhoto;
-#endif
-
 #ifdef CAMP_USE_GPU
 #ifdef CAMP_DEBUG_GPU
   double timeDerivKernel;
@@ -279,7 +275,6 @@ typedef struct {
   //get_camp_config_variables
   int use_cpu;
   int nDevices;
-  bool is_export_stats;
 
   void *cvode_mem;       // CVodeMem object
   ModelData model_data;  // Model data (used during initialization and solving)

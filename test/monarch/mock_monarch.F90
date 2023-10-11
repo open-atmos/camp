@@ -184,6 +184,7 @@ program mock_monarch_t
   end do
   call camp_mpi_barrier()
   call camp_interface%camp_core%export_solver_stats()
+  call camp_interface%camp_core%join_solver_state()
   call camp_mpi_barrier()
 
   if (camp_mpi_rank()==0) then

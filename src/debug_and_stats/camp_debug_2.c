@@ -27,7 +27,7 @@ void get_export_state_name(char filename[]){
   strcat(filename,"state.csv");
 }
 
-void init_export_state(SolverData *sd){
+void init_export_state(){
   char filename[64];
   get_export_state_name(filename);
   int rank;
@@ -110,7 +110,6 @@ void export_stats(SolverData *sd){
     fprintf(fptr, "\n");
     fclose(fptr);
   }
-  join_export_state();
 }
 
 void print_double(double *x, int len, const char *s){
@@ -131,7 +130,6 @@ void print_int(int *x, int len, const char *s){
 
 void get_camp_config_variables(SolverData *sd){
   sd->use_cpu=1;
-  sd->is_export_stats=0;
   FILE *fp;
   char buff[255];
   char path[] = "settings/config_variables_c_solver.txt";
@@ -144,7 +142,7 @@ void get_camp_config_variables(SolverData *sd){
       printf("getcwd() error");
       exit(0);
     }
-    printf("Could not open file %s, setting default values: is_cpu=ON is_export_stats=OFF\n",path);
+    printf("Could not open file %s, setting default values: is_cpu=ON\n",path);
   }else{
     fscanf(fp, "%s", buff);
     if(strstr(buff,"USE_CPU=OFF")!=NULL){
@@ -152,9 +150,6 @@ void get_camp_config_variables(SolverData *sd){
     }
     fscanf(fp, "%d", &sd->nDevices);
     fscanf(fp, "%s", buff);
-    if(strstr(buff,"IS_EXPORT_STATS=ON")!=NULL){
-      sd->is_export_stats=1;
-    }
     fclose(fp);
   }
 }

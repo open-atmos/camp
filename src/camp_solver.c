@@ -375,18 +375,10 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
   if (sd->debug_out) print_data_sizes(&(sd->model_data));
 #endif
 
-#ifdef DEBUG_RXN
-  sd->model_data.counterPhoto = 0;
-#endif
-
 #ifdef CAMP_DEBUG_GPU
   sd->timeCVode = 0.;
   init_export_stats();
-#endif
-
-#ifdef DEBUG_CAMP_SOLVER_NEW
-  printf("camp solver_run new  n_state_var %d, n_cells %d n_dep_var %d\n",
-         sd->model_data.n_per_cell_state_var, n_cells, sd->model_data.n_per_cell_dep_var);
+  init_export_state();
 #endif
 
   // Return a pointer to the new SolverData object
@@ -415,10 +407,6 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
                     // grid cell
   int n_cells;      // number of cells to solve simultaneously
   int *var_type;    // state variable types
-
-#ifdef DEBUG_solver_initialize
-  printf("camp solver_initialize start \n");
-#endif
 
   // Seed the random number generator
   srand((unsigned int)100);
@@ -510,15 +498,11 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
       constructor_cvode_gpu(sd->cvode_mem, sd);
   }
 #endif
-  if(sd->is_export_stats)init_export_state(sd);
 #ifdef FAILURE_DETAIL
   // Set a custom error handling function
   flag = CVodeSetErrHandlerFn(sd->cvode_mem, error_handler, (void *)sd);
   check_flag_fail(&flag, "CVodeSetErrHandlerFn", 0);
   sd->counter_fail_solve_print=0;
-#endif
-#ifdef DEBUG_solver_initialize
-  printf("solver_initialize end\n");
 #endif
 #endif
 }
@@ -836,19 +820,20 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
 
 void export_solver_state(void *solver_data){
   SolverData *sd = (SolverData *)solver_data;
-  if(sd->is_export_stats) {
-    export_state(sd);
-  }
+  export_state(sd);
+}
+
+void join_solver_state(void *solver_data){
+  SolverData *sd = (SolverData *)solver_data;
+  join_export_state(sd);
 }
 
 void export_solver_stats(void *solver_data){
   SolverData *sd = (SolverData *)solver_data;
-  if(sd->is_export_stats) {
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
-    solver_get_statistics_gpu(sd);
+  solver_get_statistics_gpu(sd);
 #endif
-    export_stats(sd);
-  }
+  export_stats(sd);
 }
 
 #ifdef CAMP_USE_SUNDIALS
@@ -1503,9 +1488,6 @@ SUNMatrix get_jac_init(SolverData *sd) {
                                      elements in the reaction matrix*/
   sunindextype n_jac_elem_solver; /* number of potentially non-zero Jacobian
                                      elements in the reaction matrix*/
-#ifdef DEBUG_get_jac_init
-  printf("get_jac_init start \n");
-#endif
   // Number of grid cells
   int n_cells = sd->model_data.n_cells;
 
@@ -1771,9 +1753,6 @@ SUNMatrix get_jac_init(SolverData *sd) {
   jacobian_free(&solver_jac);
   free(deriv_ids);
 
-#ifdef DEBUG_get_jac_init
-  printf("get_jac_init end \n");
-#endif
   return M;
 }
 
