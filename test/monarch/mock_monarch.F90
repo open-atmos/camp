@@ -163,34 +163,32 @@ program mock_monarch_t
     STOP
   end if
 
-  if(.not.caseMulticellsOnecell=="EBI") then
-    do i_time=1, NUM_TIME_STEP
-      call camp_interface%integrate(curr_time,         & ! Starting time (min)
-         TIME_STEP,         & ! Time step (min)
-         I_W,               & ! Starting W->E grid cell
-         I_E,               & ! Ending W->E grid cell
-         I_S,               & ! Starting S->N grid cell
-         I_N,               & ! Ending S->N grid cell
-         temperature,       & ! Temperature (K)
-         species_conc,      & ! Tracer array
-         water_conc,        & ! Water concentrations (kg_H2O/kg_air)
-         WATER_VAPOR_ID,    & ! Index in water_conc() corresponding to water vapor
-         air_density,       & ! Air density (kg_air/m^3)
-         pressure,          & ! Air pressure (Pa)
-         conv,              &
-         i_hour,&
-         NUM_TIME_STEP,&
-         DIFF_CELLS,i_time)
-    curr_time = curr_time + TIME_STEP
-    end do
-    call camp_interface%camp_core%export_solver_stats()
-  end if
+  do i_time=1, NUM_TIME_STEP
+    call camp_interface%integrate(curr_time,         & ! Starting time (min)
+       TIME_STEP,         & ! Time step (min)
+       I_W,               & ! Starting W->E grid cell
+       I_E,               & ! Ending W->E grid cell
+       I_S,               & ! Starting S->N grid cell
+       I_N,               & ! Ending S->N grid cell
+       temperature,       & ! Temperature (K)
+       species_conc,      & ! Tracer array
+       water_conc,        & ! Water concentrations (kg_H2O/kg_air)
+       WATER_VAPOR_ID,    & ! Index in water_conc() corresponding to water vapor
+       air_density,       & ! Air density (kg_air/m^3)
+       pressure,          & ! Air pressure (Pa)
+       conv,              &
+       i_hour,&
+       NUM_TIME_STEP,&
+       DIFF_CELLS,i_time)
+  curr_time = curr_time + TIME_STEP
+  end do
+  call camp_mpi_barrier()
+  call camp_interface%camp_core%export_solver_stats()
+  call camp_mpi_barrier()
 
   if (camp_mpi_rank()==0) then
     write(*,*) "Model run time: ", comp_time, " s"
   end if
-
-  call camp_mpi_barrier()
   deallocate(camp_input_file)
   deallocate(output_path)
   deallocate(output_file_title)

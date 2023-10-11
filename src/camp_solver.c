@@ -1892,8 +1892,6 @@ void solver_free(void *solver_data) {
   SolverData *sd = (SolverData *)solver_data;
   ModelData *md = &(sd->model_data);
 
-  if(sd->is_export_stats)join_export_state();
-
 #ifdef CAMP_USE_SUNDIALS
   // free the SUNDIALS solver
   CVodeFree(&(sd->cvode_mem));

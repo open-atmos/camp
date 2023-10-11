@@ -82,6 +82,7 @@ void join_export_state(){
   }
   fclose(outputFile);
   }
+  MPI_Barrier(MPI_COMM_WORLD);
 }
 
 void init_export_stats(){
@@ -109,6 +110,7 @@ void export_stats(SolverData *sd){
     fprintf(fptr, "\n");
     fclose(fptr);
   }
+  join_export_state();
 }
 
 void print_double(double *x, int len, const char *s){
