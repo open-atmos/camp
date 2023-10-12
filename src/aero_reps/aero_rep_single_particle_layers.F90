@@ -561,7 +561,6 @@ contains
     integer(kind=i_kind) :: curr_tracer_type
     character(len=:), allocatable :: curr_layer_name
     character(len=:), allocatable :: curr_phase_name
-    type(string_t), allocatable :: curr_phase_name_array(:)
     type(string_t), allocatable :: spec_names(:)
 
     ! Copy saved unique names when no filters are included
@@ -616,20 +615,21 @@ contains
       do i_layer = 1, TOTAL_NUM_LAYERS_
         do i_phase = 1, TOTAL_NUM_PHASE_
           curr_layer_name = this%aero_layer_set_names(i_layer)
-          curr_phase_name_array = &
-               (this%aero_phase(LAYER_STATE_ID_(i_layer))%val%name(): &
-               this%aero_phase(LAYER_STATE_ID_(i_layer+1))%val%name())
-          do i_phase_layer = 1, size(curr_phase_name_array)
-            curr_phase_name = curr_phase_name_array(i_phase_layer)
+          ! TODO - how do i initialize aero_phase_layer
+          aero_phase_layer = &
+               (this%aero_phase(LAYER_STATE_ID_(i_layer)): &
+               this%aero_phase(LAYER_STATE_ID_(i_layer+1)))
+          do i_phase_layer = 1, size(aero_phase_layer)
+            curr_phase_name = aero_phase_layer(i_phase_layer)%val%name()
             if (present(phase_name).and.present(layer_name)) then
               if (phase_name.ne.curr_phase_name).or. &
                  (layer_name.ne.curr_layer_name) cycle
             end if
-            spec_names = this%aero_phase(i_phase)%val%get_species_names()
-            num_spec = this%aero_phase(i_phase)%val%size()
+            spec_names = this%aero_phase_layer(i_phase_layer)%val%get_species_names()
+            num_spec = this%aero_phase_layer(i_phase_layer)%val%size()
             do j_spec = 1, num_spec
               curr_tracer_type = &
-                      this%aero_phase(i_phase)%val%get_species_type( &
+                      this%aero_phase_layer(i_phase_layer)%val%get_species_type( &
                       spec_names(j_spec)%string)
               if (present(spec_name)) then
                 if (spec_name.ne.spec_names(j_spec)%string) cycle
