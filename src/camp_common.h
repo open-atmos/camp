@@ -277,6 +277,7 @@ typedef struct {
   int nDevices;
 
   void *cvode_mem;       // CVodeMem object
+  void *cvode_mem2;
   ModelData model_data;  // Model data (used during initialization and solving)
   bool no_solve;  // Flag to indicate whether to run the solver needs to be
                   // run. Set to true when no reactions are present.

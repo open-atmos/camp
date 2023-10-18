@@ -766,43 +766,49 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
   realtype last_h, curr_h;
   int flag;
 
-  *solver_flag = sd->solver_flag;
-  flag = CVodeGetNumSteps(sd->cvode_mem, &nst);
-  if (check_flag(&flag, "CVodeGetNumSteps", 1) == CAMP_SOLVER_FAIL) return;
-  *num_steps = (int)nst;
-  flag = CVodeGetNumRhsEvals(sd->cvode_mem, &nfe);
-  if (check_flag(&flag, "CVodeGetNumRhsEvals", 1) == CAMP_SOLVER_FAIL) return;
-  *RHS_evals = (int)nfe;
-  flag = CVodeGetNumLinSolvSetups(sd->cvode_mem, &nsetups);
-  if (check_flag(&flag, "CVodeGetNumLinSolveSetups", 1) == CAMP_SOLVER_FAIL)
-    return;
-  *LS_setups = (int)nsetups;
-  flag = CVodeGetNumErrTestFails(sd->cvode_mem, &netf);
-  if (check_flag(&flag, "CVodeGetNumErrTestFails", 1) == CAMP_SOLVER_FAIL)
-    return;
-  *error_test_fails = (int)netf;
-  flag = CVodeGetNumNonlinSolvIters(sd->cvode_mem, &nni);
-  if (check_flag(&flag, "CVodeGetNonlinSolvIters", 1) == CAMP_SOLVER_FAIL)
-    return;
-  *NLS_iters = (int)nni;
-  flag = CVodeGetNumNonlinSolvConvFails(sd->cvode_mem, &ncfn);
-  if (check_flag(&flag, "CVodeGetNumNonlinSolvConvFails", 1) ==
-      CAMP_SOLVER_FAIL)
-    return;
-  *NLS_convergence_fails = ncfn;
-  flag = CVDlsGetNumJacEvals(sd->cvode_mem, &nje);
-  if (check_flag(&flag, "CVDlsGetNumJacEvals", 1) == CAMP_SOLVER_FAIL) return;
-  *DLS_Jac_evals = (int)nje;
-  flag = CVDlsGetNumRhsEvals(sd->cvode_mem, &nfeLS);
-  if (check_flag(&flag, "CVDlsGetNumRhsEvals", 1) == CAMP_SOLVER_FAIL) return;
-  *DLS_RHS_evals = (int)nfeLS;
-  flag = CVodeGetLastStep(sd->cvode_mem, &last_h);
-  if (check_flag(&flag, "CVodeGetLastStep", 1) == CAMP_SOLVER_FAIL) return;
-  *last_time_step__s = (double)last_h;
-  flag = CVodeGetCurrentStep(sd->cvode_mem, &curr_h);
-  if (check_flag(&flag, "CVodeGetCurrentStep", 1) == CAMP_SOLVER_FAIL) return;
-  *next_time_step__s = (double)curr_h;
-  *Jac_eval_fails = sd->Jac_eval_fails;
+#ifdef CAMP_USE_GPU
+  if(sd->use_cpu==1){
+#endif
+    *solver_flag = sd->solver_flag;
+    flag = CVodeGetNumSteps(sd->cvode_mem, &nst);
+    if (check_flag(&flag, "CVodeGetNumSteps", 1) == CAMP_SOLVER_FAIL) return;
+    *num_steps = (int)nst;
+    flag = CVodeGetNumRhsEvals(sd->cvode_mem, &nfe);
+    if (check_flag(&flag, "CVodeGetNumRhsEvals", 1) == CAMP_SOLVER_FAIL) return;
+    *RHS_evals = (int)nfe;
+    flag = CVodeGetNumLinSolvSetups(sd->cvode_mem, &nsetups);
+    if (check_flag(&flag, "CVodeGetNumLinSolveSetups", 1) == CAMP_SOLVER_FAIL)
+      return;
+    *LS_setups = (int)nsetups;
+    flag = CVodeGetNumErrTestFails(sd->cvode_mem, &netf);
+    if (check_flag(&flag, "CVodeGetNumErrTestFails", 1) == CAMP_SOLVER_FAIL)
+      return;
+    *error_test_fails = (int)netf;
+    flag = CVodeGetNumNonlinSolvIters(sd->cvode_mem, &nni);
+    if (check_flag(&flag, "CVodeGetNonlinSolvIters", 1) == CAMP_SOLVER_FAIL)
+      return;
+    *NLS_iters = (int)nni;
+    flag = CVodeGetNumNonlinSolvConvFails(sd->cvode_mem, &ncfn);
+    if (check_flag(&flag, "CVodeGetNumNonlinSolvConvFails", 1) ==
+        CAMP_SOLVER_FAIL)
+      return;
+    *NLS_convergence_fails = ncfn;
+    flag = CVDlsGetNumJacEvals(sd->cvode_mem, &nje);
+    if (check_flag(&flag, "CVDlsGetNumJacEvals", 1) == CAMP_SOLVER_FAIL) return;
+    *DLS_Jac_evals = (int)nje;
+    flag = CVDlsGetNumRhsEvals(sd->cvode_mem, &nfeLS);
+    if (check_flag(&flag, "CVDlsGetNumRhsEvals", 1) == CAMP_SOLVER_FAIL) return;
+    *DLS_RHS_evals = (int)nfeLS;
+    flag = CVodeGetLastStep(sd->cvode_mem, &last_h);
+    if (check_flag(&flag, "CVodeGetLastStep", 1) == CAMP_SOLVER_FAIL) return;
+    *last_time_step__s = (double)last_h;
+    flag = CVodeGetCurrentStep(sd->cvode_mem, &curr_h);
+    if (check_flag(&flag, "CVodeGetCurrentStep", 1) == CAMP_SOLVER_FAIL) return;
+    *next_time_step__s = (double)curr_h;
+    *Jac_eval_fails = sd->Jac_eval_fails;
+#ifdef CAMP_USE_GPU
+  }
+#endif
 #ifdef CAMP_DEBUG
   *RHS_evals_total = -1;
   *Jac_evals_total = -1;
@@ -816,6 +822,7 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
   *Jac_time__s = 0.0;
   *max_loss_precision = 0.0;
 #endif
+
 }
 
 void export_solver_state(void *solver_data){

@@ -53,8 +53,8 @@ def process_variable(dataset1, dataset2, var_name):
 
 
 def main():
-    file1_path_header = "../../../../monarch_out/cpu_tstep6_O3/"
-    file2_path_header = "../../../../monarch_out/gpu_tstep6_O3/"
+    file1_path_header = "../../../../monarch_out/cpu_tstep479_O3/"
+    file2_path_header = "../../../../monarch_out/gpu_tstep479_O3/"
 
     # Calculate the speedup
     file1 = file1_path_header + "out/stats.csv"
