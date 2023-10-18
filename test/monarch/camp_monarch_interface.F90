@@ -24,7 +24,6 @@ module camp_monarch_interface_2
   use camp_rxn_photolysis
   use mpi
   use json_module
-  use camp_solver_stats
 
   implicit none
   private
@@ -306,7 +305,6 @@ contains
     integer :: n_cells
     real(kind=dp) :: comp_start, comp_end
     integer :: state_size_per_cell, n_cell_check
-    type(solver_stats_t), target :: solver_stats
 
     if(this%n_cells==1) then
       state_size_per_cell = 0
@@ -386,11 +384,9 @@ contains
             !print*,"state_var436",this%camp_state%state_var(1)
             end if
             call cpu_time(comp_start)
-            call this%camp_core%solve(this%camp_state, real(time_step*60., kind=dp), solver_stats=solver_stats)
+            call this%camp_core%solve(this%camp_state, real(time_step*60., kind=dp))
             call cpu_time(comp_end)
             comp_time = comp_time + (comp_end-comp_start)
-            print*,solver_stats%num_steps
-            call solver_stats%print()
             if(i_time==NUM_TIME_STEP) then
               call this%camp_core%export_solver_state()
             end if
