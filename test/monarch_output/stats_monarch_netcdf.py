@@ -103,7 +103,7 @@ variable_names = [row['Variable'] for _, row in worst_variables.iterrows()]
 sns.boxplot(data=data, orient='v', showfliers=False)
 plt.ylabel("Relative Error [%]")
 plt.xticks(range(len(variable_names)), variable_names, rotation=90)
-plt.title("Box Plot of Relative Error for higuest NRMSE")
+plt.title("Box Plot of highest NRMSE for MONARCH-CAMP 2 GPUs 24h")
 plt.show()
 
 raise
