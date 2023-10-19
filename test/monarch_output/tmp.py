@@ -4,6 +4,25 @@ mpl.use('TkAgg')
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
+import numpy as np
+
+
+# Sample data
+#data = sns.load_dataset("tips")  # Load a built-in dataset as an example
+
+data = np.array([1,3,5])
+# Create a box plot
+sns.boxplot(data=data, showfliers=False)
+print(data)
+
+# Add labels and title
+plt.xlabel("Day of the week")
+plt.ylabel("Total Bill Amount ($)")
+plt.title("Box Plot of Total Bill Amount by Day")
+
+# Show the plot
+plt.show()
+raise
 
 
 # Create a DataFrame from your CSV data

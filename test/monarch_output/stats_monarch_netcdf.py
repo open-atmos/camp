@@ -6,6 +6,9 @@ import netCDF4 as nc
 import numpy as np
 import pandas as pd
 import time
+import seaborn as sns
+import matplotlib.pyplot as plt
+
 
 def calculate_speedup(file1_path, file2_path):
     df1 = pd.read_csv(file1_path)
@@ -32,6 +35,7 @@ def process_variable(dataset1, dataset2, var_name):
     relative_error = np.where(max_array == 0, 0, abs_diff / max_array)
 
     mean = np.mean(relative_error)
+    print(mean)
     if np.isnan(mean) or mean == 0.:
         if mean == 0:
             print(f"Variable difference mean: {var_name} is 0")
@@ -45,8 +49,9 @@ def process_variable(dataset1, dataset2, var_name):
         quantile95 = np.percentile(relative_error, 95)
         median = np.median(relative_error)
         std_dev = np.std(relative_error)
+
     return var_name, nrmse, std_dev,mean, median, quantile25, quantile50,\
-    quantile75, quantile95, max_error
+    quantile75, quantile95, max_error, relative_error
 
 
 def main():
@@ -56,8 +61,7 @@ def main():
     # Calculate the speedup
     file1 = file1_path_header + "out/stats.csv"
     file2 = file2_path_header + "out/stats.csv"
-    speedup = calculate_speedup(file1, file2)
-    print("Speedup:", speedup)
+    #speedup = calculate_speedup(file1, file2)
 
     #Path to netCDF
     file1 = file1_path_header + "nmmb_hst_01_nc4_0000h_00m_00.00s.nc"
@@ -71,15 +75,9 @@ def main():
     summary_data = []
     start_time = time.time()
 
-    #start_processing = False  # DEBUG
-    processed_count = 0 #debug
     for var_name in variable_names:
-        #if var_name == "NO2":  # DEBUG
-        #    start_processing = True
-        #if start_processing #and processed_count < 9999:
         variable = dataset1.variables[var_name]
         if len(variable.dimensions) == 4:
-            #processed_count += 1
             result = process_variable(dataset1, dataset2, var_name)
             if result:
                 summary_data.append(result)
@@ -93,20 +91,30 @@ def main():
 
     summary_table = pd.DataFrame(summary_data, columns=[
         'Variable','NRMSE[%]','Std Dev','Mean','Median','Quantiles 25', 'Quantile 50','Quantile 75',
-        'Quantile 95','Max'])
+        'Quantile 95','Max','Relative Error'])
     pd.set_option('display.max_rows', 100)
     pd.set_option('display.max_columns', 100)
     pd.set_option('display.width', 100)
     pd.set_option('display.max_colwidth', 100)
     #print("Summary Table:", summary_table)
 
-    worst_variables = summary_table.nlargest(999, 'NRMSE[%]')
-    worst_variables.to_csv("exports/summary_table.csv", index=False)
+    worst_variables = summary_table.nlargest(6, 'NRMSE[%]')
     highest_nrmse_row = worst_variables.iloc[0]
     highest_nrmse_variable = highest_nrmse_row['Variable']
+    plt.figure()
+    relative_error = highest_nrmse_row['Relative Error'].reshape(-1)
+    sns.boxplot(data=relative_error, showfliers=False)
+    #sns.violinplot(data=relative_error, inner="quartiles")
+    plt.ylabel("Relative Error")
+    plt.xlabel(highest_nrmse_variable)
+    plt.show()
+    raise
     highest_nrmse = highest_nrmse_row['NRMSE[%]']
     print(f"Highest NRMSE[%]: {highest_nrmse:.2f} for variable: {highest_nrmse_variable}")
-    print("Speedup:", speedup)
+    #print("Speedup:", speedup)
+    #worst_variables.to_csv("exports/summary_table.csv", index=False)
+
+
 
 
 if __name__ == "__main__":
