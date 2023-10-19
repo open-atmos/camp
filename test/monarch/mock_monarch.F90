@@ -62,7 +62,6 @@ program mock_monarch_t
   integer, parameter :: START_CAMP_ID = 1!100
   integer, parameter :: END_CAMP_ID = 260!350
   real(kind=dp):: TIME_STEP ! (min)
-  real, parameter :: TIME_STEP_MONARCH37= 1.6
   integer :: NUM_TIME_STEP
   integer, parameter :: WATER_VAPOR_ID = 5
   real, parameter :: START_TIME = 0

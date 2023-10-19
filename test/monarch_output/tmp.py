@@ -1,0 +1,31 @@
+import matplotlib as mpl
+
+mpl.use('TkAgg')
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+
+# Create a DataFrame from your CSV data
+#data = pd.read_csv('exports/summary_table.csv')
+
+array1= [1,3,5]
+array2=[2,7,4]
+# Create a DataFrame from two arrays of variables (replace with your own data)
+data = pd.DataFrame({'Variable1': array1, 'Variable2': array2})
+
+# Calculate the difference between the two variables
+data['Difference'] = data['Variable1'] - data['Variable2']
+
+# Create a violin plot
+sns.violinplot(x='Difference', data=data)
+
+# Print the standard deviation of the difference
+std_deviation = data['Difference'].std()
+print(f"Standard Deviation of Difference: {std_deviation}")
+
+# Customize the plot
+plt.title("Violin Plot of Difference")
+plt.xlabel("Difference")
+plt.ylabel("Density")
+plt.show()

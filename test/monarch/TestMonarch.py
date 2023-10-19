@@ -26,7 +26,7 @@ def all_timesteps():
   conf.allocatedTasksPerNode = 160
   conf.cells = [2]
   # conf.cells = [100, 500, 1000, 5000, 10000]
-  conf.timeSteps = 2
+  conf.timeSteps = 60
   conf.caseBase = "CPU One-cell"
   # conf.caseBase = "GPU BDF"
   conf.casesOptim = []

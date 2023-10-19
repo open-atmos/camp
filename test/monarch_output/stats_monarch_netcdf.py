@@ -21,12 +21,6 @@ def calculate_nrmse(data1, data2):
     nrmse = (rmsd / range_data1) * 100
     return nrmse
 
-def calculate_rmsdiqr(data1, data2):
-    diff = data1 - data2
-    iqr = np.percentile(diff, 75) - np.percentile(diff, 25)
-    rmsdiqr = (np.sqrt(np.mean(diff ** 2)) / iqr) * 100
-    return rmsdiqr
-
 
 def process_variable(dataset1, dataset2, var_name):
     print(f"Processing variable: {var_name}")
@@ -45,11 +39,14 @@ def process_variable(dataset1, dataset2, var_name):
     else:
         nrmse = calculate_nrmse(array1, array2)
         max_error = np.max(relative_error)
-        quantiles = np.percentile(relative_error, [25, 50, 75, 95])
-        quantiles = [f'{q:.2e}' for q in quantiles]
+        quantile25 = np.percentile(relative_error, 25)
+        quantile50 = np.percentile(relative_error, 50)
+        quantile75 = np.percentile(relative_error, 75)
+        quantile95 = np.percentile(relative_error, 95)
         median = np.median(relative_error)
         std_dev = np.std(relative_error)
-    return var_name, max_error, quantiles, median, mean, std_dev, nrmse
+    return var_name, nrmse, std_dev,mean, median, quantile25, quantile50,\
+    quantile75, quantile95, max_error
 
 
 def main():
@@ -74,19 +71,18 @@ def main():
     summary_data = []
     start_time = time.time()
 
-    start_processing = False  # DEBUG
-    processed_count = 0
-    start_processing = True # DISABLE DEBUG
+    #start_processing = False  # DEBUG
+    processed_count = 0 #debug
     for var_name in variable_names:
-        if var_name == "NO2":  # DEBUG
-            start_processing = True
-        if start_processing and processed_count < 999:
-            variable = dataset1.variables[var_name]
-            if len(variable.dimensions) == 4:
-                processed_count += 1
-                result = process_variable(dataset1, dataset2, var_name)
-                if result:
-                    summary_data.append(result)
+        #if var_name == "NO2":  # DEBUG
+        #    start_processing = True
+        #if start_processing #and processed_count < 9999:
+        variable = dataset1.variables[var_name]
+        if len(variable.dimensions) == 4:
+            #processed_count += 1
+            result = process_variable(dataset1, dataset2, var_name)
+            if result:
+                summary_data.append(result)
 
     print(f"Execution time: {time.time()-start_time:.2f} seconds")
     dataset1.close()
@@ -95,9 +91,9 @@ def main():
         print("summary_data is empty")
         exit(1)
 
-    summary_table = pd.DataFrame(summary_data, columns=['Variable','Max', \
-                                                        'Quantiles[25,50,75,95]', 'Median', 'Mean', 'Std Dev', \
-                                                        'NRMSE[%]'])
+    summary_table = pd.DataFrame(summary_data, columns=[
+        'Variable','NRMSE[%]','Std Dev','Mean','Median','Quantiles 25', 'Quantile 50','Quantile 75',
+        'Quantile 95','Max'])
     pd.set_option('display.max_rows', 100)
     pd.set_option('display.max_columns', 100)
     pd.set_option('display.width', 100)
