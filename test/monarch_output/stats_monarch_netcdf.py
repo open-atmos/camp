@@ -54,68 +54,61 @@ def process_variable(dataset1, dataset2, var_name):
     quantile75, quantile95, max_error, relative_error
 
 
-def main():
-    file1_path_header = "../../../../monarch_out/cpu_tstep479_O3/"
-    file2_path_header = "../../../../monarch_out/gpu_tstep479_O3/"
+file1_path_header = "../../../../monarch_out/cpu_tstep479_O3/"
+file2_path_header = "../../../../monarch_out/gpu_tstep479_O3/"
 
-    # Calculate the speedup
-    file1 = file1_path_header + "out/stats.csv"
-    file2 = file2_path_header + "out/stats.csv"
-    #speedup = calculate_speedup(file1, file2)
+# Calculate the speedup
+file1 = file1_path_header + "out/stats.csv"
+file2 = file2_path_header + "out/stats.csv"
+#speedup = calculate_speedup(file1, file2)
 
-    #Path to netCDF
-    file1 = file1_path_header + "nmmb_hst_01_nc4_0000h_00m_00.00s.nc"
-    file2 = file2_path_header + "nmmb_hst_01_nc4_0000h_00m_00.00s.nc"
+#Path to netCDF
+file1 = file1_path_header + "nmmb_hst_01_nc4_0000h_00m_00.00s.nc"
+file2 = file2_path_header + "nmmb_hst_01_nc4_0000h_00m_00.00s.nc"
 
-    dataset1 = nc.Dataset(file1)
-    dataset2 = nc.Dataset(file2)
+dataset1 = nc.Dataset(file1)
+dataset2 = nc.Dataset(file2)
 
-    variable_names = dataset1.variables.keys()
+variable_names = dataset1.variables.keys()
 
-    summary_data = []
-    start_time = time.time()
+summary_data = []
+start_time = time.time()
 
-    for var_name in variable_names:
-        variable = dataset1.variables[var_name]
-        if len(variable.dimensions) == 4:
-            result = process_variable(dataset1, dataset2, var_name)
-            if result:
-                summary_data.append(result)
+for var_name in variable_names:
+    variable = dataset1.variables[var_name]
+    if len(variable.dimensions) == 4:
+        result = process_variable(dataset1, dataset2, var_name)
+        if result:
+            summary_data.append(result)
 
-    print(f"Execution time: {time.time()-start_time:.2f} seconds")
-    dataset1.close()
-    dataset2.close()
-    if not summary_data:
-        print("summary_data is empty")
-        exit(1)
+print(f"Execution time: {time.time()-start_time:.2f} seconds")
+dataset1.close()
+dataset2.close()
+if not summary_data:
+    print("summary_data is empty")
+    exit(1)
 
-    summary_table = pd.DataFrame(summary_data, columns=[
-        'Variable','NRMSE[%]','Std Dev','Mean','Median','Quantiles 25', 'Quantile 50','Quantile 75',
-        'Quantile 95','Max','Relative Error'])
-    pd.set_option('display.max_rows', 100)
-    pd.set_option('display.max_columns', 100)
-    pd.set_option('display.width', 100)
-    pd.set_option('display.max_colwidth', 100)
-    #print("Summary Table:", summary_table)
+summary_table = pd.DataFrame(summary_data, columns=[
+    'Variable','NRMSE[%]','Std Dev','Mean','Median','Quantiles 25', 'Quantile 50','Quantile 75',
+    'Quantile 95','Max','Relative Error'])
 
-    worst_variables = summary_table.nlargest(6, 'NRMSE[%]')
-    highest_nrmse_row = worst_variables.iloc[0]
-    highest_nrmse_variable = highest_nrmse_row['Variable']
-    plt.figure()
-    relative_error = highest_nrmse_row['Relative Error'].reshape(-1)
-    sns.boxplot(data=relative_error, showfliers=False)
-    #sns.violinplot(data=relative_error, inner="quartiles")
-    plt.ylabel("Relative Error")
-    plt.xlabel(highest_nrmse_variable)
-    plt.show()
-    raise
-    highest_nrmse = highest_nrmse_row['NRMSE[%]']
-    print(f"Highest NRMSE[%]: {highest_nrmse:.2f} for variable: {highest_nrmse_variable}")
-    #print("Speedup:", speedup)
-    #worst_variables.to_csv("exports/summary_table.csv", index=False)
+worst_variables = summary_table.nlargest(6, 'NRMSE[%]')
 
 
+# Create a single plot for all worst variables with reversed axis
+plt.figure()
+data = [row['Relative Error'].reshape(-1) * 100 for _, row in worst_variables.iterrows()]
+variable_names = [row['Variable'] for _, row in worst_variables.iterrows()]
 
+sns.boxplot(data=data, orient='v', showfliers=False)
+plt.ylabel("Relative Error [%]")
+plt.xticks(range(len(variable_names)), variable_names, rotation=90)
+plt.title("Box Plot of Relative Error for higuest NRMSE")
+plt.show()
 
-if __name__ == "__main__":
-    main()
+raise
+highest_nrmse = highest_nrmse_row['NRMSE[%]']
+print(f"Highest NRMSE[%]: {highest_nrmse:.2f} for variable: {highest_nrmse_variable}")
+#print("Speedup:", speedup)
+#worst_variables.to_csv("exports/summary_table.csv", index=False)
+
