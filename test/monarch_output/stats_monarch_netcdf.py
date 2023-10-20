@@ -60,7 +60,7 @@ file2_path_header = "../../../../monarch_out/gpu_tstep479_O3/"
 # Calculate the speedup
 file1 = file1_path_header + "out/stats.csv"
 file2 = file2_path_header + "out/stats.csv"
-#speedup = calculate_speedup(file1, file2)
+speedup = calculate_speedup(file1, file2)
 
 #Path to netCDF
 file1 = file1_path_header + "nmmb_hst_01_nc4_0000h_00m_00.00s.nc"
@@ -93,22 +93,18 @@ summary_table = pd.DataFrame(summary_data, columns=[
     'Quantile 95','Max','Relative Error'])
 
 worst_variables = summary_table.nlargest(6, 'NRMSE[%]')
-
-
-# Create a single plot for all worst variables with reversed axis
+highest_nrmse_row = worst_variables.iloc[0]
+highest_nrmse_variable = highest_nrmse_row['Variable']
+highest_nrmse = highest_nrmse_row['NRMSE[%]']
+print(f"Highest NRMSE[%]: {highest_nrmse:.2f} for variable: {highest_nrmse_variable}")
+print("Speedup:", speedup)
 plt.figure()
 data = [row['Relative Error'].reshape(-1) * 100 for _, row in worst_variables.iterrows()]
 variable_names = [row['Variable'] for _, row in worst_variables.iterrows()]
-
 sns.boxplot(data=data, orient='v', showfliers=False)
 plt.ylabel("Relative Error [%]")
 plt.xticks(range(len(variable_names)), variable_names, rotation=90)
 plt.title("Box Plot of highest NRMSE for MONARCH-CAMP 2 GPUs 24h")
 plt.show()
-
-raise
-highest_nrmse = highest_nrmse_row['NRMSE[%]']
-print(f"Highest NRMSE[%]: {highest_nrmse:.2f} for variable: {highest_nrmse_variable}")
-#print("Speedup:", speedup)
 #worst_variables.to_csv("exports/summary_table.csv", index=False)
 
