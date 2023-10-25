@@ -63,38 +63,6 @@ int cvHandleFailure_gpu(CVodeMem cv_mem, int flag){
   return(flag);
 }
 
-int cvInitialSetup_gpu(CVodeMem cv_mem){
-  int ier;
-  if (cv_mem->cv_itol == CV_NN) {
-    cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "cvInitialSetup", MSGCV_NO_TOLS);
-    return(CV_ILL_INPUT);
-  }
-  if (cv_mem->cv_user_efun) cv_mem->cv_e_data = cv_mem->cv_user_data;
-  else                      cv_mem->cv_e_data = cv_mem;
-  ier = cv_mem->cv_efun(cv_mem->cv_zn[0], cv_mem->cv_ewt, cv_mem->cv_e_data);
-  if (ier != 0) {
-    if (cv_mem->cv_itol == CV_WF)
-      cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "cvInitialSetup", MSGCV_EWT_FAIL);
-    else
-      cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "cvInitialSetup", MSGCV_BAD_EWT);
-    return(CV_ILL_INPUT);
-  }
-  if (cv_mem->cv_iter == CV_NEWTON) {
-    if (cv_mem->cv_lsolve == NULL) {
-      cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "cvInitialSetup", MSGCV_LSOLVE_NULL);
-      return(CV_ILL_INPUT);
-    }
-    if (cv_mem->cv_linit != NULL) {
-      ier = cv_mem->cv_linit(cv_mem);
-      if (ier != 0) {
-        cvProcessError(cv_mem, CV_LINIT_FAIL, "CVODE", "cvInitialSetup", MSGCV_LINIT_FAIL);
-        return(CV_LINIT_FAIL);
-      }
-    }
-  }
-  return(CV_SUCCESS);
-}
-
 int cvYddNorm_gpu(CVodeMem cv_mem, realtype hg, realtype *yddnrm){
   int retval;
   N_VLinearSum(hg, cv_mem->cv_zn[1], ONE, cv_mem->cv_zn[0], cv_mem->cv_y);
@@ -441,8 +409,9 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
   //Initializations performed only at the first step (nst=0):
   if (cv_mem->cv_nst == 0) {
     cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
-    ier = cvInitialSetup_gpu(cv_mem);
-    if (ier!= CV_SUCCESS) return(ier);
+    cv_mem->cv_e_data = cv_mem;
+    cv_mem->cv_efun(cv_mem->cv_zn[0], cv_mem->cv_ewt, cv_mem->cv_e_data);
+    cv_mem->cv_linit(cv_mem);
     retval = f(cv_mem->cv_tn, cv_mem->cv_zn[0], cv_mem->cv_zn[1], cv_mem->cv_user_data);
     N_VScale(ONE, cv_mem->cv_zn[0], yout);
     cv_mem->cv_nfe++;
