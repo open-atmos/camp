@@ -89,7 +89,6 @@ typedef struct{
   double* A;
   int*    jA;
   int*    iA;
-  double* aux;
   int cells_method;
   int threads,blocks;
   int nnz;

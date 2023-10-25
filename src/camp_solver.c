@@ -118,14 +118,14 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
   sd->model_data.n_per_cell_state_var = n_state_var;
 
   get_camp_config_variables(sd);
-  // Set number of cells to compute simultaneously
   sd->rate_cells_gpu=1;
   printf("Set cells to gpu to %lf %\n",sd->rate_cells_gpu*100);
-  sd->model_data.n_cells = n_cells*sd->rate_cells_gpu;
-  sd->model_data.n_cells_cpu = n_cells - sd->model_data.n_cells;
-  n_cells = sd->model_data.n_cells;
-
-
+#ifdef DEV_CPU_GPU
+  sd->model_data.n_cells_gpu = n_cells * sd->rate_cells_gpu;
+  sd->model_data.n_cells_cpu_gpu = n_cells;
+  n_cells=1;
+#endif
+  sd->model_data.n_cells = n_cells;
   // Add the variable types to the solver data
   sd->model_data.var_type = (int *) malloc(n_state_var * sizeof(int));
   if (sd->model_data.var_type == NULL) {
