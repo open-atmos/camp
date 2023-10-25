@@ -390,18 +390,12 @@ int cvRootfind_gpu(CVodeMem cv_mem){
 
 int cvRcheck3_gpu(CVodeMem cv_mem){
   int i, ier, retval;
-  if (cv_mem->cv_taskc == CV_ONE_STEP) {
+  if ( (cv_mem->cv_toutc - cv_mem->cv_tn)*cv_mem->cv_h >= ZERO) {
     cv_mem->cv_thi = cv_mem->cv_tn;
     N_VScale(ONE, cv_mem->cv_zn[0], cv_mem->cv_y);
-  }
-  if (cv_mem->cv_taskc == CV_NORMAL) {
-    if ( (cv_mem->cv_toutc - cv_mem->cv_tn)*cv_mem->cv_h >= ZERO) {
-      cv_mem->cv_thi = cv_mem->cv_tn;
-      N_VScale(ONE, cv_mem->cv_zn[0], cv_mem->cv_y);
-    } else {
-      cv_mem->cv_thi = cv_mem->cv_toutc;
-      (void) CVodeGetDky(cv_mem, cv_mem->cv_thi, 0, cv_mem->cv_y);
-    }
+  } else {
+    cv_mem->cv_thi = cv_mem->cv_toutc;
+    (void) CVodeGetDky(cv_mem, cv_mem->cv_thi, 0, cv_mem->cv_y);
   }
   retval = cv_mem->cv_gfun(cv_mem->cv_thi, cv_mem->cv_y,
                            cv_mem->cv_ghi, cv_mem->cv_user_data);
@@ -424,7 +418,7 @@ int cvRcheck3_gpu(CVodeMem cv_mem){
 }
 
 int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
-               realtype *tret, int itask, SolverData *sd){
+               realtype *tret, SolverData *sd){
   //printf("cudaCVode start \n");
   CVodeMem cv_mem;
   int retval, hflag, istate, ier, irfndp;
@@ -456,16 +450,9 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "CVode", MSGCV_YOUT_NULL);
     return(CV_ILL_INPUT);
   }
-  if (tret == NULL) {
-    cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "CVode", MSGCV_TRET_NULL);
-    return(CV_ILL_INPUT);
-  }
-  if ( (itask != CV_NORMAL) && (itask != CV_ONE_STEP) ) {
-    cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "CVode", MSGCV_BAD_ITASK);
-    return(CV_ILL_INPUT);
-  }
-  if (itask == CV_NORMAL) cv_mem->cv_toutc = tout;
-  cv_mem->cv_taskc = itask;
+
+
+  cv_mem->cv_toutc = tout;
   //2. Initializations performed only at the first step (nst=0):
   if (cv_mem->cv_nst == 0) {
     cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
@@ -555,11 +542,6 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
         retval = cvRcheck3_gpu(cv_mem);
         if (retval == CV_SUCCESS) {     /* no root found */
           cv_mem->cv_irfnd = 0;
-          if ((irfndp == 1) && (itask == CV_ONE_STEP)) {
-            cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
-            N_VScale(ONE, cv_mem->cv_zn[0], yout);
-            return(CV_SUCCESS);
-          }
         } else if (retval == RTFOUND) {  /* a new root was found */
           cv_mem->cv_irfnd = 1;
           cv_mem->cv_tretlast = *tret = cv_mem->cv_tlo;
@@ -571,7 +553,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
         }
       }
     } /* end of root stop check */
-    if ( (itask == CV_NORMAL) && ((cv_mem->cv_tn-tout)*cv_mem->cv_h >= ZERO) ) {
+    if ((cv_mem->cv_tn-tout)*cv_mem->cv_h >= ZERO) {
       cv_mem->cv_tretlast = *tret = tout;
       ier =  CVodeGetDky(cv_mem, tout, 0, yout);
       if (ier != CV_SUCCESS) {
@@ -579,12 +561,6 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
                        MSGCV_BAD_TOUT, tout);
         return(CV_ILL_INPUT);
       }
-      return(CV_SUCCESS);
-    }
-    if ( itask == CV_ONE_STEP &&
-         SUNRabs(cv_mem->cv_tn - cv_mem->cv_tretlast) > troundoff ) {
-      cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
-      N_VScale(ONE, cv_mem->cv_zn[0], yout);
       return(CV_SUCCESS);
     }
     if ( cv_mem->cv_tstopset ) {

@@ -11,7 +11,7 @@
 
 void constructor_cvode_gpu(CVodeMem cv_mem, SolverData *sd);
 int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
-               realtype *tret, int itask, SolverData *sd);
+               realtype *tret, SolverData *sd);
 void solver_get_statistics_gpu(SolverData *sd);
 void free_gpu_cu(SolverData *sd);
 
