@@ -441,7 +441,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
       tout_hin = tout;
       if ( cv_mem->cv_tstopset && (tout-cv_mem->cv_tn)*(tout-cv_mem->cv_tstop) > ZERO )
         tout_hin = cv_mem->cv_tstop;
-      hflag = cvHin_gpu(cv_mem, tout_hin); //set cv_y
+      hflag = cvHin_gpu(cv_mem, tout_hin);
       if (hflag != CV_SUCCESS) {
         istate = cvHandleFailure_gpu(cv_mem, hflag);
         return(istate);
@@ -473,8 +473,8 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
         return(CV_RTFUNC_FAIL);
       }
     }
-  } /* end of first call block */
-   //3. At following steps, perform stop tests:
+  }
+   //At following steps, perform stop tests:
   if (cv_mem->cv_nst > 0) {
     troundoff = FUZZ_FACTOR*cv_mem->cv_uround*(SUNRabs(cv_mem->cv_tn) + SUNRabs(cv_mem->cv_h));
     if (cv_mem->cv_nrtfn > 0) {
@@ -494,19 +494,19 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
       }
       if ( SUNRabs(cv_mem->cv_tn - cv_mem->cv_tretlast) > troundoff ) {
         retval = cvRcheck3_gpu(cv_mem);
-        if (retval == CV_SUCCESS) {     /* no root found */
+        if (retval == CV_SUCCESS) {
           cv_mem->cv_irfnd = 0;
-        } else if (retval == RTFOUND) {  /* a new root was found */
+        } else if (retval == RTFOUND) {
           cv_mem->cv_irfnd = 1;
           cv_mem->cv_tretlast = *tret = cv_mem->cv_tlo;
           return(CV_ROOT_RETURN);
-        } else if (retval == CV_RTFUNC_FAIL) {  /* g failed */
+        } else if (retval == CV_RTFUNC_FAIL) {
           cvProcessError(cv_mem, CV_RTFUNC_FAIL, "CVODE", "cvRcheck3",
                          MSGCV_RTFUNC_FAILED, cv_mem->cv_tlo);
           return(CV_RTFUNC_FAIL);
         }
       }
-    } /* end of root stop check */
+    }
     if ((cv_mem->cv_tn-tout)*cv_mem->cv_h >= ZERO) {
       cv_mem->cv_tretlast = *tret = tout;
       ier =  CVodeGetDky(cv_mem, tout, 0, yout);
@@ -534,12 +534,8 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
         cv_mem->cv_eta = cv_mem->cv_hprime/cv_mem->cv_h;
       }
     }
-  } /* end stopping tests block */
-   //4. Looping point for internal steps
-  if (cv_mem->cv_y == NULL) {
-    cvProcessError(cv_mem, CV_BAD_DKY, "CVODE", "CVodeGetDky", MSGCV_NULL_DKY);
-    return(CV_BAD_DKY);
   }
+   //Looping point for internal steps
 #ifdef CAMP_DEBUG_GPU
   cudaEventRecord(mCPU->startcvStep);
 #endif

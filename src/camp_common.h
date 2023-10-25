@@ -108,6 +108,7 @@ typedef struct {
   int n_per_cell_solver_jac_elem;  // number of potentially non-zero
                                    // solver Jacobian elements
   int n_cells;                     // number of cells to compute simultaneously
+  int n_cells_cpu;
   double *abs_tol;  // pointer to array of state variable absolute
                     // integration tolerances
   int *var_type;    // pointer to array of state variable types (solver,

@@ -36,7 +36,6 @@ option(ENABLE_TESTS "Enable tests" OFF)
 option(ENABLE_DEBUG "Compile debugging functions" OFF)
 option(FAILURE_DETAIL "Output conditions before and after solver failures" OFF)
 option(ENABLE_GPU "Enable use of GPUs in chemistry solving" OFF)
-option(ENABLE_SWAP_DERIV_LOOP_CELLS "" OFF)
 option(ENABLE_NETCDF "Include NETCDF package" OFF)
 option(ENABLE_EXPORT_NETCDF "" OFF)
 option(ENABLE_IMPORT_NETCDF "" OFF)
@@ -247,10 +246,6 @@ if(ENABLE_MPI)
 else()
     #ENABLE_DEBUG_GPU uses MPI timers
     message( ERROR "ENABLE_DEBUG_GPU NEEDS ENABLE_MPI")
-endif()
-
-if (ENABLE_SWAP_DERIV_LOOP_CELLS)
-  add_definitions(-DSWAP_DERIV_LOOP_CELLS)
 endif()
 
 ######################################################################
