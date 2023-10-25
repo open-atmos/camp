@@ -491,7 +491,7 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
 
 #ifdef CAMP_USE_GPU
   if(sd->use_cpu==0){
-    constructor_cvode_gpu(sd->cvode_mem, sd);
+    constructor_cvode_gpu(sd);
     /* TODO
     if(md->n_cells_cpu>0){
       //Init cvode 1 cell for cpu solve

@@ -388,7 +388,7 @@ int cvRcheck3_gpu(CVodeMem cv_mem){
 int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
                realtype *tret, SolverData *sd){
   CVodeMem cv_mem;
-  int retval, hflag, istate, ier, irfndp;
+  int retval, hflag, istate, ier;
   realtype troundoff, tout_hin, rh;
   ModelDataCPU *mCPU = &(sd->mCPU);
   ModelDataGPU *mGPU;
@@ -478,7 +478,6 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
   if (cv_mem->cv_nst > 0) {
     troundoff = FUZZ_FACTOR*cv_mem->cv_uround*(SUNRabs(cv_mem->cv_tn) + SUNRabs(cv_mem->cv_h));
     if (cv_mem->cv_nrtfn > 0) {
-      irfndp = cv_mem->cv_irfnd;
       retval = cvRcheck2_gpu(cv_mem);
       if (retval == CLOSERT) {
         cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "cvRcheck2",

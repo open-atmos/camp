@@ -9,7 +9,7 @@
 #include <cuda.h>
 #include "../camp_common.h"
 
-void constructor_cvode_gpu(CVodeMem cv_mem, SolverData *sd);
+void constructor_cvode_gpu(SolverData *sd);
 int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
                realtype *tret, SolverData *sd);
 void solver_get_statistics_gpu(SolverData *sd);
