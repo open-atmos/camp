@@ -17,6 +17,7 @@ void constructor_cvode_gpu(SolverData *sd){
   ModelData *md = &(sd->model_data);
   CVDlsMem cvdls_mem = (CVDlsMem) cv_mem->cv_lmem;
   SUNMatrix J = cvdls_mem->A;
+  sd->mGPU = (ModelDataGPU *)malloc(sizeof(ModelDataGPU));
   ModelDataGPU *mGPU = sd->mGPU;
 #ifdef DEV_CPU_GPU
   int n_cells=md->n_cells_gpu; //todo use only mgpu->n_cells
@@ -64,8 +65,6 @@ void constructor_cvode_gpu(SolverData *sd){
       mCPU->blocks = (n_dep_var*n_cells + mCPU->threads - 1) / mCPU->threads;
     }
   }
-  sd->mGPU = (ModelDataGPU *)malloc(sizeof(ModelDataGPU));
-  mGPU = sd->mGPU;
   mGPU->n_rxn=md->n_rxn;
   mGPU->n_rxn_env_data=md->n_rxn_env_data;
   cudaMalloc((void **) &mGPU->state, mCPU->state_size);
@@ -231,7 +230,6 @@ void constructor_cvode_gpu(SolverData *sd){
     cudaMemcpy(&mGPU->sCells[i], &mCPU->mdvCPU, sizeof(ModelDataVariable), cudaMemcpyHostToDevice);
   }
 #ifdef IS_DEBUG_MODE_CSR_ODE_GPU
-  ModelDataGPU *mGPU = sd->mGPU;
   int n_row=mGPU->nrows/n_cells;
   ModelDataCPU *mCPU = &(sd->mCPU);
   int* Ap=mCPU->iA;
