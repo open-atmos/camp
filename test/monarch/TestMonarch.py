@@ -27,12 +27,12 @@ def all_timesteps():
   conf.cells = [2]
   # conf.cells = [100, 500, 1000, 5000, 10000]
   conf.timeSteps = 3
-  conf.caseBase = "CPU One-cell"
-  # conf.caseBase = "GPU BDF"
+  #conf.caseBase = "CPU One-cell"
+  conf.caseBase = "GPU BDF"
   conf.casesOptim = []
-  # conf.casesOptim.append("CPU One-cell")
+  conf.casesOptim.append("CPU One-cell")
   # conf.casesOptim.append("CPU EBI")
-  conf.casesOptim.append("GPU BDF")
+  #conf.casesOptim.append("GPU BDF")
   conf.plotYKey = "Speedup timecvStep"
   #conf.plotYKey = "Speedup timeCVode"
   # conf.plotXKey = "GPUs"

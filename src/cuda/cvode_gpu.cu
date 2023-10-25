@@ -419,7 +419,6 @@ int cvRcheck3_gpu(CVodeMem cv_mem){
 
 int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
                realtype *tret, SolverData *sd){
-  //printf("cudaCVode start \n");
   CVodeMem cv_mem;
   int retval, hflag, istate, ier, irfndp;
   realtype troundoff, tout_hin, rh;
@@ -436,24 +435,10 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
   cudaMemcpyAsync(mGPU->J_deriv,J_deriv,mCPU->deriv_size,cudaMemcpyHostToDevice,stream);
   double *J_solver = SM_DATA_S(md->J_solver);
   cudaMemcpy(mGPU->J_solver, J_solver, mCPU->jac_size, cudaMemcpyHostToDevice);
-
-  if (cvode_mem == NULL) {
-    cvProcessError(NULL, CV_MEM_NULL, "CVODE", "CVode", MSGCV_NO_MEM);
-    return(CV_MEM_NULL);
-  }
   cv_mem = (CVodeMem) cvode_mem;
-  if (cv_mem->cv_MallocDone == SUNFALSE) {
-    cvProcessError(cv_mem, CV_NO_MALLOC, "CVODE", "CVode", MSGCV_NO_MALLOC);
-    return(CV_NO_MALLOC);
-  }
-  if ((cv_mem->cv_y = yout) == NULL) {
-    cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "CVode", MSGCV_YOUT_NULL);
-    return(CV_ILL_INPUT);
-  }
-
-
+  cv_mem->cv_y = yout;
   cv_mem->cv_toutc = tout;
-  //2. Initializations performed only at the first step (nst=0):
+  //Initializations performed only at the first step (nst=0):
   if (cv_mem->cv_nst == 0) {
     cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
     ier = cvInitialSetup_gpu(cv_mem);
