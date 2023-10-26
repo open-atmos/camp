@@ -95,12 +95,7 @@ typedef struct{
   int nnz_J_solver;
   size_t deriv_size;
   size_t jac_size;
-  size_t state_size;
   size_t env_size;
-  size_t rxn_env_data_size;
-  size_t rxn_env_data_idx_size;
-  size_t map_state_deriv_size;
-  int *map_state_derivCPU;
   ModelDataVariable mdvCPU; //cpu equivalent to gpu
   cudaStream_t *streams;
 #ifdef CAMP_DEBUG_GPU
@@ -156,7 +151,6 @@ typedef struct { //Allocated from CPU (used during CPU / need some cudamemcpy)
     double *dp0;
     double *dt;
     double *ds;
-    double *dAx2;
     double *dy;
     double *dz;
     double* dftemp;     //Guess_helper

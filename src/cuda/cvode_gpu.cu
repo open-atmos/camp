@@ -395,7 +395,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
   ModelData *md = &(sd->model_data);
   cudaStream_t stream = 0;
   mGPU = sd->mGPU;
-  HANDLE_ERROR(cudaMemcpyAsync(mGPU->rxn_env_data,md->rxn_env_data,mCPU->rxn_env_data_size,cudaMemcpyHostToDevice,stream));
+  HANDLE_ERROR(cudaMemcpyAsync(mGPU->rxn_env_data,md->rxn_env_data,md->n_rxn_env_data * mGPU->n_cells * sizeof(double),cudaMemcpyHostToDevice,stream));
   HANDLE_ERROR(cudaMemcpyAsync(mGPU->env,md->total_env,mCPU->env_size,cudaMemcpyHostToDevice,stream));
   double *J_state = N_VGetArrayPointer(md->J_state);
   cudaMemcpyAsync(mGPU->J_state,J_state,mCPU->deriv_size,cudaMemcpyHostToDevice,stream);
@@ -538,7 +538,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
 #ifdef CAMP_DEBUG_GPU
   cudaEventRecord(mCPU->startcvStep);
 #endif
-  for (int i = 0; i < md->n_cells; i++)
+  for (int i = 0; i < mGPU->n_cells; i++)
     sd->flagCells[i] = 99;
 #ifdef ODE_WARNING
   mCPU->mdvCPU.cv_nhnil = cv_mem->cv_nhnil;
@@ -581,7 +581,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
   double *cv_acor_init = N_VGetArrayPointer(cv_mem->cv_acor_init);
   double *youtArray = N_VGetArrayPointer(yout);
   double *cv_Vabstol = N_VGetArrayPointer(cv_mem->cv_Vabstol);
-  cudaMemcpyAsync(mGPU->state,md->total_state,mCPU->state_size,cudaMemcpyHostToDevice,stream);
+  cudaMemcpyAsync(mGPU->state,md->total_state,md->n_per_cell_state_var*mGPU->n_cells*sizeof(double),cudaMemcpyHostToDevice,stream);
   cudaMemcpyAsync(mGPU->dewt, ewt, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice, stream);
   cudaMemcpyAsync(mGPU->cv_acor, acor, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice, stream);
   cudaMemcpyAsync(mGPU->dtempv, tempv, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice, stream);

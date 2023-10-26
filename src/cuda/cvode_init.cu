@@ -29,12 +29,10 @@ void constructor_cvode_gpu(SolverData *sd){
   int n_dep_var = md->n_per_cell_dep_var;
   int n_state_var = md->n_per_cell_state_var;
   int n_rxn = md->n_rxn;
-  int n_rxn_env_param = md->n_rxn_env_data;
   size_t state_size = n_state_var * n_cells * sizeof(double);
   mCPU->deriv_size = n_dep_var * n_cells * sizeof(double);
   mCPU->env_size = CAMP_NUM_ENV_PARAM_ * n_cells * sizeof(double); //Temp and pressure
-  mCPU->rxn_env_data_size = n_rxn_env_param * n_cells * sizeof(double);
-  mCPU->rxn_env_data_idx_size = (n_rxn+1) * sizeof(int);
+  size_t rxn_env_data_idx_size = (n_rxn+1) * sizeof(int);
   size_t map_state_deriv_size = n_dep_var * n_cells * sizeof(int);
   int coresPerNode = 40;
   int size;
@@ -69,8 +67,8 @@ void constructor_cvode_gpu(SolverData *sd){
   mGPU->n_rxn_env_data=md->n_rxn_env_data;
   cudaMalloc((void **) &mGPU->state, state_size);
   cudaMalloc((void **) &mGPU->env, mCPU->env_size);
-  cudaMalloc((void **) &mGPU->rxn_env_data, mCPU->rxn_env_data_size);
-  cudaMalloc((void **) &mGPU->rxn_env_data_idx, mCPU->rxn_env_data_idx_size);
+  cudaMalloc((void **) &mGPU->rxn_env_data, md->n_rxn_env_data * n_cells * sizeof(double));
+  cudaMalloc((void **) &mGPU->rxn_env_data_idx, rxn_env_data_idx_size);
   cudaMalloc((void **) &mGPU->map_state_deriv, map_state_deriv_size);
   int num_spec = md->n_per_cell_dep_var*n_cells;
   cudaMalloc((void **) &(mGPU->production_rates),num_spec*sizeof(mGPU->production_rates));
@@ -93,7 +91,6 @@ void constructor_cvode_gpu(SolverData *sd){
            " use CPU case instead\n");
     exit(0);
 }
-  mGPU = sd->mGPU;
   mCPU->jac_size = md->n_per_cell_solver_jac_elem * n_cells * sizeof(double);
   mCPU->nnz_J_solver = SM_NNZ_S(md->J_solver);
   cudaMalloc((void **) &mGPU->dA, mCPU->jac_size);
@@ -134,10 +131,9 @@ void constructor_cvode_gpu(SolverData *sd){
   cudaMalloc((void **) &mGPU->rxn_float_indices, (md->n_rxn+1)*sizeof(int));
   HANDLE_ERROR(cudaMemcpy(mGPU->rxn_int, md->rxn_int_data,(md->n_rxn_int_param + md->n_rxn)*sizeof(int), cudaMemcpyHostToDevice));
   HANDLE_ERROR(cudaMemcpy(mGPU->rxn_double, md->rxn_float_data, md->n_rxn_float_param*sizeof(double), cudaMemcpyHostToDevice));
-  HANDLE_ERROR(cudaMemcpy(mGPU->rxn_env_data_idx, md->rxn_env_idx, mCPU->rxn_env_data_idx_size, cudaMemcpyHostToDevice));
+  HANDLE_ERROR(cudaMemcpy(mGPU->rxn_env_data_idx, md->rxn_env_idx, rxn_env_data_idx_size, cudaMemcpyHostToDevice));
   HANDLE_ERROR(cudaMemcpy(mGPU->rxn_int_indices, md->rxn_int_indices,(md->n_rxn+1)*sizeof(int), cudaMemcpyHostToDevice));
   HANDLE_ERROR(cudaMemcpy(mGPU->rxn_float_indices, md->rxn_float_indices,(md->n_rxn+1)*sizeof(int), cudaMemcpyHostToDevice));
-  mGPU = sd->mGPU;
   mCPU->nnz = SM_NNZ_S(J);
   int nrows = SM_NP_S(J);
   mGPU->nrows = nrows;
@@ -278,7 +274,6 @@ void constructor_cvode_gpu(SolverData *sd){
     aux_solver_id[i]=md->jac_map[i].solver_id;
     md->jac_map[i].solver_id=jac_solver_id[i];
   }
-  mGPU = sd->mGPU;
   cudaMemcpy(mGPU->diA, Bp, (n_row + 1) * sizeof(int), cudaMemcpyHostToDevice);
   cudaMemcpy(mGPU->djA, Bi, nnz * sizeof(int), cudaMemcpyHostToDevice);
   cudaMemcpy(mGPU->dA, Bx, nnz * sizeof(double), cudaMemcpyHostToDevice);
@@ -334,7 +329,6 @@ void free_gpu_cu(SolverData *sd) {
   cudaFree(mGPU->dp0);
   cudaFree(mGPU->dt);
   cudaFree(mGPU->ds);
-  cudaFree(mGPU->dAx2);
   cudaFree(mGPU->dy);
   cudaFree(mGPU->dz);
   cudaFree(mGPU->dftemp);
