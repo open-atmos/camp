@@ -1,0 +1,31 @@
+{
+	"camp-data" : [
+{
+	"type" : "AERO_REP_SINGLE_PARTICLE",
+	"name" : "AERO_REP_SINGLE_PARTICLE_LAYERS",
+        "maximum computational particles" : 3
+        "layers" : {
+    	  "top bread" : 
+            {
+            "phases" : [ "wheat", "water" ],
+            "covers": "jam"
+            },
+	  "bottom bread" : 
+            {
+            "phases" : [ "wheat", "water","salt" ],
+            "covers": "none"
+            },
+	  "jam" : 
+            {
+           "phases" : [ "rasberry", "honey","sugar","lemon" ],
+	   "covers" : "almond butter"
+            },
+	  "almond butter" : 
+            {
+            "phases" : [ "almonds","salt" ],
+            "covers" : "bottom bread"
+            }
+          }
+}
+	]
+}
