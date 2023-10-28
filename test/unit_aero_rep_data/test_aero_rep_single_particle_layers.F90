@@ -16,7 +16,7 @@ program camp_test_aero_rep_data
 #endif
   use camp_aero_rep_data
   use camp_aero_rep_factory
-  use camp_aero_rep_single_particle
+  use camp_aero_rep_single_particle_layers
   use camp_mpi
   use camp_camp_core
   use camp_camp_state
@@ -105,7 +105,24 @@ contains
 
     deallocate(camp_solver_data)
 
+    call test_ordered_layer_array()
+
   end function run_camp_aero_rep_data_tests
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  ! Tests the ordered layer array function
+  subroutine test_ordered_layer_array()
+
+    type(aero_rep_single_particle_layers_t) :: aero_rep
+
+    ! Here you can assemble input arguments for the ordered_layer_array()
+    ! function, call the function, and check the values of the output array
+
+    ! check individual values with this function:
+    call assert(468777371, "something" .eq. "something")
+
+  end subroutine test_ordered_layer_array
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
