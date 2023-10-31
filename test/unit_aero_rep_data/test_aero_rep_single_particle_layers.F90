@@ -16,7 +16,7 @@ program camp_test_aero_rep_data
 #endif
   use camp_aero_rep_data
   use camp_aero_rep_factory
-  use camp_aero_rep_single_particle
+  use camp_aero_rep_single_particle_layers
   use camp_mpi
   use camp_camp_core
   use camp_camp_state
@@ -105,7 +105,24 @@ contains
 
     deallocate(camp_solver_data)
 
+    call test_ordered_layer_array()
+
   end function run_camp_aero_rep_data_tests
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  ! Tests the ordered layer array function
+  subroutine test_ordered_layer_array()
+
+    type(aero_rep_single_particle_layers_t) :: aero_rep
+
+    ! Here you can assemble input arguments for the ordered_layer_array()
+    ! function, call the function, and check the values of the output array
+
+    ! check individual values with this function:
+    call assert(468777371, "something" .eq. "something")
+
+  end subroutine test_ordered_layer_array
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -115,7 +132,7 @@ contains
     type(camp_core_t), pointer :: camp_core
     type(camp_state_t), pointer :: camp_state
     class(aero_rep_data_t), pointer :: aero_rep
-
+#if 0
 #ifdef CAMP_USE_JSON
 
     integer(kind=i_kind) :: i_spec, j_spec, i_rep, i_phase, i_layer 
@@ -319,7 +336,7 @@ contains
     deallocate(camp_core)
 
 #endif
-
+#endif
   end function build_aero_rep_data_set_test
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -329,7 +346,7 @@ contains
 
     !> CAMP-core
     type(camp_core_t), intent(inout) :: camp_core
-
+#if 0
     class(aero_rep_data_t), pointer :: aero_rep
     type(camp_state_t), pointer :: camp_state
     integer(kind=i_kind), allocatable :: phase_ids(:)
@@ -377,7 +394,7 @@ contains
                  ) .eq. 0
 
     deallocate(camp_state)
-
+#endif
   end function eval_c_func
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

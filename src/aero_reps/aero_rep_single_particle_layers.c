@@ -31,10 +31,10 @@
 #define NUM_ENV_PARAM_ MAX_PARTICLES_
 #define NUM_PHASE_(l) (int_data[NUM_INT_PROP_ + l] - 1)
 #define PHASE_STATE_ID_(p) (int_data[NUM_INT_PROP_ + TOTAL_NUM_PHASES_ + p] - 1)
-#define LAYER_STATE_ID_(l+1) (int_data[NUM_INT_PROP_ + TOTAL_NUM_LAYERS_ + l + 1] - 1)
+#define LAYER_STATE_ID_(l) (int_data[NUM_INT_PROP_ + TOTAL_NUM_LAYERS_ + l + 1] - 1)
 #define PHASE_MODEL_DATA_ID_(p) (int_data[NUM_INT_PROP_ + TOTAL_NUM_PHASES_ + p] - 1)
 #define PHASE_NUM_JAC_ELEM_(p) (int_data[NUM_INT_PROP_ + 2*TOTAL_NUM_PHASES_ + p] - 1)
-
+#if 0
 /** \brief Flag Jacobian elements used in calcualtions of mass and volume
  *
  * \param aero_rep_int_data Pointer to the aerosol representation integer data
@@ -453,3 +453,5 @@ void aero_rep_single_particle_set_number_update_data__n_m3(void *update_data,
   *new_particle_id = particle_id;
   *new_number_conc = number_conc;
 }
+
+#endif
