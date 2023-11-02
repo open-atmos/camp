@@ -1,5 +1,5 @@
 set -e
-make_and_check(){
+make_and_check() {
   curr_path=$(pwd)
   cd ../../build
   unbuffer make | tee output_make.log
@@ -14,7 +14,7 @@ make_and_check(){
   fi
 }
 
-make_run(){
+make_run() {
   curr_path=$(pwd)
   cd ../../build
   make -j 4
@@ -25,4 +25,3 @@ make_run(){
 
 make_run
 #make_and_check
-
