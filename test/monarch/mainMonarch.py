@@ -128,11 +128,9 @@ def run(conf):
         conf.caseMulticellsOnecell, "ncellsPerMPIProcess:",
         conf.nCells, "nGPUs:", conf.nGPUs)
   conf_name = "settings/TestMonarch.json"
-  # todo fix dump of all data
   with open(conf_name, 'w', encoding='utf-8') as jsonFile:
     json.dump(conf.__dict__, jsonFile, indent=4,
               sort_keys=False)
-  print("TIME:", time.time() - start)
   nCellsStr = str(conf.nCells)
   if conf.nCells >= 1000:
     nCellsStr = str(int(conf.nCells / 1000)) + "k"
@@ -216,9 +214,7 @@ def run_cases(conf):
         conf.caseGpuCpu = cases_words[0]
         conf.caseMulticellsOnecell = cases_words[1]
         conf.case = caseOptim
-        start = time.time()
         timeOptim,valuesOptim = run(conf)
-        print("TIME:", time.time() - start)
         if conf.is_out:
           math_functions.check_NRMSE(valuesBase,
                                      valuesOptim,
