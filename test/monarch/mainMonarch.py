@@ -9,6 +9,7 @@ import json
 import subprocess
 from pandas import read_csv as pd_read_csv
 import time
+from math import ceil
 
 
 class TestMonarch:
@@ -25,13 +26,10 @@ class TestMonarch:
     self.mpiProcesses = 1
     self.allocatedNodes = 1
     self.allocatedTasksPerNode = 160
-    self.nGPUs = 1
     # Cases configuration
-    self.is_start_cases_attributes = True
     self.diffCellsL = ""
     self.mpiProcessesCaseBase = 1
     self.mpiProcessesCaseOptimList = []
-    self.nGPUsCaseOptimList = [1]
     self.cells = [100]
     self.caseBase = ""
     self.casesOptim = [""]
@@ -41,7 +39,6 @@ class TestMonarch:
     self.profileCuda = ""
     self.is_out = True
     # Auxiliary
-    self.is_start_auxiliary_attributes = True
     self.sbatch_job_id = ""
     self.exportPath = "exports"
     self.results_file = "_solver_stats.csv"
@@ -58,7 +55,7 @@ def write_camp_config_file(conf):
       file1.write("USE_CPU=ON\n")
     else:
       file1.write("USE_CPU=OFF\n")
-    file1.write(str(conf.nGPUs) + "\n")
+    file1.write(str(nGPUs) + "\n")
     file1.close()
   except Exception as e:
     print("write_camp_config_file fails", e)
@@ -76,18 +73,8 @@ def run(conf):
         "MULTIPLE OF 40, WHEN CTE-POWER ONLY HAS 40 CORES "
         "PER NODE\n");
       raise
-    maxnDevices = 4
-    maxCoresPerDevice = maxCoresPerNode / maxnDevices
-    maxCores = int(maxCoresPerDevice * conf.nGPUs)
-    if conf.mpiProcesses != maxCores and (
-        conf.mpiProcesses != 1 and maxCores == 10):
-      print("WARNING: conf.mpiProcesses != maxCores, ",
-            conf.mpiProcesses, "!=", maxCores,
-            "conf.mpiProcesses changed from ",
-            conf.mpiProcesses, "to ", maxCores)
-      conf.mpiProcesses = maxCores
-      conf.mpiProcessesCaseOptimList[0] = maxCores
-      raise
+  coresPerGPU = 10
+  nGPUs=ceil(conf.mpiProcesses/coresPerGPU)
   exec_str = ""
   try:
     ddt_pid = subprocess.check_output(
@@ -122,11 +109,20 @@ def run(conf):
           + "/" + pathNvprof + ".ncu-rep")
   path_exec = "../../build/mock_monarch"
   exec_str += path_exec
-  write_camp_config_file(conf)
+  try:
+    file1 = open(conf.campSolverConfigFile, "w")
+    if conf.caseGpuCpu == "CPU":
+      file1.write("USE_CPU=ON\n")
+    else:
+      file1.write("USE_CPU=OFF\n")
+    file1.write(str(nGPUs) + "\n")
+    file1.close()
+  except Exception as e:
+    print("write_camp_config_file fails", e)
   print("exec_str:", exec_str, conf.diffCells,
         conf.caseGpuCpu,
         conf.caseMulticellsOnecell, "ncellsPerMPIProcess:",
-        conf.nCells, "nGPUs:", conf.nGPUs)
+        conf.nCells, "nGPUs:", nGPUs)
   conf_name = "settings/TestMonarch.json"
   with open(conf_name, 'w', encoding='utf-8') as jsonFile:
     json.dump(conf.__dict__, jsonFile, indent=4,
@@ -135,7 +131,7 @@ def run(conf):
   if conf.nCells >= 1000:
     nCellsStr = str(int(conf.nCells / 1000)) + "k"
   if conf.caseGpuCpu == "GPU":
-    caseGpuCpuName = str(conf.nGPUs) + conf.caseGpuCpu
+    caseGpuCpuName = str(nGPUs) + conf.caseGpuCpu
   else:
     caseGpuCpuName = str(conf.mpiProcesses) + "CPUcores"
   is_import = False
@@ -188,7 +184,6 @@ def run_cases(conf):
     raise
   conf.nCells = int(
     conf.nCellsProcesses / conf.mpiProcesses)
-  conf.nGPUs = conf.nGPUsCaseBase
   cases_words = conf.caseBase.split()
   conf.caseGpuCpu = cases_words[0]
   conf.caseMulticellsOnecell = cases_words[1]
@@ -196,31 +191,29 @@ def run_cases(conf):
   timeBase,valuesBase = run(conf)
   # OptimCases
   datacases = []
-  for nGPUs in conf.nGPUsCaseOptimList:
-    conf.nGPUs = nGPUs
-    for mpiProcessesCaseOptim in (
-        conf.mpiProcessesCaseOptimList):
-      conf.mpiProcesses = mpiProcessesCaseOptim
-      if conf.nCellsProcesses % conf.mpiProcesses != 0:
-        print(
-          "WARNING: On optim case conf.nCellsProcesses % "
-          "conf.mpiProcesses != 0,nCellsProcesses, "
-          "mpiProcesses",
-          conf.nCellsProcesses, conf.mpiProcesses)
-      conf.nCells = int(
-        conf.nCellsProcesses / conf.mpiProcesses)
-      for caseOptim in conf.casesOptim:
-        cases_words = caseOptim.split()
-        conf.caseGpuCpu = cases_words[0]
-        conf.caseMulticellsOnecell = cases_words[1]
-        conf.case = caseOptim
-        timeOptim,valuesOptim = run(conf)
-        if conf.is_out:
-          math_functions.check_NRMSE(valuesBase,
-                                     valuesOptim,
-                                     conf.nCellsProcesses)
-        datay = timeBase / timeOptim
-        datacases.append(datay)
+  for mpiProcessesCaseOptim in (
+      conf.mpiProcessesCaseOptimList):
+    conf.mpiProcesses = mpiProcessesCaseOptim
+    if conf.nCellsProcesses % conf.mpiProcesses != 0:
+      print(
+        "WARNING: On optim case conf.nCellsProcesses % "
+        "conf.mpiProcesses != 0,nCellsProcesses, "
+        "mpiProcesses",
+        conf.nCellsProcesses, conf.mpiProcesses)
+    conf.nCells = int(
+      conf.nCellsProcesses / conf.mpiProcesses)
+    for caseOptim in conf.casesOptim:
+      cases_words = caseOptim.split()
+      conf.caseGpuCpu = cases_words[0]
+      conf.caseMulticellsOnecell = cases_words[1]
+      conf.case = caseOptim
+      timeOptim,valuesOptim = run(conf)
+      if conf.is_out:
+        math_functions.check_NRMSE(valuesBase,
+                                   valuesOptim,
+                                   conf.nCellsProcesses)
+      datay = timeBase / timeOptim
+      datacases.append(datay)
 
   return datacases
 
@@ -267,33 +260,27 @@ def plot_cases(conf,datay):
   legend = []
   for diff_cells in conf.diffCellsL:
     conf.diffCells = diff_cells
-    for nGPUs in conf.nGPUsCaseOptimList:
-      for mpiProcessesCaseOptim in (
-          conf.mpiProcessesCaseOptimList):
-        for caseOptim in conf.casesOptim:
-          cases_words = caseOptim.split()
-          conf.caseGpuCpu = cases_words[0]
-          conf.caseMulticellsOnecell = cases_words[1]
-          case_multicells_onecell_name = ""
-          if (conf.caseMulticellsOnecell.find(
-              "BDF") != -1 or
-              conf.caseMulticellsOnecell.find(
-                "maxrregcount") != -1):
-            is_same_diff_cells = True
-          legend_name = ""
-          if len(conf.diffCellsL) > 1:
-            legend_name += conf.diffCells + " "
-          if (len(
-              conf.nGPUsCaseOptimList) > 1 and
-              conf.caseGpuCpu == "GPU" \
-              and len(conf.cells) > 1):
-            legend_name += str(nGPUs) + " GPU "
-          elif not is_same_arch_optim:
-            legend_name += conf.caseGpuCpu + " "
-          if not is_same_case_optim:
-            legend_name += case_multicells_onecell_name
-          if not legend_name == "":
-            legend.append(legend_name)
+    for mpiProcessesCaseOptim in (
+        conf.mpiProcessesCaseOptimList):
+      for caseOptim in conf.casesOptim:
+        cases_words = caseOptim.split()
+        conf.caseGpuCpu = cases_words[0]
+        conf.caseMulticellsOnecell = cases_words[1]
+        case_multicells_onecell_name = ""
+        if (conf.caseMulticellsOnecell.find(
+            "BDF") != -1 or
+            conf.caseMulticellsOnecell.find(
+              "maxrregcount") != -1):
+          is_same_diff_cells = True
+        legend_name = ""
+        if len(conf.diffCellsL) > 1:
+          legend_name += conf.diffCells + " "
+        elif not is_same_arch_optim:
+          legend_name += conf.caseGpuCpu + " "
+        if not is_same_case_optim:
+          legend_name += case_multicells_onecell_name
+        if not legend_name == "":
+          legend.append(legend_name)
   conf.plotTitle = ""
   if not is_same_diff_cells and len(conf.diffCellsL) == 1:
     conf.plotTitle += conf.diffCells + " test: "
@@ -302,10 +289,11 @@ def plot_cases(conf,datay):
       conf.plotTitle += ""
     else:
       if conf.caseGpuCpu == "GPU" and len(
-          conf.nGPUsCaseOptimList) == 1 and \
-          conf.nGPUsCaseOptimList[0] > 1:
+          conf.mpiProcessesCaseOptimList) == 1 and \
+          conf.mpiProcessesCaseOptimList[0] > 1:
         conf.plotTitle += str(
-          conf.nGPUsCaseOptimList[0]) + " GPUs "
+          int(conf.mpiProcessesCaseOptimList[0]/10)) + " GPUs "
+      #todo use conf.nGPUsOptim instead of dividing all time
       else:
         conf.plotTitle += conf.caseGpuCpu + " "
   if conf.plotXKey == "GPUs":
@@ -328,12 +316,11 @@ def plot_cases(conf,datay):
     datax = conf.cells
     plot_x_key = "Cells"
   elif conf.plotXKey == "GPUs":
+    datax = [i / 10 for i in conf.mpiProcessesCaseOptimList]
     if len(conf.cells) > 1:
       conf.plotTitle += ", Cells: " + str(conf.cells[0])
-      datax = conf.nGPUsCaseOptimList
       plot_x_key = conf.plotXKey
     else:
-      datax = conf.nGPUsCaseOptimList
       plot_x_key = "GPUs"
   else:
     conf.plotTitle += ", Cells: " + str(conf.cells[0])

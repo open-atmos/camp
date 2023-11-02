@@ -18,8 +18,6 @@ def all_timesteps():
   # conf.profileCuda = "nvprof"
   # conf.profileCuda = "nsight"
   conf.is_import = True
-  conf.nGPUsCaseBase = 1
-  conf.nGPUsCaseOptimList = [2,4]
   conf.mpiProcessesCaseBase = 40
   conf.mpiProcessesCaseOptimList = [40]
   conf.allocatedNodes = 1
@@ -38,6 +36,6 @@ def all_timesteps():
 
   run_main(conf)
 
-
+import math
 if __name__ == "__main__":
   all_timesteps()
