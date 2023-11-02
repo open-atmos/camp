@@ -118,9 +118,9 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
   sd->model_data.n_per_cell_state_var = n_state_var;
 
   get_camp_config_variables(sd);
+#ifdef DEV_CPU_GPU
   sd->rate_cells_gpu=1;
   printf("Set cells to gpu to %lf %\n",sd->rate_cells_gpu*100);
-#ifdef DEV_CPU_GPU
   sd->model_data.n_cells_gpu = n_cells * sd->rate_cells_gpu;
   sd->model_data.n_cells_cpu_gpu = n_cells;
   n_cells=1;
@@ -492,43 +492,6 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
 #ifdef CAMP_USE_GPU
   if(sd->use_cpu==0){
     constructor_cvode_gpu(sd);
-    /* TODO
-    if(md->n_cells_cpu>0){
-      //Init cvode 1 cell for cpu solve
-      ModelData *md = &(sd->model_data);
-      int n_cells_copy=md->n_cells;
-      md->n_cells=1;
-      sd->cvode_mem2 = CVodeCreate(CV_BDF, CV_NEWTON);
-      flag = CVodeSetUserData(sd->cvode_mem2, sd);
-      flag = CVodeInit(sd->cvode_mem2, f, (realtype)0.0, sd->y);
-      N_Vector abs_tol_nv = N_VNew_Serial(md->n_per_cell_dep_var);
-      i_dep_var = 0;
-      for (int i_spec = 0; i_spec < md->n_per_cell_state_var; ++i_spec)
-        if (md->var_type[i_spec] == CHEM_SPEC_VARIABLE)
-          NV_Ith_S(abs_tol_nv, i_dep_var++) = (realtype)abs_tol[i_spec];
-      flag = CVodeSVtolerances(sd->cvode_mem2, (realtype)rel_tol, abs_tol_nv);
-      flag = CVodeSetMaxNumSteps(sd->cvode_mem2, max_steps);
-      flag = CVodeSetMaxConvFails(sd->cvode_mem2, max_conv_fails);
-      flag = CVodeSetMaxErrTestFails(sd->cvode_mem2, max_conv_fails);
-      flag = CVodeSetMaxHnilWarns(sd->cvode_mem2, MAX_TIMESTEP_WARNINGS);
-
-
-      Jacobian jac2=sd->jac;
-
-
-      sd->J = get_jac_init(sd);
-      sd->model_data.J_init = SUNMatClone(sd->J);
-      SUNMatCopy(sd->J, sd->model_data.J_init);
-      sd->J_guess = SUNMatClone(sd->J);
-      SUNMatCopy(sd->J, sd->J_guess);
-      sd->ls = SUNKLU(sd->y, sd->J);
-      flag = CVDlsSetLinearSolver(sd->cvode_mem2, sd->ls, sd->J);
-      flag = CVDlsSetJacFn(sd->cvode_mem2, Jac);
-      flag = CVodeSetDlsGuessHelper(sd->cvode_mem2, guess_helper);
-      md->n_cells=n_cells_copy;
-      printf("end copy\n");
-    }
-    */
   }
 #endif
 #ifdef FAILURE_DETAIL
@@ -589,10 +552,11 @@ int solver_set_eval_jac(void *solver_data, bool eval_Jac) {
  * \return Flag indicating CAMP_SOLVER_SUCCESS or CAMP_SOLVER_FAIL
  */
 int solver_run(void *solver_data, double *state, double *env, double t_initial,
-               double t_final, int n_cells) {
+               double t_final) {
   SolverData *sd = (SolverData *)solver_data;
   ModelData *md = &(sd->model_data);
   int n_state_var = md->n_per_cell_state_var;
+  int n_cells = md->n_cells;
   int flag;
   int rank = 0;
 

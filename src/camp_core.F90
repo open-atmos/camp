@@ -1410,7 +1410,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Integrate the chemical mechanism
-  subroutine solve(this, camp_state, time_step, rxn_phase, solver_stats, n_cells)
+  subroutine solve(this, camp_state, time_step, rxn_phase, solver_stats)
 
     use camp_rxn_data
     use camp_solver_stats
@@ -1428,9 +1428,6 @@ contains
     integer(kind=i_kind), intent(in), optional :: rxn_phase
     !> Return solver statistics to the host model
     type(solver_stats_t), intent(inout), optional, target :: solver_stats
-    integer, intent(in), optional :: n_cells
-    !class(rxn_update_data_t), intent(inout), optional :: update_data
-    integer :: n_cells_aux
     integer(kind=c_int) :: solver_status
     real(kind=dp) :: t_initial
     real(kind=dp) :: t_final
@@ -1448,14 +1445,6 @@ contains
       phase = rxn_phase
     else
       phase = GAS_AERO_RXN
-    end if
-
-    if (present(n_cells)) then
-      call assert_msg(593328368, n_cells.le.this%n_cells,                   &
-              "Trying to solve more cells than allocated cells" )
-      n_cells_aux=n_cells
-    else
-      n_cells_aux=this%n_cells
     end if
 
     ! Update the solver array of environmental states
@@ -1482,13 +1471,12 @@ contains
     ! Run the integration
     if (present(solver_stats)) then
       call solver%get_solver_stats( solver_stats )
-      solver_status = solver%solve(camp_state, t_initial, t_final,    &
-              n_cells_aux, solver_stats)
+      solver_status = solver%solve(camp_state, t_initial, t_final, solver_stats)
       solver_stats%status_code   = solver_status
       solver_stats%start_time__s = t_initial
       solver_stats%end_time__s   = t_final
     else
-      solver_status = solver%solve(camp_state, t_initial, t_final, n_cells_aux)
+      solver_status = solver%solve(camp_state, t_initial, t_final)
     end if
 
     if (.not.present(solver_stats)) then

@@ -1,14 +1,14 @@
 import matplotlib as mpl
 
 mpl.use('TkAgg')
-# import plot_functions #comment to save ~2s execution time
+#import plot_functions #comment to save ~2s execution time
 import math_functions
 import os
 import numpy as np
 import json
 import subprocess
-import time
 from pandas import read_csv as pd_read_csv
+import time
 
 
 class TestMonarch:
@@ -52,13 +52,6 @@ class TestMonarch:
     self.plotTitle = ""
     self.nCellsProcesses = 1
     self.campSolverConfigFile = "settings/config_variables_c_solver.txt"
-
-def read_csv(conf,data_path):
-  with open(data_path) as f:
-    if conf.case is conf.caseBase:
-      conf.outBase = [float(line.rstrip('\n')) for line in f]
-    else:
-      conf.outOptim = [float(line.rstrip('\n')) for line in f]
 
 
 def write_camp_config_file(conf):
@@ -128,24 +121,16 @@ def run(conf):
     caseGpuCpuName = str(conf.nGPUs) + conf.caseGpuCpu
   else:
     caseGpuCpuName = str(conf.mpiProcesses) + "CPUcores"
-  if not conf.is_import:
-    os.system(exec_str)
-  if conf.is_out:
-    data_path = "out/state" + caseGpuCpuName + nCellsStr + "cells" \
-                + str(conf.timeSteps) + "tsteps.csv"
-    try:
-      if not conf.is_import:
-        os.rename("out/state.csv", data_path)
-      df = pd_read_csv(data_path, header=None, names=["Column1"])
-      if conf.case is conf.caseBase:
-        conf.outBase = df["Column1"].tolist()
-      else:
-        conf.outOptim = df["Column1"].tolist()
-    except FileNotFoundError as e:
-      raise FileNotFoundError("Check enable EXPORT_STATE in CAMP code") from e
+  is_import=False
   data_path = "out/stats" + caseGpuCpuName + nCellsStr + "cells" \
               + str(conf.timeSteps) + "tsteps.csv"
-  if not conf.is_import:
+  if conf.is_import and os.path.exists(data_path):
+    is_import=True
+  if not is_import:
+    os.system(exec_str)
+  data_path = "out/stats" + caseGpuCpuName + nCellsStr + "cells" \
+              + str(conf.timeSteps) + "tsteps.csv"
+  if not is_import:
     os.rename("out/stats.csv", data_path)
   nRows_csv = conf.timeSteps * conf.nCells * conf.mpiProcesses
   df = pd_read_csv(data_path, nrows=nRows_csv)
@@ -153,6 +138,22 @@ def run(conf):
   y_key_words = conf.plotYKey.split()
   y_key = y_key_words[-1]
   data = data[y_key][0]
+  start = time.time()
+  if conf.is_out:
+    data_path = "out/state" + caseGpuCpuName + nCellsStr + "cells" \
+                + str(conf.timeSteps) + "tsteps.csv"
+  try:
+    if not is_import:
+      os.rename("out/state.csv", data_path)
+    df = pd_read_csv(data_path, header=None, names=["Column1"])
+    if conf.case is conf.caseBase:
+      conf.outBase = df["Column1"].tolist()
+    else:
+      conf.outOptim = df["Column1"].tolist()
+  except FileNotFoundError as e:
+    raise FileNotFoundError("Check enable EXPORT_STATE in CAMP code") from e
+  print("TIME READ_CSV:",time.time() - start)
+
   return data
 
 
@@ -218,9 +219,6 @@ def run_diffCells(conf):
 
 
 def plot_cases(conf):
-  cases_words = conf.caseBase.split()
-  conf.caseGpuCpu = cases_words[0]
-  conf.caseMulticellsOnecell = cases_words[1]
   conf.legend = []
   cases_words = conf.casesOptim[0].split()
   conf.caseGpuCpu = cases_words[0]
@@ -284,9 +282,11 @@ def plot_cases(conf):
       conf.plotTitle += "Implementations "
   else:
     conf.plotTitle += "Implementations "
-  namey = conf.plotYKey
+  cases_words = conf.caseBase.split()
+  conf.caseGpuCpu = cases_words[0]
+  conf.plotTitle += "vs " + str(conf.mpiProcessesCaseBase) + " Cores CPU"
+  namey = "Speedup"
   if len(conf.cells) > 1:
-    namey += " [Mean and \u03C3]"
     conf.plotTitle += ""
     datax = conf.cells
     plot_x_key = "Cells"
@@ -304,12 +304,14 @@ def plot_cases(conf):
     plot_x_key = "Timesteps"
   namex = plot_x_key
   datay = conf.datacolumns
-  print(namex, ":", datax[-1])
+  print(namex, ":", datax)
   if conf.legend:
     print("plotTitle: ", conf.plotTitle, " legend:", conf.legend)
   else:
     print("plotTitle: ", conf.plotTitle)
   print(namey, ":", datay)
+  #plot_functions.plotsns(namex, namey, datax, datay, conf.plotTitle, conf.legend)
+
 
 
 def run_main(conf):
