@@ -44,7 +44,6 @@ class TestMonarch:
     self.is_start_auxiliary_attributes = True
     self.sbatch_job_id = ""
     self.exportPath = "exports"
-    self.legend = []
     self.results_file = "_solver_stats.csv"
     self.plotTitle = ""
     self.nCellsProcesses = 1
@@ -129,7 +128,6 @@ def run(conf):
         conf.caseMulticellsOnecell, "ncellsPerMPIProcess:",
         conf.nCells, "nGPUs:", conf.nGPUs)
   conf_name = "settings/TestMonarch.json"
-  start = time.time()
   # todo fix dump of all data
   with open(conf_name, 'w', encoding='utf-8') as jsonFile:
     json.dump(conf.__dict__, jsonFile, indent=4,
@@ -197,8 +195,7 @@ def run_cases(conf):
   conf.caseGpuCpu = cases_words[0]
   conf.caseMulticellsOnecell = cases_words[1]
   conf.case = conf.caseBase
-  baseData,outBase = run(conf)
-  outOptim = []
+  timeBase,valuesBase = run(conf)
   # OptimCases
   datacases = []
   for nGPUs in conf.nGPUsCaseOptimList:
@@ -220,13 +217,13 @@ def run_cases(conf):
         conf.caseMulticellsOnecell = cases_words[1]
         conf.case = caseOptim
         start = time.time()
-        optimData,outOptim = run(conf)
+        timeOptim,valuesOptim = run(conf)
         print("TIME:", time.time() - start)
         if conf.is_out:
-          math_functions.check_NRMSE(outBase,
-                                     outOptim,
+          math_functions.check_NRMSE(valuesBase,
+                                     valuesOptim,
                                      conf.nCellsProcesses)
-        datay = baseData / optimData
+        datay = timeBase / timeOptim
         datacases.append(datay)
 
   return datacases
@@ -253,7 +250,6 @@ def run_diffCells(conf):
   return datacolumns
 
 def plot_cases(conf,datay):
-  conf.legend = []
   cases_words = conf.casesOptim[0].split()
   conf.caseGpuCpu = cases_words[0]
   conf.caseMulticellsOnecell = cases_words[1]
@@ -272,6 +268,7 @@ def plot_cases(conf,datay):
       is_same_case_optim = False
     last_case_optim = conf.caseMulticellsOnecell
   is_same_diff_cells = False
+  legend = []
   for diff_cells in conf.diffCellsL:
     conf.diffCells = diff_cells
     for nGPUs in conf.nGPUsCaseOptimList:
@@ -300,7 +297,7 @@ def plot_cases(conf,datay):
           if not is_same_case_optim:
             legend_name += case_multicells_onecell_name
           if not legend_name == "":
-            conf.legend.append(legend_name)
+            legend.append(legend_name)
   conf.plotTitle = ""
   if not is_same_diff_cells and len(conf.diffCellsL) == 1:
     conf.plotTitle += conf.diffCells + " test: "
@@ -317,7 +314,7 @@ def plot_cases(conf,datay):
         conf.plotTitle += conf.caseGpuCpu + " "
   if conf.plotXKey == "GPUs":
     conf.plotTitle += "GPU "
-  if len(conf.legend) == 1 or not conf.legend or len(
+  if len(legend) == 1 or not legend or len(
       conf.diffCellsL) > 1:
     if len(conf.mpiProcessesCaseOptimList) > 1:
       legend_name += str(mpiProcessesCaseOptim) + " MPI "
@@ -348,14 +345,14 @@ def plot_cases(conf,datay):
     plot_x_key = "Timesteps"
   namex = plot_x_key
   print(namex, ":", datax)
-  if conf.legend:
+  if legend:
     print("plotTitle: ", conf.plotTitle, " legend:",
-          conf.legend)
+          legend)
   else:
     print("plotTitle: ", conf.plotTitle)
   print(namey, ":", datay)
   # plot_functions.plotsns(namex, namey, datax, datay,
-  # conf.plotTitle, conf.legend)
+  # conf.plotTitle, legend)
 
 
 def run_main(conf):
