@@ -23,7 +23,5 @@ def plotsns(namex, namey, datax, datay, plot_title, legend):
               ncol=len(legend), labels=legend, frameon=True, shadow=False, borderaxespad=0.)
   else:
     ax.set_title(plot_title)
-    datay = datay[0]
-    data = DataFrame(datay, datax)
-    sns.lineplot(data=data, palette="tab10", linewidth=2.5, legend=False)
-  plt.show()
+    sns.lineplot(x=datax,y=datay[0], palette="tab10", linewidth=2.5, legend=False)
+    plt.show()

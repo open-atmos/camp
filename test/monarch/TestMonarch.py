@@ -18,8 +18,8 @@ def all_timesteps():
   # conf.profileCuda = "nvprof"
   # conf.profileCuda = "nsight"
   conf.is_import = True
-  conf.mpiProcessesCaseBase = 40
-  conf.mpiProcessesCaseOptimList = [20,40]
+  conf.mpiProcessesCaseBase = 1
+  conf.mpiProcessesCaseOptimList = [10,20,30,40]
   conf.allocatedNodes = 1
   conf.allocatedTasksPerNode = 160
   conf.cells = [1000]
