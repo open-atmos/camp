@@ -1,7 +1,7 @@
 import matplotlib as mpl
 
 mpl.use('TkAgg')
-# import plot_functions #comment to save ~2s execution time
+import plot_functions #comment to save ~2s execution time
 import math_functions
 import os
 import numpy as np
@@ -34,7 +34,6 @@ class TestMonarch:
     self.caseBase = ""
     self.casesOptim = [""]
     self.plotYKey = ""
-    self.plotXKey = ""
     self.is_import = False
     self.profileCuda = ""
     self.is_out = True
@@ -42,7 +41,6 @@ class TestMonarch:
     self.sbatch_job_id = ""
     self.exportPath = "exports"
     self.results_file = "_solver_stats.csv"
-    self.plotTitle = ""
     self.nCellsProcesses = 1
     self.campConf = "settings/config_variables_c_solver.txt"
 
@@ -275,61 +273,61 @@ def plot_cases(conf, datay):
           legend_name += case_multicells_onecell_name
         if not legend_name == "":
           legend.append(legend_name)
-  conf.plotTitle = ""
-  nGPUsOptim = [i / 10 for i in conf.mpiProcessesCaseOptimList]
+  plotTitle = ""
+  nGPUsOptim = [int(i / 10) for i in conf.mpiProcessesCaseOptimList]
   if not is_same_diff_cells and len(conf.diffCellsL) == 1:
-    conf.plotTitle += conf.diffCells + " test: "
+    plotTitle += conf.diffCells + " test: "
+  if len(nGPUsOptim) > 1:
+    plotXKey = "GPUs"
   if is_same_arch_optim:
-    if conf.plotXKey == "GPUs":
-      conf.plotTitle += ""
+    if plotXKey == "GPUs":
+      plotTitle += ""
     else:
       if conf.caseGpuCpu == "GPU" and len(
           nGPUsOptim) == 1 and \
           conf.mpiProcessesCaseOptimList[0] > 1:
-        conf.plotTitle += str(
+        plotTitle += str(
           int(nGPUsOptim[0])) + " GPUs "
       else:
-        conf.plotTitle += conf.caseGpuCpu + " "
-  if conf.plotXKey == "GPUs":
-    conf.plotTitle += "GPU "
+        plotTitle += conf.caseGpuCpu + " "
+  if plotXKey == "GPUs":
+    plotTitle += "GPU "
   if len(legend) == 1 or not legend or len(
       conf.diffCellsL) > 1:
     if len(conf.mpiProcessesCaseOptimList) > 1:
       legend_name += str(mpiProcessesCaseOptim) + " MPI "
     if len(conf.diffCellsL) > 1:
-      conf.plotTitle += "Implementations "
+      plotTitle += "Implementations "
   else:
-    conf.plotTitle += "Implementations "
+    plotTitle += "Implementations "
   cases_words = conf.caseBase.split()
   conf.caseGpuCpu = cases_words[0]
-  conf.plotTitle += "vs " + str(
+  plotTitle += "vs " + str(
     conf.mpiProcessesCaseBase) + " Cores CPU"
   namey = "Speedup"
   if len(conf.cells) > 1:
-    conf.plotTitle += ""
+    plotTitle += ""
     datax = conf.cells
     plot_x_key = "Cells"
-  elif conf.plotXKey == "GPUs":
+  elif plotXKey == "GPUs":
     datax = nGPUsOptim
     if len(conf.cells) > 1:
-      conf.plotTitle += ", Cells: " + str(conf.cells[0])
-      plot_x_key = conf.plotXKey
+      plotTitle += ", Cells: " + str(conf.cells[0])
+      plot_x_key = plotXKey
     else:
       plot_x_key = "GPUs"
   else:
-    conf.plotTitle += ", Cells: " + str(conf.cells[0])
+    plotTitle += ", Cells: " + str(conf.cells[0])
     datax = list(range(1, conf.timeSteps + 1, 1))
     plot_x_key = "Timesteps"
   namex = plot_x_key
   print(namex, ":", datax)
   if legend:
-    print("plotTitle: ", conf.plotTitle, " legend:",
-          legend)
+    print("plotTitle: ", plotTitle, " legend:", legend)
   else:
-    print("plotTitle: ", conf.plotTitle)
+    print("plotTitle: ", plotTitle)
   print(namey, ":", datay)
-  # plot_functions.plotsns(namex, namey, datax, datay,
-  # conf.plotTitle, legend)
+  plot_functions.plotsns(namex, namey, datax, datay,plotTitle, legend)
 
 
 def run_main(conf):
