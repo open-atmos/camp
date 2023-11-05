@@ -4,7 +4,6 @@ mpl.use('TkAgg')
 import matplotlib.pyplot as plt
 from pandas import DataFrame
 import seaborn as sns
-from matplotlib.ticker import MaxNLocator
 
 
 def plotsns(namex, namey, datax, datay, plot_title, legend):
@@ -13,7 +12,6 @@ def plotsns(namex, namey, datax, datay, plot_title, legend):
   ax = plt.subplot(111)
   ax.set_xlabel(namex)
   ax.set_ylabel(namey)
-  ax.xaxis.set_major_locator(MaxNLocator(integer=True))
   if legend and len(legend) > 1:
     print("WARNING: Increase plot window manually to take better screenshot")
     datay = list(map(list, zip(*datay)))
@@ -25,4 +23,5 @@ def plotsns(namex, namey, datax, datay, plot_title, legend):
   else:
     ax.set_title(plot_title)
     sns.lineplot(x=datax,y=datay[0], palette="tab10", linewidth=2.5, legend=False)
+    ax.set_xticks(datax)
     plt.show()

@@ -133,8 +133,12 @@ def run(conf):
   is_import = False
   data_path = ("out/stats" + caseGpuCpuName + nCellsStr +
                "cells" + str(conf.timeSteps) + "tsteps.csv")
+  data_path2 = ("out/state" + caseGpuCpuName + nCellsStr +
+               "cells" + str(conf.timeSteps) + "tsteps.csv")
   if conf.is_import and os.path.exists(data_path):
     is_import = True
+    if conf. is_out and not os.path.exists(data_path2):
+      is_import = False
   if not is_import:
     os.system(exec_str)
   data_path = ("out/stats" + caseGpuCpuName + nCellsStr +
@@ -151,11 +155,9 @@ def run(conf):
   data = data[y_key][0]
   out=0
   if conf.is_out:
-    data_path = ("out/state" + caseGpuCpuName + nCellsStr
-                 + "cells" + str(conf.timeSteps) + "tsteps.csv")
     if not is_import:
-      os.rename("out/state.csv", data_path)
-    df = pd_read_csv(data_path, header=None,
+      os.rename("out/state.csv", data_path2)
+    df = pd_read_csv(data_path2, header=None,
                      names=["Column1"])
     out = df["Column1"].tolist()
   return data, out
@@ -277,6 +279,7 @@ def plot_cases(conf, datay):
   nGPUsOptim = [int(i / 10) for i in conf.mpiProcessesCaseOptimList]
   if not is_same_diff_cells and len(conf.diffCellsL) == 1:
     plotTitle += conf.diffCells + " test: "
+  plotXKey = ""
   if len(nGPUsOptim) > 1:
     plotXKey = "GPUs"
   if is_same_arch_optim:
