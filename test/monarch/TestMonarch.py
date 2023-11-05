@@ -19,7 +19,7 @@ def all_timesteps():
   # conf.profileCuda = "nsight"
   conf.is_import = True
   conf.mpiProcessesCaseBase = 40
-  conf.mpiProcessesCaseOptimList = [20,40]
+  conf.mpiProcessesCaseOptimList = [40]
   conf.allocatedNodes = 1
   conf.allocatedTasksPerNode = 160
   conf.cells = [1000]
@@ -35,7 +35,6 @@ def all_timesteps():
   # conf.plotXKey = "GPUs"
 
   run_main(conf)
-
 
 if __name__ == "__main__":
   all_timesteps()
