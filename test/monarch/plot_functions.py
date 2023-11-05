@@ -4,15 +4,16 @@ mpl.use('TkAgg')
 import matplotlib.pyplot as plt
 from pandas import DataFrame
 import seaborn as sns
+from matplotlib.ticker import MaxNLocator
 
 
 def plotsns(namex, namey, datax, datay, plot_title, legend):
   sns.set_style("whitegrid")
   sns.set_context("paper", font_scale=1.25)
-  fig = plt.figure()
   ax = plt.subplot(111)
   ax.set_xlabel(namex)
   ax.set_ylabel(namey)
+  ax.xaxis.set_major_locator(MaxNLocator(integer=True))
   if legend and len(legend) > 1:
     print("WARNING: Increase plot window manually to take better screenshot")
     datay = list(map(list, zip(*datay)))
