@@ -18,8 +18,6 @@ def all_timesteps():
   # conf.profileCuda = "nvprof"
   # conf.profileCuda = "nsight"
   #conf.is_import = True
-  conf.nGPUsCaseBase = 1
-  conf.nGPUsCaseOptimList = [2]
   conf.mpiProcessesCaseBase = 20
   conf.mpiProcessesCaseOptimList = [20]
   conf.allocatedNodes = 1

@@ -44,13 +44,12 @@ class TestMonarch:
     self.results_file = "_solver_stats.csv"
     self.plotTitle = ""
     self.nCellsProcesses = 1
-    self.campSolverConfigFile = \
-      "settings/config_variables_c_solver.txt"
+    self.campConf = "settings/config_variables_c_solver.txt"
 
 
 def write_camp_config_file(conf):
   try:
-    file1 = open(conf.campSolverConfigFile, "w")
+    file1 = open(conf.campConf, "w")
     if conf.caseGpuCpu == "CPU":
       file1.write("USE_CPU=ON\n")
     else:
@@ -74,7 +73,7 @@ def run(conf):
         "PER NODE\n");
       raise
   coresPerGPU = 10
-  nGPUs=ceil(conf.mpiProcesses/coresPerGPU)
+  nGPUs = ceil(conf.mpiProcesses / coresPerGPU)
   exec_str = ""
   try:
     ddt_pid = subprocess.check_output(
@@ -88,29 +87,29 @@ def run(conf):
   if (conf.profileCuda == "nvprof" and conf.caseGpuCpu ==
       "GPU"):
     pathNvprof = ("../../compile/power9/" +
-                  conf.caseMulticellsOnecell \
+                  conf.caseMulticellsOnecell
                   + str(conf.nCells) + "Cells" + ".nvprof ")
     exec_str += ("nvprof --analysis-metrics -f -o " +
                  pathNvprof)
     print("Saving profiling file in ",
-          os.path.abspath(os.getcwd()) \
+          os.path.abspath(os.getcwd())
           + "/" + pathNvprof + ".nvprof")
   elif (conf.profileCuda == "nsight" and conf.caseGpuCpu
         == "GPU"):
     exec_str += ("/apps/NVIDIA-HPC-SDK/21.3/Linux_ppc64le"
                  "/21.3/profilers/Nsight_Compute/ncu ")
     pathNvprof = ("../../compile/power9/" +
-                  conf.caseMulticellsOnecell \
+                  conf.caseMulticellsOnecell
                   + str(conf.nCells) + "Cells ")
     exec_str += "--set full -f -o " + pathNvprof  # last
     # working version
     print("Saving nsight file in ",
-          os.path.abspath(os.getcwd()) \
+          os.path.abspath(os.getcwd())
           + "/" + pathNvprof + ".ncu-rep")
   path_exec = "../../build/mock_monarch"
   exec_str += path_exec
   try:
-    file1 = open(conf.campSolverConfigFile, "w")
+    file1 = open(conf.campConf, "w")
     if conf.caseGpuCpu == "CPU":
       file1.write("USE_CPU=ON\n")
     else:
@@ -136,15 +135,13 @@ def run(conf):
     caseGpuCpuName = str(conf.mpiProcesses) + "CPUcores"
   is_import = False
   data_path = ("out/stats" + caseGpuCpuName + nCellsStr +
-               "cells" \
-               + str(conf.timeSteps) + "tsteps.csv")
+               "cells" + str(conf.timeSteps) + "tsteps.csv")
   if conf.is_import and os.path.exists(data_path):
     is_import = True
   if not is_import:
     os.system(exec_str)
   data_path = ("out/stats" + caseGpuCpuName + nCellsStr +
-               "cells" \
-               + str(conf.timeSteps) + "tsteps.csv")
+               "cells" + str(conf.timeSteps) + "tsteps.csv")
   if not is_import:
     os.rename("out/stats.csv", data_path)
   nRows_csv = (conf.timeSteps * conf.nCells *
@@ -156,8 +153,7 @@ def run(conf):
   data = data[y_key][0]
   if conf.is_out:
     data_path = ("out/state" + caseGpuCpuName + nCellsStr
-                 + "cells" \
-                 + str(conf.timeSteps) + "tsteps.csv")
+                 + "cells" + str(conf.timeSteps) + "tsteps.csv")
   try:
     if not is_import:
       os.rename("out/state.csv", data_path)
@@ -167,7 +163,7 @@ def run(conf):
   except FileNotFoundError as e:
     raise FileNotFoundError(
       "Check enable EXPORT_STATE in CAMP code") from e
-  return data,out
+  return data, out
 
 
 # @profile
@@ -188,7 +184,7 @@ def run_cases(conf):
   conf.caseGpuCpu = cases_words[0]
   conf.caseMulticellsOnecell = cases_words[1]
   conf.case = conf.caseBase
-  timeBase,valuesBase = run(conf)
+  timeBase, valuesBase = run(conf)
   # OptimCases
   datacases = []
   for mpiProcessesCaseOptim in (
@@ -207,7 +203,7 @@ def run_cases(conf):
       conf.caseGpuCpu = cases_words[0]
       conf.caseMulticellsOnecell = cases_words[1]
       conf.case = caseOptim
-      timeOptim,valuesOptim = run(conf)
+      timeOptim, valuesOptim = run(conf)
       if conf.is_out:
         math_functions.check_NRMSE(valuesBase,
                                    valuesOptim,
@@ -238,7 +234,8 @@ def run_diffCells(conf):
     datacolumns += datacells
   return datacolumns
 
-def plot_cases(conf,datay):
+
+def plot_cases(conf, datay):
   cases_words = conf.casesOptim[0].split()
   conf.caseGpuCpu = cases_words[0]
   conf.caseMulticellsOnecell = cases_words[1]
@@ -282,6 +279,7 @@ def plot_cases(conf,datay):
         if not legend_name == "":
           legend.append(legend_name)
   conf.plotTitle = ""
+  nGPUsOptim = [i / 10 for i in conf.mpiProcessesCaseOptimList]
   if not is_same_diff_cells and len(conf.diffCellsL) == 1:
     conf.plotTitle += conf.diffCells + " test: "
   if is_same_arch_optim:
@@ -289,11 +287,8 @@ def plot_cases(conf,datay):
       conf.plotTitle += ""
     else:
       if conf.caseGpuCpu == "GPU" and len(
-          conf.mpiProcessesCaseOptimList) == 1 and \
-          conf.mpiProcessesCaseOptimList[0] > 1:
-        conf.plotTitle += str(
-          int(conf.mpiProcessesCaseOptimList[0]/10)) + " GPUs "
-      #todo use conf.nGPUsOptim instead of dividing all time
+          nGPUsOptim) == 1 and nGPUsOptim[0] > 1:
+        conf.plotTitle += str(int(nGPUsOptim[0])) + " GPUs "
       else:
         conf.plotTitle += conf.caseGpuCpu + " "
   if conf.plotXKey == "GPUs":
@@ -316,7 +311,7 @@ def plot_cases(conf,datay):
     datax = conf.cells
     plot_x_key = "Cells"
   elif conf.plotXKey == "GPUs":
-    datax = [i / 10 for i in conf.mpiProcessesCaseOptimList]
+    datax = nGPUsOptim
     if len(conf.cells) > 1:
       conf.plotTitle += ", Cells: " + str(conf.cells[0])
       plot_x_key = conf.plotXKey
@@ -342,7 +337,7 @@ def run_main(conf):
   if conf.is_out:
     if (len(
         conf.mpiProcessesCaseOptimList) > 1 or
-        conf.mpiProcessesCaseBase != \
+        conf.mpiProcessesCaseBase !=
         conf.mpiProcessesCaseOptimList[0]):
       print(
         "Disabled out error check because number of "
@@ -362,5 +357,5 @@ def run_main(conf):
           "processes, setting 1 cell per process")
         conf.mpiProcessesCaseOptimList[i] = cellsProcesses
 
-  datay=run_diffCells(conf)
-  plot_cases(conf,datay)
+  datay = run_diffCells(conf)
+  plot_cases(conf, datay)

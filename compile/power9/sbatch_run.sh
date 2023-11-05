@@ -9,4 +9,4 @@
 #SBATCH --exclusive
 
 cd ../../test/monarch
-time ./run.sh
+./sbatch_run.sh
