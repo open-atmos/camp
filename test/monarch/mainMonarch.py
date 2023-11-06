@@ -133,6 +133,7 @@ def run(conf):
   is_import = False
   data_path = ("out/stats" + caseGpuCpuName + nCellsStr +
                "cells" + str(conf.timeSteps) + "tsteps.csv")
+  print("data_path", data_path)
   data_path2 = ("out/state" + caseGpuCpuName + nCellsStr +
                 "cells" + str(conf.timeSteps) + "tsteps.csv")
   if conf.is_import and os.path.exists(data_path):
@@ -151,7 +152,6 @@ def run(conf):
   data = df.to_dict('list')
   y_key_words = conf.plotYKey.split()
   y_key = y_key_words[-1]
-  print("data_path", data_path)
   data = data[y_key][0]
   out = 0
   if conf.is_out:

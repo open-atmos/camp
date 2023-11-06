@@ -18,11 +18,11 @@ def all_timesteps():
   # conf.profileCuda = "nvprof"
   # conf.profileCuda = "nsight"
   conf.is_import = True
-  conf.mpiProcessesCaseBase = 40
-  conf.mpiProcessesCaseOptimList = [40]
+  conf.mpiProcessesCaseBase = 1
+  conf.mpiProcessesCaseOptimList = [10,20,30,40]
   conf.allocatedNodes = 1
   conf.allocatedTasksPerNode = 160
-  conf.cells = [10000,50000,100000]
+  conf.cells = [100000]
   # conf.cells = [100, 500, 1000, 5000, 10000]
   conf.timeSteps = 720
   conf.caseBase = "CPU One-cell"
@@ -33,7 +33,6 @@ def all_timesteps():
   conf.plotYKey = "Speedup timecvStep"
 
   run_main(conf)
-
 
 if __name__ == "__main__":
   all_timesteps()
