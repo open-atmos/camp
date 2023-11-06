@@ -32,7 +32,6 @@ def all_timesteps():
   # conf.casesOptim.append("CPU EBI")
   conf.casesOptim.append("GPU BDF")
   conf.plotYKey = "Speedup timecvStep"
-  # plotXKey = "GPUs"
 
   run_main(conf)
 

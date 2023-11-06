@@ -15,7 +15,7 @@ make_run(){
   make
   cd $curr_path
   python TestMonarch1.py
-  python TestMonarch2.py
-  python TestMonarch3.py
+  #python TestMonarch2.py
+  #python TestMonarch3.py
 }
 time make_run

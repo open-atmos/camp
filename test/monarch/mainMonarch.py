@@ -1,7 +1,7 @@
 import matplotlib as mpl
 
 mpl.use('TkAgg')
-import plot_functions #comment to save ~2s execution time
+#import plot_functions  # comment to save ~2s execution time
 import math_functions
 import os
 import numpy as np
@@ -134,10 +134,10 @@ def run(conf):
   data_path = ("out/stats" + caseGpuCpuName + nCellsStr +
                "cells" + str(conf.timeSteps) + "tsteps.csv")
   data_path2 = ("out/state" + caseGpuCpuName + nCellsStr +
-               "cells" + str(conf.timeSteps) + "tsteps.csv")
+                "cells" + str(conf.timeSteps) + "tsteps.csv")
   if conf.is_import and os.path.exists(data_path):
     is_import = True
-    if conf. is_out and not os.path.exists(data_path2):
+    if conf.is_out and not os.path.exists(data_path2):
       is_import = False
   if not is_import:
     os.system(exec_str)
@@ -153,7 +153,7 @@ def run(conf):
   y_key = y_key_words[-1]
   print("data_path", data_path)
   data = data[y_key][0]
-  out=0
+  out = 0
   if conf.is_out:
     if not is_import:
       os.rename("out/state.csv", data_path2)
@@ -330,7 +330,7 @@ def plot_cases(conf, datay):
   else:
     print("plotTitle: ", plotTitle)
   print(namey, ":", datay)
-  plot_functions.plotsns(namex, namey, datax, datay,plotTitle, legend)
+  plot_functions.plotsns(namex, namey, datax, datay, plotTitle, legend)
 
 
 def run_main(conf):
@@ -344,9 +344,6 @@ def run_main(conf):
         "processes should be the same for calculate "
         "accuracy, only speedup can use different number")
       conf.is_out = False
-  if not conf.caseBase:
-    print("ERROR: caseBase is empty")
-    raise
   for i, mpiProcesses in enumerate(
       conf.mpiProcessesCaseOptimList):
     for j, cellsProcesses in enumerate(conf.cells):
@@ -358,4 +355,4 @@ def run_main(conf):
         conf.mpiProcessesCaseOptimList[i] = cellsProcesses
 
   datay = run_diffCells(conf)
-  plot_cases(conf, datay)
+ # plot_cases(conf, datay)
