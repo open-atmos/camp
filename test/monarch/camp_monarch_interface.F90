@@ -225,6 +225,7 @@ contains
     end if
     deallocate(buffer)
     use_cpu=0
+    nGPUs=1
     open(unit=32, file='settings/config_variables_c_solver.txt', status='old')
     read(32,'(A)') i_str
     if(trim(i_str) == "USE_CPU=ON") then
