@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: MIT
 #
 
-from checkGPU import *
+from mainMonarch import *
 
 
 def all_timesteps():
@@ -22,9 +22,9 @@ def all_timesteps():
   conf.mpiProcessesCaseOptimList = [1]
   conf.allocatedNodes = 1
   conf.allocatedTasksPerNode = 160
-  conf.cells = [100000]
+  conf.cells = [1000]
   # conf.cells = [100, 500, 1000, 5000, 10000]
-  conf.timeSteps = 720
+  conf.timeSteps = 2
   conf.caseBase = "CPU One-cell"
   # conf.caseBase = "GPU BDF"
   conf.casesOptim = []
