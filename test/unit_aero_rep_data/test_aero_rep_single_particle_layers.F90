@@ -118,25 +118,18 @@ contains
     character(len=50), dimension(4) :: cover_name
     character(len=50), dimension(4) :: ordered_layer_set_names
 
+    ! Assemble input arguments
     layer_name_unordered = [ character(len=50) :: 'almond butter','top bread','jam','bottom bread' ]
     cover_name = [ character(len=50) :: 'bottom bread','jam','almond butter','none' ]
-    correct_layer_names = [ character(len=50) :: 'bommom bread','almond butter','jam','top bread' ]
-    ! Here you can assemble input arguments for the ordered_layer_array()
-    ! function, call the function, and check the values of the output array
+    correct_layer_names = [ character(len=50) :: 'bottom bread','almond butter','jam','top bread' ]
 
     ! Call the function and enter inputs 
-    !ordered_layer_set_names = aero_rep%ordered_layer_array(layer_name, cover_name)
     ordered_layer_set_names = aero_rep%ordered_layer_array(layer_name_unordered, cover_name)
-    print *, ordered_layer_set_names
-    print *, correct_layer_names
-    ! check individual values with this function:
-    call assert(468777371, ordered_layer_set_names(1) .ne. correct_layer_names(1))
-
-!    do i_layer = 1,size(ordered_layer_set_names)
-!      call assert_msg(072051383, ordered_layer_set_names(i_layer).ne.&
-!                        correct_layer_names(i_layer))
-!    end do
-
+    ! check individual values:
+    call assert(903386486, ordered_layer_set_names(1) .eq. correct_layer_names(1))
+    call assert(468777371, ordered_layer_set_names(2) .eq. correct_layer_names(2))
+    call assert(487966491, ordered_layer_set_names(3) .eq. correct_layer_names(3))
+    call assert(721784428, ordered_layer_set_names(4) .eq. correct_layer_names(4))
 
   end subroutine test_ordered_layer_array
 
