@@ -330,7 +330,7 @@ def plot_cases(conf, datay):
   else:
     print("plotTitle: ", plotTitle)
   print(namey, ":", datay)
-  plot_functions.plotsns(namex, namey, datax, datay, plotTitle, legend)
+  #plot_functions.plotsns(namex, namey, datax, datay, plotTitle, legend)
 
 
 def run_main(conf):
@@ -355,4 +355,8 @@ def run_main(conf):
         conf.mpiProcessesCaseOptimList[i] = cellsProcesses
 
   datay = run_diffCells(conf)
- # plot_cases(conf, datay)
+  file1 = open(conf.campConf, "w")
+  file1.write("USE_CPU=ON\n")
+  file1.write("1\n")
+  file1.close()
+  #plot_cases(conf, datay)

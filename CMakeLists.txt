@@ -271,7 +271,7 @@ set_property(DIRECTORY PROPERTY ADDITIONAL_MAKE_CLEAN_FILES test_run mechanisms_
 ######################################################################
 # Unit test macro
 
-#if (ENABLE_TESTS)
+if (ENABLE_TESTS)
   macro(do_unit_test test_name result)
     if(ENABLE_MPI)
       add_test(unit_test_${test_name} mpirun -v -np 1 ${CMAKE_BINARY_DIR}/unit_test_${test_name})
@@ -281,7 +281,7 @@ set_property(DIRECTORY PROPERTY ADDITIONAL_MAKE_CLEAN_FILES test_run mechanisms_
     set_tests_properties(unit_test_${test_name}
             PROPERTIES PASS_REGULAR_EXPRESSION ${result})
   endmacro(do_unit_test)
-#endif()
+endif()
 
 ######################################################################
 # tests
@@ -304,7 +304,10 @@ else()
 endif()
 
 if (ENABLE_TESTS)
-  # New unit tests (UNDER DEVELOPMENT)
+if (ENABLE_GPU)
+    add_test(test_gpu ${CMAKE_CURRENT_SOURCE_DIR}/test/monarch/checkGPU.sh)
+endif()
+    # New unit tests (UNDER DEVELOPMENT)
   add_test(test_rxn_arrhenius_mech ${CMAKE_BINARY_DIR}/test_run/unit_tests/input_files/run_rxn_arrhenius.sh ${MPI_TEST_FLAG})
 
   # Old-style unit tests
@@ -545,11 +548,13 @@ target_link_libraries(unit_test_aero_rep_single_particle camplib)
 
 if (ENABLE_TESTS)
 
-add_executable(mock_monarch test/monarch/mock_monarch.F90
-        test/monarch/camp_monarch_interface.F90
-        ${CB5_EBI_SOLVER} ${CB5_KPP_SOLVER}
-        test/chemistry/cb05cl_ae5/module_BSC_CHEM_DATA.F90)
-target_link_libraries(mock_monarch camplib)
+if (ENABLE_GPU)
+    add_executable(mock_monarch test/monarch/mock_monarch.F90
+            test/monarch/camp_monarch_interface.F90
+            ${CB5_EBI_SOLVER} ${CB5_KPP_SOLVER}
+            test/chemistry/cb05cl_ae5/module_BSC_CHEM_DATA.F90)
+    target_link_libraries(mock_monarch camplib)
+endif()
 
 ######################################################################
 # camp-chem box model
