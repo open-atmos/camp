@@ -822,34 +822,37 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Order layer array from inner most layer to outermost 
-  function ordered_layer_array(this) result(ordered_layer_name)
-
+  function ordered_layer_array(this,layer_name_unordered,cover_name) result(ordered_layer_name)
+  !function ordered_layer_array(this) result(ordered_layer_name)
     !> Aerosol representation to update
     class(aero_rep_single_particle_layers_t), intent(inout) :: this
-
+    !> Layer name input, for testing
+    character(len=*), intent(in) :: layer_name_unordered(:)
+    character(len=*), intent(in) :: cover_name(:)
     !> Layer names in order (only used during initialization)
-    type(string_t), allocatable :: ordered_layer_name(:)
+    character(len=50), allocatable :: ordered_layer_name(:)
 
     integer(kind=i_kind) :: i_layer, i_cover
-#if 0   
-    allocate(ordered_layer_name(layers%size()))
+    !allocate(ordered_layer_name(layers%size()))
+    allocate(ordered_layer_name(size(layer_name_unordered)))
    
     ! Search for innermost layer with cover set to 'none'
-    do i_layer = 1, layers%size()
+    do i_layer = 1,size(layer_name_unordered)
+  !  do i_layer = 1, layers%size()
       if (cover_name(i_layer) == "none") then
         ordered_layer_name(1) = layer_name_unordered(i_layer)
       end if
     end do
 
-    do i_cover = 2, layers%size()
-      do i_layer = 1, layers%size()
+    do i_cover = 2, size(layer_name_unordered)
+      do i_layer = 1, size(layer_name_unordered)
         if (ordered_layer_name(i_cover-1).eq.cover_name(i_layer)) then
-          ordered_layer_name(i_cover) = layer_name(i_layer)
+          ordered_layer_name(i_cover) = layer_name_unordered(i_layer)
         end if
       end do
     end do
-    this%ordered_layer_name = ordered_layer_name
-#endif
+    !this%ordered_layer_name = ordered_layer_name
+
   end function ordered_layer_array
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

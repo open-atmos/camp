@@ -49,7 +49,7 @@ program camp_test_aero_rep_data
   !> Interface to c ODE solver and test functions
   interface
     !> Run the c function tests
-    integer(kind=c_int) function run_aero_rep_single_particle_c_tests(solver_data, &
+    integer(kind=c_int) function run_aero_rep_single_particle_layers_c_tests(solver_data, &
         state, env)  bind (c)
       use iso_c_binding
       !> Pointer to the initialized solver data
@@ -58,7 +58,7 @@ program camp_test_aero_rep_data
       type(c_ptr), value :: state
       !> Pointer to the environmental state array
       type(c_ptr), value :: env
-    end function run_aero_rep_single_particle_c_tests
+    end function run_aero_rep_single_particle_layers_c_tests
   end interface
 
   ! New-line character
@@ -78,7 +78,6 @@ program camp_test_aero_rep_data
   call camp_mpi_finalize()
 
 contains
-
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Run all camp_aero_rep_data tests
@@ -115,12 +114,29 @@ contains
   subroutine test_ordered_layer_array()
 
     type(aero_rep_single_particle_layers_t) :: aero_rep
+    character(len=50), dimension(4) :: layer_name_unordered, correct_layer_names
+    character(len=50), dimension(4) :: cover_name
+    character(len=50), dimension(4) :: ordered_layer_set_names
 
+    layer_name_unordered = [ character(len=50) :: 'almond butter','top bread','jam','bottom bread' ]
+    cover_name = [ character(len=50) :: 'bottom bread','jam','almond butter','none' ]
+    correct_layer_names = [ character(len=50) :: 'bommom bread','almond butter','jam','top bread' ]
     ! Here you can assemble input arguments for the ordered_layer_array()
     ! function, call the function, and check the values of the output array
 
+    ! Call the function and enter inputs 
+    !ordered_layer_set_names = aero_rep%ordered_layer_array(layer_name, cover_name)
+    ordered_layer_set_names = aero_rep%ordered_layer_array(layer_name_unordered, cover_name)
+    print *, ordered_layer_set_names
+    print *, correct_layer_names
     ! check individual values with this function:
-    call assert(468777371, "something" .eq. "something")
+    call assert(468777371, ordered_layer_set_names(1) .ne. correct_layer_names(1))
+
+!    do i_layer = 1,size(ordered_layer_set_names)
+!      call assert_msg(072051383, ordered_layer_set_names(i_layer).ne.&
+!                        correct_layer_names(i_layer))
+!    end do
+
 
   end subroutine test_ordered_layer_array
 
@@ -155,7 +171,7 @@ contains
 
     allocate(file_list(1))
     file_list(1)%string = &
-            'test_run/unit_aero_rep_data/test_aero_rep_single_particle.json'
+            'test_run/unit_aero_rep_data/test_aero_rep_single_particle_layers.json'
 
     call camp_core%load(file_list)
     call camp_core%initialize()
@@ -175,7 +191,7 @@ contains
               camp_core%get_aero_rep(rep_name, aero_rep), rep_name)
       call assert_msg(362813745, associated(aero_rep), rep_name)
       select type (aero_rep)
-        type is (aero_rep_single_particle_t)
+        type is (aero_rep_single_particle_layers_t)
         class default
           call die_msg(519535557, rep_name)
       end select
@@ -360,7 +376,7 @@ contains
                     rep_name)
 
     select type( aero_rep )
-      type is(aero_rep_single_particle_t)
+      type is(aero_rep_single_particle_layers_t)
         call camp_core%initialize_update_object( aero_rep, update_number )
       class default
         call die_msg(766425873, "Wrong aero rep type")
@@ -387,7 +403,7 @@ contains
     call update_number%set_number__n_m3( TEST_PARTICLE, PART_NUM_CONC )
     call camp_core%update_data( update_number )
 
-    passed = run_aero_rep_single_particle_c_tests(                           &
+    passed = run_aero_rep_single_particle_layers_c_tests(                           &
                  camp_core%solver_data_gas_aero%solver_c_ptr,                &
                  c_loc(camp_state%state_var),                                &
                  c_loc(camp_state%env_var)                                   &
