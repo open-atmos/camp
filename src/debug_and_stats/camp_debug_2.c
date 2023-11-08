@@ -127,29 +127,3 @@ void print_int(int *x, int len, const char *s){
   }
 #endif
 }
-
-void get_camp_config_variables(SolverData *sd){
-  sd->use_cpu=1;
-  FILE *fp;
-  char buff[255];
-  char path[] = "settings/config_variables_c_solver.txt";
-  fp = fopen(path, "r");
-  if (fp == NULL){
-    char cwd[1024];
-    if (getcwd(cwd, sizeof(cwd)) != NULL) {
-      printf("Current working dir: %s\n", cwd);
-    } else {
-      printf("getcwd() error");
-      exit(0);
-    }
-    printf("Could not open file %s, setting default values: is_cpu=ON\n",path);
-  }else{
-    fscanf(fp, "%s", buff);
-    if(strstr(buff,"USE_CPU=OFF")!=NULL){
-      sd->use_cpu=0;
-    }
-    fscanf(fp, "%d", &sd->nDevices);
-    fscanf(fp, "%s", buff);
-    fclose(fp);
-  }
-}

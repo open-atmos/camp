@@ -41,23 +41,23 @@ void constructor_cvode_gpu(SolverData *sd){
     printf("ERROR: MORE THAN 40 MPI PROCESSES AND NOT MULTIPLE OF 40, WHEN CTE-POWER ONLY HAS 40 CORES PER NODE\n");
     exit(0);
   }
-  int nDevicesMax=4;
-  cudaGetDeviceCount(&nDevicesMax);
-  if (sd->nDevices > nDevicesMax) {
-    printf("ERROR: Not enough GPUs to launch, nDevices %d nDevicesMax %d\n", sd->nDevices, nDevicesMax);
+  int nGPUsMax=4;
+  cudaGetDeviceCount(&nGPUsMax);
+  if (sd->nGPUs > nGPUsMax) {
+    printf("ERROR: Not enough GPUs to launch, nGPUs %d nGPUsMax %d\n", sd->nGPUs, nGPUsMax);
     exit(0);
   }
-  if (size > sd->nDevices*(coresPerNode/nDevicesMax)){
-    printf("ERROR: size,sd->nDevices,coresPerNode,nDevicesMax %d %d %d %d "
+  if (size > sd->nGPUs*(coresPerNode/nGPUsMax)){
+    printf("ERROR: size,sd->nGPUs,coresPerNode,nGPUsMax %d %d %d %d "
            "MORE MPI PROCESSES THAN DEVICES (FOLLOW PROPORTION, "
-           "FOR CTE-POWER IS 10 PROCESSES FOR EACH GPU)\n",size,sd->nDevices,coresPerNode,nDevicesMax);
+           "FOR CTE-POWER IS 10 PROCESSES FOR EACH GPU)\n",size,sd->nGPUs,coresPerNode,nGPUsMax);
     exit(0);
   }
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   cudaSetDevice(0);
   for (int i = 0; i < coresPerNode; i++) {
-    if (rank < coresPerNode / nDevicesMax * (i + 1) && rank >= coresPerNode / nDevicesMax * i && i<sd->nDevices) {
+    if (rank < coresPerNode / nGPUsMax * (i + 1) && rank >= coresPerNode / nGPUsMax * i && i<sd->nGPUs) {
       cudaSetDevice(i);
       mCPU->threads = 1024;
       mCPU->blocks = (n_dep_var*n_cells + mCPU->threads - 1) / mCPU->threads;

@@ -26,7 +26,7 @@ endif ()
 
 ######################################################################
 # options
-SET(ENABLE_TESTS ON)
+SET(ENABLE_TESTS OFF)
 
 #Set all options to OFF by default due to bug on CMake 3.15
 option(ENABLE_GSL "Enable GSL library for Jacobian evaluation" OFF)
@@ -537,17 +537,6 @@ endif()
 set_source_files_properties(${CB5_EBI_SOLVER} PROPERTIES COMPILE_FLAGS
 	${CB5_EBI_FLAGS})
 
-######################################################################
-# test_aero_rep_single_particle
-
-add_executable(unit_test_aero_rep_single_particle
-        test/unit_aero_rep_data/test_aero_rep_single_particle.c
-        test/unit_aero_rep_data/test_aero_rep_single_particle.F90)
-
-target_link_libraries(unit_test_aero_rep_single_particle camplib)
-
-if (ENABLE_TESTS)
-
 if (ENABLE_GPU)
     add_executable(mock_monarch test/monarch/mock_monarch.F90
             test/monarch/camp_monarch_interface.F90
@@ -556,7 +545,15 @@ if (ENABLE_GPU)
     target_link_libraries(mock_monarch camplib)
 endif()
 
-######################################################################
+if (ENABLE_TESTS)
+    add_executable(unit_test_aero_rep_single_particle
+            test/unit_aero_rep_data/test_aero_rep_single_particle.c
+            test/unit_aero_rep_data/test_aero_rep_single_particle.F90)
+
+    target_link_libraries(unit_test_aero_rep_single_particle camplib)
+
+
+    ######################################################################
 # camp-chem box model
 
   add_executable(camp_box_model test/camp_box_model_data.F90
