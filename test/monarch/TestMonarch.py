@@ -26,7 +26,7 @@ def all_timesteps():
   # conf.cells = [100, 500, 1000, 5000, 10000]
   conf.timeSteps = 720
   conf.caseBase = "CPU One-cell"
-  #conf.caseBase = "GPU BDF"
+  # conf.caseBase = "GPU BDF"
   conf.casesOptim = []
   # conf.casesOptim.append("CPU One-cell")
   conf.casesOptim.append("GPU BDF")
