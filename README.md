@@ -1,24 +1,23 @@
+
 CAMP
 ======
 
 CAMP: Chemistry Across Multiple Phases
 
 [![Latest version](https://img.shields.io/github/tag/open-atmos/camp.svg?label=version)](https://github.com/open-atmos/camp/blob/main/ChangeLog.md)
-[![Docker build status](https://img.shields.io/docker/automated/open-atmos/camp.svg)](https://cloud.docker.com/swarm/compdyn/repository/docker/openatmos/camp/builds)
 [![CI Status](https://github.com/open-atmos/camp/actions/workflows/main.yml/badge.svg)](https://github.com/open-atmos/camp/actions/workflows/main.yml)
 [![License](https://img.shields.io/github/license/open-atmos/camp.svg)](https://github.com/open-atmos/camp/blob/main/COPYING)
 
-Version -.-.-
-Released -
-
 <http://open-atmos.org/camp/>
+
+The full CAMP documentation, including the BootCAMP tutorial is available [here](https://open-atmos.github.io/camp).
 
 References:
 
-   * M. Dawson, C. Guzman, J. H. Curtis, M. Acosta, S. Zhu, D. Dabdub,
-     A. Conley, M. West, N. Riemer, and O. Jorba (2021),
+   * [M. Dawson, C. Guzman, J. H. Curtis, M. Acosta, S. Zhu, D. Dabdub,
+     A. Conley, M. West, N. Riemer, and O. Jorba (2022),
      Chemistry Across Multiple Phases (CAMP) version 1.0: An
-     Integrated multi-phase chemistry model, in preparation
+     Integrated multi-phase chemistry model, Geosci. Model Dev. 15](https://doi.org/10.5194/gmd-15-3663-2022)
 
 Copyright (C) 2017&ndash;2021 Barcelona Supercomputing Center and the
 University of Illinois at Urbana&ndash;Champaign
@@ -36,7 +35,7 @@ This is the fastest way to get running.
 * **_Step 2:_** Run the CAMP test suite with:
 
 ```text
-docker run -it --rm openatmos/camp bash -c 'cd /build; make test'
+docker run -it --rm ghcr.io/open-atmos/camp:main bash -c 'cd /build; make test'
 ```
 
 
@@ -50,7 +49,7 @@ Required dependencies:
    * json-fortran for JSON input file support -
      <https://github.com/jacobwilliams/json-fortran>
    * SuiteSparse - <http://faculty.cse.tamu.edu/davis/SuiteSparse/SuiteSparse-5.1.0.tar.gz>
-   * A modified version of CVODE 3.1.2 - <https://github.com/mattldawson/cvode>
+   * A modified version of CVODE 3.1.2 - provided here in `cvode-3.4-alpha.tar.gz`
 
 Optional dependencies:
 
@@ -61,7 +60,7 @@ Optional dependencies:
 Installation
 ============
 
-1. Install cmake, SuiteSparse, and CVODE (see above).
+1. Install cmake, json-fortran, SuiteSparse, and CVODE (see above).
 
 2. Unpack CAMP:
 
@@ -119,16 +118,4 @@ Installation
         make
         make test
 
-Compile on [CTE-POWER](https://www.bsc.es/user-support/power.php) 
-============
 
-Go to folder camp/compile/power9/README.md for more instructions.
-
-Authors
-============
-
-The Open-Atmos Team: Matthew Dawson, Matthew West, Nicole Riemer,
-Christian G. Ruiz, Jeffrey Curtis, Mario Acosta and Oriol Jorba.
-
-We also acknowledge past contributions of Andrew Conley, 
-Shupeng Zhu and Donald Dabdub.

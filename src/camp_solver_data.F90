@@ -162,15 +162,6 @@ module camp_camp_solver_data
       real(kind=c_double), value :: t_final
     end function solver_run
 
-    subroutine rxn_get_base_rate(solver_data, rate_constants) bind (c)
-      use iso_c_binding
-      !> Pointer to the initialized solver data
-      type(c_ptr), value :: solver_data
-      real(kind=c_double) :: rate_constants
-      !type(c_ptr), value :: rate_constants
-      !integer(kind=c_int) :: rxn_id
-    end subroutine rxn_get_base_rate
-
     !> Get the solver statistics
     subroutine solver_get_statistics( solver_data, solver_flag, num_steps, &
                     RHS_evals, LS_setups, error_test_fails, NLS_iters, &
@@ -426,7 +417,6 @@ module camp_camp_solver_data
     procedure :: update_aero_rep_data
     !> Integrate over a given time step
     procedure :: solve
-    procedure :: get_base_rate
     procedure:: get_solver_stats
     procedure:: export_solver_data_state
     procedure:: join_solver_data_state
@@ -950,17 +940,6 @@ contains
             )
 
   end function solve
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-  subroutine get_base_rate(this, rate_constants)
-    class(camp_solver_data_t), intent(inout) :: this
-    real(kind=dp), allocatable, intent(inout) :: rate_constants(:)
-    real(kind=c_double), pointer :: rate_constants_c(:)
-
-    call rxn_get_base_rate(this%solver_c_ptr,rate_constants(1))
-
-  end subroutine get_base_rate
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 

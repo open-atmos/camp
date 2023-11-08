@@ -355,8 +355,4 @@ def run_main(conf):
         conf.mpiProcessesCaseOptimList[i] = cellsProcesses
 
   datay = run_diffCells(conf)
-  file1 = open(conf.campConf, "w")
-  file1.write("USE_CPU=ON\n")
-  file1.write("1\n")
-  file1.close()
   #plot_cases(conf, datay)

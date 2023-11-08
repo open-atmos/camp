@@ -26,7 +26,7 @@ endif ()
 
 ######################################################################
 # options
-SET(ENABLE_TESTS OFF)
+SET(ENABLE_TESTS ON)
 
 #Set all options to OFF by default due to bug on CMake 3.15
 option(ENABLE_GSL "Enable GSL library for Jacobian evaluation" OFF)
@@ -495,6 +495,14 @@ install(
 endif()
 
 ######################################################################
+# camp-chem box model
+
+add_executable(camp_box_model test/camp_box_model_data.F90
+        test/camp_box_model.F90)
+
+target_link_libraries(camp_box_model camplib)
+
+######################################################################
 # test_chemistry_cb05cl_ae5
 
 set(CB5_EBI_SOLVER
@@ -551,14 +559,6 @@ if (ENABLE_TESTS)
             test/unit_aero_rep_data/test_aero_rep_single_particle.F90)
 
     target_link_libraries(unit_test_aero_rep_single_particle camplib)
-
-
-    ######################################################################
-# camp-chem box model
-
-  add_executable(camp_box_model test/camp_box_model_data.F90
-          test/camp_box_model.F90)
-  target_link_libraries(camp_box_model camplib)
 
 ######################################################################
 # test_chemistry_cb05cl_ae5

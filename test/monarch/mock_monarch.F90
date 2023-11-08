@@ -89,7 +89,7 @@ program mock_monarch_t
   type(json_core) :: json
   character(len=:), allocatable :: export_path
   character(len=128) :: i_str
-  integer :: id, use_cpu, nGPUs
+  integer :: id
 
   call camp_mpi_init()
   I_W=1

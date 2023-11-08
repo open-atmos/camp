@@ -238,9 +238,6 @@ bool rxn_photolysis_update_data(void *update_data, int *rxn_int_data,
 void rxn_photolysis_export_input(ModelData *model_data, int *rxn_int_data,
                                  double *rxn_float_data, double *rxn_env_data,
                                  FILE *f);
-void rxn_photolysis_get_base_rate(ModelData *model_data, int *rxn_int_data,
-                                       double *rxn_float_data, double *rxn_env_data,
-                                       double *rate_constant);
 void rxn_photolysis_print(int *rxn_int_data, double *rxn_float_data);
 #ifdef CAMP_USE_SUNDIALS
 

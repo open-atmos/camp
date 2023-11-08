@@ -224,12 +224,12 @@ contains
       call camp_mpi_unpack_real_array(buffer, pos, this%specs_emi)
     end if
     deallocate(buffer)
-    use_cpu=0
+    use_cpu=1
     nGPUs=1
     open(unit=32, file='settings/config_variables_c_solver.txt', status='old')
     read(32,'(A)') i_str
-    if(trim(i_str) == "USE_CPU=ON") then
-      use_cpu = 1
+    if(trim(i_str) == "USE_CPU=OFF") then
+      use_cpu = 0
     end if
     read(32, *) nGPUs
     close(32)

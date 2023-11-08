@@ -1157,7 +1157,7 @@ contains
     call assert_msg(662920365, .not.this%solver_is_initialized, &
             "Attempting to initialize the solver twice.")
 
-    use_cpu1=0
+    use_cpu1=1
     nGPUs1=1
     if (present(use_cpu)) then
       use_cpu1=use_cpu
