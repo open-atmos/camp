@@ -1,12 +1,13 @@
-/* Copyright (C) 2021 Barcelona Supercomputing Center and University of
- * Illinois at Urbana-Champaign
+/* Copyright (C) 2021 Barcelona Supercomputing Center,
+ *   University of Illinois at Urbana-Champaign, and
+ *   National Center for Atmospheric Research
  * SPDX-License-Identifier: MIT
  *
- * CMAQ_OH_HNO3 reaction solver functions
+ * Ternary Chemical Activation reaction solver functions
  *
  */
 /** \file
- * \brief CMAQ_OH_HNO3 reaction solver functions
+ * \brief Ternary Chemical Activation reaction solver functions
  */
 #include <math.h>
 #include <stdio.h>
@@ -19,21 +20,19 @@
 
 #define NUM_REACT_ int_data[0]
 #define NUM_PROD_ int_data[1]
-#define k0_A_ float_data[0]
-#define k0_B_ float_data[1]
-#define k0_C_ float_data[2]
-#define k2_A_ float_data[3]
-#define k2_B_ float_data[4]
-#define k2_C_ float_data[5]
-#define k3_A_ float_data[6]
-#define k3_B_ float_data[7]
-#define k3_C_ float_data[8]
-#define SCALING_ float_data[9]
-#define CONV_ float_data[10]
+#define K0_A_ float_data[0]
+#define K0_B_ float_data[1]
+#define K0_C_ float_data[2]
+#define KINF_A_ float_data[3]
+#define KINF_B_ float_data[4]
+#define KINF_C_ float_data[5]
+#define FC_ float_data[6]
+#define N_ float_data[7]
+#define SCALING_ float_data[8]
+#define CONV_ float_data[9]
 #define RATE_CONSTANT_ (rxn_env_data[0])
 #define NUM_INT_PROP_ 2
-#define NUM_FLOAT_PROP_ 11
-#define NUM_ENV_PARAM_ 1
+#define NUM_FLOAT_PROP_ 10
 #define REACT_(x) (int_data[NUM_INT_PROP_ + x] - 1)
 #define PROD_(x) (int_data[NUM_INT_PROP_ + NUM_REACT_ + x] - 1)
 #define DERIV_ID_(x) int_data[NUM_INT_PROP_ + NUM_REACT_ + NUM_PROD_ + x]
@@ -46,8 +45,9 @@
  * \param rxn_float_data Pointer to the reaction floating-point data
  * \param jac Jacobian
  */
-void rxn_CMAQ_OH_HNO3_get_used_jac_elem(int *rxn_int_data,
-                                        double *rxn_float_data, Jacobian *jac) {
+void rxn_ternary_chemical_activation_get_used_jac_elem(int *rxn_int_data,
+                                                       double *rxn_float_data,
+                                                       Jacobian *jac) {
   int *int_data = rxn_int_data;
   double *float_data = rxn_float_data;
 
@@ -71,9 +71,10 @@ void rxn_CMAQ_OH_HNO3_get_used_jac_elem(int *rxn_int_data,
  * \param rxn_int_data Pointer to the reaction integer data
  * \param rxn_float_data Pointer to the reaction floating-point data
  */
-void rxn_CMAQ_OH_HNO3_update_ids(ModelData *model_data, int *deriv_ids,
-                                 Jacobian jac, int *rxn_int_data,
-                                 double *rxn_float_data) {
+void rxn_ternary_chemical_activation_update_ids(ModelData *model_data,
+                                                int *deriv_ids, Jacobian jac,
+                                                int *rxn_int_data,
+                                                double *rxn_float_data) {
   int *int_data = rxn_int_data;
   double *float_data = rxn_float_data;
 
@@ -99,36 +100,36 @@ void rxn_CMAQ_OH_HNO3_update_ids(ModelData *model_data, int *deriv_ids,
 
 /** \brief Update reaction data for new environmental conditions
  *
- * For CMAQ_OH_HNO3 reaction this only involves recalculating the rate
- * constant.
+ * For Ternary Chemical Activation reaction this only involves recalculating the
+ * rate constant.
  *
  * \param model_data Pointer to the model data
  * \param rxn_int_data Pointer to the reaction integer data
  * \param rxn_float_data Pointer to the reaction floating-point data
  * \param rxn_env_data Pointer to the environment-dependent parameters
  */
-void rxn_CMAQ_OH_HNO3_update_env_state(ModelData *model_data, int *rxn_int_data,
-                                       double *rxn_float_data,
-                                       double *rxn_env_data) {
+void rxn_ternary_chemical_activation_update_env_state(ModelData *model_data,
+                                                      int *rxn_int_data,
+                                                      double *rxn_float_data,
+                                                      double *rxn_env_data) {
   int *int_data = rxn_int_data;
   double *float_data = rxn_float_data;
   double *env_data = model_data->grid_cell_env;
 
   // Calculate the rate constant in (#/cc)
+  // k = (k0 / (1 + k0[M]/kinf)) * Fc^(1/(1+(1/N*log(k0[M]/kinf))^2))
   double conv = CONV_ * PRESSURE_PA_ / TEMPERATURE_K_;
-  double k2 =
-      k2_A_ * (k2_C_ == 0.0 ? 1.0 : exp(k2_C_ / TEMPERATURE_K_)) *
-      (k2_B_ == 0.0 ? 1.0 : pow(TEMPERATURE_K_ / ((double)300.0), k2_B_));
-  double k3 =
-      k3_A_  // [M] is included in k3_A_
-      * (k3_C_ == 0.0 ? 1.0 : exp(k3_C_ / TEMPERATURE_K_)) *
-      (k3_B_ == 0.0 ? 1.0 : pow(TEMPERATURE_K_ / ((double)300.0), k3_B_)) *
+  double k0 =
+      K0_A_ * (K0_C_ == 0.0 ? 1.0 : exp(K0_C_ / TEMPERATURE_K_)) *
+      (K0_B_ == 0.0 ? 1.0 : pow(TEMPERATURE_K_ / ((double)300.0), K0_B_)) *
       conv;
-  RATE_CONSTANT_ =
-      (k0_A_ * (k0_C_ == 0.0 ? 1.0 : exp(k0_C_ / TEMPERATURE_K_)) *
-           (k0_B_ == 0.0 ? 1.0 : pow(TEMPERATURE_K_ / ((double)300.0), k0_B_)) +
-       k3 / (((double)1.0) + k3 / k2)) *
-      pow(conv, NUM_REACT_ - 1) * SCALING_;
+  double kinf =
+      k0 /
+      (KINF_A_ * (KINF_C_ == 0.0 ? 1.0 : exp(KINF_C_ / TEMPERATURE_K_)) *
+       (KINF_B_ == 0.0 ? 1.0 : pow(TEMPERATURE_K_ / ((double)300.0), KINF_B_)));
+  RATE_CONSTANT_ = 1.0e-6 * (k0 / (1.0 + kinf)) *
+                   pow(FC_, (1.0 / (1.0 + pow(log10(kinf) / N_, 2)))) *
+                   pow(conv, NUM_REACT_ - 1) * SCALING_;
 
   return;
 }
@@ -136,7 +137,7 @@ void rxn_CMAQ_OH_HNO3_update_env_state(ModelData *model_data, int *rxn_int_data,
 /** \brief Calculate contributions to the time derivative \f$f(t,y)\f$ from
  * this reaction.
  *
- * \param model_data Pointer to the model data
+ * \param model_data Pointer to the model data, including the state array
  * \param time_deriv TimeDerivative object
  * \param rxn_int_data Pointer to the reaction integer data
  * \param rxn_float_data Pointer to the reaction floating-point data
@@ -144,20 +145,16 @@ void rxn_CMAQ_OH_HNO3_update_env_state(ModelData *model_data, int *rxn_int_data,
  * \param time_step Current time step being computed (s)
  */
 #ifdef CAMP_USE_SUNDIALS
-void rxn_CMAQ_OH_HNO3_calc_deriv_contrib(
+void rxn_ternary_chemical_activation_calc_deriv_contrib(
     ModelData *model_data, TimeDerivative time_deriv, int *rxn_int_data,
-    double *rxn_float_data, double *rxn_env_data, double time_step) {
+    double *rxn_float_data, double *rxn_env_data, realtype time_step) {
   int *int_data = rxn_int_data;
   double *float_data = rxn_float_data;
   double *state = model_data->grid_cell_state;
   double *env_data = model_data->grid_cell_env;
 
   // Calculate the reaction rate
-#ifdef TIME_DERIVATIVE_LONG_DOUBLE
   long double rate = RATE_CONSTANT_;
-#else
-  double rate = RATE_CONSTANT_;
-#endif
   for (int i_spec = 0; i_spec < NUM_REACT_; i_spec++)
     rate *= state[REACT_(i_spec)];
 
@@ -193,10 +190,9 @@ void rxn_CMAQ_OH_HNO3_calc_deriv_contrib(
  * \param time_step Current time step being calculated (s)
  */
 #ifdef CAMP_USE_SUNDIALS
-void rxn_CMAQ_OH_HNO3_calc_jac_contrib(ModelData *model_data, Jacobian jac,
-                                       int *rxn_int_data,
-                                       double *rxn_float_data,
-                                       double *rxn_env_data, double time_step) {
+void rxn_ternary_chemical_activation_calc_jac_contrib(
+    ModelData *model_data, Jacobian jac, int *rxn_int_data,
+    double *rxn_float_data, double *rxn_env_data, realtype time_step) {
   int *int_data = rxn_int_data;
   double *float_data = rxn_float_data;
   double *state = model_data->grid_cell_state;
@@ -231,16 +227,17 @@ void rxn_CMAQ_OH_HNO3_calc_jac_contrib(ModelData *model_data, Jacobian jac,
 }
 #endif
 
-/** \brief Print the CMAQ_OH_HNO3 reaction parameters
+/** \brief Print the Ternary Chemical Activation reaction parameters
  *
  * \param rxn_int_data Pointer to the reaction integer data
  * \param rxn_float_data Pointer to the reaction floating-point data
  */
-void rxn_CMAQ_OH_HNO3_print(int *rxn_int_data, double *rxn_float_data) {
+void rxn_ternary_chemical_activation_print(int *rxn_int_data,
+                                           double *rxn_float_data) {
   int *int_data = rxn_int_data;
   double *float_data = rxn_float_data;
 
-  printf("\n\nCMAQ_OH_HNO3 reaction\n");
+  printf("\n\nTernary Chemical Activation reaction\n");
 
   return;
 }

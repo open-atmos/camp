@@ -116,16 +116,6 @@ void rxn_emission_update_env_state(ModelData *model_data, int *rxn_int_data,
   // Calculate the rate constant in (concentration_units/s)
   RATE_ = SCALING_ * BASE_RATE_;
 
-#ifdef CAMP_DEBUG_RATE_CONSTANTS
-#ifdef CAMP_USE_MPI
-  int rank;
-  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  if (rank == 411 || rank == 0) {
-    printf("RATE_CONSTANT: %-le, rank %d \n", RATE_, rank);
-  }
-#endif
-#endif
-
   return;
 }
 

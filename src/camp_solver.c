@@ -3,6 +3,11 @@
  * SPDX-License-Identifier: MIT
  *
  * This is the c ODE solver for the chemistry module
+ * It is currently set up to use the SUNDIALS BDF method, Newton
+ * iteration with the KLU sparse linear solver.
+ *
+ * It uses a scalar relative tolerance and a vector absolute tolerance.
+ *
  */
 /** \file
  * \brief Interface to c solvers for chemistry

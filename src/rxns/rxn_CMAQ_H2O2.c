@@ -121,38 +121,6 @@ void rxn_CMAQ_H2O2_update_env_state(ModelData *model_data, int *rxn_int_data,
            (k2_B_ == 0.0 ? 1.0 : pow(TEMPERATURE_K_ / ((double)300.0), k2_B_)) *
            conv) *
       pow(conv, NUM_REACT_ - 1);
-
-#ifdef CAMP_DEBUG_RATE_CONSTANTS
-#ifdef CAMP_USE_MPI
-  int rank;
-  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  if (rank == 411 || rank == 0) {
-    printf("RATE_CONSTANT CMAQ_H2O2: %-le, rank %d \n", RATE_CONSTANT_, rank);
-  }
-#endif
-#endif
-
-  /*
-#ifdef CAMP_USE_MPI
-  int rank;
-  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-
-  if (rank==10) {
-    printf("RATE_CONSTANT: %-le\n", RATE_CONSTANT_);
-    printf("k1_A_: %-le\n", k1_A_);
-    //printf("TEMPERATURE_K_: %-le\n", TEMPERATURE_K_);
-    //printf("PRESSURE_PA_: %-le\n", PRESSURE_PA_);
-    //todo print each react id that access, if there any id=70(bnzhrxn) more
-than 1 or wrong rates we got it printf("NUM_REACT_: %d\n", NUM_REACT_); for(int
-i=0; i<NUM_REACT_; i++) printf("%d,",REACT_(i));
-
-    printf("NUM_PROD_: %d\n", NUM_PROD_);
-    for(int i=0; i<NUM_PROD_; i++)
-      printf("%d,",PROD_(i));
-
-  }
-#endif
-*/
   return;
 }
 

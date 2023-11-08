@@ -23,7 +23,6 @@ void rxn_update_env_state(ModelData *model_data);
 void rxn_reset_state_adjustments(ModelData *model_data);
 void rxn_adjust_state(ModelData *model_data);
 void rxn_print_data(void *solver_data);
-void rxn_export_input(void *solver_data, FILE *f);
 void rxn_get_base_rate(void *solver_data, double *rate_constants);
 #ifdef CAMP_USE_SUNDIALS
 void rxn_calc_deriv(ModelData *model_data, TimeDerivative time_deriv,
