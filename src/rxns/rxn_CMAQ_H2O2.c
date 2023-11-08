@@ -121,6 +121,7 @@ void rxn_CMAQ_H2O2_update_env_state(ModelData *model_data, int *rxn_int_data,
            (k2_B_ == 0.0 ? 1.0 : pow(TEMPERATURE_K_ / ((double)300.0), k2_B_)) *
            conv) *
       pow(conv, NUM_REACT_ - 1);
+
   return;
 }
 
