@@ -152,7 +152,8 @@ void copy_data(ModelElement from, ModelElement *to) {
 // Initialize the difference checker data
 void diff_check_init(ModelData model_data) {
   DifferenceCheckerData *dd;
-  dd = &diff_data[num_solvers++];
+  dd = &diff_data[num_solvers];
+  num_solvers++;
 
   printf("\nInitializing solver diff checker %d n_rxn = %d", num_solvers,
          model_data.n_rxn);

@@ -20,7 +20,8 @@ module camp_camp_solver_data
   use camp_sub_model_data
   use camp_sub_model_factory
   use camp_util,                        only : assert_msg, to_string, &
-                                              warn_assert_msg, die_msg
+                                              warn_assert_msg, die_msg,&
+                                              string_t
 
   use iso_c_binding
 
@@ -48,7 +49,8 @@ module camp_camp_solver_data
                     n_aero_phase_float_param, n_aero_rep, &
                     n_aero_rep_int_param, n_aero_rep_float_param, &
                     n_aero_rep_env_param, n_sub_model, n_sub_model_int_param,&
-                    n_sub_model_float_param, n_sub_model_env_param) bind (c)
+                    n_sub_model_float_param, n_sub_model_env_param,&
+                    use_cpu, nGPUs) bind (c)
       use iso_c_binding
       !> Number of variables on the state array per grid cell
       !! (including const, PSSA, etc.)
@@ -89,7 +91,22 @@ module camp_camp_solver_data
       integer(kind=c_int), value :: n_sub_model_float_param
       !> Total number of environment-dependent parameters for all sub models
       integer(kind=c_int), value :: n_sub_model_env_param
+      integer(kind=c_int), value :: use_cpu
+      integer(kind=c_int), value :: nGPUs
     end function solver_new
+
+    !> Set specie name
+    subroutine solver_set_spec_name(solver_data, spec_name, size_spec_name, i) bind (c)
+      use iso_c_binding
+      !> Pointer to a SolverData object
+      type(c_ptr), value :: solver_data
+      !> Species name
+      character(1) :: spec_name
+      !> Index spec_name
+      integer(kind=c_int), value :: size_spec_name
+      !> Index spec_name
+      integer(kind=c_int), value :: i
+    end subroutine solver_set_spec_name
 
     !> Solver initialization
     subroutine solver_initialize(solver_data, abs_tol, rel_tol, max_steps, &
@@ -145,13 +162,6 @@ module camp_camp_solver_data
       real(kind=c_double), value :: t_final
     end function solver_run
 
-    !> Reset the solver function timers
-    subroutine solver_reset_timers( solver_data ) bind(c)
-      use iso_c_binding
-      !> Pointer to the solver data
-      type(c_ptr), value :: solver_data
-    end subroutine solver_reset_timers
-
     !> Get the solver statistics
     subroutine solver_get_statistics( solver_data, solver_flag, num_steps, &
                     RHS_evals, LS_setups, error_test_fails, NLS_iters, &
@@ -197,6 +207,21 @@ module camp_camp_solver_data
       !> Maximum loss of precision on last call the f()
       type(c_ptr), value :: max_loss_precision
     end subroutine solver_get_statistics
+
+    subroutine export_solver_state( solver_data) bind (c)
+      use iso_c_binding
+      type(c_ptr), value :: solver_data
+    end subroutine
+
+    subroutine join_solver_state( solver_data) bind (c)
+      use iso_c_binding
+      type(c_ptr), value :: solver_data
+    end subroutine
+
+    subroutine export_solver_stats( solver_data) bind (c)
+      use iso_c_binding
+      type(c_ptr), value :: solver_data
+    end subroutine
 
     !> Add condensed reaction data to the solver data block
     subroutine rxn_add_condensed_data(rxn_type, n_int_param, &
@@ -392,10 +417,10 @@ module camp_camp_solver_data
     procedure :: update_aero_rep_data
     !> Integrate over a given time step
     procedure :: solve
-    !> Reset the solver function timers
-    procedure, private :: reset_timers
-    !> Get the solver statistics from the last run
-    procedure, private :: get_solver_stats
+    procedure:: get_solver_stats
+    procedure:: export_solver_data_state
+    procedure:: join_solver_data_state
+    procedure:: export_solver_data_stats
     !> Checks whether a solver is available
     procedure :: is_solver_available
     !> Print the solver data
@@ -428,7 +453,8 @@ contains
 
   !> Initialize the solver
   subroutine initialize(this, var_type, abs_tol, mechanisms, aero_phases, &
-                  aero_reps, sub_models, rxn_phase, n_cells)
+          aero_reps, sub_models, rxn_phase, n_cells,&
+          spec_names, use_cpu, nGPUs)
 
     !> Solver data
     class(camp_solver_data_t), intent(inout) :: this
@@ -447,20 +473,24 @@ contains
     type(aero_rep_data_ptr), pointer, intent(in) :: aero_reps(:)
     !> Sub models to include
     type(sub_model_data_ptr), pointer, intent(in) :: sub_models(:)
+    integer, intent(in) :: use_cpu
+    integer, intent(in) :: nGPUs
     !> Reactions phase to solve -- gas, aerosol, or both (default)
     !! Use parameters in camp_rxn_data to specify phase:
     !! GAS_RXN, AERO_RXN, GAS_AERO_RXN
     integer(kind=i_kind), intent(in) :: rxn_phase
-    !> Number of cells to compute
-    integer(kind=i_kind), optional :: n_cells
 
     ! Variable types
     integer(kind=c_int), pointer :: var_type_c(:)
     ! Absolute tolerances
     real(kind=c_double), pointer :: abs_tol_c(:)
+    !> Number of cells to compute
+    integer(kind=i_kind), optional :: n_cells
+    type(string_t), allocatable, intent(in) :: spec_names(:)
+    character(len=:), allocatable :: spec_name
     ! Indices for iteration
     integer(kind=i_kind) :: i_mech, i_rxn, i_aero_phase, i_aero_rep, &
-            i_sub_model
+            i_sub_model, i
     ! Reaction pointer
     class(rxn_data_t), pointer :: rxn
     ! Reaction factory object for getting reaction type
@@ -627,7 +657,9 @@ contains
             n_sub_model,                       & ! # of sub models
             n_sub_model_int_param,             & ! # of sub model int params
             n_sub_model_float_param,           & ! # of sub model real params
-            n_sub_model_env_param              & ! # of sub model env params
+            n_sub_model_env_param,              & ! # of sub model env params
+            use_cpu,&
+            nGPUs&
             )
 
     ! Add all the condensed reaction data to the solver data block for
@@ -794,10 +826,11 @@ contains
     !> Solver data
     class(camp_solver_data_t), intent(inout) :: this
     !> Update data
-    class(sub_model_update_data_t), intent(in) :: update_data
+    class(sub_model_update_data_t), intent(inout) :: update_data
+    integer :: i
 
     call sub_model_update_data( &
-            update_data%get_cell_id()-1,     & ! Grid cell to update
+            update_data%get_cell_id()-1,      & ! Grid cell to update
             update_data%sub_model_solver_id, & ! Solver's sub model id
             update_data%get_type(),          & ! Sub-model type to update
             update_data%get_data(),          & ! Data needed to perform update
@@ -806,7 +839,7 @@ contains
 
   end subroutine update_sub_model_data
 
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Update reaction data
   subroutine update_rxn_data(this, update_data)
@@ -814,10 +847,11 @@ contains
     !> Solver data
     class(camp_solver_data_t), intent(inout) :: this
     !> Update data
-    class(rxn_update_data_t), intent(in) :: update_data
+    class(rxn_update_data_t), intent(inout) :: update_data
+    integer :: i
 
     call rxn_update_data( &
-            update_data%get_cell_id()-1,     & ! Grid cell to update
+            update_data%get_cell_id()-1,      & ! Grid cell to update
             update_data%rxn_solver_id,       & ! Solver's reaction id
             update_data%get_type(),          & ! Reaction type to update
             update_data%get_data(),          & ! Data needed to perform update
@@ -826,7 +860,7 @@ contains
 
   end subroutine update_rxn_data
 
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Update aerosol representation data based on data passed from the host
   !! model related to aerosol properties
@@ -835,22 +869,23 @@ contains
     !> Solver data
     class(camp_solver_data_t), intent(inout) :: this
     !> Update data
-    class(aero_rep_update_data_t), intent(in) :: update_data
+    class(aero_rep_update_data_t), intent(inout) :: update_data
+    integer :: i
 
     call aero_rep_update_data( &
-            update_data%get_cell_id()-1,     & ! Grid cell to update
+            update_data%get_cell_id()-1,      & ! Grid cell to update
             update_data%aero_rep_solver_id,  & ! Solver's aero rep id
             update_data%get_type(),          & ! Aerosol representation type
             update_data%get_data(),          & ! Data needed to perform update
             this%solver_c_ptr                & ! Pointer to solver data
-            )
+      )
 
   end subroutine update_aero_rep_data
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Solve the mechanism(s) for a specified timestep
-  subroutine solve(this, camp_state, t_initial, t_final, solver_stats)
+  function solve(this, camp_state, t_initial, t_final, solver_stats) result (solver_status)
 
     !> Solver data
     class(camp_solver_data_t), intent(inout) :: this
@@ -893,8 +928,6 @@ contains
       end if
     end if
 
-    ! Reset the solver function timers
-    call this%reset_timers( )
 #endif
 
     ! Run the solver
@@ -906,34 +939,11 @@ contains
             real(t_final, kind=c_double)    & ! Final time (s)
             )
 
-    ! Get the solver statistics
-    if (present(solver_stats)) then
-      call this%get_solver_stats( solver_stats )
-      solver_stats%status_code   = solver_status
-      solver_stats%start_time__s = t_initial
-      solver_stats%end_time__s   = t_final
-    else
-      call warn_assert_msg(997420005, solver_status.eq.0, "Solver failed")
-    end if
-
-  end subroutine solve
+  end function solve
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  !> Reset the solver function timers
-  subroutine reset_timers( this )
-
-    !> Solver data
-    class(camp_solver_data_t), intent(inout) :: this
-
-    call solver_reset_timers( this%solver_c_ptr )
-
-  end subroutine reset_timers
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-  !> Get solver statistics
-  subroutine get_solver_stats( this, solver_stats )
+  subroutine get_solver_stats( this, solver_stats)
 
     !> Solver data
     class(camp_solver_data_t), intent(inout) :: this
@@ -958,9 +968,25 @@ contains
             c_loc( solver_stats%Jac_evals_total       ),   & ! total Jac() calls
             c_loc( solver_stats%RHS_time__s           ),   & ! Compute time f() [s]
             c_loc( solver_stats%Jac_time__s           ),   & ! Compute time Jac() [s]
-            c_loc( solver_stats%max_loss_precision    ) )    ! Maximum loss of precision
+            c_loc( solver_stats%max_loss_precision) & ! Maximum loss of precision
+    )
 
-  end subroutine get_solver_stats
+  end subroutine
+
+  subroutine export_solver_data_state( this)
+    class(camp_solver_data_t), intent(inout) :: this
+    call export_solver_state(this%solver_c_ptr)
+  end subroutine
+
+  subroutine join_solver_data_state( this)
+    class(camp_solver_data_t), intent(inout) :: this
+    call join_solver_state(this%solver_c_ptr)
+  end subroutine
+
+  subroutine export_solver_data_stats( this)
+    class(camp_solver_data_t), intent(inout) :: this
+    call export_solver_stats(this%solver_c_ptr)
+  end subroutine
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 

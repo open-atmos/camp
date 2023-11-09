@@ -9,6 +9,12 @@ program box_model
   !! [Chem-spec data module]
   use camp_chem_spec_data
 
+#ifdef CAMP_USE_MPI
+  use mpi
+  use camp_mpi
+#endif
+
+
   !! [Chem-spec data module]
 
   !! [Core and state]
@@ -33,6 +39,11 @@ program box_model
   integer(kind=i_kind) :: i_time
 
   !! [Time id]
+
+  ! allows example to run with MPI supprt compiled in
+#ifdef CAMP_USE_MPI
+  call camp_mpi_init( )
+#endif
 
   !! [Initialize core]
   camp_core => camp_core_t( "my_config_file.json" )
@@ -79,8 +90,11 @@ program box_model
                      camp_state%state_var( idx_O2  )
   end do
 
-  deallocate( camp_core )
   deallocate( camp_state )
+
+#ifdef CAMP_USE_MPI
+  call camp_mpi_finalize( )
+#endif
 
 end program box_model
 !! [Solve and output]

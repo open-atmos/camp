@@ -11,22 +11,41 @@
 #ifndef CAMP_COMMON_H
 #define CAMP_COMMON_H
 
+#include <stdio.h>
+#include <stdlib.h>
 #include <time.h>
 #include "Jacobian.h"
 #include "time_derivative.h"
 
 /* SUNDIALS Header files with a description of contents used */
 #ifdef CAMP_USE_SUNDIALS
-#include <cvode/cvode.h>             /* Protoypes for CVODE fcts., consts.  */
-#include <cvode/cvode_direct.h>      /* CVDls interface                     */
+
+#ifdef CAMP_USE_GPU
+#include <cuda.h>
+#include <cuda_runtime.h>
+#include <cuda_runtime_api.h>
+#include "cuda/cuda_structs.h"
+#endif
+#include <cvode/cvode.h>        /* Protoypes for CVODE fcts., consts.  */
+#include <cvode/cvode_direct.h> /* CVDls interface                     */
 #ifdef CAMP_CUSTOM_CVODE
-#  include <cvode/cvode_impl.h>        /* CVodeMem structure                  */
+#include <cvode/cvode_impl.h>   /* CVodeMem structure                  */
 #endif
 #include <nvector/nvector_serial.h>  /* Serial N_Vector types, fcts, macros */
 #include <sundials/sundials_math.h>  /* SUNDIALS math function macros       */
 #include <sundials/sundials_types.h> /* definition of types                 */
 #include <sunlinsol/sunlinsol_klu.h> /* KLU SUNLinearSolver                 */
+#include <sundials/sundials_nvector.h>
 #include <sunmatrix/sunmatrix_sparse.h> /* sparse SUNMatrix                    */
+
+
+#ifdef CAMP_USE_GPU
+#include <cvode/cvode_direct_impl.h>
+#include <sundials/sundials_direct.h>
+#include <sundials/sundials_linearsolver.h>
+#include <sundials/sundials_matrix.h>
+#endif
+
 #endif
 
 // State variable types (Must match parameters defined in camp_chem_spec_data
@@ -53,15 +72,26 @@
 /* boolean definition */
 // CUDA/C++ already has bool definition: Avoid issues disabling it for GPU
 #ifndef CAMP_GPU_SOLVER_H_
+#ifndef CVODE_gpu_SOLVER_H_
+#ifndef CVODE_gpu_d2_H_
+#ifndef ITSOLVERGPU_H
+#ifndef CVODE_CUDA_H_
 typedef enum { false, true } bool;
+#endif
+#endif
+#endif
+#endif
 #endif
 
 /* Jacobian map */
+#ifndef DEF_JAC_MAP
+#define DEF_JAC_MAP
 typedef struct {
   int solver_id;  // solver Jacobian id
   int rxn_id;     // reaction Jacobian id
   int param_id;   // sub model Jacobian id
 } JacMap;
+#endif
 
 /* Model data structure */
 typedef struct {
@@ -74,6 +104,8 @@ typedef struct {
   int n_per_cell_solver_jac_elem;  // number of potentially non-zero
                                    // solver Jacobian elements
   int n_cells;                     // number of cells to compute simultaneously
+  int n_cells_cpu_gpu;
+  int n_cells_gpu;
   double *abs_tol;  // pointer to array of state variable absolute
                     // integration tolerances
   int *var_type;    // pointer to array of state variable types (solver,
@@ -81,7 +113,6 @@ typedef struct {
 #ifdef CAMP_USE_SUNDIALS
   SUNMatrix J_init;    // sparse solver Jacobian matrix with used elements
                        // initialized to 1.0
-  SUNMatrix J_rxn;     // Matrix for Jacobian contributions from reactions
   SUNMatrix J_params;  // Matrix for Jacobian contributions from sub model
                        // parameter calculations
   SUNMatrix J_solver;  // Solver Jacobian
@@ -176,6 +207,22 @@ typedef struct {
                                  // for the current grid cell
   int n_sub_model_env_data;      // Number of sub model environmental parameters
                                  // from all sub models
+
+  int n_aero_phase_int_param;
+  int n_aero_phase_float_param;
+  int n_aero_rep_int_param;
+  int n_aero_rep_float_param;
+  int n_rxn_int_param;
+  int n_rxn_float_param;
+
+#ifdef CAMP_USE_GPU
+#ifdef CAMP_DEBUG_GPU
+  double timeDerivKernel;
+  cudaEvent_t startDerivKernel;
+  cudaEvent_t stopDerivKernel;
+#endif
+#endif
+
 } ModelData;
 
 /* Solver data structure */
@@ -203,19 +250,34 @@ typedef struct {
 #ifdef CAMP_DEBUG
   booleantype debug_out;  // Output debugging information during solving
   booleantype eval_Jac;   // Evalute Jacobian data during solving
-  int counterDeriv;       // Total calls to f()
-  int counterJac;         // Total calls to Jac()
-  clock_t timeDeriv;      // Compute time for calls to f()
-  clock_t timeJac;        // Compute time for calls to Jac()
   double
       max_loss_precision;  // Maximum loss of precision during last call to f()
 #endif
+
+  double t_initial;
+  double t_final;
+
+#ifdef CAMP_DEBUG_GPU
+  double timeCVode;
 #endif
+
+#endif
+#ifdef CAMP_USE_GPU
+  ModelDataCPU mCPU;
+  ModelDataGPU *mGPU;
+  int *flagCells;
+  void *cvode_mem2;
+  float rate_cells_gpu;
+#endif
+  int use_cpu;
+  int nGPUs;
+
   void *cvode_mem;       // CVodeMem object
   ModelData model_data;  // Model data (used during initialization and solving)
   bool no_solve;  // Flag to indicate whether to run the solver needs to be
                   // run. Set to true when no reactions are present.
   double init_time_step;  // Initial time step (s)
+  char **spec_names;      // Species names
 } SolverData;
 
 #endif

@@ -12,6 +12,7 @@
 #define RXN_SOLVER_H
 #include "Jacobian.h"
 #include "camp_common.h"
+#include "debug_and_stats/camp_debug_2.h"
 
 /** Public reaction functions **/
 
@@ -25,8 +26,6 @@ void rxn_print_data(void *solver_data);
 #ifdef CAMP_USE_SUNDIALS
 void rxn_calc_deriv(ModelData *model_data, TimeDerivative time_deriv,
                     double time_step);
-void rxn_calc_deriv_specific_types(ModelData *model_data,
-                                   TimeDerivative time_deriv, double time_step);
 void rxn_calc_jac(ModelData *model_data, Jacobian jac, double time_step);
 void rxn_calc_jac_specific_types(ModelData *model_data, Jacobian jac,
                                  double time_step);

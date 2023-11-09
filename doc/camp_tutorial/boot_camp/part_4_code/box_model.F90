@@ -170,7 +170,6 @@ program box_model
 #endif
   !! [output]
 
-  deallocate( camp_core )
   deallocate( camp_state )
 
 end program box_model

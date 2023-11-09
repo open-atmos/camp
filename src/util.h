@@ -47,6 +47,9 @@ static inline double mean_speed__m_s(double temperature__K,
  * @param mw__kg_mol Molecular weight of the gas-phase species [\f$\mbox{kg}\,
  * \mbox{mol}^{-1}\f$]
  */
+#ifdef __CUDA_ARCH__
+__device__
+#endif
 static inline double mean_free_path__m(double diffusion_coeff__m2_s,
                                        double temperature__K,
                                        double mw__kg_mol) {
@@ -66,6 +69,9 @@ static inline double mean_free_path__m(double diffusion_coeff__m2_s,
  *  @param radius__m Particle effective radius [m]
  *  @param alpha Mass accomodation coefficient [unitless]
  */
+#ifdef __CUDA_ARCH__
+__device__
+#endif
 static inline double transition_regime_correction_factor(
     double mean_free_path__m, double radius__m, double alpha) {
   double K_n = mean_free_path__m / radius__m;
@@ -88,6 +94,9 @@ static inline double transition_regime_correction_factor(
  *  @param radius__m Particle effective radius [m]
  *  @param alpha Mass accomodation coefficient [unitless]
  */
+#ifdef __CUDA_ARCH__
+__device__
+#endif
 static inline double d_transition_regime_correction_factor_d_radius(
     double mean_free_path__m, double radius__m, double alpha) {
   double K_n = mean_free_path__m / radius__m;
@@ -126,6 +135,9 @@ static inline double d_transition_regime_correction_factor_d_radius(
  *  @param radius__m Particle radius [m]
  *  @param alpha Mass accomodation coefficient [unitless]
  */
+#ifdef __CUDA_ARCH__
+__device__
+#endif
 static inline double gas_aerosol_transition_rxn_rate_constant(
     double diffusion_coeff__m2_s, double mean_free_path__m,
     double radius__m, double alpha) {
@@ -151,6 +163,9 @@ static inline double gas_aerosol_transition_rxn_rate_constant(
  *  @param radius__m Particle radius [m]
  *  @param alpha Mass accomodation coefficient [unitless]
  */
+#ifdef __CUDA_ARCH__
+__device__
+#endif
 static inline double d_gas_aerosol_transition_rxn_rate_constant_d_radius(
     double diffusion_coeff__m2_s, double mean_free_path__m, double radius__m,
     double alpha) {

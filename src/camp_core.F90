@@ -90,9 +90,7 @@ module camp_camp_core
 #ifdef CAMP_USE_JSON
   use json_module
 #endif
-#ifdef CAMP_USE_MPI
-  use mpi
-#endif
+  use camp_mpi
   use camp_aero_phase_data
   use camp_aero_rep_data
   use camp_aero_rep_factory
@@ -100,7 +98,6 @@ module camp_camp_core
   use camp_constants,                  only : i_kind, dp
   use camp_env_state
   use camp_mechanism_data
-  use camp_mpi
   use camp_camp_solver_data
   use camp_camp_state
   use camp_rxn_data
@@ -120,7 +117,6 @@ module camp_camp_core
   !!
   !! Contains all time-invariant data for a Part-MC model run.
   type :: camp_core_t
-  private
     !> Chemical mechanisms
     !! FIXME set up an iterator for external modules to use and
     !! make all data members private
@@ -138,6 +134,7 @@ module camp_camp_core
     !> Number of cells to compute
     integer(kind=i_kind) :: n_cells = 1
     !> Initial state values
+    real(kind=dp), allocatable :: init_state_cell(:)
     real(kind=dp), allocatable :: init_state(:)
     !> Flag to split gas- and aerosol-phase reactions
     !! (for large aerosol representations, like single-particle)
@@ -155,6 +152,8 @@ module camp_camp_core
     type(camp_solver_data_t), pointer, public :: solver_data_aero => null()
     !> Solver data (mixed gas- and aerosol-phase reactions)
     type(camp_solver_data_t), pointer, public :: solver_data_gas_aero => null()
+    real(kind=dp), allocatable :: init_state_var(:)
+    type(string_t), allocatable :: spec_names(:)
     !> Flag indicating the model data has been initialized
     logical :: core_is_initialized = .false.
     !> Flag indicating the solver has been initialized
@@ -184,6 +183,9 @@ module camp_camp_core
     procedure :: get_rel_tol
     !> Get the absolute tolerance for a species on the state array
     procedure :: get_abs_tol
+    procedure :: export_solver_state
+    procedure :: join_solver_state
+    procedure :: export_solver_stats
     !> Get a new model state variable
     procedure :: new_state_one_cell
     procedure :: new_state_multi_cell
@@ -258,6 +260,8 @@ contains
     character(len=*), intent(in), optional :: input_file_path
     !> Num cells to compute simulatenously
     integer(kind=i_kind), optional :: n_cells
+    logical :: flag
+    integer(kind=i_kind) :: err
 
     allocate(new_obj)
     allocate(new_obj%mechanism(0))
@@ -273,7 +277,12 @@ contains
     if (present(input_file_path)) then
       call new_obj%load_files(trim(input_file_path))
     end if
-
+#ifdef CAMP_USE_MPI
+    call MPI_INITIALIZED(flag, err)
+    if (.not.flag) then
+      call camp_mpi_init( )
+    endif
+#endif
   end function constructor
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -393,7 +402,7 @@ contains
   !! key-value pair \b camp-data whose value is an array of \c json objects.
   !! Additional top-level key-value pairs will be ignored. Each of the \c json
   !! objects in the \b camp-data array must contain a key-value pair \b type
-  !! whose value is a string referencing a valid PartMC object.
+  !! whose value is a string referencing a valid CAMP object.
   !!
   !! The valid values for \b type are:
   !!
@@ -440,6 +449,7 @@ contains
     character(len=:), allocatable :: str_val
     real(kind=json_rk) :: real_val
     logical :: file_exists, found
+    CHARACTER(len=255) :: cwd
 
     ! mechansim
     type(mechanism_data_t), pointer :: mech_ptr
@@ -478,6 +488,10 @@ contains
       call assert_msg(936390222, trim(input_file_path(i_file)%string).ne."", &
               "Received empty string for file path")
       inquire( file=input_file_path(i_file)%string, exist=file_exists )
+      if(.not.file_exists) then
+        call getcwd(cwd)
+        print*, "Current working directory:", trim(cwd)
+      end if
       call assert_msg(910660557, file_exists, "Cannot file file: "// &
               input_file_path(i_file)%string)
       call j_file%load_file(filename = input_file_path(i_file)%string)
@@ -665,7 +679,7 @@ contains
 
     ! Variables for setting initial state values
     class(aero_rep_data_t), pointer :: rep
-    integer(kind=i_kind) :: i_state_elem, i_name
+    integer(kind=i_kind) :: i, i_state_elem, i_name
 
     ! Species name for looking up properties
     character(len=:), allocatable :: spec_name
@@ -766,9 +780,11 @@ contains
     this%core_is_initialized = .true.
 
     ! Set the initial state values
+    allocate(this%init_state_cell(this%size_state_per_cell))
     allocate(this%init_state(this%size_state_per_cell * this%n_cells))
 
     ! Set species concentrations to zero
+    this%init_state_cell(:) = 0.0
     this%init_state(:) = 0.0
 
     ! Set activity coefficients to 1.0
@@ -785,6 +801,8 @@ contains
             i_state_elem = rep%spec_state_id(unique_names(i_name)%string)
             this%init_state(i_state_elem + i_cell * this%size_state_per_cell) = &
                     real(1.0d0, kind=dp)
+            this%init_state_cell(i_state_elem) = &
+                    this%init_state(i_state_elem + i_cell * this%size_state_per_cell)
           end do
 
           deallocate(unique_names)
@@ -1133,13 +1151,23 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Initialize the solver
-  subroutine solver_initialize(this)
-
-    !> Chemical model
+  subroutine solver_initialize(this, use_cpu, nGPUs)
     class(camp_core_t), intent(inout) :: this
-
+    integer, intent(in), optional :: use_cpu
+    integer, intent(in), optional :: nGPUs
+    type(string_t), allocatable :: spec_names(:)
+    integer :: i_spec, n_gas_spec, use_cpu1, nGPUs1
     call assert_msg(662920365, .not.this%solver_is_initialized, &
             "Attempting to initialize the solver twice.")
+
+    use_cpu1=1
+    nGPUs1=1
+    if (present(use_cpu)) then
+      use_cpu1=use_cpu
+    end if
+    if (present(nGPUs)) then
+      nGPUs1=nGPUs
+    end if
 
     ! Set up either two solvers (gas and aerosol) or one solver (combined)
     if (this%split_gas_aero) then
@@ -1163,8 +1191,11 @@ contains
                 this%aero_rep,   & ! Pointer to the aerosol representations
                 this%sub_model,  & ! Pointer to the sub-models
                 GAS_RXN,         & ! Reaction phase
-                this%n_cells   & ! # of cells computed simultaneosly
-                )
+                this%n_cells,    & ! # of cells computed simultaneosly
+                spec_names,       & ! Species names
+                use_cpu1, &
+                nGPUs1 &
+      )
       call this%solver_data_aero%initialize( &
                 this%var_type,   & ! State array variable types
                 this%abs_tol,    & ! Absolute tolerances for each state var
@@ -1173,8 +1204,11 @@ contains
                 this%aero_rep,   & ! Pointer to the aerosol representations
                 this%sub_model,  & ! Pointer to the sub-models
                 AERO_RXN,        & ! Reaction phase
-                this%n_cells   & ! # of cells computed simultaneosly
-                )
+                this%n_cells,    & ! # of cells computed simultaneosly
+                spec_names,       & ! Species names
+                use_cpu1, &
+                nGPUs1 &
+              )
     else
 
       ! Create a new solver data object
@@ -1194,7 +1228,10 @@ contains
                 this%aero_rep,   & ! Pointer to the aerosol representations
                 this%sub_model,  & ! Pointer to the sub-models
                 GAS_AERO_RXN,    & ! Reaction phase
-                this%n_cells   & ! # of cells computed simultaneosly
+                this%n_cells,    & ! # of cells computed simultaneosly
+                spec_names,       & ! Species names
+                use_cpu1, &
+                nGPUs1 &
                 )
 
     end if
@@ -1247,9 +1284,9 @@ contains
   subroutine initialize_rxn_update_object( this, rxn, update_data )
 
     !> CAMP core
-    class(camp_core_t), intent(in) :: this
+    class(camp_core_t), intent(inout) :: this
     !> Reaction to be updated
-    class(rxn_data_t), intent(inout) :: rxn
+    class(rxn_data_t),target, intent(inout) :: rxn
     !> Update data object
     class(rxn_update_data_t), intent(out) :: update_data
 
@@ -1290,12 +1327,26 @@ contains
   !! the aerosol condensed data needs updated based on changes in, e.g.,
   !! particle size or number concentration. The update types are aerosol-
   !! representation specific.
-  subroutine aero_rep_update_data(this, update_data)
+  subroutine aero_rep_update_data(this, update_data, cell_id)
 
     !> Chemical model
     class(camp_core_t), intent(in) :: this
     !> Update data
-    class(aero_rep_update_data_t), intent(in) :: update_data
+    class(aero_rep_update_data_t), intent(inout) :: update_data
+    !> Cell id
+    integer(kind=i_kind), optional :: cell_id
+    integer :: n_cells_update
+
+    n_cells_update = 1
+    if (present(cell_id)) then
+      update_data%cell_id=cell_id;
+    else
+      if(.not.this%n_cells.eq.1) then
+        print*,"aero_rep_update_data with more than 1 cell needs to specify cell_id this%n_cells",this%n_cells
+        stop
+      end if
+      update_data%cell_id=1;
+    end if
 
     if (associated(this%solver_data_gas)) &
             call this%solver_data_gas%update_aero_rep_data(update_data)
@@ -1312,12 +1363,26 @@ contains
   !! when reaction parameters need updated from the host model. For example,
   !! this function can be called to update photolysis rates from a host
   !! model's photolysis module.
-  subroutine rxn_update_data(this, update_data)
+  subroutine rxn_update_data(this, update_data, cell_id)
 
     !> Chemical model
     class(camp_core_t), intent(in) :: this
     !> Update data
-    class(rxn_update_data_t), intent(in) :: update_data
+    class(rxn_update_data_t), intent(inout) :: update_data
+    !> Cell id
+    integer(kind=i_kind), optional :: cell_id
+    integer :: n_cells_update
+
+    n_cells_update = 1
+    if (present(cell_id)) then
+      update_data%cell_id=cell_id;
+    else
+      if(.not.this%n_cells.eq.1) then
+        print*,"rxn_update_data with more than 1 cell needs to specify cell_id this%n_cells",this%n_cells
+        stop
+      end if
+      update_data%cell_id=1;
+    end if
 
     if (associated(this%solver_data_gas)) &
             call this%solver_data_gas%update_rxn_data(update_data)
@@ -1332,12 +1397,26 @@ contains
 
   !> Update data associated with a sub-model. This function should be called
   !! when sub-model parameters need updated from the host model.
-  subroutine sub_model_update_data(this, update_data)
+  subroutine sub_model_update_data(this, update_data, cell_id)
 
     !> Chemical model
     class(camp_core_t), intent(in) :: this
     !> Update data
-    class(sub_model_update_data_t), intent(in) :: update_data
+    class(sub_model_update_data_t), intent(inout) :: update_data
+    !> Cell id
+    integer(kind=i_kind), optional :: cell_id
+    integer :: n_cells_update
+
+    n_cells_update = 1
+    if (present(cell_id)) then
+      update_data%cell_id=cell_id;
+    else
+      if(.not.this%n_cells.eq.1) then
+        print*,"sub_model_update_data with more than 1 cell needs to specify cell_id this%n_cells",this%n_cells
+        stop
+      end if
+      update_data%cell_id=1;
+    end if
 
     if (associated(this%solver_data_gas)) &
             call this%solver_data_gas%update_sub_model_data(update_data)
@@ -1358,7 +1437,7 @@ contains
     use iso_c_binding
 
     !> Chemical model
-    class(camp_core_t), intent(in) :: this
+    class(camp_core_t), intent(inout) :: this
     !> Current model state
     type(camp_state_t), intent(inout), target :: camp_state
     !> Time step over which to integrate (s)
@@ -1369,6 +1448,9 @@ contains
     integer(kind=i_kind), intent(in), optional :: rxn_phase
     !> Return solver statistics to the host model
     type(solver_stats_t), intent(inout), optional, target :: solver_stats
+    integer(kind=c_int) :: solver_status
+    real(kind=dp) :: t_initial
+    real(kind=dp) :: t_final
 
     ! Phase to solve
     integer(kind=i_kind) :: phase
@@ -1403,15 +1485,76 @@ contains
     ! Make sure the requested solver was loaded
     call assert_msg(730097030, associated(solver), "Invalid solver requested")
 
+    t_initial = real(0.0, kind=dp)
+    t_final = time_step
+
     ! Run the integration
     if (present(solver_stats)) then
-      call solver%solve(camp_state, real(0.0, kind=dp), time_step,          &
-                        solver_stats)
+      call solver%get_solver_stats( solver_stats )
+      solver_status = solver%solve(camp_state, t_initial, t_final, solver_stats)
+      solver_stats%status_code   = solver_status
+      solver_stats%start_time__s = t_initial
+      solver_stats%end_time__s   = t_final
     else
-      call solver%solve(camp_state, real(0.0, kind=dp), time_step)
+      solver_status = solver%solve(camp_state, t_initial, t_final)
+    end if
+
+    if (.not.present(solver_stats)) then
+      call warn_assert_msg(997420005, solver_status.eq.0, "Solver failed")
     end if
 
   end subroutine solve
+
+  subroutine export_solver_state(this)
+    use camp_rxn_data
+    use iso_c_binding
+    class(camp_core_t), intent(inout) :: this
+    integer(kind=i_kind) :: phase
+    type(camp_solver_data_t), pointer :: solver
+    phase = GAS_AERO_RXN
+    if (phase.eq.GAS_RXN) then
+      solver => this%solver_data_gas
+    else if (phase.eq.AERO_RXN) then
+      solver => this%solver_data_aero
+    else if (phase.eq.GAS_AERO_RXN) then
+      solver => this%solver_data_gas_aero
+    end if
+    call solver%export_solver_data_state()
+  end subroutine
+
+  subroutine join_solver_state(this)
+    use camp_rxn_data
+    use iso_c_binding
+    class(camp_core_t), intent(inout) :: this
+    integer(kind=i_kind) :: phase
+    type(camp_solver_data_t), pointer :: solver
+    phase = GAS_AERO_RXN
+    if (phase.eq.GAS_RXN) then
+      solver => this%solver_data_gas
+    else if (phase.eq.AERO_RXN) then
+      solver => this%solver_data_aero
+    else if (phase.eq.GAS_AERO_RXN) then
+      solver => this%solver_data_gas_aero
+    end if
+    call solver%join_solver_data_state()
+  end subroutine
+
+  subroutine export_solver_stats(this)
+    use camp_rxn_data
+    use iso_c_binding
+    class(camp_core_t), intent(inout) :: this
+    integer(kind=i_kind) :: phase
+    type(camp_solver_data_t), pointer :: solver
+    phase = GAS_AERO_RXN
+    if (phase.eq.GAS_RXN) then
+      solver => this%solver_data_gas
+    else if (phase.eq.AERO_RXN) then
+      solver => this%solver_data_aero
+    else if (phase.eq.GAS_AERO_RXN) then
+      solver => this%solver_data_gas_aero
+    end if
+    call solver%export_solver_data_stats()
+  end subroutine
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -1419,7 +1562,7 @@ contains
   integer(kind=i_kind) function pack_size(this, comm)
 
     !> Chemical model
-    class(camp_core_t), intent(in) :: this
+    class(camp_core_t), intent(inout) :: this
     !> MPI communicator
     integer, intent(in), optional :: comm
 
@@ -1427,7 +1570,8 @@ contains
     type(sub_model_factory_t) :: sub_model_factory
     class(aero_rep_data_t), pointer :: aero_rep
     class(sub_model_data_t), pointer :: sub_model
-    integer(kind=i_kind) :: i_mech, i_phase, i_rep, i_sub_model, l_comm
+    integer(kind=i_kind) :: i_mech, i_phase, i_rep,&
+            i_sub_model, l_comm
 
 #ifdef CAMP_USE_MPI
     if (present(comm)) then
@@ -1456,17 +1600,16 @@ contains
     end do
     do i_sub_model = 1, size(this%sub_model)
       sub_model => this%sub_model(i_sub_model)%val
-      pack_size = pacK_size + sub_model_factory%pack_size(sub_model, l_comm)
+      pack_size = pack_size + sub_model_factory%pack_size(sub_model, l_comm)
       sub_model => null()
     end do
     pack_size = pack_size + &
                 camp_mpi_pack_size_integer(this%size_state_per_cell, l_comm) + &
-                camp_mpi_pack_size_integer(this%n_cells, l_comm) + &
                 camp_mpi_pack_size_logical(this%split_gas_aero, l_comm) + &
                 camp_mpi_pack_size_real(this%rel_tol, l_comm) + &
                 camp_mpi_pack_size_real_array(this%abs_tol, l_comm) + &
                 camp_mpi_pack_size_integer_array(this%var_type, l_comm) + &
-                camp_mpi_pack_size_real_array(this%init_state, l_comm)
+                camp_mpi_pack_size_real_array(this%init_state_cell, l_comm)
 #else
     pack_size = 0
 #endif
@@ -1478,7 +1621,7 @@ contains
   subroutine bin_pack(this, buffer, pos, comm)
 
     !> Chemical model
-    class(camp_core_t), intent(in) :: this
+    class(camp_core_t), intent(inout) :: this
     !> Memory buffer
     character, intent(inout) :: buffer(:)
     !> Current buffer position
@@ -1525,12 +1668,11 @@ contains
       sub_model => null()
     end do
     call camp_mpi_pack_integer(buffer, pos, this%size_state_per_cell, l_comm)
-    call camp_mpi_pack_integer(buffer, pos, this%n_cells, l_comm)
     call camp_mpi_pack_logical(buffer, pos, this%split_gas_aero, l_comm)
     call camp_mpi_pack_real(buffer, pos, this%rel_tol, l_comm)
     call camp_mpi_pack_real_array(buffer, pos, this%abs_tol, l_comm)
     call camp_mpi_pack_integer_array(buffer, pos, this%var_type, l_comm)
-    call camp_mpi_pack_real_array(buffer, pos, this%init_state, l_comm)
+    call camp_mpi_pack_real_array(buffer, pos, this%init_state_cell, l_comm)
     call assert(184050835, &
          pos - prev_position <= this%pack_size(l_comm))
 #endif
@@ -1550,6 +1692,7 @@ contains
     integer, intent(inout) :: pos
     !> MPI communicator
     integer, intent(in), optional :: comm
+    integer :: i_cell, i_state_elem
 
 #ifdef CAMP_USE_MPI
     type(aero_rep_factory_t) :: aero_rep_factory
@@ -1592,15 +1735,23 @@ contains
               sub_model_factory%bin_unpack(buffer, pos, l_comm)
     end do
     call camp_mpi_unpack_integer(buffer, pos, this%size_state_per_cell, l_comm)
-    call camp_mpi_unpack_integer(buffer, pos, this%n_cells, l_comm)
     call camp_mpi_unpack_logical(buffer, pos, this%split_gas_aero, l_comm)
     call camp_mpi_unpack_real(buffer, pos, this%rel_tol, l_comm)
     call camp_mpi_unpack_real_array(buffer, pos, this%abs_tol, l_comm)
     call camp_mpi_unpack_integer_array(buffer, pos, this%var_type, l_comm)
-    call camp_mpi_unpack_real_array(buffer, pos, this%init_state, l_comm)
+    call camp_mpi_unpack_real_array(buffer, pos, this%init_state_cell, l_comm)
+
+    allocate(this%init_state(this%size_state_per_cell * this%n_cells))
+    do i_cell = 0, this%n_cells - 1
+      do i_state_elem = 1, this%size_state_per_cell
+        this%init_state(i_state_elem + i_cell * this%size_state_per_cell)=&
+                this%init_state_cell(i_state_elem)
+      end do
+    end do
+
     this%core_is_initialized = .true.
     call assert(291557168, &
-         pos - prev_position <= this%pack_size(l_comm))
+            pos - prev_position <= this%pack_size(l_comm))
 #endif
 
   end subroutine bin_unpack
