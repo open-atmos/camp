@@ -7,9 +7,9 @@ project(CAMP Fortran C)
 
 set(PACKAGE_BUGREPORT "mattldawson@gmail.com")
 set(PACKAGE_NAME "CAMP")
-set(PACKAGE_STRING "CAMP 1.0.0")
+set(PACKAGE_STRING "CAMP 1.1.0")
 set(PACKAGE_TARNAME "camp")
-set(PACKAGE_VERSION "1.0.0")
+set(PACKAGE_VERSION "1.1.0")
 
 if ( "${CMAKE_SYSTEM_NAME}" MATCHES "Darwin" )
   set ( ENABLE_DYLIBS_USE_RPATH TRUE CACHE BOOL
@@ -25,14 +25,10 @@ else ()
 endif ()
 
 ######################################################################
-# options
-SET(ENABLE_TESTS OFF)
-#SET(ENV{CTEST_OUTPUT_ON_FAILURE} ON) #test if ctest output on failure is working
 
 #Set all options to OFF by default due to bug on CMake 3.15
 option(ENABLE_GSL "Enable GSL library for Jacobian evaluation" OFF)
 option(ENABLE_MPI "Enable MPI parallel support" OFF)
-option(ENABLE_MPI_TEST "Enable MPI parallel support" OFF)
 option(ENABLE_C_SORT "Enable C sorting routines" OFF)
 option(ENABLE_DEBUG "Compile debugging functions" OFF)
 option(FAILURE_DETAIL "Output conditions before and after solver failures" OFF)
@@ -242,6 +238,7 @@ endif()
 ######################################################################
 # copy dirs
 
+SET(ENABLE_TESTS ON)
 if(ENABLE_DATA OR ENABLE_TESTS)
 add_custom_target(copy_data ALL ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/data ${CMAKE_BINARY_DIR}/data_run)
 endif()
@@ -286,6 +283,7 @@ do_unit_test(aero_rep_modal_binned_mass "PASS")
 do_unit_test(camp_core "PASS")
 endif()
 
+SET(ENABLE_MPI_TEST OFF)
 if (ENABLE_MPI AND ENABLE_MPI_TEST)
   set(MPI_TEST_FLAG MPI)
 else()
@@ -293,7 +291,7 @@ else()
 endif()
 
 if (ENABLE_GPU)
-    add_test(test_gpu checkGPU.sh WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/test/monarch)
+    add_test(NAME test_gpu COMMAND checkGPU.sh WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/test/monarch)
 endif()
 
 if (ENABLE_TESTS)
