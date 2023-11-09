@@ -43,13 +43,10 @@ option(ENABLE_IMPORT_NETCDF "" OFF)
 option(ENABLE_BOOTCAMP "" OFF)
 option(ENABLE_DATA "" OFF)
 option(ENABLE_INSTALL_OPTIONS "" OFF)
-option(ENABLE_SHARED_LIB "" OFF) #todo fix and shared lib in Monarch
 
 mark_as_advanced(FORCE ENABLE_DEBUG FAILURE_DETAIL)
-file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/out)
-file(CREATE_LINK ${CMAKE_BINARY_DIR}/out ${CMAKE_CURRENT_SOURCE_DIR}/test/monarch/out SYMBOLIC)
+file(CREATE_LINK ${CMAKE_CURRENT_SOURCE_DIR}/test/monarch/out ${CMAKE_BINARY_DIR}/out  SYMBOLIC)
 file(CREATE_LINK ${CMAKE_CURRENT_SOURCE_DIR}/test/monarch/settings ${CMAKE_BINARY_DIR}/settings SYMBOLIC)
-
 
 
 ######################################################################
@@ -221,14 +218,8 @@ add_definitions(-DCAMP_USE_JSON)
 
 if (ENABLE_GPU)
   find_package(CUDA)
-  #If enable_gpu, all will be executed on GPU
-  if (CUDA_FOUND)
-    enable_language(CUDA)
-    #Define global variable of use gpu no matter what test to include user main test
-    add_definitions(-DCAMP_USE_GPU)
-  else()
-    message( WARNING "Not CUDA module found, can't support GPU computation")
-  endif()
+  enable_language(CUDA)
+  add_definitions(-DCAMP_USE_GPU)
 endif()
 
 ######################################################################
@@ -458,11 +449,7 @@ set(CAMP_LIB_SRC
         ${CAMP_C_SRC} ${AEROSOL_REPS_SRC} ${SUB_MODELS_SRC}
         ${REACTIONS_SRC} ${GSL_SRC} ${CAMP_CUDA_SRC})
 
-if(ENABLE_SHARED_LIB)
-  add_library(camplib SHARED ${CAMP_LIB_SRC}) #todo fix, Shared library are better than static (faster in execution, no recompilation, smaller)
-else()
-  add_library(camplib ${CAMP_LIB_SRC})
-endif()
+add_library(camplib ${CAMP_LIB_SRC})
 
 target_link_libraries(camplib ${MPI_C_LIBRARIES} ${MPI_FORTRAN_LIBRARIES})
 target_link_libraries(camplib ${NETCDF_LIBS} ${SUNDIALS_LIBS} ${GSL_LIBS} ${JSON_LIB})
