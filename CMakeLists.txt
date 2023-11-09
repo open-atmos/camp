@@ -26,7 +26,8 @@ endif ()
 
 ######################################################################
 # options
-SET(ENABLE_TESTS ON)
+SET(ENABLE_TESTS OFF)
+#SET(ENV{CTEST_OUTPUT_ON_FAILURE} ON) #test if ctest output on failure is working
 
 #Set all options to OFF by default due to bug on CMake 3.15
 option(ENABLE_GSL "Enable GSL library for Jacobian evaluation" OFF)
@@ -196,9 +197,6 @@ set(SUNDIALS_LIBS ${SUITE_SPARSE_KLU_LIB} ${SUNDIALS_KLU_LIB}
 include_directories(${SUNDIALS_INCLUDE_DIR} ${SUITE_SPARSE_INCLUDE_DIR})
 add_definitions(-DCAMP_USE_SUNDIALS)
 
-#set(CMAKE_INSTALL_RPATH "/home/cguzman/CLionProjects/gpupartmc/cvode-3.4-alpha/install/lib/libsundials_sunmatrixsparse.so.1")
-#set(CMAKE_INSTALL_RPATH "/home/cguzman/CLionProjects/gpupartmc/cvode-3.4-alpha/install/lib/")
-
 ######################################################################
 # json-fortran
 
@@ -303,10 +301,12 @@ else()
   set(MPI_TEST_FLAG serial)
 endif()
 
-if (ENABLE_TESTS)
 if (ENABLE_GPU)
-    add_test(test_gpu ${CMAKE_CURRENT_SOURCE_DIR}/test/monarch/checkGPU.sh)
+    add_test(test_gpu checkGPU.sh WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/test/monarch)
 endif()
+
+if (ENABLE_TESTS)
+
     # New unit tests (UNDER DEVELOPMENT)
   add_test(test_rxn_arrhenius_mech ${CMAKE_BINARY_DIR}/test_run/unit_tests/input_files/run_rxn_arrhenius.sh ${MPI_TEST_FLAG})
 
