@@ -12,11 +12,7 @@ mkdir -p out
 if [[ $1 = "MPI" ]]; then
   exec_str="mpirun -v -np 1 ../../boot_camp_part_1"
 else
-  if [ -z ${SLURM_TASK_PID+x} ]; then
-    exec_str="../../boot_camp_part_1"
-  else
-    exec_str="mpirun -np 1 --bind-to none  ../../boot_camp_part_1"
-  fi
+  exec_str="../../boot_camp_part_1"
 fi
 
 if ! $exec_str; then

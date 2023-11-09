@@ -54,3 +54,17 @@ COPY . /camp
 # Update environment variables
 ENV LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:/usr/local/lib:/usr/local/lib64:/usr/local/jsonfortran-gnu-6.1.0/lib"
 ENV PATH="${PATH}:/usr/local/jsonfortran-gnu-6.1.0/lib"
+
+# Build CAMP
+ RUN mkdir build \
+    && cd build \
+    && export JSON_FORTRAN_HOME="/usr/local/jsonfortran-gnu-6.1.0" \
+    && cmake -D CMAKE_BUILD_TYPE=release \
+             -D CMAKE_C_FLAGS_DEBUG="-pg" \
+             -D CMAKE_Fortran_FLAGS_DEBUG="-pg" \
+             -D CMAKE_MODULE_LINKER_FLAGS="-pg" \
+             -D ENABLE_GSL:BOOL=TRUE \
+             /camp \
+    && make install
+
+WORKDIR /build

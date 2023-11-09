@@ -7,9 +7,9 @@ project(CAMP Fortran C)
 
 set(PACKAGE_BUGREPORT "mattldawson@gmail.com")
 set(PACKAGE_NAME "CAMP")
-set(PACKAGE_STRING "CAMP 1.0.0")
+set(PACKAGE_STRING "CAMP 1.1.0")
 set(PACKAGE_TARNAME "camp")
-set(PACKAGE_VERSION "1.0.0")
+set(PACKAGE_VERSION "1.1.0")
 
 if ( "${CMAKE_SYSTEM_NAME}" MATCHES "Darwin" )
   set ( ENABLE_DYLIBS_USE_RPATH TRUE CACHE BOOL
@@ -25,14 +25,10 @@ else ()
 endif ()
 
 ######################################################################
-# options
-SET(ENABLE_TESTS OFF)
-#SET(ENV{CTEST_OUTPUT_ON_FAILURE} ON) #test if ctest output on failure is working
 
 #Set all options to OFF by default due to bug on CMake 3.15
 option(ENABLE_GSL "Enable GSL library for Jacobian evaluation" OFF)
 option(ENABLE_MPI "Enable MPI parallel support" OFF)
-option(ENABLE_MPI_TEST "Enable MPI parallel support" OFF)
 option(ENABLE_C_SORT "Enable C sorting routines" OFF)
 option(ENABLE_DEBUG "Compile debugging functions" OFF)
 option(FAILURE_DETAIL "Output conditions before and after solver failures" OFF)
@@ -242,6 +238,7 @@ endif()
 ######################################################################
 # copy dirs
 
+SET(ENABLE_TESTS OFF)
 if(ENABLE_DATA OR ENABLE_TESTS)
 add_custom_target(copy_data ALL ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/data ${CMAKE_BINARY_DIR}/data_run)
 endif()
@@ -286,18 +283,17 @@ do_unit_test(aero_rep_modal_binned_mass "PASS")
 do_unit_test(camp_core "PASS")
 endif()
 
+SET(ENABLE_MPI_TEST ON)
 if (ENABLE_MPI AND ENABLE_MPI_TEST)
   set(MPI_TEST_FLAG MPI)
 else()
   set(MPI_TEST_FLAG serial)
 endif()
 
-if (ENABLE_GPU)
-    add_test(test_gpu checkGPU.sh WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/test/monarch)
-endif()
-
 if (ENABLE_TESTS)
-
+  if (ENABLE_GPU)
+    add_test(NAME test_gpu COMMAND checkGPU.sh WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/test/monarch)
+  endif()
     # New unit tests (UNDER DEVELOPMENT)
   add_test(test_rxn_arrhenius_mech ${CMAKE_BINARY_DIR}/test_run/unit_tests/input_files/run_rxn_arrhenius.sh ${MPI_TEST_FLAG})
 
@@ -532,16 +528,24 @@ endif()
 set_source_files_properties(${CB5_EBI_SOLVER} PROPERTIES COMPILE_FLAGS
 	${CB5_EBI_FLAGS})
 
-if (ENABLE_GPU)
-    add_executable(mock_monarch test/monarch/mock_monarch.F90
-            test/monarch/camp_monarch_interface.F90
-            ${CB5_EBI_SOLVER} ${CB5_KPP_SOLVER}
-            test/chemistry/cb05cl_ae5/module_BSC_CHEM_DATA.F90)
-    target_link_libraries(mock_monarch camplib)
-endif()
+######################################################################
+# Part 1
+
+add_executable(boot_camp_part_1 doc/camp_tutorial/boot_camp/part_1_code/box_model.F90)
+
+target_link_libraries(boot_camp_part_1 camplib)
 
 if (ENABLE_TESTS)
-    add_executable(unit_test_aero_rep_single_particle
+
+  if (ENABLE_GPU)
+    add_executable(mock_monarch test/monarch/mock_monarch.F90
+        test/monarch/camp_monarch_interface.F90
+        ${CB5_EBI_SOLVER} ${CB5_KPP_SOLVER}
+        test/chemistry/cb05cl_ae5/module_BSC_CHEM_DATA.F90)
+    target_link_libraries(mock_monarch camplib)
+  endif()
+
+  add_executable(unit_test_aero_rep_single_particle
             test/unit_aero_rep_data/test_aero_rep_single_particle.c
             test/unit_aero_rep_data/test_aero_rep_single_particle.F90)
 
@@ -674,12 +678,7 @@ target_link_libraries(test_chem_mech_solver camplib)
 # BootCAMP Tutorial Exercises
 ######################################################################
 
-######################################################################
-# Part 1
 
-add_executable(boot_camp_part_1 doc/camp_tutorial/boot_camp/part_1_code/box_model.F90)
-
-target_link_libraries(boot_camp_part_1 camplib)
 
 ######################################################################
 # Part 3
