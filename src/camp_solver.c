@@ -1800,6 +1800,12 @@ void solver_free(void *solver_data) {
       free_gpu_cu(sd);
   }
 #endif
+
+  // Free the allocated ModelData
+  model_free(sd->model_data);
+
+  // free the SolverData object
+  free(sd);
 }
 
 #ifdef CAMP_USE_SUNDIALS

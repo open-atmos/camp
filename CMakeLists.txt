@@ -189,6 +189,7 @@ set(SUNDIALS_LIBS ${SUITE_SPARSE_KLU_LIB} ${SUNDIALS_KLU_LIB}
   ${SUITE_SPARSE_BTF_LIB} ${SUITE_SPARSE_CONFIG_LIB})
 include_directories(${SUNDIALS_INCLUDE_DIR} ${SUITE_SPARSE_INCLUDE_DIR})
 add_definitions(-DCAMP_USE_SUNDIALS)
+add_definitions(-DCAMP_CUSTOM_CVODE)
 
 ######################################################################
 # json-fortran
@@ -238,7 +239,7 @@ endif()
 ######################################################################
 # copy dirs
 
-SET(ENABLE_TESTS OFF)
+SET(ENABLE_TESTS ON)
 if(ENABLE_DATA OR ENABLE_TESTS)
 add_custom_target(copy_data ALL ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/data ${CMAKE_BINARY_DIR}/data_run)
 endif()
