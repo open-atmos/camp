@@ -33,13 +33,8 @@ typedef struct {
   unsigned int num_elem;   // Number of potentially non-zero Jacobian elements
   int *col_ptrs;  // Index of start/end of each column in data array
   unsigned int *row_ids;   // Row id of each Jacobian element in data array
-#ifdef JAC_LONG_DOUBLE
   long double *production_partials;    // Data array for productions rate partial derivs
   long double *loss_partials;  // Data array for loss rate partial derivs
-#else
-  double *production_partials;    // Data array for productions rate partial derivs
-  double *loss_partials;  // Data array for loss rate partial derivs
-#endif
   JacobianColumnElements *elements;  // Jacobian elements flagged for inclusion
 } Jacobian;
 
@@ -140,16 +135,9 @@ void jacobian_output(Jacobian jac, double *dest_array);
  *                         (contributions to loss elements should be positive if
  *                         the contribution increases the loss)
  */
-#ifdef JAC_LONG_DOUBLE
 void jacobian_add_value(Jacobian jac, unsigned int elem_id,
                         unsigned int prod_or_loss,
                         long double jac_contribution);
-#else
-void jacobian_add_value(Jacobian jac, unsigned int elem_id,
-                        unsigned int prod_or_loss,
-                        double jac_contribution);
-#endif
-
 
 /** \brief Prints the Jacobian structure
  *

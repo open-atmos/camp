@@ -45,8 +45,6 @@ program camp_test_cb05cl_ae5
   integer(kind=i_kind), parameter :: KPP_FILE_UNIT = 11
   ! CAMP-chem output file unit
   integer(kind=i_kind), parameter :: CAMP_FILE_UNIT = 12
-  ! CAMP-chem output profiling stats file unit
-  integer(kind=i_kind), parameter :: CAMP_FILE_UNIT_PROFILE = 13
   ! EBI solver output file unit
   integer(kind=i_kind), parameter :: CAMP_EBI_FILE_UNIT = 14
   ! file unit
@@ -517,8 +515,10 @@ contains
             KPP_NSPEC)
     write(CAMP_FILE_UNIT,*) "time ", (camp_spec_names(i_spec)%string//" ", i_spec=1, &
             size(camp_spec_names))
+#ifdef COMPARE_CAMP_FILE
     write(CAMP_EBI_FILE_UNIT,*) "CAMP order: ", (camp_spec_names(i_spec)%string//" ", i_spec=1, &
             NUM_EBI_SPEC)
+#endif
 
     ! Set up the reaction map between camp-chem, kpp and ebi solvers
     key = "rxn id"
@@ -721,13 +721,14 @@ contains
     write(EBI_FILE_UNIT,*) i_time*EBI_TMSTEP, YC(:)
     write(KPP_FILE_UNIT,*) i_time*EBI_TMSTEP, KPP_C(:)*conv
     write(CAMP_FILE_UNIT,*) i_time*EBI_TMSTEP, camp_state%state_var(:)
+#ifdef COMPARE_CAMP_FILE
     write(CAMP_EBI_FILE_UNIT,*) "Repeat", i_repeat, "timestep ", NUM_TIME_STEPS
     write(CAMP_EBI_FILE_UNIT,*) "spec_name, concentrations rel. error [(camp_state-ebi)/(camp_state+ebi)], camp_state, ebi"
     write(CAMP_KPP_FILE_UNIT,*) "Repeat", i_repeat, "timestep ", NUM_TIME_STEPS
     write(CAMP_KPP_FILE_UNIT,*) "spec_name, concentrations rel. error [(camp_state-kpp)/(camp_state+kpp)], camp_state, kpp"
     write(EBI_KPP_FILE_UNIT,*) "Repeat", i_repeat, "timestep ", NUM_TIME_STEPS
     write(EBI_KPP_FILE_UNIT,*) "spec_name, concentrations rel. error [(èbi-kpp)/(ebi+kpp)], ebi, kpp"
-
+#endif
     ! Output the computational time
     write(*,*) "EBI calculation time: ", comp_ebi," s"
     write(*,*) "KPP calculation time: ", comp_kpp," s"

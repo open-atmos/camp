@@ -17,8 +17,6 @@
 #include "Jacobian.h"
 #include "time_derivative.h"
 
-// todo cant found cvode_impl in docker, put under #gpu flags or something
-
 /* SUNDIALS Header files with a description of contents used */
 #ifdef CAMP_USE_SUNDIALS
 
@@ -30,18 +28,16 @@
 #endif
 #include <cvode/cvode.h>        /* Protoypes for CVODE fcts., consts.  */
 #include <cvode/cvode_direct.h> /* CVDls interface                     */
+#ifdef CAMP_CUSTOM_CVODE
 #include <cvode/cvode_impl.h>   /* CVodeMem structure                  */
-
-//  #include <nvector/nvector_cuda.h>      /* access to cuda N_Vector */
-//  #include <sunlinsol/sunlinsol_spgmr.h> /* access to SPGMR SUNLinearSolver */
+#endif
 #include <nvector/nvector_serial.h>  /* Serial N_Vector types, fcts, macros */
+#include <sundials/sundials_math.h>  /* SUNDIALS math function macros       */
+#include <sundials/sundials_types.h> /* definition of types                 */
 #include <sunlinsol/sunlinsol_klu.h> /* KLU SUNLinearSolver                 */
-
 #include <sundials/sundials_nvector.h>
 #include <sunmatrix/sunmatrix_sparse.h> /* sparse SUNMatrix                    */
 
-#include <sundials/sundials_math.h>  /* SUNDIALS math function macros       */
-#include <sundials/sundials_types.h> /* definition of types                 */
 
 #ifdef CAMP_USE_GPU
 #include <cvode/cvode_direct_impl.h>
@@ -238,7 +234,7 @@ typedef struct {
   TimeDerivative time_deriv;  // CAMP derivative structure for use in
                               // calculating deriv
   Jacobian jac;               // CAMP Jacobian structure for use in
-                       // calculating the Jacobian
+                              // calculating the Jacobian
   N_Vector deriv;      // used to calculate the derivative outside the solver
   SUNMatrix J;         // Jacobian matrix
   SUNMatrix J_guess;   // Jacobian matrix for improving guesses sent to linear

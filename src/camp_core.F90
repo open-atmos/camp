@@ -59,7 +59,7 @@
 !!
 !! You can also check out
 !! \ref ./Dockerfile
-!! (or \ref ./Dockerfile.mpi for MPI applications) to see how CAMP is
+!! (or \ref ./Dockerfile.mpi for MPI applications) to see how CAMP
 !! is built for automated testing.
 !!
 !!## Input files ##
@@ -111,8 +111,6 @@ module camp_camp_core
   implicit none
   private
 
-#define CAMP_SOLVER_FAIL 1
-
   public :: camp_core_t
 
   !> Part-MC model data
@@ -156,7 +154,6 @@ module camp_camp_core
     type(camp_solver_data_t), pointer, public :: solver_data_gas_aero => null()
     real(kind=dp), allocatable :: init_state_var(:)
     type(string_t), allocatable :: spec_names(:)
-    logical :: export_flag
     !> Flag indicating the model data has been initialized
     logical :: core_is_initialized = .false.
     !> Flag indicating the solver has been initialized
@@ -272,9 +269,11 @@ contains
     allocate(new_obj%aero_phase(0))
     allocate(new_obj%aero_rep(0))
     allocate(new_obj%sub_model(0))
+
     if (present(n_cells)) then
       new_obj%n_cells=n_cells
     end if
+
     if (present(input_file_path)) then
       call new_obj%load_files(trim(input_file_path))
     end if
@@ -284,7 +283,6 @@ contains
       call camp_mpi_init( )
     endif
 #endif
-    new_obj%export_flag = .true.
   end function constructor
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -694,16 +692,19 @@ contains
     call assert_msg(157261665, .not.this%core_is_initialized, &
             "Attempting to initialize a camp_core_t object twice.")
 
+    ! Initialize the species database
     call this%chem_spec_data%initialize()
 
     ! Get the next index on the state array after the gas-phase species
     i_state_var = this%chem_spec_data%size(spec_phase=CHEM_SPEC_GAS_PHASE) + 1
 
+    ! Initialize the aerosol phases
     do i_phase = 1, size(this%aero_phase)
       call assert(254948966, associated(this%aero_phase(i_phase)%val))
       call this%aero_phase(i_phase)%val%initialize(this%chem_spec_data)
     end do
 
+    ! Initialize the aerosol representations
     do i_aero_rep = 1, size(this%aero_rep)
       call assert(251590193, associated(this%aero_rep(i_aero_rep)%val))
       call this%aero_rep(i_aero_rep)%val%initialize(this%aero_phase, &
@@ -711,6 +712,7 @@ contains
       i_state_var = i_state_var + this%aero_rep(i_aero_rep)%val%size()
     end do
 
+    ! Initialize the sub-models
     do i_sub_model = 1, size(this%sub_model)
       call assert(565644925, associated(this%sub_model(i_sub_model)%val))
       call this%sub_model(i_sub_model)%val%initialize(this%aero_rep, &
@@ -720,6 +722,7 @@ contains
     ! Set the size of the state array per grid cell
     this%size_state_per_cell = i_state_var - 1
 
+    ! Initialize the mechanisms
     do i_mech = 1, size(this%mechanism)
       call this%mechanism(i_mech)%val%initialize(this%chem_spec_data, &
               this%aero_rep, this%n_cells)
@@ -1230,6 +1233,7 @@ contains
                 use_cpu1, &
                 nGPUs1 &
                 )
+
     end if
 
     this%solver_is_initialized = .true.
@@ -1989,5 +1993,7 @@ contains
     this%sub_model => new_sub_model
 
   end subroutine add_sub_model
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 end module camp_camp_core

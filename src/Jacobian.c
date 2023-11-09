@@ -59,7 +59,6 @@ int jacobian_initialize(Jacobian *jac, unsigned int num_spec,
     free(jac->col_ptrs);
     return 0;
   }
-#ifdef JAC_LONG_DOUBLE
   jac->production_partials =
       (long double *)malloc(num_elem * sizeof(long double));
   if (!jac->production_partials) {
@@ -74,22 +73,6 @@ int jacobian_initialize(Jacobian *jac, unsigned int num_spec,
     free(jac->production_partials);
     return 0;
   }
-#else
-jac->production_partials =
-    (double *)malloc(num_elem * sizeof(double));
-if (!jac->production_partials) {
-  free(jac->col_ptrs);
-  free(jac->row_ids);
-  return 0;
-}
-jac->loss_partials = (double *)malloc(num_elem * sizeof(double));
-if (!jac->loss_partials) {
-  free(jac->col_ptrs);
-  free(jac->row_ids);
-  free(jac->production_partials);
-  return 0;
-}
-#endif
 
   unsigned int i_elem = 0;
   unsigned int i_col = 0;
@@ -187,7 +170,6 @@ unsigned int jacobian_build_matrix(Jacobian *jac) {
            i_elem, jac->num_elem);
     exit(EXIT_FAILURE);
   }
-#ifdef JAC_LONG_DOUBLE
   jac->production_partials =
       (long double *)malloc(jac->num_elem * sizeof(long double));
   if (!jac->production_partials) {
@@ -200,20 +182,6 @@ unsigned int jacobian_build_matrix(Jacobian *jac) {
     jacobian_free(jac);
     return 0;
   }
-#else
-  jac->production_partials =
-      (double *)malloc(jac->num_elem * sizeof(double));
-  if (!jac->production_partials) {
-    jacobian_free(jac);
-    return 0;
-  }
-  jac->loss_partials =
-      (double *)malloc(jac->num_elem * sizeof(double));
-  if (!jac->loss_partials) {
-    jacobian_free(jac);
-    return 0;
-  }
-#endif
   for (unsigned int i_col = 0; i_col < jac->num_spec; ++i_col) {
     jacobian_column_elements_free(&(jac->elements[i_col]));
   }
@@ -260,27 +228,16 @@ void jacobian_output(Jacobian jac, double *dest_array) {
   for (unsigned int i_col = 0; i_col < jac.num_spec; ++i_col) {
     for (int i_elem = jac.col_ptrs[i_col];
          i_elem < jac.col_ptrs[i_col + 1]; ++i_elem) {
-#ifdef JAC_LONG_DOUBLE
       long double drf_dy = jac.production_partials[i_elem];
       long double drr_dy = jac.loss_partials[i_elem];
-#else
-      double drf_dy = jac.production_partials[i_elem];
-      double drr_dy = jac.loss_partials[i_elem];
-#endif
       dest_array[i_elem] = drf_dy - drr_dy;
     }
   }
 }
 
-#ifdef JAC_LONG_DOUBLE
 void jacobian_add_value(Jacobian jac, unsigned int elem_id,
                         unsigned int prod_or_loss,
                         long double jac_contribution) {
-#else
-void jacobian_add_value(Jacobian jac, unsigned int elem_id,
-                        unsigned int prod_or_loss,
-                        double jac_contribution) {
-#endif
   if (prod_or_loss == JACOBIAN_PRODUCTION)
     jac.production_partials[elem_id] += jac_contribution;
   if (prod_or_loss == JACOBIAN_LOSS)
