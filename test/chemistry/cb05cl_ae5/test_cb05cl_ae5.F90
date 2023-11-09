@@ -1427,7 +1427,7 @@ contains
 
   !> Compare calculated rates between the modules
   subroutine compare_rates(camp_core, camp_state, ebi_spec_names, conv, &
-          ebi_rxn_map, kpp_rxn_map)
+                  ebi_rxn_map, kpp_rxn_map)
 
     use EXT_RXCM,                               only : NRXNS, RXLABEL
     use EXT_HRDATA,                             only : EBI_PROD => PROD, &

@@ -238,7 +238,7 @@ endif()
 ######################################################################
 # copy dirs
 
-SET(ENABLE_TESTS OFF)
+SET(ENABLE_TESTS ON)
 if(ENABLE_DATA OR ENABLE_TESTS)
 add_custom_target(copy_data ALL ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/data ${CMAKE_BINARY_DIR}/data_run)
 endif()
@@ -302,12 +302,17 @@ if (ENABLE_TESTS)
   add_test(test_rxn_CMAQ_H2O2 ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_CMAQ_H2O2.sh ${MPI_TEST_FLAG})
   add_test(test_rxn_CMAQ_OH_HNO3 ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_CMAQ_OH_HNO3.sh ${MPI_TEST_FLAG})
   add_test(test_rxn_condensed_phase_arrhenius ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_condensed_phase_arrhenius.sh ${MPI_TEST_FLAG})
+  #add_test(test_rxn_condensed_phase_photolysis ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_condensed_phase_photolysis.sh ${MPI_TEST_FLAG})
   add_test(test_rxn_emission ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_emission.sh ${MPI_TEST_FLAG})
   add_test(test_rxn_first_order_loss ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_first_order_loss.sh ${MPI_TEST_FLAG})
   add_test(test_rxn_HL_phase_transfer ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_HL_phase_transfer.sh ${MPI_TEST_FLAG})
   add_test(test_rxn_photolysis ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_photolysis.sh ${MPI_TEST_FLAG})
   add_test(test_rxn_SIMPOL_phase_transfer ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_SIMPOL_phase_transfer.sh ${MPI_TEST_FLAG})
+  #add_test(test_rxn_surface ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_surface.sh ${MPI_TEST_FLAG})
+  #add_test(test_rxn_ternary_chemical_activation ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_ternary_chemical_activation.sh ${MPI_TEST_FLAG})
   add_test(test_rxn_troe ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_troe.sh ${MPI_TEST_FLAG})
+  #add_test(test_rxn_wennberg_no_ro2 ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_wennberg_no_ro2.sh ${MPI_TEST_FLAG})
+  #add_test(test_rxn_wennberg_tunneling ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_wennberg_tunneling.sh ${MPI_TEST_FLAG})
   add_test(test_rxn_wet_deposition ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_wet_deposition.sh ${MPI_TEST_FLAG})
   add_test(test_sub_model_PDFiTE ${CMAKE_BINARY_DIR}/test_run/unit_sub_model_data/test_PDFiTE.sh ${MPI_TEST_FLAG})
   add_test(test_sub_model_UNIFAC ${CMAKE_BINARY_DIR}/test_run/unit_sub_model_data/test_UNIFAC.sh ${MPI_TEST_FLAG})
@@ -315,6 +320,7 @@ if (ENABLE_TESTS)
   add_test(test_chem_mech_solver ${CMAKE_BINARY_DIR}/test_run/chemistry/test_chemistry_1.sh ${MPI_TEST_FLAG})
   add_test(test_chemistry_cb05cl_ae5 ${CMAKE_BINARY_DIR}/test_run/chemistry/cb05cl_ae5/test_chemistry_cb05cl_ae5.sh ${MPI_TEST_FLAG})
   add_test(boot_camp_part_1 ${CMAKE_BINARY_DIR}/boot_camp_run/part_2_code/run_part_1.sh ${MPI_TEST_FLAG})
+  add_test(boot_camp_part_2 ${CMAKE_BINARY_DIR}/boot_camp_run/part_2_code/run_part_2.sh ${MPI_TEST_FLAG})
   add_test(boot_camp_part_3 ${CMAKE_BINARY_DIR}/boot_camp_run/part_3_code/run_part_3.sh ${MPI_TEST_FLAG})
   add_test(boot_camp_part_4 ${CMAKE_BINARY_DIR}/boot_camp_run/part_4_code/run_part_4.sh ${MPI_TEST_FLAG})
   add_test(camp_v1_paper_binned ${CMAKE_BINARY_DIR}/data_run/CAMP_v1_paper/binned/test_monarch_binned.sh ${MPI_TEST_FLAG})
@@ -330,7 +336,7 @@ set(STD_CUDA_FLAGS "-g -O3 -arch=compute_70 -code=sm_70") #-G for assembly code 
 if(${CMAKE_Fortran_COMPILER_ID} MATCHES "Intel")
   set(STD_F_FLAGS "-extend_source -warn truncated_source")
 elseif(${CMAKE_Fortran_COMPILER_ID} MATCHES "GNU")
-  set(STD_F_FLAGS "-ffree-line-length-none -lnetcdf -lnetcdff")
+  set(STD_F_FLAGS "-ffree-line-length-none")
 endif()
 
 set(REACTIONS_F_SRC
@@ -343,9 +349,9 @@ set(REACTIONS_F_SRC
 	src/rxns/rxn_first_order_loss.F90
 	src/rxns/rxn_HL_phase_transfer.F90
 	src/rxns/rxn_photolysis.F90
-        src/rxns/rxn_SIMPOL_phase_transfer.F90
+  src/rxns/rxn_SIMPOL_phase_transfer.F90
 	src/rxns/rxn_troe.F90
-        src/rxns/rxn_wet_deposition.F90)
+  src/rxns/rxn_wet_deposition.F90)
 
 set(REACTIONS_C_SRC
 	src/rxns/rxn_aqueous_equilibrium.c

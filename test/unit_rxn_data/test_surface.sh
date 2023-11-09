@@ -14,14 +14,15 @@ while [ true ]
 do
   echo Attempt $counter
 
-if [[ $1 == "MPI" ]]; then
-  exec_str="mpirun -v -np 2 ../../../unit_test_rxn_arrhenius"
+if [[ $1 = "MPI" ]]; then
+  exec_str="mpirun -v -np 2 ../../test_rxn_surface"
 else
-  exec_str="../../../unit_test_rxn_arrhenius"
+  exec_str="../../test_rxn_surface"
 fi
+
 if ! $exec_str; then
 	  echo Failure "$counter"
-	  if [ "$counter" -gt 5 ]
+	  if [ "$counter" -gt 10 ]
 	  then
 		  echo FAIL
 		  exit 1
