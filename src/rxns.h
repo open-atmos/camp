@@ -17,12 +17,6 @@
 #include "camp_common.h"
 #include "debug_and_stats/camp_debug_2.h"
 
-#ifdef CAMP_DEBUG_RATE_CONSTANTS
-#ifdef CAMP_USE_MPI
-#include <mpi.h>
-#endif
-#endif
-
 void rxn_aqueous_equilibrium_calc_deriv_contrib(
     ModelData *model_data, TimeDerivative time_deriv, int *rxn_int_data,
     double *rxn_float_data, double *rxn_env_data, realtype time_step);
@@ -244,9 +238,6 @@ bool rxn_photolysis_update_data(void *update_data, int *rxn_int_data,
 void rxn_photolysis_export_input(ModelData *model_data, int *rxn_int_data,
                                  double *rxn_float_data, double *rxn_env_data,
                                  FILE *f);
-void rxn_photolysis_get_base_rate(ModelData *model_data, int *rxn_int_data,
-                                       double *rxn_float_data, double *rxn_env_data,
-                                       double *rate_constant);
 void rxn_photolysis_print(int *rxn_int_data, double *rxn_float_data);
 #ifdef CAMP_USE_SUNDIALS
 

@@ -167,11 +167,7 @@ void rxn_photolysis_calc_deriv_contrib(
   double *env_data = model_data->grid_cell_env;
 
   // Calculate the reaction rate
-#ifdef TIME_DERIVATIVE_LONG_DOUBLE
   long double rate = RATE_CONSTANT_;
-#else
-  double rate = RATE_CONSTANT_;
-#endif
   for (int i_spec = 0; i_spec < NUM_REACT_; i_spec++)
     rate *= state[REACT_(i_spec)];
 
@@ -284,28 +280,4 @@ void rxn_photolysis_set_rate_update_data(void *update_data, int photo_id,
   double *new_base_rate = (double *)&(new_photo_id[1]);
   *new_photo_id = photo_id;
   *new_base_rate = base_rate;
-}
-
-void rxn_photolysis_export_input(ModelData *model_data, int *rxn_int_data,
-                                 double *rxn_float_data, double *rxn_env_data,
-                                 FILE *f) {
-  int *int_data = rxn_int_data;
-  double *float_data = rxn_float_data;
-  double *env_data = model_data->grid_cell_env;
-
-  fprintf(f, " %-le", BASE_RATE_);
-
-  return;
-}
-
-void rxn_photolysis_get_base_rate(ModelData *model_data, int *rxn_int_data,
-                                 double *rxn_float_data, double *rxn_env_data,
-                                 double *rate_constant) {
-  int *int_data = rxn_int_data;
-  double *float_data = rxn_float_data;
-  double *env_data = model_data->grid_cell_env;
-
-  *rate_constant = BASE_RATE_;
-
-  return;
 }

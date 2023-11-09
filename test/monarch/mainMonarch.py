@@ -1,7 +1,7 @@
 import matplotlib as mpl
 
 mpl.use('TkAgg')
-import plot_functions  # comment to save ~2s execution time
+#import plot_functions  # comment to save ~2s execution time
 import math_functions
 import os
 import numpy as np
@@ -324,13 +324,13 @@ def plot_cases(conf, datay):
     datax = list(range(1, conf.timeSteps + 1, 1))
     plot_x_key = "Timesteps"
   namex = plot_x_key
-  print(namex, ":", datax[0],"-",datax[-1])
+  print(namex, ":", datax)
   if legend:
     print("plotTitle: ", plotTitle, " legend:", legend)
   else:
     print("plotTitle: ", plotTitle)
   print(namey, ":", datay)
-  plot_functions.plotsns(namex, namey, datax, datay, plotTitle, legend)
+  #plot_functions.plotsns(namex, namey, datax, datay, plotTitle, legend)
 
 
 def run_main(conf):
@@ -355,4 +355,4 @@ def run_main(conf):
         conf.mpiProcessesCaseOptimList[i] = cellsProcesses
 
   datay = run_diffCells(conf)
-  plot_cases(conf, datay)
+  #plot_cases(conf, datay)

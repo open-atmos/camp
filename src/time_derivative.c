@@ -16,8 +16,6 @@ int time_derivative_initialize(TimeDerivative *time_deriv,
                                unsigned int num_spec) {
   if (num_spec <= 0) return 0;
 
-#ifdef TIME_DERIVATIVE_LONG_DOUBLE
-
   time_deriv->production_rates =
       (long double *)malloc(num_spec * sizeof(long double));
   if (time_deriv->production_rates == NULL) return 0;
@@ -28,21 +26,6 @@ int time_derivative_initialize(TimeDerivative *time_deriv,
     free(time_deriv->production_rates);
     return 0;
   }
-
-#else
-
-  time_deriv->production_rates =
-          (double *)malloc(num_spec * sizeof(double));
-  if (time_deriv->production_rates == NULL) return 0;
-
-  time_deriv->loss_rates =
-          (double *)malloc(num_spec * sizeof(double));
-  if (time_deriv->loss_rates == NULL) {
-    free(time_deriv->production_rates);
-    return 0;
-  }
-
-#endif
 
   time_deriv->num_spec = num_spec;
 
@@ -62,41 +45,23 @@ void time_derivative_reset(TimeDerivative time_deriv) {
 
 void time_derivative_output(TimeDerivative time_deriv, double *dest_array,
                             double *deriv_est, unsigned int output_precision) {
-#ifdef TIME_DERIVATIVE_LONG_DOUBLE
   long double *r_p = time_deriv.production_rates;
   long double *r_l = time_deriv.loss_rates;
-#else
-  double *r_p = time_deriv.production_rates;
-  double *r_l = time_deriv.loss_rates;
-#endif
 
 #ifdef CAMP_DEBUG
   time_deriv.last_max_loss_precision = 1.0;
 #endif
 
-#ifdef CAMP_DEBUG_TIME_DERIV
-  printf("Time_deriv r_p r_l deriv_est scale_fact\n");
-#endif
-  for (unsigned int i_spec = 0; i_spec < time_deriv.num_spec; i_spec++) {
+  for (unsigned int i_spec = 0; i_spec < time_deriv.num_spec; ++i_spec) {
     double prec_loss = 1.0;
     if (*r_p + *r_l != 0.0) {
       if (deriv_est) {
-#ifdef TIME_DERIVATIVE_LONG_DOUBLE
         long double scale_fact;
         scale_fact =
             1.0 / (*r_p + *r_l) /
             (1.0 / (*r_p + *r_l) + MAX_PRECISION_LOSS / fabsl(*r_p - *r_l));
-#else
-        double scale_fact;
-        scale_fact =
-            1.0 / (*r_p + *r_l) /
-            (1.0 / (*r_p + *r_l) + MAX_PRECISION_LOSS / fabs(*r_p - *r_l));
-#endif
         *dest_array =
             scale_fact * (*r_p - *r_l) + (1.0 - scale_fact) * (*deriv_est);
-#ifdef CAMP_DEBUG_TIME_DERIV
-        printf("%-le %-le %-le %-le\n", *r_p, *r_l, *deriv_est, scale_fact);
-#endif
       } else {
         *dest_array = *r_p - *r_l;
       }
@@ -122,14 +87,8 @@ void time_derivative_output(TimeDerivative time_deriv, double *dest_array,
   }
 }
 
-#ifdef TIME_DERIVATIVE_LONG_DOUBLE
 void time_derivative_add_value(TimeDerivative time_deriv, unsigned int spec_id,
                                long double rate_contribution) {
-#else
-void time_derivative_add_value(TimeDerivative time_deriv, unsigned int spec_id,
-                               double rate_contribution) {
-#endif
-
   if (rate_contribution > 0.0) {
     time_deriv.production_rates[spec_id] += rate_contribution;
   } else {

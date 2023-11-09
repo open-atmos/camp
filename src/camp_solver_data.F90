@@ -49,7 +49,8 @@ module camp_camp_solver_data
                     n_aero_phase_float_param, n_aero_rep, &
                     n_aero_rep_int_param, n_aero_rep_float_param, &
                     n_aero_rep_env_param, n_sub_model, n_sub_model_int_param,&
-                    n_sub_model_float_param, n_sub_model_env_param) bind (c)
+                    n_sub_model_float_param, n_sub_model_env_param,&
+                    use_cpu, nGPUs) bind (c)
       use iso_c_binding
       !> Number of variables on the state array per grid cell
       !! (including const, PSSA, etc.)
@@ -90,6 +91,8 @@ module camp_camp_solver_data
       integer(kind=c_int), value :: n_sub_model_float_param
       !> Total number of environment-dependent parameters for all sub models
       integer(kind=c_int), value :: n_sub_model_env_param
+      integer(kind=c_int), value :: use_cpu
+      integer(kind=c_int), value :: nGPUs
     end function solver_new
 
     !> Set specie name
@@ -158,15 +161,6 @@ module camp_camp_solver_data
       !> Final time (s)
       real(kind=c_double), value :: t_final
     end function solver_run
-
-    subroutine rxn_get_base_rate(solver_data, rate_constants) bind (c)
-      use iso_c_binding
-      !> Pointer to the initialized solver data
-      type(c_ptr), value :: solver_data
-      real(kind=c_double) :: rate_constants
-      !type(c_ptr), value :: rate_constants
-      !integer(kind=c_int) :: rxn_id
-    end subroutine rxn_get_base_rate
 
     !> Get the solver statistics
     subroutine solver_get_statistics( solver_data, solver_flag, num_steps, &
@@ -423,7 +417,6 @@ module camp_camp_solver_data
     procedure :: update_aero_rep_data
     !> Integrate over a given time step
     procedure :: solve
-    procedure :: get_base_rate
     procedure:: get_solver_stats
     procedure:: export_solver_data_state
     procedure:: join_solver_data_state
@@ -461,7 +454,7 @@ contains
   !> Initialize the solver
   subroutine initialize(this, var_type, abs_tol, mechanisms, aero_phases, &
           aero_reps, sub_models, rxn_phase, n_cells,&
-          spec_names)
+          spec_names, use_cpu, nGPUs)
 
     !> Solver data
     class(camp_solver_data_t), intent(inout) :: this
@@ -480,6 +473,8 @@ contains
     type(aero_rep_data_ptr), pointer, intent(in) :: aero_reps(:)
     !> Sub models to include
     type(sub_model_data_ptr), pointer, intent(in) :: sub_models(:)
+    integer, intent(in) :: use_cpu
+    integer, intent(in) :: nGPUs
     !> Reactions phase to solve -- gas, aerosol, or both (default)
     !! Use parameters in camp_rxn_data to specify phase:
     !! GAS_RXN, AERO_RXN, GAS_AERO_RXN
@@ -662,7 +657,9 @@ contains
             n_sub_model,                       & ! # of sub models
             n_sub_model_int_param,             & ! # of sub model int params
             n_sub_model_float_param,           & ! # of sub model real params
-            n_sub_model_env_param              & ! # of sub model env params
+            n_sub_model_env_param,              & ! # of sub model env params
+            use_cpu,&
+            nGPUs&
             )
 
     ! Add all the condensed reaction data to the solver data block for
@@ -943,17 +940,6 @@ contains
             )
 
   end function solve
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-  subroutine get_base_rate(this, rate_constants)
-    class(camp_solver_data_t), intent(inout) :: this
-    real(kind=dp), allocatable, intent(inout) :: rate_constants(:)
-    real(kind=c_double), pointer :: rate_constants_c(:)
-
-    call rxn_get_base_rate(this%solver_c_ptr,rate_constants(1))
-
-  end subroutine get_base_rate
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 

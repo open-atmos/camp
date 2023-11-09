@@ -1148,12 +1148,23 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Initialize the solver
-  subroutine solver_initialize(this)
+  subroutine solver_initialize(this, use_cpu, nGPUs)
     class(camp_core_t), intent(inout) :: this
+    integer, intent(in), optional :: use_cpu
+    integer, intent(in), optional :: nGPUs
     type(string_t), allocatable :: spec_names(:)
-    integer :: i_spec, n_gas_spec
+    integer :: i_spec, n_gas_spec, use_cpu1, nGPUs1
     call assert_msg(662920365, .not.this%solver_is_initialized, &
             "Attempting to initialize the solver twice.")
+
+    use_cpu1=1
+    nGPUs1=1
+    if (present(use_cpu)) then
+      use_cpu1=use_cpu
+    end if
+    if (present(nGPUs)) then
+      nGPUs1=nGPUs
+    end if
 
     ! Set up either two solvers (gas and aerosol) or one solver (combined)
     if (this%split_gas_aero) then
@@ -1178,7 +1189,9 @@ contains
                 this%sub_model,  & ! Pointer to the sub-models
                 GAS_RXN,         & ! Reaction phase
                 this%n_cells,    & ! # of cells computed simultaneosly
-                spec_names       & ! Species names
+                spec_names,       & ! Species names
+                use_cpu1, &
+                nGPUs1 &
       )
       call this%solver_data_aero%initialize( &
                 this%var_type,   & ! State array variable types
@@ -1189,8 +1202,10 @@ contains
                 this%sub_model,  & ! Pointer to the sub-models
                 AERO_RXN,        & ! Reaction phase
                 this%n_cells,    & ! # of cells computed simultaneosly
-                spec_names       & ! Species names
-      )
+                spec_names,       & ! Species names
+                use_cpu1, &
+                nGPUs1 &
+              )
     else
 
       ! Create a new solver data object
@@ -1211,9 +1226,10 @@ contains
                 this%sub_model,  & ! Pointer to the sub-models
                 GAS_AERO_RXN,    & ! Reaction phase
                 this%n_cells,    & ! # of cells computed simultaneosly
-                spec_names       & ! Species names
-              )
-
+                spec_names,       & ! Species names
+                use_cpu1, &
+                nGPUs1 &
+                )
     end if
 
     this%solver_is_initialized = .true.

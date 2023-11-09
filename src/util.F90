@@ -140,7 +140,7 @@ contains
     integer :: ierr
 #endif
     if (.not. condition_ok) then
-       write(0,'(a)') 'ERROR (CAMP-' // trim(integer_to_string(code)) &
+      write(0,'(a)') 'ERROR (CAMP-' // trim(integer_to_string(code)) &
             // '): ' // trim(error_msg)
       open(unit=kErrorFileId, file = "error.json", action = "WRITE")
       write(kErrorFileId,'(A)') '{'

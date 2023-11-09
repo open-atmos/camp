@@ -1,0 +1,25 @@
+# Build and deloy documentation to GitHub Pages
+name: GitHub Pages
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build Doxygen documentation
+        uses: mattnotmitt/doxygen-action@v1
+        with:
+          working-directory: 'doc/'
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./doc
+          allow_empty_commit: true
+          enable_jekyll: false

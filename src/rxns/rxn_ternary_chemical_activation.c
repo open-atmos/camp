@@ -1,12 +1,13 @@
-/* Copyright (C) 2021 Barcelona Supercomputing Center and University of
- * Illinois at Urbana-Champaign
+/* Copyright (C) 2021 Barcelona Supercomputing Center,
+ *   University of Illinois at Urbana-Champaign, and
+ *   National Center for Atmospheric Research
  * SPDX-License-Identifier: MIT
  *
- * Troe reaction solver functions
+ * Ternary Chemical Activation reaction solver functions
  *
  */
 /** \file
- * \brief Troe reaction solver functions
+ * \brief Ternary Chemical Activation reaction solver functions
  */
 #include <math.h>
 #include <stdio.h>
@@ -44,8 +45,9 @@
  * \param rxn_float_data Pointer to the reaction floating-point data
  * \param jac Jacobian
  */
-void rxn_troe_get_used_jac_elem(int *rxn_int_data, double *rxn_float_data,
-                                Jacobian *jac) {
+void rxn_ternary_chemical_activation_get_used_jac_elem(int *rxn_int_data,
+                                                       double *rxn_float_data,
+                                                       Jacobian *jac) {
   int *int_data = rxn_int_data;
   double *float_data = rxn_float_data;
 
@@ -69,8 +71,10 @@ void rxn_troe_get_used_jac_elem(int *rxn_int_data, double *rxn_float_data,
  * \param rxn_int_data Pointer to the reaction integer data
  * \param rxn_float_data Pointer to the reaction floating-point data
  */
-void rxn_troe_update_ids(ModelData *model_data, int *deriv_ids, Jacobian jac,
-                         int *rxn_int_data, double *rxn_float_data) {
+void rxn_ternary_chemical_activation_update_ids(ModelData *model_data,
+                                                int *deriv_ids, Jacobian jac,
+                                                int *rxn_int_data,
+                                                double *rxn_float_data) {
   int *int_data = rxn_int_data;
   double *float_data = rxn_float_data;
 
@@ -96,33 +100,34 @@ void rxn_troe_update_ids(ModelData *model_data, int *deriv_ids, Jacobian jac,
 
 /** \brief Update reaction data for new environmental conditions
  *
- * For Troe reaction this only involves recalculating the rate
- * constant.
+ * For Ternary Chemical Activation reaction this only involves recalculating the
+ * rate constant.
  *
  * \param model_data Pointer to the model data
  * \param rxn_int_data Pointer to the reaction integer data
  * \param rxn_float_data Pointer to the reaction floating-point data
  * \param rxn_env_data Pointer to the environment-dependent parameters
  */
-void rxn_troe_update_env_state(ModelData *model_data, int *rxn_int_data,
-                               double *rxn_float_data, double *rxn_env_data) {
+void rxn_ternary_chemical_activation_update_env_state(ModelData *model_data,
+                                                      int *rxn_int_data,
+                                                      double *rxn_float_data,
+                                                      double *rxn_env_data) {
   int *int_data = rxn_int_data;
   double *float_data = rxn_float_data;
   double *env_data = model_data->grid_cell_env;
 
   // Calculate the rate constant in (#/cc)
-  // k = (k0[M] / (1 + k0[M]/kinf)) * Fc^(1/(1+(1/N*log(k0[M]/kinf))^2))
+  // k = (k0 / (1 + k0[M]/kinf)) * Fc^(1/(1+(1/N*log(k0[M]/kinf))^2))
   double conv = CONV_ * PRESSURE_PA_ / TEMPERATURE_K_;
   double k0 =
-      K0_A_  // [M] is included in K0_A_
-      * (K0_C_ == 0.0 ? 1.0 : exp(K0_C_ / TEMPERATURE_K_)) *
+      K0_A_ * (K0_C_ == 0.0 ? 1.0 : exp(K0_C_ / TEMPERATURE_K_)) *
       (K0_B_ == 0.0 ? 1.0 : pow(TEMPERATURE_K_ / ((double)300.0), K0_B_)) *
       conv;
   double kinf =
       k0 /
       (KINF_A_ * (KINF_C_ == 0.0 ? 1.0 : exp(KINF_C_ / TEMPERATURE_K_)) *
        (KINF_B_ == 0.0 ? 1.0 : pow(TEMPERATURE_K_ / ((double)300.0), KINF_B_)));
-  RATE_CONSTANT_ = (k0 / (1.0 + kinf)) *
+  RATE_CONSTANT_ = 1.0e-6 * (k0 / (1.0 + kinf)) *
                    pow(FC_, (1.0 / (1.0 + pow(log10(kinf) / N_, 2)))) *
                    pow(conv, NUM_REACT_ - 1) * SCALING_;
 
@@ -140,10 +145,9 @@ void rxn_troe_update_env_state(ModelData *model_data, int *rxn_int_data,
  * \param time_step Current time step being computed (s)
  */
 #ifdef CAMP_USE_SUNDIALS
-void rxn_troe_calc_deriv_contrib(ModelData *model_data,
-                                 TimeDerivative time_deriv, int *rxn_int_data,
-                                 double *rxn_float_data, double *rxn_env_data,
-                                 realtype time_step) {
+void rxn_ternary_chemical_activation_calc_deriv_contrib(
+    ModelData *model_data, TimeDerivative time_deriv, int *rxn_int_data,
+    double *rxn_float_data, double *rxn_env_data, realtype time_step) {
   int *int_data = rxn_int_data;
   double *float_data = rxn_float_data;
   double *state = model_data->grid_cell_state;
@@ -186,9 +190,9 @@ void rxn_troe_calc_deriv_contrib(ModelData *model_data,
  * \param time_step Current time step being calculated (s)
  */
 #ifdef CAMP_USE_SUNDIALS
-void rxn_troe_calc_jac_contrib(ModelData *model_data, Jacobian jac,
-                               int *rxn_int_data, double *rxn_float_data,
-                               double *rxn_env_data, realtype time_step) {
+void rxn_ternary_chemical_activation_calc_jac_contrib(
+    ModelData *model_data, Jacobian jac, int *rxn_int_data,
+    double *rxn_float_data, double *rxn_env_data, realtype time_step) {
   int *int_data = rxn_int_data;
   double *float_data = rxn_float_data;
   double *state = model_data->grid_cell_state;
@@ -223,16 +227,17 @@ void rxn_troe_calc_jac_contrib(ModelData *model_data, Jacobian jac,
 }
 #endif
 
-/** \brief Print the Troe reaction parameters
+/** \brief Print the Ternary Chemical Activation reaction parameters
  *
  * \param rxn_int_data Pointer to the reaction integer data
  * \param rxn_float_data Pointer to the reaction floating-point data
  */
-void rxn_troe_print(int *rxn_int_data, double *rxn_float_data) {
+void rxn_ternary_chemical_activation_print(int *rxn_int_data,
+                                           double *rxn_float_data) {
   int *int_data = rxn_int_data;
   double *float_data = rxn_float_data;
 
-  printf("\n\nTroe reaction\n");
+  printf("\n\nTernary Chemical Activation reaction\n");
 
   return;
 }

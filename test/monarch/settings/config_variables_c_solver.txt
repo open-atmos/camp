@@ -1,2 +1,2 @@
-USE_CPU=OFF
-4
+USE_CPU=ON
+1

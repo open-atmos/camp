@@ -26,13 +26,14 @@ endif ()
 
 ######################################################################
 # options
+SET(ENABLE_TESTS OFF)
+#SET(ENV{CTEST_OUTPUT_ON_FAILURE} ON) #test if ctest output on failure is working
 
 #Set all options to OFF by default due to bug on CMake 3.15
 option(ENABLE_GSL "Enable GSL library for Jacobian evaluation" OFF)
 option(ENABLE_MPI "Enable MPI parallel support" OFF)
 option(ENABLE_MPI_TEST "Enable MPI parallel support" OFF)
 option(ENABLE_C_SORT "Enable C sorting routines" OFF)
-option(ENABLE_TESTS "Enable tests" OFF)
 option(ENABLE_DEBUG "Compile debugging functions" OFF)
 option(FAILURE_DETAIL "Output conditions before and after solver failures" OFF)
 option(ENABLE_GPU "Enable use of GPUs in chemistry solving" OFF)
@@ -48,6 +49,8 @@ mark_as_advanced(FORCE ENABLE_DEBUG FAILURE_DETAIL)
 file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/out)
 file(CREATE_LINK ${CMAKE_BINARY_DIR}/out ${CMAKE_CURRENT_SOURCE_DIR}/test/monarch/out SYMBOLIC)
 file(CREATE_LINK ${CMAKE_CURRENT_SOURCE_DIR}/test/monarch/settings ${CMAKE_BINARY_DIR}/settings SYMBOLIC)
+
+
 
 ######################################################################
 # CPack
@@ -194,9 +197,6 @@ set(SUNDIALS_LIBS ${SUITE_SPARSE_KLU_LIB} ${SUNDIALS_KLU_LIB}
 include_directories(${SUNDIALS_INCLUDE_DIR} ${SUITE_SPARSE_INCLUDE_DIR})
 add_definitions(-DCAMP_USE_SUNDIALS)
 
-#set(CMAKE_INSTALL_RPATH "/home/cguzman/CLionProjects/gpupartmc/cvode-3.4-alpha/install/lib/libsundials_sunmatrixsparse.so.1")
-#set(CMAKE_INSTALL_RPATH "/home/cguzman/CLionProjects/gpupartmc/cvode-3.4-alpha/install/lib/")
-
 ######################################################################
 # json-fortran
 
@@ -269,7 +269,7 @@ set_property(DIRECTORY PROPERTY ADDITIONAL_MAKE_CLEAN_FILES test_run mechanisms_
 ######################################################################
 # Unit test macro
 
-#if (ENABLE_TESTS)
+if (ENABLE_TESTS)
   macro(do_unit_test test_name result)
     if(ENABLE_MPI)
       add_test(unit_test_${test_name} mpirun -v -np 1 ${CMAKE_BINARY_DIR}/unit_test_${test_name})
@@ -279,13 +279,13 @@ set_property(DIRECTORY PROPERTY ADDITIONAL_MAKE_CLEAN_FILES test_run mechanisms_
     set_tests_properties(unit_test_${test_name}
             PROPERTIES PASS_REGULAR_EXPRESSION ${result})
   endmacro(do_unit_test)
-#endif()
+endif()
 
 ######################################################################
 # tests
 
 enable_testing()
-#if (ENABLE_TESTS)
+if (ENABLE_TESTS)
 do_unit_test(property "PASS")
 do_unit_test(chem_spec_data "PASS")
 do_unit_test(aero_phase_data "PASS")
@@ -293,7 +293,7 @@ do_unit_test(jacobian "PASS")
 do_unit_test(aero_rep_single_particle "PASS")
 do_unit_test(aero_rep_modal_binned_mass "PASS")
 do_unit_test(camp_core "PASS")
-#endif()
+endif()
 
 if (ENABLE_MPI AND ENABLE_MPI_TEST)
   set(MPI_TEST_FLAG MPI)
@@ -301,8 +301,13 @@ else()
   set(MPI_TEST_FLAG serial)
 endif()
 
+if (ENABLE_GPU)
+    add_test(test_gpu checkGPU.sh WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/test/monarch)
+endif()
+
 if (ENABLE_TESTS)
-  # New unit tests (UNDER DEVELOPMENT)
+
+    # New unit tests (UNDER DEVELOPMENT)
   add_test(test_rxn_arrhenius_mech ${CMAKE_BINARY_DIR}/test_run/unit_tests/input_files/run_rxn_arrhenius.sh ${MPI_TEST_FLAG})
 
   # Old-style unit tests
@@ -490,6 +495,14 @@ install(
 endif()
 
 ######################################################################
+# camp-chem box model
+
+add_executable(camp_box_model test/camp_box_model_data.F90
+        test/camp_box_model.F90)
+
+target_link_libraries(camp_box_model camplib)
+
+######################################################################
 # test_chemistry_cb05cl_ae5
 
 set(CB5_EBI_SOLVER
@@ -532,20 +545,20 @@ endif()
 set_source_files_properties(${CB5_EBI_SOLVER} PROPERTIES COMPILE_FLAGS
 	${CB5_EBI_FLAGS})
 
-add_executable(mock_monarch test/monarch/mock_monarch.F90
-        test/monarch/camp_monarch_interface.F90
-        ${CB5_EBI_SOLVER} ${CB5_KPP_SOLVER}
-        test/chemistry/cb05cl_ae5/module_BSC_CHEM_DATA.F90)
-target_link_libraries(mock_monarch camplib)
+if (ENABLE_GPU)
+    add_executable(mock_monarch test/monarch/mock_monarch.F90
+            test/monarch/camp_monarch_interface.F90
+            ${CB5_EBI_SOLVER} ${CB5_KPP_SOLVER}
+            test/chemistry/cb05cl_ae5/module_BSC_CHEM_DATA.F90)
+    target_link_libraries(mock_monarch camplib)
+endif()
 
 if (ENABLE_TESTS)
+    add_executable(unit_test_aero_rep_single_particle
+            test/unit_aero_rep_data/test_aero_rep_single_particle.c
+            test/unit_aero_rep_data/test_aero_rep_single_particle.F90)
 
-######################################################################
-# camp-chem box model
-
-  add_executable(camp_box_model test/camp_box_model_data.F90
-          test/camp_box_model.F90)
-  target_link_libraries(camp_box_model camplib)
+    target_link_libraries(unit_test_aero_rep_single_particle camplib)
 
 ######################################################################
 # test_chemistry_cb05cl_ae5
@@ -652,14 +665,7 @@ add_executable(unit_test_aero_phase_data test/unit_aero_phase_data/test_aero_pha
 
 target_link_libraries(unit_test_aero_phase_data camplib)
 
-######################################################################
-# test_aero_rep_single_particle
 
-add_executable(unit_test_aero_rep_single_particle
-	test/unit_aero_rep_data/test_aero_rep_single_particle.c
-	test/unit_aero_rep_data/test_aero_rep_single_particle.F90)
-
-target_link_libraries(unit_test_aero_rep_single_particle camplib)
 
 ######################################################################
 # test_aero_rep_modal_binned_mass

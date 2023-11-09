@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: MIT
 #
 
-from checkGPU import *
+from mainMonarch import *
 
 
 def all_timesteps():

@@ -18,6 +18,5 @@ void init_export_stats();
 void export_stats(SolverData *sd);
 void print_double(double *x, int len, const char *s);
 void print_int(int *x, int len, const char *s);
-void get_camp_config_variables(SolverData *sd);
 
 #endif  // CAMP_DEBUG_2_H

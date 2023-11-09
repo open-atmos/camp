@@ -3,6 +3,11 @@
  * SPDX-License-Identifier: MIT
  *
  * This is the c ODE solver for the chemistry module
+ * It is currently set up to use the SUNDIALS BDF method, Newton
+ * iteration with the KLU sparse linear solver.
+ *
+ * It uses a scalar relative tolerance and a vector absolute tolerance.
+ *
  */
 /** \file
  * \brief Interface to c solvers for chemistry
@@ -90,7 +95,8 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
                  int n_aero_rep, int n_aero_rep_int_param,
                  int n_aero_rep_float_param, int n_aero_rep_env_param,
                  int n_sub_model, int n_sub_model_int_param,
-                 int n_sub_model_float_param, int n_sub_model_env_param) {
+                 int n_sub_model_float_param, int n_sub_model_env_param,
+                 int use_cpu, int nGPUs) {
   // Create the SolverData object
   SolverData *sd = (SolverData *) malloc(sizeof(SolverData));
   if (sd == NULL) {
@@ -117,7 +123,8 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
   // Save the number of state variables per grid cell
   sd->model_data.n_per_cell_state_var = n_state_var;
 
-  get_camp_config_variables(sd);
+  sd->use_cpu = use_cpu;
+  sd->nGPUs = nGPUs;
 #ifdef DEV_CPU_GPU
   sd->rate_cells_gpu=1;
   printf("Set cells to gpu to %lf %\n",sd->rate_cells_gpu*100);

@@ -276,9 +276,8 @@ typedef struct {
   void *cvode_mem2;
   float rate_cells_gpu;
 #endif
-  //get_camp_config_variables
   int use_cpu;
-  int nDevices;
+  int nGPUs;
 
   void *cvode_mem;       // CVodeMem object
   ModelData model_data;  // Model data (used during initialization and solving)
