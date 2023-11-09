@@ -261,9 +261,6 @@ typedef struct {
   double timeCVode;
 #endif
 
-#ifdef FAILURE_DETAIL
-  int counter_fail_solve_print;
-#endif
 #endif
 #ifdef CAMP_USE_GPU
   ModelDataCPU mCPU;

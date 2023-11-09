@@ -31,9 +31,10 @@ typedef struct {
 typedef struct {
   unsigned int num_spec;   // Number of species
   unsigned int num_elem;   // Number of potentially non-zero Jacobian elements
-  int *col_ptrs;  // Index of start/end of each column in data array
+  unsigned int *col_ptrs;  // Index of start/end of each column in data array
   unsigned int *row_ids;   // Row id of each Jacobian element in data array
-  long double *production_partials;    // Data array for productions rate partial derivs
+  long double
+      *production_partials;    // Data array for productions rate partial derivs
   long double *loss_partials;  // Data array for loss rate partial derivs
   JacobianColumnElements *elements;  // Jacobian elements flagged for inclusion
 } Jacobian;
@@ -90,7 +91,7 @@ unsigned int jacobian_number_of_elements(Jacobian jac);
  * \param col_id Column index (0...number of columns)
  * \return Column pointer value
  */
-int jacobian_column_pointer_value(Jacobian jac, int col_id);
+unsigned int jacobian_column_pointer_value(Jacobian jac, unsigned int col_id);
 
 /** \brief Returns the row for a given Jacobian element
  *

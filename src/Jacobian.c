@@ -52,7 +52,7 @@ int jacobian_initialize(Jacobian *jac, unsigned int num_spec,
 
   jac->num_spec = num_spec;
   jac->num_elem = num_elem;
-  jac->col_ptrs = (int *)malloc((num_spec + 1) * sizeof(int));
+  jac->col_ptrs = (unsigned int *)malloc((num_spec + 1) * sizeof(unsigned int));
   if (!jac->col_ptrs) return 0;
   jac->row_ids = (unsigned int *)malloc(num_elem * sizeof(unsigned int));
   if (!jac->row_ids) {
@@ -144,7 +144,7 @@ unsigned int jacobian_build_matrix(Jacobian *jac) {
     jac->num_elem += column->number_of_elements;
   }
   jac->col_ptrs =
-      (int *)malloc((jac->num_spec + 1) * sizeof(int));
+      (unsigned int *)malloc((jac->num_spec + 1) * sizeof(unsigned int));
   if (!jac->col_ptrs) {
     jacobian_free(jac);
     return 0;
@@ -155,7 +155,7 @@ unsigned int jacobian_build_matrix(Jacobian *jac) {
     return 0;
   }
   unsigned int i_elem = 0;
-  for (int i_col = 0; i_col < jac->num_spec; ++i_col) {
+  for (unsigned int i_col = 0; i_col < jac->num_spec; ++i_col) {
     jac->col_ptrs[i_col] = i_elem;
     JacobianColumnElements *column = &(jac->elements[i_col]);
     for (unsigned int j_elem = 0; j_elem < column->number_of_elements;
@@ -193,7 +193,7 @@ unsigned int jacobian_build_matrix(Jacobian *jac) {
 
 unsigned int jacobian_number_of_elements(Jacobian jac) { return jac.num_elem; }
 
-int jacobian_column_pointer_value(Jacobian jac, int col_id) {
+unsigned int jacobian_column_pointer_value(Jacobian jac, unsigned int col_id) {
   return jac.col_ptrs[col_id];
 }
 
@@ -210,7 +210,7 @@ unsigned int jacobian_get_element_id(Jacobian jac, unsigned int dep_id,
         ind_id, jac.num_spec);
     exit(EXIT_FAILURE);
   }
-  for (int i_elem = jac.col_ptrs[ind_id];
+  for (unsigned int i_elem = jac.col_ptrs[ind_id];
        i_elem < jac.col_ptrs[ind_id + 1]; ++i_elem) {
     if (jac.row_ids[i_elem] == dep_id) return i_elem;
   }
@@ -226,7 +226,7 @@ void jacobian_reset(Jacobian jac) {
 
 void jacobian_output(Jacobian jac, double *dest_array) {
   for (unsigned int i_col = 0; i_col < jac.num_spec; ++i_col) {
-    for (int i_elem = jac.col_ptrs[i_col];
+    for (unsigned int i_elem = jac.col_ptrs[i_col];
          i_elem < jac.col_ptrs[i_col + 1]; ++i_elem) {
       long double drf_dy = jac.production_partials[i_elem];
       long double drr_dy = jac.loss_partials[i_elem];
@@ -262,7 +262,7 @@ void jacobian_print(Jacobian jac) {
              jac.loss_partials) {
     printf("\nstatus: Jacobian built");
     for (unsigned int i_col = 0; i_col < jac.num_spec; ++i_col) {
-      for (int i_elem = jac.col_ptrs[i_col];
+      for (unsigned int i_elem = jac.col_ptrs[i_col];
            i_elem < jac.col_ptrs[i_col + 1]; ++i_elem) {
         printf("\n  col = %6d row = %6d production = %Le loss = %Le", i_col,
                jac.row_ids[i_elem], jac.production_partials[i_elem],

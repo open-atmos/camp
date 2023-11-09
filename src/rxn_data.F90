@@ -40,12 +40,17 @@
 !!   - \subpage camp_rxn_CMAQ_H2O2 "CMAQ special reaction type for 2HO2 (+ H2O) -> H2O2"
 !!   - \subpage camp_rxn_CMAQ_OH_HNO3 "CMAQ special reaction type for OH + HNO3 -> NO3 + H2O"
 !!   - \subpage camp_rxn_condensed_phase_arrhenius "condensed-chase Arrhenius"
+!!   - \subpage camp_rxn_condensed_phase_photolysis "condensed-chase photolysis"
 !!   - \subpage camp_rxn_emission "emission"
 !!   - \subpage camp_rxn_first_order_loss "first-order loss"
 !!   - \subpage camp_rxn_HL_phase_transfer "Henry's Law phase transfer"
 !!   - \subpage camp_rxn_photolysis "photolysis"
 !!   - \subpage camp_rxn_SIMPOL_phase_transfer "SIMPOL.1 phase transfer"
+!!   - \subpage camp_rxn_ternary_chemical_activation "ternary chemical activation"
+!!   - \subpage camp_rxn_surface "surface (heterogeneous)"
 !!   - \subpage camp_rxn_troe "Troe (fall-off)"
+!!   - \subpage camp_rxn_wennberg_no_ro2 "Wennberg NO + RO2"
+!!   - \subpage camp_rxn_wennberg_tunneling "Wennberg tunneling"
 !!   - \subpage camp_rxn_wet_deposition "wet deposition"
 !!
 !! The general input format for a reaction can be found

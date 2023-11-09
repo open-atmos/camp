@@ -302,17 +302,17 @@ if (ENABLE_TESTS)
   add_test(test_rxn_CMAQ_H2O2 ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_CMAQ_H2O2.sh ${MPI_TEST_FLAG})
   add_test(test_rxn_CMAQ_OH_HNO3 ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_CMAQ_OH_HNO3.sh ${MPI_TEST_FLAG})
   add_test(test_rxn_condensed_phase_arrhenius ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_condensed_phase_arrhenius.sh ${MPI_TEST_FLAG})
-  #add_test(test_rxn_condensed_phase_photolysis ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_condensed_phase_photolysis.sh ${MPI_TEST_FLAG})
+  add_test(test_rxn_condensed_phase_photolysis ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_condensed_phase_photolysis.sh ${MPI_TEST_FLAG})
   add_test(test_rxn_emission ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_emission.sh ${MPI_TEST_FLAG})
   add_test(test_rxn_first_order_loss ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_first_order_loss.sh ${MPI_TEST_FLAG})
   add_test(test_rxn_HL_phase_transfer ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_HL_phase_transfer.sh ${MPI_TEST_FLAG})
   add_test(test_rxn_photolysis ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_photolysis.sh ${MPI_TEST_FLAG})
   add_test(test_rxn_SIMPOL_phase_transfer ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_SIMPOL_phase_transfer.sh ${MPI_TEST_FLAG})
-  #add_test(test_rxn_surface ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_surface.sh ${MPI_TEST_FLAG})
-  #add_test(test_rxn_ternary_chemical_activation ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_ternary_chemical_activation.sh ${MPI_TEST_FLAG})
+  add_test(test_rxn_surface ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_surface.sh ${MPI_TEST_FLAG})
+  add_test(test_rxn_ternary_chemical_activation ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_ternary_chemical_activation.sh ${MPI_TEST_FLAG})
   add_test(test_rxn_troe ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_troe.sh ${MPI_TEST_FLAG})
-  #add_test(test_rxn_wennberg_no_ro2 ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_wennberg_no_ro2.sh ${MPI_TEST_FLAG})
-  #add_test(test_rxn_wennberg_tunneling ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_wennberg_tunneling.sh ${MPI_TEST_FLAG})
+  add_test(test_rxn_wennberg_no_ro2 ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_wennberg_no_ro2.sh ${MPI_TEST_FLAG})
+  add_test(test_rxn_wennberg_tunneling ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_wennberg_tunneling.sh ${MPI_TEST_FLAG})
   add_test(test_rxn_wet_deposition ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_wet_deposition.sh ${MPI_TEST_FLAG})
   add_test(test_sub_model_PDFiTE ${CMAKE_BINARY_DIR}/test_run/unit_sub_model_data/test_PDFiTE.sh ${MPI_TEST_FLAG})
   add_test(test_sub_model_UNIFAC ${CMAKE_BINARY_DIR}/test_run/unit_sub_model_data/test_UNIFAC.sh ${MPI_TEST_FLAG})
@@ -345,12 +345,17 @@ set(REACTIONS_F_SRC
 	src/rxns/rxn_CMAQ_H2O2.F90
 	src/rxns/rxn_CMAQ_OH_HNO3.F90
 	src/rxns/rxn_condensed_phase_arrhenius.F90
+	src/rxns/rxn_condensed_phase_photolysis.F90
 	src/rxns/rxn_emission.F90
 	src/rxns/rxn_first_order_loss.F90
 	src/rxns/rxn_HL_phase_transfer.F90
 	src/rxns/rxn_photolysis.F90
   src/rxns/rxn_SIMPOL_phase_transfer.F90
-	src/rxns/rxn_troe.F90
+  src/rxns/rxn_surface.F90
+  src/rxns/rxn_ternary_chemical_activation.F90
+  src/rxns/rxn_troe.F90
+  src/rxns/rxn_wennberg_no_ro2.F90
+  src/rxns/rxn_wennberg_tunneling.F90
   src/rxns/rxn_wet_deposition.F90)
 
 set(REACTIONS_C_SRC
@@ -359,13 +364,18 @@ set(REACTIONS_C_SRC
 	src/rxns/rxn_CMAQ_H2O2.c
 	src/rxns/rxn_CMAQ_OH_HNO3.c
 	src/rxns/rxn_condensed_phase_arrhenius.c
+	src/rxns/rxn_condensed_phase_photolysis.c
 	src/rxns/rxn_emission.c
 	src/rxns/rxn_first_order_loss.c
 	src/rxns/rxn_HL_phase_transfer.c
 	src/rxns/rxn_photolysis.c
-        src/rxns/rxn_SIMPOL_phase_transfer.c
+  src/rxns/rxn_SIMPOL_phase_transfer.c
+  src/rxns/rxn_surface.c
+  src/rxns/rxn_ternary_chemical_activation.c
 	src/rxns/rxn_troe.c
-        src/rxns/rxn_wet_deposition.c)
+  src/rxns/rxn_wennberg_no_ro2.c
+  src/rxns/rxn_wennberg_tunneling.c
+  src/rxns/rxn_wet_deposition.c)
 
 set_source_files_properties(${REACTIONS_F_SRC} PROPERTIES COMPILE_FLAGS
         ${STD_F_FLAGS})
@@ -487,7 +497,7 @@ endif()
 # camp-chem box model
 
 add_executable(camp_box_model test/camp_box_model_data.F90
-        test/camp_box_model.F90)
+                              test/camp_box_model.F90)
 
 target_link_libraries(camp_box_model camplib)
 
@@ -534,37 +544,24 @@ endif()
 set_source_files_properties(${CB5_EBI_SOLVER} PROPERTIES COMPILE_FLAGS
 	${CB5_EBI_FLAGS})
 
-######################################################################
-# Part 1
-
-add_executable(boot_camp_part_1 doc/camp_tutorial/boot_camp/part_1_code/box_model.F90)
-
-target_link_libraries(boot_camp_part_1 camplib)
+if (ENABLE_GPU)
+  add_executable(mock_monarch test/monarch/mock_monarch.F90
+      test/monarch/camp_monarch_interface.F90
+      ${CB5_EBI_SOLVER} ${CB5_KPP_SOLVER}
+      test/chemistry/cb05cl_ae5/module_BSC_CHEM_DATA.F90)
+  target_link_libraries(mock_monarch camplib)
+endif()
 
 if (ENABLE_TESTS)
-
-  if (ENABLE_GPU)
-    add_executable(mock_monarch test/monarch/mock_monarch.F90
-        test/monarch/camp_monarch_interface.F90
-        ${CB5_EBI_SOLVER} ${CB5_KPP_SOLVER}
-        test/chemistry/cb05cl_ae5/module_BSC_CHEM_DATA.F90)
-    target_link_libraries(mock_monarch camplib)
-  endif()
-
-  add_executable(unit_test_aero_rep_single_particle
-            test/unit_aero_rep_data/test_aero_rep_single_particle.c
-            test/unit_aero_rep_data/test_aero_rep_single_particle.F90)
-
-    target_link_libraries(unit_test_aero_rep_single_particle camplib)
 
 ######################################################################
 # test_chemistry_cb05cl_ae5
 
-  add_executable(test_chemistry_cb05cl_ae5
-          test/chemistry/cb05cl_ae5/test_cb05cl_ae5.F90
-          ${CB5_EBI_SOLVER} ${CB5_KPP_SOLVER}
-          test/chemistry/cb05cl_ae5/module_BSC_CHEM_DATA.F90)
-  target_link_libraries(test_chemistry_cb05cl_ae5 camplib)
+add_executable(test_chemistry_cb05cl_ae5
+    test/chemistry/cb05cl_ae5/test_cb05cl_ae5.F90
+    ${CB5_EBI_SOLVER} ${CB5_KPP_SOLVER}
+    test/chemistry/cb05cl_ae5/module_BSC_CHEM_DATA.F90)
+target_link_libraries(test_chemistry_cb05cl_ae5 camplib)
 
 ######################################################################
 # test_property
@@ -598,6 +595,8 @@ add_executable(test_rxn_CMAQ_OH_HNO3 test/unit_rxn_data/test_rxn_CMAQ_OH_HNO3.F9
 target_link_libraries(test_rxn_CMAQ_OH_HNO3 camplib)
 add_executable(test_rxn_condensed_phase_arrhenius test/unit_rxn_data/test_rxn_condensed_phase_arrhenius.F90)
 target_link_libraries(test_rxn_condensed_phase_arrhenius camplib)
+add_executable(test_rxn_condensed_phase_photolysis test/unit_rxn_data/test_rxn_condensed_phase_photolysis.F90)
+target_link_libraries(test_rxn_condensed_phase_photolysis camplib)
 add_executable(test_rxn_emission test/unit_rxn_data/test_rxn_emission.F90)
 target_link_libraries(test_rxn_emission camplib)
 add_executable(test_rxn_first_order_loss test/unit_rxn_data/test_rxn_first_order_loss.F90)
@@ -608,8 +607,16 @@ add_executable(test_rxn_photolysis test/unit_rxn_data/test_rxn_photolysis.F90)
 target_link_libraries(test_rxn_photolysis camplib)
 add_executable(test_rxn_SIMPOL_phase_transfer test/unit_rxn_data/test_rxn_SIMPOL_phase_transfer.F90)
 target_link_libraries(test_rxn_SIMPOL_phase_transfer camplib)
+add_executable(test_rxn_surface test/unit_rxn_data/test_rxn_surface.F90)
+target_link_libraries(test_rxn_surface camplib)
+add_executable(test_rxn_ternary_chemical_activation test/unit_rxn_data/test_rxn_ternary_chemical_activation.F90)
+target_link_libraries(test_rxn_ternary_chemical_activation camplib)
 add_executable(test_rxn_troe test/unit_rxn_data/test_rxn_troe.F90)
 target_link_libraries(test_rxn_troe camplib)
+add_executable(test_rxn_wennberg_no_ro2 test/unit_rxn_data/test_rxn_wennberg_no_ro2.F90)
+target_link_libraries(test_rxn_wennberg_no_ro2 camplib)
+add_executable(test_rxn_wennberg_tunneling test/unit_rxn_data/test_rxn_wennberg_tunneling.F90)
+target_link_libraries(test_rxn_wennberg_tunneling camplib)
 add_executable(test_rxn_wet_deposition test/unit_rxn_data/test_rxn_wet_deposition.F90)
 target_link_libraries(test_rxn_wet_deposition camplib)
 
@@ -662,7 +669,14 @@ add_executable(unit_test_aero_phase_data test/unit_aero_phase_data/test_aero_pha
 
 target_link_libraries(unit_test_aero_phase_data camplib)
 
+######################################################################
+# test_aero_rep_single_particle
 
+add_executable(unit_test_aero_rep_single_particle
+	test/unit_aero_rep_data/test_aero_rep_single_particle.c
+	test/unit_aero_rep_data/test_aero_rep_single_particle.F90)
+
+target_link_libraries(unit_test_aero_rep_single_particle camplib)
 
 ######################################################################
 # test_aero_rep_modal_binned_mass
@@ -684,7 +698,12 @@ target_link_libraries(test_chem_mech_solver camplib)
 # BootCAMP Tutorial Exercises
 ######################################################################
 
+######################################################################
+# Part 1
 
+add_executable(boot_camp_part_1 doc/camp_tutorial/boot_camp/part_1_code/box_model.F90)
+
+target_link_libraries(boot_camp_part_1 camplib)
 
 ######################################################################
 # Part 3

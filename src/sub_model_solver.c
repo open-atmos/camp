@@ -73,7 +73,7 @@ void sub_model_get_used_jac_elem(ModelData *model_data, Jacobian *jac) {
   // Add registered elements to sub-model Jacobian
   for (unsigned int i_ind = 0; i_ind < model_data->n_per_cell_state_var;
        ++i_ind) {
-    for (int i_elem = jacobian_column_pointer_value(local_jac, i_ind);
+    for (unsigned int i_elem = jacobian_column_pointer_value(local_jac, i_ind);
          i_elem < jacobian_column_pointer_value(local_jac, i_ind + 1);
          ++i_elem) {
       unsigned int i_dep = jacobian_row_index(local_jac, i_elem);
@@ -86,7 +86,7 @@ void sub_model_get_used_jac_elem(ModelData *model_data, Jacobian *jac) {
   model_data->n_mapped_params = 0;
   for (unsigned int i_ind = 0; i_ind < model_data->n_per_cell_state_var;
        ++i_ind) {
-    for (int i_elem = jacobian_column_pointer_value(local_jac, i_ind);
+    for (unsigned int i_elem = jacobian_column_pointer_value(local_jac, i_ind);
          i_elem < jacobian_column_pointer_value(local_jac, i_ind + 1);
          ++i_elem) {
       unsigned int i_dep = jacobian_row_index(local_jac, i_elem);
@@ -182,7 +182,7 @@ void sub_model_set_jac_map(ModelData *model_data, Jacobian jac) {
     // if necessary
     for (unsigned int i_ind = 0; i_ind < model_data->n_per_cell_state_var;
          ++i_ind) {
-      for (int i_elem =
+      for (unsigned int i_elem =
                jacobian_column_pointer_value(local_jac, i_ind);
            i_elem < jacobian_column_pointer_value(local_jac, i_ind + 1);
            ++i_elem) {

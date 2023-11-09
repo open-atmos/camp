@@ -28,6 +28,11 @@
 #define RXN_FIRST_ORDER_LOSS 12
 #define RXN_EMISSION 13
 #define RXN_WET_DEPOSITION 14
+#define RXN_TERNARY_CHEMICAL_ACTIVATION 15
+#define RXN_WENNBERG_TUNNELING 16
+#define RXN_WENNBERG_NO_RO2 17
+#define RXN_CONDENSED_PHASE_PHOTOLYSIS 18
+#define RXN_SURFACE 19
 
 /** \brief Get the Jacobian elements used by a particular reaction
  *
@@ -69,6 +74,10 @@ void rxn_get_used_jac_elem(ModelData *model_data, Jacobian *jac) {
         rxn_condensed_phase_arrhenius_get_used_jac_elem(rxn_int_data,
                                                         rxn_float_data, jac);
         break;
+      case RXN_CONDENSED_PHASE_PHOTOLYSIS:
+        rxn_condensed_phase_photolysis_get_used_jac_elem(rxn_int_data,
+                                                        rxn_float_data, jac);
+        break;
       case RXN_EMISSION:
         rxn_emission_get_used_jac_elem(rxn_int_data, rxn_float_data, jac);
         break;
@@ -87,8 +96,24 @@ void rxn_get_used_jac_elem(ModelData *model_data, Jacobian *jac) {
         rxn_SIMPOL_phase_transfer_get_used_jac_elem(model_data, rxn_int_data,
                                                     rxn_float_data, jac);
         break;
+      case RXN_SURFACE:
+        rxn_surface_get_used_jac_elem(model_data, rxn_int_data,
+                                      rxn_float_data, jac);
+        break;
+      case RXN_TERNARY_CHEMICAL_ACTIVATION:
+        rxn_ternary_chemical_activation_get_used_jac_elem(rxn_int_data,
+                                                          rxn_float_data, jac);
+        break;
       case RXN_TROE:
         rxn_troe_get_used_jac_elem(rxn_int_data, rxn_float_data, jac);
+        break;
+      case RXN_WENNBERG_NO_RO2:
+        rxn_wennberg_no_ro2_get_used_jac_elem(rxn_int_data, rxn_float_data,
+                                              jac);
+        break;
+      case RXN_WENNBERG_TUNNELING:
+        rxn_wennberg_tunneling_get_used_jac_elem(rxn_int_data, rxn_float_data,
+                                                 jac);
         break;
       case RXN_WET_DEPOSITION:
         rxn_wet_deposition_get_used_jac_elem(rxn_int_data, rxn_float_data, jac);
@@ -140,6 +165,10 @@ void rxn_update_ids(ModelData *model_data, int *deriv_ids, Jacobian jac) {
         rxn_condensed_phase_arrhenius_update_ids(model_data, deriv_ids, jac,
                                                  rxn_int_data, rxn_float_data);
         break;
+      case RXN_CONDENSED_PHASE_PHOTOLYSIS:
+        rxn_condensed_phase_photolysis_update_ids(model_data, deriv_ids, jac,
+                                                 rxn_int_data, rxn_float_data);
+        break;
       case RXN_EMISSION:
         rxn_emission_update_ids(model_data, deriv_ids, jac, rxn_int_data,
                                 rxn_float_data);
@@ -160,9 +189,25 @@ void rxn_update_ids(ModelData *model_data, int *deriv_ids, Jacobian jac) {
         rxn_SIMPOL_phase_transfer_update_ids(model_data, deriv_ids, jac,
                                              rxn_int_data, rxn_float_data);
         break;
+      case RXN_SURFACE:
+        rxn_surface_update_ids(model_data, deriv_ids, jac,
+                               rxn_int_data, rxn_float_data);
+        break;
+      case RXN_TERNARY_CHEMICAL_ACTIVATION:
+        rxn_ternary_chemical_activation_update_ids(
+            model_data, deriv_ids, jac, rxn_int_data, rxn_float_data);
+        break;
       case RXN_TROE:
         rxn_troe_update_ids(model_data, deriv_ids, jac, rxn_int_data,
                             rxn_float_data);
+        break;
+      case RXN_WENNBERG_NO_RO2:
+        rxn_wennberg_no_ro2_update_ids(model_data, deriv_ids, jac, rxn_int_data,
+                                       rxn_float_data);
+        break;
+      case RXN_WENNBERG_TUNNELING:
+        rxn_wennberg_tunneling_update_ids(model_data, deriv_ids, jac,
+                                          rxn_int_data, rxn_float_data);
         break;
       case RXN_WET_DEPOSITION:
         rxn_wet_deposition_update_ids(model_data, deriv_ids, jac, rxn_int_data,
@@ -215,6 +260,10 @@ void rxn_update_env_state(ModelData *model_data) {
         rxn_condensed_phase_arrhenius_update_env_state(
             model_data, rxn_int_data, rxn_float_data, rxn_env_data);
         break;
+      case RXN_CONDENSED_PHASE_PHOTOLYSIS:
+        rxn_condensed_phase_photolysis_update_env_state(
+            model_data, rxn_int_data, rxn_float_data, rxn_env_data);
+        break;
       case RXN_EMISSION:
         rxn_emission_update_env_state(model_data, rxn_int_data, rxn_float_data,
                                       rxn_env_data);
@@ -235,9 +284,25 @@ void rxn_update_env_state(ModelData *model_data) {
         rxn_SIMPOL_phase_transfer_update_env_state(
             model_data, rxn_int_data, rxn_float_data, rxn_env_data);
         break;
+      case RXN_SURFACE:
+        rxn_surface_update_env_state(
+            model_data, rxn_int_data, rxn_float_data, rxn_env_data);
+        break;
+      case RXN_TERNARY_CHEMICAL_ACTIVATION:
+        rxn_ternary_chemical_activation_update_env_state(
+            model_data, rxn_int_data, rxn_float_data, rxn_env_data);
+        break;
       case RXN_TROE:
         rxn_troe_update_env_state(model_data, rxn_int_data, rxn_float_data,
                                   rxn_env_data);
+        break;
+      case RXN_WENNBERG_NO_RO2:
+        rxn_wennberg_no_ro2_update_env_state(model_data, rxn_int_data,
+                                             rxn_float_data, rxn_env_data);
+        break;
+      case RXN_WENNBERG_TUNNELING:
+        rxn_wennberg_tunneling_update_env_state(model_data, rxn_int_data,
+                                                rxn_float_data, rxn_env_data);
         break;
       case RXN_WET_DEPOSITION:
         rxn_wet_deposition_update_env_state(model_data, rxn_int_data,
@@ -254,7 +319,6 @@ void rxn_update_env_state(ModelData *model_data) {
  * \param time_step Current model time step (s)
  */
 #ifdef CAMP_USE_SUNDIALS
-
 void rxn_calc_deriv(ModelData *model_data, TimeDerivative time_deriv,
                     realtype time_step) {
   // Get the number of reactions
@@ -300,6 +364,11 @@ void rxn_calc_deriv(ModelData *model_data, TimeDerivative time_deriv,
             model_data, time_deriv, rxn_int_data, rxn_float_data, rxn_env_data,
             time_step);
         break;
+      case RXN_CONDENSED_PHASE_PHOTOLYSIS:
+        rxn_condensed_phase_photolysis_calc_deriv_contrib(
+            model_data, time_deriv, rxn_int_data, rxn_float_data, rxn_env_data,
+            time_step);
+        break;
       case RXN_EMISSION:
         rxn_emission_calc_deriv_contrib(model_data, time_deriv, rxn_int_data,
                                         rxn_float_data, rxn_env_data,
@@ -325,59 +394,34 @@ void rxn_calc_deriv(ModelData *model_data, TimeDerivative time_deriv,
             model_data, time_deriv, rxn_int_data, rxn_float_data, rxn_env_data,
             time_step);
         break;
+      case RXN_SURFACE:
+        rxn_surface_calc_deriv_contrib(
+            model_data, time_deriv, rxn_int_data, rxn_float_data, rxn_env_data,
+            time_step);
+        break;
+      case RXN_TERNARY_CHEMICAL_ACTIVATION:
+        rxn_ternary_chemical_activation_calc_deriv_contrib(
+            model_data, time_deriv, rxn_int_data, rxn_float_data, rxn_env_data,
+            time_step);
+        break;
       case RXN_TROE:
         rxn_troe_calc_deriv_contrib(model_data, time_deriv, rxn_int_data,
                                     rxn_float_data, rxn_env_data, time_step);
+        break;
+      case RXN_WENNBERG_NO_RO2:
+        rxn_wennberg_no_ro2_calc_deriv_contrib(model_data, time_deriv,
+                                               rxn_int_data, rxn_float_data,
+                                               rxn_env_data, time_step);
+        break;
+      case RXN_WENNBERG_TUNNELING:
+        rxn_wennberg_tunneling_calc_deriv_contrib(model_data, time_deriv,
+                                                  rxn_int_data, rxn_float_data,
+                                                  rxn_env_data, time_step);
         break;
       case RXN_WET_DEPOSITION:
         rxn_wet_deposition_calc_deriv_contrib(model_data, time_deriv,
                                               rxn_int_data, rxn_float_data,
                                               rxn_env_data, time_step);
-        break;
-    }
-  }
-}
-
-#endif
-
-/** \brief DEPRECATED Calculate the time derivative \f$f(t,y)\f$ for only some specific
- * types
- *
- * \param model_data Pointer to the model data
- * \param time_deriv TimeDerivative to use to build derivative array
- * \param time_step Current model time step (s)
- */
-#ifdef CAMP_USE_SUNDIALS
-void rxn_calc_deriv_aeros(ModelData *model_data,
-                                   TimeDerivative time_deriv,
-                                   realtype time_step) {
-  // Get the number of reactions
-  int n_rxn = model_data->n_rxn;
-
-  // Loop through the reactions advancing the rxn_data pointer each time
-  for (int i_rxn = 0; i_rxn < n_rxn; i_rxn++) {
-    // Get pointers to the reaction data
-    int *rxn_int_data =
-        &(model_data->rxn_int_data[model_data->rxn_int_indices[i_rxn]]);
-    double *rxn_float_data =
-        &(model_data->rxn_float_data[model_data->rxn_float_indices[i_rxn]]);
-    double *rxn_env_data =
-        &(model_data->grid_cell_rxn_env_data[model_data->rxn_env_idx[i_rxn]]);
-
-    // Get the reaction type
-    int rxn_type = *(rxn_int_data++);
-
-    // Call the appropriate function
-    switch (rxn_type) {
-      case RXN_HL_PHASE_TRANSFER:
-        rxn_HL_phase_transfer_calc_deriv_contrib(model_data, time_deriv,
-                                                 rxn_int_data, rxn_float_data,
-                                                 rxn_env_data, time_step);
-        break;
-      case RXN_SIMPOL_PHASE_TRANSFER:
-        rxn_SIMPOL_phase_transfer_calc_deriv_contrib(
-            model_data, time_deriv, rxn_int_data, rxn_float_data,
-            rxn_env_data, time_step);
         break;
     }
   }
@@ -433,6 +477,11 @@ void rxn_calc_jac(ModelData *model_data, Jacobian jac, realtype time_step) {
             model_data, jac, rxn_int_data, rxn_float_data, rxn_env_data,
             time_step);
         break;
+      case RXN_CONDENSED_PHASE_PHOTOLYSIS:
+        rxn_condensed_phase_photolysis_calc_jac_contrib(
+            model_data, jac, rxn_int_data, rxn_float_data, rxn_env_data,
+            time_step);
+        break;
       case RXN_EMISSION:
         rxn_emission_calc_jac_contrib(model_data, jac, rxn_int_data,
                                       rxn_float_data, rxn_env_data, time_step);
@@ -457,9 +506,29 @@ void rxn_calc_jac(ModelData *model_data, Jacobian jac, realtype time_step) {
                                                    rxn_int_data, rxn_float_data,
                                                    rxn_env_data, time_step);
         break;
+      case RXN_SURFACE:
+        rxn_surface_calc_jac_contrib(model_data, jac,
+                                     rxn_int_data, rxn_float_data,
+                                     rxn_env_data, time_step);
+        break;
+      case RXN_TERNARY_CHEMICAL_ACTIVATION:
+        rxn_ternary_chemical_activation_calc_jac_contrib(
+            model_data, jac, rxn_int_data, rxn_float_data, rxn_env_data,
+            time_step);
+        break;
       case RXN_TROE:
         rxn_troe_calc_jac_contrib(model_data, jac, rxn_int_data, rxn_float_data,
                                   rxn_env_data, time_step);
+        break;
+      case RXN_WENNBERG_NO_RO2:
+        rxn_wennberg_no_ro2_calc_jac_contrib(model_data, jac, rxn_int_data,
+                                             rxn_float_data, rxn_env_data,
+                                             time_step);
+        break;
+      case RXN_WENNBERG_TUNNELING:
+        rxn_wennberg_tunneling_calc_jac_contrib(model_data, jac, rxn_int_data,
+                                                rxn_float_data, rxn_env_data,
+                                                time_step);
         break;
       case RXN_WET_DEPOSITION:
         rxn_wet_deposition_calc_jac_contrib(model_data, jac, rxn_int_data,
@@ -506,6 +575,11 @@ void rxn_calc_jac_specific_types(ModelData *model_data, Jacobian jac,
         break;
       case RXN_CONDENSED_PHASE_ARRHENIUS:
         rxn_condensed_phase_arrhenius_calc_jac_contrib(
+            model_data, jac, rxn_int_data, rxn_float_data, rxn_env_data,
+            time_step);
+        break;
+      case RXN_CONDENSED_PHASE_PHOTOLYSIS:
+        rxn_condensed_phase_photolysis_calc_jac_contrib(
             model_data, jac, rxn_int_data, rxn_float_data, rxn_env_data,
             time_step);
         break;
@@ -628,6 +702,10 @@ void rxn_update_data(int cell_id, int *rxn_id, int update_rxn_type,
           found = rxn_photolysis_update_data((void *)update_data, rxn_int_data,
                                              rxn_float_data, rxn_env_data);
           break;
+        case RXN_CONDENSED_PHASE_PHOTOLYSIS:
+          found = rxn_condensed_phase_photolysis_update_data((void *)update_data, rxn_int_data,
+                                             rxn_float_data, rxn_env_data);
+          break;
         case RXN_WET_DEPOSITION:
           found = rxn_wet_deposition_update_data(
               (void *)update_data, rxn_int_data, rxn_float_data, rxn_env_data);
@@ -679,6 +757,9 @@ void rxn_print_data(void *solver_data) {
       case RXN_CONDENSED_PHASE_ARRHENIUS:
         rxn_condensed_phase_arrhenius_print(rxn_int_data, rxn_float_data);
         break;
+      case RXN_CONDENSED_PHASE_PHOTOLYSIS:
+        rxn_condensed_phase_photolysis_print(rxn_int_data, rxn_float_data);
+        break;
       case RXN_EMISSION:
         rxn_emission_print(rxn_int_data, rxn_float_data);
         break;
@@ -694,8 +775,20 @@ void rxn_print_data(void *solver_data) {
       case RXN_SIMPOL_PHASE_TRANSFER:
         rxn_SIMPOL_phase_transfer_print(rxn_int_data, rxn_float_data);
         break;
+      case RXN_SURFACE:
+        rxn_surface_print(rxn_int_data, rxn_float_data);
+        break;
+      case RXN_TERNARY_CHEMICAL_ACTIVATION:
+        rxn_ternary_chemical_activation_print(rxn_int_data, rxn_float_data);
+        break;
       case RXN_TROE:
         rxn_troe_print(rxn_int_data, rxn_float_data);
+        break;
+      case RXN_WENNBERG_NO_RO2:
+        rxn_wennberg_no_ro2_print(rxn_int_data, rxn_float_data);
+        break;
+      case RXN_WENNBERG_TUNNELING:
+        rxn_wennberg_tunneling_print(rxn_int_data, rxn_float_data);
         break;
       case RXN_WET_DEPOSITION:
         rxn_wet_deposition_print(rxn_int_data, rxn_float_data);
