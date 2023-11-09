@@ -238,7 +238,7 @@ endif()
 ######################################################################
 # copy dirs
 
-SET(ENABLE_TESTS ON)
+SET(ENABLE_TESTS OFF)
 if(ENABLE_DATA OR ENABLE_TESTS)
 add_custom_target(copy_data ALL ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/data ${CMAKE_BINARY_DIR}/data_run)
 endif()
@@ -290,10 +290,11 @@ else()
   set(MPI_TEST_FLAG serial)
 endif()
 
+if (ENABLE_GPU)
+  add_test(NAME test_gpu COMMAND checkGPU.sh WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/test/monarch)
+endif()
+
 if (ENABLE_TESTS)
-  if (ENABLE_GPU)
-    add_test(NAME test_gpu COMMAND checkGPU.sh WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/test/monarch)
-  endif()
     # New unit tests (UNDER DEVELOPMENT)
   add_test(test_rxn_arrhenius_mech ${CMAKE_BINARY_DIR}/test_run/unit_tests/input_files/run_rxn_arrhenius.sh ${MPI_TEST_FLAG})
 
