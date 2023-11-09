@@ -69,5 +69,5 @@ cmake -D CMAKE_C_COMPILER=$(which mpicc) \
 -D DISABLE_INSTALL_OPTIONS=TRUE \
 ..
 
-make -j 4 VERBOSE=1
+make VERBOSE=1
 cd $curr_path
