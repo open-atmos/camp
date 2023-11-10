@@ -101,7 +101,8 @@ void camp_debug_print_jac(void *solver_data, SUNMatrix J, const char *message) {
     next_col = SM_INDEXPTRS_S(J)[i_ind + 1];
     for (int i_dep = 0; i_dep < n_state_var; i_dep++) {
       if (i_dep == SM_INDEXVALS_S(J)[i_elem] && i_elem < next_col) {
-        printf(" % -1.2le ", SM_DATA_S(J)[i_elem++]);
+        printf(" % -1.2le ", SM_DATA_S(J)[i_elem]);
+        i_elem++;
       } else {
         printf("     -     ");
       }
@@ -136,35 +137,6 @@ static void print_data_sizes(ModelData *md) {
   printf("n_rxn: %d ", n_rxn);
   printf("n_state_var: %d", md->n_per_cell_state_var * md->n_cells);
   printf("n_dep_var: %d", md->n_per_cell_dep_var * md->n_cells);
-}
-
-/** \brief Print Jacobian matrix in format KLU SPARSE
- *
- * \param M Jacobian matrix
- */
-static void print_jacobian(SUNMatrix M) {
-  printf("\n NNZ JAC: %lld \n", (long long)SM_NNZ_S(M));
-  printf("DATA | INDEXVALS:\n");
-  for (int i = 0; i < SM_NNZ_S(M); i++) {
-    printf("% -le \n", (SM_DATA_S(M))[i]);
-    printf("%lld \n", (long long)((SM_INDEXVALS_S(M))[i]));
-  }
-  printf("PTRS:\n");
-  for (int i = 0; i <= SM_NP_S(M); i++) {
-    printf("%lld \n", (long long)((SM_INDEXPTRS_S(M))[i]));
-  }
-}
-
-/** \brief Print derivative array
- *
- * \param deriv Derivative array
- */
-static void print_derivative(N_Vector deriv) {
-  // printf(" deriv length: %d\n", NV_LENGTH_S(deriv));
-  for (int i = 0; i < NV_LENGTH_S(deriv); i++) {  // NV_LENGTH_S(deriv)
-    printf(" deriv: % -le", NV_DATA_S(deriv)[i]);
-    printf(" index: %d \n", i);
-  }
 }
 
 /** \brief Evaluate the derivative and Jacobian near a given state

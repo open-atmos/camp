@@ -20,7 +20,10 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
                  int n_aero_rep, int n_aero_rep_int_param,
                  int n_aero_rep_float_param, int n_aero_rep_env_param,
                  int n_sub_model, int n_sub_model_int_param,
-                 int n_sub_model_float_param, int n_sub_model_env_param);
+                 int n_sub_model_float_param, int n_sub_model_env_param,
+                 int use_cpu, int nGPUs);
+void solver_set_spec_name(void *solver_data, char *spec_name,
+                          int size_spec_name, int i);
 void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
                        int max_steps, int max_conv_fails);
 #ifdef CAMP_DEBUG
@@ -38,6 +41,9 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
                            int *RHS_evals_total, int *Jac_evals_total,
                            double *RHS_time__s, double *Jac_time__s,
                            double *max_loss_precision);
+void export_solver_state(void *solver_data);
+void join_solver_state(void *solver_data);
+void export_solver_stats(void *solver_data);
 void solver_free(void *solver_data);
 void model_free(ModelData model_data);
 
@@ -53,19 +59,13 @@ void error_handler(int error_code, const char *module, const char *function,
                    char *msg, void *sd);
 
 /* SUNDIALS support functions */
-int camp_solver_update_model_state(N_Vector solver_state, ModelData *model_data,
-                                   realtype threshhold,
-                                   realtype replacement_value);
-SUNMatrix get_jac_init(SolverData *solver_data);
+SUNMatrix get_jac_init(SolverData *sd);
 bool check_Jac(realtype t, N_Vector y, SUNMatrix J, N_Vector deriv,
                N_Vector tmp, N_Vector tmp1, void *solver_data);
 int check_flag(void *flag_value, char *func_name, int opt);
 void check_flag_fail(void *flag_value, char *func_name, int opt);
-void solver_reset_timers(void *solver_data);
 static void solver_print_stats(void *cvode_mem);
 static void print_data_sizes(ModelData *md);
-static void print_jacobian(SUNMatrix M);
-static void print_derivative(N_Vector deriv);
 bool is_anything_going_on_here(SolverData *sd, realtype t_initial,
                                realtype t_final);
 #ifdef CAMP_USE_GSL

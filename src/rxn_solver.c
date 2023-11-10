@@ -428,50 +428,6 @@ void rxn_calc_deriv(ModelData *model_data, TimeDerivative time_deriv,
 }
 #endif
 
-/** \brief Calculate the time derivative \f$f(t,y)\f$ for only some specific
- * types
- *
- * \param model_data Pointer to the model data
- * \param time_deriv TimeDerivative to use to build derivative array
- * \param time_step Current model time step (s)
- */
-#ifdef CAMP_USE_SUNDIALS
-void rxn_calc_deriv_specific_types(ModelData *model_data,
-                                   TimeDerivative time_deriv,
-                                   realtype time_step) {
-  // Get the number of reactions
-  int n_rxn = model_data->n_rxn;
-
-  // Loop through the reactions advancing the rxn_data pointer each time
-  for (int i_rxn = 0; i_rxn < n_rxn; i_rxn++) {
-    // Get pointers to the reaction data
-    int *rxn_int_data =
-        &(model_data->rxn_int_data[model_data->rxn_int_indices[i_rxn]]);
-    double *rxn_float_data =
-        &(model_data->rxn_float_data[model_data->rxn_float_indices[i_rxn]]);
-    double *rxn_env_data =
-        &(model_data->grid_cell_rxn_env_data[model_data->rxn_env_idx[i_rxn]]);
-
-    // Get the reaction type
-    int rxn_type = *(rxn_int_data++);
-
-    // Call the appropriate function
-    switch (rxn_type) {
-      case RXN_HL_PHASE_TRANSFER:
-        rxn_HL_phase_transfer_calc_deriv_contrib(model_data, time_deriv,
-                                                 rxn_int_data, rxn_float_data,
-                                                 rxn_env_data, time_step);
-        break;
-      case RXN_SIMPOL_PHASE_TRANSFER:
-        rxn_SIMPOL_phase_transfer_calc_deriv_contrib(
-            model_data, time_deriv, rxn_int_data, rxn_float_data, rxn_env_data,
-            time_step);
-        break;
-    }
-  }
-}
-#endif
-
 /** \brief Calculate the Jacobian
  *
  * \param model_data Pointer to the model data
@@ -653,8 +609,6 @@ void rxn_calc_jac_specific_types(ModelData *model_data, Jacobian jac,
  * \param float_param Pointer to floating-point parameter array
  * \param solver_data Pointer to solver data
  */
-// TODO: question: move n_added_rxns out of struct to function parameter since
-// is only used in this function
 void rxn_add_condensed_data(int rxn_type, int n_int_param, int n_float_param,
                             int n_env_param, int *int_param,
                             double *float_param, void *solver_data) {

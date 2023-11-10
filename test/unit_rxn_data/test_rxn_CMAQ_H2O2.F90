@@ -285,8 +285,8 @@ contains
         run_CMAQ_H2O2_test = .false.
       end if
     end if
-
     deallocate(buffer)
+
 #endif
 
     deallocate(camp_core)

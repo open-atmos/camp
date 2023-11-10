@@ -2,7 +2,10 @@
 
 Configurations for recreating experiments for:
 
- * Dawson, M. L., Guzman, C., Curtis, J. H., Acosta, M., Zhu, S., Dabdub, D., Conley, A., West, M., Riemer, N., and Jorba, O.: Chemistry Across Multiple Phases (CAMP) version 1.0: an integrated multiphase chemistry model, Geosci. Model Dev., 15, 3663–3689, https://doi.org/10.5194/gmd-15-3663-2022, 2022.
+ * M. Dawson, C. Guzman, J. H. Curtis, M. Acosta, S. Zhu, D. Dabdub,
+     A. Conley, M. West, N. Riemer, and O. Jorba (2021),
+     Chemistry Across Multiple Phases (CAMP) version 1.0: An
+     Integrated multi-phase chemistry model, in preparation
 
 
 The binned and modal box model experiments are run as part of the CAMP testing suite. The results will be in the build folder under:
