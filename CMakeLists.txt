@@ -34,6 +34,8 @@ option(FAILURE_DETAIL "Output conditions before and after solver failures" OFF)
 option(ENABLE_GPU "Enable use of GPUs in chemistry solving" OFF)
 option(ENABLE_NETCDF "Include NETCDF package" OFF)
 option(DISABLE_INSTALL_OPTIONS "" OFF)
+option(DISABLE_TESTS "" OFF)
+
 
 mark_as_advanced(FORCE ENABLE_DEBUG FAILURE_DETAIL)
 
@@ -107,6 +109,15 @@ endif()
 # MPI
 
 if(ENABLE_MPI)
+  find_package(MPI)
+  if(MPI_FOUND)
+    set(CMAKE_Fortran_COMPILER mpifort)
+  endif()
+  include_directories(${MPI_INCLUDE_PATH})
+  include_directories(${MPI_Fortran_INCLUDE_DIRS})
+  if(NOT MPI_FOUND)
+      message( WARNING "Not MPI found")
+  endif()
   add_definitions(-DCAMP_USE_MPI)
 endif()
 
@@ -214,22 +225,18 @@ endif()
 
 ######################################################################
 # copy dirs
-
+if(DISABLE_TESTS)
+else ()
 SET(ENABLE_TESTS ON)
+endif ()
+
 if(ENABLE_TESTS)
 add_custom_target(copy_data ALL ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/data ${CMAKE_BINARY_DIR}/data_run)
-endif()
-
-if (ENABLE_TESTS)
 add_custom_target(copy_test ALL ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/test ${CMAKE_BINARY_DIR}/test_run)
 add_custom_target(copy_mechanism ALL ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/mechanisms ${CMAKE_BINARY_DIR}/mechanisms_run)
-endif()
-
-if(ENABLE_TESTS)
-  add_custom_target(copy_boot_camp ALL ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/doc/camp_tutorial/boot_camp ${CMAKE_BINARY_DIR}/boot_camp_run)
-endif()
-
+add_custom_target(copy_boot_camp ALL ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/doc/camp_tutorial/boot_camp ${CMAKE_BINARY_DIR}/boot_camp_run)
 set_property(DIRECTORY PROPERTY ADDITIONAL_MAKE_CLEAN_FILES test_run mechanisms_run scenarios_run boot_camp_run)
+endif()
 
 ######################################################################
 # Unit test macro

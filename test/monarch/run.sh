@@ -24,8 +24,6 @@ make_run() {
   #python TestMonarch.py
   python checkGPU.py
 }
-#file(CREATE_LINK ${CMAKE_CURRENT_SOURCE_DIR}/test/monarch/out ${CMAKE_BINARY_DIR}/out  SYMBOLIC)
-#file(CREATE_LINK ${CMAKE_CURRENT_SOURCE_DIR}/test/monarch/settings ${CMAKE_BINARY_DIR}/settings SYMBOLIC)
 
 make_run
 #make_and_check
