@@ -1,0 +1,10 @@
+{
+  "camp-files" : [
+    "settings/cb05_paperV2/cb05_abs_tol.json",
+    "settings/cb05_paperV2/cb05_mechanism.json",
+    "settings/cb05_paperV2/cb05_species.json",
+    "settings/cb05_paperV2/custom_species.json",
+    "settings/cb05_paperV2/partitioning_species_params.json"
+  ]
+}
+

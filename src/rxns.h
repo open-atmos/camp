@@ -15,6 +15,7 @@
 #define RXNS_H_
 #include "Jacobian.h"
 #include "camp_common.h"
+#include "debug_and_stats/camp_debug_2.h"
 
 // aqueous_equilibrium
 void rxn_aqueous_equilibrium_get_used_jac_elem(int *rxn_int_data,

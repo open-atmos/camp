@@ -79,7 +79,10 @@ int jacobian_initialize(Jacobian *jac, unsigned int num_spec,
   for (; i_col < num_spec; ++i_col) {
     jac->col_ptrs[i_col] = i_elem;
     for (unsigned int i_row = 0; i_row < num_spec; ++i_row) {
-      if (jac_struct[i_row][i_col] == 1) jac->row_ids[i_elem++] = i_row;
+      if (jac_struct[i_row][i_col] == 1){
+        jac->row_ids[i_elem] = i_row;
+        i_elem++;
+      }
     }
   }
   jac->col_ptrs[i_col] = i_elem;
@@ -157,7 +160,8 @@ unsigned int jacobian_build_matrix(Jacobian *jac) {
     JacobianColumnElements *column = &(jac->elements[i_col]);
     for (unsigned int j_elem = 0; j_elem < column->number_of_elements;
          ++j_elem) {
-      jac->row_ids[i_elem++] = column->row_ids[j_elem];
+      jac->row_ids[i_elem] = column->row_ids[j_elem];
+      i_elem++;
     }
   }
   jac->col_ptrs[jac->num_spec] = i_elem;
