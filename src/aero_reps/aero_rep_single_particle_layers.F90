@@ -58,7 +58,7 @@ module camp_aero_rep_single_particle_layers
 #define NUM_ENV_PARAM_PER_PARTICLE_ 1
 #define NUM_PHASE_(l) this%condensed_data_int(NUM_INT_PROP_+l)
 #define PHASE_STATE_ID_(p) this%condensed_data_int(NUM_INT_PROP_+TOTAL_NUM_PHASES_+p)
-#define LAYER_STATE_ID_(l) this%condensed_data_int(NUM_INT_PROP_+TOTAL_NUM_LAYERS_+l+1)
+!#define LAYER_STATE_ID_(l) this%condensed_data_int(NUM_INT_PROP_+TOTAL_NUM_LAYERS_+l+1)
 #define PHASE_MODEL_DATA_ID_(p) this%condensed_data_int(NUM_INT_PROP_+TOTAL_NUM_PHASES_+p)
 #define PHASE_NUM_JAC_ELEM_(p) this%condensed_data_int(NUM_INT_PROP_+2*TOTAL_NUM_PHASES_+p)
 
@@ -156,7 +156,7 @@ module camp_aero_rep_single_particle_layers
     !! phase names for each layer remain in order or phase input
     procedure :: ordered_phase_array 
     !> Layer state id array calculated from num_phase
- !   procedure :: construct_layer_state_id
+    procedure :: construct_layer_state_id
     !> Finalize the aerosol representation
     final :: finalize
 
@@ -858,55 +858,70 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Order num_phase array from inner most layer to outermost 
-  function ordered_num_phase_array(this,num_phase_array)&
-    result(ordered_num_phase)
-
+  !function ordered_num_phase_array(this,num_phase_array)&
+  !  result(ordered_num_phase)
+  function ordered_num_phase_array(this,num_phase_array,ordered_layer_name,cover_name)&
+    result(ordered_num_phase)  
     !> Aerosol representation to update
     class(aero_rep_single_particle_layers_t), intent(inout) :: this
     !> Num phase array input
-    type(integer), allocatable :: num_phase_array(:)
+    type(integer), intent(in) :: num_phase_array(:)
     !> Ordered num phase array output
     type(integer), allocatable :: ordered_num_phase(:)
 
+    !> Layer name input, for testing
+    character(len=*), intent(in) :: ordered_layer_name(:)
+    character(len=*), intent(in) :: cover_name(:)
+
     integer(kind=i_kind) :: i_layer, i_cover
-#if 0   
-    allocate(ordered_num_phase(layers%size()))
-   
+    !allocate(ordered_num_phase(layers%size()))
+    allocate(ordered_num_phase(size(num_phase_array)))    
+
     ! Search for innermost layer
-    do i_layer = 1, layers%size()
+    !do i_layer = 1, layers%size()
+    do i_layer = 1, size(num_phase_array)
       if (cover_name(i_layer) == "none") then
         ordered_num_phase(1) = num_phase_array(i_layer)
       end if
     end do
 
-    do i_cover = 2, layers%size()
-      do i_layer = 1, layers%size()
+    do i_cover = 2, size(num_phase_array)
+      do i_layer = 1, size(num_phase_array)
         if (ordered_layer_name(i_cover-1).eq.cover_name(i_layer)) then
           ordered_num_phase(i_cover) = num_phase_array(i_layer)
         end if
       end do
     end do
-#endif
+
   end function ordered_num_phase_array
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Order layer array from inner most layer to outermost 
-  function ordered_phase_array(this)&
+  !function ordered_phase_array(this)&
+  !  result(ordered_phase_name)
+  function ordered_phase_array(this,cover_name,ordered_layer_name,&
+           LAYER_STATE_ID_,layer_state_id_unordered_array, phase_name_unordered)&
     result(ordered_phase_name)
-
     !> Aerosol representation to update
     class(aero_rep_single_particle_layers_t), intent(inout) :: this
-
+   ! TODO: remove as inputs once json file read in + initialize funtion works
+   ! cover name, LAYER_STATE_ID, phase name unordered, layer state id unordered array
+    character(len=*), intent(in) :: cover_name(:)
+    type(integer), intent(in) :: LAYER_STATE_ID_(:)
+    type(integer), intent(in) :: layer_state_id_unordered_array(:)
+    character(len=*), intent(in) :: phase_name_unordered(:)
+    character(len=*), intent(in) :: ordered_layer_name(:)
+ 
     !> Phase names in order from inner to outer most layer
-    type(string_t), allocatable :: ordered_phase_name(:)
-#if 0
+    character(len=50), allocatable :: ordered_phase_name(:)
     integer(kind=i_kind) :: i_layer, i_cover
    
-    allocate(ordered_phase_name(phase_name_unordered%size()))
+    allocate(ordered_phase_name(size(phase_name_unordered)))
    
     ! Search for innermost layer
-    do i_layer = 1, layers%size()
+    !do i_layer = 1, layers%size()
+    do i_layer = 1, size(cover_name)
       i_cover = 1
       if (cover_name(i_layer) == "none") then
         ordered_phase_name(LAYER_STATE_ID_(i_cover):LAYER_STATE_ID_(i_cover+1)-1) = &
@@ -915,28 +930,29 @@ contains
       end if
     end do
 
-    do i_cover = 2, layers%size()
-      do i_layer = 1, layers%size()
+    do i_cover = 2, size(cover_name)
+      do i_layer = 1, size(cover_name)
         if (ordered_layer_name(i_cover-1).eq.cover_name(i_layer)) then
-          ordered_phase_name(LAYER_STATE_ID_(i_cover):LAYER_STATE_ID(i_cover+1)-1) = &
+          ordered_phase_name(LAYER_STATE_ID_(i_cover):LAYER_STATE_ID_(i_cover+1)-1) = &
           phase_name_unordered(layer_state_id_unordered_array(i_layer):&
           layer_state_id_unordered_array(i_layer+1)-1)
         end if
       end do
     end do
-#endif
+
   end function ordered_phase_array
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Order layer state id array from inner most layer to outermost 
-  function construct_layer_state_id(num_phase_array) result(layer_state_id_array)
+  function construct_layer_state_id(this,num_phase_array) result(layer_state_id_array)
 
+    !> Aerosol representation to update
+    class(aero_rep_single_particle_layers_t), intent(inout) :: this
     !> Number of phases in each layer
-    type(integer), allocatable :: num_phase_array(:)
+    type(integer), intent(in) :: num_phase_array(:)
     !> Layer_state_id variable
     type(integer), allocatable :: layer_state_id_array(:)
-#if 0
     integer(kind=i_kind) :: i_layer
 
     ! Allocate space in layer_state_id
@@ -947,7 +963,7 @@ contains
       layer_state_id_array(i_layer+1) = layer_state_id_array(i_layer) + &
         num_phase_array(i_layer)
     end do
-#endif
+
   end function construct_layer_state_id
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

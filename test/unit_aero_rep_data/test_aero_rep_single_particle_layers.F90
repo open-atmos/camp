@@ -105,6 +105,9 @@ contains
     deallocate(camp_solver_data)
 
     call test_ordered_layer_array()
+    call test_num_phase_array()
+    call test_layer_state_id_array()
+    call test_ordered_phase_array()
 
   end function run_camp_aero_rep_data_tests
 
@@ -135,6 +138,108 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
+  ! Tests the ordered num phase array function
+  subroutine test_num_phase_array()
+
+    type(aero_rep_single_particle_layers_t) :: aero_rep
+    character(len=50), dimension(4) :: correct_layer_names
+    character(len=50), dimension(4) :: cover_name
+    !> Num phase array input
+    integer, dimension(4) :: num_phase_array, correct_num_phase_array
+    !> Ordered num phase array output
+    integer, allocatable :: ordered_num_phase_array(:)
+
+    ! Assemble input arguments
+    cover_name = [ character(len=50) :: 'bottom bread','jam','almond butter','none' ]
+    correct_layer_names = [ character(len=50) :: 'bottom bread','almond butter','jam','top bread' ]
+    num_phase_array = (/ 2,2,4,3 /)
+    correct_num_phase_array = (/ 3,2,4,2 /)
+
+    ! Call the function and enter inputs 
+    ordered_num_phase_array = aero_rep%ordered_num_phase_array(num_phase_array,&
+                              correct_layer_names, cover_name)
+    ! check individual values:
+    call assert(500109071, ordered_num_phase_array(1) .eq. correct_num_phase_array(1))
+    call assert(195255637, ordered_num_phase_array(2) .eq. correct_num_phase_array(2))
+    call assert(165185913, ordered_num_phase_array(3) .eq. correct_num_phase_array(3))
+    call assert(735490318, ordered_num_phase_array(4) .eq. correct_num_phase_array(4))
+
+  end subroutine test_num_phase_array
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  ! Tests the layer state id array function
+  subroutine test_layer_state_id_array()
+
+    type(aero_rep_single_particle_layers_t) :: aero_rep
+    !> Num phase array input
+    integer, dimension(4) :: correct_num_phase_array
+    !> Correct layer state id for validating test
+    integer, dimension(5) :: correct_layer_state_id
+    !> Ordered num phase array output
+    integer, allocatable :: layer_state_id_array(:)
+
+    ! Assemble input arguments
+    correct_num_phase_array = (/ 3,2,4,2 /)
+    correct_layer_state_id = (/ 1,4,6,10,12 /)
+
+    ! Call the function and enter inputs 
+    layer_state_id_array = aero_rep%construct_layer_state_id(correct_num_phase_array)
+    ! check individual values:
+    call assert(963138391, layer_state_id_array(1) .eq. correct_layer_state_id(1))
+    call assert(947594419, layer_state_id_array(2) .eq. correct_layer_state_id(2))
+    call assert(114607250, layer_state_id_array(3) .eq. correct_layer_state_id(3))
+    call assert(062008253, layer_state_id_array(4) .eq. correct_layer_state_id(4))
+    call assert(785130714, layer_state_id_array(5) .eq. correct_layer_state_id(5))
+    print *, layer_state_id_array
+
+  end subroutine test_layer_state_id_array
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  ! Tests the ordered layer array function
+  subroutine test_ordered_phase_array()
+
+    type(aero_rep_single_particle_layers_t) :: aero_rep
+    character(len=50), dimension(4) :: correct_layer_names
+    character(len=50), dimension(4) :: cover_name
+    character(len=50), dimension(4) :: ordered_layer_set_names
+    integer, allocatable :: layer_state_id_unordered_array(:), LAYER_STATE_ID(:)
+    character(len=50), dimension(11) :: phase_name_unordered, correct_phase_name
+    character(len=50), dimension(11) :: ordered_phase_set_names
+    ! Assemble input arguments
+    cover_name = [ character(len=50) :: 'bottom bread','jam','almond butter','none' ]
+    correct_layer_names = [ character(len=50) :: 'bottom bread','almond butter','jam','top bread' ]
+    phase_name_unordered = [character(len=50) :: 'almonds','salt','wheat','water','rasberry',&
+                                       'honey','sugar','lemon','wheat', 'water','salt']
+    correct_phase_name = [character(len=50) :: 'wheat','water','salt','almonds','salt','rasberry',&
+                                       'honey','sugar','lemon','wheat','water' ]
+    LAYER_STATE_ID = (/ 1,4,6,10,12 /)
+    layer_state_id_unordered_array = (/ 1,3,5,9,12 /)
+
+    ! Call the function and enter inputs 
+    ordered_phase_set_names = aero_rep%ordered_phase_array(cover_name,correct_layer_names,&
+           LAYER_STATE_ID,layer_state_id_unordered_array, phase_name_unordered)
+    ! check individual values:
+    call assert(339098038, ordered_phase_set_names(1) .eq. correct_phase_name(1))
+    call assert(199474991, ordered_phase_set_names(2) .eq. correct_phase_name(2))
+    call assert(457236155, ordered_phase_set_names(3) .eq. correct_phase_name(3))  
+    call assert(301795824, ordered_phase_set_names(4) .eq. correct_phase_name(4))
+    call assert(313407860, ordered_phase_set_names(5) .eq. correct_phase_name(5))
+    call assert(657858049, ordered_phase_set_names(6) .eq. correct_phase_name(6))
+    call assert(100854544, ordered_phase_set_names(7) .eq. correct_phase_name(7)) 
+    call assert(292581267, ordered_phase_set_names(8) .eq. correct_phase_name(8))
+    call assert(550954164, ordered_phase_set_names(9) .eq. correct_phase_name(9))
+    call assert(962490372, ordered_phase_set_names(10) .eq. correct_phase_name(10))
+    call assert(476629486, ordered_phase_set_names(11) .eq. correct_phase_name(11))
+   print *, ordered_phase_set_names(2)
+    print *, correct_phase_name(2)
+    print *, ordered_phase_set_names(3)
+    print *, correct_phase_name(3)
+
+  end subroutine test_ordered_phase_array
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   !> Build aero_rep_data set
   logical function build_aero_rep_data_set_test()
 
