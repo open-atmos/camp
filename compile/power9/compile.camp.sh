@@ -37,7 +37,6 @@ elif [ LOCAL_MACHINE==CGUZMAN ]; then
       echo "MPI is not installed. Installing..."
       sudo apt update
       sudo apt install -y mpi-default-dev
-      #if run | Invalid MIT-MAGIC-COOKIE-1 key THEN sudo apt-remove openmpi-bin AND sudo apt-get install libcr-dev mpich2 mpich2-doc
   fi
 else
   echo "Unknown architecture"
