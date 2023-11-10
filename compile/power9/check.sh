@@ -1,3 +1,4 @@
+set -e
 cd ../../build
 make -j 4
 ctest --output-on-failure

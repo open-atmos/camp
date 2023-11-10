@@ -756,7 +756,7 @@ contains
           trim(to_string(camp_init(chem_spec_data%gas_state_id( &
                   ebi_spec_names(i_spec)%string)))))
 
-#ifndef CAMP_USE_MPI
+#ifdef CAMP_USE_MPI
 #ifdef COMPARE_CAMP_FILE
       associate (camp_var=>camp_state%state_var( &
               chem_spec_data%gas_state_id( &
@@ -793,7 +793,7 @@ contains
           "; camp init: "//trim(to_string(camp_init( &
                   chem_spec_data%gas_state_id( &
                   str_temp%string)))))
-#ifndef CAMP_USE_MPI
+#ifdef CAMP_USE_MPI
 #ifdef COMPARE_CAMP_FILE
       associate (camp_var=>camp_state%state_var( &
               chem_spec_data%gas_state_id( &

@@ -27,13 +27,15 @@
 #ifdef CAMP_USE_GSL
 #include <gsl/gsl_deriv.h>
 #include <gsl/gsl_math.h>
-#include <gsl/gsl_roots.gpupartmch>
+#include <gsl/gsl_roots.h>
 #endif
 #include "camp_debug.h"
 #include "debug_and_stats/camp_debug_2.h"
 
+#ifdef CAMP_DEBUG_GPU
 #ifdef CAMP_USE_MPI
 #include <mpi.h>
+#endif
 #endif
 
 // Default solver initial time step relative to total integration time
@@ -54,8 +56,6 @@
 // Status codes for calls to camp_solver functions
 #define CAMP_SOLVER_SUCCESS 0
 #define CAMP_SOLVER_FAIL 1
-
-#define MPI_RANK_DEBUG 0
 
 /** \brief Get a new solver object
  *
@@ -563,7 +563,6 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
   int n_state_var = md->n_per_cell_state_var;
   int n_cells = md->n_cells;
   int flag;
-  int rank = 0;
 
   // Update model data pointers
   sd->model_data.total_state = state;
@@ -681,12 +680,8 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
       }
       N_Vector deriv = N_VClone(sd->y);
       flag = f(t_initial, sd->y, deriv, sd);
-#ifdef CAMP_USE_MPI
-      MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-#endif
       if (flag != 0)
-        printf("\nCall to f() at failed state failed with flag %d, rank %d \n",
-          flag, rank);
+        printf("\nCall to f() at failed state failed with flag %d \n",flag);
       solver_print_stats(sd->cvode_mem);
 #endif
       return CAMP_SOLVER_FAIL;

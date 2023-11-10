@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.10)
 # Require 2.6.4 due to -I/usr/include behavior:
 # http://www.cmake.org/Bug/view.php?id=8598
 # http://gcc.gnu.org/bugzilla/show_bug.cgi?id=35707
@@ -29,20 +29,19 @@ endif ()
 #Set all options to OFF by default due to bug on CMake 3.15
 option(ENABLE_GSL "Enable GSL library for Jacobian evaluation" OFF)
 option(ENABLE_MPI "Enable MPI parallel support" OFF)
-option(ENABLE_C_SORT "Enable C sorting routines" OFF)
 option(ENABLE_DEBUG "Compile debugging functions" OFF)
 option(FAILURE_DETAIL "Output conditions before and after solver failures" OFF)
 option(ENABLE_GPU "Enable use of GPUs in chemistry solving" OFF)
 option(ENABLE_NETCDF "Include NETCDF package" OFF)
-option(ENABLE_EXPORT_NETCDF "" OFF)
-option(ENABLE_IMPORT_NETCDF "" OFF)
-option(ENABLE_BOOTCAMP "" OFF)
-option(ENABLE_DATA "" OFF)
-option(ENABLE_INSTALL_OPTIONS "" OFF)
+option(DISABLE_INSTALL_OPTIONS "" OFF)
+option(DISABLE_TESTS "" OFF)
+
 
 mark_as_advanced(FORCE ENABLE_DEBUG FAILURE_DETAIL)
-file(CREATE_LINK ${CMAKE_CURRENT_SOURCE_DIR}/test/monarch/out ${CMAKE_BINARY_DIR}/out  SYMBOLIC)
-file(CREATE_LINK ${CMAKE_CURRENT_SOURCE_DIR}/test/monarch/settings ${CMAKE_BINARY_DIR}/settings SYMBOLIC)
+
+#Missing CMake version >=3.14 in Github Docker to use CREATE_LINK
+#file(CREATE_LINK ${CMAKE_CURRENT_SOURCE_DIR}/test/monarch/out ${CMAKE_BINARY_DIR}/out  SYMBOLIC)
+#file(CREATE_LINK ${CMAKE_CURRENT_SOURCE_DIR}/test/monarch/settings ${CMAKE_BINARY_DIR}/settings SYMBOLIC)
 
 
 ######################################################################
@@ -81,13 +80,6 @@ find_path(NETCDF_INCLUDE_DIR netcdf.mod NETCDF.mod
     set(NETCDF_LIBS ${NETCDF_LIBS} ${NETCDF_FORTRAN_LIB})
   endif()
   include_directories(${NETCDF_INCLUDE_DIR})
-  add_definitions(-D ENABLE_NETCDF)
-  if(ENABLE_EXPORT_NETCDF)
-    add_definitions(-D EXPORT_NETCDF)
-  endif()
-  if(ENABLE_IMPORT_NETCDF)
-    add_definitions(-D IMPORT_NETCDF)
-  endif()
 else()
   set(NETCDF_LIBS "")
 endif()
@@ -116,15 +108,11 @@ endif()
 ######################################################################
 # MPI
 
-if(NOT ENABLE_MPI)
+if(ENABLE_MPI)
   find_package(MPI)
   if(MPI_FOUND)
-    set(ENABLE_MPI ON)
     set(CMAKE_Fortran_COMPILER mpifort)
   endif()
-endif()
-
-if(ENABLE_MPI)
   include_directories(${MPI_INCLUDE_PATH})
   include_directories(${MPI_Fortran_INCLUDE_DIRS})
   if(NOT MPI_FOUND)
@@ -217,6 +205,12 @@ if (ENABLE_GPU)
   find_package(CUDA)
   enable_language(CUDA)
   add_definitions(-DCAMP_USE_GPU)
+  if(ENABLE_MPI)
+    add_definitions(-DCAMP_DEBUG_GPU)
+  else()
+    #ENABLE_DEBUG_GPU uses MPI timers
+    message( ERROR "ENABLE_DEBUG_GPU NEEDS ENABLE_MPI")
+  endif()
 endif()
 
 ######################################################################
@@ -229,31 +223,20 @@ if (FAILURE_DETAIL)
   add_definitions(-DFAILURE_DETAIL)
 endif()
 
-if(ENABLE_MPI)
-    add_definitions(-DCAMP_DEBUG_GPU)
-else()
-    #ENABLE_DEBUG_GPU uses MPI timers
-    message( ERROR "ENABLE_DEBUG_GPU NEEDS ENABLE_MPI")
-endif()
-
 ######################################################################
 # copy dirs
-
+if(DISABLE_TESTS)
+else ()
 SET(ENABLE_TESTS ON)
-if(ENABLE_DATA OR ENABLE_TESTS)
-add_custom_target(copy_data ALL ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/data ${CMAKE_BINARY_DIR}/data_run)
-endif()
+endif ()
 
-if (ENABLE_TESTS)
+if(ENABLE_TESTS)
+add_custom_target(copy_data ALL ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/data ${CMAKE_BINARY_DIR}/data_run)
 add_custom_target(copy_test ALL ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/test ${CMAKE_BINARY_DIR}/test_run)
 add_custom_target(copy_mechanism ALL ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/mechanisms ${CMAKE_BINARY_DIR}/mechanisms_run)
-endif()
-
-if(ENABLE_BOOTCAMP OR ENABLE_TESTS)
-  add_custom_target(copy_boot_camp ALL ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/doc/camp_tutorial/boot_camp ${CMAKE_BINARY_DIR}/boot_camp_run)
-endif()
-
+add_custom_target(copy_boot_camp ALL ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/doc/camp_tutorial/boot_camp ${CMAKE_BINARY_DIR}/boot_camp_run)
 set_property(DIRECTORY PROPERTY ADDITIONAL_MAKE_CLEAN_FILES test_run mechanisms_run scenarios_run boot_camp_run)
+endif()
 
 ######################################################################
 # Unit test macro
@@ -284,8 +267,7 @@ do_unit_test(aero_rep_modal_binned_mass "PASS")
 do_unit_test(camp_core "PASS")
 endif()
 
-SET(ENABLE_MPI_TEST ON)
-if (ENABLE_MPI AND ENABLE_MPI_TEST)
+if (ENABLE_MPI)
   set(MPI_TEST_FLAG MPI)
 else()
   set(MPI_TEST_FLAG serial)
@@ -431,7 +413,7 @@ set(CAMP_C_SRC
 set_source_files_properties(${CAMP_C_SRC} PROPERTIES COMPILE_FLAGS
         ${STD_C_FLAGS})
 
-if (CUDA_FOUND AND ENABLE_GPU)
+if (ENABLE_GPU)
   set(CAMP_CUDA_SRC
           src/cuda/cvode_cuda.cu
           src/cuda/cvode_gpu.cu
@@ -480,7 +462,9 @@ set_target_properties(camplib PROPERTIES
                          LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
                          Fortran_MODULE_DIRECTORY ${CMAKE_BINARY_DIR})
 
-if(ENABLE_INSTALL_OPTIONS)
+if(DISABLE_INSTALL_OPTIONS)
+
+else()
 include(GNUInstallDirs)
 install(TARGETS camplib
         EXPORT camplib-targets
