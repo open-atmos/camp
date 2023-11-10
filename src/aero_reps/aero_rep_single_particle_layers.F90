@@ -58,7 +58,7 @@ module camp_aero_rep_single_particle_layers
 #define NUM_ENV_PARAM_PER_PARTICLE_ 1
 #define NUM_PHASE_(l) this%condensed_data_int(NUM_INT_PROP_+l)
 #define PHASE_STATE_ID_(p) this%condensed_data_int(NUM_INT_PROP_+TOTAL_NUM_PHASES_+p)
-!#define LAYER_STATE_ID_(l) this%condensed_data_int(NUM_INT_PROP_+TOTAL_NUM_LAYERS_+l+1)
+#define LAYER_STATE_ID_(l) this%condensed_data_int(NUM_INT_PROP_+TOTAL_NUM_LAYERS_+l+1)
 #define PHASE_MODEL_DATA_ID_(p) this%condensed_data_int(NUM_INT_PROP_+TOTAL_NUM_PHASES_+p)
 #define PHASE_NUM_JAC_ELEM_(p) this%condensed_data_int(NUM_INT_PROP_+2*TOTAL_NUM_PHASES_+p)
 
@@ -280,10 +280,10 @@ contains
     integer(kind=i_kind) :: i_particle, i_phase, i_layer, i_aero, curr_id
     integer(kind=i_kind) :: i_cover, j_phase, j_layer
     integer(kind=i_kind) :: num_int_param, num_float_param, num_particles
-#if 0
+
     ! Start off the counters
     ! TODO: how do I initialize these variables
-    num_int_param = NUM_INT_PROP_ + 5*size(aero_phase_set) + size(aero_layer_set)
+    num_int_param = NUM_INT_PROP_ + 5*size(aero_phase_set)
     num_float_param = NUM_REAL_PROP_
 
     ! Get the maximum number of computational particles
@@ -310,7 +310,6 @@ contains
 
     ! Loop through the layers, adding names and counting the spaces needed
     ! on the condensed data arrays, and counting the total phases instances
-    num_phase = 0
     call layers%iter_reset()
     do i_layer = 1, layers%size()
 
@@ -474,8 +473,8 @@ contains
     AERO_REP_ID_ = -1
 
     ! Set the unique names for the chemical species
-    this%unique_names_ = this%unique_names( )
-#endif
+    !this%unique_names_ = this%unique_names( )
+
   end subroutine initialize
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -901,14 +900,14 @@ contains
   !function ordered_phase_array(this)&
   !  result(ordered_phase_name)
   function ordered_phase_array(this,cover_name,ordered_layer_name,&
-           LAYER_STATE_ID_,layer_state_id_unordered_array, phase_name_unordered)&
+          layer_state_id_unordered_array, phase_name_unordered)&
     result(ordered_phase_name)
     !> Aerosol representation to update
     class(aero_rep_single_particle_layers_t), intent(inout) :: this
    ! TODO: remove as inputs once json file read in + initialize funtion works
    ! cover name, LAYER_STATE_ID, phase name unordered, layer state id unordered array
     character(len=*), intent(in) :: cover_name(:)
-    type(integer), intent(in) :: LAYER_STATE_ID_(:)
+!    type(integer), intent(in) :: LAYER_STATE_ID_(:)
     type(integer), intent(in) :: layer_state_id_unordered_array(:)
     character(len=*), intent(in) :: phase_name_unordered(:)
     character(len=*), intent(in) :: ordered_layer_name(:)
