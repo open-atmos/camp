@@ -8,7 +8,7 @@ program construct_layer_state_id
 
   integer :: i_layer
 
-  num_phase_array = (/ 3,2,4,2 /)
+  num_phase_array = (/ 2,2,4,3 /)
 
   ! Allocate space in layer_state_id
   allocate(layer_state_id_array(size(num_phase_array)+1))
