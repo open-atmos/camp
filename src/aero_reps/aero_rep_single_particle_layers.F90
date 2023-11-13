@@ -29,7 +29,7 @@
 !! \c camp_aero_rep_single_particle::aero_rep_update_data_single_particle_number_t
 !! objects.
 
-!> The aero_rep_single_particle_layers_t type and associated subroutines.
+!> The aero_rep_single_particle_t type and associated subroutines.
 module camp_aero_rep_single_particle_layers
 
   use camp_aero_phase_data
@@ -65,13 +65,13 @@ module camp_aero_rep_single_particle_layers
   ! Update types (These must match values in aero_rep_single_particle.c)
   integer(kind=i_kind), parameter, public :: UPDATE_NUMBER_CONC = 0
 
-  public :: aero_rep_single_particle_layers_t, &
+  public :: aero_rep_single_particle_t, &
             aero_rep_update_data_single_particle_number_t
 
   !> Single particle aerosol representation
   !!
   !! Time-invariant data related to a single particle aerosol representation.
-  type, extends(aero_rep_data_t) :: aero_rep_single_particle_layers_t
+  type, extends(aero_rep_data_t) :: aero_rep_single_particle_t
     !> Unique names for each instance of every chemical species in the
     !! aerosol representaiton
     type(string_t), allocatable, private :: unique_names_(:)
@@ -81,6 +81,8 @@ module camp_aero_rep_single_particle_layers
     type(string_t), allocatable, private :: cover_names(:)
     !> Layer names in order of user input 
     type(string_t), allocatable, private :: layer_name_unordered(:)
+    !> Layer names in order of innermost to outermost layer
+    type(string_t), allocatable, private :: ordered_layer_name(:)
     !> Number of phases in each layer 
     type(integer), allocatable, private :: num_phase_unordered(:)
     !> Index where each layer starts for unordered layer name array
@@ -160,12 +162,12 @@ module camp_aero_rep_single_particle_layers
     !> Finalize the aerosol representation
     final :: finalize
 
-  end type aero_rep_single_particle_layers_t
+  end type aero_rep_single_particle_t
 
-  ! Constructor for aero_rep_single_particle_layers_t
-  interface aero_rep_single_particle_layers_t
+  ! Constructor for aero_rep_single_particle_t
+  interface aero_rep_single_particle_t
     procedure :: constructor
-  end interface aero_rep_single_particle_layers_t
+  end interface aero_rep_single_particle_t
 
   !> Single particle update number concentration object
   type, extends(aero_rep_update_data_t) :: &
@@ -229,11 +231,11 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  !> Constructor for aero_rep_single_particle_layers_t
+  !> Constructor for aero_rep_single_particle_t
   function constructor() result (new_obj)
 
     !> New aerosol representation
-    type(aero_rep_single_particle_layers_t), pointer :: new_obj
+    type(aero_rep_single_particle_t), pointer :: new_obj
 
     allocate(new_obj)
 
@@ -250,32 +252,32 @@ contains
   subroutine initialize(this, aero_phase_set, spec_state_id)
 
     !> Aerosol representation data
-    class(aero_rep_single_particle_layers_t), intent(inout) :: this
+    class(aero_rep_single_particle_t), intent(inout) :: this
     !> The set of aerosol phases
     type(aero_phase_data_ptr), pointer, intent(in) :: aero_phase_set(:)
     !> The set of aerosol phases in layer order
     type(aero_phase_data_ptr), pointer:: aero_layer_phase_set(:)
     !> Layer names (only used during initialization)
-    type(string_t), allocatable :: layer_name(:)
+    !type(string_t), allocatable :: layer_name(:)
     !> Unordered layer names (only used during initialization)
-    type(string_t), allocatable :: layer_name_unordered(:)
+    !type(string_t), allocatable :: layer_name_unordered(:)
     !> Unordered phase names (only used during initialization)
-    type(string_t), allocatable :: phase_name_unordered(:)
+    !type(string_t), allocatable :: phase_name_unordered(:)
     !> Unordered num phase array (only used during initialization)
-    type(integer), allocatable :: num_phase_unordered(:)
+    !type(integer), allocatable :: num_phase_unordered(:)
     !> Unordered layer state id array (only used during initialization)
-    type(integer), allocatable :: layer_state_id_unordered(:)
+    !type(integer), allocatable :: layer_state_id_unordered(:)
     !> Cover names (only used during initialization)
-    type(string_t), allocatable :: cover_name(:)
+    !type(string_t), allocatable :: cover_name(:)
     !> Ordered set of aerosol layer names 
-    type(string_t), allocatable :: aero_layer_set_names(:)
+    !type(string_t), allocatable :: aero_layer_set_names(:)
     !> Ordered set of aerosol phase names from inner to outermost layer 
-    type(string_t), allocatable :: aero_layer_phase_set_names(:)
+    !type(string_t), allocatable :: aero_layer_phase_set_names(:)
     !> Beginning state id for this aerosol representationin the model species
     !! state array
     integer(kind=i_kind), intent(in) :: spec_state_id
 
-    character(len=:), allocatable :: key_name, layer_covers
+    character(len=:), allocatable :: key_name, layer_covers, phase_name
     type(property_t), pointer :: layers, phases
     integer(kind=i_kind) :: i_particle, i_phase, i_layer, i_aero, curr_id
     integer(kind=i_kind) :: i_cover, j_phase, j_layer
@@ -483,7 +485,7 @@ contains
   integer(kind=i_kind) function maximum_computational_particles(this)
 
     !> Aerosol representation data
-    class(aero_rep_single_particle_layers_t), intent(in) :: this
+    class(aero_rep_single_particle_t), intent(in) :: this
 
     maximum_computational_particles = MAX_PARTICLES_
 
@@ -503,7 +505,7 @@ contains
     !> Size on the state array
     integer(kind=i_kind) :: state_size
     !> Aerosol representation data
-    class(aero_rep_single_particle_layers_t), intent(in) :: this
+    class(aero_rep_single_particle_t), intent(in) :: this
 
     state_size = MAX_PARTICLES_ * PARTICLE_STATE_SIZE_
 
@@ -521,7 +523,7 @@ contains
     !> Size on the state array per particle
     integer(kind=i_kind) :: state_size
     !> Aerosol representation data
-    class(aero_rep_single_particle_layers_t), intent(in) :: this
+    class(aero_rep_single_particle_t), intent(in) :: this
 
     state_size = PARTICLE_STATE_SIZE_
 
@@ -544,9 +546,9 @@ contains
     !> List of unique names
     type(string_t), allocatable :: unique_names(:)
     !> Aerosol representation data
-    class(aero_rep_single_particle_layers_t), intent(in) :: this
+    class(aero_rep_single_particle_t), intent(in) :: this
     !> Aerosol layer name
-    !character(len=*), optional, intent(in) :: layer_name
+    character(len=*), optional, intent(in) :: layer_name
     !> Aerosol phase name
     character(len=*), optional, intent(in) :: phase_name
     !> Aerosol-phase species tracer type
@@ -670,7 +672,7 @@ contains
     !> Species state id
     integer(kind=i_kind) :: spec_id
     !> Aerosol representation data
-    class(aero_rep_single_particle_layers_t), intent(in) :: this
+    class(aero_rep_single_particle_t), intent(in) :: this
     !> Unique name
     character(len=*), intent(in) :: unique_name
 
@@ -696,7 +698,7 @@ contains
     !> Chemical species name
     character(len=:), allocatable :: spec_name
     !> Aerosol representation data
-    class(aero_rep_single_particle_layers_t), intent(in) :: this
+    class(aero_rep_single_particle_t), intent(in) :: this
     !> Unique name of the species in this aerosol representation
     character(len=*), intent(in) :: unique_name
 
@@ -720,7 +722,7 @@ contains
     !> Number of instances of the aerosol phase
     integer(kind=i_kind) :: num_phase_instances
     !> Aerosol representation data
-    class(aero_rep_single_particle_layers_t), intent(in) :: this
+    class(aero_rep_single_particle_t), intent(in) :: this
     !> Aerosol phase name
     character(len=*), intent(in) :: phase_name
 
@@ -744,7 +746,7 @@ contains
     !> Number of Jacobian elements used
     integer(kind=i_kind) :: num_jac_elem
     !> Aerosol respresentation data
-    class(aero_rep_single_particle_layers_t), intent(in) :: this
+    class(aero_rep_single_particle_t), intent(in) :: this
     !> Aerosol phase id
     integer(kind=i_kind), intent(in) :: phase_id
 
@@ -769,7 +771,7 @@ contains
   elemental subroutine finalize(this)
 
     !> Aerosol representation data
-    type(aero_rep_single_particle_layers_t), intent(inout) :: this
+    type(aero_rep_single_particle_t), intent(inout) :: this
 #if 0
     if (allocated(this%rep_name)) deallocate(this%rep_name)
     if (allocated(this%aero_phase)) then
@@ -796,7 +798,7 @@ contains
     use camp_rand,                                only : generate_int_id
 
     !> Aerosol representation to update
-    class(aero_rep_single_particle_layers_t), intent(inout) :: this
+    class(aero_rep_single_particle_t), intent(inout) :: this
     !> Update data object
     class(aero_rep_update_data_single_particle_number_t), intent(out) :: &
         update_data
@@ -821,15 +823,16 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Order layer array from inner most layer to outermost 
-  function ordered_layer_array(this,layer_name_unordered,cover_name) result(ordered_layer_name)
-  !function ordered_layer_array(this) result(ordered_layer_name)
+  !function ordered_layer_array(this,layer_name_unordered,cover_name) result(ordered_layer_name)
+  function ordered_layer_array(this) result(ordered_layer_name)
     !> Aerosol representation to update
-    class(aero_rep_single_particle_layers_t), intent(inout) :: this
+    class(aero_rep_single_particle_t), intent(inout) :: this
     !> Layer name input, for testing
-    character(len=*), intent(in) :: layer_name_unordered(:)
-    character(len=*), intent(in) :: cover_name(:)
+    !character(len=*), intent(in) :: layer_name_unordered(:)
+    !character(len=*), intent(in) :: cover_name(:)
     !> Layer names in order (only used during initialization)
-    character(len=50), allocatable :: ordered_layer_name(:)
+    !character(len=50), allocatable :: ordered_layer_name(:)
+    type(string_t), allocatable :: ordered_layer_name(:)
 
     integer(kind=i_kind) :: i_layer, i_cover
     !allocate(ordered_layer_name(layers%size()))
@@ -838,39 +841,39 @@ contains
     ! Search for innermost layer with cover set to 'none'
     do i_layer = 1,size(layer_name_unordered)
   !  do i_layer = 1, layers%size()
-      if (cover_name(i_layer) == "none") then
+      if (cover_names(i_layer) == "none") then
         ordered_layer_name(1) = layer_name_unordered(i_layer)
       end if
     end do
 
     do i_cover = 2, size(layer_name_unordered)
       do i_layer = 1, size(layer_name_unordered)
-        if (ordered_layer_name(i_cover-1).eq.cover_name(i_layer)) then
+        if (ordered_layer_name(i_cover-1).eq.cover_names(i_layer)) then
           ordered_layer_name(i_cover) = layer_name_unordered(i_layer)
         end if
       end do
     end do
-    !this%ordered_layer_name = ordered_layer_name
+    this%ordered_layer_name = ordered_layer_name
 
   end function ordered_layer_array
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Order num_phase array from inner most layer to outermost 
-  !function ordered_num_phase_array(this,num_phase_array)&
-  !  result(ordered_num_phase)
-  function ordered_num_phase_array(this,num_phase_array,ordered_layer_name,cover_name)&
-    result(ordered_num_phase)  
+  function ordered_num_phase_array(this,num_phase_array)&
+    result(ordered_num_phase)
+  !function ordered_num_phase_array(this,num_phase_array,ordered_layer_name,cover_name)&
+    !result(ordered_num_phase)  
     !> Aerosol representation to update
-    class(aero_rep_single_particle_layers_t), intent(inout) :: this
+    class(aero_rep_single_particle_t), intent(inout) :: this
     !> Num phase array input
     type(integer), intent(in) :: num_phase_array(:)
     !> Ordered num phase array output
     type(integer), allocatable :: ordered_num_phase(:)
 
     !> Layer name input, for testing
-    character(len=*), intent(in) :: ordered_layer_name(:)
-    character(len=*), intent(in) :: cover_name(:)
+    !character(len=*), intent(in) :: ordered_layer_name(:)
+    !character(len=*), intent(in) :: cover_name(:)
 
     integer(kind=i_kind) :: i_layer, i_cover
     !allocate(ordered_num_phase(layers%size()))
@@ -879,14 +882,14 @@ contains
     ! Search for innermost layer
     !do i_layer = 1, layers%size()
     do i_layer = 1, size(num_phase_array)
-      if (cover_name(i_layer) == "none") then
+      if (cover_names(i_layer) == "none") then
         ordered_num_phase(1) = num_phase_array(i_layer)
       end if
     end do
 
     do i_cover = 2, size(num_phase_array)
       do i_layer = 1, size(num_phase_array)
-        if (ordered_layer_name(i_cover-1).eq.cover_name(i_layer)) then
+        if (ordered_layer_name(i_cover-1).eq.cover_names(i_layer)) then
           ordered_num_phase(i_cover) = num_phase_array(i_layer)
         end if
       end do
@@ -897,44 +900,44 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Order layer array from inner most layer to outermost 
-  !function ordered_phase_array(this)&
-  !  result(ordered_phase_name)
-  function ordered_phase_array(this,cover_name,ordered_layer_name,&
-          layer_state_id_unordered_array, phase_name_unordered)&
+  function ordered_phase_array(this)&
     result(ordered_phase_name)
+  !function ordered_phase_array(this,cover_name,ordered_layer_name,&
+  !        layer_state_id_unordered_array, phase_name_unordered)&
+  !  result(ordered_phase_name)
     !> Aerosol representation to update
-    class(aero_rep_single_particle_layers_t), intent(inout) :: this
+    class(aero_rep_single_particle_t), intent(inout) :: this
    ! TODO: remove as inputs once json file read in + initialize funtion works
    ! cover name, LAYER_STATE_ID, phase name unordered, layer state id unordered array
-    character(len=*), intent(in) :: cover_name(:)
+    !character(len=*), intent(in) :: cover_name(:)
 !    type(integer), intent(in) :: LAYER_STATE_ID_(:)
-    type(integer), intent(in) :: layer_state_id_unordered_array(:)
-    character(len=*), intent(in) :: phase_name_unordered(:)
-    character(len=*), intent(in) :: ordered_layer_name(:)
+    !type(integer), intent(in) :: layer_state_id_unordered_array(:)
+    !character(len=*), intent(in) :: phase_name_unordered(:)
+    !character(len=*), intent(in) :: ordered_layer_name(:)
  
     !> Phase names in order from inner to outer most layer
-    character(len=50), allocatable :: ordered_phase_name(:)
+    type(string_t), allocatable :: ordered_phase_name(:)
     integer(kind=i_kind) :: i_layer, i_cover
    
     allocate(ordered_phase_name(size(phase_name_unordered)))
    
     ! Search for innermost layer
     !do i_layer = 1, layers%size()
-    do i_layer = 1, size(cover_name)
+    do i_layer = 1, size(cover_names)
       i_cover = 1
-      if (cover_name(i_layer) == "none") then
+      if (cover_names(i_layer) == "none") then
         ordered_phase_name(LAYER_STATE_ID_(i_cover):LAYER_STATE_ID_(i_cover+1)-1) = &
-        phase_name_unordered(layer_state_id_unordered_array(i_layer):&
-        layer_state_id_unordered_array(i_layer+1)-1)
+        phase_name_unordered(layer_state_id_unordered(i_layer):&
+        layer_state_id_unordered(i_layer+1)-1)
       end if
     end do
 
-    do i_cover = 2, size(cover_name)
-      do i_layer = 1, size(cover_name)
-        if (ordered_layer_name(i_cover-1).eq.cover_name(i_layer)) then
+    do i_cover = 2, size(cover_names)
+      do i_layer = 1, size(cover_names)
+        if (ordered_layer_name(i_cover-1).eq.cover_names(i_layer)) then
           ordered_phase_name(LAYER_STATE_ID_(i_cover):LAYER_STATE_ID_(i_cover+1)-1) = &
-          phase_name_unordered(layer_state_id_unordered_array(i_layer):&
-          layer_state_id_unordered_array(i_layer+1)-1)
+          phase_name_unordered(layer_state_id_unordered(i_layer):&
+          layer_state_id_unordered(i_layer+1)-1)
         end if
       end do
     end do
@@ -947,7 +950,7 @@ contains
   function construct_layer_state_id(this,num_phase_array) result(layer_state_id_array)
 
     !> Aerosol representation to update
-    class(aero_rep_single_particle_layers_t), intent(inout) :: this
+    class(aero_rep_single_particle_t), intent(inout) :: this
     !> Number of phases in each layer
     type(integer), intent(in) :: num_phase_array(:)
     !> Layer_state_id variable
