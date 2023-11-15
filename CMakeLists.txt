@@ -226,7 +226,7 @@ endif()
 ######################################################################
 # copy dirs
 
-SET(ENABLE_TESTS OFF)
+SET(ENABLE_TESTS ON)
 
 if(ENABLE_TESTS)
 add_custom_target(copy_data ALL ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/data ${CMAKE_BINARY_DIR}/data_run)
@@ -242,7 +242,7 @@ endif()
 if (ENABLE_TESTS)
   macro(do_unit_test test_name result)
     if(ENABLE_MPI)
-      add_test(unit_test_${test_name} mpirun -v -np 1 ${CMAKE_BINARY_DIR}/unit_test_${test_name})
+      add_test(unit_test_${test_name} mpirun -v -np 2 ${CMAKE_BINARY_DIR}/unit_test_${test_name})
     else()
       add_test(unit_test_${test_name} ${CMAKE_BINARY_DIR}/unit_test_${test_name})
     endif()
