@@ -7,6 +7,7 @@
 extern "C" {
 #include "cvode_gpu.h"
 }
+#include <unistd.h>
 #ifdef CAMP_USE_MPI
 #include <mpi.h>
 #endif
@@ -35,34 +36,30 @@ void constructor_cvode_gpu(SolverData *sd){
   size_t rxn_env_data_idx_size = (n_rxn+1) * sizeof(int);
   size_t map_state_deriv_size = n_dep_var * n_cells * sizeof(int);
   int coresPerNode = 40;
-  int size;
-  MPI_Comm_size(MPI_COMM_WORLD, &size);
-  if (size > 40 && size % coresPerNode != 0) {
-    printf("ERROR: MORE THAN 40 MPI PROCESSES AND NOT MULTIPLE OF 40, WHEN CTE-POWER ONLY HAS 40 CORES PER NODE\n");
-    exit(0);
-  }
   int nGPUsMax=4;
   cudaGetDeviceCount(&nGPUsMax);
   if (sd->nGPUs > nGPUsMax) {
     printf("ERROR: Not enough GPUs to launch, nGPUs %d nGPUsMax %d\n", sd->nGPUs, nGPUsMax);
     exit(0);
   }
-  if (size > sd->nGPUs*(coresPerNode/nGPUsMax)){
-    printf("ERROR: size,sd->nGPUs,coresPerNode,nGPUsMax %d %d %d %d "
-           "MORE MPI PROCESSES THAN DEVICES (FOLLOW PROPORTION, "
-           "FOR CTE-POWER IS 10 PROCESSES FOR EACH GPU)\n",size,sd->nGPUs,coresPerNode,nGPUsMax);
-    exit(0);
-  }
-  int rank;
-  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  cudaSetDevice(0);
-  for (int i = 0; i < coresPerNode; i++) {
-    if (rank < coresPerNode / nGPUsMax * (i + 1) && rank >= coresPerNode / nGPUsMax * i && i<sd->nGPUs) {
-      cudaSetDevice(i);
-      mCPU->threads = 1024;
-      mCPU->blocks = (n_dep_var*n_cells + mCPU->threads - 1) / mCPU->threads;
-    }
-  }
+  int rankNode, sizeNode;
+  MPI_Comm commNode;
+  MPI_Comm_split_type(MPI_COMM_WORLD, MPI_COMM_TYPE_SHARED, 0,
+                      MPI_INFO_NULL, &commNode);
+  MPI_Comm_rank(commNode, &rankNode);
+  MPI_Comm_size(commNode, &sizeNode);
+  cudaSetDevice(rankNode / sizeNode);
+  printf("rankNode %d sizeNode %d \n", rankNode, sizeNode);
+  char hostname[1024];
+  gethostname(hostname, 1024);
+  puts(hostname);
+  printf("hostname %s",hostname);
+  int size;
+  MPI_Comm_size(MPI_COMM_WORLD, &size);
+  char* envVar = getenv("SLURM_NPROCS");
+  int SLURM_NPROCS = envVar ? atoi(envVar) : -1;
+  int cpusPerNode = SLURM_NPROCS % nGPUsMax;
+  printf("SLURM_NPROCS %d cpusPerNode %d\n",SLURM_NPROCS, cpusPerNode);
   mGPU->n_rxn=md->n_rxn;
   mGPU->n_rxn_env_data=md->n_rxn_env_data;
   cudaMalloc((void **) &mGPU->state, state_size);

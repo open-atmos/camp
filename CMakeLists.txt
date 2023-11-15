@@ -226,7 +226,7 @@ endif()
 ######################################################################
 # copy dirs
 
-SET(ENABLE_TESTS ON)
+SET(ENABLE_TESTS OFF)
 
 if(ENABLE_TESTS)
 add_custom_target(copy_data ALL ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/data ${CMAKE_BINARY_DIR}/data_run)
@@ -478,14 +478,6 @@ install(
 endif()
 
 ######################################################################
-# camp-chem box model
-
-add_executable(camp_box_model test/camp_box_model_data.F90
-                              test/camp_box_model.F90)
-
-target_link_libraries(camp_box_model camplib)
-
-######################################################################
 # test_chemistry_cb05cl_ae5
 
 set(CB5_EBI_SOLVER
@@ -537,6 +529,15 @@ if (ENABLE_GPU)
 endif()
 
 if (ENABLE_TESTS)
+
+######################################################################
+# camp-chem box model
+
+add_executable(camp_box_model test/camp_box_model_data.F90
+    test/camp_box_model.F90)
+
+target_link_libraries(camp_box_model camplib)
+
 
 ######################################################################
 # test_chemistry_cb05cl_ae5

@@ -8,8 +8,6 @@
     "caseGpuCpu": "GPU",
     "caseMulticellsOnecell": "BDF",
     "mpiProcesses": 20,
-    "allocatedNodes": 1,
-    "allocatedTasksPerNode": 160,
     "diffCellsL": [
         "Realistic"
     ],

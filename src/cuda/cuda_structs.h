@@ -90,7 +90,6 @@ typedef struct{
   int*    jA;
   int*    iA;
   int cells_method;
-  int threads,blocks;
   int nnz;
   int nnz_J_solver;
   size_t deriv_size;

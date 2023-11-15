@@ -19,8 +19,6 @@ def all_timesteps():
   conf.nGPUsCaseOptimList = [1]
   conf.mpiProcessesCaseBase = 1
   conf.mpiProcessesCaseOptimList.append(1)
-  conf.allocatedNodes = 1
-  conf.allocatedTasksPerNode = 160
   conf.cells = [2]
   conf.timeSteps = 3
   conf.caseBase = "CPU One-cell"

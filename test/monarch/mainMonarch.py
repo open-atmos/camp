@@ -9,7 +9,6 @@ import json
 import subprocess
 from pandas import read_csv as pd_read_csv
 import time
-from math import ceil
 
 
 class TestMonarch:
@@ -24,8 +23,6 @@ class TestMonarch:
     self.caseGpuCpu = ""
     self.caseMulticellsOnecell = ""
     self.mpiProcesses = 1
-    self.allocatedNodes = 1
-    self.allocatedTasksPerNode = 160
     # Cases configuration
     self.diffCellsL = ""
     self.mpiProcessesCaseBase = 1
@@ -61,17 +58,8 @@ def write_camp_config_file(conf):
 # from line_profiler_pycharm import profile
 # @profile
 def run(conf):
-  if conf.caseGpuCpu == "GPU":
-    maxCoresPerNode = 40
-    if (conf.mpiProcesses > maxCoresPerNode and
-        conf.mpiProcesses % maxCoresPerNode != 0):
-      print(
-        "ERROR: MORE THAN 40 MPI PROCESSES AND NOT "
-        "MULTIPLE OF 40, WHEN CTE-POWER ONLY HAS 40 CORES "
-        "PER NODE\n");
-      raise
-  coresPerGPU = 10
-  nGPUs = ceil(conf.mpiProcesses / coresPerGPU)
+  nGPUs = 1 #todo remove
+  #TODO FIX IF NODES>1, SINCE ONLY 4 GPUS PER NODE
   exec_str = ""
   try:
     ddt_pid = subprocess.check_output(
@@ -80,8 +68,15 @@ def run(conf):
       exec_str += 'ddt --connect '
   except Exception:
     pass
-  exec_str += "mpirun -v -np " + str(
-    conf.mpiProcesses) + " --bind-to core "
+  maxCoresPerNode = 40
+  if (conf.mpiProcesses <= maxCoresPerNode):
+    exec_str += "mpirun -v -np " + str(
+      conf.mpiProcesses) + " --bind-to core " #for plogin (fails squeue)
+  else:
+    #exec_str += "srun --cpu-bind=core -n " + str(
+    #  conf.mpiProcesses) + " " #for squeue (slow plogin)
+    exec_str += "mpirun -v -np " + str(
+      conf.mpiProcesses) + " --bind-to core " #for plogin (fails squeue)
   if (conf.profileCuda == "nvprof" and conf.caseGpuCpu ==
       "GPU"):
     pathNvprof = ("../../compile/power9/" +
@@ -355,4 +350,4 @@ def run_main(conf):
         conf.mpiProcessesCaseOptimList[i] = cellsProcesses
 
   datay = run_diffCells(conf)
-  #plot_cases(conf, datay)
+  plot_cases(conf, datay)

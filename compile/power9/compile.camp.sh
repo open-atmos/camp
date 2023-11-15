@@ -64,7 +64,6 @@ cmake -D CMAKE_C_COMPILER=$(which mpicc) \
 -D ENABLE_GPU=ON \
 -D ENABLE_GSL:BOOL=FALSE \
 -D ENABLE_NETCDF=ON \
--D DISABLE_INSTALL_OPTIONS=TRUE \
 ..
 
 ln -sf ../test/monarch/settings
