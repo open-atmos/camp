@@ -82,7 +82,7 @@ contains
     integer, optional :: n_cells
     type(camp_solver_data_t), pointer :: camp_solver_data
     character, allocatable :: buffer(:)
-    integer(kind=i_kind) :: pos, pack_size
+    integer(kind=i_kind) :: pos, pack_size, size
     integer(kind=i_kind) :: i_spec, i_photo_rxn, rank, n_ranks, ierr
     type(string_t), allocatable :: unique_names(:)
     character(len=:), allocatable :: spec_name, settings_interface_file
@@ -225,6 +225,7 @@ contains
     end if
     deallocate(buffer)
     use_cpu=1
+    !todo change nGPUs manual set for automatic on C code
     nGPUs=1
     open(unit=32, file='settings/config_variables_c_solver.txt', status='old')
     read(32,'(A)') i_str
