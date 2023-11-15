@@ -59,9 +59,6 @@ void error_handler(int error_code, const char *module, const char *function,
                    char *msg, void *sd);
 
 /* SUNDIALS support functions */
-int camp_solver_update_model_state(N_Vector solver_state, SolverData *sd,
-                                   realtype threshhold,
-                                   realtype replacement_value);
 SUNMatrix get_jac_init(SolverData *sd);
 bool check_Jac(realtype t, N_Vector y, SUNMatrix J, N_Vector deriv,
                N_Vector tmp, N_Vector tmp1, void *solver_data);

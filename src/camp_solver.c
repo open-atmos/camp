@@ -27,13 +27,15 @@
 #ifdef CAMP_USE_GSL
 #include <gsl/gsl_deriv.h>
 #include <gsl/gsl_math.h>
-#include <gsl/gsl_roots.gpupartmch>
+#include <gsl/gsl_roots.h>
 #endif
 #include "camp_debug.h"
 #include "debug_and_stats/camp_debug_2.h"
 
+#ifdef CAMP_DEBUG_GPU
 #ifdef CAMP_USE_MPI
 #include <mpi.h>
+#endif
 #endif
 
 // Default solver initial time step relative to total integration time
@@ -54,8 +56,6 @@
 // Status codes for calls to camp_solver functions
 #define CAMP_SOLVER_SUCCESS 0
 #define CAMP_SOLVER_FAIL 1
-
-#define MPI_RANK_DEBUG 0
 
 /** \brief Get a new solver object
  *
@@ -98,7 +98,7 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
                  int n_sub_model_float_param, int n_sub_model_env_param,
                  int use_cpu, int nGPUs) {
   // Create the SolverData object
-  SolverData *sd = (SolverData *) malloc(sizeof(SolverData));
+  SolverData *sd = (SolverData *)malloc(sizeof(SolverData));
   if (sd == NULL) {
     printf("\n\nERROR allocating space for SolverData\n\n");
     exit(EXIT_FAILURE);
@@ -133,8 +133,9 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
   n_cells=1;
 #endif
   sd->model_data.n_cells = n_cells;
+
   // Add the variable types to the solver data
-  sd->model_data.var_type = (int *) malloc(n_state_var * sizeof(int));
+  sd->model_data.var_type = (int *)malloc(n_state_var * sizeof(int));
   if (sd->model_data.var_type == NULL) {
     printf("\n\nERROR allocating space for variable types\n\n");
     exit(EXIT_FAILURE);
@@ -151,10 +152,8 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
   sd->model_data.n_per_cell_dep_var = n_dep_var;
 
 #ifdef CAMP_USE_SUNDIALS
-  int n_time_deriv_specs=n_dep_var;
-
   // Set up a TimeDerivative object to use during solving
-  if (time_derivative_initialize(&(sd->time_deriv), n_time_deriv_specs) != 1) {
+  if (time_derivative_initialize(&(sd->time_deriv), n_dep_var) != 1) {
     printf("\n\nERROR initializing the TimeDerivative\n\n");
     exit(EXIT_FAILURE);
   }
@@ -162,31 +161,25 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
   // Set up the solver variable array and helper derivative array
   sd->y = N_VNew_Serial(n_dep_var * n_cells);
   sd->deriv = N_VNew_Serial(n_dep_var * n_cells);
-  double *yp = N_VGetArrayPointer(sd->y);
-  double *derivp = N_VGetArrayPointer(sd->deriv);
-  for(int i=0;i<n_dep_var * n_cells;i++){
-    yp[i]=0.;
-    derivp[i]=0.;
-  }
 #endif
 
   // Allocate space for the reaction data and set the number
   // of reactions (including one int for the number of reactions
   // and one int per reaction to store the reaction type)
   sd->model_data.rxn_int_data =
-      (int *) malloc((n_rxn_int_param + n_rxn) * sizeof(int));
+      (int *)malloc((n_rxn_int_param + n_rxn) * sizeof(int));
   if (sd->model_data.rxn_int_data == NULL) {
     printf("\n\nERROR allocating space for reaction integer data\n\n");
     exit(EXIT_FAILURE);
   }
   sd->model_data.rxn_float_data =
-      (double *) malloc(n_rxn_float_param * sizeof(double));
+      (double *)malloc(n_rxn_float_param * sizeof(double));
   if (sd->model_data.rxn_float_data == NULL) {
     printf("\n\nERROR allocating space for reaction float data\n\n");
     exit(EXIT_FAILURE);
   }
   sd->model_data.rxn_env_data =
-      (double *) calloc(n_cells * n_rxn_env_param, sizeof(double));
+      (double *)calloc(n_cells * n_rxn_env_param, sizeof(double));
   if (sd->model_data.rxn_env_data == NULL) {
     printf(
         "\n\nERROR allocating space for environment-dependent "
@@ -195,17 +188,17 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
   }
 
   // Allocate space for the reaction data pointers
-  sd->model_data.rxn_int_indices = (int *) malloc((n_rxn + 1) * sizeof(int *));
+  sd->model_data.rxn_int_indices = (int *)malloc((n_rxn + 1) * sizeof(int *));
   if (sd->model_data.rxn_int_indices == NULL) {
     printf("\n\nERROR allocating space for reaction integer indices\n\n");
     exit(EXIT_FAILURE);
   }
-  sd->model_data.rxn_float_indices = (int *) malloc((n_rxn + 1) * sizeof(int *));
+  sd->model_data.rxn_float_indices = (int *)malloc((n_rxn + 1) * sizeof(int *));
   if (sd->model_data.rxn_float_indices == NULL) {
     printf("\n\nERROR allocating space for reaction float indices\n\n");
     exit(EXIT_FAILURE);
   }
-  sd->model_data.rxn_env_idx = (int *) malloc((n_rxn + 1) * sizeof(int));
+  sd->model_data.rxn_env_idx = (int *)malloc((n_rxn + 1) * sizeof(int));
   if (sd->model_data.rxn_env_idx == NULL) {
     printf(
         "\n\nERROR allocating space for reaction environment-dependent "
@@ -229,13 +222,13 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
   // of aerosol phases (including one int for the number of
   // phases)
   sd->model_data.aero_phase_int_data =
-      (int *) malloc(n_aero_phase_int_param * sizeof(int));
+      (int *)malloc(n_aero_phase_int_param * sizeof(int));
   if (sd->model_data.aero_phase_int_data == NULL) {
     printf("\n\nERROR allocating space for aerosol phase integer data\n\n");
     exit(EXIT_FAILURE);
   }
   sd->model_data.aero_phase_float_data =
-      (double *) malloc(n_aero_phase_float_param * sizeof(double));
+      (double *)malloc(n_aero_phase_float_param * sizeof(double));
   if (sd->model_data.aero_phase_float_data == NULL) {
     printf(
         "\n\nERROR allocating space for aerosol phase floating-point "
@@ -245,13 +238,13 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
 
   // Allocate space for the aerosol phase data pointers
   sd->model_data.aero_phase_int_indices =
-      (int *) malloc((n_aero_phase + 1) * sizeof(int *));
+      (int *)malloc((n_aero_phase + 1) * sizeof(int *));
   if (sd->model_data.aero_phase_int_indices == NULL) {
     printf("\n\nERROR allocating space for reaction integer indices\n\n");
     exit(EXIT_FAILURE);
   }
   sd->model_data.aero_phase_float_indices =
-      (int *) malloc((n_aero_phase + 1) * sizeof(int *));
+      (int *)malloc((n_aero_phase + 1) * sizeof(int *));
   if (sd->model_data.aero_phase_float_indices == NULL) {
     printf("\n\nERROR allocating space for reaction float indices\n\n");
     exit(EXIT_FAILURE);
@@ -270,7 +263,7 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
   // aerosol representation to store the aerosol representation
   // type)
   sd->model_data.aero_rep_int_data =
-      (int *) malloc((n_aero_rep_int_param + n_aero_rep) * sizeof(int));
+      (int *)malloc((n_aero_rep_int_param + n_aero_rep) * sizeof(int));
   if (sd->model_data.aero_rep_int_data == NULL) {
     printf(
         "\n\nERROR allocating space for aerosol representation integer "
@@ -278,7 +271,7 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
     exit(EXIT_FAILURE);
   }
   sd->model_data.aero_rep_float_data =
-      (double *) malloc(n_aero_rep_float_param * sizeof(double));
+      (double *)malloc(n_aero_rep_float_param * sizeof(double));
   if (sd->model_data.aero_rep_float_data == NULL) {
     printf(
         "\n\nERROR allocating space for aerosol representation "
@@ -286,7 +279,7 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
     exit(EXIT_FAILURE);
   }
   sd->model_data.aero_rep_env_data =
-      (double *) calloc(n_cells * n_aero_rep_env_param, sizeof(double));
+      (double *)calloc(n_cells * n_aero_rep_env_param, sizeof(double));
   if (sd->model_data.aero_rep_env_data == NULL) {
     printf(
         "\n\nERROR allocating space for aerosol representation "
@@ -296,19 +289,19 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
 
   // Allocate space for the aerosol representation data pointers
   sd->model_data.aero_rep_int_indices =
-      (int *) malloc((n_aero_rep + 1) * sizeof(int *));
+      (int *)malloc((n_aero_rep + 1) * sizeof(int *));
   if (sd->model_data.aero_rep_int_indices == NULL) {
     printf("\n\nERROR allocating space for reaction integer indices\n\n");
     exit(EXIT_FAILURE);
   }
   sd->model_data.aero_rep_float_indices =
-      (int *) malloc((n_aero_rep + 1) * sizeof(int *));
+      (int *)malloc((n_aero_rep + 1) * sizeof(int *));
   if (sd->model_data.aero_rep_float_indices == NULL) {
     printf("\n\nERROR allocating space for reaction float indices\n\n");
     exit(EXIT_FAILURE);
   }
   sd->model_data.aero_rep_env_idx =
-      (int *) malloc((n_aero_rep + 1) * sizeof(int));
+      (int *)malloc((n_aero_rep + 1) * sizeof(int));
   if (sd->model_data.aero_rep_env_idx == NULL) {
     printf(
         "\n\nERROR allocating space for aerosol representation "
@@ -329,19 +322,19 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
   // (including one int for the number of sub models and one int per sub
   // model to store the sub model type)
   sd->model_data.sub_model_int_data =
-      (int *) malloc((n_sub_model_int_param + n_sub_model) * sizeof(int));
+      (int *)malloc((n_sub_model_int_param + n_sub_model) * sizeof(int));
   if (sd->model_data.sub_model_int_data == NULL) {
     printf("\n\nERROR allocating space for sub model integer data\n\n");
     exit(EXIT_FAILURE);
   }
   sd->model_data.sub_model_float_data =
-      (double *) malloc(n_sub_model_float_param * sizeof(double));
+      (double *)malloc(n_sub_model_float_param * sizeof(double));
   if (sd->model_data.sub_model_float_data == NULL) {
     printf("\n\nERROR allocating space for sub model floating-point data\n\n");
     exit(EXIT_FAILURE);
   }
   sd->model_data.sub_model_env_data =
-      (double *) calloc(n_cells * n_sub_model_env_param, sizeof(double));
+      (double *)calloc(n_cells * n_sub_model_env_param, sizeof(double));
   if (sd->model_data.sub_model_env_data == NULL) {
     printf(
         "\n\nERROR allocating space for sub model environment-dependent "
@@ -351,19 +344,19 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
 
   // Allocate space for the sub-model data pointers
   sd->model_data.sub_model_int_indices =
-      (int *) malloc((n_sub_model + 1) * sizeof(int *));
+      (int *)malloc((n_sub_model + 1) * sizeof(int *));
   if (sd->model_data.sub_model_int_indices == NULL) {
     printf("\n\nERROR allocating space for reaction integer indices\n\n");
     exit(EXIT_FAILURE);
   }
   sd->model_data.sub_model_float_indices =
-      (int *) malloc((n_sub_model + 1) * sizeof(int *));
+      (int *)malloc((n_sub_model + 1) * sizeof(int *));
   if (sd->model_data.sub_model_float_indices == NULL) {
     printf("\n\nERROR allocating space for reaction float indices\n\n");
     exit(EXIT_FAILURE);
   }
   sd->model_data.sub_model_env_idx =
-      (int *) malloc((n_sub_model + 1) * sizeof(int));
+      (int *)malloc((n_sub_model + 1) * sizeof(int));
   if (sd->model_data.sub_model_env_idx == NULL) {
     printf(
         "\n\nERROR allocating space for sub model environment-dependent "
@@ -418,7 +411,13 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
   sd = (SolverData *)solver_data;
 
   // Create a new solver object
-  sd->cvode_mem = CVodeCreate(CV_BDF, CV_NEWTON);
+  sd->cvode_mem = CVodeCreate(CV_BDF
+#ifndef SUNDIALS_VERSION_MAJOR
+#  error SUNDIALS_VERSION_MAJOR not defined
+#elif SUNDIALS_VERSION_MAJOR < 4
+    , CV_NEWTON
+#endif
+  );
   check_flag_fail((void *)sd->cvode_mem, "CVodeCreate", 0);
 
   // Get the number of total and dependent variables on the state array,
@@ -470,9 +469,7 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
 
   // Get the structure of the Jacobian matrix
   sd->J = get_jac_init(sd);
-
   sd->model_data.J_init = SUNMatClone(sd->J);
-
   SUNMatCopy(sd->J, sd->model_data.J_init);
 
   // Create a Jacobian matrix for correcting negative predicted concentrations
@@ -492,9 +489,11 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
   flag = CVDlsSetJacFn(sd->cvode_mem, Jac);
   check_flag_fail(&flag, "CVDlsSetJacFn", 1);
 
+#ifdef CAMP_CUSTOM_CVODE
   // Set a function to improve guesses for y sent to the linear solver
   flag = CVodeSetDlsGuessHelper(sd->cvode_mem, guess_helper);
   check_flag_fail(&flag, "CVodeSetDlsGuessHelper", 1);
+#endif
 
 #ifdef CAMP_USE_GPU
   if(sd->use_cpu==0){
@@ -505,7 +504,6 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
   // Set a custom error handling function
   flag = CVodeSetErrHandlerFn(sd->cvode_mem, error_handler, (void *)sd);
   check_flag_fail(&flag, "CVodeSetErrHandlerFn", 0);
-  sd->counter_fail_solve_print=0;
 #endif
 #endif
 }
@@ -565,7 +563,6 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
   int n_state_var = md->n_per_cell_state_var;
   int n_cells = md->n_cells;
   int flag;
-  int rank = 0;
 
   // Update model data pointers
   sd->model_data.total_state = state;
@@ -683,12 +680,8 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
       }
       N_Vector deriv = N_VClone(sd->y);
       flag = f(t_initial, sd->y, deriv, sd);
-#ifdef CAMP_USE_MPI
-      MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-#endif
       if (flag != 0)
-        printf("\nCall to f() at failed state failed with flag %d, rank %d \n",
-          flag, rank);
+        printf("\nCall to f() at failed state failed with flag %d \n",flag);
       solver_print_stats(sd->cvode_mem);
 #endif
       return CAMP_SOLVER_FAIL;
@@ -708,15 +701,6 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
       }
     }
   }
-  //for (int i = 0; i < n_cells; i++) {
-    //double *yp2 = N_VGetArrayPointer(sd->y)+i*md->n_per_cell_dep_var;
-    //print_double(yp2,md->n_per_cell_dep_var,"y789");
-    //print_double(state+md->n_per_cell_state_var*i, n_state_var, "state768");
-    //printf("end cell\nline\n");
-  //}
-#ifdef FAILURE_DETAIL
-  sd->counter_fail_solve_print=0;
-#endif
 
   // Re-run the pre-derivative calculations to update equilibrium species
   // and apply adjustments to final state
@@ -858,9 +842,7 @@ void export_solver_stats(void *solver_data){
  * \return CAMP_SOLVER_SUCCESS for successful update or
  *         CAMP_SOLVER_FAIL for negative concentration
  */
-int camp_solver_update_model_state(N_Vector solver_state, SolverData *sd,
-                                   realtype threshhold0,
-                                   realtype replacement_value0) {
+int camp_solver_update_model_state(N_Vector solver_state, SolverData *sd) {
   ModelData *model_data = &(sd->model_data);
   int n_state_var = model_data->n_per_cell_state_var;
   int n_dep_var = model_data->n_per_cell_dep_var;
@@ -872,14 +854,10 @@ int camp_solver_update_model_state(N_Vector solver_state, SolverData *sd,
   for (int i_cell = 0; i_cell < n_cells; i_cell++) {
     for (int i_spec = 0; i_spec < n_state_var; ++i_spec) {
       if (model_data->var_type[i_spec] == CHEM_SPEC_VARIABLE) {
-        if (NV_DATA_S(solver_state)[i_dep_var] < -SMALL)
-        {
+        if (NV_DATA_S(solver_state)[i_dep_var] < -SMALL) {
 #ifdef FAILURE_DETAIL
-          if(sd->counter_fail_solve_print<1){
-            printf("Failed model state update (Innacurate results): [spec %d] = %le\n", i_spec,
-               NV_DATA_S(solver_state)[i_dep_var]);
-          }
-          sd->counter_fail_solve_print++;
+          printf("Failed model state update: [spec %d] = %le\n", i_spec,
+                 NV_DATA_S(solver_state)[i_dep_var]);
 #endif
           return CAMP_SOLVER_FAIL;
         }
@@ -931,13 +909,8 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
   // Update the state array with the current dependent variable values.
   // Signal a recoverable error (positive return value) for negative
   // concentrations.
-  //print_double(&time_step,1,"time_step661");
-  //print_double(md->total_state,n_state_var,"state661");
-  if (camp_solver_update_model_state(y, sd, -SMALL, TINY) != CAMP_SOLVER_SUCCESS){
-    //print_double(md->total_state,n_state_var,"state663");
+  if (camp_solver_update_model_state(y, sd) != CAMP_SOLVER_SUCCESS)
     return 1;
-  }
-  //print_double(md->total_state,n_state_var,"state663");
 
   // Get the Jacobian-estimated derivative
   N_VLinearSum(1.0, y, -1.0, md->J_state, md->J_tmp);
@@ -972,11 +945,8 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
 
     // Update the deriv array
     if (sd->use_deriv_est == 1) {
-      //printf("jac_deriv_data %-le\n",jac_deriv_data[0]);
-      //printf("Pointer jac_deriv_data before time_derivative_output %p\n",(void *)jac_deriv_data);
       time_derivative_output(sd->time_deriv, deriv_data, jac_deriv_data,
                              sd->output_precision);
-      //printf("Pointer jac_deriv_data after time_derivative_output %p\n",(void *)jac_deriv_data);
     } else {
       time_derivative_output(sd->time_deriv, deriv_data, NULL,
                              sd->output_precision);
@@ -1037,8 +1007,6 @@ int Jac(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_data,
   // Calculate the the derivative for the current state y without
   // the estimated derivative from the last Jacobian calculation
   sd->use_deriv_est = 0;
-  //double *yp = N_VGetArrayPointer(y);
-  //print_double(yp,86,"dcv_y914");
   if (f(t, y, deriv, solver_data) != 0) {
     printf("\n Derivative calculation failed on Jac.\n");
     sd->use_deriv_est = 1;
@@ -1049,12 +1017,9 @@ int Jac(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_data,
   // Update the state array with the current dependent variable values
   // Signal a recoverable error (positive return value) for negative
   // concentrations.
-  //print_double(md->total_state,n_state_var,"state920");
-  if (camp_solver_update_model_state(y, sd, -SMALL, TINY) != CAMP_SOLVER_SUCCESS){
-    //print_double(md->total_state,n_state_var,"state923");
+  if (camp_solver_update_model_state(y, sd) != CAMP_SOLVER_SUCCESS)
     return 1;
-  }
-  //print_double(md->total_state,n_state_var,"state923");
+
   // Get the current integrator time step (s)
   CVodeGetCurrentStep(sd->cvode_mem, &time_step);
 
@@ -1097,8 +1062,6 @@ int Jac(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_data,
     // Calculate the reaction Jacobian
     rxn_calc_jac(md, sd->jac, time_step);
 
-//#endif
-
     // Set the solver Jacobian using the reaction and sub-model Jacobians
     JacMap *jac_map = md->jac_map;
     SM_DATA_S(md->J_params)[0] = 1.0;  // dummy value for non-sub model calcs
@@ -1128,6 +1091,7 @@ int Jac(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_data,
     }
   }
 #endif
+
   return (0);
 }
 
@@ -1323,6 +1287,7 @@ double gsl_f(double x, void *param) {
  * \param corr Vector of calculated adjustments to \f$y(t_n)\f$ [output]
  * \return 1 if corrections were calculated, 0 if not
  */
+#ifdef CAMP_CUSTOM_CVODE
 int guess_helper(const realtype t_n, const realtype h_n, N_Vector y_n,
                  N_Vector y_n1, N_Vector hf, void *solver_data, N_Vector tmp1,
                  N_Vector corr) {
@@ -1348,9 +1313,6 @@ int guess_helper(const realtype t_n, const realtype h_n, N_Vector y_n,
   } else {
     N_VScale(ONE, hf, corr);
   }
-  //print_double(&h_n,1,"h_n711");
-  //print_double(ahf,86,"hf711");
-  //print_double(acorr,86,"acorr711");
   CAMP_DEBUG_PRINT("Got f0");
 
   // Advance state interatively
@@ -1360,7 +1322,6 @@ int guess_helper(const realtype t_n, const realtype h_n, N_Vector y_n,
   for (; iter < GUESS_MAX_ITER && t_0 + t_j < t_n; iter++) {
     // Calculate \f$h_j\f$
     realtype h_j = t_n - (t_0 + t_j);
-    //print_double(atmp1,86,"atmp720");
     int i_fast = -1;
     for (int i = 0; i < n_elem; i++) {
       realtype t_star = -atmp1[i] / acorr[i];
@@ -1374,9 +1335,7 @@ int guess_helper(const realtype t_n, const realtype h_n, N_Vector y_n,
     // Scale incomplete jumps
     if (i_fast >= 0 && h_n > ZERO)
       h_j *= 0.95 + 0.1 * iter / (double)GUESS_MAX_ITER;
-    //print_double(&h_j,1,"h_j756");
     h_j = t_n < t_0 + t_j + h_j ? t_n - (t_0 + t_j) : h_j;
-    //print_double(&h_j,1,"h_j758");
 
     // Only make small changes to adjustment vectors used in Newton iteration
     if (h_n == ZERO &&
@@ -1391,14 +1350,11 @@ int guess_helper(const realtype t_n, const realtype h_n, N_Vector y_n,
     t_j += h_j;
 
     // Recalculate the time derivative \f$f(t_j)\f$
-    //print_double(atmp1,86,"atmp1766");
     if (f(t_0 + t_j, tmp1, corr, solver_data) != 0) {
       CAMP_DEBUG_PRINT("Unexpected failure in guess helper!");
-      //print_double(acorr,86,"acorr721");
       N_VConst(ZERO, corr);
       return -1;
     }
-    //print_double(acorr,86,"acorr721");
     ((CVodeMem)sd->cvode_mem)->cv_nfe++;
 
     if (iter == GUESS_MAX_ITER - 1 && t_0 + t_j < t_n) {
@@ -1420,6 +1376,7 @@ int guess_helper(const realtype t_n, const realtype h_n, N_Vector y_n,
 
   return 1;
 }
+#endif
 
 /** \brief Create a sparse Jacobian matrix based on model data
  *
@@ -1538,7 +1495,6 @@ SUNMatrix get_jac_init(SolverData *sd) {
     (SM_DATA_S(sd->model_data.J_params))[i_elem] = (realtype)0.0;
     (SM_INDEXVALS_S(sd->model_data.J_params))[i_elem] =
             param_jac.row_ids[i_elem];
-
   }
 
   // Update the ids in the sub model data
@@ -1713,18 +1669,11 @@ SUNMatrix get_jac_init(SolverData *sd) {
  */
 int check_flag(void *flag_value, char *func_name, int opt) {
   int *err_flag;
-  int rank = 999;
-#ifdef CAMP_USE_MPI
-  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-#endif
 
   /* Check for a NULL pointer */
   if (opt == 0 && flag_value == NULL) {
-    if (rank == 0) {
-      fprintf(stderr,
-              "\nSUNDIALS_ERROR: %s() failed - returned NULL pointer\n\n",
-              func_name);
-    }
+    fprintf(stderr, "\nSUNDIALS_ERROR: %s() failed - returned NULL pointer\n\n",
+            func_name);
     return CAMP_SOLVER_FAIL;
   }
 
@@ -1732,11 +1681,8 @@ int check_flag(void *flag_value, char *func_name, int opt) {
   else if (opt == 1) {
     err_flag = (int *)flag_value;
     if (*err_flag < 0) {
-      if (rank == 0) {
-        fprintf(stderr,
-                "\nSUNDIALS_ERROR: %s() failed with flag = %d, rank %d\n\n",
-                func_name, *err_flag, rank);
-      }
+      fprintf(stderr, "\nSUNDIALS_ERROR: %s() failed with flag = %d\n\n",
+              func_name, *err_flag);
       return CAMP_SOLVER_FAIL;
     }
   }
@@ -1849,6 +1795,12 @@ void solver_free(void *solver_data) {
       free_gpu_cu(sd);
   }
 #endif
+
+  // Free the allocated ModelData
+  model_free(sd->model_data);
+
+  // free the SolverData object
+  free(sd);
 }
 
 #ifdef CAMP_USE_SUNDIALS

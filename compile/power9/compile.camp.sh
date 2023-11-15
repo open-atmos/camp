@@ -37,7 +37,6 @@ elif [ LOCAL_MACHINE==CGUZMAN ]; then
       echo "MPI is not installed. Installing..."
       sudo apt update
       sudo apt install -y mpi-default-dev
-      #if run | Invalid MIT-MAGIC-COOKIE-1 key THEN sudo apt-remove openmpi-bin AND sudo apt-get install libcr-dev mpich2 mpich2-doc
   fi
 else
   echo "Unknown architecture"
@@ -58,19 +57,17 @@ cmake -D CMAKE_C_COMPILER=$(which mpicc) \
 -D CMAKE_C_FLAGS_RELEASE="-std=c99" \
 -D CMAKE_Fortran_FLAGS_RELEASE="" \
 -D CMAKE_Fortran_COMPILER=$mpifort \
--D ENABLE_TESTS=OFF \
+-D DISABLE_TESTS=ON \
 -D ENABLE_DEBUG=OFF \
 -D FAILURE_DETAIL=OFF \
 -D ENABLE_MPI=ON \
 -D ENABLE_GPU=ON \
 -D ENABLE_GSL:BOOL=FALSE \
 -D ENABLE_NETCDF=ON \
--D ENABLE_EXPORT_NETCDF=OFF \
--D ENABLE_IMPORT_NETCDF=OFF \
--D ENABLE_BOOTCAMP=OFF \
--D ENABLE_DATA=OFF \
--D ENABLE_STATIC_LIB=OFF \
+-D DISABLE_INSTALL_OPTIONS=TRUE \
 ..
 
+ln -sf ../test/monarch/settings
+ln -sf ../test/monarch/out
 make -j 4 VERBOSE=1
 cd $curr_path

@@ -1,0 +1,80 @@
+{
+  "camp-data" : [
+    {
+      "type" : "RELATIVE_TOLERANCE",
+      "value" : 1.0e-15
+    },
+    {
+      "name" : "foo",
+      "type" : "CHEM_SPEC",
+      "diffusion coeff [m2 s-1]" : 0.95E-05,
+      "molecular weight [kg mol-1]" : 0.04607,
+      "absolute tolerance" : 1.0e-20
+    },
+    {
+      "name" : "bar",
+      "type" : "CHEM_SPEC"
+    },
+    {
+      "name" : "baz",
+      "type" : "CHEM_SPEC"
+    },
+    {
+      "name" : "aerosol stuff",
+      "type" : "CHEM_SPEC",
+      "phase" : "AEROSOL",
+      "molecular weight [kg mol-1]" : 0.5,
+      "density [kg m-3]" : 1000.0,
+      "absolute tolerance" : 1.0e-20
+    },
+    {
+      "name" : "more aerosol stuff",
+      "type" : "CHEM_SPEC",
+      "phase" : "AEROSOL",
+      "molecular weight [kg mol-1]" : 0.2,
+      "density [kg m-3]" : 1000.0,
+      "absolute tolerance" : 1.0e-20
+    },
+    {
+      "name" : "surface reacting phase",
+      "type" : "AERO_PHASE",
+      "species" : ["aerosol stuff", "more aerosol stuff"]
+    },
+    {
+      "name" : "not surface reacting phase",
+      "type" : "AERO_PHASE",
+      "species": ["aerosol stuff"]
+    },
+    {
+      "type" : "AERO_REP_SINGLE_PARTICLE",
+      "name" : "my aero rep 1",
+      "maximum computational particles" : 1
+    },
+    {
+      "type" : "AERO_REP_SINGLE_PARTICLE",
+      "name" : "my aero rep 2",
+      "maximum computational particles" : 1
+    },
+    {
+      "type" : "AERO_REP_SINGLE_PARTICLE",
+      "name" : "my aero rep 3",
+      "maximum computational particles" : 1
+    },
+    {
+      "name" : "surface mechanism",
+      "type" : "MECHANISM",
+      "reactions" : [
+        {
+  	      "type" : "SURFACE",
+  	      "gas-phase reactant" : "foo",
+          "reaction probability" : 2.0e-2,
+          "gas-phase products" : {
+            "bar" : { },
+            "baz" : { "yield" : 0.4 }
+          },
+  	      "aerosol phase" : "surface reacting phase"
+        }
+      ]
+    }
+  ]
+}

@@ -155,9 +155,6 @@ void diff_check_init(ModelData model_data) {
   dd = &diff_data[num_solvers];
   num_solvers++;
 
-  printf("ERROR: Using variable num_solvers and diff_data as global variable is highly risky, fix that before continue");
-  exit(0);
-
   printf("\nInitializing solver diff checker %d n_rxn = %d", num_solvers,
          model_data.n_rxn);
 

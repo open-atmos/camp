@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.10)
 # Require 2.6.4 due to -I/usr/include behavior:
 # http://www.cmake.org/Bug/view.php?id=8598
 # http://gcc.gnu.org/bugzilla/show_bug.cgi?id=35707
@@ -29,20 +29,19 @@ endif ()
 #Set all options to OFF by default due to bug on CMake 3.15
 option(ENABLE_GSL "Enable GSL library for Jacobian evaluation" OFF)
 option(ENABLE_MPI "Enable MPI parallel support" OFF)
-option(ENABLE_C_SORT "Enable C sorting routines" OFF)
 option(ENABLE_DEBUG "Compile debugging functions" OFF)
 option(FAILURE_DETAIL "Output conditions before and after solver failures" OFF)
 option(ENABLE_GPU "Enable use of GPUs in chemistry solving" OFF)
 option(ENABLE_NETCDF "Include NETCDF package" OFF)
-option(ENABLE_EXPORT_NETCDF "" OFF)
-option(ENABLE_IMPORT_NETCDF "" OFF)
-option(ENABLE_BOOTCAMP "" OFF)
-option(ENABLE_DATA "" OFF)
-option(ENABLE_INSTALL_OPTIONS "" OFF)
+option(DISABLE_INSTALL_OPTIONS "" OFF)
+option(DISABLE_TESTS "" OFF)
+
 
 mark_as_advanced(FORCE ENABLE_DEBUG FAILURE_DETAIL)
-file(CREATE_LINK ${CMAKE_CURRENT_SOURCE_DIR}/test/monarch/out ${CMAKE_BINARY_DIR}/out  SYMBOLIC)
-file(CREATE_LINK ${CMAKE_CURRENT_SOURCE_DIR}/test/monarch/settings ${CMAKE_BINARY_DIR}/settings SYMBOLIC)
+
+#Missing CMake version >=3.14 in Github Docker to use CREATE_LINK
+#file(CREATE_LINK ${CMAKE_CURRENT_SOURCE_DIR}/test/monarch/out ${CMAKE_BINARY_DIR}/out  SYMBOLIC)
+#file(CREATE_LINK ${CMAKE_CURRENT_SOURCE_DIR}/test/monarch/settings ${CMAKE_BINARY_DIR}/settings SYMBOLIC)
 
 
 ######################################################################
@@ -81,13 +80,6 @@ find_path(NETCDF_INCLUDE_DIR netcdf.mod NETCDF.mod
     set(NETCDF_LIBS ${NETCDF_LIBS} ${NETCDF_FORTRAN_LIB})
   endif()
   include_directories(${NETCDF_INCLUDE_DIR})
-  add_definitions(-D ENABLE_NETCDF)
-  if(ENABLE_EXPORT_NETCDF)
-    add_definitions(-D EXPORT_NETCDF)
-  endif()
-  if(ENABLE_IMPORT_NETCDF)
-    add_definitions(-D IMPORT_NETCDF)
-  endif()
 else()
   set(NETCDF_LIBS "")
 endif()
@@ -116,15 +108,11 @@ endif()
 ######################################################################
 # MPI
 
-if(NOT ENABLE_MPI)
+if(ENABLE_MPI)
   find_package(MPI)
   if(MPI_FOUND)
-    set(ENABLE_MPI ON)
     set(CMAKE_Fortran_COMPILER mpifort)
   endif()
-endif()
-
-if(ENABLE_MPI)
   include_directories(${MPI_INCLUDE_PATH})
   include_directories(${MPI_Fortran_INCLUDE_DIRS})
   if(NOT MPI_FOUND)
@@ -189,6 +177,7 @@ set(SUNDIALS_LIBS ${SUITE_SPARSE_KLU_LIB} ${SUNDIALS_KLU_LIB}
   ${SUITE_SPARSE_BTF_LIB} ${SUITE_SPARSE_CONFIG_LIB})
 include_directories(${SUNDIALS_INCLUDE_DIR} ${SUITE_SPARSE_INCLUDE_DIR})
 add_definitions(-DCAMP_USE_SUNDIALS)
+add_definitions(-DCAMP_CUSTOM_CVODE)
 
 ######################################################################
 # json-fortran
@@ -216,6 +205,12 @@ if (ENABLE_GPU)
   find_package(CUDA)
   enable_language(CUDA)
   add_definitions(-DCAMP_USE_GPU)
+  if(ENABLE_MPI)
+    add_definitions(-DCAMP_DEBUG_GPU)
+  else()
+    #ENABLE_DEBUG_GPU uses MPI timers
+    message( ERROR "ENABLE_DEBUG_GPU NEEDS ENABLE_MPI")
+  endif()
 endif()
 
 ######################################################################
@@ -228,31 +223,18 @@ if (FAILURE_DETAIL)
   add_definitions(-DFAILURE_DETAIL)
 endif()
 
-if(ENABLE_MPI)
-    add_definitions(-DCAMP_DEBUG_GPU)
-else()
-    #ENABLE_DEBUG_GPU uses MPI timers
-    message( ERROR "ENABLE_DEBUG_GPU NEEDS ENABLE_MPI")
-endif()
-
 ######################################################################
 # copy dirs
 
-SET(ENABLE_TESTS ON)
-if(ENABLE_DATA OR ENABLE_TESTS)
-add_custom_target(copy_data ALL ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/data ${CMAKE_BINARY_DIR}/data_run)
-endif()
+SET(ENABLE_TESTS OFF)
 
-if (ENABLE_TESTS)
+if(ENABLE_TESTS)
+add_custom_target(copy_data ALL ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/data ${CMAKE_BINARY_DIR}/data_run)
 add_custom_target(copy_test ALL ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/test ${CMAKE_BINARY_DIR}/test_run)
 add_custom_target(copy_mechanism ALL ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/mechanisms ${CMAKE_BINARY_DIR}/mechanisms_run)
-endif()
-
-if(ENABLE_BOOTCAMP OR ENABLE_TESTS)
-  add_custom_target(copy_boot_camp ALL ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/doc/camp_tutorial/boot_camp ${CMAKE_BINARY_DIR}/boot_camp_run)
-endif()
-
+add_custom_target(copy_boot_camp ALL ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/doc/camp_tutorial/boot_camp ${CMAKE_BINARY_DIR}/boot_camp_run)
 set_property(DIRECTORY PROPERTY ADDITIONAL_MAKE_CLEAN_FILES test_run mechanisms_run scenarios_run boot_camp_run)
+endif()
 
 ######################################################################
 # Unit test macro
@@ -283,19 +265,17 @@ do_unit_test(aero_rep_modal_binned_mass "PASS")
 do_unit_test(camp_core "PASS")
 endif()
 
-SET(ENABLE_MPI_TEST OFF)
-if (ENABLE_MPI AND ENABLE_MPI_TEST)
+if (ENABLE_MPI)
   set(MPI_TEST_FLAG MPI)
 else()
   set(MPI_TEST_FLAG serial)
 endif()
 
 if (ENABLE_GPU)
-    add_test(NAME test_gpu COMMAND checkGPU.sh WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/test/monarch)
+  add_test(NAME test_gpu COMMAND checkGPU.sh WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/test/monarch)
 endif()
 
 if (ENABLE_TESTS)
-
     # New unit tests (UNDER DEVELOPMENT)
   add_test(test_rxn_arrhenius_mech ${CMAKE_BINARY_DIR}/test_run/unit_tests/input_files/run_rxn_arrhenius.sh ${MPI_TEST_FLAG})
 
@@ -304,12 +284,17 @@ if (ENABLE_TESTS)
   add_test(test_rxn_CMAQ_H2O2 ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_CMAQ_H2O2.sh ${MPI_TEST_FLAG})
   add_test(test_rxn_CMAQ_OH_HNO3 ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_CMAQ_OH_HNO3.sh ${MPI_TEST_FLAG})
   add_test(test_rxn_condensed_phase_arrhenius ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_condensed_phase_arrhenius.sh ${MPI_TEST_FLAG})
+  add_test(test_rxn_condensed_phase_photolysis ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_condensed_phase_photolysis.sh ${MPI_TEST_FLAG})
   add_test(test_rxn_emission ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_emission.sh ${MPI_TEST_FLAG})
   add_test(test_rxn_first_order_loss ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_first_order_loss.sh ${MPI_TEST_FLAG})
   add_test(test_rxn_HL_phase_transfer ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_HL_phase_transfer.sh ${MPI_TEST_FLAG})
   add_test(test_rxn_photolysis ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_photolysis.sh ${MPI_TEST_FLAG})
   add_test(test_rxn_SIMPOL_phase_transfer ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_SIMPOL_phase_transfer.sh ${MPI_TEST_FLAG})
+  add_test(test_rxn_surface ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_surface.sh ${MPI_TEST_FLAG})
+  add_test(test_rxn_ternary_chemical_activation ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_ternary_chemical_activation.sh ${MPI_TEST_FLAG})
   add_test(test_rxn_troe ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_troe.sh ${MPI_TEST_FLAG})
+  add_test(test_rxn_wennberg_no_ro2 ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_wennberg_no_ro2.sh ${MPI_TEST_FLAG})
+  add_test(test_rxn_wennberg_tunneling ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_wennberg_tunneling.sh ${MPI_TEST_FLAG})
   add_test(test_rxn_wet_deposition ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_wet_deposition.sh ${MPI_TEST_FLAG})
   add_test(test_sub_model_PDFiTE ${CMAKE_BINARY_DIR}/test_run/unit_sub_model_data/test_PDFiTE.sh ${MPI_TEST_FLAG})
   add_test(test_sub_model_UNIFAC ${CMAKE_BINARY_DIR}/test_run/unit_sub_model_data/test_UNIFAC.sh ${MPI_TEST_FLAG})
@@ -317,6 +302,7 @@ if (ENABLE_TESTS)
   add_test(test_chem_mech_solver ${CMAKE_BINARY_DIR}/test_run/chemistry/test_chemistry_1.sh ${MPI_TEST_FLAG})
   add_test(test_chemistry_cb05cl_ae5 ${CMAKE_BINARY_DIR}/test_run/chemistry/cb05cl_ae5/test_chemistry_cb05cl_ae5.sh ${MPI_TEST_FLAG})
   add_test(boot_camp_part_1 ${CMAKE_BINARY_DIR}/boot_camp_run/part_2_code/run_part_1.sh ${MPI_TEST_FLAG})
+  add_test(boot_camp_part_2 ${CMAKE_BINARY_DIR}/boot_camp_run/part_2_code/run_part_2.sh ${MPI_TEST_FLAG})
   add_test(boot_camp_part_3 ${CMAKE_BINARY_DIR}/boot_camp_run/part_3_code/run_part_3.sh ${MPI_TEST_FLAG})
   add_test(boot_camp_part_4 ${CMAKE_BINARY_DIR}/boot_camp_run/part_4_code/run_part_4.sh ${MPI_TEST_FLAG})
   add_test(camp_v1_paper_binned ${CMAKE_BINARY_DIR}/data_run/CAMP_v1_paper/binned/test_monarch_binned.sh ${MPI_TEST_FLAG})
@@ -332,7 +318,7 @@ set(STD_CUDA_FLAGS "-g -O3 -arch=compute_70 -code=sm_70") #-G for assembly code 
 if(${CMAKE_Fortran_COMPILER_ID} MATCHES "Intel")
   set(STD_F_FLAGS "-extend_source -warn truncated_source")
 elseif(${CMAKE_Fortran_COMPILER_ID} MATCHES "GNU")
-  set(STD_F_FLAGS "-ffree-line-length-none -lnetcdf -lnetcdff")
+  set(STD_F_FLAGS "-ffree-line-length-none")
 endif()
 
 set(REACTIONS_F_SRC
@@ -341,13 +327,18 @@ set(REACTIONS_F_SRC
 	src/rxns/rxn_CMAQ_H2O2.F90
 	src/rxns/rxn_CMAQ_OH_HNO3.F90
 	src/rxns/rxn_condensed_phase_arrhenius.F90
+	src/rxns/rxn_condensed_phase_photolysis.F90
 	src/rxns/rxn_emission.F90
 	src/rxns/rxn_first_order_loss.F90
 	src/rxns/rxn_HL_phase_transfer.F90
 	src/rxns/rxn_photolysis.F90
-        src/rxns/rxn_SIMPOL_phase_transfer.F90
-	src/rxns/rxn_troe.F90
-        src/rxns/rxn_wet_deposition.F90)
+  src/rxns/rxn_SIMPOL_phase_transfer.F90
+  src/rxns/rxn_surface.F90
+  src/rxns/rxn_ternary_chemical_activation.F90
+  src/rxns/rxn_troe.F90
+  src/rxns/rxn_wennberg_no_ro2.F90
+  src/rxns/rxn_wennberg_tunneling.F90
+  src/rxns/rxn_wet_deposition.F90)
 
 set(REACTIONS_C_SRC
 	src/rxns/rxn_aqueous_equilibrium.c
@@ -355,13 +346,18 @@ set(REACTIONS_C_SRC
 	src/rxns/rxn_CMAQ_H2O2.c
 	src/rxns/rxn_CMAQ_OH_HNO3.c
 	src/rxns/rxn_condensed_phase_arrhenius.c
+	src/rxns/rxn_condensed_phase_photolysis.c
 	src/rxns/rxn_emission.c
 	src/rxns/rxn_first_order_loss.c
 	src/rxns/rxn_HL_phase_transfer.c
 	src/rxns/rxn_photolysis.c
-        src/rxns/rxn_SIMPOL_phase_transfer.c
+  src/rxns/rxn_SIMPOL_phase_transfer.c
+  src/rxns/rxn_surface.c
+  src/rxns/rxn_ternary_chemical_activation.c
 	src/rxns/rxn_troe.c
-        src/rxns/rxn_wet_deposition.c)
+  src/rxns/rxn_wennberg_no_ro2.c
+  src/rxns/rxn_wennberg_tunneling.c
+  src/rxns/rxn_wet_deposition.c)
 
 set_source_files_properties(${REACTIONS_F_SRC} PROPERTIES COMPILE_FLAGS
         ${STD_F_FLAGS})
@@ -415,7 +411,7 @@ set(CAMP_C_SRC
 set_source_files_properties(${CAMP_C_SRC} PROPERTIES COMPILE_FLAGS
         ${STD_C_FLAGS})
 
-if (CUDA_FOUND AND ENABLE_GPU)
+if (ENABLE_GPU)
   set(CAMP_CUDA_SRC
           src/cuda/cvode_cuda.cu
           src/cuda/cvode_gpu.cu
@@ -464,7 +460,9 @@ set_target_properties(camplib PROPERTIES
                          LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
                          Fortran_MODULE_DIRECTORY ${CMAKE_BINARY_DIR})
 
-if(ENABLE_INSTALL_OPTIONS)
+if(DISABLE_INSTALL_OPTIONS)
+
+else()
 include(GNUInstallDirs)
 install(TARGETS camplib
         EXPORT camplib-targets
@@ -483,7 +481,7 @@ endif()
 # camp-chem box model
 
 add_executable(camp_box_model test/camp_box_model_data.F90
-        test/camp_box_model.F90)
+                              test/camp_box_model.F90)
 
 target_link_libraries(camp_box_model camplib)
 
@@ -531,28 +529,23 @@ set_source_files_properties(${CB5_EBI_SOLVER} PROPERTIES COMPILE_FLAGS
 	${CB5_EBI_FLAGS})
 
 if (ENABLE_GPU)
-    add_executable(mock_monarch test/monarch/mock_monarch.F90
-            test/monarch/camp_monarch_interface.F90
-            ${CB5_EBI_SOLVER} ${CB5_KPP_SOLVER}
-            test/chemistry/cb05cl_ae5/module_BSC_CHEM_DATA.F90)
-    target_link_libraries(mock_monarch camplib)
+  add_executable(mock_monarch test/monarch/mock_monarch.F90
+      test/monarch/camp_monarch_interface.F90
+      ${CB5_EBI_SOLVER} ${CB5_KPP_SOLVER}
+      test/chemistry/cb05cl_ae5/module_BSC_CHEM_DATA.F90)
+  target_link_libraries(mock_monarch camplib)
 endif()
 
 if (ENABLE_TESTS)
-    add_executable(unit_test_aero_rep_single_particle
-            test/unit_aero_rep_data/test_aero_rep_single_particle.c
-            test/unit_aero_rep_data/test_aero_rep_single_particle.F90)
-
-    target_link_libraries(unit_test_aero_rep_single_particle camplib)
 
 ######################################################################
 # test_chemistry_cb05cl_ae5
 
-  add_executable(test_chemistry_cb05cl_ae5
-          test/chemistry/cb05cl_ae5/test_cb05cl_ae5.F90
-          ${CB5_EBI_SOLVER} ${CB5_KPP_SOLVER}
-          test/chemistry/cb05cl_ae5/module_BSC_CHEM_DATA.F90)
-  target_link_libraries(test_chemistry_cb05cl_ae5 camplib)
+add_executable(test_chemistry_cb05cl_ae5
+    test/chemistry/cb05cl_ae5/test_cb05cl_ae5.F90
+    ${CB5_EBI_SOLVER} ${CB5_KPP_SOLVER}
+    test/chemistry/cb05cl_ae5/module_BSC_CHEM_DATA.F90)
+target_link_libraries(test_chemistry_cb05cl_ae5 camplib)
 
 ######################################################################
 # test_property
@@ -586,6 +579,8 @@ add_executable(test_rxn_CMAQ_OH_HNO3 test/unit_rxn_data/test_rxn_CMAQ_OH_HNO3.F9
 target_link_libraries(test_rxn_CMAQ_OH_HNO3 camplib)
 add_executable(test_rxn_condensed_phase_arrhenius test/unit_rxn_data/test_rxn_condensed_phase_arrhenius.F90)
 target_link_libraries(test_rxn_condensed_phase_arrhenius camplib)
+add_executable(test_rxn_condensed_phase_photolysis test/unit_rxn_data/test_rxn_condensed_phase_photolysis.F90)
+target_link_libraries(test_rxn_condensed_phase_photolysis camplib)
 add_executable(test_rxn_emission test/unit_rxn_data/test_rxn_emission.F90)
 target_link_libraries(test_rxn_emission camplib)
 add_executable(test_rxn_first_order_loss test/unit_rxn_data/test_rxn_first_order_loss.F90)
@@ -596,8 +591,16 @@ add_executable(test_rxn_photolysis test/unit_rxn_data/test_rxn_photolysis.F90)
 target_link_libraries(test_rxn_photolysis camplib)
 add_executable(test_rxn_SIMPOL_phase_transfer test/unit_rxn_data/test_rxn_SIMPOL_phase_transfer.F90)
 target_link_libraries(test_rxn_SIMPOL_phase_transfer camplib)
+add_executable(test_rxn_surface test/unit_rxn_data/test_rxn_surface.F90)
+target_link_libraries(test_rxn_surface camplib)
+add_executable(test_rxn_ternary_chemical_activation test/unit_rxn_data/test_rxn_ternary_chemical_activation.F90)
+target_link_libraries(test_rxn_ternary_chemical_activation camplib)
 add_executable(test_rxn_troe test/unit_rxn_data/test_rxn_troe.F90)
 target_link_libraries(test_rxn_troe camplib)
+add_executable(test_rxn_wennberg_no_ro2 test/unit_rxn_data/test_rxn_wennberg_no_ro2.F90)
+target_link_libraries(test_rxn_wennberg_no_ro2 camplib)
+add_executable(test_rxn_wennberg_tunneling test/unit_rxn_data/test_rxn_wennberg_tunneling.F90)
+target_link_libraries(test_rxn_wennberg_tunneling camplib)
 add_executable(test_rxn_wet_deposition test/unit_rxn_data/test_rxn_wet_deposition.F90)
 target_link_libraries(test_rxn_wet_deposition camplib)
 
@@ -650,7 +653,14 @@ add_executable(unit_test_aero_phase_data test/unit_aero_phase_data/test_aero_pha
 
 target_link_libraries(unit_test_aero_phase_data camplib)
 
+######################################################################
+# test_aero_rep_single_particle
 
+add_executable(unit_test_aero_rep_single_particle
+	test/unit_aero_rep_data/test_aero_rep_single_particle.c
+	test/unit_aero_rep_data/test_aero_rep_single_particle.F90)
+
+target_link_libraries(unit_test_aero_rep_single_particle camplib)
 
 ######################################################################
 # test_aero_rep_modal_binned_mass

@@ -187,12 +187,17 @@ module camp_rxn_factory
   use camp_rxn_CMAQ_H2O2
   use camp_rxn_CMAQ_OH_HNO3
   use camp_rxn_condensed_phase_arrhenius
+  use camp_rxn_condensed_phase_photolysis
   use camp_rxn_emission
   use camp_rxn_first_order_loss
   use camp_rxn_HL_phase_transfer
   use camp_rxn_photolysis
   use camp_rxn_SIMPOL_phase_transfer
+  use camp_rxn_surface
+  use camp_rxn_ternary_chemical_activation
   use camp_rxn_troe
+  use camp_rxn_wennberg_no_ro2
+  use camp_rxn_wennberg_tunneling
   use camp_rxn_wet_deposition
 
   use iso_c_binding
@@ -216,6 +221,11 @@ module camp_rxn_factory
   integer(kind=i_kind), parameter, public :: RXN_FIRST_ORDER_LOSS = 12
   integer(kind=i_kind), parameter, public :: RXN_EMISSION = 13
   integer(kind=i_kind), parameter, public :: RXN_WET_DEPOSITION = 14
+  integer(kind=i_kind), parameter, public :: RXN_TERNARY_CHEMICAL_ACTIVATION = 15
+  integer(kind=i_kind), parameter, public :: RXN_WENNBERG_TUNNELING = 16
+  integer(kind=i_kind), parameter, public :: RXN_WENNBERG_NO_RO2 = 17
+  integer(kind=i_kind), parameter, public :: RXN_CONDENSED_PHASE_PHOTOLYSIS = 18
+  integer(kind=i_kind), parameter, public :: RXN_SURFACE = 19
 
   !> Factory type for chemical reactions
   !!
@@ -275,12 +285,22 @@ contains
         new_obj => rxn_SIMPOL_phase_transfer_t()
       case ("CONDENSED_PHASE_ARRHENIUS")
         new_obj => rxn_condensed_phase_arrhenius_t()
+      case ("CONDENSED_PHASE_PHOTOLYSIS")
+        new_obj => rxn_condensed_phase_photolysis_t()
       case ("FIRST_ORDER_LOSS")
         new_obj => rxn_first_order_loss_t()
       case ("EMISSION")
         new_obj => rxn_emission_t()
       case ("WET_DEPOSITION")
         new_obj => rxn_wet_deposition_t()
+      case ("TERNARY_CHEMICAL_ACTIVATION")
+        new_obj => rxn_ternary_chemical_activation_t()
+      case ("WENNBERG_TUNNELING")
+        new_obj => rxn_wennberg_tunneling_t()
+      case ("WENNBERG_NO_RO2")
+        new_obj => rxn_wennberg_no_ro2_t()
+      case ("SURFACE")
+        new_obj => rxn_surface_t()
       case default
         call die_msg(367114278, "Unknown chemical reaction type: " &
                 //type_name)
@@ -290,7 +310,7 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  !> Load an aerosol represenation from input data
+  !> Load a reaction from input data
 #ifdef CAMP_USE_JSON
   function load(this, json, j_obj) result (new_obj)
 
@@ -364,12 +384,22 @@ contains
         rxn_type = RXN_SIMPOL_PHASE_TRANSFER
       type is (rxn_condensed_phase_arrhenius_t)
         rxn_type = RXN_CONDENSED_PHASE_ARRHENIUS
+      type is (rxn_condensed_phase_photolysis_t)
+        rxn_type = RXN_CONDENSED_PHASE_PHOTOLYSIS
       type is (rxn_first_order_loss_t)
         rxn_type = RXN_FIRST_ORDER_LOSS
       type is (rxn_emission_t)
         rxn_type = RXN_EMISSION
       type is (rxn_wet_deposition_t)
         rxn_type = RXN_WET_DEPOSITION
+      type is (rxn_ternary_chemical_activation_t)
+        rxn_type = RXN_TERNARY_CHEMICAL_ACTIVATION
+      type is (rxn_wennberg_tunneling_t)
+        rxn_type = RXN_WENNBERG_TUNNELING
+      type is (rxn_wennberg_no_ro2_t)
+        rxn_type = RXN_WENNBERG_NO_RO2
+      type is (rxn_surface_t)
+        rxn_type = RXN_SURFACE
       class default
         call die_msg(343941184, "Unknown reaction type.")
     end select
@@ -414,6 +444,13 @@ contains
         select type (rxn)
           type is (rxn_photolysis_t)
             call rxn%update_data_initialize(update_data, RXN_PHOTOLYSIS)
+          class default
+            call die_msg(284703230, "Update data <-> rxn mismatch")
+        end select
+      type is (rxn_update_data_condensed_phase_photolysis_t)
+        select type (rxn)
+          type is (rxn_condensed_phase_photolysis_t)
+            call rxn%update_data_initialize(update_data, RXN_CONDENSED_PHASE_PHOTOLYSIS)
           class default
             call die_msg(284703230, "Update data <-> rxn mismatch")
         end select
@@ -479,12 +516,22 @@ contains
         rxn_type = RXN_SIMPOL_PHASE_TRANSFER
       type is (rxn_condensed_phase_arrhenius_t)
         rxn_type = RXN_CONDENSED_PHASE_ARRHENIUS
+      type is (rxn_condensed_phase_photolysis_t)
+        rxn_type = RXN_CONDENSED_PHASE_PHOTOLYSIS
       type is (rxn_first_order_loss_t)
         rxn_type = RXN_FIRST_ORDER_LOSS
       type is (rxn_emission_t)
         rxn_type = RXN_EMISSION
       type is (rxn_wet_deposition_t)
         rxn_type = RXN_WET_DEPOSITION
+      type is (rxn_ternary_chemical_activation_t)
+        rxn_type = RXN_TERNARY_CHEMICAL_ACTIVATION
+      type is (rxn_wennberg_tunneling_t)
+        rxn_type = RXN_WENNBERG_TUNNELING
+      type is (rxn_wennberg_no_ro2_t)
+        rxn_type = RXN_WENNBERG_NO_RO2
+      type is (rxn_surface_t)
+        rxn_type = RXN_SURFACE
       class default
         call die_msg(343941184, "Trying to pack reaction of unknown type.")
     end select
@@ -536,12 +583,22 @@ contains
         rxn => rxn_SIMPOL_phase_transfer_t()
       case (RXN_CONDENSED_PHASE_ARRHENIUS)
         rxn => rxn_condensed_phase_arrhenius_t()
+      case (RXN_CONDENSED_PHASE_PHOTOLYSIS)
+        rxn => rxn_condensed_phase_photolysis_t()
       case (RXN_FIRST_ORDER_LOSS)
         rxn => rxn_first_order_loss_t()
       case (RXN_EMISSION)
         rxn => rxn_emission_t()
       case (RXN_WET_DEPOSITION)
         rxn => rxn_wet_deposition_t()
+      case (RXN_TERNARY_CHEMICAL_ACTIVATION)
+        rxn => rxn_ternary_chemical_activation_t()
+      case (RXN_WENNBERG_TUNNELING)
+        rxn => rxn_wennberg_tunneling_t()
+      case (RXN_WENNBERG_NO_RO2)
+        rxn => rxn_wennberg_no_ro2_t()
+      case (RXN_SURFACE)
+        rxn => rxn_surface_t()
       case default
         call die_msg(659290342, &
                 "Trying to unpack reaction of unknown type:"// &
