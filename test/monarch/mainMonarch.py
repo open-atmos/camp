@@ -80,8 +80,10 @@ def run(conf):
       exec_str += 'ddt --connect '
   except Exception:
     pass
-  exec_str += "mpirun -v -np " + str(
-    conf.mpiProcesses) + " --bind-to core "
+  #exec_str += "mpirun -v -np " + str(
+  #  conf.mpiProcesses) + " --bind-to core " #for plogin (fails squeue)
+  exec_str += "srun --cpu-bind=core -n " + str( #for squeue (fails plogin)
+    conf.mpiProcesses) + " "
   if (conf.profileCuda == "nvprof" and conf.caseGpuCpu ==
       "GPU"):
     pathNvprof = ("../../compile/power9/" +
