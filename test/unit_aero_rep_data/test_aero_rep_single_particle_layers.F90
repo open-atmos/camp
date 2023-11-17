@@ -119,7 +119,7 @@ contains
     type(aero_rep_single_particle_layers_t) :: aero_rep
     character(len=50), dimension(4) :: layer_name_unordered, correct_layer_names
     character(len=50), dimension(4) :: cover_name
-    character(len=50), dimension(4) :: ordered_layer_set_names
+    type(string_t), allocatable :: ordered_layer_set_names(:)
 
     ! Assemble input arguments
     layer_name_unordered = [ character(len=50) :: 'almond butter','top bread','jam','bottom bread' ]
@@ -129,10 +129,10 @@ contains
     ! Call the function and enter inputs 
     ordered_layer_set_names = aero_rep%ordered_layer_array(layer_name_unordered, cover_name)
     ! check individual values:
-    call assert(903386486, ordered_layer_set_names(1) .eq. correct_layer_names(1))
-    call assert(468777371, ordered_layer_set_names(2) .eq. correct_layer_names(2))
-    call assert(487966491, ordered_layer_set_names(3) .eq. correct_layer_names(3))
-    call assert(721784428, ordered_layer_set_names(4) .eq. correct_layer_names(4))
+    call assert(903386486, ordered_layer_set_names(1)%string .eq. correct_layer_names(1))
+    call assert(468777371, ordered_layer_set_names(2)%string .eq. correct_layer_names(2))
+    call assert(487966491, ordered_layer_set_names(3)%string .eq. correct_layer_names(3))
+    call assert(721784428, ordered_layer_set_names(4)%string .eq. correct_layer_names(4))
 
   end subroutine test_ordered_layer_array
 
@@ -206,7 +206,7 @@ contains
     character(len=50), dimension(4) :: ordered_layer_set_names
     integer, allocatable :: layer_state_id_unordered_array(:), LAYER_STATE_ID(:)
     character(len=50), dimension(11) :: phase_name_unordered, correct_phase_name
-    character(len=50), dimension(11) :: ordered_phase_set_names
+    type(string_t), allocatable :: ordered_phase_set_names(:)
     ! Assemble input arguments
     cover_name = [ character(len=50) :: 'bottom bread','jam','almond butter','none' ]
     correct_layer_names = [ character(len=50) :: 'bottom bread','almond butter','jam','top bread' ]
@@ -221,20 +221,20 @@ contains
     ordered_phase_set_names = aero_rep%ordered_phase_array(cover_name,correct_layer_names,&
            LAYER_STATE_ID,layer_state_id_unordered_array, phase_name_unordered)
     ! check individual values:
-    call assert(339098038, ordered_phase_set_names(1) .eq. correct_phase_name(1))
-    call assert(199474991, ordered_phase_set_names(2) .eq. correct_phase_name(2))
-    call assert(457236155, ordered_phase_set_names(3) .eq. correct_phase_name(3))  
-    call assert(301795824, ordered_phase_set_names(4) .eq. correct_phase_name(4))
-    call assert(313407860, ordered_phase_set_names(5) .eq. correct_phase_name(5))
-    call assert(657858049, ordered_phase_set_names(6) .eq. correct_phase_name(6))
-    call assert(100854544, ordered_phase_set_names(7) .eq. correct_phase_name(7)) 
-    call assert(292581267, ordered_phase_set_names(8) .eq. correct_phase_name(8))
-    call assert(550954164, ordered_phase_set_names(9) .eq. correct_phase_name(9))
-    call assert(962490372, ordered_phase_set_names(10) .eq. correct_phase_name(10))
-    call assert(476629486, ordered_phase_set_names(11) .eq. correct_phase_name(11))
-   print *, ordered_phase_set_names(2)
+    call assert(339098038, ordered_phase_set_names(1)%string .eq. correct_phase_name(1))
+    call assert(199474991, ordered_phase_set_names(2)%string .eq. correct_phase_name(2))
+    call assert(457236155, ordered_phase_set_names(3)%string .eq. correct_phase_name(3))  
+    call assert(301795824, ordered_phase_set_names(4)%string .eq. correct_phase_name(4))
+    call assert(313407860, ordered_phase_set_names(5)%string .eq. correct_phase_name(5))
+    call assert(657858049, ordered_phase_set_names(6)%string .eq. correct_phase_name(6))
+    call assert(100854544, ordered_phase_set_names(7)%string .eq. correct_phase_name(7)) 
+    call assert(292581267, ordered_phase_set_names(8)%string .eq. correct_phase_name(8))
+    call assert(550954164, ordered_phase_set_names(9)%string .eq. correct_phase_name(9))
+    call assert(962490372, ordered_phase_set_names(10)%string .eq. correct_phase_name(10))
+    call assert(476629486, ordered_phase_set_names(11)%string .eq. correct_phase_name(11))
+    print *, ordered_phase_set_names(2)%string
     print *, correct_phase_name(2)
-    print *, ordered_phase_set_names(3)
+    print *, ordered_phase_set_names(3)%string
     print *, correct_phase_name(3)
 
   end subroutine test_ordered_phase_array
