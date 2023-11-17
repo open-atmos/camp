@@ -262,25 +262,27 @@ contains
     !> Unordered layer names (only used during initialization)
     type(string_t), allocatable :: layer_name_unordered(:)
     !> Unordered phase names (only used during initialization)
-    !type(string_t), allocatable :: phase_name_unordered(:)
+    type(string_t), allocatable :: phase_name_unordered(:)
     !> Unordered num phase array (only used during initialization)
     type(integer), allocatable :: num_phase_unordered(:)
     !> Unordered layer state id array (only used during initialization)
     type(integer), allocatable :: layer_state_id_unordered(:)
     !> Cover names (only used during initialization)
-    !type(string_t), allocatable :: cover_name(:)
+    type(string_t), allocatable :: cover_names(:)
     !> Ordered set of aerosol layer names 
-    !type(string_t), allocatable :: aero_layer_set_names(:)
+    type(string_t), allocatable :: aero_layer_set_names(:)
     !> Ordered set of aerosol phase names from inner to outermost layer 
-    !type(string_t), allocatable :: aero_layer_phase_set_names(:)
+    type(string_t), allocatable :: aero_layer_phase_set_names(:)
+    !> TODO: remove once pre-processor variables are added
+    !type(integer), allocatable :: num_phase_, layer_state_id_
+
     !> Beginning state id for this aerosol representationin the model species
     !! state array
     integer(kind=i_kind), intent(in) :: spec_state_id
-#if 0
     character(len=:), allocatable :: key_name, layer_covers, phase_name
     type(property_t), pointer :: layers, phases
     integer(kind=i_kind) :: i_particle, i_phase, i_layer, i_aero, curr_id
-    integer(kind=i_kind) :: i_cover, j_phase, j_layer
+    integer(kind=i_kind) :: i_cover, j_phase, j_layer, i
     integer(kind=i_kind) :: num_int_param, num_float_param, num_particles
     ! Start off the counters
     ! TODO: how do I initialize these variables
@@ -379,7 +381,7 @@ contains
     end do
 
     ! Construct layer state id unordered
-    this%layer_state_id_unordered = construct_layer_state_id(num_phase_unordered)
+    this%layer_state_id_unordered = construct_layer_state_id(this,num_phase_unordered)
 
     allocate(this%phase_name_unordered(SUM(num_phase_unordered)))
 
@@ -407,18 +409,18 @@ contains
               this%layer_name_unordered(i_layer)%string// &
               "' in single-particle layer aerosol representation '"// &
             this%rep_name//"'")
-      this%phase_name_unordered(layer_state_id_unordered(i_layer):&
-                                layer_state_id_unordered(i_layer+1))%string = key_name
-      
+      do i = layer_state_id_unordered(i_layer), layer_state_id_unordered(i_layer+1)
+        this%phase_name_unordered(i)%string = key_name
+      end do  
       call layers%iter_next()
     end do
-    ! Construct NUM_PHASE_ and LAYER_STATE_ID in inner to outer layer order
-    NUM_PHASE_ = ordered_num_phase_array(this,num_phase_unordered)
-    LAYER_STATE_ID_ = construct_layer_state_id(NUM_PHASE_)
- 
-    this%aero_layer_set_names = ordered_layer_array(this)
-    this%aero_layer_phase_set_names = ordered_phase_array(this)
- 
+    ! Construct NUM_PHASE_ and LAYER_STATE_ID)
+    ! Order layers and phases in inner to outer layer order 
+    this%aero_layer_set_names = ordered_layer_array(this,layer_name_unordered,cover_names)
+    NUM_PHASE_ = ordered_num_phase_array(this,num_phase_unordered,aero_layer_set_names,cover_names)
+    LAYER_STATE_ID_ = construct_layer_state_id(this,NUM_PHASE_)
+    this%aero_layer_phase_set_names = ordered_phase_array(this,cover_names,aero_layer_set_names,&
+          LAYER_STATE_ID_, layer_state_id_unordered, phase_name_unordered)
     ! Set total phase and total number layers state
     TOTAL_NUM_PHASES_ = SUM(NUM_PHASE_)
     TOTAL_NUM_LAYERS_ = size(NUM_PHASE_)
@@ -474,7 +476,6 @@ contains
 
     ! Set the unique names for the chemical species
     !this%unique_names_ = this%unique_names( )
-#endif
   end subroutine initialize
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -825,8 +826,8 @@ contains
     !> Aerosol representation to update
     class(aero_rep_single_particle_layers_t), intent(inout) :: this
     !> Layer name input, for testing
-    character(len=*), intent(in) :: layer_name_unordered(:)
-    character(len=*), intent(in) :: cover_name(:)
+    type(string_t), intent(in) :: layer_name_unordered(:)
+    type(string_t), intent(in) :: cover_name(:)
     !> Layer names in order (only used during initialization)
     type(string_t), allocatable :: ordered_layer_name(:)
     !type(string_t), allocatable :: ordered_layer_name(:)
@@ -838,15 +839,15 @@ contains
     ! Search for innermost layer with cover set to 'none'
     do i_layer = 1,size(layer_name_unordered)
   !  do i_layer = 1, layers%size()
-      if (cover_name(i_layer) == "none") then
-        ordered_layer_name(1)%string = layer_name_unordered(i_layer)
+      if (cover_name(i_layer)%string == "none") then
+        ordered_layer_name(1) = layer_name_unordered(i_layer)
       end if
     end do
 
     do i_cover = 2, size(layer_name_unordered)
       do i_layer = 1, size(layer_name_unordered)
-        if (ordered_layer_name(i_cover-1)%string.eq.cover_name(i_layer)) then
-          ordered_layer_name(i_cover)%string = layer_name_unordered(i_layer)
+        if (ordered_layer_name(i_cover-1)%string.eq.cover_name(i_layer)%string) then
+          ordered_layer_name(i_cover) = layer_name_unordered(i_layer)
         end if
       end do
     end do
@@ -869,8 +870,8 @@ contains
     type(integer), allocatable :: ordered_num_phase(:)
 
     !> Layer name input, for testing
-    character(len=*), intent(in) :: ordered_layer_name(:)
-    character(len=*), intent(in) :: cover_name(:)
+    type(string_t), intent(in) :: ordered_layer_name(:)
+    type(string_t), intent(in) :: cover_name(:)
 
     integer(kind=i_kind) :: i_layer, i_cover
     !allocate(ordered_num_phase(layers%size()))
@@ -879,14 +880,14 @@ contains
     ! Search for innermost layer
     !do i_layer = 1, layers%size()
     do i_layer = 1, size(num_phase_array)
-      if (cover_name(i_layer) == "none") then
+      if (cover_name(i_layer)%string == "none") then
         ordered_num_phase(1) = num_phase_array(i_layer)
       end if
     end do
 
     do i_cover = 2, size(num_phase_array)
       do i_layer = 1, size(num_phase_array)
-        if (ordered_layer_name(i_cover-1).eq.cover_name(i_layer)) then
+        if (ordered_layer_name(i_cover-1)%string.eq.cover_name(i_layer)%string) then
           ordered_num_phase(i_cover) = num_phase_array(i_layer)
         end if
       end do
@@ -904,11 +905,11 @@ contains
     result(ordered_phase_name)
     !> Aerosol representation to update
     class(aero_rep_single_particle_layers_t), intent(inout) :: this
-    character(len=*), intent(in) :: cover_name(:)
+    type(string_t), intent(in) :: cover_name(:)
     type(integer), intent(in) :: layer_state_id(:)
     type(integer), intent(in) :: layer_state_id_unordered_array(:)
-    character(len=*), intent(in) :: phase_name_unordered(:)
-    character(len=*), intent(in) :: ordered_layer_name(:)
+    type(string_t), intent(in) :: phase_name_unordered(:)
+    type(string_t), intent(in) :: ordered_layer_name(:)
  
     !> Phase names in order from inner to outer most layer
     type(string_t), allocatable :: ordered_phase_name(:)
@@ -921,13 +922,13 @@ contains
     !do i_layer = 1, layers%size()
     do i_layer = 1, size(cover_name)
       i_cover = 1
-      if (cover_name(i_layer) == "none") then
+      if (cover_name(i_layer)%string == "none") then
         do i_state_layer = layer_state_id_unordered_array(i_layer), &
                       layer_state_id_unordered_array(i_layer+1)-1
           idx = i_state_layer
           do i_state_cover = layer_state_id(i_cover), &
                              layer_state_id(i_cover+1)-1
-            ordered_phase_name(i_state_cover)%string = phase_name_unordered(idx)
+            ordered_phase_name(i_state_cover) = phase_name_unordered(idx)
             idx = idx + 1
           end do
           exit
@@ -937,13 +938,13 @@ contains
 
     do i_cover = 2, size(cover_name)
       do i_layer = 1, size(cover_name)
-        if (ordered_layer_name(i_cover-1).eq.cover_name(i_layer)) then
+        if (ordered_layer_name(i_cover-1)%string.eq.cover_name(i_layer)%string) then
           do i_state_layer = layer_state_id_unordered_array(i_layer), &
                         layer_state_id_unordered_array(i_layer+1)-1
             idx = i_state_layer
             do i_state_cover = layer_state_id(i_cover), &
                                layer_state_id(i_cover+1)-1
-              ordered_phase_name(i_state_cover)%string = phase_name_unordered(idx)
+              ordered_phase_name(i_state_cover) = phase_name_unordered(idx)
               idx = idx + 1
             end do
             exit
