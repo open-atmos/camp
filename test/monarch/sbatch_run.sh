@@ -3,10 +3,8 @@
 #SBATCH --job-name=camp_test_monarch
 #SBATCH --output=out_sbatch.txt
 #SBATCH --error=err_sbatch.txt
-#SBATCH --ntasks-per-core=1
-#SBATCH -n 80
-##SBATCH --nodes=2
-##SBATCH --ntasks-per-node=160
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=160
 #SBATCH --gres=gpu:4
 #SBATCH --exclusive
 
