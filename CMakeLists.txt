@@ -226,7 +226,7 @@ endif()
 ######################################################################
 # copy dirs
 
-SET(ENABLE_TESTS ON)
+SET(ENABLE_TESTS OFF)
 
 if(ENABLE_TESTS)
 add_custom_target(copy_data ALL ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/data ${CMAKE_BINARY_DIR}/data_run)

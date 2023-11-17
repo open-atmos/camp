@@ -53,13 +53,7 @@ void constructor_cvode_gpu(SolverData *sd){
   char hostname[1024];
   gethostname(hostname, 1024);
   puts(hostname);
-  printf("hostname %s",hostname);
-  int size;
-  MPI_Comm_size(MPI_COMM_WORLD, &size);
-  char* envVar = getenv("SLURM_NPROCS");
-  int SLURM_NPROCS = envVar ? atoi(envVar) : -1;
-  int cpusPerNode = SLURM_NPROCS % nGPUsMax;
-  printf("SLURM_NPROCS %d cpusPerNode %d\n",SLURM_NPROCS, cpusPerNode);
+  printf("hostname %s\n",hostname);
   mGPU->n_rxn=md->n_rxn;
   mGPU->n_rxn_env_data=md->n_rxn_env_data;
   cudaMalloc((void **) &mGPU->state, state_size);
