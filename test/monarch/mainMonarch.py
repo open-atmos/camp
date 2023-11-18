@@ -125,6 +125,7 @@ def run(conf):
     caseGpuCpuName = str(nGPUs) + conf.caseGpuCpu
   else:
     caseGpuCpuName = str(conf.mpiProcesses) + "CPUcores"
+  out = 0
   is_import = False
   data_path = ("out/stats" + caseGpuCpuName + nCellsStr +
                "cells" + str(conf.timeSteps) + "tsteps.csv")
@@ -132,30 +133,32 @@ def run(conf):
   data_path2 = ("out/state" + caseGpuCpuName + nCellsStr +
                 "cells" + str(conf.timeSteps) + "tsteps.csv")
   if conf.is_import and os.path.exists(data_path):
-    is_import = True
-    if conf.is_out and not os.path.exists(data_path2):
-      is_import = False
+    nRows_csv = (conf.timeSteps * conf.nCells *
+                 conf.mpiProcesses)
+    df = pd_read_csv(data_path, nrows=nRows_csv)
+    data = df.to_dict('list')
+    y_key_words = conf.plotYKey.split()
+    y_key = y_key_words[-1]
+    data = data[y_key]
+    print("data stats",data)
+    if data:
+      is_import = True
+    if conf.is_out:
+      if os.path.exists(data_path2):
+        is_import = True
+        df = pd_read_csv(data_path2, header=None,
+                         names=["Column1"])
+        out = df["Column1"].tolist()
+        if out:
+          is_import = True
+      else:
+        is_import = False
   if not is_import:
     os.system(exec_str)
-  data_path = ("out/stats" + caseGpuCpuName + nCellsStr +
-               "cells" + str(conf.timeSteps) + "tsteps.csv")
-  if not is_import:
     os.rename("out/stats.csv", data_path)
-  nRows_csv = (conf.timeSteps * conf.nCells *
-               conf.mpiProcesses)
-  df = pd_read_csv(data_path, nrows=nRows_csv)
-  data = df.to_dict('list')
-  y_key_words = conf.plotYKey.split()
-  y_key = y_key_words[-1]
-  data = data[y_key][0]
-  out = 0
-  if conf.is_out:
-    if not is_import:
+    if conf.is_out:
       os.rename("out/state.csv", data_path2)
-    df = pd_read_csv(data_path2, header=None,
-                     names=["Column1"])
-    out = df["Column1"].tolist()
-  return data, out
+  return data[0], out
 
 
 # @profile

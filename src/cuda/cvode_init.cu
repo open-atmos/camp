@@ -48,18 +48,13 @@ void constructor_cvode_gpu(SolverData *sd){
                       MPI_INFO_NULL, &commNode);
   MPI_Comm_rank(commNode, &rankNode);
   MPI_Comm_size(commNode, &sizeNode);
-  cudaSetDevice(rankNode / sizeNode);
+  int MPIsPerGPU = sizeNode / nGPUsMax;
+  cudaSetDevice(rankNode / MPIsPerGPU);
   printf("rankNode %d sizeNode %d \n", rankNode, sizeNode);
   char hostname[1024];
   gethostname(hostname, 1024);
   puts(hostname);
-  printf("hostname %s",hostname);
-  int size;
-  MPI_Comm_size(MPI_COMM_WORLD, &size);
-  char* envVar = getenv("SLURM_NPROCS");
-  int SLURM_NPROCS = envVar ? atoi(envVar) : -1;
-  int cpusPerNode = SLURM_NPROCS % nGPUsMax;
-  printf("SLURM_NPROCS %d cpusPerNode %d\n",SLURM_NPROCS, cpusPerNode);
+  printf("hostname %s\n",hostname);
   mGPU->n_rxn=md->n_rxn;
   mGPU->n_rxn_env_data=md->n_rxn_env_data;
   cudaMalloc((void **) &mGPU->state, state_size);
@@ -113,9 +108,9 @@ void constructor_cvode_gpu(SolverData *sd){
   Jacobian *jac = &sd->jac;
   JacobianGPU *jacgpu = &(mGPU->jac);
   cudaMalloc((void **) &jacgpu->num_elem, 1 * sizeof(jacgpu->num_elem));
-  cudaMemcpy(jacgpu->num_elem, &jac->num_elem, 1 * sizeof(jacgpu->num_elem), cudaMemcpyHostToDevice);
+  HANDLE_ERROR(cudaMemcpy(jacgpu->num_elem, &jac->num_elem, 1 * sizeof(jacgpu->num_elem), cudaMemcpyHostToDevice));
   int num_elem = jac->num_elem * n_cells;
-  cudaMalloc((void **) &(jacgpu->production_partials), num_elem * sizeof(double));
+  HANDLE_ERROR(cudaMalloc((void **) &(jacgpu->production_partials), num_elem * sizeof(double)));
   HANDLE_ERROR(cudaMalloc((void **) &(jacgpu->loss_partials), num_elem * sizeof(double)));
   double *aux=(double*)malloc(sizeof(double)*num_elem);
   for (int i = 0; i < num_elem; i++) {
