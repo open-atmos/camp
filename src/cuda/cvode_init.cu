@@ -39,8 +39,8 @@ void constructor_cvode_gpu(SolverData *sd){
   int nGPUsMax=4;
   cudaGetDeviceCount(&nGPUsMax);
   if (sd->nGPUs > nGPUsMax) {
-    printf("ERROR: Not enough GPUs to launch, nGPUs %d nGPUsMax %d\n", sd->nGPUs, nGPUsMax);
-    exit(0);
+    printf("WARNING: Not enough GPUs to launch, nGPUs %d nGPUsMax %d\n", sd->nGPUs, nGPUsMax);
+    //exit(0);
   }
   int rankNode, sizeNode;
   MPI_Comm commNode;
