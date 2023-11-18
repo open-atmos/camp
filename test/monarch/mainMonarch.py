@@ -49,7 +49,7 @@ def write_camp_config_file(conf):
       file1.write("USE_CPU=ON\n")
     else:
       file1.write("USE_CPU=OFF\n")
-    file1.write(str(nGPUs) + "\n")
+    file1.write(str(1) + "\n")
     file1.close()
   except Exception as e:
     print("write_camp_config_file fails", e)
@@ -58,8 +58,6 @@ def write_camp_config_file(conf):
 # from line_profiler_pycharm import profile
 # @profile
 def run(conf):
-  nGPUs = 1 #todo remove
-  #TODO FIX IF NODES>1, SINCE ONLY 4 GPUS PER NODE
   exec_str = ""
   try:
     ddt_pid = subprocess.check_output(
@@ -69,14 +67,12 @@ def run(conf):
   except Exception:
     pass
   maxCoresPerNode = 40
-  if (conf.mpiProcesses <= maxCoresPerNode):
+  if conf.mpiProcesses <= maxCoresPerNode:
     exec_str += "mpirun -v -np " + str(
       conf.mpiProcesses) + " --bind-to core " #for plogin (fails squeue)
   else:
     exec_str += "srun --cpu-bind=core -n " + str(
-      conf.mpiProcesses) + " " #for squeue (slow plogin)
-    #exec_str += "mpirun -v -np " + str(
-    #  conf.mpiProcesses) + " --bind-to core " #for plogin (fails squeue)
+      conf.mpiProcesses) + " " #foqueue (slow plogin)
   if (conf.profileCuda == "nvprof" and conf.caseGpuCpu ==
       "GPU"):
     pathNvprof = ("../../compile/power9/" +
@@ -106,14 +102,14 @@ def run(conf):
       file1.write("USE_CPU=ON\n")
     else:
       file1.write("USE_CPU=OFF\n")
-    file1.write(str(nGPUs) + "\n")
+    file1.write(str(1) + "\n")#todo remove
     file1.close()
   except Exception as e:
     print("write_camp_config_file fails", e)
   print("exec_str:", exec_str, conf.diffCells,
         conf.caseGpuCpu,
         conf.caseMulticellsOnecell, "ncellsPerMPIProcess:",
-        conf.nCells, "nGPUs:", nGPUs)
+        conf.nCells)
   conf_name = "settings/TestMonarch.json"
   with open(conf_name, 'w', encoding='utf-8') as jsonFile:
     json.dump(conf.__dict__, jsonFile, indent=4,
@@ -121,10 +117,7 @@ def run(conf):
   nCellsStr = str(conf.nCells)
   if conf.nCells >= 1000:
     nCellsStr = str(int(conf.nCells / 1000)) + "k"
-  if conf.caseGpuCpu == "GPU":
-    caseGpuCpuName = str(nGPUs) + conf.caseGpuCpu
-  else:
-    caseGpuCpuName = str(conf.mpiProcesses) + "CPUcores"
+  caseGpuCpuName=conf.caseGpuCpu+str(conf.mpiProcesses) + "cores"
   out = 0
   is_import = False
   data_path = ("out/stats" + caseGpuCpuName + nCellsStr +
@@ -133,8 +126,7 @@ def run(conf):
   data_path2 = ("out/state" + caseGpuCpuName + nCellsStr +
                 "cells" + str(conf.timeSteps) + "tsteps.csv")
   if conf.is_import and os.path.exists(data_path):
-    nRows_csv = (conf.timeSteps * conf.nCells *
-                 conf.mpiProcesses)
+    nRows_csv = (conf.timeSteps * conf.nCells *conf.mpiProcesses)
     df = pd_read_csv(data_path, nrows=nRows_csv)
     data = df.to_dict('list')
     y_key_words = conf.plotYKey.split()
@@ -158,6 +150,18 @@ def run(conf):
     os.rename("out/stats.csv", data_path)
     if conf.is_out:
       os.rename("out/state.csv", data_path2)
+    nRows_csv = (conf.timeSteps * conf.nCells *conf.mpiProcesses)
+    df = pd_read_csv(data_path, nrows=nRows_csv)
+    data = df.to_dict('list')
+    y_key_words = conf.plotYKey.split()
+    y_key = y_key_words[-1]
+    data = data[y_key]
+    print("data stats",data)
+    if conf.is_out:
+      if os.path.exists(data_path2):
+        df = pd_read_csv(data_path2, header=None,
+                         names=["Column1"])
+        out = df["Column1"].tolist()
   return data[0], out
 
 
@@ -322,7 +326,7 @@ def plot_cases(conf, datay):
     datax = list(range(1, conf.timeSteps + 1, 1))
     plot_x_key = "Timesteps"
   namex = plot_x_key
-  print(namex, ":", datax)
+  print(namex, ":", datax[0],"to",datax[-1])
   if legend:
     print("plotTitle: ", plotTitle, " legend:", legend)
   else:
