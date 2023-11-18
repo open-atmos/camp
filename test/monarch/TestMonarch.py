@@ -18,15 +18,15 @@ def all_timesteps():
   # conf.profileCuda = "nvprof"
   # conf.profileCuda = "nsight"
   conf.is_import = True
-  conf.mpiProcessesCaseBase = 1
-  conf.mpiProcessesCaseOptimList = [10,20,30,40]
-  conf.cells = [100000]
-  conf.timeSteps = 720
-  conf.caseBase = "CPU One-cell"
-  # conf.caseBase = "GPU BDF"
+  conf.mpiProcessesCaseBase = 40
+  conf.mpiProcessesCaseOptimList = [1]
+  conf.cells = [50000]
+  conf.timeSteps = 1
+  #conf.caseBase = "CPU One-cell"
+  conf.caseBase = "GPU BDF"
   conf.casesOptim = []
   # conf.casesOptim.append("CPU One-cell")
-  conf.casesOptim.append("GPU BDF")
+  #conf.casesOptim.append("GPU BDF")
   conf.plotYKey = "Speedup timecvStep"
 
   run_main(conf)

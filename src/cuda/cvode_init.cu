@@ -39,8 +39,8 @@ void constructor_cvode_gpu(SolverData *sd){
   int nGPUsMax=4;
   cudaGetDeviceCount(&nGPUsMax);
   if (sd->nGPUs > nGPUsMax) {
-    printf("ERROR: Not enough GPUs to launch, nGPUs %d nGPUsMax %d\n", sd->nGPUs, nGPUsMax);
-    exit(0);
+    printf("WARNING: Not enough GPUs to launch, nGPUs %d nGPUsMax %d\n", sd->nGPUs, nGPUsMax);
+    //exit(0);
   }
   int rankNode, sizeNode;
   MPI_Comm commNode;
@@ -48,7 +48,8 @@ void constructor_cvode_gpu(SolverData *sd){
                       MPI_INFO_NULL, &commNode);
   MPI_Comm_rank(commNode, &rankNode);
   MPI_Comm_size(commNode, &sizeNode);
-  cudaSetDevice(rankNode / sizeNode);
+  int MPIsPerGPU = sizeNode / nGPUsMax;
+  cudaSetDevice(rankNode / MPIsPerGPU);
   printf("rankNode %d sizeNode %d \n", rankNode, sizeNode);
   char hostname[1024];
   gethostname(hostname, 1024);
@@ -107,9 +108,9 @@ void constructor_cvode_gpu(SolverData *sd){
   Jacobian *jac = &sd->jac;
   JacobianGPU *jacgpu = &(mGPU->jac);
   cudaMalloc((void **) &jacgpu->num_elem, 1 * sizeof(jacgpu->num_elem));
-  cudaMemcpy(jacgpu->num_elem, &jac->num_elem, 1 * sizeof(jacgpu->num_elem), cudaMemcpyHostToDevice);
+  HANDLE_ERROR(cudaMemcpy(jacgpu->num_elem, &jac->num_elem, 1 * sizeof(jacgpu->num_elem), cudaMemcpyHostToDevice));
   int num_elem = jac->num_elem * n_cells;
-  cudaMalloc((void **) &(jacgpu->production_partials), num_elem * sizeof(double));
+  HANDLE_ERROR(cudaMalloc((void **) &(jacgpu->production_partials), num_elem * sizeof(double)));
   HANDLE_ERROR(cudaMalloc((void **) &(jacgpu->loss_partials), num_elem * sizeof(double)));
   double *aux=(double*)malloc(sizeof(double)*num_elem);
   for (int i = 0; i < num_elem; i++) {
