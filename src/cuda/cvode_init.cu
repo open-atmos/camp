@@ -35,13 +35,8 @@ void constructor_cvode_gpu(SolverData *sd){
   mCPU->env_size = CAMP_NUM_ENV_PARAM_ * n_cells * sizeof(double); //Temp and pressure
   size_t rxn_env_data_idx_size = (n_rxn+1) * sizeof(int);
   size_t map_state_deriv_size = n_dep_var * n_cells * sizeof(int);
-  int coresPerNode = 40;
   int nGPUsMax=4;
   cudaGetDeviceCount(&nGPUsMax);
-  if (sd->nGPUs > nGPUsMax) {
-    printf("WARNING: Not enough GPUs to launch, nGPUs %d nGPUsMax %d\n", sd->nGPUs, nGPUsMax);
-    //exit(0);
-  }
   int rankNode, sizeNode;
   MPI_Comm commNode;
   MPI_Comm_split_type(MPI_COMM_WORLD, MPI_COMM_TYPE_SHARED, 0,
@@ -50,11 +45,6 @@ void constructor_cvode_gpu(SolverData *sd){
   MPI_Comm_size(commNode, &sizeNode);
   int MPIsPerGPU = sizeNode / nGPUsMax;
   cudaSetDevice(rankNode / MPIsPerGPU);
-  printf("rankNode %d sizeNode %d \n", rankNode, sizeNode);
-  char hostname[1024];
-  gethostname(hostname, 1024);
-  puts(hostname);
-  printf("hostname %s\n",hostname);
   mGPU->n_rxn=md->n_rxn;
   mGPU->n_rxn_env_data=md->n_rxn_env_data;
   cudaMalloc((void **) &mGPU->state, state_size);
