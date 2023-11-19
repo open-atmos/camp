@@ -8,7 +8,6 @@ import numpy as np
 import json
 import subprocess
 from pandas import read_csv as pd_read_csv
-import time
 
 
 class TestMonarch:
@@ -40,19 +39,6 @@ class TestMonarch:
     self.results_file = "_solver_stats.csv"
     self.nCellsProcesses = 1
     self.campConf = "settings/config_variables_c_solver.txt"
-
-
-def write_camp_config_file(conf):
-  try:
-    file1 = open(conf.campConf, "w")
-    if conf.caseGpuCpu == "CPU":
-      file1.write("USE_CPU=ON\n")
-    else:
-      file1.write("USE_CPU=OFF\n")
-    file1.write(str(1) + "\n")
-    file1.close()
-  except Exception as e:
-    print("write_camp_config_file fails", e)
 
 
 # from line_profiler_pycharm import profile
@@ -102,7 +88,6 @@ def run(conf):
       file1.write("USE_CPU=ON\n")
     else:
       file1.write("USE_CPU=OFF\n")
-    file1.write(str(1) + "\n")#todo remove
     file1.close()
   except Exception as e:
     print("write_camp_config_file fails", e)

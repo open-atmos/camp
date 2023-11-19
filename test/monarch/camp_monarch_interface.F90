@@ -94,7 +94,7 @@ contains
     type(aero_rep_update_data_modal_binned_mass_GSD_t) :: update_data_GSD
     real(kind=dp) :: comp_start, comp_end
     character(len=128) :: i_str
-    integer :: local_comm,use_cpu, nGPUs
+    integer :: local_comm,use_cpu
 
     if (present(mpi_comm)) then
       local_comm = mpi_comm
@@ -225,16 +225,13 @@ contains
     end if
     deallocate(buffer)
     use_cpu=1
-    !todo change nGPUs manual set for automatic on C code
-    nGPUs=1
     open(unit=32, file='settings/config_variables_c_solver.txt', status='old')
     read(32,'(A)') i_str
     if(trim(i_str) == "USE_CPU=OFF") then
       use_cpu = 0
     end if
-    read(32, *) nGPUs
     close(32)
-    call this%camp_core%solver_initialize(use_cpu,nGPUs)
+    call this%camp_core%solver_initialize(use_cpu)
     this%camp_state => this%camp_core%new_state()
     if(this%output_file_title=="cb05_paperV2") then
       allocate(this%offset_photo_rates_cells(this%n_cells))

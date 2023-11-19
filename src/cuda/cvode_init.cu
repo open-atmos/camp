@@ -35,7 +35,7 @@ void constructor_cvode_gpu(SolverData *sd){
   mCPU->env_size = CAMP_NUM_ENV_PARAM_ * n_cells * sizeof(double); //Temp and pressure
   size_t rxn_env_data_idx_size = (n_rxn+1) * sizeof(int);
   size_t map_state_deriv_size = n_dep_var * n_cells * sizeof(int);
-  int nGPUsMax=4;
+  int nGPUsMax;
   cudaGetDeviceCount(&nGPUsMax);
   int rankNode, sizeNode;
   MPI_Comm commNode;
@@ -45,10 +45,11 @@ void constructor_cvode_gpu(SolverData *sd){
   MPI_Comm_size(commNode, &sizeNode);
   int MPIsPerGPU = sizeNode / nGPUsMax;
   cudaSetDevice(rankNode / MPIsPerGPU);
+  printf("rankNode %d sizeNode %d iDevice %d\n", rankNode, sizeNode,rankNode / MPIsPerGPU);
   mGPU->n_rxn=md->n_rxn;
   mGPU->n_rxn_env_data=md->n_rxn_env_data;
-  cudaMalloc((void **) &mGPU->state, state_size);
-  cudaMalloc((void **) &mGPU->env, mCPU->env_size);
+  HANDLE_ERROR(cudaMalloc((void **) &mGPU->state, state_size));
+  HANDLE_ERROR(cudaMalloc((void **) &mGPU->env, mCPU->env_size));
   cudaMalloc((void **) &mGPU->rxn_env_data, md->n_rxn_env_data * n_cells * sizeof(double));
   cudaMalloc((void **) &mGPU->rxn_env_data_idx, rxn_env_data_idx_size);
   cudaMalloc((void **) &mGPU->map_state_deriv, map_state_deriv_size);

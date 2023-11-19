@@ -15,8 +15,6 @@ def all_timesteps():
   conf.diffCellsL.append("Realistic")
   #conf.diffCellsL.append("Ideal")
   conf.profileCuda = ""
-  conf.nGPUsCaseBase = 1
-  conf.nGPUsCaseOptimList = [1]
   conf.mpiProcessesCaseBase = 1
   conf.mpiProcessesCaseOptimList.append(1)
   conf.cells = [2]

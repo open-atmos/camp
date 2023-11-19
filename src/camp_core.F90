@@ -1151,22 +1151,17 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Initialize the solver
-  subroutine solver_initialize(this, use_cpu, nGPUs)
+  subroutine solver_initialize(this, use_cpu)
     class(camp_core_t), intent(inout) :: this
     integer, intent(in), optional :: use_cpu
-    integer, intent(in), optional :: nGPUs
     type(string_t), allocatable :: spec_names(:)
-    integer :: i_spec, n_gas_spec, use_cpu1, nGPUs1
+    integer :: i_spec, n_gas_spec, use_cpu1
     call assert_msg(662920365, .not.this%solver_is_initialized, &
             "Attempting to initialize the solver twice.")
 
     use_cpu1=1
-    nGPUs1=1
     if (present(use_cpu)) then
       use_cpu1=use_cpu
-    end if
-    if (present(nGPUs)) then
-      nGPUs1=nGPUs
     end if
 
     ! Set up either two solvers (gas and aerosol) or one solver (combined)
@@ -1193,8 +1188,7 @@ contains
                 GAS_RXN,         & ! Reaction phase
                 this%n_cells,    & ! # of cells computed simultaneosly
                 spec_names,       & ! Species names
-                use_cpu1, &
-                nGPUs1 &
+                use_cpu1&
       )
       call this%solver_data_aero%initialize( &
                 this%var_type,   & ! State array variable types
@@ -1206,8 +1200,7 @@ contains
                 AERO_RXN,        & ! Reaction phase
                 this%n_cells,    & ! # of cells computed simultaneosly
                 spec_names,       & ! Species names
-                use_cpu1, &
-                nGPUs1 &
+                use_cpu1&
               )
     else
 
@@ -1230,10 +1223,8 @@ contains
                 GAS_AERO_RXN,    & ! Reaction phase
                 this%n_cells,    & ! # of cells computed simultaneosly
                 spec_names,       & ! Species names
-                use_cpu1, &
-                nGPUs1 &
+                use_cpu1&
                 )
-
     end if
 
     this%solver_is_initialized = .true.

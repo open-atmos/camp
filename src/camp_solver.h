@@ -21,7 +21,7 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
                  int n_aero_rep_float_param, int n_aero_rep_env_param,
                  int n_sub_model, int n_sub_model_int_param,
                  int n_sub_model_float_param, int n_sub_model_env_param,
-                 int use_cpu, int nGPUs);
+                 int use_cpu);
 void solver_set_spec_name(void *solver_data, char *spec_name,
                           int size_spec_name, int i);
 void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,

@@ -96,7 +96,7 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
                  int n_aero_rep_float_param, int n_aero_rep_env_param,
                  int n_sub_model, int n_sub_model_int_param,
                  int n_sub_model_float_param, int n_sub_model_env_param,
-                 int use_cpu, int nGPUs) {
+                 int use_cpu) {
   // Create the SolverData object
   SolverData *sd = (SolverData *)malloc(sizeof(SolverData));
   if (sd == NULL) {
@@ -124,7 +124,6 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
   sd->model_data.n_per_cell_state_var = n_state_var;
 
   sd->use_cpu = use_cpu;
-  sd->nGPUs = nGPUs;
 #ifdef DEV_CPU_GPU
   sd->rate_cells_gpu=1;
   printf("Set cells to gpu to %lf %\n",sd->rate_cells_gpu*100);
