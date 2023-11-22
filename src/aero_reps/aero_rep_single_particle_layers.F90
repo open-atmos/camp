@@ -56,9 +56,9 @@ module camp_aero_rep_single_particle_layers
 #define NUM_INT_PROP_ 6
 #define NUM_REAL_PROP_ 0
 #define NUM_ENV_PARAM_PER_PARTICLE_ 1
-#define NUM_PHASE_(l) this%condensed_data_int(NUM_INT_PROP_+l)
+!#define NUM_PHASE_(l) this%condensed_data_int(NUM_INT_PROP_+l)
 #define PHASE_STATE_ID_(p) this%condensed_data_int(NUM_INT_PROP_+TOTAL_NUM_PHASES_+p)
-#define LAYER_STATE_ID_(l) this%condensed_data_int(NUM_INT_PROP_+TOTAL_NUM_LAYERS_+l+1)
+!#define LAYER_STATE_ID_(l) this%condensed_data_int(NUM_INT_PROP_+TOTAL_NUM_LAYERS_+l+1)
 #define PHASE_MODEL_DATA_ID_(p) this%condensed_data_int(NUM_INT_PROP_+TOTAL_NUM_PHASES_+p)
 #define PHASE_NUM_JAC_ELEM_(p) this%condensed_data_int(NUM_INT_PROP_+2*TOTAL_NUM_PHASES_+p)
 
@@ -428,22 +428,20 @@ contains
     ! Construct aero_phase pointer array for layers, phases only exist
     ! in the user specified layers
     allocate(aero_layer_phase_set(size(aero_layer_phase_set_names)))
-    do i_aero = 1, size(aero_phase)
-      do i_layer = 1, TOTAL_NUM_LAYERS_
-        do i_phase = 1, TOTAL_NUM_PHASES_
-          ! must add and statement for layer = layer 
-           if (aero_layer_phase_set_names(i_aero).eq.&
-              aero_phase_set(i_phase)) then 
-              aero_layer_phase_set(i_aero) = aero_phase_set(i_phase)
-          end if
-        end do
-      end do
+    i_aero = 1
+    do i_phase = 1, TOTAL_NUM_PHASES_
+      ! must add and statement for layer = layer 
+       if (aero_layer_phase_set_names(i_aero)%string.eq.&
+          aero_phase_set(i_phase)%val%name()) then 
+          aero_layer_phase_set(i_aero) = aero_phase_set(i_phase)
+          i_aero = i_aero + 1
+      end if
     end do
 
     ! Ordered phases are applied once to each particle
-    allocate(this%aero_phase(size(aero_phase_set)*num_particles))
+    allocate(this%aero_phase(size(aero_layer_phase_set)*num_particles))
     do i_particle = 1, num_particles
-      do i_phase = 1, size(aero_phase_set)
+      do i_phase = 1, size(aero_layer_phase_set)
         this%aero_phase((i_particle-1)*TOTAL_NUM_PHASES_*TOTAL_NUM_LAYERS_+i_phase) = &
             aero_layer_phase_set(i_phase)
       end do
