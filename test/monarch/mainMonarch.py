@@ -123,11 +123,6 @@ def run(conf):
     if conf.is_out:
       if os.path.exists(data_path2):
         is_import = True
-        df = pd_read_csv(data_path2, header=None,
-                         names=["Column1"])
-        out = df["Column1"].tolist()
-        if out:
-          is_import = True
       else:
         is_import = False
   if not is_import:
