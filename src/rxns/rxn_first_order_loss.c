@@ -149,7 +149,7 @@ void rxn_first_order_loss_calc_deriv_contrib(
   double *env_data = model_data->grid_cell_env;
 
   // Calculate the reaction rate
-  long double rate = RATE_CONSTANT_ * state[REACT_];
+  double rate = RATE_CONSTANT_ * state[REACT_];
 
   // Add contributions to the time derivative
   if (DERIV_ID_ >= 0) time_derivative_add_value(time_deriv, DERIV_ID_, -rate);

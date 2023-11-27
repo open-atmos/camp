@@ -167,9 +167,9 @@ void rxn_wennberg_no_ro2_calc_deriv_contrib(
   double *env_data = model_data->grid_cell_env;
 
   // Calculate the reaction rate
-  long double rate = 1.0;
-  long double k_a = ALKOXY_RATE_CONSTANT_;
-  long double k_n = NITRATE_RATE_CONSTANT_;
+  double rate = 1.0;
+  double k_a = ALKOXY_RATE_CONSTANT_;
+  double k_n = NITRATE_RATE_CONSTANT_;
   for (int i_spec = 0; i_spec < NUM_REACT_; i_spec++)
     rate *= state[REACT_(i_spec)];
 

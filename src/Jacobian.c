@@ -60,13 +60,13 @@ int jacobian_initialize(Jacobian *jac, unsigned int num_spec,
     return 0;
   }
   jac->production_partials =
-      (long double *)malloc(num_elem * sizeof(long double));
+      (double *)malloc(num_elem * sizeof(double));
   if (!jac->production_partials) {
     free(jac->col_ptrs);
     free(jac->row_ids);
     return 0;
   }
-  jac->loss_partials = (long double *)malloc(num_elem * sizeof(long double));
+  jac->loss_partials = (double *)malloc(num_elem * sizeof(double));
   if (!jac->loss_partials) {
     free(jac->col_ptrs);
     free(jac->row_ids);
@@ -171,13 +171,13 @@ unsigned int jacobian_build_matrix(Jacobian *jac) {
     exit(EXIT_FAILURE);
   }
   jac->production_partials =
-      (long double *)malloc(jac->num_elem * sizeof(long double));
+      (double *)malloc(jac->num_elem * sizeof(double));
   if (!jac->production_partials) {
     jacobian_free(jac);
     return 0;
   }
   jac->loss_partials =
-      (long double *)malloc(jac->num_elem * sizeof(long double));
+      (double *)malloc(jac->num_elem * sizeof(double));
   if (!jac->loss_partials) {
     jacobian_free(jac);
     return 0;
@@ -228,8 +228,8 @@ void jacobian_output(Jacobian jac, double *dest_array) {
   for (unsigned int i_col = 0; i_col < jac.num_spec; ++i_col) {
     for (unsigned int i_elem = jac.col_ptrs[i_col];
          i_elem < jac.col_ptrs[i_col + 1]; ++i_elem) {
-      long double drf_dy = jac.production_partials[i_elem];
-      long double drr_dy = jac.loss_partials[i_elem];
+      double drf_dy = jac.production_partials[i_elem];
+      double drr_dy = jac.loss_partials[i_elem];
       dest_array[i_elem] = drf_dy - drr_dy;
     }
   }
@@ -237,7 +237,7 @@ void jacobian_output(Jacobian jac, double *dest_array) {
 
 void jacobian_add_value(Jacobian jac, unsigned int elem_id,
                         unsigned int prod_or_loss,
-                        long double jac_contribution) {
+                        double jac_contribution) {
   if (prod_or_loss == JACOBIAN_PRODUCTION)
     jac.production_partials[elem_id] += jac_contribution;
   if (prod_or_loss == JACOBIAN_LOSS)

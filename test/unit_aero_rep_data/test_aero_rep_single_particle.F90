@@ -94,7 +94,9 @@ contains
       ! The MPI tests only involve packing and unpacking the aero rep
       ! from a buffer on the primary task
       if (camp_mpi_rank().eq.0) then
+        print*,"hola"
         passed = build_aero_rep_data_set_test()
+        print*,"gola2";
       else
         passed = .true.
       end if
@@ -275,15 +277,24 @@ contains
 
     aero_rep => null()
 
+    print*,"b"
+
     deallocate(buffer)
+
     deallocate(aero_rep_passed_data_set)
 #endif
+
+        print*,"c"
 
     ! Evaluate the aerosol representation c functions
     build_aero_rep_data_set_test = eval_c_func(camp_core)
 
+    print*,"a"
     deallocate(camp_state)
+        print*,"a"
+
     deallocate(camp_core)
+    print*,"a"
 
 #endif
 
@@ -306,8 +317,12 @@ contains
 
     rep_name = "AERO_REP_SINGLE_PARTICLE"
 
+    print*,"e"
+
     call assert_msg(264314298, camp_core%get_aero_rep(rep_name, aero_rep), &
                     rep_name)
+
+    print*,"e1"
 
     select type( aero_rep )
       type is(aero_rep_single_particle_t)
@@ -316,9 +331,15 @@ contains
         call die_msg(766425873, "Wrong aero rep type")
     end select
 
+    print*,"e3"
+
     call camp_core%solver_initialize()
 
+    print*,"e2"
+
     camp_state => camp_core%new_state()
+
+    print*,"f"
 
     camp_state%state_var(:) = 0.0
     call camp_state%env_states(1)%set_temperature_K(  298.0d0 )
@@ -333,9 +354,14 @@ contains
     call update_number%set_number__n_m3( TEST_PARTICLE, 12.3d0 )
     call camp_core%update_data( update_number )
 
+    print*,"g"
+
+
     ! Test re-setting number concentration
     call update_number%set_number__n_m3( TEST_PARTICLE, PART_NUM_CONC )
     call camp_core%update_data( update_number )
+
+    print*,"d"
 
     passed = run_aero_rep_single_particle_c_tests(                           &
                  camp_core%solver_data_gas_aero%solver_c_ptr,                &
@@ -343,7 +369,9 @@ contains
                  c_loc(camp_state%env_var)                                   &
                  ) .eq. 0
 
+    print*,"d"
     deallocate(camp_state)
+    print*,"e"
 
   end function eval_c_func
 

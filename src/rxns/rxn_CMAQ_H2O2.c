@@ -146,7 +146,7 @@ void rxn_CMAQ_H2O2_calc_deriv_contrib(ModelData *model_data,
   double *env_data = model_data->grid_cell_env;
 
   // Calculate the reaction rate
-  long double rate = RATE_CONSTANT_;
+  double rate = RATE_CONSTANT_;
   for (int i_spec = 0; i_spec < NUM_REACT_; i_spec++)
     rate *= state[REACT_(i_spec)];
 

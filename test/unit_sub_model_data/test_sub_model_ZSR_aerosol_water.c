@@ -77,8 +77,8 @@ int test_sub_model_zsr_jac_calc(void *solver_data, double *state, double *env,
   double ppm_to_RH = pressure_Pa / water_vp / 1.0e6; // (1/ppm)
 
   // Water activity and d_aw / d_[H2O_g]
-  long double a_w = ppm_to_RH * CONC_H2O_G;
-  long double d_aw_d_wg = ppm_to_RH;
+  double a_w = ppm_to_RH * CONC_H2O_G;
+  double d_aw_d_wg = ppm_to_RH;
 
   // Jacobson ion pair
   double Y0 = -1.918004e2;
@@ -89,27 +89,27 @@ int test_sub_model_zsr_jac_calc(void *solver_data, double *state, double *env,
   double Y5 =  2.187103e4;
   double Y6 = -9.591577e3;
   double Y7 =  1.763672e3;
-  long double molality = Y0 + Y1*a_w + Y2*pow(a_w,2) + Y3*pow(a_w,3) + Y4*pow(a_w,4) +
+  double molality = Y0 + Y1*a_w + Y2*pow(a_w,2) + Y3*pow(a_w,3) + Y4*pow(a_w,4) +
                     Y5*pow(a_w,5) + Y6*pow(a_w,6) + Y7*pow(a_w,7);
-  long double d_molal_d_wg = Y1 + 2.0*Y2*a_w + 3.0*Y3*pow(a_w,2) + 4.0*Y4*pow(a_w,3) +
+  double d_molal_d_wg = Y1 + 2.0*Y2*a_w + 3.0*Y3*pow(a_w,2) + 4.0*Y4*pow(a_w,3) +
                         5.0*Y5*pow(a_w,4) + 6.0*Y6*pow(a_w,5) + 7.0*Y7*pow(a_w,6);
   d_molal_d_wg *= d_aw_d_wg;
 
-  long double cation = CONC_CA / MW_CA / 1000.0;
-  long double d_cation_d_C = 1.0 / MW_CA / 1000.0;
-  long double anion = CONC_CL / 2.0 / MW_CL / 1000.0;
-  long double d_anion_d_A = 1.0 / 2.0 / MW_CL / 1000.0;
+  double cation = CONC_CA / MW_CA / 1000.0;
+  double d_cation_d_C = 1.0 / MW_CA / 1000.0;
+  double anion = CONC_CL / 2.0 / MW_CL / 1000.0;
+  double d_anion_d_A = 1.0 / 2.0 / MW_CL / 1000.0;
 
-  long double e_ac = exp(ALPHA_ * cation);
-  long double e_aa = exp(ALPHA_ * anion );
-  long double conc = (cation * e_ac + anion * e_aa) / (e_ac + e_aa);
-  long double denom = (e_ac + e_aa) * (e_ac + e_aa);
-  long double d_conc_d_cation =
+  double e_ac = exp(ALPHA_ * cation);
+  double e_aa = exp(ALPHA_ * anion );
+  double conc = (cation * e_ac + anion * e_aa) / (e_ac + e_aa);
+  double denom = (e_ac + e_aa) * (e_ac + e_aa);
+  double d_conc_d_cation =
     (e_ac * e_ac +
      e_ac * e_aa *
      (1.0 - ALPHA_ * anion + ALPHA_ * cation)) /
     denom;
-  long double d_conc_d_anion =
+  double d_conc_d_anion =
     (e_aa * e_aa +
      e_ac * e_aa *
      (1.0 - ALPHA_ * cation + ALPHA_ * anion)) /

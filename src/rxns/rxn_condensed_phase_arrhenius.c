@@ -192,7 +192,7 @@ void rxn_condensed_phase_arrhenius_calc_deriv_contrib(
   // Calculate derivative contributions for each aerosol phase
   for (int i_phase = 0, i_deriv = 0; i_phase < NUM_AERO_PHASE_; i_phase++) {
     // If this is an aqueous reaction, get the unit conversion from mol/m3 -> M
-    long double unit_conv = 1.0;
+    double unit_conv = 1.0;
     if (WATER_(i_phase) >= 0) {
       unit_conv = state[WATER_(i_phase)];  // convert from kg/m3->L/m3
 
@@ -206,7 +206,7 @@ void rxn_condensed_phase_arrhenius_calc_deriv_contrib(
     }
 
     // Calculate the reaction rate rate (M/s or mol/m3/s)
-    long double rate = RATE_CONSTANT_;
+    double rate = RATE_CONSTANT_;
     for (int i_react = 0; i_react < NUM_REACT_; i_react++) {
       rate *= state[REACT_(i_phase * NUM_REACT_ + i_react)] *
               KGM3_TO_MOLM3_(i_react) * unit_conv;
