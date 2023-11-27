@@ -239,28 +239,27 @@ endif()
 ######################################################################
 # Unit test macro
 
-if (ENABLE_TESTS)
-  macro(do_unit_test test_name result)
-    if(ENABLE_MPI)
-      add_test(unit_test_${test_name} mpirun -v -np 2 ${CMAKE_BINARY_DIR}/unit_test_${test_name})
-    else()
-      add_test(unit_test_${test_name} ${CMAKE_BINARY_DIR}/unit_test_${test_name})
-    endif()
-    set_tests_properties(unit_test_${test_name}
-            PROPERTIES PASS_REGULAR_EXPRESSION ${result})
-  endmacro(do_unit_test)
+macro(do_unit_test test_name result)
+if(ENABLE_MPI)
+  add_test(unit_test_${test_name} mpirun -v -np 2 ${CMAKE_BINARY_DIR}/unit_test_${test_name})
+else()
+  add_test(unit_test_${test_name} ${CMAKE_BINARY_DIR}/unit_test_${test_name})
 endif()
+set_tests_properties(unit_test_${test_name}
+        PROPERTIES PASS_REGULAR_EXPRESSION ${result})
+endmacro(do_unit_test)
 
 ######################################################################
 # tests
 
 enable_testing()
+do_unit_test(aero_rep_single_particle "PASS")
+
 if (ENABLE_TESTS)
 do_unit_test(property "PASS")
 do_unit_test(chem_spec_data "PASS")
 do_unit_test(aero_phase_data "PASS")
 do_unit_test(jacobian "PASS")
-do_unit_test(aero_rep_single_particle "PASS")
 do_unit_test(aero_rep_modal_binned_mass "PASS")
 do_unit_test(camp_core "PASS")
 endif()
@@ -520,6 +519,13 @@ endif()
 set_source_files_properties(${CB5_EBI_SOLVER} PROPERTIES COMPILE_FLAGS
 	${CB5_EBI_FLAGS})
 
+add_executable(unit_test_aero_rep_single_particle
+        test/unit_aero_rep_data/test_aero_rep_single_particle.c
+        test/unit_aero_rep_data/test_aero_rep_single_particle.F90)
+
+target_link_libraries(unit_test_aero_rep_single_particle camplib)
+
+
 if (ENABLE_GPU)
   add_executable(mock_monarch test/monarch/mock_monarch.F90
       test/monarch/camp_monarch_interface.F90
@@ -657,11 +663,6 @@ target_link_libraries(unit_test_aero_phase_data camplib)
 ######################################################################
 # test_aero_rep_single_particle
 
-add_executable(unit_test_aero_rep_single_particle
-	test/unit_aero_rep_data/test_aero_rep_single_particle.c
-	test/unit_aero_rep_data/test_aero_rep_single_particle.F90)
-
-target_link_libraries(unit_test_aero_rep_single_particle camplib)
 
 ######################################################################
 # test_aero_rep_modal_binned_mass

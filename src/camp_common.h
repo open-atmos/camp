@@ -269,6 +269,9 @@ typedef struct {
   void *cvode_mem2;
   float rate_cells_gpu;
 #endif
+#ifdef CAMP_DEBUG_GPU
+  bool is_init_export_state;
+#endif
   int use_cpu;
 
   void *cvode_mem;       // CVodeMem object

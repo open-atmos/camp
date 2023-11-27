@@ -137,11 +137,11 @@ def run(conf):
     y_key = y_key_words[-1]
     data = data[y_key]
     print("data stats",data)
-    if conf.is_out:
-      if os.path.exists(data_path2):
-        df = pd_read_csv(data_path2, header=None,
-                         names=["Column1"])
-        out = df["Column1"].tolist()
+  if conf.is_out:
+    if os.path.exists(data_path2):
+      df = pd_read_csv(data_path2, header=None,
+                       names=["Column1"])
+      out = df["Column1"].tolist()
   return data[0], out
 
 

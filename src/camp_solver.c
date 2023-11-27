@@ -98,6 +98,8 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
                  int n_sub_model_float_param, int n_sub_model_env_param,
                  int use_cpu) {
   // Create the SolverData object
+
+  printf("g3\n");
   SolverData *sd = (SolverData *)malloc(sizeof(SolverData));
   if (sd == NULL) {
     printf("\n\nERROR allocating space for SolverData\n\n");
@@ -113,6 +115,8 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
   sd->eval_Jac = SUNFALSE;
 #endif
 #endif
+
+  printf("g4\n");
 
   // Do not output precision loss by default
   sd->output_precision = 0;
@@ -213,6 +217,8 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
   sd->model_data.rxn_int_indices[0] = 0;
   sd->model_data.rxn_float_indices[0] = 0;
   sd->model_data.rxn_env_idx[0] = 0;
+
+  printf("g2\n");
 
   // If there are no reactions, flag the solver not to run
   sd->no_solve = (n_rxn == 0);
@@ -370,11 +376,15 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
   sd->model_data.sub_model_float_indices[0] = 0;
   sd->model_data.sub_model_env_idx[0] = 0;
 
+  printf("g\n");
+
 #ifdef CAMP_DEBUG_GPU
   sd->timeCVode = 0.;
-  init_export_stats();
-  init_export_state();
+  sd->is_init_export_state = 1;
 #endif
+
+  printf("g5\n");
+
 
   // Return a pointer to the new SolverData object
   return (void *)sd;
@@ -403,6 +413,7 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
   int n_cells;      // number of cells to solve simultaneously
   int *var_type;    // state variable types
 
+  printf("f\n");
   // Seed the random number generator
   srand((unsigned int)100);
 
@@ -505,6 +516,8 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
   check_flag_fail(&flag, "CVodeSetErrHandlerFn", 0);
 #endif
 #endif
+    printf("f2\n");
+
 }
 
 #ifdef CAMP_DEBUG
@@ -1065,8 +1078,8 @@ int Jac(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_data,
     JacMap *jac_map = md->jac_map;
     SM_DATA_S(md->J_params)[0] = 1.0;  // dummy value for non-sub model calcs
     for (int i_map = 0; i_map < md->n_mapped_values; ++i_map){
-      long double drf_dy = sd->jac.production_partials[jac_map[i_map].rxn_id];
-      long double drr_dy = sd->jac.loss_partials[jac_map[i_map].rxn_id];
+      double drf_dy = sd->jac.production_partials[jac_map[i_map].rxn_id];
+      double drr_dy = sd->jac.loss_partials[jac_map[i_map].rxn_id];
 
       SM_DATA_S(J)
       [i_cell * md->n_per_cell_solver_jac_elem + jac_map[i_map].solver_id] +=

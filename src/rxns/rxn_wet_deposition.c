@@ -157,7 +157,7 @@ void rxn_wet_deposition_calc_deriv_contrib(
   // Add contributions to the time derivative
   for (int i_spec = 0; i_spec < NUM_SPEC_; i_spec++) {
     if (DERIV_ID_(i_spec) >= 0) {
-      long double rate = RATE_CONSTANT_ * state[REACT_(i_spec)];
+      double rate = RATE_CONSTANT_ * state[REACT_(i_spec)];
       time_derivative_add_value(time_deriv, DERIV_ID_(i_spec), -rate);
     }
   }

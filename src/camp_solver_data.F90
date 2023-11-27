@@ -541,6 +541,8 @@ contains
     ! Number of cells to compute
     integer(kind=c_int) :: l_n_cells
 
+    print*,"f"
+
     if (present(n_cells)) then
       l_n_cells = n_cells
     else
@@ -586,6 +588,9 @@ contains
     end do
     rxn => null()
 
+    print*,"f1"
+
+
     ! Initialize the aerosol phase counters
     n_aero_phase = size(aero_phases)
     n_aero_phase_int_param = 0
@@ -625,6 +630,9 @@ contains
     n_sub_model_float_param = 0
     n_sub_model_env_param = 0
 
+    print*,"f2"
+
+
     ! Calculate the size of the sub model condensed data
     do i_sub_model=1, n_sub_model
       sub_model => sub_models(i_sub_model)%val
@@ -635,6 +643,9 @@ contains
       n_sub_model_env_param = n_sub_model_env_param + sub_model%num_env_params
     end do
     sub_model => null()
+
+    print*,"f3"
+
 
     ! Get a new solver object
     this%solver_c_ptr = solver_new( &
@@ -658,6 +669,9 @@ contains
             n_sub_model_env_param,              & ! # of sub model env params
             use_cpu&
             )
+
+    print*,"f4"
+
 
     ! Add all the condensed reaction data to the solver data block for
     ! reactions of the specified phase
@@ -705,6 +719,9 @@ contains
       end do
     end do
     rxn => null()
+
+    print*,"f5"
+
 
     ! Add all the condensed aerosol phase data to the solver data block
     do i_aero_phase=1, size(aero_phases)

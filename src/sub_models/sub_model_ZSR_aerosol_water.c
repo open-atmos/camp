@@ -222,7 +222,7 @@ void sub_model_ZSR_aerosol_water_calculate(int *sub_model_int_data,
   double *float_data = sub_model_float_data;
 
   // Calculate the water activity---i.e., relative humidity (0-1)
-  long double a_w = PPM_TO_RH_ * state[GAS_WATER_ID_];
+  double a_w = PPM_TO_RH_ * state[GAS_WATER_ID_];
 
   // Calculate the total aerosol water for each instance of the aerosol phase
   for (int i_phase = 0; i_phase < NUM_PHASE_; i_phase++) {
@@ -231,7 +231,7 @@ void sub_model_ZSR_aerosol_water_calculate(int *sub_model_int_data,
 
     // Get the contribution from each ion pair
     for (int i_ion_pair = 0; i_ion_pair < NUM_ION_PAIR_; i_ion_pair++) {
-      long double molality, conc;
+      double molality, conc;
 
       // Determine which type of activity calculation should be used
       switch (TYPE_(i_ion_pair)) {
@@ -239,7 +239,7 @@ void sub_model_ZSR_aerosol_water_calculate(int *sub_model_int_data,
         case ACT_TYPE_JACOBSON:;
 
           // Determine whether to use the minimum RH in the calculation
-          long double j_aw =
+          double j_aw =
               a_w > JACOB_low_RH_(i_ion_pair) ? a_w : JACOB_low_RH_(i_ion_pair);
 
           // Calculate the molality of the pure binary ion pair solution
@@ -249,11 +249,11 @@ void sub_model_ZSR_aerosol_water_calculate(int *sub_model_int_data,
           molality *= molality;  // (mol/kg)
 
           // Calculate the water associated with this ion pair
-          long double cation =
+          double cation =
               state[PHASE_ID_(i_phase) + JACOB_CATION_ID_(i_ion_pair)] /
               JACOB_NUM_CATION_(i_ion_pair) / JACOB_CATION_MW_(i_ion_pair) /
               1000.0;  // (umol/m3)
-          long double anion =
+          double anion =
               state[PHASE_ID_(i_phase) + JACOB_ANION_ID_(i_ion_pair)] /
               JACOB_NUM_ANION_(i_ion_pair) / JACOB_ANION_MW_(i_ion_pair) /
               1000.0;  // (umol/m3)
@@ -265,8 +265,8 @@ void sub_model_ZSR_aerosol_water_calculate(int *sub_model_int_data,
           //               (e^(alpha*cation) + e^(alpha*anion))
           // where alpha is a constant smoothing factor
           // orig eq: conc = (cation > anion ? anion : cation);
-          long double e_ac = exp(ALPHA_ * cation);
-          long double e_aa = exp(ALPHA_ * anion);
+          double e_ac = exp(ALPHA_ * cation);
+          double e_aa = exp(ALPHA_ * anion);
           conc = (cation * e_ac + anion * e_aa) / (e_ac + e_aa);
 
           *water += conc / molality * 1000.0;  // (ug/m3)
@@ -277,7 +277,7 @@ void sub_model_ZSR_aerosol_water_calculate(int *sub_model_int_data,
         case ACT_TYPE_EQSAM:;
 
           // Keep the water activity within the range specified in EQSAM
-          long double e_aw = a_w > 0.99 ? 0.99 : a_w;
+          double e_aw = a_w > 0.99 ? 0.99 : a_w;
           e_aw = e_aw < 0.001 ? 0.001 : e_aw;
 
           // Calculate the molality of the ion pair
@@ -323,15 +323,15 @@ void sub_model_ZSR_aerosol_water_get_jac_contrib(int *sub_model_int_data,
   double *env_data = model_data->grid_cell_env;
 
   // Calculate the water activity---i.e., relative humidity (0-1)
-  long double a_w = PPM_TO_RH_ * state[GAS_WATER_ID_];
-  long double d_aw_d_wg = PPM_TO_RH_;
+  double a_w = PPM_TO_RH_ * state[GAS_WATER_ID_];
+  double d_aw_d_wg = PPM_TO_RH_;
 
   // Calculate the total aerosol water for each instance of the aerosol phase
   for (int i_phase = 0; i_phase < NUM_PHASE_; i_phase++) {
     // Get the contribution from each ion pair
     for (int i_ion_pair = 0; i_ion_pair < NUM_ION_PAIR_; i_ion_pair++) {
-      long double molality, d_molal_d_wg;
-      long double conc;
+      double molality, d_molal_d_wg;
+      double conc;
 
       // Determine which type of activity calculation should be used
       switch (TYPE_(i_ion_pair)) {
@@ -339,9 +339,9 @@ void sub_model_ZSR_aerosol_water_get_jac_contrib(int *sub_model_int_data,
         case ACT_TYPE_JACOBSON:;
 
           // Determine whether to use the minimum RH in the calculation
-          long double j_aw =
+          double j_aw =
               a_w > JACOB_low_RH_(i_ion_pair) ? a_w : JACOB_low_RH_(i_ion_pair);
-          long double d_jaw_d_wg =
+          double d_jaw_d_wg =
               a_w > JACOB_low_RH_(i_ion_pair) ? d_aw_d_wg : 0.0;
 
           // Calculate the molality of the pure binary ion pair solution
@@ -355,30 +355,30 @@ void sub_model_ZSR_aerosol_water_get_jac_contrib(int *sub_model_int_data,
           d_molal_d_wg *= d_jaw_d_wg;
 
           // Calculate the water associated with this ion pair
-          long double cation =
+          double cation =
               state[PHASE_ID_(i_phase) + JACOB_CATION_ID_(i_ion_pair)] /
               JACOB_NUM_CATION_(i_ion_pair) / JACOB_CATION_MW_(i_ion_pair) /
               1000.0;  // (umol/m3)
-          long double d_cation_d_C = 1.0 / JACOB_NUM_CATION_(i_ion_pair) /
+          double d_cation_d_C = 1.0 / JACOB_NUM_CATION_(i_ion_pair) /
                                      JACOB_CATION_MW_(i_ion_pair) / 1000.0;
-          long double anion =
+          double anion =
               state[PHASE_ID_(i_phase) + JACOB_ANION_ID_(i_ion_pair)] /
               JACOB_NUM_ANION_(i_ion_pair) / JACOB_ANION_MW_(i_ion_pair) /
               1000.0;  // (umol/m3)
-          long double d_anion_d_A = 1.0 / JACOB_NUM_ANION_(i_ion_pair) /
+          double d_anion_d_A = 1.0 / JACOB_NUM_ANION_(i_ion_pair) /
                                     JACOB_ANION_MW_(i_ion_pair) / 1000.0;
 
           // Calculate the smooth-maximum ion pair concentration
           // (see calculate() function for details)
-          long double e_ac = exp(ALPHA_ * cation);
-          long double e_aa = exp(ALPHA_ * anion);
+          double e_ac = exp(ALPHA_ * cation);
+          double e_aa = exp(ALPHA_ * anion);
           conc = (cation * e_ac + anion * e_aa) / (e_ac + e_aa);
-          long double denom = (e_ac + e_aa) * (e_ac + e_aa);
-          long double d_conc_d_cation =
+          double denom = (e_ac + e_aa) * (e_ac + e_aa);
+          double d_conc_d_cation =
               (e_ac * e_ac +
                e_ac * e_aa * (1.0 - ALPHA_ * anion + ALPHA_ * cation)) /
               denom;
-          long double d_conc_d_anion =
+          double d_conc_d_anion =
               (e_aa * e_aa +
                e_ac * e_aa * (1.0 - ALPHA_ * cation + ALPHA_ * anion)) /
               denom;
@@ -397,9 +397,9 @@ void sub_model_ZSR_aerosol_water_get_jac_contrib(int *sub_model_int_data,
         case ACT_TYPE_EQSAM:;
 
           // Keep the water activity within the range specified in EQSAM
-          long double e_aw = a_w > 0.99 ? 0.99 : a_w;
+          double e_aw = a_w > 0.99 ? 0.99 : a_w;
           e_aw = e_aw < 0.001 ? 0.001 : e_aw;
-          long double d_eaw_d_wg = a_w > 0.99 ? 0.0 : d_aw_d_wg;
+          double d_eaw_d_wg = a_w > 0.99 ? 0.0 : d_aw_d_wg;
           d_eaw_d_wg = a_w < 0.001 ? 0.0 : d_eaw_d_wg;
 
           // Calculate the molality of the ion pair
@@ -418,7 +418,7 @@ void sub_model_ZSR_aerosol_water_get_jac_contrib(int *sub_model_int_data,
           for (int i_ion = 0; i_ion < EQSAM_NUM_ION_(i_ion_pair); i_ion++) {
             conc = state[PHASE_ID_(i_phase) + EQSAM_ION_ID_(i_ion_pair, i_ion)];
             conc = (conc > 0.0 ? conc : 0.0);
-            long double d_conc_d_ion = (conc > 0.0 ? 1.0 : 0.0);
+            double d_conc_d_ion = (conc > 0.0 ? 1.0 : 0.0);
 
             // Gas-phase water contribution
             J[EQSAM_GAS_WATER_JAC_ID_(i_phase, i_ion_pair)] +=

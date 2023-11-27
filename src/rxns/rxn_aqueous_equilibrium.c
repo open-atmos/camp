@@ -275,25 +275,25 @@ void rxn_aqueous_equilibrium_update_env_state(ModelData *model_data,
  * \param rate_reverse [output] calculated reverse rate
  * \return reaction rate per mixing ratio of water [M_X/s*kg_H2O/m^3]
  */
-long double calc_standard_rate(int *rxn_int_data, double *rxn_float_data,
+double calc_standard_rate(int *rxn_int_data, double *rxn_float_data,
                                double *rxn_env_data, bool is_water_partial,
-                               long double *rate_forward,
-                               long double *rate_reverse) {
+                               double *rate_forward,
+                               double *rate_reverse) {
   int *int_data = rxn_int_data;
   double *float_data = rxn_float_data;
 
-  long double react_fact, prod_fact;
-  long double water = WATER_CONC_;
+  double react_fact, prod_fact;
+  double water = WATER_CONC_;
 
   // Get the product of all reactants
-  react_fact = (long double)REACT_CONC_(0) * MASS_FRAC_TO_M_(0);
+  react_fact = (double)REACT_CONC_(0) * MASS_FRAC_TO_M_(0);
   for (int i_react = 1; i_react < NUM_REACT_; i_react++) {
     react_fact *= REACT_CONC_(i_react) * MASS_FRAC_TO_M_(i_react) / water;
   }
 
   // Get the product of all product
-  prod_fact = (long double)PROD_CONC_(0) * MASS_FRAC_TO_M_(NUM_REACT_);
-  prod_fact *= (long double)ACTIVITY_COEFF_VALUE_;
+  prod_fact = (double)PROD_CONC_(0) * MASS_FRAC_TO_M_(NUM_REACT_);
+  prod_fact *= (double)ACTIVITY_COEFF_VALUE_;
   for (int i_prod = 1; i_prod < NUM_PROD_; i_prod++) {
     prod_fact *=
         PROD_CONC_(i_prod) * MASS_FRAC_TO_M_(NUM_REACT_ + i_prod) / water;
@@ -331,7 +331,7 @@ void rxn_aqueous_equilibrium_calc_deriv_contrib(
   // Calculate derivative contributions for each aerosol phase
   for (int i_phase = 0, i_deriv = 0; i_phase < NUM_AERO_PHASE_; i_phase++) {
     // If no aerosol water is present, no reaction occurs
-    long double water = state[WATER_(i_phase)];
+    double water = state[WATER_(i_phase)];
     if (water < MIN_WATER_ * SMALL_WATER_CONC_(i_phase)) {
       i_deriv += NUM_REACT_ + NUM_PROD_;
       continue;
@@ -350,8 +350,8 @@ void rxn_aqueous_equilibrium_calc_deriv_contrib(
     }
 
     // Get the rate using the standard calculation
-    long double rate_forward, rate_reverse;
-    long double rate =
+    double rate_forward, rate_reverse;
+    double rate =
         calc_standard_rate(rxn_int_data, rxn_float_data, rxn_env_data, false,
                            &rate_forward, &rate_reverse);
     if (rate == ZERO) {
@@ -413,21 +413,21 @@ void rxn_aqueous_equilibrium_calc_jac_contrib(ModelData *model_data,
   // Calculate Jacobian contributions for each aerosol phase
   for (int i_phase = 0, i_jac = 0; i_phase < NUM_AERO_PHASE_; i_phase++) {
     // If not aerosol water is present, no reaction occurs
-    long double water = state[WATER_(i_phase)];
+    double water = state[WATER_(i_phase)];
     if (water < MIN_WATER_ * SMALL_WATER_CONC_(i_phase)) {
       i_jac += (NUM_REACT_ + NUM_PROD_) * (NUM_REACT_ + NUM_PROD_ + 2);
       continue;
     }
 
     // Calculate the forward rate (M/s)
-    long double forward_rate = RATE_CONST_FORWARD_;
+    double forward_rate = RATE_CONST_FORWARD_;
     for (int i_react = 0; i_react < NUM_REACT_; i_react++) {
       forward_rate *= state[REACT_(i_phase * NUM_REACT_ + i_react)] *
                       MASS_FRAC_TO_M_(i_react) / water;
     }
 
     // Calculate the reverse rate (M/s)
-    long double reverse_rate = RATE_CONST_REVERSE_;
+    double reverse_rate = RATE_CONST_REVERSE_;
     for (int i_prod = 0; i_prod < NUM_PROD_; i_prod++) {
       reverse_rate *= state[PROD_(i_phase * NUM_PROD_ + i_prod)] *
                       MASS_FRAC_TO_M_(NUM_REACT_ + i_prod) / water;

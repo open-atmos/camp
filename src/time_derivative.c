@@ -17,11 +17,11 @@ int time_derivative_initialize(TimeDerivative *time_deriv,
   if (num_spec <= 0) return 0;
 
   time_deriv->production_rates =
-      (long double *)malloc(num_spec * sizeof(long double));
+      (double *)malloc(num_spec * sizeof(double));
   if (time_deriv->production_rates == NULL) return 0;
 
   time_deriv->loss_rates =
-      (long double *)malloc(num_spec * sizeof(long double));
+      (double *)malloc(num_spec * sizeof(double));
   if (time_deriv->loss_rates == NULL) {
     free(time_deriv->production_rates);
     return 0;
@@ -45,8 +45,8 @@ void time_derivative_reset(TimeDerivative time_deriv) {
 
 void time_derivative_output(TimeDerivative time_deriv, double *dest_array,
                             double *deriv_est, unsigned int output_precision) {
-  long double *r_p = time_deriv.production_rates;
-  long double *r_l = time_deriv.loss_rates;
+  double *r_p = time_deriv.production_rates;
+  double *r_l = time_deriv.loss_rates;
 
 #ifdef CAMP_DEBUG
   time_deriv.last_max_loss_precision = 1.0;
@@ -56,7 +56,7 @@ void time_derivative_output(TimeDerivative time_deriv, double *dest_array,
     double prec_loss = 1.0;
     if (*r_p + *r_l != 0.0) {
       if (deriv_est) {
-        long double scale_fact;
+        double scale_fact;
         scale_fact =
             1.0 / (*r_p + *r_l) /
             (1.0 / (*r_p + *r_l) + MAX_PRECISION_LOSS / fabsl(*r_p - *r_l));
@@ -88,7 +88,7 @@ void time_derivative_output(TimeDerivative time_deriv, double *dest_array,
 }
 
 void time_derivative_add_value(TimeDerivative time_deriv, unsigned int spec_id,
-                               long double rate_contribution) {
+                               double rate_contribution) {
   if (rate_contribution > 0.0) {
     time_deriv.production_rates[spec_id] += rate_contribution;
   } else {

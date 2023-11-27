@@ -47,6 +47,10 @@ void init_export_state(){
 
 void export_state(SolverData *sd){
 #ifdef CAMP_DEBUG_GPU
+  if(sd->is_init_export_state){
+    init_export_state();
+    sd->is_init_export_state=0;
+  }
   ModelData *md = &(sd->model_data);
   char filename[64];
   get_export_state_name(filename);
@@ -95,33 +99,22 @@ void join_export_state(){
 #endif
 }
 
-void init_export_stats(){
-#ifdef CAMP_DEBUG_GPU
-  int rank;
-  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  char file_path[]="out/stats.csv";
-  if(rank==0){
-    printf("export_stats enabled\n");
-    FILE *fptr;
-    fptr = fopen(file_path,"w");
-    fprintf(fptr, "timecvStep,timeCVode\n");
-    fclose(fptr);
-  }
-#endif
-}
-
 void export_stats(SolverData *sd){
 #ifdef CAMP_DEBUG_GPU
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   if (rank == 0) {
     FILE *fptr;
-    fptr = fopen("out/stats.csv", "a");
-    CVodeMem cv_mem = (CVodeMem) sd->cvode_mem;
-    fprintf(fptr, "%.17le,",cv_mem->timecvStep);
-    fprintf(fptr, "%.17le",sd->timeCVode);
-    fprintf(fptr, "\n");
-    fclose(fptr);
+    if ((fptr = fopen("out/stats.csv", "w")) != NULL) {
+      fprintf(fptr, "timecvStep,timeCVode\n");
+      CVodeMem cv_mem = (CVodeMem) sd->cvode_mem;
+      fprintf(fptr, "%.17le,",cv_mem->timecvStep);
+      fprintf(fptr, "%.17le",sd->timeCVode);
+      fprintf(fptr, "\n");
+      fclose(fptr);
+    }else {
+      printf("File '%s' does not exist.\n", "out/stats.csv");
+    }
   }
 #endif
 }

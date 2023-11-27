@@ -101,15 +101,15 @@ void aero_phase_get_mass__kg_m3(ModelData *model_data, int aero_phase_idx,
             [model_data->aero_phase_float_indices[aero_phase_idx]]);
 
   // Sum the mass and MW
-  long double l_mass = MINIMUM_MASS_;
-  long double moles = MINIMUM_MASS_ / MINIMUM_MW_;
+  double l_mass = MINIMUM_MASS_;
+  double moles = MINIMUM_MASS_ / MINIMUM_MW_;
   int i_jac = 0;
   for (int i_spec = 0; i_spec < NUM_STATE_VAR_; i_spec++) {
     if (SPEC_TYPE_(i_spec) == CHEM_SPEC_VARIABLE ||
         SPEC_TYPE_(i_spec) == CHEM_SPEC_CONSTANT ||
         SPEC_TYPE_(i_spec) == CHEM_SPEC_PSSA) {
       l_mass += state_var[i_spec];
-      moles += state_var[i_spec] / (long double)MW_(i_spec);
+      moles += state_var[i_spec] / (double)MW_(i_spec);
       if (jac_elem_mass) jac_elem_mass[i_jac] = 1.0L;
       if (jac_elem_MW) jac_elem_MW[i_jac] = 1.0L / MW_(i_spec);
       i_jac++;

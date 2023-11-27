@@ -8,7 +8,6 @@
 
 typedef struct {
     unsigned int num_spec;          // Number of species in the derivative
-    // long double is treated as double in GPU
     double *production_rates;  // Production rates for all species
     double *loss_rates;        // Loss rates for all species
 #ifdef CAMP_DEBUG
