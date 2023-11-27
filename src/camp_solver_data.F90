@@ -207,6 +207,10 @@ module camp_camp_solver_data
       type(c_ptr), value :: max_loss_precision
     end subroutine solver_get_statistics
 
+    subroutine init_export_solver_state() bind (c)
+      use iso_c_binding
+    end subroutine
+
     subroutine export_solver_state( solver_data) bind (c)
       use iso_c_binding
       type(c_ptr), value :: solver_data
@@ -417,6 +421,7 @@ module camp_camp_solver_data
     !> Integrate over a given time step
     procedure :: solve
     procedure:: get_solver_stats
+    procedure:: init_export_solver_data_state
     procedure:: export_solver_data_state
     procedure:: join_solver_data_state
     procedure:: export_solver_data_stats
@@ -985,6 +990,11 @@ contains
             c_loc( solver_stats%max_loss_precision) & ! Maximum loss of precision
     )
 
+  end subroutine
+
+  subroutine init_export_solver_data_state( this)
+    class(camp_solver_data_t), intent(inout) :: this
+    call init_export_solver_state()
   end subroutine
 
   subroutine export_solver_data_state( this)

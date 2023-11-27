@@ -47,10 +47,6 @@ void init_export_state(){
 
 void export_state(SolverData *sd){
 #ifdef CAMP_DEBUG_GPU
-  if(sd->is_init_export_state){
-    init_export_state();
-    sd->is_init_export_state=0;
-  }
   ModelData *md = &(sd->model_data);
   char filename[64];
   get_export_state_name(filename);

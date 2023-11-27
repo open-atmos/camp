@@ -14,7 +14,6 @@
 void init_export_state();
 void export_state(SolverData *sd);
 void join_export_state();
-void init_export_stats();
 void export_stats(SolverData *sd);
 void print_double(double *x, int len, const char *s);
 void print_int(int *x, int len, const char *s);

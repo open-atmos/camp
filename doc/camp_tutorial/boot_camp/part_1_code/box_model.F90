@@ -90,11 +90,11 @@ program box_model
                      camp_state%state_var( idx_O2  )
   end do
 
-  deallocate( camp_state )
-
 #ifdef CAMP_USE_MPI
   call camp_mpi_finalize( )
 #endif
+
+  deallocate( camp_state )
 
 end program box_model
 !! [Solve and output]

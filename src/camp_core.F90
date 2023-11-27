@@ -183,6 +183,7 @@ module camp_camp_core
     procedure :: get_rel_tol
     !> Get the absolute tolerance for a species on the state array
     procedure :: get_abs_tol
+    procedure :: init_export_solver_state
     procedure :: export_solver_state
     procedure :: join_solver_state
     procedure :: export_solver_stats
@@ -1495,6 +1496,23 @@ contains
     end if
 
   end subroutine solve
+
+  subroutine init_export_solver_state(this)
+    use camp_rxn_data
+    use iso_c_binding
+    class(camp_core_t), intent(inout) :: this
+    integer(kind=i_kind) :: phase
+    type(camp_solver_data_t), pointer :: solver
+    phase = GAS_AERO_RXN
+    if (phase.eq.GAS_RXN) then
+      solver => this%solver_data_gas
+    else if (phase.eq.AERO_RXN) then
+      solver => this%solver_data_aero
+    else if (phase.eq.GAS_AERO_RXN) then
+      solver => this%solver_data_gas_aero
+    end if
+    call solver%init_export_solver_data_state()
+  end subroutine
 
   subroutine export_solver_state(this)
     use camp_rxn_data

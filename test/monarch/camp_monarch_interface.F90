@@ -270,6 +270,7 @@ contains
     !do i=1, size(unique_names)
     !  print*,i,trim(unique_names(i)%string)
     !end do
+    call this%camp_core%init_export_solver_state()
     if (MONARCH_PROCESS==0) then
       call cpu_time(comp_end)
       write(*,*) "Initialization time: ", comp_end-comp_start, " s"

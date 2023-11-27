@@ -380,7 +380,6 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
 
 #ifdef CAMP_DEBUG_GPU
   sd->timeCVode = 0.;
-  sd->is_init_export_state = 1;
 #endif
 
   printf("g5\n");
@@ -823,6 +822,10 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
   *max_loss_precision = 0.0;
 #endif
 
+}
+
+void init_export_solver_state(){
+  init_export_state();
 }
 
 void export_solver_state(void *solver_data){

@@ -226,9 +226,9 @@ endif()
 ######################################################################
 # copy dirs
 
-SET(ENABLE_TESTS OFF)
+SET(USE_TESTS ON)
 
-if(ENABLE_TESTS)
+if(USE_TESTS)
 add_custom_target(copy_data ALL ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/data ${CMAKE_BINARY_DIR}/data_run)
 add_custom_target(copy_test ALL ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/test ${CMAKE_BINARY_DIR}/test_run)
 add_custom_target(copy_mechanism ALL ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/mechanisms ${CMAKE_BINARY_DIR}/mechanisms_run)
@@ -253,13 +253,13 @@ endmacro(do_unit_test)
 # tests
 
 enable_testing()
-do_unit_test(aero_rep_single_particle "PASS")
 
-if (ENABLE_TESTS)
+if (USE_TESTS)
 do_unit_test(property "PASS")
 do_unit_test(chem_spec_data "PASS")
 do_unit_test(aero_phase_data "PASS")
 do_unit_test(jacobian "PASS")
+do_unit_test(aero_rep_single_particle "PASS")
 do_unit_test(aero_rep_modal_binned_mass "PASS")
 do_unit_test(camp_core "PASS")
 endif()
@@ -274,7 +274,7 @@ if (ENABLE_GPU)
   add_test(NAME test_gpu COMMAND checkGPU.sh WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/test/monarch)
 endif()
 
-if (ENABLE_TESTS)
+if (USE_TESTS)
     # New unit tests (UNDER DEVELOPMENT)
   add_test(test_rxn_arrhenius_mech ${CMAKE_BINARY_DIR}/test_run/unit_tests/input_files/run_rxn_arrhenius.sh ${MPI_TEST_FLAG})
 
@@ -519,13 +519,6 @@ endif()
 set_source_files_properties(${CB5_EBI_SOLVER} PROPERTIES COMPILE_FLAGS
 	${CB5_EBI_FLAGS})
 
-add_executable(unit_test_aero_rep_single_particle
-        test/unit_aero_rep_data/test_aero_rep_single_particle.c
-        test/unit_aero_rep_data/test_aero_rep_single_particle.F90)
-
-target_link_libraries(unit_test_aero_rep_single_particle camplib)
-
-
 if (ENABLE_GPU)
   add_executable(mock_monarch test/monarch/mock_monarch.F90
       test/monarch/camp_monarch_interface.F90
@@ -534,7 +527,7 @@ if (ENABLE_GPU)
   target_link_libraries(mock_monarch camplib)
 endif()
 
-if (ENABLE_TESTS)
+if (USE_TESTS)
 
 ######################################################################
 # camp-chem box model
@@ -663,6 +656,11 @@ target_link_libraries(unit_test_aero_phase_data camplib)
 ######################################################################
 # test_aero_rep_single_particle
 
+add_executable(unit_test_aero_rep_single_particle
+	test/unit_aero_rep_data/test_aero_rep_single_particle.c
+	test/unit_aero_rep_data/test_aero_rep_single_particle.F90)
+
+target_link_libraries(unit_test_aero_rep_single_particle camplib)
 
 ######################################################################
 # test_aero_rep_modal_binned_mass
