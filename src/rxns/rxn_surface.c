@@ -391,12 +391,12 @@ void rxn_surface_print(int *rxn_int_data, double *rxn_float_data) {
       printf("\n  - d_reactant/d_phase_species_%d Jacobian id %d",
              i_elem, PHASE_JAC_ID_(i_phase,0,i_elem));
       for (int i_prod = 0; i_prod < NUM_PROD_; ++i_prod) {
-        printf("\n  - d_product_%s/d_phase_species_%d Jacobian id %d",
+        printf("\n  - d_product_%d/d_phase_species_%d Jacobian id %d",
                i_prod, i_elem, PHASE_JAC_ID_(i_phase,i_prod+1,i_elem));
       }
-      printf("\n  - d_radius/d_phase_species_%d = %le", i_elem,
+      printf("\n  - d_radius/d_phase_species_%d = %le",
              i_elem, EFF_RAD_JAC_ELEM_(i_phase,i_elem));
-      printf("\n  - d_number/d_phase_species_%d = %le", i_elem,
+      printf("\n  - d_number/d_phase_species_%d = %le",
              i_elem, EFF_RAD_JAC_ELEM_(i_phase,i_elem));
     }
   }
