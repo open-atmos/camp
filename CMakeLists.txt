@@ -240,7 +240,7 @@ add_test(camp_v1_paper_modal ${CMAKE_BINARY_DIR}/data_run/CAMP_v1_paper/modal/te
 ######################################################################
 # camp library
 
-set(STD_C_FLAGS "-std=c99")
+set(STD_C_FLAGS "-std=c99 -Werror=format")
 set(STD_CUDA_FLAGS "-dc -arch=compute_70 -code=sm_70")
 
 if(${CMAKE_Fortran_COMPILER_ID} MATCHES "Intel")
