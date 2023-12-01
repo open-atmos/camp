@@ -448,12 +448,12 @@ $(function() {
 <div class="line"><a id="l00391" name="l00391"></a><span class="lineno">  391</span>      printf(<span class="stringliteral">&quot;\n  - d_reactant/d_phase_species_%d Jacobian id %d&quot;</span>,</div>
 <div class="line"><a id="l00392" name="l00392"></a><span class="lineno">  392</span>             i_elem, <a class="code hl_define" href="rxn__surface_8c.html#abdf4e3795c943871823b78eaf5da21fc">PHASE_JAC_ID_</a>(i_phase,0,i_elem));</div>
 <div class="line"><a id="l00393" name="l00393"></a><span class="lineno">  393</span>      <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i_prod = 0; i_prod &lt; <a class="code hl_define" href="rxn__surface_8c.html#acf951e890da75cd2d503ed6ce8211fc2">NUM_PROD_</a>; ++i_prod) {</div>
-<div class="line"><a id="l00394" name="l00394"></a><span class="lineno">  394</span>        printf(<span class="stringliteral">&quot;\n  - d_product_%s/d_phase_species_%d Jacobian id %d&quot;</span>,</div>
+<div class="line"><a id="l00394" name="l00394"></a><span class="lineno">  394</span>        printf(<span class="stringliteral">&quot;\n  - d_product_%d/d_phase_species_%d Jacobian id %d&quot;</span>,</div>
 <div class="line"><a id="l00395" name="l00395"></a><span class="lineno">  395</span>               i_prod, i_elem, <a class="code hl_define" href="rxn__surface_8c.html#abdf4e3795c943871823b78eaf5da21fc">PHASE_JAC_ID_</a>(i_phase,i_prod+1,i_elem));</div>
 <div class="line"><a id="l00396" name="l00396"></a><span class="lineno">  396</span>      }</div>
-<div class="line"><a id="l00397" name="l00397"></a><span class="lineno">  397</span>      printf(<span class="stringliteral">&quot;\n  - d_radius/d_phase_species_%d = %le&quot;</span>, i_elem,</div>
+<div class="line"><a id="l00397" name="l00397"></a><span class="lineno">  397</span>      printf(<span class="stringliteral">&quot;\n  - d_radius/d_phase_species_%d = %le&quot;</span>,</div>
 <div class="line"><a id="l00398" name="l00398"></a><span class="lineno">  398</span>             i_elem, <a class="code hl_define" href="rxn__surface_8c.html#ae144b859674c9147443a7cf505ddac6a">EFF_RAD_JAC_ELEM_</a>(i_phase,i_elem));</div>
-<div class="line"><a id="l00399" name="l00399"></a><span class="lineno">  399</span>      printf(<span class="stringliteral">&quot;\n  - d_number/d_phase_species_%d = %le&quot;</span>, i_elem,</div>
+<div class="line"><a id="l00399" name="l00399"></a><span class="lineno">  399</span>      printf(<span class="stringliteral">&quot;\n  - d_number/d_phase_species_%d = %le&quot;</span>,</div>
 <div class="line"><a id="l00400" name="l00400"></a><span class="lineno">  400</span>             i_elem, <a class="code hl_define" href="rxn__surface_8c.html#ae144b859674c9147443a7cf505ddac6a">EFF_RAD_JAC_ELEM_</a>(i_phase,i_elem));</div>
 <div class="line"><a id="l00401" name="l00401"></a><span class="lineno">  401</span>    }</div>
 <div class="line"><a id="l00402" name="l00402"></a><span class="lineno">  402</span>  }</div>
