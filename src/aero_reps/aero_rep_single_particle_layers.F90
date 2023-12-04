@@ -48,25 +48,26 @@ module camp_aero_rep_single_particle_layers
   implicit none
   private
 
-#define TOTAL_NUM_PHASES_ this%condensed_data_int(1)
-#define TOTAL_NUM_LAYERS_ this%condensed_data_int(2)
-#define AERO_REP_ID_ this%condensed_data_int(3)
-#define MAX_PARTICLES_ this%condensed_data_int(4)
-#define PARTICLE_STATE_SIZE_ this%condensed_data_int(5)
-#define NUM_INT_PROP_ 6
+#define NUM_LAYERS_ this%condensed_data_int(1)
+#define AERO_REP_ID_ this%condensed_data_int(2)
+#define MAX_PARTICLES_ this%condensed_data_int(3)
+#define PARTICLE_STATE_SIZE_ this%condensed_data_int(4)
+#define NUM_INT_PROP_ 4
 #define NUM_REAL_PROP_ 0
 #define NUM_ENV_PARAM_PER_PARTICLE_ 1
-!#define NUM_PHASE_(l) this%condensed_data_int(NUM_INT_PROP_+l)
-#define PHASE_STATE_ID_(p) this%condensed_data_int(NUM_INT_PROP_+TOTAL_NUM_PHASES_+p)
-!#define LAYER_STATE_ID_(l) this%condensed_data_int(NUM_INT_PROP_+TOTAL_NUM_LAYERS_+l+1)
-#define PHASE_MODEL_DATA_ID_(p) this%condensed_data_int(NUM_INT_PROP_+TOTAL_NUM_PHASES_+p)
-#define PHASE_NUM_JAC_ELEM_(p) this%condensed_data_int(NUM_INT_PROP_+2*TOTAL_NUM_PHASES_+p)
+#define LAYER_PHASE_START_(l) this%condensed_data_int(NUM_INT_PROP_+l)
+#define LAYER_PHASE_END_(l) this%condensed_data_int(NUM_INT_PROP_+NUM_LAYERS_+l)
+#define TOTAL_NUM_PHASES_ (LAYER_PHASE_END_(NUM_LAYERS_))
+#define PHASE_STATE_ID_(l,p) this%condensed_data_int(NUM_INT_PROP_+2*NUM_LAYERS_+LAYER_PHASE_START_(l)+p-1)
+#define PHASE_MODEL_DATA_ID_(l,p) this%condensed_data_int(NUM_INT_PROP_+2*NUM_LAYERS_+TOTAL_NUM_PHASES_+LAYER_PHASE_START_(l)+p-1)
+#define PHASE_NUM_JAC_ELEM_(l,p) this%condensed_data_int(NUM_INT_PROP_+2*NUM_LAYERS_+2*TOTAL_NUM_PHASES_+LAYER_PHASE_START_(l)+p-1)
 
   ! Update types (These must match values in aero_rep_single_particle.c)
   integer(kind=i_kind), parameter, public :: UPDATE_NUMBER_CONC = 0
 
   public :: aero_rep_single_particle_layers_t, &
-            aero_rep_update_data_single_particle_number_t
+            aero_rep_update_data_single_particle_number_t, &
+            ordered_layer_ids
 
   !> Single particle aerosol representation
   !!
@@ -75,24 +76,8 @@ module camp_aero_rep_single_particle_layers
     !> Unique names for each instance of every chemical species in the
     !! aerosol representaiton
     type(string_t), allocatable, private :: unique_names_(:)
-    !> Layer names that exist in the aerosol population 
+    !> Layer names, ordered inner-most to outer-most
     type(string_t), allocatable, private :: layer_names(:)
-    !> Name layer covered (used to order layers)
-    type(string_t), allocatable, private :: cover_names(:)
-    !> Layer names in order of user input 
-    type(string_t), allocatable, private :: layer_name_unordered(:)
-    !> Layer names in order of innermost to outermost layer
-    type(string_t), allocatable, private :: ordered_layer_name(:)
-    !> Number of phases in each layer 
-    type(integer), allocatable, private :: num_phase_unordered(:)
-    !> Index where each layer starts for unordered layer name array
-    type(integer), allocatable, private :: layer_state_id_unordered(:)
-    !> Phase names in order of user input
-    type(string_t), allocatable, private :: phase_name_unordered(:)
-    !> Set of aero layer names in order (innermost to outermost layer)
-    type(string_t), allocatable, private :: aero_layer_set_names(:)  
-    !> Set of aero phase names in order (innermost to outermost layer)
-    type(string_t), allocatable, private :: aero_layer_phase_set_names(:)
     !> First state id for the representation (only used during initialization)
     integer(kind=i_kind) :: state_id_start = -99999
   contains
@@ -150,18 +135,8 @@ module camp_aero_rep_single_particle_layers
     !> Get the number of Jacobian elements used in calculations of aerosol
     !! mass, volume, number, etc. for a particular phase
     procedure :: num_jac_elem
-    !> Organize layers names in order from innermost to outtermost layer
-    procedure :: ordered_layer_array
-    !> Organize num phase array in order or layers
-    procedure :: ordered_num_phase_array
-    !> Organize phase names in order from innermost layer to outermost layer
-    !! phase names for each layer remain in order or phase input
-    procedure :: ordered_phase_array 
-    !> Layer state id array calculated from num_phase
-    procedure :: construct_layer_state_id
     !> Finalize the aerosol representation
     final :: finalize
-
   end type aero_rep_single_particle_layers_t
 
   ! Constructor for aero_rep_single_particle_layers_t
@@ -255,39 +230,26 @@ contains
     class(aero_rep_single_particle_layers_t), intent(inout) :: this
     !> The set of aerosol phases
     type(aero_phase_data_ptr), pointer, intent(in) :: aero_phase_set(:)
-    !> The set of aerosol phases in layer order
-    type(aero_phase_data_ptr), pointer:: aero_layer_phase_set(:)
-    !> Layer names (only used during initialization)
-    !type(string_t), allocatable :: layer_name(:)
-    !> Unordered layer names (only used during initialization)
-    type(string_t), allocatable :: layer_name_unordered(:)
-    !> Unordered phase names (only used during initialization)
-    type(string_t), allocatable :: phase_name_unordered(:)
-    !> Unordered num phase array (only used during initialization)
-    type(integer), allocatable :: num_phase_unordered(:)
-    !> Unordered layer state id array (only used during initialization)
-    type(integer), allocatable :: layer_state_id_unordered(:)
-    !> Cover names (only used during initialization)
-    type(string_t), allocatable :: cover_names(:)
-    !> Ordered set of aerosol layer names 
-    type(string_t), allocatable :: aero_layer_set_names(:)
-    !> Ordered set of aerosol phase names from inner to outermost layer 
-    type(string_t), allocatable :: aero_layer_phase_set_names(:)
-    !> TODO: remove once pre-processor variables are added
-    !type(integer), allocatable :: num_phase_, layer_state_id_
-
-    !> Beginning state id for this aerosol representationin the model species
+    !> Beginning state id for this aerosol representation in the model species
     !! state array
     integer(kind=i_kind), intent(in) :: spec_state_id
+
+    ! Unordered layer names (only used during initialization)
+    type(string_t), allocatable :: layer_names_unordered(:)
+    ! Cover names (only used during initialization)
+    type(string_t), allocatable :: cover_names_unordered(:)
+    ! Index in layer_names_unordered for each layer from inner- to outer-most
+    ! layer
+    integer(kind=i_kind), allocatable :: ordered_layer_id(:)
+
     character(len=:), allocatable :: key_name, layer_covers, phase_name
-    type(property_t), pointer :: layers, phases
+    type(property_t), pointer :: layers, layer
+    type(property_ptr), allocatable :: phases(:)
     integer(kind=i_kind) :: i_particle, i_phase, i_layer, i_aero, curr_id
-    integer(kind=i_kind) :: i_cover, j_phase, j_layer, i
-    integer(kind=i_kind) :: num_int_param, num_float_param, num_particles
-    ! Start off the counters
-    ! TODO: how do I initialize these variables
-    num_int_param = NUM_INT_PROP_ + 5*size(aero_phase_set)
-    num_float_param = NUM_REAL_PROP_
+    integer(kind=i_kind) :: i_cover, j_phase, j_layer, i_map, curr_phase
+    integer(kind=i_kind) :: num_phases, num_int_param, num_float_param, &
+                            num_particles
+    logical :: found
 
     ! Get the maximum number of computational particles
     key_name = "maximum computational particles"
@@ -301,18 +263,18 @@ contains
                     this%property_set%get_property_t(key_name, layers), &
                     "Missing layers for single-particle aerosol "// &
                     "representation '"//this%rep_name//"'")
-                    call assert_msg(168669831, layers%size().gt.0, "No layers "// &
-                    "specified for single-particle layer aerosol representation '"// &
-                    this%rep_name//"'")
+                    call assert_msg(168669831, layers%size() .gt. 0, &
+                    "No Layers specified for single-particle layer "// &
+                    "aerosol representation '"//this%rep_name//"'")
 
-    ! Allocate space for the layer and cover names
-    allocate(this%layer_names(layers%size()))
-    allocate(this%cover_names(layers%size()))
-    allocate(this%layer_name_unordered(layers%size()))
-    allocate(this%num_phase_unordered(layers%size()))
+    ! Allocate space for the working arrays
+    allocate(phases(layers%size()))
+    allocate(cover_names_unordered(layers%size()))
+    allocate(layer_names_unordered(layers%size()))
 
     ! Loop through the layers, adding names and counting the spaces needed
     ! on the condensed data arrays, and counting the total phases instances
+    num_phases = 0
     call layers%iter_reset()
     do i_layer = 1, layers%size()
 
@@ -321,151 +283,114 @@ contains
       call assert_msg(784799080, len(key_name).gt.0, "Missing layer "// &
               "name in single-particle layer aerosol representation '"// &
               this%rep_name//"'")
-      this%layer_name_unordered(i_layer)%string = key_name
+      layer_names_unordered(i_layer)%string = key_name
 
       ! Get the layer properties
-      call assert_msg(303808978, layers%get_property_t(val=layers), &
+      call assert_msg(303808978, layers%get_property_t(val=layer), &
               "Invalid structure for layer '"// &
-              this%layer_name_unordered(i_layer)%string// &
+              layer_names_unordered(i_layer)%string// &
               "' in single-particle layer representation '"// &
               this%rep_name//"'")
 
       ! Get the cover name
       key_name = "covers"
-      call assert_msg(350939595, layers%get_string(key_name, layer_covers), &
+      call assert_msg(350939595, layer%get_string(key_name, layer_covers), &
                 "Missing cover name in layer'"// &
-                this%layer_name_unordered(i_layer)%string// &
+                layer_names_unordered(i_layer)%string// &
                 "' in single-particle layer aerosol representation '"// &
                 this%rep_name//"'")
-      this%cover_names(i_layer)%string = layer_covers
+      cover_names_unordered(i_layer)%string = layer_covers
            
       ! Get the set of phases
       key_name = "phases"
-      call assert_msg(647756433, layers%get_property_t(key_name, phases), &
+      call assert_msg(647756433, &
+              layers%get_property_t(key_name, phases(i_layer)%val_), &
               "Missing phases for layer '"// &
-              this%layer_name_unordered(i_layer)%string// &
+              layer_names_unordered(i_layer)%string// &
               "' in single-particle layer aerosol representation '"// &
               this%rep_name//"'")
 
       ! Add the phases to the counter
-      call assert_msg(002679882, phases%size().gt.0, &
+      call assert_msg(002679882, phases(i_layer)%val_%size().gt.0, &
               "No phases specified for layer '"// &
-              this%layer_names(i_layer)%string// &
+              layer_names_unordered(i_layer)%string// &
               "' in single-particle layer aerosol representation '"// &
               this%rep_name//"'")
-      num_phase_unordered(i_layer) = phases%size() 
 
-      ! Loop through the phases and make sure they exist
-      call phases%iter_reset()
-      do i_phase = 1, phases%size()
-
-        ! Get the phase name
-        call assert_msg(566480284, phases%get_string(val=phase_name), &
-                "Non-string phase name for layer '"// &
-                this%layer_name_unordered(i_layer)%string// &
-                "' in single-particle layer aerosol representation '"// &
-                this%rep_name//"'")
-  
-        call phases%iter_next()
-      end do
+      ! add to running total of phase count
+      num_phases = num_phases + phases(i_layer)%val_%size()
 
       call layers%iter_next()
     end do
 
-    ! Ensure layer names do not repeat 
-    do i_layer = 1,layers%size()
-      do j_layer = 1,layers%size()
-        call assert(781626922,layer_name_unordered(i_layer)%string.eq.&
-                        layer_name_unordered(j_layer)%string)
-      end do
-    end do
+    ! get the map of layer names after reordering
+    ordered_layer_id = ordered_layer_ids(layer_names_unordered, &
+                                           cover_names_unordered)
 
-    ! Construct layer state id unordered
-    this%layer_state_id_unordered = construct_layer_state_id(this,num_phase_unordered)
+    ! set the layer names
+    allocate(this%layer_names(size(ordered_layer_id)))
+    this%layer_names(:) = layer_names_unordered(ordered_layer_id(:))
 
-    allocate(this%phase_name_unordered(SUM(num_phase_unordered)))
-
-    ! Loop through the layers again, adding phase names to array
-    call layers%iter_reset()
-    do i_layer = 1, layers%size()
-      ! Get the layer name
-      call assert(887258456, layers%get_key(key_name))
-      call assert_msg(449241732, len(key_name).gt.0, "Missing layer "// &
-              "name in single-particle layer aerosol representation '"// &
-             this%rep_name//"'")
-      this%layer_name_unordered(i_layer)%string = key_name
-
-      ! Get the layer properties
-      call assert_msg(839897881, layers%get_property_t(val=layers), &
-             "Invalid structure for layer '"// &
-            this%layer_name_unordered(i_layer)%string// &
-            "' in single-particle layer representation '"// &
-            this%rep_name//"'")
-           
-      ! Get the set of phases
-      key_name = "phases"
-      call assert_msg(977307148, layers%get_property_t(key_name, phases), &
-              "Missing phases for layer '"// &
-              this%layer_name_unordered(i_layer)%string// &
-              "' in single-particle layer aerosol representation '"// &
-            this%rep_name//"'")
-      do i = layer_state_id_unordered(i_layer), layer_state_id_unordered(i_layer+1)
-        this%phase_name_unordered(i)%string = key_name
-      end do  
-      call layers%iter_next()
-    end do
-    ! Construct NUM_PHASE_ and LAYER_STATE_ID)
-    ! Order layers and phases in inner to outer layer order 
-    this%aero_layer_set_names = ordered_layer_array(this,layer_name_unordered,cover_names)
-    NUM_PHASE_ = ordered_num_phase_array(this,num_phase_unordered,aero_layer_set_names,cover_names)
-    LAYER_STATE_ID_ = construct_layer_state_id(this,NUM_PHASE_)
-    this%aero_layer_phase_set_names = ordered_phase_array(this,cover_names,aero_layer_set_names,&
-          LAYER_STATE_ID_, layer_state_id_unordered, phase_name_unordered)
-    ! Set total phase and total number layers state
-    TOTAL_NUM_PHASES_ = SUM(NUM_PHASE_)
-    TOTAL_NUM_LAYERS_ = size(NUM_PHASE_)
-
-    ! Construct aero_phase pointer array for layers, phases only exist
-    ! in the user specified layers
-    allocate(aero_layer_phase_set(size(aero_layer_phase_set_names)))
-    i_aero = 1
-    do i_phase = 1, TOTAL_NUM_PHASES_
-      ! must add and statement for layer = layer 
-       if (aero_layer_phase_set_names(i_aero)%string.eq.&
-          aero_phase_set(i_phase)%val%name()) then 
-          aero_layer_phase_set(i_aero) = aero_phase_set(i_phase)
-          i_aero = i_aero + 1
-      end if
-    end do
-
-    ! Ordered phases are applied once to each particle
-    allocate(this%aero_phase(size(aero_layer_phase_set)*num_particles))
-    do i_particle = 1, num_particles
-      do i_phase = 1, size(aero_layer_phase_set)
-        this%aero_phase((i_particle-1)*TOTAL_NUM_PHASES_*TOTAL_NUM_LAYERS_+i_phase) = &
-            aero_layer_phase_set(i_phase)
-      end do
-    end do
-    
     ! Allocate condensed data arrays
+    num_int_param = NUM_INT_PROP_ + 2 * layers%size() + 3 * num_phases
+    num_float_param = NUM_REAL_PROP_
     allocate(this%condensed_data_int(num_int_param))
     allocate(this%condensed_data_real(num_float_param))
     this%condensed_data_int(:) = int(0, kind=i_kind)
     this%condensed_data_real(:) = real(0.0, kind=dp)
 
-    ! Save the number of computational particles
-    MAX_PARTICLES_ = num_particles
-
     ! Save space for the environment-dependent parameters
     this%num_env_params = NUM_ENV_PARAM_PER_PARTICLE_ * num_particles
 
-    ! Set phase state and model data ids
-    this%state_id_start = spec_state_id
+    ! Save representation dimensions
+    NUM_LAYERS_ = layers%size()
+    MAX_PARTICLES_ = num_particles
+
+    ! validate phase names, assign aero_phase pointers for each phase in
+    ! each layer in each particle, and set PHASE_STATE_ID and
+    ! PHASE_MODEL_DATA_ID for each phase
+    allocate(this%aero_phase(num_phases * num_particles))
     curr_id = spec_state_id
-    do i_phase = 1, TOTAL_NUM_PHASES_
-      PHASE_STATE_ID_(i_phase) = curr_id
-      PHASE_MODEL_DATA_ID_(i_phase) = i_phase
-      curr_id = curr_id + aero_layer_phase_set(i_phase)%val%size()
+    this%state_id_start = spec_state_id
+    curr_phase = 1
+    do i_layer = 1, size(ordered_layer_id)
+      j_layer = ordered_layer_id(i_layer)
+
+      ! Set the starting and ending indices for the phases in this layer
+      LAYER_PHASE_START_(i_layer) = curr_phase
+      LAYER_PHASE_END_(i_layer) = curr_phase + phases(j_layer)%val_%size() - 1
+      curr_phase = curr_phase + phases(j_layer)%val_%size()
+
+      ! Loop through the phases and make sure they exist
+      call phases(j_layer)%val_%iter_reset()
+      do i_phase = 1, phases(j_layer)%val_%size()
+
+        ! Get the phase name
+        call assert_msg(566480284, &
+                phases(j_layer)%val_%get_string(val=phase_name), &
+                "Non-string phase name for layer '"// &
+                layer_names_unordered(j_layer)%string// &
+                "' in single-particle layer aerosol representation '"// &
+                this%rep_name//"'")
+  
+        ! find phase and set pointer and indices
+        found = .false.
+        do j_phase = 1, size(aero_phase_set)
+          if (aero_phase_set(j_phase)%val%name() .eq. phase_name) then
+            found = .true.
+            do i_particle = 0, num_particles-1
+              this%aero_phase(i_particle*num_phases + i_phase) = &
+                aero_phase_set(j_phase)
+            end do
+            PHASE_STATE_ID_(i_layer,i_phase) = curr_id
+            PHASE_MODEL_DATA_ID_(i_layer,i_phase) = j_phase
+            curr_id = curr_id + aero_phase_set(j_phase)%val%size()
+            exit
+          end if
+        end do
+
+        call phases(j_layer)%val_%iter_next()
+      end do
     end do
     PARTICLE_STATE_SIZE_ = curr_id - spec_state_id
 
@@ -473,7 +398,8 @@ contains
     AERO_REP_ID_ = -1
 
     ! Set the unique names for the chemical species
-    !this%unique_names_ = this%unique_names( )
+    ! this%unique_names_ = this%unique_names( )
+
   end subroutine initialize
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -819,164 +745,50 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Order layer array from inner most layer to outermost 
-  function ordered_layer_array(this,layer_name_unordered,cover_name) result(ordered_layer_name)
-  !function ordered_layer_array(this) result(ordered_layer_name)
-    !> Aerosol representation to update
-    class(aero_rep_single_particle_layers_t), intent(inout) :: this
-    !> Layer name input, for testing
-    type(string_t), intent(in) :: layer_name_unordered(:)
-    type(string_t), intent(in) :: cover_name(:)
-    !> Layer names in order (only used during initialization)
-    type(string_t), allocatable :: ordered_layer_name(:)
-    !type(string_t), allocatable :: ordered_layer_name(:)
+  function ordered_layer_ids(layer_names_unordered, cover_names_unordered)
 
-    integer(kind=i_kind) :: i_layer, i_cover
-    !allocate(ordered_layer_name(layers%size()))
-    allocate(ordered_layer_name(size(layer_name_unordered)))
+    !> Layer names in original order
+    type(string_t), intent(in) :: layer_names_unordered(:)
+    !> Name of "covered" layer for each layer in layer_name_unordered
+    type(string_t), intent(in) :: cover_names_unordered(:)
+    !> Index of name in layer_name_unordered for each layer after reordering
+    integer, allocatable :: ordered_layer_ids(:)
+
+    integer(kind=i_kind) :: i_layer, j_layer, i_cover
+
+    ! Ensure layer names do not repeat 
+    do i_layer = 1, size(layer_names_unordered)
+      do j_layer = 1, size(layer_names_unordered)
+        if (i_layer .eq. j_layer) cycle
+        call assert_msg(781626922, layer_names_unordered(i_layer)%string .ne. &
+                                   layer_names_unordered(j_layer)%string, &
+                        "Duplicate layer name in single particle "// &
+                        "representation: '"// &
+                        trim(layer_names_unordered(i_layer)%string)//"'")
+      end do
+    end do
+
+    allocate(ordered_layer_ids(size(layer_names_unordered)))
    
     ! Search for innermost layer with cover set to 'none'
-    do i_layer = 1,size(layer_name_unordered)
-  !  do i_layer = 1, layers%size()
-      if (cover_name(i_layer)%string == "none") then
-        ordered_layer_name(1) = layer_name_unordered(i_layer)
+    do i_layer = 1, size(layer_names_unordered)
+      if (cover_names_unordered(i_layer)%string == "none") then
+        ordered_layer_ids(1) = i_layer
       end if
     end do
 
-    do i_cover = 2, size(layer_name_unordered)
-      do i_layer = 1, size(layer_name_unordered)
-        if (ordered_layer_name(i_cover-1)%string.eq.cover_name(i_layer)%string) then
-          ordered_layer_name(i_cover) = layer_name_unordered(i_layer)
-        end if
-      end do
-    end do
-    this%ordered_layer_name = ordered_layer_name
-
-  end function ordered_layer_array
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-  !> Order num_phase array from inner most layer to outermost 
-  !function ordered_num_phase_array(this,num_phase_array)&
-  !  result(ordered_num_phase)
-  function ordered_num_phase_array(this,num_phase_array,ordered_layer_name,cover_name)&
-    result(ordered_num_phase)  
-    !> Aerosol representation to update
-    class(aero_rep_single_particle_layers_t), intent(inout) :: this
-    !> Num phase array input
-    type(integer), intent(in) :: num_phase_array(:)
-    !> Ordered num phase array output
-    type(integer), allocatable :: ordered_num_phase(:)
-
-    !> Layer name input, for testing
-    type(string_t), intent(in) :: ordered_layer_name(:)
-    type(string_t), intent(in) :: cover_name(:)
-
-    integer(kind=i_kind) :: i_layer, i_cover
-    !allocate(ordered_num_phase(layers%size()))
-    allocate(ordered_num_phase(size(num_phase_array)))    
-
-    ! Search for innermost layer
-    !do i_layer = 1, layers%size()
-    do i_layer = 1, size(num_phase_array)
-      if (cover_name(i_layer)%string == "none") then
-        ordered_num_phase(1) = num_phase_array(i_layer)
-      end if
-    end do
-
-    do i_cover = 2, size(num_phase_array)
-      do i_layer = 1, size(num_phase_array)
-        if (ordered_layer_name(i_cover-1)%string.eq.cover_name(i_layer)%string) then
-          ordered_num_phase(i_cover) = num_phase_array(i_layer)
-        end if
-      end do
-    end do
-
-  end function ordered_num_phase_array
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-  !> Order layer array from inner most layer to outermost 
-  !function ordered_phase_array(this)&
-  !  result(ordered_phase_name)
-  function ordered_phase_array(this,cover_name,ordered_layer_name,&
-          layer_state_id, layer_state_id_unordered_array, phase_name_unordered)&
-    result(ordered_phase_name)
-    !> Aerosol representation to update
-    class(aero_rep_single_particle_layers_t), intent(inout) :: this
-    type(string_t), intent(in) :: cover_name(:)
-    type(integer), intent(in) :: layer_state_id(:)
-    type(integer), intent(in) :: layer_state_id_unordered_array(:)
-    type(string_t), intent(in) :: phase_name_unordered(:)
-    type(string_t), intent(in) :: ordered_layer_name(:)
- 
-    !> Phase names in order from inner to outer most layer
-    type(string_t), allocatable :: ordered_phase_name(:)
-    integer(kind=i_kind) :: i_layer, i_cover, idx
-    integer(kind=i_kind) :: i_state_layer, i_state_cover
-   
-    allocate(ordered_phase_name(size(phase_name_unordered)))
-   
-    ! Search for innermost layer
-    !do i_layer = 1, layers%size()
-    do i_layer = 1, size(cover_name)
-      i_cover = 1
-      if (cover_name(i_layer)%string == "none") then
-        do i_state_layer = layer_state_id_unordered_array(i_layer), &
-                      layer_state_id_unordered_array(i_layer+1)-1
-          idx = i_state_layer
-          do i_state_cover = layer_state_id(i_cover), &
-                             layer_state_id(i_cover+1)-1
-            ordered_phase_name(i_state_cover) = phase_name_unordered(idx)
-            idx = idx + 1
-          end do
-          exit
-        end do   
-      end if
-    end do
-
-    do i_cover = 2, size(cover_name)
-      do i_layer = 1, size(cover_name)
-        if (ordered_layer_name(i_cover-1)%string.eq.cover_name(i_layer)%string) then
-          do i_state_layer = layer_state_id_unordered_array(i_layer), &
-                        layer_state_id_unordered_array(i_layer+1)-1
-            idx = i_state_layer
-            do i_state_cover = layer_state_id(i_cover), &
-                               layer_state_id(i_cover+1)-1
-              ordered_phase_name(i_state_cover) = phase_name_unordered(idx)
-              idx = idx + 1
-            end do
-            exit
-          end do
+    ! Assign each layer working outwards from center of particle
+    do i_cover = 2, size(ordered_layer_ids)
+      do i_layer = 1, size(layer_names_unordered)
+        if (layer_names_unordered(ordered_layer_ids(i_cover-1))%string &
+            .eq. cover_names_unordered(i_layer)%string) then
+          ordered_layer_ids(i_cover) = i_layer
           exit
         end if
       end do
     end do
 
-  end function ordered_phase_array
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-  !> Order layer state id array from inner most layer to outermost 
-  function construct_layer_state_id(this,num_phase_array) result(layer_state_id_array)
-
-    !> Aerosol representation to update
-    class(aero_rep_single_particle_layers_t), intent(inout) :: this
-    !> Number of phases in each layer
-    type(integer), intent(in) :: num_phase_array(:)
-    !> Layer_state_id variable
-    type(integer), allocatable :: layer_state_id_array(:)
-    integer(kind=i_kind) :: i_layer
-
-    ! Allocate space in layer_state_id
-    allocate(layer_state_id_array(size(num_phase_array)+1))
-
-    layer_state_id_array(1) = 1
-    do i_layer = 1, size(num_phase_array)
-      layer_state_id_array(i_layer+1) = layer_state_id_array(i_layer) + &
-        num_phase_array(i_layer)
-    end do
-
-  end function construct_layer_state_id
+  end function ordered_layer_ids
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
