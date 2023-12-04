@@ -398,7 +398,7 @@ contains
     AERO_REP_ID_ = -1
 
     ! Set the unique names for the chemical species
-    ! this%unique_names_ = this%unique_names( )
+    this%unique_names_ = this%unique_names( )
 
   end subroutine initialize
 
@@ -478,8 +478,77 @@ contains
     !> Aerosol-phase species name
     character(len=*), optional, intent(in) :: spec_name
 
-    allocate(unique_names(0))
+    integer :: i_particle, i_layer, i_phase, i_spec, j_spec
+    integer :: num_spec, curr_tracer_type
+    type(string_t), allocatable :: spec_names(:)
 
+    ! copy saved unique names when available and no filters are included
+    if (.not. present(phase_name) .and. &
+        .not. present(tracer_type) .and. &
+        .not. present(spec_name) .and. &
+        allocated(this%unique_names_)) then
+      unique_names = this%unique_names_
+      return
+    end if
+    
+    ! count the number of unique names
+    num_spec = 0
+    do i_phase = 1, size(this%aero_phase)
+      if (present(phase_name)) then
+        if(phase_name .ne. this%aero_phase(i_phase)%val%name()) cycle
+      end if
+      if (present(spec_name) .or. present(tracer_type)) then
+        spec_names = this%aero_phase(i_phase)%val%get_species_names()
+        do j_spec = 1, size(spec_names)
+          if (present(spec_name)) then
+            if (spec_name .ne. spec_names(j_spec)%string) cycle
+          end if
+          if (present(tracer_type)) then
+            curr_tracer_type = &
+                this%aero_phase(i_phase)%val%get_species_type( &
+                    spec_names(j_spec)%string)
+            if (tracer_type .ne. curr_tracer_type) cycle
+          end if
+          num_spec = num_spec + 1
+        end do
+        deallocate(spec_names)
+      else
+        num_spec = num_spec + this%aero_phase(i_phase)%val%size()
+      end if
+    end do            
+
+    ! allocate space for the unique names and assign them
+    allocate(unique_names(num_spec*MAX_PARTICLES_))
+    i_spec = 1
+    do i_layer = 1, NUM_LAYERS_
+      do i_phase = LAYER_PHASE_START_(i_layer), LAYER_PHASE_END_(i_layer)
+        if (present(phase_name)) then
+          if(phase_name .ne. this%aero_phase(i_phase)%val%name()) cycle
+        end if
+        spec_names = this%aero_phase(i_phase)%val%get_species_names()
+        do j_spec = 1, this%aero_phase(i_phase)%val%size()
+          if (present(spec_name)) then
+            if (spec_name .ne. spec_names(j_spec)%string) cycle
+          end if
+          if (present(tracer_type)) then
+            curr_tracer_type = &
+                this%aero_phase(i_phase)%val%get_species_type( &
+                    spec_names(j_spec)%string)
+            if (tracer_type .ne. curr_tracer_type) cycle
+          end if
+          do i_particle = 1, MAX_PARTICLES_
+            unique_names((i_particle-1)*num_spec+i_spec)%string = 'P'// &
+              trim(integer_to_string(i_particle))//"."// &
+              this%layer_names_(i_layer)%string//"."// &
+              this%aero_phase(i_phase)%val%name()//"."// &
+              spec_names(j_spec)%string
+          end do
+          i_spec = i_spec + 1
+        end do
+        deallocate(spec_names)
+      end do
+    end do
+        
   end function unique_names
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
